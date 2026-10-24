@@ -3,8 +3,8 @@
 # Decompilation coverage
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **7,629 / 10,532 (72.4%)**
-- Remaining `GLOBAL_ASM` owners: **2,903**
+- US functions with C implementations: **7,634 / 10,532 (72.5%)**
+- Remaining `GLOBAL_ASM` owners: **2,898**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -13,7 +13,7 @@
 | File | Remaining | Baseline total | Percent complete |
 | --- | ---: | ---: | ---: |
 | `src/10BB0.c` | 20 | 55 | 63.6% |
-| `src/14640.c` | 39 | 117 | 66.7% |
+| `src/14640.c` | 38 | 117 | 67.5% |
 | `src/1A360.c` | 11 | 30 | 63.3% |
 | `src/1C2D0.c` | 5 | 10 | 50.0% |
 | `src/1CDC0.c` | 21 | 37 | 43.2% |
@@ -77,7 +77,7 @@
 | `src/fragments/20/fragment20_1286C0.c` | 2 | 5 | 60.0% |
 | `src/fragments/20/fragment20_128B10.c` | 9 | 35 | 74.3% |
 | `src/fragments/20/fragment20_12BB60.c` | 2 | 8 | 75.0% |
-| `src/fragments/20/fragment20_12C460.c` | 75 | 146 | 48.6% |
+| `src/fragments/20/fragment20_12C460.c` | 74 | 146 | 49.3% |
 | `src/fragments/21/fragment21_13FFA0.c` | 24 | 56 | 57.1% |
 | `src/fragments/21/fragment21_144790.c` | 25 | 46 | 45.7% |
 | `src/fragments/21/fragment21_147D10.c` | 4 | 11 | 63.6% |
@@ -89,7 +89,7 @@
 | `src/fragments/25/fragment25_15A060.c` | 10 | 30 | 66.7% |
 | `src/fragments/25/fragment25_15BBC0.c` | 6 | 10 | 40.0% |
 | `src/fragments/25/fragment25_15C920.c` | 1 | 1 | 0.0% |
-| `src/fragments/26/fragment26_162710.c` | 4 | 10 | 60.0% |
+| `src/fragments/26/fragment26_162710.c` | 2 | 10 | 80.0% |
 | `src/fragments/26/fragment26_1646B0.c` | 1 | 3 | 66.7% |
 | `src/fragments/29/fragment29_166060.c` | 10 | 25 | 60.0% |
 | `src/fragments/29/fragment29_167940.c` | 5 | 9 | 44.4% |
@@ -184,7 +184,7 @@
 | `src/fragments/44/fragment44_20F140.c` | 14 | 25 | 44.0% |
 | `src/fragments/44/fragment44_212740.c` | 7 | 22 | 68.2% |
 | `src/fragments/45/fragment45_2251A0.c` | 10 | 79 | 87.3% |
-| `src/fragments/45/fragment45_22AB80.c` | 22 | 49 | 55.1% |
+| `src/fragments/45/fragment45_22AB80.c` | 21 | 49 | 57.1% |
 | `src/fragments/45/fragment45_22FAD0.c` | 11 | 26 | 57.7% |
 | `src/fragments/45/fragment45_2324B0.c` | 1 | 24 | 95.8% |
 | `src/fragments/45/fragment45_2348E0.c` | 8 | 17 | 52.9% |
