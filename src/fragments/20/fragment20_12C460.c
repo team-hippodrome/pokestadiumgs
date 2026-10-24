@@ -562,7 +562,29 @@ void func_82606784(u8*a0,s32 a1,s32 a2,s32 a3){if(*(s16*)(a0+6)==0){*(s16*)(a0+6
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606CE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606E90.s")
+typedef struct unk_func_82606E90 {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+    s16 unk_06;
+    s16 unk_08;
+    s16 unk_0A;
+} unk_func_82606E90;
+
+unk_func_82606E90* func_82606E90(unk_func_82606E90* arg0) {
+    unk_func_82606E90* result = NULL;
+    s32 i;
+    unk_func_82606E90* entry;
+
+    for (i = 0; i < 40; i++) {
+        entry = &arg0[i];
+        if (entry->unk_00 == 0) {
+            result = entry;
+            break;
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606EC8.s")
 
