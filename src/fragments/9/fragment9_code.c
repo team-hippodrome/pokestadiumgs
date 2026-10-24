@@ -13,7 +13,17 @@ void func_8FB00020(s32 arg0, s32 arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB000D0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB00170.s")
+extern s32 func_8FB000D0(void*, void*);
+s32 func_8FB00170(void* arg0, void* arg1) {
+    *(u16*)((u8*)arg0 + 0) = 230;
+    *(u16*)((u8*)arg0 + 2) = 150;
+    *(u16*)((u8*)arg0 + 4) = 300;
+    *(u16*)((u8*)arg0 + 6) = 210;
+    *(u16*)((u8*)arg0 + 32) = *(u16*)((u8*)*(void**)((u8*)arg1 + 68) + 12);
+    *(s16*)((u8*)arg0 + 8) = 0;
+    *(s16*)((u8*)arg0 + 10) = 0;
+    return func_8FB000D0(arg0, arg1);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB001C0.s")
 
