@@ -950,3 +950,5 @@ func_81003F58 = Particle31_SpawnSpeciesEffect;
 func_81005524 = Particle31_DisplayListCallback;
 
 func_81004818 = Particle31_DrawAndUpdateSpeciesEffect;
+
+func_80016890 = BackgroundCopy_ServiceRequest;

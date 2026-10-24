@@ -487,7 +487,71 @@ void func_80016748(s32 arg0, s32 arg1) {}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016754.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016890.s")
+// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
+typedef struct {
+    s8 active, delay, copy_type; u8 unknown_03;
+    s32 destination_base, source, destination;
+    s32 remaining;
+    s32 chunk_size;
+    u32 unknown_18, completion_message;
+    OSMesgQueue *completion_queue;
+    OSMesgQueue queue;
+    OSMesg message;
+    OSIoMesg request;
+} BackgroundCopyRequest;
+typedef struct { u8 unknown[2]; s16 unknown_02; } BackgroundCopyHeader;
+extern void func_80016754(BackgroundCopyRequest *);
+extern void func_80016AB4(BackgroundCopyRequest *, s32);
+extern void func_80016A24(u8 *, s32);
+extern void func_80016B24(s32, s32, s32, s32);
+// Advances one queued copy after its startup delay and completion message.
+void BackgroundCopy_ServiceRequest(BackgroundCopyRequest *job, s32 stop_after_receive) {
+    BackgroundCopyHeader *header;
+    u32 remaining;
+    header = (BackgroundCopyHeader *)D_8011EA58;
+    if (job->delay >= 2) {
+        job->delay--;
+        return;
+    }
+    if (job->delay == 1) {
+        job->delay = 0;
+    } else {
+        if (stop_after_receive != 0) {
+            osRecvMesg(&job->queue, NULL, OS_MESG_BLOCK);
+            job->active = 0;
+            return;
+        }
+        if (osRecvMesg(&job->queue, NULL, OS_MESG_NOBLOCK) == -1) {
+            return;
+        }
+    }
+    remaining = job->remaining;
+    if (remaining == 0) {
+        func_80016754(job);
+        return;
+    }
+    if (remaining < job->chunk_size) {
+        if (job->copy_type == 1) {
+            func_80016B24(job->source, job->destination, remaining, header->unknown_02);
+        } else if (job->copy_type == 5) {
+            func_80016AB4(job, remaining);
+        } else {
+            func_80016A24((u8 *)job, remaining);
+        }
+        job->remaining = 0;
+    } else {
+        if (job->copy_type == 1) {
+            func_80016B24(job->source, job->destination, job->chunk_size, header->unknown_02);
+        } else if (job->copy_type == 5) {
+            func_80016AB4(job, job->chunk_size);
+        } else {
+            func_80016A24((u8 *)job, job->chunk_size);
+        }
+        job->remaining -= job->chunk_size;
+        job->source += job->chunk_size;
+        job->destination += job->chunk_size;
+    }
+}
 
 const char D_800A1DD0[8] = "BGCOPY";
 extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
