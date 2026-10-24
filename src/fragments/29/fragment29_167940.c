@@ -51,7 +51,13 @@ void func_88001C6C(void *arg0, u16 arg1, u8 arg2, s16 arg3, u8 arg4, s16 arg5, s
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_167940/func_880020CC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_167940/func_8800225C.s")
+extern void func_88001D0C(void*);
+void func_8800225C(void* arg0, s16 arg1, s16 arg2) {
+    *(s16*)((u8*)arg0 + 10) = arg1;
+    *(s16*)((u8*)arg0 + 8) = arg2;
+    *(s16*)((u8*)arg0 + 16) = (arg2 - arg1) * *(u8*)((u8*)arg0 + 15) + *(s16*)((u8*)arg0 + 18);
+    func_88001D0C(arg0);
+}
 
 void func_880022B4(void *arg0, s16 arg1, s32 arg2) {
     if (arg2 == 0) {
