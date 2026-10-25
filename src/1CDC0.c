@@ -36,7 +36,73 @@ s32 func_8001C1C0(u8 **arg0, u8 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C404.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C570.s")
+extern u8 D_80121EF4[];
+extern s32 func_8001CB5C(void *);
+extern void func_8001A994(void *);
+typedef struct AudioLayerAllocateChannel AudioLayerAllocateChannel;
+typedef struct { u8 release; u8 unknown01[3]; void *envelope; } AudioLayerAllocateAdsr;
+typedef struct { u8 enabled:1; u8 finished:1; u8 stop:1; u8 continuous:1; u8 bit27:1; u8 bit26:1; u8 bit25:1; u8 bit24:1; } AudioLayerAllocateFlags;
+typedef struct {
+    AudioLayerAllocateFlags flags; u8 status; u8 instrument_id; u8 duration;
+    u8 unknown04[2]; u8 pan; u8 unknown07; u8 value08; u8 policy;
+    u16 unknown0A; u16 unknown0C; u16 unknown0E; u16 unknown10;
+    u16 unknown12; u16 unknown14; u16 unknown16; u16 unknown18;
+    s16 delay; s16 gate; s16 transposition; u8 unknown20[2]; u16 unknown22;
+    u8 unknown24[4]; AudioLayerAllocateAdsr adsr; u8 portamento; u8 unknown31[11];
+    void *note; f32 frequency; f32 frequency_multiplier; f32 velocity;
+    u8 unknown4C[12]; void *instrument; u8 unknown5C[4]; AudioLayerAllocateChannel *channel;
+    u8 unknown64[24]; u8 script_depth;
+} AudioLayerAllocateRecord;
+struct AudioLayerAllocateChannel { u8 unknown00[4]; u8 policy; u8 unknown05[79]; AudioLayerAllocateRecord *layers[6]; u8 unknown6C[28]; AudioLayerAllocateAdsr adsr; };
+s32 AudioChannel_AllocateLayer(AudioLayerAllocateChannel *channel, s32 index) {
+    AudioLayerAllocateRecord *layer;
+    if (channel->layers[index] == NULL) {
+        AudioLayerAllocateRecord *layer;
+        layer = (AudioLayerAllocateRecord *)func_8001CB5C(D_80121EF4);
+        channel->layers[index] = layer;
+        if (layer == NULL) { channel->layers[index] = NULL; return -1; }
+    } else {
+        func_8001A994(channel->layers[index]);
+    }
+    layer = channel->layers[index];
+    layer->channel = channel;
+    layer->adsr = channel->adsr;
+    layer->adsr.release = 0;
+    layer->policy = channel->policy;
+    layer->flags.enabled = 1;
+    layer->flags.finished = 0;
+    layer->flags.stop = 0;
+    layer->flags.continuous = 0;
+    layer->flags.bit27 = 0;
+    layer->flags.bit26 = 0;
+    layer->flags.bit25 = 0;
+    layer->flags.bit24 = 0;
+    layer->status = 0;
+    layer->portamento = 0;
+    layer->script_depth = 0;
+    layer->duration = 0x80;
+    layer->value08 = 0x80;
+    layer->pan = 0x40;
+    layer->unknown22 = 0;
+    layer->delay = 0;
+    layer->gate = 0;
+    layer->transposition = 0;
+    layer->note = NULL;
+    layer->instrument = NULL;
+    layer->instrument_id = 0xFF;
+    layer->unknown0A = 0xFFFF;
+    layer->unknown10 = 0x800;
+    layer->unknown0C = 0x800;
+    layer->unknown12 = 0;
+    layer->unknown0E = 0;
+    layer->unknown14 = 0;
+    layer->unknown16 = 0;
+    layer->unknown18 = 0;
+    layer->frequency = 1.0f;
+    layer->frequency_multiplier = 1.0f;
+    layer->velocity = 0.0f;
+    return 0;
+}
 
 typedef struct { u8 unknown[80]; void *player; } AudioChannelPrefix;
 extern AudioChannelPrefix D_80121DDC;
