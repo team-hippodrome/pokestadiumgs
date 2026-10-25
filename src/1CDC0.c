@@ -2,6 +2,11 @@
 
 
 #ifdef VERSION_US
+extern u8 D_8011BE90[];
+extern u8 D_80121F44[];
+extern void func_8001ED64(void *);
+extern void AudioSequence_Update(u8 *);
+extern void func_80019DE4(void);
 extern void func_8001C744(void *, s32);
 extern s32 func_8001A308(s32, s32);
 extern u8 D_8008FB90[];
@@ -247,7 +252,7 @@ void AudioChannel_SetProgram(u8 *channel, u8 program) {
     } else if (program == 0x7F) {
         *(s16 *)(channel + 0x28) = 0;
         *(u32 *)(channel + 0x4C) = 1;
-    } else if (program == 0x7E) {
+    } else if (program == 126) {
         *(s16 *)(channel + 0x28) = 1;
         *(u32 *)(channel + 0x4C) = 2;
     } else {
@@ -267,9 +272,22 @@ void func_8001DFD0(void *arg0, u8 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001ED64.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001F6D4.s")
+void Audio_UpdateSequencesAndNotes(s32 update_index) {
+    u32 i;
+    u8 *sequence;
+    *(u32 *)(D_8011BE90 + 0x6060) = *(u32 *)(D_8011BE90 + 0x2C28) * (*(s16 *)(D_8011BE90 + 0x2BE8) - update_index - 1);
+    for (i = 0; i < *(s16 *)(D_8011BE90 + 0x2BF0); i++) {
+        sequence = D_8011BE90 + i * 352 + 0x346C;
+        if ((*(u32 *)sequence >> 31) == 1) {
+            func_8001ED64(sequence);
+            AudioSequence_Update(sequence);
+        }
+    }
+    func_8001ED64(D_80121F44);
+    AudioSequence_Update(D_80121F44);
+    func_80019DE4();
+}
 
-extern void func_8001ED64(void *);
 extern void func_8001B8D0(void *);
 void func_8001F7A0(void *arg0) {
     s32 temp_t8;

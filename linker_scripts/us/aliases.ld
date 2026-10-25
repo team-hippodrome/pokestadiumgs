@@ -988,3 +988,5 @@ func_8001C97C = AudioChannel_StartScript;
 func_8001DEB0 = AudioChannel_ResolveInstrument;
 
 func_8001DF24 = AudioChannel_SetProgram;
+
+func_8001F6D4 = Audio_UpdateSequencesAndNotes;
