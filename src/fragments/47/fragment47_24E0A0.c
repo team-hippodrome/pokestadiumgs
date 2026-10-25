@@ -52,7 +52,7 @@ void func_86007E4C(u8 *arg0, s32 arg1, s32 arg2) {
     func_87C00198(arg0 + 0x108, arg0 + 0x108, value);
 }
 
-extern void func_87C00AE4(void *, void *);
+extern void* func_87C00AE4(void *, void *);
 extern void func_87C015E4(void *, void *);
 extern void *func_87C002A8(void *, void *, f64);
 void func_86007EB4(void *arg0) {
