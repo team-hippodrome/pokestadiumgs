@@ -995,3 +995,11 @@ D_827032B0 = fragments_22_fragment22_14B090;
 D_827032B4 = fragments_22_fragment22_14B090 + 4;
 
 func_8001C6C8 = AudioLayer_Disable;
+
+func_8001CB9C = AudioLayerPool_Init;
+
+func_8001CA3C = AudioSequence_Disable;
+
+func_8001CCC8 = AudioLayer_UpdateScript;
+
+func_8001CDE4 = AudioLayer_PrepareNote;
