@@ -2,6 +2,7 @@
 
 
 #ifdef VERSION_US
+extern f32 D_8011EA90;
 extern u8 D_8008FC20[];
 extern s16 *D_8008E778;
 extern void func_8001CA3C(void *);
@@ -211,5 +212,83 @@ void func_8001BE1C(void *arg0, s32 arg1, s32 arg2) {
     (*(f32 *)((u8 *)(arg0) + (0xC))) = 0.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001BE44.s")
+f32 AudioAdsr_Update(void *arg0) {
+    typedef struct { s16 delay; s16 value; } AudioAdsrEnvelopePoint;
+    typedef struct { u8 flags; u8 index; s16 delay; f32 sustain; f32 velocity; f32 fadeOutVelocity; f32 current; f32 target; f32 fadeIn; AudioAdsrEnvelopePoint *envelope; } AudioAdsrState;
+    typedef struct { u8 special:1; u8 startDisabled:1; u8 decay:1; u8 release:1; u8 state:4; } AudioAdsrFlags;
+    typedef struct { u32 special:1; u32 startDisabled:1; u32 decay:1; u32 release:1; u32 state:4; u32 tail:24; } AdsrWordFlags;
+
+    AudioAdsrState *adsr = arg0;
+    u8 state;
+    state = adsr->flags & 15;
+    switch (state) {
+        case 0: return 0.0f;
+        case 1:
+            if (((AdsrWordFlags *)adsr)->startDisabled) {
+                adsr->flags = (adsr->flags & 0xFFF0) | 5;
+                break;
+            }
+        case 2:
+            adsr->index = 0;
+            adsr->flags = (adsr->flags & 0xFFF0) | 3;
+read_envelope:
+        case 3:
+            adsr->delay = adsr->envelope[adsr->index].delay;
+            switch (adsr->delay) {
+                case 0: adsr->flags = (adsr->flags & 0xFFF0) | 0; break;
+                case -1: adsr->flags = (adsr->flags & 0xFFF0) | 5; break;
+                case -2: adsr->index = adsr->envelope[adsr->index].value; goto read_envelope;
+                case -3: adsr->flags = (adsr->flags & 0xFFF0) | 1; break;
+                case -4:
+                    adsr->fadeIn = (f32)adsr->envelope[adsr->index].value / 32767.0f;
+                    ((AudioAdsrFlags *)adsr)->special = 1;
+                    adsr->index++;
+                    goto read_envelope;
+                default:
+                    adsr->delay = (f32)adsr->delay * D_8011EA90;
+                    if (adsr->delay == 0) { adsr->delay = 1; }
+                    adsr->target = (f32)adsr->envelope[adsr->index].value / 32767.0f;
+                    adsr->target = adsr->target * adsr->target;
+                    adsr->velocity = (adsr->target - adsr->current) / adsr->delay;
+                    adsr->flags = (adsr->flags & 0xFFF0) | 4;
+                    adsr->index++;
+                    break;
+            }
+            if ((adsr->flags & 15) != 4) { break; }
+        case 4:
+            adsr->delay--;
+            adsr->current += adsr->velocity;
+            if (adsr->delay <= 0) { adsr->flags = (adsr->flags & 0xFFF0) | 3; }
+            break;
+        case 6:
+        case 7:
+            adsr->current -= adsr->fadeOutVelocity;
+            if (adsr->sustain != 0.0f && state == 6) {
+                if (adsr->current < adsr->sustain) {
+                    adsr->current = adsr->sustain;
+                    adsr->delay = 128;
+                    adsr->flags = (adsr->flags & 0xFFF0) | 8;
+                }
+            } else if (adsr->current < 0.00001f) {
+                adsr->current = 0.0f;
+                adsr->flags = (adsr->flags & 0xFFF0) | 0;
+            }
+            break;
+        case 8:
+            adsr->delay--;
+            if (adsr->delay == 0) { adsr->flags = (adsr->flags & 0xFFF0) | 7; }
+            break;
+    }
+    if (((AdsrWordFlags *)adsr)->decay) {
+        adsr->flags = (adsr->flags & 0xFFF0) | 6;
+        adsr->flags &= 0xDF;
+    }
+    if (((AdsrWordFlags *)adsr)->release) {
+        adsr->flags = (adsr->flags & 0xFFF0) | 7;
+        adsr->flags &= 0xEF;
+    }
+    if (adsr->current < 0.0f) { return 0.0f; }
+    if (adsr->current > 1.0f) { return 1.0f; }
+    return adsr->current;
+}
 #endif
