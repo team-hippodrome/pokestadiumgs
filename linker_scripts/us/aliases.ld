@@ -1005,3 +1005,5 @@ func_8001CCC8 = AudioLayer_UpdateScript;
 func_8001CDE4 = AudioLayer_PrepareNote;
 
 func_8001C570 = AudioChannel_AllocateLayer;
+
+func_8001F8C0 = AudioSequence_AllocateChannels;

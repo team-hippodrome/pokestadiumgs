@@ -512,7 +512,37 @@ void func_8001F7F0(void *arg0) {
     } while (var_s0 != 0x40);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001F8C0.s")
+extern u8 D_8011BE90[];
+extern u8 D_8011EBF0[];
+extern s32 func_80010510(u8 *, s32);
+extern void func_8001C404(s32);
+typedef struct {
+ u8 unknown00[17]; u8 index; u8 unknown12[62]; void *player; void *layers[6];
+} AudioPreallocatedChannel;
+typedef struct { u8 unknown00[56]; AudioPreallocatedChannel *channels[16]; } AudioPreallocatePlayer;
+void AudioSequence_AllocateChannels(s32 player_index) {
+    typedef struct { u8 enabled:1; u8 low:7; } ChannelEnabledFlag;
+    AudioPreallocatePlayer *player;
+    AudioPreallocatedChannel *channel;
+    s32 i;
+    s32 j;
+    player = (AudioPreallocatePlayer *)(D_8011BE90 + (player_index * 352 + 0x346C));
+    for (i = 0; i < 16; i++) {
+        player->channels[i] = (AudioPreallocatedChannel *)func_80010510(D_8011EBF0, 256);
+        if (player->channels[i] == NULL) {
+            player->channels[i] = (AudioPreallocatedChannel *)&D_80121DDC;
+        } else {
+            channel = player->channels[i];
+            channel->player = player;
+            channel->index = i;
+            ((ChannelEnabledFlag *)channel)->enabled = 0;
+            for (j = 0; j < 6; j++) {
+                channel->layers[j] = NULL;
+            }
+        }
+        func_8001C404((s32)player->channels[i]);
+    }
+}
 
 extern void func_8001A9E4(void *);
 extern void func_8001F7F0(void *arg0);
