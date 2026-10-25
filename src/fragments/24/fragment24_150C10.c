@@ -42,7 +42,18 @@ s32 func_82B00E34(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B00F14.s")
+void *func_82B00F14(s32 arg0) {
+    s32 i;
+    void *result = NULL;
+    u8 *entry = (u8 *)&D_82B12450;
+    for (i = 0; i < *(s16 *)(entry + 0xDF0); i++) {
+        if (*(s32 *)(entry + 0xDF4 + i * 0x10) == arg0) {
+            result = entry + 0xDF4 + i * 0x10;
+            break;
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

@@ -270,7 +270,25 @@ void func_86706A30(void) { f32 temp_fv0; temp_fv0 = D_87F119DC->in54; D_87F119DC
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86706AC8.s")
+extern f32 D_8670C4F4;
+extern u8 D_8670F868[];
+extern s32 D_8670FF4C;
+void func_86706AC8(s32 arg0) {
+    u8 *entry;
+
+    entry = func_87F025B8(D_8670F868, func_86706A30);
+    if (entry != NULL) {
+        *(f32 *)(entry + 0x48) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x24);
+        *(f32 *)(entry + 0x4C) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x28);
+        *(f32 *)(entry + 0x50) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x2C) - D_8670C4F4;
+        *(s16 *)(entry + 0x42) = -0x4000;
+        *(s32 *)(entry + 0x38) = arg0;
+        *(f32 *)(entry + 0x54) = 7.0f;
+        *(f32 *)(entry + 0x58) = 7.0f;
+        *(f32 *)(entry + 0x5C) = 7.0f;
+        func_8003F114(entry + 0x24, 0, -1, D_8670FF4C);
+    }
+}
 #endif
 
 #ifdef VERSION_US
