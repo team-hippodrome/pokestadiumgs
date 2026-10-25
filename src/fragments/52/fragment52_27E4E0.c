@@ -486,7 +486,28 @@ void func_86403CB4(void) { void *node; node = *(void **)(D_86416C00 + 0xE0C); wh
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86404724.s")
+extern f32 D_86409B20;
+extern f32 D_86409B24;
+f32 func_86404724(void) {
+    s8 kind;
+    f32 result;
+
+    kind = *(s8 *)((u8 *)(*(u8 **)(D_86416C00 + 0x70)) + 0x2181);
+    switch (kind) {
+    case 0:
+        result = (f32)func_8003570C();
+        result = (((result / 4294967296.0f) + (result / 4294967296.0f)) - 1.0f) * D_86409B20 * 6.0f;
+        break;
+    case 1:
+        result = (f32)func_8003570C();
+        result = (((result / 4294967296.0f) + (result / 4294967296.0f)) - 1.0f) * D_86409B24 * 2.0f;
+        break;
+    default:
+        result = 0.0f;
+        break;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
