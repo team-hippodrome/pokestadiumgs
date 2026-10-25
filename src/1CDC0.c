@@ -2,6 +2,8 @@
 
 
 #ifdef VERSION_US
+extern u8 D_8011FA5C[];
+extern u8 D_8011F9DC[];
 extern u8 D_8011BE90[];
 extern u8 D_80121F44[];
 extern void func_8001ED64(void *);
@@ -162,13 +164,41 @@ void AudioChannel_StartScript(u8 *player, u8 index, u8 *script) {
     }
 }
 
-extern void func_8001CA3C(void);
+extern void AudioSequence_Disable(u8 *);
 void func_8001CA14(u8 *arg0) {
     *arg0 = ((*arg0) & 0xFF) | 0x40;
-    func_8001CA3C();
+    AudioSequence_Disable(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CA3C.s")
+extern void func_8001C8FC(void *, s32);
+extern void AudioNotePool_Clear(void *);
+extern s32 func_80014208(s32);
+extern void func_80014328(s32, s32);
+extern s32 func_80014190(s32);
+extern void func_800142F8(s32, s32);
+extern void func_800102BC(s32);
+extern u8 D_8011BE90[];
+void AudioSequence_Disable(u8 *player) {
+    typedef struct { u8 enabled:1; u8 finished:1; u8 low:6; } PlayerFlags;
+    s32 was_finished;
+    was_finished = ((*(u32 *)player << 1) >> 31);
+    func_8001C8FC(player, 0xFFFF);
+    AudioNotePool_Clear(player + 0x9C);
+    if ((*(u32 *)player >> 31) != 0) {
+        ((PlayerFlags *)player)->enabled = 0;
+        ((PlayerFlags *)player)->finished = 1;
+        if (func_80014208(player[4])) { func_80014328(player[4], 3); }
+        if (func_80014190(player[5])) {
+            func_800142F8(player[5], 4);
+            if (was_finished) { func_800102BC(player[5]); }
+        }
+        if (player[5] == *(s16 *)(D_8011BE90 + 0x2FC2)) {
+            *(s32 *)(D_8011BE90 + 0x2FA4) = 1;
+        } else if (player[5] == *(s16 *)(D_8011BE90 + 0x2FCE)) {
+            *(s32 *)(D_8011BE90 + 0x2FA4) = 0;
+        }
+    }
+}
 
 void func_8001CB1C(void *arg0, void *arg1)
 {
@@ -193,7 +223,20 @@ s32 func_8001CB5C(void *arg0) {
     return *(s32 *)((u8 *)node + 8);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CB9C.s")
+void AudioLayerPool_Init(void) {
+    s32 i;
+    *(u8 **)(D_8011BE90 + 0x6064) = D_80121EF4;
+    *(u8 **)(D_8011BE90 + 0x6068) = D_80121EF4;
+    *(s32 *)(D_8011BE90 + 0x606C) = 0;
+    *(void **)(D_8011BE90 + 0x6070) = NULL;
+    i = 0;
+    do {
+        *(u8 **)(D_8011BE90 + 0x3BD4 + i * 144) = D_8011F9DC + i * 144;
+        *(void **)(D_8011BE90 + 0x3BCC + i * 144) = NULL;
+        func_8001CB1C(D_80121EF4, D_8011FA5C + i * 144);
+        i += 1;
+    } while (i != 64);
+}
 
 u8 func_8001CC3C(u8 **arg0) { u8 result = **arg0; (*arg0)++; return result; }
 
@@ -216,9 +259,57 @@ u32 func_8001CC88(u8 **arg0) {
     return result.value;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CCC8.s")
+extern void func_8001A994(void *);
+typedef struct AudioLayerPreparePrefix AudioLayerPreparePrefix;
+extern void AudioLayer_PrepareNote(AudioLayerPreparePrefix *);
+extern s32 func_8001CF5C(void *);
+extern s32 func_8001DA54(void *, s32);
+extern s32 func_8001D340(void *, s32);
+extern s32 func_8001CE70(void *, s32);
+typedef struct { u32 enabled:1; u32 finished:1; u32 stop:1; u32 continuous_notes:1; u32 low:28; } AudioLayerUpdateWordFlags;
+typedef struct { AudioLayerUpdateWordFlags flags; u8 unknown04[22]; s16 delay; s16 gate; u8 unknown1E[30]; void *note; } AudioLayerUpdatePrefix;
+void AudioLayer_UpdateScript(AudioLayerUpdatePrefix *layer) {
+    typedef struct { u8 high:2; u8 stop:1; u8 low:5; } LayerStopFlags;
+    s32 command;
+    if (layer->flags.enabled != 0) {
+        if (layer->delay >= 2) {
+            layer->delay--;
+            if (layer->flags.stop == 0 && layer->delay <= layer->gate) {
+                func_8001A994(layer);
+                ((LayerStopFlags *)layer)->stop = 1;
+            }
+        } else {
+            AudioLayer_PrepareNote((AudioLayerPreparePrefix *)layer);
+            do {
+                command = func_8001CF5C(layer);
+                if (command == -1) { return; }
+                command = func_8001DA54(layer, command);
+            } while (command == -1 && layer->delay == 0);
+            if (command != -1) { command = func_8001D340(layer, command); }
+            if (command != -1) { func_8001CE70(layer, command); }
+            if (layer->flags.stop == 1 && (layer->note != NULL || layer->flags.continuous_notes != 0)) {
+                func_8001A994(layer);
+            }
+        }
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CDE4.s")
+extern void func_8001A994(void *);
+typedef struct { u32 enabled:1; u32 finished:1; u32 stop:1; u32 continuous_notes:1; u32 low:28; } AudioLayerPrepareFlags;
+typedef struct { u8 unknown[72]; AudioLayerPreparePrefix *previous_layer; } AudioNotePreviousPrefix;
+struct AudioLayerPreparePrefix { AudioLayerPrepareFlags flags; u8 unknown04[44]; u8 portamento; u8 unknown31[11]; AudioNotePreviousPrefix *note; };
+void AudioLayer_PrepareNote(AudioLayerPreparePrefix *layer) {
+    typedef struct { u8 high:7; u8 bit0:1; } LayerLowFlags;
+    s32 mode;
+    if (layer->flags.continuous_notes == 0) {
+        func_8001A994(layer);
+    } else {
+        if (layer->note != NULL && layer->note->previous_layer == layer) { func_8001A994(layer); }
+    }
+    mode = layer->portamento & ~0x80;
+    if (mode == 1 || mode == 2) { layer->portamento = 0; }
+    ((LayerLowFlags *)layer)->bit0 = 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CE70.s")
 
@@ -324,7 +415,7 @@ void func_8001F7F0(void *arg0) {
     u8 *var_s1;
     s32 var_s0;
 
-    func_8001CA3C();
+    AudioSequence_Disable((u8 *)arg0);
     var_s1 = (u8 *)arg0;
     var_s0 = 0;
     var_s1 = var_s1;
