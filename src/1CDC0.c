@@ -36,17 +36,33 @@ s32 func_8001C1C0(u8 **arg0, u8 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C570.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C6C8.s")
+typedef struct { u8 unknown[80]; void *player; } AudioChannelPrefix;
+extern AudioChannelPrefix D_80121DDC;
+extern void func_8001A994(void *);
+extern void func_8001A9B4(void *);
+typedef struct { u8 enabled:1; u8 finished:1; u8 low:6; } AudioLayerDisableFlags;
+typedef struct { AudioLayerDisableFlags flags; u8 unknown01[95]; AudioChannelPrefix *channel; } AudioLayerDisablePrefix;
+void AudioLayer_Disable(AudioLayerDisablePrefix *layer) {
+    if (layer != NULL) {
+        if (layer->channel != &D_80121DDC && (((*(u32 *)layer->channel->player << 1) >> 31) == 1)) {
+            func_8001A9B4(layer);
+        } else {
+            func_8001A994(layer);
+        }
+        layer->flags.enabled = 0;
+        layer->flags.finished = 1;
+    }
+}
 
 extern u8 D_80121EF4[];
 extern void func_8001CB1C();
-extern void func_8001C6C8();
+extern void AudioLayer_Disable();
 void func_8001C744(void *arg0, s32 arg1) {
     s32 temp_a2;
     temp_a2 = *(s32 *)((u8 *)arg0 + (arg1 << 2) + 0x54);
     if (temp_a2 != 0) {
         func_8001CB1C(D_80121EF4, (void *)(u32)(temp_a2 + 0x80));
-        func_8001C6C8(temp_a2);
+        AudioLayer_Disable(temp_a2);
         *(s32 *)((u8 *)arg0 + (arg1 << 2) + 0x54) = 0;
     }
 }
@@ -107,7 +123,7 @@ void func_8001C804(void *arg0, u16 arg1) {
     } while (i != 0x10);
 }
 
-extern u8 D_80121DDC[];
+extern AudioChannelPrefix D_80121DDC;
 extern void func_8001C794(s32);
 void func_8001C8FC(void *arg0, s32 arg1)
 {
@@ -343,12 +359,12 @@ void func_8001F7F0(void *arg0) {
 
 extern void func_8001A9E4(void *);
 extern void func_8001F7F0(void *arg0);
-extern u8 D_80121DDC[];
+extern AudioChannelPrefix D_80121DDC;
 void func_8001F9B0(void *arg0) {
     s32 i;
     s32 j;
     for (i = 0; i != 16; i++) {
-        *(u8 **)((u8 *)arg0 + 0x38 + i * 4) = D_80121DDC;
+        *(u8 **)((u8 *)arg0 + 0x38 + i * 4) = (u8 *)&D_80121DDC;
     }
     *(u8 *)arg0 &= 0xFF7F;
     *(u8 *)arg0 &= 0xDF;
