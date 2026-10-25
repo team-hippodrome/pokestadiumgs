@@ -2,6 +2,7 @@
 
 
 #ifdef VERSION_US
+extern s16 *D_8008E778;
 extern void func_8001CA3C(void *);
 extern void func_8001B6D0(void *, s32, s32);
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001B6D0.s")
@@ -77,7 +78,37 @@ void func_8001BCA4(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001BD00.s")
+void AudioVibrato_Init(void *arg0) {
+    typedef struct { u16 rateStart; u16 extentStart; u16 rateTarget; u16 extentTarget; u16 rateDelay; u16 extentDelay; u16 delay; } NoteVibratoParams;
+    typedef struct { NoteVibratoParams *params; u32 phase; s16 *curve; f32 extent; f32 rate; s8 active; u8 pad15; u16 rateTimer; u16 extentTimer; u16 delay; } NoteVibratoState;
+    typedef struct { u8 pad0[8]; u32 reserved:19; u32 channelVibrato:1; u32 tail:12; u8 padC[0x54]; u8 *channel; } NoteVibratoLayer;
+    typedef struct { u8 priority; u8 pad1[3]; u8 state; u8 pad5[7]; f32 vibratoScale; void *previous; NoteVibratoLayer *parent; void *wanted; } NoteVibratoPlayback;
+    typedef struct { u8 pad0[0x30]; NoteVibratoPlayback playback; u8 pad4C[0x40]; NoteVibratoState vibrato; } NoteVibratoOwner;
+
+    NoteVibratoOwner *note = arg0;
+    NoteVibratoPlayback *playback;
+    NoteVibratoState *vibrato;
+    NoteVibratoParams *params;
+    note->vibrato.active = 1;
+    note->vibrato.curve = D_8008E778;
+    playback = &note->playback;
+    vibrato = &note->vibrato;
+    if (playback->parent->channelVibrato == 1) {
+        vibrato->params = (NoteVibratoParams *)(playback->parent->channel + 0x14);
+    } else {
+        vibrato->params = (NoteVibratoParams *)((u8 *)playback->parent + 0xC);
+    }
+    params = vibrato->params;
+    if ((vibrato->extentTimer = params->extentDelay) == 0) {
+        vibrato->extent = (s32)params->extentTarget;
+    } else { vibrato->extent = (s32)params->extentStart; }
+    if ((vibrato->rateTimer = params->rateDelay) == 0) {
+        vibrato->rate = (s32)params->rateTarget;
+    } else { vibrato->rate = (s32)params->rateStart; }
+    playback->vibratoScale = 1.0f;
+    vibrato->phase = 0;
+    vibrato->delay = params->delay;
+}
 
 void func_8001BDF0(u8 *arg0) {
     struct Vector { s32 x, y, z; };
