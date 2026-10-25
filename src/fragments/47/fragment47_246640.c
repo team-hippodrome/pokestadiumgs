@@ -67,7 +67,22 @@ void func_86000BB0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000C6C.s")
+typedef struct unk_func_86000C6C {
+    f32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+} unk_func_86000C6C;
+
+void func_86000C6C(u8* arg0, s32 arg1, unk_func_86000C6C* arg2, f32 arg3, f32 arg4) {
+    u8* entry = arg0;
+
+    entry += *(s32*)(arg0 + 240) * 24;
+    *(unk_func_86000C6C*)entry = *arg2;
+    *(s32*)(entry + 12) = arg1;
+    *(f32*)(entry + 16) = arg3;
+    *(f32*)(entry + 20) = arg4;
+    *(s32*)(arg0 + 240) = (*(s32*)(arg0 + 240) + 1) % 10;
+}
 #endif
 
 #ifdef VERSION_US
