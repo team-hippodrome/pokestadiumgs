@@ -958,3 +958,7 @@ func_8001A5B4 = ResourceCatalog_SetEntry;
 func_8001AFE0 = AudioVoice_SetPendingRequest;
 
 func_8001AA34 = ResourcePool_InitLists;
+
+func_8001AC38 = ResourcePool_AcquireEntries;
+
+func_8001B59C = AudioVoicePool_Init;

@@ -255,7 +255,50 @@ void ResourcePool_InitLists(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AAD8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AC38.s")
+extern u8 D_80121F14[];
+extern u8 D_80121F24[];
+extern u8 D_80121F34[];
+extern void func_8001AAD8(void *);
+extern s32 func_8001CB5C(void *);
+// Returns existing entries before acquiring up to count entries from four shared lists.
+void ResourcePool_AcquireEntries(u8 *pool, u32 count) {
+    u32 total;
+    s32 group;
+    s32 entry;
+    u8 *source;
+    u8 *destination;
+    func_8001AAD8(pool);
+    group = 0;
+    total = 0;
+    while (total < count) {
+        if (group == 4) { break; }
+        switch (group) {
+        case 0:
+            source = D_80121F04;
+            destination = pool;
+            break;
+        case 1:
+            source = D_80121F14;
+            destination = pool + 16;
+            break;
+        case 2:
+            source = D_80121F24;
+            destination = pool + 32;
+            break;
+        case 3:
+            source = D_80121F34;
+            destination = pool + 48;
+            break;
+        }
+        while (total < count) {
+            entry = func_8001CB5C(source);
+            if (entry == 0) { break; }
+            func_8001CB1C(destination, (void *)entry);
+            total++;
+        }
+        group++;
+    }
+}
 
 void func_8001AD74(s32 *arg0, s32 *arg1) {
     if ((*(s32 **)((u8 *)(arg1) + (0))) == NULL) {
@@ -400,5 +443,36 @@ void *func_8001B1A8(void *arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001B218.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001B59C.s")
+extern u8 D_8011EBF0[];
+extern Copy32_1A360 D_8008F1C4;
+extern s32 func_800104A0(void *, s32);
+// Initializes each 0x100-byte voice record and allocates its 480-byte buffer.
+void AudioVoicePool_Init(void) {
+    s32 index;
+    u8 *voice;
+    u32 voice_address;
+    for (index = 0; index < *(s32 *)(D_8011BE90 + 0x2C28); index++) {
+        voice_address = index * 0x100;
+        voice_address += *(u32 *)(D_8011BE90 + 0x3468);
+        voice = (u8 *)voice_address;
+        *(Copy32_1A360 *)(voice + 0xD0) = D_8008F1C4;
+        voice[0x30] = 0;
+        voice[0x34] = 0;
+        *(s32 *)(voice + 0x44) = -1;
+        *(s32 *)(voice + 0x48) = -1;
+        *(s32 *)(voice + 0x40) = -1;
+        voice[0x31] = 0;
+        *(f32 *)(voice + 0x58) = 0.0f;
+        *(s16 *)(voice + 0x36) = 0;
+        voice[0x60] = 0;
+        voice[0xA0] = 0;
+        *(s16 *)(voice + 0x82) = 0;
+        *(s16 *)(voice + 0x84) = 0;
+        voice[0x35] = 0;
+        *(u32 *)(voice + 0xB0) = 0;
+        *(s32 *)(voice + 0x20) = func_800104A0(D_8011EBF0, 480);
+    }
+}
+// The retail owner ends with two alignment nops.
+#pragma C_FUNCTION_PADDING(8)
 #endif
