@@ -20,7 +20,20 @@ void func_8AF154EC(s32 arg0, s32 arg1) {
                         G_TX_RENDERTILE, 0, 0, 1024, 1024);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15584.s")
+extern s16 D_8AF337E8[17][17];
+void func_8AF15584(s16 arg0, s16 arg1, s16 arg2) {
+    s32 row;
+    s32 col;
+
+    func_8AF15384(arg0 & 0xFF);
+    for (row = 0; row < 17; row++) {
+        for (col = 0; col < 17; col++) {
+            if (arg0 == D_8AF337E8[row][col]) {
+                func_8AF154EC(arg1 + col * 20, arg2 + row * 20);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15670.s")
 

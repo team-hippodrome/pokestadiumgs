@@ -381,7 +381,16 @@ void func_87E07194(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E07278.s")
+s32 func_87E07278(u8 *arg0) {
+    s32 count = 0;
+    s32 i;
+    for (i = 0; i < 12; i++) {
+        if (*(u16 *)(*(u8 **)(arg0 + 0x170) + 0x21F4) & (1 << i)) {
+            count++;
+        }
+    }
+    return count;
+}
 
 void func_87E072FC(void *a, u16 b) {
     u8 *p;

@@ -139,11 +139,88 @@ void func_8416654C(f32 arg0, f32 *arg1, f32 arg2) {
     guMtxXFMF(sp30, 0.0f, 0.0f, arg2, &arg1[0], &arg1[1], &arg1[2]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3D59C0/func_841665D4.s")
+extern void func_841098FC(AnchorTrailVec3f *);
+extern f32 Math_AbsF32(f32);
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+
+void func_841665D4(TrailPoolRecord *arg0) {
+    UNUSED f32 pad[5]; // FAKE: unreferenced local slots the frame reserves.
+    s32 i;
+    f32 wave_scale = arg0->unk014;
+    TrailPoolSample *var_s0 = &arg0->samples[0];
+    f32 denom;
+    f32 dy;
+    AnchorTrailVec3f anchor;
+    UNUSED f32 pad2[3]; // FAKE: unreferenced local slots between the anchor and the frame bottom.
+
+    for (i = 0; i < 10; i++, var_s0++) {
+        if (i == 0) {
+            var_s0->previous_scale = var_s0->scale;
+            var_s0->unk0C = var_s0->angle;
+            var_s0->previous_position = var_s0->position;
+            var_s0->previous_velocity = var_s0->velocity;
+
+            switch (arg0->age) {
+                case 0:
+                    var_s0->position.x += var_s0->acceleration.x;
+                    var_s0->position.y += var_s0->acceleration.y;
+                    var_s0->position.z += var_s0->acceleration.z;
+                    var_s0->angle += arg0->unk010;
+                    var_s0->acceleration.x += __sinf(var_s0->angle) * wave_scale;
+                    var_s0->acceleration.z += __cosf(var_s0->angle) * wave_scale;
+                    if (arg0->unk004 >= 21) {
+                        arg0->age = 1;
+                        arg0->unk004 = 0;
+                        func_841098FC(&anchor);
+                        denom = Math_AbsF32(anchor.x - var_s0->position.x);
+                        if (anchor.y < 0.0f) {
+                            anchor.y = 0.0f;
+                        }
+                        dy = anchor.y - var_s0->position.y;
+                        var_s0->velocity.y = (dy * 20.0f) / denom;
+                    }
+                    break;
+
+                case 1:
+                    var_s0->position.x += var_s0->velocity.x;
+                    var_s0->position.y += var_s0->velocity.y;
+                    var_s0->position.z += var_s0->velocity.z;
+                    var_s0->angle += arg0->unk010;
+                    if (arg0->unk008 > 0) {
+                        var_s0->velocity.x += 2.0;
+                        if (var_s0->velocity.x > 20.0f) {
+                            var_s0->velocity.x = 20.0f;
+                        }
+                    } else {
+                        var_s0->velocity.x -= 2.0;
+                        if (var_s0->velocity.x < -20.0f) {
+                            var_s0->velocity.x = -20.0f;
+                        }
+                    }
+                    break;
+            }
+
+            var_s0->scale += 2.0;
+            if (arg0->unk018 < var_s0->scale) {
+                var_s0->scale = arg0->unk018;
+            }
+        } else {
+            var_s0->previous_scale = var_s0->scale;
+            var_s0->unk0C = var_s0->angle;
+            var_s0->previous_position = var_s0->position;
+            var_s0->previous_velocity = var_s0->velocity;
+
+            var_s0->position = var_s0[-1].previous_position;
+            var_s0->angle = var_s0[-1].unk0C;
+            var_s0->velocity = var_s0[-1].previous_velocity;
+            var_s0->scale = var_s0[-1].previous_scale;
+        }
+    }
+}
 
 extern u32 func_841094EC(void);
 extern s16 D_841A4DB0;
-extern void func_841665D4(TrailPoolRecord *);
 s32 TrailEffectPool_IsComplete(void) {
     s32 i;
     TrailPoolRecord *stream;
@@ -188,6 +265,96 @@ extern void func_8007D454(void *, f32, f32, f32);
 // active record's head sample, then a 20-vertex strip from its 10 samples. Same body as Pokemon
 // Stadium 1 Trail50Effect_Draw (src/fragments/battle_engine/battle_engine_354CD0.c there),
 // which draws 50 records with a fixed, wrapping texture.
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3D59C0/func_84166A64.s")
+Gfx *func_84166A64(Gfx *arg0, s32 arg1) {
+    s32 i;
+    s32 j;
+    s32 k;
+    TrailPoolSample *temp_s0;
+    TrailPoolRecord *var_s5;
+    Vtx *var_s0;
+    AnchorTrailVec3f sp184;
+    UNUSED s32 pad[15]; // FAKE: unused stack space (also in Stadium 1); sets the frame layout.
+    Mtx *temp_v0;
+    Mtx sp100;
+    Mtx spC0;
+    f32 temp_fs1;
+    s16 var_s3;
+    f32 tmp;
+
+    gDPLoadTextureBlock(arg0++, D_8418CA20[arg1], G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                        G_TX_NOMIRROR | G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+
+    var_s5 = &D_8419F070[0];
+    for (i = 0; i < 26; i++, var_s5++) {
+        if (var_s5->active == 1) {
+            temp_s0 = &var_s5->samples[0];
+            tmp = var_s5->unk014;
+            if (temp_s0->position.y > 0.0f) {
+                temp_fs1 = (temp_s0->angle * 360.0f) / 6.2831854820251465;
+                temp_v0 = Gfx_AllocDisplayList(sizeof(Mtx) * 1);
+                guTranslate(temp_v0, temp_s0->position.x, temp_s0->position.y, temp_s0->position.z);
+                func_8007D454(&sp100, 90.0f, temp_fs1, temp_fs1);
+                guMtxCatL(&sp100, temp_v0, temp_v0);
+                guScale(&spC0, tmp, tmp, tmp);
+                guMtxCatL(&spC0, temp_v0, temp_v0);
+
+                gSPMatrix(arg0++, temp_v0, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPDisplayList(arg0++, D_84187CC0);
+                gSPPopMatrix(arg0++, G_MTX_MODELVIEW);
+            }
+
+            var_s5->vertices = Gfx_AllocDisplayList(sizeof(Vtx) * 20);
+
+            var_s0 = var_s5->vertices;
+            for (j = 0; j < 10; j++) {
+                func_8416654C(temp_s0->angle, &sp184.x, temp_s0->scale * tmp);
+
+                var_s3 = temp_s0->position.y + sp184.y;
+                if (var_s3 < 0) {
+                    var_s3 = 0;
+                }
+
+                var_s0->v.ob[0] = temp_s0->position.x + sp184.x;
+                var_s0->v.ob[1] = var_s3;
+                var_s0->v.ob[2] = temp_s0->position.z + sp184.z;
+                var_s0->v.cn[0] = var_s5->color[0];
+                var_s0->v.cn[1] = var_s5->color[1];
+                var_s0->v.cn[2] = var_s5->color[2];
+                var_s0->v.cn[3] = temp_s0->alpha;
+                var_s0++;
+
+                func_8416654C(temp_s0->angle + 3.1415927f, &sp184.x, temp_s0->scale * tmp);
+
+                var_s3 = temp_s0->position.y + sp184.y;
+                if (var_s3 < 0) {
+                    var_s3 = 0;
+                }
+
+                var_s0->v.ob[0] = temp_s0->position.x + sp184.x;
+                var_s0->v.ob[1] = var_s3;
+                var_s0->v.ob[2] = temp_s0->position.z + sp184.z;
+                var_s0->v.cn[0] = var_s5->color[0];
+                var_s0->v.cn[1] = var_s5->color[1];
+                var_s0->v.cn[2] = var_s5->color[2];
+                var_s0->v.cn[3] = temp_s0->alpha;
+                var_s0++;
+
+                temp_s0++;
+            }
+
+            var_s0 = var_s5->vertices;
+
+            gSPDisplayList(arg0++, D_84187C30);
+
+            for (k = 0; k < 9; k++) {
+                gSPVertex(arg0++, var_s0, 4, 0);
+                gSP2Triangles(arg0++, 0, 2, 1, 0, 2, 3, 1, 0);
+                var_s0 += 2;
+            }
+        }
+    }
+
+    return arg0;
+}
 
 #endif

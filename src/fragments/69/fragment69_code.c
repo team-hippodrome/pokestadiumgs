@@ -765,5 +765,38 @@ void func_8F1036F4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F1037C4.s")
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern u8 D_8F104D20[];
+s32 func_8F1037C4(s32 arg0, s32 arg1) {
+    s32 sp34;
+    u8 *var_s1;
+    s32 var_s0;
+
+    main_pool_push_state(0x4D444C56); // 'MDLV'
+    Gfx_InitDisplayListBuffers(0x10000, 0);
+    sp34 = func_800082E0(0, 1, 3, 1, 2, 1);
+    func_8004C09C(11);
+    func_8004C8C0(51);
+    func_8004C8C0(50);
+    var_s1 = D_8F104D20;
+    var_s0 = 1;
+    do {
+        func_8004D878(var_s1, var_s0, 0);
+        var_s0++;
+        var_s1 += 0xC80;
+    } while (var_s0 != 280);
+    func_80047588(63, 0);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    func_8F100E78();
+    func_80008514(sp34);
+    func_8F1036F4();
+    func_80008574();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4D444C56); // 'MDLV'
+    return 0;
+}
 #endif

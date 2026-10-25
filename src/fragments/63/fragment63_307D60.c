@@ -120,7 +120,27 @@ void func_87E05128(void) {
     func_8004C8C0(426);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E05148.s")
+extern u8 D_87E19970[];
+void func_87E05148(void *arg0) {
+    s32 state;
+    s32 unk;
+    s32 i;
+    s32 temp;
+    u8 *record;
+
+    state = MainPool_AllocState(main_pool_get_available(), 0);
+    *(s32 *)((u8 *)arg0 + 0x26C) = func_80040E80(state, &D_87E19970);
+    MainPool_FinalizeAllocation(state);
+    unk = func_87F08E7C(100, 26, 0, 2, 0xF000000);
+    record = (u8 *)arg0 + 0x1C;
+    // FAKE: the store of temp into the previous record sits in the loop's
+    // increment expression instead of the body.
+    for (i = 0; i != 4; i++, record += 0x94, *(s32 *)(record - 0x90) = temp) {
+        *(s32 *)(record + 0) = i;
+        *(s32 *)(record + 8) = unk;
+        temp = func_800071A4(0, 2, 100, 26, 0);
+    }
+}
 
 extern void func_8005493C(void *);
 extern void func_87E05128(void);

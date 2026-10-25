@@ -46,7 +46,17 @@ u8 *func_84154B64(u8 arg0) {
     return D_8419E780 + arg0 * 0xCC + 8;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154B9C.s")
+s32 func_84154B9C(u8 arg0, u16 arg1) {
+    s32 i = 0;
+    u8 *record = D_841951F8[arg0];
+
+    for (; i < record[8]; i++) {
+        if ((*(u16 *)(record + i * 0x58 + 0x3E) != 0) && (*(u8 *)(record + i * 0x58 + 0x3C) & arg1)) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 
 extern u8 *D_84195208[];

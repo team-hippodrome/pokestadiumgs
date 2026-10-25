@@ -163,7 +163,17 @@ s32 func_88B04ADC(u16 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04BB4.s")
+extern u8 D_88B069CE[];
+u32 func_88B04BB4(void) {
+    u32 count;
+    u8 *ptr;
+    s32 i;
+
+    count = 0;
+    // FAKE: the loops must share one source line; split over lines (same tokens), IDO schedules them differently
+    do { i = 0; ptr = D_88B069CE; do { if (*ptr != 0) { count = (count + 1) & 0xFF; } i++; ptr++; } while (i != 36); } while (0);
+    return count;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04C38.s")
 
