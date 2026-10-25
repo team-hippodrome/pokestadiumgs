@@ -47,7 +47,7 @@ typedef struct {
     u8 unknown04[2]; u8 pan; u8 unknown07; u8 value08; u8 policy;
     u16 unknown0A; u16 unknown0C; u16 unknown0E; u16 unknown10;
     u16 unknown12; u16 unknown14; u16 unknown16; u16 unknown18;
-    s16 delay; s16 gate; s16 transposition; u8 unknown20[2]; u16 unknown22;
+    s16 delay; s16 gate; s16 unknown1E; u8 unknown20[2]; s16 transposition;
     u8 unknown24[4]; AudioLayerAllocateAdsr adsr; u8 portamento; u8 unknown31[11];
     void *note; f32 frequency; f32 frequency_multiplier; f32 velocity;
     u8 unknown4C[12]; void *instrument; u8 unknown5C[4]; AudioLayerAllocateChannel *channel;
@@ -83,10 +83,10 @@ s32 AudioChannel_AllocateLayer(AudioLayerAllocateChannel *channel, s32 index) {
     layer->duration = 0x80;
     layer->value08 = 0x80;
     layer->pan = 0x40;
-    layer->unknown22 = 0;
+    layer->transposition = 0;
     layer->delay = 0;
     layer->gate = 0;
-    layer->transposition = 0;
+    layer->unknown1E = 0;
     layer->note = NULL;
     layer->instrument = NULL;
     layer->instrument_id = 0xFF;
