@@ -171,7 +171,41 @@ s32 *func_8001A4C0(s32 arg0, s32 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001A5B4.s")
+extern u8 *D_8011EA68;
+extern s32 func_80014190(s32);
+s32 ResourceCatalog_SetEntry(s32 kind, s32 catalog_id, s32 index, void *value) {
+    typedef struct {
+        u32 word0, word1;
+    } ResourcePair;
+    typedef struct {
+        u8 resource_count, primary_count, pool_a, pool_b;
+        u16 secondary_count, unknown_06;
+        void **resources;
+        void **primary;
+        ResourcePair *secondary;
+    } ResourceCatalog;
+    ResourceCatalog *catalog;
+    if (catalog_id == 0xFF) { return -1; }
+    if (func_80014190(catalog_id) == 0) { return -2; }
+    switch (kind) {
+    case 0:
+        catalog = &((ResourceCatalog *)D_8011EA68)[catalog_id];
+        if (index >= catalog->primary_count) { return -3; }
+        catalog->primary[index] = value;
+        break;
+    case 1:
+        catalog = &((ResourceCatalog *)D_8011EA68)[catalog_id];
+        if (index >= catalog->secondary_count) { return -3; }
+        catalog->secondary[index] = *(ResourcePair *)value;
+        break;
+    default:
+        catalog = &((ResourceCatalog *)D_8011EA68)[catalog_id];
+        if (index >= catalog->resource_count) { return -3; }
+        catalog->resources[index] = value;
+        break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001A6F8.s")
 
@@ -201,7 +235,23 @@ void func_8001A9E4(void *arg0) {
     *(u32 *)((u8 *)arg0 + 0x3C) = (u32)arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AA34.s")
+extern u8 D_80121F04[];
+extern void func_8001CB1C(void *, void *);
+void ResourcePool_InitLists(void) {
+    typedef struct PoolRecord { struct PoolRecord *next; struct PoolRecord *prev; u32 self; u8 unknown_0C[0xF4]; } PoolRecord;
+    u32 index;
+    PoolRecord *records;
+    u32 node_address;
+    func_8001A9E4(D_80121F04);
+    for (index = 0; index < *(u32 *)(D_8011BE90 + 0x2C28); index++) {
+        records = *(PoolRecord **)(D_8011BE90 + 0x3468);
+        records[index].self = (u32)&records[index];
+        (*(PoolRecord **)(D_8011BE90 + 0x3468))[index].next = NULL;
+        node_address = (index * 0x100);
+        node_address += *(u32 *)(D_8011BE90 + 0x3468);
+        func_8001CB1C(D_80121F04, (void *)node_address);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AAD8.s")
 
@@ -266,7 +316,18 @@ void func_8001AFAC(void *arg0, s32 arg1) {
     (*(s32 *)((u8 *)(arg0) + (0x48))) = arg1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AFE0.s")
+extern f32 D_8011EA88;
+void AudioVoice_SetPendingRequest(void *voice, void *request) {
+    typedef struct {
+        u16 high : 3;
+        u16 pending : 1;
+        u16 low : 12;
+    } PendingFlags;
+    *(void **)((u8 *)voice + 0x48) = request;
+    *((u8 *)voice + 0x30) = (*(u8 **)((u8 *)request + 0x60))[5];
+    *(f32 *)((u8 *)voice + 0x6C) = D_8011EA88;
+    ((PendingFlags *)((u8 *)voice + 0x60))->pending = 1;
+}
 
 s32 func_8001B00C(s32 *arg0, s32 arg1) {
     s32 v = func_8001CB5C(arg0);
@@ -277,13 +338,13 @@ s32 func_8001B00C(s32 *arg0, s32 arg1) {
     return v;
 }
 
-extern void func_8001AFE0(void *, void *);
+extern void AudioVoice_SetPendingRequest(void *, void *);
 extern void func_8001CB1C(void *, void *);
 void *func_8001B058(void *arg0, void *arg1) {
     void *result = func_8001ADE0((ListNode1A360 *)((u8 *)arg0 + 0x10),
         *(u8 *)((u8 *)(*(void **)((u8 *)arg1 + 0x60)) + 5));
     if (result != NULL) {
-        func_8001AFE0(result, arg1);
+        AudioVoice_SetPendingRequest(result, arg1);
         func_8001CB1C((u8 *)arg0 + 0x20, result);
     }
     return result;
