@@ -113,10 +113,43 @@ s32 func_8001BA84(u8 *arg0) {
     return (*(s16 **)(arg0 + 8))[index];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001BABC.s")
+f32 AudioVibrato_Update(void *arg0) {
+    typedef struct { u16 rateStart; u16 extentStart; u16 rateTarget; u16 extentTarget; u16 rateDelay; u16 extentDelay; u16 delay; } VibratoParams;
+    typedef struct { VibratoParams *params; u32 phase; s16 *curve; f32 extent; f32 rate; s8 active; u8 pad15; u16 rateTimer; u16 extentTimer; u16 delay; } VibratoState;
+    VibratoState *state = arg0;
+    VibratoParams *params;
+    s32 pitchChange;
+    f32 extent;
+    f32 result;
+    params = state->params;
+    if (state->delay != 0) {
+        state->delay--;
+        return 1.0f;
+    }
+    if (params != NULL) {
+        if (state->extentTimer) {
+            if (state->extentTimer == 1) { state->extent = (s32)params->extentTarget; }
+            else { state->extent += ((s32)params->extentTarget - state->extent) / (s32)state->extentTimer; }
+            state->extentTimer--;
+        } else if (params->extentTarget != (s32)state->extent) {
+            if ((state->extentTimer = params->extentDelay) == 0) { state->extent = (s32)params->extentTarget; }
+        }
+        if (state->rateTimer) {
+            if (state->rateTimer == 1) { state->rate = (s32)params->rateTarget; }
+            else { state->rate += ((s32)params->rateTarget - state->rate) / (s32)state->rateTimer; }
+            state->rateTimer--;
+        } else if (params->rateTarget != (s32)state->rate) {
+            if ((state->rateTimer = params->rateDelay) == 0) { state->rate = (s32)params->rateTarget; }
+        }
+    }
+    if (state->extent == 0.0f) { return 1.0f; }
+    pitchChange = func_8001BA84(arg0);
+    extent = state->extent / 4096.0f;
+    result = 65536.0f / (65536.0f + pitchChange * extent);
+    return result;
+}
 
 extern f32 func_8001BA28();
-extern f32 func_8001BABC();
 void func_8001BCA4(u8 *arg0) {
     u8 *state;
     state = arg0;
@@ -124,7 +157,7 @@ void func_8001BCA4(u8 *arg0) {
         *(f32 *)(state + 0x38) = func_8001BA28(state + 0x80);
     }
     if (state[0xA0] != 0) {
-        *(f32 *)(state + 0x3C) = func_8001BABC(state + 0x8C);
+        *(f32 *)(state + 0x3C) = AudioVibrato_Update(state + 0x8C);
     }
 }
 
