@@ -344,8 +344,8 @@ extern s32 func_80057BCC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern u8 D_80128570[];
 s32 func_80058DE4(s32 arg0)
 {
-    struct Local { u8 *p; } data;
-    volatile s64 padding;
+    struct Local { u8 *p; } data; // FAKE: the struct copy keeps the pointer in a stack slot that each use reloads
+    volatile s64 padding; // FAKE: pads the frame; never accessed
 
     data = *(struct Local *)(D_80128570 + arg0 * 112 + 0x60);
     GbSave_ComputeChecksum(data.p + 0x18, data.p + 0xFA3);
@@ -355,11 +355,33 @@ s32 func_80058DE4(s32 arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80058E60.s")
+s32 func_80058E60(s32 arg0) {
+    struct Local { u8 *p; } data; // FAKE: the struct copy keeps the pointer in a stack slot that each use reloads
+    s32 result;
+    volatile s64 padding; // FAKE: grows the frame from 0x28 to 0x30 bytes; never accessed
+
+    data = *(struct Local *)(D_80128570 + arg0 * 112 + 0x60);
+    GbSave_ComputeChecksumRange(data.p + 9, data.p + 0xD68, data.p + 0xD69);
+    *(u16 *)(data.p + 0xD69) ^= 0xFFFF;
+    result = func_80057BCC(arg0, (s32)(data.p + 0xD00), 0x2D00, 0x20);
+    result &= func_80057BCC(arg0, (s32)(data.p + 0xD00), 0x7F00, 0x20);
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80058F18.s")
+s32 func_80058F18(s32 arg0) {
+    struct Local { u8 *p; } data; // FAKE: the struct copy keeps the pointer in a stack slot that each use reloads
+    s32 result;
+    volatile s64 padding; // FAKE: pads the frame; never accessed
+
+    data = *(struct Local *)(D_80128570 + arg0 * 112 + 0x60);
+    GbSave_ComputeChecksumRange(data.p + 9, data.p + 0xB82, data.p + 0xD0D);
+    *(u16 *)(data.p + 0xD0D) ^= 0xFFFF;
+    result = func_80057BCC(arg0, (s32)(data.p + 0xD00), 0x2D00, 0x20);
+    result &= func_80057BCC(arg0, (s32)(data.p + 0xD00), 0x7F00, 0x20);
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

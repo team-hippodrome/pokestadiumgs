@@ -4491,7 +4491,36 @@ void func_84132E40(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132F34.s")
+void func_84132F34(void) {
+    s32 i;
+    u8 **record;
+
+    for (i = 0; i < 2; i++) {
+        record = &D_841951F8[i];
+        if ((*record)[0xB] & 8) {
+            (*record)[0xD]--;
+            if ((*record)[0xD] == 0) {
+                (*record)[0xB] &= ~8;
+                func_84136678(i, -1);
+                func_8004C54C(26, D_84195200[i] + 0x34);
+                func_84135B00(74);
+                func_84124594(i);
+                BattleRecord_AdvanceWriteSlot();
+            }
+        }
+        if ((*record)[0xB] & 0x10) {
+            (*record)[0xE]--;
+            if ((*record)[0xE] == 0) {
+                (*record)[0xB] &= ~0x10;
+                func_84136678(i, -1);
+                func_8004C54C(26, D_84195200[i] + 0x34);
+                func_84135B00(155);
+                func_84124594(i);
+                BattleRecord_AdvanceWriteSlot();
+            }
+        }
+    }
+}
 #endif
 
 void func_841330B4(void) {
