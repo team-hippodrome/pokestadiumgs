@@ -2,6 +2,10 @@
 
 
 #ifdef VERSION_US
+extern f32 D_8011EA88;
+extern f32 *D_8011F2EC;
+extern void func_8001ADB4(void *);
+extern void func_8001AD74(s32 *, s32 *);
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_80019760.s")
 
 void AudioNote_SetResamplingRate(u8 *note, f32 rate) {
@@ -183,15 +187,90 @@ s32 ResourceCatalog_SetEntry(s32 kind, s32 catalog_id, s32 index, void *value) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001A6F8.s")
+void AudioLayer_DecayRelease(void *request, s32 reason) {
+    typedef struct { u8 bit0:1; u8 bit1:1; u8 bit2:1; u8 usesHeadsetPanEffects:1; u8 stereoHeadsetEffects:2; u8 strongRight:1; u8 strongLeft:1; } SavedReverbBits;
+    typedef struct { u8 reserved:2; u8 decay:1; u8 release:1; u8 state:4; } NoteAdsrBits;
 
-extern void func_8001A6F8(void *arg0, s32 arg1);
+    typedef struct { u8 enabled:1; u8 needsInit:1; u8 finished:1; u8 tail:5; } ReleaseNoteFlags;
+    typedef struct { u32 reserved:2; u32 muted:1; u32 tail:29; } ReleaseSequenceFlags;
+    u8 *voice;
+    u8 *state;
+    u8 *metadata;
+    u8 pan;
+    u8 index;
+    if ((s32)request == -1) { return; }
+    ((u8 *)request)[0] &= ~8;
+    if (*(u8 **)((u8 *)request + 0x3C) == NULL) { return; }
+    voice = *(u8 **)((u8 *)request + 0x3C);
+    if (*(u8 **)(voice + 0x48) == request) {
+        *(s32 *)(voice + 0x48) = -1;
+    }
+    if (request != (*(u8 **)(voice + 0x44))) {
+        if ((s32)(*(u8 **)(voice + 0x44)) == -1 && *(s32 *)(voice + 0x48) == -1 &&
+            *(u8 **)(voice + 0x40) == request && reason != 6) {
+            *(f32 *)(voice + 0x6C) = D_8011EA88;
+            ((NoteAdsrBits *)(voice + 0x60))->release = 1;
+        }
+    } else {
+        state = voice + 0x4C;
+        if (((NoteAdsrBits *)(voice + 0x60))->state != 6) {
+            *(f32 *)(state + 8) = *(f32 *)((u8 *)request + 0x54);
+            *(f32 *)(state + 12) = *(f32 *)((u8 *)request + 0x50);
+            state[2] = ((u8 *)request)[7];
+            if (*(u8 **)((u8 *)request + 0x60) != NULL) {
+                metadata = *(u8 **)((u8 *)request + 0x60);
+                if ((s32)((*(u32 *)((u8 *)request + 8) << 18) >> 31) == 1) {
+                    state[0] = metadata[4];
+                } else {
+                    state[0] = ((u8 *)request)[9];
+                }
+                pan = ((u8 *)request)[8];
+                if (pan == 0x80) { state[3] = metadata[0x10]; }
+                else { state[3] = pan; }
+                state[1] = metadata[0xC];
+                *(u32 *)(state + 0x10) = *(u32 *)(metadata + 0xDC);
+                if (((ReleaseSequenceFlags *)(*(u8 **)(metadata + 0x50)))->muted && (metadata[3] & 8)) {
+                    ((ReleaseNoteFlags *)(voice + 0xD0))->finished = 1;
+                }
+                if (((u8 *)request)[1] == 0) { *(SavedReverbBits *)(state + 4) = *(SavedReverbBits *)(metadata + 0xE0); }
+                else { *(SavedReverbBits *)(state + 4) = *(SavedReverbBits *)((u8 *)request + 1); }
+                voice[0x30] = metadata[6];
+            } else {
+                *(SavedReverbBits *)(state + 4) = *(SavedReverbBits *)((u8 *)request + 1);
+                voice[0x30] = 1;
+            }
+            *(u8 **)(voice + 0x40) = *(u8 **)(voice + 0x44);
+            *(s32 *)(voice + 0x44) = -1;
+            if (reason == 7) {
+                *(f32 *)(voice + 0x6C) = D_8011EA88;
+                ((NoteAdsrBits *)(voice + 0x60))->release = 1;
+                voice[0x34] = 2;
+            } else {
+                voice[0x34] = 1;
+                ((NoteAdsrBits *)(voice + 0x60))->decay = 1;
+                index = ((u8 *)request)[0x28];
+                if (index == 0) {
+                    *(f32 *)(voice + 0x6C) = D_8011F2EC[(*(u8 **)((u8 *)request + 0x60))[0x88]];
+                } else {
+                    *(f32 *)(voice + 0x6C) = D_8011F2EC[index];
+                }
+                *(f32 *)(voice + 0x64) = *(f32 *)(voice + 0x70) *
+                    (f32)(s32)(*(u8 **)((u8 *)request + 0x60))[0x89] * 0.00390625f;
+            }
+        }
+        if (reason == 6) {
+            func_8001ADB4(voice);
+            func_8001AD74((s32 *)(*(u8 **)(voice + 0xC) + 0x10), (s32 *)voice);
+        }
+    }
+}
+
 void func_8001A994(void *arg0) {
-    func_8001A6F8(arg0, 6);
+    AudioLayer_DecayRelease(arg0, 6);
 }
 
 void func_8001A9B4(void *arg0) {
-    func_8001A6F8(arg0, 7);
+    AudioLayer_DecayRelease(arg0, 7);
 }
 
 void func_8001A9D4(u32 *arg0) {
@@ -232,7 +311,6 @@ void ResourcePool_InitLists(void) {
 extern u8 D_80121F14[];
 extern u8 D_80121F24[];
 extern u8 D_80121F34[];
-extern void func_8001ADB4(void *);
 // Returns all four note lists to their corresponding shared free lists.
 void AudioNotePool_Clear(void *arg0) {
     typedef struct PoolNode { struct PoolNode *prev; struct PoolNode *next; union { void *value; s32 count; } u; void *pool; } PoolNode;
@@ -373,7 +451,6 @@ void func_8001AFAC(void *arg0, s32 arg1) {
     (*(s32 *)((u8 *)(arg0) + (0x48))) = arg1;
 }
 
-extern f32 D_8011EA88;
 void AudioVoice_SetPendingRequest(void *voice, void *request) {
     typedef struct {
         u16 high : 3;

@@ -978,3 +978,5 @@ func_8001B6D0 = AudioChannel_Update;
 func_8001BABC = AudioVibrato_Update;
 
 func_8001BE44 = AudioAdsr_Update;
+
+func_8001A6F8 = AudioLayer_DecayRelease;
