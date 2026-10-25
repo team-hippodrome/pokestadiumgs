@@ -1011,3 +1011,5 @@ func_8001F8C0 = AudioSequence_AllocateChannels;
 func_86300FE4 = Fragment51_CloneScaledActor;
 
 func_863036FC = Fragment51_UpdateState;
+
+func_863024A8 = Fragment51_UpdateResults;

@@ -316,7 +316,51 @@ void func_86302404(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863024A8.s")
+typedef struct {
+    u8 unk_0000[0x8F2C];
+    s32 result_frame;
+} Fragment51ResultFrameContext;
+
+typedef struct {
+    u8 unk_00[60];
+    s32 score;
+    u8 unk_40[12];
+} Fragment51ResultRecord;
+extern u8 D_863072F8[];
+extern void func_87F0C930(void *);
+extern void func_87F0A098(void *, void *, s32, s32, s32, s32, s32);
+extern s32 func_87F0A3E8(void *);
+void Fragment51_UpdateResults(void) {
+    s32 top_score;
+    ((Fragment51ResultFrameContext *)D_863075D8)->result_frame = ((Fragment51ResultFrameContext *)D_863075D8)->result_frame + 1;
+    if (((Fragment51ResultFrameContext *)D_863075D8)->result_frame == 8) {
+        if (func_86300074(&top_score) < 4) {
+            if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180)) == 4) {
+                func_87F0C930((u8 *)D_863075D8 + 0x38);
+            } else {
+                func_87F0A098((u8 *)D_863075D8 + 0x7C, *(void **)((u8 *)D_863075D8 + 12), 4,
+                              top_score == ((Fragment51ResultRecord *)D_863072F8)[0].score,
+                              top_score == ((Fragment51ResultRecord *)D_863072F8)[1].score,
+                              top_score == ((Fragment51ResultRecord *)D_863072F8)[2].score,
+                              top_score == ((Fragment51ResultRecord *)D_863072F8)[3].score);
+            }
+        } else {
+            if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180)) == 4) {
+                func_87F0C930((u8 *)D_863075D8 + 0x38);
+            } else {
+                func_87F0A098((u8 *)D_863075D8 + 0x7C, *(void **)((u8 *)D_863075D8 + 12), 4, 0, 0, 0, 0);
+            }
+        }
+    }
+    if (func_87F0A3E8((u8 *)D_863075D8 + 0x7C) != 0) {
+        if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180)) == 1) {
+            func_86300020(2);
+        } else {
+            *(s32 *)D_863075D8 = 6;
+        }
+    }
+    func_86302404();
+}
 #endif
 
 #ifdef VERSION_US
@@ -470,7 +514,7 @@ extern void func_87C037C0(void *, void *);
 extern u32 func_87F00930(void);
 extern void *func_87F006BC(void);
 extern s32 func_87F02104(void);
-extern void func_863024A8(void);
+extern void Fragment51_UpdateResults(void);
 extern void func_87F0D5B8(void *);
 extern s32 func_87F0C6F4(void *);
 void Fragment51_UpdateState(void) {
@@ -510,7 +554,7 @@ void Fragment51_UpdateState(void) {
         }
         break;
     case 5:
-        func_863024A8();
+        Fragment51_UpdateResults();
         break;
     case 6:
         (*(s32 *)((u8 *)D_863075D8 + 0x8F54)) = 2;
