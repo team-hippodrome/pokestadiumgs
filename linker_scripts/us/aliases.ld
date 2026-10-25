@@ -982,3 +982,9 @@ func_8001BE44 = AudioAdsr_Update;
 func_8001A6F8 = AudioLayer_DecayRelease;
 
 func_80019760 = AudioNote_UpdateSynthesisParameters;
+
+func_8001C97C = AudioChannel_StartScript;
+
+func_8001DEB0 = AudioChannel_ResolveInstrument;
+
+func_8001DF24 = AudioChannel_SetProgram;

@@ -2,6 +2,8 @@
 
 
 #ifdef VERSION_US
+extern void func_8001C744(void *, s32);
+extern s32 func_8001A308(s32, s32);
 extern u8 D_8008FB90[];
 extern u8 func_8001CC3C(u8 **);
 extern s16 func_8001CC50(u8 **);
@@ -124,7 +126,20 @@ void func_8001C8FC(void *arg0, s32 arg1)
   while (i != 0x40);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C97C.s")
+void AudioChannel_StartScript(u8 *player, u8 index, u8 *script) {
+    typedef struct { u8 enabled:1; u8 finished:1; u8 low:6; } ChannelFlags;
+    u8 *channel;
+    s32 i;
+    channel = ((u8 **)(player + 0x38))[index];
+    channel[0x84] = 0;
+    *(u8 **)(channel + 0x6C) = script;
+    ((ChannelFlags *)channel)->enabled = 1;
+    ((ChannelFlags *)channel)->finished = 0;
+    *(s16 *)(channel + 0x22) = 0;
+    for (i = 0; i != 6; i++) {
+        if (*(u8 **)(channel + 0x54 + i * 4) != NULL) { func_8001C744(channel, i); }
+    }
+}
 
 extern void func_8001CA3C(void);
 void func_8001CA14(u8 *arg0) {
@@ -213,9 +228,35 @@ void func_8001DE58(u8 *arg0, u8 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001DEB0.s")
+u8 AudioChannel_ResolveInstrument(u8 *channel, u8 program, u8 **out_instrument, u8 *adsr) {
+    u8 *instrument;
+    instrument = (u8 *)func_8001A308(channel[7], program);
+    if (instrument == NULL) { *out_instrument = NULL; return 0; }
+    *(u32 *)(adsr + 4) = *(u32 *)(instrument + 4);
+    adsr[0] = instrument[3];
+    *out_instrument = instrument;
+    program += 2;
+    return program;
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001DF24.s")
+void AudioChannel_SetProgram(u8 *channel, u8 program) {
+    typedef struct { u8 high:4; u8 has_instrument:1; u8 low:3; } ChannelFlags;
+    if (program >= 0x80) {
+        *(s16 *)(channel + 0x28) = program;
+        *(u32 *)(channel + 0x4C) = 0;
+    } else if (program == 0x7F) {
+        *(s16 *)(channel + 0x28) = 0;
+        *(u32 *)(channel + 0x4C) = 1;
+    } else if (program == 0x7E) {
+        *(s16 *)(channel + 0x28) = 1;
+        *(u32 *)(channel + 0x4C) = 2;
+    } else {
+        if ((*(s16 *)(channel + 0x28) = AudioChannel_ResolveInstrument(channel, program, (u8 **)(channel + 0x4C), channel + 0x88)) == 0) { ((ChannelFlags *)channel)->has_instrument = 0; goto done; }
+    }
+    ((ChannelFlags *)channel)->has_instrument = 1;
+done:
+    return;
+}
 
 void func_8001DFD0(void *arg0, u8 arg1) {
     s32 value = arg1;
