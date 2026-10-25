@@ -417,7 +417,29 @@ void func_800519AC(u8 *arg0, u8 *arg1) {
     _bcopy(arg0, temp_a3 + 0x34, 0x14);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051A8C.s")
+extern s32 D_800972C0;
+s32 func_80051A8C(u32 arg0, s32 arg1, s16 arg2) {
+    u8 *entry = NULL;
+
+    switch (arg0) {
+        case 16: entry = (u8 *)func_80050E88(0, D_800972C0, arg1); break;
+        case 17: entry = (u8 *)func_80050F60(0, arg1); break;
+        case 18: entry = (u8 *)func_80051028(0, arg1); break;
+        case 19: entry = (u8 *)func_800510CC(0); break;
+        case 20: entry = (u8 *)func_80051138(0); break;
+        case 21: entry = (u8 *)func_800511A4(0); break;
+        case 22: entry = (u8 *)func_80051208(0); break;
+        case 23: entry = (u8 *)func_80051274(0); break;
+        case 24: entry = (u8 *)func_800512E0(0); break;
+        case 25: entry = (u8 *)func_8005134C(0); break;
+        case 26: entry = (u8 *)func_800513B8(0); break;
+        case 27: entry = (u8 *)func_80051424(0); break;
+        case 28: entry = (u8 *)func_80051490(0); break;
+        case 29: entry = (u8 *)func_800514FC(0); break;
+        case 30: entry = (u8 *)func_80051568(0); break;
+    }
+    return (entry != NULL) ? ((*entry & arg2) != 0) : 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051BF0.s")
 
@@ -720,7 +742,37 @@ u8 func_8005370C(s32 arg0, s32 arg1) {
     }
     return var_v1;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80053808.s")
+void func_80053808(s32 arg0, s32 arg1, s32 arg2) {
+    if (arg2 < func_80053230(arg0)) {
+        switch (arg0) {
+            case 16:
+                ((s8 *)func_80050E88(0, D_800972C0, arg1))[1] = arg2;
+                break;
+            case 17:
+                ((s8 *)func_80050F60(0, arg1))[1] = arg2;
+                break;
+            case 18:
+                ((s8 *)func_80051028(0, arg1))[1] = arg2;
+                break;
+            case 22:
+                ((s8 *)func_80051208(0))[1] = arg2;
+                break;
+            case 24:
+                ((s8 *)func_800512E0(0))[1] = arg2;
+                break;
+            case 25:
+                ((s8 *)func_8005134C(0))[1] = arg2;
+                break;
+            case 26:
+                ((s8 *)func_800513B8(0))[1] = arg2;
+                break;
+            case 27:
+                ((s8 *)func_80051424(0))[1] = arg2;
+                break;
+        }
+        func_80051BF0(arg0, (u8 *)arg1, 2);
+    }
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32

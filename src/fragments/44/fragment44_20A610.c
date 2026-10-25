@@ -127,7 +127,41 @@ void func_8AF1C66C(u8 *arg0, s32 arg1, s32 arg2) {
     *(s32 *)(arg0 + 0x2C) = arg2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20A610/func_8AF1C678.s")
+extern s16 D_8AF37754;
+extern u8 *D_8AF37758;
+extern u8 *D_8AF3775C;
+extern u8 *D_8AF37760;
+extern s16 D_8AF3779E;
+void func_8AF1C678(void) {
+    s16 pos[2]; // FAKE: two scalars in an array for their stack slots; as separate locals the function does not match (fd 22)
+
+    *(u16 *)(D_8AF37758 + 2) &= ~2;
+    *(u16 *)(D_8AF3775C + 2) &= ~2;
+    *(u16 *)(D_8AF37760 + 2) &= ~2;
+    func_8AF1C66C(D_8AF37778, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF1C66C(D_8AF3777C, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF1C66C(D_8AF37780, 0xC3A05AFF, 0xE1C38CFF);
+    if (D_8AF3779E == 0) {
+        switch (D_8AF37754) {
+            case 0:
+                pos[1] = *(s16 *)(D_8AF37758 + 8);
+                pos[0] = *(s16 *)(D_8AF37758 + 0xA);
+                func_8AF1C66C(D_8AF37778, 0xFFFF00FF, 0xFFFF00FF);
+                break;
+            case 2:
+                pos[1] = *(s16 *)(D_8AF3775C + 8);
+                pos[0] = *(s16 *)(D_8AF3775C + 0xA);
+                func_8AF1C66C(D_8AF3777C, 0xFFFF00FF, 0xFFFF00FF);
+                break;
+            case 1:
+                pos[1] = *(s16 *)(D_8AF37760 + 8);
+                pos[0] = *(s16 *)(D_8AF37760 + 0xA);
+                func_8AF1C66C(D_8AF37780, 0xFFFF00FF, 0xFFFF00FF);
+                break;
+        }
+        func_8AF01020(pos[1], pos[0]);
+    }
+}
 
 extern s16 D_8AF37754;
 extern s16 D_8AF37798;

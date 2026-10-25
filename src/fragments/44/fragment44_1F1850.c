@@ -309,7 +309,20 @@ void func_8AF04894(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04A14.s")
+typedef struct { s32 unk_0; } unk_D_8AF2BFB4;
+extern unk_D_8AF2BFB4 D_8AF2BFB4;
+extern unk_D_8AF2BFB4 D_8AF2BFB8;
+s32 func_8AF04A14(s32 arg0, u8 *arg1) {
+    switch (arg0) {
+        case 0:
+            *(unk_D_8AF2BFB4 *)(arg1 + 0x3C) = D_8AF2BFB4;
+            *(unk_D_8AF2BFB4 *)(arg1 + 0x40) = D_8AF2BFB8;
+            break;
+        case 1: // karodo: empty arm; without it the switch compiles as an if
+            break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04A54.s")
 

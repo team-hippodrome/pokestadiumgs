@@ -74,7 +74,24 @@ extern void fragment3_main(void *);
 extern void func_81A005F0(void *);
 void func_87F0EECC(void) { fragment3_main(&D_87F15BB0); func_81A005F0(&D_87F15BB0); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0EEFC.s")
+void func_87F0EEFC(void *arg0, s32 arg1) {
+    u8 *base;
+    u8 *ptr;
+    s32 i;
+    s32 index;
+
+    base = (u8 *)arg0 + arg1 * 0x6C0;
+    *((u8 *)arg0 + (u32)arg1 * 0x6C0 + 0x6B8) &= 0xFF7F; // FAKE: recomputes base; 0xFF7F on a byte clears bit 7
+    index = arg1 & -1 & -1 & -1; // FAKE: arithmetic no-op that keeps arg1 in another register
+    i = 0x6A8; // FAKE: the offset goes through the loop counter
+    func_8005D9E0(arg1, base + i);
+    base = (u8 *)arg0 + index * 0x6C0;
+    ptr = base + 0x30;
+    for (i = 0; i < 18; i++) {
+        func_87F0E978(ptr, i);
+        ptr += 0x5C;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0EFA0.s")
 

@@ -682,7 +682,45 @@ u8 MoveSelection_ChooseFourth_fragment81(u8 *mon) {
     return chosen;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/81/fragment81_code/func_843016CC.s")
+u8 func_843016CC(u8 *arg0) {
+    u8 species;
+    u8 move_type;
+    u8 item;
+    u8 roll;
+
+    species = arg0[0];
+    move_type = arg0[2];
+    do {
+        roll = func_8003570C() & 0xFF;
+        if (roll >= 243) {
+            item = HeldItem_ForSpecies_fragment81(species);
+            if (item == 0) {
+                item = func_8430009C();
+            }
+        } else if (roll >= 205) {
+            item = func_8430009C();
+        } else if (roll >= 116) {
+            switch (func_80062D20(move_type)) {
+                case 40:
+                case 41:
+                case 87:
+                case 88:
+                case 89:
+                case 91:
+                case 144:
+                    item = func_843001CC();
+                    break;
+                default:
+                    item = func_80062D98(move_type);
+                    item = HeldItem_ForMoveType_fragment81(item);
+                    break;
+            }
+        } else {
+            item = func_843001CC();
+        }
+    } while (func_843007BC(species, item) != 0);
+    return item;
+}
 
 extern s32 D_84302C8C;
 extern s32 func_8006443C(u8, u8, u8);

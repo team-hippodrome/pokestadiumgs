@@ -1634,7 +1634,115 @@ f32 BattleAnim_SampleTerrainHeightAndSlope(f32 x, f32 z, f32 *slope) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C60B0/func_8415A364.s")
+typedef struct {
+    /* 0x00 */ f32 posX;
+    /* 0x04 */ f32 rotation;
+    /* 0x08 */ f32 RentalSlotAnimData_PosePhase;
+    /* 0x0C */ f32 unk_0C;
+    /* 0x10 */ s16 unk_10;
+} WaterHeightNode;
+typedef struct {
+    /* 0x0000 */ f32 waveScale;
+    /* 0x0004 */ s16 counter;
+    /* 0x0006 */ u8 unk_06[0x2];
+    /* 0x0008 */ s16 limit;
+    /* 0x000A */ u8 unk_0A[0x1006];
+    /* 0x1010 */ WaterHeightNode nodes[16][16];
+} WaterHeightMap;
+extern f32 __sinf(f32);
+extern f32 D_8418C5F8;
+extern f64 D_8418C600;
+extern f64 D_8418C608;
+extern f64 D_8418C610;
+extern f32 D_8418C618;
+
+s32 func_8415A364(void) {
+    s32 i;
+    s32 j;
+    WaterHeightNode *ptr;
+    f32 var_fv0;
+    s32 temp_v0;
+    WaterHeightMap *map;
+    f32 tmp;
+
+    ((WaterHeightMap *)D_84187330)->counter++;
+    if (((WaterHeightMap *)D_84187330)->limit < ((WaterHeightMap *)D_84187330)->counter) {
+        return -1;
+    }
+
+    if (((WaterHeightMap *)D_84187330)->counter < 60) {
+        ptr = &((WaterHeightMap *)D_84187330)->nodes[0][0];
+        for (j = 0; j < 16; j++) {
+            ptr->rotation += (30.0 * __sinf((((((WaterHeightMap *)D_84187330)->counter + j) % 15) * D_8418C5F8) / 15.0f)) + 10.0;
+            ptr++;
+        }
+        ((WaterHeightMap *)D_84187330)->waveScale += D_8418C600;
+    } else {
+        ptr = (WaterHeightNode *)(((u8 *)D_84187330) + 0x1038);
+        if (((((WaterHeightMap *)D_84187330)->counter - 60) % 90) < 70) {
+            for (j = 0; j < 13; j++) {
+                if (0) {} // karodo
+                if (ptr->rotation > 0.0) {
+                    ptr->rotation -= 40.0;
+                    if (ptr->rotation < 0.0) {
+                        ptr->rotation = 0.0f;
+                        if (j) {} // karodo
+                    }
+                }
+                ptr++;
+            }
+        } else {
+            ptr = (WaterHeightNode *)(((u8 *)D_84187330) + 0x1038);
+            for (j = 0; j < 13; j++) {
+                ptr->rotation += 30.0;
+                ptr++;
+            }
+        }
+        ((WaterHeightMap *)D_84187330)->waveScale += D_8418C608;
+        if (((WaterHeightMap *)D_84187330)->waveScale > D_8418C610) {
+            ((WaterHeightMap *)D_84187330)->waveScale = D_8418C618;
+        }
+    }
+
+    map = (WaterHeightMap *)D_84187330;
+    ptr = &map->nodes[0][0];
+    for (i = 0; i < 16; i++) {
+        for (j = 0; j < 16; j++) {
+            temp_v0 = 1;
+            tmp = ptr->rotation;
+            var_fv0 = 0.0f;
+            if (i > 0) {
+                temp_v0 = 2;
+                var_fv0 += ((WaterHeightMap *)D_84187330)->nodes[i - 1][j].rotation - tmp;
+            }
+            if ((!ptr) && (!ptr)) {} // FAKE: duplicated empty test; without it the function does not match (fd 455)
+            if (j > 0) {
+                var_fv0 += ((WaterHeightMap *)D_84187330)->nodes[i][j - 1].rotation - tmp;
+            }
+            if (j < 15) {
+                var_fv0 += ((WaterHeightMap *)D_84187330)->nodes[i][j + 1].rotation - tmp;
+            }
+            // FAKE: temp_v0 is never read; without these dead updates the function does not match (fd 2495)
+            temp_v0++;
+            temp_v0++;
+            if (temp_v0) {}
+            ptr->unk_0C = (var_fv0 * ((WaterHeightMap *)D_84187330)->waveScale) + tmp;
+            ptr++;
+        }
+    }
+
+    ptr = &((WaterHeightMap *)D_84187330)->nodes[0][0];
+    for (i = 0; i < 16; i++) {
+        for (j = 0; j < 16; j++, ptr++) {
+            ptr->rotation = ptr->unk_0C;
+            if (ptr->rotation < 0.0) {
+                ptr->rotation = 0.0f;
+            }
+        }
+    }
+
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

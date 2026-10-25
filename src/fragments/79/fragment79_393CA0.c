@@ -2949,7 +2949,39 @@ void BattleAnim_Table_84186004_000(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412EB10.s")
+extern s32 func_8412EA28(void);
+extern u8 *D_84195208[];
+extern void func_84134DD8(u8);
+extern void func_84134CBC(u8, u8);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_84135B00(u16);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84134E30(s32);
+extern void func_84124604(u8, u8);
+extern void func_84126C3C(u8);
+
+void func_8412EB10(void) {
+    if (func_8412EA28() != 0) {
+        D_84195208[D_841951BD][0xD] |= 0x80;
+        func_84134DD8(D_841951BF);
+        func_84134CBC(D_841951BC, 0);
+        BattleRecord_AdvanceWriteSlot();
+        func_84136218(D_841951BC, 6);
+        func_84136218(D_841951BD, 5);
+        func_84136678(D_841951BD, -1);
+        func_84135B00(122);
+        if (func_841360C0(D_841951BC, -2, 60, 6, 10) == 0) {
+            func_841360C0(D_841951BD, -2, 60, 5, 10);
+        }
+        func_84134E30(5);
+        func_84124604(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+        return;
+    }
+    func_84126C3C(D_841951BC);
+}
 #endif
 
 #ifdef VERSION_US
@@ -4459,7 +4491,36 @@ void func_84132E40(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132F34.s")
+void func_84132F34(void) {
+    s32 i;
+    u8 **record;
+
+    for (i = 0; i < 2; i++) {
+        record = &D_841951F8[i];
+        if ((*record)[0xB] & 8) {
+            (*record)[0xD]--;
+            if ((*record)[0xD] == 0) {
+                (*record)[0xB] &= ~8;
+                func_84136678(i, -1);
+                func_8004C54C(26, D_84195200[i] + 0x34);
+                func_84135B00(74);
+                func_84124594(i);
+                BattleRecord_AdvanceWriteSlot();
+            }
+        }
+        if ((*record)[0xB] & 0x10) {
+            (*record)[0xE]--;
+            if ((*record)[0xE] == 0) {
+                (*record)[0xB] &= ~0x10;
+                func_84136678(i, -1);
+                func_8004C54C(26, D_84195200[i] + 0x34);
+                func_84135B00(155);
+                func_84124594(i);
+                BattleRecord_AdvanceWriteSlot();
+            }
+        }
+    }
+}
 #endif
 
 void func_841330B4(void) {
@@ -6027,7 +6088,50 @@ void func_841397FC(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84139958.s")
+void func_84139958(u8 arg0, u8 arg1) {
+    switch (D_84195248[arg0 * 24 + 13]) {
+        case 2:
+        case 5:
+            func_84147228(7, arg0, 0, 11, 0);
+            func_84147228(8, arg0, 0, 11, 0);
+            func_84147228(7, arg0, 0, 4, 4);
+            func_84147228(8, arg0, 0, 4, 4);
+            break;
+        case 3:
+            func_84147228(9, arg0, 0, 11, 0);
+            func_84147228(9, arg0, 0, 4, 4);
+            func_84147228(19, arg0, 0, 11, 0);
+            break;
+        case 4:
+            func_84147228(10, arg0, 0, 11, 0);
+            func_84147228(10, arg0, 0, 4, 4);
+            break;
+        case 6:
+            if (((u8 *)D_841951F8[arg0])[2] == 1) {
+                if (((u8 *)D_841951F8[arg0])[8] >= 4) {
+                    func_84147228(12, arg0, 0, 11, 0);
+                } else {
+                    func_84147228(11, arg0, 0, 11, 0);
+                }
+            } else {
+                func_84147228(11, arg0, 0, 11, 0);
+                func_84147228(11, arg0, 1, 11, 0);
+            }
+            func_84147228(20, arg0, 0, 11, 0);
+            break;
+        case 7:
+            func_84147228(13, arg0, 0, 11, 0);
+            break;
+    }
+    func_84147228(4, arg0, 0, 13, 2);
+    func_84147228(5, arg0, 0, 13, 2);
+    func_84147228(6, arg0, 0, 13, 2);
+    func_84147228(4, arg0, 0, 4, 4);
+    func_84147228(5, arg0, 0, 4, 4);
+    func_84147228(6, arg0, 0, 4, 4);
+    func_800226C0(3);
+    D_84195248[arg0 * 24 + 13] = arg1;
+}
 #endif
 
 #ifdef VERSION_US

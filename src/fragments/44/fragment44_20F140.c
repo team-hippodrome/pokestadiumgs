@@ -133,7 +133,30 @@ s16 func_8AF21610(void) {
 }
 /* mkdraft:func_8AF21610 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF21864.s")
+void func_8AF21864(void) {
+    u8 *base;
+
+    base = D_8AF279B0;
+    if (func_8AC06800(&D_8AF39FE0, *(s16 *)(base + 0x38)) != 0) {
+        func_8AC05F00(&D_8AF39E00);
+    }
+    if (func_8AC06834(&D_8AF39FE0, *(s16 *)(base + 0x38)) != 0) {
+        func_8AC05F00(&D_8AF39E78);
+    }
+    if (D_8AF3A008 == 0) {
+        func_8004B314(*(s32 *)(base + 8), *(s32 *)(base + 0xC), 255, 195);
+    }
+    base = D_8AF279B0 + 0x52C;
+    if (func_8AC06800(&D_8AF39FF0, *(s16 *)(base + 0x38)) != 0) {
+        func_8AC05F00(&D_8AF39EF0);
+    }
+    if (func_8AC06834(&D_8AF39FF0, *(s16 *)(base + 0x38)) != 0) {
+        func_8AC05F00(&D_8AF39F68);
+    }
+    if (D_8AF3A008 == 1) {
+        func_8004B314(*(s32 *)(base + 8), *(s32 *)(base + 0xC), 255, 195);
+    }
+}
 
 /* mkdraft:func_8AF21960 begin */
 extern f32 D_80088E50[];

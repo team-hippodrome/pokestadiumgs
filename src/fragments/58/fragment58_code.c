@@ -65,7 +65,50 @@ void func_83400038(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_8340156C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83401904.s")
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800497E4(s32, s32, s32, s32);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800499EC(void);
+extern char D_83403F50[]; // "frame:%d"
+extern char D_83403F5C[]; // "cam posx:%0.1f"
+extern char D_83403F6C[]; // "cam posy:%0.1f"
+extern char D_83403F7C[]; // "cam posz:%0.1f"
+extern char D_83403F8C[]; // "cam latx:%0.1f"
+extern char D_83403F9C[]; // "cam laty:%0.1f"
+extern char D_83403FAC[]; // "cam latz:%0.1f"
+extern char D_83403FBC[]; // "cam fovy:%0.1f"
+extern s32 D_83404194;
+extern f32 D_834048C4;
+extern f32 D_834048C8;
+extern f32 D_834048CC;
+extern f32 D_834048D0;
+extern f32 D_834048D4;
+extern f32 D_834048D8;
+extern f32 D_834048DC;
+// Debug overlay: prints D_83404194 as the frame number and D_834048C4..DC as the
+// camera's eye x/y/z, look-at x/y/z and fovy, per the format strings above
+// (asm/us/data/fragments/58/fragment58_data.data.s).
+void func_83401904(void) {
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(20, 20, 0, D_83403F50, D_83404194);
+    func_800495F8(20, 30, 0, D_83403F5C, D_834048C4);
+    func_800495F8(20, 40, 0, D_83403F6C, D_834048C8);
+    func_800495F8(20, 50, 0, D_83403F7C, D_834048CC);
+    func_800495F8(20, 60, 0, D_83403F8C, D_834048D0);
+    func_800495F8(20, 70, 0, D_83403F9C, D_834048D4);
+    func_800495F8(20, 80, 0, D_83403FAC, D_834048D8);
+    func_800495F8(20, 90, 0, D_83403FBC, D_834048DC);
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83401AAC.s")
 

@@ -32,7 +32,14 @@ void func_87F0CA58(void) {
     *(s32 *)(D_87F15B90 + 0x10) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32F5F0/func_87F0CA68.s")
+extern u8 D_87F112B0[];
+void func_87F0CA68(s32 arg0, void *arg1, u8 *arg2) {
+    if (arg0 >= 100) {
+        arg0 %= 100;
+    }
+    func_8004D19C(arg1, arg2, func_8004C990(441, D_87F112B0[arg0 / 10]), 0, 0);
+    func_8004D19C((u8 *)arg1 + 10, arg2, func_8004C990(441, D_87F112B0[arg0 % 10]), 0, 0);
+}
 
 void func_87F0CB24(void) {
     *(s32 *)(D_87F15B90 + 0x14) = 1;

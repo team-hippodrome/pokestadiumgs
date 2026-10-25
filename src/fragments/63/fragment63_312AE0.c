@@ -322,7 +322,23 @@ void func_87E1097C(s32 *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E109FC.s")
+void func_87E109FC(s32 *arg0, s32 arg1) {
+    switch (arg1) {
+        case 149:
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x504C4D31, func_87E10094, (void *)0); // 'PLM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x50524D31, func_87E10094, (void *)1); // 'PRM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x504D4D31, func_87E10094, (void *)2); // 'PMM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x424C4D31, func_87E10154, (void *)0); // 'BLM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x42524D31, func_87E10154, (void *)1); // 'BRM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x424D4D31, func_87E10154, (void *)2); // 'BMM1'
+            break;
+        case 150:
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x4B4C4D31, func_87E10214, (void *)0); // 'KLM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x4B524D31, func_87E10214, (void *)1); // 'KRM1'
+            func_87F0AB08((TreeNode_80050428 *)*arg0, 0x4B4D4D31, func_87E10214, (void *)2); // 'KMM1'
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E10B30.s")
 
@@ -395,7 +411,19 @@ void func_87E11148(void *arg0, s32 arg1) {
     *(s32 *)((u8 *)arg0 + 4) = func_8004C990(0x1B8, D_87E1AA40[(u8)digit]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E11248.s")
+void func_87E11248(u8 *arg0) {
+    func_800476A0(arg0 + 0x22C, 9);
+    func_800476FC(arg0 + 0x22C, 9);
+    func_80047738(0, func_8004C990(356, D_87E1A5EC[0]), func_87E10F74, 0);
+    func_80047738(1, func_8004C990(357, D_87E1A684[0]), func_87E1102C, 0);
+    func_80047738(2, func_8004C990(357, D_87E1A6E8[0]), func_87E11088, 0);
+    func_80047738(3, func_8004C990(356, D_87E1A620[0]), func_87E10FD0, 0);
+    func_80047738(4, func_8004C990(369, 0), NULL, 0);
+    func_80047738(5, func_8004C990(437, 0), func_87E110E4, 0);
+    func_80047738(6, func_8004C990(440, 0), func_87E11148, 0);
+    func_80047738(7, func_8004C990(440, 1), func_87E11148, 1);
+    func_80047738(8, func_8004C990(440, 2), func_87E11148, 2);
+}
 
 s32 process_geo_layout(s32, s32 *);
 extern u8 D_87E1AA80;
