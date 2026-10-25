@@ -145,7 +145,7 @@ void func_8FC00AC4(void) {
     func_8FC009C4();
     func_800496A4(8, -1);
     func_8004989C(22);
-    // FAKE: the loops and their do-while(0) wrapper must stay on one source line; split over lines it does not match (fd 30)
+    // FAKE: the loops and their do-while(0) wrapper must stay on one source line; split over lines it does not match (diff score 30)
     do { func_8FC007E0(); var_s0 = &D_8FC0244C; var_s1 = D_8FC024DC; do { func_8FC0082C(var_s0); var_s0 += 0x10; } while (var_s0 != var_s1); } while (0);
     func_800499EC();
 }

@@ -24,13 +24,13 @@ extern u8 D_82A01990[];
 extern u8 D_82A01A0A[];
 s32 func_82A007A0(s32 arg0, u8 *arg1) {
     void *entry;
-    u8 unused[4]; // FAKE: never used; without it the function does not match (fd 34)
+    u8 unused[4]; // FAKE: never used; without it the function does not match (diff score 34)
     s32 idx;
-    s32 i; // FAKE: never used; without it the function does not match (fd 34)
+    s32 i; // FAKE: never used; without it the function does not match (diff score 34)
     u8 *p;
 
     idx = *(s32 *)(arg1 + 0x20);
-    if ((arg0 != 0) && (arg0 == 1)) { // FAKE: the arg0 != 0 test is redundant; without it the function does not match (fd 160)
+    if ((arg0 != 0) && (arg0 == 1)) { // FAKE: the arg0 != 0 test is redundant; without it the function does not match (diff score 160)
         p = D_82A01990;
         if (D_82A01A0A[idx * 4] != 0) {
             entry = p + idx * 4;

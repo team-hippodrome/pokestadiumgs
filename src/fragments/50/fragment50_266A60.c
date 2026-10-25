@@ -851,7 +851,7 @@ s32 func_86205308(s32 arg0, s32 arg1) {
     func_87F06EAC(154, (u8 *)D_8620E198 + 0x73C1C, *(s32 *)((u8 *)D_8620E198 + 0xF4));
     func_80047588(*(s32 *)((u8 *)D_8620E198 + 0x73C24) | 0x28, 0);
     Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
-    // FAKE: both assignments must share one source line; split over two lines fd 30
+    // FAKE: both assignments must share one source line; split over two lines diff score 30
     ptr = D_800CE060, end = D_800CE100;
     do {
         func_80006148(ptr);

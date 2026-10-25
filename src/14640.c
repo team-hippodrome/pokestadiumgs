@@ -567,7 +567,7 @@ void func_80016A24(u8 *arg0, s32 arg1) {
 }
 
 void func_80016AB4(BackgroundCopyRequest *arg0, s32 arg1) {
-    OSMesgQueue *queue[1]; // FAKE: a one-element array for the stack slot; as a plain local fd 8
+    OSMesgQueue *queue[1]; // FAKE: a one-element array for the stack slot; as a plain local diff score 8
 
     arg1 += 0xF;
     arg1 &= ~0xF;

@@ -4,7 +4,7 @@
 #ifdef VERSION_US
 extern u8 D_88B05BE0[];
 s32 func_88B04380(u8 arg0) {
-    // FAKE: the whole body must stay on one source line; split over lines (same tokens) it does not match (fd 60)
+    // FAKE: the whole body must stay on one source line; split over lines (same tokens) it does not match (diff score 60)
     struct unk_D_88B05BE0 { u16 pad; u16 value; }; struct unk_D_88B05BE0 *p = (struct unk_D_88B05BE0 *)D_88B05BE0; s32 result = 0; while (result < 34) { if (arg0 == p->value) break; result++; p++; } return result & 0xFF;
 }
 

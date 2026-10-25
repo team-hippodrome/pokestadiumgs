@@ -103,7 +103,7 @@ s16 func_8AF0C758(void) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C7C8.s")
 
 u8 func_8AF0C96C(u8 *arg0) {
-    volatile u8 pad; // FAKE: never accessed; without it the function does not match (fd 40)
+    volatile u8 pad; // FAKE: never accessed; without it the function does not match (diff score 40)
     u8 values[4];
     u8 minimum;
     u32 index;

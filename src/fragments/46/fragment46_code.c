@@ -417,7 +417,7 @@ void func_8AE019A0(s16 arg0, s32 arg1) {
                 if (entry->value == 0) {
                     changed = 1;
                 }
-                // FAKE: the & 0xFF (on a byte) and the ^ 0 are no-ops; without the & 0xFF fd 65, without the ^ 0 fd 225
+                // FAKE: the & 0xFF (on a byte) and the ^ 0 are no-ops; without the & 0xFF diff score 65, without the ^ 0 diff score 225
                 entry->value |= ((*(u8 *)arg1 & 0xFF) | 0xC000 | 0x10000) ^ 0;
             }
             arg1 += 5;
