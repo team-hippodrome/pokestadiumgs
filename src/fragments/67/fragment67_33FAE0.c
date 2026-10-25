@@ -2,7 +2,15 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82902FE0.s")
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+void func_82902FE0(f32 *arg0, f32 *arg1, s16 arg2) {
+    s32 index;
+
+    index = (u16)arg2 >> 4;
+    arg0[0] = arg1[0] * D_80088E50[index] + arg1[2] * D_80087E50[index];
+    arg0[2] = -arg1[0] * D_80087E50[index] + arg1[2] * D_80088E50[index];
+}
 #endif
 
 #ifdef VERSION_US
