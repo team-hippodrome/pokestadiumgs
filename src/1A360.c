@@ -2,11 +2,169 @@
 
 
 #ifdef VERSION_US
+extern void AudioNote_SetResamplingRate(u8 *, f32);
+extern s8 D_8011EABE;
+extern u16 D_8008F204[];
+extern f32 D_8008F308[];
+extern f32 D_8008F508[];
+extern f32 D_8008F708[];
 extern f32 D_8011EA88;
 extern f32 *D_8011F2EC;
 extern void func_8001ADB4(void *);
 extern void func_8001AD74(s32 *, s32 *);
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_80019760.s")
+void AudioNote_UpdateSynthesisParameters(u8 *note, void *arg1) {
+    typedef struct {
+        u8 high:2;
+        u8 effect_mode:2;
+        u8 strong_right:1;
+        u8 strong_left:1;
+        u8 unk_bit1:1;
+        u8 unk_bit0:1;
+    } ReverbData;
+    typedef struct {
+        u8 reverb;
+        u8 synthesis;
+        u8 pan;
+        u8 output_index;
+        ReverbData bits;
+        f32 frequency;
+        f32 velocity;
+        u32 unk_10;
+        void *filter;
+    } ReverbInfo;
+    typedef struct {
+        u8 enabled:1;
+        u8 needs_init:1;
+        u8 finished:1;
+        u8 env_init:1;
+        u8 strong_right:1;
+        u8 strong_left:1;
+        u8 unk_bit1:1;
+        u8 unk_bit0:1;
+        u8 mode:3;
+        u8 unk_01:2;
+        u8 synthetic:1;
+        u8 two_parts:1;
+        u8 headset_pan:1;
+        u8 synthesis;
+        u8 pan_right;
+        u8 pan_left;
+        u8 reverb;
+        u16 unk_06;
+        u16 volume_left;
+        u16 volume_right;
+        u16 rate;
+        u16 unk_0E;
+        void *samples;
+        void *filter;
+        u8 unk_18;
+        u8 output_index;
+        u8 tail[6];
+    } NoteSub;
+    s32 volume;
+    NoteSub *sub;
+    f32 volume_right_scale;
+    f32 volume_left_scale;
+    s32 strong_right;
+    s32 strong_left;
+    s32 small;
+    f32 velocity;
+    u8 pan;
+    u8 reverb;
+    ReverbData bits;
+    ReverbInfo *info = arg1;
+    s32 headset;
+    headset = note[0x35];
+
+    AudioNote_SetResamplingRate(note, info->frequency);
+    velocity = info->velocity;
+    pan = info->pan;
+    reverb = info->reverb;
+    bits = info->bits;
+    pan &= 0x7F;
+    sub = (NoteSub *)(note + 0xD0);
+    sub->strong_right = 0;
+    sub->strong_left = 0;
+    sub->unk_bit1 = bits.unk_bit1;
+    sub->unk_bit0 = bits.unk_bit0;
+    if (headset && D_8011EABE == 1) {
+        small = pan >> 1;
+        if (small >= 64) {
+            small = 63;
+        }
+        sub->pan_left = D_8008F204[small];
+        sub->pan_right = D_8008F204[63 - small];
+        sub->headset_pan = 1;
+        volume_left_scale = D_8008F308[pan];
+        volume_right_scale = D_8008F308[127 - pan];
+        switch (bits.effect_mode) {
+            case 0:
+                break;
+            case 1:
+            case 2:
+            case 3:
+                sub->strong_right = bits.strong_right;
+                sub->strong_left = bits.strong_left;
+                break;
+        }
+    } else if (headset && D_8011EABE == 0) {
+        sub->pan_right = 0;
+        sub->pan_left = 0;
+        sub->headset_pan = 0;
+        volume_left_scale = D_8008F508[pan];
+        volume_right_scale = D_8008F508[127 - pan];
+        strong_right = 0;
+        strong_left = 0;
+        if (pan < 0x20) {
+            strong_left = 1;
+        }
+        else if (pan > 0x60) {
+            strong_right = 1;
+        }
+        sub->strong_right = strong_right;
+        sub->strong_left = strong_left;
+        switch (bits.effect_mode) {
+            case 0:
+                break;
+            case 1:
+                sub->strong_right = bits.strong_right;
+                sub->strong_left = bits.strong_left;
+                break;
+            case 2:
+                sub->strong_right = bits.strong_right | strong_right;
+                sub->strong_left = bits.strong_left | strong_left;
+                break;
+            case 3:
+                sub->strong_right = bits.strong_right ^ strong_right;
+                sub->strong_left = bits.strong_left ^ strong_left;
+                break;
+        }
+    } else if (D_8011EABE == 3) {
+        sub->unk_bit1 = 0;
+        sub->unk_bit0 = 0;
+        volume_left_scale = 0.707f;
+        volume_right_scale = 0.707f;
+    } else {
+        sub->strong_right = bits.strong_right;
+        sub->strong_left = bits.strong_left;
+        volume_left_scale = D_8008F708[pan];
+        volume_right_scale = D_8008F708[127 - pan];
+    }
+    if (velocity < 0.0f) {
+        velocity = 0.0f;
+    }
+    if (velocity > 1.0f) {
+        velocity = 1.0f;
+    }
+    volume = (s32)(velocity * volume_left_scale * 4095.999f);
+    sub->volume_left = volume;
+    volume = (s32)(velocity * volume_right_scale * 4095.999f);
+    sub->volume_right = volume;
+    sub->synthesis = info->synthesis;
+    sub->filter = info->filter;
+    sub->reverb = reverb;
+    sub->output_index = info->output_index;
+}
 
 void AudioNote_SetResamplingRate(u8 *note, f32 rate) {
     typedef struct { u8 header; u8 high:6; u8 two_parts:1; u8 low:1; } RateSubFlags;
