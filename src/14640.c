@@ -661,7 +661,24 @@ void func_800185A8(s32 arg0, s32 arg1) { u8 *ptr = D_80121EDC[arg0]; if (arg1 ==
 
 void func_800185E8(s32 arg0, s32 arg1) { if (arg1 != 0) { u8 *ptr = D_80121EDC[arg0]; ptr[1] = 1; *(s16 *)(ptr + 0x14) = arg1; *(s16 *)(ptr + 0x12) = arg1; *(f32 *)(ptr + 0x1C) = 0.0f; *(f32 *)(ptr + 0x20) = 0.0f; } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018620.s")
+extern OSMesgQueue D_801221C0;
+extern OSMesgQueue D_801221D8;
+extern OSMesgQueue D_801221F0;
+extern OSMesg D_80122208[];
+extern OSMesg D_8012220C[];
+extern OSMesg D_80122210[];
+
+void func_80018620(void) {
+    D_8011BE90[0x6314] = 0;
+    D_8011BE90[0x6315] = 0;
+    D_8011BE90[0x6316] = 0;
+    *(OSMesgQueue **)(D_8011BE90 + 0x6328) = &D_801221C0;
+    *(OSMesgQueue **)(D_8011BE90 + 0x632C) = &D_801221D8;
+    *(OSMesgQueue **)(D_8011BE90 + 0x6324) = &D_801221F0;
+    osCreateMesgQueue(*(OSMesgQueue **)(D_8011BE90 + 0x6328), D_80122208, 1);
+    osCreateMesgQueue(*(OSMesgQueue **)(D_8011BE90 + 0x632C), D_80122210, 4);
+    osCreateMesgQueue(*(OSMesgQueue **)(D_8011BE90 + 0x6324), D_8012220C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800186B8.s")
 
