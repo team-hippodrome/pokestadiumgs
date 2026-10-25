@@ -15,7 +15,26 @@ void func_86300020(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86300074.s")
+typedef struct {
+    u8 unk_00[60];
+    s32 score;
+    u8 unk_40[12];
+} Fragment51ScoreRecord;
+extern u8 D_863072F8[];
+s32 Fragment51_CountTopScorers(s32 *top_score) {
+    s32 ties = 0;
+    s32 i;
+    *top_score = 0;
+    for (i = 0; i < 4; i++) {
+        if ((i == 0) || (*top_score < ((Fragment51ScoreRecord *)D_863072F8)[i].score)) {
+            *top_score = ((Fragment51ScoreRecord *)D_863072F8)[i].score;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (((Fragment51ScoreRecord *)D_863072F8)[i].score == *top_score) ties++;
+    }
+    return ties;
+}
 #endif
 
 #ifdef VERSION_US
@@ -54,11 +73,6 @@ void func_86300120(void) {
 #endif
 
 #ifdef VERSION_US
-typedef struct {
-    u8 unk_00[60];
-    s32 score;
-    u8 unk_40[12];
-} Fragment51ScoreRecord;
 extern void *D_87F119DC;
 extern u8 D_863072F8[];
 void Fragment51_UpdateScores(void) {
@@ -268,7 +282,7 @@ void *Fragment51_CloneScaledActor(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_86300074(s32 *);
+extern s32 Fragment51_CountTopScorers(s32 *);
 extern s32 ModelAnim_IsFinished();
 extern void ModelAnim_SetAnimation();
 extern void func_8003F3BC();
@@ -290,7 +304,7 @@ void func_86301250(void *arg0) {
 
     if ((*(s16 *)((u8 *)D_87F119DC + 0x64) == 0) ||
         ((*(s16 *)((u8 *)D_87F119DC + 0x64) == 1) && ModelAnim_IsFinished((void *)((u8 *)D_87F119DC + 0x24)))) {
-        if ((func_86300074(&value) < 4) && (value == ((s32 (*)[19])D_86307334)[*(s32 *)arg0][0])) {
+        if ((Fragment51_CountTopScorers(&value) < 4) && (value == ((s32 (*)[19])D_86307334)[*(s32 *)arg0][0])) {
             selection = D_86307460;
             animation = 3;
             speed = 0x40;
@@ -424,7 +438,7 @@ void Fragment51_UpdateResults(void) {
     s32 top_score;
     ((Fragment51ResultFrameContext *)D_863075D8)->result_frame = ((Fragment51ResultFrameContext *)D_863075D8)->result_frame + 1;
     if (((Fragment51ResultFrameContext *)D_863075D8)->result_frame == 8) {
-        if (func_86300074(&top_score) < 4) {
+        if (Fragment51_CountTopScorers(&top_score) < 4) {
             if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180)) == 4) {
                 func_87F0C930((u8 *)D_863075D8 + 0x38);
             } else {
