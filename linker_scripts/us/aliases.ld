@@ -1023,3 +1023,7 @@ func_86302F9C = Fragment51_DrawSceneFrame;
 func_863001BC = Fragment51_UpdateScores;
 
 func_86300074 = Fragment51_CountTopScorers;
+
+func_863010A8 = Fragment51_UpdatePlayerAnimations;
+
+func_863039DC = Fragment51_Run;

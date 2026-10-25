@@ -278,7 +278,43 @@ void *Fragment51_CloneScaledActor(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863010A8.s")
+typedef struct { u8 unk_00[224]; void *resources[4][2]; } Fragment51TransitionResources;
+extern u8 D_8630745E;
+extern u8 D_8630745F;
+extern u8 D_86307458;
+extern u8 D_86307459;
+extern s32 ModelAnim_IsFinished(void *);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern s32 func_8003F210(void *, s32);
+extern void * D_863075D8;
+extern void * D_87F119DC;
+void Fragment51_UpdatePlayerAnimations(void *arg0) {
+    switch (*(s16 *)((u8 *)D_87F119DC + 0x64)) {
+    case 0:
+        if (ModelAnim_IsFinished((u8 *)D_87F119DC + 0x24)) {
+            func_8003F1DC((u8 *)D_87F119DC + 0x24);
+            func_8003F114((u8 *)D_87F119DC + 0x24, 0, -1, ((Fragment51TransitionResources *)D_863075D8)->resources[*(s32 *)arg0][D_8630745E]);
+            func_8003F210((u8 *)D_87F119DC + 0x24, D_8630745F);
+            func_8003F114((u8 *)*(void **)((u8 *)arg0 + 0x40) + 0x24, 0, -1, *(void **)((u8 *)D_863075D8 + 0x120));
+            func_8003F210((u8 *)*(void **)((u8 *)arg0 + 0x40) + 0x24, 1);
+        }
+        break;
+    case 1:
+        if (ModelAnim_IsFinished((u8 *)D_87F119DC + 0x24)) {
+            func_8003F1DC((u8 *)D_87F119DC + 0x24);
+            func_8003F114((u8 *)D_87F119DC + 0x24, 0, -1, ((Fragment51TransitionResources *)D_863075D8)->resources[*(s32 *)arg0][D_86307458]);
+            func_8003F210((u8 *)D_87F119DC + 0x24, D_86307459);
+            ModelAnim_SetSpeed((u8 *)D_87F119DC + 0x24, 0x10000);
+            func_8003F210((u8 *)*(void **)((u8 *)arg0 + 0x40) + 0x24, 2);
+            ModelAnim_SetSpeed((u8 *)*(void **)((u8 *)arg0 + 0x40) + 0x24, 0x10000);
+        }
+        break;
+    default:
+        return;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -756,5 +792,80 @@ void func_86303974(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863039DC.s")
+typedef struct { u8 unk_00[40]; } Fragment51ControllerRecord;
+extern u8 D_863075E0[];
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern Fragment51ControllerRecord D_800CE060[];
+extern u8 D_800CE100[];
+extern s32 main_pool_push_state(s32);
+extern s32 main_pool_pop_state(s32);
+extern void func_80027EE0(u16);
+extern void Gfx_InitDisplayListBuffers(s32, s32);
+extern void Gfx_FreeDisplayListBuffers(void);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern s32 func_8004C09C(s32);
+extern s32 func_8004C8C0(u16);
+extern void func_87F09EBC(void *, void *);
+extern void func_87F06EAC(s32, void *, void *);
+extern void func_87F061D0(void);
+extern u8 *func_80047588(s32, s32);
+extern u8 *Asset_LoadToSegment(s32, u8 *, u8 *, s32);
+extern void func_80006148(u8 *);
+extern void func_80006158(void);
+extern void func_80008514(s32);
+extern void func_80008574(void);
+extern void func_80047610(void);
+extern void func_8004C398(void);
+extern s32 func_87F0F480(void *);
+extern void func_86303974(void);
+extern void * D_863075D8;
+s32 Fragment51_Run(s32 arg0, void *arg1) {
+    s32 display;
+    Fragment51ControllerRecord *controller;
+    Fragment51ControllerRecord *controllers_end;
+    main_pool_push_state(0x4D59524D);
+    D_863075D8 = D_863075E0;
+    *(void **)((u8 *)D_863075D8 + 12) = arg1;
+    if (*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2182) == 15) {
+        *(s8 *)((u8 *)D_863075D8 + 0x8FE0) = 1;
+    } else {
+        *(s8 *)((u8 *)D_863075D8 + 0x8FE0) = *(s8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2181);
+    }
+    if (*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180) == 4) func_80027EE0(0xFFF);
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    display = func_800082E0(0, 0, 2, 1, 2, 1);
+    func_8004C09C(291);
+    func_87F09EBC((u8 *)D_863075D8 + 0x7C, *(void **)((u8 *)D_863075D8 + 12));
+    func_87F06EAC(153, (u8 *)D_863075D8 + 0x44, *(void **)((u8 *)D_863075D8 + 12));
+    func_8004C8C0(260);
+    func_8004C8C0(147);
+    func_8004C8C0(307);
+    func_8004C8C0(151);
+    func_8004C8C0(434);
+    func_8004C8C0(415);
+    func_87F061D0();
+    func_80047588(*(s32 *)((u8 *)D_863075D8 + 0x4C) | 8, 0);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    controller = D_800CE060; controllers_end = (Fragment51ControllerRecord *)D_800CE100;
+    do {
+        func_80006148((u8 *)controller);
+        controller++;
+    } while (controller != controllers_end);
+    func_86301F0C();
+    func_80008514(display);
+    func_86303974();
+    func_80008574();
+    func_80006158();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4D59524D);
+    func_87F0F480(*(void **)((u8 *)D_863075D8 + 12));
+    func_80027EE0(0xFFE);
+    return *(s32 *)((u8 *)D_863075D8 + 0x8F58);
+}
+// Preserve the two alignment words after the fragment entrypoint.
+#pragma C_FUNCTION_PADDING(8)
 #endif
