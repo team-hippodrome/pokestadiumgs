@@ -253,12 +253,50 @@ void ResourcePool_InitLists(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AAD8.s")
-
 extern u8 D_80121F14[];
 extern u8 D_80121F24[];
 extern u8 D_80121F34[];
-extern void func_8001AAD8(void *);
+extern void func_8001ADB4(void *);
+// Returns all four note lists to their corresponding shared free lists.
+void AudioNotePool_Clear(void *arg0) {
+    typedef struct PoolNode { struct PoolNode *prev; struct PoolNode *next; union { void *value; s32 count; } u; void *pool; } PoolNode;
+    typedef struct PoolHeads { PoolNode disabled; PoolNode decaying; PoolNode releasing; PoolNode active; } PoolHeads;
+    s32 group;
+    PoolNode *source;
+    PoolNode *entry;
+    PoolNode *destination;
+    PoolHeads *pool;
+    pool = arg0;
+    for (group = 0; group != 4; group++) {
+        switch (group) {
+        case 0:
+            source = &pool->disabled;
+            destination = (PoolNode *)D_80121F04;
+            break;
+        case 1:
+            source = &pool->decaying;
+            destination = (PoolNode *)D_80121F14;
+            break;
+        case 2:
+            source = &pool->releasing;
+            destination = (PoolNode *)D_80121F24;
+            break;
+        case 3:
+            source = &pool->active;
+            destination = (PoolNode *)D_80121F34;
+            break;
+        }
+        for (;;) {
+            entry = source->next;
+            if (entry == source) { break; }
+            if (entry == NULL) { break; }
+            func_8001ADB4(entry);
+            func_8001CB1C(destination, entry);
+        }
+    }
+}
+
+extern void AudioNotePool_Clear(void *);
 extern s32 func_8001CB5C(void *);
 // Returns existing entries before acquiring up to count entries from four shared lists.
 void ResourcePool_AcquireEntries(u8 *pool, u32 count) {
@@ -267,7 +305,7 @@ void ResourcePool_AcquireEntries(u8 *pool, u32 count) {
     s32 entry;
     u8 *source;
     u8 *destination;
-    func_8001AAD8(pool);
+    AudioNotePool_Clear(pool);
     group = 0;
     total = 0;
     while (total < count) {
@@ -382,7 +420,6 @@ s32 func_8001B00C(s32 *arg0, s32 arg1) {
 }
 
 extern void AudioVoice_SetPendingRequest(void *, void *);
-extern void func_8001CB1C(void *, void *);
 void *func_8001B058(void *arg0, void *arg1) {
     void *result = func_8001ADE0((ListNode1A360 *)((u8 *)arg0 + 0x10),
         *(u8 *)((u8 *)(*(void **)((u8 *)arg1 + 0x60)) + 5));
