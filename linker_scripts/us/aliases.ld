@@ -968,3 +968,5 @@ func_8001B218 = AudioVoice_AcquireForRequest;
 func_8001AAD8 = AudioNotePool_Clear;
 
 func_80019C08 = AudioNote_SetResamplingRate;
+
+func_8001B8D0 = AudioSequence_Update;
