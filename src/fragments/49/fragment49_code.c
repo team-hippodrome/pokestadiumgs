@@ -132,7 +132,66 @@ void func_861007D8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86100874.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861008E8.s")
+extern void func_86100E20(void *, s32);
+void func_861008E8(void) {
+    struct ScoreContext {
+        u8 pad[0x708];
+        s32 flag0;
+        u8 gap0[392];
+        s32 flag1;
+        u8 gap1[392];
+        s32 flag2;
+        u8 gap2[392];
+        s32 flag3;
+    };
+    s32 value;
+    // FAKE: these unused words preserve the original stack frame size.
+    s32 unused0;
+    s32 unused1;
+
+    s32 i;
+    s32 highest;
+    s32 count;
+    u8 *start;
+    u8 *node;
+    u8 *record;
+
+    start = (u8 *)(u32)D_8610AD20 + 0x8DE0;
+    count = 0;
+    record = start;
+    for (i = 0; i < 4; i++) {
+        if (i == 0) {
+            highest = *(s32 *)(record + 4);
+        }
+        value = *(s32 *)(record + 4);
+        if (highest < value) {
+            highest = value;
+        }
+        record += 44;
+    }
+    node = (u8 *)(u32)D_8610AD20 + 0x6FC;
+    record = start;
+    i = 0;
+    do {
+        func_86100E20(node, 0x400000);
+        if (highest == *(s32 *)(record + 4)) {
+            count++;
+            *(s32 *)(node + 0xC) |= 0x100000;
+        } else {
+            *(s32 *)(node + 0xC) |= 0x800000;
+        }
+        i++;
+        record += 44;
+        node += 396;
+    } while (i != 4);
+    if (count == 4) {
+        ((struct ScoreContext *)(u32)D_8610AD20)->flag0 = ((struct ScoreContext *)(u32)D_8610AD20)->flag0 & 0xFFEFFFFF;
+        ((struct ScoreContext *)(u32)D_8610AD20)->flag1 = ((struct ScoreContext *)(u32)D_8610AD20)->flag1 & 0xFFEFFFFF;
+        ((struct ScoreContext *)(u32)D_8610AD20)->flag2 = ((struct ScoreContext *)(u32)D_8610AD20)->flag2 & 0xFFEFFFFF;
+        ((struct ScoreContext *)(u32)D_8610AD20)->flag3 = ((struct ScoreContext *)(u32)D_8610AD20)->flag3 & 0xFFEFFFFF;
+        func_861007D8();
+    }
+}
 
 extern void *func_87F0A3E8(void *);
 extern void func_86109394(void);
