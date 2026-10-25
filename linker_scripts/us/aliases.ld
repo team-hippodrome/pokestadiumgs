@@ -993,3 +993,5 @@ func_8001F6D4 = Audio_UpdateSequencesAndNotes;
 
 D_827032B0 = fragments_22_fragment22_14B090;
 D_827032B4 = fragments_22_fragment22_14B090 + 4;
+
+func_8001C6C8 = AudioLayer_Disable;
