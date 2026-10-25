@@ -455,7 +455,35 @@ s32 func_8FC01E28(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC01E9C.s")
+extern u16 D_8FC0C79E;
+extern u16 D_8FC0C7A0;
+void func_8FC01E9C(void) {
+    u8 *state = (u8 *)&D_8FC0244C + (D_8FC02832 << 4);
+
+    if (state[0] != 6) {
+        return;
+    }
+
+    if (D_8FC0C7A0 & 0x800) {
+        func_800226C0(19);
+        **(u8 **)(state + 0xC) += 1;
+    } else if (D_8FC0C7A0 & 0x400) {
+        func_800226C0(19);
+        **(u8 **)(state + 0xC) -= 1;
+    } else if (D_8FC0C7A0 & 0x200) {
+        func_800226C0(19);
+        **(u8 **)(state + 0xC) -= 10;
+    } else if (D_8FC0C7A0 & 0x100) {
+        func_800226C0(19);
+        **(u8 **)(state + 0xC) += 10;
+    }
+
+    if (D_8FC0C79E & 0xC000) {
+        func_800226C0(2);
+        func_8FC01288();
+        D_8FC02830 = 0;
+    }
+}
 #endif
 
 void func_8FC01FBC(void) {

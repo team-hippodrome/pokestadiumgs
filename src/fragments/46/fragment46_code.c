@@ -402,7 +402,31 @@ void func_8AE018C4(s16 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE019A0.s")
+void func_8AE019A0(s16 arg0, s32 arg1) {
+    s16 changed;
+    Fragment46LookupEntry *entry;
+
+    if (arg1 != 0) {
+        for (changed = 0;; changed = 0) {
+            arg1 = (s32)func_8AE00F84((u8 *)arg1, ((u8 *)&D_8AE0A15C)[1]);
+            if (arg1 == 0) {
+                break;
+            }
+            entry = func_8AE00E54(arg0);
+            if (entry != 0) {
+                if (entry->value == 0) {
+                    changed = 1;
+                }
+                // FAKE: the & 0xFF (on a byte) and the ^ 0 are no-ops; without the & 0xFF fd 65, without the ^ 0 fd 225
+                entry->value |= ((*(u8 *)arg1 & 0xFF) | 0xC000 | 0x10000) ^ 0;
+            }
+            arg1 += 5;
+            if (changed == 1) {
+                D_8AE08504++;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -413,5 +413,21 @@ extern u32 D_882347B4; extern u8 D_8823474D; void func_8821C2C8(s32 arg0) { if (
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C2F4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C39C.s")
+extern u8 D_88234780[];
+extern s32 D_882347B0;
+void func_8821C39C(void) {
+    typedef struct {
+        u32 words[8];
+    } unk_D_88234758;
+
+    if (D_882347B4 != 0) {
+        *(unk_D_88234758 *)&D_88234758 = *(unk_D_88234758 *)&D_88234780;
+        D_88234778 = *(s32 *)((u8 *)&D_88234780 + 0x20);
+        D_8823477C = *(s32 *)((u8 *)&D_88234780 + 0x24);
+        D_882347B0 = 1;
+        func_8821C0B0();
+        D_882347B0 = 0;
+        func_8821C2C8(0);
+    }
+}
 #endif
