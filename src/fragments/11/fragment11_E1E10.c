@@ -139,7 +139,13 @@ void func_8160A928(u8 *arg0, s32 arg1) {
     *(f32 *)(arg0 + 4) = 0.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A94C.s")
+void func_8160A94C(void* arg0) {
+    s32 var_v0;
+
+    for (var_v0 = 0; var_v0 < 6; var_v0++) {
+        *((u8*)arg0 + var_v0 * 3304 + 0x20) = 0;
+    }
+}
 
 extern void func_8160A94C(void *);
 extern volatile u8 D_8160C2E0;
