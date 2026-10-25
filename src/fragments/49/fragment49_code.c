@@ -778,7 +778,44 @@ u16 func_86102E8C(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86102FF0.s")
+extern f32 D_8610AB50;
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 ModelAnim_IsFinished(void *);
+void func_86102FF0(void) {
+    f32 speed;
+    f32 y;
+    f32 ratio;
+
+    ModelAnim_SetSpeed((u8 *)D_87F119DC + 36, 0x10000);
+    if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x01000000) {
+        ModelAnim_SetAnimation((u8 *)D_87F119DC + 36, 4);
+        if (ModelAnim_IsFinished((u8 *)D_87F119DC + 36)) {
+            *(s32 *)((u8 *)D_87F119DC + 12) &= 0xFEFFFFFF;
+            ModelAnim_SetAnimation((u8 *)D_87F119DC + 36, 1);
+        }
+    } else if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x80000000) {
+        speed = 1.0f;
+        if (*(s32 *)((u8 *)D_87F119DC + 28) >= 9) {
+            *(s32 *)((u8 *)D_87F119DC + 12) &= 0x7FFFFFFF;
+        }
+        if ((*(s32 *)((u8 *)D_87F119DC + 108) >> 16) == 0) {
+            func_861000B8(D_87F119DC, 3843);
+        }
+        y = *(f32 *)((u8 *)D_87F119DC + 20);
+        if (y > 0.0f) {
+            ratio = y / 15.0f;
+            speed += 2.0f * ratio;
+        }
+        ModelAnim_SetSpeed((u8 *)D_87F119DC + 36, (s32)(speed * D_8610AB50));
+    } else if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x40000000) {
+        ModelAnim_SetAnimation((u8 *)D_87F119DC + 36, 5);
+    } else {
+        ModelAnim_SetAnimation((u8 *)D_87F119DC + 36, 2);
+        if ((*(s32 *)((u8 *)D_87F119DC + 108) >> 16) == 0) {
+            func_861000B8(D_87F119DC, 3843);
+        }
+    }
+}
 
 extern void func_8610109C(void *, void *);
 void func_86103194(void) {
