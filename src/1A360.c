@@ -441,7 +441,60 @@ void *func_8001B1A8(void *arg0, void *arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001B218.s")
+void *AudioVoice_AcquireForRequest(u8 *request) {
+    typedef struct { u8 high:4; u8 requested:1; u8 middle:2; u8 active:1; } RequestFlags;
+    u8 *voice;
+    if (((*(u8 **)(request + 0x60))[2] & 1) && (voice = *(u8 **)(request + 0x3C)) != NULL &&
+        *(u8 **)(voice + 0x40) == request && *(s32 *)(voice + 0x48) == -1) {
+        AudioVoice_SetPendingRequest(voice, request);
+        func_8001ADB4(voice);
+        func_8001CB1C(*(u8 **)(voice + 12) + 32, voice);
+        return voice;
+    }
+    if (((*(u8 **)(request + 0x60))[2] & 2)) {
+        if ((voice = (u8 *)func_8001B00C((s32 *)(*(u8 **)(request + 0x60) + 0x90), (s32)request)) != NULL ||
+            (voice = func_8001B058((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B0B0((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B1A8((*(u8 **)(request + 0x60) + 0x90), request)) != NULL) {
+            return voice;
+        }
+    } else if (((*(u8 **)(request + 0x60))[2] & 4)) {
+        if ((voice = (u8 *)func_8001B00C((s32 *)(*(u8 **)(request + 0x60) + 0x90), (s32)request)) != NULL ||
+            (voice = (u8 *)func_8001B00C((s32 *)(*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), (s32)request)) != NULL ||
+            (voice = func_8001B058((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B058((*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), request)) != NULL ||
+            (voice = func_8001B0B0((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B0B0((*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), request)) != NULL ||
+            (voice = func_8001B1A8((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B1A8((*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), request)) != NULL) {
+            return voice;
+        }
+    } else if (((*(u8 **)(request + 0x60))[2] & 8)) {
+        if ((voice = (u8 *)func_8001B00C((s32 *)D_80121F04, (s32)request)) != NULL ||
+            (voice = func_8001B058(D_80121F04, request)) != NULL ||
+            (voice = func_8001B0B0(D_80121F04, request)) != NULL ||
+            (voice = func_8001B1A8(D_80121F04, request)) != NULL) {
+            return voice;
+        }
+    } else {
+        if ((voice = (u8 *)func_8001B00C((s32 *)(*(u8 **)(request + 0x60) + 0x90), (s32)request)) != NULL ||
+            (voice = (u8 *)func_8001B00C((s32 *)(*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), (s32)request)) != NULL ||
+            (voice = (u8 *)func_8001B00C((s32 *)D_80121F04, (s32)request)) != NULL ||
+            (voice = func_8001B058((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B058((*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), request)) != NULL ||
+            (voice = func_8001B058(D_80121F04, request)) != NULL ||
+            (voice = func_8001B0B0((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B0B0((*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), request)) != NULL ||
+            (voice = func_8001B0B0(D_80121F04, request)) != NULL ||
+            (voice = func_8001B1A8((*(u8 **)(request + 0x60) + 0x90), request)) != NULL ||
+            (voice = func_8001B1A8((*(u8 **)(*(u8 **)(request + 0x60) + 0x50) + 0x9C), request)) != NULL ||
+            (voice = func_8001B1A8(D_80121F04, request)) != NULL) {
+            return voice;
+        }
+    }
+    ((RequestFlags *)request)->requested = 1;
+    return NULL;
+}
 
 extern u8 D_8011EBF0[];
 extern Copy32_1A360 D_8008F1C4;
