@@ -192,7 +192,23 @@ void func_8270103C(Fragment22RowEntry *entry, s32 kind_value, s32 row_index) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_827010F0.s")
+void func_827010F0(void* arg0) {
+    static s32 D_827032B0 = 480;
+    static s32 D_827032B4 = 10;
+    Fragment22RowEntry* entry;
+
+    entry = arg0;
+    entry->counter++;
+    if (entry->counter < D_827032B4) {
+        entry->position.x = (-D_827032B0 * entry->counter) / D_827032B4 + entry->layout_position.x + D_827032B0;
+    } else {
+        entry->state = 2;
+        entry->position.x = entry->layout_position.x;
+    }
+}
+
+s32 D_827032B8 = 8;
+s32 D_827032BC = 5;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82701188.s")
 

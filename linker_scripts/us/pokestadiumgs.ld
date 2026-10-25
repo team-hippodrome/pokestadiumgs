@@ -1823,10 +1823,12 @@ SECTIONS
         build/asm/us/data/fragments/22/fragment22_header.o(.data);
         fragments_22_fragment22_14A2E0 = .;
         build/src/fragments/22/fragment22_14A2E0.o(.data);
-        fragments_22_fragment22_14B090 = .;
-        build/src/fragments/22/fragment22_14B090.o(.data);
         fragments_22_fragment22_data_data = .;
         build/asm/us/data/fragments/22/fragment22_data.data.o(.data);
+        fragments_22_fragment22_14B090 = .;
+        build/src/fragments/22/fragment22_14B090.o(.data);
+        fragments_22_fragment22_data_tail_data = .;
+        build/asm/us/data/fragments/22/fragment22_data_tail.data.o(.data);
         fragment22_DATA_END = .;
         fragment22_DATA_SIZE = ABSOLUTE(fragment22_DATA_END - fragment22_DATA_START);
         fragment22_RODATA_START = .;

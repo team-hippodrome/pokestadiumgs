@@ -990,3 +990,6 @@ func_8001DEB0 = AudioChannel_ResolveInstrument;
 func_8001DF24 = AudioChannel_SetProgram;
 
 func_8001F6D4 = Audio_UpdateSequencesAndNotes;
+
+D_827032B0 = fragments_22_fragment22_14B090;
+D_827032B4 = fragments_22_fragment22_14B090 + 4;
