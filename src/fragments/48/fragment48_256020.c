@@ -284,7 +284,16 @@ void *func_87C00A78(void *arg0, void *arg1, void *arg2) {
     return arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C00AE4.s")
+extern f64 func_87C00B58(u8*);
+void* func_87C00AE4(void* arg0, void* arg1) {
+    f64 scale = 1.0 / func_87C00B58(arg1);
+
+    *(f64*)((u8*)arg0 + 0) = *(f64*)((u8*)arg1 + 0) * scale;
+    *(f64*)((u8*)arg0 + 8) = *(f64*)((u8*)arg1 + 8) * scale;
+    *(f64*)((u8*)arg0 + 16) = *(f64*)((u8*)arg1 + 16) * scale;
+    *(f64*)((u8*)arg0 + 24) = *(f64*)((u8*)arg1 + 24) * scale;
+    return arg0;
+}
 
 f64 func_87C00B58(u8 *arg0) {
     f64 temp_fv1 = *(f64 *)(arg0 + 0);
@@ -302,9 +311,9 @@ void *func_87C00B94(void *arg0, void *arg1) {
     return arg0;
 }
 
-extern void func_87C00AE4(s32, s32); extern void *func_87C00B94(void *, void *);
+extern void* func_87C00AE4(void*, void*); extern void *func_87C00B94(void *, void *);
 void func_87C00BC8(void *arg0, void *arg1) {
-    func_87C00AE4((s32)(u32)arg0, (s32)(u32)func_87C00B94(arg0, arg1));
+    func_87C00AE4(arg0, func_87C00B94(arg0, arg1));
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C00BF4.s")

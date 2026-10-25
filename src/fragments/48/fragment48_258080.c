@@ -79,7 +79,7 @@ void func_87C02508(s32 arg0) {
     func_87C00144((void*)(arg0 + 136));
 }
 
-extern void func_87C00AE4(void *, void *);
+extern void* func_87C00AE4(void *, void *);
 extern void *func_87C004C4(void *, void *, void *);
 void func_87C02538(u8 *arg0) {
     f64 temp[3];
