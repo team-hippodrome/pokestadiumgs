@@ -15,23 +15,39 @@ void func_86300020(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
+typedef struct Fragment51PlayerActor Fragment51PlayerActor;
 typedef struct {
-    u8 unk_00[60];
+    s32 player_index;
+    f32 angle_degrees;
+    f32 slope;
+    f32 intercept;
+    f32 min_x;
+    f32 max_x;
+    u8 unk_18[8];
+    f32 spawn_x;
+    f32 spawn_y;
+    f32 position_x;
+    f32 position_y;
+    s32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
     s32 score;
-    u8 unk_40[12];
-} Fragment51ScoreRecord;
+    Fragment51PlayerActor *companion;
+    f32 companion_x;
+    f32 companion_y;
+} Fragment51PlayerRecord;
 extern u8 D_863072F8[];
 s32 Fragment51_CountTopScorers(s32 *top_score) {
     s32 ties = 0;
     s32 i;
     *top_score = 0;
     for (i = 0; i < 4; i++) {
-        if ((i == 0) || (*top_score < ((Fragment51ScoreRecord *)D_863072F8)[i].score)) {
-            *top_score = ((Fragment51ScoreRecord *)D_863072F8)[i].score;
+        if ((i == 0) || (*top_score < ((Fragment51PlayerRecord *)D_863072F8)[i].score)) {
+            *top_score = ((Fragment51PlayerRecord *)D_863072F8)[i].score;
         }
     }
     for (i = 0; i < 4; i++) {
-        if (((Fragment51ScoreRecord *)D_863072F8)[i].score == *top_score) ties++;
+        if (((Fragment51PlayerRecord *)D_863072F8)[i].score == *top_score) ties++;
     }
     return ties;
 }
@@ -80,7 +96,7 @@ void Fragment51_UpdateScores(void) {
     s32 player_index;
     s32 quadrant;
     s32 i;
-    Fragment51ScoreRecord *hit;
+    Fragment51PlayerRecord *hit;
     actor_state = *(u8 **)((u8 *)D_87F119DC + 0x20);
     player_index = *(s8 *)(actor_state + 0x20);
     if (*(f32 *)((u8 *)D_87F119DC + 0x48) <= 0.0f) {
@@ -93,27 +109,27 @@ void Fragment51_UpdateScores(void) {
     switch (*(u8 *)((u8 *)D_863075D8 + 0x8F50)) {
     case 0:
         for (i = 0; i < 4; i++) {
-            if (i != quadrant) ((Fragment51ScoreRecord *)D_863072F8)[i].score++;
+            if (i != quadrant) ((Fragment51PlayerRecord *)D_863072F8)[i].score++;
         }
         if ((player_index != -1) && (player_index != quadrant)) {
-            ((Fragment51ScoreRecord *)D_863072F8)[player_index].score++;
+            ((Fragment51PlayerRecord *)D_863072F8)[player_index].score++;
         }
         break;
     case 1:
-        hit = &((Fragment51ScoreRecord *)D_863072F8)[quadrant];
+        hit = &((Fragment51PlayerRecord *)D_863072F8)[quadrant];
         hit->score--;
         if (hit->score < 0) hit->score = 0;
         if (player_index != -1) {
-            ((Fragment51ScoreRecord *)D_863072F8)[player_index].score++;
+            ((Fragment51PlayerRecord *)D_863072F8)[player_index].score++;
         }
         break;
     case 2:
         if ((player_index != -1) && (player_index != quadrant)) {
-            hit = &((Fragment51ScoreRecord *)D_863072F8)[quadrant];
+            hit = &((Fragment51PlayerRecord *)D_863072F8)[quadrant];
             hit->score--;
-            ((Fragment51ScoreRecord *)D_863072F8)[player_index].score++;
+            ((Fragment51PlayerRecord *)D_863072F8)[player_index].score++;
         } else {
-            hit = &((Fragment51ScoreRecord *)D_863072F8)[quadrant];
+            hit = &((Fragment51PlayerRecord *)D_863072F8)[quadrant];
             hit->score--;
         }
         if (hit->score < 0) hit->score = 0;
@@ -330,17 +346,17 @@ typedef struct Func86301250ResourceRow { void *slots[2]; } Func86301250ResourceR
 typedef struct Func86301250ResourceRows { u8 pad[0xE0]; Func86301250ResourceRow rows[4]; } Func86301250ResourceRows;
 extern void * D_863075D8;
 extern void * D_87F119DC;
-void func_86301250(void *arg0) {
+void Fragment51_UpdateResultAnimations(void *arg0) {
     u8 *selection;
     s32 animation;
     s32 speed;
     s32 value;
-    s32 padding0;
-    s32 padding1;
+    s32 winner_count;
 
     if ((*(s16 *)((u8 *)D_87F119DC + 0x64) == 0) ||
         ((*(s16 *)((u8 *)D_87F119DC + 0x64) == 1) && ModelAnim_IsFinished((void *)((u8 *)D_87F119DC + 0x24)))) {
-        if ((Fragment51_CountTopScorers(&value) < 4) && (value == ((s32 (*)[19])D_86307334)[*(s32 *)arg0][0])) {
+        winner_count = Fragment51_CountTopScorers(&value);
+        if ((winner_count < 4) && (value == ((s32 (*)[19])D_86307334)[*(s32 *)arg0][0])) {
             selection = D_86307460;
             animation = 3;
             speed = 0x40;
@@ -391,18 +407,96 @@ void Fragment51_DrawTintedMaterial(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86301B3C.s")
+typedef struct { f32 x, y, z; } Fragment51PlayerVector;
+typedef struct {
+    u8 unk_00[2];
+    u8 flags;
+    u8 unk_03[27];
+    s16 rotation[3];
+    Fragment51PlayerVector position;
+    Fragment51PlayerVector scale;
+    u8 unk_3C[300];
+} Fragment51PlayerModel;
+struct Fragment51PlayerActor {
+    u8 unk_00[12];
+    u32 flags;
+    Fragment51PlayerVector unk_10;
+    u8 unk_1C[4];
+    Fragment51PlayerRecord *player;
+    Fragment51PlayerModel model;
+};
+typedef struct {
+    u8 unk_00[12];
+    void *game_context;
+    u8 unk_10[208];
+    void *resources[4][2];
+    u8 unk_100[0x8E24];
+    f32 offset_scale;
+} Fragment51PlayerSetupContext;
+extern u8 D_8630745C;
+extern u8 D_8630745D;
+extern void func_863013C8(void);
+extern void func_86300EF8(void *);
+extern void func_80037E3C(void *, s32 (*)(s32, void *), void *);
+extern void * Fragment51_CloneScaledActor(void *arg0);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern u32 func_8003570C();
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern s32 func_8003F210(void *, s32);
+extern void * func_87F025B8(void *, void (*)(void));
+extern void * D_863075D8;
+void Fragment51_InitPlayerActor(s32 player_index) {
+    Fragment51PlayerActor *actor;
+    Fragment51PlayerRecord *player;
+    f32 angle;
+    f32 width;
+    actor = func_87F025B8((u8 *)D_863075D8 + 0x12C, func_863013C8);
+    if (actor != NULL) {
+        player = actor->player;
+        func_8003F1DC(&actor->model);
+        func_8003F114((u8 *)&actor->model, 0, -1, ((Fragment51PlayerSetupContext *)D_863075D8)->resources[player_index][D_8630745C]);
+        func_8003F210(&actor->model, D_8630745D);
+        ModelAnim_SetSpeed((u8 *)&actor->model, 0x20000);
+        func_80037E3C(&actor->model, NULL, actor);
+        actor->model.position.x = -player->spawn_x * 220.0f;
+        actor->model.position.y = -player->spawn_y * 220.0f;
+        actor->model.position.z = 0.0f;
+        angle = (player->angle_degrees / 360.0f) * 65535.0f;
+        if (angle >= 0.0f) actor->model.rotation[2] = (s32)(angle + 0.5f);
+        else actor->model.rotation[2] = (s32)(angle - 0.5f);
+        actor->unk_10.x = actor->unk_10.y = actor->unk_10.z = 0.0f;
+        actor->model.flags |= 0x10;
+        actor->model.scale.x = actor->model.scale.y = actor->model.scale.z = 0.15f;
+        func_86300EF8(actor);
+        player->intercept = actor->model.position.y - player->slope * actor->model.position.x;
+        width = ((((Fragment51PlayerSetupContext *)D_863075D8)->offset_scale + ((Fragment51PlayerSetupContext *)D_863075D8)->offset_scale) * 0.7071067691f - 120.0f) * 0.7071067691f * 0.5f;
+        player->min_x = actor->model.position.x - width;
+        player->max_x = actor->model.position.x + width;
+        player->score = 0;
+        player->position_x = actor->model.position.x;
+        player->position_y = actor->model.position.y;
+        player->unk_38 = func_8003570C() / 4294967296.0f - 0.5f;
+        player->unk_34 = 0.5;
+        player->companion = Fragment51_CloneScaledActor(actor);
+        player->companion_x = player->companion->model.position.x;
+        player->companion_y = player->companion->model.position.y;
+        if (*(u8 *)((u8 *)((Fragment51PlayerSetupContext *)D_863075D8)->game_context + 0x2182) & (1 << player_index)) actor->flags |= 0x10000000;
+        else actor->flags |= 0x20000000;
+        actor->flags |= 0x80000000;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_86301B3C(s32);
+extern void Fragment51_InitPlayerActor(s32);
 
 void func_86301E14(void) {
     s32 var_s0;
 
     var_s0 = 0;
     do {
-        func_86301B3C(var_s0);
+        Fragment51_InitPlayerActor(var_s0);
         var_s0 += 1;
     } while (var_s0 != 4);
 }
@@ -479,10 +573,10 @@ void Fragment51_UpdateResults(void) {
                 func_87F0C930((u8 *)D_863075D8 + 0x38);
             } else {
                 func_87F0A098((u8 *)D_863075D8 + 0x7C, *(void **)((u8 *)D_863075D8 + 12), 4,
-                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[0].score,
-                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[1].score,
-                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[2].score,
-                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[3].score);
+                              top_score == ((Fragment51PlayerRecord *)D_863072F8)[0].score,
+                              top_score == ((Fragment51PlayerRecord *)D_863072F8)[1].score,
+                              top_score == ((Fragment51PlayerRecord *)D_863072F8)[2].score,
+                              top_score == ((Fragment51PlayerRecord *)D_863072F8)[3].score);
             }
         } else {
             if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180)) == 4) {
@@ -608,13 +702,63 @@ void func_86303110(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_8630328C.s")
+extern s32 func_80001FF0(void);
+extern void func_800279C4(u16);
+typedef struct {
+    s32 state;
+    u8 unk_0004[0x8F28];
+    s32 result_frame;
+    s32 remaining_frames;
+    u8 unk_8F34[20];
+    s32 score_limit;
+    u8 unk_8F4C[4];
+    u8 rule_mode;
+} Fragment51ProgressContext;
+extern u8 D_863072F8[];
+extern void * D_863075D8;
+void Fragment51_UpdateRoundProgress(void) {
+    Fragment51PlayerRecord *score_record;
+    s32 i;
+    s32 j;
+    s32 count;
+    score_record = (Fragment51PlayerRecord *)D_863072F8;
+    switch (((Fragment51ProgressContext *)D_863075D8)->rule_mode) {
+    case 0:
+        for (i = 0; i < 4; i++, score_record++) {
+            if (((Fragment51ProgressContext *)D_863075D8)->score_limit < score_record->score) {
+                ((Fragment51ProgressContext *)D_863075D8)->result_frame = 0;
+                ((Fragment51ProgressContext *)D_863075D8)->state = 5;
+            }
+        }
+        break;
+    case 1:
+    case 2:
+        ((Fragment51ProgressContext *)D_863075D8)->remaining_frames -= 1;
+        if (((Fragment51ProgressContext *)D_863075D8)->remaining_frames < 0) {
+            ((Fragment51ProgressContext *)D_863075D8)->remaining_frames = 0;
+            ((Fragment51ProgressContext *)D_863075D8)->result_frame = 0;
+            ((Fragment51ProgressContext *)D_863075D8)->state = 5;
+        }
+        for (j = 0; j < 4; j++, score_record++) {
+            if (score_record->score >= ((Fragment51ProgressContext *)D_863075D8)->score_limit) {
+                ((Fragment51ProgressContext *)D_863075D8)->result_frame = 0;
+                ((Fragment51ProgressContext *)D_863075D8)->state = 5;
+            }
+        }
+        if (((Fragment51ProgressContext *)D_863075D8)->remaining_frames % (func_80001FF0() >> 1) + 1 == (func_80001FF0() >> 1)) {
+            count = (((Fragment51ProgressContext *)D_863075D8)->remaining_frames + (func_80001FF0() >> 1) - 1) / (func_80001FF0() >> 1);
+            if (count == 0) func_800279C4(0xCF06);
+            else if (count < 4) func_800279C4(0xCF00);
+        }
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern void func_86302404();
 extern void func_863031A4();
-extern void func_8630328C();
+extern void Fragment51_UpdateRoundProgress();
 extern s32 D_863072E8;
 s32 func_80001FF0(void);
 void func_80028118(u8 arg0);
@@ -624,7 +768,7 @@ void func_8630352C(void) {
     }
     func_863031A4();
     func_86302404();
-    func_8630328C();
+    Fragment51_UpdateRoundProgress();
     if (D_863072E8 != 4) {
 loop_3:
         goto loop_3;
