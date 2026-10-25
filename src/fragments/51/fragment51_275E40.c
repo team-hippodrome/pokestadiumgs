@@ -54,7 +54,58 @@ void func_86300120(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863001BC.s")
+typedef struct {
+    u8 unk_00[60];
+    s32 score;
+    u8 unk_40[12];
+} Fragment51ScoreRecord;
+extern void *D_87F119DC;
+extern u8 D_863072F8[];
+void Fragment51_UpdateScores(void) {
+    u8 *actor_state;
+    s32 player_index;
+    s32 quadrant;
+    s32 i;
+    Fragment51ScoreRecord *hit;
+    actor_state = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    player_index = *(s8 *)(actor_state + 0x20);
+    if (*(f32 *)((u8 *)D_87F119DC + 0x48) <= 0.0f) {
+        if (*(f32 *)((u8 *)D_87F119DC + 0x4C) > 0.0f) quadrant = 0;
+        else quadrant = 2;
+    } else {
+        if (*(f32 *)((u8 *)D_87F119DC + 0x4C) > 0.0f) quadrant = 1;
+        else quadrant = 3;
+    }
+    switch (*(u8 *)((u8 *)D_863075D8 + 0x8F50)) {
+    case 0:
+        for (i = 0; i < 4; i++) {
+            if (i != quadrant) ((Fragment51ScoreRecord *)D_863072F8)[i].score++;
+        }
+        if ((player_index != -1) && (player_index != quadrant)) {
+            ((Fragment51ScoreRecord *)D_863072F8)[player_index].score++;
+        }
+        break;
+    case 1:
+        hit = &((Fragment51ScoreRecord *)D_863072F8)[quadrant];
+        hit->score--;
+        if (hit->score < 0) hit->score = 0;
+        if (player_index != -1) {
+            ((Fragment51ScoreRecord *)D_863072F8)[player_index].score++;
+        }
+        break;
+    case 2:
+        if ((player_index != -1) && (player_index != quadrant)) {
+            hit = &((Fragment51ScoreRecord *)D_863072F8)[quadrant];
+            hit->score--;
+            ((Fragment51ScoreRecord *)D_863072F8)[player_index].score++;
+        } else {
+            hit = &((Fragment51ScoreRecord *)D_863072F8)[quadrant];
+            hit->score--;
+        }
+        if (hit->score < 0) hit->score = 0;
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -365,11 +416,6 @@ typedef struct {
     s32 result_frame;
 } Fragment51ResultFrameContext;
 
-typedef struct {
-    u8 unk_00[60];
-    s32 score;
-    u8 unk_40[12];
-} Fragment51ResultRecord;
 extern u8 D_863072F8[];
 extern void func_87F0C930(void *);
 extern void func_87F0A098(void *, void *, s32, s32, s32, s32, s32);
@@ -383,10 +429,10 @@ void Fragment51_UpdateResults(void) {
                 func_87F0C930((u8 *)D_863075D8 + 0x38);
             } else {
                 func_87F0A098((u8 *)D_863075D8 + 0x7C, *(void **)((u8 *)D_863075D8 + 12), 4,
-                              top_score == ((Fragment51ResultRecord *)D_863072F8)[0].score,
-                              top_score == ((Fragment51ResultRecord *)D_863072F8)[1].score,
-                              top_score == ((Fragment51ResultRecord *)D_863072F8)[2].score,
-                              top_score == ((Fragment51ResultRecord *)D_863072F8)[3].score);
+                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[0].score,
+                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[1].score,
+                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[2].score,
+                              top_score == ((Fragment51ScoreRecord *)D_863072F8)[3].score);
             }
         } else {
             if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 12) + 0x2180)) == 4) {
