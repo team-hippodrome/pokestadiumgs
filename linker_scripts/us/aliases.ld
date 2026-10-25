@@ -962,3 +962,5 @@ func_8001AA34 = ResourcePool_InitLists;
 func_8001AC38 = ResourcePool_AcquireEntries;
 
 func_8001B59C = AudioVoicePool_Init;
+
+func_8001B218 = AudioVoice_AcquireForRequest;
