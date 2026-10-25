@@ -64,7 +64,45 @@ void func_88103CE0(void) {
     D_880068B8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_88103D30.s")
+typedef struct unk_func_88103D30 unk_func_88103D30;
+
+typedef struct {
+    unk_func_88103D30 *owner;
+    u8 index;
+    u8 unk_05[91];
+} unk_func_88103D30_entry;
+
+struct unk_func_88103D30 {
+    u8 unk_00[12];
+    s32 unk_0C;
+    unk_func_88103D30_entry **entries;
+    u8 unk_14;
+    u8 count;
+};
+
+typedef struct {
+    u8 unk_00[162];
+    u8 selected;
+    u8 unk_A3;
+    unk_func_88103D30_entry entries[2];
+    s32 unk_164;
+} unk_D_88104EA0;
+
+extern void func_800226C0(s32);
+void func_88103D30(unk_func_88103D30 *arg0) {
+    unk_func_88103D30_entry **entry;
+    unk_D_88104EA0 *state;
+
+    entry = &arg0->entries[arg0->count];
+    func_800226C0(333);
+    ((unk_D_88104EA0 *)D_88104EA0)->unk_164 = 1;
+    state = D_88104EA0;
+    *entry = &state->entries[state->selected];
+    (*entry)->owner = arg0;
+    (*entry)->index = arg0->count;
+    arg0->count++;
+    arg0->unk_0C = 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_88103DC8.s")
 
