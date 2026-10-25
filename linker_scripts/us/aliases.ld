@@ -972,3 +972,5 @@ func_80019C08 = AudioNote_SetResamplingRate;
 func_8001B8D0 = AudioSequence_Update;
 
 func_8001BD00 = AudioVibrato_Init;
+
+func_8001B6D0 = AudioChannel_Update;

@@ -2,10 +2,60 @@
 
 
 #ifdef VERSION_US
+extern u8 D_8008FC20[];
 extern s16 *D_8008E778;
 extern void func_8001CA3C(void *);
-extern void func_8001B6D0(void *, s32, s32);
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001B6D0.s")
+void AudioChannel_Update(void *arg0, s32 updateVolume, s32 updateFrequency) {
+    typedef struct { u8 frequency:1; u8 volume:1; u8 pan:1; u8 other:5; } ChannelUpdateFlags;
+    typedef struct { u32 reserved:9; u32 volumeChanged:1; u32 panChanged:1; u32 rest:21; } ChannelWordFlags;
+    typedef struct { u32 reserved:2; u32 muted:1; u32 rest:29; } SequenceWordFlags;
+    typedef struct { u32 reserved:17; u32 ignoreFrequency:1; u32 tail:14; } LayerFrequencyFlags;
+    typedef struct { u16 ignoreVolume:1; u16 tail:15; } LayerVolumeFlags;
+    typedef struct { u8 ignorePan:1; u8 tail:7; } LayerPanFlags;
+    s32 i;
+    u8 *layer;
+    u8 *updates;
+    f32 volume;
+    f32 frequency;
+
+    if (((ChannelWordFlags *)arg0)->volumeChanged || updateVolume) {
+        volume = *(f32 *)(*(u8 **)(((u8 *)arg0) + 0x50) + 0x30) * (*(f32 *)(((u8 *)arg0) + 0x2C) * *(f32 *)(((u8 *)arg0) + 0x30));
+        if (((SequenceWordFlags *)(*(u8 **)(((u8 *)arg0) + 0x50)))->muted && (((u8 *)arg0)[3] & 0x20)) {
+            volume = *(f32 *)(*(u8 **)(((u8 *)arg0) + 0x50) + 0x28) * volume;
+        }
+        *(f32 *)(((u8 *)arg0) + 0x38) = volume * volume;
+    }
+    if (((ChannelWordFlags *)arg0)->panChanged) { *(s32 *)(((u8 *)arg0) + 0x34) = ((u8 *)arg0)[0xB] * ((u8 *)arg0)[0xA]; }
+    frequency = *(f32 *)(((u8 *)arg0) + 0x3C);
+    if (updateFrequency) {
+        frequency *= *(f32 *)(*(u8 **)(((u8 *)arg0) + 0x50) + 0x34);
+        ((ChannelUpdateFlags *)((u8 *)arg0 + 1))->frequency = 1;
+    }
+
+    for (i = 0; i < 6; i++) {
+        layer = ((u8 **)(((u8 *)arg0) + 0x54))[i];
+        if (layer != NULL && (*(u32 *)layer >> 31) && *(u8 **)(layer + 0x3C) != NULL) {
+            updates = ((u8 *)arg0) + 1;
+            if (layer[0] & 1) {
+                updates = D_8008FC20;
+                layer[0] &= 0xFFFE;
+            }
+            if (((ChannelUpdateFlags *)updates)->frequency) {
+                if (((LayerFrequencyFlags *)(layer + 8))->ignoreFrequency == 0) { *(f32 *)(layer + 0x54) = *(f32 *)(layer + 0x40); }
+                else { *(f32 *)(layer + 0x54) = *(f32 *)(layer + 0x40) * frequency; }
+            }
+            if (((ChannelUpdateFlags *)updates)->volume || updateVolume) {
+                if (((LayerVolumeFlags *)(layer + 0xA))->ignoreVolume == 0) { *(f32 *)(layer + 0x50) = *(f32 *)(layer + 0x48); }
+                else { *(f32 *)(layer + 0x50) = *(f32 *)(((u8 *)arg0) + 0x38) * *(f32 *)(layer + 0x48); }
+            }
+            if (((ChannelUpdateFlags *)updates)->pan) {
+                if (((LayerPanFlags *)(layer + 0xB))->ignorePan == 0) { *(f32 *)(layer + 0x50) = (f32)(u32)layer[6]; }
+                else { layer[7] = (layer[6] * (128 - ((u8 *)arg0)[0xB]) + *(s32 *)(((u8 *)arg0) + 0x34)) >> 7; }
+            }
+        }
+    }
+    ((u8 *)arg0)[1] = 0;
+}
 
 void AudioSequence_Update(u8 *sequence) {
     typedef struct { u8 reserved:5; u8 recalculateVolume:1; u8 reserved1:1; u8 applyBend:1; } SequenceUpdates;
@@ -31,7 +81,7 @@ void AudioSequence_Update(u8 *sequence) {
     for (i = 0; i < 16; i++) {
         channel = ((u8 **)(sequence + 0x38))[i];
         if ((*(u32 *)channel >> 31) == 1) {
-            func_8001B6D0(channel, ((*(u32 *)sequence << 5) >> 31), (sequence[0] & 1));
+            AudioChannel_Update(channel, ((*(u32 *)sequence << 5) >> 31), (sequence[0] & 1));
         }
 
     }
