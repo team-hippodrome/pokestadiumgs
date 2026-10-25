@@ -133,7 +133,7 @@ extern u8 *D_8AF3775C;
 extern u8 *D_8AF37760;
 extern s16 D_8AF3779E;
 void func_8AF1C678(void) {
-    s16 pos[2];
+    s16 pos[2]; // FAKE: two scalars in an array for their stack slots; as separate locals the function does not match (fd 22)
 
     *(u16 *)(D_8AF37758 + 2) &= ~2;
     *(u16 *)(D_8AF3775C + 2) &= ~2;

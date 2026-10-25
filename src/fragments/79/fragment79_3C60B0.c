@@ -1715,16 +1715,17 @@ s32 func_8415A364(void) {
                 temp_v0 = 2;
                 var_fv0 += ((WaterHeightMap *)D_84187330)->nodes[i - 1][j].rotation - tmp;
             }
-            if ((!ptr) && (!ptr)) {} // karodo
+            if ((!ptr) && (!ptr)) {} // FAKE: duplicated empty test; without it the function does not match (fd 455)
             if (j > 0) {
                 var_fv0 += ((WaterHeightMap *)D_84187330)->nodes[i][j - 1].rotation - tmp;
             }
             if (j < 15) {
                 var_fv0 += ((WaterHeightMap *)D_84187330)->nodes[i][j + 1].rotation - tmp;
             }
-            temp_v0++; // karodo
-            temp_v0++; // karodo
-            if (temp_v0) {} // karodo
+            // FAKE: temp_v0 is never read; without these dead updates the function does not match (fd 2495)
+            temp_v0++;
+            temp_v0++;
+            if (temp_v0) {}
             ptr->unk_0C = (var_fv0 * ((WaterHeightMap *)D_84187330)->waveScale) + tmp;
             ptr++;
         }
