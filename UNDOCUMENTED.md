@@ -3,13 +3,13 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **58 / 7,664 (0.8%)**
-- Functions with a real name: **1,675 / 10,901 (15.4%)** (9,226 still `func_XXXXXXXX`)
+- Functions defined in `src/` with a `/* ... */` comment: **58 / 7,667 (0.8%)**
+- Functions with a real name: **1,677 / 10,901 (15.4%)** (9,224 still `func_XXXXXXXX`)
 - Variables with a real name: **248 / 4,678 (5.3%)** (4,430 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **930**
-- Functions with generic `arg0`, `arg1`, ... parameters: **4,720 / 7,664 (61.6%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **765 / 1,416**
-- Struct fields with a real name: **3,983 / 6,215 (64.1%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **4,720 / 7,667 (61.6%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **774 / 1,427**
+- Struct fields with a real name: **4,021 / 6,287 (64.0%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **6,689**
 <!-- AUTO_UNDOCUMENTED:END -->
 
@@ -104,8 +104,8 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/77/fragment77_code.c` | 25 | 25 | 74 | 40 | 0 | 3 | 0 |
 | `src/fragments/79/fragment79_3BC290.c` | 23 | 23 | 40 | 0 | 3 | 12 | 64 |
 | `src/fragments/79/fragment79_38D510.c` | 30 | 30 | 37 | 9 | 2 | 29 | 32 |
+| `src/1CDC0.c` | 27 | 27 | 39 | 10 | 3 | 16 | 43 |
 | `src/fragments/8/fragment8_code.c` | 19 | 19 | 63 | 8 | 1 | 19 | 27 |
-| `src/1CDC0.c` | 25 | 25 | 40 | 9 | 3 | 16 | 43 |
 | `src/fragments/29/fragment29_168330.c` | 25 | 25 | 39 | 10 | 2 | 6 | 53 |
 | `src/fragments/31/fragment31_17F280.c` | 24 | 24 | 69 | 22 | 0 | 3 | 17 |
 | `src/fragments/63/fragment63_303990.c` | 27 | 27 | 69 | 8 | 5 | 9 | 13 |
@@ -142,10 +142,10 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/58/fragment58_code.c` | 7 | 6 | 37 | 22 | 3 | 2 | 27 |
 | `src/fragments/63/fragment63_30F070.c` | 19 | 19 | 32 | 5 | 8 | 16 | 17 |
 | `src/fragments/76/fragment76_code.c` | 23 | 23 | 38 | 25 | 4 | 5 | 0 |
+| `src/fragments/31/fragment31_190BB0.c` | 15 | 15 | 46 | 11 | 1 | 4 | 16 |
 | `src/fragments/31/fragment31_1A03C0.c` | 16 | 16 | 34 | 16 | 0 | 1 | 26 |
 | `src/4EE50.c` | 16 | 16 | 22 | 7 | 1 | 8 | 38 |
 | `src/8470.c` | 29 | 29 | 17 | 12 | 2 | 5 | 27 |
-| `src/fragments/31/fragment31_190BB0.c` | 14 | 14 | 46 | 10 | 1 | 4 | 16 |
 | `src/fragments/67/fragment67_34C8B0.c` | 15 | 15 | 47 | 23 | 3 | 3 | 0 |
 | `src/fragments/17/fragment17_11B210.c` | 20 | 20 | 35 | 15 | 3 | 10 | 6 |
 | `src/fragments/32/fragment32_1B1330.c` | 14 | 14 | 50 | 21 | 0 | 4 | 0 |
@@ -464,6 +464,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `S1_DoubleTextureTrail` | `src/fragments/79/fragment79_3D4DA0.c` | 23 | 23 |
 | `S1_DoubleTextureTrail` | `src/fragments/79/fragment79_3D67F0.c` | 23 | 23 |
 | `S1_unk_D_843C3508` | `src/fragments/79/fragment79_3D7DD0.c` | 20 | 20 |
+| `AudioLayerAllocateRecord` | `src/1CDC0.c` | 36 | 17 |
 | `GbAudioStreamRecord` | `src/229E0.c` | 20 | 17 |
 | `S1_unk_D_86002F58_004_000` | `src/229E0.c` | 24 | 17 |
 | `S1_unk_D_86002F58_004_000` | `src/fragments/67/fragment67_33FAE0.c` | 24 | 17 |
@@ -498,4 +499,3 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `S1_unk_D_86002F34_alt24` | `src/229E0.c` | 9 | 9 |
 | `S1_unk_D_86002F58_004_000_000` | `src/229E0.c` | 9 | 9 |
 | `S1_unk_D_86002F58_004_000_000` | `src/fragments/67/fragment67_33FAE0.c` | 9 | 9 |
-| `SceneMaterialState` | `src/229E0.c` | 13 | 9 |
