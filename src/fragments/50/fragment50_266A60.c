@@ -839,7 +839,7 @@ s32 func_86205308(s32 arg0, s32 arg1) {
     D_8620E198 = D_8620E1A0;
     *(s32 *)((u8 *)D_8620E198 + 0xF4) = arg1;
     if (*(u8 *)((u8 *)*(s32 *)((u8 *)D_8620E198 + 0xF4) + 0x2180) == 4) {
-        func_80027EE0(0xFFF);
+        func_80027EE0(4095);
     }
     Gfx_InitDisplayListBuffers(0x20000, 0);
     var_v0 = func_800082E0(0, 0, 2, 1, 2, 1);
@@ -855,7 +855,7 @@ s32 func_86205308(s32 arg0, s32 arg1) {
     ptr = D_800CE060, end = D_800CE100;
     do {
         func_80006148(ptr);
-        ptr += 0x28;
+        ptr += 40;
     } while (ptr != end);
     func_87F061D0();
     func_86202E94();
@@ -868,7 +868,7 @@ s32 func_86205308(s32 arg0, s32 arg1) {
     Gfx_FreeDisplayListBuffers();
     main_pool_pop_state(0x4D59524D); // 'MYRM'
     func_87F0F480(*(s32 *)((u8 *)D_8620E198 + 0xF4));
-    func_80027EE0(0xFFE);
+    func_80027EE0(4094);
     return *(s32 *)((u8 *)D_8620E198 + 0x73CC0);
 }
 #endif

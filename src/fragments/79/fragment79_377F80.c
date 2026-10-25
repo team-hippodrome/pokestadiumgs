@@ -225,7 +225,7 @@ void func_84109118(s32 arg0) {
                 func_84100030(record, flag);
             }
         }
-        record += 0x9C;
+        record += 156;
     }
 }
 

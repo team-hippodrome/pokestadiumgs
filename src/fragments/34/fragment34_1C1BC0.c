@@ -12,7 +12,7 @@ void func_88504704(void) {
     u16 value;
     char *name;
 
-    for (i = 0, ptr = D_8850D678; i < 4; i++, ptr += 0x14) {
+    for (i = 0, ptr = D_8850D678; i < 4; i++, ptr += 20) {
         func_8005D9E0(i, buffer);
         *(u8 *)(ptr + 0) = func_8005D8CC(i);
         *(u8 *)(ptr + 1) = func_8005D92C(i);

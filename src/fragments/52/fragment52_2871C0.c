@@ -62,7 +62,7 @@ void func_86409378(u8 *arg0, s32 arg1, s32 arg2) {
     u32 *value;
     s32 i;
     ptr = arg0 + 0x14;
-    for (i = 0; i < 12; i++, ptr += 0x18C) {
+    for (i = 0; i < 12; i++, ptr += 396) {
         value = *(u32 **)(ptr + 0x38);
         if (*(s32 *)(value + 3) != arg1) continue;
         if (*(s32 *)value >= arg2) continue;

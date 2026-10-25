@@ -63,7 +63,7 @@ void func_841035DC(s16 arg0) {
     s32 i = 0;
     u8 *ptr = D_84182A60[arg0][0];
 
-    while (*ptr != 0x83) {
+    while (*ptr != 131) { // list terminator
         D_8418D240[i] = *ptr++;
         i++;
     }

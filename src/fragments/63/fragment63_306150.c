@@ -74,7 +74,7 @@ void func_87E02A70(void *arg0) {
     record = (u8 *)arg0 + 0x1C;
     // FAKE: the store of temp into the previous record sits in the loop's
     // increment expression instead of the body.
-    for (i = 0; i != 2; i++, record += 0x98, *(s32 *)(record - 0x8C) = temp) {
+    for (i = 0; i != 2; i++, record += 152, *(s32 *)(record - 0x8C) = temp) {
         *(s32 *)(record + 0) = 0;
         *(s32 *)(record + 4) = i;
         *(s32 *)(record + 8) = unk;

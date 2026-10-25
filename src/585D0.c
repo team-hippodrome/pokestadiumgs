@@ -962,7 +962,7 @@ s32 func_8005AEA0(void) {
     func_80055948(3);
 
     for (i = 0; i < 4; i++) {
-        u8 *entry = D_80128570 + i * 0x70;
+        u8 *entry = D_80128570 + i * 112;
         GbSave_ResetPortCache((u8)i);
         if (D_8012874D & (1 << i)) {
             entry[5] = 2;
