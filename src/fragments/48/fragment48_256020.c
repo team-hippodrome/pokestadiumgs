@@ -316,11 +316,22 @@ void func_87C00BC8(void *arg0, void *arg1) {
     func_87C00AE4(arg0, func_87C00B94(arg0, arg1));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C00BF4.s")
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+void* func_87C00BF4(void* arg0, void* arg1, f64 arg2) {
+    f32 half_angle = (f32)(arg2 * 0.5);
+    f64 sine = __sinf(half_angle);
+
+    *(f64*)((u8*)arg0 + 0) = __cosf(half_angle);
+    *(f64*)((u8*)arg0 + 8) = *(f64*)((u8*)arg1 + 0) * sine;
+    *(f64*)((u8*)arg0 + 16) = *(f64*)((u8*)arg1 + 8) * sine;
+    *(f64*)((u8*)arg0 + 24) = *(f64*)((u8*)arg1 + 16) * sine;
+    return arg0;
+}
 
 extern f64 func_87C00664(void *);
 extern void *func_87C00718(void *, void *, f64);
-extern void func_87C00BF4(void *, void *, f64);
+extern void* func_87C00BF4(void *, void *, f64);
 extern void func_87C00944(void *, void *, void *);
 void *func_87C00C80(void *arg0, void *arg1) {
     typedef struct { f64 x; f64 y; f64 z; } V3;
@@ -402,7 +413,7 @@ f64 func_87C00F9C(f64 arg0) {
 }
 
 extern f64 func_87C00F9C(f64);
-extern void func_87C00BF4(void *, void *, f64);
+extern void* func_87C00BF4(void *, void *, f64);
 extern f64 func_87C00208(void *a, void *b);
 extern void * func_87C00238(void *arg0, void *arg1, void *arg2);
 void func_87C01048(void *arg0, void *arg1, void *arg2, f64 arg3) {
