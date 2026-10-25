@@ -429,7 +429,26 @@ loop_2:
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82604C98.s")
+typedef struct unk_func_82604C98 {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+} unk_func_82604C98;
+
+s32 func_82604C98(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 var_v1 = -1;
+    s32 var_v0;
+    unk_func_82604C98* var_a2;
+
+    for (var_v0 = 0; var_v0 < arg1; var_v0++) {
+        var_a2 = &((unk_func_82604C98*)arg0)[var_v0];
+        if ((arg2 == var_a2->unk_00) && (arg3 == var_a2->unk_02)) {
+            var_v1 = var_v0;
+            break;
+        }
+    }
+    return var_v1;
+}
 
 extern s32 func_82604C98(s32, s32, s32, s32);
 s32 func_82604CF0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
