@@ -165,7 +165,28 @@ void func_86300FB4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86300FE4.s")
+extern void *func_87F025B8(void *, void (*)(void));
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern s32 func_8003F210(void *, s32);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+typedef struct { f32 x, y, z; } Fragment51ScaleVector;
+void *Fragment51_CloneScaledActor(void *arg0) {
+    u8 *node;
+    node = func_87F025B8((u8 *)D_863075D8 + 0x770, func_86300FB4);
+    if (node != NULL) {
+        func_8003F1DC(node + 0x24);
+        func_8003F210(node + 0x24, 2);
+        ModelAnim_SetSpeed(node + 0x24, 0x20000);
+        node[0x26] |= 0x10;
+        *(void **)(node + 0x20) = arg0;
+        MtxF_Copy((u32 *)(node + 0x84), (u32 *)((u8 *)arg0 + 0x84));
+        *(Fragment51ScaleVector *)(node + 0x54) = *(Fragment51ScaleVector *)((u8 *)arg0 + 0x54);
+        ((Fragment51ScaleVector *)(node + 0x54))->x *= 0.9f;
+        ((Fragment51ScaleVector *)(node + 0x54))->y *= 0.9f;
+    }
+    return node;
+}
 #endif
 
 #ifdef VERSION_US
@@ -175,8 +196,6 @@ void func_86300FB4(void) {
 #ifdef VERSION_US
 extern s32 func_86300074(s32 *);
 extern s32 ModelAnim_IsFinished();
-extern void func_8003F1DC();
-extern void func_8003F114();
 extern void ModelAnim_SetAnimation();
 extern void func_8003F3BC();
 extern u8 D_86307334[];
@@ -301,9 +320,6 @@ void func_86302404(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_863074D0;
-extern f32 D_863074D4;
-extern f32 D_863074D8;
 extern void func_87F06240(s32, s32, f32, f32, s32);
 void func_86302634(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
     s32 x;
@@ -312,12 +328,12 @@ void func_86302634(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
     if (arg0 < 10) {
         x = arg1 + arg3;
         y = arg2 + arg4;
-        func_87F06240(x, y, D_863074D0, D_863074D0, arg0 % 10);
+        func_87F06240(x, y, 0.57f, 0.57f, arg0 % 10);
     } else {
         x = arg1 + arg5;
         y = arg2 + arg6;
-        func_87F06240(x, y, D_863074D4, D_863074D4, arg0 / 10);
-        func_87F06240(x + 13, y, D_863074D8, D_863074D8, arg0 % 10);
+        func_87F06240(x, y, 0.57f, 0.57f, arg0 / 10);
+        func_87F06240(x + 13, y, 0.57f, 0.57f, arg0 % 10);
     }
 }
 #endif
