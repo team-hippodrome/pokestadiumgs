@@ -1007,3 +1007,5 @@ func_8001CDE4 = AudioLayer_PrepareNote;
 func_8001C570 = AudioChannel_AllocateLayer;
 
 func_8001F8C0 = AudioSequence_AllocateChannels;
+
+func_86300FE4 = Fragment51_CloneScaledActor;

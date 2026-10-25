@@ -1204,6 +1204,8 @@
     - [0x27AC10, c,       fragments/51/fragment51_27AC10]
     - [0x27B9E0, c,       fragments/51/fragment51_27B9E0]
     - [0x27CCC0, data,    fragments/51/fragment51_data]
+    - [0x27D2B0, .rodata, fragments/51/fragment51_275E40]
+    - [0x27D330, rodata]
   
   - name: fragment52
     type: code
