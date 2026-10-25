@@ -1013,3 +1013,9 @@ func_86300FE4 = Fragment51_CloneScaledActor;
 func_863036FC = Fragment51_UpdateState;
 
 func_863024A8 = Fragment51_UpdateResults;
+
+func_86300DD4 = Fragment51_ComputeActorInput;
+
+func_863018C4 = Fragment51_DrawTintedMaterial;
+
+func_86302F9C = Fragment51_DrawSceneFrame;

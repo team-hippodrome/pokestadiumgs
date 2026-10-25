@@ -147,7 +147,30 @@ void func_86300C74(s32 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86300DD4.s")
+extern s32 func_86300818(f32 *, f32 *, f32 *, f32);
+extern u32 func_8003570C(void);
+void Fragment51_ComputeActorInput(s32 *arg0, s32 *arg1) {
+    f32 scale;
+    s32 i;
+    f32 x;
+    f32 y;
+    f32 z;
+    *arg0 = *arg1 = 0;
+    scale = (*(f32 *)((u8 *)D_863075D8 + 0x8F3C));
+    for (i = 0; i < (*(s32 *)((u8 *)D_863075D8 + 0xDB8)) - 1; i++) {
+        scale *= (*(f32 *)((u8 *)D_863075D8 + 0x8F40));
+    }
+    if (func_86300818(&x, &y, &z, scale) != 0) {
+        *arg0 = x - *(f32 *)((u8 *)D_87F119DC + 0x48);
+        if ((func_8003570C() / 4294967296.0f) < (*(f32 *)((u8 *)D_863075D8 + 0x8F44))) {
+            if (y < 42.0f) {
+                *arg1 = 0x8000;
+            }
+        }
+    } else {
+        func_86300C74(arg0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -242,7 +265,28 @@ void func_86301250(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863018C4.s")
+typedef struct { f32 r, g, b; } Fragment51EnvironmentColor;
+extern void *D_8009491C;
+extern Gfx D_86307020[];
+void Fragment51_DrawTintedMaterial(s32 arg0, void *arg1) {
+    u8 *scene_object;
+    u8 *material;
+    Fragment51EnvironmentColor color;
+    if (arg0 == 5) {
+        color.r = 255.0f;
+        scene_object = D_8009491C;
+        material = *(u8 **)(scene_object + 0x14);
+        if (((*(u32 *)(material + 0xC)) & 0x40000000) != 0) {
+            color.g = color.b = ((f32)(*(s32 *)(material + 0x1C)) / 31.0f) * 255.0f;
+        } else {
+            color.g = color.b = 255.0f;
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, color.r, color.g, color.b, 255);
+        gSPDisplayList(D_800D0510++, D_86307020);
+        GeoRender_ApplyMaterialState();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -387,7 +431,49 @@ void func_86302634(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86302F9C.s")
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(void *, u16);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(void *);
+extern void func_8630271C(void);
+extern void func_87F0A5BC(void *);
+extern void func_87F07FE8(void *);
+extern void func_87F022F0(void);
+extern void func_87F01D44(void);
+extern void func_87F0C88C(void *);
+extern s32 func_80008648(void);
+extern u32 func_87F00930(void);
+void Fragment51_DrawSceneFrame(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 0xA655);
+    func_8000766C(&D_800D0510, 0, 0, 320, 240);
+    if (func_87F00930() == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(*(void **)((u8 *)D_863075D8 + 8));
+    if (*(s32 *)D_863075D8 == 5) {
+        func_8630271C();
+        if ((*(s32 *)((u8 *)D_863075D8 + 0x8F2C)) >= 8) {
+            func_87F0A5BC((u8 *)D_863075D8 + 0x7C);
+        }
+    } else {
+        if (((*(s32 *)((u8 *)D_863075D8 + 0x8F54)) & 1) == 0) {
+            func_8630271C();
+        }
+    }
+    if (((*(s32 *)((u8 *)D_863075D8 + 0x8F54)) & 1) != 0) {
+        func_87F07FE8((u8 *)D_863075D8 + 0x44);
+    }
+    if (((*(s32 *)((u8 *)D_863075D8 + 0x8F54)) & 2) != 0) {
+        func_87F022F0();
+    }
+    if (func_87F00930() == 1) {
+        func_87F01D44();
+    }
+    func_87F0C88C((u8 *)D_863075D8 + 0x38);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
@@ -597,14 +683,14 @@ extern void func_800086A4(s32);
 extern void StageFade_StartFromOpaque(s32);
 extern void func_80064D28(void);
 extern void Fragment51_UpdateState(void);
-extern void func_86302F9C(void);
+extern void Fragment51_DrawSceneFrame(void);
 void func_86303974(void) {
     func_800086A4(2);
     StageFade_StartFromOpaque(0xA);
     do {
         func_80064D28();
         Fragment51_UpdateState();
-        func_86302F9C();
+        Fragment51_DrawSceneFrame();
     } while (*(s32 *)D_863075D8 != 8);
 }
 #endif
