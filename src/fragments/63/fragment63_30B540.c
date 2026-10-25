@@ -79,7 +79,19 @@ s32 func_87E07E08(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E07E38.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E07ED8.s")
+s32 func_87E07ED8(s32 arg0) {
+    s32 i;
+    s32 ret;
+
+    ret = -1;
+    for (i = 0; i != 4; i++) {
+        if (*(s32 *)((u8 *)arg0 + i * 0x18 + 0x2190) >= *(s32 *)((u8 *)arg0 + 0x2188)) {
+            ret = i;
+            break;
+        }
+    }
+    return ret;
+}
 
 s32 func_87E07E38();
 extern void func_87F0F1C0(s32, s32);

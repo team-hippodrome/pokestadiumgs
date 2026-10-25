@@ -674,7 +674,24 @@ void func_82B02E50(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B02EDC.s")
+extern struct Color82B01BB8 D_82B085F0;
+extern struct Color82B01BB8 D_82B085F4;
+void func_82B02EDC(void *arg0) {
+    struct Color82B01BB8 saved_a;
+    struct Color82B01BB8 saved_b;
+
+    saved_a = D_82B085F0;
+    saved_b = D_82B085F4;
+    if (*(u16 *)((u8 *)arg0 + 4) & 1) {
+        if (*(u16 *)((u8 *)arg0 + 4) & 2) {
+            *(struct Color82B01BB8 *)((u8 *)arg0 + 0x4C) = saved_a;
+        } else {
+            *(struct Color82B01BB8 *)((u8 *)arg0 + 0x4C) = saved_b;
+        }
+    } else {
+        *(struct Color82B01BB8 *)((u8 *)arg0 + 0x4C) = saved_b;
+    }
+}
 #endif
 
 #ifdef VERSION_US

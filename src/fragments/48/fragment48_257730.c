@@ -83,7 +83,30 @@ void func_87C019B0(u8 *arg0, s16 arg1) {
     func_87C01910(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_257730/func_87C019DC.s")
+s32 func_87C019DC(void *arg0) {
+    s16 *indices;
+    s32 result;
+
+    result = *(s32 *)((u8 *)arg0 + 4);
+    indices = (s16 *)result;
+    if (indices == NULL) {
+        return 0;
+    }
+    if (indices[*(s16 *)((u8 *)arg0 + 0x16)] == -2) {
+        *(s32 *)((u8 *)arg0 + 0x1C) = 1;
+        return 0;
+    }
+    *(s16 *)((u8 *)arg0 + 0x16) += 1;
+    if (indices[*(s16 *)((u8 *)arg0 + 0x16)] == -2) {
+        *(s32 *)((u8 *)arg0 + 0x1C) = 1;
+        return 0;
+    }
+    if (indices[*(s16 *)((u8 *)arg0 + 0x16)] < -2) {
+        *(s16 *)((u8 *)arg0 + 0x16) = -((s16)indices[*(s16 *)((u8 *)arg0 + 0x16)] + 3);
+    }
+    func_87C019B0(arg0, indices[*(s16 *)((u8 *)arg0 + 0x16)]);
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_257730/func_87C01A90.s")
 

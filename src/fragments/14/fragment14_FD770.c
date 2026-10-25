@@ -28,7 +28,24 @@ s32 func_81305634(void *arg0) {
     return func_8130560C(arg0, temp_a1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_813056A0.s")
+f32 func_813056A0(void *arg0) {
+    if (*((u8 *)arg0 + 0x87) == 0) {
+        return 0.0f;
+    }
+    if (*(s32 *)arg0 != 0) {
+        return 1.0f;
+    }
+    switch (*((u8 *)arg0 + 0x87)) {
+        case 1:
+        case 2:
+        case 3:
+            return 1.0f;
+        case 4:
+        case 5:
+            return 1.0f;
+    }
+    //!bug: no return for other values; the caller gets whatever is in $f0
+}
 
 f32 func_8130571C(void *arg0) { u8 *base = (u8 *)arg0; f32 result = 1.0f; if (base[0x87] == 3) { result = (f32)base[0x82] / (f32)base[0x86]; } return result; }
 
