@@ -1021,3 +1021,5 @@ func_863018C4 = Fragment51_DrawTintedMaterial;
 func_86302F9C = Fragment51_DrawSceneFrame;
 
 func_863001BC = Fragment51_UpdateScores;
+
+func_86300074 = Fragment51_CountTopScorers;
