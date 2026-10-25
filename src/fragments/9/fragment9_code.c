@@ -176,7 +176,21 @@ struct MsgState *func_8FB02418(s32 arg0)
   return func_800718B8(func_8006A600(temp_v0 & 0xFFFF, (temp_v0 & 0xFF) & 0xFFu, 0));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02454.s")
+extern u8 D_8FB03A6C[];
+void *func_8FB02454(void *arg0) {
+    u16 temp_a1;
+    void *temp_v0;
+    void *var_v1;
+
+    temp_a1 = *(u16 *)((u8 *)func_8FB02418((s32)arg0) + 0x3E);
+    temp_v0 = func_8004C874(15, temp_a1);
+    if (temp_v0 != NULL) {
+        var_v1 = temp_v0;
+    } else {
+        var_v1 = &D_8FB03A6C;
+    }
+    return var_v1;
+}
 
 struct MsgState { u8 pad[0x40]; u32 flags; };
 extern struct MsgState *func_8FB02418(s32);

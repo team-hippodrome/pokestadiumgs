@@ -57,7 +57,22 @@ void func_86409260(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86409280.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86409378.s")
+void func_86409378(u8 *arg0, s32 arg1, s32 arg2) {
+    u8 *ptr;
+    u32 *value;
+    s32 i;
+    ptr = arg0 + 0x14;
+    for (i = 0; i < 12; i++, ptr += 0x18C) {
+        value = *(u32 **)(ptr + 0x38);
+        if (*(s32 *)(value + 3) != arg1) continue;
+        if (*(s32 *)value >= arg2) continue;
+        value[1] |= 0x30000000;
+        value[1] &= ~0x40000000;
+        *(s32 *)(ptr + 0x1C) = 0;
+        *(s32 *)(ptr + 0xC4) = -0x100;
+        ptr[0x41] = 0xFF;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_864094BC.s")
 #endif

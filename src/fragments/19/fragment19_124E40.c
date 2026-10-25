@@ -137,7 +137,25 @@ void func_82305914(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82305988.s")
+extern s16 D_82306AFA;
+void func_82305988(u16 arg0, s32 arg1) {
+    s16 *flag;
+    s16 *state;
+    flag = &D_82306AFA;
+    state = &D_82306AFC;
+    switch (arg0) {
+    case 1:
+        *state = 1;
+        break;
+    case 2:
+        *state = 2;
+        break;
+    default:
+        *flag = 0;
+        break;
+    }
+    *(u16 *)D_82306AF8 = arg1;
+}
 
 void func_823059D4(void) {
     *(s16 *)(D_82306AF8 + 2) = 1;

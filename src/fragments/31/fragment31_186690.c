@@ -383,7 +383,19 @@ extern u16 D_88234758; typedef struct { u16 flags; u8 pad[18]; u32 value; } Stat
 
 extern u16 D_88234758; s32 func_8821B95C(void) { s32 result = 0; if (D_88234758 & 0x400) { result = 1; } return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821B980.s")
+void func_8821B980(u16 arg0, s32 arg1) {
+    u8 bit_index;
+
+    for (bit_index = 0; (1 << bit_index) != 0x800; bit_index++) {
+        if (arg0 & (1 << bit_index)) {
+            if (arg1) {
+                D_88234758 |= 1 << bit_index;
+            } else {
+                D_88234758 &= ~(1 << bit_index);
+            }
+        }
+    }
+}
 
 extern u8 *D_88234750;
 u32 func_8821B9EC(s32 arg0) {
