@@ -2,9 +2,40 @@
 
 
 #ifdef VERSION_US
+extern void func_8001CA3C(void *);
+extern void func_8001B6D0(void *, s32, s32);
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001B6D0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1C2D0/func_8001B8D0.s")
+void AudioSequence_Update(u8 *sequence) {
+    typedef struct { u8 reserved:5; u8 recalculateVolume:1; u8 reserved1:1; u8 applyBend:1; } SequenceUpdates;
+    s32 i;
+    u8 *channel;
+
+    if (*(u16 *)(sequence + 0x12) != 0 && *(u32 *)(sequence + 0xDC) == 0) {
+        *(f32 *)(sequence + 0x1C) += *(f32 *)(sequence + 0x20);
+        ((SequenceUpdates *)sequence)->recalculateVolume = 1;
+        if (*(f32 *)(sequence + 0x1C) > 1.0f) { *(f32 *)(sequence + 0x1C) = 1.0f; }
+        if (*(f32 *)(sequence + 0x1C) < 0.0f) { *(f32 *)(sequence + 0x1C) = 0.0f; }
+        (*(u16 *)(sequence + 0x12))--;
+        if (*(u16 *)(sequence + 0x12) == 0) {
+            if (sequence[1] == 2) {
+                func_8001CA3C(sequence);
+                return;
+            }
+        }
+    }
+    if (((*(u32 *)sequence << 5) >> 31)) {
+        *(f32 *)(sequence + 0x30) = *(f32 *)(sequence + 0x2C) * *(f32 *)(sequence + 0x1C);
+    }
+    for (i = 0; i < 16; i++) {
+        channel = ((u8 **)(sequence + 0x38))[i];
+        if ((*(u32 *)channel >> 31) == 1) {
+            func_8001B6D0(channel, ((*(u32 *)sequence << 5) >> 31), (sequence[0] & 1));
+        }
+
+    }
+    ((SequenceUpdates *)sequence)->recalculateVolume = 0;
+}
 
 extern f32 D_8008E994[];
 f32 func_8001BA28(void *arg0) {
