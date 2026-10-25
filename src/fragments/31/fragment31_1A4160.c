@@ -22,7 +22,21 @@ void func_88230EE0(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A4160/func_88230F5C.s")
+typedef struct {
+    u8 unk_00[2];
+    s16 x;
+    s16 y;
+    u16 width;
+} unk_D_882349C0;
+
+extern unk_D_882349C0 *D_882349C0;
+extern Gfx *D_800D0510;
+extern void func_88230E38(void);
+void func_88230F5C(void) {
+    func_88230E38();
+    gDPFillRectangle(D_800D0510++, D_882349C0->x, D_882349C0->y,
+                     D_882349C0->x + D_882349C0->width, D_882349C0->y + 20);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A4160/func_88230FF4.s")
 
