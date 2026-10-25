@@ -275,7 +275,19 @@ void func_84109394(void)
 
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_841093E8.s")
+extern void func_84156820(void);
+void func_841093E8(void) {
+    s32 var_v0;
+
+    D_841901B4 = 0;
+    for (var_v0 = 0; var_v0 < 8; var_v0++) {
+        D_841901C0[var_v0] = 0;
+        D_841901E0[var_v0] = 0;
+    }
+    D_841901AC = 0;
+    D_841901B0 = 0;
+    func_84156820();
+}
 
 extern void func_84109394();
 extern void func_841093E8();
