@@ -226,7 +226,28 @@ s32 func_8AF03F4C(s32 arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF03FF8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04340.s")
+extern s32 D_8AF26474;
+extern s16 D_8AF2C088;
+extern s32 D_8AF2C57C;
+s32 func_8AF04340(s32 arg0, void *arg1) {
+    s32 result;
+
+    result = *(s32 *)((u8 *)arg1 + 0x20);
+    switch (arg0) {
+        case 0:
+            D_8AF2C57C = *(s16 *)((u8 *)arg1 + 0xA);
+            break;
+        case 1:
+            if (D_8AF26470 == 0) {
+                return 0;
+            }
+            D_8AF26474 = *(s32 *)((u8 *)result + 0x4E8);
+            *(s16 *)((u8 *)arg1 + 0xA) = D_8AF2C57C - (D_8AF2C088 - 30) * D_8AF26474 / (D_8AF26470 - 40);
+            *(s32 *)((u8 *)arg1 + 0x2C) = -1;
+            break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04404.s")
 
