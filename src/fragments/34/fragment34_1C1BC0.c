@@ -4,7 +4,25 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_885045B0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88504704.s")
+extern u8 D_8850D678[];
+void func_88504704(void) {
+    s32 i;
+    u8 *ptr;
+    u8 buffer[16];
+    u16 value;
+    char *name;
+
+    for (i = 0, ptr = D_8850D678; i < 4; i++, ptr += 0x14) {
+        func_8005D9E0(i, buffer);
+        *(u8 *)(ptr + 0) = func_8005D8CC(i);
+        *(u8 *)(ptr + 1) = func_8005D92C(i);
+        *(u8 *)(ptr + 2) = func_8005DDD4(i);
+        *(u8 *)(ptr + 3) = func_8005DDF8(i);
+        *(u16 *)(ptr + 4) = *(u16 *)buffer;
+        name = (char *)buffer + 2;
+        HAL_Strcpy((char *)(ptr + 6), name);
+    }
+}
 
 // Readiness code for a trade record from its state byte arg0[0]: state 0 gives 4, 3 or 0 from
 // bytes 3 and 2; state 2 gives 1; states 3 and 5 give 2; others -1. Same body as Pokemon
