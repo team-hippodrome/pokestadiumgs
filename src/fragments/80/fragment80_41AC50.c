@@ -210,7 +210,18 @@ s32 TeamMember_SumMatchupValues_fragment80(u8 arg0, u8 arg1, u8 arg2) {
     return total;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/80/fragment80_41AC50/func_84201F2C.s")
+void func_84201F2C(u8 arg0) {
+    s32 i;
+
+    for (i = 0; i < D_84203B54[arg0].roster_count; i++) {
+        D_84203A88[i].flags = 0;
+        if (D_84203A40.flags & 8) {
+            D_84203A88[i].score = (u16)func_8003570C();
+        } else {
+            D_84203A88[i].score = TeamMember_SumMatchupValues_fragment80(arg0, 1 - arg0, (u8)i);
+        }
+    }
+}
 
 void TeamScores_Rank_fragment80(u8 arg0) {
     u8 count = D_84203B54[arg0].roster_count;

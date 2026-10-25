@@ -2,7 +2,11 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04380.s")
+extern u8 D_88B05BE0[];
+s32 func_88B04380(u8 arg0) {
+    // FAKE: the whole body must stay on one source line; split over lines (same tokens) it does not match (fd 60)
+    struct unk_D_88B05BE0 { u16 pad; u16 value; }; struct unk_D_88B05BE0 *p = (struct unk_D_88B05BE0 *)D_88B05BE0; s32 result = 0; while (result < 34) { if (arg0 == p->value) break; result++; p++; } return result & 0xFF;
+}
 
 extern u8 D_88B05BE3[];
 extern s32 *func_800635E0(u8);

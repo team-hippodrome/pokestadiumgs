@@ -132,7 +132,23 @@ void func_8FC007E0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC00AC4.s")
+extern u8 D_8FC024DC[];
+void func_8FC00AC4(void) {
+    s32 temp_v0;
+    u8 *var_s0;
+    u8 *var_s1;
+
+    func_800498C4();
+    func_800496A4(16, 0);
+    temp_v0 = func_8004C874(75, 0);
+    func_80049064(320, 45, 1, temp_v0);
+    func_8FC009C4();
+    func_800496A4(8, -1);
+    func_8004989C(22);
+    // FAKE: the loops and their do-while(0) wrapper must stay on one source line; split over lines it does not match (fd 30)
+    do { func_8FC007E0(); var_s0 = &D_8FC0244C; var_s1 = D_8FC024DC; do { func_8FC0082C(var_s0); var_s0 += 0x10; } while (var_s0 != var_s1); } while (0);
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
