@@ -203,7 +203,19 @@ void func_822016C8(s32 arg0) {
         *(f32 *)(p + 0xC) = 0.0f;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822017B0.s")
+extern f32 D_80087E50[];
+void func_822017B0(u8* arg0) {
+    s16 var_v0;
+    s16 var_v1;
+    s16 var_a1;
+
+    var_v0 = *(s16*)(arg0 + 0x18) - *(s16*)(arg0 + 0x10);
+    var_v1 = *(s16*)(arg0 + 0x1A) - *(s16*)(arg0 + 0x12);
+    var_a1 = *(s16*)(arg0 + 0x12);
+    *(s16*)(arg0 + 0x1E) = (s16)(s32)(D_80087E50[*(u16*)(arg0 + 2) >> 4] * 10.0f + (f32)var_a1);
+    *(s16*)(arg0 + 0x20) = *(s16*)(arg0 + 0x1C) + var_v0;
+    *(s16*)(arg0 + 0x22) = *(s16*)(arg0 + 0x1E) + var_v1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82201834.s")
 
