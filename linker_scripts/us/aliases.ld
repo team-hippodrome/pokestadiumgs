@@ -952,3 +952,9 @@ func_81005524 = Particle31_DisplayListCallback;
 func_81004818 = Particle31_DrawAndUpdateSpeciesEffect;
 
 func_80016890 = BackgroundCopy_ServiceRequest;
+
+func_8001A5B4 = ResourceCatalog_SetEntry;
+
+func_8001AFE0 = AudioVoice_SetPendingRequest;
+
+func_8001AA34 = ResourcePool_InitLists;
