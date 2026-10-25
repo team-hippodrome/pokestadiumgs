@@ -337,7 +337,7 @@
     - [0xA2900, .rodata, CE80] # jtbl_800A1D00
     - [0xA2930, .rodata, 10BB0] # jtbl_800A1D3C (+1 more)
     - [0xA2980, .rodata, 14640] # jtbl_800A1DD8 (+2 more)
-    - [0xA2B60, rodata]
+    - [0xA2B60, .rodata, 1A360] # audio float constants 800A1F60..800A1F70
     - [0xA2B80, .rodata, 1C2D0] # jtbl_800A1F80 (+1 more)
     - [0xA2BD0, .rodata, 1CDC0] # jtbl_800A1FD0 (+2 more)
     - [0xA3260, rodata]
