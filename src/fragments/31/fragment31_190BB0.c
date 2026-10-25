@@ -49,7 +49,43 @@ void func_8821DE04(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821DE58.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E0BC.s")
+typedef struct {
+    u8 unk_00[44];
+    s32 unk_2C;
+} unk_func_8821E0BC_child;
+
+typedef struct {
+    void **unk_00;
+} unk_func_8821E0BC_list;
+
+typedef struct {
+    u8 unk_00[8];
+    s16 unk_08;
+} unk_func_8821E0BC_selection;
+
+typedef struct {
+    s32 unk_00;
+    s32 unk_04;
+    unk_func_8821E0BC_child *unk_08;
+    unk_func_8821E0BC_list *unk_0C;
+    unk_func_8821E0BC_selection *unk_10;
+} unk_func_8821E0BC;
+
+extern void *D_88234620;
+extern void func_8821DE58(void);
+void func_8821E0BC(void) {
+    unk_func_8821E0BC *state;
+
+    state = (unk_func_8821E0BC *)D_882347F0;
+    D_88234620 = state->unk_0C->unk_00[state->unk_10->unk_08];
+    if (state->unk_00 == 0) {
+        state->unk_08->unk_2C = 0;
+        ((unk_func_8821E0BC *)D_882347F0)->unk_04 = 2;
+        *((u8 *)D_882347F0 + 1184) = 2;
+    } else {
+        func_8821DE58();
+    }
+}
 
 extern void func_88216EFC(s32);
 extern s32 D_880068B4;
