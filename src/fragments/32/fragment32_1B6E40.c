@@ -27,9 +27,37 @@ void func_88305B30(State_88305B30 *arg0, s16 arg1, s16 arg2, u16 arg3, u16 arg4)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_88305CA8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_8830602C.s")
+typedef struct unk_D_88308E38 {
+    s32 unk_00;
+    u8 unk_04;
+    u8 unk_05[19];
+} unk_D_88308E38;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_8830609C.s")
+extern u8 D_88308E38;
+
+s32 func_8830602C(void) {
+    unk_D_88308E38* var_v0;
+    s32 var_a0;
+
+    for (var_v0 = (unk_D_88308E38*)&D_88308E38, var_a0 = 0; var_a0 < 4; var_a0++, var_v0++) {
+        if (var_v0->unk_04 != 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+s32 func_8830609C(void) {
+    unk_D_88308E38* var_v0;
+    s32 var_a0;
+
+    for (var_v0 = (unk_D_88308E38*)&D_88308E38, var_a0 = 0; var_a0 < 4; var_a0++, var_v0++) {
+        if (var_v0->unk_00 != 1) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_8830610C.s")
 
