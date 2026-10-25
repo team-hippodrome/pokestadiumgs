@@ -520,7 +520,32 @@ void func_8AC01F20(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC01F8C.s")
+typedef struct {
+    u8 unk_00[8];
+    s16 x;
+} unk_func_8AC01F8C_output;
+
+typedef struct {
+    unk_func_8AC01F8C_output *output;
+    u8 unk_04[6];
+    s16 base_x;
+    u8 unk_0C[8];
+    s16 amplitude;
+    u16 counter;
+    u16 step;
+    u16 mask;
+} unk_func_8AC01F8C;
+
+extern f32 D_80087E50[];
+void func_8AC01F8C(unk_func_8AC01F8C *arg0) {
+    unk_func_8AC01F8C_output *output;
+
+    output = arg0->output;
+    gSPDisplayList(D_800D0510++, D_80094DB8);
+    output->x = D_80087E50[(u16)((u32)arg0->step * (arg0->counter & arg0->mask)) >> 4] *
+                    arg0->amplitude + arg0->base_x;
+    arg0->counter++;
+}
 #endif
 
 #ifdef VERSION_US
