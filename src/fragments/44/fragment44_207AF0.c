@@ -125,7 +125,19 @@ s32 func_8AF19BA0(s32 arg0) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19BDC.s")
+s32 func_8AF19BDC(u8 arg0) {
+    u32 flags = func_8005431C();
+
+    switch (arg0) {
+        case 187: if (!(flags & 1)) return 0; break;
+        case 189: if (!(flags & 2)) return 0; break;
+        case 116: if (!(flags & 4)) return 0; break;
+        case 70: if (!(flags & 8)) return 0; break;
+        case 115: if (!(flags & 0x10)) return 0; break;
+        case 129: if (!(flags & 0x20)) return 0; break;
+    }
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19CB0.s")
 

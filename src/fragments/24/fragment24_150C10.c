@@ -332,11 +332,49 @@ void func_82B01CE0(void *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B01E0C.s")
+void func_82B01E0C(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0xC) = 0;
+    *(s16 *)((u8 *)arg0 + 0xE) = -480;
+    *(s16 *)((u8 *)arg0 + 0x10) = 97;
+    *(s16 *)((u8 *)arg0 + 0x12) = 139;
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x3C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x10);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0xC);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x1C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x2C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x20) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x30) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x24) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x34) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x28) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x38) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(s16 *)((u8 *)arg0 + 0x48) = 449;
+    *(s16 *)((u8 *)arg0 + 0x4A) = 46;
+    *(struct Color82B01BB8 *)((u8 *)arg0 + 0x4C) = D_82B085BC;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B01F14.s")
+void func_82B01F14(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0xC) = 0;
+    *(s16 *)((u8 *)arg0 + 0xE) = -480;
+    *(s16 *)((u8 *)arg0 + 0x10) = 97;
+    *(s16 *)((u8 *)arg0 + 0x12) = 180;
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x3C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x10);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0xC);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x1C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x2C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x20) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x30) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x24) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x34) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x28) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x38) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(s16 *)((u8 *)arg0 + 0x48) = 449;
+    *(s16 *)((u8 *)arg0 + 0x4A) = 166;
+    *(struct Color82B01BB8 *)((u8 *)arg0 + 0x4C) = D_82B085BC;
+}
 #endif
 
 #ifdef VERSION_US

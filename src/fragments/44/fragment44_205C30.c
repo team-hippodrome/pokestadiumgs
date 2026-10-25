@@ -60,7 +60,26 @@ s32 func_8AF17A5C(s32 mode, void *record) {
 }
 /* mkdraft:func_8AF17A5C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_205C30/func_8AF17AF8.s")
+extern u8 D_8AF27170[];
+extern u8 D_8AF272B0[];
+extern u8 D_8AF27390[];
+extern s16 D_8AF34D70;
+extern s16 D_8AF34FAC;
+void func_8AF17AF8(void) {
+    D_8AF35000 = D_8AF27170;
+    D_8AF27430 = func_8AC01354(D_8AF35000, 10);
+    D_8AF34D70 = D_8AF34FAC;
+    switch (D_8AF34FAC) {
+        case 2:
+            D_8AF35004 = D_8AF27390;
+            D_8AF27434 = func_8AC01354(D_8AF35004, 5);
+            return;
+        case 3:
+            D_8AF35004 = D_8AF272B0;
+            D_8AF27434 = func_8AC01354(D_8AF35004, 7);
+            return;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_205C30/func_8AF17BA8.s")
 

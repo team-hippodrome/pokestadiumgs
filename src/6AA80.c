@@ -665,7 +665,37 @@ s32 func_8006CEE8(u16 arg0) {
  return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006CF70.s")
+s32 func_8006CF70(s16 arg0) {
+    s32 id = -1;
+
+    switch (arg0) {
+        case 1: id = 90; break;
+        case 2: id = 91; break;
+        case 3: id = 92; break;
+        case 4: id = 93; break;
+        case 5: id = 57; break;
+        case 6: id = 58; break;
+        case 7: id = 59; break;
+        case 8: id = 60; break;
+        case 9: id = 61; break;
+        case 10: id = 62; break;
+        case 11: id = 63; break;
+        case 12: id = 64; break;
+        case 13: id = 65; break;
+        case 14: id = 66; break;
+        case 15: id = 79; break;
+        case 16: id = 69; break;
+        case 17: id = 72; break;
+        case 18: id = 68; break;
+        case 19: id = 70; break;
+        case 20: id = 71; break;
+        case 21: id = 67; break;
+        case 22: id = 73; break;
+        case 23: id = 74; break;
+        case 24: id = 82; break;
+    }
+    return id;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006D068.s")
 #endif

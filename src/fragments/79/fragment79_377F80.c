@@ -207,7 +207,27 @@ void func_84108E00(s32 arg0, s32 arg1) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108F88.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84109118.s")
+void func_84109118(s32 arg0) {
+    u8 *record;
+    s32 i;
+    s32 flag;
+
+    record = D_8418C950;
+    if (arg0 == 1) {
+        func_84105E3C();
+        func_8410890C(287, D_84190194);
+        return;
+    }
+    flag = 0x40080;
+    for (i = 0; i != 300; i++) {
+        if (*(s8 *)(record + 0x98) != 0) {
+            if (func_84100054(record, 0x40000) != 0) {
+                func_84100030(record, flag);
+            }
+        }
+        record += 0x9C;
+    }
+}
 
 extern u8 D_841901B4;
 extern s32 D_841901C0[8];
