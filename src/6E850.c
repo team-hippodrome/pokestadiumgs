@@ -119,7 +119,166 @@ extern void func_8006DEBC(void *); extern void func_8006F23C(void *); void func_
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006E2F8.s")
+extern u32 Memmap_GetSegmentVaddr(u32);
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} ModelVec3f;
+typedef struct {
+    /* 0x00 */ u8 unk_00[0xC];
+    /* 0x0C */ ModelVec3f base;
+    /* 0x18 */ ModelVec3f offset;
+    /* 0x24 */ ModelVec3f color;
+    /* 0x30 */ u8 unk_30[0x8];
+    /* 0x38 */ u16 drawGroup;
+} VertexPosBlend;
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x14];
+    /* 0x14 */ VertexPosBlend position;
+} ModelAnimVertex;
+typedef struct {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ s16 count;
+    /* 0x0E */ u8 unk_0E[0x2];
+} VertexNormalCounter;
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x4];
+    /* 0x04 */ s16 vertexCount;
+    /* 0x06 */ u16 triangleCount;
+    /* 0x08 */ u32 indexSegment;
+    /* 0x0C */ u8 unk_0C[0x8];
+    /* 0x14 */ u32 remapSegment;
+} ModelSegmentAnimDesc;
+extern VertexNormalCounter *D_80128C70;
+/* mkdraft:func_8006E2F8 begin */
+// Accumulates face normals over the segment's triangle list (indices mapped
+// through remap) into the per-vertex counters behind D_80128C70, then averages
+// each accumulated normal into the vertex color fields, scaled so a unit
+// normal maps to 120.
+void func_8006E2F8(ModelSegmentAnimDesc *segment, ModelAnimVertex *vertices)
+{
+  s32 i;
+  f32 x0;
+  f32 y0;
+  f32 z0;
+  f32 x1;
+  f32 y1;
+  f32 z1;
+  f32 x2;
+  f32 z2;
+  f32 nx;
+  f32 ny;
+  f32 nz;
+  f32 len;
+  int zero; /* FAKE: always 0; comparing len against this int reproduces
+               retail's zero materialization (a literal 0 compare compiles
+               to different bytes; the Stadium 1 donor spells it (s32)len > 0) */
+  s16 i1;
+  s16 i2;
+  u16 triangleCountCopy; /* FAKE: never read; using the chained assignment's
+                            value keeps triangleCount's u16 field unfused
+                            (lhu + sh + lh readback through its stack slot) */
+  f32 scale;
+  f32 y2;
+  s32 pad0[5]; /* FAKE: frame pad; sizes the array region below the
+                  float locals so their spill slots sit where retail puts them */
+  s16 triangleCount;
+  s16 *indices;
+  s16 vertexCount;
+  s16 i0;
+  ModelAnimVertex *v0;
+  ModelAnimVertex *v1;
+  ModelAnimVertex *v2;
+  ModelAnimVertex *vtx;
+  VertexNormalCounter *counter;
+  s32 pad[1]; /* FAKE: frame pad below the pointer locals */
+  s16 *remap;
+  triangleCountCopy = (triangleCount = segment->triangleCount);
+  vertexCount = segment->vertexCount;
+  indices = (s16 *) Memmap_GetSegmentVaddr(segment->indexSegment);
+  remap = (s16 *) Memmap_GetSegmentVaddr(segment->remapSegment);
+  counter = D_80128C70;
+  for (i = 0; i < vertexCount; i++)
+  {
+    counter->x = 0.0f;
+    counter->y = 0.0f;
+    counter->z = 0.0f;
+    counter->count = indices[0] * 0; /* FAKE: the * 0 keeps indices[0] in the
+                                       software-pipelined loop preload */
+    counter++;
+  }
+
+  for (i = 0; i < triangleCount; i++)
+  {
+    i0 = remap[indices[0]];
+    v0 = &vertices[i0];
+    x0 = v0->position.base.x;
+    y0 = v0->position.base.y;
+    z0 = v0->position.base.z;
+    i1 = remap[indices[1]];
+    v1 = &vertices[i1];
+    x1 = v1->position.base.x;
+    y1 = v1->position.base.y;
+    z1 = v1->position.base.z;
+    i2 = remap[indices[2]];
+    v2 = &vertices[i2];
+    x2 = v2->position.base.x;
+    y2 = v2->position.base.y;
+    z2 = v2->position.base.z;
+    nx = ((y1 - y0) * (z2 - z1)) - ((z1 - z0) * (y2 - y1));
+    ny = ((z1 - z0) * (x2 - x1)) - ((x1 - x0) * (z2 - z1));
+    indices += 3;
+    nz = ((x1 - x0) * (y2 - y1)) - ((y1 - y0) * (x2 - x1));
+    scale = nx;
+    len = sqrtf(((scale * scale) + (ny * ny)) + (nz * nz));
+    zero = 0;
+    if (len > zero)
+    {
+      scale = 120.0f / len;
+      nx *= scale;
+      ny *= scale;
+      nz *= scale;
+    }
+    counter = &D_80128C70[i0];
+    counter->x += nx;
+    counter->y += ny;
+    counter->z += nz;
+    counter->count++;
+    counter = &D_80128C70[i1];
+    counter->x += nx;
+    counter->y += ny;
+    counter->z += nz;
+    counter->count++;
+    counter = &D_80128C70[i2];
+    counter->x += nx;
+    counter->y += ny;
+    counter->z += nz;
+    counter->count++;
+  }
+
+  counter = D_80128C70;
+  vtx = vertices;
+  for (i = 0; i < vertexCount; i++)
+  {
+    if (counter->count > 0)
+    {
+      len = 1.0f / counter->count;
+      vtx->position.color.x = counter->x * len;
+      if (!len)
+      {
+      } /* karodo */
+      vtx->position.color.y = counter->y * len;
+      vtx->position.color.z = counter->z * len;
+    }
+    counter++;
+    vtx++;
+  }
+
+}
+/* mkdraft:func_8006E2F8 end */
 #endif
 
 #ifdef VERSION_US
@@ -572,7 +731,7 @@ s16 ModelRenderer_GetObjectType(void) {
 #ifdef VERSION_US
 extern u16 *func_8003F54C(void *);
 extern s16 D_80129078;
-extern void func_81003ECC(void *);
+extern void func_81003ECC(void);
 void func_8007074C(void *arg0)
 {
   u32 new_var;
@@ -724,16 +883,18 @@ extern f64 D_800A5A08;
 void func_80070C68(Mtx *mtx, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6) {
     f32 sp10C;
     f32 sp108;
-    struct { f32 x, y, z; } direction;
+    UNUSED s32 pad;
+    UNUSED s32 pad2;
+    f32 temp_fa1;
+    f32 temp_fv0;
     Mtx spB8;
     Mtx sp78;
     Mtx sp38;
 
-    direction.x = arg4 - arg1;
-    direction.z = arg6 - arg3;
-    sp108 = (f32) (((f64) (f32) MathUtil_Atan2s(-direction.z, direction.x) * D_800A59F0) / D_800A59F8);
-    direction.y = arg5 - arg2;
-    sp10C = (f32) (((f64) (f32) MathUtil_Atan2s(-direction.y, sqrtf((direction.x * direction.x) + (direction.z * direction.z))) * D_800A5A00) / D_800A5A08);
+    temp_fa1 = arg4 - arg1;
+    temp_fv0 = arg6 - arg3;
+    sp108 = (f32) (((f64) (f32) MathUtil_Atan2s(-temp_fv0, temp_fa1) * D_800A59F0) / D_800A59F8);
+    sp10C = (f32) (((f64) (f32) MathUtil_Atan2s(-(arg5 - arg2), sqrtf((temp_fa1 * temp_fa1) + (temp_fv0 * temp_fv0))) * D_800A5A00) / D_800A5A08);
     guTranslate(&spB8, arg1, arg2, arg3);
     func_8007DCD4(&sp78, sp108, 0.0f, -1.0f, 0.0f);
     guMtxCatL(&sp78, &spB8, &spB8);

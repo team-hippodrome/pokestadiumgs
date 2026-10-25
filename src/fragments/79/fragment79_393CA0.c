@@ -2949,7 +2949,39 @@ void BattleAnim_Table_84186004_000(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412EB10.s")
+extern s32 func_8412EA28(void);
+extern u8 *D_84195208[];
+extern void func_84134DD8(u8);
+extern void func_84134CBC(u8, u8);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_84135B00(u16);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84134E30(s32);
+extern void func_84124604(u8, u8);
+extern void func_84126C3C(u8);
+
+void func_8412EB10(void) {
+    if (func_8412EA28() != 0) {
+        D_84195208[D_841951BD][0xD] |= 0x80;
+        func_84134DD8(D_841951BF);
+        func_84134CBC(D_841951BC, 0);
+        BattleRecord_AdvanceWriteSlot();
+        func_84136218(D_841951BC, 6);
+        func_84136218(D_841951BD, 5);
+        func_84136678(D_841951BD, -1);
+        func_84135B00(122);
+        if (func_841360C0(D_841951BC, -2, 60, 6, 10) == 0) {
+            func_841360C0(D_841951BD, -2, 60, 5, 10);
+        }
+        func_84134E30(5);
+        func_84124604(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+        return;
+    }
+    func_84126C3C(D_841951BC);
+}
 #endif
 
 #ifdef VERSION_US
