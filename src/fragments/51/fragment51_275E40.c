@@ -466,7 +466,85 @@ void func_86303610(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863036FC.s")
+extern void func_87C037C0(void *, void *);
+extern u32 func_87F00930(void);
+extern void *func_87F006BC(void);
+extern s32 func_87F02104(void);
+extern void func_863024A8(void);
+extern void func_87F0D5B8(void *);
+extern s32 func_87F0C6F4(void *);
+void Fragment51_UpdateState(void) {
+    func_87C037C0((u8 *)D_863075D8 + 0x8F5C, *(void **)((u8 *)*(void **)((u8 *)D_863075D8 + 8) + 12));
+    if (func_87F00930() == 0) {
+        func_87F006BC();
+    }
+    switch ((*(s32 *)((u8 *)D_863075D8 + 0))) {
+    case 0:
+        (*(s32 *)((u8 *)D_863075D8 + 0x8F54)) = 1;
+        if (StageContext_GetFadeMode() == 0) {
+            (*(s32 *)((u8 *)D_863075D8 + 0)) = 1;
+        }
+        break;
+    case 1:
+        func_86303110();
+        break;
+    case 2:
+        func_863035B0();
+        break;
+    case 3:
+        (*(s32 *)((u8 *)D_863075D8 + 0x8F54)) = 0;
+        func_86303610();
+        break;
+    case 4:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_8630352C();
+            break;
+        case 3:
+            func_86300020(0);
+            break;
+        case 4:
+            func_86300020(1);
+            break;
+        }
+        break;
+    case 5:
+        func_863024A8();
+        break;
+    case 6:
+        (*(s32 *)((u8 *)D_863075D8 + 0x8F54)) = 2;
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(0);
+            (*(s32 *)((u8 *)D_863075D8 + 0)) = 7;
+            (*(s32 *)((u8 *)D_863075D8 + 4)) = 0;
+            StageFade_StartFromTransparent(10);
+            break;
+        case 2:
+            func_86300020(0);
+            break;
+        case 3:
+            func_86300020(1);
+            break;
+        }
+        break;
+    case 7:
+        if (StageContext_GetFadeMode() == 1) {
+            (*(s32 *)((u8 *)D_863075D8 + 0)) = (*(s32 *)((u8 *)D_863075D8 + 4));
+            if ((*(s32 *)((u8 *)D_863075D8 + 0)) == 0) {
+                func_86301E54();
+                StageFade_StartFromOpaque(10);
+            }
+        }
+        break;
+    }
+    func_87F0D5B8((u8 *)D_863075D8 + 0x10);
+    if (func_87F0C6F4((u8 *)D_863075D8 + 0x38) != 0) {
+        (*(s32 *)((u8 *)D_863075D8 + 0x8F58)) = 3;
+        (*(s32 *)((u8 *)D_863075D8 + 0)) = 8;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -474,14 +552,14 @@ extern void *D_863075D8;
 extern void func_800086A4(s32);
 extern void StageFade_StartFromOpaque(s32);
 extern void func_80064D28(void);
-extern void func_863036FC(void);
+extern void Fragment51_UpdateState(void);
 extern void func_86302F9C(void);
 void func_86303974(void) {
     func_800086A4(2);
     StageFade_StartFromOpaque(0xA);
     do {
         func_80064D28();
-        func_863036FC();
+        Fragment51_UpdateState();
         func_86302F9C();
     } while (*(s32 *)D_863075D8 != 8);
 }
