@@ -824,5 +824,51 @@ void func_862052A0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86205308.s")
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern u8 D_800CE060[];
+extern u8 D_800CE100[];
+extern u8 D_8620E1A0[];
+s32 func_86205308(s32 arg0, s32 arg1) {
+    u8 *var_v0;
+    u8 *ptr;
+    u8 *end;
+
+    main_pool_push_state(0x4D59524D); // 'MYRM'
+    D_8620E198 = D_8620E1A0;
+    *(s32 *)((u8 *)D_8620E198 + 0xF4) = arg1;
+    if (*(u8 *)((u8 *)*(s32 *)((u8 *)D_8620E198 + 0xF4) + 0x2180) == 4) {
+        func_80027EE0(4095);
+    }
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    var_v0 = func_800082E0(0, 0, 2, 1, 2, 1);
+    func_8004C09C(295);
+    func_87F09EBC((u8 *)D_8620E198 + 0x73C54, *(s32 *)((u8 *)D_8620E198 + 0xF4));
+    func_8004C8C0(307);
+    func_8004C8C0(260);
+    func_8004C8C0(434);
+    func_87F06EAC(154, (u8 *)D_8620E198 + 0x73C1C, *(s32 *)((u8 *)D_8620E198 + 0xF4));
+    func_80047588(*(s32 *)((u8 *)D_8620E198 + 0x73C24) | 0x28, 0);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    // FAKE: both assignments must share one source line; split over two lines diff score 30
+    ptr = D_800CE060, end = D_800CE100;
+    do {
+        func_80006148(ptr);
+        ptr += 40;
+    } while (ptr != end);
+    func_87F061D0();
+    func_86202E94();
+    func_80008514(var_v0);
+    func_862052A0();
+    func_80008574();
+    func_80006158();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4D59524D); // 'MYRM'
+    func_87F0F480(*(s32 *)((u8 *)D_8620E198 + 0xF4));
+    func_80027EE0(4094);
+    return *(s32 *)((u8 *)D_8620E198 + 0x73CC0);
+}
 #endif

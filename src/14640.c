@@ -566,7 +566,17 @@ void func_80016A24(u8 *arg0, s32 arg1) {
     func_80015584(arg0 + 0x40, 0, 0, *(s32 *)(arg0 + 8), *(s32 *)(arg0 + 0xC), arg1, queue[0], *(s8 *)(arg0 + 2), (void *)D_800A1DD0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016AB4.s")
+void func_80016AB4(BackgroundCopyRequest *arg0, s32 arg1) {
+    OSMesgQueue *queue[1]; // FAKE: a one-element array for the stack slot; as a plain local diff score 8
+
+    arg1 += 0xF;
+    arg1 &= ~0xF;
+    func_80019540(arg0->destination, arg1);
+    queue[0] = &arg0->queue;
+    osCreateMesgQueue(queue[0], &arg0->message, 1);
+    _bcopy((void *)arg0->source, (void *)arg0->destination, arg1);
+    osSendMesg(queue[0], NULL, 0);
+}
 
 void func_80016B24(s32 a0, s32 a1, s32 a2, s32 a3) {}
 

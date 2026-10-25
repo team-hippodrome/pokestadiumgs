@@ -383,7 +383,19 @@ extern u16 D_88234758; typedef struct { u16 flags; u8 pad[18]; u32 value; } Stat
 
 extern u16 D_88234758; s32 func_8821B95C(void) { s32 result = 0; if (D_88234758 & 0x400) { result = 1; } return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821B980.s")
+void func_8821B980(u16 arg0, s32 arg1) {
+    u8 bit_index;
+
+    for (bit_index = 0; (1 << bit_index) != 0x800; bit_index++) {
+        if (arg0 & (1 << bit_index)) {
+            if (arg1) {
+                D_88234758 |= 1 << bit_index;
+            } else {
+                D_88234758 &= ~(1 << bit_index);
+            }
+        }
+    }
+}
 
 extern u8 *D_88234750;
 u32 func_8821B9EC(s32 arg0) {
@@ -413,5 +425,21 @@ extern u32 D_882347B4; extern u8 D_8823474D; void func_8821C2C8(s32 arg0) { if (
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C2F4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C39C.s")
+extern u8 D_88234780[];
+extern s32 D_882347B0;
+void func_8821C39C(void) {
+    typedef struct {
+        u32 words[8];
+    } unk_D_88234758;
+
+    if (D_882347B4 != 0) {
+        *(unk_D_88234758 *)&D_88234758 = *(unk_D_88234758 *)&D_88234780;
+        D_88234778 = *(s32 *)((u8 *)&D_88234780 + 0x20);
+        D_8823477C = *(s32 *)((u8 *)&D_88234780 + 0x24);
+        D_882347B0 = 1;
+        func_8821C0B0();
+        D_882347B0 = 0;
+        func_8821C2C8(0);
+    }
+}
 #endif

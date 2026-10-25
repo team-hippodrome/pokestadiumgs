@@ -81,5 +81,23 @@ s32 func_82600838(s32 arg0) {
     }
     return var_a2;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_1286C0/func_826009A0.s")
+void func_826009A0(void) {
+    s32 temp_v0;
+    s32 var_s0;
+
+    var_s0 = 0;
+    func_800086A4(2);
+    StageFade_StartFromOpaque(5);
+    do {
+        func_80064D28();
+        func_82604170();
+        func_826007E4();
+        temp_v0 = func_82600838(var_s0);
+        var_s0 = temp_v0;
+    } while (temp_v0 != 3);
+    if (*(s16 *)((u8 *)D_82615330 + 0x16) != *(s16 *)(*(u8 **)D_82615330 + 0x88)) {
+        *(s16 *)(*(u8 **)D_82615330 + 0x88) = *(s16 *)((u8 *)D_82615330 + 0x16);
+        *(*(u8 **)D_82615330 + 0xE) = 0;
+    }
+}
 #endif

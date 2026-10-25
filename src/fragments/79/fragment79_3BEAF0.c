@@ -104,7 +104,19 @@ void func_8414F894(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F8B4.s")
+void func_8414F8B4(s32 arg0) {
+    u8 temp_v0;
+    u8 temp_t7;
+
+    temp_v0 = func_84154B24();
+    temp_t7 = 1 - temp_v0;
+    func_8414F2F4((void *)arg0);
+    if (*(u16 *)((u8 *)arg0 + temp_t7 * 2 + 2) == 0) {
+        *(s32 *)((u8 *)arg0 + 0x18) = -*(s32 *)((u8 *)arg0 + 0x14);
+    } else {
+        *(s32 *)((u8 *)arg0 + 0x18) += *(s32 *)((u8 *)arg0 + 0x14) * *(u16 *)((u8 *)arg0 + temp_t7 * 2 + 2) / 128;
+    }
+}
 #endif
 
 #ifdef VERSION_US

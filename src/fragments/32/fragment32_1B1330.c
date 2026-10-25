@@ -147,7 +147,28 @@ void func_8830099C(void) {
 
 s32 func_88300A78(void) { s32 value = D_88308E04; s32 result; if (value < 5) { result = value & 0xFF; } else { result = (8 - value) & 0xFF; } D_88308E04 = value + 1; if (D_88308E04 >= 8) { D_88308E04 = 0; } return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_88300AC4.s")
+extern u8 D_88308E0A;
+extern u8 D_88308E0B;
+extern u8 D_88308E0C;
+extern u8 D_88308E0D;
+extern u8 D_88308E0E;
+extern u8 D_88308E10;
+void func_88300AC4(u16 arg0) {
+    if (arg0 != 0) {
+        func_8830058C(0);
+        D_88308E0D = 3;
+    } else {
+        func_8830058C(3);
+        D_88308E0D = 0;
+    }
+    D_88308E0A = 3;
+    D_88308E0B = 3;
+    D_88308E0C = 3;
+    D_88308E0E = 3;
+    D_88308E0F = 3;
+    D_88308E10 = 3;
+    D_88308E09[0] = 3;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_88300B48.s")
 

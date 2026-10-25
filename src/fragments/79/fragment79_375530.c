@@ -123,7 +123,21 @@ void func_84105E3C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_841065E0.s")
+void func_841065E0(void *arg0, void *arg1, void *arg2, s16 arg3, f32 arg4) {
+    u8 *p;
+
+    p = arg1;
+    if (p != NULL) {
+        if (*(s16 *)p == 1) {
+            if (arg3 == 0) {
+                *(s16 *)arg2 = func_84105E9C(1, *(u16 *)(p + 0xC));
+            }
+        } else {
+            *(s16 *)arg2 = func_84105E9C(1, *(u16 *)(p + 0xC));
+        }
+        *(f32 *)arg0 += (f32)(*(s16 *)(p + 6) + *(s16 *)arg2) * arg4;
+    }
+}
 #endif
 
 #ifdef VERSION_US

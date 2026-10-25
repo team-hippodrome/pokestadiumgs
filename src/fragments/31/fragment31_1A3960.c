@@ -35,7 +35,42 @@ void func_88230878(void) {
     func_8821D930(D_882349A0 + 4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_882308A0.s")
+extern u8 D_8800ED50[];
+void func_882308A0(u8 arg0) {
+    extern s32 D_880068B4;
+    extern s32 D_882346F4;
+    extern void func_88230770(void);
+    extern void func_88230878(void);
+    extern void func_882306E0(void);
+    extern void func_88230708(void);
+    s32 idx;
+
+    D_882349A0 = (s32)Util_Malloc(232);
+    if (func_882304B0(D_882349A0 + 4, arg0) == 0) {
+        Util_Free(D_882349A0);
+        return;
+    }
+    idx = func_88004804(
+        D_882349A0 + 4,
+        2,
+        320,
+        240,
+        4,
+        1,
+        220,
+        220,
+        180,
+        func_88230770,
+        func_88230878,
+        func_882306E0,
+        func_88230708,
+        0,
+        0
+    );
+    *(void **)D_882349A0 = (void *)((idx * 76) + D_8800ED50);
+    D_880068B4 = 0;
+    D_882346F4 = 1;
+}
 
 
 void func_882309B0(void) {

@@ -235,5 +235,21 @@ void func_84108630(void) {
     D_84190170 += 4;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377570/func_84108654.s")
+extern s32 D_84182154[];
+void func_84108654(u16 arg0, u16 arg1) {
+    typedef struct { void (*callback)(void); s32 unk_04; } unk_D_8416A218;
+    s32 temp_s0;
+    u8 *var_p;
+
+    D_84190170 = D_84182154[arg0];
+    D_8416A214 = arg1;
+    temp_s0 = D_84190170;
+    var_p = D_8416A218;
+    if (temp_s0 != 0) {
+        do {
+            ((unk_D_8416A218 *)var_p)[*(u8 *)temp_s0].callback();
+            temp_s0 = D_84190170;
+        } while (temp_s0 != 0);
+    }
+}
 #endif

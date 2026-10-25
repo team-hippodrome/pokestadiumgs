@@ -77,7 +77,14 @@ void func_8822B8FC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822B930.s")
+extern u8 D_880068B4[];
+extern u8 func_88903B00[];
+void func_8822B930(u8 *arg0) {
+    u8 buffer[128];
+    LabPC_OpenMessageDialog(func_8004C8A0(buffer, 128, 37, arg0),
+        380, 287, 4, 219, 220, 180, 2, 0, &D_880068B4, &D_880068B8,
+        func_88903B00, func_8822B8FC);
+}
 
 
 void func_8822B9C4(void) {

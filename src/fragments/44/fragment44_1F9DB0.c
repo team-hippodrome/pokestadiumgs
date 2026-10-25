@@ -102,7 +102,24 @@ s16 func_8AF0C758(void) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C7C8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C96C.s")
+u8 func_8AF0C96C(u8 *arg0) {
+    volatile u8 pad; // FAKE: never accessed; without it the function does not match (diff score 40)
+    u8 values[4];
+    u8 minimum;
+    u32 index;
+
+    minimum = 0xFF;
+    values[0] = arg0[1];
+    values[1] = arg0[2];
+    values[2] = arg0[3];
+    values[3] = arg0[4];
+    for (index = 0; index < 4; index++) {
+        if (values[index] != 0 && values[index] < minimum) {
+            minimum = values[index];
+        }
+    }
+    return minimum;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0CA00.s")
 

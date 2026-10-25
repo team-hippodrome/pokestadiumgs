@@ -4,7 +4,36 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324A10/func_87F01DA0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324A10/func_87F01E8C.s")
+extern u8 *D_87F11980;
+void func_87F01E8C(s32 arg0, u8 *arg1) {
+    s32 flag;
+    u32 mode;
+
+    switch (arg0) {
+        case 0:
+            *(u16 *)(arg1 + 2) &= 0xFFFD;
+            break;
+        case 1:
+            mode = *(u32 *)(arg1 + 0x20);
+            switch (mode) {
+                case 0:
+                    flag = 1;
+                    break;
+                case 1:
+                    flag = 2;
+                    break;
+                case 2:
+                    flag = 3;
+                    break;
+            }
+            if (flag == *(u32 *)(D_87F11980 + 0xC)) {
+                *(u16 *)(arg1 + 2) |= 2;
+            } else {
+                *(u16 *)(arg1 + 2) &= 0xFFFD;
+            }
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324A10/func_87F01F34.s")
 

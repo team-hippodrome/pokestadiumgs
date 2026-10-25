@@ -312,7 +312,21 @@ u16 Save_Checksum(u8* arg0, s32 arg1) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051610.s")
+void func_80051610(void *arg0, s32 arg1, s32 arg2) {
+    u16 *entry;
+
+    entry = (u16 *)((u8 *)arg0 + arg1);
+    entry -= 3;
+    if (arg2) {
+        entry[0] = 0x5033; // "P3"
+        entry[1] = 0x7630; // "v0"
+        entry[2] = Save_Checksum(arg0, arg1);
+    } else {
+        entry[0] = 0x5858; // "XX"
+        entry[1] = 0x5858; // "XX"
+        entry[2] = Save_Checksum(arg0, arg1) ^ 0xFF;
+    }
+}
 
 extern void _bcopy(void *, void *, s32);
 void Save_WriteRecord(void *arg0, void *arg1, s32 arg2, s32 arg3) {

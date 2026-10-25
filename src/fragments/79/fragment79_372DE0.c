@@ -58,11 +58,21 @@ loop:
     if ((u8 *)D_8418D240 != (u8 *)D_8418CA20 + i * 0x10) goto loop;
     BattleAnim_RegisterAssetTable(BattleAnim_LoadResourceTable(0));
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_372DE0/func_841035DC.s")
+extern u8 *D_84182A60[][2];
+void func_841035DC(s16 arg0) {
+    s32 i = 0;
+    u8 *ptr = D_84182A60[arg0][0];
+
+    while (*ptr != 131) { // list terminator
+        D_8418D240[i] = *ptr++;
+        i++;
+    }
+    D_8418D240[i] = -1;
+}
 
 extern s16 D_8418D240[];
 extern u8 D_8418D260[];
-extern s32 func_841035DC(s16);
+extern void func_841035DC(s16);
 extern void func_8003F84C(s32, s16 *, u8 *);
 extern void PokeIcon_RequestBackgroundForObject(s32);
 void func_84103640(s32 arg0, s16 arg1) {

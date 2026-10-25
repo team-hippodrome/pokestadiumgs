@@ -678,7 +678,32 @@ void func_8290A5B0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290A81C.s")
+extern u8 D_829137A8[];
+void func_8290A81C(s32 arg0) {
+    s32 i;
+
+    D_8291B862 = 0;
+    (&D_8291A7C0)[0x1071] = 0;
+    i = 0;
+    do {
+        (&D_8291A7C0)[i * 0x1A4 + 0x1A2] = 0;
+        i++;
+    } while (&D_8291A7C0 + i * 0x1A4 < &D_8291AE50);
+    func_82908B60();
+    for (i = 0; i < arg0; i++) {
+        if (*(s16 *)((u8 *)&D_829137A8 + i * 2) != 0) {
+            (&D_8291A7C0)[i * 0x1A4 + 0x1A2] = 1;
+            func_8290A358(i, *(s16 *)((u8 *)&D_829137A8 + i * 2));
+            func_800428F8(*(s32 *)(&D_8291A7C0 + i * 0x1A4));
+            func_8290A6F4(i, i);
+            func_8290A208(i);
+            (&D_8291A7C0 + i * 0x1A4)[6] |= 0x10;
+            (&D_8291A7C0)[0x1071]++;
+        } else {
+            (&D_8291A7C0)[i * 0x1A4 + 0x1A2] = 0;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

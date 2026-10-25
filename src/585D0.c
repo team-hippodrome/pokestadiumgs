@@ -949,7 +949,43 @@ void GbTower_StartPortSession(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005AEA0.s")
+extern u8 D_8012874C;
+s32 func_8005AEA0(void) {
+    s32 i;
+    s32 j;
+    s32 temp_v0 = GbPak_InitializePorts();
+
+    D_8012874C = temp_v0 & 0xFF;
+    D_8012874D = (temp_v0 >> 16) & 0xFF;
+    D_80128748 = 0;
+
+    func_80055948(3);
+
+    for (i = 0; i < 4; i++) {
+        u8 *entry = D_80128570 + i * 112;
+        GbSave_ResetPortCache((u8)i);
+        if (D_8012874D & (1 << i)) {
+            entry[5] = 2;
+            entry[4] = func_8005805C(i);
+            if (entry[4]) {
+                D_80128748 |= 1 << i;
+                if (GbPak_DetectRam(i, entry + 0x28) == 0) {
+                    Game_ShutdownAndLoadFragment(i, 2);
+                }
+                func_8005AD58(i);
+            }
+            GbTower_CheckPakRemoved(i, 0);
+        }
+    }
+
+    func_80054E48(3);
+
+    if (D_8012874C != 0) {
+        GbTower_SetPollMask(*(u8 *)((u8 *)&D_80128748 + 3));
+    }
+
+    return D_80128748;
+}
 #endif
 
 #ifdef VERSION_US
