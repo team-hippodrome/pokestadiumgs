@@ -202,7 +202,12 @@ void func_860095B8(void* arg0, f64 arg1) {
     func_86007EB4(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_860095DC.s")
+void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
+    return func_87C00120(arg0,
+                        (arg2[0] + (arg3[1] - arg3[2]) * arg1[1] * arg1[2]) / arg3[0],
+                        (arg2[1] + (arg3[2] - arg3[0]) * arg1[2] * arg1[0]) / arg3[1],
+                        (arg2[2] + (arg3[0] - arg3[1]) * arg1[0] * arg1[1]) / arg3[2]);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009674.s")
 
