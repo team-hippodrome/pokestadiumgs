@@ -30,7 +30,56 @@ void func_87F0D5B8(u8 *arg0) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0D600.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0D96C.s")
+// Prefix views for the callback's model node and its three-word callback data.
+// GeoNode_CreateModelPart initializes the same vector and color field layouts.
+//@src/229E0.c
+typedef struct {
+    f32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+} unk_func_87F0D96C_024;
+
+typedef struct {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+} unk_func_87F0D96C_01E;
+
+typedef union {
+    u8 rgba[4];
+    u32 word;
+} unk_func_87F0D96C_03C;
+
+typedef struct unk_func_87F0D96C {
+    u8 unk_00[20];
+    struct unk_func_87F0D96C_014 *unk_14;
+    u8 unk_18[6];
+    unk_func_87F0D96C_01E unk_1E;
+    unk_func_87F0D96C_024 unk_24;
+    unk_func_87F0D96C_024 unk_30;
+    unk_func_87F0D96C_03C unk_3C;
+} unk_func_87F0D96C;
+
+typedef struct unk_func_87F0D96C_014 {
+    s32 unk_00;
+    unk_func_87F0D96C *unk_04;
+    u8 *unk_08;
+} unk_func_87F0D96C_014;
+
+s32 func_87F0D96C(s32 arg0, unk_func_87F0D96C *arg1) {
+    unk_func_87F0D96C_014 *var_v0;
+
+    if (arg0 == 2) {
+        var_v0 = arg1->unk_14;
+        if (var_v0->unk_04 != NULL) {
+            arg1->unk_24 = var_v0->unk_04->unk_24;
+            arg1->unk_30 = var_v0->unk_04->unk_30;
+            arg1->unk_1E = var_v0->unk_04->unk_1E;
+            arg1->unk_3C = *(unk_func_87F0D96C_03C *)func_87F0D1A0(var_v0->unk_08);
+        }
+    }
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0DA08.s")
 
