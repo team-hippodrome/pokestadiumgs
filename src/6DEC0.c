@@ -2,9 +2,60 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6DEC0/func_8006D2C0.s")
+extern u16 D_80094904;
+extern u32 D_80128C00;
+extern u32 D_80128C04;
+extern u32 D_80128C08;
+extern u32 D_80128C0C;
+extern u32 D_80128C10;
+extern u32 D_80128C14;
+extern u32 D_80128C18;
+extern u32 D_80128C1C;
+extern u32 D_80128C20;
+extern u32 D_80128C24;
+extern u32 D_80128C28;
+extern u32 D_80128C2C;
+extern u32 D_80128C30;
+extern u32 D_80128C34;
+extern u32 D_80128C38;
+extern u32 D_80128C3C;
+extern u32 D_80128C40;
+extern u32 D_80128C44;
+extern u32 D_80128C48;
+extern u32 D_80128C4C;
+extern u32 D_80128C50;
+extern u32 D_80128C54;
 
-extern s32 D_80128C00; s32 func_8006D424(void) { return D_80128C00; }
+// Close to Pokemon Stadium's Particle_UpdateFrameCounters; GS copies the u16 frame
+// counter D_80094904 (advanced by GeoRender_AdvanceFrameCounter) instead of
+// incrementing its own word, then derives the same masks, shifts and mod/div-3 values.
+//@src/229E0.c
+void func_8006D2C0(void) {
+    D_80128C00 = D_80094904;
+    D_80128C04 = D_80128C00 & 0x3F;
+    D_80128C08 = D_80128C00 & 0x1F;
+    D_80128C0C = D_80128C00 & 0xF;
+    D_80128C10 = D_80128C00 & 7;
+    D_80128C14 = D_80128C00 & 3;
+    D_80128C18 = D_80128C00 % 3;
+    D_80128C1C = D_80128C00 & 1;
+    D_80128C20 = D_80128C00 >> 6;
+    D_80128C24 = D_80128C00 >> 5;
+    D_80128C28 = D_80128C00 >> 4;
+    D_80128C2C = D_80128C00 >> 3;
+    D_80128C30 = D_80128C00 >> 2;
+    D_80128C34 = D_80128C00 / 3;
+    D_80128C38 = D_80128C00 >> 1;
+    D_80128C3C = D_80128C20 & 1;
+    D_80128C40 = D_80128C24 & 1;
+    D_80128C44 = D_80128C28 & 1;
+    D_80128C48 = D_80128C2C & 1;
+    D_80128C4C = D_80128C30 & 1;
+    D_80128C50 = D_80128C34 & 1;
+    D_80128C54 = D_80128C38 & 1;
+}
+
+s32 func_8006D424(void) { return D_80128C00; }
 
 void func_8006D430(s32 arg0) {}
 

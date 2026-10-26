@@ -26,7 +26,55 @@
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290EFA0.s")
+// Close to Pokemon Stadium's BattleHud_DrawGradientRect; GS takes the vertex alpha as arg6
+// instead of 0xFF, sets G_SHADE | G_SHADING_SMOOTH, and draws with G_RM_XLU_SURF instead
+// of G_RM_OPA_SURF.
+typedef struct GfxImage {
+    /* 0x00 */ u16 fmt;
+    /* 0x02 */ u16 size;
+    /* 0x04 */ u16 width;
+    /* 0x06 */ u16 height;
+    /* 0x08 */ u8 *img_p;
+    /* 0x0C */ void *depth_p;
+} GfxImage;
+extern GfxImage *func_8000731C(void);
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern Gfx *D_800D0510;
+extern Mtx D_80094890;
+void func_8290EFA0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4, u8 *arg5, u8 arg6) {
+    Vtx *temp_s2;
+    GfxImage *temp_s1;
+    Mtx *sp7C;
+    Vp *sp78;
+
+    temp_s1 = func_8000731C();
+    temp_s2 = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    sp7C = Gfx_AllocDisplayList(sizeof(Mtx) * 1);
+    sp78 = Gfx_AllocDisplayList(sizeof(Vp) * 1);
+    Gfx_SetViewportDimensions(sp78, temp_s1->width, temp_s1->height);
+
+    gSPViewport(D_800D0510++, (u32)sp78 & 0x1FFFFFFF);
+
+    guOrtho(sp7C, 0.5f, temp_s1->width - 0.5f, temp_s1->height - 0.5f, 0.5f, -2.0f, 2.0f, 1.0f);
+    Gfx_SetVertexAttributes(&temp_s2[0], arg0, arg1, -1, 0, 0, arg4[0], arg4[1], arg4[2], arg6);
+    Gfx_SetVertexAttributes(&temp_s2[1], arg0 + arg2, arg1, -1, 0, 0, arg4[0], arg4[1], arg4[2], arg6);
+    Gfx_SetVertexAttributes(&temp_s2[2], arg0, arg1 + arg3, -1, 0, 0, arg5[0], arg5[1], arg5[2], arg6);
+    Gfx_SetVertexAttributes(&temp_s2[3], arg0 + arg2, arg1 + arg3, -1, 0, 0, arg5[0], arg5[1], arg5[2], arg6);
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gSPSetGeometryMode(D_800D0510++, G_SHADE | G_SHADING_SMOOTH);
+    gDPSetCombineMode(D_800D0510++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    gSPMatrix(D_800D0510++, (u32)sp7C & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)&D_80094890 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPVertex(D_800D0510++, (u32)temp_s2 & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
 #endif
 
 void func_8290F36C(void) {

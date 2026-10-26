@@ -47,7 +47,17 @@ void TradeCable_UpdateLightWaitPulse(unk_D_88523100 *arg0) {
 
     arg0->unk_12 += 0x800;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88508B98.s")
+// Close to Pokemon Stadium's TradeCable_UpdateLightShrinkOut; GS light records are 0x24 bytes
+// with an s32 state word.
+void func_88508B98(unk_D_88523100 *arg0) {
+    arg0->unk_04 = D_88523034 + arg0->unk_02;
+    arg0->unk_12--;
+    arg0->unk_06 += arg0->unk_12;
+    if (arg0->unk_06 < 121) {
+        arg0->unk_00 = 0;
+        arg0->unk_06 = 120;
+    }
+}
 
 extern u8 D_88523100[];
 extern u8 D_88523030[];
@@ -206,7 +216,30 @@ void func_88509538(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_885095EC.s")
+extern f32 D_80088E50[];
+extern void func_800226C0(s32);
+// Close to Pokemon Stadium's TradeCable_UpdateBallSpinPulse; GS uses 0x50-byte ball records,
+// keeps the ball index in a u8 for func_88509418, and plays sound 0x144.
+void func_885095EC(unk_func_88509418 *ball) {
+    u8 sp1C;
+
+    if (ball->unk_08 > 0) {
+        ball->unk_08--;
+    }
+
+    ball->unk_0A += 0x200;
+
+    ball->unk_0E = ((D_80088E50[(u16)ball->unk_0A >> 4] * 0.5f) + 0.5f) * 255.0f +
+                   ((((D_80088E50[(u16)ball->unk_0A >> 4] * 0.5f) + 0.5f) * 255.0f) > 0.0f ? 0.5f : -0.5f);
+
+    if ((ball->unk_08 <= 0) && (ball->unk_0E >= 0xFF)) {
+        sp1C = (ball - (unk_func_88509418 *)D_88523050);
+        func_88509418(sp1C, 3);
+        if (sp1C == 0) {
+            func_800226C0(324);
+        }
+    }
+}
 
 typedef struct { s16 unk_00; s16 unk_02; s16 unk_04; } unk_D_88523050_012;
 typedef struct { s32 unk_00; s16 unk_04; s16 unk_06; s16 unk_08; s16 unk_0A; s16 unk_0C; s16 unk_0E; s16 unk_10; unk_D_88523050_012 unk_12[10]; } unk_D_88523050;
@@ -292,7 +325,7 @@ extern s32 D_88523018;
 extern u8 D_88523030[];
 extern s32 func_8850CED8(s32);
 extern void func_88509538(u8 *);
-extern void func_885095EC(u8 *);
+extern void func_885095EC(unk_func_88509418 *);
 extern void func_88509870(u8 *);
 extern void func_88509418(u8, s32);
 extern void func_800226C0(s32);
@@ -310,7 +343,7 @@ void func_8850998C(void) {
             func_88509538(ptr);
             break;
         case 2:
-            func_885095EC(ptr);
+            func_885095EC((unk_func_88509418 *)ptr);
             break;
         case 3:
             func_88509870(ptr);

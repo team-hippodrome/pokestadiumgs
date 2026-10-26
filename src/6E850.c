@@ -149,7 +149,8 @@ typedef struct {
     /* 0x04 */ s16 vertexCount;
     /* 0x06 */ u16 triangleCount;
     /* 0x08 */ u32 indexSegment;
-    /* 0x0C */ u8 unk_0C[0x8];
+    /* 0x0C */ u8 unk_0C[0x4];
+    /* 0x10 */ u32 tableSegment; // vertex-class table read by Model_GetVertexClass
     /* 0x14 */ u32 remapSegment;
 } ModelSegmentAnimDesc;
 extern VertexNormalCounter *D_80128C70;
@@ -688,7 +689,70 @@ void func_8006F83C(u8 *arg0, u8 *arg1, f32 arg2, BlendWeight1F arg3)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006F9B0.s")
+extern f32 D_800A59B0;
+extern f32 D_800A59B4;
+// Close to Pokemon Stadium's Model_IntegrateVertexOffsets; GS vertices are 0x50
+// bytes with the blend block at 0x14, and the vertex count is read once before the loop.
+// D_800A59B0 is the near-zero cutoff (1e-4f) and D_800A59B4 the per-frame offset decay
+// (0.3f); they are copied to locals in the loop guard because this file's rodata is
+// still in asm/us/data/A6500.rodata.s, so float literals cannot be used yet.
+void func_8006F9B0(ModelSegmentAnimDesc *segment, ModelAnimVertex *vertices) {
+    f32 divisor;
+    s16 *classes;
+    s16 *remap;
+    s32 i;
+    f32 cutoff;
+    f32 decay;
+    s32 count;
+    VertexPosBlend *blend;
+    ModelAnimVertex *vertex;
+
+    vertex = vertices;
+    classes = (s16 *)Memmap_GetSegmentVaddr(segment->tableSegment);
+    remap = (s16 *)Memmap_GetSegmentVaddr(segment->remapSegment);
+    count = (u16)segment->vertexCount;
+
+    i = 0;
+    if (count > 0) {
+        cutoff = D_800A59B0;
+        decay = D_800A59B4;
+        do {
+            blend = &vertex->position;
+            if ((Model_GetVertexClass(classes, i) != 0) && (i == *remap)) {
+                if (Math_FAbs(blend->offset.x) < cutoff) {
+                    blend->offset.x = 0.0f;
+                    // FAKE: swaps the f22/f24 allocation of cutoff and 0.0f; diff score 40 without it.
+                    if (1) {} if (1) {}
+                }
+                if (Math_FAbs(blend->offset.y) < cutoff) {
+                    blend->offset.y = 0.0f;
+                }
+                if (Math_FAbs(blend->offset.z) < cutoff) {
+                    blend->offset.z = 0.0f;
+                }
+                if ((s32)blend->drawGroup > 0) {
+                    divisor = (f32)blend->drawGroup;
+                    blend->base.x = blend->base.x + (blend->offset.x / divisor);
+                    blend->base.y = blend->base.y + (blend->offset.y / divisor);
+                    blend->base.z = blend->base.z + (blend->offset.z / divisor);
+                    blend->offset.x = blend->offset.x - (decay * blend->offset.x);
+                    blend->offset.y = blend->offset.y - (decay * blend->offset.y);
+                    blend->offset.z = blend->offset.z - (decay * blend->offset.z);
+                } else {
+                    blend->base.x = blend->base.x + blend->offset.x;
+                    blend->base.y = blend->base.y + blend->offset.y;
+                    blend->base.z = blend->base.z + blend->offset.z;
+                    blend->offset.x = blend->offset.x - (decay * blend->offset.x);
+                    blend->offset.y = blend->offset.y - (decay * blend->offset.y);
+                    blend->offset.z = blend->offset.z - (decay * blend->offset.z);
+                }
+            }
+            blend->drawGroup = 0;
+            vertex++;
+            remap++;
+        } while (++i != count);
+    }
+}
 #endif
 
 #ifdef VERSION_US
