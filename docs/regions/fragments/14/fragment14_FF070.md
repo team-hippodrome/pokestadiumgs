@@ -1,0 +1,51 @@
+# fragment14_FF070 matching notes
+
+## func_81309820
+
+This one-pointer, void handler reads the signed halfword at offset
+`0x137B6`. When it is below 2, it increments that halfword, stores 1 and 2
+in the halfwords at `0x137D4` and `0x137D6`, sets the byte at `0x137F5` to
+10, and calls existing `func_800226C0(1)`. Otherwise it calls existing
+`func_81309740(arg0, 8, 0)`.
+
+Compiled `func_81309928` selects this handler for input mask `0x400` and
+ignores its result. Compiled sibling `func_813096B4` decrements the same
+signed halfword when nonzero, writes -1 and -2 to the same two halfwords,
+and sets the same state byte to 10; its zero branch calls `func_813095C4`.
+These shared accesses establish the actual widths and local structure view.
+The unknown fields retain their address-based names, and the view allocates
+no storage.
+//@src/fragments/14/fragment14_FF070.c
+
+Original `func_81309740` receives a context pointer, consumes the second
+argument's unsigned low halfword and the third word, updates these transition
+fields, and calls other existing context helpers. Existing calls and
+declarations are preserved. Original `func_800226C0` constructs its subsequent
+call arguments from the incoming selector; this owner supplies only selector
+1 and consumes no result.
+//@src/229E0.c
+
+The first candidate reproduces all 36 instruction words (144 bytes), including
+the 24-byte frame. The current region catalog and private attempt ledger
+contained no earlier attempt for this owner. Existing matched C and helper
+bodies remain unchanged. No new fakes, padding, qualifiers, instruction
+rewriting, storage, layout, or CI changes are required.
+
+Fresh validation uses master `0acfa5069e1b3a1b796d209bf7c4a8a2e4e51071`
+plus this patch. The updated unchanged baseline passed its own complete US
+build and retail comparison after normal extraction. An unsuccessful trial
+in fragment 37 was restored and forced through compilation before acceptance.
+Final validation forces the changed source through the default syntax-enabled
+Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/14/fragment14_FF070.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. Independent original-assembly and retail-span comparisons verify
+all 144 bytes at ROM `0x1019B0..0x101A40`.
