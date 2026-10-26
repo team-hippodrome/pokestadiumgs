@@ -270,7 +270,29 @@ s32 func_8AF220E8(void) {
     return sp1C;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF221C4.s")
+extern s16 D_8AF3A080;
+extern s16 D_8AF3A140;
+extern u8 *D_8AF3A160;
+extern u8 *D_8AF3A164;
+extern u8 *D_8AF3A168;
+void func_8AF221C4(void) {
+    *(u16 *)(D_8AF3A160 + 2) &= ~1;
+    *(u16 *)(D_8AF3A164 + 2) &= ~1;
+    *(u16 *)(D_8AF3A168 + 2) &= ~1;
+    if (D_8AF3A080 == 3) {
+        switch (D_8AF3A140) {
+            case 0:
+                *(u16 *)(D_8AF3A160 + 2) |= 1;
+                break;
+            case 1:
+                *(u16 *)(D_8AF3A164 + 2) |= 1;
+                break;
+            case 2:
+                *(u16 *)(D_8AF3A168 + 2) |= 1;
+                break;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF2228C.s")
 

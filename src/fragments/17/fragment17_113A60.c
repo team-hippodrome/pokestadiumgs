@@ -252,7 +252,24 @@ void func_82206804(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822068E0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82206950.s")
+extern s16 D_8220EC44;
+extern s16 D_8220EC46;
+// Counts D_8220EC46 down by one per call and sets D_8220EC44, the env color alpha drawn by
+// func_822069A4, to timer * 0xFF / 5. Returns that alpha; func_822085EC waits for 0.
+s32 func_82206950(void) {
+    s16 alpha;
+    // FAKE: pointer alias for D_8220EC46; diff score 970 without it.
+    s16 *timer = &D_8220EC46;
+
+    if (*timer > 0) {
+        (*timer)--;
+        alpha = (*timer * 0xFF) / 5;
+    } else {
+        alpha = 0;
+    }
+    D_8220EC44 = alpha;
+    return alpha;
+}
 
 extern s16 D_8220EC44;
 extern Gfx *D_800D0510;

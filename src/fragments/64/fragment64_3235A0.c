@@ -15,7 +15,26 @@ u32 func_87F00930(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F014C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F01870.s")
+extern u8 D_87F11940[];
+void func_87F01870(void *arg0) {
+    D_87F0F610 = D_87F11940;
+    *(void **)(D_87F0F610 + 0xC) = arg0;
+    *(s32 *)(D_87F0F610 + 0x30) = 2;
+    D_87F0F610[0x3D] &= ~0x80; // Clears the bit func_87F00930 returns.
+    D_87F0F610[0x3C] = 0;
+    func_87F0E390(D_87F0F610, *(void **)(D_87F0F610 + 0xC));
+    switch ((*(u8 **)(D_87F0F610 + 0xC))[0x2180]) {
+        case 0:
+            *(s32 *)(D_87F0F610 + 0x10) = 0;
+            func_87F014C4(0, 118);
+            break;
+        case 1:
+            *(s32 *)(D_87F0F610 + 0x10) = 1;
+            func_87F014C4(1, 194);
+            func_87F014C4(2, 121);
+            break;
+    }
+}
 
 extern u8 D_800CE060[];
 extern void func_80006148(u8 *);

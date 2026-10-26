@@ -997,7 +997,17 @@ void func_84126C3C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84126E88.s")
+// Hidden Power base power from a packed DV word (attack, defense, speed and special
+// nibbles from high to low): (5 * (top bit of each DV) + (special DV & 3)) / 2 + 31.
+s32 func_84126E88(u16 dvs) {
+    u16 power = ((dvs & 0x8000) >> 12) | ((dvs & 0x800) >> 9) | ((dvs & 0x80) >> 6) | ((dvs & 8) >> 3);
+
+    power *= 5;
+    power += dvs & 3;
+    power >>= 1;
+    power += 31;
+    return power;
+}
 #endif
 
 #ifdef VERSION_US

@@ -150,7 +150,32 @@ s32 func_8180132C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AE600/func_81801388.s")
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_800225C4(s32);
+extern void func_80025CBC(s32);
+// In fade mode 0, starts a stage fade and the audio fade picked by audio_fade (1 = func_800225C4,
+// 2 = func_80025CBC; both queue 0x830x0000 audio commands with duration * 3). Returns 1 only in
+// fade mode 1.
+//@src/229E0.c
+s32 func_81801388(s32 duration, s32 audio_fade) {
+    switch (StageContext_GetFadeMode()) {
+    case 0:
+        StageFade_StartFromTransparent(duration);
+        switch (audio_fade) {
+        case 1:
+            func_800225C4(duration);
+            break;
+        case 2:
+            func_80025CBC(duration);
+            break;
+        }
+    case 2:
+    case 3:
+        return 0;
+    case 1:
+        return 1;
+    }
+}
 #endif
 
 #ifdef VERSION_US

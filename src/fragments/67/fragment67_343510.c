@@ -181,7 +181,38 @@ void func_8290711C(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_343510/func_82907188.s")
+// Byte 0: sequence state (0 = reset counter, 1 = advancing, 2 = finished after frame 61).
+// Byte 2: frame counter passed to the seven interpolation steps called below.
+// The f32s at +4 and +8 are D_82919D4C and D_82919D50.
+extern u8 D_82919D48[];
+void func_82907188(void) {
+    switch (D_82919D48[0]) {
+    case 0:
+        D_82919D48[0] = 1;
+        D_82919D48[2] = 0;
+        func_82906D64(D_82919D48[2]);
+        func_82906CC8(D_82919D48[2]);
+        func_82906EC4(D_82919D48[2]);
+        func_82906DFC(D_82919D48[2]);
+        func_82907054(D_82919D48[2]);
+        func_82906F8C(D_82919D48[2]);
+        func_8290711C(D_82919D48[2]);
+        break;
+    case 1:
+        D_82919D48[2]++;
+        func_82906D64(D_82919D48[2]);
+        func_82906CC8(D_82919D48[2]);
+        func_82906EC4(D_82919D48[2]);
+        func_82906DFC(D_82919D48[2]);
+        func_82907054(D_82919D48[2]);
+        func_82906F8C(D_82919D48[2]);
+        func_8290711C(D_82919D48[2]);
+        if (D_82919D48[2] == 61) {
+            D_82919D48[0] = 2;
+        }
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_343510/func_82907274.s")
 #endif

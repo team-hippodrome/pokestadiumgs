@@ -2,7 +2,41 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307AD0.s")
+extern s8 D_88601894;
+extern s8 D_88601895;
+extern s8 D_883087C0[17];
+extern s8 D_883087D4[18];
+// Returns the entry at (base + offset) wrapped into the table length: list 0 uses base
+// D_88601894 with the 17-entry D_883087C0, list 1 uses D_88601895 with the 18-entry D_883087D4.
+s32 func_88307AD0(s32 list, s8 offset) {
+    s8 result;
+    s8 index;
+
+    switch (list) {
+        case 0:
+            index = D_88601894 + offset;
+            while (index >= 17) {
+                index -= 17;
+            }
+            while (index < 0) {
+                index += 17;
+            }
+            result = D_883087C0[index];
+            break;
+        case 1:
+            index = D_88601895 + offset;
+            while (index >= 18) {
+                index -= 18;
+            }
+            while (index < 0) {
+                index += 18;
+            }
+            result = D_883087D4[index];
+            break;
+    }
+    //!bug result is uninitialized when list is neither 0 nor 1.
+    return result;
+}
 
 extern s32 func_88307AD0(s32, s8);
 extern void *func_8004C874(s32, s32);
@@ -24,8 +58,8 @@ s32 func_88307BCC(s32 arg0, u8 arg1) {
 extern float sqrtf(float value);
 extern s32 D_88308ED0;
 extern s32 D_88308EF0;
-extern s32 D_88601894;
-extern s32 D_88601895;
+extern s8 D_88601894;
+extern s8 D_88601895;
 
 void func_88307C2C(void)
 {

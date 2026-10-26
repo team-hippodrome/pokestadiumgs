@@ -303,7 +303,18 @@ s32 GbSave_WriteGen1SaveBlock(s32 index) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80058C6C.s")
+s32 func_80058C6C(s32 index) {
+    struct SaveBuffer { u8 *p; } data;
+
+    data = *(struct SaveBuffer *)(&D_80128570[index * 112] + 0x60);
+    GbSave_ComputeChecksumRange(data.p + 9, data.p + 0xB82, data.p + 0xD0D);
+    *(u16 *)(&D_80128570[index * 112] + 6) = func_800579D0(data.p + 0xD0D);
+    if (func_80057BCC(index, (s32)data.p, 0x2000, 0xD20) != 0 &&
+        func_80057BCC(index, (s32)data.p, 0x1200, 0xD20) != 0) {
+        return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

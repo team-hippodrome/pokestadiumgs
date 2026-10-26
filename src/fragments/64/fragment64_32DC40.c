@@ -2,7 +2,46 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0AFD0.s")
+extern f32 D_87F116D0; // 360/65536: converts s16 binary angles to degrees.
+s32 func_87F0AFD0(u8 *arg0, f32 *arg1, f32 *arg2, s16 *rotation) {
+    /* Byte 0x68 holds the two flags func_87F0B154 tests (bit31/bit30 of its word). */
+    struct unk_func_87F0AFD0 {
+        u8 pad[0x68];
+        u8 bit7 : 1;
+        u8 bit6 : 1;
+    } *flags = (void *)arg0;
+    f32 to_degrees = D_87F116D0;
+
+    // The ROM writes these nine fields twice in a row.
+    *(f32 *)(arg0 + 0x0) = arg1[0];
+    *(f32 *)(arg0 + 0x4) = arg1[1];
+    *(f32 *)(arg0 + 0x8) = arg1[2];
+    *(f32 *)(arg0 + 0xC) = arg2[0];
+    *(f32 *)(arg0 + 0x10) = arg2[1];
+    *(f32 *)(arg0 + 0x14) = arg2[2];
+    *(f32 *)(arg0 + 0x18) = rotation[0] * to_degrees;
+    *(f32 *)(arg0 + 0x1C) = rotation[1] * to_degrees;
+    *(f32 *)(arg0 + 0x20) = rotation[2] * to_degrees;
+    *(f32 *)(arg0 + 0x0) = arg1[0];
+    *(f32 *)(arg0 + 0x4) = arg1[1];
+    *(f32 *)(arg0 + 0x8) = arg1[2];
+    *(f32 *)(arg0 + 0xC) = arg2[0];
+    *(f32 *)(arg0 + 0x10) = arg2[1];
+    *(f32 *)(arg0 + 0x14) = arg2[2];
+    *(f32 *)(arg0 + 0x18) = rotation[0] * to_degrees;
+    *(f32 *)(arg0 + 0x1C) = rotation[1] * to_degrees;
+    *(f32 *)(arg0 + 0x20) = rotation[2] * to_degrees;
+    flags->bit7 = 0;
+    *(s32 *)(arg0 + 0x6C) = 0;
+    *(s32 *)(arg0 + 0x70) = 1;
+    *(s32 *)(arg0 + 0x74) = 0;
+    *(s32 *)(arg0 + 0x78) = 1;
+    *(s32 *)(arg0 + 0x7C) = 0;
+    *(s32 *)(arg0 + 0x80) = 1;
+    *(s32 *)(arg0 + 0x84) = 0;
+    flags->bit6 = 0;
+    return 1;
+}
 
 void func_87F0B0FC(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
     /* Word at +0x68, same flags word func_87F0B154 reads (bit31 = byte 0x68 bit 7). */
