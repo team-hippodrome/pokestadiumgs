@@ -229,8 +229,8 @@ typedef struct {
     s16 unk_04;
     u16 flags;
     s16 unk_08;
-    s16 unk_0A;
-    s16 unk_0C;
+    s16 primary_record_count;
+    s16 secondary_record_count;
     s16 unk_0E;
     s16 unk_10;
     s16 unk_12;
@@ -286,11 +286,90 @@ void func_82506AA4(s16 *arg0, s32 arg1, s32 arg2) {
     *(u16 *)((u8 *)&D_82508FF0 + 6) |= 4;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82506AD4.s")
+extern void *func_82506888(void);
+extern s16 D_82508FFA;
+extern s16 D_82508FFE;
+extern s16 D_82509000;
+// func_82505A64 packs these bytes into the RDP environment color.
+// func_82505420 interpolates the current color from a saved start and target.
+typedef struct {
+    u32 rgba;
+} Fragment21Color;
+void Fragment21_CreateType1Record(s32 arg0, Fragment21Color *arg1, s16 arg2, s16 arg3, s32 arg4) {
+    Fragment21Color *value;
+    u8 *node;
+
+    node = func_82506888();
+    if (node != NULL) {
+        _bzero((s16 *)node, 100);
+
+        *(s16 *)(node + 0) = 1;
+        *(s16 *)(node + 2) = arg0;
+        *(s16 *)(node + 4) = 0;
+        *(s16 *)(node + 8) = 0;
+        *(s16 *)(node + 10) = *(s16 *)(node + 2) * 10 + 50;
+        *(s16 *)(node + 14) = -1;
+        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&D_82509008;
+        *(s16 *)(node + 36) = D_82508FFE;
+        *(s16 *)(node + 38) = D_82509000;
+        *(s16 *)(node + 40) = 255;
+        *(s16 *)(node + 42) = 49;
+        *(s16 *)(node + 44) = arg2;
+        *(s16 *)(node + 46) = arg3;
+        *(s16 *)(node + 48) = arg2;
+        value = (Fragment21Color *)(node + 72);
+        *(s32 *)(node + 52) = arg4;
+        *(s32 *)(node + 68) = 0;
+        *(s32 *)(node + 64) = 0;
+        *(s32 *)(node + 60) = 0;
+        *(s32 *)(node + 56) = 0;
+        *value = *arg1;
+        *(Fragment21Color *)(node + 80) = *value;
+        *(Fragment21Color *)(node + 84) = *value;
+        D_82508FFA = ((Fragment21Header *)&D_82508FF0)->primary_record_count + 1;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82506BEC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82506E98.s")
+extern s16 D_82509020;
+extern s16 D_82509022;
+void Fragment21_CreateType1RecordWithValues(s32 arg0, Fragment21Color *arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
+    Fragment21Color *value;
+    u8 *node;
+    s32 record_value;
+
+    node = func_82506888();
+    if (node != NULL) {
+        _bzero((s16 *)node, 100);
+
+        *(s16 *)(node + 0) = 1;
+        *(s16 *)(node + 2) = arg0;
+        *(s16 *)(node + 4) = 1;
+        *(s16 *)(node + 8) = 0;
+        *(s16 *)(node + 10) = *(s16 *)(node + 2) * 10 + 50;
+        *(s16 *)(node + 14) = -1;
+        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&D_82509024;
+        *(s16 *)(node + 36) = D_82509020;
+        *(s16 *)(node + 38) = D_82509022;
+        *(s16 *)(node + 40) = 255;
+        *(s16 *)(node + 42) = 49;
+        *(s16 *)(node + 44) = arg2;
+        *(s16 *)(node + 46) = -1;
+        *(s16 *)(node + 48) = arg2;
+        value = (Fragment21Color *)(node + 72);
+        record_value = arg6;
+        *(s32 *)(node + 52) = record_value;
+        *(s32 *)(node + 56) = arg3;
+        *(s32 *)(node + 60) = arg4;
+        *(s32 *)(node + 64) = arg5;
+        *(s32 *)(node + 68) = record_value;
+        *value = *arg1;
+        *(Fragment21Color *)(node + 80) = *value;
+        *(Fragment21Color *)(node + 84) = *value;
+        D_82508FFA = ((Fragment21Header *)&D_82508FF0)->primary_record_count + 1;
+    }
+}
 
 extern s16 D_82508FFC;
 extern void _bzero(s16 *, s32);
@@ -472,11 +551,6 @@ s32 func_82507CF4(void) {
     return D_82508FF0 == 0;
 }
 
-// func_82505A64 packs these bytes into the RDP environment color.
-// func_82505420 interpolates the current color from a saved start and target.
-typedef struct {
-    u32 rgba;
-} Fragment21Color;
 s32 Fragment21_SetRecordColorTransition(s32 record_id, void *target_color, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s32 arg6) {
     s32 updated = 0;
     u8 *record;
