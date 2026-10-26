@@ -12,8 +12,8 @@ void func_82504810(void) {
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
-extern s32 func_8004C874(s32, s32);
-extern void func_800495BC(s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
 extern void func_800499EC(void);
 extern s32 * D_825087F0;
 void func_8250483C(void) {
@@ -294,12 +294,6 @@ void Fragment21_DrawTexturedBorder(s32 x, s32 y, s32 width, s32 height) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82505A64.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_8250610C.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825064A4.s")
-
-extern void _bzero(s16 *, s32);
-extern void func_8004C8C0(s32);
 typedef struct {
     s16 state;
     s16 unk_02;
@@ -321,14 +315,41 @@ typedef struct {
     s16 unk_0A;
     s16 timer;
     s16 frame;
-    u8 unk_10[84];
+    s16 offset_x, offset_y;
+    s16 transition_offset_x, transition_offset_y;
+    s16 x, y;
+    s16 start_x, start_y, target_x, target_y;
+    s16 width, height;
+    s16 opacity;
+    s16 unk_2A, unk_2C, unk_2E, unk_30, unk_32;
+    s32 image;
+    s32 images[4];
+    u8 color[4];
+    s16 start_width, target_width;
+    u8 start_color[4];
+    u8 target_color[4];
+    s16 unk_58, unk_5A, unk_5C, unk_5E;
+    s32 next_image;
 } Fragment21PoolNode;
 typedef struct {
     Fragment21Header header;
-    u8 unk_14[56];
+    u8 unk_14[40];
+    s16 image_positions[4][2];
     Fragment21PoolNode nodes[16];
 } Fragment21Context;
 extern Fragment21Context D_82508FF0;
+
+// X-coordinate aliases within the fragment context; Y occupies the next halfword.
+extern s16 D_8250900C;
+extern s16 D_82509010;
+extern s16 D_82509014;
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_8250610C.s")
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825064A4.s")
+
+extern void _bzero(s16 *, s32);
+extern void func_8004C8C0(s32);
 void func_8250684C(void) {
     func_8004C8C0(0x4B);
     func_8004C8C0(0x85);
@@ -371,9 +392,6 @@ void *Fragment21_FindRecord(s32 kind, s32 id) {
 }
 
 extern s32 D_82509008;
-extern s32 D_8250900C;
-extern s32 D_82509010;
-extern s32 D_82509014;
 void Fragment21_SetRecordDefaults(void *arg0, s32 arg1, s32 arg2, s32 arg3,
                     void *arg4, void *arg5, void *arg6, s32 arg7, s32 arg8) {
     Fragment21Header *header;
