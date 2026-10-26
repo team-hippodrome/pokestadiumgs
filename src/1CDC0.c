@@ -6,7 +6,7 @@ extern u8 D_8011FA5C[];
 extern u8 D_8011F9DC[];
 extern u8 D_8011BE90[];
 extern u8 D_80121F44[];
-extern void func_8001ED64(void *);
+extern void func_8001ED64();
 extern void AudioSequence_Update(u8 *);
 extern void func_80019DE4(void);
 extern void func_8001C744(void *, s32);
@@ -475,7 +475,7 @@ extern void func_8001A994(void *);
 typedef struct AudioLayerPreparePrefix AudioLayerPreparePrefix;
 extern void AudioLayer_PrepareNote(AudioLayerPreparePrefix *);
 extern s32 func_8001CF5C(void *);
-extern s32 func_8001DA54(void *, s32);
+extern s32 func_8001DA54();
 extern s32 func_8001D340(void *, s32);
 extern s32 func_8001CE70(void *, s32);
 typedef struct { u32 enabled:1; u32 finished:1; u32 stop:1; u32 continuous_notes:1; u32 low:28; } AudioLayerUpdateWordFlags;
@@ -695,7 +695,327 @@ s32 func_8001CF5C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001D340.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001DA54.s")
+// Sequence player, channel and layer records, laid out like Majora's Mask
+// SequencePlayer, SequenceChannel and SequenceLayer (include/audio/seqplayer.h),
+// except that GS's channel has two more bytes at 0x12 and six layers
+// (func_8001C404 and func_8001C794 use the shifted offsets and the layer count).
+// The players are the 0x160-byte records at D_8011BE90 + 0x346C that
+// Audio_UpdateSequencesAndNotes steps. Only the members that the script
+// interpreters below use are typed; pointers to notes, instruments and samples
+// are left as u8 *.
+typedef struct {
+    /* 0x0 */ u16 vibratoRateStart;
+    /* 0x2 */ u16 vibratoDepthStart;
+    /* 0x4 */ u16 vibratoRateTarget;
+    /* 0x6 */ u16 vibratoDepthTarget;
+    /* 0x8 */ u16 vibratoRateChangeDelay;
+    /* 0xA */ u16 vibratoDepthChangeDelay;
+    /* 0xC */ u16 vibratoDelay;
+} VibratoSubStruct; // size = 0xE
+
+typedef struct {
+    /* 0x0 */ u8 decayIndex;
+    /* 0x1 */ u8 sustain;
+    /* 0x4 */ u8 *envelope;
+} AdsrSettings; // size = 0x8
+
+typedef struct {
+    /* 0x0 */ u8 mode;
+    /* 0x2 */ u16 cur;
+    /* 0x4 */ u16 speed;
+    /* 0x8 */ f32 extent;
+} Portamento; // size = 0xC
+
+typedef struct AudioListItem {
+    /* 0x0 */ struct AudioListItem *prev;
+    /* 0x4 */ struct AudioListItem *next;
+    /* 0x8 */ void *value;
+    /* 0xC */ void *pool;
+} AudioListItem; // size = 0x10
+
+typedef struct {
+    /* 0x00 */ AudioListItem disabled;
+    /* 0x10 */ AudioListItem decaying;
+    /* 0x20 */ AudioListItem releasing;
+    /* 0x30 */ AudioListItem active;
+} NotePool; // size = 0x40
+
+typedef union {
+    struct {
+        u8 unused : 2;
+        u8 type : 2;
+        u8 strongRight : 1;
+        u8 strongLeft : 1;
+        u8 strongReverbRight : 1;
+        u8 strongReverbLeft : 1;
+    } s;
+    u8 asByte;
+} StereoData; // size = 0x1
+
+typedef struct SequencePlayer {
+    /* 0x000 */ u8 enabled : 1;
+    /* 0x000 */ u8 finished : 1;
+    /* 0x000 */ u8 muted : 1;
+    /* 0x000 */ u8 seqDmaInProgress : 1;
+    /* 0x000 */ u8 fontDmaInProgress : 1;
+    /* 0x000 */ u8 recalculateVolume : 1;
+    /* 0x000 */ u8 stopScript : 1;
+    /* 0x000 */ u8 applyBend : 1;
+    /* 0x001 */ u8 state;
+    /* 0x002 */ u8 noteAllocPolicy;
+    /* 0x003 */ u8 muteFlags;
+    /* 0x004 */ u8 seqId;
+    /* 0x005 */ u8 defaultFont;
+    /* 0x006 */ u8 unk_06[1];
+    /* 0x007 */ s8 playerIndex;
+    /* 0x008 */ u16 tempo;
+    /* 0x00A */ u16 tempoAcc;
+    /* 0x00C */ s16 tempoChange;
+    /* 0x00E */ s16 transposition;
+    /* 0x010 */ u16 delay;
+    /* 0x012 */ u16 fadeTimer;
+    /* 0x014 */ u16 storedFadeTimer;
+    /* 0x016 */ u16 unk_16;
+    /* 0x018 */ u8 *seqData;
+    /* 0x01C */ f32 fadeVolume;
+    /* 0x020 */ f32 fadeVelocity;
+    /* 0x024 */ f32 volume;
+    /* 0x028 */ f32 muteVolumeScale;
+    /* 0x02C */ f32 fadeVolumeScale;
+    /* 0x030 */ f32 appliedFadeVolume;
+    /* 0x034 */ f32 bend;
+    /* 0x038 */ struct SequenceChannel *channels[16];
+    /* 0x078 */ AudioScriptState scriptState;
+    /* 0x094 */ u8 *shortNoteVelocityTable;
+    /* 0x098 */ u8 *shortNoteGateTimeTable;
+    /* 0x09C */ NotePool notePool;
+    /* 0x0DC */ s32 skipTicks;
+    /* 0x0E0 */ u32 scriptCounter;
+    /* 0x0E4 */ u8 unk_E4[0x74];
+    /* 0x158 */ s8 seqScriptIO[8];
+} SequencePlayer; // size = 0x160
+
+typedef struct SequenceChannel {
+    /* 0x00 */ u8 enabled : 1;
+    /* 0x00 */ u8 finished : 1;
+    /* 0x00 */ u8 stopScript : 1;
+    /* 0x00 */ u8 muted : 1;
+    /* 0x00 */ u8 hasInstrument : 1;
+    /* 0x00 */ u8 stereoHeadsetEffects : 1;
+    /* 0x00 */ u8 largeNotes : 1;
+    /* 0x00 */ u8 unused : 1;
+    union {
+        struct {
+            /* 0x01 */ u8 freqScale : 1;
+            /* 0x01 */ u8 volume : 1;
+            /* 0x01 */ u8 pan : 1;
+        } s;
+        /* 0x01 */ u8 asByte;
+    } changes;
+    /* 0x02 */ u8 noteAllocPolicy;
+    /* 0x03 */ u8 muteFlags;
+    /* 0x04 */ u8 targetReverbVol;
+    /* 0x05 */ u8 notePriority;
+    /* 0x06 */ u8 someOtherPriority;
+    /* 0x07 */ u8 fontId;
+    /* 0x08 */ u8 reverbIndex;
+    /* 0x09 */ u8 bookOffset;
+    /* 0x0A */ u8 newPan;
+    /* 0x0B */ u8 panChannelWeight;
+    /* 0x0C */ u8 gain;
+    /* 0x0D */ u8 velocityRandomVariance;
+    /* 0x0E */ u8 gateTimeRandomVariance;
+    /* 0x0F */ u8 combFilterSize;
+    /* 0x10 */ u8 surroundEffectIndex;
+    /* 0x11 */ u8 channelIndex;
+    /* 0x12 */ u8 unk_12[2];
+    /* 0x14 */ VibratoSubStruct vibrato;
+    /* 0x22 */ u16 delay;
+    /* 0x24 */ u16 combFilterGain;
+    /* 0x26 */ u16 unk_22;
+    /* 0x28 */ s16 instOrWave;
+    /* 0x2A */ s16 transposition;
+    /* 0x2C */ f32 volumeScale;
+    /* 0x30 */ f32 volume;
+    /* 0x34 */ s32 pan;
+    /* 0x38 */ f32 appliedVolume;
+    /* 0x3C */ f32 freqScale;
+    /* 0x40 */ u8 (*dynTable)[][2];
+    /* 0x44 */ u8 *noteUnused;
+    /* 0x48 */ struct SequenceLayer *layerUnused;
+    /* 0x4C */ u8 *instrument;
+    /* 0x50 */ SequencePlayer *seqPlayer;
+    /* 0x54 */ struct SequenceLayer *layers[6];
+    /* 0x6C */ AudioScriptState scriptState;
+    /* 0x88 */ AdsrSettings adsr;
+    /* 0x90 */ NotePool notePool;
+    /* 0xD0 */ s8 seqScriptIO[8];
+    /* 0xD8 */ u8 *sfxState;
+    /* 0xDC */ s16 *filter;
+    /* 0xE0 */ StereoData stereoData;
+    /* 0xE4 */ s32 startSamplePos;
+    /* 0xE8 */ s32 unk_E0;
+} SequenceChannel; // size = 0xEC
+
+typedef struct SequenceLayer {
+    /* 0x00 */ u8 enabled : 1;
+    /* 0x00 */ u8 finished : 1;
+    /* 0x00 */ u8 muted : 1;
+    /* 0x00 */ u8 continuousNotes : 1;
+    /* 0x00 */ u8 bit3 : 1;
+    /* 0x00 */ u8 ignoreDrumPan : 1;
+    /* 0x00 */ u8 bit1 : 1;
+    /* 0x00 */ u8 notePropertiesNeedInit : 1;
+    /* 0x01 */ StereoData stereoData;
+    /* 0x02 */ u8 instOrWave;
+    /* 0x03 */ u8 gateTime;
+    /* 0x04 */ u8 semitone;
+    /* 0x05 */ u8 portamentoTargetNote;
+    /* 0x06 */ u8 pan;
+    /* 0x07 */ u8 notePan;
+    /* 0x08 */ u8 surroundEffectIndex;
+    /* 0x09 */ u8 targetReverbVol;
+    /* 0x0A */ u16 unk_0A;
+    /* 0x0C */ VibratoSubStruct vibrato;
+    /* 0x1A */ s16 delay;
+    /* 0x1C */ s16 gateDelay;
+    /* 0x1E */ s16 delay2;
+    /* 0x20 */ u16 portamentoTime;
+    /* 0x22 */ s16 transposition;
+    /* 0x24 */ s16 shortNoteDefaultDelay;
+    /* 0x26 */ s16 lastDelay;
+    /* 0x28 */ AdsrSettings adsr;
+    /* 0x30 */ Portamento portamento;
+    /* 0x3C */ u8 *note;
+    /* 0x40 */ f32 freqScale;
+    /* 0x44 */ f32 bend;
+    /* 0x48 */ f32 velocitySquare2;
+    /* 0x4C */ f32 velocitySquare;
+    /* 0x50 */ f32 noteVelocity;
+    /* 0x54 */ f32 noteFreqScale;
+    /* 0x58 */ u8 *instrument;
+    /* 0x5C */ u8 *tunedSample;
+    /* 0x60 */ SequenceChannel *channel;
+    /* 0x64 */ AudioScriptState scriptState;
+    /* 0x80 */ AudioListItem listItem;
+} SequenceLayer; // size = 0x90
+
+// Close to Majora's Mask AudioScript_SeqLayerProcessScriptStep3 (src/audio/lib/seqplayer.c);
+// GS does not check the channel's muted flag before the skip-ticks check.
+// D_8011EB9C is the audio random value (D_8011BE90 + 0x2D0C).
+extern u32 D_8011EB9C;
+s32 func_8001DA54(SequenceLayer *layer, s32 cmd) {
+    AudioScriptState *state = &layer->scriptState;
+    u16 delay;
+    s32 velocity;
+    SequenceChannel *channel = layer->channel;
+    SequencePlayer *seq_player = channel->seqPlayer;
+    s32 int_delta;
+    f32 float_delta;
+
+    if (cmd == 0xC0) { // Layer delay.
+        layer->delay = func_8001CC88(&state->pc);
+        layer->muted = TRUE;
+        layer->bit1 = FALSE;
+        return -1;
+    }
+
+    layer->muted = FALSE;
+
+    if (channel->largeNotes == TRUE) {
+        switch (cmd & 0xC0) {
+            case 0x00: // Large note with delay, velocity and gate time.
+                delay = func_8001CC88(&state->pc);
+                velocity = *(state->pc++);
+                layer->gateTime = *(state->pc++);
+                layer->lastDelay = delay;
+                break;
+
+            case 0x40: // Large note with delay and velocity.
+                delay = func_8001CC88(&state->pc);
+                velocity = *(state->pc++);
+                layer->gateTime = 0;
+                layer->lastDelay = delay;
+                break;
+
+            case 0x80: // Large note with velocity and gate time.
+                delay = layer->lastDelay;
+                velocity = *(state->pc++);
+                layer->gateTime = *(state->pc++);
+                break;
+        }
+
+        if ((velocity > 0x7F) || (velocity < 0)) {
+            velocity = 0x7F;
+        }
+        layer->velocitySquare = ((f32)velocity * (f32)velocity) / (127.0f * 127.0f);
+        cmd -= (cmd & 0xC0);
+    } else {
+        switch (cmd & 0xC0) {
+            case 0x00: // Small note with a delay.
+                delay = func_8001CC88(&state->pc);
+                layer->lastDelay = delay;
+                break;
+
+            case 0x40: // Small note with the default delay.
+                delay = layer->shortNoteDefaultDelay;
+                break;
+
+            case 0x80: // Small note with the previous delay.
+                delay = layer->lastDelay;
+                break;
+        }
+        cmd -= (cmd & 0xC0);
+    }
+
+    if (channel->velocityRandomVariance != 0) {
+        float_delta = layer->velocitySquare * (D_8011EB9C % channel->velocityRandomVariance) / 100.0f;
+        if ((D_8011EB9C & 0x8000) != 0) {
+            float_delta = -float_delta;
+        }
+
+        layer->velocitySquare2 = layer->velocitySquare + float_delta;
+
+        if (layer->velocitySquare2 < 0.0f) {
+            layer->velocitySquare2 = 0.0f;
+        } else if (layer->velocitySquare2 > 1.0f) {
+            layer->velocitySquare2 = 1.0f;
+        }
+    } else {
+        layer->velocitySquare2 = layer->velocitySquare;
+    }
+
+    layer->delay = delay;
+    layer->gateDelay = (layer->gateTime * delay) >> 8;
+
+    if (channel->gateTimeRandomVariance != 0) {
+        //!bug the gate-time variance check scales by velocityRandomVariance, as in Majora's Mask
+        int_delta = (layer->gateDelay * (D_8011EB9C % channel->velocityRandomVariance)) / 100;
+        if ((D_8011EB9C & 0x4000) != 0) {
+            int_delta = -int_delta;
+        }
+
+        layer->gateDelay += int_delta;
+        if (layer->gateDelay < 0) {
+            layer->gateDelay = 0;
+        } else if (layer->gateDelay > layer->delay) {
+            layer->gateDelay = layer->delay;
+        }
+    }
+
+    // Mute flags 0x40 and 0x10 stop notes and layers.
+    if (seq_player->muted && (channel->muteFlags & 0x50)) {
+        layer->muted = TRUE;
+        return -1;
+    }
+
+    if (seq_player->skipTicks != 0) {
+        layer->muted = TRUE;
+        return -1;
+    }
+
+    return cmd;
+}
 
 void func_8001DE58(u8 *arg0, u8 arg1) {
     s32 value;
@@ -753,9 +1073,987 @@ void func_8001DFD0(void *arg0, u8 arg1) {
     *(f32 *)((u8 *)arg0 + 0x30) = (f32)value / 127.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001DFF4.s")
+extern void ResourcePool_AcquireEntries(void *pool, s32 count);
+extern s32 func_80011250(s32 table_type, s32 cache, s32 id);
+extern void func_80011864(s16 *filter, s32 low_pass_cutoff, s32 high_pass_cutoff);
+extern s32 func_80015E6C(s32 font_id, s32 sample_id, s8 *status);
+extern f32 D_8008E794[];
+extern u8 *D_8011EA60;
+extern u8 (*D_8011EBA8[])(s8 value, SequenceChannel *channel);
+extern u8 (*D_80122A24)(s8 value, SequenceChannel *channel);
+extern u32 func_800194A0(void);
+// Close to Majora's Mask AudioScript_SequenceChannelProcessScript (src/audio/lib/seqplayer.c);
+// GS has no commands 0xA7 (shift value) and 0xA8 (random pointer), draws the random values of
+// commands 0xB7 and 0xB8 from func_800194A0 (the generator Majora's Mask calls
+// AudioThread_NextRandom) instead of the stored audio random value, and its
+// layer commands accept layer indices 0-5. D_8011EA60 is the sequence font
+// table, D_8008E794 and D_8008EB94 are the one-octave and two-semitone bend
+// tables, and D_8011EBA8 holds five custom sequence functions, the one being
+// called is stored in D_80122A24.
+void func_8001DFF4(SequenceChannel *channel) {
+    s32 i;
+    u8 *data;
+    SequencePlayer *seq_player;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001ED64.s")
+    if (channel->stopScript) {
+        goto exit_loop;
+    }
+
+    seq_player = channel->seqPlayer;
+    if (seq_player->muted && (channel->muteFlags & 0x80)) {
+        return;
+    }
+
+    if (channel->delay >= 2) {
+        channel->delay--;
+        goto exit_loop;
+    }
+
+    while (TRUE) {
+        AudioScriptState *script_state = &channel->scriptState;
+        s16 temp1;
+        u16 cmd_arg_u16;
+        s8 cmd_arg_s8;
+        u8 cmd = func_8001CC3C(&script_state->pc);
+        u8 low_bits;
+        u8 high_bits;
+        s32 delay;
+        u32 cmd_args[3];
+        u8 depth;
+        u8 *seq_data = seq_player->seqData;
+
+        // Commands 0xA0 - 0xFF
+        if (cmd >= 0xA0) {
+            // The argument table for commands 0xA0-0xFF starts at 0x8008FC30,
+            // D_8008FB90 + 0xA0 (entry 0x81 for command 0xA0: one s16 argument).
+            high_bits = (D_8008FB90 + 0xA0)[cmd - 0xA0];
+            low_bits = high_bits & 3;
+
+            // Read the command's arguments.
+            for (i = 0; i < low_bits; i++, high_bits <<= 1) {
+                if (!(high_bits & 0x80)) {
+                    cmd_args[i] = func_8001CC3C(&script_state->pc);
+                } else {
+                    cmd_args[i] = func_8001CC50(&script_state->pc);
+                }
+            }
+
+            // Control-flow commands
+            if (cmd >= 0xF2) {
+                delay = func_8001C228((u8 *)seq_player, script_state, cmd, cmd_args[0]);
+
+                if (delay != 0) {
+                    if (delay == -1) {
+                        func_8001C794((s32)channel);
+                    } else {
+                        channel->delay = delay;
+                    }
+                    break;
+                }
+                continue;
+            }
+
+            switch (cmd) {
+                case 0xEA: // Stop the script.
+                    channel->stopScript = TRUE;
+                    goto exit_loop;
+
+                case 0xF1: // Reserve notes.
+                    AudioNotePool_Clear(&channel->notePool);
+                    cmd = (u8)cmd_args[0];
+                    ResourcePool_AcquireEntries(&channel->notePool, cmd);
+                    break;
+
+                case 0xF0: // Release reserved notes.
+                    AudioNotePool_Clear(&channel->notePool);
+                    break;
+
+                case 0xC2: // Set the dynamic table.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    channel->dynTable = (void *)&seq_player->seqData[cmd_arg_u16];
+                    break;
+
+                case 0xC5: // Set the dynamic table from the dynamic table.
+                    if (script_state->value != -1) {
+                        data = (*channel->dynTable)[script_state->value];
+                        cmd_arg_u16 = (u16)((data[0] << 8) + data[1]);
+                        script_state->pc = (void *)&seq_player->seqData[cmd_arg_u16];
+                    }
+                    break;
+
+                case 0xEB: // Set sound font and instrument.
+                    cmd = (u8)cmd_args[0];
+
+                    if (seq_player->defaultFont != 0xFF) {
+                        cmd_arg_u16 = ((u16 *)D_8011EA60)[seq_player->seqId];
+                        low_bits = D_8011EA60[cmd_arg_u16];
+                        cmd = D_8011EA60[cmd_arg_u16 + low_bits - cmd];
+                    }
+
+                    if (func_80011250(1, 2, cmd)) {
+                        channel->fontId = cmd;
+                    }
+
+                    cmd_args[0] = cmd_args[1];
+                    // fallthrough
+                case 0xC1: // Set instrument.
+                    cmd = (u8)cmd_args[0];
+                    AudioChannel_SetProgram((u8 *)channel, cmd);
+                    break;
+
+                case 0xC3: // Large notes off.
+                    channel->largeNotes = FALSE;
+                    break;
+
+                case 0xC4: // Large notes on.
+                    channel->largeNotes = TRUE;
+                    break;
+
+                case 0xDF: // Set volume.
+                    cmd = (u8)cmd_args[0];
+                    func_8001DFD0(channel, cmd);
+                    channel->changes.s.volume = TRUE;
+                    break;
+
+                case 0xE0: // Set volume scale.
+                    cmd = (u8)cmd_args[0];
+                    channel->volumeScale = (f32)(s32)cmd / 128.0f;
+                    channel->changes.s.volume = TRUE;
+                    break;
+
+                case 0xDE: // Set frequency scale.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    channel->freqScale = (f32)(s32)cmd_arg_u16 / 0x8000;
+                    channel->changes.s.freqScale = TRUE;
+                    break;
+
+                case 0xD3: // Bend pitch by up to one octave.
+                    cmd = (u8)cmd_args[0];
+                    cmd += 0x80;
+                    channel->freqScale = D_8008E794[cmd];
+                    channel->changes.s.freqScale = TRUE;
+                    break;
+
+                case 0xEE: // Bend pitch by up to two semitones.
+                    cmd = (u8)cmd_args[0];
+                    cmd += 0x80;
+                    channel->freqScale = D_8008EB94[cmd];
+                    channel->changes.s.freqScale = TRUE;
+                    break;
+
+                case 0xDD: // Set pan.
+                    cmd = (u8)cmd_args[0];
+                    channel->newPan = cmd;
+                    channel->changes.s.pan = TRUE;
+                    break;
+
+                case 0xDC: // Set pan weight.
+                    cmd = (u8)cmd_args[0];
+                    channel->panChannelWeight = cmd;
+                    channel->changes.s.pan = TRUE;
+                    break;
+
+                case 0xDB: // Set transposition.
+                    cmd_arg_s8 = (s8)cmd_args[0];
+                    channel->transposition = cmd_arg_s8;
+                    break;
+
+                case 0xDA: // Set envelope.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    channel->adsr.envelope = &seq_player->seqData[cmd_arg_u16];
+                    break;
+
+                case 0xD9: // Set release rate.
+                    cmd = (u8)cmd_args[0];
+                    channel->adsr.decayIndex = cmd;
+                    break;
+
+                case 0xD8: // Set vibrato depth.
+                    cmd = (u8)cmd_args[0];
+                    channel->vibrato.vibratoDepthTarget = cmd * 8;
+                    channel->vibrato.vibratoDepthStart = 0;
+                    channel->vibrato.vibratoDepthChangeDelay = 0;
+                    break;
+
+                case 0xD7: // Set vibrato rate.
+                    cmd = (u8)cmd_args[0];
+                    channel->vibrato.vibratoRateChangeDelay = 0;
+                    channel->vibrato.vibratoRateTarget = cmd * 32;
+                    channel->vibrato.vibratoRateStart = cmd * 32;
+                    break;
+
+                case 0xE2: // Set a vibrato depth ramp.
+                    cmd = (u8)cmd_args[0];
+                    channel->vibrato.vibratoDepthStart = cmd * 8;
+                    cmd = (u8)cmd_args[1];
+                    channel->vibrato.vibratoDepthTarget = cmd * 8;
+                    cmd = (u8)cmd_args[2];
+                    channel->vibrato.vibratoDepthChangeDelay = cmd * 16;
+                    break;
+
+                case 0xE1: // Set a vibrato rate ramp.
+                    cmd = (u8)cmd_args[0];
+                    channel->vibrato.vibratoRateStart = cmd * 32;
+                    cmd = (u8)cmd_args[1];
+                    channel->vibrato.vibratoRateTarget = cmd * 32;
+                    cmd = (u8)cmd_args[2];
+                    channel->vibrato.vibratoRateChangeDelay = cmd * 16;
+                    break;
+
+                case 0xE3: // Set vibrato delay.
+                    cmd = (u8)cmd_args[0];
+                    channel->vibrato.vibratoDelay = cmd * 16;
+                    break;
+
+                case 0xD4: // Set reverb volume.
+                    cmd = (u8)cmd_args[0];
+                    channel->targetReverbVol = cmd;
+                    break;
+
+                case 0xC6: // Set sound font.
+                    cmd = (u8)cmd_args[0];
+
+                    if (seq_player->defaultFont != 0xFF) {
+                        cmd_arg_u16 = ((u16 *)D_8011EA60)[seq_player->seqId];
+                        low_bits = D_8011EA60[cmd_arg_u16];
+                        cmd = D_8011EA60[cmd_arg_u16 + low_bits - cmd];
+                    }
+
+                    if (func_80011250(1, 2, cmd)) {
+                        channel->fontId = cmd;
+                    }
+                    break;
+
+                case 0xC7: // Write into the sequence data.
+                    cmd = (u8)cmd_args[0];
+                    cmd_arg_u16 = (u16)cmd_args[1];
+                    seq_data = &seq_player->seqData[cmd_arg_u16];
+                    seq_data[0] = (u8)script_state->value + cmd;
+                    break;
+
+                case 0xC8: // Subtract from value.
+                case 0xCC: // Set value.
+                case 0xC9: // Bitwise AND with value.
+                    cmd_arg_s8 = (s8)cmd_args[0];
+
+                    if (cmd == 0xC8) {
+                        script_state->value -= cmd_arg_s8;
+                    } else if (cmd == 0xCC) {
+                        script_state->value = cmd_arg_s8;
+                    } else {
+                        script_state->value &= cmd_arg_s8;
+                    }
+                    break;
+
+                case 0xCD: // Disable a channel.
+                    cmd = (u8)cmd_args[0];
+                    func_8001C794((s32)seq_player->channels[cmd]);
+                    break;
+
+                case 0xCA: // Set mute behavior.
+                    cmd = (u8)cmd_args[0];
+                    channel->muteFlags = cmd;
+                    channel->changes.s.volume = TRUE;
+                    break;
+
+                case 0xCB: // Read the sequence data into value.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    script_state->value = *(seq_player->seqData + (u32)(cmd_arg_u16 + script_state->value));
+                    break;
+
+                case 0xCE: // Set the pointer register.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    channel->unk_22 = cmd_arg_u16;
+                    break;
+
+                case 0xCF: // Write the pointer register into the sequence data.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    seq_data = &seq_player->seqData[cmd_arg_u16];
+                    seq_data[0] = (channel->unk_22 >> 8) & 0xFF;
+                    seq_data[1] = channel->unk_22 & 0xFF;
+                    break;
+
+                case 0xD0: // Stereo headset effects.
+                    cmd = (u8)cmd_args[0];
+                    if (cmd & 0x80) {
+                        channel->stereoHeadsetEffects = TRUE;
+                    } else {
+                        channel->stereoHeadsetEffects = FALSE;
+                    }
+                    channel->stereoData.asByte = cmd & 0x7F;
+                    break;
+
+                case 0xD1: // Set note allocation policy.
+                    cmd = (u8)cmd_args[0];
+                    channel->noteAllocPolicy = cmd;
+                    break;
+
+                case 0xD2: // Set sustain.
+                    cmd = (u8)cmd_args[0];
+                    channel->adsr.sustain = cmd;
+                    break;
+
+                case 0xE5: // Set reverb index.
+                    cmd = (u8)cmd_args[0];
+                    channel->reverbIndex = cmd;
+                    break;
+
+                case 0xE4: // Call through the dynamic table.
+                    if (script_state->value != -1) {
+                        data = (*channel->dynTable)[script_state->value];
+                        depth = script_state->depth;
+                        //!bug no stack depth check
+                        script_state->stack[depth] = script_state->pc;
+                        script_state->depth++;
+                        cmd_arg_u16 = (u16)((data[0] << 8) + data[1]);
+                        script_state->pc = seq_player->seqData + cmd_arg_u16;
+                    }
+                    break;
+
+                case 0xE6: // Set sample book offset.
+                    cmd = (u8)cmd_args[0];
+                    channel->bookOffset = cmd;
+                    break;
+
+                case 0xE7: // Load channel parameters from the sequence data.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    data = &seq_player->seqData[cmd_arg_u16];
+                    channel->muteFlags = *data++;
+                    channel->noteAllocPolicy = *data++;
+                    func_8001DE58((u8 *)channel, *data++);
+                    channel->transposition = (s8)*data++;
+                    channel->newPan = *data++;
+                    channel->panChannelWeight = *data++;
+                    channel->targetReverbVol = *data++;
+                    channel->reverbIndex = *data++;
+                    //!bug the reverb change is not flagged
+                    channel->changes.s.pan = TRUE;
+                    break;
+
+                case 0xE8: // Set channel parameters.
+                    channel->muteFlags = cmd_args[0];
+                    channel->noteAllocPolicy = cmd_args[1];
+                    cmd = (u8)cmd_args[2];
+                    func_8001DE58((u8 *)channel, cmd);
+                    channel->transposition = (s8)func_8001CC3C(&script_state->pc);
+                    channel->newPan = func_8001CC3C(&script_state->pc);
+                    channel->panChannelWeight = func_8001CC3C(&script_state->pc);
+                    channel->targetReverbVol = func_8001CC3C(&script_state->pc);
+                    channel->reverbIndex = func_8001CC3C(&script_state->pc);
+                    //!bug the reverb change is not flagged
+                    channel->changes.s.pan = TRUE;
+                    break;
+
+                case 0xEC: // Reset vibrato and other effects.
+                    channel->vibrato.vibratoDepthTarget = 0;
+                    channel->vibrato.vibratoDepthStart = 0;
+                    channel->vibrato.vibratoDepthChangeDelay = 0;
+                    channel->vibrato.vibratoRateTarget = 0;
+                    channel->vibrato.vibratoRateStart = 0;
+                    channel->vibrato.vibratoRateChangeDelay = 0;
+                    channel->filter = NULL;
+                    channel->gain = 0;
+                    channel->adsr.sustain = 0;
+                    channel->velocityRandomVariance = 0;
+                    channel->gateTimeRandomVariance = 0;
+                    channel->combFilterSize = 0;
+                    channel->combFilterGain = 0;
+                    channel->bookOffset = 0;
+                    channel->startSamplePos = 0;
+                    channel->unk_E0 = 0;
+                    channel->freqScale = 1.0f;
+                    break;
+
+                case 0xE9: // Set note priority.
+                    func_8001DE58((u8 *)channel, (u8)cmd_args[0]);
+                    break;
+
+                case 0xED: // Set gain.
+                    cmd = (u8)cmd_args[0];
+                    channel->gain = cmd;
+                    break;
+
+                case 0xB0: // Set filter.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    data = seq_player->seqData + cmd_arg_u16;
+                    channel->filter = (s16 *)data;
+                    break;
+
+                case 0xB1: // Clear filter.
+                    channel->filter = NULL;
+                    break;
+
+                case 0xB3: // Load filter coefficients.
+                    cmd = cmd_args[0];
+
+                    if (channel->filter != NULL) {
+                        low_bits = (cmd >> 4) & 0xF; // Low-pass cutoff
+                        cmd &= 0xF;                  // High-pass cutoff
+                        func_80011864(channel->filter, low_bits, cmd);
+                    }
+                    break;
+
+                case 0xB2: // Read a u16 from the sequence data into the pointer register.
+                    cmd_arg_u16 = (u16)cmd_args[0];
+                    channel->unk_22 = *(u16 *)(seq_player->seqData + (u32)(cmd_arg_u16 + script_state->value * 2));
+                    break;
+
+                case 0xB4: // Set the dynamic table from the pointer register.
+                    channel->dynTable = (void *)&seq_player->seqData[channel->unk_22];
+                    break;
+
+                case 0xB5: // Read the dynamic table into the pointer register.
+                    channel->unk_22 = ((u16 *)(channel->dynTable))[script_state->value];
+                    break;
+
+                case 0xB6: // Read the dynamic table into value.
+                    script_state->value = (*channel->dynTable)[0][script_state->value];
+                    break;
+
+                case 0xB7: // Random pointer register.
+                    channel->unk_22 = (cmd_args[0] == 0) ? (func_800194A0() & 0xFFFF) : (func_800194A0() % cmd_args[0]);
+                    break;
+
+                case 0xB8: // Random value.
+                    script_state->value = (cmd_args[0] == 0) ? (func_800194A0() & 0xFFFF) : (func_800194A0() % cmd_args[0]);
+                    break;
+
+                case 0xB9: // Set velocity random variance.
+                    channel->velocityRandomVariance = cmd_args[0];
+                    break;
+
+                case 0xBA: // Set gate time random variance.
+                    channel->gateTimeRandomVariance = cmd_args[0];
+                    break;
+
+                case 0xBB: // Set comb filter.
+                    channel->combFilterSize = cmd_args[0];
+                    channel->combFilterGain = cmd_args[1];
+                    break;
+
+                case 0xBC: // Add to the pointer register.
+                    channel->unk_22 += cmd_args[0];
+                    break;
+
+                case 0xBD: // Set sample start position.
+                    channel->startSamplePos = cmd_args[0];
+                    break;
+
+                case 0xBE: // Call a custom sequence function.
+                    if (cmd_args[0] < 5) {
+                        if (1) {} // karodo: also in Majora's Mask; diff score 1725 without it.
+                        if (D_8011EBA8[cmd_args[0]] != NULL) {
+                            D_80122A24 = D_8011EBA8[cmd_args[0]];
+                            script_state->value = D_80122A24(script_state->value, channel);
+                        }
+                    }
+                    break;
+
+                case 0xA0: // Read from the sound effect state at an argument offset.
+                case 0xA1: // Read from the sound effect state at the pointer register.
+                case 0xA2: // Write to the sound effect state at an argument offset.
+                case 0xA3: // Write to the sound effect state at the pointer register.
+                    if ((cmd == 0xA0) || (cmd == 0xA2)) {
+                        cmd_arg_u16 = (u16)cmd_args[0];
+                    } else {
+                        cmd_arg_u16 = channel->unk_22;
+                    }
+
+                    if (channel->sfxState != NULL) {
+                        if ((cmd == 0xA0) || (cmd == 0xA1)) {
+                            script_state->value = channel->sfxState[cmd_arg_u16];
+                        } else {
+                            channel->sfxState[cmd_arg_u16] = script_state->value;
+                        }
+                    }
+                    break;
+
+                case 0xA4: // Set surround effect index.
+                    channel->surroundEffectIndex = cmd_args[0];
+                    break;
+
+                case 0xA5: // Add the channel index to value.
+                    script_state->value += channel->channelIndex;
+                    break;
+
+                case 0xA6: // Write into the sequence data at an offset by the channel index.
+                    cmd = (u8)cmd_args[0];
+                    cmd_arg_u16 = (u16)cmd_args[1];
+                    seq_data = seq_player->seqData + (u32)(cmd_arg_u16 + channel->channelIndex);
+                    seq_data[0] = (u8)script_state->value + cmd;
+                    break;
+            }
+            continue;
+        }
+
+        // Commands 0x70 - 0x9F
+        if (cmd >= 0x70) {
+            low_bits = cmd & 0x7;
+
+            if (((cmd & 0xF8) != 0x70) && (low_bits >= 6)) {
+                low_bits = 0;
+            }
+
+            switch (cmd & 0xF8) {
+                case 0x80: // Test whether a layer is finished.
+                    if (channel->layers[low_bits] != NULL) {
+                        script_state->value = channel->layers[low_bits]->finished;
+                    } else {
+                        script_state->value = -1;
+                    }
+                    break;
+
+                case 0x88: // Start a layer.
+                    cmd_arg_u16 = func_8001CC50(&script_state->pc);
+                    if (!AudioChannel_AllocateLayer((AudioLayerAllocateChannel *)channel, low_bits)) {
+                        channel->layers[low_bits]->scriptState.pc = &seq_player->seqData[cmd_arg_u16];
+                    }
+                    break;
+
+                case 0x90: // Free a layer.
+                    func_8001C744(channel, low_bits);
+                    break;
+
+                case 0x98: // Start a layer through the dynamic table.
+                    if ((script_state->value != -1) &&
+                        (AudioChannel_AllocateLayer((AudioLayerAllocateChannel *)channel, low_bits) != -1)) {
+                        data = (*channel->dynTable)[script_state->value];
+                        cmd_arg_u16 = (data[0] << 8) + data[1];
+                        channel->layers[low_bits]->scriptState.pc = &seq_player->seqData[cmd_arg_u16];
+                    }
+                    break;
+
+                case 0x70: // Write an IO value.
+                    channel->seqScriptIO[low_bits] = script_state->value;
+                    break;
+
+                case 0x78: // Start a layer at a relative offset.
+                    temp1 = func_8001CC50(&script_state->pc);
+                    if (!AudioChannel_AllocateLayer((AudioLayerAllocateChannel *)channel, low_bits)) {
+                        channel->layers[low_bits]->scriptState.pc = &script_state->pc[temp1];
+                    }
+                    break;
+            }
+            continue;
+        }
+
+        // Commands 0x00 - 0x6F
+        low_bits = cmd & 0xF;
+
+        switch (cmd & 0xF0) {
+            case 0x00: // Short delay.
+                channel->delay = low_bits;
+                if (low_bits == 0) {
+                    break;
+                }
+                goto exit_loop;
+
+            case 0x10: // Load a sample.
+                if (low_bits < 8) {
+                    channel->seqScriptIO[low_bits] = -1;
+                    // karodo: the empty result check is also in Majora's Mask; diff score 1360 without both.
+                    if (func_80015E6C(channel->fontId, script_state->value, &channel->seqScriptIO[low_bits]) == -1) {}
+                } else {
+                    low_bits -= 8;
+                    channel->seqScriptIO[low_bits] = -1;
+                    if (func_80015E6C(channel->fontId, channel->unk_22 + 0x100, &channel->seqScriptIO[low_bits]) ==
+                        -1) {} // karodo
+                }
+                break;
+
+            case 0x60: // Read an IO value.
+                script_state->value = channel->seqScriptIO[low_bits];
+                if (low_bits < 2) {
+                    channel->seqScriptIO[low_bits] = -1;
+                }
+                break;
+
+            case 0x50: // Subtract an IO value.
+                script_state->value -= channel->seqScriptIO[low_bits];
+                break;
+
+            case 0x20: // Start a channel.
+                cmd_arg_u16 = func_8001CC50(&script_state->pc);
+                AudioChannel_StartScript((u8 *)seq_player, low_bits, &seq_player->seqData[cmd_arg_u16]);
+                break;
+
+            case 0x30: // Write another channel's IO value.
+                cmd = func_8001CC3C(&script_state->pc);
+                seq_player->channels[low_bits]->seqScriptIO[cmd] = script_state->value;
+                break;
+
+            case 0x40: // Read another channel's IO value.
+                cmd = func_8001CC3C(&script_state->pc);
+                script_state->value = seq_player->channels[low_bits]->seqScriptIO[cmd];
+                break;
+        }
+    }
+exit_loop:
+
+    for (i = 0; i < 6; i++) {
+        if (channel->layers[i] != NULL) {
+            AudioLayer_UpdateScript((AudioLayerUpdatePrefix *)channel->layers[i]);
+        }
+    }
+}
+
+extern s32 func_80014A18(s32 player_index, s32 seq_id, s32 arg2);
+extern void func_80016368(s32 seq_id, u8 *ram_addr, s8 *status);
+extern void func_800179CC(s32 arg0, s32 arg1, s8 *arg2);
+// Close to Majora's Mask AudioScript_SequencePlayerProcessSequence (src/audio/lib/seqplayer.c);
+// GS's start-sequence command (0xC4) with player 0xFF restarts the current
+// player even while it fades out. D_8011BE90 + 0x2C2C is the maximum tempo; D_8011EB9C is the audio random value.
+void func_8001ED64(SequencePlayer *seq_player) {
+    u8 cmd;
+    u8 cmd_low_bits;
+    AudioScriptState *seq_script = &seq_player->scriptState;
+    s16 temp_s;
+    u16 temp;
+    s32 i;
+    s32 value;
+    u8 *data1;
+    u8 *data2;
+    u8 *data3;
+    u8 *data4;
+    s32 tempo_change;
+    s32 j;
+    SequenceChannel *channel;
+    u16 *new_var;
+    s32 delay;
+
+    if (!seq_player->enabled) {
+        return;
+    }
+
+    if (!func_80014208(seq_player->seqId) || !func_80014190(seq_player->defaultFont)) {
+        // These calls have no effect.
+        if (func_80014208(seq_player->seqId)) {}
+        if (func_80014208(seq_player->defaultFont)) {}
+
+        AudioSequence_Disable((u8 *)seq_player);
+        return;
+    }
+
+    func_80014328(seq_player->seqId, 2);
+    func_800142F8(seq_player->defaultFont, 2);
+
+    if (seq_player->muted && (seq_player->muteFlags & 0x80)) {
+        return;
+    }
+
+    seq_player->scriptCounter++;
+
+    tempo_change = seq_player->tempo + seq_player->tempoChange;
+    if (tempo_change > *(s16 *)(D_8011BE90 + 0x2C2C)) {
+        tempo_change = *(s16 *)(D_8011BE90 + 0x2C2C);
+    }
+
+    seq_player->tempoAcc += tempo_change;
+
+    if (seq_player->tempoAcc < *(s16 *)(D_8011BE90 + 0x2C2C)) {
+        return;
+    }
+
+    seq_player->tempoAcc -= (u16)*(s16 *)(D_8011BE90 + 0x2C2C);
+    seq_player->unk_16++;
+
+    if (seq_player->stopScript == TRUE) {
+        return;
+    }
+
+    if (seq_player->delay > 1) {
+        seq_player->delay--;
+    } else {
+        seq_player->recalculateVolume = TRUE;
+
+        while (TRUE) {
+            cmd = func_8001CC3C(&seq_script->pc);
+
+            // 0xF2 and above are control-flow commands, including termination.
+            if (cmd >= 0xF2) {
+                delay = func_8001C228((u8 *)seq_player, seq_script, cmd,
+                                      func_8001C1C0(&seq_player->scriptState.pc, cmd));
+
+                if (delay != 0) {
+                    if (delay == -1) {
+                        AudioSequence_Disable((u8 *)seq_player);
+                    } else {
+                        seq_player->delay = delay;
+                    }
+                    break;
+                }
+                continue;
+            }
+
+            // Commands 0xC0 - 0xF1
+            if (cmd >= 0xC0) {
+                switch (cmd) {
+                    case 0xF1: // Reserve notes.
+                        AudioNotePool_Clear(&seq_player->notePool);
+                        cmd = func_8001CC3C(&seq_script->pc);
+                        ResourcePool_AcquireEntries(&seq_player->notePool, cmd);
+                        break;
+
+                    case 0xF0: // Release reserved notes.
+                        AudioNotePool_Clear(&seq_player->notePool);
+                        break;
+
+                    case 0xDF: // Set transposition.
+                        seq_player->transposition = 0;
+                        // fallthrough
+                    case 0xDE: // Add to transposition.
+                        seq_player->transposition += (s8)func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xDD: // Set tempo in beats per minute.
+                        seq_player->tempo = func_8001CC3C(&seq_script->pc) * 48;
+                        if (seq_player->tempo > *(s16 *)(D_8011BE90 + 0x2C2C)) {
+                            seq_player->tempo = *(s16 *)(D_8011BE90 + 0x2C2C);
+                        }
+
+                        if ((s16)seq_player->tempo <= 0) {
+                            seq_player->tempo = 1;
+                        }
+                        break;
+
+                    case 0xDC: // Set tempo change.
+                        seq_player->tempoChange = (s8)func_8001CC3C(&seq_script->pc) * 48;
+                        break;
+
+                    case 0xDA: // Set fade mode and time.
+                        cmd = func_8001CC3C(&seq_script->pc);
+                        temp = func_8001CC50(&seq_script->pc);
+                        switch (cmd) {
+                            case 0:
+                            case 1:
+                                if (seq_player->state != 2) {
+                                    seq_player->storedFadeTimer = temp;
+                                    seq_player->state = cmd;
+                                }
+                                break;
+
+                            case 2: // Fade out.
+                                seq_player->fadeTimer = temp;
+                                seq_player->state = cmd;
+                                seq_player->fadeVelocity = (0.0f - seq_player->fadeVolume) / (s32)seq_player->fadeTimer;
+                                break;
+                        }
+                        break;
+
+                    case 0xDB: // Set volume.
+                        value = func_8001CC3C(&seq_script->pc);
+                        switch (seq_player->state) {
+                            case 1: // Fade in.
+                                seq_player->state = 0;
+                                seq_player->fadeVolume = 0.0f;
+                                // fallthrough
+                            case 0:
+                                seq_player->fadeTimer = seq_player->storedFadeTimer;
+                                if (seq_player->storedFadeTimer != 0) {
+                                    seq_player->fadeVelocity =
+                                        ((value / 127.0f) - seq_player->fadeVolume) / (s32)seq_player->fadeTimer;
+                                } else {
+                                    seq_player->fadeVolume = value / 127.0f;
+                                }
+                                break;
+
+                            case 2: // Fade out.
+                                break;
+                        }
+                        break;
+
+                    case 0xD9: // Set volume scale.
+                        seq_player->fadeVolumeScale = (s8)func_8001CC3C(&seq_script->pc) / 127.0f;
+                        break;
+
+                    case 0xD7: // Initialize channels.
+                        temp = func_8001CC50(&seq_script->pc);
+                        func_8001C804(seq_player, temp);
+                        break;
+
+                    case 0xD6: // Disable channels (argument ignored).
+                        func_8001CC50(&seq_script->pc);
+                        break;
+
+                    case 0xD5: // Set mute volume scale.
+                        seq_player->muteVolumeScale = (s8)func_8001CC3C(&seq_script->pc) / 127.0f;
+                        break;
+
+                    case 0xD4: // Mute.
+                        seq_player->muted = TRUE;
+                        break;
+
+                    case 0xD3: // Set mute behavior.
+                        seq_player->muteFlags = func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xD1: // Set short-note gate time table.
+                    case 0xD2: // Set short-note velocity table.
+                        temp = func_8001CC50(&seq_script->pc);
+                        data3 = &seq_player->seqData[temp];
+                        if (cmd == 0xD2) {
+                            seq_player->shortNoteVelocityTable = data3;
+                        } else {
+                            seq_player->shortNoteGateTimeTable = data3;
+                        }
+                        break;
+
+                    case 0xD0: // Set note allocation policy.
+                        seq_player->noteAllocPolicy = func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xCE: // Random value.
+                        cmd = func_8001CC3C(&seq_script->pc);
+                        if (cmd == 0) {
+                            seq_script->value = (D_8011EB9C >> 2) & 0xFF;
+                        } else {
+                            seq_script->value = (D_8011EB9C >> 2) % cmd;
+                        }
+                        break;
+
+                    case 0xCD: // Call through a table indexed by the script value.
+                        temp = func_8001CC50(&seq_script->pc);
+                        if ((seq_script->value != -1) && (seq_script->depth != 3)) {
+                            data1 = seq_player->seqData + (u32)(temp + (seq_script->value << 1));
+                            seq_script->stack[seq_script->depth] = seq_script->pc;
+                            seq_script->depth++;
+                            temp = (data1[0] << 8) + data1[1];
+                            seq_script->pc = &seq_player->seqData[temp];
+                        }
+                        break;
+
+                    case 0xCC: // Set value.
+                        seq_script->value = func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xC9: // Bitwise AND with value.
+                        seq_script->value &= func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xC8: // Subtract from value.
+                        seq_script->value -= func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xC7: // Write into the sequence data.
+                        cmd = func_8001CC3C(&seq_script->pc);
+                        temp = func_8001CC50(&seq_script->pc);
+                        data2 = &seq_player->seqData[temp];
+                        *data2 = (u8)seq_script->value + cmd;
+                        break;
+
+                    case 0xC2: // Jump through a table indexed by the script value.
+                        temp = func_8001CC50(&seq_script->pc);
+                        if (seq_script->value != -1) {
+                            data4 = seq_player->seqData + (u32)(temp + (seq_script->value << 1));
+
+                            temp = (data4[0] << 8) + data4[1];
+                            seq_script->pc = &seq_player->seqData[temp];
+                        }
+                        break;
+
+                    case 0xC6: // Stop the script.
+                        seq_player->stopScript = TRUE;
+                        return;
+
+                    case 0xC5: // Set the script counter.
+                        seq_player->unk_16 = func_8001CC50(&seq_script->pc);
+                        break;
+
+                    case 0xEF: // Arguments ignored.
+                        func_8001CC50(&seq_script->pc);
+                        func_8001CC3C(&seq_script->pc);
+                        break;
+
+                    case 0xC4: // Start a sequence.
+                        cmd = func_8001CC3C(&seq_script->pc);
+                        if (cmd == 0xFF) {
+                            cmd = seq_player->playerIndex;
+                        }
+
+                        cmd_low_bits = func_8001CC3C(&seq_script->pc);
+                        func_80014A18(cmd, cmd_low_bits, 0);
+                        if (cmd == (u8)seq_player->playerIndex) {
+                            return;
+                        }
+                        break;
+
+                    case 0xC3: // Mute channels from a bit mask in the sequence data.
+                        temp = func_8001CC50(&seq_script->pc);
+                        if (seq_script->value != -1) {
+                            new_var = (u16 *)(seq_player->seqData + (u32)(temp + seq_script->value * 2));
+                            temp = *new_var;
+
+                            for (i = 0; i < 16; i++) {
+                                seq_player->channels[i]->muted = temp & 1;
+                                temp = temp >> 1;
+                            }
+                        }
+                        break;
+                }
+                continue;
+            }
+
+            // Commands 0x00 - 0xBF
+            cmd_low_bits = cmd & 0x0F;
+
+            switch (cmd & 0xF0) {
+                case 0x00: // Test whether a channel is disabled.
+                    seq_script->value = seq_player->channels[cmd_low_bits]->enabled ^ 1;
+                    break;
+
+                case 0x50: // Subtract an IO value.
+                    seq_script->value -= seq_player->seqScriptIO[cmd_low_bits];
+                    break;
+
+                case 0x70: // Write an IO value.
+                    seq_player->seqScriptIO[cmd_low_bits] = seq_script->value;
+                    break;
+
+                case 0x80: // Read an IO value.
+                    seq_script->value = seq_player->seqScriptIO[cmd_low_bits];
+                    if (cmd_low_bits < 2) {
+                        seq_player->seqScriptIO[cmd_low_bits] = -1;
+                    }
+                    break;
+
+                case 0x40: // Disable a channel.
+                    func_8001C794((s32)seq_player->channels[cmd_low_bits]);
+                    break;
+
+                case 0x90: // Start a channel.
+                    temp = func_8001CC50(&seq_script->pc);
+                    AudioChannel_StartScript((u8 *)seq_player, cmd_low_bits, (void *)&seq_player->seqData[temp]);
+                    break;
+
+                case 0xA0: // Start a channel at a relative offset.
+                    temp_s = func_8001CC50(&seq_script->pc);
+                    AudioChannel_StartScript((u8 *)seq_player, cmd_low_bits, (void *)&seq_script->pc[temp_s]);
+                    break;
+
+                case 0xB0: // Load a sequence.
+                    cmd = func_8001CC3C(&seq_script->pc);
+                    temp = func_8001CC50(&seq_script->pc);
+                    data2 = &seq_player->seqData[temp];
+                    func_80016368(cmd, data2, &seq_player->seqScriptIO[cmd_low_bits]);
+                    break;
+
+                case 0x60: // Asynchronous load.
+                    cmd = func_8001CC3C(&seq_script->pc);
+                    value = cmd;
+                    temp = func_8001CC3C(&seq_script->pc);
+                    func_800179CC(value, temp, &seq_player->seqScriptIO[cmd_low_bits]);
+                    break;
+            }
+        }
+    }
+
+    for (j = 0; j < 16; j++) {
+        channel = seq_player->channels[j];
+        if (channel->enabled) {
+            func_8001DFF4(channel);
+        }
+    }
+}
 
 void Audio_UpdateSequencesAndNotes(s32 update_index) {
     u32 i;

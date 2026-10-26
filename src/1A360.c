@@ -225,7 +225,242 @@ void func_80019D80(u8 *arg0) {
     *(f32 *)(arg0 + 0x70) = 0.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_80019DE4.s")
+// First word of a note's sample state (note + 0xD0); names follow the Majora's Mask
+// NoteSampleState bitfields.
+typedef struct NoteSampleStateBits {
+    /* 0x00 */ u32 enabled : 1;
+    /* 0x00 */ u32 needsInit : 1;
+    /* 0x00 */ u32 finished : 1;
+    /* 0x00 */ u32 unused : 1;
+    /* 0x00 */ u32 strongRight : 1;
+    /* 0x00 */ u32 strongLeft : 1;
+    /* 0x00 */ u32 strongReverbRight : 1;
+    /* 0x00 */ u32 strongReverbLeft : 1;
+    /* 0x01 */ u32 reverbIndex : 3;
+    /* 0x01 */ u32 bookOffset : 2;
+    /* 0x01 */ u32 isSyntheticWave : 1;
+    /* 0x01 */ u32 hasTwoParts : 1;
+    /* 0x01 */ u32 useHaasEffect : 1;
+} NoteSampleStateBits;
+
+// First byte of an ADSR state (playback state + 0x30); names follow Majora's Mask
+// AdsrSettings action.s.
+typedef struct AdsrAction {
+    /* 0x00 */ u8 unk_7 : 1;
+    /* 0x00 */ u8 unk_6 : 1;
+    /* 0x00 */ u8 unk_5 : 1;
+    /* 0x00 */ u8 release : 1;
+    /* 0x00 */ u8 status : 4;
+} AdsrAction;
+
+// First word of a sequence layer; names follow Majora's Mask SequenceLayer.
+typedef struct LayerFlags {
+    /* 0x00 */ u32 enabled : 1;
+    /* 0x00 */ u32 finished : 1;
+    /* 0x00 */ u32 muted : 1;
+    /* 0x00 */ u32 continuousNotes : 1;
+    /* 0x00 */ u32 bit3 : 1;
+    /* 0x00 */ u32 ignoreDrumPan : 1;
+    /* 0x00 */ u32 bit1 : 1;
+    /* 0x00 */ u32 notePropertiesNeedInit : 1;
+} LayerFlags;
+
+// Stereo flags byte copied as a unit from a layer, channel or note attributes.
+typedef struct StereoData {
+    /* 0x00 */ u8 asByte;
+} StereoData;
+
+// Parameters AudioNote_UpdateSynthesisParameters reads; Majora's Mask NoteSubAttributes
+// without the comb filter fields.
+typedef struct NoteSubAttributes {
+    /* 0x00 */ u8 targetReverbVol;
+    /* 0x01 */ u8 gain;
+    /* 0x02 */ u8 pan;
+    /* 0x03 */ u8 surroundEffectIndex;
+    /* 0x04 */ StereoData stereoData;
+    /* 0x08 */ f32 frequency;
+    /* 0x0C */ f32 velocity;
+    /* 0x10 */ s32 unk_10;
+    /* 0x14 */ s16 *filter;
+} NoteSubAttributes; // size = 0x18
+
+// Pointer to the 0x100-byte note array, stored at D_8011BE90 + 0x3468.
+typedef struct NoteArrayField {
+    /* 0x00 */ u8 *notes;
+} NoteArrayField;
+
+// Close to Majora's Mask AudioPlayback_ProcessNotes (src/audio/lib/playback.c). GS has no
+// separate sample state list: AudioNote_UpdateSynthesisParameters takes the note and the
+// attributes. GS also drops the comb filter attributes and always takes the channel's gain.
+// The note count is the u32 at D_8011BE90 + 0x2C28. The playback state is at note + 0x30
+// (priority 0x0, status 0x4, parentLayer 0x14, wantedParentLayer 0x18, attributes 0x1C,
+// ADSR state 0x30).
+extern u8 D_8011BE90[];
+extern void func_8001C794(u8 *);
+extern void func_8001A9B4(void *);
+extern void func_8001CB1C(void *, void *);
+extern void func_8001AE60(u8 *, u8 *);
+extern void AudioVibrato_Init(void *);
+extern void func_8001BDF0(u8 *);
+extern f32 AudioAdsr_Update(void *);
+extern void func_8001BCA4(u8 *);
+void func_80019DE4(void) {
+    s32 pad;
+    s32 playbackStatus;
+    u8 *attrs;
+    NoteSampleStateBits *noteSampleState;
+    u8 *note;
+    u8 *playbackState;
+    NoteSubAttributes subAttrs;
+    u8 bookOffset;
+    f32 adsrVolumeScale;
+    u32 i;
+
+    for (i = 0; i < *(u32 *)(D_8011BE90 + 0x2C28); i++) {
+        // FAKE: integer add of the array pointer; diff score 10 with (u8 *)notes + i * 0x100.
+        note = (u8 *)(i * 0x100 + (u32)((NoteArrayField *)(D_8011BE90 + 0x3468))->notes);
+        playbackState = note + 0x30;
+        if (*(u8 **)(playbackState + 0x14) != (u8 *)-1) {
+            if ((u32) * (u8 **)(playbackState + 0x14) < 0x7FFFFFFF) {
+                continue;
+            }
+
+            if ((note != *(u8 **)(*(u8 **)(playbackState + 0x14) + 0x3C)) && (playbackState[4] == 0)) {
+                ((AdsrAction *)(playbackState + 0x30))->release = TRUE;
+                *(f32 *)(playbackState + 0x3C) = *(f32 *)(D_8011BE90 + 0x2BF8);
+                playbackState[0] = 1;
+                playbackState[4] = 2;
+                goto out;
+            } else if (!(**(u32 **)(playbackState + 0x14) >> 31) && (playbackState[4] == 0) &&
+                       (playbackState[0] >= 1)) {
+                // do nothing
+            } else if (1) { // FAKE: diff score 98 without this wrapper.
+                if (*(u8 **)(*(u8 **)(*(u8 **)(playbackState + 0x14) + 0x60) + 0x50) == NULL) {
+                    func_8001C794(*(u8 **)(*(u8 **)(playbackState + 0x14) + 0x60));
+                    playbackState[0] = 1;
+                    playbackState[4] = 1;
+                    continue;
+                } else if (((**(u32 **)(*(u8 **)(*(u8 **)(playbackState + 0x14) + 0x60) + 0x50) << 2) >> 31) &&
+                           (*(*(u8 **)(*(u8 **)(playbackState + 0x14) + 0x60) + 3) & 0x40)) {
+                    // do nothing
+                } else {
+                    goto out;
+                }
+            }
+
+            func_8001A9B4(*(u8 **)(playbackState + 0x14));
+            func_8001ADB4(note);
+            func_8001AD74((s32 *)(*(u8 **)(note + 0xC) + 0x10), (s32 *)note);
+            playbackState[0] = 1;
+            playbackState[4] = 2;
+        } else if ((playbackState[4] == 0) && (playbackState[0] >= 1)) {
+            continue;
+        }
+
+    out:
+        if (playbackState[0] != 0) {
+            if (1) {} // karodo
+            noteSampleState = (NoteSampleStateBits *)(note + 0xD0);
+            if ((playbackState[4] >= 1) || noteSampleState->finished) {
+                if (((playbackState[0x30] & 0xF) == 0) || noteSampleState->finished) {
+                    if (*(u8 **)(playbackState + 0x18) != (u8 *)-1) {
+                        func_80019D80(note);
+                        if (*(u8 **)(*(u8 **)(playbackState + 0x18) + 0x60) != NULL) {
+                            func_8001AE60(note, *(u8 **)(playbackState + 0x18));
+                            AudioVibrato_Init(note);
+                            func_8001BDF0(note);
+                            func_8001ADB4(note);
+                            func_8001CB1C(*(u8 **)(note + 0xC) + 0x30, note);
+                            *(u8 **)(playbackState + 0x18) = (u8 *)-1;
+                        } else {
+                            func_80019D80(note);
+                            func_8001ADB4(note);
+                            func_8001CB1C(*(u8 **)(note + 0xC), note);
+                            *(u8 **)(playbackState + 0x18) = (u8 *)-1;
+                            goto skip;
+                        }
+                    } else {
+                        if (*(u8 **)(playbackState + 0x14) != (u8 *)-1) {
+                            (*(LayerFlags **)(playbackState + 0x14))->bit1 = TRUE;
+                        }
+                        func_80019D80(note);
+                        func_8001ADB4(note);
+                        func_8001CB1C(*(u8 **)(note + 0xC), note);
+                        continue;
+                    }
+                }
+            } else if ((playbackState[0x30] & 0xF) == 0) {
+                if (*(u8 **)(playbackState + 0x14) != (u8 *)-1) {
+                    (*(LayerFlags **)(playbackState + 0x14))->bit1 = TRUE;
+                }
+                func_80019D80(note);
+                func_8001ADB4(note);
+                func_8001CB1C(*(u8 **)(note + 0xC), note);
+                continue;
+            }
+
+            adsrVolumeScale = AudioAdsr_Update(playbackState + 0x30);
+            func_8001BCA4(note);
+            playbackStatus = playbackState[4];
+            attrs = playbackState + 0x1C;
+            if ((playbackStatus == 1) || (playbackStatus == 2)) {
+                subAttrs.frequency = *(f32 *)(attrs + 8);
+                subAttrs.velocity = *(f32 *)(attrs + 0xC);
+                subAttrs.pan = attrs[2];
+                subAttrs.targetReverbVol = attrs[0];
+                subAttrs.stereoData = *(StereoData *)(attrs + 4);
+                subAttrs.gain = attrs[1];
+                subAttrs.filter = *(s16 **)(attrs + 0x10);
+                subAttrs.surroundEffectIndex = attrs[3];
+                bookOffset = noteSampleState->bookOffset;
+            } else {
+                u8 *layer = *(u8 **)(playbackState + 0x14);
+                u8 *channel = *(u8 **)(*(u8 **)(playbackState + 0x14) + 0x60);
+
+                subAttrs.frequency = *(f32 *)(layer + 0x54);
+                subAttrs.velocity = *(f32 *)(layer + 0x50);
+                subAttrs.pan = layer[7];
+
+                if (layer[8] == 0x80) {
+                    subAttrs.surroundEffectIndex = channel[0x10];
+                } else {
+                    subAttrs.surroundEffectIndex = layer[8];
+                }
+
+                if (((*(u32 *)layer << 10) >> 30) == 0) {
+                    subAttrs.stereoData = *(StereoData *)(channel + 0xE0);
+                } else {
+                    subAttrs.stereoData = *(StereoData *)(layer + 1);
+                }
+
+                // Bit 13 of the layer word at 0x8 (Majora's Mask unk_0A.s.bit_2).
+                // FAKE: the (s32) cast; diff score 110 without it.
+                if ((s32)((*(u32 *)(layer + 8) << 18) >> 31) == 1) {
+                    subAttrs.targetReverbVol = channel[4];
+                } else {
+                    subAttrs.targetReverbVol = layer[9];
+                }
+
+                subAttrs.gain = channel[0xC];
+                subAttrs.filter = *(s16 **)(channel + 0xDC);
+                bookOffset = channel[9] & 7;
+
+                if (((**(u32 **)(channel + 0x50) << 2) >> 31) && (channel[3] & 8)) {
+                    subAttrs.frequency = 0.0f;
+                    subAttrs.velocity = 0.0f;
+                }
+            }
+
+            subAttrs.frequency *= *(f32 *)(playbackState + 0xC) * *(f32 *)(playbackState + 8);
+            subAttrs.frequency *= *(f32 *)(D_8011BE90 + 0x2BF4);
+            subAttrs.velocity *= adsrVolumeScale;
+            AudioNote_UpdateSynthesisParameters(note, &subAttrs);
+            noteSampleState->bookOffset = bookOffset;
+        skip:;
+        }
+    }
+}
+
 
 void *func_8001A2CC(void *arg0, s32 arg1) {
     u8 *p = (u8 *)arg0;

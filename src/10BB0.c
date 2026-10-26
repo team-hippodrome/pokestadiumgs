@@ -899,7 +899,103 @@ void func_80011B0C(void)
     } while (i != 0x540);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_80011B78.s")
+// ADSR action byte of a note (note + 0x60), laid out like Majora's Mask
+// AdsrState action.s (include/audio/effects.h); status 0 is disabled.
+typedef struct {
+    u8 unused : 1;
+    u8 hang : 1;
+    u8 decay : 1;
+    u8 release : 1;
+    u8 status : 4;
+} AdsrActionStatus;
+
+extern void func_8001CA14(u8 *seqPlayer);
+extern void func_80011E7C(void);
+void func_80012CA0(void);
+void func_80013174(void);
+// Close to Majora's Mask AudioHeap_ResetStep (src/audio/lib/heap.c); GS keeps
+// sequence player pointers at D_8011BE90 + 0x604C instead of an inline array.
+// Offsets from D_8011BE90: 0x2BDC specUnk4, 0x2BE4 numSamplesPerFrameMax,
+// 0x2BF0 sequence player count, 0x2BF8 updatesPerFrameInv, 0x2C28 note count,
+// 0x2CF8 AI buffer pointers, 0x2D04 samples per AI buffer, 0x3454 reset status
+// (volatile, as in Majora's Mask AudioContext), 0x3458 fade-out frames left,
+// 0x3468 note array.
+s32 func_80011B78(void) {
+    s32 i;
+    s32 j;
+    s32 count;
+
+    if (*(s16 *)(D_8011BE90 + 0x2BDC) == 2) {
+        count = 2;
+    } else {
+        count = 1;
+    }
+
+    switch (*(vu8 *)(D_8011BE90 + 0x3454)) {
+        case 5:
+            for (i = 0; i < *(s16 *)(D_8011BE90 + 0x2BF0); i++) {
+                func_8001CA14(((u8 **)(D_8011BE90 + 0x604C))[i]);
+            }
+            *(s32 *)(D_8011BE90 + 0x3458) = 2 / count;
+            (*(vu8 *)(D_8011BE90 + 0x3454))--;
+            break;
+
+        case 4:
+            if (*(s32 *)(D_8011BE90 + 0x3458) != 0) {
+                (*(s32 *)(D_8011BE90 + 0x3458))--;
+                func_80011A48();
+            } else {
+                for (i = 0; i < *(s32 *)(D_8011BE90 + 0x2C28); i++) {
+                    if (((AudioEnabledBit *)(*(u8 **)(D_8011BE90 + 0x3468) + i * 0x100 + 0xD0))->enabled &&
+                        ((AdsrActionStatus *)(*(u8 **)(D_8011BE90 + 0x3468) + i * 0x100 + 0x60))->status != 0) {
+                        *(f32 *)(*(u8 **)(D_8011BE90 + 0x3468) + i * 0x100 + 0x6C) = *(f32 *)(D_8011BE90 + 0x2BF8);
+                        ((AdsrActionStatus *)(*(u8 **)(D_8011BE90 + 0x3468) + i * 0x100 + 0x60))->release = TRUE;
+                    }
+                }
+                *(s32 *)(D_8011BE90 + 0x3458) = 8 / count;
+                (*(vu8 *)(D_8011BE90 + 0x3454))--;
+            }
+            break;
+
+        case 3:
+            if (*(s32 *)(D_8011BE90 + 0x3458) != 0) {
+                (*(s32 *)(D_8011BE90 + 0x3458))--;
+                func_80011A48();
+            } else {
+                *(s32 *)(D_8011BE90 + 0x3458) = 2 / count;
+                (*(vu8 *)(D_8011BE90 + 0x3454))--;
+            }
+            break;
+
+        case 2:
+            func_80011B0C();
+            if (*(s32 *)(D_8011BE90 + 0x3458) != 0) {
+                (*(s32 *)(D_8011BE90 + 0x3458))--;
+            } else {
+                (*(vu8 *)(D_8011BE90 + 0x3454))--;
+                func_80012CA0();
+                func_80013174();
+            }
+            break;
+
+        case 1:
+            func_80011E7C();
+            *(vu8 *)(D_8011BE90 + 0x3454) = 0;
+            for (i = 0; i < 3; i++) {
+                ((s16 *)(D_8011BE90 + 0x2D04))[i] = *(s16 *)(D_8011BE90 + 0x2BE4);
+                for (j = 0; j < 0x540; j++) {
+                    ((s16 **)(D_8011BE90 + 0x2CF8))[i][j] = 0;
+                }
+            }
+            break;
+    }
+
+    if (*(vu8 *)(D_8011BE90 + 0x3454) < 3) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_80011E7C.s")
 
@@ -976,7 +1072,145 @@ void func_80012598(s32 persistentSize, s32 temporarySize) {
     *(s32 *)(D_8011BE90 + 0x32CC) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_80012630.s")
+// Sample cache entry, laid out like Majora's Mask SampleCacheEntry
+// (include/audio/heap.h).
+typedef struct {
+    /* 0x00 */ s8 inUse;
+    /* 0x01 */ s8 origMedium;
+    /* 0x02 */ u8 sampleBankId;
+    /* 0x03 */ u8 pad03[5];
+    /* 0x08 */ u8 *allocatedAddr;
+    /* 0x0C */ void *sampleAddr;
+    /* 0x10 */ u32 size;
+} SampleCacheEntry; // size = 0x14
+
+// Sample cache; Majora's Mask AudioSampleCache (include/audio/heap.h) has 128
+// entries, while GS's caches at D_8011F110 and D_8011F138 have one each.
+typedef struct {
+    /* 0x00 */ AudioAllocPoolT pool;
+    /* 0x10 */ SampleCacheEntry entries[1];
+    /* 0x24 */ s32 numEntries;
+} AudioSampleCache; // size = 0x28
+
+// Sample preload request, laid out like Majora's Mask AudioPreloadReq
+// (include/audio/load.h); the stack is at D_8011BE90 + 0xAB8 and its top index
+// at D_8011BE90 + 0x14BC.
+typedef struct {
+    /* 0x00 */ u32 endAndMediumKey;
+    /* 0x04 */ void *sample;
+    /* 0x08 */ u8 *ramAddr;
+    /* 0x0C */ u32 encodedInfo;
+    /* 0x10 */ s32 isFree;
+} AudioPreloadReq; // size = 0x14
+
+// Sample size bit field of a sample header (bits 23-0 of the first word).
+typedef struct {
+    u32 unk_0 : 8;
+    u32 size : 24;
+} AudioSampleSize;
+
+void func_80012A90(u8 *entry);
+// Close to Majora's Mask AudioHeap_AllocTemporarySampleCacheEntry (src/audio/lib/heap.c);
+// GS's temporary sample cache (D_8011F138) holds one entry instead of 128.
+u8 *func_80012630(u32 size) {
+    s32 pad2[2]; // FAKE: pad2, pad3 and pad1 are unused stack slots, also in the Majora's Mask twin; diff score 358 without them.
+    void *addr;
+    s32 pad3[2];
+    u8 *alloc_after;
+    u8 *alloc_before;
+    s32 pad1;
+    s32 index;
+    s32 i;
+    SampleCacheEntry *entry;
+    AudioPreloadReq *preload;
+    AudioSampleCache *cache;
+    u8 *start_addr;
+    u8 *end_addr;
+
+    cache = (AudioSampleCache *)(D_8011BE90 + 0x32A8);
+    alloc_before = cache->pool.curAddr;
+    addr = (void *)GbApu_Alloc((S1_unk_func_81206FA0 *)&cache->pool, size);
+    if (addr == NULL) {
+        // Reset the heap and try again. Pointers into the heap are still held,
+        // so overlapping allocations are discarded below.
+        u8 *old_addr = cache->pool.curAddr;
+
+        cache->pool.curAddr = cache->pool.startAddr;
+        addr = (void *)GbApu_Alloc((S1_unk_func_81206FA0 *)&cache->pool, size);
+        if (addr == NULL) {
+            cache->pool.curAddr = old_addr;
+            return NULL;
+        }
+        alloc_before = cache->pool.startAddr;
+    }
+
+    alloc_after = cache->pool.curAddr;
+
+    index = -1;
+    for (i = 0; i < *(s32 *)(D_8011BE90 + 0x14BC); i++) {
+        preload = &((AudioPreloadReq *)(D_8011BE90 + 0xAB8))[i];
+        if (preload->isFree == FALSE) {
+            start_addr = preload->ramAddr;
+            end_addr = preload->ramAddr + ((AudioSampleSize *)preload->sample)->size - 1;
+
+            if ((end_addr < alloc_before) && (start_addr < alloc_before)) {
+                continue;
+            }
+            if ((end_addr >= alloc_after) && (start_addr >= alloc_after)) {
+                continue;
+            }
+
+            // Overlap, skip this preload.
+            preload->isFree = TRUE;
+        }
+    }
+
+    for (i = 0; i < cache->numEntries; i++) {
+        if (!cache->entries[i].inUse) {
+            continue;
+        }
+
+        start_addr = cache->entries[i].allocatedAddr;
+        end_addr = start_addr + cache->entries[i].size - 1;
+
+        if ((end_addr < alloc_before) && (start_addr < alloc_before)) {
+            continue;
+        }
+        if ((end_addr >= alloc_after) && (start_addr >= alloc_after)) {
+            continue;
+        }
+
+        // Overlap, discard the existing entry.
+        func_80012A90((u8 *)&cache->entries[i]);
+        cache->entries[i].inUse = FALSE;
+        if (index == -1) {
+            index = i;
+        }
+    }
+
+    if (index == -1) {
+        for (i = 0; i < cache->numEntries; i++) {
+            if (!cache->entries[i].inUse) {
+                break;
+            }
+        }
+
+        index = i;
+        if (index == cache->numEntries) {
+            if (cache->numEntries == 1) {
+                return NULL;
+            }
+            cache->numEntries++;
+        }
+    }
+
+    entry = &cache->entries[index];
+    entry->inUse = 1;
+    entry->allocatedAddr = addr;
+    entry->size = size;
+
+    return (u8 *)entry;
+}
 
 extern u8 *func_8001A308(s32 fontId, s32 instId);
 extern u8 *func_8001A3DC(s32 fontId, s32 drumId);
@@ -1255,7 +1489,264 @@ void func_80013174(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_80013210.s")
+// Reverb buffer sample header, laid out like Majora's Mask Sample
+// (include/audio/soundfont.h).
+typedef struct {
+    u32 unk_0 : 1;
+    u32 codec : 3;
+    u32 medium : 2;
+    u32 unk_bit26 : 1;
+    u32 isRelocated : 1;
+    u32 size : 24;
+    u8 *sampleAddr;
+    void *loop;
+    void *book;
+} ReverbSample; // size = 0x10
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_800137AC.s")
+// Reverb settings record passed to func_800137AC, laid out like Majora's Mask
+// ReverbSettings (include/audio/reverb.h).
+typedef struct {
+    /* 0x00 */ u8 downsampleRate;
+    /* 0x02 */ u16 delayNumSamples;
+    /* 0x04 */ u16 decayRatio;
+    /* 0x06 */ u16 subDelay;
+    /* 0x08 */ u16 subVolume;
+    /* 0x0A */ u16 volume;
+    /* 0x0C */ u16 leakRtl;
+    /* 0x0E */ u16 leakLtr;
+    /* 0x10 */ s8 mixReverbIndex;
+    /* 0x12 */ u16 mixReverbStrength;
+    /* 0x14 */ s16 lowPassFilterCutoffLeft;
+    /* 0x16 */ s16 lowPassFilterCutoffRight;
+} ReverbSettings; // size = 0x18
+
+// Reverb state, laid out like Majora's Mask SynthesisReverb
+// (include/audio/reverb.h); D_8011BE90 + 0x18 holds an array of these.
+// src/CE80.c declares the synthesis-side view of the same records.
+//@src/CE80.c
+typedef struct {
+    /* 0x000 */ u8 resampleFlags;
+    /* 0x001 */ u8 useReverb;
+    /* 0x002 */ u8 framesToIgnore;
+    /* 0x003 */ u8 curFrame;
+    /* 0x004 */ u8 downsampleRate;
+    /* 0x005 */ s8 mixReverbIndex;
+    /* 0x006 */ u16 delayNumSamples;
+    /* 0x008 */ s16 mixReverbStrength;
+    /* 0x00A */ s16 volume;
+    /* 0x00C */ u16 decayRatio;
+    /* 0x00E */ u16 downsamplePitch;
+    /* 0x010 */ s16 leakRtl;
+    /* 0x012 */ s16 leakLtr;
+    /* 0x014 */ u16 subDelay;
+    /* 0x016 */ s16 subVolume;
+    /* 0x018 */ u8 resampleEffectOn;
+    /* 0x019 */ s8 resampleEffectExtraSamples;
+    /* 0x01A */ u16 resampleEffectLoadUnk;
+    /* 0x01C */ u16 resampleEffectSaveUnk;
+    /* 0x01E */ u8 delayNumSamplesAfterDownsampling;
+    /* 0x020 */ s32 nextReverbBufPos;
+    /* 0x024 */ s32 delayNumSamplesUnk;
+    /* 0x028 */ s16 *leftReverbBuf;
+    /* 0x02C */ s16 *rightReverbBuf;
+    /* 0x030 */ s16 *leftLoadResampleBuf;
+    /* 0x034 */ s16 *rightLoadResampleBuf;
+    /* 0x038 */ s16 *leftSaveResampleBuf;
+    /* 0x03C */ s16 *rightSaveResampleBuf;
+    /* 0x040 */ u8 bufEntry[0x270 - 0x40];
+    /* 0x270 */ s16 *filterLeft;
+    /* 0x274 */ s16 *filterRight;
+    /* 0x278 */ s16 *filterLeftInit;
+    /* 0x27C */ s16 *filterRightInit;
+    /* 0x280 */ s16 *filterLeftState;
+    /* 0x284 */ s16 *filterRightState;
+    /* 0x288 */ ReverbSample *tunedSampleSample;
+    /* 0x28C */ f32 tunedSampleTuning;
+    /* 0x290 */ ReverbSample sample;
+    /* 0x2A0 */ struct {
+        u32 start;
+        u32 loopEnd;
+        u32 count;
+        u32 sampleEnd;
+    } loop;
+    /* 0x2B0 */ u8 unk_2B0[0x2D0 - 0x2B0];
+} SynthesisReverb; // size = 0x2D0
+
+void func_800137AC(s32 reverb_index, ReverbSettings *settings, s32 is_first_init);
+// Close to Majora's Mask AudioHeap_SetReverbData (src/audio/lib/heap.c); GS
+// clamps and divides the delay in reverb->delayNumSamples itself and resets the
+// buffer positions only when they lie past the new delay. Data types: 0 settings
+// record, 1 delay, 2 decay ratio, 3 sub volume, 4 volume, 5 leak right to left,
+// 6 leak left to right, 7/8 left/right low-pass filter cutoff, 9 resample
+// effect extra samples.
+void func_80013210(s32 reverb_index, u32 data_type, s32 data, s32 is_first_init) {
+    s32 pad; // FAKE: unused stack slot where Majora's Mask keeps delayNumSamples; diff score 368 without it.
+    SynthesisReverb *reverb = &((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index];
+
+    switch (data_type) {
+        case 0:
+            func_800137AC(reverb_index, (ReverbSettings *)data, FALSE);
+            break;
+
+        case 1:
+            if (data < 4) {
+                data = 4;
+            }
+
+            reverb->delayNumSamples = data * 64;
+            if (reverb->delayNumSamples < 256) {
+                reverb->delayNumSamples = 256;
+            }
+
+            reverb->delayNumSamples /= reverb->downsampleRate;
+
+            if (!is_first_init) {
+                if (reverb->delayNumSamplesAfterDownsampling < (data / reverb->downsampleRate)) {
+                    break;
+                }
+                if ((reverb->nextReverbBufPos > reverb->delayNumSamples) ||
+                    (reverb->delayNumSamplesUnk > reverb->delayNumSamples)) {
+                    reverb->nextReverbBufPos = 0;
+                    reverb->delayNumSamplesUnk = 0;
+                }
+            }
+
+            if ((reverb->downsampleRate != 1) || reverb->resampleEffectOn) {
+                reverb->downsamplePitch = 0x8000 / reverb->downsampleRate;
+                if (reverb->leftLoadResampleBuf == NULL) {
+                    reverb->leftLoadResampleBuf = (s16 *)func_80010510(&D_8011EBF0, 32);
+                    reverb->rightLoadResampleBuf = (s16 *)func_80010510(&D_8011EBF0, 32);
+                    reverb->leftSaveResampleBuf = (s16 *)func_80010510(&D_8011EBF0, 32);
+                    reverb->rightSaveResampleBuf = (s16 *)func_80010510(&D_8011EBF0, 32);
+                    if (reverb->rightSaveResampleBuf == NULL) {
+                        reverb->downsampleRate = 1;
+                    }
+                }
+            }
+            break;
+
+        case 2:
+            ((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index].decayRatio = data;
+            break;
+
+        case 3:
+            ((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index].subVolume = data;
+            break;
+
+        case 4:
+            ((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index].volume = data;
+            break;
+
+        case 5:
+            ((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index].leakRtl = data;
+            break;
+
+        case 6:
+            ((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index].leakLtr = data;
+            break;
+
+        case 7:
+            if (data != 0) {
+                if (is_first_init || (reverb->filterLeftInit == NULL)) {
+                    reverb->filterLeftState = (s16 *)func_800104D8(&D_8011EBF0, 64);
+                    reverb->filterLeftInit = (s16 *)func_800104A0(&D_8011EBF0, 16);
+                }
+
+                reverb->filterLeft = reverb->filterLeftInit;
+                if (reverb->filterLeft != NULL) {
+                    func_800117B8(reverb->filterLeft, data);
+                }
+            } else {
+                reverb->filterLeft = NULL;
+
+                if (is_first_init) {
+                    reverb->filterLeftInit = NULL;
+                }
+            }
+            break;
+
+        case 8:
+            if (data != 0) {
+                if (is_first_init || (reverb->filterRightInit == NULL)) {
+                    reverb->filterRightState = (s16 *)func_800104D8(&D_8011EBF0, 64);
+                    reverb->filterRightInit = (s16 *)func_800104A0(&D_8011EBF0, 16);
+                }
+                reverb->filterRight = reverb->filterRightInit;
+                if (reverb->filterRight != NULL) {
+                    func_800117B8(reverb->filterRight, data);
+                }
+            } else {
+                reverb->filterRight = NULL;
+                if (is_first_init) {
+                    reverb->filterRightInit = NULL;
+                }
+            }
+            break;
+
+        case 9:
+            reverb->resampleEffectExtraSamples = data;
+            if (data == 0) {
+                reverb->resampleEffectOn = FALSE;
+            } else {
+                reverb->resampleEffectOn = TRUE;
+            }
+            break;
+
+        default:
+            break;
+    }
+}
+
+// Same code as Majora's Mask AudioHeap_InitReverb (src/audio/lib/heap.c).
+// D_8011EBF0 is the misc allocation pool (D_8011BE90 + 0x2D60).
+void func_800137AC(s32 reverb_index, ReverbSettings *settings, s32 is_first_init) {
+    SynthesisReverb *reverb = &((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb_index];
+
+    if (is_first_init) {
+        reverb->delayNumSamplesAfterDownsampling = settings->delayNumSamples / settings->downsampleRate;
+        reverb->leftLoadResampleBuf = NULL;
+    } else if (reverb->delayNumSamplesAfterDownsampling < (settings->delayNumSamples / settings->downsampleRate)) {
+        return;
+    }
+
+    reverb->downsampleRate = settings->downsampleRate;
+    reverb->resampleEffectOn = FALSE;
+    reverb->resampleEffectExtraSamples = 0;
+    reverb->resampleEffectLoadUnk = 0;
+    reverb->resampleEffectSaveUnk = 0;
+    func_80013210(reverb_index, 1, settings->delayNumSamples, is_first_init);
+    reverb->decayRatio = settings->decayRatio;
+    reverb->volume = settings->volume;
+    reverb->subDelay = settings->subDelay * 64;
+    reverb->subVolume = settings->subVolume;
+    reverb->leakRtl = settings->leakRtl;
+    reverb->leakLtr = settings->leakLtr;
+    reverb->mixReverbIndex = settings->mixReverbIndex;
+    reverb->mixReverbStrength = settings->mixReverbStrength;
+    reverb->useReverb = 8; // used as a boolean
+
+    if (is_first_init) {
+        reverb->leftReverbBuf = (s16 *)func_800103F0(&D_8011EBF0, reverb->delayNumSamples * 2);
+        reverb->rightReverbBuf = (s16 *)func_800103F0(&D_8011EBF0, reverb->delayNumSamples * 2);
+        reverb->resampleFlags = 1;
+        reverb->nextReverbBufPos = 0;
+        reverb->delayNumSamplesUnk = 0;
+        reverb->curFrame = 0;
+        reverb->framesToIgnore = 2;
+    }
+
+    reverb->tunedSampleSample = &reverb->sample;
+    reverb->sample.loop = &reverb->loop;
+    reverb->tunedSampleTuning = 1.0f;
+    reverb->sample.codec = 4;
+    reverb->sample.medium = 0;
+    reverb->sample.size = reverb->delayNumSamples * 2;
+    reverb->sample.sampleAddr = (u8 *)reverb->leftReverbBuf;
+    reverb->loop.start = 0;
+    reverb->loop.count = 1;
+    reverb->loop.loopEnd = reverb->delayNumSamples;
+
+    func_80013210(reverb_index, 7, settings->lowPassFilterCutoffLeft, is_first_init);
+    func_80013210(reverb_index, 8, settings->lowPassFilterCutoffRight, is_first_init);
+}
 #endif
