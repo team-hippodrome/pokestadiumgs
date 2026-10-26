@@ -14,7 +14,36 @@
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E81C.s")
+typedef struct unk_D_8291BC68 {
+    s16 unk_00;
+    s16 unk_02;
+    s16 index;
+    u8 unk_06[2];
+    s8 text[255];
+    s8 revealed[255];
+} unk_D_8291BC68;
+
+extern unk_D_8291BC68 D_8291BC68;
+extern void func_800226C0(s32);
+
+s32 func_8290E81C(void) {
+    if (D_8291BC68.text[D_8291BC68.index] == 0) {
+        return 1;
+    }
+    D_8291BC68.revealed[D_8291BC68.index] = D_8291BC68.text[D_8291BC68.index];
+    if (D_8291BC68.text[D_8291BC68.index] == 10) {
+        D_8291BC68.index++;
+        return 0;
+    }
+    D_8291BC68.index++;
+    if (D_8291BC68.text[D_8291BC68.index] == 0) {
+        return 1;
+    }
+    func_800226C0(295);
+    D_8291BC68.revealed[D_8291BC68.index] = D_8291BC68.text[D_8291BC68.index];
+    D_8291BC68.index++;
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
