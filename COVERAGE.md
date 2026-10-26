@@ -3,8 +3,8 @@
 # Decompilation coverage
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **7,834 / 10,532 (74.4%)**
-- Remaining `GLOBAL_ASM` owners: **2,698**
+- US functions with C implementations: **7,844 / 10,532 (74.5%)**
+- Remaining `GLOBAL_ASM` owners: **2,688**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -60,7 +60,7 @@
 | `src/fragments/14/fragment14_FA520.c` | 4 | 9 | 55.6% |
 | `src/fragments/14/fragment14_FAD40.c` | 15 | 46 | 67.4% |
 | `src/fragments/14/fragment14_FD770.c` | 6 | 31 | 80.6% |
-| `src/fragments/14/fragment14_FF070.c` | 30 | 91 | 67.0% |
+| `src/fragments/14/fragment14_FF070.c` | 29 | 91 | 68.1% |
 | `src/fragments/15/fragment15_code.c` | 2 | 6 | 66.7% |
 | `src/fragments/16/fragment16_code.c` | 8 | 29 | 72.4% |
 | `src/fragments/17/fragment17_10F9E0.c` | 4 | 5 | 20.0% |
@@ -78,7 +78,7 @@
 | `src/fragments/20/fragment20_12BB60.c` | 2 | 8 | 75.0% |
 | `src/fragments/20/fragment20_12C460.c` | 73 | 146 | 50.0% |
 | `src/fragments/21/fragment21_13FFA0.c` | 24 | 56 | 57.1% |
-| `src/fragments/21/fragment21_144790.c` | 25 | 46 | 45.7% |
+| `src/fragments/21/fragment21_144790.c` | 18 | 46 | 60.9% |
 | `src/fragments/21/fragment21_147D10.c` | 4 | 11 | 63.6% |
 | `src/fragments/22/fragment22_14A2E0.c` | 4 | 12 | 66.7% |
 | `src/fragments/22/fragment22_14B090.c` | 8 | 40 | 80.0% |
@@ -98,7 +98,7 @@
 | `src/fragments/30/fragment30_170D70.c` | 5 | 10 | 50.0% |
 | `src/fragments/31/fragment31_1732A0.c` | 3 | 9 | 66.7% |
 | `src/fragments/31/fragment31_1736F0.c` | 8 | 10 | 20.0% |
-| `src/fragments/31/fragment31_174460.c` | 10 | 16 | 37.5% |
+| `src/fragments/31/fragment31_174460.c` | 9 | 16 | 43.8% |
 | `src/fragments/31/fragment31_175260.c` | 8 | 12 | 33.3% |
 | `src/fragments/31/fragment31_1768F0.c` | 7 | 10 | 30.0% |
 | `src/fragments/31/fragment31_177430.c` | 5 | 8 | 37.5% |
@@ -231,7 +231,7 @@
 | `src/fragments/63/fragment63_30B540.c` | 12 | 51 | 76.5% |
 | `src/fragments/63/fragment63_30E370.c` | 5 | 15 | 66.7% |
 | `src/fragments/63/fragment63_30F070.c` | 6 | 25 | 76.0% |
-| `src/fragments/63/fragment63_310270.c` | 19 | 43 | 55.8% |
+| `src/fragments/63/fragment63_310270.c` | 18 | 43 | 58.1% |
 | `src/fragments/63/fragment63_312AE0.c` | 12 | 58 | 79.3% |
 | `src/fragments/63/fragment63_315A90.c` | 7 | 39 | 82.1% |
 | `src/fragments/63/fragment63_317060.c` | 23 | 74 | 68.9% |
