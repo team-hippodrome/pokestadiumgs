@@ -1055,3 +1055,7 @@ func_825068C4 = Fragment21_FindRecord;
 func_825049DC = Fragment21_UpdateSelectionInput;
 
 func_825075B0 = Fragment21_UpdateContextAndRecords;
+
+func_82507078 = Fragment21_UpdateLayoutTransition;
+
+func_825073B0 = Fragment21_UpdateCloseTransition;

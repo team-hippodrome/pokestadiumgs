@@ -516,7 +516,67 @@ void func_82507000(s16 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507078.s")
+extern void Fragment21_RequestClose(void);
+extern s32 Fragment21_SetRecordColorTransition(s32, void *, s16, s16, s16, s16, s32);
+void Fragment21_UpdateLayoutTransition(void *context) {
+    s16 target_value;
+    s16 step;
+    s32 row_index;
+    void *row_record;
+    void *primary;
+    s16 position[2];
+    void *found_primary;
+
+    found_primary = Fragment21_FindRecord(1, 0);
+    step = (*(s16 *)((u8 *)context + 2));
+    primary = found_primary;
+    target_value = (*(s16 *)((u8 *)context + 18));
+    switch (step) {
+    case 0:
+        func_82504CC8(primary, target_value);
+        Fragment21_RequestClose();
+        (*(s16 *)((u8 *)context + 2)) = 1;
+        return;
+    case 1:
+        if (target_value == (*(s16 *)((u8 *)found_primary + 36))) {
+            Fragment21_SetRecordColorTransition(0, (u8 *)primary + 72, (*(s16 *)((u8 *)primary + 48)), (*(s16 *)((u8 *)context + 20)), (s32) (*(s16 *)((u8 *)context + 22)), (s32) (*(s16 *)((u8 *)primary + 46)), (*(s32 *)((u8 *)primary + 52)));
+            position[0] = (*(s16 *)((u8 *)context + 24));
+            if ((*(u16 *)((u8 *)context + 6)) & 1) {
+                position[1] = ((*(s16 *)((u8 *)context + 16)) * (*(s16 *)((u8 *)context + 12))) + (*(s16 *)((u8 *)context + 26));
+            } else {
+                position[1] = (*(s16 *)((u8 *)context + 26));
+            }
+            func_82504D40(primary, position);
+            row_index = 0;
+            if ((*(s16 *)((u8 *)context + 12)) > 0) {
+                do {
+                    row_record = Fragment21_FindRecord(2, row_index);
+                    position[0] = (*(s16 *)((u8 *)context + 24));
+                    if ((*(u16 *)((u8 *)context + 6)) & 1) {
+                        position[1] = ((*(s16 *)((u8 *)context + 16)) * row_index) + (*(s16 *)((u8 *)context + 26));
+                    } else {
+                        position[1] = (*(s16 *)((u8 *)context + 26)) - (((*(s16 *)((u8 *)context + 12)) - row_index) * (*(s16 *)((u8 *)context + 16)));
+                    }
+                    func_82504D40(row_record, position);
+                    row_index += 1;
+                } while (row_index < (*(s16 *)((u8 *)context + 12)));
+            }
+            (*(s16 *)((u8 *)context + 2)) = 2;
+            return;
+        }
+        return;
+    case 2:
+        if ((*(s16 *)((u8 *)found_primary + 8)) == 2) {
+            (*(s16 *)((u8 *)context + 0)) = 4;
+            (*(s16 *)((u8 *)context + 4)) = 0;
+            (*(u16 *)((u8 *)context + 6)) = (u16) ((*(u16 *)((u8 *)context + 6)) & 0xFFF7);
+            if ((*(s16 *)((u8 *)context + 12)) > 0) {
+                func_800226C0(273);
+            }
+        }
+        break;
+    }
+}
 
 extern s32 Fragment21_SetRecordColorTransition(s32, void *, s16, s16, s16, s16, s32);
 extern void func_82504D40(void *, void *);
@@ -582,10 +642,62 @@ void func_82507250(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825073B0.s")
+extern s32 D_82508814;
+void Fragment21_UpdateCloseTransition(void *context) {
+    s16 primary_count;
+    s16 secondary_count;
+    s32 last_started_index;
+    s32 record_count;
+    s32 record_index;
+    s32 primary_id;
+    void *records[16];
+    void *primary;
+    s32 complete;
+    s32 exit_mode;
 
-extern void func_82507078(void *);
-extern void func_825073B0(void *);
+    primary_count = (*(s16 *)((u8 *)context + 10));
+    secondary_count = (*(s16 *)((u8 *)context + 12));
+    record_count = 0;
+    primary = Fragment21_FindRecord(1, 0);
+    complete = 1;
+    for (record_index = 0; record_index < secondary_count; record_index++) {
+        records[record_count++] = Fragment21_FindRecord(2, record_index);
+    }
+    for (record_index = 0; record_index < 1; record_index++) {
+        records[record_count++] = primary;
+    }
+    last_started_index = (*(s16 *)((u8 *)context + 4)) / D_82508814;
+    (*(s16 *)((u8 *)context + 4))++;
+    if (record_count - 1 < last_started_index) {
+        last_started_index = record_count - 1;
+    }
+    for (record_index = 0; record_index < record_count; record_index++) {
+        exit_mode = 0;
+        if (record_index <= last_started_index) {
+            if ((*(s16 *)((u8 *)context + 8)) == 1) {
+                exit_mode = 2;
+            }
+            if (records[record_index] != primary) {
+                func_82504D94(records[record_index], exit_mode);
+            } else {
+                func_82504D94(primary, exit_mode);
+                for (primary_id = 1; primary_id < primary_count; primary_id++) {
+                    func_82504D94(Fragment21_FindRecord(1, primary_id), exit_mode);
+                }
+            }
+        }
+    }
+    for (record_index = 0; record_index < record_count; record_index++) {
+        if ((*(s16 *)((u8 *)records[record_index] + 8)) != 0) {
+            complete = 0;
+            break;
+        }
+    }
+    if (complete) {
+        (*(s16 *)((u8 *)context + 0)) = 0;
+    }
+}
+
 extern void func_82504E38(void *, void *);
 extern void func_82504FB4(void *, void *);
 extern void func_825050EC(void *, void *);
@@ -607,13 +719,13 @@ void Fragment21_UpdateContextAndRecords(void) {
         func_82507000(state);
         break;
     case 3:
-        func_82507078(state);
+        Fragment21_UpdateLayoutTransition(state);
         break;
     case 5:
         func_82507250(state);
         break;
     case 6:
-        func_825073B0(state);
+        Fragment21_UpdateCloseTransition(state);
         break;
     }
     context = &D_82508FF0;
