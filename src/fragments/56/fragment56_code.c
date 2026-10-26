@@ -12,7 +12,14 @@ s32 func_86800020(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800298.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868003E4.s")
+extern f32 D_86807CB0;
+extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
+s32 func_868003E4(s32 arg0, void *arg1) {
+    // The second (f32) parameter is passed the integer constant 0, which IDO
+    // loads with li; writing 0.0f moves it from $f0 instead (diff score 474).
+    func_80038E14(arg1, 0, 0.0f, D_86807CB0, 0.0f, 0.0f, 0.0f, 0);
+    return 0;
+}
 
 extern void func_80037120(s32, s32, s32 *, s16 *, s16 *);
 extern s32 D_80094908;

@@ -16,7 +16,16 @@ void func_87C02DF0(u8 *arg0, s32 arg1, void *arg2, f32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C02FEC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C03178.s")
+extern Gfx *D_800D0510;
+extern Gfx D_87C03CD0[];
+//!bug Declared s32 but never returns a value; the register allocation (display-list pointer
+// in v0) only matches with a non-void return type, diff score 20 as void.
+s32 func_87C03178(s32 arg0, u8 *arg1) {
+    if (arg0 == 2) {
+        arg1[0x1D] = 100;
+        gSPDisplayList(D_800D0510++, D_87C03CD0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C031B8.s")
 

@@ -4,7 +4,45 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32AEF0/func_87F08280.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32AEF0/func_87F088EC.s")
+// Builds a vertex for texel (s, t) of an image whose u16 width and height are at
+// image_size: position is the texel's offset from the image center, flipped in y,
+// shifted by (x_offset, y_offset) and multiplied by scale; texture coordinates are
+// s and t in 10.5 fixed point. The normal is (0, 0, 127) with alpha 0xFF; the signed
+// reload of n[1] when copying it to n[0] matches the s8 Vtx_tn normal.
+void func_87F088EC(Vtx *vtx, f32 s, f32 t, f32 x_offset, f32 y_offset, f32 scale, u16 *image_size) {
+    f32 x;
+    f32 y;
+
+    x = ((s - image_size[0] * 0.5f) + x_offset) * scale;
+    if (x >= 0.0f) {
+        vtx->n.ob[0] = x + 0.5f;
+    } else {
+        vtx->n.ob[0] = x - 0.5f;
+    }
+    y = ((image_size[1] * 0.5f - t) + y_offset) * scale;
+    if (y >= 0.0f) {
+        vtx->n.ob[1] = y + 0.5f;
+    } else {
+        vtx->n.ob[1] = y - 0.5f;
+    }
+    vtx->n.ob[2] = 0;
+    vtx->n.flag = 0;
+    x = s * 32.0f;
+    if (x >= 0.0f) {
+        vtx->n.tc[0] = x + 0.5f;
+    } else {
+        vtx->n.tc[0] = x - 0.5f;
+    }
+    y = t * 32.0f;
+    if (y >= 0.0f) {
+        vtx->n.tc[1] = y + 0.5f;
+    } else {
+        vtx->n.tc[1] = y - 0.5f;
+    }
+    vtx->n.n[0] = vtx->n.n[1] = 0;
+    vtx->n.n[2] = 127;
+    vtx->n.a = 0xFF;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32AEF0/func_87F08A94.s")
 

@@ -762,7 +762,32 @@ void Fragment53_UpdateSecondaryAnimation(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86508890.s")
+void func_86508890(void) {
+    s32 i;
+
+    if (StageContext_GetFadeMode() == 1) {
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC(&D_8650E6C0[i]);
+            func_8003F114(&D_8650E120[i], 0, -1, D_8650DB28[i]);
+            ModelAnim_SetEventFrame((u8 *)&D_8650E120[i], 0);
+            func_8003F3BC(&D_8650E120[i], 0);
+            func_8003F210(&D_8650E120[i], 0);
+            ModelAnim_SetFrame((u8 *)&D_8650E120[i], (s16)(guRandom() % 15 + 15));
+            D_86511698[i].animation = 0;
+        }
+        StageFade_StartFromOpaque(20);
+        func_87F00688();
+        D_8650C5EC = 6;
+        return;
+    }
+    for (i = 0; i < 4; i++) {
+        if (D_86511698[i].kind == 55) {
+            Fragment53_UpdateTimedSecondaryAnimation(i);
+        } else {
+            Fragment53_UpdateSecondaryAnimation(i);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

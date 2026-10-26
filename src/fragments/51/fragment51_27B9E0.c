@@ -11,7 +11,27 @@ void func_86305C48(void *arg0, void *arg1, f32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305C78.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305D88.s")
+extern u8 *D_863075D8;
+// Rescales the 2D vector at +0x10/+0x14 to length (its current length + 1),
+// clamped to the f32 limit at D_863075D8 + 0x8F34. A zero vector is left unchanged.
+void func_86305D88(u8 *arg0) {
+    f32 max_length;
+    f32 x = *(f32 *)(arg0 + 0x10);
+    f32 y = *(f32 *)(arg0 + 0x14);
+    f32 length = sqrtf(x * x + y * y);
+
+    if (length > 0) {
+        *(f32 *)(arg0 + 0x10) = x / length;
+        *(f32 *)(arg0 + 0x14) = y / length;
+        length += 1.0f;
+        max_length = *(f32 *)(D_863075D8 + 0x8F34);
+        if (max_length < length) {
+            length = max_length;
+        }
+        *(f32 *)(arg0 + 0x10) *= length;
+        *(f32 *)(arg0 + 0x14) *= length;
+    }
+}
 
 extern u8 *D_863075D8;
 extern void func_87C03B60(void *, void *, void *);

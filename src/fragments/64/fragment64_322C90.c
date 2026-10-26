@@ -42,7 +42,28 @@ void func_87F00030(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F003F8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F00534.s")
+extern s32 func_87F00138();
+extern void func_87F026E8(void *, void *);
+extern u8 *func_87F025B8(void *, void *);
+extern void func_80037E3C(void *, void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+void func_87F00534(f32 arg0, f32 arg1) {
+    u8 *obj;
+
+    func_87F026E8((u8 *)D_87F11768 + 0x20, (u8 *)D_87F11768 + 0x34);
+    obj = func_87F025B8((u8 *)D_87F11768 + 0x20, func_87F00138);
+    if (obj != NULL) {
+        func_80037E3C(obj + 0x24, NULL, obj);
+        func_8003F1DC(obj + 0x24);
+        func_8003F114(obj + 0x24, 0, -1, *(void **)((u8 *)D_87F11768 + 0x1C0));
+        *(f32 *)(obj + 0x48) = arg0;
+        *(f32 *)(obj + 0x4C) = arg1;
+        *(f32 *)(obj + 0x54) = 0.0f;
+        *(f32 *)(obj + 0x58) = 0.0f;
+        *(f32 *)(obj + 0x5C) = 1.0f;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F005F0.s")
 

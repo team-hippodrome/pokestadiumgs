@@ -83,5 +83,32 @@ s32 func_87F0D96C(s32 arg0, unk_func_87F0D96C *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0DA08.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0DB3C.s")
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_80037E3C(void *, s32 (*)(s32, unk_func_87F0D96C *), void *);
+
+// When arg0 + 0x20 holds model data, takes a free 0x18C-byte object from the pool
+// at arg0 + 0xC with func_87F025B8, initializes the object's model node at +0x24 with
+// that data and installs func_87F0D96C as the node callback. The callback data
+// (object + 0x38, the node's unk_14) receives arg1 and `source`, the node whose
+// unk_1E/unk_24/unk_30 fields func_87F0D96C copies into this node. func_867068EC
+// passes another pool object's model node as `source`. Pool functions:
+//@src/fragments/64/fragment64_324FB0.c
+void func_87F0DB3C(u8 *arg0, s32 arg1, unk_func_87F0D96C *source) {
+    u8 *object;
+    unk_func_87F0D96C_014 *data;
+
+    if (*(void **)(arg0 + 0x20) != NULL) {
+        object = func_87F025B8(arg0 + 0xC, NULL);
+        if (object != NULL) {
+            data = *(unk_func_87F0D96C_014 **)(object + 0x38);
+            func_8003F1DC(object + 0x24);
+            func_8003F114(object + 0x24, 0, -1, *(void **)(arg0 + 0x20));
+            func_80037E3C(object + 0x24, func_87F0D96C, data);
+            data->unk_00 = arg1;
+            data->unk_04 = source;
+        }
+    }
+}
 #endif

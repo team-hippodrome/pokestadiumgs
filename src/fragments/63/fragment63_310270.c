@@ -180,7 +180,23 @@ void func_87E0D73C(void) {
     func_87E0D278();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0D75C.s")
+void func_87E0D75C(u8 *arg0) {
+    u8 *data;
+    s32 index;
+
+    *(s32 *)(arg0 + 0x3F4) = 2;
+    *(s32 *)(arg0 + 0x3FC) = 0;
+    *(s32 *)(arg0 + 0x3F8) = 0;
+    index = func_87E0C900(arg0);
+    if (index == -1) {
+        *(s8 *)(*(u8 **)(arg0 + 4) + 0x218D) = 0;
+        return;
+    }
+    data = *(u8 **)(arg0 + 4);
+    if (*(s32 *)(data + 0x2190 + index * 24) + *(s8 *)(data + 0x218D) > *(s32 *)(data + 0x2188)) {
+        *(s8 *)(data + 0x218D) = *(s32 *)(data + 0x2188) - *(s32 *)(data + 0x2190 + index * 24);
+    }
+}
 
 extern u32 func_8003570C(void);
 extern void func_87E0D18C(void);

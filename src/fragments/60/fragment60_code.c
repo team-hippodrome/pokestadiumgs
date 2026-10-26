@@ -216,7 +216,28 @@ s32 func_86A0405C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A05344.s")
+extern s32 D_86A0EFF4[];
+extern f32 D_86A0F62C;
+extern f32 D_86A443F4[];
+typedef struct { f32 x; f32 y; } F60C7Pair;
+// Returns the OR of the D_86A0EFF4 bits for each of the four D_86A443F4 points
+// that lies strictly inside the square of half-width D_86A0F62C around (arg0, arg1).
+s32 func_86A05344(f32 arg0, f32 arg1) {
+    s32 i;
+    f32 x;
+    f32 y;
+    s32 result = 0;
+    f32 half_size = D_86A0F62C;
+
+    for (i = 0; i != 4; i++) {
+        x = ((F60C7Pair *)D_86A443F4)[i].x;
+        y = ((F60C7Pair *)D_86A443F4)[i].y;
+        if (x < arg0 + half_size && arg0 - half_size < x && y < arg1 + half_size && arg1 - half_size < y) {
+            result |= D_86A0EFF4[i];
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -683,7 +704,6 @@ void func_86A0BB40(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-typedef struct { f32 x; f32 y; } F60C7Pair;
 extern f32 func_86A0CF80(f32 *, f32 *, s32);
 extern s32 func_86A0C9B4(s32, s32);
 extern void func_86A0CED8(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
