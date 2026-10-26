@@ -332,33 +332,20 @@ s32 func_8600A04C(void *arg0, void *arg1, void *arg2) {
     return 0;
 }
 
-/* mkdraft:func_8600A0C8 begin */
-f64 func_8600A0C8(void *arg0)
-{
-  f64 temp_fa0;
-  f64 temp_fv1;
-  s32 temp_v0;
-  s32 var_v0;
-  temp_v0 = *((s32 *) (((u8 *) arg0) + 0x48));
-  temp_fv1 = (*((f64 *) (((u8 *) arg0) + 8))) / temp_fa0;
-  if (temp_v0 != 0)
-  {
-    temp_fa0 = *((f64 *) (((u8 *) arg0) + 0));
-    temp_fv1 = (*((f64 *) (((u8 *) arg0) + 8))) / temp_fa0;
-    if (0, temp_v0)
-    {
-      var_v0 = 1;
+f64 func_8600A0C8(void *arg0) {
+    f64 ratio;
+    f64 base;
+    s32 flag;
+    s32 sign;
+    flag = *(s32 *)((u8 *)arg0 + 0x48);
+    if (flag != 0) {
+        ratio = *(f64 *)((u8 *)arg0 + 8) / *(f64 *)arg0;
+        base = *(f64 *)arg0;
+        sign = flag ? 1 : -1;
+        return *(f64 *)((u8 *)arg0 + 0x18) + (f64)sqrtf((f32)(1.0 - ratio * ratio)) * ((f64)sign * base);
     }
-    else
-    {
-      var_v0 = -1;
-    }
-    return (*((f64 *) (((u8 *) arg0) + 0x18))) + (((f64) sqrtf((f32) (1.0 - (temp_fv1 * temp_fv1)))) * (((f64) var_v0) * temp_fa0));
-  }
- if (1) { }
-  return (*((f64 *) (((u8 *) arg0) + 0x18))) - (*((f64 *) (((u8 *) arg0) + 0)));
+    return *(f64 *)((u8 *)arg0 + 0x18) - *(f64 *)arg0;
 }
-/* mkdraft:func_8600A0C8 end */
 
 f64 func_8600A144(u8 *arg0) {
     f64 ratio;
