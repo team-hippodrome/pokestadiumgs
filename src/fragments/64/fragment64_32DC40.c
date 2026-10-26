@@ -57,9 +57,35 @@ void func_87F0B18C(u8 *arg0) {
     arg0[0x68] &= 0xFFBF;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0B1A4.s")
+void func_87F0B1A4(u8 *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5, s32 arg6) {
+    if (arg2 != arg1[0] || arg3 != arg1[1] || arg4 != arg1[2]) {
+        *(f32 *)(arg0 + 0) = arg1[0];
+        *(f32 *)(arg0 + 4) = arg1[1];
+        *(f32 *)(arg0 + 8) = arg1[2];
+        *(s32 *)(arg0 + 108) = 0;
+        *(s32 *)(arg0 + 112) = arg5;
+        *(u32 *)(arg0 + 132) = (*(u32 *)(arg0 + 132) | 1) | arg6;
+        *(f32 *)(arg0 + 40) = arg3;
+        *(f32 *)(arg0 + 36) = arg2;
+        *(f32 *)(arg0 + 44) = arg4;
+        func_87F0B18C(arg0);
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0B24C.s")
+void func_87F0B24C(u8 *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5, s32 arg6) {
+    if (arg2 != arg1[0] || arg3 != arg1[1] || arg4 != arg1[2]) {
+        *(f32 *)(arg0 + 12) = arg1[0];
+        *(f32 *)(arg0 + 16) = arg1[1];
+        *(f32 *)(arg0 + 20) = arg1[2];
+        *(s32 *)(arg0 + 116) = 0;
+        *(s32 *)(arg0 + 120) = arg5;
+        *(u32 *)(arg0 + 132) = (*(u32 *)(arg0 + 132) | 0x10) | arg6;
+        *(f32 *)(arg0 + 52) = arg3;
+        *(f32 *)(arg0 + 48) = arg2;
+        *(f32 *)(arg0 + 56) = arg4;
+        func_87F0B18C(arg0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0B2F4.s")
 
