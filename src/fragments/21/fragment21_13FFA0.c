@@ -551,7 +551,18 @@ void func_82503840(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_825038A4.s")
+extern void func_82506BEC(s32, s32, s16, s16, void *);
+void func_825038A4(u8 *arg0) {
+    s32 var_s3 = **(u8 **)(arg0 + 12) - 1;
+    s32 var_s0;
+    u8 *var_v0;
+
+    for (var_s0 = 0; var_s0 < var_s3; var_s0++) {
+        var_v0 = *(u8 **)(arg0 + 12) + var_s0 * 152 + 4;
+        func_82506BEC(var_s0, var_s3, (s16)(var_v0[0] - 1),
+                      (s16)(var_v0[1] - 1), *(void **)(arg0 + 28 + var_s0 * 4));
+    }
+}
 #endif
 
 #ifdef VERSION_US
