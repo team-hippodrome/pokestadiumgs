@@ -6358,7 +6358,44 @@ void func_8413A53C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413AB2C.s")
+extern void func_800226C0(s32);
+extern void func_84147228(s32, u8, s32, s32, s32);
+extern void * D_841951F8[];
+extern u8 D_84195248[];
+// Close to func_8413AD98; gated on arg2 being below byte 8 of D_841951F8[arg0] instead of a
+// per-slot flag, has no case 7, and case 6 starts with two calls whose first argument is arg3.
+void func_8413AB2C(u8 arg0, u8 arg1, s8 arg2, u8 arg3) {
+    if ((u8)arg2 < ((u8 *)D_841951F8[arg0])[8]) {
+        switch (D_84195248[arg0 * 24 + 0xD]) {
+        case 5:
+            func_84147228(7, arg0, 0, 11, 0);
+            func_84147228(8, arg0, 0, 11, 0);
+            func_84147228(7, arg0, 0, 4, 4);
+            func_84147228(8, arg0, 0, 4, 4);
+            func_84147228(13, arg0, 0, 8, arg1);
+            func_84147228(13, arg0, 0, 3, 0);
+            func_84147228(13, arg0, 0, 10, 0);
+            func_84147228(13, arg0, 0, 4, 6);
+            func_800226C0(8);
+            break;
+        case 6:
+            // FAKE: reading arg3 through its address reloads it from its stack slot for each
+            // call; diff score 474 with plain arg3.
+            func_84147228(*(u8 *)&arg3, arg0, 0, 4, 1);
+            func_84147228(*(u8 *)&arg3, arg0, 0, 9, 0);
+            func_84147228(20, arg0, 0, 4, 3);
+            func_84147228(20, arg0, 0, 9, 0);
+            func_84147228(13, arg0, 0, 8, arg1);
+            func_84147228(13, arg0, 0, 1, 0);
+            func_84147228(13, arg0, 0, 3, 0);
+            func_84147228(13, arg0, 0, 5, 3);
+            func_800226C0(8);
+            break;
+        }
+        D_84195248[arg0 * 24 + 0xD] = 7;
+        func_84147228(13, arg0, 0, 7, *(u8 *)&arg2);
+    }
+}
 #endif
 
 #ifdef VERSION_US

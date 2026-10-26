@@ -20,7 +20,33 @@ s32 func_841047A4(u8 *arg0) {
     return *(s32 *)(arg0 + 0x14);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_373F70/func_841047AC.s")
+extern u8 D_84188BF0[];
+extern u8 D_8418D2A0[];
+extern u8 D_84190020[];
+extern void func_84105CA0(u8 *);
+// Claims the first 0x16C-byte entry of D_8418D2A0 whose word at +0x168 is 0
+// and sets that word to 1; func_84104818 clears it again. When every entry up
+// to D_84190020 is in use, passes D_84188BF0 ("Can't Alloc Hms Effect Dynamic")
+// to func_84105CA0 and returns NULL.
+u8 *func_841047AC(void) {
+    s32 i;
+    u8 *entry;
+
+    entry = NULL;
+    i = 0;
+    do {
+        if (*(s32 *)(D_8418D2A0 + i * 0x16C + 0x168) == 0) {
+            *(s32 *)(D_8418D2A0 + i * 0x16C + 0x168) = 1;
+            entry = D_8418D2A0 + i * 0x16C;
+            break;
+        }
+        i++;
+    } while (D_84190020 != D_8418D2A0 + i * 0x16C);
+    if (entry == NULL) {
+        func_84105CA0(D_84188BF0);
+    }
+    return entry;
+}
 
 extern u8 D_8418D2A0[];
 extern u8 D_84190020[];

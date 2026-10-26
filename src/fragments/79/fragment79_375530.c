@@ -141,7 +141,39 @@ void func_841065E0(void *arg0, void *arg1, void *arg2, s16 arg3, f32 arg4) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_8410668C.s")
+extern u8 *D_8418C950;
+void func_8410668C(u8 *arg0) {
+    u8 *record;
+    u8 *found;
+    s32 i;
+
+    record = D_8418C950;
+    found = NULL;
+    i = 0;
+    do {
+        // FAKE: comma expression around the second 0x10 load; diff score 15 without it.
+        if ((*(s8 *)(record + 0x98) != 0) && (*(u8 **)(record + 0x10) != NULL) &&
+            (ParticleMath_HasBits((0, *(u8 **)(record + 0x10)) + 4, 0x400000) != 0)) {
+            if (func_84100054(record, 2) != 0) {
+                if (func_84100054(arg0, 2) != 0) {
+                    found = record;
+                    break;
+                }
+            } else if (func_84100074(arg0, 2) != 0) {
+                found = record;
+                break;
+            }
+        }
+        i++;
+        record += 156;
+    } while (i != 300);
+
+    if (found != NULL) {
+        *(f32 *)(arg0 + 0x2C) += *(f32 *)(found + 0x20);
+        *(f32 *)(arg0 + 0x30) += *(f32 *)(found + 0x24);
+        *(f32 *)(arg0 + 0x34) += *(f32 *)(found + 0x28);
+    }
+}
 #endif
 
 #ifdef VERSION_US

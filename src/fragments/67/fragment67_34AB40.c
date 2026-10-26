@@ -45,9 +45,9 @@ void func_8290E1D8(f32* arg0, f32 arg1) {
     arg0[3] = D_8291BC2C / 6.0f;
 }
 extern s32 D_8291BC00;
-extern s32 D_8291BC04;
-extern s32 D_8291BC08;
-extern s32 D_8291BC10;
+extern s16 D_8291BC04[];
+extern f32 D_8291BC08[];
+extern s16 D_8291BC10[];
 
 void func_8290E2A8(void)
 {
@@ -62,5 +62,39 @@ void func_8290E2A8(void)
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34AB40/func_8290E2FC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34AB40/func_8290E438.s")
+s32 func_8290E438(s32 arg0, s32 arg1) {
+    f32 weights[4]; // Cubic B-spline basis weights filled by func_8290E0FC, func_8290E1D8 or func_8290E040.
+
+    if (D_8291BC10[arg1] < D_8291BC04[arg1] + 3) {
+        return 1;
+    }
+    if (D_8291BC04[arg1] == 1) {
+        func_8290E0FC(weights, D_8291BC08[arg1]);
+    }
+    if (D_8291BC04[arg1] == 2) {
+        func_8290E1D8(weights, D_8291BC08[arg1]);
+    }
+    if (D_8291BC04[arg1] >= 3) {
+        func_8290E040(weights, D_8291BC08[arg1]);
+    }
+    func_8290E2FC(weights, arg0, (s16)(D_8291BC04[arg1] - 1), arg1);
+    if (D_8291BC08[arg1] >= 1.0f) {
+        D_8291BC04[arg1]++;
+        D_8291BC08[arg1] = 0.0f;
+        if (D_8291BC10[arg1] < D_8291BC04[arg1] + 3) {
+            return 1;
+        }
+        if (D_8291BC04[arg1] == 1) {
+            func_8290E0FC(weights, D_8291BC08[arg1]);
+        }
+        if (D_8291BC04[arg1] == 2) {
+            func_8290E1D8(weights, D_8291BC08[arg1]);
+        }
+        if (D_8291BC04[arg1] >= 3) {
+            func_8290E040(weights, D_8291BC08[arg1]);
+        }
+        func_8290E2FC(weights, arg0, (s16)(D_8291BC04[arg1] - 1), arg1);
+    }
+    return 0;
+}
 #endif
