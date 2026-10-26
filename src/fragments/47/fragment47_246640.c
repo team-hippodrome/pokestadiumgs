@@ -124,7 +124,41 @@ void func_860018A8(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86001924.s")
+extern f32 D_8600D63C;
+extern f32 *func_87C007B0(f32 *, void *);
+extern void func_87C03B60(u8 *, f32 *, s8 *);
+// Converts the f64 position at arg0 to f32, passes it through func_87C03B60
+// with *(arg0 + 0x1870) + 0x8150 to fill the s8 pair at 0x1890, then scales that
+// pair by D_8600D63C (1.33) and clamps it to [-127, 127]. Callers in this file
+// then pass the pair at 0x1890 to the sound-event functions func_8002781C and
+// func_800278C0.
+//@src/229E0.c
+void func_86001924(void *arg0) {
+    f32 vec[3];
+    u8 *base;
+
+    base = *(u8 **)((u8 *)arg0 + 0x1870) + 0x8150;
+    func_87C03B60(base, func_87C007B0(vec, arg0), (s8 *)((u8 *)arg0 + 0x1890));
+    // FAKE: empty test that moves the D_8600D63C load ahead of the -127.0f constant; diff score 130 without it.
+    if (!D_8600D63C) {
+    }
+    vec[0] = *(s8 *)((u8 *)arg0 + 0x1890) * D_8600D63C;
+    vec[1] = *(s8 *)((u8 *)arg0 + 0x1891) * D_8600D63C;
+    if (vec[0] <= -127.0f) {
+        *(s8 *)((u8 *)arg0 + 0x1890) = -127;
+    } else if (vec[0] >= 127.0f) {
+        *(s8 *)((u8 *)arg0 + 0x1890) = 127;
+    } else {
+        *(s8 *)((u8 *)arg0 + 0x1890) = vec[0];
+    }
+    if (vec[1] <= -127.0f) {
+        *(s8 *)((u8 *)arg0 + 0x1891) = -127;
+    } else if (vec[1] >= 127.0f) {
+        *(s8 *)((u8 *)arg0 + 0x1891) = 127;
+    } else {
+        *(s8 *)((u8 *)arg0 + 0x1891) = vec[1];
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -81,7 +81,31 @@ void func_86800508(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800594.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800A7C.s")
+extern s32 D_86807CB4;
+extern s32 D_86808648[20];
+// Fills D_86808648 with 0-19 and shuffles it with D_86807CB4 random swaps of two distinct
+// entries. func_868063CC advances D_86807CB4 every frame, cycling it through 50-150.
+void func_86800A7C(void) {
+    s32 i;
+    s32 first;
+    s32 second;
+    s32 temp;
+
+    for (i = 0; i < 20; i++) {
+        D_86808648[i] = i;
+    }
+
+    for (i = 0; i < D_86807CB4; i++) {
+        first = guRandom() % 20;
+        do {
+            second = guRandom() % 20;
+        } while (first == second);
+
+        temp = D_86808648[first];
+        D_86808648[first] = D_86808648[second];
+        D_86808648[second] = temp;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800B98.s")
 

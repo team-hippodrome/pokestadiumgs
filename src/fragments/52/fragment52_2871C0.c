@@ -74,5 +74,21 @@ void func_86409378(u8 *arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_864094BC.s")
+// Same 12-entry scan as func_86409378, but matches word 0 exactly and sets 0x50000000 /
+// clears 0x20000000 in word 1 of each matching entry's object.
+void func_864094BC(u8 *arg0, s32 arg1, s32 arg2) {
+    u8 *entry;
+    u32 *object;
+    s32 i;
+
+    entry = arg0 + 0x14;
+    for (i = 0; i < 12; i++, entry += 396) {
+        object = *(u32 **)(entry + 0x38);
+        if (object[3] != arg1) continue;
+        if (object[0] != arg2) continue;
+        object[1] |= 0x50000000;
+        object[1] &= ~0x20000000;
+        *(s32 *)(entry + 0x1C) = 0;
+    }
+}
 #endif

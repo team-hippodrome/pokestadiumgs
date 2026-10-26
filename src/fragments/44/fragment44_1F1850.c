@@ -249,7 +249,25 @@ s32 func_8AF04340(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04404.s")
+extern s32 D_8AF2C580;
+s32 func_8AF04404(s32 arg0, void *arg1) {
+    void *inner = *(void **)((u8 *)arg1 + 0x20);
+
+    switch (arg0) {
+        case 0:
+            D_8AF2C580 = *(s16 *)((u8 *)arg1 + 0xA);
+            break;
+        case 1:
+            if (D_8AF26470 == 0) {
+                return 0;
+            }
+            D_8AF26474 = *(s32 *)((u8 *)inner + 0x4E8);
+            *(s16 *)((u8 *)arg1 + 0xA) = D_8AF2C580 - (D_8AF2C088 - 30) * D_8AF26474 / D_8AF26470;
+            *(s32 *)((u8 *)arg1 + 0x2C) = -1;
+            break;
+    }
+    return 0;
+}
 
 s32 func_8AF044C4(s32 arg0, void *arg1) {
     void *inner = *(void **)((u8 *)arg1 + 0x20);
@@ -410,7 +428,30 @@ u8 *func_8AF04D68(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04DB8.s")
+// Returns the index of id in the -1-terminated s16 list chosen by func_8AF04D68,
+// or -1 if id is absent or no list exists for D_8AF2BA6C.
+s32 func_8AF04DB8(s32 id) {
+    s32 index;
+    s16 *entry;
+    s32 result = -1;
+
+    entry = (s16 *)func_8AF04D68();
+    if (entry == NULL) {
+        return -1;
+    }
+
+    for (index = 0;; index++) {
+        if (*entry == -1) {
+            break;
+        }
+        if (id == *entry) {
+            result = index;
+            break;
+        }
+        entry++;
+    }
+    return result;
+}
 
 extern s32 func_8AF04DB8(s32);
 s32 *func_8AF04E2C(arg0, arg1)

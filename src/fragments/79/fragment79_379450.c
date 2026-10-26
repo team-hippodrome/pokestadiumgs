@@ -6,7 +6,47 @@
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_379450/func_84109E18.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_379450/func_8410A074.s")
+typedef struct unk_D_841833E0 {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ u8 r;
+    /* 0x09 */ u8 g;
+    /* 0x0A */ u8 b;
+    /* 0x0B */ u8 unk_0B;
+} unk_D_841833E0; // size = 0xC
+
+typedef struct unk_D_84190218 {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ u8 r;
+    /* 0x09 */ u8 g;
+    /* 0x0A */ u8 b;
+} unk_D_84190218;
+
+extern s32 D_84190208;
+extern unk_D_841833E0 D_841833E0[];
+extern unk_D_84190218 D_84190218;
+
+// Geo layout callback (command 0x08 in D_84183548): copies the RGB color of
+// table entry D_84190208 (set by func_8410A524) into node bytes 0x18-0x1A.
+// With arg0 == 2 the color is scaled by D_84190218's color unless that is white.
+s32 func_8410A074(s32 arg0, u8 *node) {
+    if (arg0 == 0) {
+        node[0x18] = D_841833E0[D_84190208].r;
+        node[0x19] = D_841833E0[D_84190208].g;
+        node[0x1A] = D_841833E0[D_84190208].b;
+    }
+    if (arg0 == 2) {
+        if ((D_84190218.r & D_84190218.g & D_84190218.b) == 0xFF) {
+            node[0x18] = D_841833E0[D_84190208].r;
+            node[0x19] = D_841833E0[D_84190208].g;
+            node[0x1A] = D_841833E0[D_84190208].b;
+        } else {
+            node[0x18] = (D_841833E0[D_84190208].r * D_84190218.r) / 255;
+            node[0x19] = (D_841833E0[D_84190208].g * D_84190218.g) / 255;
+            node[0x1A] = (D_841833E0[D_84190208].b * D_84190218.b) / 255;
+        }
+    }
+    return 0;
+}
 
 s32 func_8410A274(u8 *arg0, s32 arg1) {
     return 0;

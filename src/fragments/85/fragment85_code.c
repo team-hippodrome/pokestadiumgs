@@ -184,7 +184,29 @@ void func_8FD00B28(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD00BA4.s")
+extern s32 D_8FD020E8;
+// While the byte at D_8FD02188 + 1 equals 2, steps the frame counter D_8FD020E8
+// through an 11-frame cycle that passes 0, 1, 2, 1 as func_8FD00124's last argument.
+void func_8FD00BA4(void) {
+    if ((D_8FD02188 == 3) || (D_8FD02188 == 4)) {
+        gSPDisplayList(D_800D0510++, D_8FD02060);
+        if ((&D_8FD02188)[1] == 2) {
+            D_8FD020E8++;
+            if (D_8FD020E8 < 3) {
+                func_8FD00124(105, 90, 356, 0);
+            } else if (D_8FD020E8 < 6) {
+                func_8FD00124(105, 90, 356, 1);
+            } else if (D_8FD020E8 < 9) {
+                func_8FD00124(105, 90, 356, 2);
+            } else if (D_8FD020E8 < 11) {
+                func_8FD00124(105, 90, 356, 1);
+            } else {
+                func_8FD00124(105, 90, 356, 1);
+                D_8FD020E8 = 0;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

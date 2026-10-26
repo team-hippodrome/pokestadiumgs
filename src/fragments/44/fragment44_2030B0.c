@@ -37,7 +37,34 @@ void func_8AF15584(s16 arg0, s16 arg1, s16 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15670.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15954.s")
+extern u8 D_8AF33770[][2];
+extern s16 D_8AF33C72;
+extern s16 D_8AF33C80;
+// Paired-column variant of func_8AF15584. For each of the D_8AF33C80 byte pairs starting at
+// pair D_8AF33C72 of D_8AF33770, and each of the 17 rows of D_8AF337E8, draws a 24x24
+// rectangle with func_8AF154EC wherever the table entry for either index of the pair equals
+// value. Pairs are 60 pixels apart; the second index is drawn 20 pixels right of the first
+// and skipped when both indices are equal.
+void func_8AF15954(s16 value, s16 x, s16 y) {
+    s32 row;
+    s32 col;
+    u8 first;
+    u8 second;
+
+    func_8AF15384(value & 0xFF);
+    for (row = 0; row < 17; row++) {
+        for (col = 0; col < D_8AF33C80; col++) {
+            first = D_8AF33770[D_8AF33C72 + col][0];
+            second = D_8AF33770[D_8AF33C72 + col][1];
+            if (value == D_8AF337E8[row][first]) {
+                func_8AF154EC(x + col * 60, y + row * 20);
+            }
+            if (first != second && value == D_8AF337E8[row][second]) {
+                func_8AF154EC(x + col * 60 + 20, y + row * 20);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15AD8.s")
 

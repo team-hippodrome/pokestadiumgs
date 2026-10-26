@@ -73,7 +73,21 @@ void func_87E00204(void) {
     func_87E04A14(D_87E1BA20 + 0x4B8);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0023C.s")
+// Returns the index of the lowest set bit among bits 0-3 of the byte at
+// arg0 + 0x2182, or -1. arg0 is the pointer word at D_87E1BA20 + 0x0, which this
+// file passes as s32 (see func_87E0027C).
+s32 func_87E0023C(s32 arg0) {
+    s32 result = -1;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (((u8 *)arg0)[0x2182] & (1 << i)) {
+            result = i;
+            break;
+        }
+    }
+    return result;
+}
 
 s32 func_87E0023C(s32);
 extern void func_87E06D8C(u8 *, s32);
@@ -219,7 +233,44 @@ void func_87E00ED4(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00F4C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0101C.s")
+extern s32 func_87E078DC(u8 *);
+extern void func_87E07B74(u8 *);
+// state is func_87E0132C's loop state, passed through func_87E0123C. Setting it to 2 makes that
+// loop wait for the fade started here to reach fade mode 1 (same exit as func_87E01128).
+void func_87E0101C(s32 *state) {
+    s32 result;
+
+    result = func_87E078DC(D_87E1BA20 + 0x734);
+    // FAKE: redundant guard, the switch has no case 2; diff score 460 without it.
+    if (result != 2) {
+        switch (result) {
+        case 0:
+            switch (*(u8 *)(*(u8 **)D_87E1BA20 + 0x2180)) {
+            case 0:
+                *(s32 *)(D_87E1BA20 + 0x1C) = *(s8 *)(*(u8 **)D_87E1BA20 + 0x2183);
+                *state = 2;
+                StageFade_StartFromTransparent(5);
+                break;
+            case 1:
+                func_87E07B74(D_87E1BA20 + 0x734);
+                func_87E000D4();
+                func_87E002E4();
+                break;
+            }
+            break;
+        case 1:
+            func_87E07B74(D_87E1BA20 + 0x734);
+            func_87E0006C();
+            if (*(u8 *)(*(u8 **)D_87E1BA20 + 0x2182) == 15) {
+                func_87E00184();
+            } else {
+                func_87E00204();
+            }
+            func_87E015C0(0);
+            break;
+        }
+    }
+}
 
 void func_87E01128(s32 arg0) {
     s32 mode = func_87E0A620(D_87E1BA20 + 0x8C4);

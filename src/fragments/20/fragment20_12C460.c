@@ -1351,7 +1351,32 @@ s32 func_82610E34(s32 arg0)
 
   return found;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82610EE8.s")
+extern s32 func_80001FF0(void);
+extern s32 func_82610D6C(s16 *, s32);
+// arg0[0] selects the check, arg0[3] counts frames, and arg0[1] receives the
+// next state (2 or 7) when the check passes.
+void func_82610EE8(s16 *arg0) {
+    s32 frames;
+
+    // Rounds func_80001FF0() * 0.75 to the nearest integer; the sign test
+    // calls func_80001FF0 a second time.
+    frames = (func_80001FF0() * 0.5f * 1.5f) + ((func_80001FF0() * 0.5f * 1.5f > 0.0f) ? 0.5f : -0.5f);
+    switch (arg0[0]) {
+        case 0:
+            arg0[3]++;
+            if (func_82610D6C(arg0, frames) && (arg0[3] >= frames)) {
+                arg0[1] = 2;
+                arg0[3] = 0;
+            }
+            break;
+        case 1:
+            if (func_82610E34((s32)arg0)) {
+                arg0[1] = 7;
+                arg0[3] = 0;
+            }
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82610FF8.s")
 
@@ -2212,7 +2237,50 @@ s32 func_82614F0C(void) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82614F40.s")
+void func_82614F40(u16 *arg0, u16 *arg1, u16 arg2, s32 arg3) {
+    s32 result = -1;
+
+    switch (arg2 & 0xFF00) {
+        case 0:
+            switch (arg2 & 0xFF) {
+                case 0: result = 85; break;
+                case 1: result = 83; break;
+                case 2: result = 84; break;
+                case 3: result = 86; break;
+            }
+            break;
+        case 0x300:
+            switch (arg3) {
+                case 5: result = 57; break;
+                case 6: result = 58; break;
+                case 7: result = 59; break;
+                case 8: result = 60; break;
+                case 9: result = 61; break;
+                case 10: result = 62; break;
+                case 11: result = 63; break;
+                case 12: result = 64; break;
+                case 13: result = 65; break;
+                case 14: result = 66; break;
+                case 15: result = 79; break;
+                case 16: result = 69; break;
+                case 17: result = 72; break;
+                case 18: result = 68; break;
+                case 19: result = 70; break;
+                case 20: result = 71; break;
+                case 21: result = 67; break;
+                case 22: result = 73; break;
+                case 23: result = 74; break;
+                case 24: result = 82; break;
+            }
+            break;
+    }
+    if ((arg0 != NULL) && (result != -1)) {
+        *arg0 = 18;
+    }
+    if (arg1 != NULL) {
+        *arg1 = result;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826150A4.s")
 #endif

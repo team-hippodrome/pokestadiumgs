@@ -311,7 +311,39 @@ void Fragment14_ScrollGridForward(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_813064E8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_8130662C.s")
+// Moves the grid cursor down one row while the s16 row at 0xA is below 3; on the last
+// row it instead scrolls the grid forward by one row, the single-row counterpart of
+// Fragment14_ScrollGridForward.
+void func_8130662C(u8 *grid) {
+    s16 scroll_row;
+    s32 delta;
+    s32 distance;
+
+    if (*(s16 *)(grid + 0xA) < 3) {
+        *(struct Fragment14PackedWord *)(grid + 0xC) = *(struct Fragment14PackedWord *)(grid + 8);
+        *(s16 *)(grid + 0xA) += 1;
+        grid[0x87] = 2;
+        grid[0x83] = 0;
+        grid[0x85] = 1;
+        func_800226C0(1);
+    } else {
+        scroll_row = *(s16 *)(grid + 0x7C);
+        if (scroll_row < grid[0x84] - 4) {
+            *(s16 *)(grid + 0x7C) = scroll_row + 1;
+            grid[0x8A] = scroll_row;
+            grid[0x87] = 3;
+            delta = *(s16 *)(grid + 0x7C) - grid[0x8A];
+            grid[0x82] = 0;
+            if (delta > 0) {
+                distance = delta;
+            } else {
+                distance = -delta;
+            }
+            grid[0x86] = (u32)((f32)distance * D_81311F70);
+            func_800226C0(1);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_81306780.s")
 

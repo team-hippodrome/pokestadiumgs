@@ -179,7 +179,25 @@ void func_84200860(u8 *arg0) {}
 
 void func_84200868(u8 *arg0) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/80/fragment80_4194A0/func_84200870.s")
+extern s32 func_80064474(u8, u16);
+// func_80064474 returns a gender from species gender-ratio data (0 = genderless);
+// coefficient 0x15 is added only when the Pokemon at 0x18 and 0x1C have opposite genders.
+//@src/641E0.c
+void func_84200870(u8 *arg0) {
+    u8 gender_a;
+    s32 gender_b;
+    u8 *pokemon_a;
+    u8 *pokemon_b;
+
+    pokemon_a = *(u8 **)(arg0 + 0x18);
+    gender_a = func_80064474(pokemon_a[0], *(u16 *)(pokemon_a + 0x16));
+    pokemon_b = *(u8 **)(arg0 + 0x1C);
+    gender_b = func_80064474(pokemon_b[0], *(u16 *)(pokemon_b + 0x16));
+    if ((gender_a != 0) && (gender_b != 0) && (gender_a != gender_b)) {
+        u32 value = func_842034A0();
+        *(u8 **)(arg0 + 0x10) += (*(u8 **)(arg0 + 0x14))[0x15] * value;
+    }
+}
 
 void func_842008F8(u8 *arg0) {}
 

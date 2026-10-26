@@ -107,7 +107,30 @@ void func_88230B2C(void) { func_889033A0((D_882349B0 + 236)); func_8821D930((D_8
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230B64.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230D80.s")
+// Viewed as s16 words: [4] and [5] are the count and limit fields of the F29Callbacks
+// transition state that func_88005B60 initializes.
+//@src/fragments/29/fragment29_16BBA0.c
+extern s16 D_8800EF50[];
+// Writes half the transition length to *half and maps the remaining count onto a
+// rounded alpha ramp, 255 at the start through 0 at the midpoint to -255 at the end.
+void func_88230D80(s16 *half, s16 *alpha) {
+    f32 value;
+    f32 rounding;
+
+    *half = D_8800EF50[5] >> 1;
+    value = 255.0f * (D_8800EF50[4] - *half) / *half;
+    if (value > 0.0f) {
+        rounding = 0.5f;
+    } else {
+        rounding = -0.5f;
+    }
+    *alpha = rounding + value;
+    if (*alpha >= 256) {
+        *alpha = 255;
+    } else if (*alpha < -255) {
+        *alpha = -255;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230E38.s")
 #endif

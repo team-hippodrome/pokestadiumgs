@@ -111,7 +111,15 @@ Color_88000510 *func_88000510(Color_88000510 *dest, s8 arg0) {
 extern u8 D_8800ED28[];
 void func_880006BC(u8 *arg0) { struct S { u8 a,b,c; }; *(struct S *)&D_8800ED28 = *(struct S *)arg0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_880006E0.s")
+extern void func_8004972C(s32, s32, s32, s32);
+// Passes the color with alpha 0xFF to func_8004972C only when it differs from
+// the copy cached in D_8800ED28, then updates that copy.
+void func_880006E0(Color_88000510 *color) {
+    if ((color->red != D_8800ED28[0]) || (color->green != D_8800ED28[1]) || (color->blue != D_8800ED28[2])) {
+        func_8004972C(color->red, color->green, color->blue, 0xFF);
+        *(Color_88000510 *)D_8800ED28 = *color;
+    }
+}
 
 s32 func_88000770(u8 *arg0)
 {

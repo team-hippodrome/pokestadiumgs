@@ -4,7 +4,25 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1900C0/func_8821CE40.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1900C0/func_8821D308.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80094E00[];
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern u8 D_882345D4;
+extern s32 D_882347E4;
+void func_8821D308(void) {
+    if (func_88205D7C()) {
+        func_80006F70(&D_800D0510, 50, 68, 590, 349);
+    }
+    func_882001E8();
+    if (func_88205D7C()) {
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+    func_882052F8();
+    if (D_882345D4 != 0 && func_88205D7C()) {
+        gSPDisplayList(D_800D0510++, D_80094E00);
+        func_880015F4(50, 355, 100, 60, D_882347E4, 0, 2, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1900C0/func_8821D3FC.s")
 

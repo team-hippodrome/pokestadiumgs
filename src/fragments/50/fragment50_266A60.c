@@ -718,7 +718,48 @@ void func_862040AC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_862048B0.s")
+extern void BgStage_DrawFrame(void);
+extern void GfxImage_FillCurrent(void *, u16);
+extern void GfxImage_ClearDepthRectangle(Gfx **, s32, s32, s32, s32);
+extern s32 func_87F00930(void);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void Geo_RenderRootNode(s32);
+extern void func_87F0A5BC(u8 *);
+extern void func_87F07FE8(u8 *);
+extern void func_87F022F0(void);
+extern void func_87F01D44(void);
+extern void func_87F0C88C(u8 *);
+extern void func_80008648(void);
+// Per-frame draw, the same sequence as Fragment51_DrawSceneFrame: clear the color and
+// depth buffers, render the scene root, then the overlays selected by the state at 0xE8
+// and the flag word at 0x73CBC.
+//@src/fragments/51/fragment51_275E40.c
+void func_862048B0(void) {
+    BgStage_DrawFrame();
+    GfxImage_FillCurrent(&D_800D0510, 0xA579);
+    GfxImage_ClearDepthRectangle(&D_800D0510, 0, 0, 320, 240);
+    if (func_87F00930() == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    Geo_RenderRootNode(*(s32 *)((u8 *)D_8620E198 + 0xF0));
+    if (!(*(s32 *)((u8 *)D_8620E198 + 0x73CBC) & 1)) {
+        func_862040AC();
+    }
+    if (*(s32 *)((u8 *)D_8620E198 + 0xE8) == 5) {
+        func_87F0A5BC((u8 *)D_8620E198 + 0x73C54);
+    }
+    if (*(s32 *)((u8 *)D_8620E198 + 0x73CBC) & 1) {
+        func_87F07FE8((u8 *)D_8620E198 + 0x73C1C);
+    }
+    if (*(s32 *)((u8 *)D_8620E198 + 0x73CBC) & 2) {
+        func_87F022F0();
+    }
+    if (func_87F00930() == 1) {
+        func_87F01D44();
+    }
+    func_87F0C88C((u8 *)D_8620E198 + 0x120);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US

@@ -584,7 +584,54 @@ void func_86101E04(f32 arg0, f32 arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86101F60.s")
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern void func_86101BD8(f32 *, f32 *);
+// Gets x/y deltas from func_86101BD8 and, if either is nonzero, adds them to the f32s at
+// D_87F119DC + 0x10/0x14. x is limited to +/-64 times the f32 at D_8610AD20 + 0x9790, as in
+// func_86101E04. With clamp_y set, y is limited to [-0.25, 2] times the f32 at
+// D_8610AD20 + 0x9784; otherwise a positive y adds that f32 once. Returns 1 if the deltas
+// were applied. The x clamp is repeated in both branches; hoisting it above the branch does
+// not match.
+s32 func_86101F60(f32 *x_delta, f32 *y_delta, s32 clamp_y) {
+    s32 moved;
+    f32 value;
+    f32 limit;
+
+    moved = 0;
+    func_86101BD8(x_delta, y_delta);
+    if ((*x_delta != 0.0f) || (*y_delta != 0.0f)) {
+        if (clamp_y != 0) {
+            value = (*x_delta > 0.0f) ? *x_delta : -*x_delta;
+            limit = 64.0f;
+            limit *= *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9790);
+            if (limit < value) {
+                *x_delta = ((*x_delta > 0.0f) ? 1.0f : -1.0f) * limit;
+            }
+            *(f32 *)((u8 *)D_87F119DC + 0x10) += *x_delta;
+            if (2.0f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9784) < *y_delta) {
+                *y_delta = 2.0f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9784);
+            }
+            if (*y_delta < -*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9784) * 0.25f) {
+                *y_delta = -*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9784) * 0.25f;
+            }
+            *(f32 *)((u8 *)D_87F119DC + 0x14) += *y_delta;
+        } else {
+            value = (*x_delta > 0.0f) ? *x_delta : -*x_delta;
+            limit = 64.0f;
+            limit *= *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9790);
+            if (limit < value) {
+                *x_delta = ((*x_delta > 0.0f) ? 1.0f : -1.0f) * limit;
+            }
+            *(f32 *)((u8 *)D_87F119DC + 0x10) += *x_delta;
+            if (*y_delta > 0.0f) {
+                *(f32 *)((u8 *)D_87F119DC + 0x14) += *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9784);
+            }
+        }
+        moved = 1;
+    }
+    return moved;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861021A8.s")
 

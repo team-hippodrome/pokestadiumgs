@@ -997,7 +997,17 @@ void func_84126C3C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84126E88.s")
+// Hidden Power base power from a packed DV word (attack, defense, speed and special
+// nibbles from high to low): (5 * (top bit of each DV) + (special DV & 3)) / 2 + 31.
+s32 func_84126E88(u16 dvs) {
+    u16 power = ((dvs & 0x8000) >> 12) | ((dvs & 0x800) >> 9) | ((dvs & 0x80) >> 6) | ((dvs & 8) >> 3);
+
+    power *= 5;
+    power += dvs & 3;
+    power >>= 1;
+    power += 31;
+    return power;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1688,7 +1698,23 @@ void BattleAnim_Table_84185F10_000(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84129E84.s")
+extern u8 D_841951BC, D_841951BD;
+extern u8 *D_84195208[];
+// Resets all seven stat stages (bytes 0x1E-0x24, 7 = neutral; func_84125B88 bounds them to
+// 1-13) of both active Pokemon, then has func_84125734 recompute the five stats at 0x3C
+// from those stages.
+void func_84129E84(void) {
+    s32 i;
+
+    for (i = 0; i < 7; i++) {
+        D_84195208[D_841951BC][i + 0x1E] = 7;
+        D_84195208[D_841951BD][i + 0x1E] = 7;
+    }
+    func_84125734(D_841951BC);
+    func_84125734(D_841951BD);
+    func_841366C4(D_841951BC, -1);
+    func_84135B40(104);
+}
 #endif
 
 #ifdef VERSION_US
@@ -4733,7 +4759,40 @@ void func_841341D8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413425C.s")
+void func_8413425C(void) {
+    u8 i;
+
+    func_84124F40(**(void ***)((u8 *)D_841951F0 + 0x9D8));
+    func_841341D8();
+    ((u8 *)D_841951F0)[0x9C7] = 1;
+    ((u8 *)D_841951F0)[0x9C4] = 0;
+    ((u8 *)D_841951F0)[0x9C5] = 0;
+    ((u8 *)D_841951F0)[0x9C6] = 0;
+    // Mark every slot of the 12-byte table filled by func_841270D8 as empty (0xFF).
+    HAL_Memset((u8 *)D_841951F0 + 0x9C8, 0xFF, 12);
+    for (i = 0; i < 2; i++) {
+        func_84134170(i);
+        func_84126994(i);
+        D_84195208[i][0x12] = 0;
+        D_84195208[i][0x13] = 0;
+        D_84195208[i][0x14] = 0;
+        D_84195208[i][0x15] = 0;
+        D_84195208[i][0x16] = 0;
+        D_84195208[i][0x17] = 0;
+        D_84195208[i][0x18] = 0;
+        D_84195208[i][0x19] = 0;
+        D_84195208[i][0x1A] = 0;
+        *(u16 *)(D_84195208[i] + 0x48) = *(u16 *)(D_84195200[i] + 0x26);
+        func_8412693C(i);
+    }
+    if (((u8 *)D_841951F0)[0x9C3] == 0) {
+        func_84136A9C(0, -1, ((u8 *)D_841951F8[0])[0xA], 4);
+        func_84133714(0, 0, 0);
+        func_84136A9C(1, -1, ((u8 *)D_841951F8[1])[0xA], 4);
+        func_84133714(1, 0, 0);
+    }
+    func_84126A64();
+}
 #endif
 
 #ifdef VERSION_US
@@ -6598,7 +6657,29 @@ void func_8413C3A8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413C6AC.s")
+extern void func_84148410(void);
+void func_8413C6AC(u8 arg0, u16 arg1) {
+    func_84148410();
+    switch (arg0) {
+        case 0:
+            func_84134CBC(0, arg1);
+            break;
+        case 1:
+            func_84134CBC(1, arg1);
+            break;
+        case 2:
+            func_84134CBC(0, arg1);
+            break;
+    }
+    BattleRecord_AdvanceWriteSlot();
+    func_84147228(1, 0, 0, 4, 1);
+    func_84147228(1, 1, 0, 4, 1);
+    D_84195278 = 6;
+    if ((((u8 *)D_841951F0)[0x9C2] == 1) && (D_8419527C < 104)) {
+        (*(u8 **)((u8 *)D_841951F0 + 0x9D8))[0x6B] = D_8419527C;
+    }
+    func_84147228(24, 0, 0, 10, 0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -6718,7 +6799,7 @@ void func_8413D2C0(u8 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8413C6AC(u8, s32);
+extern void func_8413C6AC(u8, u16);
 extern void * D_841951F0;
 extern u8 * D_84195200[];
 void func_8413D2E4(u8 arg0) {

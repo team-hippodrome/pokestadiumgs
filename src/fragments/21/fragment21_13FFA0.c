@@ -749,7 +749,19 @@ void func_82504524(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_825045EC.s")
+extern s16 D_82508D0E;
+// Returns D_82508D0E + 1 when it is non-negative, 100 when it is -2 and 0 otherwise.
+s32 func_825045EC(void) {
+    s32 result = 0;
+    s16 *value = &D_82508D0E; // FAKE: pointer alias that makes each test reload the global; diff score 460 without it.
+
+    if (*value >= 0) {
+        result = *value + 1;
+    } else if (*value == -2) {
+        result = 100;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
