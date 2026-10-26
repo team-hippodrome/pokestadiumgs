@@ -16,7 +16,32 @@ s32 func_8AF00020(void) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF0007C.s")
+typedef struct unk_func_8AF0007C {
+    u32 unk_00;
+    s16 unk_04;
+    u16 held;
+    u16 pressed;
+    u16 unk_0A;
+    u16 repeat;
+    u8 unk_0E[26];
+} unk_func_8AF0007C;
+
+extern void func_80064D28(void);
+extern unk_func_8AF0007C *D_80087200;
+extern unk_func_8AF0007C D_8AF2A590;
+extern unk_func_8AF0007C *D_8AF263C0;
+extern s16 D_8AF2BDDC;
+extern s32 D_8AF2BDD0;
+
+void func_8AF0007C(s32 arg0) {
+    func_80064D28();
+    D_8AF2A590 = *D_80087200;
+    if ((D_8AF2BDDC < 4) || (D_8AF2BDD0 != 0) || (arg0 != 1)) {
+        D_8AF263C0->pressed = 0;
+        D_8AF263C0->held = 0;
+        D_8AF263C0->repeat = 0;
+    }
+}
 
 extern void func_800226C0(s32);
 void func_8AF00130(s32 code) {
@@ -458,7 +483,7 @@ M2C_UNK StageFade_StartFromOpaque(M2C_UNK);         /* extern */
 M2C_UNK func_800086A4(M2C_UNK);                     /* extern */
 s32 func_80043678(s32);                             /* extern */
 M2C_UNK func_8AC0080C(M2C_UNK);                     /* extern */
-M2C_UNK func_8AF0007C(s32);                         /* extern */
+void func_8AF0007C(s32);                         /* extern */
 M2C_UNK func_8AF01910();                            /* extern */
 s32 func_8AF01D7C(s32);                             /* extern */
 M2C_UNK func_8AF0282C(M2C_UNK *, M2C_UNK);          /* extern */
