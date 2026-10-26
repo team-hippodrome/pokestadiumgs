@@ -265,7 +265,16 @@ void func_87C00908(void *arg0, f64 arg1, f64 arg2, f64 arg3) {
     func_87C01278(arg0, local);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C00944.s")
+void func_87C00944(void *arg0, void *arg1, void *arg2) {
+    f64 *a = arg1;
+    f64 *b = arg2;
+
+    func_87C008DC(arg0,
+        a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - b[3] * a[3],
+        a[0] * b[1] + b[0] * a[1] + a[2] * b[3] - b[2] * a[3],
+        a[0] * b[2] + b[0] * a[2] + a[3] * b[1] - b[3] * a[1],
+        a[0] * b[3] + b[0] * a[3] + a[1] * b[2] - b[1] * a[2]);
+}
 
 extern void * func_87C008DC(void *arg0, f64 arg1, f64 arg2, f64 arg3, f64 arg4);
 void func_87C00A14(void *arg0, void *arg1, void *arg2) {
