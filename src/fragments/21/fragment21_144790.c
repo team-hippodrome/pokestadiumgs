@@ -53,10 +53,75 @@ void func_8250498C(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825049DC.s")
+typedef struct {
+    s32 unk_00;
+    s32 unk_04;
+    s32 unk_08;
+    s16 cursor_index;
+    s16 result_index;
+} Fragment21SelectionState;
+typedef struct {
+    u8 unk_00[8];
+    u16 pressed;
+    u16 unk_0A;
+    u16 repeat;
+} Fragment21InputHeader;
+extern Fragment21InputHeader *D_80087200;
+extern s32 * D_825087F0;
+s32 Fragment21_UpdateSelectionInput(void) {
+    Fragment21SelectionState *context;
+    s32 column;
+    s32 row;
+    u32 repeat;
+    u32 pressed;
+    s32 finished = 0;
+
+    context = (Fragment21SelectionState *)D_825087F0;
+    column = context->cursor_index / 11;
+    row = context->cursor_index % 11;
+
+    repeat = D_80087200->repeat;
+    if (repeat & 0x200) {
+        column--;
+    }
+    if (repeat & 0x100) {
+        column++;
+    }
+    if (repeat & 0x800) {
+        row--;
+    }
+    if (repeat & 0x400) {
+        row++;
+    }
+    if (column < 0) {
+        column = 0;
+    }
+    if (column >= 2) {
+        column = 1;
+    }
+    if (row < 0) {
+        row = 0;
+    }
+    if (row >= 11) {
+        row = 10;
+    }
+    if (column == 1 && row >= 9) {
+        row = 8;
+    }
+    context->cursor_index = column * 11 + row;
+    pressed = D_80087200->pressed;
+    if (pressed & 0x8000) {
+        context->result_index = context->cursor_index;
+        finished = 1;
+    } else if (pressed & 0x4000) {
+        context->result_index = -1;
+        finished = 1;
+    }
+    return finished;
+}
 
 extern void StageFade_StartFromTransparent(s32);
-s32 func_825049DC();
+s32 Fragment21_UpdateSelectionInput(void);
 s32 func_82504B04(s32 arg0) {
     s32 var_s0;
 
@@ -68,7 +133,7 @@ s32 func_82504B04(s32 arg0) {
         }
         break;
     case 1:
-        if (func_825049DC() != 0) {
+        if (Fragment21_UpdateSelectionInput() != 0) {
             var_s0 = 3;
             StageFade_StartFromTransparent(5);
             func_80035424(0xF);
@@ -207,30 +272,49 @@ void func_82504D94(void *arg0, s32 arg1) {
 
 extern void _bzero(s16 *, s32);
 extern void func_8004C8C0(s32);
-extern s16 D_82508FF0;
-void func_8250684C(void) {
-    func_8004C8C0(0x4B);
-    func_8004C8C0(0x85);
-    _bzero(&D_82508FF0, 0x68C);
-    D_82508FF0 = 0;
-}
-
+typedef struct {
+    s16 state;
+    s16 unk_02;
+    s16 unk_04;
+    u16 flags;
+    s16 unk_08;
+    s16 primary_record_count;
+    s16 secondary_record_count;
+    s16 unk_0E;
+    s16 unk_10;
+    s16 unk_12;
+} Fragment21Header;
 typedef struct {
     s16 kind;
     s16 id;
-    u8 unk_04[96];
+    s16 variant;
+    s16 unk_06;
+    s16 phase;
+    s16 unk_0A;
+    s16 timer;
+    s16 frame;
+    u8 unk_10[84];
 } Fragment21PoolNode;
 typedef struct {
-    u8 header[76];
+    Fragment21Header header;
+    u8 unk_14[56];
     Fragment21PoolNode nodes[16];
-} Fragment21PoolView;
+} Fragment21Context;
+extern Fragment21Context D_82508FF0;
+void func_8250684C(void) {
+    func_8004C8C0(0x4B);
+    func_8004C8C0(0x85);
+    _bzero((s16 *)&D_82508FF0, 0x68C);
+    D_82508FF0.header.state = 0;
+}
+
 void *Fragment21_FindFreeRecord(void) {
-    Fragment21PoolView *pool;
+    Fragment21Context *pool;
     Fragment21PoolNode *node;
     Fragment21PoolNode *found = NULL;
     s32 i;
 
-    pool = (Fragment21PoolView *)&D_82508FF0;
+    pool = (Fragment21Context *)&D_82508FF0;
     for (i = 0; i < 16; i++) {
         node = &pool->nodes[i];
         if (node->kind == 0) {
@@ -242,12 +326,12 @@ void *Fragment21_FindFreeRecord(void) {
 }
 
 void *Fragment21_FindRecord(s32 kind, s32 id) {
-    Fragment21PoolView *pool;
+    Fragment21Context *pool;
     Fragment21PoolNode *node;
     Fragment21PoolNode *found = NULL;
     s32 i;
 
-    pool = (Fragment21PoolView *)&D_82508FF0;
+    pool = (Fragment21Context *)&D_82508FF0;
     for (i = 0; i < 16; i++) {
         node = &pool->nodes[i];
         if (node->kind == kind && node->id == id) {
@@ -262,18 +346,6 @@ extern s32 D_82509008;
 extern s32 D_8250900C;
 extern s32 D_82509010;
 extern s32 D_82509014;
-typedef struct {
-    s16 state;
-    s16 unk_02;
-    s16 unk_04;
-    u16 flags;
-    s16 unk_08;
-    s16 primary_record_count;
-    s16 secondary_record_count;
-    s16 unk_0E;
-    s16 unk_10;
-    s16 unk_12;
-} Fragment21Header;
 void Fragment21_SetRecordDefaults(void *arg0, s32 arg1, s32 arg2, s32 arg3,
                     void *arg4, void *arg5, void *arg6, s32 arg7, s32 arg8) {
     Fragment21Header *header;
@@ -304,7 +376,6 @@ extern s32 D_8250902C;
 extern s32 D_82509030;
 extern s32 D_82509034;
 extern s32 D_82509038;
-extern s16 D_82508FF0;
 void func_825069F0(void *arg0, s32 arg1, s32 arg2, void *arg3, void *arg4, void *arg5, void *arg6, void *arg7) {
     *(struct Fragment21PackedWord *)&D_82509024 = *(struct Fragment21PackedWord *)arg0;
     *(s16 *)((u8 *)&D_82508FF0 + 0x30) = arg1;
@@ -316,7 +387,6 @@ void func_825069F0(void *arg0, s32 arg1, s32 arg2, void *arg3, void *arg4, void 
     *(struct Fragment21PackedWord *)&D_82509038 = *(struct Fragment21PackedWord *)arg7;
 }
 
-extern s16 D_82508FF0;
 void func_82506AA4(s16 *arg0, s32 arg1, s32 arg2) {
     *(s16 *)((u8 *)&D_82508FF0 + 0x28) = arg0[0];
     *(s16 *)((u8 *)&D_82508FF0 + 0x2A) = arg0[1];
@@ -514,7 +584,53 @@ void func_82507250(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825073B0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825075B0.s")
+extern void func_82507078(void *);
+extern void func_825073B0(void *);
+extern void func_82504E38(void *, void *);
+extern void func_82504FB4(void *, void *);
+extern void func_825050EC(void *, void *);
+extern void func_825052A0(void *, void *);
+extern void func_82505420(void *);
+extern void func_82507000(s16 *arg0);
+extern void func_82507250(void *arg0);
+void Fragment21_UpdateContextAndRecords(void) {
+    s16 *state;
+    Fragment21Context *context;
+    Fragment21PoolNode *item;
+    s16 mode;
+    s32 i;
+
+    state = &D_82508FF0.header.state;
+    mode = *state;
+    switch (mode) {
+    case 1:
+        func_82507000(state);
+        break;
+    case 3:
+        func_82507078(state);
+        break;
+    case 5:
+        func_82507250(state);
+        break;
+    case 6:
+        func_825073B0(state);
+        break;
+    }
+    context = &D_82508FF0;
+    for (i = 0; i < 16; i++) {
+        item = &context->nodes[i];
+        mode = context->nodes[i].phase;
+        switch (mode) {
+        case 1: func_82504E38(state, item); break;
+        case 3: func_82504FB4(state, item); break;
+        case 4: func_825050EC(state, item); break;
+        case 5: func_825052A0(state, item); break;
+        }
+        if (item->frame >= 0) {
+            func_82505420(item);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_8250771C.s")
 
@@ -522,9 +638,9 @@ void func_82507AF4(void)
 {
   int new_var;
   new_var = 1;
-  if (D_82508FF0 == 0)
+  if (D_82508FF0.header.state == 0)
   {
-    D_82508FF0 = new_var;
+    D_82508FF0.header.state = new_var;
   }
 }
 
@@ -543,17 +659,16 @@ void func_82507B18(void) {
 
 
 s32 func_82507B58(void) {
-    return D_82508FF0 == 2;
+    return D_82508FF0.header.state == 2;
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507B6C.s")
 
 
 s32 func_82507BBC(void) {
-    return D_82508FF0 == 4;
+    return D_82508FF0.header.state == 4;
 }
 
-extern s16 D_82508FF0;
 extern s16 D_82508FF2;
 extern s16 D_82508FF4;
 
@@ -562,7 +677,7 @@ extern s16 D_82508FF4;
 #pragma COALESCE_AT_LUI(func_82507BD0)
 /* mkdraft:func_82507BD0 begin */
 void func_82507BD0(void) {
-    s16 *state = &D_82508FF0;
+    s16 *state = &D_82508FF0.header.state;
     if (*state != 4) {
         return;
     }
@@ -587,7 +702,7 @@ void Fragment21_RequestClose(void) {
 
 
 s32 func_82507CF4(void) {
-    return D_82508FF0 == 0;
+    return D_82508FF0.header.state == 0;
 }
 
 s32 Fragment21_SetRecordColorTransition(s32 record_id, void *target_color, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s32 arg6) {
