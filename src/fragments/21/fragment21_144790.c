@@ -262,7 +262,35 @@ void func_82504D94(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82505420.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82505758.s")
+// Texture-header prefix; func_8004D1FC consumes the following format metadata.
+//@src/4CC20.c
+typedef struct {
+    u16 width;
+    u16 height;
+} Fragment21TextureHeader;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+void Fragment21_DrawTexturedBorder(s32 x, s32 y, s32 width, s32 height) {
+    Fragment21TextureHeader *texture;
+    s32 tile_width;
+    s32 tile_height;
+
+    texture = (Fragment21TextureHeader *)func_8004C990(75, 0);
+    if (texture != NULL && height > 0) {
+        tile_width = (s32)texture->width / 4;
+        tile_height = texture->height;
+        func_8004D1FC((u8 *)texture);
+        GfxRect_DrawTextured(x, y, tile_width, tile_height, 0, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + tile_width, y, width - tile_width * 2, tile_height, tile_width << 5, 0, 0, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y, tile_width, tile_height, tile_width << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x, y + tile_height, tile_width, height - tile_height * 2, (tile_width * 2) << 5, 0, 1024, 0, 0);
+        GfxRect_DrawTextured(x, y + height - tile_height, tile_width, tile_height, (tile_width * 2) << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + tile_width, y + height - tile_height, width - tile_width * 2, tile_height, tile_width * 96, 0, 0, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y + height - tile_height, tile_width, tile_height, tile_width * 96, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y + tile_height, tile_width, height - tile_height * 2, tile_width * 96, 0, 1024, 0, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82505A64.s")
 
