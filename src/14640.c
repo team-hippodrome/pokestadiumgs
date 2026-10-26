@@ -1,5 +1,78 @@
 #include "global.h"
 
+// Sound font header, 0x14 bytes per font; func_80015A58 fills the counts and bank IDs from the
+// font table at D_8011BE90 + 0x2BC4, and func_800151E0 stores the relocated list pointers.
+// Field names follow the Majora's Mask SoundFont struct.
+typedef struct SoundFont {
+    /* 0x00 */ u8 numInstruments;
+    /* 0x01 */ u8 numDrums;
+    /* 0x02 */ u8 sampleBankId1;
+    /* 0x03 */ u8 sampleBankId2;
+    /* 0x04 */ u16 numSfx;
+    /* 0x06 */ u8 unk_06[2];
+    /* 0x08 */ void **instruments;
+    /* 0x0C */ void **drums;
+    /* 0x10 */ void *soundEffects;
+} SoundFont; // size = 0x14
+
+// Sample header; func_8001454C loads samples by it and func_80016B38 relocates its pointers.
+// Bit positions are read from those functions' masks; names follow the Majora's Mask Sample struct.
+typedef struct Sample {
+    /* 0x00 */ u32 unk_0 : 1;
+    /* 0x00 */ u32 codec : 3;
+    /* 0x00 */ u32 medium : 2;
+    /* 0x00 */ u32 unk_bit26 : 1;
+    /* 0x00 */ u32 isRelocated : 1;
+    /* 0x01 */ u32 size : 24;
+    /* 0x04 */ u8 *sampleAddr;
+    /* 0x08 */ void *loop;
+    /* 0x0C */ void *book;
+} Sample; // size = 0x10
+
+// Audio table entry, 0x10 bytes each, following a 0x10-byte table header. func_80015A58
+// reads the font table's entries; field names follow the Majora's Mask AudioTableEntry struct.
+typedef struct AudioTableEntry {
+    /* 0x00 */ u32 romAddr;
+    /* 0x04 */ u32 size;
+    /* 0x08 */ s8 medium;
+    /* 0x09 */ s8 cachePolicy;
+    /* 0x0A */ s16 shortData1;
+    /* 0x0C */ s16 shortData2;
+    /* 0x0E */ s16 shortData3;
+} AudioTableEntry; // size = 0x10
+
+// Audio table: a 0x10-byte header followed by AudioTableEntry records. func_8001454C reads
+// unkMediumParam from the sample bank table at D_8011EA58; names follow Majora's Mask AudioTable.
+typedef struct AudioTable {
+    /* 0x00 */ s16 numEntries;
+    /* 0x02 */ s16 unkMediumParam;
+    /* 0x04 */ u32 romAddr;
+    /* 0x08 */ u8 pad[8];
+    /* 0x10 */ AudioTableEntry entries[1];
+} AudioTable;
+
+// Sample bank IDs, base addresses and media for one font; func_80014D64 and func_80016754
+// fill it and pass it to func_80016C78, which relocates the font's samples against it.
+// Field names follow the Majora's Mask SampleBankRelocInfo struct.
+typedef struct SampleBankRelocInfo {
+    /* 0x00 */ s32 sampleBankId1;
+    /* 0x04 */ s32 sampleBankId2;
+    /* 0x08 */ s32 baseAddr1;
+    /* 0x0C */ s32 baseAddr2;
+    /* 0x10 */ s32 medium1;
+    /* 0x14 */ s32 medium2;
+} SampleBankRelocInfo; // size = 0x18
+
+// Sample preload request; a stack of them starts at D_8011BE90 + 0xAB8 and the stack top
+// count is at D_8011BE90 + 0x14BC. Field names follow the Majora's Mask AudioPreloadReq struct.
+typedef struct AudioPreloadReq {
+    /* 0x00 */ u32 endAndMediumKey;
+    /* 0x04 */ Sample *sample;
+    /* 0x08 */ u8 *ramAddr;
+    /* 0x0C */ u32 encodedInfo;
+    /* 0x10 */ s32 isFree;
+} AudioPreloadReq; // size = 0x14
+
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013A40.s")
@@ -27,7 +100,49 @@ void func_80013A8C(void) {
     *(s32 *)(D_8011BE90 + 0x2C34) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013B54.s")
+// Same code as Majora's Mask AudioLoad_DecreaseSampleDmaTtls (src/audio/lib/load.c).
+// Counts down the time-to-live byte (0xE) of each 0x10-byte sample DMA buffer at
+// *(D_8011BE90 + 0x29AC); an expired buffer gets its reuse index (0xD) and joins reuse queue 1
+// (0x29BC) or 2 (0x2ABC), whose write positions are the bytes at 0x2BBE and 0x2BBF.
+void func_80013B54(void) {
+    u32 i;
+
+    for (i = 0; i < *(u32 *)(D_8011BE90 + 0x29B4); i++) {
+        u8 *dma = (u8 *)(i * 0x10);
+
+        // FAKE: adding the base second orders the addu as the target does; the one-line
+        // pointer sum leaves 2 instructions different.
+        dma += *(u32 *)(D_8011BE90 + 0x29AC);
+
+        if (dma[0xE] != 0) {
+            dma[0xE]--;
+            if (dma[0xE] == 0) {
+                dma[0xD] = D_8011BE90[0x2BBE];
+                D_8011BE90[0x29BC + D_8011BE90[0x2BBE]] = i;
+                D_8011BE90[0x2BBE]++;
+            }
+        }
+    }
+
+    for (i = *(u32 *)(D_8011BE90 + 0x29B4); i < *(u32 *)(D_8011BE90 + 0x29B0); i++) {
+        u8 *dma = (u8 *)(i * 0x10);
+
+        // FAKE: adding the base second orders the addu as the target does; the one-line
+        // pointer sum leaves 2 instructions different.
+        dma += *(u32 *)(D_8011BE90 + 0x29AC);
+
+        if (dma[0xE] != 0) {
+            dma[0xE]--;
+            if (dma[0xE] == 0) {
+                dma[0xD] = D_8011BE90[0x2BBF];
+                D_8011BE90[0x2ABC + D_8011BE90[0x2BBF]] = i;
+                D_8011BE90[0x2BBF]++;
+            }
+        }
+    }
+
+    *(u32 *)(D_8011BE90 + 0x29B8) = 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013C40.s")
 
@@ -93,6 +208,7 @@ void func_800143B8(s32 arg0, s32 arg1) { if (arg0 != 0xFF) { u8 *ptr = D_8011BE9
 void func_800143E8(void *arg0, s32 arg1, u16 arg2) { s32 i; u8 *entry; *(s32 *)((u8 *)arg0 + 4) = arg1; *(u16 *)((u8 *)arg0 + 2) = arg2; i = 0; while (i < *(s16 *)arg0) { entry = (u8 *)arg0 + i * 0x10; if (*(s32 *)(entry + 0x14) != 0 && *(s8 *)(entry + 0x18) == 2) { *(s32 *)(entry + 0x10) += arg1; } i++; } }
 
 extern u8 D_8011BE90[];
+extern s32 func_80014D64(s32);
 s32 func_80014448(s32 arg0, void *arg1) { s32 index; s32 count; s32 value; s32 result; index = *(u16 *)(*(u8 **)(D_8011BE90 + 0x2BD0) + arg0 * 2); count = (*(u8 **)(D_8011BE90 + 0x2BD0))[index++]; value = 0xFF; if (count > 0) { do { value = (*(u8 **)(D_8011BE90 + 0x2BD0))[index++]; result = func_80014D64(value); --count; } while (count > 0); } *(s32 *)arg1 = value; return result; }
 
 extern s32 func_80014448(s32, void *);
@@ -110,12 +226,37 @@ void func_800144E4(s32 arg0, s32 arg1, s32 arg2, OSMesgQueue *arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_8001454C.s")
+// Same code as Majora's Mask AudioLoad_SyncLoadSample (src/audio/lib/load.c).
+extern s32 func_80012528(u32, s32, s32, s8, s32);
+extern s32 D_8011EA58;
+extern void func_80015570(s32, s32, s32, s32);
+extern void func_8001544C(u32, u8 *, u32, s32);
+s32 func_8001454C(Sample *arg0, s32 arg1) {
+    s32 sample_addr;
+
+    if (arg0->isRelocated == 1) {
+        if (arg0->medium != 0) {
+            sample_addr = func_80012528(arg0->size, arg1, (s32)arg0->sampleAddr, arg0->medium, 1);
+            if (sample_addr == 0) {
+                return -1;
+            }
+
+            if (arg0->medium == 1) {
+                func_80015570((s32)arg0->sampleAddr, sample_addr, arg0->size, *(s16 *)(D_8011EA58 + 2));
+            } else {
+                func_8001544C((u32)arg0->sampleAddr, (u8 *)sample_addr, arg0->size, arg0->medium);
+            }
+            arg0->medium = 0;
+            arg0->sampleAddr = (u8 *)sample_addr;
+        }
+    }
+    //! @bug Missing return on the success path; callers ignore the value.
+}
 
 extern s32 func_8001A308(s32, s32);
 extern s32 func_8001A3DC(s32, s32);
-extern void func_8001454C(s32, s32);
-s32 func_80014638(s32 arg0, s32 arg1, s32 arg2) { s32 *ptr; if (arg1 < 0x7F) { ptr = (s32 *)func_8001A308(arg0, arg1); if (ptr == NULL) return -1; if (((u8 *)ptr)[1] != 0) func_8001454C(ptr[2], arg0); func_8001454C(ptr[4], arg0); if (((u8 *)ptr)[2] != 0x7F) func_8001454C(ptr[6], arg0); } else if (arg1 == 0x7F) { ptr = (s32 *)func_8001A3DC(arg0, arg2); if (ptr == NULL) return -1; func_8001454C(ptr[1], arg0); return 0; } }
+extern s32 func_8001454C(Sample *, s32);
+s32 func_80014638(s32 arg0, s32 arg1, s32 arg2) { s32 *ptr; if (arg1 < 0x7F) { ptr = (s32 *)func_8001A308(arg0, arg1); if (ptr == NULL) return -1; if (((u8 *)ptr)[1] != 0) func_8001454C((Sample *)ptr[2], arg0); func_8001454C((Sample *)ptr[4], arg0); if (((u8 *)ptr)[2] != 0x7F) func_8001454C((Sample *)ptr[6], arg0); } else if (arg1 == 0x7F) { ptr = (s32 *)func_8001A3DC(arg0, arg2); if (ptr == NULL) return -1; func_8001454C((Sample *)ptr[1], arg0); return 0; } }
 
 extern s32 func_80015684(s32, s32, s32, s32, s32);
 void func_80014708(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
@@ -147,7 +288,32 @@ extern s32 func_8001510C(s32 arg0, s32 arg1);
 extern u8 D_8011BE90[];
 void func_80014850(s32 arg0) { s32 index; s32 count; s32 value; s32 result; index = *(u16 *)(*(u8 **)(D_8011BE90 + 0x2BD0) + arg0 * 2); count = (*(u8 **)(D_8011BE90 + 0x2BD0))[index++]; if (count > 0) { do { --count; value = (*(u8 **)(D_8011BE90 + 0x2BD0))[index++]; result = func_8001510C(1, value); if (func_8001244C(1, result) == 0) { func_80014900(result); func_800142F8(result, 0); } } while (count > 0); } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80014900.s")
+// Same code as Majora's Mask AudioLoad_DiscardFont (src/audio/lib/load.c).
+// The font cache starts at D_8011BE90 + 0x2ED0 (D_8011ED60): a persistent entry count followed by
+// 0xC-byte entries with the font ID at 0x1E from the cache start, then two temporary entries whose
+// IDs are at 0xF2 (D_8011EE52) and 0xFE (D_8011EE5E). Taking the cache address in a local, as Majora's
+// Mask does, gives the per-access %hi/%lo loads; the relocations then name D_8011BE90 plus an offset.
+extern void func_800101D8(s32);
+void func_80014900(s32 arg0) {
+    u32 i;
+    u8 *pool = D_8011BE90 + 0x2ED0;
+    u8 *persistent;
+
+    if (arg0 == *(s16 *)(pool + 0xF2)) {
+        *(s16 *)(pool + 0xF2) = -1;
+    } else if (arg0 == *(s16 *)(pool + 0xFE)) {
+        *(s16 *)(pool + 0xFE) = -1;
+    }
+
+    persistent = pool;
+    for (i = 0; i < *(u32 *)persistent; i++) {
+        if (arg0 == *(s16 *)(persistent + i * 0xC + 0x1E)) {
+            *(s16 *)(persistent + i * 0xC + 0x1E) = -1;
+        }
+    }
+
+    func_800101D8(arg0);
+}
 
 s32 func_8001519C(s32 arg0);
 s32 func_8001519C(s32 arg0);
@@ -244,8 +410,8 @@ s32 func_80014BD4(s32 arg0) {
 
 s32 func_80014C48(s32 arg0, s32 arg1, s32 arg2);
 
-void func_80014C28(s32 arg0, s32 arg1) {
-    func_80014C48(arg0, arg1, 1);
+s32 func_80014C28(s32 arg0, s32 arg1) {
+    return func_80014C48(arg0, arg1, 1);
 }
 
 /* mkdraft:func_80014C48 begin */
@@ -282,9 +448,160 @@ s32 func_80014C48(s32 arg0, s32 arg1, s32 arg2) {
 }
 /* mkdraft:func_80014C48 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80014D64.s")
+// Same code as Majora's Mask AudioLoad_SyncLoadFont (src/audio/lib/load.c).
+extern s32 func_8001510C(s32, s32);
+extern s32 func_80014C48(s32, s32, s32);
+extern s32 func_80014E68(s32, s32, void *);
+extern void func_80016C78(s32, s32, SampleBankRelocInfo *, s32);
+s32 func_80014D64(s32 arg0) {
+    s32 fontData;
+    s32 sampleBankId1;
+    s32 sampleBankId2;
+    s32 didAllocate;
+    SampleBankRelocInfo sampleBankReloc;
+    s32 realFontId = func_8001510C(1, arg0);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80014E68.s")
+    if (D_8011BE90[0x3364 + realFontId] == 1) {
+        return 0;
+    }
+
+    sampleBankId1 = (*(u8 **)(D_8011BE90 + 0x2BD8))[realFontId * 0x14 + 2];
+    sampleBankId2 = (*(u8 **)(D_8011BE90 + 0x2BD8))[realFontId * 0x14 + 3];
+
+    sampleBankReloc.sampleBankId1 = sampleBankId1;
+    sampleBankReloc.sampleBankId2 = sampleBankId2;
+    if (sampleBankReloc.sampleBankId1 != 0xFF) {
+        sampleBankReloc.baseAddr1 = func_80014C48(sampleBankReloc.sampleBankId1, (s32)&sampleBankReloc.medium1, 0);
+    } else {
+        sampleBankReloc.baseAddr1 = 0;
+    }
+
+    if (sampleBankId2 != 0xFF) {
+        sampleBankReloc.baseAddr2 = func_80014C48(sampleBankId2, (s32)&sampleBankReloc.medium2, 0);
+    } else {
+        sampleBankReloc.baseAddr2 = 0;
+    }
+
+    fontData = func_80014E68(1, arg0, &didAllocate);
+    if (fontData == 0) {
+        return 0;
+    }
+    if (didAllocate == 1) {
+        func_80016C78(realFontId, fontData, &sampleBankReloc, 0);
+    }
+
+    return fontData;
+}
+
+// Same code as Majora's Mask AudioLoad_SyncLoad (src/audio/lib/load.c).
+extern s32 func_800124A4(s32, s32, s32);
+extern s32 func_80010ABC(s32, s32, s32, s32);
+extern SoundFont *D_8011EA68;
+extern s32 func_80015148(s32, s32);
+extern s32 func_8001519C(s32);
+extern void _bcopy(const void *, void *, s32);
+s32 func_80014E68(s32 arg0, s32 arg1, void *arg2) {
+    u32 size;
+    AudioTable *table;
+    s32 medium2;
+    u32 medium;
+    s32 load_status;
+    u32 rom_addr;
+    s32 cache_policy;
+    s32 ram_addr;
+    u32 real_id;
+    s32 medium_unk = 1;
+
+    real_id = func_8001510C(arg0, arg1);
+    ram_addr = func_80015148(arg0, real_id);
+    if (ram_addr != 0) {
+        *(s32 *)arg2 = FALSE;
+        load_status = 2;
+    } else {
+        table = (AudioTable *)func_8001519C(arg0);
+        size = table->entries[real_id].size;
+        size = (size + 0xF) & ~0xF;
+        medium = table->entries[arg1].medium;
+        cache_policy = table->entries[arg1].cachePolicy;
+        rom_addr = table->entries[real_id].romAddr;
+        switch (cache_policy) {
+            case 0:
+                ram_addr = func_800124A4(arg0, real_id, size);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+
+            case 1:
+                ram_addr = func_80010ABC(arg0, size, 1, real_id);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+
+            case 2:
+                ram_addr = func_80010ABC(arg0, size, 0, real_id);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+
+            case 3:
+            case 4:
+                ram_addr = func_80010ABC(arg0, size, 2, real_id);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+        }
+
+        *(s32 *)arg2 = TRUE;
+
+        medium2 = medium;
+        if (medium == 5) {
+            if (rom_addr == 0) {
+                return 0;
+            }
+
+            if (arg0 == 1) {
+                SoundFont *sound_font = &D_8011EA68[real_id];
+
+                sound_font->numInstruments = ((u16 *)rom_addr)[0];
+                sound_font->numDrums = ((u16 *)rom_addr)[1];
+                sound_font->numSfx = ((u16 *)rom_addr)[2];
+                rom_addr += 0x10;
+                size -= 0x10;
+            }
+
+            _bcopy((void *)rom_addr, (void *)ram_addr, size);
+        } else if (medium2 == medium_unk) {
+            func_80015570(rom_addr, ram_addr, size, (s16)table->unkMediumParam);
+        } else {
+            func_8001544C(rom_addr, (u8 *)ram_addr, size, medium);
+        }
+
+        load_status = (cache_policy == 0) ? 5 : 2;
+    }
+
+    switch (arg0) {
+        case 0:
+            func_80014328(real_id, load_status);
+            break;
+
+        case 1:
+            func_800142F8(real_id, load_status);
+            break;
+
+        case 2:
+            func_80014358(real_id, load_status);
+            break;
+
+        default:
+            break;
+    }
+
+    return ram_addr;
+}
 
 s32 func_8001519C(s32);
 s32 func_8001510C(s32 arg0, s32 arg1) {
@@ -327,9 +644,134 @@ s32 func_8001519C(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800151E0.s")
+// Same code as Majora's Mask AudioLoad_RelocateFont (src/audio/lib/load.c).
+// Drums keep isRelocated at 0x2, their tuned sample at 0x4 and envelope at 0xC; instruments keep
+// isRelocated, normalRangeLo and normalRangeHi at 0x0-0x2, envelope at 0x4 and tuned samples at
+// 0x8, 0x10 and 0x18; sound effects are 8-byte tuned samples.
+extern SoundFont *D_8011EA68;
+void func_80016B38(Sample **, u32, SampleBankRelocInfo *);
+void func_800151E0(s32 arg0, u32 *arg1, SampleBankRelocInfo *arg2) {
+    void *sound_offset;
+    u32 sound_list_offset;
+    u8 *inst;
+    u8 *drum;
+    u8 *sound_effect;
+    s32 i;
+    s32 num_drums = D_8011EA68[arg0].numDrums;
+    s32 num_instruments = D_8011EA68[arg0].numInstruments;
+    s32 num_sfx = D_8011EA68[arg0].numSfx;
+    u32 *font_data = arg1;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_8001544C.s")
+#define RELOC_TO_RAM(x) (void *)((u32)(x) + (u32)(arg1))
+
+    sound_list_offset = font_data[0];
+
+    if ((sound_list_offset != 0) && (num_drums != 0)) {
+        font_data[0] = (u32)RELOC_TO_RAM(sound_list_offset);
+
+        for (i = 0; i < num_drums; i++) {
+            sound_offset = ((u8 **)font_data[0])[i];
+
+            if (sound_offset == NULL) {
+                continue;
+            }
+            sound_offset = RELOC_TO_RAM(sound_offset);
+            ((u8 **)font_data[0])[i] = drum = sound_offset;
+
+            if (drum[2]) {
+                continue;
+            }
+
+            func_80016B38((Sample **)(drum + 4), (u32)arg1, arg2);
+
+            sound_offset = *(void **)(drum + 0xC);
+            *(void **)(drum + 0xC) = RELOC_TO_RAM(sound_offset);
+
+            drum[2] = TRUE;
+        }
+    }
+
+    sound_list_offset = font_data[1];
+
+    if ((sound_list_offset != 0) && (num_sfx != 0)) {
+        font_data[1] = (u32)RELOC_TO_RAM(sound_list_offset);
+
+        for (i = 0; i < num_sfx; i++) {
+            sound_offset = (u8 *)font_data[1] + i * 8;
+            sound_effect = (u8 *)sound_offset;
+
+            if ((sound_effect == NULL) || (*(Sample **)sound_effect == NULL)) {
+                continue;
+            }
+
+            func_80016B38((Sample **)sound_effect, (u32)arg1, arg2);
+        }
+    }
+
+    if (num_instruments > 126) {
+        num_instruments = 126;
+    }
+
+    for (i = 2; i <= 2 + num_instruments - 1; i++) {
+        if (font_data[i] != 0) {
+            font_data[i] = (u32)RELOC_TO_RAM(font_data[i]);
+            inst = (u8 *)font_data[i];
+
+            if (!inst[0]) {
+                if (inst[1] != 0) {
+                    func_80016B38((Sample **)(inst + 8), (u32)arg1, arg2);
+                }
+
+                func_80016B38((Sample **)(inst + 0x10), (u32)arg1, arg2);
+
+                if (inst[2] != 0x7F) {
+                    func_80016B38((Sample **)(inst + 0x18), (u32)arg1, arg2);
+                }
+
+                sound_offset = *(void **)(inst + 4);
+                *(void **)(inst + 4) = RELOC_TO_RAM(sound_offset);
+
+                inst[0] = TRUE;
+            }
+        }
+    }
+
+#undef RELOC_TO_RAM
+
+    D_8011EA68[arg0].drums = (void **)font_data[0];
+    D_8011EA68[arg0].soundEffects = (void *)font_data[1];
+    D_8011EA68[arg0].instruments = (void **)(&font_data[2]);
+}
+
+// Same code as Majora's Mask AudioLoad_SyncDma (src/audio/lib/load.c).
+extern OSMesgQueue D_8011E808;
+extern OSIoMesg D_8011E824;
+extern void func_80019540(void *, s32);
+extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
+void func_8001544C(u32 arg0, u8 *arg1, u32 arg2, s32 arg3) {
+    OSMesgQueue *msgQueue = &D_8011E808;
+    OSIoMesg *ioMesg = &D_8011E824;
+
+    arg2 = (arg2 + 0xF) & ~0xF;
+
+    func_80019540(arg1, arg2);
+
+    while (TRUE) {
+        if (arg2 < 0x400) {
+            break;
+        }
+        func_80015584(ioMesg, OS_MESG_PRI_HIGH, OS_READ, arg0, (s32)arg1, 0x400, msgQueue, arg3, "FastCopy");
+        osRecvMesg(msgQueue, NULL, OS_MESG_BLOCK);
+        arg2 -= 0x400;
+        arg0 += 0x400;
+        arg1 += 0x400;
+    }
+
+    if (arg2 != 0) {
+        func_80015584(ioMesg, OS_MESG_PRI_HIGH, OS_READ, arg0, (s32)arg1, arg2, msgQueue, arg3, "FastCopy");
+        osRecvMesg(msgQueue, NULL, OS_MESG_BLOCK);
+    }
+}
 
 void func_80015570(s32 a0, s32 a1, s32 a2, s32 a3) {}
 
@@ -337,8 +779,143 @@ void func_80015570(s32 a0, s32 a1, s32 a2, s32 a3) {}
 
 void func_80015664(s32 arg0, s32 arg1) { s32 value; func_80014E68(arg0, arg1, &value); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80015684.s")
+// Same code as Majora's Mask AudioLoad_AsyncLoadInner (src/audio/lib/load.c).
+// Load status bytes are indexed by real table index: sequences at D_8011F258, fonts at
+// D_8011F1F4 and sample banks at D_8011F190. The completion message packs the caller's
+// value, table type, real index and load status into bytes 3 to 0.
+extern u8 D_8011F1F4;
+extern u8 D_8011F190;
+extern u8 D_8011F258;
+extern SoundFont *D_8011EA68;
+extern void *func_8001647C(s32, s32, s32, s32, s32, s32, s32, s32);
+extern void *func_80016500(s32, s32, s32, s32, s32, s32, s32);
+s32 func_80015684(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    u32 size;
+    AudioTable *table;
+    s32 ram_addr;
+    s32 medium;
+    s8 cache_policy;
+    u32 rom_addr;
+    s32 load_status;
+    SoundFont *sound_font;
+    u32 real_id = func_8001510C(arg0, arg1);
+    s32 pad;
 
+    switch (arg0) {
+        case 0:
+            if ((&D_8011F258)[real_id] == 1) {
+                return 0;
+            }
+            break;
+
+        case 1:
+            if ((&D_8011F1F4)[real_id] == 1) {
+                return 0;
+            }
+            break;
+
+        case 2:
+            if ((&D_8011F190)[real_id] == 1) {
+                return 0;
+            }
+            break;
+    }
+
+    ram_addr = func_80015148(arg0, real_id);
+    if (ram_addr != 0) {
+        load_status = 2;
+        osSendMesg((OSMesgQueue *)arg4, (OSMesg)(arg3 << 24), OS_MESG_NOBLOCK);
+    } else {
+        table = (AudioTable *)func_8001519C(arg0);
+        size = table->entries[real_id].size;
+        size = (size + 0xF) & ~0xF;
+        medium = table->entries[arg1].medium;
+        cache_policy = table->entries[arg1].cachePolicy;
+        rom_addr = table->entries[real_id].romAddr;
+        load_status = 2;
+
+        switch (cache_policy) {
+            case 0:
+                ram_addr = func_800124A4(arg0, real_id, size);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                load_status = 5;
+                break;
+
+            case 1:
+                ram_addr = func_80010ABC(arg0, size, 1, real_id);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+
+            case 2:
+                ram_addr = func_80010ABC(arg0, size, 0, real_id);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+
+            case 3:
+            case 4:
+                ram_addr = func_80010ABC(arg0, size, 2, real_id);
+                if (ram_addr == 0) {
+                    return ram_addr;
+                }
+                break;
+        }
+
+        if (medium == 5) {
+            if (rom_addr == 0) {
+                return 0;
+            }
+
+            if (arg0 == 1) {
+                sound_font = &D_8011EA68[real_id];
+
+                sound_font->numInstruments = ((u16 *)rom_addr)[0];
+                sound_font->numDrums = ((u16 *)rom_addr)[1];
+                sound_font->numSfx = ((u16 *)rom_addr)[2];
+                rom_addr += 0x10;
+                size += -0x10;
+            }
+        }
+
+        if (medium == 1) {
+            func_8001647C((s16)table->unkMediumParam, rom_addr, ram_addr, size, medium, arg2, arg4,
+                          (arg3 << 24) | (arg0 << 16) | (real_id << 8) | load_status);
+        } else {
+            func_80016500(rom_addr, ram_addr, size, medium, arg2, arg4,
+                          (arg3 << 24) | (arg0 << 16) | (real_id << 8) | load_status);
+        }
+
+        load_status = 1;
+    }
+
+    switch (arg0) {
+        case 0:
+            func_80014328(real_id, load_status);
+            break;
+
+        case 1:
+            func_800142F8(real_id, load_status);
+            break;
+
+        case 2:
+            func_80014358(real_id, load_status);
+            break;
+
+        default:
+            break;
+    }
+
+    return ram_addr;
+}
+
+extern void func_80016148(s32);
+extern s32 func_80017070(s32);
+extern void func_80016624(s32);
 void func_80015A10(s32 arg0) { func_80016148(arg0); func_80017070(arg0); func_80016624(arg0); }
 
 extern s32 D_8008FA70; void func_80015A40(s32 value) { D_8008FA70 = value; }
@@ -418,7 +995,59 @@ void func_800160D4(u8 *arg0) {
 }
 /* mkdraft:func_800160D4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016148.s")
+// Same code as Majora's Mask AudioLoad_ProcessSlowLoads (src/audio/lib/load.c).
+// Each of the two 0x64-byte slow-load slots at D_8011BE90 + 0x2060 holds a status word at 0x14.
+void func_800160D4(u8 *);
+void GbApu_InitSlowCopySlot(u8 *, s32);
+void func_80016354(s32, s32, s32, s32);
+void func_80016148(s32 arg0) {
+    u8 *slow_load;
+    s32 i;
+
+    for (i = 0; i < 2; i++) {
+        slow_load = D_8011BE90 + 0x2060 + i * 0x64;
+        switch (*(s32 *)(D_8011BE90 + 0x2060 + i * 0x64 + 0x14)) {
+            case 2:
+                if (slow_load[0] != 1) {
+                    osRecvMesg((OSMesgQueue *)(slow_load + 0x30), NULL, OS_MESG_BLOCK);
+                }
+
+                if (arg0 != 0) {
+                    *(s32 *)(slow_load + 0x14) = 3;
+                    continue;
+                }
+                // fallthrough
+            case 1:
+                *(s32 *)(slow_load + 0x14) = 2;
+                if (*(s32 *)(slow_load + 0x18) == 0) {
+                    func_800160D4(slow_load);
+                    *(s32 *)(slow_load + 0x14) = 3;
+                    **(s8 **)(slow_load + 0x1C) = 1;
+                } else if (*(s32 *)(slow_load + 0x18) < 0x400) {
+                    if (slow_load[0] == 1) {
+                        s32 size = *(s32 *)(slow_load + 0x18);
+
+                        func_80016354(*(s32 *)(slow_load + 8), *(s32 *)(slow_load + 0xC), size,
+                                      *(s32 *)(slow_load + 4));
+                    } else {
+                        GbApu_InitSlowCopySlot(slow_load, *(s32 *)(slow_load + 0x18));
+                    }
+                    *(s32 *)(slow_load + 0x18) = 0;
+                } else {
+                    if (slow_load[0] == 1) {
+                        func_80016354(*(s32 *)(slow_load + 8), *(s32 *)(slow_load + 0xC), 0x400,
+                                      *(s32 *)(slow_load + 4));
+                    } else {
+                        GbApu_InitSlowCopySlot(slow_load, 0x400);
+                    }
+                    *(s32 *)(slow_load + 0x18) -= 0x400;
+                    *(s32 *)(slow_load + 0xC) += 0x400;
+                    *(s32 *)(slow_load + 8) += 0x400;
+                }
+                break;
+        }
+    }
+}
 
 extern void func_80019540(void *, s32);
 extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
@@ -485,7 +1114,57 @@ return slot;
 
 void func_80016748(s32 arg0, s32 arg1) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016754.s")
+// Same code as Majora's Mask AudioLoad_FinishAsyncLoad (src/audio/lib/load.c).
+// arg0 is a background copy request (see BackgroundCopyRequest below): status byte at 0x0, RAM
+// address at 0x4, completion message at 0x1C and completion queue at 0x20. The message packs the
+// table type, real table index and load status into bytes 2 to 0.
+extern void func_80014328(s32, s32);
+extern void func_80014358(s32, s32);
+extern s32 func_80014C28(s32, s32);
+extern SoundFont *D_8011EA68;
+extern void func_800142F8(s32, s32);
+void func_80016754(u8 *async_load) {
+    u32 ret_msg = *(u32 *)(async_load + 0x1C);
+    u32 font_id;
+    s32 pad;
+    OSMesg done_msg;
+    u32 sample_bank_id1;
+    u32 sample_bank_id2;
+    SampleBankRelocInfo sample_bank_reloc;
+
+    if (1) {} // karodo: also in the Majora's Mask twin; removing it leaves 30 instructions different
+    switch ((ret_msg >> 16) & 0xFF) {
+        case 0:
+            func_80014328((ret_msg >> 8) & 0xFF, ret_msg & 0xFF);
+            break;
+
+        case 2:
+            func_80014358((ret_msg >> 8) & 0xFF, ret_msg & 0xFF);
+            break;
+
+        case 1:
+            font_id = (ret_msg >> 8) & 0xFF;
+            sample_bank_id1 = D_8011EA68[font_id].sampleBankId1;
+            sample_bank_id2 = D_8011EA68[font_id].sampleBankId2;
+            sample_bank_reloc.sampleBankId1 = sample_bank_id1;
+            sample_bank_reloc.sampleBankId2 = sample_bank_id2;
+            sample_bank_reloc.baseAddr1 =
+                (sample_bank_id1 != 0xFF) ? func_80014C28(sample_bank_id1, (s32)&sample_bank_reloc.medium1) : 0;
+            sample_bank_reloc.baseAddr2 =
+                (sample_bank_id2 != 0xFF) ? func_80014C28(sample_bank_id2, (s32)&sample_bank_reloc.medium2) : 0;
+            func_800142F8(font_id, ret_msg & 0xFF);
+            func_80016C78(font_id, *(s32 *)(async_load + 4), &sample_bank_reloc, 1);
+            break;
+
+        default:
+            break;
+    }
+
+    done_msg = (OSMesg) *(u32 *)(async_load + 0x1C);
+    if (1) {} // karodo: also in the Majora's Mask twin; removing it leaves 10 instructions different
+    async_load[0] = 0;
+    osSendMesg(*(OSMesgQueue **)(async_load + 0x20), done_msg, OS_MESG_NOBLOCK);
+}
 
 // Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
 typedef struct {
@@ -500,7 +1179,6 @@ typedef struct {
     OSIoMesg request;
 } BackgroundCopyRequest;
 typedef struct { u8 unknown[2]; s16 unknown_02; } BackgroundCopyHeader;
-extern void func_80016754(BackgroundCopyRequest *);
 extern void func_80016AB4(BackgroundCopyRequest *, s32);
 extern void func_80016A24(u8 *, s32);
 extern void func_80016B24(s32, s32, s32, s32);
@@ -580,7 +1258,44 @@ void func_80016AB4(BackgroundCopyRequest *arg0, s32 arg1) {
 
 void func_80016B24(s32 a0, s32 a1, s32 a2, s32 a3) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016B38.s")
+// Same code as Majora's Mask AudioLoad_RelocateSample (src/audio/lib/load.c).
+// arg0 points at a tuned sample whose first word is its Sample pointer.
+void func_80016B38(Sample **arg0, u32 arg1, SampleBankRelocInfo *arg2) {
+    Sample *sample;
+    void *reloc;
+
+    if ((u32)*arg0 <= 0x80000000) {
+        sample = *arg0 = reloc = (void *)((u32)*arg0 + arg1);
+
+        if ((sample->size != 0) && (sample->isRelocated != 1)) {
+            sample->loop = reloc = (void *)((u32)sample->loop + arg1);
+            sample->book = reloc = (void *)((u32)sample->book + arg1);
+
+            switch (sample->medium) {
+                case 0:
+                    sample->sampleAddr = reloc = (void *)((u32)sample->sampleAddr + arg2->baseAddr1);
+                    sample->medium = arg2->medium1;
+                    break;
+
+                case 1:
+                    sample->sampleAddr = reloc = (void *)((u32)sample->sampleAddr + arg2->baseAddr2);
+                    sample->medium = arg2->medium2;
+                    break;
+
+                case 2:
+                case 3:
+                    break;
+            }
+
+            sample->isRelocated = 1;
+
+            if (sample->unk_bit26 && (sample->medium != 0)) {
+                *(Sample **)(D_8011BE90 + 0x8B8 + *(s32 *)(D_8011BE90 + 0x14B8) * 4) = sample;
+                (*(s32 *)(D_8011BE90 + 0x14B8))++;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016C78.s")
 
@@ -601,7 +1316,44 @@ s32 func_80017224(void *arg0, s32 arg1, void **arg2) {
     return arg1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_8001726C.s")
+// Same code as Majora's Mask AudioLoad_GetSamplesForFont (src/audio/lib/load.c).
+extern SoundFont *D_8011EA68;
+s32 func_8001726C(s32 arg0, void **arg1) {
+    s32 i;
+    s32 num_samples = 0;
+    s32 num_drums = D_8011EA68[arg0].numDrums;
+    s32 num_instruments = D_8011EA68[arg0].numInstruments;
+
+    for (i = 0; i < num_drums; i++) {
+        u8 *drum = (u8 *)func_8001A3DC(arg0, i);
+
+        if (drum == NULL) {
+            continue;
+        }
+
+        num_samples = func_80017224(*(void **)(drum + 4), num_samples, arg1);
+    }
+
+    for (i = 0; i < num_instruments; i++) {
+        u8 *instrument = (u8 *)func_8001A308(arg0, i);
+
+        if (instrument == NULL) {
+            continue;
+        }
+
+        if (instrument[1] != 0) {
+            num_samples = func_80017224(*(void **)(instrument + 8), num_samples, arg1);
+        }
+
+        if (instrument[2] != 0x7F) {
+            num_samples = func_80017224(*(void **)(instrument + 0x18), num_samples, arg1);
+        }
+
+        num_samples = func_80017224(*(void **)(instrument + 0x10), num_samples, arg1);
+    }
+
+    return num_samples;
+}
 
 extern u8 D_8011BE90[];
 void func_800173A0(void *arg0) {
@@ -626,13 +1378,62 @@ void func_800173A0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800173F8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80017874.s")
+// Same code as Majora's Mask AudioLoad_LoadPermanentSamples (src/audio/lib/load.c).
+extern void func_800173F8(s32, s32, SampleBankRelocInfo *);
+void func_80017874(void) {
+    s32 pad;
+    u32 font_id;
+    AudioTable *sample_bank_table;
+    s32 pad2;
+    s32 i;
+
+    sample_bank_table = (AudioTable *)func_8001519C(2);
+    for (i = 0; i < *(s32 *)(D_8011BE90 + 0x30FC); i++) {
+        SampleBankRelocInfo sample_bank_reloc;
+
+        if (*(s16 *)(D_8011BE90 + 0x3108 + i * 0xC) == 1) {
+            font_id = func_8001510C(1, *(s16 *)(D_8011BE90 + 0x310A + i * 0xC));
+            sample_bank_reloc.sampleBankId1 = (*(SoundFont **)(D_8011BE90 + 0x2BD8))[font_id].sampleBankId1;
+            sample_bank_reloc.sampleBankId2 = (*(SoundFont **)(D_8011BE90 + 0x2BD8))[font_id].sampleBankId2;
+
+            if (sample_bank_reloc.sampleBankId1 != 0xFF) {
+                sample_bank_reloc.sampleBankId1 = func_8001510C(2, sample_bank_reloc.sampleBankId1);
+                sample_bank_reloc.medium1 = sample_bank_table->entries[sample_bank_reloc.sampleBankId1].medium;
+            }
+
+            if (sample_bank_reloc.sampleBankId2 != 0xFF) {
+                sample_bank_reloc.sampleBankId2 = func_8001510C(2, sample_bank_reloc.sampleBankId2);
+                sample_bank_reloc.medium2 = sample_bank_table->entries[sample_bank_reloc.sampleBankId2].medium;
+            }
+            func_800173F8(font_id, 0, &sample_bank_reloc);
+        }
+    }
+}
 
 void func_800179B4(void) {}
 void func_800179B4_padding(void) {}
 void func_800179B4_padding2(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800179CC.s")
+// Same code as Majora's Mask AudioLoad_ScriptLoad (src/audio/lib/load.c).
+// D_8008FA7C is that function's local static sLoadIndex, which stays defined in
+// asm/us/data/88A40.data.s; it is the slot index into D_800D1378 and the message value.
+extern u8 D_800D1378;
+extern OSMesgQueue D_800D1320;
+extern u32 D_8008FA7C;
+void func_800179CC(s32 arg0, s32 arg1, s8 *arg2) {
+    // FAKE: reaching the static through a pointer reproduces the function-static codegen;
+    // direct D_8008FA7C accesses leave 11 instructions different.
+    u32 *load_index_ptr = &D_8008FA7C;
+    u32 load_index = *load_index_ptr;
+
+    ((s8 **)&D_800D1378)[load_index] = arg2;
+    func_80014708(arg0, arg1, 0, load_index, &D_800D1320);
+    load_index = *load_index_ptr + 1;
+    *load_index_ptr = load_index;
+    if (load_index == 16) {
+        *load_index_ptr = 0;
+    }
+}
 
 extern OSMesgQueue D_800D1320;
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
@@ -690,7 +1491,21 @@ void func_80018620(void) {
     osCreateMesgQueue(*(OSMesgQueue **)(D_8011BE90 + 0x6324), D_8012220C, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800186B8.s")
+// Same code as Majora's Mask AudioThread_QueueCmd (src/audio/lib/thread.c).
+// Appends an 8-byte command (op/args word, data word) to the ring at D_8011BE90 + 0x6390; the
+// write position byte is at 0x6314 and the read position byte at 0x6315.
+void func_800186B8(u32 arg0, void **arg1) {
+    u8 *cmd = &D_8011BE90[0x6390 + (D_8011BE90[0x6314] & 0xFF) * 8];
+
+    *(u32 *)cmd = arg0;
+    *(void **)(cmd + 4) = *arg1;
+
+    D_8011BE90[0x6314]++;
+
+    if (D_8011BE90[0x6315] == D_8011BE90[0x6314]) {
+        D_8011BE90[0x6314]--;
+    }
+}
 
 void func_80018704(s32 arg0, s32 arg1) {
     func_800186B8(arg0, &arg1);
@@ -829,7 +1644,100 @@ void func_80018CC0(s32 arg0, s32 arg1) {
 
 extern s32 D_8011EBD0; void func_80018CF0(void) { D_8011EBD0 = 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018CFC.s")
+// Flag byte at offset 0 of a sequence player; func_80018CFC sets recalculateVolume (0x04)
+// and applyBend (0x01). Names follow the Majora's Mask SequencePlayer bitfield.
+typedef struct SequencePlayerFlags {
+    /* 0x00 */ u8 enabled : 1;
+    /* 0x00 */ u8 finished : 1;
+    /* 0x00 */ u8 muted : 1;
+    /* 0x00 */ u8 seqDmaInProgress : 1;
+    /* 0x00 */ u8 fontDmaInProgress : 1;
+    /* 0x00 */ u8 recalculateVolume : 1;
+    /* 0x00 */ u8 stopScript : 1;
+    /* 0x00 */ u8 applyBend : 1;
+} SequencePlayerFlags;
+
+// Same code as Majora's Mask AudioThread_ProcessSeqPlayerCmd (src/audio/lib/thread.c).
+// arg1 is an 8-byte audio command: opcode at 0x0, argument bytes at 0x2 and 0x3, data at 0x4.
+void func_80018CFC(u8 *arg0, u8 *arg1) {
+    f32 fade_volume;
+
+    switch (arg1[0]) {
+        case 0x41:
+            if (*(f32 *)(arg1 + 4) != *(f32 *)(arg0 + 0x2C)) {
+                *(f32 *)(arg0 + 0x2C) = *(f32 *)(arg1 + 4);
+                ((SequencePlayerFlags *)arg0)->recalculateVolume = TRUE;
+            }
+            break;
+
+        case 0x47:
+            *(u16 *)(arg0 + 8) = *(s32 *)(arg1 + 4) * 48;
+            break;
+
+        case 0x49:
+            *(s16 *)(arg0 + 0xC) = *(s32 *)(arg1 + 4) * 48;
+            break;
+
+        case 0x4E:
+            *(s16 *)(arg0 + 0xC) = *(s32 *)(arg1 + 4);
+            break;
+
+        case 0x48:
+            *(s16 *)(arg0 + 0xE) = *(s8 *)(arg1 + 4);
+            break;
+
+        case 0x46:
+            *(s8 *)(arg0 + 0x158 + arg1[3]) = *(s8 *)(arg1 + 4);
+            break;
+
+        case 0x4A:
+            fade_volume = (s32)arg1[2] / 127.0f;
+            goto apply_fade;
+
+        case 0x4B:
+            fade_volume = *(f32 *)(arg0 + 0x1C) * ((s32)arg1[2] / 100.0f);
+        apply_fade:
+            if (arg0[1] != 2) {
+                *(f32 *)(arg0 + 0x24) = *(f32 *)(arg0 + 0x1C);
+                if (*(s32 *)(arg1 + 4) == 0) {
+                    *(f32 *)(arg0 + 0x1C) = fade_volume;
+                } else {
+                    s32 fade_timer = *(s32 *)(arg1 + 4);
+
+                    arg0[1] = 0;
+                    *(u16 *)(arg0 + 0x12) = fade_timer;
+                    *(f32 *)(arg0 + 0x20) = (fade_volume - *(f32 *)(arg0 + 0x1C)) / fade_timer;
+                }
+            }
+            break;
+
+        case 0x4C:
+            if (arg0[1] != 2) {
+                if (*(s32 *)(arg1 + 4) == 0) {
+                    *(f32 *)(arg0 + 0x1C) = *(f32 *)(arg0 + 0x24);
+                } else {
+                    s32 fade_timer = *(s32 *)(arg1 + 4);
+
+                    arg0[1] = 0;
+                    *(u16 *)(arg0 + 0x12) = fade_timer;
+                    *(f32 *)(arg0 + 0x20) = (*(f32 *)(arg0 + 0x24) - *(f32 *)(arg0 + 0x1C)) / fade_timer;
+                }
+            }
+            break;
+
+        case 0x4D:
+            *(f32 *)(arg0 + 0x34) = *(f32 *)(arg1 + 4);
+            if (*(f32 *)(arg0 + 0x34) == 1.0f) {
+                ((SequencePlayerFlags *)arg0)->applyBend = FALSE;
+            } else {
+                ((SequencePlayerFlags *)arg0)->applyBend = TRUE;
+            }
+            break;
+
+        default:
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018ED4.s")
 
@@ -877,6 +1785,7 @@ void func_80019398(void) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800193B8.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800194A0.s")
+
 
 void func_8001951C(void) {
     func_80018620();
