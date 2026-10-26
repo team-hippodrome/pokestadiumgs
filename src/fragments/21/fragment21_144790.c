@@ -219,7 +219,45 @@ void func_8250684C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825068C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82506910.s")
+extern s32 D_82509008;
+extern s32 D_8250900C;
+extern s32 D_82509010;
+extern s32 D_82509014;
+typedef struct {
+    s16 state;
+    s16 unk_02;
+    s16 unk_04;
+    u16 flags;
+    s16 unk_08;
+    s16 unk_0A;
+    s16 unk_0C;
+    s16 unk_0E;
+    s16 unk_10;
+    s16 unk_12;
+} Fragment21Header;
+void Fragment21_SetRecordDefaults(void *arg0, s32 arg1, s32 arg2, s32 arg3,
+                    void *arg4, void *arg5, void *arg6, s32 arg7, s32 arg8) {
+    Fragment21Header *header;
+
+    *(struct Fragment21PackedWord *)&D_82509008 = *(struct Fragment21PackedWord *)arg0;
+    header = (Fragment21Header *)&D_82508FF0;
+    header->unk_0E = arg1;
+    header->unk_10 = arg2;
+    header->unk_12 = arg3;
+    *(struct Fragment21PackedWord *)&D_8250900C = *(struct Fragment21PackedWord *)arg4;
+    *(struct Fragment21PackedWord *)&D_82509010 = *(struct Fragment21PackedWord *)arg5;
+    *(struct Fragment21PackedWord *)&D_82509014 = *(struct Fragment21PackedWord *)arg6;
+    if (arg7) {
+        header->flags = D_82508FF6 | 1;
+    } else {
+        header->flags = D_82508FF6 & 0xFFFE;
+    }
+    if (arg8) {
+        header->flags = header->flags | 2;
+    } else {
+        header->flags = header->flags & 0xFFFD;
+    }
+}
 
 extern s32 D_82509024;
 extern s32 D_82509028;
@@ -292,7 +330,7 @@ void func_82507000(s16 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507078.s")
 
-extern void func_82507D04(s32, void *, s32, s32, s32, s32, s32);
+extern s32 Fragment21_SetRecordColorTransition(s32, void *, s16, s16, s16, s16, s32);
 extern void func_82504D40(void *, void *);
 extern void func_82504CC8(void *, s32);
 extern void func_800226C0(s32);
@@ -316,7 +354,7 @@ void func_82507250(void *arg0) {
     switch (temp_v1) {
     case 0:
         temp_a2 = *(s16 *)((u8 *)temp_s0 + 0x30);
-        func_82507D04(0, (u8 *)temp_s0 + 0x48, temp_a2, 0x31, temp_a2,
+        Fragment21_SetRecordColorTransition(0, (u8 *)temp_s0 + 0x48, temp_a2, 0x31, temp_a2,
                      *(s16 *)((u8 *)temp_s0 + 0x2E), *(s32 *)((u8 *)temp_s0 + 0x34));
         temp_s2 = (u8 *)arg0 + 0x18;
         func_82504D40(temp_s0, temp_s2);
@@ -420,12 +458,41 @@ void func_82507BD0(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507C48.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507C98.s")
+void Fragment21_RequestClose(void) {
+    Fragment21Header *pool = (Fragment21Header *)&D_82508FF0;
+
+    if (pool->state == 2 || pool->state == 3) {
+        func_82504D94(func_825068C4(1, 1), 1);
+        pool->flags = pool->flags | 8;
+    }
+}
 
 
 s32 func_82507CF4(void) {
     return D_82508FF0 == 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507D04.s")
+// func_82505A64 packs these bytes into the RDP environment color.
+// func_82505420 interpolates the current color from a saved start and target.
+typedef struct {
+    u32 rgba;
+} Fragment21Color;
+s32 Fragment21_SetRecordColorTransition(s32 record_id, void *target_color, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s32 arg6) {
+    s32 updated = 0;
+    u8 *record;
+
+    record = func_825068C4(1, record_id);
+    if (record != NULL) {
+        *(Fragment21Color *)(record + 0x50) = *(Fragment21Color *)(record + 0x48);
+        *(Fragment21Color *)(record + 0x54) = *(Fragment21Color *)target_color;
+        *(s16 *)(record + 0x30) = arg2;
+        *(s16 *)(record + 0x58) = arg3;
+        *(s16 *)(record + 0x5A) = arg4;
+        *(s16 *)(record + 0x5C) = arg5;
+        *(s32 *)(record + 0x60) = arg6;
+        *(s16 *)(record + 0xE) = 0;
+        updated = 1;
+    }
+    return updated;
+}
 #endif

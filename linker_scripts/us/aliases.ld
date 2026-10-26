@@ -1037,3 +1037,9 @@ func_86301250 = Fragment51_UpdateResultAnimations;
 func_863031A4 = Fragment51_UpdateSpawnCount;
 
 func_86301F0C = Fragment51_InitScene;
+
+func_82506910 = Fragment21_SetRecordDefaults;
+
+func_82507C98 = Fragment21_RequestClose;
+
+func_82507D04 = Fragment21_SetRecordColorTransition;
