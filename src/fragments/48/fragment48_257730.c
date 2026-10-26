@@ -75,7 +75,30 @@ f32 func_87C018C8(void) {
     return ((f32) sp1C * 60.0f) / (f32) func_80001FF0();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_257730/func_87C01910.s")
+typedef struct {
+    s16 unk_00;
+    u8 unk_02[2];
+    s32 unk_04;
+    f32 unk_08;
+} unk_func_87C01910;
+
+extern f32 MathUtil_Random_ZeroOne(void);
+
+void func_87C01910(void *arg0) {
+    u8 *var_a0 = arg0;
+
+    if (*(unk_func_87C01910 **)(var_a0 + 36) != NULL &&
+        *(s16 *)(var_a0 + 20) >= 0 &&
+        (*(unk_func_87C01910 **)(var_a0 + 36))[*(s16 *)(var_a0 + 20)].unk_00 >= 0 &&
+        MathUtil_Random_ZeroOne() <=
+            (*(unk_func_87C01910 **)(var_a0 + 36))[*(s16 *)(var_a0 + 20)].unk_08) {
+        *(s32 *)(var_a0 + 32) = 1;
+        *(f32 *)(var_a0 + 16) = 0.0f;
+    } else {
+        *(s32 *)(var_a0 + 32) = 0;
+        *(f32 *)(var_a0 + 16) = 0.0f;
+    }
+}
 
 extern void func_87C01910(void *);
 void func_87C019B0(u8 *arg0, s16 arg1) {
