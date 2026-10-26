@@ -423,7 +423,33 @@ extern s32 D_88234778; extern void func_8821C0B0(void); void func_8821C298(void)
 
 extern u32 D_882347B4; extern u8 D_8823474D; void func_8821C2C8(s32 arg0) { if (D_882347B4 != arg0) { D_882347B4 = arg0; D_8823474D = 2; } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C2F4.s")
+// func_8821C39C restores this same 32-byte block from D_88234780.
+typedef struct {
+    u32 words[8];
+} unk_func_8821C2F4_000;
+
+typedef struct {
+    unk_func_8821C2F4_000 unk_00;
+    s32 unk_20;
+    s32 unk_24;
+    s16 unk_28;
+    s16 unk_2A;
+    s16 unk_2C;
+} unk_func_8821C2F4;
+
+extern u8 D_88234780[];
+
+void func_8821C2F4(void) {
+    unk_func_8821C2F4 *var_v0 = (unk_func_8821C2F4 *)D_88234780;
+
+    var_v0->unk_00 = *(unk_func_8821C2F4_000 *)&D_88234758;
+    var_v0->unk_20 = D_88234778;
+    var_v0->unk_24 = D_8823477C;
+    var_v0->unk_28 = *(s16 *)(D_88006880 + 8);
+    var_v0->unk_2A = *(s16 *)(D_88006880 + 10);
+    var_v0->unk_2C = *(s16 *)(D_88006880 + 16);
+    func_8821C2C8(1);
+}
 
 extern u8 D_88234780[];
 extern s32 D_882347B0;
