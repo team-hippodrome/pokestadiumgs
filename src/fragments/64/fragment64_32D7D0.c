@@ -3,7 +3,15 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32D7D0/func_87F0AB60.s")
+s32 func_87F0AB60(s32 arg0, s32 arg1, s32 arg2) {
+    s32 result;
+
+    if (arg1 >= 0 && arg1 < 12) {
+        result = *(s32 *)((u8 *)arg0 + arg2 * 1728 + arg1 * 4);
+    }
+    //!bug The original returns an uninitialized result for indices outside 0..11.
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32D7D0/func_87F0ABA4.s")
 
