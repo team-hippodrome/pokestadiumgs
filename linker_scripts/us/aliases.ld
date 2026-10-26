@@ -1047,3 +1047,7 @@ func_82507D04 = Fragment21_SetRecordColorTransition;
 func_82506AD4 = Fragment21_CreateType1Record;
 
 func_82506E98 = Fragment21_CreateType1RecordWithValues;
+
+func_82506888 = Fragment21_FindFreeRecord;
+
+func_825068C4 = Fragment21_FindRecord;
