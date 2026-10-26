@@ -1043,3 +1043,7 @@ func_82506910 = Fragment21_SetRecordDefaults;
 func_82507C98 = Fragment21_RequestClose;
 
 func_82507D04 = Fragment21_SetRecordColorTransition;
+
+func_82506AD4 = Fragment21_CreateType1Record;
+
+func_82506E98 = Fragment21_CreateType1RecordWithValues;
