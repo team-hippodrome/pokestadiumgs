@@ -1338,7 +1338,40 @@ s32 func_8AC06834(void *arg0, s16 arg1)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0686C.s")
+// 14-byte vertical scroll state; func_8AC0651C clears it and sets last_row, row_height,
+// visible_rows and step (fragment44_1FD260.c passes them as (count - 1) / 4, 20, its
+// visible row count and 10).
+//@src/fragments/44/fragment44_1FD260.c
+typedef struct MenuScrollState {
+    /* 0x0 */ s16 scroll_y;
+    /* 0x2 */ s16 first_row;
+    /* 0x4 */ s16 direction;
+    /* 0x6 */ s16 last_row;
+    /* 0x8 */ s16 row_height;
+    /* 0xA */ s16 visible_rows;
+    /* 0xC */ s16 step;
+} MenuScrollState;
+
+// Moves first_row toward cursor_row (func_8AC06464 / func_8AC06490 test whether the cursor
+// is above or below the visible window), then steps scroll_y toward first_row * row_height
+// and records the movement direction as -1, 1 or 0.
+void func_8AC0686C(MenuScrollState *scroll, s16 cursor_row) {
+    if (func_8AC06464(cursor_row, scroll) != 0) {
+        scroll->first_row--;
+    }
+    if (func_8AC06490(cursor_row, scroll) != 0) {
+        scroll->first_row++;
+    }
+    if (func_8AC064C4(scroll->first_row * scroll->row_height, &scroll->scroll_y) != 0) {
+        scroll->scroll_y -= scroll->step;
+        scroll->direction = -1;
+    } else if (func_8AC064F0(scroll->first_row * scroll->row_height, &scroll->scroll_y) != 0) {
+        scroll->scroll_y += scroll->step;
+        scroll->direction = 1;
+    } else {
+        scroll->direction = 0;
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -223,7 +223,43 @@ void func_8FB024BC(void *arg0) {
 }
 /* mkdraft:func_8FB024BC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02560.s")
+// Leading fields of the D_8FB03DF8 state. func_8FB031E0 draws images[index] with
+// func_800495F8; func_8FB029B4 dispatches on mode and func_8FB032C4 runs until mode is 2.
+//@src/fragments/9/fragment9_code.c
+typedef struct unk_D_8FB03DF8 {
+    /* 0x00 */ void *images[6];
+    /* 0x18 */ s32 available[6];
+    /* 0x30 */ s32 unk_30;
+    /* 0x34 */ s32 index;
+    /* 0x38 */ s32 unk_38;
+    /* 0x3C */ s32 unk_3C;
+    /* 0x40 */ s32 mode;
+} unk_D_8FB03DF8;
+
+extern void func_80055948(s32);
+extern void func_80055A74(s32);
+extern void func_80055BF8(void);
+extern void func_8FB02108(void *);
+// Loads the image of each of the six entries (func_8FB02454) and whether its message
+// state has bit 31 of its flags clear (func_8FB02494), then resets the selection.
+void func_8FB02560(unk_D_8FB03DF8 *state) {
+    s32 i;
+
+    for (i = 0; i < 6; i++) {
+        state->images[i] = func_8FB02454((void *)i);
+        state->available[i] = func_8FB02494(i);
+    }
+    state->unk_30 = 0;
+    state->unk_38 = 0;
+    state->index = 0;
+    state->mode = 0;
+    func_80055948(0);
+    func_80055948(1);
+    func_80055A74(state->index);
+    func_80055BF8();
+    func_8FB024BC(state);
+    func_8FB02108(state);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02608.s")
 
@@ -337,7 +373,7 @@ extern s32 StageContext_Allocate(s32, s32, s32, s32, s32, s32);
 extern void func_8004C09C(s32);
 extern void func_8004C4B0(s32);
 extern s32 func_80047588(s32, s32);
-extern void func_8FB02560(void *);
+extern void func_8FB02560(unk_D_8FB03DF8 *);
 extern void func_80008514(s32);
 extern void func_800086A4(s32);
 extern void StageFade_StartFromOpaque(s32);
@@ -354,7 +390,7 @@ void func_8FB03328(s32 arg0, s32 arg1) {
     func_8004C4B0(0xF);
     func_8004C4B0(0x2A);
     D_8FB03DF0 = func_80047588(0x1E, 0);
-    func_8FB02560(&D_8FB03DF8);
+    func_8FB02560((unk_D_8FB03DF8 *)&D_8FB03DF8);
     func_80008514(sp24);
     func_800086A4(2);
     StageFade_StartFromOpaque(0x10);

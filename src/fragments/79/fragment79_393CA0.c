@@ -1698,7 +1698,23 @@ void BattleAnim_Table_84185F10_000(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84129E84.s")
+extern u8 D_841951BC, D_841951BD;
+extern u8 *D_84195208[];
+// Resets all seven stat stages (bytes 0x1E-0x24, 7 = neutral; func_84125B88 bounds them to
+// 1-13) of both active Pokemon, then has func_84125734 recompute the five stats at 0x3C
+// from those stages.
+void func_84129E84(void) {
+    s32 i;
+
+    for (i = 0; i < 7; i++) {
+        D_84195208[D_841951BC][i + 0x1E] = 7;
+        D_84195208[D_841951BD][i + 0x1E] = 7;
+    }
+    func_84125734(D_841951BC);
+    func_84125734(D_841951BD);
+    func_841366C4(D_841951BC, -1);
+    func_84135B40(104);
+}
 #endif
 
 #ifdef VERSION_US
