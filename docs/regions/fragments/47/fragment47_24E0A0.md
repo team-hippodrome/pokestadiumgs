@@ -98,3 +98,25 @@ also forces this source to recompile and reproduces retail MD5
   final addition ordering have been tested. Next inspect multiplication
   operand order and the product's lifetime, keeping the float-to-double
   square-root boundary intact.
+
+## 2026-10-26 — initialized height query
+
+Starting revision `cfa29ddb25bdfa4e2817ab991fea133c9b7469a1` (#1623).
+`func_8600A0C8` was already C but contained a division using an uninitialized
+local, an empty `if (1)` guard, and a comma-zero condition. Removing the
+uninitialized division alone preserves the 124-byte extent but changes four
+instruction words: the base and ratio exchange floating-point registers.
+Removing the empty guard and comma-zero expression does not affect the object.
+
+The fully initialized replacement calculates the ratio directly from the two
+configuration fields before caching the base used in the final product. That
+order recovers base F12 and ratio F2 with ordinary C. It preserves the flag's
+sign selection, single-precision square root, and promotion back to double.
+No uninitialized reads, empty guards, or artificial unused operations remain
+in this function.
+
+Four complete-module controls (before/after, each normal and blank-prefixed)
+prove identical section bytes, symbol extents and relocations. Forced native
+source recompilation with host syntax checking passes the full US retail-ROM
+comparison, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. This cleans an existing C
+owner; it does not replace another assembly owner or change coverage.
