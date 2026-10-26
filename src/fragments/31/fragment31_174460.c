@@ -67,7 +67,30 @@ loop:
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_8820137C.s")
+typedef struct unk_D_88234634 {
+    u8 *entries;
+    u8 unk_04[8];
+} unk_D_88234634;
+
+extern unk_D_88234634 D_88234634[];
+extern void *D_88234664;
+
+void *func_8820137C(void *arg0) {
+    u8 type = ((u8 *)**(void ***)arg0)[8];
+    s8 index;
+
+    switch (type) {
+        case 0:
+            index = func_882012E4(arg0);
+            break;
+        case 2:
+            index = ((u8 *)arg0)[39] - 1;
+            break;
+        default:
+            return D_88234664;
+    }
+    return D_88234634[type].entries + index * 118;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201420.s")
 
