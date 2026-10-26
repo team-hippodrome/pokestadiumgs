@@ -1059,3 +1059,5 @@ func_825075B0 = Fragment21_UpdateContextAndRecords;
 func_82507078 = Fragment21_UpdateLayoutTransition;
 
 func_825073B0 = Fragment21_UpdateCloseTransition;
+
+func_82505758 = Fragment21_DrawTexturedBorder;
