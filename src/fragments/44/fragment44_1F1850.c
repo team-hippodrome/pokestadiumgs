@@ -428,7 +428,30 @@ u8 *func_8AF04D68(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04DB8.s")
+// Returns the index of id in the -1-terminated s16 list chosen by func_8AF04D68,
+// or -1 if id is absent or no list exists for D_8AF2BA6C.
+s32 func_8AF04DB8(s32 id) {
+    s32 index;
+    s16 *entry;
+    s32 result = -1;
+
+    entry = (s16 *)func_8AF04D68();
+    if (entry == NULL) {
+        return -1;
+    }
+
+    for (index = 0;; index++) {
+        if (*entry == -1) {
+            break;
+        }
+        if (id == *entry) {
+            result = index;
+            break;
+        }
+        entry++;
+    }
+    return result;
+}
 
 extern s32 func_8AF04DB8(s32);
 s32 *func_8AF04E2C(arg0, arg1)

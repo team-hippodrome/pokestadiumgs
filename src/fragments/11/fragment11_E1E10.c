@@ -60,7 +60,14 @@ void func_8160A384(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A50C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A6AC.s")
+// Clears bytes 0x0B-0x10 of arg0.
+void func_8160A6AC(void *arg0) {
+    s32 i;
+
+    for (i = 0; i < 6; i++) {
+        ((u8 *)arg0)[i + 0xB] = 0;
+    }
+}
 
 extern void func_8004D878(s32, s32, s32);
 void func_8160A6D0(s32 arg0, s32 arg1) {

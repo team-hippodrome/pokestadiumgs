@@ -1351,7 +1351,32 @@ s32 func_82610E34(s32 arg0)
 
   return found;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82610EE8.s")
+extern s32 func_80001FF0(void);
+extern s32 func_82610D6C(s16 *, s32);
+// arg0[0] selects the check, arg0[3] counts frames, and arg0[1] receives the
+// next state (2 or 7) when the check passes.
+void func_82610EE8(s16 *arg0) {
+    s32 frames;
+
+    // Rounds func_80001FF0() * 0.75 to the nearest integer; the sign test
+    // calls func_80001FF0 a second time.
+    frames = (func_80001FF0() * 0.5f * 1.5f) + ((func_80001FF0() * 0.5f * 1.5f > 0.0f) ? 0.5f : -0.5f);
+    switch (arg0[0]) {
+        case 0:
+            arg0[3]++;
+            if (func_82610D6C(arg0, frames) && (arg0[3] >= frames)) {
+                arg0[1] = 2;
+                arg0[3] = 0;
+            }
+            break;
+        case 1:
+            if (func_82610E34((s32)arg0)) {
+                arg0[1] = 7;
+                arg0[3] = 0;
+            }
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82610FF8.s")
 

@@ -196,5 +196,29 @@ void func_8830765C(u16 *arg0, u16 *arg1, s16 arg2, s16 arg3, u16 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8010/func_8830780C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8010/func_88307938.s")
+extern s32 func_8004C990(s32, s32);
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+// Tiles texture 6 of archive 264 over the rectangle (x, y, width, height),
+// with func_80006F70 clipping to (clip_x, clip_y, clip_width, clip_height); the calls in
+// func_88301C00 pass the same rectangle for both. The texture header holds its
+// width and height in the first two u16s.
+void func_88307938(s32 x, s32 y, s32 width, s32 height, s16 clip_x, s16 clip_y, s16 clip_width,
+                   s32 clip_height) {
+    u16 *texture;
+    s32 row;
+    s32 column;
+
+    texture = (u16 *)func_8004C990(264, 6);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0x64, 0x6E, 0x78, 0xFF);
+    func_8004D1FC((u8 *)texture);
+    func_80006F70(&D_800D0510, clip_x, clip_y, clip_width, clip_height);
+    //!bug The row loop starts at x instead of y.
+    for (row = x; row < y + height; row += texture[1]) {
+        for (column = x; column < x + width; column += texture[0]) {
+            GfxRect_DrawTextured(column, row, texture[0], texture[1], 0, 0, 0x400, 0x400, 0);
+        }
+    }
+    func_80006F70(&D_800D0510, 0, 0, 640, 480);
+}
 #endif
