@@ -96,7 +96,17 @@ void func_88307C2C(void)
 }
 /* mkdraft:func_88307C2C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307DA4.s")
+extern s8 D_88308EB1;
+extern void func_88002640(void *);
+
+void func_88307DA4(void) {
+    switch (D_88308EB1) {
+    case 0:
+    case 1:
+        func_88002640((u8 *)&D_88308ED0 + D_88308EB1 * 32);
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307DE8.s")
 
