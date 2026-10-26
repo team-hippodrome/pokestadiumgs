@@ -21,7 +21,16 @@ void func_87F08FA0(u8 arg0) {
     gDPSetEnvColor(D_800D0510++, 0, 0, 0, arg0);
     gSPTextureRectangle(D_800D0510++, 0, 0, 320 << 2, 240 << 2, G_TX_RENDERTILE, 0, 0, 1024, 1024);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32BC10/func_87F09040.s")
+extern Gfx D_80094DE0[];
+void func_87F09040(void) {
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0xFFFFFFFF);
+    gDPFillRectangle(D_800D0510++, 22, 16, 298, 16);
+    gDPFillRectangle(D_800D0510++, 22, 224, 298, 224);
+    gDPFillRectangle(D_800D0510++, 22, 16, 22, 224);
+    gDPFillRectangle(D_800D0510++, 298, 16, 298, 224);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32BC10/func_87F09120.s")
 
