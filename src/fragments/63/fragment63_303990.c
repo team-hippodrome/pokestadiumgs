@@ -73,7 +73,21 @@ void func_87E00204(void) {
     func_87E04A14(D_87E1BA20 + 0x4B8);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0023C.s")
+// Returns the index of the lowest set bit among bits 0-3 of the byte at
+// arg0 + 0x2182, or -1. arg0 is the pointer word at D_87E1BA20 + 0x0, which this
+// file passes as s32 (see func_87E0027C).
+s32 func_87E0023C(s32 arg0) {
+    s32 result = -1;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (((u8 *)arg0)[0x2182] & (1 << i)) {
+            result = i;
+            break;
+        }
+    }
+    return result;
+}
 
 s32 func_87E0023C(s32);
 extern void func_87E06D8C(u8 *, s32);

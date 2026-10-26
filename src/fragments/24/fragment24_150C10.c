@@ -470,7 +470,21 @@ void func_82B0284C(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B028CC.s")
+s32 func_82B028CC(void) {
+    u8 *base = (u8 *)&D_82B12450;
+    s32 result = 1;
+    s32 i;
+    u8 *entry;
+
+    for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+        entry = ((u8 **)(base + 0xB18))[i];
+        if (*(u16 *)(entry + 6) != 0) {
+            result = 0;
+            break;
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

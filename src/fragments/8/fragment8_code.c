@@ -184,7 +184,37 @@ void func_82F00A3C(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00B28.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00C2C.s")
+extern s32 func_80064474(u8, u16);
+extern s32 func_800647C8(u8);
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern u8 *func_8004C874(s32, s32);
+extern u8 D_82F031CC[];
+extern u8 D_82F031D0[];
+// Returns the gender-symbol string shown after a Pokemon's name. func_80064474
+// returns 0 (genderless), 1 or 2 from the species byte at +0x0 and the word at
+// +0x16. Species 29 and 32 (Nidoran) get the empty string D_82F031CC while the
+// name at +0x34 still equals the species name from func_800647C8.
+//@src/641E0.c
+u8 *func_82F00C2C(u8 *pokemon) {
+    u8 gender;
+    s32 species;
+
+    gender = func_80064474(pokemon[0], *(u16 *)(pokemon + 0x16));
+    species = pokemon[0];
+    if (((species == 29) || (species == 32)) &&
+        (HAL_Strcmp((s8 *)(pokemon + 0x34), (s8 *)func_800647C8(pokemon[0])) == 0)) {
+        return D_82F031CC;
+    }
+    switch (gender) {
+        case 0:
+            return D_82F031D0;
+        case 1:
+            return func_8004C874(13, 29);
+        case 2:
+            return func_8004C874(13, 30);
+    }
+    //!bug no return for a gender value other than 0, 1 or 2; $v0 still holds that value.
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00CF4.s")
 

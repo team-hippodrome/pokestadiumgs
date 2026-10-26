@@ -6641,7 +6641,29 @@ void func_8413C3A8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413C6AC.s")
+extern void func_84148410(void);
+void func_8413C6AC(u8 arg0, u16 arg1) {
+    func_84148410();
+    switch (arg0) {
+        case 0:
+            func_84134CBC(0, arg1);
+            break;
+        case 1:
+            func_84134CBC(1, arg1);
+            break;
+        case 2:
+            func_84134CBC(0, arg1);
+            break;
+    }
+    BattleRecord_AdvanceWriteSlot();
+    func_84147228(1, 0, 0, 4, 1);
+    func_84147228(1, 1, 0, 4, 1);
+    D_84195278 = 6;
+    if ((((u8 *)D_841951F0)[0x9C2] == 1) && (D_8419527C < 104)) {
+        (*(u8 **)((u8 *)D_841951F0 + 0x9D8))[0x6B] = D_8419527C;
+    }
+    func_84147228(24, 0, 0, 10, 0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -6761,7 +6783,7 @@ void func_8413D2C0(u8 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8413C6AC(u8, s32);
+extern void func_8413C6AC(u8, u16);
 extern void * D_841951F0;
 extern u8 * D_84195200[];
 void func_8413D2E4(u8 arg0) {

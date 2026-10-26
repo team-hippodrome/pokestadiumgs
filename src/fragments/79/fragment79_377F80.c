@@ -205,7 +205,64 @@ void func_84108E00(s32 arg0, s32 arg1) {
         var_s0 += 0x9C;
     } while (var_s1 != 0x12C);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108F88.s")
+void func_84108F88(s32 arg0, s32 arg1) {
+    u8 *record;
+    u8 *temp;
+    s16 *id;
+    s32 found;
+    s32 i;
+
+    record = D_8418C950;
+    found = 0;
+    i = 0;
+    do {
+        if ((*(s8 *)(record + 0x98) != 0) && (*(s32 *)(record + 8) == arg0)) {
+            switch (arg1) {
+                case 0:
+                    temp = *(u8 **)(record + 0x10);
+                    if (temp != NULL) {
+                        id = *(s16 **)(temp + 0x14);
+                        if ((id != NULL) && (*id == 211)) {
+                            temp = *(u8 **)(record + 0xC);
+                            if (temp != NULL) {
+                                temp[1] |= 1;
+                                found = 1;
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    temp = *(u8 **)(record + 0x10);
+                    if (temp != NULL) {
+                        id = *(s16 **)(temp + 0x14);
+                        if ((id != NULL) && (*id == 317)) {
+                            temp = *(u8 **)(record + 0xC);
+                            if (temp != NULL) {
+                                temp[1] |= 1;
+                                found = 1;
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    temp = *(u8 **)(record + 0x10);
+                    if (temp != NULL) {
+                        id = *(s16 **)(temp + 0x14);
+                        if ((id != NULL) && (*id == 18)) {
+                            func_84100030(record, 0x100000);
+                            found = 1;
+                        }
+                    }
+                    break;
+            }
+        }
+        i++;
+        if (found) {
+            return;
+        }
+        record += 156;
+    } while (i != 300);
+}
 
 void func_84109118(s32 arg0) {
     u8 *record;
