@@ -461,7 +461,55 @@ s32 func_80051A8C(u32 arg0, s32 arg1, s16 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80052150.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_8005253C.s")
+void func_8005253C(s32 arg0, s32 arg1) {
+    switch (arg0) {
+        case 16:
+            Save_RestoreRecord(func_80050E88(0, D_800972C0, arg1), func_80050DE4(arg0), func_80050D20(arg0, D_800972C0));
+            break;
+        case 17:
+            Save_RestoreRecord(func_80050F60(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, arg1));
+            break;
+        case 18:
+            Save_RestoreRecord((s32)func_80051028(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 19:
+            Save_RestoreRecord((s32)func_800510CC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 20:
+            Save_RestoreRecord((s32)func_80051138(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 21:
+            Save_RestoreRecord(func_800511A4(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 22:
+            Save_RestoreRecord((s32)func_80051208(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 23:
+            Save_RestoreRecord((s32)func_80051274(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 24:
+            Save_RestoreRecord((s32)func_800512E0(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 25:
+            Save_RestoreRecord((s32)func_8005134C(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 26:
+            Save_RestoreRecord((s32)func_800513B8(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 27:
+            Save_RestoreRecord((s32)func_80051424(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 28:
+            Save_RestoreRecord((s32)func_80051490(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 29:
+            Save_RestoreRecord((s32)func_800514FC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 30:
+            Save_RestoreRecord((s32)func_80051568(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80052928.s")
 

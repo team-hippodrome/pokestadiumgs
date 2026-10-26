@@ -89,7 +89,25 @@ void func_8F400E74(s32 arg0, s32 arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F401464.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F4015FC.s")
+// Close to fragment20's func_82609938; also skips drawing when arg5 is not positive.
+//@src/fragments/20/fragment20_12C460.c
+extern void func_80046204(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+void func_8F4015FC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    s32 temp_v0;
+    s32 var_s0;
+    s32 var_s1;
+
+    if (arg5 > 0) {
+        for (var_s1 = 0; var_s1 < arg4; var_s1 += arg5) {
+            temp_v0 = arg4 - var_s1;
+            if (temp_v0 < arg5) var_s0 = temp_v0;
+            else var_s0 = arg5;
+            func_80046204((arg3 * var_s1 * 2) + arg2, 0, 2, arg3, var_s0, 0, 0, arg3, var_s0 - 1, 0, 2, 2, 0, 0, 0, 0);
+            GfxRect_DrawTextured((s16)arg0, (s16)(arg1 + var_s1), (s16)arg3, (s16)var_s0, 0, 0, 0x400, 0x400, 0);
+        }
+    }
+}
 
 extern void Dma_CopyChunks(s32, s32, s32);
 extern s32 func_800356CC(s32);
@@ -100,7 +118,7 @@ extern void *D_80087200;
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
 extern u8 D_8F4020C0;
-extern void func_8F4015FC(s32, s32, s32, s16, s32, s32);
+extern void func_8F4015FC(s32, s32, s32, s32, s32, s32);
 #define GFX_DL (*(Gfx **)&D_800D0510)
 void func_8F401750(void) {
     s16 temp_a3;

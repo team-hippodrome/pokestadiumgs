@@ -101,7 +101,26 @@ void func_82400880(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824008C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824009AC.s")
+void func_824009AC(void) {
+    s32 state = 0;
+
+    func_800086A4(2);
+    StageFade_StartFromOpaque(30);
+    do {
+        // FAKE: comma expression around -1 swaps the bne operand order; diff score 10 without it.
+        if (*(s32 *)(D_824090A0 + 0x254) == (0, -1)) {
+            func_80064D28();
+        }
+        func_816018CC(0);
+        func_81600954(D_8240AA68);
+        func_82406A78(D_824090A0, D_8240AA68);
+        func_81600B30(D_8240AA68);
+        func_82400438(&D_82409308);
+        func_82407228(D_824090A0, &D_82409308, D_82409FC0);
+        func_82400880();
+        state = func_824008C4(state);
+    } while (state != 3);
+}
 
 /* mkdraft:func_82400A9C begin */
 extern s32 main_pool_push_state(s32);

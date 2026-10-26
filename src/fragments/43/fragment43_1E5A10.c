@@ -9,7 +9,46 @@ void fragment43_main(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0011C.s")
+extern u8 D_8AC07BA0[];
+extern u8 D_8AC081B0[];
+// Writes D_8AC081B0 = D_8AC07BA0 + bias for 18 four-byte entries, adding bias[0..3]
+// to bytes 0..3 of each entry and saturating each sum at 0xFF.
+void func_8AC0011C(u8 *bias) {
+    u8 *dst;
+    u8 *src;
+    u16 sum0;
+    u16 sum1;
+    u16 sum2;
+    u16 sum3;
+    s32 i;
+
+    dst = D_8AC081B0;
+    src = D_8AC07BA0;
+    for (i = 0; i < 18; i++) {
+        sum0 = bias[0] + src[0];
+        sum1 = bias[1] + src[1];
+        sum2 = bias[2] + src[2];
+        sum3 = bias[3] + src[3];
+        if (sum0 >= 0x100) {
+            sum0 = 0xFF;
+        }
+        if (sum1 >= 0x100) {
+            sum1 = 0xFF;
+        }
+        if (sum2 >= 0x100) {
+            sum2 = 0xFF;
+        }
+        if (sum3 >= 0x100) {
+            sum3 = 0xFF;
+        }
+        dst[0] = sum0;
+        dst[1] = sum1;
+        dst[2] = sum2;
+        dst[3] = sum3;
+        src += 4;
+        dst += 4;
+    }
+}
 #endif
 
 #ifdef VERSION_US

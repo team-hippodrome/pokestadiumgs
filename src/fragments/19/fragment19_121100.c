@@ -19,7 +19,28 @@ s32 func_823000F8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230010C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82300368.s")
+extern void func_8230010C(s16 *);
+
+// Runs func_8230010C on D_82305EE4 only while that state halfword is 1; states 0 and 2
+// (tested by func_823000E8 and func_823000F8) do nothing here.
+void func_82300368(void) {
+    s16 *state; // FAKE: switching on D_82305EE4 directly does not match; diff score 275 without it.
+
+    state = &D_82305EE4;
+    // karodo; diff score 275 without it.
+    if (1) {}
+    switch (*state) {
+        case 0:
+            break;
+
+        case 1:
+            func_8230010C(&D_82305EE4);
+            break;
+
+        case 2:
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823003B4.s")
 
@@ -296,7 +317,42 @@ void func_82302B44(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302B8C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302D2C.s")
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Close to func_8260B8CC (fragment20); draws resource 75 instead of 81, returns early when
+// func_8004C990 finds no resource or height is not positive, and passes the resource to
+// func_8004D1FC before drawing. Same body as func_82100214 (fragment25).
+void func_82302D2C(s32 x, s32 y, s32 width, s32 height) {
+    s32 resource;
+    s32 tile_width;
+    s32 tile_height;
+
+    resource = func_8004C990(75, 0);
+    if (resource != 0 && height > 0) {
+        tile_width = ((u16 *)resource)[0] / 4;
+        tile_height = ((u16 *)resource)[1];
+        func_8004D1FC((u8 *)resource);
+        GfxRect_DrawTextured(x, y, tile_width, tile_height, 0, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + tile_width, y, width - tile_width * 2, tile_height,
+                             tile_width << 5, 0, 0, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y, tile_width, tile_height,
+                             tile_width << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x, y + tile_height, tile_width, height - tile_height * 2,
+                             (tile_width * 2) << 5, 0, 1024, 0, 0);
+        GfxRect_DrawTextured(x, y + height - tile_height, tile_width, tile_height,
+                             (tile_width * 2) << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + tile_width, y + height - tile_height,
+                             width - tile_width * 2, tile_height,
+                             (tile_width * 3) << 5, 0, 0, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y + height - tile_height,
+                             tile_width, tile_height, (tile_width * 3) << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y + tile_height,
+                             tile_width, height - tile_height * 2,
+                             (tile_width * 3) << 5, 0, 1024, 0, 0);
+    }
+}
 
 extern void func_80008648();
 extern void BgStage_DrawFrame();
@@ -380,7 +436,46 @@ s32 func_82303508(void) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230362C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82303A04.s")
+extern s8 *D_82305A70;
+extern s32 D_82305E94;
+s32 func_82303A04(s32 arg0, s32 arg1) {
+    s32 result;
+    s32 state;
+    u8 *entry;
+
+    result = 0;
+    state = 0;
+    if (D_82305A70[2] != 0) {
+        state = 1;
+    }
+    func_8004C09C(263);
+    D_82305E94 = func_8004D690(12);
+    func_82302320(arg0, arg1);
+    main_pool_push_state(0x63776C70);
+    entry = &D_82305A74[D_82305E6A * 36];
+    D_82305E98 = func_8004D690(*(s16 *)(entry + 8));
+    func_80008624();
+    if (StageContext_GetFadeMode() != 0) {
+        func_800086A4(2);
+        StageFade_StartFromOpaque(5);
+    }
+    do {
+        func_80064D28();
+        func_82300368();
+        func_8170024C();
+        func_82300AF8();
+        func_82300F6C();
+        func_82305914();
+        func_82303038();
+        state = func_8230362C(state, arg1);
+    } while (state != 8);
+    if (D_82305E6C == -2) {
+        result = 2;
+    }
+    StageLoader_WaitForRetrace();
+    main_pool_pop_state(0x63776C70);
+    return result;
+}
 
 extern s16 D_82305E6C;
 extern s16 D_82305E70;

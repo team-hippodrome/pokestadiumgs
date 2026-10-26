@@ -338,7 +338,54 @@ s32 func_800040C4(u8 *arg0) {
     return *(s32 *)(arg0 + 0xC) + 0x100;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4420/func_800040D0.s")
+// Header of a "PRESJPEG" file, identified by func_800042C0 and func_80004458.
+typedef struct PresJpegHeader {
+    /* 0x00 */ u32 magic[2]; // 'PRES', 'JPEG'
+    /* 0x08 */ s32 dataOffset; // offset of the JPEG data from the header start
+    /* 0x0C */ s32 outputSize; // decode buffer size before the 0x100 margin func_800040C4 adds
+} PresJpegHeader;
+
+// Decodes the JPEG data of `file` into a new buffer and returns it, or 0 on failure.
+// With pool == NULL the buffer comes from main_pool_alloc on `side` (0 = low end,
+// 1 = high end of the main pool, //@src/3280.c) and a low-end buffer is shrunk to the
+// decoded size with main_pool_realloc. Otherwise the buffer is carved from the
+// sub-pool state `pool` with MainPool_AllocAligned, and the pool's used offset (+4) is
+// reset to just past the decoded bytes, or to its previous value on failure.
+// `src` is freed in every case. Sub-pool functions:
+//@src/3A00.c
+s32 func_800040D0(void *pool, void *src, PresJpegHeader *file, s32 side) {
+    s32 buffer;
+    s32 previous_offset;
+    s32 decoded_size;
+
+    previous_offset = 0;
+    if (pool == NULL) {
+        buffer = main_pool_alloc(func_800040C4((u8 *)file), side);
+    } else {
+        previous_offset = *(s32 *)((u8 *)pool + 4);
+        buffer = MainPool_AllocAligned(pool, file->outputSize + 0x100, 0x10);
+    }
+    if (buffer != 0) {
+        decoded_size = Jpeg_DecodeImage(buffer, func_800040C4((u8 *)file), (u8 *)file + file->dataOffset);
+        if (decoded_size == 0) {
+            if (pool == NULL) {
+                main_pool_try_free(buffer);
+                buffer = 0;
+            } else {
+                MainPool_ResetStateToOffset(pool, previous_offset);
+                buffer = 0;
+            }
+        } else if (pool == NULL) {
+            if (side == 0) {
+                main_pool_realloc(buffer, decoded_size);
+            }
+        } else {
+            MainPool_ResetStateToOffset(pool, previous_offset + decoded_size);
+        }
+    }
+    main_pool_try_free(src);
+    return buffer;
+}
 
 u8 *func_800041E4(s32 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     u8 *result;

@@ -25,7 +25,26 @@ void func_82800020(u8 *arg0, s16 *arg1, s32 arg2) {
     func_82801510(arg0 + 12, arg1[1], arg2, *(s32 *)(arg1 + 2), *(s32 *)(arg0 + 180));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D4C50/func_828000CC.s")
+extern u8 D_82802870[];
+extern u8 D_82802874[];
+void func_828000CC(u8 *arg0) {
+    s32 flags;
+
+    func_800088DC();
+    func_81607408();
+    if (1) {} // karodo: diff score 55 without it.
+    // Word at +4 of the s16 parameter block that func_82800020 stores at +0xB8.
+    flags = *(s32 *)(*(u8 **)(arg0 + 0xB8) + 4);
+    if (flags & 0x80000) {
+        func_816098B0(func_8004C990(341, 0), D_82802870);
+    } else if (flags & 0x8000000) {
+        func_816098B0(func_8004C990(340, 0), D_82802874);
+    } else {
+        func_81600F0C(*(s32 *)(arg0 + 0xB4), 0, 0, 640, 480);
+    }
+    func_82802224(arg0 + 0xC, *(s32 *)(arg0 + 8));
+    func_80008648();
+}
 
 extern void func_81600954(void *);
 extern void func_81600A34(void *, s32, s32, s32, s32, s32, s32);

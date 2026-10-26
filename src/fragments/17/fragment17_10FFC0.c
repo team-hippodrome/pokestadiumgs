@@ -425,7 +425,33 @@ s32 func_822023D8(s32 arg0, u8 *arg1)
   return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82202534.s")
+s32 func_82202534(s32 arg0, u8 *arg1) {
+    s32 index = *(s32 *)(arg1 + 0x20);
+    u8 *p = (u8 *)&D_8220E378 + index * 0x3C;
+
+    switch (arg0) {
+        case 0:
+            *(s16 *)(p + 0x24) = *(s16 *)(arg1 + 8);
+            *(s16 *)(p + 0x26) = *(s16 *)(arg1 + 0xA);
+            break;
+
+        case 1:
+            if (D_8220E310[index * 0x14 + 5] != 2) {
+                if (D_8220D788 < *(s16 *)(p + 0x36)) {
+                    *(s16 *)(arg1 + 8) = *(s16 *)(p + 0x24) + *(s16 *)(p + 0x34);
+                    *(s16 *)(arg1 + 0xA) = *(s16 *)(p + 0x26) + *(s16 *)(p + 0x36);
+                    *(u16 *)(arg1 + 2) |= 2;
+                } else {
+                    *(u16 *)(arg1 + 2) &= ~2;
+                }
+            } else {
+                *(u16 *)(arg1 + 2) &= ~2;
+            }
+            break;
+    }
+
+    return 0;
+}
 
 const f32 D_8220E0D0[1] = { 0.001f };
 

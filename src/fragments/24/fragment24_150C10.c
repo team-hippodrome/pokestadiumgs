@@ -388,9 +388,11 @@ extern u8 D_82B12672[];
 extern s32 func_80049148(s32, s32, void *);
 typedef struct Pair02198 { s16 x; s16 y; } Pair02198;
 typedef struct State02198 {
-    u8 pad00[4];
+    s16 unk_00;
+    s16 unk_02;
     u16 flags;
-    u8 pad06[6];
+    s16 unk_06;
+    u8 pad08[4];
     Pair02198 delta;
     Pair02198 pos;
     Pair02198 a;
@@ -443,15 +445,100 @@ void func_82B02198(void *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B024B4.s")
+extern struct Color82B01BB8 D_82B085D8;
+
+// Initializes a panel like func_82B01E0C, through func_82B02198's State02198 view:
+// delta (0, 480); position (column * 171 + 70, 383), where column is the halfword at
+// +2; a = b = delta, copied into a0[] and b0[]; size 161 x 54; color D_82B085D8
+// (0xFF, 0xFF, 0xB4).
+void func_82B024B4(State02198 *p) {
+    s32 i;
+
+    p->delta.x = 0;
+    p->delta.y = 480;
+    p->pos.x = *(s16 *)((u8 *)p + 2) * 171 + 70;
+    p->pos.y = 383;
+    p->poscopy = p->pos;
+    p->a = p->delta;
+    p->b = p->a;
+    for (i = 0; i < 4; i++) {
+        p->a0[i] = p->a;
+        p->b0[i] = p->b;
+    }
+    p->width = 161;
+    p->height = 54;
+    *(struct Color82B01BB8 *)((u8 *)p + 0x4C) = D_82B085D8;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B025E0.s")
+extern struct Color82B01BB8 D_82B085C8;
+// Close to func_82B01F14; differs only in the halfwords stored at 0x10 (120), 0x48 (404) and
+// 0x4A (160) and in copying color D_82B085C8.
+void func_82B025E0(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0xC) = 0;
+    *(s16 *)((u8 *)arg0 + 0xE) = -480;
+    *(s16 *)((u8 *)arg0 + 0x10) = 120;
+    *(s16 *)((u8 *)arg0 + 0x12) = 180;
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x3C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x10);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0xC);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x1C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x2C) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x20) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x30) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x24) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x34) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x28) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x38) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x18);
+    *(s16 *)((u8 *)arg0 + 0x48) = 404;
+    *(s16 *)((u8 *)arg0 + 0x4A) = 160;
+    *(struct Color82B01BB8 *)((u8 *)arg0 + 0x4C) = D_82B085C8;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B026E8.s")
+extern void _bzero(void *, s32);
+void func_82B026E8(State02198 *arg0, s32 arg1, s32 arg2) {
+    _bzero(arg0, 112);
+    arg0->unk_00 = arg1;
+    arg0->unk_02 = arg2;
+    arg0->flags |= 1;
+    arg0->flags |= 2;
+    arg0->unk_06 = 0;
+    switch (arg0->unk_00) {
+        case 1:
+            func_82B01904(arg0);
+            break;
+        case 2:
+            func_82B01BB8(arg0);
+            break;
+        case 3:
+            func_82B01CE0(arg0);
+            break;
+        case 4:
+            func_82B01E0C(arg0);
+            break;
+        case 5:
+            func_82B01F14(arg0);
+            break;
+        case 6:
+            func_82B0201C(arg0);
+            break;
+        case 7:
+            func_82B02198(arg0);
+            break;
+        case 8:
+            func_82B02334(arg0);
+            break;
+        case 9:
+            func_82B024B4(arg0);
+            break;
+        case 10:
+            func_82B025E0(arg0);
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

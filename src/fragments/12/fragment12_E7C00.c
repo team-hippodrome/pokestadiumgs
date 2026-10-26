@@ -394,7 +394,14 @@ s32 func_81404334(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814046C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404700.s")
+s32 func_81404700(u8 *arg0) {
+    s32 ret = *(s32 *)(arg0 + 0x14) != 0;
+
+    if (ret) {
+        return *(s8 *)(arg0 + 0x10) >= 0;
+    }
+    //!bug No return when the word at 0x14 is 0; callers get whatever is left in v0 (here 0).
+}
 
 extern s16 D_81407A1C[][2];
 void func_81404724(void *arg0, void *arg1) {
