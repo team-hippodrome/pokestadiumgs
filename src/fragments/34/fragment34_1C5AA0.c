@@ -189,7 +189,22 @@ void func_88509418(u8 arg0, s32 arg1) {
         break;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88509538.s")
+void func_88509538(u8 *arg0) {
+    s32 var_v0;
+    f32 var_fv0;
+    f32 var_fv1;
+    f32 var_ft3;
+
+    (*(s16 *)(arg0 + 8))--;
+    var_v0 = *(s16 *)(arg0 + 8);
+    var_fv0 = (f32)(var_v0 * 255) / 40.0f;
+    var_ft3 = 255.0f - var_fv0;
+    var_fv1 = var_fv0 < 255.0f ? 0.5f : -0.5f;
+    *(s16 *)(arg0 + 14) = (s32)(var_fv1 + var_ft3);
+    if (var_v0 <= 0) {
+        func_88509418((s32)(arg0 - D_88523050) / 80, 2);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_885095EC.s")
 
