@@ -533,7 +533,153 @@ void func_86301E54(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86301F0C.s")
+#include "color_adjustment.h"
+typedef ColorAdjustment Fragment51InitTint;
+typedef struct {
+    u8 unk_00[32];
+    void *user_data;
+    u8 unk_24[360];
+} Fragment51InitActor;
+typedef struct {
+    u8 bytes[36];
+} Fragment51InitActorData;
+typedef struct {
+    u8 bytes[12];
+} Fragment51InitConfig;
+typedef struct {
+    s32 state;
+    u8 unk_04[4];
+    void *scene;
+    void *game_context;
+    u8 unk_10[208];
+    void *player_resources[4][2];
+    void *models_100[5];
+    void *models_114[3];
+    void *model_120;
+    void *graph_124;
+    void *graph_128;
+    u8 unk_12C[0x8DF4];
+    s32 resource_8F20;
+    u8 unk_8F24[48];
+    s32 unk_8F54;
+    u8 unk_8F58[132];
+    u8 player_codes[4];
+    s8 config_index;
+} Fragment51InitContext;
+extern u8 D_86306EA0[];
+extern u8 D_86306F50[];
+extern u8 D_86306F84[];
+extern u8 D_863075C0[];
+extern u8 D_86307428[];
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *process_geo_layout(void *, void *);
+extern s32 func_8004DDF4(s32);
+extern u8 *func_8004DF38(s32, s32, s32);
+extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+extern void *func_8004DFEC(s32, s32, Fragment51InitTint);
+extern Fragment51InitTint func_87F0AD50(s32, s32, s32);
+extern void func_87F0C650(void *);
+extern void func_87F0C694(void *, s32);
+extern void func_87F01870(void *);
+extern void func_87F01F34(void *);
+extern void func_87F00030(void);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void *GeoNode_CreateContainer(void *, void *);
+extern void func_87F024CC(void);
+extern void func_87F024F4(void *, u8 *, s32);
+extern void func_87F0252C(void *, void *, u8 *, s32);
+extern void func_863005B8(void);
+extern void func_863006F8(void);
+extern s32 func_87F08E3C(void *, s32);
+extern void func_87F0D48C(void *, void *, s32);
+extern void func_863048D4(void);
+extern void func_86303C00(void *);
+extern void func_87F00688(void);
+extern s32 func_8004C990(s32, s32);
+extern void func_86300120(void);
+extern void func_86301E14(void);
+extern void func_86301E54(void);
+extern void * D_863075D8;
+void Fragment51_InitScene(void) {
+    u8 *pool;
+    s32 i;
+    Fragment51PlayerRecord *player;
+    Fragment51InitContext *context;
+    Fragment51InitTint tint;
+    func_87F0C650((u8 *)D_863075D8 + 0x38);
+    if (*(u8 *)((u8 *)((Fragment51InitContext *)D_863075D8)->game_context + 0x2180) == 4) {
+        func_87F0C694((u8 *)D_863075D8 + 0x38, 20);
+    }
+    func_8004DDF4(120);
+    func_8004DDF4(141);
+    func_8004DDF4(146);
+    func_8004DDF4(154);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    ((Fragment51InitContext *)D_863075D8)->scene = process_geo_layout(pool, D_86306EA0);
+    ((Fragment51InitContext *)D_863075D8)->models_114[0] = func_8004DF38((s32)pool, 120, 0);
+    ((Fragment51InitContext *)D_863075D8)->models_114[1] = func_8004DF38((s32)pool, 120, 1);
+    ((Fragment51InitContext *)D_863075D8)->models_114[2] = func_8004DF38((s32)pool, 120, 2);
+    ((Fragment51InitContext *)D_863075D8)->models_100[0] = func_8004DF38((s32)pool, 154, 0);
+    ((Fragment51InitContext *)D_863075D8)->models_100[1] = func_8004DF38((s32)pool, 120, 3);
+    ((Fragment51InitContext *)D_863075D8)->models_100[2] = func_8004DF38((s32)pool, 120, 4);
+    ((Fragment51InitContext *)D_863075D8)->models_100[3] = func_8004DF38((s32)pool, 120, 5);
+    ((Fragment51InitContext *)D_863075D8)->models_100[4] = func_8004DF38((s32)pool, 120, 6);
+    ((Fragment51InitContext *)D_863075D8)->model_120 = (void *)WidgetTree_RunMessagePanelSilent((s32)pool, 141);
+    ((Fragment51InitContext *)D_863075D8)->graph_124 = process_geo_layout(pool, D_86306F50);
+    ((Fragment51InitContext *)D_863075D8)->graph_128 = process_geo_layout(pool, D_86306F84);
+    MainPool_FinalizeAllocation(pool);
+    for (i = 0; i < 4; i++) {
+        func_8004DDF4(218);
+        pool = MainPool_AllocState(main_pool_get_available(), 0);
+        tint = func_87F0AD50((s32)((Fragment51InitContext *)D_863075D8)->game_context, 4, i);
+        ((Fragment51InitContext *)D_863075D8)->player_resources[i][0] = func_8004DFEC((s32)pool, 218, tint);
+        MainPool_FinalizeAllocation(pool);
+        func_8004DDF4(129);
+        pool = MainPool_AllocState(main_pool_get_available(), 0);
+        tint = func_87F0AD50((s32)((Fragment51InitContext *)D_863075D8)->game_context, 4, i);
+        ((Fragment51InitContext *)D_863075D8)->player_resources[i][1] = func_8004DFEC((s32)pool, 129, tint);
+        MainPool_FinalizeAllocation(pool);
+    }
+    func_87F01870(((Fragment51InitContext *)D_863075D8)->game_context);
+    func_87F01F34(((Fragment51InitContext *)D_863075D8)->game_context);
+    func_87F00030();
+    ModelRenderer_InitDisplayRoots();
+    GeoNode_CreateContainer(NULL, D_863075C0);
+    func_87F024CC();
+    func_87F024F4((u8 *)D_863075D8 + 0x1488, (u8 *)D_863075D8 + 0x149C, 4);
+    func_863005B8();
+    func_87F024F4((u8 *)D_863075D8 + 0x12C, (u8 *)D_863075D8 + 0x140, 4);
+    for (i = 0, player = D_863072F8; player < D_863072F8 + 4; i++, player++) {
+        ((Fragment51InitActor *)((u8 *)D_863075D8 + 0x140))[i].user_data = player;
+    }
+    func_87F024F4((u8 *)D_863075D8 + 0x770, (u8 *)D_863075D8 + 0x784, 4);
+    func_87F0252C(D_863075C0, (u8 *)D_863075D8 + 0x1ACC, (u8 *)D_863075D8 + 0x1AE0, 3);
+    func_863006F8();
+    func_87F0252C(D_863075C0, (u8 *)D_863075D8 + 0x1F84, (u8 *)D_863075D8 + 0x1F98, 64);
+    func_87F024F4((u8 *)D_863075D8 + 0xDB4, (u8 *)D_863075D8 + 0xDC8, 4);
+    for (i = 0; i < 4; i++) {
+        ((Fragment51InitActor *)((u8 *)D_863075D8 + 0xDC8))[i].user_data = &((Fragment51InitActorData *)((u8 *)D_863075D8 + 0x13F8))[i];
+    }
+    func_87F024F4((u8 *)D_863075D8 + 0x8298, (u8 *)D_863075D8 + 0x82AC, 4);
+    ((Fragment51InitContext *)D_863075D8)->resource_8F20 = func_87F08E3C((void *)func_8004C990(151, 0), 0x0F000000);
+    func_87F0D48C((u8 *)D_863075D8 + 0x10, ((Fragment51InitContext *)D_863075D8)->game_context, 0);
+    func_863048D4();
+    func_86300120();
+    ((Fragment51InitContext *)D_863075D8)->unk_8F54 = 0;
+    func_86303C00(&((Fragment51InitConfig *)D_86307428)[((Fragment51InitContext *)D_863075D8)->config_index]);
+    for (i = 0; i < 4; i++) {
+        context = (Fragment51InitContext *)D_863075D8;
+        ((Fragment51InitContext *)D_863075D8)->player_codes[i] = (*(u8 *)((u8 *)context->game_context + 0x2182) & (1 << i) ? 6 : 2) + i;
+    }
+    func_86301E54();
+    if (*(u8 *)((u8 *)((Fragment51InitContext *)D_863075D8)->game_context + 0x2180) == 4) {
+        func_86301E14();
+        ((Fragment51InitContext *)D_863075D8)->state = 3;
+        func_87F00688();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1022,7 +1168,7 @@ s32 Fragment51_Run(s32 arg0, void *arg1) {
         func_80006148((u8 *)controller);
         controller++;
     } while (controller != controllers_end);
-    func_86301F0C();
+    Fragment51_InitScene();
     func_80008514(display);
     func_86303974();
     func_80008574();

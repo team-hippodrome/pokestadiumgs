@@ -1035,3 +1035,5 @@ func_86301B3C = Fragment51_InitPlayerActor;
 func_86301250 = Fragment51_UpdateResultAnimations;
 
 func_863031A4 = Fragment51_UpdateSpawnCount;
+
+func_86301F0C = Fragment51_InitScene;
