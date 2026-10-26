@@ -1,0 +1,48 @@
+# fragment64_32D7D0 matching notes
+
+## func_87F0AB60
+
+This owner returns the word at byte address `arg0 + arg2 * 1728 + arg1 * 4`
+when the signed index `arg1` is in 0..11. The incoming address retains its
+existing word-sized interface; converting it to a byte pointer expresses the
+row and entry offsets. The original assembly returns an uninitialized stack
+word for other indices. The C preserves that behavior and labels the original
+bug with `//!bug`.
+
+Compiled `func_87F0AD50` forwards its three explicit arguments to this owner,
+then passes the returned address and row index to `func_87F0ABA4`. The latter's
+original assembly consumes the record address in `a1`, following the hidden
+`ColorAdjustment` return pointer in `a0`. Compiled `func_87F0AD98` independently
+uses the same 1728-byte row stride and four-byte entry indexing, then reads
+through the selected pointer. These consumers support the address calculation
+without introducing a new global allocation or changing their interfaces.
+//@src/fragments/64/fragment64_32D7D0.c
+//@include/color_adjustment.h
+
+Compiled `Fragment51_InitScene` supplies its game-context pointer, entry index
+4 and row indices 0..3 to `func_87F0AD50`, using the returned color adjustment
+for resource creation. Broader table contents remain outside this replacement;
+existing address-based names and all neighboring C remain unchanged.
+//@src/fragments/51/fragment51_275E40.c
+
+An initial integer-address expression differed only in the source operands of
+one `addu`. Byte-pointer arithmetic matches all 17 instruction words (68 bytes)
+and the original eight-byte frame. No new fakes, qualifiers, padding, instruction
+rewrites or layout changes are required.
+
+Fresh validation uses master `86b045009b228b0e6485f70211f05f164eb4e336`
+plus this patch. The unchanged baseline passes its own complete US ROM build
+and retail comparison. Final validation forces recompilation through the
+default syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/64/fragment64_32D7D0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. Independent original-assembly and retail-span comparisons verify
+all 68 bytes at ROM `0x32D7D0..0x32D814`.
