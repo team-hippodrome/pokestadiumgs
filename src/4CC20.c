@@ -1,4 +1,5 @@
 #include "global.h"
+#include "color_adjustment.h"
 #include <stdarg.h>
 
 
@@ -663,14 +664,7 @@ u8* func_8004D720(u8* destination, s32 id, s32 alternate, s32 variant) {
     return result;
 }
 
-typedef union S1_arg1_func_80010CA8 {
-    struct {
-        /* 0x00 */ s16 unk_00;
-        /* 0x02 */ s8 unk_02;
-        /* 0x03 */ s8 unk_03;
-    };
-    u32 raw;
-} S1_arg1_func_80010CA8;
+typedef ColorAdjustment S1_arg1_func_80010CA8;
 void PokeIcon_AdjustImageColors(u16* arg0, s32 a1, S1_arg1_func_80010CA8 arg2) {
     s32 cond;
     s32 arg1 = a1;
@@ -980,8 +974,8 @@ void func_8004DEF8(s32 arg0) {
 }
 
 extern u8* func_8004DF38(s32, s32, s32);
-void WidgetTree_RunMessagePanelSilent(s32 arg0, s32 arg1) {
-    func_8004DF38(arg0, arg1, 0);
+s32 WidgetTree_RunMessagePanelSilent(s32 arg0, s32 arg1) {
+    return (s32)func_8004DF38(arg0, arg1, 0);
 }
 
 extern u8* process_geo_layout(s32, void*);
@@ -1008,7 +1002,7 @@ u8* func_8004DF38(s32 pool, s32 id, s32 index) {
     return result;
 }
 
-typedef struct { void *value; } Func8004DFECArg;
+typedef ColorAdjustment Func8004DFECArg;
 extern void *func_8004E018(s32 arg0, s32 arg1, s32 arg2, Func8004DFECArg arg3);
 void *func_8004DFEC(s32 arg0, s32 arg1, Func8004DFECArg arg2) {
     return func_8004E018(arg0, arg1, 0, arg2);
@@ -1030,7 +1024,7 @@ void* func_8004E018(s32 pool, s32 id, s32 index, Func8004DFECArg tint) {
             callback = func_8004C3B0(archive, id);
             descriptor = ((HandlerResult_DE84D* (*)(s32,s32))(u32)callback)(0, 0);
             *(s32*)(result + 0x2C) = callback;
-            if (tint.value != NULL) {
+            if (tint.raw != 0) {
                 Model_AdjustTextureColors(result, tint);
             }
             if (index < ((u8*)descriptor)[3]) {

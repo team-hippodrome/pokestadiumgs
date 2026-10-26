@@ -36,7 +36,7 @@ typedef struct {
     f32 companion_x;
     f32 companion_y;
 } Fragment51PlayerRecord;
-extern u8 D_863072F8[];
+extern Fragment51PlayerRecord D_863072F8[4];
 s32 Fragment51_CountTopScorers(s32 *top_score) {
     s32 ties = 0;
     s32 i;
@@ -90,7 +90,7 @@ void func_86300120(void) {
 
 #ifdef VERSION_US
 extern void *D_87F119DC;
-extern u8 D_863072F8[];
+extern Fragment51PlayerRecord D_863072F8[4];
 void Fragment51_UpdateScores(void) {
     u8 *actor_state;
     s32 player_index;
@@ -560,7 +560,7 @@ typedef struct {
     s32 result_frame;
 } Fragment51ResultFrameContext;
 
-extern u8 D_863072F8[];
+extern Fragment51PlayerRecord D_863072F8[4];
 extern void func_87F0C930(void *);
 extern void func_87F0A098(void *, void *, s32, s32, s32, s32, s32);
 extern s32 func_87F0A3E8(void *);
@@ -698,7 +698,32 @@ void func_86303110(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863031A4.s")
+typedef struct {
+    u8 unk_0000[0xDB8];
+    s32 actor_count;
+    u8 unk_0DBC[0x816C];
+    s32 desired_count;
+    s32 elapsed_frames;
+    s32 remaining_frames;
+} Fragment51SpawnContext;
+extern void func_86306D3C(void);
+extern s32 func_80001FF0(void);
+extern void * D_863075D8;
+void Fragment51_UpdateSpawnCount(void) {
+    if (((Fragment51SpawnContext *)D_863075D8)->remaining_frames > 0) {
+        ((Fragment51SpawnContext *)D_863075D8)->elapsed_frames += 1;
+        if ((func_80001FF0() >> 1) * 3 < ((Fragment51SpawnContext *)D_863075D8)->elapsed_frames) {
+            ((Fragment51SpawnContext *)D_863075D8)->desired_count += 1;
+            if (((Fragment51SpawnContext *)D_863075D8)->desired_count >= 4) {
+                ((Fragment51SpawnContext *)D_863075D8)->desired_count = 3;
+            }
+            ((Fragment51SpawnContext *)D_863075D8)->elapsed_frames = 0;
+        }
+        if (((Fragment51SpawnContext *)D_863075D8)->actor_count < ((Fragment51SpawnContext *)D_863075D8)->desired_count) {
+            func_86306D3C();
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -714,7 +739,7 @@ typedef struct {
     u8 unk_8F4C[4];
     u8 rule_mode;
 } Fragment51ProgressContext;
-extern u8 D_863072F8[];
+extern Fragment51PlayerRecord D_863072F8[4];
 extern void * D_863075D8;
 void Fragment51_UpdateRoundProgress(void) {
     Fragment51PlayerRecord *score_record;
@@ -757,7 +782,7 @@ void Fragment51_UpdateRoundProgress(void) {
 
 #ifdef VERSION_US
 extern void func_86302404();
-extern void func_863031A4();
+extern void Fragment51_UpdateSpawnCount();
 extern void Fragment51_UpdateRoundProgress();
 extern s32 D_863072E8;
 s32 func_80001FF0(void);
@@ -766,7 +791,7 @@ void func_8630352C(void) {
     if ((*(s32 *)((u8 *)(D_863075D8) + (0x8F30))) < ((func_80001FF0() >> 1) * 0x1E)) {
         func_80028118(6U);
     }
-    func_863031A4();
+    Fragment51_UpdateSpawnCount();
     func_86302404();
     Fragment51_UpdateRoundProgress();
     if (D_863072E8 != 4) {
