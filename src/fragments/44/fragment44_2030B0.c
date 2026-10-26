@@ -4,7 +4,27 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF14E40.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15080.s")
+extern s16 D_8AF337E8[17][17];
+extern s16 Trade_GetSelectedBox(s16);
+extern u8 func_80063550(u8, u8);
+// Fills D_8AF337E8[attacker][defender] for the 17 type slots. Trade_GetSelectedBox
+// maps a slot to a type id, and func_80063550 looks up the attacker/defender
+// pair in the type matchup triples at D_80097E90.
+//@src/63CF0.c
+void func_8AF15080(void) {
+    s32 i;
+    s32 j;
+    u8 attacker;
+    u8 defender;
+
+    for (i = 0; i < 17; i++) {
+        attacker = Trade_GetSelectedBox(i);
+        for (j = 0; j < 17; j++) {
+            defender = Trade_GetSelectedBox(j);
+            D_8AF337E8[i][j] = func_80063550(attacker, defender);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15120.s")
 

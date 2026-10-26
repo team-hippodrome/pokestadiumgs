@@ -2,7 +2,18 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1732A0/func_88200020.s")
+extern u8 *D_88234564;
+void func_88200020(u8 count) {
+    u32 i;
+    u8 *entry;
+
+    // Allocates count 0x44-byte entries and clears each entry's active flag at +0x1C
+    // (func_882000AC sets it to 1). The unsigned size matches a sizeof() product.
+    D_88234564 = Util_Malloc(count * 0x44U);
+    for (i = 0, entry = D_88234564; i != count; i++, entry += 0x44) {
+        *(s32 *)(entry + 0x1C) = 0;
+    }
+}
 
 extern u8 *D_88234564;
 void func_882000AC(u8 arg0, s16 arg1, s16 arg2, u16 arg3, u16 arg4, s32 arg5, s32 arg6, u8 arg7) {

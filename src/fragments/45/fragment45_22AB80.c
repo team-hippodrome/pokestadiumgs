@@ -5,7 +5,40 @@
 extern u8 *D_8AB11D0C;
 void func_8AB05A00(void) { s32 i; s32 value; value = -1; i = 2; *(u8 *)(D_8AB11D0C + 0x16) = value; *(u8 *)(D_8AB11D0C + 4) = value; *(u8 *)(D_8AB11D0C + 5) = value; do { *(u8 *)(D_8AB11D0C + i + 4) = value; *(u8 *)(D_8AB11D0C + i + 5) = value; *(u8 *)(D_8AB11D0C + i + 6) = value; *(u8 *)(D_8AB11D0C + i + 7) = value; i += 4; } while (i != 0xA); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB05A6C.s")
+extern s16 D_8AB1269C;
+extern s32 D_8AB16958;
+extern void *D_8AB1695C;
+extern u8 D_8AB16A18[];
+extern void func_800504BC(s16 *);
+extern void func_8AB00BC4(s16, s16, s16, u8, u8, u8);
+s32 func_8AB05A6C(s32 arg0, u8 *arg1) {
+    s16 offset[2];
+    s16 x;
+    s16 y;
+    u8 *color;
+
+    color = D_8AB16A18;
+    switch (arg0) {
+    case 0:
+        *(u16 *)(arg1 + 2) &= 0xFFFD;
+        color[0] = 0xFF;
+        color[1] = 0xFF;
+        color[2] = 0;
+        break;
+    case 1:
+        if (D_8AB16958 == 8) {
+            func_800504BC(offset);
+            x = *(s16 *)(arg1 + 8) + offset[0];
+            y = *(s16 *)(arg1 + 0xA) + offset[1];
+            func_8AB00BC4(x, y, D_8AB1269C / 2 + 1, color[0], color[1], color[2]);
+            *(u16 *)((u8 *)D_8AB1695C + 2) |= 2;
+        } else {
+            *(u16 *)((u8 *)D_8AB1695C + 2) &= 0xFFFD;
+        }
+        break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB05B88.s")
 
@@ -132,7 +165,43 @@ s32 func_8AB0683C(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB0699C.s")
+extern s16 D_8AB12694;
+extern void *D_8AB167AC;
+extern s16 D_8AB16A1C;
+extern void func_8004C594(s32, s32);
+s32 func_8AB0699C(s32 arg0) {
+    s32 result;
+    s16 *counter;
+
+    counter = &D_8AB16A1C;
+    result = 6;
+    switch (arg0) {
+    case 0:
+        func_8AB00BA4(0x10006, 0, 0);
+        *counter = 0;
+        if (D_8AB12694 > 0) {
+            *(u16 *)((u8 *)D_8AB11D00 + 2) |= 1;
+            func_8004C594(2, D_8AB12694 + 1);
+            if (D_8AB12694 < 9) {
+                func_8004C8A0(D_8AB126A8, 256, 57, func_8AB023EC(9) + 377);
+            } else {
+                func_8004C8A0(D_8AB126A8, 256, 57, 386);
+            }
+        } else {
+            *(u16 *)((u8 *)D_8AB11D00 + 2) &= ~1;
+        }
+        func_8AB04AE4();
+        *(u16 *)((u8 *)D_8AB167AC + 2) &= ~1;
+        break;
+    case 1:
+        *counter += 1;
+        if (*counter >= 45) {
+            result = func_8AB06AE8(0);
+        }
+        break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB06AE8.s")
 
@@ -645,7 +714,59 @@ void func_8AB09DCC(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB09E28.s")
+extern s16 D_8AB16CD8;
+extern s32 func_8AB09FC4(s32);
+// Close to TextMode8_HandleRowCleanupState (fragment45_2324B0.c); returns state 27, counts in
+// D_8AB16CD8, updates rows with func_8AB09DCC, sets D_8AB16CB4, and returns
+// func_8AB09FC4(0) once the counter reaches 31.
+//@src/fragments/45/fragment45_2324B0.c
+s32 func_8AB09E28(s32 phase) {
+    s32 result = 27;
+    s16 *counter = &D_8AB16CD8;
+    s32 i;
+    s32 all_wrong;
+    u8 *row;
+
+    switch (phase) {
+    case 0:
+        *counter = 0;
+        all_wrong = 1;
+        for (i = 0; i < 4; i++) {
+            row = D_8AB12CB0 + i * 148;
+            if (*(s16 *)row != 0 && *(s16 *)(row + 4) != 2) {
+                all_wrong = 0;
+            }
+        }
+        if (all_wrong) {
+            for (i = 0; i < 4; i++) {
+                row = D_8AB12CB0 + i * 148;
+                func_8AB09DCC(row, i);
+            }
+            D_8AB16CB4 = 1;
+        } else {
+            for (i = 0; i < 4; i++) {
+                row = D_8AB12CB0 + i * 148;
+                if (*(s16 *)row != 0 && *(s16 *)(row + 4) == 0) {
+                    func_8AB09DCC(row, i);
+                }
+            }
+        }
+        break;
+    case 1:
+        *counter += 1;
+        TextHighlight_AnimateScales();
+        if (*counter == func_80001FF0() / 4) {
+            func_8AB00BA4(102, 0, 0);
+        }
+        if (*counter >= 31) {
+            result = func_8AB09FC4(0);
+        }
+        break;
+    case 2:
+        break;
+    }
+    return result;
+}
 
 s32 func_8AB09FBC(void) {
     return 0x1C;

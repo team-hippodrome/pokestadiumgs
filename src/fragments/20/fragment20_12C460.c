@@ -918,7 +918,21 @@ void func_8260BBA8(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260BD50.s")
+extern u8 D_80094D90[];
+extern void Gfx_FillRectRgb(s16, s16, s16, s16, u8, u8, u8);
+void func_8260BD50(u8 *arg0, s32 arg1) {
+    s16 x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    s16 y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    s32 i;
+
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094D90);
+    }
+
+    for (i = 0; i < 142; i += 71) {
+        Gfx_FillRectRgb(x + 21, y + 45 + i, 261, 57, 0, 0, 0);
+    }
+}
 
 extern Gfx *D_800D0510;
 extern u8 D_80094D90[];
@@ -1542,7 +1556,43 @@ s32 func_826119A4(s32 arg0, s32 arg1, s16 *arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82612E1C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826131A4.s")
+extern s16 D_826157B0;
+void func_826131A4(u8 *arg0) {
+    s32 i;
+    s32 done;
+    s32 ready;
+
+    done = 1;
+    *(s16 *)(arg0 + 6) += 1;
+    for (i = 0; i < *(s16 *)(arg0 + 0x18); i++) {
+        if ((((u8 **)(arg0 + 0x34F4))[i] != NULL) && (*(s16 *)(((u8 **)(arg0 + 0x34F4))[i] + 0xC) > 0)) {
+            done = 0;
+            break;
+        }
+    }
+    if ((*(s16 *)(arg0 + 6) >= D_826157B0) && (done != 0)) {
+        if (*(s32 *)(*(u8 **)(arg0 + 0x110) + 0x9C) == 7) {
+            if (func_80054E10(*(u8 **)(arg0 + 0x110) + 0x900) != 0) {
+                ready = 1;
+            } else {
+                ready = 0;
+            }
+        } else {
+            ready = 0;
+        }
+        if (ready != 0) {
+            *(s16 *)(arg0 + 2) = 0x10;
+            *(s16 *)(arg0 + 6) = 0;
+        } else {
+            *(s16 *)(arg0 + 2) = 0x13;
+            *(s16 *)(arg0 + 6) = 0;
+        }
+        for (i = 0; i < *(s16 *)(arg0 + 0x18); i++) {
+            func_826078B4(((void **)(arg0 + 0x34F4))[i]);
+        }
+        func_800226C0(0x69);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826132D8.s")
 

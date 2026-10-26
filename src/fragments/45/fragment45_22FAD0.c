@@ -277,7 +277,87 @@ void func_8AB0BF70(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0BF80.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0C414.s")
+extern void func_8AB03394(void);
+extern void TextChoice_ShuffleAndRefresh(void);
+extern void TextPanels_UpdateVisibility(void);
+extern void _bzero(void *, s32);
+extern void func_8004C594(s32, s32);
+extern void *D_8AB16D08;
+extern u8 *D_8AB12668[];
+extern u8 *D_8AB12678[];
+extern s16 D_8AB12692;
+extern s32 D_8AB112A0;
+extern s32 D_8AB16F68;
+extern s16 D_8AB16F86;
+extern void func_8AB0BF80(void);
+extern s32 func_8AB0C5CC(s32);
+extern s32 func_8AB0C7FC(s32);
+
+// Close to func_8AB09A28 (fragment45_22AB80.c) with this file's state flags, buffers and
+// handlers; returns state 52 and also clears D_8AB112A0 when entering.
+//@src/fragments/45/fragment45_22AB80.c
+s32 func_8AB0C414(s32 arg0) {
+    s32 result;
+    s32 new_var;
+    u8 **ptr;
+    u8 **end;
+    u8 **ptr2;
+    u8 **end2;
+    u8 *temp;
+
+    new_var = 1;
+    result = 52;
+    switch (arg0) {
+        case 0:
+            func_8AB03394();
+            TextChoice_ShuffleAndRefresh();
+            new_var = 1;
+            D_8AB16F82 = new_var;
+            D_8AB16F84 = 0;
+            _bzero(&D_8AB16D10, 0x100);
+            *(u16 *)((u8 *)D_8AB16D08 + 2) = (u16)(*(u16 *)((u8 *)D_8AB16D08 + 2) | 1);
+            *(u16 *)((u8 *)D_8AB11D00 + 2) &= 0xFFFE;
+            TextPanels_UpdateVisibility();
+            // FAKE: &D_8AB12668[4] is the address of D_8AB12678; spelling it through D_8AB12668
+            // keeps uopt from sharing one D_8AB12678 address register between the two loops,
+            // as in func_8AB09A28; diff score 620 without it.
+            // FAKE: the comma expressions keep the lui/addiu order of both loop-preheader
+            // pairs; diff score 65 with separate statements.
+            ptr2 = &D_8AB12668[4], end2 = (u8 **)&D_8AB12688;
+            do {
+                temp = *ptr2;
+                ptr2++;
+                *(u16 *)((u8 *)temp + 2) = (u16)(*(u16 *)((u8 *)temp + 2) | 1);
+            } while (ptr2 < end2);
+            ptr = D_8AB12668, end = D_8AB12678;
+            do {
+                func_8AB00B98(*ptr, -1U);
+                ptr++;
+            } while (ptr != end);
+            func_8004C594(2, D_8AB12692 + 1);
+            D_8AB112A0 = 0;
+            D_8AB16F68 = 0;
+            func_8AB00548();
+            break;
+        case 1:
+            func_8AB0BF80();
+            func_8AB0BE4C();
+            if (D_8AB16F84 == new_var) {
+                result = func_8AB0C5CC(0);
+            }
+            if (new_var == D_8AB16F86) {
+                result = func_8AB0C7FC(0);
+                if (D_8AB16F84 == 0) {
+                    func_8004C8A0(D_8AB16D10, 0x100, *(u16 *)((u8 *)D_8AB11D00 + 0x30), *(u16 *)((u8 *)D_8AB11D00 + 0x32));
+                }
+            }
+            result = func_8AB0B5E0(result);
+            break;
+        case 2:
+            break;
+    }
+    return result;
+}
 
 /* mkdraft:func_8AB0C5CC begin */
 extern s16 D_8AB1269C;

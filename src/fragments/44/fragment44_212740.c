@@ -15,7 +15,23 @@ s32 func_8AF244D0(void) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF24508.s")
+extern s32 D_8AF279E4;
+extern u8 D_8AF3A660;
+extern u8 D_8AF3A661;
+extern s32 func_8AC004E0(s16);
+void func_8AF24508(s16 arg0) {
+    u8 flags;
+    u8 mask;
+
+    D_8AF279E4 = 0;
+    flags = func_80054794();
+    mask = 1 << arg0;
+    if ((flags & mask) == 0 && func_8AC004E0(arg0) != 0) {
+        D_8AF279E4 = 1;
+        D_8AF3A660 = flags | mask;
+        D_8AF3A661 = arg0;
+    }
+}
 
 extern u8 func_80054794(void);
 extern s32 func_8AC004E0(s16);

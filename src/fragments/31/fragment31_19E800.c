@@ -65,7 +65,18 @@ void func_8822B7E4(void) {
     func_8821D930((D_88234910 + 88));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822B80C.s")
+extern u8 D_8800ED50[];
+extern void func_8822B6A4(void);
+void func_8822B80C(void) {
+    s32 index;
+
+    index = func_88004804(D_88234910 + 0x58, 2, 380, 287, 4, 1, 220, 220, 180, func_8822B6A4, func_8822B7E4,
+                          func_8822B614, func_8822B63C, 0, 1);
+    *(u8 **)(D_88234910 + 4) = &D_8800ED50[index * 0x4C];
+    *(s32 *)(*(u8 **)D_88234910 + 0x2C) = 0;
+    *(s32 *)(D_88234910 + 0x48) = 2;
+    D_880068B8 = 1;
+}
 
 s32 func_8821C0B0();
 extern void func_8822AF00(s32);

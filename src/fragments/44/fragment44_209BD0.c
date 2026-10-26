@@ -21,7 +21,25 @@ s32 func_8AF1B960(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_209BD0/func_8AF1B9C0.s")
+extern u8 *D_8AF37240;
+s32 func_8AF1B9C0(s32 arg0, u8 *arg1) {
+    s16 width;
+    s16 height;
+
+    switch (arg0) {
+        case 0:
+            break;
+        case 1:
+            // func_8AC0077C takes corner coordinates; func_8AC007B8 takes the same
+            // rectangle as an origin plus width and height.
+            //@src/fragments/43/fragment43_1E5A10.c
+            width = *(s16 *)(D_8AF37240 + 0xC);
+            height = *(s16 *)(D_8AF37240 + 0xE);
+            func_8AC0077C(D_8AF37560, D_8AF37562, D_8AF37560 + width, D_8AF37562 + height);
+            break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_209BD0/func_8AF1BA18.s")
 

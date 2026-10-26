@@ -496,7 +496,87 @@ void func_82D023AC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D023EC.s")
+void func_82D023EC(void) {
+    Fragment82NameState *state;
+
+    switch (D_82D07421) {
+        case 0:
+            if (D_82D23938 < 8) {
+                state = (Fragment82NameState *)&D_82D23830;
+                state->unk_04[0] = D_82D23938;
+                state->unk_04[1] = D_82D23938;
+                state->selection = D_82D23938;
+                func_82D019D8();
+                func_800226C0(163);
+                return;
+            }
+            D_82D2382A = 24;
+            D_82D23D84 = 10;
+            func_800226C0(5);
+            return;
+
+        case 1:
+            if (D_82D23938 > 0) {
+                state = (Fragment82NameState *)&D_82D23830;
+                state->unk_04[0] = 0;
+                state->unk_04[1] = D_82D23938 - 1;
+                state->selection = 0;
+                D_82D2382A = 25;
+                func_82D019D8();
+                func_800226C0(163);
+                return;
+            }
+            D_82D2382A = 26;
+            D_82D23D84 = 10;
+            func_800226C0(5);
+            return;
+
+        case 2:
+            if (D_82D23938 > 0) {
+                state = (Fragment82NameState *)&D_82D23830;
+                state->unk_04[0] = 0;
+                state->unk_04[1] = D_82D23938 - 1;
+                state->selection = 0;
+                D_82D2382A = 28;
+                func_82D019D8();
+                func_800226C0(163);
+                return;
+            }
+            D_82D2382A = 26;
+            D_82D23D84 = 10;
+            func_800226C0(5);
+            return;
+
+        case 3:
+            if (D_82D23938 >= 2) {
+                state = (Fragment82NameState *)&D_82D23830;
+                state->unk_04[0] = 0;
+                state->unk_04[1] = D_82D23938 - 1;
+                state->selection = 0;
+                D_82D2382A = 29;
+                func_82D019D8();
+                func_800226C0(163);
+                return;
+            }
+            D_82D2382A = 27;
+            D_82D23D84 = 10;
+            func_800226C0(5);
+            return;
+
+        case 4:
+            func_82D06B34(2, 2, 0);
+            func_82D06B34(3, 2, 0);
+            func_82D06B34(4, 2, 0);
+            func_82D06B34(5, 2, 0);
+            func_82D06B34(6, 2, 0);
+            func_82D06B34(7, 2, 0);
+            func_82D06B34(8, 2, 0);
+            D_82D23D84 = 12;
+            func_82D00444();
+            func_800226C0(17);
+            break;
+    }
+}
 
 extern void MenuSelection_StepSkipping_fragment82(s8 *, u8, u8, u8);
 extern void func_82D023EC();

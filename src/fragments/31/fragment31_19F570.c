@@ -92,7 +92,38 @@ void func_8822C5AC(void) {
     D_88234714 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19F570/func_8822C5EC.s")
+typedef struct {
+    u8 unk_00[4];
+    u8 unk_04;
+    u8 unk_05[0x1F];
+    u16 unk_24;
+    u8 unk_26[0x1A];
+    s16 cursor;    // func_88002720 moves it; func_8822C4A0 switches on it
+    u8 unk_42[0xA];
+    u8 unk_4C[1];  // per-cursor byte; nonzero rejects A with sound 73
+} unk_D_88234920;
+extern u8 D_88006020[];
+// A plays sound 73 if unk_4C[cursor] is set, otherwise passes cursor to func_8820C114 and
+// closes; B closes; any other input goes to func_88002720 to move the cursor.
+void func_8822C5EC(void) {
+    u32 pressed;
+
+    pressed = *(u16 *)((u8 *)D_80087200 + 8);
+    if (pressed & A_BUTTON) {
+        if (((unk_D_88234920 *)D_88234920)->unk_4C[((unk_D_88234920 *)D_88234920)->cursor] != 0) {
+            func_800226C0(73);
+        } else {
+            func_800226C0(71);
+            func_8820C114(((unk_D_88234920 *)D_88234920)->unk_04, ((unk_D_88234920 *)D_88234920)->cursor);
+            func_8822C5AC();
+        }
+    } else if (pressed & B_BUTTON) {
+        func_800226C0(72);
+        func_8822C5AC();
+    } else {
+        func_88002720(&((unk_D_88234920 *)D_88234920)->cursor, ((unk_D_88234920 *)D_88234920)->unk_24, D_88006020);
+    }
+}
 
 extern void func_889033FC(void *, void *);
 void func_8822C6AC(void) {
