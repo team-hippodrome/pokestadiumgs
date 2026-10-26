@@ -1051,3 +1051,7 @@ func_82506E98 = Fragment21_CreateType1RecordWithValues;
 func_82506888 = Fragment21_FindFreeRecord;
 
 func_825068C4 = Fragment21_FindRecord;
+
+func_825049DC = Fragment21_UpdateSelectionInput;
+
+func_825075B0 = Fragment21_UpdateContextAndRecords;
