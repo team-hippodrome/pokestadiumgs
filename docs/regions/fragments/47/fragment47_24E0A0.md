@@ -45,3 +45,56 @@ the complete US ROM. It reported `build/pokestadiumgs-us.z64: OK`, with
 MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The retail byte comparison and
 whitespace check passed. All 38 instruction words, totaling 152 bytes,
 and the 40-byte frame match. Existing matched C remains unchanged.
+
+## 2026-10-26 — shape scaling and curve sampling
+
+Starting revision `27ab9930c95bfb59687e651f07ab76d65d877303`. Two owners pass
+canonical acceptance and syntax-enabled full US retail-ROM comparison:
+
+- `func_86007B4C` (152 bytes, 40-byte frame) saves the incoming radius at
+  object offset `0xC8`, updates `0xD0/0xD8` from the existing coefficient
+  table, and passes three equal components to `func_87C00120` at `0x60`.
+  Cache the property at `0xE0`, rather than its divided intermediate, to
+  recover the original floating-point instruction order. Reading the saved
+  radius in the `0xD8` product recovers its final multiplication operand order.
+- `func_86007CB0` (232 bytes, 48-byte frame) writes six doubles. The first
+  and third components use the configuration value at offset 8, the scale,
+  and single-precision sine/cosine of the angle. The second comes from
+  `func_86009C98`; the remaining components use the existing table and
+  trigonometric values. Multiplication order must be considered separately
+  for the leading and trailing products: composing the independently useful
+  orders closes the function.
+
+Neither owner has an evidence-backed name in the current GS/Stadium 1 name
+maps, so address names remain. No new helper or instruction-rewrite pragma
+is required. Duplicate extern declarations were removed. Complete-module
+normal/blank-prefix controls preserve all section bytes, symbol extents and
+relocations after declaration cleanup and formatting. The final normal build
+also forces this source to recompile and reproduces retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+### Unresolved owners
+
+- `func_8600853C` / `func_860086A4`: **requeue**. Four variants each recover
+  the vector-update flow with three real 24-byte double vectors. Their
+  frames are 160 bytes rather than the oracle's 328, and extents are
+  368/388 versus 360/380. Best normalized scores are 0.9457/0.9588;
+  corresponding raw scores are 0.4348/0.5773. Declaration order and bound
+  operand order do not resolve this. Inventory the original stack objects
+  and interface before further variants; do not invent unused buffers to
+  fill the gap. The existing `func_86008038` interface splits one double
+  into two words, which the draft forwards through its actual word view.
+- `func_86009C98`: **requeue**. Preserve the single-precision `sqrtf` and
+  sign multiplication before promotion to double. Initial typed drafts
+  reach 0.8621 normalized / 0.5690 raw, with 232 rather than 228 bytes.
+  Caching the source radius and splitting branch-local base/sign variables
+  do not improve that frontier. Next inspect the double expression tree,
+  branch-local loads, and the saved floating-point register; retain the
+  actual `(void *, f64, f64)` interface.
+- `func_86009E54`: **requeue**. The draft computes the configuration/parameter
+  product and ratio, chooses the sign, and calls `func_86009D7C` with the
+  square-root-derived value. Best score is 0.8780 normalized / 0.6098 raw,
+  with the correct 164-byte extent. Declaration order, sign selection and
+  final addition ordering have been tested. Next inspect multiplication
+  operand order and the product's lifetime, keeping the float-to-double
+  square-root boundary intact.

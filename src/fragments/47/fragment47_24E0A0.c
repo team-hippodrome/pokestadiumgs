@@ -1,6 +1,5 @@
 #include "global.h"
 
-
 #ifdef VERSION_US
 extern void *func_87C00120(void *, f64, f64, f64);
 void func_86007A80(void *arg0, f64 arg1) {
@@ -21,7 +20,22 @@ void func_86007AF8(void *arg0, f64 arg1) {
     func_86007BE4(arg0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86007B4C.s")
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+extern f64 func_86009C98(void *, f64, f64);
+extern f64 D_8600DEE0;
+
+void func_86007B4C(void *arg0, f64 radius) {
+    f64 value;
+    f64 result;
+
+    value = *(f64 *)((u8 *)arg0 + 0xE0);
+    *(f64 *)((u8 *)arg0 + 0xC8) = radius;
+    *(f64 *)((u8 *)arg0 + 0xD0) = *(f64 *)(D_8600DE30 + 0x50) * radius;
+    *(f64 *)((u8 *)arg0 + 0xD8) = *(f64 *)(D_8600DE30 + 0x60) * *(f64 *)((u8 *)arg0 + 0xC8);
+    result = ((value + value) / 3.0) * radius * radius * 5.0;
+    func_87C00120((u8 *)arg0 + 0x60, result, result, result);
+}
 
 extern void func_87C00908(void *, f64, f64, f64);
 extern void func_86007EB4(void *arg0);
@@ -35,7 +49,16 @@ void func_86007BE4(void *arg0, s32 arg1) {
     func_87C00120((u8 *)arg0 + 0x108, 0.0, 0.0, 0.0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86007CB0.s")
+void func_86007CB0(void *arg0, void *config, f64 angle, f64 scale) {
+    f64 *destination = arg0;
+
+    destination[0] = (*(f64 *)((u8 *)config + 8) * scale) * (f64)__sinf((f32)angle);
+    destination[2] = (*(f64 *)((u8 *)config + 8) * scale) * (f64)__cosf((f32)angle);
+    destination[1] = func_86009C98(config, destination[0], destination[2]);
+    destination[3] = -*(f64 *)(D_8600DE30 + 0xB0) * (f64)__sinf((f32)angle);
+    destination[4] = *(f64 *)(D_8600DE30 + 0xB8);
+    destination[5] = (f64)__cosf((f32)angle) * -D_8600DEE0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86007D98.s")
 
@@ -72,7 +95,6 @@ f64 func_86007F50(void *arg0, s32 arg1, s32 arg2) {
 
 extern f64 func_86007F50(void *arg0, s32 arg1, s32 arg2);
 
-extern void *func_87C00160(u8 *, s32, u8 *);
 extern f64 func_87C00208(void *, void *);
 f64 func_86007F6C(void *arg0, void *arg1, s32 arg2, s32 arg3, void *arg4, s32 arg5, f64 arg6) {
     u8 sp30[0x18];
@@ -89,10 +111,7 @@ extern void func_87C00718(void *, void *, f64);
 extern void *func_87C002DC(void *, void *);
 extern f64 func_86007F6C(void *, void *, s32, s32, void *, s32, f64);
 extern void func_86007E4C(u8 *arg0, s32 arg1, s32 arg2);
-extern void * func_87C00160(u8 *, s32, u8 *);
-extern void func_87C00198();
-extern s32 func_87C00238(u8 *, u8 *, s32);
-extern void * func_87C002A8(void *, void *, f64);
+
 f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, s32 arg5, s32 arg6, f64 arg7) {
     f64 result;
     u8 sp100[0x18];
@@ -128,7 +147,7 @@ f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, s32 arg5, 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_860086A4.s")
 
 extern f64 func_87C00664(void *);
-extern f64 func_87C00208(void *, void *);
+
 s32 func_86008820(f64 *arg0, f64 *arg1, void *arg2, void *arg3, void *arg4) {
     volatile u8 frame_pad[8];
     f64 sp38;
@@ -171,7 +190,6 @@ f64 func_860091F4(void *arg0, f64 arg1, s32 arg2, f64 arg3, s32 arg4) {
     return 0.0;
 }
 
-extern f64 func_87C00664(void *);
 extern void func_86008D2C(void *, s32, void *, void *, f64, void *);
 void func_86009260(void *arg0, f64 arg1, void *arg2, s32 arg3, void *arg4) {
     s32 i;
@@ -183,7 +201,6 @@ void func_86009260(void *arg0, f64 arg1, void *arg2, s32 arg3, void *arg4) {
     }
 }
 
-extern f64 func_87C00664(void *);
 extern void func_86008E64(void *, s32, void *, void *);
 void func_86009318(void *arg0, void *arg1, s32 arg2) {
     s32 i;
@@ -239,10 +256,8 @@ f64 func_86009C58(void *arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009C98.s")
 
-
 extern f64 D_8600D988;
-extern f32 __cosf(f32);
-extern f32 __sinf(f32);
+
 void func_86009D7C(void *arg0, f64 arg1, f64 arg2, f64 arg3, s32 arg4) {
     s32 unused;
     s32 sign;
@@ -265,7 +280,7 @@ s32 func_86009EF8(void *arg0, f64 arg1) {
 }
 
 typedef struct { f64 x; f64 y; f64 z; } F86009F28Vector;
-extern f64 func_86009C98(void *, f64, f64);
+
 s32 func_86009F28(void *arg0, F86009F28Vector *arg1, F86009F28Vector *arg2) {
     if (func_86009C08(arg0, arg1) != 0) {
         *arg2 = *arg1;
@@ -275,9 +290,8 @@ s32 func_86009F28(void *arg0, F86009F28Vector *arg1, F86009F28Vector *arg2) {
     return 0;
 }
 
-extern void func_87C00718(void *, void *, f64);
 extern s32 func_86009C08(void *arg0, void *arg1);
-extern void * func_87C00160(u8 *, s32, u8 *);
+
 s32 func_86009FB8(void *arg0, void *arg1, void *arg2) {
     void *result;
     f64 sign;
@@ -445,11 +459,9 @@ extern s16 D_8600D9B0[][2];
 extern s16 D_8600D9C0[][2];
 extern u8 D_80094E38[];
 extern void func_8004D1FC(void *);
-extern s32 func_8004CA10(void *);
-extern s32 func_8004CA24(void *);
+
 extern void func_8600A650(f32, f32, f32, f32, s32, s32, f32, f32);
-extern Gfx * D_800D0510;
-extern s32 D_8600DE10;
+
 void func_8600AE6C(u8 *arg0) {
     s32 i;
 
@@ -484,8 +496,6 @@ void func_8600AE6C(u8 *arg0) {
 
 void func_8600B468(u8 *arg0, s32 arg1) {}
 
-extern Gfx *D_800D0510;
-extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern void func_8600B100(void *);
 extern void func_8600B328(void *);
@@ -503,10 +513,7 @@ void func_8600B474(void *arg0, void *arg1) {
 }
 
 extern s32 func_8004C990(s32, s32);
-extern void func_8004D1FC(void *);
-extern s32 func_8004CA10(void *);
-extern s32 func_8004CA24(void *);
-extern void func_8600A650(f32, f32, f32, f32, s32, s32, f32, f32);
+
 void func_8600B51C(s32 arg0, s32 arg1) {
     volatile u8 frame_pad[8];
     s32 sp3C;
