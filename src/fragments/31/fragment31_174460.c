@@ -88,7 +88,28 @@ void func_88201608(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201CF4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201E28.s")
+void func_88201E28(void *arg0, void *arg1) {
+    void **var_v1;
+    void **var_a3;
+    u8 var_a0;
+    void *var_t0;
+    void *var_t1;
+
+    *(s32 *)((u8 *)arg0 + 12) = *(s32 *)((u8 *)arg1 + 12) = 1;
+    var_v1 = *(void ***)((u8 *)*(void **)arg0 + 12);
+    var_v1 += func_88201330(arg0);
+    var_a3 = *(void ***)((u8 *)*(void **)arg1 + 12);
+    var_a3 += func_88201330(arg1);
+    var_a0 = ((u8 *)arg0)[4];
+    ((u8 *)arg0)[4] = ((u8 *)arg1)[4];
+    ((u8 *)arg1)[4] = var_a0;
+    var_t0 = *(void **)arg0;
+    *(void **)arg0 = *(void **)arg1;
+    *(void **)arg1 = var_t0;
+    var_t1 = *var_v1;
+    *var_v1 = *var_a3;
+    *var_a3 = var_t1;
+}
 
 typedef struct {
     u8 pad[0xC];
