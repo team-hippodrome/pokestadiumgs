@@ -4743,7 +4743,40 @@ void func_841341D8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413425C.s")
+void func_8413425C(void) {
+    u8 i;
+
+    func_84124F40(**(void ***)((u8 *)D_841951F0 + 0x9D8));
+    func_841341D8();
+    ((u8 *)D_841951F0)[0x9C7] = 1;
+    ((u8 *)D_841951F0)[0x9C4] = 0;
+    ((u8 *)D_841951F0)[0x9C5] = 0;
+    ((u8 *)D_841951F0)[0x9C6] = 0;
+    // Mark every slot of the 12-byte table filled by func_841270D8 as empty (0xFF).
+    HAL_Memset((u8 *)D_841951F0 + 0x9C8, 0xFF, 12);
+    for (i = 0; i < 2; i++) {
+        func_84134170(i);
+        func_84126994(i);
+        D_84195208[i][0x12] = 0;
+        D_84195208[i][0x13] = 0;
+        D_84195208[i][0x14] = 0;
+        D_84195208[i][0x15] = 0;
+        D_84195208[i][0x16] = 0;
+        D_84195208[i][0x17] = 0;
+        D_84195208[i][0x18] = 0;
+        D_84195208[i][0x19] = 0;
+        D_84195208[i][0x1A] = 0;
+        *(u16 *)(D_84195208[i] + 0x48) = *(u16 *)(D_84195200[i] + 0x26);
+        func_8412693C(i);
+    }
+    if (((u8 *)D_841951F0)[0x9C3] == 0) {
+        func_84136A9C(0, -1, ((u8 *)D_841951F8[0])[0xA], 4);
+        func_84133714(0, 0, 0);
+        func_84136A9C(1, -1, ((u8 *)D_841951F8[1])[0xA], 4);
+        func_84133714(1, 0, 0);
+    }
+    func_84126A64();
+}
 #endif
 
 #ifdef VERSION_US

@@ -142,7 +142,31 @@ void func_87F02684(F2684State *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324FB0/func_87F026E8.s")
+extern void func_8003F1DC(void *);
+// Releases an active 0x18C-byte item: clears its active flag (+0xC) and unlinks
+// it from the state's active list (head +0xC, tail +0x10, count +4), the inverse
+// of the append in func_87F025B8. Items link through prev (+0) and next (+4).
+void func_87F026E8(F2684State *state, u8 *item) {
+    u8 *neighbor;
+
+    if (*(s32 *)(item + 0xC) & 1) {
+        func_8003F1DC(item + 0x24);
+        *(s32 *)(item + 0xC) = 0;
+        neighbor = *(u8 **)item;
+        if (neighbor != NULL) {
+            *(u8 **)(neighbor + 4) = *(u8 **)(item + 4);
+        } else {
+            *(u8 **)((u8 *)state + 0xC) = *(u8 **)(item + 4);
+        }
+        neighbor = *(u8 **)(item + 4);
+        if (neighbor != NULL) {
+            *(u8 **)neighbor = *(u8 **)item;
+        } else {
+            *(u8 **)((u8 *)state + 0x10) = *(u8 **)item;
+        }
+        *(s32 *)((u8 *)state + 4) -= 1;
+    }
+}
 
 typedef struct unk_func_87F0277C {
     struct unk_func_87F0277C *unk_00;

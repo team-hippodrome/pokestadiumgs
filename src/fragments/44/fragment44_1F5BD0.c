@@ -99,7 +99,40 @@ void func_8AF07A90(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5BD0/func_8AF07AAC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5BD0/func_8AF07BC0.s")
+extern void *D_8AF26560;
+extern s32 D_8AF2BA68;
+extern s16 D_8AF2BA6C;
+extern u8 *D_8AF2BDD8;
+extern u16 D_8AF2C680;
+extern void func_8AC007FC(void);
+extern s32 func_8AF065DC(void *);
+// Returns the next value for the state D_8AF2BA6C: func_8AF00B74 calls this from
+// its switch on D_8AF2BA6C, and func_8AF00D90 starts a transition when the
+// returned value differs from D_8AF2BA6C.
+//@src/fragments/44/fragment44_1EE290.c
+s32 func_8AF07BC0(void) {
+    s16 next_state = D_8AF2BA6C;
+    s32 status;
+    s16 *target;
+
+    if (D_8AF2C680 >= 5) {
+        D_8AF2C680 = 5;
+        func_8AC007FC();
+    }
+    status = func_8AF065DC(D_8AF26560);
+    if (status == -1) {
+        D_8AF26568 = 0;
+        next_state = 36;
+    } else if (status == -2) {
+        next_state = 31;
+    } else if (status == -3) {
+        target = *(s16 **)(D_8AF2BDD8 + 8);
+        *target = 11;
+        D_8AF2BA68 = 3;
+    }
+    D_8AF2C680++;
+    return next_state;
+}
 
 extern void *D_8AF26560;
 extern void func_8AF06EA4(void *);

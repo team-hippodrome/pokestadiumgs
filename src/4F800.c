@@ -27,7 +27,18 @@ extern s32 D_80128120; void func_8004EC5C(void) { if (D_80128120 > 0) { D_801281
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004EC7C.s")
+// Returns 1 if (x, y) lies within x = -640..640 and y = -479..480, else 0.
+// Callers (func_8004F64C, func_8004FC58, func_80050218) branch past their following code when it returns 0.
+s32 func_8004EC7C(s16 x, s16 y) {
+    s32 in_bounds = 1;
+
+    if ((x < -640) || (x > 640)) {
+        in_bounds = 0;
+    } else if ((y < -479) || (y > 480)) {
+        in_bounds = 0;
+    }
+    return in_bounds;
+}
 #endif
 
 #ifdef VERSION_US
