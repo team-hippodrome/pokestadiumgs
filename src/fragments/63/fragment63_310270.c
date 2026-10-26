@@ -368,7 +368,29 @@ s32 func_87E0E110(void *arg0) {
     return sp24;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E2C8.s")
+typedef struct unk_func_87E0E2C8_2190 {
+    s32 unk_00;
+    u8 unk_04[20];
+} unk_func_87E0E2C8_2190;
+
+typedef struct unk_func_87E0E2C8 {
+    u8 unk_0000[8584];
+    s32 unk_2188;
+    u8 unk_218C[4];
+    unk_func_87E0E2C8_2190 unk_2190[4];
+} unk_func_87E0E2C8;
+
+void func_87E0E2C8(void *arg0) {
+    s32 *var_v1 = *(s32 **)((u8 *)arg0 + 56);
+    u8 *var_a2 = *(u8 **)((u8 *)arg0 + 32);
+    unk_func_87E0E2C8 *var_v0 = *(unk_func_87E0E2C8 **)(var_a2 + 4);
+    s32 *var_a3 = &var_v0->unk_2190[*var_v1].unk_00;
+
+    if (*var_a3 < var_v0->unk_2188) {
+        (*var_a3)++;
+        func_87E0CEE4(var_a2, *var_v1);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E32C.s")
 
