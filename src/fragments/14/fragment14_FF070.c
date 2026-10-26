@@ -324,7 +324,30 @@ void func_813096B4(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81309740.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81309820.s")
+extern void func_81309740(void *, s32, s32);
+void func_81309820(void *arg0) {
+    struct unk_func_81309820 {
+        u8 unk_00000[79798];
+        s16 unk_137B6;
+        u8 unk_137B8[28];
+        s16 unk_137D4;
+        s16 unk_137D6;
+        u8 unk_137D8[29];
+        u8 unk_137F5;
+    };
+    struct unk_func_81309820 *var_a3 = arg0;
+    s16 var_v0 = var_a3->unk_137B6;
+
+    if (var_v0 < 2) {
+        var_a3->unk_137B6 = var_v0 + 1;
+        var_a3->unk_137D4 = 1;
+        var_a3->unk_137D6 = 2;
+        var_a3->unk_137F5 = 10;
+        func_800226C0(1);
+    } else {
+        func_81309740(arg0, 8, 0);
+    }
+}
 
 extern void func_800226C0(s32);
 extern void func_81307C94(void *arg0);
