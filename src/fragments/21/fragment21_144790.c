@@ -215,9 +215,48 @@ void func_8250684C(void) {
     D_82508FF0 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82506888.s")
+typedef struct {
+    s16 kind;
+    s16 id;
+    u8 unk_04[96];
+} Fragment21PoolNode;
+typedef struct {
+    u8 header[76];
+    Fragment21PoolNode nodes[16];
+} Fragment21PoolView;
+void *Fragment21_FindFreeRecord(void) {
+    Fragment21PoolView *pool;
+    Fragment21PoolNode *node;
+    Fragment21PoolNode *found = NULL;
+    s32 i;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825068C4.s")
+    pool = (Fragment21PoolView *)&D_82508FF0;
+    for (i = 0; i < 16; i++) {
+        node = &pool->nodes[i];
+        if (node->kind == 0) {
+            found = node;
+            break;
+        }
+    }
+    return found;
+}
+
+void *Fragment21_FindRecord(s32 kind, s32 id) {
+    Fragment21PoolView *pool;
+    Fragment21PoolNode *node;
+    Fragment21PoolNode *found = NULL;
+    s32 i;
+
+    pool = (Fragment21PoolView *)&D_82508FF0;
+    for (i = 0; i < 16; i++) {
+        node = &pool->nodes[i];
+        if (node->kind == kind && node->id == id) {
+            found = node;
+            break;
+        }
+    }
+    return found;
+}
 
 extern s32 D_82509008;
 extern s32 D_8250900C;
@@ -286,7 +325,7 @@ void func_82506AA4(s16 *arg0, s32 arg1, s32 arg2) {
     *(u16 *)((u8 *)&D_82508FF0 + 6) |= 4;
 }
 
-extern void *func_82506888(void);
+extern void *Fragment21_FindFreeRecord(void);
 extern s16 D_82508FFA;
 extern s16 D_82508FFE;
 extern s16 D_82509000;
@@ -299,7 +338,7 @@ void Fragment21_CreateType1Record(s32 arg0, Fragment21Color *arg1, s16 arg2, s16
     Fragment21Color *value;
     u8 *node;
 
-    node = func_82506888();
+    node = Fragment21_FindFreeRecord();
     if (node != NULL) {
         _bzero((s16 *)node, 100);
 
@@ -339,7 +378,7 @@ void Fragment21_CreateType1RecordWithValues(s32 arg0, Fragment21Color *arg1, s16
     u8 *node;
     s32 record_value;
 
-    node = func_82506888();
+    node = Fragment21_FindFreeRecord();
     if (node != NULL) {
         _bzero((s16 *)node, 100);
 
@@ -373,12 +412,12 @@ void Fragment21_CreateType1RecordWithValues(s32 arg0, Fragment21Color *arg1, s16
 
 extern s16 D_82508FFC;
 extern void _bzero(s16 *, s32);
-extern void * func_825068C4(s32, s32);
+extern void * Fragment21_FindRecord(s32, s32);
 void func_82506FB8(s32 arg0)
 {
   void *temp_v0;
   unsigned short new_var;
-  temp_v0 = func_825068C4(2, arg0);
+  temp_v0 = Fragment21_FindRecord(2, arg0);
   if (temp_v0 != 0)
   {
     new_var = 1;
@@ -388,18 +427,18 @@ void func_82506FB8(s32 arg0)
 }
 
 extern void func_82504C50(void *, s32);
-void *func_825068C4(s32, s32);
+void *Fragment21_FindRecord(s32, s32);
 
 void func_82507000(s16 *arg0) {
     s16 temp_v1;
     void *temp_v0;
 
-    temp_v0 = func_825068C4(1, 0);
+    temp_v0 = Fragment21_FindRecord(1, 0);
     temp_v1 = (*(s16 *)((u8 *)(temp_v0) + (8)));
     switch (temp_v1) {                              /* irregular */
     case 0:
         func_82504C50(temp_v0, 0);
-        func_82504C50(func_825068C4(1, 1), 0);
+        func_82504C50(Fragment21_FindRecord(1, 1), 0);
         return;
     case 2:
         *arg0 = 2;
@@ -413,7 +452,7 @@ extern s32 Fragment21_SetRecordColorTransition(s32, void *, s16, s16, s16, s16, 
 extern void func_82504D40(void *, void *);
 extern void func_82504CC8(void *, s32);
 extern void func_800226C0(s32);
-extern void * func_825068C4(s32, s32);
+extern void * Fragment21_FindRecord(s32, s32);
 extern void func_82506FB8(s32 arg0);
 extern void func_82507B18(void);
 void func_82507250(void *arg0) {
@@ -426,7 +465,7 @@ void func_82507250(void *arg0) {
     void *temp_s0;
     void *temp_s2;
 
-    temp_s0 = func_825068C4(1, 0);
+    temp_s0 = Fragment21_FindRecord(1, 0);
     temp_v1 = *(s16 *)((u8 *)arg0 + 2);
     temp_a1 = *(s16 *)((u8 *)arg0 + 0xE);
     temp_s1 = *(s16 *)((u8 *)arg0 + 0xC);
@@ -441,7 +480,7 @@ void func_82507250(void *arg0) {
         var_s0 = 0;
         if (temp_s1 > 0) {
             do {
-                func_82504D40(func_825068C4(2, var_s0), temp_s2);
+                func_82504D40(Fragment21_FindRecord(2, var_s0), temp_s2);
                 var_s0++;
             } while (var_s0 != temp_s1);
         }
@@ -490,14 +529,14 @@ void func_82507AF4(void)
 }
 
 extern void func_82504C50(void *arg0, s32 arg1);
-extern void * func_825068C4(s32, s32);
+extern void * Fragment21_FindRecord(s32, s32);
 extern u16 D_82508FF6;
 void func_82507B18(void) {
     u16 *flag;
     void *temp_v0;
 
     flag = &D_82508FF6;
-    temp_v0 = func_825068C4(1, 1);
+    temp_v0 = Fragment21_FindRecord(1, 1);
     func_82504C50(temp_v0, 1);
     *flag = *flag | 8;
 }
@@ -541,7 +580,7 @@ void Fragment21_RequestClose(void) {
     Fragment21Header *pool = (Fragment21Header *)&D_82508FF0;
 
     if (pool->state == 2 || pool->state == 3) {
-        func_82504D94(func_825068C4(1, 1), 1);
+        func_82504D94(Fragment21_FindRecord(1, 1), 1);
         pool->flags = pool->flags | 8;
     }
 }
@@ -555,7 +594,7 @@ s32 Fragment21_SetRecordColorTransition(s32 record_id, void *target_color, s16 a
     s32 updated = 0;
     u8 *record;
 
-    record = func_825068C4(1, record_id);
+    record = Fragment21_FindRecord(1, record_id);
     if (record != NULL) {
         *(Fragment21Color *)(record + 0x50) = *(Fragment21Color *)(record + 0x48);
         *(Fragment21Color *)(record + 0x54) = *(Fragment21Color *)target_color;
