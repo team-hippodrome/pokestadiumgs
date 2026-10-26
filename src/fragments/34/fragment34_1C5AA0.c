@@ -2,18 +2,124 @@
 
 
 #ifdef VERSION_US
+// Unreferenced debug message ("%s: bug technique (%d) found!"); it opens this file's
+// .rodata at 0x8850D530, ahead of func_885084EC's jump table.
+const char D_8850D530[] = "%s にバグ技（%d）発見！\n";
 extern u8 D_88523100[];
 void func_88508490(void){s32 i=0;u8 *p=D_88523100;do{i++;p+=0x24;*(s32 *)(p-0x24)=0;*(s16 *)(p-0x20)=0;*(s16 *)(p-0x1E)=0;*(s16 *)(p-0x1C)=0;*(s16 *)(p-0x1A)=0;*(s16 *)(p-0x18)=0;*(s16 *)(p-0x16)=0;*(s16 *)(p-0x14)=0;*(s16 *)(p-0x12)=0;*(s16 *)(p-0x10)=0;*(f32 *)(p-0xC)=0.0f;*(f32 *)(p-8)=0.0f;*(f32 *)(p-4)=0.0f;}while(i!=2);}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_885084EC.s")
+typedef struct { s32 unk_00; s16 unk_02; s16 unk_04; s16 unk_06; s16 unk_08; s16 unk_0A; s16 unk_0C; s16 unk_0E; s16 unk_10; s16 unk_12; f32 unk_14; f32 unk_18; f32 unk_1C; } unk_D_88523100;
+extern s16 D_88523034;
+extern s16 D_88523048;
+extern s16 D_8850D2E0[];
+extern s16 D_8850D2E4[];
+extern s16 D_8850D2E8[];
+// Close to Pokemon Stadium's TradeCable_SetLightState; GS takes a u8 light index, uses
+// 0x24-byte light records with an s32 state word, and reads the state 4 position from
+// D_8850D2E4 instead of an if/else.
+void func_885084EC(u8 arg0, s32 arg1) {
+    unk_D_88523100 *temp_v0 = &((unk_D_88523100 *)D_88523100)[arg0];
+
+    temp_v0->unk_00 = arg1;
+
+    switch (arg1) {
+        case 1:
+            temp_v0->unk_02 = D_8850D2E0[arg0];
+            temp_v0->unk_04 = D_88523034 + temp_v0->unk_02;
+            temp_v0->unk_06 = 250;
+            temp_v0->unk_08 = temp_v0->unk_04 - 64;
+            temp_v0->unk_0A = 174;
+            temp_v0->unk_0C = 128;
+            temp_v0->unk_0E = 72;
+            temp_v0->unk_10 = 0;
+            temp_v0->unk_12 = 0;
+            temp_v0->unk_14 = 1.0f;
+            temp_v0->unk_18 = 0.0f;
+            temp_v0->unk_1C = 9.0f;
+            break;
+
+        case 2:
+            temp_v0->unk_08 = 0;
+            temp_v0->unk_0A = 0;
+            temp_v0->unk_0C = 0;
+            temp_v0->unk_0E = 0;
+            temp_v0->unk_06 = 190;
+            break;
+
+        case 3:
+            temp_v0->unk_08 = 0;
+            temp_v0->unk_0A = 0;
+            temp_v0->unk_0C = 0;
+            temp_v0->unk_0E = 0;
+            temp_v0->unk_10 = D_88523048;
+            break;
+
+        case 4:
+            temp_v0->unk_02 = D_8850D2E4[arg0];
+            temp_v0->unk_04 = D_88523034 + temp_v0->unk_02;
+            temp_v0->unk_14 = 0.75f;
+            break;
+
+        case 5:
+            temp_v0->unk_12 = 0;
+            temp_v0->unk_08 = temp_v0->unk_04 - 64;
+            if (temp_v0->unk_08 < 0) {
+                temp_v0->unk_08 = 0;
+            }
+            temp_v0->unk_0A = 194;
+            temp_v0->unk_0C = 128;
+            temp_v0->unk_0E = 60;
+            break;
+
+        case 6:
+            temp_v0->unk_02 = D_8850D2E8[arg0];
+            temp_v0->unk_04 = D_88523034 + temp_v0->unk_02;
+            temp_v0->unk_06 = 160;
+            temp_v0->unk_08 = temp_v0->unk_04 - 64;
+            if (temp_v0->unk_08 < 0) {
+                temp_v0->unk_08 = 0;
+            }
+            temp_v0->unk_0A = 194;
+            temp_v0->unk_0C = 128;
+            temp_v0->unk_0E = 60;
+            temp_v0->unk_10 = 0;
+            temp_v0->unk_12 = 0;
+            temp_v0->unk_14 = 0.75f;
+            temp_v0->unk_18 = 0.0f;
+            temp_v0->unk_1C = 1.0f;
+            break;
+
+        case 8:
+            temp_v0->unk_02 = D_8850D2E8[arg0];
+            temp_v0->unk_04 = D_88523034 + temp_v0->unk_02;
+            temp_v0->unk_06 = 160;
+            temp_v0->unk_08 = temp_v0->unk_04 - 64;
+            if (temp_v0->unk_08 < 0) {
+                temp_v0->unk_08 = 0;
+            }
+            temp_v0->unk_0A = 194;
+            temp_v0->unk_0C = 128;
+            temp_v0->unk_0E = 60;
+            temp_v0->unk_10 = 0;
+            temp_v0->unk_12 = 0;
+            temp_v0->unk_14 = 0.75f;
+            temp_v0->unk_18 = 0.0f;
+            temp_v0->unk_1C = 1.0f;
+            break;
+    }
+}
 
 extern u8 D_88523100[];
 extern s16 D_88523034;
-extern u8 D_88523030[];
+// Trade cable sequence record: Pokemon Stadium's TradeCableState with an s32 state word and
+// without that struct's s16 at 0x0E. func_8850A0EC writes every field, func_8850A3F0 and
+// func_8850A710 count unk_18 down, and func_8850A8BC sets and clears bits of the u16 unk_0E.
+typedef struct { s32 unk_00; s16 unk_04; s16 unk_06; s16 unk_08; s16 unk_0A; s16 unk_0C; u16 unk_0E; f32 unk_10; u16 unk_14; u16 unk_16; s16 unk_18; } unk_D_88523030;
+extern unk_D_88523030 D_88523030;
 extern f32 D_80087E50[];
 s32 func_8850CED8(s32);
 extern void func_8850A0EC(s32);
-void func_885084EC(s32, s32);
+void func_885084EC(u8, s32);
 void func_88508780(u8 *arg0) {
     *(s16 *)(arg0 + 8) = *(s16 *)(arg0 + 8) - 2;
     if (*(s16 *)(arg0 + 8) < 0xBF) {
@@ -22,9 +128,7 @@ void func_88508780(u8 *arg0) {
 }
 
 /* mkdraft:func_885087D4 begin */
-typedef struct { s32 unk_00; s16 unk_02; s16 unk_04; s16 unk_06; s16 unk_08; s16 unk_0A; s16 unk_0C; s16 unk_0E; s16 unk_10; s16 unk_12; f32 unk_14; f32 unk_18; f32 unk_1C; } unk_D_88523100;
 extern f32 D_80087E50[];
-extern f32 D_8850D56C;
 
 void func_885087D4(unk_D_88523100 *arg0) {
     arg0->unk_04 = D_88523034 + arg0->unk_02;
@@ -32,14 +136,46 @@ void func_885087D4(unk_D_88523100 *arg0) {
 
     arg0->unk_12 += 0x800;
 
-    arg0->unk_1C -= D_8850D56C;
+    arg0->unk_1C -= 0.2f;
     if (arg0->unk_1C < 1.0f) {
         arg0->unk_1C = 1.0f;
     }
 }
 /* mkdraft:func_885087D4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850889C.s")
+// Close to Pokemon Stadium's TradeCable_UpdateLightSlideIn, computed in floats instead of
+// integer division. As the sequence countdown D_88523030.unk_18 (treated as 0 while it exceeds
+// arg0->unk_10) falls, unk_02 eases to 80 for light 0 or 566 for light 1, unk_06 settles at 210
+// plus a sine pulse, and unk_14 falls to 0.75; below 1 the light enters state 4.
+void func_8850889C(unk_D_88523100 *arg0) {
+    s16 var_v1 = D_88523030.unk_18;
+    s32 light_index;
+    s32 var_a1;
+    s16 var_a2;
+    f32 var_f12;
+    f32 var_f2;
+
+    if (arg0->unk_10 < var_v1) {
+        var_v1 = 0;
+    }
+    light_index = (u8)((s32)((u8 *)arg0 - D_88523100) / 0x24);
+    if (light_index == 0) {
+        arg0->unk_02 = (s16)((80.0f - (f32)(var_v1 * -20) / arg0->unk_10) + ((80.0f > (f32)(var_v1 * -20) / arg0->unk_10) ? 0.5f : -0.5f));
+    } else {
+        arg0->unk_02 = (s16)((566.0f - (f32)(var_v1 * -146) / arg0->unk_10) + ((566.0f > (f32)(var_v1 * -146) / arg0->unk_10) ? 0.5f : -0.5f));
+    }
+    var_a1 = var_v1 * 20;
+    var_f12 = (f32)var_a1 / arg0->unk_10;
+    arg0->unk_04 = D_88523030.unk_04 + arg0->unk_02;
+    var_a2 = (s16)((210.0f - var_f12) + ((210.0f > var_f12) ? 0.5f : -0.5f));
+    var_f2 = 2.0f - (var_v1 * -1.0f) / arg0->unk_10;
+    arg0->unk_06 = (s16)(D_80087E50[(u16)arg0->unk_12 >> 4] * var_f2 + ((D_80087E50[(u16)arg0->unk_12 >> 4] * var_f2) > 0.0f ? 0.5f : -0.5f)) + var_a2;
+    arg0->unk_12 += 0x800;
+    arg0->unk_14 = 0.75f - (var_v1 * -0.25f) / arg0->unk_10;
+    if (var_a1 < 20) {
+        func_885084EC(light_index, 4);
+    }
+}
 
 void TradeCable_UpdateLightWaitPulse(unk_D_88523100 *arg0) {
     arg0->unk_04 = D_88523034 + arg0->unk_02;
@@ -60,7 +196,6 @@ void func_88508B98(unk_D_88523100 *arg0) {
 }
 
 extern u8 D_88523100[];
-extern u8 D_88523030[];
 extern s32 MathUtil_Random16(void);
 void func_88508BEC(u8 *arg0) {
     *(s16 *)(arg0 + 0x14) = *(s16 *)(arg0 + 0x14) + 1;
@@ -71,7 +206,7 @@ void func_88508BEC(u8 *arg0) {
         *(f32 *)(arg0 + 0x1C) = (f32)(MathUtil_Random16() % 16);
         *(s16 *)(arg0 + 0x14) = MathUtil_Random16();
         if (((s32)(arg0 - D_88523100) / 0x24) == 0) {
-            *(u16 *)(D_88523030 + 0xE) &= 0xFFDF;
+            D_88523030.unk_0E &= 0xFFDF;
         }
     }
 }
@@ -82,17 +217,16 @@ void TradeCable_UpdateLightFlashPulse(unk_D_88523100 *arg0) {
 
     arg0->unk_12 += 0x800;
 }
-// Light fade-in (unk_1C rises by D_8850D574 to 9.0) with the sine pulse of
+// Light fade-in (unk_1C rises by 0.2 to 9.0) with the sine pulse of
 // TradeCable_UpdateLightWaitPulse, then a hold that clears the light once unk_06 reaches 260.
 // Same body as Pokemon Stadium 1 TradeCable_UpdateLightFadeInThenPulse.
-extern f32 D_8850D574;
 void func_88508D34(unk_D_88523100 *arg0) {
     if (arg0->unk_1C < 9.0f) {
         arg0->unk_04 = D_88523034 + arg0->unk_02;
         arg0->unk_06 = (s16)(2.0f * D_80087E50[(u16)(arg0->unk_12) >> 4] + ((2.0f * D_80087E50[(u16)(arg0->unk_12) >> 4]) > 0.0f ? 0.5f : -0.5f)) + 210;
         arg0->unk_12 += 0x800;
 
-        arg0->unk_1C += D_8850D574;
+        arg0->unk_1C += 0.2f;
         if (arg0->unk_1C >= 9.0f) {
             arg0->unk_1C = 9.0f;
         }
@@ -106,7 +240,63 @@ void func_88508D34(unk_D_88523100 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88508E34.s")
+void func_8850889C(unk_D_88523100 *arg0);
+// Close to Pokemon Stadium's TradeCable_UpdateLights; GS light records are 0x24 bytes
+// with an s32 state word, and the phase wrap is a plain signed divide by 16.
+void func_88508E34(void) {
+    s32 var_s1;
+    unk_D_88523100 *var_s0;
+    s32 i;
+
+    var_s0 = (unk_D_88523100 *)D_88523100;
+
+    for (i = 0; i < 2; i++, var_s0++) {
+        var_s1 = 1;
+
+        switch (var_s0->unk_00) {
+            case 0:
+                var_s1 = 0;
+                break;
+
+            case 1:
+                func_88508780((u8 *)var_s0);
+                break;
+
+            case 2:
+                func_885087D4(var_s0);
+                break;
+
+            case 3:
+                func_8850889C(var_s0);
+                break;
+
+            case 4:
+                TradeCable_UpdateLightWaitPulse(var_s0);
+                break;
+
+            case 5:
+                func_88508B98(var_s0);
+                break;
+
+            case 6:
+                func_88508BEC((u8 *)var_s0);
+                break;
+
+            case 7:
+                TradeCable_UpdateLightFlashPulse(var_s0);
+                break;
+
+            case 8:
+                func_88508D34(var_s0);
+                break;
+        }
+
+        if (var_s1 != 0) {
+            var_s0->unk_18 += var_s0->unk_1C;
+            var_s0->unk_18 -= ((s32)var_s0->unk_18 / 16) * 16;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88508F78.s")
 
@@ -285,7 +475,7 @@ void func_8850974C(u8 *arg0) {
 
 extern void func_8850974C(u8 *);
 extern void TradeCable_SpawnBallTrailGhost(unk_D_88523050 *);
-extern void func_885084EC(s32, s32);
+extern void func_885084EC(u8, s32);
 void func_88509870(u8 *arg0) {
     s16 temp_v0;
     s16 temp_v0_2;
@@ -322,7 +512,6 @@ void func_88509870(u8 *arg0) {
 
 extern u8 D_88523050[];
 extern s32 D_88523018;
-extern u8 D_88523030[];
 extern s32 func_8850CED8(s32);
 extern void func_88509538(u8 *);
 extern void func_885095EC(unk_func_88509418 *);
@@ -397,23 +586,129 @@ void func_8850A0A0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
     (*(s16 *)((u8 *)(&D_88523148) + (6))) = arg3;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A0EC.s")
+// Close to Pokemon Stadium's TradeCable_SetSequenceState: states below 18 are stored in
+// D_88523030.unk_00, then each state sets the countdown unk_18, the flag bits in unk_0E or
+// light states (func_885084EC). GS state 0 also calls func_8850A0A0 with a 640x480 rectangle.
+void func_8850A0EC(s32 arg0) {
+    s32 pad; // FAKE: unreferenced stack slot (removal diff score 8).
+    unk_D_88523100 *light;
+    s32 i;
+
+    if (arg0 < 18) {
+        D_88523030.unk_00 = arg0;
+    }
+
+    switch (arg0) {
+        case 0:
+            D_88523030.unk_04 = -20;
+            D_88523030.unk_06 = 24;
+            D_88523030.unk_10 = 1.5f;
+            D_88523030.unk_08 = 180;
+            D_88523030.unk_0A = 228;
+            D_88523030.unk_0C = 170;
+            D_88523030.unk_14 = 128;
+            D_88523030.unk_16 = 64;
+            D_88523030.unk_0E = 0;
+            D_88523030.unk_0E |= 0xF;
+            func_8850A0A0(0, 0, 640, 480);
+            break;
+        case 1:
+            D_88523030.unk_18 = 30;
+            D_88523030.unk_0E |= 0x10;
+            func_800226C0(320);
+            break;
+        case 2:
+        case 4:
+            D_88523030.unk_18 = 10;
+            break;
+        case 3:
+            D_88523030.unk_18 = 2;
+            break;
+        case 6:
+            D_88523030.unk_18 = 10;
+            break;
+        case 7:
+            D_88523030.unk_18 = 2;
+            break;
+        case 8:
+        case 9:
+            D_88523030.unk_18 = 10;
+            light = (unk_D_88523100 *)D_88523100;
+            for (i = 0; i < 2; i++, light++) {
+                if (light->unk_00 != 0) {
+                    func_885084EC(i, 3);
+                }
+            }
+            break;
+        case 11:
+            func_885084EC(0, 8);
+            func_885084EC(1, 8);
+            break;
+        case 12:
+            D_88523030.unk_18 = 10;
+            break;
+        case 14:
+            D_88523030.unk_18 = 10;
+            break;
+        case 16:
+            D_88523030.unk_18 = 10;
+            break;
+        case 5:
+        case 17:
+            D_88523030.unk_18 = 30;
+            break;
+        case 19:
+            func_885084EC(0, 1);
+            func_800226C0(322);
+            break;
+        case 20:
+            func_885084EC(1, 1);
+            func_800226C0(322);
+            break;
+        case 21:
+            if (1) {} // karodo: removal diff score 1359; Stadium 1's TradeCable_SetSequenceState has empty ifs in this case too.
+            func_885084EC(0, 5);
+            func_885084EC(1, 5);
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A2F4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A3F0.s")
+// Same body as Pokemon Stadium's TradeCable_UpdateSequenceSlideVertical, computed in floats:
+// counts unk_18 down, interpolates unk_04, unk_06, unk_10 and unk_0C (state 4 runs the
+// countdown in reverse), and at 0 moves to sequence state 5 (from state 4) or 3.
+void func_8850A3F0(void) {
+    s16 var_v0;
+
+    D_88523030.unk_18--;
+    var_v0 = D_88523030.unk_18;
+    if (D_88523030.unk_00 == 4) {
+        var_v0 = 10 - var_v0;
+    }
+    D_88523030.unk_04 = (s16)((190.0f - (var_v0 * 210) / 10.0f) + ((190.0f > (var_v0 * 210) / 10.0f) ? 0.5f : -0.5f));
+    D_88523030.unk_06 = (s16)((-43.0f - (var_v0 * -67) / 10.0f) + ((-43.0f > (var_v0 * -67) / 10.0f) ? 0.5f : -0.5f));
+    D_88523030.unk_10 = 1.9f - (var_v0 * 0.39999998f) / 10.0f;
+    D_88523030.unk_0C = (s16)((167.0f - (var_v0 * -3) / 10.0f) + ((167.0f > (var_v0 * -3) / 10.0f) ? 0.5f : -0.5f));
+    if (D_88523030.unk_18 <= 0) {
+        if (D_88523030.unk_00 == 4) {
+            func_8850A0EC(5);
+        } else {
+            func_8850A0EC(3);
+        }
+    }
+}
 
 extern u8 D_88523100[];
 extern s16 D_88523034;
-extern u8 D_88523030[];
 extern f32 D_80087E50[];
 s32 func_8850CED8(s32);
 extern void func_8850A0EC(s32);
-void func_885084EC(s32, s32);
+void func_885084EC(u8, s32);
 void func_8850A5CC(void) {
-    s16 v = *(s16 *)(D_88523030 + 0x18);
+    s16 v = D_88523030.unk_18;
     if (v > 0) {
-        *(s16 *)(D_88523030 + 0x18) = v - 1;
+        D_88523030.unk_18 = v - 1;
     }
     if (func_8850CED8(4) != 0) {
         func_8850A0EC(6);
@@ -423,26 +718,41 @@ void func_8850A5CC(void) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A614.s")
 
 void func_8850A6C8(void) {
-    s16 v = *(s16 *)(D_88523030 + 0x18);
+    s16 v = D_88523030.unk_18;
     if (v > 0) {
-        *(s16 *)(D_88523030 + 0x18) = v - 1;
+        D_88523030.unk_18 = v - 1;
     }
     if (func_8850CED8(5) != 0) {
         func_8850A0EC(9);
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A710.s")
+// Same body as Pokemon Stadium's TradeCable_UpdateSequenceSlideBack, computed in floats;
+// at 0 it moves to sequence state 5 (from state 8) or 10.
+void func_8850A710(void) {
+    D_88523030.unk_18--;
+    D_88523030.unk_04 = (s16)((-20.0f - (D_88523030.unk_18 * 400) / 10.0f) + ((-20.0f > (D_88523030.unk_18 * 400) / 10.0f) ? 0.5f : -0.5f));
+    D_88523030.unk_06 = (s16)((24.0f - (D_88523030.unk_18 * 67) / 10.0f) + ((24.0f > (D_88523030.unk_18 * 67) / 10.0f) ? 0.5f : -0.5f));
+    D_88523030.unk_10 = 1.5f - (D_88523030.unk_18 * -0.39999998f) / 10.0f;
+    D_88523030.unk_0C = (s16)((170.0f - (D_88523030.unk_18 * 3) / 10.0f) + ((170.0f > (D_88523030.unk_18 * 3) / 10.0f) ? 0.5f : -0.5f));
+    if (D_88523030.unk_18 <= 0) {
+        if (D_88523030.unk_00 == 8) {
+            func_8850A0EC(5);
+        } else {
+            func_8850A0EC(10);
+        }
+    }
+}
 
 void func_8850A8BC(void) {
     if (D_88523018 == 1) {
-        *(u16 *)(D_88523030 + 0xE) &= 0xFFF6;
+        D_88523030.unk_0E &= 0xFFF6;
     } else {
-        *(u16 *)(D_88523030 + 0xE) |= 9;
+        D_88523030.unk_0E |= 9;
     }
     if (func_8850CED8(7) != 0) {
-        if ((*(u16 *)(D_88523030 + 0xE) & 0x20) == 0) {
-            *(u16 *)(D_88523030 + 0xE) |= 0x20;
+        if ((D_88523030.unk_0E & 0x20) == 0) {
+            D_88523030.unk_0E |= 0x20;
             func_88509418(0, 1);
             func_88509418(1, 1);
             func_800226C0(0x143);
