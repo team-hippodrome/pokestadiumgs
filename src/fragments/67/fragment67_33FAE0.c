@@ -140,7 +140,51 @@ void func_8290379C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82903808.s")
+// Close to Pokemon Stadium's GalleryUI_DrawGradientQuad; GS takes the alpha as u8, does not
+// clear G_FOG, and adds G_SHADING_SMOOTH to the geometry mode.
+typedef struct GfxImage {
+    /* 0x00 */ u16 fmt;
+    /* 0x02 */ u16 size;
+    /* 0x04 */ u16 width;
+    /* 0x06 */ u16 height;
+    /* 0x08 */ u8 *img_p;
+    /* 0x0C */ void *depth_p;
+} GfxImage;
+extern GfxImage *func_8000731C(void);
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern Gfx *D_800D0510;
+extern Mtx D_80094890;
+void func_82903808(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
+    GfxImage *temp_s1 = func_8000731C();
+    Vtx *temp_s2 = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    Mtx *sp84 = Gfx_AllocDisplayList(sizeof(Mtx) * 1);
+    Vp *sp80 = Gfx_AllocDisplayList(sizeof(Vp) * 1);
+
+    Gfx_SetViewportDimensions(sp80, temp_s1->width, temp_s1->height);
+
+    gSPViewport(D_800D0510++, (u32)sp80 & 0x1FFFFFFF);
+
+    guOrtho(sp84, 0.5f, temp_s1->width - 0.5f, temp_s1->height - 0.5f, 0.5f, -2.0f, 2.0f, 1.0f);
+
+    Gfx_SetVertexAttributes(&temp_s2[0], arg0, arg1, -1, 0, 0, 0, 0, 0, arg4);
+    Gfx_SetVertexAttributes(&temp_s2[1], arg0 + arg2, arg1, -1, 0, 0, 0, 0, 0, arg4);
+    Gfx_SetVertexAttributes(&temp_s2[2], arg0, arg1 + arg3, -1, 0, 0, 0, 0, 0, arg4);
+    Gfx_SetVertexAttributes(&temp_s2[3], arg0 + arg2, arg1 + arg3, -1, 0, 0, 0, 0, 0, arg4);
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gSPSetGeometryMode(D_800D0510++, G_SHADE | G_SHADING_SMOOTH);
+    gDPSetCombineMode(D_800D0510++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    gSPMatrix(D_800D0510++, (u32)sp84 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)&D_80094890 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPVertex(D_800D0510++, (u32)temp_s2 & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -252,7 +296,7 @@ extern u8 D_82917430[];
 extern void func_8004C594(s32, s32);
 extern s32 func_8004C8A0(void *, s32, s32, s32);
 extern s32 func_80049148(s32, s32, s32);
-extern void func_82903808(s32, s32, s32, s32, s32);
+extern void func_82903808(s32, s32, s32, s32, u8);
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_800495F8(s32, s32, s32, void *, void *);

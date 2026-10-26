@@ -273,7 +273,67 @@ void BattleAnim_InitSwayOffset(void *arg0, f32 arg1, s16 arg2) {
     (*(f32 *)((u8 *)(arg0) + (0x5F4))) = D_80087E50[(u16) arg2 >> 4] * arg1;
     (*(f32 *)((u8 *)(arg0) + (0x610))) = D_84189C40;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_841204BC.s")
+// Close to Pokemon Stadium's BattleAnim_UpdateSwayPhysicsToTarget; GS takes the downward
+// pull as arg4 instead of a 20.0f constant and steers along rotationY + 0x4000 instead of
+// an angle argument.
+// The callers in this file declare arg1 (target speed) and arg2 (step) as s32 and pass
+// IEEE float bit patterns, so both are read back here as f32.
+typedef struct SwayStep {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+} SwayStep; // size = 0xC
+// Field names follow the Pokemon Stadium twin's BattlePlayerEntity (launchSpeed, swayDamping).
+typedef struct unk_func_841204BC {
+    /* 0x000 */ u8 unk_000[0x20];
+    /* 0x020 */ s16 rotationY;
+    /* 0x024 */ SwayStep unk_024;
+    /* 0x030 */ u8 unk_030[0x5C0];
+    /* 0x5F0 */ SwayStep unk_5F0;
+    /* 0x5FC */ u8 unk_5FC[0xC];
+    /* 0x608 */ f32 launchSpeed;
+    /* 0x60C */ f32 unk_60C;
+    /* 0x610 */ f32 swayDamping;
+} unk_func_841204BC;
+extern f32 Math_StepToF(f32, f32, f32, f32);
+extern void Vec3f_AddInPlace(f32 *, f32 *);
+extern f32 D_84189C44;
+extern f32 D_84189C48;
+void func_841204BC(void *arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
+    f32 sp54;
+    f32 sp50;
+    UNUSED f32 sp4C;
+    UNUSED s32 pad;
+    SwayStep sp3C;
+    UNUSED s32 pad2;
+    f32 temp_fa1;
+    f32 temp_fa2;
+    f32 var_fa0;
+
+    sp54 = ((unk_func_841204BC *)arg0)->swayDamping;
+    sp50 = ((unk_func_841204BC *)arg0)->launchSpeed;
+    ((unk_func_841204BC *)arg0)->launchSpeed = Math_StepToF(sp50, *(f32 *)&arg1, *(f32 *)&arg2, *(f32 *)&arg2);
+
+    var_fa0 = ((unk_func_841204BC *)arg0)->launchSpeed;
+    if (*(f32 *)&arg1 <= var_fa0) {
+        if (&((unk_func_841204BC *)arg0)->unk_5F0) {} // FAKE: removing this empty address test gives diff score 1433
+        var_fa0 = 0.0f;
+    }
+
+    sp3C.z = D_80088E50[(u16)arg3 >> 4] * var_fa0;
+    sp3C.y = D_80087E50[(u16)arg3 >> 4] * var_fa0;
+
+    temp_fa1 = -sp54 * ((sp50 * ((unk_func_841204BC *)arg0)->unk_5F0.z) + sp3C.z);
+    temp_fa2 = -arg4 - (sp54 * ((sp50 * ((unk_func_841204BC *)arg0)->unk_5F0.y) + sp3C.y));
+
+    ((unk_func_841204BC *)arg0)->unk_5F0.z = ((unk_func_841204BC *)arg0)->unk_5F0.z + sp3C.z + (temp_fa1 * D_84189C44);
+    ((unk_func_841204BC *)arg0)->unk_5F0.y = ((unk_func_841204BC *)arg0)->unk_5F0.y + sp3C.y + (temp_fa2 * D_84189C48);
+    sp3C.y = ((unk_func_841204BC *)arg0)->unk_5F0.y;
+    ((unk_func_841204BC *)arg0)->unk_5F0.x = 0.0f;
+
+    BattleAnim_Vec3fSetPolarXZ(&sp3C, ((unk_func_841204BC *)arg0)->unk_5F0.z, ((unk_func_841204BC *)arg0)->rotationY + 0x4000);
+    Vec3f_AddInPlace((f32 *)&((unk_func_841204BC *)arg0)->unk_024, (f32 *)&sp3C);
+}
 
 void func_8412060C(arg0)
 void *arg0;
