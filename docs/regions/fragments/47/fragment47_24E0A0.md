@@ -120,3 +120,67 @@ prove identical section bytes, symbol extents and relocations. Forced native
 source recompilation with host syntax checking passes the full US retail-ROM
 comparison, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. This cleans an existing C
 owner; it does not replace another assembly owner or change coverage.
+
+## 2026-10-26 — matching position evaluation
+
+Starting revision `6a4ef16ec124fb72ffd397c9b65069acaa0e4575` (#1627).
+`func_86009A90` passes canonical acceptance and the full US retail-ROM gate:
+336 bytes, 84 instructions, and the original 48-byte frame. Preserve the
+three float trigonometric calls, double products, and the unsigned-angle
+conversion used to index `D_80088E50`. The middle coordinate uses that
+existing float table, not another trigonometric call.
+
+`Fragment47PositionConfig` describes only the observed 40-byte prefix:
+scale/radius at 0, the existing coefficient slot at 8, and coordinate origins
+at 16/24/32. It does not claim a complete allocation size or invent a tail.
+The neighboring constructor and calculations already access these offsets.
+The current GS/Stadium 1 maps provide no evidence-backed function name.
+
+Coordinate addition and multiplication operand orders matter independently.
+A typed prefix closes the function; an independently calibrated source search
+also finds a matching expression-only spelling by commuting both operations
+in the middle coordinate. The selected typed form keeps the data layout
+readable. Four complete-module controls (normal/blank-prefix, before/after)
+prove that removing unused draft types and duplicate externs, naming the
+prefix, and formatting preserve all section bytes, extents and relocations.
+
+### Standalone search calibration
+
+The SDK guards `#pragma intrinsic(sqrtf)` in `PR/gu.h` with `__sgi`.
+The native compiler defines it; a generic host preprocessor may not. A
+height-owner import without this context emits an external `sqrtf` call and
+an 80-byte frame instead of the canonical inline `sqrt.s` and 16-byte frame.
+Do not search that imported function. Native IDO `-E`, using the captured
+compile flags, preserves the actual header conditions and intrinsic pragma.
+It retains some full-line `//` comments; remove these with newline preservation
+before parsing. Known-function and target controls pass for raw preprocessed
+C, actual parser round-trip C, and blank-prefixed copies. Graphics macro line
+groups must still survive parser formatting, as in the earlier renderer work.
+
+### Updated requeues
+
+- `func_86009C98`: **requeue**. A real query-X snapshot fixes the initial
+  parameter/displacement register choice; early X-square evaluation plus the
+  second branch's sign expression reaches 0.9310 normalized / 0.8103 raw.
+  The draft remains 232 bytes versus 228. Its first difference is now the
+  branch distance at offset 140, rather than the input register pair.
+  Preserve that improvement; inspect the remaining branch/square-root
+  schedule before adding more allocation variants. Fifteen complete-module
+  controls verify logging-only allocator/frame observations. A calibrated
+  180-second search on the earlier frontier improves stock score 650 to 620
+  without a hit; do not treat that as a search of the new snapshot frontier.
+- `func_8600B328`: **requeue**. The GBI commands match: sync, translucent
+  surface render mode, white environment alpha 155, white primitive color,
+  environment-color/texture-alpha combiner, and image at (129,29).
+  Best draft is 0.9753 normalized / 0.9259 raw, 324 versus 320 bytes.
+  The phase update materializes a shared address in V1, where the oracle
+  uses separate load/store addresses. Intermediate-value spellings and a
+  word-flag interface do not close it. No volatile barrier or instruction
+  rewrite is justified.
+- `func_8600B100`: **requeue**. Preserve both width queries and the signed
+  modulo-32 phase. The triangular phase drives an expanded width around
+  X=138, with environment alpha 200. Initial drafts reach 0.9565 normalized /
+  0.7029 raw at 552 bytes but an 80-byte rather than 72-byte frame. Explicit
+  dimension lifetimes recover the frame in some variants but regress the
+  instruction order (best 0.9493 / 0.7174). Continue from those separate
+  frontiers; do not force the frame with padding.

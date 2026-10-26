@@ -232,7 +232,20 @@ void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009934.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009A90.s")
+extern f32 D_80088E50[];
+typedef struct {
+    f64 radius;
+    f64 unk_08;
+    f64 center_x, center_y, center_z;
+} Fragment47PositionConfig;
+void func_86009A90(Fragment47PositionConfig *config, f64 first_angle, f64 second_angle, f64 *destination) {
+    f64 projection;
+
+    projection = config->radius * (f64)__sinf((f32)first_angle);
+    destination[0] = config->center_x + (f64)__cosf((f32)second_angle) * projection;
+    destination[1] = (f64)D_80088E50[(u16)first_angle >> 4] * config->radius + config->center_y;
+    destination[2] = config->center_z + (f64)__sinf((f32)second_angle) * projection;
+}
 
 extern s32 MainPool_AllocAligned(s32, s32, s32);
 s32 func_86009BE0(s32 arg0, s32 arg1) {
