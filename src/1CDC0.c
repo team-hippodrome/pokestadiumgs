@@ -32,9 +32,155 @@ s32 func_8001C1C0(u8 **arg0, u8 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C228.s")
+extern u32 func_8001CC88(u8 **);
+typedef struct {
+    u8 *pc;
+    u8 *stack[4];
+    u8 remaining_loop_iterations[4];
+    u8 depth;
+    s8 value;
+} AudioScriptState;
+// Same code as Majora's Mask AudioScript_HandleScriptFlowControl (src/audio/lib/seqplayer.c),
+// except that the delay opcodes are swapped: here 0xFD reads a delay and 0xFE delays one frame
+// (jtbl_800A1FD0 entries 11 and 12).
+s32 func_8001C228(u8 *player, AudioScriptState *state, s32 cmd, s32 cmd_arg) {
+    u32 depth;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001C404.s")
+    switch (cmd) {
+        case 0xFF: // End script, or return from a call.
+            if (state->depth == 0) {
+                return -1;
+            }
+            state->pc = state->stack[--state->depth];
+            break;
+
+        case 0xFD: // Delay by a compressed u16 frame count.
+            return func_8001CC88(&state->pc);
+
+        case 0xFE: // Delay one frame.
+            return 1;
+
+        case 0xFC: // Call.
+            state->stack[depth = state->depth++] = state->pc;
+            state->pc = *(u8 **) (player + 0x18) + (u16) cmd_arg;
+            break;
+
+        case 0xF8: // Loop start.
+            state->remaining_loop_iterations[depth = state->depth] = cmd_arg;
+            state->stack[state->depth++] = state->pc;
+            break;
+
+        case 0xF7: // Loop end.
+            state->remaining_loop_iterations[state->depth - 1]--;
+            if (state->remaining_loop_iterations[state->depth - 1] != 0) {
+                state->pc = state->stack[state->depth - 1];
+            } else {
+                state->depth--;
+            }
+            break;
+
+        case 0xF6: // Break out of a loop.
+            state->depth--;
+            break;
+
+        case 0xF5: // Branch if value >= 0.
+        case 0xF9: // Branch if value < 0.
+        case 0xFA: // Branch if value == 0.
+        case 0xFB: // Jump.
+            if ((cmd == 0xFA) && (state->value != 0)) {
+                break;
+            }
+            if ((cmd == 0xF9) && (state->value >= 0)) {
+                break;
+            }
+            if ((cmd == 0xF5) && (state->value < 0)) {
+                break;
+            }
+            state->pc = *(u8 **) (player + 0x18) + (u16) cmd_arg;
+            break;
+
+        case 0xF2: // Relative branch if value < 0.
+        case 0xF3: // Relative branch if value == 0.
+        case 0xF4: // Relative jump.
+            if ((cmd == 0xF3) && (state->value != 0)) {
+                break;
+            }
+            if ((cmd == 0xF2) && (state->value >= 0)) {
+                break;
+            }
+            state->pc += (s8) (cmd_arg & 0xFF);
+            break;
+    }
+
+    return 0;
+}
+
+extern void func_8001A9E4(void *);
+extern u8 D_8008F1B4[];
+// Same code as Majora's Mask AudioScript_InitSequenceChannel (src/audio/lib/seqplayer.c).
+void func_8001C404(s32 arg0) {
+    typedef struct {
+        u8 enabled:1; u8 finished:1; u8 stop_script:1; u8 muted:1;
+        u8 has_instrument:1; u8 stereo_headset_effects:1; u8 large_notes:1; u8 unused:1;
+    } ChannelFlags;
+    u8 *channel = (u8 *) arg0;
+    s32 i;
+
+    if (channel == D_8011BE90 + 0x5F4C) {
+        return;
+    }
+
+    ((ChannelFlags *) channel)->enabled = 0;
+    ((ChannelFlags *) channel)->finished = 0;
+    ((ChannelFlags *) channel)->stop_script = 0;
+    ((ChannelFlags *) channel)->muted = 0;
+    ((ChannelFlags *) channel)->has_instrument = 0;
+    ((ChannelFlags *) channel)->stereo_headset_effects = 0;
+    *(s16 *) (channel + 0x2A) = 0;
+    ((ChannelFlags *) channel)->large_notes = 0;
+    channel[0x9] = 0;
+    channel[0xE0] = 0;
+    channel[0x1] = 0xFF;
+    channel[0x84] = 0;
+    channel[0xA] = 64;
+    channel[0xB] = 128;
+    channel[0x10] = 0xFF;
+    channel[0xD] = 0;
+    channel[0xE] = 0;
+    *(void **) (channel + 0x44) = NULL;
+    channel[0x8] = 0;
+    channel[0x4] = 0;
+    channel[0xC] = 0;
+    channel[0x5] = 3;
+    channel[0x6] = 1;
+    *(s16 *) (channel + 0x22) = 0;
+    *(u8 **) (channel + 0x8C) = D_8008F1B4;
+    channel[0x88] = 240;
+    channel[0x89] = 0;
+    *(u16 *) (channel + 0x18) = 0x800;
+    *(u16 *) (channel + 0x14) = 0x800;
+    *(u16 *) (channel + 0x1A) = 0;
+    *(u16 *) (channel + 0x16) = 0;
+    *(u16 *) (channel + 0x1C) = 0;
+    *(u16 *) (channel + 0x1E) = 0;
+    *(u16 *) (channel + 0x20) = 0;
+    *(void **) (channel + 0xDC) = NULL;
+    *(u16 *) (channel + 0x24) = 0;
+    channel[0xF] = 0;
+    *(f32 *) (channel + 0x30) = 1.0f;
+    *(f32 *) (channel + 0x2C) = 1.0f;
+    *(f32 *) (channel + 0x3C) = 1.0f;
+
+    for (i = 0; i < 8; i++) {
+        ((s8 *) (channel + 0xD0))[i] = -1;
+    }
+
+    ((ChannelFlags *) channel)->unused = 0;
+    func_8001A9E4(channel + 0x90);
+    *(s32 *) (channel + 0xE4) = 0;
+    *(s32 *) (channel + 0xE8) = 0;
+    *(void **) (channel + 0xD8) = NULL;
+}
 
 extern u8 D_80121EF4[];
 extern s32 func_8001CB5C(void *);
@@ -379,7 +525,173 @@ void AudioLayer_PrepareNote(AudioLayerPreparePrefix *layer) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CE70.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CF5C.s")
+extern u8 AudioChannel_ResolveInstrument(u8 *channel, u8 program, u8 **out_instrument, u8 *adsr);
+extern f32 D_8008EB94[];
+// Same code as Majora's Mask AudioScript_SeqLayerProcessScriptStep2 (src/audio/lib/seqplayer.c).
+s32 func_8001CF5C(void *arg0) {
+    typedef struct {
+        u8 enabled:1; u8 finished:1; u8 stop:1; u8 continuous_notes:1;
+        u8 bit3:1; u8 ignore_drum_pan:1; u8 bit1:1; u8 bit0:1;
+    } LayerFlags;
+    u8 *layer = arg0;
+    u8 *channel = *(u8 **) (layer + 0x60);
+    u8 **state = (u8 **) (layer + 0x64);
+    u8 *player = *(u8 **) (channel + 0x50);
+    u8 cmd;
+    u8 cmd_arg8;
+    u16 cmd_arg16;
+    u16 velocity;
+
+    while (TRUE) {
+        cmd = func_8001CC3C(state);
+
+        // Note commands, handled by func_8001DA54 and later steps.
+        if (cmd <= 0xC0) {
+            return cmd;
+        }
+
+        // Control-flow commands.
+        if (cmd >= 0xF2) {
+            // func_8001C1C0 already masks its result to 16 bits.
+            if (func_8001C228(player, (AudioScriptState *) state, cmd, func_8001C1C0(state, cmd)) == 0) {
+                continue;
+            }
+            AudioLayer_Disable((AudioLayerDisablePrefix *) layer);
+            return -1;
+        }
+
+        switch (cmd) {
+            case 0xC1: // Set short-note velocity.
+            case 0xCA: // Set pan.
+                cmd_arg8 = *((*state)++);
+                if (cmd == 0xC1) {
+                    *(f32 *) (layer + 0x4C) = (cmd_arg8 * cmd_arg8) / (127.0f * 127.0f);
+                } else {
+                    layer[0x6] = cmd_arg8;
+                }
+                break;
+
+            case 0xC9: // Set short-note gate time.
+            case 0xC2: // Set transposition in semitones.
+                cmd_arg8 = *((*state)++);
+                if (cmd == 0xC9) {
+                    layer[0x3] = cmd_arg8;
+                } else {
+                    *(s16 *) (layer + 0x22) = cmd_arg8;
+                }
+                break;
+
+            case 0xC4: // Continuous notes on.
+            case 0xC5: // Continuous notes off.
+                if (cmd == 0xC4) {
+                    ((LayerFlags *) layer)->continuous_notes = TRUE;
+                } else {
+                    ((LayerFlags *) layer)->continuous_notes = FALSE;
+                }
+                ((LayerFlags *) layer)->bit1 = FALSE;
+                func_8001A994(layer);
+                break;
+
+            case 0xC3: // Set short-note default delay.
+                cmd_arg16 = func_8001CC88(state);
+                *(s16 *) (layer + 0x24) = cmd_arg16;
+                break;
+
+            case 0xC6: // Set instrument.
+                cmd = func_8001CC3C(state);
+                if (cmd >= 0x7E) {
+                    if (cmd == 0x7E) {
+                        layer[0x2] = 1;
+                    } else if (cmd == 0x7F) {
+                        layer[0x2] = 0;
+                    } else {
+                        layer[0x2] = cmd;
+                        *(u8 **) (layer + 0x58) = NULL;
+                    }
+
+                    if (cmd == 0xFF) {
+                        layer[0x28] = 0;
+                    }
+                } else {
+                    if ((layer[0x2] = AudioChannel_ResolveInstrument(channel, cmd, (u8 **) (layer + 0x58),
+                                                                     layer + 0x28)) == 0) {
+                        layer[0x2] = 0xFF;
+                    }
+                }
+                break;
+
+            case 0xC7: // Enable portamento.
+                layer[0x30] = func_8001CC3C(state);
+
+                cmd = func_8001CC3C(state);
+                cmd += *(s16 *) (channel + 0x2A);
+                cmd += *(s16 *) (layer + 0x22);
+                cmd += *(s16 *) (player + 0xE);
+
+                if (cmd >= 0x80) {
+                    cmd = 0;
+                }
+
+                layer[0x5] = cmd;
+
+                // Bit 7 of the portamento mode selects a u8 time instead of a compressed u16.
+                if (layer[0x30] & 0x80) {
+                    *(s16 *) (layer + 0x20) = *((*state)++);
+                    break;
+                }
+
+                cmd_arg16 = func_8001CC88(state);
+                *(s16 *) (layer + 0x20) = cmd_arg16;
+                break;
+
+            case 0xC8: // Disable portamento.
+                layer[0x30] = 0;
+                break;
+
+            case 0xCB: // Set envelope, then fall through to set the release rate.
+                cmd_arg16 = func_8001CC50(state);
+                *(u8 **) (layer + 0x2C) = *(u8 **) (player + 0x18) + cmd_arg16;
+            case 0xCF: // Set release rate.
+                layer[0x28] = func_8001CC3C(state);
+                break;
+
+            case 0xCC: // Ignore drum pan.
+                ((LayerFlags *) layer)->ignore_drum_pan = TRUE;
+                break;
+
+            case 0xCD: // Set stereo effects.
+                layer[0x1] = func_8001CC3C(state);
+                break;
+
+            case 0xCE: // Bend pitch.
+                cmd_arg8 = func_8001CC3C(state);
+                *(f32 *) (layer + 0x44) = D_8008EB94[(u8) (cmd_arg8 + 0x80)];
+                break;
+
+            case 0xF0:
+                cmd_arg16 = func_8001CC50(state);
+                *(u16 *) (layer + 0xA) &= (cmd_arg16 ^ 0xFFFF);
+                break;
+
+            case 0xF1:
+                layer[0x8] = func_8001CC3C(state);
+                break;
+
+            default:
+                switch (cmd & 0xF0) {
+                    case 0xD0: // Set short-note velocity from the player's table.
+                        velocity = (*(u8 **) (player + 0x94))[cmd & 0xF];
+                        *(f32 *) (layer + 0x4C) = (velocity * velocity) / (127.0f * 127.0f);
+                        break;
+
+                    case 0xE0: // Set short-note gate time from the player's table.
+                        layer[0x3] = (*(u8 **) (player + 0x98))[cmd & 0xF];
+                        break;
+                }
+                break;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001D340.s")
 
