@@ -47,9 +47,9 @@ func_82B05F60: time cap at 0.925 (raw 0.7625) after 2420s, mismatch instruction_
 
 Entry in state 2 → state 3, `+0x08 = 0`; for `arg1 >= 0` copy the `+0x10` pair to `+0x40` and `D_82B085DC` to `+0x44`, otherwise shift `+0x40` into `+0x44` and copy `+0x10` into `+0x40`. Written with the file's `Pair02198` struct copies.
 
-## 2026-10-27 — `func_82B02800`: requeue
+## 2026-10-27 — `func_82B02800`: matched
 
-requeue. Returns the 0x70-byte record of `D_82B126A8` (20 entries) whose two leading halfwords equal `(arg0, arg1)`, else NULL. A constant `i < 20` bound is unrolled by copt; `s32 count = 20` with `result = entry; break;` gives retail's rolled loop and tail-duplicated return (0.53 locally). The only remaining diff is `a2`/`a3` swapped between `entry` and `i`; declaration/statement orders, struct/`while`/`for`-increment forms and extra parameters do not move it. Permuter 180 s: no improvement (60).
+Searches `D_82B126A8` (20 records of 0x70 bytes, typed `unk_D_82B126A8`) for the one whose `unk_00`/`unk_02` halfwords equal `(arg0, arg1)`. Declaring `count = 20`, `i`, `entry`, then `result = NULL` (in that order), walking `entry = D_82B126A8` with `i++, entry++` and nested `if`s that `break` with `result = entry` gives retail's rolled loop and its `a2`/`a3` assignment. Returns `void *` to agree with the file's existing prototypes.
 
 ## 2026-10-27 — `func_82B055A0`: requeue
 

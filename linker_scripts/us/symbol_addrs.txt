@@ -292,6 +292,7 @@ fragment88_ROM_START = 0x436C20; // defined:true
 D_8600D690 = 0x8600D690; // type:f64 size:0x8 force_migration:true
 D_8600D698 = 0x8600D698; // type:f64 size:0x8 force_migration:true
 D_8600D6A0 = 0x8600D6A0; // type:f64 size:0x8 force_migration:true
+D_814078D0 = 0x814078D0; // size:0x4 force_migration:true
 D_8600D650 = 0x8600D650; // type:f64 size:0x8 force_migration:true
 D_8600D658 = 0x8600D658; // type:f64 size:0x8 force_migration:true
 D_8600D660 = 0x8600D660; // type:f64 size:0x8 force_migration:true
