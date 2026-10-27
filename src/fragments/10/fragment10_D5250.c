@@ -20,7 +20,21 @@ void func_82800620(s32 arg0, s32 arg1, f32 arg2) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800864.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800984.s")
+extern u8 D_828028B0[];
+void func_82800984(s32 arg0, f32 arg1) {
+    s32 mode;
+    s16 (*pairs)[2];
+
+    pairs = (s16 (*)[2])D_828028B0;
+    gDPSetEnvColor(D_800D0510++, 80, 210, 240, 0);
+    gDPSetPrimColor(D_800D0510++, 0xFF, 0xFF, 255, 255, 255, (u32)(255.0f * arg1));
+    if (arg0 == 0 || arg0 == 3) {
+        mode = 1;
+    } else {
+        mode = 2;
+    }
+    func_8004D150(pairs[arg0][0], pairs[arg0][1], func_8004C990(54, mode), 0, (arg0 >= 2) ? 1 : 0, 0);
+}
 
 extern void func_82800864(f32, s16 *);
 extern Gfx *D_800D0510;

@@ -77,7 +77,25 @@ void func_821006AC(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_821008BC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82100A40.s")
+void func_82100A40(void *arg0) {
+    typedef struct {
+        s32 data[12];
+    } Block30;
+    typedef struct {
+        u8 unk_00[0x28];
+        s32 unk_28;
+    } State;
+
+    if (_bcmp((u8 *)arg0 + 0x70, (u8 *)arg0 + 0x40, 0x30) != 0) {
+        s32 flag = ((State *)arg0)->unk_28 ? 1 : 0;
+
+        func_80055F6C((u8 *)arg0 + 0x78, flag);
+        func_80054248((u8 *)arg0 + 0x70);
+        func_80051D64(20, 0);
+        func_80055028();
+        *(Block30 *)((u8 *)arg0 + 0x40) = *(Block30 *)((u8 *)arg0 + 0x70);
+    }
+}
 
 extern u8 *D_8210418C;
 s32 func_82100AEC(s32 a, void *p) {

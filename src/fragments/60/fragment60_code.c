@@ -113,7 +113,65 @@ void func_86A01C5C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A01CC4.s")
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern u8 D_86A0F8E8[];
+extern s32 D_86A0F8F0;
+extern u8 D_86A0F920[];
+extern s32 D_86A0F940;
+extern u8 D_86A0F988[];
+extern u8 D_86A46550[];
+
+s32 func_86A01CC4(s32 arg0, s32 arg1) {
+    void *stage;
+    s32 pad; // FAKE: unused stack space; diff score 54 without it.
+    s32 flags;
+
+    main_pool_push_state(0x4B414D45);
+    D_86A46548 = D_86A46550;
+    *(s32 *)(D_86A46548 + 0xC) = arg1;
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4) {
+        func_80027EE0(0xFFF);
+    }
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    stage = func_800082E0(0, 0, 2, 1, 2, 1);
+    func_8004C09C(303);
+    func_87F06EAC(111, D_86A0F8E8, *(u8 **)(D_86A46548 + 0xC));
+    func_87F09EBC(D_86A0F920, *(u8 **)(D_86A46548 + 0xC));
+    func_87F0D48C(D_86A0F988, *(u8 **)(D_86A46548 + 0xC), 0);
+    func_8004DDF4(103);
+    func_8004DDF4(82);
+    func_8004DDF4(92);
+    func_8004DDF4(96);
+    func_8004DDF4(175);
+    func_8004DDF4(176);
+    func_8004DDF4(181);
+    func_8004DDF4(169);
+    func_8004DDF4(180);
+    func_8004DDF4(174);
+    func_8004DDF4(184);
+    func_8004DDF4(177);
+    func_8004DDF4(170);
+    func_8004DDF4(148);
+    func_8004DDF4(147);
+    //!bug: flags is never assigned; this ORs whatever the stack slot holds.
+    func_80047588(D_86A0F8F0 | 0x2D | D_86A0F940 | flags, 0);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    func_86A004B4();
+    func_80008514(stage);
+    func_86A01C5C();
+    func_80008574();
+    func_80006158();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4B414D45);
+    func_87F0F480(*(u8 **)(D_86A46548 + 0xC));
+    func_80027EE0(0xFFE);
+    return *(s32 *)(D_86A46548 + 0x18);
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -200,7 +258,38 @@ s32 func_86A0405C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A04100.s")
+extern s32 D_86A4149C;
+extern s32 D_86A414AC;
+extern s32 D_86A414BC;
+extern s32 D_86A414CC;
+extern u8 D_86A414D0[];
+
+s32 func_86A04100(void) {
+    s32 count = 0;
+    s32 i;
+    s32 j;
+
+    if (D_86A414AC != 0) {
+        if (D_86A4149C != 0) {
+            count++;
+        }
+    }
+    if (D_86A414CC != 0) {
+        if (D_86A414BC != 0) {
+            count++;
+        }
+    }
+    for (i = 0; i < 49; i++) {
+        for (j = 0; j < 4; j++) {
+            if (((*(s32 *)(D_86A414D0 + i * 0x80 + j * 0x20 + 0x1C)) != 0) &&
+                ((*(s32 *)(D_86A414D0 + i * 0x80 + j * 0x20 + 0xC)) != 0)) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 #endif
 
 #ifdef VERSION_US

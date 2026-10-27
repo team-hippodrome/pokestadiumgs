@@ -13,7 +13,25 @@ s32 func_82400530(s32 arg0, s32 arg1) {
 
 void func_82400578(u8 *arg0, s32 arg1) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_82400584.s")
+extern u8 D_824090A0[];
+
+//!bug: declared to return s32 but has no return statement; the caller gets
+// whatever $v0 holds.
+s32 func_82400584(s32 arg0, u8 *arg1) {
+    f32 value;
+
+    if (arg0 == 2) {
+        if (D_824090A0[0x53] != 0) {
+            value = 1.0f;
+        } else {
+            value = 0.0f;
+        }
+        *(f32 *)(arg1 + 0x30) = value;
+        *(f32 *)(arg1 + 0x34) = value;
+        *(f32 *)(arg1 + 0x38) = value;
+        arg1[0x1D] = D_824090A0[0x53];
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824005D8.s")
 

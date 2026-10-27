@@ -2,7 +2,22 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305BC0.s")
+void func_86305BC0(u8 *arg0, u8 *arg1, u8 *arg2, f32 scale) {
+    struct V {
+        f32 x;
+        f32 y;
+    };
+    f32 dot = ((struct V *)arg1)->x * ((struct V *)arg2)->x + ((struct V *)arg1)->y * ((struct V *)arg2)->y;
+
+    if (dot >= 0.0f) {
+        *(f32 *)(arg0 + 0x48) += ((struct V *)arg1)->x * scale;
+        *(f32 *)(arg0 + 0x4C) += ((struct V *)arg1)->y * scale;
+        return;
+    }
+    *(f32 *)(arg0 + 0x48) -= ((struct V *)arg1)->x * scale;
+    //!bug: subtracts the x component from 0x4C; the branch above adds y.
+    *(f32 *)(arg0 + 0x4C) -= ((struct V *)arg1)->x * scale;
+}
 
 void func_86305C48(void *arg0, void *arg1, f32 arg2) {
     *(f32 *)((u8 *)arg0 + 0x48) += *(f32 *)((u8 *)arg1 + 0) * arg2;

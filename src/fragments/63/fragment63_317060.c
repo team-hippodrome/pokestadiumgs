@@ -306,7 +306,24 @@ void func_87E15430(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E15478.s")
+void func_87E15478(u8 *arg0) {
+    s32 temp_v1;
+    u8 *var_v0;
+
+    if ((var_v0 = func_87E13C94(arg0)) != NULL) {
+        temp_v1 = *(s32 *)(var_v0 + 0x38);
+        *(s32 *)temp_v1 = 1;
+        var_v0[0x25] |= 1;
+        *(f32 *)(var_v0 + 0x10) = 0.0f;
+        *(f32 *)(var_v0 + 0x14) = 0.0f;
+        // FAKE: spelling this zero 0.f keeps it out of the shared $f0 zero;
+        // diff score 215 with 0.0f.
+        *(f32 *)(var_v0 + 0x48) = 0.f;
+        *(f32 *)(var_v0 + 0x18) = 0.0f;
+        *(f32 *)(var_v0 + 0x4C) = 30.0f;
+        *(f32 *)(var_v0 + 0x50) = 500.0f;
+    }
+}
 
 extern void func_87E13F84(s32, s32);
 void func_87E154E4(s32 arg0) {
@@ -647,7 +664,30 @@ void func_87E176FC_padding(void) {}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E177E0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E17928.s")
+extern f32 D_87E1B95C;
+extern void func_87E177E0();
+void func_87E17928(u8 *arg0) {
+    u8 *entry;
+    f32 scale;
+
+    entry = func_87F025B8(arg0 + 0x1C, func_87E177E0);
+    if (entry != NULL) {
+        func_8003F1DC(entry + 0x24);
+        func_8003F114(entry + 0x24, 0, -1, *(s32 *)(arg0 + 0x10));
+        scale = D_87E1B95C;
+        entry[0x25] &= ~1;
+        entry[0x26] |= 0x10;
+        *(f32 *)(entry + 0x5C) = scale;
+        *(f32 *)(entry + 0x58) = scale;
+        *(f32 *)(entry + 0x54) = scale;
+        *(f32 *)(entry + 0x48) = -1000.0f;
+        *(f32 *)(entry + 0x4C) = 0.0f;
+        *(f32 *)(entry + 0x50) = 1000.0f;
+        *(f32 *)(entry + 0x10) = 80.0f;
+        *(f32 *)(entry + 0x14) = 400.0f;
+        *(f32 *)(entry + 0x18) = -20.0f;
+    }
+}
 
 extern u8 D_87E1B270;
 extern u8 D_87E1B2DC;

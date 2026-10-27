@@ -390,7 +390,36 @@ void func_8220C1C4(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220C340.s")
+void func_8220C340(void) {
+    u8 *record = (u8 *)&D_82210C30;
+    s32 index;
+
+    if (D_82210C30 == 0) {
+        return;
+    }
+    switch (D_82210C32) {
+    case 1:
+        func_8220C030(record);
+        break;
+    case 2:
+        func_8220C08C(record);
+        break;
+    case 3:
+        func_8220C1C4(record);
+        break;
+    }
+    for (index = 0; index != 2; index++) {
+        record = (u8 *)&D_82210C30 + index * 0x16;
+        switch (*(s16 *)(record + 0x16)) {
+        case 1:
+            func_8220BDAC(record + 0x14);
+            break;
+        case 3:
+            func_8220BE94(record + 0x14);
+            break;
+        }
+    }
+}
 
 void func_8220C42C(u8 *arg0, u8 *arg1, s16 *arg2) {
     if (*arg2 == 1) {
@@ -407,8 +436,53 @@ void func_8220C42C(u8 *arg0, u8 *arg1, s16 *arg2) {
     arg1[2] = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220C470.s")
+extern u8 D_80094E78[];
 
+// Same code as fragment20's func_8260899C; GS reads the size from pair_06 instead of
+// 0x24/0x26, always sets up the render mode and texture, and takes its colors from
+// func_8220C42C.
+//@src/fragments/20/fragment20_12C460.c
+void func_8220C470(Fragment17Panel *panel) {
+    u8 *texture;
+    s32 unused[2];
+    f32 step;
+    f32 bias;
+    s16 x;
+    s16 y;
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 a;
+    } environment, primitive;
+    s32 width;
+    s32 height;
+    f32 scale;
+
+    texture = (u8 *)func_8004C990(82, 1);
+    if (texture == NULL) {
+        return;
+    }
+
+    width = panel->pair_06.x - 10;
+    height = panel->pair_06.y - 10;
+    scale = (f32)width / (f32)(u32)*(u16 *)texture;
+    if (scale > 0.0f && width > 0 && height > 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+        func_8004D1FC(texture);
+        func_8220C42C((u8 *)&environment, (u8 *)&primitive, (s16 *)panel);
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, environment.r, environment.g, environment.b, 255);
+        step = 1024.0f / scale;
+        gDPSetPrimColor(D_800D0510++, 0, 0, primitive.r, primitive.g, primitive.b, 255);
+
+        x = panel->pair_0A.x + panel->pair_12.x;
+        y = panel->pair_0A.y + panel->pair_12.y;
+        bias = (step > 0.0f) ? 0.5f : -0.5f;
+        func_80044270(x + 5, y + 5, panel->pair_06.x - 10, panel->pair_06.y - 10, 0, 0, (s32)(bias + step), 1024, 0);
+    }
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220C6C4.s")
 
 void func_8220CB34(s32 x, s32 y, s32 width, s32 height) {
@@ -439,8 +513,6 @@ void func_8220CB34(s32 x, s32 y, s32 width, s32 height) {
                   (tile_width * 3) << 5, 0, 1024, 0, 0);
 }
 
-extern u8 D_80094E78[];
-
 void func_8220CE10(Fragment17Panel *panel) {
     s32 resource;
     Fragment17HalfPair position;
@@ -470,7 +542,34 @@ void func_8220CE10(Fragment17Panel *panel) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220D3C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220D560.s")
+extern s32 func_8220C6C4();
+extern s32 func_8220CF9C();
+extern s32 func_8220D3C4();
+
+void func_8220D560(void) {
+    s32 i;
+    s32 selected;
+    s16 *state = &D_82210C30;
+    s16 *mode = &D_82210C36;
+
+    if (*state != 0) {
+        for (i = 0; i < 2; i++) {
+            if (*(s16 *)((u8 *)state + i * 0x16 + 0x16) != 0) {
+                selected = (i == *mode);
+                func_8220C470((Fragment17Panel *)((u8 *)state + i * 0x16 + 0x14));
+                func_8220C6C4((u8 *)state + i * 0x16 + 0x14);
+                switch (i) {
+                    case 0:
+                        func_8220CF9C((u8 *)state + i * 0x16 + 0x14, selected);
+                        break;
+                    case 1:
+                        func_8220D3C4((u8 *)state + i * 0x16 + 0x14, selected);
+                        break;
+                }
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220D630.s")
 

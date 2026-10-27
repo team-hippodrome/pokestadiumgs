@@ -92,7 +92,35 @@ void func_84124768(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84124798.s")
+extern u8 D_841951E4;
+extern void func_84136678(u8, s16);
+extern void func_84135B00(u16);
+extern void func_84136218(u8, u8);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern s32 func_8004C54C(u8, s32);
+void func_84124798(u8 arg0) {
+    u8 other = 1 - arg0;
+
+    switch (D_841951E4) {
+    case 1:
+        func_84136678(arg0, -1);
+        func_84135B00(41);
+        func_84136218(arg0, 4);
+        func_84136218(other, 3);
+        if (func_841360C0(other, -1, 60, 3, 0) == 0) {
+            func_8004C54C(26, (s32)(D_84195200[arg0] + 0x34));
+            func_8004C54C(28, (s32)(D_84195200[other] + 0x34));
+            func_841360C0(arg0, -1, 60, 4, 0);
+            func_8004C54C(26, (s32)(D_84195200[other] + 0x34));
+            func_8004C54C(28, (s32)(D_84195200[arg0] + 0x34));
+        }
+        break;
+    case 2:
+        func_84136678(arg0, -1);
+        func_84135B00(62);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -116,7 +144,7 @@ void func_841248DC(u8 arg0) {
 extern u8 D_841951E7;
 extern u8 D_841951C6;
 extern s32 func_800635E0(u8);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 void func_84124954(u8 arg0) {
     switch (D_841951E7) {
     case 1:
@@ -255,18 +283,16 @@ void func_84124DEC(u8 arg0) {
 
 #ifdef VERSION_US
 extern s32 func_8004B7A4(s32);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
 void func_84124E44(u8 arg0) {
     u8 other;
-    u8 id;
 
     func_8004C54C(0x19, func_8004B7A4(D_84195208[arg0][0]));
     func_8004C54C(0x1A, (s32)(D_84195200[arg0] + 0x34));
     other = 1 - arg0;
-    id = D_84195208[other][0];
-    func_8004C54C(0x1B, func_8004B7A4(id));
+    func_8004C54C(0x1B, func_8004B7A4(D_84195208[other][0]));
     func_8004C54C(0x1C, (s32)(D_84195200[other] + 0x34));
 }
 #endif
@@ -306,7 +332,7 @@ u8 func_84125170(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_80063660(u8);
+extern u8 func_80063660(u8);
 extern s32 func_84124EFC(u8, u8 *);
 extern u8 D_8418549C[];
 void func_8412517C(u8 arg0) {
@@ -468,7 +494,24 @@ void func_84125734(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841259D4.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+void func_841259D4(u8 arg0) {
+    s32 result;
+
+    if (D_84195208[arg0][0xF] & 0x80) {
+        result = func_80063660(D_84195200[arg0][1]);
+        if (result == 16 || result == 15) {
+            D_84195208[arg0][0xF] &= ~0x80;
+            func_84136678(arg0, -1);
+            func_8004C54C(28, (s32)D_84195200[arg0] + 0x34);
+            func_8004C54C(42, func_800635E0(D_84195200[arg0][1]));
+            func_84135B00(95);
+            func_84134CBC(arg0, 86);
+            BattleRecord_AdvanceWriteSlot();
+            D_84195200[arg0][1] = 0;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1142,7 +1185,7 @@ extern u8 D_8418547C[];
 extern u8 D_84185484[];
 extern u8 D_841951C5;
 extern s32 func_84125080(void);
-extern s32 func_80063660(u8);
+extern u8 func_80063660(u8);
 extern s32 func_84124EFC(u8 arg0, u8 *arg1);
 extern u8 D_841951BC;
 extern u8 D_841951BF;
@@ -1312,7 +1355,7 @@ void func_84128438(void) {
 extern s32 func_84128354(void);
 extern void func_84128438(void);
 extern s32 D_84187020;
-extern s32 func_80063660(u8);
+extern u8 func_80063660(u8);
 extern u8 func_80063690(u8);
 extern s32 func_84125080();
 extern void func_84128298(void);
@@ -1362,7 +1405,7 @@ void func_841288DC(void) {
 
 #ifdef VERSION_US
 extern void func_8412D8C8(void);
-extern s32 func_80063660(u8);
+extern u8 func_80063660(u8);
 extern u8 func_80063690(u8);
 extern s32 func_84125080();
 extern void func_841288DC(void);
@@ -1427,7 +1470,7 @@ void func_84128954(void) {
 
 #ifdef VERSION_US
 extern s16 D_841951EC;
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84124768(u8 arg0);
 extern void func_841254E0(void);
 extern void func_84134CBC(u8 arg0, u8 arg1);
@@ -1669,7 +1712,7 @@ s32 func_84129D3C(void) {
 
 #ifdef VERSION_US
 s32 func_80063270(u8);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern s32 func_84125080();
 extern s32 func_84129C8C(u8);
 extern void func_84135B40(u16);
@@ -1794,7 +1837,7 @@ s32 func_8412A23C(u8 arg0,u8 arg1){s32 result=arg1;u8 *ptr=D_841951F8[arg0];u8 *
 
 #ifdef VERSION_US
 extern s32 func_8412A23C(u8, u8);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84124604(u8 arg0, u8 arg1);
 extern s32 func_84125080();
 extern void func_84126BA8(u8 arg0);
@@ -2490,7 +2533,7 @@ s32 func_8412CFE4(u8 arg0, u8 arg1) {
 
 #ifdef VERSION_US
 extern s32 func_80063270(u8);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern s32 func_84125080();
 extern s32 func_8412CFE4(u8 arg0, u8 arg1);
 extern void func_84135B40(u16);
@@ -2711,7 +2754,7 @@ void BattleEffect_ClearPartyStatus(void) {
 #ifdef VERSION_US
 extern u8 D_841951C5;
 extern u8 func_80063690(u8);
-extern s32 func_80063660(u8);
+extern u8 func_80063660(u8);
 extern s32 func_84125080();
 void BattleAnim_Table_84185F10_044(void) {
     u8 limit;
@@ -3576,7 +3619,7 @@ void BattleAnim_Table_84186004_050(void) {
 
 #ifdef VERSION_US
 extern s32 func_8004B7A4(s32);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern u8 D_841951BC;
 extern u8 D_841951BD;
 extern u8 * D_84195200[];
@@ -4195,7 +4238,7 @@ void BattleCommand_RunSequence(void) {
 
 #ifdef VERSION_US
 extern s32 func_8004C874(s32, s32);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8 arg0, s16 arg1);
@@ -4252,7 +4295,7 @@ void func_84131AB8(u8 arg0) {
 #ifdef VERSION_US
 extern s32 func_8412676C(u8, u8);
 extern u32 func_84126804(u8, u16);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8, s16);
@@ -4343,7 +4386,7 @@ void func_84132300(void) {
 #ifdef VERSION_US
 extern s32 func_8412676C(u8, u8);
 extern u32 func_84126804(u8, u16);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8, s16);
@@ -4393,7 +4436,7 @@ void func_841324EC(void) {
 
 #ifdef VERSION_US
 extern void func_8004C594(s32, s32);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8 arg0, s16 arg1);
@@ -4431,12 +4474,12 @@ void func_8413293C(void) {
 
 #ifdef VERSION_US
 /* mkdraft:func_84132A94 begin */
-extern s32 func_80063660(u8);
+extern u8 func_80063660(u8);
 extern s32 func_841267B4(u8, u8);
 extern u16 func_84126850(u8, u16);
 extern void func_84136A9C(u8, s16, s16, u8);
 extern void func_84136678(u8, s16);
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern s32 func_800635E0(u8);
 extern void func_84135B00(u16);
 extern void func_84134CBC(u8, u8);
@@ -4477,7 +4520,7 @@ void func_84132A94(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern s32 func_84125080();
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
@@ -4509,7 +4552,7 @@ void func_84132D44(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8004C54C(u8, s32);
+extern s32 func_8004C54C(u8, s32);
 extern void func_84124594(u8 arg0);
 extern void func_84135B00(u16);
 extern void func_84136678(u8 arg0, s16 arg1);
@@ -4576,7 +4619,28 @@ void func_841330B4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841331F8.s")
+// Same code as func_84132E40 on D_84195208's records, with flag 0x10 at 0x11 and its
+// counter at 0x16; GS also ends the effect early when the low six bits of the byte at
+// 9 + record[4] are clear, and passes 0x1C to func_8004C54C and 0x31 to func_84135B00.
+void func_841331F8(void) {
+    s32 i;
+
+    for (i = 0; i != 2; i++) {
+        if (D_84195208[i][0x11] & 0x10) {
+            D_84195208[i][0x16]--;
+            // FAKE: adding the index before the record pointer orders the addu operands like
+            // the original; diff score 10 without it.
+            if (D_84195208[i][0x16] == 0 || !((D_84195208[i][4] + D_84195208[i])[9] & 0x3F)) {
+                D_84195208[i][0x11] &= ~0x10;
+                func_84136678(i, -1);
+                func_8004C54C(0x1C, (s32)(D_84195200[i] + 0x34));
+                func_84135B00(0x31);
+                func_84124594(i);
+                func_84136CA8();
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -5503,7 +5567,20 @@ void func_84136564(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841365F4.s")
+extern u8 D_84195252[];
+extern u8 D_84195253[];
+void func_841365F4(u8 *arg0, u8 arg1, s16 arg2) {
+    u8 *base;
+    base = arg0 + 0x68;
+    arg0[0x1E8] = arg1;
+    if (*(u8 *)((u8 *)D_841951F8[arg1] + 0xA) < *(u8 *)((u8 *)D_841951F8[arg1] + 3)) {
+        base[0x181] = D_84195252[arg1 * 0x18];
+    } else {
+        base[0x181] = D_84195253[arg1 * 0x18];
+    }
+    *(s16 *)(base + 0x18A) = arg2;
+}
+
 #endif
 
 #ifdef VERSION_US

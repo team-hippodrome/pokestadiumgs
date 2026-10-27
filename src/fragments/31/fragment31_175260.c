@@ -122,7 +122,49 @@ s32 func_882025B4(u32 mode, u8 slot) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_882026A4.s")
+extern s32 func_80063754(s32);
+extern u8 *func_8820137C(u8 *);
+extern void func_88203A58(u8 *);
+extern void func_88203ED8(u8 *, s32);
+extern void func_88A017B4(u8, s16);
+extern u8 D_88A01C3F[];
+
+void func_882026A4(u8 *arg0, s32 arg1) {
+    u8 *obj = NULL;
+
+    if (func_80063754(arg0[9])) {
+        obj = func_8820137C(arg0);
+        if (arg1 == 2 || arg1 == 3 || arg1 == 4) {
+            func_88203A58(obj);
+        }
+    }
+    switch (arg1) {
+        case 0:
+        case 1:
+            if (obj != NULL) {
+                if (!func_80063754(obj[0x75])) {
+                    obj[0x75] = arg0[9];
+                }
+                func_88203ED8(obj, (arg1 == 0) ? 1 : 3);
+            }
+            break;
+        case 2:
+            func_88A017B4(arg0[9], 0);
+            break;
+        case 3:
+            func_88A017B4(arg0[9], 1);
+            break;
+        case 4:
+            func_88A017B4(arg0[9], 2);
+            break;
+    }
+    if (arg0[0x27] != 0) {
+        D_88A01C3F[arg0[0x27]] = 0;
+        arg0[0x27] = 0;
+    }
+    arg0[9] = 0;
+    *(s32 *)(*(u8 **)arg0 + 0xC) = 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_882027F0.s")
 

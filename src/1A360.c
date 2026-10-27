@@ -837,8 +837,55 @@ void *func_8001ADE0(ListNode1A360 *arg0, s32 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1A360/func_8001AE60.s")
+// Same code as Majora's Mask AudioPlayback_NoteInitForLayer (src/audio/lib/playback.c)
+// with the note's playback state at 0x30 and sample state at 0xD0; GS sets the
+// synthetic-wave flag for instruments 0x80-0xBF but does not build a synthetic wave.
+void func_8001AE60(u8 *note, u8 *layer) {
+    typedef struct { u8 enabled:1; u8 finished:1; u8 muted:1; u8 continuous_notes:1; u8 bit3:1; u8 ignore_drum_pan:1; u8 bit1:1; u8 note_properties_need_init:1; } LayerFlags;
+    typedef struct { u8 reverb_index:3; u8 book_offset:2; u8 is_synthetic_wave:1; u8 has_two_parts:1; u8 use_haas_effect:1; } SampleStateFlags;
+    typedef struct { u32 unk_bits:5; u32 stereo_headset_effects:1; u32 unk_rest:26; } ChannelFlags;
+    s32 pad[3];
+    s16 inst_id;
+    u8 *channel = *(u8 **)(layer + 0x60);
+    u8 *playback = note + 0x30;
+    u8 *sample_state = note + 0xD0;
 
+    *(s32 *)(playback + 0x10) = -1;
+    *(u8 **)(playback + 0x14) = layer;
+    playback[0] = channel[5];
+    ((LayerFlags *)layer)->note_properties_need_init = 1;
+    ((LayerFlags *)layer)->bit3 = 1;
+    *(u8 **)(layer + 0x3C) = note;
+    *(u8 **)(channel + 0x44) = note;
+    *(u8 **)(channel + 0x48) = layer;
+    *(f32 *)(layer + 0x50) = 0.0f;
+    func_80019CC0(note);
+    inst_id = layer[2];
+
+    if (inst_id == 0xFF) {
+        inst_id = *(s16 *)(channel + 0x28);
+    }
+    *(u8 **)(sample_state + 0x10) = *(u8 **)(layer + 0x5C);
+
+    if (inst_id >= 0x80 && inst_id < 0xC0) {
+        ((SampleStateFlags *)(sample_state + 1))->is_synthetic_wave = 1;
+    } else {
+        ((SampleStateFlags *)(sample_state + 1))->is_synthetic_wave = 0;
+    }
+
+    if (*(u32 *)(channel + 0xE4) == 1) {
+        *(u32 *)(playback + 0x80) = *(u32 *)*(u8 **)(**(u8 ***)(sample_state + 0x10) + 8);
+    } else {
+        *(u32 *)(playback + 0x80) = *(u32 *)(channel + 0xE4);
+        if (*(u32 *)(playback + 0x80) >= *(u32 *)(*(u8 **)(**(u8 ***)(sample_state + 0x10) + 8) + 4)) {
+            *(u32 *)(playback + 0x80) = 0;
+        }
+    }
+
+    playback[3] = channel[7];
+    playback[5] = ((ChannelFlags *)channel)->stereo_headset_effects;
+    ((SampleStateFlags *)(sample_state + 1))->reverb_index = channel[8] & 3;
+}
 void func_8001AFAC(void *arg0, s32 arg1) {
     func_8001A9B4((*(void **)((u8 *)(arg0) + (0x44))));
     (*(s32 *)((u8 *)(arg0) + (0x48))) = arg1;

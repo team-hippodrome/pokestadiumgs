@@ -137,7 +137,41 @@ void func_8AF15EF0(void) {
     D_8AF33C7C = D_8AF33C74;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15F28.s")
+extern s32 D_8AF337E0;
+extern s32 D_8AF337E4;
+extern s16 D_8AF33C7A;
+extern s16 D_8AF33C7E;
+extern u8 D_8AF33C88[];
+extern u8 D_8AF33CB8[];
+extern u8 D_8AF33D30[];
+extern s32 D_8AF33DAC;
+extern s32 D_8AF33DB0;
+extern s32 D_8AF33DB4;
+
+void func_8AF15F28(void) {
+    s32 temp_v0;
+
+    func_8004C8C0(179);
+    D_8AF33DAC = func_8004C990(179, 1);
+    D_8AF33DB0 = func_8004C990(179, 3);
+    D_8AF33DB4 = func_8004C990(179, 5);
+    func_8AF0A340();
+    func_8AF00504(113);
+    temp_v0 = func_8AF003A8(113);
+    func_8AC06E98(temp_v0);
+    // The hex arguments below are four-character ASCII tags: "po_w", "ya_l", "ya_r",
+    // "onof", "r_l_" and "r_r_".
+    D_8AF337E0 = func_8AC06D8C(temp_v0, 0x706F5F77);
+    func_8004E308(D_8AF337E0, (s32 *)func_8AF15E80, 0);
+    func_8AC05ED4(temp_v0, 0x79615F6C, &D_8AF33CB8);
+    func_8AC05ED4(temp_v0, 0x79615F72, &D_8AF33D30);
+    D_8AF337E4 = func_8AC06D8C(temp_v0, 0x6F6E6F66);
+    func_8AC02C80(temp_v0, 0x725F6C5F, 0x725F725F, D_8AF33C88);
+    func_8AF15080();
+    func_8AF152A8();
+    D_8AF33C7A = 0;
+    D_8AF33C7E = 360;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF16064.s")
 

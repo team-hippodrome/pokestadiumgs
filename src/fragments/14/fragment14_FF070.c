@@ -1191,8 +1191,28 @@ s32 func_8130BFCC(void *arg0) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130BFF0.s")
-
+// Same code as func_8130C270; GS moves the value to 0xE8F4 and the target count to
+// 0xE914, clears the float at 0xE8FC, steps by a quarter of func_816092FC's result
+// instead of an eighth, and does not call func_8130B12C.
+s32 func_8130BFF0(void *arg0) {
+    struct S { u8 pad0[0xE8F4]; f32 value; u8 gap0[4]; f32 unk_E8FC; u8 gap1[0x12]; u8 state; u8 gap2[1]; u8 count; };
+    struct S *s = arg0;
+    f32 delta = func_816092FC();
+    f32 step;
+    s->unk_E8FC = 0.0f;
+    step = delta / 4;
+    if (s->value + step < (f32)s->count) {
+        s->value = s->value + step;
+    } else {
+        if ((f32)s->count < s->value - step) {
+            s->value = s->value - step;
+        } else {
+            s->value = (f32)s->count;
+            s->state = 2;
+        }
+    }
+    return 1;
+}
 extern s32 func_81311C70();
 extern u8 D_8131200C[];
 extern void func_8130A8E0(void *arg0, s32 arg1);

@@ -38,7 +38,32 @@ s32 func_82B00E34(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B00EA4.s")
+extern s16 D_82B12458;
+extern s16 D_82B13240;
+
+void func_82B00EA4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    s16 *count;
+    u8 *entry;
+    s32 bottom;
+
+    // FAKE: reading D_82B13240 through a pointer, writing it back through
+    // D_82B12458 + 0xDE8 (the same address), and keeping both statements on one
+    // line reproduce the original allocation; diff score 345 with plain
+    // accesses and 60 with the statements on separate lines.
+    count = &D_82B13240;
+    if (*(s16 *)((u8 *)&D_82B12450 + 0xDF0) < 32) {
+        entry = (u8 *)&D_82B12450 + D_82B13240 * 16; *(s16 *)((u8 *)&D_82B12458 + 0xDE8) = *count + 1;
+        *(s32 *)(entry + 0xDF4) = arg0;
+        *(s16 *)(entry + 0xDF8) = arg1;
+        *(s16 *)(entry + 0xDFC) = arg2;
+        *(s16 *)(entry + 0xDFE) = arg2 + arg4 - 1;
+        *(s16 *)(entry + 0xE02) = arg3;
+        entry = entry + 0xDF4;
+        bottom = arg3 + arg5 - 1;
+        *(s16 *)(entry + 0xC) = bottom;
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -378,14 +403,8 @@ void func_82B01F14(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B0201C.s")
-#endif
-
-#ifdef VERSION_US
-extern s16 D_82B12470;
-extern u8 D_82B12472[];
-extern u8 D_82B12672[];
 extern s32 func_80049148(s32, s32, void *);
+extern s32 func_8004C874(s32, s32);
 typedef struct Pair02198 { s16 x; s16 y; } Pair02198;
 typedef struct State02198 {
     s16 unk_00;
@@ -404,6 +423,49 @@ typedef struct State02198 {
     s16 width;
     s16 height;
 } State02198;
+
+// Same code as func_82B02198, but GS takes the widest of the four strings
+// func_8004C874(27, 34-37) instead of walking D_82B12472, uses height 124, and does
+// not clear flag 2.
+void func_82B0201C(void *arg0)
+{
+  State02198 *p;
+  s32 maximum;
+  s32 value;
+  s32 i;
+  p = arg0;
+  maximum = 0;
+  for (i = 0; i < 4; i++) {
+    value = func_80049148(8, 0, (void *)func_8004C874(27, i + 34));
+    if (maximum < value) {
+      maximum = value;
+    }
+  }
+  p->width = maximum + 22;
+  p->height = 124;
+  p->delta.x = 0;
+  p->delta.y = -480;
+  p->pos.x = 0xFF;
+  p->pos.y = 216 - (p->height / 2);
+  p->poscopy = p->pos;
+  p->a = p->delta;
+  p->b.x = -p->a.x;
+  p->b.y = -p->a.y;
+  for (i = 0; i < 4; i++)
+  {
+    p->a0[i] = p->a;
+    p->b0[i] = p->b;
+  }
+
+  p->b0[1].x = 0;
+  p->b0[1].y = -480;
+}
+#endif
+
+#ifdef VERSION_US
+extern s16 D_82B12470;
+extern u8 D_82B12472[];
+extern u8 D_82B12672[];
 void func_82B02198(void *arg0)
 {
   u8 *cursor;
@@ -718,7 +780,37 @@ void func_82B02BA4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B02CA0.s")
+extern s32 D_82B085E8;
+
+// Same code as func_82B02ABC with limit D_82B085E8, but GS grows the offsets at
+// 0xC/0xE from 0 toward the targets at 0x18/0x1A and, at the limit, clears the state
+// at 0x6 and copies the pair at 0x14 to 0xC.
+void func_82B02CA0(void *arg0) {
+    s32 result;
+    s32 counter;
+    s32 limit;
+
+    result = 0;
+    // FAKE: the dead read of the counter and the empty if (0) below color the registers
+    // like the original, as in func_82B02ABC; diff score 70 without either one.
+    counter = *(s16 *)((u8 *)arg0 + 8);
+    limit = D_82B085E8;
+    *(s16 *)((u8 *)arg0 + 8) = *(s16 *)((u8 *)arg0 + 8) + 1;
+    if (0) {
+    }
+    counter = *(s16 *)((u8 *)arg0 + 8);
+    if (counter < limit) {
+        *(s16 *)((u8 *)arg0 + 0xC) = (*(s16 *)((u8 *)arg0 + 0x18) * counter) / limit;
+        *(s16 *)((u8 *)arg0 + 0xE) = (*(s16 *)((u8 *)arg0 + 0x1A) * counter) / limit;
+    } else {
+        result = 1;
+    }
+    if (result != 0) {
+        *(s16 *)((u8 *)arg0 + 6) = 0;
+        *(s16 *)((u8 *)arg0 + 8) = 0;
+        *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0xC) = *(struct PackedWord82B01BB8 *)((u8 *)arg0 + 0x14);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1196,7 +1288,18 @@ void func_82B05EF0(s32 arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B062BC.s")
+extern s16 D_82B12456;
+
+#pragma COALESCE_AT_LUI(func_82B062BC, D_82B12450, D_82B12456)
+
+void func_82B062BC(void) {
+    if (func_82B02870() != 0) {
+        D_82B12450 = 2;
+        D_82B12456 = 0;
+        func_82B01054(2);
+    }
+}
+
 #endif
 
 #ifdef VERSION_US

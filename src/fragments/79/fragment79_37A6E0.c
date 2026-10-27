@@ -166,7 +166,22 @@ u8 *func_8410B330(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410B35C.s")
+extern u8 *D_841911E8;
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+void func_8410B35C(u8 *arg0, void *arg1, s16 arg2) {
+    D_841911E8 = func_8410B330(arg0);
+    *(f32 *)(D_841911E8 + 0x84) = *(f32 *)((u8 *)arg1 + 0x644);
+    *(f32 *)(D_841911E8 + 0x80) = *(f32 *)((u8 *)arg1 + 0x640);
+    *(f32 *)(D_841911E8 + 0x7C) = *(f32 *)((u8 *)arg1 + 0x654);
+    *(f32 *)(D_841911E8 + 0x74) = *(f32 *)((u8 *)arg1 + 0x64C);
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x5C), *(f32 *)((u8 *)arg1 + 0x634),
+                                 *(f32 *)((u8 *)arg1 + 0x638), *(f32 *)((u8 *)arg1 + 0x63C));
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x50), *(f32 *)((u8 *)arg1 + 0x634),
+                                 *(f32 *)((u8 *)arg1 + 0x638), *(f32 *)((u8 *)arg1 + 0x63C));
+    Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), *(f32 *)(D_841911E8 + 0x5C), *(f32 *)(D_841911E8 + 0x60),
+                                 *(f32 *)(D_841911E8 + 0x64));
+}
 #endif
 
 #ifdef VERSION_US
@@ -232,7 +247,24 @@ void func_8410B594(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410B60C.s")
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern void func_841203B4(u8 *, f32, f32);
+void func_8410B60C(u8 *arg0, void *arg1, u8 *arg2, u8 *arg3) {
+    f32 target[3];
+    f32 pos[3];
+    f32 distance;
+    s16 angle1;
+    s16 angle0;
+
+    func_841203B4(arg2 + 0x44, 0.15f, 0.03f);
+    func_800371B4(arg3, (u8 *)target, *(f32 *)(arg2 + 0x40) * 1.3f, *(s16 *)(arg2 + 0x3C), *(s16 *)(arg2 + 0x3E));
+    Vec3f_SetComponentsDuplicate(pos, *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+    func_80037120(pos, target, &distance, &angle0, &angle1);
+    func_800371B4((u8 *)pos, arg0 + 0xA8, *(f32 *)(arg2 + 0x44) * distance, angle0, angle1);
+    if (*(f32 *)(arg0 + 0xAC) <= 10.0f) {
+        *(f32 *)(arg0 + 0xAC) = 10.0f;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -911,7 +943,23 @@ void BattleAnim_ModelDispatch_134(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410F92C.s")
+void func_8410F92C(u8 *arg0, f32 arg1) {
+    u8 *value;
+
+    value = D_841911E8 = func_8410B330(arg0);
+    // FAKE: the multiply by one keeps 30.0f out of the register the later calls reuse;
+    // diff score 255 without it.
+    *(f32 *)(arg0 + 0x2C) = 30.0f * 1.0f;
+    Vec3f_SetComponentsDuplicate((f32 *)(*(u8 **)D_841911E8 + 0xB4), 0.0f, 30.0f, 0.0f);
+    if (D_841911E8 == D_841911E0) {
+        // FAKE: reloading through value selects $v1; diff score 30 without it.
+        value = D_841911E8;
+        Vec3f_SetComponentsDuplicate((f32 *)(*(u8 **)value + 0xA8), 100.0f, 30.0f, 0.0f);
+    } else {
+        Vec3f_SetComponentsDuplicate((f32 *)(*(u8 **)D_841911E8 + 0xA8), -100.0f, 30.0f, 0.0f);
+    }
+}
+
 #endif
 
 #ifdef VERSION_US

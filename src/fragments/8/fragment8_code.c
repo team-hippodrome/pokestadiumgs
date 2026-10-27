@@ -8,7 +8,11 @@
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00460.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00580.s")
+void func_82F00580(u8 *arg0) {
+    // FAKE: the comma expression puts arg0 second in the addu; diff score 10 without it.
+    func_8004C54C(65, func_80062CE0((arg0[0xECF] + (0, arg0))[0xED0]));
+    func_8004C54C(66, func_80062CE0(((u8(*)[0x58])arg0)[arg0[0xECE]][arg0[0xED0] - 31]));
+}
 
 extern void func_800226C0(s32);
 void func_82F005F8(void *arg0, s32 arg1) {

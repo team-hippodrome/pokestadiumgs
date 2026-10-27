@@ -2351,6 +2351,8 @@ s32 func_8001926C(s32 arg0, s32 arg1, s32 arg2, s32 *loopEnd, s32 *samplePosInt)
     return FALSE;
 }
 
+s32 func_800193B8(s32 flags);
+
 void func_80019378(void) {
     func_800193B8(0);
 }
@@ -2359,8 +2361,73 @@ void func_80019398(void) {
     func_800193B8(2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800193B8.s")
+// Same code as Ocarina of Time func_800E66C0 (src/audio/internal/thread.c), which counts
+// the notes still playing and, for odd flags, releases them; GS's audio context is
+// D_8011BE90 with the note count at 0x2C28, 0x100-byte notes from the pointer at
+// 0x3468, and the release rate at 0x2BF8.
+s32 func_800193B8(s32 flags) {
+    typedef struct { u8 unk_bits : 3; u8 release : 1; u8 state : 4; } AdsrAction;
+    typedef struct {
+        u32 enabled : 1;
+        u32 needs_init : 1;
+        u32 finished : 1;
+        u32 unused : 1;
+        u32 strong_right : 1;
+        u32 strong_left : 1;
+        u32 strong_reverb_right : 1;
+        u32 strong_reverb_left : 1;
+        u32 reverb_index : 3;
+        u32 book_offset : 2;
+        u32 is_synthetic_wave : 1;
+        u32 has_two_parts : 1;
+        u32 use_haas_effect : 1;
+        u32 unk_bits : 16;
+    } NoteSampleFlags;
+    typedef struct { u8 unk_00[0x30]; u8 playback[0xA0]; u8 sample_state[0x30]; } Note;
+    typedef struct {
+        u8 unk_0000[0x2BF8];
+        f32 ticks_per_update_inv;
+        u8 unk_2BFC[0x2C];
+        s32 num_notes;
+        u8 unk_2C2C[0x83C];
+        Note *notes;
+    } AudioContext;
+    s32 count;
+    u8 *playback;
+    u8 *sample_state;
+    s32 i;
+    Note *note;
+    u8 *tuned_sample;
 
+    count = 0;
+    for (i = 0; i < ((AudioContext *)D_8011BE90)->num_notes; i++) {
+        // FAKE: adding the note array after the index orders the addu operands like the
+        // original; diff score 10 without it.
+        note = i + ((AudioContext *)D_8011BE90)->notes;
+        playback = note->playback;
+        if (((NoteSampleFlags *)note->sample_state)->enabled) {
+            sample_state = note->sample_state;
+            if (((AdsrAction *)(playback + 0x30))->state != 0) {
+                if (flags >= 2) {
+                    tuned_sample = *(u8 **)(sample_state + 0x10);
+                    if (tuned_sample == NULL || ((NoteSampleFlags *)sample_state)->is_synthetic_wave) {
+                        continue;
+                    }
+                    if ((*(Sample **)tuned_sample)->medium == 0) {
+                        continue;
+                    }
+                }
+
+                count++;
+                if ((flags & 1) == 1) {
+                    *(f32 *)(playback + 0x3C) = ((AudioContext *)D_8011BE90)->ticks_per_update_inv;
+                    ((AdsrAction *)(playback + 0x30))->release = 1;
+                }
+            }
+        }
+    }
+    return count;
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800194A0.s")
 
 

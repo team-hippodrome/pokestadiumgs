@@ -220,7 +220,22 @@ void func_8160B54C(s32 arg0, s32 arg1, s32 arg2) {
     func_81607408();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160B5BC.s")
+void func_8160B5BC(u8 *arg0, u8 *arg1) {
+    f32 ratio;
+    f32 inv_ratio;
+
+    *(s16 *)(arg1 + 4) = 140;
+    *(s16 *)(arg1 + 6) = 57;
+    if (*(s8 *)(arg0 + 8) == *(s8 *)(arg0 + 9)) {
+        *(s16 *)(arg1 + 0) = func_8160A2E8(*(s8 *)(arg0 + 8));
+        *(s16 *)(arg1 + 2) = func_8160A31C(*(s8 *)(arg0 + 8));
+        return;
+    }
+    ratio = *(f32 *)(arg0 + 4) / 4;
+    inv_ratio = 1.0f - ratio;
+    *(s16 *)(arg1 + 0) = (s16)((func_8160A2E8(*(s8 *)(arg0 + 8)) * ratio) + (func_8160A2E8(*(s8 *)(arg0 + 9)) * inv_ratio));
+    *(s16 *)(arg1 + 2) = (s16)((func_8160A31C(*(s8 *)(arg0 + 8)) * ratio) + (func_8160A31C(*(s8 *)(arg0 + 9)) * inv_ratio));
+}
 
 extern u8 D_800CE060[];
 s32 func_8160B6E4(void *arg0) {

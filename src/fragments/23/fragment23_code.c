@@ -175,8 +175,43 @@ void func_82A00BF4(void)
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A00C84.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A01098.s")
+extern Gfx *D_800D0510;
+extern u8 D_82A018B8[];
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_800459AC(u8 *, u8, u8, u16, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80044270(s16, s16, s16, s16, s32, s32, s32, s32, s32);
 
+// Same code as fragment24's func_82B07C88 with resource 115 and display list
+// D_82A018B8; GS sets no render mode or environment color.
+//@src/fragments/24/fragment24_150C10.c
+void func_82A01098(void) {
+    s32 y;
+    s32 row_y;
+    u8 *texture;
+    s32 offset;
+    s32 row;
+
+    texture = (u8 *)func_8004C990(115, 0);
+    gSPDisplayList(D_800D0510++, D_82A018B8);
+    row = 0;
+    row_y = 0;
+    do {
+        func_800459AC((*(u16 *)texture << 5) * row + func_8004CA60(texture), texture[4], texture[5],
+                      *(u16 *)texture, 32, 1, 0, 0, 2, 7, 0, 0, 0);
+        offset = 0;
+        y = row_y;
+        do {
+            if (y < 480) {
+                func_80044270(0, y, 640, 32, 0, 0, 1024, 1024, 0);
+            }
+            offset += 128;
+            y += 128;
+        } while (offset != 512);
+        row++;
+        row_y += 32;
+    } while (row != 4);
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A011E4.s")
 
 extern void BgStage_DrawFrame(void);

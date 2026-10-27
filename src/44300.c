@@ -11,7 +11,7 @@ extern s32 process_geo_layout(s32, void *);
 extern void MainPool_FinalizeAllocation(s32);
 extern void GeoCamera_SetViewport(void *, s16, s16, s16, s32);
 extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
-void func_80043714(void *arg0, s16 arg1, s32 arg2) {
+void func_80043714(void *arg0, s32 arg1, s32 arg2) {
     s32 camera;
     s32 state;
     state = MainPool_AllocState(main_pool_get_available(), 0);
@@ -23,8 +23,76 @@ void func_80043714(void *arg0, s16 arg1, s32 arg2) {
     GeoCamera_SetPerspective((void *)(u32)camera, 30.0f, 100.0f, 12800.0f);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/44300/func_800437B4.s")
+// Render slot of a func_800437B4 list, 0x24 bytes; func_80043BD4 sets unk_20.
+typedef struct PokeIconSlot44300 {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ u8 unk_02[2];
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ u8 unk_06[0x12];
+    /* 0x18 */ u8 *image; // color image from func_800071A4
+    /* 0x1C */ s32 unk_1C;
+    /* 0x20 */ s32 unk_20;
+} PokeIconSlot44300; // size = 0x24
 
+// Render list made by func_800437B4; func_80043714 sets the geo layout at 0x14 and
+// D_80094CF0 at 0x18.
+typedef struct PokeIconList44300 {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 count;
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ s16 unk_06;
+    /* 0x08 */ void *unk_08;
+    /* 0x0C */ PokeIconSlot44300 *slots;
+    /* 0x10 */ u8 *depth; // shared depth image, made when arg0 is not NULL
+    /* 0x14 */ s32 unk_14;
+    /* 0x18 */ s32 unk_18;
+} PokeIconList44300; // size = 0x1C
+
+extern void *main_pool_alloc(s32, s32);
+extern void *func_800071A4(s32, s32, s32, s32, s32);
+extern void GfxImage_AttachDepthBuffer(u8 *, u8 *);
+extern void _bzero(void *, s32);
+
+// Same code as Pokemon Stadium's PokeIcon_CreateRenderList (src/poke_icon.c): allocates
+// arg1 slots, each with an arg2 x arg3 16-bit color image cleared to 0 and sharing the
+// depth image, then sets up the scene with func_80043714. GS clears the fields that
+// Pokemon Stadium fills with -1 and gSpeciesDisplayTable, and also clears slot words
+// 0x1C and 0x20.
+PokeIconList44300 *func_800437B4(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 i;
+    PokeIconList44300 *list = main_pool_alloc(sizeof(PokeIconList44300), 0);
+
+    if (list != NULL) {
+        list->unk_00 = 0;
+        list->count = arg1;
+        list->unk_04 = 0;
+        list->unk_06 = 0;
+        list->unk_08 = arg0;
+        list->slots = main_pool_alloc(arg1 * sizeof(PokeIconSlot44300), 0);
+        list->depth = NULL;
+        list->unk_14 = 0;
+        list->unk_18 = 0;
+
+        if (arg0 != NULL) {
+            list->depth = func_800071A4(0, 2, arg2, arg3, 1);
+        }
+
+        for (i = 0; i < arg1; i++) {
+            list->slots[i].unk_00 = 0;
+            list->slots[i].unk_04 = 0;
+            list->slots[i].unk_1C = 0;
+            list->slots[i].image = func_800071A4(0, 2, arg2, arg3, 0);
+            list->slots[i].unk_20 = 0;
+            _bzero(*(void **)(list->slots[i].image + 8), arg2 * arg3 * 2);
+            if (list->depth != NULL) {
+                GfxImage_AttachDepthBuffer(list->slots[i].image, list->depth);
+            }
+        }
+
+        func_80043714(list, arg2, arg3);
+    }
+    return list;
+}
 extern s32 func_80064728();
 extern s32 func_8004BA34(s32);
 extern void func_8004B7E0(s32, void *);

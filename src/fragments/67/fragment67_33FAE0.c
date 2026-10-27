@@ -639,7 +639,16 @@ void func_829046A8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82904794.s")
+extern f32 D_82911FD0[];
+
+void func_82904794(void) {
+    func_829033DC((f32 *)((u8 *)D_82919C38 + 0xB8),
+                  *(f32 *)((u8 *)D_82919A08 + 0x28) + *(f32 *)((u8 *)D_82911FD0 + D_82919C10 * 20), 0.45f);
+    if (*(f32 *)((u8 *)D_82919C38 + 0xB8) > 450.0f) {
+        *(f32 *)((u8 *)D_82919C38 + 0xB8) = 450.0f;
+    }
+}
+
 #endif
 
 #ifdef VERSION_US

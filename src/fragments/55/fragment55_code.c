@@ -64,7 +64,38 @@ void func_86700318(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86700588.s")
+extern void *D_8009491C;
+extern s32 D_8670BBA4;
+extern s32 D_8670BD64[];
+// 0xAC-byte records; func_86700588 reads the word at 0x0 as an index into D_8670BD64.
+extern struct { s32 unk_00; u8 unk_04[0xA8]; } D_8672843C[];
+extern s32 D_8670C960;
+extern void *D_8670C95C;
+extern f32 D_8670C340;
+
+// Same code as func_867006C4 with resource 387, its frame taken from
+// D_8670BD64[D_8672843C[index].unk_00], and display list D_8670C95C; GS draws only
+// while D_8670BBA4 is 1 and otherwise stores D_8670C340 at 0x2C of the context.
+void func_86700588(s32 arg0, s32 arg1) {
+    void *context;
+    s32 index;
+
+    if (arg0 == 5) {
+        context = D_8009491C;
+        index = *(s32 *)((u8 *)context + 0x14);
+        if (D_8670BBA4 == 1) {
+            D_8670C960 = func_8004C990(387, D_8670BD64[D_8672843C[index].unk_00]);
+            gDPPipeSync(D_800D0510++);
+            gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+            gSPSegment(D_800D0510++, 0xF,
+                       func_8004CA60((u8 *)D_8670C960));
+            gSPDisplayList(D_800D0510++, D_8670C95C);
+            GeoRender_ApplyMaterialState();
+        } else {
+            *(f32 *)((u8 *)context + 0x2C) = D_8670C340;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

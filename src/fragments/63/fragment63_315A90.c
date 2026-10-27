@@ -197,7 +197,24 @@ void func_87E12AA0(void *arg0, s32 arg1, void *arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E12B34.s")
+void func_87E12B34(s32 arg0) {
+    u8 *var_p;
+    u8 *var_q;
+    s32 var_s0 = 0;
+
+    // FAKE: a for loop with the same bounds assigns different saved registers;
+    // diff score 45 with one.
+loop:
+    func_87E127B8((void *)arg0, var_s0 + 4, (void **)&var_p, (void **)&var_q);
+    if (var_p != NULL) {
+        func_87F0B1A4(var_q + 0xC, (f32 *)(var_p + 0x48), *(f32 *)(var_p + 0x48), *(f32 *)(var_p + 0x4C), 1000.0f,
+                      15, 0x2000);
+    }
+    var_s0 += 1;
+    if (var_s0 != 4) {
+        goto loop;
+    }
+}
 
 extern u32 D_87E1AB64;
 void func_87E12BE8(s32 arg0) {
@@ -243,8 +260,29 @@ s32 func_87E12D48(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E12D80.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E130F0.s")
+extern void *D_8009491C;
+extern Gfx *D_800D0510;
+extern u8 *func_8004CA60(u8 *);
+extern void GeoRender_ApplyMaterialState();
 
+// Same code as fragment63's func_87E05874, but GS selects the texture (0x258) and the
+// display list (0x260) by the index at 0x4 of the model data.
+//@src/fragments/63/fragment63_308D70.c
+void func_87E130F0(s32 arg0, s32 arg1) {
+    u8 *context;
+    void *temp_v0;
+
+    if (arg0 == 5) {
+        context = (u8 *)D_8009491C;
+        temp_v0 = *(void **)(context + 0x14);
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        gSPSegment(D_800D0510++, 0xF,
+                   func_8004CA60(((u8 **)((u8 *)temp_v0 + 0x258))[*(s32 *)((u8 *)temp_v0 + 4)]));
+        gSPDisplayList(D_800D0510++, ((void **)((u8 *)temp_v0 + 0x260))[*(s32 *)((u8 *)temp_v0 + 4)]);
+        GeoRender_ApplyMaterialState();
+    }
+}
 extern void func_87E12D80(void);
 extern void *func_87F025B8(void *, void (*)(void));
 extern void func_8003F1DC(void *);

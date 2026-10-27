@@ -249,7 +249,46 @@ void draw_profiler(s32 profiler_mode) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/AC80/func_8000B0F0.s")
+// Profiler frame record, 0xC8 bytes, as in Pokemon Stadium's ProfilerFrameData
+// (src/profiler.h); three of them start at D_800D0F90.
+typedef struct ProfilerFrameDataB0F0 {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ OSTime gameTimes[3];
+    /* 0x20 */ u8 unk_20[0x10];
+    /* 0x30 */ OSTime gfxTimes[3];
+    /* 0x48 */ u8 unk_48[0x80];
+} ProfilerFrameDataB0F0; // size = 0xC8
+typedef struct ProfilerB0F0 {
+    /* 0x000 */ ProfilerFrameDataB0F0 data[3];
+    /* 0x258 */ s16 unk_258;
+    /* 0x25A */ s16 frameIdx1;
+    /* 0x25C */ s16 frameIdx2;
+} ProfilerB0F0;
+extern s16 D_80087E30;
+extern char D_800A1CD0[]; // "MAXA:%5.3f"
+extern char D_800A1CDC[]; // "CPU:%5.3f"
+extern char D_800A1CE8[]; // "RCP:%5.3f"
+// 1 / 770296.0f each, the scale Pokemon Stadium's print_profiler_metrics applies.
+extern f32 D_800A1CF4;
+extern f32 D_800A1CF8;
+extern f32 D_800A1CFC;
+
+// Same code as Pokemon Stadium's print_profiler_metrics (src/profiler.c); GS first
+// prints the OSTime at D_80087E30 as "MAXA" on the line above.
+void func_8000B0F0(void) {
+    // FAKE: pad and pad2 place the spilled profiler pointer and index like the original;
+    // diff score 20 without pad and 18 without pad2.
+    s32 pad[2];
+    ProfilerFrameDataB0F0 *profiler =
+        &((ProfilerB0F0 *)&D_800D0F90)->data[(((ProfilerB0F0 *)&D_800D0F90)->frameIdx1 == 0) ? 2 : ((ProfilerB0F0 *)&D_800D0F90)->frameIdx1 - 1];
+    ProfilerFrameDataB0F0 *profiler_2 =
+        &((ProfilerB0F0 *)&D_800D0F90)->data[(((ProfilerB0F0 *)&D_800D0F90)->frameIdx2 == 0) ? 2 : ((ProfilerB0F0 *)&D_800D0F90)->frameIdx2 - 1];
+    s32 pad2;
+
+    HAL_Printf(240, 200, D_800A1CD0, *(OSTime *)&D_80087E30 * D_800A1CF4);
+    HAL_Printf(240, 210, D_800A1CDC, (profiler->gameTimes[2] - profiler->gameTimes[0]) * D_800A1CF8);
+    HAL_Printf(240, 220, D_800A1CE8, (profiler_2->gfxTimes[2] - profiler_2->gfxTimes[0]) * D_800A1CFC);
+}
 
 extern void _bzero(s32 *, s32);
 extern u8 D_800D0F90;

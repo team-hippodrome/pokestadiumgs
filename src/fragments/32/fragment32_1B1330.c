@@ -94,7 +94,47 @@ void func_883005B8(s32 arg0) {
     func_80044270((s32) (s16) ((arg0 * 0x3C) + 0x43), 0xD5, 0x3C, 0x3E, -0x10, -0x10, 0x400, 0x400, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_88300640.s")
+extern s32 D_8800687C;
+extern s32 D_88601890;
+extern u16 D_8800686A;
+extern u8 D_8800686D[];
+extern u8 D_88308894[];
+extern u8 D_8830889C[];
+extern u8 D_883088A0[];
+extern u8 D_883088A4[];
+extern u8 D_883088A8[];
+extern u8 D_883088AC[];
+
+void func_88300640(void) {
+    s32 i;
+
+    func_800496A4(8, 1);
+    func_80049064(157, 74, 1, D_8800686D);
+    func_800496A4(4, 2);
+    func_80048E30(D_8800687C, 115, 100, func_8004C874(13, 9), 1);
+    func_80049668(0);
+    func_800495F8(151, 100, 0, D_88308894, D_8800686A);
+    // FAKE: the empty statements select $v0 for D_88601890; diff score 25 without them.
+    if (1) {} if (1) {} if (1) {} if (1) {}
+    if (*(s32 *)D_88601890 >= 4) {
+        func_800495F8(236, 152, 2, D_8830889C, ((u8 *)D_88601890)[0x38E]);
+        func_800495F8(236, 172, 2, D_883088A0, ((u8 *)D_88601890)[0x38F]);
+        func_80049668(1);
+        for (i = 0; i != 2; i++) {
+            func_80048E30(D_8800687C, 77, 152 + i * 20, func_8004C874(40, i + 4), 1);
+        }
+        func_800496A4(8, 1);
+        func_80049064(157, 124, 1, func_8004C874(40, 20));
+    } else {
+        func_800495F8(236, 132, 2, D_883088A4, ((u8 *)D_88601890)[0x38B]);
+        func_800495F8(236, 152, 2, D_883088A8, ((u8 *)D_88601890)[0x38C]);
+        func_800495F8(236, 172, 2, D_883088AC, ((u8 *)D_88601890)[0x38D]);
+        func_80049668(1);
+        for (i = 0; i != 3; i++) {
+            func_80048E30(D_8800687C, 77, 132 + i * 20, func_8004C874(40, i + 3), 1);
+        }
+    }
+}
 
 extern Gfx *D_800D0510;
 extern s32 func_8004C990(s32, s32);

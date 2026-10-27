@@ -263,7 +263,64 @@ void func_8FB02560(unk_D_8FB03DF8 *state) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02608.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02698.s")
+extern s32 D_80087200;
+extern u8 D_8FB034AE;
+extern u8 D_8FB034AF;
+extern u8 D_8FB034B0;
+extern u8 D_8FB034B1;
+void func_8FB02698(void *arg0) {
+    u16 buttons;
+    u16 pressed;
+
+    buttons = *(u16 *)((u8 *)D_80087200 + 0xC);
+    if (buttons & 0x8000) {
+        func_800226C0(2);
+        if (func_8FB02608(arg0) != 0) {
+            *(s32 *)((u8 *)arg0 + 0x40) = 1;
+        } else {
+            pressed = *(u16 *)((u8 *)*(void **)((u8 *)arg0 + 0x44));
+            if (pressed != 0) {
+                if (pressed == 2) {
+                    func_8FB021F8(arg0);
+                    func_8FB02108(arg0);
+                    *(s32 *)((u8 *)arg0 + 0x3C) = 0;
+                    *(s32 *)((u8 *)arg0 + 0x38) = 0;
+                    func_8FB024BC(arg0);
+                }
+            } else {
+                *(s32 *)((u8 *)arg0 + 0x40) = 2;
+            }
+        }
+    } else if (buttons & 0x4000) {
+        func_800226C0(3);
+        *(s32 *)((u8 *)arg0 + 0x30) = 2;
+    } else {
+        pressed = buttons;
+        if (pressed == 0x800) {
+            func_800226C0(1);
+            *(s32 *)((u8 *)arg0 + 0x30) =
+                ((u8 *)&D_8FB034AE)[*(s32 *)((u8 *)arg0 + 0x30) * 0x24];
+        } else if (pressed == 0x400) {
+            func_800226C0(1);
+            *(s32 *)((u8 *)arg0 + 0x30) =
+                ((u8 *)&D_8FB034AF)[*(s32 *)((u8 *)arg0 + 0x30) * 0x24];
+        } else if (pressed == 0x200) {
+            func_800226C0(1);
+            *(s32 *)((u8 *)arg0 + 0x30) =
+                ((u8 *)&D_8FB034B0)[*(s32 *)((u8 *)arg0 + 0x30) * 0x24];
+        } else if (pressed == 0x100) {
+            func_800226C0(1);
+            *(s32 *)((u8 *)arg0 + 0x30) =
+                ((u8 *)&D_8FB034B1)[*(s32 *)((u8 *)arg0 + 0x30) * 0x24];
+        } else if (pressed & 8) {
+            func_800226C0(1);
+            *(s32 *)((u8 *)arg0 + 0x3C) -= 1;
+        } else if (pressed & 4) {
+            func_800226C0(1);
+            *(s32 *)((u8 *)arg0 + 0x3C) += 1;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02878.s")
 

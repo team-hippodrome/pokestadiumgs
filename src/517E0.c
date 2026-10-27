@@ -455,8 +455,41 @@ s32 func_80051A8C(u32 arg0, s32 arg1, s16 arg2) {
     return (entry != NULL) ? ((*entry & arg2) != 0) : 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051BF0.s")
+// Same code as func_80051A8C, but GS sets the arg2 bits in the entry's first byte
+// instead of testing them, and returns whether an entry was found.
+s32 func_80051BF0(u32 arg0, void *arg1, s16 arg2) {
+    u8 *entry = NULL;
+    s32 result;
 
+    switch (arg0) {
+        case 16: entry = (u8 *)func_80050E88(0, D_800972C0, (s32)arg1); break;
+        case 17: entry = (u8 *)func_80050F60(0, arg1); break;
+        case 18: entry = (u8 *)func_80051028(0, (s32)arg1); break;
+        case 19: entry = (u8 *)func_800510CC(0); break;
+        case 20: entry = (u8 *)func_80051138(0); break;
+        case 21: entry = (u8 *)func_800511A4(0); break;
+        case 22: entry = (u8 *)func_80051208(0); break;
+        case 23: entry = (u8 *)func_80051274(0); break;
+        case 24: entry = (u8 *)func_800512E0(0); break;
+        case 25: entry = (u8 *)func_8005134C(0); break;
+        case 26: entry = (u8 *)func_800513B8(0); break;
+        case 27: entry = (u8 *)func_80051424(0); break;
+        case 28: entry = (u8 *)func_80051490(0); break;
+        case 29: entry = (u8 *)func_800514FC(0); break;
+        case 30: entry = (u8 *)func_80051568(0); break;
+    }
+    if (entry != NULL) {
+        *entry |= arg2;
+        result = 1;
+    } else {
+        result = 0;
+    }
+    return result;
+}
+
+// Empty function at 0x80051D5C, inside the asm file of func_80051BF0.
+void func_80051D5C(void) {
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051D64.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80052150.s")
@@ -699,7 +732,7 @@ s32 func_80053524(s32 arg0, u8 *arg1) {
 }
 
 extern void func_80060D70(u8 *, u8 *);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 void func_80053584(void *arg0, s32 arg1) {
     u8 *v0;
@@ -713,7 +746,7 @@ void func_80053584(void *arg0, s32 arg1) {
 
 extern s32 func_80050E88(s32 arg0, s32 arg1, s32 arg2);
 extern void * func_80051028(s32 arg0, s32 arg1);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 extern void func_80060D70(u8 *, u8 *);
 extern s32 D_800972C0;
 s32 func_800535D4(s32 arg0, s32 arg1, void *arg2, u8 *arg3, u16 arg4) {
@@ -1001,7 +1034,7 @@ u8 func_8005431C(void) {
 }
 
 extern void * func_800510CC(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 s32 func_8005437C(u8 arg0) {
     s32 result = 0;
@@ -1024,7 +1057,7 @@ u8 func_80054410(s32 arg0) {
 }
 
 extern void * func_800510CC(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 s32 func_80054488(s32 arg0, u8 arg1) {
     s32 result = 0;
@@ -1048,7 +1081,7 @@ u8 func_8005453C(s32 arg0) {
 }
 
 extern void * func_800510CC(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 s32 func_800545B4(s32 arg0, u8 arg1) {
     s32 result = 0;
@@ -1072,7 +1105,7 @@ u8 func_80054668(s32 arg0) {
 }
 
 extern void * func_800510CC(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 s32 func_800546E0(s32 arg0, u8 arg1) {
     s32 result = 0;
@@ -1096,7 +1129,7 @@ u8 func_80054794(void) {
 }
 
 extern void * func_800510CC(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 u8 func_800547F4(u8 arg0) {
     if ((*(s32 *)((u8 *)&D_801281C0 + (func_80050D20(0x13, -1) * 0xC)) & 1) != 0 &&
@@ -1116,7 +1149,7 @@ void func_8005487C(Quad8005487C *arg0) {
 
 extern s32 _bcmp(const void *, const void *, s32);
 extern void * func_80051138(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 
 typedef struct {
     s32 a;
@@ -1194,7 +1227,7 @@ s32 func_80054AA0(s32 arg0) {
 }
 
 extern void * func_80051138(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 void func_80054AF4(s32 arg0) {
     void *temp_v0;
     s32 flags;
@@ -1479,7 +1512,7 @@ s32 func_80055A9C(void *arg0, s32 arg1) {
 }
 
 extern s32 func_80050E88(s32 arg0, s32 arg1, s32 arg2);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 extern s32 D_800972C0;
 s32 func_80055B14(void *arg0, s32 arg1) {
     struct Payload80055B14 { s32 words[96]; };
@@ -1605,7 +1638,7 @@ void func_80055EF0(void *arg0, s32 arg1) {
 
 extern s32 _bcmp(const void *, const void *, s32);
 extern void * func_80051138(s32 arg0);
-extern void func_80051BF0(s32, void *, s32);
+extern s32 func_80051BF0(u32, void *, s16);
 void func_80055F6C(void *arg0, s32 arg1) {
     struct Record { s32 a, b, c, d, e, f; };
     if (arg1 < 0 || arg1 >= 2) {

@@ -2,7 +2,69 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/67F00/func_80067300.s")
+extern u8 D_83500000[];
+extern u8 D_87F00000[];
+extern u8 fragment1_ROM_START[];
+extern u8 fragment2_ROM_START[];
+extern u8 fragment64_ROM_START[];
+extern u8 fragment65_ROM_START[];
+void Audio_ResetModeSelector(void);
+s32 Audio_SetModeBlocking(s32 mode, s32 arg1, s32 arg2);
+void Fragment_Load(s32, void *, void *);
+s32 Fragment_LoadAndCall(s32, void *, void *, s32, void *);
+s32 GbSave_GetPortAvailability(s32 arg0);
+s32 func_8006A388(void);
+s32 func_8006A424(void);
+s32 func_8006CBB8(s32 arg0);
+void *main_pool_alloc(s32, s32);
+
+typedef struct unk_func_80067300 {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+} unk_func_80067300;
+
+s32 func_80067300(u8 *arg0) {
+    s32 pad1; // FAKE: unreferenced stack slot 0x34; diff score 64 without it (42 without both pads).
+    s32 sp30;
+    s32 pad2; // FAKE: unreferenced stack slot 0x2C; diff score 48 without it.
+    s32 sp28;
+    s32 sp24;
+    unk_func_80067300 *sp20;
+    s32 ret;
+
+    sp30 = 0;
+    sp28 = func_8006CBB8(func_8006A424());
+    sp20 = main_pool_alloc(8, 0);
+    if (sp28 == 2) {
+        sp24 = 1;
+    } else {
+        if (*(s8 *)(arg0 + 0x93C) >= 0 && *(s8 *)(arg0 + 0x93C) < 4 &&
+            !GbSave_GetPortAvailability(*(s8 *)(arg0 + 0x93C))) {
+            sp30 = 1;
+        }
+        sp24 = 0;
+    }
+    _bzero(sp20, 8);
+    sp20->unk_00 = sp30;
+    sp20->unk_02 = func_8006A388();
+    sp20->unk_04 = sp24;
+    Audio_ResetModeSelector();
+    Audio_SetModeBlocking(10, 0, 0);
+    Fragment_Load((((u32)D_87F00000 & 0x0FF00000) >> 20) - 0x10, fragment64_ROM_START, fragment65_ROM_START);
+    Fragment_LoadAndCall((((u32)D_83500000 & 0x0FF00000) >> 20) - 0x10, fragment1_ROM_START, fragment2_ROM_START,
+                         0, sp20);
+    if (sp24 == 0) {
+        if (sp30 != 0) {
+            ret = 0;
+        } else {
+            ret = 1;
+        }
+    } else {
+        ret = -1;
+    }
+    return ret;
+}
 
 struct Func800675A0Source;
 typedef struct { s32 words[24]; } Func80067454Copy;
@@ -47,7 +109,6 @@ extern u8 D_81800000[];
 extern u8 D_81A00000[];
 extern u8 D_82F00000[];
 extern u8 D_83300000[];
-extern u8 D_87F00000[];
 extern u8 fragment11_ROM_START[];
 extern u8 fragment12_ROM_START[];
 extern u8 fragment3_ROM_START[];
@@ -57,15 +118,10 @@ extern u8 fragment8_ROM_START[];
 extern u8 fragment9_ROM_START[];
 extern u8 fragment57_ROM_START[];
 extern u8 fragment58_ROM_START[];
-extern u8 fragment64_ROM_START[];
-extern u8 fragment65_ROM_START[];
-void *main_pool_alloc(s32, s32);
 void main_pool_push_state(s32);
 void main_pool_pop_state(s32);
 void func_800354B4(s32, s32, s32);
 void func_80067454(Func800675A0Source *, void *);
-void Fragment_Load(s32, void *, void *);
-s32 Fragment_LoadAndCall(s32, void *, void *, s32, void *);
 void func_800675F8(void *arg0) {
     Func800675A0Source *sp2C;
     Func800675A0Dest *sp28;

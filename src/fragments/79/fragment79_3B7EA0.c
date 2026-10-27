@@ -208,8 +208,50 @@ void func_8414978C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_841497E8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149928.s")
+typedef struct unk_D_841951F0_9D4 {
+    u8 unk_00[0x40];
+    u32 unk_40_31 : 4;
+    u32 unk_40_27 : 1; // Gates effect 41 in func_84149928.
+} unk_D_841951F0_9D4;
 
+extern u8 *D_841951F0;
+
+// Same code as fragment80's MoveDamage_ApplyEffect_fragment80; GS reads the level at
+// 0xC and HP at 0x28 of the Pokemon records, and effect 41 deals the move's power only
+// while bit 27 of the word at (D_841951F0 + 0x9D4)->0x40 is set (0 damage otherwise).
+//@src/fragments/80/fragment80_41A5F0.c
+void func_84149928(void *arg0) {
+    Fragment79DamageContext *ctx = arg0;
+    switch (ctx->effect) {
+    case 38:
+        if (ctx->attacker[0xC] >= ctx->defender[0xC]) {
+            ctx->damage = 65535;
+        }
+        return;
+    case 40:
+        ctx->damage = *(u16 *)(ctx->defender + 0x28) >> 1;
+        if (!ctx->damage) {
+            ctx->damage++;
+        }
+        return;
+    case 41:
+        if ((*(unk_D_841951F0_9D4 **)(D_841951F0 + 0x9D4))->unk_40_27) {
+            ctx->damage = ctx->power;
+        } else {
+            ctx->damage = 0;
+        }
+        return;
+    case 87:
+        ctx->damage = ctx->attacker[0xC];
+        return;
+    case 88:
+        ctx->damage = ctx->attacker[0xC] * 0.75;
+        return;
+    default:
+        MoveDamage_ComputeBase_fragment79(ctx);
+        return;
+    }
+}
 extern void func_8414978C(u8 *);
 extern void func_841496C0(u8 *);
 void func_84149A50(void *arg0) {

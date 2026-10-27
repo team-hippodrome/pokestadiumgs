@@ -543,7 +543,22 @@ void func_87E11850(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E11924.s")
+void func_87E11924(s32 arg0) {
+    s32 i;
+    u8 *entry;
+
+    func_87E11534(1, arg0, D_87E1EBB8 + 0x1DC, 0xFF, 0xFF);
+    entry = D_87E1EBB8 + 0x1DC;
+    for (i = 0; i != 1; i += 1, entry += 8) {
+        if (i == 0) {
+            if (((1 << *(s8 *)(D_87E1EBB8 + 0x938)) & *(*(u8 **)(D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) {
+                *(u16 *)(*(u8 **)entry + 2) |= 1;
+            } else {
+                *(u16 *)(*(u8 **)entry + 2) &= ~1;
+            }
+        }
+    }
+}
 
 extern void func_87E1162C(s32 *, s32 *, s32 *);
 extern s32 func_87E11534(s32, s32, u8 *, u8, u8);
