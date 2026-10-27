@@ -1410,7 +1410,40 @@ void func_8260E398(void *arg0, s32 arg1) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260E4A8.s")
+extern void func_8004C594(s32, s32);
+extern s32 func_8004C8A0(void *, s32, s32, s32);
+void func_8260E4A8(void *arg0, s32 arg1) {
+    s16 x;
+    s16 y;
+    s32 i;
+    s32 text;
+    char buf[0x80];
+    s16 *sub;
+
+    x = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    y = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_8004972C(255, 255, 255, 255);
+    func_800495F8(x + 150, y + 13, 1, func_8004C874(18, 8));
+    sub = (s16 *)((u8 *)arg0 + 0x30);
+    for (i = 0; i < 2; i++) {
+        if (sub[i * 2 + 2] == -1) {
+            text = func_8004C874(18, 11);
+        } else if (sub[i] == 1) {
+            func_8004C594(1, sub[i * 2 + 2] + 1);
+            text = func_8004C8A0(buf, 0x80, 18, 9);
+        } else {
+            func_8004C594(1, sub[i * 2 + 2] + 1);
+            func_8004C594(2, sub[i * 2 + 3] + 1);
+            text = func_8004C8A0(buf, 0x80, 18, 10);
+        }
+        func_800495F8(x + 53, y + 63 + i * 71, 0, text);
+        func_8004C594(2, sub[i + 6]);
+        func_800495F8(x + 252, y + 63 + i * 71, 2, func_8004C8A0(buf, 0x80, 18, 12));
+    }
+    func_800499EC();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260E684.s")
 
@@ -1473,7 +1506,30 @@ s32 func_8260F49C(s32 arg0, s32 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260F4E4.s")
+void func_8260F4E4(void *arg0) {
+    s32 width;
+    s32 height;
+    u8 *tex;
+    u16 *size;
+    f32 step;
+    f32 scale;
+
+    size = *(u16 **)((u8 *)arg0 + 0x18);
+    width = size[2];
+    height = size[3];
+    tex = (u8 *)func_8004C990(104, 0);
+    if (tex != NULL) {
+        scale = (f32)height / (f32)(u32)*(u16 *)tex;
+        if (scale > 0.0f) {
+            gSPDisplayList(D_800D0510++, D_80094E78);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            gDPSetEnvColor(D_800D0510++, 155, 155, 255, 255);
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 255);
+            func_8004D1FC(tex);
+            gSPTextureRectangleFlip(D_800D0510++, 0, 0, (width - 1) << 2, (height - 1) << 2, 0, 0, 0, (s32)(((step = 1024.0f / scale) > 0.0f ? 0.5f : -0.5f) + step), 1024);
+        }
+    }
+}
 
 extern s32 func_8006456C(s32);
 extern s32 func_80064728(void *);
