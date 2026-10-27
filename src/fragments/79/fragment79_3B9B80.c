@@ -79,7 +79,23 @@ void func_8414A4E4(u8 *arg0, u8 arg1, u8 arg2, u8 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B574.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B73C.s")
+extern u8 D_8419D7C0[];
+// D_8419D7C0 holds 24 0xA8-byte records; func_8414BEE8 clears all 0xFC0 bytes.
+void func_8414B73C(void) {
+    s32 var_s1;
+    s32 i;
+    u8 *entry;
+
+    var_s1 = func_84154B24();
+    for (i = 0; i < 24; i++) {
+        entry = &D_8419D7C0[i * 0xA8];
+        if (entry[0] & 1) {
+            if (!(entry[0] & 2) || func_8414A3C0(var_s1, 2) == 0) {
+                func_8414FB24(entry);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B7BC.s")
 

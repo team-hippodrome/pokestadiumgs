@@ -277,7 +277,56 @@ void DeckMenu_HandleSettingsInput_fragment82(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D00C34.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D010F4.s")
+extern u16 D_82D23D86;
+extern s8 D_82D06F84;
+// Returns 0x800 or 0x400 (D-pad up/down bits) for a D_82D23D88 input or, once the
+// D_82D06F84 countdown runs out, for a held D_82D23D86 input. func_82D027D4 copies
+// both words from the D_80087200 controller record at +8 and +6.
+s32 func_82D010F4(void) {
+    s32 result = 0;
+    s8 *timer = &D_82D06F84; // FAKE: accesses through a local pointer; diff score 4280 without it.
+
+    if (D_82D23D88 & 0x800) {
+        if (!(D_82D23D86 & 0xC)) {
+            result = 0x800;
+            *timer = 10;
+        }
+    } else if (D_82D23D88 & 0x400) {
+        if (!(D_82D23D86 & 0xC)) {
+            result = 0x400;
+            *timer = 10;
+        }
+    } else if (D_82D23D88 & 8) {
+        if (!(D_82D23D86 & 0xC04)) {
+            result = 0x800;
+            *timer = 2;
+        }
+    } else if (D_82D23D88 & 0x400) {
+        //!bug: repeats the 0x400 test of the second branch, so this branch never runs.
+        if (!(D_82D23D86 & 0xC08)) {
+            result = 4;
+            *timer = 2;
+        }
+    }
+    (*timer)--;
+    if (*timer <= 0) {
+        *timer = 0;
+        if (D_82D23D86 & 8) {
+            *timer = 2;
+            result = 0x800;
+        } else if (D_82D23D86 & 4) {
+            *timer = 2;
+            result = 0x400;
+        } else if (D_82D23D86 & 0x800) {
+            *timer = 4;
+            result = 0x800;
+        } else if (D_82D23D86 & 0x400) {
+            *timer = 4;
+            result = 0x400;
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D0125C.s")
 

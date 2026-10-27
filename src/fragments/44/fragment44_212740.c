@@ -58,12 +58,138 @@ void func_8AF2458C(void) {
     } while (i < 3);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF24628.s")
-
 typedef struct {
     u16 unused;
     u16 flags;
 } Flags_8AF24A7C;
+
+extern Flags_8AF24A7C *D_8AF3A464;
+extern Flags_8AF24A7C *D_8AF3A468;
+extern Flags_8AF24A7C *D_8AF3A46C;
+extern Flags_8AF24A7C *D_8AF3A600;
+extern Flags_8AF24A7C *D_8AF3A604;
+extern Flags_8AF24A7C *D_8AF3A608;
+extern Flags_8AF24A7C *D_8AF3A60C;
+extern Flags_8AF24A7C *D_8AF3A610;
+extern Flags_8AF24A7C *D_8AF3A614;
+extern Flags_8AF24A7C *D_8AF3A618;
+extern Flags_8AF24A7C *D_8AF3A61C;
+extern Flags_8AF24A7C *D_8AF3A620;
+extern Flags_8AF24A7C *D_8AF3A624;
+extern Flags_8AF24A7C *D_8AF3A628;
+extern Flags_8AF24A7C *D_8AF3A62C;
+extern Flags_8AF24A7C *D_8AF3A630;
+extern Flags_8AF24A7C *D_8AF3A634;
+extern Flags_8AF24A7C *D_8AF3A638;
+extern s32 D_8AF3A63C;
+extern s32 D_8AF3A640;
+extern s32 D_8AF3A644;
+extern s32 D_8AF3A648;
+extern s32 D_8AF3A64C;
+extern s32 D_8AF3A650;
+extern s32 D_8AF3A654;
+extern s32 D_8AF3A658;
+extern s32 D_8AF3A65C;
+extern u8 func_8005453C(s32);
+// Clears bit 0 of every listed entry's flags, then sets it again for each entry whose
+// func_8005453C, func_80054794 bit or func_8AC004E0 check passes. Only the first six of
+// the nine D_8AF3A63C-D_8AF3A65C words are reset to 0 first.
+void func_8AF24628(void) {
+    D_8AF3A464->flags &= ~1;
+    D_8AF3A468->flags &= ~1;
+    D_8AF3A46C->flags &= ~1;
+    D_8AF3A600->flags &= ~1;
+    D_8AF3A604->flags &= ~1;
+    D_8AF3A608->flags &= ~1;
+    D_8AF3A60C->flags &= ~1;
+    D_8AF3A610->flags &= ~1;
+    D_8AF3A614->flags &= ~1;
+    D_8AF3A618->flags &= ~1;
+    D_8AF3A61C->flags &= ~1;
+    D_8AF3A620->flags &= ~1;
+    D_8AF3A624->flags &= ~1;
+    D_8AF3A628->flags &= ~1;
+    D_8AF3A62C->flags &= ~1;
+    D_8AF3A630->flags &= ~1;
+    D_8AF3A634->flags &= ~1;
+    D_8AF3A638->flags &= ~1;
+
+    D_8AF3A63C = 0;
+    D_8AF3A640 = 0;
+    D_8AF3A644 = 0;
+    D_8AF3A648 = 0;
+    D_8AF3A64C = 0;
+    D_8AF3A650 = 0;
+
+    if (func_8005453C(0) == 1) {
+        D_8AF3A61C->flags |= 1;
+        D_8AF3A63C = 1;
+    }
+
+    if (func_8005453C(1) == 1) {
+        D_8AF3A624->flags |= 1;
+        D_8AF3A640 = 1;
+    }
+
+    if (func_8005453C(2) == 1) {
+        D_8AF3A62C->flags |= 1;
+        D_8AF3A644 = 1;
+    }
+
+    if (func_8005453C(3) == 1) {
+        D_8AF3A618->flags |= 1;
+        D_8AF3A648 = 1;
+    }
+
+    if (func_8005453C(4) == 1) {
+        D_8AF3A620->flags |= 1;
+        D_8AF3A64C = 1;
+    }
+
+    if (func_8005453C(5) == 1) {
+        D_8AF3A628->flags |= 1;
+        D_8AF3A650 = 1;
+    }
+
+    if (func_8005453C(6) == 1) {
+        D_8AF3A630->flags |= 1;
+        D_8AF3A654 = 1;
+    }
+
+    if (func_8005453C(7) == 1) {
+        D_8AF3A634->flags |= 1;
+        D_8AF3A658 = 1;
+    }
+
+    if (func_8005453C(8) == 1) {
+        D_8AF3A638->flags |= 1;
+        D_8AF3A65C = 1;
+    }
+
+    if ((func_80054794() & 1) != 0) {
+        D_8AF3A464->flags |= 1;
+    }
+
+    if ((func_80054794() & 2) != 0) {
+        D_8AF3A468->flags |= 1;
+    }
+
+    if ((func_80054794() & 4) != 0) {
+        D_8AF3A46C->flags |= 1;
+    }
+
+    if (func_8AC004E0(0) != 0) {
+        D_8AF3A600->flags |= 1;
+        D_8AF3A604->flags |= 1;
+        D_8AF3A608->flags |= 1;
+    }
+
+    if (func_8AC004E0(1) != 0) {
+        D_8AF3A60C->flags |= 1;
+        D_8AF3A610->flags |= 1;
+        D_8AF3A614->flags |= 1;
+    }
+}
 
 extern Flags_8AF24A7C *D_8AF3A3D8[12];
 

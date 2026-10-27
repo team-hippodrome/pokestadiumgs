@@ -490,9 +490,105 @@ s32 func_80051BF0(u32 arg0, void *arg1, s16 arg2) {
 // Empty function at 0x80051D5C, inside the asm file of func_80051BF0.
 void func_80051D5C(void) {
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051D64.s")
+void func_80051D64(s32 arg0, s32 arg1) {
+    switch (arg0) {
+        case 16:
+            Save_CommitRecord((u8 *)func_80050E88(0, D_800972C0, arg1), func_80050DE4(arg0), func_80050D20(arg0, D_800972C0));
+            break;
+        case 17:
+            Save_CommitRecord((u8 *)func_80050F60(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, arg1));
+            break;
+        case 18:
+            Save_CommitRecord(func_80051028(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 19:
+            Save_CommitRecord(func_800510CC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 20:
+            Save_CommitRecord(func_80051138(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 21:
+            Save_CommitRecord((u8 *)func_800511A4(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 22:
+            Save_CommitRecord(func_80051208(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 23:
+            Save_CommitRecord(func_80051274(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 24:
+            Save_CommitRecord(func_800512E0(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 25:
+            Save_CommitRecord(func_8005134C(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 26:
+            Save_CommitRecord(func_800513B8(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 27:
+            Save_CommitRecord(func_80051424(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 28:
+            Save_CommitRecord(func_80051490(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 29:
+            Save_CommitRecord(func_800514FC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 30:
+            Save_CommitRecord(func_80051568(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80052150.s")
+void func_80052150(s32 arg0, s32 arg1) {
+    switch (arg0) {
+        case 16:
+            Save_InvalidateRecord((u8 *)func_80050E88(0, D_800972C0, arg1), func_80050DE4(arg0), func_80050D20(arg0, D_800972C0));
+            break;
+        case 17:
+            Save_InvalidateRecord((u8 *)func_80050F60(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, arg1));
+            break;
+        case 18:
+            Save_InvalidateRecord(func_80051028(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 19:
+            Save_InvalidateRecord(func_800510CC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 20:
+            Save_InvalidateRecord(func_80051138(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 21:
+            Save_InvalidateRecord((u8 *)func_800511A4(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 22:
+            Save_InvalidateRecord(func_80051208(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 23:
+            Save_InvalidateRecord(func_80051274(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 24:
+            Save_InvalidateRecord(func_800512E0(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 25:
+            Save_InvalidateRecord(func_8005134C(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 26:
+            Save_InvalidateRecord(func_800513B8(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 27:
+            Save_InvalidateRecord(func_80051424(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 28:
+            Save_InvalidateRecord(func_80051490(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 29:
+            Save_InvalidateRecord(func_800514FC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 30:
+            Save_InvalidateRecord(func_80051568(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+    }
+}
 
 void func_8005253C(s32 arg0, s32 arg1) {
     switch (arg0) {

@@ -371,7 +371,50 @@ void func_87E013AC(void) {
     } while (var_s0 != 3);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E01424.s")
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern u8 D_800CE060[];
+extern u8 D_800CE100[];
+extern u8 D_87E1BA28[];
+extern void func_80035700(u32);
+s32 func_87E01424(s32 arg0, s32 arg1) {
+    s32 display;
+    u8 *ptr;
+    u8 *end;
+
+    main_pool_push_state(0x4D475345); // 'MGSE'
+    func_80055948(3);
+    func_80027EE0(0xFFF);
+    func_80035700(osGetTime());
+    // FAKE: both pointer assignments share one source line; diff score 30 without it.
+    ptr = D_800CE060, end = D_800CE100;
+    do {
+        func_80006148(ptr);
+        ptr += 40;
+    } while (ptr != end);
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    display = func_800082E0(0, 0, 2, 1, 2, 1);
+    D_87E1BA20 = D_87E1BA28;
+    *(s32 *)D_87E1BA20 = arg1;
+    func_87F0DBE0(D_87E1BA20 + 0x30F4, display);
+    func_8004C09C(295);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    func_87E1144C(D_87E1BA20 + 0x24C8, *(s32 *)D_87E1BA20);
+    func_80047588(*(s32 *)(D_87E1BA20 + 0x2784) | 1, 0);
+    func_87F0EECC();
+    func_87E11248(D_87E1BA20 + 0x24C8);
+    func_87E00394();
+    func_80008514(display);
+    func_87E013AC();
+    func_80008574();
+    func_80006158();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4D475345); // 'MGSE'
+    return *(s32 *)(D_87E1BA20 + 0x1C);
+}
 
 void func_87E015C0(s32 arg0)
 {
