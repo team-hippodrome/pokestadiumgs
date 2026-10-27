@@ -625,12 +625,33 @@ void func_82607734(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826078B4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82607AA0.s")
+extern s32 D_82615604;
+void func_82607AA0(s16 *arg0) {
+    s32 total;
+    s32 step;
+
+    step = 0; // FAKE
+    if (1) { // FAKE
+        total = D_82615604;
+        arg0[4]++;
+    }
+    step = arg0[4];
+    if (step < total) {
+        arg0[8] = (arg0[12] * step) / total;
+        arg0[9] = (arg0[13] * step) / total;
+    } else {
+        arg0[3] = 0;
+        arg0[4] = 0;
+        arg0[6] = 0;
+        arg0[7] = 0;
+        arg0[8] = 0;
+        arg0[9] = 0;
+    }
+}
 
 extern void func_826067D4();
 extern void func_82607528();
 extern void func_82607790();
-extern void func_82607AA0();
 void func_82607B74(void *arg0) {
     s16 temp_v0;
 
@@ -646,7 +667,7 @@ void func_82607B74(void *arg0) {
         func_82607790();
         return;
     case 4:
-        func_82607AA0();
+        func_82607AA0(arg0);
         return;
     }
 }
@@ -1309,7 +1330,38 @@ s32 func_82610D14(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82610D6C.s")
+/* Retail takes one argument; func_82610EE8 passes a second one that is ignored. */
+#ifdef CC_CHECK
+s32 func_82610D6C(s16 *arg0, s32 arg1) {
+#else
+s32 func_82610D6C(arg0)
+s16 *arg0;
+{
+#endif
+    s32 result;
+    s32 i;
+    s32 j;
+    u8 *entry;
+    s16 *sub;
+
+    result = 1;
+    for (i = 0; i < arg0[9]; i++) {
+        entry = func_82604C40(1, i, (u8 *)arg0 + 0x114, 0x14);
+        if (entry != NULL) {
+            sub = (s16 *)(entry + 0x30);
+            for (j = 0; j < sub[3]; j++) {
+                if (sub[j + 5] > 0) {
+                    result = 0;
+                }
+            }
+            if (result == 0) {
+                break;
+            }
+        }
+        if (1) {} // karodo
+    }
+    return result;
+}
 
 
 
@@ -1366,7 +1418,11 @@ s32 func_82610E34(s32 arg0)
   return found;
 }
 extern s32 func_80001FF0(void);
+#ifdef CC_CHECK
 extern s32 func_82610D6C(s16 *, s32);
+#else
+extern s32 func_82610D6C();
+#endif
 // arg0[0] selects the check, arg0[3] counts frames, and arg0[1] receives the
 // next state (2 or 7) when the check passes.
 void func_82610EE8(s16 *arg0) {
