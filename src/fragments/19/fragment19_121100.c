@@ -2,6 +2,12 @@
 
 
 #ifdef VERSION_US
+typedef struct unk_func_82302B8C {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+} unk_func_82302B8C; // size = 0x3
+
 extern s16 D_82305E68[];
 typedef struct unk_D_82305E68_entry {
     /* 0x00 */ s16 unk_00;
@@ -628,12 +634,6 @@ extern Gfx *D_800D0510;
 extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D1FC(u8 *);
 extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
-typedef struct unk_func_82302B8C {
-    /* 0x00 */ u8 r;
-    /* 0x01 */ u8 g;
-    /* 0x02 */ u8 b;
-} unk_func_82302B8C; // size = 0x3
-
 void func_82302B8C(s32 x, s32 y, s32 width, s32 height, unk_func_82302B8C *color, s32 flip) {
     u8 *tex;
     f32 scale;
