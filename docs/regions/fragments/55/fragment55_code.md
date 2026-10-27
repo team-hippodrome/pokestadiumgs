@@ -27,3 +27,26 @@ Validation: default host syntax checks, `make rom COMPARE=1 -j2`, and explicit `
   in `D_8670C980` set to -1, z to `D_8670C394`, y to 90). Retail hoists
   -600, the reset z and 90 into `fs0`, `fs1`, `fs2`; IDO orders them
   reset/-600/90 regardless of local declarations. Permuter 200 s: 380 → 300.
+
+## 2026-10-28: `func_8670427C`, `func_867068EC`, `func_8670675C` handoffs
+
+- `func_8670427C`: requeue (0.97). Fades row `D_86710668[i]` alpha (`+0x1D`)
+  by 10 per frame for `D_86728408[i]` mode 1 (stop at 70, reset z from
+  `D_8670C404`, mode 0) and mode -1 (stop at 20, `func_8003F1DC`), then
+  clamps to [5, 200]. Write the `+0x38` store before the mode reset. A FAKE
+  `if (!row && !row) {}` after it fixes the `a1`/`a2` roles (permuter). The
+  only remaining diff is the `row` spill (retail `sp+0x1C`, IDO `0x18`); any
+  extra local grows the frame to 0x30.
+- `func_867068EC`: requeue (0.91). Spawns an entry (`func_87F025B8(D_8670D948,
+  D_867068E4)`) at `D_8670C04C[arg0 / 2]`, `D_8670C05C`, z from
+  `D_8670C060[arg0 odd]`, size `D_8670C4F0`, index from `D_86728408[half] +
+  0x50`; `func_87F0DB3C(D_8670D920, half, entry + 0x24)` for even slots.
+  Code order matches with `z` assigned right after the `+0x48` store and
+  `size` held in a local. The compiler spills (`z`, `half`,
+  `entry + 0x24`) land 4 bytes below retail's.
+- `func_8670675C`: requeue (0.73). Camera orbit: `D_8670C8A8 = sqrtf(bb.x18² +
+  bb.x1C²)` (needs the `BUILD_VERSION` intrinsic), `GeoCamera_SetPerspective(cam,
+  D_8670BE7C, 100, 12800)`, then `func_80038E14(cam, cos[pitch] * r + 1,
+  sin[yaw] * d, sin[pitch] * r, bb+0x20..0x28, D_8670BE88)` with `r = d *
+  cos[yaw]` from `D_80088E50`/`D_80087E50`. Retail keeps the distance in
+  `f14` and loads the `D_8670BE84` index first.
