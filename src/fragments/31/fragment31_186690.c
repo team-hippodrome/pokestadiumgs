@@ -134,8 +134,29 @@ void func_882158E4(s16 arg0, s16 arg1, s8 *arg2) { s8 temp[0x44]; s32 count; if 
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_882159A0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88215BCC.s")
+// Storage list header, laid out like fragment31_1A5E10's LabPCStorageList.
+//@src/fragments/31/fragment31_1A5E10.c
+typedef struct StorageList186690 {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} StorageList186690;
+extern u8 D_88234630[];
+extern char D_88233F80[]; // "%d/%d"
+extern void func_8004D5B8(s32, s32, s32, const char *, ...);
 
+// Prints "count/capacity" of the second storage list of each of the two
+// D_88234630 pairs at x = 269 and 580, y = 287.
+void func_88215BCC(void) {
+    s32 i;
+
+    for (i = 0; i < 2; i++) {
+        func_8004D5B8(269 + i * 311, 287, 2, D_88233F80,
+                      ((StorageList186690 *)D_88234630)[i * 2 + 1].count,
+                      ((StorageList186690 *)D_88234630)[i * 2 + 1].capacity);
+    }
+}
 extern void func_800496A4(s32, s32); extern s32 func_8004C874(s32, s16); extern void func_80049064(s32, s32, s32, s32); extern s16 D_8800EF58; extern s32 D_882346F0; extern u8 *D_88234730;
 void func_88215C4C(void) { if (D_8800EF58 == 0) { if (D_882346F0 == 0) { func_800496A4(4, 2); func_80049064(0x140, 0x198, 1, func_8004C874(0x23, 7)); } } func_800496A4(0x10, 2); func_80049064(0x140, 0x15F, 1, func_8004C874(0x23, *(s16 *)(D_88234730 + 8))); }
 

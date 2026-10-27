@@ -114,7 +114,23 @@ void func_87E0CDAC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CDDC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CE60.s")
+void func_87E0CE60(u8 *arg0, s32 arg1, s32 arg2) {
+    u8 *temp_a3;
+    u8 *temp_v0;
+    s32 i;
+    s32 value;
+
+    *(s32 *)(arg0 + arg1 * 0xEC + 0x100) = 0;
+    temp_v0 = arg0 + arg1 * 0xEC + 0x28;
+    temp_a3 = arg0 + arg1 * 0xEC + 0xB4;
+    for (i = 0; i < *(s32 *)(*(u8 **)(arg0 + 4) + 0x2188); i++) {
+        value = **(s32 **)(temp_v0 + 0x88);
+        if (i >= value - arg2 && i < value) {
+            *temp_a3 |= 5;
+        }
+        temp_a3 += 8;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CEE4.s")
 

@@ -162,10 +162,43 @@ void func_84149400(void) {
 
 u8 func_84149424(void) { return D_8419D7B2; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149430.s")
+typedef struct Fragment79DamageContext { u8 unk_00, unk_01; u8 effect, power, type, level; u8 unk_06, unk_07; u16 attack, defense; s32 damage; u8 *attacker, *defender; u8 *unk_18; u8 *unk_1C; } Fragment79DamageContext;
+
+// Loads the attack and defense stats for the damage formula: types below 20 use the
+// Attack/Defense words at attacker + 0x36 and defender + 0x38, the others the Special
+// words at + 0x3C and + 0x3E. Doubles defense when the matching flag in unk_1C[3] is set,
+// and applies the held-item doublers checked by species/item byte pairs: Cubone (104) or
+// Marowak (105) with Thick Club (118), Pikachu (25) with Light Ball (163), and Ditto (132)
+// with Metal Powder (35), which raises defense by half.
+void func_84149430(Fragment79DamageContext *arg0) {
+    if (arg0->power != 0) {
+        if (arg0->type < 20) {
+            arg0->attack = *(u16 *)(arg0->attacker + 0x36);
+            arg0->defense = *(u16 *)(arg0->defender + 0x38);
+            if (arg0->unk_1C[3] & 0x10) {
+                arg0->defense <<= 1;
+            }
+            if (arg0->attacker[1] == 118 && (arg0->attacker[0] == 104 || arg0->attacker[0] == 105)) {
+                arg0->attack <<= 1;
+            }
+        } else {
+            arg0->attack = *(u16 *)(arg0->attacker + 0x3C);
+            arg0->defense = *(u16 *)(arg0->defender + 0x3E);
+            if (arg0->unk_1C[3] & 8) {
+                arg0->defense <<= 1;
+            }
+            if (arg0->attacker[1] == 163 && arg0->attacker[0] == 25) {
+                arg0->attack <<= 1;
+            }
+        }
+        if (arg0->defender[1] == 35 && arg0->defender[0] == 132) {
+            arg0->defense += arg0->defense >> 1;
+        }
+        arg0->level = arg0->attacker[0xC];
+    }
+}
 
 /* mkdraft:MoveDamage_ComputeBase_fragment79 begin */
-typedef struct Fragment79DamageContext { u8 unk_00, unk_01; u8 effect, power, type, level; u8 unk_06, unk_07; u16 attack, defense; s32 damage; u8 *attacker, *defender; u8 *unk_18; u8 *unk_1C; } Fragment79DamageContext;
 extern s32 func_800636C0(u8, u8);
 extern u8 func_80063690(u8);
 
@@ -208,8 +241,50 @@ void func_8414978C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_841497E8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149928.s")
+typedef struct unk_D_841951F0_9D4 {
+    u8 unk_00[0x40];
+    u32 unk_40_31 : 4;
+    u32 unk_40_27 : 1; // Gates effect 41 in func_84149928.
+} unk_D_841951F0_9D4;
 
+extern u8 *D_841951F0;
+
+// Same code as fragment80's MoveDamage_ApplyEffect_fragment80; GS reads the level at
+// 0xC and HP at 0x28 of the Pokemon records, and effect 41 deals the move's power only
+// while bit 27 of the word at (D_841951F0 + 0x9D4)->0x40 is set (0 damage otherwise).
+//@src/fragments/80/fragment80_41A5F0.c
+void func_84149928(void *arg0) {
+    Fragment79DamageContext *ctx = arg0;
+    switch (ctx->effect) {
+    case 38:
+        if (ctx->attacker[0xC] >= ctx->defender[0xC]) {
+            ctx->damage = 65535;
+        }
+        return;
+    case 40:
+        ctx->damage = *(u16 *)(ctx->defender + 0x28) >> 1;
+        if (!ctx->damage) {
+            ctx->damage++;
+        }
+        return;
+    case 41:
+        if ((*(unk_D_841951F0_9D4 **)(D_841951F0 + 0x9D4))->unk_40_27) {
+            ctx->damage = ctx->power;
+        } else {
+            ctx->damage = 0;
+        }
+        return;
+    case 87:
+        ctx->damage = ctx->attacker[0xC];
+        return;
+    case 88:
+        ctx->damage = ctx->attacker[0xC] * 0.75;
+        return;
+    default:
+        MoveDamage_ComputeBase_fragment79(ctx);
+        return;
+    }
+}
 extern void func_8414978C(u8 *);
 extern void func_841496C0(u8 *);
 void func_84149A50(void *arg0) {

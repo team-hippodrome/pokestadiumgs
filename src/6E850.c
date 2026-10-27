@@ -459,7 +459,102 @@ void func_8006F0A8(f32 *src, f32 *dst, f32 totalTime, f32 elapsed, f32 stiffness
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006F23C.s")
+// Transform command built by func_8006F23C and applied by func_8006F438 and
+// func_8006F548; a targetIndex of -1 ends the list.
+typedef struct ModelTransformCmd6E850 {
+    /* 0x00 */ s16 targetIndex;
+    /* 0x02 */ s16 sourceIndex;
+    /* 0x04 */ s16 enableFrom;
+    /* 0x06 */ s16 enableTo;
+    /* 0x08 */ f32 blendWeight;
+} ModelTransformCmd6E850;
+
+// Per-vertex record of a model, 0x50 bytes each from 0x40 of the model.
+typedef struct ModelVertex6E850 {
+    /* 0x00 */ s16 jointIndex;
+    /* 0x02 */ s16 parentIndex;
+    /* 0x04 */ u8 unk_04[4];
+    /* 0x08 */ ModelTransformCmd6E850 cmd;
+    /* 0x14 */ f32 position[3];
+    /* 0x20 */ u8 unk_20[0x30];
+} ModelVertex6E850; // size = 0x50
+extern f32 func_8006EF04(f32 *arg0, f32 *arg1);
+
+// Same code as Pokemon Stadium's Model_BuildTransformCommands (src/33FE0.c), with the
+// segment descriptor at 0x4 of the model and the vertex records at 0x40. GS measures
+// the blend distance between the records' positions (0x14) with func_8006EF04
+// instead of reading a vertex segment, and orders joints with func_8006DDE8.
+void func_8006F23C(void *arg0) {
+    // FAKE: pad1, pad2 and pad3 place i, count, sp64, sp60 and sp44 in the original's
+    // stack slots; diff score 282 without them.
+    s32 i;
+    s32 pad1[3];
+    s32 count;
+    s32 pad2[1];
+    s16 *sp64;
+    s16 *sp60;
+    s32 pad3[6];
+    ModelVertex6E850 *sp44;
+    ModelSegmentAnimDesc *segment;
+    s16 temp_s0;
+    s16 temp_s1;
+    s16 temp_s1_2;
+    s16 temp_s2;
+    s16 temp_s4;
+    s16 temp_s4_2;
+    s16 temp_s5;
+    s16 temp_v0_2;
+    s16 *var_s6;
+    s32 temp_t7;
+    ModelVertex6E850 *vertices;
+    s16 *temp_s3;
+    ModelVertex6E850 *mvtx;
+    f32 weight;
+    ModelTransformCmd6E850 *cmd;
+
+    segment = (ModelSegmentAnimDesc *)Memmap_GetSegmentVaddr(*(u32 *)((u8 *)arg0 + 4));
+    temp_s3 = (s16 *)Memmap_GetSegmentVaddr(segment->tableSegment);
+    sp64 = (s16 *)Memmap_GetSegmentVaddr(segment->remapSegment);
+    sp60 = (s16 *)Memmap_GetSegmentVaddr(*(u32 *)segment->unk_0C);
+    vertices = (ModelVertex6E850 *)((u8 *)arg0 + 0x40);
+    sp44 = vertices;
+    mvtx = vertices;
+    count = (u16)segment->vertexCount;
+    for (i = 0; i < count; i++) {
+        temp_s2 = sp44->jointIndex;
+        var_s6 = &sp60[sp44->parentIndex];
+        while (1) {
+            temp_v0_2 = *var_s6;
+            var_s6++;
+            if (temp_v0_2 == -1) {
+                break;
+            }
+            temp_s0 = sp64[temp_v0_2];
+            temp_s4 = func_8006DDE8(temp_s3, temp_s2);
+            temp_s5 = func_8006DDE8(temp_s3, temp_s0);
+            temp_s1 = Model_GetVertexThreshold(temp_s3, temp_s2);
+            temp_t7 = Model_GetVertexThreshold(temp_s3, temp_s0) << 0x10;
+            if ((temp_s4 < temp_s5) && (temp_s1 == (temp_t7 >> 0x10)) && (temp_s1 > 0)) {
+                temp_s1_2 = Model_GetVertexClass(temp_s3, temp_s2);
+                temp_s4_2 = Model_GetVertexClass(temp_s3, temp_s0);
+                // FAKE: adding the index before the vertex array orders the addu operands like
+                // the original; diff score 20 without it.
+                weight = func_8006EF04((temp_s2 + vertices)->position, (temp_s0 + vertices)->position);
+                cmd = &mvtx->cmd;
+                mvtx++;
+                cmd->targetIndex = temp_s2;
+                cmd->sourceIndex = temp_s0;
+                cmd->enableFrom = temp_s1_2;
+                cmd->enableTo = temp_s4_2;
+                cmd->blendWeight = weight;
+            }
+        }
+        sp44++;
+    }
+    mvtx->cmd.targetIndex = -1;
+    mvtx->cmd.sourceIndex = -1;
+    mvtx->cmd.blendWeight = -1.0f;
+}
 #endif
 
 #ifdef VERSION_US

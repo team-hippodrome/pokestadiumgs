@@ -129,7 +129,61 @@ void func_86B02180(void) { s32 mode; u8 **state; func_800086A4(2); StageFade_Sta
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B021E8.s")
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern s32 D_86B0E0A4;
+extern s32 D_86B0E0B0;
+extern u8 D_86B0E0E0[];
+extern s32 D_86B0E100;
+extern u8 D_86B0E148[];
+extern u8 D_86B181C8[];
+
+s32 func_86B021E8(s32 arg0, void *arg1) {
+    void *stage;
+    s32 pad; // FAKE: unused stack space; diff score 54 without it.
+    s32 flags;
+
+    main_pool_push_state(0x4B414D45);
+    D_86B181C0 = D_86B181C8;
+    *(void **)((u8 *)D_86B181C0 + 0xC) = arg1;
+    if ((*(u8 **)((u8 *)D_86B181C0 + 0xC))[0x2180] == 4) {
+        func_80027EE0(0xFFF);
+    }
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    stage = func_800082E0(0, 0, 2, 1, 2, 1);
+    func_8004C09C(303);
+    D_86B0E0A4 = func_8004D690(44);
+    func_87F06EAC(105, &D_86B0E0A8, *(void **)((u8 *)D_86B181C0 + 0xC));
+    func_87F09EBC(D_86B0E0E0, *(void **)((u8 *)D_86B181C0 + 0xC));
+    func_87F0D48C(D_86B0E148, *(void **)((u8 *)D_86B181C0 + 0xC), 0);
+    func_8004DDF4(151);
+    func_8004DDF4(216);
+    func_8004DDF4(211);
+    func_8004DDF4(209);
+    func_8004DDF4(213);
+    func_8004DDF4(203);
+    func_8004DDF4(204);
+    func_8004DDF4(207);
+    func_8004DDF4(149);
+    func_8004DDF4(150);
+    //!bug: flags is never assigned; this ORs whatever the stack slot holds.
+    func_80047588(D_86B0E0B0 | 0x3D | D_86B0E100 | flags, 0);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    func_86B00A3C();
+    func_80008514(stage);
+    func_86B02180();
+    func_80008574();
+    func_80006158();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4B414D45);
+    func_87F0F480(*(void **)((u8 *)D_86B181C0 + 0xC));
+    func_80027EE0(0xFFE);
+    return *(s32 *)((u8 *)D_86B181C0 + 0x18);
+}
+
 #endif
 
 #ifdef VERSION_US

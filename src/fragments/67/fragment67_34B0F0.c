@@ -11,7 +11,7 @@ typedef struct unk_D_8291BC50 {
     /* 0x02 */ s16 unk_02;
     /* 0x04 */ s16 unk_04;
     /* 0x06 */ u8 unk_06[2];
-    /* 0x08 */ s16 unk_08;
+    /* 0x08 */ u16 unk_08; // state index; func_8290E8D8 loads it with lhu for its switch
     /* 0x0A */ s16 unk_0A;
     /* 0x0C */ s16 unk_0C;
     /* 0x0E */ s16 unk_0E;
@@ -120,7 +120,63 @@ s32 func_8290E81C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E8D8.s")
+extern u8 D_8291BE6E;
+extern u8 D_8291BE6F;
+extern u8 *D_80087200;
+extern s32 D_8291BC40;
+extern s32 D_8291BC44;
+extern s32 Math_StepToS32(s32, s32, s32, s32);
+
+void func_8290E8D8(void) {
+    switch (D_8291BC50.unk_08) {
+        case 0:
+            if (D_8291BC50.unk_04++ == 20) {
+                D_8291BC50.unk_08 = 1;
+                func_800226C0(166);
+                func_800226C0(165);
+            }
+            break;
+        case 1:
+            D_8291BC50.unk_00 = Math_StepToS32(D_8291BC50.unk_00, 184, 80, 80);
+            D_8291BC68.unk_00 = Math_StepToS32(D_8291BC68.unk_00, 82, 80, 80);
+            if (D_8291BC50.unk_00 == 184 && D_8291BC68.unk_00 == 82) {
+                D_8291BC50.unk_08 = 2;
+            }
+            D_8291BC50.unk_04 = 0;
+            break;
+        case 2:
+            if (D_8291BC50.unk_04++ == 20) {
+                D_8291BC50.unk_08 = 3;
+            }
+            func_8290E76C();
+            break;
+        case 3:
+            D_8291BC50.unk_04 = 0;
+            func_8290E6D4();
+            func_8290E76C();
+            D_8291BE6E = 2;
+            D_8291BE6F = 0;
+            if (func_8290E81C()) {
+                D_8291BC50.unk_08 = 4;
+                D_8291BC50.unk_12 = 3;
+            }
+            break;
+        case 4:
+            func_8290E76C();
+            if (--D_8291BE6E == 0) {
+                D_8291BE6E = 2;
+                if (++D_8291BE6F >= 4) {
+                    D_8291BE6F = 0;
+                }
+            }
+            if (*(u16 *)(D_80087200 + 8) & 0x8000) {
+                D_8291BC40 = 0;
+                D_8291BC44 = 1;
+                func_800226C0(140);
+            }
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -210,7 +210,38 @@ void func_86905804(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86909EAC.s")
+extern s32 D_8690FABC;
+extern u8 D_8691A2A0[];
+extern void func_87F0A6C8(s32, s32, s32 *, s32 *);
+extern void func_800503A4(s32);
+extern void func_8690CA50(void);
+void func_86909EAC(void) {
+    s32 var_v0;
+    s32 color1;
+    s32 color2;
+
+    var_v0 = *(s32 *)(D_8691A2A0 + 0x4C);
+    if (var_v0 < 30) {
+        if (*(s32 *)(D_8691A2A0 + 0x48) < 4) {
+            *(s32 *)(D_8691A2A0 + 0x70) = 1;
+        }
+    } else if (var_v0 < 60) {
+        *(s32 *)(D_8691A2A0 + 0x70) = 1;
+        color1 = 0xFFB400FF;
+        color2 = 0x000096FF;
+        func_87F0A6C8(D_8690FABC, 0x50503643, &color1, &color2);
+        func_800503A4(D_8690FABC);
+    } else if (var_v0 < 90) {
+        *(s32 *)(D_8691A2A0 + 0x70) = 1;
+        color1 = 0xFFB400FF;
+        color2 = 0x000096FF;
+        func_87F0A6C8(D_8690FABC, 0x50503643, &color1, &color2);
+        func_800503A4(D_8690FABC);
+        func_8690CA50();
+    } else {
+        *(s32 *)(D_8691A2A0 + 0x70) = 0;
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -20,7 +20,21 @@ void func_82800620(s32 arg0, s32 arg1, f32 arg2) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800864.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800984.s")
+extern u8 D_828028B0[];
+void func_82800984(s32 arg0, f32 arg1) {
+    s32 mode;
+    s16 (*pairs)[2];
+
+    pairs = (s16 (*)[2])D_828028B0;
+    gDPSetEnvColor(D_800D0510++, 80, 210, 240, 0);
+    gDPSetPrimColor(D_800D0510++, 0xFF, 0xFF, 255, 255, 255, (u32)(255.0f * arg1));
+    if (arg0 == 0 || arg0 == 3) {
+        mode = 1;
+    } else {
+        mode = 2;
+    }
+    func_8004D150(pairs[arg0][0], pairs[arg0][1], func_8004C990(54, mode), 0, (arg0 >= 2) ? 1 : 0, 0);
+}
 
 extern void func_82800864(f32, s16 *);
 extern Gfx *D_800D0510;
@@ -140,7 +154,43 @@ s32 func_828019B4(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801A08.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801BE8.s")
+void func_82801BE8(u8 *arg0, void *arg1) {
+    f32 step;
+    s32 i;
+    s16 coordinates[4];
+
+    func_81801420();
+    func_82801278(arg0, 0);
+    switch (arg0[0xC]) {
+        case 0:
+            func_828016AC(arg0);
+            break;
+        case 1:
+            func_828016BC(arg0);
+            break;
+        case 2:
+            func_82801774(arg0);
+            break;
+        case 3:
+            func_828019B4(arg0);
+            break;
+    }
+    func_82801A08(arg0);
+    for (i = 0; i < 4; i++) {
+        func_82800E94(arg0, coordinates, i);
+        func_81600A34(arg1, arg0 + i, 0, coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
+    }
+    if (*(s32 *)(arg0 + 0x10) >= 0) {
+        step = func_816092FC() / 20.0f;
+        if (*(f32 *)(arg0 + 0x94) + step < *(s32 *)(arg0 + 0x10)) {
+            *(f32 *)(arg0 + 0x94) += step;
+        } else if (*(s32 *)(arg0 + 0x10) < *(f32 *)(arg0 + 0x94) - step) {
+            *(f32 *)(arg0 + 0x94) -= step;
+        } else {
+            *(f32 *)(arg0 + 0x94) = *(s32 *)(arg0 + 0x10);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801D7C.s")
 

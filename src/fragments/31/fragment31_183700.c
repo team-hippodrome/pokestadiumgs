@@ -199,8 +199,67 @@ void func_882114EC(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88211550.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88212440.s")
+// Layout of the D_88234720 state, as in fragment31_186690's State18690.
+//@src/fragments/31/fragment31_186690.c
+typedef struct { u8 pad[8]; s16 position; s16 start; u8 pad2[0x20]; } Scroll183700;
+typedef struct { u8 slot; u8 reserved[0xB]; Scroll183700 records[2]; } State183700;
+extern s32 D_882346F4;
 
+// Same code as fragment31_186690's func_882152F4 on D_88234720; in mode 2 GS compares
+// against the halfword at 0x66, and while D_88234724 is set it also accepts the mode-0
+// match when the switch found none.
+//@src/fragments/31/fragment31_186690.c
+s32 func_88212440(u8 arg0, u8 arg1) {
+    u32 index = arg0;
+    State183700 *state;
+    s32 result = 0;
+
+    switch (D_882346F0) {
+    default:
+        goto done;
+    case 0:
+        if (D_882346F4 == 0) {
+            goto done;
+        }
+        state = (State183700 *)D_88234720;
+        if (arg0 != state->slot) {
+            goto done;
+        }
+        if (arg1 == state->records[index].position - state->records[index].start) {
+            result = 1;
+            goto done;
+        }
+        goto done;
+    case 1:
+    case 3:
+        state = (State183700 *)D_88234720;
+        if (arg0 == state->slot) {
+            goto done;
+        }
+        if (arg1 == state->records[index].position - state->records[index].start) {
+            result = 1;
+            goto done;
+        }
+        goto done;
+    case 2:
+        state = (State183700 *)D_88234720;
+        if (arg0 != state->slot) {
+            goto done;
+        }
+        if ((s16)arg1 == *(s16 *)((u8 *)state + 0x66) - state->records[index].start) {
+            result = 1;
+        }
+        goto done;
+    }
+done:
+    if (result == 0 && D_88234724 != 0) {
+        state = (State183700 *)D_88234720;
+        if (arg0 == state->slot && arg1 == state->records[index].position - state->records[index].start) {
+            result = 1;
+        }
+    }
+    return result;
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_882125C0.s")
 
 extern void func_80047634(s32);

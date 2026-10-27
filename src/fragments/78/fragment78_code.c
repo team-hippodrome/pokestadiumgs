@@ -49,12 +49,80 @@ void func_8F900594(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F9005B4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900690.s")
+extern s32 Input_GetRepeatedDPad(void);
+extern s32 D_80087200;
+// Hex number editor state, laid out like the numeric view of fragment77's
+// F77EditorState; func_8F90083C clamps the entered value (words[5]) to 0-255.
+//@src/fragments/77/fragment77_code.c
+typedef union {
+    s32 words[9];
+    struct {
+        u16 geometry[4];
+        s16 selected;
+        u16 last;
+        s8 digits[8];
+        s32 value;
+    } numeric;
+} F78EditorState;
+extern F78EditorState D_8F911650;
+
+// Same code as fragment77's func_8F802B40 on the editor state at D_8F911650; GS plays
+// no sound on D-pad input and switches on the input value without an s16 conversion.
+//@src/fragments/77/fragment77_code.c
+s32 func_8F900690(void) {
+    s32 input;
+    s32 result = 0;
+    s32 buttons;
+    u32 value;
+    s32 index;
+    F78EditorState *state = &D_8F911650;
+
+    input = Input_GetRepeatedDPad();
+    if (input) {
+        switch (input) {
+        case 0x200:
+            state->numeric.selected++;
+            if (state->numeric.selected > state->numeric.last) {
+                state->numeric.selected = state->numeric.last;
+            }
+            break;
+        case 0x100:
+            state->numeric.selected--;
+            if (state->numeric.selected < 0) {
+                state->numeric.selected = 0;
+            }
+            break;
+        case 0x800:
+            state->numeric.digits[state->numeric.selected]++;
+            if (state->numeric.digits[state->numeric.selected] >= 16) {
+                state->numeric.digits[state->numeric.selected] = 0;
+            }
+            break;
+        case 0x400:
+            state->numeric.digits[state->numeric.selected]--;
+            if (state->numeric.digits[state->numeric.selected] < 0) {
+                state->numeric.digits[state->numeric.selected] = 15;
+            }
+            break;
+        }
+    }
+    buttons = *(u16 *)((u8 *)(u32)D_80087200 + 8);
+    if (buttons & 0x8000) {
+        value = 0;
+        for (index = state->numeric.last; index >= 0; index--) {
+            value = value * 16 + state->numeric.digits[index];
+        }
+        state->numeric.value = value;
+        result = 1;
+    } else if (buttons & 0x4000) {
+        result = 2;
+    }
+    return result;
+}
 
 extern s32 func_8F900690(void);
 extern s32 func_8F9000D0(void);
 extern void func_8F900594(void);
-extern s32 D_8F911650[];
 extern s32 D_8F911648;
 s32 func_8F90083C(void) {
     s32 sp1C;
@@ -63,13 +131,13 @@ s32 func_8F90083C(void) {
     sp1C = func_8F900690();
     func_8F9000D0();
     if (sp1C == 1) {
-        var_v0 = D_8F911650[5];
+        var_v0 = D_8F911650.words[5];
         if (var_v0 < 0) {
-            D_8F911650[5] = 0;
+            D_8F911650.words[5] = 0;
             var_v0 = 0;
         }
         if (var_v0 >= 0x100) {
-            D_8F911650[5] = 0xFF;
+            D_8F911650.words[5] = 0xFF;
         }
         func_8F900594();
         D_8F911648 = 1;
@@ -79,13 +147,31 @@ s32 func_8F90083C(void) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F9008D0.s")
-
 extern u8 D_8F901630;
 extern void func_8005B140(s32);
 extern u8 func_8005D92C(s32);
-extern s32 GbPak_WriteCommand(s32, u8 *, s32, s32);
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
 extern void GbSave_RequirePakPresent(s32);
+extern s32 D_8F911640;
+
+// Same code as func_8F900968 with GbPak_ReadCommand instead of GbPak_WriteCommand;
+// GS also sets D_8F911640 to 0xFF80 (0x10000-byte read) or 0x7F80 (0x8000-byte read).
+s32 func_8F9008D0(s32 arg0) {
+    s32 result;
+
+    func_8005B140(arg0);
+    if (func_8005D92C(arg0) == 7) {
+        result = GbPak_ReadCommand(arg0, &D_8F901630, 0, 0x10000);
+        D_8F911640 = 0xFF80;
+    } else {
+        result = GbPak_ReadCommand(arg0, &D_8F901630, 0, 0x8000);
+        D_8F911640 = 0x7F80;
+    }
+    GbSave_RequirePakPresent(arg0);
+    return result;
+}
+
+extern s32 GbPak_WriteCommand(s32, u8 *, s32, s32);
 s32 func_8F900968(s32 arg0) {
     s32 result;
 
@@ -159,7 +245,7 @@ void func_8F90132C(void) {
 }
 
 extern void Input_SetRepeatController(s32);
-extern void func_8F9008D0(s32);
+extern s32 func_8F9008D0(s32);
 extern s32 D_80087200;
 extern s32 D_8F911630;
 extern s32 D_8F911634;

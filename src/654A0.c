@@ -42,5 +42,19 @@ u8 func_80064A7C(u8 arg0)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_80064AC8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_80064B84.s")
+void func_80064B84(u8 arg0) {
+    u8 sum = 0;
+    s32 i = 0;
+    for (; i != 32; i++) {
+        (&D_80128B58)[i * 4 + 3] = sum;
+        if (arg0) {
+            sum += func_80064940((&D_80128B58)[i * 4 + 1]);
+        } else {
+            sum += func_800648B8((&D_80128B58)[i * 4 + 1]);
+        }
+    }
+}
+
+/* Preserve the five alignment NOPs at the end of the original assembly owner. */
+#pragma C_FUNCTION_PADDING(20)
 #endif

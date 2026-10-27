@@ -145,7 +145,30 @@ void *func_88201ED0(u8 arg0, u8 arg1) {
     return entries[arg1];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201F0C.s")
+s32 func_88201F0C(void) {
+    struct S {
+        u8 pad[0x10];
+        void **entries;
+        u8 unk_14;
+        u8 count;
+    };
+    struct R {
+        u8 pad[0x26];
+        u8 flags;
+    };
+    struct R **entry = ((struct S *)D_88A01C34)->entries;
+    u32 i;
+
+    if (((struct S *)D_88A01C34)->count == 0) {
+        return 1;
+    }
+    for (i = 0; i < ((struct S *)D_88A01C34)->count; i++, entry++) {
+        if (!((*entry)->flags & 1) && *(u16 *)((u8 *)*entry + 0x2E) != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 extern s32 HAL_Strcmp(const s8 *, const s8 *);
 extern s8 D_8800686D[];

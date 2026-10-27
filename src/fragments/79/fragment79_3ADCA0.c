@@ -966,7 +966,26 @@ void func_84142EB0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84142F0C.s")
+extern s16 D_84186BDC;
+extern s16 D_84186BE0;
+extern s16 D_84186BE4;
+extern s16 D_84186BE8;
+extern s16 D_84186BEC;
+extern u8 *func_8413D29C(u8);
+extern void func_8413F390(s16, s16, s32, u16);
+void func_84142F0C(u8 *arg0) {
+    s32 var_s0;
+    u8 *sp20;
+
+    sp20 = func_8413D29C(*(u8 *)(arg0 + 1));
+    var_s0 = *(s16 *)(arg0 + 0xC) + D_84186BDC;
+    func_8413F32C(*(s16 *)(arg0 + 0xA) + D_84186BCC, var_s0, 11);
+    func_8413F390(*(s16 *)(arg0 + 0xA) + D_84186BCC + 6, var_s0, 0, *(u8 *)(sp20 + 0xE));
+    var_s0 = *(s16 *)(arg0 + 0xC) + D_84186BEC;
+    func_8413F498(*(s16 *)(arg0 + 0xA) + D_84186BE0, var_s0, 0, *(f32 *)(sp20 + 4));
+    func_8413F32C(*(s16 *)(arg0 + 0xA) + D_84186BE4, var_s0, 10);
+    func_8413F390(*(s16 *)(arg0 + 0xA) + D_84186BE8, var_s0, 0, *(u16 *)(sp20 + 8));
+}
 #endif
 
 #ifdef VERSION_US

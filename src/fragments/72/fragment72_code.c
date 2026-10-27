@@ -87,7 +87,41 @@ void func_8F400E74(s32 arg0, s32 arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400EE0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F401464.s")
+extern s16 D_8F402030[];
+extern u8 D_8F402040[];
+extern u8 D_8F402044[];
+extern u8 D_8F4020C0;
+extern s16 D_8F4020FC;
+void func_8F401464(void) {
+    s32 i;
+    s32 y;
+    s16 *selection; // FAKE: reads D_8F4020C0 through a local pointer; diff score 655 without it.
+    s16 *extra; // FAKE: reads D_8F4020FC through a local pointer; diff score 940 without it.
+
+    Ui_DrawGradientPanel(120, 120, 400, 180, D_8F402040, D_8F402044);
+    func_800498C4();
+    func_800496A4(8, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0, 0xFF, 0xFF, 0xFF);
+    func_800495BC(140, 140, func_8004C874(66, 19));
+    Font_DisableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    selection = (s16 *)&D_8F4020C0;
+    extra = &D_8F4020FC;
+    for (i = 0, y = 180; i < 5; i++, y += 22) {
+        if (i != *selection) {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        }
+        func_800495BC(140, y, func_8004C874(66, D_8F402030[i]));
+        if (i == 4) {
+            func_800495F8(500, y, 2, func_8004C874(66, *extra + 34));
+        }
+    }
+    func_800499EC();
+}
 
 // Close to fragment20's func_82609938; also skips drawing when arg5 is not positive.
 //@src/fragments/20/fragment20_12C460.c

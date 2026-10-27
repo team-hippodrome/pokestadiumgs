@@ -254,7 +254,24 @@ void func_87E14BA8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14D24.s")
+void func_87E14D24(void) {
+    s32 rounded;
+    f32 ratio;
+    f32 scaled;
+    s32 *child; // FAKE: single-use copy of the pointer at +0x20; diff score 75 without it.
+
+    child = *(s32 **)((u8 *)D_87F119DC + 0x20);
+    func_87E13924(D_87F119DC, *child);
+    *((u8 *)D_87F119DC + 0x41) = 0xFF;
+    ratio = *((u8 *)D_87F119DC + 0xC7) / 255.0f;
+    scaled = (1.0f - ratio) * 220.0f;
+    if (scaled >= 0.0f) {
+        rounded = scaled + 0.5f;
+    } else {
+        rounded = scaled - 0.5f;
+    }
+    *((u8 *)D_87F119DC + 0xC7) = 220 - rounded;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14E08.s")
 
@@ -306,14 +323,57 @@ void func_87E15430(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E15478.s")
+void func_87E15478(u8 *arg0) {
+    s32 temp_v1;
+    u8 *var_v0;
+
+    if ((var_v0 = func_87E13C94(arg0)) != NULL) {
+        temp_v1 = *(s32 *)(var_v0 + 0x38);
+        *(s32 *)temp_v1 = 1;
+        var_v0[0x25] |= 1;
+        *(f32 *)(var_v0 + 0x10) = 0.0f;
+        *(f32 *)(var_v0 + 0x14) = 0.0f;
+        // FAKE: spelling this zero 0.f keeps it out of the shared $f0 zero;
+        // diff score 215 with 0.0f.
+        *(f32 *)(var_v0 + 0x48) = 0.f;
+        *(f32 *)(var_v0 + 0x18) = 0.0f;
+        *(f32 *)(var_v0 + 0x4C) = 30.0f;
+        *(f32 *)(var_v0 + 0x50) = 500.0f;
+    }
+}
 
 extern void func_87E13F84(s32, s32);
 void func_87E154E4(s32 arg0) {
     func_87E13F84(arg0, 0x10000000);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E15504.s")
+extern void *func_87E12070(void *, s32, s32);
+void func_87E15504(u8 *arg0, s32 arg1) {
+    u8 *context = *(u8 **)(arg0 + 0xC);
+    s32 *resource = *(s32 **)(context + 0x38);
+    s32 i;
+    u8 *entry;
+
+    *resource = 2;
+    *(f32 *)(context + 0x10) = 0.0f;
+    *(f32 *)(context + 0x14) = 0.0f;
+    context[0x25] |= 1;
+    *(f32 *)(context + 0x18) = 0.0f;
+    *(s32 *)(arg0 + 0x80) = arg1;
+    *(f32 *)(arg0 + 0x84) = 0.0f;
+    for (i = 0; i < *(s32 *)(arg0 + 0x80); i++) {
+        entry = func_87E12070(arg0 + 0x64, (s32)func_87E14458, i);
+        if (entry != NULL) {
+            *(u8 **)(entry + 0x20) = arg0;
+            entry[0x41] = 0;
+        }
+    }
+    func_87E15334(arg0);
+    func_87E15430(arg0);
+    func_87E13F84((s32)arg0, 0);
+    *(s32 *)(arg0 + 0x160) = 0;
+    *(s32 *)(arg0 + 0x164) = 0;
+}
 
 void func_87E155DC(u8 *arg0) {
     *(s32 *)(arg0 + 0x168) = 4;
@@ -647,7 +707,30 @@ void func_87E176FC_padding(void) {}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E177E0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E17928.s")
+extern f32 D_87E1B95C;
+extern void func_87E177E0();
+void func_87E17928(u8 *arg0) {
+    u8 *entry;
+    f32 scale;
+
+    entry = func_87F025B8(arg0 + 0x1C, func_87E177E0);
+    if (entry != NULL) {
+        func_8003F1DC(entry + 0x24);
+        func_8003F114(entry + 0x24, 0, -1, *(s32 *)(arg0 + 0x10));
+        scale = D_87E1B95C;
+        entry[0x25] &= ~1;
+        entry[0x26] |= 0x10;
+        *(f32 *)(entry + 0x5C) = scale;
+        *(f32 *)(entry + 0x58) = scale;
+        *(f32 *)(entry + 0x54) = scale;
+        *(f32 *)(entry + 0x48) = -1000.0f;
+        *(f32 *)(entry + 0x4C) = 0.0f;
+        *(f32 *)(entry + 0x50) = 1000.0f;
+        *(f32 *)(entry + 0x10) = 80.0f;
+        *(f32 *)(entry + 0x14) = 400.0f;
+        *(f32 *)(entry + 0x18) = -20.0f;
+    }
+}
 
 extern u8 D_87E1B270;
 extern u8 D_87E1B2DC;

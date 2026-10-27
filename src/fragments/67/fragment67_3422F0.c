@@ -61,7 +61,28 @@ void func_82906164(f32 arg0) {
     D_80128C54[1] = arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_3422F0/func_82906170.s")
+extern u8 D_80128C5C[];
+extern u8 D_82919DD0[];
+
+void func_82906170(u8 arg0, u8 arg1, u8 arg2, u8 arg3) {
+    u8 *ptr = D_80128C5C;
+    u8 *color = D_82919DD0;
+
+    ptr[0] = arg0;
+    ptr[1] = arg1;
+    ptr[2] = arg2;
+    // FAKE: the mask and the chained store below together select $t7 for 0xFF;
+    // diff score 50 without either one.
+    ptr[3] = arg3 & 0xFFFF;
+    color[2] = 0xFF;
+    color[1] = 0xFF;
+    color[0] = 0xFF;
+    color[6] = 0xFF;
+    color[5] = 0xFF;
+    color[10] = (color[4] = 0xFF);
+    color[9] = 0xFF;
+    color[8] = 0xFF;
+}
 
 extern s32 D_82919D24;
 extern s32 D_82919DC0;

@@ -124,7 +124,43 @@ void func_8FA010B0(s16 arg0, s16 arg1, u8 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA01718.s")
+extern s32 StageContext_GetFadeMode(void);
+extern s32 func_8FA0125C(void);
+extern void StageFade_StartFromTransparent(s32);
+
+// Same code as fragment63's func_87E0132C; in state 1 GS advances to state 2 and
+// starts StageFade_StartFromTransparent(5) when func_8FA0125C returns 1.
+//@src/fragments/63/fragment63_303990.c
+s32 func_8FA01718(s32 arg0) {
+    // FAKE: volatile keeps sp1C in its stack slot like the original, where no call takes its
+    // address; diff score 1939 without it.
+    volatile s32 sp1C;
+
+    sp1C = arg0;
+    switch (arg0) {                                 /* irregular */
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            sp1C = 1;
+        }
+        break;
+    case 1:
+        if (func_8FA0125C() == 1) {
+            sp1C = 2;
+            StageFade_StartFromTransparent(5);
+        }
+        break;
+    case 2:
+        if (StageContext_GetFadeMode() == 1) {
+            sp1C = 3;
+        }
+        break;
+    }
+    return sp1C;
+}
+
+// Empty function at 0x8FA017B0, inside the asm file of func_8FA01718.
+void func_8FA017B0(void) {
+}
 #endif
 
 #ifdef VERSION_US

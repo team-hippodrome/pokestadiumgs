@@ -111,7 +111,18 @@ void func_82301088(void) {
     _bzero(&D_82305D88, 224);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823010B0.s")
+void *func_823010B0(void) {
+    s32 i;
+    void *result = NULL;
+
+    for (i = 0; i < 16; i++) {
+        if (*(u16 *)((u8 *)&D_82305D88 + i * 14 + 2) == 0) {
+            result = (u8 *)&D_82305D88 + i * 14;
+            break;
+        }
+    }
+    return result;
+}
 
 void *func_823010B0();
 

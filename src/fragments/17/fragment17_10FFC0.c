@@ -164,8 +164,60 @@ s32 func_8220158C(void *arg0) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822015B4.s")
+// Game Boy save entry per controller port, 0x14 bytes each; func_822015B4 fills them.
+typedef struct F822015B4_Entry {
+    /* 0x00 */ u8 unk_00; // func_8005D8CC(port)
+    /* 0x01 */ u8 unk_01; // func_8005D92C(port)
+    /* 0x02 */ u8 unk_02; // func_8005D948(port)
+    /* 0x03 */ u8 unk_03; // func_8005DDD4(port)
+    /* 0x04 */ u8 connected; // bit `port` of func_800060E8's controller bits
+    /* 0x05 */ u8 status; // func_82201518(entry)
+    /* 0x06 */ u16 unk_06; // first halfword of func_8005D9E0's buffer
+    /* 0x08 */ s8 name[12]; // string after it
+} F822015B4_Entry;
+extern u8 D_8220E310[];
+extern u8 func_800060E8(void);
+extern void func_8005D9E0(s32, void *);
+extern u8 func_8005D8CC(s32);
+extern u8 func_8005D92C(s32);
+extern u8 func_8005D948(s32);
+extern s32 func_8005DDD4(s32);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
 
+// Same code as Pokemon Stadium's TransferPak_ScanAllPorts
+// (src/fragments/transfer_pak_select/transfer_pak_select.c), refreshing the four
+// entries at D_8220E310 from func_8005D9E0's buffer and the per-port getters; GS also
+// stores func_82201518's status and returns how many entries func_8220158C accepts.
+s32 func_822015B4(void) {
+    s32 i;
+    s32 count;
+    struct {
+        u16 id;
+        s8 name[14];
+    } buffer;
+    F822015B4_Entry *entry;
+    u8 controller_bits;
+
+    count = 0;
+    controller_bits = func_800060E8();
+
+    for (i = 0; i < 4; i++) {
+        entry = (F822015B4_Entry *)(D_8220E310 + i * 0x14);
+        func_8005D9E0(i, &buffer);
+        entry->unk_00 = func_8005D8CC(i);
+        entry->unk_01 = func_8005D92C(i);
+        entry->unk_02 = func_8005D948(i);
+        entry->unk_03 = func_8005DDD4(i);
+        entry->connected = (controller_bits & (1 << i)) != 0;
+        entry->unk_06 = buffer.id;
+        HAL_Strcpy(entry->name, buffer.name);
+        entry->status = func_82201518((u8 *)entry);
+        if (func_8220158C(entry)) {
+            count++;
+        }
+    }
+    return count;
+}
 extern s16 D_8220E378;
 extern s16 D_8220E3B4;
 extern s16 D_8220E3F0;
@@ -787,7 +839,7 @@ void func_82203E40(void) { func_822014D8(); StageFade_StartFromTransparent(5); f
 extern void StageFade_StartFromOpaque(s32);
 extern void func_800086A4(s32);
 extern void func_80064D28();
-extern void func_822015B4();
+extern s32 func_822015B4(void);
 extern void func_82201B70();
 extern void func_822039C8();
 s32 func_82203E70(s32);

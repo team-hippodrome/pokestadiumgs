@@ -353,7 +353,42 @@ loop:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_80050994.s")
+extern u8 D_801281B8;
+extern u8 D_81500000[];
+extern u8 D_15877A0[];
+extern u8 D_15B9B60[];
+extern void main_pool_push_state(s32);
+extern s32 main_pool_alloc(s32, s32);
+extern void Fragment_Load(s32, void *, void *);
+extern s32 func_80047524(void);
+extern s32 func_80047558(s32, s32);
+extern s32 func_80050878(void);
+extern u8 GbTower_SetPollMask(u8);
+typedef struct Copy8_80050994 { u8 bytes[8]; } Copy8_80050994;
+
+// Same code as Pokemon Stadium's GbTower_Start (src/gb_tower_audio.c): allocates the
+// emulator state (D_801281B0) and audio thread (D_801281B4), loads the fragment at
+// 0x81500000, and starts both threads. GS takes both fonts from the archive returned
+// by func_80047524, stores func_80050878's result at 0x2204, and keeps the poll mask
+// in D_801281B8.
+void func_80050994(void *arg0) {
+    s32 archive;
+
+    main_pool_push_state(0x4742454D);
+    D_801281B0 = main_pool_alloc(0x2210, 0);
+    D_801281B4 = main_pool_alloc(0x21E0, 0);
+    Fragment_Load((((u32)D_81500000 & 0x0FF00000) >> 20) - 0x10, D_15877A0, D_15B9B60);
+    archive = func_80047524();
+    *(s32 *)((u8 *)D_801281B0 + 0x21FC) = func_80047558(archive, 1);
+    *(s32 *)((u8 *)D_801281B0 + 0x2200) = func_80047558(archive, 2);
+    *(s32 *)((u8 *)D_801281B0 + 0x2204) = func_80050878();
+    *(Copy8_80050994 *)((u8 *)D_801281B0 + 0x2208) = *(Copy8_80050994 *)arg0;
+    osCreateMesgQueue((OSMesgQueue *)((u8 *)D_801281B0 + 0x21E4), (OSMesg *)((u8 *)D_801281B0 + 0x21E0), 1);
+    osCreateThread((OSThread *)D_801281B4, 10, GbTower_AudioThread, NULL, (u8 *)D_801281B4 + 0x21E0, 17);
+    osCreateThread((OSThread *)D_801281B0, 8, GbTower_EmuThread, NULL, (u8 *)D_801281B0 + 0x21E0, 15);
+    D_801281B8 = GbTower_SetPollMask(0);
+    osStartThread((OSThread *)D_801281B0);
+}
 #endif
 
 #ifdef VERSION_US

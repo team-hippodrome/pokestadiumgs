@@ -462,7 +462,41 @@ void func_87E08B90(s32 arg0) {
     main_pool_pop_state(0x434D4C42);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E08BEC.s")
+extern void func_87E08B14(s32);
+extern void func_87E08844(s32, s32);
+extern void func_87E015C0(s32);
+extern void func_80021ED8(s32);
+extern void func_87E0D41C();
+void func_87E08BEC(s32 arg0, void *arg1) {
+    main_pool_push_state(0x4D47434D);
+    *(s32 *)(arg0 + 0x1C) = 0;
+    *(void **)(arg0 + 0x20) = arg1;
+    func_87E07F98(arg1);
+    func_87E08168(*(void **)(arg0 + 0x20));
+    switch (*(s32 *)(*(u8 **)(arg0 + 0x20) + 0x21F0)) {
+    case 0:
+        func_87E080F8((s32)(*(u8 **)(arg0 + 0x20) + 0x2188));
+        *(s16 *)(*(u8 **)(arg0 + 0x20) + 0x21F4) = 0;
+        func_87E087B0((void *)arg0);
+        func_87E07F98(*(void **)(arg0 + 0x20));
+        break;
+    case 1:
+        func_87E08B14(arg0);
+        func_87E015C0(1);
+        if (func_87E07E08(*(void **)(arg0 + 0x20)) != 0) {
+            func_87E088E0((F63_088E0_Owner *)arg0);
+            func_80021ED8(77);
+            break;
+        }
+        func_80021ED8(77);
+        func_87E08844(arg0, 0);
+        // func_87E0D41C is defined without parameters, but it leaves $a0 unchanged for
+        // func_87E0D18C, which loads 0x1C($a0); this pointer reaches that load.
+        //@src/fragments/63/fragment63_310270.c
+        func_87E0D41C(arg0 + 0x8C);
+        break;
+    }
+}
 
 extern s32 func_87E0B0EC(s32);
 extern void func_87E08810(s32);

@@ -437,7 +437,54 @@ void func_82C02B30(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C03134.s")
+extern u8 D_82C04A1C;
+extern u16 D_82C04C30;
+s32 func_82C03134(void) {
+    s32 result = 0;
+    s8 *state = (s8 *)&D_82C04A1C;
+
+    if (D_82C04C32 & 0x800) {
+        if ((D_82C04C30 & 0xC) == 0) {
+            result = 0x800;
+            *state = 10;
+        }
+    } else if (D_82C04C32 & 0x400) {
+        if ((D_82C04C30 & 0xC) == 0) {
+            result = 0x400;
+            *state = 10;
+        }
+    } else if (D_82C04C32 & 8) {
+        if ((D_82C04C30 & 0xC04) == 0) {
+            result = 0x800;
+            *state = 2;
+        }
+    } else if (D_82C04C32 & 0x400) {
+        //!bug: repeats the 0x400 test above, so this branch never runs.
+        if ((D_82C04C30 & 0xC08) == 0) {
+            result = 4;
+            *state = 2;
+        }
+    }
+    *state -= 1;
+    if (*state <= 0) {
+        *state = 0;
+        if (D_82C04C30 & 8) {
+            *state = 2;
+            result = 0x800;
+        } else if (D_82C04C30 & 4) {
+            *state = 2;
+            result = 0x400;
+        } else if (D_82C04C30 & 0x800) {
+            *state = 4;
+            result = 0x800;
+        } else if (D_82C04C30 & 0x400) {
+            *state = 4;
+            result = 0x400;
+        }
+    }
+    return result;
+}
+
 #endif
 
 #ifdef VERSION_US

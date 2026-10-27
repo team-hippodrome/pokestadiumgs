@@ -41,7 +41,30 @@ s32 func_8AF1B9C0(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_209BD0/func_8AF1BA18.s")
+extern s32 D_8AF27494;
+extern s32 D_8AF37594;
+extern s32 D_8AF37598;
+extern s32 D_8AF3759C;
+extern s32 func_800472E0(void *);
+extern void *func_8004C874(s32, s32);
+
+s32 func_8AF1BA18(s32 arg0, u8 *arg1) {
+    switch (arg0) {
+        case 0:
+            D_8AF27494 = 480;
+            break;
+        case 1:
+            D_8AF3759C = *(s8 *)(arg1 + 0x26);
+            D_8AF37594 = func_800472E0(func_8004C874(*(u16 *)(arg1 + 0x30), *(u16 *)(arg1 + 0x32)));
+            D_8AF37598 = D_8AF37594 * D_8AF3759C;
+            D_8AF27494 = *(s16 *)(arg1 + 0xA) + D_8AF37598 - *(s16 *)((u8 *)D_8AF37240 + 0xE) - D_8AF3759C;
+            if (D_8AF27494 <= 0) {
+                D_8AF27494 = 1;
+            }
+            break;
+    }
+    return 0;
+}
 
 #ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
 #define M2C_UNK s32
