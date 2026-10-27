@@ -2,7 +2,31 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203670.s")
+extern u8 D_88234618[];
+extern u8 D_882345F8[];
+extern void _bzero(void *, s32);
+void func_88203670(s32 type, u8 *entries, u8 count) {
+    u32 i;
+
+    switch (type) {
+        case 0:
+            for (i = 0; i < count; i++) {
+                if (D_88234618[i] == 0) {
+                    _bzero(entries, 0x76);
+                }
+                entries += 0x76;
+            }
+            break;
+        case 2:
+            for (i = 0; i < count; i++) {
+                if (D_882345F8[i] == 0) {
+                    _bzero(entries, 0x76);
+                }
+                entries += 0x76;
+            }
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203744.s")
 
@@ -41,7 +65,33 @@ s32 func_88203A18(s32 arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203BE4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203ED8.s")
+// Same 12-byte layout as LabPCStorageList in
+//@src/fragments/31/fragment31_1736F0.c
+typedef struct LabPCStorageList {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList;
+
+// One 0x76-byte Lab PC storage entry (halfword aligned); see func_88203670's 0x76 stride.
+typedef struct unk_func_88203ED8 {
+    u16 unk_00[0x3B];
+} unk_func_88203ED8;
+
+extern LabPCStorageList D_88234630[];
+void func_88203A58(u8 *);
+
+void func_88203ED8(u8 *entry, s32 list) {
+    LabPCStorageList *storage = &D_88234630[list];
+
+    if (storage->count != storage->capacity) {
+        ((unk_func_88203ED8 *)storage->entries)[storage->count] = *(unk_func_88203ED8 *)entry;
+        storage->count++;
+        storage->changed = 1;
+        func_88203A58(entry);
+    }
+}
 
 extern u8 D_88A01C40[];
 u8 func_88203FB4(void) {
