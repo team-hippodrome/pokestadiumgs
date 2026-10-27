@@ -143,6 +143,22 @@ class ScheduledPairs(unittest.TestCase):
         relocs.update({24: [(A, 5)], 32: [(A, 6)]})
         self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES), [])
 
+    def test_lo16_in_place_addend_is_kept(self):
+        # sw v0, %lo(A)($at); sw v1, %lo(A + 4)($at): the second operand is a
+        # LO16 against A whose +4 addend lives in the immediate (REL).
+        words = [HI, STORE_A, HI, STORE_B | 0x0004, 0x03E00008, 0]
+        relocs = {0: [(A, 5)], 4: [(A, 6)], 8: [(A, 5)], 12: [(A, 6)]}
+        actual, kept, count = fold.fold_function_words(words, relocs, ADDRESSES, None, "synthetic")
+        self.assertEqual(count, 1)
+        self.assertEqual(actual[2] & 0xFFFF, (ADDRESSES[A] + 4) & 0xFFFF)
+        self.assertEqual(kept, [(0, A, 5), (4, A, 6)])
+
+    def test_addend_crossing_a_page_is_not_folded(self):
+        edge = "D_8AF27FFC"  # +4 lands on the next %hi page (0x8AF28000)
+        words = [HI, STORE_A, HI, STORE_A | 0x0004, 0x03E00008, 0]
+        relocs = {0: [(edge, 5)], 4: [(edge, 6)], 8: [(edge, 5)], 12: [(edge, 6)]}
+        self.assertEqual(fold.plan_runs(words, relocs, {edge: 0x8AF27FFC}), [])
+
     def test_legacy_adjacent_pair_still_folds(self):
         words, relocs = fixture(())
         self.assertEqual(fold.fold_function_words(words, relocs, ADDRESSES, None, "synthetic")[2], 1)
