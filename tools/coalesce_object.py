@@ -198,8 +198,15 @@ def _is_control_transfer(word: int) -> bool:
 
 
 def _is_safe_register_gap(word: int) -> bool:
-    """Non-trapping moves/immediate shifts, neither reading nor writing $at."""
-    if word == 0 or (word >> 26) != 0:
+    """Non-trapping moves/immediate shifts/constant loads, never touching $at."""
+    if word == 0:
+        return False
+    if (word >> 26) in (0x09, 0x0D):
+        # ``li rt, imm`` -- ``addiu``/``ori`` from $zero: reads nothing,
+        # cannot trap, and IDO schedules it between a ``lui $at`` and the
+        # store that consumes the loaded constant.
+        return ((word >> 21) & 31) == 0 and ((word >> 16) & 31) not in (0, _AT)
+    if (word >> 26) != 0:
         return False
     rs, rt, rd = (word >> 21) & 31, (word >> 16) & 31, (word >> 11) & 31
     if _AT in (rs, rt, rd):
@@ -281,7 +288,7 @@ def _macro_pairs(words, by_offset):
     surviving ``lui``'s value is still live at the store.
 
     Scheduled gaps are narrower than a general scheduler analysis: at most
-    four OR/ADDU moves or immediate shifts, no relocation on an intervening
+    four OR/ADDU moves, immediate shifts or ``li`` constant loads, no relocation on an intervening
     instruction and no entry into the gap or memory operation. A final
     control transfer may place the memory operation in its delay slot, just
     as in the existing adjacent-pair case. Run-level checks reject entries
