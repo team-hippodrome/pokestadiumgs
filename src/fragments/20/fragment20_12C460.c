@@ -465,9 +465,108 @@ s32 func_82604CF0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82604D40.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605110.s")
+typedef struct unk_func_82605110_pair {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+} unk_func_82605110_pair;
+typedef struct unk_func_82605110 {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ u16 unk_04;
+    /* 0x06 */ u8 unk_06[0xA];
+    /* 0x10 */ unk_func_82605110_pair unk_10;
+    /* 0x14 */ s16 unk_14;
+    /* 0x16 */ s16 unk_16;
+    /* 0x18 */ unk_func_82605110_pair unk_18;
+    /* 0x1C */ u8 unk_1C[8];
+    /* 0x24 */ s16 unk_24;
+    /* 0x26 */ s16 unk_26;
+    /* 0x28 */ u8 unk_28[8];
+    /* 0x30 */ s16 unk_30[2];
+    /* 0x34 */ s16 unk_34[2][2];
+    /* 0x3C */ s16 unk_3C[2];
+} unk_func_82605110;
+extern s16 D_82615504[];
+extern s32 func_82604720(s32 *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern s32 func_82604CF0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_82605110(void *arg0, void *arg1) {
+    unk_func_82605110 *desc = arg1;
+    u8 *state;
+    s32 offset;
+    s32 *out;
+    s32 is_first;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605218.s")
+    state = **(u8 ***)((u8 *)arg0 + 0x110);
+    offset = *(s16 *)((u8 *)arg0 + 0x16);
+    is_first = *(s16 *)arg0 == 1;
+    out = (s32 *)desc->unk_30;
+    desc->unk_10.unk_00 = 0;
+    desc->unk_24 = 554;
+    desc->unk_26 = D_82615504[desc->unk_00];
+    if (is_first) {
+        desc->unk_10.unk_02 = -480;
+        desc->unk_16 = 240 - desc->unk_26;
+    } else {
+        if (*(s16 *)((u8 *)arg0 + 0x12) != 1) {
+            desc->unk_10.unk_02 = -480;
+        } else {
+            desc->unk_10.unk_02 = 480;
+        }
+        desc->unk_16 = func_82604CF0((s32)((u8 *)arg0 + 0x3544), *(s16 *)((u8 *)arg0 + 0x14), desc->unk_00, desc->unk_02) + offset;
+    }
+    desc->unk_14 = 44;
+    desc->unk_18 = desc->unk_10;
+    *out = func_82604720(out + 1, *(u16 *)(state + 8), *(s16 *)(state + 0xA), *(s8 *)(state + 0xF));
+}
+
+extern s32 func_8004C990(s32, s32);
+extern s32 func_82604814(s32 *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern s32 func_826049A0(s32 *arg0, s32 arg1);
+extern s32 func_82604A78(s32 *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern s32 func_82604CF0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern s16 D_82615504[];
+void func_82605218(void *arg0, void *arg1) {
+    unk_func_82605110 *desc = arg1;
+    u8 *state;
+    s32 offset;
+    s32 *out;
+    s32 is_first;
+
+    state = **(u8 ***)((u8 *)arg0 + 0x110);
+    offset = *(s16 *)((u8 *)arg0 + 0x16);
+    is_first = *(s16 *)arg0 == 1;
+    desc->unk_10.unk_00 = 0;
+    desc->unk_10.unk_02 = 480;
+    desc->unk_14 = 44;
+    desc->unk_24 = 554;
+    desc->unk_26 = D_82615504[desc->unk_00];
+    if (is_first) {
+        desc->unk_16 = 240;
+    } else {
+        desc->unk_16 = func_82604CF0((s32)((u8 *)arg0 + 0x3544), *(s16 *)((u8 *)arg0 + 0x14), desc->unk_00, desc->unk_02) + offset;
+    }
+    desc->unk_18 = desc->unk_10;
+    if (is_first) {
+        out = (s32 *)desc->unk_30;
+        out[out[0] + 1] = func_8004C990(89, 0);
+        out[0]++;
+    } else {
+        out = (s32 *)desc->unk_30;
+        switch (*(u16 *)(state + 8) & 0xFF00) {
+            case 0:
+                out[0] = func_82604814(out + 1, *(s16 *)(state + 0xA), *(s16 *)(state + 0x88), *(s16 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0x14));
+                break;
+            case 0x100:
+            case 0x200:
+            case 0x700:
+                out[0] = func_826049A0(out + 1, *(u16 *)(state + 8));
+                break;
+            case 0x300:
+                out[0] = func_82604A78(out + 1, *(s16 *)(state + 0xA), *(s16 *)(state + 0x88), *(s16 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0x14));
+                break;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826053A4.s")
 
@@ -494,7 +593,43 @@ s32 func_826058CC(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605908.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605E04.s")
+extern s16 D_82615504[];
+void func_82605E04(void *arg0, void *arg1) {
+    unk_func_82605110 *desc = arg1;
+    u8 *state;
+    s16 count;
+    s32 quotient;
+    s32 remainder;
+    s16 *range;
+
+    state = **(u8 ***)((u8 *)arg0 + 0x110);
+    count = *(s16 *)(state + 0x88);
+    quotient = *(s16 *)(state + 0x88) / 4; // FAKE: count
+    remainder = count % 4;
+    desc->unk_10.unk_00 = 0;
+    desc->unk_14 = 44;
+    if (desc->unk_02 == 0) {
+        desc->unk_10.unk_02 = -480;
+        desc->unk_16 = 41;
+    } else {
+        desc->unk_10.unk_02 = 480;
+        desc->unk_16 = 242;
+    }
+    desc->unk_18 = desc->unk_10;
+    desc->unk_24 = 554;
+    desc->unk_26 = D_82615504[desc->unk_00];
+    range = desc->unk_30;
+    if (desc->unk_02 < quotient) {
+        range[0] = 4;
+        range[1] = -1;
+    } else if (quotient < desc->unk_02) {
+        range[0] = 0;
+        range[1] = -1;
+    } else {
+        range[0] = remainder + 1;
+        range[1] = remainder;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605EF4.s")
 
