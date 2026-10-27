@@ -51,9 +51,52 @@ void func_83400038(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834006A8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400A64.s")
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x78];
+    /* 0x78 */ u8 colorA[4];
+    /* 0x7C */ u8 unk_7C[0x10];
+    /* 0x8C */ u8 colorB[4];
+} Fragment58CameraColors;
+extern u8 *D_80094908;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern s32 D_83404188;
+s32 func_83400A64(s32 arg0, u8 *arg1) {
+    s32 i;
+    u8 *dst = arg1;
+    f32 distance;
+    s16 angleX;
+    s16 angleY;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400AFC.s")
+    if (arg0 == 2) {
+        for (i = 0; i < 3; i++) {
+            dst[0x18 + i] = ((Fragment58CameraColors *)&D_83404188)->colorA[i];
+        }
+        dst[0x1B] = ((Fragment58CameraColors *)&D_83404188)->colorA[3];
+        func_80037120(D_80094908 + 0xB4, D_80094908 + 0xA8, &distance, &angleX, &angleY);
+        *(s16 *)(dst + 0x1C) = angleX + 0x2000;
+        *(s16 *)(dst + 0x1E) = angleY;
+    }
+    return 0;
+}
+
+s32 func_83400AFC(s32 arg0, u8 *arg1) {
+    s32 i;
+    u8 *dst = arg1;
+    f32 distance;
+    s16 angleX;
+    s16 angleY;
+
+    if (arg0 == 2) {
+        for (i = 0; i < 3; i++) {
+            dst[0x18 + i] = ((Fragment58CameraColors *)&D_83404188)->colorB[i];
+        }
+        dst[0x1B] = ((Fragment58CameraColors *)&D_83404188)->colorB[3];
+        func_80037120(D_80094908 + 0xB4, D_80094908 + 0xA8, &distance, &angleX, &angleY);
+        *(s16 *)(dst + 0x1C) = -0x2000 - angleX;
+        *(s16 *)(dst + 0x1E) = angleY;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400B98.s")
 
