@@ -78,6 +78,7 @@ extern void func_87F08FA0(u8);
 extern void func_800503A4(s32);
 void func_87F01D44(void) {
     if ((u32)D_87F0F610[0x3D] >> 7) {
+        func_87F08FA0(D_87F0F610[0x3C]);
         func_800503A4(((s32 *)(D_87F0F610 + 0x20))[*(s32 *)(D_87F0F610 + 0x10)]);
     }
 }
