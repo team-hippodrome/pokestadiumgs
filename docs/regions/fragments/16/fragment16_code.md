@@ -201,3 +201,7 @@ sequences; fresh ranking alone does not establish that the coalescing shape
 is ready. `func_8200182C` has a jump table without its per-file rodata
 prerequisite. Do not treat those as ordinary fresh scalar wrappers or claim
 that this batch completes the file or the repository.
+
+## 2026-10-28 — `func_8200070C`: requeue
+
+requeue. Fade-state init: `bzero(&sFadeState, 12)`, then `mode`, `counter`, `alpha` = 0, `unk_08 = 320`, `unk_0A = func_8003514C() ? 321 : 376`, and `flags |= 1` when `func_800061EC()`. `sFadeState` is already this file's static (data at 0x82001EA0), and the retail stores share one `lui $at`, consistent with that. But once `&sFadeState` is passed to `bzero`, IDO keeps the address in `$s0` for the field stores (0.7647), while retail re-forms it. Using the static needs its typedef hoisted plus a forward `static Fragment16FadeState sFadeState;` before this function (byte-identical). Next: pass the address through a different expression (e.g. `&sFadeState.mode`), or test whether retail's `bzero` is a macro around `_bzero`.
