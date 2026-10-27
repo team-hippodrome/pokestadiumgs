@@ -47,7 +47,60 @@ f64 func_86000020(u8 *arg0, u8 *arg1, f64 horizon) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000170.s")
+s32 func_86000170(u8 *object, s32 flag_a, s32 flag_b, f64 horizon) {
+    static f64 radius_margin = 3.0;
+    s32 offset;
+    u8 *other;
+
+    if (flag_a == 0 && flag_b == 0) {
+        return 0;
+    }
+    if (*(s32 *)(object + 0x1828) != 3) {
+        return 0;
+    }
+    offset = 0;
+    do {
+        other = *(u8 **)(object + 0x1870) + offset;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(object + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        if (func_86000020(object, other, horizon) <
+            *(f64 *)(other + 0x17C8) + *(f64 *)(object + 0x17C8) + radius_margin) {
+            return 1;
+        }
+next_object:
+        offset += 6552;
+    } while (offset != 26208);
+    return 0;
+}
+
+typedef struct {
+    f64 x;
+    f64 y;
+    f64 z;
+} Fragment47SteeringVector;
+
+typedef struct {
+    f32 threshold;
+    f32 probability;
+    f32 speed;
+    u32 flags;
+} Fragment47SteeringConfig;
+
+Fragment47SteeringVector D_8600D158 = {0.0, 0.0, 0.0};
+Fragment47SteeringVector D_8600D170 = {0.0, 0.0, 0.0};
+Fragment47SteeringConfig D_8600D188 = {0.65f, 0.00605f, 28.0f, 0xF3C00000};
+f64 D_8600D198 = 250.0;
+
 #endif
 
 void func_860002A0(void) {
