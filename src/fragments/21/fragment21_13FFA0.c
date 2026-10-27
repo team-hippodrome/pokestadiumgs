@@ -1032,5 +1032,83 @@ s32 func_825045EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82504628.s")
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern void Gfx_InitDisplayListBuffers(s32, s32);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern void func_80047588(s32, s32);
+extern u8 *Asset_LoadToSegment(s32, u8 *, u8 *, s32);
+extern void func_80055948(s32);
+extern void func_82502854(s32);
+extern void func_80008514(s32);
+extern s32 func_8006D268(s32);
+extern s32 func_82504BA0(s32 *, s32);
+extern void func_80008574(void);
+extern void func_80047610(void);
+extern void Gfx_FreeDisplayListBuffers(void);
+
+extern s32 D_82508D00;
+extern void StageLoader_WaitForRetrace(void);
+extern void func_800355E4(s32);
+extern void func_80064D28();
+extern s32 func_825043AC(s32 arg0, s32 arg1);
+extern void func_825044D0(void);
+extern void func_82504524(void);
+extern void * D_80087200;
+extern void * D_82508680;
+void func_82504628(s32 arg0, u8 *arg1) {
+    s32 state;
+    s32 prev;
+    s32 config;
+    s32 back;
+
+    state = *(s16 *)(arg1 + 8);
+    D_82508680 = arg1;
+    prev = state;
+    main_pool_push_state(0x47594D4C); // 'GYML'
+    Gfx_InitDisplayListBuffers(0x10000, 0);
+    config = func_800082E0(1, 0, 2, 0, 2, 1);
+    func_80047588(28, 0);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    func_80055948(3);
+    func_82502854(state);
+    func_80008514(config);
+    StageLoader_WaitForRetrace();
+    if (func_8006D268(0x301) != 0) {
+        func_80064D28();
+        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x2000) {
+            state = 0;
+        }
+    }
+    do {
+        main_pool_push_state(0x6C6F6F70); // 'loop'
+        switch (state) {
+            case 0:
+                func_800355E4(62);
+                prev = state;
+                state = func_82504BA0(&D_82508D00, state);
+                break;
+            case 4:
+                func_825044D0();
+                state = prev;
+                prev = 4;
+                break;
+            default:
+                back = prev == 4;
+                prev = state;
+                state = func_825043AC(state, back ? 1 : 0);
+                func_82504524();
+                break;
+        }
+        main_pool_pop_state(0x6C6F6F70);
+    } while (state != 5);
+    func_80008574();
+    func_80047610();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x47594D4C);
+    func_825045EC();
+}
 #endif
