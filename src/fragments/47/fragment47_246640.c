@@ -1176,7 +1176,48 @@ void func_860037D8(u8 *arg0, u8 *arg1, s32 *arg2, f64 *arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86003868.s")
+extern void func_800277F0(u16, void *);
+
+void func_86003868(u8 *first, u8 *second, void *sound_context, f64 impact) {
+    s32 next_index_first;
+    s32 next_index_second;
+    f64 next_timer_first;
+    f64 next_timer_second;
+    s32 special_pair;
+
+    next_index_first = *(s32 *)(first + 0x1818);
+    next_index_second = *(s32 *)(second + 0x1818);
+    next_timer_first = *(f64 *)(first + 0x17D0);
+    next_timer_second = *(f64 *)(second + 0x17D0);
+    special_pair = func_8600472C(first) != 0 || func_8600472C(second) != 0;
+    func_860037D8(first, second, &next_index_first, &next_timer_first);
+    func_860037D8(second, first, &next_index_second, &next_timer_second);
+
+    if (*(f64 *)(D_8600DE30 + 0x2A0) < impact && special_pair) {
+        func_800277F0(20228, sound_context);
+    } else if (*(f64 *)(D_8600DE30 + 0x298) < impact) {
+        func_800277F0(20231, sound_context);
+    } else if (*(f64 *)(D_8600DE30 + 0x290) < impact) {
+        func_800277F0(20227, sound_context);
+    }
+
+    *(s32 *)(first + 0x1818) = next_index_first;
+    *(s32 *)(second + 0x1818) = next_index_second;
+    *(f64 *)(first + 0x17D0) = next_timer_first;
+    *(f64 *)(second + 0x17D0) = next_timer_second;
+    if (*(f64 *)(first + 0x17D0) < *(f64 *)(D_8600DE30 + 0xF0)) {
+        *(f64 *)(first + 0x17F0) = *(f64 *)(D_8600DE30 + 0xF0);
+    } else {
+        *(f64 *)(first + 0x17F0) = *(f64 *)(first + 0x17D0);
+    }
+    if (*(f64 *)(second + 0x17D0) < *(f64 *)(D_8600DE30 + 0xF0)) {
+        *(f64 *)(second + 0x17F0) = *(f64 *)(D_8600DE30 + 0xF0);
+    } else {
+        *(f64 *)(second + 0x17F0) = *(f64 *)(second + 0x17D0);
+    }
+    *(f64 *)(first + 0x17F8) = *(f64 *)(D_8600DE30 + 0x200);
+    *(f64 *)(second + 0x17F8) = *(f64 *)(D_8600DE30 + 0x200);
+}
 #endif
 
 #ifdef VERSION_US
