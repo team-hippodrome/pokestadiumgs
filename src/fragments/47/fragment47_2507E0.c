@@ -174,11 +174,28 @@ void func_8600AE6C(u8 *arg0) {
     }
 }
 
-s32 D_8600D404 = 0;
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_2507E0/func_8600B100.s")
-
 extern s32 func_80008970(void);
+void func_8600B100(u32 hold_animation) {
+    static s32 animation_phase = 0;
+    void *image;
+    f32 additional_width;
+
+    image = (void *)func_8004C990(401, 5);
+    if (hold_animation == 0) {
+        animation_phase = (func_80008970() + animation_phase) % 32;
+    }
+    {
+        f32 scale;
+
+        scale = (f32)(animation_phase >= 16 ? 32 - animation_phase : animation_phase) * 0.2f;
+        additional_width = ((scale * 0.0625f + 1.0f) - 1.0f) * (f32)func_8004CA10((u16 *)image);
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 200);
+    func_8600A5B0((s16)(138.0f - additional_width * 0.5f), 16, (u16)((f32)func_8004CA10((u16 *)image) + additional_width), (u16)func_8004CA24((u16 *)image), image);
+}
+
 extern s32 func_8004D19C(s32, s32, s32, s32, s32);
 void func_8600B328(u32 hold_animation) {
     static s32 animation_phase = 0;
@@ -205,13 +222,12 @@ s32 D_8600D41C[4][2] = { { 30, 260 }, { 30, 260 }, { 60, 60 }, { 160, 160 } };
 
 void func_8600B468(u8 *arg0, s32 arg1) {}
 
-extern void func_8600B100(void *);
 extern void func_87F061F0(void);
 u8 D_8600D43C[4] = { 60, 60, 100, 255 };
 u8 D_8600D440[4] = { 220, 190, 120, 255 };
 void func_8600B474(void *arg0, u32 hold_animation) {
     gSPDisplayList(D_800D0510++, D_80094E38);
-    func_8600B100((void *)hold_animation);
+    func_8600B100(hold_animation);
     func_8600B328(hold_animation);
     gSPDisplayList(D_800D0510++, D_80094F50);
     func_87F061F0();
