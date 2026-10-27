@@ -541,3 +541,12 @@ assembly for the baseline's fragment-38 rodata change, a forced native build
 with the host C check enabled reproduces retail MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. These are cleanups of existing C owners;
 no additional assembly owner is replaced.
+
+## 2026-10-27 — rendering source ownership
+
+The functions from `func_8600A1C0` onward now live in
+`src/fragments/47/fragment47_2507E0.c`, with their own readonly subsegment.
+The geometry functions and `D_8600D970`/`D_8600D988` remain in this source's
+original layout. Continue the rendering owners using
+`docs/regions/fragments/47/fragment47_2507E0.md`; it records the successful
+`func_8600AB6C` spelling and current requeues.
