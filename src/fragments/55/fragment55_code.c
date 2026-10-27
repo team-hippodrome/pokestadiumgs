@@ -180,7 +180,39 @@ void func_867006C4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867035A8.s")
+extern f32 D_8670B3CC;
+extern f32 D_8670B3C8;
+extern s32 D_8670B3D0;
+extern f32 D_8670C8A0;
+extern f32 D_8670C89C;
+extern f32 D_8670C390;
+extern f32 D_8670BD9C;
+extern u8 D_800CE060[];
+extern Row86706A30 D_86710C20[];
+extern State86703DF4 D_86728408[];
+extern s32 D_8670BB48;
+void func_867035A8(void) {
+    f32 scale;
+    s32 i;
+
+    scale = *(f32 *)((u8 *)&D_8670BB48 + 0x38); D_8670B3CC = 85.0f * scale; // FAKE: one source line
+    D_8670C8A0 = D_8670B3C8 * 40.0f;
+    D_8670C89C = D_86710C20[0].z + 8.0f * D_8670B3C8;
+    for (i = 0; i < 4; i++) {
+        *(f32 *)(D_800CE060 + i * 0x28 + 0x1C) = 0.0f;
+        *(f32 *)((u8 *)&D_86710C20[i] + 0x38) = scale;
+        *(f32 *)((u8 *)&D_86710C20[i] + 0x34) = scale;
+        *(f32 *)((u8 *)&D_86710C20[i] + 0x30) = scale;
+        if (*(s32 *)((u8 *)&D_86728408[i] + 0x98) == 0xCE) {
+            *(f32 *)((u8 *)&D_86710C20[i] + 0x38) = *(f32 *)((u8 *)&D_8670BB48 + 0x60);
+            *(f32 *)((u8 *)&D_86710C20[i] + 0x34) = *(f32 *)((u8 *)&D_8670BB48 + 0x60);
+            *(f32 *)((u8 *)&D_86710C20[i] + 0x30) = *(f32 *)((u8 *)&D_8670BB48 + 0x60);
+        }
+    }
+    if (D_8670B3D0 >= 2) {
+        D_8670BD9C = D_8670C390;
+    }
+}
 #endif
 
 #ifdef VERSION_US
