@@ -333,3 +333,7 @@ in that snapshot does not make these owners fresh.
   dispatch and the 22-byte record overlay were already tried. Investigate
   genuine address-expression/aggregate context, not a forced address alias;
   neither interpolation helper is accepted C.
+
+## 2026-10-28 — `func_8220D630`: requeue
+
+requeue. Shape: `if (D_82210C30 != 0 && D_82210C32 == 0) { D_82210C32 = 1; D_82210C34 = 0; D_82210C38 = -1; } return 0;`. Best score 0.9412 / raw 0.7647 (nested and `&&` spellings tie), `operand_or_scheduling_drift`. Retail loads `D_82210C32` through its own `lui $t7`, hoisted above the first `beqz`, then stores through a separate `lui $at`, shared with `D_82210C34`. IDO instead CSEs `&D_82210C32` into `$v0` for both the load and the stores, which also leaves `COALESCE_AT_LUI` nothing to fold ("no fold applied"). Tried without success: re-reading through `((s16 *)&D_82210C30)[1]` (IDO then CSEs `&D_82210C30`), and `volatile` casts on the load, the store, or every access. Next: a load spelling that cannot share a base with the stores (a different symbol on the same page, or an accessor helper), then the coalesce pragma on `D_82210C32`/`D_82210C34`.
