@@ -564,7 +564,6 @@ void func_829090A0(s32 arg0, s32 arg1) {
 /* mkdraft:func_829092AC begin */
 extern s16 D_8291B862;
 extern u8 D_82916EB8;
-extern f32 D_82917694;
 extern s32 func_80001FF0(void);
 extern void func_82908E90(u8, s32);
 extern void func_829090A0(s32, s32);
@@ -592,7 +591,7 @@ void func_829092AC(void)
             var_b862 = 1;
             if (func_80001FF0() == 0x32)
           {
-            if (D_8291B862 == ((s32) (((f32) (*((s16 *) ((((u8 *) (&D_82916EB8)) + (temp_s2 * 4)) - 4)))) * D_82917694)))
+            if (D_8291B862 == ((s32) (((f32) (*((s16 *) ((((u8 *) (&D_82916EB8)) + (temp_s2 * 4)) - 4)))) * 0.8f)))
             {
               *((u8 *) temp_s0) = var_b862;
               func_82908E90(*((u8 *) (temp_s0 + 2)), var_s1);
@@ -739,7 +738,6 @@ typedef struct {
     /* 0x0FC */ f32 unk_0FC[14];
 } unk_D_829139C0; // size = 0x134
 extern unk_D_829139C0 D_829139C0[];
-extern f32 D_829176A0;
 extern void func_8003F114(unk_D_8291A7C0_000_004 *, s16, s16, s32);
 extern s32 ModelAnim_SetResourceAnimation(s32, unk_D_8291A7C0_000_004 *, s32);
 extern void Vec3s_SetComponents(s16 *, s16, s16, s16);
@@ -752,7 +750,7 @@ void func_8290A3C4(s32 arg0, s32 arg1) {
     D_8291A7C0.records[arg0].model.unk_002 &= ~0x40;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].position, D_829139C0[D_8291A7C0.unk_1068].position[arg1][0], D_829139C0[D_8291A7C0.unk_1068].position[arg1][1], D_829139C0[D_8291A7C0.unk_1068].position[arg1][2]);
     Vec3s_SetComponents(D_8291A7C0.records[arg0].rotation, D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][0], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][1], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][2]);
-    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * D_829176A0;
+    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * 0.05f;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].model.scale, scale, scale, scale);
     D_8291A7C0.records[arg0].unk_198 = D_829139C0[D_8291A7C0.unk_1068].unk_0FC[arg1];
 }
@@ -795,7 +793,6 @@ void func_8290A5B0(s32 arg0) {
 
 #ifdef VERSION_US
 extern s16 D_829137A8[];
-extern f32 D_829176A4;
 typedef struct {
     /* 0x00 */ f32 position[3];
     /* 0x0C */ s8 unk_0C;
@@ -810,7 +807,7 @@ void func_8290A6F4(s32 arg0, s32 arg1) {
     Vec3s_SetComponents(D_8291A7C0.records[arg0].rotation, 0, 0, 0);
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].position, D_82913820[arg1].position[0], D_82913820[arg1].position[1], D_82913820[arg1].position[2]);
     D_8291A7C0.records[arg0].unk_1A3 = D_82913820[arg1].unk_0C;
-    scale = func_8004B888(D_829137A8[arg1]) * D_829176A4;
+    scale = func_8004B888(D_829137A8[arg1]) * 0.05f;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].model.scale, scale, scale, scale);
     D_8291A7C0.records[arg0].unk_198 = 0.0f;
 }
@@ -845,7 +842,6 @@ void func_8290A81C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_829176A8;
 void func_8290A920(s32 arg0, s32 arg1) {
     f32 scale;
 
@@ -855,7 +851,7 @@ void func_8290A920(s32 arg0, s32 arg1) {
     D_8291A7C0.records[arg0].model.unk_002 &= ~0x40;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].position, D_829139C0[D_8291A7C0.unk_1068].position[arg1][0], D_829139C0[D_8291A7C0.unk_1068].position[arg1][1], D_829139C0[D_8291A7C0.unk_1068].position[arg1][2]);
     Vec3s_SetComponents(D_8291A7C0.records[arg0].rotation, D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][0], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][1], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][2]);
-    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * D_829176A8;
+    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * 0.05f;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].model.scale, scale, scale, scale);
     D_8291A7C0.records[arg0].unk_198 = D_829139C0[D_8291A7C0.unk_1068].unk_0FC[arg1];
 }
@@ -1105,7 +1101,6 @@ void func_8290B220(void) {
 
 #ifdef VERSION_US
 extern s16 D_82916E64[];
-extern f32 D_829176AC;
 extern s16 D_8291B87A;
 extern unk_D_8291A7C0_000_004 D_8291A388[3];
 void func_8290B264(void) {
@@ -1116,7 +1111,7 @@ void func_8290B264(void) {
     if (func_80001FF0() == 60) {
         frame = D_82916E64[D_8291A7C0.unk_1068];
     } else {
-        frame = D_82916E64[D_8291A7C0.unk_1068] * D_829176AC;
+        frame = D_82916E64[D_8291A7C0.unk_1068] * 0.83f;
     }
     if (frame == D_8291B862) {
         StageFade_StartFromTransparent(8);
@@ -1227,7 +1222,52 @@ void func_8290BC84(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290BCF0.s")
+void func_8290BCF0(void) {
+    f32 step;
+    s32 i;
+    u8 *p;
+
+    p = &D_8291A7C0;
+    for (i = 0; i < 4; i++) {
+        if (*(u8 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1A2) == 1) {
+            if (D_8291B862 == 0) {
+                func_8290BC84(p + i * 0x1A4 + 4, 0x2A);
+            }
+            step = 3.6000001f;
+            if (func_80001FF0() == 0x32) {
+                if (D_8291B862 < 0x22) {
+                    if ((i & 1) == 0) {
+                        *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) -= step;
+                    } else {
+                        *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) += step;
+                    }
+                }
+            } else if (D_8291B862 < 0x29) {
+                if ((i & 1) == 0) {
+                    *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) -= 3.0f;
+                } else {
+                    *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) += 3.0f;
+                }
+            }
+            if (D_8291B862 == 0x29) {
+                if (*(s16 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1E) == 3) {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 5);
+                } else if (*(s16 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1E) == 6) {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 4);
+                } else if (*(s16 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1E) == 9) {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 6);
+                } else {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 2);
+                }
+            }
+            if (ModelAnim_IsFinished(p + i * 0x1A4 + 4) != 0) {
+                ModelAnim_SetFrame(p + i * 0x1A4 + 4, 0);
+            }
+            func_8290A208(i);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US

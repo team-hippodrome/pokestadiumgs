@@ -13,6 +13,12 @@ were made. These attempts are failures, not claimed matches. The restored
 186-owner workspace passes the US retail checksum with default host syntax
 checks. Unknown tokens retain their existing address/offset names.
 
+## 2026-10-28 — `func_8001CE70` matched
+
+Ocarina of Time `AudioSeq_SeqLayerProcessScriptStep5`, without the synthetic-wave reinit. The layer flags are OoT's `u32` bitfields (`continuousNotes`, `bit3`, `bit1` in word 0), the note is at 0x3C and its parent layer at note + 0x44. Two spelling details:
+- Use `arg0` directly with casts instead of a typed local, so retail spills it to its home slot around calls (a 0x18 frame, no `$s0`).
+- Write `sameSound == 1U`: an unsigned compare reuses the `1` already loaded for the bitfield tests. The permuter found it.
+
 ## 2026-10-28 — `func_8001FA80`: requeue (layout findings)
 
 requeue. GS's `AudioSeq_InitSequencePlayers`. Audio-context layout it establishes:

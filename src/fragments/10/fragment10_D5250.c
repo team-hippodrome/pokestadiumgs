@@ -18,7 +18,32 @@ void func_82800620(s32 arg0, s32 arg1, f32 arg2) {
     }
     func_8004D19C(D_82802890[arg1][arg0][0], D_82802890[arg1][arg0][1], func_8004C990(0x36, 0), 0, 0);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800864.s")
+void func_82800864(f32 arg0, s16* arg1) {
+    typedef struct { s16 x; s16 y; } Point;
+    extern f32 D_82802830;
+    extern Point D_828028C0[];
+
+    s32 index;
+    f32 fraction;
+    f32 one_minus_fraction;
+    s16 result_x;
+    s16 result_y;
+    f32 distance;
+    f32 weight;
+
+    index = arg0;
+    fraction = arg0 - index;
+    one_minus_fraction = 1.0f - fraction;
+    weight = D_82802830;
+
+    result_x = D_828028C0[index].x * one_minus_fraction + D_828028C0[index + 1].x * fraction;
+    result_y = D_828028C0[index].y * one_minus_fraction + D_828028C0[index + 1].y * fraction;
+
+    distance = sqrtf((result_x * result_x) + (result_y * result_y));
+
+    arg1[0] = (s16)(((f32)result_x * weight) / distance + 319.0f);
+    arg1[1] = (s16)(((f32)result_y * weight) / distance + 354.0f);
+}
 
 extern u8 D_828028B0[];
 void func_82800984(s32 arg0, f32 arg1) {
@@ -103,7 +128,32 @@ void func_82801144(void) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_828011F8.s")
+s32 func_828011F8(s32 arg0) {
+    switch (arg0) {
+    case 3:
+        return 1;
+    case 5:
+        return 2;
+    case 2:
+        return 8;
+    case 4:
+        return 2;
+    case 7:
+        return 6;
+    case 8:
+        return 7;
+    case 9:
+        return 5;
+    case 10:
+        return 4;
+    case 1:
+        return 17;
+    case 6:
+        return 3;
+    default:
+        return -1;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801278.s")
 

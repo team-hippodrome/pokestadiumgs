@@ -26,7 +26,32 @@ void func_87E18410(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18504.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18738.s")
+extern u8 *D_8009491C;
+extern void func_8003CD84(void);
+
+// In mode 5, draws the model at *(D_8009491C + 0x14): sets a gray environment color from byte
+// 0x3C of D_8009491C, binds segment 15 to the model's word at *(model + 4) + 8, runs the model's
+// display list and then calls func_8003CD84.
+void func_87E18738(s32 arg0, s32 arg1) {
+    u8 *obj;
+    u8 *model;
+    Gfx *gfx;
+
+    if (arg0 == 5) {
+        obj = D_8009491C;
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0x50FFFF, 0xFFFFF238);
+        // FAKE: gDPSetEnvColor(v, v, v, 255) written out with the channels ORed green, blue,
+        // red; diff score 15 with the macro's red, green, blue order.
+        gfx = D_800D0510++;
+        gfx->words.w0 = 0xFB000000;
+        gfx->words.w1 = (obj[0x3C] << 16) | (obj[0x3C] << 8) | (obj[0x3C] << 24) | 0xFF;
+        model = *(u8 **)(D_8009491C + 0x14);
+        gSPSegment(D_800D0510++, 15, *(u32 *)(*(u8 **)(model + 4) + 8));
+        gSPDisplayList(D_800D0510++, *(Gfx **)model);
+        func_8003CD84();
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18828.s")
 

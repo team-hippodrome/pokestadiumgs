@@ -2,7 +2,31 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8413E410.s")
+extern u8 D_8419C0C0;
+extern s32 func_8004C874(s32, s32);
+
+// The 48 name slots at D_8419C0C0 (the table ends at D_8419D7A0); func_8413E490 searches them by tag.
+typedef struct unk_D_8419C0C0 {
+    /* 0x00 */ u8 tag;
+    /* 0x01 */ char name[0x79];
+} unk_D_8419C0C0; // size = 0x7A
+
+// Returns if a slot already has tag arg0; otherwise claims the first empty slot (tag 0) and copies
+// the string func_8004C874(7, arg0 - 1) into its name.
+void func_8413E410(u8 arg0) {
+    s32 i;
+
+    for (i = 0; i < 48; i++) {
+        if (arg0 == ((unk_D_8419C0C0 *)&D_8419C0C0)[i].tag) {
+            return;
+        }
+        if (((unk_D_8419C0C0 *)&D_8419C0C0)[i].tag == 0) {
+            ((unk_D_8419C0C0 *)&D_8419C0C0)[i].tag = arg0;
+            sprintf(((unk_D_8419C0C0 *)&D_8419C0C0)[i].name, (char *)func_8004C874(7, arg0 - 1));
+            return;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

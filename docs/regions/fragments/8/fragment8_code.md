@@ -96,3 +96,7 @@ link pass with `build/pokestadiumgs-us.z64: OK`. The ROM MD5 is
 check pass. The original instruction words and retail span
 `0xCE07C..0xCE10C` compare exactly. No new fakes, padding members,
 instruction rewrites, data/layout, generated reports or CI changes are added.
+
+## 2026-10-28 — `func_82F01220` matched
+
+Selection handler on the menu record (`void *arg0`): a negative selection sets state 1 and plays SFX 3. If the slot byte at `0xED0 + arg1` is set, it plays 0x90 and sets state `*(s32 *)(arg0 + 0xEE4) ? 6 : 9`; otherwise a nonzero selection plays 5. The state choice has to be a ternary: an if/else loads the 9/6 constants in the wrong order. A `u8 *` parameter commutes the `addu`, so it is `void *` with casts.

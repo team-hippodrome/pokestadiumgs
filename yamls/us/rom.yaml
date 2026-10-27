@@ -57,6 +57,8 @@
     - [0x220C0, hasm, ../../src/unk_220C0]
     - [0x226C0, c]
     - [0x229E0, c]
+    - [0x2C1B0, c]
+    - [0x340C0, c]
     - [0x43700, c]
     - [0x44300, c]
     - [0x44E70, c]
@@ -361,7 +363,9 @@
                                 # (not split) because ld can only consume an object's .rodata
                                 # section once.
                                 # start moved down from 0xA3BD0 to cover jtbl_800A2670, jtbl_800A2B38, jtbl_800A2B64 (func_800226C0's switch tables; jtbl_datamig.py)
-    - [0xA4590, rodata] # Include six tables from the next four audio owners.
+    - [0xA4590, rodata]
+    - [0xA49F0, .rodata, 2C1B0] # queued-event tables and adjacent audio constants
+    - [0xA4EA0, rodata]
     - [0xA4EC0, .rodata, 43700] # jtbl_800A42C0
     - [0xA4EE0, .rodata, 47580] # jtbl_800A43C0 (+2 more)
     - [0xA5120, rodata]
@@ -543,6 +547,8 @@
     - [0xCC6B0, textbin, fragments/8/fragment8_header]
     - [0xCC6D0, c,       fragments/8/fragment8_code]
     - [0xCE660, data,    fragments/8/fragment8_data]
+    - [0xCF880, .rodata, fragments/8/fragment8_code] # Strings, jump tables, double literals.
+    - [0xCF970, rodata]
 
   # unk fragment
   - name: fragment9
@@ -568,6 +574,8 @@
     - [0xD4C50, c,       fragments/10/fragment10_D4C50]
     - [0xD5250, c,       fragments/10/fragment10_D5250]
     - [0xD7460, data,    fragments/10/fragment10_data]
+    - [0xD7550, .rodata, fragments/10/fragment10_D5250] # Strings, jump tables, float literals.
+    - [0xD75D0, rodata]
 
   - name: fragment11
     type: code
@@ -601,6 +609,8 @@
     - [0xE5330, c,       fragments/12/fragment12_E5330]
     - [0xE7C00, c,       fragments/12/fragment12_E7C00]
     - [0xECAB0, data,    fragments/12/fragment12_data]
+    - [0xECBE0, .rodata, fragments/12/fragment12_E5330] # Strings, jump tables, float literals.
+    - [0xECC60, rodata]
     - [0xECE50, .rodata, fragments/12/fragment12_E7C00] # jtbl_81407B2C tail (3 words) + jtbl_81407B4C + jtbl_81407B6C + D_81407B8C, 16-byte aligned
                                                         # end moved up from 0xECEA0 to cover jtbl_81407B94 (func_81406A30's switch table; jtbl_datamig.py)
     - [0xECEC0, rodata]
@@ -636,6 +646,9 @@
     - [0x1077C0, c,       fragments/14/fragment14_1077C0]
     - [0x109280, c,       fragments/14/fragment14_109280]
     - [0x109EC0, data,    fragments/14/fragment14_data]
+    - [0x10A110, .data,   fragments/14/fragment14_FF070] # D_81311F80 (func_81308014's 30-unit accumulator) and three
+                                                            # unreferenced words in the same 16-byte IDO-padded section
+    - [0x10A120, data]
     - [0x10A310, .rodata, fragments/14/fragment14_F81B0] # D_81312180 and all seven jump tables
     - [0x10A430, rodata]
     - [0x10A600, .rodata, fragments/14/fragment14_FCD40] # D_81312470, all three jump tables and renderer floats
@@ -929,6 +942,8 @@
     - [0x1A6E00, .rodata, fragments/31/fragment31_1736F0] # jtbl_88233B80
     - [0x1A6E60, .rodata, fragments/31/fragment31_175260] # D_88233BE0..BF8 constants and jtbl_88233C00/C14/D3C/D50, all referenced only by this file
     - [0x1A6FF0, rodata]
+    - [0x1A7120, .rodata, fragments/31/fragment31_17B150] # Strings, jump tables.
+    - [0x1A71D0, rodata]
     - [0x1A7350, .rodata, fragments/31/fragment31_18F6D0] # Jump tables.
     - [0x1A73D0, rodata]
     - [0x1A7420, .rodata, fragments/31/fragment31_190BB0] # jtbl_882341A0, 16-byte aligned start; ends mid jtbl_882341B8
@@ -976,8 +991,8 @@
     - [0x1CA9C0, .rodata, fragments/34/fragment34_1BD630] # Jump tables, float literals.
     - [0x1CAA60, .rodata, fragments/34/fragment34_1BE300] # Strings, jump tables, float literals.
     - [0x1CAA90, rodata]
-    - [0x1CAB40, .rodata, fragments/34/fragment34_1C5AA0] # Debug string, light/sequence jump tables and their float constants.
-    - [0x1CAC10, rodata,  fragments/34/fragment34_tail]
+    - [0x1CAB40, .rodata, fragments/34/fragment34_1C5AA0] # Debug string, light/sequence jump tables and their float constants. Extended to 0x1CAB40-0x1CAC80: jump tables.
+    - [0x1CAC80, rodata, fragments/34/fragment34_tail]
 
   - name: fragment35
     type: code
@@ -1014,6 +1029,8 @@
     - [0x1D0960, textbin, fragments/37/fragment37_header]
     - [0x1D0980, c,       fragments/37/fragment37_code]
     - [0x1D4850, data,    fragments/37/fragment37_data]
+    - [0x1D4860, .rodata, fragments/37/fragment37_code] # Strings, jump tables, float literals.
+    - [0x1D49B0, rodata]
   
   - name: fragment38
     type: code
@@ -1119,8 +1136,12 @@
     - [0x20F140, c,       fragments/44/fragment44_20F140]
     - [0x212740, c,       fragments/44/fragment44_212740]
     - [0x214630, data,    fragments/44/fragment44_data]
+    - [0x2169D0, .rodata, fragments/44/fragment44_1EE290] # Strings, jump tables.
+    - [0x216BB0, rodata]
     - [0x217840, .rodata, fragments/44/fragment44_1FD260]
     - [0x217930, rodata,  fragments/44/fragment44_rodata_tail]
+    - [0x2186F0, .rodata, fragments/44/fragment44_212740] # Strings, jump tables, float literals.
+    - [0x218800, rodata]
   
   - name: fragment45
     type: code
@@ -1432,6 +1453,8 @@
     - [0x3321A0, data,    fragments/64/fragment64_data]
     - [0x333F10, .data,   fragments/64/fragment64_32F2C0]
     - [0x333F20, data,    fragments/64/fragment64_data_tail]
+    - [0x3341B0, .rodata, fragments/64/fragment64_3290A0] # Jump tables, float literals.
+    - [0x334310, rodata]
 
   - name: fragment65
     type: code
@@ -1481,8 +1504,7 @@
     - [0x353F30, rodata] # D_82917430 through D_82917438
     - [0x353F40, .rodata, fragments/67/fragment67_33FAE0] # D_82917440 through jtbl_8291744C and D_82917478
     - [0x353F80, rodata]
-    - [0x354090, .rodata, fragments/67/fragment67_344D70] # jtbl_82917590 (func_82908F60's switch table; jtbl_datamig.py)
-    - [0x354130, rodata]
+    - [0x354000, .rodata, fragments/67/fragment67_344D70] # jtbl_82917590 (func_82908F60's switch table; jtbl_datamig.py). Extended to 0x354000-0x354230: strings, jump tables, float literals.
     - [0x354230, .rodata, fragments/67/fragment67_34AB40] # spline trio literals (datamig)
     - [0x354240, .rodata, fragments/67/fragment67_34B0F0] # D_82917740/D_82917744 format strings and jtbl_82917748..jtbl_829177A4, all referenced only by this file
     - [0x3542C0, .rodata, fragments/67/fragment67_34C8B0] # format strings and jtbl_829177CC
@@ -1508,6 +1530,8 @@
     - [0x358850, c,       fragments/69/fragment69_code]
     - [0x35C130, .data,   fragments/69/fragment69_code] # file-scope tables + func_8F100020's static (D_8F103A50) through D_8F103A9C
     - [0x35C300, data,    fragments/69/fragment69_data]
+    - [0x35C840, .rodata, fragments/69/fragment69_code] # Jump tables, float literals.
+    - [0x35C8D0, rodata]
   
   - name: fragment70
     type: code
@@ -1660,16 +1684,20 @@
     - [0x3D9A00, data,    fragments/79/fragment79_data]
     - [0x3F83E0, .rodata, fragments/79/fragment79_36F8B0] # Jump tables, float literals.
     - [0x3F8480, rodata]
+    - [0x3F84E0, .rodata, fragments/79/fragment79_375530] # Jump tables, float literals.
+    - [0x3F8530, rodata]
     - [0x3F86C0, .rodata, fragments/79/fragment79_37A6E0]
     - [0x3F8830, .rodata, fragments/79/fragment79_380210]
     - [0x3F8850, .rodata, fragments/79/fragment79_380A00]
-    - [0x3F8CE0, rodata]
+    - [0x3F8CE0, .rodata, fragments/79/fragment79_38D510] # Jump tables, float literals.
+    - [0x3F90B0, rodata]
     - [0x3F95D0, .rodata, fragments/79/fragment79_38EFE0] # Movement setup/update dispatch tables, 192 bytes.
     - [0x3F9690, rodata]
     - [0x3FA810, .rodata, fragments/79/fragment79_393CA0] # jtbl_8418AF80, jtbl_8418AFB0, jtbl_8418AFEC, jtbl_8418B008, jtbl_8418B020, jtbl_8418B0C0, jtbl_8418B0D8, jtbl_8418B0F4, jtbl_8418B10C, jtbl_8418B124, jtbl_8418B150, jtbl_8418B174, jtbl_8418B194
     - [0x3FAA50, rodata]
     - [0x3FAA60, .rodata, fragments/79/fragment79_3ADCA0] # jtbl_8418B1D0 (+13 more, incl. jtbl_8418B738/jtbl_8418B74C)
-    - [0x3FB010, rodata]
+    - [0x3FB010, .rodata, fragments/79/fragment79_3B7EA0] # Strings, jump tables, double literals.
+    - [0x3FB230, rodata]
     - [0x3FB760, .rodata, fragments/79/fragment79_3BEAF0] # labels in this range are referenced only by this file
     - [0x3FB9D0, .rodata, fragments/79/fragment79_3BF4C0] # Scoring constants and all three jump tables,720 bytes.
     - [0x3FBCA0, .rodata, fragments/79/fragment79_3C50B0] # Both selected-state jump tables,176 bytes.
@@ -1767,6 +1795,8 @@
     - [0x4320C0, textbin, fragments/85/fragment85_header]
     - [0x4320E0, c,       fragments/85/fragment85_code]
     - [0x434040, data,    fragments/85/fragment85_data]
+    - [0x4341B0, .rodata, fragments/85/fragment85_code] # Strings, jump tables, float literals.
+    - [0x434240, rodata]
 
   - name: fragment86
     type: code

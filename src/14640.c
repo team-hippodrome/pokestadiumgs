@@ -1254,7 +1254,60 @@ void GbApu_InitSlowCopySlot(u8 *arg0, s32 arg1) {
 }
 void func_80016354(s32 a0, s32 a1, s32 a2, s32 a3) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016368.s")
+typedef struct AudioSlowLoad {
+    /* 0x00 */ u8 medium;
+    /* 0x01 */ u8 seqOrFontId;
+    /* 0x02 */ u16 instId;
+    /* 0x04 */ s32 unkMediumParam;
+    /* 0x08 */ s32 curDevAddr;
+    /* 0x0C */ u8 *curRamAddr;
+    /* 0x10 */ u8 *ramAddr;
+    /* 0x14 */ s32 status;
+    /* 0x18 */ s32 bytesRemaining;
+    /* 0x1C */ s8 *isDone;
+    /* 0x20 */ u32 sampleBits;
+    /* 0x24 */ u8 *sampleAddr;
+    /* 0x28 */ u8 unk_28[0x3C];
+} AudioSlowLoad; // size = 0x64
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x205C];
+    /* 0x205C */ s32 slowLoadPos;
+    /* 0x2060 */ AudioSlowLoad slowLoads[2];
+} AudioContextSlowLoadView;
+
+// Same code as Ocarina of Time AudioLoad_SlowLoadSeq (src/code/audio_load.c).
+s32 func_80016368(s32 seqId, u8 *ramAddr, s8 *isDone) {
+    AudioSlowLoad *slowLoad;
+    AudioTable *seqTable;
+    u32 size;
+
+    seqId = func_8001510C(0, seqId);
+    seqTable = (AudioTable *)func_8001519C(0);
+    slowLoad = &((AudioContextSlowLoadView *)D_8011BE90)->slowLoads[((AudioContextSlowLoadView *)D_8011BE90)->slowLoadPos];
+    if (slowLoad->status == 3) {
+        slowLoad->status = 0;
+    }
+
+    slowLoad->sampleAddr = NULL;
+    slowLoad->isDone = isDone;
+    size = seqTable->entries[seqId].size;
+    size = (size + 0xF) & ~0xF;
+    slowLoad->curRamAddr = ramAddr;
+    slowLoad->status = 1;
+    slowLoad->bytesRemaining = size;
+    slowLoad->ramAddr = ramAddr;
+    slowLoad->curDevAddr = seqTable->entries[seqId].romAddr;
+    slowLoad->medium = seqTable->entries[seqId].medium;
+    slowLoad->seqOrFontId = seqId;
+
+    if (slowLoad->medium == 1) {
+        slowLoad->unkMediumParam = seqTable->unkMediumParam;
+    }
+
+    ((AudioContextSlowLoadView *)D_8011BE90)->slowLoadPos ^= 1;
+    return 0;
+}
 
 /* mkdraft:GbApu_ResetSlotFlags begin */
 extern u8 D_8011BE90[];
@@ -1302,6 +1355,19 @@ osCreateMesgQueue((OSMesgQueue *)(slot + 0x24), (OSMesg *)(slot + 0x3C), 1);
 return slot;
 
 }
+
+// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
+typedef struct {
+    s8 active, delay, copy_type; u8 unknown_03;
+    s32 destination_base, source, destination;
+    s32 remaining;
+    s32 chunk_size;
+    u32 unknown_18, completion_message;
+    OSMesgQueue *completion_queue;
+    OSMesgQueue queue;
+    OSMesg message;
+    OSIoMesg request;
+} BackgroundCopyRequest;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016624.s")
 
@@ -1359,18 +1425,6 @@ void func_80016754(u8 *async_load) {
     osSendMesg(*(OSMesgQueue **)(async_load + 0x20), done_msg, OS_MESG_NOBLOCK);
 }
 
-// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
-typedef struct {
-    s8 active, delay, copy_type; u8 unknown_03;
-    s32 destination_base, source, destination;
-    s32 remaining;
-    s32 chunk_size;
-    u32 unknown_18, completion_message;
-    OSMesgQueue *completion_queue;
-    OSMesgQueue queue;
-    OSMesg message;
-    OSIoMesg request;
-} BackgroundCopyRequest;
 typedef struct { u8 unknown[2]; s16 unknown_02; } BackgroundCopyHeader;
 extern void func_80016AB4(BackgroundCopyRequest *, s32);
 extern void func_80016A24(u8 *, s32);
@@ -1492,7 +1546,81 @@ void func_80016B38(Sample **arg0, u32 arg1, SampleBankRelocInfo *arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016C78.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80017070.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0xAB8];
+    /* 0x0AB8 */ AudioPreloadReq preloadSampleStack[128];
+    /* 0x14B8 */ u8 unk_14B8[4];
+    /* 0x14BC */ s32 preloadSampleStackTop;
+    /* 0x14C0 */ u8 unk_14C0[0x21C8 - 0x14C0];
+    /* 0x21C8 */ OSMesgQueue preloadSampleQueue;
+} AudioContextPreloadView;
+
+// Same code as Ocarina of Time AudioLoad_ProcessSamplePreloads (src/code/audio_load.c), with the
+// sample address and size cached in locals; GS's RAM medium is 0.
+s32 func_80017070(s32 resetStatus) {
+    Sample *sample;
+    AudioPreloadReq *preload;
+    u32 preloadIndex;
+    u32 key;
+    u32 nChunks;
+    s32 pad;
+    u32 size;
+    u8 *sampleAddr;
+
+    if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop > 0) {
+        if (resetStatus != 0) {
+            osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK);
+            ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop = 0;
+            return 0;
+        }
+        if (osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK) == -1) {
+            return 0;
+        }
+
+        preloadIndex >>= 24;
+        preload = &((AudioContextPreloadView *)D_8011BE90)->preloadSampleStack[preloadIndex];
+
+        if (preload->isFree == FALSE) {
+            sample = preload->sample;
+            key = (u32)sample->sampleAddr + sample->size + sample->medium;
+            if (key == preload->endAndMediumKey) {
+                sample->sampleAddr = preload->ramAddr;
+                sample->medium = 0;
+            }
+            preload->isFree = TRUE;
+        }
+
+        for (;;) {
+            if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop <= 0) {
+                break;
+            }
+            preload = &((AudioContextPreloadView *)D_8011BE90)
+                           ->preloadSampleStack[((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop - 1];
+            if (preload->isFree == TRUE) {
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+                continue;
+            }
+
+            sample = preload->sample;
+            sampleAddr = sample->sampleAddr;
+            size = sample->size;
+            nChunks = (size >> 12) + 1;
+            key = (u32)sampleAddr + size + sample->medium;
+            if (key != preload->endAndMediumKey) {
+                preload->isFree = TRUE;
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+            } else {
+                size = sample->size;
+                func_80016500((s32)sampleAddr, (s32)preload->ramAddr, size, sample->medium, nChunks,
+                              (s32)&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, preload->encodedInfo);
+                break;
+            }
+        }
+    }
+    return 1;
+}
 
 s32 func_80017224(void *arg0, s32 arg1, void **arg2) {
     s32 i = 0;
