@@ -28,7 +28,24 @@ void func_8AF15080(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15120.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF152A8.s")
+extern s16 D_8AF33A30[17][17];
+extern void _bzero(void *, s32);
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern s16 func_8AF01530(s16);
+void func_8AF152A8(void) {
+    s32 i;
+    s16 a;
+    s16 b;
+
+    _bzero(D_8AF33A30, sizeof(D_8AF33A30));
+    for (i = 1; i < 252; i++) {
+        a = func_8AF01530(func_8006397C(i));
+        b = func_8AF01530(func_800639C0(i));
+        D_8AF33A30[a][b]++;
+        D_8AF33A30[b][a]++;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15384.s")
 
