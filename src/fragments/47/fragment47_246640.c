@@ -513,7 +513,46 @@ void func_86002BF0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002DA8.s")
+extern u8 D_8600D604[];
+extern f64 MathUtil_Atan2d_fragment48(f64,f64);
+extern f64 func_86004EA8(void *, void *);
+extern f64 D_8600E028;
+void func_86002DA8(u8 *arg0) {
+    f64 distance;
+    f64 magnitude;
+
+    distance = func_86004EA8(*(void **)(arg0 + 0x1870), arg0);
+    *(f64 *)(arg0 + 0x1860) = func_87C00090(*(f64 *)(arg0 + 0x1860), 0.0,
+        *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890) * D_8600E028);
+    *(f64 *)(arg0 + 0x1858) = MathUtil_Atan2d_fragment48(-*(f64 *)arg0, -*(f64 *)(arg0 + 0x10));
+    if (func_86009C08(*(u8 **)(arg0 + 0x1870) + 0x6668, arg0) != 0) {
+        *(f64 *)(arg0 + 0x17D8) = MathUtil_Atan2d_fragment48(*(f64 *)arg0, *(f64 *)(arg0 + 0x10));
+        func_86001F44(arg0);
+    }
+    if (*(f64 *)(arg0 + 0x17F0) > 0.0) {
+        *(f64 *)(arg0 + 0x17F0) -= *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890);
+    }
+    if (*(f64 *)(arg0 + 0x17F0) < 0.0) {
+        *(f64 *)(arg0 + 0x17F0) = 0.0;
+    }
+    magnitude = *(f64 *)(arg0 + 0x20) > 0.0
+        ? *(f64 *)(arg0 + 0x20) : -*(f64 *)(arg0 + 0x20);
+    if (magnitude < 100.0 && distance <= *(f64 *)(D_8600DE30 + 0x1E8) + *(f64 *)(arg0 + 0xC8)) {
+        *(f64 *)(arg0 + 0x18) = 0.0;
+        *(f64 *)(arg0 + 0x28) = 0.0;
+        *(f64 *)(arg0 + 0x20) = 0.0;
+        if (*(s32 *)(arg0 + 0x17A4) == 0) {
+            *(f64 *)(arg0 + 0x17D0) = *(f64 *)(D_8600DE30 + 0x1E0);
+            func_87C01E30(arg0 + 0x17A0, D_8600D604, 0);
+        } else {
+            *(f64 *)(arg0 + 0x17D0) -= *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890);
+            if (*(f64 *)(arg0 + 0x17D0) <= 0.0) {
+                *(f64 *)(arg0 + 0x17D0) = 0.0;
+                func_86003EFC(arg0, 1);
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -580,13 +619,13 @@ void func_86003124(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f64 func_86004EA8(void *);
+extern f64 func_86004EA8(void *, void *);
 extern f64 D_8600E018;
 s32 func_860031C8(u8 *arg0) {
     s32 state;
     s32 result;
 
-    if (*(f64 *)(arg0 + 0xC8) + D_8600E018 < func_86004EA8(*(void **)(arg0 + 0x1870))) {
+    if (*(f64 *)(arg0 + 0xC8) + D_8600E018 < func_86004EA8(*(void **)(arg0 + 0x1870), arg0)) {
         return 0;
     }
     state = *(s32 *)(arg0 + 0x1828);
@@ -635,7 +674,6 @@ void func_860032DC(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_86002DA8(u8 *);
 extern s32 func_8600A04C(void *, void *, void *);
 extern void func_87C00908(void *, f64, f64, f64);
 extern void *func_87C00C80(void *, void *);
@@ -807,7 +845,45 @@ void func_86003A98(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86003B10.s")
+extern void func_80027A28(u16, u8);
+extern s32 D_8600E038;
+extern f64 MathUtil_Atan2d_fragment48(f64,f64);
+extern void func_8002781C(s32, u8, void *);
+extern void func_86001924(void *);
+extern void func_86003EFC(void *arg0, s32 arg1);
+extern f64 D_8600E018;
+void func_86003B10(u8 *arg0) {
+    s32 index;
+    s32 offset;
+    u8 *record;
+
+    *(s32 *)(arg0 + 0x1868) = 1;
+    *(s32 *)(arg0 + 0x186C) = 0;
+    *(s32 *)(arg0 + 0x1820) += 1;
+    func_86001924(arg0);
+    func_8002781C(0x4F05, arg0[0x1813], arg0 + 0x1890);
+    *(f64 *)(arg0 + 0x17D8) = MathUtil_Atan2d_fragment48(-*(f64 *)arg0, -*(f64 *)(arg0 + 0x10));
+    index = 0;
+    offset = 0;
+    *(f64 *)(arg0 + 8) += D_8600E018;
+    if (*(f64 *)(arg0 + 0x17F8) > 0.0) {
+        do {
+            record = *(u8 **)(arg0 + 0x1870) + offset;
+            if (*(s32 *)(record + 0x1828) == 3 && index == *(s32 *)(arg0 + 0x1818)) {
+                record[0x1990 + *(s32 *)(record + 0x1814)] = (u8)*(s32 *)(arg0 + 0x1810);
+                record = *(u8 **)(arg0 + 0x1870) + offset;
+                *(s32 *)(record + 0x1814) += 1;
+                func_80027A28(0xF04, (u8)index);
+            }
+            index++;
+            offset += 0x1998;
+        } while (index != 4);
+        *(f64 *)(arg0 + 0x17F8) = -1.0;
+    }
+    if (D_8600E038 != 0 && *(s32 *)(arg0 + 0x1820) >= D_8600E038) {
+        func_86003EFC(arg0, 8);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -883,7 +959,6 @@ void func_86003E5C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_86003B10(u8 *);
 void func_86003EFC(void *arg0, s32 arg1) {
     u8 *object = arg0;
 

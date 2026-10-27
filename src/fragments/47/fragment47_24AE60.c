@@ -80,19 +80,16 @@ s32 func_86004E84(Func86004E84State *arg0) {
     return result;
 }
 
-extern s32 func_86009C08(void *);
-extern s32 func_86009C58(void *, void *);
-extern s32 func_87C007DC(void *, void *);
-s32 func_86004EA8(void *arg0, void *arg1)
+extern s32 func_86009C08(void *, void *);
+extern f64 func_86009C58(void *, void *);
+extern f64 func_87C007DC(const f64 *, const f64 *);
+f64 func_86004EA8(void *arg0, void *arg1)
 {
-    if (func_86009C08(((u8 *) arg0) + 0x66B8) != 0)
+    if (func_86009C08(((u8 *) arg0) + 0x66B8, arg1) != 0)
     {
         return func_86009C58(((u8 *) arg0) + 0x66B8, arg1);
     }
-    if (!arg1)
-    {
-    }
-    if (func_86009C08(((u8 *) arg0) + 0x6668) != 0)
+    if (func_86009C08(((u8 *) arg0) + 0x6668, arg1) != 0)
     {
         return func_86009C58(((u8 *) arg0) + 0x6668, arg1);
     }
