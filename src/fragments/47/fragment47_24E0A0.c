@@ -1,6 +1,22 @@
 #include "global.h"
 
 #ifdef VERSION_US
+typedef struct {
+    f64 position[3];
+    f64 unk_18[3];
+    f64 unk_30[3];
+    f64 unk_48[3];
+    f64 unk_60[3];
+    f64 unk_78[3];
+    u8 unk_90[8];
+    f64 unk_98[3];
+    f64 unk_B0[3];
+    f64 radius;
+    f64 unk_D0;
+    f64 unk_D8;
+    f64 unk_E0;
+} Fragment47MotionPrefix;
+
 extern void *func_87C00120(void *, f64, f64, f64);
 void func_86007A80(void *arg0, f64 arg1) {
     f64 t = (2.0 * arg1) / 3.0;
@@ -60,7 +76,16 @@ void func_86007CB0(void *arg0, void *config, f64 angle, f64 scale) {
     destination[5] = (f64)__cosf((f32)angle) * -D_8600DEE0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86007D98.s")
+extern f64 D_8600DE58;
+extern void func_86007E4C(u8 *, s32, s32);
+void func_86007D98(Fragment47MotionPrefix *arg0, f64 x, f64 z, f64 scale) {
+    f64 displacement[3];
+    f64 position[3];
+
+    func_87C00120(displacement, D_8600DE58 * x * scale * arg0->unk_E0, 0.0, -z * D_8600DE58 * scale * arg0->unk_E0);
+    func_87C00120(position, arg0->unk_B0[0], arg0->unk_B0[1], arg0->unk_B0[2]);
+    func_86007E4C((u8 *)arg0, (s32)position, (s32)displacement);
+}
 
 extern void func_87C00198();
 extern void *func_87C00160(u8 *, s32, u8 *);
@@ -110,7 +135,6 @@ extern void func_87C003BC(void *, void *, void *);
 extern void func_87C00718(void *, void *, f64);
 extern void *func_87C002DC(void *, void *);
 extern f64 func_86007F6C(void *, void *, s32, s32, void *, s32, f64);
-extern void func_86007E4C(u8 *arg0, s32 arg1, s32 arg2);
 
 f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, s32 arg5, s32 arg6, f64 arg7) {
     f64 result;
@@ -173,7 +197,36 @@ s32 func_86008820(f64 *arg0, f64 *arg1, void *arg2, void *arg3, void *arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008904.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008BB4.s")
+extern f64 D_8600DE60;
+
+f64 func_86008BB4(Fragment47MotionPrefix *object, s32 flag, u8 *point, void *normal, f64 divisor, f64 coefficient, f64 tangent_scale) {
+    f64 combined[3];
+    f64 difference[3];
+    f64 normal_part[3];
+    f64 cross_part[3];
+    f64 relative[3];
+    f64 cross[3];
+    f64 result;
+    f64 projection;
+    f64 response_factor;
+
+    func_87C00238((u8 *)relative, (u8 *)object + 0x30, func_87C00160((u8 *)difference, (s32)point, (u8 *)object + 0xB0));
+    func_87C00198(relative, relative, (u8 *)object + 0x18);
+    projection = func_87C00208(normal, relative);
+    response_factor = -(1.0 + coefficient);
+    result = projection * response_factor * object->unk_E0 / divisor;
+    if (flag == 0) {
+        result *= -func_87C00208(normal, (u8 *)object + 0x48);
+    }
+    if ((0.0 < D_8600DE60) && (D_8600DE60 < result)) {
+        result = D_8600DE60;
+    }
+    func_87C003BC(cross, relative, normal);
+    func_87C00718(cross, cross, 1.0);
+    func_87C00198(combined, func_87C002A8(normal_part, normal, result), func_87C002A8(cross_part, cross, -result * tangent_scale));
+    func_86007E4C((u8 *)object, (s32)point, (s32)combined);
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008D2C.s")
 

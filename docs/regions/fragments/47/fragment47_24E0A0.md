@@ -221,3 +221,57 @@ and formatting against the accepted object's bytes, extents, and relocations.
   0.9556 raw. Two final multiplication operand orders remain. Swapping the
   source operands and using three-field structs preserve that residual.
   Full-product temporaries enlarge the frame; do not add artificial padding.
+
+
+## 2026-10-27 — matching motion-vector calculations
+
+Starting revision `961986b40cb60415730910023a644f0fffc5af04` (#1651).
+Both owners pass canonical acceptance and the full US retail-ROM gate:
+
+- `func_86007D98`: 180 bytes / 45 instructions, original 112-byte frame.
+  Construct two actual three-double vectors, calculate the scaled X/Z
+  displacement, and pass both vectors to `func_86007E4C`.
+- `func_86008BB4`: 376 bytes / 94 instructions, original 240-byte frame.
+  Construct six actual three-double vectors, calculate the projection and
+  response factor, apply the flag-dependent projection and positive cap,
+  combine the normal/cross-vector components, and call `func_86007E4C`.
+  All vector buffers and scalar locals participate in the calculation.
+
+`Fragment47MotionPrefix` describes the observed object through offset 0xE0;
+its extent is 232 bytes, and later fields remain outside this prefix. The
+three-double slots are evidenced by the neighboring vector helper calls.
+`func_86007B4C` writes the radius at 0xC8, and the selected calculations read
+the scalar at 0xE0. Keep that scalar's role unknown. Bytes 0x90–0x97 remain
+opaque; the prefix does not assign them an unsupported scalar type.
+
+Typed access to offset 0xE0 closes the remaining multiplication operand and
+floating-point register differences in both owners. The displacement owner
+therefore needs no cached coefficient. In the response owner, naming the
+actual projection and response factor also recovers the frame and all six
+vector offsets; there are no dummy locals or padding buffers. Independent
+complete-module normal/blank-prefix controls verify declaration cleanup,
+the opaque eight-byte range, placement of the prefix above both owners,
+and typed access to the displacement owner's input vector. The GS/Stadium 1
+maps provide no supported names for either function.
+
+### Compiler observation and remaining work
+
+Ten complete-module stock/blank/off/on controls verify a logging-only native
+compiler observation on the displacement draft and the accepted curve
+configuration fixture. In the untyped draft, UGEN's final multiplication
+already receives the field leaf on the left and the nested product on the
+right. The observation does not identify the upstream pass that ordered
+those operands. The typed-prefix acceptance resolves this owner; do not
+resume the older operand-swap or scaled-input campaigns.
+
+- `func_86009934`: **requeue**. Two real three-double buffers and scalar
+  intermediates reproduce the full 348-byte opcode sequence. Reusing the
+  ratio as the subsequent square-root value recovers the original 136-byte
+  frame and both vector offsets: 1.0 normalized / 0.9310 raw. Six words
+  remain: the first helper result spills at SP+56 rather than SP+48, and
+  that value exchanges F12/F14 with `D_8600D968`. Declaration placement,
+  block scopes, and extracting the second helper result do not close it.
+  Inspect that result's spill lifetime before changing vector sizes.
+- `func_86009C98`: **requeue**. The two-word F0/F12 residual documented
+  above remains. Named return values and signed-square-root intermediates
+  do not close it. Its generated redundant-copy exact form remains rejected.
