@@ -44,3 +44,12 @@ MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The retail byte comparison and
 whitespace check passed. All 33 instruction words, totaling 132 bytes, match
 with no stack frame. Fragment 4 was also freshly compiled after restoring
 its unsuccessful candidate to assembly. No instruction rewrite was added.
+
+## 2026-10-28: `func_82200C60` handoff
+
+requeue (0.95). Returns 0 if any of the 30 twelve-byte entries
+(`+0x24`, s16) in any of the four 0x18C-byte records from `D_8220E4E0` up to
+`D_8220EB10` is non-zero, else 1. The do-while with `goto` gets the
+structure. Retail keeps the result in `v1` and exits through `b` to the
+shared return; IDO tail-duplicates `jr ra; li v0,0`, and the record/end
+registers are named differently.

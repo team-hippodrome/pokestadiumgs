@@ -1,7 +1,49 @@
 #include "global.h"
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000020.s")
+extern f64 D_8600D4E8;
+extern f64 D_8600D4F0;
+extern void *func_87C00160(void *, void *, void *);
+extern f64 func_87C00208(void *, void *);
+extern f64 func_87C00664(void *);
+extern f64 func_87C0068C(void *);
+extern void *func_87C00198(void *, void *, void *);
+extern void *func_87C002A8(void *, void *, f64);
+
+f64 func_86000020(u8 *arg0, u8 *arg1, f64 horizon) {
+    f64 closest_time;
+    f64 dot;
+    f64 speed_squared;
+    struct {
+        f64 x;
+        f64 y;
+        f64 z;
+    } separation, relative_velocity, projected;
+
+    func_87C00160(&separation, arg1, arg0);
+    func_87C00160(&relative_velocity, arg1 + 0x18, arg0 + 0x18);
+    relative_velocity.y = 0.0;
+    separation.y = 0.0;
+    dot = func_87C00208(&separation, &relative_velocity);
+    speed_squared = func_87C00664(&relative_velocity);
+    if (speed_squared < D_8600D4E8) {
+        return func_87C0068C(&separation);
+    } else {
+        closest_time = -dot / speed_squared;
+        if (closest_time <= D_8600D4F0) {
+            return func_87C0068C(&separation);
+        } else {
+            if (horizon <= closest_time) {
+                func_87C002A8(&projected, &relative_velocity, horizon);
+                func_87C00198(&projected, &separation, &projected);
+                return func_87C0068C(&projected);
+            } else {
+                //!bug The negative product increases the squared distance.
+                return sqrtf((f32)(func_87C00664(&separation) - (closest_time * dot)));
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -13,7 +55,6 @@ void func_860002A0(void) {
 
 #ifdef VERSION_US
 extern f64 D_8600D4F8;
-extern f64 func_86000020(u8 *, u8 *, f64);
 
 u8 *func_860002A8(u8 *arg0, s32 flag_a, s32 flag_b, f64 horizon) {
     f64 best_distance;
@@ -59,7 +100,38 @@ next_object:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860003DC.s")
+u8 *func_860003DC(u8 *arg0, s32 flag_a, s32 flag_b) {
+    u8 *closest;
+    s32 best_score;
+    s32 i;
+    u8 *other;
+
+    closest = NULL;
+    best_score = 0;
+    i = 0;
+    do {
+        other = *(u8 **)(arg0 + 0x1870) + i * 0x1998;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(arg0 + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1814) < best_score) {
+            best_score = *(s32 *)(other + 0x1814);
+            closest = other;
+        }
+next_object:
+        i++;
+    } while (i != 4);
+    return closest;
+}
 #endif
 
 #ifdef VERSION_US
@@ -354,7 +426,29 @@ void func_86001B1C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86001CE8.s")
+typedef struct {
+    f64 x;
+    f64 y;
+    f64 z;
+} Fragment47CallbackVector;
+extern void *func_87C00718(void *, void *, f64);
+void func_86001CE8(u8 *arg0, f32 *arg1, f32 *arg2) {
+    Fragment47CallbackVector normalized;
+    Fragment47CallbackVector delta;
+
+    *arg1 = 0.0f;
+    *arg2 = 0.0f;
+    if (*(s32 *)(arg0 + 0x194) && *(s32 *)(arg0 + 0x184)) {
+        func_87C00718(&normalized, func_87C00160(&delta, arg0 + 0x2B8, arg0 + 0x198), 140.0);
+        if (*(s32 *)(arg0 + 0x2D0) != 0) {
+            *arg1 = (f32)normalized.z;
+            *arg2 = (f32)normalized.x;
+        } else {
+            *arg1 = (f32)-normalized.z;
+            *arg2 = (f32)-normalized.x;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -362,7 +456,53 @@ void func_86001DBC(u8 *arg0) { arg0[0x1639] &= 0xFFFE; }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86001DCC.s")
+extern u8 D_8600DE30[];
+extern void func_860041E8(u8 *arg0, u8 *arg1, f32 arg2);
+extern s32 func_8600472C(u8 *arg0);
+void func_86001DCC(u8 *arg0) {
+    f32 factor;
+    f32 radius_scale;
+    f32 scale;
+    f64 phase;
+    f64 split;
+
+    radius_scale = (f32)(*(f64 *)(arg0 + 0x17C8) / 200.0);
+    if (*(s32 *)(arg0 + 0x1828) != 3) {
+        arg0[0x14D1] &= 0xFFFE;
+        return;
+    }
+    if (func_8600472C(arg0) != 0) {
+        factor = (f32)*(f64 *)(D_8600DE30 + 0x2B0);
+    } else {
+        phase = *(f64 *)(arg0 + 0x17E8);
+        if (phase > 0.0) {
+            split = *(f64 *)(D_8600DE30 + 0x2D8);
+            if (split <= 0.0) {
+                factor = (f32)(*(f64 *)(D_8600DE30 + 0x2C0) +
+                    (phase / *(f64 *)(D_8600DE30 + 0xC8)) *
+                    (*(f64 *)(D_8600DE30 + 0x2B8) - *(f64 *)(D_8600DE30 + 0x2C0)));
+            } else if (split < phase) {
+                factor = (f32)(*(f64 *)(D_8600DE30 + 0x2C0) +
+                    ((*(f64 *)(D_8600DE30 + 0x2B8) - *(f64 *)(D_8600DE30 + 0x2C0)) *
+                    (phase - split) / (*(f64 *)(D_8600DE30 + 0xC8) - split)));
+            } else {
+                factor = (f32)(*(f64 *)(D_8600DE30 + 0x2C0) +
+                    ((*(f64 *)(D_8600DE30 + 0x2C8) - *(f64 *)(D_8600DE30 + 0x2C0)) *
+                    (split - phase) / split));
+            }
+        } else {
+            arg0[0x14D1] &= 0xFFFE;
+            return;
+        }
+    }
+    scale = radius_scale * factor;
+    arg0[0x14D1] |= 1;
+    arg0[0x14ED] = 255;
+    *(f32 *)(arg0 + 0x1500) = scale;
+    *(f32 *)(arg0 + 0x1504) = scale;
+    *(f32 *)(arg0 + 0x1508) = scale;
+    func_860041E8(arg0, arg0 + 0x1530, (f32)*(f64 *)(arg0 + 0xC8));
+}
 #endif
 
 #ifdef VERSION_US
@@ -410,10 +550,15 @@ void func_86001FCC(void *arg0) {
 extern void func_86002070(void *, s32, f32, void *, void *);
 extern void func_86003EFC(void *, s32);
 extern f32 MathUtil_Random_ZeroOne(void);
-extern f32 D_8600D668;
-extern f32 D_8600D66C;
 extern void func_87C01F6C(void *, f32);
-void func_860021C4(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4) { f32 random; func_86002070(arg0, arg1, arg2, arg3, arg4); func_86003EFC(arg0, 0); random = MathUtil_Random_ZeroOne(); func_87C01F6C(arg0 + 0x17A0, random * D_8600D668 + D_8600D66C); }
+void func_860021C4(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4) {
+    f32 random;
+
+    func_86002070(arg0, arg1, arg2, arg3, arg4);
+    func_86003EFC(arg0, 0);
+    random = MathUtil_Random_ZeroOne();
+    func_87C01F6C(arg0 + 0x17A0, random * 0.02f + 0.99f);
+}
 #endif
 
 #ifdef VERSION_US
@@ -473,11 +618,9 @@ s32 func_860022F8(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8600D670;
 extern void func_86007B4C(void *, f64);
 extern void *func_87C00308(void *, void *, void *, f64);
 extern void *func_87C00160(void *, void *, void *);
-extern void func_87C00718(void *, void *, f64);
 extern void func_86007E4C(u8 *, s32, s32);
 void func_860023CC(u8 *arg0, f64 arg1) {
     f32 value;
@@ -488,7 +631,7 @@ void func_860023CC(u8 *arg0, f64 arg1) {
     *(f32 *)(arg0 + 0x150) = value;
     *(f32 *)(arg0 + 0x154) = value;
     *(f32 *)(arg0 + 0x158) = value;
-    scaled = value * D_8600D670;
+    scaled = value * 1.1f;
     *(f32 *)(arg0 + 0x2B8) = scaled;
     *(f32 *)(arg0 + 0x2BC) = scaled;
     *(f32 *)(arg0 + 0x2C0) = scaled;

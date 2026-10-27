@@ -186,11 +186,86 @@ s16 func_84100688(Func84100688Table *arg0, u32 arg1) {
     return arg0->count - 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100710.s")
+extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+u8 *func_84100710(u8 *out, Func84100688Table **anim, s32 time) {
+    s16 index;
+    Func84100688Table *table;
+    s16 *frames;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100874.s")
+    index = func_84100688(anim[0], time);
+    table = anim[0];
+    frames = table->values;
+    if (index + 1 == table->count) {
+        out[0] = ((u8 **)anim)[1][index * 4 + 0];
+        out[1] = ((u8 **)anim)[1][index * 4 + 1];
+        out[2] = ((u8 **)anim)[1][index * 4 + 2];
+        out[3] = ((u8 **)anim)[1][index * 4 + 3];
+    } else {
+        out[0] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 0], ((u8 **)anim)[1][index * 4 + 4], time);
+        out[1] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 1], ((u8 **)anim)[1][index * 4 + 5], time);
+        out[2] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 2], ((u8 **)anim)[1][index * 4 + 6], time);
+        out[3] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 3], ((u8 **)anim)[1][index * 4 + 7], time);
+    }
+    return out;
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841009D8.s")
+extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+u8 *func_84100874(u8 *out, Func84100688Table **anim, s32 time) {
+    s16 index;
+    Func84100688Table *table;
+    s16 *frames;
+
+    index = func_84100688(anim[0], time);
+    table = anim[0];
+    frames = table->values;
+    if (index + 1 == table->count) {
+        out[0] = ((u8 **)anim)[1][index * 4 + 0];
+        out[1] = ((u8 **)anim)[1][index * 4 + 1];
+        out[2] = ((u8 **)anim)[1][index * 4 + 2];
+        out[3] = ((u8 **)anim)[1][index * 4 + 3];
+    } else {
+        out[0] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 0], ((u8 **)anim)[1][index * 4 + 4], time);
+        out[1] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 1], ((u8 **)anim)[1][index * 4 + 5], time);
+        out[2] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 2], ((u8 **)anim)[1][index * 4 + 6], time);
+        out[3] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[1][index * 4 + 3], ((u8 **)anim)[1][index * 4 + 7], time);
+    }
+    return out;
+}
+
+extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+u8 *func_841009D8(u8 *out, Func84100688Table **anim, s32 time) {
+    s16 index;
+    Func84100688Table *table;
+    s16 *frames;
+
+    index = func_84100688(anim[0], time);
+    table = anim[0];
+    frames = table->values;
+    if (index + 1 == table->count) {
+        out[0] = ((u8 **)anim)[2][index * 4 + 0];
+        out[1] = ((u8 **)anim)[2][index * 4 + 1];
+        out[2] = ((u8 **)anim)[2][index * 4 + 2];
+        out[3] = ((u8 **)anim)[2][index * 4 + 3];
+    } else {
+        out[0] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[2][index * 4 + 0], ((u8 **)anim)[2][index * 4 + 4], time);
+        out[1] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[2][index * 4 + 1], ((u8 **)anim)[2][index * 4 + 5], time);
+        out[2] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[2][index * 4 + 2], ((u8 **)anim)[2][index * 4 + 6], time);
+        out[3] = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                               ((u8 **)anim)[2][index * 4 + 3], ((u8 **)anim)[2][index * 4 + 7], time);
+    }
+    return out;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100B3C.s")
 
@@ -198,7 +273,31 @@ s16 func_84100688(Func84100688Table *arg0, u32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100DE4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101084.s")
+extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+void func_84101084(Func84100688Table **arg0, u8 *arg1) {
+    Func84100688Table *table;
+    s16 index;
+    s16 *frames;
+
+    table = arg0[0];
+    if (table == NULL) {
+        *(s16 *)(arg1 + 0x66) = ((s16 **)arg0)[1][0];
+        return;
+    }
+    if (table->pad_00[0] == 0) {
+        *(s16 *)(arg1 + 0x66) = ((s16 **)arg0)[1][arg1[0x7F] % table->divisor];
+        return;
+    }
+    index = func_84100688(table, arg1[0x7F]);
+    table = arg0[0];
+    frames = table->values;
+    if (index + 1 == table->divisor) {
+        *(s16 *)(arg1 + 0x66) = ((s16 **)arg0)[1][index];
+        return;
+    }
+    *(s16 *)(arg1 + 0x66) = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                                          ((s16 **)arg0)[1][index], ((s16 **)arg0)[1][index + 1], arg1[0x7F]);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_8410119C.s")
 
@@ -231,7 +330,23 @@ void func_84101A08(f32 *arg0, u8 *arg1, u8 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101AF4.s")
+extern u32 func_8411E358(s32 arg0, s32 arg1);
+extern u32 func_8411EE54(u8 *arg0);
+extern s32 ParticleMath_LacksBits(void *arg0, s32 arg1);
+void func_84101AF4(u8 *arg0, u8 *arg1) {
+    f32 scale;
+
+    scale = 1.0f;
+    if (ParticleMath_LacksBits(arg0 + 0x14, 0x2000) && *(s32 *)(arg0 + 8) != 0 &&
+        ParticleMath_LacksBits(arg1 + 4, 0x80) && ParticleMath_LacksBits(arg1 + 4, 0x40)) {
+        if (*(s32 *)(arg1 + 4) & 8) {
+            scale = func_8411E358(*(s32 *)(arg0 + 8), *(u16 *)(arg0 + 0x68)) * 0.01f;
+        } else {
+            scale = func_8411EE54(*(u8 **)(arg0 + 8)) * 0.01f;
+        }
+    }
+    *(f32 *)(arg0 + 0x18) = *(f32 *)(arg0 + 0x1C) * scale;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101C00.s")
 
@@ -382,9 +497,55 @@ void func_84102B3C(u8 *record, void *matrix, s32 type) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102E84.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841031F4.s")
+extern Gfx *D_800D0510;
+extern u8 *D_8418CA20[];
+extern void *func_80003240();
+extern void func_8100348C();
+extern void func_84102E84(s32, u8 *);
+void func_841031F4(u8 *record, void *arg1, s32 matrix) {
+    s16 *id;
+    u8 *entry;
+    u8 *model;
+    u16 type;
+    u16 count;
+    void (*draw)(u8 *, s32);
+    s32 i;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841032F0.s")
+    if (arg1 != NULL && (id = *(s16 **)((u8 *)arg1 + 0x14)) != NULL && *id != 0) {
+        entry = D_8418CA20[*id];
+        model = *(u8 **)(entry + 4);
+        type = *(u16 *)entry;
+        count = *(u16 *)(entry + 2);
+        draw = (void (*)(u8 *, s32))func_80003240(func_8100348C);
+        func_84102B3C(record, (void *)matrix, type);
+        for (i = 0; i < count; i++) {
+            draw(record, *(s32 *)model);
+            func_84102E84(*(u16 *)(model + 6), record);
+            gSPDisplayList(D_800D0510++, *(u32 *)(model + 8));
+            model += 0x10;
+        }
+    }
+}
+
+extern Gfx *D_800D0510;
+extern u8 *D_8418CB88;
+extern void *func_80003240();
+extern void func_8100348C();
+extern void func_84102E84(s32, u8 *);
+void func_841032F0(u8 *record, s32 matrix) {
+    s32 pad[2]; // FAKE
+    u8 *model;
+    u16 type;
+    void (*draw)(u8 *, s32);
+
+    model = *(u8 **)(D_8418CB88 + 4);
+    type = *(u16 *)D_8418CB88;
+    draw = (void (*)(u8 *, s32))func_80003240(func_8100348C);
+    func_84102B3C(record, (void *)matrix, type);
+    draw(record, *(s32 *)model);
+    func_84102E84(*(u16 *)(model + 6), record);
+    gSPDisplayList(D_800D0510++, *(u32 *)(model + 8));
+}
 
 extern u8 *D_80094910;
 extern void func_841031F4(u8 *, void *, s32);
