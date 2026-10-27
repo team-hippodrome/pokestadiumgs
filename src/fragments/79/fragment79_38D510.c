@@ -210,8 +210,6 @@ f32 func_8411EF90(u8 *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411EFE4.s")
 
 /* mkdraft:func_8411F1AC begin */
-extern f32 D_84189818;
-extern f32 D_8418981C;
 extern s32 D_84191208;
 
 // Writes an x offset to arg1[0] (negated when arg0 is D_84191208) chosen by the
@@ -227,7 +225,7 @@ void func_8411F1AC(u8 *arg0, f32 *arg1)
         val = *(s16 *)((u8 *)arg0 + 0x1A);
 
         if (val == 208) {
-            arg1[0] = D_84189818;
+            arg1[0] = -325.0f;
         } else if (val == 95) {
             arg1[0] = -225.0f;
         } else if (val == 130) {
@@ -247,7 +245,7 @@ void func_8411F1AC(u8 *arg0, f32 *arg1)
         val = *(s16 *)((u8 *)arg0 + 0x1A);
 
         if (val == 208) {
-            arg1[0] = D_8418981C;
+            arg1[0] = 325.0f;
         } else if (val == 95) {
             arg1[0] = 225.0f;
         } else if (val == 130) {
