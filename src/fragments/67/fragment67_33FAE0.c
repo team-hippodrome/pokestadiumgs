@@ -674,7 +674,28 @@ void func_82904824(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82904AC8.s")
+extern s32 Math_StepToS32(s32 current, s32 target, s32 inc, s32 dec);
+
+// Steps the six halfwords at arg1 toward arg2-arg7 by up to step each call; once all six
+// arrive, toggles bit 1 of the byte at arg0 + 0x18. func_82904D78 passes the same record for
+// arg0 and arg1.
+void func_82904AC8(u8 *arg0, u16 *arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, u16 arg7,
+                   s16 step) {
+    arg1[0] = Math_StepToS32(arg1[0], arg2, step, step);
+    arg1[1] = Math_StepToS32(arg1[1], arg3, step, step);
+    arg1[2] = Math_StepToS32(arg1[2], arg4, step, step);
+    arg1[3] = Math_StepToS32(arg1[3], arg5, step, step);
+    arg1[4] = Math_StepToS32(arg1[4], arg6, step, step);
+    arg1[5] = Math_StepToS32(arg1[5], arg7, step, step);
+    if (arg1[0] == arg2 && arg1[1] == arg3 && arg1[2] == arg4 && arg1[3] == arg5 && arg1[4] == arg6 &&
+        arg1[5] == arg7) {
+        if (arg0[0x18] & 2) {
+            arg0[0x18] &= ~2;
+        } else {
+            arg0[0x18] |= 2;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -686,15 +707,15 @@ extern u8 D_82919A88[];
 extern u8 D_82919AF8[];
 extern u8 D_82919B68[];
 extern u8 D_82919B80;
-extern void func_82904AC8(void *, void *, u16, u16, s32, s32, s32, s32, s32);
+extern void func_82904AC8(u8 *, u16 *, u16, u16, u16, u16, u16, u16, s16);
 void func_82904D78(s32 arg0) {
-    func_82904AC8(&D_82919A88, &D_82919A88, 0xFF, 0xFF, 0xFF, 0, 0x64, 0xFF, 0x14);
-    func_82904AC8(&D_82919AF8, &D_82919AF8, 0xFF, 0xFF, 0xFF, 0, 0x64, 0xFF, 0x14);
+    func_82904AC8(D_82919A88, (u16 *)D_82919A88, 0xFF, 0xFF, 0xFF, 0, 0x64, 0xFF, 0x14);
+    func_82904AC8(D_82919AF8, (u16 *)D_82919AF8, 0xFF, 0xFF, 0xFF, 0, 0x64, 0xFF, 0x14);
     if (!(D_82919B80 & 2)) {
-        func_82904AC8(&D_82919B68, &D_82919B68, 0xFF, 0xFF, 0xFF, 0xFF, 0xC8, 0, 0x14);
+        func_82904AC8(D_82919B68, (u16 *)D_82919B68, 0xFF, 0xFF, 0xFF, 0xFF, 0xC8, 0, 0x14);
         return;
     }
-    func_82904AC8(&D_82919B68, &D_82919B68, 0xFF, 0xFF, 0xFF, 0, 0x64, 0xFF, 0x14);
+    func_82904AC8(D_82919B68, (u16 *)D_82919B68, 0xFF, 0xFF, 0xFF, 0, 0x64, 0xFF, 0x14);
 }
 #endif
 

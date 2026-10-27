@@ -729,7 +729,20 @@ s32 func_82209EA8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82209F50.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_8220A098.s")
+// Sets the vectors at arg0 + 0x24 to the screen point (D_822106CC, D_822106CE) relative to the
+// 640x480 center at depth -579, and at arg0 + 0x30 to (x, D_822106C8, 1), where x is
+// D_822106B0[5], negated when bit 0 of the halfword at D_822106B0 + 6 is set.
+s32 func_8220A098(void *arg0) {
+    s32 pad[4]; // FAKE: reserves the 0x30-byte frame; diff score 58 without it.
+    f32 x;
+
+    x = D_822106B0[5];
+    if (*(u16 *)((u8 *)D_822106B0 + 6) & 1) {
+        x = 0.0f - x;
+    }
+    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x24), D_822106CC - 320.0f, 240.0f - D_822106CE, -579.0f);
+    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x30), x, D_822106C8, 1.0f);
+}
 
 extern s32 func_82208EB0(void *);
 extern s32 func_82209F50(void *);
