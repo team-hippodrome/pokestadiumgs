@@ -325,7 +325,60 @@ s32 func_82301964(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823019F4.s")
+extern u16 D_82305E72;
+extern s16 D_82305E6A;
+extern s16 D_82305B9C;
+extern s16 D_82306970[][2];
+extern u8 D_82305A78[];
+s32 func_82300AD4(void);
+s32 func_823019F4(s32 arg0, u8 *arg1) {
+    s16 *pos;
+    s32 offset;
+    s16 *src;
+    s32 index;
+
+    index = *(s32 *)(arg1 + 0x20);
+    switch (arg0) {
+        case 0:
+            arg1[0x28] = 0x21;
+            pos = D_82306970[index];
+            src = (s16 *)(arg1 + 8);
+            pos[0] = src[0];
+            pos[1] = src[1];
+            break;
+        case 1:
+            *(u16 *)(arg1 + 2) &= 0xFFFD;
+            if (func_82300AD4() == 0) {
+                break;
+            }
+            if (index == D_82305E6A) {
+                arg0 = D_82305B9C;
+                *(u16 *)(arg1 + 2) |= 2;
+                if (arg0 < 6) {
+                    offset = arg0;
+                } else {
+                    offset = 12 - arg0;
+                }
+                if (arg1[1] & 1) {
+                    offset = -offset;
+                }
+                pos = D_82306970[index];
+                *(s16 *)(arg1 + 8) = pos[0] + offset;
+                *(s16 *)(arg1 + 0xA) = pos[1];
+            }
+            // FAKE: D_82305B9C re-read through its record table, so IDO does not reuse the
+            // address it already formed for the read above.
+            arg0 = *(s16 *)(D_82305A78 + 0x124);
+            if (!(D_82305E72 & 4) && index == 0) {
+                arg0 = (s16)((arg0 + 1) % 12);
+                D_82305B9C = arg0;
+            }
+            break;
+        default:
+            break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301B2C.s")
 
