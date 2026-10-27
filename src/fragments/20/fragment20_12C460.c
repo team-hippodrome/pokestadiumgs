@@ -2054,8 +2054,63 @@ void func_826122A4(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826123B0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826127A4.s")
+extern s32 D_826153C4;
+extern void *D_80087200;
+extern void func_800226C0(s32);
+extern void * func_82604C40(s32 arg0, s32 arg1, void *arg2, s32 arg3);
+extern void func_82606784(u8*a0,s32 a1,s32 a2,s32 a3);
+extern void func_826078B4(void *arg0);
+void func_826127A4(void *arg0) {
+    u8 *first;
+    u8 *second;
+    s32 i;
+    u16 flags;
+    u32 state;
 
+    first = func_82604C40(5, 0, (u8 *)arg0 + 0x114, 0x14);
+    second = func_82604C40(6, 1, (u8 *)arg0 + 0x114, 0x14);
+    switch (*(s16 *)(first + 6)) {
+        case 0:
+            if (*(s16 *)(second + 6) == 2) {
+                func_82606784(first, *(s16 *)(second + 0x14) + 416, (*(s16 *)(second + 0x24) - *(s16 *)(first + 0x24)) / 2 + *(s16 *)(second + 0x14), *(s16 *)(second + 0x26) + *(s16 *)(second + 0x16));
+            }
+            break;
+        case 2:
+            (*(s16 *)((u8 *)arg0 + 6))++;
+            if (*(s16 *)((u8 *)arg0 + 6) >= D_826153C4 || (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000)) {
+                flags = *(u16 *)((u8 *)arg0 + 4);
+                if (flags & 0x200) {
+                    *(s16 *)((u8 *)arg0 + 2) = 17;
+                    *(s16 *)((u8 *)arg0 + 6) = 0;
+                } else if (flags & 4) {
+                    *(s16 *)((u8 *)arg0 + 2) = 12;
+                    *(s16 *)((u8 *)arg0 + 6) = 0;
+                } else if (flags & 0x100) {
+                    *(s16 *)((u8 *)arg0 + 2) = 13;
+                    *(s16 *)((u8 *)arg0 + 6) = 0;
+                } else if (flags & 0x10) {
+                    *(s16 *)((u8 *)arg0 + 2) = 14;
+                    *(s16 *)((u8 *)arg0 + 6) = 0;
+                } else {
+                    state = 2;
+                    if (!arg0) {} // FAKE
+                    *(s16 *)((u8 *)arg0 + 2) = 19;
+                    *(s16 *)((u8 *)arg0 + 6) = 0;
+                    *(s32 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0x9C) = state;
+                }
+                *(s16 *)((u8 *)arg0 + 0x18) = 0;
+                ((u8 **)((u8 *)arg0 + 0x34F4))[*(s16 *)((u8 *)arg0 + 0x18)] = second;
+                (*(s16 *)((u8 *)arg0 + 0x18))++;
+                ((u8 **)((u8 *)arg0 + 0x34F4))[*(s16 *)((u8 *)arg0 + 0x18)] = first;
+                (*(s16 *)((u8 *)arg0 + 0x18))++;
+                for (i = 0; i < *(s16 *)((u8 *)arg0 + 0x18); i++) {
+                    func_826078B4(((u8 **)((u8 *)arg0 + 0x34F4))[i]);
+                }
+                func_800226C0(105);
+            }
+            break;
+    }
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826129AC.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82612BD0.s")
