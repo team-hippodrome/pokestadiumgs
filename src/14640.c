@@ -1607,24 +1607,23 @@ void func_800179B4(void) {}
 void func_800179B4_padding(void) {}
 void func_800179B4_padding2(void) {}
 
+// File data before func_800179CC's static, in retail order (rom.yaml .data window 0x90670).
+s32 D_8008FA70 = (s32)osEPiStartDma;
+s32 D_8008FA74 = 0;
+s32 D_8008FA78 = 0;
+
 // Same code as Majora's Mask AudioLoad_ScriptLoad (src/audio/lib/load.c).
-// D_8008FA7C is that function's local static sLoadIndex, which stays defined in
-// asm/us/data/88A40.data.s; it is the slot index into D_800D1378 and the message value.
+// sLoadIndex is the slot index into D_800D1378 and the message value.
 extern u8 D_800D1378;
 extern OSMesgQueue D_800D1320;
-extern u32 D_8008FA7C;
 void func_800179CC(s32 arg0, s32 arg1, s8 *arg2) {
-    // FAKE: reaching the static through a pointer reproduces the function-static codegen;
-    // direct D_8008FA7C accesses leave 11 instructions different.
-    u32 *load_index_ptr = &D_8008FA7C;
-    u32 load_index = *load_index_ptr;
+    static u32 sLoadIndex = 0;
 
-    ((s8 **)&D_800D1378)[load_index] = arg2;
-    func_80014708(arg0, arg1, 0, load_index, &D_800D1320);
-    load_index = *load_index_ptr + 1;
-    *load_index_ptr = load_index;
-    if (load_index == 16) {
-        *load_index_ptr = 0;
+    ((s8 **)&D_800D1378)[sLoadIndex] = arg2;
+    func_80014708(arg0, arg1, 0, sLoadIndex, &D_800D1320);
+    sLoadIndex++;
+    if (sLoadIndex == 16) {
+        sLoadIndex = 0;
     }
 }
 
@@ -2428,7 +2427,32 @@ s32 func_800193B8(s32 flags) {
     }
     return count;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800194A0.s")
+// Rest of this file's data, in retail order (rom.yaml .data window 0x90670-0x906A0).
+// D_8008FA80 and D_8008FA88 are probably function statics of the audio update (waiting task)
+// and of func_8001895C; they stay file-scope until those owners are placed.
+void *D_8008FA80 = NULL;
+s32 D_8008FA84 = 0;
+u8 D_8008FA88 = 0;
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x2C30];
+    /* 0x2C30 */ s32 totalTaskCount;
+    /* 0x2C34 */ u8 unk_2C34[0xD8];
+    /* 0x2D0C */ s32 audioRandom;
+} AudioContextRandomView;
+
+// Same code as Ocarina of Time Audio_NextRandom (src/code/audio_thread.c).
+u32 func_800194A0(void) {
+    static u32 sAudioRandom = 0x12345678;
+    static u32 sAudioRandomPrev = 0x11111111;
+    u32 count = osGetCount();
+
+    sAudioRandom = (((AudioContextRandomView *)D_8011BE90)->totalTaskCount + sAudioRandom + count) *
+                   (((AudioContextRandomView *)D_8011BE90)->audioRandom + 0x1234567);
+    sAudioRandom = (sAudioRandom & 1) + (sAudioRandom * 2) + sAudioRandomPrev;
+    sAudioRandomPrev = count;
+    return sAudioRandom;
+}
 
 
 void func_8001951C(void) {

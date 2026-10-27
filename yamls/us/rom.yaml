@@ -289,6 +289,8 @@
     - [0x88A20, .data, AC80] # src/AC80.c owns [0x80087E20, 0x80087E40): profiler/render statics,
                              # D_80087E30/E34, sBackupTime (wave-5 migration)
     - [0x88A40, data]
+    - [0x90670, .data, 14640] # src/14640.c's tail data: D_8008FA70..D_8008FA88 and func_800194A0's statics
+    - [0x906A0, data]
     - [0x97ED0, .data, 56F90]
     - [0x97EE0, data]
     
