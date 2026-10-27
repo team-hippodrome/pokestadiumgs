@@ -882,3 +882,10 @@ collateral objects and unrelated dirty paths are independently verified
 before further compilation. No padding, extra argument, unused local,
 forced register/frame, volatile access or byte rewrite is used. Five
 assembly owners remain; the three accepted owners total 2,008 text bytes.
+
+## 2026-10-28 — `func_84150330` matched
+
+Battle-plan scorer in the style of `BattlePlan_ScoreSleep`: if the battler record from `func_84154B30(side)` has flag bit 0 at byte 3 and `func_84155544(mon + 8, 2)` is 0, add `func_84148520(mon u16 0x30, u16 0x32, 3)` to the plan's per-side `u16` at `plan + 4 + (side + 0x11) * 2`. Spelling details:
+- `base = (s32)(u32)plan + 4` keeps retail's separate `+ 4`.
+- `base` must be declared before `mon`, to reserve the slot that puts `mon` at `sp+0x18`.
+- The call result goes through an `s16 amount` declared last, which fixes the temp numbering; declared before `mon`, it adds 8 bytes of frame.
