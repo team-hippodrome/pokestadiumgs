@@ -5,7 +5,27 @@ void func_8414F260(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F268.s")
+extern u8 func_84154B24(void);
+void func_8414F268(void *arg0) {
+    s32 value;
+    s32 amount;
+
+    value = ((u16 *)((u8 *)arg0 + 2))[(u8)(1 - func_84154B24())];
+    amount = *(s32 *)((u8 *)arg0 + 0x14);
+    if (value != 0) {
+        if (amount < 0) {
+            amount = -amount;
+        }
+        if (value < 0x80) {
+        // karodo: empty check on the magnitude; the original keeps its branch.
+        if (!amount) {
+        }
+            *(s32 *)((u8 *)arg0 + 0x18) = (value + 10) * -amount / 255;
+        } else {
+            *(s32 *)((u8 *)arg0 + 0x18) = -amount;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
