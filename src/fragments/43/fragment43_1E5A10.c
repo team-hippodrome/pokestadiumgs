@@ -1658,7 +1658,20 @@ void func_8AC06D70(void *arg0, s32 arg1, s32 arg2, u16 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC06D8C.s")
+extern s32 func_8005049C(s32, s32);
+extern u8 D_8AC0878C;
+extern s32 D_8AC08788;
+#pragma COALESCE_AT_LUI(func_8AC06D8C, D_8AC0878C, D_8AC08788)
+s32 func_8AC06D8C(s32 arg0, s32 arg1) {
+    s32 result;
+
+    result = func_8005049C(arg0, arg1);
+    if (result == 0) {
+        D_8AC0878C = 0;
+        D_8AC08788 = arg1;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
