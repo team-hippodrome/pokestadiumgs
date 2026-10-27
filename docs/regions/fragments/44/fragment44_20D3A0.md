@@ -63,3 +63,7 @@ Source shape:
 - Read `z`/`w` into block `s16` locals with `x`/`y`, and use a plain
   `s16 angles[2]` (the sibling's padded scratch struct grows the frame to
   0x40).
+
+## 2026-10-28 — `func_8AF1F490`: requeue
+
+requeue. "Shares a type" predicate: `func_8AF01654(id)` returns a byte with type 1 in the high nibble and type 2 in the low nibble. It returns 1 when any of the four type pairs of `arg0` and `arg1` match. Retail homes both arguments, masks `arg0` (`move a2,a0; andi a0,a2,0xFF`, so `s32`), and reloads `arg1` from its home with `lbu` (a `u8` parameter). The first species' nibbles spill to `sp+0x1E`/`sp+0x1D`. Best 0.9394, with `(s32 arg0, u8 arg1)` and a `u8 types` temp declared first; the remaining differences are `$a0`/`$a1` choices and slot order. The permuter got 265 → 60. Next: K&R-style parameters, or both `arg0` and `arg1` read back from their homes.

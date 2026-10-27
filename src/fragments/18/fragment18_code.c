@@ -33,7 +33,19 @@ void fragment18_main(u8 *arg0) {
     arg0[0x23] = 0xFF;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/18/fragment18_code/func_817000A4.s")
+s32 func_817000A4(void) {
+    s32 i;
+
+    D_81700DA0 = 0;
+    D_81700DA0 = func_8004C8C0(0x13F);
+    if (D_81700DA0 != 0) {
+        func_8004C8C0(0x11C);
+        for (i = 0; i < 4; i++) {
+            fragment18_main(D_81700DB0 + i * 0x24);
+        }
+    }
+    return D_81700DA0;
+}
 
 void func_81700120(void *arg0)
 {
