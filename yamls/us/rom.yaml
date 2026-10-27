@@ -566,6 +566,8 @@
     - [0xD4C50, c,       fragments/10/fragment10_D4C50]
     - [0xD5250, c,       fragments/10/fragment10_D5250]
     - [0xD7460, data,    fragments/10/fragment10_data]
+    - [0xD7550, .rodata, fragments/10/fragment10_D5250] # Strings, jump tables, float literals.
+    - [0xD75D0, rodata]
 
   - name: fragment11
     type: code
