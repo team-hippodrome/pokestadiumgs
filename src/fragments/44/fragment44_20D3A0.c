@@ -44,8 +44,6 @@ s32 func_8AF1F130(s32 arg0, Func8AF1F130Arg *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F1F0.s")
 
 extern void func_8004B314(s32, s32, s32, s32);
-extern void func_800504BC(s16 *);
-extern s16 D_8AF39228;
 s32 func_8AF1F294(s32 arg0, Func8AF1F130Arg *arg1) {
     s16 angles[2];
     s32 var_v1;
