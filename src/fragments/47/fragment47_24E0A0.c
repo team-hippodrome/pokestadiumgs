@@ -683,7 +683,45 @@ void func_8600A5B0(s16 arg0, s16 arg1, u16 arg2, u16 arg3, void *arg4) {
     func_8600A20C(arg0, arg1, arg2, arg3, sp44, sp40, sp34, sp3C, func_8004CA4C((u8 *)arg4), sp24);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_8600A650.s")
+extern Gfx *D_800D0510;
+void func_8600A650(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 horizontal_scale, f32 vertical_scale) {
+    f32 right;
+    f32 bottom;
+
+    if ((width < 0) || (height < 0) || (320.0f <= x) || (240.0f <= y)) {
+        return;
+    }
+    right = x + width;
+    if (right < 0) {
+        return;
+    }
+    bottom = y + height;
+    if (bottom < 0) {
+        return;
+    }
+    if (x < 0) {
+        s -= x * horizontal_scale;
+        width += x;
+        x = 0;
+    }
+    right = x + width;
+    if (y < 0) {
+        t -= y * vertical_scale;
+        height += y;
+        y = 0;
+    }
+    bottom = y + height;
+    //!bug Far-edge clipping retains the excess span instead of the visible span.
+    if (320.0f <= right) {
+        width -= 320.0f - x;
+    }
+    if (240.0f <= bottom) {
+        height -= 240.0f - y;
+    }
+    right = x + width;
+    bottom = y + height;
+    gSPScisTextureRectangle(D_800D0510++, x * 4.0f, y * 4.0f, right * 4.0f, bottom * 4.0f, G_TX_RENDERTILE, s << 5, t << 5, (s16)(horizontal_scale * 1024.0f), (s16)(vertical_scale * 1024.0f));
+}
 
 extern u8 D_8600D3F0[];
 extern u8 D_8600D400;
@@ -719,7 +757,6 @@ void func_8600AAD4(void) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_8600AB6C.s")
 
 extern void func_87F06240(s32, s32, f32, f32, s32);
-extern Gfx * D_800D0510;
 void func_8600ACC4(void *arg0, s32 arg1, s32 arg2, void *arg3, void *arg4) {
     struct ACC4Color { u8 r, g, b, a; };
     gDPSetPrimColor(D_800D0510++, 0, 0, ((struct ACC4Color *)arg3)->r, ((struct ACC4Color *)arg3)->g, ((struct ACC4Color *)arg3)->b, ((struct ACC4Color *)arg3)->a);
@@ -739,8 +776,6 @@ extern s16 D_8600D9B0[][2];
 extern s16 D_8600D9C0[][2];
 extern u8 D_80094E38[];
 extern void func_8004D1FC(void *);
-
-extern void func_8600A650(f32, f32, f32, f32, s32, s32, f32, f32);
 
 void func_8600AE6C(u8 *arg0) {
     s32 i;

@@ -483,3 +483,37 @@ selected cleanup preserves all section bytes, extents, and relocations. The
 final forced native rebuild includes the host C check and reproduces retail
 MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No GS/Stadium 1 map supports a
 function rename.
+
+## 2026-10-27 — matching scaled texture rectangle
+
+Starting revision `c9cc4ce18015174cfdf1c6c144b158d9832ce79e` (#1661).
+`func_8600A650` passes canonical acceptance and the full US retail-ROM gate:
+1,108 bytes / 277 instructions, with no allocated frame. Its arguments are
+four floats, two signed 16-bit texture coordinates, and two float texture
+scales. The existing `func_8600AE6C` caller supplies zero for both coordinates;
+retype the local forward declaration in the same canonical transaction.
+
+Use the SDK `gSPScisTextureRectangle` macro, with float quarter-pixel
+rectangle coordinates, texture origins shifted by five, and scales converted
+to signed 16-bit values after multiplying by 1024. The macro reproduces the
+negative-coordinate corrections and all three display-list commands.
+
+Keep the width/height and viewport guards before the named right/bottom
+calculations. Each edge value first serves a negative-edge rejection check,
+is refreshed after near-edge clipping for the far-edge check, and is
+refreshed again after far-edge clipping for the display-list command.
+Combining the edge guards into an anonymous expression loses two parameter
+loads; assigning edge values that are overwritten before use is unnecessary.
+Integer zero literals recover the shared single-precision zero register.
+
+Preserve the original far-edge arithmetic: `width -= 320 - x` and
+`height -= 240 - y` keep the excess span rather than the visible span.
+The C source marks this existing clipping bug. The matching change does
+not alter its behavior.
+
+Ten complete-module controls test declaration cleanup and guard/comment
+formatting across all four combinations, with normal and blank-prefixed
+sources. All section bytes, extents, and relocations are preserved.
+A forced native rebuild with the host C check enabled reproduces retail
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No GS/Stadium 1 map supports a
+function rename.
