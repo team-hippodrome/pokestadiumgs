@@ -111,3 +111,47 @@ pass with `build/pokestadiumgs-us.z64: OK`. ROM MD5 is
 checks pass. All 48 original words and retail span `0xFBEF0..0xFBFB0`
 compare exactly. No fakes, padding members, instruction rewriting, new
 storage, generated reports, layout or CI changes are needed.
+
+## 2026-10-27 — `func_813042E4`: guarded state transition
+
+The 152-byte owner (38 instructions, 32-byte frame) calls
+`func_8160A920`, preserving its discarded result, then returns zero unless
+parent byte 19901 equals 13 and `func_8160A8DC` returns a nonzero count.
+It reads the context pointer at parent offset 19872, follows pointers at
+context offset 106824 and the next record's offset 2368, and tests bit 31
+of the final record's word at offset 64. A clear bit returns zero. A set
+bit calls `func_81311C18` with context offset 116, stores 4 in parent byte
+19901 and returns one. The state numbers and flag's broader meaning remain
+unknown. Keeping the context pointer in a local preserves its original
+reuse through the flag test and call.
+//@src/fragments/14/fragment14_FAD40.c
+
+Compiled `func_8160A920` reads the selected signed byte at parent offset 8.
+`func_8160A8DC` counts up to six occupied 3304-byte records, stopping at the
+first zero byte at record offset 32. `func_81311C18` writes -1 at its
+argument's byte 25 and updates the adjacent state and float according to
+the existing state byte. Their bodies and data ownership remain unchanged.
+//@src/fragments/11/fragment11_E1E10.c
+//@src/fragments/14/fragment14_109280.c
+
+Compiled caller `func_813091E0` tests this owner's word result before
+setting its own flag and state and playing sound 2. The complete ROM
+comparison also covers that caller and all previously matched functions.
+//@src/fragments/14/fragment14_FF070.c
+
+Fresh validation on master `8b887cd48294525153220892eb703a8b6bc8aeec`
+plus this patch:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/14/fragment14_FAD40.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal host syntax check, forced source compilation and full US link
+pass with `build/pokestadiumgs-us.z64: OK`. ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; retail byte comparison and whitespace
+checks pass. All 38 original words and retail span `0xFC474..0xFC50C`
+compare exactly. No new fakes, padding, storage, instruction rewriting,
+layout, generated reports or CI changes are required.

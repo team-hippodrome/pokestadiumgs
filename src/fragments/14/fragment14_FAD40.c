@@ -375,7 +375,25 @@ s32 func_81304248(u8 *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_813042E4.s")
+extern s32 func_8160A8DC(u8 *);
+s32 func_813042E4(u8 *arg0) {
+    u8 *context;
+
+    func_8160A920(arg0);
+    if (arg0[19901] != 13) {
+        return 0;
+    }
+    if (func_8160A8DC(arg0) == 0) {
+        return 0;
+    }
+    context = *(u8 **)(arg0 + 19872);
+    if ((*(u32 *)(*(u8 **)(*(u8 **)(context + 106824) + 2368) + 64) >> 31) == 0) {
+        return 0;
+    }
+    func_81311C18((s32)context + 116);
+    arg0[19901] = 4;
+    return 1;
+}
 
 /* mkdraft:func_8130437C begin */
 extern s32 func_8160A920(u8 *);
