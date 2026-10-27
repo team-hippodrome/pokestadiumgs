@@ -314,7 +314,7 @@ extern void func_8004972C(s32, s32, s32, s32);
 extern void Font_EnableTwoCycleTexturing(void);
 extern void func_800497E4(s32, s32, s32, s32);
 extern s32 func_8003514C(void);
-extern void func_800495BC(s32, s32, void *);
+extern void func_800495BC(s32, s32, const char *, ...);
 extern void Font_DisableTwoCycleTexturing(void);
 extern void func_800499EC(void);
 void func_8F100594(Fragment69MenuState *arg0) {
@@ -403,7 +403,62 @@ void func_8F100740(Fragment69MenuState *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F1008EC.s")
+extern s32 D_8F1DEE18;
+extern s32 D_8F1DEE1C;
+extern s32 D_8F1DEE20;
+extern s32 func_80073420(s32);
+extern void *func_8004B7A4(s32);
+extern char D_8F103B2C[];
+extern char D_8F103B38[];
+extern char D_8F103B50[];
+void func_8F1008EC(Fragment69MenuState *arg0) {
+    void *title;
+    s16 *position;
+    s32 i;
+    s32 yOffset;
+    s32 index;
+    s32 species;
+    void *name;
+
+    func_800498C4();
+    func_800496A4(0x20, 0);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    Font_EnableTwoCycleTexturing();
+    func_800497E4(0, 0xFF, 0, 0xFF);
+    position = D_8F1039C8[((u8 *)arg0 - D_8F1DF270) / 6];
+    if (func_8003514C() == 0) {
+        title = D_8F103A5C[D_8F1DEE18];
+    } else {
+        title = D_8F103A64[D_8F1DEE18];
+    }
+    func_800495BC(position[0] + 0xA, position[1] + 4, title);
+    Font_DisableTwoCycleTexturing();
+    for (i = 0, yOffset = 0; i < 10; i++, yOffset += 14) {
+        index = D_8F1DEE1C + i;
+        if (i == D_8F1DEE20) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        if (D_8F1DEE18 == 0) {
+            species = index;
+        } else {
+            species = func_80073420(index & 0xFF);
+        }
+        name = func_8004B7A4(species);
+        if (name == NULL) {
+            if (func_8003514C() == 0) {
+                name = D_8F10398C;
+            } else {
+                name = D_8F103998;
+            }
+        }
+        func_800495BC(position[0] + 0xA, position[1] + yOffset + 0x10, D_8F103B2C, species, name);
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495BC(position[0] + 0xA, position[1] + 0xA0, (func_8003514C() == 0) ? D_8F103B38 : D_8F103B50);
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
