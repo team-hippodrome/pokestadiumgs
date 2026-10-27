@@ -60,7 +60,20 @@ void func_87E01A5C(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E01B50.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E01DB4.s")
+extern s32 main_pool_alloc(s32, s32);
+extern void func_87F024CC(void);
+extern void func_87F024F4(void *, u8 *, s32);
+void func_87E01DB4(void * arg0) {
+    u8 *mem;
+    s32 i;
+
+    mem = (u8 *)main_pool_alloc(0x630, 0);
+    for (i = 0; i < 4; i++) {
+        *(u8 **)(mem + 0x20 + i * 0x18C) = (u8 *)arg0 + 0x1C + i * 0x98;
+    }
+    func_87F024CC();
+    func_87F024F4((u8 *)arg0 + 8, mem, 4);
+}
 
 typedef struct { u8 pad_00[0x2180]; u8 mode; } F1E24ObjB;
 typedef struct { u8 pad_00[4]; s32 value; u8 pad_08[0x278]; F1E24ObjB *obj; s8 out_284; s8 out_285; } F1E24StateB;
