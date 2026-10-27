@@ -55,7 +55,25 @@ s32 func_86C000B4(s32 arg0) {
     return var_s0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/62/fragment62_code/func_86C00148.s")
+extern void func_800086A4(s32);
+extern void StageFade_StartFromOpaque(s32);
+extern void func_80064D28(void);
+void func_86C00148(void) {
+    s32 state = 0;
+    s32 value;
+
+    func_800086A4(2);
+    StageFade_StartFromOpaque(5);
+    do {
+        // FAKE: the 64-bit round trip only steers register allocation (t6 instead of v0).
+        value = (s64)*(s32 *)(D_86C00350 + 8);
+        if (value == -1) {
+            func_80064D28();
+        }
+        state = func_86C000B4(state);
+        func_86C00070();
+    } while (state != 3);
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
@@ -84,7 +102,7 @@ M2C_UNK func_80047610();                            /* extern */
 M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 M2C_UNK func_8004C4B0(M2C_UNK);                     /* extern */
-M2C_UNK func_86C00148();                            /* extern */
+void func_86C00148(void);
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
 extern M2C_UNK D_1000000;
