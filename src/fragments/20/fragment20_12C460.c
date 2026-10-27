@@ -1892,7 +1892,93 @@ void func_826137B8(s16 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82613814.s")
+extern s16 D_8261A492;
+extern u16 D_8261A494;
+extern s16 D_8261DA4C;
+extern void func_8260F108(void *);
+extern void func_82610FF8(void *);
+extern void func_826114DC(void *);
+extern void func_826119DC(void *);
+extern void func_82611D44(void *);
+extern void func_826123B0(void *);
+extern void func_826127A4(void *);
+extern void func_826129AC(void *);
+extern void func_82612BD0(void *);
+extern void func_82612E1C(void *);
+extern void func_826134DC(void *);
+extern void func_826132D8(void *);
+s32 func_82613814(void) {
+    void *s0 = &D_8261A490;
+    u8 *entry;
+    s32 i;
+
+    if (*(u16 *)((u8 *)s0 + 4) & 1) {
+        switch (D_8261A492) {
+            case 1:
+                func_82610EE8(s0);
+                break;
+            case 2:
+                func_82610FF8(s0);
+                break;
+            case 3:
+                func_82611184(s0);
+                break;
+            case 4:
+                func_826112CC(s0);
+                break;
+            case 5:
+                func_826114DC(s0);
+                break;
+            case 7:
+                func_826119DC(s0);
+                break;
+            case 8:
+                func_82611D44(s0);
+                break;
+            case 9:
+                func_826122A4(s0);
+                break;
+            case 10:
+                func_826123B0(s0);
+                break;
+            case 11:
+                func_826127A4(s0);
+                break;
+            case 12:
+                func_826129AC(s0);
+                break;
+            case 13:
+                func_82612BD0(s0);
+                break;
+            case 14:
+                func_82612E1C(s0);
+                break;
+            case 15:
+                func_826131A4(s0);
+                break;
+            case 16:
+                func_826134DC(s0);
+                break;
+            case 17:
+                func_826132D8(s0);
+                break;
+            case 18:
+                func_82613764(s0);
+                break;
+            case 19:
+                func_826137B8(s0);
+                break;
+        }
+        for (i = 0; i < 20; i++) {
+            entry = (u8 *)&D_8261A490 + i * 0x298;
+            if (*(s16 *)(entry + 0x114) != 0) {
+                func_82607B74(entry + 0x114);
+            }
+        }
+        func_8260F108(&D_8261DA4C);
+    }
+    return (D_8261A494 & 1) != 0;
+}
 
 extern void func_8260850C(u8 *, s32);
 extern void func_8260899C(u8 *, s32);
@@ -2171,7 +2257,52 @@ void func_82613EA4(void *arg0) {
     } while (var_s2 != 0x33E0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82613F64.s")
+extern void func_8260A0B8(void *, s32);
+extern void func_8260A6B4(void *, s32);
+extern void func_8260AF30(void *, s32);
+extern void func_8260B424(void *, s32);
+void func_82613F64(u8 *arg0) {
+    s32 first;
+    s32 i;
+    u8 *entry;
+
+    first = 1;
+    for (i = 0; i < 20; i++) {
+        entry = arg0 + i * 0x298 + 0x114;
+        switch (*(s16 *)entry) {
+            case 4:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260A0B8(entry, first);
+                    first = 0;
+                }
+                break;
+            case 6:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260A6B4(entry, first);
+                    first = 0;
+                }
+                break;
+            case 7:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260AF30(entry, first);
+                    first = 0;
+                }
+                break;
+            case 8:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260B424(entry, first);
+                    first = 0;
+                }
+                break;
+            case 11:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260BBA8(entry, first);
+                    first = 0;
+                }
+                break;
+        }
+    }
+}
 
 void func_82614088(void *arg0) {
     s32 temp_a1;
@@ -2472,7 +2603,78 @@ void func_826148D4(void *arg0) {
     func_8004D19C(0x141, 0xD4, result, 1, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82614A0C.s")
+typedef struct unk_func_82614A0C {
+    /* 0x000 */ u8 unk_000[0x114];
+    /* 0x114 */ u8 unk_114[0x30];
+    /* 0x144 */ u8 unk_144[0x154];
+} unk_func_82614A0C;
+extern void func_8260E4A8(void *, s32);
+extern void func_8260E684(void *, s32);
+extern void func_8260EA60(void *, s32);
+extern void func_8260ED40(void *, s32);
+void func_82614A0C(void *arg0) {
+    s32 first;
+    s32 i;
+    u8 *entry;
+    u8 *sub;
+
+    first = 1;
+    for (i = 0; i < 20; i++) {
+        entry = ((unk_func_82614A0C *)arg0)[i].unk_114;
+        switch (*(s16 *)entry) {
+            case 4:
+                sub = ((unk_func_82614A0C *)arg0)[i].unk_144;
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260E1B4(entry, first, *(s32 **)(sub + 0xC), *(s32 **)(sub + 0x10), 255);
+                    first = 0;
+                }
+                break;
+            case 6:
+                sub = ((unk_func_82614A0C *)arg0)[i].unk_144;
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260E1B4(entry, first, *(s32 **)(sub + 0x200), *(s32 **)(sub + 0x204), 255 - *(s16 *)(sub + 0x1E));
+                    first = 0;
+                }
+                break;
+            case 5:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260E2C4(entry, first);
+                    first = 0;
+                }
+                break;
+            case 7:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260E398(entry, first);
+                    first = 0;
+                }
+                break;
+            case 8:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260E4A8(entry, first);
+                    first = 0;
+                }
+                break;
+            case 9:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260E684(entry, first);
+                    first = 0;
+                }
+                break;
+            case 10:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260EA60(entry, first);
+                    first = 0;
+                }
+                break;
+            case 11:
+                if (*(s16 *)(entry + 6) != 0) {
+                    func_8260ED40(entry, first);
+                    first = 0;
+                }
+                break;
+        }
+    }
+}
 
 extern s16 D_8261A490;
 extern u16 D_8261A494;
