@@ -1147,6 +1147,8 @@
     - [0x253770, data,    fragments/47/fragment47_data]
     - [0x253A10, .data,   fragments/47/fragment47_2507E0] # slot colors, animation counters and retained initialization tables
     - [0x253A70, data,    fragments/47/fragment47_data_tail]
+    - [0x253CB0, .rodata, fragments/47/fragment47_246640] # motion literals and jtbl_8600D6A8
+    - [0x253CF0, rodata,  fragments/47/fragment47_data_tail_rodata]
     - [0x253F30, .rodata, fragments/47/fragment47_24AE60] # jtbl_8600D910 (func_86006F20, still GLOBAL_ASM) + jtbl_8600D92C (func_86007648), widened to 16-byte boundary
     - [0x253F70, .rodata, fragments/47/fragment47_24E0A0] # four double constants at D_8600D950..D_8600D968
     - [0x253F90, rodata]
