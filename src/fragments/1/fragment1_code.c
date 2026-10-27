@@ -163,6 +163,27 @@ void func_835034A8(void)
     }
   }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83503548.s")
+typedef struct unk_D_83503B00 {
+    s32 unk_00[42];
+} unk_D_83503B00;
+extern unk_D_83503B00 D_83503B00;
+extern unk_D_83503B00 D_83503E88;
+extern s32 D_83503BB0;
+extern u8 D_83503F58[];
+extern u8 StageContext_GetFadeMode(void);
+extern s32 StageFade_StartFromOpaque(s32);
+extern void func_87F0DBFC(u8 *, s32, u8, s32);
+void func_83503548(void) {
+    s32 mode;
+
+    mode = StageContext_GetFadeMode();
+    if (1 == mode && D_83503E80 == 1) {
+        StageFade_StartFromOpaque(10);
+        D_83503BB0 = 1;
+        D_83503E88 = D_83503B00;
+        func_87F0DBFC(D_83503F58, 0, 150, -1);
+        D_83503BA8 = 1;
+    }
+}
 
 #endif
