@@ -624,7 +624,39 @@ void func_82302B44(void) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302B8C.s")
+extern Gfx *D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+typedef struct unk_func_82302B8C {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+} unk_func_82302B8C; // size = 0x3
+
+void func_82302B8C(s32 x, s32 y, s32 width, s32 height, unk_func_82302B8C *color, s32 flip) {
+    u8 *tex;
+    f32 scale;
+    s32 s;
+    f32 step;
+
+    tex = (u8 *)func_8004C990(77, 0);
+    if (tex != NULL) {
+        scale = (f32)width / (f32)(u32)*(u16 *)tex;
+        if (scale > 0.0f && width > 0 && height > 0) {
+            gDPPipeSync(D_800D0510++);
+            gDPSetEnvColor(D_800D0510++, color->r, color->g, color->b, 255);
+            s = 0;
+            if (flip != 0) {
+                s = (*(u16 *)tex - 1) << 5;
+                scale = 0.0f - scale;
+            }
+            func_8004D1FC(tex);
+            step = 1024.0f / scale;
+            GfxRect_DrawTextured(x, y, width, height, s, 0, (s32)(((step > 0.0f) ? 0.5f : -0.5f) + step), 1024, 0);
+        }
+    }
+}
 
 extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D1FC(u8 *);
