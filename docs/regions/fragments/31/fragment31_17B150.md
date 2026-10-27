@@ -99,3 +99,7 @@ void func_88208FF0(void) {
     11b8:	00000000 	nop
 
 ```
+
+## 2026-10-28 — `func_8820B09C` matched
+
+Predicate: returns 1 when the menu state has no pending word at + 4, `D_8800EF58 == 0`, the current entry's slot word at `+ 0x6C + index * 4` is 0, and the record `func_88201ED0(byte[0xA + 2i], byte[0xB + 2i])` has byte 0x15 set. It must be one `&&` chain with an initialized `result`; guard returns score 0.71.
