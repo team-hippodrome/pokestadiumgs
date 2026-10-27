@@ -108,7 +108,21 @@ s32 func_88A00FD4(u8 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A01018.s")
+s32 func_88A01018(u8 arg0) {
+    u8 *table;
+    s16 index;
+    u32 i;
+
+    table = D_88A01C64;
+    index = table[7];
+    for (i = 0; i < table[3]; i++) {
+        if (arg0 < ((u8 (*)[2])(table + 9))[index][0]) {
+            break;
+        }
+        index++;
+    }
+    return index;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A01074.s")
 
