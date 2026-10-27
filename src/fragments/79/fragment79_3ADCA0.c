@@ -2462,7 +2462,29 @@ void func_841482BC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414831C.s")
+void func_8414831C(u8 arg0) {
+    s32 offset;
+
+    D_8419A0B0 = func_80047588(3, 0);
+    func_8413E7A8(arg0);
+    func_8413E728(arg0);
+    func_8413FC34();
+    // For each of the 52 0x28-byte entries at D_84186188: func_84146B0C,
+    // func_84146DBC, then set bits 0 and 1 of byte 8.
+    offset = 0;
+    do {
+        func_84146B0C(&D_84186188[offset], 0);
+        func_84146DBC(&D_84186188[offset], 0);
+        offset += 0x28;
+        D_84186188[offset - 0x20] |= 1;
+        D_84186188[offset - 0x20] |= 2;
+    } while (offset != 52 * 0x28); // D_841869A8 ends the array
+    if (arg0 != 0 && func_800061EC() == 0) {
+        D_8419D7A0 = func_80049148(2, -1, func_8004C874(22, 0)) + 80;
+        D_84186188[0x788] &= ~1;
+        D_84186188[0x788] &= ~2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
