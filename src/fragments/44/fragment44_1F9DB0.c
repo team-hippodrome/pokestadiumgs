@@ -157,7 +157,28 @@ u8 func_8AF0C96C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0D398.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0D704.s")
+extern s16 D_8AF2ECF8;
+extern u8 *D_8AF2E8DC;
+extern u8 *D_8AF2E8E0;
+void func_8AF0D704(void) {
+    switch (D_8AF2ECF8) {
+        case 0:
+        case 2:
+            *(s16 *)(D_8AF2E8DC + 0x32) = 48;
+            *(s16 *)(D_8AF2E8E0 + 0x32) = 49;
+            *(u16 *)(D_8AF2E8E0 + 2) |= 2;
+            break;
+        case 1:
+            *(s16 *)(D_8AF2E8DC + 0x32) = 269;
+            *(s16 *)(D_8AF2E8E0 + 0x32) = 270;
+            if (func_8AF00020()) {
+                *(u16 *)(D_8AF2E8E0 + 2) |= 2;
+            } else {
+                *(u16 *)(D_8AF2E8E0 + 2) &= ~2;
+            }
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0D7C8.s")
 
