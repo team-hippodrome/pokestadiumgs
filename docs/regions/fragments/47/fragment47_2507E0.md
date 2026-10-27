@@ -53,15 +53,6 @@ function rename.
   all opcodes but colors the format selector and saved draw arguments
   differently. Follow the declaration and step-lifetime evidence in the
   predecessor region notes; readonly ownership is now available in this unit.
-- `func_8600B100` — requeue. The 552-byte / 138-instruction draw routine
-  requires a 72-byte frame. A function-local static phase counter removes
-  the extra global-address register and recovers the original instruction
-  sequence. The scoped triangular-phase candidate has two remaining stack
-  accesses at offset 60 instead of 44; the additional-width and final
-  dimension temporaries already occupy their expected offsets, 64 and 40.
-  Data and float-pool relocation fields must be resolved separately from
-  these two true instruction differences. Next investigate expression and
-  temporary lifetimes while preserving both width queries.
 
 ## 2026-10-27 — writable renderer data and matching animated indicator
 
@@ -103,3 +94,37 @@ starts and sizes, and normalized relocations. The final forced native IDO
 7.1 rebuild with the host C check enabled reproduces US retail MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Only the indicator's assembly owner is
 removed in this batch; the panel and scaled-strip owners remain unresolved.
+
+## 2026-10-27 — matching pulsing panel
+
+Starting revision `a29ec60c889293d946a7845a60868fc66560344d` (indicator batch).
+`func_8600B100` passes canonical acceptance and the full US retail ROM gate:
+552 bytes / 138 instructions with the original 72-byte frame. It loads
+resource 401, image 5; advances a signed phase modulo 32 unless animation
+is held; reflects the phase around 16; and computes horizontal growth from
+that triangular pulse. It centers the expanded image around x = 138 at
+y = 16 and draws with environment alpha 200. Both texture-width queries
+remain because they occur at distinct points in the original routine.
+
+As with the indicator, the counter is an initialized function-local static.
+Move its existing word at `D_8600D404` into that definition, preserving the
+owned writable data byte for byte. The caller's flag is already backed by
+the byte-high-bit producer described above; replace the remaining panel
+pointer declaration and cast with the actual `u32` flag interface.
+
+Keep a scoped `f32 scale` for the reflected phase multiplied by `0.2f`, and
+compute additional width from `((scale * 0.0625f + 1.0f) - 1.0f)` times the
+texture width. The addition and subtraction preserve single-precision
+rounding in the original instruction sequence. An explicit integer-phase
+local matches every opcode and register but spills that phase at 60 rather
+than 44. A single float carrier instead shifts two temporary homes. The
+scoped scale local recovers the phase temporary at 44, final width at 40,
+and additional width at 64 without artificial storage.
+
+Post-acceptance declaration cleanup, static-local naming, and formatting
+are checked in all eight combinations with ordinary and blank-prefixed
+sources: 16 exact whole-module comparisons of section bytes/extents,
+function starts/sizes, and normalized relocations. A forced native IDO 7.1
+rebuild with the host C check enabled reproduces retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Only `func_8600A20C` remains an assembly
+owner in this rendering unit.
