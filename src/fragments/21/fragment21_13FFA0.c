@@ -204,7 +204,53 @@ s32 func_82500D24(s32 arg0, void *arg1) { s32 index = *(s32 *)((u8 *)arg1 + 0x20
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82500D68.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern void *D_82508FAC[];
+extern s16 D_82508F94;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+s32 func_82500D68(s32 arg0, u8 *arg1) {
+    s32 pad0; // FAKE
+    s32 index;
+    s32 pad1[2]; // FAKE
+    u8 *tex;
+    s32 w;
+    u8 *bar;
+    u8 *rec;
+    s32 x;
+    s32 y;
+    s32 h;
+
+    index = *(s32 *)(arg1 + 0x20);
+    switch (arg0) {
+        case 0:
+            *(u16 *)(arg1 + 2) &= 0xFFFD;
+            break;
+        case 1:
+            tex = (u8 *)func_8004C990(*(u16 *)(arg1 + 0x24), *(u16 *)(arg1 + 0x26));
+            if (tex == NULL) {
+                break;
+            }
+            rec = (u8 *)D_82508FAC[index];
+            if (rec == NULL) {
+                break;
+            }
+            bar = (u8 *)func_8004C990(*(u16 *)(rec + 0x24), *(u16 *)(rec + 0x26));
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255, D_82508F94);
+            func_8004D1FC(tex);
+            y = *(s16 *)(rec + 0xA);
+            h = *(u16 *)(bar + 2);
+            w = *(s16 *)(rec + 8);
+            GfxRect_DrawTextured(0, y, w, h, 0, 0, 0, 1024, 0);
+            x = *(u16 *)bar + *(s16 *)(rec + 8);
+            GfxRect_DrawTextured(x, y, 640 - x, h, 0, 0, 0, 1024, 0);
+            break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
