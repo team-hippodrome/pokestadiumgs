@@ -127,7 +127,24 @@ s32 func_88210E40(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88210ECC.s")
+extern s32 D_882346F0;
+extern s32 func_8800005C(void);
+s32 func_88210ECC(void *arg0) {
+    s32 result = 0;
+
+    if (*(s32 *)(D_88234720 + 4) == 0) {
+        if ((D_882346F0 == 0 && (*(s16 *)(D_88234720 + 8) == 1 || *(s16 *)(D_88234720 + 8) == 3)) || D_882346F0 == 3) {
+            if (func_8800005C() != 0 && *(u8 *)D_88234720 == 1 && func_88210D48(arg0) != 0) {
+                result = 1;
+            } else if (func_88210DC4(arg0) != 0) {
+                result = 2;
+            } else if (func_88210E40(arg0) != 0) {
+                result = 3;
+            }
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88210FAC.s")
 
