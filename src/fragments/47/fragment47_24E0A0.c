@@ -545,14 +545,15 @@ f64 func_86009C58(void *arg0, u8 *arg1) {
 extern f64 D_8600D988;
 
 void func_86009D7C(void *arg0, f64 arg1, f64 arg2, f64 arg3, s32 arg4) {
-    s32 unused;
+    f32 cosine;
     s32 sign;
     f32 half;
 
     *(s32 *)((u8 *)arg0 + 0x48) = arg4;
     *(f64 *)((u8 *)arg0 + 0x8) = arg2;
     half = (f32)((D_8600D988 - arg3) * 0.5);
-    *(f64 *)arg0 = *(f64 *)((u8 *)arg0 + 0x8) / (f64)__cosf(half);
+    cosine = __cosf(half);
+    *(f64 *)arg0 = *(f64 *)((u8 *)arg0 + 0x8) / (f64)cosine;
     *(f64 *)((u8 *)arg0 + 0x10) = 0.0;
     *(f64 *)((u8 *)arg0 + 0x20) = 0.0;
     sign = (*(s32 *)((u8 *)arg0 + 0x48) != 0) ? 1 : -1;
@@ -603,19 +604,11 @@ s32 func_86009FB8(void *arg0, void *arg1, void *arg2) {
     return 0;
 }
 
-typedef struct Copy8600A04C {
-    s32 a;
-    s32 b;
-    s32 c;
-    s32 d;
-    s32 e;
-    s32 f;
-} Copy8600A04C;
-extern Copy8600A04C D_8600D970;
+extern Fragment47Point D_8600D970;
 extern void func_87C010AC(void *, void *, void *);
 s32 func_8600A04C(void *arg0, void *arg1, void *arg2) {
-    Copy8600A04C sp30;
-    Copy8600A04C sp18;
+    Fragment47Point sp30;
+    Fragment47Point sp18;
 
     if (func_86009FB8(arg0, arg1, &sp30) != 0) {
         sp18 = D_8600D970;
@@ -829,22 +822,25 @@ void func_8600B474(void *arg0, void *arg1) {
 extern s32 func_8004C990(s32, s32);
 
 void func_8600B51C(s32 arg0, s32 arg1) {
-    volatile u8 frame_pad[8];
-    s32 sp3C;
-    s32 sp38;
-    s32 sp34;
-    u8 *temp_v0;
+    s32 left;
+    s32 top;
+    s32 draw_width;
+    s32 height;
+    s32 width;
+    u8* texture;
 
-    temp_v0 = func_8004C990(0x191, 0);
-    func_8004D1FC(temp_v0);
-    sp34 = func_8004CA10(temp_v0);
-    sp38 = func_8004CA24(temp_v0);
-    sp3C = func_8004CA10(temp_v0);
+    texture = func_8004C990(401, 0);
+    func_8004D1FC(texture);
+    width = func_8004CA10(texture);
+    height = func_8004CA24(texture);
+    draw_width = func_8004CA10(texture);
+    left = arg0 - width / 2;
+    top = arg1 - height / 2;
     func_8600A650(
-        (f32)(arg0 - sp34 / 2),
-        (f32)(arg1 - sp38 / 2),
-        (f32)sp3C,
-        (f32)func_8004CA24(temp_v0),
+        (f32)left,
+        (f32)top,
+        (f32)draw_width,
+        (f32)func_8004CA24(texture),
         0, 0, 1.0f, 1.0f
     );
 }
