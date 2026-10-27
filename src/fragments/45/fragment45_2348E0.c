@@ -2,6 +2,8 @@
 
 
 #ifdef VERSION_US
+// Pointed to by D_8AB112F8 in .data; it opens this file's .rodata.
+const char D_8AB11C90[] = "\n";
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB0F760.s")
 #endif
 
@@ -17,7 +19,68 @@ void func_8AB0FE08(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB0FF40.s")
+extern s32 D_8AB17408;
+extern void *D_8AB11D08;
+extern u8 *D_8AB17250;
+extern void func_8AC00F04(void *);
+extern void func_800503A4(u8 *);
+extern s32 func_8AB1007C(s32);
+extern s32 func_8AB100E0(s32);
+extern s32 func_8AB10144(s32);
+extern s32 func_8AB10248(s32);
+extern s32 func_8AB103B0(s32);
+extern s32 func_8AB104FC(s32);
+extern s32 func_8AB1075C(s32);
+extern s32 func_8AB10AD0(s32);
+extern s32 func_8AB10D30(s32);
+extern s32 func_8AB10DE4(s32);
+extern s32 func_8AB10F14(s32);
+// Declared without a prototype: func_8AB10D28 (defined below) takes no parameters, but this call
+// site loads 2 into $a0 like the other state handlers.
+extern s32 func_8AB10D28();
+void func_8AB0FF40(s32 state) {
+    D_8AB17408 = state;
+    func_8AC00F04(D_8AB11D08);
+    func_800503A4(D_8AB17250);
+    switch (state) {
+    case 61:
+        func_8AB1007C(2);
+        break;
+    case 62:
+        func_8AB100E0(2);
+        break;
+    case 63:
+        func_8AB10144(2);
+        break;
+    case 64:
+        func_8AB10248(2);
+        break;
+    case 65:
+        func_8AB103B0(2);
+        break;
+    case 66:
+        func_8AB104FC(2);
+        break;
+    case 67:
+        func_8AB1075C(2);
+        break;
+    case 68:
+        func_8AB10AD0(2);
+        break;
+    case 70:
+        func_8AB10D30(2);
+        break;
+    case 69:
+        func_8AB10D28(2);
+        break;
+    case 71:
+        func_8AB10DE4(2);
+        break;
+    case 73:
+        func_8AB10F14(2);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

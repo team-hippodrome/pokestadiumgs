@@ -229,5 +229,71 @@ s32 func_8821CC0C(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821CCE8.s")
+extern void func_88004B60(void *, s32, void *);
+extern s32 func_8821C820(S1_unk_func_88316128 *, S1_unk_func_88316128 *);
+extern s32 func_8821CB48(S1_unk_func_88316128 *, S1_unk_func_88316128 *);
+extern void *D_88234750;
+extern u16 D_88234744;
+extern s32 D_882347D0;
+
+// Sorts the D_88234744 entries at D_88234750 with the comparator selected by
+// sort_mode (1-16); mode 0 leaves the list unsorted. arg1 is stored in D_882347D0.
+void func_8821CCE8(u32 sort_mode, s32 arg1) {
+    void *compare;
+
+    D_882347D0 = arg1;
+    switch (sort_mode) {
+        case 0:
+            return;
+        case 1:
+            compare = (void *)func_8821C690;
+            break;
+        case 2:
+            compare = (void *)func_8821C6B0;
+            break;
+        case 3:
+            compare = (void *)func_8821C6D0;
+            break;
+        case 4:
+            compare = (void *)func_8821C6F0;
+            break;
+        case 5:
+            compare = (void *)func_8821C710;
+            break;
+        case 6:
+            compare = (void *)func_8821C730;
+            break;
+        case 7:
+            compare = (void *)func_8821C750;
+            break;
+        case 8:
+            compare = (void *)func_8821C770;
+            break;
+        case 9:
+            compare = (void *)func_8821C820;
+            break;
+        case 10:
+            compare = (void *)func_8821C924;
+            break;
+        case 11:
+            compare = (void *)func_8821C970;
+            break;
+        case 12:
+            compare = (void *)func_8821CA24;
+            break;
+        case 13:
+            compare = (void *)func_8821CADC;
+            break;
+        case 14:
+            compare = (void *)func_8821CAFC;
+            break;
+        case 15:
+            compare = (void *)func_8821CB48;
+            break;
+        case 16:
+            compare = (void *)func_8821CC0C;
+            break;
+    }
+    func_88004B60(D_88234750, D_88234744, compare);
+}
 #endif

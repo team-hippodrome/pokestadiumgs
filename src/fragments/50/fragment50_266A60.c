@@ -203,7 +203,6 @@ s32 SceneCollision_TestBoundedPlaneHit(u8 *node, f32 *plane, f32 limit, f32 *fir
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8620E05C;
 extern void func_800277F0(u32, void *);
 typedef struct Candidate86200AD4Vec { f32 x, y, z; } Candidate86200AD4Vec;
 typedef struct Candidate86200AD4Obj { u8 pad0[0x10]; Candidate86200AD4Vec v; u8 pad1[0x2C]; Candidate86200AD4Vec p; } Candidate86200AD4Obj;
@@ -221,7 +220,7 @@ void func_86200AD4(Candidate86200AD4Obj *arg0, Candidate86200AD4Obj1 *arg1, Cand
     arg2->x = arg2->x + temp_fv0 * temp_fv1;
     arg2->y = arg2->y + arg3->y * temp_fv1;
     arg2->z = arg2->z + arg3->z * temp_fv1;
-    if (*(f32 *)((u8 *)D_8620E198 + 0x64) * 0.75f * 100.0f * arg1->q34 * D_8620E05C < arg4 && arg1->q48 > 55.0f) {
+    if (*(f32 *)((u8 *)D_8620E198 + 0x64) * 0.75f * 100.0f * arg1->q34 * 0.04f < arg4 && arg1->q48 > 55.0f) {
         func_800277F0(0xBF03U, (u8 *)arg1 + 0x38);
     }
 }
@@ -612,20 +611,17 @@ void func_86203ED8(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8620E0B8;
-extern f32 D_8620E0BC;
-extern f32 D_8620E0C0;
 extern void func_87F06240(s32, s32, f32, f32, s32);
 extern Gfx * D_800D0510;
 void func_86203F50(s32 n, s32 x, s32 y, u8 r1, u8 g1, u8 b1, u8 r2, u8 g2, u8 b2) {
     gDPSetPrimColor(D_800D0510++, 0, 0, r1, g1, b1, 0xFF);
     gDPSetEnvColor(D_800D0510++, r2, g2, b2, 0xFF);
     if (n < 10) {
-        func_87F06240(x + 0x24, y + 2, D_8620E0B8, D_8620E0B8, n % 10);
+        func_87F06240(x + 0x24, y + 2, 0.57f, 0.57f, n % 10);
         return;
     }
-    func_87F06240(x + 0x1C, y + 2, D_8620E0BC, D_8620E0BC, n / 10);
-    func_87F06240(x + 0x29, y + 2, D_8620E0C0, D_8620E0C0, n % 10);
+    func_87F06240(x + 0x1C, y + 2, 0.57f, 0.57f, n / 10);
+    func_87F06240(x + 0x29, y + 2, 0.57f, 0.57f, n % 10);
 }
 #endif
 
@@ -635,10 +631,6 @@ extern void func_80044270(s32, s32, s16, s16, s32, s32, s32, s32, s32);
 extern void func_87F0D600(void *, s32, s32, s32, f32, f32);
 extern void func_87F061F0(void);
 extern s32 func_80001FF0(void);
-extern f32 D_8620E0C4;
-extern f32 D_8620E0C8;
-extern f32 D_8620E0CC;
-extern f32 D_8620E0D0;
 extern Gfx D_80094E38[];
 extern Gfx D_80094F50[];
 extern s32 func_8004C990(s32, s32);
@@ -658,7 +650,7 @@ void func_862040AC(void) {
     gSPDisplayList(D_800D0510++, D_80094E38);
         p = (u16 *)func_8004C990(0x1B2, *((u8 *)D_8620E198 + 0x73CB8));
         func_8004D1FC(p);
-        scale = D_8620E0C4;
+        scale = 0.8f;
         xa = (f32)p[0] * scale;
         if (xa > 0.0f) { bx = 0.5f; } else { bx = -0.5f; }
         ya = (f32)p[1] * scale;
@@ -708,11 +700,11 @@ void func_862040AC(void) {
     gDPSetPrimColor(D_800D0510++, 0, 0, 0xC8, 0xFF, 0x73, 0xFF);
     gDPSetEnvColor(D_800D0510++, 0, 0x46, 0, 0xFF);
     if (amount < 10) {
-        func_87F06240(0xF4, 0xC0, D_8620E0C8, D_8620E0C8, amount % 10);
+        func_87F06240(0xF4, 0xC0, 0.82f, 0.82f, amount % 10);
         return;
     }
-    func_87F06240(0xEB, 0xC0, D_8620E0CC, D_8620E0CC, amount / 10);
-    func_87F06240(0xFD, 0xC0, D_8620E0D0, D_8620E0D0, amount % 10);
+    func_87F06240(0xEB, 0xC0, 0.82f, 0.82f, amount / 10);
+    func_87F06240(0xFD, 0xC0, 0.82f, 0.82f, amount % 10);
     }
 }
 #endif
@@ -847,7 +839,89 @@ void func_86204F20(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86204FEC.s")
+extern void func_87C037C0(void *, void *);
+extern void func_87F0C3EC(void *);
+extern void func_87F006BC(void);
+extern void func_86204A9C(void);
+extern void func_86202AC4(void);
+extern s32 func_87F02104(void);
+extern void func_87F0D5B8(void *);
+extern s32 func_87F0C6F4(void *);
+void func_86204FEC(void) {
+    func_87C037C0((u8 *)D_8620E198 + 0x73CC4, *(void **)((u8 *)*(void **)((u8 *)D_8620E198 + 0xF0) + 12));
+    func_87F0C3EC((u8 *)D_8620E198 + 0x70);
+    if (func_87F00930() == 0) {
+        func_87F006BC();
+    }
+    switch (*(s32 *)((u8 *)D_8620E198 + 0xE8)) {
+        case 0:
+            *(s32 *)((u8 *)D_8620E198 + 0x73CBC) = 1;
+            if (StageContext_GetFadeMode() == 0) {
+                *(s32 *)((u8 *)D_8620E198 + 0xE8) = 1;
+            }
+            break;
+        case 1:
+            func_86204A00();
+            break;
+        case 2:
+            func_86204EB8();
+            break;
+        case 3:
+            *(s32 *)((u8 *)D_8620E198 + 0x73CBC) = 0;
+            func_86204F20();
+            break;
+        case 4:
+            switch (func_87F01A40()) {
+                case 0:
+                case 2:
+                    func_86204A9C();
+                    break;
+                case 3:
+                    func_86200020(0);
+                    break;
+                case 4:
+                    func_86200020(1);
+                    break;
+            }
+            break;
+        case 5:
+            func_86203ED8();
+            func_86203D50();
+            break;
+        case 6:
+            func_86203D50();
+            *(s32 *)((u8 *)D_8620E198 + 0x73CBC) = 2;
+            switch (func_87F02104()) {
+                case 1:
+                    StageContext_SetClearColor(0);
+                    *(s32 *)((u8 *)D_8620E198 + 0xE8) = 7;
+                    *(s32 *)((u8 *)D_8620E198 + 0xEC) = 0;
+                    StageFade_StartFromTransparent(10);
+                    break;
+                case 2:
+                    func_86200020(0);
+                    break;
+                case 3:
+                    func_86200020(1);
+                    break;
+            }
+            break;
+        case 7:
+            if (StageContext_GetFadeMode() == 1) {
+                *(s32 *)((u8 *)D_8620E198 + 0xE8) = *(s32 *)((u8 *)D_8620E198 + 0xEC);
+                if (*(s32 *)((u8 *)D_8620E198 + 0xE8) == 0) {
+                    func_86202AC4();
+                    StageFade_StartFromOpaque(10);
+                }
+            }
+            break;
+    }
+    func_87F0D5B8((u8 *)D_8620E198 + 0xF8);
+    if (func_87F0C6F4((u8 *)D_8620E198 + 0x120) != 0) {
+        *(s32 *)((u8 *)D_8620E198 + 0x73CC0) = 3;
+        *(s32 *)((u8 *)D_8620E198 + 0xE8) = 8;
+    }
+}
 #endif
 
 #ifdef VERSION_US

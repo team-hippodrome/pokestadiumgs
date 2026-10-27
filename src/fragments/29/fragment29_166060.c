@@ -106,7 +106,35 @@ Color_88000510 *func_88000510(Color_88000510 *dest, s8 arg0) {
     return dest;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000578.s")
+extern Color_88000510 D_88005FFC[];
+// Copies color D_88005FFC[arg1 - 1] to dest for arg1 1-6 and the last entry,
+// D_88005FFC[6], for any other value.
+Color_88000510 *func_88000578(Color_88000510 *dest, u8 arg1) {
+    switch (arg1) {
+        case 1:
+            *dest = D_88005FFC[0];
+            break;
+        case 2:
+            *dest = D_88005FFC[1];
+            break;
+        case 3:
+            *dest = D_88005FFC[2];
+            break;
+        case 4:
+            *dest = D_88005FFC[3];
+            break;
+        case 5:
+            *dest = D_88005FFC[4];
+            break;
+        case 6:
+            *dest = D_88005FFC[5];
+            break;
+        default:
+            *dest = D_88005FFC[6];
+            break;
+    }
+    return dest;
+}
 
 extern u8 D_8800ED28[];
 void func_880006BC(u8 *arg0) { struct S { u8 a,b,c; }; *(struct S *)&D_8800ED28 = *(struct S *)arg0; }

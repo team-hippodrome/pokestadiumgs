@@ -129,10 +129,6 @@ func_84164C28 = OwnerLinkedFourStream_UpdateNodeChain;
 D_80128C58 = D_80128C54 + 0x4;
 D_80128C5C = D_80128C54 + 0x8;
 
-/* Attachment scales retain their original addresses inside this C data block. */
-D_86409C4C = fragments_52_fragment52_285F60 + 0xC;
-D_86409C50 = fragments_52_fragment52_285F60 + 0x10;
-
 /* Fragment16 fade-state fields retain their original addresses inside the
  * C-owned data block (func_82000794's mode/counter/alpha words; the three
  * still-asm fade users and the in-file C externs keep these spellings). */

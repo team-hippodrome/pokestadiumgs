@@ -126,7 +126,77 @@ void func_87E00360(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00394.s")
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(void *, void *);
+extern void MainPool_FinalizeAllocation(void *);
+extern void func_87F0E390(u8 *, s32);
+extern s32 func_8004D690(s32);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void *func_80037E9C(void *, void *);
+extern void func_87E107B4(u8 *);
+extern void func_87E13380(u8 *);
+extern u8 D_87E19670[];
+extern u8 D_87E1B9C0;
+extern u8 D_87E1B9D8;
+extern u8 D_87E1B9F0;
+extern u8 D_87E1BA08;
+
+void func_87E00394(void) {
+    void *pool = MainPool_AllocState(main_pool_get_available(), 0);
+
+    *(s32 *)(D_87E1BA20 + 0x20) = func_80040E80(pool, D_87E19670);
+    MainPool_FinalizeAllocation(pool);
+    *(s32 *)(D_87E1BA20 + 0x3114) = 0;
+    func_87F0E390(D_87E1BA20 + 0x3108, *(s32 *)D_87E1BA20);
+    func_8004C8C0(418);
+    *(s32 *)(D_87E1BA20 + 0x4) = func_8004D690(18);
+    *(s32 *)(D_87E1BA20 + 0x8) = *(s32 *)(D_87E1BA20 + 0x4);
+    *(s32 *)(D_87E1BA20 + 0xC) = *(s32 *)(D_87E1BA20 + 0x4);
+    *(s32 *)(D_87E1BA20 + 0x10) = 0;
+    *(s32 *)(D_87E1BA20 + 0x14) = 0;
+    *(s32 *)(D_87E1BA20 + 0x18) = 0;
+    ModelRenderer_InitDisplayRoots();
+    func_80037E9C(NULL, &D_87E1B9C0);
+    func_80037E9C(NULL, &D_87E1B9D8);
+    func_80037E9C(NULL, &D_87E1B9F0);
+    func_80037E9C(NULL, &D_87E1BA08);
+    func_87E107B4(D_87E1BA20 + 0x24C8);
+    *(s32 *)(D_87E1BA20 + 0x2E04) = 1;
+    func_87E13380(D_87E1BA20 + 0x2E08);
+    switch (*(s32 *)(*(u8 **)D_87E1BA20 + 0x2184)) {
+        case 0:
+            func_87E0006C();
+            func_87E00148();
+            func_80021ED8(72);
+            break;
+        case 1:
+            *(s32 *)(D_87E1BA20 + 0x10) = 1;
+            *(s32 *)(D_87E1BA20 + 0x18) = 9;
+            func_87E0027C();
+            func_87E00360();
+            break;
+        case 2:
+            *(s32 *)(D_87E1BA20 + 0x10) = 1;
+            *(s32 *)(D_87E1BA20 + 0x18) = 9;
+            func_87E002E4();
+            break;
+        case 3:
+        case 4:
+            func_87E0006C();
+            func_87E00148();
+            func_87E00360();
+            break;
+        case 6:
+            func_87E00100(*(s32 *)(*(u8 **)D_87E1BA20 + 0x21F8));
+            func_87E00360();
+            break;
+        case 5:
+            func_87E00100(*(s32 *)(*(u8 **)D_87E1BA20 + 0x21F8));
+            func_87E00360();
+            break;
+    }
+}
 
 extern void Geo_RenderRootNode(s32);
 extern void GeoRender_AdvanceFrameCounter();
@@ -173,7 +243,63 @@ void func_87E00648(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0072C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00A84.s")
+extern void func_800088DC(void);
+extern void func_87E0072C(void);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern void func_87E11AB8(void);
+extern void func_87E079FC(u8 *);
+extern void func_87E0276C(u8 *);
+extern void func_87E03448(u8 *);
+extern void func_87E053D0(u8 *);
+extern void func_87E0A918(u8 *);
+extern void func_87E183A0(u8 *);
+extern void func_87E13458(void);
+extern void func_87F0DFB4(u8 *);
+extern void StageLoader_UpdateSegments(void);
+extern void func_80008648(void);
+
+void func_87E00A84(void) {
+    func_800088DC();
+    func_87E0072C();
+    func_8000766C(&D_800D0510, 0, 0, 320, 240);
+    if (*(s32 *)(D_87E1BA20 + 0x2E04) == 0) {
+        func_87E11AB8();
+    }
+    switch (*(s32 *)(D_87E1BA20 + 0x24)) {
+        case 4:
+            func_87E079FC(D_87E1BA20 + 0x734);
+            func_87E00590();
+            break;
+        case 0:
+            func_87E0276C(D_87E1BA20 + 0x28);
+            func_87E00590();
+            break;
+        case 1:
+            func_87E03448(D_87E1BA20 + 0x2B0);
+            func_87E00590();
+            break;
+        case 3:
+            func_87E053D0(D_87E1BA20 + 0x4B8);
+            func_87E00590();
+            break;
+        case 5:
+            func_87E0A918(D_87E1BA20 + 0x8C4);
+            break;
+        case 6:
+            func_87E183A0(D_87E1BA20 + 0x2260);
+            func_87E00590();
+            break;
+        case 2:
+            break;
+    }
+    func_87E13458();
+    func_87F0DFB4(D_87E1BA20 + 0x30F4);
+    if (*(s32 *)(D_87E1BA20 + 0x2E04) == 1) {
+        func_87E11AB8();
+    }
+    StageLoader_UpdateSegments();
+    func_80008648();
+}
 
 extern s32 func_87E182A8(u8 *);
 extern void func_87E17F48(void);
@@ -201,7 +327,37 @@ void func_87E00BDC(s32 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00C70.s")
+extern s32 func_87E021CC(u8 *);
+extern void func_87E01F04(u8 *);
+
+void func_87E00C70(s32 *arg0) {
+    s32 state = func_87E021CC(D_87E1BA20 + 0x28);
+
+    if (state != 5) {
+        func_87E01F04(D_87E1BA20 + 0x28);
+        switch (state) {
+            case 1:
+                *(s32 *)(*(u8 **)D_87E1BA20 + 0x2184) = 2;
+                func_87E00184();
+                break;
+            case 0:
+                *(s32 *)(*(u8 **)D_87E1BA20 + 0x2184) = 1;
+                func_87E00184();
+                break;
+            case 2:
+                func_87E000D4();
+                func_87E00100(0);
+                break;
+            case 3:
+                func_87E000D4();
+                func_87E00100(2);
+                break;
+            case 4:
+                func_87E00320(arg0);
+                break;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00D54.s")
 
@@ -249,7 +405,36 @@ void func_87E00ED4(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00F4C.s")
+extern s32 func_87E04ED4(u8 *);
+extern void func_87E04AA4(u8 *);
+
+void func_87E00F4C(s32 arg0) {
+    s32 state = func_87E04ED4(D_87E1BA20 + 0x4B8);
+
+    if (state != 5) {
+        func_87E04AA4(D_87E1BA20 + 0x4B8);
+        switch (state) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                switch ((*(u8 **)D_87E1BA20)[0x2180]) {
+                    case 0:
+                        func_87E000D4();
+                        func_87E0027C();
+                        break;
+                    case 1:
+                        func_87E000D4();
+                        func_87E002E4();
+                        break;
+                }
+                break;
+            case 4:
+                func_87E00184();
+                break;
+        }
+    }
+}
 
 extern s32 func_87E078DC(u8 *);
 extern void func_87E07B74(u8 *);

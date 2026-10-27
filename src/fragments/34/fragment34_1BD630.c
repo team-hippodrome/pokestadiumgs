@@ -58,7 +58,133 @@ void func_88500494(void) {
     func_88004180();
     func_80008648();
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_8850052C.s")
+extern s32 D_880068B4;
+extern u8 *D_80087200;
+extern u8 D_8850D6C8;
+extern u8 D_8850D6D9[];
+extern u8 D_8850D679[];
+extern s32 D_8852301C;
+extern s32 D_88523020;
+extern s32 D_88804054;
+extern void func_800226C0(s32);
+extern void func_80057944(u8);
+extern void func_88500020(void);
+extern s32 func_88504E94(s32);
+extern s32 func_8850CED8(s32);
+extern s32 fragment29_main(u8);
+
+// Steps the state machine at D_8850D670 while D_880068B4 is set. Returns 0 once
+// state 7 sees fade mode 1, otherwise 1.
+s32 func_8850052C(void) {
+    s32 result = 1;
+    s32 pad; // FAKE: unused; enlarges the frame to 0x28 bytes; diff score 42 without it.
+    s32 first;
+
+    if (D_880068B4 != 0) {
+        switch (D_8850D670) {
+            case 0:
+                if (StageContext_GetFadeMode() == 0) {
+                    func_885002A0(1);
+                }
+                break;
+            case 1:
+                if (*(u16 *)(D_80087200 + 8) & 0x4000) {
+                    func_800226C0(3);
+                    func_885002A0(7);
+                } else if (*(u16 *)(D_80087200 + 8) & 0x8000) {
+                    func_800226C0(2);
+                    func_885002A0(2);
+                }
+                break;
+            case 2:
+                if (func_88504E94(1) == -1) {
+                    func_885002A0(7);
+                } else {
+                    func_88500460(1);
+                    first = fragment29_main(D_8850D679[func_88504E94(0) * 20]);
+                    if (fragment29_main(D_8850D679[func_88504E94(1) * 20]) != first) {
+                        D_88804054 = 1;
+                    } else {
+                        D_88804054 = 0;
+                    }
+                }
+                break;
+            case 3:
+                switch (D_8850D6CC) {
+                    case 1:
+                        if (func_8850CED8(1)) {
+                            func_885002A0(4);
+                        }
+                        break;
+                    case 19:
+                        if (func_8850CED8(2)) {
+                            func_885002A0(4);
+                        }
+                        break;
+                    case 4:
+                    case 8:
+                    case 11:
+                        if (func_8850CED8(3)) {
+                            func_885002A0(2);
+                        }
+                        break;
+                    case 20:
+                        if (func_8850CED8(6)) {
+                            func_885002A0(5);
+                        }
+                        break;
+                    case 21:
+                        if (func_8850CED8(8)) {
+                            func_88500020();
+                            func_88500460(12);
+                        }
+                        break;
+                    case 12:
+                        if (func_8850CED8(10)) {
+                            func_885002A0(6);
+                        }
+                        break;
+                }
+                break;
+            case 4:
+                if (D_8850D6D9[D_8850D6C8 * 0xA960] != 0) {
+                    if (D_8850D6C8 == 0) {
+                        func_88500460(19);
+                    } else {
+                        func_88500460(20);
+                    }
+                    D_8850D6C8 ^= 1;
+                } else if (D_8850D6C8 == 0) {
+                    func_88500460(4);
+                } else {
+                    func_88500460(8);
+                    D_8850D6C8 = 0;
+                }
+                break;
+            case 5:
+                if (D_8852301C != 0) {
+                    func_88500460(21);
+                } else {
+                    func_88500460(11);
+                }
+                break;
+            case 6:
+                if (D_88523020 != 0) {
+                    func_885002A0(2);
+                } else {
+                    func_80057944(func_88504E94(1));
+                    func_885002A0(7);
+                }
+                break;
+            case 7:
+                if (StageContext_GetFadeMode() == 1) {
+                    result = 0;
+                }
+                break;
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_8850089C.s")
 
