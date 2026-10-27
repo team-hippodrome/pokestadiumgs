@@ -1162,7 +1162,8 @@
     - [0x2507E0, c,       fragments/47/fragment47_2507E0]
     - [0x251C30, c,       fragments/47/fragment47_251C30]
     - [0x2533F0, c,       fragments/47/fragment47_2533F0]
-    - [0x253770, data,    fragments/47/fragment47_data]
+    - [0x253770, .data,   fragments/47/fragment47_246640] # steering threshold, default vectors and configuration
+    - [0x2537C0, data,    fragments/47/fragment47_data]
     - [0x253A10, .data,   fragments/47/fragment47_2507E0] # slot colors, animation counters and retained initialization tables
     - [0x253A70, data,    fragments/47/fragment47_data_tail]
     - [0x253C70, .rodata, fragments/47/fragment47_246640] # callback/motion literals and state-update jump tables
