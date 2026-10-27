@@ -229,7 +229,22 @@ void func_86703DF4_padding(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86703E9C.s")
+extern Row86706A30 D_86710C20[];
+extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u8 D_86727CB0[];
+extern u32 func_8003570C(void);
+void func_86703E9C(s32 arg0) {
+    u32 rand2;
+    s32 pad; // FAKE
+    u32 rand1;
+    u32 rand0;
+
+    rand0 = func_8003570C();
+    rand1 = func_8003570C();
+    rand2 = func_8003570C();
+    func_87F03884(D_86727CB0, 0, &D_86710C20[arg0], 10.0f, 90.0f, -20.0f, (rand0 % 31) * 0x200,
+                  ((f32)rand1 / 4294967296.0f) * 1.5f * 5.0f, (rand2 % 3) + 2);
+}
 #endif
 
 #ifdef VERSION_US
