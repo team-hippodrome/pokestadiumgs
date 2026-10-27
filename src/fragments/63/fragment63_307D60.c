@@ -67,7 +67,20 @@ void func_87E0469C(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04790.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E049A4.s")
+extern s32 main_pool_alloc(s32, s32);
+extern void func_87F024CC(void);
+extern void func_87F024F4(void *, u8 *, s32);
+void func_87E049A4(void * arg0) {
+    u8 *mem;
+    s32 i;
+
+    mem = (u8 *)main_pool_alloc(0x630, 0);
+    for (i = 0; i < 4; i++) {
+        *(u8 **)(mem + 0x20 + i * 0x18C) = (u8 *)arg0 + 0x1C + i * 0x94;
+    }
+    func_87F024CC();
+    func_87F024F4((u8 *)arg0 + 8, mem, 4);
+}
 
 extern void func_87E04790(u8 *);
 extern void func_87E134C0(void);
