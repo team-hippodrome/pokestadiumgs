@@ -396,7 +396,7 @@ The routine accumulates the supplied vector, updates and caps linear velocity,
 advances position, updates the quaternion and its derived axis, and integrates
 angular velocity through `func_860095DC`. It copies the global point
 `D_8600D3D0` before adding the scaled derivative, rotates that local result
-back into object coordinates, and clears both accumulators at 0xF0 and 0x108.
+with the object's quaternion, and clears both accumulators at 0xF0 and 0x108.
 Preserve that global copy and the helper calls' order and side effects.
 
 Six genuine 24-byte working vectors occupy SP+88 through SP+231. Nested
@@ -415,3 +415,38 @@ fields changes code generation; retain the existing conservative prefix and
 explicit offsets for those accesses. The final forced rebuild, with the host
 C check enabled, produces retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
 No GS/Stadium 1 map supports a function rename.
+
+## 2026-10-27 — matching object contact response
+
+Starting revision `3b9af96a290a028bc0ac6ae56b1441cd7761ac9f` (#1659).
+`func_86008904` passes canonical acceptance and the full US retail-ROM gate:
+688 bytes / 172 instructions, retaining the original 288-byte frame.
+The arguments are two objects, a double divisor in A2/A3, and a point
+pointer at caller SP+16. It rejects parallel axes, out-of-range axis
+parameters, and excessive point separation before computing the contact
+normal, midpoint, response, and both corrected positions.
+
+Seven real 24-byte working vectors and five doubles account for the
+observed local objects. Keep the reversed-axis helper return nested in the
+`func_86008820` call: it remains live across the position subtraction and
+spills at SP+72. Use the first object's axis field directly; a separate
+axis alias leaves an additional compiler slot and enlarges the frame.
+The upper-bound sums use `unk_D0 + radius` to recover the floating-point
+operand order. All table loads remain loads from the existing globals.
+
+The same canonical transaction corrects two accepted helper interfaces.
+`func_86008038` receives a double coefficient at caller SP+24, forwards
+it in A2/A3 to `func_86007F6C`, and retains the tangent scale at SP+32.
+Represent the coefficient as one double in both signatures instead of
+splitting it into adjacent integers and dereferencing one integer's
+address as a double. Preserve the original scalar arithmetic and calls;
+the full ROM gate verifies both corrected helper bodies together with
+the new owner.
+
+Twelve complete-module controls cover declaration cleanup and formatting,
+including all four combinations with normal and blank-prefixed sources
+and the final removal of a repeated data declaration.
+The selected source preserves every section's bytes, extents, and
+relocations. A forced native rebuild with the host C check enabled
+reproduces retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No GS/Stadium 1
+map supports a function rename.
