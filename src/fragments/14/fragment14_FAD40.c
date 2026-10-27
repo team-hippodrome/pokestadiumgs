@@ -216,7 +216,33 @@ void *func_813035A0(void *arg0) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81303648.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_813037F0.s")
+extern void func_813049AC(u8 *, s16 *);
+extern void func_81304788(u8 *, s32 *, s32);
+extern void func_81306C18(void *, s32, s32 *, s32);
+extern void func_8130EB04(void *, s32, void *, s32, s32 *, s16 *, s16 *, s32);
+void func_813037F0(u8 *arg0) {
+    struct unk_func_813037F0 {
+        u8 unk_0000[19902];
+        u8 unk_4DBE[6];
+    };
+    s32 index;
+    s32 flags[8];
+    s16 position[4];
+    s32 mode;
+
+    index = func_8160A920(arg0);
+    func_813049AC(arg0, position);
+    func_81304788(arg0, flags, index);
+    func_81306C18(*(u8 **)(arg0 + 19872) + 3352, ((struct unk_func_813037F0 *)arg0)->unk_4DBE[index], flags, 1);
+    if (func_81302BB0(arg0) != 0) {
+        mode = 152;
+    } else {
+        mode = 146;
+    }
+    func_8130EB04(*(void **)(arg0 + 19872), arg0[10], ((u8 (*)[3304])arg0)[index] + 32,
+        3, flags, position, position, mode);
+    arg0[19901] = 10;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_813038D0.s")
 
