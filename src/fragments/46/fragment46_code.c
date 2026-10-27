@@ -157,7 +157,27 @@ void func_8AE0043C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE00C1C.s")
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(u8 *, s32 *);
+extern s32 func_8004EB58(s32, s32);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 main_pool_get_available(void);
+
+s32 func_8AE00C1C(s32 arg0) {
+    s32 state;
+    s32 archive;
+    s32 entry;
+
+    archive = func_8004DC6C(arg0);
+    func_8004DCFC((u8 *)archive, NULL);
+    state = MainPool_AllocState(main_pool_get_available(), 0);
+    entry = func_8004EB58(state, archive);
+    MainPool_FinalizeAllocation(state);
+    *(u16 *)(entry + 2) |= 1;
+    *(u16 *)(entry + 2) |= 2;
+    return entry;
+}
 #endif
 
 #ifdef VERSION_US
