@@ -365,7 +365,56 @@ s32 func_82501244(s32 arg0, void *arg1) { s32 index; u8 *entry; index = *(s32 *)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_825012B4.s")
+extern u8 *D_82508F84;
+extern u8 D_82508F68[];
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(u8 *, s32 *);
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern s32 func_8004EB58(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *func_8005049C(void *, s32);
+extern void func_8004E308(void *, void *, s32);
+extern s32 func_82500CF0(s32 arg0, void *arg1);
+extern s32 func_82500D24(s32 arg0, void *arg1);
+extern s32 func_82500D68(s32 arg0, u8 *arg1);
+extern s32 func_825010F8(s32 arg0, u8 *arg1);
+extern s32 func_82501244(s32 arg0, void *arg1);
+void func_825012B4(void) {
+    u8 *cfg;
+    u8 *base; // FAKE
+    s32 i;
+    u8 *slot;
+    s32 resource;
+    void *pool;
+
+    base = D_82508F84;
+    cfg = base;
+    for (i = 0; i < 2; i++) {
+        slot = D_82508F68 + i * 4;
+        if (*(s16 *)(cfg + 0x44) >= 0) {
+            resource = func_8004DC6C(*(s16 *)(cfg + 0x44));
+            if (resource != 0) {
+                func_8004DCFC((u8 *)resource, NULL);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                *(s32 *)(slot + 0x34) = func_8004EB58((s32)pool, resource);
+                MainPool_FinalizeAllocation(pool);
+            } else {
+                *(s32 *)(slot + 0x34) = 0;
+            }
+            *(s32 *)(slot + 0x3C) = 0;
+            if (*(void **)(slot + 0x34) != NULL) {
+                func_8004E308(func_8005049C(*(void **)(slot + 0x34), 0x725F636C /* 'r_cl' */), func_82500CF0, i);
+                func_8004E308(func_8005049C(*(void **)(slot + 0x34), 0x725F7267 /* 'r_rg' */), func_82500D24, i);
+                func_8004E308(func_8005049C(*(void **)(slot + 0x34), 0x636C6D70 /* 'clmp' */), func_82500D68, i);
+                func_8004E308(func_8005049C(*(void **)(slot + 0x34), 0x725F6C69 /* 'r_li' */), func_82501034, i);
+                func_8004E308(func_8005049C(*(void **)(slot + 0x34), 0x77696E64 /* 'wind' */), func_825010F8, i);
+                func_8004E308(func_8005049C(*(void **)(slot + 0x34), 0x736C6966 /* 'slif' */), func_82501244, i);
+            }
+        }
+        cfg += 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
