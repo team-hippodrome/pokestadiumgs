@@ -450,3 +450,36 @@ The selected source preserves every section's bytes, extents, and
 relocations. A forced native rebuild with the host C check enabled
 reproduces retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No GS/Stadium 1
 map supports a function rename.
+
+## 2026-10-27 — matching axis contact response
+
+Starting revision `065d58fd04fa258ed0e815769f10bb63084d723e` (#1660).
+`func_86008224` passes canonical acceptance and the full US retail-ROM gate:
+792 bytes / 198 instructions, with the original 224-byte frame. Its arguments
+are two objects, a double divisor in A2/A3, and a point pointer at caller
+SP+16. Four genuine 24-byte vectors hold the displacement, radial component,
+helper output, and normal.
+
+The routine projects displacement onto the first object's axis and checks
+radial separation against the second object's radius. The interior branch
+computes the point on that axis and applies mass-weighted corrections to
+both positions. The alternate branch tests the stored point at 0x98,
+copies it to the output, and corrects only the second position. Preserve
+both response calls and the original upper-bound comparison against
+`unk_D0`; this branch does not add the radius to that bound.
+
+The initial draft matches every opcode and local offset after inlining the
+stored-point address. Eight instruction words still allocate the coefficient
+table base to V0 rather than V1 after the normalization calls. The existing
+fragment-48 implementation of `func_87C00718` returns the destination pointer
+from both branches. Correct its stale local `void` declaration to `void *`
+in the canonical companion transaction; this reproduces all eight words
+and passes the full ROM gate for every existing caller in the module.
+No forced register, dummy assignment, or instruction rewrite is required.
+
+Twelve complete-module controls verify declaration cleanup, guard formatting,
+and direct point-field access, with normal and blank-prefixed sources. The
+selected cleanup preserves all section bytes, extents, and relocations. The
+final forced native rebuild includes the host C check and reproduces retail
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No GS/Stadium 1 map supports a
+function rename.

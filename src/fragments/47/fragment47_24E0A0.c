@@ -135,7 +135,7 @@ f64 func_86007F6C(void *arg0, void *arg1, f64 coefficient, void *arg4, s32 arg5,
 
 extern f64 D_8600DE78;
 extern void func_87C003BC(void *, void *, void *);
-extern void func_87C00718(void *, void *, f64);
+extern void *func_87C00718(void *, void *, f64);
 extern void *func_87C002DC(void *, void *);
 
 f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, f64 coefficient, f64 arg7) {
@@ -166,7 +166,56 @@ f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, f64 coeffi
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008224.s")
+extern f64 func_87C006B4(void *, void *);
+extern f64 func_87C006F0(void *, void *);
+extern f64 func_87C0068C(void *);
+f64 func_86008224(Fragment47MotionPrefix *first, Fragment47MotionPrefix *second, f64 divisor, Fragment47Point *point) {
+    f64 projection;
+    f64 radial_length;
+    f64 result;
+    f64 difference[3];
+    f64 radial[3];
+    f64 scratch[3];
+    f64 normal[3];
+    f64 penetration;
+    void *axis;
+
+    func_87C00160((u8 *)difference, (s32)second, (u8 *)first);
+    axis = first->unk_48;
+    projection = func_87C00208(difference, axis);
+    func_87C00160((u8 *)radial, (s32)difference, func_87C002A8(scratch, axis, projection));
+    radial_length = func_87C0068C(radial);
+    if (second->radius < radial_length) {
+        return 0.0;
+    }
+    if ((first->radius < projection) && (projection < first->unk_D0)) {
+        penetration = radial_length - second->radius;
+        func_87C00198(point, first, func_87C002A8(scratch, axis, projection));
+        func_87C00160((u8 *)normal, (s32)point, (u8 *)second);
+        func_87C00718(normal, normal, 1.0);
+        result = func_86008038((u8 *)first, (u8 *)second, normal, (s32)point, divisor,
+                             *(f64 *)(D_8600DE30 + 0x248), *(f64 *)(D_8600DE30 + 0x280));
+        func_87C00160((u8 *)second, (s32)second, func_87C002A8(scratch, normal,
+                             -penetration * first->unk_E0 / (second->unk_E0 + first->unk_E0)));
+        func_87C00160((u8 *)first, (s32)first, func_87C002A8(scratch, normal,
+                             second->unk_E0 * penetration / (second->unk_E0 + first->unk_E0)));
+        func_86007EB4(first);
+        func_86007EB4(second);
+        return result;
+    }
+    if (second->radius * second->radius < func_87C006B4(&first->unk_98, second)) {
+        return 0.0;
+    }
+    *point = first->unk_98;
+    func_87C00160((u8 *)normal, (s32)point, (u8 *)second);
+    func_87C00718(normal, normal, 1.0);
+    result = func_86008038((u8 *)first, (u8 *)second, normal, (s32)point, divisor,
+                         *(f64 *)(D_8600DE30 + 0x248), *(f64 *)(D_8600DE30 + 0x280));
+    func_87C00160((u8 *)second, (s32)second, func_87C002A8(scratch, normal,
+                         second->radius - func_87C006F0(point, second)));
+    func_86007EB4(second);
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_8600853C.s")
 
@@ -199,7 +248,6 @@ s32 func_86008820(f64 *arg0, f64 *arg1, void *arg2, void *arg3, void *arg4) {
 
 extern f64 D_8600DE88;
 extern void *func_87C00308(void *, void *, void *, f64);
-extern f64 func_87C0068C(void *);
 f64 func_86008904(Fragment47MotionPrefix *first, Fragment47MotionPrefix *second, f64 divisor, void *point) {
     f64 first_distance;
     f64 second_distance;
