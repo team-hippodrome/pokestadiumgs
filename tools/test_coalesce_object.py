@@ -109,9 +109,18 @@ class ScheduledPairs(unittest.TestCase):
     def test_filter_and_address_proof_are_unchanged(self):
         words, relocs = fixture()
         self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES, {A}), [])
-        self.assertEqual(fold.plan_runs(words, relocs, {A: ADDRESSES[A]}), [])
-        with self.assertRaises(fold.FoldError):
-            fold.plan_runs(words, relocs, {A: 0x8AF2BF38, B: ADDRESSES[B]})
+        # A renamed symbol states no address of its own: without a map entry
+        # it cannot join a run.
+        renamed = {0: [("Scene_Flag", 5)], 8: [("Scene_Flag", 6)], 12: [(B, 5)], 20: [(B, 6)]}
+        self.assertEqual(fold.plan_runs(words, renamed, {B: ADDRESSES[B]}), [])
+
+    def test_address_shaped_names_override_a_disagreeing_map(self):
+        # The CI seed map is linked with GLOBAL_ASM owners stubbed out, so it
+        # can place D_ symbols elsewhere; the name is the retail address.
+        words, relocs = fixture()
+        stale = {A: 0x8AF2BF38, B: 0x8AF2BF00}
+        self.assertEqual(fold.plan_runs(words, relocs, stale), fold.plan_runs(words, relocs, ADDRESSES))
+        self.assertEqual(fold.plan_runs(words, relocs, {}), fold.plan_runs(words, relocs, ADDRESSES))
 
     def test_branch_before_run_is_repaired(self):
         words, relocs = fixture()
