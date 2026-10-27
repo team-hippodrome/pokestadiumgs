@@ -467,7 +467,43 @@ void func_813049AC(u8 *arg0, s16 *arg1) {
     output[1] += temp[1];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81304A08.s")
+typedef struct unk_func_81304A08_20 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ u8 unk_01[3];
+    /* 0x04 */ s32 unk_04[0x15];
+} unk_func_81304A08_20; // size = 0x58
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81304AD0.s")
+typedef struct unk_func_81304A08 {
+    /* 0x000 */ u8 unk_000[0x20];
+    /* 0x020 */ unk_func_81304A08_20 unk_020;
+    /* 0x078 */ u8 unk_078[0xC70];
+} unk_func_81304A08; // size = 0xCE8
+
+s32 func_81304A08(u8 *arg0, unk_func_81304A08_20 *out) {
+    s32 count;
+    s32 i;
+
+    if (func_81302C40(arg0) == 0) {
+        return 0;
+    }
+    count = func_8160A8DC(arg0);
+    for (i = 0; i < count; i++) {
+        out[i] = ((unk_func_81304A08 *)arg0)[i].unk_020;
+    }
+    return count;
+}
+
+s32 func_81304AD0(u8 *arg0) {
+    s32 i;
+
+    if (func_81302C40(arg0) != 0) {
+        for (i = 0; i < 6; i++) {
+            if (((unk_func_81304A08 *)arg0)[i].unk_020.unk_00 > 0) {
+                return 1;
+            }
+        }
+        return -1;
+    }
+    return 0;
+}
 #endif
