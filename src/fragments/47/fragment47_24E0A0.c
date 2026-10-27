@@ -13,8 +13,7 @@ typedef struct {
     f64 unk_30[3];
     f64 unk_48[3];
     f64 unk_60[3];
-    f64 unk_78[3];
-    u8 unk_90[8];
+    f64 unk_78[4];
     Fragment47Point unk_98;
     f64 unk_B0[3];
     f64 radius;
@@ -336,7 +335,6 @@ s32 func_860093AC(Fragment47MotionPrefix *object, Fragment47CurvePrefix *config,
     return 1;
 }
 
-extern void func_86007EB4(void *);
 void func_860095B8(void* arg0, f64 arg1) {
     func_86007EB4(arg0);
 }
@@ -348,9 +346,45 @@ void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
                         (arg2[2] + (arg3[0] - arg3[1]) * arg1[0] * arg1[1]) / arg3[2]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009674.s")
-
+extern Fragment47Point D_8600D3D0;
 extern void func_87C004C4(void *, void *, void *);
+extern void func_87C00628(s32 arg0, s32 arg1, s32 arg2);
+extern void * func_87C00C80(void *arg0, void *arg1);
+void func_86009674(Fragment47MotionPrefix *object, void *vector, f64 step) {
+    f64 scale_buffer[3];
+    f64 local_torque[3];
+    f64 derivative[3];
+    f64 local_omega[3];
+    Fragment47Point local_delta;
+    f64 world_delta[3];
+
+    func_86007EB4(object);
+    vector = func_87C002A8(scale_buffer, vector, object->unk_E0);
+    func_86007E4C((u8 *)object, (s32)object->unk_B0, (s32)vector);
+    vector = func_87C002A8(scale_buffer, ((u8 *)object + 0xF0), step / object->unk_E0);
+    func_87C00198(object->unk_18, object->unk_18, vector);
+    if (func_87C00664(object->unk_18) > *(f64 *)((u8 *)object + 0xE8) * *(f64 *)((u8 *)object + 0xE8)) {
+        func_87C00718(object->unk_18, object->unk_18, *(f64 *)((u8 *)object + 0xE8));
+    }
+    vector = func_87C002A8(scale_buffer, object->unk_18, step);
+    func_87C00198(object, object, vector);
+    vector = func_87C002A8(scale_buffer, object->unk_30, step);
+    func_87C00C80(object->unk_78, vector);
+    func_87C00AE4(object->unk_78, object->unk_78);
+    func_87C015E4(object->unk_78, object->unk_48);
+    local_delta = D_8600D3D0;
+    func_87C00628((s32)local_omega, (s32)object->unk_30, (s32)object->unk_78);
+    func_87C00628((s32)local_torque, (s32)((u8 *)object + 0x108), (s32)object->unk_78);
+    vector = func_860095DC(derivative, local_omega, local_torque, object->unk_60);
+    vector = func_87C002A8(scale_buffer, vector, step);
+    func_87C00198(&local_delta, &local_delta, vector);
+    func_87C004C4(world_delta, &local_delta, object->unk_78);
+    func_87C00198(object->unk_30, object->unk_30, world_delta);
+    func_86007EB4(object);
+    func_87C00120(((u8 *)object + 0xF0), 0.0, 0.0, 0.0);
+    func_87C00120(((u8 *)object + 0x108), 0.0, 0.0, 0.0);
+}
+
 extern void *func_87C001D0(void *, void *, void *);
 extern f64 D_8600DEB0;
 f64 func_860098A8(u8 *arg0) {

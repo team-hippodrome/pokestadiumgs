@@ -383,3 +383,35 @@ is a point: `func_86007EB4` produces it, and this owner copies it as an
 alternate origin. Eighteen complete-module normal/blank-prefix controls
 verify these fields, the direct point conditional, and declaration cleanup
 across all eight combinations. No GS/Stadium 1 map supports a function rename.
+
+## 2026-10-27 — matching motion integration
+
+Starting revision `1f8a141de29dbf6a074dff7dbe5f0559c0cb4428` (#1658).
+`func_86009674` passes canonical acceptance and the full US retail-ROM gate:
+564 bytes / 141 instructions, with the original 232-byte frame. Both assembly
+callers, `func_860057D0` and `func_86005CB4`, pass the object and vector in
+A0/A1 and a double step in A2/A3; neither consumes a return value.
+
+The routine accumulates the supplied vector, updates and caps linear velocity,
+advances position, updates the quaternion and its derived axis, and integrates
+angular velocity through `func_860095DC`. It copies the global point
+`D_8600D3D0` before adding the scaled derivative, rotates that local result
+back into object coordinates, and clears both accumulators at 0xF0 and 0x108.
+Preserve that global copy and the helper calls' order and side effects.
+
+Six genuine 24-byte working vectors occupy SP+88 through SP+231. Nested
+helper expressions produce the correct opcode sequence but retain extra
+compiler temporaries and enlarge the frame. Separate result assignments and
+reuse of the vector parameter after its original value is consumed recover
+every instruction word and the original frame without extra storage.
+
+`Fragment47MotionPrefix.unk_78` spans four doubles: the normalization helper
+`func_87C00AE4` reads and writes all four quaternion components. Eighteen
+complete-module normal/blank-prefix controls test this field, extending the
+later state fields, and declaration cleanup across all eight combinations.
+The selected quaternion and declaration cleanup preserve all sections, bytes,
+extents, and relocations. Direct array access to the proposed accumulator
+fields changes code generation; retain the existing conservative prefix and
+explicit offsets for those accesses. The final forced rebuild, with the host
+C check enabled, produces retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+No GS/Stadium 1 map supports a function rename.
