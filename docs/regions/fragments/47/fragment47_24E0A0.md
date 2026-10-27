@@ -275,3 +275,44 @@ resume the older operand-swap or scaled-input campaigns.
 - `func_86009C98`: **requeue**. The two-word F0/F12 residual documented
   above remains. Named return values and signed-square-root intermediates
   do not close it. Its generated redundant-copy exact form remains rejected.
+
+
+## 2026-10-27 — literal coefficients and vector rescaling
+
+Starting revision `6882f9f8c57ac3241de20f4e6b294a5b1092e4ea` (#1652).
+`func_86009934` now passes canonical acceptance and the full US retail-ROM
+gate: 348 bytes / 87 instructions, with the original 136-byte frame. Preserve
+the two three-double buffers, the returned helper pointer, and reuse of the
+ratio as the subsequent square-root value. The guard rejects values below
+zero or at least one; it must retain the original NaN behavior. The square
+root executes in single precision before promotion and vector rescaling.
+
+The five-register residual came from spelling `D_8600D968` as an external
+variable. Its retail pool value is exactly the double encoding of `1e-5`.
+Using the literal reproduces the instructions, including the helper result's
+register and its SP+48 spill. A logging-only native observation, calibrated
+with ten complete-module controls, identifies the external-load coloring:
+that draft gives the shared constant F12 and the helper result F14. The
+literal closes this owner without extra copies or register constraints.
+
+The literal requires the file's own read-only pool. `yamls/us/rom.yaml`
+now assigns ROM 0x253F70–0x253F8F (VMA 0x8600D950–0x8600D96F) to this file's
+`.rodata`, followed by the shared tail at 0x253F90. These 32 bytes contain
+two `10000` doubles and two `1e-5` doubles. Both boundaries are 16-byte
+aligned. Re-extraction generates the corresponding linker entry and migrates
+the four constants to their owning functions.
+
+`func_860098A8` already had matching C and now uses its `1e-5` literal too,
+so its constant remains in this file after the split. Its 140-byte extent
+and 96-byte frame are preserved. The layout control with original assembly
+passed the full retail-ROM gate before canonical acceptance of both literal
+bodies. Four complete-module normal/blank-prefix controls verify removal of
+unused external data declarations and duplicate function declarations.
+The earlier six-/five-word rescaling requeues are resolved by this change.
+
+The sequential gate must use the source containing an earlier accepted
+owner. During this migration, a batch snapshot that still referenced the
+restored neighbor's assembly failed after extraction removed that assembly
+file. A fresh canonical batch on the restored C context accepted the new
+owner. Treat this failure as a source-context/tooling issue, not another
+source-shape hypothesis.

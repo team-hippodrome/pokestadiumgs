@@ -283,8 +283,8 @@ void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
 
 extern void func_87C004C4(void *, void *, void *);
 extern void *func_87C001D0(void *, void *, void *);
-extern f64 D_8600D960;
 extern f64 D_8600DEB0;
+extern f64 func_87C0068C(void *);
 f64 func_860098A8(u8 *arg0) {
     f64 sp48[3];
     f64 sp30[3];
@@ -292,10 +292,30 @@ f64 func_860098A8(u8 *arg0) {
     func_87C004C4(sp30, arg0 + 0x30, arg0 + 0x78);
     return (*(f64 *)(arg0 + 0xE0) * (func_87C00664(arg0 + 0x18) + D_8600DEB0 * *(f64 *)(arg0 + 0xB8)) +
             func_87C00208(sp30, func_87C001D0(sp48, arg0 + 0x60, sp30))) *
-           D_8600D960;
+           1e-5;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009934.s")
+void func_86009934(Fragment47MotionPrefix *object, f64 parameter) {
+    f64 transformed[3];
+    f64 root;
+    f64 scale_18;
+    f64 scale_30;
+    f64 vector[3];
+    void *transformed_result;
+    f64 first_value;
+
+    func_87C004C4(vector, (u8 *)object + 0x30, (u8 *)object + 0x78);
+    first_value = func_87C00664((u8 *)object + 0x18);
+    transformed_result = func_87C001D0(transformed, (u8 *)object + 0x60, vector);
+    root = (parameter - D_8600DEB0 * object->unk_B0[1] * 1e-5) /
+            ((func_87C00208(vector, transformed_result) + object->unk_E0 * first_value) * 1e-5);
+    if ((root < 0.0) || (1.0 <= root)) return;
+    root = (f64)sqrtf((f32)root);
+    scale_18 = func_87C0068C((u8 *)object + 0x18) * root;
+    scale_30 = func_87C0068C((u8 *)object + 0x30) * root;
+    func_87C00718((u8 *)object + 0x18, (u8 *)object + 0x18, scale_18);
+    func_87C00718((u8 *)object + 0x30, (u8 *)object + 0x30, scale_30);
+}
 
 extern f32 D_80088E50[];
 typedef struct {
@@ -325,7 +345,6 @@ s32 func_86009C08(void *arg0, void *arg1) {
     return ((x * x) + (y * y)) < (radius * radius);
 }
 
-extern f64 func_87C0068C(void *);
 f64 func_86009C58(void *arg0, u8 *arg1) {
     u8 data[0x18];
     func_87C00160(data, (s32)((u8 *)arg0 + 0x10), arg1);
