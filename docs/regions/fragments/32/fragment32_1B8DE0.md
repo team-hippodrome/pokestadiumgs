@@ -46,3 +46,17 @@ The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks pass. Independent original-assembly and retail-span comparisons cover
 all 68 bytes at ROM `0x1B90B4..0x1B90F8`.
+
+## 2026-10-27 — `func_88307F28` two-record clear predicate accepted
+
+`func_88307F28` is now C: **32 words / 128 bytes** plus two alignment
+nops, leaf. It returns 1 when both 0x20-byte records at `D_88308ED0` have
+their halfword +0x04, word +0x08 and halfword +0x16 all zero (overlay
+`unk_D_88308ED0`).
+
+Source shape: each record sets its **own** flag with `if (a && b && c)
+flag = 1; else flag = 0;` (the else arm produces the target's
+branch-to-join). Then `result = first != 0; if (result) { ...; result =
+second != 0; }`. Reusing one flag variable for both records moves the base
+pointer from `a1` to `a0` (0.73), and `return first && second` reshapes the
+tail.

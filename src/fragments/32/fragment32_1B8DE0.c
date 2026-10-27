@@ -110,5 +110,36 @@ void func_88307DA4(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307DE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307F28.s")
+extern s32 D_88308ED0;
+typedef struct unk_D_88308ED0 {
+    /* 0x00 */ u8 unk_00[4];
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ u8 unk_06[2];
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ u8 unk_0C[0xA];
+    /* 0x16 */ s16 unk_16;
+    /* 0x18 */ u8 unk_18[8];
+} unk_D_88308ED0; // size = 0x20
+
+s32 func_88307F28(void) {
+    s32 first;
+    s32 second;
+    s32 result;
+
+    if (((unk_D_88308ED0 *)&D_88308ED0)[0].unk_04 == 0 && ((unk_D_88308ED0 *)&D_88308ED0)[0].unk_08 == 0 && ((unk_D_88308ED0 *)&D_88308ED0)[0].unk_16 == 0) {
+        first = 1;
+    } else {
+        first = 0;
+    }
+    result = first != 0;
+    if (result) {
+        if (((unk_D_88308ED0 *)&D_88308ED0)[1].unk_04 == 0 && ((unk_D_88308ED0 *)&D_88308ED0)[1].unk_08 == 0 && ((unk_D_88308ED0 *)&D_88308ED0)[1].unk_16 == 0) {
+            second = 1;
+        } else {
+            second = 0;
+        }
+        result = second != 0;
+    }
+    return result;
+}
 #endif
