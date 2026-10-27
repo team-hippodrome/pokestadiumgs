@@ -49,6 +49,10 @@ The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 180 bytes at ROM `0x1EE2EC..0x1EE3A0`.
 
-## 2026-10-27 — `func_8AF01C84`: requeue
+## 2026-10-27 — `func_8AF01C84`: matched
 
-requeue (temp numbering). gSPDisplayList(D_80094E38), gDPSetPrimColor(0, 0, 255, 255, 255, 255), then 28 strips func_8AF01A0C(x, y + 4i, 96, 4, texture + 0x300 * i, 96), then gSPDisplayList(D_80094F50). An `s32` first parameter copied into an `s16 x` local fixes the home-slot store (0.77); the residual is the prim-color temps (target t1/t2, IDO t0/t1). Permuter 75 s: 610 -> 225.
+gSPDisplayList(`D_80094E38`), gDPSetPrimColor(0, 0, 255, 255, 255, 255), then 28 strips `func_8AF01A0C(x, arg1 + i * 4, 96, 4, arg2, 96)` with `arg2 += 0x300` after each, then gSPDisplayList(`D_80094F50`). Signature `(s32 arg0, s32 arg1, u8 *arg2)` with `s16 x = arg0`; with the macros written in this order and a `for` loop advancing `arg2` in place, the primitive-color temps land in retail's t1/t2.
+
+## 2026-10-28 — `func_8AF00360`: requeue
+
+requeue. Shape: `s8 buf[4]; sprintf(buf, D_8AF28760, arg0); return (u16)((buf[0] << 8) | buf[1]) | 0x234C0000;`. Retail homes `arg0` and reloads it as `lbu a2,0x2B(sp)`. Only `s32 arg0` with `((u8 *)&arg0)[3]` reproduces that, plus the 0x28 frame (callers pass `(u8)`, and old-style `u8`/`char` definitions still emit `andi`). Best local score 0.8889: the only remaining diff is retail keeping the masked code in `$a3` (`or v1,t6,t8; andi a3,v1,0xFFFF; or v0,a3,at`), where IDO uses `$v0`/`$v1`. The permuter plateaued at 10 after 240 s. Next: hypotheses about the signature (e.g. extra unused parameters that would put the variable in `$a3`).

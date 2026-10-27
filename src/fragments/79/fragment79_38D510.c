@@ -115,15 +115,259 @@ s32 func_8411E238(u8 *arg0) {
     return *(u8 *)(*(u8 **)(arg0 + 0x2D4) + 0x13DB);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411E244.s")
+u8 func_8411E244(void *arg0, s32 arg1) {
+    switch (arg1) {
+    case 276:
+    case 277:
+    case 278:
+    case 279:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x45];
+    case 280:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x40];
+    case 274:
+    case 290:
+    case 292:
+    case 298:
+    case 299:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x4A];
+    case 252:
+    case 253:
+    case 272:
+    case 273:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[4];
+    case 254:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[9];
+    case 271:
+    case 296:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0xE];
+    case 255:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13DA];
+    case 281:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13C7];
+    case 282:
+    case 283:
+    case 294:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13C6];
+    case 256:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x13];
+    case 257:
+    case 258:
+    case 259:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x18];
+    case 260:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x1D];
+    case 261:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x22];
+    case 264:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x27];
+    case 265:
+    case 266:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x2C];
+    case 267:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x31];
+    case 268:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x36];
+    case 269:
+    case 270:
+    case 295:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x3B];
+    case 291:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x4F];
+    default:
+        return 0;
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411E358.s")
+u8 func_8411E358(void *arg0, s32 arg1) {
+    switch (arg1) {
+    case 276:
+    case 277:
+    case 278:
+    case 279:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x44];
+    case 280:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x3F];
+    case 274:
+    case 290:
+    case 292:
+    case 298:
+    case 299:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x49];
+    case 252:
+    case 253:
+    case 272:
+    case 273:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[3];
+    case 254:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[8];
+    case 271:
+    case 296:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0xD];
+    case 255:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x67B];
+    case 281:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13D7];
+    case 282:
+    case 283:
+    case 294:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13D3];
+    case 256:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x12];
+    case 257:
+    case 258:
+    case 259:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x17];
+    case 260:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x1C];
+    case 261:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x21];
+    case 264:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x26];
+    case 265:
+    case 266:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x2B];
+    case 267:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x30];
+    case 268:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x35];
+    case 269:
+    case 270:
+    case 295:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x3A];
+    case 291:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x4E];
+    default:
+        return 0;
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411E46C.s")
+u8 func_8411E46C(void *arg0, s32 arg1) {
+    switch (arg1) {
+    case 276:
+    case 277:
+    case 278:
+    case 279:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x41];
+    case 280:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x3C];
+    case 274:
+    case 290:
+    case 292:
+    case 298:
+    case 299:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x46];
+    case 252:
+    case 253:
+    case 272:
+    case 273:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0];
+    case 254:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[5];
+    case 271:
+    case 296:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0xA];
+    case 255:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x678];
+    case 281:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13D4];
+    case 282:
+    case 283:
+    case 294:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13D0];
+    case 256:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0xF];
+    case 257:
+    case 258:
+    case 259:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x14];
+    case 260:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x19];
+    case 261:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x1E];
+    case 264:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x23];
+    case 265:
+    case 266:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x28];
+    case 267:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x2D];
+    case 268:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x32];
+    case 269:
+    case 270:
+    case 295:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x37];
+    case 291:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x4B];
+    default:
+        return 0;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411E580.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411ED40.s")
+u8 func_8411ED40(void *arg0, s32 arg1) {
+    switch (arg1) {
+    case 276:
+    case 277:
+    case 278:
+    case 279:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x43];
+    case 280:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x3E];
+    case 274:
+    case 290:
+    case 292:
+    case 298:
+    case 299:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x48];
+    case 252:
+    case 253:
+    case 272:
+    case 273:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[2];
+    case 271:
+    case 296:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0xC];
+    case 254:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[7];
+    case 255:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x67A];
+    case 281:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13D6];
+    case 282:
+    case 283:
+    case 294:
+        return (*(u8 **)((u8 *)arg0 + 0x2D4))[0x13D2];
+    case 256:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x11];
+    case 257:
+    case 258:
+    case 259:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x16];
+    case 260:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x1B];
+    case 261:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x20];
+    case 264:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x25];
+    case 265:
+    case 266:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x2A];
+    case 267:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x2F];
+    case 268:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x34];
+    case 269:
+    case 270:
+    case 295:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x39];
+    case 291:
+        return (*(u8 **)((u8 *)arg0 + 0x67C))[0x4D];
+    default:
+        return 0;
+    }
+}
 
 s32 func_8411EE54(u8 *arg0) {
     return *(u8 *)(arg0 + 0x661);
@@ -207,11 +451,49 @@ f32 func_8411EF90(u8 *arg0) {
     return var_fa0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411EFE4.s")
+void func_8411EFE4(void *arg0) {
+    if ((s32)arg0 == D_84191208) {
+        Vec3s_SetComponents((s16 *)((u8 *)arg0 + 0x1E), 0, 0x4000, 0);
+        *(f32 *)((u8 *)arg0 + 0x28) = *(f32 *)((u8 *)arg0 + 0x650);
+        if (*(s16 *)((u8 *)arg0 + 0x1A) == 0xD0) {
+            *(f32 *)((u8 *)arg0 + 0x24) = -325.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0x5F) {
+            *(f32 *)((u8 *)arg0 + 0x24) = -225.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0x82) {
+            *(f32 *)((u8 *)arg0 + 0x24) = -200.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0xF9) {
+            *(f32 *)((u8 *)arg0 + 0x24) = -200.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0xFA) {
+            *(f32 *)((u8 *)arg0 + 0x24) = -185.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 3) {
+            *(f32 *)((u8 *)arg0 + 0x24) = -185.0f;
+        } else {
+            *(f32 *)((u8 *)arg0 + 0x24) = -150.0f;
+        }
+        *(f32 *)((u8 *)arg0 + 0x2C) = 0.0f;
+    } else {
+        Vec3s_SetComponents((s16 *)((u8 *)arg0 + 0x1E), 0, -0x4000, 0);
+        *(f32 *)((u8 *)arg0 + 0x28) = *(f32 *)((u8 *)arg0 + 0x650);
+        if (*(s16 *)((u8 *)arg0 + 0x1A) == 0xD0) {
+            *(f32 *)((u8 *)arg0 + 0x24) = 325.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0x5F) {
+            *(f32 *)((u8 *)arg0 + 0x24) = 225.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0x82) {
+            *(f32 *)((u8 *)arg0 + 0x24) = 200.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0xF9) {
+            *(f32 *)((u8 *)arg0 + 0x24) = 200.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 0xFA) {
+            *(f32 *)((u8 *)arg0 + 0x24) = 185.0f;
+        } else if (*(s16 *)((u8 *)arg0 + 0x1A) == 3) {
+            *(f32 *)((u8 *)arg0 + 0x24) = 185.0f;
+        } else {
+            *(f32 *)((u8 *)arg0 + 0x24) = 150.0f;
+        }
+        *(f32 *)((u8 *)arg0 + 0x2C) = 0.0f;
+    }
+}
 
 /* mkdraft:func_8411F1AC begin */
-extern f32 D_84189818;
-extern f32 D_8418981C;
 extern s32 D_84191208;
 
 // Writes an x offset to arg1[0] (negated when arg0 is D_84191208) chosen by the
@@ -227,7 +509,7 @@ void func_8411F1AC(u8 *arg0, f32 *arg1)
         val = *(s16 *)((u8 *)arg0 + 0x1A);
 
         if (val == 208) {
-            arg1[0] = D_84189818;
+            arg1[0] = -325.0f;
         } else if (val == 95) {
             arg1[0] = -225.0f;
         } else if (val == 130) {
@@ -247,7 +529,7 @@ void func_8411F1AC(u8 *arg0, f32 *arg1)
         val = *(s16 *)((u8 *)arg0 + 0x1A);
 
         if (val == 208) {
-            arg1[0] = D_8418981C;
+            arg1[0] = 325.0f;
         } else if (val == 95) {
             arg1[0] = 225.0f;
         } else if (val == 130) {

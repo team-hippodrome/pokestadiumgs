@@ -383,7 +383,29 @@ void func_882180C4(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821811C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821B3E0.s")
+typedef struct unk_D_88234758 { u16 unk_00; u8 unk_02; u8 unk_03; u8 unk_04[3]; s8 unk_07[2]; } unk_D_88234758;
+extern u8 D_88234761;
+extern u8 D_88234762;
+extern u8 D_88234763;
+extern u8 D_88234764;
+extern u16 D_88234758;
+#pragma COALESCE_AT_LUI(func_8821B3E0, D_88234762, D_88234763, D_88234764, D_88234761)
+void func_8821B3E0(void) {
+    unk_D_88234758 *s = (unk_D_88234758 *)&D_88234758;
+    s32 i;
+
+    s->unk_00 = 0;
+    s->unk_02 = 1;
+    s->unk_03 = 100;
+    for (i = 0; i < 2; i++) {
+        ((unk_D_88234758 *)&D_88234758)->unk_07[i] = -1; // FAKE: re-forms the base address
+    }
+    i = 0; // FAKE
+    D_88234762 = 0;
+    D_88234763 = i;
+    D_88234764 = 0;
+    D_88234761 = 0;
+}
 
 extern void func_8821B3E0(void);
 extern s32 D_88234778;

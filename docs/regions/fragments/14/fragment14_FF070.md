@@ -50,10 +50,23 @@ The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 144 bytes at ROM `0x1019B0..0x101A40`.
 
-## 2026-10-27 — `func_81308014`: requeue
+## 2026-10-27 — `func_81308014`: matched
 
-requeue. `t = D_81311F80 + func_816092FC(); if (t > 30.0f) { t -= 30.0f; return 1 } ; D_81311F80 = t` (result 0 otherwise). Best 0.84 with an early-return form. Retail re-materializes `lui $at` for each of the three `D_81311F80` accesses and keeps `t` in `$f2` with an in-place subtract and a tail-duplicated store, whereas IDO CSEs the address into a register in every spelling tried (local/global/duplicated store/`volatile`). Permuter 200 s only found a semantics-changing body.
+`D_81311F80 += func_816092FC(); if (D_81311F80 > 30.0f) { D_81311F80 -= 30.0f; return 1; } return 0;`. Retail's three separate `lui $at` reloads of `D_81311F80` come from a function-scope `static f32 D_81311F80 = 0.0f`: IDO CSEs the address into a register for an `extern` or a file-scope static, but not for a function-scope static. The static needs this object to own the 16 bytes at 0x81311F80, so `yamls/us/rom.yaml` splits `fragment14_data` there (`[0x10A110, .data, fragments/14/fragment14_FF070]`, then an unnamed `[0x10A120, data]`). IDO pads the section to 16 bytes, so the three unreferenced words at 0x81311F84-0x81311F8C are defined after the function as `D_81311F84[2]` and `D_81311F8C`; IDO emits the function-scope static first only when those definitions follow the function.
 
 ## 2026-10-27 — `func_81307228`: layout-prerequisite
 
 layout-prerequisite. A 12-case switch on `*(u8 *)(arg0 + 0x137F5)`, after a `+0x137D0 < 16.0f` early 0, returning 0/1. Its table `jtbl_81312564` sits in the shared `rodata` blob at `0x10A6D0`, below `fragment14_FF070`'s current `.rodata` subsegment (`0x10A7D0`); extend the subsegment down (every label in the run must be this file's) before writing the switch.
+
+## 2026-10-28: `func_8130AEF4` prototype; `func_8130B06C` handoff
+
+- `func_8130AEF4` takes an `s32` third argument: the callee tests it with
+  `bltz`. Declaring it `u8` made every caller mask with `andi 0xFF`.
+- `func_8130B06C`: requeue (normalized 1.0, frame only). It is the
+  increment twin of `func_8130B0E0`: `count = base[0x6911]`; if below 8,
+  store `count + 1`, advance the `+0xE8E8` node to its `+0x4D98` successor,
+  and call `func_8130AEF4(arg0, func_8160A33C(node, 2), count' + 2)`.
+  With the sibling's spelling and an inline last argument, every instruction
+  matches except the frame: 0x30 vs retail's 0x20, because the named
+  `base`/`store_base` locals reserve slots. Neither declaration order nor the
+  stack-aware permuter (200 s) fixes it.

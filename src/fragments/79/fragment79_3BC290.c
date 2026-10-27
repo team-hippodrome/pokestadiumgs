@@ -63,7 +63,25 @@ void BattleEffects_PlanCalculatedRecovery(void *state, u8 side, u8 move) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414CB10.s")
+extern u8 *D_841951F8[];
+typedef struct unk_func_8414CB10 {
+    /* 0x00 */ u8 *mon;
+    /* 0x04 */ u8 unk_04[12];
+} unk_func_8414CB10; // size = 0x10
+
+void func_8414CB10(void *arg0, u8 arg1, u8 arg2) {
+    unk_func_8414CB10 info; //!bug: never filled in before info.mon is read
+    u8 *mon;
+    u8 *selected;
+
+    if (D_841951F8[arg1][9] == 1) {
+        *(u16 *)((u8 *)(u32)arg0 + arg1 * 2 + 0xE) = 0;
+    }
+    mon = info.mon;
+    selected = (u8 *)((u32)arg0 + arg1 * 2 + 4);
+    *(u16 *)(selected + 0x1A) = *(u16 *)(mon + 0x28);
+    *(u16 *)(selected + 0x1E) = *(u16 *)(mon + 0x28);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414CB74.s")
 

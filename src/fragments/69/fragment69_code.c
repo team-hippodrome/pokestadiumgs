@@ -3,7 +3,62 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F100020.s")
+s32 func_8F10008C(s32 arg0, void *arg1);
+s32 func_8F1000F4(s32 arg0, void *arg1);
+extern u8 D_80126420;
+extern u8 D_1000000[];
+
+u32 D_8F103900[] = {
+    0x0C00FFFF, 0x05000000, 0x0B00001E, 0x00000000, 0x014000F0, 0x00000000, 0x0000000A, 0x000004E2,
+    0x05000000, 0x0D000000, 0x05000000, 0x14000000, 0x002D0019, 0xFFFFFF28, 0x08000000, (u32)func_8F10008C,
+    0x00000000, 0x14000000, 0x002D0019, 0x80808028, 0x08000000, (u32)func_8F1000F4, 0x00000000, 0x16646464,
+    0x0F000003, 0x05000000, 0x0A000000, (u32)&D_80126420, 0x06000000, 0x06000000, 0x06000000, 0x06000000,
+    (u32)D_1000000,
+};
+s32 D_8F103984 = 1;
+s32 D_8F103988 = -1;
+u8 D_8F10398C[] = "\xA4\xC0\xA4\xDF\xA1\xBC\xA4\xAF\xA4\xF3";
+u8 D_8F103998[] = "DummyMon";
+s32 D_8F1039A4 = 0;
+s32 D_8F1039A8 = 0;
+s32 D_8F1039AC = 0;
+s32 D_8F1039B0 = 0;
+s32 D_8F1039B4 = 0;
+s32 D_8F1039B8 = 0;
+s32 D_8F1039BC = 0;
+s32 D_8F1039C0 = 0;
+s32 D_8F1039C4 = 0;
+s16 D_8F1039C8[][5] = {
+    { 50, 50, 130, 180, 1 },
+    { 50, 50, 180, 74, 2 },
+    { 50, 50, 180, 50, 2 },
+};
+u8 D_8F1039E8[] = "\xA5\xC7\xA1\xBC\xA5\xBF\xA4\xF2\xA5\xED\xA5\xE0\xA4\xCB\xA5\xBB\xA1\xBC\xA5\xD6\xA4\xB7\xA4\xDE\xA4\xB9";
+u8 D_8F103A04[] = "Save current data to ROM?";
+extern u8 D_8F103AD0[], D_8F103AD8[], D_8F103AE0[], D_8F103AE4[];
+void *D_8F103A20[] = { D_8F103AD0, D_8F103AD8 };
+void *D_8F103A28[] = { D_8F103AE0, D_8F103AE4 };
+u8 D_8F103A30[] = "\xA4\xB7\xA4\xE5\xA4\xA6\xA4\xEA\xA4\xE7\xA4\xA6\xA4\xB7\xA4\xDE\xA4\xB9\xA4\xAB\xA1\xA9";
+u8 D_8F103A48[] = "Quit ?";
+
+// Debug toggle on the Z trigger; the flag is a function-local static, which is why every access
+// re-forms its address instead of reusing one base register.
+s32 func_8F100020(s32 arg0, u8 *arg1) {
+    static s32 sDebugFlag = 1;
+
+    if (arg0 == 2) {
+        if (D_80087200->buttonsPressed & Z_TRIG) {
+            sDebugFlag ^= 1;
+        }
+        if (sDebugFlag) {
+            arg1[2] |= 0x40;
+        } else {
+            arg1[2] &= ~0x40;
+        }
+    }
+    return 0;
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -143,7 +198,6 @@ typedef struct {
     s16 values[5];
 } Fragment69LimitRecord;
 extern u8 D_8F1DF270[];
-extern Fragment69LimitRecord D_8F1039D0[];
 void func_8F1002F0(void *arg0) {
     Fragment69MenuRecord *record = (Fragment69MenuRecord *)arg0;
     s32 rowIndex;
@@ -153,13 +207,13 @@ void func_8F1002F0(void *arg0) {
         record->index--;
         if (record->index < 0) {
             rowIndex = ((u8 *)record - D_8F1DF270) / 6;
-            row = &D_8F1039D0[rowIndex];
+            row = (Fragment69LimitRecord *)&D_8F1039C8[rowIndex][4];
             record->index = row->values[0] - 1;
         }
     }
     if ((D_80087200->buttonsRepeat) & 0x400) {
         rowIndex = ((u8 *)record - D_8F1DF270) / 6;
-        row = &D_8F1039D0[rowIndex];
+        row = (Fragment69LimitRecord *)&D_8F1039C8[rowIndex][4];
         record->index++;
         if (record->index >= row->values[0]) record->index = 0;
     }
@@ -203,15 +257,52 @@ void func_8F1003EC(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F10049C.s")
-#endif
-
-#ifdef VERSION_US
 typedef struct {
     s16 state;
     s16 timer;
     s16 selected;
 } Fragment69MenuState;
+typedef struct {
+    u8 r, g, b;
+} Fragment69Rgb;
+#endif
+
+#ifdef VERSION_US
+extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
+// The two colors are initialized locals: IDO copies them from anonymous .data templates, which
+// is why their bytes sit between func_8F100020's static and the tables below.
+void func_8F10049C(Fragment69MenuState *arg0) {
+    s32 index;
+    s16 *rect;
+    s32 width;
+    s32 height;
+    s32 x;
+    s32 y;
+
+    index = ((u8 *)arg0 - D_8F1DF270) / 6;
+    rect = D_8F1039C8[index];
+    width = (rect[2] * arg0->timer) / 8;
+    height = (rect[3] * arg0->timer) / 8;
+    x = (rect[2] - width) / 2 + rect[0];
+    y = (rect[3] - height) / 2 + rect[1];
+    {
+        Fragment69Rgb top = { 0, 0, 30 };
+        Fragment69Rgb bottom = { 0, 0, 150 };
+
+        Ui_DrawGradientPanel(x, y, width, height, (s32)&top, (s32)&bottom);
+    }
+}
+
+extern u8 D_8F103AE8[], D_8F103AF8[], D_8F103B0C[], D_8F103B1C[];
+u8 *D_8F103A5C[] = { D_8F103AE8, D_8F103AF8 };
+u8 *D_8F103A64[] = { D_8F103B0C, D_8F103B1C };
+extern u8 D_8F103B64[], D_8F103B78[], D_8F103B88[], D_8F103B9C[], D_8F103BB8[], D_8F103BC4[], D_8F103BCC[], D_8F103BD4[], D_8F103BDC[], D_8F103BE8[], D_8F103C00[], D_8F103C10[];
+u8 *D_8F103A6C[] = { D_8F103B64, D_8F103B78, D_8F103B88, D_8F103B9C, D_8F103BB8, D_8F103BC4, D_8F103BCC, D_8F103BD4, D_8F103BDC, D_8F103BE8, D_8F103C00, D_8F103C10 };
+extern u8 D_8F103C1C[], D_8F103C2C[], D_8F103C38[], D_8F103C4C[], D_8F103C60[], D_8F103C64[], D_8F103C70[], D_8F103C7C[], D_8F103C84[], D_8F103C8C[], D_8F103C98[], D_8F103CA8[];
+u8 *D_8F103A9C[] = { D_8F103C1C, D_8F103C2C, D_8F103C38, D_8F103C4C, D_8F103C60, D_8F103C64, D_8F103C70, D_8F103C7C, D_8F103C84, D_8F103C8C, D_8F103C98, D_8F103CA8, NULL };
+#endif
+
+#ifdef VERSION_US
 extern s16 D_8F1039C8[][5];
 extern u8 D_8F1039E8[];
 extern u8 D_8F103A04[];
@@ -223,7 +314,7 @@ extern void func_8004972C(s32, s32, s32, s32);
 extern void Font_EnableTwoCycleTexturing(void);
 extern void func_800497E4(s32, s32, s32, s32);
 extern s32 func_8003514C(void);
-extern void func_800495BC(s32, s32, void *);
+extern void func_800495BC(s32, s32, const char *, ...);
 extern void Font_DisableTwoCycleTexturing(void);
 extern void func_800499EC(void);
 void func_8F100594(Fragment69MenuState *arg0) {
@@ -312,7 +403,62 @@ void func_8F100740(Fragment69MenuState *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F1008EC.s")
+extern s32 D_8F1DEE18;
+extern s32 D_8F1DEE1C;
+extern s32 D_8F1DEE20;
+extern s32 func_80073420(s32);
+extern void *func_8004B7A4(s32);
+extern char D_8F103B2C[];
+extern char D_8F103B38[];
+extern char D_8F103B50[];
+void func_8F1008EC(Fragment69MenuState *arg0) {
+    void *title;
+    s16 *position;
+    s32 i;
+    s32 yOffset;
+    s32 index;
+    s32 species;
+    void *name;
+
+    func_800498C4();
+    func_800496A4(0x20, 0);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    Font_EnableTwoCycleTexturing();
+    func_800497E4(0, 0xFF, 0, 0xFF);
+    position = D_8F1039C8[((u8 *)arg0 - D_8F1DF270) / 6];
+    if (func_8003514C() == 0) {
+        title = D_8F103A5C[D_8F1DEE18];
+    } else {
+        title = D_8F103A64[D_8F1DEE18];
+    }
+    func_800495BC(position[0] + 0xA, position[1] + 4, title);
+    Font_DisableTwoCycleTexturing();
+    for (i = 0, yOffset = 0; i < 10; i++, yOffset += 14) {
+        index = D_8F1DEE1C + i;
+        if (i == D_8F1DEE20) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        if (D_8F1DEE18 == 0) {
+            species = index;
+        } else {
+            species = func_80073420(index & 0xFF);
+        }
+        name = func_8004B7A4(species);
+        if (name == NULL) {
+            if (func_8003514C() == 0) {
+                name = D_8F10398C;
+            } else {
+                name = D_8F103998;
+            }
+        }
+        func_800495BC(position[0] + 0xA, position[1] + yOffset + 0x10, D_8F103B2C, species, name);
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495BC(position[0] + 0xA, position[1] + 0xA0, (func_8003514C() == 0) ? D_8F103B38 : D_8F103B50);
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -320,7 +466,6 @@ void func_8F100740(Fragment69MenuState *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8F104010;
 extern s32 D_8F1DECA4;
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void Camera_ComputeEyeFromAngles(f32 *, s32 *, f32, s16, s32);
@@ -331,7 +476,7 @@ void func_8F100C64(f32 arg0, void *arg1) {
     s32 output[3];
 
     Vec3f_SetComponentsDuplicate(position, 0.0f, 250.0f / arg0, 0.0f);
-    Camera_ComputeEyeFromAngles(position, output, D_8F104010 / arg0, *(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2));
+    Camera_ComputeEyeFromAngles(position, output, 1.65e+03f / arg0, *(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2));
     func_80038E14(*(s32 *)((u8 *)(u32)D_8F1DECA4 + 0xC), output[0], output[1], output[2], position[0], position[1], position[2], 0);
     GeoCamera_SetPerspective((void *)(u32)*(s32 *)((u8 *)(u32)D_8F1DECA4 + 0xC), 30.0f, 100.0f / arg0, 12800.0f / arg0);
 }
@@ -432,7 +577,40 @@ void func_8F101CDC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F101FF4.s")
+// Four signed bytes passed to func_80041FD0 as one word.
+typedef union {
+    s32 word;
+    s8 bytes[4];
+} Fragment69PackedState;
+#endif
+
+#ifdef VERSION_US
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE44;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DECA0;
+extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
+void func_8F101FF4(void) {
+    s32 old = D_8F1DEE24;
+
+    if (D_80087200->buttonsRepeat & 0x200) {
+        D_8F1DEE24--;
+        if (D_8F1DEE24 < 0) {
+            D_8F1DEE24 = 0;
+        }
+    }
+    if (D_80087200->buttonsRepeat & 0x100) {
+        D_8F1DEE24++;
+        if (D_8F1DEE24 > 0x118) {
+            D_8F1DEE24 = 0x118;
+        }
+    }
+    if (old != D_8F1DEE24) {
+        D_8F1DEE44 = 0;
+        D_8F1DEE5C = 0;
+        func_80041FD0(D_8F1DECA0, D_8F1DEE24, *(Fragment69PackedState *)&D_8F1DEE44, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -473,10 +651,6 @@ void func_8F102394(void) {
 #endif
 
 #ifdef VERSION_US
-typedef union {
-    s32 word;
-    s8 bytes[4];
-} Fragment69PackedState;
 extern s8 D_8F1DEE48[];
 extern s32 D_8F1DECA0;
 extern s32 D_8F1DECF0;
@@ -687,7 +861,47 @@ void func_8F102B48(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F102BC8.s")
+extern s32 D_8F1DEE58;
+s32 func_8F102BC8(void) {
+    s32 result = 0;
+
+    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+        D_8F1DEE58--;
+        if (D_8F1DEE58 < 0) {
+            D_8F1DEE58 = 11;
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+        D_8F1DEE58++;
+        if (D_8F1DEE58 >= 12) {
+            D_8F1DEE58 = 0;
+        }
+    }
+
+    switch (D_8F1DEE58) {
+        case 0: func_8F101FF4(); break;
+        case 1: func_8F1020A4(); break;
+        case 2: func_8F102394(); break;
+        case 4: func_8F102488(); break;
+        case 5: func_8F102618(); break;
+        case 6: func_8F102708(); break;
+        case 7: func_8F10282C(); break;
+        case 8: func_8F1029CC(); break;
+        case 9: func_8F102A20(); break;
+        case 10: func_8F102A98(); break;
+        case 11: func_8F102B48(); break;
+    }
+
+    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x2000) {
+            result = 3;
+        } else {
+            result = 2;
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+        result = 1;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

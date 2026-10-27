@@ -2,7 +2,68 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00020.s")
+void func_82F00020(u32 arg0) {
+    switch (arg0) {
+    case 7:
+        func_8004C990(332, 0);
+        return;
+    case 26:
+        func_8004C990(332, 1);
+        return;
+    case 23:
+        func_8004C990(332, 2);
+        return;
+    case 27:
+        func_8004C990(332, 4);
+        return;
+    case 1:
+        func_8004C990(332, 5);
+        return;
+    case 20:
+        func_8004C990(332, 6);
+        return;
+    case 2:
+    case 6:
+        func_8004C990(332, 7);
+        return;
+    case 8:
+        func_8004C990(332, 8);
+        return;
+    case 22:
+        func_8004C990(332, 9);
+        return;
+    case 4:
+        func_8004C990(332, 10);
+        return;
+    case 25:
+        func_8004C990(332, 11);
+        return;
+    case 0:
+        func_8004C990(332, 12);
+        return;
+    case 3:
+        func_8004C990(332, 13);
+        return;
+    case 24:
+        func_8004C990(332, 14);
+        return;
+    case 5:
+        func_8004C990(332, 15);
+        return;
+    case 9:
+        func_8004C990(332, 16);
+        return;
+    case 21:
+        func_8004C990(332, 17);
+        return;
+    case 19:
+        func_8004C990(332, 3);
+        return;
+    default:
+        func_8004C990(332, 12);
+        return;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F001CC.s")
 
@@ -193,7 +254,6 @@ extern s32 func_800647C8(u8);
 extern s32 HAL_Strcmp(const s8 *, const s8 *);
 extern u8 *func_8004C874(s32, s32);
 extern u8 D_82F031CC[];
-extern u8 D_82F031D0[];
 // Returns the gender-symbol string shown after a Pokemon's name. func_80064474
 // returns 0 (genderless), 1 or 2 from the species byte at +0x0 and the word at
 // +0x16. Species 29 and 32 (Nidoran) get the empty string D_82F031CC while the
@@ -211,7 +271,7 @@ u8 *func_82F00C2C(u8 *pokemon) {
     }
     switch (gender) {
         case 0:
-            return D_82F031D0;
+            return "";
         case 1:
             return func_8004C874(13, 29);
         case 2:
@@ -222,15 +282,58 @@ u8 *func_82F00C2C(u8 *pokemon) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00CF4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01220.s")
+extern void func_800226C0(s32);
+void func_82F01220(void *arg0, s32 arg1) {
+    if (arg1 < 0) {
+        ((u8 *)arg0)[0x1E] = 1;
+        func_800226C0(3);
+        return;
+    }
+    if (((u8 *)arg0)[0xED0 + arg1] > 0) {
+        func_800226C0(0x90);
+        ((u8 *)arg0)[0x1E] = (*(s32 *)((u8 *)arg0 + 0xEE4) != 0) ? 6 : 9;
+    } else if (arg1 != 0) {
+        func_800226C0(5);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F012AC.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01658.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01958.s")
+typedef struct unk_func_82F01958 {
+    u8 unk_000[3791];
+    u8 unk_ECF;
+    u8 unk_ED0[16];
+} unk_func_82F01958;
+extern void WidgetResources_DrawRecords(s32, s32, s32);
+extern void WidgetResources_DrawSelection(s32, s32, s32);
+extern void func_82F01658(s16, s16, u8, f32);
+void func_82F01958(void *arg0, void *arg1, s16 *arg2) {
+    struct {
+        f32 weight;
+        u8 value;
+    } draw;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F019CC.s")
+    draw.weight = func_818055E0(arg0, (u8 *)arg1);
+    WidgetResources_DrawRecords((s32)arg0, (s32)arg1, (s32)arg2);
+    draw.value = ((unk_func_82F01958 *)arg1)->unk_ED0[((unk_func_82F01958 *)arg1)->unk_ECF];
+    func_82F01658(arg2[0], arg2[1], draw.value, draw.weight);
+    WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
+}
+
+void func_82F019CC(void *arg0, void *arg1, s16 *arg2) {
+    struct {
+        f32 weight;
+        u8 value;
+    } draw;
+
+    draw.weight = func_818055E0(arg0, (u8 *)arg1);
+    WidgetResources_DrawRecords((s32)arg0, (s32)arg1, (s32)arg2);
+    draw.value = ((u8 (*)[88])arg1)[((u8 *)arg1)[3790]][((u8 *)arg1)[3792] - 31];
+    func_82F01658(arg2[0], arg2[1], draw.value, draw.weight);
+    WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01A5C.s")
 

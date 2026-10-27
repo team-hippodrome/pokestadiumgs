@@ -2,7 +2,36 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0E660.s")
+typedef struct unk_func_87F0E660_00 {
+    u8 unk_00[0x5C];
+} unk_func_87F0E660_00;
+
+typedef struct unk_func_87F0E660_678 {
+    u8 unk_00[0x10];
+} unk_func_87F0E660_678;
+
+typedef struct unk_func_87F0E660 {
+    /* 0x000 */ unk_func_87F0E660_00 unk_000[18];
+    /* 0x678 */ unk_func_87F0E660_678 unk_678[3];
+    /* 0x6A8 */ u8 unk_6A8[0x18];
+} unk_func_87F0E660; // size = 0x6C0
+
+void func_87F0E660(unk_func_87F0E660 *arg0) {
+    s32 i;
+    s32 j;
+    unk_func_87F0E660 *entry;
+
+    for (i = 0; i < 4; i++) {
+        entry = &arg0[i];
+        for (j = 0; j < 18; j++) {
+            if (arg0[i].unk_000[j].unk_00[0]) {} // karodo
+        }
+        for (j = 0; j < 3; j++) {
+            if (arg0[i].unk_678[j].unk_00[0]) {} // karodo
+        }
+        if (entry) {} // karodo
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0E6B8.s")
 
@@ -61,7 +90,7 @@ void func_87F0E9D8(void *arg0, void *arg1, s32 arg2) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0EA40.s")
 
 extern void func_87F0EA40(void *, u8);
-extern void func_87F0E660(void *);
+extern void func_87F0E660(unk_func_87F0E660 *);
 void func_87F0EDDC(void *arg0, u8 arg1) {
     func_87F0EA40(arg0, arg1);
     func_87F0E660(arg0);

@@ -390,7 +390,27 @@ s32 func_82908A54(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_82908B60.s")
+typedef struct unk_D_8291B880 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 unk_02;
+    /* 0x03 */ u8 unk_03;
+    /* 0x04 */ f32 unk_04;
+    /* 0x08 */ u8 unk_08[0x38];
+} unk_D_8291B880; // size = 0x40
+
+// File-scope bss, pinned at 0x8291B880 by linker_scripts/us/datamig_bss.ld.
+static unk_D_8291B880 D_8291B880[14];
+
+void func_82908B60(void) {
+    s32 i;
+
+    for (i = 0; i < 14; i++) {
+        D_8291B880[i].unk_00 = 0;
+        D_8291B880[i].unk_02 = 0;
+        D_8291B880[i].unk_04 = 10.0f;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -453,7 +473,6 @@ void func_82908E6C(f32 *arg0, const f32 *arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8291B880;
 extern f32 D_82916AF8;
 extern f32 D_82916B08;
 extern f32 D_82916B18;
@@ -463,14 +482,14 @@ extern f32 D_82916B38;
 void func_82908F60(s32 arg0, s32 arg1) {
     switch (arg0) {
         case 0:
-            func_82908E6C((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916AF8);
+            func_82908E6C((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916AF8);
             return;
         case 1:
         case 2:
         case 3:
         case 4:
         case 5:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B08, &D_82916AF8, 5);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B08, &D_82916AF8, 5);
             return;
         case 6:
         case 7:
@@ -478,11 +497,11 @@ void func_82908F60(s32 arg0, s32 arg1) {
         case 9:
         case 10:
         case 11:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B18, &D_82916B08, 6);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B18, &D_82916B08, 6);
             return;
         case 12:
         case 13:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B28, &D_82916B18, 2);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B28, &D_82916B18, 2);
             return;
         case 14:
         case 15:
@@ -495,7 +514,7 @@ void func_82908F60(s32 arg0, s32 arg1) {
         case 22:
         case 23:
         case 24:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B38, &D_82916B28, 10);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B38, &D_82916B28, 10);
             /* fallthrough */
         default:
             return;
@@ -504,7 +523,6 @@ void func_82908F60(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8291B880;
 extern f32 D_82916AD4;
 extern f32 D_82916AE0;
 extern f32 D_82916AEC;
@@ -512,7 +530,7 @@ extern f32 D_82916AEC;
 void func_829090A0(s32 arg0, s32 arg1) {
     switch (arg0) {
         case 0:
-            func_82908E50((f32 *)((arg1 << 6) + 0x18 + &D_8291B880), &D_82916AD4);
+            func_82908E50((f32 *)((arg1 << 6) + 0x18 + (u8 *)D_8291B880), &D_82916AD4);
             return;
         case 1:
         case 2:
@@ -525,12 +543,12 @@ void func_829090A0(s32 arg0, s32 arg1) {
         case 9:
         case 10:
         case 11:
-            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + &D_8291B880), &D_82916AE0, &D_82916AD4, 11);
+            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + (u8 *)D_8291B880), &D_82916AE0, &D_82916AD4, 11);
             return;
         case 12:
         case 13:
         case 14:
-            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + &D_8291B880), &D_82916AEC, &D_82916AE0, 3);
+            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + (u8 *)D_8291B880), &D_82916AEC, &D_82916AE0, 3);
             /* fallthrough */
         default:
             return;
@@ -546,8 +564,6 @@ void func_829090A0(s32 arg0, s32 arg1) {
 /* mkdraft:func_829092AC begin */
 extern s16 D_8291B862;
 extern u8 D_82916EB8;
-extern f32 D_82917694;
-extern u8 D_8291B880;
 extern s32 func_80001FF0(void);
 extern void func_82908E90(u8, s32);
 extern void func_829090A0(s32, s32);
@@ -571,11 +587,11 @@ void func_829092AC(void)
   var_s1 = 0;
   if (var_fp > 0)
   {
- var_s5 = 0; do { temp_s2 = *((s16 *) ((((u8 *) D_82913210) + (D_8291A7C0.unk_1068 * 0x22)) + var_s5)); temp_s0 = (var_s1 << 6) + (&D_8291B880); if (temp_s2 > 0) { switch (*((u8 *) temp_s0)) { case 0:
+ var_s5 = 0; do { temp_s2 = *((s16 *) ((((u8 *) D_82913210) + (D_8291A7C0.unk_1068 * 0x22)) + var_s5)); temp_s0 = (var_s1 << 6) + ((u8 *)D_8291B880); if (temp_s2 > 0) { switch (*((u8 *) temp_s0)) { case 0:
             var_b862 = 1;
             if (func_80001FF0() == 0x32)
           {
-            if (D_8291B862 == ((s32) (((f32) (*((s16 *) ((((u8 *) (&D_82916EB8)) + (temp_s2 * 4)) - 4)))) * D_82917694)))
+            if (D_8291B862 == ((s32) (((f32) (*((s16 *) ((((u8 *) (&D_82916EB8)) + (temp_s2 * 4)) - 4)))) * 0.8f)))
             {
               *((u8 *) temp_s0) = var_b862;
               func_82908E90(*((u8 *) (temp_s0 + 2)), var_s1);
@@ -722,7 +738,6 @@ typedef struct {
     /* 0x0FC */ f32 unk_0FC[14];
 } unk_D_829139C0; // size = 0x134
 extern unk_D_829139C0 D_829139C0[];
-extern f32 D_829176A0;
 extern void func_8003F114(unk_D_8291A7C0_000_004 *, s16, s16, s32);
 extern s32 ModelAnim_SetResourceAnimation(s32, unk_D_8291A7C0_000_004 *, s32);
 extern void Vec3s_SetComponents(s16 *, s16, s16, s16);
@@ -735,7 +750,7 @@ void func_8290A3C4(s32 arg0, s32 arg1) {
     D_8291A7C0.records[arg0].model.unk_002 &= ~0x40;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].position, D_829139C0[D_8291A7C0.unk_1068].position[arg1][0], D_829139C0[D_8291A7C0.unk_1068].position[arg1][1], D_829139C0[D_8291A7C0.unk_1068].position[arg1][2]);
     Vec3s_SetComponents(D_8291A7C0.records[arg0].rotation, D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][0], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][1], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][2]);
-    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * D_829176A0;
+    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * 0.05f;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].model.scale, scale, scale, scale);
     D_8291A7C0.records[arg0].unk_198 = D_829139C0[D_8291A7C0.unk_1068].unk_0FC[arg1];
 }
@@ -778,7 +793,6 @@ void func_8290A5B0(s32 arg0) {
 
 #ifdef VERSION_US
 extern s16 D_829137A8[];
-extern f32 D_829176A4;
 typedef struct {
     /* 0x00 */ f32 position[3];
     /* 0x0C */ s8 unk_0C;
@@ -793,7 +807,7 @@ void func_8290A6F4(s32 arg0, s32 arg1) {
     Vec3s_SetComponents(D_8291A7C0.records[arg0].rotation, 0, 0, 0);
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].position, D_82913820[arg1].position[0], D_82913820[arg1].position[1], D_82913820[arg1].position[2]);
     D_8291A7C0.records[arg0].unk_1A3 = D_82913820[arg1].unk_0C;
-    scale = func_8004B888(D_829137A8[arg1]) * D_829176A4;
+    scale = func_8004B888(D_829137A8[arg1]) * 0.05f;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].model.scale, scale, scale, scale);
     D_8291A7C0.records[arg0].unk_198 = 0.0f;
 }
@@ -828,7 +842,6 @@ void func_8290A81C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_829176A8;
 void func_8290A920(s32 arg0, s32 arg1) {
     f32 scale;
 
@@ -838,7 +851,7 @@ void func_8290A920(s32 arg0, s32 arg1) {
     D_8291A7C0.records[arg0].model.unk_002 &= ~0x40;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].position, D_829139C0[D_8291A7C0.unk_1068].position[arg1][0], D_829139C0[D_8291A7C0.unk_1068].position[arg1][1], D_829139C0[D_8291A7C0.unk_1068].position[arg1][2]);
     Vec3s_SetComponents(D_8291A7C0.records[arg0].rotation, D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][0], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][1], D_829139C0[D_8291A7C0.unk_1068].rotation[arg1][2]);
-    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * D_829176A8;
+    scale = func_8004B888(((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][arg1]) * 0.05f;
     Vec3f_SetComponentsDuplicate(D_8291A7C0.records[arg0].model.scale, scale, scale, scale);
     D_8291A7C0.records[arg0].unk_198 = D_829139C0[D_8291A7C0.unk_1068].unk_0FC[arg1];
 }
@@ -1088,7 +1101,6 @@ void func_8290B220(void) {
 
 #ifdef VERSION_US
 extern s16 D_82916E64[];
-extern f32 D_829176AC;
 extern s16 D_8291B87A;
 extern unk_D_8291A7C0_000_004 D_8291A388[3];
 void func_8290B264(void) {
@@ -1099,7 +1111,7 @@ void func_8290B264(void) {
     if (func_80001FF0() == 60) {
         frame = D_82916E64[D_8291A7C0.unk_1068];
     } else {
-        frame = D_82916E64[D_8291A7C0.unk_1068] * D_829176AC;
+        frame = D_82916E64[D_8291A7C0.unk_1068] * 0.83f;
     }
     if (frame == D_8291B862) {
         StageFade_StartFromTransparent(8);
@@ -1210,7 +1222,52 @@ void func_8290BC84(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290BCF0.s")
+void func_8290BCF0(void) {
+    f32 step;
+    s32 i;
+    u8 *p;
+
+    p = &D_8291A7C0;
+    for (i = 0; i < 4; i++) {
+        if (*(u8 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1A2) == 1) {
+            if (D_8291B862 == 0) {
+                func_8290BC84(p + i * 0x1A4 + 4, 0x2A);
+            }
+            step = 3.6000001f;
+            if (func_80001FF0() == 0x32) {
+                if (D_8291B862 < 0x22) {
+                    if ((i & 1) == 0) {
+                        *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) -= step;
+                    } else {
+                        *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) += step;
+                    }
+                }
+            } else if (D_8291B862 < 0x29) {
+                if ((i & 1) == 0) {
+                    *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) -= 3.0f;
+                } else {
+                    *(f32 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x16C) += 3.0f;
+                }
+            }
+            if (D_8291B862 == 0x29) {
+                if (*(s16 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1E) == 3) {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 5);
+                } else if (*(s16 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1E) == 6) {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 4);
+                } else if (*(s16 *)((u8 *)&D_8291A7C0 + i * 0x1A4 + 0x1E) == 9) {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 6);
+                } else {
+                    func_8003F2C4(*(s32 *)((u8 *)&D_8291A7C0 + i * 0x1A4), p + i * 0x1A4 + 4, 2);
+                }
+            }
+            if (ModelAnim_IsFinished(p + i * 0x1A4 + 4) != 0) {
+                ModelAnim_SetFrame(p + i * 0x1A4 + 4, 0);
+            }
+            func_8290A208(i);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US

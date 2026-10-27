@@ -208,7 +208,23 @@ void func_86006538(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_860065E8.s")
+extern s32 func_87F01A40(s32);
+s32 func_860065E8(s32 arg0) {
+    typedef struct { u8 b7 : 1; u8 b6 : 1; u8 b5 : 1; u8 b4 : 1; u8 rest : 4; } StateFlags;
+    switch (func_87F01A40(arg0)) {
+        case 3:
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b5 = 1;
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b7 = 1;
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b4 = 1;
+            return 1;
+        case 4:
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b5 = 0;
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b7 = 1;
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b4 = 1;
+            return 1;
+    }
+    //!bug: no return value when the result is neither 3 nor 4
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_8600666C.s")
 

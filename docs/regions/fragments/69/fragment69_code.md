@@ -9,3 +9,34 @@ The original decrement narrows to an unsigned byte before comparing against zero
 The first direct byte-lvalue recipe passes the full US build with default host syntax checks and COMPARE=1, then explicit md5sum -c baseroms/us/checksum.md5: retail 1561c75d11cedf356a8ddb1a4a5f9d5d. Based on master 13df50bb51c537a3f669831a147cd7c7654bb95a, preserving all 209 previous process matches and the exact new foreign fragment 13 changes. Source/object/build evidence is retained in work/session-54.
 
 Fleet main afee707ab78d3f63f2f9deeadc7551ec0080eeed has no exact or solved owner attempt or owner reference, so no normalized/raw score exists for this owner. The complete fragment 69 notes were consulted, including the accepted direct-global-lvalue 2A98 recipe and terminal 049C (0.7903/raw0.3548), B54 (0.8676/raw0.8676), 37C4 (0.9620/raw0.9494), and 1FF4 (0.9778/raw0.2222) histories; none was retried. The earlier process failure for 8F100020 remains untouched. All open PR scopes were documentation only before edits. No new names, tokens, fakes, qualifiers, data, tooling, layout or verification changes.
+
+## 2026-10-28 — `func_8F100020`: requeue (optimizer-level finding)
+
+requeue. Z-trigger toggle: `if (arg0 == 2) { if (D_80087200->buttonsPressed & Z_TRIG) D_8F103A50 ^= 1; if (D_8F103A50) arg1[2] |= 0x40; else arg1[2] &= ~0x40; } return 0;`.
+
+With standard `-O2`, IDO's global optimizer (uopt) CSEs `&D_8F103A50` into `$v0` (`lui v0; addiu v0`). Retail instead re-forms it per access (`lui t9`/`lui t1` hoisted above the branch, `lui at` for the store). Compiling this exact C with **`-O2 -Wo,-O1`** (uopt at level 1, normal ugen/as1 scheduling) reproduces retail instruction for instruction. Plain `-O1` gets the per-access `lui`s but not the delay-slot scheduling. A per-file `OPTFLAGS := -O2 -Wo,-O1` for `fragment69_code.o` is **not** the answer: 43 functions in the file change and the ROM compare fails, so retail mixes both shapes within one file. What makes uopt skip address CSE for individual functions is still unknown. The same per-access `lui` signature blocks `func_8220D630` (fragment17) and `func_88210FAC`/`func_88211018` (fragment31), so the explanation would likely unlock a family. Next: find the per-function trigger (something in the function that disables uopt's address CSE, an Olimit effect, or a declaration that makes the global non-CSE-able); don't brute-force spellings.
+
+## 2026-10-28 — `func_8F100020`: per-function trigger found — layout-prerequisite
+
+layout-prerequisite. The trigger is a **function-local `static`**. Declaring the toggle as `static s32 D_8F103A50;` *inside* `func_8F100020` makes standard `-O2` emit retail's per-access `lui t9`/`lui t1`/`lui at` exactly. IDO does not CSE the address of a function-local static. A file-scope `static`, a block-scope `extern`, `volatile`, array and struct spellings all still CSE into `$v0`. This is ordinary, plausible original source (a toggle kept in a static), not a fake.
+
+Landing it requires this C file to emit that static at retail's address. IDO places function statics in `.data` in source order (checked: `a, f's static, b, g's static, c`), and `func_8F100020` is the file's first function. Its static sits 0x150 bytes into the data (`D_8F103A50` at ROM 0x35C280, initial value 1), so the source evidently defines the 0x150 bytes of tables from `D_8F103900` (scripts with `func_8F10008C`/`func_8F1000F4` pointers, the "DummyMon" record, the EUC-JP prompts "Save current data to ROM?"/"Quit ?") before the function. Next action: give `fragment69_code` a `.data` subsegment from 0x35C130, define that data in C, then define `func_8F100020` with `static s32 D_8F103A50 = 1;`. The data after it (`D_8F103A54`...) is dense and needs the same treatment up to a 16-byte boundary, or the subsegment has to end where retail pads.
+
+Check this for every owner with the per-access `lui` signature: if the global is used by only one function, a function-local static is the likely original.
+## 2026-10-28 — `.data` subsegment; `func_8F100020` matched
+
+`rom.yaml` now gives `fragment69_code` the `.data` range `0x35C130..0x35C300`, ending at `D_8F103AD0`, the first 16-byte-aligned label after the static. That data is defined in C at the top of the file, in retail order. `func_8F100020` keeps its toggle as `static s32 sDebugFlag = 1;` (formerly `D_8F103A50`). `D_8F1039C8` is one `s16[3][5]` table: splat's `D_8F1039D0` was only field 4 (the item count) of each row, so `func_8F1002F0` now reads `&D_8F1039C8[rowIndex][4]`.
+
+Every data word after the static is used by exactly one function, in function order: `D_8F103A54`/`58` → `func_8F10049C`, `D_8F103A5C`/`64` → `func_8F1008EC`, `D_8F103A6C`/`9C` → `func_8F101318`. They are probably those functions' statics too. They are file-scope globals here for now; when one of those owners is decompiled, move its words into it as a `static` (IDO keeps source order, so the bytes don't move) and expect retail's per-access `lui` shape from it.
+
+## 2026-10-28 — `func_8F10049C` matched
+
+Gradient panel behind a menu row. The former `D_8F103A54`/`D_8F103A58` words are not statics but the `.data` templates of two initialized local colors, `{0, 0, 30}` and `{0, 0, 150}` (`Fragment69Rgb`, 3 bytes, copied with `lwr`/`swr`). IDO emits those templates at the function's position, so `D_8F103A5C`..`D_8F103A9C` are now defined after this function. The colors live in an inner block declared just before the call, so the copies are scheduled late as in retail; six locals declared ahead of them give the 0x40 frame with the colors at `sp+0x24`/`sp+0x20`. The offsets are written `(rect[2] - width) / 2 + rect[0]`, in that operand order.
+
+## 2026-10-28 — `func_8F1008EC` matched
+
+Species list renderer: a title from `D_8F103A5C`/`D_8F103A64` indexed by mode `D_8F1DEE18`, ten rows of `"%… %s"`-style text (`D_8F103B2C`) with the selected row in yellow, and a footer prompt. `func_800495BC` is varargs (`const char *, ...`); the file-level prototype was corrected in the same change (byte-identical). The only scheduling detail: compute `position` before choosing the title. The permuter found it via an alias temporary, and the plain reordering is equivalent. When `func_8004B7A4` returns NULL, the name falls back to `D_8F10398C` (Japanese build) or `"DummyMon"`.
+
+## 2026-10-28 — `func_8F101FF4` matched
+
+D-pad list scroll: L/R repeat (`0x200`/`0x100`) moves `D_8F1DEE24` within 0..0x118, written directly on the global. When it changes, `D_8F1DEE44`/`D_8F1DEE5C` are cleared and `func_80041FD0(D_8F1DECA0, index, *(Fragment69PackedState *)&D_8F1DEE44, 0)` reloads the list. A local `value` copy of the index scores 0.84; only `old` is a local. `Fragment69PackedState` is now declared above this function.

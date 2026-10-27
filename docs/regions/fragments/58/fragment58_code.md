@@ -50,3 +50,10 @@ pass with `build/pokestadiumgs-us.z64: OK`. The full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail and whitespace checks pass.
 Independent original-word and raw retail comparisons verify all 168 bytes
 at `0x2CB110..0x2CB1B8`.
+
+## 2026-10-28 — `func_83400A64` / `func_83400AFC` matched
+
+Twin model callbacks: on step 2 they copy a 3-byte color plus a fourth byte from the camera-color record at `D_83404188` (`colorA` at + 0x78, `colorB` at + 0x8C) into the model at + 0x18. They then read the camera angle with `func_80037120(cam + 0xB4, cam + 0xA8, ...)` and store `angleX ± 0x2000` and `angleY`. Spelling details:
+- Use a struct-member access `((Fragment58CameraColors *)&D_83404188)->colorA[i]`, so IDO strength-reduces to retail's `record + i` induction with 0x78 in the load offset. A named `D_83404200` or a cast `u8 *` index gives the wrong base.
+- Copy `arg1` into a `dst` local, which keeps it in `$s0`.
+- Declare `s32 i; u8 *dst;` before `distance`, which puts the out-parameters at `sp+0x30..0x34`.

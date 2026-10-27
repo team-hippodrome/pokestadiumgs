@@ -45,7 +45,21 @@ void BattlePlan_ApplyPursuitMultiplier(u8 *state, u8 side) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BF4C0/func_84150330.s")
+extern u16 func_84148520(u16, u16, u8);
+extern u8 * func_84154B30(u8);
+extern s32 func_84155544(u8 *, u8);
+void func_84150330(void *plan, u8 side) {
+    s32 base;
+    u8 *mon;
+    s16 amount;
+
+    mon = func_84154B30(side);
+    if ((mon[3] & 1) == 0) return;
+    if (func_84155544(mon + 8, 2) != 0) return;
+    base = (s32)(u32)plan + 4;
+    amount = func_84148520(*(u16 *)(mon + 0x30), *(u16 *)(mon + 0x32), 3);
+    ((u16 *)(u32)base)[(u32)side + 0x11] += amount;
+}
 
 extern s32 BattleRecord_HasMove(u8 *, u8);
 extern u8 func_80063660(u8);

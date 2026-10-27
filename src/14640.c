@@ -1254,7 +1254,60 @@ void GbApu_InitSlowCopySlot(u8 *arg0, s32 arg1) {
 }
 void func_80016354(s32 a0, s32 a1, s32 a2, s32 a3) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016368.s")
+typedef struct AudioSlowLoad {
+    /* 0x00 */ u8 medium;
+    /* 0x01 */ u8 seqOrFontId;
+    /* 0x02 */ u16 instId;
+    /* 0x04 */ s32 unkMediumParam;
+    /* 0x08 */ s32 curDevAddr;
+    /* 0x0C */ u8 *curRamAddr;
+    /* 0x10 */ u8 *ramAddr;
+    /* 0x14 */ s32 status;
+    /* 0x18 */ s32 bytesRemaining;
+    /* 0x1C */ s8 *isDone;
+    /* 0x20 */ u32 sampleBits;
+    /* 0x24 */ u8 *sampleAddr;
+    /* 0x28 */ u8 unk_28[0x3C];
+} AudioSlowLoad; // size = 0x64
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x205C];
+    /* 0x205C */ s32 slowLoadPos;
+    /* 0x2060 */ AudioSlowLoad slowLoads[2];
+} AudioContextSlowLoadView;
+
+// Same code as Ocarina of Time AudioLoad_SlowLoadSeq (src/code/audio_load.c).
+s32 func_80016368(s32 seqId, u8 *ramAddr, s8 *isDone) {
+    AudioSlowLoad *slowLoad;
+    AudioTable *seqTable;
+    u32 size;
+
+    seqId = func_8001510C(0, seqId);
+    seqTable = (AudioTable *)func_8001519C(0);
+    slowLoad = &((AudioContextSlowLoadView *)D_8011BE90)->slowLoads[((AudioContextSlowLoadView *)D_8011BE90)->slowLoadPos];
+    if (slowLoad->status == 3) {
+        slowLoad->status = 0;
+    }
+
+    slowLoad->sampleAddr = NULL;
+    slowLoad->isDone = isDone;
+    size = seqTable->entries[seqId].size;
+    size = (size + 0xF) & ~0xF;
+    slowLoad->curRamAddr = ramAddr;
+    slowLoad->status = 1;
+    slowLoad->bytesRemaining = size;
+    slowLoad->ramAddr = ramAddr;
+    slowLoad->curDevAddr = seqTable->entries[seqId].romAddr;
+    slowLoad->medium = seqTable->entries[seqId].medium;
+    slowLoad->seqOrFontId = seqId;
+
+    if (slowLoad->medium == 1) {
+        slowLoad->unkMediumParam = seqTable->unkMediumParam;
+    }
+
+    ((AudioContextSlowLoadView *)D_8011BE90)->slowLoadPos ^= 1;
+    return 0;
+}
 
 /* mkdraft:GbApu_ResetSlotFlags begin */
 extern u8 D_8011BE90[];
@@ -1302,6 +1355,19 @@ osCreateMesgQueue((OSMesgQueue *)(slot + 0x24), (OSMesg *)(slot + 0x3C), 1);
 return slot;
 
 }
+
+// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
+typedef struct {
+    s8 active, delay, copy_type; u8 unknown_03;
+    s32 destination_base, source, destination;
+    s32 remaining;
+    s32 chunk_size;
+    u32 unknown_18, completion_message;
+    OSMesgQueue *completion_queue;
+    OSMesgQueue queue;
+    OSMesg message;
+    OSIoMesg request;
+} BackgroundCopyRequest;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016624.s")
 
@@ -1359,18 +1425,6 @@ void func_80016754(u8 *async_load) {
     osSendMesg(*(OSMesgQueue **)(async_load + 0x20), done_msg, OS_MESG_NOBLOCK);
 }
 
-// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
-typedef struct {
-    s8 active, delay, copy_type; u8 unknown_03;
-    s32 destination_base, source, destination;
-    s32 remaining;
-    s32 chunk_size;
-    u32 unknown_18, completion_message;
-    OSMesgQueue *completion_queue;
-    OSMesgQueue queue;
-    OSMesg message;
-    OSIoMesg request;
-} BackgroundCopyRequest;
 typedef struct { u8 unknown[2]; s16 unknown_02; } BackgroundCopyHeader;
 extern void func_80016AB4(BackgroundCopyRequest *, s32);
 extern void func_80016A24(u8 *, s32);
@@ -1492,7 +1546,81 @@ void func_80016B38(Sample **arg0, u32 arg1, SampleBankRelocInfo *arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016C78.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80017070.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0xAB8];
+    /* 0x0AB8 */ AudioPreloadReq preloadSampleStack[128];
+    /* 0x14B8 */ u8 unk_14B8[4];
+    /* 0x14BC */ s32 preloadSampleStackTop;
+    /* 0x14C0 */ u8 unk_14C0[0x21C8 - 0x14C0];
+    /* 0x21C8 */ OSMesgQueue preloadSampleQueue;
+} AudioContextPreloadView;
+
+// Same code as Ocarina of Time AudioLoad_ProcessSamplePreloads (src/code/audio_load.c), with the
+// sample address and size cached in locals; GS's RAM medium is 0.
+s32 func_80017070(s32 resetStatus) {
+    Sample *sample;
+    AudioPreloadReq *preload;
+    u32 preloadIndex;
+    u32 key;
+    u32 nChunks;
+    s32 pad;
+    u32 size;
+    u8 *sampleAddr;
+
+    if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop > 0) {
+        if (resetStatus != 0) {
+            osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK);
+            ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop = 0;
+            return 0;
+        }
+        if (osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK) == -1) {
+            return 0;
+        }
+
+        preloadIndex >>= 24;
+        preload = &((AudioContextPreloadView *)D_8011BE90)->preloadSampleStack[preloadIndex];
+
+        if (preload->isFree == FALSE) {
+            sample = preload->sample;
+            key = (u32)sample->sampleAddr + sample->size + sample->medium;
+            if (key == preload->endAndMediumKey) {
+                sample->sampleAddr = preload->ramAddr;
+                sample->medium = 0;
+            }
+            preload->isFree = TRUE;
+        }
+
+        for (;;) {
+            if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop <= 0) {
+                break;
+            }
+            preload = &((AudioContextPreloadView *)D_8011BE90)
+                           ->preloadSampleStack[((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop - 1];
+            if (preload->isFree == TRUE) {
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+                continue;
+            }
+
+            sample = preload->sample;
+            sampleAddr = sample->sampleAddr;
+            size = sample->size;
+            nChunks = (size >> 12) + 1;
+            key = (u32)sampleAddr + size + sample->medium;
+            if (key != preload->endAndMediumKey) {
+                preload->isFree = TRUE;
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+            } else {
+                size = sample->size;
+                func_80016500((s32)sampleAddr, (s32)preload->ramAddr, size, sample->medium, nChunks,
+                              (s32)&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, preload->encodedInfo);
+                break;
+            }
+        }
+    }
+    return 1;
+}
 
 s32 func_80017224(void *arg0, s32 arg1, void **arg2) {
     s32 i = 0;
@@ -1607,24 +1735,23 @@ void func_800179B4(void) {}
 void func_800179B4_padding(void) {}
 void func_800179B4_padding2(void) {}
 
+// File data before func_800179CC's static, in retail order (rom.yaml .data window 0x90670).
+s32 D_8008FA70 = (s32)osEPiStartDma;
+s32 D_8008FA74 = 0;
+s32 D_8008FA78 = 0;
+
 // Same code as Majora's Mask AudioLoad_ScriptLoad (src/audio/lib/load.c).
-// D_8008FA7C is that function's local static sLoadIndex, which stays defined in
-// asm/us/data/88A40.data.s; it is the slot index into D_800D1378 and the message value.
+// sLoadIndex is the slot index into D_800D1378 and the message value.
 extern u8 D_800D1378;
 extern OSMesgQueue D_800D1320;
-extern u32 D_8008FA7C;
 void func_800179CC(s32 arg0, s32 arg1, s8 *arg2) {
-    // FAKE: reaching the static through a pointer reproduces the function-static codegen;
-    // direct D_8008FA7C accesses leave 11 instructions different.
-    u32 *load_index_ptr = &D_8008FA7C;
-    u32 load_index = *load_index_ptr;
+    static u32 sLoadIndex = 0;
 
-    ((s8 **)&D_800D1378)[load_index] = arg2;
-    func_80014708(arg0, arg1, 0, load_index, &D_800D1320);
-    load_index = *load_index_ptr + 1;
-    *load_index_ptr = load_index;
-    if (load_index == 16) {
-        *load_index_ptr = 0;
+    ((s8 **)&D_800D1378)[sLoadIndex] = arg2;
+    func_80014708(arg0, arg1, 0, sLoadIndex, &D_800D1320);
+    sLoadIndex++;
+    if (sLoadIndex == 16) {
+        sLoadIndex = 0;
     }
 }
 
@@ -1901,7 +2028,30 @@ void func_8001877C(s32 arg0, s16 arg1) {
     func_800186B8(arg0, &value);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800187AC.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x6314];
+    /* 0x6314 */ u8 cmdWrPos;
+    /* 0x6315 */ u8 cmdRdPos;
+    /* 0x6316 */ u8 unk_6316[0x16];
+    /* 0x632C */ OSMesgQueue *cmdProcQueueP;
+} AudioContextSchedView;
+
+// Same code as Majora's Mask AudioThread_ScheduleProcessCmds without the queue-size tracking.
+s32 func_800187AC(void) {
+    s32 ret;
+
+    ret = osSendMesg(((AudioContextSchedView *)D_8011BE90)->cmdProcQueueP,
+                     (OSMesg)((((AudioContextSchedView *)D_8011BE90)->cmdRdPos & 0xFF) << 8 |
+                              (((AudioContextSchedView *)D_8011BE90)->cmdWrPos & 0xFF)),
+                     OS_MESG_NOBLOCK);
+    if (ret != -1) {
+        ((AudioContextSchedView *)D_8011BE90)->cmdRdPos = ((AudioContextSchedView *)D_8011BE90)->cmdWrPos;
+        ret = 0;
+    } else {
+        return -1;
+    }
+    return ret;
+}
 
 void func_80018810(void) {
     D_8011BE90[0x6315] = D_8011BE90[0x6314];
@@ -1925,9 +2075,98 @@ typedef struct AudioCmd {
     } data;
 } AudioCmd; // size = 0x8
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018828.s")
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x38];
+    /* 0x38 */ u8 *channels[16];
+} SeqPlayerView;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_8001895C.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x2BF0];
+    /* 0x2BF0 */ s16 numSequencePlayers;
+    /* 0x2BF2 */ u8 unk_2BF2[0x345A];
+    /* 0x604C */ SeqPlayerView *seqPlayers[(0x6318 - 0x604C) / 4];
+    /* 0x6318 */ u16 activeChannelMasks[1];
+} AudioContextProcessView;
+
+extern void func_80018078(AudioCmd *);
+extern void func_80018CFC(u8 *, u8 *);
+extern void func_80018ED4(u8 *, AudioCmd *);
+
+// Same code as Ocarina of Time Audio_ProcessCmd (src/code/audio_thread.c); GS treats every
+// op >= 0xE0 as global and keeps the sequence players as a pointer array.
+void func_80018828(AudioCmd *cmd) {
+    SeqPlayerView *seqPlayer;
+    u16 channelMask;
+    s32 i;
+
+    if ((cmd->op & 0xF0) >= 0xE0) {
+        func_80018078(cmd);
+        return;
+    }
+
+    if (cmd->arg0 < ((AudioContextProcessView *)D_8011BE90)->numSequencePlayers) {
+        seqPlayer = ((AudioContextProcessView *)D_8011BE90)->seqPlayers[cmd->arg0];
+        if (cmd->op & 0x80) {
+            func_80018078(cmd);
+            return;
+        }
+        if (cmd->op & 0x40) {
+            func_80018CFC((u8 *)seqPlayer, (u8 *)cmd);
+            return;
+        }
+        if (cmd->arg1 < 0x10) {
+            func_80018ED4(seqPlayer->channels[cmd->arg1], cmd);
+            return;
+        }
+        if (cmd->arg1 == 0xFF) {
+            channelMask = ((AudioContextProcessView *)D_8011BE90)->activeChannelMasks[cmd->arg0];
+            for (i = 0; i < 16; i++) {
+                if (channelMask & 1) {
+                    func_80018ED4(seqPlayer->channels[i], cmd);
+                }
+                channelMask = channelMask >> 1;
+            }
+        }
+    }
+}
+
+// File data between func_800179CC's and func_8001895C's statics (rom.yaml .data window).
+// D_8008FA80 is probably the audio update's waiting-task static.
+void *D_8008FA80 = NULL;
+s32 D_8008FA84 = 0;
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x6316];
+    /* 0x6316 */ u8 cmdQueueFinished;
+    /* 0x6317 */ u8 unk_6317[0x79];
+    /* 0x6390 */ AudioCmd cmdBuf[0x100];
+} AudioContextCmdView;
+
+// Same code as Ocarina of Time Audio_ProcessCmds (src/code/audio_thread.c).
+void func_8001895C(u32 msg) {
+    static u8 sCurCmdRdPos = 0;
+    AudioCmd *cmd;
+    u8 endPos;
+
+    if (!((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished) {
+        sCurCmdRdPos = msg >> 8;
+    }
+
+    while (TRUE) {
+        endPos = msg & 0xFF;
+        if (sCurCmdRdPos == endPos) {
+            ((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished = FALSE;
+            break;
+        }
+        cmd = &((AudioContextCmdView *)D_8011BE90)->cmdBuf[sCurCmdRdPos++ & 0xFF];
+        if (cmd->op == 0xF8) {
+            ((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished = TRUE;
+            break;
+        }
+        func_80018828(cmd);
+        cmd->op = 0;
+    }
+}
 
 extern OSMesgQueue D_8011DFC0;
 u32 func_80018A10(s32 *arg0) {
@@ -2428,7 +2667,26 @@ s32 func_800193B8(s32 flags) {
     }
     return count;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800194A0.s")
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x2C30];
+    /* 0x2C30 */ s32 totalTaskCount;
+    /* 0x2C34 */ u8 unk_2C34[0xD8];
+    /* 0x2D0C */ s32 audioRandom;
+} AudioContextRandomView;
+
+// Same code as Ocarina of Time Audio_NextRandom (src/code/audio_thread.c).
+u32 func_800194A0(void) {
+    static u32 sAudioRandom = 0x12345678;
+    static u32 sAudioRandomPrev = 0x11111111;
+    u32 count = osGetCount();
+
+    sAudioRandom = (((AudioContextRandomView *)D_8011BE90)->totalTaskCount + sAudioRandom + count) *
+                   (((AudioContextRandomView *)D_8011BE90)->audioRandom + 0x1234567);
+    sAudioRandom = (sAudioRandom & 1) + (sAudioRandom * 2) + sAudioRandomPrev;
+    sAudioRandomPrev = count;
+    return sAudioRandom;
+}
 
 
 void func_8001951C(void) {

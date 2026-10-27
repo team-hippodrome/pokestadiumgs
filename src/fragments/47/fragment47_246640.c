@@ -1,22 +1,190 @@
 #include "global.h"
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000020.s")
+extern f64 D_8600D4E8;
+extern f64 D_8600D4F0;
+extern void *func_87C00160(void *, void *, void *);
+extern f64 func_87C00208(void *, void *);
+extern f64 func_87C00664(void *);
+extern f64 func_87C0068C(void *);
+extern void *func_87C00198(void *, void *, void *);
+extern void *func_87C002A8(void *, void *, f64);
+
+f64 func_86000020(u8 *arg0, u8 *arg1, f64 horizon) {
+    f64 closest_time;
+    f64 dot;
+    f64 speed_squared;
+    struct {
+        f64 x;
+        f64 y;
+        f64 z;
+    } separation, relative_velocity, projected;
+
+    func_87C00160(&separation, arg1, arg0);
+    func_87C00160(&relative_velocity, arg1 + 0x18, arg0 + 0x18);
+    relative_velocity.y = 0.0;
+    separation.y = 0.0;
+    dot = func_87C00208(&separation, &relative_velocity);
+    speed_squared = func_87C00664(&relative_velocity);
+    if (speed_squared < D_8600D4E8) {
+        return func_87C0068C(&separation);
+    } else {
+        closest_time = -dot / speed_squared;
+        if (closest_time <= D_8600D4F0) {
+            return func_87C0068C(&separation);
+        } else {
+            if (horizon <= closest_time) {
+                func_87C002A8(&projected, &relative_velocity, horizon);
+                func_87C00198(&projected, &separation, &projected);
+                return func_87C0068C(&projected);
+            } else {
+                //!bug The negative product increases the squared distance.
+                return sqrtf((f32)(func_87C00664(&separation) - (closest_time * dot)));
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000170.s")
+s32 func_86000170(u8 *object, s32 flag_a, s32 flag_b, f64 horizon) {
+    static f64 radius_margin = 3.0;
+    s32 offset;
+    u8 *other;
+
+    if (flag_a == 0 && flag_b == 0) {
+        return 0;
+    }
+    if (*(s32 *)(object + 0x1828) != 3) {
+        return 0;
+    }
+    offset = 0;
+    do {
+        other = *(u8 **)(object + 0x1870) + offset;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(object + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        if (func_86000020(object, other, horizon) <
+            *(f64 *)(other + 0x17C8) + *(f64 *)(object + 0x17C8) + radius_margin) {
+            return 1;
+        }
+next_object:
+        offset += 6552;
+    } while (offset != 26208);
+    return 0;
+}
+
+typedef struct {
+    f64 x;
+    f64 y;
+    f64 z;
+} Fragment47SteeringVector;
+
+typedef struct {
+    f32 threshold;
+    f32 probability;
+    f32 speed;
+    u32 flags;
+} Fragment47SteeringConfig;
+
+Fragment47SteeringVector D_8600D158 = {0.0, 0.0, 0.0};
+Fragment47SteeringVector D_8600D170 = {0.0, 0.0, 0.0};
+Fragment47SteeringConfig D_8600D188 = {0.65f, 0.00605f, 28.0f, 0xF3C00000};
+f64 D_8600D198 = 250.0;
+
 #endif
 
 void func_860002A0(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860002A8.s")
+extern f64 D_8600D4F8;
+
+u8 *func_860002A8(u8 *arg0, s32 flag_a, s32 flag_b, f64 horizon) {
+    f64 best_distance;
+    u8 *closest;
+    s32 offset;
+    u8 *other;
+
+    closest = NULL;
+    best_distance = D_8600D4F8;
+    if (flag_a == 0 && flag_b == 0) {
+        return NULL;
+    }
+    if (*(s32 *)(arg0 + 0x1828) != 3) {
+        return NULL;
+    }
+    offset = 0;
+    do {
+        other = *(u8 **)(arg0 + 0x1870) + offset;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(arg0 + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        {
+            f64 distance = func_86000020(arg0, other, horizon);
+            if (distance < best_distance) {
+                best_distance = distance;
+                closest = other;
+            }
+        }
+next_object:
+        offset += 0x1998;
+    } while (offset != 0x6660);
+    return closest;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860003DC.s")
+u8 *func_860003DC(u8 *arg0, s32 flag_a, s32 flag_b) {
+    u8 *closest;
+    s32 best_score;
+    s32 i;
+    u8 *other;
+
+    closest = NULL;
+    best_score = 0;
+    i = 0;
+    do {
+        other = *(u8 **)(arg0 + 0x1870) + i * 0x1998;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(arg0 + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1814) < best_score) {
+            best_score = *(s32 *)(other + 0x1814);
+            closest = other;
+        }
+next_object:
+        i++;
+    } while (i != 4);
+    return closest;
+}
 #endif
 
 #ifdef VERSION_US
@@ -85,7 +253,100 @@ void func_86000C6C(u8* arg0, s32 arg1, unk_func_86000C6C* arg2, f32 arg3, f32 ar
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000CCC.s")
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 depth;
+    s32 color_index;
+    f32 unk_10;
+    f32 opacity;
+} Fragment47TrailRecord;
+
+typedef struct {
+    Fragment47TrailRecord records[10];
+    s32 index;
+} Fragment47TrailBuffer;
+
+typedef struct {
+    u8 primitive[4];
+    u8 environment[4];
+} Fragment47TrailColorPair;
+
+typedef struct {
+    Fragment47TrailColorPair unk_00;
+    Fragment47TrailColorPair colors[4];
+} Fragment47TrailColorTable;
+
+extern Fragment47TrailColorTable D_8600D1A0;
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+
+void func_86000CCC(Fragment47TrailBuffer *arg0) {
+    s32 resource;
+    s32 inner_gradient;
+    s32 outer_gradient;
+    Fragment47TrailRecord *records;
+    s16 inner_texture_step;
+    Fragment47TrailRecord *inner_record;
+    s32 i;
+    s16 outer_texture_step;
+    f32 radius;
+    Fragment47TrailRecord *outer_record;
+
+    records = arg0->records;
+    resource = func_8004C990(151, 0);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2);
+    func_8004D1FC((u8 *)resource);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTexturePersp(D_800D0510++, G_TP_NONE);
+    gDPSetDepthSource(D_800D0510++, G_ZS_PRIM);
+    gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT,
+        ENVIRONMENT, 0, TEXEL0, 0, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT,
+        ENVIRONMENT, 0, TEXEL0, 0);
+    radius = 18.0f;
+    for (i = 0; i < 10; i++) {
+        outer_record = records;
+        outer_record += ((arg0->index - i + 9) % 10);
+        if (!(outer_record->unk_10 <= 0)) {
+            outer_gradient = (s32)(16384.0f / radius);
+            outer_texture_step = (s16)outer_gradient;
+            gDPSetPrimDepth(D_800D0510++, (u32)outer_record->depth & 0x7FFF, 0);
+            gDPSetPrimColor(D_800D0510++, 255, 255, D_8600D1A0.colors[outer_record->color_index].primitive[0],
+                D_8600D1A0.colors[outer_record->color_index].primitive[1],
+                D_8600D1A0.colors[outer_record->color_index].primitive[2],
+                D_8600D1A0.colors[outer_record->color_index].primitive[3]);
+            gDPSetEnvColor(D_800D0510++, D_8600D1A0.colors[outer_record->color_index].environment[0],
+                D_8600D1A0.colors[outer_record->color_index].environment[1],
+                D_8600D1A0.colors[outer_record->color_index].environment[2],
+                (u32)D_8600D1A0.colors[outer_record->color_index].environment[3] * (1.0f - (f32)i / 10.0f) * outer_record->opacity);
+            gSPScisTextureRectangle(D_800D0510++,
+                (outer_record->x - radius) * 4.0f, (outer_record->y - radius) * 4.0f,
+                (outer_record->x + radius) * 4.0f, (outer_record->y + radius) * 4.0f,
+                G_TX_RENDERTILE, 0, 0, outer_texture_step, outer_texture_step);
+        }
+    }
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 128);
+    gDPSetPrimColor(D_800D0510++, 255, 255, 255, 255, 255, 255);
+    radius = 6.0f;
+    for (i = 0; i != 10; i++) {
+        inner_record = records;
+        inner_record += ((arg0->index - i + 9) % 10);
+        if (!(inner_record->unk_10 <= 0)) {
+            inner_gradient = (s32)(16384.0f / radius);
+            inner_texture_step = (s16)inner_gradient;
+            gDPSetPrimDepth(D_800D0510++, (u32)inner_record->depth & 0x7FFF, 0);
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255,
+                (1.0f - (f32)i / 10.0f) * 128.0f * inner_record->opacity);
+            gSPScisTextureRectangle(D_800D0510++,
+                (inner_record->x - radius) * 4.0f, (inner_record->y - radius) * 4.0f,
+                (inner_record->x + radius) * 4.0f, (inner_record->y + radius) * 4.0f,
+                G_TX_RENDERTILE, 0, 0, inner_texture_step, inner_texture_step);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -218,7 +479,29 @@ void func_86001B1C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86001CE8.s")
+typedef struct {
+    f64 x;
+    f64 y;
+    f64 z;
+} Fragment47CallbackVector;
+extern void *func_87C00718(void *, void *, f64);
+void func_86001CE8(u8 *arg0, f32 *arg1, f32 *arg2) {
+    Fragment47CallbackVector normalized;
+    Fragment47CallbackVector delta;
+
+    *arg1 = 0.0f;
+    *arg2 = 0.0f;
+    if (*(s32 *)(arg0 + 0x194) && *(s32 *)(arg0 + 0x184)) {
+        func_87C00718(&normalized, func_87C00160(&delta, arg0 + 0x2B8, arg0 + 0x198), 140.0);
+        if (*(s32 *)(arg0 + 0x2D0) != 0) {
+            *arg1 = (f32)normalized.z;
+            *arg2 = (f32)normalized.x;
+        } else {
+            *arg1 = (f32)-normalized.z;
+            *arg2 = (f32)-normalized.x;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -226,7 +509,53 @@ void func_86001DBC(u8 *arg0) { arg0[0x1639] &= 0xFFFE; }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86001DCC.s")
+extern u8 D_8600DE30[];
+extern void func_860041E8(u8 *arg0, u8 *arg1, f32 arg2);
+extern s32 func_8600472C(u8 *arg0);
+void func_86001DCC(u8 *arg0) {
+    f32 factor;
+    f32 radius_scale;
+    f32 scale;
+    f64 phase;
+    f64 split;
+
+    radius_scale = (f32)(*(f64 *)(arg0 + 0x17C8) / 200.0);
+    if (*(s32 *)(arg0 + 0x1828) != 3) {
+        arg0[0x14D1] &= 0xFFFE;
+        return;
+    }
+    if (func_8600472C(arg0) != 0) {
+        factor = (f32)*(f64 *)(D_8600DE30 + 0x2B0);
+    } else {
+        phase = *(f64 *)(arg0 + 0x17E8);
+        if (phase > 0.0) {
+            split = *(f64 *)(D_8600DE30 + 0x2D8);
+            if (split <= 0.0) {
+                factor = (f32)(*(f64 *)(D_8600DE30 + 0x2C0) +
+                    (phase / *(f64 *)(D_8600DE30 + 0xC8)) *
+                    (*(f64 *)(D_8600DE30 + 0x2B8) - *(f64 *)(D_8600DE30 + 0x2C0)));
+            } else if (split < phase) {
+                factor = (f32)(*(f64 *)(D_8600DE30 + 0x2C0) +
+                    ((*(f64 *)(D_8600DE30 + 0x2B8) - *(f64 *)(D_8600DE30 + 0x2C0)) *
+                    (phase - split) / (*(f64 *)(D_8600DE30 + 0xC8) - split)));
+            } else {
+                factor = (f32)(*(f64 *)(D_8600DE30 + 0x2C0) +
+                    ((*(f64 *)(D_8600DE30 + 0x2C8) - *(f64 *)(D_8600DE30 + 0x2C0)) *
+                    (split - phase) / split));
+            }
+        } else {
+            arg0[0x14D1] &= 0xFFFE;
+            return;
+        }
+    }
+    scale = radius_scale * factor;
+    arg0[0x14D1] |= 1;
+    arg0[0x14ED] = 255;
+    *(f32 *)(arg0 + 0x1500) = scale;
+    *(f32 *)(arg0 + 0x1504) = scale;
+    *(f32 *)(arg0 + 0x1508) = scale;
+    func_860041E8(arg0, arg0 + 0x1530, (f32)*(f64 *)(arg0 + 0xC8));
+}
 #endif
 
 #ifdef VERSION_US
@@ -267,17 +596,60 @@ void func_86001FCC(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002070.s")
+extern f64 D_8600D1C8[];
+extern f64 D_8600DF00;
+extern void func_87C00908(void *, f64, f64, f64);
+extern void func_87C00120(void *, f64, f64, f64);
+void func_86002070(void *arg0, s32 index, f32 radius, void *input_callback, void *context) {
+    u8 *object = arg0;
+    s32 i;
+
+    *(void **)(object + 0x1824) = input_callback;
+    *(f64 *)(object + 0x17C8) = (f64)radius;
+    *(s32 *)(object + 0x1810) = index;
+    *(f64 *)(object + 0x1858) = 0.0;
+    func_87C00908(object + 0x1838, 0.0, 0.0, 0.0);
+    func_86007AF8(object, *(f64 *)(object + 0x17C8));
+    *(s32 *)(object + 0x1820) = 0;
+    *(f32 *)(object + 0x1804) = 0.0f;
+    *(f32 *)(object + 0x1800) = 0.0f;
+    *(void **)(object + 0x1870) = context;
+    *(s32 *)(object + 0x1828) = 0;
+    *(s32 *)(object + 0x1814) = 0;
+    *(s32 *)(object + 0x1818) = -1;
+    *(f64 *)(object + 0x17D0) = 0.0;
+    *(f64 *)(object + 0x17D8) = D_8600D1C8[*(s32 *)(object + 0x1810)];
+    *(f64 *)(object + 0x1860) = 0.0;
+    *(f64 *)(object + 0x17E0) = 0.0;
+    *(f64 *)(object + 0x17E8) = D_8600DF00;
+    *(f64 *)(object + 0x17F0) = 0.0;
+    *(f32 *)(object + 0x1808) = 1.0f;
+    *(f64 *)(object + 0x17F8) = -1.0;
+    func_86000BB0(object + 0x189C);
+    func_86001FCC(object);
+    func_87C00120(object + 0x1878, 0.0, 0.0,
+        *(f64 *)(*(u8 **)(object + 0x1870) + 0x6670) * 0.6);
+    // func_8600AE6C uses signed slot values plus one as texture-table indices.
+    //@src/fragments/47/fragment47_2507E0.c
+    for (i = 0; i != 8; i++) {
+        ((s8 *)object)[0x1990 + i] = -1;
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern void func_86002070(void *, s32, f32, void *, void *);
 extern void func_86003EFC(void *, s32);
 extern f32 MathUtil_Random_ZeroOne(void);
-extern f32 D_8600D668;
-extern f32 D_8600D66C;
 extern void func_87C01F6C(void *, f32);
-void func_860021C4(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4) { f32 random; func_86002070(arg0, arg1, arg2, arg3, arg4); func_86003EFC(arg0, 0); random = MathUtil_Random_ZeroOne(); func_87C01F6C(arg0 + 0x17A0, random * D_8600D668 + D_8600D66C); }
+void func_860021C4(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4) {
+    f32 random;
+
+    func_86002070(arg0, arg1, arg2, arg3, arg4);
+    func_86003EFC(arg0, 0);
+    random = MathUtil_Random_ZeroOne();
+    func_87C01F6C(arg0 + 0x17A0, random * 0.02f + 0.99f);
+}
 #endif
 
 #ifdef VERSION_US
@@ -337,11 +709,9 @@ s32 func_860022F8(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8600D670;
 extern void func_86007B4C(void *, f64);
 extern void *func_87C00308(void *, void *, void *, f64);
 extern void *func_87C00160(void *, void *, void *);
-extern void func_87C00718(void *, void *, f64);
 extern void func_86007E4C(u8 *, s32, s32);
 void func_860023CC(u8 *arg0, f64 arg1) {
     f32 value;
@@ -352,7 +722,7 @@ void func_860023CC(u8 *arg0, f64 arg1) {
     *(f32 *)(arg0 + 0x150) = value;
     *(f32 *)(arg0 + 0x154) = value;
     *(f32 *)(arg0 + 0x158) = value;
-    scaled = value * D_8600D670;
+    scaled = value * 1.1f;
     *(f32 *)(arg0 + 0x2B8) = scaled;
     *(f32 *)(arg0 + 0x2BC) = scaled;
     *(f32 *)(arg0 + 0x2C0) = scaled;
@@ -370,11 +740,155 @@ void func_86002444(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002470.s")
+extern void func_8003F018(s32);
+extern s32 func_80071ADC(s32, s32);
+extern s32 func_86002780(s32, u8 *);
+extern s32 func_8600297C(s32, u8 *);
+extern f64 D_8600DE48;
+extern void func_86007BE4(void *arg0, s32 arg1);
+void func_86002470(u8 *object, s32 resource_file, s32 *models) {
+    f32 base_scale;
+    u8 **node_slot;
+    u8 *main_model;
+    u8 *secondary;
+    u8 *effect;
+    u8 *overlay;
+    s32 resource_id;
+
+    base_scale = (f32)(*(f64 *)(object + 0x17C8) / 200.0);
+    func_86007BE4(object, *(s32 *)(object + 0x1810));
+    func_86001FCC(object);
+    main_model = object + 0x120;
+    func_8003F018((s32)main_model);
+    secondary = object + 0x288;
+    func_8003F018((s32)secondary);
+    effect = object + 0x14D0;
+    func_8003F018((s32)effect);
+    overlay = object + 0x1638;
+    func_8003F018((s32)overlay);
+    func_8003F114(main_model, 0, -1, models[*(s32 *)(object + 0x1810)]);
+    func_8003F114(secondary, 0, -1, func_80071ADC(resource_file, 79));
+    resource_id = 0;
+    switch (*(s32 *)(object + 0x1810)) {
+        case 0:
+            resource_id = 197;
+            break;
+        case 1:
+            resource_id = 198;
+            break;
+        case 2:
+            resource_id = 195;
+            break;
+        case 3:
+            resource_id = 196;
+            break;
+    }
+    func_8003F114(effect, 0, -1, func_80071ADC(resource_file, resource_id));
+    switch (*(s32 *)(object + 0x1810)) {
+        case 0:
+            resource_id = 191;
+            break;
+        case 1:
+            resource_id = 192;
+            break;
+        case 2:
+            resource_id = 194;
+            break;
+        case 3:
+            resource_id = 193;
+            break;
+    }
+    func_8003F114(overlay, 0, -1, func_80071ADC(resource_file, resource_id));
+    object[0x14D2] |= 0x10;
+    object[0x163A] |= 0x10;
+    object[0x122] |= 0x10;
+    object[0x28A] |= 0x10;
+    *(f32 *)(object + 0x1500) = base_scale * 5.0f;
+    *(f32 *)(object + 0x1504) = base_scale * 5.0f;
+    *(f32 *)(object + 0x1508) = base_scale * 5.0f;
+    object[0x14ED] = 255;
+    *(f32 *)(object + 0x150) = base_scale;
+    *(f32 *)(object + 0x154) = base_scale;
+    *(f32 *)(object + 0x158) = base_scale;
+    *(f32 *)(object + 0x2B8) = base_scale;
+    *(f32 *)(object + 0x2BC) = base_scale;
+    *(f32 *)(object + 0x2C0) = base_scale;
+    func_80037E3C(main_model, (void (*)(s32, u8 *))func_86002780, object);
+    func_80037E3C(secondary, (void (*)(s32, u8 *))func_8600297C, object);
+
+    // Reuse the setup pointers for position, scene-scale, and color records.
+    node_slot = (u8 **)(*(s32 *)(object + 0x1810) * 24 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C8));
+    *node_slot = main_model;
+    secondary = *(s32 *)(object + 0x1810) * 24 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C8);
+    *(f32 *)(secondary + 4) = 0.0f;
+    *(f32 *)(secondary + 8) = (f32)D_8600DE48;
+    *(f32 *)(secondary + 0xC) = 0.0f;
+    effect = *(s32 *)(object + 0x1810) * 396 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C4);
+    *(f32 *)(effect + 0x54) = 10.0f;
+    *(f32 *)(effect + 0x58) = 10.0f;
+    *(f32 *)(effect + 0x5C) = 10.0f;
+    overlay = *(s32 *)(object + 0x1810) * 24 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C8);
+    overlay[0x12] = 255;
+    overlay[0x13] = 255;
+    overlay[0x14] = 255;
+    overlay[0x15] = 200;
+
+    func_87C01888(object + 0x17A0, main_model, D_8600D540);
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002780.s")
+extern s32 func_87F00930(void);
+extern void func_86003FDC(u8 *arg0, u8 *arg1, f32 arg2);
+extern f64 func_87C00090(f64, f64, f64);
+s32 func_86002780(s32 event, u8 *node) {
+    u8 *object;
+    f32 base_scale;
+    f32 horizontal_scale;
+    f32 multiplier;
+
+    object = *(u8 **)(node + 0x14);
+    base_scale = (f32)(*(f64 *)(object + 0x17C8) / 200.0);
+    object[0x122] |= 0x10;
+    if (event != 2) {
+        return 0;
+    }
+    func_87F00930();
+    func_86003FDC(object, node + 0x60, (f32)-*(f64 *)(object + 0xC8));
+    func_86001DBC(object);
+    func_86001DCC(object);
+    object[0x1655] = 5;
+    func_87C01CBC(object + 0x17A0);
+    *(f32 *)(object + 0x150) = base_scale;
+    *(f32 *)(object + 0x154) = base_scale;
+    *(f32 *)(object + 0x158) = base_scale;
+    if (*(f64 *)(object + 0x17E0) > 0.0) {
+        object[0x1C0] = 255;
+        object[0x1C1] = 255;
+        object[0x1C2] = 255;
+        object[0x1C3] = 0;
+        *(f32 *)(object + 0x1808) = (f32)func_87C00090((f64)*(f32 *)(object + 0x1808), 1.5, 0.2);
+    } else if (*(s32 *)(object + 0x1828) == 3 &&
+               *(f64 *)(object + 0x17D0) > 0.0 && *(s32 *)(object + 0x1898) != 0) {
+        object[0x1C0] = 255;
+        object[0x1C1] = 127;
+        object[0x1C2] = 127;
+        object[0x1C3] = 150;
+        *(f32 *)(object + 0x1808) = (f32)func_87C00090((f64)*(f32 *)(object + 0x1808), 1.0, 0.2);
+    } else {
+        object[0x1C0] = 255;
+        object[0x1C1] = 255;
+        object[0x1C2] = 255;
+        object[0x1C3] = 0;
+        *(f32 *)(object + 0x1808) = (f32)func_87C00090((f64)*(f32 *)(object + 0x1808), 1.0, 0.2);
+    }
+    multiplier = sqrtf(1.0f / *(f32 *)(object + 0x1808));
+    horizontal_scale = base_scale * multiplier;
+    *(f32 *)(object + 0x150) = horizontal_scale;
+    *(f32 *)(object + 0x158) = horizontal_scale;
+    *(f32 *)(object + 0x154) = *(f32 *)(object + 0x1808) * base_scale;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
@@ -809,7 +1323,48 @@ void func_860037D8(u8 *arg0, u8 *arg1, s32 *arg2, f64 *arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86003868.s")
+extern void func_800277F0(u16, void *);
+
+void func_86003868(u8 *first, u8 *second, void *sound_context, f64 impact) {
+    s32 next_index_first;
+    s32 next_index_second;
+    f64 next_timer_first;
+    f64 next_timer_second;
+    s32 special_pair;
+
+    next_index_first = *(s32 *)(first + 0x1818);
+    next_index_second = *(s32 *)(second + 0x1818);
+    next_timer_first = *(f64 *)(first + 0x17D0);
+    next_timer_second = *(f64 *)(second + 0x17D0);
+    special_pair = func_8600472C(first) != 0 || func_8600472C(second) != 0;
+    func_860037D8(first, second, &next_index_first, &next_timer_first);
+    func_860037D8(second, first, &next_index_second, &next_timer_second);
+
+    if (*(f64 *)(D_8600DE30 + 0x2A0) < impact && special_pair) {
+        func_800277F0(20228, sound_context);
+    } else if (*(f64 *)(D_8600DE30 + 0x298) < impact) {
+        func_800277F0(20231, sound_context);
+    } else if (*(f64 *)(D_8600DE30 + 0x290) < impact) {
+        func_800277F0(20227, sound_context);
+    }
+
+    *(s32 *)(first + 0x1818) = next_index_first;
+    *(s32 *)(second + 0x1818) = next_index_second;
+    *(f64 *)(first + 0x17D0) = next_timer_first;
+    *(f64 *)(second + 0x17D0) = next_timer_second;
+    if (*(f64 *)(first + 0x17D0) < *(f64 *)(D_8600DE30 + 0xF0)) {
+        *(f64 *)(first + 0x17F0) = *(f64 *)(D_8600DE30 + 0xF0);
+    } else {
+        *(f64 *)(first + 0x17F0) = *(f64 *)(first + 0x17D0);
+    }
+    if (*(f64 *)(second + 0x17D0) < *(f64 *)(D_8600DE30 + 0xF0)) {
+        *(f64 *)(second + 0x17F0) = *(f64 *)(D_8600DE30 + 0xF0);
+    } else {
+        *(f64 *)(second + 0x17F0) = *(f64 *)(second + 0x17D0);
+    }
+    *(f64 *)(first + 0x17F8) = *(f64 *)(D_8600DE30 + 0x200);
+    *(f64 *)(second + 0x17F8) = *(f64 *)(D_8600DE30 + 0x200);
+}
 #endif
 
 #ifdef VERSION_US

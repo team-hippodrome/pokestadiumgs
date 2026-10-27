@@ -256,7 +256,42 @@ void func_8000C614(s32 arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000C6D8.s")
+extern void func_8001FD50(u8 *);
+extern s32 D_8008FA40;
+extern u8 D_800D1220[];
+typedef struct {
+    /* 0x00 */ u8 *apu;
+    /* 0x04 */ s32 active;
+    /* 0x08 */ s32 mode;
+    /* 0x0C */ u8 *unk_0C;
+    /* 0x10 */ s32 unk_10;
+    /* 0x14 */ u8 *unk_14;
+} GbApuChannelSlot; // size = 0x18
+
+void func_8000C6D8(void) {
+    GbApuChannelSlot *slot;
+    u8 *apu;
+    s32 i;
+
+    for (i = 0; i < D_8008FA40; i++) {
+        slot = &((GbApuChannelSlot *)D_800D1220)[i];
+        apu = slot->apu;
+        if (apu == NULL) {
+            continue;
+        }
+        if (slot->active != 0) {
+            if ((u32)(*(s32 *)(apu + 0x25CC) - *(s32 *)(apu + 0x25C8)) <= 0x500 || slot->mode == 2) {
+                func_8001FD50(apu);
+            }
+            if ((u32)(*(s32 *)(apu + 0x25CC) - *(s32 *)(apu + 0x25C8)) <= 0x500 || slot->mode == 2) {
+                func_8001FD50(apu);
+            }
+            if ((u32)(*(s32 *)(apu + 0x25CC) - *(s32 *)(apu + 0x25C8)) <= 0x500 || slot->mode == 2) {
+                func_8001FD50(apu);
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
