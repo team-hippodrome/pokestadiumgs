@@ -151,7 +151,25 @@ void func_87E005C0(void) {
     gSPDisplayList(D_800D0510++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00648.s")
+extern Gfx D_80094E38[];
+extern Gfx D_80094DE0[];
+extern void func_800468A0(u32);
+void func_87E00648(s32 arg0) {
+    switch (arg0) {
+        case 2:
+            gSPDisplayList(D_800D0510++, D_80094DE0);
+            gDPSetFillColor(D_800D0510++, 0x00010001);
+            gDPFillRectangle(D_800D0510++, 0, 0, 319, 239);
+            break;
+        case 0:
+            func_800468A0(((u32 *)D_87E1BA20)[arg0 + 1]);
+            break;
+        case 1:
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            func_87E005C0();
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0072C.s")
 
