@@ -5238,7 +5238,32 @@ void func_8413584C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841358B0.s")
+typedef struct {
+    u32 data[160];
+} unk_D_84195280;
+extern s32 D_84186174;
+
+// D_84195280 starts with 0x280-byte records. func_84134CBC and its siblings fill the record at
+// byte 0x4D81's index; this copies the record at byte 0x4D80's index to D_84199D80 and advances
+// that index, wrapping at 30. When the two indexes are equal there is nothing to copy.
+void func_841358B0(void) {
+    if (D_84195280[0x4D81] == D_84195280[0x4D80]) {
+        if (D_84195278 != 6) {
+            Display_QueueFramebufferRequest_fragment79((OSMesg)0x4D564544);
+        } else {
+            D_84186174 = 0;
+            func_8413584C(20);
+        }
+    } else {
+        *(unk_D_84195280 *)D_84199D80 = ((unk_D_84195280 *)D_84195280)[D_84195280[0x4D80]];
+        func_84135808(D_84199D80);
+        D_84195280[0x4D80]++;
+        if (D_84195280[0x4D80] >= 30) {
+            D_84195280[0x4D80] = 0;
+        }
+        D_8419A004 = 0;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -6371,7 +6396,34 @@ void func_84139F44(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413A12C.s")
+void func_8413A12C(u8 arg0, u8 arg1) {
+    if (((u8 *)D_84195208[(u32)arg0])[(u32)arg1 + 5] == 0) {
+        return;
+    }
+    switch (D_84195248[arg0 * 24 + 13]) {
+        case 2:
+            func_84147228(7, arg0, 0, 11, 0);
+            func_84147228(8, arg0, 0, 11, 0);
+            func_84147228(7, arg0, 0, 4, 4);
+            func_84147228(8, arg0, 0, 4, 4);
+            func_84147228(10, arg0, 0, 10, 0);
+            func_84147228(10, arg0, 0, 4, 6);
+            func_800226C0(8);
+            break;
+        case 3:
+            func_84147228(9, arg0, 0, 4, 3);
+            func_84147228(9, arg0, 0, 9, 0);
+            func_84147228(19, arg0, 0, 4, 3);
+            func_84147228(19, arg0, 0, 9, 0);
+            func_84147228(10, arg0, 0, 1, 0);
+            func_84147228(10, arg0, 0, 3, 0);
+            func_84147228(10, arg0, 0, 5, 3);
+            func_800226C0(8);
+            break;
+    }
+    D_84195248[arg0 * 24 + 13] = 4;
+    func_84147228(10, arg0, 0, 7, arg1);
+}
 #endif
 
 #ifdef VERSION_US
@@ -6431,7 +6483,35 @@ void func_8413A53C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413A8C4.s")
+void func_8413A8C4(u8 arg0) {
+    switch (D_84195248[(u32)arg0 * 24 + 13]) {
+        case 5:
+            func_84147228(7, arg0, 0, 11, 0);
+            func_84147228(8, arg0, 0, 11, 0);
+            func_84147228(7, arg0, 0, 5, 4);
+            func_84147228(8, arg0, 0, 5, 4);
+            func_84147228(11, arg0, 0, 10, 0);
+            func_84147228(11, arg0, 0, 5, 6);
+            func_84147228(11, arg0, 1, 10, 0);
+            func_84147228(11, arg0, 1, 5, 6);
+            func_84147228(20, arg0, 0, 10, 0);
+            func_84147228(20, arg0, 0, 5, 6);
+            func_800226C0(8);
+            break;
+        case 7:
+            func_84147228(13, arg0, 0, 4, 1);
+            func_84147228(11, arg0, 0, 1, 0);
+            func_84147228(11, arg0, 0, 3, 0);
+            func_84147228(11, arg0, 0, 5, 3);
+            func_84147228(11, arg0, 1, 1, 0);
+            func_84147228(11, arg0, 1, 3, 0);
+            func_84147228(11, arg0, 1, 5, 3);
+            func_84147228(20, arg0, 0, 5, 3);
+            func_84147228(20, arg0, 0, 3, 0);
+            break;
+    }
+    D_84195248[(u32)arg0 * 24 + 13] = 6;
+}
 #endif
 
 #ifdef VERSION_US

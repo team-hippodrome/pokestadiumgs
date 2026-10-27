@@ -10,7 +10,10 @@ typedef struct {
     u8 unk22;
     u8 unk23;
     u8 unk24;
-    u16 unk26;
+    s16 unk26;
+    s32 unk28;
+    u8 pad2C[0x2];
+    u16 unk2E;
 } Frag41_State;
 extern void Input_SetRepeatController(void *);
 extern Frag41_State *D_88C01A60;
@@ -25,7 +28,76 @@ void func_88C00020(Frag41_Input *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00084.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C006B8.s")
+extern Gfx* D_800D0510;
+extern char D_88C01924[];
+extern char D_88C01934[];
+extern char D_88C01964[];
+extern char D_88C01988[];
+extern char D_88C019C4[];
+extern char D_88C019F4[];
+extern char D_88C019F8[];
+extern char D_88C01A08[];
+extern char D_88C01A1C[];
+extern char D_88C01A20[];
+extern char D_88C01A28[];
+extern char D_88C01A30[];
+extern char D_88C01A38[];
+extern char D_88C01A3C[];
+extern char D_88C01A40[];
+extern char D_88C01A44[];
+extern char* D_88C01830[];
+
+void func_88C006B8(void) {
+    func_80007444(&D_800D0510, 50, 90, 293, 155, 0x7C67);
+    func_800498C4();
+    func_800496A4(16, 2);
+    func_8004972C(0x32, 0x80, 0xFF, 0xFF);
+    func_800495F8(60, 100, 0, D_88C01924);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(40, 260, 0, D_88C01934);
+    func_800495F8(40, 290, 0, D_88C01964, D_88C01A60->unk2E);
+    func_800495F8(40, 320, 0, D_88C01988);
+    func_8004972C(0xFF, 0x64, 0x64, 0xFF);
+    func_800495F8(50, 360, 0, D_88C019C4);
+    func_800495F8(50, 390, 0, D_88C019F4);
+    func_800496A4(8, 1);
+    if (D_88C01A60->unk28 == 2) {
+        func_8004972C(0xFF, 0, 0, 0xFF);
+        func_800495F8(590, 200, 2, D_88C019F8);
+        func_800495F8(590, 220, 2, D_88C01A08);
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(60, 140, 0, D_88C01A1C);
+    func_800495F8(60, 165, 0, D_88C01A20);
+    func_800495F8(60, 190, 0, D_88C01A28);
+    func_800495F8(60, 215, 0, D_88C01A30);
+    if (D_88C01A60->unk26 == 0) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    func_800495F8(190, 140, 2, D_88C01A38, D_88C01A60->unk20);
+    func_800495F8(200, 140, 0, D_88C01830[D_88C01A60->unk20 % 7]);
+    if (D_88C01A60->unk26 == 1) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    func_800495F8(190, 165, 2, D_88C01A3C, D_88C01A60->unk22);
+    if (D_88C01A60->unk26 == 2) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    func_800495F8(190, 190, 2, D_88C01A40, D_88C01A60->unk23);
+    if (D_88C01A60->unk26 == 3) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    func_800495F8(190, 215, 2, D_88C01A44, D_88C01A60->unk24);
+    func_800499EC();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00AB0.s")
 

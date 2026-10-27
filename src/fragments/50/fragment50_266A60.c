@@ -357,7 +357,36 @@ void func_86201620(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_8620169C.s")
+extern u32 func_8003570C(void);
+
+typedef struct {
+    /* 0x00000 */ u8 pad0[0x73BB4];
+    /* 0x73BB4 */ u8 order[4];
+    /* 0x73BB8 */ u8 unk73BB8;
+} unk_func_8620169C;
+
+// Shuffles order[0..3] (initially 0, 1, 2, 3) with up to ten random swaps, then clears unk73BB8.
+void func_8620169C(void) {
+    s32 i;
+    s32 count;
+    s32 first;
+    s32 second;
+    u8 value;
+
+    for (i = 0; i < 4; i++) {
+        ((unk_func_8620169C *)D_8620E198)->order[i] = i;
+    }
+    count = func_8003570C() % 11;
+    for (i = 0; i < count; i++) {
+        func_8003570C(); // Draw discarded.
+        first = func_8003570C() & 3;
+        second = func_8003570C() & 3;
+        value = ((unk_func_8620169C *)D_8620E198)->order[first];
+        ((unk_func_8620169C *)D_8620E198)->order[first] = ((unk_func_8620169C *)D_8620E198)->order[second];
+        ((unk_func_8620169C *)D_8620E198)->order[second] = value;
+    }
+    ((unk_func_8620169C *)D_8620E198)->unk73BB8 = 0;
+}
 #endif
 
 #ifdef VERSION_US
