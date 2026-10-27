@@ -384,7 +384,25 @@ void func_84102B3C(u8 *record, void *matrix, s32 type) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841031F4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841032F0.s")
+extern Gfx *D_800D0510;
+extern u8 *D_8418CB88;
+extern void *func_80003240();
+extern void func_8100348C();
+extern void func_84102E84(s32, u8 *);
+void func_841032F0(u8 *record, s32 matrix) {
+    s32 pad[2]; // FAKE
+    u8 *model;
+    u16 type;
+    void (*draw)(u8 *, s32);
+
+    model = *(u8 **)(D_8418CB88 + 4);
+    type = *(u16 *)D_8418CB88;
+    draw = (void (*)(u8 *, s32))func_80003240(func_8100348C);
+    func_84102B3C(record, (void *)matrix, type);
+    draw(record, *(s32 *)model);
+    func_84102E84(*(u16 *)(model + 6), record);
+    gSPDisplayList(D_800D0510++, *(u32 *)(model + 8));
+}
 
 extern u8 *D_80094910;
 extern void func_841031F4(u8 *, void *, s32);
