@@ -9,3 +9,19 @@ The original leaf reads `f12` and returns `f0`. Data at `D_8160BD00` registers i
 History audit: fleet main `afee707ab78d3f63f2f9deeadc7551ec0080eeed` has no exact owner attempt or `11_D7BC0` regional record, and current master has no regional document at this path. No historical normalized or raw similarity score is available for this owner. Earlier failed `func_81600450` and `func_81600884` investigations were retained and not retried. All open PR scopes were inspected; only documentation draft #922 was open before the trial.
 
 Independent validation against master `c73a3a3c9a8097a4e5ff8b85cc062e5a0b531fee`: the first recipe passed the full US ROM build with default host syntax checks and `COMPARE=1`, followed by `md5sum -c baseroms/us/checksum.md5`. Retail MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`. All 195 prior matched US owners remained present. The Public PR ROM Gate must actually run its checksum build successfully for the current PR head and merge result before merging; a skipped draft check is not validation.
+
+## 2026-10-27 — `func_81600A34` region-list append accepted
+
+`func_81600A34` is now C: **47 words / 188 bytes**, frame 0x28. With a
+non-zero id it takes a free node from `func_81600884(ctx)`, writes the
+rectangle with `func_816003B0`, stores the id at node+8, calls
+`func_816009C0(ctx, node, id, arg2)`, and appends the node to the list whose
+head/tail pointers live in `*(ctx + 0x28)`. Links are node+0x14 (next) and
+node+0x10 (previous). Callers in other fragments (for example
+`func_824027F4`, `Fragment13_UpdateConfirmationDialog`) pass the id as
+`void *`.
+
+Source shape: re-read `*(ctx + 0x28)` in every statement (no cached list
+pointer: 0.94), and test `head != NULL` first. The target falls through into
+the append and branches (`beql`) to the empty-list case; the opposite
+polarity scores 0.74. In the empty case write `tail = node; head = tail;`.
