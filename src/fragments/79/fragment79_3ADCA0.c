@@ -512,7 +512,33 @@ void func_8413FC34(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8413FD04.s")
+u8 func_8413FD04(u8 arg0, u8 arg1, u8 arg2) {
+    u8 *entry;
+    s32 slot;
+    u8 result;
+
+    slot = arg2;
+    entry = (&D_841951F8)[arg0];
+    if (slot >= entry[8]) {
+        return 0xFF;
+    }
+    if (entry[2] == 2) {
+        if (arg1 == 0) {
+            if (slot >= entry[3]) {
+                return 0xFF;
+            }
+            result = arg2;
+        } else {
+            if (slot >= entry[8] - entry[3]) {
+                return 0xFF;
+            }
+            result = entry[3] + slot;
+        }
+    } else {
+        result = arg2;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
