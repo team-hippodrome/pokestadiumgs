@@ -1926,7 +1926,50 @@ typedef struct AudioCmd {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018828.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_8001895C.s")
+// File data between func_800179CC's and func_8001895C's statics (rom.yaml .data window).
+// D_8008FA80 is probably the audio update's waiting-task static.
+void *D_8008FA80 = NULL;
+s32 D_8008FA84 = 0;
+
+typedef struct {
+    /* 0x0 */ u8 op;
+    /* 0x1 */ u8 unk_1[7];
+} AudioCmdView; // size = 0x8
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x6316];
+    /* 0x6316 */ u8 cmdQueueFinished;
+    /* 0x6317 */ u8 unk_6317[0x79];
+    /* 0x6390 */ AudioCmdView cmdBuf[0x100];
+} AudioContextCmdView;
+
+extern void func_80018828(AudioCmdView *);
+
+// Same code as Ocarina of Time Audio_ProcessCmds (src/code/audio_thread.c).
+void func_8001895C(u32 msg) {
+    static u8 sCurCmdRdPos = 0;
+    AudioCmdView *cmd;
+    u8 endPos;
+
+    if (!((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished) {
+        sCurCmdRdPos = msg >> 8;
+    }
+
+    while (TRUE) {
+        endPos = msg & 0xFF;
+        if (sCurCmdRdPos == endPos) {
+            ((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished = FALSE;
+            break;
+        }
+        cmd = &((AudioContextCmdView *)D_8011BE90)->cmdBuf[sCurCmdRdPos++ & 0xFF];
+        if (cmd->op == 0xF8) {
+            ((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished = TRUE;
+            break;
+        }
+        func_80018828(cmd);
+        cmd->op = 0;
+    }
+}
 
 extern OSMesgQueue D_8011DFC0;
 u32 func_80018A10(s32 *arg0) {
@@ -2427,12 +2470,6 @@ s32 func_800193B8(s32 flags) {
     }
     return count;
 }
-// Rest of this file's data, in retail order (rom.yaml .data window 0x90670-0x906A0).
-// D_8008FA80 and D_8008FA88 are probably function statics of the audio update (waiting task)
-// and of func_8001895C; they stay file-scope until those owners are placed.
-void *D_8008FA80 = NULL;
-s32 D_8008FA84 = 0;
-u8 D_8008FA88 = 0;
 
 typedef struct {
     /* 0x0000 */ u8 unk_0000[0x2C30];
