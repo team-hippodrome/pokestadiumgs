@@ -370,7 +370,24 @@ void func_8410C720(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410C840.s")
+void func_8410C840(u8 *arg0, void *arg1, u8 *arg2, u8 *arg3) {
+    f32 target[3];
+    f32 pos[3];
+    f32 distance;
+    s16 angle1;
+    s16 angle0;
+    s32 pad[2]; // FAKE: unused; restores the original 0x50-byte frame.
+
+    BattleAnim_StepToS16((s16 *)(arg2 + 0x3C), 0xAAA, 100);
+    func_841203B4(arg2 + 0x44, 0.2f, 0.06f);
+    func_800371B4(arg3, (u8 *)target, *(f32 *)(arg2 + 0x40), *(s16 *)(arg2 + 0x3C), *(s16 *)(arg2 + 0x3E));
+    Vec3f_SetComponentsDuplicate(pos, *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+    func_80037120(pos, target, &distance, &angle0, &angle1);
+    func_800371B4((u8 *)pos, arg0 + 0xA8, *(f32 *)(arg2 + 0x44) * distance, angle0, angle1);
+    if (*(f32 *)(arg0 + 0xAC) <= 5.0f) {
+        *(f32 *)(arg0 + 0xAC) = 5.0f;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -501,7 +518,24 @@ void BattleAnim_ModelDispatch_024(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410D088.s")
+void func_8410D088(u8 *arg0, void *arg1) {
+    f32 target[3];
+    f32 pos[3]; // FAKE: unused; restores the original 0x50-byte frame.
+    f32 distance;
+    s16 angle0;
+    s16 angle1;
+
+    D_841911E8 = func_8410B330(arg0);
+    if (*(f32 *)(D_841911E8 + 0x60) <= 0.0f) {
+        return;
+    }
+    func_8411E0A4(arg1, target, D_841911E8);
+    func_80037120(target, D_841911E8 + 0x50, &distance, &angle0, &angle1);
+    if (*(f32 *)(D_841911E8 + 0x80) < distance) {
+        func_800371B4((u8 *)target, D_841911E8 + 0x5C, *(f32 *)(D_841911E8 + 0x84) * 0.9f * distance, angle0, angle1);
+        *(f32 *)(arg0 + 0xB8) = *(f32 *)(D_841911E8 + 0x60);
+    }
+}
 #endif
 
 #ifdef VERSION_US

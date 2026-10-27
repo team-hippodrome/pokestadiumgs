@@ -707,3 +707,21 @@ vectors, padding, or forced frame are installed. The assembly owner remains.
 Next action: inspect authentic local aggregate/expression lifetimes and
 compiler stack allocation around the vector helper calls; preserve the
 six bonus-using branches and the species-filter early return.
+
+## 2026-10-27 — `func_8410C840` and `func_8410D088` camera helpers accepted
+
+Both follow the accepted `func_8410C720` spelling (raw offsets, `target`/
+`pos` vectors, `func_80037120` distance/angles, `func_800371B4` placement).
+
+- `func_8410C840(u8 *arg0, void *arg1, u8 *arg2, u8 *arg3)` (**61 words**):
+  steps `arg2`'s s16 +0x3C toward 0xAAA, eases +0x44 (0.2f, 0.06f), places a
+  target from `arg3`, then moves the camera position at arg0+0xA8 toward it
+  by `arg2[+0x44] * distance`, clamping +0xAC to at least 5.0f.
+- `func_8410D088(u8 *arg0, void *arg1)` (**60 words**, with its 0.9f
+  literal): with `D_841911E8 = func_8410B330(arg0)` and +0x60 positive,
+  projects `arg1` into `target` with `func_8411E0A4`. If the distance from
+  +0x50 exceeds +0x80, it moves +0x5C toward the target by
+  `+0x84 * 0.9f * distance` and copies +0x60 into arg0+0xB8.
+
+Both need 8 or 16 extra frame bytes: an unused `s32 pad[2]` (C840) or
+unused `f32 pos[3]` (D088), each marked `// FAKE`.
