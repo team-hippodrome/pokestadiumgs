@@ -557,7 +557,27 @@ Gfx *func_8000D710(Gfx *arg0, s32 arg1, u8 *arg2)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000D7B8.s")
+// Same code as Majora's Mask AudioSynth_MixOtherReverbIndex (src/audio/lib/synthesis.c).
+// D_8011BE90 + 1 is the reverb count and D_8011BE90 + 0x18 the SynthesisReverb array;
+// unk_005 is the index of the reverb to mix in and unk_008 its mix gain.
+Acmd *func_8000D7B8(Acmd *cmd, SynthesisReverb *reverb, s32 update_index)
+{
+    SynthesisReverb *mix_reverb;
+
+    if (reverb->unk_005 >= (s8)D_8011BE90[1]) {
+        return cmd;
+    }
+
+    mix_reverb = &((SynthesisReverb *)(D_8011BE90 + 0x18))[reverb->unk_005];
+    if (mix_reverb->downsampleRate == 1) {
+        cmd = (Acmd *)func_8000D024((s32)cmd, (u8 *)mix_reverb, update_index);
+        aMix_GS(cmd++, 832 >> 4, reverb->unk_008, 0xC70, 0x3D0);
+        cmd = (Acmd *)func_8000D0CC((s32)cmd, (u8 *)mix_reverb, update_index);
+    }
+
+    return cmd;
+}
+void func_8000D7B8_padding(void) {}
 #endif
 
 #ifdef VERSION_US
@@ -1032,5 +1052,85 @@ Acmd *func_8000F834(Acmd *cmd, NoteSampleState *sample_state, NoteSynthesisState
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000FCF0.s")
+// A_CLEARBUFF 0x02, A_ADDMIXER 0x04 and A_RESAMPLE_ZOH 0x06 encoders, following
+// Majora's Mask include/PR/abi.h aClearBuffer, aAddMixer and aResampleZoh.
+#define aClearBuffer_GS(pkt, d, c) AUDIO_CMD(pkt, _SHIFTL(0x02, 24, 8) | _SHIFTL(d, 0, 24), (unsigned int)(c))
+#define aAddMixer_GS(pkt, count, dmemi, dmemo, a4)                                         \
+    AUDIO_CMD(pkt, _SHIFTL(0x04, 24, 8) | _SHIFTL((count) >> 4, 16, 8) | _SHIFTL(a4, 0, 16), \
+              _SHIFTL(dmemi, 16, 16) | _SHIFTL(dmemo, 0, 16))
+#define aResampleZoh_GS(pkt, pitch, pitch_accu) \
+    AUDIO_CMD(pkt, _SHIFTL(0x06, 24, 8) | _SHIFTL(pitch, 0, 16), _SHIFTL(pitch_accu, 0, 16))
+#define ALIGN16(val) (((val) + 0xF) & ~0xF)
+#define ALIGN64(val) (((val) + 0x3F) & ~0x3F)
+
+// Close to Majora's Mask AudioSynth_ApplyHaasEffect (src/audio/lib/synthesis.c);
+// GS clears the delay area with A_CLEARBUFF on the A_INIT path even when the
+// delay size is 0. Delay sizes: sample state bytes 3 (left) and 4 (right);
+// previous sizes: synthesis state bytes 2 (left) and 3 (right). The delay
+// state buffer is at synthesis buffers + 0xA0. DMEM: 0x930 left channel,
+// 0xAD0 right channel, 0x5B0 Haas temp, 0x3B0 temp.
+Acmd *func_8000FCF0(Acmd *cmd, NoteSampleState *sample_state, NoteSynthesisState *synth_state, s32 size, s32 flags,
+                    s32 haas_effect_delay_side)
+{
+    u16 dmem_dest;
+    u16 pitch;
+    u8 prev_haas_effect_delay_size;
+    u8 haas_effect_delay_size;
+
+    switch (haas_effect_delay_side) {
+        case 1:
+            // Delay the sample on the left channel
+            dmem_dest = 0x930;
+            haas_effect_delay_size = sample_state->unk_02[1];
+            prev_haas_effect_delay_size = synth_state->unk_00[2];
+            synth_state->unk_00[3] = 0;
+            synth_state->unk_00[2] = haas_effect_delay_size;
+            break;
+
+        case 2:
+            // Delay the sample on the right channel
+            dmem_dest = 0xAD0;
+            haas_effect_delay_size = sample_state->unk_02[2];
+            prev_haas_effect_delay_size = synth_state->unk_00[3];
+            synth_state->unk_00[3] = haas_effect_delay_size;
+            synth_state->unk_00[2] = 0;
+            break;
+
+        default:
+            return cmd;
+    }
+
+    if (flags != 1) {
+        // Slightly adjust the sample rate in order to fit a change in sample delay
+        if (haas_effect_delay_size != prev_haas_effect_delay_size) {
+            pitch = (((size << 15) / 2) - 1) / ((size + haas_effect_delay_size - prev_haas_effect_delay_size - 2) / 2);
+            aSetBuffer_GS(cmd++, 0, 0x5B0, 0x3B0, size + haas_effect_delay_size - prev_haas_effect_delay_size);
+            aResampleZoh_GS(cmd++, pitch, 0);
+        } else {
+            aDMEMMove_GS(cmd++, 0x5B0, 0x3B0, size);
+        }
+
+        if (prev_haas_effect_delay_size != 0) {
+            aLoadBuffer_GS(cmd++, (u8 *)synth_state->unk_10 + 0xA0, 0x5B0, ALIGN16(prev_haas_effect_delay_size));
+            aDMEMMove_GS(cmd++, 0x3B0, 0x5B0 + prev_haas_effect_delay_size,
+                         size + haas_effect_delay_size - prev_haas_effect_delay_size);
+        } else {
+            aDMEMMove_GS(cmd++, 0x3B0, 0x5B0, size + haas_effect_delay_size);
+        }
+    } else {
+        // Just apply a delay directly
+        aDMEMMove_GS(cmd++, 0x5B0, 0x3B0, size);
+        aClearBuffer_GS(cmd++, 0x5B0, haas_effect_delay_size);
+        aDMEMMove_GS(cmd++, 0x3B0, 0x5B0 + haas_effect_delay_size, size);
+    }
+
+    if (haas_effect_delay_size) {
+        // Save excess samples for the next update
+        aSaveBuffer_GS(cmd++, 0x5B0 + size, (u8 *)synth_state->unk_10 + 0xA0, ALIGN16(haas_effect_delay_size));
+    }
+
+    aAddMixer_GS(cmd++, ALIGN64(size), 0x5B0, dmem_dest, 0x7FFF);
+
+    return cmd;
+}
 #endif

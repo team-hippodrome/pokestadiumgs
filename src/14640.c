@@ -80,7 +80,7 @@ typedef struct AudioPreloadReq {
 extern u8 D_800D13B8[];
 extern u8 D_8011E0F0[];
 extern u8 D_8011E208[];
-extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
+extern s32 func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
 extern u8 D_8011BE90[];
 void func_80013A8C(void) {
     static const char buffer_name[8] = {66, 85, 70, 70, 69, 82, 0, 0};
@@ -747,7 +747,7 @@ void func_800151E0(s32 arg0, u32 *arg1, SampleBankRelocInfo *arg2) {
 extern OSMesgQueue D_8011E808;
 extern OSIoMesg D_8011E824;
 extern void func_80019540(void *, s32);
-extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
+extern s32 func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
 void func_8001544C(u32 arg0, u8 *arg1, u32 arg2, s32 arg3) {
     OSMesgQueue *msgQueue = &D_8011E808;
     OSIoMesg *ioMesg = &D_8011E824;
@@ -775,7 +775,48 @@ void func_8001544C(u32 arg0, u8 *arg1, u32 arg2, s32 arg3) {
 
 void func_80015570(s32 a0, s32 a1, s32 a2, s32 a3) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80015584.s")
+// Same code as Majora's Mask AudioLoad_Dma (src/audio/lib/load.c). D_8008FA70 is the DMA
+// handler function pointer that func_80015A40 sets.
+extern s32 D_8008FA70;
+s32 func_80015584(void *arg0, s32 priority, s32 direction, s32 devAddr, s32 ramAddr, s32 size,
+                  void *reqQueue, s32 medium, void *dmaFuncType) {
+    OSIoMesg *mesg = arg0;
+    OSPiHandle *handle;
+
+    if (*(u32 *)(D_8011BE90 + 0x2D14) > 16) {
+        return -1;
+    }
+
+    switch (medium) {
+        case 2: // cartridge
+            handle = *(OSPiHandle **)(D_8011BE90 + 0x2128);
+            break;
+
+        case 3: // disk drive
+            handle = *(OSPiHandle **)(D_8011BE90 + 0x212C);
+            break;
+
+        default:
+            return 0;
+    }
+
+    if (((u32)size % 0x10) != 0) {
+        size = (size + 0xF) & ~0xF;
+    }
+
+    mesg->hdr.pri = priority;
+    mesg->hdr.retQueue = reqQueue;
+    mesg->dramAddr = (void *)ramAddr;
+    mesg->devAddr = devAddr;
+    mesg->size = size;
+    handle->transferInfo.cmdType = 2;
+    ((s32 (*)(OSPiHandle *, OSIoMesg *, s32))D_8008FA70)(handle, mesg, direction);
+    return 0;
+}
+
+// Same code as Majora's Mask AudioLoad_Unused1 (src/audio/lib/load.c).
+void func_8001565C(void) {
+}
 
 void func_80015664(s32 arg0, s32 arg1) { s32 value; func_80014E68(arg0, arg1, &value); }
 
@@ -924,7 +965,159 @@ extern s32 D_8008FA74; void func_80015A4C(s32 value) { D_8008FA74 = value; }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80015A58.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80015AB8.s")
+// Close to Majora's Mask AudioLoad_Init (src/audio/lib/load.c); GS creates the
+// external-load (D_8011DFC0) and preload-sample (D_8011E058) queues with 32 messages
+// instead of 16. The custom update function pointer (D_80122A20) is the one func_80017B00 calls.
+extern void *D_80122A20;
+extern void *D_80122A28;
+extern void *D_80122A2C;
+extern s32 osTvType;
+extern OSMesg D_8011E820;
+extern OSMesg D_8011E108[];
+extern OSMesg D_8011DFD8[];
+extern OSMesgQueue D_8011DFC0;
+extern OSMesgQueue D_8011E058;
+extern OSMesg D_8011E070[];
+extern u8 D_800D2D80[];
+// Heap sizes read by func_80015AB8; Majora's Mask calls this gAudioHeapInitSizes.
+typedef struct AudioHeapInitSizes {
+    /* 0x0 */ s32 heapSize;
+    /* 0x4 */ s32 initPoolSize;
+    /* 0x8 */ s32 permanentPoolSize;
+} AudioHeapInitSizes; // size = 0xC
+extern AudioHeapInitSizes D_800A42A4;
+extern u8 D_8011EBE0[];
+extern u8 D_8011EF80[];
+extern u8 D_80086420[];
+extern u8 D_80085D60[];
+extern u8 D_80086330[];
+extern u8 D_80086CC0[];
+extern u8 D_14D6660[];
+extern u8 D_4AD450[];
+extern u8 D_50F7E0[];
+extern s32 D_8008FA78;
+extern void func_8001951C(void);
+extern void func_800107CC(s32);
+extern void *func_80010510(u8 *, s32);
+extern s32 func_80011B78(void);
+extern void *GbApu_Alloc(u8 *, s32);
+extern void GbApu_InitAllocator(s32 *, s32, s32);
+extern void func_80015A58(s32);
+void func_80015AB8(void *heap, s32 heapSize) {
+    s32 pad1[9];
+    s32 numFonts;
+    s32 pad2[2];
+    u8 *audioCtxPtr;
+    void *addr;
+    s32 i;
+    s32 j;
+
+    D_80122A20 = NULL;
+    D_80122A28 = NULL;
+    D_80122A2C = NULL;
+
+    for (i = 0; i < 4; i++) {
+        ((void **)(D_8011BE90 + 0x2D18))[i] = NULL;
+    }
+
+    *(s32 *)(D_8011BE90 + 0x2D14) = 0;
+    D_8011BE90[0x2D28] = FALSE;
+
+    audioCtxPtr = D_8011BE90;
+    for (j = 0x6B90; j >= 0; j--) {
+        *audioCtxPtr++ = 0;
+    }
+
+    switch (osTvType) {
+        case OS_TV_PAL:
+            *(f32 *)(D_8011BE90 + 0x2CF0) = 20.03042f;
+            *(s32 *)(D_8011BE90 + 0x2CF4) = 50;
+            break;
+
+        case OS_TV_MPAL:
+            *(f32 *)(D_8011BE90 + 0x2CF0) = 16.546f;
+            *(s32 *)(D_8011BE90 + 0x2CF4) = 60;
+            break;
+
+        case OS_TV_NTSC:
+        default:
+            *(f32 *)(D_8011BE90 + 0x2CF0) = 16.713f;
+            *(s32 *)(D_8011BE90 + 0x2CF4) = 60;
+            break;
+    }
+
+    func_8001951C();
+
+    for (i = 0; i < 3; i++) {
+        ((s16 *)(D_8011BE90 + 0x2D04))[i] = 160;
+    }
+
+    *(s32 *)(D_8011BE90 + 0x2C30) = 0;
+    *(s32 *)(D_8011BE90 + 0x2C38) = 0;
+    *(s32 *)(D_8011BE90 + 0x2C3C) = 0;
+    D_8011BE90[0x2C2E] = 0;
+    *(void **)(D_8011BE90 + 0x2C4C) = NULL;
+    *(s32 *)(D_8011BE90 + 0x2C84) = 0;
+    *(s32 *)(D_8011BE90 + 0x2CD4) = 0;
+
+    osCreateMesgQueue(&D_8011E808, &D_8011E820, 1);
+    osCreateMesgQueue((OSMesgQueue *)D_8011E0F0, D_8011E108, 64);
+    osCreateMesgQueue(&D_8011DFC0, D_8011DFD8, 32);
+    osCreateMesgQueue(&D_8011E058, D_8011E070, 32);
+    *(s32 *)(D_8011BE90 + 0x2C34) = 0;
+    *(s32 *)(D_8011BE90 + 0x29B0) = 0;
+    *(OSPiHandle **)(D_8011BE90 + 0x2128) = osCartRomInit();
+
+    if (heap == NULL) {
+        *(u8 **)(D_8011BE90 + 0x3460) = D_800D2D80;
+        *(s32 *)(D_8011BE90 + 0x3464) = D_800A42A4.heapSize;
+    } else {
+        void **hp = &heap;
+
+        *(void **)(D_8011BE90 + 0x3460) = *hp;
+        *(s32 *)(D_8011BE90 + 0x3464) = heapSize;
+    }
+
+    for (i = 0; i < (*(s32 *)(D_8011BE90 + 0x3464) / (s32)sizeof(u64)); i++) {
+        (*(u64 **)(D_8011BE90 + 0x3460))[i] = 0;
+    }
+
+    func_800107CC(D_800A42A4.initPoolSize);
+
+    for (i = 0; i < 3; i++) {
+        ((void **)(D_8011BE90 + 0x2CF8))[i] = func_80010510(D_8011EBE0, 1344 * sizeof(s16));
+    }
+
+    *(u8 **)(D_8011BE90 + 0x2BC0) = D_80086420;
+    *(u8 **)(D_8011BE90 + 0x2BC4) = D_80085D60;
+    *(u8 **)(D_8011BE90 + 0x2BC8) = D_80086330;
+    *(u8 **)(D_8011BE90 + 0x2BD0) = D_80086CC0;
+
+    *(s16 *)(D_8011BE90 + 0x2BD4) = **(s16 **)(D_8011BE90 + 0x2BC0);
+
+    D_8011BE90[0x3455] = 0;
+    D_8011BE90[0x3454] = 1;
+    func_80011B78();
+
+    func_800143E8(*(void **)(D_8011BE90 + 0x2BC0), (s32)D_14D6660, 0);
+    func_800143E8(*(void **)(D_8011BE90 + 0x2BC4), (s32)D_4AD450, 0);
+    func_800143E8(*(void **)(D_8011BE90 + 0x2BC8), (s32)D_50F7E0, 0);
+
+    numFonts = **(s16 **)(D_8011BE90 + 0x2BC4);
+    *(void **)(D_8011BE90 + 0x2BD8) = GbApu_Alloc(D_8011EBE0, numFonts * sizeof(SoundFont));
+
+    for (i = 0; i < numFonts; i++) {
+        func_80015A58(i);
+    }
+
+    if (addr = GbApu_Alloc(D_8011EBE0, D_800A42A4.permanentPoolSize), addr == NULL) {
+        D_800A42A4.permanentPoolSize = 0;
+    }
+
+    GbApu_InitAllocator((s32 *)D_8011EF80, (s32)addr, D_800A42A4.permanentPoolSize);
+    D_8008FA78 = TRUE;
+    osSendMesg(*(OSMesgQueue **)(D_8011BE90 + 0x6328), (OSMesg) * (s32 *)(D_8011BE90 + 0x2C30), OS_MESG_NOBLOCK);
+}
 
 extern u8 D_8011BE90[]; void func_80015E58(void) { *(s32 *)(D_8011BE90 + 0x2074) = 0; *(s32 *)(D_8011BE90 + 0x20D8) = 0; }
 
@@ -1050,7 +1243,7 @@ void func_80016148(s32 arg0) {
 }
 
 extern void func_80019540(void *, s32);
-extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
+extern s32 func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
 const char D_800A1DC4[9] = "SLOWCOPY";
 void GbApu_InitSlowCopySlot(u8 *arg0, s32 arg1) {
     void *queue[1];
@@ -1232,7 +1425,7 @@ void BackgroundCopy_ServiceRequest(BackgroundCopyRequest *job, s32 stop_after_re
 }
 
 const char D_800A1DD0[8] = "BGCOPY";
-extern void func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
+extern s32 func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
 extern void func_80019540(void *arg0, s32 arg1);
 void func_80016A24(u8 *arg0, s32 arg1) {
     void *queue[1];
@@ -1464,8 +1657,187 @@ s32 func_80017AC0(void) {
     return temp_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80017B00.s")
+// Close to Ocarina of Time AudioThread_UpdateImpl (src/audio/internal/thread.c); GS counts
+// frame DMAs as unsigned, calls func_8000C6D8 after the script loads, does not point
+// gWaveSamples[8] into code, keeps the maximum command count at D_8011BE90 + 0x2D2C and gives
+// the task a DRAM stack (D_8008FC90). Returns the RSP task to run this frame, or NULL; the
+// task waiting for the last update of a multi-update frame is kept in D_8008FA80.
+extern void *D_8008FA80;
+extern void *D_80122A20;
+extern u8 D_80000460[];
+extern u64 D_80086EF0[];
+extern u64 D_800871D0[];
+extern u8 D_8008FC90[];
+extern void func_8000C6D8(void);
+extern s32 func_80011B78(void);
+extern void func_800195C0(void *, s32);
+extern void func_8001895C(u32);
+extern s32 func_800187AC(void);
+extern s32 func_8000CDB8(s32, s32 *, s16 *, s32);
+s32 func_80017B00(void) {
+    u32 samplesRemainingInAi;
+    s32 abiCmdCnt;
+    s32 pad;
+    s32 j;
+    u32 sp5C;
+    s16 *curAiBuffer;
+    OSTask_t *task;
+    s32 index;
+    u32 sp4C;
+    u32 sp48;
+    u32 i;
 
+    (*(s32 *)(D_8011BE90 + 0x2C30))++;
+    if ((*(s32 *)(D_8011BE90 + 0x2C30) % *(s16 *)(D_8011BE90 + 0x2BDC)) != 0) {
+        if (D_80122A20 != NULL) {
+            ((void (*)(void))D_80122A20)();
+        }
+
+        if (*(s16 *)(D_8011BE90 + 0x2BDC) ==
+            ((*(s32 *)(D_8011BE90 + 0x2C30) % *(s16 *)(D_8011BE90 + 0x2BDC)) + 1)) {
+            return (s32)D_8008FA80;
+        } else {
+            return (s32)NULL;
+        }
+    }
+
+    osSendMesg(*(OSMesgQueue **)(D_8011BE90 + 0x6328), (OSMesg) * (s32 *)(D_8011BE90 + 0x2C30), OS_MESG_NOBLOCK);
+    *(s32 *)(D_8011BE90 + 0x2C38) ^= 1;
+    (*(s32 *)(D_8011BE90 + 0x2C3C))++;
+    *(s32 *)(D_8011BE90 + 0x2C3C) %= 3;
+    index = (*(s32 *)(D_8011BE90 + 0x2C3C) - 2 + 3) % 3;
+    samplesRemainingInAi = osAiGetLength() / 4;
+
+    if (*(volatile u32 *)(D_8011BE90 + 0x2D14) < 16) {
+        if (((s16 *)(D_8011BE90 + 0x2D04))[index] != 0) {
+            func_800195C0(((s16 **)(D_8011BE90 + 0x2CF8))[index], ((s16 *)(D_8011BE90 + 0x2D04))[index] * 4);
+            if (((s16 **)(D_8011BE90 + 0x2CF8))[index]) {}
+            if (((s16 *)(D_8011BE90 + 0x2D04))[index]) {}
+        }
+    }
+
+    if (D_80122A20 != NULL) {
+        ((void (*)(void))D_80122A20)();
+    }
+
+    sp5C = *(u32 *)(D_8011BE90 + 0x2C34);
+    for (i = 0; i < *(u32 *)(D_8011BE90 + 0x2C34); i++) {
+        if (osRecvMesg((OSMesgQueue *)D_8011E0F0, NULL, OS_MESG_NOBLOCK) == 0) {
+            sp5C--;
+        }
+    }
+
+    if (sp5C != 0) {
+        for (i = 0; i < sp5C; i++) {
+            osRecvMesg((OSMesgQueue *)D_8011E0F0, NULL, OS_MESG_BLOCK);
+        }
+    }
+
+    sp48 = MQ_GET_COUNT((OSMesgQueue *)(D_8011BE90 + 0x2260));
+    if (sp48 != 0) {
+        for (i = 0; i < sp48; i++) {
+            osRecvMesg((OSMesgQueue *)D_8011E0F0, NULL, OS_MESG_NOBLOCK);
+        }
+    }
+
+    *(u32 *)(D_8011BE90 + 0x2C34) = 0;
+    func_80013B54();
+    func_80015A10(D_8011BE90[0x3454]);
+    func_80017A38();
+    func_8000C6D8();
+
+    if (D_8011BE90[0x3454] != 0) {
+        if (func_80011B78() == 0) {
+            if (D_8011BE90[0x3454] == 0) {
+                osSendMesg(*(OSMesgQueue **)(D_8011BE90 + 0x6324), (OSMesg)(u32)D_8011BE90[0x3455], OS_MESG_NOBLOCK);
+            }
+
+            D_8008FA80 = NULL;
+            return (s32)NULL;
+        }
+    }
+
+    if (*(volatile u32 *)(D_8011BE90 + 0x2D14) > 16) {
+        return (s32)NULL;
+    }
+    if (*(volatile u32 *)(D_8011BE90 + 0x2D14) != 0) {
+        (*(volatile u32 *)(D_8011BE90 + 0x2D14))++;
+    }
+
+    *(u8 **)(D_8011BE90 + 0x2C4C) = &D_8011BE90[*(s32 *)(D_8011BE90 + 0x2C38) * 0x50 + 0x2C50];
+    *(s32 *)(D_8011BE90 + 0x2C48) = ((s32 *)(D_8011BE90 + 0x2C40))[*(s32 *)(D_8011BE90 + 0x2C38)];
+
+    index = *(s32 *)(D_8011BE90 + 0x2C3C);
+    curAiBuffer = ((s16 **)(D_8011BE90 + 0x2CF8))[index];
+
+    ((s16 *)(D_8011BE90 + 0x2D04))[index] =
+        (s16)((((*(s16 *)(D_8011BE90 + 0x2BE2) - samplesRemainingInAi) + 0x80) & ~0xF) + 0x10);
+    if (((s16 *)(D_8011BE90 + 0x2D04))[index] < *(s16 *)(D_8011BE90 + 0x2BE6)) {
+        ((s16 *)(D_8011BE90 + 0x2D04))[index] = *(s16 *)(D_8011BE90 + 0x2BE6);
+    }
+
+    if (((s16 *)(D_8011BE90 + 0x2D04))[index] > *(s16 *)(D_8011BE90 + 0x2BE4)) {
+        ((s16 *)(D_8011BE90 + 0x2D04))[index] = *(s16 *)(D_8011BE90 + 0x2BE4);
+    }
+
+    j = 0;
+    if (D_8011BE90[0x3454] == 0) {
+        // The message packs the command ring's read and end positions.
+        while (osRecvMesg(*(OSMesgQueue **)(D_8011BE90 + 0x632C), (OSMesg *)&sp4C, OS_MESG_NOBLOCK) != -1) {
+            if (1) {}
+            func_8001895C(sp4C);
+            j++;
+        }
+        if ((j == 0) && (D_8011BE90[0x6316])) {
+            func_800187AC();
+        }
+    }
+
+    *(s32 *)(D_8011BE90 + 0x2C48) =
+        func_8000CDB8(*(s32 *)(D_8011BE90 + 0x2C48), &abiCmdCnt, curAiBuffer, ((s16 *)(D_8011BE90 + 0x2D04))[index]);
+
+    *(s32 *)(D_8011BE90 + 0x2D0C) = (*(s32 *)(D_8011BE90 + 0x2D0C) + *(s32 *)(D_8011BE90 + 0x2C30)) * osGetCount();
+    *(s32 *)(D_8011BE90 + 0x2D0C) =
+        *(s32 *)(D_8011BE90 + 0x2D0C) + ((s16 **)(D_8011BE90 + 0x2CF8))[index][*(s32 *)(D_8011BE90 + 0x2C30) & 0xFF];
+
+    index = *(s32 *)(D_8011BE90 + 0x2C38);
+    *(void **)(*(u8 **)(D_8011BE90 + 0x2C4C) + 0x40) = NULL;
+    *(void **)(*(u8 **)(D_8011BE90 + 0x2C4C) + 0x44) = NULL;
+
+    task = *(OSTask_t **)(D_8011BE90 + 0x2C4C);
+    task->type = M_AUDTASK;
+    task->flags = 0;
+    task->ucode_boot = (u64 *)D_80000460;
+    task->ucode_boot_size = 0x1000;
+    task->ucode_data_size = (size_t)(D_800871D0 - D_80086EF0) * sizeof(u64) - 1;
+    task->ucode = (u64 *)D_80000460;
+    task->ucode_data = D_80086EF0;
+    task->ucode_size = 0x1000;
+    task->dram_stack = (u64 *)D_8008FC90;
+    task->dram_stack_size = 0;
+    task->output_buff = NULL;
+    task->output_buff_size = NULL;
+    if (1) {}
+    task->data_ptr = (u64 *)((s32 *)(D_8011BE90 + 0x2C40))[index];
+    task->data_size = abiCmdCnt * sizeof(Acmd);
+    task->yield_data_ptr = NULL;
+    task->yield_data_size = 0;
+
+    if (*(s32 *)(D_8011BE90 + 0x2D2C) < abiCmdCnt) {
+        *(s32 *)(D_8011BE90 + 0x2D2C) = abiCmdCnt;
+    }
+
+    if (*(s16 *)(D_8011BE90 + 0x2BDC) == 1) {
+        return *(s32 *)(D_8011BE90 + 0x2C4C);
+    } else {
+        D_8008FA80 = *(void **)(D_8011BE90 + 0x2C4C);
+        return (s32)NULL;
+    }
+}
+
+// func_80018078 starts its jump table on an 8-byte boundary, after the zero word that
+// follows func_80015AB8's three refresh-rate floats.
+#pragma asmproc late_rodata_alignment("func_80018078", 8)
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018078.s")
 
 void func_800185A8(s32 arg0, s32 arg1) { u8 *ptr = D_80121EDC[arg0]; if (arg1 == 0) arg1 = 1; ptr[1] = 2; *(s16 *)(ptr + 0x12) = arg1; *(f32 *)(ptr + 0x20) = -(*(f32 *)(ptr + 0x1C) / (f32)arg1); }
@@ -1535,6 +1907,23 @@ void func_80018810(void) {
     D_8011BE90[0x6315] = D_8011BE90[0x6314];
     D_8011BE90[0x6316] = 0;
 }
+
+// Audio thread command queued by func_800186B8: opcode, three argument bytes and a data word.
+// func_80018ED4 reads channel commands through it.
+typedef struct AudioCmd {
+    /* 0x0 */ u8 op;
+    /* 0x1 */ u8 arg0;
+    /* 0x2 */ u8 arg1;
+    /* 0x3 */ u8 arg2;
+    union {
+        /* 0x4 */ f32 asFloat;
+        /* 0x4 */ s32 asInt;
+        /* 0x4 */ u16 asUShort;
+        /* 0x4 */ s8 asSbyte;
+        /* 0x4 */ u8 asUbyte;
+        /* 0x4 */ void *asPtr;
+    } data;
+} AudioCmd; // size = 0x8
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018828.s")
 
@@ -1739,7 +2128,150 @@ void func_80018CFC(u8 *arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018ED4.s")
+extern void func_80011864(s16 *filter, s32 lowPassCutoff, s32 highPassCutoff);
+// Flag bytes at offsets 0 and 1 of a sequence channel; func_80018ED4 writes muted (0x10 in
+// byte 0) and the change flags in byte 1. Names follow the Majora's Mask SequenceChannel
+// bitfields.
+typedef struct SequenceChannelFlags {
+    /* 0x00 */ u8 enabled : 1;
+    /* 0x00 */ u8 finished : 1;
+    /* 0x00 */ u8 stopScript : 1;
+    /* 0x00 */ u8 muted : 1;
+    /* 0x00 */ u8 hasInstrument : 1;
+    /* 0x00 */ u8 stereoHeadsetEffects : 1;
+    /* 0x00 */ u8 largeNotes : 1;
+    /* 0x00 */ u8 unused : 1;
+    /* 0x01 */ u8 changeFreqScale : 1;
+    /* 0x01 */ u8 changeVolume : 1;
+    /* 0x01 */ u8 changePan : 1;
+} SequenceChannelFlags;
+
+// Close to Majora's Mask AudioThread_ProcessChannelCmd (src/audio/lib/thread.c); GS has one
+// extra opcode, 0x15, which stores the command's unsigned byte as a u16 at channel + 0x2A.
+// GS channel offsets: vibrato rate/depth targets at 0x18/0x1A, combFilterGain at 0x24,
+// seqScriptIO at 0xD0, sfxState at 0xD8, filter at 0xDC, stereo byte at 0xE0 and
+// startSamplePos at 0xE4.
+void func_80018ED4(u8 *channel, AudioCmd *cmd) {
+    u8 filterCutoff;
+
+    switch (cmd->op) {
+        case 0x1:
+            if (*(f32 *)(channel + 0x2C) != cmd->data.asFloat) {
+                *(f32 *)(channel + 0x2C) = cmd->data.asFloat;
+                ((SequenceChannelFlags *)channel)->changeVolume = TRUE;
+            }
+            break;
+
+        case 0x2:
+            if (*(f32 *)(channel + 0x30) != cmd->data.asFloat) {
+                *(f32 *)(channel + 0x30) = cmd->data.asFloat;
+                ((SequenceChannelFlags *)channel)->changeVolume = TRUE;
+            }
+            break;
+
+        case 0x3:
+            if (channel[0xA] != cmd->data.asSbyte) {
+                channel[0xA] = cmd->data.asSbyte;
+                ((SequenceChannelFlags *)channel)->changePan = TRUE;
+            }
+            break;
+
+        case 0x7:
+            if (channel[0xA] != cmd->data.asSbyte) {
+                channel[0xB] = cmd->data.asSbyte;
+                ((SequenceChannelFlags *)channel)->changePan = TRUE;
+            }
+            break;
+
+        case 0x4:
+            if (*(f32 *)(channel + 0x3C) != cmd->data.asFloat) {
+                *(f32 *)(channel + 0x3C) = cmd->data.asFloat;
+                ((SequenceChannelFlags *)channel)->changeFreqScale = TRUE;
+            }
+            break;
+
+        case 0x5:
+            if (channel[0x4] != cmd->data.asSbyte) {
+                channel[0x4] = cmd->data.asSbyte;
+            }
+            break;
+
+        case 0x11:
+            if (channel[0x8] != cmd->data.asSbyte) {
+                channel[0x8] = cmd->data.asSbyte;
+            }
+            break;
+
+        case 0x12:
+            channel[0x10] = cmd->data.asSbyte;
+            break;
+
+        case 0x6:
+            if (cmd->arg2 < 8) {
+                *(s8 *)(channel + 0xD0 + cmd->arg2) = cmd->data.asSbyte;
+            }
+            break;
+
+        case 0x8:
+            ((SequenceChannelFlags *)channel)->muted = cmd->data.asSbyte;
+            break;
+
+        case 0x9:
+            channel[0x3] = cmd->data.asSbyte;
+            break;
+
+        case 0xA:
+            *(u16 *)(channel + 0x1A) = cmd->data.asUbyte * 8;
+            *(u16 *)(channel + 0x1E) = 1;
+            break;
+
+        case 0xB:
+            *(u16 *)(channel + 0x18) = cmd->data.asUbyte * 32;
+            *(u16 *)(channel + 0x1C) = 1;
+            break;
+
+        case 0xC:
+            channel[0xF] = cmd->data.asUbyte;
+            break;
+
+        case 0xD:
+            *(u16 *)(channel + 0x24) = cmd->data.asUShort;
+            break;
+
+        case 0xE:
+            channel[0xE0] = cmd->data.asUbyte;
+            break;
+
+        case 0xF:
+            *(s32 *)(channel + 0xE4) = cmd->data.asInt;
+            break;
+
+        case 0x10:
+            *(void **)(channel + 0xD8) = cmd->data.asPtr;
+            break;
+
+        case 0x13:
+            filterCutoff = cmd->arg2;
+            if (cmd->data.asPtr != NULL) {
+                *(s16 **)(channel + 0xDC) = cmd->data.asPtr;
+            }
+            if (*(s16 **)(channel + 0xDC) != NULL) {
+                func_80011864(*(s16 **)(channel + 0xDC), filterCutoff >> 4, filterCutoff & 0xF);
+            }
+            break;
+
+        case 0x14:
+            channel[0xC] = cmd->data.asUbyte;
+            break;
+
+        case 0x15:
+            *(u16 *)(channel + 0x2A) = cmd->data.asUbyte;
+            break;
+
+        default:
+            break;
+    }
+}
 
 void func_8001911C(s32 arg0, s32 arg1, s32 arg2) {
     func_80018728(((arg0 & 0xFF) << 0x10) | 0xFA000000 | ((arg1 & 0xFF) << 8) | (arg2 & 0xFF), 1);
@@ -1772,7 +2304,52 @@ s32 func_80019230(s32 arg0, s32 arg1, s32 arg2) {
     return locals[2] - locals[1];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_8001926C.s")
+// Same code as Majora's Mask AudioThread_GetSamplePos (src/audio/lib/thread.c); GS reaches
+// the sequence player through the pointer table D_80121EDC, and its note fields sit at
+// smaller offsets (parentLayer at 0x44, the isSyntheticWave flag word at 0xD0, tunedSample
+// at 0xE0; Majora's Mask uses 0x48, 0xD8 and 0xE8).
+// Returns TRUE and writes the sample's loop end and the note's integer sample position when
+// the layer's note is still owned by that layer and plays a real sample.
+s32 func_8001926C(s32 arg0, s32 arg1, s32 arg2, s32 *loopEnd, s32 *samplePosInt) {
+    u8 *seqPlayer = D_80121EDC[arg0];
+    u8 *layer;
+    u8 *note;
+    u8 *tunedSample;
+
+    if ((*(u32 *)seqPlayer >> 31) && (**(u32 **)(seqPlayer + 0x38 + arg1 * 4) >> 31)) {
+        layer = *(u8 **)(*(u8 **)(seqPlayer + 0x38 + arg1 * 4) + 0x54 + arg2 * 4);
+        if (layer == NULL) {
+            return FALSE;
+        }
+
+        if (*(u32 *)layer >> 31) {
+            if (*(u8 **)(layer + 0x3C) == NULL) {
+                return FALSE;
+            }
+
+            if (!((*(u32 *)layer << 4) >> 31)) {
+                return FALSE;
+            }
+
+            note = *(u8 **)(layer + 0x3C);
+            if (layer == *(u8 **)(note + 0x44)) {
+                if (((*(u32 *)(note + 0xD0) << 13) >> 31) == TRUE) {
+                    return FALSE;
+                }
+
+                tunedSample = *(u8 **)(note + 0xE0);
+                if (tunedSample == NULL) {
+                    return FALSE;
+                }
+                *loopEnd = *(s32 *)(*(u8 **)(*(u8 **)tunedSample + 8) + 4);
+                *samplePosInt = *(s32 *)(note + 0x1C);
+                return TRUE;
+            }
+            return FALSE;
+        }
+    }
+    return FALSE;
+}
 
 void func_80019378(void) {
     func_800193B8(0);
