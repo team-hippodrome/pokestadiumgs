@@ -2,7 +2,35 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0BB40.s")
+extern u16 *D_8AF2BA98;
+extern u16 *D_8AF2BA9C;
+extern u8 func_80062D98(u8);
+s32 func_8AF0BB40(s16 move) {
+    s32 result = 1;
+    u8 type = func_80062D98(move);
+    u16 *table;
+    u16 mask;
+
+    if (move == 0xF8) {
+        result = 0;
+    } else if (move == 0xED) {
+        result = 0;
+    } else if (move == 0xFB) {
+        result = 0;
+    } else {
+        if (type == 0x1B) {
+            table = D_8AF2BA9C;
+            mask = 0x8000;
+        } else {
+            table = D_8AF2BA98;
+            mask = 0xFFFF;
+        }
+        if (!(table[move - 1] & mask)) {
+            result = 0;
+        }
+    }
+    return result;
+}
 
 extern s32 D_8AF26A20;
 extern s8 *D_8AF2E8E8;
