@@ -204,7 +204,35 @@ s16 func_8AF21C04(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF21C58.s")
+extern s16 D_8AF3A082;
+extern u8 *D_8AF3A198;
+extern u16 *D_8AF3A0B0;
+extern u16 *D_8AF3A0B4;
+typedef struct unk_func_8AF21C58 {
+    u8 unk_00[64];
+    s16 unk_40;
+    u8 unk_42[2];
+} unk_func_8AF21C58;
+
+void func_8AF21C58(void) {
+    unk_func_8AF21C58 *record = D_8AF3A082 + (unk_func_8AF21C58 *)D_8AF3A198;
+    s16 mode = record->unk_40;
+
+    switch (mode) {
+    case 1:
+        D_8AF3A0B0[1] |= 2;
+        D_8AF3A0B4[1] &= ~2;
+        break;
+    case 2:
+        D_8AF3A0B0[1] &= ~2;
+        D_8AF3A0B4[1] |= 2;
+        break;
+    default:
+        D_8AF3A0B0[1] &= ~2;
+        D_8AF3A0B4[1] &= ~2;
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF21D14.s")
 
