@@ -40,3 +40,14 @@ checks pass. Independent comparison covers all owner bytes at ROM
 `0x1A41DC..0x1A4274`. Previously matched C and layout remain unchanged;
 no new qualifiers, padding, forced registers, FAKE constructs, or instruction
 rewriting are introduced.
+
+## 2026-10-27 — `func_882310A0` state setup accepted
+
+`func_882310A0` is now C: **52 words / 208 bytes**, frame 0x18. It registers
+this file's `func_88230F5C`/`func_88230FF4`/`func_88230EE0` with
+`func_88005B60(1, ...)` and allocates the 8-byte `unk_D_882349C0` state.
+It fills the two leading bytes from `D_882345F4` (byte 8 of `**D_882345F4`,
+byte 4 of `*D_882345F4`), sets `x = func_88216D98(0, 4)`, `y = D_88006890`
+and `width = func_88216E28(0, 4)`, and stores the pointer in `D_8800EF54`.
+The straightforward typed spelling matches; the draw callbacks already use
+the same field names.
