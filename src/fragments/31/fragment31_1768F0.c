@@ -43,15 +43,24 @@ s32 func_88203A18(s32 arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203ED8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203FB4.s")
+extern u8 D_88A01C40[];
+u8 func_88203FB4(void) {
+    u8 count = 0;
+    s32 i;
 
-extern u8 D_88A01C40;
+    for (i = 0; i < 30; i++) {
+        if (D_88A01C40[i] == 0) {
+            count++;
+        }
+    }
+    return count;
+}
 
 s32 func_88204050(void) {
     s32 var_v1;
     u8 *var_v0;
 
-    var_v0 = &D_88A01C40;
+    var_v0 = D_88A01C40;
     var_v1 = 0;
 loop_1:
     if (*var_v0 != 0) {
