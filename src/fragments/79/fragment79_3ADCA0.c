@@ -1115,7 +1115,23 @@ void func_84143CF0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84143E64.s")
+extern s32 func_80064474(u8, u16);
+extern void func_80049628(s32, s32, s32);
+extern void _bcopy(const void *, void *, s32);
+extern void func_800495F8(s32, s32, s32, void *, ...);
+void func_84143E64(u16 arg0, u16 arg1, s32 arg2, u16 arg3, s32 arg4) {
+    u8 color;
+    char buf[12];
+
+    color = func_80064474(*((u8 *)&arg2 + 3), arg3); // FAKE
+    if (arg4 != 0) {
+        _bcopy((void *)arg4, buf, 12);
+        func_800495F8(arg0, arg1, 1, buf);
+        if (color != 0) {
+            func_80049628(arg0 + 21, arg1 + 10, (color == 1) ? 169 : (color == 2) ? 190 : 0);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1128,7 +1144,7 @@ extern s16 D_84186BBC;
 extern s16 D_84186BC0;
 extern u8 *func_8413D29C(u8);
 extern void func_8004972C(s32, s32, s32, s32);
-extern void func_800495F8(s32, s32, s32, void *);
+extern void func_800495F8(s32, s32, s32, void *, ...);
 void func_84143FF4(void *arg0) {
     u8 sp1F[4];
     u8 temp_a0;
@@ -1152,7 +1168,7 @@ void func_84143FF4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84143E64(s32, s32, u8, u16, s32);
+extern void func_84143E64(u16, u16, s32, u16, s32);
 extern s16 D_84186BBC;
 extern s16 D_84186BC0;
 void func_841440B4(void *arg0) {
@@ -1218,7 +1234,7 @@ extern s16 D_84186DF4;
 extern s16 D_8419D7A6;
 extern void *D_8419A0B0;
 extern void func_80048E30(void *, s32, s32, s32, s32);
-extern void func_800495F8(s32, s32, s32, void *);
+extern void func_800495F8(s32, s32, s32, void *, ...);
 extern s32 func_8004C874(s32, s32);
 extern s16 D_84186DF0;
 extern s16 D_84186DF8;
@@ -1241,7 +1257,7 @@ extern s16 D_84186DF0;
 extern s16 D_84186DFC;
 extern void func_8004C54C(s32, s32);
 extern s32 func_8004C8A0(void *, s32, s32, s32);
-extern void func_800495F8(s32, s32, s32, void *);
+extern void func_800495F8(s32, s32, s32, void *, ...);
 void func_84144A00(void *arg0) {
     u8 index;
     u8 sp20[0x28];
