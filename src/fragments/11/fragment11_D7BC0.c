@@ -456,7 +456,45 @@ void func_81600E04(void *arg0)
   }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D7BC0/func_81600E28.s")
+extern void *MainPool_AllocAligned(void *, s32, s32);
+typedef struct unk_func_81600E28_List {
+    /* 0x00 */ u8 *head;
+    /* 0x04 */ u8 *tail;
+    /* 0x08 */ u8 *unk_08;
+} unk_func_81600E28_List; // size = 0xC
+
+typedef struct unk_func_81600E28 {
+    /* 0x00 */ s32 node_count;
+    /* 0x04 */ s32 list_index;
+    /* 0x08 */ u8 *nodes;
+    /* 0x0C */ s32 unk_0C;
+    /* 0x10 */ unk_func_81600E28_List lists[2];
+    /* 0x28 */ unk_func_81600E28_List *list;
+    /* 0x2C */ u8 unk_2C[4];
+} unk_func_81600E28; // size = 0x30
+
+void *func_81600E28(void *pool, s32 arg1, s32 count) {
+    unk_func_81600E28 *ctx;
+    u8 *nodes;
+    s32 node_count = count * 4 + 1;
+    s32 i;
+
+    ctx = MainPool_AllocAligned(pool, sizeof(unk_func_81600E28), 4);
+    nodes = MainPool_AllocAligned(pool, node_count * 0x20, 4);
+    ctx->nodes = nodes;
+    ctx->node_count = node_count;
+    for (i = 0; i < node_count; i++) {
+        func_816003C8(nodes + i * 0x20);
+    }
+    for (i = 0; i < 2; i++) {
+        ctx->list_index = i;
+        ctx->list = &ctx->lists[i];
+        ctx->list->tail = NULL;
+        ctx->list->head = ctx->list->unk_08 = ctx->list->tail;
+    }
+    ctx->unk_0C = arg1;
+    return ctx;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D7BC0/func_81600F0C.s")
 
