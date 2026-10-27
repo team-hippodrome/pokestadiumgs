@@ -106,3 +106,11 @@ requeue. Builds the selection order at `+0x20`: clears `used[count]` (`count = s
 ## 2026-10-27 — `func_8260DB98`: requeue
 
 requeue. Draws a selection marker: if `+0x3C != -1`, texture 97 frame 0 with colors `D_82615720`/`D_82615724` when `+0x02 == +0x3C`, else frame 1 with `D_82615728`/`D_8261572C`; PipeSync, env color (alpha `+0x44`) and prim color when both are set; then `func_8004D19C(offsets[+0x02] + x, y + dy, tex, 0, 0)` with `offsets`/`dy` = `D_82615734`/31 when `+0x34` is set, else `D_82615730`/17. The parameter must be `u8 *` (later extern). Best 0.96: retail re-reads `+0x3C` for the second compare instead of CSE-ing it, and loads the env color's green byte first. Permuter 420 s: 1680 → 745.
+
+## 2026-10-27 — `func_82607528`: requeue
+
+requeue. Per-kind update: kinds 1/4/6 call `func_82606B28`/`func_82606CE8`/`func_82606EC8`; kind 5 advances `+0x08` (capped at 1000) and sets `+0x34 = min(t, D_826155FC) * 255 / D_826155FC`. Then, while flag bit 0 is set, it advances `+0x0E` and sets `+0x0C` rising over `D_826155F4` frames and falling over `D_826155F8`, clearing the flag after `D_826155F4 + D_826155F8` frames. The caller `func_82607B74` must pass `arg0` (companion edit, as for `func_82607AA0`). Best 0.95 with direct global reads: retail keeps `D_826155F4` in `a3` from the top and re-loads it after each handler call (IDO PRE), plus `255` in `a2`, in a 0x28 frame; a local copy of the global gives the right frame but spills it instead (0.95). Permuter 420 s: 1140 → 840 with semantics-changing output only.
+
+## 2026-10-27 — `func_82608EC4`: requeue
+
+requeue. Draws a horizontal strip of images: colors via `func_82607BF4` (as in the matched `func_8260899C`), sum of the non-null image widths in the `+0x30` list (count at `[0]`), then each image through `func_8004D19C` from `x + (+0x24 - width) / 2`. `x`/`y` are added as `+0x14 + +0x10`. With the scalars declared in the order `y, list, i, width, cursor, image, x, prim, env`, the frame and colour slots match (0.96/0.94). The rest: retail computes `list = arg0 + 0x30` right after the position loads and keeps two copies (`t0`, spilled to `sp+0x58`, and `s4`), and spills `x` at `sp+0x74` (IDO: `0x76`). Stack-diff permuter: 880 → 820.
