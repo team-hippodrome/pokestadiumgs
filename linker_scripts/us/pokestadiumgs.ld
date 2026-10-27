@@ -1305,6 +1305,7 @@ SECTIONS
         fragment12_RODATA_START = .;
         build/asm/us/data/fragments/12/fragment12_header.o(.rodata);
         build/src/fragments/12/fragment12_E5330.o(.rodata);
+        build/asm/us/data/ECC60.rodata.o(.rodata);
         build/src/fragments/12/fragment12_E7C00.o(.rodata);
         build/asm/us/data/ECEC0.rodata.o(.rodata);
         fragment12_RODATA_END = .;
