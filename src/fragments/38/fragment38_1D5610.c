@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 #ifdef VERSION_US
 extern u8 *D_88904190;
@@ -108,7 +109,6 @@ void func_88900754(void) {
 }
 
 extern void Input_SetRepeatController(void *arg0);
-extern void *D_80087200;
 void func_8890077C(void) {
     Input_SetRepeatController(D_80087200);
 }
@@ -143,7 +143,7 @@ void LabPC_HandleChoiceInput(void) {
     LabPCTextList *list = (LabPCTextList *)(D_88904190 + 8);
     s32 special_sound;
 
-    if (((*(u16 *)((u8 *)D_80087200 + 8)) & 0x8000) && list->selected == 0) {
+    if (((D_80087200->buttonsPressed) & 0x8000) && list->selected == 0) {
         special_sound = 0;
         switch (*(s32 *)(D_88904190 + 288)) {
         case 9:
@@ -185,7 +185,7 @@ void LabPC_HandleChoiceInput(void) {
         } else {
             func_800226C0(*(s32 *)(D_88904190 + 328));
         }
-    } else if ((*(u16 *)((u8 *)D_80087200 + 8)) & 0xC000) {
+    } else if ((D_80087200->buttonsPressed) & 0xC000) {
         func_800226C0(*(s32 *)(D_88904190 + 332));
         switch (*(s32 *)(D_88904190 + 288)) {
         case 9:
@@ -281,7 +281,7 @@ extern void LabPC_OpenChoiceWindow(s32);
 
 void LabPC_HandleMovePaneInput(void) {
     LabPCControllerMovePane *pane = (LabPCControllerMovePane *)(D_88904190 + 72);
-    u32 pressed = *(u16 *)((u8 *)D_80087200 + 8);
+    u32 pressed = D_80087200->buttonsPressed;
 
     if (pressed & 0x8000) {
         func_800226C0(*(s32 *)(D_88904190 + 328));

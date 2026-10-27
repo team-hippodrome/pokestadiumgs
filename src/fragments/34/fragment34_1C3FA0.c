@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -55,7 +56,6 @@ extern s32 func_88002958(s32 *, s32, s32, s32);
 extern u16 *func_8004C990(s32, s32);
 extern void func_880048D4(s32, s32, s16, s32, s32, s32, s32, s32, s32,
                            s32 *, s32 *, s32 *, s32 *, s32, s32, s32);
-extern s32 *D_80087200;
 extern s32 D_88000E4C;
 extern s32 D_8800EDE8;
 extern s32 D_88523018;
@@ -68,7 +68,7 @@ void func_885075A8(void) {
     var_s0 = 0;
     *(s16 *)((u8 *)D_88523010 + 0x1E) = *(s16 *)((u8 *)D_88523010 + 0x1E) - 1;
     var_s1 = (s32)sp68;
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         *(s16 *)((u8 *)D_88523010 + 0x1E) = 0;
     }
     if (*(s16 *)((u8 *)D_88523010 + 0x1E) <= 0) {

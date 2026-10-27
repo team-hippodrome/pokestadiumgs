@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -8,10 +9,9 @@ void func_88004EB0(void) {
     D_8800EF20 = 10;
 }
 
-extern u8 *D_80087200;
 s32 func_88004EC0(void) {
-    u8 *input = D_80087200;
-    s32 buttons = *(u16 *)(input + 8);
+    ControllerState *input = D_80087200;
+    s32 buttons = input->buttonsPressed;
 
     if (buttons & 0x200) {
         D_8800EF20 = 10;
@@ -32,7 +32,7 @@ s32 func_88004EC0(void) {
     D_8800EF20--;
     if (D_8800EF20 <= 0) {
         D_8800EF20 = 0;
-        buttons = *(u16 *)(input + 6);
+        buttons = input->buttonsHeld;
         if (buttons & 0x200) {
             return (D_8800EF20 = 2, 0x200);
         }

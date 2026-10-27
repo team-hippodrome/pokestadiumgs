@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -29,16 +30,15 @@ void func_826007E4(void) {
  * load that value and dereference it as the stage-state pointer. */
 
 extern s32 StageContext_GetFadeMode(void);
-extern void *D_80087200;
 
 s32 func_82600838(s32 arg0) {
     s32 var_a2;
-    void *var_v1;
+    ControllerState *var_v1;
     /* FAKE: exists only so the three `*base` reads constant-propagate to ugen's
      * `lw $r, D_80087200` macro form (as1: lui %hi + lw %lo with base=dest in
      * v1) instead of routing through the live la of the bare reads; removing it
      * re-joins those loads to the a3 la web and loses the reload pairs. */
-    void **base;
+    ControllerState **base;
 
     base = &D_80087200;
     var_a2 = arg0;
@@ -50,13 +50,13 @@ s32 func_82600838(s32 arg0) {
         break;
     case 1:
         if (*(u16 *)((u8 *)*(void **)D_82615330 + 8) != 0x500) {
-            if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+            if (D_80087200->buttonsRepeat & 0x800) {
                 *(s16 *)((u8 *)D_82615330 + 0x16) = *(s16 *)((u8 *)D_82615330 + 0x16) - 1;
                 if (*(s16 *)((u8 *)D_82615330 + 0x16) < 0) {
                     *(s16 *)((u8 *)D_82615330 + 0x16) = *(s16 *)((u8 *)D_82615330 + 0x14) - 1;
                 }
             }
-            if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+            if (D_80087200->buttonsRepeat & 0x400) {
                 *(s16 *)((u8 *)D_82615330 + 0x16) = *(s16 *)((u8 *)D_82615330 + 0x16) + 1;
                 if (*(s16 *)((u8 *)D_82615330 + 0x16) >= *(s16 *)((u8 *)D_82615330 + 0x14)) {
                     *(s16 *)((u8 *)D_82615330 + 0x16) = 0;
@@ -65,16 +65,16 @@ s32 func_82600838(s32 arg0) {
             var_v1 = *base;
         } else {
             var_v1 = D_80087200;
-            if (*(u16 *)((u8 *)var_v1 + 0xC) & 0x800) {
+            if (var_v1->buttonsRepeat & 0x800) {
                 *(s32 *)((u8 *)D_82615330 + 0x98) = *(s32 *)((u8 *)D_82615330 + 0x98) + 1;
                 var_v1 = *base;
             }
-            if (*(u16 *)((u8 *)var_v1 + 0xC) & 0x400) {
+            if (var_v1->buttonsRepeat & 0x400) {
                 *(s32 *)((u8 *)D_82615330 + 0x98) = *(s32 *)((u8 *)D_82615330 + 0x98) - 1;
                 var_v1 = *base;
             }
         }
-        if (*(u16 *)((u8 *)var_v1 + 8) & 0x8000) {
+        if (var_v1->buttonsPressed & 0x8000) {
             var_a2 = 3;
         }
         break;

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -26,7 +27,7 @@ typedef struct {
 typedef struct {
     Fragment4DefinitionView **definitions;
     s32 unk_04;
-    u8 *controller;
+    ControllerState *controller;
     u8 unk_0C[8];
     u16 unk_14;
     u16 unk_16;
@@ -45,7 +46,6 @@ typedef struct {
     s32 unk_30;
     s32 unk_34;
 } Fragment4StateView;
-extern u8 D_800CE060[];
 extern void func_81802DC8(u8 *);
 extern void func_81802E34(u8 *);
 extern void func_81803B18(void *);
@@ -141,7 +141,7 @@ void WidgetState_Initialize(Fragment4StateView *state, s32 controller, s32 count
     state->unk_28 = 1.0f;
     state->unk_2C = 1.0f;
     if (controller >= 0 && controller < 4) {
-        state->controller = D_800CE060 + controller * 40;
+        state->controller = &D_800CE060[controller];
     } else {
         state->controller = NULL;
     }
@@ -350,11 +350,11 @@ void WidgetState_Update(Fragment4StateView *state) {
     s32 next;
     u8 previous_variant;
 
-    *(f32 *)state->unk_0C = *(s16 *)(state->controller + 2);
-    *(f32 *)(state->unk_0C + 4) = *(s16 *)(state->controller + 4);
-    state->unk_14 = *(u16 *)(state->controller + 8);
-    state->unk_16 = *(u16 *)(state->controller + 12);
-    state->unk_18 = *(u16 *)(state->controller + 6);
+    *(f32 *)state->unk_0C = state->controller->stickX;
+    *(f32 *)(state->unk_0C + 4) = state->controller->stickY;
+    state->unk_14 = state->controller->buttonsPressed;
+    state->unk_16 = state->controller->buttonsRepeat;
+    state->unk_18 = state->controller->buttonsHeld;
     switch (state->unk_1A) {
     case 0:
         if (state->unk_1C != state->unk_1D) {

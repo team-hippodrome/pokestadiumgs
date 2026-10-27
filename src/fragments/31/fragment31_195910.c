@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -12,7 +13,6 @@ void func_88222690(void) {
 
 extern void Util_Free(s32);
 extern void Input_SetRepeatController(s32);
-extern s32 D_80087200;
 extern s32 D_880068B4;
 extern s32 D_88234840;
 

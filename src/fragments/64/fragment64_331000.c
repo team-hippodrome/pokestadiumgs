@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -7,19 +8,18 @@ void func_87F0E390(u8 *arg0, s32 arg1) {
     *(s32 *)(arg0 + 4) = arg1;
 }
 
-extern u8 D_800CE060[];
 u16 func_87F0E39C(u8 *arg0, s32 arg1, s32 arg2) {
     s32 var_v1 = 0;
 
     switch (arg2) {
         case 0:
-            var_v1 = *(u16 *)(D_800CE060 + arg1 * 40 + 6);
+            var_v1 = D_800CE060[arg1].buttonsHeld;
             break;
         case 1:
-            var_v1 = *(u16 *)(D_800CE060 + arg1 * 40 + 8);
+            var_v1 = D_800CE060[arg1].buttonsPressed;
             break;
         case 2:
-            var_v1 = *(u16 *)(D_800CE060 + arg1 * 40 + 12);
+            var_v1 = D_800CE060[arg1].buttonsRepeat;
             break;
     }
     if (var_v1 != 0) {

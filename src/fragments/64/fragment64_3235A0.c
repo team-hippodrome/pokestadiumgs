@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -36,27 +37,25 @@ void func_87F01870(void *arg0) {
     }
 }
 
-extern u8 D_800CE060[];
-extern void func_80006148(u8 *);
 void func_87F01934(void) {
-    u8 *entry = D_800CE060;
+    ControllerState *entry = D_800CE060;
     s32 offset;
 
     for (offset = 0; offset < 8; offset += 2) {
-        *(u16 *)(D_87F0F610 + offset + 0x34) = *(u16 *)(entry + 0x10);
+        *(u16 *)(D_87F0F610 + offset + 0x34) = entry->flags;
         func_80006148(entry);
-        entry += 0x28;
+        entry++;
     }
 }
 
 /* mkdraft:func_87F019A4 begin */
 void func_87F019A4(void) {
-    u8 *entry = D_800CE060;
+    ControllerState *entry = D_800CE060;
     s32 offset;
 
     for (offset = 0; offset < 8; offset += 2) {
-        *(u16 *)(entry + 0x10) = *(u16 *)(D_87F0F610 + offset + 0x34);
-        entry += 0x28;
+        entry->flags = *(u16 *)(D_87F0F610 + offset + 0x34);
+        entry++;
     }
 }
 /* mkdraft:func_87F019A4 end */

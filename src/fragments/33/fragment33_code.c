@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -10,7 +11,6 @@ s32 func_88400020(s32 arg0, s32 arg1) {
     return 0;
 }
 
-extern void *D_80087200;
 s32 func_88400034(s32 arg0, u8 *arg1) {
     s32 var_a0;
     s32 var_a1;
@@ -30,19 +30,19 @@ s32 func_88400034(s32 arg0, u8 *arg1) {
         var_a1 = 2;
         var_a2 = 1;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_v0) != 0) {
+    if ((D_80087200->buttonsHeld & var_v0) != 0) {
         result = 1;
         *(s16 *)(arg1 + 0) = *(s16 *)(arg1 + 0) + 0x400;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_a0) != 0) {
+    if ((D_80087200->buttonsHeld & var_a0) != 0) {
         result = 1;
         *(s16 *)(arg1 + 0) = *(s16 *)(arg1 + 0) - 0x400;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_a1) != 0) {
+    if ((D_80087200->buttonsHeld & var_a1) != 0) {
         result = 1;
         *(s16 *)(arg1 + 2) = *(s16 *)(arg1 + 2) + 0x400;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_a2) != 0) {
+    if ((D_80087200->buttonsHeld & var_a2) != 0) {
         result = 1;
         *(s16 *)(arg1 + 2) = *(s16 *)(arg1 + 2) - 0x400;
     }

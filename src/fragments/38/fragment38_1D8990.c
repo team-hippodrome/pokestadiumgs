@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -63,7 +64,6 @@ extern u8 D_8800ED50[];
 extern u8 *D_889041B0;
 extern u8 D_889041B8;
 extern s32 D_889041B4;
-extern void *D_80087200;
 extern void func_88903BB4(void);
 extern void func_88903C28(void);
 extern void LabPC_CloseMessageDialog(void);
@@ -235,7 +235,7 @@ extern void func_88004990(u8, s32);
 void func_88903BB4(void) {
     s32 *temp_v0;
 
-    if ((*(u16 *)((u8 *)(D_80087200) + (8))) & 0xC000) {
+    if ((D_80087200->buttonsPressed) & 0xC000) {
         func_88004990(*(*(u8 **)((u8 *)(D_889041B0) + (0))), 0);
         temp_v0 = (*(s32 **)((u8 *)(D_889041B0) + (0x240)));
         if (temp_v0 != NULL) {

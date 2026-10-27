@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -113,16 +114,15 @@ s32 func_81304E24(u8 *arg0) {
     return 1;
 }
 
-extern u8 D_800CE060[];
 extern s32 func_81302290(void *);
 extern void func_800226C0(s32);
 s32 Fragment14_UpdatePanelInput(u8 *arg0) {
     u16 pressed;
-    u8 *controller;
+    ControllerState *controller;
 
-    controller = (u8 *)((u32)D_800CE060 + arg0[0x19] * 0x28);
+    controller = &D_800CE060[arg0[0x19]];
     *(f32 *)(arg0 + 0xC) = 16.0f;
-    pressed = *(u16 *)(controller + 0xC);
+    pressed = controller->buttonsRepeat;
     if (pressed & 0x8000) {
         switch (arg0[0x18]) {
         case 0:

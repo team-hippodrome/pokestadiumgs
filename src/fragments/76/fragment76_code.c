@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 #ifdef VERSION_US
 /* The title ends across the aligned data/rodata boundary. Preserve its
@@ -500,7 +501,6 @@ void func_8F70104C(void) {
 #endif
 
 #ifdef VERSION_US
-extern void *D_80087200;
 extern s32 func_8F700858(void *);
 extern void func_8F7007B8(u8);
 extern void func_8F700A54(void);
@@ -566,13 +566,13 @@ result_2:
 result_1:
     func_8F7007B8(6);
 common_tail:
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         func_8F700FD8();
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+    } else if (D_80087200->buttonsPressed & 0x4000) {
         func_8F70104C();
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x20) {
+    } else if (D_80087200->buttonsPressed & 0x20) {
         func_8F700F90();
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x10) {
+    } else if (D_80087200->buttonsPressed & 0x10) {
         func_8F700F48();
     }
 }

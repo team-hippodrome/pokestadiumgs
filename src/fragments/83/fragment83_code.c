@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -511,16 +512,15 @@ void func_82C033E4(void) {
 #endif
 
 #ifdef VERSION_US
-extern void *D_80087200;
 extern u8 D_82C04A10;
 extern u16 D_82C04C30;
 extern u16 D_82C04C34;
 void func_82C03450(void) {
     func_80064D28();
     if (D_82C04A10 != 0) {
-        D_82C04C30 = (*(u16 *)((u8 *)(D_80087200) + (6)));
-        D_82C04C32 = (*(u16 *)((u8 *)(D_80087200) + (8)));
-        D_82C04C34 = (*(u16 *)((u8 *)(D_80087200) + (0xC)));
+        D_82C04C30 = (D_80087200->buttonsHeld);
+        D_82C04C32 = (D_80087200->buttonsPressed);
+        D_82C04C34 = (D_80087200->buttonsRepeat);
         return;
     }
     D_82C04C30 = 0;

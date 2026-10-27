@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -44,11 +45,6 @@ typedef struct FadeTimer {
     u32 pending : 1;
     u32 reserved : 30;
 } FadeTimer;
-typedef struct FadeInput {
-    u8 pad00[6];
-    /* 0x06 */ u16 pressed;
-} FadeInput;
-extern FadeInput* D_80087200;
 extern Gfx* D_800D0510;
 extern Gfx D_80094E38[], D_80094F50[];
 extern u8 StageContext_GetFadeMode(void);
@@ -79,7 +75,7 @@ s32 func_87F0C6F4(FadeTimer* timer) {
                 timer->elapsed = timer->limit;
                 finished = 1;
             }
-            if (D_80087200->pressed & 0xD000) finished = 1;
+            if (D_80087200->buttonsHeld & 0xD000) finished = 1;
             if (finished) func_87F0C930(timer);
         }
     }

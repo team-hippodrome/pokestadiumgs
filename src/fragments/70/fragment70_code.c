@@ -1,9 +1,9 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
 typedef struct TargetGraphNode TargetGraphNode;
-extern void* D_80087200;
 
 s32 func_8F200020(s32 kind, TargetGraphNode* node) {
     switch (kind) {
@@ -11,22 +11,22 @@ s32 func_8F200020(s32 kind, TargetGraphNode* node) {
         break;
     case 1:
         /* Apply all held directions before clamping the signed coordinates. */
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 0x800) {
+        if (D_80087200->buttonsRepeat & 0x800) {
             *(s16*)((u8*)node + 0xA) -= 1;
         }
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 0x400) {
+        if (D_80087200->buttonsRepeat & 0x400) {
             *(s16*)((u8*)node + 0xA) += 1;
         }
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 8) {
+        if (D_80087200->buttonsRepeat & 8) {
             *(s16*)((u8*)node + 0xA) -= 10;
         }
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 4) {
+        if (D_80087200->buttonsRepeat & 4) {
             *(s16*)((u8*)node + 0xA) += 10;
         }
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 2) {
+        if (D_80087200->buttonsRepeat & 2) {
             *(s16*)((u8*)node + 8) -= 10;
         }
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 1) {
+        if (D_80087200->buttonsRepeat & 1) {
             *(s16*)((u8*)node + 8) += 10;
         }
         if (*(s16*)((u8*)node + 0xA) < -960) {
@@ -186,24 +186,24 @@ s32 func_8F200494(void) {
     u8* table = *(u8**)((u8*)(u32)D_8F200900 + 0x1C);
     s32 result = 0;
 
-    if (*(u16*)((u8*)D_80087200 + 0xC) & 0x200) {
+    if (D_80087200->buttonsRepeat & 0x200) {
         if (--D_8F200904 < 0) {
             D_8F200904 = *(u32*)(table + 0xC) - 1;
         }
     }
-    if (*(u16*)((u8*)D_80087200 + 0xC) & 0x100) {
+    if (D_80087200->buttonsRepeat & 0x100) {
         if (++D_8F200904 > *(u32*)(table + 0xC) - 1) {
             D_8F200904 = 0;
         }
     }
-    if (*(u16*)((u8*)D_80087200 + 8) & 0x20) {
+    if (D_80087200->buttonsPressed & 0x20) {
         D_8F200874 ^= 1;
     }
-    if (*(u16*)((u8*)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         D_8F200910 = 1;
-    } else if (*(u16*)((u8*)D_80087200 + 8) & 0x4000) {
+    } else if (D_80087200->buttonsPressed & 0x4000) {
         result = 1;
-    } else if (*(u16*)((u8*)D_80087200 + 0xC) & 0x10) {
+    } else if (D_80087200->buttonsRepeat & 0x10) {
         result = 2;
     }
     return result;

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -109,7 +110,6 @@ void func_8822FA30(void) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A1BD0/func_8822FA58.s")
 
 extern void Input_SetRepeatController(s32);
-extern s32 D_80087200;
 
 void func_8822FF80(void) {
     Input_SetRepeatController(D_80087200);
@@ -139,14 +139,14 @@ void func_88230048(void) {
     u8 *temp_v0;
 
     temp_v0 = (u8 *)D_88234980 + 0x20;
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+    if (D_80087200->buttonsPressed & 0x4000) {
         func_800226C0(72);
         func_88230010();
         *(s32 *)((u8 *)D_88234980 + 0x5C) = 1;
         D_88234724 = 0;
         return;
     }
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         func_800226C0(93);
         func_88230010();
         *(s32 *)((u8 *)D_88234980 + 0x5C) = 0;

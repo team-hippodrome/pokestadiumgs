@@ -1,9 +1,9 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
 extern void Input_SetRepeatController(s32);
-extern s32 D_80087200;
 extern s32 D_880068B8;
 
 void func_882306E0(void) {
@@ -28,7 +28,39 @@ void func_88230708(void) {
     Util_Free((s32) D_882349A0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230770.s")
+extern void func_800226C0(s32);
+extern s32 func_8004C54C(s32 index,s32 value);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern s32 func_80063754(s32 arg0);
+extern void func_88002720(void *, u16, void *);
+extern void func_88004990(u8, s32);
+extern void func_88A017B4(u8, s16);
+void func_88230770(void) {
+    u8 *list;
+    s32 pressed;
+
+    pressed = D_80087200->buttonsPressed;
+    list = (u8 *)D_882349A0 + 0x20;
+    if (pressed & B_BUTTON) {
+        func_800226C0(72);
+        *(s32 *)((u8 *)D_882349A0 + 0xE4) = 1;
+        func_88004990(**(u8 **)D_882349A0, 0);
+        D_880068B8 = 1;
+        return;
+    }
+    if (pressed & A_BUTTON) {
+        func_800226C0(93);
+        func_88A017B4(*((u8 *)D_882349A0 + 0xE3), *(s16 *)(list + 0x28));
+        if (func_80063754(*((u8 *)D_882349A0 + 0xE3)) != 0) {
+            func_8004C54C(26, func_8004C874(35, *(s16 *)(list + 0x28) + 18));
+        }
+        func_88004990(**(u8 **)D_882349A0, 0);
+        D_880068B8 = 1;
+        return;
+    }
+    func_88002720(list + 0x28, *(u16 *)(list + 0xC), list + 0x2C);
+}
+
 
 extern void func_8821D930(s32);
 void func_88230878(void) {
@@ -107,7 +139,7 @@ extern void func_88002720(void *, u16, void *);
 extern s32 D_882345F4;
 void func_88230A88(void) {
     u8 *menu = (u8 *)D_882349B0 + 0x24;
-    u32 buttons = *(u16 *)(D_80087200 + 8);
+    u32 buttons = D_80087200->buttonsPressed;
 
     if (buttons & 0x4000) {
         func_800226C0(0x48);

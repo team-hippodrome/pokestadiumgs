@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -130,9 +131,8 @@ s32 func_860053F8(Func860053F8Record *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005CB4.s")
 
-extern u16 D_800CE060[];
 s32 func_860062E0(s32 arg0, u16 arg1) {
-    if (D_800CE060[4] & arg1) {
+    if (D_800CE060[0].buttonsPressed & arg1) {
         return 1;
     }
     return 0;

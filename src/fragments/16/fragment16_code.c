@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -212,7 +213,6 @@ extern s32 D_82001CD4;
 extern s16 D_82001C10[];
 extern Fragment16Color D_82001CF0, D_82001CF4, D_82001CF8, D_82001CFC;
 extern char D_82001D10[], D_82001D24[], D_82001D2C[];
-extern void *D_80087200;
 extern void *func_8004C874(s32, s32);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
@@ -335,7 +335,7 @@ extern void func_80008648(void);
 extern void func_820006B8(void);
 void func_820014C4(void) {
     BgStage_DrawFrame();
-    if (func_8006D268(0x202) != 0 && ((*(u16 *)((u8 *)(u32)D_80087200 + 8)) & 4) != 0) {
+    if (func_8006D268(0x202) != 0 && ((D_80087200->buttonsPressed) & 4) != 0) {
         (*(s16 *)((u8 *)&D_82001D58 + 4)) =
             (s16)((*(s16 *)((u8 *)&D_82001D58 + 4) + 1) % 3);
     }
@@ -358,13 +358,13 @@ void func_820014C4(void) {
 s32 Fragment16_HandleSelectionInput(void) {
     s32 result = 0;
     s32 previousSelection = D_82001EB0;
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x200) {
+    if ((D_80087200->buttonsRepeat) & 0x200) {
         D_82001EB0--;
         if (D_82001EB0 < 0) {
             D_82001EB0 = D_82001EB4 - 1;
         }
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x100) {
+    if ((D_80087200->buttonsRepeat) & 0x100) {
         D_82001EB0++;
         if (D_82001EB0 >= D_82001EB4) {
             D_82001EB0 = 0;
@@ -373,11 +373,11 @@ s32 Fragment16_HandleSelectionInput(void) {
     if (previousSelection != D_82001EB0) {
         func_800226C0(1);
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 8)) & 0x8000) {
+    if ((D_80087200->buttonsPressed) & 0x8000) {
         result = 1;
         func_800226C0(2);
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 8)) & 0x4000) {
+    if ((D_80087200->buttonsPressed) & 0x4000) {
         result = -1;
         func_800226C0(3);
     }
@@ -391,7 +391,7 @@ s32 func_82001688(void) {
     s32 result = 0;
     if (func_80025D44() == 0) {
         result = 1;
-    } else if (func_8006D268(0x201) != 0 && ((*(u16 *)((u8 *)(u32)D_80087200 + 8)) & 2) != 0) {
+    } else if (func_8006D268(0x201) != 0 && ((D_80087200->buttonsPressed) & 2) != 0) {
         result = 1;
     }
     return result;
@@ -407,12 +407,12 @@ s32 Fragment16_HandleListInput(void) {
     if ((D_82001EA2 & 2) || D_82001EC4 != 0) {
         if (D_82001EC4 != 0) {
             previousSelection = D_82001EAC;
-            if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x800) {
+            if ((D_80087200->buttonsRepeat) & 0x800) {
                 if (--D_82001EAC < 0) {
                     D_82001EAC = 18;
                 }
             }
-            if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x400) {
+            if ((D_80087200->buttonsRepeat) & 0x400) {
                 if (++D_82001EAC >= 19) {
                     D_82001EAC = 0;
                 }
@@ -421,7 +421,7 @@ s32 Fragment16_HandleListInput(void) {
                 func_800226C0(1);
             }
         }
-        if ((*(u16 *)((u8 *)D_80087200 + 8)) & 0x9000) {
+        if ((D_80087200->buttonsPressed) & 0x9000) {
             result = 1;
             func_800226C0(0x32);
         }

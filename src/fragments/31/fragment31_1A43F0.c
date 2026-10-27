@@ -1,11 +1,11 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
 extern void func_800226C0(s32);
 extern void Input_SetRepeatController(s32);
 extern void func_88800B24();
-extern s32 D_80087200;
 extern void **D_882345F4;
 void func_88231170(void) {
     func_800226C0(0x5E);

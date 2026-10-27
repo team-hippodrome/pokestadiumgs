@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -543,7 +544,6 @@ void func_8F8026DC(void) {
     }
 }
 
-extern s32 D_80087200;
 extern s32 Input_GetRepeatedDPad(void);
 s32 func_8F8027C4(void) {
     s32 raw;
@@ -585,7 +585,7 @@ s32 func_8F8027C4(void) {
             break;
         }
     }
-    buttons = *(u16*)((u8*)(u32)D_80087200 + 8);
+    buttons = D_80087200->buttonsPressed;
     if (buttons & 0x8000) {
         value = 0;
         for (index = state->numeric.last; index >= 0; index--) {
@@ -687,7 +687,7 @@ s32 func_8F802B40(void) {
             break;
         }
     }
-    buttons = *(u16*)((u8*)(u32)D_80087200 + 8);
+    buttons = D_80087200->buttonsPressed;
     if (buttons & 0x8000) {
         value = 0;
         for (index = state->numeric.last; index >= 0; index--) {
@@ -781,7 +781,7 @@ s32 func_8F802ECC(void) {
     s32 buttons;
 
     input = Input_GetRepeatedDPad();
-    buttons = *(u16*)((u8*)(u32)D_80087200 + 8);
+    buttons = D_80087200->buttonsPressed;
     if (buttons & 0x8000) {
         func_800226C0(2);
         result = func_8F802DD8();

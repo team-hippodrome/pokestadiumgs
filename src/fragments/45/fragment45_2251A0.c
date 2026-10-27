@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -1464,14 +1465,7 @@ void func_8AB05254(void) {
 #endif
 
 #ifdef VERSION_US
-// The input loop copies the selected port's complete 40-byte controller state.
-typedef struct TextControllerSnapshot {
-    u32 words[10];
-} TextControllerSnapshot;
-extern void *D_80087200;
-extern void *D_80087204;
-extern void *D_80087208;
-extern void *D_8008720C;
+// The input loop copies the selected port's complete ControllerState into D_8AB13F00.
 extern s32 D_8AB14188;
 extern void func_800086A4(s32);
 extern s32 StageFade_StartFromOpaque(s32);
@@ -1485,16 +1479,16 @@ void TextInterface_RunMainLoop(void) {
     do {
         func_80064D28();
         if (D_8AB11D0C[14] & 1) {
-            *(TextControllerSnapshot *)D_8AB13F00 = *(TextControllerSnapshot *)D_80087200;
+            *(ControllerState *)D_8AB13F00 = *D_80087200;
             D_8AB13F2C = 0;
         } else if (D_8AB11D0C[14] & 2) {
-            *(TextControllerSnapshot *)D_8AB13F00 = *(TextControllerSnapshot *)D_80087204;
+            *(ControllerState *)D_8AB13F00 = *D_80087204;
             D_8AB13F2C = 1;
         } else if (D_8AB11D0C[14] & 4) {
-            *(TextControllerSnapshot *)D_8AB13F00 = *(TextControllerSnapshot *)D_80087208;
+            *(ControllerState *)D_8AB13F00 = *D_80087208;
             D_8AB13F2C = 2;
         } else if (D_8AB11D0C[14] & 8) {
-            *(TextControllerSnapshot *)D_8AB13F00 = *(TextControllerSnapshot *)D_8008720C;
+            *(ControllerState *)D_8AB13F00 = *D_8008720C;
             D_8AB13F2C = 3;
         }
         func_8AB05254();
