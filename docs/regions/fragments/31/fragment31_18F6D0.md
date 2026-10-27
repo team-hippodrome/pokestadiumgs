@@ -80,3 +80,45 @@ checks pass. Independent original-assembly and retail-span comparisons verify
 all 180 bytes at ROM `0x18FBF0..0x18FCA4`. Earlier matched C remains unchanged.
 No new fakes, unused locals, helper or caller edits, storage, layout,
 instruction rewriting or CI changes are required.
+
+## func_8821CA24
+
+This comparator derives the same two byte values as `func_8821C770`: 253
+when bit 0 of byte 38 is set, otherwise the object's byte at offset 8. It
+passes each value to existing `func_80073450`, retains the first returned
+byte across the second call, and subtracts the second result. Equal results
+use `LabPCList_CompareByPointer` on the saved object pair. Preserve both
+lookup calls and the unsigned-byte intermediate.
+//@src/fragments/31/fragment31_18F6D0.c
+
+The compiled lookup takes and returns an unsigned byte. For inputs 1 through
+253 it reads `D_8009F97F[input]`; other inputs return zero. This establishes
+the declaration and byte-result lifetime without assigning a new meaning to
+the table or the unknown object flag.
+//@src/74020.c
+
+Original `func_8821CCE8` selects this owner as another callback for
+`func_88004B60`, whose compiled calls pass the stored object pointers.
+The real pointer and value arrays are populated by the two-iteration loop,
+and the saved pointers remain live through the lookup calls for tie-breaking.
+The existing type, sort interfaces, helper bodies and storage remain unchanged.
+//@src/fragments/29/fragment29_16AA30.c
+
+The first candidate matches all 46 instruction words (184 bytes) and the
+original 56-byte frame. Fresh validation uses master
+`1f25161aa9f2e2c51f938bcd377e3fb666b06753` plus this patch and forces the
+changed translation unit through the default syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/31/fragment31_18F6D0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The complete link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. Independent original-assembly and retail-span comparisons verify
+all 184 bytes at ROM `0x18FCA4..0x18FD5C`. Earlier matched C remains unchanged.
+No new fakes, unused locals, layout, instruction rewriting or CI changes are
+required.
