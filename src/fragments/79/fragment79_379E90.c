@@ -33,7 +33,50 @@ void func_8410A608(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_379E90/func_8410A6A4.s")
+// ControllerState (include/controller.h) read as halfwords: [3] buttonsHeld, [4] buttonsPressed.
+extern u16 *D_80087200;
+extern u8 *D_84193FA0;
+extern s32 D_84193FA4;
+void func_8410A6A4(void) {
+    extern s32 func_8410580C(s32, u8 *, s32);
+
+    D_84193FA4 = func_841242B0(D_80087200, D_84193FA0 + 0x86, D_84193FA0 + 0x88);
+    if (D_80087200[4] & 0x1000) {
+        D_84190410 = ~D_84190410 + 2;
+    }
+    if (D_84190410 != 0) {
+        if ((D_80087200[3] & 0x4000) && D_84193FA4 != 0) {
+            D_84190411 = 1;
+        } else {
+            D_84190411 = 0;
+        }
+    }
+    if (D_84190410 == 0) {
+        func_8411DBF4(30);
+        func_84111868(2, D_84190428, D_841910E0);
+        func_8411F694(2, D_84190230, D_84190320);
+        func_8411F340(D_8419041C, D_84190414);
+        func_8411F340(D_84190420, D_84190418);
+        func_8410580C(2, D_84190428, 0);
+    } else {
+        func_8411DBF4(30);
+        func_84111868(2, D_84190428, D_841910E0);
+        if (D_84190411 != 0) {
+            func_8411F694(2, D_84190230, D_84190320);
+        }
+        if (D_84190411 != 0) {
+            func_8411F340(D_8419041C, D_84190414);
+        }
+        if (D_84190411 != 0) {
+            func_8411F340(D_84190420, D_84190418);
+        }
+        // FAKE: empty repeated test of D_84190420; diff score 80 without it.
+        if (D_84190420 && D_84190420 && D_84190420) {}
+        if (D_84190411 != 0) {
+            func_8410580C(2, D_84190428, 0);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
