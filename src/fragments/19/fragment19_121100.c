@@ -90,7 +90,48 @@ void func_82300368(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823003B4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823008CC.s")
+extern s16 D_82305EE4;
+extern s16 D_82305EE8;
+extern s32 D_82305E94;
+extern s32 D_82305E98;
+extern void func_800468A0(s32);
+extern void func_823003B4(s16 *);
+extern s16 D_82305E68[];
+s32 func_823008CC(s32 arg0) {
+    s32 pad0; // FAKE
+    s32 pad1; // FAKE
+    s32 result;
+
+    result = 0;
+    // FAKE: D_82305EE4 and D_82305EE8 read through D_82305E68 so IDO does not share their
+    // addresses with the &D_82305EE4 argument below or hoist the second D_82305EE8 read.
+    switch (D_82305E68[0x7C / 2]) {
+        case 0:
+            if (arg0 == 0) {
+                func_800468A0(D_82305E94);
+            }
+            break;
+        case 1:
+            if (arg0 == 0) {
+                if (D_82305EE8 != 0) {
+                    func_800468A0(D_82305E94);
+                }
+            } else {
+                func_823003B4(&D_82305EE4);
+            }
+            if (D_82305E68[0x80 / 2] == 0) {
+                result = 1;
+            }
+            break;
+        case 2:
+            if (arg0 != 0) {
+                func_800468A0(D_82305E98);
+            }
+            result = 1;
+            break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230099C.s")
 
