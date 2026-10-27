@@ -231,7 +231,23 @@ void func_84101A08(f32 *arg0, u8 *arg1, u8 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101AF4.s")
+extern u32 func_8411E358(s32 arg0, s32 arg1);
+extern u32 func_8411EE54(u8 *arg0);
+extern s32 ParticleMath_LacksBits(void *arg0, s32 arg1);
+void func_84101AF4(u8 *arg0, u8 *arg1) {
+    f32 scale;
+
+    scale = 1.0f;
+    if (ParticleMath_LacksBits(arg0 + 0x14, 0x2000) && *(s32 *)(arg0 + 8) != 0 &&
+        ParticleMath_LacksBits(arg1 + 4, 0x80) && ParticleMath_LacksBits(arg1 + 4, 0x40)) {
+        if (*(s32 *)(arg1 + 4) & 8) {
+            scale = func_8411E358(*(s32 *)(arg0 + 8), *(u16 *)(arg0 + 0x68)) * 0.01f;
+        } else {
+            scale = func_8411EE54(*(u8 **)(arg0 + 8)) * 0.01f;
+        }
+    }
+    *(f32 *)(arg0 + 0x18) = *(f32 *)(arg0 + 0x1C) * scale;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101C00.s")
 
