@@ -711,7 +711,28 @@ void func_8410E878(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410EA58.s")
+extern u8 D_841844D0[];
+extern void func_84120AC4(void *, void *);
+void func_8410EA58(u8 *arg0, void *arg1, s16 arg2) {
+    u8 *entry;
+    f32 *pos;
+    u8 *eye;
+    f32 **pp;
+
+    eye = arg0 + 0xB4; // FAKE
+    D_841911E8 = func_8410B330(arg0);
+    func_84120AC4(arg0, arg1);
+    *(f32 *)(D_841911E8 + 0x44) = 0.0f;
+    entry = D_841844D0 + *(s32 *)((u8 *)&arg2 - 2) * 0x1C; // FAKE
+    *(s16 *)(D_841911E8 + 0x90) = *(s16 *)entry;
+    *(s16 *)(D_841911E8 + 0x92) = *(s16 *)(entry + 2);
+    *(f32 *)(D_841911E8 + 0x74) = *(f32 *)(entry + 4) * 50.0f;
+    *(f32 *)(arg0 + 0x2C) = *(f32 *)(D_841911E8 + 0x88) = *(f32 *)(entry + 0x10);
+    pos = (f32 *)eye;
+    Vec3f_SetComponentsDuplicate(pos, 0.0f, 40.0f, 0.0f);
+    func_800371B4((u8 *)pos, arg0 + 0xA8, *(f32 *)(D_841911E8 + 0x74), *(s16 *)(D_841911E8 + 0x90), *(s16 *)(D_841911E8 + 0x92));
+    pp = &pos; // FAKE
+}
 #endif
 
 #ifdef VERSION_US
