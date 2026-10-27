@@ -336,7 +336,32 @@ void func_8240227C(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_8240239C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_824027F4.s")
+extern void func_81600A34(void *, void *, s32, s32, s32, s32, s32);
+void func_824027F4(void *arg0, s32 x_center, s32 y_center, u16 *size, void *arg4, f32 amount) {
+    f32 blend;
+    f32 scale;
+    s32 width;
+    s32 height;
+    s32 x;
+    s32 y;
+
+    scale = 1.0f + amount;
+    // karodo: the clamped blend is computed as in the tinted sibling func_8240239C but never used.
+    if (amount > 0.0f) {
+        if (amount > 1.0f) {
+            blend = 1.0f;
+        } else {
+            blend = amount;
+        }
+    } else {
+        blend = 0.0f;
+    }
+    width = size[0] * scale;
+    height = size[1] * scale;
+    x = size[0] / 2 + x_center - width / 2;
+    y = (size[1] - 3) / 2 + y_center - height / 2;
+    func_81600A34(arg0, arg4, 0, x, y, width, height);
+}
 
 void Fragment13_DrawSelectionHeader(s32 arg0, s32 arg1) {
     Gfx *packet;
