@@ -1718,7 +1718,19 @@ void func_8005C750(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005C7D0.s")
+void func_8005C7D0(u8 *dest, s32 port, s32 entry) {
+    GbSaveBoxName name;
+    u8 *mail = *(u8 **)(((GbSavePortView *)D_80128570)[port].unk_64 + 4);
+
+
+    bcopy((((u8 (*)[47])mail)[entry]) + 1069, name, 8);
+    name[7] = 0x50;
+    if (func_80062C24(name) == 0) {
+        func_80060EC8(name, ((GbSavePortView *)D_80128570)[port].trainer_name);
+        bcopy(name, (((u8 (*)[47])mail)[entry]) + 1069, 11);
+    }
+    GbMail_ImportRecord(dest, (((u8 (*)[47])mail)[entry]) + 1036);
+}
 #endif
 
 #ifdef VERSION_US
@@ -1731,7 +1743,19 @@ void func_8005C880(s32 arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005C8D8.s")
+void func_8005C8D8(u8 *dest, s32 port, s32 entry) {
+    GbSaveBoxName name;
+    u8 *mail = *(u8 **)(((GbSavePortView *)D_80128570)[port].unk_64 + 4);
+
+
+    bcopy((((u8 (*)[47])mail)[entry]) + 315, name, 8);
+    name[7] = 0x50;
+    if (func_80062C24(name) == 0) {
+        func_80060EC8(name, ((GbSavePortView *)D_80128570)[port].trainer_name);
+        bcopy(name, (((u8 (*)[47])mail)[entry]) + 315, 11);
+    }
+    GbMail_ImportRecord(dest, (((u8 (*)[47])mail)[entry]) + 282);
+}
 #endif
 
 #ifdef VERSION_US
