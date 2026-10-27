@@ -12,3 +12,12 @@ which store its result as the move type.
 Write the three exclusions as separate `if`/`else if` arms (a single `||`
 test is 20 bytes shorter) and select table and mask together in one
 `if`/`else`.
+
+## 2026-10-27 — `func_8AF0D704` mode-dependent setup accepted
+
+`func_8AF0D704` is now C: **49 words / 196 bytes**, frame 0x18. It switches
+on the `s16` mode `D_8AF2ECF8`. Modes 0 and 2 store 48/49 into halfword
++0x32 of the records at `D_8AF2E8DC`/`D_8AF2E8E0` and set bit 0x2 of the
+second record's +2 flags. Mode 1 stores 269/270 and sets or clears that
+bit according to this file's `func_8AF00020()`. A plain `switch` with
+`case 0: case 2:` sharing one arm matches directly.
