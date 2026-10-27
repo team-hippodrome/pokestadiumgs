@@ -1057,3 +1057,6 @@ func_82507078 = Fragment21_UpdateLayoutTransition;
 func_825073B0 = Fragment21_UpdateCloseTransition;
 
 func_82505758 = Fragment21_DrawTexturedBorder;
+
+// Interior slot-coordinate pair named by re-extracted data.
+D_8600D9B8 = D_8600D9B0 + 8;

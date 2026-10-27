@@ -289,3 +289,6 @@ fragment85_ROM_START = 0x4320C0; // defined:true
 fragment86_ROM_START = 0x434720; // defined:true
 fragment87_ROM_START = 0x435A70; // defined:true
 fragment88_ROM_START = 0x436C20; // defined:true
+D_8600D690 = 0x8600D690; // type:f64 size:0x8 force_migration:true
+D_8600D698 = 0x8600D698; // type:f64 size:0x8 force_migration:true
+D_8600D6A0 = 0x8600D6A0; // type:f64 size:0x8 force_migration:true
