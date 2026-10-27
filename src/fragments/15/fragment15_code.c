@@ -21,7 +21,45 @@ s32 func_83F0012C(void) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/15/fragment15_code/func_83F001A8.s")
+extern u8 StageContext_GetFadeMode(void);
+extern void func_8002596C(s32);
+extern void func_80064F54(void);
+extern void StageContext_SetClearColor(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+// osGetTime()'s two result words share one $at in the original (D_83F00400, D_83F00400 + 4).
+#pragma COALESCE_AT_LUI(func_83F001A8, D_83F00400)
+s32 func_83F001A8(s32 arg0) {
+    s32 state = arg0;
+
+    switch (arg0) {
+        case 0:
+            if (StageContext_GetFadeMode() == 0) {
+                state = 1;
+                func_8002596C(10);
+            }
+            break;
+        case 1:
+            if ((u32)++D_83F003F0 >= 2) {
+                state = 2;
+                D_83F00400 = osGetTime();
+                func_80064F54();
+            }
+            break;
+        case 2:
+            if (func_83F0012C() != 0) {
+                state = 3;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(16);
+            }
+            break;
+        case 3:
+            if (StageContext_GetFadeMode() == 1) {
+                state = 4;
+            }
+            break;
+    }
+    return state;
+}
 
 extern void func_83F0002C();
 s32 func_83F001A8(s32);
