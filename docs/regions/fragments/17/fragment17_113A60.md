@@ -619,3 +619,11 @@ were excluded, including both files for #885 and the new #900 source. Already
 merged #880 and current foreign rendering work were preserved. The combined
 188-owner workspace also passed. The authoritative Public PR ROM Gate remains
 required for each current PR head and actual merge result.
+
+## 2026-10-27 — `func_8220AC64`: matched
+
+Mirrors `func_8220AC38`: reads the flag through `*(s16 *)(D_82210698 + 0x1A)` (a separate expression keeps IDO from CSE-ing its address with the `D_822106B2` store), and when it is 3 sets `D_822106B2 = 5`/`D_822106B4 = 0` under `#pragma COALESCE_AT_LUI(func_8220AC64, D_822106B2, D_822106B4)`, copies the `D_822106CC` pair to `D_822106D4`, sets both scales to 0.75, `D_822106BA = -1`, and plays sound 57. Needs the fold's `li` gap support (PR #1744): IDO schedules `li t7, 5` between the `lui $at` and the store.
+
+## 2026-10-27 — `func_822068E0`: tooling-blocked
+
+tooling-blocked. `_bzero(&D_8220EC40, 0x650); D_8220EC40 = func_8004D690(7); D_8220EC48 = -1;` then `D_8220EC44/46 = (255, 5)` when `StageContext_GetFadeMode() == 0`, else `(0, 0)`. Retail shares `$at` for the pair in both branches. With `COALESCE_AT_LUI(func_822068E0, D_8220EC44, D_8220EC46)` the if-branch folds, but retail's scheduler also hoisted `li t8, 5` above the first store (`lui; li; sh; b; sh` vs folded `lui; sh; li; b; sh`), which deleting a `lui` cannot reproduce. The else-branch's surviving `lui` sits in the `bnez` delay slot, which the fold refuses. 0.93 best.

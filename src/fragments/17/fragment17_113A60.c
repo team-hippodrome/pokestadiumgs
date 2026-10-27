@@ -778,7 +778,24 @@ s32 func_8220AC38(void) {
 }
 /* mkdraft:func_8220AC38 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_8220AC64.s")
+typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
+extern s16 D_822106D4;
+#pragma COALESCE_AT_LUI(func_8220AC64, D_822106B2, D_822106B4)
+s32 func_8220AC64(void) {
+    s32 result = 0;
+
+    if (*(s16 *)(D_82210698 + 0x1A) == 3) {
+        D_822106B2 = 5;
+        D_822106B4 = 0;
+        *(unk_func_8220AC64_pair *)&D_822106D4 = *(unk_func_8220AC64_pair *)&D_822106CC;
+        D_822106C4 = 0.75f;
+        D_822106C8 = 0.75f;
+        D_822106BA = -1;
+        func_800226C0(57);
+        result = 1;
+    }
+    return result;
+}
 
 extern s16 D_822106BA;
 
