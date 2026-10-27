@@ -114,3 +114,15 @@ requeue. Per-kind update: kinds 1/4/6 call `func_82606B28`/`func_82606CE8`/`func
 ## 2026-10-27 — `func_82608EC4`: requeue
 
 requeue. Draws a horizontal strip of images: colors via `func_82607BF4` (as in the matched `func_8260899C`), sum of the non-null image widths in the `+0x30` list (count at `[0]`), then each image through `func_8004D19C` from `x + (+0x24 - width) / 2`. `x`/`y` are added as `+0x14 + +0x10`. With the scalars declared in the order `y, list, i, width, cursor, image, x, prim, env`, the frame and colour slots match (0.96/0.94). The rest: retail computes `list = arg0 + 0x30` right after the position loads and keeps two copies (`t0`, spilled to `sp+0x58`, and `s4`), and spills `x` at `sp+0x74` (IDO: `0x76`). Stack-diff permuter: 880 → 820.
+
+## 2026-10-27 — `func_826150A4`: requeue
+
+requeue. Label text builder `(char *out, s32 size, u16 kind, s32 id, s32 index, s32 count)`. For kind `& 0xFF00 == 0`: message `90 + id - 1` (ids 1–4, else -1) as `name`; `label` = string 87/88 when `count == index + 1/+2`, else `func_8004C594(1, index + 1)` + string 75. Both are joined through `func_8004C54C(10/11, …)` + string 56, or whichever exists is copied with `HAL_Strcpy`. For `0x300`: ids 15/11/14/24 → strings 80/75/78/81 (that case order is retail's body order), default 77 or formatted 76. `u16 kind` reproduces retail's home store; declaring `s16 pad` (`// FAKE`), `msg`, `name`, `label`, `buf[0x80]` in that order fixes the frame, and an `index = arg4 + 1` local supplies the shared `arg4 + 1`. Best 0.987: `count` is loaded into `a0` instead of retail's `v1`, which also moves `li a0, 18` out of the branch delay slot. Permuter: a `&arg4` pointer read fixes the registers but grows the frame by 8; stack-diff run 190 → 169.
+
+## 2026-10-27 — `func_8260C988`: requeue
+
+requeue. Draws the 3-column marker grid: texture 88 frame 0/1 with offsets `D_8261570C`/`D_82615708`, row height 18/44 and step 91/0 by `+0x34`. PipeSync and the env (`-1`) / prim (`0x320000FF`) colors are written through three explicit `Gfx *` locals: retail keeps the three command pointers in `a0..a2`, so not the GBI macros. Then a marker per slot `i` (`+0x25C` set and `+0x208 < 255`) at `offsets[+0x02] + x + 135 * (i % 3), y + dy + step * (i / 3)`. First draft 0.79: retail keeps `dy` in `fp`, `step` and `y` on the stack (`sp+0x4C`/`0x62`), and spills `x` around the call; all of these differ in the draft.
+
+## 2026-10-27 — `func_82608C1C`: requeue
+
+requeue. Scaled sibling of `func_8260899C`: asset 82 scaled to 120 px; for four slots `func_82608270(&prim, &env, kind * 4 + i)` (the file's `Color82608270`), then PipeSync/env/prim and `GfxRect_DrawTextured(x + 15 + 135 i, y + 150, 120, 36, 0, 0, round(1024 / scale), 1024, 0)`. Best 0.95: retail hoists all three command words (`0xE7`, `0xFB`, `0xFA` in `s6`/`s7`/`fp`) plus both colour addresses into saved registers and therefore spills `arg0` (re-read from its home each iteration) with a 0xC8 frame; IDO leaves `0xFA` unhoisted and keeps `arg0` in `s4` (0xB8 frame). `y` is computed before `x`.
