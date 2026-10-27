@@ -673,7 +673,14 @@ void func_8850A0EC(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A2F4.s")
+void func_8850A2F4(void) {
+    D_88523030.unk_18--;
+    D_88523030.unk_14 = (s16)((32.0f - (D_88523030.unk_18 * -96) / 30.0f) + ((32.0f > (D_88523030.unk_18 * -96) / 30.0f) ? 0.5f : -0.5f));
+    D_88523030.unk_16 = (s16)((128.0f - (D_88523030.unk_18 * 64) / 30.0f) + ((128.0f > (D_88523030.unk_18 * 64) / 30.0f) ? 0.5f : -0.5f));
+    if (D_88523030.unk_18 <= 0) {
+        func_8850A0EC(2);
+    }
+}
 
 // Same body as Pokemon Stadium's TradeCable_UpdateSequenceSlideVertical, computed in floats:
 // counts unk_18 down, interpolates unk_04, unk_06, unk_10 and unk_0C (state 4 runs the
