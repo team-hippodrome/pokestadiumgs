@@ -45,7 +45,26 @@ void func_86407290(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, s
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_86407610.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_864079AC.s")
+typedef struct unk_func_864079AC {
+    u8 unk_00[0xC];
+    u32 unk_0C_flag : 1;
+} unk_func_864079AC;
+
+extern void *D_80087208;
+extern void func_87F04894(void);
+void func_864079AC(void) {
+    if (*(u16 *)((u8 *)D_80087208 + 8) & 0x10) {
+        // karodo: both arms clear the same controller bit.
+        if (((unk_func_864079AC *)D_86416C00)->unk_0C_flag ^= 1) {
+            *(u16 *)((u8 *)D_80087208 + 0x10) &= 0xFFFE;
+        } else {
+            *(u16 *)((u8 *)D_80087208 + 0x10) &= 0xFFFE;
+        }
+    }
+    if (((unk_func_864079AC *)D_86416C00)->unk_0C_flag) {
+        func_87F04894();
+    }
+}
 
 extern void func_87F05204(s32 *);
 extern void func_87F09040();
