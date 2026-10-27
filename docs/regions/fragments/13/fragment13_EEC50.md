@@ -1194,3 +1194,32 @@ home drift, and progress-parameter reuse shrinks the frame incorrectly.
 Next: map the overlapping live-block membership of webs 28/85 to their source
 uses, or bring a new real lifetime boundary. Do not repeat these source
 families, add padding/unused locals or rename the spill offset by hand.
+
+## 2026-10-27 — `func_824027F4` scaled panel rectangle accepted
+
+`func_824027F4` is now C: **68 instruction words / 272 bytes**, frame 0x28,
+stock IDO 7.1 `-O2`. Runner acceptance was `link_verified: true` with a
+full-ROM gate; a forced `make COMPARE=1 RUN_CC_CHECK=1` after retyping the
+pass-through handle (`s32` → `void *`, no code change) reproduces US MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+The function scales the two `u16` dimensions at `size[0..1]` by
+`1.0f + amount`, centers the result on `(x_center, y_center)` (height uses
+`size[1] - 3`, as in the tinted sibling `func_8240239C`), and forwards the
+rectangle to `func_81600A34` with a zero third argument.
+
+Source mechanisms:
+
+- The target has a dead `c.lt.s 0.0f, amount` with no `bc1` branch, and
+  reloads `size` from its stack home immediately after it. That shape comes
+  from the sibling's `amount` → `[0, 1]` blend clamp whose result is unused:
+  IDO removes the branches but keeps the first compare and its block
+  boundary. Write the clamp as nested `if`/`else` **after** `scale` is
+  computed; a ternary, or the clamp before `scale`, loses the compare
+  placement (0.50). Empty `if (amount > 0.0f) {}`, `goto`, `while`/`break`,
+  and identical-arm ternaries are optimized away entirely (0.62–0.65).
+- Assign `x` then `y` to locals before the call. Inline call arguments
+  leave the final temp registers shifted by one (`t2` vs `t3`); any term
+  order inside the `x`/`y` expressions matches once they are locals.
+- IDO emits the unsigned `0x4F800000` correction for `u16` → `f32` by
+  itself; an explicit `(u32)` cast changes nothing.
