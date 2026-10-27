@@ -3131,6 +3131,7 @@ SECTIONS
         build/asm/us/data/fragments/43/fragment43_header.o(.rodata);
         build/src/fragments/43/fragment43_1E5A10.o(.rodata);
         build/src/fragments/43/fragment43_1EC950.o(.rodata);
+        build/asm/us/data/fragments/43/fragment43_rodata_tail.rodata.o(.rodata);
         fragment43_RODATA_END = .;
         fragment43_RODATA_SIZE = ABSOLUTE(fragment43_RODATA_END - fragment43_RODATA_START);
     }
