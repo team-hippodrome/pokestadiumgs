@@ -49,3 +49,11 @@ The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 144 bytes at ROM `0x1019B0..0x101A40`.
+
+## 2026-10-27 — `func_81308014`: requeue
+
+requeue. `t = D_81311F80 + func_816092FC(); if (t > 30.0f) { t -= 30.0f; return 1 } ; D_81311F80 = t` (result 0 otherwise). Best 0.84 with an early-return form. Retail re-materializes `lui $at` for each of the three `D_81311F80` accesses and keeps `t` in `$f2` with an in-place subtract and a tail-duplicated store, whereas IDO CSEs the address into a register in every spelling tried (local/global/duplicated store/`volatile`). Permuter 200 s only found a semantics-changing body.
+
+## 2026-10-27 — `func_81307228`: layout-prerequisite
+
+layout-prerequisite. A 12-case switch on `*(u8 *)(arg0 + 0x137F5)`, after a `+0x137D0 < 16.0f` early 0, returning 0/1. Its table `jtbl_81312564` sits in the shared `rodata` blob at `0x10A6D0`, below `fragment14_FF070`'s current `.rodata` subsegment (`0x10A7D0`); extend the subsegment down (every label in the run must be this file's) before writing the switch.
