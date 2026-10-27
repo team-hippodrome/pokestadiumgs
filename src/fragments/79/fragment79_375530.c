@@ -119,7 +119,25 @@ void func_84105E3C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84105E9C.s")
+extern s32 ParticleMath_RandomRange(s32 arg0);
+extern s32 ParticleMath_RandomSigned(s32 arg0);
+s16 func_84105E9C(s16 sign, u16 range) {
+    s32 limit;
+
+    if (!range) {
+        return 0;
+    } else {
+        limit = range;
+        if (range == 0xFFFF) {
+            limit = 0x10000;
+        }
+        if (sign == 0) {
+            return ParticleMath_RandomRange(limit);
+        } else {
+            return ParticleMath_RandomSigned(limit);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
