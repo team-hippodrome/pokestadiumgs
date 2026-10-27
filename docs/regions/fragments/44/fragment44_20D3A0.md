@@ -43,3 +43,23 @@ Matched the independent 31-instruction sparse-switch owner with a real s16 argum
 The first source recipe passes the full US build with default host syntax checks and COMPARE=1, followed by explicit md5sum -c baseroms/us/checksum.md5: retail 1561c75d11cedf356a8ddb1a4a5f9d5d. The local combined build also retains the independently verified func_8F102A20 source. Both owners are in separate translation units and separate narrow PRs. No global, helper, data, tooling, layout or verification changes.
 
 Fleet main afee707ab78d3f63f2f9deeadc7551ec0080eeed contains no exact/solved owner attempt, owner reference or 20D3A0 region note; historical normalized/raw scores are unavailable. The complete current-master region note above was read. Earlier failed func_8AF1F40C and func_8AF208D0 families remain untouched. All open scopes were inspected; the only source PR was this process's separate func_8F102A20. Unknown names, decimal case constants and var_register locals follow the contributing guide. Source/object/build evidence is retained in work/session-54.
+
+## 2026-10-27 — `func_8AF1F294` tag-gated highlight accepted
+
+`func_8AF1F294(s32 arg0, Func8AF1F130Arg *arg1)` is now C: **57 words / 228
+bytes**, frame 0x38. It is the sibling of `func_8AF1F130`. It is active when
+`arg1->type` is `'wak1'` and `D_8AF39228 == 0`, or `'wak2'` and
+`D_8AF39228 == 1`. For `arg0 == 1` it reads the screen offset with
+`func_800504BC` and calls `func_8004B314(x - 5, y - 5, z + 10, w + 10)` (a
+rectangle 5 px larger on each side). It always returns 0.
+
+Source shape:
+- Write the flag as `if (type == A) { if (D == 0) flag = 1; } else if
+  (type == B) { if (D == 1) flag = 1; }`. The then-arm's jump over the
+  `else if` is the `b` to the join that the target has right after
+  `flag = 1`. Separate `&&` tests (as in `func_8AF1F130`) do not emit it.
+- Gate the draw with the sibling's `(arg0 != 0) && (arg0 == 1)`; it yields
+  the `beqz` + `bnel` pair.
+- Read `z`/`w` into block `s16` locals with `x`/`y`, and use a plain
+  `s16 angles[2]` (the sibling's padded scratch struct grows the frame to
+  0x40).

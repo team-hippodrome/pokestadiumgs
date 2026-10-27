@@ -43,7 +43,42 @@ s32 func_8AF1F130(s32 arg0, Func8AF1F130Arg *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F1F0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F294.s")
+extern void func_8004B314(s32, s32, s32, s32);
+extern void func_800504BC(s16 *);
+extern s16 D_8AF39228;
+s32 func_8AF1F294(s32 arg0, Func8AF1F130Arg *arg1) {
+    s16 angles[2];
+    s32 var_v1;
+
+    var_v1 = 0;
+    if (arg1->type == 0x77616B31) {
+        if (D_8AF39228 == 0) {
+            var_v1 = 1;
+        }
+    } else if (arg1->type == 0x77616B32) {
+        if (D_8AF39228 == 1) {
+            var_v1 = 1;
+        }
+    }
+    if (var_v1 == 0) {
+        return 0;
+    }
+    if ((arg0 != 0) && (arg0 == 1)) {
+        func_800504BC(angles);
+        {
+            s16 x;
+            s16 y;
+            s16 z;
+            s16 w;
+            x = angles[0] + arg1->x;
+            y = angles[1] + arg1->y;
+            z = arg1->z;
+            w = arg1->w;
+            func_8004B314(x - 5, y - 5, z + 10, w + 10);
+        }
+    }
+    return 0;
+}
 
 typedef struct {
     u32 unk_00[321];
