@@ -50,7 +50,42 @@ void func_87F023B0(void *arg0, F2684State *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324FB0/func_87F0242C.s")
+void func_87F0242C(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x22) = 0;
+    *(s16 *)((u8 *)arg0 + 0x20) = *(s16 *)((u8 *)arg0 + 0x22);
+    *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x22);
+    *(f32 *)((u8 *)arg0 + 0x2C) = 1.0f;
+    *(f32 *)((u8 *)arg0 + 0x28) = 1.0f;
+    *(f32 *)((u8 *)arg0 + 0x24) = 1.0f;
+    *(s16 *)((u8 *)arg0 + 0x18) = 0;
+    *(s16 *)((u8 *)arg0 + 0x1A) = 0;
+    ((u8 *)arg0)[0x1D] = 0xFF;
+    ((u8 *)arg0)[0x1C] = 0;
+    *(s32 *)((u8 *)arg0 + 0xA0) = -0x100;
+    *(s32 *)((u8 *)arg0 + 0x3C) = -0x100;
+    *(s16 *)((u8 *)arg0 + 0x40) = 0;
+    *(s32 *)((u8 *)arg0 + 0x44) = 0;
+    *(s32 *)((u8 *)arg0 + 0x48) = 0;
+    *(s32 *)((u8 *)arg0 + 0x4C) = 0x10000;
+    *(s16 *)((u8 *)arg0 + 0x52) = 0;
+    *(s16 *)((u8 *)arg0 + 0x54) = 0;
+    *(s32 *)((u8 *)arg0 + 0x58) = 0;
+    *(s16 *)((u8 *)arg0 + 0x5C) = 0;
+    // karodo: always-true block around the second group; without it IDO drops the first +0x1E/+0x20 stores.
+    if (1) {
+        *(s16 *)((u8 *)arg0 + 0x5E) = 0;
+        ((u8 *)arg0)[2] = 0;
+        ((u8 *)arg0)[3] = 0;
+        *(f32 *)((u8 *)arg0 + 0x38) = 1.0f;
+        *(f32 *)((u8 *)arg0 + 0x34) = 1.0f;
+        *(f32 *)((u8 *)arg0 + 0x30) = 1.0f;
+        *(f32 *)((u8 *)arg0 + 0x24) = 0.0f;
+        *(f32 *)((u8 *)arg0 + 0x28) = 0.0f;
+        *(f32 *)((u8 *)arg0 + 0x2C) = 0.0f;
+    }
+    *(s16 *)((u8 *)arg0 + 0x20) = *(s16 *)((u8 *)arg0 + 0x22);
+    *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x22);
+}
 
 extern u32 D_87F119C0;
 extern void GeoNode_CreateContainer(s32, void *);
