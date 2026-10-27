@@ -95,8 +95,8 @@ _JUMP_OPCODES = {0x02, 0x03}  # j / jal -- absolute, never PC-relative
 
 # splat names an unnamed data label after its own address (``D_82305EC2`` at
 # 0x82305EC2), and ``undefined_syms_auto.ld`` literally writes that identity
-# out as ``D_82305EC2 = 0x82305EC2;``. That makes the name a free, independent
-# check on the address map -- see ``_verify_address``.
+# out as ``D_82305EC2 = 0x82305EC2;``. That makes the name the authoritative
+# address for such symbols -- see ``_symbol_address``.
 _ADDRESS_SHAPED_NAME = re.compile(r"^[A-Za-z]+_([0-9A-F]{8})$")
 
 
@@ -104,33 +104,22 @@ class FoldError(Exception):
     """Raised when a function cannot be folded safely; never a silent wrong fold."""
 
 
-def _verify_address(symbol: str, address: int) -> None:
-    """Reject an address map that disagrees with an address-shaped symbol name.
+def _symbol_address(symbol: str, address_map):
+    """The address this fold uses for ``symbol``, or ``None`` if unknown.
 
-    The fold's correctness rests entirely on the address map: it replaces a
-    relocation with a literal displacement, so a wrong address becomes wrong
-    *bytes* in a linked ROM, with no relocation left for the linker to catch
-    it. ``resolve_repo_addresses`` will fall back to a linked ``.map`` from a
-    sibling checkout when this one has not been built yet, and that map can
-    be from a different ELF -- a skewed one was what first produced a wrong
-    fold here (``D_84186160`` resolving to 0x84186170, a uniform +0x10 shift,
-    which silently produced a ROM 16 bytes long).
-
-    Most of the symbols this fold ever touches are splat's own
-    address-derived labels, so the name states the answer independently of
-    any map. Where it does, hold the map to it; a renamed, evidence-backed
-    symbol simply has no such claim to check and passes through.
+    An address-shaped name (splat's ``D_XXXXXXXX``) states the symbol's
+    retail address, which is exactly what a matching build must place it at,
+    so the name is used directly and no map is needed. This keeps the fold
+    independent of how the reference map was produced: the CI seed map is
+    linked with every still-assembly ``GLOBAL_ASM`` owner stubbed out, so data
+    addresses inside a fragment that still has such owners are shifted there
+    (``D_83F00400`` read 0x83F00300). Other (renamed) symbols carry no such
+    claim and still come from the map.
     """
     match = _ADDRESS_SHAPED_NAME.match(symbol)
-    if match is None:
-        return
-    claimed = int(match.group(1), 16)
-    if claimed != address:
-        raise FoldError(
-            f"address map says {symbol} is at {address:#010x}, but the symbol's "
-            f"own name says {claimed:#010x} -- refusing to fold against a map "
-            "that disagrees with the tree (a stale or foreign linked .map?)"
-        )
+    if match is not None:
+        return int(match.group(1), 16)
+    return address_map.get(symbol)
 
 
 def _is_lui_at(word: int) -> bool:
@@ -360,13 +349,12 @@ def plan_runs(words, by_offset, address_map, symbol_filter=None):
             op_index, symbol = pairs[cursor]
             if symbol_filter is not None and symbol not in symbol_filter:
                 break
-            address = address_map.get(symbol)
+            address = _symbol_address(symbol, address_map)
             if address is None:
                 break
-            _verify_address(symbol, address)
             target = address + _lo16_addend(words, op_index)
             if run and coalesce_lui.hi16(target) != coalesce_lui.hi16(
-                address_map[run[0][2]] + _lo16_addend(words, run[0][1])
+                _symbol_address(run[0][2], address_map) + _lo16_addend(words, run[0][1])
             ):
                 break
             run.append((cursor, op_index, symbol))
@@ -463,7 +451,7 @@ def fold_function_words(words, by_offset, address_map, symbol_filter, function_n
             # The operand may address ``symbol + addend`` (REL in-place
             # addend); the literal must reach that same byte.
             rewritten[op_index] = coalesce_lui.lo16(
-                address_map[symbol] + _lo16_addend(words, op_index)
+                _symbol_address(symbol, address_map) + _lo16_addend(words, op_index)
             )
             folds += 1
 
