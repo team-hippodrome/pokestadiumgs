@@ -177,7 +177,27 @@ void func_81307DC0(void *arg0, s32 arg1, s32 arg2, s32 arg3, void *arg4) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81308014.s")
+extern f32 func_816092FC(void);
+
+// Adds this frame's step to D_81311F80 and returns 1 each time the total passes 30, keeping the
+// remainder; returns 0 otherwise.
+s32 func_81308014(void) {
+    // Function-scope static: retail reloads its %hi for each access, which IDO does not
+    // do for an extern or a file-scope static (both get one cached address register).
+    static f32 D_81311F80 = 0.0f;
+
+    D_81311F80 += func_816092FC();
+    if (D_81311F80 > 30.0f) {
+        D_81311F80 -= 30.0f;
+        return 1;
+    }
+    return 0;
+}
+
+// IDO pads this object's .data section to 16 bytes, so the retail words at 0x81311F84-0x81311F8C
+// are carried here to keep the following data blob in place. No code references them.
+s32 D_81311F84[] = { 7680, 38400 };
+f32 D_81311F8C = 0.43f;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81308078.s")
 

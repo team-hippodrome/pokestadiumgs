@@ -1410,6 +1410,8 @@ SECTIONS
         build/src/fragments/14/fragment14_FCD40.o(.data);
         fragments_14_fragment14_FD770 = .;
         build/src/fragments/14/fragment14_FD770.o(.data);
+        fragments_14_fragment14_data_data = .;
+        build/asm/us/data/fragments/14/fragment14_data.data.o(.data);
         fragments_14_fragment14_FF070 = .;
         build/src/fragments/14/fragment14_FF070.o(.data);
         fragments_14_fragment14_104FC0 = .;
@@ -1418,8 +1420,8 @@ SECTIONS
         build/src/fragments/14/fragment14_1077C0.o(.data);
         fragments_14_fragment14_109280 = .;
         build/src/fragments/14/fragment14_109280.o(.data);
-        fragments_14_fragment14_data_data = .;
-        build/asm/us/data/fragments/14/fragment14_data.data.o(.data);
+        _10A120_data = .;
+        build/asm/us/data/10A120.data.o(.data);
         fragment14_DATA_END = .;
         fragment14_DATA_SIZE = ABSOLUTE(fragment14_DATA_END - fragment14_DATA_START);
         fragment14_RODATA_START = .;

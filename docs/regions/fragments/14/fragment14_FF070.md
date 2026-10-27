@@ -50,9 +50,9 @@ The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 144 bytes at ROM `0x1019B0..0x101A40`.
 
-## 2026-10-27 — `func_81308014`: requeue
+## 2026-10-27 — `func_81308014`: matched
 
-requeue. `t = D_81311F80 + func_816092FC(); if (t > 30.0f) { t -= 30.0f; return 1 } ; D_81311F80 = t` (result 0 otherwise). Best 0.84 with an early-return form. Retail re-materializes `lui $at` for each of the three `D_81311F80` accesses and keeps `t` in `$f2` with an in-place subtract and a tail-duplicated store, whereas IDO CSEs the address into a register in every spelling tried (local/global/duplicated store/`volatile`). Permuter 200 s only found a semantics-changing body.
+`D_81311F80 += func_816092FC(); if (D_81311F80 > 30.0f) { D_81311F80 -= 30.0f; return 1; } return 0;`. Retail's three separate `lui $at` reloads of `D_81311F80` come from a function-scope `static f32 D_81311F80 = 0.0f`: IDO CSEs the address into a register for an `extern` or a file-scope static, but not for a function-scope static. The static needs this object to own the 16 bytes at 0x81311F80, so `yamls/us/rom.yaml` splits `fragment14_data` there (`[0x10A110, .data, fragments/14/fragment14_FF070]`, then an unnamed `[0x10A120, data]`). IDO pads the section to 16 bytes, so the three unreferenced words at 0x81311F84-0x81311F8C are defined after the function as `D_81311F84[2]` and `D_81311F8C`; IDO emits the function-scope static first only when those definitions follow the function.
 
 ## 2026-10-27 — `func_81307228`: layout-prerequisite
 
