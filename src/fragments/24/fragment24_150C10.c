@@ -553,7 +553,22 @@ void func_82B0284C(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B02870.s")
+s32 func_82B02870(void) {
+    s32 i;
+    s32 result = 1;
+    u8 *base = (u8 *)&D_82B12450;
+
+    for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+        u8 *ptr = *(u8 **)(base + 0xB18 + i * 4);
+
+        if (*(u16 *)(ptr + 6) != 2) {
+            result = 0;
+            break;
+        }
+    }
+
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

@@ -58,7 +58,136 @@ void func_8AF2458C(void) {
     } while (i < 3);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF24628.s")
+extern s32 D_8AF3A464;
+extern s32 D_8AF3A468;
+extern s32 D_8AF3A46C;
+extern s32 D_8AF3A600;
+extern s32 D_8AF3A604;
+extern s32 D_8AF3A608;
+extern s32 D_8AF3A60C;
+extern s32 D_8AF3A610;
+extern s32 D_8AF3A614;
+extern s32 D_8AF3A618;
+extern s32 D_8AF3A61C;
+extern s32 D_8AF3A620;
+extern s32 D_8AF3A624;
+extern s32 D_8AF3A628;
+extern s32 D_8AF3A62C;
+extern s32 D_8AF3A630;
+extern s32 D_8AF3A634;
+extern s32 D_8AF3A638;
+extern s32 D_8AF3A63C;
+extern s32 D_8AF3A640;
+extern s32 D_8AF3A644;
+extern s32 D_8AF3A648;
+extern s32 D_8AF3A64C;
+extern s32 D_8AF3A650;
+extern s32 D_8AF3A654;
+extern s32 D_8AF3A658;
+extern s32 D_8AF3A65C;
+extern u8 func_8005453C(s32 arg0);
+void func_8AF24628(void) {
+    struct MaskedWord {
+        u8 prefix[2];
+        u16 value;
+        u8 suffix[6];
+    };
+
+    (*(u16 *)((u8 *)(D_8AF3A464) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A468) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A46C) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A600) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A604) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A608) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A60C) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A610) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A614) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A618) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A61C) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A620) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A624) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A628) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A62C) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A630) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A634) + (2))) &= ~1;
+    (*(u16 *)((u8 *)(D_8AF3A638) + (2))) &= ~1;
+
+    D_8AF3A63C = 0;
+    D_8AF3A640 = 0;
+    D_8AF3A644 = 0;
+    D_8AF3A648 = 0;
+    D_8AF3A64C = 0;
+    D_8AF3A650 = 0;
+
+    if (func_8005453C(0) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A61C) + (2))) |= 1;
+        D_8AF3A63C = 1;
+    }
+
+    if (func_8005453C(1) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A624) + (2))) |= 1;
+        D_8AF3A640 = 1;
+    }
+
+    if (func_8005453C(2) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A62C) + (2))) |= 1;
+        D_8AF3A644 = 1;
+    }
+
+    if (func_8005453C(3) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A618) + (2))) |= 1;
+        D_8AF3A648 = 1;
+    }
+
+    if (func_8005453C(4) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A620) + (2))) |= 1;
+        D_8AF3A64C = 1;
+    }
+
+    if (func_8005453C(5) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A628) + (2))) |= 1;
+        D_8AF3A650 = 1;
+    }
+
+    if (func_8005453C(6) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A630) + (2))) |= 1;
+        D_8AF3A654 = 1;
+    }
+
+    if (func_8005453C(7) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A634) + (2))) |= 1;
+        D_8AF3A658 = 1;
+    }
+
+    if (func_8005453C(8) == 1) {
+        (*(u16 *)((u8 *)(D_8AF3A638) + (2))) |= 1;
+        D_8AF3A65C = 1;
+    }
+
+    if ((func_80054794() & 1) != 0) {
+        (*(u16 *)((u8 *)(D_8AF3A464) + (2))) |= 1;
+    }
+
+    if ((func_80054794() & 2) != 0) {
+        (*(u16 *)((u8 *)(D_8AF3A468) + (2))) |= 1;
+    }
+
+    if ((func_80054794() & 4) != 0) {
+        (*(u16 *)((u8 *)(D_8AF3A46C) + (2))) |= 1;
+    }
+
+    if (func_8AC004E0(0) != 0) {
+        (*(u16 *)((u8 *)(D_8AF3A600) + (2))) |= 1;
+        (*(u16 *)((u8 *)(D_8AF3A604) + (2))) |= 1;
+        (*(u16 *)((u8 *)(D_8AF3A608) + (2))) |= 1;
+    }
+
+    if (func_8AC004E0(1) != 0) {
+        (*(u16 *)((u8 *)(D_8AF3A60C) + (2))) |= 1;
+        (*(u16 *)((u8 *)(D_8AF3A610) + (2))) |= 1;
+        (*(u16 *)((u8 *)(D_8AF3A614) + (2))) |= 1;
+    }
+}
 
 typedef struct {
     u16 unused;

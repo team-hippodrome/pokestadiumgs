@@ -143,7 +143,7 @@ extern M2C_UNK D_88000E4C;
 void func_88501274(s16 arg0) {
     func_88903C50(func_8004C874(0x34, arg0), 0x141, 0x108, 4, 0xFF, 0xAA, 0x8C, 0, 2, M2C_FIELD(D_8850D6D0, s32 *, 4) + 0x2C, D_8850D6D0 + 0x88, &D_88000E4C, func_8000612C);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_8850130C.s")
+s32 func_8850130C(u8 *arg0, s32 arg1, s32 arg2) { struct S { u8 pad[2]; u8 value; }; s32 result = 0; s32 index = 0; if ((*arg0) == 0xFC) { result = 1; } else { do { if (((struct S *)(arg0 + index))->value == 0) { if (index == 0) { result = 1; } break; } if ((((struct S *)(arg0 + index))->value == 0xA5) || (((struct S *)(arg0 + index))->value >= 0xFC)) { result = 1; break; } index++; } while (index != 4); } return result; }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501380.s")
 

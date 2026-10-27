@@ -87,7 +87,54 @@ void func_8F400E74(s32 arg0, s32 arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400EE0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F401464.s")
+extern u8 D_8F402030[];
+extern u8 D_8F402040[];
+extern u8 D_8F402044[];
+extern u8 D_8F4020C0;
+extern s16 D_8F4020FC;
+void func_8F401464(void) {
+    s16 *selected;
+    s32 index;
+    s32 y;
+    s16 *table;
+    s16 value;
+    s16 *new_var;
+    s16 *variable;
+
+    Ui_DrawGradientPanel(0x78, 0x78, 0x190, 0xB4, &D_8F402040, &D_8F402044);
+    func_800498C4();
+    func_800496A4(8, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0, 0xFF, 0xFF, 0xFF);
+    func_800495BC(0x8C, 0x8C, func_8004C874(0x42, 0x13));
+    Font_DisableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    selected = &D_8F4020C0;
+    table = &D_8F402030;
+    new_var = &D_8F4020FC;
+    /* FAKE: the one-line layout below is load-bearing. as1 breaks prologue
+     * scheduling ties by .loc line number; splitting the two initializations
+     * and the loop head onto separate lines swaps the lui/addiu order of the
+     * s2/s1/s4/s3 address materialization. */
+    variable = &value;
+    index = 0;
+    y = 0xB4;
+    for (; index < 5; index++, table++, variable = &value) {
+        if (index != *selected) {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        }
+        func_800495BC(0x8C, y, func_8004C874(0x42, *table));
+        if (index == 4) {
+            func_800495F8(0x1F4, y, 2,
+                          func_8004C874(0x42, *new_var + 0x22));
+        }
+        y += 0x16;
+    }
+    func_800499EC();
+}
 
 // Close to fragment20's func_82609938; also skips drawing when arg5 is not positive.
 //@src/fragments/20/fragment20_12C460.c

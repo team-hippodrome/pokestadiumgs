@@ -250,7 +250,15 @@ void func_8821EC10(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821F01C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821FFB4.s")
+s32 func_8821FFB4(u8 *arg0, u8 *arg1) {
+    typedef struct { u8 pad[0x4A4]; u8 (*callback)(u8); } State;
+    s32 value;
+    value = ((State *)D_882347F0)->callback(arg0[0]) -
+            ((State *)D_882347F0)->callback(arg1[0]);
+    return (value != 0) ? value :
+           (((u8 *)arg0 == (u8 *)arg1) ? 0 :
+             (((u8 *)arg0 < (u8 *)arg1) ? -1 : 1));
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_88220050.s")
 

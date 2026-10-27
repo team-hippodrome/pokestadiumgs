@@ -162,7 +162,47 @@ void func_84149400(void) {
 
 u8 func_84149424(void) { return D_8419D7B2; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149430.s")
+void func_84149430(u8 *arg0) {
+    if (*(u8 *)((u8 *)arg0 + 3) != 0) {
+        if (*(u8 *)((u8 *)arg0 + 4) < 0x14) {
+            *(u16 *)((u8 *)arg0 + 8) =
+                *(u16 *)(*(u8 **)((u8 *)arg0 + 0x10) + 0x36);
+            *(u16 *)((u8 *)arg0 + 0xA) =
+                *(u16 *)(*(u8 **)((u8 *)arg0 + 0x14) + 0x38);
+            if ((*(u8 **)((u8 *)arg0 + 0x1C))[3] & 0x10) {
+                *(u16 *)((u8 *)arg0 + 0xA) =
+                    *(u16 *)((u8 *)arg0 + 0xA) << 1;
+            }
+            if (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x10) + 1) == 0x76 &&
+                (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x10) + 0) == 0x68 ||
+                 *(u8 *)(*(u8 **)((u8 *)arg0 + 0x10) + 0) == 0x69)) {
+                *(u16 *)((u8 *)arg0 + 8) =
+                    *(u16 *)((u8 *)arg0 + 8) << 1;
+            }
+        } else {
+            *(u16 *)((u8 *)arg0 + 8) =
+                *(u16 *)(*(u8 **)((u8 *)arg0 + 0x10) + 0x3C);
+            *(u16 *)((u8 *)arg0 + 0xA) =
+                *(u16 *)(*(u8 **)((u8 *)arg0 + 0x14) + 0x3E);
+            if ((*(u8 **)((u8 *)arg0 + 0x1C))[3] & 8) {
+                *(u16 *)((u8 *)arg0 + 0xA) =
+                    *(u16 *)((u8 *)arg0 + 0xA) << 1;
+            }
+            if (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x10) + 1) == 0xA3 &&
+                *(u8 *)(*(u8 **)((u8 *)arg0 + 0x10) + 0) == 0x19) {
+                *(u16 *)((u8 *)arg0 + 8) =
+                    *(u16 *)((u8 *)arg0 + 8) << 1;
+            }
+        }
+        if (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x14) + 1) == 0x23 &&
+            *(u8 *)(*(u8 **)((u8 *)arg0 + 0x14) + 0) == 0x84) {
+            *(u16 *)((u8 *)arg0 + 0xA) +=
+                *(u16 *)((u8 *)arg0 + 0xA) >> 1;
+        }
+        *(u8 *)((u8 *)arg0 + 5) =
+            *(u8 *)(*(u8 **)((u8 *)arg0 + 0x10) + 0xC);
+    }
+}
 
 /* mkdraft:MoveDamage_ComputeBase_fragment79 begin */
 typedef struct Fragment79DamageContext { u8 unk_00, unk_01; u8 effect, power, type, level; u8 unk_06, unk_07; u16 attack, defense; s32 damage; u8 *attacker, *defender; u8 *unk_18; u8 *unk_1C; } Fragment79DamageContext;
