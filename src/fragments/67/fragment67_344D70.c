@@ -834,11 +834,50 @@ void func_8290AEEC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290AF50.s")
+void func_8290AF50(void) {
+    s32 i;
+
+    StageFade_StartFromOpaque(8);
+    func_8290A5B0(3);
+
+    for (i = 0; i < 3; i++) {
+        (&D_8291A7C0)[i * 0x1A4 + 0x21] = 0;
+    }
+
+    // D_8291A7C0 holds 0x1A4-byte records. func_80001FF0 returns the refresh rate (50 or 60);
+    // the start values are (record + 3) times the 24- or 30-frame step that func_8290B478
+    // compares against record 0's 0x1A0 counter.
+    if (func_80001FF0() == 50) {
+        *(s16 *)(&D_8291A7C0 + 0 * 0x1A4 + 0x1A0) = 72;
+        *(s16 *)(&D_8291A7C0 + 1 * 0x1A4 + 0x1A0) = 96;
+        *(s16 *)(&D_8291A7C0 + 2 * 0x1A4 + 0x1A0) = 120;
+    } else {
+        *(s16 *)(&D_8291A7C0 + 0 * 0x1A4 + 0x1A0) = 90;
+        *(s16 *)(&D_8291A7C0 + 1 * 0x1A4 + 0x1A0) = 120;
+        *(s16 *)(&D_8291A7C0 + 2 * 0x1A4 + 0x1A0) = 150;
+    }
+    *(s32 *)(&D_8291B838 + D_8291B858 * 4) = D_82912F80;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290B004.s")
+void func_8290B004(void) {
+    s32 i;
+
+    StageFade_StartFromOpaque(8);
+    func_8290A5B0(3);
+    for (i = 0; i < 3; i++) {
+        (&D_8291A7C0)[i * 0x1A4 + 0x21] = 0;
+    }
+    (&D_8291A7C0)[1 * 0x1A4 + 0x1A2] = 0;
+    (&D_8291A7C0)[2 * 0x1A4 + 0x1A2] = 0;
+    (&D_8291A7C0)[1 * 0x1A4 + 5] &= ~1;
+    (&D_8291A7C0)[2 * 0x1A4 + 5] &= ~1;
+    *(s16 *)(&D_8291A7C0 + 0 * 0x1A4 + 0x1A0) = 0;
+    *(s16 *)(&D_8291A7C0 + 1 * 0x1A4 + 0x1A0) = 0;
+    *(s16 *)(&D_8291A7C0 + 2 * 0x1A4 + 0x1A0) = 0;
+    *(s32 *)(&D_8291B838 + D_8291B858 * 4) = D_82912F80;
+}
 #endif
 
 #ifdef VERSION_US

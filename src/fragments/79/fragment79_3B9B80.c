@@ -211,7 +211,17 @@ u8 *func_8414C960(u8 arg0) {
     return D_8419D7C0 + arg0 * 0xA8;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C98C.s")
+// Returns the next free 0x40-byte slot of the array at +0x28 in a 0xA8-byte
+// D_8419D7C0 record and increments the record's slot count at +1.
+u8 *func_8414C98C(u8 *record) {
+    u8 *slot = record;
+
+    slot += record[1] * 0x40;
+    slot += 0x28;
+    record[1]++;
+    if (0) {} // karodo: diff score 200 without it.
+    return slot;
+}
 
 extern u8 *func_84154B30(u8);
 void func_8414C9AC(u8 *arg0, u8 arg1) {

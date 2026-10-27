@@ -56,7 +56,22 @@ void func_829064D0(s32 arg0, void *arg1) {
 }
 /* mkdraft:func_829064D0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_342DB0/func_82906680.s")
+void func_82906680(void *arg0) {
+    s16 target_speed; // func_82906748 steps each record's s16 at 0x12 toward this value at 0x10.
+    s32 i;
+
+    for (i = 0; i != 40; i++) {
+        func_829064D0(i, arg0);
+        if (i % 5 == 0) {
+            target_speed = func_829063EC(1456);
+            *(s16 *)(D_82919DE0 + i * 0x24 + 0x10) = target_speed + 10;
+        } else {
+            target_speed = func_829063EC(728);
+            *(s16 *)(D_82919DE0 + i * 0x24 + 0x10) = target_speed + 10;
+        }
+        *(D_82919DE0 + i * 0x24 + 0x20) = 0;
+    }
+}
 
 /* mkdraft:func_82906748 begin */
 extern u8 D_82919DE0[];

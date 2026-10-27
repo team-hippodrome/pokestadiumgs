@@ -702,7 +702,20 @@ void BattleAnim_ModelDispatch_072(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410F0D0.s")
+void func_8410F0D0(u8 *arg0, u8 *arg1) {
+    f32 distance;
+
+    D_841911E8 = func_8410B330(arg0);
+    // FAKE: empty test of distance before it is assigned grows the stack frame; diff score 42 without it.
+    if (!distance) {}
+    func_841203B4(D_841911E8 + 0x44, 0.3f, 0.005f);
+    func_841203B4(arg0 + 0xB8, *(f32 *)(D_841911E8 + 0x54), *(f32 *)(D_841911E8 + 0x44));
+    distance = *(f32 *)(arg0 + 0xB8) - *(f32 *)(D_841911E8 + 0x54);
+    if ((*(u16 *)(D_84193DD0 + 6) < 41) && (distance < 0.1)) {
+        func_8411FEE8(0);
+        *(s32 *)(D_841911E8 + D_841911EC * 8 + 8) = D_84184148;
+    }
+}
 #endif
 
 #ifdef VERSION_US

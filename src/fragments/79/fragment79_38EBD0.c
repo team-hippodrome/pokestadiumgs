@@ -37,7 +37,36 @@ void func_8411F340(u8 *arg0, void *arg1) {
 }
 /* mkdraft:func_8411F340 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EBD0/func_8411F400.s")
+extern s32 D_84191208;
+extern u8 *D_84193DD0;
+extern u8 *D_84193F88;
+extern u8 *D_84193F8C;
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+void func_8411F400(s32 arg0, u8 *arg1) {
+    u8 *node;
+    s32 animation;
+    s32 index;
+
+    if ((s32)arg1 == D_84191208) {
+        node = D_84193F88;
+        animation = 1;
+    } else {
+        node = D_84193F8C;
+        animation = 2;
+    }
+    func_8003F1DC(node);
+    func_8003F114(node, animation, *(s16 *)(arg1 + 0x658),
+                  **(void ***)(*(u8 **)(*(u8 **)(arg1 + 0x5C0) + 0x38) + 8));
+    index = func_8411E1F8(arg1);
+    // FAKE: the (u32) round trip on D_84193DD0; diff score 20 without it.
+    func_8003F9AC(node, *(s16 *)(arg1 + 0x1A), *(u16 *)((u8 *)(u32)D_84193DD0 + (index << 4) + 0x14));
+    func_8003F2C4(*(void **)(arg1 + 0x5C0), node, 0);
+    ModelAnim_SetFrame(node, *(s16 *)(*(u8 **)(arg1 + 0x668) + 0x10));
+    node[2] &= ~0x40;
+    Vec3f_SetComponentsDuplicate((f32 *)(node + 0x24), 0.0f, 0.0f, 0.0f);
+}
 
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void Camera_ComputeEyeFromAngles(void *, void *, s32, s32, s32);

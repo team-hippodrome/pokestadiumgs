@@ -30,7 +30,31 @@ void func_84107D4C(void) {
     D_84190170 += 0x10;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377570/func_84107D90.s")
+extern s32 D_8416A210;
+extern u8 D_8416A218[];
+// Script command handler: steps the script pointer D_84190170 past this command, then
+// skips whole commands (length from the command's D_8416A218 entry) until it reaches
+// command 3 or the command 10 whose zero-based occurrence number equals D_8416A210.
+void func_84107D90(void) {
+    typedef struct { void (*callback)(void); s32 unk_04; } unk_D_8416A218;
+    s32 index;
+    u8 cmd;
+
+    index = 0;
+    D_84190170 += 4;
+    while (TRUE) {
+        cmd = *(u8 *)(u32)D_84190170;
+        if (cmd == 10) {
+            if (index == D_8416A210) {
+                break;
+            }
+            index++;
+        } else if (cmd == 3) {
+            break;
+        }
+        D_84190170 += ((unk_D_8416A218 *)D_8416A218)[cmd].unk_04;
+    }
+}
 
 void func_84107E08(void) {
     D_84190170 += 4;
