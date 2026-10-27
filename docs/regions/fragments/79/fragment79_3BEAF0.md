@@ -22,3 +22,20 @@ side's record `mon = func_84154B64(1 - side)`. It then calls
 10 and, when byte 2 of `func_84154B30(side)` is at least 2, also
 `mon[0x13]`, `mon[0xE]` and `mon[0x11]`. The `side`, `other` and flag
 locals are `u8` (they spill as bytes at +0x25..+0x27).
+
+## 2026-10-27 — own `.rodata` subsegment; `func_8414FB24` effect dispatch accepted
+
+`yamls/us/rom.yaml` gives this file `[0x3FB760, .rodata]`
+(`jtbl_8418BED0`, 155 entries, up to `0x3FB9D0`), the tail of the shared
+`3FB010` blob. In the linker script that blob's object now precedes
+`fragment79_3BEAF0.o(.rodata)`.
+
+`func_8414FB24(u8 *arg0)` (**64 words / 256 bytes**) maps the byte at
+`arg0 + 0x2E + func_84154B24()` through `func_80062D20` and dispatches
+values 2..156 to this file's handlers. The case groups are generated from the
+table and written in body-address order: `func_8414F2F4` (8 values),
+`func_8414F268` (26), `func_8414F5F0` (33), `func_8414F618`,
+`func_8414F668` (2), `func_8414F6D0` (3), `func_8414F748`, `func_8414FA3C`,
+`func_8414F894`, `func_8414F8B4` and `func_8414F93C`. Index the byte pair as a
+typed array (`unk_func_8414FB24.unk_2E[side]`); raw `arg0[0x2E + side]`
+commutes the `addu`.
