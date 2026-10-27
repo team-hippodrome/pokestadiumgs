@@ -131,7 +131,33 @@ s32 func_8821C970(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821CA24.s")
+extern u8 func_80073450(u8);
+s32 func_8821CA24(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
+    s32 difference;
+    s32 result;
+    S1_unk_func_88316128 *entries[2];
+    u8 values[2];
+    u8 first;
+    u8 i;
+
+    entries[0] = arg0;
+    entries[1] = arg1;
+    for (i = 0; i < 2; i++) {
+        if (((u8 *)entries[i])[38] & 1) {
+            values[i] = 253;
+        } else {
+            values[i] = entries[i]->unk_08;
+        }
+    }
+    first = func_80073450(values[0]);
+    difference = first - func_80073450(values[1]);
+    if (difference != 0) {
+        result = difference;
+    } else {
+        result = LabPCList_CompareByPointer(entries[0], entries[1]);
+    }
+    return result;
+}
 
 void func_8821CADC(s32 arg0, s32 arg1) {
     func_8821C47C(arg0, arg1, 13);
