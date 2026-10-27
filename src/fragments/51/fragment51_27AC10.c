@@ -59,5 +59,28 @@ void func_863057A0(u8 *arg0, u8 *arg1, u8 *arg2, u8 *arg3, f32 arg4, f32 arg5) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305A04.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305B44.s")
+typedef struct unk_func_86305B44 {
+    s32 index;
+    u8 *entry;
+    u8 *node;
+    u8 unk_0C[128];
+} unk_func_86305B44;
+
+extern u8 *D_863075D8;
+extern void func_86305A04(unk_func_86305B44 *);
+
+void func_86305B44(void) {
+    unk_func_86305B44 state;
+
+    state.entry = D_863075D8 + 320;
+    state.index = 0;
+    do {
+        state.node = *(u8 **)(state.entry + 32);
+        if (*(s32 *)(state.node + 64) != 0) {
+            func_86305A04(&state);
+        }
+        state.index++;
+        state.entry += 396;
+    } while (state.index < 4);
+}
 #endif
