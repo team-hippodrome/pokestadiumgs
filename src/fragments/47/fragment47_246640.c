@@ -1,7 +1,49 @@
 #include "global.h"
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000020.s")
+extern f64 D_8600D4E8;
+extern f64 D_8600D4F0;
+extern void *func_87C00160(void *, void *, void *);
+extern f64 func_87C00208(void *, void *);
+extern f64 func_87C00664(void *);
+extern f64 func_87C0068C(void *);
+extern void *func_87C00198(void *, void *, void *);
+extern void *func_87C002A8(void *, void *, f64);
+
+f64 func_86000020(u8 *arg0, u8 *arg1, f64 horizon) {
+    f64 closest_time;
+    f64 dot;
+    f64 speed_squared;
+    struct {
+        f64 x;
+        f64 y;
+        f64 z;
+    } separation, relative_velocity, projected;
+
+    func_87C00160(&separation, arg1, arg0);
+    func_87C00160(&relative_velocity, arg1 + 0x18, arg0 + 0x18);
+    relative_velocity.y = 0.0;
+    separation.y = 0.0;
+    dot = func_87C00208(&separation, &relative_velocity);
+    speed_squared = func_87C00664(&relative_velocity);
+    if (speed_squared < D_8600D4E8) {
+        return func_87C0068C(&separation);
+    } else {
+        closest_time = -dot / speed_squared;
+        if (closest_time <= D_8600D4F0) {
+            return func_87C0068C(&separation);
+        } else {
+            if (horizon <= closest_time) {
+                func_87C002A8(&projected, &relative_velocity, horizon);
+                func_87C00198(&projected, &separation, &projected);
+                return func_87C0068C(&projected);
+            } else {
+                //!bug The negative product increases the squared distance.
+                return sqrtf((f32)(func_87C00664(&separation) - (closest_time * dot)));
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -13,7 +55,6 @@ void func_860002A0(void) {
 
 #ifdef VERSION_US
 extern f64 D_8600D4F8;
-extern f64 func_86000020(u8 *, u8 *, f64);
 
 u8 *func_860002A8(u8 *arg0, s32 flag_a, s32 flag_b, f64 horizon) {
     f64 best_distance;
@@ -59,7 +100,38 @@ next_object:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860003DC.s")
+u8 *func_860003DC(u8 *arg0, s32 flag_a, s32 flag_b) {
+    u8 *closest;
+    s32 best_score;
+    s32 i;
+    u8 *other;
+
+    closest = NULL;
+    best_score = 0;
+    i = 0;
+    do {
+        other = *(u8 **)(arg0 + 0x1870) + i * 0x1998;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(arg0 + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1814) < best_score) {
+            best_score = *(s32 *)(other + 0x1814);
+            closest = other;
+        }
+next_object:
+        i++;
+    } while (i != 4);
+    return closest;
+}
 #endif
 
 #ifdef VERSION_US
