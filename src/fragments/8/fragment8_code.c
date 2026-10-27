@@ -222,7 +222,20 @@ u8 *func_82F00C2C(u8 *pokemon) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00CF4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01220.s")
+extern void func_800226C0(s32);
+void func_82F01220(void *arg0, s32 arg1) {
+    if (arg1 < 0) {
+        ((u8 *)arg0)[0x1E] = 1;
+        func_800226C0(3);
+        return;
+    }
+    if (((u8 *)arg0)[0xED0 + arg1] > 0) {
+        func_800226C0(0x90);
+        ((u8 *)arg0)[0x1E] = (*(s32 *)((u8 *)arg0 + 0xEE4) != 0) ? 6 : 9;
+    } else if (arg1 != 0) {
+        func_800226C0(5);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F012AC.s")
 
