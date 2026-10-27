@@ -153,8 +153,8 @@ void func_86B02180(void) { s32 mode; u8 **state; func_800086A4(2); StageFade_Sta
 #endif
 
 #ifdef VERSION_US
-extern void func_87F026E8(s32, void *);
-extern s32 D_87F119D8;
+extern void func_87F026E8(void *, void *);
+extern void *D_87F119D8;
 extern void * D_87F119DC;
 void func_86B04870(void) {
     s32 result = 0;
@@ -182,8 +182,8 @@ void func_86B04870(void) {
 
 #ifdef VERSION_US
 extern void *D_87F119DC;
-extern s32 D_87F119D8;
-extern void func_87F026E8(s32, void *);
+extern void *D_87F119D8;
+extern void func_87F026E8(void *, void *);
 extern void func_86B052BC(s32);
 void func_86B05194(void) {
     s32 result;
@@ -285,8 +285,8 @@ void func_86B052BC(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_87F026E8(s32, void *);
-extern s32 D_87F119D8;
+extern void func_87F026E8(void *, void *);
+extern void *D_87F119D8;
 extern void *D_87F119DC;
 void func_86B05428(void) {
     s32 var_v0;
@@ -623,7 +623,27 @@ void func_86B09478(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B09480.s")
+extern f64 D_86B0E018;
+void func_86B09480(void) {
+    s32 frame;
+    s32 done = 0;
+    f32 value;
+
+    frame = *(s32 *)((u8 *)D_87F119DC + 28);
+    if (frame > 10) {
+        value = (f64)(frame - 10) * D_86B0E018 + 2.0;
+        *(f32 *)((u8 *)D_87F119DC + 92) = value;
+        *(f32 *)((u8 *)D_87F119DC + 88) = value;
+        *(f32 *)((u8 *)D_87F119DC + 84) = value;
+        *(s32 *)(D_86B17A78 + 148) -= 12;
+    }
+    if (frame > 30) {
+        done = 1;
+    }
+    if (done) {
+        func_87F026E8(D_87F119D8, D_87F119DC);
+    }
+}
 #endif
 
 #ifdef VERSION_US
