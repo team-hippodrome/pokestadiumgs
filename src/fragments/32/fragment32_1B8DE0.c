@@ -110,7 +110,6 @@ void func_88307DA4(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307DE8.s")
 
-extern s32 D_88308ED0;
 typedef struct unk_D_88308ED0 {
     /* 0x00 */ u8 unk_00[4];
     /* 0x04 */ s16 unk_04;
