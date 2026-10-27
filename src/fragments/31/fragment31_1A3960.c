@@ -100,7 +100,27 @@ void func_88230A38(void) {
     D_880068B8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230A88.s")
+extern void func_800226C0(s32);
+extern void func_88214394(void);
+extern s32 func_882026A4(s32, s32);
+extern void func_88002720(void *, u16, void *);
+extern s32 D_882345F4;
+void func_88230A88(void) {
+    u8 *menu = (u8 *)D_882349B0 + 0x24;
+    u32 buttons = *(u16 *)(D_80087200 + 8);
+
+    if (buttons & 0x4000) {
+        func_800226C0(0x48);
+        *(s32 *)((u8 *)D_882349B0 + 0xE8) = 1;
+        func_88230A38();
+    } else if (buttons & 0x8000) {
+        func_88214394();
+        func_882026A4(D_882345F4, *(s16 *)(menu + 0x28) + 2);
+        func_88230A38();
+    } else {
+        func_88002720(menu + 0x28, *(u16 *)(menu + 0xC), menu + 0x2C);
+    }
+}
 
 extern void func_889033A0(s32);
 void func_88230B2C(void) { func_889033A0((D_882349B0 + 236)); func_8821D930((D_882349B0 + 8)); }
@@ -132,5 +152,20 @@ void func_88230D80(s16 *half, s16 *alpha) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230E38.s")
+extern Gfx *D_800D0510;
+extern s16 D_8800EF58;
+extern u8 D_88233B20[];
+void func_88230E38(void) {
+    s16 half;
+    s16 alpha;
+    s32 level;
+
+    func_88230D80(&half, &alpha);
+    if (half >= D_8800EF58) {
+        alpha = -alpha;
+    }
+    level = (255 - alpha) >> 1;
+    gSPDisplayList(D_800D0510++, D_88233B20);
+    gDPSetPrimColor(D_800D0510++, 0, level, 0, 0, 0, 255);
+}
 #endif
