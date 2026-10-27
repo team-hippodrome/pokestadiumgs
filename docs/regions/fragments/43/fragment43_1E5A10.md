@@ -40,3 +40,55 @@ is `build/pokestadiumgs-us.z64: OK`, with ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and
 `git diff --check` pass. The complete owner span at ROM
 `0x1E797C..0x1E7A1C` independently matches all 160 original bytes.
+
+## func_8AC01354
+
+This owner processes at most the supplied number of 32-byte records. Each
+record supplies two signed words at offsets 8 and 12 to `func_8004C874`.
+The returned text pointer is stored at offset 16, and its width from
+`func_80049148(8, 0, text)` is narrowed into the signed halfword at offset
+20. The existing string at `D_8AC07F28` decodes to `"end"`. That sentinel's
+pointer and width are populated before the loop stops; the signed-halfword
+result counts only records preceding it. Nonpositive limits return zero.
+
+`func_8004C874` returns the text resource through `func_8004C7A0`.
+`func_80049148` accepts a signed word font argument and a variadic format
+pointer and computes text width. The declarations in this translation unit
+now agree with those definitions. The existing `func_8AC06A94` resource
+local carries a text pointer, with its compiled instructions unchanged.
+`HAL_Strcmp` compares signed character sequences and returns zero on equal
+strings.
+//@src/4CC20.c
+//@src/47580.c
+//@src/C180.c
+
+Compiled caller `func_8AF10CD4` passes the existing record arrays and limits
+10, 9, 18 and 13, storing the first three signed-halfword results.
+`func_8AF10AB8` constructs 32-byte records with resource words at offsets
+8 and 12. Original `func_8AC013FC` consumes the text pointer at offset 16
+when calculating and drawing the entries. The new view describes only the
+accessed fields, leaving the remaining bytes opaque and allocating no data.
+The address-based owner and field names remain unchanged.
+//@src/fragments/44/fragment44_1FD260.c
+//@src/fragments/43/fragment43_1E5A10.c
+
+Advancing the record pointer immediately after saving the string comparison
+preserves the original loop schedule. All 42 instruction words, 168 bytes,
+and the 48-byte frame match, including ROM `0x1E6D44..0x1E6DEC`.
+No fakes, padding, instruction rewrites or layout changes are introduced.
+
+Fresh verification on master
+`79adabc72d99147fb5daa4b9fa34230dfbaeff89` plus this patch:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/43/fragment43_1E5A10.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal host syntax check, forced source compilation and complete US link
+pass, producing `build/pokestadiumgs-us.z64: OK` and full-ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. The updated unchanged baseline passes its own full build and
+retail comparison before this candidate is reapplied.

@@ -343,7 +343,37 @@ s32 func_8AC010D4(u8 *arg0, u16 arg1, u16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC01354.s")
+typedef struct unk_func_8AC01354 {
+    u8 unk_00[8];
+    s32 unk_08;
+    s32 unk_0C;
+    const char *unk_10;
+    s16 unk_14;
+    u8 unk_16[10];
+} unk_func_8AC01354;
+
+extern void *func_8004C874(s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern s8 D_8AC07F28[];
+s16 func_8AC01354(unk_func_8AC01354 *arg0, s32 arg1) {
+    s16 count;
+    s32 i;
+    s32 comparison;
+
+    count = 0;
+    for (i = 0; i < arg1; i++) {
+        arg0->unk_10 = func_8004C874(arg0->unk_08, arg0->unk_0C);
+        arg0->unk_14 = func_80049148(8, 0, arg0->unk_10);
+        comparison = HAL_Strcmp((const s8 *)arg0->unk_10, D_8AC07F28);
+        arg0++;
+        if (comparison == 0) {
+            break;
+        }
+        count++;
+    }
+    return count;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1501,14 +1531,12 @@ typedef struct F43A94State {
     s16 kind;
     F43A94Sub sub;
 } F43A94State;
-extern s32 func_8004C874(s32, s32);
-extern s32 func_80049148(u16, s32, s32);
 extern s32 func_8004C990(s32, s32);
 void func_8AC06A94(F43A94State *a, F43A94Owner *b, F43A94Node *c, void *arg3)
 {
     s32 unused;
     u16 *h;
-    s32 r;
+    const char *r;
     F43A94Sub *p;
     s16 d;
 
