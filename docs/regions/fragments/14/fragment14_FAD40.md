@@ -66,3 +66,48 @@ link pass with `build/pokestadiumgs-us.z64: OK`. The ROM MD5 is
 check pass. All 20 original words and retail span `0xFB368..0xFB3B8` compare
 exactly. No new storage, fakes, padding, instruction rewriting, layout,
 generated reports or CI changes are required.
+
+## 2026-10-27 — `func_81303D60`: selected-record setup
+
+The 192-byte owner (48 instructions, 96-byte frame) obtains a four-halfword
+position/dimension record, reads the selected index through `func_8160A920`,
+and builds an eight-word flag set through `func_81304788`. It passes the
+selected 3304-byte record's block at offset 32, the flags and the same local
+position record twice to `func_8130EB04`. The last argument is 150 when
+`func_81302BB0` succeeds and 146 otherwise. Finally it stores 14 in parent
+byte 19901. The broader meanings of those numeric states remain unknown.
+//@src/fragments/14/fragment14_FAD40.c
+
+`func_813049AC` calls `func_8160B5BC`, which initializes all four halfwords:
+the last two are 140 and 57. It then adds `func_81302CB4`'s two offsets to
+the first two halfwords. The original assembly of `func_8130EB04` copies
+eight bytes from each of its two record arguments, and copies all eight
+words of the flag set. `func_81304788` initializes that set through
+`func_81601A38`. The four-halfword local therefore represents consumed
+data. Its original stack offset is 52; the flags start at 60 and the
+selected index spills at 92.
+//@src/fragments/11/fragment11_E1E10.c
+//@src/fragments/11/fragment11_D9520.c
+//@src/fragments/14/fragment14_104FC0.c
+
+The 3304-byte array view preserves the same record stride established by
+`func_81304A08` and `func_81304AD0` in this file. The original assembly of
+caller `func_81303EF4` passes its parent pointer and discards the result.
+Existing callers, helpers and data ownership retain their bytes.
+
+Fresh validation on master `29f0a2e7ba3c00c633b026d74e89423f1866528c`
+plus this patch:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/14/fragment14_FAD40.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal host syntax check, forced source compilation and full US link
+pass with `build/pokestadiumgs-us.z64: OK`. ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; retail byte comparison and whitespace
+checks pass. All 48 original words and retail span `0xFBEF0..0xFBFB0`
+compare exactly. No fakes, padding members, instruction rewriting, new
+storage, generated reports, layout or CI changes are needed.
