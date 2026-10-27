@@ -385,6 +385,8 @@ SECTIONS
         build/src/CE80.o(.data);
         _10BB0 = .;
         build/src/10BB0.o(.data);
+        _88A40_data = .;
+        build/asm/us/data/88A40.data.o(.data);
         _14640 = .;
         build/src/14640.o(.data);
         _1A140 = .;
@@ -429,8 +431,8 @@ SECTIONS
         build/src/4F800.o(.data);
         _517E0 = .;
         build/src/517E0.o(.data);
-        _88A40_data = .;
-        build/asm/us/data/88A40.data.o(.data);
+        _906A0_data = .;
+        build/asm/us/data/906A0.data.o(.data);
         _56F90 = .;
         build/src/56F90.o(.data);
         _585D0 = .;
