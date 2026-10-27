@@ -117,3 +117,33 @@ bytes, rather than treating that preliminary symbol-name check as proof.
 
 Only the four layout-prerequisite owners listed above remain assembly in
 this controller file.
+
+## 2026-10-27 — own `.rodata` subsegment; `func_88900528` range switch
+
+`yamls/us/rom.yaml` now gives this file `[0x1D9450, .rodata]`
+(`0x88903E60..0x88903FDF`, 0x180 bytes), split out of the tail of
+`fragment38_data`. Every label in that range is referenced only by this
+file: `jtbl_88903E60` (`func_88900528`), `jtbl_88903E84`, `D_88903EB0`
+(0.4f) and `jtbl_88903EB4` (`func_88900F54`), `D_88903F74..7C` (three
+363.0f) and `jtbl_88903F80` (`func_88901A24`), and `jtbl_88903FB8`
+(`func_88902624`). The existing linker script already places
+`fragment38_1D5610.o(.rodata)` between the data blob and
+`fragment38_1D8160`'s `.rodata`, so no `.ld` change is needed.
+
+With the subsegment, splat moves each table into its owner's `.s` as
+8-aligned `.late_rodata`. asm-processor then pads an odd-length owner's
+`.text` by one word: `func_88900528` (13 words) grew to 14 and shifted the
+ROM. The other three owners have even word counts and assemble in place.
+Landing the subsegment therefore requires `func_88900528` as C in the same
+change.
+
+`func_88900528` (13 words / 52 bytes, leaf): returns 1 for `arg0` in
+6..14, otherwise 0. All nine table entries target the same label. Write
+`s32 result = 0;` and a `switch` whose nine stacked cases assign 1 and
+`break`. Direct `return 1;` cases and an explicit `default:` both add a
+word (56 bytes); a `u8` argument adds an `andi` (60 bytes). Runner
+`.rodata` link-shape reports `section_content_drift` because the baseline
+object was the padded one; the full-ROM gate is authoritative.
+
+The switch owners `func_88900F54`, `func_88901A24` and `func_88902624` can
+now be written as C `switch`es.

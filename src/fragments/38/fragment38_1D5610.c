@@ -60,7 +60,24 @@ s32 func_889004C4(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/38/fragment38_1D5610/func_88900528.s")
+s32 func_88900528(s32 arg0) {
+    s32 result = 0;
+
+    switch (arg0) {
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+            result = 1;
+            break;
+    }
+    return result;
+}
 
 void func_8890055C(void) {
     *(s32 *)(D_88904190 + 0x120) = 0;
