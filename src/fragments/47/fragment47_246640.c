@@ -999,11 +999,87 @@ void func_86003EFC(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86003FDC.s")
+extern void *func_87C008B0(void *);
+extern void *func_87C00944(void *, void *, void *);
+extern void func_87C013CC(void *, void *);
+extern void func_87C015E4(void *, void *);
+void func_86003FDC(u8 *arg0, u8 *arg1, f32 arg2) {
+    f64 direction[3];
+    f64 final_rotation[4];
+    f64 wobble[4];
+    f64 heading[4];
+    f64 product[4];
+    u8 *record;
+
+    if ((*(s32 *)(arg0 + 0x1828) == 1 && *(s32 *)(arg0 + 0x17BC) != 0) ||
+        (*(s32 *)(arg0 + 0x1828) == 3 && *(f64 *)(arg0 + 0x17D0) > 0.0)) {
+        func_87C00908(wobble, 0.0, 0.0,
+            (f64)(__sinf((f32)(*(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6888) * 0.02f)) * 0.03f));
+    } else {
+        func_87C008B0(wobble);
+    }
+    func_87C00908(heading, 0.0, *(f64 *)(arg0 + 0x1858), 0.0);
+    func_87C00944(final_rotation, arg0 + 0x1838,
+        func_87C00944(product, heading, wobble));
+    func_87C00AE4(final_rotation, final_rotation);
+    func_87C013CC(final_rotation, arg1);
+    func_87C015E4(final_rotation, direction);
+    func_87C002A8(direction, direction, 1.0);
+    record = *(s32 *)(arg0 + 0x1810) * 24 +
+             *(u8 **)(*(u8 **)(arg0 + 0x1870) + 0x74C8);
+    *(f32 *)(record + 4) = (f32)(*(f64 *)(D_8600DE30 + 0x18) * direction[0]);
+    *(f32 *)(record + 8) = (f32)(*(f64 *)(D_8600DE30 + 0x18) * direction[1]);
+    *(f32 *)(record + 12) = (f32)(*(f64 *)(D_8600DE30 + 0x18) * direction[2]);
+    *(f32 *)(arg1 + 0x30) = (f32)((f64)arg2 * direction[0] + *(f64 *)arg0);
+    *(f32 *)(arg1 + 0x34) = (f32)((f64)arg2 * direction[1] + *(f64 *)(arg0 + 8));
+    *(f32 *)(arg1 + 0x38) = (f32)((f64)arg2 * direction[2] + *(f64 *)(arg0 + 0x10));
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860041E8.s")
+void func_860041E8(u8 *arg0, u8 *arg1, f32 arg2) {
+    f64 direction[3];
+    f64 final_rotation[4];
+    f64 wobble[4];
+    u8 *record;
+    f32 *record_x;
+    f32 *record_y;
+    f32 *record_z;
+    f64 *position;
+    f32 *out_x;
+    f32 *out_y;
+    f32 *out_z;
+    u8 *orientation;
+
+    if ((*(s32 *)(arg0 + 0x1828) == 1 && *(s32 *)(arg0 + 0x17BC) != 0) ||
+        (*(s32 *)(arg0 + 0x1828) == 3 && *(f64 *)(arg0 + 0x17D0) > 0.0)) {
+        func_87C00908(wobble, 0.0, 0.0,
+            (f64)(__sinf((f32)(*(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6888) * 0.02f)) * 0.03f));
+    } else {
+        func_87C008B0(wobble);
+    }
+    orientation = arg0 + 0x1838;
+    func_87C00944(final_rotation, orientation, wobble);
+    func_87C00AE4(final_rotation, final_rotation);
+    func_87C013CC(final_rotation, arg1);
+    func_87C015E4(final_rotation, direction);
+    func_87C002A8(direction, direction, 1.0);
+    record = *(s32 *)(arg0 + 0x1810) * 24 +
+             *(u8 **)(*(u8 **)(arg0 + 0x1870) + 0x74C8);
+    record_x = (f32 *)(record + 4);
+    *record_x = (f32)(*(f64 *)(D_8600DE30 + 0x18) * direction[0]);
+    record_y = (f32 *)(record + 8);
+    *record_y = (f32)(*(f64 *)(D_8600DE30 + 0x18) * direction[1]);
+    record_z = (f32 *)(record + 12);
+    *record_z = (f32)(*(f64 *)(D_8600DE30 + 0x18) * direction[2]);
+    position = (f64 *)arg0;
+    out_x = (f32 *)(arg1 + 0x30);
+    *out_x = (f32)((f64)arg2 * direction[0] + position[0]);
+    out_y = (f32 *)(arg1 + 0x34);
+    *out_y = (f32)((f64)arg2 * direction[1] + position[1]);
+    out_z = (f32 *)(arg1 + 0x38);
+    *out_z = (f32)((f64)arg2 * direction[2] + position[2]);
+}
 #endif
 
 #ifdef VERSION_US
