@@ -179,7 +179,7 @@ void func_87E129D0(s32 arg0) {
     func_87E126D4(arg0, &D_87E1ABC4, 3, var_a3, 0x5000);
 }
 
-extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
 void func_87E12AA0(void *arg0, s32 arg1, void *arg2) {
     s32 sp2C;
     void *sp28;
@@ -188,9 +188,9 @@ void func_87E12AA0(void *arg0, s32 arg1, void *arg2) {
     if (sp2C != 0) {
         *(f32 *)((u8 *)sp2C + 0x50) = 1000.0f;
         func_87F0B1A4((u8 *)((u8 *)sp28 + 0xC),
-            (u8 *)((u8 *)sp2C + 0x48),
+            (f32 *)((u8 *)sp2C + 0x48),
             *(f32 *)((u8 *)arg2 + 0x48),
-            *(s32 *)((u8 *)arg2 + 0x4C),
+            *(f32 *)((u8 *)arg2 + 0x4C),
             *(f32 *)((u8 *)arg2 + 0x50) + 20.0f,
             (arg1 * 5) + 0xA,
             0);
@@ -369,13 +369,36 @@ void func_87E134C0(void) {
     *(u32 *)(D_87E1EBD8 + 0xC) = 0;
 }
 
-extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
 void func_87E134E8(void) {
-    func_87F0B1A4(D_87E1EBD8 + 0x1CC, D_87E1EBD8 + 0x88, (*(f32 *)((u8 *)(D_87E1EBD8) + (0x88))) + -520.0f, (*(s32 *)((u8 *)(D_87E1EBD8) + (0x8C))), (*(f32 *)((u8 *)(D_87E1EBD8) + (0x90))), 0xF, 0x2000);
+    func_87F0B1A4(D_87E1EBD8 + 0x1CC, (f32 *)(D_87E1EBD8 + 0x88), (*(f32 *)((u8 *)(D_87E1EBD8) + (0x88))) + -520.0f, (*(f32 *)((u8 *)(D_87E1EBD8) + (0x8C))), (*(f32 *)((u8 *)(D_87E1EBD8) + (0x90))), 0xF, 0x2000);
     (*(s32 *)((u8 *)(D_87E1EBD8) + (0))) = (s32) ((*(s32 *)((u8 *)(D_87E1EBD8) + (0))) | 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E13558.s")
+typedef struct unk_func_87E13558 {
+    f32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+} unk_func_87E13558;
+
+void func_87E13558(u8 *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
+    if ((*(u32 *)D_87E1EBD8 & 1) && !(*(u32 *)D_87E1EBD8 & 2)) {
+        if (*(u8 **)(D_87E1EBD8 + 12) == NULL) {
+            *(unk_func_87E13558 *)(D_87E1EBD8 + 136) = *(unk_func_87E13558 *)(arg0 + 72);
+            *(f32 *)(D_87E1EBD8 + 16) = arg1;
+            *(f32 *)(D_87E1EBD8 + 20) = arg2;
+            *(f32 *)(D_87E1EBD8 + 24) = arg3;
+            *(s32 *)(D_87E1EBD8 + 616) = 0;
+        }
+        if (*(u8 **)(D_87E1EBD8 + 12) != arg0) {
+            *(u8 **)(D_87E1EBD8 + 12) = arg0;
+            func_87F0B1A4(D_87E1EBD8 + 460, (f32 *)(D_87E1EBD8 + 136),
+                *(f32 *)(D_87E1EBD8 + 16) + *(f32 *)(*(u8 **)(D_87E1EBD8 + 12) + 72),
+                *(f32 *)(D_87E1EBD8 + 20) + *(f32 *)(*(u8 **)(D_87E1EBD8 + 12) + 76),
+                *(f32 *)(D_87E1EBD8 + 24) + *(f32 *)(*(u8 **)(D_87E1EBD8 + 12) + 80), arg4, 0);
+        }
+    }
+}
 
 void func_87E13654(void) {
     extern u8 *D_87E1EBD8;
