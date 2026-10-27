@@ -15,3 +15,23 @@ instruction after setting the flag. Empty then/else arms, goto-join,
 all omit that branch. Permuter 240 s: no improvement. Next: find a matched
 owner with the same `or v0,zero; bnez; b next; addiu v0,1` join and copy its
 source idiom.
+
+## 2026-10-27 — `func_883083C8` backward search accepted; `func_88308464` narrowed
+
+`func_883083C8` is now C (**39 words / 156 bytes**, frame 0x28). The
+branch-to-join after `flag = 1` comes from an `if (cur == 0) { flag = 1; }
+else { flag = 0; }` with **no initializer** on the flag. With
+`s32 flag = 0;` plus a then-only arm the `b` disappears; that was the
+earlier 0.92 plateau. Initialize `count = 1` immediately before the loop
+(declaring it with `= 1` hoists the `li` ahead of the flag's `or`). The same
+then-arm-jumps-over-else shape is confirmed by `func_8AF1F294`
+(`fragment44_20D3A0.c`).
+
+`func_88308464` (forward search to the `u16` limit at `arg0 + 0xC`) is still
+a requeue, now at 0.78. The same if/else flag and
+`for (i = cur + 1, count = 1; ; i++, count++)` with
+`if (i + 1 == limit) return 0;` match the control flow. The remaining
+difference is that the target recomputes `cur + 1` for the loop start (no
+CSE with the flag test) and keeps `i + 1` and `i++` as separate adds. A
+180 s permuter run reaches score 10 only with slop (`cur ^ 0` and a `u16`
+limit local).
