@@ -2,7 +2,13 @@
 
 #ifdef VERSION_US
 typedef struct {
-    f64 position[3];
+    f64 radius, unk_08, center_x, center_y, center_z;
+    u8 unk_28[32];
+    s32 flag;
+} Fragment47CurvePrefix;
+typedef struct { f64 x, y, z; } Fragment47Point;
+typedef struct {
+    Fragment47Point position;
     f64 unk_18[3];
     f64 unk_30[3];
     f64 unk_48[3];
@@ -265,7 +271,41 @@ void func_86009318(void *arg0, void *arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_860093AC.s")
+extern s32 func_86009C08(void *arg0, void *arg1);
+extern s32 func_86009EF8(void *arg0, f64 arg1);
+extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
+extern f64 func_87C0068C(void *);
+s32 func_860093AC(Fragment47MotionPrefix *object, Fragment47CurvePrefix *config, f64 threshold) {
+    f64 length;
+    f64 difference[3];
+    Fragment47Point point;
+    f64 adjustment[3];
+    f64 radius;
+    Fragment47Point origin;
+    f64 dx;
+    f64 penetration;
+    f64 dz;
+
+    radius = object->radius;
+    origin = object->position;
+    length = func_87C0068C(func_87C00160((u8 *)difference, (s32)((u8 *)config + 0x10), (u8 *)&origin));
+    penetration = (length - config->radius) + radius;
+    if (config->flag != 0) penetration = -penetration;
+    if (penetration <= 0.0) return 0;
+    if (10000.0 < penetration) return 0;
+    point.y = config->center_y - difference[1] * config->radius / length;
+    point.x = config->center_x - difference[0] * config->radius / length;
+    point.z = config->center_z - difference[2] * config->radius / length;
+    if (func_86009C08(config, (u8 *)&point) == 0) return 0;
+    if (func_86009EF8(config, point.y) == 0) return 0;
+    dx = point.x - config->center_x;
+    dz = point.z - config->center_z;
+    if (dx * dx + dz * dz < threshold * threshold) return 0;
+    func_86009FB8(config, &point, difference);
+    func_87C00198(object, object, func_87C002A8(adjustment, difference, penetration));
+    func_86007EB4(object);
+    return 1;
+}
 
 extern void func_86007EB4(void *);
 void func_860095B8(void* arg0, f64 arg1) {
@@ -284,7 +324,6 @@ void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
 extern void func_87C004C4(void *, void *, void *);
 extern void *func_87C001D0(void *, void *, void *);
 extern f64 D_8600DEB0;
-extern f64 func_87C0068C(void *);
 f64 func_860098A8(u8 *arg0) {
     f64 sp48[3];
     f64 sp30[3];
@@ -318,12 +357,7 @@ void func_86009934(Fragment47MotionPrefix *object, f64 parameter) {
 }
 
 extern f32 D_80088E50[];
-typedef struct {
-    f64 radius;
-    f64 unk_08;
-    f64 center_x, center_y, center_z;
-} Fragment47PositionConfig;
-void func_86009A90(Fragment47PositionConfig *config, f64 first_angle, f64 second_angle, f64 *destination) {
+void func_86009A90(Fragment47CurvePrefix *config, f64 first_angle, f64 second_angle, f64 *destination) {
     f64 projection;
 
     projection = config->radius * (f64)__sinf((f32)first_angle);
@@ -371,7 +405,7 @@ void func_86009D7C(void *arg0, f64 arg1, f64 arg2, f64 arg3, s32 arg4) {
 }
 
 void func_86009E54(void *destination, void *config, f64 parameter, f64 angle, s32 flags) {
-    Fragment47PositionConfig *shape = config;
+    Fragment47CurvePrefix *shape = config;
     f64 product;
     f64 ratio;
     f64 height;
@@ -388,9 +422,8 @@ s32 func_86009EF8(void *arg0, f64 arg1) {
     return (arg1 < *(f64 *)((u8 *)arg0 + 0x18)) ^ *(s32 *)((u8 *)arg0 + 0x48);
 }
 
-typedef struct { f64 x; f64 y; f64 z; } F86009F28Vector;
 
-s32 func_86009F28(void *arg0, F86009F28Vector *arg1, F86009F28Vector *arg2) {
+s32 func_86009F28(void *arg0, Fragment47Point *arg1, Fragment47Point *arg2) {
     if (func_86009C08(arg0, arg1) != 0) {
         *arg2 = *arg1;
         arg2->y = func_86009C98(arg0, arg1->x, arg1->z);
@@ -399,7 +432,6 @@ s32 func_86009F28(void *arg0, F86009F28Vector *arg1, F86009F28Vector *arg2) {
     return 0;
 }
 
-extern s32 func_86009C08(void *arg0, void *arg1);
 
 s32 func_86009FB8(void *arg0, void *arg1, void *arg2) {
     void *result;
@@ -428,7 +460,6 @@ typedef struct Copy8600A04C {
 } Copy8600A04C;
 extern Copy8600A04C D_8600D970;
 extern void func_87C010AC(void *, void *, void *);
-extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
 s32 func_8600A04C(void *arg0, void *arg1, void *arg2) {
     Copy8600A04C sp30;
     Copy8600A04C sp18;

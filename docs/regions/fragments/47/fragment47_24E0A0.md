@@ -316,3 +316,33 @@ restored neighbor's assembly failed after extraction removed that assembly
 file. A fresh canonical batch on the restored C context accepted the new
 owner. Treat this failure as a source-context/tooling issue, not another
 source-shape hypothesis.
+
+
+## 2026-10-27 — matching curve-contact adjustment
+
+Starting source #1655 (`77d68dce4f7aabc71721a8d5138bd08fff94de28`).
+`func_860093AC` passes canonical acceptance and the full US retail-ROM gate:
+524 bytes / 131 instructions, with the original 184-byte frame. The newly
+owned constant pool supplies its `10000.0` literal at 0x8600D958.
+
+Capture the object's radius before copying its position. The copied point,
+difference vector, projected point, adjustment vector, and all five scalar
+locals participate in the calculation. Preserve Y/X/Z projection order,
+the two penetration guards, the projected-point predicates, and the squared
+threshold guard before adjusting the object and calling `func_86007EB4`.
+A typed configuration radius closes the initial operand/scheduling residual;
+subsequent field-access cleanup preserves the complete object.
+
+`Fragment47Point` now serves both this owner and the existing
+`func_86009F28` point copy, and describes the motion prefix's first member.
+`Fragment47CurvePrefix` combines the earlier 40-byte position view with the
+observed flag at offset 0x48. `func_86009D7C` writes that flag and the
+configuration's radius and center fields. Bytes 0x28–0x47 remain opaque;
+the prefix does not establish the complete allocation size.
+
+Eighteen complete-module normal/blank-prefix controls cover point-type
+consolidation, curve-prefix consolidation, and typed field access, including
+all eight combinations. Every combination preserves bytes, section extents,
+and relocations. The selected source consolidates both types, uses direct
+member access for the origin copy, and removes duplicate externs. The
+GS/Stadium 1 maps provide no supported function rename.
