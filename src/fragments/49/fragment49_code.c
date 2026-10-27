@@ -513,7 +513,29 @@ void func_8610167C(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f
     *arg6 = sqrtf((x * x) + (y * y));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86101758.s")
+extern void * D_87F119DC;
+f32 func_86101758(f32 arg0, f32 arg1) {
+    f32 result;
+    f32 distance;
+    f32 t;
+    u8 *ptr;
+
+    result = 0.0f;
+    ptr = *(u8 **)((u8 *)D_8610AD20 + 0xD38);
+    if (ptr != NULL) {
+        do {
+            // func_8610167C: distance from (arg0, arg1) to the line through both points, and the projection parameter t.
+            func_8610167C(*(f32 *)((u8 *)D_87F119DC + 0x48), *(f32 *)((u8 *)D_87F119DC + 0x4C), *(f32 *)(ptr + 0x48),
+                          *(f32 *)(ptr + 0x4C), arg0, arg1, &distance, &t);
+            if (t > 0.0f && t < 1.0f &&
+                distance < ((*(f32 *)((u8 *)D_8610AD20 + 0x9768) * 0.04f * 700.0f + 19.2f) * 0.65f * 1.7f)) {
+                result += 70.0f;
+            }
+            ptr = *(u8 **)(ptr + 4);
+        } while (ptr != NULL);
+    }
+    return result;
+}
 
 extern void * D_87F119DC;
 s32 func_861018D8(f32 arg0, f32 arg1) { f32 *coord; f32 y; f32 dx; f32 dy; s32 result = 1; coord = &arg1; if (arg0 < -364.41092f) { result = 0; } else { y = *(f32 *)((u8 *)D_87F119DC + 0x48); if (arg0 < y) { dx = y - arg0; dy = *(f32 *)((u8 *)D_87F119DC + 0x4C) - *coord; if ((arg0 - -364.41092f) * 2.0f < sqrtf(dx * dx + dy * dy)) result = 0; } } return result; }

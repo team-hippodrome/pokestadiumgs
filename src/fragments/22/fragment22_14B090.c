@@ -208,11 +208,24 @@ void func_827010F0(void* arg0) {
 }
 
 s32 D_827032B8 = 8;
-s32 D_827032BC = 5;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82701188.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82701278.s")
+void func_82701278(void* arg0) {
+    static s32 D_827032BC = 5;
+    Fragment22RowEntry* entry;
+    s32 counter;
+
+    entry = arg0;
+    entry->counter++;
+    counter = entry->counter;
+    if (counter < D_827032BC) {
+        entry->alpha = 255 - (counter * 255) / D_827032BC;
+    } else {
+        entry->state = 0;
+        entry->alpha = 255;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82701300.s")
 
