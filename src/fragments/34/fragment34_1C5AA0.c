@@ -834,5 +834,58 @@ void func_8850C948(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850C998.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850CED8.s")
+s32 func_8850CED8(s32 arg0) {
+    s32 var_v1;
+
+    var_v1 = 0;
+    switch (arg0) {
+        case 1:
+            if ((*(s32 *)((u8 *)&D_88523030 + 0) == 3) && (*(s16 *)((u8 *)&D_88523030 + 0x18) == 0)) {
+                var_v1 = 1;
+            }
+            break;
+        case 2:
+            if ((*(s32 *)((u8 *)&D_88523030 + 0) == 7) && (*(s16 *)((u8 *)&D_88523030 + 0x18) == 0)) {
+                var_v1 = 1;
+            }
+            break;
+        case 3:
+            if (*(s32 *)((u8 *)&D_88523030 + 0) == 0) {
+                var_v1 = 1;
+            }
+            break;
+        case 4:
+            if ((*(s32 *)(D_88523100 + 0) == 2) && (*(f32 *)(D_88523100 + 0x20) <= 1.0f)) {
+                var_v1 = 1;
+            }
+            break;
+        case 5:
+            if ((*(s32 *)(D_88523100 + 0x24) == 2) && (*(f32 *)(D_88523100 + 0x44) <= 1.0f)) {
+                var_v1 = 1;
+            }
+            break;
+        case 6:
+            if (*(s32 *)((u8 *)&D_88523030 + 0) == 0xA) {
+                var_v1 = 1;
+            }
+            break;
+        case 8:
+            if ((*(s32 *)(D_88523100 + 0) == 7) && (*(s32 *)(D_88523100 + 0x24) == 7)) {
+                var_v1 = 1;
+            }
+            break;
+        case 7:
+        case 9:
+            if ((*(s32 *)(D_88523100 + 0) == 0) && (*(s32 *)(D_88523100 + 0x24) == 0)) {
+                var_v1 = 1;
+            }
+            break;
+        case 10:
+            if (*(s32 *)((u8 *)&D_88523030 + 0) == 0) {
+                var_v1 = 1;
+            }
+            break;
+    }
+    return var_v1;
+}
 #endif

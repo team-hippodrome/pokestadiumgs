@@ -2,7 +2,68 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00020.s")
+void func_82F00020(u32 arg0) {
+    switch (arg0) {
+    case 7:
+        func_8004C990(332, 0);
+        return;
+    case 26:
+        func_8004C990(332, 1);
+        return;
+    case 23:
+        func_8004C990(332, 2);
+        return;
+    case 27:
+        func_8004C990(332, 4);
+        return;
+    case 1:
+        func_8004C990(332, 5);
+        return;
+    case 20:
+        func_8004C990(332, 6);
+        return;
+    case 2:
+    case 6:
+        func_8004C990(332, 7);
+        return;
+    case 8:
+        func_8004C990(332, 8);
+        return;
+    case 22:
+        func_8004C990(332, 9);
+        return;
+    case 4:
+        func_8004C990(332, 10);
+        return;
+    case 25:
+        func_8004C990(332, 11);
+        return;
+    case 0:
+        func_8004C990(332, 12);
+        return;
+    case 3:
+        func_8004C990(332, 13);
+        return;
+    case 24:
+        func_8004C990(332, 14);
+        return;
+    case 5:
+        func_8004C990(332, 15);
+        return;
+    case 9:
+        func_8004C990(332, 16);
+        return;
+    case 21:
+        func_8004C990(332, 17);
+        return;
+    case 19:
+        func_8004C990(332, 3);
+        return;
+    default:
+        func_8004C990(332, 12);
+        return;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F001CC.s")
 
@@ -193,7 +254,6 @@ extern s32 func_800647C8(u8);
 extern s32 HAL_Strcmp(const s8 *, const s8 *);
 extern u8 *func_8004C874(s32, s32);
 extern u8 D_82F031CC[];
-extern u8 D_82F031D0[];
 // Returns the gender-symbol string shown after a Pokemon's name. func_80064474
 // returns 0 (genderless), 1 or 2 from the species byte at +0x0 and the word at
 // +0x16. Species 29 and 32 (Nidoran) get the empty string D_82F031CC while the
@@ -211,7 +271,7 @@ u8 *func_82F00C2C(u8 *pokemon) {
     }
     switch (gender) {
         case 0:
-            return D_82F031D0;
+            return "";
         case 1:
             return func_8004C874(13, 29);
         case 2:

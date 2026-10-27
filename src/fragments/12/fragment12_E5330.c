@@ -376,7 +376,42 @@ void func_81401404(s32 arg0, s32 arg1, f32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81401DB0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_8140225C.s")
+extern u8 D_80094F50[];
+void func_8140225C(s32 x, s32 y, s32 mode, u8 type) {
+    u8 *image;
+
+    image = D_81407810;
+    switch (type) {
+        case 1: image = D_814077E8; break;
+        case 2: image = D_814077EC; break;
+        case 4: image = D_814077F0; break;
+        case 8: image = D_814077F4; break;
+        case 3: image = D_814077F8; break;
+        case 5: image = D_814077FC; break;
+        case 9: image = D_81407800; break;
+        case 6: image = D_81407804; break;
+        case 10: image = D_81407808; break;
+        case 12: image = D_8140780C; break;
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D1FC(image);
+    gDPSetEnvColor(D_800D0510++, 0, 0, 0, 255);
+    if (mode != 0) {
+        func_81602240(x, y,
+            *(u16 *)(image + 0),
+            *(u16 *)(image + 2),
+            *(u16 *)(image + 0),
+            *(u16 *)(image + 2),
+            -1.0f, -1.0f);
+    } else {
+        func_81602240(x, y,
+            *(u16 *)(image + 0),
+            *(u16 *)(image + 2),
+            0, 0,
+            1.0f, 1.0f);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 extern u8 D_80094F50[];
 

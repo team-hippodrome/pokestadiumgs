@@ -153,7 +153,34 @@ s16 func_84105E9C(s16 sign, u16 range) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84106540.s")
+s16 func_84106540(void *arg0, void *arg1, u16 arg2, unsigned long arg3) {
+    s16 result;
+
+    switch (arg2) {
+        case 1:
+            result = 0;
+            break;
+        case 2:
+            result = (*(u8 *)((u8 *)arg1 + 3) * *(s8 *)((u8 *)arg0 + 6)) + arg3;
+            break;
+        case 3:
+            result = arg3;
+            break;
+        case 4:
+            result = arg3;
+            break;
+        case 5:
+            result = (*(u8 *)((u8 *)arg1 + 3) * *(s8 *)((u8 *)arg0 + 6)) + arg3;
+            break;
+        case 6:
+            result = *(s8 *)((u8 *)arg0 + 6);
+            break;
+        default:
+            result = 0;
+            break;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -374,5 +401,45 @@ s32 func_84107948(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84107B68.s")
+void func_84107B68(void) {
+    s32 i;
+    u8 *entry;
+
+    entry = D_84190150;
+    i = 0;
+loop:
+    if ((*(u8 *)(entry + 8) & 1) != 0) {
+        if (*(u8 *)(entry + 4) != 0) {
+            (*(u8 *)(entry + 4))--;
+        }
+        if (*(u8 *)(entry + 4) == 0) {
+            switch (*(u8 *)(entry + 9)) {
+            case 0: func_84107998(entry); break;
+            case 1: func_84107998(entry); break;
+            case 7: func_841076B8(entry); break;
+            case 2: func_841077E8(entry); break;
+            case 4: func_84107838(entry); break;
+            case 5: func_84107948(entry); break;
+            case 6: func_84107948(entry); break;
+            case 8: func_841078B8(entry); break;
+            }
+            if (*(s8 *)(entry + 7) > 0) {
+                //!bug: byte 7 is read as s8, so it never equals 255 and this branch never runs
+                if (*(s8 *)(entry + 7) == 255) {
+                    *(u8 *)(entry + 4) = *(u8 *)(entry + 5);
+                } else {
+                    *(s8 *)(entry + 6) += 1;
+                    if (*(s8 *)(entry + 7) == *(s8 *)(entry + 6)) {
+                        func_84105E20(entry);
+                    } else {
+                        *(u8 *)(entry + 4) = *(u8 *)(entry + 5);
+                    }
+                }
+            }
+        }
+    }
+    i++;
+    entry += 0xC;
+    if (i != 64) goto loop;
+}
 #endif
