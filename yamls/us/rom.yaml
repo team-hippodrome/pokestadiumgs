@@ -1129,6 +1129,8 @@
     - [0x216BB0, rodata]
     - [0x217840, .rodata, fragments/44/fragment44_1FD260]
     - [0x217930, rodata,  fragments/44/fragment44_rodata_tail]
+    - [0x2186F0, .rodata, fragments/44/fragment44_212740] # Strings, jump tables, float literals.
+    - [0x218800, rodata]
   
   - name: fragment45
     type: code

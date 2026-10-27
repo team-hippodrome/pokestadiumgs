@@ -2,6 +2,13 @@
 
 
 #ifdef VERSION_US
+// Not referenced by code or data (debug format strings); they open this file's .rodata.
+const char D_8AF2A480[] = "ogMedalCheck() : Congratulation !!!  clear  Class (%d) !! \n";
+const char D_8AF2A4BC[] = "ogMedalCheckReigai() MORAISOKONE !!! \n";
+const char D_8AF2A4E4[] = "CLASS FUKKATU !!!!\n";
+const char D_8AF2A4F8[] = "medal_clear_event_flg = %d\n";
+const char D_8AF2A514[] = "ogSetPage_QUIZ_Recover() mode = %d\n";
+const char D_8AF2A538[] = "ogSetPage_BATTLE_Recover() class = %d\n";
 extern u8 func_80054794(void);
 s32 func_8AF244D0(void) {
     s32 var_v1;
