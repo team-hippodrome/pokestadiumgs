@@ -3437,14 +3437,16 @@ SECTIONS
         build/src/fragments/47/fragment47_24AE60.o(.data);
         fragments_47_fragment47_24E0A0 = .;
         build/src/fragments/47/fragment47_24E0A0.o(.data);
+        fragments_47_fragment47_data_data = .;
+        build/asm/us/data/fragments/47/fragment47_data.data.o(.data);
         fragments_47_fragment47_2507E0 = .;
         build/src/fragments/47/fragment47_2507E0.o(.data);
         fragments_47_fragment47_251C30 = .;
         build/src/fragments/47/fragment47_251C30.o(.data);
         fragments_47_fragment47_2533F0 = .;
         build/src/fragments/47/fragment47_2533F0.o(.data);
-        fragments_47_fragment47_data_data = .;
-        build/asm/us/data/fragments/47/fragment47_data.data.o(.data);
+        fragments_47_fragment47_data_tail_data = .;
+        build/asm/us/data/fragments/47/fragment47_data_tail.data.o(.data);
         fragment47_DATA_END = .;
         fragment47_DATA_SIZE = ABSOLUTE(fragment47_DATA_END - fragment47_DATA_START);
         fragment47_RODATA_START = .;

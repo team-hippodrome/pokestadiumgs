@@ -195,31 +195,24 @@ if [ "${library_changed}" -eq 1 ]; then
     make libclean
 fi
 
-# Rebuild a direct-IDO seed when extraction or libclean removed the baked map.
-# The coalescing wrapper needs that map to resolve dlabels before it can safely
-# apply an opted-in fold. The final ROM build is always forced after the PR
-# overlay: the image contains a retail seed ROM, and timestamp-based make
-# decisions must never be allowed to accept that seed without compiling the
-# checked-out sources.
+# Keep the baked linked map while invalidating compiled outputs. Coalescing
+# resolves fixed data addresses from it until the final link replaces it.
+# A direct-CC seed bypasses target-specific asm-processor recipes, drops
+# GLOBAL_ASM owners, and can leave a failed-link map with shifted addresses.
 if [ "${split_changed}" -eq 1 ]; then
+    saved_map="$(mktemp /tmp/pokestadiumgs-linked-map.XXXXXX)"
+    if [ -f /work/build/pokestadiumgs-us.map ]; then
+        cp /work/build/pokestadiumgs-us.map "$saved_map"
+    fi
     rm -rf /work/build
+    if [ -s "$saved_map" ]; then
+        mkdir -p /work/build
+        cp "$saved_map" /work/build/pokestadiumgs-us.map
+    fi
+    rm -f "$saved_map"
 elif [ "${linker_changed}" -eq 1 ]; then
-    rm -f /work/build/pokestadiumgs-us.map \
-        /work/build/pokestadiumgs-us.elf \
+    rm -f /work/build/pokestadiumgs-us.elf \
         /work/build/pokestadiumgs-us.z64
-fi
-if [ ! -f /work/build/pokestadiumgs-us.map ]; then
-    echo "gate-pr.sh: linked map missing; rebuilding direct-IDO seed" >&2
-    # CC= on the make command line overrides every target-specific CC
-    # assignment in the Makefile, including the one that routes
-    # still-unmatched GLOBAL_ASM files through asm-processor. That turns
-    # those files into empty stubs for this seed build, which can fail to
-    # link if anything (for example an aliases.ld entry) references one of
-    # the now-missing symbols. This seed build only exists to hand the
-    # coalescing wrapper a reference map; it is not the gate verdict, and
-    # the real, correctly-compiled build always runs next regardless of
-    # whether this step produced a map. Tolerate its failure here.
-    make CC=tools/ido/linux/7.1/cc COMPARE=0 -j2 rom || true
 fi
 
 # Produce the proposed coverage snapshot even when the ROM build later
