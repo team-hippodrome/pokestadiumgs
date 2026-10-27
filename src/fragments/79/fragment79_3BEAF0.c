@@ -144,7 +144,37 @@ void func_8414F8B4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414FA3C.s")
+extern u8 *func_84154B30(u8);
+void func_8414FA3C(void *arg0) {
+    u8 side = func_84154B24();
+    u8 other = 1 - side;
+    u8 ok = 1;
+    u8 *self;
+    u8 *mon;
+
+    self = func_84154B64(side);
+    mon = func_84154B64(other);
+    if (mon[0xD] >= 10) {
+        ok = 0;
+    }
+    if (mon[0x10] >= 10) {
+        ok = 0;
+    }
+    if (func_84154B30(side)[2] >= 2) {
+        if (mon[0x13] >= 10) {
+            ok = 0;
+        }
+        if (mon[0xE] >= 10) {
+            ok = 0;
+        }
+        if (mon[0x11] >= 10) {
+            ok = 0;
+        }
+    }
+    if (ok) {
+        func_8414F268(arg0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
