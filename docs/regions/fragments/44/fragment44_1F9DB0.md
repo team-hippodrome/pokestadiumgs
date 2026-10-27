@@ -21,3 +21,10 @@ on the `s16` mode `D_8AF2ECF8`. Modes 0 and 2 store 48/49 into halfword
 second record's +2 flags. Mode 1 stores 269/270 and sets or clears that
 bit according to this file's `func_8AF00020()`. A plain `switch` with
 `case 0: case 2:` sharing one arm matches directly.
+
+## 2026-10-28: `func_8AF0C6F8` handoff
+
+requeue (0.54). Counts the distinct first-byte ids across 0x14-byte records
+into `D_8AF2E8F8`. The lookup cursor is not reset between records: retail
+sets it once before the outer loop. The nested-while draft is 0.54; retail
+lays out three blocks with back-branches and an `s16` count.
