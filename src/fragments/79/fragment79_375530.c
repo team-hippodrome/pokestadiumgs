@@ -73,7 +73,23 @@ u8 *func_84105D40(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84105DD0.s")
+extern u8 * func_84105D40(void);
+u8 *func_84105DD0(void) {
+    u8 *entry;
+
+    entry = func_84105D40();
+    if (entry != NULL) {
+        entry[8] = 0;
+        entry[4] = 0;
+        entry[5] = 0;
+        entry[6] = 0;
+        entry[7] = 1;
+        entry[8] = 0; // FAKE: repeated clear before the flag is set
+        *(s32 *)entry = 0;
+        entry[8] |= 1;
+    }
+    return entry;
+}
 #endif
 
 #ifdef VERSION_US
