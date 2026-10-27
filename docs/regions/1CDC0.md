@@ -12,3 +12,22 @@ checked for duplicate owner work. No CI, verification, linker, or data changes
 were made. These attempts are failures, not claimed matches. The restored
 186-owner workspace passes the US retail checksum with default host syntax
 checks. Unknown tokens retain their existing address/offset names.
+
+## 2026-10-28 — `func_8001FA80`: requeue (layout findings)
+
+requeue. GS's `AudioSeq_InitSequencePlayers`. Audio-context layout it establishes:
+- five 0x160-byte sequence players pooled at context + 0x346C (`D_8011F2FC`), ending exactly at the layers;
+- 64 0x90-byte layers at + 0x3B4C, with the enable bit 7 of byte 0 and `channel` at + 0x60;
+- a pointer table `seqPlayers[5]` at + 0x604C;
+- an extra player at + 0x60B4 (`D_80121F44`) and its single extra channel at + 0x6214 (`D_801220A4`). The channel's `seqPlayer` is at + 0x50 (`D_801220F4`), and the six words at + 0x54 are zeroed by a copt-peeled loop.
+
+The body:
+- `AudioLayerPool_Init`; clear each layer's channel and enable bit;
+- set and init the 5 player slots;
+- init the extra player; link and disable the channel; zero `unk_54[6]`; `func_8001C404(channel)`;
+- player `channels[0] = channel`, bytes 4/5 = 0xFF, + 0x18 and + 0x78 = `D_8008F988`, + 0x90 = 0, + 0x10 = 0, + 0xDC = 0, enabled = 1, finished = 0.
+
+Best 0.75. Two problems remain:
+- Retail ends the slot loop with `bne` on the pointer-table induction (`D_8011BE90 + 4i` against `D_8011BEA4`); IDO picks the pool pointer and `sltu`.
+- Retail forms every extra-player field address with its own `lui $at`, while IDO keeps `&player` in `$s0` once it is passed to `func_8001F9B0`. Routing everything through a context view makes it worse (0.73).
+Next: test an `extern` context *struct* (not the cast `u8[]`) in a scratch file, and an index loop whose body uses only `seqPlayers[i]`.
