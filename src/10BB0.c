@@ -361,7 +361,7 @@ void func_800107CC(s32 arg0) {
 extern u8 D_8011EBF0;
 extern S1_unk_func_81206FA0 D_8011EC20;
 u8 *func_80012630();
-u8 *func_80012BC4();
+u8 *func_80012BC4(u32);
 void func_8001082C(void *arg0) {
     *(s32 *)(D_8011BE90 + 0x2D34) = *(s32 *)(D_8011BE90 + 0x2D30);
     GbApu_InitAllocator(&D_8011EBF0, GbApu_Alloc(&D_8011EBC0, *(s32 *)((u8 *)arg0 + 0)), *(s32 *)((u8 *)arg0 + 0));
@@ -1283,7 +1283,26 @@ void func_80012A90(u8 *entry) {
 
 void func_80012B80(u8 *arg0, u8 *arg1) { if (arg1 != 0) { if ((*((s32 *) (arg0 + 8))) == (*((s32 *) (arg1 + 4)))) { *((s32 *) (arg1 + 4)) = *((s32 *) (arg0 + 0xC)); *arg1 = ((*arg1) & 0xFFF3) | (((*((s8 *)(arg0 + 1)) << 1) << 1) & 0xC); } } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_80012BC4.s")
+u8 *func_80012BC4(u32 size) {
+    u8 *addr;
+    SampleCacheEntry *entry;
+    AudioSampleCache *cache;
+
+    cache = (AudioSampleCache *)&D_8011F110;
+    addr = (u8 *)GbApu_Alloc((S1_unk_func_81206FA0 *)&cache->pool, size);
+    if (addr == NULL) {
+        return NULL;
+    }
+    if (cache->numEntries == 1) {
+        return NULL;
+    }
+    entry = &cache->entries[cache->numEntries];
+    entry->inUse = 1;
+    entry->allocatedAddr = addr;
+    entry->size = size;
+    cache->numEntries++;
+    return (u8 *)entry;
+}
 
 void func_80012C64(u8 *arg0, s32 arg1, s32 arg2, s32 arg3) {
     u8 value = arg0[2];
