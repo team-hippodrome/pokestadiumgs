@@ -5651,6 +5651,7 @@ SECTIONS
         fragment85_RODATA_START = .;
         build/asm/us/data/fragments/85/fragment85_header.o(.rodata);
         build/src/fragments/85/fragment85_code.o(.rodata);
+        build/asm/us/data/434240.rodata.o(.rodata);
         fragment85_RODATA_END = .;
         fragment85_RODATA_SIZE = ABSOLUTE(fragment85_RODATA_END - fragment85_RODATA_START);
     }

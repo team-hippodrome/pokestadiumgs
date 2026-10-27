@@ -3,12 +3,11 @@
 
 
 #ifdef VERSION_US
-extern f32 D_8FD02120;
 s32 func_8FD00020(f32 arg0) {
     s32 temp_v1;
 
     temp_v1 = (s32) arg0 & 0x1F;
-    return ((temp_v1 << 0xA) + (s32) (((arg0 - (f32) temp_v1) + D_8FD02120) * 1024.0f)) & 0xFFFF;
+    return ((temp_v1 << 0xA) + (s32) (((arg0 - (f32) temp_v1) + 0.000488f) * 1024.0f)) & 0xFFFF;
 }
 #endif
 

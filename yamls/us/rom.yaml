@@ -1764,6 +1764,8 @@
     - [0x4320C0, textbin, fragments/85/fragment85_header]
     - [0x4320E0, c,       fragments/85/fragment85_code]
     - [0x434040, data,    fragments/85/fragment85_data]
+    - [0x4341B0, .rodata, fragments/85/fragment85_code] # Strings, jump tables, float literals.
+    - [0x434240, rodata]
 
   - name: fragment86
     type: code
