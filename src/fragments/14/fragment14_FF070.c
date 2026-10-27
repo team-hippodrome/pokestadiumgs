@@ -789,7 +789,7 @@ s32 func_8130AA54(u8 *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130B06C.s")
 
-extern void func_8130AEF4(void *, void *, u8);
+extern void func_8130AEF4(void *, void *, s32);
 void func_8130B0E0(void *arg0) {
     u8 *new_var;
     u8 *base = ((u8 *)arg0) + 0x8000;
