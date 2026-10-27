@@ -55,7 +55,47 @@ void func_86409260(void) {
     func_87F0277C();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86409280.s")
+typedef struct unk_func_86409280_item {
+    /* 0x000 */ u8 unk_000[0x38];
+    /* 0x038 */ void *unk_038;
+    /* 0x03C */ u8 unk_03C[0x150];
+} unk_func_86409280_item;
+typedef struct unk_func_86409280_record {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ u8 unk_0C[4];
+} unk_func_86409280_record;
+typedef struct unk_func_86409280 {
+    /* 0x0000 */ u8 unk_0000[0x14];
+    /* 0x0014 */ unk_func_86409280_item unk_0014[12];
+    /* 0x12A4 */ unk_func_86409280_record unk_12A4[12];
+    /* 0x1364 */ s32 unk_1364;
+} unk_func_86409280;
+extern void *func_8004C990(s32, s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 func_80040E80(s32, void *);
+extern s32 func_87F08E3C(void *, s32);
+extern void func_87F0252C(void *, void *, void *, s32);
+extern u8 D_86409840[];
+extern void func_8004C8C0(s32);
+void func_86409280(unk_func_86409280 *arg0, void *arg1) {
+    s32 pool;
+    s32 dl;
+    s32 i;
+
+    func_8004C8C0(384);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    arg0->unk_1364 = func_80040E80(pool, D_86409840);
+    MainPool_FinalizeAllocation(pool);
+    dl = func_87F08E3C(func_8004C990(384, 0), 0x0F000000);
+    func_87F0252C(arg1, arg0, arg0->unk_0014, 12);
+    for (i = 0; i < 12; i++) {
+        arg0->unk_0014[i].unk_038 = &arg0->unk_12A4[i];
+        arg0->unk_12A4[i].unk_08 = dl;
+    }
+}
 
 void func_86409378(u8 *arg0, s32 arg1, s32 arg2) {
     u8 *ptr;
