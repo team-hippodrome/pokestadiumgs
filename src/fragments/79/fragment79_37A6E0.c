@@ -179,7 +179,7 @@ extern s32 func_8411DC80(u16, s32 *, s32);
 extern s32 func_8411E140(s32);
 extern void func_8410B35C(u8 *, void *, s16);
 extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 
 void func_8410B420(u8 *arg0, void *arg1, s16 arg2) {
     s16 var_s2;
@@ -220,7 +220,7 @@ void func_8410B578(f32 arg0) {
 void func_8410B594(u8 *arg0) {
     extern u8 *D_841911E0;
     extern void func_8411E084(u8 *, f32 *);
-    extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+    extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
     f32 values[3];
 
     func_8411E084(arg0, values);
@@ -236,7 +236,7 @@ void func_8410B594(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
 extern s32 func_8411DC80(u16, s32 *, s32);
@@ -314,7 +314,7 @@ void func_8410B8FC(f32 *arg0, f32 *arg1, s16 arg2) {
 extern u8 *D_841911E8;
 extern u8 *func_8410B330(u8 *);
 extern void func_8410BDA0(u8 *, s32);
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_84120BB4(u8 *, s32);
 void func_8410C304(u8 *arg0, s32 arg1, s32 arg2) {
     u8 *temp_v0;
@@ -347,7 +347,7 @@ extern u8 *func_8410B330(u8 *);
 extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
 extern void func_841203B4(u8 *, f32, f32);
 extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 
 void func_8410C720(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5) {
@@ -401,7 +401,7 @@ extern s32 func_8411DC80(u16, s32 *, s32);
 extern s32 func_8411E140(s32);
 extern void func_8410B974(u8 *, void *, s16, s32, s32);
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 void func_8410C934(u8 *arg0, s32 arg1, s16 arg2) {
     s16 var_a2;
     s16 var_t6 = 1;
@@ -963,7 +963,7 @@ extern s32 D_841911EC;
 extern s32 D_84184148;
 extern u8 *func_8410B330(u8 *);
 extern void func_84120960(u8 *, s32);
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
 void BattleAnim_ModelDispatch_029(u8 *arg0, s32 arg1) {
     D_841911E8 = func_8410B330(arg0);
@@ -1073,18 +1073,6 @@ extern u8 D_84185264;
 extern s32 D_841910D8;
 extern s32 D_841911EC;
 extern s32 D_84184148;
-
-/* IDO colors the CSE'd D_84185258 row base v0 here; retail keeps it v1 for
-   both Vec3f_SetComponentsDuplicate blocks. The 8 register words are the
-   objdump-verified rotation (offsets 0x78-0x84, 0xD4-0xE0). */
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0x78, 0x01091021, 0x01091821)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0x7C, 0x844A0000, 0x846A0000)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0x80, 0x844B0002, 0x846B0002)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0x84, 0x844C0004, 0x846C0004)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0xD4, 0x01CF1021, 0x01CF1821)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0xD8, 0x84580006, 0x84780006)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0xDC, 0x84590008, 0x84790008)
-#pragma REWRITE_FUNCTION_WORD(func_84110118, 0xE0, 0x8448000A, 0x8468000A)
 
 /* mkdraft:func_84110118 begin */
 void func_84110118(u8 *arg0, s32 arg1) {
