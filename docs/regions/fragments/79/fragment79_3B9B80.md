@@ -12,6 +12,6 @@ Independent validation against master `21d7fb8c6505eb8e66031331e63eabf8d2d8fe96`
 
 Current-master integration: after foreign #948 advanced master to `e5264768303a56409602fd72f01f029a60d54de1`, the unchanged accepted owner was rebuilt with default host syntax checks and `COMPARE=1`; the explicit retail checksum passed again. The PR was returned to draft before its branch refresh so validation against the old base cannot authorize a merge.
 
-## 2026-10-27 — `func_8414C858`: requeue
+## 2026-10-27 — `func_8414C858`: matched
 
-requeue. Comparator: battle = func_84154B0C(); a = func_8414C7D4(arg0[6 + battle[0x19A]]), b = same for battle[0x19B]; returns 1 if b < a, 0 if a < b, else whether the u16 at battle + [0x19B] * 0xCC + 0x42 is below the one for [0x19A]. Target spills the two indices and `a` as packed bytes at sp+0x19..0x1B (frame 0x20) and returns through a result variable; plain u8 locals spill as words (frame 0x28), a `u8 side[2]` array still frames 0x28. Best 0.29.
+Comparator: `records = func_84154B0C()` (declared with no parameters, as fragment79_3B7EA0 does); `first = func_8414C7D4((arg0 + 6)[records[0x19A]])`, `second` likewise for `records[0x19B]`; returns 1 if `second < first`, 0 if `first < second`, otherwise whether the `unk_42` halfword of 0xCC-byte record `records[0x19B]` is below that of `records[0x19A]` (`unk_func_84154B0C`). `u8` index locals spill as bytes; `(arg0 + 6)[index]` gives retail's `addu` operand order. `second` is an `s32` narrowed with `(u8)` only in the second comparison, marked `// FAKE` (diff score 120 without it).

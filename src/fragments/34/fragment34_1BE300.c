@@ -24,7 +24,31 @@ u8 *func_88500CF0(u8 arg0) {
     return (u8 *)&state->rows[state->rowIndex].items[state->itemIndex];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88500D60.s")
+extern u8 *D_8850D6D0;
+extern u8 *func_8004D878(u8 *dst, s32 id, u8 *src);
+
+// Row arg0 of the current group (byte 0x0A of *D_8850D6D0) holds a count byte followed by
+// 0x58-byte entries. Each entry is passed to func_8004D878 with a destination that starts at
+// the buffer selected by byte 0x11 (word table at +0x14) and advances 0xC80 per entry; byte
+// 0x11 is then toggled to select the other buffer.
+void func_88500D60(s8 arg0) {
+    u8 *group;
+    u8 *entry;
+    u8 *dst;
+    s32 i;
+
+    i = 0x0A; // FAKE: index through a variable; diff score 40 without it.
+    group = D_8850D6D0[i] * 0xA960 + arg0 * 0xA74 + 0xC8C + &D_8850D6D8;
+    do {} while (0); // FAKE: diff score 40 without it.
+    entry = group + 4;
+    dst = ((u8 **)(D_8850D6D0 + 0x14))[D_8850D6D0[0x11]];
+    for (i = 0; i < group[0]; i++) {
+        func_8004D878(dst, entry[0], entry);
+        dst += 0xC80;
+        entry += 0x58;
+    }
+    D_8850D6D0[0x11] ^= 1;
+}
 
 extern u8 *D_8850D6D0;
 s8 func_88500E4C(void) {

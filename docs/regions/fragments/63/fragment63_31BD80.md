@@ -111,6 +111,6 @@ void func_87E18410(u8 *arg0) {
 
 ```
 
-## 2026-10-27 — `func_87E18738`: requeue
+## 2026-10-27 — `func_87E18738`: matched
 
-requeue (0.95). In mode 5: gDPPipeSync, gDPSetCombine(0x50FFFF, 0xFFFFF238), gDPSetEnvColor(v, v, v, 255) with v = byte +0x3C of D_8009491C (read through a block-top `obj = D_8009491C` local), gSPSegment(15, *(u32 *)(*(u8 **)(model + 4) + 8)) and gSPDisplayList(*(Gfx **)model) with model = *(u8 **)(D_8009491C + 0x14), then func_8003CD84(). Only residual: the env-color word is built <<24, <<16, <<8 in the target; the macro with a repeated obj[0x3C] gives <<8, <<24, <<16, and a byte local is much worse (0.50). Permuter 90 s: 35 -> 15.
+In mode 5: gDPPipeSync, gDPSetCombine(0x50FFFF, 0xFFFFF238), an environment color (v, v, v, 255) with v = byte +0x3C of `D_8009491C` (read through `obj = D_8009491C`), gSPSegment(15, `*(u32 *)(*(u8 **)(model + 4) + 8)`) and gSPDisplayList(`*(Gfx **)model`) with `model = *(u8 **)(D_8009491C + 0x14)`, then `func_8003CD84()`. The environment-color command is written out by hand (`w0 = 0xFB000000`, `w1 = (v << 16) | (v << 8) | (v << 24) | 0xFF`), marked `// FAKE`: `gDPSetEnvColor` ORs the channels red, green, blue and scores 15.

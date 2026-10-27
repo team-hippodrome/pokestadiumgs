@@ -69,6 +69,6 @@ Fleet main afee707ab78d3f63f2f9deeadc7551ec0080eeed has no exact/solved owner at
 
 Based on master 224774092bdc686b39361e5308a59d6567d7ed75. Full US rebuild with default host syntax checks and COMPARE=1, then explicit md5sum -c baseroms/us/checksum.md5 passes retail 1561c75d11cedf356a8ddb1a4a5f9d5d. Source/object/build evidence for both variants remains in work/session-53. No new semantic names, tokens, fakes, helper edits or verification changes.
 
-## 2026-10-27 — `func_81310800`: requeue
+## 2026-10-27 — `func_81310800`: matched
 
-requeue. table = D_813120E0, or (if word +0xA8) D_81312128 when arg0[*(s32 *)(arg0 + 0x48) + 0x8C] == 6 else D_81312104; if func_81311C70(arg0, table, arg0[0x39], -1) set byte +0x38 to 3 (word +0xA8 set) or 4. Best 0.79: the target hoists &D_81312104 into v0 before the compare and copies it in the else arm (`b join; or a1,v0`), and adds `arg0 + index` (not index + arg0). if/else, ternary, pre-assignment, [3][0x24] table array: all identical. Permuter 180 s: 255 -> 225.
+`arg0` is typed as a local `unk_func_81310800` record (`unk_38` phase byte, `unk_39`, `unk_48` entry index, `unk_8C[]` per-entry bytes, `unk_A8` any-selectable flag). The table argument is one nested conditional inside the `func_81311C70` call (`unk_A8 ? (unk_8C[unk_48] == 6 ? D_81312128 : D_81312104) : D_813120E0`), which produces retail's hoisted `&D_81312104` and else-arm copy; the struct member access gives the `arg0 + index` operand order that the raw `u8 *` index spellings reverse. The result store is `arg0->unk_38 = unk_A8 != 0 ? 3 : 4`, which allocates 4 to t2 and 3 to t1 as retail does.
