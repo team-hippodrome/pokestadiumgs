@@ -147,3 +147,14 @@ object was the padded one; the full-ROM gate is authoritative.
 
 The switch owners `func_88900F54`, `func_88901A24` and `func_88902624` can
 now be written as C `switch`es.
+
+## 2026-10-27 — `func_88902624`: layout-prerequisite
+
+A natural C `switch (kind)` (cases 0–7 storing the evolution helpers'
+results to `D_88904190[0x134]`, then the `0x4558434C` pool / `BinArchive_Open`
+/ `func_80004B4C` lookup into `[0x135]`) is normalized 1.0 / raw 0.9896 (the
+only text difference is the jump-table `%lo`). The `.rodata` link shape is
+wrong, though (0x30 → 0x50). asm-processor emits the assembly owners' tables
+as late rodata after all C rodata, so this table would land before
+`func_88900F54`'s and `func_88901A24`'s. Match those two first (or move their
+tables out of `.late_rodata`); then this owner should gate as written.
