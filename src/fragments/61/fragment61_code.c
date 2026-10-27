@@ -391,7 +391,25 @@ void func_86B05484(f32 arg0, f32 arg1, f32 arg2, s32 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B05548.s")
+extern f32 D_86B17AC0[];
+extern u32 D_86B0D838[];
+
+// ORs into *arg0 the D_86B0D838 flag word of each of the four D_86B17AC0 thresholds that are at
+// most 45.0f, and returns how many passed.
+s32 func_86B05548(s32 *arg0) {
+    s32 count = 0;
+    s32 i;
+    f32 value = 45.0f;
+
+    *arg0 = 0;
+    for (i = 0; i < 4; i++) {
+        if (D_86B17AC0[i] <= value) {
+            *arg0 |= D_86B0D838[i];
+            count++;
+        }
+    }
+    return count;
+}
 #endif
 
 #ifdef VERSION_US
