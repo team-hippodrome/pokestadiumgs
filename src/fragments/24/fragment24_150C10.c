@@ -682,7 +682,20 @@ void func_82B02924(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B029B8.s")
+extern Pair02198 D_82B085DC;
+void func_82B029B8(u8 *arg0, s32 arg1) {
+    if (arg0 != NULL && *(u16 *)(arg0 + 6) == 2) {
+        *(u16 *)(arg0 + 6) = 3;
+        *(s16 *)(arg0 + 8) = 0;
+        if (arg1 >= 0) {
+            *(Pair02198 *)(arg0 + 0x40) = *(Pair02198 *)(arg0 + 0x10);
+            *(Pair02198 *)(arg0 + 0x44) = D_82B085DC;
+        } else {
+            *(Pair02198 *)(arg0 + 0x44) = *(Pair02198 *)(arg0 + 0x40);
+            *(Pair02198 *)(arg0 + 0x40) = *(Pair02198 *)(arg0 + 0x10);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
