@@ -687,7 +687,101 @@ void func_86002444(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002470.s")
+extern void func_8003F018(s32);
+extern s32 func_80071ADC(s32, s32);
+extern s32 func_86002780(s32, u8 *);
+extern s32 func_8600297C(s32, u8 *);
+extern f64 D_8600DE48;
+extern void func_86007BE4(void *arg0, s32 arg1);
+void func_86002470(u8 *object, s32 resource_file, s32 *models) {
+    f32 base_scale;
+    u8 **node_slot;
+    u8 *main_model;
+    u8 *secondary;
+    u8 *effect;
+    u8 *overlay;
+    s32 resource_id;
+
+    base_scale = (f32)(*(f64 *)(object + 0x17C8) / 200.0);
+    func_86007BE4(object, *(s32 *)(object + 0x1810));
+    func_86001FCC(object);
+    main_model = object + 0x120;
+    func_8003F018((s32)main_model);
+    secondary = object + 0x288;
+    func_8003F018((s32)secondary);
+    effect = object + 0x14D0;
+    func_8003F018((s32)effect);
+    overlay = object + 0x1638;
+    func_8003F018((s32)overlay);
+    func_8003F114(main_model, 0, -1, models[*(s32 *)(object + 0x1810)]);
+    func_8003F114(secondary, 0, -1, func_80071ADC(resource_file, 79));
+    resource_id = 0;
+    switch (*(s32 *)(object + 0x1810)) {
+        case 0:
+            resource_id = 197;
+            break;
+        case 1:
+            resource_id = 198;
+            break;
+        case 2:
+            resource_id = 195;
+            break;
+        case 3:
+            resource_id = 196;
+            break;
+    }
+    func_8003F114(effect, 0, -1, func_80071ADC(resource_file, resource_id));
+    switch (*(s32 *)(object + 0x1810)) {
+        case 0:
+            resource_id = 191;
+            break;
+        case 1:
+            resource_id = 192;
+            break;
+        case 2:
+            resource_id = 194;
+            break;
+        case 3:
+            resource_id = 193;
+            break;
+    }
+    func_8003F114(overlay, 0, -1, func_80071ADC(resource_file, resource_id));
+    object[0x14D2] |= 0x10;
+    object[0x163A] |= 0x10;
+    object[0x122] |= 0x10;
+    object[0x28A] |= 0x10;
+    *(f32 *)(object + 0x1500) = base_scale * 5.0f;
+    *(f32 *)(object + 0x1504) = base_scale * 5.0f;
+    *(f32 *)(object + 0x1508) = base_scale * 5.0f;
+    object[0x14ED] = 255;
+    *(f32 *)(object + 0x150) = base_scale;
+    *(f32 *)(object + 0x154) = base_scale;
+    *(f32 *)(object + 0x158) = base_scale;
+    *(f32 *)(object + 0x2B8) = base_scale;
+    *(f32 *)(object + 0x2BC) = base_scale;
+    *(f32 *)(object + 0x2C0) = base_scale;
+    func_80037E3C(main_model, (void (*)(s32, u8 *))func_86002780, object);
+    func_80037E3C(secondary, (void (*)(s32, u8 *))func_8600297C, object);
+
+    // Reuse the setup pointers for position, scene-scale, and color records.
+    node_slot = (u8 **)(*(s32 *)(object + 0x1810) * 24 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C8));
+    *node_slot = main_model;
+    secondary = *(s32 *)(object + 0x1810) * 24 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C8);
+    *(f32 *)(secondary + 4) = 0.0f;
+    *(f32 *)(secondary + 8) = (f32)D_8600DE48;
+    *(f32 *)(secondary + 0xC) = 0.0f;
+    effect = *(s32 *)(object + 0x1810) * 396 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C4);
+    *(f32 *)(effect + 0x54) = 10.0f;
+    *(f32 *)(effect + 0x58) = 10.0f;
+    *(f32 *)(effect + 0x5C) = 10.0f;
+    overlay = *(s32 *)(object + 0x1810) * 24 + *(u8 **)(*(u8 **)(object + 0x1870) + 0x74C8);
+    overlay[0x12] = 255;
+    overlay[0x13] = 255;
+    overlay[0x14] = 255;
+    overlay[0x15] = 200;
+
+    func_87C01888(object + 0x17A0, main_model, D_8600D540);
+}
 #endif
 
 #ifdef VERSION_US
