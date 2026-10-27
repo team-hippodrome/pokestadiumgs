@@ -146,7 +146,9 @@ void func_88504EB8(void) {
 // Slot records indexed from 0 (index - 1 is compared with D_88523009); field offsets are
 // Stadium 1 TradeSlotInfo + 6, from the accesses in func_88505264.
 typedef struct {
-    /* 0x000 */ u8 unk_000[0xC];
+    /* 0x000 */ u8 unk_000[4];
+    /* 0x004 */ s16 unk_004;
+    /* 0x006 */ u8 unk_006[6];
     /* 0x00C */ s16 unk_00C;
     /* 0x00E */ s16 unk_00E;
     /* 0x010 */ s16 unk_010;
@@ -247,7 +249,23 @@ void Trade_UpdateBoxSlotShrink(void *arg0)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_885055A0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88505718.s")
+extern void func_80057944(u8);
+void func_88505718(void) {
+    s32 i;
+
+    if (D_8852300C[1] != -1) {
+        func_80057944(D_8852300C[1]);
+        D_8852300C[1] = -1;
+    }
+    *(s32 *)&D_885229A8 = 1;
+    *(s16 *)((u8 *)&D_885229A8 + 4) = 0;
+    func_88505038(&D_885229B0[0], 1);
+    for (i = 0; i < 3; i++) {
+        if (D_885229B0[i + 1].unk_004 != -1) {
+            func_88505038(&D_885229B0[i + 1], 2);
+        }
+    }
+}
 
 extern s8 D_8852300A;
 extern void func_88505718(void);
