@@ -1485,7 +1485,70 @@ s32 func_8260D3F4(s32 arg0, s32 arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260DB98.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260DD84.s")
+typedef struct unk_func_8260DD84_entry {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ s16 unk_06;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+} unk_func_8260DD84_entry; // size = 0xC
+
+typedef struct unk_func_8260DD84 {
+    /* 0x00 */ u8 unk_00[0x16];
+    /* 0x16 */ s16 unk_16;
+    /* 0x18 */ s16 unk_18;
+    /* 0x1A */ s16 unk_1A;
+    /* 0x1C */ s16 unk_1C;
+    /* 0x1E */ s16 unk_1E;
+    /* 0x20 */ unk_func_8260DD84_entry unk_20[40];
+} unk_func_8260DD84;
+
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_82608054(u8 *arg0, u8 *arg1, s32 arg2);
+extern u8 D_80094E78[];
+extern Gfx * D_800D0510;
+void func_8260DD84(u8 *arg0, s32 arg1) {
+    u8 *tex;
+    s32 i;
+    struct Color { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+    s16 y;
+    unk_func_8260DD84_entry *entry;
+    s16 x;
+    unk_func_8260DD84 *sub;
+    s32 flag;
+
+    tex = (u8 *)func_8004C990(103, 0);
+    flag = 0;
+    x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    sub = (unk_func_8260DD84 *)(arg0 + 0x30);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+    }
+    if (sub->unk_18 != 0 && sub->unk_18 != 3) {
+        flag = 1;
+    }
+    if (tex == NULL || flag == 0 || sub->unk_16 == 0 || sub->unk_1E <= 0) {
+        return;
+    }
+    func_82608054((u8 *)&prim, (u8 *)&env, sub->unk_1C);
+    for (i = 0; i < 40; i++) {
+        entry = &sub->unk_20[i];
+        if (entry->unk_00 != 0) {
+            gDPPipeSync(D_800D0510++);
+            gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, entry->unk_04);
+            gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+            func_8004D19C(x + entry->unk_08, y + entry->unk_0A, (s32)tex, 1, 0);
+        }
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, sub->unk_1E);
+    gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+    func_8004D19C(x + 74, y + 144, (s32)tex, 1, 0);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260E03C.s")
 
