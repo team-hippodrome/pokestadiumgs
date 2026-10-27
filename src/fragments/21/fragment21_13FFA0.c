@@ -208,7 +208,26 @@ s32 func_82500D24(s32 arg0, void *arg1) { s32 index = *(s32 *)((u8 *)arg1 + 0x20
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82500EF4.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+extern u8 D_80094F50[];
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+typedef struct unk_func_82500EF4 {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+    /* 0x03 */ u8 a;
+} unk_func_82500EF4; // size = 0x4
+
+void func_82500EF4(s32 x, s32 y, s32 tex, u8 *env, u8 *prim) {
+    gSPDisplayList(D_800D0510++, D_80094E78);
+    gDPSetAlphaDither(D_800D0510++, G_AD_NOISE);
+    gDPSetAlphaCompare(D_800D0510++, G_AC_DITHER);
+    gDPSetEnvColor(D_800D0510++, ((unk_func_82500EF4 *)env)->r, ((unk_func_82500EF4 *)env)->g, ((unk_func_82500EF4 *)env)->b, ((unk_func_82500EF4 *)env)->a);
+    gDPSetPrimColor(D_800D0510++, 0, 0, ((unk_func_82500EF4 *)prim)->r, ((unk_func_82500EF4 *)prim)->g, ((unk_func_82500EF4 *)prim)->b, ((unk_func_82500EF4 *)prim)->a);
+    func_8004D19C(x, y, tex, 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 #endif
 
 #ifdef VERSION_US
