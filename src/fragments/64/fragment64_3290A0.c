@@ -68,5 +68,17 @@ void func_87F06734(s32 a0, u8 *out_base, u8 *src_base)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F07FE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F08208.s")
+s32 func_87F08208(u8 *arg0) {
+    s32 result = 0;
+    u32 flags;
+
+    flags = func_87F0E610(arg0 + 0x2C, func_80001FF0() * 2);
+    if (flags & 0x1000) {
+        result = 1;
+    } else if (((*(u8 **)(arg0 + 0x30))[0x2180] == 0) &&
+               (u16)(flags & 0x4000)) { // FAKE: u16 cast of the masked flags; diff score 10 without it.
+        result = 2;
+    }
+    return result;
+}
 #endif

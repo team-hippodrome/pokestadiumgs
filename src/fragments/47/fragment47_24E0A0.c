@@ -228,7 +228,19 @@ void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009674.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_860098A8.s")
+extern void func_87C004C4(void *, void *, void *);
+extern void *func_87C001D0(void *, void *, void *);
+extern f64 D_8600D960;
+extern f64 D_8600DEB0;
+f64 func_860098A8(u8 *arg0) {
+    f64 sp48[3];
+    f64 sp30[3];
+
+    func_87C004C4(sp30, arg0 + 0x30, arg0 + 0x78);
+    return (*(f64 *)(arg0 + 0xE0) * (func_87C00664(arg0 + 0x18) + D_8600DEB0 * *(f64 *)(arg0 + 0xB8)) +
+            func_87C00208(sp30, func_87C001D0(sp48, arg0 + 0x60, sp30))) *
+           D_8600D960;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009934.s")
 

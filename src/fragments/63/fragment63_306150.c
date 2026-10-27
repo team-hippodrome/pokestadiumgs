@@ -161,7 +161,30 @@ void func_87E03448(void) {
     BgStage_DrawFrame();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03470.s")
+extern s32 func_87F08DF8(void *, f32, f32, s32);
+typedef struct unk_func_87E03470 {
+    s32 unk_00;
+    s32 unk_04;
+    u8 *unk_08;
+    f32 unk_0C;
+    f32 unk_10;
+} unk_func_87E03470;
+
+void func_87E03470(void *arg0) {
+    s32 i;
+    s32 resource;
+    unk_func_87E03470 *entry;
+
+    entry = (unk_func_87E03470 *)((u8 *)arg0 + 0x160);
+    resource = func_87F08DF8((void *)func_8004C990(434, 1), 0.0f, 10.0f, 0x0F000000);
+    for (i = 0; i < 4; i++) {
+        entry[i].unk_00 = i;
+        entry[i].unk_04 = resource;
+        entry[i].unk_08 = func_8004CA60((u8 *)func_8004C990(434, 1));
+        entry[i].unk_0C = 0.0f;
+        entry[i].unk_10 = 0.0f;
+    }
+}
 
 extern s32 func_87F08E3C(void *, s32);
 void func_87E03518(void *arg0) {
@@ -269,7 +292,29 @@ s32 func_87E03D48(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03D80.s")
+extern f32 D_87E19830[];
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+void func_87E03D80(u8 *arg0) {
+    u8 *sub;
+    u8 *node;
+    f32 *vec;
+    s32 var_s2;
+
+    node = *(u8 **)(arg0 + 0x14);
+    if (node != NULL) {
+        vec = D_87E19830;
+        var_s2 = 10;
+        do {
+            sub = *(u8 **)(node + 0x20);
+            func_87F0B1A4(sub + 0x10, node + 0x48, vec[0], vec[1], vec[2], var_s2, 0x2000);
+            func_87F0B2F4(sub + 0x10, node + 0x42, 180.0f, 0.0f, 0.0f, var_s2, 0);
+            node = *(u8 **)(node + 4);
+            vec += 3;
+            var_s2 += 5;
+        } while (node != NULL);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03E48.s")
 

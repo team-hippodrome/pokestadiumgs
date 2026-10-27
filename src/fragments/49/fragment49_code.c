@@ -130,7 +130,27 @@ void func_861007D8(void) {
                   *(u32 *)((u8 *)(u32)v0 + 0xBAC) & 0x100000);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86100874.s")
+void func_86100874(void) {
+    s32 count = 0;
+    s32 i;
+    s32 flags;
+    s32 base = D_8610AD20 + 0x6FC;
+    // FAKE: is_null and the empty if (is_null) {} below keep an extra register live; diff score 45 without them.
+    s32 is_null = !base;
+
+    // Four 0x18C-byte records start at D_8610AD20 + 0x6FC; func_861007D8 reads the same
+    // flag words at 0x708, 0x894, 0xA20 and 0xBAC.
+    for (i = 0; i < 4; i++, base += 0x18C) {
+        flags = *(s32 *)(base + 0xC);
+        if (flags & 0x200000) {
+            count++;
+            if (is_null) {} // FAKE: see is_null.
+        }
+    }
+    if (*(s32 *)((u8 *)(u32)D_8610AD20 + 0x97DC) == 0 && count > 0) {
+        func_861007D8();
+    }
+}
 
 extern void func_86100E20(void *, s32);
 void func_861008E8(void) {
@@ -1655,7 +1675,72 @@ void func_86107EBC(s32 arg0, s32 arg1, s32 arg2, char arg3, u8 arg4, u8 arg5, u8
   func_87F06240(arg1 + 0x29, arg2 + 2, D_8610ACB4, D_8610ACB4, arg0 % 10);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86108018.s")
+extern void func_8004D1FC(void *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_87F0D600(void *, s32, s32, s32, f32, f32);
+extern void func_87F061F0(void);
+extern f32 D_8610ACB8;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+// Close to fragment50's func_862040AC; reads the four archive-434 texture indices as
+// s32 words at 0x96F4 and ends after the four func_86107EBC calls, without the
+// trailing two-digit func_87F06240 counter.
+//@src/fragments/50/fragment50_266A60.c
+void func_86108018(void) {
+    u16 *p;
+    f32 scale;
+    f32 xa, ya;
+    f32 bx, by;
+    if (*(u8 *)((u8 *)*(void **)((u8 *)D_8610AD20 + 0) + 0x2180) != 4) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        p = (u16 *)func_8004C990(434, *(s32 *)((u8 *)D_8610AD20 + 0x96F4));
+        func_8004D1FC(p);
+        scale = D_8610ACB8;
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) { bx = 0.5f; } else { bx = -0.5f; }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) { by = 0.5f; } else { by = -0.5f; }
+
+        GfxRect_DrawTextured(28, 16, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+        p = (u16 *)func_8004C990(434, *(s32 *)((u8 *)D_8610AD20 + 0x96F8));
+        func_8004D1FC(p);
+
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) { bx = 0.5f; } else { bx = -0.5f; }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) { by = 0.5f; } else { by = -0.5f; }
+
+        GfxRect_DrawTextured(97, 16, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+        p = (u16 *)func_8004C990(434, *(s32 *)((u8 *)D_8610AD20 + 0x96FC));
+        func_8004D1FC(p);
+
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) { bx = 0.5f; } else { bx = -0.5f; }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) { by = 0.5f; } else { by = -0.5f; }
+
+        GfxRect_DrawTextured(166, 16, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+        p = (u16 *)func_8004C990(434, *(s32 *)((u8 *)D_8610AD20 + 0x9700));
+        func_8004D1FC(p);
+
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) { bx = 0.5f; } else { bx = -0.5f; }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) { by = 0.5f; } else { by = -0.5f; }
+
+        GfxRect_DrawTextured(235, 16, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        func_87F0D600((u8 *)D_8610AD20 + 4, 0, 28, 16, scale, scale);
+        func_87F0D600((u8 *)D_8610AD20 + 4, 1, 97, 16, scale, scale);
+        func_87F0D600((u8 *)D_8610AD20 + 4, 2, 166, 16, scale, scale);
+        func_87F0D600((u8 *)D_8610AD20 + 4, 3, 235, 16, scale, scale);
+        func_87F061F0();
+        func_86107EBC(*(s32 *)((u8 *)D_8610AD20 + 0x8DE4), 28, 16, 0x00, 0x00, 0x9B, 0xAA, 0xF5, 0xFF);
+        func_86107EBC(*(s32 *)((u8 *)D_8610AD20 + 0x8E10), 97, 16, 0x00, 0x64, 0x00, 0xC8, 0xFF, 0x9B);
+        func_86107EBC(*(s32 *)((u8 *)D_8610AD20 + 0x8E3C), 166, 16, 0x78, 0x00, 0x00, 0xFF, 0xA0, 0xBE);
+        func_86107EBC(*(s32 *)((u8 *)D_8610AD20 + 0x8E68), 235, 16, 0xD2, 0x5A, 0x00, 0xFF, 0xFF, 0x8C);
+    }
+}
 
 extern Gfx *D_800D0510;
 extern s32 D_8610AD20;

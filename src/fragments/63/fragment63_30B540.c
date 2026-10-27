@@ -520,7 +520,26 @@ void func_87E08D70(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E08E8C.s")
+extern u8 D_800CE060[];
+
+// Returns 1 for a port whose bit is set in the byte at +0x2182 of the shared state
+// when bit 0x8000 (A_BUTTON) is set in the halfword at +8 of that port's 0x28-byte
+// D_800CE060 controller record; for any other port, once the counter at
+// state + 0x7B8 exceeds threshold. Returns 0 otherwise. func_87E0023C scans the same
+// +0x2182 port mask:
+//@src/fragments/63/fragment63_303990.c
+s32 func_87E08E8C(u8 *state, s32 port, u32 threshold) {
+    s32 result = 0;
+
+    if (*(u8 *)(*(u8 **)(state + 0x20) + 0x2182) & (1 << port)) {
+        if ((*(u16 *)(D_800CE060 + port * 40 + 8) & A_BUTTON) != 0) {
+            result = 1;
+        }
+    } else if (threshold < *(u32 *)(state + 0x7B8)) {
+        result = 1;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E08EF0.s")
 
@@ -546,7 +565,7 @@ void func_87E094C0(void *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E09654.s")
 
 s32 func_87E07ED8(s32);
-extern void func_87E08E8C(void *, s32, s32);
+extern s32 func_87E08E8C(u8 *, s32, u32);
 
 void func_87E09BDC(void *arg0, s32 arg1) {
     s32 temp_v0;
