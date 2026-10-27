@@ -106,7 +106,30 @@ s32 func_8821C924(Func8821C924Item *arg0, Func8821C924Item *arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821C970.s")
+s32 func_8821C970(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
+    s32 difference;
+    s32 result;
+    S1_unk_func_88316128 *entries[2];
+    s32 values[2];
+    u8 i;
+
+    entries[0] = arg0;
+    entries[1] = arg1;
+    for (i = 0; i < 2; i++) {
+        if (((u8 *)entries[i])[38] & 1) {
+            values[i] = 100000;
+        } else {
+            values[i] = *(u16 *)((u8 *)entries[i] + 14);
+        }
+    }
+    difference = values[0] - values[1];
+    if (difference != 0) {
+        result = difference;
+    } else {
+        result = LabPCList_CompareByPointer(arg0, arg1);
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821CA24.s")
 

@@ -43,3 +43,40 @@ The complete link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 176 bytes at ROM `0x18F9F0..0x18FAA0`. Existing neighboring C, callers,
 helpers, storage, layout and CI remain unchanged.
+
+## func_8821C970
+
+This sibling comparator derives two signed-word values: 100000 when bit 0
+of the object's byte at offset 38 is set, otherwise the unsigned halfword
+at offset 14. It returns the first value minus the second, using existing
+`LabPCList_CompareByPointer` for ties. The flag's wider meaning and the
+halfword's semantics remain unknown; existing names are preserved.
+//@src/fragments/31/fragment31_18F6D0.c
+
+Original `func_8821CCE8` also selects this owner as a callback for
+`func_88004B60`. The sorter's calls pass stored object pointers, as with the
+preceding comparator. The accepted byte comparator provides the same real
+pointer-pair and value-pair loop structure. This owner uses signed-word
+working values for its larger sentinel and halfword input. Both arrays are
+populated and consumed; the unsigned-byte counter and separate scalar
+difference/result values reproduce the original loop and common return.
+//@src/fragments/29/fragment29_16AA30.c
+
+The first candidate matches all 45 instruction words (180 bytes), including
+the original 64-byte frame. Fresh validation uses master
+`8c29b4904d6e8991e4251e26d9168d142a81fced` plus this patch and forces the
+changed translation unit through the default syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/31/fragment31_18F6D0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The complete link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. Independent original-assembly and retail-span comparisons verify
+all 180 bytes at ROM `0x18FBF0..0x18FCA4`. Earlier matched C remains unchanged.
+No new fakes, unused locals, helper or caller edits, storage, layout,
+instruction rewriting or CI changes are required.
