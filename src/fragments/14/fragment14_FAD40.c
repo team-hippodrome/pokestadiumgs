@@ -6,13 +6,13 @@ s32 func_81302BB0(const u8 *arg0) {
     return *(const s8 *)(arg0 + 0x4DBC) >= 0;
 }
 
-extern s32 func_8160A920(void);
+extern s32 func_8160A920(u8 *);
 s32 func_81302BC0(u8 *arg0) {
     s32 var_v1;
     s32 offset;
     u8 *entry;
 
-    offset = func_8160A920() * 0xCE8;
+    offset = func_8160A920(arg0) * 0xCE8;
     entry = arg0 + offset;
     var_v1 = entry[0x20] == 0;
     if (var_v1 != 0) {
@@ -61,7 +61,15 @@ void func_81302E58(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_8130302C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_813031D8.s")
+extern s32 func_8160B9A0(u8 *, s32, s32);
+void func_813031D8(u8 *arg0) {
+    s32 index;
+    s32 flag;
+
+    index = func_8160A920(arg0);
+    flag = func_81302BB0(arg0);
+    *(s32 *)(arg0 + 19884) |= func_8160B9A0(arg0, index, flag);
+}
 
 void func_81303228(u8 *arg0) {}
 
@@ -71,11 +79,11 @@ void func_81303230(u8 *arg0) {
 
 void func_81303240(u8 *arg0) {}
 
-extern s32 func_8160A920(void);
+extern s32 func_8160A920(u8 *);
 extern s32 func_8130A708(u8 *arg0);
-extern void func_8160B9A0(u8 *arg0, s32 arg1, s32 arg2);
+extern s32 func_8160B9A0(u8 *arg0, s32 arg1, s32 arg2);
 void func_81303248(u8 *arg0) {
-    s32 value = func_8160A920();
+    s32 value = func_8160A920(arg0);
     if (func_8130A708(*(u8 **)(arg0 + 0x4DA0) + 0xDA8)) {
         s32 valid = func_81302BB0(arg0);
         func_8160B9A0(arg0, value, valid);
@@ -133,11 +141,11 @@ void func_81303364(void *arg0) {
 
 extern s32 func_8130F578(u8 *, u8 *);
 extern s32 func_8130A708(u8 *arg0);
-extern s32 func_8160A920(void);
+extern s32 func_8160A920(u8 *);
 void func_813033DC(u8 *arg0) {
     struct { u32 prefix; u8 buffer[8]; } local;
     s32 result;
-    func_8160A920();
+    func_8160A920(arg0);
     result = func_8130F578(*(u8 **)(arg0 + 0x4DA0), local.buffer);
     if (result == 1) {
         func_8130A708(*(u8 **)(arg0 + 0x4DA0) + 0xDA8);
@@ -350,7 +358,7 @@ s32 func_81304248(u8 *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_813042E4.s")
 
 /* mkdraft:func_8130437C begin */
-extern s32 func_8160A920(void);
+extern s32 func_8160A920(u8 *);
 extern s32 func_8160A8DC(u8 *);
 extern void func_8160A928(u8 *, s32);
 extern void func_813031D8(u8 *);
@@ -358,7 +366,7 @@ extern void func_813031D8(u8 *);
 s32 func_8130437C(u8 *arg0) {
     s32 sp24;
 
-    sp24 = func_8160A920();
+    sp24 = func_8160A920(arg0);
     if (arg0[0x4DBD] == 0xD) {
         if (func_8160A8DC(arg0) == 0) {
             arg0[0x4DBD] = 3;
@@ -380,14 +388,14 @@ s32 func_8130437C(u8 *arg0) {
 extern void func_8160B8E0(u8 *, s32, s32, s32);
 extern s32 func_81303A38(void *arg0);
 extern void func_81311C18(s32 arg0);
-extern s32 func_8160A920(void);
+extern s32 func_8160A920(u8 *);
 extern void func_8160A928(u8 *, s32);
 extern s32 func_8160A9CC();
 s32 func_81304444(u8 *arg0, s32 arg1, s32 arg2) {
     s32 sp24;
     s32 var_a2;
 
-    sp24 = func_8160A920();
+    sp24 = func_8160A920(arg0);
     if (arg0[0x4DBD] != 0xD) {
         return 0;
     }
