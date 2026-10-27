@@ -382,7 +382,35 @@ void func_84102B3C(u8 *record, void *matrix, s32 type) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102E84.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841031F4.s")
+extern Gfx *D_800D0510;
+extern u8 *D_8418CA20[];
+extern void *func_80003240();
+extern void func_8100348C();
+extern void func_84102E84(s32, u8 *);
+void func_841031F4(u8 *record, void *arg1, s32 matrix) {
+    s16 *id;
+    u8 *entry;
+    u8 *model;
+    u16 type;
+    u16 count;
+    void (*draw)(u8 *, s32);
+    s32 i;
+
+    if (arg1 != NULL && (id = *(s16 **)((u8 *)arg1 + 0x14)) != NULL && *id != 0) {
+        entry = D_8418CA20[*id];
+        model = *(u8 **)(entry + 4);
+        type = *(u16 *)entry;
+        count = *(u16 *)(entry + 2);
+        draw = (void (*)(u8 *, s32))func_80003240(func_8100348C);
+        func_84102B3C(record, (void *)matrix, type);
+        for (i = 0; i < count; i++) {
+            draw(record, *(s32 *)model);
+            func_84102E84(*(u16 *)(model + 6), record);
+            gSPDisplayList(D_800D0510++, *(u32 *)(model + 8));
+            model += 0x10;
+        }
+    }
+}
 
 extern Gfx *D_800D0510;
 extern u8 *D_8418CB88;
