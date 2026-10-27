@@ -123,13 +123,11 @@ f64 func_86007F50(void *arg0, s32 arg1, s32 arg2) {
     return (temp_fv1 * temp_fv1) / (*(f64 *)((u8 *)(arg0) + (0x60)));
 }
 
-extern f64 func_86007F50(void *arg0, s32 arg1, s32 arg2);
-
 extern f64 func_87C00208(void *, void *);
-f64 func_86007F6C(void *arg0, void *arg1, s32 arg2, s32 arg3, void *arg4, s32 arg5, f64 arg6) {
+f64 func_86007F6C(void *arg0, void *arg1, f64 coefficient, void *arg4, s32 arg5, f64 arg6) {
     u8 sp30[0x18];
 
-    return (-(1.0f + *(f64 *)&arg2) *
+    return (-(1.0f + coefficient) *
             func_87C00208(func_87C00160(sp30, (s32)((u8 *)arg0 + 0x18), (u8 *)arg1 + 0x18), arg4)) /
            ((1.0 / *(f64 *)((u8 *)arg0 + 0xE0) + 1.0 / *(f64 *)((u8 *)arg1 + 0xE0) +
              func_86007F50(arg0, (s32)arg4, arg5) + func_86007F50(arg1, (s32)arg4, arg5)) * arg6);
@@ -139,9 +137,8 @@ extern f64 D_8600DE78;
 extern void func_87C003BC(void *, void *, void *);
 extern void func_87C00718(void *, void *, f64);
 extern void *func_87C002DC(void *, void *);
-extern f64 func_86007F6C(void *, void *, s32, s32, void *, s32, f64);
 
-f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, s32 arg5, s32 arg6, f64 arg7) {
+f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, f64 coefficient, f64 arg7) {
     f64 result;
     u8 sp100[0x18];
     u8 spE8[0x18];
@@ -160,7 +157,7 @@ f64 func_86008038(u8 *arg0, u8 *arg1, void *arg2, s32 arg3, f64 arg4, s32 arg5, 
     func_87C00160(spA0, (s32)sp58, sp70);
     func_87C003BC(sp100, spA0, arg2);
     func_87C00718(sp100, sp100, 1.0);
-    result = func_86007F6C(arg0, arg1, arg5, arg6, arg2, arg3, arg4);
+    result = func_86007F6C(arg0, arg1, coefficient, arg2, arg3, arg4);
     if (result < *(f64 *)(D_8600DE30 + 0x20)) result = *(f64 *)(D_8600DE30 + 0x20);
     if ((0.0 < *(f64 *)(D_8600DE30 + 0x30)) && (*(f64 *)(D_8600DE30 + 0x30) < result)) result = *(f64 *)(D_8600DE30 + 0x30);
     func_87C00198(sp88, func_87C002A8(spD0, arg2, result), func_87C002A8(spB8, sp100, arg7 * result));
@@ -200,7 +197,55 @@ s32 func_86008820(f64 *arg0, f64 *arg1, void *arg2, void *arg3, void *arg4) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008904.s")
+extern f64 D_8600DE88;
+extern void *func_87C00308(void *, void *, void *, f64);
+extern f64 func_87C0068C(void *);
+f64 func_86008904(Fragment47MotionPrefix *first, Fragment47MotionPrefix *second, f64 divisor, void *point) {
+    f64 first_distance;
+    f64 second_distance;
+    f64 separation;
+    f64 result;
+    f64 threshold;
+    f64 reversed_axis[3];
+    f64 scratch[3];
+    f64 center[3];
+    f64 first_point[3];
+    f64 second_point[3];
+    f64 difference[3];
+    f64 normal[3];
+
+    threshold = (first->radius + second->radius) * D_8600DE88;
+    if (!func_86008820(&first_distance, &second_distance, first->unk_48,
+                      func_87C002DC(reversed_axis, first->unk_48),
+                      func_87C00160((u8 *)scratch, (s32)first, (u8 *)second))) {
+        return 0.0;
+    }
+    if ((first_distance < first->radius) || (first->unk_D0 + first->radius < first_distance)) {
+        return 0.0;
+    }
+    second_distance = -second_distance;
+    if ((second_distance < second->radius) || (second->unk_D0 + second->radius < second_distance)) {
+        return 0.0;
+    }
+    func_87C00198(first_point, first, func_87C002A8(reversed_axis, first->unk_48, first_distance));
+    func_87C00198(second_point, second, func_87C002A8(scratch, second->unk_48, second_distance));
+    func_87C00160((u8 *)difference, (s32)first_point, (u8 *)second_point);
+    separation = func_87C0068C(difference);
+    if (threshold < separation) {
+        return 0.0;
+    }
+    func_87C00718(normal, difference, 1.0);
+    func_87C00308(center, first_point, second_point, 0.5);
+    result = func_86008038((u8 *)first, (u8 *)second, normal, (s32)point, divisor,
+                         *(f64 *)(D_8600DE30 + 0x250), *(f64 *)(D_8600DE30 + 0x288));
+    func_87C00198(first, center, func_87C002A8(reversed_axis, normal,
+                                          first->radius * separation / (first->radius + second->radius)));
+    func_87C00198(second, center, func_87C002A8(scratch, normal,
+                                           -separation * second->radius / (first->radius + second->radius)));
+    func_86007EB4(first);
+    func_86007EB4(second);
+    return result;
+}
 
 extern f64 D_8600DE60;
 
@@ -240,7 +285,6 @@ f64 func_86008BB4(Fragment47MotionPrefix *object, s32 flag, u8 *point, void *nor
 extern s32 func_86009C08(void *arg0, void *arg1);
 extern s32 func_86009EF8(void *arg0, f64 arg1);
 extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
-extern f64 func_87C0068C(void *);
 f64 func_86008F4C(Fragment47MotionPrefix *object, s32 flag, f64 divisor, Fragment47CurvePrefix *config, f64 threshold, Fragment47Point *point) {
     f64 difference[3];
     f64 adjustment[3];
@@ -485,7 +529,6 @@ s32 func_86009EF8(void *arg0, f64 arg1) {
     return (arg1 < *(f64 *)((u8 *)arg0 + 0x18)) ^ *(s32 *)((u8 *)arg0 + 0x48);
 }
 
-
 s32 func_86009F28(void *arg0, Fragment47Point *arg1, Fragment47Point *arg2) {
     if (func_86009C08(arg0, arg1) != 0) {
         *arg2 = *arg1;
@@ -494,7 +537,6 @@ s32 func_86009F28(void *arg0, Fragment47Point *arg1, Fragment47Point *arg2) {
     }
     return 0;
 }
-
 
 s32 func_86009FB8(void *arg0, void *arg1, void *arg2) {
     void *result;
@@ -690,7 +732,6 @@ extern u8 D_80094F50[];
 extern void func_8600B100(void *);
 extern void func_8600B328(void *);
 extern void func_87F061F0(void);
-extern void func_8600ACC4(void *, s32, s32, void *, void *);
 extern u8 D_8600D43C[];
 extern u8 D_8600D440[];
 void func_8600B474(void *arg0, void *arg1) {
