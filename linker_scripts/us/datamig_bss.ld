@@ -16,4 +16,11 @@ SECTIONS
     {
         build/src/fragments/67/fragment67_34AB40.o(.bss)
     }
+
+    /* func_82908B60's 14 0x40-byte records (file-scope static D_8291B880),
+     * 0x8291B880-0x8291BC00. */
+    .fragment67_344D70_bss 0x8291B880 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/67/fragment67_344D70.o(.bss)
+    }
 }
