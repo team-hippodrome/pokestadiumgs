@@ -74,3 +74,19 @@ all 176 bytes at ROM `0x143824..0x1438D4`.
   by state 2/3. Retail reloads `D_82508F84`, `D_82508F68` and `D_82508FD8`
   by symbol every iteration, but tests the bound through the cached state
   base. IDO CSEs all of them into s-registers.
+
+## 2026-10-28: `func_825010F8` accepted; `func_82501490` handoff
+
+- `func_825010F8`: in mode 1, `dy` (held in the reused `arg0`) must be
+  computed before the `+0x28` store, together with `dx`. Computing it after
+  the store lets IDO hoist the node read instead of the record read (found by
+  the permuter).
+- `func_82501490`: requeue. The button-gate predicate returns `0x100`/`0x101`
+  (mode 1, node kinds 11/14 without bits 1/2), `0x200`/`0x201` (mode 2, kind
+  14 with `arg1 == 3`, or kind 15 when `D_82508680->unk2 == 15`, clearing it
+  unless `arg4`), and `0x300`/`0x301` (mode 3, unless kind 24; bit 4 clear
+  gives `0x300`; with bit 8 clear and all 8 low bits of `D_82508FCE` set,
+  `0x301`). Retail returns `result` through an unfolded `v1` at every exit
+  and keeps the 8-bit scan rolled with an in-loop `return 0`. IDO
+  constant-folds `result = 0` into the exits, and copt unrolls the loop
+  unless it breaks out instead (85 vs 82 instructions).
