@@ -18,7 +18,27 @@ f32 func_818006B4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AE600/func_818006FC.s")
+extern u32 D_800D0510;
+extern u8 D_80094D90[];
+extern u8 D_80094DB8[];
+extern f32 D_81805C60;
+extern void Gfx_FillRectRgb(s16, s16, s16, s16, u8, u8, u8);
+extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
+
+// Fills a black rectangle (arg0, arg1, arg2, 1) and a white one one row lower through
+// Gfx_FillRectRgb/Gfx_FillRectRgba (//@src/44E70.c), opaque when alpha exceeds D_81805C60
+// (the .data float 0.99) and with prim alpha 255 * alpha otherwise.
+void func_818006FC(s32 arg0, s32 arg1, s32 arg2, f32 alpha, s16 arg4, s16 arg5) {
+    if (alpha > D_81805C60) {
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094D90);
+        Gfx_FillRectRgb(arg0, arg1, arg2, 1, 0, 0, 0);
+        Gfx_FillRectRgb(arg0, arg1 + 1, arg2, 1, 0xFF, 0xFF, 0xFF);
+    } else {
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094DB8);
+        Gfx_FillRectRgba(arg0, arg1, arg2, 1, 0, 0, 0, (u32)(255.0f * alpha));
+        Gfx_FillRectRgba(arg0, arg1 + 1, arg2, 1, 0xFF, 0xFF, 0xFF, (u32)(255.0f * alpha));
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -31,7 +51,6 @@ extern s32 func_8000731C(void);
 extern void *Gfx_AllocDisplayList(s32);
 extern void Gfx_SetViewportDimensions(void *, s16, s16);
 extern Mtx D_80094890;
-extern u32 D_800D0510;
 
 void Gfx_SetupOrthoProjection(void) {
     s16 *dims;
