@@ -2,7 +2,35 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_328C20/func_87F05FB0.s")
+extern void MtxF_Multiply(void *, void *, void *);
+void func_87F06094(f32 *arg0, u16 *arg1);
+void func_87F05FB0(f32 out[4][4], f32 basis[4][4], f32 *pos, u16 *angles, void *arg4) {
+    f32 tmp[4][4];
+    f32 rot[4][4];
+
+    func_87F06094(tmp[0], angles);
+    rot[0][0] = basis[0][0];
+    rot[0][1] = basis[1][0];
+    rot[0][2] = basis[2][0];
+    rot[0][3] = 0.0f;
+    rot[1][0] = basis[0][1];
+    rot[1][1] = basis[1][1];
+    rot[1][2] = basis[2][1];
+    rot[1][3] = 0.0f;
+    rot[2][0] = basis[0][2];
+    rot[2][1] = basis[1][2];
+    rot[2][2] = basis[2][2];
+    rot[2][3] = 0.0f;
+    rot[3][0] = 0.0f;
+    rot[3][1] = 0.0f;
+    rot[3][2] = 0.0f;
+    rot[3][3] = 1.0f;
+    MtxF_Multiply(out, tmp, rot);
+    out[3][0] = pos[0];
+    out[3][1] = pos[1];
+    out[3][2] = pos[2];
+    out[3][3] = 1.0f;
+}
 
 /* mkdraft:func_87F06094 begin */
 extern f32 D_80087E50[];
