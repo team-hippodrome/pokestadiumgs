@@ -236,6 +236,7 @@ void func_8410B594(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
 extern s32 func_8411DC80(u16, s32 *, s32);
@@ -313,6 +314,7 @@ void func_8410B8FC(f32 *arg0, f32 *arg1, s16 arg2) {
 extern u8 *D_841911E8;
 extern u8 *func_8410B330(u8 *);
 extern void func_8410BDA0(u8 *, s32);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_84120BB4(u8 *, s32);
 void func_8410C304(u8 *arg0, s32 arg1, s32 arg2) {
     u8 *temp_v0;
@@ -343,6 +345,10 @@ void func_8410C304(u8 *arg0, s32 arg1, s32 arg2) {
 extern u8 *D_841911E8;
 extern u8 *func_8410B330(u8 *);
 extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
+extern void func_841203B4(u8 *, f32, f32);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 
 void func_8410C720(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5) {
     f32 target[3];
@@ -364,6 +370,11 @@ void func_8410C720(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5) {
 #endif
 
 #ifdef VERSION_US
+extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern void func_841203B4(u8 *, f32, f32);
 void func_8410C840(u8 *arg0, void *arg1, u8 *arg2, u8 *arg3) {
     f32 target[3];
     f32 pos[3];
@@ -395,6 +406,7 @@ extern s32 func_8411DC80(u16, s32 *, s32);
 extern s32 func_8411E140(s32);
 extern void func_8410B974(u8 *, void *, s16, s32, s32);
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 void func_8410C934(u8 *arg0, s32 arg1, s16 arg2) {
     s16 var_a2;
     s16 var_t6 = 1;
@@ -478,8 +490,11 @@ void func_8410CAE4(u8 *arg0, s32 arg1, s16 arg2) {
 #endif
 
 #ifdef VERSION_US
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 extern u8 * func_8410B330(u8 *arg0);
 extern void func_8411E0A4(void *, void *, void *);
+extern void func_841203B4(u8 *, f32, f32);
+extern u8 * D_841911E8;
 void BattleAnim_UpdateCameraHeightTarget(u8 *arg0, u8 *arg1) {
     f32 position[3];
     f64 separation;
@@ -508,6 +523,11 @@ void BattleAnim_ModelDispatch_024(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern u8 * func_8410B330(u8 *arg0);
+extern void func_8411E0A4(void *, void *, void *);
+extern u8 * D_841911E8;
 void func_8410D088(u8 *arg0, void *arg1) {
     f32 target[3];
     f32 pos[3]; // FAKE: unused; restores the original 0x50-byte frame.
@@ -533,6 +553,7 @@ void func_8410D088(u8 *arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
 void BattleAnim_AdjustCameraDistanceMild(u8 *arg0, f32 distance, s16 angle_x, s16 angle_y, u8 *origin, u8 *target) {
     if (distance > *(f32 *)(arg0 + 128) * 1.5f) {
         func_800371B4(origin, target, distance * 0.68f, angle_x, angle_y);
@@ -563,6 +584,7 @@ void BattleAnim_AdjustCameraDistanceMild(u8 *arg0, f32 distance, s16 angle_x, s1
 #endif
 
 #ifdef VERSION_US
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
 void BattleAnim_AdjustCameraDistanceLowerBands(u8 *arg0, f32 distance, s16 angle_x, s16 angle_y, u8 *origin, u8 *target) {
     if (distance > *(f32 *)(arg0 + 128) * 1.6f) {
         func_800371B4(origin, target, distance * 0.6f, angle_x, angle_y);
@@ -575,6 +597,7 @@ void BattleAnim_AdjustCameraDistanceLowerBands(u8 *arg0, f32 distance, s16 angle
 #endif
 
 #ifdef VERSION_US
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
 void BattleAnim_AdjustCameraDistanceStrong(u8 *arg0, f32 distance, s16 angle_x, s16 angle_y, u8 *origin, u8 *target) {
     if (distance > *(f32 *)(arg0 + 128) * 1.5f) {
         func_800371B4(origin, target, distance * 0.3f, angle_x, angle_y);
@@ -741,8 +764,10 @@ void func_8410F0D0(u8 *arg0, u8 *arg1) {
 
 #ifdef VERSION_US
 extern void func_8410B8FC(f32 *, f32 *, s16);
+extern void func_8411E0A4(void *, void *, void *);
 extern u8 * func_8410B330(u8 *);
 extern s32 D_84184148;
+extern u8 * D_841911E8;
 extern s32 D_841911EC;
 extern u8 * D_84193DD0;
 void BattleAnim_ModelDispatch_127(u8 *arg0, u8 *arg1) {
@@ -795,8 +820,10 @@ void BattleAnim_ModelDispatch_127(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 extern u8 * func_8410B330(u8 *);
 extern s32 D_84184148;
+extern u8 * D_841911E8;
 extern s32 D_841911EC;
 void BattleAnim_ModelDispatch_148(u8 *arg0, s32 arg1) {
     u8 *temp_v0;
@@ -826,6 +853,7 @@ void BattleAnim_ModelDispatch_149(u8 *arg0, s32 arg1) {
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
 extern u8 * func_8410B330(u8 *);
 extern s32 D_84184148;
+extern u8 * D_841911E8;
 extern s32 D_841911EC;
 void func_8410F78C(u8 *arg0, s32 arg1) {
     D_841911E8 = func_8410B330(arg0);
@@ -884,8 +912,10 @@ void BattleAnim_ModelDispatch_163(u8 *arg0, s32 arg1) {}
 #endif
 
 #ifdef VERSION_US
+extern u8 * func_8410B330(u8 *arg0);
 extern void func_8410C934(u8 *arg0, s32 arg1, s16 arg2);
 extern s32 D_84184148;
+extern u8 * D_841911E8;
 extern s32 D_841911EC;
 void func_8410F9FC(u8 *arg0, s32 arg1) {
     D_841911E8 = func_8410B330(arg0);
@@ -903,6 +933,7 @@ void func_8410F9FC(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
+extern void func_841203B4(u8 *, f32, f32);
 extern void func_8410E73C();
 void BattleAnim_ModelDispatch_170(u8 *arg0, s32 arg1) {
     D_841911E8 = func_8410B330(arg0);
@@ -915,6 +946,7 @@ void BattleAnim_ModelDispatch_170(u8 *arg0, s32 arg1) {
 extern u8 * func_8410B330(u8 *);
 extern void func_84120960(u8 *, s32);
 extern s32 D_84184148;
+extern u8 * D_841911E8;
 extern s32 D_841911EC;
 extern u8 * D_84193DD0;
 void BattleAnim_ModelDispatch_204(u8 *arg0, s32 arg1) {
@@ -941,6 +973,7 @@ extern s32 D_841911EC;
 extern s32 D_84184148;
 extern u8 *func_8410B330(u8 *);
 extern void func_84120960(u8 *, s32);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
 void BattleAnim_ModelDispatch_029(u8 *arg0, s32 arg1) {
     D_841911E8 = func_8410B330(arg0);
@@ -1083,9 +1116,11 @@ void func_84110118(u8 *arg0, s32 arg1) {
 
 #ifdef VERSION_US
 extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s32);
+extern u8 * func_8410B330(u8 *arg0);
 extern void func_8410B884(u8 *arg0, void *arg1, u8 *arg2, s16 arg3);
 extern void func_8410C934(u8 *arg0, s32 arg1, s16 arg2);
 extern s32 D_84184148;
+extern u8 * D_841911E8;
 extern s32 D_841911EC;
 void func_84110264(u8 *arg0, s32 arg1)
 {
@@ -1197,12 +1232,15 @@ void BattleAnim_ModelDispatch_218(u8 *arg0, void *arg1) {
 
 #ifdef VERSION_US
 extern u8 D_84183944[];
+extern u8 * func_8410B330(u8 *arg0);
 extern void func_8410DFC4(u8 *, void *);
 extern void func_8410E688(u8 *arg0, void *arg1);
 extern void func_8410E73C(u8 *arg0, void *arg1);
 extern void BattleAnim_UpdateCameraWave(u8 *, s32);
 extern s32 func_8411DC80(u16, s32 *, s32);
+extern void func_841203B4(u8 *, f32, f32);
 extern u8 D_8418393C;
+extern u8 * D_841911E8;
 void func_84110718(u8 *arg0, u8 *arg1) {
     D_841911E8 = func_8410B330(arg0);
     func_841203B4(arg0 + 0x2C, *(f32 *)(D_841911E8 + 0x88), 0.05f);
@@ -1238,6 +1276,8 @@ void BattleAnim_ModelDispatch_079(u8 *arg0, void *arg1) {
 extern u8 * func_8410B330(u8 *);
 extern void func_8410B884(u8 *arg0, void *arg1, u8 *arg2, s16 arg3);
 extern void func_8410DFC4(u8 *, void *);
+extern void func_841203B4(u8 *, f32, f32);
+extern u8 * D_841911E8;
 void BattleAnim_ModelDispatch_191(u8 *arg0, void *arg1) {
     D_841911E8 = func_8410B330(arg0);
     func_841203B4(arg0 + 0x2C, *(f32 *)(D_841911E8 + 0x88), 0.05f);
@@ -1255,6 +1295,8 @@ void BattleAnim_ModelDispatch_191(u8 *arg0, void *arg1) {
 extern void func_8410C840(u8 *, void *, u8 *, u8 *);
 extern u8 * func_8410B330(u8 *);
 extern void func_8410DFC4(u8 *, void *);
+extern void func_841203B4(u8 *, f32, f32);
+extern u8 * D_841911E8;
 void BattleAnim_ModelDispatch_184(u8 *arg0, void *arg1) {
     D_841911E8 = func_8410B330(arg0);
     func_841203B4(arg0 + 0x2C, *(f32 *)(D_841911E8 + 0x88), 0.05f);
