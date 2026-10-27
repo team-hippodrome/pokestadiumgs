@@ -196,7 +196,26 @@ void func_8220BD90(s16 *arg0) {
     D_82210C36 = arg0[0];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220BDAC.s")
+extern s32 D_8220E06C;
+
+void func_8220BDAC(void *arg0) {
+    Fragment17Panel *panel = (Fragment17Panel *)arg0;
+    s32 counter;
+    s32 divisor;
+
+    // FAKE: the comma expression loads D_8220E06C before the counter store,
+    // as in func_8220BE94; diff score 60 without it.
+    panel->counter = panel->counter + (counter = panel->counter, divisor = D_8220E06C, 1);
+    if (panel->counter < divisor) {
+        panel->pair_0A.x = panel->pair_0E.x - (panel->pair_0E.x * panel->counter) / divisor;
+        panel->pair_0A.y = panel->pair_0E.y - (panel->pair_0E.y * panel->counter) / divisor;
+        return;
+    }
+    panel->state = 2;
+    panel->counter = 0;
+    panel->pair_0A.x = 0;
+    panel->pair_0A.y = 0;
+}
 
 void func_8220BE84(s16 *arg0) {
     arg0[1] = 3;
