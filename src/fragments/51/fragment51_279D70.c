@@ -53,5 +53,28 @@ void func_86304318(f32 x, f32 y, f32 z, f32 scale, u8 kind) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_279D70/func_863043E4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_279D70/func_86304544.s")
+extern f32 D_86307548;
+extern void func_863043E4(void);
+void func_86304544(u8 *parent) {
+    u8 *object;
+
+    object = func_87F025B8(D_863075D8 + 0x8298, func_863043E4);
+    if (object != NULL) {
+        f32 scale;
+        u8 *owner;
+
+        func_8003F1DC(object + 0x24);
+        func_8003F114(object + 0x24, 0, -1, *(s32 *)(D_863075D8 + 0x124));
+        scale = D_86307548;
+        owner = *(u8 **)(parent + 0x20);
+        *(u8 **)(object + 0x38) = parent;
+        *(f32 *)(object + 0x54) = scale;
+        *(f32 *)(object + 0x58) = scale;
+        *(f32 *)(object + 0x5C) = scale;
+        *(s32 *)(object + 0x60) = D_86306FB8[*(s8 *)(owner + 0x20) + 1][1];
+        *(s32 *)(object + 0xC4) = D_86306FB8[*(s8 *)(owner + 0x20) + 1][0];
+        object[0x41] = 255;
+        object[0x26] |= 8;
+    }
+}
 #endif
