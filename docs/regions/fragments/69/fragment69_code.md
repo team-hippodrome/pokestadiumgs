@@ -32,3 +32,7 @@ Every data word after the static is used by exactly one function, in function or
 ## 2026-10-28 — `func_8F10049C` matched
 
 Gradient panel behind a menu row. The former `D_8F103A54`/`D_8F103A58` words are not statics but the `.data` templates of two initialized local colors, `{0, 0, 30}` and `{0, 0, 150}` (`Fragment69Rgb`, 3 bytes, copied with `lwr`/`swr`). IDO emits those templates at the function's position, so `D_8F103A5C`..`D_8F103A9C` are now defined after this function. The colors live in an inner block declared just before the call, so the copies are scheduled late as in retail; six locals declared ahead of them give the 0x40 frame with the colors at `sp+0x24`/`sp+0x20`. The offsets are written `(rect[2] - width) / 2 + rect[0]`, in that operand order.
+
+## 2026-10-28 — `func_8F1008EC` matched
+
+Species list renderer: a title from `D_8F103A5C`/`D_8F103A64` indexed by mode `D_8F1DEE18`, ten rows of `"%… %s"`-style text (`D_8F103B2C`) with the selected row in yellow, and a footer prompt. `func_800495BC` is varargs (`const char *, ...`); the file-level prototype was corrected in the same change (byte-identical). The only scheduling detail: compute `position` before choosing the title. The permuter found it via an alias temporary, and the plain reordering is equivalent. When `func_8004B7A4` returns NULL, the name falls back to `D_8F10398C` (Japanese build) or `"DummyMon"`.
