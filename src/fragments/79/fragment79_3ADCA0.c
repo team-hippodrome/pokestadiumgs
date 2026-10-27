@@ -586,7 +586,33 @@ void func_84140270(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841402FC.s")
+// Draws texture (0x157, 1) as two 64-pixel-wide rectangles at the left and right
+// edges of the box at arg0 + 0xA (x, y, width, height); the right one starts at
+// s = 0x800.
+void func_841402FC(void *arg0) {
+    u8 *asset;
+    s32 width;
+    s32 height;
+    s32 format;
+    s32 size;
+    u8 *texture;
+
+    asset = func_8004C990(0x157, 1);
+    width = func_8004CA10((u16 *)asset);
+    height = func_8004CA24((u16 *)asset);
+    texture = func_8004CA60(asset);
+    format = func_8004CA38(asset);
+    size = func_8004CA4C(asset);
+    gSPDisplayList(D_800D0510++, D_841869E0);
+    ParticleGfx_SetPrimColor_fragment79(*(u8 *)((u8 *)arg0 + 0x22), *(u8 *)((u8 *)arg0 + 0x23),
+                                        *(u8 *)((u8 *)arg0 + 0x24), *(u8 *)((u8 *)arg0 + 0x25));
+    func_800459AC(texture, format, size, width, height, 1, 0, 1, 1, 6, 6, 0, 0);
+    GfxRect_DrawTextured(*(s16 *)((u8 *)arg0 + 0xA), *(s16 *)((u8 *)arg0 + 0xC), 64,
+                         *(s16 *)((u8 *)arg0 + 0x10), 0, 0, 0x400, 0, 0);
+    GfxRect_DrawTextured((s16)(*(s16 *)((u8 *)arg0 + 0xE) + *(s16 *)((u8 *)arg0 + 0xA) - 64),
+                         *(s16 *)((u8 *)arg0 + 0xC), 64, *(s16 *)((u8 *)arg0 + 0x10), 0x800, 0, 0x400, 0, 0);
+    func_8413FDB0(arg0);
+}
 #endif
 
 #ifdef VERSION_US

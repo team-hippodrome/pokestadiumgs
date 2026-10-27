@@ -126,7 +126,16 @@ s32 func_88A01018(u8 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A01074.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A013E8.s")
+// Adds arg1 to byte 0, byte arg0 + 1 and bytes arg0 + 6 through 8 of *D_88A01C64.
+void func_88A013E8(s32 arg0, s8 arg1) {
+    u32 i;
+
+    D_88A01C64[0] += arg1;
+    (D_88A01C64 + arg0)[1] += arg1;
+    for (i = arg0 + 1; i < 4; i++) {
+        (D_88A01C64 + i)[5] += arg1;
+    }
+}
 
 extern s32 func_8800005C(void);
 extern u8 func_8006378C(u8);
@@ -162,5 +171,58 @@ void func_88A014C8(s32 arg0, u8 arg1, s8 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A017B4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A01990.s")
+extern s8 D_88006868;
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_WriteEntries(void *, s32, u8 *);
+extern s32 func_8006229C(u8 *);
+extern void func_88A00B44(u8 *, u8 *);
+// For each of the four pending-write flags at D_88A01C64 + 0x104, opens the
+// matching save handle with func_8006218C, writes that table's entries with
+// Deck_WriteEntries, closes the handle and clears the flag.
+void func_88A01990(void) {
+    s32 i;
+    s32 offset;
+    u8 buffer[0x98];
+    u8 *handle;
+
+    for (i = 0; i < 4; i++) {
+        offset = i * 4;
+        if (*(s32 *)(D_88A01C64 + offset + 0x104)) {
+            switch ((u32)i) {
+                case 0:
+                    handle = func_8006218C(35, D_88006868, 0, 1);
+                    if (handle != NULL) {
+                        func_88A00B44(D_88A01C64, buffer);
+                        Deck_WriteEntries(buffer, 1, handle);
+                        func_8006229C(handle);
+                    }
+                    break;
+                case 1:
+                    handle = func_8006218C(34, D_88006868, 0, 1);
+                    if (handle != NULL) {
+                        Deck_WriteEntries(*(u8 **)(D_88A01C64 + 0xF0), D_88A01C64[0xEF], handle);
+                        func_8006229C(handle);
+                    }
+                    break;
+                case 2:
+                    handle = func_8006218C(18, 0, 0, 1);
+                    if (handle != NULL) {
+                        Deck_WriteEntries(*(u8 **)(D_88A01C64 + 0xF8), D_88A01C64[0xF4], handle);
+                        func_8006229C(handle);
+                    }
+                    break;
+                case 3:
+                    handle = func_8006218C(18, 0, 1, 1);
+                    if (handle != NULL) {
+                        Deck_WriteEntries(*(u8 **)(D_88A01C64 + 0x100), D_88A01C64[0xFC], handle);
+                        func_8006229C(handle);
+                    }
+                    break;
+            }
+            *(s32 *)(D_88A01C64 + offset + 0x104) = 0;
+        }
+    }
+}
+
+#pragma C_FUNCTION_PADDING(8)
 #endif
