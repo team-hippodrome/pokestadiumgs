@@ -19,3 +19,14 @@
   halfword pairs. IDO picks the `+0x50..0x58` float chain to re-read instead.
   Statement order does not change which chain IDO picks. Permuter 240 s:
   1380 → 750.
+- `func_84100710`, `func_84100874`, `func_841009D8`: the RGBA keyframe
+  samplers (the first two are byte-identical; the third reads `anim[2]`).
+  Same spellings as `func_84101084`, plus an `s32` time parameter. Retail
+  homes it and reads `(s16)time` back with `lh`.
+- `func_84100B3C`: requeue. Applies the sampled color: mode 0 indexes
+  `anim[1] + (time % divisor) * 4`, mode 1 calls `func_84100710`, and
+  `time == divisor` ends via `func_84100094`. The result goes to
+  `Audio_SetChannelGroupCounts` for kind 2, else into `+0x8B..0x8E`.
+  Retail keeps extra register copies of `time` and `mode`, and spills the
+  remainder (`sp+0x28`) and `color` (`sp+0x38`). A sweep of
+  `time`/`mode`/`frame` widths only reaches 0.63 (72 vs 75 instructions).
