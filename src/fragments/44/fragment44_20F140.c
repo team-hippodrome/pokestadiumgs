@@ -322,7 +322,42 @@ void func_8AF221C4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF2228C.s")
+s32 func_8AF2228C(void) {
+    u8 *entry;
+    u8 *party;
+    s32 result;
+    s32 a, b, c, x, y, z;
+
+    result = 0;
+    entry = D_8AF3A198 + D_8AF3A082 * 0x44;
+    a = entry[0x1A];
+    b = entry[0x1B];
+    c = entry[0x1C];
+    party = *(u8 **)(D_8AF2BDD8 + 4);
+    x = party[0x18];
+    y = party[0x70];
+    party += 0xC8; // FAKE
+    z = *party;
+    if (x == a && y == b && z == c) {
+        result = 1;
+    }
+    if (x == a && y == c && z == b) {
+        result = 1;
+    }
+    if (x == b && y == a && z == c) {
+        result = 1;
+    }
+    if (x == b && y == c && z == a) {
+        result = 1;
+    }
+    if (x == c && y == a && z == b) {
+        result = 1;
+    }
+    if (x == c && y == b && z == a) {
+        result = 1;
+    }
+    return result;
+}
 
 s32 func_8AF22384(void) {
     u8 *entry = *(u8 **)(D_8AF2BDD8 + 4);
