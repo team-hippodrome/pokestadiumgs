@@ -3,7 +3,71 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F100020.s")
+s32 func_8F10008C(s32 arg0, void *arg1);
+s32 func_8F1000F4(s32 arg0, void *arg1);
+extern u8 D_80126420;
+extern u8 D_1000000[];
+
+u32 D_8F103900[] = {
+    0x0C00FFFF, 0x05000000, 0x0B00001E, 0x00000000, 0x014000F0, 0x00000000, 0x0000000A, 0x000004E2,
+    0x05000000, 0x0D000000, 0x05000000, 0x14000000, 0x002D0019, 0xFFFFFF28, 0x08000000, (u32)func_8F10008C,
+    0x00000000, 0x14000000, 0x002D0019, 0x80808028, 0x08000000, (u32)func_8F1000F4, 0x00000000, 0x16646464,
+    0x0F000003, 0x05000000, 0x0A000000, (u32)&D_80126420, 0x06000000, 0x06000000, 0x06000000, 0x06000000,
+    (u32)D_1000000,
+};
+s32 D_8F103984 = 1;
+s32 D_8F103988 = -1;
+u8 D_8F10398C[] = "\xA4\xC0\xA4\xDF\xA1\xBC\xA4\xAF\xA4\xF3";
+u8 D_8F103998[] = "DummyMon";
+s32 D_8F1039A4 = 0;
+s32 D_8F1039A8 = 0;
+s32 D_8F1039AC = 0;
+s32 D_8F1039B0 = 0;
+s32 D_8F1039B4 = 0;
+s32 D_8F1039B8 = 0;
+s32 D_8F1039BC = 0;
+s32 D_8F1039C0 = 0;
+s32 D_8F1039C4 = 0;
+s16 D_8F1039C8[][5] = {
+    { 50, 50, 130, 180, 1 },
+    { 50, 50, 180, 74, 2 },
+    { 50, 50, 180, 50, 2 },
+};
+u8 D_8F1039E8[] = "\xA5\xC7\xA1\xBC\xA5\xBF\xA4\xF2\xA5\xED\xA5\xE0\xA4\xCB\xA5\xBB\xA1\xBC\xA5\xD6\xA4\xB7\xA4\xDE\xA4\xB9";
+u8 D_8F103A04[] = "Save current data to ROM?";
+extern u8 D_8F103AD0[], D_8F103AD8[], D_8F103AE0[], D_8F103AE4[];
+void *D_8F103A20[] = { D_8F103AD0, D_8F103AD8 };
+void *D_8F103A28[] = { D_8F103AE0, D_8F103AE4 };
+u8 D_8F103A30[] = "\xA4\xB7\xA4\xE5\xA4\xA6\xA4\xEA\xA4\xE7\xA4\xA6\xA4\xB7\xA4\xDE\xA4\xB9\xA4\xAB\xA1\xA9";
+u8 D_8F103A48[] = "Quit ?";
+
+// Debug toggle on the Z trigger; the flag is a function-local static, which is why every access
+// re-forms its address instead of reusing one base register.
+s32 func_8F100020(s32 arg0, u8 *arg1) {
+    static s32 sDebugFlag = 1;
+
+    if (arg0 == 2) {
+        if (D_80087200->buttonsPressed & Z_TRIG) {
+            sDebugFlag ^= 1;
+        }
+        if (sDebugFlag) {
+            arg1[2] |= 0x40;
+        } else {
+            arg1[2] &= ~0x40;
+        }
+    }
+    return 0;
+}
+
+s32 D_8F103A54 = 0x1E00;
+s32 D_8F103A58 = 0x9600;
+extern u8 D_8F103AE8[], D_8F103AF8[], D_8F103B0C[], D_8F103B1C[];
+u8 *D_8F103A5C[] = { D_8F103AE8, D_8F103AF8 };
+u8 *D_8F103A64[] = { D_8F103B0C, D_8F103B1C };
+extern u8 D_8F103B64[], D_8F103B78[], D_8F103B88[], D_8F103B9C[], D_8F103BB8[], D_8F103BC4[], D_8F103BCC[], D_8F103BD4[], D_8F103BDC[], D_8F103BE8[], D_8F103C00[], D_8F103C10[];
+u8 *D_8F103A6C[] = { D_8F103B64, D_8F103B78, D_8F103B88, D_8F103B9C, D_8F103BB8, D_8F103BC4, D_8F103BCC, D_8F103BD4, D_8F103BDC, D_8F103BE8, D_8F103C00, D_8F103C10 };
+extern u8 D_8F103C1C[], D_8F103C2C[], D_8F103C38[], D_8F103C4C[], D_8F103C60[], D_8F103C64[], D_8F103C70[], D_8F103C7C[], D_8F103C84[], D_8F103C8C[], D_8F103C98[], D_8F103CA8[];
+u8 *D_8F103A9C[] = { D_8F103C1C, D_8F103C2C, D_8F103C38, D_8F103C4C, D_8F103C60, D_8F103C64, D_8F103C70, D_8F103C7C, D_8F103C84, D_8F103C8C, D_8F103C98, D_8F103CA8, NULL };
 #endif
 
 #ifdef VERSION_US
@@ -143,7 +207,6 @@ typedef struct {
     s16 values[5];
 } Fragment69LimitRecord;
 extern u8 D_8F1DF270[];
-extern Fragment69LimitRecord D_8F1039D0[];
 void func_8F1002F0(void *arg0) {
     Fragment69MenuRecord *record = (Fragment69MenuRecord *)arg0;
     s32 rowIndex;
@@ -153,13 +216,13 @@ void func_8F1002F0(void *arg0) {
         record->index--;
         if (record->index < 0) {
             rowIndex = ((u8 *)record - D_8F1DF270) / 6;
-            row = &D_8F1039D0[rowIndex];
+            row = (Fragment69LimitRecord *)&D_8F1039C8[rowIndex][4];
             record->index = row->values[0] - 1;
         }
     }
     if ((D_80087200->buttonsRepeat) & 0x400) {
         rowIndex = ((u8 *)record - D_8F1DF270) / 6;
-        row = &D_8F1039D0[rowIndex];
+        row = (Fragment69LimitRecord *)&D_8F1039C8[rowIndex][4];
         record->index++;
         if (record->index >= row->values[0]) record->index = 0;
     }
