@@ -361,5 +361,25 @@ void func_81311030(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_8131109C.s")
+// Returns -2 unless the phase byte at +0x38 is 5 (set by func_813107A0 once the
+// value at +0x30 falls to 0) and the counter at +0x3A (incremented by func_8130FE9C)
+// is at least 3. Otherwise returns the entry index at +0x48 when the any-selectable
+// flag at +0xA8 (set by func_8130FB58) is nonzero, or -1.
+s32 func_8131109C(u8 *arg0) {
+    s32 result;
+    s32 result_copy; // FAKE: copy of result restored in the else branch; diff score 1210 without it.
+
+    result = -1;
+    if (arg0[0x38] == 5 && arg0[0x3A] >= 3) {
+        result_copy = result;
+        if (*(s32 *)(arg0 + 0xA8) != 0) {
+            result = *(s32 *)(arg0 + 0x48);
+        } else {
+            result = result_copy;
+        }
+    } else {
+        result = -2;
+    }
+    return result;
+}
 #endif

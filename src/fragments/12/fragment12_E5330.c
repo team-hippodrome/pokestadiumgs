@@ -347,7 +347,28 @@ void func_81401394(void) {
     gDPSetCombine(D_800D0510++, 0xFFB3FF, 0xFF65FEFF);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81401404.s")
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+// Eight-byte header at the start of a texture returned by func_8004C990; same
+// layout as TextureRenderHeader in src/4CC20.c.
+//@src/4CC20.c
+typedef struct TextureRenderHeader {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u16 unk_06;
+} TextureRenderHeader;
+
+void func_81401404(s32 arg0, s32 arg1, f32 arg2) {
+    TextureRenderHeader *texture;
+    f32 width;
+    f32 height;
+
+    texture = (TextureRenderHeader *)D_814077C0;
+    width = texture->width * arg2;
+    height = texture->height * arg2;
+    func_81602240(arg0 - width * 0.5f, arg1 - height * 0.5f, width, height, 0, 0, 1.0f / arg2, 1.0f / arg2);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814014C8.s")
 
@@ -357,7 +378,19 @@ void func_81401394(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_8140225C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814024B4.s")
+extern u8 D_80094F50[];
+
+// Draws texture `index` of the consecutive pointers D_81407814..D_81407828, which
+// func_814005B0 fills from func_8004C990(0x33, n), at (x, y) using the width and
+// height in the texture header's first two u16 fields. func_8004D1FC loads it:
+//@src/4CC20.c
+void func_814024B4(s32 x, s32 y, s32 index) {
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    func_8004D1FC((&D_81407814)[index]);
+    func_81602240(x, y, *(u16 *)(&D_81407814)[index], *(u16 *)((&D_81407814)[index] + 2), 0, 0, 1.0f, 1.0f);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814025E8.s")
 

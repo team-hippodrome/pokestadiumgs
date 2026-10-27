@@ -4,7 +4,43 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82100020.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82100214.s")
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Close to func_8260B8CC (fragment20); draws resource 75 instead of 81, returns early when
+// func_8004C990 finds no resource, and passes the resource to func_8004D1FC before drawing.
+// The width is divided as it is loaded; the template's separate `tile_width /= 4` loads the
+// height through a different register (diff score 5).
+void func_82100214(s32 x, s32 y, s32 width, s32 height) {
+    s32 resource;
+    s32 tile_width;
+    s32 tile_height;
+
+    resource = func_8004C990(75, 0);
+    if (resource != 0) {
+        tile_width = ((u16 *)resource)[0] / 4;
+        tile_height = ((u16 *)resource)[1];
+        func_8004D1FC((u8 *)resource);
+        GfxRect_DrawTextured(x, y, tile_width, tile_height, 0, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + tile_width, y, width - tile_width * 2, tile_height,
+                             tile_width << 5, 0, 0, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y, tile_width, tile_height,
+                             tile_width << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x, y + tile_height, tile_width, height - tile_height * 2,
+                             (tile_width * 2) << 5, 0, 1024, 0, 0);
+        GfxRect_DrawTextured(x, y + height - tile_height, tile_width, tile_height,
+                             (tile_width * 2) << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + tile_width, y + height - tile_height,
+                             width - tile_width * 2, tile_height,
+                             (tile_width * 3) << 5, 0, 0, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y + height - tile_height,
+                             tile_width, tile_height, (tile_width * 3) << 5, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(x + width - tile_width, y + tile_height,
+                             tile_width, height - tile_height * 2,
+                             (tile_width * 3) << 5, 0, 1024, 0, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82100514.s")
 

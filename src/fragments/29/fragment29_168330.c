@@ -344,7 +344,24 @@ u8 func_8800335C(void) {
     return count;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_168330/func_88003430.s")
+// Returns 1 if any of the six 0x4C-byte D_8800ED50 nodes has id byte +1 equal to id
+// and a nonzero state word at +0x20 (the word func_880032C4 counts), else 0.
+s32 func_88003430(u8 id) {
+    s32 i = 0; // FAKE: initializer overwritten by the loop; diff score 260 without it.
+    s32 found = 0;
+    u8 *node = D_8800ED50;
+
+    // FAKE: do-while (0) wrapper; diff score 55 without it.
+    do {
+        for (i = 0; i != 6; i++, node += 0x4C) {
+            if (id == node[1] && *(s32 *)(node + 0x20) != 0) {
+                found = 1;
+                break;
+            }
+        }
+    } while (0);
+    return found;
+}
 
 void func_88003480(s32 mode, u16 width, u16 height, s16 *x, s16 *y) {
     switch (mode) {

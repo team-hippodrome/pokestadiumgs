@@ -299,7 +299,32 @@ void func_8006E7DC(f32 (*arg0)[4], void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006E858.s")
+void func_8006E858(f32 (*mtx)[4], void *arg1, f32 weight) {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    s32 pad[3]; // FAKE: unused stack padding; diff score 201 without it.
+
+    x = (*(f32 *)((u8 *)(arg1) + (0)));
+    y = (*(f32 *)((u8 *)(arg1) + (4)));
+    z = (*(f32 *)((u8 *)(arg1) + (8)));
+    guMtxXFMF(mtx, x, y, z, &x, &y, &z);
+    dx = x - (*(f32 *)((u8 *)(arg1) + (0xC)));
+    dy = y - (*(f32 *)((u8 *)(arg1) + (0x10)));
+    dz = z - (*(f32 *)((u8 *)(arg1) + (0x14)));
+    dx *= weight;
+    dy *= weight;
+    dz *= weight;
+    (*(f32 *)((u8 *)(arg1) + (0xC))) += dx;
+    (*(f32 *)((u8 *)(arg1) + (0x10))) += dy;
+    (*(f32 *)((u8 *)(arg1) + (0x14))) += dz;
+    (*(f32 *)((u8 *)(arg1) + (0x18))) += dx * 0.5f;
+    (*(f32 *)((u8 *)(arg1) + (0x1C))) += dy * 0.5f;
+    (*(f32 *)((u8 *)(arg1) + (0x20))) += dz * 0.5f;
+}
 #endif
 
 #ifdef VERSION_US

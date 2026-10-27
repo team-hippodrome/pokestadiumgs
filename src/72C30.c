@@ -71,7 +71,17 @@ void Minigame_ResetPlayerSubstate(s32 *arg0) {
     arg0[3] = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/72C30/func_80072184.s")
+void func_80072184(u8 *arg0) {
+    arg0[0x2183] = 5;
+    arg0[0x2180] = 0;
+    arg0[0x2181] = 1;
+    // FAKE: s8 store to a byte Minigame_MapControllerButtons reads as u8 bit flags;
+    // diff score 130 without it.
+    *(s8 *)(arg0 + 0x2182) = 1;
+    *(s32 *)(arg0 + 0x2184) = 0;
+    func_800720A8((unk_func_800720A8 *)(arg0 + 0x2188));
+    Minigame_ResetPlayerSubstate((s32 *)(arg0 + 0x21F8));
+}
 
 void Minigame_SetModeDefaults(u8 *arg0) {
     *(s16 *)(arg0 + 0) = 4;

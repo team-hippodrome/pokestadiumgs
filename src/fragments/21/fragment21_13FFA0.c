@@ -256,7 +256,37 @@ void func_825015D8(u16 arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82501754.s")
+extern void *D_82508680;
+extern u8 D_82508FCC[];
+extern u8 D_82508FD8[];
+void func_82501754(u16 *arg0) {
+    s32 mask = 0;
+    s32 i = 0; // FAKE: constant index into D_82508FD8; diff score 355 without it.
+    s32 enabled;
+
+    switch (*arg0) {
+        case 0x100:
+            mask = 1;
+            break;
+        case 0x101:
+            mask = 2;
+            break;
+        case 0x300:
+            mask = 4;
+            break;
+        case 0x301:
+            mask = 8;
+            break;
+    }
+
+    if (mask != 0) {
+        D_82508FD8[i] |= mask;
+        enabled = (*(s16 *)D_82508680 != 0) ? 1 : 0;
+        func_80055F6C(D_82508FCC, enabled);
+        func_80051D64(20, 0);
+        func_80054E48(3);
+    }
+}
 #endif
 
 #ifdef VERSION_US
