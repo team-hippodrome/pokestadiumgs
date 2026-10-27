@@ -65,7 +65,6 @@ s32 func_88203A18(s32 arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203BE4.s")
 
-extern void func_88203670(s32 type, u8 *entries, u8 count);
 // Same 12-byte layout as LabPCStorageList in
 //@src/fragments/31/fragment31_1736F0.c
 typedef struct LabPCStorageList {
