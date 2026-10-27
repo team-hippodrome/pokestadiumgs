@@ -972,7 +972,40 @@ void func_82607B74(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82607BF4.s")
+extern u8 D_82615608[];
+extern u8 D_8261560C[];
+extern u8 D_82615610[];
+extern u8 D_82615614[];
+extern u8 D_82615618[];
+extern u8 D_8261561C[];
+extern u8 D_82615620;
+extern u8 D_82615621;
+extern u8 D_82615622;
+extern u8 D_82615624;
+extern u8 D_82615625;
+extern u8 D_82615626;
+void func_82607BF4(s32 arg0, u8 *arg1, u8 *arg2, s32 arg3, s32 arg4) {
+    u8 *from_prim;
+    u8 *from_env;
+    s32 max = 255;
+
+    if (arg0 == 11) {
+        from_prim = D_82615618;
+        from_env = D_8261561C;
+    } else if (arg4 != 0) {
+        from_prim = D_82615610;
+        from_env = D_82615614;
+    } else {
+        from_prim = D_82615608;
+        from_env = D_8261560C;
+    }
+    arg1[0] = from_prim[0] + (D_82615620 - from_prim[0]) * arg3 / max;
+    arg1[1] = from_prim[1] + (D_82615621 - from_prim[1]) * arg3 / max;
+    arg1[2] = from_prim[2] + (D_82615622 - from_prim[2]) * arg3 / max;
+    arg2[0] = from_env[0] + (D_82615624 - from_env[0]) * arg3 / max;
+    arg2[1] = from_env[1] + (D_82615625 - from_env[1]) * arg3 / max;
+    arg2[2] = from_env[2] + (D_82615626 - from_env[2]) * arg3 / max;
+}
 
 extern u8 D_82615628;
 extern u8 D_82615629;
@@ -1025,14 +1058,41 @@ void func_82608270(Color82608270 *arg0, Color82608270 *arg1, s32 arg2) {
     *arg1 = D_82615644[arg2];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826082C0.s")
+typedef struct unk_func_826082C0_rgb {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+} unk_func_826082C0_rgb;
+extern unk_func_826082C0_rgb D_8261565C;
+extern u8 D_82615660[];
+void func_826082C0(u8 *arg0, u8 *arg1, s32 arg2, s32 arg3) {
+    u8 *row;
+    s32 step;
+    s32 steps;
+
+    *(unk_func_826082C0_rgb *)arg0 = D_8261565C;
+    if (arg3 < 3) {
+        steps = 3;
+        row = D_82615660 + arg2 * 9;
+        arg1[0] = (row[3] - row[0]) * arg3 / steps + row[0];
+        arg1[1] = (row[4] - row[1]) * arg3 / steps + row[1];
+        arg1[2] = (row[5] - row[2]) * arg3 / steps + row[2];
+    } else {
+        step = arg3 - 3;
+        steps = 6;
+        row = D_82615660 + arg2 * 9;
+        arg1[0] = (row[6] - row[3]) * step / steps + row[3];
+        arg1[1] = (row[7] - row[4]) * step / steps + row[4];
+        arg1[2] = (row[8] - row[5]) * step / steps + row[5];
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260850C.s")
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E78[];
 extern s32 func_8004D1FC(u8 *);
-extern void func_82607BF4(s16, u8 *, u8 *, s16, s32);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
 extern void func_80044270(s16, s16, s16, s16, s32, s32, s32, s32, s32);
 extern s32 func_8004C990(s32, s32);
 void func_8260899C(u8 *arg0, s32 arg1) {
@@ -1268,7 +1328,7 @@ void func_8260B8CC(s32 x, s32 y, s32 width, s32 height) {
 /* mkdraft:func_8260B8CC end */
 
 extern s32 func_8004D1FC(u8 *);
-extern void func_82607BF4(s16, u8 *, u8 *, s16, s32);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
 extern void func_8260B8CC(s32, s32, s32, s32);
 extern u8 D_80094E78[];
 extern s32 func_8004C990(s32, s32);
@@ -1360,7 +1420,7 @@ extern u8 *func_8004CA60(u8 *);
 extern void func_800459AC();
 extern void func_80044270(s16, s16, s16, s16, s32, s32, s32, s32, s32);
 extern s32 func_8004C990(s32, s32);
-extern void func_82607BF4(s16, u8 *, u8 *, s16, s32);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
 extern u8 D_80094E78[];
 extern Gfx * D_800D0510;
 void func_8260CC24(u8 *arg0, s32 arg1, s32 arg2) {
