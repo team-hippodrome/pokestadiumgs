@@ -178,5 +178,116 @@ void func_8414FA3C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414FB24.s")
+extern u8 func_80062D20(u8);
+void func_8414F748(void *);
+void func_8414F93C(void *);
+typedef struct unk_func_8414FB24 {
+    /* 0x00 */ u8 unk_00[0x2E];
+    /* 0x2E */ u8 unk_2E[2];
+} unk_func_8414FB24;
+
+void func_8414FB24(u8 *arg0) {
+    switch (func_80062D20(((unk_func_8414FB24 *)arg0)->unk_2E[func_84154B24()])) {
+        case 5:
+        case 6:
+        case 31:
+        case 49:
+        case 67:
+        case 76:
+        case 111:
+        case 113:
+            func_8414F2F4(arg0);
+            break;
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 26:
+        case 30:
+        case 46:
+        case 47:
+        case 50:
+        case 51:
+        case 52:
+        case 53:
+        case 54:
+        case 55:
+        case 81:
+        case 82:
+        case 84:
+        case 109:
+        case 129:
+        case 138:
+        case 139:
+        case 140:
+        case 142:
+        case 145:
+            func_8414F268(arg0);
+            break;
+        case 2:
+        case 18:
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 24:
+        case 33:
+        case 36:
+        case 42:
+        case 58:
+        case 59:
+        case 60:
+        case 61:
+        case 62:
+        case 64:
+        case 66:
+        case 68:
+        case 69:
+        case 70:
+        case 71:
+        case 72:
+        case 74:
+        case 77:
+        case 90:
+        case 94:
+        case 100:
+        case 101:
+        case 106:
+        case 115:
+        case 136:
+        case 137:
+        case 156:
+            func_8414F5F0(arg0);
+            break;
+        case 4:
+            func_8414F618(arg0);
+            break;
+        case 16:
+        case 56:
+            func_8414F668(arg0);
+            break;
+        case 23:
+        case 63:
+        case 73:
+            func_8414F6D0(arg0);
+            break;
+        case 97:
+            func_8414F748(arg0);
+            break;
+        case 25:
+            func_8414FA3C(arg0);
+            break;
+        case 114:
+            func_8414F894((s32)arg0);
+            break;
+        case 116:
+            func_8414F8B4((s32)arg0);
+            break;
+        case 120:
+            func_8414F93C(arg0);
+            break;
+    }
+}
 #endif
