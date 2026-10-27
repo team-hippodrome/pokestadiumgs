@@ -635,7 +635,104 @@ void func_860032DC(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860033E8.s")
+extern void func_86002DA8(u8 *);
+extern s32 func_8600A04C(void *, void *, void *);
+extern void func_87C00908(void *, f64, f64, f64);
+extern void *func_87C00C80(void *, void *);
+extern void *func_87C00AE4(void *, void *);
+extern void *func_87C01140(void *, void *, void *, f64);
+extern void func_86007A80(void *, f64);
+extern f64 D_8600DE40;
+extern f64 D_8600DEA0;
+extern f64 D_8600DEA8;
+extern f64 D_8600DEF8;
+extern f64 D_8600DF10;
+extern f64 D_8600DFF8;
+extern f64 D_8600E000;
+extern void func_87C00120(void *, f64, f64, f64);
+
+void func_860033E8(u8 *arg0) {
+    f64 multiplier;
+    f64 quaternion[4];
+    f64 vector[3];
+
+    *(f32 *)(arg0 + 0x144) = (f32)*(f64 *)arg0;
+    *(f32 *)(arg0 + 0x148) = (f32)*(f64 *)(arg0 + 8);
+    *(f32 *)(arg0 + 0x14C) = (f32)*(f64 *)(arg0 + 0x10);
+    func_87C00120(arg0 + 0x30, 0.0, 0.0, 0.0);
+    if (*(f64 *)(arg0 + 0x17F8) > 0.0) {
+        *(f64 *)(arg0 + 0x17F8) -= *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890);
+        if (*(f64 *)(arg0 + 0x17F8) <= 0.0) {
+            *(f64 *)(arg0 + 0x17F8) = -1.0;
+        }
+    }
+    switch (*(u32 *)(arg0 + 0x1828)) {
+    case 0:
+        func_860029D0(arg0);
+        break;
+    case 2:
+        func_86002A58(arg0);
+        break;
+    case 1:
+        func_86002B20(arg0);
+        break;
+    case 4:
+        func_86002DA8(arg0);
+        break;
+    case 3:
+        func_86002BF0(arg0);
+        break;
+    case 5:
+        func_86002F5C(arg0);
+        break;
+    case 6:
+        func_86002FB4(arg0);
+        break;
+    case 7:
+        func_86003124(arg0);
+        break;
+    case 8:
+        func_86003080(arg0);
+        break;
+    }
+    *(f64 *)(arg0 + 0xE8) = D_8600DEA0;
+    if (func_8600A04C(*(u8 **)(arg0 + 0x1870) + 0x66B8, arg0, quaternion) == 0 &&
+        func_8600A04C(*(u8 **)(arg0 + 0x1870) + 0x6668, arg0, quaternion) == 0) {
+        func_87C00908(quaternion, 0.0, 0.0, 0.0);
+    }
+    if (func_860031C8(arg0) != 0) {
+        multiplier = D_8600DFF8;
+        func_87C00120(vector,
+            (f64)*(f32 *)(arg0 + 0x1804) * multiplier * 0.01,
+            0.0, (f64)*(f32 *)(arg0 + 0x1800) * multiplier * 0.01);
+        func_87C00C80(quaternion, vector);
+    }
+    func_87C01140(arg0 + 0x1838, arg0 + 0x1838, quaternion, D_8600E000);
+    func_87C00AE4(arg0 + 0x1838, arg0 + 0x1838);
+    if (*(f64 *)(arg0 + 0x17E0) > 0.0) {
+        *(f64 *)(arg0 + 0x17E0) -= *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890);
+        *(f64 *)(arg0 + 0x17D0) = 0.0;
+        *(f64 *)(arg0 + 0x17E8) = *(f64 *)(D_8600DE30 + 0xC8);
+        func_86007A80(arg0, *(f64 *)(D_8600DE30 + 0xD8) * *(f64 *)(D_8600DE30 + 0x10));
+        if (*(f64 *)(arg0 + 0x17E0) <= 0.0) {
+            *(f64 *)(arg0 + 0x17E0) = 0.0;
+            *(f64 *)(arg0 + 0x17E8) = D_8600DEF8;
+            func_87C01DB8(arg0 + 0x17A0, 0, 0);
+        }
+    } else {
+        *(f64 *)(arg0 + 0x17E0) = 0.0;
+        func_86007A80(arg0, D_8600DE40);
+        if (*(s32 *)(arg0 + 0x1828) == 3 && *(f64 *)(arg0 + 0x17D0) > 0.0) {
+            func_86007A80(arg0, D_8600DE40 * D_8600DF10);
+            *(f64 *)(arg0 + 0xE8) = D_8600DEA8;
+        }
+        *(f64 *)(arg0 + 0x17E8) -= *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890);
+        if (*(f64 *)(arg0 + 0x17E8) < 0.0) {
+            *(f64 *)(arg0 + 0x17E8) = 0.0;
+        }
+    }
+    func_87C01A90((s32)(arg0 + 0x17A0));
+}
 #endif
 
 #ifdef VERSION_US
@@ -786,7 +883,44 @@ void func_86003E5C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86003EFC.s")
+extern void func_86003B10(u8 *);
+void func_86003EFC(void *arg0, s32 arg1) {
+    u8 *object = arg0;
+
+    *(s32 *)(object + 0x1828) = arg1;
+    object[0x13D] = 255;
+    *(f32 *)(object + 0x180C) = 0.0f;
+    *(f64 *)(object + 0x17E0) = 0.0;
+    switch (arg1) {
+    case 0:
+        func_86003A0C(object);
+        break;
+    case 2:
+        func_86003C68(object);
+        break;
+    case 1:
+        func_86003A98(object);
+        break;
+    case 4:
+        func_86003B10(object);
+        break;
+    case 3:
+        func_86003CFC(object);
+        break;
+    case 5:
+        func_86003D54(object);
+        break;
+    case 6:
+        func_86003DAC(object);
+        break;
+    case 7:
+        func_86003DD0(object);
+        break;
+    case 8:
+        func_86003E5C(object);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
