@@ -459,7 +459,31 @@ void func_86202574(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_862025E0.s")
+// For each node in the list at D_8620E198 + 0x180, picks one of the four 12-byte D_8620DF60
+// entries from the signs of the node's floats at +0x48 and +0x50 rotated by 45 degrees
+// (a quadrant test on what are likely the x and z coordinates).
+void func_862025E0(void) {
+    u8 *node = *(u8 **)((u8 *)D_8620E198 + 0x180);
+    u32 index;
+    f32 a;
+    f32 b;
+
+    if (node != NULL) {
+        do {
+            index = 0;
+            a = *(f32 *)(node + 0x50) * -0.70710677f + *(f32 *)(node + 0x48) * 0.70710677f;
+            b = *(f32 *)(node + 0x50) * 0.70710677f + -*(f32 *)(node + 0x48) * -0.70710677f;
+            if (a > 0.0f) {
+                index++;
+            }
+            if (b > 0.0f) {
+                index += 2;
+            }
+            func_86201300(node, (u8 *)D_8620DF60 + index * 12);
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
 #endif
 
 #ifdef VERSION_US

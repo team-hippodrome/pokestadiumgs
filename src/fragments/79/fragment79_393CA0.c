@@ -6196,7 +6196,34 @@ void func_841392E0(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84139364.s")
+extern void func_800226C0(s32);
+extern u8 D_8419A01A;
+
+void func_84139364(u8 arg0) {
+    switch (D_84195248[(u32)arg0 * 24 + 14]) {
+        case 1:
+            func_84147228(4, arg0, 0, 13, 0);
+            func_84147228(5, arg0, 0, 13, 0);
+            func_84147228(6, arg0, 0, 13, 0);
+            func_84147228(4, arg0, 0, 4, 4);
+            func_84147228(5, arg0, 0, 4, 4);
+            func_84147228(6, arg0, 0, 4, 4);
+            func_84147228(7, arg0, 0, 1, 0);
+            func_84147228(8, arg0, 0, 1, 0);
+            func_84147228(7, arg0, 0, 15, 0);
+            func_84147228(8, arg0, 0, 15, 0);
+            break;
+        default:
+            func_84147228(8, arg0, 0, 10, 0);
+            break;
+    }
+    if (D_8419A01A & 2) {
+        func_84147228(22, arg0, 0, 10, 0);
+        func_84147228(22, arg0, 0, 4, 4);
+    }
+    D_84195248[(u32)arg0 * 24 + 13] = D_84195248[(u32)arg0 * 24 + 14];
+    func_800226C0(3);
+}
 #endif
 
 #ifdef VERSION_US
@@ -6599,7 +6626,29 @@ void func_8413AD98(u8 arg0, u8 arg1, s8 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413B08C.s")
+// FAKE: volatile makes each use of arg1 reload it from its stack home; diff score 784 without it.
+void func_8413B08C(u8 arg0, volatile u8 arg1) {
+    switch (D_84195248[(u32)arg0 * 24 + 13]) {
+        case 6:
+            func_84147228(7, arg0, 0, 10, 0);
+            func_84147228(8, arg0, 0, 10, 0);
+            func_84147228(7, arg0, 0, 5, 4);
+            func_84147228(8, arg0, 0, 5, 4);
+            func_84147228(arg1, arg0, 0, 11, 0);
+            func_84147228(arg1, arg0, 0, 5, 4);
+            func_84147228(arg1, arg0, 0, 4, 2);
+            func_84147228(20, arg0, 0, 11, 0);
+            func_84147228(20, arg0, 0, 5, 4);
+            func_84147228(20, arg0, 0, 4, 2);
+            break;
+        case 7:
+            func_84147228(7, arg0, 0, 10, 0);
+            func_84147228(8, arg0, 0, 10, 0);
+            func_84147228(13, arg0, 0, 11, 0);
+            break;
+    }
+    D_84195248[(u32)arg0 * 24 + 13] = 5;
+}
 #endif
 
 #ifdef VERSION_US
