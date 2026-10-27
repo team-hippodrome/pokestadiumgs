@@ -158,6 +158,17 @@ def _sign_extend16(value: int) -> int:
     return value - 0x10000 if value & 0x8000 else value
 
 
+def _lo16_addend(words, op_index: int) -> int:
+    """The in-place addend of the ``%lo`` operand at ``op_index``.
+
+    IDO emits REL relocations, so ``sym + k`` is encoded as an
+    ``R_MIPS_LO16`` against ``sym`` with ``k`` left in the instruction's
+    signed 16-bit immediate (for example the second word of a 64-bit store,
+    ``sw v1, 4($at)``). Folding must keep that offset.
+    """
+    return _sign_extend16(words[op_index] & 0xFFFF)
+
+
 def _relocations_by_offset(relocations, symbols, lo: int, hi: int):
     """``{function-relative offset: [(symbol_name, type), ...]}`` for one function."""
     by_offset: dict[int, list[tuple[str, int]]] = {}
@@ -353,8 +364,9 @@ def plan_runs(words, by_offset, address_map, symbol_filter=None):
             if address is None:
                 break
             _verify_address(symbol, address)
-            if run and coalesce_lui.hi16(address) != coalesce_lui.hi16(
-                address_map[run[0][2]]
+            target = address + _lo16_addend(words, op_index)
+            if run and coalesce_lui.hi16(target) != coalesce_lui.hi16(
+                address_map[run[0][2]] + _lo16_addend(words, run[0][1])
             ):
                 break
             run.append((cursor, op_index, symbol))
@@ -448,7 +460,11 @@ def fold_function_words(words, by_offset, address_map, symbol_filter, function_n
             # that page, so the plain low half of this symbol's own address
             # is exactly the displacement that reaches it -- the same value
             # coalesce_lui._lo16_immediate_literal renders as assembly text.
-            rewritten[op_index] = coalesce_lui.lo16(address_map[symbol])
+            # The operand may address ``symbol + addend`` (REL in-place
+            # addend); the literal must reach that same byte.
+            rewritten[op_index] = coalesce_lui.lo16(
+                address_map[symbol] + _lo16_addend(words, op_index)
+            )
             folds += 1
 
     keep = [i for i in range(len(words)) if i not in removed]
