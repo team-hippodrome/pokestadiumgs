@@ -1082,7 +1082,36 @@ void func_8260899C(u8 *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82608EC4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826090F4.s")
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+void func_826090F4(u8 *arg0, s32 arg1) {
+    u8 *tex;
+    s32 i;
+    s16 x; // FAKE: unused, reserves the stack slot retail has
+    struct { s16 x, y; } pos;
+    struct Color { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+    s16 y;
+    u16 width;
+
+    tex = (u8 *)func_8004C990(84, 0);
+    pos.x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    pos.y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+        func_8004D1FC(tex);
+    }
+    func_82607BF4(*(s16 *)arg0, (u8 *)&prim, (u8 *)&env, *(s16 *)(arg0 + 0xC), (*(u16 *)(arg0 + 4) & 8) != 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+    y = pos.y + 36;
+    for (i = 0; i < 4; i++) {
+        GfxRect_DrawTextured(pos.x + i * 135 + 27, y, *(s16 *)tex, *(s16 *)(tex + 2), 0, 0, 1024, 1024, 0);
+        width = *(u16 *)tex;
+        GfxRect_DrawTextured(pos.x + i * 135 + width + 27, y, width, *(s16 *)(tex + 2), (width - 1) << 5, 0, -1024, 1024, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260933C.s")
 
