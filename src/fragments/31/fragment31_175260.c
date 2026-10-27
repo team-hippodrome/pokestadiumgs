@@ -29,7 +29,41 @@ u8 func_88201FE0(u8 *arg0) {
 }
 /* mkdraft:func_88201FE0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202098.s")
+s32 func_88202098(u8 arg0) {
+    s32 result = 0;
+
+    switch (arg0) {
+        case 5:
+        case 6:
+        case 8:
+        case 9:
+        case 31:
+        case 41:
+        case 42:
+        case 43:
+        case 45:
+        case 48:
+        case 63:
+        case 64:
+        case 69:
+        case 70:
+        case 71:
+        case 72:
+        case 73:
+        case 74:
+        case 76:
+        case 77:
+        case 78:
+        case 196:
+        case 197:
+        case 198:
+        case 199:
+        case 200:
+            result = 1;
+            break;
+    }
+    return result;
+}
 
 extern u8 func_8006378C(u8);
 s32 func_88202104(u8 arg0) {
@@ -43,7 +77,50 @@ s32 func_88202104(u8 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202158.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_882025B4.s")
+// Same 12-byte layout as LabPCStorageList in
+//@src/fragments/31/fragment31_1736F0.c
+typedef struct LabPCStorageList {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList;
+
+extern LabPCStorageList D_88234630[];
+extern s32 func_88A01074(u8, s32, s32);
+
+s32 func_882025B4(u32 mode, u8 slot) {
+    s32 result = 0;
+
+    switch (mode) {
+        case 0:
+            if (D_88234630[1].count == D_88234630[1].capacity) {
+                result = 1;
+            }
+            break;
+        case 1:
+            if (D_88234630[3].count == D_88234630[3].capacity) {
+                result = 1;
+            }
+            break;
+        case 2:
+            if (func_88A01074(slot, 1, 0) == 0) {
+                result = 1;
+            }
+            break;
+        case 3:
+            if (func_88A01074(slot, 1, 1) == 0) {
+                result = 1;
+            }
+            break;
+        case 4:
+            if (func_88A01074(slot, 1, 2) == 0) {
+                result = 1;
+            }
+            break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_882026A4.s")
 

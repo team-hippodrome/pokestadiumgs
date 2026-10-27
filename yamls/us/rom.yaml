@@ -915,7 +915,8 @@
     - [0x1A6360, c,       fragments/31/fragment31_1A6360]
     - [0x1A6980, data,    fragments/31/fragment31_data]
     - [0x1A6E00, .rodata, fragments/31/fragment31_1736F0] # jtbl_88233B80
-    - [0x1A6E60, rodata]
+    - [0x1A6E60, .rodata, fragments/31/fragment31_175260] # D_88233BE0..BF8 constants and jtbl_88233C00/C14/D3C/D50, all referenced only by this file
+    - [0x1A6FF0, rodata]
     - [0x1A7420, .rodata, fragments/31/fragment31_190BB0] # jtbl_882341A0, 16-byte aligned start; ends mid jtbl_882341B8
     - [0x1A7440, rodata]
 
