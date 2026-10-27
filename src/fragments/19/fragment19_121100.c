@@ -344,9 +344,6 @@ s32 func_823016B4(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-typedef struct unk_D_82305EB0 {
-    /* 0x00 */ u32 unk_00;
-} unk_D_82305EB0; // size = 0x4
 extern s16 D_82305E68[];
 extern s16 D_82305E6A;
 extern unk_D_82305EB0 D_82305EB0;
