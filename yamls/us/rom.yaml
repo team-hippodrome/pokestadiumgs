@@ -57,6 +57,8 @@
     - [0x220C0, hasm, ../../src/unk_220C0]
     - [0x226C0, c]
     - [0x229E0, c]
+    - [0x2C1B0, c]
+    - [0x340C0, c]
     - [0x43700, c]
     - [0x44300, c]
     - [0x44E70, c]
@@ -361,7 +363,9 @@
                                 # (not split) because ld can only consume an object's .rodata
                                 # section once.
                                 # start moved down from 0xA3BD0 to cover jtbl_800A2670, jtbl_800A2B38, jtbl_800A2B64 (func_800226C0's switch tables; jtbl_datamig.py)
-    - [0xA4590, rodata] # Include six tables from the next four audio owners.
+    - [0xA4590, rodata]
+    - [0xA49F0, .rodata, 2C1B0] # queued-event tables and adjacent audio constants
+    - [0xA4EA0, rodata]
     - [0xA4EC0, .rodata, 43700] # jtbl_800A42C0
     - [0xA4EE0, .rodata, 47580] # jtbl_800A43C0 (+2 more)
     - [0xA5120, rodata]
