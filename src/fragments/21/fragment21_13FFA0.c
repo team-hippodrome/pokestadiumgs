@@ -249,7 +249,47 @@ s32 func_82501034(s32 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_825010F8.s")
+extern u16 D_82508F88;
+extern u16 D_82508F8A;
+extern s16 D_82508F96;
+extern s16 D_82508F98;
+s32 func_825010F8(s32 arg0, u8 *arg1) {
+    s32 index;
+    s32 dx;
+
+    index = *(s32 *)(arg1 + 0x20);
+    switch (arg0) {
+        case 0:
+            *(s16 *)((u8 *)&D_82508F88 + index * 4 + 0x2C) = *(s16 *)(arg1 + 8);
+            *(s16 *)((u8 *)&D_82508F88 + index * 4 + 0x2E) = *(s16 *)(arg1 + 0xA);
+            *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x34) = *(s16 *)(arg1 + 0xC);
+            *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x38) = *(s16 *)(arg1 + 0xE);
+            *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x3C) = *(s16 *)(arg1 + 0x28);
+            *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x40) = *(s16 *)(arg1 + 0x2A);
+            break;
+        case 1:
+            if (D_82508F8A & 1) {
+                *(u16 *)(arg1 + 2) |= 2;
+                *(s16 *)(arg1 + 0xC) = D_82508F96;
+                *(s16 *)(arg1 + 0xE) = D_82508F98;
+                dx = *(s16 *)(arg1 + 0xC) - *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x34);
+                arg0 = *(s16 *)(arg1 + 0xE) - *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x38);
+                *(s16 *)(arg1 + 0x28) = *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x3C) + dx;
+                if (*(s16 *)(arg1 + 0x28) < 0) {
+                    *(s16 *)(arg1 + 0x28) = 0;
+                }
+                *(s16 *)(arg1 + 0x2A) = *(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x40) + arg0;
+                if (*(s16 *)(arg1 + 0x2A) < 0) {
+                    *(s16 *)(arg1 + 0x2A) = 0;
+                }
+                *(s16 *)(arg1 + 8) = *(s16 *)((u8 *)&D_82508F88 + index * 4 + 0x2C) + (*(s16 *)((u8 *)&D_82508F88 + index * 2 + 0x34) - *(s16 *)(arg1 + 0xC)) / 2;
+            } else {
+                *(u16 *)(arg1 + 2) &= 0xFFFD;
+            }
+            break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
