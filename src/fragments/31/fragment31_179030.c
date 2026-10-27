@@ -13,7 +13,16 @@ void func_88205DB0(void) {
 extern void func_88200134();
 void func_88205DE8(void) { func_88200134(0, 1); func_88200134(1, 1); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_179030/func_88205E18.s")
+extern void D_88000E4C(void);
+extern void func_882000AC(u8, s16, s16, u16, u16, s32, s32, u8);
+void func_88205E18(void) {
+    func_882000AC(2, *(s16 *)((u8 *)D_882346F8 + 0xA), *(s16 *)((u8 *)D_882346F8 + 0xC),
+                  *(u16 *)((u8 *)D_882346F8 + 0xE), *(s16 *)((u8 *)D_882346F8 + 0x10), (s32)D_88000E4C,
+                  (s32)func_88205DE8, 1);
+    func_882000AC(3, *(s16 *)((u8 *)D_882346F8 + 0x1A), *(s16 *)((u8 *)D_882346F8 + 0x1C),
+                  *(u16 *)((u8 *)D_882346F8 + 0x1E), *(s16 *)((u8 *)D_882346F8 + 0x20), (s32)D_88000E4C,
+                  (s32)D_88000E4C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_179030/func_88205EB0.s")
 
