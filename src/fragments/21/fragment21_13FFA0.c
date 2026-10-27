@@ -139,7 +139,57 @@ f32 func_825003DC(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 *arg5) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82500BC0.s")
+extern u8 D_82508D10[];
+extern s16 D_82508F7E;
+extern s16 D_82508F6A;
+extern s16 D_825087BC;
+extern s16 D_82508F70;
+extern u8 D_82508798[];
+s32 func_82500BC0(s32 arg0, u8 *arg1) {
+    s32 index;
+    s16 *pos;
+    s32 offset;
+
+    index = *(s32 *)(arg1 + 0x20);
+    switch (arg0) {
+        case 0:
+            arg1[0x28] = 0x21;
+            pos = (s16 *)(D_82508D10 + index * 0x3C);
+            if (arg1) {} // FAKE
+            pos[8] = *(s16 *)(arg1 + 8);
+            pos[9] = *(s16 *)(arg1 + 0xA);
+            break;
+        case 1:
+            if (D_82508F7E != 0) {
+                if (index != D_82508F6A) {
+                    *(u16 *)(arg1 + 2) &= 0xFFFD;
+                    // FAKE: D_825087BC read through D_82508798 so IDO does not keep its address in
+                    // a register across the three reads and the store.
+                    arg0 = *(s16 *)(D_82508798 + 0x24);
+                } else {
+                    arg0 = D_825087BC;
+                    *(u16 *)(arg1 + 2) |= 2;
+                    if (arg0 < 6) {
+                        offset = arg0;
+                    } else {
+                        offset = 12 - arg0;
+                    }
+                    pos = (s16 *)(D_82508D10 + index * 0x3C);
+                    *(s16 *)(arg1 + 8) = pos[8] + offset;
+                    *(s16 *)(arg1 + 0xA) = pos[9];
+                }
+            } else {
+                *(u16 *)(arg1 + 2) &= 0xFFFD;
+                arg0 = D_825087BC;
+            }
+            if (index == 0 && D_82508F70 == 0) {
+                arg0 = (s16)((arg0 + 1) % 12);
+                D_825087BC = arg0;
+            }
+            break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -162,7 +212,40 @@ s32 func_82500D24(s32 arg0, void *arg1) { s32 index = *(s32 *)((u8 *)arg1 + 0x20
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82501034.s")
+extern u16 D_82508F88;
+extern s16 D_82508F92;
+extern s32 func_8004C990(s32, s32);
+void func_82500EF4(s32, s32, s32, u8 *, u8 *);
+typedef struct unk_func_82501034 {
+    /* 0x00 */ u32 unk_00;
+} unk_func_82501034; // size = 0x4
+
+s32 func_82501034(s32 arg0, u8 *arg1) {
+    s32 index;
+    u8 *entry;
+    u8 *color0;
+    u8 *color1;
+
+    index = *(s32 *)(arg1 + 0x20);
+    switch (arg0) {
+        case 0:
+            arg1[0x28] = 2;
+            *(u16 *)(arg1 + 2) &= 0xFFFD;
+            break;
+        case 1:
+            entry = (u8 *)&D_82508F88 + index * 4;
+            color0 = arg1 + 0x2C;
+            color1 = arg1 + 0x30;
+            if (*(u8 **)(entry + 0x1C) != NULL) {
+                *(unk_func_82501034 *)color0 = *(unk_func_82501034 *)(*(u8 **)(entry + 0x1C) + 0x28);
+                *(unk_func_82501034 *)color1 = *(unk_func_82501034 *)(*(u8 **)(entry + 0x1C) + 0x2C);
+            }
+            arg1[0x2F] = D_82508F92;
+            func_82500EF4(*(s16 *)(arg1 + 8), *(s16 *)(arg1 + 0xA), func_8004C990(*(u16 *)(arg1 + 0x24), *(u16 *)(arg1 + 0x26)), color0, color1);
+            break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
