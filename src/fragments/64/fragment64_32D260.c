@@ -57,7 +57,32 @@ void func_87F0A91C(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32D260/func_87F0A988.s")
+struct TargetGraphNode;
+extern void func_8004E308(struct TargetGraphNode *, s32 (*)(s32, struct TargetGraphNode *), void *);
+void func_87F0A714(void);
+void func_87F0A988(TreeNode_80050428 *arg0, s32 arg1, s32 arg2, s32 arg3, u32 *arg4, u32 *arg5) {
+    u8 *first;
+    u8 *second;
+
+    first = func_8005049C(arg0, arg2);
+    if (first == NULL) {
+        func_87F0A5F0(arg2);
+        return;
+    }
+    second = func_8005049C(arg0, arg3);
+    if (second == NULL) {
+        func_87F0A5F0(arg3);
+        return;
+    }
+    func_87F0A66C(first, arg4, arg5);
+    func_87F0A66C(second, arg4, arg5);
+    func_8004E308((struct TargetGraphNode *)first, (s32 (*)(s32, struct TargetGraphNode *))func_87F0A714, (void *)func_87F0A61C());
+    func_8004E308((struct TargetGraphNode *)second, (s32 (*)(s32, struct TargetGraphNode *))func_87F0A91C, (void *)func_87F0A61C());
+    **(s32 **)(first + 0x20) = arg1;
+    **(s32 **)(second + 0x20) = arg1;
+    *(void **)(*(u8 **)(first + 0x20) + 8) = *(void **)(second + 0x20);
+    *(void **)(*(u8 **)(second + 0x20) + 8) = NULL;
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
