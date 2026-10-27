@@ -574,7 +574,40 @@ void func_82301DA0(s32 x, s32 y, s32 width, s32 height) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301EF0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823020EC.s")
+extern u8 D_82305A74[];
+extern u8 D_82305D70[];
+void func_823020EC(u8 *arg0) {
+    s32 i;
+    s32 j;
+    u8 flags;
+
+    for (i = 0; i < 4; i++) {
+        flags = 0;
+        switch (i) {
+            case 0:
+                flags = D_82305D70[6];
+                break;
+            case 1:
+                flags = D_82305D70[7];
+                break;
+            case 2:
+                flags = D_82305D70[9];
+                break;
+            case 3:
+                flags = D_82305D70[8];
+                break;
+        }
+        ((u16 *)(arg0 + 0x1C))[i] = 1;
+        for (j = 0; j < 4; j++) {
+            if (flags & (1 << j)) {
+                ((u16 *)(arg0 + 0x1C))[i] = j + 2;
+                if (*(s16 *)&((unk_D_82305A74 *)D_82305A74)[i].unk_00[2] < ((u16 *)(arg0 + 0x1C))[i]) {
+                    ((u16 *)(arg0 + 0x1C))[i] = *(s16 *)&((unk_D_82305A74 *)D_82305A74)[i].unk_00[2];
+                }
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302258.s")
 
