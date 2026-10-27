@@ -135,7 +135,28 @@ typedef struct { u8 *p; } Arg1_80057F58;
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80057D74.s")
+s32 func_80057D74(s32 arg0, Arg1_80057F58 arg1) {
+    s32 result = 0;
+    u32 sum = 0;
+    u8 *start;
+    u8 *last;
+    u8 *p;
+    u8 *e;
+
+    start = arg1.p + 0x18;
+    last = arg1.p + 0xFA3;
+    p = start;
+    e = last;
+    if (func_80057C74((s8 *)start) != 0) {
+        if (p <= e) {
+            do {
+                sum += *p++;
+            } while (p <= e);
+        }
+        result = (sum & 0xFF) == 0xFF;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
