@@ -511,46 +511,7 @@ f32 func_86404724(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_86409B28;
-extern f32 D_86409B2C;
-extern f32 D_86409B30;
-extern f32 D_86409B34;
-extern f32 D_86409B38;
-extern f32 D_86409B3C;
-// Classifies the x/z position at 0x48/0x50 into a zone: corners 0-3 (each also sets one
-// flag bit at 0xC), then edges 4-7, and stores it at child + 4. When the zone changes,
-// child + 0x54 receives a new value from func_86404724.
-void func_86404824(u8 *arg0) {
-    u8 *child;
-    s32 previous_zone;
-
-    child = *(u8 **)(arg0 + 0x20);
-    previous_zone = *(s32 *)(child + 4);
-    if (*(f32 *)(arg0 + 0x48) <= D_86409B28 && *(f32 *)(arg0 + 0x50) <= D_86409B2C) {
-        *(u32 *)(arg0 + 0xC) |= 0x100000;
-        *(s32 *)(child + 4) = 0;
-    } else if (*(f32 *)(arg0 + 0x48) <= D_86409B28 && D_86409B30 <= *(f32 *)(arg0 + 0x50)) {
-        *(u32 *)(arg0 + 0xC) |= 0x200000;
-        *(s32 *)(child + 4) = 1;
-    } else if (D_86409B34 <= *(f32 *)(arg0 + 0x48) && D_86409B38 <= *(f32 *)(arg0 + 0x50)) {
-        *(u32 *)(arg0 + 0xC) |= 0x800000;
-        *(s32 *)(child + 4) = 2;
-    } else if (D_86409B34 <= *(f32 *)(arg0 + 0x48) && *(f32 *)(arg0 + 0x50) <= D_86409B3C) {
-        *(u32 *)(arg0 + 0xC) |= 0x400000;
-        *(s32 *)(child + 4) = 3;
-    } else if (*(f32 *)(arg0 + 0x50) <= -92.5f) {
-        *(s32 *)(child + 4) = 6;
-    } else if (*(f32 *)(arg0 + 0x50) >= 92.5f) {
-        *(s32 *)(child + 4) = 7;
-    } else if (*(f32 *)(arg0 + 0x48) <= -148.0f) {
-        *(s32 *)(child + 4) = 4;
-    } else if (*(f32 *)(arg0 + 0x48) >= 148.0f) {
-        *(s32 *)(child + 4) = 5;
-    }
-    if (previous_zone != *(s32 *)(child + 4)) {
-        *(f32 *)(child + 0x54) = func_86404724();
-    }
-}
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86404824.s")
 #endif
 
 #ifdef VERSION_US
