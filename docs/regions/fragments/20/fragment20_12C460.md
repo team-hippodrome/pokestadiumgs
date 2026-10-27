@@ -114,3 +114,19 @@ requeue. Per-kind update: kinds 1/4/6 call `func_82606B28`/`func_82606CE8`/`func
 ## 2026-10-27 — `func_82608EC4`: requeue
 
 requeue. Draws a horizontal strip of images: colors via `func_82607BF4` (as in the matched `func_8260899C`), sum of the non-null image widths in the `+0x30` list (count at `[0]`), then each image through `func_8004D19C` from `x + (+0x24 - width) / 2`. `x`/`y` are added as `+0x14 + +0x10`. With the scalars declared in the order `y, list, i, width, cursor, image, x, prim, env`, the frame and colour slots match (0.96/0.94). The rest: retail computes `list = arg0 + 0x30` right after the position loads and keeps two copies (`t0`, spilled to `sp+0x58`, and `s4`), and spills `x` at `sp+0x74` (IDO: `0x76`). Stack-diff permuter: 880 → 820.
+
+## 2026-10-28 — `func_8260DD84`: matched (#1758)
+
+The record at `arg0 + 0x30` and its 40-entry, 12-byte table must be typed structs (`unk_func_8260DD84`, `unk_func_8260DD84_entry`). With raw `*(s16 *)` offsets IDO folds `arg0 + 0x30` into the loads (retail keeps it in `a3` and spills it) and computes the env-color alpha before the RGB bytes. `flag = 0` goes before the position sums, and `if (mode != 0 && mode != 3)` beats a `switch`, which costs a stack temp.
+
+## 2026-10-28 — `func_8260EA60`: requeue
+
+requeue. Text panel draw: asset 284 as `font`, `half = +0x24 / 2`, `offset = state+0xF ? (*font + 4) / 2 : 0`, image via `func_82614F40(&id, &index, state+8, state+0xA)` + `func_8004C874`; when the image exists and `state+0xF` is set it measures it (`func_80049148(8, 0, image)`), emits `D_80094E38` + render mode `0x0F0A7008`, and draws the font sprite at `x + half + offset - width / 2 - *font - 4, y + 18`. Then `cx = x + half`, shadowed 128-gray / 255-white text of the image at `(cx + offset, y + 20)` and of a `func_826150A4` 0x80-byte string at `(cx, y + 48)`. `state = *(u8 **)D_8261A5A0`.
+
+Best 0.89 (scratch layout matches retail's slots): declare `state, width, cx, half, tx, ty, text, pad, offset, y, x, image_id, image_index, image, pad, buf[0x80], font, pad`, with `text = buf` keeping the string in `s0`. The remaining four-instruction gap is the shadow call: retail spills `cx + offset` and `y + 20` *before* the first `func_8004972C` and recomputes `cx + offset + 2` after it, meaning `offset` is reloaded across calls. A FAKE `if (&offset) {}` restores the 184-instruction count (0.83), but then `tx` lands in its own home slot instead of retail's `sp+0x2C`. Next: treat `x, y, offset, half` (all memory-resident in retail) as one address-taken local struct, rather than separate scalars plus fakes. Permuter (base 2170 → 1900 in 300 s) did not help.
+
+## 2026-10-28 — `func_82609A88`: requeue
+
+requeue. Grid draw: `sub = arg0 + 0x30` (kept in `s7` and also spilled at `sp+0x78` for the loop bound), `font = *(s32 *)(D_8261A5A0 + 4)`. `+0x34 != 0` selects layout (`D_826156CC`, top 13, 4 columns, col 102, row 62, w 89, h 49, step 20); otherwise (`D_826156C8`, 16, 3, 135, 91, 118, 78, 16). Retail sets `cols = 3` before the test. Optional `D_80094E38` + render mode `0x0F0A4000`. For each `i < sub[3]` with `sub[10 + i] < 255`: col/row are `((i / 6) * 2 + i % 2, (i % 6) / 2)` when `sub[2]` is set, else `(i % cols, i / cols)`; then `func_82609938(table[arg0->unk2] + x + col_w * col, y + top + row_h * row, func_8004410C(font, D_8261A4C8[sub[4] + i]), w, h, step)`. `col_w` and `row_h` are unsigned (retail uses `multu`).
+
+Best 0.46 (0.75 when the loop's `arg0 + 2` read is dropped). Retail keeps `arg0` in `a2` until the loop guard and homes it at `sp+0x80` only there. Every spelling tried (for vs. guarded do-while, `sub[2]` vs. `arg0 + 0x34` test, `((s16 *)arg0)[1]`, temp index, call result temp) homes `arg0` in the prologue. Next: type `arg0` and the `+0x30` record as structs, as `func_8260DD84` needed.
