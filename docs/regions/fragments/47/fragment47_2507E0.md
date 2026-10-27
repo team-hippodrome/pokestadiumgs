@@ -49,10 +49,10 @@ function rename.
 ## Remaining owners
 
 - `func_8600A20C` — requeue. The scaled strip routine is 932 bytes / 233
-  instructions with a 216-byte frame. Its strongest genuine draft matches
-  all opcodes but colors the format selector and saved draw arguments
-  differently. Follow the declaration and step-lifetime evidence in the
-  predecessor region notes; readonly ownership is now available in this unit.
+  instructions with a 216-byte frame. Its strongest genuine draft recovers
+  the stack homes and saved draw arguments; size-selector and dependent
+  temporary-register allocation remain. The latest handoff below supersedes
+  the earlier declaration and step-lifetime frontiers.
 
 ## 2026-10-27 — writable renderer data and matching animated indicator
 
@@ -128,3 +128,32 @@ function starts/sizes, and normalized relocations. A forced native IDO 7.1
 rebuild with the host C check enabled reproduces retail MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Only `func_8600A20C` remains an assembly
 owner in this rendering unit.
+
+
+## 2026-10-27 — stronger scaled-strip allocation handoff
+
+`func_8600A20C` remains `requeue`, with a genuine 932-byte / 233-instruction
+candidate and the original 216-byte frame. Starting from #1718, update the
+current y-coordinate with `current_y += scaled_rows` at the loop tail,
+retain the computed next coordinate for clipping, and convert x and width
+to scoped `s16` draw arguments before the texture-load call. Inline the
+fractional-row error into its accumulator. These source changes recover
+all stack homes, the next-coordinate saved register, and all four saved
+rectangle-argument registers. They introduce no artificial storage.
+
+The best canonical result is normalized similarity 1.0 / raw similarity
+0.8884, with register/scheduling differences only. The first difference is
+the size selector load at function offset `0xFC`: candidate A2 versus retail
+T8, followed by dependent temporary-register ordering. This is evidence
+for the next allocation experiment, not acceptance. The C body remains
+private; the tracked owner is still assembly.
+
+Read-only size qualification with a compatible prototype, integer versus
+pointer texture-address interfaces, switch case/default/fall-through
+variants, and guarded-do loop forms do not improve that residual. A bounded
+180-second native permutation run from this stronger body also has no gain
+(base and best score 145); internal-type and cast mutations are disabled.
+The accepted sibling and actual target AST imports both pass ordinary and
+blank-prefixed compiler controls before the search. Earlier allocator
+traces predate these lifetime changes: recapture the size formal's call
+register affinity for this candidate before interpreting its web numbers.
