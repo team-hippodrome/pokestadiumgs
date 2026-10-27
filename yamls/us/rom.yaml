@@ -1503,7 +1503,8 @@
     subsegments:
     - [0x358830, textbin, fragments/69/fragment69_header]
     - [0x358850, c,       fragments/69/fragment69_code]
-    - [0x35C130, data,    fragments/69/fragment69_data]
+    - [0x35C130, .data,   fragments/69/fragment69_code] # file-scope tables + func_8F100020's static (D_8F103A50) through D_8F103A9C
+    - [0x35C300, data,    fragments/69/fragment69_data]
   
   - name: fragment70
     type: code
