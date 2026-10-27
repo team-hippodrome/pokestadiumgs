@@ -130,19 +130,65 @@ s32 func_80057C74(s8 *arg0) {
 #endif
 
 #ifdef VERSION_US
+// Save-buffer handle passed by value to the format validators.
+typedef struct { u8 *p; } Arg1_80057F58;
+#endif
+
+#ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80057D74.s")
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80057E08.s")
+s32 func_80057E08(s32 arg0, Arg1_80057F58 arg1) {
+    s32 result = 0;
+    u32 sum = 0;
+    u8 *start;
+    u8 *last;
+    u8 *p;
+    u8 *e;
+
+    start = arg1.p + 9;
+    last = arg1.p + 0xD68;
+    p = start;
+    e = last;
+    if (func_80057C74((s8 *)(arg1.p + 0xB)) != 0) {
+        if (p <= e) {
+            do {
+                sum += *p++;
+            } while (p <= e);
+        }
+        result = (u16)(sum & 0xFFFF) == func_800579D0(arg1.p + 0xD69);
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80057EB0.s")
+s32 func_80057EB0(s32 arg0, Arg1_80057F58 arg1) {
+    s32 result = 0;
+    u32 sum = 0;
+    u8 *start;
+    u8 *last;
+    u8 *p;
+    u8 *e;
+
+    start = arg1.p + 9;
+    last = arg1.p + 0xB82;
+    p = start;
+    e = last;
+    if (func_80057C74((s8 *)(arg1.p + 0xB)) != 0) {
+        if (p <= e) {
+            do {
+                sum += *p++;
+            } while (p <= e);
+        }
+        result = (u16)(sum & 0xFFFF) == func_800579D0(arg1.p + 0xD0D);
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
-typedef struct { s32 x; } Arg1_80057F58;
 extern s32 func_80057D74(s32, Arg1_80057F58);
 extern s32 func_80057E08(s32, Arg1_80057F58);
 extern s32 func_80057EB0(s32, Arg1_80057F58);
