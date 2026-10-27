@@ -3,7 +3,7 @@
 #ifdef VERSION_US
 typedef struct {
     f64 radius, unk_08, center_x, center_y, center_z;
-    u8 unk_28[32];
+    f64 unk_28, unk_30, unk_38, unk_40;
     s32 flag;
 } Fragment47CurvePrefix;
 typedef struct { f64 x, y, z; } Fragment47Point;
@@ -15,7 +15,7 @@ typedef struct {
     f64 unk_60[3];
     f64 unk_78[3];
     u8 unk_90[8];
-    f64 unk_98[3];
+    Fragment47Point unk_98;
     f64 unk_B0[3];
     f64 radius;
     f64 unk_D0;
@@ -238,10 +238,43 @@ f64 func_86008BB4(Fragment47MotionPrefix *object, s32 flag, u8 *point, void *nor
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008E64.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008F4C.s")
+extern s32 func_86009C08(void *arg0, void *arg1);
+extern s32 func_86009EF8(void *arg0, f64 arg1);
+extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
+extern f64 func_87C0068C(void *);
+f64 func_86008F4C(Fragment47MotionPrefix *object, s32 flag, f64 divisor, Fragment47CurvePrefix *config, f64 threshold, Fragment47Point *point) {
+    f64 difference[3];
+    f64 adjustment[3];
+    f64 radius;
+    Fragment47Point origin;
+    f64 length;
+    f64 penetration;
+    f64 dx;
+    f64 dz;
 
-extern f64 func_86008F4C(void *, s32, f64, s32, f64, s32);
-f64 func_860091F4(void *arg0, f64 arg1, s32 arg2, f64 arg3, s32 arg4) {
+    radius = flag ? object->radius : 0.0;
+    origin = flag ? object->position : object->unk_98;
+    length = func_87C0068C(func_87C00160((u8 *)difference, (s32)&config->center_x, (u8 *)&origin));
+    penetration = (length - config->radius) + radius;
+    if (config->flag != 0) penetration = -penetration;
+    if (penetration <= 0.0) return 0.0;
+    if (10000.0 < penetration) return 0.0;
+    point->y = config->center_y - difference[1] * config->radius / length;
+    point->x = config->center_x - difference[0] * config->radius / length;
+    point->z = config->center_z - difference[2] * config->radius / length;
+    if (func_86009C08(config, point) == 0) return 0.0;
+    dx = point->x - config->center_x;
+    dz = point->z - config->center_z;
+    if (dx * dx + dz * dz < threshold * threshold) return 0.0;
+    if (func_86009EF8(config, point->y) == 0) return 0.0;
+    func_86009FB8(config, point, difference);
+    func_86008BB4(object, flag, (u8 *)point, difference, divisor, flag ? config->unk_28 : config->unk_30, flag ? config->unk_38 : config->unk_40);
+    func_87C00198(object, object, func_87C002A8(adjustment, difference, penetration));
+    func_86007EB4(object);
+    return 1.0;
+}
+
+f64 func_860091F4(Fragment47MotionPrefix *arg0, f64 arg1, Fragment47CurvePrefix *arg2, f64 arg3, Fragment47Point *arg4) {
     f64 result = func_86008F4C(arg0, 1, arg1, arg2, arg3, arg4);
     if (result > 0.0) {
         return result;
@@ -271,10 +304,6 @@ void func_86009318(void *arg0, void *arg1, s32 arg2) {
     }
 }
 
-extern s32 func_86009C08(void *arg0, void *arg1);
-extern s32 func_86009EF8(void *arg0, f64 arg1);
-extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
-extern f64 func_87C0068C(void *);
 s32 func_860093AC(Fragment47MotionPrefix *object, Fragment47CurvePrefix *config, f64 threshold) {
     f64 length;
     f64 difference[3];

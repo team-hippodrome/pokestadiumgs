@@ -346,3 +346,40 @@ all eight combinations. Every combination preserves bytes, section extents,
 and relocations. The selected source consolidates both types, uses direct
 member access for the origin copy, and removes duplicate externs. The
 GS/Stadium 1 maps provide no supported function rename.
+
+
+## 2026-10-27 — matching curve-contact response
+
+Starting revision `865cf93a62a14642acd1288949c9820f6a389ca6` (#1656).
+`func_86008F4C` passes canonical acceptance and the full US retail-ROM gate:
+680 bytes / 170 instructions, with the original 200-byte frame. All four
+constants in the newly assigned 32-byte scalar pool now have C consumers.
+
+The six arguments are object, call flag, double divisor, configuration,
+double distance threshold, and output point. The divisor occupies A2/A3;
+configuration, threshold, and point begin at caller stack offsets 16, 24,
+and 32. The existing `func_860091F4` wrapper had integer placeholders for
+the two stack pointer arguments. Retype the owner declaration and wrapper
+in the same canonical transaction; retain the original argument order and
+floating-point return convention.
+
+The call flag selects the object's radius or zero, its ordinary or derived
+origin, and two pairs of response coefficients. The configuration flag
+controls penetration orientation. Preserve the point, planar-distance, and
+height guards in their original order. The response helper's side effects
+are required even though its numeric return is discarded; success returns
+`1.0`, and each rejected contact returns `0.0`.
+
+The initial faithful draft had the correct frame and every instruction but
+three local offsets. Declaring the real radius before the copied origin,
+then length and penetration, places the origin at SP+120 and radius at
+SP+144, matching the oracle without extra locals or storage.
+
+`Fragment47CurvePrefix` now exposes the four observed double fields at
+0x28, 0x30, 0x38, and 0x40. Their values are selected for the existing
+`func_86008BB4` response calculation; keep the offset names until their
+individual roles have stronger evidence. `Fragment47MotionPrefix.unk_98`
+is a point: `func_86007EB4` produces it, and this owner copies it as an
+alternate origin. Eighteen complete-module normal/blank-prefix controls
+verify these fields, the direct point conditional, and declaration cleanup
+across all eight combinations. No GS/Stadium 1 map supports a function rename.
