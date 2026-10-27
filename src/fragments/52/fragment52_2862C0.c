@@ -35,9 +35,28 @@ void func_86408048(void) {
     func_86407E58(temp + 0x8C);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2862C0/func_864080A0.s")
+void func_864080A0(void) {
+    u8 *temp = D_86416C00 + 0xCE00;
+    s32 i;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2862C0/func_86408148.s")
+    *(s32 *)(temp + 8) = 0;
+    *(s32 *)(temp + 0) = -1;
+    *(s32 *)(temp + 4) = -1;
+    for (i = 0; i < 4; i++) {
+        func_86407E00(temp + 0xC + i * 0x20, 114.0f, (f32)(240 + i * 64));
+    }
+    func_86407E00(temp + 0x8C, 320.0f, 86.0f);
+}
+
+void func_86408148(void) {
+    u8 *temp = D_86416C00 + 0xCE00;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        func_86407E2C(temp + 0xC + i * 0x20, 110.0f, (f32)(79 + i * 15), 40);
+    }
+    func_86407E2C(temp + 0x8C, 156.0f, 86.0f, 40);
+}
 
 /* mkdraft:func_864081E8 begin */
 void func_864081E8(void) {
