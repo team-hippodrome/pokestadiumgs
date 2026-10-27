@@ -1,6 +1,17 @@
 #include "global.h"
 
 typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
+typedef struct State86703DF4 {
+    u8 pad00[0x08];
+    s32 unk08;
+    u8 pad0C[0x20];
+    s32 unk2C;
+    u8 pad30[0x08];
+    s32 unk38;
+    u8 pad3C[0x0C];
+    s32 unk48;
+    u8 pad4C[0x60];
+} State86703DF4;
 
 
 #ifdef VERSION_US
@@ -191,17 +202,6 @@ s16 func_86703D98(s8 arg0, s8 arg1) {
 #endif
 
 #ifdef VERSION_US
-typedef struct State86703DF4 {
-    u8 pad00[0x08];
-    s32 unk08;
-    u8 pad0C[0x20];
-    s32 unk2C;
-    u8 pad30[0x08];
-    s32 unk38;
-    u8 pad3C[0x0C];
-    s32 unk48;
-    u8 pad4C[0x60];
-} State86703DF4;
 extern State86703DF4 D_86728408[];
 extern s16 D_86710C40[][0xB4];
 void func_86703DF4(s32 arg0) {
