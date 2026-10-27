@@ -65,7 +65,16 @@ void func_888003CC(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800B24.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800D34.s")
+extern u8 *D_880068B0;
+extern u8 func_80062EB0(u8, u8);
+extern void func_88000FC4(s32, s32, s32, s32, s16, s16);
+void func_88800D34(s8 slot) {
+    // Byte arrays indexed by move slot: move IDs at +2, PP bytes at +0x18 (low 6 bits = current PP).
+    if ((D_880068B0 + 2)[slot] != 252) {
+        func_88000FC4(273, slot * 27 + 259, 1, 1, (D_880068B0 + 0x18)[slot] & 0x3F,
+                      func_80062EB0((D_880068B0 + 2)[slot], (D_880068B0 + 0x18)[slot]) & 0x3F);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800DC0.s")
 
