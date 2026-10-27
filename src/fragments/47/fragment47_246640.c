@@ -85,7 +85,100 @@ void func_86000C6C(u8* arg0, s32 arg1, unk_func_86000C6C* arg2, f32 arg3, f32 ar
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000CCC.s")
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 depth;
+    s32 color_index;
+    f32 unk_10;
+    f32 opacity;
+} Fragment47TrailRecord;
+
+typedef struct {
+    Fragment47TrailRecord records[10];
+    s32 index;
+} Fragment47TrailBuffer;
+
+typedef struct {
+    u8 primitive[4];
+    u8 environment[4];
+} Fragment47TrailColorPair;
+
+typedef struct {
+    Fragment47TrailColorPair unk_00;
+    Fragment47TrailColorPair colors[4];
+} Fragment47TrailColorTable;
+
+extern Fragment47TrailColorTable D_8600D1A0;
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+
+void func_86000CCC(Fragment47TrailBuffer *arg0) {
+    s32 resource;
+    s32 inner_gradient;
+    s32 outer_gradient;
+    Fragment47TrailRecord *records;
+    s16 inner_texture_step;
+    Fragment47TrailRecord *inner_record;
+    s32 i;
+    s16 outer_texture_step;
+    f32 radius;
+    Fragment47TrailRecord *outer_record;
+
+    records = arg0->records;
+    resource = func_8004C990(151, 0);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2);
+    func_8004D1FC((u8 *)resource);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTexturePersp(D_800D0510++, G_TP_NONE);
+    gDPSetDepthSource(D_800D0510++, G_ZS_PRIM);
+    gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT,
+        ENVIRONMENT, 0, TEXEL0, 0, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT,
+        ENVIRONMENT, 0, TEXEL0, 0);
+    radius = 18.0f;
+    for (i = 0; i < 10; i++) {
+        outer_record = records;
+        outer_record += ((arg0->index - i + 9) % 10);
+        if (!(outer_record->unk_10 <= 0)) {
+            outer_gradient = (s32)(16384.0f / radius);
+            outer_texture_step = (s16)outer_gradient;
+            gDPSetPrimDepth(D_800D0510++, (u32)outer_record->depth & 0x7FFF, 0);
+            gDPSetPrimColor(D_800D0510++, 255, 255, D_8600D1A0.colors[outer_record->color_index].primitive[0],
+                D_8600D1A0.colors[outer_record->color_index].primitive[1],
+                D_8600D1A0.colors[outer_record->color_index].primitive[2],
+                D_8600D1A0.colors[outer_record->color_index].primitive[3]);
+            gDPSetEnvColor(D_800D0510++, D_8600D1A0.colors[outer_record->color_index].environment[0],
+                D_8600D1A0.colors[outer_record->color_index].environment[1],
+                D_8600D1A0.colors[outer_record->color_index].environment[2],
+                (u32)D_8600D1A0.colors[outer_record->color_index].environment[3] * (1.0f - (f32)i / 10.0f) * outer_record->opacity);
+            gSPScisTextureRectangle(D_800D0510++,
+                (outer_record->x - radius) * 4.0f, (outer_record->y - radius) * 4.0f,
+                (outer_record->x + radius) * 4.0f, (outer_record->y + radius) * 4.0f,
+                G_TX_RENDERTILE, 0, 0, outer_texture_step, outer_texture_step);
+        }
+    }
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 128);
+    gDPSetPrimColor(D_800D0510++, 255, 255, 255, 255, 255, 255);
+    radius = 6.0f;
+    for (i = 0; i != 10; i++) {
+        inner_record = records;
+        inner_record += ((arg0->index - i + 9) % 10);
+        if (!(inner_record->unk_10 <= 0)) {
+            inner_gradient = (s32)(16384.0f / radius);
+            inner_texture_step = (s16)inner_gradient;
+            gDPSetPrimDepth(D_800D0510++, (u32)inner_record->depth & 0x7FFF, 0);
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255,
+                (1.0f - (f32)i / 10.0f) * 128.0f * inner_record->opacity);
+            gSPScisTextureRectangle(D_800D0510++,
+                (inner_record->x - radius) * 4.0f, (inner_record->y - radius) * 4.0f,
+                (inner_record->x + radius) * 4.0f, (inner_record->y + radius) * 4.0f,
+                G_TX_RENDERTILE, 0, 0, inner_texture_step, inner_texture_step);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
