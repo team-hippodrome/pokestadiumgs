@@ -249,7 +249,18 @@ void func_82F01958(void *arg0, void *arg1, s16 *arg2) {
     WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F019CC.s")
+void func_82F019CC(void *arg0, void *arg1, s16 *arg2) {
+    struct {
+        f32 weight;
+        u8 value;
+    } draw;
+
+    draw.weight = func_818055E0(arg0, (u8 *)arg1);
+    WidgetResources_DrawRecords((s32)arg0, (s32)arg1, (s32)arg2);
+    draw.value = ((u8 (*)[88])arg1)[((u8 *)arg1)[3790]][((u8 *)arg1)[3792] - 31];
+    func_82F01658(arg2[0], arg2[1], draw.value, draw.weight);
+    WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01A5C.s")
 
