@@ -714,7 +714,49 @@ void func_82606784(u8*a0,s32 a1,s32 a2,s32 a3){if(*(s16*)(a0+6)==0){*(s16*)(a0+6
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606B28.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606CE8.s")
+extern s32 D_826155C8;
+extern s32 D_826155CC;
+extern s32 D_826155D0;
+extern s32 D_826155D4;
+void func_82606CE8(u8 *arg0) {
+    u8 *sub;
+    s32 duration;
+    s32 stagger;
+    s32 delay;
+    s32 i;
+    s32 t;
+    s16 prev;
+
+    sub = arg0 + 0x30;
+    if (*(s16 *)(sub + 4) != 0) {
+        duration = D_826155CC;
+        stagger = D_826155D4;
+    } else {
+        duration = D_826155C8;
+        stagger = D_826155D0;
+    }
+    delay = 0;
+    if (*(s16 *)(arg0 + 8) < 0x800) {
+        (*(s16 *)(arg0 + 8))++;
+    }
+    for (i = 0; i < *(s16 *)(sub + 6); delay += stagger, i++) {
+        t = *(s16 *)(arg0 + 8) - delay;
+        prev = ((s16 *)sub)[((s16 *)sub)[i + 22] + 10];
+        if (t < 0) {
+            t = 0;
+        } else if (duration < t) {
+            t = duration;
+        }
+        ((s16 *)sub)[((s16 *)sub)[i + 22] + 10] = 255 - t * 255 / duration;
+        if (*(s16 *)(arg0 + 2) == 0 && prev == 255 && ((s16 *)sub)[((s16 *)sub)[i + 22] + 10] < 255) {
+            if (i != *(s16 *)(sub + 6)) {
+                func_800226C0(103);
+            } else {
+                func_800226C0(104);
+            }
+        }
+    }
+}
 
 typedef struct unk_func_82606E90 {
     s16 unk_00;
@@ -959,11 +1001,43 @@ void func_8260899C(u8 *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260933C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82609584.s")
+typedef struct unk_func_82609584_rgb {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+} unk_func_82609584_rgb;
+extern unk_func_82609584_rgb D_826156B8;
+extern unk_func_82609584_rgb D_826156BC;
+extern void func_800459AC();
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern u8 *func_8004CA60(u8 *);
+void func_82609584(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    u8 *texture;
+    unk_func_82609584_rgb *color;
+    unk_func_82609584_rgb on;
+    unk_func_82609584_rgb off;
+    s32 i;
+
+    if (arg2 != 0) {
+        texture = func_8004CA60((u8 *)arg2);
+        on = D_826156B8;
+        off = D_826156BC;
+        if (arg3 != 0) {
+            color = &on;
+        } else {
+            color = &off;
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, color->r, color->g, color->b, 255);
+        for (i = 0; i < 2; i++) {
+            func_800459AC(texture + i * 0x1000, *(u8 *)(arg2 + 4), *(u8 *)(arg2 + 5), *(u16 *)arg2, 32, 1, 0, 2, 2, 0, 0, 0, 0);
+            GfxRect_DrawTextured(arg0, arg1 + i * 64, *(u16 *)arg2 * 2, 64, 0, 0, 512, 512, 0);
+        }
+    }
+}
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
-extern void func_82609584(s32, s32, s32, s16);
 
 void func_82609730(void *arg0, s32 arg1) {
     s16 temp_s5;
@@ -1621,7 +1695,43 @@ void func_82610EE8(s16 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82610FF8.s")
+extern s32 D_82615768;
+extern void func_826078B4(void *);
+void func_82610FF8(s16 *arg0) {
+    s32 i;
+    u8 *entry;
+
+    i = 0;
+    arg0[3]++;
+    if (D_82615768 < arg0[3]) {
+        if (arg0[9] > 0) {
+            arg0[1] = 3;
+        } else {
+            arg0[1] = 5;
+        }
+        arg0[3] = 0;
+        arg0[4] = 0;
+        arg0[12] = 0;
+        for (i = 0; i < arg0[9]; i++) {
+            entry = func_82604C40(1, i, (u8 *)arg0 + 0x114, 0x14);
+            if (*(s16 *)(entry + 0x32) == -1) {
+                ((void **)((u8 *)arg0 + 0x34F4))[arg0[12]] = entry;
+                arg0[12]++;
+            }
+        }
+        ((void **)((u8 *)arg0 + 0x34F4))[arg0[12]] = func_82604C40(2, 0, (u8 *)arg0 + 0x114, 0x14);
+        arg0[12]++;
+        entry = func_82604C40(3, 0, (u8 *)arg0 + 0x114, 0x14);
+        if (entry != NULL) {
+            ((void **)((u8 *)arg0 + 0x34F4))[arg0[12]] = entry;
+            arg0[12]++;
+        }
+        for (i = 0; i < arg0[12]; i++) {
+            func_826078B4(((void **)((u8 *)arg0 + 0x34F4))[i]);
+        }
+        func_800226C0(105);
+    }
+}
 
 extern void func_82607734(void *, s32);
 void func_82611184(u8 *arg0)
@@ -1896,7 +2006,6 @@ extern s16 D_8261A492;
 extern u16 D_8261A494;
 extern s16 D_8261DA4C;
 extern void func_8260F108(void *);
-extern void func_82610FF8(void *);
 extern void func_826114DC(void *);
 extern void func_826119DC(void *);
 extern void func_82611D44(void *);
