@@ -90,7 +90,21 @@ void func_8820B020(void) {
     func_80049064(0x140, 0x15F, 1, func_8004C874(0x20, (*(s16 *)((u8 *)(D_88234700) + (8))) + 1));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820B09C.s")
+extern s16 D_8800EF58;
+extern u8 *func_88201ED0(u8, u8);
+s32 func_8820B09C(void) {
+    s32 result = 0;
+    u8 *entry;
+
+    if ((*(s32 *)((u8 *)D_88234700 + 4) == 0) && (D_8800EF58 == 0) &&
+        (*(s32 *)((u8 *)D_88234700 + D_88234700->index * 4 + 0x6C) == 0)) {
+        entry = func_88201ED0(((u8 *)D_88234700)[D_88234700->index * 2 + 0xA], ((u8 *)D_88234700)[D_88234700->index * 2 + 0xB]);
+        if (entry[0x15] != 0) {
+            result = 1;
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820B124.s")
 

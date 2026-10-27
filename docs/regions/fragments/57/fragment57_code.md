@@ -12,3 +12,7 @@ checked for duplicate owner work. No CI, verification, linker, or data changes
 were made. These attempts are failures, not claimed matches. The restored
 186-owner workspace passes the US retail checksum with default host syntax
 checks. Unknown tokens retain their existing address/offset names.
+
+## 2026-10-28 — `func_833084B0`: requeue
+
+requeue. Scene loop: `func_800086A4(2); StageContext_SetClearColor(1); StageFade_StartFromOpaque(10);`, then `do { if (D_8330A288 word 2 == -1) func_80064D28(); func_83303564(); state = func_83307C7C(state); } while (state != 14);` with `state = 1`. Normalized 1.0: only `$s1`/`$s2` are swapped between `&D_8330A288` and the `-1` constant. The permuter reaches 0 only with fakes (`(new_var = -1)` plus an empty `if (1)`), so none was committed. The file's m2c externs mistype `func_800086A4` (really `void`) and this function (`s32 ()`), so a candidate needs `void func_800086A4(s32);` in its declarations.
