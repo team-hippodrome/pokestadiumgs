@@ -517,3 +517,27 @@ sources. All section bytes, extents, and relocations are preserved.
 A forced native rebuild with the host C check enabled reproduces retail
 MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No GS/Stadium 1 map supports a
 function rename.
+
+## 2026-10-27 — remove artificial geometry and image locals
+
+Tested on `fcb773fa2d5a1fa1c01d71f9817eb6dc94e1ca58` (#1667).
+Three existing C functions preserve the complete object's section bytes,
+extents, and relocations after source cleanup:
+
+- `func_86009D7C`: replace its unused integer local with the actual
+  single-precision cosine result, then use that result for the radius
+  division. This retains the half-angle across the cosine and sine calls.
+- `func_8600A04C`: represent both 24-byte vectors and `D_8600D970` with the
+  existing three-double `Fragment47Point` type. The ROM data decodes to
+  `(0.0, 1.0, 0.0)`; the helper consumes double vectors through
+  `func_87C010AC` and `func_87C01048` in `src/fragments/48/fragment48_256020.c`.
+- `func_8600B51C`: replace the unused volatile eight-byte array with the
+  actual centered left/top coordinates. Preserve the original two width
+  queries and two height queries, including their order.
+
+All eight combinations pass whole-object comparison with both ordinary and
+20-blank-line-prefixed sources (16 controls). After regenerating extracted
+assembly for the baseline's fragment-38 rodata change, a forced native build
+with the host C check enabled reproduces retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. These are cleanups of existing C owners;
+no additional assembly owner is replaced.
