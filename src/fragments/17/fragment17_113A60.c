@@ -780,12 +780,7 @@ s32 func_8220AC38(void) {
 
 typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
 extern s16 D_822106D4;
-extern void func_800226C0(s32);
 #pragma COALESCE_AT_LUI(func_8220AC64, D_822106B2, D_822106B4)
-extern u8 D_82210698[];
-extern s16 D_822106BA;
-extern f32 D_822106C4;
-extern f32 D_822106C8;
 s32 func_8220AC64(void) {
     s32 result = 0;
 
