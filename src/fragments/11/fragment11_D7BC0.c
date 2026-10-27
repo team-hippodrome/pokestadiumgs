@@ -381,7 +381,32 @@ void func_816009C0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     *(s32 *)((u8 *)(u32)arg1 + 0x18) = arg3;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D7BC0/func_81600A34.s")
+extern void *func_81600884(void *);
+typedef struct unk_func_81600A34_List {
+    u8 *head;
+    u8 *tail;
+} unk_func_81600A34_List;
+
+void func_81600A34(u8 *arg0, void *id, s32 arg2, s32 x, s32 y, s32 width, s32 height) {
+    u8 *node;
+
+    if (id != 0) {
+        node = func_81600884(arg0);
+        if (node != NULL) {
+            func_816003B0(node, x, y, width, height);
+            *(s32 *)(node + 8) = (s32)id;
+            func_816009C0((s32)arg0, (s32)node, (s32)id, arg2);
+            if ((*(unk_func_81600A34_List **)(arg0 + 0x28))->head != NULL) {
+                *(u8 **)((*(unk_func_81600A34_List **)(arg0 + 0x28))->tail + 0x14) = node;
+                *(u8 **)(node + 0x10) = (*(unk_func_81600A34_List **)(arg0 + 0x28))->tail;
+                (*(unk_func_81600A34_List **)(arg0 + 0x28))->tail = node;
+            } else {
+                (*(unk_func_81600A34_List **)(arg0 + 0x28))->tail = node;
+                (*(unk_func_81600A34_List **)(arg0 + 0x28))->head = (*(unk_func_81600A34_List **)(arg0 + 0x28))->tail;
+            }
+        }
+    }
+}
 
 s32 func_816007F8();
 extern void func_816009C0(s32, s32, s32, s32);
