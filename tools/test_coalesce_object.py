@@ -100,6 +100,23 @@ class ScheduledPairs(unittest.TestCase):
             with self.subTest(target=target):
                 self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES), [])
 
+    def test_lui_hoisted_above_conditional_branch_with_empty_delay_slot(self):
+        # lui at,%hi(A) / bnez t7,+5 / nop / sb A / lui at,%hi(B) / sw B / ...
+        words = [HI, 0x15E00005, 0, STORE_A, HI, STORE_B, 0x03E00008, 0, 0, 0]
+        relocs = {0: [(A, 5)], 12: [(A, 6)], 16: [(B, 5)], 20: [(B, 6)]}
+        actual, _, count = fold.fold_function_words(words, relocs, ADDRESSES, None, "synthetic")
+        expected = words[:4] + words[5:]
+        expected[4] |= 0xBF30
+        expected[1] = 0x15E00004
+        self.assertEqual((actual, count), (expected, 1))
+
+    def test_hoisted_lui_needs_an_empty_delay_slot_and_no_link(self):
+        for branch, slot in [(0x15E00005, MOVE), (0x05F00005, 0)]:
+            words = [HI, branch, slot, STORE_A, HI, STORE_B, 0x03E00008, 0, 0, 0]
+            relocs = {0: [(A, 5)], 12: [(A, 6)], 16: [(B, 5)], 20: [(B, 6)]}
+            with self.subTest(branch=hex(branch), slot=hex(slot)):
+                self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES), [])
+
     def test_first_lui_in_delay_slot_is_not_extended(self):
         words, relocs = fixture()
         words.insert(0, 0x10000008)
