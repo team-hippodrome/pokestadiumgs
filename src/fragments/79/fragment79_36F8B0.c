@@ -198,7 +198,31 @@ s16 func_84100688(Func84100688Table *arg0, u32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100DE4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101084.s")
+extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+void func_84101084(Func84100688Table **arg0, u8 *arg1) {
+    Func84100688Table *table;
+    s16 index;
+    s16 *frames;
+
+    table = arg0[0];
+    if (table == NULL) {
+        *(s16 *)(arg1 + 0x66) = ((s16 **)arg0)[1][0];
+        return;
+    }
+    if (table->pad_00[0] == 0) {
+        *(s16 *)(arg1 + 0x66) = ((s16 **)arg0)[1][arg1[0x7F] % table->divisor];
+        return;
+    }
+    index = func_84100688(table, arg1[0x7F]);
+    table = arg0[0];
+    frames = table->values;
+    if (index + 1 == table->divisor) {
+        *(s16 *)(arg1 + 0x66) = ((s16 **)arg0)[1][index];
+        return;
+    }
+    *(s16 *)(arg1 + 0x66) = func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                                          ((s16 **)arg0)[1][index], ((s16 **)arg0)[1][index + 1], arg1[0x7F]);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_8410119C.s")
 
