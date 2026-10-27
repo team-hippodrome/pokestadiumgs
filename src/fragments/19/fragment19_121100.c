@@ -380,7 +380,71 @@ s32 func_823019F4(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301B2C.s")
+extern u8 D_82305A74[];
+extern s16 D_82305EB4;
+void *func_823010EC(s32 arg0, s32 arg1, s16 arg2);
+typedef struct unk_func_82301B2C {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ u16 *unk_04;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ s16 *unk_0C;
+} unk_func_82301B2C;
+
+typedef struct unk_D_82305A74 {
+    /* 0x00 */ u8 unk_00[0x18];
+    /* 0x18 */ s16 unk_18;
+    /* 0x1A */ s16 unk_1A;
+    /* 0x1C */ s16 unk_1C[4];
+} unk_D_82305A74; // size = 0x24
+
+s32 func_82301B2C(s32 arg0, u8 *arg1) {
+    s32 one;
+    unk_func_82301B2C *sub;
+    s16 index;
+    s16 bit;
+    u16 *flags;
+    unk_D_82305A74 *entry;
+    s16 *slot;
+
+    sub = *(unk_func_82301B2C **)(arg1 + 0x20);
+    one = 1;
+    index = sub->unk_00;
+    bit = sub->unk_02;
+    flags = sub->unk_04;
+    switch (arg0) {
+        case 0:
+            arg1[0x28] = 0x21;
+            sub->unk_08 = *(s16 *)(arg1 + 8);
+            sub->unk_0A = *(s16 *)(arg1 + 0xA);
+            if (*flags & (1 << bit)) {
+                entry = (unk_D_82305A74 *)(D_82305A74 + index * 36);
+                sub->unk_0C = func_823010EC(sub->unk_08 + entry->unk_18, sub->unk_0A + entry->unk_1A, entry->unk_1C[bit]);
+            } else {
+                sub->unk_0C = NULL;
+            }
+            break;
+        case 1:
+            if (*flags & (1 << bit)) {
+                *(u16 *)(arg1 + 2) |= 2;
+                slot = &D_82305EB4 + index;
+                arg1[0x2F] = arg1[0x33] = slot[11];
+                *(s16 *)(arg1 + 8) = slot[3] + sub->unk_08;
+                if (slot[11] == 0xFF && slot[3] == 0) {
+                    *sub->unk_0C = one;
+                } else {
+                    *sub->unk_0C = 0;
+                }
+            } else {
+                *(u16 *)(arg1 + 2) &= 0xFFFD;
+            }
+            break;
+        default:
+            break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301C80.s")
 
