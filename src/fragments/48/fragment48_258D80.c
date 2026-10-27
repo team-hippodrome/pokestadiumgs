@@ -21,7 +21,19 @@ void func_87C02DF0(u8 *arg0, s32 arg1, void *arg2, f32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C02E24.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C02F74.s")
+extern void *func_87C008B0(void *arg0);
+extern void func_87C010AC(void *arg0, void *arg1, void *arg2);
+extern u8 D_87C03E00[];
+void func_87C02F74(u8 *arg0, s32 mode) {
+    if (mode == 1) {
+        func_87C008B0(arg0 + 0x308);
+    } else if (mode >= 2 && mode < 7) {
+        func_87C010AC(arg0 + 0x308, D_87C03E00 + mode * 24 - 24, D_87C03E00);
+    }
+}
+
+void func_87C02F74_padding(void) {
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C02FEC.s")
 
