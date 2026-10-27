@@ -327,7 +327,38 @@ void func_86706AC8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86706D3C.s")
+extern void func_86706B88();
+extern u8 D_8670E5C0[];
+extern s32 D_8670FF50;
+extern f32 D_8670C4FC;
+extern f32 D_8670C500;
+void func_86706D3C(s32 arg0) {
+    u8 *entry;
+    s32 tier;
+    f32 size;
+
+    if (arg0 < 3) {
+        tier = 0;
+    } else if (arg0 < 6) {
+        tier = 1;
+    } else if (arg0 < 9) {
+        tier = 2;
+    } else {
+        tier = 3;
+    }
+    entry = (u8 *)func_87F025B8(D_8670E5C0, func_86706B88);
+    if (entry != NULL) {
+        size = D_8670C4FC;
+        *(f32 *)(entry + 0x50) = D_86710C20[tier].z - D_8670C500;
+        *(s16 *)(entry + 0x42) = 0;
+        *(f32 *)(entry + 0x54) = size;
+        *(f32 *)(entry + 0x58) = size;
+        *(f32 *)(entry + 0x5C) = size;
+        *(s32 *)(entry + 0x38) = arg0;
+        func_8003F114(entry + 0x24, 0, -1, D_8670FF50);
+        entry[0x41] = 0x8C;
+    }
+}
 #endif
 
 #ifdef VERSION_US
