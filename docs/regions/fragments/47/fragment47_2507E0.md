@@ -53,11 +53,53 @@ function rename.
   all opcodes but colors the format selector and saved draw arguments
   differently. Follow the declaration and step-lifetime evidence in the
   predecessor region notes; readonly ownership is now available in this unit.
-- `func_8600B100` — requeue. The 552-byte draw routine requires a 72-byte
-  frame. Prior drafts with named dimensions require 80 bytes; reducing those
-  lifetimes changes the phase-field address allocation. Next test nested
-  dimension queries and the newly owned literal pool together, preserving
-  both width queries.
-- `func_8600B328` — requeue. The 324-byte display-list routine's prior draft
-  has 320 bytes and materializes the phase field at `D_8600D408` differently.
-  Read the predecessor diagnostics before repeating display-list spellings.
+- `func_8600B100` — requeue. The 552-byte / 138-instruction draw routine
+  requires a 72-byte frame. A function-local static phase counter removes
+  the extra global-address register and recovers the original instruction
+  sequence. The scoped triangular-phase candidate has two remaining stack
+  accesses at offset 60 instead of 44; the additional-width and final
+  dimension temporaries already occupy their expected offsets, 64 and 40.
+  Data and float-pool relocation fields must be resolved separately from
+  these two true instruction differences. Next investigate expression and
+  temporary lifetimes while preserving both width queries.
+
+## 2026-10-27 — writable renderer data and matching animated indicator
+
+Starting revision `25c2218caf5cf506248fe75e53a06215e6b68c06` (#1705).
+Give this source unit the 96 writable bytes at ROM `0x253A10..0x253A70`
+(VMA `0x8600D3F0..0x8600D450`). They contain the four slot RGBA colors,
+white fallback, two initialized animation counters, four further RGBA
+entries, the initialized pairs at `D_8600D41C`, and the two colors used by
+`func_8600B474`. The consumer of the initialized pairs is unidentified.
+The final 12 bytes come from the compiler's normal data-section alignment.
+Gate the layout with both animation draw routines still in assembly before
+replacing either routine: all 96 data bytes and the complete retail ROM
+match. The original source-unit boundaries remain unknown.
+
+`func_8600B328` then passes canonical acceptance: 320 bytes / 80 instructions,
+with its original 40-byte frame. It selects a resource-402 image from
+`D_8600D9D0[animation_phase / 2]` before advancing the phase modulo 12,
+configures translucent rendering with environment alpha 155, and draws at
+(129, 29). Preserve the signed arithmetic and the delta from
+`func_80008970`. The phase is an initialized function-local static; a
+file-global static or a block-local extern produces different address
+materialization and scheduling. This replaces the earlier reversed size
+note: the target is 320 bytes and the old global-state draft was 324 bytes.
+
+The hold flag comes from `func_87F00930` in
+`src/fragments/64/fragment64_3235A0.c`, which shifts the high bit of a byte
+to produce a `u32` value of zero or one. `func_86006F20` forwards that result
+through `func_8600B474` to the two animation draws. Retype the indicator and
+its immediate caller accordingly. The remaining assembly panel draw keeps
+its existing pointer declaration pending its own acceptance.
+
+A stale fragment-15 object initially prevented linking. Fresh baseline
+extraction and forced fragment-15 and fragment-47 rebuilds restored a
+byte-identical baseline; the matched candidate then passed a canonical
+full-ROM gate. Sixteen post-acceptance controls cover all combinations of
+declaration cleanup, local naming, and formatting with ordinary and
+blank-prefixed sources. They preserve section bytes and extents, function
+starts and sizes, and normalized relocations. The final forced native IDO
+7.1 rebuild with the host C check enabled reproduces US retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Only the indicator's assembly owner is
+removed in this batch; the panel and scaled-strip owners remain unresolved.
