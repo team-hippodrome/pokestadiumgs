@@ -42,3 +42,23 @@ The complete link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 188 bytes at ROM `0x34B31C..0x34B3D8`.
+
+## 2026-10-27 — own `.rodata` subsegment; two state cycles accepted
+
+`yamls/us/rom.yaml` now gives this file `[0x354240, .rodata]`
+(`0x82917740..0x829177BF`) in place of the bare blob, and the linker script
+drops the blob object. Every label in that range is referenced only by this
+file's functions: the `D_82917740`/`D_82917744` format strings and
+`jtbl_82917748/60/78/8C/A4`. All assembly owners have even lengths and
+assemble unchanged.
+
+Two owners on the record at `D_8291BC50` (overlay `unk_D_8291BC50`) are now C:
+
+- `func_8290E6D4` (**32 words**): increments s16 +0x0E and steps u16
+  +0x12 through 0→1→…→5→0, resetting +0x0E. The target places the case
+  bodies in the order 3, 4, 5, 0, 1, 2, so the `switch` is written that way.
+- `func_8290E76C` (**38 words**): the same for +0x0C/+0x10, except state 0
+  only advances when the counter is a multiple of 30.
+
+`func_8290E8D8` and `func_8290F42C` remain assembly but can now be written
+as C switches.
