@@ -358,7 +358,69 @@ s32 func_86401F60(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86402158.s")
+extern u8 D_864095F8[];
+extern u8 D_86409604[];
+extern u8 D_86409610[];
+extern u8 D_8640961C[];
+
+// arg1 holds direction bits 0x100-0x800. The bits func_86401F60 returns for the position limits
+// and the bits the mode at state + 4 excludes are cleared; the highest remaining bit selects a
+// record. If the pair at +0x10/+0x18 has a non-negative dot product with the record's (x, z), the
+// record's pair replaces it and the record's halfword at +8 is stored as a float at state + 0x48.
+void func_86402158(u8 *arg0, u16 arg1) {
+    u8 *state;
+    s32 pad;
+    u8 *record;
+
+    state = *(u8 **)(arg0 + 0x20);
+    record = NULL;
+    if (*(u32 *)(arg0 + 0xC) & 0x90000000) {
+        arg1 = 0;
+    }
+    arg1 &= ~func_86401F60(arg0);
+    switch (*(u32 *)(state + 4)) {
+        case 0:
+            arg1 &= 0xF6FF;
+            break;
+        case 1:
+            arg1 &= 0xF5FF;
+            break;
+        case 2:
+            arg1 &= 0xF9FF;
+            break;
+        case 3:
+            arg1 &= 0xFAFF;
+            break;
+        case 6:
+            arg1 &= 0xFEFF;
+            break;
+        case 7:
+            arg1 &= 0xFDFF;
+            break;
+        case 4:
+            arg1 &= 0xF7FF;
+            break;
+        case 5:
+            arg1 &= 0xFBFF;
+            break;
+    }
+
+    if (arg1 & 0x800) {
+        record = D_8640961C;
+    } else if (arg1 & 0x400) {
+        record = D_86409604;
+    } else if (arg1 & 0x200) {
+        record = D_864095F8;
+    } else if (arg1 & 0x100) {
+        record = D_86409610;
+    }
+    if (record != NULL && 0.0f <= (*(f32 *)(arg0 + 0x18) * *(f32 *)(record + 4)) +
+                                          (*(f32 *)(record + 0) * *(f32 *)(arg0 + 0x10))) {
+        *(f32 *)(state + 0x48) = *(u16 *)(record + 8);
+        *(f32 *)(arg0 + 0x10) = *(f32 *)(record + 0);
+        *(f32 *)(arg0 + 0x18) = *(f32 *)(record + 4);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -434,7 +496,33 @@ void func_86402A2C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86403550.s")
+// Stores at arg0 + 0x50 the frame count of 175 frames at 60 Hz, converted to the rate
+// func_80001FF0 reports, times a random factor whose range depends on the byte at +0x2181:
+// [1, 2), [0.3, 0.5), [0.2, 0.5) or 0.
+void func_86403550(u8 *arg0) {
+    f32 scale;
+    s32 value;
+
+    value = *(s8 *)(*(u8 **)(D_86416C00 + 0x70) + 0x2181);
+    switch (value) {
+        case 0:
+            scale = func_8003570C() / 4294967296.0f + 1.0f;
+            break;
+        case 1:
+            scale = func_8003570C() / 4294967296.0f * 0.2f + 0.3f;
+            break;
+        case 2:
+            scale = func_8003570C() / 4294967296.0f * 0.3f + 0.2f;
+            break;
+        case 3:
+            scale = 0.0f;
+            break;
+    }
+
+    value = (func_80001FF0() / 60.0f * 175.0f >= 0.0f) ? func_80001FF0() / 60.0f * 175.0f + 0.5f
+                                                       : func_80001FF0() / 60.0f * 175.0f - 0.5f;
+    *(s32 *)(arg0 + 0x50) = value * scale;
+}
 #endif
 
 #ifdef VERSION_US
@@ -551,7 +639,53 @@ void func_86404D48(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86405138.s")
+extern void func_86407290(f32, f32, f32, f32, f32, f32, s32); //@src/fragments/52/fragment52_285750.c
+
+// Averages the positions (+0x48/+0x4C/+0x50) of the four 0x18C-byte records from
+// D_86416C00 + 0x7D0 whose word +0xC has flag 0x10000, or of all four when none has it, and
+// passes func_86407290 two points offset from that average.
+void func_86405138(void) {
+    f32 x;
+    f32 y;
+    f32 z;
+    s32 i;
+    s32 count;
+    u8 *p;
+
+    count = 0;
+    p = D_86416C00 + 0x7D0;
+    x = y = z = 0.0f;
+    for (i = 0; i < 4; i++) {
+        if (*(s32 *)(p + 0xC) & 0x10000) {
+            count++;
+        }
+        p += 0x18C;
+    }
+    if (count == 0) {
+        count = 4;
+        p = D_86416C00 + 0x7D0;
+        for (i = 0; i < 4; i++, p += 0x18C) {
+            x += *(f32 *)(p + 0x48);
+            y += *(f32 *)(p + 0x4C);
+            z += *(f32 *)(p + 0x50);
+        }
+    } else {
+        p = D_86416C00 + 0x7D0;
+        for (i = 0; i < 4; i++, p += 0x18C) {
+            if (*(s32 *)(p + 0xC) & 0x10000) {
+                x += *(f32 *)(p + 0x48);
+                y += *(f32 *)(p + 0x4C);
+                z += *(f32 *)(p + 0x50);
+            }
+        }
+    }
+    if (count >= 2) {
+        x /= count;
+        y /= count;
+        z /= count;
+    }
+    func_86407290(x - 200.0f, y + 450.0f, z + 80.0f, x + 90.0f, y - 40.0f, z, 60);
+}
 #endif
 
 #ifdef VERSION_US
@@ -559,7 +693,41 @@ void func_86404D48(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864055CC.s")
+// For each of the four 0x18C-byte records from D_86416C00 + 0x7D0, decays the node scale at
+// +0x18 by 0.8 and advances +0x48 by +0x10 times that scale. Once the scale drops below 1 it
+// is cleared (record 0 first calls func_86407290 while it is still positive) and, when +0x64
+// is 1, the animation at +0x24 restarts at a random frame 0-15.
+void func_864055CC(void) {
+    u8 *state = D_86416C00;
+    u8 *node;
+    u8 *child;
+    s32 i;
+
+    state += 0x7D0;
+    for (i = 0; i < 4; i++, state += 0x18C) {
+        node = *(u8 **)(state + 0x20);
+        *(f32 *)(node + 0x18) *= 0.8f;
+        *(f32 *)(state + 0x48) += *(f32 *)(state + 0x10) * *(f32 *)(node + 0x18);
+        if (*(f32 *)(node + 0x18) < 1.0f) {
+            if (i == 0 && *(f32 *)(node + 0x18) > 0.0f) {
+                func_86407290(0.0f, 1049.5f, 553.0f, 0.0f, 30.0f, 30.0f, 80);
+            }
+            *(f32 *)(node + 0x18) = 0.0f;
+            if (*(s16 *)(state + 0x64) == 1) {
+                func_8003F210(state + 0x24, 0);
+                ModelAnim_SetFrame(state + 0x24, (s16)(func_8003570C() & 0xF));
+            }
+        }
+    }
+    func_86401D1C();
+    state = D_86416C00;
+    state += 0x7D0;
+    for (i = 0; i < 4; i++, state += 0x18C) {
+        child = *(u8 **)(state + 0x20);
+        func_86404D48(state, child);
+        func_86401DBC(state, child, *(s32 *)(child + 0x18));
+    }
+}
 #endif
 
 #ifdef VERSION_US
