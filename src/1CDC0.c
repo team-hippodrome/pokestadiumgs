@@ -523,7 +523,52 @@ void AudioLayer_PrepareNote(AudioLayerPreparePrefix *layer) {
     ((LayerLowFlags *)layer)->bit0 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001CE70.s")
+typedef struct {
+    /* 0x00 */ u32 enabled : 1;
+    /* 0x00 */ u32 finished : 1;
+    /* 0x00 */ u32 stopSomething : 1;
+    /* 0x00 */ u32 continuousNotes : 1;
+    /* 0x00 */ u32 bit3 : 1;
+    /* 0x00 */ u32 ignoreDrumPan : 1;
+    /* 0x00 */ u32 bit1 : 1;
+    /* 0x00 */ u32 notePropertiesNeedInit : 1;
+    /* 0x01 */ u32 unk_01 : 24;
+    /* 0x04 */ u8 unk_04[0x38];
+    /* 0x3C */ u8 *note;
+} AudioLayerStep5View;
+
+extern void *AudioVoice_AcquireForRequest(u8 *request);
+extern void AudioVibrato_Init(void *);
+extern void func_8001BDF0(u8 *);
+
+// Same code as Ocarina of Time AudioSeq_SeqLayerProcessScriptStep5 (src/code/audio_seqplayer.c),
+// without the synthetic-wave reinit. A note's parent layer is at note + 0x44.
+s32 func_8001CE70(void *arg0, s32 sameSound) {
+    u8 *note;
+
+    if ((((AudioLayerStep5View *)arg0)->continuousNotes == 1) && (((AudioLayerStep5View *)arg0)->bit1 == 1)) {
+        return 0;
+    }
+
+    if ((((AudioLayerStep5View *)arg0)->continuousNotes == 1) && (((AudioLayerStep5View *)arg0)->note != NULL) && ((AudioLayerStep5View *)arg0)->bit3 && (sameSound == 1U) &&
+        (*(void **)(((AudioLayerStep5View *)arg0)->note + 0x44) == arg0)) {
+        // OoT reinitializes a synthetic wave here; GS has no such call.
+    } else {
+        if (sameSound == 0) {
+            func_8001A994(arg0);
+        }
+        ((AudioLayerStep5View *)arg0)->note = AudioVoice_AcquireForRequest((u8 *)arg0);
+        if ((((AudioLayerStep5View *)arg0)->note != NULL) && (*(void **)(((AudioLayerStep5View *)arg0)->note + 0x44) == arg0)) {
+            AudioVibrato_Init(((AudioLayerStep5View *)arg0)->note);
+        }
+    }
+
+    if ((((AudioLayerStep5View *)arg0)->note != NULL) && (*(void **)(((AudioLayerStep5View *)arg0)->note + 0x44) == arg0)) {
+        note = ((AudioLayerStep5View *)arg0)->note;
+        func_8001BDF0(note);
+    }
+    return 0;
+}
 
 extern u8 AudioChannel_ResolveInstrument(u8 *channel, u8 program, u8 **out_instrument, u8 *adsr);
 extern f32 D_8008EB94[];
