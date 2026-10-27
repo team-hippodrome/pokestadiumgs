@@ -1,5 +1,7 @@
 #include "global.h"
 
+typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
+
 
 #ifdef VERSION_US
 extern Gfx *D_800D0510;
@@ -227,7 +229,22 @@ void func_86703DF4_padding(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86703E9C.s")
+extern Row86706A30 D_86710C20[];
+extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u8 D_86727CB0[];
+extern u32 func_8003570C(void);
+void func_86703E9C(s32 arg0) {
+    u32 rand2;
+    s32 pad; // FAKE
+    u32 rand1;
+    u32 rand0;
+
+    rand0 = func_8003570C();
+    rand1 = func_8003570C();
+    rand2 = func_8003570C();
+    func_87F03884(D_86727CB0, 0, &D_86710C20[arg0], 10.0f, 90.0f, -20.0f, (rand0 % 31) * 0x200,
+                  ((f32)rand1 / 4294967296.0f) * 1.5f * 5.0f, (rand2 % 3) + 2);
+}
 #endif
 
 #ifdef VERSION_US
@@ -293,7 +310,6 @@ void D_867068E4(void) {
 
 #ifdef VERSION_US
 typedef struct { u8 pad38[0x38]; s32 index; u8 pad3C[0x0C]; f32 out48; f32 out4C; f32 out50; f32 in54; f32 out58; } State86706A30;
-typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
 extern State86706A30 *D_87F119DC;
 extern f32 D_8670C974;
 extern Row86706A30 D_86710C20[];
@@ -327,7 +343,38 @@ void func_86706AC8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86706D3C.s")
+extern void func_86706B88();
+extern u8 D_8670E5C0[];
+extern s32 D_8670FF50;
+extern f32 D_8670C4FC;
+extern f32 D_8670C500;
+void func_86706D3C(s32 arg0) {
+    u8 *entry;
+    s32 tier;
+    f32 size;
+
+    if (arg0 < 3) {
+        tier = 0;
+    } else if (arg0 < 6) {
+        tier = 1;
+    } else if (arg0 < 9) {
+        tier = 2;
+    } else {
+        tier = 3;
+    }
+    entry = (u8 *)func_87F025B8(D_8670E5C0, func_86706B88);
+    if (entry != NULL) {
+        size = D_8670C4FC;
+        *(f32 *)(entry + 0x50) = D_86710C20[tier].z - D_8670C500;
+        *(s16 *)(entry + 0x42) = 0;
+        *(f32 *)(entry + 0x54) = size;
+        *(f32 *)(entry + 0x58) = size;
+        *(f32 *)(entry + 0x5C) = size;
+        *(s32 *)(entry + 0x38) = arg0;
+        func_8003F114(entry + 0x24, 0, -1, D_8670FF50);
+        entry[0x41] = 0x8C;
+    }
+}
 #endif
 
 #ifdef VERSION_US
