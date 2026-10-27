@@ -298,7 +298,19 @@ void func_86009D7C(void *arg0, f64 arg1, f64 arg2, f64 arg3, s32 arg4) {
     *(f64 *)((u8 *)arg0 + 0x18) = arg1 - ((f64)sign * *(f64 *)arg0) * (f64)__sinf(half);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009E54.s")
+void func_86009E54(void *destination, void *config, f64 parameter, f64 angle, s32 flags) {
+    Fragment47PositionConfig *shape = config;
+    f64 product;
+    f64 ratio;
+    f64 height;
+    s32 sign;
+
+    ratio = (shape->unk_08 * parameter) / shape->radius;
+    product = shape->unk_08 * parameter;
+    sign = *(s32 *)((u8 *)config + 0x48) ? 1 : -1;
+    height = (f64)sqrtf((f32)(1.0 - ratio * ratio)) * ((f64)sign * shape->radius) + shape->center_y;
+    func_86009D7C(destination, height, product, angle, flags);
+}
 
 s32 func_86009EF8(void *arg0, f64 arg1) {
     return (arg1 < *(f64 *)((u8 *)arg0 + 0x18)) ^ *(s32 *)((u8 *)arg0 + 0x48);
