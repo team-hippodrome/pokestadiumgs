@@ -1437,6 +1437,8 @@
     - [0x3321A0, data,    fragments/64/fragment64_data]
     - [0x333F10, .data,   fragments/64/fragment64_32F2C0]
     - [0x333F20, data,    fragments/64/fragment64_data_tail]
+    - [0x3341B0, .rodata, fragments/64/fragment64_3290A0] # Jump tables, float literals.
+    - [0x334310, rodata]
 
   - name: fragment65
     type: code
