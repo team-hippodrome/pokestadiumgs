@@ -36,3 +36,7 @@ Gradient panel behind a menu row. The former `D_8F103A54`/`D_8F103A58` words are
 ## 2026-10-28 — `func_8F1008EC` matched
 
 Species list renderer: a title from `D_8F103A5C`/`D_8F103A64` indexed by mode `D_8F1DEE18`, ten rows of `"%… %s"`-style text (`D_8F103B2C`) with the selected row in yellow, and a footer prompt. `func_800495BC` is varargs (`const char *, ...`); the file-level prototype was corrected in the same change (byte-identical). The only scheduling detail: compute `position` before choosing the title. The permuter found it via an alias temporary, and the plain reordering is equivalent. When `func_8004B7A4` returns NULL, the name falls back to `D_8F10398C` (Japanese build) or `"DummyMon"`.
+
+## 2026-10-28 — `func_8F101FF4` matched
+
+D-pad list scroll: L/R repeat (`0x200`/`0x100`) moves `D_8F1DEE24` within 0..0x118, written directly on the global. When it changes, `D_8F1DEE44`/`D_8F1DEE5C` are cleared and `func_80041FD0(D_8F1DECA0, index, *(Fragment69PackedState *)&D_8F1DEE44, 0)` reloads the list. A local `value` copy of the index scores 0.84; only `old` is a local. `Fragment69PackedState` is now declared above this function.

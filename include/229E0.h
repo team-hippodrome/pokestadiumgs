@@ -341,9 +341,10 @@ u16 Audio_FilterRecentSoundId(u16 arg0) ;
 void Audio_RemoveRecentSoundAt(u16 arg0) ;
 
 extern void func_800314D4(s32);
-extern s32 func_80028ADC(void);
-/* Existing callers pass an ignored address; preserve the no-argument body. */
-void func_80028CA8() ;
+// The first halfword's low byte counts the following 16-bit sound IDs.
+//@asm/us/nonmatchings/229E0/func_80028ADC.s
+extern s32 func_80028ADC(const void *sound_candidates);
+void func_80028CA8(const void *sound_candidates);
 void func_80028CA8_padding(void) ;
 void func_80028CA8_padding2(void) ;
 

@@ -577,7 +577,40 @@ void func_8F101CDC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F101FF4.s")
+// Four signed bytes passed to func_80041FD0 as one word.
+typedef union {
+    s32 word;
+    s8 bytes[4];
+} Fragment69PackedState;
+#endif
+
+#ifdef VERSION_US
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE44;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DECA0;
+extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
+void func_8F101FF4(void) {
+    s32 old = D_8F1DEE24;
+
+    if (D_80087200->buttonsRepeat & 0x200) {
+        D_8F1DEE24--;
+        if (D_8F1DEE24 < 0) {
+            D_8F1DEE24 = 0;
+        }
+    }
+    if (D_80087200->buttonsRepeat & 0x100) {
+        D_8F1DEE24++;
+        if (D_8F1DEE24 > 0x118) {
+            D_8F1DEE24 = 0x118;
+        }
+    }
+    if (old != D_8F1DEE24) {
+        D_8F1DEE44 = 0;
+        D_8F1DEE5C = 0;
+        func_80041FD0(D_8F1DECA0, D_8F1DEE24, *(Fragment69PackedState *)&D_8F1DEE44, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -618,10 +651,6 @@ void func_8F102394(void) {
 #endif
 
 #ifdef VERSION_US
-typedef union {
-    s32 word;
-    s8 bytes[4];
-} Fragment69PackedState;
 extern s8 D_8F1DEE48[];
 extern s32 D_8F1DECA0;
 extern s32 D_8F1DECF0;

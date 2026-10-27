@@ -52,3 +52,7 @@ bounded family. The owner remains assembly; no draft was installed.
 Older primary-checkout notes also record unresolved `84154820`/`84154948`
 source/layout work. Those owners were not retried in this batch. The existing
 `841556C4` query and `841557B0` snapshot-pop body are unchanged.
+
+## 2026-10-28 — `func_84154820`: requeue
+
+requeue. For the 0xCC-byte side record `D_8419E780[side]`: if `value != rec->unk_00`, set `rec->unk_01 = value`, call `func_84154FC4(&rec->unk_08, side)`, and clear bit 7 of byte 0x1D (sub-struct + 0x15) in the opponent's record `[1 - side]`. Retail forms that address as `(D_8419E780 + 0xCC) - side * 0xCC + 8`, which a typed struct array with `[1 - side].unk_08` reproduces. Best 0.9302 with `(u8 side, u8 value)` and the struct view: `side`/`value` land in `$a2`/`$a3` swapped, and the post-call address recompute differs (retail spills `side` to `sp+0x1B` as a byte and recomputes the multiply). The permuter went 635 → 565 with fakes only.
