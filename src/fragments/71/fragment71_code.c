@@ -51,7 +51,141 @@ void func_8F300770(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/71/fragment71_code/func_8F3007B0.s")
+extern u8 *D_80087200;
+extern void func_80054248(void *);
+extern void func_800548C4(void *);
+extern void func_80054974(void *);
+extern void func_80055F6C(void *, s32);
+extern void func_80051D64(s32, s32);
+
+// Bits 0x800/0x400 of the halfword at D_80087200 + 0xC move the cursor D_8F300E10
+// over items 0-13; in the halfword at D_80087200 + 8, bit 1 switches between the two
+// 24-byte records at D_8F300F48, 0x8000 toggles the item under the cursor, and 0x4000
+// passes D_8F300F28-D_8F300F60 to func_80054248 through func_80055F6C and returns 1.
+s32 func_8F3007B0(void) {
+    s32 result = 0;
+    u8 *record;
+    u8 *counter;
+
+    if (*(u16 *)(D_80087200 + 0xC) & 0x800) {
+        if (--*(s32 *)D_8F300E10 < 0) {
+            *(s32 *)D_8F300E10 = 0;
+        }
+    }
+    if (*(u16 *)(D_80087200 + 0xC) & 0x400) {
+        if (++*(s32 *)D_8F300E10 >= 14) {
+            *(s32 *)D_8F300E10 = 13;
+        }
+    }
+    if (*(u16 *)(D_80087200 + 8) & 1) {
+        *(s32 *)D_8F300E14 ^= 1;
+    }
+    record = D_8F300F48 + *(s32 *)D_8F300E14 * 24;
+    counter = (*(s32 *)D_8F300E10 == 0) ? D_8F300F28 : D_8F300F28 + 1;
+    if (*(u16 *)(D_80087200 + 8) & 0x8000) {
+        switch (*(s32 *)D_8F300E10) {
+            case 0:
+            case 1:
+                if (++*counter >= 3) {
+                    *counter = 0;
+                }
+                break;
+            case 2:
+                if (*(u16 *)D_8F300F40 & 4) {
+                    *(u16 *)D_8F300F40 &= ~4;
+                } else {
+                    *(u16 *)D_8F300F40 |= 4;
+                }
+                break;
+            case 3:
+                if (record[0xB] == 0) {
+                    record[0xB] = 1;
+                } else {
+                    record[0xB] = 0;
+                }
+                break;
+            case 4:
+                if (record[0xA] == 0) {
+                    record[0xA] = 1;
+                } else {
+                    record[0xA] = 0;
+                }
+                break;
+            case 5:
+                if (record[6] == 0) {
+                    record[6] = 15;
+                } else {
+                    record[6] = 0;
+                }
+                break;
+            case 6:
+                if (record[7] == 0) {
+                    record[7] = 15;
+                } else {
+                    record[7] = 0;
+                }
+                break;
+            case 7:
+                if (record[8] == 0) {
+                    record[8] = 15;
+                } else {
+                    record[8] = 0;
+                }
+                break;
+            case 8:
+                if (record[9] == 0) {
+                    record[9] = 15;
+                } else {
+                    record[9] = 0;
+                }
+                break;
+            case 9:
+                if (*(u16 *)(record + 0) == 0) {
+                    *(u16 *)(record + 0) = 0xFFFF;
+                } else {
+                    *(u16 *)(record + 0) = 0;
+                }
+                break;
+            case 10:
+                if (*(u16 *)(record + 2) == 0) {
+                    *(u16 *)(record + 2) = 0xFF;
+                } else {
+                    *(u16 *)(record + 2) = 0;
+                }
+                break;
+            case 11:
+                if (*(u16 *)(record + 4) == 0) {
+                    *(u16 *)(record + 4) = 0xFFFF;
+                } else {
+                    *(u16 *)(record + 4) = 0;
+                }
+                break;
+            case 12:
+                if (record[0xC] == 0) {
+                    record[0xC] = 0xFF;
+                } else {
+                    record[0xC] = 0;
+                }
+                break;
+            case 13:
+                if (*(u16 *)(D_8F300F30 + 2) & 4) {
+                    *(u16 *)(D_8F300F30 + 2) &= ~4;
+                } else {
+                    *(u16 *)(D_8F300F30 + 2) |= 4;
+                }
+                break;
+        }
+    } else if (*(u16 *)(D_80087200 + 8) & 0x4000) {
+        func_80054248(D_8F300F28);
+        func_800548C4(D_8F300F30);
+        func_80054974(D_8F300F40);
+        func_80055F6C(D_8F300F48, 0);
+        func_80055F6C(D_8F300F60, 1);
+        func_80051D64(20, 0);
+        result = 1;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/71/fragment71_code/func_8F300AD0.s")
 

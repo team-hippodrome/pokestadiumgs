@@ -39,9 +39,6 @@ typedef struct F52Node {
 } F52Node;
 extern F52State* D_86416C00;
 extern u8 D_86409800[], D_86409C70[];
-f32 D_86409C40 = 2.534400225f;
-f32 D_86409C44 = 2.534400225f;
-f32 D_86409C48 = 5.28f;
 extern Gfx* D_800D0510;
 extern s32 main_pool_get_available(void);
 extern void* MainPool_AllocState(s32, s32);
@@ -103,13 +100,13 @@ void func_86407CE0(s32 kind, F52Node* node) {
         node->position[2] = item->position[2];
         node->angle = item->angles[2];
         if (relation->state20 > 0) {
-            first = D_86409C40;
+            first = 2.534400225f;
             node->scale[2] = first;
             node->scale[1] = first;
             node->scale[0] = first;
         } else {
-            first = D_86409C44;
-            second = D_86409C48;
+            first = 2.534400225f;
+            second = 5.28f;
             node->scale[0] = first;
             node->scale[2] = second;
             node->scale[1] = second;
@@ -123,15 +120,12 @@ extern void func_8003F1DC(void*);
 extern void func_8003F114(void*, s16, s16, void*);
 
 void func_86407D58(void* argument) {
-    static f32 scaleYZ = 5.28f;
-    static f32 scaleX = 2.534400225f;
     F52Item* item;
     /* Keep these statements grouped: their line relationship affects IDO scheduling. */
     item = func_87F025B8(&D_86416C00->group, 0); if (item != 0) { func_80037E3C((u8*)item + 0x24, func_86407CE0, argument); func_8003F1DC((u8*)item + 0x24);
         func_8003F114((u8*)item + 0x24, 0, -1, D_86416C00->graph);
-        item->scale[0] = scaleX;
-        item->scale[1] = scaleYZ;
-        item->scale[2] = scaleYZ;
+        item->scale[0] = 2.534400225f;
+        item->scale[1] = item->scale[2] = 5.28f;
         item->angles[1] = -0x4000;
     }
 }

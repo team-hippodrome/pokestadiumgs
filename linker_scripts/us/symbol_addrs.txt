@@ -13,6 +13,7 @@ D_82408F38 = 0x82408F38; // type:u8 size:0x8 force_not_migration:true
 D_82408F40 = 0x82408F40; // size:0x38 force_not_migration:true
 D_82408F78 = 0x82408F78; // size:0xE0 force_not_migration:true
 jtbl_82409058 = 0x82409058; // type:jtbl size:0x14 force_migration:true
+D_8690EFF0 = 0x8690EFF0; // type:f32 size:0x8 force_migration:true
 gIdleThread = 0x800A8280; // size:0x1B0
 pThreads = 0x800A8830; // size:0x1B0
 leoDiskID = 0x800AA9E0; // size:0x20

@@ -168,7 +168,48 @@ void func_869020CC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690241C.s")
+extern u8 D_8691A2A0[];
+extern s32 D_8691A768;
+
+// Sets D_8691A768 to a random amount chosen by the word at D_8691A2A0 + 0x48,
+// scaled by a factor chosen by the word at D_8691A2A0 + 0x78.
+void func_8690241C(void) {
+    //!bug factor is never set when the word at D_8691A2A0 + 0x78 is above 3.
+    f32 factor;
+
+    switch (*(s32 *)(D_8691A2A0 + 0x78)) {
+        case 0:
+            factor = 0.6f;
+            break;
+        case 1:
+            factor = 0.8f;
+            break;
+        case 2:
+            factor = 1.0f;
+            break;
+        case 3:
+            factor = 1.0f;
+            break;
+    }
+
+    switch (*(u32 *)(D_8691A2A0 + 0x48)) {
+        case 0:
+            D_8691A768 = (5 + guRandom() % 6) * factor;
+            break;
+        case 1:
+            D_8691A768 = (*(s32 *)(D_8691A2A0 + 0x74) + guRandom() % 11 + 5) * factor;
+            break;
+        case 2:
+            D_8691A768 = (*(s32 *)(D_8691A2A0 + 0x74) + guRandom() % 11 + 10) * factor;
+            break;
+        case 3:
+            D_8691A768 = (*(s32 *)(D_8691A2A0 + 0x74) + guRandom() % 16 + 10) * factor;
+            break;
+        case 4:
+            D_8691A768 = (*(s32 *)(D_8691A2A0 + 0x74) + guRandom() % 11 + 20) * factor;
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

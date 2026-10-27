@@ -60,7 +60,38 @@ s32 func_82B0069C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B00914.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B00B78.s")
+extern s32 D_82B08524;
+extern s32 D_82B08528;
+
+// Packs D_82B08524 + 1 (only for 0-4; other non-negative values give 1) into the
+// upper halfword and the low halfword of D_82B08528 into the lower one; returns 0
+// while D_82B08524 is negative.
+u32 func_82B00B78(void) {
+    u32 result = 0;
+    u32 high;
+
+    if (D_82B08524 >= 0) {
+        high = 0x10000;
+        switch (D_82B08524) {
+            case 0:
+                break;
+            case 1:
+                high = 0x20000;
+                break;
+            case 2:
+                high = 0x30000;
+                break;
+            case 3:
+                high = 0x40000;
+                break;
+            case 4:
+                high = 0x50000;
+                break;
+        }
+        result = (D_82B08528 & 0xFFFF) | high;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B00BE0.s")
 #endif

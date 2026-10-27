@@ -151,7 +151,64 @@ void func_88501274(s16 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501AE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88503644.s")
+extern u8 D_8850D679[];
+extern s32 D_88804054;
+extern s32 func_88504E94(u8);
+extern s32 fragment29_main(u8);
+extern s32 func_80063754(s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_80047738(s32, s32, s32, s32);
+
+// Picks the value passed to func_88501274: 26 after clearing the word at
+// D_8850D6D0 + 0x84, or 25 after passing a value mapped from the byte
+// D_8850D679[func_88504E94(1 - D_8850D6D0[0xA]) * 20] to func_8004C990 and
+// func_80047738; otherwise calls func_8000612C. Always clears D_880068B8.
+void func_88503644(void) {
+    s16 next = -1;
+    u8 id = D_8850D679[func_88504E94(D_8850D6D0[0xA]) * 20];
+    s32 ready = (D_88804054 == 0);
+    s32 param;
+
+    if (ready) {
+        ready = (fragment29_main(id) == 0);
+    }
+    if (D_8850D6D0[0xA] == 1 && ready && func_80063754(func_88500CF0(0)[1])) {
+        *(s32 *)(D_8850D6D0 + 0x84) = 0;
+        next = 26;
+    } else if (D_88804054 != 0 && fragment29_main(id) == 0) {
+        switch (D_8850D679[func_88504E94(1 - D_8850D6D0[0xA]) * 20]) {
+            case 1:
+                param = 5;
+                break;
+            case 2:
+                param = 4;
+                break;
+            case 3:
+                param = 1;
+                break;
+            case 4:
+                param = 7;
+                break;
+            case 5:
+                param = 3;
+                break;
+            case 6:
+                param = 6;
+                break;
+            default:
+                param = 2;
+                break;
+        }
+        func_80047738(0, func_8004C990(56, param), 0, 0);
+        next = 25;
+    } else {
+        func_8000612C();
+    }
+    if (next != -1) {
+        func_88501274(next);
+    }
+    D_880068B8 = 0;
+}
 
 extern s32 D_880068B4;
 extern void Util_Free(u8 *);

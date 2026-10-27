@@ -272,9 +272,111 @@ void func_8410291C(u8 *arg0) {
     } else if (ModelAnim_IsFinished(*(u8 **)(arg0 + 0xC)) != 0) func_84100094(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841029DC.s")
+extern void func_841027B4(u8 *);
+extern void func_84100B3C(u8 *);
+extern void func_84100C68(u8 *);
+extern void func_84100DE4(u8 *);
+extern void func_8410488C(u8 *);
+extern void BattleAnim_GetPointAlongCameraRay(u8 *, f32);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102B3C.s")
+// Updates each active record (nonzero byte 0x98) of the 300 156-byte records at
+// D_8418C950 according to its mode byte at offset 0x7C.
+void func_841029DC(void) {
+    s32 i;
+    u8 *record = D_8418C950;
+
+    for (i = 0; i < 300; i++, record += 156) {
+        if (*(s8 *)(record + 0x98) == 0) {
+            continue;
+        }
+        switch (record[0x7C]) {
+            case 0:
+                func_841027B4(record);
+                func_8410291C(record);
+                break;
+            case 1:
+                if (func_84100074(record, 0x800)) {
+                    func_841027B4(record);
+                }
+                break;
+            case 7:
+                if (func_84100074(record, 0x800)) {
+                    func_841027B4(record);
+                }
+                break;
+            case 2:
+                func_84100B3C(record);
+                break;
+            case 4:
+                BattleAnim_GetPointAlongCameraRay(*(u8 **)(record + 0xC) + 0x24, 50.0f);
+                func_84100B3C(record);
+                break;
+            case 8:
+                func_84100B3C(record);
+                break;
+            case 5:
+                func_84100C68(record);
+                break;
+            case 6:
+                func_84100DE4(record);
+                break;
+            case 3:
+                break;
+        }
+        if (func_8410009C(record)) {
+            func_8410488C(record);
+            func_84100350(record);
+        }
+    }
+}
+
+typedef struct S1_Vec3f {
+    /* 0x0 */ f32 x;
+    /* 0x4 */ f32 y;
+    /* 0x8 */ f32 z;
+} S1_Vec3f;
+typedef struct S1_Vec3s {
+    /* 0x0 */ s16 x;
+    /* 0x2 */ s16 y;
+    /* 0x4 */ s16 z;
+} S1_Vec3s;
+
+extern void func_841039AC(s16, s16, s16, f32);
+extern void func_841039F4(s16, s16, s16, f32);
+extern void func_841043AC(S1_Vec3f, S1_Vec3s, f32);
+extern void func_84104428(S1_Vec3f, S1_Vec3s, f32);
+extern void func_84104528(void *, S1_Vec3f, f32);
+extern void func_84104590(void *, S1_Vec3f, f32, s16);
+extern void func_84104668(void *, S1_Vec3f, f32, s16);
+
+// Passes the record's position (0x20), rotation (0x6A) and scale (0x18) to the
+// handler for type, all defined in fragment79_372DE0.
+//@src/fragments/79/fragment79_372DE0.c
+void func_84102B3C(u8 *record, void *matrix, s32 type) {
+    switch (type) {
+        case 0:
+            func_841043AC(*(S1_Vec3f *)(record + 0x20), *(S1_Vec3s *)(record + 0x6A), *(f32 *)(record + 0x18));
+            break;
+        case 1:
+            func_84104528(matrix, *(S1_Vec3f *)(record + 0x20), *(f32 *)(record + 0x18));
+            break;
+        case 2:
+            func_84104428(*(S1_Vec3f *)(record + 0x20), *(S1_Vec3s *)(record + 0x6A), *(f32 *)(record + 0x18));
+            break;
+        case 3:
+            func_84104668(matrix, *(S1_Vec3f *)(record + 0x20), *(f32 *)(record + 0x18), *(s16 *)(record + 0x6E));
+            break;
+        case 4:
+            func_84104590(matrix, *(S1_Vec3f *)(record + 0x20), *(f32 *)(record + 0x18), *(s16 *)(record + 0x6E));
+            break;
+        case 5:
+            func_841039AC(*(f32 *)(record + 0x20), *(f32 *)(record + 0x24), *(s16 *)(record + 0x6E), *(f32 *)(record + 0x18));
+            break;
+        case 6:
+            func_841039F4(*(f32 *)(record + 0x20), *(f32 *)(record + 0x24), *(s16 *)(record + 0x6E), *(f32 *)(record + 0x18));
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102D38.s")
 
