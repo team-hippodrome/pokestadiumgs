@@ -4,7 +4,21 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82300020.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230009C.s")
+extern s8 *D_82305A70;
+extern s16 D_82305EE4;
+extern s16 D_82305EE6;
+extern s16 D_82305EE8;
+extern void func_82300020(s32);
+#pragma COALESCE_AT_LUI(func_8230009C, D_82305EE4, D_82305EE6)
+void func_8230009C(void) {
+    if (D_82305A70[2] == 0) {
+        D_82305EE4 = 0;
+        D_82305EE6 = 0;
+        D_82305EE8 = 0;
+    } else {
+        func_82300020(1);
+    }
+}
 
 extern s16 D_82305EE4;
 
