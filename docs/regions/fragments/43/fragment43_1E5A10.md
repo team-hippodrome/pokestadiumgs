@@ -104,3 +104,11 @@ tooling-blocked. Pool push/pop trace helpers: `main_pool_push_state(arg0)` (resp
 ## 2026-10-27 — `func_8AC0619C`: layout-prerequisite
 
 layout-prerequisite. Sine wobble: `u16 arg1; arg1 <<= 12;` (gives retail's `sw a1,4(sp); sll; andi`), `wave = &D_80088E50[arg1 >> 4]`, `+0x40 = 1.0f - *wave * 0.3f`, `+0x44 = *wave * 0.3f + 1.0f`, `+0x4C = *(s16 *)(arg0 + 0x5A) * 0.5f * (1.0f - +0x44) + +0x54`. With the literal `0.3f` the text matches exactly (1.0 locally); `D_8AC08180` is that literal, one of the file's float literals that splat left in `fragment43_data`. Through `extern f32 D_8AC08180` (or a local copy) IDO swaps `f0`/`f2` and re-reads it (0.79). Needs `fragment43_1E5A10.c`'s literal pool split out of `fragment43_data` as a per-file `.rodata` subsegment first.
+
+## 2026-10-28 — `.rodata` subsegment; `func_8AC0619C`/`06220`/`062A4`/`06328` matched
+
+`rom.yaml` now splits `[0x1EDB60, .rodata, fragments/43/fragment43_1E5A10]` (0.05f ×2 = `D_8AC08170`/`74`, 0.3f ×6 = `D_8AC08178`..`8C`) with the rest of the pool as `fragment43_rodata_tail` from 0x1EDB80. The whole file's literal pool probably starts at 0x1ED840 (strings, `jtbl_8AC08128`/`8144`, `D_8AC0816C`), but only the 16-byte-aligned float block was split; `D_8AC0816C` stays in `fragment43_data`. `func_8AC0602C`/`060E4` now spell their factor as the literal `0.3f`.
+
+The four wobble owners take the `func_8AC0619C` spelling with literal `0.3f`. `062A4`/`06328` are the X-axis twins: `unk48 = unk50 ± unk58 * 0.5f * (1.0f - unk40)`.
+
+`func_8AC05F38` (still assembly) now carries `D_8AC08170`/`74` as `.late_rodata` while `D_8AC0816C` is a data extern. Decompiling it as C needs the split moved down to cover `D_8AC0816C`, which is not 16-byte aligned (0x1EDB5C), or that one literal kept as an extern.
