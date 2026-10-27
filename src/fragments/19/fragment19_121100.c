@@ -548,7 +548,32 @@ s32 func_82301D78(s32 arg0, s32 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301DA0.s")
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+void func_82301DA0(s32 x, s32 y, s32 width, s32 height) {
+    u8 *tex;
+    f32 step;
+    f32 pad; // FAKE
+    s32 w;
+    s32 h;
+    f32 scale;
+
+    tex = (u8 *)func_8004C990(44, 0);
+    if (tex == NULL) {
+        return;
+    }
+    w = width - 16;
+    h = height - 16;
+    scale = (f32)w / (f32)(u32)*(u16 *)tex;
+    if (scale > 0.0f && w > 0 && h > 0) {
+        func_8004D1FC(tex);
+        step = 1024.0f / scale;
+        // FAKE: the unsigned 16U keeps IDO from reusing w and h across the call.
+        GfxRect_DrawTextured(x + 8, y + 8, width - 16U, height - 16U, 0, 0,
+                             (s32)(((step > 0.0f) ? 0.5f : -0.5f) + step), 1024, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301EF0.s")
 
