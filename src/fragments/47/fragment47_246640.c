@@ -12,7 +12,50 @@ void func_860002A0(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_860002A8.s")
+extern f64 D_8600D4F8;
+extern f64 func_86000020(u8 *, u8 *, f64);
+
+u8 *func_860002A8(u8 *arg0, s32 flag_a, s32 flag_b, f64 horizon) {
+    f64 best_distance;
+    u8 *closest;
+    s32 offset;
+    u8 *other;
+
+    closest = NULL;
+    best_distance = D_8600D4F8;
+    if (flag_a == 0 && flag_b == 0) {
+        return NULL;
+    }
+    if (*(s32 *)(arg0 + 0x1828) != 3) {
+        return NULL;
+    }
+    offset = 0;
+    do {
+        other = *(u8 **)(arg0 + 0x1870) + offset;
+        if (*(s32 *)(other + 0x1810) == *(s32 *)(arg0 + 0x1810)) {
+            goto next_object;
+        }
+        if (*(s32 *)(other + 0x1828) != 3) {
+            goto next_object;
+        }
+        if (flag_a == 0 && *(s32 *)(other + 0x1824) == 0) {
+            goto next_object;
+        }
+        if (flag_b == 0 && *(s32 *)(other + 0x1824) != 0) {
+            goto next_object;
+        }
+        {
+            f64 distance = func_86000020(arg0, other, horizon);
+            if (distance < best_distance) {
+                best_distance = distance;
+                closest = other;
+            }
+        }
+next_object:
+        offset += 0x1998;
+    } while (offset != 0x6660);
+    return closest;
+}
 #endif
 
 #ifdef VERSION_US
