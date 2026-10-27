@@ -1900,7 +1900,30 @@ void func_8001877C(s32 arg0, s16 arg1) {
     func_800186B8(arg0, &value);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800187AC.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x6314];
+    /* 0x6314 */ u8 cmdWrPos;
+    /* 0x6315 */ u8 cmdRdPos;
+    /* 0x6316 */ u8 unk_6316[0x16];
+    /* 0x632C */ OSMesgQueue *cmdProcQueueP;
+} AudioContextSchedView;
+
+// Same code as Majora's Mask AudioThread_ScheduleProcessCmds without the queue-size tracking.
+s32 func_800187AC(void) {
+    s32 ret;
+
+    ret = osSendMesg(((AudioContextSchedView *)D_8011BE90)->cmdProcQueueP,
+                     (OSMesg)((((AudioContextSchedView *)D_8011BE90)->cmdRdPos & 0xFF) << 8 |
+                              (((AudioContextSchedView *)D_8011BE90)->cmdWrPos & 0xFF)),
+                     OS_MESG_NOBLOCK);
+    if (ret != -1) {
+        ((AudioContextSchedView *)D_8011BE90)->cmdRdPos = ((AudioContextSchedView *)D_8011BE90)->cmdWrPos;
+        ret = 0;
+    } else {
+        return -1;
+    }
+    return ret;
+}
 
 void func_80018810(void) {
     D_8011BE90[0x6315] = D_8011BE90[0x6314];
