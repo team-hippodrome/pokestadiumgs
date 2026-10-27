@@ -265,11 +265,11 @@ void func_87C00908(void *arg0, f64 arg1, f64 arg2, f64 arg3) {
     func_87C01278(arg0, local);
 }
 
-void func_87C00944(void *arg0, void *arg1, void *arg2) {
+void *func_87C00944(void *arg0, void *arg1, void *arg2) {
     f64 *a = arg1;
     f64 *b = arg2;
 
-    func_87C008DC(arg0,
+    return func_87C008DC(arg0,
         a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - b[3] * a[3],
         a[0] * b[1] + b[0] * a[1] + a[2] * b[3] - b[2] * a[3],
         a[0] * b[2] + b[0] * a[2] + a[3] * b[1] - b[3] * a[1],
@@ -341,7 +341,6 @@ void* func_87C00BF4(void* arg0, void* arg1, f64 arg2) {
 extern f64 func_87C00664(void *);
 extern void *func_87C00718(void *, void *, f64);
 extern void* func_87C00BF4(void *, void *, f64);
-extern void func_87C00944(void *, void *, void *);
 void *func_87C00C80(void *arg0, void *arg1) {
     typedef struct { f64 x; f64 y; f64 z; } V3;
     typedef struct { f64 x; f64 y; f64 z; f64 w; } V4;
