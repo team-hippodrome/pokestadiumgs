@@ -399,7 +399,23 @@ void func_8AF01A0C(s16 x, s16 y, s16 width, s16 height, void *image, s16 stride)
     gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + width) << 2, (y + height) << 2, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01C84.s")
+extern u8 D_80094F50[];
+
+// Draws a 96-pixel-wide image as 28 strips of 4 rows: after the D_80094E38 display list and a
+// white primitive color, strip i shows rows 4i-4i+3 of arg2 (0x300 bytes per strip) at
+// (arg0, arg1 + 4i) through func_8AF01A0C; the D_80094F50 display list follows.
+void func_8AF01C84(s32 arg0, s32 arg1, u8 *arg2) {
+    s16 x = arg0;
+    s32 i;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    for (i = 0; i < 28; i++) {
+        func_8AF01A0C(x, arg1 + i * 4, 96, 4, arg2, 96);
+        arg2 += 0x300;
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 extern s32 D_8AF2BA68;
 extern s16 D_8AF2BE40;

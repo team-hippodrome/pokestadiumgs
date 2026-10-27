@@ -329,7 +329,34 @@ s32 func_813107A0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_81310800.s")
+typedef struct unk_func_81310800 {
+    /* 0x00 */ u8 unk_00[0x38];
+    /* 0x38 */ u8 unk_38; // phase byte (see func_8131109C)
+    /* 0x39 */ u8 unk_39; // passed to func_81311C70 as its third argument
+    /* 0x3A */ u8 unk_3A[0x48 - 0x3A];
+    /* 0x48 */ s32 unk_48; // entry index (see func_8131109C)
+    /* 0x4C */ u8 unk_4C[0x8C - 0x4C];
+    /* 0x8C */ u8 unk_8C[6]; // per-entry byte indexed by unk_48; func_8130F970 tests it against 2
+    /* 0x92 */ u8 unk_92[0xA8 - 0x92];
+    /* 0xA8 */ s32 unk_A8; // any-selectable flag (set by func_8130FB58)
+} unk_func_81310800;
+
+extern s32 func_81311C70(void *arg0, void *arg1, s32 arg2, s32 arg3);
+extern u8 D_813120E0[];
+extern u8 D_81312104[];
+extern u8 D_81312128[];
+
+// Calls func_81311C70 with table D_813120E0, or, when the any-selectable flag is set, D_81312128
+// if unk_8C[unk_48] is 6 and D_81312104 otherwise. On a nonzero result, sets the
+// phase byte to 3 (flag set) or 4 (flag clear).
+void func_81310800(unk_func_81310800 *arg0) {
+    if (func_81311C70(arg0,
+                      (arg0->unk_A8 != 0) ? ((arg0->unk_8C[arg0->unk_48] == 6) ? D_81312128 : D_81312104)
+                                          : D_813120E0,
+                      arg0->unk_39, -1)) {
+        arg0->unk_38 = (arg0->unk_A8 != 0) ? 3 : 4;
+    }
+}
 #endif
 
 #ifdef VERSION_US
