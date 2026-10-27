@@ -37,7 +37,36 @@ void func_8410A608(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_379E90/func_8410A884.s")
+extern s32 func_8410580C(s32, u8 *, s32);
+extern u8 D_84183870[];
+extern u8 D_84183874[];
+extern s32 D_8419020C;
+extern s32 D_84190210;
+extern u8 D_84190429;
+extern u8 D_841910E1;
+extern s32 D_841911E4;
+void func_8410A884(void) {
+    func_8410A444();
+    if (D_84190410 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    } else if (D_84190411 != 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    if (D_84190429 & 0x10) {
+        func_8003C6B8(D_8419020C);
+    }
+    func_8410580C(5, D_84190428, 4);
+    if (D_841910E1 & 0x10) {
+        func_8003C6B8(D_84190210);
+    }
+    if (D_841910E1 & 0x10) {
+        if (*(s16 *)((u8 *)D_841911E4 + 0x9C) != 0) {
+            Ui_DrawGradientQuad(0, *(s16 *)((u8 *)D_841911E4 + 0x9C) - 1, 320, 2, &D_84183870, &D_84183874);
+        } else {
+            Ui_DrawGradientQuad(*(s16 *)((u8 *)D_841911E4 + 0x9A) - 1, 0, 2, 240, &D_84183870, &D_84183874);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -345,7 +345,34 @@ void func_8130662C(u8 *grid) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_81306780.s")
+extern u8 D_800CE060[];
+void func_81306780(u8 *arg0) {
+    u16 flags;
+    u8 *entry;
+
+    // D_800CE060 holds four 0x28-byte ControllerState records; +0xC is buttonsRepeat.
+    //@include/controller.h
+    entry = D_800CE060 + *(u8 *)(arg0 + 0x89) * 0x28;
+    flags = *(u16 *)(entry + 0xC);
+    // FAKE: the first two tests reread entry + 0xC instead of flags; diff score 600 without it.
+    if (*(u16 *)(entry + 0xC) & 0x8000) {
+        func_81306178();
+    } else if (*(u16 *)(entry + 0xC) & 0x4000) {
+        func_813061E8(arg0);
+    } else if (flags & 0x200) {
+        func_81306208(arg0);
+    } else if (flags & 0x100) {
+        func_81306264(arg0);
+    } else if (flags & 0x800) {
+        func_813064E8(arg0);
+    } else if (flags & 0x400) {
+        func_8130662C(arg0);
+    } else if (flags & 8) {
+        func_813062C0(arg0);
+    } else if (flags & 4) {
+        func_813063CC(arg0);
+    }
+}
 
 void Fragment14_UpdateGridCursorStep(u8 *arg0) {
     s32 count = arg0[0x83];
