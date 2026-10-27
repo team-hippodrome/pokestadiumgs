@@ -48,6 +48,13 @@ class ScheduledPairs(unittest.TestCase):
         expected[6] |= 0xBF30
         self.assertEqual((actual, count), (expected, 1))
 
+    def test_constant_load_is_a_safe_gap(self):
+        # li t0,1 / li t7,5 (addiu from $zero) and ori t0,zero,0x8000
+        for word in [0x24080001, 0x240F0005, 0x34088000]:
+            words, relocs = fixture((word,))
+            with self.subTest(word=hex(word)):
+                self.assertEqual(len(fold.plan_runs(words, relocs, ADDRESSES)), 1)
+
     def test_shift_must_not_read_or_write_at(self):
         for shift in [0x00010C00, 0x00050C03, 0x00252C00]:
             words, relocs = fixture((shift,))
@@ -75,7 +82,7 @@ class ScheduledPairs(unittest.TestCase):
         self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES), [])
 
     def test_at_reads_writes_and_unknown_gap_operations_are_barriers(self):
-        for word in [0x00203025, 0x00800825, 0x24080001, 0x8C880000, 0]:
+        for word in [0x00203025, 0x00800825, 0x24010001, 0x24880001, 0x8C880000, 0]:
             with self.subTest(word=hex(word)):
                 words, relocs = fixture((word,))
                 self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES), [])
