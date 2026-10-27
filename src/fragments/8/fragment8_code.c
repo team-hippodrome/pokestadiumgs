@@ -2,7 +2,68 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00020.s")
+void func_82F00020(u32 arg0) {
+    switch (arg0) {
+    case 7:
+        func_8004C990(332, 0);
+        return;
+    case 26:
+        func_8004C990(332, 1);
+        return;
+    case 23:
+        func_8004C990(332, 2);
+        return;
+    case 27:
+        func_8004C990(332, 4);
+        return;
+    case 1:
+        func_8004C990(332, 5);
+        return;
+    case 20:
+        func_8004C990(332, 6);
+        return;
+    case 2:
+    case 6:
+        func_8004C990(332, 7);
+        return;
+    case 8:
+        func_8004C990(332, 8);
+        return;
+    case 22:
+        func_8004C990(332, 9);
+        return;
+    case 4:
+        func_8004C990(332, 10);
+        return;
+    case 25:
+        func_8004C990(332, 11);
+        return;
+    case 0:
+        func_8004C990(332, 12);
+        return;
+    case 3:
+        func_8004C990(332, 13);
+        return;
+    case 24:
+        func_8004C990(332, 14);
+        return;
+    case 5:
+        func_8004C990(332, 15);
+        return;
+    case 9:
+        func_8004C990(332, 16);
+        return;
+    case 21:
+        func_8004C990(332, 17);
+        return;
+    case 19:
+        func_8004C990(332, 3);
+        return;
+    default:
+        func_8004C990(332, 12);
+        return;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F001CC.s")
 
