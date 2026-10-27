@@ -122,3 +122,43 @@ checks pass. Independent original-assembly and retail-span comparisons verify
 all 184 bytes at ROM `0x18FCA4..0x18FD5C`. Earlier matched C remains unchanged.
 No new fakes, unused locals, layout, instruction rewriting or CI changes are
 required.
+
+## func_8821CC0C
+
+This comparator derives a signed-halfword key for each object. A zero byte
+at offset 9 or bit 0 set in byte 38 selects 256. Otherwise it passes byte 9
+to existing `func_800735A0`. It returns the first key minus the second,
+breaking ties with `LabPCList_CompareByPointer` on the saved object pair.
+Preserve the short-circuit tests, unsigned-byte loop counter, signed-halfword
+key array and separate difference/result values.
+//@src/fragments/31/fragment31_18F6D0.c
+
+The compiled lookup takes and returns an unsigned byte. Inputs 1 through
+250 read `D_8009FD73[input]`; other inputs return zero. Thus 256 sorts after
+every lookup result. The unknown flag and key semantics retain their existing
+names. The real pointer and key arrays are populated and consumed by the loop,
+and the saved pointers remain live across helper calls for tie-breaking.
+//@src/74020.c
+
+Original `func_8821CCE8` selects this owner for `func_88004B60`, whose calls
+pass stored object pointers. The existing type, sort interfaces, helper
+bodies, earlier matched C and storage remain unchanged.
+//@src/fragments/29/fragment29_16AA30.c
+
+The first candidate matches all 55 instruction words (220 bytes), including
+the original 72-byte frame. Fresh validation uses master
+`f0b086b3b9057356d24a4a542c2007b4f72e72db` plus this patch and forces the
+changed translation unit through the default syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/31/fragment31_18F6D0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The complete link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. Independent original-assembly and retail-span comparisons verify
+all 220 bytes at ROM `0x18FE8C..0x18FF68`. No new fakes, unused locals,
+layout, instruction rewriting or CI changes are required.
