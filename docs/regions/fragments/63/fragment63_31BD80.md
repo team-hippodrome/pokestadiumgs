@@ -110,3 +110,7 @@ void func_87E18410(u8 *arg0) {
   f0:	00000000 	nop
 
 ```
+
+## 2026-10-27 — `func_87E18738`: requeue
+
+requeue (0.95). In mode 5: gDPPipeSync, gDPSetCombine(0x50FFFF, 0xFFFFF238), gDPSetEnvColor(v, v, v, 255) with v = byte +0x3C of D_8009491C (read through a block-top `obj = D_8009491C` local), gSPSegment(15, *(u32 *)(*(u8 **)(model + 4) + 8)) and gSPDisplayList(*(Gfx **)model) with model = *(u8 **)(D_8009491C + 0x14), then func_8003CD84(). Only residual: the env-color word is built <<24, <<16, <<8 in the target; the macro with a repeated obj[0x3C] gives <<8, <<24, <<16, and a byte local is much worse (0.50). Permuter 90 s: 35 -> 15.
