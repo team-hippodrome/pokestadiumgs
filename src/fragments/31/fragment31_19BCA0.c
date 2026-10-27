@@ -1,9 +1,9 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
 extern void Input_SetRepeatController(s32);
-extern s32 D_80087200;
 extern s32 D_880068B8;
 
 void func_88228A20(void) {
@@ -39,7 +39,7 @@ void func_88228AB4(void) {
     u32 flags;
 
     ptr = (u8 *)D_88234890 + 0x20;
-    flags = *(u16 *)((u8 *)D_80087200 + 8);
+    flags = D_80087200->buttonsPressed;
     if (flags & 0x4000) {
         func_800226C0(72);
         func_88004990(**(u8 **)D_88234890, 0);

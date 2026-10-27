@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -55,7 +56,6 @@ typedef struct Fragment22Menu {
     Quad800548C4 settings_backup;
     Fragment22RowEntry rows[16];
 } Fragment22Menu;
-extern void *D_80087200;
 extern void func_800226C0(s32);
 extern void func_800548C4(Quad800548C4 *);
 extern void func_80051D64(s32, s32);
@@ -311,13 +311,13 @@ void func_82701978(Fragment22Menu *menu) {
     previous = menu->unk_04;
     table = menu->rows;
     func_82700E70(1, 0, table, 16);
-    if (*(u16 *)((u8 *)D_80087200 + 12) & 0x800) {
+    if (D_80087200->buttonsRepeat & 0x800) {
         menu->unk_04--;
         if (menu->unk_04 < 0) {
             menu->unk_04 = 0;
         }
     }
-    if (*(u16 *)((u8 *)D_80087200 + 12) & 0x400) {
+    if (D_80087200->buttonsRepeat & 0x400) {
         menu->unk_04++;
         if (menu->unk_04 >= 5) {
             menu->unk_04 = 4;
@@ -326,7 +326,7 @@ void func_82701978(Fragment22Menu *menu) {
     if (previous != menu->unk_04) {
         func_800226C0(1);
     }
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         entry = func_82700E70(2, menu->unk_04, table, 16);
         choice = (Fragment22RowSelection *)&entry->selection;
         choice->selection++;
@@ -379,7 +379,7 @@ void func_82701978(Fragment22Menu *menu) {
             close_requested = 1;
             break;
         }
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+    } else if (D_80087200->buttonsPressed & 0x4000) {
         menu->unk_04 = 4;
         close_requested = 1;
     }
@@ -458,13 +458,13 @@ void func_82701DF4(Fragment22Menu *menu) {
 
     previous = menu->selection;
     confirmed = 0;
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+    if (D_80087200->buttonsRepeat & 0x800) {
         menu->selection--;
         if (menu->selection < 0) {
             menu->selection = 0;
         }
     }
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+    if (D_80087200->buttonsRepeat & 0x400) {
         menu->selection++;
         if (menu->selection >= 2) {
             menu->selection = 1;
@@ -473,14 +473,14 @@ void func_82701DF4(Fragment22Menu *menu) {
     if (previous != menu->selection) {
         func_800226C0(1);
     }
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         confirmed = 1;
         if (menu->selection == 0) {
             func_800226C0(16);
         } else {
             func_800226C0(3);
         }
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+    } else if (D_80087200->buttonsPressed & 0x4000) {
         menu->selection = 1;
         confirmed = 1;
         func_800226C0(3);
@@ -513,13 +513,13 @@ void func_82701F7C(Fragment22Menu *menu) {
 
     previous = menu->selection;
     confirmed = 0;
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+    if (D_80087200->buttonsRepeat & 0x800) {
         menu->selection--;
         if (menu->selection < 0) {
             menu->selection = 0;
         }
     }
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+    if (D_80087200->buttonsRepeat & 0x400) {
         menu->selection++;
         if (menu->selection >= 2) {
             menu->selection = 1;
@@ -528,14 +528,14 @@ void func_82701F7C(Fragment22Menu *menu) {
     if (previous != menu->selection) {
         func_800226C0(1);
     }
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         confirmed = 1;
         if (menu->selection == 0) {
             func_800226C0(67);
         } else {
             func_800226C0(3);
         }
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+    } else if (D_80087200->buttonsPressed & 0x4000) {
         menu->selection = 1;
         confirmed = 1;
         func_800226C0(3);
@@ -668,13 +668,13 @@ void func_82702364(Fragment22Menu *menu) {
 
     previous = menu->unk_08;
     confirmed = 0;
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+    if (D_80087200->buttonsRepeat & 0x800) {
         menu->unk_08--;
         if (menu->unk_08 < 0) {
             menu->unk_08 = 0;
         }
     }
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+    if (D_80087200->buttonsRepeat & 0x400) {
         menu->unk_08++;
         if (menu->unk_08 >= 3) {
             menu->unk_08 = 2;
@@ -683,9 +683,9 @@ void func_82702364(Fragment22Menu *menu) {
     if (previous != menu->unk_08) {
         func_800226C0(1);
     }
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+    if (D_80087200->buttonsPressed & 0x8000) {
         confirmed = 1;
-    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+    } else if (D_80087200->buttonsPressed & 0x4000) {
         confirmed = 1;
         menu->unk_08 = 2;
     }

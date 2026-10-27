@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -1398,7 +1399,6 @@ Fragment46Entry *func_8AE05BF0(void) {
 #ifdef VERSION_US
 extern s32 StageContext_GetFadeMode(void);
 extern void StageFade_StartFromTransparent(s32);
-extern void *D_80087200;
 extern s32 D_8AE084A0;
 extern void func_8AE00020();
 extern s16 D_8AE084EC;
@@ -1412,7 +1412,7 @@ s32 func_8AE0605C(s32 arg0) {
         }
         break;
     case 1:
-        if ((((*(u16 *)((u8 *)D_80087200 + 8)) & 0x4000) != 0) && (D_8AE084EC == 0)) {
+        if ((((D_80087200->buttonsPressed) & 0x4000) != 0) && (D_8AE084EC == 0)) {
             sp1C = 2;
             StageFade_StartFromTransparent(5);
             func_8AE00020(0x48);

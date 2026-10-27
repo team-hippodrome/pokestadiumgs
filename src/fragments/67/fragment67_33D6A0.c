@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -550,7 +551,6 @@ void func_8290263C(void) {
 #endif
 
 #ifdef VERSION_US
-extern void *D_80087200;
 extern s32 D_829188EC;
 extern void func_80064D28(void);
 extern void func_8290260C(void);
@@ -562,7 +562,7 @@ void func_82902694(void) {
             func_80064D28();
             func_8290260C();
             func_82902634();
-            if ((*(u16 *)((u8 *)D_80087200 + 8) & 0xD000) != 0) {
+            if ((D_80087200->buttonsPressed & 0xD000) != 0) {
                 D_829188EC = 0;
             }
             func_82901BA8();

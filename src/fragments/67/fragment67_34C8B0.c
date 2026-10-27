@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -104,7 +105,6 @@ void func_8290FF14(F67DisplayRecord* state) {
     }
 }
 
-extern void* D_80087200;
 extern void func_800226C0(s32);
 extern void func_80021ED8(s32);
 extern s32 D_8291BE70;
@@ -149,7 +149,7 @@ void func_82910258(void) {
         case 3:
             if (D_8291BE78.timer < 60) {
                 D_8291BE78.timer++;
-            } else if (*(u16*)((u8*)D_80087200 + 8) & 0x8000) {
+            } else if (D_80087200->buttonsPressed & 0x8000) {
                 D_8291BE78.phase = 4;
                 func_800226C0(0xA7);
                 func_800226C0(0xA8);

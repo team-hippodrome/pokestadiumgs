@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -126,7 +127,6 @@ void func_8821E1E4(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E21C.s")
 
-extern void *D_80087200;
 extern void Input_SetRepeatController(void *);
 void func_8821E490(void) {
     Input_SetRepeatController(D_80087200);
@@ -134,7 +134,6 @@ void func_8821E490(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E4B4.s")
 
-extern void *D_80087200;
 extern u32 D_882347F0;
 extern void func_88004990(u8, s32);
 extern void func_800226C0(s32);
@@ -146,7 +145,7 @@ void func_8821E5F8(void) {
     s16 temp_v1;
     s32 temp_v0_2;
 
-    temp_a0 = *(u16 *)((u8 *)D_80087200 + 8);
+    temp_a0 = D_80087200->buttonsPressed;
     temp_v0 = (u8 *)(u32)D_882347F0 + 0x18;
     if (!temp_v0) {
     }
@@ -204,7 +203,43 @@ void func_8821E8EC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E964.s")
+extern void func_8821E21C(u8, s32);
+extern u8 D_88006020[];
+extern u8 D_889041A0;
+extern s32 func_8821E73C();
+void func_8821E964(void) {
+    u8 *record;
+    record = (u8 *)D_882347F0 + 0x58;
+
+    if (D_80087200->buttonsPressed & A_BUTTON) {
+        *(s32 *)(*(u8 **)record + 0x2C) = 0;
+        D_889041A0 = *(s16 *)(record + 0xC);
+        if (*(s32 *)((u8 *)D_882347F0 + 4) == 3) {
+            func_800226C0(71);
+            func_8821E73C(6);
+        } else if (*(s32 *)((u8 *)D_882347F0 + 4) == 4) {
+            if (((*(s16 *)(record + 0xC) + *(u8 **)(record + 0x8))[0x18] & 0xC0) >> 6 == 3 ||
+                (*(s16 *)(record + 0xC) + *(u8 **)(record + 0x8))[2] == 166) {
+                func_800226C0(73);
+                func_8821E21C((*(s16 *)(record + 0xC) + *(u8 **)(record + 0x8))[2], 0);
+            } else if ((*(s16 *)(record + 0xC) + *(u8 **)(record + 0x8))[2] == 252) {
+                func_800226C0(73);
+                *(s32 *)(*(u8 **)record + 0x2C) = 1;
+            } else {
+                func_800226C0(71);
+                func_8821E73C(7);
+            }
+        }
+    } else if (D_80087200->buttonsPressed & B_BUTTON) {
+        func_800226C0(72);
+        func_88004990(**(u8 **)record, 0);
+        *(s32 *)(record + 0x10) = 1;
+    } else {
+        func_88002720(record + 0xC, record[0xE], D_88006020);
+    }
+}
+
+
 
 extern void func_889035FC(s32);
 void func_8821EAD8(void) {

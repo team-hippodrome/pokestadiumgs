@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -11,7 +12,6 @@ typedef struct {
     u8 unk24;
     u16 unk26;
 } Frag41_State;
-extern void *D_80087200;
 extern void Input_SetRepeatController(void *);
 extern Frag41_State *D_88C01A60;
 void func_88C00020(Frag41_Input *arg0) {

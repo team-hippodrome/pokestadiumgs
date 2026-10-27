@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -60,13 +61,6 @@ typedef struct {
     s16 cursor_index;
     s16 result_index;
 } Fragment21SelectionState;
-typedef struct {
-    u8 unk_00[8];
-    u16 pressed;
-    u16 unk_0A;
-    u16 repeat;
-} Fragment21InputHeader;
-extern Fragment21InputHeader *D_80087200;
 extern s32 * D_825087F0;
 s32 Fragment21_UpdateSelectionInput(void) {
     Fragment21SelectionState *context;
@@ -80,7 +74,7 @@ s32 Fragment21_UpdateSelectionInput(void) {
     column = context->cursor_index / 11;
     row = context->cursor_index % 11;
 
-    repeat = D_80087200->repeat;
+    repeat = D_80087200->buttonsRepeat;
     if (repeat & 0x200) {
         column--;
     }
@@ -109,7 +103,7 @@ s32 Fragment21_UpdateSelectionInput(void) {
         row = 8;
     }
     context->cursor_index = column * 11 + row;
-    pressed = D_80087200->pressed;
+    pressed = D_80087200->buttonsPressed;
     if (pressed & 0x8000) {
         context->result_index = context->cursor_index;
         finished = 1;

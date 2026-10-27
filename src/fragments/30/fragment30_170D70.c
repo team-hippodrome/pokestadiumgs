@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -6,7 +7,6 @@
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_88103A64.s")
 
-extern void *D_80087200;
 extern void Input_SetRepeatController(void *);
 extern s32 D_880068B8;
 void func_88103B90(void) {

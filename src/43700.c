@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -219,7 +220,6 @@ s32 func_80043064(u8 *arg0) {
 }
 
 extern s32 D_80094C60;
-extern void *D_80087200;
 // Modes 1-3 edit position, 4 edits rotationY, 5 scale, and 6 animation frame.
 void ModelPreview_ApplyEditControls(ModelPreviewState *state) {
     state->flags &= ~4;
@@ -227,42 +227,42 @@ void ModelPreview_ApplyEditControls(ModelPreviewState *state) {
     *(s16 *)(state->model + 0x1E) = 0;
     switch (D_80094C60) {
     case 1:
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x200) {
+        if (D_80087200->buttonsHeld & 0x200) {
             *(f32 *)(state->model + 0x24) -= 1.0f;
         }
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x100) {
+        if (D_80087200->buttonsHeld & 0x100) {
             *(f32 *)(state->model + 0x24) += 1.0f;
         }
         break;
     case 2:
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x200) {
+        if (D_80087200->buttonsHeld & 0x200) {
             *(f32 *)(state->model + 0x28) -= 1.0f;
         }
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x100) {
+        if (D_80087200->buttonsHeld & 0x100) {
             *(f32 *)(state->model + 0x28) += 1.0f;
         }
         break;
     case 3:
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x200) {
+        if (D_80087200->buttonsHeld & 0x200) {
             *(f32 *)(state->model + 0x2C) -= 1.0f;
         }
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x100) {
+        if (D_80087200->buttonsHeld & 0x100) {
             *(f32 *)(state->model + 0x2C) += 1.0f;
         }
         break;
     case 4:
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x200) {
+        if (D_80087200->buttonsHeld & 0x200) {
             *(s16 *)(state->model + 0x20) -= 64;
         }
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x100) {
+        if (D_80087200->buttonsHeld & 0x100) {
             *(s16 *)(state->model + 0x20) += 64;
         }
         break;
     case 5:
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x200) {
+        if (D_80087200->buttonsHeld & 0x200) {
             state->scale -= 0.1f;
         }
-        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x100) {
+        if (D_80087200->buttonsHeld & 0x100) {
             state->scale += 0.1f;
         }
         break;
@@ -270,7 +270,7 @@ void ModelPreview_ApplyEditControls(ModelPreviewState *state) {
         u8 *model = state->model;
         s16 maximum = *(u16 *)(*(u8 **)(model + 0x44) + 0xA) - 1;
         s16 frame = *(s32 *)(model + 0x48) >> 16;
-        s32 buttons = *(u16 *)((u8 *)D_80087200 + 0xC);
+        s32 buttons = D_80087200->buttonsRepeat;
         if ((buttons & 0x200) && frame > 0) {
             frame--;
         }
@@ -283,7 +283,6 @@ void ModelPreview_ApplyEditControls(ModelPreviewState *state) {
     }
 }
 
-extern void *D_80087200;
 s32 func_8004335C(s32 arg0, u8 *arg1) {
     s32 var_a0;
     s32 var_a1;
@@ -303,19 +302,19 @@ s32 func_8004335C(s32 arg0, u8 *arg1) {
         var_a1 = 2;
         var_a2 = 1;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_v0) != 0) {
+    if ((D_80087200->buttonsHeld & var_v0) != 0) {
         result = 1;
         *(s16 *)(arg1 + 0) = *(s16 *)(arg1 + 0) + 0x400;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_a0) != 0) {
+    if ((D_80087200->buttonsHeld & var_a0) != 0) {
         result = 1;
         *(s16 *)(arg1 + 0) = *(s16 *)(arg1 + 0) - 0x400;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_a1) != 0) {
+    if ((D_80087200->buttonsHeld & var_a1) != 0) {
         result = 1;
         *(s16 *)(arg1 + 2) = *(s16 *)(arg1 + 2) + 0x400;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & var_a2) != 0) {
+    if ((D_80087200->buttonsHeld & var_a2) != 0) {
         result = 1;
         *(s16 *)(arg1 + 2) = *(s16 *)(arg1 + 2) - 0x400;
     }

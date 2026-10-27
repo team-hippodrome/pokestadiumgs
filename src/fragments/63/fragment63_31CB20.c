@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -7,7 +8,6 @@ void func_87E191B0(u8 *arg0, s32 arg1) {
     arg0[4] &= 0xFF7F;
 }
 
-extern u8 *D_80087200;
 extern void Audio_PlayDefaultSound(s32);
 void func_87E191C4(void *arg0) {
     struct State {
@@ -17,7 +17,7 @@ void func_87E191C4(void *arg0) {
     };
     struct State *state = arg0;
 
-    if (*(u16 *)(D_80087200 + 8) & 0x1000) {
+    if (D_80087200->buttonsPressed & 0x1000) {
         state->enabled ^= 1;
         Audio_PlayDefaultSound(0xCF02);
     }

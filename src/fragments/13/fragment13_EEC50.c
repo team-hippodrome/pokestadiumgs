@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -532,14 +533,13 @@ s32 func_82404430(u8 *arg0) {
     return 0;
 }
 
-extern u8 *D_80087200;
 /* Sound requests carry a sound word and, for contextual requests, a context. */
 extern void func_800226C0(s32, ...);
 s32 Fragment13_HandleConfirmationInput(u8 *arg0) {
     s32 buttons;
 
     *(f32 *)(arg0 + 0x1C) = 8.0f;
-    buttons = *(u16 *)(D_80087200 + 8);
+    buttons = D_80087200->buttonsPressed;
     if ((buttons & 0x100) && *(s8 *)(arg0 + 0x20) <= 0) {
         func_800226C0(1);
         *(s8 *)(arg0 + 0x20) = 1;

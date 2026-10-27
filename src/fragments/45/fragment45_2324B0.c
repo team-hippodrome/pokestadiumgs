@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -507,10 +508,6 @@ void func_8AB0E9D8(u8 *arg0) {
     *(s16 *)(arg0 + 0x10) = 1;
 }
 
-extern void *D_80087200;
-extern void *D_80087204;
-extern void *D_80087208;
-extern void *D_8008720C;
 extern s16 D_8AB17230;
 extern s16 D_8AB17232;
 extern void TextRow_SetOrangeState(s16);
@@ -541,16 +538,16 @@ void TextMode8_HandleAnswerInput(void) {
 
             switch (player) {
             case 0:
-                buttons = *(u16 *)((u8 *)D_80087200 + 8);
+                buttons = D_80087200->buttonsPressed;
                 break;
             case 1:
-                buttons = *(u16 *)((u8 *)D_80087204 + 8);
+                buttons = D_80087204->buttonsPressed;
                 break;
             case 2:
-                buttons = *(u16 *)((u8 *)D_80087208 + 8);
+                buttons = D_80087208->buttonsPressed;
                 break;
             case 3:
-                buttons = *(u16 *)((u8 *)D_8008720C + 8);
+                buttons = D_8008720C->buttonsPressed;
                 break;
             }
             if (*(s16 *)row_address == 2) {

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -42,7 +43,6 @@ void func_8F0004EC(void) {
 extern s32 StageContext_GetFadeMode(void);
 extern void StageFade_StartFromTransparent(s32);
 extern void func_800226C0(s32);
-extern void* D_80087200;
 
 s32 func_8F000524(s32 incoming) {
     s32 state = incoming;
@@ -56,12 +56,12 @@ s32 func_8F000524(s32 incoming) {
         }
         break;
     case 1:
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 0x800) {
+        if (D_80087200->buttonsRepeat & 0x800) {
             if (--D_8F000920 < 0) {
                 D_8F000920 = 15;
             }
         }
-        if (*(u16*)((u8*)D_80087200 + 0xC) & 0x400) {
+        if (D_80087200->buttonsRepeat & 0x400) {
             if (++D_8F000920 >= 16) {
                 D_8F000920 = 0;
             }
@@ -69,10 +69,10 @@ s32 func_8F000524(s32 incoming) {
         if (previous != D_8F000920) {
             func_800226C0(1);
         }
-        if (*(u16*)((u8*)D_80087200 + 8) & 0x8000) {
+        if (D_80087200->buttonsPressed & 0x8000) {
             leaving = 1;
             func_800226C0(2);
-        } else if (*(u16*)((u8*)D_80087200 + 8) & 0x4000) {
+        } else if (D_80087200->buttonsPressed & 0x4000) {
             D_8F000920 = -1;
             leaving = 1;
             func_800226C0(3);
@@ -149,10 +149,8 @@ extern s32 func_8004C4B0(s32);
 extern u8* func_80047588(s32, s32);
 extern u8* Asset_LoadToSegment(s32, u8*, u8*, s32);
 extern u8 D_1000000[], D_446E30[], D_447D00[];
-extern void func_80006148(void*);
 extern void func_80008514(s32);
 extern void func_80008574(void);
-extern void func_80006158(void);
 extern void func_80047610(void);
 extern void func_8004C398(void);
 

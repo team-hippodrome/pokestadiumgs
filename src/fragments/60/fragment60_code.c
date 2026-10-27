@@ -1,5 +1,52 @@
 #include "global.h"
 
+// Five-entry ring queue for one player in D_86A443F0. func_86A03F48 (asm) appends at head + count;
+// func_86A0405C removes the entry at head, wraps head at five entries, and returns the value.
+typedef struct unk_D_86A443F0_108 {
+    /* 0x00 */ s32 count;
+    /* 0x04 */ s32 head;
+    /* 0x08 */ s32 values[5];
+} unk_D_86A443F0_108; // size = 0x1C
+
+// Fragment60 minigame state. Most members are per-player arrays indexed by the player number
+// (0-3). Spans that only unmatched code touches are left as byte arrays until their element
+// types and strides are confirmed.
+typedef struct unk_D_86A443F0 {
+    /* 0x0000 */ s32 unk_0000; // func_86A06D04 compares it against multiples of D_86A0F8E4
+    /* 0x0004 */ f32 position[4][2]; // ground-plane x, z; func_86A0B7F0 and func_86A0BA80 copy them to object x and z
+    /* 0x0024 */ s32 unk_0024[4]; // func_86A06C3C sets 9 when func_86A0585C reports the player past the edge
+    /* 0x0034 */ char unk_0034[0x10];
+    /* 0x0044 */ f32 unk_0044[4][2]; // func_86A06BDC adds unk_0074 and unk_0094 when unk_0064 is set
+    /* 0x0064 */ s32 unk_0064[4];
+    /* 0x0074 */ f32 unk_0074[4][2];
+    /* 0x0094 */ f32 unk_0094[4][2];
+    /* 0x00B4 */ s32 unk_00B4[4]; // func_86A0B49C (asm) flags in unk_0178 the players holding the maximum
+    /* 0x00C4 */ char unk_00C4[0x14];
+    /* 0x00D8 */ f32 unk_00D8[4]; // func_86A0405C subtracts the popped D_86A0D560 entry's f32 at 0x8
+    /* 0x00E8 */ s32 unk_00E8[4]; // func_86A0405C subtracts the popped D_86A0D560 entry's s32 at 0x4
+    /* 0x00F8 */ s32 unk_00F8[4]; // func_86A03F48 (asm) stores the last value it queued
+    /* 0x0108 */ unk_D_86A443F0_108 queues[4];
+    /* 0x0178 */ s32 unk_0178[4];
+    /* 0x0188 */ s32 unk_0188[4]; // func_86A06C3C sets 40 together with unk_0024 = 9
+    /* 0x0198 */ char unk_0198[0x14];
+    /* 0x01AC */ s32 unk_01AC; // func_86A06D88 clears it
+    /* 0x01B0 */ char unk_01B0[0xC98];
+    /* 0x0E48 */ u8 unk_0E48[4][2]; // func_86A0B5CC passes the player's pair to func_8002781C
+    /* 0x0E50 */ char unk_0E50[0x14];
+    /* 0x0E64 */ s16 unk_0E64[4]; // func_86A06400 stores the heading from MathUtil_Atan2s
+    /* 0x0E6C */ char unk_0E6C[8];
+    /* 0x0E74 */ s16 unk_0E74[4]; // func_86A0638C stores the heading from MathUtil_Atan2s
+    /* 0x0E7C */ char unk_0E7C[0x44];
+    /* 0x0EC0 */ s32 unk_0EC0; // number of unk_16A8 entries func_86A05504 (asm) tests; func_86A06D88 clears it
+    /* 0x0EC4 */ char unk_0EC4[0x7BC];
+    /* 0x1680 */ s32 unk_1680; // func_86A06D88 clears it
+    /* 0x1684 */ f32 unk_1684[4][2]; // func_86A0C7B4 passes the player's pair to func_86A0CF80
+    /* 0x16A4 */ s32 unk_16A4;
+    /* 0x16A8 */ f32 unk_16A8[5][2]; // x, z pairs; five entries reach D_86A45AC0, the next symbol
+} unk_D_86A443F0; // size = 0x16D0
+
+extern unk_D_86A443F0 D_86A443F0;
+
 
 #ifdef VERSION_US
 extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
@@ -59,7 +106,51 @@ s32 func_86A00144(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A003A8.s")
+extern u8 D_86A43E50[];
+extern u8 *D_86A46548;
+extern s32 D_86A0D4D0;
+extern s32 D_86A0D4D4;
+extern u8 D_86A0F8E8[];
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromTransparent(s32);
+extern void func_800225C4(s32);
+extern void func_800226C0(s32);
+extern s32 func_800279C4(s32);
+extern s32 func_8003EC54(u8 *);
+extern s32 func_8003F210(u8 *, s32);
+extern void func_86A01480(s32);
+extern s32 func_87F08208(u8 *);
+void func_86A003A8(void) {
+    u8 *model;
+
+    // FAKE: same-line statement and loop head order the address setup; diff score 215 without it.
+    model = D_86A43E50; do {
+        func_8003F210(model, 11);
+        if (func_8003EC54(model) > 0) {
+            ModelAnim_SetFrame(model, 0);
+            ModelAnim_SetSpeed(model, 98304); // 1.5 times the 0x10000 speed passed elsewhere
+        }
+        model += 360;
+    } while (model != (u8 *)&D_86A443F0);
+    D_86A0D4D4 = 0;
+    switch (func_87F08208(D_86A0F8E8)) {
+        case 1:
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(20);
+            *(s32 *)D_86A46548 = 2;
+            func_800225C4(40);
+            func_800279C4(53003);
+            D_86A0D4D0 = 0;
+            break;
+        case 2:
+            func_86A01480(0);
+            func_800226C0(3);
+            D_86A0D4D0 = 1;
+            break;
+    }
+}
 #endif
 
 void func_86A004AC(void) {
@@ -169,32 +260,25 @@ void func_86A03D0C(void) {
 
 #ifdef VERSION_US
 extern u8 D_86A0D560[];
-extern u8 D_86A443F0[];
 s32 func_86A0405C(s32 arg0) {
     s32 count;
     s32 index;
     s32 value;
-    u8 *queue;
-    u8 *entry;
-    u8 *state;
 
-    index = *(s32 *)(D_86A443F0 + arg0 * 0x1C + 0x10C);
-    queue = D_86A443F0 + arg0 * 0x1C;
-    count = *(s32 *)(queue + 0x108);
+    index = D_86A443F0.queues[arg0].head;
+    count = D_86A443F0.queues[arg0].count;
     if (count == 0) {
         return -1;
     }
-    *(s32 *)(queue + 0x108) = count - 1;
-    value = ((s32 *)(queue + 0x110))[index++];
+    D_86A443F0.queues[arg0].count = count - 1;
+    value = D_86A443F0.queues[arg0].values[index++];
     if (index < 5) {
-        *(s32 *)(queue + 0x10C) = index;
+        D_86A443F0.queues[arg0].head = index;
     } else {
-        *(s32 *)(queue + 0x10C) = 0;
+        D_86A443F0.queues[arg0].head = 0;
     }
-    state = D_86A443F0 + arg0 * 4;
-    entry = D_86A0D560 + value * 0x18;
-    *(s32 *)(state + 0xE8) -= *(s32 *)(entry + 4);
-    *(f32 *)(state + 0xD8) -= *(f32 *)(entry + 8);
+    D_86A443F0.unk_00E8[arg0] -= *(s32 *)(D_86A0D560 + value * 0x18 + 4);
+    D_86A443F0.unk_00D8[arg0] -= *(f32 *)(D_86A0D560 + value * 0x18 + 8);
     return value;
 }
 #endif
@@ -218,9 +302,8 @@ s32 func_86A0405C(s32 arg0) {
 #ifdef VERSION_US
 extern s32 D_86A0EFF4[];
 extern f32 D_86A0F62C;
-extern f32 D_86A443F4[];
 typedef struct { f32 x; f32 y; } F60C7Pair;
-// Returns the OR of the D_86A0EFF4 bits for each of the four D_86A443F4 points
+// Returns the OR of the D_86A0EFF4 bits for each of the four D_86A443F0.position points
 // that lies strictly inside the square of half-width D_86A0F62C around (arg0, arg1).
 s32 func_86A05344(f32 arg0, f32 arg1) {
     s32 i;
@@ -230,8 +313,8 @@ s32 func_86A05344(f32 arg0, f32 arg1) {
     f32 half_size = D_86A0F62C;
 
     for (i = 0; i != 4; i++) {
-        x = ((F60C7Pair *)D_86A443F4)[i].x;
-        y = ((F60C7Pair *)D_86A443F4)[i].y;
+        x = D_86A443F0.position[i][0];
+        y = D_86A443F0.position[i][1];
         if (x < arg0 + half_size && arg0 - half_size < x && y < arg1 + half_size && arg1 - half_size < y) {
             result |= D_86A0EFF4[i];
         }
@@ -267,20 +350,18 @@ s32 func_86A0585C(f32 arg0, f32 arg1) {
 
 #ifdef VERSION_US
 extern s32 MathUtil_Atan2s(f32, f32);
-extern u8 D_86A443F0[];
-extern s16 D_86A45254[];
 s32 func_86A05AAC(s32 arg0, f32 arg1, f32 arg2) {
-    u8 *pos;
+    f32 *pos;
     s16 angle;
     s16 current;
     f32 x;
     f32 z;
 
-    pos = D_86A443F0 + arg0 * 8;
-    x = *(f32 *)(pos + 4);
-    z = *(f32 *)(pos + 8);
+    pos = D_86A443F0.position[arg0];
+    x = pos[0];
+    z = pos[1];
     angle = (MathUtil_Atan2s(arg1 - x, -(arg2 - z)) + 0x3FFF) % 0xFFFF;
-    current = D_86A45254[arg0];
+    current = D_86A443F0.unk_0E64[arg0];
     if ((current - angle >= 0x2000) || (angle - current < -0x1FFF)) {
         return 0;
     }
@@ -301,21 +382,19 @@ s32 func_86A05AAC(s32 arg0, f32 arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-extern s16 D_86A45264[];
 extern s32 MathUtil_Atan2s(f32, f32);
 void func_86A0638C(s32 arg0, f32 arg1, f32 arg2) {
     if ((arg1 != 0.0f) || (arg2 != 0.0f)) {
-        D_86A45264[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
+        D_86A443F0.unk_0E74[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
     }
 }
 #endif
 
 #ifdef VERSION_US
-extern s16 D_86A45254[];
 extern s32 MathUtil_Atan2s(f32, f32);
 void func_86A06400(s32 arg0, f32 arg1, f32 arg2) {
     if ((arg1 != 0.0f) || (arg2 != 0.0f)) {
-        D_86A45254[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
+        D_86A443F0.unk_0E64[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
     }
 }
 #endif
@@ -372,35 +451,29 @@ s32 func_86A066F4(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_86A443F0[];
 void func_86A06BDC(s32 arg0) {
-    u8 *p4 = D_86A443F0 + (arg0 << 2);
-    u8 *p8 = D_86A443F0 + (arg0 << 3);
-    if (*(s32 *)(p4 + 0x64)) {
-        *(f32 *)(p8 + 0x44) += *(f32 *)(p8 + 0x74) + *(f32 *)(p8 + 0x94);
-        *(f32 *)(p8 + 0x48) += *(f32 *)(p8 + 0x78) + *(f32 *)(p8 + 0x98);
-        *(s32 *)(p4 + 0x64) = 0;
+    if (D_86A443F0.unk_0064[arg0]) {
+        D_86A443F0.unk_0044[arg0][0] += D_86A443F0.unk_0074[arg0][0] + D_86A443F0.unk_0094[arg0][0];
+        D_86A443F0.unk_0044[arg0][1] += D_86A443F0.unk_0074[arg0][1] + D_86A443F0.unk_0094[arg0][1];
+        D_86A443F0.unk_0064[arg0] = 0;
     }
 }
 #endif
 
 #ifdef VERSION_US
 extern s32 func_86A0585C(f32 arg0, f32 arg1);
-extern u8 D_86A443F0[];
 void func_86A06C3C(void) {
     s32 i;
-    u8 *q;
     s32 x;
     s32 y;
 
     for (i = 0; i < 4; i++) {
-        x = *(f32 *)(D_86A443F0 + i * 8 + 4);
-        y = *(f32 *)(D_86A443F0 + i * 8 + 8);
+        x = D_86A443F0.position[i][0];
+        y = D_86A443F0.position[i][1];
         if (func_86A0585C((f32)x, (f32)y) != 0) {
-            q = D_86A443F0 + i * 4;
-            if ((*(s32 *)(q + 0x24) != 9) && (*(s32 *)(q + 0xE8) != 0)) {
-                *(s32 *)(q + 0x24) = 9;
-                *(s32 *)(q + 0x188) = 0x28;
+            if ((D_86A443F0.unk_0024[i] != 9) && (D_86A443F0.unk_00E8[i] != 0)) {
+                D_86A443F0.unk_0024[i] = 9;
+                D_86A443F0.unk_0188[i] = 40;
             }
         }
     }
@@ -411,12 +484,11 @@ void func_86A06C3C(void) {
 extern s32 D_86A0F8E4;
 extern void func_86A03234();
 extern void func_86A046A4();
-extern u8 D_86A443F0[];
 void func_86A06D04(void) {
-    if (D_86A0F8E4 * 3 < *(s32 *)D_86A443F0) {
+    if (D_86A0F8E4 * 3 < D_86A443F0.unk_0000) {
         func_86A03234();
     }
-    if ((D_86A0F8E4 * 3 < *(s32 *)D_86A443F0) && (*(s32 *)D_86A443F0 < D_86A0F8E4 * 59)) {
+    if ((D_86A0F8E4 * 3 < D_86A443F0.unk_0000) && (D_86A443F0.unk_0000 < D_86A0F8E4 * 59)) {
         func_86A046A4();
     }
 }
@@ -431,12 +503,11 @@ extern u8 D_86A11190;
 extern u8 D_86A1AAD0;
 extern u8 D_86A2DD40;
 extern u8 D_86A40FA0;
-extern s32 D_86A4459C;
 void func_86A06D88(void) {
-    (*(s32 *)((u8 *)(D_86A443F0) + (0xEC0))) = 0;
-    (*(s32 *)((u8 *)(D_86A443F0) + (0x1680))) = 0;
+    D_86A443F0.unk_0EC0 = 0;
+    D_86A443F0.unk_1680 = 0;
     func_87F0277C(&D_86A11190);
-    D_86A4459C = 0;
+    D_86A443F0.unk_01AC = 0;
     func_87F0277C(&D_86A1AAD0);
     func_87F0277C(&D_86A2DD40);
     func_87F0277C(&D_86A40FA0);
@@ -470,18 +541,16 @@ void func_86A06E0C(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 D_86A44578[];
 extern s32 func_86A0405C(s32);
 extern void func_86A03B10();
 extern void func_8002781C(s32, s32, void *);
-extern u8 D_86A443F0[];
 void func_86A0B5CC(s32 arg0) {
-    if (D_86A44578[arg0] == 8 || D_86A44578[arg0] == 0xF || D_86A44578[arg0] == 0x16 || D_86A44578[arg0] == 0x1D || D_86A44578[arg0] == 0x24) {
+    if (D_86A443F0.unk_0188[arg0] == 8 || D_86A443F0.unk_0188[arg0] == 15 || D_86A443F0.unk_0188[arg0] == 22 || D_86A443F0.unk_0188[arg0] == 29 || D_86A443F0.unk_0188[arg0] == 36) {
         s32 result;
         result = func_86A0405C(arg0);
         if (result != -1) {
             func_86A03B10(arg0, result);
-            func_8002781C(0x8F0B, arg0 & 0xFF, &D_86A443F0[0xE48 + arg0 * 2]);
+            func_8002781C(0x8F0B, arg0 & 0xFF, D_86A443F0.unk_0E48[arg0]);
         }
     }
 }
@@ -554,15 +623,14 @@ extern void func_8003F114(void *, s32, s32, s32);
 extern s32 D_86A104E8;
 extern void func_86A0B7A0(void);
 extern u8 D_86A0FEA0;
-extern u8 D_86A443F0[];
 void func_86A0B7F0(s32 arg0) {
     u8 *temp_v0;
 
     temp_v0 = func_87F025B8(&D_86A0FEA0, func_86A0B7A0);
     if (temp_v0 != NULL) {
-        *(f32 *)(temp_v0 + 0x48) = *(f32 *)((arg0 * 8) + D_86A443F0 + 4);
+        *(f32 *)(temp_v0 + 0x48) = D_86A443F0.position[arg0][0];
         *(f32 *)(temp_v0 + 0x4C) = 1.0f;
-        *(f32 *)(temp_v0 + 0x50) = *(f32 *)((arg0 * 8) + D_86A443F0 + 8);
+        *(f32 *)(temp_v0 + 0x50) = D_86A443F0.position[arg0][1];
         *(s16 *)(temp_v0 + 0x42) = -0x4001;
         *(s32 *)(temp_v0 + 0x38) = arg0;
         *(s32 *)(temp_v0 + 0x20) = arg0;
@@ -607,9 +675,9 @@ void func_86A0B98C(void) {
 
     var_a0 = 0;
     *(f32 *)((u8 *)D_87F119DC + 0x48) =
-        *(f32 *)&D_86A443F0[(*(s32 *)((u8 *)D_87F119DC + 0x20) << 3) + 4];
+        D_86A443F0.position[*(s32 *)((u8 *)D_87F119DC + 0x20)][0];
     *(f32 *)((u8 *)D_87F119DC + 0x50) =
-        *(f32 *)&D_86A443F0[(*(s32 *)((u8 *)D_87F119DC + 0x20) << 3) + 8];
+        D_86A443F0.position[*(s32 *)((u8 *)D_87F119DC + 0x20)][1];
     temp_v1 = *(s32 *)((u8 *)D_87F119DC + 0x1C);
     if (temp_v1 < 0x14) {
         temp_fv0 = (f32)temp_v1 * D_86A0F814;
@@ -622,7 +690,7 @@ void func_86A0B98C(void) {
         *(f32 *)((u8 *)D_87F119DC + 0x58) = temp_fv0_2;
         *(f32 *)((u8 *)D_87F119DC + 0x54) = temp_fv0_2;
     }
-    if (*(s32 *)&D_86A443F0[(*(s32 *)((u8 *)D_87F119DC + 0x20) << 2) + 0xE8] != 5) {
+    if (D_86A443F0.unk_00E8[*(s32 *)((u8 *)D_87F119DC + 0x20)] != 5) {
         var_a0 = 1;
     }
     if (var_a0 != 0) {
@@ -638,17 +706,16 @@ extern void func_8003F1DC(void *);
 extern void func_86A0B98C(void);
 extern void * func_87F025B8(void *, void *);
 extern u8 D_86A10B38;
-extern u8 D_86A443F0[];
 void func_86A0BA80(s32 arg0) {
     u8 *obj;
-    u8 *pos;
+    f32 *pos;
 
     obj = func_87F025B8(&D_86A10B38, func_86A0B98C);
     if (obj != NULL) {
-        pos = D_86A443F0 + arg0 * 8;
-        *(f32 *)(obj + 0x48) = *(f32 *)(pos + 4);
+        pos = D_86A443F0.position[arg0];
+        *(f32 *)(obj + 0x48) = pos[0];
         *(f32 *)(obj + 0x4C) = 82.0f;
-        *(f32 *)(obj + 0x50) = *(f32 *)(pos + 8);
+        *(f32 *)(obj + 0x50) = pos[1];
         *(s32 *)(obj + 0x1C) = 0;
         *(s32 *)(obj + 0x38) = arg0;
         *(s32 *)(obj + 0x20) = arg0;
@@ -709,21 +776,20 @@ extern s32 func_86A0C9B4(s32, s32);
 extern void func_86A0CED8(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 extern u8 D_800CE060[];
 extern u8 D_86A0F004[];
-extern u8 D_86A443F0[];
 void func_86A0C7B4(s32 arg0) {
     F60C7Pair value;
     f32 delta;
-    u8 *base;
-    base = D_86A443F0 + arg0 * 8;
-    if (func_86A0CF80((f32 *)(base + 0x1684), (f32 *)(base + 0x1688), arg0) > 0.0f) {
-        base = D_86A443F0 + arg0 * 8;
-        delta = *(f32 *)(base + 0x1684) - *(f32 *)(base + 4);
+    f32 *position;
+
+    if (func_86A0CF80(&D_86A443F0.unk_1684[arg0][0], &D_86A443F0.unk_1684[arg0][1], arg0) > 0.0f) {
+        position = D_86A443F0.position[arg0];
+        delta = D_86A443F0.unk_1684[arg0][0] - position[0];
         *(f32 *)(D_86A0F004 + 0xD8) = delta;
         *(f32 *)(D_86A0F004 + 0x90) = delta;
-        delta = *(f32 *)(base + 0x1688) - *(f32 *)(base + 8);
+        delta = D_86A443F0.unk_1684[arg0][1] - position[1];
         *(f32 *)(D_86A0F004 + 0xDC) = delta;
         *(f32 *)(D_86A0F004 + 0x94) = delta;
-        if (*(f32 *)(base + 4) > 0.0f) {
+        if (position[0] > 0.0f) {
             value = ((F60C7Pair *)D_86A0F004)[func_86A0C9B4(arg0, 0) + 18];
         } else {
             value = ((F60C7Pair *)D_86A0F004)[func_86A0C9B4(arg0, 0) + 27];
@@ -742,7 +808,6 @@ typedef struct {
     s32 pad;
     Pair pair;
 } Local;
-extern f32 D_86A443F4[];
 extern u8 D_86A0F004[];
 extern u8 D_800CE060[];
 extern s32 func_86A0C9B4(s32, s32);
@@ -750,7 +815,7 @@ extern void func_86A0CED8(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 void func_86A0C8DC(s32 arg0) {
     Local local;
     s32 temp_v0;
-    if (*(f32 *)((u8 *)D_86A443F4 + (arg0 << 3)) > 0.0f) {
+    if (D_86A443F0.position[arg0][0] > 0.0f) {
         temp_v0 = func_86A0C9B4(arg0, 1);
         local.pair = *(Pair *)((u8 *)D_86A0F004 + (temp_v0 << 3));
     } else {

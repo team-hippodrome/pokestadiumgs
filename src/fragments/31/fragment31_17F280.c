@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -98,7 +99,6 @@ extern s32 D_882345D0;
 extern s8 D_88006868;
 extern s32 func_800606F4(s32);
 extern void func_88A00D0C(void*);
-extern s32 D_80087200;
 extern void Input_SetRepeatController(s32);
 extern s32 D_880068B8;
 extern s32 D_880068B4;

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -52,7 +53,6 @@ s32 func_833018B8(s32 arg0, void *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83303220.s")
 
 extern void *D_800D0510;
-extern void *D_80087200;
 extern s32 D_833090AC;
 extern u8 D_8330A288[];
 extern s32 D_8330A2C4;
@@ -79,7 +79,7 @@ void func_83303564(void) {
     }
     Geo_RenderRootNode(D_8330A4C8);
     func_83302D8C();
-    if ((*(u16 *)((u8 *)D_80087200 + 6) & 0x2000) && (D_833090AC == 1)) {
+    if ((D_80087200->buttonsHeld & 0x2000) && (D_833090AC == 1)) {
         func_83302AC8();
     }
     if (D_8330A2C4 == 1) {

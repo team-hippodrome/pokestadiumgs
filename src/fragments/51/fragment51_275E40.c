@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -1107,13 +1108,10 @@ void func_86303974(void) {
 #endif
 
 #ifdef VERSION_US
-typedef struct { u8 unk_00[40]; } Fragment51ControllerRecord;
 extern u8 D_863075E0[];
 extern u8 D_1000000[];
 extern u8 D_446E30[];
 extern u8 D_447D00[];
-extern Fragment51ControllerRecord D_800CE060[];
-extern u8 D_800CE100[];
 extern s32 main_pool_push_state(s32);
 extern s32 main_pool_pop_state(s32);
 extern void func_80027EE0(u16);
@@ -1127,8 +1125,6 @@ extern void func_87F06EAC(s32, void *, void *);
 extern void func_87F061D0(void);
 extern u8 *func_80047588(s32, s32);
 extern u8 *Asset_LoadToSegment(s32, u8 *, u8 *, s32);
-extern void func_80006148(u8 *);
-extern void func_80006158(void);
 extern void func_80008514(s32);
 extern void func_80008574(void);
 extern void func_80047610(void);
@@ -1138,8 +1134,8 @@ extern void func_86303974(void);
 extern void * D_863075D8;
 s32 Fragment51_Run(s32 arg0, void *arg1) {
     s32 display;
-    Fragment51ControllerRecord *controller;
-    Fragment51ControllerRecord *controllers_end;
+    ControllerState *controller;
+    ControllerState *controllers_end;
     main_pool_push_state(0x4D59524D);
     D_863075D8 = D_863075E0;
     *(void **)((u8 *)D_863075D8 + 12) = arg1;
@@ -1163,9 +1159,9 @@ s32 Fragment51_Run(s32 arg0, void *arg1) {
     func_87F061D0();
     func_80047588(*(s32 *)((u8 *)D_863075D8 + 0x4C) | 8, 0);
     Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
-    controller = D_800CE060; controllers_end = (Fragment51ControllerRecord *)D_800CE100;
+    controller = D_800CE060; controllers_end = &D_800CE060[4];
     do {
-        func_80006148((u8 *)controller);
+        func_80006148(controller);
         controller++;
     } while (controller != controllers_end);
     Fragment51_InitScene();

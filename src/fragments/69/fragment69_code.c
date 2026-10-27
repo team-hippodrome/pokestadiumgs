@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -141,7 +142,6 @@ typedef struct {
 typedef struct {
     s16 values[5];
 } Fragment69LimitRecord;
-extern void *D_80087200;
 extern u8 D_8F1DF270[];
 extern Fragment69LimitRecord D_8F1039D0[];
 void func_8F1002F0(void *arg0) {
@@ -149,7 +149,7 @@ void func_8F1002F0(void *arg0) {
     s32 rowIndex;
     Fragment69LimitRecord *row;
 
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x800) {
+    if ((D_80087200->buttonsRepeat) & 0x800) {
         record->index--;
         if (record->index < 0) {
             rowIndex = ((u8 *)record - D_8F1DF270) / 6;
@@ -157,17 +157,17 @@ void func_8F1002F0(void *arg0) {
             record->index = row->values[0] - 1;
         }
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x400) {
+    if ((D_80087200->buttonsRepeat) & 0x400) {
         rowIndex = ((u8 *)record - D_8F1DF270) / 6;
         row = &D_8F1039D0[rowIndex];
         record->index++;
         if (record->index >= row->values[0]) record->index = 0;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x8000) {
+    if ((D_80087200->buttonsRepeat) & 0x8000) {
         record->state = 3;
         return;
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x4000) record->state = 4;
+    if ((D_80087200->buttonsRepeat) & 0x4000) record->state = 4;
 }
 #endif
 
@@ -402,7 +402,6 @@ extern void func_8F10128C(void);
 extern void func_8F100B54(void);
 extern void func_8F101318(void);
 extern void func_80008648(void);
-extern void *D_80087200;
 extern s32 D_8F103988;
 extern s32 D_8F1DECA4;
 extern s32 D_8F103984;
@@ -417,7 +416,7 @@ void func_8F101CDC(void) {
     }
     Geo_RenderRootNode(D_8F1DECA4);
     func_8F10128C();
-    if ((*(u16 *)((u8 *)D_80087200 + 8)) & 0x10) {
+    if ((D_80087200->buttonsPressed) & 0x10) {
         D_8F103984 ^= 1;
     }
     if (D_8F103984 != 0) {
@@ -442,7 +441,6 @@ void func_8F101CDC(void) {
 
 #ifdef VERSION_US
 extern void *D_8F1DECB4;
-extern void *D_80087200;
 extern u8 D_8F1DECA8;
 extern s32 D_8F1DEE38;
 extern s32 D_8F1DEE3C;
@@ -454,14 +452,14 @@ void func_8F102394(void) {
     object = D_8F1DECB4;
     temp_v0 = (*(void *(**)(s32, s32))((u8 *)object + 0x2C))(0, 0);
     if (*(u8 *)((u8 *)temp_v0 + 5) > 0) {
-        if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x200) { D_8F1DEE3C--; }
-        if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x100) { D_8F1DEE3C++; }
+        if ((D_80087200->buttonsRepeat) & 0x200) { D_8F1DEE3C--; }
+        if ((D_80087200->buttonsRepeat) & 0x100) { D_8F1DEE3C++; }
         if (D_8F1DEE3C < 0) {
             D_8F1DEE3C = *(u8 *)((u8 *)temp_v0 + 5) - 1;
         } else if (D_8F1DEE3C >= (s32)*(u8 *)((u8 *)temp_v0 + 5)) {
             D_8F1DEE3C = 0;
         }
-        if ((*(u16 *)((u8 *)D_80087200 + 8)) & 0x8000) {
+        if ((D_80087200->buttonsPressed) & 0x8000) {
             D_8F1DEE38 = D_8F1DEE3C;
             ModelAnim_SetEventTrack(&D_8F1DECA8, -1);
             ModelAnim_SetEventTrack(&D_8F1DECA8, D_8F1DEE38);
@@ -488,13 +486,13 @@ extern s32 D_8F1DEE44;
 extern s32 D_8F1DEE5C;
 extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
 void func_8F102618(void) {
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x200) {
+    if (D_80087200->buttonsRepeat & 0x200) {
         D_8F1DEE48[3]--;
         if (D_8F1DEE48[3] < -8) {
             D_8F1DEE48[3] = 8;
         }
     }
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x100) {
+    if (D_80087200->buttonsRepeat & 0x100) {
         D_8F1DEE48[3]++;
         if (D_8F1DEE48[3] >= 9) {
             D_8F1DEE48[3] = -8;
@@ -512,13 +510,13 @@ void func_8F102618(void) {
 
 #ifdef VERSION_US
 void func_8F102708(void) {
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x200) {
+    if (D_80087200->buttonsRepeat & 0x200) {
         D_8F1DEE48[2]--;
         if (D_8F1DEE48[2] < -8) {
             D_8F1DEE48[2] = 8;
         }
     }
-    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x100) {
+    if (D_80087200->buttonsRepeat & 0x100) {
         D_8F1DEE48[2]++;
         if (D_8F1DEE48[2] >= 9) {
             D_8F1DEE48[2] = -8;
@@ -558,13 +556,13 @@ void func_8F10282C(void)
   if (((D_80094BB0 != NULL) && (D_8F1DEE24 >= 0x98)) && (D_8F1DEE24 < 0xFC))
   {
     temp_v0 = ((D_8F1DEE24 * 8) - 0x4C0) + (&D_8F1DEE68);
-    if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 2)
+    if ((D_80087200->buttonsPressed) & 2)
     {
       D_8F1DEE60 ^= 1;
     }
     if (D_8F1DEE60 == 0)
     {
-      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+      if ((D_80087200->buttonsRepeat) & 0x200)
       {
         *((s16 *) (((u8 *) temp_v0) + 4)) = (s16) ((*((s16 *) (((u8 *) temp_v0) + 4))) - 0xA);
         if ((*((s16 *) (((u8 *) temp_v0) + 4))) < 0)
@@ -572,7 +570,7 @@ void func_8F10282C(void)
           *((s16 *) (((u8 *) temp_v0) + 4)) = 0;
         }
       }
-      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100)
+      if ((D_80087200->buttonsRepeat) & 0x100)
       {
         *((s16 *) (((u8 *) temp_v0) + 4)) = (s16) ((*((s16 *) (((u8 *) temp_v0) + 4))) + 0xA);
         if ((*((s16 *) (((u8 *) temp_v0) + 4))) >= 0xFA1)
@@ -583,7 +581,7 @@ void func_8F10282C(void)
     }
     else
     {
-      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+      if ((D_80087200->buttonsRepeat) & 0x200)
       {
         *((s16 *) (((u8 *) temp_v0) + 6)) = (s16) ((*((s16 *) (((u8 *) temp_v0) + 6))) - 0xA);
         if ((*((s16 *) (((u8 *) temp_v0) + 6))) < 0)
@@ -591,7 +589,7 @@ void func_8F10282C(void)
           *((s16 *) (((u8 *) temp_v0) + 6)) = 0;
         }
       }
-      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100)
+      if ((D_80087200->buttonsRepeat) & 0x100)
       {
         *((s16 *) (((u8 *) temp_v0) + 6)) = (s16) ((*((s16 *) (((u8 *) temp_v0) + 6))) + 0xA);
         if ((*((s16 *) (((u8 *) temp_v0) + 6))) >= 0xFA1)
@@ -600,7 +598,7 @@ void func_8F10282C(void)
         }
       }
     }
-    if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0x8000)
+    if ((D_80087200->buttonsPressed) & 0x8000)
     {
       temp_v0 = temp_v0;
       func_8F1027F8();
@@ -614,10 +612,10 @@ void func_8F10282C(void)
 #ifdef VERSION_US
 extern u8 D_8F1DECA8;
 void func_8F1029CC(void) {
-    if ((*(u16 *)((u8 *)(D_80087200) + (0xC))) & 0x200) {
+    if ((D_80087200->buttonsRepeat) & 0x200) {
         (*(u8 *)((u8 *)(&D_8F1DECA8) + (0x1D))) = (u8) ((*(u8 *)((u8 *)(&D_8F1DECA8) + (0x1D))) - 1);
     }
-    if ((*(u16 *)((u8 *)(D_80087200) + (0xC))) & 0x100) {
+    if ((D_80087200->buttonsRepeat) & 0x100) {
         (*(u8 *)((u8 *)(&D_8F1DECA8) + (0x1D))) = (u8) ((*(u8 *)((u8 *)(&D_8F1DECA8) + (0x1D))) + 1);
     }
 }
@@ -625,14 +623,14 @@ void func_8F1029CC(void) {
 
 #ifdef VERSION_US
 void func_8F102A20(void) {
-    if (*(u16*)((u8*)D_80087200 + 12) & 0x200) {
+    if (D_80087200->buttonsRepeat & 0x200) {
         ((u8*)&D_8F1DECA8)[28]--;
         //!bug The byte is unsigned, so this lower clamp never executes.
         if (((u8*)&D_8F1DECA8)[28] < 0) {
             ((u8*)&D_8F1DECA8)[28] = 0;
         }
     }
-    if (*(u16*)((u8*)D_80087200 + 12) & 0x100) {
+    if (D_80087200->buttonsRepeat & 0x100) {
         ((u8*)&D_8F1DECA8)[28]++;
         if (((u8*)&D_8F1DECA8)[28] >= 3) {
             ((u8*)&D_8F1DECA8)[28] = 2;
@@ -648,13 +646,13 @@ void func_8F102A98(void) {
     s32 var_a3;
 
     previous = D_8F1DEE5C;
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x200) {
+    if ((D_80087200->buttonsRepeat) & 0x200) {
         D_8F1DEE5C--;
         if (D_8F1DEE5C < 0) {
             D_8F1DEE5C = 0;
         }
     }
-    if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x100) {
+    if ((D_80087200->buttonsRepeat) & 0x100) {
         D_8F1DEE5C++;
         if (D_8F1DEE5C >= 2) {
             D_8F1DEE5C = 1;
@@ -673,13 +671,13 @@ void func_8F102A98(void) {
 
 #ifdef VERSION_US
 void func_8F102B48(void) {
-    if ((*(u16 *)((u8 *)(D_80087200) + (0xC))) & 0x200) {
+    if ((D_80087200->buttonsRepeat) & 0x200) {
         (*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) = (s8) ((*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) - 1);
         if ((*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) < 0) {
             (*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) = 0;
         }
     }
-    if ((*(u16 *)((u8 *)(D_80087200) + (0xC))) & 0x100) {
+    if ((D_80087200->buttonsRepeat) & 0x100) {
         (*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) = (s8) ((*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) + 1);
         if ((*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) >= 0x10) {
             (*(s8 *)((u8 *)(&D_8F1DECA8) + (0xA6))) = 0xF;
@@ -693,7 +691,58 @@ void func_8F102B48(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F102D98.s")
+extern s32 D_8F1DEE18;
+extern s32 D_8F1DEE1C;
+extern s32 D_8F1DEE20;
+extern s32 func_80073420(s32);
+s32 func_8F102D98(void) {
+    s32 old_state;
+    s32 state;
+
+    old_state = D_8F1DEE24;
+    state = func_8F100220(0);
+    if (D_80087200->buttonsPressed & R_CBUTTONS) {
+        D_8F1DEE18 ^= 1;
+    }
+    if (D_80087200->buttonsRepeat & L_JPAD) {
+        D_8F1DEE1C -= 10;
+    }
+    if (D_80087200->buttonsRepeat & R_JPAD) {
+        D_8F1DEE1C += 10;
+    }
+    if (D_80087200->buttonsRepeat & U_JPAD) {
+        if (--D_8F1DEE20 < 0) {
+            D_8F1DEE20 = 0;
+            --D_8F1DEE1C;
+        }
+    }
+    if (D_80087200->buttonsRepeat & D_JPAD) {
+        if (++D_8F1DEE20 >= 10) {
+            D_8F1DEE20 = 9;
+            ++D_8F1DEE1C;
+        }
+    }
+    if (D_8F1DEE1C < 0) {
+        D_8F1DEE1C = 0;
+    }
+    if (D_8F1DEE1C >= 272) {
+        D_8F1DEE1C = 271;
+    }
+    if (state >= 0) {
+        if (D_8F1DEE18 == 0) {
+            D_8F1DEE24 = D_8F1DEE1C + D_8F1DEE20;
+        } else {
+            D_8F1DEE24 = func_80073420((D_8F1DEE1C + D_8F1DEE20) & 0xFF);
+        }
+        if (D_8F1DEE24 != old_state) {
+            D_8F1DEE44 = 0;
+            D_8F1DEE5C = 0;
+            func_80041FD0(D_8F1DECA0, (u16)D_8F1DEE24, *(Fragment69PackedState *)&D_8F1DEE44, 0);
+        }
+    }
+    return state;
+}
+
 #endif
 
 #ifdef VERSION_US

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -9,7 +10,6 @@ void crash_screen_sleep(s32 ms) {
     while (osGetTime() < cycles) {}
 }
 
-extern void *D_80087200;
 extern u16 D_80087E00[];
 extern void Cont_StartReadInputs(void);
 extern void func_80005F0C(void);
@@ -22,7 +22,7 @@ void crash_screen_wait_for_button_combo(void) {
     do {
         Cont_StartReadInputs();
         func_80005F0C();
-        input = *(u16 *)((u8 *)D_80087200 + 8);
+        input = D_80087200->buttonsPressed;
         if (input != 0) {
             expected = (match = D_80087E00[index]);
             index++;

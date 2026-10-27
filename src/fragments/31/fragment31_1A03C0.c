@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -143,7 +144,6 @@ void LabPC_ApplyBytePairSortOrder(u8 mode) {
 }
 
 extern void Input_SetRepeatController(s32);
-extern s32 D_80087200;
 extern s32 D_880068B8;
 
 void func_8822D750(void) {
@@ -167,7 +167,7 @@ void LabPC_UpdateSortDialogInput(void) {
     u8 *view;
     u32 pressed;
 
-    pressed = *(u16 *)((u8 *)D_80087200 + 8);
+    pressed = D_80087200->buttonsPressed;
     view = (u8 *)D_88234940 + 0x20;
     if (pressed & B_BUTTON) {
         func_800226C0(72);
@@ -286,10 +286,10 @@ void LabPC_UpdateListChoiceDialogInput(void) {
         break;
     }
     if (*(s32 *)((u8 *)D_88234950 + 12)) {
-        if (*(u16 *)((u8 *)D_80087200 + 8) & B_BUTTON) {
+        if (D_80087200->buttonsPressed & B_BUTTON) {
             func_800226C0(72);
             func_8822DC34();
-        } else if (*(u16 *)((u8 *)D_80087200 + 8) & A_BUTTON) {
+        } else if (D_80087200->buttonsPressed & A_BUTTON) {
             func_800226C0(71);
             if (*(s16 *)((u8 *)D_88234950 + 16) == 0) {
                 func_88208010(*(u8 *)D_88234950, 0, 0);
@@ -301,10 +301,10 @@ void LabPC_UpdateListChoiceDialogInput(void) {
             func_88002720((u8 *)D_88234950 + 16, 3, (u8 *)D_88234950 + 20);
         }
     } else {
-        if (*(u16 *)((u8 *)D_80087200 + 8) & B_BUTTON) {
+        if (D_80087200->buttonsPressed & B_BUTTON) {
             func_800226C0(72);
             *(s32 *)((u8 *)D_88234950 + 12) = 1;
-        } else if (*(u16 *)((u8 *)D_80087200 + 8) & A_BUTTON) {
+        } else if (D_80087200->buttonsPressed & A_BUTTON) {
             func_800226C0(71);
             func_88208010(*(u8 *)D_88234950, *((u8 *)D_88234950 + 17), list[7]);
             func_8822DC34();

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -46,7 +47,6 @@ void func_88220F40(void) {
 }
 
 extern void func_88220AD0(s16, s16);
-extern s32 D_80087200;
 extern s32 D_88234660;
 extern u32 D_88234810;
 void Input_SetRepeatController(s32 value);
@@ -57,7 +57,7 @@ void func_88220F4C(void) {
     if (D_88234660 != 0) {
         func_88220AD0((*(s16 *)((u8 *)(D_88234810) + (0x23C))), (*(s16 *)((u8 *)(D_88234810) + (0x23E))));
     } else {
-        Input_SetRepeatController(D_80087200);
+        Input_SetRepeatController((s32)D_80087200);
         func_88001900();
         D_880068B4 = 1;
     }
@@ -65,7 +65,7 @@ void func_88220F4C(void) {
 }
 
 void func_88220FB8(void) {
-    if (*(u16 *)((u8 *)D_80087200 + 8) & 0xC000) {
+    if (D_80087200->buttonsPressed & 0xC000) {
         func_88004990(**(u8 **)D_88234810, 0);
         D_880068B8 = 1;
     }

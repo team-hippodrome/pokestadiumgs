@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -12,22 +13,21 @@ void func_888002DC(void) {
     main_pool_pop_state(0x504D494E);
 }
 
-extern void *D_80087200;
 s32 func_8880030C(void)
 {
   u16 flags;
   s32 result = 0 * 0;
-  if (((*((u16 *) (((u8 *) D_80087200) + 0x8))) & 1) != 0)
+  if (((D_80087200->buttonsPressed) & 1) != 0)
   {
     result = 1;
   }
   else
-    if (((*((u16 *) (((u8 *) D_80087200) + 0x8))) & 4) != 0)
+    if (((D_80087200->buttonsPressed) & 4) != 0)
   {
     result = 2;
   }
   else
-    if (((*((u16 *) (((u8 *) D_80087200) + 0x8))) & 2) != 0)
+    if (((D_80087200->buttonsPressed) & 2) != 0)
   {
     result = 3;
   }

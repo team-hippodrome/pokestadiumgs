@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 void func_83200020(void) {
@@ -60,7 +61,6 @@ extern void func_81804FD0(u8 *);
 extern s32 func_81804A20(u8 *);
 extern void func_800225C4(s32);
 extern void StageFade_StartFromTransparent(s32);
-extern void *D_80087200;
 extern u8 D_83200DB0[];
 s32 func_832007D4(s32 arg0) {
     func_80064D28();
@@ -76,7 +76,7 @@ s32 func_832007D4(s32 arg0) {
     case 2:
         func_81804FD0(D_83200DB0);
         if (((func_81804A20(D_83200DB0) != 0) &&
-             ((*(u16 *)((u8 *)D_80087200 + 8) & 0x1000) != 0)) ||
+             ((D_80087200->buttonsPressed & 0x1000) != 0)) ||
             ((D_83200DB0[0x1D] == 0) &&
              (D_83200DB0[0x1C] == 0) &&
              (D_83200DB0[0x1E] == 0))) {
