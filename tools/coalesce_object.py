@@ -274,6 +274,14 @@ def _copy_gap_run_is_safe(words, run, entry_targets):
     return True
 
 
+def _is_conditional_branch(word: int) -> bool:
+    """``beq``/``bne``/``blez``/``bgtz`` or ``bltz``/``bgez``: no link, no ``$at`` write."""
+    opcode = word >> 26
+    if opcode in (4, 5, 6, 7):
+        return True
+    return opcode == 1 and ((word >> 16) & 31) in (0, 1)
+
+
 def _macro_pairs(words, by_offset):
     """``{lui index: (mem-op index, symbol)}`` for every macro pair in the function.
 
@@ -285,7 +293,9 @@ def _macro_pairs(words, by_offset):
     function one ``lui`` short of ground truth, so a single intervening
     control transfer is allowed: its delay slot executes before the jump
     takes effect, and neither a branch nor a jump writes ``$at``, so the
-    surviving ``lui``'s value is still live at the store.
+    surviving ``lui``'s value is still live at the store. After a conditional
+    branch with an empty (``nop``) delay slot the store may also be the first
+    fall-through instruction.
 
     Scheduled gaps are narrower than a general scheduler analysis: at most
     four OR/ADDU moves, immediate shifts or ``li`` constant loads, no relocation on an intervening
@@ -305,6 +315,11 @@ def _macro_pairs(words, by_offset):
         candidates = [index + 1]
         if _is_control_transfer(words[index + 1]):
             candidates.append(index + 2)
+            if _is_conditional_branch(words[index + 1]) and words[index + 2] == 0:
+                # IDO also hoists the ``lui`` above a conditional branch whose
+                # delay slot it leaves empty; the store then opens the
+                # fall-through path (``func_8230009C``).
+                candidates.append(index + 3)
         if entry_targets is not None and not (
             index and _is_control_transfer(words[index - 1])
         ):

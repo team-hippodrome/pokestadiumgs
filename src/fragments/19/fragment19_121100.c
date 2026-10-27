@@ -2,9 +2,49 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82300020.s")
+extern s16 D_82305E68[];
+typedef struct unk_D_82305E68_entry {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ f32 unk_04;
+} unk_D_82305E68_entry; // size = 0x8
+void func_82300020(s32 arg0) {
+    s16 *base;
+    f32 value;
+    s32 i;
+    unk_D_82305E68_entry *entries;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230009C.s")
+    base = D_82305E68;
+    base[0x80 / 2] = arg0;
+    base[0x7C / 2] = 1;
+    base[0x7E / 2] = -1;
+    if (base[0x80 / 2] == 0) {
+        value = 0.0f;
+    } else {
+        value = 1.0f;
+    }
+    entries = (unk_D_82305E68_entry *)(base + 0x7C / 2);
+    for (i = 0; i < 300; i++) {
+        entries[i + 1].unk_00 = -1;
+        entries[i + 1].unk_04 = value;
+    }
+}
+
+extern s8 *D_82305A70;
+extern s16 D_82305EE4;
+extern s16 D_82305EE6;
+extern s16 D_82305EE8;
+extern void func_82300020(s32);
+#pragma COALESCE_AT_LUI(func_8230009C, D_82305EE4, D_82305EE6)
+void func_8230009C(void) {
+    if (D_82305A70[2] == 0) {
+        D_82305EE4 = 0;
+        D_82305EE6 = 0;
+        D_82305EE8 = 0;
+    } else {
+        func_82300020(1);
+    }
+}
 
 extern s16 D_82305EE4;
 
