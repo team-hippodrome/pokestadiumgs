@@ -3,14 +3,14 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **57 / 8,012 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **57 / 8,013 (0.7%)**
 - Functions with a real name: **1,704 / 10,901 (15.6%)** (9,197 still `func_XXXXXXXX`)
 - Variables with a real name: **248 / 4,911 (5.0%)** (4,663 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **966**
-- Functions with generic `arg0`, `arg1`, ... parameters: **4,905 / 8,012 (61.2%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **4,905 / 8,013 (61.2%)**
 - Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **858 / 1,568**
 - Struct fields with a real name: **4,682 / 7,190 (65.1%)**
-- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **7,297**
+- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **7,298**
 <!-- AUTO_UNDOCUMENTED:END -->
 
 A function counts as commented when a `/* ... */` block ends on the line directly above its definition.
@@ -63,7 +63,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/4CC20.c` | 59 | 59 | 81 | 10 | 14 | 41 | 44 |
 | `src/fragments/17/fragment17_10FFC0.c` | 38 | 37 | 68 | 41 | 9 | 26 | 65 |
 | `src/fragments/44/fragment44_1F1850.c` | 35 | 35 | 71 | 47 | 2 | 26 | 62 |
-| `src/fragments/47/fragment47_24E0A0.c` | 37 | 37 | 84 | 23 | 4 | 35 | 58 |
+| `src/fragments/47/fragment47_24E0A0.c` | 38 | 38 | 84 | 23 | 4 | 35 | 59 |
 | `src/fragments/50/fragment50_266A60.c` | 37 | 37 | 105 | 24 | 6 | 11 | 55 |
 | `src/fragments/63/fragment63_30B540.c` | 39 | 38 | 119 | 3 | 5 | 34 | 39 |
 | `src/47580.c` | 73 | 72 | 82 | 23 | 5 | 41 | 11 |
