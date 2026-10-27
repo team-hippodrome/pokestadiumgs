@@ -164,7 +164,48 @@ void func_8FB01FCC(void *arg0) {
     func_8FB00020(state->x + ((state->count - state->offset) * 0x14), state->y + 0x12, 0x14);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02108.s")
+extern void func_80055A74(s32);
+extern s32 func_80055A9C(void *, s32);
+extern s32 func_800533A4(s32, s32);
+extern s32 func_80053440(s32, s32, u8 *);
+
+typedef struct {
+    /* 0x00 */ u8 info[0xC];
+    /* 0x0C */ s16 unk_0C;
+    /* 0x0E */ u8 unk_0E[2];
+    /* 0x10 */ u8 entries[6][0x58];
+} unk_func_8FB02108_row; // size = 0x220
+
+// The state func_8FB02560 passes as unk_D_8FB03DF8 (index at 0x34); this view
+// adds the ten 0x220-byte rows that follow it at 0x4C.
+typedef struct {
+    /* 0x000 */ u8 unk_000[0x34];
+    /* 0x034 */ s32 index;
+    /* 0x038 */ u8 unk_038[0x14];
+    /* 0x04C */ unk_func_8FB02108_row rows[10];
+} unk_func_8FB02108;
+
+void func_8FB02108(unk_func_8FB02108 *state) {
+    s32 i;
+    s32 pad; // FAKE: reserves the stack word above buffer; diff score 15 without it.
+    struct {
+        u8 header[0x10];
+        u8 entries[6][0x3C];
+        u8 tail[8];
+    } buffer;
+    s32 j;
+
+    for (i = 0; i < 10; i++) {
+        _bzero(&buffer, sizeof(buffer));
+        func_80055A74(state->index);
+        func_80055A9C(&buffer, i);
+        state->rows[i].unk_0C = func_800533A4(16, i);
+        func_80053440(16, i, state->rows[i].info);
+        for (j = 0; j < 6; j++) {
+            func_80051830(state->rows[i].entries[j], buffer.entries[j]);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB021F8.s")
 
@@ -239,7 +280,7 @@ typedef struct unk_D_8FB03DF8 {
 extern void func_80055948(s32);
 extern void func_80055A74(s32);
 extern void func_80055BF8(void);
-extern void func_8FB02108(void *);
+extern void func_8FB02108(unk_func_8FB02108 *);
 // Loads the image of each of the six entries (func_8FB02454) and whether its message
 // state has bit 31 of its flags clear (func_8FB02494), then resets the selection.
 void func_8FB02560(unk_D_8FB03DF8 *state) {
@@ -258,7 +299,7 @@ void func_8FB02560(unk_D_8FB03DF8 *state) {
     func_80055A74(state->index);
     func_80055BF8();
     func_8FB024BC(state);
-    func_8FB02108(state);
+    func_8FB02108((unk_func_8FB02108 *)state);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02608.s")

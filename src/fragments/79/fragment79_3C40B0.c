@@ -123,7 +123,69 @@ void func_84154C10(u8 *arg0, u8 arg1) {
     *(u32 *)(arg0 + 0x48) = value[0x2A];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154DF8.s")
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+
+void func_84154DF8(u8 *arg0, u8 arg1, u8 arg2) {
+    u8 *p;
+    p = D_841951F8[arg1] + arg2 * 88 + 0x18;
+    arg0[0] = p[0];
+    arg0[1] = p[1];
+    *(u16 *)(arg0 + 0x26) = p[0x24];
+    arg0[2] = func_8006397C(p[0]);
+    arg0[3] = func_800639C0(p[0]);
+    arg0[4] = p[2];
+    arg0[5] = p[3];
+    arg0[6] = p[4];
+    arg0[7] = p[5];
+    arg0[8] = p[0x18];
+    arg0[9] = p[0x19];
+    arg0[0xA] = p[0x1A];
+    arg0[0xB] = p[0x1B];
+    arg0[0xC] = p[0x1D];
+    *(u16 *)(arg0 + 0x28) = *(u16 *)(p + 0x26);
+    *(u16 *)(arg0 + 0x2A) = *(u16 *)(p + 0x28);
+    *(u16 *)(arg0 + 0x2C) = *(u16 *)(p + 0x2A);
+    *(u16 *)(arg0 + 0x2E) = *(u16 *)(p + 0x2C);
+    *(u16 *)(arg0 + 0x30) = *(u16 *)(p + 0x2E);
+    *(u16 *)(arg0 + 0x32) = *(u16 *)(p + 0x30);
+    *(u16 *)(arg0 + 0x34) = *(u16 *)(p + 0x32);
+    *(u16 *)(arg0 + 0x36) = *(u16 *)(p + 0x2A);
+    *(u16 *)(arg0 + 0x38) = *(u16 *)(p + 0x2C);
+    *(u16 *)(arg0 + 0x3A) = *(u16 *)(p + 0x2E);
+    *(u16 *)(arg0 + 0x3C) = *(u16 *)(p + 0x30);
+    *(u16 *)(arg0 + 0x3E) = *(u16 *)(p + 0x32);
+    arg0[0xD] = 7;
+    arg0[0xE] = 7;
+    arg0[0xF] = 7;
+    arg0[0x10] = 7;
+    arg0[0x11] = 7;
+    arg0[0x12] = 7;
+    arg0[0x13] = 7;
+    arg0[0x14] = p[0x1C];
+    *(u16 *)(arg0 + 0x40) = *(u16 *)(p + 0x16);
+    *(u16 *)(arg0 + 0x42) = 0;
+    arg0[0x15] = 0;
+    arg0[0x16] = 0;
+    arg0[0x17] = 0;
+    arg0[0x18] = 0;
+    arg0[0x19] = 0;
+    arg0[0x1A] = 0;
+    arg0[0x1B] = 0;
+    arg0[0x1C] = 0;
+    arg0[0x1D] = 0;
+    arg0[0x1E] = 0;
+    arg0[0x1F] = 0;
+    arg0[0x20] = 0;
+    arg0[0x21] = 0;
+    arg0[0x23] = 0;
+    arg0[0x24] = 0;
+    arg0[0x25] = 0;
+    *(u16 *)(arg0 + 0x44) = 0;
+    arg0[0x22] = 0;
+    *(u16 *)(arg0 + 0x46) = 0;
+    *(s32 *)(arg0 + 0x48) = 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154FC4.s")
 
