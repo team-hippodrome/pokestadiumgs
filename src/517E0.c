@@ -1440,7 +1440,117 @@ s32 func_800551EC(u8 *arg0, s32 arg1) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80055260.s")
+// Reconciles the two copies of save record type arg0 (arg1 selects the entry for
+// types 16-18): func_800551EC checks each copy's footer, a copy with a valid
+// footer is copied over one without, and the record is reset when neither is valid.
+void func_80055260(s32 arg0, s32 arg1) {
+    s32 slot;
+    s32 size;
+    u8 *backup;
+    u8 *primary;
+
+    slot = -1;
+    primary = NULL;
+    backup = NULL;
+    switch (arg0) {
+        case 16:
+            size = 384;
+            slot = D_800972C0;
+            primary = (u8 *)func_80050E88(0, D_800972C0, arg1);
+            backup = (u8 *)func_80050E88(1, D_800972C0, arg1);
+            break;
+        case 17:
+            slot = arg1;
+            size = 1240;
+            primary = (u8 *)func_80050F60(0, arg1);
+            backup = (u8 *)func_80050F60(1, arg1);
+            break;
+        case 18:
+            size = 524;
+            primary = func_80051028(0, arg1);
+            backup = func_80051028(1, arg1);
+            break;
+        case 19:
+            size = 84;
+            primary = func_800510CC(0);
+            backup = func_800510CC(1);
+            break;
+        case 22:
+            size = 2358;
+            primary = func_80051208(0);
+            backup = func_80051208(1);
+            break;
+        case 23:
+            size = 1418;
+            primary = func_80051274(0);
+            backup = func_80051274(1);
+            break;
+        case 20:
+            size = 96;
+            primary = func_80051138(0);
+            backup = func_80051138(1);
+            break;
+        case 21:
+            size = 416;
+            primary = func_800511A4(0);
+            backup = func_800511A4(1);
+            break;
+        case 24:
+            size = 592;
+            primary = func_800512E0(0);
+            backup = func_800512E0(1);
+            break;
+        case 25:
+            size = 6928;
+            primary = func_8005134C(0);
+            backup = func_8005134C(1);
+            break;
+        case 26:
+            size = 1168;
+            primary = func_800513B8(0);
+            backup = func_800513B8(1);
+            break;
+        case 27:
+            size = 3024;
+            primary = func_80051424(0);
+            backup = func_80051424(1);
+            break;
+        case 28:
+            size = 1008;
+            primary = func_80051490(0);
+            backup = func_80051490(1);
+            break;
+        case 29:
+            size = 1608;
+            primary = func_800514FC(0);
+            backup = func_800514FC(1);
+            break;
+        case 30:
+            size = 80;
+            primary = func_80051568(0);
+            backup = func_80051568(1);
+            break;
+    }
+
+    if ((primary != NULL) && (backup != NULL)) {
+        s32 primary_valid = func_800551EC(primary, size);
+        s32 valid;
+
+        valid = primary_valid;
+        valid = (func_800551EC(backup, size) * 2) | valid;
+        switch (valid) {
+            case 0:
+                Save_ResetAndCommitTypedRecord(arg0, arg1);
+                return;
+            case 1:
+                Save_WriteRecord(primary, backup, size, func_80050D20(arg0, slot));
+                return;
+            case 2:
+                Save_WriteRecord(backup, primary, size, func_80050D20(arg0, slot));
+                break;
+        }
+    }
+}
 
 extern void Save_ResetAndCommitTypedRecord(s32 a0,s32 a1);
 extern void func_80055260(s32, s32);
