@@ -184,3 +184,40 @@ groups must still survive parser formatting, as in the earlier renderer work.
   dimension lifetimes recover the frame in some variants but regress the
   instruction order (best 0.9493 / 0.7174). Continue from those separate
   frontiers; do not force the frame with padding.
+
+
+## 2026-10-27 — matching curve configuration
+
+Starting source revision `6e7c01b373984780972e9019acbf2c04940c4ef9` (#1630).
+`func_86009E54` passes canonical acceptance and the full US retail-ROM gate:
+164 bytes, 41 instructions, and the original 48-byte frame. It computes the
+coefficient/parameter ratio, chooses the sign from offset 0x48, and calls
+`func_86009D7C` with the derived height, product, angle, and flags. Preserve
+the single-precision square root followed by double-precision multiplication.
+
+The existing `Fragment47PositionConfig` prefix supplies the coefficient,
+radius, and vertical origin. Calculate the ratio directly from those fields
+before assigning the outgoing product, then give the final height its own
+local. IDO shares the repeated multiplication while retaining the original
+register allocation and instruction order. Every local contributes to the
+calculation or outgoing call. An automated exact candidate instead introduced
+a redundant temporary copy; that source was rejected. Four complete-module
+normal/blank-prefix controls verify removal of the runner-added declarations
+and formatting against the accepted object's bytes, extents, and relocations.
+
+### Updated unresolved owners
+
+- `func_86009C98`: **requeue**. The genuine frontier is now 228 bytes with
+  the correct frame and opcode sequence, 1.0 normalized / 0.9649 raw.
+  Only the second branch's base load and square differ in F0/F12 selection.
+  A full-ROM-exact generated spelling depends on a redundant copy and is
+  not installed. Branch scopes, the typed prefix, explicit square/partial
+  intermediates, and repeated named operand loads do not resolve the tie.
+  Inspect the allocator's treatment of the second branch's base definition;
+  keep the genuine two-word frontier as the starting point.
+- `func_86007D98`: **requeue**. Two actual three-double vectors reproduce
+  the original 112-byte frame and 180-byte extent. Caching `D_8600DE58`
+  fixes the constant/value register exchange and reaches 1.0 normalized /
+  0.9556 raw. Two final multiplication operand orders remain. Swapping the
+  source operands and using three-field structs preserve that residual.
+  Full-product temporaries enlarge the frame; do not add artificial padding.
