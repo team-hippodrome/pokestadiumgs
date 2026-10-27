@@ -262,3 +262,7 @@ sequencing variants did not close it. A 496-byte/64-byte-frame spelling reaches
 0.9839 normalized similarity but only about 0.34 raw: it is not a match.
 Next: trace side/other/base carriers and expression/stack ownership around the
 second record lookup and the conditional calls before more source variants.
+
+## 2026-10-28 — `func_8414CB10` matched
+
+Copies `mon + 0x28` (current HP) into both per-side `u16` slots at `+0x1E`/`+0x22`, and clears `+0xE` when the side's record byte 9 is 1. Retail reads the pointer from an uninitialized 16-byte stack record (`lw v0,0(sp)`, with no call filling it), so it is written as an unfilled `unk_func_8414CB10 info` and marked `//!bug`. The pointer must be copied to a local (`mon = info.mon;`) before computing `selected`; otherwise `$v0`/`$v1` swap. A record smaller than 0x10, or a different declaration order, changes the frame or the slot.
