@@ -94,3 +94,15 @@ requeue. Draws `D_8261DA4C`'s panel: when `[1] > 0`, frame = upper half of the w
 ## 2026-10-27 — `func_826057A8`: requeue
 
 requeue. Image descriptor (kind 1): looks up the 0x98-byte record for the state's slot, sets `out[0..1] = (16, 24)`, `out+8 = func_8004C874(record[7] + 76, slot+0x38)`, zeroes the pair/sizes, then `+0x24 = func_80049148(8, 0, image) + out[0] * 2`, `+0x26 = func_800472E0(image) * 20 + out[1] * 2`, `+0x28 = 128`, `+0x2C = 16`, `+0x2A/+0x2E` mirror `+0x24/+0x26`. Not probed past 0.47: retail homes `arg0` at `sp+0x40` without reloading it and leaves a dead `addiu t1,t1,4` after reading `record[7]` (`record + 4` then `[3]`?), so the record pointer is probably a struct walk the draft lacks.
+
+## 2026-10-27 — `func_82606B28`: requeue
+
+requeue. Sibling of the matched `func_82606CE8`: caps the timer `+0x08` at 30000 and, while `sub[4]` (`sub = arg0 + 0x30`) is set, fades each slot `sub[5 + i]` toward 0 by `t = timer - stagger * i - stagger * 4 * arg0[1]` (`D_826155C0` duration, `D_826155C4` stagger). Slots with `i >= sub[3]` snap to 255, zero slots are skipped, and it plays sound 103/104 on the 255 → <255 edge. Best 0.55: retail hoists both global values into `a1`/`a2` and re-reads them after each `func_800226C0` call, while every spelling tried (direct globals, locals assigned in the loop, before the loop, at the top) keeps their addresses in two extra saved registers (`s6`/`s7`). Permuter 400 s: 4250 → 3660. Next: try the globals as `static` file-scope data or a struct read.
+
+## 2026-10-27 — `func_8260FFE8`: requeue
+
+requeue. Builds the selection order at `+0x20`: clears `used[count]` (`count = state->unk4->unk2`), records up to 12 nibble-packed indices from `(*state)[0x10 + i]` (stop at 0xFF; index = `(b >> 4 & 0xF) * arg1 + (b & 0xF)`), stores the count at `+0x1C`, then appends every unused index. copt unrolls both clearing/appending loops by 4. Best 0.34: `s32 used[12]` gives retail's 0x60 frame, but retail places the array at `sp+0x20` (IDO: `sp+0x30`) and swaps `v0`/`v1` for count/state; declaration order has no effect. Stack-diff permuter: 1555 → 1080.
+
+## 2026-10-27 — `func_8260DB98`: requeue
+
+requeue. Draws a selection marker: if `+0x3C != -1`, texture 97 frame 0 with colors `D_82615720`/`D_82615724` when `+0x02 == +0x3C`, else frame 1 with `D_82615728`/`D_8261572C`; PipeSync, env color (alpha `+0x44`) and prim color when both are set; then `func_8004D19C(offsets[+0x02] + x, y + dy, tex, 0, 0)` with `offsets`/`dy` = `D_82615734`/31 when `+0x34` is set, else `D_82615730`/17. The parameter must be `u8 *` (later extern). Best 0.96: retail re-reads `+0x3C` for the second compare instead of CSE-ing it, and loads the env color's green byte first. Permuter 420 s: 1680 → 745.
