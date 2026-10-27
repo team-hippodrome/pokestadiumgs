@@ -370,11 +370,6 @@ void func_8410C720(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5) {
 #endif
 
 #ifdef VERSION_US
-extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
-extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
-extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
-extern void func_841203B4(u8 *, f32, f32);
 void func_8410C840(u8 *arg0, void *arg1, u8 *arg2, u8 *arg3) {
     f32 target[3];
     f32 pos[3];
@@ -523,11 +518,6 @@ void BattleAnim_ModelDispatch_024(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
-extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
-extern u8 * func_8410B330(u8 *arg0);
-extern void func_8411E0A4(void *, void *, void *);
-extern u8 * D_841911E8;
 void func_8410D088(u8 *arg0, void *arg1) {
     f32 target[3];
     f32 pos[3]; // FAKE: unused; restores the original 0x50-byte frame.
