@@ -9,3 +9,7 @@ The original func_82900AFC body consumes the four narrow formals plus its fifth 
 The first candidate reproduces all 53 owner instructions, the 48-byte frame, the resource spill at stack offset 44, and every original argument/home and global access. US COMPARE=1 and host syntax checks pass; md5sum -c baseroms/us/checksum.md5 returns OK, with ROM MD5 1561c75d11cedf356a8ddb1a4a5f9d5d. This local result does not substitute for a fresh remote gate and exact tested/actual merge-tree audit.
 
 The full fleet note for this region was read. Its previous func_829012E4 normalized 0.8261/raw 0.5362 scheduling and frame plateau is unrelated and was not retried. Existing accepted func_82901DD4/func_82902024 recipes are retained. No exact fleet attempt for func_82901554 was found; references from other owners were not treated as attempts.
+
+## 2026-10-27 — `func_82901AE0`: requeue
+
+requeue (global address CSE). Scrolling strip: unless func_800061EC(), texture = func_8004C874(0x16, 0), width = func_80049148(0x10, 0, texture), draw at D_82911E38 and D_82911E38 + width + 120 (func_800495BC(x, 400, texture) between func_800498C4/func_800496A4(0x10, 0) and func_800499EC), then scroll D_82911E38 by -2 and add width + 120 once it is <= -width. Best 0.76: the target re-emits `lui` for every D_82911E38 access (stores through $at), while IDO CSEs the address in every spelling tried. Permuter 120 s: 825 -> 105.

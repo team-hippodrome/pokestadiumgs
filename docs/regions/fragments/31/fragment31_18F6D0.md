@@ -203,3 +203,7 @@ The complete link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 260 bytes at ROM `0x18FAA0..0x18FBA4`. No new fakes, unused locals,
 layout, instruction rewriting or CI changes are required.
+
+## 2026-10-27 — `func_8821CB48`: requeue
+
+requeue. Comparator in the style of func_8821CAFC: flagged (bit 0 of +0x26) entries sort after unflagged (+1/-1), both unflagged -> func_80073828(arg0 + 0x48, arg1 + 0x48), ties -> LabPCList_CompareByPointer. Structure matches (0.80); only the arg0/arg1 copies swap a2/a3. Permuter 25 s finds 0 only with slop `if ((arg0 && arg0) && arg0) {}` in the final else.

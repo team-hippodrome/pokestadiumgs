@@ -11,3 +11,7 @@ History audit: live fleet main `afee707ab78d3f63f2f9deeadc7551ec0080eeed` has no
 Independent validation against master `21d7fb8c6505eb8e66031331e63eabf8d2d8fe96`: the first switch recipe passed `make rom COMPARE=1 -j2` with default host syntax checks enabled, followed by `md5sum -c baseroms/us/checksum.md5`. Retail MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`. All 201 previous process matches and foreign #941 through #946 remain present. No CI, verification, compiler or layout changes are authored. A fresh current-head and merge-result Public PR ROM Gate must actually run the Build and compare against the retail checksum step before merging; skipped draft checks do not count.
 
 Current-master integration: after foreign #948 advanced master to `e5264768303a56409602fd72f01f029a60d54de1`, the unchanged accepted owner was rebuilt with default host syntax checks and `COMPARE=1`; the explicit retail checksum passed again. The PR was returned to draft before its branch refresh so validation against the old base cannot authorize a merge.
+
+## 2026-10-27 — `func_8414C858`: requeue
+
+requeue. Comparator: battle = func_84154B0C(); a = func_8414C7D4(arg0[6 + battle[0x19A]]), b = same for battle[0x19B]; returns 1 if b < a, 0 if a < b, else whether the u16 at battle + [0x19B] * 0xCC + 0x42 is below the one for [0x19A]. Target spills the two indices and `a` as packed bytes at sp+0x19..0x1B (frame 0x20) and returns through a result variable; plain u8 locals spill as words (frame 0x28), a `u8 side[2]` array still frames 0x28. Best 0.29.
