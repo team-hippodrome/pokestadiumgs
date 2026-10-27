@@ -57,3 +57,16 @@ requeue. `t = D_81311F80 + func_816092FC(); if (t > 30.0f) { t -= 30.0f; return 
 ## 2026-10-27 — `func_81307228`: layout-prerequisite
 
 layout-prerequisite. A 12-case switch on `*(u8 *)(arg0 + 0x137F5)`, after a `+0x137D0 < 16.0f` early 0, returning 0/1. Its table `jtbl_81312564` sits in the shared `rodata` blob at `0x10A6D0`, below `fragment14_FF070`'s current `.rodata` subsegment (`0x10A7D0`); extend the subsegment down (every label in the run must be this file's) before writing the switch.
+
+## 2026-10-28: `func_8130AEF4` prototype; `func_8130B06C` handoff
+
+- `func_8130AEF4` takes an `s32` third argument: the callee tests it with
+  `bltz`. Declaring it `u8` made every caller mask with `andi 0xFF`.
+- `func_8130B06C`: requeue (normalized 1.0, frame only). It is the
+  increment twin of `func_8130B0E0`: `count = base[0x6911]`; if below 8,
+  store `count + 1`, advance the `+0xE8E8` node to its `+0x4D98` successor,
+  and call `func_8130AEF4(arg0, func_8160A33C(node, 2), count' + 2)`.
+  With the sibling's spelling and an inline last argument, every instruction
+  matches except the frame: 0x30 vs retail's 0x20, because the named
+  `base`/`store_base` locals reserve slots. Neither declaration order nor the
+  stack-aware permuter (200 s) fixes it.
