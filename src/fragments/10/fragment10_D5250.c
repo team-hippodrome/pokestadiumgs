@@ -143,7 +143,7 @@ s32 func_828019B4(u8 *arg0) {
 void func_82801BE8(u8 *arg0, void *arg1) {
     f32 step;
     s32 i;
-    s16 coordinates[3];
+    s16 coordinates[4];
 
     func_81801420();
     func_82801278(arg0, 0);

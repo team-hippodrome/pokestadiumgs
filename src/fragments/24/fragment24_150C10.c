@@ -559,14 +559,13 @@ s32 func_82B02870(void) {
     u8 *base = (u8 *)&D_82B12450;
 
     for (i = 0; i < *(s16 *)(base + 0x250); i++) {
-        u8 *ptr = *(u8 **)(base + 0xB18 + i * 4);
+        u8 *entry = ((u8 **)(base + 0xB18))[i];
 
-        if (*(u16 *)(ptr + 6) != 2) {
+        if (*(u16 *)(entry + 6) != 2) {
             result = 0;
             break;
         }
     }
-
     return result;
 }
 #endif

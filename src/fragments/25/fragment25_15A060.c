@@ -42,36 +42,32 @@ void func_82100214(s32 x, s32 y, s32 width, s32 height) {
     }
 }
 
-extern u8 D_80094E38[];
-extern u8 D_80094E78[];
-extern u8 D_800D0510[];
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094E78[];
 extern u8 D_82103DE0[];
-s32 func_82100514(s32 arg0, void *arg1, void *arg2) {
+extern void func_82100020(s16, s16, s16, s16, u8 *, u8 *);
+
+// arg1[4]-arg1[7] are passed as the x, y, width and height parameters of func_82100214;
+// func_82100020 receives the same rectangle.
+s32 func_82100514(s32 arg0, s16 *arg1, u8 *arg2) {
     u8 *var_v1;
     u8 *var_v0;
 
-    if (arg0 != 0 && arg0 == 1) {
-        gSPDisplayList(((Gfx **)&D_800D0510)[0]++, D_80094E78);
-        gDPSetCombine(((Gfx **)&D_800D0510)[0]++, 0xFC30FE61, 0x55FEF77B);
-        gDPSetRenderMode(((Gfx **)&D_800D0510)[0]++, 0x0F0A4000, 0);
-        var_v1 = (arg2 != NULL) ? (u8 *)arg2 + 0x28 : D_82103DE0;
-        var_v0 = (arg2 != NULL) ? (u8 *)arg2 + 0x2C : D_82103DE0;
-        func_82100020(
-            *(s16 *)((u8 *)arg1 + 8),
-            *(s16 *)((u8 *)arg1 + 0xA),
-            *(s16 *)((u8 *)arg1 + 0xC),
-            *(s16 *)((u8 *)arg1 + 0xE),
-            var_v1,
-            var_v0
-        );
-        gSPDisplayList(((Gfx **)&D_800D0510)[0]++, D_80094E38);
-        gDPSetRenderMode(((Gfx **)&D_800D0510)[0]++, 0x0F0A4000, 0);
-        func_82100214(
-            *(s16 *)((u8 *)arg1 + 8),
-            *(s16 *)((u8 *)arg1 + 0xA),
-            *(s16 *)((u8 *)arg1 + 0xC),
-            *(s16 *)((u8 *)arg1 + 0xE)
-        );
+    switch (arg0) {
+        case 0: // FAKE: empty case; diff score 360 without it.
+            break;
+        case 1:
+            gSPDisplayList(D_800D0510++, D_80094E78);
+            gDPSetCombine(D_800D0510++, 0xFC30FE61, 0x55FEF77B);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            var_v1 = (arg2 != NULL) ? arg2 + 0x28 : D_82103DE0;
+            var_v0 = (arg2 != NULL) ? arg2 + 0x2C : D_82103DE0;
+            func_82100020(arg1[4], arg1[5], arg1[6], arg1[7], var_v1, var_v0);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            func_82100214(arg1[4], arg1[5], arg1[6], arg1[7]);
+            break;
     }
     return 0;
 }
@@ -134,7 +130,6 @@ s32 func_82100B2C(s32 a, void *p) {
 extern u8 *D_8210418C;
 extern s32 func_8004C874(s32, s32);
 extern s32 func_80049148(u16, s32, s32, void *);
-extern s32 func_82100514(s32, void *, void *);
 s32 func_82100B6C(s32 arg0, void *arg1) {
     if (arg0 == 1) {
         if (*(u8 *)arg1 == 4) {
@@ -148,7 +143,6 @@ s32 func_82100B6C(s32 arg0, void *arg1) {
     return 0;
 }
 
-extern s32 func_82100514(s32, void *, void *);
 extern u8 *D_82104188;
 s32 func_82100C14(s32 arg0, void *arg1) {
     s32 result;

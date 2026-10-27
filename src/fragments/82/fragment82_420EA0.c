@@ -277,50 +277,55 @@ void DeckMenu_HandleSettingsInput_fragment82(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D00C34.s")
 
+extern u16 D_82D23D86;
+extern s8 D_82D06F84;
+// Returns 0x800 or 0x400 (D-pad up/down bits) for a D_82D23D88 input or, once the
+// D_82D06F84 countdown runs out, for a held D_82D23D86 input. func_82D027D4 copies
+// both words from the D_80087200 controller record at +8 and +6.
 s32 func_82D010F4(void) {
-    extern u16 D_82D23D88;
-    extern u16 D_82D23D86;
-    extern u8 D_82D06F84;
-    s32 ret = 0;
-    s8 *p = &D_82D06F84;
+    s32 result = 0;
+    s8 *timer = &D_82D06F84; // FAKE: accesses through a local pointer; diff score 4280 without it.
 
-    if ((D_82D23D88 & 0x800) != 0) {
-        if ((D_82D23D86 & 0xC) == 0) {
-            ret = 0x800;
-            p[0] = 10;
+    if (D_82D23D88 & 0x800) {
+        if (!(D_82D23D86 & 0xC)) {
+            result = 0x800;
+            *timer = 10;
         }
-    } else if ((D_82D23D88 & 0x400) != 0) {
-        if ((D_82D23D86 & 0xC) == 0) {
-            ret = 0x400;
-            p[0] = 10;
+    } else if (D_82D23D88 & 0x400) {
+        if (!(D_82D23D86 & 0xC)) {
+            result = 0x400;
+            *timer = 10;
         }
-    } else if ((D_82D23D88 & 8) != 0) {
-        if ((D_82D23D86 & 0xC04) == 0) {
-            ret = 0x800;
-            p[0] = 2;
+    } else if (D_82D23D88 & 8) {
+        if (!(D_82D23D86 & 0xC04)) {
+            result = 0x800;
+            *timer = 2;
         }
-    } else if ((D_82D23D88 & 0x400) != 0 && (D_82D23D86 & 0xC08) == 0) {
-        ret = 4;
-        p[0] = 2;
+    } else if (D_82D23D88 & 0x400) {
+        //!bug: repeats the 0x400 test of the second branch, so this branch never runs.
+        if (!(D_82D23D86 & 0xC08)) {
+            result = 4;
+            *timer = 2;
+        }
     }
-    p[0]--;
-    if (p[0] <= 0) {
-        p[0] = 0;
+    (*timer)--;
+    if (*timer <= 0) {
+        *timer = 0;
         if (D_82D23D86 & 8) {
-            p[0] = 2;
-            ret = 0x800;
+            *timer = 2;
+            result = 0x800;
         } else if (D_82D23D86 & 4) {
-            p[0] = 2;
-            ret = 0x400;
+            *timer = 2;
+            result = 0x400;
         } else if (D_82D23D86 & 0x800) {
-            p[0] = 4;
-            ret = 0x800;
+            *timer = 4;
+            result = 0x800;
         } else if (D_82D23D86 & 0x400) {
-            p[0] = 4;
-            ret = 0x400;
+            *timer = 4;
+            result = 0x400;
         }
     }
-    return ret;
+    return result;
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D0125C.s")

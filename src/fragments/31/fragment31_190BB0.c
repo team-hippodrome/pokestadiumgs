@@ -250,15 +250,18 @@ void func_8821EC10(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821F01C.s")
 
-s32 func_8821FFB4(u8 *arg0, u8 *arg1) {
-    typedef struct {
-        u8 pad[1188];
-        u8 (*callback)(u8);
-    } State;
-    s32 value;
+typedef struct {
+    u8 unk_000[0x4A4];
+    u8 (*unk_4A4)(u8);
+} unk_D_882347F0;
 
-    value = ((State *)D_882347F0)->callback(arg0[0]) - ((State *)D_882347F0)->callback(arg1[0]);
-    return (value != 0) ? value : ((u8 *)arg0 == arg1) ? 0 : (arg0 < arg1) ? -1 : 1;
+// Comparator over byte keys: orders by the values unk_4A4 maps them to, then by address.
+s32 func_8821FFB4(u8 *arg0, u8 *arg1) {
+    s32 difference;
+
+    difference = ((unk_D_882347F0 *)D_882347F0)->unk_4A4(*arg0) -
+                 ((unk_D_882347F0 *)D_882347F0)->unk_4A4(*arg1);
+    return (difference != 0) ? difference : (arg0 == arg1) ? 0 : (arg0 < arg1) ? -1 : 1;
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_88220050.s")

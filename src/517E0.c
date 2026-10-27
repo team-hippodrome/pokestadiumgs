@@ -458,29 +458,102 @@ s32 func_80051A8C(u32 arg0, s32 arg1, s16 arg2) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80051BF0.s")
 
 void func_80051D64(s32 arg0, s32 arg1) {
-    s32 temp_s1; s32 temp_s0;
-    switch (arg0) { case 16: temp_s1 = func_80050E88(0, D_800972C0, arg1); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, D_800972C0)); break; case 17: temp_s1 = func_80050F60(0, arg1); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, arg1)); break; case 18: temp_s1 = (s32)func_80051028(0, arg1); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 19: temp_s1 = (s32)func_800510CC(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 20: temp_s1 = (s32)func_80051138(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 21: temp_s1 = func_800511A4(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 22: temp_s1 = (s32)func_80051208(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 23: temp_s1 = (s32)func_80051274(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 24: temp_s1 = (s32)func_800512E0(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 25: temp_s1 = (s32)func_8005134C(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 26: temp_s1 = (s32)func_800513B8(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 27: temp_s1 = (s32)func_80051424(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 28: temp_s1 = (s32)func_80051490(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 29: temp_s1 = (s32)func_800514FC(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; case 30: temp_s1 = (s32)func_80051568(0); temp_s0 = func_80050DE4(arg0); Save_CommitRecord((u8 *)(u32)temp_s1, temp_s0, func_80050D20(arg0, -1)); break; }
+    switch (arg0) {
+        case 16:
+            Save_CommitRecord((u8 *)func_80050E88(0, D_800972C0, arg1), func_80050DE4(arg0), func_80050D20(arg0, D_800972C0));
+            break;
+        case 17:
+            Save_CommitRecord((u8 *)func_80050F60(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, arg1));
+            break;
+        case 18:
+            Save_CommitRecord(func_80051028(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 19:
+            Save_CommitRecord(func_800510CC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 20:
+            Save_CommitRecord(func_80051138(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 21:
+            Save_CommitRecord((u8 *)func_800511A4(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 22:
+            Save_CommitRecord(func_80051208(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 23:
+            Save_CommitRecord(func_80051274(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 24:
+            Save_CommitRecord(func_800512E0(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 25:
+            Save_CommitRecord(func_8005134C(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 26:
+            Save_CommitRecord(func_800513B8(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 27:
+            Save_CommitRecord(func_80051424(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 28:
+            Save_CommitRecord(func_80051490(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 29:
+            Save_CommitRecord(func_800514FC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 30:
+            Save_CommitRecord(func_80051568(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+    }
 }
 
 void func_80052150(s32 arg0, s32 arg1) {
-    u8 *first;
-    u8 *second;
-    switch ((u32)arg0) {
-    case 16: first = (u8 *)func_80050E88(0,D_800972C0,arg1); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0, D_800972C0)); return;
-    case 17: first = (u8 *)func_80050F60(0,arg1); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0, arg1)); return;
-    case 18: first = (u8 *)func_80051028(0,arg1); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 19: first = (u8 *)func_800510CC(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 20: first = (u8 *)func_80051138(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 21: first = (u8 *)func_800511A4(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 22: first = (u8 *)func_80051208(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 23: first = (u8 *)func_80051274(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 24: first = (u8 *)func_800512E0(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 25: first = (u8 *)func_8005134C(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 26: first = (u8 *)func_800513B8(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 27: first = (u8 *)func_80051424(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 28: first = (u8 *)func_80051490(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 29: first = (u8 *)func_800514FC(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
-    case 30: first = (u8 *)func_80051568(0); second = (u8 *)func_80050DE4(arg0); Save_InvalidateRecord(first, (s32)second, (s32)func_80050D20(arg0,-1)); return;
+    switch (arg0) {
+        case 16:
+            Save_InvalidateRecord((u8 *)func_80050E88(0, D_800972C0, arg1), func_80050DE4(arg0), func_80050D20(arg0, D_800972C0));
+            break;
+        case 17:
+            Save_InvalidateRecord((u8 *)func_80050F60(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, arg1));
+            break;
+        case 18:
+            Save_InvalidateRecord(func_80051028(0, arg1), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 19:
+            Save_InvalidateRecord(func_800510CC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 20:
+            Save_InvalidateRecord(func_80051138(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 21:
+            Save_InvalidateRecord((u8 *)func_800511A4(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 22:
+            Save_InvalidateRecord(func_80051208(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 23:
+            Save_InvalidateRecord(func_80051274(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 24:
+            Save_InvalidateRecord(func_800512E0(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 25:
+            Save_InvalidateRecord(func_8005134C(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 26:
+            Save_InvalidateRecord(func_800513B8(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 27:
+            Save_InvalidateRecord(func_80051424(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 28:
+            Save_InvalidateRecord(func_80051490(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 29:
+            Save_InvalidateRecord(func_800514FC(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
+        case 30:
+            Save_InvalidateRecord(func_80051568(0), func_80050DE4(arg0), func_80050D20(arg0, -1));
+            break;
     }
 }
 
