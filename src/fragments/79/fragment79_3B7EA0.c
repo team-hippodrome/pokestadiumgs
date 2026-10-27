@@ -244,7 +244,41 @@ void func_8414978C(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_841497E8.s")
+void func_841497E8(void *arg0) {
+    u8 *state = arg0;
+
+    switch (state[2]) {
+        case 99:
+            state[3] = Audio_LookupScaledRatio_fragment79(*(u16 *)(*(u8 **)(state + 0x10) + 0x28),
+                                                          *(u16 *)(*(u8 **)(state + 0x10) + 0x2A));
+            func_84149430(state);
+            break;
+        case 121:
+            func_84149430(state);
+            state[3] = (*(u8 **)(state + 0x10))[0x14] * 10 / 25;
+            break;
+        case 122:
+            func_84149430(state);
+            state[3] = 52;
+            break;
+        case 123:
+            func_84149430(state);
+            state[3] = (-(*(u8 **)(state + 0x10))[0x14] * 10 + 2550) / 25;
+            break;
+        case 126:
+            func_84149430(state);
+            state[3] = 64;
+            break;
+        case 135:
+            state[4] = func_84126EDC(*(u16 *)(*(u8 **)(state + 0x10) + 0x40));
+            state[3] = func_84126E88(*(u16 *)(*(u8 **)(state + 0x10) + 0x40));
+            func_84149430(state);
+            break;
+        default:
+            func_84149430(state);
+            break;
+    }
+}
 
 typedef struct unk_D_841951F0_9D4 {
     u8 unk_00[0x40];
