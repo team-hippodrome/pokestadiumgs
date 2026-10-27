@@ -20,7 +20,40 @@ void func_88210480(void) {
     D_88234560 = 5;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_882104DC.s")
+extern s32 D_88A01C30;
+typedef struct unk_D_88A01C30_20 {
+    /* 0x00 */ void **unk_00;
+    /* 0x04 */ u8 unk_04[0x10];
+} unk_D_88A01C30_20; // size = 0x14, array at D_88A01C30 + 0x20
+
+typedef struct unk_D_88234720 {
+    /* 0x00 */ u8 unk_00[0x14];
+    /* 0x14 */ s16 unk_14;
+    /* 0x16 */ s16 unk_16;
+    /* 0x18 */ u8 unk_18[0x14];
+} unk_D_88234720; // size = 0x2C
+
+void *func_882104DC(s32 mode, u8 slot) {
+    s16 index;
+    void **table = ((unk_D_88A01C30_20 *)(D_88A01C30 + 0x20))[slot].unk_00;
+
+    switch (mode) {
+        case 0:
+            index = ((unk_D_88234720 *)D_88234720)[slot].unk_16;
+            break;
+        case 1:
+            index = ((unk_D_88234720 *)D_88234720)[slot].unk_14;
+            break;
+        case 2:
+            index = 0;
+            break;
+        case 3:
+            index = *(s16 *)(D_88234720 + 0x66);
+            break;
+    }
+    //!bug index is uninitialized for any other mode.
+    return table[index];
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_882105B0.s")
 
@@ -94,7 +127,24 @@ s32 func_88210E40(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88210ECC.s")
+extern s32 D_882346F0;
+extern s32 func_8800005C(void);
+s32 func_88210ECC(void *arg0) {
+    s32 result = 0;
+
+    if (*(s32 *)(D_88234720 + 4) == 0) {
+        if ((D_882346F0 == 0 && (*(s16 *)(D_88234720 + 8) == 1 || *(s16 *)(D_88234720 + 8) == 3)) || D_882346F0 == 3) {
+            if (func_8800005C() != 0 && *(u8 *)D_88234720 == 1 && func_88210D48(arg0) != 0) {
+                result = 1;
+            } else if (func_88210DC4(arg0) != 0) {
+                result = 2;
+            } else if (func_88210E40(arg0) != 0) {
+                result = 3;
+            }
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88210FAC.s")
 

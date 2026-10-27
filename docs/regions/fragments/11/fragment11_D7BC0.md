@@ -25,3 +25,19 @@ Source shape: re-read `*(ctx + 0x28)` in every statement (no cached list
 pointer: 0.94), and test `head != NULL` first. The target falls through into
 the append and branches (`beql`) to the empty-list case; the opposite
 polarity scores 0.74. In the empty case write `tail = node; head = tail;`.
+
+## 2026-10-27 — `func_81600E28` region-context constructor accepted
+
+`func_81600E28(pool, arg1, count)` is now C: **57 words / 228 bytes**, frame
+0x30. It allocates the 0x30-byte context and `count * 4 + 1` nodes of 0x20
+bytes from `pool` (`MainPool_AllocAligned(..., 4)`) and resets every node
+with `func_816003C8`. It then initializes both 12-byte lists at +0x10 and
+leaves list 1 current (`list_index` +0x4, `list` +0x28), and stores `arg1`
+at +0xC. The `list` pointer is the head/tail pair `func_81600A34` appends
+to (`unk_func_81600A34_List` is the first eight bytes of
+`unk_func_81600E28_List`).
+
+Source shape: inside the list loop, assign `ctx->list = &ctx->lists[i]`
+and then clear `ctx->list->tail` (not `ctx->lists[i].tail` or an
+assignment expression; those add two words). Finish with the chained
+`ctx->list->head = ctx->list->unk_08 = ctx->list->tail;`.
