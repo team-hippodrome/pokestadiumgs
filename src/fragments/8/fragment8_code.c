@@ -193,7 +193,6 @@ extern s32 func_800647C8(u8);
 extern s32 HAL_Strcmp(const s8 *, const s8 *);
 extern u8 *func_8004C874(s32, s32);
 extern u8 D_82F031CC[];
-extern u8 D_82F031D0[];
 // Returns the gender-symbol string shown after a Pokemon's name. func_80064474
 // returns 0 (genderless), 1 or 2 from the species byte at +0x0 and the word at
 // +0x16. Species 29 and 32 (Nidoran) get the empty string D_82F031CC while the
@@ -211,7 +210,7 @@ u8 *func_82F00C2C(u8 *pokemon) {
     }
     switch (gender) {
         case 0:
-            return D_82F031D0;
+            return "";
         case 1:
             return func_8004C874(13, 29);
         case 2:

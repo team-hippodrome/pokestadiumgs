@@ -541,6 +541,8 @@
     - [0xCC6B0, textbin, fragments/8/fragment8_header]
     - [0xCC6D0, c,       fragments/8/fragment8_code]
     - [0xCE660, data,    fragments/8/fragment8_data]
+    - [0xCF880, .rodata, fragments/8/fragment8_code] # Strings, jump tables, double literals.
+    - [0xCF970, rodata]
 
   # unk fragment
   - name: fragment9

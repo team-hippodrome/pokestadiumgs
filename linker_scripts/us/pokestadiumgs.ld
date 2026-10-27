@@ -1105,6 +1105,7 @@ SECTIONS
         fragment8_RODATA_START = .;
         build/asm/us/data/fragments/8/fragment8_header.o(.rodata);
         build/src/fragments/8/fragment8_code.o(.rodata);
+        build/asm/us/data/CF970.rodata.o(.rodata);
         fragment8_RODATA_END = .;
         fragment8_RODATA_SIZE = ABSOLUTE(fragment8_RODATA_END - fragment8_RODATA_START);
     }
