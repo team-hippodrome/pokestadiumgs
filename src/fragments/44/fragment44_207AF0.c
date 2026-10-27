@@ -81,7 +81,37 @@ s32 *func_8AF199D8(s16 arg0) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19A1C.s")
+extern void _bzero(void *, s32);
+extern s16 *D_8AF2BA90[];
+extern u8 D_8AF36F30[];
+s16 func_8AF19A1C(s16 arg0) {
+    s16 *source;
+    s16 count;
+    s16 separator;
+    s32 value;
+
+    source = D_8AF2BA90[arg0];
+    _bzero(D_8AF36F30, 255);
+    count = 0;
+    separator = 0;
+    while (1) {
+        value = *source;
+        if (value > 0) {
+            D_8AF36F30[count++] = value;
+            if (count >= 255) {
+                break;
+            }
+            separator = 0;
+        } else {
+            if (separator == 1) {
+                break;
+            }
+            separator = 1;
+        }
+        source++;
+    }
+    return count;
+}
 
 extern u8 func_80062F68(u8);
 s32 func_8AF19AC4(u8 arg0) {
@@ -156,14 +186,14 @@ void func_8AF19E50(s16 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19FAC.s")
 
-extern s16 func_8AF19A1C(s32);
+extern s16 func_8AF19A1C(s16);
 extern u8 *func_8AF19E7C(u8 *, s32, s32, s16);
 extern s8 D_8AF29D44;
 extern s32 D_8AF2BAAC;
 extern s16 D_8AF35050;
 extern s8 D_8AF354A8;
 extern s32 D_8AF357D0;
-extern void _bzero(s32 *, s32);
+extern void _bzero(void *, s32);
 extern void *func_8004C874(s32, s32);
 void func_8AF1A0DC(s16 arg0) {
     s16 *p = &arg0;
@@ -226,7 +256,7 @@ void func_8AF1A1B8(s16 arg0, s16 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF1A2B8.s")
 
-extern void _bzero(s32 *, s32);
+extern void _bzero(void *, s32);
 extern s16 D_8AF357AC;
 extern s16 D_8AF357AE;
 extern u8 D_8AF357C0;
