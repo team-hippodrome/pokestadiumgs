@@ -78,7 +78,33 @@ s32 func_8821C770(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821C820.s")
+extern u8 func_800637C0(u8);
+s32 func_8821C820(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
+    s32 difference;
+    s32 result;
+    S1_unk_func_88316128 *entries[2];
+    s16 values[2];
+    u8 i;
+
+    entries[0] = arg0;
+    entries[1] = arg1;
+    for (i = 0; i < 2; i++) {
+        if (((u8 *)entries[i])[38] & 1) {
+            values[i] = 257;
+        } else if (entries[i]->unk_08 == 252) {
+            values[i] = 256;
+        } else {
+            values[i] = func_800637C0(entries[i]->unk_08);
+        }
+    }
+    difference = values[0] - values[1];
+    if (difference != 0) {
+        result = difference;
+    } else {
+        result = LabPCList_CompareByPointer(entries[0], entries[1]);
+    }
+    return result;
+}
 
 
 typedef struct {
