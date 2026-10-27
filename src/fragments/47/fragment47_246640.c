@@ -1,6 +1,5 @@
 #include "global.h"
 
-
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000020.s")
 #endif
@@ -282,7 +281,36 @@ void func_860021C4(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4) { f32 r
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002234.s")
+extern void func_86002070(void *, s32, f32, void *, void *);
+// Vector layouts used by GeoNode_CreateModelPart.
+//@src/229E0.c
+struct S1_Vec3f {
+    f32 x;
+    f32 y;
+    f32 z;
+};
+struct S1_Vec3s {
+    s16 x;
+    s16 y;
+    s16 z;
+};
+struct S1_MainPoolState;
+struct S1_unk_D_86002F58_004_000;
+extern struct S1_unk_D_86002F58_004_000 *func_80038894(struct S1_MainPoolState *, void *, s16, struct S1_Vec3f *, struct S1_Vec3s *, struct S1_Vec3f *);
+extern struct S1_Vec3f D_8600D1E8;
+extern struct S1_Vec3s D_8600D1F4;
+extern struct S1_Vec3f D_8600D1FC;
+void func_86002234(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4) {
+    struct S1_Vec3f position;
+    struct S1_Vec3s rotation;
+    struct S1_Vec3f scale;
+
+    position = D_8600D1E8;
+    rotation = D_8600D1F4;
+    scale = D_8600D1FC;
+    func_80038894(NULL, arg0 + 0x120, -1, &position, &rotation, &scale);
+    func_86002070(arg0, arg1, arg2, arg3, arg4);
+}
 #endif
 
 #ifdef VERSION_US
@@ -378,7 +406,23 @@ void func_860029D0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002A58.s")
+extern f64 fragment48_main(f64);
+extern void func_860032DC(u8 *);
+extern s32 func_86004494(void *, f64);
+void func_86002A58(u8 *arg0) {
+    *(f64 *)(arg0 + 0x17D0) -= *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890);
+    arg0[0x13D] = 100;
+    if (*(f64 *)(arg0 + 0x17D0) <= 0.0) {
+        *(f64 *)(arg0 + 0x17D0) = 0.0;
+        if (func_86004494(arg0, *(f64 *)(D_8600DE30 + 0x160)) != 0) {
+            func_86003EFC(arg0, 3);
+        }
+    } else {
+        *(f64 *)(arg0 + 0x1860) = func_87C00090(*(f64 *)(arg0 + 0x1860), *(f64 *)(D_8600DE30 + 0x88), *(f64 *)(D_8600DE30 + 0x1F8) * *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890));
+    }
+    *(f64 *)(arg0 + 0x1858) = fragment48_main(*(f64 *)(arg0 + 0x1860) + *(f64 *)(arg0 + 0x1858));
+    func_860032DC(arg0);
+}
 #endif
 
 #ifdef VERSION_US
