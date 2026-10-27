@@ -1924,7 +1924,60 @@ typedef struct AudioCmd {
     } data;
 } AudioCmd; // size = 0x8
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80018828.s")
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x38];
+    /* 0x38 */ u8 *channels[16];
+} SeqPlayerView;
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x2BF0];
+    /* 0x2BF0 */ s16 numSequencePlayers;
+    /* 0x2BF2 */ u8 unk_2BF2[0x345A];
+    /* 0x604C */ SeqPlayerView *seqPlayers[(0x6318 - 0x604C) / 4];
+    /* 0x6318 */ u16 activeChannelMasks[1];
+} AudioContextProcessView;
+
+extern void func_80018078(AudioCmd *);
+extern void func_80018CFC(u8 *, u8 *);
+extern void func_80018ED4(u8 *, AudioCmd *);
+
+// Same code as Ocarina of Time Audio_ProcessCmd (src/code/audio_thread.c); GS treats every
+// op >= 0xE0 as global and keeps the sequence players as a pointer array.
+void func_80018828(AudioCmd *cmd) {
+    SeqPlayerView *seqPlayer;
+    u16 channelMask;
+    s32 i;
+
+    if ((cmd->op & 0xF0) >= 0xE0) {
+        func_80018078(cmd);
+        return;
+    }
+
+    if (cmd->arg0 < ((AudioContextProcessView *)D_8011BE90)->numSequencePlayers) {
+        seqPlayer = ((AudioContextProcessView *)D_8011BE90)->seqPlayers[cmd->arg0];
+        if (cmd->op & 0x80) {
+            func_80018078(cmd);
+            return;
+        }
+        if (cmd->op & 0x40) {
+            func_80018CFC((u8 *)seqPlayer, (u8 *)cmd);
+            return;
+        }
+        if (cmd->arg1 < 0x10) {
+            func_80018ED4(seqPlayer->channels[cmd->arg1], cmd);
+            return;
+        }
+        if (cmd->arg1 == 0xFF) {
+            channelMask = ((AudioContextProcessView *)D_8011BE90)->activeChannelMasks[cmd->arg0];
+            for (i = 0; i < 16; i++) {
+                if (channelMask & 1) {
+                    func_80018ED4(seqPlayer->channels[i], cmd);
+                }
+                channelMask = channelMask >> 1;
+            }
+        }
+    }
+}
 
 // File data between func_800179CC's and func_8001895C's statics (rom.yaml .data window).
 // D_8008FA80 is probably the audio update's waiting-task static.
@@ -1932,23 +1985,16 @@ void *D_8008FA80 = NULL;
 s32 D_8008FA84 = 0;
 
 typedef struct {
-    /* 0x0 */ u8 op;
-    /* 0x1 */ u8 unk_1[7];
-} AudioCmdView; // size = 0x8
-
-typedef struct {
     /* 0x0000 */ u8 unk_0000[0x6316];
     /* 0x6316 */ u8 cmdQueueFinished;
     /* 0x6317 */ u8 unk_6317[0x79];
-    /* 0x6390 */ AudioCmdView cmdBuf[0x100];
+    /* 0x6390 */ AudioCmd cmdBuf[0x100];
 } AudioContextCmdView;
-
-extern void func_80018828(AudioCmdView *);
 
 // Same code as Ocarina of Time Audio_ProcessCmds (src/code/audio_thread.c).
 void func_8001895C(u32 msg) {
     static u8 sCurCmdRdPos = 0;
-    AudioCmdView *cmd;
+    AudioCmd *cmd;
     u8 endPos;
 
     if (!((AudioContextCmdView *)D_8011BE90)->cmdQueueFinished) {
