@@ -543,7 +543,45 @@ void func_86001FCC(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002070.s")
+extern f64 D_8600D1C8[];
+extern f64 D_8600DF00;
+extern void func_87C00908(void *, f64, f64, f64);
+extern void func_87C00120(void *, f64, f64, f64);
+void func_86002070(void *arg0, s32 index, f32 radius, void *input_callback, void *context) {
+    u8 *object = arg0;
+    s32 i;
+
+    *(void **)(object + 0x1824) = input_callback;
+    *(f64 *)(object + 0x17C8) = (f64)radius;
+    *(s32 *)(object + 0x1810) = index;
+    *(f64 *)(object + 0x1858) = 0.0;
+    func_87C00908(object + 0x1838, 0.0, 0.0, 0.0);
+    func_86007AF8(object, *(f64 *)(object + 0x17C8));
+    *(s32 *)(object + 0x1820) = 0;
+    *(f32 *)(object + 0x1804) = 0.0f;
+    *(f32 *)(object + 0x1800) = 0.0f;
+    *(void **)(object + 0x1870) = context;
+    *(s32 *)(object + 0x1828) = 0;
+    *(s32 *)(object + 0x1814) = 0;
+    *(s32 *)(object + 0x1818) = -1;
+    *(f64 *)(object + 0x17D0) = 0.0;
+    *(f64 *)(object + 0x17D8) = D_8600D1C8[*(s32 *)(object + 0x1810)];
+    *(f64 *)(object + 0x1860) = 0.0;
+    *(f64 *)(object + 0x17E0) = 0.0;
+    *(f64 *)(object + 0x17E8) = D_8600DF00;
+    *(f64 *)(object + 0x17F0) = 0.0;
+    *(f32 *)(object + 0x1808) = 1.0f;
+    *(f64 *)(object + 0x17F8) = -1.0;
+    func_86000BB0(object + 0x189C);
+    func_86001FCC(object);
+    func_87C00120(object + 0x1878, 0.0, 0.0,
+        *(f64 *)(*(u8 **)(object + 0x1870) + 0x6670) * 0.6);
+    // func_8600AE6C uses signed slot values plus one as texture-table indices.
+    //@src/fragments/47/fragment47_2507E0.c
+    for (i = 0; i != 8; i++) {
+        ((s8 *)object)[0x1990 + i] = -1;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -653,7 +691,57 @@ void func_86002444(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86002780.s")
+extern s32 func_87F00930(void);
+extern void func_86003FDC(u8 *arg0, u8 *arg1, f32 arg2);
+extern f64 func_87C00090(f64, f64, f64);
+s32 func_86002780(s32 event, u8 *node) {
+    u8 *object;
+    f32 base_scale;
+    f32 horizontal_scale;
+    f32 multiplier;
+
+    object = *(u8 **)(node + 0x14);
+    base_scale = (f32)(*(f64 *)(object + 0x17C8) / 200.0);
+    object[0x122] |= 0x10;
+    if (event != 2) {
+        return 0;
+    }
+    func_87F00930();
+    func_86003FDC(object, node + 0x60, (f32)-*(f64 *)(object + 0xC8));
+    func_86001DBC(object);
+    func_86001DCC(object);
+    object[0x1655] = 5;
+    func_87C01CBC(object + 0x17A0);
+    *(f32 *)(object + 0x150) = base_scale;
+    *(f32 *)(object + 0x154) = base_scale;
+    *(f32 *)(object + 0x158) = base_scale;
+    if (*(f64 *)(object + 0x17E0) > 0.0) {
+        object[0x1C0] = 255;
+        object[0x1C1] = 255;
+        object[0x1C2] = 255;
+        object[0x1C3] = 0;
+        *(f32 *)(object + 0x1808) = (f32)func_87C00090((f64)*(f32 *)(object + 0x1808), 1.5, 0.2);
+    } else if (*(s32 *)(object + 0x1828) == 3 &&
+               *(f64 *)(object + 0x17D0) > 0.0 && *(s32 *)(object + 0x1898) != 0) {
+        object[0x1C0] = 255;
+        object[0x1C1] = 127;
+        object[0x1C2] = 127;
+        object[0x1C3] = 150;
+        *(f32 *)(object + 0x1808) = (f32)func_87C00090((f64)*(f32 *)(object + 0x1808), 1.0, 0.2);
+    } else {
+        object[0x1C0] = 255;
+        object[0x1C1] = 255;
+        object[0x1C2] = 255;
+        object[0x1C3] = 0;
+        *(f32 *)(object + 0x1808) = (f32)func_87C00090((f64)*(f32 *)(object + 0x1808), 1.0, 0.2);
+    }
+    multiplier = sqrtf(1.0f / *(f32 *)(object + 0x1808));
+    horizontal_scale = base_scale * multiplier;
+    *(f32 *)(object + 0x150) = horizontal_scale;
+    *(f32 *)(object + 0x158) = horizontal_scale;
+    *(f32 *)(object + 0x154) = *(f32 *)(object + 0x1808) * base_scale;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
