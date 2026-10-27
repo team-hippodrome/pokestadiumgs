@@ -1080,6 +1080,8 @@
     - [0x1E5A10, c,       fragments/43/fragment43_1E5A10]
     - [0x1EC950, c,       fragments/43/fragment43_1EC950]
     - [0x1ED590, data,    fragments/43/fragment43_data]
+    - [0x1EDB60, .rodata, fragments/43/fragment43_1E5A10] # D_8AC08170..D_8AC0818C (0.05f x2, 0.3f x6), 16-byte aligned
+    - [0x1EDB80, rodata,  fragments/43/fragment43_rodata_tail]
   
   - name: fragment44
     type: code
@@ -1163,7 +1165,7 @@
     - [0x253770, data,    fragments/47/fragment47_data]
     - [0x253A10, .data,   fragments/47/fragment47_2507E0] # slot colors, animation counters and retained initialization tables
     - [0x253A70, data,    fragments/47/fragment47_data_tail]
-    - [0x253CB0, .rodata, fragments/47/fragment47_246640] # motion literals and state-update jump tables
+    - [0x253C70, .rodata, fragments/47/fragment47_246640] # callback/motion literals and state-update jump tables
     - [0x253D40, rodata,  fragments/47/fragment47_data_tail_rodata]
     - [0x253F30, .rodata, fragments/47/fragment47_24AE60] # jtbl_8600D910 (func_86006F20, still GLOBAL_ASM) + jtbl_8600D92C (func_86007648), widened to 16-byte boundary
     - [0x253F70, .rodata, fragments/47/fragment47_24E0A0] # four double constants at D_8600D950..D_8600D968
