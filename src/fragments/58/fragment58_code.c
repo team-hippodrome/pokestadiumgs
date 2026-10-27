@@ -223,7 +223,7 @@ void func_83402B10(void) {
 s32 GeoRender_FindAnchorPosition(s32 *, s32, f32 *);
 extern f32 D_834041D4;
 extern u8 D_83404250;
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 void func_83402C80(void) {
     Vec3f_SetComponentsDuplicate(&D_834041D4, (*(f32 *)((u8 *)(&D_83404250) + (0x24))), (*(f32 *)((u8 *)(&D_83404250) + (0x28))), (*(f32 *)((u8 *)(&D_83404250) + (0x2C))));
     if (GeoRender_FindAnchorPosition(&D_83404250, 0x64, &D_834041D4) == 0) {
@@ -233,7 +233,23 @@ void func_83402C80(void) {
     GeoRender_FindAnchorPosition(&D_83404250, 0x64, &D_834041D4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83402D00.s")
+extern f32 D_83404274[3];
+extern f32 D_83403D80[3];
+extern f64 D_834040D8;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern void Camera_ComputeEyeFromAngles(void *, void *, f32, s16, s16);
+void func_83402D00(void) {
+    f32 position[3];
+    f32 distance;
+    s16 angle_x;
+    s16 angle_y;
+
+    func_80037120(D_83404274, D_83403D80, &distance, &angle_x, &angle_y);
+    if (distance > 10.0f) {
+        Camera_ComputeEyeFromAngles(D_83404274, position, (f32)((f64)distance * D_834040D8), angle_x, angle_y);
+        Vec3f_SetComponentsDuplicate(D_83404274, position[0], position[1], position[2]);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83402DA8.s")
 
