@@ -297,7 +297,52 @@ s32 func_82301638(s32 arg0, u8 *arg1)
   return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823016B4.s")
+typedef struct unk_D_82305EB0 {
+    /* 0x00 */ u32 unk_00;
+} unk_D_82305EB0; // size = 0x4
+extern s16 D_82305E68[];
+extern s16 D_82305E6A;
+extern unk_D_82305EB0 D_82305EB0;
+extern s16 D_82306910[][2];
+extern unk_D_82305EB0 D_823068F0[];
+extern unk_D_82305EB0 D_82306900[];
+s32 func_82301494(s32 value);
+s32 func_823016B4(s32 arg0, u8 *arg1) {
+    s32 slot;
+    u8 *rec;
+    s32 index;
+    s32 pad; // FAKE
+
+    index = *(s32 *)(arg1 + 0x20);
+    slot = func_82301494(index);
+    switch (arg0) {
+        case 0:
+            rec = (u8 *)&D_82305E68[slot];
+            D_82306910[index][0] = *(s16 *)(arg1 + 8);
+            D_82306910[index][1] = *(s16 *)(arg1 + 0xA);
+            *(u16 *)(rec + 0xC) = *(u16 *)(arg1 + 0x30);
+            *(u16 *)(rec + 0x14) = *(u16 *)(arg1 + 0x32);
+            D_823068F0[slot] = *(unk_D_82305EB0 *)(arg1 + 0x28);
+            D_82306900[slot] = *(unk_D_82305EB0 *)(arg1 + 0x2C);
+            arg1[0x2B] = arg1[0x2F] = rec[0x63];
+            if (0) {} // FAKE
+            break;
+        case 1:
+            rec = (u8 *)&D_82305E68[slot];
+            *(s16 *)(arg1 + 8) = D_82306910[index][0] + *(s16 *)(rec + 0x52);
+            if (slot != D_82305E6A) {
+                *(unk_D_82305EB0 *)(arg1 + 0x28) = D_823068F0[slot];
+                *(unk_D_82305EB0 *)(arg1 + 0x2C) = D_82306900[slot];
+            } else {
+                *(unk_D_82305EB0 *)(arg1 + 0x28) = *(unk_D_82305EB0 *)(arg1 + 0x2C) = D_82305EB0;
+            }
+            arg1[0x2B] = arg1[0x2F] = rec[0x63];
+            break;
+        default:
+            break;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301814.s")
 
