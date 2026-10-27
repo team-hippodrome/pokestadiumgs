@@ -151,7 +151,39 @@ void func_87F0F234(s32 arg0, s8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0F2B8.s")
+extern s32 func_81A00074(u8 *, s32);
+typedef struct unk_func_87F0F2B8_Item {
+    /* 0x00 */ u8 unk_00[0x30];
+    /* 0x30 */ s8 unk_30;
+    /* 0x31 */ u8 unk_31[0x2B];
+} unk_func_87F0F2B8_Item; // size = 0x5C
+
+typedef struct unk_func_87F0F2B8 {
+    /* 0x000 */ unk_func_87F0F2B8_Item items[18];
+    /* 0x678 */ u8 unk_678[0x40];
+    /* 0x6B8 */ u32 unk_6B8_flag : 1;
+    /* 0x6BC */ u8 unk_6BC[4];
+} unk_func_87F0F2B8; // size = 0x6C0
+
+s32 func_87F0F2B8(unk_func_87F0F2B8 *ports, s32 port) {
+    s32 i;
+    s32 result = 0;
+
+    osGetTime();
+    if (ports[port].unk_6B8_flag) {
+        for (i = 0; i < 18; i++) {
+            if (ports[port].items[i].unk_30 != 0) {
+                func_87F0F234(port, &ports[port].items[i].unk_30);
+            }
+        }
+        if (func_81A00074((u8 *)&D_87F15BB0, port)) {
+            result = 1;
+        }
+    } else {
+        result = 1;
+    }
+    return result;
+}
 
 s8 GbTower_SetPollMask(s32);
 extern void func_80057944(s32);
