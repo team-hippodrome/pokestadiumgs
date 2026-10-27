@@ -322,9 +322,6 @@ void func_8AF221C4(void) {
     }
 }
 
-extern u8 * D_8AF2BDD8;
-extern s16 D_8AF3A082;
-extern u8 * D_8AF3A198;
 s32 func_8AF2228C(void) {
     u8 *entry;
     u8 *party;
