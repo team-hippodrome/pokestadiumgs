@@ -11,3 +11,14 @@ The first candidate preserves all 66 original executable words and the 40-byte f
 Fleet has no exact owner attempt or regional catalog record for this source. References in failed `func_86405F28` and `func_86107A20` drafts concern their callers and are not attempts of this owner; their inconsistent helper declarations do not override actual compiled definitions. All earlier raw/normalized plateaus and shared-tail exclusions remain in force.
 
 Validation: `make rom COMPARE=1 -j2` and explicit `md5sum -c baseroms/us/checksum.md5` pass with retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No CI, verification, tools, data, layout, linker or symbol-table changes are included.
+
+## 2026-10-27 — `func_87F005F0` state reset accepted
+
+`func_87F005F0(f32 arg0, f32 arg1)` is now C: **38 words / 152 bytes**,
+frame 0x18. Through the state pointer `D_87F11768` it sets +4 to five times
++0, +8 to 2, +12 to 0, +16 to `+4 / +0` and the float +20 to 0.0f. It then
+forwards both float arguments, still in `$f12`/`$f14`, to
+`func_87F00534(arg0, arg1)`. The file's existing
+`extern void func_87F005F0(f32, f32)` and callers establish the two
+parameters; there is no `mov.s` because the registers are untouched. The
+raw-offset spelling follows `func_87F00030`.

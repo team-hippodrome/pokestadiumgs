@@ -65,7 +65,15 @@ void func_87F00534(f32 arg0, f32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F005F0.s")
+void func_87F00534(f32 arg0, f32 arg1);
+void func_87F005F0(f32 arg0, f32 arg1) {
+    *(s32 *)((u8 *)D_87F11768 + 4) = *(s32 *)D_87F11768 * 5;
+    *(s32 *)((u8 *)D_87F11768 + 8) = 2;
+    *(s32 *)((u8 *)D_87F11768 + 12) = 0;
+    *(s32 *)((u8 *)D_87F11768 + 16) = *(s32 *)((u8 *)D_87F11768 + 4) / *(s32 *)D_87F11768;
+    *(f32 *)((u8 *)D_87F11768 + 20) = 0.0f;
+    func_87F00534(arg0, arg1);
+}
 
 extern void func_87F005F0(f32, f32);
 void func_87F00688(void) {
