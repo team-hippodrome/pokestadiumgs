@@ -320,7 +320,6 @@ void func_8F100740(Fragment69MenuState *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8F104010;
 extern s32 D_8F1DECA4;
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void Camera_ComputeEyeFromAngles(f32 *, s32 *, f32, s16, s32);
@@ -331,7 +330,7 @@ void func_8F100C64(f32 arg0, void *arg1) {
     s32 output[3];
 
     Vec3f_SetComponentsDuplicate(position, 0.0f, 250.0f / arg0, 0.0f);
-    Camera_ComputeEyeFromAngles(position, output, D_8F104010 / arg0, *(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2));
+    Camera_ComputeEyeFromAngles(position, output, 1.65e+03f / arg0, *(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2));
     func_80038E14(*(s32 *)((u8 *)(u32)D_8F1DECA4 + 0xC), output[0], output[1], output[2], position[0], position[1], position[2], 0);
     GeoCamera_SetPerspective((void *)(u32)*(s32 *)((u8 *)(u32)D_8F1DECA4 + 0xC), 30.0f, 100.0f / arg0, 12800.0f / arg0);
 }

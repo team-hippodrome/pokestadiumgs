@@ -1513,6 +1513,8 @@
     - [0x358830, textbin, fragments/69/fragment69_header]
     - [0x358850, c,       fragments/69/fragment69_code]
     - [0x35C130, data,    fragments/69/fragment69_data]
+    - [0x35C840, .rodata, fragments/69/fragment69_code] # Jump tables, float literals.
+    - [0x35C8D0, rodata]
   
   - name: fragment70
     type: code
