@@ -6,11 +6,84 @@
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E6D4.s")
+typedef struct unk_D_8291BC50 {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ u8 unk_06[2];
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ s16 unk_0C;
+    /* 0x0E */ s16 unk_0E;
+    /* 0x10 */ u16 unk_10;
+    /* 0x12 */ u16 unk_12;
+} unk_D_8291BC50;
+
+extern unk_D_8291BC50 D_8291BC50;
+
+void func_8290E6D4(void) {
+    D_8291BC50.unk_0E++;
+    switch (D_8291BC50.unk_12) {
+        case 3:
+            D_8291BC50.unk_12 = 4;
+            D_8291BC50.unk_0E = 0;
+            break;
+        case 4:
+            D_8291BC50.unk_12 = 5;
+            D_8291BC50.unk_0E = 0;
+            break;
+        case 5:
+            D_8291BC50.unk_12 = 0;
+            D_8291BC50.unk_0E = 0;
+            break;
+        case 0:
+            D_8291BC50.unk_12 = 1;
+            D_8291BC50.unk_0E = 0;
+            break;
+        case 1:
+            D_8291BC50.unk_12 = 2;
+            D_8291BC50.unk_0E = 0;
+            break;
+        case 2:
+            D_8291BC50.unk_12 = 3;
+            D_8291BC50.unk_0E = 0;
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E76C.s")
+void func_8290E76C(void) {
+    D_8291BC50.unk_0C++;
+    switch (D_8291BC50.unk_10) {
+        case 0:
+            if (D_8291BC50.unk_0C % 30 == 0) {
+                D_8291BC50.unk_10 = 1;
+                D_8291BC50.unk_0C = 0;
+            }
+            break;
+        case 1:
+            D_8291BC50.unk_10 = 2;
+            D_8291BC50.unk_0C = 0;
+            break;
+        case 2:
+            D_8291BC50.unk_10 = 3;
+            D_8291BC50.unk_0C = 0;
+            break;
+        case 3:
+            D_8291BC50.unk_10 = 4;
+            D_8291BC50.unk_0C = 0;
+            break;
+        case 4:
+            D_8291BC50.unk_10 = 5;
+            D_8291BC50.unk_0C = 0;
+            break;
+        case 5:
+            D_8291BC50.unk_10 = 0;
+            D_8291BC50.unk_0C = 0;
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

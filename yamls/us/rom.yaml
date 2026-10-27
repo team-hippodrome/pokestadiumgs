@@ -1451,7 +1451,7 @@
     - [0x354090, .rodata, fragments/67/fragment67_344D70] # jtbl_82917590 (func_82908F60's switch table; jtbl_datamig.py)
     - [0x354130, rodata]
     - [0x354230, .rodata, fragments/67/fragment67_34AB40] # spline trio literals (datamig)
-    - [0x354240, rodata]
+    - [0x354240, .rodata, fragments/67/fragment67_34B0F0] # D_82917740/D_82917744 format strings and jtbl_82917748..jtbl_829177A4, all referenced only by this file
     - [0x3542C0, .rodata, fragments/67/fragment67_34C8B0] # format strings and jtbl_829177CC
     - [0x3542F0, rodata]
 
