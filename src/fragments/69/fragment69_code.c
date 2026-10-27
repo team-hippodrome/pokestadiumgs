@@ -59,15 +59,6 @@ s32 func_8F100020(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-s32 D_8F103A54 = 0x1E00;
-s32 D_8F103A58 = 0x9600;
-extern u8 D_8F103AE8[], D_8F103AF8[], D_8F103B0C[], D_8F103B1C[];
-u8 *D_8F103A5C[] = { D_8F103AE8, D_8F103AF8 };
-u8 *D_8F103A64[] = { D_8F103B0C, D_8F103B1C };
-extern u8 D_8F103B64[], D_8F103B78[], D_8F103B88[], D_8F103B9C[], D_8F103BB8[], D_8F103BC4[], D_8F103BCC[], D_8F103BD4[], D_8F103BDC[], D_8F103BE8[], D_8F103C00[], D_8F103C10[];
-u8 *D_8F103A6C[] = { D_8F103B64, D_8F103B78, D_8F103B88, D_8F103B9C, D_8F103BB8, D_8F103BC4, D_8F103BCC, D_8F103BD4, D_8F103BDC, D_8F103BE8, D_8F103C00, D_8F103C10 };
-extern u8 D_8F103C1C[], D_8F103C2C[], D_8F103C38[], D_8F103C4C[], D_8F103C60[], D_8F103C64[], D_8F103C70[], D_8F103C7C[], D_8F103C84[], D_8F103C8C[], D_8F103C98[], D_8F103CA8[];
-u8 *D_8F103A9C[] = { D_8F103C1C, D_8F103C2C, D_8F103C38, D_8F103C4C, D_8F103C60, D_8F103C64, D_8F103C70, D_8F103C7C, D_8F103C84, D_8F103C8C, D_8F103C98, D_8F103CA8, NULL };
 #endif
 
 #ifdef VERSION_US
@@ -266,15 +257,52 @@ void func_8F1003EC(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F10049C.s")
-#endif
-
-#ifdef VERSION_US
 typedef struct {
     s16 state;
     s16 timer;
     s16 selected;
 } Fragment69MenuState;
+typedef struct {
+    u8 r, g, b;
+} Fragment69Rgb;
+#endif
+
+#ifdef VERSION_US
+extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
+// The two colors are initialized locals: IDO copies them from anonymous .data templates, which
+// is why their bytes sit between func_8F100020's static and the tables below.
+void func_8F10049C(Fragment69MenuState *arg0) {
+    s32 index;
+    s16 *rect;
+    s32 width;
+    s32 height;
+    s32 x;
+    s32 y;
+
+    index = ((u8 *)arg0 - D_8F1DF270) / 6;
+    rect = D_8F1039C8[index];
+    width = (rect[2] * arg0->timer) / 8;
+    height = (rect[3] * arg0->timer) / 8;
+    x = (rect[2] - width) / 2 + rect[0];
+    y = (rect[3] - height) / 2 + rect[1];
+    {
+        Fragment69Rgb top = { 0, 0, 30 };
+        Fragment69Rgb bottom = { 0, 0, 150 };
+
+        Ui_DrawGradientPanel(x, y, width, height, (s32)&top, (s32)&bottom);
+    }
+}
+
+extern u8 D_8F103AE8[], D_8F103AF8[], D_8F103B0C[], D_8F103B1C[];
+u8 *D_8F103A5C[] = { D_8F103AE8, D_8F103AF8 };
+u8 *D_8F103A64[] = { D_8F103B0C, D_8F103B1C };
+extern u8 D_8F103B64[], D_8F103B78[], D_8F103B88[], D_8F103B9C[], D_8F103BB8[], D_8F103BC4[], D_8F103BCC[], D_8F103BD4[], D_8F103BDC[], D_8F103BE8[], D_8F103C00[], D_8F103C10[];
+u8 *D_8F103A6C[] = { D_8F103B64, D_8F103B78, D_8F103B88, D_8F103B9C, D_8F103BB8, D_8F103BC4, D_8F103BCC, D_8F103BD4, D_8F103BDC, D_8F103BE8, D_8F103C00, D_8F103C10 };
+extern u8 D_8F103C1C[], D_8F103C2C[], D_8F103C38[], D_8F103C4C[], D_8F103C60[], D_8F103C64[], D_8F103C70[], D_8F103C7C[], D_8F103C84[], D_8F103C8C[], D_8F103C98[], D_8F103CA8[];
+u8 *D_8F103A9C[] = { D_8F103C1C, D_8F103C2C, D_8F103C38, D_8F103C4C, D_8F103C60, D_8F103C64, D_8F103C70, D_8F103C7C, D_8F103C84, D_8F103C8C, D_8F103C98, D_8F103CA8, NULL };
+#endif
+
+#ifdef VERSION_US
 extern s16 D_8F1039C8[][5];
 extern u8 D_8F1039E8[];
 extern u8 D_8F103A04[];
