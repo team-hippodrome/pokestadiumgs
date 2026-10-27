@@ -1,5 +1,7 @@
 #include "global.h"
 
+typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
+
 
 #ifdef VERSION_US
 extern Gfx *D_800D0510;
@@ -293,7 +295,6 @@ void D_867068E4(void) {
 
 #ifdef VERSION_US
 typedef struct { u8 pad38[0x38]; s32 index; u8 pad3C[0x0C]; f32 out48; f32 out4C; f32 out50; f32 in54; f32 out58; } State86706A30;
-typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
 extern State86706A30 *D_87F119DC;
 extern f32 D_8670C974;
 extern Row86706A30 D_86710C20[];
