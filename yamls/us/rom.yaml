@@ -1657,6 +1657,8 @@
     - [0x3D9A00, data,    fragments/79/fragment79_data]
     - [0x3F83E0, .rodata, fragments/79/fragment79_36F8B0] # Jump tables, float literals.
     - [0x3F8480, rodata]
+    - [0x3F84E0, .rodata, fragments/79/fragment79_375530] # Jump tables, float literals.
+    - [0x3F8530, rodata]
     - [0x3F86C0, .rodata, fragments/79/fragment79_37A6E0]
     - [0x3F8830, .rodata, fragments/79/fragment79_380210]
     - [0x3F8850, .rodata, fragments/79/fragment79_380A00]
