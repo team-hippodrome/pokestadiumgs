@@ -929,6 +929,8 @@
     - [0x1A6E00, .rodata, fragments/31/fragment31_1736F0] # jtbl_88233B80
     - [0x1A6E60, .rodata, fragments/31/fragment31_175260] # D_88233BE0..BF8 constants and jtbl_88233C00/C14/D3C/D50, all referenced only by this file
     - [0x1A6FF0, rodata]
+    - [0x1A7120, .rodata, fragments/31/fragment31_17B150] # Strings, jump tables.
+    - [0x1A71D0, rodata]
     - [0x1A7350, .rodata, fragments/31/fragment31_18F6D0] # Jump tables.
     - [0x1A73D0, rodata]
     - [0x1A7420, .rodata, fragments/31/fragment31_190BB0] # jtbl_882341A0, 16-byte aligned start; ends mid jtbl_882341B8
