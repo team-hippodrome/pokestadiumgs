@@ -390,7 +390,27 @@ s32 func_82908A54(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_82908B60.s")
+typedef struct unk_D_8291B880 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 unk_02;
+    /* 0x03 */ u8 unk_03;
+    /* 0x04 */ f32 unk_04;
+    /* 0x08 */ u8 unk_08[0x38];
+} unk_D_8291B880; // size = 0x40
+
+// File-scope bss, pinned at 0x8291B880 by linker_scripts/us/datamig_bss.ld.
+static unk_D_8291B880 D_8291B880[14];
+
+void func_82908B60(void) {
+    s32 i;
+
+    for (i = 0; i < 14; i++) {
+        D_8291B880[i].unk_00 = 0;
+        D_8291B880[i].unk_02 = 0;
+        D_8291B880[i].unk_04 = 10.0f;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -453,7 +473,6 @@ void func_82908E6C(f32 *arg0, const f32 *arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8291B880;
 extern f32 D_82916AF8;
 extern f32 D_82916B08;
 extern f32 D_82916B18;
@@ -463,14 +482,14 @@ extern f32 D_82916B38;
 void func_82908F60(s32 arg0, s32 arg1) {
     switch (arg0) {
         case 0:
-            func_82908E6C((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916AF8);
+            func_82908E6C((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916AF8);
             return;
         case 1:
         case 2:
         case 3:
         case 4:
         case 5:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B08, &D_82916AF8, 5);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B08, &D_82916AF8, 5);
             return;
         case 6:
         case 7:
@@ -478,11 +497,11 @@ void func_82908F60(s32 arg0, s32 arg1) {
         case 9:
         case 10:
         case 11:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B18, &D_82916B08, 6);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B18, &D_82916B08, 6);
             return;
         case 12:
         case 13:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B28, &D_82916B18, 2);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B28, &D_82916B18, 2);
             return;
         case 14:
         case 15:
@@ -495,7 +514,7 @@ void func_82908F60(s32 arg0, s32 arg1) {
         case 22:
         case 23:
         case 24:
-            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + &D_8291B880), &D_82916B38, &D_82916B28, 10);
+            func_82908CF4((f32 *)((arg1 << 6) + 0x24 + (u8 *)D_8291B880), &D_82916B38, &D_82916B28, 10);
             /* fallthrough */
         default:
             return;
@@ -504,7 +523,6 @@ void func_82908F60(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8291B880;
 extern f32 D_82916AD4;
 extern f32 D_82916AE0;
 extern f32 D_82916AEC;
@@ -512,7 +530,7 @@ extern f32 D_82916AEC;
 void func_829090A0(s32 arg0, s32 arg1) {
     switch (arg0) {
         case 0:
-            func_82908E50((f32 *)((arg1 << 6) + 0x18 + &D_8291B880), &D_82916AD4);
+            func_82908E50((f32 *)((arg1 << 6) + 0x18 + (u8 *)D_8291B880), &D_82916AD4);
             return;
         case 1:
         case 2:
@@ -525,12 +543,12 @@ void func_829090A0(s32 arg0, s32 arg1) {
         case 9:
         case 10:
         case 11:
-            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + &D_8291B880), &D_82916AE0, &D_82916AD4, 11);
+            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + (u8 *)D_8291B880), &D_82916AE0, &D_82916AD4, 11);
             return;
         case 12:
         case 13:
         case 14:
-            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + &D_8291B880), &D_82916AEC, &D_82916AE0, 3);
+            func_82908BD8((f32 *)((arg1 << 6) + 0x18 + (u8 *)D_8291B880), &D_82916AEC, &D_82916AE0, 3);
             /* fallthrough */
         default:
             return;
@@ -547,7 +565,6 @@ void func_829090A0(s32 arg0, s32 arg1) {
 extern s16 D_8291B862;
 extern u8 D_82916EB8;
 extern f32 D_82917694;
-extern u8 D_8291B880;
 extern s32 func_80001FF0(void);
 extern void func_82908E90(u8, s32);
 extern void func_829090A0(s32, s32);
@@ -571,7 +588,7 @@ void func_829092AC(void)
   var_s1 = 0;
   if (var_fp > 0)
   {
- var_s5 = 0; do { temp_s2 = *((s16 *) ((((u8 *) D_82913210) + (D_8291A7C0.unk_1068 * 0x22)) + var_s5)); temp_s0 = (var_s1 << 6) + (&D_8291B880); if (temp_s2 > 0) { switch (*((u8 *) temp_s0)) { case 0:
+ var_s5 = 0; do { temp_s2 = *((s16 *) ((((u8 *) D_82913210) + (D_8291A7C0.unk_1068 * 0x22)) + var_s5)); temp_s0 = (var_s1 << 6) + ((u8 *)D_8291B880); if (temp_s2 > 0) { switch (*((u8 *) temp_s0)) { case 0:
             var_b862 = 1;
             if (func_80001FF0() == 0x32)
           {
