@@ -49,22 +49,29 @@ extern u8 D_82103DE0[];
 s32 func_82100514(s32 arg0, void *arg1, void *arg2) {
     u8 *var_v1;
     u8 *var_v0;
+
     if (arg0 != 0 && arg0 == 1) {
-        gSPDisplayList(((Gfx **)(&D_800D0510))[0]++, D_80094E78);
-        gDPSetCombine(((Gfx **)(&D_800D0510))[0]++, 0xFC30FE61, 0x55FEF77B);
-        gDPSetRenderMode(((Gfx **)(&D_800D0510))[0]++, 0x0F0A4000, 0);
+        gSPDisplayList(((Gfx **)&D_800D0510)[0]++, D_80094E78);
+        gDPSetCombine(((Gfx **)&D_800D0510)[0]++, 0xFC30FE61, 0x55FEF77B);
+        gDPSetRenderMode(((Gfx **)&D_800D0510)[0]++, 0x0F0A4000, 0);
         var_v1 = (arg2 != NULL) ? (u8 *)arg2 + 0x28 : D_82103DE0;
         var_v0 = (arg2 != NULL) ? (u8 *)arg2 + 0x2C : D_82103DE0;
-        func_82100020(*(s16 *)((u8 *)arg1 + 8),
-                      *(s16 *)((u8 *)arg1 + 0xA),
-                      *(s16 *)((u8 *)arg1 + 0xC),
-                      *(s16 *)((u8 *)arg1 + 0xE), var_v1, var_v0);
-        gSPDisplayList(((Gfx **)(&D_800D0510))[0]++, D_80094E38);
-        gDPSetRenderMode(((Gfx **)(&D_800D0510))[0]++, 0x0F0A4000, 0);
-        func_82100214(*(s16 *)((u8 *)arg1 + 8),
-                      *(s16 *)((u8 *)arg1 + 0xA),
-                      *(s16 *)((u8 *)arg1 + 0xC),
-                      *(s16 *)((u8 *)arg1 + 0xE));
+        func_82100020(
+            *(s16 *)((u8 *)arg1 + 8),
+            *(s16 *)((u8 *)arg1 + 0xA),
+            *(s16 *)((u8 *)arg1 + 0xC),
+            *(s16 *)((u8 *)arg1 + 0xE),
+            var_v1,
+            var_v0
+        );
+        gSPDisplayList(((Gfx **)&D_800D0510)[0]++, D_80094E38);
+        gDPSetRenderMode(((Gfx **)&D_800D0510)[0]++, 0x0F0A4000, 0);
+        func_82100214(
+            *(s16 *)((u8 *)arg1 + 8),
+            *(s16 *)((u8 *)arg1 + 0xA),
+            *(s16 *)((u8 *)arg1 + 0xC),
+            *(s16 *)((u8 *)arg1 + 0xE)
+        );
     }
     return 0;
 }

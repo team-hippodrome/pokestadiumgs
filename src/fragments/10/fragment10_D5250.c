@@ -148,24 +148,32 @@ void func_82801BE8(u8 *arg0, void *arg1) {
     func_81801420();
     func_82801278(arg0, 0);
     switch (arg0[0xC]) {
-    case 0: func_828016AC(arg0); break;
-    case 1: func_828016BC(arg0); break;
-    case 2: func_82801774(arg0); break;
-    case 3: func_828019B4(arg0); break;
+        case 0:
+            func_828016AC(arg0);
+            break;
+        case 1:
+            func_828016BC(arg0);
+            break;
+        case 2:
+            func_82801774(arg0);
+            break;
+        case 3:
+            func_828019B4(arg0);
+            break;
     }
     func_82801A08(arg0);
     for (i = 0; i < 4; i++) {
         func_82800E94(arg0, coordinates, i);
-        func_81600A34(arg1, (u8 *)arg0 + i, 0, coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
+        func_81600A34(arg1, arg0 + i, 0, coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
     }
     if (*(s32 *)(arg0 + 0x10) >= 0) {
         step = func_816092FC() / 20.0f;
-        if (*(f32 *)(arg0 + 0x94) + step < (f32)*(s32 *)(arg0 + 0x10)) {
+        if (*(f32 *)(arg0 + 0x94) + step < *(s32 *)(arg0 + 0x10)) {
             *(f32 *)(arg0 + 0x94) += step;
-        } else if ((f32)*(s32 *)(arg0 + 0x10) < *(f32 *)(arg0 + 0x94) - step) {
+        } else if (*(s32 *)(arg0 + 0x10) < *(f32 *)(arg0 + 0x94) - step) {
             *(f32 *)(arg0 + 0x94) -= step;
         } else {
-            *(f32 *)(arg0 + 0x94) = (f32)*(s32 *)(arg0 + 0x10);
+            *(f32 *)(arg0 + 0x94) = *(s32 *)(arg0 + 0x10);
         }
     }
 }

@@ -277,12 +277,49 @@ void DeckMenu_HandleSettingsInput_fragment82(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D00C34.s")
 
-extern u8 D_82D06F84;
-extern u16 D_82D23D86;
 s32 func_82D010F4(void) {
-    extern u16 D_82D23D88; extern u16 D_82D23D86; extern u8 D_82D06F84;
-    s32 ret=0; s8 *p=&D_82D06F84;if((D_82D23D88&0x800)!=0){if((D_82D23D86&0xC)==0){ret=0x800;p[0]=10;}}else if((D_82D23D88&0x400)!=0){if((D_82D23D86&0xC)==0){ret=0x400;p[0]=10;}}else if((D_82D23D88&8)!=0){if((D_82D23D86&0xC04)==0){ret=0x800;p[0]=2;}}else if((D_82D23D88&0x400)!=0){if((D_82D23D86&0xC08)==0){ret=0x4;p[0]=2;}}
-    p[0]--;if(p[0]<=0){p[0]=0;if(D_82D23D86&8){p[0]=2;ret=0x800;}else if(D_82D23D86&4){p[0]=2;ret=0x400;}else if(D_82D23D86&0x800){p[0]=4;ret=0x800;}else if(D_82D23D86&0x400){p[0]=4;ret=0x400;}}
+    extern u16 D_82D23D88;
+    extern u16 D_82D23D86;
+    extern u8 D_82D06F84;
+    s32 ret = 0;
+    s8 *p = &D_82D06F84;
+
+    if ((D_82D23D88 & 0x800) != 0) {
+        if ((D_82D23D86 & 0xC) == 0) {
+            ret = 0x800;
+            p[0] = 10;
+        }
+    } else if ((D_82D23D88 & 0x400) != 0) {
+        if ((D_82D23D86 & 0xC) == 0) {
+            ret = 0x400;
+            p[0] = 10;
+        }
+    } else if ((D_82D23D88 & 8) != 0) {
+        if ((D_82D23D86 & 0xC04) == 0) {
+            ret = 0x800;
+            p[0] = 2;
+        }
+    } else if ((D_82D23D88 & 0x400) != 0 && (D_82D23D86 & 0xC08) == 0) {
+        ret = 4;
+        p[0] = 2;
+    }
+    p[0]--;
+    if (p[0] <= 0) {
+        p[0] = 0;
+        if (D_82D23D86 & 8) {
+            p[0] = 2;
+            ret = 0x800;
+        } else if (D_82D23D86 & 4) {
+            p[0] = 2;
+            ret = 0x400;
+        } else if (D_82D23D86 & 0x800) {
+            p[0] = 4;
+            ret = 0x800;
+        } else if (D_82D23D86 & 0x400) {
+            p[0] = 4;
+            ret = 0x400;
+        }
+    }
     return ret;
 }
 

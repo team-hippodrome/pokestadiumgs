@@ -258,19 +258,19 @@ void func_87E14D24(void) {
     s32 temp_v0;
     f32 var_fv0;
     f32 var_fv1;
-    void *temp_v0_2;
+    void *temp_v0_2; // FAKE?: permuter temporary temp_v0_2; diff score 75 without it.
 
-    temp_v0_2 = (*(s32 *)((u8 *)(D_87F119DC) + (0x20)));
-    func_87E13924(D_87F119DC, (*(s32 *)((u8 *)(temp_v0_2) + (0))));
-    *((u8 *) D_87F119DC + 0x41) = 0xFF;
-    var_fv0 = (f32) (*((u8 *) D_87F119DC + 0xC7)) / 255.0f;
+    temp_v0_2 = *(s32 *)((u8 *)D_87F119DC + 0x20);
+    func_87E13924(D_87F119DC, *(s32 *)temp_v0_2);
+    *((u8 *)D_87F119DC + 0x41) = 0xFF;
+    var_fv0 = *((u8 *)D_87F119DC + 0xC7) / 255.0f;
     var_fv1 = (1.0f - var_fv0) * 220.0f;
     if (var_fv1 >= 0.0f) {
-        temp_v0 = (s32) (var_fv1 + 0.5f);
+        temp_v0 = var_fv1 + 0.5f;
     } else {
-        temp_v0 = (s32) (var_fv1 - 0.5f);
+        temp_v0 = var_fv1 - 0.5f;
     }
-    *((u8 *) D_87F119DC + 0xC7) = 0xDC - temp_v0;
+    *((u8 *)D_87F119DC + 0xC7) = 220 - temp_v0;
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14E08.s")
@@ -339,20 +339,20 @@ void func_87E15504(void *arg0, s32 arg1) {
     *(s32 *)resource = 2;
     *(f32 *)((u8 *)context + 0x10) = 0.0f;
     *(f32 *)((u8 *)context + 0x14) = 0.0f;
-    *(u8 *)((u8 *)context + 0x25) |= 1;
+    *((u8 *)context + 0x25) |= 1;
     *(f32 *)((u8 *)context + 0x18) = 0.0f;
     *(s32 *)((u8 *)arg0 + 0x80) = arg1;
     *(f32 *)((u8 *)arg0 + 0x84) = 0.0f;
     for (count = 0; count < *(s32 *)((u8 *)arg0 + 0x80); count++) {
-        entry = func_87E12070((u8 *)arg0 + 0x64, (s32)func_87E14458, count);
+        entry = func_87E12070((u8 *)arg0 + 0x64, func_87E14458, count);
         if (entry != NULL) {
-            *(void **)((u8 *)entry + 0x20) = arg0;
-            *((u8 *)entry + 0x41) = 0;
+            *(void **)(entry + 0x20) = arg0;
+            entry[0x41] = 0;
         }
     }
     func_87E15334((u8 *)arg0);
     func_87E15430(arg0);
-    func_87E13F84((s32)arg0, 0);
+    func_87E13F84(arg0, 0);
     *(s32 *)((u8 *)arg0 + 0x160) = 0;
     *(s32 *)((u8 *)arg0 + 0x164) = 0;
 }
