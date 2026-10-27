@@ -2,6 +2,11 @@
 
 
 #ifdef VERSION_US
+// Not referenced by code or data (debug format strings); they open this file's .rodata.
+const char D_8418B780[] = "maxHitWaza = %11s\n";
+const char D_8418B794[] = "now %11s atk %d dmg %d aph %d dph %d\n";
+const char D_8418B7BC[] = "candidate %11s atk %d dmg %d maph %d mdph %d val %d\n";
+const char D_8418B7F4[] = "change to %11s %3d\n";
 extern void func_84149400(void);
 extern void func_8414C18C(void);
 extern void func_8414BEB0(void);

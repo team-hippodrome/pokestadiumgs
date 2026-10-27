@@ -1679,7 +1679,8 @@
     - [0x3FA810, .rodata, fragments/79/fragment79_393CA0] # jtbl_8418AF80, jtbl_8418AFB0, jtbl_8418AFEC, jtbl_8418B008, jtbl_8418B020, jtbl_8418B0C0, jtbl_8418B0D8, jtbl_8418B0F4, jtbl_8418B10C, jtbl_8418B124, jtbl_8418B150, jtbl_8418B174, jtbl_8418B194
     - [0x3FAA50, rodata]
     - [0x3FAA60, .rodata, fragments/79/fragment79_3ADCA0] # jtbl_8418B1D0 (+13 more, incl. jtbl_8418B738/jtbl_8418B74C)
-    - [0x3FB010, rodata]
+    - [0x3FB010, .rodata, fragments/79/fragment79_3B7EA0] # Strings, jump tables, double literals.
+    - [0x3FB230, rodata]
     - [0x3FB760, .rodata, fragments/79/fragment79_3BEAF0] # labels in this range are referenced only by this file
     - [0x3FB9D0, .rodata, fragments/79/fragment79_3BF4C0] # Scoring constants and all three jump tables,720 bytes.
     - [0x3FBCA0, .rodata, fragments/79/fragment79_3C50B0] # Both selected-state jump tables,176 bytes.
