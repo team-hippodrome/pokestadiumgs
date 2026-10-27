@@ -70,11 +70,23 @@ void Gfx_DrawTexturedFrame16(s16 x, s16 y, u16 width, u16 height) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC003F8.s")
+extern u8 D_8FC02518[];
+
+// Fills the rectangle at (x, y) of size width x height, inset 8 pixels on each side,
+// with the RGBA5551 fill color func_8FC00078 packs from (r, g, b), then draws a
+// 16-pixel textured border around the full rectangle with Gfx_DrawTexturedFrame16.
+void func_8FC003F8(s16 x, s16 y, u16 width, u16 height, u8 r, u8 g, u8 b) {
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_8FC00078(r, g, b, 1);
+    gDPScisFillRectangle(D_800D0510++, x + 8, y + 8, x + width - 8, y + height - 8);
+    gSPDisplayList(D_800D0510++, D_8FC02518);
+    ParticleGfx_SetPrimColor_fragment84(0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_DrawTexturedFrame16(x, y, width, height);
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_8FC003F8(s32, s32, s32, s32, s32, s32, s32);
+extern void func_8FC003F8(s16, s16, u16, u16, u8, u8, u8);
 void func_8FC00558(void) {
     func_8FC003F8(0x3C, 0x4B, 0x91, 0x7D, 0x50, 0x50, 0xFF);
     func_8FC003F8(0xC8, 0x4B, 0x190, 0x7D, 0x50, 0x50, 0xFF);
@@ -161,7 +173,7 @@ extern Gfx *D_800D0510;
 extern void BgStage_DrawFrame(void);
 extern void func_80008648(void);
 extern void GfxImage_FillCurrent(Gfx **, s32);
-extern void func_8FC003F8(s32, s32, s32, s32, s32, s32, s32);
+extern void func_8FC003F8(s16, s16, u16, u16, u8, u8, u8);
 extern void func_8FC00558(void);
 extern void func_8FC0069C(void);
 extern void func_8FC00774(void);

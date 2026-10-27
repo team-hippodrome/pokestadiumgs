@@ -876,7 +876,33 @@ void func_8160877C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9520/func_816087C8.s")
+extern u8 D_8160C120[];
+extern u8 D_8160C124[];
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern s32 func_80064474(u8, u16);
+extern s32 func_800647C8(u8);
+// Selects the gender text shown after a Pokemon's name. func_80064474 reads the
+// species byte at D_80098313[species * 22] and the u16 at +0x16 and returns
+// 0 (genderless), 1 or 2; cases 1 and 2 use text 29 and 30 of table 13.
+// Species 29 and 32 (Nidoran female and male) whose name at +0x34 equals the
+// species name from func_800647C8 get the empty string D_8160C120 instead.
+//@src/641E0.c
+s32 func_816087C8(u8 *arg0) {
+    u8 gender;
+
+    gender = func_80064474(arg0[0], *(u16 *)(arg0 + 0x16));
+    if ((arg0[0] == 29 || arg0[0] == 32) && HAL_Strcmp((s8 *)(arg0 + 0x34), (s8 *)func_800647C8(arg0[0])) == 0) {
+        return (s32)D_8160C120;
+    }
+    switch (gender) {
+        case 0:
+            return (s32)D_8160C124;
+        case 1:
+            return func_8004C874(13, 29);
+        case 2:
+            return func_8004C874(13, 30);
+    }
+}
 
 extern s32 func_80064474(u8, u16);
 extern void func_800495BC(s32, s32, s32);

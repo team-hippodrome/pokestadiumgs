@@ -392,7 +392,12 @@ void func_8AF017A4(void) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01910.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01A0C.s")
+// Same code as fragment45's TextPreview_DrawRgba16Rect.
+//@src/fragments/45/fragment45_2251A0.c
+void func_8AF01A0C(s16 x, s16 y, s16 width, s16 height, void *image, s16 stride) {
+    gDPLoadTextureBlock(D_800D0510++, image, G_IM_FMT_RGBA, G_IM_SIZ_16b, stride, height, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + width) << 2, (y + height) << 2, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01C84.s")
 

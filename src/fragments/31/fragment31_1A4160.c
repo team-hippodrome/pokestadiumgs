@@ -38,7 +38,21 @@ void func_88230F5C(void) {
                      D_882349C0->x + D_882349C0->width, D_882349C0->y + 20);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A4160/func_88230FF4.s")
+extern s16 D_8800EF58;
+void func_88230FF4(void) {
+    s16 half;
+    s16 alpha;
+
+    // Same func_88230D80 outputs as LabPC_DrawMoveFieldValue.
+    //@src/fragments/31/fragment31_1A60F0.c
+    func_88230D80(&half, &alpha);
+    func_800496A4(4, 1);
+    if (half < D_8800EF58) {
+        func_88217DA8(D_882349C0->x, D_882349C0->y, D_882349C0->unk_00[0], D_882349C0->unk_00[1], alpha);
+    } else {
+        func_88217DA8(D_882349C0->x, D_882349C0->y, (**(u8 ***)D_882345F4)[8], (*(u8 **)D_882345F4)[4], -alpha);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A4160/func_882310A0.s")
 #endif

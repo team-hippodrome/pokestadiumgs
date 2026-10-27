@@ -76,7 +76,57 @@ s32 func_88200D04(u8 arg0) {
 }
 /* mkdraft:func_88200D04 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88200DCC.s")
+// Same 12-byte layout as LabPCStorageList in
+//@src/fragments/31/fragment31_1A5E10.c
+typedef struct LabPCStorageList {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList;
+
+extern s8 D_88006868;
+extern s32 D_88233760[];
+extern LabPCStorageList D_88234630[];
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_WriteEntries(void *, s32, u8 *);
+extern s32 func_8006229C(u8 *);
+
+// Writes each of the four D_88234630 lists whose changed flag is set back to its
+// deck: func_8006218C opens deck type D_88233760[i] (lists 0 and 1 on port
+// D_88006868, lists 2 and 3 on port 0), Deck_WriteEntries stores `count` entries
+// and func_8006229C commits the deck if it was modified and frees the handle.
+//@src/615D0.c
+void func_88200DCC(void) {
+    s32 pad[2]; // FAKE: unused 8 bytes of stack; diff score 10 without it.
+    u32 i;
+    s32 port;
+    u8 *deck;
+    LabPCStorageList *list;
+
+    for (i = 0; i < 4; i++) {
+        list = &D_88234630[i];
+        if (list->changed != 0) {
+            switch (i) {
+                case 0:
+                case 1:
+                    port = D_88006868;
+                    break;
+
+                case 2:
+                case 3:
+                    port = 0;
+                    break;
+            }
+
+            deck = func_8006218C(D_88233760[i], port, 0, 1);
+            if (deck != NULL) {
+                Deck_WriteEntries(list->entries, list->count, deck);
+                func_8006229C(deck);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88200EDC.s")
 

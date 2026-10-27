@@ -12,7 +12,49 @@ s32 func_8AF1E2F0(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20C560/func_8AF1E32C.s")
+extern u8 func_80063804(u8);
+extern s32 func_80064474(u8, u16);
+extern u8 func_8AF01654(u8);
+// Writes to arg0, terminated by -1, each species from func_80063804(1) through
+// func_80063804(251) whose nibble-packed group byte (func_8AF01654) has arg1
+// in either nibble (func_8AF1E2F0). Other than for groups 13 and 15, the
+// species must also pass func_80064474(species, 128), which returns 0 only for
+// genderless species. Group 16, also used when arg1 is 0, selects species whose
+// group byte is 0. The two nibbles look like Gen 2's two egg groups; that
+// reading is not confirmed against decoded data.
+//@src/fragments/44/fragment44_1EE290.c
+void func_8AF1E32C(s16 *arg0, u8 arg1) {
+    s32 i;
+    u8 species;
+    u8 groups;
+
+    if (arg1 == 0) {
+        arg1 = 16;
+    }
+    for (i = 0; i < 251; i++) {
+        species = func_80063804(i + 1);
+        groups = func_8AF01654(species);
+        switch (arg1) {
+            case 13:
+            case 15:
+                if (func_8AF1E2F0(groups, arg1) != 0) {
+                    *arg0++ = species;
+                }
+                break;
+            case 16:
+                if (groups == 0) {
+                    *arg0++ = species;
+                }
+                break;
+            default:
+                if (func_80064474(species, 128) != 0 && func_8AF1E2F0(groups, arg1) != 0) {
+                    *arg0++ = species;
+                }
+                break;
+        }
+    }
+    *arg0 = -1;
+}
 #endif
 
 #ifdef VERSION_US
@@ -91,5 +133,24 @@ s16 func_8AF1E840(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20C560/func_8AF1E8E4.s")
+void func_8AF1E8E4(void) {
+    u8 *state;
+    u8 *sprite;
+    s32 pad[2]; // FAKE: unused stack padding; diff score 10 without it.
+    s32 one = 1; // FAKE: always-true condition variable; diff score 23 without it and its if.
+
+    state = (u8 *)D_8AF27940;
+    sprite = state + 0x28;
+    func_8AC007B8(*(s32 *)(state + 8), *(s32 *)(state + 0xC), *(s16 *)(state + 0x28), 260);
+    if (one) {
+        func_8AF02F18(state);
+        func_8AC00738();
+    }
+    if (func_8AC06800(&D_8AF38828, *(s16 *)(sprite + 0x10)) != 0) {
+        func_8AC05F00(&D_8AF38738);
+    }
+    if (func_8AC06834(&D_8AF38828, *(s16 *)(sprite + 0x10)) != 0) {
+        func_8AC05F00(&D_8AF387B0);
+    }
+}
 #endif

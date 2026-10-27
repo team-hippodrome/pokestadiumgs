@@ -169,7 +169,29 @@ void func_88225BC0(s32 arg0) {
 
 void func_88225C20(void) { Input_SetRepeatController(D_80087200); D_880068B8 = 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88225C48.s")
+extern u8 *D_88234870;
+extern void func_88001900(void);
+void func_88225C48(void) {
+    u32 i;
+
+    Input_SetRepeatController(D_80087200);
+    func_88001900();
+    D_880068B4 = 1;
+    for (i = 0; i < *(u16 *)(D_88234870 + 0x18); i++) {
+        Util_Free((*(s32 **)(D_88234870 + 0x78))[i]);
+    }
+    for (i = 0; i < *(u16 *)(D_88234870 + 0x28); i++) {
+        Util_Free((*(s32 **)(D_88234870 + 0x7C))[i]);
+    }
+    Util_Free(*(s32 *)(D_88234870 + 0x78));
+    Util_Free(*(s32 *)(D_88234870 + 0x7C));
+    Util_Free(*(s32 *)(D_88234870 + 0x98));
+    Util_Free(*(s32 *)(D_88234870 + 0x9C));
+    Util_Free(*(s32 *)(D_88234870 + 0xA8));
+    Util_Free(*(s32 *)(D_88234870 + 0xAC));
+    Util_Free(D_88234870);
+    main_pool_pop_state(0x4C53424C);
+}
 
 extern u8 *D_88A01C30;
 extern u8 *D_88A01C34;
@@ -410,7 +432,7 @@ void func_882277F8(void) {
     Util_Free((s32)D_88234880);
 }
 
-extern void func_88001900();
+extern void func_88001900(void);
 extern void func_882277F8();
 extern void *D_88234880;
 

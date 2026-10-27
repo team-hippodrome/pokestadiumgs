@@ -26,7 +26,43 @@ void func_88207ED0(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208B38.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208FF0.s")
+// 8-byte record allocated by func_88208FF0 and published through D_8800EF54.
+typedef struct {
+    s32 unk_00; // func_88207F18(1, index) result
+    s8 delta;   // records[index].unk_10 - records[index].unk_12
+    u8 index;
+} unk_func_88208FF0;
+
+typedef struct {
+    u8 unk_00[0x10];
+    s16 unk_10;
+    s16 unk_12;
+    u8 unk_14[0x18];
+} unk_D_88234700_Record;
+
+typedef struct {
+    u8 index; // selects the entry of records read by func_88208FF0
+    u8 unk_01[7];
+    unk_D_88234700_Record records[2];
+} unk_D_88234700;
+
+extern void *Util_Malloc(s32);
+extern void func_800226C0(s32);
+extern s32 func_88207F18(s32, s32);
+extern void func_882322B8(void);
+extern void *D_8800EF54;
+extern unk_D_88234700 *D_88234700;
+void func_88208FF0(void) {
+    unk_func_88208FF0 *record;
+
+    record = Util_Malloc(sizeof(unk_func_88208FF0));
+    record->unk_00 = func_88207F18(1, D_88234700->index);
+    record->delta = D_88234700->records[D_88234700->index].unk_10 - D_88234700->records[D_88234700->index].unk_12;
+    record->index = D_88234700->index;
+    D_8800EF54 = record;
+    func_800226C0(99);
+    func_882322B8();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820908C.s")
 
@@ -45,7 +81,7 @@ void func_88207ED0(void) {
 extern void func_80049064(s32, s32, s32, s32);
 extern void func_800496A4(s32, s32);
 s32 func_8004C874(s32, s32);
-extern void *D_88234700;
+extern unk_D_88234700 *D_88234700;
 
 void func_8820B020(void) {
     func_800496A4(4, 2);

@@ -24,7 +24,41 @@ void func_8AF166E0(u8* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5, u8
     *(unk_func_8AF166E0*)(arg0 + 40) = *arg13;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF16774.s")
+extern s16 D_8AF33DC0[];
+extern s16 D_8AF340BC;
+extern u8 D_8AF341BE;
+extern u8 D_8AF341BF;
+extern u8 func_80063804(u8);
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern s16 func_8AF01530(s16);
+// Lists in D_8AF33DC0, terminated by -1, every species from func_80063804(1)
+// through func_80063804(251) whose first or second type (func_8006397C,
+// func_800639C0) maps through func_8AF01530 to arg0; D_8AF340BC counts them.
+//@src/641E0.c
+void func_8AF16774(u8 arg0) {
+    s16 *entry = D_8AF33DC0;
+    s32 i;
+    s16 species;
+    u8 type1;
+    u8 type2;
+
+    D_8AF340BC = 0;
+    for (i = 1; i < 252; i++) {
+        species = func_80063804(i);
+        type1 = func_8AF01530(func_8006397C(species));
+        type2 = func_8AF01530(func_800639C0(species));
+        if (type1 == arg0 || type2 == arg0) {
+            func_8004B7A4(species);
+            *entry = species;
+            entry++;
+            D_8AF340BC++;
+        }
+    }
+    *entry = -1;
+    D_8AF341BE = arg0;
+    D_8AF341BF = arg0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF16878.s")
 
@@ -56,7 +90,25 @@ s16 func_8AF16D2C(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF16DC8.s")
+void func_8AF16DC8(void) {
+    u8 *state;
+    u8 *sprite;
+    s32 one = 1; // FAKE: always-true condition variable; diff score 23 without it and its if.
+
+    state = D_8AF27150;
+    sprite = state + 0x28;
+    func_8AC007B8(*(s32 *)(state + 8), *(s32 *)(state + 0xC), *(s16 *)(state + 0x28), 260);
+    if (one) {
+        func_8AF02F18(state);
+        func_8AC00738();
+    }
+    if (func_8AC0665C(&D_8AF341B0, *(s16 *)(sprite + 0x10)) != 0) {
+        func_8AC05F00(&D_8AF340C0);
+    }
+    if (func_8AC0672C(&D_8AF341B0, *(s16 *)(sprite + 0x10)) != 0) {
+        func_8AC05F00(&D_8AF34138);
+    }
+}
 
 /* mkdraft:func_8AF16E60 begin */
 extern s16 *D_8AF2BA94;

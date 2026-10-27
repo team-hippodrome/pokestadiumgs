@@ -92,7 +92,29 @@ void func_8160A72C(s32 arg0) {
     } while (var_s0 != 0x4D70);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A780.s")
+s32 func_8160A780(s32 arg0, s32 slot) {
+    s32 i;
+    s32 count;
+    s32 removed;
+    u8 buffer[384];
+
+    removed = 0;
+    count = Deck_FindFirstFreeTeamSlot();
+    func_80055A74(arg0);
+    for (i = slot; i < count; i++) {
+        removed = 1;
+        _bzero(buffer, sizeof(buffer));
+        if (i + 1 < count) {
+            func_80055A9C(buffer, i + 1);
+        }
+        func_80055B14(buffer, i);
+        func_80051D64(0x10, i);
+    }
+    if (removed) {
+        func_80055028();
+    }
+    return removed;
+}
 
 s32 func_8160A844(u8 *arg0, s32 arg1, s32 arg2, s32 arg3) {
     u8 pad[4];

@@ -189,7 +189,36 @@ void func_88216520(void) {
 extern u8 *D_88234740;
 u8 *func_88216D54(s32 arg0) { switch (arg0) { case 0: case 1: return D_88234740 + 0xC4; case 2: return D_88234740 + 0xF8; } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88216D98.s")
+// Returns the start of column arg1 for entry arg0: 48, 78, then 168 plus the widths of
+// columns 2 through arg1 - 1 (the per-column widths that func_88216E28 returns).
+s32 func_88216D98(s8 arg0, s8 arg1) {
+    s16 x;
+    u32 i;
+    u8 *width;
+
+    switch (arg1) {
+        case 0:
+            x = 48;
+            break;
+        case 1:
+            x = 78;
+            break;
+        default:
+            i = 0;
+            x = 168;
+            width = D_88234740 + 5 + arg0 * 7;
+            // FAKE: guarded do-while; diff score 60 as a multi-line while (i + 2 < arg1) loop.
+            if (i + 2 < arg1) {
+                do {
+                    i++;
+                    x += *width;
+                    width++;
+                } while (i + 2 < arg1);
+            }
+            break;
+    }
+    return x;
+}
 
 extern u8 * D_88234740;
 s32 func_88216E28(s8 arg0, s8 arg1) {
