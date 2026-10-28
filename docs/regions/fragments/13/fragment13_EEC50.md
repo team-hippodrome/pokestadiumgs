@@ -1454,3 +1454,56 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_8240239C` → `Fragment13_DrawTintedPanel`.
+
+## 2026-10-28 — scrolling list renderer accepted
+
+`func_82402E28` is genuine C: **313 words / 1,252 bytes**, original frame
+**0x70**. File: **72 C / 7 function ASM**. This box adds two functions,
+**591 words / 2,364 bytes**, after the earlier two-owner checkpoint. The
+first candidate of `box3-list-reuse1` passes explicit normal host syntax and
+the authoritative sequential retail-ROM gate. Alias-related
+`relocation_drift` prevents isolated object link verification; the full-ROM
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d` is the acceptance evidence.
+
+The new tint helper supplies the correct seven-argument interface. A typed
+m2c draft becomes available after removing nine unrelated invalid extern
+prototypes from a private context copy; context cleanup does not affect the
+production compiler input. The renderer uses a real three-byte RGB struct
+assignment from `D_82407870`, retaining the original compiler-generated
+three-byte copy. All text, scissor, background, arrow, branch and clipping
+operations remain intact.
+
+The first natural body is 1,256 bytes/frame 0x78. Giving the group argument its
+actual signed halfword type removes a redundant shared narrowing spill and
+one word, yielding the correct 1,252-byte/frame-0x70 extent. The transaction
+updates the existing same-file prototype accordingly; its already-accepted
+caller remains exact. The text API is corrected to its verified
+`void func_800495F8(s32, s32, s32, const char *, ...)` definition, and the
+existing accepted text caller explicitly casts its returned string address.
+These are runner companion transactions, with no shared-header edits.
+
+A five-control calibrated spill trace preserves every complete section,
+function extent and relocation (`scratch/box3-list-observer/calibration.json`).
+It identifies the index/fraction/Y cycle. The successful source defines the
+real text index and fraction before animated Y, while the ordinary optimizer
+still emits their computations at the target's later use sites. Inline arrow
+Y expressions let their spill reuse animated Y's home. Initial pulse-to-
+triangle assignment restores the floating register roles; moving the consumed
+triangle declaration after clipping values restores its fixed home. Finally,
+calling the label getter directly in both text calls removes the transient
+label local and closes the last frame/slot residual. Every retained local
+has a real consumed value. There is no filler, fabricated argument, forced
+register, padding, manual unrolling or output rewrite.
+
+Correct gate receipt: `scratch/box3-list-reuse1/gate-0/receipt.json`.
+Normal/+20-blank whole-module controls and specifically accepted provenance:
+`scratch/box3-list-ready-controls/`. Independent full-ROM and host verification:
+`scratch/box3-list-ready-state/`. All three prior accepted owners remain
+frozen. Behavior-backed integration name suggestion:
+`Fragment13_DrawScrollingLabelPanel`. Naming/publication remain coordinator
+work.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_82402E28` → `Fragment13_DrawScrollingLabelPanel`.

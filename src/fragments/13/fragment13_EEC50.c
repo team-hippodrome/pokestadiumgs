@@ -219,14 +219,14 @@ void Fragment13_DrawColoredPanelFill(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 
 extern void func_800496A4(s32, s32);
 extern void func_8004C54C(s32, s32);
 extern s32 func_8004C8A0(void *, s32, s32, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 void func_82401DD4(s32 arg0) {
     s32 temp[32];
     s32 value;
     func_800496A4(4, 1);
     func_8004C54C(0x14, arg0);
     value = func_8004C8A0(temp, 0x40, 0x3C, 0);
-    func_800495F8(0xA0, 0x12, 1, value);
+    func_800495F8(0xA0, 0x12, 1, (const char *)(u32)value);
 }
 
 extern Gfx *D_800D0510;
@@ -479,7 +479,83 @@ void Fragment13_DrawScrollIndicatorPanel(void *arg0, void *list, f32 selection, 
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82402E28.s")
+struct Fragment13Rgb { u8 r, g, b; };
+extern struct Fragment13Rgb D_82407870;
+extern u8 D_82407874[];
+extern f32 D_82408F10;
+extern f32 D_82408F14;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void Fragment13_DrawColoredPanelFill(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4);
+extern void func_800496A4(s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern s32 func_81600DA8(void *, void *);
+extern void func_82401198(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void Fragment13_DrawTintedPanel(void *context, s32 x_center, s32 y_center, u16 *size, void *selector, f32 amount, u8 *color);
+extern s32 func_824029E4(s32 arg0, s16 arg1);
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern Gfx * D_800D0510;
+extern s32 D_8240784C;
+extern s32 D_82407850;
+void Fragment13_DrawScrollingLabelPanel(s32 context, void *list, f32 selection, s16 group, f32 amount, s32 base_y, s32 show, s32 direction) {
+    s32 y;
+    s32 x;
+    s32 index;
+    f32 fraction;
+    struct Fragment13Rgb tint;
+    f32 pulse;
+    s32 clip_y;
+    s32 clip_height;
+    f32 triangle;
+    s32 text_y;
+    tint = D_82407870;
+    index = (s32)selection;
+    fraction = selection - (f32)index;
+    y = (s32)((f32)(base_y - 240) * amount + 240.0f);
+    if (y < 241) {
+        if (func_81600DA8((void *)context, (void *)3)) {
+            func_82401198(90, y, 140, 22);
+            clip_y = y + 2;
+            clip_height = 222 - y;
+            if (clip_y < 240 && clip_height >= 2) {
+                Fragment13_DrawColoredPanelFill(92, clip_y, 134, 16, D_82407874);
+                func_80006F70(&D_800D0510, 92, clip_y, 134, clip_height);
+                func_800498C4();
+                func_800496A4(2, 1);
+                text_y = y + 4;
+                func_800495F8((s32)(160.0f - 140.0f * fraction), text_y, 1, (const char *)(u32)Fragment13_GetGroupedItemLabel(list, group, (s16)index));
+                if (index < func_824029E4((s32)list, group)) {
+                    func_800495F8((s32)((1.0f - fraction) * 140.0f + 160.0f), text_y, 1, (const char *)(u32)Fragment13_GetGroupedItemLabel(list, group, (s16)(index + 1)));
+                }
+                func_800499EC();
+                func_80006F70(&D_800D0510, 0, 0, 320, 240);
+            }
+        }
+        if (show) {
+            index = -(s32)*(u16 *)D_8240784C;
+            x = (s32)((f32)(76 - index) * amount + (f32)index);
+            index = (s32)selection;
+            fraction = selection - (f32)index;
+            pulse = fraction > 0.5f ? 1.0f - fraction : fraction;
+            triangle = pulse;
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            if (direction) {
+                pulse = index > 0 ? 0.0f : -1.0f + fraction;
+                Fragment13_DrawTintedPanel((void *)context, x, base_y + 2, (u16 *)D_8240784C, (void *)11, pulse, (u8 *)&tint);
+                pulse = index < 6 ? triangle : index >= 7 ? D_82408F10 : -fraction;
+                Fragment13_DrawTintedPanel((void *)context, (s32)(-90.0f * amount + 320.0f), base_y + 2, (u16 *)D_82407850, (void *)10, pulse, (u8 *)&tint);
+            } else {
+                pulse = index > 0 ? triangle : -1.0f + fraction;
+                Fragment13_DrawTintedPanel((void *)context, x, base_y + 2, (u16 *)D_8240784C, (void *)11, pulse, (u8 *)&tint);
+                pulse = index < 6 ? 0.0f : index >= 7 ? D_82408F14 : -fraction;
+                Fragment13_DrawTintedPanel((void *)context, (s32)(-90.0f * amount + 320.0f), base_y + 2, (u16 *)D_82407850, (void *)10, pulse, (u8 *)&tint);
+            }
+            gSPDisplayList(D_800D0510++, D_80094F50);
+        }
+    }
+}
 
 struct Fragment13GroupCountSpan { u16 count; u8 rest[58]; };
 extern struct Fragment13GroupCountSpan D_824073AA[];
@@ -1360,9 +1436,9 @@ s32 func_82406CCC(u8 *arg0) {
     return *(s32 *)(arg0 + 0x1E4) == 4;
 }
 
-extern void func_82402E28(s32, void *, f32, s32, f32, s32, s32, s32);
+extern void Fragment13_DrawScrollingLabelPanel(s32, void *, f32, s16, f32, s32, s32, s32);
 extern void func_82403624(s32, void *, s32, f32, s32, s32, f32);
-void func_82406CDC(void *arg0, s32 arg1) { f32 scale; s32 state; scale = D_8160BD08(*(f32 *)((u8 *)arg0 + 0x204) / 10.0f); state = *(s32 *)((u8 *)arg0 + 0x1EC); switch (state) { case 0: return; case 1: func_82402E28(arg1, (u8 *)arg0 + 0x54, func_82407088(arg0), -1, scale, 0xB8, 1, *(s32 *)((u8 *)arg0 + 0x1E0) < *(s32 *)((u8 *)arg0 + 0x1DC)); return; case 2: func_82403624(arg1, arg0, *(s32 *)((u8 *)arg0 + 0x1DC), scale, *(s32 *)((u8 *)arg0 + 0x1D4), *(s32 *)((u8 *)arg0 + 0x1D8), *(f32 *)((u8 *)arg0 + 0x208) / 6.0f); func_82402E28(arg1, (u8 *)arg0 + 0x54, Fragment13_GetInterpolatedListPosition(arg0), (s16)*(s32 *)((u8 *)arg0 + 0x1DC), scale, 0x9A, 0, *(s32 *)((u8 *)arg0 + 0x1E0) < *(s32 *)((u8 *)arg0 + 0x1DC)); return; } }
+void func_82406CDC(void *arg0, s32 arg1) { f32 scale; s32 state; scale = D_8160BD08(*(f32 *)((u8 *)arg0 + 0x204) / 10.0f); state = *(s32 *)((u8 *)arg0 + 0x1EC); switch (state) { case 0: return; case 1: Fragment13_DrawScrollingLabelPanel(arg1, (u8 *)arg0 + 0x54, func_82407088(arg0), -1, scale, 0xB8, 1, *(s32 *)((u8 *)arg0 + 0x1E0) < *(s32 *)((u8 *)arg0 + 0x1DC)); return; case 2: func_82403624(arg1, arg0, *(s32 *)((u8 *)arg0 + 0x1DC), scale, *(s32 *)((u8 *)arg0 + 0x1D4), *(s32 *)((u8 *)arg0 + 0x1D8), *(f32 *)((u8 *)arg0 + 0x208) / 6.0f); Fragment13_DrawScrollingLabelPanel(arg1, (u8 *)arg0 + 0x54, Fragment13_GetInterpolatedListPosition(arg0), (s16)*(s32 *)((u8 *)arg0 + 0x1DC), scale, 0x9A, 0, *(s32 *)((u8 *)arg0 + 0x1E0) < *(s32 *)((u8 *)arg0 + 0x1DC)); return; } }
 
 extern void func_8000766C(Gfx **, s32, s32, s32, s32);
 extern void Geo_RenderRootNode(s32);

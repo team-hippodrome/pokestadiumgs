@@ -326,3 +326,85 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_8AE05118` → `Fragment46_DrawSelectionFrame`.
+
+
+## 2026-10-28 third native box (after c227439c)
+
+The oldest `requeue`, `func_8AE01738`, was resumed first. Promoting either
+snapshot to a word and narrowing only at the calls adds word stores and
+conversion instructions (best new raw 0.8571, 112 versus 108 bytes). A real
+info-buffer pointer used by both calls was then introduced at four declaration
+positions, with assignment and declaration initialization variants. Those
+retain the 108-byte shape; the best still has a 0x20 rather than 0x28 frame.
+The pointer's earlier homes move the snapshots rather than solving the return
+value's home. No frame filler was introduced. Evidence:
+`scratch/b3-snapshot17-widths/result.json`,
+`scratch/b3-snapshot17-buffer/result.json`. Next: inspect compiler home-slot
+allocation for the three live saved values against a known matching native
+small caller; source scope and promoted-snapshot families now have direct
+negative evidence.
+
+`func_8AE017A4` remains `requeue`: independent C89 clearing/search cursor
+scopes, postfix versus explicit advancement, and end equality versus ordered
+comparison did not improve the 288-byte, raw 0.9306 basin. A word parameter
+with a real narrow selection local also worsens it. The closest source still
+shares the initial address in `$v1`; retail materializes `$s0` and later
+rematerializes it. Evidence: `scratch/b3-selection17a-lifetimes/result.json`,
+`scratch/b3-selection17a-argument/result.json`. Next: inspect the first
+address web and clear-loop/search-loop relationship rather than retrying
+those scopes or the argument-width change.
+
+A complete normalized diagnostic of `func_8AE03D94` corrects the earlier
+size interpretation: the two-instruction size deficit is retail's trailing
+second `jr $ra; nop` at 0x8AE04470, after the ordinary epilogue. The base/
+event cursor also differs, while the origin loads are present in both
+objects and are scheduled in a different order. This was obscured by the
+runner's 32-row display limit. Ordinary final `return;` and a void-returning
+call expression do not emit the extra return pair. No helper or padding was
+added. Full diagnostic: `scratch/b3-panel-full-diff.json`; source experiments:
+`scratch/b3-panel3d-return/result.json`. This remains a `requeue`; next
+resolve the original return-boundary/source-shape evidence before treating
+the missing eight bytes as ordinary body instructions.
+
+The real buffer pointer and count-first declaration family improves
+`func_8AE01738` to raw 0.9259 / normalized 1.0, 108/108 bytes, both frames
+0x28. All six snapshot accesses now match; only the result store/reload at
+0x24 instead of retail 0x20 remain. Best is
+`selection:buffer-homes:count,info,selection,variant` in
+`scratch/b3-snapshot17-buffer-homes/result.json`. This is not an acceptance.
+
+### Third-box accepted checkpoint
+
+- `func_8AE01738`: accepted
+  `selection:saved-buffer:pointer-first1-init0-scope0`, 27 instructions,
+  108 bytes, 0x28 frame. Declare the real buffer pointer before a saved-state
+  record containing variant, selection, and count, all used. The record
+  carries the two selections across buffer initialization and retains the
+  collector's count across the two follow-up calls. This gives variant at
+  0x1C, selection at 0x1E, and count at 0x20. Retype its three stale forward
+  declarations to the real `s32` count return. No padding, unused fields,
+  forced registers, or return-category tricks were used. Sealed native
+  source/object/ELF/map/retail ROM receipt:
+  `scratch/b3-snapshot17-state-buffer/gate-0/receipt.json`.
+
+The third-box oldest requeue is resolved by that checkpoint. Its earlier
+negative results above remain the experiment history, not an active blocker.
+`scratch/b3-preserved-ten.json` confirms that the prior ten accepted function
+bodies remain textually unchanged.
+
+The bounded `func_8AE017A4` allocator search is not an acceptance: five
+minutes with one worker reduced the permuter metric from 885 to 230, but
+source review rejects those outputs because they omit the search-cursor
+reset or retain dead references. No output was submitted as genuine C.
+Its isolated baseline exactly reproduces the canonical candidate's 288
+function bytes (`scratch/b3-permute17a-local-control.json`), and the raw
+results are `scratch/b3-permute17a-local-result.json`. The shared launcher
+initially overrode TMPDIR into the primary checkout's scratch directory;
+that run was stopped. A private `scratch/b3-permuter-entry.py` imports the
+unchanged package with temporary files confined to this worktree. Neither
+shared tool sources nor tracked parent files were edited.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8AE01738` → `Fragment46_RefreshSavedSelection`.
