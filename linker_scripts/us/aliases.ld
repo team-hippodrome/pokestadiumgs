@@ -1270,3 +1270,7 @@ func_82B03538 = Panel_DrawHeadingAndOptions;
 func_882159A0 = StorageList_DrawRows;
 
 func_86A014D0 = StageCountdown_UpdateAndCheckExit;
+
+func_87E0DC98 = ListSlots_UpdateTransferAnimation;
+
+func_87E0E9B0 = ListSlots_DrawPanel;

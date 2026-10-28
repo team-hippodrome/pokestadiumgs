@@ -91,7 +91,7 @@ void func_87E0CBC8(void *arg0) {
     MainPool_FinalizeAllocation(temp);
 }
 
-extern void func_87E0E9B0(void);
+extern void ListSlots_DrawPanel(void *);
 extern f32 D_87E1A434[][3];
 void func_87E0CC18(void *arg0) {
     u8 *node;
@@ -102,7 +102,7 @@ void func_87E0CC18(void *arg0) {
     scale = 0.7f;
     for (i = 0; i < 4; i++) {
         func_87E0CA2C(arg0, i);
-        node = func_87F0AEC0((u8 *)arg0 + 0x10, func_87E0C93C, (void *)0x0F000000, 320, 36, func_87E0E9B0,
+        node = func_87F0AEC0((u8 *)arg0 + 0x10, func_87E0C93C, (void *)0x0F000000, 320, 36, ListSlots_DrawPanel,
                              (u8 *)arg0 + 0x28 + i * 0xEC);
         if (node != NULL) {
             func_8003F1DC(node + 0x24);
@@ -284,7 +284,7 @@ void func_87E0D41C(u8 *arg0) {
 }
 
 extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
-extern void func_800279C4(s32);
+extern void Audio_PlayDefaultSound(u16);
 void func_87E0D43C(void *arg0) {
     u8 *node;
     s32 offset;
@@ -307,7 +307,7 @@ void func_87E0D43C(void *arg0) {
         } while (node != NULL);
     }
     if (found) {
-        func_800279C4(0xCF16);
+        Audio_PlayDefaultSound(0xCF16);
     }
 }
 
@@ -527,7 +527,51 @@ s32 func_87E0DC78(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0DC98.s")
+extern void *D_87F119D8;
+extern void func_87F026E8(void *, void *);
+extern f32 D_80087E50[];
+extern int func_87E0C900(void *);
+extern void Audio_PlayDefaultSound(u16);
+extern void ListSlots_ResetEntryState(void *arg0, s32 arg1);
+extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
+extern void * D_87F119DC;
+void ListSlots_UpdateTransferAnimation(void) {
+    u8 *state;
+    u8 *context;
+    u8 *model;
+    f32 angle;
+    f32 scale;
+    f32 sine;
+    s32 rounded;
+    s32 selected;
+    context = *(u8 **)((u8 *)D_87F119DC + 32);
+    state = D_87F119DC;
+    model = *(u8 **)(state + 56) + 4;
+    func_87F0B4AC(model, (f32 *)(state + 72), (f32 *)(state + 84), (s16 *)(state + 66));
+    if (*(s32 *)(model + 132) != 0) {
+        angle = ((f32)*(s32 *)(model + 108) / (f32)*(s32 *)(model + 112)) * 180.0f * 182.04167f;
+        if (angle >= 0.0f) {
+            rounded = (s32)(angle + 0.5f);
+        } else {
+            rounded = (s32)(angle - 0.5f);
+        }
+        sine = D_80087E50[(u16)rounded >> 4];
+        scale = 0.5f * sine + 1.0f;
+        *(f32 *)((u8 *)D_87F119DC + 92) = scale;
+        *(f32 *)((u8 *)D_87F119DC + 88) = scale;
+        *(f32 *)((u8 *)D_87F119DC + 84) = scale;
+        Audio_PlayDefaultSound(0xCE0E);
+    }
+    if (*(s32 *)(*(u8 **)((u8 *)D_87F119DC + 56) + 136) == 0) {
+        selected = func_87E0C900(context);
+        if (selected != -1) {
+            (*(s32 *)(*(u8 **)(context + 4) + selected * 24 + 8592))++;
+            ListSlots_ResetEntryState(context, selected);
+        }
+        func_87F026E8(D_87F119D8, D_87F119DC);
+        Audio_PlayDefaultSound(0xCF0C);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0DE34.s")
 
@@ -711,7 +755,109 @@ s32 ListSlots_UpdateState(u8 *state) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E9B0.s")
+extern void func_80007444(Gfx **, s32, s32, s32, s32, u16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern u8 *func_87E0167C(void);
+extern void func_87F0BD48(void *);
+extern void func_87F0D600(void *, s32, s32, s32, f32, f32);
+extern f32 D_80088E50[];
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern s32 D_87E1A494[];
+extern Gfx * D_800D0510;
+void ListSlots_DrawPanel(void *context) {
+    typedef union { struct { u8 r, g, b, a; } channels; u32 packed; } SlotPanelColor;
+    typedef struct { u8 flags; u8 unk_01[3]; SlotPanelColor color; } SlotPanelIcon;
+    typedef struct { s32 count; u8 unk_04[16]; u32 flags; } SlotPanelRecord;
+    typedef struct { u16 width, height; SlotPanelColor color; } SlotPanelBackground;
+    typedef struct {
+        u8 unk_00[136];
+        SlotPanelRecord *record;
+        SlotPanelIcon slots[9];
+        s32 resource;
+        u32 tick;
+        SlotPanelBackground background;
+        SlotPanelColor color;
+        u8 index;
+        u8 flags;
+        u8 unk_EA[2];
+    } SlotPanelEntry;
+    f32 angle;
+    f32 pulse;
+    s32 rounded;
+    SlotPanelEntry *entry;
+    SlotPanelIcon *slot;
+    s32 frame;
+    s32 i;
+
+    entry = *(SlotPanelEntry **)((u8 *)context + 12);
+    angle = (f32)(entry->tick % 360U) * 15.0f * 182.04167f;
+    if (angle >= 0.0f) {
+        rounded = (s32)(angle + 0.5f);
+    } else {
+        rounded = (s32)(angle - 0.5f);
+    }
+    pulse = 1.0f - D_80088E50[(u16)rounded >> 4];
+    func_80007444(&D_800D0510, 0, 0, 320, 36, 0xFFFE);
+    func_87F0BD48(&entry->background);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetTextureFilter(D_800D0510++, G_TF_POINT);
+    gDPSetRenderMode(D_800D0510++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
+    gDPSetCombine(D_800D0510++, 0x377E6E, 0x11FCF279);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 0);
+    func_8004D19C(5, 5, func_8004C990(434, entry->resource), 0, 0);
+    func_87F0D600(func_87E0167C(), entry->index, 5, 5, 1.0f, 1.0f);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetTextureFilter(D_800D0510++, G_TF_POINT);
+    gDPSetRenderMode(D_800D0510++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
+    if ((entry->record->flags << 17) >> 31) {
+        func_8004D19C(13, 0, func_8004C990(436, 0), 0, 0);
+    }
+    gDPPipeSync(D_800D0510++);
+    slot = entry->slots;
+    for (i = 0; i < 9; i++, slot++) {
+        if (slot->flags & 8) {
+            func_8004D1FC((u8 *)func_8004C990(352, D_87E1A494[5]));
+            gDPSetCombine(D_800D0510++, 0xFFD3FF, 0xFFA6FF7F);
+            gDPSetEnvColor(D_800D0510++, 0, 0, 0, 64);
+            GfxRect_DrawTextured((s16)(i * 27 + 43), 6, 24, 24, 0, 0, 1024, 1024, 0);
+        }
+        if (slot->flags & 2) {
+            slot->color.channels.a = 64.0f * pulse;
+            slot->color.channels.r = slot->color.channels.g = slot->color.channels.b = 255;
+            frame = 5;
+        } else if (slot->flags & 4) {
+            slot->color.channels.r = slot->color.channels.g = slot->color.channels.b = 64;
+            frame = ((s32)entry->tick % 14) / 2;
+        } else {
+            slot->color.channels.r = slot->color.channels.g = slot->color.channels.b = 255;
+            frame = ((s32)entry->tick % 14) / 2;
+        }
+        if (slot->flags & 1) {
+            if (slot->color.channels.a < 245) {
+                slot->color.channels.a += 10;
+            } else {
+                slot->color.channels.a = 255;
+            }
+            func_8004D1FC((u8 *)func_8004C990(352, D_87E1A494[frame]));
+            gDPSetCombine(D_800D0510++, 0x50D2A1, 0xFFA7FFFF);
+            gDPSetEnvColor(D_800D0510++, slot->color.channels.r, slot->color.channels.g, slot->color.channels.b, slot->color.channels.a);
+            GfxRect_DrawTextured((s16)(i * 27 + 43), 6, 24, 24, 0, 0, 1024, 1024, 0);
+        }
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
+    gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFEF379);
+    gDPSetEnvColor(D_800D0510++, entry->color.channels.r, entry->color.channels.g, entry->color.channels.b, entry->color.channels.a);
+    func_8004D19C(286, 6, func_8004C990(353, 0), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    func_8004D19C(294, 10, func_8004C990(415, entry->record->count), 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 extern void func_87F0AF4C(s32);
 void func_87E0F124(s32 arg0) {
