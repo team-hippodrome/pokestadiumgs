@@ -217,9 +217,18 @@ typedef struct AudioContext {
     /* 0x2BBD */ u8 sampleDmaReuseQueue2RdPos;
     /* 0x2BBE */ u8 sampleDmaReuseQueue1WrPos;
     /* 0x2BBF */ u8 sampleDmaReuseQueue2WrPos;
-    /* 0x2BC0 */ u8 unk_2BC0[0x2BF0 - 0x2BC0];
+    /* 0x2BC0 */ u8 unk_2BC0[0x2BDC - 0x2BC0];
+    /* 0x2BDC */ s16 specUnk4;
+    /* 0x2BDE */ u8 unk_2BDE[0x2BF0 - 0x2BDE];
     /* 0x2BF0 */ s16 numSequencePlayers;
-    /* 0x2BF2 */ u8 unk_2BF2[0x2C30 - 0x2BF2];
+    /* 0x2BF2 */ u8 unk_2BF2[0x2C08 - 0x2BF2];
+    /* 0x2C08 */ s32 sampleDmaBufSize1;
+    /* 0x2C0C */ s32 sampleDmaBufSize2;
+    /* 0x2C10 */ u8 unk_2C10[0x2C20 - 0x2C10];
+    /* 0x2C20 */ s32 sampleDmaBufSize;
+    /* 0x2C24 */ u8 unk_2C24[4];
+    /* 0x2C28 */ s32 numNotes;
+    /* 0x2C2C */ u8 unk_2C2C[4];
     /* 0x2C30 */ s32 totalTaskCount;
     /* 0x2C34 */ u8 unk_2C34[0x2D0C - 0x2C34];
     /* 0x2D0C */ s32 audioRandom;
@@ -314,7 +323,79 @@ void *func_80013C40(u32 devAddr, u32 size, s32 arg2, u8 *dmaIndexRef, s32 medium
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013EF8.s")
+extern u8 D_8011EBF0[];
+extern void *GbApu_Alloc(u8 *, s32);
+extern void *func_80010448(void *, s32);
+extern s32 func_800103C8(s32, s32);
+// Same code as Ocarina of Time AudioLoad_InitSampleDmaBuffers (src/code/audio_load.c).
+void func_80013EF8(s32 numNotes) {
+    SampleDma *dma;
+    s32 i;
+    s32 t2;
+    s32 j;
+
+    gAudioContext.sampleDmaBufSize = gAudioContext.sampleDmaBufSize1;
+    gAudioContext.sampleDmas =
+        GbApu_Alloc(D_8011EBF0, 4 * gAudioContext.numNotes * sizeof(SampleDma) * gAudioContext.specUnk4);
+    t2 = 3 * gAudioContext.numNotes * gAudioContext.specUnk4;
+    for (i = 0; i < t2; i++) {
+        dma = &gAudioContext.sampleDmas[gAudioContext.sampleDmaCount];
+        dma->ramAddr = func_80010448(D_8011EBF0, gAudioContext.sampleDmaBufSize);
+        if (dma->ramAddr == NULL) {
+            break;
+        } else {
+            func_800103C8((s32)dma->ramAddr, gAudioContext.sampleDmaBufSize);
+            dma->size = gAudioContext.sampleDmaBufSize;
+            dma->devAddr = 0;
+            dma->sizeUnused = 0;
+            dma->unused = 0;
+            dma->ttl = 0;
+            gAudioContext.sampleDmaCount++;
+        }
+    }
+
+    for (i = 0; (u32)i < gAudioContext.sampleDmaCount; i++) {
+        gAudioContext.sampleDmaReuseQueue1[i] = i;
+        gAudioContext.sampleDmas[i].reuseIndex = i;
+    }
+
+    for (i = gAudioContext.sampleDmaCount; i < 0x100; i++) {
+        gAudioContext.sampleDmaReuseQueue1[i] = 0;
+    }
+
+    gAudioContext.sampleDmaReuseQueue1RdPos = 0;
+    gAudioContext.sampleDmaReuseQueue1WrPos = gAudioContext.sampleDmaCount;
+    gAudioContext.sampleDmaListSize1 = gAudioContext.sampleDmaCount;
+    gAudioContext.sampleDmaBufSize = gAudioContext.sampleDmaBufSize2;
+
+    for (j = 0; j < gAudioContext.numNotes; j++) {
+        dma = &gAudioContext.sampleDmas[gAudioContext.sampleDmaCount];
+        dma->ramAddr = func_80010448(D_8011EBF0, gAudioContext.sampleDmaBufSize);
+        if (dma->ramAddr == NULL) {
+            break;
+        } else {
+            func_800103C8((s32)dma->ramAddr, gAudioContext.sampleDmaBufSize);
+            dma->size = gAudioContext.sampleDmaBufSize;
+            dma->devAddr = 0;
+            dma->sizeUnused = 0;
+            dma->unused = 0;
+            dma->ttl = 0;
+            gAudioContext.sampleDmaCount++;
+        }
+    }
+
+    for (i = gAudioContext.sampleDmaListSize1; (u32)i < gAudioContext.sampleDmaCount; i++) {
+        gAudioContext.sampleDmaReuseQueue2[i - gAudioContext.sampleDmaListSize1] = i;
+        gAudioContext.sampleDmas[i].reuseIndex = i - gAudioContext.sampleDmaListSize1;
+    }
+
+    for (i = gAudioContext.sampleDmaCount; i < 0x100; i++) {
+        gAudioContext.sampleDmaReuseQueue2[i] = gAudioContext.sampleDmaListSize1;
+    }
+
+    gAudioContext.sampleDmaReuseQueue2RdPos = 0;
+    gAudioContext.sampleDmaReuseQueue2WrPos = gAudioContext.sampleDmaCount - gAudioContext.sampleDmaListSize1;
+}
 
 extern u8 D_8011F1F4;
 extern s32 func_8001510C(s32, s32);
