@@ -137,7 +137,21 @@ s32 func_87E0AE28(void *arg0)
   return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0AE64.s")
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+void func_87E0AE64(void *arg0) {
+    u8 *node;
+    u8 *state;
+
+    node = *(u8 **)((u8 *)arg0 + 40);
+    while (node != NULL) {
+        state = *(u8 **)(*(u8 **)(node + 56) + 12);
+        func_87F0B1A4(state, (f32 *)(node + 72), *(f32 *)(node + 72),
+            *(f32 *)(node + 76) - -120.0f, *(f32 *)(node + 80) + 200.0f, 15, 0x2000);
+        func_87F0B2F4(state, (s16 *)(node + 66), 180.0f, 0.0f, 0.0f, 15, 0);
+        node = *(u8 **)(node + 4);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0AF44.s")
 
