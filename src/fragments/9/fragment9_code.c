@@ -25,7 +25,48 @@ s32 func_8FB00170(void* arg0, void* arg1) {
     return func_8FB000D0(arg0, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB001C0.s")
+typedef struct {
+    /* 0x00 */ u8 info[0xC];
+    /* 0x0C */ s16 unk_0C;
+    /* 0x0E */ u8 unk_0E[2];
+    /* 0x10 */ u8 entries[6][0x58];
+} unk_func_8FB02108_row; // size = 0x220
+
+// The state func_8FB02560 passes as unk_D_8FB03DF8 (index at 0x34); this view
+// adds the ten 0x220-byte rows that follow it at 0x4C.
+typedef struct {
+    /* 0x000 */ u8 unk_000[0x34];
+    /* 0x034 */ s32 index;
+    /* 0x038 */ u8 unk_038[0x14];
+    /* 0x04C */ unk_func_8FB02108_row rows[10];
+} unk_func_8FB02108;
+
+extern void _bcopy(const void *, void *, s32);
+extern s32 func_800647C8(u8);
+extern void *func_8004C874(s32, s32);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+s32 func_8FB001C0(u8 *arg0, u8 *arg1) {
+    switch (*(u16 *)*(void **)(arg1 + 68)) {
+        case 34:
+            if (*(s8 *)(arg0 + 14) != 0) {
+                _bcopy(arg0 + 14, *(u8 **)(arg1 + 72) + 52, 12);
+            } else {
+                HAL_Strcpy((s8 *)*(u8 **)(arg1 + 72) + 52,
+                           (s8 *)func_800647C8(**(u8 **)(arg1 + 72)));
+            }
+            return 1;
+        case 6:
+            if (*(s8 *)(arg0 + 14) != 0) {
+                _bcopy(arg0 + 14,
+                       ((unk_func_8FB02108 *)arg1)->rows[*(s32 *)(arg1 + 56)].info, 12);
+            } else {
+                HAL_Strcpy((s8 *)*(u8 **)(arg1 + 72) + 52,
+                           func_8004C874(42, 86));
+            }
+            return 1;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB002BC.s")
 
@@ -168,22 +209,6 @@ extern void func_80055A74(s32);
 extern s32 func_80055A9C(void *, s32);
 extern s32 func_800533A4(s32, s32);
 extern s32 func_80053440(s32, s32, u8 *);
-
-typedef struct {
-    /* 0x00 */ u8 info[0xC];
-    /* 0x0C */ s16 unk_0C;
-    /* 0x0E */ u8 unk_0E[2];
-    /* 0x10 */ u8 entries[6][0x58];
-} unk_func_8FB02108_row; // size = 0x220
-
-// The state func_8FB02560 passes as unk_D_8FB03DF8 (index at 0x34); this view
-// adds the ten 0x220-byte rows that follow it at 0x4C.
-typedef struct {
-    /* 0x000 */ u8 unk_000[0x34];
-    /* 0x034 */ s32 index;
-    /* 0x038 */ u8 unk_038[0x14];
-    /* 0x04C */ unk_func_8FB02108_row rows[10];
-} unk_func_8FB02108;
 
 void func_8FB02108(unk_func_8FB02108 *state) {
     s32 i;
