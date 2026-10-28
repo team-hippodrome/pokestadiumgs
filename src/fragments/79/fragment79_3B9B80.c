@@ -116,7 +116,25 @@ s32 func_8414B7BC(u8 side) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B878.s")
+extern u32 func_8414A258(void);
+extern u8 * D_84195208[];
+s32 func_8414B878(u8 side) {
+    u8 other;
+    s32 result = 0;
+
+    if (D_84195208[side][0xD] & 0x10) {
+        if ((D_84195208[side][0x11] & 0x80) && (D_84195208[other = 1 - side][0xD] & 0x10)) {
+            if (D_84195208[side][0x17] == 1) {
+                result = -(func_8414A258() << 9);
+            } else {
+                result = func_8414A258() << 9;
+            }
+        } else {
+            result = -((4 - D_84195208[side][0x17]) * (func_8414A258() << 7));
+        }
+    }
+    return result;
+}
 
 /* mkdraft:func_8414B958 begin */
 extern u8 *D_84195208[];

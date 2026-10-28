@@ -734,3 +734,7 @@ with normal syntax checks and exact acceptance
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail `cmp` and `git diff --check` pass.
 Independent original-assembly/raw-ROM comparisons cover instructions at
 `0x3A6C94..0x3A6D60` and the jump table at `0x3FA8B0..0x3FA950`.
+
+## 2026-10-29: `func_84125080` layout-prerequisite
+
+layout-prerequisite (0.92, shared `$at`). It refreshes a 10-byte LCG pool with `x = x*5 + 1` (a copt-unrolled `for (i = 0; i < 10; i++)` once the cursor reaches 10), resets the cursor, and returns `D_84195188[D_84195180++]`. Return type is s32, matching the existing externs. The only remaining difference: retail stores both peeled iterations (D_84195188, D_84195189) through one `lui $at`. That is the shared-`$at` assembler artifact, which needs a COALESCE-style fold this project doesn't use.
