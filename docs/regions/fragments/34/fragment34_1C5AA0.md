@@ -90,3 +90,11 @@ pass with `build/pokestadiumgs-us.z64: OK`. The full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail and whitespace checks pass.
 Independent original-word and raw retail comparisons verify all 252 bytes
 at `0x1C7904..0x1C7A00`.
+
+## 2026-10-28 — `func_8850A614` matched (trade cable slide step)
+
+Same rounded-lerp pattern as its siblings `func_8850A710` and friends:
+`unk_18--`, then `unk_04 = (s16)((-420.0f - (unk_18 * -610) / 10.0f) +
+(-420.0f > (unk_18 * -610) / 10.0f ? 0.5f : -0.5f))`; at `unk_18 <= 0` it
+moves to sequence state 7. Write the multiplier as `* -610`: `-unk_18 * 610`
+schedules the `negu` chain later.
