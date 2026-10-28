@@ -1260,3 +1260,13 @@ func_87E0D520 = ListSlots_UpdateAlternatingAnimations;
 func_822016C8 = Fragment17_ResetAnimationEntries;
 
 func_8FB024BC = Fragment9_UpdateSelectionPointers;
+
+func_80059320 = GbSave_WriteRequestedBuffers;
+
+func_80058614 = GbSave_ReadCrystalMainSave;
+
+func_82B03538 = Panel_DrawHeadingAndOptions;
+
+func_882159A0 = StorageList_DrawRows;
+
+func_86A014D0 = StageCountdown_UpdateAndCheckExit;

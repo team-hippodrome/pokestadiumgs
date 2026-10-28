@@ -51,7 +51,9 @@ typedef struct {
     u8 visible;
     u8 step;
     s16 scroll;
-    u8 unk_12[26];
+    u8 unk_12[16];
+    s16 residual;
+    u8 unk_24[8];
 } StorageListScrollRecord;
 extern void func_88001C24(void *, u16, u8);
 extern void func_88001D0C(void *);
@@ -222,7 +224,57 @@ s8 *Text_CopyCharacterPrefix(s8 *output, s8 *input, s32 limit) {
 extern void func_800496A4(s32, s32); extern void func_80049064(s32, s32, s32, s32); extern s32 func_8003514C(void); extern void func_80047634(s32); extern s32 D_8800687C; extern s32 func_80048E30(u8 *, s32, s32, const char *, s32); extern void func_80047650(s32);
 void func_882158E4(s16 arg0, s16 arg1, s8 *arg2) { s8 temp[0x44]; s32 count; if (arg2[0x66] != 0) { func_800496A4(4, 1); func_80049064(arg0 + 0xD3, arg1 + 4, 2, arg2 + 0x66); if (func_8003514C() == 0) count = 6; else count = 0xC; Text_CopyCharacterPrefix(temp + 4, arg2, count); func_800496A4(8, 2); func_80047634(1); func_80048E30((u8 *)D_8800687C, arg0, arg1, (const char *)(temp + 4), 1); func_80047650(1); } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_882159A0.s")
+typedef struct Color88217F70 {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color88217F70;
+typedef struct { u8 r; u8 g; u8 b; u8 a; } RowColor186690;
+extern RowColor186690 *Color_SetRGB(RowColor186690 *, u8, u8, u8);
+extern void func_880006E0(Color88217F70 *);
+extern Color88217F70 D_88005FA0;
+extern s32 func_88005CC0(s32, void *);
+void StorageList_DrawRows(u8 column, u8 limit) {
+    s16 x;
+    s16 y;
+    s32 row;
+    u8 selected;
+
+    if (D_8823463C[column * 2].unk_00 != 0) {
+        Color88217F70 gray;
+        u8 *entry;
+
+        entry = StorageList_GetEntry(0, column);
+        x = column == 0 ? 58 : 369;
+        {
+            u16 available = ((StorageListScrollRecord *)(D_88234730 + 12))[(u32)column].count;
+
+            row = 0;
+            limit = limit < available ? limit : available;
+        }
+        y = 128 - ((StorageListScrollRecord *)(D_88234730 + 12))[(u32)column].residual;
+        for (; row != limit; row++, y += 27) {
+            if (((s32 *)(D_88234730 + 104))[column] != 0) {
+                selected = row == ((StorageListScrollRecord *)(D_88234730 + 12))[(u32)column].position -
+                                  ((StorageListScrollRecord *)(D_88234730 + 12))[(u32)column].start ? 1 : 0;
+                if (selected != 0) continue;
+            }
+            if (D_882346F0 == 1 || D_882346F0 == 3 || column == *D_88234730) {
+                func_880006E0(&D_88005FA0);
+            } else {
+                func_880006E0((Color88217F70 *)Color_SetRGB((RowColor186690 *)&gray, 150, 150, 150));
+            }
+            if (func_88005CC0(15, entry) == 0 &&
+                func_88005CC0(16, entry) == 0 &&
+                func_88005CC0(17, entry) == 0 &&
+                func_88005CC0(18, entry) == 0 &&
+                func_88005CC0(19, entry) == 0) {
+                func_882158E4(x, y, (s8 *)entry);
+            }
+            entry += 118;
+        }
+    }
+}
 
 // Storage list header, laid out like fragment31_1A5E10's LabPCStorageList.
 //@src/fragments/31/fragment31_1A5E10.c

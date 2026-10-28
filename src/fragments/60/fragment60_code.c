@@ -131,7 +131,7 @@ extern void StageContext_SetClearColor(s32);
 extern void StageFade_StartFromTransparent(s32);
 extern void func_800225C4(s32);
 extern void func_800226C0(s32);
-extern s32 func_800279C4(s32);
+extern void func_800279C4(u16);
 extern s32 func_8003EC54(u8 *);
 extern s32 func_8003F210(u8 *, s32);
 extern void func_86A01480(s32);
@@ -192,7 +192,52 @@ void func_86A01480(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A014D0.s")
+extern void func_80028118(u8);
+extern void func_86A05DCC(void);
+extern s32 D_86A4459C;
+extern s32 D_86A44414;
+extern s32 D_86A44418;
+extern s32 D_86A4441C;
+extern s32 D_86A44420;
+extern s32 func_86A04100(void);
+extern void func_86A06D04(void);
+extern void func_86A06D88(void);
+extern s32 D_86A0F8E4;
+
+// Advance the countdown and wait for the terminal player states before leaving the stage.
+void StageCountdown_UpdateAndCheckExit(void) {
+    if (D_86A443F0.unk_0000 <= D_86A0F8E4 * 30) {
+        func_80028118(8);
+    }
+    if (D_86A443F0.unk_0000 == D_86A0F8E4 * 3) {
+        func_800279C4(0xCF00);
+    }
+    if (D_86A443F0.unk_0000 == D_86A0F8E4 * 2) {
+        func_800279C4(0xCF00);
+    }
+    if (D_86A0F8E4 == D_86A443F0.unk_0000) {
+        func_800279C4(0xCF00);
+    }
+    if (D_86A443F0.unk_0000 == 0) {
+        func_800279C4(0xCF06);
+    }
+    if (D_86A443F0.unk_0000 > 0) {
+        D_86A443F0.unk_0000--;
+        func_86A05DCC();
+        func_86A06D04();
+        func_86A06D88();
+    } else if (D_86A4459C || func_86A04100() ||
+               D_86A44414 == 9 || D_86A44418 == 9 ||
+               D_86A4441C == 9 || D_86A44420 == 9) {
+        func_86A05DCC();
+        func_86A06D88();
+        if (D_86A443F0.unk_0000-- < -60) {
+            *(s32 *)D_86A46548 = 5;
+        }
+    } else {
+        *(s32 *)D_86A46548 = 5;
+    }
+}
 #endif
 
 #ifdef VERSION_US
