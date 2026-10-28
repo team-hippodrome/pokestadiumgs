@@ -26,7 +26,34 @@ s32 func_87F042D0(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F05204.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F056E0.s")
+s32 func_87F056E0(void *arg0, s32 arg1) {
+    s32 count;
+    s32 negative;
+    s32 i;
+    s8 buffer[16];
+
+    count = 0;
+    negative = 0;
+    if (arg1 < 0) {
+        //!bug: negating the minimum signed word overflows, as in retail.
+        arg1 = -arg1;
+        negative = 1;
+    }
+    do {
+        buffer[count] = arg1 % 10 + '0';
+        count++;
+        arg1 /= 10;
+    } while (arg1 > 0);
+    if (negative) {
+        buffer[count] = '-';
+        count++;
+    }
+    for (i = 0; i < count; i++) {
+        ((s8 *)arg0)[i] = buffer[count - i - 1];
+    }
+    ((s8 *)arg0)[i] = 0;
+    return count;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F057EC.s")
 
