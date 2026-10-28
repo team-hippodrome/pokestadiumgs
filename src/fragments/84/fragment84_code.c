@@ -251,7 +251,18 @@ void func_8FC00FD0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC00FF8.s")
+extern u8 D_15833A0[];
+extern void func_80003F74(u8 *, u8 *, u8 *, s32);
+void _bcopy(s32 *, s32, s32);
+void func_8FC00FF8(void *dst, volatile u8 index) {
+    u8 scratch[0x44 + 16];
+    u8 *end;
+
+    if (index != 0) {
+        func_80003F74((u8 *)((u32)scratch & ~7U), (end = D_15833A0 + index * 0x44) - 0x44, end, 0);
+        _bcopy((s32 *)((u32)scratch & ~7U), (s32)dst, 0x44);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -279,7 +290,7 @@ M2C_UNK func_80054E48(M2C_UNK);                     /* extern */
 M2C_UNK func_80055948(M2C_UNK);                     /* extern */
 s32 func_8006218C(M2C_UNK, M2C_UNK, M2C_UNK, M2C_UNK); /* extern */
 M2C_UNK func_80062304(s32);                         /* extern */
-M2C_UNK func_8FC00FF8(M2C_UNK *, u8);               /* extern */
+void func_8FC00FF8(void *, volatile u8);
 extern s32 D_8FC02833;
 extern u8 D_8FC02858;
 extern s32 D_8FC02865;
