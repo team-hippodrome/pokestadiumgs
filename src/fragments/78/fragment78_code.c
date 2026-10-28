@@ -47,10 +47,6 @@ void func_8F900594(void) {
     *(&D_8F901630 + D_8F91163C) = (s8) D_8F911664;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F9005B4.s")
-
-extern s32 Input_GetRepeatedDPad(void);
-extern s32 D_80087200;
 // Hex number editor state, laid out like the numeric view of fragment77's
 // F77EditorState; func_8F90083C clamps the entered value (words[5]) to 0-255.
 //@src/fragments/77/fragment77_code.c
@@ -65,6 +61,33 @@ typedef union {
     } numeric;
 } F78EditorState;
 extern F78EditorState D_8F911650;
+extern s32 D_8F911630;
+extern s32 D_8F911634;
+extern void func_8F900574(void);
+void func_8F9005B4(void) {
+    s32 value;
+    s32 index;
+
+    D_8F911650.numeric.geometry[0] = D_8F911630 * 34 + 0xB4;
+    D_8F911650.numeric.geometry[1] = D_8F911634 * 22 + 0x69;
+    D_8F911650.numeric.geometry[2] = 0x20;
+    D_8F911650.numeric.geometry[3] = 0x14;
+    D_8F911650.numeric.selected = 0;
+    D_8F911650.numeric.last = 1;
+    func_8F900574();
+    value = D_8F911650.numeric.value;
+    index = 0;
+    if (index <= D_8F911650.numeric.last) {
+        do {
+            D_8F911650.numeric.digits[index] = value % 16;
+            value /= 16;
+            index++;
+        } while (index <= D_8F911650.numeric.last);
+    }
+}
+
+extern s32 Input_GetRepeatedDPad(void);
+extern s32 D_80087200;
 
 // Same code as fragment77's func_8F802B40 on the editor state at D_8F911650; GS plays
 // no sound on D-pad input and switches on the input value without an s16 conversion.
