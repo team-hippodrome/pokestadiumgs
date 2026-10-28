@@ -105,7 +105,34 @@ void func_88201608(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_882017F8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201A74.s")
+extern void func_88200320(void *, void *);
+extern void func_88201628(u8 *, u8 *);
+extern u8 D_88234630[];
+extern s32 func_80063754();
+extern void * func_8820137C(void *arg0);
+void func_88201A74(u8 *a, u8 *b) {
+    u8 **listA;
+    u8 **listB;
+    u8 slotA;
+    u8 slotB;
+    void *first;
+
+    listA = *(u8 ***)a;
+    listB = *(u8 ***)b;
+    slotA = (*listA)[8];
+    slotB = (*listB)[8];
+
+    if (func_80063754(a[9]) && func_80063754(b[9])) {
+        first = func_8820137C(a);
+        func_88200320(first, func_8820137C(b));
+        *(s32 *)(D_88234630 + slotB * 12 + 8) = 1;
+        *(s32 *)(D_88234630 + slotA * 12 + 8) = 1;
+    } else if (func_80063754(a[9])) {
+        func_88201628(a, b);
+    } else if (func_80063754(b[9])) {
+        func_88201628(b, a);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201B74.s")
 
