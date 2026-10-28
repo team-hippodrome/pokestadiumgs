@@ -1256,3 +1256,5 @@ func_82B0128C = TeamRules_ValidateSelection;
 func_87E0D278 = ListSlots_StartAlternatingAnimations;
 
 func_87E0D520 = ListSlots_UpdateAlternatingAnimations;
+
+func_822016C8 = Fragment17_ResetAnimationEntries;
