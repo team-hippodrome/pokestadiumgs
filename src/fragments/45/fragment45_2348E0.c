@@ -57,7 +57,6 @@ void func_8AB0FE08(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 D_8AB17408;
 extern void *D_8AB11D08;
 extern u8 *D_8AB17250;
 extern void func_8AC00F04(void *);

@@ -30,10 +30,10 @@ extern s32 func_8004D1FC(u8 *);
 // order follow func_88100C80's gradient quad.
 //@src/fragments/30/fragment30_16D4F0.c
 void func_82A001DC(s32 x0, s16 y0, s32 x1, s16 y1) {
-    s32 temp; // FAKE: holds the screen dimensions pointer, then y0; separate locals give diff score 28.
+    s32 temp; // FAKE: holds the screen dimensions pointer, then y0; diff score 28 without it (separate locals).
     Vtx *vertices;
     Mtx *matrix;
-    s32 viewport; // FAKE: Vp * that is reused for y1; a separate y1 local gives diff score 8.
+    s32 viewport; // FAKE: Vp * reused for y1; diff score 8 without it (a separate y1 local).
 
     temp = func_8000731C();
     vertices = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
