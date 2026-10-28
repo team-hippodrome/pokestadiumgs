@@ -104,3 +104,13 @@ product survives as `mtc1 $zero` + `cvt`.
   state 0xD or 0xF and `func_88509F68(0)` or `(1)`. The post-decrement
   initializer produces retail's redundant `sll`/`sra` re-sign-extension;
   a separate `unk_18 = v - 1` statement drops it.
+- `func_8850ACD8` (sequence light step): in state 5, reset both
+  `D_88523100` records whose s32 is 4 (`func_885084EC(i, 8)`), and continue
+  only once both records are 0. In state 0x11, wait for
+  `func_8850CED8(9)`. Then clear flag 0x10 with sound 0x141, `unk_18--`,
+  and lerp `unk_14` (128/96) and `unk_16` (64/-64) over 30.0f. At 0: state
+  0 and clear the low flag nibble.
+- `func_8850AEA8` (sequence dispatcher): a `switch` over `unk_00` with an
+  explicit `case 0: break;`. Without it, IDO biases the table by 1 (17
+  entries, `addiu -1`). The jump table lands in the file's `.rodata`
+  subsegment unchanged.
