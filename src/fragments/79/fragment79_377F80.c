@@ -2,7 +2,24 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_841086F0.s")
+extern s32 D_84190180;
+extern s32 D_84190184;
+extern s32 D_84190194;
+extern u8 *D_84190198;
+extern u8 *D_8419019C;
+extern u32 D_841901B8;
+void func_841086F0(arg0, arg1, arg2)
+    s32 arg0;
+    u8 *arg1;
+    u8 *arg2;
+{
+    D_84190180 = arg0;
+    D_84190184 = 1;
+    D_84190194 = (s32)arg1;
+    D_84190198 = arg1;
+    D_8419019C = arg2;
+    D_841901B8 = 0;
+}
 
 extern void func_841086F0();
 extern u32 D_84190188;
