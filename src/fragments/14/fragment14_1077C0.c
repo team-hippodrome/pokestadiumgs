@@ -49,7 +49,7 @@ extern f32 (*D_8160BD1C)(f32);
 extern void func_8160945C(s16 *, s16 *, s16 *, f32);
 
 
-f32 func_8130F6A4(u8 *arg0, u8 *arg1, u8 *arg2) {
+f32 func_8130F6A4(u8 *arg0, s16 *arg1, u8 *arg2) {
     u8 *ptr = arg2 + 8;
     f32 temp = 0.0f;
 
@@ -71,24 +71,57 @@ f32 func_8130F6A4(u8 *arg0, u8 *arg1, u8 *arg2) {
 #endif
 
 #ifdef VERSION_US
-extern f32 func_8130F6A4(u8 *arg0, u8 *arg1, u8 *arg2);
-f32 func_8130F794(u8 *arg0, u8 *arg1) {
+extern f32 func_8130F6A4(u8 *arg0, s16 *arg1, u8 *arg2);
+f32 func_8130F794(u8 *arg0, s16 *arg1) {
     return func_8130F6A4(arg0, arg1, (u8 *)D_81312924);
 }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_8130F7B8.s")
+extern f32 (*D_8160BD04)(f32);
+extern s16 *func_81609530(s32);
+extern void func_8160945C(s16 *, s16 *, s16 *, f32);
+f32 func_8130F7B8(u8 *arg0, s16 *arg1) {
+    f32 scale = D_8160BD04(*(f32 *)(arg0 + 0x30) / 16);
+    s16 *color = (s16 *)(arg0 + 0x20);
+
+    if (arg0[0x38] == 4 || arg0[0x38] == 5) {
+        switch (*(s32 *)(arg0 + 0x48)) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 6:
+                color = func_81609530(3);
+                break;
+            case 4:
+                color = func_81609530(1);
+                break;
+            case 5:
+                color = func_81609530(2);
+                break;
+            case -1:
+                if (*(s32 *)(arg0 + 0x3C) != 0) {
+                    color = func_81609530(2);
+                } else {
+                    color = (s16 *)(arg0 + 0x28);
+                }
+                break;
+        }
+    }
+    func_8160945C(arg1, color, func_81609530(0), scale);
+    return scale;
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_8130F7B8(u8 *arg0, u8 *arg1);
-extern void func_81609A90(u8 *arg0, u8 *arg1);
+extern f32 func_8130F7B8(u8 *arg0, s16 *arg1);
+extern void func_81609A90(s16 *arg0, s16 *arg1);
 void func_8130F8B4(u8 *arg0, s32 arg1) {
-    u8 sp40[8];
-    u8 sp38[8];
-    u8 sp30[8];
-    u8 sp28[8];
+    s16 sp40[4];
+    s16 sp38[4];
+    s16 sp30[4];
+    s16 sp28[4];
     f32 sp24;
     sp24 = *(f32 *)(arg0 + 0x30);
     *(f32 *)(arg0 + 0x30) = 0.0f;
