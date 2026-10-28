@@ -1726,7 +1726,7 @@
     - [0x3D99F0, c,       fragments/79/fragment79_3D99F0]
     - [0x3D9A00, data,    fragments/79/fragment79_data]
     - [0x3F83E0, .rodata, fragments/79/fragment79_36F8B0] # Jump tables, float literals.
-    - [0x3F8480, rodata]
+    - [0x3F8480, .rodata, fragments/79/fragment79_373F70] # labels in this range are referenced only by this file
     - [0x3F84C0, .rodata, fragments/79/fragment79_3749B0] # labels in this range are referenced only by this file
     - [0x3F84E0, .rodata, fragments/79/fragment79_375530] # Jump tables, float literals.
     - [0x3F8530, .rodata, fragments/79/fragment79_377570] # jtbl_84188CA0, jtbl_84188D08, jtbl_84188D74 (func_841083B0's switches)

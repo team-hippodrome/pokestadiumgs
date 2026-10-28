@@ -30,13 +30,12 @@ s32 func_841047A4(u8 *arg0) {
     return *(s32 *)(arg0 + 0x14);
 }
 
-extern u8 D_84188BF0[];
 extern u8 D_8418D2A0[];
 extern u8 D_84190020[];
 extern void func_84105CA0(u8 *);
 // Claims the first 0x16C-byte entry of D_8418D2A0 whose word at +0x168 is 0
 // and sets that word to 1; func_84104818 clears it again. When every entry up
-// to D_84190020 is in use, passes D_84188BF0 ("Can't Alloc Hms Effect Dynamic")
+// to D_84190020 is in use, passes "Can't Alloc Hms Effect Dynamic"
 // to func_84105CA0 and returns NULL.
 u8 *func_841047AC(void) {
     s32 i;
@@ -53,13 +52,12 @@ u8 *func_841047AC(void) {
         i++;
     } while (D_84190020 != D_8418D2A0 + i * 0x16C);
     if (entry == NULL) {
-        func_84105CA0(D_84188BF0);
+        func_84105CA0("Can't Alloc Hms Effect Dynamic");
     }
     return entry;
 }
 
 extern u8 D_84190020[];
-extern u8 D_84188C10[];
 extern void func_84105CA0(u8 *);
 extern void func_8003F1DC(void *);
 
@@ -72,7 +70,7 @@ void func_84104818(u8 *arg0) {
         }
     }
     if (D_84190020 == (u8 *)D_8418D2A0 + i * 0x16C) {
-        func_84105CA0(D_84188C10);
+        func_84105CA0("Can't Remove Hms Shape");
     }
     *(s32 *)((u8 *)D_8418D2A0 + i * 0x16C + 0x168) = 0;
     ((u8 *)D_8418D2A0 + i * 0x16C)[2] &= 0xFFFD;
