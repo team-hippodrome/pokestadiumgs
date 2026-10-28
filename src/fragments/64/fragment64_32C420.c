@@ -32,7 +32,7 @@ void Fragment64_IncrementMatchingCounters(u8 *root, s32 slot) {
 extern void _bzero(void *, s32);
 void func_87F09870(s32 *arg0) { _bzero(arg0, 0x1C); *arg0 = 0; }
 
-extern void Audio_PlayDefaultSound(s32);
+extern void Audio_PlayDefaultSound(u16);
 void func_87F0989C(void *arg0) {
     (*(s32 *)((u8 *)(arg0) + (0))) = 1;
     (*(s32 *)((u8 *)(arg0) + (0x18))) = 0;
@@ -44,7 +44,57 @@ void func_87F0989C(void *arg0) {
     Audio_PlayDefaultSound(0xCF11);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F098F4.s")
+typedef struct { s32 mode; f32 x, y, width, velocity; u8 rgba[4]; s32 frame; } Fragment64MotionState;
+extern f32 D_87F116A0, D_87F116A4;
+extern f32 D_80088E50[0x1000];
+void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
+    s32 mode;
+    s32 frame;
+    s32 angle;
+    f32 phase;
+    mode = state->mode;
+    if (mode == 0) return;
+    switch (mode) {
+    case 1:
+        state->velocity -= D_87F116A0;
+        state->y += state->velocity;
+        if (state->y < 108.0f) {
+            state->frame = 0;
+            state->y = 108.0f;
+            state->mode = 2;
+            Audio_PlayDefaultSound(0xCF10);
+            return;
+        }
+    case 5:
+        return;
+    case 2:
+        frame = state->frame;
+        phase = (((f32)frame * 180.0f) / 7.0f) * D_87F116A4;
+        if (phase >= 0.0f) angle = (s32)(phase + 0.5f);
+        else angle = (s32)(phase - 0.5f);
+        state->width = (1.0f - D_80088E50[(u16)angle >> 4]) * 90.0f;
+        state->frame++;
+        state->x = 160.0f - state->width * 0.5f;
+        if (state->frame >= 8) {
+            state->frame = 0;
+            state->mode = 3;
+        }
+        if (state->frame == 3) {
+            Audio_PlayDefaultSound(0xCF17);
+            return;
+        }
+        break;
+    case 3:
+        frame = state->frame;
+        state->rgba[3] = (u32)(((f32)frame * 255.0f) / 8);
+        state->frame++;
+        if (state->frame >= 9) {
+            state->frame = 0;
+            state->mode = 5;
+        }
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F09B7C.s")
 

@@ -35,7 +35,7 @@ callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_87F097B0` → `Fragment64_IncrementMatchingCounters`.
 
-## 2026-10-28 — motion owner requeue
+## 2026-10-28 — motion owner progression (resolved below)
 
 `func_87F098F4` remains `requeue`, not installed. Target: 162 instructions /
 648 bytes, frame 0x18. Best canonical candidate is
@@ -67,3 +67,28 @@ Next: trace consumed frame-assignment result and temporary-register webs
 with a calibrated stock compiler pass observer.
 Do not fabricate occupancy, ABI hints, dead guards, padding or output patches.
 Private canonical manifests/results retain all source variants and diagnostics.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_87F098F4` → `Fragment64_AdvancePanelAnimation`.
+
+## 2026-10-28 — motion owner accepted
+
+`func_87F098F4` → `Fragment64_AdvancePanelAnimation`: 648 bytes / 162
+instructions, frame 0x18. Canonical batch
+`parent64-motion-both-fields`, label
+`motion:both-frame-fields:direct0-tail0`, accepted through the sequential
+full-ROM gate. The initial relocation-only probe difference was not used
+as proof: the retail ROM comparison passed with MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Explicit host syntax checking also passed.
+
+The resolving source shape increments and tests the actual frame field in
+both the expansion and fade states. Cached old frames remain consumed by
+the angle/alpha calculations; no next-frame local, unused assignment, ABI
+hint, output rewrite, or padding is required. The real one-argument
+`Audio_PlayDefaultSound(u16)` declaration also replaces the stale s32
+prototype for the whole module. Integer `/ 8` retains the retail floating
+division. Normal and +20blank whole-module naming/extern cleanup controls
+preserve all allocated bytes, function extents and relocation topology
+modulo the reviewed compatibility alias. Stock IDO 7.1, unchanged flags.
