@@ -3,14 +3,14 @@
 
 #ifdef VERSION_US
 extern void func_80015AB8(void);
-extern void func_80018704(s32, s32);
+extern void func_80018704(s32, f32);
 void func_80021AC0(s32 arg0, s32 arg1) {
     if (arg0 || arg1) {
         /* intentionally empty */
     }
     func_80015AB8();
-    func_80018704(0x41010000, 0x3F2147AE);
-    func_80018704(0x41000000, 0x3F4F5C29);
+    func_80018704(0x41010000, 0.63f);
+    func_80018704(0x41000000, 0.81f);
 }
 
 extern void func_80021AC0(s32, s32);
@@ -67,7 +67,7 @@ void func_80021BBC(void) {
         func_80018728(0x82010000, 0);
         D_80090B80 = 1;
         func_80018728(0x82020600, 0);
-        func_80018704(0x41020000, 0x3F25E354);
+        func_80018704(0x41020000, 0.648f);
         D_80090094 = 0;
     }
     switch ((u32)D_80094570) {
