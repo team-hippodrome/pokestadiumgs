@@ -79,7 +79,21 @@ void func_88800A30(void) {
     func_800226C0(*(s32 *)(D_88804050 + 0x354));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800B24.s")
+extern s32 func_80001FF0(void);
+extern void func_880002F4(u8 *, s16);
+extern u8 * D_88804050;
+void func_88800B24(void) {
+    ((s8 *)D_88804050)[0x27] = -1;
+    ((s8 *)D_88804050)[0x26] = ((s8 *)D_88804050)[0x27];
+    D_88804050[0x11] = 3;
+    if (D_88804050[0x2A] != 0) {
+        // Rounds frame-rate-scaled durations (func_80001FF0 returns 50 or 60).
+        func_880002F4(D_88804050 + 0x2C,
+                      (s32)((5.0f * func_80001FF0() / 60.0f) + (((func_80001FF0() * 5.0f / 60.0f) > 0.0f) ? 0.5f : -0.5f)) +
+                      (s32)((8.0f * func_80001FF0() / 60.0f) + (((func_80001FF0() * 8.0f / 60.0f) > 0.0f) ? 0.5f : -0.5f)) +
+                      (s32)((30.0f * func_80001FF0() / 60.0f) + (((func_80001FF0() * 30.0f / 60.0f) > 0.0f) ? 0.5f : -0.5f)));
+    }
+}
 
 extern u8 *D_880068B0;
 extern u8 func_80062EB0(u8, u8);
