@@ -408,3 +408,169 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_8AE01738` → `Fragment46_RefreshSavedSelection`.
+
+### Third-box unresolved handoffs at the extended cutoff
+
+- `func_8AE017A4`: `requeue`. The pointer-loop basin remains raw/normalized
+  0.9306, 288/288 bytes, 0x40 frames. Named sentinels, producer-backed
+  record/minimum pointer types, a narrow variant snapshot, and completing
+  the ten-element array inside either loop scope (using `sizeof` for the
+  search count) do not fix the shared initial address. Mixed pointer-clear /
+  indexed-search forms do emit a fresh search base, but the clear cursor is
+  then `$v0` and the search cursor `$s3`; retail keeps both in `$s0`.
+  That basin is normalized 0.9861 / raw 0.6528, also 288 bytes. Next:
+  obtain compiler web/rematerialization evidence for that specific shared
+  cursor before another spelling campaign. Do not treat the normalized
+  score as an improvement in actual byte agreement. Latest evidence:
+  `scratch/b3-selection17a-sentinel/result.json`,
+  `scratch/b3-selection17a-records/result.json`,
+  `scratch/b3-selection17a-mixed/result.json`,
+  `scratch/b3-selection17a-extent/result.json`.
+- `func_8AE004C0`: `requeue`. New best genuine source has the correct
+  1,588-byte size and 0x170 frame: normalized 0.9924, raw 0.9118,
+  `markers:branch-position:cursor1-decl0-flags1`. Establish the position
+  pointer after each scale call, and retain the allocation snapshot and
+  advancing texture-upload cursor as separate used roles. Prefix root,
+  matrix, opacity, and texture colors remain coherently different, with
+  further SDK constant scheduling differences. Moving the upload cursor's
+  first definition/scope, using the actual marker/16-bit texture types,
+  mixed vector access, matrix pointers, and snapshot timing did not improve
+  this basin. Next: trace the first matrix-versus-texture pointer allocation
+  rather than adding more source copies. Best manifest/result:
+  `scratch/b3-markers-branches.json`,
+  `scratch/b3-markers-branches/result.json`; later diagnostics are in
+  `b3-markers-lifetimes`, `b3-markers-types`, `b3-markers-position`,
+  `b3-markers-snapshot`, and `b3-markers-matrices` under scratch.
+- UI callbacks `func_8AE02398`, `func_8AE02470`, `func_8AE026C8`: `requeue`.
+  Raw node access and coordinate-record representations do not cure the
+  initial global-address carrier. The initial coordinate-record generator
+  incorrectly rewrote member names; those compile failures are generator
+  evidence only. The corrected batch is
+  `scratch/b3-callback26c-record-fixed/result.json`.
+  The raw m2c shared-store label inside a case is a materially different
+  CFG from the previously tested store after the entire switch. In
+  `b3-callback26c-label`, case0/snapshot1/order0 reaches raw 0.8103,
+  normalized 0.8793, 224/232 bytes, 0x18 frame, matching the prologue through
+  the argument reloads. The case1 label has normalized 0.8966/raw 0.7931,
+  220 bytes. The corresponding label families give `func_8AE02398` raw
+  0.7778, 208/216 bytes, and `func_8AE02470` raw 0.7903, 240/248 bytes.
+  Reusing the final reload local or ordinary conditional step/clamp
+  expressions does not improve the raw basin. Next: inspect why retail
+  duplicates the store and reloads into `$a0`, while the shared-case source
+  branches back to one store and hoists a separate final-load carrier.
+  Evidence: `scratch/b3-callback23-label/result.json`,
+  `scratch/b3-callback24-label/result.json`,
+  `scratch/b3-callback26c-label/result.json`,
+  `scratch/b3-callback26c-label-reload/result.json`,
+  `scratch/b3-callback26c-conditional/result.json`.
+- `func_8AE02568`: `requeue`. The straightforward two-direction clamp emits
+  316/352 bytes (best normalized 0.7614/raw 0.3182), frame 0x18. Retail has
+  path-specific target stores absent from the simplified source. Next:
+  establish that target-assignment value flow from an actual helper/macro
+  or source-shape witness; do not manually repeat stores to fill the gap.
+  `scratch/b3-callback2568-v1/result.json`.
+- `func_8AE04618`: `requeue`. Pixel-to-quarter-pixel shifts materially
+  improve the original macro candidate: 1,484/1,508 bytes, normalized
+  0.9523/raw 0.3183, frame 0xE8 versus retail 0xF0. A persistent four-field
+  signed bounds record gives the exact 1,508 bytes and 0xF0 frame, and the
+  first 33 instructions match; normalized 0.9390/raw 0.2997. These are
+  separate basins. Per-rectangle records/scalars add other storage or
+  narrowing effects; halfword icon parameters also moved the sibling
+  `func_8AE04BFC` away from its prior 700-byte basin. Next: inspect the
+  coordinate factoring and first SDK temporary allocation using the
+  persistent-bounds source. No packet words were rewritten, and the real
+  one-argument texture-loader ABI was retained. Evidence:
+  `scratch/b3-window-shifts/result.json`,
+  `scratch/b3-window-bounds/result.json`,
+  `scratch/b3-window-scalars/result.json`,
+  `scratch/b3-icons-contract/result.json`.
+
+The existing jump-table `.rodata` prerequisite remains in force. No further
+switch probe, shared layout edit, padding helper, or instruction rewrite was
+introduced during this box.
+
+The final bounds-field/value-flow batch reproduced the persistent-bounds
+basin without improvement: `scratch/b3-window-bound-order/result.json`.
+Final native module controls, accepted-row provenance, preserved eleven
+function definitions, and full retail ROM comparison passed:
+`scratch/b3-final-module-controls.json`,
+`scratch/b3-final-provenance.json`, `scratch/b3-preserved-eleven.json`,
+`scratch/b3-final-gate.log`. The accepted source SHA256 remains
+`b9d62a363a8470feb5ad518fcd86d6c1a4a53a1f9cf8bad53c00adf37e7e42e9`,
+identical to the sealed `func_8AE01738` checkpoint source.
+
+## 2026-10-28 fourth native box (after a743e6ee)
+
+User extended the same exclusive assignment through 07:55 UTC, preserving
+all earlier committed winners; publication and shared layout remain with
+parent. The oldest actionable requeue `func_8AE017A4` was resumed first.
+
+The unchanged native compiler's retained stages reproduce the canonical
+288-byte candidate exactly (`scratch/b4-ir-control.json`). UGEN's assembly
+already has one `la $3,D_8AE08888` feeding both `$s0` assignments, so the
+shared-address residual precedes assembler scheduling. The explicit indexed
+clear, with the same named pointer subsequently used by search, instead
+reaches the previous 288-byte normalized-0.9861/raw-0.6528 basin; separating
+its clear counter adds code. Grouping the actual cursor/index and result
+state, and changing array decay to address-of-first-element/array forms,
+reproduce raw 0.9306. Library `memset` emits a call and does not match the
+retail clear. No return types, callee ABIs, registers or volatile qualifiers
+were changed. Evidence:
+`scratch/b4-selection17a-indexed-cursor/result.json`,
+`scratch/b4-selection17a-state/result.json`,
+`scratch/b4-selection17a-library-clear/result.json`,
+`scratch/b4-selection17a-addresses/result.json`.
+
+Native detailed listing was investigated without modifying the compiler.
+The upstream [IDO argument parser](https://github.com/n64decomp/ido/blob/master/src/uopt/uoptinit.c) identifies `-l`/`-zdbug` as
+listing controls; native listing aborts in `wrapper_ecvt` while formatting
+floating diagnostics. The normal rerun and code-motion listing's emitted
+ucode equal the retained normal `.O`, but the process failure means no
+successful full allocation trace is claimed. The allocation listing is
+truncated. Receipts and logs: `scratch/b4-uopt-list/receipt.json`,
+`scratch/b4-uopt-list/{reg,motion}/listing.txt`. `-dwopcode` is a word-width
+option, not an opcode-dump option; its diagnostic run was discarded as a
+trace mechanism. No diagnostic flags are used by candidate admission. The
+cc driver's `-keep` files were relocated into the private scratch capture;
+no generated compiler artifacts are committed.
+
+
+The remaining fourth-box source families also rejected without installation:
+
+- Marker matrix arrays/records, signed/unsigned DMA-address locals, the
+  producer-verified `u8 *D_8AE0A164` paired retype, Gfx-typed state lists,
+  and signed/unsigned phase widths do not improve the retained 1,588-byte,
+  0x170-frame, raw-0.9118 basin. The paired retype was restored on rejection;
+  earlier accepted code/declarations stay intact. Evidence:
+  `scratch/b4-markers-matrix-object/result.json`,
+  `scratch/b4-markers-dma/result.json`,
+  `scratch/b4-markers-buffer-type/result.json`,
+  `scratch/b4-markers-gfx-types/result.json`,
+  `scratch/b4-markers-angle/result.json`.
+- Natural per-case return tails in `func_8AE026C8` do not improve its prior
+  shared-case-store basin: `scratch/b4-callback26-leaves/result.json`.
+- Gfx-typed state-list declarations in `func_8AE04618` leave the persistent
+  bounds basin unchanged: `scratch/b4-window-gfx-types/result.json`.
+- `func_8AE02568` was tested with SDK `MIN`/`MAX` target-update operands,
+  which naturally reevaluate a real target assignment and therefore offer
+  a source mechanism for the retail's repeated stores. These bodies emit
+  348–364 versus 352 bytes and remain instruction drift; best normalized
+  0.6742/raw 0.3596. This hypothesis does not establish the original source.
+  `scratch/b4-callback2568-macro-target/result.json`.
+- Persistent quarter-pixel bounds in `func_8AE04BFC` emit 692 or 708 bytes
+  versus 700, below the earlier raw-0.8514 basin. All bounds fields were
+  used; no frame filler was added. `scratch/b4-icons-bounds/result.json`.
+
+A compiler-lineage diagnostic of the already rejected `func_8AE017A4` body
+compiled under stock native IDO 5.3 with the same normal flags, emitting
+320 bytes versus the 7.1 candidate's 288. This is not an alternate-compiler
+match or admission. `scratch/b4-lineage17a/receipt.json`; native 5.3 SHA256
+`fc0ebc664c16cee7a39caa0b4f403c8594e6bea8bc267fe8ea34060b6c1fefdc`.
+The pinned 7.1 compiler and its flags remain the admission oracle.
+
+Oldest-owner next action: obtain a source/frontend or cursor-rematerialization
+witness for two independent base materializations on the same named cursor,
+or inspect the retained UCODE with a functioning stock listing runtime.
+Do not infer C unreachability or replay the now-inert aggregate, address,
+extent, and declaration-lifetime families. All eleven earlier accepted
+bodies remain protected, with their existing sealed receipts retained.

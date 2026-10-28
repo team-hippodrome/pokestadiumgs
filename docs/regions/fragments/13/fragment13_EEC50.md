@@ -1525,3 +1525,114 @@ A 300-second permuter on the sequential form reached 1115 -> 215, only with
 `ret++; ret--;` noise. Not adopted. Next: keep the sequential reload and
 find what puts `ret` back in `$v0`, the way retail assigns it after each
 call (`b tail; li v0, 1`).
+
+### Third-box remaining requeues and native process receipts
+
+- **Requeue `func_824050A8` first.** Sixteen new canonical candidates test
+  literal-60 quotient carriers and actual byte-valued field carriers. The
+  quotient family reaches normalized/raw **0.9709/0.5922**, correct
+  412-byte/frame-0x18 extent, at `scratch/box3-clock-carriers1.json` index 2.
+  This matches the historical opcode score but not its better raw score.
+  The retained raw leader remains `scratch/box2-clock-permuter1.json` index 1,
+  **0.9417/0.6505**, with the correct divisor register and remaining old-field
+  preload/first-carry allocation differences. New stock/blank/observer-off/
+  on/on-blank controls reproduce the raw leader's complete module under the
+  logging compiler (`scratch/box3-clock-observer/calibration.json`). Constant
+  60 has save cost 5 and physical `$v0` there, unlike the previous reused-
+  carry candidate. Explicit quotient locals improve opcode alignment but
+  change that constant allocation. Field carriers do not close it. Next:
+  trace first-carry/old-field demand on these two calibrated source families;
+  ordinary carry permutations and narrow divisor widths are already bounded
+  negatives. A field-carrier generator was stopped during controls and
+  corrected to preserve the floating tick remainder before any result from
+  it was admitted; use `box3-clock-fields2`, not its incomplete predecessor.
+- **Requeue `func_82403C84`.** Twenty-four new canonical candidates test
+  normalized selectors, partitioned switches, and explicit additive/prefix
+  induction forms with indexed/pointer texture access. Selector minus one
+  reduces the owner to **664 bytes/frame 0x78**, normalized/raw
+  **0.9639/0.5060**, but changes dispatch and retains one extra saved constant.
+  Partitioning does not restore the original graph. Explicit counter additions
+  reproduce the original 676-byte/frame-0x78 basin; pointer variants can grow
+  the frame to 0x80. Retain the four-case leader at `scratch/panel2.json`
+  index 0, **0.9527/0.5740**, target 652/frame 0x70. The unresolved mechanism
+  remains constant-1/3 lifetime/cost across the two-texture loop; do not replay
+  these selector/partition/induction families.
+
+The local target lister still reports zero prior attempts for some owners and
+misclassifies the lighting preset sentinel as a jump table. Those are native
+adapter metadata limitations, not permission to discard the retained history
+or introduce a layout change. Seven actual function ASM owners remain; eleven
+additional ASM pragmas are data-only labels. No shared tooling, headers,
+linker/YAML inputs, symbol names or coverage files are changed by this worker.
+The private scratch batch wrapper's explicit host-syntax-before-ROM gate and
+all diagnostic sources, draft-context cleanup, traces and receipts stay local.
+
+Clock closing extension checkpoint: a calibrated **240-second, single-worker**
+natural-source search retains nonzero scores 820/830. Eight canonical checks
+of its reviewed outputs and real carry/reduction-order combinations accept
+none, but improve the retained frontiers (`scratch/box3-clock-final1.json`):
+index 4 is **0.9709/0.6699**, and the new raw leader, index 6, is
+**0.9612/0.7864**. Both are exactly 412 bytes/frame 0x18. In the raw leader
+the divisor and old-seconds load now match; the first difference advances to
+**byte 45**, old-minutes load `$t4` versus `$t2`. The first eleven instructions
+are exact. The next concrete hypothesis is first-minutes/old-hour demand and
+carry lifetime on this three-quotient body; preserve the stronger opcode
+leader alongside it. Do not restart divisor-width or generic declaration
+permutations. Search calibration and outputs:
+`scratch/box3-clock-carriers1-permute.json`; all canonical closing diagnostics:
+`scratch/box3-clock-final1/result.json`. These are requeue evidence, not
+matching-C credit. The two renderer commits stay frozen throughout the search.
+
+
+### Fourth-box durable checkpoint (2026-10-28, through 07:55 UTC)
+
+All four committed genuine matches are preserved; this extension accepts no
+new owners. The earlier 06:55 seal remains `scratch/box3-final-state/receipt.json`.
+The exclusive source still contains 72 C functions and seven function ASM
+owners, excluding eleven data-only ASM labels. No prototype companion from
+an unsuccessful experiment was installed.
+
+- **Oldest actionable requeue `func_824050A8` was resumed first.** Eight real
+  old-field snapshot variants (`scratch/box4-clock-snapshots1/result.json`)
+  test a materially different first-carry/old-minute/old-hour demand hypothesis.
+  Best normalized/raw is 0.9223/0.5728, 412 bytes/frame 0x18; the divisor moves
+  to argument registers and loses the exact prefix. Preserve the stronger
+  `box3-clock-final1` index 6 raw leader (0.9612/0.7864, first difference byte
+  45, eleven exact initial instructions) and index 4 opcode leader
+  (0.9709/0.6699). Next: inspect first-carry interference in the calibrated
+  allocator trace, rather than replaying explicit snapshots or divisor widths.
+- **Requeue `func_8240641C`.** Sixteen signed/unsigned field-view and explicit
+  unsigned-conversion variants (`box4-input-views1`, `box4-input-loadcasts1`)
+  use the verified controller halfword at +0xC. The same unsigned view retains
+  the old 316-byte common-load basin; mixed views produce 336 bytes versus
+  target 324. Explicit casts restore unsigned loads but promote the controller
+  base and add address reloads. Preserve the earlier 316-byte near miss;
+  these do not justify volatile barriers, fake ABI changes or extra arguments.
+- **Requeue `func_82403624`, grid renderer.** Typed-prefix layout and real
+  grouped-list helper signatures enable a complete ordinary C reconstruction.
+  Verified state list offset is +0x54 and per-group counts are at +0x154.
+  Target is 1,632 bytes/frame 0xE0. Best retained candidate is
+  `scratch/box4-grid-countviews1.json` index 0 (index 2 also ties):
+  normalized/raw **0.9657/0.7034**, **1,624 bytes/frame 0xE0**, with
+  operand/scheduling drift. Literal-five guarded do loops restore the correct
+  row-loop graph; ordinary for loops lose further instructions. Typed formal
+  parameters, short-lived pointer aliases, verified raw initial count reads,
+  list/count-view caches and declaration-home variants do not close the two
+  missing words. Final eight word-address cache variants preserve the real
+  pointer interface and callback arguments; best is 0.9657/0.6029,
+  1,616 bytes/frame 0xE8 (`box4-grid-address1`). No address/prototype experiment
+  is installed. Next concrete hypothesis: target independently materializes
+  the initial state count and list-relative count bases, spills the original
+  state argument and retains group in a saved register; current bodies merge
+  initial count loads and instead retain state/spill group. Trace those webs
+  and their costs before another spelling batch. Do not restart declaration
+  ordering alone. Eight initial `box4-grid1` compile failures were type
+  visibility/prototype setup evidence, not scored C-reachability hypotheses.
+
+All canonical results, whole-module normal/+20-blank controls and private
+context/draft cleanup remain under `scratch/box4-*`. The original native
+compiler and stronger explicit host-syntax-before-ROM gate remain unchanged.
+No new output rewrites, fabricated arguments, padding, forced registers,
+volatile barriers, shared-layout edits, names, coverage or publication changes.
+The final committed-source ROM/host seal is `scratch/box4-final-state/receipt.json`;
+the complete incremental report is `scratch/agent-report.json`.

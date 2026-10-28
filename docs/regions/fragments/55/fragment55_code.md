@@ -252,3 +252,188 @@ allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_8670408C` → `Stage55_UpdateModelSounds`.
 - `func_8670427C` → `Stage55_UpdateModelFade`.
 - `func_867068EC` → `Stage55_SpawnVariantEffect`.
+
+
+## 2026-10-28 third native box: constant-pool and allocation follow-ups
+
+Incremental base is `5e7cad6471536851ced11b976146e12522574243`.
+The seven accepted owners in the preceding two boxes remain protected. Parent
+owns naming and publication. The extended cutoff for this worker is 06:55 UTC.
+All candidate batches retain normal/+20-blank whole-module controls and use the
+unmodified native compiler; scores below describe rejected candidates only.
+
+- `func_867036B4`: **layout-prerequisite**. A normal indexed 60-row reset loop
+  using the real `3000.0f` boundary matches all 65 text words exactly (260 bytes,
+  frame `0x48`). Canonical link verification rejects candidate-only `.rodata`:
+  16 bytes, alignment 16, `453b8000000000000000000000000000`.
+  The existing literal is `D_8670C394`, ROM `0x2AE874`, bits `453B8000`.
+  Do not spend more source spellings before parent fixes constant-pool ownership.
+  Exact candidate 0: `scratch/box3-036b4-literal.json`; result and captured
+  source/object: `scratch/box3-036b4-literal/`; section facts and hashes:
+  `scratch/box3-036b4-layout-handoff.json`. This owner was never installed.
+- `func_86702B28`: **requeue**. Genuine four-lane state/model initialization is
+  808/808 bytes, frame `0x30`, best normalized `0.9901`, raw `0.9703`.
+  Snapshot `D_8670B3C4` after the two calls and use it in both the initial speed
+  calculation and lane X positions; that removes the extra two-word reload.
+  Initialize state `+0x1C` immediately after `+0x18` to reproduce the float
+  constant/register order. Keep ordinary inner loops: IDO supplies the retail
+  four-way unroll without manual unrolling. Explicit `clearEnd` and `clear`
+  locals initialized end-first improve the remaining setup. Best is candidate 4
+  of `scratch/box3-02b28-bounds.json`, with source/object in its result folder.
+  Residual: clear iterator/bound `v0`/`v1` roles and their setup; two equivalent
+  address spellings are `D_86727CE8+0x640` versus `D_86728328`, and
+  `D_86710C20+0x2C` versus `D_86710C4C`. Indexed clearing, pre/post increment,
+  reversed comparison, do/while, pointer setup placement, and direct field-label
+  references did not close it. Next: use the sealed linked diagnostic controls
+  before further allocation experiments, and retain the real 400-word bound.
+- `func_8670675C`: **register-tie/requeue**. Best 280/280 bytes, frame `0x28`,
+  normalized `1.0`, raw `0.9143`: candidate 4 of
+  `scratch/box3-0675c-staged.json`. Compute vertical byte offset before horizontal
+  byte offset, copy the global distance into `radius`, then multiply `radius`
+  by the horizontal cosine. This fixes the integer angle register roles and
+  almost all orbit arithmetic. Remaining words: perspective/global-store setup
+  ordering; sqrt destination `f0` versus retail `f14`; reloaded distance `f2`
+  versus `f14` and its two uses. Named coordinate snapshots, explicit squared
+  distance, shared before/after-call distance locals, byte-offset declaration
+  order, and staged cosine-first forms did not close that last float web.
+  The original unlinked permuter run is not a controlled compiler result: host
+  preprocessing omits `PR/gu.h:196-198`'s `__sgi`-conditional intrinsic pragma.
+  The control failure is retained in `scratch/box3-camera-import-control.json`.
+  Reproducing that exact SDK `#pragma intrinsic(sqrtf);` in the private diagnostic
+  context restores a byte-identical base control and a retail-identical linked
+  target. `scratch/linked-permute55-intrinsic.py` also disables synthetic,
+  external-type, ABI, padding, and line-grouping mutations. Next: use that sealed
+  context before tracing/searching the remaining float web.
+- `func_8670122C`: **requeue**. Best remains normalized `0.9699`, 664/660 bytes,
+  frame `0x58`; a current-model pointer raises raw score to `0.6928` (candidate 1,
+  `scratch/box3-0122c-loop.json`). Candidate caches the slot-table base in `s8`,
+  while retail uses `s8` for the initial literal one; state/result are consequently
+  `s5`/`s4` instead of `s4`/`s5`. Counted-loop conditions, pointer induction,
+  unsigned random chance, flattened slot indices and byte/word address forms
+  did not remove the cached base. Next: trace the table-base hoist and initial
+  constant allocation rather than replaying these boolean/array spellings.
+- `func_86706B88`: **requeue**. Direct global index uses improve the best to
+  normalized `0.8716`, raw `0.5872`, 436/436 bytes, leaf frame. Candidate 4 of
+  `scratch/box3-06b88-inline.json`; resource-offset snapshots, signed index with
+  unsigned comparisons, and nested tier predicates are weaker. Retail keeps
+  initial node in `v0`, index in `v1`, then reloads the global node after stores.
+  Next: preserve that actual reload behavior while resolving the initial index
+  and tier webs; no narrow/fabricated callback arguments.
+- `func_86708B18`: **requeue/layout-prerequisite**. The initial exit draft is 968/964
+  bytes, normalized `0.9132`, raw `0.6860` (candidate 1,
+  `scratch/box3-08b18.json`). The 0/2 mode and sound-latch fields agree with the
+  accepted model callbacks; double constants are the existing `D_8670C550` and
+  `D_8670C558`. Separate coefficient/coordinate constant snapshots and setup-loop
+  index/scale-chain variants were inert. Next hypothesis: compute X before Y
+  after storing Z so IDO can overlap the divisor load with double Y arithmetic;
+  test indexed state access and a scene-control pointer confined to phase two.
+  This hypothesis improved the extern-coefficient draft to 964/964 bytes, frame
+  `0x58`, normalized `0.9419`, raw `0.7593` (candidate 1 of
+  `scratch/box3-08b18-order.json`). A combined transform/frame model view and
+  increment expressions were inert; indexed state access deletes loads retail
+  retains. The real coefficients are doubles `-0.13` and `0.1`, respectively,
+  at ROM `0x2AEA30`/`0x2AEA38`. Literal-coefficient candidate 0 of
+  `scratch/box3-08b18-literal.json` improves to normalized `0.9585`, raw `0.7967`,
+  964/964 bytes, but canonical link verification rejects candidate-only `.rodata`.
+  It is exactly 16 bytes aligned 16, `bfc0a3d70a3d70a43fb999999999999a`.
+  Section facts/captured object: `scratch/box3-08b18-layout-handoff.json`.
+  Stop literal variants until parent resolves the shared constant-pool layout.
+  Then address first-phase state/secondary-model register roles and the second
+  phase's scene/state and double-constant register webs.
+- `func_86700418`: **requeue**. A verified minimal model-node view (index `+0x14`,
+  Z `+0x2C`) and the real `(s32 reason, void *node)` callback ABI retain the same
+  four scheduling differences. Candidate 4 of `scratch/box3-00418-context.json`
+  is 368/368 bytes, frame `0x38`, normalized `0.9565`, raw `0.9457`; its extra
+  raw difference is the equivalent state-base `+0x50` field reference. Producer:
+  `Geo_NodeModelPart` in `src/340C0.c`; node layout in `include/229E0.h`.
+  Next: isolate the early lookup/call-argument schedule with the native compiler
+  rather than replaying pointer/index/argument-carrier spellings.
+
+Private linked permuter diagnostics keep both an unlinked base control against
+its canonical captured object and a linked target control against the exact
+retail ROM slice. `scratch/linked-permute55.py` resolves both sides with the
+unchanged completed ELF symbol addresses; GNU ld uses the real owner address
+and `SUBALIGN(4)` because isolated `.text` defaults to 16-byte alignment while
+this owner starts at address `0x86702B28`. The first alignment-control failure
+was retained and corrected before searching. No production object/assembly,
+compiler, flags, linker files, or source were patched. Do not treat a permuter
+score as acceptance; discard synthetic/filler or changed-bound suggestions.
+
+
+Third-box checkpoint: no additional C owner was accepted. The assigned source
+is byte-for-byte identical to `5e7cad64`, SHA256
+`32be2d4fa040de959261920dca6272bac5796affd10ff734356758893a5530c3`.
+Fresh full native ROM and host-C verification passed; receipt, complete object,
+ELF/map/ROM and seven-owner provenance are sealed in
+`scratch/box3-checkpoint/`. Retail MD5 remains
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The controlled 300-second linked initializer
+search emitted no admissible winner. The corrected ordinary-C camera search
+passed both controls and ran for 90 seconds without emitting an improved
+candidate; its exact control is in
+`scratch/permuter/func_8670675C-ougbje2p/control-receipt.json`, and its result is
+`scratch/box3-0675c-linked-intrinsic-result.json`. Prior uncorrected camera
+permuter output is excluded as an import-control failure, not a C-reachability
+result. `scratch/agent-report.json` contains the final incremental handoff.
+
+
+## Fourth native continuation: stopped by parent; no new accepted owner
+
+The durable `469f449c` checkpoint and all seven genuine C owners through
+`5e7cad64` are unchanged. Parent requested the final stop; all runner and
+permuter transactions had completed. No further probe or gate was started for
+this handoff. Source SHA256 remains
+`32be2d4fa040de959261920dca6272bac5796affd10ff734356758893a5530c3`.
+The latest applicable successful production receipt remains
+`scratch/box3-checkpoint/receipt.json` (retail ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, host C checks enabled).
+
+- `func_86700418`: **requeue**. Resumed the oldest actionable continuation with
+  a genuinely different callback control-flow family: one-case switch, signed
+  or unsigned selector, default return or implicit no-op. Verified real callback
+  ABI remains `(s32 reason, void *node)`. Eight canonical candidates retained
+  the four early scheduling differences; best 368/368 bytes, frame `0x38`,
+  normalized `0.9565`, raw `0.9457` (equivalent field-address addend accounts
+  for one raw difference). Exact manifest/result:
+  `scratch/box4-00418-switch.json`,
+  `scratch/box4-00418-switch/result.json`. A 300-second constrained single-worker
+  linked permutation run passed exact unlinked-base and retail-target controls:
+  `scratch/permuter/func_86700418-f9p1yrg7/control-receipt.json`.
+  Its result is `scratch/box4-00418-linked-permute-result.json`; no admissible
+  source winner was emitted. The score-270 suggestion changes a GBI word through
+  a float cast and was rejected on source/semantic review, never submitted for
+  installation. Next: investigate the initial lookup/call setup schedule with
+  native compiler intermediate evidence; do not replay the switch family or
+  change the verified callee ABI.
+- `func_86701874`: **requeue**. Added a complete genuine steering/prediction
+  draft based on its producer in `func_86701C6C` and the adjacent `014C0` routine.
+  Prediction input has float old-X/target-Z/target-X/width at `+0/+4/+8/+0xC`,
+  slot index `+0x10`, and snapped latch `+0x14`. Slot records have stride `0x10`;
+  state stride is `0xAC`, X at `+0x1C`, mode at `+0x2C`. Lane stride is `0x38`,
+  gain `+8`, slope limit `+0xC`, direction `+0x18`, integer correction `+0x1C`,
+  and last direction `+0x24`. `D_86728340` aliases lane direction; `D_8670BAEC`
+  has an eight-byte kind-table stride. SDK `osSyncPrintf(const char *, ...)`
+  receives only the existing format and one promoted double: `D_8670C110` is
+  `angle=%f`, and `D_8670C11C` is `(angle=%f)`. The apparent leftover `a1` in
+  assembly is not an extra printf argument.
+  Eight canonical candidates varied lane initialization placement and real
+  X/Z snapshots. Best normalized `0.8417`, raw `0.3552`, 1036 versus 1016 bytes,
+  frame `0x60`: candidate 0 in `scratch/box4-01874.json` and
+  `scratch/box4-01874/result.json`. Candidate 2 has raw `0.3571` but is worse
+  overall (1064 bytes, normalized `0.8271`). Captured sources/objects and full
+  candidate-0 disassembly are in `scratch/box4-01874/`; the readable dump is
+  `scratch/box4-01874-disasm.txt`.
+  Decisive next hypothesis, **not tested before the stop**: snapshot the current
+  direction once into a real used `s32 direction`, use it both for the last-
+  direction store and positive/negative branch. Retail loads that value once
+  into `v0`; the draft reloads direction after the global slope-limit store and
+  spends `v0` on the lane pointer. This may also resolve lane/state/slot register
+  roles. Then stage the angle numerator/division or use separate branch-local
+  angle values: retail preserves the angle over printf, whereas the current
+  positive branch preserves numerator operands and rematerializes the division.
+  Retain actual model-Z refresh behavior and the correct one-double printf ABI;
+  add no filler locals or fake arguments.
+
+The fourth-box source did not change. No coverage, shared layout, symbols,
+headers, compiler, core tools, push, naming or PR operation belongs to this
+handoff. Final machine-readable record: `scratch/agent-report.json`; previous
+sealed checkpoints and their reports remain in place.
