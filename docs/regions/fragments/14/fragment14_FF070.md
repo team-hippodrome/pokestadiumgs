@@ -94,3 +94,11 @@ Spelling notes:
 - `colorA` is assigned after the scale call.
 
 `func_8130A98C` was declared `void` but returns `D_8160BD1C(...)`'s float. Its two callers' 8-byte buffers are now `s16[4]`, and `func_81609A90` takes `s16 *`.
+
+## 2026-10-28 — `func_8130BDB8` and `func_8130AAA8` matched
+
+Both use the typed state (now through 0xE915, with `unk_E8EC` typed as the pointer `func_8130AEF4` reads).
+- `func_8130BDB8`: `unk_E900 += func_816092FC()`. At 120 it clamps, and if the record's six bytes at 0xB are all zero it sets `unk_E904 = 0`, mode `unk_E912 = 9`, plays sound 0xA8 and calls `func_8160A780(unk_E8EC->unk_1A148->unk_944, unk_E911 + unk_E914)`. Below 120 it draws `min(unk_E900 * 9 / 120, 6)` steps with `func_8160B9A0(record, 5 - i, 1)`. The two loops use separate counters (`i` for the draw loop, `j` for the byte scan). One shared counter puts the scan in a saved register.
+- `func_8130AAA8(state, x, y)` interpolates between `166 * y + 128` and a target. The target is `(x - unk_E915 - unk_E914) * 166 + 101` with weight `func_8130A98C(state)` when `func_8130AA54` holds, else -143/91 by `unk_E908` with weight `1 - unk_E8F0 / 16`; in mode 9 past the threshold, `y -= D_8160BD04(unk_E904 / 16)`. This was a first-draft match.
+
+`func_8130AA54` keeps its `u8 *` signature: rewritten over the typed state, its own bytes change (its explicit `base` pointer is what retail compiled).

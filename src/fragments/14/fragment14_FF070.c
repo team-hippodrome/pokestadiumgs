@@ -686,6 +686,15 @@ void func_8130A88C(u8 *arg0) {
     func_8130A778(arg0, 4, func_80073450);
 }
 
+// What the state's 0xE8EC pointer leads to: the selected entry's byte at 0x944.
+typedef struct unk_D_8130AEF4_entry {
+    /* 0x000 */ u8 unk_000[0x944];
+    /* 0x944 */ s8 unk_944;
+} unk_D_8130AEF4_entry;
+typedef struct unk_D_8130AEF4 {
+    /* 0x00000 */ u8 unk_00000[0x1A148];
+    /* 0x1A148 */ unk_D_8130AEF4_entry *unk_1A148;
+} unk_D_8130AEF4;
 // The three nodes func_8130AF94 links into a ring (predecessor at 0x4D94, successor at
 // 0x4D98), and the state holding them, the current node and its index; func_8130B06C and
 // func_8130B0E0 step the current node forward and back.
@@ -699,17 +708,20 @@ typedef struct unk_func_8130B06C {
     /* 0x0000 */ s16 unk_0000[4];
     /* 0x0008 */ unk_D_8130B06C_node unk_0008[3];
     /* 0xE8E8 */ unk_D_8130B06C_node *unk_E8E8;
-    /* 0xE8EC */ u8 unk_E8EC[4];
+    /* 0xE8EC */ struct unk_D_8130AEF4 *unk_E8EC;
     /* 0xE8F0 */ f32 unk_E8F0;
     /* 0xE8F4 */ u8 unk_E8F4[0xE8FC - 0xE8F4];
     /* 0xE8FC */ f32 unk_E8FC;
-    /* 0xE900 */ u8 unk_E900[0xE908 - 0xE900];
+    /* 0xE900 */ f32 unk_E900;
+    /* 0xE904 */ f32 unk_E904;
     /* 0xE908 */ s32 unk_E908;
     /* 0xE90C */ s32 unk_E90C;
     /* 0xE910 */ u8 unk_E910;
     /* 0xE911 */ u8 unk_E911;
     /* 0xE912 */ u8 unk_E912;
     /* 0xE913 */ u8 unk_E913;
+    /* 0xE914 */ u8 unk_E914;
+    /* 0xE915 */ u8 unk_E915;
 } unk_func_8130B06C;
 
 extern f32 func_8130B3B8(unk_func_8130B06C *, s16 *);
@@ -825,7 +837,30 @@ s32 func_8130AA54(u8 *arg0, s32 arg1) {
         || (base[0x6912] < 0xC);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AAA8.s")
+extern f32 (*D_8160BD04)(f32);
+extern s32 func_8130AA54(u8 *arg0, s32 arg1);
+f32 func_8130AAA8(unk_func_8130B06C *arg0, f32 arg1, f32 arg2) {
+    f32 t;
+    f32 target;
+    f32 base;
+
+    if (arg0->unk_E912 == 9 && (f32)(arg0->unk_E915 + arg0->unk_E914) < arg1) {
+        arg2 -= D_8160BD04(arg0->unk_E904 / 16);
+    }
+    if (func_8130AA54((u8 *)arg0, (s32)arg1)) {
+        t = func_8130A98C(arg0);
+        target = (arg1 - arg0->unk_E915 - arg0->unk_E914) * 166.0f + 101.0f;
+    } else {
+        t = 1.0f - arg0->unk_E8F0 / 16;
+        if (arg0->unk_E908) {
+            target = -143.0f;
+        } else {
+            target = 91.0f;
+        }
+    }
+    base = 166.0f * arg2 + 128.0f;
+    return (target - base) * t + base;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AC40.s")
 
@@ -998,7 +1033,7 @@ f32 func_8130B3B8(unk_func_8130B06C *arg0, s16 *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130B4E8.s")
 
 extern s32 func_8130B1F4(u8 *arg0);
-extern f32 func_8130AAA8(void *, f32, f32);
+extern f32 func_8130AAA8(unk_func_8130B06C *, f32, f32);
 extern void func_8160B5BC(void *, s16 *);
 extern void func_8130EB04(void *, s32, void *, s32, s32, s16 *, s16 *, s32);
 s32 func_8130B620(void *arg0, s32 arg1)
@@ -1242,7 +1277,45 @@ s32 func_8130BD2C(void *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130BDB8.s")
+extern f32 func_816092FC(void);
+extern void func_800226C0(s32);
+extern void func_8160A780(s32, s32);
+extern void func_8160B9A0(u8 *, s32, s32);
+extern s32 func_8130B1F4(u8 *arg0);
+s32 func_8130BDB8(unk_func_8130B06C *arg0) {
+    u8 *record = (u8 *)func_8130B1F4((u8 *)arg0);
+    s32 done;
+    s32 i;
+    s32 j;
+    s32 count;
+
+    arg0->unk_E900 += func_816092FC();
+    done = TRUE;
+    if (arg0->unk_E900 >= 120.0f) {
+        arg0->unk_E900 = 120.0f;
+        for (j = 0; j < 6; j++) {
+            if (record[0xB + j] != 0) {
+                done = FALSE;
+                break;
+            }
+        }
+        if (done) {
+            arg0->unk_E904 = 0.0f;
+            arg0->unk_E912 = 9;
+            func_800226C0(0xA8);
+            func_8160A780(arg0->unk_E8EC->unk_1A148->unk_944, arg0->unk_E911 + arg0->unk_E914);
+        }
+    } else {
+        count = arg0->unk_E900 * 9.0f / 120.0f;
+        if (count >= 7) {
+            count = 6;
+        }
+        for (i = 0; i < count; i++) {
+            func_8160B9A0(record, 5 - i, 1);
+        }
+    }
+    return TRUE;
+}
 
 extern f32 func_816092FC(void);
 extern void func_8130AF94(unk_func_8130B06C *arg0);
