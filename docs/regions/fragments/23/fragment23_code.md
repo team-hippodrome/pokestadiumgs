@@ -11,3 +11,7 @@ The existing compiled neighbor `func_82A00A04` uses a preinitialized word result
 Fleet history at `afee707ab78d3f63f2f9deeadc7551ec0080eeed` contains no exact owner attempt or reference to `func_82A009A0`, and its region catalog has no fragment 23 note. The existing compiled neighbor supplies the source-shape evidence.
 
 Local validation used public master `67180352e9ef1e09a4b1130e782fd81e145ab843` plus this owner replacement, source Git blob `76ee1a895c8e8836fd921e73f3ad87b4e0ddcd35`, targeting the US ROM. `make rom COMPARE=1 -j2`, an explicit `md5sum -c baseroms/us/checksum.md5`, and all 427 host syntax checks passed. The built ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`. The full-ROM check includes the unchanged compiled neighbor and its existing table. This local result is separate from public CI validation of the published commit.
+
+## 2026-10-29: `func_82A0089C` tooling-blocked
+
+tooling-blocked (shared `$at`): case 0 stores D_82A01A24 and D_82A01A26 through one `lui $at`.

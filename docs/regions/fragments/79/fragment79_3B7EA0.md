@@ -25,3 +25,14 @@
   Only the compiler temp holding the first `func_84154B30` result differs:
   retail puts it at `0x24`, ours at `0x20`. Any extra named local grows
   the frame to 0x40.
+
+## 2026-10-29: `func_84149D54` requeue
+
+requeue (0.88). Builds a 0x20-byte move context `(u8 *out, u8 side, u8 move)`:
+- battle = func_84154B0C(), info = func_8414A3A0(side), then bzero;
+- bit 0 from `*info & 1`;
+- move, plus its func_80062D20/D5C/D98 bytes;
+- out[6] = battle[0x198], written before the pointers;
+- +0x18/+0x1C = attacker and defender sides (0xCC-byte structs), +0x10/+0x14 = those + 8.
+
+Struct indexing gives retail's shift-chain multiply. Remaining: the defender address. Retail computes `battle + (-(side*0xCC)) + 0xCC` (negu/addu/addiu), while every spelling we tried (`[1 - side]`, `[-side + 1]`, pointer arithmetic, an s32 temp) produces subu or a negated index.
