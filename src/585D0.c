@@ -284,7 +284,33 @@ s32 GbSave_IdentifyFormat(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005818C.s")
+extern u8 D_80128570[];
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+s32 func_8005818C(s32 index) {
+    u8 *rec;
+    s32 result;
+    Arg1_80057F58 data;
+    s32 i;
+
+    rec = &D_80128570[index * 112];
+    data = *(Arg1_80057F58 *)(rec + 0x60);
+    result = 0;
+    if (GbPak_ReadCommand(index, data.p, 0x2580, 0xFC0) == 0) {
+        for (i = 0; i < 3; i++) {
+            result = func_80057F58(index, data);
+            if (result != 0) {
+                if (*(u32 *)rec & 0x80000000) {
+                    *(u16 *)(rec + 6) = data.p[0xFA3];
+                    *(u32 *)rec &= 0x7FFFFFFF;
+                } else {
+                    result = data.p[0xFA3] == *(u16 *)(rec + 6);
+                }
+                return result;
+            }
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
