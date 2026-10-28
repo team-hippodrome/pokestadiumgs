@@ -99,7 +99,46 @@ s32 func_80063270(u8 arg0) {
     return (s32)D_800A5090;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/63CF0/func_800632CC.s")
+extern u8 D_80097E90[];
+
+u8 func_800632CC(s32 *arg0, u8 arg1, u8 arg2, u8 arg3, s32 arg4) {
+    u16 result = 10;
+    u8 *entry = D_80097E90;
+    s32 hasDamage = 1;
+
+    if (*arg0 == 0) {
+        hasDamage = 0;
+    }
+
+    if (arg4 == 0) {
+        if ((arg1 == 0 || arg1 == 1) && (arg2 == 8 || arg3 == 8)) {
+            *arg0 = 0;
+            return 0;
+        }
+    }
+
+    while (entry[0] != 0xFF) {
+        if (arg1 == entry[0]) {
+            if (arg2 == entry[1] || arg3 == entry[1]) {
+                *arg0 *= entry[2];
+                result *= entry[2];
+                result &= 0xFFFF;
+                if (hasDamage && *arg0 == 0) {
+                    return 0;
+                }
+                *arg0 /= 10;
+                result /= 10;
+                result &= 0xFFFF;
+                if (hasDamage && *arg0 == 0) {
+                    arg0++;
+                }
+            }
+        }
+        entry += 3;
+    }
+
+    return result;
+}
 
 extern u8 D_80097E90[];
 u8 func_80063454(u8 arg0, u8 arg1, u8 arg2, s32 arg3) {

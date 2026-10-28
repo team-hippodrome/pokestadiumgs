@@ -75,75 +75,6 @@ typedef struct AudioPreloadReq {
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013A40.s")
-
-extern u8 D_800D13B8[];
-extern u8 D_8011E0F0[];
-extern u8 D_8011E208[];
-extern s32 func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
-extern u8 D_8011BE90[];
-void func_80013A8C(void) {
-    static const char buffer_name[8] = {66, 85, 70, 70, 69, 82, 0, 0};
-    static const char error_message[36] = {84, 89, 80, 69, 32, 37, 100, 58, 73, 68, 32, 37, 100, 32, 105, 115, 32, 110, 111, 116, 32, 69, 120, 116, 101, 114, 110, 97, 108, 32, 77, 97, 112, 46, 10, 0};
-    s32 *row;
-    s32 *output;
-    u32 i;
-    i = 0;
-    if (*(s32 *)(D_8011BE90 + 0x2C34) != 0) {
-        do {
-            row = (s32 *)D_800D13B8 + i * 4;
-            output = (s32 *)D_8011E208 + i * 6;
-            func_80015584(output, 0, 0, row[0], row[1], row[2], D_8011E0F0, row[3], buffer_name);
-            i += 1;
-        } while (i < *(s32 *)(D_8011BE90 + 0x2C34));
-    }
-    *(s32 *)(D_8011BE90 + 0x2C34) = 0;
-}
-
-// Same code as Majora's Mask AudioLoad_DecreaseSampleDmaTtls (src/audio/lib/load.c).
-// Counts down the time-to-live byte (0xE) of each 0x10-byte sample DMA buffer at
-// *(D_8011BE90 + 0x29AC); an expired buffer gets its reuse index (0xD) and joins reuse queue 1
-// (0x29BC) or 2 (0x2ABC), whose write positions are the bytes at 0x2BBE and 0x2BBF.
-void func_80013B54(void) {
-    u32 i;
-
-    for (i = 0; i < *(u32 *)(D_8011BE90 + 0x29B4); i++) {
-        u8 *dma = (u8 *)(i * 0x10);
-
-        // FAKE: adding the base second orders the addu as the target does; the one-line
-        // pointer sum leaves 2 instructions different.
-        dma += *(u32 *)(D_8011BE90 + 0x29AC);
-
-        if (dma[0xE] != 0) {
-            dma[0xE]--;
-            if (dma[0xE] == 0) {
-                dma[0xD] = D_8011BE90[0x2BBE];
-                D_8011BE90[0x29BC + D_8011BE90[0x2BBE]] = i;
-                D_8011BE90[0x2BBE]++;
-            }
-        }
-    }
-
-    for (i = *(u32 *)(D_8011BE90 + 0x29B4); i < *(u32 *)(D_8011BE90 + 0x29B0); i++) {
-        u8 *dma = (u8 *)(i * 0x10);
-
-        // FAKE: adding the base second orders the addu as the target does; the one-line
-        // pointer sum leaves 2 instructions different.
-        dma += *(u32 *)(D_8011BE90 + 0x29AC);
-
-        if (dma[0xE] != 0) {
-            dma[0xE]--;
-            if (dma[0xE] == 0) {
-                dma[0xD] = D_8011BE90[0x2BBF];
-                D_8011BE90[0x2ABC + D_8011BE90[0x2BBF]] = i;
-                D_8011BE90[0x2BBF]++;
-            }
-        }
-    }
-
-    *(u32 *)(D_8011BE90 + 0x29B8) = 0;
-}
-
 typedef struct SampleDma {
     /* 0x00 */ u8 *ramAddr;
     /* 0x04 */ u32 devAddr;
@@ -230,7 +161,8 @@ typedef struct AudioContext {
     /* 0x2C28 */ s32 numNotes;
     /* 0x2C2C */ u8 unk_2C2C[4];
     /* 0x2C30 */ s32 totalTaskCount;
-    /* 0x2C34 */ u8 unk_2C34[0x2D0C - 0x2C34];
+    /* 0x2C34 */ s32 curAudioFrameDmaCount;
+    /* 0x2C38 */ u8 unk_2C38[0x2D0C - 0x2C38];
     /* 0x2D0C */ s32 audioRandom;
     /* 0x2D10 */ u8 unk_2D10[0x604C - 0x2D10];
     /* 0x604C */ SequencePlayer *seqPlayers[5];
@@ -247,8 +179,102 @@ typedef struct AudioContext {
 
 extern AudioContext gAudioContext;
 
+// Audio-frame DMA request queued by func_80013A40 and started by func_80013A8C.
+typedef struct AudioFrameDmaReq {
+    /* 0x00 */ u32 devAddr;
+    /* 0x04 */ u8 *ramAddr;
+    /* 0x08 */ u32 size;
+    /* 0x0C */ s32 medium;
+} AudioFrameDmaReq; // size = 0x10
 
-extern void func_80013A40(u32, u8 *, u32, s32);
+extern AudioFrameDmaReq D_800D13B8[64];
+
+#endif
+
+#ifdef VERSION_US
+s32 func_80013A40(u32 devAddr, u8 *ramAddr, u32 size, s32 medium) {
+    AudioFrameDmaReq *req;
+
+    if (gAudioContext.curAudioFrameDmaCount == 64) {
+        return -1;
+    }
+    req = &D_800D13B8[gAudioContext.curAudioFrameDmaCount++];
+    req->devAddr = devAddr;
+    req->ramAddr = ramAddr;
+    req->size = size;
+    req->medium = medium;
+    //!bug: no return value on success
+}
+
+extern u8 D_8011E0F0[];
+extern u8 D_8011E208[];
+extern s32 func_80015584(void *, s32, s32, s32, s32, s32, void *, s32, void *);
+extern u8 D_8011BE90[];
+void func_80013A8C(void) {
+    static const char buffer_name[8] = {66, 85, 70, 70, 69, 82, 0, 0};
+    static const char error_message[36] = {84, 89, 80, 69, 32, 37, 100, 58, 73, 68, 32, 37, 100, 32, 105, 115, 32, 110, 111, 116, 32, 69, 120, 116, 101, 114, 110, 97, 108, 32, 77, 97, 112, 46, 10, 0};
+    AudioFrameDmaReq *req;
+    s32 *output;
+    u32 i;
+    i = 0;
+    if (gAudioContext.curAudioFrameDmaCount != 0) {
+        do {
+            req = &D_800D13B8[i];
+            output = (s32 *)D_8011E208 + i * 6;
+            func_80015584(output, 0, 0, req->devAddr, (s32)req->ramAddr, req->size, D_8011E0F0, req->medium, buffer_name);
+            i += 1;
+        } while (i < gAudioContext.curAudioFrameDmaCount);
+    }
+    gAudioContext.curAudioFrameDmaCount = 0;
+}
+
+// Same code as Majora's Mask AudioLoad_DecreaseSampleDmaTtls (src/audio/lib/load.c).
+// Counts down the time-to-live byte (0xE) of each 0x10-byte sample DMA buffer at
+// *(D_8011BE90 + 0x29AC); an expired buffer gets its reuse index (0xD) and joins reuse queue 1
+// (0x29BC) or 2 (0x2ABC), whose write positions are the bytes at 0x2BBE and 0x2BBF.
+void func_80013B54(void) {
+    u32 i;
+
+    for (i = 0; i < *(u32 *)(D_8011BE90 + 0x29B4); i++) {
+        u8 *dma = (u8 *)(i * 0x10);
+
+        // FAKE: adding the base second orders the addu as the target does; the one-line
+        // pointer sum leaves 2 instructions different.
+        dma += *(u32 *)(D_8011BE90 + 0x29AC);
+
+        if (dma[0xE] != 0) {
+            dma[0xE]--;
+            if (dma[0xE] == 0) {
+                dma[0xD] = D_8011BE90[0x2BBE];
+                D_8011BE90[0x29BC + D_8011BE90[0x2BBE]] = i;
+                D_8011BE90[0x2BBE]++;
+            }
+        }
+    }
+
+    for (i = *(u32 *)(D_8011BE90 + 0x29B4); i < *(u32 *)(D_8011BE90 + 0x29B0); i++) {
+        u8 *dma = (u8 *)(i * 0x10);
+
+        // FAKE: adding the base second orders the addu as the target does; the one-line
+        // pointer sum leaves 2 instructions different.
+        dma += *(u32 *)(D_8011BE90 + 0x29AC);
+
+        if (dma[0xE] != 0) {
+            dma[0xE]--;
+            if (dma[0xE] == 0) {
+                dma[0xD] = D_8011BE90[0x2BBF];
+                D_8011BE90[0x2ABC + D_8011BE90[0x2BBF]] = i;
+                D_8011BE90[0x2BBF]++;
+            }
+        }
+    }
+
+    *(u32 *)(D_8011BE90 + 0x29B8) = 0;
+}
+
+
+
+extern s32 func_80013A40(u32, u8 *, u32, s32);
 
 
 // Close to Ocarina of Time AudioLoad_DmaSampleData (src/code/audio_load.c): GS checks only the
