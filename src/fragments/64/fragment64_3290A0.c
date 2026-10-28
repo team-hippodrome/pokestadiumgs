@@ -29,7 +29,83 @@ s32 func_87F064EC(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F065B4.s")
+s32 func_87F065B4(s32 move, s32 base, u8 *item) {
+    s32 offset;
+
+    switch (move) {
+    case 97:
+        offset = 0;
+        break;
+    case 110:
+        offset = 4;
+        break;
+    case 106:
+        switch (*item) {
+        case 0xAC:
+            offset = 0x8;
+            break;
+        case 0x19:
+            offset = 0xC;
+            break;
+        }
+        break;
+    case 108:
+        switch (*item) {
+        case 0xAF:
+            offset = 0x10;
+            break;
+        case 0x8A:
+            offset = 0x14;
+            break;
+        }
+        break;
+    case 103:
+        switch (*item) {
+        case 0xAD:
+            offset = 0x18;
+            break;
+        case 0xAE:
+            offset = 0x1C;
+            break;
+        }
+        break;
+    case 105:
+        offset = 0x20;
+        break;
+    case 100:
+        offset = 0x24;
+        break;
+    case 111:
+        offset = 0x28;
+        break;
+    case 107:
+        switch (*item) {
+        case 0x7F:
+            offset = 0x2C;
+            break;
+        case 0x7B:
+            offset = 0x30;
+            break;
+        case 0xD4:
+            offset = 0x34;
+            break;
+        }
+        break;
+    case 109:
+        offset = 0x38;
+        break;
+    case 0x99:
+        offset = 0x3C;
+        break;
+    case 0x9A:
+        offset = 0x40;
+        break;
+    default:
+        offset = 0;
+        break;
+    }
+    return offset + base;
+}
 
 /* mkdraft:func_87F06734 begin */
 void func_87F06734(s32 a0, u8 *out_base, u8 *src_base)

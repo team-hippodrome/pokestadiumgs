@@ -175,7 +175,78 @@ void func_86A004AC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A012D4.s")
+extern Gfx *D_800D0510;
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern s32 func_87F00930(void);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(u8 *);
+extern void func_86A095A0(void);
+extern void func_87F07FE8(u8 *);
+extern s32 D_86A444C4;
+extern void func_86A07334(void);
+extern void func_87F022F0(void);
+extern void func_86A06E0C(void);
+extern void func_87F0A5BC(u8 *);
+extern void func_87F01D44(void);
+extern void func_87F0C88C(u8 *);
+extern void func_80008648(void);
+extern u8 D_86A0F920[];
+extern s32 D_86A0D4D0;
+extern s32 D_86A0D4D4;
+extern u8 D_86A0F8E8[];
+extern u8 * D_86A46548;
+void func_86A012D4(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 1);
+    func_8000766C(&D_800D0510, 0, 0, 0x140, 0xF0);
+    if (func_87F00930() == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(*(u8 **)(D_86A46548 + 8));
+    func_86A095A0();
+    switch (*(u32 *)D_86A46548) {
+    case 0:
+    case 1:
+    case 2:
+        func_87F07FE8(D_86A0F8E8);
+        break;
+    case 8:
+        if (D_86A0D4D0 != 0) {
+            func_87F07FE8(D_86A0F8E8);
+        }
+        if (D_86A444C4 != 0) {
+            func_86A07334();
+        }
+        if (D_86A0D4D4 != 0) {
+            func_87F022F0();
+        }
+        break;
+    case 4:
+        func_86A06E0C();
+        break;
+    case 5:
+        func_86A06E0C();
+        func_86A07334();
+        break;
+    case 6:
+        func_86A06E0C();
+        func_86A07334();
+        func_87F0A5BC(D_86A0F920);
+        break;
+    case 7:
+        func_86A06E0C();
+        func_86A07334();
+        func_87F022F0();
+        break;
+    }
+    if (func_87F00930() == 1) {
+        func_87F01D44();
+    }
+    func_87F0C88C(D_86A46548 + 0x1C);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
@@ -367,7 +438,55 @@ void func_86A03D0C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A03DDC.s")
+extern u8 D_86A2DD40;
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern s32 D_86A0FD08;
+extern s32 D_86A0FD0C;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern void func_86A03D0C(void);
+void func_86A03DDC(f32 x, f32 z, f32 px, f32 pz, s32 kind) {
+    u8 *node;
+    u16 angle;
+    u8 *anim;
+
+    angle = guRandom() % 0xFFFF;
+    node = func_87F025B8(&D_86A2DD40, func_86A03D0C);
+    if (node != NULL) {
+        *(f32 *)(node + 0x48) = x;
+        *(f32 *)(node + 0x4C) = 1.0f;
+        *(f32 *)(node + 0x50) = z;
+        *(f32 *)(node + 0x10) = D_80088E50[angle >> 4] * 4.0f + px;
+        *(f32 *)(node + 0x14) = 8.0f;
+        *(f32 *)(node + 0x18) = D_80087E50[angle >> 4] * 4.0f + pz;
+        node[0x41] = 0xFF;
+        *(s32 *)(node + 0x1C) = 0;
+        *(f32 *)(node + 0x54) = 0.11111111f;
+        *(f32 *)(node + 0x58) = 0.11111111f;
+        *(f32 *)(node + 0x5C) = 0.11111111f;
+        anim = node + 0x24;
+        func_8003F1DC(anim);
+        switch (kind) {
+        case 0:
+            func_8003F114(anim, 0, -1, D_86A0FD08);
+            break;
+        case 1:
+        case 2:
+            func_8003F114(anim, 0, -1, D_86A0FD0C);
+            break;
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            func_8003F114(anim, 0, -1, D_86A0FD08);
+            break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -559,7 +678,41 @@ s32 func_86A0585C(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A0588C.s")
+extern s16 MathUtil_Atan2s(f32, f32);
+extern s32 D_86A444D8[4];
+extern F60C7Pair D_86A0F2D4[6];
+extern f32 D_86A0F2BC[6];
+extern f32 D_80088E50[];
+extern f32 D_80087E50[];
+
+// Tests a point against the player's rotated item offset and squared radius.
+s32 ItemBounds_ContainsRotatedOffset(s32 player, f32 point_x, f32 point_z) {
+    s32 player_offset;
+    f32 z;
+    f32 x;
+    s32 angle;
+    f32 radius;
+    f32 dx;
+    f32 dz;
+
+    player_offset = player * 4;
+    angle = *(s32 *)((u8 *)D_86A444D8 + player_offset);
+    x = D_86A0F2D4[angle].x;
+    z = D_86A0F2D4[angle].y;
+    angle = MathUtil_Atan2s(x, z);
+    radius = sqrtf(x * x + z * z);
+    angle = (angle + ((s16 *)D_86A443F0.unk_0E6C)[player]) & 0xFFFF;
+    angle >>= 4;
+    angle *= sizeof(f32);
+    dx = -*(f32 *)((u8 *)D_80088E50 + angle) * radius;
+    dz = *(f32 *)((u8 *)D_80087E50 + angle) * radius;
+    dx = D_86A443F0.position[player][0] + dx - point_x;
+    dz = D_86A443F0.position[player][1] + dz - point_z;
+    if (dx * dx + dz * dz < *(f32 *)((u8 *)D_86A0F2BC + player_offset)) {
+        return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -592,7 +745,7 @@ s32 ItemBounds_ContainsPlayerPosition(s32 arg0, f32 arg1, f32 arg2, s32 arg3) {
 #endif
 
 #ifdef VERSION_US
-extern s32 MathUtil_Atan2s(f32, f32);
+extern s16 MathUtil_Atan2s(f32, f32);
 s32 func_86A05AAC(s32 arg0, f32 arg1, f32 arg2) {
     f32 *pos;
     s16 angle;
@@ -682,7 +835,7 @@ s32 ItemBounds_AnyContainsPoint(f32 point_x, f32 point_z) {
 #endif
 
 #ifdef VERSION_US
-extern s32 MathUtil_Atan2s(f32, f32);
+extern s16 MathUtil_Atan2s(f32, f32);
 void func_86A0638C(s32 arg0, f32 arg1, f32 arg2) {
     if ((arg1 != 0.0f) || (arg2 != 0.0f)) {
         D_86A443F0.unk_0E74[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
@@ -691,7 +844,7 @@ void func_86A0638C(s32 arg0, f32 arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-extern s32 MathUtil_Atan2s(f32, f32);
+extern s16 MathUtil_Atan2s(f32, f32);
 void func_86A06400(s32 arg0, f32 arg1, f32 arg2) {
     if ((arg1 != 0.0f) || (arg2 != 0.0f)) {
         D_86A443F0.unk_0E64[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);

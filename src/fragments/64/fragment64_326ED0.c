@@ -55,7 +55,42 @@ s32 func_87F056E0(void *arg0, s32 arg1) {
     return count;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F057EC.s")
+void func_87F057EC(void *arg0, s32 arg1, s32 arg2) {
+    s32 count;
+    s32 negative;
+    s32 i;
+    s32 missing;
+    s8 buffer[16];
+
+    count = 0;
+    negative = 0;
+    if (arg1 < 0) {
+        //!bug: negating the minimum signed word overflows, as in retail.
+        arg1 = -arg1;
+        negative = 1;
+    }
+    do {
+        buffer[count] = arg1 % 10 + '0';
+        count++;
+        arg1 /= 10;
+    } while (arg1 > 0);
+    if (negative) {
+        buffer[count] = '-';
+        count++;
+    }
+    if (count < arg2) {
+        missing = arg2 - count;
+        for (i = 0; i < missing; i++) {
+            //!bug: a requested width above 16 exceeds the scratch buffer.
+            buffer[count] = ' ';
+            count++;
+        }
+    }
+    for (i = 0; i < count; i++) {
+        ((s8 *)arg0)[i] = buffer[count - i - 1];
+    }
+    ((s8 *)arg0)[i] = 0;
+}
 
 extern Gfx D_87F0FBC8[];
 

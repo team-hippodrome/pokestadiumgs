@@ -151,7 +151,47 @@ void func_8FC007E0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC0082C.s")
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_80049064(s32, s32, s32, s32);
+extern s32 func_8004C874(s32, u8);
+extern u8 D_8FC0244C;
+extern u8 D_8FC02830;
+void func_8FC0082C(u8 *item) {
+    s8 *str;
+
+    switch (item[0]) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        func_80049064(*(u16 *)(item + 4), *(u16 *)(item + 6), 0, func_8004C874(0x4B, item[1]));
+        break;
+    case 4:
+        str = *(s8 **)(item + 0xC);
+        if (str[0] == 0) {
+            func_80049064(0x140, *(u16 *)(item + 6), 1, func_8004C874(0x4B, item[1]));
+        } else {
+            func_80049064(0x140, *(u16 *)(item + 6), 1, (s32)str);
+        }
+        break;
+    case 5:
+        str = *(s8 **)(item + 0xC);
+        if (str[0] == 0) {
+            func_80049064(*(u16 *)(item + 4), *(u16 *)(item + 6), 0, func_8004C874(0x4B, item[1]));
+        } else {
+            func_80049064(*(u16 *)(item + 4), *(u16 *)(item + 6), 0, (s32)str);
+        }
+        break;
+    case 6:
+        if ((&D_8FC02830)[0] == 1 && item == &D_8FC0244C + (&D_8FC02830)[2] * 16) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        }
+        func_800495BC(*(u16 *)(item + 4), *(u16 *)(item + 6), "%s %3d", func_8004C874(0x4B, item[1]), **(u8 **)(item + 0xC));
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

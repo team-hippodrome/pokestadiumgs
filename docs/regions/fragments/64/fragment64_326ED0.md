@@ -39,3 +39,35 @@ ROM, reporting `build/pokestadiumgs-us.z64: OK`, with MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Full retail byte comparison and whitespace
 checks passed. Independent original-assembly/raw-ROM comparison verifies
 all 67 instruction words at `0x328350..0x32845C`.
+
+## `func_87F057EC`: decimal text with a minimum width
+
+The 324-byte sibling retains the same signed decimal digit collection and
+reversal. After the sign is appended to the reverse buffer, it appends
+spaces until the requested minimum width is reached. Reversal therefore
+places those spaces before the sign and digits. It writes a terminating
+zero and has the existing void, three-argument interface. It does not
+truncate values longer than the requested width.
+
+`func_87F05C50` and `func_87F05C98` pass their value and width arguments
+along with a local output buffer, then send that text to `func_87F05B88`
+and `func_87F05954`, respectively. The latter consumes signed characters
+until zero while drawing text. The formatter has no callees or external
+data dependencies. The signed-minimum negation overflow and unchecked
+width beyond the scratch capacity are preserved and labeled `//!bug`.
+//@src/fragments/64/fragment64_326ED0.c
+
+The C scratch array has 16 signed bytes. Four consumed word locals
+reproduce the observed scratch start at stack offset 24 and 56-byte frame.
+The natural digit, space-fill and reverse-copy loops emit all original
+instructions, including IDO's four-byte reverse-copy unrolling. No fake,
+padding, manual unrolling or instruction rewriting is introduced.
+
+Fresh validation on master
+`5c5290f4d96406b9e7be7c9c9f6f6f58cfc1b207` plus this replacement used the
+same commands above, forcing `src/fragments/64/fragment64_326ED0.c` through
+the normal syntax-enabled Makefile and linking the complete US ROM. Fresh
+extraction and the unchanged baseline passed first. The replacement passed
+`build/pokestadiumgs-us.z64: OK`, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`,
+full retail byte comparison and whitespace checks. All 81 instruction words
+at ROM `0x32845C..0x3285A0` independently match original assembly and retail.
