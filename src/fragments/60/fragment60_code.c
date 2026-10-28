@@ -8,6 +8,15 @@ typedef struct unk_D_86A443F0_108 {
     /* 0x08 */ s32 values[5];
 } unk_D_86A443F0_108; // size = 0x1C
 
+// RGBA color. func_86A07334 copies whole colors and reads the channels; the u32 member gives the
+// union 4-byte alignment, so a copy compiles to one lw/sw pair.
+typedef union Fragment60Color {
+    struct {
+        u8 r, g, b, a;
+    };
+    u32 rgba;
+} Fragment60Color;
+
 // Fragment60 minigame state. Most members are per-player arrays indexed by the player number
 // (0-3). Spans that only unmatched code touches are left as byte arrays until their element
 // types and strides are confirmed.
@@ -21,7 +30,8 @@ typedef struct unk_D_86A443F0 {
     /* 0x0074 */ f32 unk_0074[4][2];
     /* 0x0094 */ f32 unk_0094[4][2];
     /* 0x00B4 */ s32 unk_00B4[4]; // func_86A0B49C (asm) flags in unk_0178 the players holding the maximum
-    /* 0x00C4 */ char unk_00C4[0x14];
+    /* 0x00C4 */ s32 unk_00C4[4]; // func_86A07334 draws each player's value in decimal digits
+    /* 0x00D4 */ s32 unk_00D4; // while set, func_86A07334 draws the players flagged in unk_0178 in the blended color
     /* 0x00D8 */ f32 unk_00D8[4]; // func_86A0405C subtracts the popped D_86A0D560 entry's f32 at 0x8
     /* 0x00E8 */ s32 unk_00E8[4]; // func_86A0405C subtracts the popped D_86A0D560 entry's s32 at 0x4
     /* 0x00F8 */ s32 unk_00F8[4]; // func_86A03F48 (asm) stores the last value it queued
@@ -32,7 +42,11 @@ typedef struct unk_D_86A443F0 {
     /* 0x01AC */ s32 unk_01AC; // func_86A06D88 clears it
     /* 0x01B0 */ char unk_01B0[0xC98];
     /* 0x0E48 */ u8 unk_0E48[4][2]; // func_86A0B5CC passes the player's pair to func_8002781C
-    /* 0x0E50 */ char unk_0E50[0x14];
+    /* 0x0E50 */ char unk_0E50[4];
+    /* 0x0E54 */ Fragment60Color unk_0E54; // func_86A07334 blends from this color to unk_0E58
+    /* 0x0E58 */ Fragment60Color unk_0E58; // both are refilled from D_86A464C0 every 10 frames
+    /* 0x0E5C */ s32 unk_0E5C; // frame counter 0-59 that func_86A07334 advances
+    /* 0x0E60 */ char unk_0E60[4];
     /* 0x0E64 */ s16 unk_0E64[4]; // func_86A06400 stores the heading from MathUtil_Atan2s
     /* 0x0E6C */ char unk_0E6C[8];
     /* 0x0E74 */ s16 unk_0E74[4]; // func_86A0638C stores the heading from MathUtil_Atan2s
@@ -286,7 +300,6 @@ s32 func_86A01CC4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern f64 D_86A0F5B8;
 extern void func_87F026E8(s32, void *);
 extern s32 D_87F119D8;
 extern void * D_87F119DC;
@@ -299,7 +312,7 @@ void func_86A03D0C(void) {
     *(f32 *)((u8 *)D_87F119DC + 0x50) += *(f32 *)((u8 *)D_87F119DC + 0x18);
     *(f32 *)((u8 *)D_87F119DC + 0x14) -= 1.0;
     *((u8 *)D_87F119DC + 0x41) -= 7;
-    if (*(f32 *)((u8 *)D_87F119DC + 0x4C) < D_86A0F5B8) {
+    if (*(f32 *)((u8 *)D_87F119DC + 0x4C) < -11.11111111111111) {
         flag = 1;
     }
     if (flag != 0) {
@@ -390,7 +403,6 @@ s32 func_86A04100(void) {
 
 #ifdef VERSION_US
 extern s32 D_86A0EFF4[];
-extern f32 D_86A0F62C;
 typedef struct { f32 x; f32 y; } F60C7Pair;
 // Returns the OR of the D_86A0EFF4 bits for each of the four D_86A443F0.position points
 // that lies strictly inside the square of half-width D_86A0F62C around (arg0, arg1).
@@ -399,7 +411,7 @@ s32 func_86A05344(f32 arg0, f32 arg1) {
     f32 x;
     f32 y;
     s32 result = 0;
-    f32 half_size = D_86A0F62C;
+    f32 half_size = 19.199999f;
 
     for (i = 0; i != 4; i++) {
         x = D_86A443F0.position[i][0];
@@ -618,7 +630,226 @@ void func_86A06E0C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A07334.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094E78[];
+extern Gfx D_80094F50[];
+extern u8 *D_86A46470[4];
+extern u8 *D_86A46480[4];
+extern u8 *D_86A46490[10];
+extern u8 *D_86A464B8;
+extern Fragment60Color D_86A464C0[6];
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Texture width (u16 at 0) or height (u16 at 2) times scale, rounded half away from zero; the
+// textures are the ones func_8004D1FC loads before each GfxRect_DrawTextured call.
+#define TEX_SCALED_WIDTH(tex, scale) \
+    ((f32)(u32)((u16 *)(tex))[0] * (scale) + (((f32)(u32)((u16 *)(tex))[0] * (scale) > 0.0f) ? 0.5f : -0.5f))
+#define TEX_SCALED_HEIGHT(tex, scale) \
+    ((f32)(u32)((u16 *)(tex))[1] * (scale) + (((f32)(u32)((u16 *)(tex))[1] * (scale) > 0.0f) ? 0.5f : -0.5f))
+
+// Draws screen rectangles with GfxRect_DrawTextured:
+// - four icons at x 98, one per bit 0-3 of byte 0x2182 of the record at D_86A46548 + 0xC:
+//   D_86A46470[n] while the bit is set (or byte 0x2180 is 4), D_86A46480[n] otherwise;
+// - for each player, D_86A443F0.unk_00C4[player] in decimal digits (D_86A46490, drawn right to
+//   left from x 182) and the texture D_86A464B8 after them. A player flagged in unk_0178 is drawn
+//   in a color that blends from unk_0E54 to unk_0E58 while unk_00D4 is set; otherwise each player
+//   has fixed primitive and environment colors.
+void func_86A07334(void) {
+    s32 value;
+    s32 digit_index;
+    f32 digit_scale;
+    f32 current_weight;
+    f32 next_weight;
+
+    digit_scale = 0.57f;
+    gSPDisplayList(D_800D0510++, D_80094E38);
+
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 1)) {
+        func_8004D1FC(D_86A46470[0]);
+        GfxRect_DrawTextured(98, 114, TEX_SCALED_WIDTH(D_86A46470[0], 0.8f), TEX_SCALED_HEIGHT(D_86A46470[0], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    } else {
+        func_8004D1FC(D_86A46480[0]);
+        GfxRect_DrawTextured(98, 114, TEX_SCALED_WIDTH(D_86A46480[0], 0.8f), TEX_SCALED_HEIGHT(D_86A46480[0], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    }
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 2)) {
+        func_8004D1FC(D_86A46470[1]);
+        GfxRect_DrawTextured(98, 137, TEX_SCALED_WIDTH(D_86A46470[1], 0.8f), TEX_SCALED_HEIGHT(D_86A46470[1], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    } else {
+        func_8004D1FC(D_86A46480[1]);
+        GfxRect_DrawTextured(98, 137, TEX_SCALED_WIDTH(D_86A46480[1], 0.8f), TEX_SCALED_HEIGHT(D_86A46480[1], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    }
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 4)) {
+        func_8004D1FC(D_86A46470[2]);
+        GfxRect_DrawTextured(98, 160, TEX_SCALED_WIDTH(D_86A46470[2], 0.8f), TEX_SCALED_HEIGHT(D_86A46470[2], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    } else {
+        func_8004D1FC(D_86A46480[2]);
+        GfxRect_DrawTextured(98, 160, TEX_SCALED_WIDTH(D_86A46480[2], 0.8f), TEX_SCALED_HEIGHT(D_86A46480[2], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    }
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 8)) {
+        func_8004D1FC(D_86A46470[3]);
+        GfxRect_DrawTextured(98, 183, TEX_SCALED_WIDTH(D_86A46470[3], 0.8f), TEX_SCALED_HEIGHT(D_86A46470[3], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    } else {
+        func_8004D1FC(D_86A46480[3]);
+        GfxRect_DrawTextured(98, 183, TEX_SCALED_WIDTH(D_86A46480[3], 0.8f), TEX_SCALED_HEIGHT(D_86A46480[3], 0.8f),
+                             0, 0, 1280, 1280, 0);
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    gSPDisplayList(D_800D0510++, D_80094E78);
+
+    // Every 10 frames of the 60-frame cycle, the blend moves one step through the six D_86A464C0 colors.
+    if (D_86A443F0.unk_0E5C == 0) {
+        D_86A443F0.unk_0E54 = D_86A464C0[0];
+        D_86A443F0.unk_0E58 = D_86A464C0[1];
+    }
+    // FAKE: the reversed operands give the target's bne register order.
+    if (10 == D_86A443F0.unk_0E5C) {
+        D_86A443F0.unk_0E54 = D_86A464C0[1];
+        D_86A443F0.unk_0E58 = D_86A464C0[2];
+    }
+    if (D_86A443F0.unk_0E5C == 20) {
+        D_86A443F0.unk_0E54 = D_86A464C0[2];
+        D_86A443F0.unk_0E58 = D_86A464C0[3];
+    }
+    if (D_86A443F0.unk_0E5C == 30) {
+        D_86A443F0.unk_0E54 = D_86A464C0[3];
+        D_86A443F0.unk_0E58 = D_86A464C0[4];
+    }
+    if (D_86A443F0.unk_0E5C == 40) {
+        D_86A443F0.unk_0E54 = D_86A464C0[4];
+        D_86A443F0.unk_0E58 = D_86A464C0[5];
+    }
+    if (D_86A443F0.unk_0E5C == 50) {
+        D_86A443F0.unk_0E54 = D_86A464C0[5];
+        D_86A443F0.unk_0E58 = D_86A464C0[0];
+    }
+    next_weight = (f32)(D_86A443F0.unk_0E5C % 10) / 10.0f;
+    current_weight = 1.0f - next_weight;
+    D_86A443F0.unk_0E5C++;
+    if (D_86A443F0.unk_0E5C >= 60) {
+        D_86A443F0.unk_0E5C = 0;
+    }
+
+    if (D_86A443F0.unk_00D4 != 0 && D_86A443F0.unk_0178[0] != 0) {
+        gDPSetPrimColor(D_800D0510++, 0, 0,
+                        D_86A443F0.unk_0E54.r * current_weight + D_86A443F0.unk_0E58.r * next_weight,
+                        D_86A443F0.unk_0E54.g * current_weight + D_86A443F0.unk_0E58.g * next_weight,
+                        D_86A443F0.unk_0E54.b * current_weight + D_86A443F0.unk_0E58.b * next_weight, 255);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    } else {
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 155, 255);
+        gDPSetEnvColor(D_800D0510++, 170, 245, 255, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    }
+    digit_index = 0;
+    value = D_86A443F0.unk_00C4[0];
+    do {
+        func_8004D1FC(D_86A46490[value % 10]);
+        GfxRect_DrawTextured(182 - digit_index * 13, 116, TEX_SCALED_WIDTH(D_86A46490[value % 10], digit_scale),
+                             TEX_SCALED_HEIGHT(D_86A46490[value % 10], digit_scale), 0, 0, 1796, 1796, 0);
+        digit_index++;
+        value /= 10;
+    } while (value != 0);
+    func_8004D1FC(D_86A464B8);
+    GfxRect_DrawTextured(198, 120, TEX_SCALED_WIDTH(D_86A464B8, 0.8f), TEX_SCALED_HEIGHT(D_86A464B8, 0.8f), 0, 0,
+                         1280, 1280, 0);
+
+    if (D_86A443F0.unk_00D4 != 0 && D_86A443F0.unk_0178[1] != 0) {
+        gDPSetPrimColor(D_800D0510++, 0, 0,
+                        D_86A443F0.unk_0E54.r * current_weight + D_86A443F0.unk_0E58.r * next_weight,
+                        D_86A443F0.unk_0E54.g * current_weight + D_86A443F0.unk_0E58.g * next_weight,
+                        D_86A443F0.unk_0E54.b * current_weight + D_86A443F0.unk_0E58.b * next_weight, 255);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    } else {
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0, 100, 0, 255);
+        gDPSetEnvColor(D_800D0510++, 200, 255, 155, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    }
+    digit_index = 0;
+    value = D_86A443F0.unk_00C4[1];
+    do {
+        func_8004D1FC(D_86A46490[value % 10]);
+        GfxRect_DrawTextured(182 - digit_index * 13, 139, TEX_SCALED_WIDTH(D_86A46490[value % 10], digit_scale),
+                             TEX_SCALED_HEIGHT(D_86A46490[value % 10], digit_scale), 0, 0, 1796, 1796, 0);
+        digit_index++;
+        value /= 10;
+    } while (value != 0);
+    func_8004D1FC(D_86A464B8);
+    GfxRect_DrawTextured(198, 143, TEX_SCALED_WIDTH(D_86A464B8, 0.8f), TEX_SCALED_HEIGHT(D_86A464B8, 0.8f), 0, 0,
+                         1280, 1280, 0);
+
+    if (D_86A443F0.unk_00D4 != 0 && D_86A443F0.unk_0178[2] != 0) {
+        gDPSetPrimColor(D_800D0510++, 0, 0,
+                        D_86A443F0.unk_0E54.r * current_weight + D_86A443F0.unk_0E58.r * next_weight,
+                        D_86A443F0.unk_0E54.g * current_weight + D_86A443F0.unk_0E58.g * next_weight,
+                        D_86A443F0.unk_0E54.b * current_weight + D_86A443F0.unk_0E58.b * next_weight, 255);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    } else {
+        gDPSetPrimColor(D_800D0510++, 0, 0, 120, 0, 0, 255);
+        gDPSetEnvColor(D_800D0510++, 255, 160, 190, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    }
+    digit_index = 0;
+    value = D_86A443F0.unk_00C4[2];
+    do {
+        func_8004D1FC(D_86A46490[value % 10]);
+        GfxRect_DrawTextured(182 - digit_index * 13, 162, TEX_SCALED_WIDTH(D_86A46490[value % 10], digit_scale),
+                             TEX_SCALED_HEIGHT(D_86A46490[value % 10], digit_scale), 0, 0, 1796, 1796, 0);
+        digit_index++;
+        value /= 10;
+    } while (value != 0);
+    func_8004D1FC(D_86A464B8);
+    GfxRect_DrawTextured(198, 166, TEX_SCALED_WIDTH(D_86A464B8, 0.8f), TEX_SCALED_HEIGHT(D_86A464B8, 0.8f), 0, 0,
+                         1280, 1280, 0);
+
+    if (D_86A443F0.unk_00D4 != 0 && D_86A443F0.unk_0178[3] != 0) {
+        gDPSetPrimColor(D_800D0510++, 0, 0,
+                        D_86A443F0.unk_0E54.r * current_weight + D_86A443F0.unk_0E58.r * next_weight,
+                        D_86A443F0.unk_0E54.g * current_weight + D_86A443F0.unk_0E58.g * next_weight,
+                        D_86A443F0.unk_0E54.b * current_weight + D_86A443F0.unk_0E58.b * next_weight, 255);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    } else {
+        gDPSetPrimColor(D_800D0510++, 0, 0, 210, 90, 0, 255);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 140, 255);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, 0, TEXEL0, 0);
+    }
+    digit_index = 0;
+    value = D_86A443F0.unk_00C4[3];
+    do {
+        func_8004D1FC(D_86A46490[value % 10]);
+        GfxRect_DrawTextured(182 - digit_index * 13, 185, TEX_SCALED_WIDTH(D_86A46490[value % 10], digit_scale),
+                             TEX_SCALED_HEIGHT(D_86A46490[value % 10], digit_scale), 0, 0, 1796, 1796, 0);
+        digit_index++;
+        value /= 10;
+    } while (value != 0);
+    func_8004D1FC(D_86A464B8);
+    GfxRect_DrawTextured(198, 189, TEX_SCALED_WIDTH(D_86A464B8, 0.8f), TEX_SCALED_HEIGHT(D_86A464B8, 0.8f), 0, 0,
+                         1280, 1280, 0);
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -755,7 +986,6 @@ void func_86A0B8A4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_86A0F814;
 void func_86A0B98C(void) {
     f32 temp_fv0;
     f32 temp_fv0_2;
@@ -769,7 +999,7 @@ void func_86A0B98C(void) {
         D_86A443F0.position[*(s32 *)((u8 *)D_87F119DC + 0x20)][1];
     temp_v1 = *(s32 *)((u8 *)D_87F119DC + 0x1C);
     if (temp_v1 < 0x14) {
-        temp_fv0 = (f32)temp_v1 * D_86A0F814;
+        temp_fv0 = (f32)temp_v1 * 0.05f;
         *(f32 *)((u8 *)D_87F119DC + 0x5C) = temp_fv0;
         *(f32 *)((u8 *)D_87F119DC + 0x58) = temp_fv0;
         *(f32 *)((u8 *)D_87F119DC + 0x54) = temp_fv0;
@@ -929,7 +1159,6 @@ void func_86A0C9AC(u8 *arg0) {}
 #endif
 
 #ifdef VERSION_US
-extern f32 D_86A0F878;
 void func_86A0CED8(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     f32 var_fv1;
     f64 temp_fv0;
@@ -940,8 +1169,8 @@ void func_86A0CED8(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
         return;
     }
     var_fv1 = sqrtf((arg2 * arg2) + (arg3 * arg3));
-    if (var_fv1 < D_86A0F878) {
-        var_fv1 = D_86A0F878;
+    if (var_fv1 < 0.01f) {
+        var_fv1 = 0.01f;
     }
     temp_fv0 = (f64) var_fv1;
     *arg0 = (f32) (((f64) arg2 * 64.0) / temp_fv0);
