@@ -1645,7 +1645,81 @@ void func_80016B38(Sample **arg0, u32 arg1, SampleBankRelocInfo *arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016C78.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80017070.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0xAB8];
+    /* 0x0AB8 */ AudioPreloadReq preloadSampleStack[128];
+    /* 0x14B8 */ u8 unk_14B8[4];
+    /* 0x14BC */ s32 preloadSampleStackTop;
+    /* 0x14C0 */ u8 unk_14C0[0x21C8 - 0x14C0];
+    /* 0x21C8 */ OSMesgQueue preloadSampleQueue;
+} AudioContextPreloadView;
+
+// Same code as Ocarina of Time AudioLoad_ProcessSamplePreloads (src/code/audio_load.c), with the
+// sample address and size cached in locals; GS's RAM medium is 0.
+s32 func_80017070(s32 resetStatus) {
+    Sample *sample;
+    AudioPreloadReq *preload;
+    u32 preloadIndex;
+    u32 key;
+    u32 nChunks;
+    s32 pad;
+    u32 size;
+    u8 *sampleAddr;
+
+    if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop > 0) {
+        if (resetStatus != 0) {
+            osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK);
+            ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop = 0;
+            return 0;
+        }
+        if (osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK) == -1) {
+            return 0;
+        }
+
+        preloadIndex >>= 24;
+        preload = &((AudioContextPreloadView *)D_8011BE90)->preloadSampleStack[preloadIndex];
+
+        if (preload->isFree == FALSE) {
+            sample = preload->sample;
+            key = (u32)sample->sampleAddr + sample->size + sample->medium;
+            if (key == preload->endAndMediumKey) {
+                sample->sampleAddr = preload->ramAddr;
+                sample->medium = 0;
+            }
+            preload->isFree = TRUE;
+        }
+
+        for (;;) {
+            if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop <= 0) {
+                break;
+            }
+            preload = &((AudioContextPreloadView *)D_8011BE90)
+                           ->preloadSampleStack[((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop - 1];
+            if (preload->isFree == TRUE) {
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+                continue;
+            }
+
+            sample = preload->sample;
+            sampleAddr = sample->sampleAddr;
+            size = sample->size;
+            nChunks = (size >> 12) + 1;
+            key = (u32)sampleAddr + size + sample->medium;
+            if (key != preload->endAndMediumKey) {
+                preload->isFree = TRUE;
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+            } else {
+                size = sample->size;
+                func_80016500((s32)sampleAddr, (s32)preload->ramAddr, size, sample->medium, nChunks,
+                              (s32)&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, preload->encodedInfo);
+                break;
+            }
+        }
+    }
+    return 1;
+}
 
 s32 func_80017224(void *arg0, s32 arg1, void **arg2) {
     s32 i = 0;
