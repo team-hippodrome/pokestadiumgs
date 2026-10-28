@@ -167,7 +167,35 @@ void func_88A014C8(s32 arg0, u8 arg1, s8 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A015A0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A016F0.s")
+// A two-byte list entry; func_88A016F0 inserts one and shifts the rest up.
+typedef struct Fragment39Entry {
+    /* 0x0 */ u8 unk_00;
+    /* 0x1 */ u8 unk_01;
+} Fragment39Entry; // size = 0x2
+extern u8 * func_88A00710(s32 arg0, s16 arg1);
+extern u8 func_88A007BC(s32 arg0);
+extern void func_88A014C8(s32 arg0, u8 arg1, s8 arg2);
+void func_88A016F0(s32 arg0, Fragment39Entry *arg1, s16 index) {
+    Fragment39Entry *p;
+    s32 i;
+    u16 count;
+    Fragment39Entry cur;
+    Fragment39Entry tmp;
+
+    func_88A014C8(arg0, arg1->unk_00, 1);
+    count = func_88A007BC(arg0);
+    p = (Fragment39Entry *)func_88A00710(arg0, index);
+    cur = *arg1;
+    for (i = index; ; i++) {
+        if (i == count - 1) {
+            *p = cur;
+            break;
+        }
+        tmp = *p;
+        *p++ = cur;
+        cur = tmp;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A017B4.s")
 
