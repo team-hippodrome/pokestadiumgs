@@ -74,7 +74,41 @@ void ModelPreview_UpdateAutoRotation_fragment33(void *state) {
 /* mkdraft:ModelPreview_UpdateAutoRotation_fragment33 end */
 
 extern void ModelPreview_UpdateAutoRotation_fragment33(void *);
-extern void *D_884017E0;
+// Preview state for fragment 33. Offsets 0x00-0x2F follow the ModelPreviewState layout that
+// ModelPreview_Create initializes; func_88401364 performs the same initialization inline.
+//@src/43700.c
+typedef struct unk_D_884017E0 {
+    /* 0x00 */ u16 flags;
+    /* 0x02 */ u16 clearColor;
+    /* 0x04 */ s16 width;
+    /* 0x06 */ s16 height;
+    /* 0x08 */ void *callback;
+    /* 0x0C */ s16 countdown;
+    /* 0x0E */ s16 rotationStep;
+    /* 0x10 */ f32 scale;
+    /* 0x14 */ s32 resource;
+    /* 0x18 */ u8 *layout;
+    /* 0x1C */ u8 *model;
+    /* 0x20 */ u8 *image;
+    /* 0x24 */ u8 *depth;
+    /* 0x28 */ u16 selectionFlags;
+    /* 0x2C */ u32 selectionValue;
+    /* 0x30 */ u8 unk_30;
+    /* 0x31 */ u8 unk_31;
+    /* 0x32 */ u16 species; // passed to func_80042FE4, which calls ModelPreview_SetSelection
+    /* 0x34 */ s8 unk_34;
+    /* 0x35 */ s8 unk_35;
+    /* 0x38 */ s32 unk_38;
+    /* 0x3C */ s16 unk_3C;
+    /* 0x3E */ s16 unk_3E;
+    /* 0x40 */ s16 unk_40;
+    /* 0x42 */ s16 unk_42;
+    /* 0x44 */ s16 unk_44;
+    /* 0x46 */ s16 unk_46;
+    /* 0x48 */ s16 unk_48; // func_884001CC reloads countdown from this after manual rotation
+} unk_D_884017E0; // size = 0x4C
+
+extern unk_D_884017E0 *D_884017E0;
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 void func_884001CC(u8 *arg0) {
     f32 scale;
@@ -184,7 +218,6 @@ extern void func_80064D28(void);
 extern void func_88400610(void);
 extern void func_88600020(void *);
 extern void StageFade_StartFromTransparent(s32);
-extern void *D_884017E0;
 extern f32 D_884017D4;
 void func_88401200(void) {
     u16 count;
@@ -211,7 +244,93 @@ void func_88401200(void) {
     func_88600020(D_884017E0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/33/fragment33_code/func_88401364.s")
+extern u8 D_88401740;
+extern s32 D_80128C64;
+extern void func_8004C4B0(s32);
+extern void func_8004C8C0(s32);
+extern void *Util_Malloc(s32);
+extern s8 func_8006397C(u8);
+extern s8 func_800639C0(u8);
+extern s32 func_8004C874(s32, s32);
+extern s32 func_80049290(s32, s32, s32);
+extern s32 func_80001FF0(void);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern u8 *process_geo_layout(s32, void *);
+extern void MainPool_FinalizeAllocation(s32);
+extern void GeoCamera_SetViewport(void *, s16, s16, s16, s32);
+extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
+extern void func_80042FE4(void *, u16);
+extern void func_88600074(void *);
+// Allocates D_884017E0 for species `arg0`, fills its unk_34..unk_48 fields, and initializes its
+// preview fields the way ModelPreview_Create does (320x240 viewport, 30/100/12800 perspective).
+// It then selects the species with func_80042FE4 and copies the saved rotation, rotationStep
+// and countdown back into the preview with func_88600074.
+//@src/43700.c
+//@src/fragments/35/fragment35_1CCC20.c
+void func_88401364(s32 arg0) {
+    s32 pool;
+    unk_D_884017E0 *state;
+    s32 temp_v0;
+    u8 table_index;
+    u16 species;
+
+    func_8004C4B0(40);
+    func_8004C8C0(60);
+    func_8004C8C0(270);
+    func_8004C8C0(269);
+    func_8004C8C0(268);
+    func_8004C8C0(332);
+    D_884017E0 = Util_Malloc(sizeof(unk_D_884017E0));
+    D_884017E0->species = arg0;
+    // Ids above 253 index the species tables as 201 (Unown). func_886000C8 treats ids other
+    // than 201 as offsets from 252, the range used for Unown forms.
+    //@src/fragments/35/fragment35_1CCC20.c
+    species = arg0;
+    if (species > 253) {
+        species = 201;
+    }
+    table_index = species;
+    D_884017E0->unk_34 = func_8006397C(table_index);
+    D_884017E0->unk_35 = func_800639C0(table_index);
+    D_884017E0->unk_38 = func_8004C874(40, 16);
+    temp_v0 = func_80049290(1, 0, D_884017E0->unk_38);
+    D_884017E0->unk_3C = 283 - temp_v0;
+    D_884017E0->unk_3E = D_884017E0->unk_3C - 23;
+    D_884017E0->unk_40 = temp_v0 + 32;
+    D_884017E0->unk_42 = D_884017E0->unk_3E + 2;
+    D_884017E0->unk_44 = D_884017E0->unk_40 - 4;
+    D_884017E0->unk_46 = D_884017E0->unk_3E + 9;
+    D_884017E0->unk_48 = (u32)((func_80001FF0() * 12.0f) / 2);
+    state = D_884017E0;
+    state->flags = 0x106;
+    state->clearColor = 1;
+    state->width = 320;
+    state->height = 240;
+    state->callback = NULL;
+    state->countdown = 0;
+    state->rotationStep = 0;
+    state->scale = 1.0f;
+    state->resource = D_80128C64;
+    state->layout = NULL;
+    state->model = NULL;
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    state->layout = process_geo_layout(pool, &D_88401740);
+    state->model = (u8 *)D_884017E4;
+    MainPool_FinalizeAllocation(pool);
+    GeoCamera_SetViewport(*(void **)(state->layout + 0xC), 0, 0, state->width, state->height);
+    GeoCamera_SetPerspective(*(void **)(state->layout + 0xC), 30.0f, 100.0f, 12800.0f);
+    state->selectionFlags = 0;
+    state->selectionValue = 0;
+    state->flags &= ~4;
+    state->flags &= ~2;
+    state->flags |= 1;
+    func_80042FE4(state, D_884017E0->species);
+    func_88600074(state);
+    *(s32 *)(state->model + 0x4C) = 0;
+    D_884017E0->unk_30 = 0;
+    D_884017E0->unk_31 = 0;
+}
 
 extern void main_pool_push_state(s32);
 extern void main_pool_pop_state(s32);
@@ -227,7 +346,6 @@ extern void func_88400F48(void);
 extern void func_8840104C(void);
 extern void func_88401200(void);
 extern void func_80008574(void);
-extern void *D_884017E0;
 extern void Util_Free(void *);
 extern void func_80047610(void);
 extern void func_8004C398(void);
