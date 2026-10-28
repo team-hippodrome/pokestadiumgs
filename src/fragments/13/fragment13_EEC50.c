@@ -142,7 +142,7 @@ extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern u8 D_80094DB8[];
-extern void func_8004D1FC(u8 *);
+extern s32 func_8004D1FC(u8 *);
 extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
 extern s32 D_82407840;
 void func_82401198(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -230,7 +230,7 @@ void func_82401DD4(s32 arg0) {
 }
 
 extern Gfx *D_800D0510;
-extern void func_8004D1FC(u8 *);
+extern s32 func_8004D1FC(u8 *);
 void func_82401E30(s32 arg0, s32 arg1) {
     gDPSetEnvColor(D_800D0510++, 0xAA, 0xAA, 0xFF, 0xFF);
     func_8004D1FC((u8 *)(u32)D_82407838);
@@ -244,7 +244,7 @@ void func_82401F08(s32 arg0, s32 arg1) {
 }
 
 extern Gfx *D_800D0510;
-extern void func_8004D1FC(u8 *);
+extern s32 func_8004D1FC(u8 *);
 void func_82401FE0(s32 arg0, s32 arg1) {
     gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
     func_8004D1FC((u8 *)(u32)D_82407830);
@@ -335,7 +335,39 @@ void func_8240227C(s32 arg0, s32 arg1) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_8240239C.s")
+extern f32 D_82408F04;
+extern s32 func_8004D1FC(u8 *);
+extern void Fragment13_DrawClippedTextureRect(f32 arg0, f32 arg1, f32 arg2, f32 arg3, s16 arg4, s16 arg5, f32 arg6, f32 arg7);
+extern s32 func_81600DA8(void *, void *);
+extern Gfx * D_800D0510;
+void Fragment13_DrawTintedPanel(void *context, s32 x_center, s32 y_center, u16 *size, void *selector, f32 amount, u8 *color) {
+    f32 texture_scale;
+    f32 blend;
+    s32 width;
+    s32 height;
+    s32 x;
+    s32 y;
+    u8 red;
+    u8 green;
+    u8 blue;
+    texture_scale = 1.0f + amount;
+    blend = amount > 0.0f ? (amount > 1.0f ? 1.0f : amount) : 0.0f;
+    width = size[0] * texture_scale;
+    height = (size[1] - 3) * texture_scale;
+    x = size[0] / 2 + x_center - width / 2;
+    y = (size[1] - 3) / 2 + y_center - height / 2;
+    if (func_81600DA8(context, selector)) {
+        if (1.0f + amount < D_82408F04) {
+            texture_scale = D_82408F04;
+        }
+        func_8004D1FC((u8 *)size);
+        red = (u32)((f32)(u32)color[0] + (f32)(220 - color[0]) * blend);
+        green = (u32)((f32)(u32)color[1] + (f32)(220 - color[1]) * blend);
+        blue = (u32)((f32)(u32)color[2] + (f32)(220 - color[2]) * blend);
+        gDPSetEnvColor(D_800D0510++, red, green, blue, 255);
+        Fragment13_DrawClippedTextureRect(x, y, width, height, 0, 0, 1.0f / texture_scale, 1.0f / texture_scale);
+    }
+}
 
 extern void func_81600A34(void *, void *, s32, s32, s32, s32, s32);
 void func_824027F4(void *arg0, s32 x_center, s32 y_center, u16 *size, void *arg4, f32 amount) {
@@ -347,7 +379,7 @@ void func_824027F4(void *arg0, s32 x_center, s32 y_center, u16 *size, void *arg4
     s32 y;
 
     scale = 1.0f + amount;
-    // karodo: the clamped blend is computed as in the tinted sibling func_8240239C but never used.
+    // karodo: the clamped blend is computed as in the tinted sibling Fragment13_DrawTintedPanel but never used.
     if (amount > 0.0f) {
         if (amount > 1.0f) {
             blend = 1.0f;
