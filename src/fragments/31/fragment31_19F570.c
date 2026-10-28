@@ -32,7 +32,22 @@ void func_8822C30C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19F570/func_8822C374.s")
+extern u8 *D_882345F4;
+extern s8 D_88006868;
+extern s32 func_80001FF0(void);
+extern void LabPC_InitEvolutionView(void);
+extern u8 LabPC_OpenEvolutionView(s32, u8 *, s32, s32, void *, void *, void *, s32);
+extern void func_8822C2F0(void);
+extern void func_8822C2FC(void);
+extern void func_8822C30C(void);
+extern s32 D_880068B4;
+void func_8822C374(s32 arg0) {
+    LabPC_InitEvolutionView();
+    LabPC_OpenEvolutionView(arg0, D_882345F4 + 8, D_88006868, (**(u8 ***)D_882345F4)[8] == 2,
+                            func_8822C2F0, func_8822C30C, func_8822C2FC,
+                            (u16)(u32)((f32)func_80001FF0() * 0.5f / 2));
+    D_880068B4 = 0;
+}
 
 extern u8 **D_88234920;
 extern void func_80049064(s32, s32, s32, const char *);

@@ -8,30 +8,6 @@ extern void main_pool_pop_state(s32);
 extern void func_8821CE40(s32);
 extern s32 D_88234560;
 extern s32 D_88234564;
-void func_88207ED0(void) {
-    Util_Free(D_88234564);
-    func_888002DC();
-    main_pool_pop_state(0x4152524D);
-    func_8821CE40(1);
-    D_88234560 = 5;
-}
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88207F18.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208010.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208174.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_882089E4.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208B38.s")
-
-// 8-byte record allocated by func_88208FF0 and published through D_8800EF54.
-typedef struct {
-    s32 unk_00; // func_88207F18(1, index) result
-    s8 delta;   // records[index].unk_10 - records[index].unk_12
-    u8 index;
-} unk_func_88208FF0;
 
 typedef struct {
     u8 unk_00[0x10];
@@ -46,12 +22,54 @@ typedef struct {
     unk_D_88234700_Record records[2];
 } unk_D_88234700;
 
+extern unk_D_88234700 *D_88234700;
+
+void func_88207ED0(void) {
+    Util_Free(D_88234564);
+    func_888002DC();
+    main_pool_pop_state(0x4152524D);
+    func_8821CE40(1);
+    D_88234560 = 5;
+}
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88207F18.s")
+
+extern u8 *func_88201ED0(u8, u8);
+extern s32 func_80001FF0(void);
+extern void func_88001C6C(void *, u16, u8, s16, u8, s16, s16, s16, s16, s16, s32);
+void func_88208010(u8 arg0, u8 arg1, u8 arg2) {
+    s16 color;
+
+    if (*(s32 *)((u8 *)D_88234700 + 4) != 0) {
+        color = 0xC;
+    } else {
+        color = 0xF0C;
+    }
+    ((u8 *)D_88234700)[arg0 * 2 + 0xA] = arg1;
+    ((u8 *)D_88234700)[arg0 * 2 + 0xB] = arg2;
+    func_88001C6C(D_88234700->records[arg0].unk_00 + 8, func_88201ED0(((u8 *)D_88234700)[arg0 * 2 + 0xA], ((u8 *)D_88234700)[arg0 * 2 + 0xB])[0x15], 6, 0x7D, 27, 14,
+                  (s32)(600.0f / func_80001FF0() + ((600.0f / func_80001FF0() > 0.0f) ? 0.5f : -0.5f)),
+                  32, 32, color, 70);
+}
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208174.s")
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_882089E4.s")
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208B38.s")
+
+// 8-byte record allocated by func_88208FF0 and published through D_8800EF54.
+typedef struct {
+    s32 unk_00; // func_88207F18(1, index) result
+    s8 delta;   // records[index].unk_10 - records[index].unk_12
+    u8 index;
+} unk_func_88208FF0;
+
 extern void *Util_Malloc(s32);
 extern void func_800226C0(s32);
 extern s32 func_88207F18(s32, s32);
 extern void func_882322B8(void);
 extern void *D_8800EF54;
-extern unk_D_88234700 *D_88234700;
 void func_88208FF0(void) {
     unk_func_88208FF0 *record;
 
