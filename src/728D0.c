@@ -70,5 +70,51 @@ void func_80071DD8(s32 arg0) {
 }
 /* mkdraft:func_80071DD8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/728D0/func_80071E48.s")
+extern void _bzero(void *, s32);
+extern s32 func_80061B88(s32, s32);
+extern u32 Pokemon_CalculateStat(s32, s32, u16, u16, u16);
+extern char *HAL_Strcpy(char *, const char *);
+extern u8 func_80062EB0(u8, u8);
+
+void func_80071E48(u8 *dst, u8 *src) {
+    char *name;
+    s32 shift;
+    s32 i;
+
+    _bzero(dst, 0x58);
+    dst[0] = src[1];
+    dst[1] = src[2];
+    dst[0x1D] = src[0];
+
+    for (i = 0; i < 4; i++) {
+        dst[i + 2] = src[i + 4];
+    }
+
+    *(u32 *)(dst + 8) = func_80061B88(dst[0], dst[0x1D]);
+
+    *(u16 *)(dst + 0xC) = *(u16 *)(src + 0xA);
+    *(u16 *)(dst + 0xE) = *(u16 *)(src + 0xC);
+    *(u16 *)(dst + 0x10) = *(u16 *)(src + 0xE);
+    *(u16 *)(dst + 0x12) = *(u16 *)(src + 0x10);
+    *(u16 *)(dst + 0x14) = *(u16 *)(src + 0x12);
+    *(u16 *)(dst + 0x16) = *(u16 *)(src + 0x14);
+    dst[0x1C] = src[9];
+
+    *(u16 *)(dst + 0x28) = Pokemon_CalculateStat(0, dst[0], *(u16 *)(dst + 0xC), dst[0x1D], *(u16 *)(dst + 0x16));
+    *(u16 *)(dst + 0x2A) = Pokemon_CalculateStat(1, dst[0], *(u16 *)(dst + 0xE), dst[0x1D], *(u16 *)(dst + 0x16));
+    *(u16 *)(dst + 0x2C) = Pokemon_CalculateStat(2, dst[0], *(u16 *)(dst + 0x10), dst[0x1D], *(u16 *)(dst + 0x16));
+    *(u16 *)(dst + 0x2E) = Pokemon_CalculateStat(3, dst[0], *(u16 *)(dst + 0x12), dst[0x1D], *(u16 *)(dst + 0x16));
+    *(u16 *)(dst + 0x30) = Pokemon_CalculateStat(4, dst[0], *(u16 *)(dst + 0x14), dst[0x1D], *(u16 *)(dst + 0x16));
+    *(u16 *)(dst + 0x32) = Pokemon_CalculateStat(5, dst[0], *(u16 *)(dst + 0x14), dst[0x1D], *(u16 *)(dst + 0x16));
+
+    name = (char *)func_8004B7A4(dst[0]);
+    HAL_Strcpy((char *)(dst + 0x34), name);
+
+    for (i = 0; i < 4; i++) {
+        shift = 8 - i * 2;
+        dst[0x18 + i] = func_80062EB0(dst[2 + i], (u8)((src[8] & (3 << shift)) << 6));
+    }
+
+    *(u16 *)(dst + 0x26) = *(u16 *)(dst + 0x28);
+}
 #endif
