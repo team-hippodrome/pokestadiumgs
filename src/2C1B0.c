@@ -181,7 +181,7 @@ extern u8 D_800D1ACC[], D_800D1B6A[], D_800D1B6C[], D_800D269A[];
 extern s32 D_800D2618[];
 extern u32 D_800D2638;
 extern u8 D_80091EA8[], D_80091EB8[], D_80091EC4[], D_80091ECC[], D_80091ED4[], D_80091EDC[], D_80091EE4[];
-s32 func_800318FC(u8 *);
+s32 Party_CountLivingGroupMembers(u8 *);
 void func_8002BE44(u8 arg0) {
     D_800D1B3B = 1;
     D_800D1B6C[arg0] = 0;
@@ -215,8 +215,8 @@ void func_8002BE44(u8 arg0) {
             func_80031530(70);
             func_80028CA8(D_80091EE4);
         } else if ((u8)D_80091A18 != 0 &&
-            func_800318FC(D_800D1B78[arg0]) == 0 &&
-            func_800318FC(D_800D1B78[arg0 ^ 1]) > 0 &&
+            Party_CountLivingGroupMembers(D_800D1B78[arg0]) == 0 &&
+            Party_CountLivingGroupMembers(D_800D1B78[arg0 ^ 1]) > 0 &&
             D_800D1ACC[arg0] == 0 &&
             D_80091AE8 == 0) {
             func_80031530(70);
@@ -547,7 +547,45 @@ s32 func_800318C8(void) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_800318FC.s")
+typedef struct { u8 unk00[38]; u16 hp; u8 unk28[48]; } PartyCountMember;
+s32 Party_CountLivingGroupMembers(u8 *party) {
+    u32 i;
+    u8 first_count;
+    s32 same_group;
+    u8 count;
+
+    count = 0;
+    if (party[0x12] != 0) {
+        first_count = party[3];
+        if (party[0xA] < first_count) {
+            same_group = 0;
+        } else {
+            same_group = 1;
+        }
+        if (same_group == 0) {
+            s32 prefix_limit;
+            i = 0;
+            prefix_limit = first_count;
+            if (first_count != 0) {
+                do {
+                    if (((PartyCountMember *)(party + 24))[i].hp > 0) {
+                        count++;
+                    }
+                    i++;
+                } while (i < prefix_limit);
+            }
+        } else {
+            for (i = first_count; i < party[7]; i++) {
+                if (((PartyCountMember *)(party + 24))[i].hp > 0) {
+                    count++;
+                }
+            }
+        }
+    } else {
+        count = party[9];
+    }
+    return count;
+}
 
 void GbAudio_QueueRegisterWrite(u16 address, u8 value, u16 delay) {
     u8 index = address;

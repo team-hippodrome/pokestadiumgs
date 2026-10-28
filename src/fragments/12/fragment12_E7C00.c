@@ -1,5 +1,22 @@
 #include "global.h"
 
+typedef struct Fragment12Row {
+    /* 0x000 */ f32 values[0x80];
+    /* 0x200 */ f32 unk_200;
+    /* 0x204 */ f32 unk_204;
+    /* 0x208 */ s16 unk_208;
+    /* 0x20A */ u8 unk_20A;
+    /* 0x20B */ u8 unk_20B;
+    /* 0x20C */ s32 unk_20C;
+} Fragment12Row; // size = 0x210
+
+typedef struct Fragment12Rows {
+    /* 0x000 */ Fragment12Row rows[6];
+    /* 0xC60 */ u8 unk_C60[0x4C];
+    /* 0xCAC */ f32 unk_CAC;
+    /* 0xCB0 */ s8 unk_CB0;
+} Fragment12Rows;
+
 
 #ifdef VERSION_US
 f32 MathUtil_Random_ZeroOne();
@@ -52,7 +69,24 @@ void func_81402CD8(void *arg0, f32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81402D08.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81403244.s")
+extern void func_81402930(void *arg0, f32 arg1, s32 arg2, s32 arg3);
+void func_81403244(Fragment12Rows *arg0, s32 arg1, s32 arg2) {
+    f32 max;
+    s32 i;
+
+    max = arg0->unk_CAC + 180.0f;
+    for (i = 0; i < 6; i++) {
+        if (max < arg0->rows[i].values[arg0->unk_CB0]) {
+            max = arg0->rows[i].values[arg0->unk_CB0];
+        }
+    }
+    for (i = 0; i < 6; i++) {
+        if (arg0->rows[i].unk_208 < 0) {
+            func_81402930(&arg0->rows[i], max + 22.0f + 1.0f, arg1, arg2);
+            return;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81403304.s")
 
@@ -120,9 +154,9 @@ void func_814038D4(void *arg0, void *arg1) {
     }
 }
 
-extern void func_81403244(s32);
-void func_81403918(s32 arg0) {
-    func_81403244((arg0 + 8));
+extern void func_81403244(Fragment12Rows *, s32, s32);
+void func_81403918(s32 arg0, s32 arg1, s32 arg2) {
+    func_81403244((Fragment12Rows *)(arg0 + 8), arg1, arg2);
 }
 
 extern s32 func_81403304(s32);

@@ -3350,7 +3350,7 @@ void func_8412F170(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84133B14(u8);
+extern void Battle_ApplySwitchInState(u8);
 extern s32 func_841262C4(u8 arg0);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84134DD8(u8 arg0);
@@ -3366,7 +3366,7 @@ void BattleAnim_Table_84186004_009(void) {
         func_84134DD8(D_841951BF);
         func_84134CBC(D_841951BC, 0);
         func_84136CA8();
-        func_84133B14(D_841951BC);
+        Battle_ApplySwitchInState(D_841951BC);
         if ((D_84195200[D_841951BC][0x24] & 7) == 0) {
             record = D_84195208[D_841951BC];
             record[0xD] &= 0xFFFE;
@@ -4949,7 +4949,34 @@ void func_84133ACC(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84133B14.s")
+extern void func_84137DB8(void);
+extern void func_841383B4(u8, u8, u8);
+extern void func_84131AB8(u8);
+extern void func_84125734(u8);
+extern void func_84133714(u8, s32, s32);
+extern void func_84131EAC(u8);
+extern u8 *D_84195200[];
+extern void *D_841951F8[];
+extern u8 *D_84195208[];
+extern u8 *D_8419520C[];
+extern u8 D_841951D5;
+void Battle_ApplySwitchInState(u8 arg0) {
+    s32 fainted;
+    fainted = 0;
+    func_84137DB8();
+    if (arg0) func_841383B4(12, 5, 1);
+    else func_841383B4(5, 12, 1);
+    if (*(u16 *)(D_84195200[arg0] + 38) == 0) fainted = 1;
+    func_84131AB8(arg0);
+    func_84125734(arg0);
+    func_84133714(arg0, fainted, 1);
+    ((u8 *)D_841951F8[arg0])[1] = 0;
+    D_84195208[arg0][38] = 0;
+    (*(u8 **)((u8 *)D_8419520C + -(arg0 << 2)))[38] = 0;
+    D_84195208[arg0][39] = 0;
+    D_841951D5 = 0;
+    func_84131EAC(arg0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -7381,7 +7408,38 @@ void func_8413D6D4(u8 *arg0, u8 *arg1) { u8 i; _bzero(arg0, 0x54); arg0[0] = arg
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413DA18.s")
+extern void func_8005A014(s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 func_80062304(u8 *);
+extern void func_8413D7AC(u8);
+extern void *D_841951F0;
+extern void *D_841951F8[];
+extern u8 *D_84195200[];
+extern u8 *D_84195208[];
+void Battle_LoadPlayerDeck(u8 arg0) {
+    struct Team { u8 bytes[1248]; };
+    u8 *handle;
+    s32 value;
+
+    value = arg0;
+    D_841951F8[arg0] = ((struct Team *)D_841951F0)[arg0].bytes;
+    D_84195200[arg0] = (u8 *)D_841951F8[arg0] + 24;
+    D_84195208[arg0] = (u8 *)D_841951F8[arg0] + 1080;
+    func_8005A014(value);
+    handle = func_8006218C(32, value, 0, 0);
+    ((u8 *)D_841951F8[arg0])[2] = 1;
+    value = Deck_ReadEntries((u8 *)D_841951F8[arg0] + 24, 6, handle);
+    ((u8 *)D_841951F8[arg0])[7] = value;
+    if (((u8 *)D_841951F8[arg0])[7] == 0) {
+        func_8413D7AC(arg0);
+    } else {
+        ((u8 *)D_841951F8[arg0])[8] = ((u8 *)D_841951F8[arg0])[7];
+        ((u8 *)D_841951F8[arg0])[9] = ((u8 *)D_841951F8[arg0])[8];
+        ((u8 *)D_841951F8[arg0])[3] = ((u8 *)D_841951F8[arg0])[8];
+    }
+    func_80062304(handle);
+}
 #endif
 
 #ifdef VERSION_US
@@ -7406,7 +7464,7 @@ extern u8 D_8418AF70[];
 extern u8 D_8418AF78[];
 extern void Teams_GenerateLevel100_fragment86(u8 *, u32);
 extern s32 func_8005D8C0(void);
-extern void func_8413DA18(u8);
+extern void Battle_LoadPlayerDeck(u8);
 extern void func_8413D7AC(u8);
 extern void func_8413D6D4(u8 *, u8 *);
 extern void func_84138530(u8, u8 *);
@@ -7451,7 +7509,7 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
                 main_pool_push_state(0x504D4C44);
                 for (i = 0; i < 2; i++) {
                     if (func_8005D8C0() & (1 << i)) {
-                        func_8413DA18(i);
+                        Battle_LoadPlayerDeck(i);
                     } else {
                         func_8413D7AC(i);
                     }
