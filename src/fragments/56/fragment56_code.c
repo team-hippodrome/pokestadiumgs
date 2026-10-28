@@ -193,7 +193,94 @@ void func_86803EA4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86803ED8.s")
+extern Gfx *D_800D0510;
+extern void func_800088DC(void);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern void func_800468A0(s32);
+extern s32 D_8682F2B4;
+extern s32 D_8682F2A8;
+extern s32 D_8682F2B8;
+extern s32 D_868086C4;
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(s32);
+extern s32 D_86808558;
+extern void *D_86808590;
+extern u8 D_868084F0[];
+extern u8 D_86808630[];
+extern void func_87F07FE8(void *);
+extern void func_87F0A5BC(u8 *);
+extern void func_87F022F0(void);
+extern void func_87F0C88C(u8 *);
+extern void func_80008648(void);
+void func_868039F8(void);
+void func_86806CD8(void);
+void func_86802EE8(void);
+extern void func_86803EA4(void);
+extern s32 D_868086C0[];
+void func_86803ED8(void) {
+    func_800088DC();
+    func_8000766C(&D_800D0510, 0, 0, 0x140, 0xF0);
+    func_800468A0(D_868086C0[0]);
+    if (D_8682F2B4 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    if (D_8682F2A8 != 1) {
+        func_8003C6B8(D_868086C4);
+    }
+    switch (D_8682F2A8) {
+    case 9:
+    case 12:
+        if (D_8682F2B8 == 1) {
+            func_87F07FE8(&D_86808558);
+        } else {
+            func_868039F8();
+        }
+        if (D_8682F2B8 == 2) {
+            func_86806CD8();
+            func_868039F8();
+            func_87F022F0();
+        }
+        if (D_8682F2B8 == 3) {
+            func_868039F8();
+            func_86803EA4();
+        }
+        if (D_8682F2B8 == 0) {
+            func_86806CD8();
+        }
+        break;
+    case 0:
+    case 3:
+    case 4:
+        if (*(u8 *)((u8 *)D_86808590 + 0x2180) != 4) {
+            func_87F07FE8(&D_86808558);
+        }
+        break;
+    case 8:
+        func_86802EE8();
+    case 2:
+    case 5:
+        func_868039F8();
+        func_86803EA4();
+        break;
+    case 1:
+        func_868039F8();
+        func_8003C6B8(D_868086C4);
+        func_86803EA4();
+        break;
+    case 7:
+        func_868039F8();
+        func_87F0A5BC(D_868084F0);
+        break;
+    case 6:
+        func_868039F8();
+        func_87F022F0();
+        break;
+    }
+    if (*(u8 *)((u8 *)D_86808590 + 0x2180) == 4) {
+        func_87F0C88C(D_86808630);
+    }
+    func_80008648();
+}
 
 extern s32 D_86807C7C;
 extern u8 D_8682CD20[];
