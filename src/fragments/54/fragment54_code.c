@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -352,7 +353,107 @@ void func_86604084(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866040B8.s")
+extern void *D_86607230;
+extern u8 D_86607320;
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern s32 D_86606714;
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(void *);
+extern void *D_866073DC;
+extern void *D_866073E0;
+extern void func_87F0CB68(void);
+extern void func_87F07FE8(void *);
+extern void func_86603604(void);
+extern void func_87F022F0(void);
+extern void func_86603108(void);
+extern void func_87F0CB24(void);
+extern void func_87F0C930(void *);
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+extern void func_87F0A5BC(void *);
+extern void func_87F0C88C(void *);
+extern void func_80008648(void);
+extern s32 D_86606728;
+extern s32 D_866067FC;
+extern s32 D_8660682C;
+extern s32 D_86607288[];
+extern u8 D_86607310;
+extern u8 D_86607358;
+extern void func_86604084(void);
+extern Gfx * D_800D0510;
+extern u8 D_86606788;
+void func_866040B8(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 1);
+    if (D_86606714 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(D_866073DC);
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) != 4) {
+        func_87F0CB68();
+    }
+    switch (*(s32 *)(&D_86606788 + 4)) {
+    case 2:
+    case 13:
+        if (*(s32 *)(&D_86606788 + 0x78) == 1) {
+            func_87F07FE8(&D_86607320);
+        } else {
+            func_86603604();
+        }
+        if (*(s32 *)(&D_86606788 + 0x78) == 2) {
+            func_86603604();
+            func_87F022F0();
+        }
+        if (*(s32 *)(&D_86606788 + 0x78) == 3) {
+            if (*(s32 *)(&D_86606788 + 0x84) == 1) {
+                func_86603604();
+            }
+            func_86604084();
+        }
+        break;
+    case 0:
+    case 4:
+    case 11:
+        if (*(u8 *)((u8 *)D_86607230 + 0x2180) != 4) {
+            func_87F07FE8(&D_86607320);
+        }
+        break;
+    case 9:
+        func_86603604();
+        func_86603108();
+        break;
+    case 1:
+        *(s32 *)(&D_86606788 + 0x84) = 1;
+    case 5:
+    case 10:
+        func_86603604();
+        func_86604084();
+        break;
+    case 8:
+        func_86603604();
+        if (D_866067FC == D_86606728 + 0x50) {
+            func_87F0CB24();
+            if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4) {
+                func_87F0C930(&D_86607310);
+            } else {
+                Fragment64_StartPlayerPanel(&D_86607358, D_86607230, 5, D_86607288[0], D_86607288[1], D_86607288[2], D_86607288[3]);
+            }
+        }
+        if ((1 - D_8660682C) * D_86606728 + 0x50 < D_866067FC) {
+            func_87F0A5BC(&D_86607358);
+        }
+        break;
+    case 7:
+        func_86603604();
+        func_87F022F0();
+        break;
+    }
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4) {
+        func_87F0C88C(&D_86607310);
+    }
+    func_8003C6B8(D_866073E0);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
@@ -451,7 +552,7 @@ extern s32 D_8660678C;
 extern void *D_86607230;
 extern void StageFade_StartFromOpaque(s32);
 void func_87F00688(void);
-u8 StageContext_GetFadeMode(void);
+s32 StageContext_GetFadeMode(void);
 void func_866048EC(void) {
     if ((*(u8 *)((u8 *)(D_86607230) + (0x2180))) == 4) {
         StageFade_StartFromOpaque(0x14);
@@ -493,7 +594,156 @@ s32 func_86604954(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86605098.s")
+extern s32 D_86606738;
+extern s32 D_86606720;
+extern s32 D_866066EC;
+extern s32 D_86606724;
+extern s32 D_8660722C;
+extern f32 D_86606750;
+extern s32 D_86606748;
+extern s32 D_866066F0;
+extern s32 D_86606728;
+extern u8 D_86606788;
+void func_86605098(void) {
+    if (D_86606738 == 0) {
+        if (D_80087200->buttonsPressed & 0x400) {
+            *(s32 *)(&D_86606788 + 8) += 1;
+            if (*(s32 *)(&D_86606788 + 8) > 10) {
+                *(s32 *)(&D_86606788 + 8) = 10;
+            }
+            if (*(s32 *)(&D_86606788 + 8) == 9 && (D_80087200->buttonsHeld & 0x8000)) {
+                D_86606738 = 1;
+            }
+        } else if (D_80087200->buttonsPressed & 0x800) {
+            *(s32 *)(&D_86606788 + 8) -= 1;
+            if (*(s32 *)(&D_86606788 + 8) < 1) {
+                *(s32 *)(&D_86606788 + 8) = 1;
+            }
+        } else if ((D_80087200->buttonsPressed & 0x100) || (D_80087200->buttonsHeld & 1)) {
+            switch (*(s32 *)(&D_86606788 + 8)) {
+            case 1:
+                D_86606720++;
+                break;
+            case 2:
+                D_866066F0++;
+                if (D_866066F0 > 2) {
+                    D_866066F0 = 2;
+                }
+                break;
+            case 3:
+                D_866066EC = 1 - D_866066EC;
+                break;
+            case 4:
+                D_86606724++;
+                if (D_86606724 > D_8660722C) {
+                    D_86606724 = D_8660722C;
+                }
+                break;
+            case 5:
+                D_86606728++;
+                break;
+            case 6:
+                D_8660722C += 10;
+                break;
+            case 7:
+                D_86606750 += 0.01;
+                break;
+            case 8:
+                D_86606748 = 0;
+                break;
+            }
+        } else if ((D_80087200->buttonsPressed & 0x200) || (D_80087200->buttonsHeld & 2)) {
+            switch (*(s32 *)(&D_86606788 + 8)) {
+            case 1:
+                D_86606720--;
+                if (D_86606720 < 5) {
+                    D_86606720 = 5;
+                }
+                break;
+            case 2:
+                D_866066F0--;
+                if (D_866066F0 < 0) {
+                    D_866066F0 = 0;
+                }
+                break;
+            case 3:
+                D_866066EC = 1 - D_866066EC;
+                break;
+            case 4:
+                D_86606724--;
+                if (D_86606724 < 0) {
+                    D_86606724 = 0;
+                }
+                break;
+            case 5:
+                D_86606728--;
+                if (D_86606728 < 0) {
+                    D_86606728 = 0;
+                }
+                break;
+            case 6:
+                D_8660722C -= 10;
+                if (D_8660722C < 40) {
+                    D_8660722C = 40;
+                }
+                break;
+            case 7:
+                D_86606750 -= 0.01;
+                if (D_86606750 <= 0.1) {
+                    D_86606750 = 0.1f;
+                }
+                break;
+            case 8:
+                D_86606748 = 1;
+                break;
+            }
+        }
+    } else if (*(s32 *)(&D_86606788 + 8) == 9 && D_86606738 > 0) {
+        if (D_80087200->buttonsPressed & 0x8000) {
+            D_86606738++;
+            if (D_86606738 >= 3) {
+                D_86606738 = 0;
+            }
+        }
+        if (D_80087200->buttonsHeld & 0x800) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x20) += 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x2C) += 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 0x400) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x20) -= 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x2C) -= 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 0x100) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x1C) += 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x28) += 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 0x200) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x1C) -= 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x28) -= 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 8) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x24) += 50.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x30) += 50.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 4) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x24) -= 50.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x30) -= 50.0f;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -538,7 +788,130 @@ if (D_8660A9B8 == 8) { D_8660746C = value; } if (D_8660AA10 == 8) { D_866075D4 =
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86605F04.s")
+extern s32 StageContext_GetFadeMode(void);
+extern s32 func_87F0C6F4(void *);
+extern void func_87F006BC(void);
+extern void func_86605DCC(void);
+extern void func_86605ABC(void);
+extern void func_866044F0(void);
+extern void func_866049D4(void);
+extern void func_866056B8(void);
+extern void func_86605098(void);
+extern s32 Fragment64_UpdateBounceAndConfirm(void *);
+extern void func_87F02328(void);
+extern s32 func_87F02104(void);
+extern void func_87F0D5B8(void *);
+extern void func_87F0C9D0(s32);
+extern s32 D_86606728;
+extern u8 D_86607238;
+extern u8 D_86607310;
+extern u8 D_86607358;
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromOpaque(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_86604370(void);
+extern void func_8660484C(void);
+extern void func_866048EC(void);
+extern s32 func_86604954(void);
+extern void func_86605D5C(void);
+extern s32 func_87F00930();
+extern u8 D_86606788;
+extern void * D_86607230;
+s32 func_86605F04(s32 arg0) {
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4 && func_87F0C6F4(&D_86607310) != 0) {
+        *(s32 *)(&D_86606788 + 4) = 3;
+        *(s32 *)(&D_86606788 + 0x8C) = 3;
+    }
+    if (func_87F00930() == 0 && *(s32 *)(&D_86606788 + 4) != 9) {
+        func_87F006BC();
+    }
+    switch (*(s32 *)(&D_86606788 + 4)) {
+    case 0:
+        func_866048EC();
+        break;
+    case 4:
+        func_8660484C();
+        break;
+    case 5:
+    case 10:
+    case 12:
+        func_86605DCC();
+        func_86604954();
+        func_86605ABC();
+        break;
+    case 11:
+        func_866044F0();
+        break;
+    case 8:
+        func_866049D4();
+        if (D_86606728 + 0x50 < *(s32 *)(&D_86606788 + 0x74) && Fragment64_UpdateBounceAndConfirm(&D_86607358) != 0) {
+            if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 1) {
+                *(s32 *)(&D_86606788 + 0x8C) = 2;
+                *(s32 *)(&D_86606788 + 4) = 2;
+                *(s32 *)(&D_86606788 + 0x78) = 0;
+                StageContext_SetClearColor(0xFFFF);
+                StageFade_StartFromTransparent(10);
+            } else {
+                func_87F02328();
+                *(s32 *)(&D_86606788 + 4) = 7;
+            }
+        }
+        break;
+    case 1:
+        func_86605DCC();
+        func_866056B8();
+        break;
+    case 9:
+        func_86605098();
+        break;
+    case 7:
+        func_86605D5C();
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(1);
+            *(s32 *)(&D_86606788 + 4) = 13;
+            *(s32 *)(&D_86606788 + 0x78) = 2;
+            StageFade_StartFromTransparent(10);
+            break;
+        case 2:
+            *(s32 *)(&D_86606788 + 0x8C) = 0;
+            *(s32 *)(&D_86606788 + 4) = 2;
+            *(s32 *)(&D_86606788 + 0x78) = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        case 3:
+            *(s32 *)(&D_86606788 + 0x8C) = 1;
+            *(s32 *)(&D_86606788 + 4) = 2;
+            *(s32 *)(&D_86606788 + 0x78) = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        }
+        break;
+    case 13:
+        func_86605D5C();
+        if (StageContext_GetFadeMode() == 1) {
+            func_86604370();
+            *(s32 *)(&D_86606788 + 4) = 14;
+            StageFade_StartFromOpaque(10);
+        }
+        break;
+    case 14:
+        func_86605D5C();
+        *(s32 *)(&D_86606788 + 4) = 0;
+        break;
+    case 2:
+        func_86605D5C();
+        if (StageContext_GetFadeMode() == 1) {
+            *(s32 *)(&D_86606788 + 4) = 3;
+        }
+        break;
+    }
+    func_87F0D5B8(&D_86607238);
+    func_87F0C9D0(func_87F00930());
+    return *(s32 *)(&D_86606788 + 4);
+}
 #endif
 
 #ifdef VERSION_US

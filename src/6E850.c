@@ -111,11 +111,49 @@ s16 func_8006DE9C(s16 *arg0, s32 arg1)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006E1C8.s")
+typedef struct {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ s16 count;
+    /* 0x0E */ u8 unk_0E[0x2];
+} VertexNormalCounter;
+
+typedef struct unk_func_8006E1C8 {
+    u32 unk_00[8];
+} unk_func_8006E1C8;
+extern u32 Memmap_GetSegmentVaddr(u32);
+extern VertexNormalCounter *D_80128C70;
+extern Mtx D_80129038;
+extern const f32 D_800A5960;
+extern void func_8006DEBC(void *, void *, void *);
+extern void func_8006F23C(void *);
+void func_8006E1C8(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4) {
+    f32 scale;
+
+    arg0 = (void *)Memmap_GetSegmentVaddr((u32)arg0);
+    arg1 = (void *)Memmap_GetSegmentVaddr((u32)arg1);
+    arg2 = (void *)Memmap_GetSegmentVaddr((u32)arg2);
+    arg3 = (void *)Memmap_GetSegmentVaddr((u32)arg3);
+    if (arg4 != NULL) {
+        arg4 = (void *)Memmap_GetSegmentVaddr((u32)arg4);
+    }
+    scale = D_800A5960;
+    D_80128C70 = arg1;
+    *(unk_func_8006E1C8 *)((u8 *)arg0 + 8) = *(unk_func_8006E1C8 *)arg3;
+    *(s16 *)arg0 = 1;
+    *(void **)((u8 *)arg0 + 4) = (u8 *)arg0 + 8;
+    guScale(&D_80129038, scale, scale, scale);
+    func_8006DEBC(arg0, arg2, arg4);
+    func_8006F23C(arg0);
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_8006DEBC(void *); extern void func_8006F23C(void *); void func_8006E2D0(void *arg0) { func_8006DEBC(arg0); func_8006F23C(arg0); }
+void func_8006E2D0(void *arg0, void *arg1, void *arg2) {
+    func_8006DEBC(arg0, arg1, arg2);
+    func_8006F23C(arg0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -137,13 +175,6 @@ typedef struct {
     /* 0x00 */ u8 unk_00[0x14];
     /* 0x14 */ VertexPosBlend position;
 } ModelAnimVertex;
-typedef struct {
-    /* 0x00 */ f32 x;
-    /* 0x04 */ f32 y;
-    /* 0x08 */ f32 z;
-    /* 0x0C */ s16 count;
-    /* 0x0E */ u8 unk_0E[0x2];
-} VertexNormalCounter;
 typedef struct {
     /* 0x00 */ u8 unk_00[0x4];
     /* 0x04 */ s16 vertexCount;
