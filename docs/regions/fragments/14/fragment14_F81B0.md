@@ -400,26 +400,15 @@ or containers. No helper function, compiler override, padding or fake branch.
 - Publish only game C, three US aliases and region notes. No scratch helpers,
   compiler instrumentation, generated assembly, objects, ROMs or JP changes.
 
-### `func_813010B0` — requeue, selected-result stack home
+### `func_813010B0` — matched (selected-controller dialog setup)
 
-Best clean source: 264/264 bytes, 1.0000 normalized / 0.9697 raw. All words
-except the selected-result spill/reload offset match: target stack+0x3C,
-candidate stack+0x44. Frame 0x48 and the idle flag at stack+0x40 already match.
-Leader: `f14-family:dialog:record-True:local-False:reverse-False`.
-
-Eight initial variants tested record/raw views, cached/direct dialog address
-and local order. Follow-ups tested inline result/flag expressions, small
-record/array snapshots, scoped declarations/initializers and register hints.
-Inlining the lookup result fixes its home but moves the idle read before
-the lookup; it is not exact. A calibrated 45-second native permuter with
-stack scoring reproduces source and target, then stays flat at **16 -> 16**.
-No mutated candidate is adopted. Do not add dummy locals or use unsequenced
-argument writes to manufacture the desired stack layout.
-
-Next: inspect named-local versus temporary spill-home ownership on the two
-leaders, preserving lookup-before-idle-read-before-count-query order. Future
-probes need the real five-argument `func_8130FC80` and ten-argument
-`func_8130FD10` declarations; unused probe declarations were removed here.
+Matched with `Fragment14SetupState *arg0` and three named locals declared
+`count`, `idle`, `result`. `count` holds `func_81302290(arg0)` in a statement
+before the `func_8130FD10` call; with that call inline in the argument list
+the result home moved to stack+0x44 and the frame grew. The dialog address
+`arg0 + 0xF64C` is written inline at both calls: a named `dialog` local adds
+8 bytes of frame. The state-local alias `Fragment14SetupState *state = arg0`
+changes register allocation and fails; the typed parameter does not.
 
 ### Remaining page/lookup requeues
 
