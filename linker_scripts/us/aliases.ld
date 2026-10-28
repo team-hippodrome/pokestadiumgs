@@ -1110,3 +1110,8 @@ func_8670018C = Stage55_DrawAnimatedResource;
 func_86708EDC = Stage55_UpdateTransition;
 func_86709934 = Stage55_UpdateResourcePools;
 func_8670A790 = Stage55_RunStage;
+
+func_8AC017B0 = Fragment43_DrawForwardTextureStrip;
+func_8AC0198C = Fragment43_DrawReverseTextureStrip;
+func_8AC02A34 = Fragment43_SecondaryTextureCallback;
+func_8AC030EC = Fragment43_ClippedTextureCallback;

@@ -548,11 +548,86 @@ void func_8AC016A8(void *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC017B0.s")
+typedef struct Render43Strip {
+    F43RectParent16A8 *parent;
+    s16 x, y;
+    s16 left, top, right, bottom;
+    u8 prim[4];
+    u8 env[4];
+    void *texture;
+} Render43Strip;
+typedef struct Render43StripOwner {
+    void *output;
+    u8 unk_04[10];
+    s16 unk_0E;
+    u8 unk_10[4];
+    Render43Strip draw;
+} Render43StripOwner;
+extern Gfx D_8AC07C10[];
+extern s32 func_8004D1FC(u8 *);
+extern Gfx * D_800D0510;
+void Fragment43_DrawForwardTextureStrip(void *arg0) {
+    u32 r, g, b;
+    s16 x, y, dx, dy;
+    u32 a;
+    u8 er, eg, eb, ea;
+    F43RectParent16A8 *parent;
+    Render43Strip *draw;
+    parent = ((Render43StripOwner *)arg0)->draw.parent;
+    x = parent->x;
+    y = parent->y;
+    dx = ((Render43StripOwner *)arg0)->unk_0E - x;
+    dy = ((Render43StripOwner *)arg0)->draw.y;
+    draw = &((Render43StripOwner *)arg0)->draw;
+    r = draw->prim[0];
+    g = draw->prim[1];
+    b = draw->prim[2];
+    a = draw->prim[3];
+    er = draw->env[0];
+    eg = draw->env[1];
+    eb = draw->env[2];
+    ea = draw->env[3];
+    gSPDisplayList(D_800D0510++, D_8AC07C10);
+    gDPSetPrimColor(D_800D0510++, 0, 0, r, g, b, a);
+    gDPSetEnvColor(D_800D0510++, er, eg, eb, ea);
+    func_8004D1FC(draw->texture);
+    gSPTextureRectangle(D_800D0510++, (x + draw->left) << 2, (y + draw->top) << 2,
+        (x + dx + draw->right) << 2, (y + dy + draw->bottom) << 2,
+        G_TX_RENDERTILE, 0, 0, 0, 0x400);
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0198C.s")
+extern Gfx * D_800D0510;
+void Fragment43_DrawReverseTextureStrip(void *arg0) {
+    u32 r, g, b;
+    s16 x, y, dx, dy;
+    u32 a;
+    u8 er, eg, eb, ea;
+    F43RectParent16A8 *parent;
+    Render43Strip *draw;
+    parent = ((Render43StripOwner *)arg0)->draw.parent;
+    x = parent->x;
+    y = parent->y;
+    dx = ((Render43StripOwner *)arg0)->unk_0E - x;
+    dy = ((Render43StripOwner *)arg0)->draw.y;
+    draw = &((Render43StripOwner *)arg0)->draw;
+    r = draw->prim[0];
+    g = draw->prim[1];
+    b = draw->prim[2];
+    a = draw->prim[3];
+    er = draw->env[0];
+    eg = draw->env[1];
+    eb = draw->env[2];
+    ea = draw->env[3];
+    gSPDisplayList(D_800D0510++, D_8AC07C10);
+    gDPSetPrimColor(D_800D0510++, 0, 0, r, g, b, a);
+    gDPSetEnvColor(D_800D0510++, er, eg, eb, ea);
+    func_8004D1FC(draw->texture);
+    gSPTextureRectangle(D_800D0510++, (x + draw->left) << 2, (y + draw->top) << 2,
+        (x + dx + draw->right) << 2, (y + dy + draw->bottom) << 2,
+        G_TX_RENDERTILE, 0, draw->bottom << 5, 0, -0x400);
+}
 #endif
 
 #ifdef VERSION_US
@@ -562,7 +637,7 @@ typedef struct { F43_1B74Parent *parent; s16 x, y, left, top, width, height; u8 
 typedef struct { F43_1B74Node *node; u8 pad[0x10]; F43_1B74Draw draw; } F43_1B74Owner;
 extern Gfx D_8AC07C10[];
 extern s16 D_8AC099BE;
-extern void func_8004D1FC(void *);
+extern s32 func_8004D1FC(u8 *);
 extern Gfx * D_800D0510;
 extern u8 D_8AC099BC;
 void func_8AC01B74(void *arg0)
@@ -609,7 +684,7 @@ typedef struct F43D88CParent { u8 pad00[14]; s16 x; s16 y; } F43D88CParent;
 typedef struct F43D88CPayload { F43D88CParent *parent; u8 pad04[4]; s16 dx; s16 dy; s16 left; s16 top; s16 right; s16 bottom; void *texture; } F43D88CPayload;
 typedef struct F43D88COwner { F43D88COutput *output; s16 ready; u8 pad06[14]; F43D88CPayload data; } F43D88COwner;
 extern Gfx D_8AC07C50[];
-extern void func_8004D1FC(void *);
+extern s32 func_8004D1FC(u8 *);
 extern Gfx * D_800D0510;
 extern u8 D_8AC099BC;
 extern s16 D_8AC099C0;
@@ -821,16 +896,80 @@ s32 func_8AC02998(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC02A34.s")
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004CA24(u16 *);
+extern s32 func_8004CA38(u8 *);
+extern s32 func_8004CA4C(u8 *);
+extern void func_80046204(s32, s32, s32, u32, u32, u32, u32, u32, u32, s32, s32, s32, s32, s32, s32, s32);
+extern Gfx D_8AC07C50[];
+extern u32 D_8AC07D20;
+extern s32 func_8004C990(s32, s32);
+extern void func_800504BC(s16 *);
+extern Gfx * D_800D0510;
+extern u8 D_8AC099BC;
+typedef struct DualTexture43State {
+    u8 unk_00[8];
+    s16 left, top, x, y;
+    u8 *image, *second;
+    s32 format, size, width, second_width, height;
+} DualTexture43State;
+typedef struct DualTexture43Node {
+    u16 unk_00, flags;
+    u8 unk_04[4];
+    s16 x, y;
+    u8 unk_0C[20];
+    DualTexture43State *state;
+    u16 id, index;
+} DualTexture43Node;
+s32 Fragment43_SecondaryTextureCallback(s32 arg0, void *arg1) {
+    DualTexture43Node *node = arg1;
+    DualTexture43State *state;
+    s16 left;
+    s16 top;
+    s16 right;
+    s16 bottom;
+    state = node->state;
+    switch (arg0) {
+    case 0:
+        state->second = (u8 *)func_8004C990(node->id, node->index);
+        state->format = func_8004CA38(state->second);
+        state->size = func_8004CA4C(state->second);
+        state->width = func_8004CA10((u16 *)state->image);
+        state->second_width = func_8004CA10((u16 *)state->second);
+        state->height = func_8004CA24((u16 *)state->second);
+        break;
+    case 1:
+        if (node->flags & 2) {
+            func_800504BC((s16 *)&D_8AC099BC);
+            state->x = *(s16 *)&D_8AC099BC + node->x;
+            state->y = ((s16 *)&D_8AC099BC)[1] + node->y;
+            if (state->y > 0) {
+                left = state->left + state->width;
+                top = state->top;
+                right = state->x;
+                bottom = state->y + state->height;
+                gSPDisplayList(D_800D0510++, D_8AC07C50);
+                func_80046204((s32)state->second, state->format, state->size,
+                    state->second_width, state->height, 4, 0, 4, (state->height - 1) << 2,
+                    0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+                gDPPipeSync(D_800D0510++);
+                gSPTextureRectangle(D_800D0510++, left << 2, top << 2,
+                    right << 2, bottom << 2, G_TX_RENDERTILE, 0, 0, 0, 0x400);
+            }
+        }
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
 extern void _bzero(void *, s32);
 extern s32 func_8AC06D8C(s32, s32);
 extern void func_8004E308(s32, s32 *, s32 *);
-extern u8 func_8AC02A34;
+extern s32 Fragment43_SecondaryTextureCallback(s32, void *);
 extern s32 Fragment43_DualTextureCallback(s32, void *);
-extern u8 func_8AC030EC;
+extern s32 Fragment43_ClippedTextureCallback(s32, void *);
 extern s32 func_8AC02998(s32, void *);
 extern s32 func_8AC02D04(s32, void *);
 extern s32 func_8AC03050(s32, void *);
@@ -846,7 +985,7 @@ void func_8AC02C80(s32 arg0, s32 arg1, s32 arg2, void *arg3) {
     v0 = func_8AC06D8C(arg0, arg2);
     (*(s32 *)((u8 *)(arg3) + (4))) = v0;
     func_8004E308((*(s32 *)((u8 *)(arg3) + (0))), (s32 *) func_8AC02998, (s32 *) arg3);
-    func_8004E308((*(s32 *)((u8 *)(arg3) + (4))), (s32 *) &func_8AC02A34, (s32 *) arg3);
+    func_8004E308((*(s32 *)((u8 *)(arg3) + (4))), (s32 *) &Fragment43_SecondaryTextureCallback, (s32 *) arg3);
 }
 #endif
 
@@ -870,20 +1009,6 @@ s32 func_8AC02D04(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-typedef struct DualTexture43State {
-    u8 unk_00[8];
-    s16 left, top, x, y;
-    u8 *image, *second;
-    s32 format, size, width, second_width, height;
-} DualTexture43State;
-typedef struct DualTexture43Node {
-    u16 unk_00, flags;
-    u8 unk_04[4];
-    s16 x, y;
-    u8 unk_0C[20];
-    DualTexture43State *state;
-    u16 id, index;
-} DualTexture43Node;
 extern s32 func_8004CA10(u16 *);
 extern s32 func_8004CA24(u16 *);
 extern s32 func_8004CA38(u8 *);
@@ -969,7 +1094,57 @@ s32 func_8AC03050(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC030EC.s")
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004CA24(u16 *);
+extern s32 func_8004CA38(u8 *);
+extern s32 func_8004CA4C(u8 *);
+extern void func_80046204(s32, s32, s32, u32, u32, u32, u32, u32, u32, s32, s32, s32, s32, s32, s32, s32);
+extern Gfx D_8AC07C50[];
+extern u32 D_8AC07D20;
+extern s32 func_8004C990(s32, s32);
+extern void func_800504BC(s16 *);
+extern Gfx * D_800D0510;
+extern u8 D_8AC099BC;
+s32 Fragment43_ClippedTextureCallback(s32 arg0, void *arg1) {
+    DualTexture43Node *node = arg1;
+    DualTexture43State *state;
+    s16 left;
+    s16 top;
+    s16 right;
+    s16 bottom;
+    state = node->state;
+    D_8AC07D20 = *(u32 *)node->unk_04;
+    switch (arg0) {
+    case 0:
+        state->second = (u8 *)func_8004C990(node->id, node->index);
+        state->format = func_8004CA38(state->second);
+        state->size = func_8004CA4C(state->second);
+        state->width = func_8004CA10((u16 *)state->image);
+        state->second_width = func_8004CA10((u16 *)state->second);
+        state->height = func_8004CA24((u16 *)state->image);
+        break;
+    case 1:
+        if (node->flags & 2) {
+            func_800504BC((s16 *)&D_8AC099BC);
+            state->x = *(s16 *)&D_8AC099BC + node->x;
+            state->y = ((s16 *)&D_8AC099BC)[1] + node->y;
+            if ((state->top < 480) && (state->y + state->height > 0)) {
+                left = state->left + state->width;
+                top = state->top - 1;
+                right = state->x;
+                bottom = state->y + state->height - 1;
+                gSPDisplayList(D_800D0510++, D_8AC07C50);
+                func_80046204((s32)state->image, state->format, state->size,
+                    state->width, state->height, 0, 0, state->width - 1, state->height,
+                    0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+                gSPTextureRectangle(D_800D0510++, left << 2, top << 2,
+                    right << 2, bottom << 2, G_TX_RENDERTILE, 64, 0, 0, 0x400);
+            }
+        }
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -982,7 +1157,7 @@ void func_8AC03334(s32 arg0, s32 arg1, s32 arg2, void *arg3) {
     v0 = func_8AC06D8C(arg0, arg2);
     (*(s32 *)((u8 *)(arg3) + (4))) = v0;
     func_8004E308((*(s32 *)((u8 *)(arg3) + (0))), (s32 *) func_8AC03050, (s32 *) arg3);
-    func_8004E308((*(s32 *)((u8 *)(arg3) + (4))), (s32 *) &func_8AC030EC, (s32 *) arg3);
+    func_8004E308((*(s32 *)((u8 *)(arg3) + (4))), (s32 *) &Fragment43_ClippedTextureCallback, (s32 *) arg3);
 }
 #endif
 
