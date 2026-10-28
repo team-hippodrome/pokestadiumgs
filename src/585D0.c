@@ -87,12 +87,34 @@ s32 func_80057A80(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80057ACC.s")
+extern u8 D_80128750[];
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+s32 func_80057ACC(s32 port, u8 *data, s32 addr, u32 size) {
+    u32 chunk;
+    u8 *buf;
+
+    while (size != 0) {
+        chunk = (size < 0x400) ? size : 0x400;
+        buf = D_80128750;
+        if (GbPak_ReadCommand(port, D_80128750, addr, (chunk + 0x1F) & 0xFFE0) != 0) {
+            if (!port) {} // FAKE
+            return 0;
+        }
+        size -= chunk;
+        addr += chunk;
+        while (chunk-- > 0) {
+            if (*data++ != *buf++) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
 s32 GbPak_WriteCommand(s32, s32, s32, s32);
-s32 func_80057ACC(s32, s32, s32, s32);
+s32 func_80057ACC(s32, u8 *, s32, u32);
 s32 func_80057BCC(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 var_s0;
 
