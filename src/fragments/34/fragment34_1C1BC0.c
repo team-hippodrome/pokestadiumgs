@@ -165,8 +165,6 @@ typedef struct {
 extern unk_D_885229B0 D_885229B0[];
 extern s16 D_8850D2C2[];
 extern f32 D_80088E50[];
-extern f32 D_8850D4E0;
-extern f32 D_8850D4E4;
 extern s32 MathUtil_Random16(void);
 // Bob/sway animation of one slot: unk_00C and unk_018 follow the sine of phase unk_012, the
 // scales unk_020/unk_024 follow phase unk_014; the slot after D_88523009 moves at double
@@ -182,11 +180,11 @@ void func_88505264(unk_D_885229B0 *arg0) {
     if (temp_lo - 1 == D_88523009) {
         var_fv0 = 1.5f;
         var_a2 = D_8850D2C2[temp_lo] * 2;
-        var_fv1 = D_8850D4E0;
+        var_fv1 = 0.06f;
         var_a3 = 0x3000;
     } else {
         var_a2 = D_8850D2C2[temp_lo];
-        var_fv1 = D_8850D4E4;
+        var_fv1 = 0.02f;
         var_a3 = 0x2000;
         var_fv0 = 1.0f;
     }

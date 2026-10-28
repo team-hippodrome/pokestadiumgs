@@ -1002,7 +1002,8 @@
     - [0x1CA690, data,    fragments/34/fragment34_data]
     - [0x1CA9C0, .rodata, fragments/34/fragment34_1BD630] # Jump tables, float literals.
     - [0x1CAA60, .rodata, fragments/34/fragment34_1BE300] # Strings, jump tables, float literals.
-    - [0x1CAA90, rodata]
+    - [0x1CAA90, .rodata, fragments/34/fragment34_1C1BC0] # strings, jump tables, float literals: referenced only by this file
+    - [0x1CAB20, .rodata, fragments/34/fragment34_1C3FA0] # strings: referenced only by this file
     - [0x1CAB40, .rodata, fragments/34/fragment34_1C5AA0] # Debug string, light/sequence jump tables and their float constants. Extended to 0x1CAB40-0x1CAC80: jump tables.
     - [0x1CAC80, rodata, fragments/34/fragment34_tail]
 
