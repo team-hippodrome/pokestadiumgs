@@ -237,7 +237,22 @@ void func_8413EDCC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8413EDF8.s")
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+void BattleUi_DrawTexturedBorder(s16 x, s16 y, u16 width, u16 height) {
+    s16 left_height;
+    s16 right_edge;
+    s32 right;
+    left_height = height - 2;
+    GfxRect_DrawTextured((s16)(x - 2), (s16)(y - 2), 4, left_height, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured((s16)(x - 1), (s16)(y + height - 4), 4, 4, 0x100, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured((s16)(x + 3), (s16)(y + height - 4), (s16)(width - 7), 4, 0x160, 0, 0, 0x400, 0);
+    right = x + width;
+    right_edge = right - 4;
+    GfxRect_DrawTextured(right_edge, (s16)(y + height - 4), 4, 4, 0x180, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(right_edge, (s16)(y + 2), 4, (s16)(height - 6), 0x180, 0, 0x400, 0, 0);
+    GfxRect_DrawTextured((s16)(right - 5), (s16)(y - 2), 4, 4, 0x80, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured((s16)(x + 2), (s16)(y - 2), (s16)(width - 7), 4, 0x80, 0, 0, 0x400, 0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -819,7 +834,7 @@ void func_84141020(void *arg0) {
         case 22:
         case 28:
             ParticleGfx_SetPrimColor_fragment79(p[0x22], p[0x23], p[0x24], p[0x25]);
-            func_8413EDF8(*(s16 *)(p + 10), *(s16 *)(p + 12), *(u16 *)(p + 14), *(u16 *)(p + 16));
+            BattleUi_DrawTexturedBorder(*(s16 *)(p + 10), *(s16 *)(p + 12), *(u16 *)(p + 14), *(u16 *)(p + 16));
             break;
         case 3:
         case 4:
@@ -1226,7 +1241,27 @@ void func_84143E64(u16 arg0, u16 arg1, s32 arg2, u16 arg3, s32 arg4) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84143F18.s")
+extern s16 D_84186D18;
+extern s16 D_84186D1C;
+extern s32 func_800625E0(s32, s32);
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern char D_8418B1C4[];
+extern void func_800495F8(s32, s32, s32, void *, ...);
+extern s32 func_80064474(u8, u16);
+void BattleUi_DrawNameLabel(u16 x, u16 y, u8 kind, u16 id, char *name) {
+    u8 color;
+    char buf[12];
+    color = func_80064474(kind, id);
+    if (name != NULL) {
+        if (kind == 29 || kind == 32) {
+            if (HAL_Strcmp((s8 *)name, (s8 *)func_800625E0((s32)buf, kind)) == 0) {
+                func_800495F8(x, y, 1, name);
+                return;
+            }
+        }
+        func_800495F8(x, y, 1, D_8418B1C4, name, color == 1 ? 169 : color == 2 ? 190 : 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1309,7 +1344,25 @@ void func_841442BC(void *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144410.s")
+extern u8 func_8413FD04(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84143E64(u16 arg0, u16 arg1, s32 arg2, u16 arg3, s32 arg4);
+extern u8 * D_841951F8;
+void BattleUi_DrawNameRow(void *row) {
+    s32 i;
+    u16 x;
+    u8 kind;
+    s32 slot;
+    u8 *entry;
+    x = 0;
+    kind = ((u8 *)row)[1];
+    for (i = 0; i < 3; i++) {
+        slot = func_8413FD04(kind, ((u8 *)row)[2], i);
+        if (slot == 0xFF) break;
+        entry = ((u8 **)&D_841951F8)[kind] + slot * 88;
+        func_84143E64(*(s16 *)((u8 *)row + 18) + D_84186D18 + x, *(s16 *)((u8 *)row + 20) + D_84186D1C, entry[24], *(u16 *)(entry + 46), (s32)(entry + 76));
+        x += 67;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1976,7 +2029,65 @@ void func_84146D98(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84146DBC.s")
+extern u8 func_8413D26C(u8, u8);
+extern u8 D_84186F44[];
+extern u8 D_84186F68[];
+extern u8 D_84186F6C[];
+extern u8 D_84186F74[];
+extern u8 D_84186F78[];
+extern u8 D_84186FD4[];
+extern s16 D_84186D18;
+extern s16 D_84186D1C;
+extern void func_84146D98(u8 *arg0, u8 *arg1);
+extern u8 D_84186F3C[];
+extern u8 D_84186F50[];
+void BattleUi_UpdateElementColor(u8 *element, s32 palette_index) {
+    switch (element[0]) {
+    case 0:
+        func_84146D98(element, D_84186F44 + func_8413D26C(element[1], element[2]) * 3);
+        break;
+    case 1:
+    case 2:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+    case 28:
+        func_84146D98(element, D_84186F50 + func_8413D26C(element[1], element[2]) * 3);
+        break;
+    case 16:
+    case 17:
+        func_84146D98(element, D_84186F50 + element[2] * 3);
+        break;
+    case 4:
+        func_84146D98(element, D_84186F68);
+        break;
+    case 5:
+        func_84146D98(element, D_84186F6C);
+        break;
+    case 6:
+        func_84146D98(element, D_84186F78);
+        break;
+    case 7:
+    case 8:
+        func_84146D98(element, D_84186F74);
+        break;
+    case 18:
+    case 19:
+    case 20:
+    case 21:
+    case 25:
+    case 26:
+        func_84146D98(element, D_84186F3C);
+        break;
+    case 22:
+        func_84146D98(element, D_84186FD4 + palette_index * 3);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -2045,7 +2156,7 @@ void func_84147008(u8 *arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84146DBC(u8 * , s32);
+extern void BattleUi_UpdateElementColor(u8 * , s32);
 extern void func_84146F24(u8 * , s32, u8);
 extern void func_84147008(u8 * , u8);
 extern u8 D_84186F38;
@@ -2059,7 +2170,7 @@ void func_841470C4(u8 * arg0, u8 arg1, u32 arg2) {
     func_84146D38(arg0);
     break;
   case 3:
-    func_84146DBC(arg0, arg2);
+    BattleUi_UpdateElementColor(arg0, arg2);
     break;
   case 4:
     arg0[8] |= arg2;
@@ -2531,18 +2642,18 @@ void func_841480C0(u8 *arg0) { u8 value = arg0[9]; if (arg0[0] == 1) { func_8414
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84186F3C;
-extern u8 D_84186F50;
+extern u8 D_84186F3C[];
+extern u8 D_84186F50[];
 void func_84148128(u8 *arg0) {
     s32 temp_v1;
 
     temp_v1 = func_8413D26C((*(u8 *)((u8 *)(arg0) + (1))), (*(u8 *)((u8 *)(arg0) + (2)))) & 0xFF;
     if ((*(u8 *)((u8 *)(arg0) + (0))) == 1) {
         if (((s32) (*(u8 *)((u8 *)(arg0) + (9))) / 4) & 1) {
-            func_84146D98(arg0, &D_84186F3C);
+            func_84146D98(arg0, D_84186F3C);
             return;
         }
-        func_84146D98(arg0, (temp_v1 * 3) + &D_84186F50);
+        func_84146D98(arg0, (temp_v1 * 3) + D_84186F50);
     }
 }
 #endif
@@ -2619,11 +2730,11 @@ void func_8414831C(u8 arg0) {
     func_8413E728(arg0);
     func_8413FC34();
     // For each of the 52 0x28-byte entries at D_84186188: func_84146B0C,
-    // func_84146DBC, then set bits 0 and 1 of byte 8.
+    // BattleUi_UpdateElementColor, then set bits 0 and 1 of byte 8.
     offset = 0;
     do {
         func_84146B0C(&D_84186188[offset], 0);
-        func_84146DBC(&D_84186188[offset], 0);
+        BattleUi_UpdateElementColor(&D_84186188[offset], 0);
         offset += 0x28;
         D_84186188[offset - 0x20] |= 1;
         D_84186188[offset - 0x20] |= 2;

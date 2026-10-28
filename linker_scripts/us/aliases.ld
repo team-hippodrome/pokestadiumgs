@@ -1238,3 +1238,13 @@ func_8005F3E0 = GbSave_WriteRtcTime;
 func_8821B5EC = StorageList_Initialize;
 
 func_88217DA8 = StorageList_DrawCategoryLabel;
+
+func_8413EDF8 = BattleUi_DrawTexturedBorder;
+
+func_84143F18 = BattleUi_DrawNameLabel;
+
+func_84144410 = BattleUi_DrawNameRow;
+
+func_84146DBC = BattleUi_UpdateElementColor;
+
+func_87E0E88C = ListSlots_UpdateState;

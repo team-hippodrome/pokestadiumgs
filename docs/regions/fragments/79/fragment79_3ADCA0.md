@@ -46,3 +46,58 @@ normal syntax checks through
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail `cmp` and `git diff --check` pass.
 Original-assembly/raw-ROM comparisons verify the 216 bytes at
 `0x3B361C..0x3B36F4` and the jump table at `0x3FAB9C..0x3FABF4`.
+
+## 2026-10-29 — color selection matched
+
+`func_84146DBC` selects RGB triples by record kind and calls `func_84146D98`,
+which copies three bytes and sets alpha to 255. The lookup used for kinds 0,
+1, 2, 9–15 and 28 is `func_8413D26C(state[1], state[2])`; its accepted
+producer in `src/fragments/79/fragment79_393CA0.c` returns a byte from
+`D_84195252[arg0 * 24 + arg1]`. Case 22 indexes `D_84186FD4` with the second
+argument. The native batch `scratch/battle79-novel3456` has a sealed retail
+gate for the direct switch spelling with that real `u8` return prototype:
+`scratch/battle79-novel3456/gate-0/receipt.json`. Final transaction status and
+commits are recorded in `scratch/agent-report.json`.
+
+## 2026-10-29 — `func_84143F18` and `func_84144410`: genuine C matches
+
+`func_84143F18` matches with `(u16 x, u16 y, u8 kind, u16 id, char *name)`.
+Declare the byte color before the 12-byte buffer. For kinds 29 and 32, compare
+`name` with `func_800625E0((s32)buf, kind)`, passing the callee's real second
+argument. That input keeps the kind in `$a1` across the test and resolves the
+historical register tie. The nested guard and ternary marker mapping match
+220 bytes with a 64-byte frame using ordinary byte-parameter C.
+
+`func_84144410` matches 260 bytes with a 72-byte frame. A signed counted loop
+visits up to three slots from `func_8413FD04`, breaks immediately on 255,
+indexes the pointer table at `&D_841951F8`, and advances a `u16` horizontal
+offset by 67. Each selected record is 88 bytes; kind, ID and name are read at
+24, 46 and 76. The separate transaction makes `D_84186D18` and `D_84186D1C`
+visible before this definition and closes its earlier declaration-scope handoff.
+
+Canonical batch `scratch/battle79-name-row` accepted the first candidate for
+both owners. Unchanged/+20-blank whole-module controls and the explicit host
+syntax check passed. The combined retail ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; sealed source/object/ELF/map/ROM and receipt
+are at `scratch/battle79-name-row/gate-0/`. These two accepts resolve their
+prior requeue entries; the border drawer and move-type drawer remain active.
+
+## 2026-10-29 — `func_8413EDF8`: genuine C match
+
+Matched the seven-rectangle border drawer (572 bytes, 96-byte frame). Declare
+`GfxRect_DrawTextured` with its verified signature from `src/44E70.c`: eight
+`s16` geometry/texture parameters and an `s32` cycle parameter. Use repeated
+expressions for the top/bottom coordinates and inner width so IDO shares
+those values. Compute the real left-edge height, `s16 left_height = arg3 - 2`,
+before the first call; this orders the height and top-coordinate spill slots
+correctly. Keep the right-edge coordinate as `s16` and the sum `arg0 + arg2`
+as a word for the later right corner. Every temporary supplies rectangle
+geometry; there are no filler locals, forced storage slots or rewrite pragmas.
+
+Canonical batch `scratch/battle79-border-height` accepted the first candidate,
+`border:left-height-first:s16:cast-False:first`, with `link_verified: true`.
+The unchanged/+20-blank module controls, explicit host syntax check and full
+retail ROM gate passed. The retail MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; the sealed receipt is
+`scratch/battle79-border-height/gate-0/receipt.json`. This closes the prior
+border-drawer requeue entry.
