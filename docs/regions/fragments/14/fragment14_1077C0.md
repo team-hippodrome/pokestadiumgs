@@ -72,3 +72,7 @@ Based on master 224774092bdc686b39361e5308a59d6567d7ed75. Full US rebuild with d
 ## 2026-10-27 — `func_81310800`: matched
 
 `arg0` is typed as a local `unk_func_81310800` record (`unk_38` phase byte, `unk_39`, `unk_48` entry index, `unk_8C[]` per-entry bytes, `unk_A8` any-selectable flag). The table argument is one nested conditional inside the `func_81311C70` call (`unk_A8 ? (unk_8C[unk_48] == 6 ? D_81312128 : D_81312104) : D_813120E0`), which produces retail's hoisted `&D_81312104` and else-arm copy; the struct member access gives the `arg0 + index` operand order that the raw `u8 *` index spellings reverse. The result store is `arg0->unk_38 = unk_A8 != 0 ? 3 : 4`, which allocates 4 to t2 and 3 to t1 as retail does.
+
+## 2026-10-28 — `func_8130FD10` matched
+
+Initializer, the long-form sibling of `func_8130FC80`: it copies two 8-byte records (`unk_D_8130FD10`, `s16[4]`, so the copies use `lwl`/`lwr`) to 0x20/0x28, stores the scalar arguments (0x39, 0xA4, 0xA5, 0x44, 0x3C, 0xA0), runs `func_8130FA0C`/`func_8130FB58`, sets 0x48, then runs `func_8130FBC0`. It plays sound 0xA5 when `arg5` is set and moves phase 0/1/4 to 1 (phase 0 also clears 0x30; `case 3: break;` is required). Finally it calls `func_8130F8B4(obj, 1)`. The byte-stored parameters are `s32`: retail neither homes `a1`/`a3` nor narrows the stack-passed one.
