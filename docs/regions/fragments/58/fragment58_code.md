@@ -57,3 +57,7 @@ Twin model callbacks: on step 2 they copy a 3-byte color plus a fourth byte from
 - Use a struct-member access `((Fragment58CameraColors *)&D_83404188)->colorA[i]`, so IDO strength-reduces to retail's `record + i` induction with 0x78 in the load offset. A named `D_83404200` or a cast `u8 *` index gives the wrong base.
 - Copy `arg1` into a `dst` local, which keeps it in `$s0`.
 - Declare `s32 i; u8 *dst;` before `distance`, which puts the out-parameters at `sp+0x30..0x34`.
+
+## 2026-10-28 — `D_83404188` typed as a record
+
+`D_83404188` is now declared as `Fragment58State188` (state word, `unk_14`/`unk_18`, and `colorA`/`colorB` at 0x78/0x8C) instead of an `s32` read through a cast struct. The camera-color callbacks read `D_83404188.colorA[i]`, `func_834022F8` switches on `.state`, and the `+0x14`/`+0x18` stores use the named fields. Byte-identical.

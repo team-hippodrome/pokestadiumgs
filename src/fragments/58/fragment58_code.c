@@ -51,15 +51,20 @@ void func_83400038(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834006A8.s")
 
+// Fragment state record at D_83404188 (only the fields C code here reads are named).
 typedef struct {
-    /* 0x00 */ u8 unk_00[0x78];
+    /* 0x00 */ s32 state;
+    /* 0x04 */ u8 unk_04[0x10];
+    /* 0x14 */ s32 unk_14;
+    /* 0x18 */ s32 unk_18;
+    /* 0x1C */ u8 unk_1C[0x5C];
     /* 0x78 */ u8 colorA[4];
     /* 0x7C */ u8 unk_7C[0x10];
     /* 0x8C */ u8 colorB[4];
-} Fragment58CameraColors;
+} Fragment58State188;
 extern u8 *D_80094908;
 extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
-extern s32 D_83404188;
+extern Fragment58State188 D_83404188;
 s32 func_83400A64(s32 arg0, u8 *arg1) {
     s32 i;
     u8 *dst = arg1;
@@ -69,9 +74,9 @@ s32 func_83400A64(s32 arg0, u8 *arg1) {
 
     if (arg0 == 2) {
         for (i = 0; i < 3; i++) {
-            dst[0x18 + i] = ((Fragment58CameraColors *)&D_83404188)->colorA[i];
+            dst[0x18 + i] = D_83404188.colorA[i];
         }
-        dst[0x1B] = ((Fragment58CameraColors *)&D_83404188)->colorA[3];
+        dst[0x1B] = D_83404188.colorA[3];
         func_80037120(D_80094908 + 0xB4, D_80094908 + 0xA8, &distance, &angleX, &angleY);
         *(s16 *)(dst + 0x1C) = angleX + 0x2000;
         *(s16 *)(dst + 0x1E) = angleY;
@@ -88,9 +93,9 @@ s32 func_83400AFC(s32 arg0, u8 *arg1) {
 
     if (arg0 == 2) {
         for (i = 0; i < 3; i++) {
-            dst[0x18 + i] = ((Fragment58CameraColors *)&D_83404188)->colorB[i];
+            dst[0x18 + i] = D_83404188.colorB[i];
         }
-        dst[0x1B] = ((Fragment58CameraColors *)&D_83404188)->colorB[3];
+        dst[0x1B] = D_83404188.colorB[3];
         func_80037120(D_80094908 + 0xB4, D_80094908 + 0xA8, &distance, &angleX, &angleY);
         *(s16 *)(dst + 0x1C) = -0x2000 - angleX;
         *(s16 *)(dst + 0x1E) = angleY;
@@ -160,7 +165,7 @@ void func_83401904(void) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834022F8.s")
 
 extern void *D_800D0510;
-extern s32 D_83404188;
+extern Fragment58State188 D_83404188;
 extern s32 D_834041A4;
 extern s32 D_834041CC;
 extern s32 D_83404248;
@@ -183,7 +188,7 @@ void func_8340295C(void) {
         GeoRender_AdvanceFrameCounter();
     }
     Geo_RenderRootNode(D_83404248);
-    switch (D_83404188) {
+    switch (D_83404188.state) {
     case 2:
         func_834022F8();
         break;
@@ -258,8 +263,8 @@ void func_83402B10(void) {
     func_8003F2C4(D_8340424C, (s32)&D_83404250, 0);
     func_8003F3BC(&D_83404250, 0);
     *(u8 *)(&D_83404250 + 2) = *(u8 *)(&D_83404250 + 2) & 0xFFBF;
-    *(s32 *)((u8 *)&D_83404188 + 0x14) = *(u8 *)((u8 *)*(void **)((u8 *)D_83404164 + 0x2D4) + 0x13B0);
-    *(s32 *)((u8 *)&D_83404188 + 0x18) = *(s8 *)((u8 *)*(void **)((u8 *)D_83404164 + 0x2D4) + 0x13B1);
+    D_83404188.unk_14 = *(u8 *)((u8 *)*(void **)((u8 *)D_83404164 + 0x2D4) + 0x13B0);
+    D_83404188.unk_18 = *(s8 *)((u8 *)*(void **)((u8 *)D_83404164 + 0x2D4) + 0x13B1);
 }
 /* mkdraft:func_83402B10 end */
 
