@@ -20,20 +20,7 @@ u8 *func_8821DA70(s32 arg0) {
     }
 }
 
-/* func_8821DAC0 is still GLOBAL_ASM, but its .s is hand-maintained (not the
- * splat-generated asm/us/nonmatchings/.../func_8821DAC0.s) so that it can
- * also carry jtbl_882341B8's first 2 entries (8 bytes) in a .late_rodata
- * block ahead of its .text. Those words have to land immediately after
- * func_8821DA70's own compiler-generated jump table (jtbl_882341A0) to
- * satisfy this fragment's SUBALIGN(16); a plain C global here would instead
- * be emitted by IDO BEFORE func_8821DA70's switch table (IDO always emits
- * named/array rodata ahead of switch-table "late" rodata within one
- * compilation), landing at the wrong address. Placing it in a GLOBAL_ASM
- * .late_rodata block instead makes asm-processor position it correctly:
- * after all first-pass rodata and after func_8821DA70's own late-rodata
- * jump table, matching retail. jtbl_882341B8's remaining entries keep
- * coming from the unmodified data blob at their real retail addresses. */
-#pragma GLOBAL_ASM("hand_asm/fragments/31/func_8821DAC0_manual.s")
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821DAC0.s")
 
 extern u16 D_882345F0;
 extern s32 GbSave_GetRecordCapacity(s32);
@@ -343,7 +330,48 @@ s32 func_88220248(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882202E8.s")
+extern u8 func_80063660(u8);
+s32 func_882202E8(u8 species, u8 item) {
+    s32 result = 0;
+
+    switch (species) {
+    case 163:
+        if (item == 0x19) {
+            result = 1;
+        }
+        break;
+    case 30:
+        if (item == 0x71) {
+            result = 1;
+        }
+        break;
+    case 105:
+        if (item == 0x53) {
+            result = 1;
+        }
+        break;
+    case 35:
+        if (item == 0x84) {
+            result = 1;
+        }
+        break;
+    case 118:
+        if (item == 0x68 || item == 0x69) {
+            result = 1;
+        }
+        break;
+    case 91:
+    case 94:
+    case 106:
+        break;
+    default:
+        if (func_80063660(species) != 0) {
+            result = 1;
+        }
+        break;
+    }
+    return result;
+}
 
 extern u16 D_882345F0;
 extern u8 *D_88A01C38;
@@ -374,7 +402,51 @@ void func_88220400(s32 mode, u8 *list) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882204F8.s")
+extern void func_88220050(s32, u8 *);
+extern s32 func_88202FD4(void *, void *);
+extern void _bzero(void *, s32);
+extern s32 func_80063754(s32);
+extern s32 func_88220248(u8 *arg0);
+extern s32 func_882202E8(u8 species, u8 item);
+extern void func_88220400(s32 mode, u8 *list);
+extern s32 D_882345F4;
+extern u32 D_882347F0;
+void func_882204F8(s32 mode, u8 *list) {
+    s32 kind = mode;
+    u32 i;
+    u8 **entry;
+    u8 *flags;
+    s32 ok;
+
+    switch (mode) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        func_88220050(kind, list);
+        break;
+    case 4:
+    case 5:
+        func_88220400(kind, list);
+        break;
+    }
+    _bzero((u8 *)D_882347F0 + 0x9C, *(s16 *)(list + 4));
+    if (kind == 1 || kind == 2) {
+        flags = (u8 *)D_882347F0 + 0x9C;
+        for (i = 0, entry = *(u8 ***)list; i < *(s16 *)(list + 4); i++, entry++, flags++) {
+            if (mode == 1) {
+                ok = func_88202FD4((void *)D_882345F4, *entry) == 0;
+            } else {
+                ok = func_80063754(**entry) && func_88220248((u8 *)D_882345F4) == 0;
+            }
+            if (ok) {
+                *flags = 1;
+            } else if (mode == 2 && func_882202E8(**entry, ((u8 *)D_882345F4)[8]) != 0) {
+                *flags = 2;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882206A0.s")
 #endif
