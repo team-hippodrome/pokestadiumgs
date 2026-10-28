@@ -780,7 +780,45 @@ void func_82904E9C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82904F78.s")
+extern void func_82906680(void *);
+extern void StageFade_StartFromOpaque(s32);
+extern void func_82903298(void *);
+extern void func_8290351C(void);
+extern void func_829043B4(u8 *);
+extern void * D_82919A08;
+extern u8 D_82919D48;
+void func_82904F78(u8 *arg0) {
+    s32 active;
+
+    if (arg0[0x1072] != 0) {
+        func_829043B4(arg0);
+    }
+    active = arg0[0x1072] != 0;
+    arg0[0x1072]--;
+    if (!active) {
+        arg0[0x1070]++;
+        if (arg0[0x1070] == 6) {
+            StageContext_SetClearColor(0xFFFF);
+        } else {
+            StageContext_SetClearColor(1);
+        }
+        if (arg0[0x1070] == 6) {
+            arg0[0x1072] = 12;
+            *(s16 *)(arg0 + 0x1068) = 7;
+            func_82906680((u8 *)D_82919A08 + 0x24);
+            func_8290351C();
+        } else {
+            *(s8 *)&D_82919D48 = 0;
+            *(f32 *)((u8 *)&D_82919D48 + 4) = 0.0f;
+            *(f32 *)((u8 *)&D_82919D48 + 8) = 0.0f;
+            func_82903298(arg0);
+            func_82903058(arg0, 0);
+            arg0[0x1072] = 12;
+            *(s16 *)(arg0 + 0x1068) = 2;
+        }
+        StageFade_StartFromOpaque(12);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -800,7 +838,7 @@ void func_82905078(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_82904F78(void *);
+extern void func_82904F78(u8 *);
 extern void func_829048A0(void *);
 extern void func_82904C28(void *);
 extern void func_82906748(void *);

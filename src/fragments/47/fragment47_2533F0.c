@@ -32,7 +32,50 @@ void func_8600CE2C(s32 arg0) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_2533F0/func_8600CE80.s")
+typedef struct {
+    u32 active : 1;
+    u32 unk_30 : 5;
+    u32 skip : 1;
+    u32 rest : 25;
+} Fragment47StageFlags;
+extern void func_86006D64(void *, s32);
+extern s32 StageContext_GetFadeMode(void);
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromTransparent(s32);
+extern void func_87F0C930(void *);
+extern u8 D_86019060[];
+extern u8 D_8600E110[];
+s32 func_8600CE80(s32 arg0) {
+    s32 result = arg0;
+
+    func_86006D64(D_8600E110, arg0);
+    switch (arg0) {
+        case 0:
+            if (StageContext_GetFadeMode() == 0) {
+                if (((Fragment47StageFlags *)(D_8600E110 + 0x75C0))->active) {
+                    result = 1;
+                    if ((*(u8 **)(D_8600E110 + 0x7580))[0x2180] == 4) {
+                        if (!((Fragment47StageFlags *)(D_8600E110 + 0x75C0))->skip) {
+                            func_87F0C930(D_86019060);
+                        }
+                    } else {
+                        StageContext_SetClearColor(0xFFFF);
+                        StageFade_StartFromTransparent(10);
+                    }
+                }
+            } else if (((Fragment47StageFlags *)(D_8600E110 + 0x75C0))->active &&
+                       ((Fragment47StageFlags *)(D_8600E110 + 0x75C0))->skip) {
+                result = 1;
+            }
+            break;
+        case 1:
+            if (StageContext_GetFadeMode() == 1) {
+                result = 2;
+            }
+            break;
+    }
+    return result;
+}
 
 extern void StageFade_StartFromOpaque(s32);
 extern void func_800086A4(s32);

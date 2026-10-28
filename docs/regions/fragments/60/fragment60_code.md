@@ -66,3 +66,12 @@ a 300-second permuter (2660 -> 2170) did not close it. Retail homes `arg2`
 first and reuses `$a2` for `arg0 * 4`, which it spills to 0x18. Next: start
 from that early `$a2` reuse; check whether `D_86A0F2BC[arg0]` is loaded
 through the same `arg0 * 4` temporary before the call.
+
+## 2026-10-29: `func_86A059AC` requeue
+
+requeue (0.28). `(s32 player, f32 x, f32 z, s32 kind)` box test against `D_86A443F0.position[player]`, where `entry = D_86A0D560 + kind*0x18`:
+- `halfWidth = entry[0x10] * 8.333333f * 0.8f + D_86A45AC8`;
+- `px < x + halfWidth && x - halfWidth < px && pz < (0.0f + D_86A45AC8) + z`;
+- and `(f64)z - ((f64)(entry[0x14] * 8.333333f) * 2 * 0.8f + margin) < (f64)pz` (the double literal is `(f64)0.8f`).
+
+Retail sets v0 = 0 before the first compare and keeps an explicit `add.s` of 0.0f, while IDO folds our `0.0f + margin`. Find the source of that unfolded zero (probably a zero-valued field or a variable) first.
