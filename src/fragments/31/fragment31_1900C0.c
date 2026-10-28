@@ -48,7 +48,46 @@ void func_8821D550(void) {
 }
 /* mkdraft:func_8821D550 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1900C0/func_8821D64C.s")
+extern s32 D_88234560;
+extern s8 D_8800EF40;
+extern void func_80064D28(void);
+extern void func_88204400(void);
+extern void func_88217040(void);
+extern void func_88209278(void);
+extern void func_88211550(void);
+extern void func_8820CF8C(void);
+extern void func_882143EC(void);
+extern void func_880040D4(void);
+void func_8821D3FC(void);
+void func_8821D64C(void) {
+    while (D_88234560 != 6) {
+        if (D_8800EF40 == -1) {
+            func_80064D28();
+        }
+        switch (D_88234560) {
+        case 5:
+            func_88204400();
+            break;
+        case 0:
+            func_88217040();
+            break;
+        case 1:
+            func_88209278();
+            break;
+        case 2:
+            func_88211550();
+            break;
+        case 3:
+            func_8820CF8C();
+            break;
+        case 4:
+            func_882143EC();
+            break;
+        }
+        func_880040D4();
+        func_8821D3FC();
+    }
+}
 
 /* mkdraft:func_8821D74C begin */
 extern s32 func_80001FF0(void);
@@ -99,7 +138,6 @@ M2C_UNK func_80047610();                            /* extern */
 M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 M2C_UNK func_8821CE40(M2C_UNK);                     /* extern */
-M2C_UNK func_8821D64C();                            /* extern */
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
 extern s32 D_8800687C;
