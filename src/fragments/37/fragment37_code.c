@@ -92,7 +92,36 @@ void func_88800D34(s8 slot) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800DC0.s")
+typedef struct Color88800DC0 {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color88800DC0;
+extern u8 *D_880068B0;
+extern u8 *D_8800687C;
+extern Color88800DC0 *func_88000510(Color88800DC0 *, s8);
+extern void func_880006E0(Color88800DC0 *);
+extern u8 func_80062D98(u8);
+extern const char *func_80062CE0(u8);
+extern const char *func_8004C874(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+void func_88800DC0(s8 index, u8 alpha) {
+    u8 move;
+    Color88800DC0 color;
+
+    if (alpha == 0) {
+        return;
+    }
+    move = (D_880068B0 + 2)[index];
+    func_88000510(&color, move == 252 ? 0 : func_80062D98(move));
+    if (alpha == 255) {
+        func_880006E0(&color);
+    } else {
+        func_8004972C(color.red, color.green, color.blue, alpha);
+    }
+    func_80048E30(D_8800687C, 0x87, index * 27 + 0x100, move == 252 ? func_8004C874(0x26, 0x2A) : func_80062CE0(move), 1);
+}
 
 extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
 extern s32 func_8004D1FC(u8 *arg0);
