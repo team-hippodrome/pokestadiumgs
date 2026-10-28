@@ -1333,6 +1333,8 @@
     - [0x299920, textbin, fragments/54/fragment54_header]
     - [0x299940, c,       fragments/54/fragment54_code]
     - [0x29FE40, data,    fragments/54/fragment54_data]
+    - [0x2A0800, .rodata, fragments/54/fragment54_code] # strings, jump tables, float literals
+    - [0x2A0AC0, rodata, fragments/54/fragment54_tail] # tables after the code object's rodata
   
   - name: fragment55
     type: code
