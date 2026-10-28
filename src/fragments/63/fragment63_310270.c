@@ -202,8 +202,8 @@ void ListSlots_ResetEntryState(void *arg0, s32 arg1) {
 }
 
 extern f32 D_87E1A464[][3];
-extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
-extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
 extern void func_87F0B24C(u8 *, u8 *, f32, f32, f32, s32, s32);
 void func_87E0D0A0(u8 *arg0) {
     u8 *node;
@@ -213,17 +213,17 @@ void func_87E0D0A0(u8 *arg0) {
     i = 0;
     for (node = *(u8 **)(arg0 + 0x1C); node != NULL; node = *(u8 **)(node + 4)) {
         object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
-        func_87F0B1A4(object, node + 0x48, D_87E1A464[i][0], D_87E1A464[i][1], D_87E1A464[i][2], i * 5 + 10, 0x5000);
-        func_87F0B2F4(object, node + 0x42, 0.0f, 0.0f, 0.0f, i * 5 + 10, 0x8000);
+        func_87F0B1A4(object, (f32 *)(node + 0x48), D_87E1A464[i][0], D_87E1A464[i][1], D_87E1A464[i][2], i * 5 + 10, 0x5000);
+        func_87F0B2F4(object, (s16 *)(node + 0x42), 0.0f, 0.0f, 0.0f, i * 5 + 10, 0x8000);
         func_87F0B24C(object, node + 0x54, 0.7f, 0.7f, 0.7f, i * 5 + 10, 0);
         i++;
     }
 }
 
 extern f32 D_87E1A464[][3];
-extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
 extern void func_87F0B24C(u8 *, u8 *, f32, f32, f32, s32, s32);
-extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
 void func_87E0D18C(u8 *arg0) {
     u8 *node;
     s32 i;
@@ -232,14 +232,34 @@ void func_87E0D18C(u8 *arg0) {
     i = 0;
     for (node = *(u8 **)(arg0 + 0x1C); node != NULL; node = *(u8 **)(node + 4)) {
         object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
-        func_87F0B1A4(object, node + 0x48, D_87E1A464[i][0], D_87E1A464[i][1], D_87E1A464[i][2], i * 5 + 5, 0x5000);
-        func_87F0B2F4(object, node + 0x42, 0.0f, 0.0f, 0.0f, i * 5 + 5, 0x8000);
+        func_87F0B1A4(object, (f32 *)(node + 0x48), D_87E1A464[i][0], D_87E1A464[i][1], D_87E1A464[i][2], i * 5 + 5, 0x5000);
+        func_87F0B2F4(object, (s16 *)(node + 0x42), 0.0f, 0.0f, 0.0f, i * 5 + 5, 0x8000);
         func_87F0B24C(object, node + 0x54, 0.7f, 0.7f, 0.7f, i * 5 + 5, 0);
         i++;
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0D278.s")
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern f32 D_87E1A434[][3];
+void ListSlots_StartAlternatingAnimations(u8 *state) {
+    u8 *node;
+    s32 i;
+    u8 *object;
+    f32 angle;
+    s32 duration;
+    f32 *position;
+    i = 0;
+    for (node = *(u8 **)(state + 28); node != NULL; node = *(u8 **)(node + 4)) {
+        position = D_87E1A434[i];
+        object = *(u8 **)(*(u8 **)(node + 56) + 12);
+        angle = (i % 2) ? -360.0f : 360.0f;
+        duration = (i % 2) * 5 + 10;
+        func_87F0B1A4(object, (f32 *)(node + 72), position[0], position[1], position[2], duration, 0x2000);
+        func_87F0B2F4(object, (s16 *)(node + 66), 0.0f, angle, 0.0f, duration, 0);
+        i++;
+    }
+}
 
 extern void func_87E0D18C(u8 *);
 void func_87E0D3A0(u8 *arg0) {
@@ -263,7 +283,7 @@ void func_87E0D41C(u8 *arg0) {
     func_87E0D18C(arg0);
 }
 
-extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
 extern void func_800279C4(s32);
 void func_87E0D43C(void *arg0) {
     u8 *node;
@@ -278,7 +298,7 @@ void func_87E0D43C(void *arg0) {
         do {
             model = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
             if (((u32)*(s32 *)(*(u8 **)((u8 *)arg0 + 4) + offset + 0x21A4) << 18) >> 31) {
-                func_87F0B1A4(model, node + 0x48, *(f32 *)(node + 0x48),
+                func_87F0B1A4(model, (f32 *)(node + 0x48), *(f32 *)(node + 0x48),
                               *(f32 *)(node + 0x4C), *(f32 *)(node + 0x50) + 20.0f, 10, 0x1000);
                 found = 1;
             }
@@ -291,14 +311,38 @@ void func_87E0D43C(void *arg0) {
     }
 }
 
-extern void func_87E0D278(void);
-void func_87E0D500(void) {
-    func_87E0D278();
+extern void ListSlots_StartAlternatingAnimations(u8 *);
+void func_87E0D500(u8 *arg0) {
+    ListSlots_StartAlternatingAnimations(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0D520.s")
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern f32 D_87E1A434[][3];
+void ListSlots_UpdateAlternatingAnimations(u8 *state) {
+    u8 *node;
+    s32 i;
+    u8 *object;
+    f32 angle;
+    s32 duration;
+    f32 *position;
+    i = 0;
+    for (node = *(u8 **)(state + 28); node != NULL; node = *(u8 **)(node + 4)) {
+        position = D_87E1A434[i];
+        object = *(u8 **)(*(u8 **)(node + 56) + 12);
+        if (**(s32 **)(object + 136) < *(s32 *)(*(u8 **)(state + 4) + 8584)) {
+            angle = (i % 2) ? -360.0f : 360.0f;
+            duration = (i % 2) * 5 + 10;
+            func_87F0B1A4(object, (f32 *)(node + 72), position[0], position[1], position[2], duration, 0x2000);
+            func_87F0B2F4(object, (s16 *)(node + 66), 0.0f, angle, 0.0f, duration, 0);
+        } else {
+            func_87F0B1A4(object, (f32 *)(node + 72), 0, 90.0f, *(f32 *)(node + 80), 20, 0x4000);
+        }
+        i++;
+    }
+}
 
-extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
 typedef struct D6BCNode {
     u8 pad0[4];
     struct D6BCNode *next;
@@ -312,15 +356,15 @@ void func_87E0D6BC(void *arg0) {
     var_s0 = *(D6BCNode **)((u8 *)arg0 + 0x1C);
     if (var_s0 != NULL) {
         do {
-            func_87F0B1A4(*(u8 **)(var_s0->child + 0xC), (u8 *)var_s0 + 0x48,
+            func_87F0B1A4(*(u8 **)(var_s0->child + 0xC), (f32 *)((u8 *)var_s0 + 0x48),
                 var_s0->values[0], var_s0->values[1] - -120.0f, var_s0->values[2], 30, 0x3000);
             var_s0 = var_s0->next;
         } while (var_s0 != NULL);
     }
 }
 
-void func_87E0D73C(void) {
-    func_87E0D278();
+void func_87E0D73C(u8 *arg0) {
+    ListSlots_StartAlternatingAnimations(arg0);
 }
 
 void func_87E0D75C(u8 *arg0) {
