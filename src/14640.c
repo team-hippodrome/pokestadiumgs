@@ -144,7 +144,106 @@ void func_80013B54(void) {
     *(u32 *)(D_8011BE90 + 0x29B8) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013C40.s")
+typedef struct SampleDma {
+    /* 0x00 */ u8 *ramAddr;
+    /* 0x04 */ u32 devAddr;
+    /* 0x08 */ u16 sizeUnused;
+    /* 0x0A */ u16 size;
+    /* 0x0C */ u8 unused;
+    /* 0x0D */ u8 reuseIndex;
+    /* 0x0E */ u8 ttl;
+} SampleDma; // size = 0x10
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x29AC];
+    /* 0x29AC */ SampleDma *sampleDmas;
+    /* 0x29B0 */ u32 sampleDmaCount;
+    /* 0x29B4 */ u32 sampleDmaListSize1;
+    /* 0x29B8 */ u8 unk_29B8[4];
+    /* 0x29BC */ u8 sampleDmaReuseQueue1[0x100];
+    /* 0x2ABC */ u8 sampleDmaReuseQueue2[0x100];
+    /* 0x2BBC */ u8 sampleDmaReuseQueue1RdPos;
+    /* 0x2BBD */ u8 sampleDmaReuseQueue2RdPos;
+    /* 0x2BBE */ u8 sampleDmaReuseQueue1WrPos;
+    /* 0x2BBF */ u8 sampleDmaReuseQueue2WrPos;
+} AudioContextDmaView;
+
+extern void func_80013A40(u32, u8 *, u32, s32);
+
+#define CTX ((AudioContextDmaView *)D_8011BE90)
+
+// Close to Ocarina of Time AudioLoad_DmaSampleData (src/code/audio_load.c): GS checks only the
+// remembered short-lived DMA, marks a fresh DMA with ttl 3 and queues it through func_80013A40.
+void *func_80013C40(u32 devAddr, u32 size, s32 arg2, u8 *dmaIndexRef, s32 medium) {
+    s32 hasDma = FALSE;
+    SampleDma *dma;
+    s32 bufferPos;
+    u32 i;
+    u32 dmaDevAddr;
+    u32 dmaIndex;
+
+    if (arg2 != 0 || *dmaIndexRef >= CTX->sampleDmaListSize1) {
+        for (i = CTX->sampleDmaListSize1; i < CTX->sampleDmaCount; i++) {
+            dma = i + CTX->sampleDmas;
+            bufferPos = devAddr - dma->devAddr;
+            if (0 <= bufferPos && (u32)bufferPos <= dma->size - size) {
+                if (dma->ttl == 0 && CTX->sampleDmaReuseQueue2RdPos != CTX->sampleDmaReuseQueue2WrPos) {
+                    if (dma->reuseIndex != CTX->sampleDmaReuseQueue2RdPos) {
+                        CTX->sampleDmaReuseQueue2[dma->reuseIndex] =
+                            CTX->sampleDmaReuseQueue2[CTX->sampleDmaReuseQueue2RdPos];
+                        CTX->sampleDmas[CTX->sampleDmaReuseQueue2[CTX->sampleDmaReuseQueue2RdPos]].reuseIndex =
+                            dma->reuseIndex;
+                    }
+                    CTX->sampleDmaReuseQueue2RdPos++;
+                }
+                dma->ttl = 32;
+                *dmaIndexRef = (u8)i;
+                return &dma->ramAddr[devAddr - dma->devAddr];
+            }
+        }
+        if (CTX->sampleDmaReuseQueue2RdPos != CTX->sampleDmaReuseQueue2WrPos && arg2 != 0) {
+            dmaIndex = CTX->sampleDmaReuseQueue2[CTX->sampleDmaReuseQueue2RdPos];
+            CTX->sampleDmaReuseQueue2RdPos++;
+            dma = dmaIndex + CTX->sampleDmas;
+            hasDma = TRUE;
+        }
+    } else {
+        dma = CTX->sampleDmas + *dmaIndexRef;
+        bufferPos = devAddr - dma->devAddr;
+        if (0 <= bufferPos && (u32)bufferPos <= dma->size - size) {
+            if (dma->ttl == 0) {
+                if (dma->reuseIndex != CTX->sampleDmaReuseQueue1RdPos) {
+                    CTX->sampleDmaReuseQueue1[dma->reuseIndex] =
+                        CTX->sampleDmaReuseQueue1[CTX->sampleDmaReuseQueue1RdPos];
+                    CTX->sampleDmas[CTX->sampleDmaReuseQueue1[CTX->sampleDmaReuseQueue1RdPos]].reuseIndex =
+                        dma->reuseIndex;
+                }
+                CTX->sampleDmaReuseQueue1RdPos++;
+            }
+            dma->ttl = 2;
+            return dma->ramAddr + (devAddr - dma->devAddr);
+        }
+    }
+
+    if (!hasDma) {
+        if (CTX->sampleDmaReuseQueue1RdPos == CTX->sampleDmaReuseQueue1WrPos) {
+            return NULL;
+        }
+        dmaIndex = CTX->sampleDmaReuseQueue1[CTX->sampleDmaReuseQueue1RdPos++];
+        dma = dmaIndex + CTX->sampleDmas;
+        hasDma = TRUE;
+    }
+
+    dmaDevAddr = devAddr & ~0xF;
+    dma->ttl = 3;
+    dma->devAddr = dmaDevAddr;
+    dma->sizeUnused = dma->size;
+    func_80013A40(dmaDevAddr, dma->ramAddr, dma->size, medium);
+    *dmaIndexRef = dmaIndex;
+    return (devAddr - dmaDevAddr) + dma->ramAddr;
+}
+
+#undef CTX
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013EF8.s")
 
