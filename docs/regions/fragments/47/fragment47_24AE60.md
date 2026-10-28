@@ -28,3 +28,7 @@ argument must load into its own local (`data`) before the call. Inline, IDO
 copies `arg0` into `s3` in the prologue instead of reading `a0` first. Second,
 the stack vector is `f32 pos[3]` (frame 0x68). The indexed `i * 0x2D8` form
 scores higher than a separately advanced record pointer.
+
+## 2026-10-29: `func_8600666C` layout-prerequisite
+
+layout-prerequisite. Its switch table jtbl_8600D8D8 sits in `fragment47_data_tail_rodata` (0x253D40-0x253F30), next to this file's other literals. Existing C in this file references those literals by D_ name, so the file's `.rodata` subsegment can't just grow down to 0x253D40. The shape is straightforward: func_860065E8/func_87F00930 guards, the per-step loop, then a seven-way switch on func_87F006AC().

@@ -546,7 +546,22 @@ void func_841098C0(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_841098FC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84109A18.s")
+extern s32 D_8419018C;
+extern s32 func_8411E46C(u8 *, s32);
+extern s32 func_8411E580(u8 *, s32);
+extern s32 func_8411ED40(u8 *, s32);
+void func_84109A18(u8 *arg0, ParticleVec3f *pos) {
+    ParticleVec3f offset;
+    ParticleVec3f rotated;
+
+    offset.x = (s8)func_8411E46C(arg0, D_8419018C);
+    offset.y = (s8)func_8411E580(arg0, D_8419018C);
+    offset.z = (s8)func_8411ED40(arg0, D_8419018C);
+    ParticleMath_RotateVec3fY(&rotated, offset, *(ParticleVec3s *)(arg0 + 0x1E));
+    pos->x += rotated.x;
+    pos->y += rotated.y;
+    pos->z += rotated.z;
+}
 
 void func_84109B1C(s32 arg0) {
     if (GeoRender_FindAnchorPosition(D_84190194, func_8411E244(D_84190194, D_8419018C), arg0) == 0) {
