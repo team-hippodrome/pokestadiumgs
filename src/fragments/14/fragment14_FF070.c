@@ -803,25 +803,46 @@ s32 func_8130AA54(u8 *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AC40.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AEF4.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AF94.s")
-
-extern void func_8130AEF4(void *, void *, s32);
-extern s32 func_8160A33C(s32 arg0, u8 arg1);
-// A node in the doubly linked list func_8130B06C/func_8130B0E0 step through (successor at
-// 0x4D98, predecessor at 0x4D94), and the state holding the current node and its index.
+// The three nodes func_8130AF94 links into a ring (predecessor at 0x4D94, successor at
+// 0x4D98), and the state holding them, the current node and its index; func_8130B06C and
+// func_8130B0E0 step the current node forward and back.
 typedef struct unk_D_8130B06C_node {
     /* 0x0000 */ u8 unk_0000[0x4D94];
     /* 0x4D94 */ struct unk_D_8130B06C_node *unk_4D94;
     /* 0x4D98 */ struct unk_D_8130B06C_node *unk_4D98;
-} unk_D_8130B06C_node;
+    /* 0x4D9C */ u8 unk_4D9C[4];
+} unk_D_8130B06C_node; // size = 0x4DA0
 typedef struct unk_func_8130B06C {
-    /* 0x0000 */ u8 unk_0000[0xE8E8];
+    /* 0x0000 */ u8 unk_0000[8];
+    /* 0x0008 */ unk_D_8130B06C_node unk_0008[3];
     /* 0xE8E8 */ unk_D_8130B06C_node *unk_E8E8;
     /* 0xE8EC */ u8 unk_E8EC[0xE911 - 0xE8EC];
     /* 0xE911 */ u8 unk_E911;
 } unk_func_8130B06C;
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AEF4.s")
+
+extern void func_8130AEF4(void *, void *, s32);
+void func_8130AF94(unk_func_8130B06C *arg0) {
+    s32 i;
+
+    for (i = 0; i < 3; i++) {
+        func_8130AEF4(arg0, &arg0->unk_0008[i], arg0->unk_E911 + i);
+        if (i <= 0) {
+            arg0->unk_0008[i].unk_4D94 = &arg0->unk_0008[2];
+        } else {
+            arg0->unk_0008[i].unk_4D94 = &arg0->unk_0008[i - 1];
+        }
+        if (i + 1 >= 3) {
+            arg0->unk_0008[i].unk_4D98 = &arg0->unk_0008[0];
+        } else {
+            arg0->unk_0008[i].unk_4D98 = &arg0->unk_0008[i + 1];
+        }
+    }
+    arg0->unk_E8E8 = &arg0->unk_0008[0];
+}
+
+extern s32 func_8160A33C(s32 arg0, u8 arg1);
 void func_8130B06C(unk_func_8130B06C *arg0) {
     if (arg0->unk_E911 < 8) {
         arg0->unk_E911++;
@@ -838,7 +859,7 @@ void func_8130B0E0(unk_func_8130B06C *arg0) {
     }
 }
 
-extern void func_8130AF94(void *arg0);
+extern void func_8130AF94(unk_func_8130B06C *arg0);
 void func_8130B12C(void *arg0) {
     u8 *base=(u8 *)arg0+0x8000;
     s32 value=(s32)*(f32 *)(base+0x68F8);
@@ -868,7 +889,7 @@ typedef struct { u8 bytes[4]; } B220J4Half;
 typedef struct { B220J4Half first, second; } B220J4Nested;
 typedef struct { u16 halves[4]; } B220J4Halves;
 typedef struct { u8 first[2]; u16 middle; u8 last[4]; } B220J4Mixed;
-extern void func_8130AF94(void *arg0);
+extern void func_8130AF94(unk_func_8130B06C *arg0);
 void func_8130B220(void *arg0, void *arg1, s32 arg2, s32 arg3) {
     extern B220J4Bytes D_81312638;
     s32 unused;
@@ -1191,7 +1212,7 @@ s32 func_8130BD2C(void *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130BDB8.s")
 
 extern f32 func_816092FC(void);
-extern void func_8130AF94(void *arg0);
+extern void func_8130AF94(unk_func_8130B06C *arg0);
 extern s32 func_81302290(void *arg0);
 extern void func_800226C0(s32 arg0);
 struct S8130BF1C { u8 pad0[0xE904]; f32 value; u8 gap[0xA]; u8 state; };
