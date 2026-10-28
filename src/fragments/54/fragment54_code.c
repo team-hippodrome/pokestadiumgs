@@ -551,7 +551,7 @@ extern s32 D_8660678C;
 extern void *D_86607230;
 extern void StageFade_StartFromOpaque(s32);
 void func_87F00688(void);
-u8 StageContext_GetFadeMode(void);
+s32 StageContext_GetFadeMode(void);
 void func_866048EC(void) {
     if ((*(u8 *)((u8 *)(D_86607230) + (0x2180))) == 4) {
         StageFade_StartFromOpaque(0x14);
@@ -638,7 +638,130 @@ if (D_8660A9B8 == 8) { D_8660746C = value; } if (D_8660AA10 == 8) { D_866075D4 =
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86605F04.s")
+extern s32 StageContext_GetFadeMode(void);
+extern s32 func_87F0C6F4(void *);
+extern void func_87F006BC(void);
+extern void func_86605DCC(void);
+extern void func_86605ABC(void);
+extern void func_866044F0(void);
+extern void func_866049D4(void);
+extern void func_866056B8(void);
+extern void func_86605098(void);
+extern s32 Fragment64_UpdateBounceAndConfirm(void *);
+extern void func_87F02328(void);
+extern s32 func_87F02104(void);
+extern void func_87F0D5B8(void *);
+extern void func_87F0C9D0(s32);
+extern s32 D_86606728;
+extern u8 D_86607238;
+extern u8 D_86607310;
+extern u8 D_86607358;
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromOpaque(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_86604370(void);
+extern void func_8660484C(void);
+extern void func_866048EC(void);
+extern s32 func_86604954(void);
+extern void func_86605D5C(void);
+extern s32 func_87F00930();
+extern u8 D_86606788;
+extern void * D_86607230;
+s32 func_86605F04(s32 arg0) {
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4 && func_87F0C6F4(&D_86607310) != 0) {
+        *(s32 *)(&D_86606788 + 4) = 3;
+        *(s32 *)(&D_86606788 + 0x8C) = 3;
+    }
+    if (func_87F00930() == 0 && *(s32 *)(&D_86606788 + 4) != 9) {
+        func_87F006BC();
+    }
+    switch (*(s32 *)(&D_86606788 + 4)) {
+    case 0:
+        func_866048EC();
+        break;
+    case 4:
+        func_8660484C();
+        break;
+    case 5:
+    case 10:
+    case 12:
+        func_86605DCC();
+        func_86604954();
+        func_86605ABC();
+        break;
+    case 11:
+        func_866044F0();
+        break;
+    case 8:
+        func_866049D4();
+        if (D_86606728 + 0x50 < *(s32 *)(&D_86606788 + 0x74) && Fragment64_UpdateBounceAndConfirm(&D_86607358) != 0) {
+            if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 1) {
+                *(s32 *)(&D_86606788 + 0x8C) = 2;
+                *(s32 *)(&D_86606788 + 4) = 2;
+                *(s32 *)(&D_86606788 + 0x78) = 0;
+                StageContext_SetClearColor(0xFFFF);
+                StageFade_StartFromTransparent(10);
+            } else {
+                func_87F02328();
+                *(s32 *)(&D_86606788 + 4) = 7;
+            }
+        }
+        break;
+    case 1:
+        func_86605DCC();
+        func_866056B8();
+        break;
+    case 9:
+        func_86605098();
+        break;
+    case 7:
+        func_86605D5C();
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(1);
+            *(s32 *)(&D_86606788 + 4) = 13;
+            *(s32 *)(&D_86606788 + 0x78) = 2;
+            StageFade_StartFromTransparent(10);
+            break;
+        case 2:
+            *(s32 *)(&D_86606788 + 0x8C) = 0;
+            *(s32 *)(&D_86606788 + 4) = 2;
+            *(s32 *)(&D_86606788 + 0x78) = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        case 3:
+            *(s32 *)(&D_86606788 + 0x8C) = 1;
+            *(s32 *)(&D_86606788 + 4) = 2;
+            *(s32 *)(&D_86606788 + 0x78) = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        }
+        break;
+    case 13:
+        func_86605D5C();
+        if (StageContext_GetFadeMode() == 1) {
+            func_86604370();
+            *(s32 *)(&D_86606788 + 4) = 14;
+            StageFade_StartFromOpaque(10);
+        }
+        break;
+    case 14:
+        func_86605D5C();
+        *(s32 *)(&D_86606788 + 4) = 0;
+        break;
+    case 2:
+        func_86605D5C();
+        if (StageContext_GetFadeMode() == 1) {
+            *(s32 *)(&D_86606788 + 4) = 3;
+        }
+        break;
+    }
+    func_87F0D5B8(&D_86607238);
+    func_87F0C9D0(func_87F00930());
+    return *(s32 *)(&D_86606788 + 4);
+}
 #endif
 
 #ifdef VERSION_US
