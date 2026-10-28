@@ -46,3 +46,35 @@ pass with `build/pokestadiumgs-us.z64: OK`, full-ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`, exact retail byte comparison and clean
 whitespace checks. The unchanged refreshed baseline passes its own complete
 build and retail comparison before this source is tested.
+
+## 2026-10-29 — `func_885055A0`: requeue
+
+Slot update loop over `unk_D_885229B0 D_885229B0[D_88523008]`. A switch on
+the state word has cases 0/1 empty, and 2..6 call
+`func_885053E8/88505440/88505460/88505514/Trade_UpdateBoxSlotShrink`. For a
+nonzero state: `Vec3f_SetComponentsDuplicate(slot+0x4C, unk_00C - 320,
+240 - unk_00E, -579.0f)`, then the model at `slot+0x28` gets
+`+0x22 = unk_018`, `+0x1D = unk_01A`, `+0x30/+0x34 = unk_020/unk_024 *
+unk_01C`. Remaining: retail writes the model fields through a separate
+`addiu v0, s0, 0x28` base and reloads `unk_01C` after each store (it cannot
+prove the two don't alias). Ours folds the offsets into `$s0` and hoists the
+loads. A `model` local, `(u32)` arithmetic and `slot->unk_028` all fold.
+Body: `scratch/c/5a0a.c`.
+
+## 2026-10-29 — `func_88505038`: requeue (same blocker as `func_885055A0`)
+
+The seven-state slot initialiser is fully written in the 2026-10-29 session's
+`scratch/c/038.c`, with a companion edit that moves the `unk_D_885229B0`
+typedef above it (`scratch/c/038_comp.json`; the parameter stays `void *` to
+match the existing externs). The slot index is `slot - D_885229B0` (signed
+`div` by 0x194), and x is `idx * 142 + 36`. The shared blocker: retail
+addresses the `+0x28` sub-object through its own base (`addiu v0, a0, 0x28`,
+then `lbu/sb 1(v0)`) even inside one basic block, so IDO did not see a
+`slot + const` address there. Every spelling tried folds into `41(a0)`. Both
+owners likely share one sub-object spelling (an embedded struct reached by
+pointer from a helper or macro?). Solve it once for both.
+Evidence for the sub-object, from `func_88504828`'s last loop: the same
+`slot + 0x28` goes to `func_8003F018(obj)` and `func_8003F114(obj, 0, -1,
+D_88523004)`, then `obj->flags(+1) &= ~1` and `obj->index(+0x14) = i`
+through a copied register. So `+0x28` is an embedded animation object
+(`func_8003F114` is the anim init used elsewhere on `node + 0x24`).

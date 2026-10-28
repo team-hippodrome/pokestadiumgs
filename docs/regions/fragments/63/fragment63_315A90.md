@@ -102,3 +102,28 @@ The link prints `build/pokestadiumgs-us.z64: OK`; full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail and whitespace checks pass.
 Independent original-assembly and raw retail comparisons verify all 57
 words at `0x316044..0x316128`.
+
+## 2026-10-29 — `func_87E121AC` / `func_87E123B8`: requeue
+
+Both are switch-capable now that the file owns its `.rodata`.
+
+`func_87E121AC`: for `arg0 == 5` it emits `gDPPipeSync`, then
+`switch (rec[0])`:
+- case 0: `gDPSetCombine(0x30FFFF, 0x5FFEF238)`, prim 255, env
+  `(C1, A0, 06, FF)`;
+- cases 1, 2, 3: `gDPSetCombine(0xFFFFFF, 0xFFFCF238)`, written three times;
+- cases 4-7: `gDPSetCombine(0x50FFFF, 0xFFFFF238)` plus env from
+  `ctx[0x3C..0x3F]`.
+
+It finishes with `gSPSegment(0x0F, func_8004CA60(rec[1]))`,
+`gSPDisplayList(rec[2])` and `func_8003CD84()`. Keep `ctx = D_8009491C` in
+a local. Remaining: the pipe-sync temp (`$a0` vs `$v1`) and the evaluation
+order of the env-colour bytes. The permuter only improved with a
+`do { } while (0)` wrapper (a fake). Body: `scratch/c/1acb.c`.
+
+`func_87E123B8`: spawns eight nodes, with a model per index from a switch
+(0x167 / 0x1BB x3 / 0x175 plus 0.9 scale), then `func_87F08E3C(model,
+0x0F000000)`, anim init and a position copy from `D_87E1AB64 + i*12`.
+Remaining: retail keeps 0x0F000000 in `$fp` and compares the loop bound
+against `$at`; ours hoists 8 into `$fp`. The permuter only improved with a
+`volatile short` prototype (a fake). Body: `scratch/c/3b8.c`.
