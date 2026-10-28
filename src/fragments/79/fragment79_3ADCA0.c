@@ -1126,15 +1126,143 @@ void func_841430D0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84143508.s")
+typedef struct {
+    u8 unk_00[2];
+    u8 moves[4];
+    u8 unk_06[2];
+    u32 experience;
+    u8 unk_0C[12];
+    u8 pps[4];
+    u8 unk_1C;
+    u8 level;
+    u8 unk_1E[8];
+    u16 hp;
+    u16 max_hp;
+    u8 unk_2A[46];
+} BattlePanelPokemon;
+typedef struct {
+    u8 unk_00[8];
+    u8 count;
+    u8 unk_09;
+    u8 active_slot;
+    u8 unk_0B[13];
+    BattlePanelPokemon mons[6];
+} BattlePanelParty;
+extern u8 *D_841951F8;
+extern u8 func_8413FD04(u8,u8,u8);
+extern void func_8413F32C(s16,s16,u8);
+extern void func_8413F390(s16,s16,s32,u16);
+extern void func_8413F498(s16,s16,s16,u16);
+extern s16 D_84186CFC,D_84186D04,D_84186D08,D_84186D0C,D_84186D10,D_84186D14;
+void BattlePanel_DrawPartyLevelHpColumns(u8 *state) {
+    s32 column;
+    u16 column_offset;
+    u8 side;
+    s32 slot;
+    BattlePanelPokemon *pokemon;
+    u16 y;
+    column_offset = 0;
+    side = state[1];
+    for (column = 0; column != 3; column++) {
+        slot = func_8413FD04(side, state[2], column);
+        if (slot == 255) break;
+        pokemon = (BattlePanelPokemon *)(((u8 **)&D_841951F8)[side] + slot * 88 + 24);
+        y = *(s16 *)(state + 20) + D_84186CFC;
+        func_8413F32C(*(s16 *)(state + 18) + D_84186D04 + column_offset, y, 11);
+        func_8413F390(*(s16 *)(state + 18) + D_84186D04 + column_offset + 6, y, 0, pokemon->level);
+        y = *(s16 *)(state + 20) + D_84186D14;
+        func_8413F498(*(s16 *)(state + 18) + D_84186D08 + column_offset, y, 0, pokemon->hp);
+        func_8413F32C(*(s16 *)(state + 18) + D_84186D0C + column_offset, y, 10);
+        func_8413F390(*(s16 *)(state + 18) + D_84186D10 + column_offset, y, 0, pokemon->max_hp);
+        column_offset = column_offset + 67;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841436EC.s")
+extern u8 *D_841951F8;
+extern s16 D_84186CFC,D_84186D04,D_84186D08,D_84186D0C,D_84186D10,D_84186D14;
+extern void func_8413F32C(s16,s16,u8);
+extern void func_8413F390(s16,s16,s32,u16);
+extern void func_8413F498(s16,s16,s16,u16);
+void BattlePanel_DrawPartyLevelHpGrid(u8 *state)
+{
+  u8 side;
+  u16 x;
+  u16 row;
+  s32 party_slot;
+  BattlePanelPokemon *pokemon;
+  side = state[1];
+  x = 0;
+  row = 0;
+  for (party_slot = 0; party_slot < ((BattlePanelParty **) (&D_841951F8))[side]->count; party_slot++)
+  {
+    u16 y;
+    pokemon = &((BattlePanelParty **) (&D_841951F8))[side]->mons[party_slot];
+    y = ((*((s16 *) (state + 20))) + D_84186CFC) + row;
+    func_8413F32C(((*((s16 *) (state + 18))) + D_84186D04) + x, y, 11);
+    func_8413F390((((*((s16 *) (state + 18))) + D_84186D04) + x) + 6, y, 0, pokemon->level);
+    y = ((*((s16 *) (state + 20))) + D_84186D14) + row;
+    func_8413F498(((*((s16 *) (state + 18))) + D_84186D08) + x, y, 0, pokemon->hp);
+    func_8413F32C(((*((s16 *) (state + 18))) + D_84186D0C) + x, y, 10);
+    func_8413F390(((*((s16 *) (state + 18))) + D_84186D10) + x, y, 0, pokemon->max_hp);
+    x += 67;
+    if (party_slot == 2)
+    {
+      x = 0;
+      row = 46;
+    }
+  }
+
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841438EC.s")
+extern u8 *D_841951F8;
+extern u8 *D_84195208[];
+extern u8 D_84186F94[];
+extern s16 D_84186D54,D_84186D64,D_84186D68,D_84186D6C,D_84186D70,D_84186D74,D_84186D84,D_84186D88,D_84186D8C,D_84186D90;
+extern void func_8413F32C(s16,s16,u8);
+extern void func_8413F390(s16,s16,s32,u16);
+extern void func_8413F498(s16,s16,s16,u16);
+extern void ParticleGfx_SetPrimColor_fragment79(u8,u8,u8,u8);
+extern u8 func_80062EB0(u8,u8);
+void BattlePanel_DrawSelectedLevelHpAndPp(u8 *state) {
+    u8 side;
+    u16 y;
+    s32 move_slot;
+    u16 row_offset;
+    u8 move_id;
+    u8 move_pp;
+    BattlePanelPokemon *pokemon;
+    side = state[1];
+    pokemon = &((BattlePanelParty *)((u8 **)&D_841951F8)[side])->mons[*(s32 *)(state + 4)];
+    y = *(s16 *)(state + 12) + D_84186D64;
+    row_offset = 0;
+    func_8413F32C(*(s16 *)(state + 10) + D_84186D54, y, 11);
+    func_8413F390(*(s16 *)(state + 10) + D_84186D54 + 6, y, 0, pokemon->level);
+    y = *(s16 *)(state + 12) + D_84186D74;
+    func_8413F498(*(s16 *)(state + 10) + D_84186D68, y, 0, pokemon->hp);
+    func_8413F32C(*(s16 *)(state + 10) + D_84186D6C, y, 10);
+    func_8413F390(*(s16 *)(state + 10) + D_84186D70, y, 0, pokemon->max_hp);
+    ParticleGfx_SetPrimColor_fragment79(D_84186F94[0],D_84186F94[1],D_84186F94[2],255);
+    for (move_slot = 0; move_slot != 4; move_slot++) {
+        if (*(s32 *)(state + 4) == (((u8 **)&D_841951F8)[side])[10]) {
+            move_id = D_84195208[side][move_slot + 5];
+            move_pp = D_84195208[side][move_slot + 9];
+        } else {
+            move_id = pokemon->moves[move_slot];
+            move_pp = pokemon->pps[move_slot];
+        }
+        if (move_id == 0) break;
+        y = *(s16 *)(state + 12) + D_84186D84 + row_offset;
+        func_8413F498(*(s16 *)(state + 10) + D_84186D88, y, 0, move_pp & 63);
+        func_8413F32C(*(s16 *)(state + 10) + D_84186D8C, y, 10);
+        func_8413F390(*(s16 *)(state + 10) + D_84186D90, y, 0, func_80062EB0(move_id,move_pp) & 63);
+        row_offset = row_offset + 23;
+    }
+    ParticleGfx_SetPrimColor_fragment79(255,255,255,255);
+}
 #endif
 
 #ifdef VERSION_US
@@ -1177,9 +1305,9 @@ void func_84143CF0(void *arg0) {
 
 #ifdef VERSION_US
 extern void func_8414327C(u8 *);
-extern void func_84143508(u8 *);
-extern void func_841436EC(u8 *);
-extern void func_841438EC(u8 *);
+extern void BattlePanel_DrawPartyLevelHpColumns(u8 *);
+extern void BattlePanel_DrawPartyLevelHpGrid(u8 *);
+extern void BattlePanel_DrawSelectedLevelHpAndPp(u8 *);
 
 void func_84143D8C(u8 *arg0) {
     if (arg0[8] & 1) {
@@ -1202,13 +1330,13 @@ void func_84143D8C(u8 *arg0) {
             func_8414327C(arg0);
             break;
         case 11:
-            func_84143508(arg0);
+            BattlePanel_DrawPartyLevelHpColumns(arg0);
             break;
         case 12:
-            func_841436EC(arg0);
+            BattlePanel_DrawPartyLevelHpGrid(arg0);
             break;
         case 13:
-            func_841438EC(arg0);
+            BattlePanel_DrawSelectedLevelHpAndPp(arg0);
             break;
         case 21:
             func_84143BF4(arg0);
