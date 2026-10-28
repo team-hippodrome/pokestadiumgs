@@ -1294,3 +1294,13 @@ func_86A0588C = ItemBounds_ContainsRotatedOffset;
 func_87E0C900 = ListSlots_FindSelectedRecord;
 
 func_87E0DB40 = ListSlots_UpdateEntryCycling;
+
+func_86A001B0 = StageState_ResetPoolsAndDefaults;
+
+func_86A05678 = PlayerBounds_ContainsPointExceptPlayer;
+
+func_84143508 = BattlePanel_DrawPartyLevelHpColumns;
+
+func_841436EC = BattlePanel_DrawPartyLevelHpGrid;
+
+func_841438EC = BattlePanel_DrawSelectedLevelHpAndPp;

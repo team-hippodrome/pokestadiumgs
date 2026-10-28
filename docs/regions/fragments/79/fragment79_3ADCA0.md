@@ -234,3 +234,118 @@ explicit normal host syntax and canonical native retail full-ROM gate pass.
 Receipt `scratch/battle79-panel-grid/gate-0/receipt.json`, retail ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Earlier panel timestamps above corrected
 to actual UTC clock readings; receipts and immutable source proof unchanged.
+
+### Native func_8414327C: counted-call-loop prerequisite / requeue — 2026-10-28 21:55 UTC
+
+Move-detail renderer: retail 652 bytes, frame72. No source installed; no gate
+receipt or new acceptance. Five genuine hypothesis batches (40 compiled
+variants), plus the initial 8 failed only on stale own-owner pointer prototype.
+That prototype was corrected through a real candidate-owner companion; all
+subsequent whole-module normal/+20blank controls passed. Complete exact
+visible declarations supplied, including real u8-return move getters from
+src/638E0.c; no fake return-category hints. Explored for/do/offset/countdown,
+preincrement/predecrement, real break form, typed 10-byte move/PP record,
+u8/u16/s16/s32 counter widths, actual side/index role reuse, signed/unsigned
+coordinate cursor and count/end termination, u16 power value and signed use
+of unsigned coordinate storage. Best normalized 0.8098 / raw0.454, 608 bytes
+(frame88) in `scratch/batch-move-detail5.json`,
+`move-detail:coordinate-cursor:s16:count`. Major residual is a real loop
+instead of retail's three straight-line glyph calls, not an allocator tie.
+
+Controlled normal standalone reproduction of the typed-slot s32 do-loop is
+instruction-words-identical to the canonical 608-byte candidate object:
+`scratch/ido-move-detail-trace/controls.json`. Stock diagnostic `-Wo,-zdbug:8`
+shows loop9(0) unchanged before and after unroll analysis; see
+`loop-debug8-uoptlist`. Diagnostic summary crashes with the previously observed
+wrapper_ecvt signal6, after emitting the procedure listing; normal control is
+valid. No acceptance compiler options or binaries changed.
+
+Primary compiler decompilation source, read to identify the prerequisite:
+https://github.com/n64decomp/ido/blob/master/src/uopt/uoptloop.c#L916-L934
+`complex_control_flow_in_interval` treats Ucup/Uicuf calls as complex flow;
+`determine_if_unrollable` at1122–1131 rejects that multi-block loop. The
+calibrated listing and all tested loop bodies agree. This rules out automatic
+unrolling of these counted-call loops under the canonical compiler, rather
+than all possible C sources. Retail likely reflects explicit source call
+repetition, but manufacturing that expansion violates this session's no-manual-
+unroll restriction. No expanded candidate was submitted. Close this owner box
+early on that demonstrated prerequisite; do not spend remaining time on more
+counter spellings. Next action: seek independent authentic source-topology
+evidence before revisiting; retain ASM under present constraints. Continue
+unmerged party/detail drawing owners using their real loops.
+
+### Native accepted party level/HP columns — 2026-10-28 22:01 UTC
+
+`func_84143508` accepted, 484 bytes / frame64, label
+`party-stats:loop-update-order:for-ne:direct`. Genuine 88-byte record layout:
+level +29, HP +38, maximum HP +40, party header24. The real helper
+`func_8413FD04(u8,u8,u8)` provides the slot or255; the old history's wide
+signature was not retained. u16 running column offset and y, plain offset
+update, ordinary for-loop, mon lookup before height calculation, and direct
+coordinate globals give exact output. No explicit duplicate column local:
+the compiler introduces the retail working copy naturally. A do-loop was
+only two scheduling sites short; for-loop fixes both. Explicit coordinate
+pointer alternatives remained near and were not accepted. No binding,
+manual unroll, filler or fake ABI. The own stale prototype is now the real
+u8 state pointer type; existing callers already pass it.
+Normal/+20blank complete module controls, explicit normal host syntax and
+automatic canonical native retail gate passed. Manifest
+`scratch/batch-party-stats4.json`; sealed receipt
+`scratch/battle79-party-stats4/gate-0/receipt.json`, retail ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, stock native compiler unchanged.
+
+### Native accepted selected Pokémon details — 2026-10-28 22:12 UTC
+
+`func_841438EC` accepted, 776 bytes / frame96. Label
+`active-detail:natural-party-expression:mon-last:byte:ne`, manifest
+`scratch/batch-active-detail6.json`. Party record has a24-byte header and
+88-byte Pokémon records: moves +2, PP +24, level +29, HP +38 / maxHP +40.
+Selected slot matches party byte10 to choose live PP data, otherwise stored
+record values. Four actual move rows are a real for-loop; no manual expansion.
+
+The typed party view fixes the initial record expression's genuine evaluation
+and register order. u16 height / row offset and for-loop fix height conversion
+and both loop scheduling sites. Best intermediate differed only in frame104
+rather than96, with all used spill offsets already exact. The extra explicit
+party-slot local was unnecessary: using the actual table expression directly
+lets the compiler cache its address and reduces the frame to96 without any
+binding, artificial local, padding or compiler change. Record pointer declared
+after the other used locals gives the actual +80 spill. Counter narrowing
+instead adds instructions; wide scalar promotions do not fix the frame. The
+prepared declaration-only optional search was never run because the natural
+source hypothesis accepted first.
+Normal/+20blank complete module controls, explicit normal host syntax and
+canonical serialized native retail full-ROM gate passed. Sealed receipt
+`scratch/battle79-active-detail6/gate-0/receipt.json`, retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, stock IDO7.1 unchanged. Existing owner
+prototype now takes the real u8 state pointer; existing callers already pass it.
+
+### Native accepted all-party level/HP grid — 2026-10-28 22:15 UTC
+
+`func_841436EC` accepted, 512 bytes / frame88. Real count at party byte8,
+24-byte header and88-byte record, two rows of three columns with x+=67 and
+row46 after entry2. Initial explicit cached party value stayed live across
+the first glyph call and spilled the row offset; direct typed table lookup
+lets the compiler form the actual record pointer earlier. u16 x, row and
+per-row y reproduce the target conversions. Best intermediate had only two
+words different: cached table-address spill +68 vs retail+64. Explicit byte
+stride fixes that slot but exchanges two saved registers; count-cache forms
+rotate more registers. A restricted declaration/commutative permuter found
+the genuine final scope in1.8seconds: y is declared inside the row loop,
+matching its actual lifetime. All other source expressions are unchanged.
+No artificial local, stack binding, filler, manual unroll or compiler rewrite.
+
+Search result `scratch/permute-safe-all-party-stats-result.json`, base8 ->0;
+only the reviewed per-row declaration scope changed. That optional score is
+not the acceptance proof. Its single known lead went through canonical
+validation, automatic native full-ROM gate and explicit normal host syntax:
+`scratch/batch-all-party-stats-scope.json`, label
+`all-party-stats:per-row-height-scope:verified-search-lead`.
+Sealed receipt `scratch/battle79-all-party-stats-scope/gate-0/receipt.json`,
+retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Both pre-probe controls and
+fresh post-accept whole-module normal/+20blank sections, bytes, function
+extents and relocation controls pass. Post-accept proof is bound to the
+sealed receipt/source hashes in `gate-0/post-controls.json`. Private control
+helper only invokes the unchanged canonical object recipe; no source mutation
+or runner/guard/compiler change. Existing own prototype takes the real state
+pointer. Earlier selected-detail note timestamp corrected to actual UTC.
