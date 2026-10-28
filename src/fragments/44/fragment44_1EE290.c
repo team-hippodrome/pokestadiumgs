@@ -574,7 +574,17 @@ void func_8AF0145C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01530.s")
+extern s16 D_8AF263F0[];
+s16 func_8AF01530(s16 arg0) {
+    s32 i;
+
+    for (i = 0; i < 18; i++) {
+        if (arg0 == D_8AF263F0[i]) {
+            return i;
+        }
+    }
+    return 17;
+}
 
 extern s16 D_8AF263F0[];
 s16 Trade_GetSelectedBox(s16 arg0) { return D_8AF263F0[arg0]; }

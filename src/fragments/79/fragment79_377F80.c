@@ -480,12 +480,33 @@ f32 func_841095DC(void) {
     return var_ft1 * D_84188E2C;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84109630.s")
+typedef struct ParticleVec3f {
+    f32 x, y, z;
+} ParticleVec3f;
+typedef struct ParticleVec3s {
+    s16 x, y, z;
+} ParticleVec3s;
+extern ParticleVec3f *ParticleMath_RotateVec3fY(ParticleVec3f *, ParticleVec3f, ParticleVec3s);
+extern s32 func_8411EE5C(u8 *arg0);
+extern s32 func_8411EE64(u8 *arg0);
+extern s32 func_8411EE6C(u8 *arg0);
+void func_84109630(u8 *arg0, ParticleVec3f *pos) {
+    ParticleVec3f offset;
+    ParticleVec3f rotated;
+
+    offset.x = (s8)func_8411EE5C(arg0);
+    offset.y = (s8)func_8411EE64(arg0);
+    offset.z = (s8)func_8411EE6C(arg0);
+    ParticleMath_RotateVec3fY(&rotated, offset, *(ParticleVec3s *)(arg0 + 0x1E));
+    pos->x += rotated.x;
+    pos->y += rotated.y;
+    pos->z += rotated.z;
+}
 
 s32 GeoRender_FindAnchorPosition(s32, s16, s32);
 s32 func_8411E21C(u8 *arg0);
 extern void func_8411DCCC(s32, s32);
-extern void func_84109630(s32, s32);
+extern void func_84109630(u8 *, ParticleVec3f *);
 void func_8410971C(s32 arg0) {
     if (GeoRender_FindAnchorPosition(D_84190194, func_8411E21C((u8 *) D_84190194), arg0) == 0) {
         func_8411DCCC(D_84190194, arg0);

@@ -37,3 +37,13 @@ unsuccessful candidate to assembly. The build reported
 `build/pokestadiumgs-us.z64: OK`, with ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The retail byte comparison and whitespace
 check passed. All 72 instruction bytes match.
+
+## 2026-10-29: `func_8160A438` requeue
+
+requeue (0.84). This is the load counterpart of func_8160A384:
+- `_bzero(buffer, 0x180); func_80055A74(arg1); func_80055A9C(buffer, arg2)`;
+- `*(s16 *)(arg0 + 0x4D90) = func_800533A4(0x10, arg2)`, then `func_80053440(0x10, arg2, arg0 + 0x11)`;
+- for each of six 0x3C records at `buffer + 0x10`: `func_80051830(arg0 + 0x20 + i*0xCE8, rec)`, call func_8004D878(entry + 0x80, 0, dst) when `entry[0x20] > 0`, and clear `entry + 0x78`;
+- return `buffer[0x178]`.
+
+Declaring `src, buffer, entry, end, dst` fixes the stack. Remaining: retail keeps arg0 in $s3 (`or s3,a0`) where ours spills it to the arg home. The permuter reaches 10 only with a fake `end = buffer + 0x178;` re-assigned inside the loop. Next: other loop shapes (index loop with pointer temporaries), and arg0 used as the entry cursor after copying it.

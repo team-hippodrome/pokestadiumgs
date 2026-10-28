@@ -1161,7 +1161,48 @@ void func_84143CF0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84143D8C.s")
+extern void func_8414327C(u8 *);
+extern void func_84143508(u8 *);
+extern void func_841436EC(u8 *);
+extern void func_841438EC(u8 *);
+
+void func_84143D8C(u8 *arg0) {
+    if (arg0[8] & 1) {
+        return;
+    }
+    if (arg0[8] & 2) {
+        return;
+    }
+    if (arg0[8] & 0x10) {
+        return;
+    }
+    switch (arg0[0]) {
+        case 1:
+            func_84142F0C(arg0);
+            break;
+        case 9:
+            func_841430D0(arg0);
+            break;
+        case 10:
+            func_8414327C(arg0);
+            break;
+        case 11:
+            func_84143508(arg0);
+            break;
+        case 12:
+            func_841436EC(arg0);
+            break;
+        case 13:
+            func_841438EC(arg0);
+            break;
+        case 21:
+            func_84143BF4(arg0);
+            break;
+        case 22:
+            func_84143CF0(arg0);
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
