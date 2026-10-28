@@ -96,7 +96,33 @@ void func_87F0EDDC(void *arg0, u8 arg1) {
     func_87F0E660(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0EE0C.s")
+typedef struct unk_func_87F0EE0C {
+    u8 unk_000[1704];
+    u8 unk_6A8[16];
+    u8 unk_6B8_7 : 1;
+    u8 unk_6B8_6 : 1;
+    u8 unk_6B8_5 : 6;
+    u8 unk_6B9[7];
+} unk_func_87F0EE0C;
+extern s32 func_8005D8C0(void);
+extern void func_8005D9E0(s32, void *);
+void func_87F0EE0C(unk_func_87F0EE0C *arg0) {
+    s32 mask;
+    s32 i;
+    u8 *entry;
+
+    mask = func_8005D8C0();
+    for (i = 0; i < 4; i++) {
+        arg0[i].unk_6B8_7 = ((1 << i) & mask) > 0;
+        arg0[i].unk_6B8_6 = 0;
+        func_8005D9E0(i, arg0[i].unk_6A8);
+    }
+    entry = (u8 *)(arg0 + 4);
+    for (i = 0; i < 18; i++) {
+        func_87F0E978(entry, i);
+        entry += 92;
+    }
+}
 
 extern u32 D_87F15BB0;
 extern void fragment3_main(void *);
