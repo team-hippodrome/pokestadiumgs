@@ -457,29 +457,19 @@ Forced normal ROM rebuild: byte-identical retail ROM, MD5
 17 warnings as the baseline; public tooling tests: 22 PASS. Only source,
 two compatibility aliases and region notes are published. Solo/native.
 
-### `func_81301648` — requeue, page-address allocation
+### `func_81301648` — matched (page update dispatcher)
 
-The 292-byte target saves only s0 and spills the page address at stack+0x24;
-the 296-byte candidate colors that address into s1, changing the saved
-register set and epilogue. Leader:
-`f14-flow:abi-two-arg:func_81301648:reverse-False:cache-False:guard-True`,
-0.9054 normalized / 0.8108 raw. Call sequence, positive/negative result
-branches, slot clear and -1 byte store are understood, but not matched.
-
-Important ABI evidence: `func_8130A044` reads incoming a1 (stored at callee
-stack+0x7C, later used by the text/drawing calls). The update must call it
-with the original context argument, not just the panel pointer. No move is
-needed at the first call because incoming a1 is already in place. Future
-declarations need `extern void func_8130A044(void *, s32);` plus the established
-page/drawing helper signatures; the unused probe declarations were removed
-from published source. This is an argument-count finding, not a compiler bug.
-
-Negative families: outer result guard versus separate tests, pointer-local
-order, input/result carrier reuse, integer address carriers, int/long
-argument/result spellings, array/nested-record address views, inline versus
-cached addresses, and their corrected-two-argument call compositions.
-Next: inspect the page-address web's colorability/lifetime with the corrected
-ABI; do not repeat the original one-argument call or force a register.
+Matched with `Fragment14SetupState *arg0`, a single `s32 result` local, and
+the page/panel addresses written inline at each use. The key was the control
+flow: `if (result == 0) return;` followed by `if (result > 0) ... else if
+(result < 0) ...`. The nested `if (result != 0) { if ... else if ... }` form
+from the sibling `Fragment14_UpdateSelectionPage` colors the `+0x15370` page
+address into `$s1`, and retail keeps it in a stack slot (0x24). The bounded
+permuter first found the effect with a `do { } while (0)` around the negative
+branch, and the early return is the plain-C equivalent. Named `panel`/`page`
+locals combined with a separate `result` add 8 bytes of frame; reusing `arg1`
+for the result also matches only with exactly one of those locals. The later
+`func_81301648` extern was retyped to the state pointer.
 
 ### `func_8130183C` — requeue, two frame-size words
 
