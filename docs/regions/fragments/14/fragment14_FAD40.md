@@ -250,3 +250,17 @@ The screen-object types now sit at the top of the file. A slot holds the copied 
   11 ops: retail forms `&slot.mon` in `$a2` before the species test and copies through it with negative offsets; IDO folds every `dst` spelling. A 240 s permuter stayed flat.
 - `func_813038D0` (requeue): battle-order pick and cancel. A pick stores the order in the current slot through a slot pointer and steps forward; a cancel clears it and steps back. Either end finishes (state 4, `func_8130F5AC`, `func_81306E90`), and backing out restores +0x4DBE. 3 ops: retail spills the current index from `$v0` rather than its `$a1` copy, and reloads the slot pointer into `$v1`.
 - `func_8130456C` (requeue): the typed slot array does not fix its saved-register permutation (8 ops), with or without an entry pointer.
+
+## 2026-10-28 — `func_81303A88` matched; owner typed; `func_8130302C` requeue
+
+- The owner at +0x4DA0 is a typed pointer (`unk_D_81303648_owner`): sub-objects at 0x74, 0x98, 0xD18 and 0xDA8, the selected index (`s8`) at 0x1A142, the entry pointer at 0x1A148 and a word at 0x1A150. The entry holds a byte per slot at 0x900 and a record at 0x940 whose word at 0x40 carries a bit-31 flag. Existing users are byte-identical.
+- `func_81303A88` handles input while the cursor is settled (slot0 +8 == +9):
+  - A on a non-empty slot: sound 2, `func_81311C18`, state 9;
+  - B: with `func_81303A38`, the cursor goes to the last slot, state 12; otherwise state 4;
+  - anything else: `func_8160B6E4`.
+  `last` is declared before the input pointer, which gives retail's frame.
+- `func_8130302C` (requeue) is the screen draw:
+  - when the entry record's flag is set, it calls `func_8160A8DC` first;
+  - it calls `func_8160B3E0` with 14 arguments (rect, cursor, entry byte, index, `+0x4DA4 / 16`, owner word, record flag, `func_81302C64`/`func_81302CA4` results, and owner+0x98 when `func_81302BB0`);
+  - when `func_81302BC0` holds, it calls `func_8160955C` at the center of the `func_8160B5BC` rect.
+  The typed owner gives retail's shared `+0x18000` base. Locals `rect, x, scale, y, inner, c, b, a` (x/y holding the final position) reproduce the whole 0x80 frame. The last 4 ops are the final call's load order: retail interleaves both halves' loads, and two separate x/y statements serialize them.

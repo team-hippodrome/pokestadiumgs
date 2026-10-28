@@ -1,5 +1,29 @@
 #include "global.h"
 
+// The record the owner's entry pointer at 0x940 leads to; bit 31 of its word at 0x40 is a flag.
+typedef struct unk_D_81303648_record {
+    /* 0x00 */ u8 unk_00[0x40];
+    /* 0x40 */ u32 unk_40_31 : 1;
+} unk_D_81303648_record;
+// The owner's selected entry: a byte per slot at 0x900 and the record at 0x940.
+typedef struct unk_D_81303648_entry {
+    /* 0x000 */ u8 unk_000[0x900];
+    /* 0x900 */ s8 unk_900[0x40];
+    /* 0x940 */ unk_D_81303648_record *unk_940;
+} unk_D_81303648_entry;
+// The owner the selection screen reports to (its pointer is at +0x4DA0).
+typedef struct unk_D_81303648_owner {
+    /* 0x00000 */ u8 unk_00000[0x74];
+    /* 0x00074 */ u8 unk_00074[0x98 - 0x74];
+    /* 0x00098 */ u8 unk_00098[0xD18 - 0x98];
+    /* 0x00D18 */ u8 unk_00D18[0xDA8 - 0xD18];
+    /* 0x00DA8 */ u8 unk_00DA8[0x1A142 - 0xDA8];
+    /* 0x1A142 */ s8 unk_1A142;
+    /* 0x1A143 */ u8 unk_1A143[0x1A148 - 0x1A143];
+    /* 0x1A148 */ unk_D_81303648_entry *unk_1A148;
+    /* 0x1A14C */ u8 unk_1A14C[4];
+    /* 0x1A150 */ s32 unk_1A150;
+} unk_D_81303648_owner;
 // A party entry as func_81302EE4 receives it: the 0x58-byte Pokemon data plus one more word.
 typedef struct unk_D_81302EE4_mon {
     /* 0x00 */ u8 species;
@@ -15,7 +39,9 @@ typedef struct unk_D_81302EE4_party {
 // One of the six 0xCE8-byte party slots at the start of the selection screen object.
 typedef struct unk_D_81303648_slot {
     /* 0x000 */ void *unk_000;
-    /* 0x004 */ u8 unk_004[0xA - 0x4];
+    /* 0x004 */ u8 unk_004[4];
+    /* 0x008 */ s8 unk_008;
+    /* 0x009 */ s8 unk_009;
     /* 0x00A */ u8 unk_00A;
     /* 0x00B */ u8 unk_00B[0x11 - 0xB];
     /* 0x011 */ char unk_011[0x20 - 0x11];
@@ -30,7 +56,7 @@ typedef struct unk_func_81303648 {
     /* 0x4D70 */ u8 unk_4D70[0x4D90 - 0x4D70];
     /* 0x4D90 */ s16 unk_4D90;
     /* 0x4D92 */ u8 unk_4D92[0x4DA0 - 0x4D92];
-    /* 0x4DA0 */ s32 unk_4DA0;
+    /* 0x4DA0 */ unk_D_81303648_owner *unk_4DA0;
     /* 0x4DA4 */ f32 unk_4DA4;
     /* 0x4DA8 */ u8 unk_4DA8[0x4DAC - 0x4DA8];
     /* 0x4DAC */ s32 unk_4DAC;
@@ -307,7 +333,7 @@ extern void * func_813035A0(void *arg0);
 void func_81303648(unk_func_81303648 *arg0, s32 arg1) {
     s32 count;
 
-    switch (func_81311C70(arg0->unk_4DA0 + 0x74, (s32 *)func_813035A0(arg0), arg0->slots[0].unk_00A, -1)) {
+    switch (func_81311C70((s32)arg0->unk_4DA0->unk_00074, (s32 *)func_813035A0(arg0), arg0->slots[0].unk_00A, -1)) {
         case -1:
             count = func_8160A8DC((u8 *)arg0);
             if (count >= 6) {
@@ -318,7 +344,7 @@ void func_81303648(unk_func_81303648 *arg0, s32 arg1) {
             arg0->unk_4DAC = 1;
             break;
         case 1:
-            func_8130A570(arg0->unk_4DA0 + 0xDA8, arg0->unk_4DB4);
+            func_8130A570((s32)arg0->unk_4DA0->unk_00DA8, arg0->unk_4DB4);
             arg0->unk_4DBD = 3;
             func_81302E58(arg0, 0);
             return;
@@ -389,7 +415,49 @@ s32 func_81303A38(void *arg0) {
     return *(u16 *)((u8 *)entry + 0x38) < func_8160A9F0();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81303A88.s")
+extern u8 D_800CE060[];
+extern u8 D_81311D84[];
+extern void func_81311B98(s32, u8 *, s32, s32);
+extern void func_81311C18(s32);
+extern s32 func_81303A38(void *);
+extern void func_8160B6E4(void *);
+extern s32 func_8160A8DC(u8 *);
+extern s32 func_8160A920(u8 *);
+void func_81303A88(unk_func_81303648 *arg0) {
+    s32 last;
+    u8 *input = D_800CE060 + arg0->slots[0].unk_00A * 40;
+    u16 held = *(u16 *)(input + 0xC);
+
+    func_81311B98((s32)arg0->unk_4DA0->unk_00074, D_81311D84, -1, -1);
+    if (arg0->slots[0].unk_009 != arg0->slots[0].unk_008) {
+        return;
+    }
+    if (*(u16 *)(input + 0xC) & 0x8000) {
+        if (arg0->slots[func_8160A920((u8 *)arg0)].mon.species == 0) {
+            return;
+        }
+        func_800226C0(2);
+        func_81311C18((s32)arg0->unk_4DA0->unk_00074);
+        arg0->unk_4DBD = 9;
+    } else if (held & 0x4000) {
+        if (func_81303A38(arg0)) {
+            last = func_8160A8DC((u8 *)arg0) - 1;
+            if (last < 0) {
+                last = 0;
+            }
+            arg0->slots[0].unk_008 = last;
+            func_800226C0(3);
+            arg0->unk_4DBD = 12;
+            func_81311C18((s32)arg0->unk_4DA0->unk_00074);
+        } else {
+            func_800226C0(3);
+            arg0->unk_4DBD = 4;
+            func_81311C18((s32)arg0->unk_4DA0->unk_00074);
+        }
+    } else {
+        func_8160B6E4(arg0);
+    }
+}
 
 extern u8 D_81311DA8[];
 extern s32 func_81302290(void *);
@@ -587,7 +655,7 @@ void func_81303EF4(unk_func_81303648 *arg0, void *arg1) {
     }
     result |= func_8160B828(arg0);
     result |= func_8160A50C(arg0);
-    if (func_81602AEC(arg0->slots[0].unk_000, func_81602D70(*(s8 *)(arg0->unk_4DA0 + 0x1A142)))) {
+    if (func_81602AEC(arg0->slots[0].unk_000, func_81602D70(arg0->unk_4DA0->unk_1A142))) {
         result = 1;
     }
     if (!result && arg0->unk_4DAC != 0) {
