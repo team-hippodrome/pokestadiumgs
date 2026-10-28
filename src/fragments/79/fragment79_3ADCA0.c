@@ -2179,7 +2179,48 @@ void func_8414760C(void *arg0, s16 arg1, u8 arg2, s16 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414782C.s")
+extern u8 D_84186F34;
+// Sets the rectangle of the record at arg0 (x, y, width, height as s16 at 0xA, 0xC, 0xE and
+// 0x10) from the width and height that func_8004CA10 and func_8004CA24 read from entry 0 of
+// resource 343 (func_8004C990), shifted by a step taken from byte 9 (counted from 1 when
+// arg1 > 0, back from D_84186F34 otherwise). The shift count is step + 30, which sllv takes
+// modulo 32, so a step of 2 or more scales by 2^(step - 2). The width is multiplied by arg2
+// (func_84147A9C and func_84147B20 pass 1.33f) and the rectangle is centered on the 320x240
+// screen.
+void func_8414782C(void *arg0, s16 arg1, f32 arg2) {
+    u8 step;
+    u16 *image;
+    u16 width;
+    s32 height;
+    s32 scaledWidth;
+
+    if (arg1 > 0) {
+        step = ((u8 *)arg0)[9] - 1;
+    } else {
+        step = D_84186F34 - ((u8 *)arg0)[9];
+    }
+    image = func_8004C990(343, 0);
+    width = func_8004CA10(image);
+    height = func_8004CA24(image);
+    if (step > 0) {
+        scaledWidth = width << (step + 30);
+    } else {
+        scaledWidth = 0;
+    }
+    *(s16 *)((u8 *)arg0 + 0xE) = (f32)scaledWidth * arg2;
+    if (step > 0) {
+        *(s16 *)((u8 *)arg0 + 0x10) = (u16)height << (step + 30);
+    } else {
+        *(s16 *)((u8 *)arg0 + 0x10) = 0;
+    }
+    ((u8 *)arg0)[0x25] = 0xFF;
+    ((u8 *)arg0)[0x22] = 0;
+    ((u8 *)arg0)[0x23] = 0;
+    ((u8 *)arg0)[0x24] = 0;
+    ((u8 *)arg0)[8] &= ~3;
+    *(s16 *)((u8 *)arg0 + 0xA) = (320 - *(s16 *)((u8 *)arg0 + 0xE)) / 2;
+    *(s16 *)((u8 *)arg0 + 0xC) = (240 - *(s16 *)((u8 *)arg0 + 0x10)) / 2;
+}
 #endif
 
 #ifdef VERSION_US
@@ -2228,7 +2269,7 @@ void func_84147A04(void *arg0, s16 arg1) {
 
 #ifdef VERSION_US
 extern u8 D_84186F34;
-extern void func_8414782C(void *, s32, s32);
+extern void func_8414782C(void *, s16, f32);
 extern void func_84147968(void *, s16);
 extern void func_84147A04(void *, s16);
 void func_84147A9C(void *arg0) {
@@ -2238,7 +2279,7 @@ void func_84147A9C(void *arg0) {
         temp_v0 = *(s32 *)((u8 *)arg0 + 4);
         switch (temp_v0) {
         case 0:
-            func_8414782C(arg0, 1, 0x3FAA3D71);
+            func_8414782C(arg0, 1, 1.33f);
             return;
         case 1:
             func_84147968(arg0, 1);
@@ -2253,7 +2294,7 @@ void func_84147A9C(void *arg0) {
 
 #ifdef VERSION_US
 extern u8 D_84186F34;
-extern void func_8414782C(void *, s32, s32);
+extern void func_8414782C(void *, s16, f32);
 extern void func_84147968(void *, s16);
 extern void func_84147A04(void *, s16);
 void func_84147B20(void *arg0) {
@@ -2263,7 +2304,7 @@ void func_84147B20(void *arg0) {
         temp_v0 = *(s32 *)((u8 *)arg0 + 4);
         switch (temp_v0) {
         case 0:
-            func_8414782C(arg0, -1, 0x3FAA3D71);
+            func_8414782C(arg0, -1, 1.33f);
             return;
         case 1:
             func_84147968(arg0, -1);
