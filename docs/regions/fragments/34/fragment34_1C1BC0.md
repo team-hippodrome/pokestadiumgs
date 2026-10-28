@@ -46,3 +46,17 @@ pass with `build/pokestadiumgs-us.z64: OK`, full-ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`, exact retail byte comparison and clean
 whitespace checks. The unchanged refreshed baseline passes its own complete
 build and retail comparison before this source is tested.
+
+## 2026-10-29 — `func_885055A0`: requeue
+
+Slot update loop over `unk_D_885229B0 D_885229B0[D_88523008]`. A switch on
+the state word has cases 0/1 empty, and 2..6 call
+`func_885053E8/88505440/88505460/88505514/Trade_UpdateBoxSlotShrink`. For a
+nonzero state: `Vec3f_SetComponentsDuplicate(slot+0x4C, unk_00C - 320,
+240 - unk_00E, -579.0f)`, then the model at `slot+0x28` gets
+`+0x22 = unk_018`, `+0x1D = unk_01A`, `+0x30/+0x34 = unk_020/unk_024 *
+unk_01C`. Remaining: retail writes the model fields through a separate
+`addiu v0, s0, 0x28` base and reloads `unk_01C` after each store (it cannot
+prove the two don't alias). Ours folds the offsets into `$s0` and hoists the
+loads. A `model` local, `(u32)` arithmetic and `slot->unk_028` all fold.
+Body: `scratch/c/5a0a.c`.
