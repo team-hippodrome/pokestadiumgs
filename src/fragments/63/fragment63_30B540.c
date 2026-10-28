@@ -515,8 +515,7 @@ void func_87E08BEC(s32 arg0, void *arg1) {
         }
         func_80021ED8(77);
         func_87E08844(arg0, 0);
-        // func_87E0D41C is defined without parameters, but it leaves $a0 unchanged for
-        // func_87E0D18C, which loads 0x1C($a0); this pointer reaches that load.
+        // func_87E0D41C forwards this pointer to func_87E0D18C, which reads its 0x1C node list.
         //@src/fragments/63/fragment63_310270.c
         func_87E0D41C(arg0 + 0x8C);
         break;

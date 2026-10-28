@@ -307,7 +307,37 @@ void func_8600688C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006964.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006C30.s")
+extern s32 func_87F02104(void);
+extern void func_86007648(s32 arg0, s32 arg1);
+extern u8 D_8600DE30[];
+void func_86006C30(s32 arg0) {
+    typedef struct { u8 b7 : 1; u8 b6 : 1; u8 b5 : 1; u8 b4 : 1; u8 rest : 4; } StateFlags;
+    s32 count;
+    s32 i;
+
+    count = *(s32 *)D_8600DE30;
+    i = 0;
+    if (count > 0) {
+        do {
+            func_86005CB4(arg0, *(f64 *)((u8 *)arg0 + 0x6890) / (f64)count, 0);
+            count = *(s32 *)D_8600DE30;
+            i++;
+        } while (i < count);
+    }
+    switch (func_87F02104()) {
+        case 1:
+            func_86007648(arg0, 6);
+            break;
+        case 2:
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b7 = 1;
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b5 = 1;
+            break;
+        case 3:
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b7 = 1;
+            ((StateFlags *)((u8 *)arg0 + 0x75C0))->b5 = 0;
+            break;
+    }
+}
 
 extern void StageFade_StartFromOpaque(s32);
 s32 StageContext_GetFadeMode();
