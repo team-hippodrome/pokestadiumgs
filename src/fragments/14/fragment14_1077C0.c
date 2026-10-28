@@ -1,5 +1,34 @@
 #include "global.h"
 
+// The three command lists D_813120E0's records point at.
+const s16 D_81312880[4] = { 96, 2, -1, 0 };
+const s16 D_81312888[4] = { 57, 2, -1, 0 };
+const s16 D_81312890[4] = { 58, 2, -1, 0 };
+
+const s16 D_81312898[70] = {
+    104, 193, -1, -1, 134, 265, -1, 1, 4, -1,
+    228, 193, -1, -1, 258, 265, -1, 2, 5, 0,
+    352, 193, -1, -1, 382, 265, -1, 3, 5, 1,
+    476, 193, -1, -1, 506, 265, -1, -1, 6, 2,
+    126, 322, 9, 53, 164, 385, 0, 5, -1, -1,
+    276, 322, 9, 54, 314, 385, 1, 6, -1, 4,
+    423, 320, 8, 55, 471, 385, 2, -1, -1, 5,
+};
+
+// Four s16[4] color sets func_8130F6A4 picks from (+0, +8, +0x10, +0x18).
+const s16 D_81312924[16] = {
+    85, 91, 473, 61, -473, 91, 473, 61, 640, 91, 473, 61, 85, 91, 473, 143,
+};
+
+// The empty name func_8130FA0C copies into a cleared slot; retail copies it as a one-byte
+// record (address formed, then lbu/sb), not as a folded character load.
+typedef struct unk_D_81312944 {
+    /* 0x0 */ char unk_0;
+} unk_D_81312944;
+const unk_D_81312944 D_81312944 = { 0 };
+
+const f32 D_81312948[4] = { -1.5707964f, 0.0f, 1.5707964f, 3.1415927f };
+
 
 #ifdef VERSION_US
 /* mkdraft:func_8130F630 begin */
@@ -42,10 +71,9 @@ f32 func_8130F6A4(u8 *arg0, u8 *arg1, u8 *arg2) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_81312924[];
 extern f32 func_8130F6A4(u8 *arg0, u8 *arg1, u8 *arg2);
 f32 func_8130F794(u8 *arg0, u8 *arg1) {
-    return func_8130F6A4(arg0, arg1, D_81312924);
+    return func_8130F6A4(arg0, arg1, (u8 *)D_81312924);
 }
 #endif
 
@@ -100,7 +128,37 @@ s32 func_8130F970(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_8130FA0C.s")
+extern s32 func_81603404(s32, u8);
+extern s32 func_81603368(s32);
+extern void func_8005D9E0(s32, void *);
+void func_8130FA0C(u8 *arg0) {
+    u8 status;
+    s32 i;
+    struct {
+        u16 id;
+        char name[12];
+    } entry;
+
+    for (i = 0; i < 4; i++) {
+        status = func_81603404(i, 4);
+        arg0[0x8C + i] = status;
+        switch (status) {
+            case 0:
+                func_8005D9E0(i, &entry);
+                HAL_Strcpy(arg0 + 0x54 + i * 12, entry.name);
+                *(u16 *)(arg0 + 0x84 + i * 2) = entry.id;
+            case 6:
+                *(s32 *)(arg0 + 0x90 + i * 4) = func_81603368(i);
+                break;
+            case 2:
+            case 3:
+                *(unk_D_81312944 *)(arg0 + 0x54 + i * 12) = D_81312944;
+                *(u16 *)(arg0 + 0x84 + i * 2) = 0xFFFF;
+                *(s32 *)(arg0 + 0x90 + i * 4) = 7;
+                break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -150,7 +208,7 @@ void func_8130FBC0(void *arg0) {
 
 #ifdef VERSION_US
 /* mkdraft:func_8130FC80 begin */
-extern s32 func_8130FA0C(u8 *);
+extern void func_8130FA0C(u8 *);
 extern s32 func_81311CFC(void);
 
 void func_8130FC80(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
@@ -238,22 +296,12 @@ s32 func_8130FF18(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_81312988;
-extern f32 D_8131298C;
-extern f32 D_81312990;
-extern f32 D_81312994;
-
 f32 func_8130FF70(f32 arg0) {
-    f32 var_f0;
-    f32 var_f2;
-
-    while (D_81312988 < arg0) {
-        arg0 -= D_8131298C;
+    while (3.1415927f < arg0) {
+        arg0 -= 6.2831855f;
     }
-    var_f0 = D_81312990;
-    var_f2 = D_81312994;
-    while (arg0 <= var_f0) {
-        arg0 += var_f2;
+    while (arg0 <= -3.1415927f) {
+        arg0 += 6.2831855f;
     }
     return arg0;
 }
@@ -270,7 +318,6 @@ void func_8130FFE0(f32 arg0, f32 arg1) {
 #ifdef VERSION_US
 /* mkdraft:MathUtil_Atan2d_fragment14 begin */
 f64 MathUtil_Atan2d_fragment14(f64 arg0, f64 arg1) {
-    extern f64 D_81312998, D_813129A0, D_813129A8, D_813129B0, D_813129B8, D_813129C0;
     f64 ratio;
     f64 reduced;
     f64 fraction;
@@ -281,9 +328,9 @@ f64 MathUtil_Atan2d_fragment14(f64 arg0, f64 arg1) {
     }
     if (arg1 == 0.0) {
         if (arg0 > 0.0) {
-            return D_81312998;
+            return 1.5707963705062866;
         }
-        return D_813129A0;
+        return -1.5707963705062866;
     }
     ratio = arg0 / arg1;
     reduced = ((ratio > 0.0 ? ratio : -ratio) <= 1.0) ? ratio : 1.0 / ratio;
@@ -293,18 +340,18 @@ f64 MathUtil_Atan2d_fragment14(f64 arg0, f64 arg1) {
     }
     reduced = reduced / (1.0 + fraction);
     if (ratio > 1.0) {
-        reduced = D_813129A8 - reduced;
+        reduced = 1.5707963705062866 - reduced;
     }
     if (ratio < -1.0) {
-        reduced = D_813129B0 - reduced;
+        reduced = -1.5707963705062866 - reduced;
     }
     if (arg1 > 0.0) {
         return reduced;
     }
     if (arg0 > 0.0) {
-        return reduced + D_813129B8;
+        return reduced + 3.1415927410125732;
     }
-    return reduced - D_813129C0;
+    return reduced - 3.1415927410125732;
 }
 /* mkdraft:MathUtil_Atan2d_fragment14 end */
 #endif

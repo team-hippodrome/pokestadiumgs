@@ -72,3 +72,21 @@ Based on master 224774092bdc686b39361e5308a59d6567d7ed75. Full US rebuild with d
 ## 2026-10-27 — `func_81310800`: matched
 
 `arg0` is typed as a local `unk_func_81310800` record (`unk_38` phase byte, `unk_39`, `unk_48` entry index, `unk_8C[]` per-entry bytes, `unk_A8` any-selectable flag). The table argument is one nested conditional inside the `func_81311C70` call (`unk_A8 ? (unk_8C[unk_48] == 6 ? D_81312128 : D_81312104) : D_813120E0`), which produces retail's hoisted `&D_81312104` and else-arm copy; the struct member access gives the `arg0 + index` operand order that the raw `u8 *` index spellings reverse. The result store is `arg0->unk_38 = unk_A8 != 0 ? 3 : 4`, which allocates 4 to t2 and 3 to t1 as retail does.
+
+## 2026-10-28 — `.rodata` subsegment; `func_8130FA0C` matched
+
+`rom.yaml` gives this file the `.rodata` window 0x10AA10–0x10AB90:
+- The three command lists `D_81312880/888/890` at its start belong here: `D_813120E0`'s records in this file's `.data` point at them.
+- `D_81312A00` at 0x10AB90 is `fragment14_109280`'s and stays in the shared blob.
+
+IDO emits the plain data first, then the late rodata in function order. Defined in C at the top: the lists, `D_81312898`, the four `s16[4]` color sets `D_81312924`, `D_81312944` and the `D_81312948` angle table. The already-C math helpers now use literals instead of externs:
+- `func_8130FF70` is the plain two-loop wrap (`while (3.1415927f < x) x -= 6.2831855f; while (x <= -3.1415927f) x += 6.2831855f;`). The m2c copies emitted the literals in the wrong order.
+- `MathUtil_Atan2d_fragment14` uses float-precision pi/2 and pi as double literals.
+
+`func_8130FA0C` fills the four name slots from `func_81603404(i, 4)` (returns `s32`; its second parameter is `u8`, since retail rematerializes the 4):
+- status 0 copies name and id from `func_8005D9E0` and falls into status 6, which stores `func_81603368(i)`;
+- statuses 2/3 clear the slot (empty name, id 0xFFFF, value 7).
+
+Retail copies the empty name as a one-byte record (address formed, then `lbu`/`sb`). A folded `D_81312944[0]` or `""[0]` load does not reproduce it, so `D_81312944` is typed `unk_D_81312944`. Locals are declared `status`, `i`, then the 14-byte `entry`.
+
+The remaining owners now have their rodata: `func_8130F7B8` (`jtbl_81312968`), `func_813102A4`, `func_81310894` (`jtbl_813129D4`) and `func_81310BF8`.
