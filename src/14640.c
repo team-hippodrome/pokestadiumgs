@@ -148,7 +148,13 @@ typedef struct AudioContext {
     /* 0x2BBD */ u8 sampleDmaReuseQueue2RdPos;
     /* 0x2BBE */ u8 sampleDmaReuseQueue1WrPos;
     /* 0x2BBF */ u8 sampleDmaReuseQueue2WrPos;
-    /* 0x2BC0 */ u8 unk_2BC0[0x2BDC - 0x2BC0];
+    /* 0x2BC0 */ AudioTable *sequenceTable;
+    /* 0x2BC4 */ AudioTable *soundFontTable;
+    /* 0x2BC8 */ AudioTable *sampleBankTable;
+    /* 0x2BCC */ u8 unk_2BCC[4];
+    /* 0x2BD0 */ u8 *sequenceFontTable;
+    /* 0x2BD4 */ u16 numSequences;
+    /* 0x2BD8 */ SoundFont *soundFonts;
     /* 0x2BDC */ s16 specUnk4;
     /* 0x2BDE */ u8 unk_2BDE[0x2BF0 - 0x2BDE];
     /* 0x2BF0 */ s16 numSequencePlayers;
@@ -1238,7 +1244,17 @@ extern s32 D_8008FA70; void func_80015A40(s32 value) { D_8008FA70 = value; }
 
 extern s32 D_8008FA74; void func_80015A4C(s32 value) { D_8008FA74 = value; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80015A58.s")
+// Ocarina of Time AudioLoad_InitSoundFontMeta.
+void func_80015A58(s32 fontId) {
+    SoundFont *font = &gAudioContext.soundFonts[fontId];
+    AudioTableEntry *entry = &gAudioContext.soundFontTable->entries[fontId];
+
+    font->sampleBankId1 = (entry->shortData1 >> 8) & 0xFF;
+    font->sampleBankId2 = (entry->shortData1) & 0xFF;
+    font->numInstruments = (entry->shortData2 >> 8) & 0xFF;
+    font->numDrums = entry->shortData2 & 0xFF;
+    font->numSfx = entry->shortData3;
+}
 
 // Close to Majora's Mask AudioLoad_Init (src/audio/lib/load.c); GS creates the
 // external-load (D_8011DFC0) and preload-sample (D_8011E058) queues with 32 messages
