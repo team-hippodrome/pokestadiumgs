@@ -5,7 +5,15 @@ void fragment43_main(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC00028.s")
+extern u8 D_8AC07BA0[];
+extern u8 D_8AC081B0[];
+void func_8AC00028(void) {
+    typedef struct { u8 rgba[4]; } CopyColor;
+    CopyColor *src = (CopyColor *)D_8AC07BA0;
+    CopyColor *dst = (CopyColor *)D_8AC081B0;
+    u32 i;
+    for (i = 0; i < 18; i++) { dst[i] = src[i]; }
+}
 #endif
 
 #ifdef VERSION_US
@@ -407,7 +415,54 @@ s16 func_8AC01354(unk_func_8AC01354 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC013FC.s")
+extern s16 D_8AC099B8;
+extern s16 D_8AC099BA;
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_800499EC(void);
+extern s32 func_80049148(s32, s32, const char *, ...);
+s32 func_8AC013FC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s16 arg4) {
+    typedef struct {
+        s16 state;
+        s16 x;
+        s16 y;
+        s16 unk_06;
+        s32 unk_08;
+        s32 unk_0C;
+        const char *text;
+        s16 width;
+        u8 normal[4];
+        u8 selected[4];
+        u8 unk_1E[2];
+    } TextEntry;
+    s16 width = -1;
+    s32 i;
+    D_8AC099B8 = 0;
+    D_8AC099BA = 0;
+    func_800498C4();
+    func_800496A4(8, 0);
+    for (i = 0; i < arg3; i++, arg2 += sizeof(TextEntry)) {
+        if (arg4 == i) {
+            D_8AC099B8 = arg0 + ((TextEntry *)arg2)->x - 10;
+            D_8AC099BA = arg1 + ((TextEntry *)arg2)->y - 5;
+        }
+        if (((TextEntry *)arg2)->state > 0) {
+            if (arg4 == i) {
+                ((TextEntry *)arg2)->state = 2;
+                width = func_80049148(8, 0, ((TextEntry *)arg2)->text) + 20;
+                func_8004972C(((TextEntry *)arg2)->selected[0], ((TextEntry *)arg2)->selected[1], ((TextEntry *)arg2)->selected[2], ((TextEntry *)arg2)->selected[3]);
+            } else {
+                ((TextEntry *)arg2)->state = 1;
+                func_8004972C(((TextEntry *)arg2)->normal[0], ((TextEntry *)arg2)->normal[1], ((TextEntry *)arg2)->normal[2], ((TextEntry *)arg2)->normal[3]);
+            }
+            func_800495BC(arg0 + ((TextEntry *)arg2)->x, arg1 + ((TextEntry *)arg2)->y, ((TextEntry *)arg2)->text);
+        }
+    }
+    func_800499EC();
+    return width;
+}
 #endif
 
 #ifdef VERSION_US
@@ -774,7 +829,7 @@ extern void _bzero(void *, s32);
 extern s32 func_8AC06D8C(s32, s32);
 extern void func_8004E308(s32, s32 *, s32 *);
 extern u8 func_8AC02A34;
-extern u8 func_8AC02DA0;
+extern s32 func_8AC02DA0(s32, void *);
 extern u8 func_8AC030EC;
 extern s32 func_8AC02998(s32, void *);
 extern s32 func_8AC02D04(s32, void *);
@@ -815,7 +870,79 @@ s32 func_8AC02D04(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC02DA0.s")
+typedef struct Growth43Output { u16 unk_00; u16 flags; } Growth43Output;
+typedef struct Growth43State { Growth43Output *output; s16 x, y, width, height, finished; } Growth43State;
+typedef struct Growth43Node {
+    u8 unk_00[8];
+    s16 x, y, width, height;
+    u8 unk_10[16];
+    Growth43State *state;
+    u8 unk_24[4];
+    s16 inner_width, inner_height;
+} Growth43Node;
+typedef struct DualTexture43State {
+    u8 unk_00[8];
+    s16 left, top, x, y;
+    u8 *image, *second;
+    s32 format, size, width, second_width, height;
+} DualTexture43State;
+typedef struct DualTexture43Node {
+    u16 unk_00, flags;
+    u8 unk_04[4];
+    s16 x, y;
+    u8 unk_0C[20];
+    DualTexture43State *state;
+    u16 id, index;
+} DualTexture43Node;
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004CA24(u16 *);
+extern s32 func_8004CA38(u8 *);
+extern s32 func_8004CA4C(u8 *);
+extern void func_80046204(s32, s32, s32, u32, u32, u32, u32, u32, u32, s32, s32, s32, s32, s32, s32, s32);
+extern Gfx D_8AC07C50[];
+extern s32 func_8004C990(s32, s32);
+extern void func_800504BC(s16 *);
+extern Gfx * D_800D0510;
+extern u8 D_8AC099BC;
+s32 func_8AC02DA0(s32 arg0, void *arg1) {
+    DualTexture43Node *node = arg1;
+    DualTexture43State *state;
+    s16 left;
+    s16 top;
+    s16 right;
+    s16 bottom;
+    state = node->state;
+    switch (arg0) {
+    case 0:
+        state->second = (u8 *)func_8004C990(node->id, node->index);
+        state->format = func_8004CA38(state->image);
+        state->size = func_8004CA4C(state->image);
+        state->width = func_8004CA10((u16 *)state->image);
+        state->second_width = func_8004CA10((u16 *)state->second);
+        state->height = func_8004CA24((u16 *)state->image);
+        break;
+    case 1:
+        if (node->flags & 2) {
+            func_800504BC((s16 *)&D_8AC099BC);
+            state->x = *(s16 *)&D_8AC099BC + node->x;
+            state->y = ((s16 *)&D_8AC099BC)[1] + node->y;
+            if (state->y > 0) {
+                left = state->left;
+                top = state->top;
+                right = state->x + state->second_width;
+                bottom = state->y;
+                gSPDisplayList(D_800D0510++, D_8AC07C50);
+                func_80046204((s32)state->image, state->format, state->size,
+                    state->width, state->height, 0, 0, state->width - 1, state->height - 1,
+                    0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+                gSPTextureRectangle(D_800D0510++, left << 2, top << 2,
+                    right << 2, bottom << 2, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+            }
+        }
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -874,7 +1001,34 @@ void func_8AC03334(s32 arg0, s32 arg1, s32 arg2, void *arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC039A4.s")
+extern void func_800504BC(s16 *);
+extern Gfx * D_800D0510;
+s32 func_8AC039A4(s32 arg0, void *arg1) {
+    s16 pos[2];
+    s16 x;
+    s16 y;
+    s16 w;
+    s16 h;
+    u16 color = *(s32 *)((u8 *)arg1 + 0x20);
+    switch (arg0) {
+    case 0:
+        break;
+    case 1:
+        func_800504BC(pos);
+        x = *(s16 *)((u8 *)arg1 + 8) + pos[0];
+        y = *(s16 *)((u8 *)arg1 + 10) + pos[1];
+        w = *(s16 *)((u8 *)arg1 + 12);
+        h = *(s16 *)((u8 *)arg1 + 14);
+        gDPPipeSync(D_800D0510++);
+        gDPSetCycleType(D_800D0510++, G_CYC_FILL);
+        gDPSetRenderMode(D_800D0510++, G_RM_NOOP, G_RM_NOOP2);
+        gDPSetFillColor(D_800D0510++, (color << 16) | color);
+        gDPPipeSync(D_800D0510++);
+        gDPFillRectangle(D_800D0510++, x, y, x + w, y + h);
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1133,7 +1287,7 @@ s32 func_8AC04604(s32 arg0, void *arg1) { s32 red; s16 index; s16 *entry; char *
 #ifdef VERSION_US
 extern void func_8004E308(s32, s32 *, s32 *);
 s32 func_8AC06D8C(s32, s32);
-extern u8 func_8AC0479C;
+extern s32 func_8AC0479C(s32, void *);
 
 void func_8AC04744(s32 *arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 sp1C;
