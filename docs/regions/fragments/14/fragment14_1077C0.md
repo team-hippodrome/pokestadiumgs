@@ -119,3 +119,14 @@ The runner gates owners one at a time and cannot apply this joint transaction (e
   - finally `func_81311AAC`.
   Locals: `result`, the unused template copy, `rect` and a second, unused `s16[4]` whose slot retail reserves. `func_81310800`'s result is used here, but it has no `return` statement and leaves `func_81311C70`'s value in `$v0` (now `s32`, marked `//!bug`).
 - `func_81310A14` draws the selection panel through `func_81600F0C` (its third argument is `s16`), `func_81604944`, `func_81605D24`, `func_8160615C`/`func_81605F94` and the text helpers. Its one caller passes the object through an `s32` and now casts it.
+
+## 2026-10-28 — `func_8131058C`: requeue
+
+requeue. Cursor/input handler; it always returns 1.
+- It sets +0x30 = 16.
+- With +0xA8 clear: sound 5, phase 2, index -1.
+- Otherwise, with `prev = +0x48 >= 0`, the d-pad bits 0x800/0x100/0x400/0x200 (of `D_800CE060[+0x39].buttons` at +0xC) pick a direction for `func_813102A4(obj, prev, dir)`, with sound 1 when the index changes. A negative index resets to 0 through `func_8130FBC0`.
+- A (+8 & 0x8000): index ≥ 4 or slot status 0 → sound 0x8F, phase 4, `func_8130F8B4(obj, 0)`; statuses 3/6 → phase 2.
+- B (0x4000): phase 4, `func_8130F8B4`, index -1, sound 3.
+
+Writing the `prev >= 0` test first gives retail's `bltzl`. The register roles still differ: retail keeps the input pointer in `$v1`, passes the index in `$a1` and copies it to `$t0`. A 300 s permuter went 520 → 510.
