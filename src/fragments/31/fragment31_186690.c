@@ -14,27 +14,95 @@ void func_88213410(void) {
     D_88234560 = 5;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213450.s")
+extern s32 func_8821BA34(u16, void *);
+typedef struct { u8 *entries; u32 unk_04; u32 unk_08; } StorageListEntryPointerRecord;
+extern StorageListEntryPointerRecord D_88234640[];
+extern u8 * D_88234730;
+// Modes 0/1 select start/position, 2 selects the first entry, and 3 uses the shared index.
+u8 *StorageList_GetEntry(s32 mode, u8 column) {
+    s16 index;
+
+    switch (mode) {
+    case 0:
+        index = *(s16 *)(D_88234730 + 22 + (u32)column * 44);
+        break;
+    case 1:
+        index = *(s16 *)(D_88234730 + 20 + (u32)column * 44);
+        break;
+    case 2:
+        index = 0;
+        break;
+    case 3:
+        index = *(s16 *)(D_88234730 + 112);
+        break;
+    }
+    return D_88234640[(u32)column * 2].entries + index * 118;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213530.s")
 
-extern u8 *D_88234730;
 u8 *func_88213A3C(s32 arg0) { switch (arg0) { case 3: return D_88234730 + 0xC4; case 4: return D_88234730 + 0xF8; case 5: return D_88234730 + 0x12C; } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213A94.s")
+typedef struct {
+    u8 unk_00[8];
+    s16 position;
+    s16 start;
+    u16 count;
+    u8 visible;
+    u8 step;
+    s16 scroll;
+    u8 unk_12[26];
+} StorageListScrollRecord;
+extern void func_88001C24(void *, u16, u8);
+extern void func_88001D0C(void *);
+
+typedef struct unk_D_8823463C {
+    u8 unk_00;
+    u8 unk_01[11];
+} unk_D_8823463C;
+/* Storage-list pair metadata. */
+extern unk_D_8823463C D_8823463C[];
+// Update the optional row count and preserve the six-row scroll position.
+//@src/fragments/29/fragment29_167940.c
+void StorageList_UpdateScrollCount(u8 column, s32 enabled) {
+    StorageListScrollRecord *scroll;
+    if (((s32 *)(D_88234730 + 104))[column] != enabled) {
+        scroll = (StorageListScrollRecord *)(D_88234730 + 12) + column;
+        ((s32 *)(D_88234730 + 104))[column] = enabled;
+        if (enabled != 0) {
+            if (D_8823463C[column * 2].unk_00 != 0) {
+                func_88001C24(scroll, scroll->count + 1, 6);
+                if (scroll->position - scroll->start == 5) {
+                    scroll->start++;
+                } else {
+                    scroll->scroll += scroll->step;
+                }
+            }
+        } else {
+            if (D_8823463C[column * 2].unk_00 != 0) {
+                func_88001C24(scroll, scroll->count - 1, 6);
+                if (scroll->position - scroll->start == 5) {
+                    scroll->start--;
+                } else {
+                    scroll->scroll -= scroll->step;
+                }
+            }
+        }
+        func_88001D0C(scroll);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213BE4.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213E9C.s")
 
 extern void func_882064B4(s32, s32 *, void *, void *);
-extern void func_88213A94(u8, s32);
+extern void StorageList_UpdateScrollCount(u8, s32);
 extern s32 D_882346F0;
-extern u8 *D_88234730;
 void func_882142DC(void) {
     D_882346F0 = 4;
     func_882064B4(0, (s32 *)(D_88234730 + 4), D_88234730 + 0xC, D_88234730 + 0x38);
-    func_88213A94(*D_88234730, 1);
+    StorageList_UpdateScrollCount(*D_88234730, 1);
 }
 
 extern void func_88213BE4(s32, s32);
@@ -75,7 +143,6 @@ void func_88214394(void) {
 /* mkdraft:func_882152F4 begin */
 typedef struct { u8 pad[8]; s16 position; s16 start; u8 pad2[0x20]; } Scroll18690;
 typedef struct { u8 slot; u8 reserved[0xB]; Scroll18690 records[2]; u8 pad[0xC]; s32 position; } State18690;
-extern s32 D_882346F0;
 extern s32 D_882346F4;
 
 s32 func_882152F4(u8 arg0, u8 arg1) {
@@ -127,10 +194,33 @@ done:
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88215420.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_882157DC.s")
+extern s32 func_8003514C(void);
+// Copy at most limit characters, treating high bytes as two-byte characters in mode zero.
+//@src/340C0.c
+s8 *Text_CopyCharacterPrefix(s8 *output, s8 *input, s32 limit) {
+    s8 *destination;
+    s32 count;
+    s32 byte;
+    s32 width;
 
-extern void func_800496A4(s32, s32); extern void func_80049064(s32, s32, s32, s32); extern s32 func_8003514C(void); extern void func_882157DC(s8 *, s8 *, s32); extern void func_80047634(s32); extern s32 D_8800687C; extern void func_80048E30(s32, s32, s32, s32, s32); extern void func_80047650(s32);
-void func_882158E4(s16 arg0, s16 arg1, s8 *arg2) { s8 temp[0x44]; s32 count; if (arg2[0x66] != 0) { func_800496A4(4, 1); func_80049064(arg0 + 0xD3, arg1 + 4, 2, arg2 + 0x66); if (func_8003514C() == 0) count = 6; else count = 0xC; func_882157DC(temp + 4, arg2, count); func_800496A4(8, 2); func_80047634(1); func_80048E30(D_8800687C, arg0, arg1, temp + 4, 1); func_80047650(1); } }
+    count = 0;
+    for (destination = output; ; count++) {
+        if (count >= limit || *input == 0) break;
+        if ((u8)*input >= 0x80 && func_8003514C() == 0) {
+            width = 2;
+        } else {
+            width = 1;
+        }
+        for (byte = 0; byte < width; byte++) {
+            *destination++ = *input++;
+        }
+    }
+    *destination = 0;
+    return output;
+}
+
+extern void func_800496A4(s32, s32); extern void func_80049064(s32, s32, s32, s32); extern s32 func_8003514C(void); extern void func_80047634(s32); extern s32 D_8800687C; extern s32 func_80048E30(u8 *, s32, s32, const char *, s32); extern void func_80047650(s32);
+void func_882158E4(s16 arg0, s16 arg1, s8 *arg2) { s8 temp[0x44]; s32 count; if (arg2[0x66] != 0) { func_800496A4(4, 1); func_80049064(arg0 + 0xD3, arg1 + 4, 2, arg2 + 0x66); if (func_8003514C() == 0) count = 6; else count = 0xC; Text_CopyCharacterPrefix(temp + 4, arg2, count); func_800496A4(8, 2); func_80047634(1); func_80048E30((u8 *)D_8800687C, arg0, arg1, (const char *)(temp + 4), 1); func_80047650(1); } }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_882159A0.s")
 
@@ -160,11 +250,6 @@ void func_88215BCC(void) {
 extern void func_800496A4(s32, s32); extern s32 func_8004C874(s32, s16); extern void func_80049064(s32, s32, s32, s32); extern s16 D_8800EF58; extern s32 D_882346F0; extern u8 *D_88234730;
 void func_88215C4C(void) { if (D_8800EF58 == 0) { if (D_882346F0 == 0) { func_800496A4(4, 2); func_80049064(0x140, 0x198, 1, func_8004C874(0x23, 7)); } } func_800496A4(0x10, 2); func_80049064(0x140, 0x15F, 1, func_8004C874(0x23, *(s16 *)(D_88234730 + 8))); }
 
-typedef struct unk_D_8823463C {
-    u8 unk_00;
-    u8 unk_01[11];
-} unk_D_8823463C;
-extern unk_D_8823463C D_8823463C[];
 s32 func_88215CE0(void) {
     u8 *var_v0 = D_88234730;
     s32 var_v1 = 0;
@@ -181,13 +266,13 @@ s32 func_88215CE0(void) {
     return var_v1;
 }
 
-extern u8 *func_88213450(s32, u8); extern void func_8004989C(s32); extern void func_80049668(s32); extern void func_800495F8(s32, s32, s32, const char *, ...); extern u8 D_88233F88[];
+extern u8 *StorageList_GetEntry(s32, u8); extern void func_8004989C(s32); extern void func_80049668(s32); extern void func_800495F8(s32, s32, s32, const char *, ...); extern u8 D_88233F88[];
 extern void func_80047634(s32);
 extern void func_80047650(s32);
-extern void func_80048E30(s32, s32, s32, s32, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
 extern void func_80049064(s32, s32, s32, s32);
 extern s32 func_8004C874(s32, s16);
-void func_88215D4C(void) { u8 *p; p = func_88213450(1, *D_88234730); if (((s8 *)p)[0x66] != 0) { func_8004989C(0x20); func_800496A4(0x10, 2); func_80047634(1); func_80049064(0x13F, 0x154, 1, (s32)p); func_80047650(1); func_800496A4(8, 1); func_80048E30(D_8800687C, 0xD5, 0x196, (s32)(p + 0x66), 1); func_800496A4(4, 1); func_80048E30(D_8800687C, 0x13E, 0x19A, func_8004C874(0xD, 9), 1); func_80049668(0); func_800495F8(0x161, 0x19A, 0, D_88233F88, *(u16 *)(p + 0x72)); } }
+void func_88215D4C(void) { u8 *p; p = StorageList_GetEntry(1, *D_88234730); if (((s8 *)p)[0x66] != 0) { func_8004989C(0x20); func_800496A4(0x10, 2); func_80047634(1); func_80049064(0x13F, 0x154, 1, (s32)p); func_80047650(1); func_800496A4(8, 1); func_80048E30((u8 *)D_8800687C, 0xD5, 0x196, (const char *)(p + 0x66), 1); func_800496A4(4, 1); func_80048E30((u8 *)D_8800687C, 0x13E, 0x19A, (const char *)func_8004C874(0xD, 9), 1); func_80049668(0); func_800495F8(0x161, 0x19A, 0, D_88233F88, *(u16 *)(p + 0x72)); } }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88215E54.s")
 
@@ -241,7 +326,6 @@ s32 func_88216D98(s8 arg0, s8 arg1) {
     return x;
 }
 
-extern u8 * D_88234740;
 s32 func_88216E28(s8 arg0, s8 arg1) {
     s32 result;
     switch (arg1) {
@@ -276,7 +360,6 @@ void func_88216E80(void) {
     func_88228BCC(0x17C, 0x11F, func_88216520);
 }
 
-extern u8 *D_88234740;
 extern u8 D_88006880[];
 extern void *D_80087200;
 extern void func_880022B4(void *, s32, s32);
@@ -360,8 +443,6 @@ extern void func_880006E0(Color88217F70 *);
 extern u8 func_80062D98(u8);
 extern s32 func_80062CE0(u8);
 extern void func_8004972C(s32, s32, s32, s32);
-extern void func_80048E30(s32, s32, s32, s32, s32);
-extern s32 func_8004C874(s32, s16);
 void func_88217F70(s16 x, s16 y, u8 move, u8 alpha) {
     Color88217F70 color;
 
@@ -374,7 +455,7 @@ void func_88217F70(s16 x, s16 y, u8 move, u8 alpha) {
     } else {
         func_8004972C(color.red, color.green, color.blue, alpha);
     }
-    func_80048E30(D_8800687C, x + 5, y + 2, move == 252 ? func_8004C874(0x45, 0x13) : func_80062CE0(move), 1);
+    func_80048E30((u8 *)D_8800687C, x + 5, y + 2, (const char *)(move == 252 ? func_8004C874(0x45, 0x13) : func_80062CE0(move)), 1);
 }
 
 extern s32 D_889041B4;
@@ -443,7 +524,41 @@ void func_8821B438(void) {
 
 extern u16 D_88234758; extern s32 D_88234778; s32 func_8821B468(void) { s32 result = 0; if (D_88234758 == 0) { if (D_88234778 == 0) result = 1; } return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821B498.s")
+extern s32 func_8800005C(void);
+extern s32 func_880007B0(u8 *);
+extern s32 func_8006461C(s32);
+extern s16 D_882345F0;
+extern u8 (*D_88A01C38)[96];
+extern s32 D_882347C0;
+extern u16 D_88234744;
+extern u8 * D_88234750;
+// Collect eligible 96-byte records and optionally update the one-time byte-40 marker.
+//@src/fragments/29/fragment29_166060.c
+void StorageList_BuildPointers(s32 detect_marker) {
+    u8 *record;
+    u8 **destination;
+    u32 index;
+    s32 mode;
+    u16 eligible;
+
+    mode = func_8800005C() != 0 ? 1 : 0;
+    D_88234744 = 0;
+    for (index = 0, record = (u8 *)D_88A01C38, destination = (u8 **)D_88234750; index < (u16)D_882345F0; index++, record += 96) {
+        if (detect_marker != 0 && D_882347C0 == 0) {
+            eligible = mode != 0 ? func_880007B0(record + 8) : 1;
+            if (eligible != 0 && func_8006461C(record[40]) != 0) {
+                D_882347C0 = 1;
+            }
+        }
+        if (*(s32 *)(*(u8 **)record + 8) != 0) {
+            eligible = mode != 0 ? func_880007B0(record + 8) : 1;
+            if (eligible != 0) {
+                *destination++ = record;
+                D_88234744++;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821B5EC.s")
 
@@ -461,7 +576,6 @@ extern u16 D_88234758; s32 func_8821B7C0(void) { s32 result = 0; if (D_88234758 
 
 extern u16 D_88234758; s32 func_8821B7E4(u8 arg0) { s32 result = 0; if (D_88234758 & 0x10) { if (((u8 *)&D_88234758)[4] == arg0) result = 1; } return result; }
 
-extern u16 D_88234758;
 s32 func_8821B81C(s8 arg0, s8 arg1) {
     s32 result = 0;
     if ((D_88234758 & 8) &&
@@ -494,7 +608,6 @@ void func_8821B980(u16 arg0, s32 arg1) {
     }
 }
 
-extern u8 *D_88234750;
 u32 func_8821B9EC(s32 arg0) {
     u8 *p = (u8 *)D_88234750;
     u32 i = 0;
@@ -512,7 +625,26 @@ u32 func_8821B9EC(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821BA34.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C004.s")
+// Compact the current pointer list in place and return the number of matching entries.
+u16 StorageList_FilterPointers(u16 filter, u16 count) {
+    u8 **source = (u8 **)D_88234750;
+    u8 **destination;
+    u8 *entry;
+    s32 index;
+    u16 limit = count;
+
+    count = 0;
+    index = 0;
+    for (destination = source; index != limit; index++) {
+        entry = *source;
+        if (func_8821BA34(filter, entry + 8)) {
+            *destination++ = entry;
+            count++;
+        }
+        source++;
+    }
+    return count;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821C0B0.s")
 
@@ -548,7 +680,6 @@ void func_8821C2F4(void) {
     func_8821C2C8(1);
 }
 
-extern u8 D_88234780[];
 extern s32 D_882347B0;
 void func_8821C39C(void) {
     typedef struct {

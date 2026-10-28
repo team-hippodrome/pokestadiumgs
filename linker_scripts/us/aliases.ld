@@ -1206,3 +1206,13 @@ func_8005EB3C = GbSave_CountBitmapBits;
 func_86A059AC = ItemBounds_ContainsPlayerPosition;
 
 func_87E0CEE4 = ListSlots_ResetEntryState;
+
+func_88213450 = StorageList_GetEntry;
+
+func_88213A94 = StorageList_UpdateScrollCount;
+
+func_882157DC = Text_CopyCharacterPrefix;
+
+func_8821B498 = StorageList_BuildPointers;
+
+func_8821C004 = StorageList_FilterPointers;
