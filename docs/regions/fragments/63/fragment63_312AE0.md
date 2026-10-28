@@ -26,3 +26,7 @@ in `$a1`, with one shared exit. A `pos` local (stored, then reloaded with
 `lh` after each `sh`) reproduces the structure (~0.2 raw, registers rotated). A typed
 `Fragment63TextReader *` global re-reads the pointer after every store, and
 the 240-second permuter stays at 750.
+
+## 2026-10-29: `func_87E1087C` register-tie
+
+register-tie. Callback `(s32 *arg0, s32 arg1)`: when arg1 == 0xA8 it registers 'DGP1'..'DGP4' with func_87E102D4 and 'DG_1'..'DG_4' with func_87E0F74C (data 0..3) via func_87F0AB08. The straight-line form matches except that $s0/$s1 are swapped (retail: s0 = callback, s1 = arg0). The permuter reaches 0 only with a fake `if (1) {}` before the last call, which we didn't use. A loop form doesn't get copt-unrolled.

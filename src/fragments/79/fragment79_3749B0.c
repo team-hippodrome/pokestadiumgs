@@ -55,7 +55,51 @@ void func_8410545C(void) {
 }
 /* mkdraft:func_8410545C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3749B0/func_841054D4.s")
+extern u8 *D_8418C950;
+extern void func_84100030(u8 *, s32);
+void func_841054D4(void) {
+    u8 *actor = D_8418C950;
+    s32 i;
+    u8 *model;
+    u8 *anim;
+    s16 *track;
+    u32 flags;
+    s32 timer;
+
+    for (i = 0; i < 300; i++, actor += 0x9C) {
+        if (*(s8 *)(actor + 0x98) == 0) {
+            continue;
+        }
+        flags = *(u32 *)(actor + 0x14);
+        if (flags & 0x800) {
+            timer = actor[0x81];
+            if (timer != 0) {
+                timer = --actor[0x81];
+            }
+            if (timer == 0) {
+                func_84100030(actor, 0x800);
+                model = *(u8 **)(actor + 0xC);
+                if (model == NULL) {
+                    continue;
+                }
+                anim = *(u8 **)(actor + 0x10);
+                if (anim == NULL) {
+                    continue;
+                }
+                track = *(s16 **)(anim + 0x14);
+                if (track == NULL || track[0] == 0) {
+                    continue;
+                }
+                model[1] |= 1;
+                if ((*(s16 **)(anim + 0x14))[1] != 0) {
+                    (*(u8 **)(actor + 0xC))[2] |= 0x20;
+                }
+            }
+        } else if (!(flags & 0x80)) {
+            actor[0x7F]++;
+        }
+    }
+}
 
 extern void func_841054D4(void);
 extern void func_84105B90(u8 *);
