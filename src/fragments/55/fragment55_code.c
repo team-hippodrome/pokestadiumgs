@@ -1,5 +1,27 @@
 #include "global.h"
 
+typedef struct {
+    s32 mode;
+    u8 unk04[0xC];
+    s32 time;
+    u8 unk14[8];
+    f32 unk1C;
+    u8 unk20[4];
+    f32 unk24;
+    u8 unk28[8];
+    s32 transition_mode;
+    u8 unk34[8];
+    s32 animation_frame;
+    u8 unk40[8];
+    s32 exit_result;
+} Stage55MainState;
+extern Stage55MainState gStage55MainState;
+
+typedef struct {
+    s32 resource_index;
+    s32 unk04[3];
+} Stage55Slot;
+
 typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
 typedef struct State86703DF4 {
     u8 pad00[0x08];
@@ -21,6 +43,7 @@ extern u8 *func_8004CA60(u8 *);
 extern void GeoRender_ApplyMaterialState(void);
 extern u8 D_8670BA40[];
 extern u8 D_8670B660[];
+extern void func_8003F114(u8 *, s16, s16, void *);
 void func_86700020(s32 arg0, s32 arg1) {
     if (arg0 == 5) {
         gDPPipeSync(D_800D0510++);
@@ -50,7 +73,48 @@ void func_867000C8(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670018C.s")
+extern void *D_8009491C;
+extern s32 D_8670B394;
+extern s32 D_8670C958;
+extern u32 func_8003570C(void);
+extern void GeoRender_ApplyMaterialState(void);
+extern s32 func_8004C990(s32, s32);
+extern u8 * func_8004CA60(u8 *);
+extern Gfx * D_800D0510;
+void Stage55_DrawAnimatedResource(s32 arg0, s32 arg1) {
+    u32 advance;
+    s32 frame;
+    s32 resource;
+    u8 *context;
+    if (arg0 == 0) {
+        func_8004C990(205, 0);
+    }
+    if (arg0 == 5) {
+        context = D_8009491C;
+        if (*(u32 *)(context + 0x14) >= 72) {
+            *(u32 *)(context + 0x14) = 0;
+        }
+        frame = (*(u32 *)(context + 0x14)) / 3;
+        if (frame >= 12) {
+            frame = 0;
+            if (D_8670B394 == 0) {
+                advance = func_8003570C() & 1;
+                (*(u32 *)(context + 0x14)) += advance;
+            }
+        } else if (frame >= 6) {
+            frame = 11 - frame;
+        }
+        resource = func_8004C990(205, frame);
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        gSPSegment(D_800D0510++, 15, func_8004CA60((u8 *)resource));
+        gSPDisplayList(D_800D0510++, D_8670C958);
+        GeoRender_ApplyMaterialState();
+        if (D_8670B394 == 0) {
+            (*(u32 *)(context + 0x14))++;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -444,7 +508,53 @@ void func_867086EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86708EDC.s")
+extern Row86706A30 D_867111C0[];
+extern s32 D_8670BBB0;
+extern s32 D_8670D880;
+extern s32 func_87F08208(void *);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_8003F210(void *, s32);
+extern void StageContext_SetClearColor(u16);
+extern void func_800225C4(s32);
+extern void func_800226C0(s32);
+extern void func_800279C4(u16);
+extern s32 StageFade_StartFromTransparent(s32);
+extern s32 D_8670BB48;
+void Stage55_UpdateTransition(void) {
+    s32 result;
+    s32 index;
+    D_8670BBB0++;
+    if (D_8670BBB0 > 200) {
+        D_8670BBB0 = 0;
+    }
+    result = func_87F08208(&D_8670D880);
+    switch (result) {
+    case 1:
+        for (index = 0; index < 4; index++) {
+            func_8003F210(&D_867111C0[index], 1);
+            ModelAnim_SetSpeed((u8 *)&D_867111C0[index], 0x50000);
+            if (*(s32 *)((u8 *)&D_86728408[index] + 0x98) == 206) {
+                func_8003F210(&D_867111C0[index], 7);
+                D_86728408[index].unk2C = 10;
+                ModelAnim_SetSpeed((u8 *)&D_867111C0[index], 0x20000);
+            }
+        }
+        StageContext_SetClearColor(0xFFFF);
+        StageFade_StartFromTransparent(20);
+        gStage55MainState.mode = 10;
+        func_800225C4(40);
+        func_800279C4(0xCF0B);
+        break;
+    case 2:
+        gStage55MainState.mode = 2;
+        gStage55MainState.transition_mode = 1;
+        gStage55MainState.exit_result = 0;
+        StageContext_SetClearColor(0xFFFF);
+        StageFade_StartFromTransparent(10);
+        func_800226C0(3);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -530,7 +640,46 @@ void func_8670972C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86709934.s")
+extern Stage55Slot D_8670C980[4][60];
+extern Row86706A30 D_86711760[4][60];
+extern s32 D_8670FF08[];
+extern void func_87F0277C(void *);
+extern u8 D_8670D948[];
+extern void func_867097D8(void);
+extern s32 D_8670BB84;
+extern s32 D_8670B394;
+extern s32 D_8670BB58;
+extern void func_8003F114(u8 *, s16, s16, void *);
+
+extern s32 D_8670BB48;
+extern u8 D_8670E5C0[];
+extern u8 D_8670F868[];
+void Stage55_UpdateResourcePools(void) {
+    s32 group;
+    s32 index;
+    func_87F0277C(D_8670D948);
+    func_87F0277C(D_8670F868);
+    func_87F0277C(D_8670E5C0);
+    if (D_8670B394 != 1) {
+        gStage55MainState.animation_frame++;
+        if (gStage55MainState.animation_frame >= 6) {
+            gStage55MainState.animation_frame = 0;
+        }
+        for (group = 0; group < 4; group++) {
+
+            for (index = 0; index < 60; index++) {
+                if (D_8670C980[group][index].resource_index != -1) {
+                    if (D_86711760[group][index].z < 450.0f) {
+                        func_8003F114((u8 *)&D_86711760[group][index], 0, -1, (void *)D_8670FF08[D_8670C980[group][index].resource_index]);
+                        D_8670C980[group][index].resource_index = -1;
+                    }
+                }
+            }
+        }
+        func_867097D8();
+        gStage55MainState.time++;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -583,7 +732,53 @@ void func_8670A404(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670A790.s")
+extern Row86706A30 D_867111C0[];
+extern Row86706A30 D_867100C8[];
+extern s32 D_8670FEC8[];
+extern s32 D_8670FF00;
+extern f32 D_8670C6C8;
+extern f32 D_8670C6CC;
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern s32 func_8003F210(void *, s32);
+extern void func_800086A4(s32);
+extern void func_80064D28(void);
+extern void func_86708720(void);
+extern s32 func_8670A4D4(s32);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern s32 D_8670BB48;
+extern f32 D_8670BE7C;
+extern s16 D_8670BE80;
+extern s16 D_8670BE84;
+extern void * D_8670FEB0;
+void Stage55_RunStage(void) {
+    s32 index;
+    func_800086A4(2);
+    if (*((u8 *)D_8670FEB0 + 0x2180) == 4) {
+        D_8670BE84 = 2773;
+        D_8670BE80 = -32764;
+        gStage55MainState.unk1C = D_8670C6C8;
+        gStage55MainState.unk24 = 160.0f;
+        D_8670BE7C = D_8670C6CC;
+        for (index = 0; index < 4; index++) {
+            func_8003F1DC(&D_867111C0[index]);
+            func_8003F114((u8 *)&D_86710C20[index], 0, -1, (void *)D_8670FEC8[index]);
+            func_8003F114((u8 *)&D_867100C8[index], 0, -1, (void *)D_8670FF00);
+            ModelAnim_SetEventFrame((u8 *)&D_86710C20[index], 0);
+            func_8003F210((u8 *)&D_86710C20[index], 0);
+            ModelAnim_SetFrame((u8 *)&D_86710C20[index], guRandom() % 25);
+            D_86728408[index].unk2C = 0;
+        }
+    }
+    StageFade_StartFromOpaque(10);
+    while (1) {
+        func_80064D28();
+        func_86708720();
+        gStage55MainState.mode = func_8670A4D4(gStage55MainState.mode);
+        if (gStage55MainState.mode == 3) { break; }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -616,7 +811,7 @@ M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 M2C_UNK func_8004C8C0(M2C_UNK);                     /* extern */
 M2C_UNK func_86706E34();                            /* extern */
-M2C_UNK func_8670A790();                            /* extern */
+void Stage55_RunStage(void);                            /* extern */
 M2C_UNK func_87F00030();                            /* extern */
 M2C_UNK func_87F01F34(u8 *);                      /* extern */
 M2C_UNK func_87F06EAC(M2C_UNK, M2C_UNK *, u8 *);  /* extern */
@@ -664,7 +859,7 @@ s32 func_8670A96C(s32 arg0, u8 *arg1) {
     func_87F0C980();
     func_86706E34();
     func_80008514(sp24);
-    func_8670A790();
+    Stage55_RunStage();
     func_80008574();
     func_80047610();
     func_8004C398();

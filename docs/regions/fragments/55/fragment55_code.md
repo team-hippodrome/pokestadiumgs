@@ -50,3 +50,83 @@ Validation: default host syntax checks, `make rom COMPARE=1 -j2`, and explicit `
   sin[yaw] * d, sin[pitch] * r, bb+0x20..0x28, D_8670BE88)` with `r = d *
   cos[yaw]` from `D_80088E50`/`D_80087E50`. Retail keeps the distance in
   `f14` and loads the `D_8670BE84` index first.
+
+## 2026-10-28 native worker: three genuine C owners
+
+Verified from base `a3884b41a6c4526790213ca0061ae61f7e603788` on
+`codex/reset-native-stage55-20261028`, using the unmodified native IDO 7.1
+compiler, SHA256
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`.
+
+- `func_8670018C` (396 bytes, 0x38 frame): resource 205 drawing callback.
+  The unsigned tick at context +0x14 wraps at 72; the first 36 ticks select
+  forward/reverse frames, and later ticks select frame zero. With
+  `D_8670B394 == 0`, it adds a random low bit during the later interval and
+  increments the tick after drawing. Four used locals in declaration order
+  `advance`, `frame`, `resource`, `context` give the retail spill slots.
+- `func_86709934` (412 bytes, 0x48 frame): updates three entry pools, cycles
+  the resource frame counter modulo six, and processes four banks of 60
+  model slots. A live resource index and z <450 cause `func_8003F114` and
+  reset the index to -1. `D_8670BB84` and `D_8670BB58` are fields at +0x3C
+  and +0x10 of the state rooted at `D_8670BB48`; accessing that containing
+  record reproduces retail address generation. Independent scalar accesses
+  materialized a different base register. The frame counter is consumed by
+  `func_86700318`; the time counter is consumed by `func_86703F9C`.
+- `func_8670A790` (476 bytes, 0x40 frame): initializes four rows when the
+  incoming context byte +0x2180 equals four, starts the opaque fade, then
+  updates the stage until `func_8670A4D4` returns state three. Its existing
+  later declaration now returns void. `func_8003F210` uses the integer-return,
+  32-bit animation-index contract of its alias `ModelAnim_SetAnimation` in
+  `src/340C0.c`; its return is ignored here.
+
+Each candidate batch passed unchanged-module and +20-leading-blank-line
+controls over sections, bytes, symbol extents and relocations. Accepted
+owners passed sequential full-ROM gates, including relocation-addend
+resolution, with host syntax checks enabled. The post-cleanup checkpoint
+also passed native `make COMPARE=1 RUN_CC_CHECK=1`; retail MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. No rewrite, schedule patch, forced
+register, unused local, padding helper or fabricated argument was added.
+
+Sealed receipts in the worker's private worktree:
+
+- `scratch/b09934-v5/gate-0/receipt.json`
+- `scratch/b0018c-v4/gate-0/receipt.json`
+- `scratch/b0a790-v2/gate-0/receipt.json`
+- `scratch/checkpoint-3/receipt.json` (all three after cleanup)
+
+The checkpoint directory also contains source, object, ELF, map, ROM,
+`gate.log` and `provenance.json`. These private artifacts are for parent
+integration and are not repository inputs.
+
+### Fourth owner: `func_86708EDC`
+
+The two-case `switch` on `func_87F08208` matches all 356 bytes with the 0x38
+frame. Result one selects animation one and speed 0x50000 for four rows;
+rows whose state +0x98 equals 206 instead select animation seven, mode ten,
+and speed 0x20000. It starts the transparent fade and advances the main
+state. Result two writes main-state words +0, +0x30 and +0x48 and starts
+the shorter fade. The counter at `D_8670BBB0` wraps after 200.
+
+`func_87F08208`'s result contract is visible in
+`src/fragments/64/fragment64_3290A0.c`; the model animation/speed signatures
+are visible in `src/340C0.c`, and the clear-color and audio argument widths
+in `src/8470.c` and `src/229E0.c`. These existing contracts determine the
+prototypes; return categories are not allocation hints.
+
+The individual sealed gate is `scratch/b08edc-v1/gate-0/receipt.json`.
+`scratch/checkpoint-4/receipt.json` seals all four owners after formatting
+cleanup, with matching retail MD5, the compiler identity above and
+`RUN_CC_CHECK=1`. Its `provenance.json` ties every removed pragma to an
+accepted canonical-runner result. Coverage and shared symbol/layout files
+are unchanged.
+
+Parent review: use a typed external main-state prefix with observed fields
+through +0x48. `gStage55MainState = D_8670BB48` is a data compatibility alias;
+no storage is allocated. New state accesses use real fields for transition
+mode/result and the two float parameters, preserving every module byte,
+extent and relocation modulo that alias, including a +20blank control.
+Descriptive names keep original address-keyed function entries as aliases.
+- `func_8670018C` → `Stage55_DrawAnimatedResource`.
+- `func_86708EDC` → `Stage55_UpdateTransition`.
+- `func_86709934` → `Stage55_UpdateResourcePools`.
+- `func_8670A790` → `Stage55_RunStage`.
