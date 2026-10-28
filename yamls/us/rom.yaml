@@ -1365,6 +1365,8 @@
     - [0x2E1080, textbin, fragments/60/fragment60_header]
     - [0x2E10A0, c,       fragments/60/fragment60_code]
     - [0x2EE550, data,    fragments/60/fragment60_data]
+    - [0x2F0430, .rodata, fragments/60/fragment60_code] # Jump tables, float literals, double literals.
+    - [0x2F0900, rodata]
 
   - name: fragment61
     type: code
