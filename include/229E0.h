@@ -939,7 +939,7 @@ void Audio_ThreadMain(void *unused) ;
 
 extern void Audio_ThreadMain(void *);
 extern OSThread D_80122B20;
-extern u8 D_80124D00[];
+extern s32 D_80124D00[19];
 void Thread4_CreateThread(void) ;
 
 extern void func_80021BBC(void);
