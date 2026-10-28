@@ -402,7 +402,51 @@ void func_88220400(s32 mode, u8 *list) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882204F8.s")
+extern void func_88220050(s32, u8 *);
+extern s32 func_88202FD4(void *, void *);
+extern void _bzero(void *, s32);
+extern s32 func_80063754(s32);
+extern s32 func_88220248(u8 *arg0);
+extern s32 func_882202E8(u8 species, u8 item);
+extern void func_88220400(s32 mode, u8 *list);
+extern s32 D_882345F4;
+extern u32 D_882347F0;
+void func_882204F8(s32 mode, u8 *list) {
+    s32 kind = mode;
+    u32 i;
+    u8 **entry;
+    u8 *flags;
+    s32 ok;
+
+    switch (mode) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        func_88220050(kind, list);
+        break;
+    case 4:
+    case 5:
+        func_88220400(kind, list);
+        break;
+    }
+    _bzero((u8 *)D_882347F0 + 0x9C, *(s16 *)(list + 4));
+    if (kind == 1 || kind == 2) {
+        flags = (u8 *)D_882347F0 + 0x9C;
+        for (i = 0, entry = *(u8 ***)list; i < *(s16 *)(list + 4); i++, entry++, flags++) {
+            if (mode == 1) {
+                ok = func_88202FD4((void *)D_882345F4, *entry) == 0;
+            } else {
+                ok = func_80063754(**entry) && func_88220248((u8 *)D_882345F4) == 0;
+            }
+            if (ok) {
+                *flags = 1;
+            } else if (mode == 2 && func_882202E8(**entry, ((u8 *)D_882345F4)[8]) != 0) {
+                *flags = 2;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882206A0.s")
 #endif
