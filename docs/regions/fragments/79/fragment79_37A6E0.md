@@ -725,3 +725,17 @@ Both follow the accepted `func_8410C720` spelling (raw offsets, `target`/
 
 Both need 8 or 16 extra frame bytes: an unused `s32 pad[2]` (C840) or
 unused `f32 pos[3]` (D088), each marked `// FAKE`.
+
+## func_8410CC90: requeue at 0.79 (2026-10-28)
+
+It is the `func_8410B420` prologue (`D_841911E8 = func_8410B330(arg0)`, then
+`func_8411E140(arg1)` when `func_8411DC80(arg1[0x61F], &D_8418393C, 8)` succeeds).
+After that it zeroes `+0x44`, sets 45.0f at `arg0 + 0x2C` and `+0x88`, and
+duplicates `arg0 + 0xA8` into `+0x68`. Retail's then-block ends in
+`lui t0; b join; addiu t0` (an explicit branch to the next block, with the
+`&D_841911E8` base in `t0`), and the `arg1` reload is in the `beqz` delay slot.
+Ours falls through with the base in `v1`. These made no difference:
+- an empty `else`
+- a dead `else` assignment like `func_8410B420`'s `var_s2`
+- `&&` and ternary expression statements
+- a `goto`

@@ -45,7 +45,44 @@ s32 func_87F0AD98(func_87F0AD98Row *arg0, s32 arg1, s32 arg2) {
     return func_8006456C(*(u16 *)(entry + 0x16));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32D7D0/func_87F0ADE0.s")
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern void *MainPool_AllocAligned(void *, s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void func_87F024F4(void *, u8 *, s32);
+void func_87F0ADE0(u8 *arg0, u32 count) {
+    u8 *nodes;
+    u32 i;
+    u8 *extra;
+    void *pool;
+    u8 *node;
+    u8 *link;
+    s32 *clr;
+
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    nodes = MainPool_AllocAligned(pool, count * 396, 4);
+    extra = MainPool_AllocAligned(pool, count * 16, 4);
+    MainPool_FinalizeAllocation(pool);
+    *(u8 **)(arg0 + 0x14) = extra;
+    func_87F024F4(arg0, nodes, count);
+    i = 0;
+    if (count != 0) {
+        node = nodes;
+        link = extra;
+        clr = (s32 *)extra;
+        do {
+            *(u8 **)(node + 0x38) = link;
+            i++;
+            link += 16;
+            node += 396;
+            clr += 4;
+            clr[-4] = 0;
+            clr[-3] = 0;
+            clr[-2] = 0;
+            clr[-1] = 0;
+        } while (i < count);
+    }
+}
 
 extern u8 *func_87F025B8(void *, void *);
 extern s32 func_87F08E7C(u16, u16, u8, u8, s32);

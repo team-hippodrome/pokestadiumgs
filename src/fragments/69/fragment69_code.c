@@ -614,7 +614,85 @@ void func_8F101FF4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F1020A4.s")
+extern s32 D_8F1DECA0;
+extern u8 D_8F1DECA8;
+extern void *D_8F1DECB4;
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE2C;
+extern s32 D_8F1DEE34;
+extern s32 ModelAnim_SetResourceAnimation(s32, u8 *, s32);
+extern s32 ModelAnim_IsFinished(u8 *);
+extern void func_80024974();
+// Debug animation selector for D_8F1DECA8. D-pad left/right steps D_8F1DEE2C through the
+// animation count at byte 4 of the record returned by the callback at D_8F1DECB4 + 0x2C,
+// wrapping at both ends. A plays the selected animation once (mode 0) and calls
+// func_80024974 with D_8F1DEE24 when that is 1-251; C-left replays it each time
+// ModelAnim_IsFinished reports the end (mode 1); C-right alternates it with animation 0
+// (mode 2). Input is read only while D_8F103988 is -1.
+void func_8F1020A4(void) {
+    void *object;
+    void *state;
+
+    object = D_8F1DECB4;
+    state = (*(void *(**)(s32, s32))((u8 *)object + 0x2C))(0, 0);
+    if (*((u8 *)state + 4) > 0) {
+        if (D_8F103988 == -1) {
+            if (D_80087200->buttonsRepeat & L_JPAD) {
+                D_8F1DEE2C--;
+            }
+            if (D_80087200->buttonsRepeat & R_JPAD) {
+                D_8F1DEE2C++;
+            }
+            if (D_8F1DEE2C < 0) {
+                D_8F1DEE2C = *((u8 *)state + 4) - 1;
+            } else if (D_8F1DEE2C >= *((u8 *)state + 4)) {
+                D_8F1DEE2C = 0;
+            }
+            if (D_80087200->buttonsPressed & A_BUTTON) {
+                D_8F1DEE34 = 0;
+                D_8F1DEE28 = D_8F1DEE2C;
+                ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, -1);
+                ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+                if (D_8F1DEE24 > 0 && D_8F1DEE24 < 252) {
+                    // FAKE: `^ 0` on D_8F1DEE24; diff score 135 without it.
+                    func_80024974(0, D_8F1DEE24 ^ 0, D_8F1DEE28, 0, 0);
+                }
+            } else if (D_80087200->buttonsPressed & L_CBUTTONS) {
+                D_8F1DEE34 = 1;
+                D_8F1DEE28 = D_8F1DEE2C;
+                ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, -1);
+                ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+            } else if (D_80087200->buttonsPressed & R_CBUTTONS) {
+                D_8F1DEE34 = 2;
+                D_8F1DEE28 = D_8F1DEE2C;
+                ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, -1);
+                ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+            }
+        }
+        if (D_8F1DEE28 != -1) {
+            switch (D_8F1DEE34) {
+                case 1:
+                    if (ModelAnim_IsFinished(&D_8F1DECA8) != 0) {
+                        ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, -1);
+                        ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+                    }
+                    break;
+
+                case 2:
+                    if (ModelAnim_IsFinished(&D_8F1DECA8) != 0) {
+                        if (D_8F1DEE28 != 0) {
+                            D_8F1DEE28 = 0;
+                        } else {
+                            D_8F1DEE28 = D_8F1DEE2C;
+                        }
+                        ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, -1);
+                        ModelAnim_SetResourceAnimation(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+                    }
+                    break;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

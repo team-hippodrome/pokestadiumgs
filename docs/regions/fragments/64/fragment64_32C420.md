@@ -35,7 +35,7 @@ callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_87F097B0` → `Fragment64_IncrementMatchingCounters`.
 
-## 2026-10-28 — motion owner requeue
+## 2026-10-28 — motion owner progression (resolved below)
 
 `func_87F098F4` remains `requeue`, not installed. Target: 162 instructions /
 648 bytes, frame 0x18. Best canonical candidate is
@@ -51,13 +51,44 @@ at `src/229E0.c`; the M2C-suggested second argument was only a live pointer.
 An ordinary five-case switch emits a new jump table absent from retail.
 An early inactive-state return followed by a sparse switch recovers the
 linear dispatcher without a layout edit. Distinct old/new frame snapshots
-then recover the two counter updates. Remaining differences include the
-alpha calculation: retail divides by eight, while the current candidate
-multiplies by its reciprocal, and the unsigned conversion's branch/transfer
-shape differs. Separate consumed opacity temporaries and signed-byte views
-worsen the result (652 bytes); integer/float-cast divisor spellings are equal.
+then recover the two counter updates. The initial sparse-switch source
+lowered alpha division by eight to a
+reciprocal multiply. Integer-divisor spelling restores the actual divide
+and unsigned-byte conversion. The counter-lifetime frontier still placed
+its increment/store before geometry. Moving both after the width calculation
+produces the complete opcode sequence: 648 bytes, frame 0x18, normalized 1.0 /
+raw 0.7963. Only register allocation differs. Latest source:
+`scratch/parent64-motion-geometry-counts.json`, index 0. Stock IDO 5.3 and 7.1 produce
+identical candidate bytes and preserve the known module text and section
+layout; there is no current
+compiler-lineage evidence for the residual.
 
-Next: calibrate the real float-division and byte-conversion expression forms
-against the verified packed-color producer and stock compiler pass output.
+Next: trace consumed frame-assignment result and temporary-register webs
+with a calibrated stock compiler pass observer.
 Do not fabricate occupancy, ABI hints, dead guards, padding or output patches.
 Private canonical manifests/results retain all source variants and diagnostics.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_87F098F4` → `Fragment64_AdvancePanelAnimation`.
+
+## 2026-10-28 — motion owner accepted
+
+`func_87F098F4` → `Fragment64_AdvancePanelAnimation`: 648 bytes / 162
+instructions, frame 0x18. Canonical batch
+`parent64-motion-both-fields`, label
+`motion:both-frame-fields:direct0-tail0`, accepted through the sequential
+full-ROM gate. The initial relocation-only probe difference was not used
+as proof: the retail ROM comparison passed with MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Explicit host syntax checking also passed.
+
+The resolving source shape increments and tests the actual frame field in
+both the expansion and fade states. Cached old frames remain consumed by
+the angle/alpha calculations; no next-frame local, unused assignment, ABI
+hint, output rewrite, or padding is required. The real one-argument
+`Audio_PlayDefaultSound(u16)` declaration also replaces the stale s32
+prototype for the whole module. Integer `/ 8` retains the retail floating
+division. Normal and +20blank whole-module naming/extern cleanup controls
+preserve all allocated bytes, function extents and relocation topology
+modulo the reviewed compatibility alias. Stock IDO 7.1, unchanged flags.

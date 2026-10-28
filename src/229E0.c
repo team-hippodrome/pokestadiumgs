@@ -29,7 +29,18 @@ s32 func_8002263C(void) {
     return 0x61;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_80022644.s")
+extern f32 D_800A2664;
+void func_80022644(u32 arg0) {
+    f32 volume;
+
+    if (arg0 != 0 && arg0 < 0x62) {
+        volume = func_80021DE0(arg0);
+        func_80018728(((u8)(arg0 + 0x27) << 8) | 0x82000000, 0);
+        func_80018704(0x41000000, volume * D_800A2664);
+    }
+}
+
+#pragma C_FUNCTION_PADDING(4)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800226C0.s")
 
@@ -274,7 +285,7 @@ void func_800251F8(s32 arg0) {
     switch (arg0) {
     case 0:
         func_80018728(0x82040700U, 0);
-        func_80018704(0x41040000, 0x3F2147AE);
+        func_80018704(0x41040000, 0.63f);
         return;
     case 1:
         func_80018728(0x83040000U, 0);
@@ -282,7 +293,7 @@ void func_800251F8(s32 arg0) {
     case 2:
         func_80018728(0x83040000U, 0);
         func_80018728(0x82040700U, 0);
-        func_80018704(0x41040000, 0x3F2147AE);
+        func_80018704(0x41040000, 0.63f);
         return;
     default:
         return;
@@ -582,7 +593,7 @@ void Audio_ResetCategoryState(void) {
     D_80090B6C = -1;
     D_80090B70 = -1;
     func_80018728(0x82010000U, 0);
-    func_80018704(0x41010000, 0x3F2147AE);
+    func_80018704(0x41010000, 0.63f);
     D_80090B80 = 1;
     switch (D_80090B60) {
     case 2:
@@ -592,27 +603,27 @@ void Audio_ResetCategoryState(void) {
     case 9:
     case 10:
         func_80018728(0x82040500U, 0);
-        func_80018704(0x41040000, 0x3F2147AE);
+        func_80018704(0x41040000, 0.63f);
     case 1:
     case 4:
         if (D_80090B9C == 0) {
             func_80018728(0x82020400U, 0);
-            func_80018704(0x41020000, 0x3F2147AE);
+            func_80018704(0x41020000, 0.63f);
             D_80090B9C = 1;
         }
         break;
     case 12:
         func_80018728(0x82030800U, 0);
-        func_80018704(0x41030000, 0x3F3851EC);
+        func_80018704(0x41030000, 0.72f);
         break;
     case 0:
         func_80018728(0x82020600U, 0);
-        func_80018704(0x41020000, 0x3F25E354);
+        func_80018704(0x41020000, 0.648f);
         break;
     }
     if (D_80090B60 == 3 || D_80090B60 == 4 || D_80090B60 == 6) {
         func_80018728(0x82030300U, 0);
-        func_80018704(0x41030000, 0x3F43D70A);
+        func_80018704(0x41030000, 0.765f);
         func_800187AC();
         func_80025E7C();
     }
@@ -624,16 +635,16 @@ void Audio_ResetCategoryState(void) {
             break;
         case 12:
             func_80018728(0x82040200U, 0);
-            func_80018704(0x41020000, 0x3F800000);
+            func_80018704(0x41020000, 1.0f);
             break;
         case 8:
             func_80018728(0x82040200U, 0);
-            func_80018704(0x41020000, 0x3F800000);
+            func_80018704(0x41020000, 1.0f);
             func_80018728(0x82020100U, 0);
-            func_80018704(0x41020000, 0x3F2147AE);
+            func_80018704(0x41020000, 0.63f);
             func_80018728(0x82010A00U, 0);
             func_80018728(0x82010000U, 0);
-            func_80018704(0x41010000, 0x3F2147AE);
+            func_80018704(0x41010000, 0.63f);
             D_80090B80 = 1;
             func_80024D44();
             func_80018728(0x82032300U, 0);

@@ -1221,7 +1221,32 @@ void func_8690B848(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690B89C.s")
+extern s32 D_8691AB68[4];
+extern u8 D_8690FA20[];
+extern void func_87F0C930(void *);
+extern void func_87F0A098(void *, void *, s32, s32, s32, s32, s32);
+void func_8690B89C(void) {
+    s32 *p;
+    s32 max;
+    s32 i;
+
+    max = -1;
+    for (p = (s32 *)D_8691A2A0; p < (s32 *)(D_8691A2A0 + 0x10); p++) {
+        if (max < p[10]) {
+            max = p[10];
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (max == ((s32 *)D_8691A2A0)[i + 10]) {
+            D_8691AB68[i] = 1;
+        }
+    }
+    if (*(u8 *)(*(u8 **)(D_8691AD58 + 0xC) + 0x2180) == 4) {
+        func_87F0C930(D_8691AD58 + 0x14);
+    } else {
+        func_87F0A098(D_8690FA20, *(void **)(D_8691AD58 + 0xC), 7, D_8691AB68[0], D_8691AB68[1], D_8691AB68[2], D_8691AB68[3]);
+    }
+}
 #endif
 
 #ifdef VERSION_US

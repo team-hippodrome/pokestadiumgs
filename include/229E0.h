@@ -100,7 +100,7 @@ void func_80024E8C(s32 arg0) ;
  * also carry 3 extra .late_rodata padding words ahead of jtbl_800A32C0. See
  * the comment in hand_asm/229E0/func_80024F20_manual.s for why. */
 
-extern void func_80018704(s32, s32);
+extern void func_80018704(s32, f32);
 void func_800251F8(s32 arg0) ;
 
 void func_80025848(s32 arg0) ;
@@ -356,21 +356,27 @@ s32 func_80028E60(u32 arg0)
 
 void func_80028EA8(void) ;
 
-// Command/event queues and their battle-response snapshots occupy one BSS run.
-// Legacy address labels refer to the corresponding fields through aliases.ld.
+// Ten-word sound command queue at 0x800D1A90; Audio_UpdateCommandQueue consumes it.
+//@src/2C1B0.c
+extern s32 gAudioCommandQueue[10];
+
+// Battle event queue and its response snapshots at 0x800D1AB8, directly after
+// gAudioCommandQueue; func_8002C2A0 appends to event_queue and func_8002C2E0 drains it.
+// The queue is its own symbol: func_8002C2E0 walks it with a pointer that starts at
+// 0x800D1AB8 (displacement 0), which a field at offset 40 of a larger struct does not
+// produce. Legacy address labels refer to the fields through linker_scripts/us/aliases.ld.
 //@src/2C1B0.c
 typedef struct {
-    s32 command_queue[10];
-    s16 event_queue[10];
-    u8 unk_3C[2];
-    u8 unk_3E[2];
-    u8 unk_40[2];
+    u16 event_queue[10];
+    u8 unk_14[2];
+    u8 unk_16[2];
+    u8 unk_18[2];
     u8 result_code;
     s32 hp_delta;
     u32 history[24];
     u8 active_slot[2];
-    u8 unk_AA;
-    u8 unk_AB;
+    u8 unk_82;
+    u8 unk_83;
 } AudioQueuedState;
 extern AudioQueuedState gAudioQueuedState;
 void Audio_ClearCommandQueue(void);
@@ -436,7 +442,6 @@ extern u8 D_80091EEC[];
 void Audio_RequestSlot(u8 slot) ;
 
 extern u32 D_80091A2C;
-extern s16 D_800D1AB8[];
 void func_8002C2A0(unsigned short arg0)
 ;
 
@@ -455,7 +460,7 @@ extern u32 D_80091A20;
 extern u32 D_80091A30;
 extern u8 D_80091A34;
 extern u8 D_80091A44;
-typedef struct { u8 unk00[38]; u16 unk26; } unk_D_800D1B88;
+typedef struct { u8 unk00[38]; u16 unk26; u16 unk28; } unk_D_800D1B88;
 extern unk_D_800D1B88 *D_800D1B88[2];
 extern s32 func_80019230(s32, s32, s32);
 // Service queued sound/wait commands and the enabled timed command sequence.
