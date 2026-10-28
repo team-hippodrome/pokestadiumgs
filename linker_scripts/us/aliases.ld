@@ -1063,26 +1063,59 @@ D_8600D9B8 = D_8600D9B0 + 8;
 /* Audio context (Ocarina of Time / Majora's Mask gAudioContext); src/14640.c reads it typed. */
 gAudioContext = D_8011BE90;
 
-// Interior labels of the queued-audio BSS state; offsets follow AudioQueuedState.
-D_800D1A90 = gAudioQueuedState;
-D_800D1A94 = gAudioQueuedState + 4;
-D_800D1A98 = gAudioQueuedState + 8;
-D_800D1AB8 = gAudioQueuedState + 40;
-D_800D1ABA = gAudioQueuedState + 42;
-D_800D1ABC = gAudioQueuedState + 44;
-D_800D1ACC = gAudioQueuedState + 60;
-D_800D1ACE = gAudioQueuedState + 62;
-D_800D1AD0 = gAudioQueuedState + 64;
-D_800D1AD2 = gAudioQueuedState + 66;
-D_800D1AD4 = gAudioQueuedState + 68;
-D_800D1AD8 = gAudioQueuedState + 72;
-D_800D1ADC = gAudioQueuedState + 76;
-D_800D1AE0 = gAudioQueuedState + 80;
-D_800D1AE4 = gAudioQueuedState + 84;
-D_800D1B34 = gAudioQueuedState + 164;
-D_800D1B38 = gAudioQueuedState + 168;
-D_800D1B3A = gAudioQueuedState + 170;
-D_800D1B3B = gAudioQueuedState + 171;
+// Interior labels of the command queue and queued-audio BSS state (src/2C1B0.c);
+// gAudioQueuedState offsets follow AudioQueuedState.
+D_800D1A90 = gAudioCommandQueue;
+D_800D1A94 = gAudioCommandQueue + 4;
+D_800D1A98 = gAudioCommandQueue + 8;
+D_800D1AB8 = gAudioQueuedState;
+D_800D1ABA = gAudioQueuedState + 2;
+D_800D1ABC = gAudioQueuedState + 4;
+D_800D1ACC = gAudioQueuedState + 20;
+D_800D1ACE = gAudioQueuedState + 22;
+D_800D1AD0 = gAudioQueuedState + 24;
+D_800D1AD2 = gAudioQueuedState + 26;
+D_800D1AD4 = gAudioQueuedState + 28;
+D_800D1AD8 = gAudioQueuedState + 32;
+D_800D1ADC = gAudioQueuedState + 36;
+D_800D1AE0 = gAudioQueuedState + 40;
+D_800D1AE4 = gAudioQueuedState + 44;
+D_800D1B34 = gAudioQueuedState + 124;
+D_800D1B38 = gAudioQueuedState + 128;
+D_800D1B3A = gAudioQueuedState + 130;
+D_800D1B3B = gAudioQueuedState + 131;
+
+// Labels inside the BSS spans that src/2C1B0.c defines as D_800D1B40, D_800D1B64,
+// D_800D1B68, D_800D2610, D_800D2618 and D_800D2620.
+D_800D1B5E = D_800D1B40 + 30;
+D_800D1B60 = D_800D1B40 + 32;
+D_800D1B62 = D_800D1B40 + 34;
+D_800D1B65 = D_800D1B64 + 1;
+D_800D1B6A = D_800D1B68 + 2;
+D_800D1B6C = D_800D1B68 + 4;
+D_800D1B6E = D_800D1B68 + 6;
+D_800D1B70 = D_800D1B68 + 8;
+D_800D1B78 = D_800D1B68 + 16;
+D_800D1B7C = D_800D1B68 + 20;
+D_800D1B80 = D_800D1B68 + 24;
+D_800D1B84 = D_800D1B68 + 28;
+D_800D1B88 = D_800D1B68 + 32;
+D_800D1B8C = D_800D1B68 + 36;
+D_800D1B90 = D_800D1B68 + 40;
+D_800D1B98 = D_800D1B68 + 48;
+D_800D1BEC = D_800D1B68 + 132;
+D_800D1C40 = D_800D1B68 + 216;
+D_800D1C48 = D_800D1B68 + 224;
+D_800D2128 = D_800D1B68 + 1472;
+D_800D2608 = D_800D1B68 + 2720;
+D_800D260C = D_800D1B68 + 2724;
+D_800D2614 = D_800D2610 + 4;
+D_800D261C = D_800D2618 + 4;
+D_800D2621 = D_800D2620 + 1;
+D_800D2622 = D_800D2620 + 2;
+D_800D2627 = D_800D2620 + 7;
+D_800D2628 = D_800D2620 + 8;
+D_800D2629 = D_800D2620 + 9;
 
 // Compatibility entry for assembly callers of the command-queue clear.
 func_80031564 = Audio_ClearCommandQueue;
@@ -1150,3 +1183,5 @@ func_8AC0036C = Fragment43_TryGrantCompletionReward;
 func_800318FC = Party_CountLivingGroupMembers;
 func_84133B14 = Battle_ApplySwitchInState;
 func_8413DA18 = Battle_LoadPlayerDeck;
+
+func_87F098F4 = Fragment64_AdvancePanelAnimation;
