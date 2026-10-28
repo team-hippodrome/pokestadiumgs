@@ -198,7 +198,93 @@ void RecordSelection_LoadLevelMatchedParties(u8 *context) {
     } while (side != 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82601298.s")
+// Each side's 1,064-byte descriptor starts with its member count and owner bytes.
+typedef struct {
+    s16 count;
+    s8 owners[2];
+    u8 unk_04[4];
+    RecordSelectionWorkingEntry entries[12];
+} RecordSelectionPartyDescriptor;
+typedef char RecordSelectionPartyDescriptorSize[sizeof(RecordSelectionPartyDescriptor) == 1064 ? 1 : -1];
+extern u8 D_826163A0[];
+extern s32 D_82615344;
+extern void func_80055F6C(void *, s32);
+extern void func_80051D64(s32, s32);
+extern s32 func_80054E48(s32);
+extern void func_84302148(void *, u8, s32);
+extern void _bzero(void *, s32);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+extern void *func_8004C874(s32, s32);
+// Refresh names and metadata; unassigned parties also receive scaled stat experience.
+void RecordSelection_InitializePartyRecords(u8 *context, s32 enabled, s32 suppress_unassigned_flag, s32 profile, s32 update_history) {
+    s32 side;
+    s32 record;
+    s32 member;
+    s32 text_table;
+    s16 *count;
+    u8 *state;
+    s32 group;
+    s32 unassigned;
+    s32 initialize_flag;
+    s32 history_index;
+    u8 divisor;
+    RecordSelectionWorkingEntry *entry;
+    s8 *name;
+    u8 *descriptor;
+    if (enabled != 0) {
+        descriptor = context + 176;
+        side = 0;
+        do {
+            count = (s16 *)descriptor;
+            if (side == 0) text_table = 70;
+            else text_table = 71;
+            for (member = 0; member < *count; member++) {
+                state = *(u8 **)context;
+                if (((s8 *)state)[6] != 0) group = side * 2 + member;
+                else group = side;
+                unassigned = ((RecordSelectionPartyDescriptor *)count)->owners[member] == -1 ? 1 : 0;
+                initialize_flag = suppress_unassigned_flag != 0 ? 0 : unassigned;
+                if (unassigned == 0 && *(s16 *)(state + 136) != 0) continue;
+                if (unassigned == 0 && state[125] != 0) continue;
+                if (update_history != 0 && unassigned == 0 && member == 0) {
+                    history_index = *(s16 *)(state + 10) - 1;
+                    if (history_index >= 0 && history_index < 4) {
+                        if (D_826163A0[history_index + 16] < 250) {
+                            D_826163A0[history_index + 16]++;
+                            func_80055F6C(D_826163A0, D_82615344);
+                            func_80051D64(20, 0);
+                            func_80054E48(3);
+                            state = *(u8 **)context;
+                        }
+                    }
+                }
+                func_84302148(&((RecordSelectionWorkingGrid *)state)->groups[group][0], state[137], initialize_flag);
+                for (record = 0; record != 6; record++) {
+                    entry = &((RecordSelectionWorkingGrid *)*(u8 **)context)->groups[group][record];
+                    if (entry->species > 0 && entry->species < 254) {
+                        name = (s8 *)entry + 52;
+                        _bzero(name, 12);
+                        HAL_Strcpy(name, func_8004C874(text_table, entry->species - 1));
+                    }
+                    if (unassigned != 0) {
+                        switch (profile) {
+                        case 0: divisor = 4; break;
+                        case 1: divisor = 2; break;
+                        default: divisor = 1; break;
+                        }
+                        entry->hp_stat_exp /= divisor;
+                        entry->attack_stat_exp /= divisor;
+                        entry->defense_stat_exp /= divisor;
+                        entry->speed_stat_exp /= divisor;
+                        entry->special_stat_exp /= divisor;
+                        func_82600CF4(entry);
+                    }
+                }
+            }
+            side++, descriptor += 1064;
+        } while (side != 2);
+    }
+}
 
 // Owners -1/-2 select the indexed row or skip it; mode 0x400 selects paired rows.
 typedef struct {
@@ -858,7 +944,6 @@ void func_82603684(void) {
     func_80008648();
 }
 
-extern void func_80055F6C(s32 *, s32);
 extern s32 D_82615374;
 extern u8 D_826163C0;
 extern s32 func_8006CBB8(s32);

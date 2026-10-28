@@ -110,7 +110,31 @@ void GbAudio_UpdateNoiseRegisters(u8 channel) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_80033950.s")
+extern u8 D_800D2C6B;
+extern u8 D_800D2CA7;
+extern u8 D_800D2CE3;
+extern u8 D_800D2D1F;
+s32 func_80033950(void) {
+    if (D_800D2C6B & 1) {
+        return 1;
+    }
+    if (D_800D2CA7 & 1) {
+        return 1;
+    }
+    if (D_800D2CE3 & 1) {
+        return 1;
+    }
+    if (D_800D2D1F & 1) {
+        return 1;
+    }
+    return 0;
+}
+
+void func_800339CC(void) {
+}
+
+void func_800339D4(void) {
+}
 
 void func_800339DC(u8 arg0) {}
 

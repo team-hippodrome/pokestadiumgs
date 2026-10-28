@@ -545,3 +545,114 @@ extents, and semantic relocations. A subsequent named-source build with
 `COMPARE=1 RUN_CC_CHECK=1` and an explicit host syntax check also passes.
 Retail ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`. Coverage and tracked
 tooling are unchanged.
+
+### 2026-10-28 requeue: HP loop-induction replacement selection
+
+The follow-up on `0b6466c2` preserves both diagnostic parents in the current
+source context: their function bytes remain identical to the earlier
+252-byte and 248-byte captures. Logging-only IDO 7.1 controls pass fifteen
+complete-module section/byte/extent/relocation comparisons for the current
+known source and both parents, including stock, twenty-leading-blank stock,
+observer disabled, observer enabled, and twenty-leading-blank enabled.
+The pinned generated compiler source hash remains the one recorded above.
+No production compiler or emitted instruction is changed.
+
+The two parents both gain 33 expression-table entries during loop unrolling
+(53 to 86 and 49 to 82 respectively). Their final bulk-loop comparison tree
+still compares the scalar index and sum after induction elimination. Its
+replacement metadata differs: the retained parent selects the record-address
+expression, while the advancing parent selects its scaled integer index.
+At emission the former comparison has pointer datatype zero and the latter
+integer datatype six. This accounts for the missing address addition in the
+248-byte form; inspecting only the surviving scalar tree misses the cause.
+
+The calibrated trace follows the replacement search in `func_477e20` of the
+pinned optimizer. The retained parent accepts address-expression table entry
+39 (numeric opcode `0x41`) with induction factor 88. The advancing parent
+considers its corresponding address entry 35 but the relation check in
+`func_476ecc` returns -1; it then accepts scaled-index entry 34 (numeric
+opcode `0x5B`), also with factor 88. Thus the address is present in both
+parents: expression order alone does not explain the selection. The relation
+checker has a special variable-base check through `func_476e40`; its precise
+hash-entry condition is the next diagnostic target, not yet a proven source
+rule. Numeric opcode and datatype observations are not guessed enum names.
+
+Three further canonical batches contain 24 attempts. Four initial late-cache
+forms fail C89 declaration placement and are corrected in the following
+batch; they are context errors, not source-shape evidence. Immutable base/end
+pointer bindings, a preserved readonly byte-buffer argument, and late or
+direct typed-record views do not close the owner. The best stays 252 bytes,
+63 matching opcodes, and 45 matching instruction words. A calibrated
+single-worker 180-second source search stays at score 135; its only retained
+tie adds a redundant end-pointer copy and is rejected as a solution. No
+candidate passes to a retail gate or is installed.
+
+Next: inspect the base-variable eligibility check in `func_476e40` for both
+retained parents, then use the result to choose a genuine source-lifetime
+change. Do not repeat the pointer-constness or late-record-cache families,
+add fake storage, or treat opcode similarity as acceptance. Keep the owner
+as assembly until an ordinary C spelling passes the full ROM gate.
+
+### HP eligibility follow-up and box handoff
+
+The next calibrated logging-only control checks `func_476e40` directly.
+It returns one for the retained parent's original parameter and zero for
+the advancing parent's saved local. The corresponding variable-table nodes
+have a null versus non-null assignment pointer at offset 56. The optimizer's
+input-reader code records the defining statement at that offset. This is
+concrete evidence for the rejected base term, rather than an expression-order
+hypothesis. Fifteen stock/off/on/leading-blank whole-module controls pass
+again, with both parent instruction streams unchanged.
+
+Forty canonical follow-up attempts test guard-local cursor scope and
+initialization, reading the count through the cursor, ordinary C `register`
+hints on the parameter/sum/status roles, signed-int versus long sum/count
+and signed/unsigned status locals, and natural for/while/postincrement/
+preincrement scan forms. All reject without a gate. The best remains
+252 bytes with 45 of 63 exact words; guard-local cursor forms can be worse,
+and for/while forms can add two instructions. These roles and control forms
+must not be recycled unchanged. No candidate or compiler modification is
+installed, and the owner remains a `requeue` after box expiry.
+
+Next action for this owner: use the two retained parents and the proven
+base-assignment distinction to investigate a different frontend lifetime or
+expression-web mechanism. Any proposal must preserve the nonpositive-sum
+result and all HP reads and must avoid redundant pointer copies, synthetic
+reads, fake arguments, physical register binding, or emitted-byte changes.
+The older party-initialization owner is the next file-local working box.
+
+### Resolved: `82601298` party-record initialization
+
+`RecordSelection_InitializePartyRecords` is accepted at 980 bytes / 245
+instructions. When enabled, it walks the two 1,064-byte context descriptors
+and their signed member counts. The owner byte and state's layout byte
+select a six-record working group. Assigned parties skip preparation when
+the selected-state or preservation flag requires it. Eligible groups pass
+the initialization flag to `84302148`, refresh species-indexed names from
+text groups 70/71, and, for unassigned owners, divide all five stat-experience
+fields by 4, 2, or 1 before recalculating stats and current HP. The optional
+history path increments only one of four valid counters below 250, saves it,
+and refreshes the associated state.
+
+The shared working-record layout preserves the earlier 964-byte parent.
+An unsigned-byte divisor recovers the retail division sequence. The group
+selection needs an explicit if/else, and the owner and initialization flags
+need conditional expressions: initial-value-plus-if forms remove three
+retail branches. Ordering the actual local declarations recovers the
+side/member/header/descriptor stack homes; the comma outer-loop update
+recovers their load/store scheduling. This leaves four words that spill an
+implicit cursor at 68 instead of 64. A calibrated source search finds zero
+scores using redundant scalar copies/constants; those proposals are rejected.
+Reading the owner through the already captured header pointer resolves the
+four offsets with no added scalar, read, or storage. The original loops remain.
+
+The eight-candidate canonical header/cursor batch accepts its first candidate
+on `0b6466c2`, with an explicit normal host syntax check and a full native
+retail-ROM comparison. Naming, comments, and duplicate-prototype cleanup pass
+normal and twenty-leading-blank complete-module section/byte/extent/relocation
+comparisons. `80055F6C` uses its real `(void *, s32)` interface from
+`src/517E0.c`; `80054E48` retains its actual integer result, which this caller
+ignores. The first-success source, object, ROM, ELF, and map are frozen.
+Retail ROM MD5 remains `1561c75d11cedf356a8ddb1a4a5f9d5d`. No coverage change,
+unused local, fake interface, source unroll, instruction rewrite, or padding
+accompanies this owner.
