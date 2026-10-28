@@ -168,7 +168,43 @@ void func_8130EC94(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130EC9C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130EF88.s")
+extern u8 D_800CE060[];
+extern void func_800226C0(s32);
+void func_8130EF88(u8 *arg0) {
+    u8 *input = D_800CE060 + arg0[0x37] * 40;
+    u8 *counts = *(u8 **)(arg0 + 0x6C);
+    s32 dir = -1;
+    s32 cur;
+
+    *(f32 *)(arg0 + 0x30) = 12.0f;
+    cur = *(s8 *)(arg0 + 0x38);
+    if ((counts + cur)[2] == 0 || (*(u16 *)(input + 8) & 0xC000)) {
+        func_800226C0(3);
+        arg0[0x34] = 7;
+        return;
+    }
+    if (*(u16 *)(input + 8) & 8) {
+        dir = 0;
+    } else if (*(u16 *)(input + 8) & 1) {
+        dir = 1;
+    } else if (*(u16 *)(input + 8) & 4) {
+        dir = 2;
+    } else if (*(u16 *)(input + 8) & 2) {
+        dir = 3;
+    }
+    if (dir >= 0) {
+        if ((counts + dir)[2] > 0) {
+            if (dir == cur) {
+                func_800226C0(5);
+            } else {
+                func_800226C0(2);
+                *(s8 *)(arg0 + 0x38) = dir;
+            }
+        } else {
+            func_800226C0(5);
+        }
+    }
+}
 
 extern f32 func_816092FC(void);
 extern s32 func_8130CE30(u8 *arg0);
