@@ -1,5 +1,14 @@
 #include "global.h"
 
+// The fragment's work area; the pointers at 0xA170/0xA174 are the ones other functions read as
+// D_81331970/D_81331974.
+typedef struct unk_D_81327800 {
+    /* 0x0000 */ u8 unk_0000[0xA170];
+    /* 0xA170 */ u8 *unk_A170;
+    /* 0xA174 */ void *unk_A174;
+} unk_D_81327800;
+extern unk_D_81327800 D_81327800;
+
 
 #ifdef VERSION_US
 extern void *D_81331970;
@@ -10,7 +19,23 @@ void func_81302390(void *arg0) {
     func_81600A34(arg0, (u8 *)D_81331970 + 1, 1, 0, 0, 0x280, 0x46);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FA520/func_81302438.s")
+extern s32 func_81600DA8(void *, void *);
+extern void func_81600F0C(void *, s32, s32, s32, s32);
+extern void func_81700908(void);
+void func_81302438(void *arg0) {
+    if (func_81600DA8(arg0, D_81327800.unk_A170)) {
+        func_81600F0C(D_81327800.unk_A170, 0, 0, 640, 480);
+        func_81700908();
+        return;
+    }
+    if (func_81600DA8(arg0, D_81327800.unk_A170 + 2)) {
+        func_81600F0C(D_81327800.unk_A170, 0, 240, 640, 240);
+    }
+    if (func_81600DA8(arg0, D_81327800.unk_A170 + 1)) {
+        func_81600F0C(D_81327800.unk_A170, 0, 0, 640, 70);
+        func_81700908();
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FA520/func_8130251C.s")
 
@@ -39,12 +64,6 @@ void func_8130267C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FA520/func_813026D0.s")
 
-// The fragment's work area; its pointer at 0xA174 is the one the other functions read as D_81331974.
-typedef struct unk_D_81327800 {
-    /* 0x0000 */ u8 unk_0000[0xA174];
-    /* 0xA174 */ void *unk_A174;
-} unk_D_81327800;
-extern unk_D_81327800 D_81327800;
 extern s32 StageContext_GetFadeMode(void);
 extern void func_800086A4(s32);
 extern void StageFade_StartFromOpaque(s32);
