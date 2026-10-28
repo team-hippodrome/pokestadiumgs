@@ -1216,3 +1216,13 @@ func_882157DC = Text_CopyCharacterPrefix;
 func_8821B498 = StorageList_BuildPointers;
 
 func_8821C004 = StorageList_FilterPointers;
+
+func_86A03F48 = ItemQueue_TryPush;
+
+func_86A05504 = CollisionBounds_ContainsPoint;
+
+func_86A05B4C = ItemBounds_SumCostsAtPoint;
+
+func_86A05C94 = ItemBounds_AnyContainsPoint;
+
+func_82B02334 = Panel_InitializeAlternatingSlide;

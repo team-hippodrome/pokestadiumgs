@@ -108,3 +108,137 @@ raw instruction differences from the assembly control are three relocation
 fields for compiler-emitted constants. Probe-stat provenance confirms the
 removed pragma has an accepted attempt. The owner remains assembly in
 upstream `7a127bb6`, so this acceptance is novel at that revision.
+
+
+## 2026-10-29 native block: `func_86A05C94` accepted
+
+The 312-byte function scans `D_86A45A70` active 20-byte collision records at
+`D_86A443F0 + 0xEC4`. Each record contains x/z at offsets 0/4 and an item
+index at offset 16. It returns 1 if `(arg0, arg1)` lies strictly inside any
+item footprint, using `D_86A45ACC` as the margin. The footprint arithmetic
+is shared with `func_86A059AC`; its upper z extent is zero and its lower z
+extent uses twice the scaled item height in double precision.
+
+A named horizontal-extent value made IDO copy incoming x from `$f12` into
+`$f20`, extending the body to 316 bytes. Repeating the horizontal expression
+in the two comparisons lets IDO perform its own common-subexpression
+elimination and retain x in `$f12`. A consumed `upper_z_extent = 0.0f`
+represents the item's anchored upper edge and preserves the original float
+addition of that extent to the margin. Caching the record's item index also
+recovers the original integer-register allocation. No unused local, fabricated
+argument, instruction rewrite, coalescing, or physical binding is involved.
+
+The canonical runner accepted `collision-scan:cse-horizontal-expression:1`
+at parent worker commit `d161e919`, through a sequential full-ROM gate.
+`scratch/scan7/gate-0/receipt.json` seals source/object/ELF/map/ROM and records
+explicit normal host syntax success, native IDO 7.1 compiler SHA256
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`, and
+retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Normal and +20-leading-blank
+whole-module controls pass before every batch. No candidate is admitted on
+the normalized score alone.
+
+Rejected families and retained evidence: scalar/pair extents with a named
+horizontal result; local versus direct margin; cached versus direct item
+loads; pointer arithmetic; raw half-extents plus a separate expanded width;
+loop-local declarations; guard/loop topology; and scalar extent ordering.
+The best named-result form was 0.9747 normalized / 0.7975 raw, 316 versus
+312 bytes, with the first save changing `$f20`/8(sp) to `$f22`/16(sp).
+A calibrated 300-second single-worker permuter run produced an invalid
+270-point result by moving the required z load after return. That result
+was rejected without a runner submission; statement reordering is disabled
+in the private helper's next configuration. The accepted source came from
+the manually reviewed common-expression family, not that mutation.
+
+
+## 2026-10-29 native block: `func_86A05B4C` accepted
+
+The 328-byte sibling of `func_86A05C94` tests the same active 20-byte collision
+records and asymmetric item footprints, but sums each overlapping item's
+`D_86A0D560[item].cost` instead of returning a predicate. The source uses a
+normal counted loop; IDO derives the original pointer/end loop itself.
+
+The first eight-variant batch transferred the accepted common-expression
+spelling with a consumed zero upper-z extent and cached item index. The first
+candidate, `collision-cost-sum:cse-horizontal-expression:0`, passed the
+canonical sequential full-ROM gate at worker base `2d989b14`; no further
+hypotheses were run for this owner. `scratch/sum2/gate-0/receipt.json` seals the
+source, object, ELF, map and retail ROM, with explicit normal host syntax
+success and ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The native compiler
+SHA256 is `975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`.
+Normal and +20-leading-blank whole-module controls pass.
+
+Post-acceptance cleanup shares one `Fragment60CollisionEntry` definition
+between both scans and removes duplicate externs. The record type is moved
+before its first use; existing state storage and every unrelated accepted
+function remain unchanged. The private final seal and normal/blank controls
+verify that this declaration cleanup preserves the complete module and ROM.
+
+
+## 2026-10-29 native block: `func_86A05504` accepted
+
+The 372-byte function scans the active centers in `D_86A443F0.unk_16A8`;
+`D_86A452B0` aliases their count at state offset 0xEC0. The signed byte at
+`(*(u8 **)(D_86A46548 + 12))[0x2181]` chooses bounds: modes 0-2 use strict
+19.199999-by-19.199999 half-extents, mode 3 uses 36.199997-by-31.199999,
+and other values do not accept a point. The source's grouped `switch`
+compiles to the original linear comparisons, with no jump table.
+
+Reading x, then the mode byte, then z recovers the original integer-register
+allocation and early point-table address setup. Reading the mode first gave
+the correct size and 16-byte frame but held mode in `$v0` and the table base
+in `$a0`; retail uses mode in `$a0` and the base in `$v0`. Both scalar and
+pair read-order families were preflighted, and the first accepted candidate
+was `point-bounds:read-order:xmz`; no further hypotheses were run afterward.
+There is no fabricated ABI, unused local, unrolled loop, volatile access,
+instruction rewrite or physical binding.
+
+`scratch/point2/gate-0/receipt.json` seals acceptance at worker base
+`9695325c`. It records explicit normal host syntax success, the stock native
+IDO 7.1 compiler SHA256
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`,
+and retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Normal and twenty-leading-
+blank whole-module controls pass. The accepted source uses the same genuine
+array and field widths as the existing state model.
+
+
+## 2026-10-29 native block: `func_86A03F48` accepted
+
+The 276-byte queue push now matches as genuine C. It rejects a queue count
+of five or a resulting cost of six or more, increments count, stores the
+item at `(head + old_count)` wrapped once at five, and updates the player's
+amount, last item and cost. Reaching cost five calls `func_86A0BA80`.
+`Fragment60QueueEntry` is the real 24-byte table record also consumed by the
+bounds helpers; older raw attempts that used a 28-byte descriptor stride
+are not evidence about this model.
+
+Three measured source mechanisms recovered the original code. Incrementing
+the count field preserves a separate old count for indexing. Repeating
+`head + count` in the wrap condition/branches lets the compiler share the
+sum without coloring a named computed-slot variable. Caching entry cost in
+the limit condition preserves its single load, while writing the last item
+before updating integer cost recovers the final temporary-register order.
+The amount and integer cost use ordinary expanded assignments. Every local
+is consumed by queue or cost logic; no fabricated argument, dummy value,
+manual unroll, volatile access, instruction rewrite or physical binding is
+used. The final source shares the existing descriptor typedef before its
+first use and preserves all pre-existing accepted bodies.
+
+The best intermediate reached matching 276-byte/24-byte-frame opcode shape
+at 1.0 normalized / 0.9130 raw, with the first remaining difference at byte
+217 (instruction 54): expected `lw t6,232(v0)`, actual `lw t5,232(v0)`.
+The last-item store order closed that residual. The runner still emitted a
+register-tie warning claiming source variants would not close it; the same
+batch accepted `queue-push:update-expression:item-before-total`. That
+warning is advisory, not proof of compiler unreachability.
+
+`scratch/queue7/gate-0/receipt.json` seals acceptance at worker base
+`c376c438`, with `link_verified: true`, an explicit normal host syntax check,
+stock native IDO 7.1 compiler SHA256
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`,
+and retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Each batch first
+passes whole-module normal/+20-leading-blank controls. Direct cost rereads
+added a load; explicit queue-pointer and budget-snapshot forms changed size
+or allocation and were rejected. One private generator accidentally removed
+the descriptor's cost member while deleting the local cost variable; its
+eight compile failures were corrected with an anchored declaration edit and
+supply no code-generation evidence.

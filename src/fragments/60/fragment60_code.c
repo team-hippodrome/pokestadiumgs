@@ -1,6 +1,6 @@
 #include "global.h"
 
-// Five-entry ring queue for one player in D_86A443F0. func_86A03F48 (asm) appends at head + count;
+// Five-entry ring queue for one player in D_86A443F0. ItemQueue_TryPush appends at head + count;
 // func_86A0405C removes the entry at head, wraps head at five entries, and returns the value.
 typedef struct unk_D_86A443F0_108 {
     /* 0x00 */ s32 count;
@@ -34,7 +34,7 @@ typedef struct unk_D_86A443F0 {
     /* 0x00D4 */ s32 unk_00D4; // while set, func_86A07334 draws the players flagged in unk_0178 in the blended color
     /* 0x00D8 */ f32 unk_00D8[4]; // func_86A0405C subtracts the popped D_86A0D560 entry's f32 at 0x8
     /* 0x00E8 */ s32 unk_00E8[4]; // func_86A0405C subtracts the popped D_86A0D560 entry's s32 at 0x4
-    /* 0x00F8 */ s32 unk_00F8[4]; // func_86A03F48 (asm) stores the last value it queued
+    /* 0x00F8 */ s32 unk_00F8[4]; // ItemQueue_TryPush stores the last value it queued
     /* 0x0108 */ unk_D_86A443F0_108 queues[4];
     /* 0x0178 */ s32 unk_0178[4];
     /* 0x0188 */ s32 unk_0188[4]; // func_86A06C3C sets 40 together with unk_0024 = 9
@@ -51,7 +51,7 @@ typedef struct unk_D_86A443F0 {
     /* 0x0E6C */ char unk_0E6C[8];
     /* 0x0E74 */ s16 unk_0E74[4]; // func_86A0638C stores the heading from MathUtil_Atan2s
     /* 0x0E7C */ char unk_0E7C[0x44];
-    /* 0x0EC0 */ s32 unk_0EC0; // number of unk_16A8 entries func_86A05504 (asm) tests; func_86A06D88 clears it
+    /* 0x0EC0 */ s32 unk_0EC0; // number of unk_16A8 entries CollisionBounds_ContainsPoint (asm) tests; func_86A06D88 clears it
     /* 0x0EC4 */ char unk_0EC4[0x7BC];
     /* 0x1680 */ s32 unk_1680; // func_86A06D88 clears it
     /* 0x1684 */ f32 unk_1684[4][2]; // func_86A0C7B4 passes the player's pair to func_86A0CF80
@@ -326,11 +326,54 @@ void func_86A03D0C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A03F48.s")
+// Each 24-byte entry supplies queue cost and collision dimensions.
+// func_86A0405C subtracts cost and unk_08 when removing an item.
+typedef struct {
+    s32 unk_00;
+    s32 cost;
+    f32 unk_08;
+    s32 unk_0C;
+    f32 width;
+    f32 height;
+} Fragment60QueueEntry;
+extern u8 D_86A0D560[];
+extern void func_86A0BA80(s32);
+
+// Appends an item when both the five-entry queue and its cost budget permit it.
+s32 ItemQueue_TryPush(s32 player, s32 item) {
+    s32 count;
+    s32 head;
+    s32 cost;
+    Fragment60QueueEntry *entry;
+
+    count = D_86A443F0.queues[player].count;
+    head = D_86A443F0.queues[player].head;
+    if (count == 5) {
+        return 0;
+    }
+
+    entry = &((Fragment60QueueEntry *)D_86A0D560)[item];
+    if (D_86A443F0.unk_00E8[player] + (cost = entry->cost) >= 6) {
+        return 0;
+    }
+    D_86A443F0.queues[player].count++;
+    if (head + count < 5) {
+        head = head + count;
+    } else {
+        head = head + count - 5;
+    }
+    D_86A443F0.queues[player].values[head] = item;
+    D_86A443F0.unk_00D8[player] = D_86A443F0.unk_00D8[player] + entry->unk_08;
+    D_86A443F0.unk_00F8[player] = item;
+    D_86A443F0.unk_00E8[player] = D_86A443F0.unk_00E8[player] + cost;
+    if (D_86A443F0.unk_00E8[player] == 5) {
+        func_86A0BA80(player);
+    }
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
-extern u8 D_86A0D560[];
 s32 func_86A0405C(s32 arg0) {
     s32 count;
     s32 index;
@@ -425,7 +468,36 @@ s32 func_86A05344(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A05504.s")
+extern s32 D_86A452B0;
+
+// Tests active centers using a square for modes 0-2 and wider bounds for mode 3.
+s32 CollisionBounds_ContainsPoint(f32 point_x, f32 point_z) {
+    s32 index;
+    s8 mode;
+    f32 x;
+    f32 z;
+
+    for (index = 0; index < D_86A452B0; index++) {
+        x = D_86A443F0.unk_16A8[index][0];
+        mode = (s8)(*(u8 **)(D_86A46548 + 0xC))[0x2181];
+        z = D_86A443F0.unk_16A8[index][1];
+        switch (mode) {
+        case 0:
+        case 1:
+        case 2:
+            if (point_x < x + 19.199999f && x - 19.199999f < point_x && point_z < z + 19.199999f && z - 19.199999f < point_z) {
+                return 1;
+            }
+            break;
+        case 3:
+            if (point_x < x + 36.199997f && x - 36.199997f < point_x && point_z < z + 31.199999f && z - 31.199999f < point_z) {
+                return 1;
+            }
+            break;
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -446,16 +518,6 @@ s32 func_86A0585C(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-// Each 24-byte entry supplies queue cost and collision dimensions.
-// func_86A0405C subtracts cost and unk_08 when removing an item.
-typedef struct {
-    s32 unk_00;
-    s32 cost;
-    f32 unk_08;
-    s32 unk_0C;
-    f32 width;
-    f32 height;
-} Fragment60QueueEntry;
 extern f32 D_86A45AC8;
 
 // Tests the player's position against the item's bounds around (arg1, arg2).
@@ -506,11 +568,68 @@ s32 func_86A05AAC(s32 arg0, f32 arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A05B4C.s")
+// Active collision records have a 20-byte stride and select a queue-entry footprint.
+typedef struct {
+    f32 x;
+    f32 z;
+    s32 unk_08;
+    s32 unk_0C;
+    s32 item;
+} Fragment60CollisionEntry;
+extern s32 D_86A45A70;
+extern f32 D_86A45ACC;
+
+// Sums item costs for active footprints containing (point_x, point_z).
+s32 ItemBounds_SumCostsAtPoint(f32 point_x, f32 point_z) {
+    s32 index;
+    s32 total = 0;
+    s32 item;
+    f32 x;
+    f32 z;
+    Fragment60QueueEntry *entry;
+    f32 upper_z_extent;
+
+    for (index = 0; index < D_86A45A70; index++) {
+        x = ((Fragment60CollisionEntry *)D_86A443F0.unk_0EC4)[index].x;
+        z = ((Fragment60CollisionEntry *)D_86A443F0.unk_0EC4)[index].z;
+        item = ((Fragment60CollisionEntry *)D_86A443F0.unk_0EC4)[index].item;
+        entry = &((Fragment60QueueEntry *)D_86A0D560)[item];
+        upper_z_extent = 0.0f;
+        if (point_x < (entry->width * 8.333333f * 0.8f + D_86A45ACC) + x && x - (entry->width * 8.333333f * 0.8f + D_86A45ACC) < point_x &&
+            point_z < upper_z_extent + D_86A45ACC + z &&
+            (f64)z - (2.0 * (f64)(entry->height * 8.333333f) * (f64)0.8f + D_86A45ACC) < (f64)point_z) {
+            total += entry->cost;
+        }
+    }
+    return total;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A05C94.s")
+// Returns 1 when (point_x, point_z) lies inside any active item footprint.
+// The upper edge has zero extent; the lower edge spans the scaled item height.
+s32 ItemBounds_AnyContainsPoint(f32 point_x, f32 point_z) {
+    s32 index;
+    s32 item;
+    f32 x;
+    f32 z;
+    Fragment60QueueEntry *entry;
+    f32 upper_z_extent;
+
+    for (index = 0; index < D_86A45A70; index++) {
+        x = ((Fragment60CollisionEntry *)D_86A443F0.unk_0EC4)[index].x;
+        z = ((Fragment60CollisionEntry *)D_86A443F0.unk_0EC4)[index].z;
+        item = ((Fragment60CollisionEntry *)D_86A443F0.unk_0EC4)[index].item;
+        entry = &((Fragment60QueueEntry *)D_86A0D560)[item];
+        upper_z_extent = 0.0f;
+        if (point_x < (entry->width * 8.333333f * 0.8f + D_86A45ACC) + x && x - (entry->width * 8.333333f * 0.8f + D_86A45ACC) < point_x &&
+            point_z < upper_z_extent + D_86A45ACC + z &&
+            (f64)z - (2.0 * (f64)(entry->height * 8.333333f) * (f64)0.8f + D_86A45ACC) < (f64)point_z) {
+            return 1;
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
