@@ -56,3 +56,15 @@ gSPDisplayList(`D_80094E38`), gDPSetPrimColor(0, 0, 255, 255, 255, 255), then 28
 ## 2026-10-28 — `func_8AF00360`: requeue
 
 requeue. Shape: `s8 buf[4]; sprintf(buf, D_8AF28760, arg0); return (u16)((buf[0] << 8) | buf[1]) | 0x234C0000;`. Retail homes `arg0` and reloads it as `lbu a2,0x2B(sp)`. Only `s32 arg0` with `((u8 *)&arg0)[3]` reproduces that, plus the 0x28 frame (callers pass `(u8)`, and old-style `u8`/`char` definitions still emit `andi`). Best local score 0.8889: the only remaining diff is retail keeping the masked code in `$a3` (`or v1,t6,t8; andi a3,v1,0xFFFF; or v0,a3,at`), where IDO uses `$v0`/`$v1`. The permuter plateaued at 10 after 240 s. Next: hypotheses about the signature (e.g. extra unused parameters that would put the variable in `$a3`).
+
+## 2026-10-28 — `func_8AF00690`: requeue (release queued nodes)
+
+Up to ten times while the s32 counter `D_8AF2BF10` stays positive:
+`node = func_8AF00240((s16)count)`. On NULL just decrement. Otherwise call
+`func_8AC01064(func_8AF00360((u8)count))` (retail reads the counter's low
+byte with `lbu +3`), clear bit 0 of the u16 at `node->+8 + 2`, decrement,
+and `_bzero(node, 0xC)`. Retail tests the count before entering, then
+re-tests it right after the body and before `i++`/`i != 10`, keeping
+`&D_8AF2BF10` in `$s0`, the node in `$s1` and i in `$s2`. Best 0.74
+(`for (i = 0; i < 10; i++) { if (count <= 0) break; ... }`). `do`/`while` and
+early-return shapes are worse. A 240-second permuter: 1135 -> 1020.
