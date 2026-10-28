@@ -17,3 +17,14 @@ panel, and digits sit 16 pixels apart (fragment77: 20). The cursor is
 `func_8F900020(x + (last - selected) * 16, y + 18, 16)`. The
 `F78EditorState` block now sits at the top of the file. The prototype is
 retyped from `s32` to `void`.
+
+## 2026-10-28 — `func_8F900F14` matched (editor cursor input)
+
+`switch (func_8F900A6C(D_80087200))` (still asm; it returns a **u16**
+button mask; an s32 return moves `result` from `$a1` to `$v1`):
+- 0x8000: `result = func_8F9009E8()`;
+- 0x4000: cursor `D_8F911644 = 0`;
+- 0x800/0x400/0x200/0x100: move the cursor to neighbour byte 12/13/14/15 of
+  the 34-byte `D_8F901534[cursor]` entry;
+- 0x10: toggle `D_8F901530`, written `if (x != 0) x = 0; else x = 1;`.
+Returns `result` (default 1).

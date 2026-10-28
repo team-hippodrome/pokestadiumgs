@@ -256,7 +256,44 @@ s32 func_8F9009E8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900A6C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900F14.s")
+extern s32 D_8F911644;
+extern u16 D_8F901534[][17];
+extern s32 D_8F901530;
+extern u16 func_8F900A6C(s32);
+extern s32 func_8F9009E8(void);
+extern s32 D_80087200;
+s32 func_8F900F14(void) {
+    s32 result = 1;
+
+    switch (func_8F900A6C(D_80087200)) {
+        case 0x8000:
+            result = func_8F9009E8();
+            break;
+        case 0x4000:
+            D_8F911644 = 0;
+            break;
+        case 0x800:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[12];
+            break;
+        case 0x400:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[13];
+            break;
+        case 0x200:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[14];
+            break;
+        case 0x100:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[15];
+            break;
+        case 0x10:
+            if (D_8F901530 != 0) {
+                D_8F901530 = 0;
+            } else {
+                D_8F901530 = 1;
+            }
+            break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F901078.s")
 
