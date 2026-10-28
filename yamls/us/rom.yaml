@@ -750,6 +750,8 @@
     - [0x12BB60, c,       fragments/20/fragment20_12BB60]
     - [0x12C460, c,       fragments/20/fragment20_12C460]
     - [0x13D3F0, data,    fragments/20/fragment20_data]
+    - [0x13D400, .data,   fragments/20/fragment20_1286C0] # D_82615330, func_826005FC's two color templates, D_8261533C
+    - [0x13D410, data,    fragments/20/fragment20_data_13D410]
     - [0x13D8B0, .rodata, fragments/20/fragment20_12C460] # jtbl_826157E0 (+2 more)
     - [0x13DB50, rodata]
 
@@ -1271,6 +1273,8 @@
     - [0x27CCC0, data,    fragments/51/fragment51_data]
     - [0x27D2B0, .rodata, fragments/51/fragment51_275E40]
     - [0x27D330, rodata]
+    - [0x27D370, .rodata, fragments/51/fragment51_27A440] # D_86307550 (func_8630470C's 0.1f literal)
+    - [0x27D380, rodata]
   
   - name: fragment52
     type: code

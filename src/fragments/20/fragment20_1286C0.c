@@ -3,7 +3,12 @@
 
 
 #ifdef VERSION_US
-extern s32 D_82615330;
+s32 D_82615330 = 0;
+typedef struct {
+    u8 r, g, b;
+} Fragment20Color;
+Fragment20Color D_82615334 = { 0, 0, 30 };
+Fragment20Color D_82615338 = { 0, 0, 150 };
 void func_826005F0(s32 arg0) {
     D_82615330 = arg0;
 }
@@ -15,7 +20,7 @@ extern void BgStage_DrawFrame();
 extern void func_826005FC();
 extern void func_82602710(s32);
 extern void func_826042A0();
-extern s32 D_8261533C;
+s32 D_8261533C = 1;
 void func_826007E4(void) {
     BgStage_DrawFrame();
     func_82602710(D_82615330);
