@@ -157,7 +157,45 @@ void func_88230A88(void) {
 extern void func_889033A0(s32);
 void func_88230B2C(void) { func_889033A0((D_882349B0 + 236)); func_8821D930((D_882349B0 + 8)); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A3960/func_88230B64.s")
+extern void *func_800635E0(u8);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern u8 *func_88002AA8(u8 *, s32, u8 **, u16, s32, s16, s16, s16, s16, s16, s16, s32, s16, void *);
+extern void func_880048D4(s32, s32, s16, s32, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32, s32);
+extern u8 D_88006020[];
+extern u8 D_8800EE80[];
+extern u8 D_8800EECC[];
+extern void D_88000E4C(void);
+extern u8 *D_88234620;
+extern void Util_Free(s32 arg0);
+extern s32 func_8004C54C(s32 index,s32 value);
+extern void func_882309B0(void);
+extern void func_882309D8(void);
+extern void func_88230A88(void);
+extern void func_88230B2C(void);
+extern s32 D_880068B4;
+extern s32 D_882345F4;
+extern u32 D_882349B0;
+void func_88230B64(void) {
+    s16 x;
+
+    D_882349B0 = (u32)Util_Malloc(0x224);
+    if (func_882304B0(D_882349B0 + 8, ((u8 *)D_882345F4)[9]) == 0) {
+        Util_Free(D_882349B0);
+        return;
+    }
+    func_8004C54C(24, (s32)func_800635E0(*D_88234620));
+    *(void **)(D_882349B0 + 0x120) = func_8004C8A0((u8 *)D_882349B0 + 0x124, 256, 35, 23);
+    func_88002AA8((u8 *)D_882349B0 + 0xEC, 0, (u8 **)(D_882349B0 + 0x120), 1, 8, 1, 6, 15, 18, 13, 16, 0, 0,
+                  D_88006020);
+    func_880048D4(D_882349B0 + 0xEC, 0, 112, 208, 0, 1, 220, 220, 180, (s32 *)func_88230A88, (s32 *)func_88230B2C,
+                  (s32 *)func_882309B0, (s32 *)func_882309D8, 0, 0, 4);
+    **(u8 ***)&D_882349B0 = D_8800EE80;
+    x = *(s16 *)(*(u8 **)D_882349B0 + 0xC) + *(u16 *)(*(u8 **)D_882349B0 + 0x10) + 5;
+    func_880048D4(D_882349B0 + 8, 2, x,
+                  208, 0, 1, 220, 220, 180, (s32 *)D_88000E4C, (s32 *)D_88000E4C, (s32 *)D_88000E4C, (s32 *)D_88000E4C, 0, 0, 5);
+    *(u8 **)(D_882349B0 + 4) = D_8800EECC;
+    D_880068B4 = 0;
+}
 
 // Viewed as s16 words: [4] and [5] are the count and limit fields of the F29Callbacks
 // transition state that func_88005B60 initializes.
