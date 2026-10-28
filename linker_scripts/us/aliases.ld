@@ -1102,3 +1102,11 @@ func_8AC00028 = Fragment43_CopyMenuColors;
 func_8AC013FC = Fragment43_DrawTextEntries;
 func_8AC02DA0 = Fragment43_DualTextureCallback;
 func_8AC039A4 = Fragment43_FillRectangleCallback;
+
+// Complete typed view of the assembly-owned fragment 55 main state.
+gStage55MainState = D_8670BB48;
+
+func_8670018C = Stage55_DrawAnimatedResource;
+func_86708EDC = Stage55_UpdateTransition;
+func_86709934 = Stage55_UpdateResourcePools;
+func_8670A790 = Stage55_RunStage;

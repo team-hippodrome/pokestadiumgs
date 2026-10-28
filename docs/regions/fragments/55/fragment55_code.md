@@ -119,3 +119,14 @@ cleanup, with matching retail MD5, the compiler identity above and
 `RUN_CC_CHECK=1`. Its `provenance.json` ties every removed pragma to an
 accepted canonical-runner result. Coverage and shared symbol/layout files
 are unchanged.
+
+Parent review: use a typed external main-state prefix with observed fields
+through +0x48. `gStage55MainState = D_8670BB48` is a data compatibility alias;
+no storage is allocated. New state accesses use real fields for transition
+mode/result and the two float parameters, preserving every module byte,
+extent and relocation modulo that alias, including a +20blank control.
+Descriptive names keep original address-keyed function entries as aliases.
+- `func_8670018C` → `Stage55_DrawAnimatedResource`.
+- `func_86708EDC` → `Stage55_UpdateTransition`.
+- `func_86709934` → `Stage55_UpdateResourcePools`.
+- `func_8670A790` → `Stage55_RunStage`.
