@@ -136,7 +136,76 @@ void RecordSelection_PrepareTwoParties(u8 *context, s32 randomize) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82601298.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_8260166C.s")
+extern void func_80071BB8(void *, void *);
+// Owners -1/-2 select the indexed row or skip it; mode 0x400 selects paired rows.
+typedef struct {
+    s8 owners[4];
+    u8 unk_04[2];
+    s8 metadata_layout;
+    u8 unk_07;
+    u16 mode_flags;
+    u8 unk_0A[126];
+    s16 selection;
+    u8 unk_8A[6];
+} RecordSelectedPartyHeader;
+typedef char RecordSelectedPartyHeaderSize[sizeof(RecordSelectedPartyHeader) == 144 ? 1 : -1];
+extern s32 func_8006AED4(s32, void *);
+void RecordSelection_LoadSelectedParties(u8 *context, s32 load_records) {
+    s32 side;
+    s32 index;
+    s32 adjustment;
+    int paired_mode;
+    RecordSelectedPartyHeader *state;
+    RecordPartyPackedRow *row;
+
+    if (*(u8 **)(context + 12) != NULL) {
+        side = 0;
+        do {
+            state = *(RecordSelectedPartyHeader **)context;
+            paired_mode = 0x400;
+            index = state->owners[side];
+            switch (index) {
+            case -1:
+                index = ((s16 *)(context + 24))[state->selection];
+                goto load_selected;
+            case -2:
+                index = -1;
+                goto load_selected;
+            default:
+                index = state->mode_flags & 0xFF00;
+                break;
+            }
+            if (index == paired_mode) {
+                if (side < 2) {
+                    adjustment = 1 - (side & 1);
+                    index = ((s16 *)(context + 24))[state->selection] - adjustment;
+                } else {
+                    index = -1;
+                }
+            } else {
+                index = -1;
+            }
+        load_selected:
+            if (index >= 0 && index < (*(u8 **)(context + 12))[0]) {
+                row = &((RecordPartyPackedRow *)(*(u8 **)(context + 12) + 4))[index];
+                if (load_records != 0) {
+                    func_80071BB8(&((RecordSelectionWorkingGrid *)state)->groups[side][0], row);
+                    state = *(RecordSelectedPartyHeader **)context;
+                }
+                if (state->metadata_layout == 0) {
+                    if (side < 2) {
+                        func_8006AED4(side, row);
+                    }
+                } else {
+                    if (side / 2 < 2) {
+                        func_8006AED4(side / 2, row);
+                    }
+                }
+            }
+            side++;
+        } while (side != 4);
+    }
+}
 
 void func_82601824(void *arg0) {
     u8 *values[4];

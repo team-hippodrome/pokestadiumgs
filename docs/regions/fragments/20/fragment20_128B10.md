@@ -429,3 +429,41 @@ sections/bytes/extents/semantic relocations, unchanged collateral and foreign
 files, and US ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d` passed. The
 earlier requeue entries above describe the rejected parents, not the final
 accepted body.
+
+## 2026-10-28: selected-party loading (`8260166C`)
+
+`RecordSelection_LoadSelectedParties` resolves four signed owner entries
+against a packed party table. Owner -1 uses the selected row; owner -2
+skips the side. Other owners select paired rows only for mode `0x400`
+and sides zero and one, subtracting one for the even side. Negative or
+out-of-range rows are skipped. The `load_records` flag controls unpacking
+into the six-entry working group; valid rows still supply metadata when
+that flag is zero. A zero metadata-layout byte uses side indices below two;
+the other layout uses the side-pair index.
+
+The header view records the observed signed owner bytes, metadata-layout
+byte at six, mode halfword at eight, and selected-index halfword at 136.
+The existing 152-byte packed rows and 88-byte working entries are shared
+with `RecordSelection_PrepareTwoParties`. `func_80071BB8` in
+`src/72720.c` is a void unpacking routine; `func_8006AED4` retains its
+actual integer return type even though this caller ignores the result.
+
+The near-match retained 109 of 110 exact instruction words. Its only
+residual was the commuted source pair of a `bnel` at owner offset 152
+(expected `56e2000e`, actual `5457000e`). Switch/if forms, reversed
+comparisons, mask widths, owner case order, and a named long-typed mode
+constant did not close it. A calibrated, restricted single-worker source
+search recovered an ordinary used `int` local for the paired-mode constant.
+The project `s32` alias is `long`; replacing that local with `s32` restores
+the one-word mismatch. The local participates directly in the mode test.
+There is no unused storage, fabricated interface, source unrolling,
+instruction rewrite, or padding.
+
+The canonical eight-candidate batch accepted its first signed-int candidate
+on base `9064fa56c9e4f51fea34b3e8b19917c2484ee33f`. Naming and declaration
+cleanup passed normal and twenty-leading-blank complete-module comparisons
+for sections, text bytes, function extents, and semantic relocations. The
+subsequent native `COMPARE=1 RUN_CC_CHECK=1` full-US-ROM build passed with
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The first-success source, object,
+ROM, ELF, and map were frozen before cleanup; no coverage change accompanies
+this implementation.

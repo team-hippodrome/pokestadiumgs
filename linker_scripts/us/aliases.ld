@@ -1190,3 +1190,5 @@ func_87F0A3E8 = Fragment64_UpdateBounceAndConfirm;
 func_87F09B7C = Fragment64_DrawExpandingPanel;
 
 func_87F0A098 = Fragment64_StartPlayerPanel;
+
+func_8260166C = RecordSelection_LoadSelectedParties;
