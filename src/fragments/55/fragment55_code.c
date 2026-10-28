@@ -148,11 +148,10 @@ extern s32 D_8670BD64[];
 extern struct { s32 unk_00; u8 unk_04[0xA8]; } D_8672843C[];
 extern s32 D_8670C960;
 extern void *D_8670C95C;
-extern f32 D_8670C340;
 
 // Same code as func_867006C4 with resource 387, its frame taken from
 // D_8670BD64[D_8672843C[index].unk_00], and display list D_8670C95C; GS draws only
-// while D_8670BBA4 is 1 and otherwise stores D_8670C340 at 0x2C of the context.
+// while D_8670BBA4 is 1 and otherwise stores -5000.0f at 0x2C of the context.
 void func_86700588(s32 arg0, s32 arg1) {
     void *context;
     s32 index;
@@ -169,7 +168,7 @@ void func_86700588(s32 arg0, s32 arg1) {
             gSPDisplayList(D_800D0510++, D_8670C95C);
             GeoRender_ApplyMaterialState();
         } else {
-            *(f32 *)((u8 *)context + 0x2C) = D_8670C340;
+            *(f32 *)((u8 *)context + 0x2C) = -5000.0f;
         }
     }
 }
@@ -228,7 +227,54 @@ void func_867006C4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670211C.s")
+extern s32 D_8670B3AC[];
+extern s32 D_8670BDB4[];
+void func_8670211C(void) {
+    s32 i;
+    s32 j;
+    s32 count;
+    s32 rnd;
+    s32 unused[2]; // never referenced; the original frame reserves these 8 bytes
+
+    for (i = 0; i < 5; i++) {
+        count = 0;
+        j = 0;
+        rnd = guRandom() % 100;
+        if (rnd > 50) {
+            D_8670BDB4[i] = 1;
+        } else {
+            D_8670BDB4[i] = 0;
+        }
+        while (1) {
+            switch (i) {
+            case 0:
+                D_8670B3AC[i] = guRandom() % 5;
+                break;
+            case 1:
+                D_8670B3AC[i] = guRandom() % 15;
+                break;
+            case 2:
+                D_8670B3AC[i] = guRandom() % 10 + 5;
+                break;
+            case 3:
+                D_8670B3AC[i] = guRandom() % 15 + 5;
+                break;
+            case 4:
+                D_8670B3AC[i] = guRandom() % 5 + 15;
+                break;
+            }
+            for (j = 0; j < i; j++) {
+                if (D_8670B3AC[i] == D_8670B3AC[j]) {
+                    count++;
+                }
+            }
+            if (count == 0) {
+                break;
+            }
+            count = 0;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -249,7 +295,6 @@ extern f32 D_8670B3C8;
 extern s32 D_8670B3D0;
 extern f32 D_8670C8A0;
 extern f32 D_8670C89C;
-extern f32 D_8670C390;
 extern f32 D_8670BD9C;
 extern u8 D_800CE060[];
 extern Row86706A30 D_86710C20[];
@@ -274,7 +319,7 @@ void func_867035A8(void) {
         }
     }
     if (D_8670B3D0 >= 2) {
-        D_8670BD9C = D_8670C390;
+        D_8670BD9C = 0.3f;
     }
 }
 #endif
@@ -402,7 +447,6 @@ typedef struct { u8 unk00[0x94]; s32 mode; u8 unk98[0x14]; } Stage55FadeState;
 typedef struct { u8 unk00[0x1D]; u8 alpha; u8 unk1E[0x1A]; f32 scale_z; u8 unk3C[0x12C]; } Stage55FadeModel;
 extern Stage55FadeModel D_86710668[];
 extern State86703DF4 D_86728408[];
-extern f32 D_8670C404;
 extern void func_8003F1DC(void *);
 void Stage55_UpdateModelFade(s32 arg0) {
 
@@ -410,7 +454,7 @@ void Stage55_UpdateModelFade(s32 arg0) {
         D_86710668[arg0].alpha -= 10;
         if (D_86710668[arg0].alpha <= 70) {
             D_86710668[arg0].alpha = 70;
-            D_86710668[arg0].scale_z = D_8670C404;
+            D_86710668[arg0].scale_z = 0.55f;
             ((Stage55FadeState *)D_86728408)[arg0].mode = 0;
         }
     }
@@ -471,7 +515,6 @@ extern Stage55VariantIndex D_86728458[];
 extern f32 D_8670C04C[];
 extern f32 D_8670C05C;
 extern f32 D_8670C060[];
-extern f32 D_8670C4F0;
 extern u8 D_8670D948[];
 extern u8 D_8670D920[];
 extern void *D_8670FF54;
@@ -489,7 +532,7 @@ void Stage55_SpawnVariantEffect(s32 arg0) {
     }
     entry = func_87F025B8(D_8670D948, D_867068E4);
     if (entry != NULL) {
-        size = D_8670C4F0;
+        size = 4.2f;
         *(f32 *)(entry + 0x48) = D_8670C04C[(arg0 / 2)];
         z = &D_8670C060[side];
         *(f32 *)(entry + 0x4C) = D_8670C05C;
@@ -516,7 +559,6 @@ void func_86706A30(void) { f32 temp_fv0; temp_fv0 = D_87F119DC->in54; D_87F119DC
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8670C4F4;
 extern u8 D_8670F868[];
 extern s32 D_8670FF4C;
 void func_86706AC8(s32 arg0) {
@@ -526,7 +568,7 @@ void func_86706AC8(s32 arg0) {
     if (entry != NULL) {
         *(f32 *)(entry + 0x48) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x24);
         *(f32 *)(entry + 0x4C) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x28);
-        *(f32 *)(entry + 0x50) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x2C) - D_8670C4F4;
+        *(f32 *)(entry + 0x50) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x2C) - 5000.0f;
         *(s16 *)(entry + 0x42) = -0x4000;
         *(s32 *)(entry + 0x38) = arg0;
         *(f32 *)(entry + 0x54) = 7.0f;
@@ -545,8 +587,6 @@ void func_86706AC8(s32 arg0) {
 extern void func_86706B88();
 extern u8 D_8670E5C0[];
 extern s32 D_8670FF50;
-extern f32 D_8670C4FC;
-extern f32 D_8670C500;
 void func_86706D3C(s32 arg0) {
     u8 *entry;
     s32 tier;
@@ -563,8 +603,8 @@ void func_86706D3C(s32 arg0) {
     }
     entry = (u8 *)func_87F025B8(D_8670E5C0, func_86706B88);
     if (entry != NULL) {
-        size = D_8670C4FC;
-        *(f32 *)(entry + 0x50) = D_86710C20[tier].z - D_8670C500;
+        size = 3.2f;
+        *(f32 *)(entry + 0x50) = D_86710C20[tier].z - 5000.0f;
         *(s16 *)(entry + 0x42) = 0;
         *(f32 *)(entry + 0x54) = size;
         *(f32 *)(entry + 0x58) = size;
@@ -599,7 +639,92 @@ void func_867086EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86708720.s")
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern s32 D_8670C0C8;
+extern s32 D_8670C0CC;
+extern s32 D_8670C0D0;
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(void *);
+extern void *D_8670FEC4;
+extern void *D_8670FEB0;
+extern void func_87F0CB68(void);
+extern void func_87F07FE8(void *);
+extern s32 D_8670D880;
+extern void func_87F022F0(void);
+extern void func_86707E2C(void);
+extern void func_87F0A5BC(void *);
+extern u8 D_8670D8B8[];
+extern void func_87F0C88C(void *);
+extern u8 D_8670FEB8[];
+extern void func_80008648(void);
+extern s16 D_8670BE80;
+extern s32 D_8670B394;
+extern void func_867086E4(void);
+extern void func_867086EC(void);
+extern Gfx * D_800D0510;
+void func_86708720(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, (D_8670C0C8 << 11) | (D_8670C0CC << 6) | (D_8670C0D0 << 1) | 1);
+    if (D_8670B394 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(D_8670FEC4);
+    if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) != 4) {
+        func_87F0CB68();
+    }
+    switch (gStage55MainState.mode) {
+    case 2:
+    case 12:
+        if (gStage55MainState.transition_mode == 1) {
+            func_87F07FE8(&D_8670D880);
+        } else {
+            func_867086E4();
+        }
+        if (gStage55MainState.transition_mode == 2) {
+            D_8670BE80 -= 0x80;
+            func_867086E4();
+            func_87F022F0();
+        }
+        if (gStage55MainState.transition_mode == 3) {
+            func_867086EC();
+        }
+        if (gStage55MainState.transition_mode == 0) {
+            D_8670BE80 -= 0x80;
+        }
+        break;
+    case 0:
+    case 4:
+    case 10:
+        if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) != 4) {
+            func_87F07FE8(&D_8670D880);
+        }
+        break;
+    case 9:
+        func_86707E2C();
+        break;
+    case 1:
+        func_867086EC();
+        func_867086E4();
+        break;
+    case 8:
+    case 14:
+        func_867086E4();
+        func_87F0A5BC(D_8670D8B8);
+        break;
+    case 5:
+    case 13:
+        func_867086EC();
+        break;
+    case 7:
+        func_87F022F0();
+        break;
+    }
+    if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) == 4) {
+        func_87F0C88C(D_8670FEB8);
+    }
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
@@ -794,8 +919,6 @@ void Stage55_UpdateResourcePools(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8670C684;
-extern f32 D_8670C688;
 extern f32 D_8670BE7C;
 extern s16 D_8670BE80;
 extern s16 D_8670BE84;
@@ -813,11 +936,11 @@ void func_8670A404(void) {
 
     var_v0[5] = 0.0f;
     var_v0[6] = -140.0f;
-    var_v0[7] = D_8670C684;
+    var_v0[7] = 7450.0f;
     var_v0[8] = 0.0f;
     var_v0[9] = 40.0f;
     var_v0[10] = 0.0f;
-    D_8670BE7C = D_8670C688;
+    D_8670BE7C = 7.6f;
     D_8670BE80 = 16388;
     D_8670BE84 = 6400;
     func_8003F1DC(D_86726A48);
@@ -831,7 +954,129 @@ void func_8670A404(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670A4D4.s")
+extern s32 func_87F0C6F4(void *);
+extern void func_87F006BC(void);
+extern void func_86708B18(void);
+extern void func_8670A07C(void);
+extern void func_86709AD0(void);
+extern s32 Fragment64_UpdateBounceAndConfirm(void *);
+extern void func_87F02328(void);
+extern void func_86708944(void);
+extern void func_86702B28(void);
+extern void func_86709130(void);
+extern s32 func_87F02104(void);
+extern void func_87F0D5B8(void *);
+extern void func_87F0C9D0(s32);
+extern u8 D_8670FEB8[];
+extern u8 D_8670D8B8[];
+extern void Stage55_UpdateResourcePools(void);
+extern void Stage55_UpdateTransition(void);
+extern void StageContext_SetClearColor(u16);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_86709040(void);
+extern s32 func_867090A8(void);
+extern void func_86709128(void);
+extern void func_8670972C(void);
+extern void func_8670A404(void);
+extern s32 func_87F00930();
+extern s16 D_8670BE80;
+extern u8 D_8670D920[];
+extern void * D_8670FEB0;
+s32 func_8670A4D4(s32 arg0) {
+    if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) == 4 && func_87F0C6F4(D_8670FEB8) != 0) {
+        gStage55MainState.mode = 3;
+        gStage55MainState.exit_result = 3;
+    }
+    if (func_87F00930() == 0 && gStage55MainState.mode != 9) {
+        func_87F006BC();
+    }
+    switch (gStage55MainState.mode) {
+    case 0:
+        func_86709040();
+        break;
+    case 4:
+        Stage55_UpdateTransition();
+        break;
+    case 10:
+        func_86708B18();
+        break;
+    case 5:
+    case 13:
+        func_8670A07C();
+        func_8670972C();
+        func_867090A8();
+        break;
+    case 14:
+        func_86709AD0();
+    case 8:
+        func_86709128();
+        if (Fragment64_UpdateBounceAndConfirm(D_8670D8B8) != 0) {
+            if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) == 1) {
+                gStage55MainState.exit_result = 2;
+                gStage55MainState.mode = 2;
+                gStage55MainState.transition_mode = 0;
+                StageContext_SetClearColor(0xFFFF);
+                StageFade_StartFromTransparent(10);
+            } else {
+                func_87F02328();
+                gStage55MainState.mode = 7;
+            }
+        }
+        break;
+    case 12:
+        if (StageContext_GetFadeMode() == 1) {
+            gStage55MainState.mode = 11;
+            func_86708944();
+            func_8670A404();
+            func_86702B28();
+            StageFade_StartFromOpaque(10);
+        }
+        break;
+    case 11:
+        gStage55MainState.mode = 0;
+        break;
+    case 1:
+        func_8670972C();
+        Stage55_UpdateResourcePools();
+        break;
+    case 9:
+        func_86709130();
+        break;
+    case 7:
+        D_8670BE80 -= 0x80;
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(10);
+            gStage55MainState.mode = 12;
+            gStage55MainState.transition_mode = 2;
+            break;
+        case 2:
+            gStage55MainState.exit_result = 0;
+            gStage55MainState.mode = 2;
+            gStage55MainState.transition_mode = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        case 3:
+            gStage55MainState.exit_result = 1;
+            gStage55MainState.mode = 2;
+            gStage55MainState.transition_mode = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        }
+        break;
+    case 2:
+        if (StageContext_GetFadeMode() == 1) {
+            gStage55MainState.mode = 3;
+        }
+        break;
+    }
+    func_87F0D5B8(D_8670D920);
+    func_87F0C9D0(func_87F00930());
+    return gStage55MainState.mode;
+}
 #endif
 
 #ifdef VERSION_US
@@ -839,8 +1084,6 @@ extern Row86706A30 D_867111C0[];
 extern Row86706A30 D_867100C8[];
 extern s32 D_8670FEC8[];
 extern s32 D_8670FF00;
-extern f32 D_8670C6C8;
-extern f32 D_8670C6CC;
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void ModelAnim_SetEventFrame(u8 *, s16);
 extern s32 func_8003F210(void *, s32);
@@ -861,9 +1104,9 @@ void Stage55_RunStage(void) {
     if (*((u8 *)D_8670FEB0 + 0x2180) == 4) {
         D_8670BE84 = 2773;
         D_8670BE80 = -32764;
-        gStage55MainState.unk1C = D_8670C6C8;
+        gStage55MainState.unk1C = 1610.0f;
         gStage55MainState.unk24 = 160.0f;
-        D_8670BE7C = D_8670C6CC;
+        D_8670BE7C = 13.6f;
         for (index = 0; index < 4; index++) {
             func_8003F1DC(&D_867111C0[index]);
             func_8003F114((u8 *)&D_86710C20[index], 0, -1, (void *)D_8670FEC8[index]);
