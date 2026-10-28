@@ -4,7 +4,21 @@
 #ifdef VERSION_US
 typedef struct { s16 x; s16 y; } Vec2s; void func_82303D60(Vec2s *arg0, Vec2s *arg1, Vec2s *arg2) { arg0->x = arg1->x + arg2->x; arg0->y = arg1->y + arg2->y; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82303D84.s")
+s32 func_82303D84(u32 arg0) {
+    s32 value = arg0 % 45;
+    s32 result;
+
+    if (value < 5) {
+        result = value * 255 / 5;
+    } else if (value < 10) {
+        result = 255;
+    } else if (value < 40) {
+        result = 255 - (value * 255 - 2550) / 30;
+    } else {
+        result = 0;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82303E14.s")
 
@@ -45,7 +59,7 @@ s32 func_82304520(s32 arg0, s32 arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304F5C.s")
 
 extern void GeoRender_ApplyMaterialState(void);
-extern s32 func_82303D84(u16);
+extern s32 func_82303D84(u32);
 extern void func_82304F5C(s32, s32, void *, void *, void *, s32);
 extern u8 D_82305BD0[];
 extern u8 D_82305C08[];
