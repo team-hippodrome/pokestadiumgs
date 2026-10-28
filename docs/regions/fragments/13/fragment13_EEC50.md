@@ -1507,3 +1507,21 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_82402E28` → `Fragment13_DrawScrollingLabelPanel`.
+### `func_8240641C` — 2026-10-28 follow-up (requeue)
+
+Two residuals are now explained:
+- **Index order.** Retail's base-first `addu t1, s0, t0` for `unk_154[i]` /
+  `unk_194[i]` comes from typed array fields: a file-level
+  `Fragment13GroupScene` (s16 `unk_154[]`, s32 `unk_194[]`, s32 fields
+  0x1D4–0x1F0, f32 `unk_200`) taken as the parameter type, not a cast. Raw
+  `(u8 *)arg0 + 0x154 + i * 2` gives index-first.
+- **Controller reload.** `if (B) {…} else if (A) {…}` always shares the
+  `D_800CE060[0].buttonsRepeat` load. That holds for every pairing of `[0].`,
+  `->`, `(&[0])->` and a raw `u16` cast, and for `goto`. A sequential
+  `if (B) {… ret = 1;} if (ret == 0 && A) {…}` reloads like retail (0.76),
+  but `ret` moves to `$a2` with a stack spill and an extra `bne`.
+
+A 300-second permuter on the sequential form reached 1115 -> 215, only with
+`ret++; ret--;` noise. Not adopted. Next: keep the sequential reload and
+find what puts `ret` back in `$v0`, the way retail assigns it after each
+call (`b tail; li v0, 1`).
