@@ -94,7 +94,85 @@ void StorageList_UpdateScrollCount(u8 column, s32 enabled) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213BE4.s")
+extern u8 *D_88234730;
+typedef struct {
+    u8 *entry;
+    u8 *other;
+    s8 row;
+    s8 otherRow;
+    u8 column;
+    u8 otherColumn;
+} StorageListMessage;
+extern void *D_8800EF54;
+extern void *Util_Malloc(s32);
+extern void func_800226C0(s32);
+extern void func_88232E30(s32);
+extern u8 * StorageList_GetEntry(s32, u8);
+void func_88213BE4(s32 mode, s32 sound) {
+    u8 column;
+    StorageListMessage *msg;
+    s16 start;
+    s16 pos;
+    s16 otherStart;
+    s16 otherPos;
+    s16 delta;
+
+    msg = Util_Malloc(0xC);
+    column = *D_88234730;
+    start = ((StorageListScrollRecord *)(D_88234730 + 12))[column].start;
+    pos = ((StorageListScrollRecord *)(D_88234730 + 12))[column].position;
+    otherStart = ((StorageListScrollRecord *)(D_88234730 + 12))[1 - column].start;
+    otherPos = ((StorageListScrollRecord *)(D_88234730 + 12))[1 - column].position;
+    switch (mode) {
+    case 15:
+    case 17:
+        msg->entry = StorageList_GetEntry(1, 1 - column);
+        if (mode == 17) {
+            msg->other = StorageList_GetEntry(1, *D_88234730);
+        } else {
+            msg->other = NULL;
+        }
+        msg->row = otherPos - otherStart;
+        msg->otherRow = pos - start;
+        msg->column = 1 - *D_88234730;
+        msg->otherColumn = *D_88234730;
+        break;
+    case 16:
+        msg->entry = StorageList_GetEntry(3, column);
+        msg->other = StorageList_GetEntry(1, *D_88234730);
+        delta = *(s16 *)(D_88234730 + 0x70) - start;
+        if (delta >= 0 && delta < 6) {
+            msg->row = delta;
+        } else {
+            msg->row = -1;
+        }
+        msg->otherRow = pos - start;
+        msg->column = msg->otherColumn = *D_88234730;
+        break;
+    case 18:
+        msg->entry = StorageList_GetEntry(1, column);
+        msg->other = NULL;
+        msg->row = pos - start;
+        msg->otherRow = -1;
+        msg->column = *D_88234730;
+        msg->otherColumn = 1 - *D_88234730;
+        break;
+    case 19:
+        msg->entry = NULL;
+        msg->other = NULL;
+        msg->row = pos - start;
+        msg->otherRow = -1;
+        msg->column = *D_88234730;
+        msg->otherColumn = 1 - *D_88234730;
+        break;
+    }
+    D_8800EF54 = msg;
+    if (sound) {
+        func_800226C0(0x5D);
+    }
+    func_800226C0(0x63);
+    func_88232E30(mode);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213E9C.s")
 

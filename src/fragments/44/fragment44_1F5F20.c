@@ -7,9 +7,86 @@ void func_8AF07CB0(u8 *arg0, s32 arg1, s32 arg2) {
     *(s32 *)(arg0 + 0x2C) = arg2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5F20/func_8AF07CBC.s")
+extern s16 D_8AF2C960;
+extern u8 *D_8AF2C9C8;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5F20/func_8AF07EBC.s")
+extern u8 *D_8AF2C980;
+extern u8 *D_8AF2C984;
+extern u8 *D_8AF2C988;
+extern u8 *D_8AF2C98C;
+extern u8 *D_8AF2C990;
+extern u8 *D_8AF2C994;
+extern void func_8AF07CB0(u8 *arg0, s32 arg1, s32 arg2);
+void func_8AF07CBC(void) {
+    func_8AF07CB0(D_8AF2C980, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF07CB0(D_8AF2C984, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF07CB0(D_8AF2C988, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF07CB0(D_8AF2C98C, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF07CB0(D_8AF2C990, 0xC3A05AFF, 0xE1C38CFF);
+    func_8AF07CB0(D_8AF2C994, 0xC3A05AFF, 0xE1C38CFF);
+    switch (D_8AF2C960) {
+    case 1:
+        *(s16 *)(D_8AF2C9C8 + 0x32) = 7;
+        func_8AF07CB0(D_8AF2C980, 0xFFFF00FF, 0xFFFF00FF);
+        break;
+    case 2:
+        *(s16 *)(D_8AF2C9C8 + 0x32) = 8;
+        func_8AF07CB0(D_8AF2C988, 0xFFFF00FF, 0xFFFF00FF);
+        break;
+    case 3:
+        *(s16 *)(D_8AF2C9C8 + 0x32) = 9;
+        func_8AF07CB0(D_8AF2C994, 0xFFFF00FF, 0xFFFF00FF);
+        break;
+    case 0:
+        *(s16 *)(D_8AF2C9C8 + 0x32) = 10;
+        func_8AF07CB0(D_8AF2C984, 0xFFFF00FF, 0xFFFF00FF);
+        break;
+    case 4:
+        *(s16 *)(D_8AF2C9C8 + 0x32) = 11;
+        func_8AF07CB0(D_8AF2C98C, 0xFFFF00FF, 0xFFFF00FF);
+        break;
+    case 5:
+        *(s16 *)(D_8AF2C9C8 + 0x32) = 12;
+        func_8AF07CB0(D_8AF2C990, 0xFFFF00FF, 0xFFFF00FF);
+        break;
+    }
+}
+
+extern s16 D_8AF2C960;
+extern u8 *D_8AF2C964;
+extern u8 *D_8AF2C968;
+extern u8 *D_8AF2C96C;
+extern u8 *D_8AF2C970;
+extern u8 *D_8AF2C974;
+extern u8 *D_8AF2C978;
+void func_8AF07EBC(void) {
+    *(u16 *)(D_8AF2C964 + 2) &= ~1;
+    *(u16 *)(D_8AF2C968 + 2) &= ~1;
+    *(u16 *)(D_8AF2C96C + 2) &= ~1;
+    *(u16 *)(D_8AF2C970 + 2) &= ~1;
+    *(u16 *)(D_8AF2C974 + 2) &= ~1;
+    *(u16 *)(D_8AF2C978 + 2) &= ~1;
+    switch (D_8AF2C960) {
+    case 0:
+        *(u16 *)(D_8AF2C964 + 2) |= 1;
+        break;
+    case 1:
+        *(u16 *)(D_8AF2C968 + 2) |= 1;
+        break;
+    case 2:
+        *(u16 *)(D_8AF2C96C + 2) |= 1;
+        break;
+    case 3:
+        *(u16 *)(D_8AF2C970 + 2) |= 1;
+        break;
+    case 4:
+        *(u16 *)(D_8AF2C974 + 2) |= 1;
+        break;
+    case 5:
+        *(u16 *)(D_8AF2C978 + 2) |= 1;
+        break;
+    }
+}
 
 extern s16 D_8AF2C960;
 void func_8AF07FF0(void) {
