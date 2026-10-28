@@ -24,7 +24,12 @@ void func_88004FF0(s32 archive) {
     D_8800EF3C = func_8004C990(archive, entry);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_16B030/func_88005048.s")
+extern s32 func_80001FF0(void);
+extern void func_88000288(void *, s32, s32, s32, s32, s32, s32, s32);
+extern u8 D_8800EF30[];
+void func_88005048(void) {
+    func_88000288(D_8800EF30, 0, 0xFF, 0x96, (s32)((f32)0 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)0 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((f32)40 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)40 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((f32)0 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)0 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((f32)40 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)40 / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+}
 
 void func_8800528C(s32 mode) {
     gSPDisplayList(D_800D0510++, D_88006030);

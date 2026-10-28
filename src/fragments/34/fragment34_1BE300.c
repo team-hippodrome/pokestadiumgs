@@ -87,7 +87,13 @@ void func_88500EF4(void) {
     *(s32 *)(*(u8 **)((u8 *)D_8850D6D0 + 4) + 0x30) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88500F08.s")
+extern s32 func_80001FF0(void);
+extern void func_880002F4(u8 *, s16);
+extern u8 * D_8850D6D0;
+void func_88500F08(void) {
+    *(s32 *)(*(u8 **)((u8 *)D_8850D6D0 + 4) + 0x30) = 1;
+    func_880002F4(D_8850D6D0 + 0x74, (s32)(13.0f * func_80001FF0() / 60.0f + ((func_80001FF0() * 13.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)) + (s32)(10.0f * func_80001FF0() / 60.0f + ((func_80001FF0() * 10.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)) + (s32)(5.0f * func_80001FF0() / 60.0f + ((func_80001FF0() * 5.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+}
 
 extern void func_8000612C(void);
 extern s32 D_88804058;
