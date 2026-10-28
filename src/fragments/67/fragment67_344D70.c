@@ -469,7 +469,31 @@ void func_82908E6C(f32 *arg0, const f32 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_82908E90.s")
+extern f32 D_82916AA4[];
+extern f32 D_82916AB4[];
+extern f32 D_82916AC4[];
+extern f32 Math_StepToF(f32, f32, f32, f32);
+extern void func_82908CF4(f32 *arg0, f32 *arg1, f32 *arg2, s16 arg3);
+extern void func_82908E6C(f32 *arg0, const f32 *arg1);
+void func_82908E90(s32 arg0, s32 arg1) {
+    D_8291B880[arg1].unk_04 = Math_StepToF(D_8291B880[arg1].unk_04, 0.0f, 0.66f, 0.66f);
+    switch (arg0) {
+    case 0:
+        func_82908E6C((f32 *)D_8291B880[arg1].unk_08, D_82916AA4);
+        break;
+    case 12:
+    case 13:
+    case 14:
+        func_82908CF4((f32 *)D_8291B880[arg1].unk_08, D_82916AB4, D_82916AA4, 3);
+        break;
+    case 26:
+    case 27:
+    case 28:
+    case 29:
+        func_82908CF4((f32 *)D_8291B880[arg1].unk_08, D_82916AC4, D_82916AB4, 4);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -565,7 +589,6 @@ void func_829090A0(s32 arg0, s32 arg1) {
 extern s16 D_8291B862;
 extern u8 D_82916EB8;
 extern s32 func_80001FF0(void);
-extern void func_82908E90(u8, s32);
 extern void func_829090A0(s32, s32);
 extern void func_82908F60(s32, s32);
 extern void func_82909170(u8, s32);
