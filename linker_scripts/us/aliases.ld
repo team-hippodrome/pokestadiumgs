@@ -1089,3 +1089,5 @@ func_80031564 = Audio_ClearCommandQueue;
 
 // Compatibility entry for assembly callers of the command-queue disable.
 func_800315E8 = Audio_DisableCommandQueue;
+/* func_8130DEB8's loop end pointer, one past fragment14_104FC0's D_813127DC table. */
+D_813127E0 = D_813127DC + 0x4;

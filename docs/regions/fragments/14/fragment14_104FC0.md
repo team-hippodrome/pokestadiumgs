@@ -11,3 +11,20 @@ History audit: live fleet main `afee707ab78d3f63f2f9deeadc7551ec0080eeed` has no
 Independent validation against master `e5264768303a56409602fd72f01f029a60d54de1`: the first rectangle recipe passed the full US `make rom COMPARE=1 -j2` with default host syntax checks. The separate unmerged #947 implementation was excluded for that independent build and restored immediately afterward. The independent ROM MD5 and the combined build with #947 both equal retail `1561c75d11cedf356a8ddb1a4a5f9d5d`; `md5sum -c baseroms/us/checksum.md5` passed after the combined build. All 201 already merged process owners and current foreign master matches remain present. No CI, verification, compiler or layout changes are authored. A fresh current-head and merge-result Public PR ROM Gate must actually run its checksum build before merging; skipped draft checks do not count.
 
 Current-master integration: after #947 was strictly verified as merged at `09ed36b421c6d4217ed030f1e29e4313381ce198`, the unchanged rectangle owner passed the full US build and explicit retail checksum again with all 202 merged process owners present. The draft branch was refreshed onto that master before ready validation.
+
+## 2026-10-28 — whole `.rodata` window; hand-maintained `func_8130F2C4` asm retired; `func_8130EF88`, `func_8130D340` matched
+
+`rom.yaml` now gives this file its full `.rodata` window, 0x10A8C0–0x10AA10 (formerly only 0x10A9E0 onward). Splat migrates the strings, floats and both of `func_8130F2C4`'s jump tables into the generated `.s` files. The hand-maintained `hand_asm/fragments/14/func_8130F2C4_manual.s` existed only to carry the tail of `jtbl_81312840`, so it is deleted and the pragma points at the generated file.
+
+The address-taken data splat does not migrate is defined in C at its retail position:
+- `D_81312730` (`func_8130D1FC`'s template) before that pragma;
+- `D_81312750`/`758`/`760` before `func_8130D4E0`;
+- `D_8131279C`–`D_813127DC` right after `func_8130DEB8`.
+
+`D_813127E0` is not a constant. It is `func_8130DEB8`'s end pointer one past `D_813127DC`, now the `aliases.ld` line `D_813127E0 = D_813127DC + 0x4`. The two 36.5 values there are `func_8130D098`'s own double literals. File-scope `const f64` scalars land in `.data` under IDO, and one-element arrays cost an extra `addiu`.
+
+- `func_8130EF88` (input handler): B or an empty slot cancels (phase 7). Otherwise the d-pad bits 8/1/4/2 pick a slot, accepted (sound 2) when non-empty and different, refused (sound 5) otherwise. Needed:
+  - base-first subscripts, `(counts + cur)[2]`;
+  - locals `input`, `counts`, `dir`, `cur`;
+  - `cur` read after the 12.0 store.
+- `func_8130D340`: `t = min(+0x30 / 12, 1)`; the size is 302 × `D_8160BD18(t)` by 135 × `D_8160BD1C(t)`, centered on (+8 + 246, +0xA). It uses the file's `unk_func_8130D45C` rect.

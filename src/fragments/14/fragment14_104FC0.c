@@ -55,8 +55,6 @@ s32 func_8130CEAC(u8 *arg0) {
 
 extern f32 (*D_8160BD18)(f32);
 extern f32 (*D_8160BD1C)(f32);
-extern f64 D_813127E0;
-extern f64 D_813127E8;
 extern void func_816072FC(void *arg0);
 typedef struct unk_func_8130D45C {
     s16 unk_00;
@@ -80,13 +78,15 @@ f32 func_8130D098(u8 *arg0, unk_func_8130D45C *arg1) {
     /* The double adds keep the integer base as the left operand; writing the
      * product first flips add.d's operands and rotates the FPU temp
      * assignment of every statement after these two. */
-    arg1->unk_00 = (s16)(s32)(*(s16 *)(arg0 + 8) + 27 + (1.0f - D_8160BD18(scale)) * D_813127E0);
-    arg1->unk_02 = (s16)(s32)(*(s16 *)(arg0 + 10) + 37 + (1.0f - D_8160BD1C(scale)) * D_813127E8);
+    arg1->unk_00 = (s16)(s32)(*(s16 *)(arg0 + 8) + 27 + (1.0f - D_8160BD18(scale)) * 36.5);
+    arg1->unk_02 = (s16)(s32)(*(s16 *)(arg0 + 10) + 37 + (1.0f - D_8160BD1C(scale)) * 36.5);
     arg1->unk_04 = (s16)(s32)(D_8160BD18(scale) * 73.0f);
     arg1->unk_06 = (s16)(s32)(D_8160BD1C(scale) * 73.0f);
     func_816072FC(arg1);
     return scale;
 }
+// func_8130D1FC's initializer template (still assembly).
+const s16 D_81312730[16] = { 401, 0, 147, 146, 401, 0, 147, 49, 474, 73, 0, 0, 474, 24, 0, 0 };
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D1FC.s")
 
 extern void func_816072FC(void *arg0);
@@ -128,6 +128,10 @@ void func_8130D45C(u8* arg0, unk_func_8130D45C* arg1, unk_func_8130D45C* arg2) {
     func_816072FC(arg1);
 }
 
+// Tables func_8130D4E0 (still assembly) reads.
+const s16 D_81312750[4] = { 24, 48, 24, 0 };
+const s16 D_81312758[4] = { 0, 24, 48, 24 };
+const s16 D_81312760[4] = { 6, 5, 3, 4 };
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D4E0.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D6A4.s")
@@ -135,6 +139,17 @@ void func_8130D45C(u8* arg0, unk_func_8130D45C* arg1, unk_func_8130D45C* arg2) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130DA04.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130DEB8.s")
+
+// Data func_8130DEB8 (still assembly) reads; its loop end pointer one past D_813127DC is the
+// linker alias D_813127E0.
+const u8 D_8131279C[4] = { 0 };
+const char D_813127A0[8] = "%s%s";
+const char D_813127A8[8] = "%s%s";
+const char D_813127B0[8] = "%s%s";
+const char D_813127B8[8] = "%s%s";
+const s32 D_813127C0[4] = { 179, 254, 230, 155 };
+const s32 D_813127D0[3] = { 116, 140, 164 };
+const s32 D_813127DC[1] = { 140 };
 
 extern u8 D_813120B4[];
 extern s32 func_80042D54(u8 *, u16);
@@ -294,20 +309,7 @@ void func_8130F270(u8 *arg0) {
     }
 }
 
-/* func_8130F2C4 is still GLOBAL_ASM, but its .s is hand-maintained (not the
- * splat-generated asm/us/nonmatchings/.../func_8130F2C4.s) so that it can
- * also carry jtbl_81312840's last 3 entries (12 bytes) in a .late_rodata
- * block ahead of its .text. Those words have to land immediately before
- * func_8130F5AC's own compiler-generated jump table (jtbl_8131285C) to
- * satisfy this fragment's SUBALIGN(16); a plain C global here would instead
- * be emitted by IDO before func_8130F2C4's own late-rodata (which isn't
- * used here) but, more importantly, can't be positioned relative to a
- * *later* function's late rodata at all. Placing it in a GLOBAL_ASM
- * .late_rodata block instead makes asm-processor position it correctly:
- * after all earlier rodata and immediately before func_8130F5AC's own
- * late-rodata jump table, matching retail. jtbl_81312840's first 4 entries
- * keep coming from the unmodified data blob at their real retail address. */
-#pragma GLOBAL_ASM("hand_asm/fragments/14/func_8130F2C4_manual.s")
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130F2C4.s")
 
 s16 func_8130F578(u8 *arg0, s32 *arg1) {
     s16 result = 0;
