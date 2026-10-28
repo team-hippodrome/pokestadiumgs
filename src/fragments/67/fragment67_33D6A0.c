@@ -42,7 +42,31 @@ void func_82900C04(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33D6A0/func_82900D78.s")
+extern void *D_829188A0;
+typedef struct Fragment67CameraPreset {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ s16 pitch;
+    /* 0x0E */ s16 yaw;
+    /* 0x10 */ f32 dist;
+    /* 0x14 */ u8 unk_14[8];
+} Fragment67CameraPreset; // size = 0x1C
+extern Fragment67CameraPreset D_82911B80[];
+extern s16 D_82918858;
+extern s16 D_829188AC;
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_800371B4(void *, void *, f32, s16, s32);
+extern s16 D_829188A8;
+extern s16 D_829188AA;
+void func_82900D78(void) {
+    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)D_829188A0 + 0xB4), D_82911B80[D_82918858].x, D_82911B80[D_82918858].y,
+                                 D_82911B80[D_82918858].z);
+    D_829188A8 = D_82911B80[D_82918858].pitch;
+    D_829188AA = D_82911B80[D_82918858].yaw;
+    D_829188AC = D_82911B80[D_82918858].dist;
+    func_800371B4((u8 *)D_829188A0 + 0xB4, (u8 *)D_829188A0 + 0xA8, D_829188AC, D_829188A8, D_829188AA);
+}
 #endif
 
 #ifdef VERSION_US
