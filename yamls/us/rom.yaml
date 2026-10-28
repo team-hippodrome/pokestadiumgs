@@ -1353,6 +1353,8 @@
     - [0x2B1540, textbin, fragments/56/fragment56_header]
     - [0x2B1560, c,       fragments/56/fragment56_code]
     - [0x2B8A00, data,    fragments/56/fragment56_data]
+    - [0x2B95C0, .rodata, fragments/56/fragment56_code] # strings, jump tables, float literals
+    - [0x2B9A10, rodata, fragments/56/fragment56_tail] # geo layouts and tables after the code object's rodata
   
   - name: fragment57
     type: code

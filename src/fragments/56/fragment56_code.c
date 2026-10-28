@@ -121,7 +121,6 @@ void func_86800A7C(void) {
 extern u32 func_8003570C(void);
 extern u8 D_868086C8[];
 extern u8 D_868085C0[];
-extern f32 D_86808218;
 extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
 void func_8680105C(s32 arg0) {
     volatile s32 pad[8];
@@ -135,7 +134,7 @@ void func_8680105C(s32 arg0) {
     func_8003570C();
     ptr = D_868086C8 + arg0 * 0x168;
     zero = 0.0f;
-    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * D_86808218 * (f32)(4 | (rand0 & 0)), 1);
+    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)(4 | (rand0 & 0)), 1);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86801160.s")
@@ -285,7 +284,6 @@ void func_86805D50(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86805DB8.s")
 
-extern f32 D_868083E0;
 extern u8 D_868085E8[];
 extern u8 D_86808C68[];
 extern f32 D_8682F30C;
@@ -299,7 +297,7 @@ void func_86806044(s32 arg0) {
     u32 rand2;
     u8 *ptr;
     D_8682F310 = 1;
-    D_8682F30C = D_868083E0;
+    D_8682F30C = 1.2f;
     rand0 = func_8003570C();
     rand1 = func_8003570C();
     rand2 = func_8003570C();
@@ -468,7 +466,6 @@ extern void main_pool_pop_state(s32);
 extern void func_87F0F480(void *);
 extern s32 D_86807CC4;
 extern f32 D_86807CC8;
-extern f32 D_868084C4;
 extern s32 D_86808640;
 extern s32 D_8680863C;
 extern s32 D_86808560;
@@ -484,7 +481,7 @@ extern s32 D_868086C0[];
 s32 func_8680729C(s32 arg0, void *arg1) {
     s32 sp24;
     if (func_80001FF0() == 0x3C) { D_86807CC4 = 0x1E; D_86807CC8 = 1.0f; }
-    else { D_86807CC4 = 0x19; D_86807CC8 = D_868084C4; }
+    else { D_86807CC4 = 0x19; D_86807CC8 = 1.4f; }
     D_86808590 = arg1;
     if (*(u8 *)((u8 *)D_86808590 + 0x2180) == 4) func_80027EE0(0xFFF);
     main_pool_push_state(0x4D523034);
