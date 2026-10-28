@@ -148,11 +148,10 @@ extern s32 D_8670BD64[];
 extern struct { s32 unk_00; u8 unk_04[0xA8]; } D_8672843C[];
 extern s32 D_8670C960;
 extern void *D_8670C95C;
-extern f32 D_8670C340;
 
 // Same code as func_867006C4 with resource 387, its frame taken from
 // D_8670BD64[D_8672843C[index].unk_00], and display list D_8670C95C; GS draws only
-// while D_8670BBA4 is 1 and otherwise stores D_8670C340 at 0x2C of the context.
+// while D_8670BBA4 is 1 and otherwise stores -5000.0f at 0x2C of the context.
 void func_86700588(s32 arg0, s32 arg1) {
     void *context;
     s32 index;
@@ -169,7 +168,7 @@ void func_86700588(s32 arg0, s32 arg1) {
             gSPDisplayList(D_800D0510++, D_8670C95C);
             GeoRender_ApplyMaterialState();
         } else {
-            *(f32 *)((u8 *)context + 0x2C) = D_8670C340;
+            *(f32 *)((u8 *)context + 0x2C) = -5000.0f;
         }
     }
 }
@@ -249,7 +248,6 @@ extern f32 D_8670B3C8;
 extern s32 D_8670B3D0;
 extern f32 D_8670C8A0;
 extern f32 D_8670C89C;
-extern f32 D_8670C390;
 extern f32 D_8670BD9C;
 extern u8 D_800CE060[];
 extern Row86706A30 D_86710C20[];
@@ -274,7 +272,7 @@ void func_867035A8(void) {
         }
     }
     if (D_8670B3D0 >= 2) {
-        D_8670BD9C = D_8670C390;
+        D_8670BD9C = 0.3f;
     }
 }
 #endif
@@ -402,7 +400,6 @@ typedef struct { u8 unk00[0x94]; s32 mode; u8 unk98[0x14]; } Stage55FadeState;
 typedef struct { u8 unk00[0x1D]; u8 alpha; u8 unk1E[0x1A]; f32 scale_z; u8 unk3C[0x12C]; } Stage55FadeModel;
 extern Stage55FadeModel D_86710668[];
 extern State86703DF4 D_86728408[];
-extern f32 D_8670C404;
 extern void func_8003F1DC(void *);
 void Stage55_UpdateModelFade(s32 arg0) {
 
@@ -410,7 +407,7 @@ void Stage55_UpdateModelFade(s32 arg0) {
         D_86710668[arg0].alpha -= 10;
         if (D_86710668[arg0].alpha <= 70) {
             D_86710668[arg0].alpha = 70;
-            D_86710668[arg0].scale_z = D_8670C404;
+            D_86710668[arg0].scale_z = 0.55f;
             ((Stage55FadeState *)D_86728408)[arg0].mode = 0;
         }
     }
@@ -471,7 +468,6 @@ extern Stage55VariantIndex D_86728458[];
 extern f32 D_8670C04C[];
 extern f32 D_8670C05C;
 extern f32 D_8670C060[];
-extern f32 D_8670C4F0;
 extern u8 D_8670D948[];
 extern u8 D_8670D920[];
 extern void *D_8670FF54;
@@ -489,7 +485,7 @@ void Stage55_SpawnVariantEffect(s32 arg0) {
     }
     entry = func_87F025B8(D_8670D948, D_867068E4);
     if (entry != NULL) {
-        size = D_8670C4F0;
+        size = 4.2f;
         *(f32 *)(entry + 0x48) = D_8670C04C[(arg0 / 2)];
         z = &D_8670C060[side];
         *(f32 *)(entry + 0x4C) = D_8670C05C;
@@ -516,7 +512,6 @@ void func_86706A30(void) { f32 temp_fv0; temp_fv0 = D_87F119DC->in54; D_87F119DC
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8670C4F4;
 extern u8 D_8670F868[];
 extern s32 D_8670FF4C;
 void func_86706AC8(s32 arg0) {
@@ -526,7 +521,7 @@ void func_86706AC8(s32 arg0) {
     if (entry != NULL) {
         *(f32 *)(entry + 0x48) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x24);
         *(f32 *)(entry + 0x4C) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x28);
-        *(f32 *)(entry + 0x50) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x2C) - D_8670C4F4;
+        *(f32 *)(entry + 0x50) = *(f32 *)((u8 *)&D_86710C20[arg0] + 0x2C) - 5000.0f;
         *(s16 *)(entry + 0x42) = -0x4000;
         *(s32 *)(entry + 0x38) = arg0;
         *(f32 *)(entry + 0x54) = 7.0f;
@@ -545,8 +540,6 @@ void func_86706AC8(s32 arg0) {
 extern void func_86706B88();
 extern u8 D_8670E5C0[];
 extern s32 D_8670FF50;
-extern f32 D_8670C4FC;
-extern f32 D_8670C500;
 void func_86706D3C(s32 arg0) {
     u8 *entry;
     s32 tier;
@@ -563,8 +556,8 @@ void func_86706D3C(s32 arg0) {
     }
     entry = (u8 *)func_87F025B8(D_8670E5C0, func_86706B88);
     if (entry != NULL) {
-        size = D_8670C4FC;
-        *(f32 *)(entry + 0x50) = D_86710C20[tier].z - D_8670C500;
+        size = 3.2f;
+        *(f32 *)(entry + 0x50) = D_86710C20[tier].z - 5000.0f;
         *(s16 *)(entry + 0x42) = 0;
         *(f32 *)(entry + 0x54) = size;
         *(f32 *)(entry + 0x58) = size;
@@ -794,8 +787,6 @@ void Stage55_UpdateResourcePools(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8670C684;
-extern f32 D_8670C688;
 extern f32 D_8670BE7C;
 extern s16 D_8670BE80;
 extern s16 D_8670BE84;
@@ -813,11 +804,11 @@ void func_8670A404(void) {
 
     var_v0[5] = 0.0f;
     var_v0[6] = -140.0f;
-    var_v0[7] = D_8670C684;
+    var_v0[7] = 7450.0f;
     var_v0[8] = 0.0f;
     var_v0[9] = 40.0f;
     var_v0[10] = 0.0f;
-    D_8670BE7C = D_8670C688;
+    D_8670BE7C = 7.6f;
     D_8670BE80 = 16388;
     D_8670BE84 = 6400;
     func_8003F1DC(D_86726A48);
@@ -839,8 +830,6 @@ extern Row86706A30 D_867111C0[];
 extern Row86706A30 D_867100C8[];
 extern s32 D_8670FEC8[];
 extern s32 D_8670FF00;
-extern f32 D_8670C6C8;
-extern f32 D_8670C6CC;
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void ModelAnim_SetEventFrame(u8 *, s16);
 extern s32 func_8003F210(void *, s32);
@@ -861,9 +850,9 @@ void Stage55_RunStage(void) {
     if (*((u8 *)D_8670FEB0 + 0x2180) == 4) {
         D_8670BE84 = 2773;
         D_8670BE80 = -32764;
-        gStage55MainState.unk1C = D_8670C6C8;
+        gStage55MainState.unk1C = 1610.0f;
         gStage55MainState.unk24 = 160.0f;
-        D_8670BE7C = D_8670C6CC;
+        D_8670BE7C = 13.6f;
         for (index = 0; index < 4; index++) {
             func_8003F1DC(&D_867111C0[index]);
             func_8003F114((u8 *)&D_86710C20[index], 0, -1, (void *)D_8670FEC8[index]);
