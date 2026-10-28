@@ -153,7 +153,24 @@ u8 func_8AF0C96C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0CE6C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0D29C.s")
+extern u8 *D_8AF2E888;
+extern u8 D_8AF2D8E8[];
+s32 func_8AF0D29C(s16 id) {
+    s32 i;
+
+    D_8AF2E888 = D_8AF2D8E8;
+    for (i = 0; i < 200; i++) {
+        if (D_8AF2E888[0] == 0) {
+            return 0;
+        }
+        if (id == D_8AF2E888[0]) {
+            return 1;
+        }
+        D_8AF2E888 += 0x14;
+    }
+    while (TRUE) {
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0D398.s")
 

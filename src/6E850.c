@@ -353,7 +353,40 @@ void func_8006E944(f32 (*arg0)[4], void *arg1, BlendWeight1F arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006EA18.s")
+extern u32 Memmap_GetSegmentVaddr(u32);
+extern s16 Model_GetVertexClass(s16 *arg0, s32 arg1);
+extern s16 func_8006DE74(s16 *arg0, s32 arg1);
+void func_8006EA18(u8 *model, u8 *transforms, u8 *out) {
+    u8 *vertices;
+    s32 count;
+    s32 i;
+    u8 *node;
+    u8 *entry;
+
+    vertices = (u8 *)Memmap_GetSegmentVaddr(*(s32 *)(model + 0x10));
+    Memmap_GetSegmentVaddr(*(s32 *)(model + 0x14));
+    count = *(u16 *)(model + 4);
+    node = out;
+    for (i = 0; i < count; i++, node += 0x50) {
+        switch (Model_GetVertexClass(vertices, i)) {
+            case 0:
+            default:
+                entry = node + 0x14;
+                func_8006E7DC(transforms, entry);
+                *(f32 *)(entry + 0x18) = 0.0f;
+                *(f32 *)(entry + 0x1C) = 0.0f;
+                *(f32 *)(entry + 0x20) = 0.0f;
+                break;
+            case 4:
+                entry = node + 0x14;
+                func_8006E7DC(transforms + (func_8006DE74(vertices, i) << 6), entry);
+                *(f32 *)(entry + 0x18) = 0.0f;
+                *(f32 *)(entry + 0x1C) = 0.0f;
+                *(f32 *)(entry + 0x20) = 0.0f;
+                break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -36,3 +36,13 @@ mutable `D_82104170`, `D_82104174`, `D_82104188` and `D_8210418C` follow the
 literals, so check whether they are a later file's `.data` or `.bss`). Then give each
 file its `.rodata` slice and convert the C files' `D_8210xxxx` float externs to
 literals.
+
+## 2026-10-29: `func_82101FB4` requeue
+
+requeue (0.968). `(u8 *arg0, f32 *target, f32 speed)`:
+- `delta = target - current` (func_82102C54 with func_82101B80(arg0));
+- if `|delta|^2 > 0`: angle = func_82102D10(delta) - arg0[0], wrapped by func_82102D34, scaled by `*(f32 *)(arg0 + 0x28)`, added to arg0[0], then arg0[0] wrapped. func_82102D10's C definition is `void`, but it really returns func_821028E0's f32; this file declares it `f32`.
+- `next = (idx + 1 == 4) ? 0 : idx + 1` (the ternary gives retail's two-store form);
+- `slot = (arg0 + 4) + next * 8`; func_82102B94(slot, speed, arg0[0]); func_82102BE8(slot, func_82101B80(arg0)); idx = next.
+
+Declare `slot, angle, next, delta[2]`. Remaining: retail spills `slot` at sp+0x24, ours at sp+0x20.
