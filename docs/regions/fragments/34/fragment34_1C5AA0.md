@@ -90,3 +90,17 @@ pass with `build/pokestadiumgs-us.z64: OK`. The full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail and whitespace checks pass.
 Independent original-word and raw retail comparisons verify all 252 bytes
 at `0x1C7904..0x1C7A00`.
+
+## 2026-10-28 — `func_8850A988`, `func_8850AAA8`, `func_8850ABCC` matched
+
+All three use the file's rounded float lerp
+`(s16)((C - (t * K) / 10.0f) + (C > (t * K) / 10.0f ? 0.5f : -0.5f))` for
+`unk_04` and `unk_06`. `unk_06` uses `C = 24.0f` with `K = 0`: the zero
+product survives as `mtc1 $zero` + `cvt`.
+- `func_8850ABCC`: `unk_18--` first, then lerp with -20/480. At
+  `unk_18 <= 0`: state 0x11 and `func_885084EC(0, 8)`, `(1, 8)`.
+- `func_8850A988` / `func_8850AAA8`: `s16 v = D_88523030.unk_18--;`, clamped
+  to 0 when negative, lerp with 450/470 or -500/-950. At `unk_18 < -5`:
+  state 0xD or 0xF and `func_88509F68(0)` or `(1)`. The post-decrement
+  initializer produces retail's redundant `sll`/`sra` re-sign-extension;
+  a separate `unk_18 = v - 1` statement drops it.
