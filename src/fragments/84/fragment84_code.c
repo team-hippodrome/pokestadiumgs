@@ -99,7 +99,22 @@ void func_8FC00558(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC0069C.s")
+extern u8 D_80094E38[];
+extern u16 D_8FC02448[];
+extern u8 D_8FC02830;
+extern void func_8004D998(s32, s32, void *, s32, s32);
+extern Gfx* D_800D0510;
+void func_8FC0069C(void) {
+    s32 p;
+    s32 j;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (p = 0; p < 2; p++) {
+        for (j = 0; j < 6; j++) {
+            func_8004D998(D_8FC02448[p] + j * 0x26 + 0xF, 0x15E, (u8 *)&D_8FC02830 + p * 0x4D40 + j * 0xC80 + 0x58, 0, 0);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
