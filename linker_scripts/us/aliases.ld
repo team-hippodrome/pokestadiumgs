@@ -1196,3 +1196,13 @@ func_8260166C = RecordSelection_LoadSelectedParties;
 func_82601070 = RecordSelection_LoadLevelMatchedParties;
 
 func_82601298 = RecordSelection_InitializePartyRecords;
+
+func_826030E4 = RecordSelection_InitializeDisplayContext;
+
+func_82B07E18 = ImageFade_UpdateAndDraw;
+
+func_8005EB3C = GbSave_CountBitmapBits;
+
+func_86A059AC = ItemBounds_ContainsPlayerPosition;
+
+func_87E0CEE4 = ListSlots_ResetEntryState;

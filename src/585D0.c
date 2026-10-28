@@ -3030,13 +3030,20 @@ s32 func_8005E728(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005EB3C.s")
+// Count set species flags in the first count bits of a saved bitmap.
+s32 GbSave_CountBitmapBits(u8 *data, u8 count) {
+    s32 result = 0;
+    s32 i;
+    for (i = 0; i < count; i++) {
+        result += (data[i / 8] >> (i % 8)) & 1;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
 extern u8 func_8005D92C(s32 index);
 extern u8 D_801285D0[];
-extern void func_8005EB3C(void *, s32);
 
 void func_8005ECA4(s32 arg0) {
     s32 address;
@@ -3060,7 +3067,7 @@ void func_8005ECA4(s32 arg0) {
         value = 0xFB;
         break;
     }
-    func_8005EB3C((void *)address, value);
+    GbSave_CountBitmapBits((void *)address, value);
 }
 #endif
 
@@ -3069,7 +3076,6 @@ extern u8 func_8005D92C(s32 index);
 extern u8 D_801285D0[];
 
 void func_8005ED78(s32 arg0) {
-    extern void func_8005EB3C(void *, s32);
     s32 address;
     u8 value;
 
@@ -3091,15 +3097,14 @@ void func_8005ED78(s32 arg0) {
         value = 0xFB;
         break;
     }
-    func_8005EB3C((void *)address, value);
+    GbSave_CountBitmapBits((void *)address, value);
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_8005EB3C(void *, s32);
 
 void func_8005EE4C(s32 arg0) {
-    func_8005EB3C((arg0 * 0x70) + 8 + D_80128570, 0xFB);
+    GbSave_CountBitmapBits((arg0 * 0x70) + 8 + D_80128570, 0xFB);
 }
 #endif
 

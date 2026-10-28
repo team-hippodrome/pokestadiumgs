@@ -1017,7 +1017,7 @@ void func_82B02EDC(void *arg0) {
 extern s16 *D_82B085FC[];
 extern s32 D_82B085F8;
 extern s32 func_8004C990(s32, s32);
-extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
 extern void func_82B0284C(u8 *arg0, u8 *arg1);
 extern u8 D_80094E38[];
 extern Gfx * D_800D0510;
@@ -1120,7 +1120,7 @@ void func_82B03934(s32 arg0, s32 arg1) { s32 temp = func_8004C990(0x156, 0); fun
 
 #ifdef VERSION_US
 extern void func_8004D998(s32, s32, u8 *, s32, s32);
-extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
 extern s32 func_8004C990(s32, s32);
 extern Gfx * D_800D0510;
 void func_82B041C8(s32 arg0, s32 arg1, u8 *arg2, s32 arg3, s32 arg4) {
@@ -1636,7 +1636,41 @@ void func_82B07C88(void) { s32 var_s0; s32 var_s5; s32 temp_v0; s32 var_s1; s32 
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B07E18.s")
+extern s16 D_82B1269C;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern u16 D_82B12454;
+// Advance archive image 333 opacity and draw it; zero also redraws the clipped background.
+void ImageFade_UpdateAndDraw(s32 skip_background) {
+    s16 alpha;
+    u16 *image;
+    s32 x;
+    image = (u16 *)func_8004C990(333, 0);
+    if (D_82B12454 & 2) {
+        alpha = D_82B1269C;
+        if (alpha < 255) {
+            alpha += 25;
+            if (alpha > 255) alpha = 255;
+        }
+    } else {
+        alpha = D_82B1269C;
+        if (alpha > 0) {
+            alpha -= 25;
+            if (alpha < 0) alpha = 0;
+        }
+    }
+    D_82B1269C = alpha;
+    if (alpha > 0) {
+        x = 328 - (s32)image[0] / 2;
+        if (skip_background == 0) {
+            func_80006F70(&D_800D0510, x, 199, (s16)image[0], image[1]);
+            func_82B07C88();
+        }
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 50, D_82B1269C);
+        func_8004D19C(328, 199, (s32)image, 1, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US

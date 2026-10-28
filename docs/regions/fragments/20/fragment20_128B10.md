@@ -656,3 +656,36 @@ ignores. The first-success source, object, ROM, ELF, and map are frozen.
 Retail ROM MD5 remains `1561c75d11cedf356a8ddb1a4a5f9d5d`. No coverage change,
 unused local, fake interface, source unroll, instruction rewrite, or padding
 accompanies this owner.
+
+### 2026-10-29 matched: `826030E4` display-context initialization
+
+`RecordSelection_InitializeDisplayContext` initializes row selection, text
+resources, compact party descriptors and icons. It preserves the captured
+entry mode for the final eligibility/history update while reloading flags
+for the text-loader dispatch. The metadata-layout byte selects one or two
+six-record groups per descriptor. Nonzero-species entries are copied as
+88-byte records; unused slots among the twelve entries are cleared. Signed
+member counts occupy descriptor bytes 4 and 5. Their sum selects the six-
+or twelve-icon layout. The descriptor remains 1,064 bytes at context+176.
+
+The four-byte values copied at context+88 are **text dimensions**, comprising
+signed 16-bit width and height. `func_82602E14` produces these halfwords at
++88/+90 with a four-byte stride. Their natural two-byte alignment explains
+the retail unaligned word loads/stores. A `RecordSelectionTextDimensions`
+assignment preserves that layout without packing directives.
+
+A staged row cursor accounts for the packed table's four-byte header.
+Separate scan/clear/sum induction variables and comma-form outer updates
+reproduce the ordinary record loops, including IDO's own two-record unroll.
+Keeping the actual returned `PokeIconList44300 *` for both the context store
+and flags update closes the final saved-mode stack offset (64 rather than
+68); declaring that pointer before the mode preserves the allocator result
+at sp+156 and the 160-byte frame. Every local carries a used value.
+
+The allocator uses its actual `SceneLoadContext *(u32)` interface from
+`229E0.h`; the final callback retains its actual integer address-handle API
+`func_82610C84(s32, s32)`. The 360-instruction / 1,440-byte function matched
+in the canonical runner. A diagnostic-only object batch ran while the
+current-master baseline build held the gate queue; its first exact body was
+then submitted for installation and the authoritative full-ROM comparison.
+Private receipts retain the source, object, ELF, map and retail ROM hashes.
