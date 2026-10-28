@@ -173,3 +173,53 @@ stock IDO 7.1 build with explicit host syntax checking and retail MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The source's only remaining GLOBAL_ASM
 is `func_87F0A098`; its C candidate can now use the original five-way switch.
 Private extraction/control/gate receipts identify the tested input hashes.
+
+## 2026-10-28 — player-panel initializer accepted; source fully C
+
+`func_87F0A098` → `Fragment64_StartPlayerPanel`: 848 bytes / 212 instructions,
+frame 0x80. Canonical batch `parent64-start-model-fields`, label
+`panel-start:model-fields:opaque0:raw-default0:half1`, is accepted through
+an explicit-host-check, full retail ROM gate. The source now has no
+GLOBAL_ASM owners; all nine functions in its 3,648-byte text span are C.
+
+The initializer turns four nonzero inputs into ordered display IDs 1..4,
+or 5..8 where the corresponding root +0x2182 bit is set. Model fields at
++0x10/+0x14/+0x18 serve one/two/three selected players; the +0x1C field is
+the default for zero/four. It writes the selected IDs to PL_1, PL_2 and
+PL_3 nodes via `func_87F0A688` in `src/fragments/64/fragment64_32D260.c`.
+The new shared panel-state view also describes the already accepted bounce
+updater. The existing resource initializer establishes all four model
+fields and the state extent; no new storage is allocated by these types.
+
+Repeated predicates of the unchanged input arguments let IDO cache the
+four membership values without four source-level snapshot locals. This
+recovers the 0x80 frame. Restricting loop-index declarations to the
+selection block recovers all array offsets. Assigning the high-bit field
+of each 24-byte counter row reproduces the original byte-store packing and
+load schedule. The row is shared with `Fragment64_IncrementMatchingCounters`,
+whose existing halfword test independently identifies that same high bit.
+Named model fields recover the final comparison-load order that an array
+view of the four pointers had swapped.
+
+//!bug: the retail selection buffer occupies three words at sp+0x4C,
+sp+0x50 and sp+0x54, immediately before the ID buffer at sp+0x58. With four
+active inputs, the fourth selection overwrites the first ID word. The
+four-player path uses the default model and does not read chosen values.
+The C source retains this original behavior and marks it at the buffer.
+It does not shorten the four-iteration selection path.
+
+Private canonical history retains rejected scope, loop, snapshot, signedness,
+statement, model and flag-view families. A logging-only stock-compiler
+observer reproduces complete-module output with tracing off/on and normal/
++20blank controls; its spill traces distinguish the extra front-end storage
+from runtime work. A separate compiler-lineage control rejects IDO 5.3 as
+an explanation: its frame remains oversized and its candidate code changes.
+Ordinary C register storage-class diagnostics also leave the residual
+unchanged and are absent from the accepted source. No physical register
+binding, padding, dead assignment, or instruction rewrite is used.
+
+Post-acceptance cleanup consolidates the counter-row flag, model prefix and
+panel-state views, removes unused type-only variants and duplicate externs,
+and adds the entry alias. Complete-module normal/+20blank controls preserve
+allocated bytes, function extents and relocation topology modulo that alias.
+The canonical retail MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`.

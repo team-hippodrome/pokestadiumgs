@@ -3,7 +3,8 @@
 
 #ifdef VERSION_US
 typedef struct { u8 bytes[0x6C0]; } Fragment64ModelSpan;
-typedef struct { u8 counts[18]; s16 state; u8 rest[4]; } Fragment64CounterRow;
+typedef struct { u16 enabled:1; u16 other:15; } Fragment64CounterState;
+typedef struct { u8 counts[18]; Fragment64CounterState state; u8 rest[4]; } Fragment64CounterRow;
 extern u8 D_87F113D0[18];
 void Fragment64_IncrementMatchingCounters(u8 *root, s32 slot) {
     s32 row;
@@ -53,6 +54,25 @@ typedef struct {
     Fragment64PanelColor color;
     s32 frame;
 } Fragment64MotionState;
+
+typedef struct {
+    u8 unk_00[10];
+    s16 unk_0A;
+} Fragment64ModelPosition;
+
+typedef struct {
+    s32 resource_ids[4];
+    Fragment64ModelPosition * model_one;
+    Fragment64ModelPosition * model_two;
+    Fragment64ModelPosition * model_three;
+    Fragment64ModelPosition * default_model;
+    s32 unk_20;
+    Fragment64ModelPosition * model;
+    f32 y, velocity;
+    s32 wait_frames, elapsed_frames, flags;
+    Fragment64MotionState panel;
+    u8 input[12];
+} Fragment64PanelState;
 extern f32 D_80088E50[0x1000];
 void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
     s32 mode;
@@ -197,24 +217,89 @@ void func_87F09EBC(u8 *arg0, s32 arg1) {
     *(f32 *)(arg0 + 0x28) = -240.0f;
     *(f32 *)(arg0 + 0x2C) = 0.0f;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F0A098.s")
+typedef struct TreeNode_80050428 TreeNode_80050428;
+extern void func_87F0A688(TreeNode_80050428 *, s32, s32);
+extern void func_80027774(u16, u8);
+extern void func_80021ED8(s32);
+void Fragment64_StartPlayerPanel(Fragment64PanelState *state, u8 *root, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
+    s32 count;
+    u8 enabled;
+    enabled = root[0x2182];
+    if (!(state->flags & 1)) {
+        s32 active[4];
+        s32 ids[4];
+        //!bug: Retail's fourth selection overwrites ids[0]; the four-player model does not read chosen.
+        s32 chosen[3];
+        s32 i, j;
+        state->flags |= 1;
+        active[0] = (arg3 != 0);
+        active[1] = (arg4 != 0);
+        active[2] = (arg5 != 0);
+        active[3] = (arg6 != 0);
+        ids[0] = (enabled & 1) ? 5 : 1;
+        ids[1] = (enabled & 2) ? 6 : 2;
+        ids[2] = (enabled & 4) ? 7 : 3;
+        ids[3] = (enabled & 8) ? 8 : 4;
+        count = (arg3 != 0) + (arg4 != 0) + (arg5 != 0) + (arg6 != 0);
+        for (i = 0; i < count; i++) {
+            chosen[i] = 0;
+            for (j = 0; j < 4; j++) {
+                if (active[j] != 0) {
+                    active[j] = 0;
+                    chosen[i] = ids[j];
+                    break;
+                }
+            }
+        }
+        switch (count) {
+        case 0:
+        case 4:
+            state->model = state->default_model;
+            break;
+        case 1:
+            state->model = state->model_one;
+            func_87F0A688((TreeNode_80050428 *)state->model, 0x504C5F31, chosen[0]);
+            break;
+        case 2:
+            state->model = state->model_two;
+            func_87F0A688((TreeNode_80050428 *)state->model, 0x504C5F31, chosen[0]);
+            func_87F0A688((TreeNode_80050428 *)state->model, 0x504C5F32, chosen[1]);
+            break;
+        case 3:
+            state->model = state->model_three;
+            func_87F0A688((TreeNode_80050428 *)state->model, 0x504C5F31, chosen[0]);
+            func_87F0A688((TreeNode_80050428 *)state->model, 0x504C5F32, chosen[1]);
+            func_87F0A688((TreeNode_80050428 *)state->model, 0x504C5F33, chosen[2]);
+            break;
+        }
+        state->model->unk_0A = -240;
+        state->wait_frames = 0;
+        state->elapsed_frames = 0;
+        state->y = -240.0f;
+        state->velocity = 0.0f;
+        if (root[0x2180] == 1) {
+            ((Fragment64CounterRow *)(root + 0x2194))[0].state.enabled = (arg3 != 0);
+            ((Fragment64CounterRow *)(root + 0x2194))[1].state.enabled = (arg4 != 0);
+            ((Fragment64CounterRow *)(root + 0x2194))[2].state.enabled = (arg5 != 0);
+            ((Fragment64CounterRow *)(root + 0x2194))[3].state.enabled = (arg6 != 0);
+        }
+        if (state->model != state->default_model) {
+            func_80021ED8(55);
+            func_80027774(0xCA0F, 36);
+        } else {
+            func_80021ED8(56);
+            func_80027774(0x1E09, 40);
+        }
+        if ((root[0x2180] == 1) && (count != 1)) {
+            state->flags |= 4;
+            func_87F09870((s32 *)&state->panel);
+        }
+    }
+}
 
-typedef struct {
-    u8 unk_00[10];
-    s16 unk_0A;
-} Fragment64ModelPosition;
-typedef struct {
-    u8 unk_00[0x24];
-    Fragment64ModelPosition *model;
-    f32 y, velocity;
-    s32 wait_frames, elapsed_frames, flags;
-    Fragment64MotionState panel;
-    u8 input[12];
-} Fragment64BounceState;
 extern s32 func_80001FF0(void);
 extern s32 func_87F0E610(u8 *, u8 *);
-extern void func_80021ED8(s32);
-s32 Fragment64_UpdateBounceAndConfirm(Fragment64BounceState *state) {
+s32 Fragment64_UpdateBounceAndConfirm(Fragment64PanelState *state) {
     Fragment64MotionState *panel;
     s32 done;
     u16 buttons;
