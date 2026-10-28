@@ -295,3 +295,46 @@ accumulator after the array closed that residual. These are source-shape
 experiments, not additional owners. No manual unrolling, filler locals,
 forced registers, fake ABI, instruction rewriting, coalescing, shared
 header/layout/alias changes, or compiler modifications were used.
+
+
+## 2026-10-29 — `func_82B03538`: genuine native panel text match
+
+Accepted `scratch/3538-b3.json` candidate 6,
+`panel-text:retail-table-base-lifetimes:mode-6`: all 336 bytes and the
+80-byte frame match, with exact link shape. Normal and +20blank whole-module
+controls, explicit normal host syntax, and the authoritative native retail
+ROM gate PASS. Receipt: `scratch/3538-b3/gate-0/receipt.json`, retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, unmodified native IDO 7.1 compiler hash
+as recorded in the preceding accept. Both this C owner and its companion
+changes were installed by the canonical runner, not by manual source edits.
+
+The panel draws its animated graphic with `func_82B0341C`, an optional
+heading from `D_82B08610`, then the two nonnegative entries of the selected
+row of `D_82B0861C`, advancing the vertical text position by 23 per entry.
+The data contains five two-halfword rows; heading IDs are 6, 7, 8, -1, -1.
+`func_82B0284C` writes exactly two halfwords. The new function uses the
+existing genuine four-byte `Pair02198`, without the unsupported coordinate
+array extent seen in some older sibling bodies. Locals in the winning order
+are `i`, `y`, `heading`, `entries`, `coords`, `id`, `text`. The heading and
+flat entry-table pointers model the actual saved-register address lifetimes
+and are used by their real lookups. With implicit global bases the complete
+84-opcode shape already matched but the frame was 72 bytes and eight
+register uses differed; explicit bases close both residuals. Changing only
+message-ID width or replacing the pair by a two-halfword array did not.
+
+Actual definitions at `src/4CC20.c:262` and `src/47580.c:1340` require
+`void *func_8004C874(s32,s32)` and
+`void func_800495F8(s32,s32,s32,const char *,...)`. All six old duplicates
+of each declaration in the owned file are retyped consistently by companion
+edits. The dispatcher `func_82B05494` now takes the real second `s32`
+animation argument and forwards `(arg0,arg1)` to this owner. The assembly
+caller `func_82B080D0` explicitly supplies both at 0x82B08424/28. Its old
+no-argument call depended on live ABI registers. The accepted full ROM gate
+covers these corrections and all pre-existing C neighbors. No shared
+header, aliases, layouts, instructions, or compiler code was changed.
+
+Preflight initially did not recognize `func_82B0201C` as a companion target
+near a preceding comment containing function names. Anchoring that exact
+prototype correction to the existing `func_8004C874` prototype passed the
+canonical validator; no guard or runner modification was made. Retained
+linked ten-word negative diagnostic: `scratch/3538-b1/linked-2/diagnostic.json`.
