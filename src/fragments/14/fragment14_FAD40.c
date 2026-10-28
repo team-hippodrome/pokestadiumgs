@@ -255,7 +255,77 @@ void *func_813035A0(void *arg0) {
     }
     return &D_81311E5C[((((u32) *(u32 *)(*(u8 **)(*(u8 **)((u8 *)(u32)(*(s32 *)((u8 *)arg0 + 0x4DA0) + 0x20000) - 0x5EB8) + 0x940) + 0x40) << 5) >> 0x1F) == 0) * 108 + idx * 36];
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81303648.s")
+// One of the six 0xCE8-byte party slots at the start of the selection screen object.
+typedef struct unk_D_81303648_slot {
+    /* 0x000 */ u8 unk_000[0xA];
+    /* 0x00A */ u8 unk_00A;
+    /* 0x00B */ u8 unk_00B[0x21 - 0xB];
+    /* 0x021 */ u8 unk_021;
+    /* 0x022 */ u8 unk_022[0xCE8 - 0x22];
+} unk_D_81303648_slot; // size = 0xCE8
+// The selection screen object func_81303648 dispatches on.
+typedef struct unk_func_81303648 {
+    /* 0x0000 */ unk_D_81303648_slot slots[6];
+    /* 0x4D70 */ u8 unk_4D70[0x4DA0 - 0x4D70];
+    /* 0x4DA0 */ s32 unk_4DA0;
+    /* 0x4DA4 */ u8 unk_4DA4[0x4DAC - 0x4DA4];
+    /* 0x4DAC */ s32 unk_4DAC;
+    /* 0x4DB0 */ u8 unk_4DB0[4];
+    /* 0x4DB4 */ s32 unk_4DB4;
+    /* 0x4DB8 */ u8 unk_4DB8[0x4DBD - 0x4DB8];
+    /* 0x4DBD */ u8 unk_4DBD;
+    /* 0x4DBE */ u8 unk_4DBE[6];
+} unk_func_81303648;
+extern s32 func_81311C70(s32, s32 *, u8, s32);
+extern s32 func_8160A8DC(u8 *);
+extern void func_8160A928(u8 *, s32);
+extern void func_8160A94C(u8 *);
+extern void func_81302E58(void *arg0, s32 arg1);
+extern void * func_813035A0(void *arg0);
+// arg1 is unused, but retail homes it, so the function takes it.
+void func_81303648(unk_func_81303648 *arg0, s32 arg1) {
+    s32 count;
+
+    switch (func_81311C70(arg0->unk_4DA0 + 0x74, (s32 *)func_813035A0(arg0), arg0->slots[0].unk_00A, -1)) {
+        case -1:
+            count = func_8160A8DC((u8 *)arg0);
+            if (count >= 6) {
+                count -= 1;
+            }
+            func_8160A928((u8 *)arg0, count);
+            arg0->unk_4DBD = 12;
+            arg0->unk_4DAC = 1;
+            break;
+        case 1:
+            func_8130A570(arg0->unk_4DA0 + 0xDA8, arg0->unk_4DB4);
+            arg0->unk_4DBD = 3;
+            func_81302E58(arg0, 0);
+            return;
+        case 2:
+        case 3:
+            arg0->unk_4DBD = 16;
+            break;
+        case 4:
+            func_8160A928((u8 *)arg0, 0);
+            arg0->unk_4DBD = 17;
+            break;
+        case 6:
+            for (count = 0; count < 6; count++) {
+                arg0->unk_4DBE[count] = arg0->slots[count].unk_021;
+                arg0->slots[count].unk_021 = 0;
+            }
+            func_8160A928((u8 *)arg0, 0);
+            arg0->unk_4DBD = 18;
+            arg0->unk_4DAC = 1;
+            break;
+        case 5:
+            func_8160A94C((u8 *)arg0);
+            func_8160A928((u8 *)arg0, 0);
+            arg0->unk_4DBD = 12;
+            arg0->unk_4DAC = 1;
+            break;
+    }
+}
 
 extern void func_813049AC(u8 *, s16 *);
 extern void func_81304788(u8 *, s32 *, s32);

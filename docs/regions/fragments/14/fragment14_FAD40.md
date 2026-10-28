@@ -213,3 +213,18 @@ The shared rodata blob 0x10A430–0x10A600 is split by file:
 Splat migrates the late rodata into the owners' `.s` files; the lists and `D_813122A0` are defined in C. Byte-identical.
 
 `func_81302C64` returns 0 for states 0–7, 11, 15 and 16 of +0x4DBD, otherwise 1, as a `switch` with direct returns; it emits retail's 19-entry jump table. `func_81302CB4`, `func_81303648` and `func_81303EF4` are now layout-ready.
+
+## 2026-10-28 — `func_81303648` matched; `func_81302CB4` requeue
+
+- `func_81303648` dispatches on `func_81311C70(owner + 0x74, func_813035A0(obj), slot0.+0xA, -1)` (case bodies in retail order -1, 1, 2/3, 4, 6, 5):
+  - -1: `func_8160A928(count >= 6 ? count - 1 : count)` with `count = func_8160A8DC`, state 12;
+  - 1: `func_8130A570` then state 3, `func_81302E58` and return;
+  - 2/3: state 16;
+  - 4: state 17;
+  - 6: save and clear each slot's +0x21 byte into +0x4DBE, state 18;
+  - 5: `func_8160A94C`, state 12.
+  The object is typed (`unk_func_81303648`: six 0xCE8-byte `unk_D_81303648_slot`s, then the state fields). Retail's base-first `addu` in the copt-unrolled save loop only comes from indexing the slot array. The loop reuses `count`. The unused second parameter is kept because retail homes `a1`.
+- `func_81302CB4` (requeue) slides the panel rect (w 473, h 143):
+  - state 15: x eases from -473 or 640 (by `+0x4DA8 > 0.5`) toward 85 with `D_8160BD08((p - 0.5) * ±2)`, y 91, returns 1;
+  - otherwise `t = D_8160BD08(+0x4DA4 / 16)` when +0x4DB0, slot0.+0x20 and state 0/3, and x/y lerp from (85, -143) to (85, 91) by `t`.
+  Retail converts all four integer endpoints with `cvt.s.w` at run time. IDO folds at least the start values for every spelling tried (literals, `s32`/`s16`/`u16` locals).
