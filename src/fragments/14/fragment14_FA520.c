@@ -1,5 +1,8 @@
 #include "global.h"
 
+// The empty record func_8130251C (still assembly) copies into the selection slots.
+const u8 D_813122A0[16] = { 0 };
+
 // The fragment's work area; the pointers at 0xA170/0xA174 are the ones other functions read as
 // D_81331970/D_81331974.
 typedef struct unk_D_81327800 {

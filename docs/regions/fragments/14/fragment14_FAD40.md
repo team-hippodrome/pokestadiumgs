@@ -204,3 +204,12 @@ link pass with `build/pokestadiumgs-us.z64: OK`. ROM MD5 is
 pass. All 56 original words and retail span `0xFB980..0xFBA60` compare
 exactly. No new fakes, padding, storage, instruction rewriting, layout,
 generated reports or CI changes are required.
+
+## 2026-10-28 — `.rodata` windows for FA520/FAD40; `func_81302C64` matched
+
+The shared rodata blob 0x10A430–0x10A600 is split by file:
+- `fragment14_FA520` owns 0x10A430–0x10A440 (`D_813122A0`, 16 zero bytes, used by its still-assembly `func_8130251C`).
+- `fragment14_FAD40` owns 0x10A440–0x10A600: the thirteen `s16` menu command lists `fragment14_data`'s descriptors point at, then its late rodata (`jtbl_813123A8`, `D_813123F4`, `jtbl_813123F8`, `jtbl_81312418`).
+Splat migrates the late rodata into the owners' `.s` files; the lists and `D_813122A0` are defined in C. Byte-identical.
+
+`func_81302C64` returns 0 for states 0–7, 11, 15 and 16 of +0x4DBD, otherwise 1, as a `switch` with direct returns; it emits retail's 19-entry jump table. `func_81302CB4`, `func_81303648` and `func_81303EF4` are now layout-ready.

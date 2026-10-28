@@ -655,7 +655,8 @@
     - [0x10A270, .data,   fragments/14/fragment14_1077C0] # D_813120E0's three records and the color templates of func_81310894/func_81310A14
     - [0x10A300, data]
     - [0x10A310, .rodata, fragments/14/fragment14_F81B0] # D_81312180 and all seven jump tables
-    - [0x10A430, rodata]
+    - [0x10A430, .rodata, fragments/14/fragment14_FA520] # D_813122A0
+    - [0x10A440, .rodata, fragments/14/fragment14_FAD40] # the menu command lists, then jtbl_813123A8 through jtbl_81312418
     - [0x10A600, .rodata, fragments/14/fragment14_FCD40] # D_81312470, all three jump tables and renderer floats
     - [0x10A660, .rodata, fragments/14/fragment14_FD770] # original leading word, four tables and float literals
     - [0x10A6D0, rodata]
