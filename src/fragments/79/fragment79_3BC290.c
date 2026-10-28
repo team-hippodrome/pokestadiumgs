@@ -85,7 +85,27 @@ void func_8414CB10(void *arg0, u8 arg1, u8 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414CB74.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414CD18.s")
+void func_8414CD18(void *state, u8 side, u8 move) {
+    s32 hp;
+    s32 amount;
+    s32 i;
+    s32 count;
+    Fragment79DamageCalculation calculation;
+
+    func_84149D54(&calculation, side, move);
+    func_84149D0C(&calculation);
+    amount = calculation.amount;
+    hp = *(u16 *)(calculation.opponent + 0x42);
+    count = 2;
+    for (i = 0; i < count; i++) {
+        if (hp > 0) {
+            hp -= amount * (i + 1);
+            *(u16 *)((u8 *)((u32)state + side * 2 + 4) + 0x16) += amount * (i + 1);
+        } else {
+            *(u16 *)((u8 *)((u32)state + side * 2 + 4) + 0xA) += amount * (i + 1);
+        }
+    }
+}
 
 extern u8 *func_84154B64(u8);
 extern u16 func_84148560(u16, u16, u8);
@@ -319,9 +339,47 @@ void BattleEffects_CopyOpposingMove(void *state) {
     func_84153E28(state, side);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414D9B8.s")
+void func_8414D9B8(void *state) {
+    u8 side;
+    u8 other;
+    Fragment79EffectView *view;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414DA70.s")
+    side = func_84154B24();
+    other = 1 - side;
+    view = (Fragment79EffectView *)((u8 *)state + 4);
+    switch (func_80062D20(*((u8 *)state + other + 6))) {
+        case 0x1A:
+        case 0x27:
+        case 0x4B:
+        case 0x50:
+        case 0x91:
+            return;
+    }
+    if (view->moves[side] == 0x4C && func_84154B18() == 2) {
+        return;
+    }
+    view->amount_0A[other] *= 2;
+}
+
+void func_8414DA70(void *state) {
+    u8 side;
+    u8 other;
+    const u8 *mon;
+    Fragment79EffectView *view;
+
+    side = func_84154B24();
+    other = 1 - side;
+    view = (Fragment79EffectView *)((u8 *)state + 4);
+    mon = func_84154B64(side);
+    func_84154B64(other);
+    do { // FAKE
+        func_80062D20(*((u8 *)state + other + 6));
+    } while (0);
+    view->amount_1A[side] += view->amount_0A[other];
+    if (*(u16 *)(mon + 0x28) < view->amount_1A[side]) {
+        view->amount_1A[side] = *(u16 *)(mon + 0x28);
+    }
+}
 
 extern s32 func_800630C0(u8);
 extern s32 func_84155544(u8 *, u8);
