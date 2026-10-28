@@ -21,3 +21,14 @@ Build the actor's rotation from the three angles at `arg0 + 0x42`
 matrices. Hence one marked `// FAKE` unreferenced `f32 unused[2][4][4]`,
 declared first. (Growing `rotation` to `[12][4]` also matches, but
 `func_87F06094` only writes 16 floats.)
+
+## 2026-10-28 — `func_863006F8` matched (spawn three scaled models)
+
+Three times: take an object from the pool at `D_863075D8 + 0x1ACC`
+(`func_87F025B8(pool, NULL)`). If one is free, re-init its model at +0x24
+with `func_8003F1DC`/`func_8003F114(model, 0, -1, models_114[i])` and set
+scale 0x54..0x5C to 0.1f. It matches only as a non-void function with no
+`return` (marked `//!bug`): the reserved return register makes IDO compute
+`obj + 0x24` from `$s0` instead of `$v0`. The caller ignores the value; the
+prototype is retyped to `s32`. Found by a 180-second permuter, which
+changed the return type.

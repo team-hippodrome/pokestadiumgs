@@ -183,7 +183,26 @@ void func_863004F0(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863006F8.s")
+extern void *func_87F025B8(void *, void (*)(void));
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void * D_863075D8;
+//!bug: declared to return a value but never returns one; the caller ignores it.
+s32 func_863006F8(void) {
+    s32 i;
+    u8 *obj;
+
+    for (i = 0; i < 3; i++) {
+        obj = func_87F025B8((u8 *)D_863075D8 + 0x1ACC, NULL);
+        if (obj != NULL) {
+            func_8003F1DC(obj + 0x24);
+            func_8003F114(obj + 0x24, 0, -1, *(void **)((u8 *)D_863075D8 + 0x114 + i * 4));
+            *(f32 *)(obj + 0x5C) = 0.1f;
+            *(f32 *)(obj + 0x58) = 0.1f;
+            *(f32 *)(obj + 0x54) = 0.1f;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -621,7 +640,7 @@ extern void func_87F024CC(void);
 extern void func_87F024F4(void *, u8 *, s32);
 extern void func_87F0252C(void *, void *, u8 *, s32);
 extern void func_863005B8(void);
-extern void func_863006F8(void);
+extern s32 func_863006F8(void);
 extern s32 func_87F08E3C(void *, s32);
 extern void func_87F0D48C(void *, void *, s32);
 extern void func_863048D4(void);
