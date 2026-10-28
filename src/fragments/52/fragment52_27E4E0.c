@@ -689,7 +689,67 @@ void func_86405138(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_8640533C.s")
+// Sine and cosine tables indexed by a 16-bit angle >> 4, as in SINS/COSS. //@include/229E0.h
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+
+// For each of the four 396-byte records from D_86416C00 + 0x7D0, updates the node scale at
+// child + 0x18 (child = record + 0x20): while flag 0x20000 at +0xC is set, the scale grows by
+// 0.13 for the first 20 frames counted at +0x1C and then decays by 0.9; otherwise it decays by
+// 0.94. The position at +0x48/+0x50 advances by the direction at +0x10/+0x18 times the scale.
+// In the second pass, a record whose scale has dropped below 1 and whose flag 0x20000 is clear
+// sets flag 0x10000000 on the entry indexed by child + 0 in the 396-byte array at
+// D_86416C00 + 0xCDD0, sets its own flag 0x20000 (record 0 first calls func_86405138), and,
+// unless flag 0x10000 is set, restarts the counter, points +0x10/+0x18 along the angle at +0x44
+// (cosine, negated sine) and clears the scale.
+void func_8640533C(void) {
+    u8 *state;
+    u8 *child;
+    s32 i;
+
+    state = D_86416C00 + 0x7D0;
+    for (i = 0; i < 4; i++, state += 396) {
+        child = *(u8 **)(state + 0x20);
+        *(s32 *)(child + 0x20) = 0;
+        func_86404824(state);
+        if (*(s32 *)(state + 0xC) & 0x20000) {
+            if (++*(s32 *)(state + 0x1C) < 20) {
+                *(f32 *)(child + 0x18) += 0.13f;
+            } else {
+                *(f32 *)(child + 0x18) *= 0.9f;
+            }
+            *(f32 *)(state + 0x48) += *(f32 *)(state + 0x10) * *(f32 *)(child + 0x18);
+            *(f32 *)(state + 0x50) += *(f32 *)(state + 0x18) * *(f32 *)(child + 0x18);
+        } else {
+            *(f32 *)(child + 0x18) *= 0.94f;
+            *(f32 *)(state + 0x48) += *(f32 *)(state + 0x10) * *(f32 *)(child + 0x18);
+            *(f32 *)(state + 0x50) += *(f32 *)(state + 0x18) * *(f32 *)(child + 0x18);
+        }
+        func_86402A2C(state);
+    }
+    func_86401D1C();
+    state = D_86416C00 + 0x7D0;
+    for (i = 0; i != 4; i++, state += 396) {
+        child = *(u8 **)(state + 0x20);
+        func_86404D48(state, child);
+        func_86401DBC(state, child, *(s32 *)(child + 0x18));
+        if (*(f32 *)(child + 0x18) < 1.0f && !(*(s32 *)(state + 0xC) & 0x20000)) {
+            *(s32 *)(*(s32 *)child * 396 + *(u8 **)(D_86416C00 + 0xCDD0) + 0xC) |= 0x10000000;
+            if (i == 0) {
+                func_86405138();
+            }
+            *(s32 *)(state + 0xC) |= 0x20000;
+            if (!(*(s32 *)(state + 0xC) & 0x10000)) {
+                *(s32 *)(state + 0x1C) = 0;
+                *(f32 *)(state + 0x10) = D_80088E50[*(u16 *)(state + 0x44) >> 4];
+                *(f32 *)(state + 0x18) = -D_80087E50[*(u16 *)(state + 0x44) >> 4];
+                *(f32 *)(child + 0x18) = 0.0f;
+            }
+        }
+        func_86404A0C(state);
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
