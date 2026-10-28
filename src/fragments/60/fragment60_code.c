@@ -678,7 +678,41 @@ s32 func_86A0585C(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A0588C.s")
+extern s16 MathUtil_Atan2s(f32, f32);
+extern s32 D_86A444D8[4];
+extern F60C7Pair D_86A0F2D4[6];
+extern f32 D_86A0F2BC[6];
+extern f32 D_80088E50[];
+extern f32 D_80087E50[];
+
+// Tests a point against the player's rotated item offset and squared radius.
+s32 ItemBounds_ContainsRotatedOffset(s32 player, f32 point_x, f32 point_z) {
+    s32 player_offset;
+    f32 z;
+    f32 x;
+    s32 angle;
+    f32 radius;
+    f32 dx;
+    f32 dz;
+
+    player_offset = player * 4;
+    angle = *(s32 *)((u8 *)D_86A444D8 + player_offset);
+    x = D_86A0F2D4[angle].x;
+    z = D_86A0F2D4[angle].y;
+    angle = MathUtil_Atan2s(x, z);
+    radius = sqrtf(x * x + z * z);
+    angle = (angle + ((s16 *)D_86A443F0.unk_0E6C)[player]) & 0xFFFF;
+    angle >>= 4;
+    angle *= sizeof(f32);
+    dx = -*(f32 *)((u8 *)D_80088E50 + angle) * radius;
+    dz = *(f32 *)((u8 *)D_80087E50 + angle) * radius;
+    dx = D_86A443F0.position[player][0] + dx - point_x;
+    dz = D_86A443F0.position[player][1] + dz - point_z;
+    if (dx * dx + dz * dz < *(f32 *)((u8 *)D_86A0F2BC + player_offset)) {
+        return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -711,7 +745,7 @@ s32 ItemBounds_ContainsPlayerPosition(s32 arg0, f32 arg1, f32 arg2, s32 arg3) {
 #endif
 
 #ifdef VERSION_US
-extern s32 MathUtil_Atan2s(f32, f32);
+extern s16 MathUtil_Atan2s(f32, f32);
 s32 func_86A05AAC(s32 arg0, f32 arg1, f32 arg2) {
     f32 *pos;
     s16 angle;
@@ -801,7 +835,7 @@ s32 ItemBounds_AnyContainsPoint(f32 point_x, f32 point_z) {
 #endif
 
 #ifdef VERSION_US
-extern s32 MathUtil_Atan2s(f32, f32);
+extern s16 MathUtil_Atan2s(f32, f32);
 void func_86A0638C(s32 arg0, f32 arg1, f32 arg2) {
     if ((arg1 != 0.0f) || (arg2 != 0.0f)) {
         D_86A443F0.unk_0E74[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
@@ -810,7 +844,7 @@ void func_86A0638C(s32 arg0, f32 arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-extern s32 MathUtil_Atan2s(f32, f32);
+extern s16 MathUtil_Atan2s(f32, f32);
 void func_86A06400(s32 arg0, f32 arg1, f32 arg2) {
     if ((arg1 != 0.0f) || (arg2 != 0.0f)) {
         D_86A443F0.unk_0E64[arg0] = (s16)((MathUtil_Atan2s(arg1, -arg2) + 0x3FFF) % 0xFFFF);
