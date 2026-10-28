@@ -105,3 +105,7 @@ before the scale, and `mul.s` operand order differs. Unchanged across
 four range spellings, `(u32)` casts, nested vs `&&`, and inline vs local
 range. A 180-second permuter got 690 -> 115 only with `(0, 30.0f)` and
 assignment-in-condition noise.
+
+## 2026-10-29: `func_86100790` requeue
+
+requeue (0.91). Body is `func_87F0277C(D_8610AD20 + 0x6E8); func_87F0277C(D_8610AD20 + 0x8914);` after a call to StageContext_GetFadeMode() whose result only feeds a `bnez v0` to the very next instruction. IDO removes every empty-branch spelling we tried: empty if, `;`, goto, dead local store, empty switch, and if/else with identical arms (which adds code). Next: find what leaves a branch with an empty target, e.g. a nested if whose inner body is a no-op macro, or a `do {} while (0)`.
