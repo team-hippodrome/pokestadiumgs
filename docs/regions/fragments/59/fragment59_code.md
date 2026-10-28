@@ -18,3 +18,15 @@ Finds the maximum of the four s32s at `D_8691A2A0 + 0x28` with a pointer loop
 with `((s32 *)D_8691A2A0)[i + 10]`); a second pointer loop keeps `i` live and adds a
 `sll`. The final branch passes the four flags to `func_87F0A098`. Comparator
 note: retail's `%lo(D_8691A2B0)` is our `D_8691A2A0 + 16`, the same bytes once linked.
+
+## 2026-10-29 — `func_869053B4`: requeue (case-join layout)
+
+Scoring by distance. `diff = arg0 - func_86904D48()`, then `d = diff` *before*
+the `arg0 == 0` early return (retail computes it in the delay slot), then
+`d = -d` when negative. A `switch (D_8691A2E8)` over 0/1, 2/3 and 4 selects
+an inner `switch (d)` returning {10, 5, 1}, {20, 10, 5} or {40, 20, 10}
+(default 0). Best 0.907 (`scratch/c/3b4c.c`). Ours adds a `b`/`or v0` join
+after each inner switch and hoists `v0 = 0` into the `bgez` delay slot;
+retail has neither. Tried: inner `if` chains, a `result` variable with breaks,
+an inner `default: return 0`, and the permuter (300 s, 700 → 480 by moving the
+last `return 0` inside the outer switch, which still isn't exact).

@@ -469,7 +469,31 @@ void func_82908E6C(f32 *arg0, const f32 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_82908E90.s")
+extern f32 D_82916AA4[];
+extern f32 D_82916AB4[];
+extern f32 D_82916AC4[];
+extern f32 Math_StepToF(f32, f32, f32, f32);
+extern void func_82908CF4(f32 *arg0, f32 *arg1, f32 *arg2, s16 arg3);
+extern void func_82908E6C(f32 *arg0, const f32 *arg1);
+void func_82908E90(s32 arg0, s32 arg1) {
+    D_8291B880[arg1].unk_04 = Math_StepToF(D_8291B880[arg1].unk_04, 0.0f, 0.66f, 0.66f);
+    switch (arg0) {
+    case 0:
+        func_82908E6C((f32 *)D_8291B880[arg1].unk_08, D_82916AA4);
+        break;
+    case 12:
+    case 13:
+    case 14:
+        func_82908CF4((f32 *)D_8291B880[arg1].unk_08, D_82916AB4, D_82916AA4, 3);
+        break;
+    case 26:
+    case 27:
+    case 28:
+    case 29:
+        func_82908CF4((f32 *)D_8291B880[arg1].unk_08, D_82916AC4, D_82916AB4, 4);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -557,7 +581,51 @@ void func_829090A0(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_82909170.s")
+extern f32 D_82916B48[];
+extern f32 D_82916B54[];
+extern f32 D_82916B60[];
+extern f32 D_82916B6C[];
+extern void func_82908BD8(f32 *arg0, f32 *arg1, f32 *arg2, s16 arg3);
+extern void func_82908E50(f32 *arg0, f32 *arg1);
+void func_82909170(s32 arg0, s32 arg1) {
+    switch (arg0) {
+    case 0:
+        func_82908E50((f32 *)&D_8291B880[arg1].unk_08[0x2C], D_82916B48);
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        func_82908BD8((f32 *)&D_8291B880[arg1].unk_08[0x2C], D_82916B48, D_82916B48, 5);
+        break;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+        func_82908BD8((f32 *)&D_8291B880[arg1].unk_08[0x2C], D_82916B54, D_82916B48, 6);
+        break;
+    case 12:
+    case 13:
+        func_82908BD8((f32 *)&D_8291B880[arg1].unk_08[0x2C], D_82916B60, D_82916B54, 2);
+        break;
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+    case 24:
+        func_82908BD8((f32 *)&D_8291B880[arg1].unk_08[0x2C], D_82916B6C, D_82916B60, 10);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -565,10 +633,8 @@ void func_829090A0(s32 arg0, s32 arg1) {
 extern s16 D_8291B862;
 extern u8 D_82916EB8;
 extern s32 func_80001FF0(void);
-extern void func_82908E90(u8, s32);
 extern void func_829090A0(s32, s32);
 extern void func_82908F60(s32, s32);
-extern void func_82909170(u8, s32);
 
 void func_829092AC(void)
 {
