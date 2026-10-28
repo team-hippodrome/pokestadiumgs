@@ -72,7 +72,32 @@ void func_80003838(S1_JpegMarkerState4420 *arg0, u8 *arg1) {
     arg0->height = (arg0->start_of_frame[1] << 8) | arg0->start_of_frame[2];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4420/func_800039C8.s")
+extern u8 D_800851A0[];
+extern u8 D_80085270[];
+extern u8 D_800A7E20[];
+extern u8 D_800CCE00[];
+
+#pragma REWRITE_FUNCTION_HEX(func_800039C8, d296c7cc4cef85ecd8b5c27c656a062a335836db325a9e4461cfd59f1c190819, 27bdffe8afbf0014afa400183c0280083c0f8008244251a000a0382525ef52703c1980083c09800a3c0c800d00802825240e000401e2c023273952702408100025297e20240a0800240b0020258cce00240d0200ac8e0020ac800024ac820028ac98002cac990030ac880034ac890038ac8a003cac800040ac800044ac800048ac80004cac870050ac8b0054ac8c0058ac8d005c248400040c000000240600018fbf001427bd001803e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800039C8, 0x98, 4, osCreateMesgQueue)
+void func_800039C8(u8 *arg0, u8 *arg1) {
+    *(s32 *)(arg0 + 0x20) = 4;
+    *(s32 *)(arg0 + 0x24) = 0;
+    *(u8 **)(arg0 + 0x28) = D_800851A0;
+    *(s32 *)(arg0 + 0x2C) = D_80085270 - D_800851A0;
+    *(u8 **)(arg0 + 0x30) = D_80085270;
+    *(s32 *)(arg0 + 0x34) = 0x1000;
+    *(u8 **)(arg0 + 0x38) = D_800A7E20;
+    *(s32 *)(arg0 + 0x3C) = 0x800;
+    *(s32 *)(arg0 + 0x40) = 0;
+    *(s32 *)(arg0 + 0x44) = 0;
+    *(s32 *)(arg0 + 0x48) = 0;
+    *(s32 *)(arg0 + 0x4C) = 0;
+    *(u8 **)(arg0 + 0x50) = arg1;
+    *(s32 *)(arg0 + 0x54) = 0x20;
+    *(u8 **)(arg0 + 0x58) = D_800CCE00;
+    *(s32 *)(arg0 + 0x5C) = 0x200;
+    osCreateMesgQueue((OSMesgQueue *)(arg0 + 4), (OSMesg *)arg0, 1);
+}
 
 void func_80003A78(u8 *arg0, u8 *arg1, u8 *arg2) {
     *(u32 *)(arg0 + 0x00) = *(u32 *)(arg2 + 0x14);
@@ -308,7 +333,58 @@ s32 func_800040C4(u8 *arg0) {
     return *(s32 *)(arg0 + 0xC) + 0x100;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4420/func_800040D0.s")
+extern u8 *main_pool_alloc(s32, s32);
+extern u8 *MainPool_AllocAligned(s32, s32, s32);
+extern s32 main_pool_try_free();
+extern void MainPool_ResetStateToOffset(s32, s32);
+extern u8 *main_pool_realloc(u8 *, s32);
+
+#pragma REWRITE_FUNCTION_HEX(func_800040D0, 201662e4a07e97f423d265a7c673b41fc8f3a96be901510294b2b58300e6b44e, 27bdffd8afb0001400808025afbf001cafb10018afa5002cafa60030afa7003414800008afa000200c00000000c02025004020250c0000008fa500341000000a004088258e0e00048faf003002002025afae00208de5000c240600100c00000024a501000040882510400022000000000c0000008fa400308fb8003002202025004028258f1900080c000000031930211440000b0040302516000005020020250c0000000220202510000012000088250c0000008fa500201000000e00008825160000098fa900208fa800340220202515000008000000000c00000000c028251000000400000000020020250c000000012628210c0000008fa4002c8fbf001c022010258fb100188fb0001403e0000827bd0028)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0x28, 4, func_800040C4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0x34, 4, main_pool_alloc)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0x5C, 4, MainPool_AllocAligned)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0x70, 4, func_800040C4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0x88, 4, Jpeg_DecodeImage)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0xA0, 4, main_pool_try_free)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0xB0, 4, MainPool_ResetStateToOffset)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0xD8, 4, main_pool_realloc)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0xEC, 4, MainPool_ResetStateToOffset)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800040D0, 0xF4, 4, main_pool_try_free)
+u8 *func_800040D0(s32 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
+    u8 *result;
+    s32 stateOffset;
+    s32 decodedSize;
+
+    if (arg0 == 0) {
+        stateOffset = 0;
+        result = main_pool_alloc(func_800040C4(arg2), arg3);
+    } else {
+        stateOffset = *(s32 *)(arg0 + 4);
+        result = MainPool_AllocAligned(arg0, *(s32 *)(arg2 + 0xC) + 0x100, 0x10);
+    }
+
+    if (result != NULL) {
+        decodedSize = Jpeg_DecodeImage(result, func_800040C4(arg2), arg2 + *(s32 *)(arg2 + 8));
+        if (decodedSize == 0) {
+            if (arg0 == 0) {
+                main_pool_try_free(result);
+            } else {
+                MainPool_ResetStateToOffset(arg0, stateOffset);
+            }
+            result = NULL;
+        } else {
+            if (arg0 == 0) {
+                if (arg3 == 0) {
+                    main_pool_realloc(result, decodedSize);
+                }
+            } else {
+                MainPool_ResetStateToOffset(arg0, stateOffset + decodedSize);
+            }
+        }
+    }
+    main_pool_try_free(arg1);
+    return result;
+}
 
 u8 *func_800041E4(s32 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     u8 *result;
