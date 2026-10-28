@@ -246,7 +246,30 @@ void func_80033F5C(s32 arg0, s32 arg1) {}
 
 void func_80033F68(s32 arg0, s32 arg1) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_80033F74.s")
+extern u8 func_800347E8(u8 arg0);
+void func_80033F74(u8 channel, u8 arg1) {
+    u8 *entry;
+
+    arg1 = func_800347E8(channel);
+    entry = &D_800D2B78 + (channel * 0x3C);
+    if (!(entry[3] & 4)) {
+        if (arg1 != 0) {
+            arg1--;
+            entry[3] |= 4;
+            entry[0x20] = arg1;
+        } else {
+            *(s32 *)(entry + 8) = *(s32 *)(entry + 8) - func_800347E8(channel) - 1;
+            return;
+        }
+    }
+    if (entry[0x20] == 0) {
+        entry[3] &= 0xFFFB;
+        *(s32 *)(entry + 8) += 1;
+    } else {
+        entry[0x20]--;
+        *(s32 *)(entry + 8) = *(s32 *)(entry + 8) - func_800347E8(channel) - 1;
+    }
+}
 
 void func_80034058(u8 arg0, s32 arg1) {
     *(&D_800D2B8D + (arg0 * 0x3C)) = func_800347E8(arg0);
