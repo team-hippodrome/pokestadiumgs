@@ -74,3 +74,9 @@ layout-prerequisite. A 12-case switch on `*(u8 *)(arg0 + 0x137F5)`, after a `+0x
 ## 2026-10-28 — `func_8130B06C` matched; `func_8130B0E0` cleaned
 
 Both read a real state struct (`unk_func_8130B06C`: current node at 0xE8E8, index byte at 0xE911) and node struct (`unk_D_8130B06C_node`: predecessor 0x4D94, successor 0x4D98). With typed fields IDO forms the two large-offset bases itself (`a0 + 0x8000` for loads, `a0 + 0x7FFF` for stores) and keeps the 0x20 frame. The named `base`/`store_base` locals were what cost the extra 0x10. `func_8130B0E0`'s permuter body (`new_var`, `((0, 0x7FFF))`) is replaced by the plain decrement twin, byte-identical.
+
+## 2026-10-28 — `func_8130AF94` matched
+
+It links the state's three inline 0x4DA0-byte nodes (`unk_0008[3]`, ending exactly at the current-node pointer at 0xE8E8) into a ring. For each `i` it calls `func_8130AEF4(state, &node[i], index + i)`, sets the predecessor (`node[2]` when `i <= 0`) and the successor (`node[0]` when `i + 1 >= 3`), then makes `node[0]` current. Those condition polarities give retail's `bgtz`/`bnez` (`i == 0` gives `bne`; the positive forms swap the hoisted constants). The `func_8130AF94` externs take the typed state.
+
+`func_8130AEF4` (requeue): with the same types, `count = func_81302290(state->unk_E8EC)`, `func_8160B8A8(node, func_813002D0(state->unk_E8EC), 0)`, then `func_8160A438(node, state->unk_E8EC->unk_1A148->unk_944)` when `0 <= arg2 < count`, else `func_8160A994(node)`, then `func_8160A6AC(node)`. Normalized 1.0: everything matches except that retail reloads `arg2` from its home into `$a2` and IDO uses `$v0`. Condition spellings and a 240 s permuter did not move it.
