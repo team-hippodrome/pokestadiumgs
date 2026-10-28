@@ -4,16 +4,53 @@
 
 #ifdef VERSION_US
 s32 D_82615330 = 0;
-typedef struct {
-    u8 r, g, b;
-} Fragment20Color;
-Fragment20Color D_82615334 = { 0, 0, 30 };
-Fragment20Color D_82615338 = { 0, 0, 150 };
 void func_826005F0(s32 arg0) {
     D_82615330 = arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_1286C0/func_826005FC.s")
+extern char D_826157D0[];
+extern char D_826157D8[];
+extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern s32 func_8004C874(s32, s32);
+extern void func_800499EC(void);
+typedef struct {
+    u8 r, g, b;
+} Fragment20Color;
+// IDO copies the two initialized colors from anonymous .data templates (D_82615334, D_82615338).
+void func_826005FC(void) {
+    s32 i;
+    Fragment20Color top = { 0, 0, 30 };
+    Fragment20Color bottom = { 0, 0, 150 };
+    u8 *entry;
+    s32 highlighted;
+
+    Ui_DrawGradientPanel(100, 120, 320, 280, (s32)&top, (s32)&bottom);
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_8004972C(255, 255, 255, 255);
+    if (*(u16 *)(*(u8 **)D_82615330 + 8) != 0x500) {
+        for (i = 0; i < *(s16 *)((u8 *)D_82615330 + 0x14); i++) {
+            entry = ((s16 *)((u8 *)D_82615330 + 0x18))[i] * 0x98 + *(u8 **)((u8 *)D_82615330 + 0xC) + 4;
+            highlighted = 0;
+            if (i == *(s16 *)((u8 *)D_82615330 + 0x16)) {
+                highlighted = 1;
+            }
+            if (!highlighted) {
+                func_8004972C(255, 255, 255, 255);
+            } else {
+                func_8004972C(255, 255, 0, 255);
+            }
+            func_800495BC(120, i * 20 + 220, D_826157D0, func_8004C874(0x29, entry[0] - 1), func_8004C874(0x2A, entry[1] - 1));
+        }
+    } else {
+        func_800495BC(120, 220, D_826157D8, *(s32 *)((u8 *)D_82615330 + 0x98));
+    }
+    func_800499EC();
+}
 
 extern void func_80008648();
 extern void BgStage_DrawFrame();
