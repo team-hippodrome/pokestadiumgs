@@ -90,3 +90,26 @@ all 176 bytes at ROM `0x143824..0x1438D4`.
   and keeps the 8-bit scan rolled with an in-loop `return 0`. IDO
   constant-folds `result = 0` into the exits, and copt unrolls the loop
   unless it breaks out instead (85 vs 82 instructions).
+
+## 2026-10-29 — `func_82501D18`: requeue
+
+Status: **requeue**, best 0.51 (197/197 words). The 2026-10-29 session's body
+is `scratch/c/d18b.c`. It is a `switch (state[4])` over cases 0, 1, 2 and 100
+on `s16 *state = (s16 *)arg0`, with `s32 index = arg0[0] & 0xFF`:
+- Case 0 runs two ease phases (`D_825087DC`, then `D_825087D8`). They write
+  `state[8]`/`state[7] = from + ROUND((48 - from) * t)` from `state[0x1C+idx]`
+  and `state[0x1A+idx]`, playing sound 0x11C at frame 1. The reset tail plays
+  `*(s32 *)(D_82508F84 + 4)`.
+- Case 1 fades `state[6] = 255 - ROUND(state[3] * 255.0f / D_825087D4)`. Its
+  tail calls `func_82508620()` and
+  `func_800225C4(func_80001FF0() * 2)` when bit 8 is set.
+- Case 2 is `func_82508670()`; case 100 calls `func_800355E4(*D_82508F84)`
+  when bit 0x10 is set.
+
+Remaining:
+- In the case-0 second phase, retail emits the product **twice** (`mul.s`
+  for the condition and again for the value). IDO CSEs it in every spelling
+  tried: a temp `t2`, an inline divide, commuted operands, a `(f32)` cast,
+  and `0 < x`.
+- Halfword temps are allocated differently (retail keeps `D_825087DC` in
+  `$a0` and `from` in `$v0`).
