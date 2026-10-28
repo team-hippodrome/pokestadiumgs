@@ -987,9 +987,9 @@ void Fragment13_ApplyGroupSelections(struct Fragment13GroupSelection *arg0) {
     *(s32 *)((u8 *)arg0 + 0x210) = 1;
 }
 
-extern void func_81A00074(s32, s32);
-void func_82404DD8(s32 arg0) {
-    func_81A00074(arg0 + 0x24C, *(s32 *)(arg0 + 0x190));
+extern s32 func_81A00074(u8 *, s32);
+s32 func_82404DD8(u8 *arg0) {
+    return func_81A00074(arg0 + 0x24C, *(s32 *)(arg0 + 0x190));
 }
 
 void func_82404E00(void *arg0, void *arg1, void *arg2, f32 arg3)
