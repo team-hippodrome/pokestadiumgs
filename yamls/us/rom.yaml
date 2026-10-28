@@ -1381,6 +1381,8 @@
     - [0x2C8410, textbin, fragments/58/fragment58_header]
     - [0x2C8430, c,       fragments/58/fragment58_code]
     - [0x2CBB90, data,    fragments/58/fragment58_data]
+    - [0x2CC360, .rodata, fragments/58/fragment58_code] # strings, jump tables, float literals
+    - [0x2CC540, rodata, fragments/58/fragment58_tail] # tables after the code object's rodata
 
   - name: fragment59
     type: code
