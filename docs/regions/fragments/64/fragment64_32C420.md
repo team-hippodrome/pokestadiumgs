@@ -34,3 +34,30 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_87F097B0` → `Fragment64_IncrementMatchingCounters`.
+
+## 2026-10-28 — motion owner requeue
+
+`func_87F098F4` remains `requeue`, not installed. Target: 162 instructions /
+648 bytes, frame 0x18. Best canonical candidate is
+`scratch/parent64-motion-counts.json`, index 0: 648 bytes, frame 0x18,
+normalized 0.9815 / raw 0.7963. Normal/+20blank whole-module controls pass.
+
+The 28-byte state has mode at +0, X/Y/width/velocity floats at +4/+8/+C/+10,
+packed color at +0x14 (alpha byte +0x17), and frame at +0x18. The existing
+initializer proves the extent. Its sound call is the one-argument
+`Audio_PlayDefaultSound(u16)` (`func_800279C4` compatibility alias), verified
+at `src/229E0.c`; the M2C-suggested second argument was only a live pointer.
+
+An ordinary five-case switch emits a new jump table absent from retail.
+An early inactive-state return followed by a sparse switch recovers the
+linear dispatcher without a layout edit. Distinct old/new frame snapshots
+then recover the two counter updates. Remaining differences include the
+alpha calculation: retail divides by eight, while the current candidate
+multiplies by its reciprocal, and the unsigned conversion's branch/transfer
+shape differs. Separate consumed opacity temporaries and signed-byte views
+worsen the result (652 bytes); integer/float-cast divisor spellings are equal.
+
+Next: calibrate the real float-division and byte-conversion expression forms
+against the verified packed-color producer and stock compiler pass output.
+Do not fabricate occupancy, ABI hints, dead guards, padding or output patches.
+Private canonical manifests/results retain all source variants and diagnostics.

@@ -553,3 +553,67 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_8AC0036C` → `Fragment43_TryGrantCompletionReward`.
+
+## Final native extended-box handoff before 07:55 UTC (2026-10-28)
+
+The extension accepted only `func_8AC0036C`, committed at `2fb3797c` above.
+The 15 fourth-box batches contain 119 candidate rows: one accepted, seven
+skipped after that acceptance, and 111 rejected. The other ten original C
+winners and the newly committed progress function are individually unchanged.
+A final forced source rebuild, host syntax check, canonical provenance audit
+and byte-for-byte retail comparison passed. Final source SHA256 remains
+`ce6f8e443877fba98ba8383da1187448f912b59c610663f6c0523b22a79bf279`.
+Separate final evidence is retained at `scratch/box4-final-evidence.json`,
+`scratch/box4-final-provenance.json` and
+`scratch/box4-final-verification/receipt.json`; earlier seals are preserved.
+
+- `func_8AC03AFC` — `requeue`: meaningful Gfx command-cursor reuse removes
+  the extra saved node register. A consumed alpha snapshot supplies the color
+  lifetime/nominal storage, reaching 300/300 bytes, frame 64 and the correct
+  origin +60 / color +44 slots. Best normalized fourth-box variant is
+  `b4:prim-rect:typed-node-and-real-bounds:0` at
+  `scratch/b4-recttypedbounds01/batch.json`, index 0: normalized 0.88,
+  raw 0.2267. Best raw is the alpha-only candidate
+  `b4:prim-rect:used-alpha-snapshot-lifetime:4` at
+  `scratch/b4-rectalpha01/batch.json`, index 4: 304 bytes/frame 64,
+  normalized 0.8684/raw 0.3421. The cursor/alpha form has identical opcode
+  counts but still differs in register choices and load/store order; it is
+  not an allocation-only classification. Dimension cursors, selected command
+  reuse, real scalar command addresses, RGBA captures, typed node/bounds,
+  scalar packed color and dispatch forms did not close it. A three-minute
+  single-worker permuter run produced forbidden empty/dead control flow;
+  those outputs were rejected, and only the ordinary alpha-value hypothesis
+  was extracted and tested separately. Next: compiler IR/alias and allocation
+  evidence for the saved argument / command / coordinate webs; do not repeat
+  the earlier packing-only campaigns.
+- `func_8AC00908` — `requeue`: moving the independent horizontal endpoint
+  assignment after negative-Y clipping removes one instruction and directly
+  assigns s6 in the branch delay slot, matching the first 28 instruction
+  positions apart from frame-dependent slots in the smaller controls. Real
+  scissor quarter-coordinates, texture S/T values and tile-image address locals
+  give the required 96-byte frame. The new endpoint-order family has
+  1256/1248 bytes, normalized 0.9108/raw 0.3312 (`b4-cliporder01`, index 7;
+  equivalent leaders in `b4-clipheightcompose01`). Retained-height snapshots
+  and explicit signed-halfword narrowing did not close the remaining height,
+  traversal and register-lifetime differences. The previous best normalized
+  0.9460 candidate and best raw 0.6025 candidate remain distinct useful
+  references in the second-box report. Next: inspect the actual height value
+  web across right clipping and scissor setup; keep horizontal steps 32-bit
+  and vertical advancement narrowed to s16.
+- `func_8AC033B8` — `requeue`: phase-value lifetime reuse, promoted loader
+  values and nonescaping local metadata records (all fields consumed) did not
+  improve the earlier best. Fourth-box normalized leader is 0.9683 at
+  1496/1516 bytes, frame 208/raw 0.4274 (`b4-scrollreuse01`, index 7).
+  Prefer the earlier frame-200/raw-0.4749 leader when resuming. No fake
+  return/signature narrowing was used. Next: compiler evidence for why retail
+  preserves four promoted word values while the candidate reloads halfwords.
+- `func_8AC049A8` retains the detailed preceding 5272-byte/raw-0.9560 handoff;
+  no further fourth-box source was installed for it.
+- The two shared jump tables, first-float ownership, and old shared-LUI/empty
+  loop owners remain parent prerequisites under the genuine-C restrictions.
+
+All new hypotheses used the same unmodified native compiler and canonical
+normal/+20-blank module controls. No shared layout/header/symbol inputs,
+coverage files, tool clones, other source owners or published branches were
+changed. Parent owns publication, naming and aliases. There is one new C
+checkpoint to integrate, not a claim that the remaining owners match.

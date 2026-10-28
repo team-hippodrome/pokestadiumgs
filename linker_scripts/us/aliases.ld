@@ -1146,3 +1146,7 @@ func_8413DE28 = Battle_InitState;
 
 func_87F097B0 = Fragment64_IncrementMatchingCounters;
 func_8AC0036C = Fragment43_TryGrantCompletionReward;
+
+func_800318FC = Party_CountLivingGroupMembers;
+func_84133B14 = Battle_ApplySwitchInState;
+func_8413DA18 = Battle_LoadPlayerDeck;
