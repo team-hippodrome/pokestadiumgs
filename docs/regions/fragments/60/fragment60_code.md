@@ -242,3 +242,62 @@ or allocation and were rejected. One private generator accidentally removed
 the descriptor's cost member while deleting the local cost variable; its
 eight compile failures were corrected with an anchored declaration edit and
 supply no code-generation evidence.
+
+
+## 2026-10-29 native box: `func_86A06A1C` requeue
+
+Corrected the historical model: coarse radius is sqrt(2)*31.199999,
+normalization saturates at 11 below distance 0.01 and otherwise uses
+0.11/distance, and the response uses the OTHER player's motion norm. Old
+74-attempt history used sqrt(4) or cap48 and does not test this model.
+All new hypotheses went through canonical controls/probes; none accepted.
+Best is scratch/repel8.json candidate 1, response-object-coordinates:1:
+448 bytes, 56-byte frame, full opcode shape 1.0, raw similarity 0.8571.
+Early continue fixes base/bound/flag GPR allocation. Reversing the squared
+distance expression and other/player z read order improves floating colors.
+Remaining differences include coefficient f20 versus target f2, impulse
+f2/f12 versus target f12/f18, penetration f18 versus target f20, and the
+other-motion squared-sum temporary. Constant relocations dominate the
+first raw difference; inspect full instruction diff, not that warning.
+Tried genuine vector locals, position snapshots, loop control forms,
+factor objects, in-place vector scaling, alternative clamp expressions,
+and branched component scaling. Branched scaling regresses to 472 bytes.
+Next hypothesis: reverse normalization/penetration factor member order or
+move the consumed penetration declaration ahead of normalization to test
+the f20 lifetime preference; then clean position-pair read ordering.
+No near-match body installed. This is a register-allocation requeue,
+not evidence of a prerequisite or compiler impossibility.
+
+
+## 2026-10-29 native block: `func_86A014D0` accepted
+
+The 428-byte countdown update now matches as genuine C with a 24-byte
+frame. It enables the final countdown at timer <= 30*D_86A0F8E4, plays
+CF00 at 3/2/1 multiples and CF06 at zero. Positive timers decrement and
+update the three helpers. At zero or below it continues cleanup while
+state+0x1AC, func_86A04100, or any player state+0x24 equals 9 requests it;
+it decrements and leaves for stage5 when the OLD timer was below -60.
+Otherwise it leaves immediately. Postdecrement in the threshold expression
+recovers the original old-value compare and delayed store instruction.
+
+The stale local declaration `s32 func_800279C4(s32)` was corrected via a
+canonical companion edit to `void func_800279C4(u16)`. This is verified by
+linker_scripts/us/aliases.ld, where the symbol aliases Audio_PlayDefaultSound,
+and that function's definition in src/229E0.c. Also verified the actual
+func_80028118(u8) declaration there. The true audio return type removes
+the reserved return register that displaced the timer/limit from v0/v1.
+After that correction only instruction36 differed: bne v1,v0 instead of
+bne v0,v1. Writing the single-tick equality as limit == timer closes it.
+No fabricated ABI, forced register, unused local, instruction rewrite or
+manual loop unroll is used. Earlier historical attempts include incorrect
+5*limit instead of 3*limit, inverted cleanup guards and stale-value tails;
+those are not tests of the final model.
+
+Canonical batch scratch/timer4.json accepted candidate0,
+countdown:one-tick-operand-order:0, link_verified true.
+Receipt scratch/timer4/gate-0/receipt.json seals explicit normal host
+syntax success, native IDO7.1 SHA256
+975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944,
+and full retail ROM MD5 1561c75d11cedf356a8ddb1a4a5f9d5d.
+All batches first passed exact whole-module normal/+20blank controls.
+Final declaration cleanup is independently resealed in scratch/timer-final.

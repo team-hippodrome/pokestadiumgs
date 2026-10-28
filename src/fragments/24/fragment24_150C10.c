@@ -339,7 +339,7 @@ s32 TeamRules_ValidateSelection(s16 *per_mon, s16 *team_error, u8 *rules, s32 co
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 
 s32 func_82B0173C(s32 arg0, s32 arg1) {
     s32 result = 0;
@@ -558,7 +558,7 @@ void func_82B01F14(void *arg0) {
 
 #ifdef VERSION_US
 extern s32 func_80049148(s32, s32, void *);
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 typedef struct Pair02198 { s16 x; s16 y; } Pair02198;
 typedef struct State02198 {
     s16 unk_00;
@@ -1171,7 +1171,47 @@ void func_82B0341C(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B03538.s")
+extern s16 D_82B08610[];
+extern s16 D_82B0861C[5][2];
+extern void func_82B0284C(u8 *, u8 *);
+extern void func_82B0341C(u8 *, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+void Panel_DrawHeadingAndOptions(u8 *panel, s32 animate) {
+    s32 i;
+    s32 y;
+    s16 *heading;
+    s16 *entries;
+    Pair02198 coords;
+    s16 id;
+    const char *text;
+    func_82B0284C(panel, (u8 *)&coords);
+    func_82B0341C(panel, animate);
+    func_800498C4();
+    func_8004972C(255, 255, 255, 255);
+    heading = D_82B08610;
+    if (heading[*(s16 *)(panel + 2)] >= 0) {
+        func_800496A4(4, -1);
+        text = func_8004C874(27, heading[*(s16 *)(panel + 2)]);
+        func_800495F8(coords.x + 68, coords.y + 6, 1, text);
+    }
+    y = 0;
+    func_800496A4(8, 0);
+    entries = (s16 *)D_82B0861C;
+    for (i = 0; i < 2; i++) {
+        id = entries[*(s16 *)(panel + 2) * 2 + i];
+        if (id >= 0) {
+            text = func_8004C874(27, id);
+            func_800495F8(coords.x + 68, coords.y + y + 77, 1, text);
+            y += 23;
+        }
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1179,7 +1219,7 @@ extern s16 D_82B08630[];
 extern void func_800498C4(void);
 extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800496A4(s32, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern void func_800499EC(void);
 void func_82B03688(u8 *arg0) {
     s32 i;
@@ -1208,8 +1248,8 @@ extern void func_82B0284C(u8 *, u8 *);
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
-extern s32 func_8004C874(s32, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern void func_800499EC(void);
 void func_82B038BC(void *arg0) {
     struct { s16 x; s16 y; s32 pad[2]; } pair;
@@ -1285,7 +1325,7 @@ void func_82B042D8(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
 #ifdef VERSION_US
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern u8 D_82B085CC[];
 extern u8 D_82B085D0[];
 void func_82B04430(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
@@ -1309,7 +1349,7 @@ extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
 extern void func_8004C594(s32, s32);
 extern s32 func_8004C8A0(void *, s32, s32, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern u8 D_82B085CC[];
 extern u8 D_82B085D0[];
 void func_82B044B8(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
@@ -1338,7 +1378,7 @@ extern u8 D_82B085CD;
 extern u8 D_82B085CE;
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 extern void func_800495BC(s32, s32, s32);
 void func_82B04558(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 alpha;
@@ -1367,7 +1407,7 @@ void func_82B04558(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 extern Gfx D_80094DB8[];
 extern void Gfx_FillRectRgba(s16, s16, s16, s16, s32, s32, s32, s32);
 extern void func_8004989C(s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800498C4(void);
@@ -1399,8 +1439,8 @@ extern void func_82B0284C(u8 *, u8 *);
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
-extern s32 func_8004C874(s32, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern void func_800499EC(void);
 extern s16 D_82B12696[];
 void func_82B0504C(void *arg0) {
@@ -1425,7 +1465,7 @@ void func_82B0504C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_82B03538(void);
+extern void Panel_DrawHeadingAndOptions(u8 *, s32);
 extern void func_82B03688(u8 *);
 extern void func_82B0373C(void);
 extern void func_82B03978(void);
@@ -1433,9 +1473,9 @@ extern void func_82B03F38(void);
 extern void func_82B04008(void);
 extern void func_82B04718(void);
 extern void func_82B050E8(void);
-void func_82B05494(void *arg0) {
+void func_82B05494(void *arg0, s32 arg1) {
     switch (*(s16 *)arg0) {
-    case 1: func_82B03538(); break;
+    case 1: Panel_DrawHeadingAndOptions(arg0, arg1); break;
     case 2: func_82B03688(arg0); break;
     case 3: func_82B0373C(); break;
     case 4: func_82B038BC(arg0); break;
@@ -1571,7 +1611,7 @@ void func_82B062BC(void) {
 
 #ifdef VERSION_US
 extern void _bzero(void *, s32);
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 extern void HAL_Strcpy(void *, s32);
 extern s16 D_82B0865C[];
 void func_82B062F8(void *arg0, s32 arg1) {
