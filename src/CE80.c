@@ -226,39 +226,7 @@ void func_8000C280(s32 num_samples, s32 update_index, s32 reverb_index)
 #ifdef VERSION_US
 extern Acmd *func_8000DDC8(Acmd *cmd, u16 dmem, u16 start_pos, s32 size, SynthesisReverb *reverb);
 extern Acmd *func_8000DE34(Acmd *cmd, u16 dmem, u16 start_pos, s32 size, SynthesisReverb *reverb);
-extern s32 D_8008FA40;
-extern u8 D_800D1220[];
-extern u8 D_8011EBF0[];
-void func_8000C614(s32 arg0)
-{
-    s32 i;
-    u8 *entry;
-
-    if (arg0 >= 8) {
-        arg0 = 7;
-    }
-    D_8008FA40 = arg0;
-    for (i = 0; i < 7; i++) {
-        entry = D_800D1220 + i * 0x18;
-        *(s32 *)(entry + 4) = 0;
-        *(s32 *)(entry + 8) = 0;
-        if (i < D_8008FA40) {
-            *(s32 *)(entry + 0) = GbApu_Alloc(D_8011EBF0, 0x25D8);
-            *(s32 *)(entry + 0xC) = GbApu_Alloc(D_8011EBF0, 0x280);
-            if (*(s32 *)(entry + 0) != 0) {
-                *(s32 *)(entry + 0x14) = *(s32 *)(entry + 0) + 0x198;
-            }
-        } else {
-            *(s32 *)(entry + 0) = 0;
-        }
-    }
-}
-#endif
-
-#ifdef VERSION_US
-extern void func_8001FD50(u8 *);
-extern s32 D_8008FA40;
-extern u8 D_800D1220[];
+// GB APU channel slots, initialized by func_8000C614 and serviced by func_8000C6D8.
 typedef struct {
     /* 0x00 */ u8 *apu;
     /* 0x04 */ s32 active;
@@ -267,6 +235,38 @@ typedef struct {
     /* 0x10 */ s32 unk_10;
     /* 0x14 */ u8 *unk_14;
 } GbApuChannelSlot; // size = 0x18
+extern s32 D_8008FA40;
+extern GbApuChannelSlot D_800D1220[7];
+extern u8 D_8011EBF0[];
+void func_8000C614(s32 arg0)
+{
+    s32 i;
+    GbApuChannelSlot *entry;
+
+    if (arg0 >= 8) {
+        arg0 = 7;
+    }
+    D_8008FA40 = arg0;
+    for (i = 0; i < 7; i++) {
+        entry = &D_800D1220[i];
+        entry->active = 0;
+        entry->mode = 0;
+        if (i < D_8008FA40) {
+            entry->apu = (u8 *)GbApu_Alloc(D_8011EBF0, 0x25D8);
+            entry->unk_0C = (u8 *)GbApu_Alloc(D_8011EBF0, 0x280);
+            if (entry->apu != NULL) {
+                entry->unk_14 = entry->apu + 0x198;
+            }
+        } else {
+            entry->apu = NULL;
+        }
+    }
+}
+#endif
+
+#ifdef VERSION_US
+extern void func_8001FD50(u8 *);
+extern s32 D_8008FA40;
 
 void func_8000C6D8(void) {
     GbApuChannelSlot *slot;
@@ -274,7 +274,7 @@ void func_8000C6D8(void) {
     s32 i;
 
     for (i = 0; i < D_8008FA40; i++) {
-        slot = &((GbApuChannelSlot *)D_800D1220)[i];
+        slot = &D_800D1220[i];
         apu = slot->apu;
         if (apu == NULL) {
             continue;
