@@ -1216,3 +1216,35 @@ func_882157DC = Text_CopyCharacterPrefix;
 func_8821B498 = StorageList_BuildPointers;
 
 func_8821C004 = StorageList_FilterPointers;
+
+func_86A03F48 = ItemQueue_TryPush;
+
+func_86A05504 = CollisionBounds_ContainsPoint;
+
+func_86A05B4C = ItemBounds_SumCostsAtPoint;
+
+func_86A05C94 = ItemBounds_AnyContainsPoint;
+
+func_82B02334 = Panel_InitializeAlternatingSlide;
+
+func_80059B08 = GbSave_LoadMainSave;
+
+func_8005F190 = GbSave_ReadRtcTime;
+
+func_8005F37C = GbSave_ReadRtcTimeWithSavedOffset;
+
+func_8005F3E0 = GbSave_WriteRtcTime;
+
+func_8821B5EC = StorageList_Initialize;
+
+func_88217DA8 = StorageList_DrawCategoryLabel;
+
+func_8413EDF8 = BattleUi_DrawTexturedBorder;
+
+func_84143F18 = BattleUi_DrawNameLabel;
+
+func_84144410 = BattleUi_DrawNameRow;
+
+func_84146DBC = BattleUi_UpdateElementColor;
+
+func_87E0E88C = ListSlots_UpdateState;

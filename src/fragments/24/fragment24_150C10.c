@@ -574,7 +574,48 @@ void func_82B02198(void *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B02334.s")
+extern struct Color82B01BB8 D_82B085C0;
+extern struct Color82B01BB8 D_82B085C4;
+void Panel_InitializeAlternatingSlide(void *context) {
+    State02198 *p = context;
+    s32 i;
+    struct Color82B01BB8 *even_color;
+    struct Color82B01BB8 *odd_color;
+    Pair02198 *a;
+    Pair02198 *b;
+    even_color = &D_82B085C0;
+    odd_color = &D_82B085C4;
+    p->width = 515;
+    p->height = 106;
+    p->delta.y = 0;
+    p->pos.x = 64;
+    if ((p->unk_02 & 1) == 0) {
+        p->delta.x = 640;
+        p->pos.y = 87;
+    } else {
+        p->delta.x = -640;
+        p->pos.y = 239;
+    }
+    p->poscopy = p->pos;
+    a = (Pair02198 *)((u8 *)context + 0x14);
+    *a = p->delta;
+    b = (Pair02198 *)((u8 *)context + 0x18);
+    b->x = -a->x;
+    b->y = -a->y;
+    for (i = 0; i < 4; i++) {
+        *(Pair02198 *)((u8 *)context + 0x1C + i * 4) = *a;
+        *(Pair02198 *)((u8 *)context + 0x2C + i * 4) = *b;
+    }
+    p->a0[1].x = -p->a.x;
+    p->a0[1].y = p->a.y;
+    p->b0[1].x = p->a.x;
+    p->b0[1].y = p->a.y;
+    if ((p->unk_02 & 1) == 0) {
+        *(struct Color82B01BB8 *)((u8 *)p + 0x4C) = *even_color;
+    } else {
+        *(struct Color82B01BB8 *)((u8 *)p + 0x4C) = *odd_color;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -662,7 +703,7 @@ void func_82B026E8(State02198 *arg0, s32 arg1, s32 arg2) {
             func_82B02198(arg0);
             break;
         case 8:
-            func_82B02334(arg0);
+            Panel_InitializeAlternatingSlide(arg0);
             break;
         case 9:
             func_82B024B4(arg0);

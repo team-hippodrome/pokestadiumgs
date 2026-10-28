@@ -621,7 +621,51 @@ s32 func_87E0E850(void *arg0)
   return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E88C.s")
+extern void func_87E0DB40(u8 *);
+extern void func_87E120F8(void *);
+extern void func_87F0277C(void *);
+extern s32 func_87E0DC78(u8 *arg0);
+extern s32 func_87E0E110(void *arg0);
+extern s32 func_87E0E850(void *arg0);
+s32 ListSlots_UpdateState(u8 *state) {
+    s32 i;
+    s32 result;
+    u8 *entry;
+    result = 1;
+    if (func_87E0E850(state)) {
+        *(s32 *)state = 1;
+    } else {
+        *(s32 *)state = 0;
+    }
+    if (*(s32 *)state == 1) {
+        switch (*(u32 *)(state + 1012)) {
+            case 3:
+                if (func_87E0E714(state)) result = 0;
+                break;
+            case 2:
+                if (func_87E0E110(state)) result = 0;
+                break;
+            case 0:
+                func_87E0DB40(state);
+                break;
+            case 1:
+                if (func_87E0DC78(state)) result = 0;
+                break;
+            case 4:
+                result = 0;
+                break;
+        }
+    }
+    entry = state + 40;
+    for (i = 0; i < 4; i++) {
+        (*(s32 *)(entry + 216))++;
+        entry += 236;
+    }
+    func_87E120F8(state + 984);
+    func_87F0277C(state + 16);
+    (*(s32 *)(state + 1020))++;
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E9B0.s")
 
