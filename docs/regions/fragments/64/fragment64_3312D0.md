@@ -65,3 +65,14 @@ The link prints `build/pokestadiumgs-us.z64: OK`; full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail and whitespace checks pass.
 Independent original-assembly and raw retail comparisons verify the
 192-byte span `0x331A7C..0x331B3C`.
+
+## 2026-10-28 — `func_87F0E6B8` matched (find a party Pokémon of a species)
+
+Walk `count` 0x58-byte entries, skipping eggs (bit 0 of +0x1E). At the first
+entry whose species byte equals `arg4`, accept it unless the species is 0x19
+and neither bit 1 of +0x1E is set nor +0x1C is ≥ 0xFA. If accepted, write
+`out[0] = slot + 1`, `out[1] = arg1` (s8) and copy the entry to `out + 4`.
+Stop at that first species hit either way; return whether it was accepted.
+The `ok` flag must be declared inside the loop body (`s32 ok = 0;`); a
+function-scope `ok` takes a different register. Found by a 180-second
+permuter. The prototype's second parameter is retyped to `s8`.
