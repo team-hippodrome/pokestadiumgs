@@ -31,12 +31,11 @@ extern s32 func_80001FF0(void);
 extern void StageFade_StartFromOpaque(s32);
 extern void func_80064D28(void);
 extern void func_8821D3FC(void);
-extern f32 D_8823416C;
 
 void func_8821D550(void) {
-    u16 count;
+    u32 count;
     s32 i;
-    count = (u16)((f32)func_80001FF0() * D_8823416C / 2);
+    count = (u16)((f32)func_80001FF0() * 0.3f / 2);
     StageFade_StartFromOpaque(count);
     if (count != 0) {
         i = 0;
@@ -56,12 +55,11 @@ extern s32 func_80001FF0(void);
 extern void StageFade_StartFromTransparent(s32);
 extern void func_80064D28(void);
 extern void func_8821D3FC(void);
-extern f32 D_88234188;
 
 void func_8821D74C(void) {
-    u16 count;
+    u32 count;
     s32 i;
-    count = (u16)((f32)func_80001FF0() * D_88234188 / 2);
+    count = (u16)((f32)func_80001FF0() * 0.3f / 2);
     StageFade_StartFromTransparent(count);
     if (count != 0) {
         i = 0;

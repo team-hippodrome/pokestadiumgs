@@ -959,9 +959,8 @@
     - [0x1A7200, .rodata, fragments/31/fragment31_186690] # strings + jtbl_88233F90..jtbl_88233FD4
     - [0x1A7270, .rodata, fragments/31/fragment31_189760] # strings + floats + jtbl_88234014..: a second object (strings after the previous object's jump tables)
     - [0x1A7350, .rodata, fragments/31/fragment31_18F6D0] # Jump tables.
-    - [0x1A73D0, rodata]
-    - [0x1A7420, .rodata, fragments/31/fragment31_190BB0] # jtbl_882341A0, 16-byte aligned start; ends mid jtbl_882341B8
-    - [0x1A7440, rodata]
+    - [0x1A73D0, .rodata, fragments/31/fragment31_1900C0] # jtbl_88234150/jtbl_88234170 + 0.3f constants
+    - [0x1A7410, .rodata, fragments/31/fragment31_190BB0] # strings, jtbl_882341A0, jtbl_882341B8 (whole), jtbl_882341D0..jtbl_882342EC
     - [0x1A7590, .rodata, fragments/31/fragment31_194450] # Jump tables.
     - [0x1A75C0, .rodata, fragments/31/fragment31_194C30] # labels in this range are referenced only by this file
     - [0x1A7610, .rodata, fragments/31/fragment31_195910] # labels in this range are referenced only by this file
