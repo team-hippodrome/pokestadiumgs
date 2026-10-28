@@ -21,9 +21,50 @@ s32 func_81306F20(void *arg0) {
     struct S { u8 pad[0x137D0]; f32 value; };
     return (s32)(D_8160BD1C((16 - ((struct S *)arg0)->value) / 16) * 23.0f);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81306F74.s")
+// The 0x15370-offset block func_81306F74 passes to func_81302BB0.
+typedef struct unk_D_81306F74_owner {
+    /* 0x00000 */ u8 unk_00000[0x15370];
+    /* 0x15370 */ u8 unk_15370[1];
+} unk_D_81306F74_owner;
+// The state func_81306F74 colors: owner at 0x137AC, scale at 0x137D0, flags at 0x137EC/0x137F0,
+// mode at 0x137F5.
+typedef struct unk_func_81306F74 {
+    /* 0x00000 */ s16 unk_00000[4];
+    /* 0x00008 */ u8 unk_00008[0x137AC - 0x8];
+    /* 0x137AC */ unk_D_81306F74_owner *unk_137AC;
+    /* 0x137B0 */ u8 unk_137B0[0x137D0 - 0x137B0];
+    /* 0x137D0 */ f32 unk_137D0;
+    /* 0x137D4 */ u8 unk_137D4[0x137EC - 0x137D4];
+    /* 0x137EC */ s32 unk_137EC;
+    /* 0x137F0 */ s32 unk_137F0;
+    /* 0x137F4 */ u8 unk_137F4;
+    /* 0x137F5 */ u8 unk_137F5;
+} unk_func_81306F74;
+extern s32 func_81302BB0(u8 *);
+extern s16 *func_81609530(s32);
+extern void func_8160945C(s16 *, s16 *, s16 *, f32);
+extern f32 (*D_8160BD08)(f32);
+f32 func_81306F74(unk_func_81306F74 *arg0, s16 *arg1) {
+    f32 scale;
+    s16 *color;
 
-extern void func_81306F74(void *, void *);
+    color = arg0->unk_00000;
+    if (arg0->unk_137F5 == 6 || arg0->unk_137F5 == 1 || arg0->unk_137F5 == 2) {
+        if (arg0->unk_137F0 != 0) {
+            color = func_81609530(func_81302BB0(arg0->unk_137AC->unk_15370) ? 2 : 4);
+        }
+    }
+    if (arg0->unk_137F5 == 5 || arg0->unk_137F5 == 2) {
+        if (arg0->unk_137EC != 0) {
+            color = func_81609530(8);
+        }
+    }
+    scale = D_8160BD08(arg0->unk_137D0 / 16);
+    func_8160945C(arg1, color, func_81609530(3), scale);
+    return scale;
+}
+
+extern f32 func_81306F74(unk_func_81306F74 *, s16 *);
 extern void func_81609A90(s16 *, s16 *);
 void func_8130707C(void *arg0, s32 arg1) {
     struct S { u8 pad[0x137D0]; f32 value; };
@@ -1030,7 +1071,24 @@ f32 func_8130B3B8(unk_func_8130B06C *arg0, s16 *arg1) {
     return scale;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130B4E8.s")
+f32 func_8130B4E8(unk_func_8130B06C *arg0, s16 *rect) {
+    f32 scale = func_8130B3B8(arg0, rect);
+    f32 dx = 19.0f * scale;
+    f32 t;
+    f32 dy;
+
+    if (arg0->unk_E8FC > 0.0f) {
+        t = 1.0f - func_8130A98C(arg0);
+    } else {
+        t = scale;
+    }
+    dy = t * 30.0f;
+    rect[0] += 8.0f + dx;
+    rect[1] += 8.0f + dy;
+    rect[2] -= 19 + dx;
+    rect[3] -= 19 + dy;
+    return scale;
+}
 
 extern s32 func_8130B1F4(u8 *arg0);
 extern f32 func_8130AAA8(unk_func_8130B06C *, f32, f32);
