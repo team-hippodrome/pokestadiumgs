@@ -553,7 +553,7 @@ s32 func_800590CC(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8005F190();
+extern s32 GbSave_ReadRtcTime(u8, u16 *, u8 *, u8 *, u8 *, u8);
 extern s32 GbPak_ReadCommand();
 extern u8 D_80128570[];
 extern u8 D_801285D4[];
@@ -739,7 +739,57 @@ extern u8 D_80128570[]; s32 func_80059AE0(s32 index) { return (*(u32 *)(D_801285
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80059B08.s")
+extern s32 func_800587BC(s32 arg0);
+extern void func_800596D0(s32 arg0, u32 arg1);
+extern u8 func_8005D92C(s32 index);
+extern s32 main_pool_alloc_with_func(s32, s32, s32, void (*)(s32, u32));
+extern s32 main_pool_try_free(s32);
+extern u8 D_80128570[];
+s8 GbSave_LoadMainSave(s32 port) {
+    s32 result = 0;
+    if (*(u32 *)(D_80128570 + port * 112) & 1) {
+        return 0;
+    }
+    switch ((u32)func_8005D92C(port)) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        *(s32 *)(D_80128570 + port * 112 + 96) = main_pool_alloc_with_func(4032, 0, port + 0x44415430, func_800596D0);
+        break;
+    case 5:
+    case 6:
+        *(s32 *)(D_80128570 + port * 112 + 96) = main_pool_alloc_with_func(3456, 0, port + 0x44415430, func_800596D0);
+        break;
+    case 7:
+        *(s32 *)(D_80128570 + port * 112 + 96) = main_pool_alloc_with_func(3360, 0, port + 0x44415430, func_800596D0);
+        break;
+    }
+    if (*(s32 *)(D_80128570 + port * 112 + 96) != 0) {
+        *(u32 *)(D_80128570 + port * 112) |= 1;
+        result = func_800587BC(port);
+        if (result == 0) {
+            main_pool_try_free(*(s32 *)(D_80128570 + port * 112 + 96));
+        }
+    }
+    if (result != 0) {
+        switch ((u32)func_8005D92C(port)) {
+        case 5:
+        case 6:
+            if ((*(u8 **)(D_80128570 + port * 112 + 96))[8] == 99 && (*(u8 **)(D_80128570 + port * 112 + 96))[3435] == 127) {
+                break;
+            }
+            return 5;
+        case 7:
+            if ((*(u8 **)(D_80128570 + port * 112 + 96))[8] == 99 && (*(u8 **)(D_80128570 + port * 112 + 96))[3343] == 127) {
+                break;
+            }
+            return 5;
+        }
+        return 0;
+    }
+    return 3;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1031,7 +1081,7 @@ void func_8005ACE8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern s8 func_80059B08(s32);
+extern s8 GbSave_LoadMainSave(s32);
 extern s32 func_8005D964(s32);
 extern s32 func_8005989C(s32);
 extern void func_8005ACE8(s32);
@@ -1040,7 +1090,7 @@ void func_8005AD58(s32 arg0) {
     u8 *record = D_80128570 + arg0 * 112;
     s8 result;
     *(s32 *)record &= 0xFF0000FF;
-    result = func_80059B08(arg0);
+    result = GbSave_LoadMainSave(arg0);
     record[5] = result;
     if ((result & 0xFF) == 0) {
         func_8005D964(arg0);
@@ -3206,38 +3256,163 @@ void GbSave_ResetPortState(u8 port) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005F190.s")
+extern s32 D_80128748;
+extern s32 GbPak_ReadClock(u8, u16 *, u8 *, u8 *, u8 *);
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+extern void GbSave_RequirePakPresent(s32 arg0);
+extern s32 func_80057A80(s32 arg0);
+extern void func_8005B140(s32 arg0);
+extern u8 D_80128570[];
+s32 GbSave_ReadRtcTime(u8 port, u16 *days, u8 *hours, u8 *minutes, u8 *seconds, u8 add_saved_time) {
+    u8 days_delta;
+    u8 hours_delta;
+    u8 minutes_delta;
+    u8 seconds_delta;
+    u8 block[32];
+    s32 result = 1;
+    s32 read_status;
+    if (D_80128748 & (1 << port)) {
+        if (((GbSavePortView *)D_80128570)[port].state == 0 && func_80057A80(port) == 0) {
+            func_8005B140(port);
+            read_status = GbPak_ReadClock(port, days, hours, minutes, seconds);
+            if (read_status == 0) {
+                if (*days & 0xC000) {
+                    result = 2;
+                } else {
+                    if (add_saved_time != 0) {
+                        if (((GbSavePortView *)D_80128570)[port].flags & 1) {
+                            days_delta = ((GbSavePortView *)D_80128570)[port].save_data[68];
+                            hours_delta = ((GbSavePortView *)D_80128570)[port].save_data[69];
+                            minutes_delta = ((GbSavePortView *)D_80128570)[port].save_data[70];
+                            seconds_delta = ((GbSavePortView *)D_80128570)[port].save_data[71];
+                        } else {
+                            if (GbPak_ReadCommand(port, block, 0x2020, sizeof(block)) != 0) {
+                                Game_ShutdownAndLoadFragment(port, 2);
+                            }
+                            days_delta = block[11];
+                            hours_delta = block[12];
+                            minutes_delta = block[13];
+                            seconds_delta = block[14];
+                        }
+                        *seconds += seconds_delta;
+                        if (*seconds >= 60) {
+                            *seconds -= 60, minutes_delta++;
+                        }
+                        *minutes += minutes_delta;
+                        if (*minutes >= 60) {
+                            *minutes -= 60, hours_delta++;
+                        }
+                        *hours += hours_delta;
+                        if (*hours >= 24) {
+                            *hours -= 24, days_delta++;
+                        }
+                        *days += days_delta;
+                    }
+                    result = 0;
+                }
+            }
+            GbSave_RequirePakPresent(port);
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
-void func_8005F37C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    s32 *arg0p = &arg0;
-    s32 masked = *arg0p & 0xFF;
-    func_8005F190(masked, arg1, arg2, arg3, arg4, 1);
+s32 GbSave_ReadRtcTimeWithSavedOffset(u8 port, u16 *days, u8 *hours, u8 *minutes, u8 *seconds) {
+    return GbSave_ReadRtcTime(port, days, hours, minutes, seconds, 1);
 }
 #endif
 
 #ifdef VERSION_US
 void func_8005F3B0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    func_8005F190(arg0 & 0xFF, arg1, arg2, arg3, arg4, 0);
+    GbSave_ReadRtcTime(arg0 & 0xFF, arg1, arg2, arg3, arg4, 0);
 }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005F3E0.s")
+extern s32 D_80128748;
+extern s32 GbPak_WriteClock(u8, u16, u8, u8, u8);
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+extern void GbSave_RequirePakPresent(s32 arg0);
+extern s32 func_80057A80(s32 arg0);
+extern void func_8005B140(s32 arg0);
+extern u8 D_80128570[];
+s32 GbSave_WriteRtcTime(u8 port, u16 days, u8 hours, u8 minutes, u8 seconds, u8 subtract_saved_time) {
+    u8 days_delta;
+    u8 hours_delta;
+    u8 minutes_delta;
+    u8 seconds_delta;
+    s16 adjusted_days;
+    s16 adjusted_hours;
+    s16 adjusted_minutes;
+    s16 adjusted_seconds;
+    u8 block[32];
+    s32 result = 1;
+    GbSavePortView *record;
+    if (D_80128748 & (1 << port)) {
+        record = &((GbSavePortView *)D_80128570)[port];
+        if (record->state == 0 && func_80057A80(port) == 0) {
+            func_8005B140(port);
+            if (subtract_saved_time != 0) {
+                if (record->flags & 1) {
+                    days_delta = record->save_data[68];
+                    hours_delta = record->save_data[69];
+                    minutes_delta = record->save_data[70];
+                    seconds_delta = record->save_data[71];
+                } else {
+                    if (GbPak_ReadCommand(port, block, 0x2020, sizeof(block)) != 0) {
+                        Game_ShutdownAndLoadFragment(port, 2);
+                    }
+                    days_delta = block[11];
+                    hours_delta = block[12];
+                    minutes_delta = block[13];
+                    seconds_delta = block[14];
+                }
+                adjusted_minutes = adjusted_hours = adjusted_days = 0;
+                if ((adjusted_seconds = seconds - seconds_delta) < 0) {
+                    adjusted_seconds += 60;
+                    adjusted_minutes = -1;
+                }
+                adjusted_minutes = adjusted_minutes + minutes - minutes_delta;
+                if (adjusted_minutes < 0) {
+                    adjusted_minutes += 60;
+                    adjusted_hours = -1;
+                }
+                adjusted_hours = adjusted_hours + hours - hours_delta;
+                if (adjusted_hours < 0) {
+                    adjusted_hours += 24;
+                    adjusted_days = -1;
+                }
+                adjusted_days = adjusted_days + days - days_delta;
+                if (adjusted_days < 0) {
+                    return 1;
+                }
+            } else {
+                adjusted_seconds = seconds;
+                adjusted_minutes = minutes;
+                adjusted_hours = hours;
+                adjusted_days = days;
+            }
+            if (GbPak_WriteClock(port, (u16)adjusted_days, (u8)adjusted_hours, (u8)adjusted_minutes, (u8)adjusted_seconds) == 0) { result = 0; }
+            GbSave_RequirePakPresent(port);
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8005F3E0(u8, u16, u8, u8, u8, u8);
+extern s32 GbSave_WriteRtcTime(u8, u16, u8, u8, u8, u8);
 s32 GbSave_SetRelativeRtcTime(u8 port, u16 days, u8 hours, u8 minutes, u8 seconds) {
-    return func_8005F3E0(port, days, hours, minutes, seconds, 1);
+    return GbSave_WriteRtcTime(port, days, hours, minutes, seconds, 1);
 }
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8005F3E0(u8, u16, u8, u8, u8, u8);
+extern s32 GbSave_WriteRtcTime(u8, u16, u8, u8, u8, u8);
 void func_8005F620(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
-    func_8005F3E0(arg0 & 0xFF, arg1 & 0xFFFF, arg2 & 0xFF, arg3 & 0xFF, (s32) arg4, 0);
+    GbSave_WriteRtcTime(arg0 & 0xFF, arg1 & 0xFFFF, arg2 & 0xFF, arg3 & 0xFF, (s32) arg4, 0);
 }
 #endif
 
