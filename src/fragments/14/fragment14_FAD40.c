@@ -1,5 +1,21 @@
 #include "global.h"
 
+// The menu command lists fragment14_data's descriptors point at.
+const s16 D_813122B0[8] = { 66, 163, 1, 0, 67, 3, -1, 0 };
+const s16 D_813122C0[4] = { 31, 2, 0, 0 };
+const s16 D_813122C8[4] = { 33, 147, 1, 0 };
+const s16 D_813122D0[4] = { 33, 2, 1, 0 };
+const s16 D_813122D8[4] = { 34, 2, 1, 0 };
+const s16 D_813122E0[4] = { 35, 2, 1, 3 };
+const s16 D_813122E8[4] = { 36, 2, 1, 0 };
+const s16 D_813122F0[20] = { 26, 147, 1, 0, 27, 148, 3, 0, 28, 149, 4, 0, 29, 150, 5, 0, 30, 151, 6, 0 };
+const s16 D_81312318[16] = { 26, 147, 2, 0, 28, 149, 4, 0, 29, 150, 5, 0, 30, 151, 6, 0 };
+const s16 D_81312338[16] = { 26, 147, 1, 0, 28, 149, 4, 0, 29, 150, 5, 0, 30, 151, 6, 0 };
+const s16 D_81312358[16] = { 26, 147, 1, 0, 27, 148, 3, 0, 28, 149, 4, 0, 29, 150, 5, 0 };
+const s16 D_81312378[12] = { 26, 147, 2, 0, 28, 149, 4, 0, 29, 150, 5, 0 };
+const s16 D_81312390[12] = { 26, 147, 1, 0, 28, 149, 4, 0, 29, 150, 5, 0 };
+
+
 
 #ifdef VERSION_US
 s32 func_81302BB0(const u8 *arg0) {
@@ -28,7 +44,32 @@ s32 func_81302C40(const u8 *arg0) {
     return arg0[0x4DBD] == 0 && arg0[0x4DC4] >= 3;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81302C64.s")
+s32 func_81302C64(u8 *arg0) {
+    switch (arg0[0x4DBD]) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 11:
+        case 15:
+        case 16:
+            return 0;
+        case 8:
+        case 9:
+        case 10:
+        case 12:
+        case 13:
+        case 14:
+        case 17:
+        case 18:
+            return 1;
+    }
+    return 1;
+}
 
 s32 func_81302CA4(u8 *arg0) {
     return arg0[0x4DBD] == 0x11;
