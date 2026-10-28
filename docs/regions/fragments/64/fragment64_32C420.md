@@ -51,13 +51,19 @@ at `src/229E0.c`; the M2C-suggested second argument was only a live pointer.
 An ordinary five-case switch emits a new jump table absent from retail.
 An early inactive-state return followed by a sparse switch recovers the
 linear dispatcher without a layout edit. Distinct old/new frame snapshots
-then recover the two counter updates. Remaining differences include the
-alpha calculation: retail divides by eight, while the current candidate
-multiplies by its reciprocal, and the unsigned conversion's branch/transfer
-shape differs. Separate consumed opacity temporaries and signed-byte views
-worsen the result (652 bytes); integer/float-cast divisor spellings are equal.
+then recover the two counter updates. The initial sparse-switch source
+lowered alpha division by eight to a
+reciprocal multiply. Integer-divisor spelling restores the actual divide
+and unsigned-byte conversion. The counter-lifetime frontier still placed
+its increment/store before geometry. Moving both after the width calculation
+produces the complete opcode sequence: 648 bytes, frame 0x18, normalized 1.0 /
+raw 0.7963. Only register allocation differs. Latest source:
+`scratch/parent64-motion-geometry-counts.json`, index 0. Stock IDO 5.3 and 7.1 produce
+identical candidate bytes and preserve the known module text and section
+layout; there is no current
+compiler-lineage evidence for the residual.
 
-Next: calibrate the real float-division and byte-conversion expression forms
-against the verified packed-color producer and stock compiler pass output.
+Next: trace consumed frame-assignment result and temporary-register webs
+with a calibrated stock compiler pass observer.
 Do not fabricate occupancy, ABI hints, dead guards, padding or output patches.
 Private canonical manifests/results retain all source variants and diagnostics.
