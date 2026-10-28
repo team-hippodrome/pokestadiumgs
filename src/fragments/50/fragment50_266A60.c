@@ -499,7 +499,57 @@ void func_862025E0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86202C14.s")
+extern s32 func_80001FF0(void);
+extern void *D_8620E198;
+// Initializes the scene parameters at the start of D_8620E198: clears bit 0x80 of the byte at
+// 0xE4, then stores constants. Values divided by func_80001FF0 (refresh rate, 50 PAL / 60
+// NTSC; //@src/dp_intro.c) are per-second amounts converted to per-frame. The float at 0x30
+// is 0.97 at 60 Hz and 0.963 otherwise.
+// FAKE: the float fields set to zero are assigned integer 0; with 0.0f IDO keeps the zero in
+// a saved float register and adds a stack frame; diff score 1562 without it.
+void func_86202C14(void) {
+    *(u8 *)((u8 *)D_8620E198 + 0xE4) &= ~0x80;
+    *(f32 *)((u8 *)D_8620E198 + 0x0) = -120.0f / func_80001FF0();
+    *(f32 *)((u8 *)D_8620E198 + 0x8) = 0.0f / func_80001FF0();
+    *(f32 *)((u8 *)D_8620E198 + 0x4) = -6000.0f / func_80001FF0();
+    *(f32 *)((u8 *)D_8620E198 + 0xC) = 0.6f;
+    *(f32 *)((u8 *)D_8620E198 + 0x14) = 1.0f;
+    *(f32 *)((u8 *)D_8620E198 + 0x10) = 0;
+    *(f32 *)((u8 *)D_8620E198 + 0x18) = 660.0f / func_80001FF0();
+    *(f32 *)((u8 *)D_8620E198 + 0x20) = 9999.99f;
+    *(f32 *)((u8 *)D_8620E198 + 0x1C) = 0;
+    *(s32 *)((u8 *)D_8620E198 + 0x48) = 1;
+    *(s32 *)((u8 *)D_8620E198 + 0x50) = 128;
+    *(s32 *)((u8 *)D_8620E198 + 0x4C) = 0;
+    if (func_80001FF0() == 60) {
+        *(f32 *)((u8 *)D_8620E198 + 0x30) = 0.97f;
+    } else {
+        *(f32 *)((u8 *)D_8620E198 + 0x30) = 0.963f;
+    }
+    *(f32 *)((u8 *)D_8620E198 + 0x38) = 1.0f;
+    *(f32 *)((u8 *)D_8620E198 + 0x34) = 0;
+    *(s32 *)((u8 *)D_8620E198 + 0x3C) = 3;
+    *(s32 *)((u8 *)D_8620E198 + 0x44) = 10;
+    *(s32 *)((u8 *)D_8620E198 + 0x40) = 1;
+    *(f32 *)((u8 *)D_8620E198 + 0x24) = 2700.0f / func_80001FF0();
+    *(f32 *)((u8 *)D_8620E198 + 0x2C) = 1000.0f;
+    *(f32 *)((u8 *)D_8620E198 + 0x28) = 0;
+    *(s32 *)((u8 *)D_8620E198 + 0x54) = 2;
+    *(s32 *)((u8 *)D_8620E198 + 0x58) = 0;
+    *(s32 *)((u8 *)D_8620E198 + 0x5C) = 3;
+    *(u8 *)((u8 *)D_8620E198 + 0x60) = 0;
+    *(u8 *)((u8 *)D_8620E198 + 0x61) = 0;
+    *(u8 *)((u8 *)D_8620E198 + 0x62) = 1;
+    *(f32 *)((u8 *)D_8620E198 + 0x64) = 0.8f;
+    *(f32 *)((u8 *)D_8620E198 + 0x68) = 0.1f;
+    *(f32 *)((u8 *)D_8620E198 + 0x6C) = 10.0f;
+    *(f32 *)((u8 *)D_8620E198 + 0xCC) = 1.5f;
+    *(f32 *)((u8 *)D_8620E198 + 0xD0) = 0;
+    *(f32 *)((u8 *)D_8620E198 + 0xD4) = 3.0f;
+    *(f32 *)((u8 *)D_8620E198 + 0xD8) = 1.0f;
+    *(f32 *)((u8 *)D_8620E198 + 0xDC) = 0.1f;
+    *(f32 *)((u8 *)D_8620E198 + 0xE0) = 10.0f;
+}
 #endif
 
 #ifdef VERSION_US
