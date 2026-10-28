@@ -103,3 +103,19 @@ The color picker for this object (`jtbl_81312968` is now in this file's `.rodata
 - −1 → color 2 if +0x3C is set, else the record at +0x28. This must be written as if/else; assign-then-override adds a `beql`.
 
 Then `func_8160945C(out, color, func_81609530(0), scale)`, returning the scale. The output buffers in `func_8130F8B4`, and `func_8130F794`/`func_8130F6A4`'s output parameter, are now `s16`.
+
+## 2026-10-28 — `.data` window; `func_81310894` and `func_81310A14` matched
+
+`rom.yaml` gives this file the `.data` window 0x10A270–0x10A300 (between `fragment14_104FC0`'s and `fragment14_109280`'s data in the shared blob). It holds the three 0x24-byte menu descriptors (`unk_D_813120E0`: texture `D_1000000`, 320x240, palette bytes, command list) and the two functions' color data. IDO emits file-scope data first and then the function data in function order, which is why both owners had to land together:
+- `func_81310894` has an initializer-template local (`D_8131214C`, `{ 0xFF, 0xFF, 0xFF }`, copied but never read).
+- `func_81310A14`'s five colors (`D_81312150`–`D_81312168`) are function `static` arrays, passed by address.
+
+The runner gates owners one at a time and cannot apply this joint transaction (each alone moves the template). The pair was installed by hand and verified with `make COMPARE=1 RUN_CC_CHECK=1`.
+
+- `func_81310894` is the per-frame update:
+  - reload the slots, then dispatch on the phase (0 → `func_8130FE8C`, 1 → `FF18`, 2 → `func_81310800`, 3 → `1058C`, 4 → `107A0`, 5 → `FE9C`; the bodies in that source order);
+  - `result = 1` if `func_81602AEC(+0x4C, func_81602D70(+0xA5))`;
+  - outside phase 0, draw the two rect/color pairs with `func_81600A34`;
+  - finally `func_81311AAC`.
+  Locals: `result`, the unused template copy, `rect` and a second, unused `s16[4]` whose slot retail reserves. `func_81310800`'s result is used here, but it has no `return` statement and leaves `func_81311C70`'s value in `$v0` (now `s32`, marked `//!bug`).
+- `func_81310A14` draws the selection panel through `func_81600F0C` (its third argument is `s16`), `func_81604944`, `func_81605D24`, `func_8160615C`/`func_81605F94` and the text helpers. Its one caller passes the object through an `s32` and now casts it.

@@ -651,6 +651,8 @@
     - [0x10A110, .data,   fragments/14/fragment14_FF070] # D_81311F80 (func_81308014's 30-unit accumulator) and three
                                                             # unreferenced words in the same 16-byte IDO-padded section
     - [0x10A120, data]
+    - [0x10A270, .data,   fragments/14/fragment14_1077C0] # D_813120E0's three records and the color templates of func_81310894/func_81310A14
+    - [0x10A300, data]
     - [0x10A310, .rodata, fragments/14/fragment14_F81B0] # D_81312180 and all seven jump tables
     - [0x10A430, rodata]
     - [0x10A600, .rodata, fragments/14/fragment14_FCD40] # D_81312470, all three jump tables and renderer floats

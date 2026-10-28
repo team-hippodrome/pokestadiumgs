@@ -29,6 +29,32 @@ const unk_D_81312944 D_81312944 = { 0 };
 
 const f32 D_81312948[4] = { -1.5707964f, 0.0f, 1.5707964f, 3.1415927f };
 
+extern u8 D_1000000[];
+
+// The three menu descriptors func_81310800 passes to func_81311C70; each ends with one of the
+// command lists above.
+typedef struct unk_D_813120E0 {
+    /* 0x00 */ void *unk_00;
+    /* 0x04 */ s32 unk_04;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ s32 unk_0C;
+    /* 0x10 */ u8 unk_10[8];
+    /* 0x18 */ s16 unk_18[4];
+    /* 0x20 */ const s16 *unk_20;
+} unk_D_813120E0; // size = 0x24
+
+unk_D_813120E0 D_813120E0 = {
+    D_1000000, 0, 320, 240, 0, { 0x10, 0x13, 0x10, 0x13, 0x10, 0x18, 0x20, 0xFF }, { -1, 2, 1, 15 }, D_81312880,
+};
+unk_D_813120E0 D_81312104 = {
+    D_1000000, 0, 320, 240, 0, { 0x10, 0x13, 0x10, 0x13, 0x10, 0x18, 0x20, 0xFF }, { -1, 2, 1, 15 }, D_81312888,
+};
+unk_D_813120E0 D_81312128 = {
+    D_1000000, 0, 320, 240, 0, { 0x10, 0x13, 0x10, 0x13, 0x10, 0x18, 0x20, 0xFF }, { -1, 2, 1, 15 }, D_81312890,
+};
+
+
 
 #ifdef VERSION_US
 /* mkdraft:func_8130F630 begin */
@@ -456,29 +482,112 @@ typedef struct unk_func_81310800 {
 } unk_func_81310800;
 
 extern s32 func_81311C70(void *arg0, void *arg1, s32 arg2, s32 arg3);
-extern u8 D_813120E0[];
-extern u8 D_81312104[];
-extern u8 D_81312128[];
 
 // Calls func_81311C70 with table D_813120E0, or, when the any-selectable flag is set, D_81312128
 // if unk_8C[unk_48] is 6 and D_81312104 otherwise. On a nonzero result, sets the
 // phase byte to 3 (flag set) or 4 (flag clear).
-void func_81310800(unk_func_81310800 *arg0) {
+// func_81310894 uses the result, but there is no return statement: it returns func_81311C70's
+// value left in $v0.
+s32 func_81310800(unk_func_81310800 *arg0) {
     if (func_81311C70(arg0,
-                      (arg0->unk_A8 != 0) ? ((arg0->unk_8C[arg0->unk_48] == 6) ? D_81312128 : D_81312104)
-                                          : D_813120E0,
+                      (arg0->unk_A8 != 0) ? ((arg0->unk_8C[arg0->unk_48] == 6) ? &D_81312128 : &D_81312104)
+                                          : &D_813120E0,
                       arg0->unk_39, -1)) {
         arg0->unk_38 = (arg0->unk_A8 != 0) ? 3 : 4;
     }
+    //!bug: no return statement
 }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_81310894.s")
+extern s32 func_8131058C(u8 *);
+extern s32 *func_81602D70(s32);
+extern s32 func_81602AEC(u8 *, u8 *);
+extern void func_81600A34(void *, void *, s32, s32, s32, s32, s32);
+extern void func_81311AAC(u8 *, void *);
+extern void func_81600F0C(void *, s16, s16, s16, s16);
+extern void func_81604944(s32, s32, s32, s32, u8 *, u8 *);
+extern void func_81605D24(s32, s32, s32, s32, u8 *);
+extern void func_8160615C(s32, s32, s32, f32);
+extern void func_81605F94(s32, s32, s32, u8 *, f32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void *func_8004C874(s32, s32);
+extern void func_800499EC(void);
+void func_81310894(u8 *arg0, void *arg1) {
+    s32 result = 0;
+    u8 unusedColor[3] = { 0xFF, 0xFF, 0xFF }; // unused: retail copies the template and never reads it
+    s16 rect[4];
+    s16 unusedRect[4]; // unused: retail reserves its slot
+
+    func_8130FA0C(arg0);
+    func_8130FB58(arg0);
+    switch (arg0[0x38]) {
+        case 0:
+            result = func_8130FE8C(arg0);
+            break;
+        case 1:
+            result = func_8130FF18(arg0);
+            break;
+        case 3:
+            result = func_8131058C(arg0);
+            break;
+        case 4:
+            result = func_813107A0(arg0);
+            break;
+        case 5:
+            result = func_8130FE9C(arg0);
+            break;
+        case 2:
+            result = func_81310800((unk_func_81310800 *)arg0);
+            break;
+    }
+    if (func_81602AEC(*(u8 **)(arg0 + 0x4C), (u8 *)func_81602D70(*(s8 *)(arg0 + 0xA5)))) {
+        result = 1;
+    }
+    if (arg0[0x38] != 0) {
+        func_8130F794(arg0, rect);
+        func_81600A34(arg1, arg0 + 1, result, rect[0], rect[1], rect[2], rect[3]);
+        func_8130F7B8(arg0, rect);
+        func_81600A34(arg1, arg0 + 2, 1, rect[0], rect[1], rect[2], rect[3]);
+    }
+    func_81311AAC(arg0, arg1);
+}
+
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_81310A14.s")
+void func_81310A14(u8 *arg0) {
+    static u8 D_81312150[3] = { 0x00, 0x00, 0x00 };
+    static u8 D_81312154[3] = { 0xFF, 0xFF, 0xFF };
+    static u8 D_81312158[3] = { 0xFF, 0xBE, 0xDC };
+    static u8 D_8131215C[4][3] = {
+        { 0x8C, 0x8C, 0xFF }, { 0x3C, 0xD2, 0x5A }, { 0xFF, 0x64, 0x46 }, { 0xFF, 0xF0, 0x00 },
+    };
+    static u8 D_81312168[3] = { 0xFF, 0xA0, 0xFF };
+    s16 rect[4];
+    f32 scale;
+
+    scale = func_8130F794(arg0, rect);
+    func_81600F0C(*(void **)(arg0 + 0x50), rect[0], rect[1] - 17, rect[2], 17);
+    if (*(s32 *)(arg0 + 0x3C) != 0) {
+        func_81604944(rect[0], rect[1], rect[2], rect[3], D_81312158, D_81312150);
+        func_81605D24(rect[0] - 6, rect[1] - 9, 289, 40, D_81312168);
+        func_8160615C(rect[0], rect[1], *(s32 *)(arg0 + 0xA0) + 1, 1.0f);
+    } else {
+        func_81604944(rect[0], rect[1], rect[2], rect[3], *(u8 **)(arg0 + 0x4C), D_81312150);
+        func_81605D24(rect[0] - 6, rect[1] - 9, 289, 40, D_8131215C[*(s8 *)(arg0 + 0xA5)]);
+        func_81605F94(rect[0] - 1, rect[1] - 18, *(s8 *)(arg0 + 0xA4), D_81312154, 1.0f);
+    }
+    func_800498C4();
+    func_800496A4(16, 1);
+    func_8004972C(255, 255, 255, 255.0f * scale);
+    func_800495F8(rect[0] + 235, rect[1] + 17, 1, func_8004C874(15, *(s32 *)(arg0 + 0x3C) ? 52 : 51));
+    func_800499EC();
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -487,12 +596,12 @@ void func_81310800(unk_func_81310800 *arg0) {
 
 #ifdef VERSION_US
 extern s32 func_81600DA8(void *arg0, void *arg1);
-extern void func_81310A14(s32 arg0);
+extern void func_81310A14(u8 *arg0);
 extern void func_81310BF8(s32 arg0);
 extern void func_81311650(s32 arg0, s32 arg1);
 void func_81311030(s32 arg0, s32 arg1) {
     if (func_81600DA8((void *)arg1, (void *)(arg0 + 1)) != 0) {
-        func_81310A14(arg0);
+        func_81310A14((u8 *)arg0);
     }
     if (func_81600DA8((void *)arg1, (void *)(arg0 + 2)) != 0) {
         func_81310BF8(arg0);
