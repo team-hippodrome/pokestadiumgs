@@ -1740,6 +1740,8 @@ SECTIONS
         build/asm/us/data/fragments/20/fragment20_header.o(.data);
         fragments_20_fragment20_1280F0 = .;
         build/src/fragments/20/fragment20_1280F0.o(.data);
+        fragments_20_fragment20_data_data = .;
+        build/asm/us/data/fragments/20/fragment20_data.data.o(.data);
         fragments_20_fragment20_1286C0 = .;
         build/src/fragments/20/fragment20_1286C0.o(.data);
         fragments_20_fragment20_128B10 = .;
@@ -1748,8 +1750,8 @@ SECTIONS
         build/src/fragments/20/fragment20_12BB60.o(.data);
         fragments_20_fragment20_12C460 = .;
         build/src/fragments/20/fragment20_12C460.o(.data);
-        fragments_20_fragment20_data_data = .;
-        build/asm/us/data/fragments/20/fragment20_data.data.o(.data);
+        fragments_20_fragment20_data_13D410_data = .;
+        build/asm/us/data/fragments/20/fragment20_data_13D410.data.o(.data);
         fragment20_DATA_END = .;
         fragment20_DATA_SIZE = ABSOLUTE(fragment20_DATA_END - fragment20_DATA_START);
         fragment20_RODATA_START = .;
@@ -3732,11 +3734,12 @@ SECTIONS
         build/src/fragments/51/fragment51_275E40.o(.rodata);
         build/src/fragments/51/fragment51_279A20.o(.rodata);
         build/src/fragments/51/fragment51_279D70.o(.rodata);
+        build/asm/us/data/27D330.rodata.o(.rodata);
         build/src/fragments/51/fragment51_27A440.o(.rodata);
         build/src/fragments/51/fragment51_27A740.o(.rodata);
         build/src/fragments/51/fragment51_27AC10.o(.rodata);
         build/src/fragments/51/fragment51_27B9E0.o(.rodata);
-        build/asm/us/data/27D330.rodata.o(.rodata);
+        build/asm/us/data/27D380.rodata.o(.rodata);
         fragment51_RODATA_END = .;
         fragment51_RODATA_SIZE = ABSOLUTE(fragment51_RODATA_END - fragment51_RODATA_START);
     }
