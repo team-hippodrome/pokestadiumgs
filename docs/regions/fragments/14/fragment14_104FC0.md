@@ -46,3 +46,14 @@ The local must be `const`. IDO then puts its initializer template (`D_81312730`)
 - Function statics are emitted in source order with file-scope data, so the rest is defined just after `func_8130D4E0`: the highlight color `D_813120B4` (shared by `func_8130E99C` and the still-assembly `func_8130D6A4`), then `D_813120B8` and `D_813120C4`–`D_813120D4`.
 
 `func_8130D4E0` draws the four selector icons (`func_8004D19C` at `pos + D_81312750/758[i]`, texture `func_8004C990(51, D_81312760[i])`). The selected one (+0x38) blinks while `func_8160BCB0(timer, 32) > 16`, using `gDPSetEnvColor` 0x808080FF around it and white after. The whole draw is wrapped in the `D_80094E38`/`D_80094F50` display lists (`gSPDisplayList`). Positions are written `pos[k] + table[i]`. `D_81312760` is `u16`, since retail reads it with `lhu`.
+
+## 2026-10-28 — `func_8130EB04` matched; `func_8130CEF0` requeue
+
+- `func_8130EB04` (slot setup):
+  - stores `arg7` at +4;
+  - with an empty slot it resets via `func_8130F5AC`;
+  - otherwise phase 0 clears the cursor and timers and falls into phases 2/3, which set phase 2;
+  - copies the `s16` arguments to +0x35/+0x37, the two rects to +0x1C/+0x14 and the 0x20-byte record to +0x3C (`func_81601A38` when it is NULL);
+  - runs `func_8130EA8C`, then sets +0x36 from `func_8130CEAC - 1` when `func_8130CE3C` holds.
+  The switch must list the empty cases 1 and 4–7 so IDO emits retail's 8-entry `jtbl_81312800`.
+- `func_8130CEF0` (requeue): it interpolates the rect from +0x14 (phase 3 with +0x36 clear) or +0x1C toward the 548x199 panel at (+8, +0xA) with `t = +0x2C / 1` (else the full panel directly). Declaring `t`, `sx`, `sy`, `from` fixes the frame. The remaining diff is the source select: retail emits `bnel` with a duplicated `+0x1C` and `b` with `+0x14`. IDO gives `bne`/`nop`, and an `s8 flag` local gets the `bnel` but shifts temps. Next: different select shapes with the flag read first.
