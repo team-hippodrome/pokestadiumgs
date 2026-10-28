@@ -3,10 +3,10 @@
 
 
 #ifdef VERSION_US
-extern void func_800226C0();
+extern void func_800226C0(s32 sound);
 
-void func_8AE00020() {
-    func_800226C0();
+void Fragment46_PlaySound(s32 sound) {
+    func_800226C0(sound);
 }
 #endif
 
@@ -75,12 +75,12 @@ extern s16 D_8AE09B48;
 extern s16 D_8AE09B54;
 extern s32 func_8004C874(s32, s32);
 extern s32 func_80049148(s32, s32, const char *, ...);
-extern void func_8AE00020();
+extern void Fragment46_PlaySound(s32 sound);
 void func_8AE001D4(void) {
     D_8AE09B54 = 1;
     D_8AE09B44 = func_8004C874(0x2B, 6);
     D_8AE09B48 = func_80049148(1, 0, D_8AE09B44);
-    func_8AE00020(0x47);
+    Fragment46_PlaySound(0x47);
 }
 #endif
 
@@ -88,11 +88,11 @@ void func_8AE001D4(void) {
 extern s16 D_8AE084EC;
 extern s32 func_80049148(s32, s32, const char *, ...);
 extern s32 func_8004C874(s32, s32);
-extern void func_8AE00020();
+extern void Fragment46_PlaySound(s32 sound);
 extern s32 D_8AE09B44;
 extern s16 D_8AE09B48;
 extern s16 D_8AE09B54;
-void func_8AE00230(s32 arg0) { if (arg0 != 0) { if ((D_8AE084EC != 1) && (D_8AE09B54 == 1)) { func_8AE00020(0x48); } } D_8AE09B54 = 0; D_8AE09B44 = func_8004C874(0x2B, 5); D_8AE09B48 = func_80049148(1, 0, D_8AE09B44); }
+void func_8AE00230(s32 arg0) { if (arg0 != 0) { if ((D_8AE084EC != 1) && (D_8AE09B54 == 1)) { Fragment46_PlaySound(0x48); } } D_8AE09B54 = 0; D_8AE09B44 = func_8004C874(0x2B, 5); D_8AE09B48 = func_80049148(1, 0, D_8AE09B44); }
 #endif
 
 #ifdef VERSION_US
@@ -731,7 +731,74 @@ void func_8AE01EA4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE020FC.s")
+extern u8 D_8AE07AE0[], D_8AE07DC0[], D_8AE080D0[];
+extern void _bcopy(const void *, void *, s32);
+extern Fragment46LookupEntry *func_8AE05B24(void);
+extern void func_8AE0575C(void *);
+extern void Fragment46_UpdateSelectionVisibility(void);
+extern s16 D_8AE084EC;
+extern f32 D_8AE084F0;
+extern s32 D_8AE09B14, D_8AE09B18, D_8AE09B20, D_8AE09B24;
+extern void func_8AE00230(s32 arg0);
+extern void func_8AE01EA4(void);
+extern void * D_8AE084BC;
+extern s16 D_8AE08504;
+extern s16 D_8AE098B0;
+void Fragment46_InitializeSelection(void) {
+    Fragment46LookupEntry *entry;
+    s16 position[3];
+    func_8AE00230(0);
+    D_8AE08504 = 0;
+    switch (D_8AE098B0) {
+    case 0:
+        _bcopy(D_8AE07AE0, D_8AE08508, 896);
+        func_8AE01EA4();
+        break;
+    case 1:
+        _bcopy(D_8AE07DC0, D_8AE08508, 896);
+        func_8AE01EA4();
+        break;
+    case 2:
+        _bcopy(D_8AE080D0, D_8AE08508, 896);
+        func_8AE01EA4();
+        break;
+    }
+    if (D_8AE08504 > 0) {
+        entry = func_8AE05B24();
+        func_8AE0575C((u8 *)entry + 8);
+    } else {
+        position[0] = ((f32 *)&D_8AE098B8)[0];
+        position[1] = ((f32 *)&D_8AE098B8)[1];
+        position[2] = ((f32 *)&D_8AE098B8)[2];
+        func_8AE0575C(position);
+        *(Triple32 *)((u8 *)D_8AE084BC + 180) = D_8AE098B8;
+        *(Triple32 *)((u8 *)D_8AE084BC + 168) = D_8AE098C8;
+    }
+    D_8AE084EC = 0;
+    D_8AE084F0 = 1.0f;
+    switch (D_8AE098B0) {
+    case 0:
+        ((u16 *)D_8AE09B20)[1] &= ~2;
+        ((u16 *)D_8AE09B24)[1] |= 2;
+        break;
+    case 1:
+        ((u16 *)D_8AE09B24)[1] &= ~2;
+        ((u16 *)D_8AE09B20)[1] |= 2;
+        break;
+    case 2:
+        ((u16 *)D_8AE09B24)[1] &= ~2;
+        ((u16 *)D_8AE09B20)[1] &= ~2;
+        break;
+    }
+    if (D_8AE08504 == 0) {
+        ((u16 *)D_8AE09B18)[1] &= ~1;
+        ((u16 *)D_8AE09B14)[1] &= ~1;
+    } else {
+        ((u16 *)D_8AE09B18)[1] |= 1;
+        ((u16 *)D_8AE09B14)[1] |= 1;
+    }
+    Fragment46_UpdateSelectionVisibility();
+}
 #endif
 
 #ifdef VERSION_US
@@ -857,7 +924,7 @@ extern void func_8AC027D0(s32, s32, void *, s32);
 extern s32 func_8AC06D8C(s32, s32);
 extern s32 func_8AE00C1C(s32);
 extern s32 func_8AE00CC8(s32);
-extern void func_8AE020FC();
+extern void Fragment46_InitializeSelection();
 extern void Fragment46_UpdateSelectionVisibility(void);
 extern s32 func_8AE02398(s32, void *);
 extern s32 func_8AE02470(s32, void *);
@@ -978,7 +1045,7 @@ void func_8AE029D0(void) {
     func_8AE003F8();
     D_8AE084E0 = 0;
     D_8AE084E2 = 0;
-    func_8AE020FC();
+    Fragment46_InitializeSelection();
     Fragment46_UpdateSelectionVisibility();
     D_8AE084E8 = func_8AE00F24();
     D_8AE084FC = 0x14;
@@ -1069,7 +1136,67 @@ s32 arg1;
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE03324.s")
+extern char D_8AE083F4[], D_8AE083FC[], D_8AE08404[];
+extern s16 D_8AE09E68;
+extern void _bzero(void *, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_8004C54C(s32, s32);
+extern void func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_8AE03214(s16 arg0);
+extern s32 func_8AE032C8();
+extern s16 D_8AE098B0;
+extern char * D_8AE09ABC;
+extern char * D_8AE09AC4;
+extern char * D_8AE09ACC;
+extern s32 D_8AE09AD0;
+extern s32 D_8AE09B5C;
+extern s32 D_8AE09E60;
+extern s32 D_8AE09E64;
+void Fragment46_DrawVariantDetails(s32 arg0, s32 arg1, u8 *arg2, s32 arg3) {
+    s32 text_width;
+    s32 width;
+    char value[256];
+    char label[256];
+    s8 upper;
+    _bzero(value, 256);
+    _bzero(label, 256);
+    if (D_8AE098B0 != 2) {
+        switch (arg3) {
+        case 1: sprintf(label, D_8AE09ABC); break;
+        case 2: sprintf(label, D_8AE09AC4); break;
+        case 4: sprintf(label, D_8AE09ACC); break;
+        }
+    }
+    if (arg3 == 8) {
+        sprintf(label, (const char *)D_8AE09AD0);
+        switch (D_8AE09E68) {
+        case 0: case 1: case 6:
+            upper = arg2[3] + 4;
+            break;
+        default:
+            upper = arg2[3];
+            break;
+        }
+    } else upper = arg2[3];
+    if (D_8AE09E64 >= 4) func_800495BC(arg0, arg1, label);
+    text_width = func_80049148(0, 0, (s32)label);
+    width = text_width + 10;
+    if (D_8AE09B5C < width) D_8AE09B5C = width;
+    if (upper == arg2[2]) {
+        func_8004C54C(51, func_8AE032C8(arg2[2], 0));
+        func_8004C8A0(value, 256, 43, 9);
+    } else {
+        func_8004C54C(52, func_8AE032C8(arg2[2], 0));
+        func_8004C54C(53, func_8AE032C8(upper, 1));
+        func_8004C8A0(value, 256, 43, 10);
+    }
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C, arg1, value);
+    text_width = func_80049148(0, 0, (s32)value);
+    width = text_width + 10;
+    if (D_8AE09E60 < width) D_8AE09E60 = width;
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C + D_8AE09E60, arg1, (const char *)func_8AE03214(arg2[4]));
+}
 #endif
 
 #ifdef VERSION_US
@@ -1184,7 +1311,56 @@ void func_8AE038DC(s32 arg0, s32 arg1, void *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE03970.s")
+extern char D_8AE083F4[], D_8AE083FC[], D_8AE08404[];
+extern s16 D_8AE09E68;
+extern void _bzero(void *, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_8004C54C(s32, s32);
+extern void func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_8AE03214(s16 arg0);
+extern s32 func_8AE032C8();
+extern char * D_8AE09ABC;
+extern char * D_8AE09AC4;
+extern char * D_8AE09ACC;
+extern s32 D_8AE09AE8;
+extern s32 D_8AE09B5C;
+extern s32 D_8AE09E60;
+extern s32 D_8AE09E64;
+void Fragment46_DrawCategoryDetails(s32 arg0, s32 arg1, u8 *arg2) {
+    s32 text_width;
+    s32 width;
+    char value[256];
+    char label[256];
+    _bzero(value, 256);
+    _bzero(label, 256);
+    sprintf(label, (const char *)D_8AE09AE8);
+    if (arg2[0] != 7) {
+        if (arg2[0] & 1) {
+            if ((s8)label[0] == 0) sprintf(label, D_8AE09ABC);
+            else sprintf(label, D_8AE083F4, label, D_8AE09ABC);
+        }
+        if (arg2[0] & 2) {
+            if ((s8)label[0] == 0) sprintf(label, D_8AE09AC4);
+            else sprintf(label, D_8AE083FC, label, D_8AE09AC4);
+        }
+        if (arg2[0] & 4) {
+            if ((s8)label[0] == 0) sprintf(label, D_8AE09ACC);
+            else sprintf(label, D_8AE08404, label, D_8AE09ACC);
+        }
+    }
+    if (D_8AE09E64 >= 4) func_800495BC(arg0, arg1, label);
+    text_width = func_80049148(0, 0, (s32)label);
+    width = text_width + 10;
+    if (D_8AE09B5C < width) D_8AE09B5C = width;
+    func_8004C54C(51, func_8AE032C8(arg2[2], 0));
+    func_8004C8A0(value, 256, 43, 9);
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C, arg1, value);
+    text_width = func_80049148(0, 0, (s32)value);
+    width = text_width + 10;
+    if (D_8AE09E60 < width) D_8AE09E60 = width;
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C + D_8AE09E60, arg1, (const char *)func_8AE03214(arg2[3]));
+}
 #endif
 
 #ifdef VERSION_US
@@ -1397,11 +1573,11 @@ loop_1:
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8AE084D0;
+extern f32 gFragment46CameraTarget[3];
 void func_8AE0575C(void *arg0) {
-    (*(f32 *)((u8 *)(&D_8AE084D0) + (0))) = (f32) (*(s16 *)((u8 *)(arg0) + (0)));
-    (*(f32 *)((u8 *)(&D_8AE084D0) + (4))) = (f32) (*(s16 *)((u8 *)(arg0) + (4)));
-    (*(f32 *)((u8 *)(&D_8AE084D0) + (8))) = (f32) -(*(s16 *)((u8 *)(arg0) + (2)));
+    (*(f32 *)((u8 *)(gFragment46CameraTarget) + (0))) = (f32) (*(s16 *)((u8 *)(arg0) + (0)));
+    (*(f32 *)((u8 *)(gFragment46CameraTarget) + (4))) = (f32) (*(s16 *)((u8 *)(arg0) + (4)));
+    (*(f32 *)((u8 *)(gFragment46CameraTarget) + (8))) = (f32) -(*(s16 *)((u8 *)(arg0) + (2)));
 }
 #endif
 
@@ -1579,14 +1755,135 @@ Fragment46Entry *func_8AE05BF0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE05CB4.s")
+extern f32 D_8AE08450;
+extern s32 D_8AE084A0;
+extern void func_80064D28(void);
+extern void Fragment46_PlaySound(s32 sound);
+extern void func_8AE00040(void);
+extern void func_8AE000C8(void);
+extern void func_8AE001D4(void);
+extern void func_8AE00230(s32 arg0);
+extern s32 func_8AE00F24(void);
+extern void func_8AE01738(void);
+extern void Fragment46_InitializeSelection(void);
+extern void func_8AE0575C(void *arg0);
+extern void func_8AE05910(s16 arg0);
+extern void func_8AE059A8(void *arg0, void *arg1);
+extern void * D_8AE084BC;
+extern f32 gFragment46CameraTarget[3];
+extern s16 D_8AE084E0;
+extern s16 D_8AE084E2;
+extern s32 D_8AE084E8;
+extern s16 D_8AE084EC;
+extern s16 D_8AE08504;
+extern s16 D_8AE098B0;
+extern s16 D_8AE09B54;
+extern s16 D_8AE09E68;
+void Fragment46_HandleSelectionInput(void) {
+    Fragment46LookupEntry *temp_v0_3;
+    s16 sp4A;
+    Fragment46Entry *temp_v0_4;
+    s16 sp42;
+    u32 var_v0;
+    f32 sight[3];
+    u32 temp_v0;
+    u32 temp_v0_2;
+    u32 var_v0_2;
+
+    if ((D_8AE09E68 == 0) || (D_8AE09E68 == 1) || (D_8AE09E68 == 6)) {
+        temp_v0 = D_80087200->buttonsPressed;
+        if (temp_v0 & 0x10) {
+            if (D_8AE098B0 != 1) {
+                func_8AE00040();
+                Fragment46_InitializeSelection();
+                Fragment46_PlaySound(0x4B);
+            }
+        } else if ((temp_v0 & 0x20) && (D_8AE098B0 != 0)) {
+            func_8AE000C8();
+            Fragment46_InitializeSelection();
+            Fragment46_PlaySound(0x4B);
+        }
+    }
+    if (D_8AE08504 > 0) {
+        temp_v0_2 = D_80087200->buttonsPressed;
+        if (temp_v0_2 & 0x800) {
+            sp4A = D_8AE084E0;
+            temp_v0_3 = func_8AE05B24();
+            if (sp4A != D_8AE084E0) {
+                func_8AE0575C((u8 *)temp_v0_3 + 8);
+                func_8AE05910(1);
+                Fragment46_PlaySound(0x46);
+            }
+        } else if (temp_v0_2 & 0x400) {
+            sp42 = D_8AE084E0;
+            temp_v0_4 = func_8AE05BF0();
+            if (sp42 != D_8AE084E0) {
+                func_8AE0575C((u8 *)temp_v0_4 + 8);
+                func_8AE05910(2);
+                Fragment46_PlaySound(0x46);
+            }
+        }
+        switch (D_8AE084EC) {
+        default: var_v0 = D_80087200->buttonsPressed;
+            break;
+        case 0: func_8AE059A8((u8 *)D_8AE084BC + 0xB4, &D_8AE098B8);
+            func_8AE059A8((u8 *)D_8AE084BC + 0xA8, &D_8AE098C8);
+            if ((D_8AE084A0 != 2) && (D_80087200->buttonsPressed & 0x8000)) {
+                D_8AE084EC = 1;
+                func_8AE05910(3);
+                func_8AE00230(1);
+                Fragment46_PlaySound(0x4D);
+            }
+            var_v0 = D_80087200->buttonsPressed;
+            break;
+        case 1: func_8AE059A8((u8 *)D_8AE084BC + 0xB4, gFragment46CameraTarget);
+                sight[0] = gFragment46CameraTarget[0];
+                sight[1] = gFragment46CameraTarget[1] + 1000.0f;
+                sight[2] = gFragment46CameraTarget[2] + D_8AE08450;
+                func_8AE059A8((u8 *)D_8AE084BC + 0xA8, sight);
+                var_v0 = D_80087200->buttonsPressed;
+                if (var_v0 & 0x4000) {
+                    D_8AE084EC = 0;
+                    func_8AE05910(4);
+                    func_8AE00230(0);
+                    func_80064D28();
+                    Fragment46_PlaySound(0x4E);
+                    var_v0 = D_80087200->buttonsPressed;
+                }
+            break;
+        }
+        if (var_v0 & 1) {
+            if (D_8AE09B54 != 1) {
+                func_8AE001D4();
+            } else {
+                func_8AE00230(1);
+            }
+        }
+        if ((D_8AE084EC == 1) && (D_8AE084E8 != 0)) {
+            var_v0_2 = D_80087200->buttonsPressed;
+            if ((var_v0_2 & 4) && (D_8AE09B58 >= 0)) {
+                D_8AE084E2 = D_8AE09B58;
+                func_8AE01738();
+                D_8AE084E8 = func_8AE00F24();
+                Fragment46_PlaySound(0x46);
+                var_v0_2 = D_80087200->buttonsPressed;
+            }
+            if ((var_v0_2 & 8) && (D_8AE09B56 >= 0)) {
+                D_8AE084E2 = D_8AE09B56;
+                func_8AE01738();
+                D_8AE084E8 = func_8AE00F24();
+                Fragment46_PlaySound(0x46);
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern s32 StageContext_GetFadeMode(void);
 extern void StageFade_StartFromTransparent(s32);
 extern s32 D_8AE084A0;
-extern void func_8AE00020();
+extern void Fragment46_PlaySound(s32 sound);
 extern s16 D_8AE084EC;
 s32 func_8AE0605C(s32 arg0) {
     s32 sp1C;
@@ -1601,7 +1898,7 @@ s32 func_8AE0605C(s32 arg0) {
         if ((((D_80087200->buttonsPressed) & 0x4000) != 0) && (D_8AE084EC == 0)) {
             sp1C = 2;
             StageFade_StartFromTransparent(5);
-            func_8AE00020(0x48);
+            Fragment46_PlaySound(0x48);
         }
         break;
     if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
@@ -1622,7 +1919,7 @@ extern void func_800086A4(s32);
 extern void func_80064D28();
 extern void func_8AE00380();
 extern void func_8AE05118();
-extern void func_8AE05CB4();
+extern void Fragment46_HandleSelectionInput();
 s32 func_8AE0605C(s32);
 
 void func_8AE06118(void) {
@@ -1635,7 +1932,7 @@ void func_8AE06118(void) {
     do {
         func_80064D28();
         if (var_s0 == 1) {
-            func_8AE05CB4();
+            Fragment46_HandleSelectionInput();
         }
         func_8AE00380();
         func_8AE05118();

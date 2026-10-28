@@ -1154,7 +1154,7 @@ void func_8005B120(s32 arg0) {
 
 #ifdef VERSION_US
 extern u8 D_80128570[];
-extern s32 GbPak_ValidateAndRefresh(s32, s32, u8 *);
+extern s32 GbPak_ValidateAndRefresh(s32, u8 *, u8 *);
 void func_8005B140(s32 arg0) {
     if (GbPak_ValidateAndRefresh(arg0, 0, D_80128570 + arg0 * 112 + 0x28) == 0) {
         Game_ShutdownAndLoadFragment(arg0, 2);
@@ -3535,7 +3535,35 @@ s32 GbSave_GetUnownDexEntry(s32 index, u8 entry) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80060250.s")
+extern u8 D_80097354[];
+extern s32 GbPak_ValidateAndRefresh(s32, u8 *, u8 *);
+extern s32 GbTower_CheckPakRemoved(s32, u8);
+extern void _bzero(s32, s32);
+extern s32 func_80057BCC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern u8 D_80128570[];
+extern s32 D_80128748;
+s32 func_80060250(s32 port) {
+    u8 status;
+    s32 ret;
+    u8 buf[0x490];
+
+    ret = 0;
+    _bzero(buf, sizeof(buf));
+    if ((D_80128570 + port * 112)[4] != 0 && (D_80128748 & (1 << port))) {
+        if (GbPak_ValidateAndRefresh(port, &status, (D_80128570 + port * 112) + 0x28) == 0) {
+            Game_ShutdownAndLoadFragment(port, 2);
+        }
+        if (func_80057BCC(port, (s32)D_80097354, 0x20, 0x20) != 0 &&
+            func_80057BCC(port, (u32)buf, 0x1000, 0x4A0) != 0) {
+            ret = 1;
+            (D_80128570 + port * 112)[4] = 13;
+        }
+        if (GbTower_CheckPakRemoved(port, status) == 0) {
+            Game_ShutdownAndLoadFragment(port, 2);
+        }
+    }
+    return ret;
+}
 #endif
 
 #ifdef VERSION_US
