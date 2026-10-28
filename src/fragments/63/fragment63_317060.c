@@ -1,4 +1,5 @@
 #include "global.h"
+#include "color_adjustment.h"
 
 
 #ifdef VERSION_US
@@ -144,7 +145,38 @@ void func_87E14458(void) {
     func_87E13924(D_87F119DC, (*(s32 *)((u8 *)(D_87F119DC) + (0x20))));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14480.s")
+typedef struct {
+    u8 *mon;
+    ColorAdjustment adjustment;
+} Fragment63MonSlot;
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern ColorAdjustment func_8003F5AC(u8 *);
+extern s32 func_8006456C(s32);
+extern void func_80041FA0(u8 *, u16, ColorAdjustment);
+extern s32 func_80041FD0(u8 *, u16, ColorAdjustment, s32);
+extern void func_800428F8(u8 *);
+extern void func_8003F2C4(u8 *, u8 *, s32);
+extern void func_8003F3BC(void *, s32);
+extern void func_8003F114(void *, s32, s32, s32);
+void func_87E14480(u8 *resource, Fragment63MonSlot *slot, u8 *model, s32 arg3, s32 arg4) {
+    u8 *mon = slot->mon + 4;
+    u16 species;
+
+    if (mon == NULL) {
+        return;
+    }
+    if (*(s8 *)slot->mon == 0) {
+        func_80041FA0(resource, Pokemon_GetDisplaySpecies(mon), slot->adjustment);
+    } else {
+        species = Pokemon_GetDisplaySpecies(mon);
+        func_80041FD0(resource, species, func_8003F5AC(mon), func_8006456C(*(u16 *)(mon + 0x16)));
+    }
+    func_800428F8(resource);
+    func_8003F114(model, 0, 0, **(s32 **)(*(u8 **)(resource + 0x38) + 8));
+    func_8003F2C4(resource, model, arg3);
+    func_8003F3BC(model, arg4);
+    model[0x1D] = 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14578.s")
 
