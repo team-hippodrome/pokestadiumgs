@@ -146,8 +146,6 @@ void draw_reference_profiler_bars(void) {
     draw_profiler_rect(0xB1, 0xE2, 0xDC, 0xF94B);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/AC80/func_8000A730.s")
-
 typedef struct ProfilerFrameDataAC80 {
     s16 numSoundTimes;
     s16 numVblankTimes;
@@ -157,6 +155,38 @@ typedef struct ProfilerFrameDataAC80 {
     OSTime vblankTimes[8];
 } ProfilerFrameDataAC80;
 extern u8 D_800D0F90;
+extern s16 D_80087E30;
+
+void func_8000A730(void) {
+    s32 i;
+    ProfilerFrameDataAC80 *profiler =
+        &(*(ProfilerFrameDataAC80 (*)[3])&D_800D0F90)[(*(s16 *)((u8 *)&D_800D0F90 + 0x25A) == 0) ? 2 : *(s16 *)((u8 *)&D_800D0F90 + 0x25A) - 1];
+    ProfilerFrameDataAC80 *profiler_2 =
+        &(*(ProfilerFrameDataAC80 (*)[3])&D_800D0F90)[(*(s16 *)((u8 *)&D_800D0F90 + 0x25C) == 0) ? 2 : *(s16 *)((u8 *)&D_800D0F90 + 0x25C) - 1];
+    OSTime clockStart = profiler->gameTimes[0] - 0xBC0F8;
+
+    draw_profiler_bar_cpu(clockStart, profiler->gameTimes[0], profiler->gameTimes[1], 212, 0xFFCB);
+    draw_profiler_bar_cpu(clockStart, profiler->gameTimes[1], profiler->gameTimes[2], 212, 0xFBCB);
+
+    profiler->numSoundTimes &= 0xFFFE;
+    for (i = 0; i < profiler->numSoundTimes; i += 2) {
+        OSTime duration = profiler->soundTimes[i + 1] - profiler->soundTimes[i];
+        if (*(OSTime *)&D_80087E30 < duration) {
+            *(OSTime *)&D_80087E30 = duration;
+        }
+        draw_profiler_bar_cpu(clockStart, profiler->soundTimes[i], profiler->soundTimes[i + 1], 212, 0xF94B);
+    }
+
+    draw_profiler_bar_cpu(clockStart, profiler_2->gfxTimes[0], profiler_2->gfxTimes[1], 216, 0xFFCB);
+    draw_profiler_bar_cpu(clockStart, profiler_2->gfxTimes[1], profiler_2->gfxTimes[2], 216, 0xFBCB);
+
+    profiler_2->numVblankTimes &= 0xFFFE;
+    for (i = 0; i < profiler_2->numVblankTimes; i += 2) {
+        draw_profiler_bar_cpu(clockStart, profiler_2->vblankTimes[i], profiler_2->vblankTimes[i + 1], 216, 0xF94B);
+    }
+
+    draw_reference_profiler_bars();
+}
 
 void func_8000AA2C(void) {
     s32 i;
