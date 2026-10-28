@@ -265,7 +265,41 @@ void func_8130FC80(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_8130FD10.s")
+// The two 8-byte records func_8130FD10 copies into its object at 0x20 and 0x28.
+typedef struct unk_D_8130FD10 {
+    /* 0x0 */ s16 unk_0[4];
+} unk_D_8130FD10; // size = 0x8
+extern void func_800226C0(s32);
+extern void func_8130F8B4(u8 *arg0, s32 arg1);
+void func_8130FD10(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, unk_D_8130FD10 *arg6,
+                   unk_D_8130FD10 *arg7, s32 arg8, s32 arg9) {
+    *(unk_D_8130FD10 *)(arg0 + 0x20) = *arg6;
+    *(unk_D_8130FD10 *)(arg0 + 0x28) = *arg7;
+    arg0[0x39] = arg1;
+    arg0[0xA4] = arg3;
+    arg0[0xA5] = arg4;
+    *(s32 *)(arg0 + 0x44) = arg5;
+    *(s32 *)(arg0 + 0x3C) = arg8;
+    *(s32 *)(arg0 + 0xA0) = arg9;
+    func_8130FA0C(arg0);
+    func_8130FB58(arg0);
+    *(s32 *)(arg0 + 0x48) = arg2;
+    func_8130FBC0(arg0);
+    if (arg5 != 0) {
+        func_800226C0(0xA5);
+    }
+    switch (arg0[0x38]) {
+        case 0:
+            *(f32 *)(arg0 + 0x30) = 0.0f;
+        case 1:
+        case 4:
+            arg0[0x38] = 1;
+            break;
+        case 3:
+            break;
+    }
+    func_8130F8B4(arg0, 1);
+}
 #endif
 
 #ifdef VERSION_US

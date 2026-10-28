@@ -113,3 +113,11 @@ Remaining owners that need layout work first:
 - `func_8130C334` is a jump-table dispatcher.
 - `func_8130AC40` copies a 3-byte initialized local (`D_8131209C`).
 All three wait for this file to own its `.rodata`/`.data`.
+
+## 2026-10-28 — `func_8130BF1C` typed; `func_8130C334` requeue
+
+- `func_8130BF1C`'s `struct S8130BF1C` view is replaced by the shared state (`unk_E904`, `unk_E912`, `unk_E8EC`), byte-identical.
+- `func_8130C334` (requeue, register-tie) is the mode dispatcher. Its table (`jtbl_813126F0`) is already in this file's `.rodata` subsegment, so a C `switch` works. The `case` bodies must appear in retail's body order: 0, 1, 2, 3, 4, 11, 5, 12, 6, 8, 7, 10, 9, 13 (handlers B74C, B770, BADC, BFF0, C14C, C0BC, C270, BD2C, B7F8, B88C, BC44, BDB8, BF1C, BFCC).
+  - After the switch: `result = 1` if `func_81602AEC(&owner + 0x1A144, func_81602D70(unk_E910))`; then `func_8160A50C(&unk_0008[i])` for the three nodes; then `func_81600A34(gfx, state, mode == 5 || mode == 2 || mode == 3, rectA…)` with `func_8130B3B8`'s rect, and `func_81600A34(gfx, (u8 *)state + 1, result, rectB…)` with `func_8130B4E8`'s rect.
+  - Everything matches except the node loop: retail initializes the stack-spilled counter (`$v1`) in the `beqz` delay slot before the node pointer, while IDO puts `addiu s0, s2, 8` there and uses `$v0`.
+  - Tried without effect: declaration orders, `u32`/`s16`/`u8` counters, `<=`/`!=` bounds, `while`, `arr + i`, a node local. A 300 s permuter stayed flat.
