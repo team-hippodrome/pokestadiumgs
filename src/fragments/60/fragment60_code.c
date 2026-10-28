@@ -367,7 +367,55 @@ void func_86A03D0C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A03DDC.s")
+extern u8 D_86A2DD40;
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern s32 D_86A0FD08;
+extern s32 D_86A0FD0C;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern void func_86A03D0C(void);
+void func_86A03DDC(f32 x, f32 z, f32 px, f32 pz, s32 kind) {
+    u8 *node;
+    u16 angle;
+    u8 *anim;
+
+    angle = guRandom() % 0xFFFF;
+    node = func_87F025B8(&D_86A2DD40, func_86A03D0C);
+    if (node != NULL) {
+        *(f32 *)(node + 0x48) = x;
+        *(f32 *)(node + 0x4C) = 1.0f;
+        *(f32 *)(node + 0x50) = z;
+        *(f32 *)(node + 0x10) = D_80088E50[angle >> 4] * 4.0f + px;
+        *(f32 *)(node + 0x14) = 8.0f;
+        *(f32 *)(node + 0x18) = D_80087E50[angle >> 4] * 4.0f + pz;
+        node[0x41] = 0xFF;
+        *(s32 *)(node + 0x1C) = 0;
+        *(f32 *)(node + 0x54) = 0.11111111f;
+        *(f32 *)(node + 0x58) = 0.11111111f;
+        *(f32 *)(node + 0x5C) = 0.11111111f;
+        anim = node + 0x24;
+        func_8003F1DC(anim);
+        switch (kind) {
+        case 0:
+            func_8003F114(anim, 0, -1, D_86A0FD08);
+            break;
+        case 1:
+        case 2:
+            func_8003F114(anim, 0, -1, D_86A0FD0C);
+            break;
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            func_8003F114(anim, 0, -1, D_86A0FD08);
+            break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
