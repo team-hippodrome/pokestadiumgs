@@ -4665,7 +4665,7 @@ SECTIONS
         build/src/fragments/67/fragment67_3422F0.o(.rodata);
         build/src/fragments/67/fragment67_342DB0.o(.rodata);
         build/src/fragments/67/fragment67_343510.o(.rodata);
-        build/asm/us/data/353F80.rodata.o(.rodata);
+        build/asm/us/data/353FD0.rodata.o(.rodata);
         build/src/fragments/67/fragment67_344D70.o(.rodata);
         build/src/fragments/67/fragment67_34AB40.o(.rodata);
         build/src/fragments/67/fragment67_34B0F0.o(.rodata);
