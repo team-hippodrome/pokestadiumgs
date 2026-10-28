@@ -364,3 +364,93 @@ normalized1.0/raw0.9722 with only one local slot wrong, then declaration order
 closes it. Remaining candidates stop after the first accepted owner. Parent
 owns naming and integration; suggested meaning is a player rotated-offset
 point-in-radius predicate. No shared source/layout files changed.
+
+## 2026-10-29 native acceptance: `func_86A05678`
+
+Accepted in the22:00 UTC owner box by canonical runner through
+scratch/player-bounds4.json candidate2, other-player-bounds:captured-center:2.
+The genuine s32(s32 player,f32 x,f32 z) leaf returns1 when the point is
+strictly inside any other player's square of half-width31.19999886f, else0.
+A natural four-player for loop skips the excluded player with continue,
+assigns half_size inside that guard, captures both real position components,
+then evaluates the four strict comparisons in original order. Stock IDO
+naturally expands the loop into the target's121 instructions/484 bytes and
+zero frame; source does not repeat or manually expand player cases.
+
+Capturing the two center components removes the rolled address calculation;
+continue preserves the duplicated first-iteration constant-load topology.
+Pointer-only forms naturally expand but retain an induction base absent from
+the target; direct indexed comparisons without captured components remain
+rolled. Reversing coordinate loads swaps float register webs and fails.
+The accepted source uses existing state.position fields and requires no new
+alias, struct change, helper prototype or companion edit. Unused test-only
+externs were removed after acceptance. Existing accepted bodies stay intact.
+
+Raw object/link-shape verification reports relocation_drift for constants and
+absolute state-field references, not link_verified. The canonical sequential
+full-ROM gate is the acceptance oracle and passes. Receipt:
+scratch/player-bounds4/gate-0/receipt.json. The cleaned complete-unit source,
+normal/+20blank object controls, explicit normal host syntax, provenance and
+fresh full-ROM receipt are under scratch/player-bounds-final. Retail MD5 is
+1561c75d11cedf356a8ddb1a4a5f9d5d; stock compiler SHA256 remains unchanged.
+No owner attempts were present in full retained ledgers before this box;
+references in old logs were callers, not attempts at this owner. Two generated
+conditional-scope variants in player-bounds2 had a C89 declaration placement
+error; neither is compiler-reachability evidence. Corrected scoped cases in
+player-bounds3 compile normally. Four batches precede acceptance; all first
+pass whole-module normal/+20blank controls. Parent owns naming/integration;
+suggested meaning is a point-in-other-player-bounds predicate.
+
+## 2026-10-29 native acceptance: `func_86A001B0`
+
+Accepted by canonical runner via scratch/reset10.json candidate0,
+initial-reset:full-198-record-pool:0. Receipt:
+scratch/reset10/gate-0/receipt.json. Genuine void(void) initialization clears
+two word spans (0x44C and0x550 bytes), clears all198 effect-record active
+flags, resets seven distinct object pools, copies the complete default
+state with one struct assignment, sets the timer, applies signed mode0..3
+and context flags, then calls the real void(void) final reset helper.
+
+The decisive evidence is in producers03234 and03B10: each scans
+D_86A41490 through D_86A42D50 in32-byte steps and tests active at offset1C.
+The span is0x18C0, exactly198 records. One ordinary loop over198 records
+lets stock IDO emit the two initial clears and the four-record loop body.
+Source never manually peels or expands those record clears. The0x16D0-byte
+default block D_86A0D924 ends at D_86A0EFF4 and has the real state layout;
+D_86A443F0 = D_86A0D924 emits the original12-byte copy loop and two-word tail
+without handwritten word-copy sequences. The whole owner is504 bytes with
+24-byte frame. Real func_87F02684 takes the count/pad/items struct documented
+by its definition in fragments/64/fragment64_324FB0.c:168; the local view
+matches that actual contract. func_87F02328 is void(void), defined in
+fragment64_324A10.c:44. Seven pool calls are distinct real objects, not
+manually expanded iterations of one pool operation.
+
+Important review rejection: scratch/reset9/gate-0 also has a retail PASS,
+but that source manually separated the first two record clears and put one
+in a comma-for initializer. It is NOT an admissible genuine acceptance and
+must not be copied, integrated or counted. Before further probes, the exact
+pretransaction source was restored, canonically rebuilt and sealed in
+scratch/reset-baseline-restored, with fresh normal/+20blank controls. The
+natural198-record loop supersedes that rejected source model. The older58
+retained attempts also used manually expanded copy/clear sequences and are
+not genuine source models to replay.
+
+The initial real whole-state assignment reached504/24 with only clear-loop
+setup differences. A300-second restricted private permuter reproduced the
+canonical base object, used one worker and stayed flat at130; result and
+controls are in scratch/permute-reset-isolated-result.json and
+scratch/permuter/func_86A001B0-7uptoutl/doctor.json. Direct retained-object
+comparison found the same seven positional residual words. No permuter
+candidate was installed. All helpers remain private and no compiler/tool
+recipe or shared source/layout changed. Ordinary nonempty array for loops
+fix the first two loop setups; producer-driven full-array modeling fixes
+the last loop. No line bindings, fake ABI, dummy locals or byte changes.
+
+Raw link shape reports relocation_drift because real array endpoints are
+expressed through their containing objects; canonical sequential full-ROM
+comparison passes. Cleaned complete-unit source, normal/+20blank exact
+object controls, explicit normal host syntax, provenance and a fresh full
+retail receipt are under scratch/reset-final. Retail MD5 remains
+1561c75d11cedf356a8ddb1a4a5f9d5d. Existing accepted bodies are unchanged;
+only exact duplicate/unused declarations are cleaned up. Parent owns naming
+and integration. Meaning: initialize stage pools and default game state.
