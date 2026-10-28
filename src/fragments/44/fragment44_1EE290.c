@@ -707,7 +707,51 @@ void func_8AF017A4(void) {
         func_8AF0282C(&D_8AF2BE10, 2);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01910.s")
+extern void func_8AF10540(void);
+extern void func_8AF0BB04(void);
+extern void func_800088DC(void);
+extern s32 func_8AC00840(void);
+extern void Font_EndTexturedTextRendering_fragment44(void);
+extern void func_80046634(s32);
+extern void func_8AC00F04(s32);
+extern void func_8AC005D8(void);
+extern void func_80008648(void);
+extern s32 D_8AF2BDC4;
+extern void func_8AF00620(void);
+extern void func_8AF00770(s16 arg0);
+extern void func_8AF00E24(void);
+extern void func_8AF017A4(void);
+extern s32 D_8AF2BACC;
+extern s16 D_8AF2BDDC;
+extern s32 D_8AF2BE78;
+extern s16 D_8AF2BE7C;
+void func_8AF01910(void) {
+    func_8AF10540();
+    func_8AF0BB04();
+    func_8AF017A4();
+    func_800088DC();
+    if (func_8AC00840() != 0) {
+        if (D_8AF2BACC != 0) {
+            Font_EndTexturedTextRendering_fragment44();
+            func_80046634(D_8AF2BACC);
+        }
+    } else {
+        func_8AC00F04(D_8AF2BACC);
+    }
+    func_8AF00620();
+    func_8AC005D8();
+    func_8AF00E24();
+    func_80008648();
+    if (D_8AF2BE78 != 0) {
+        func_8AF00770(D_8AF2BE7C);
+        D_8AF2BE78 = 0;
+    }
+    D_8AF2BDC4++;
+    D_8AF2BDDC++;
+    if (D_8AF2BDDC > 1000) {
+        D_8AF2BDDC = 1000;
+    }
+}
 
 // Same code as fragment45's TextPreview_DrawRgba16Rect.
 //@src/fragments/45/fragment45_2251A0.c
@@ -822,7 +866,7 @@ M2C_UNK func_800086A4(M2C_UNK);                     /* extern */
 s32 func_80043678(s32);                             /* extern */
 M2C_UNK func_8AC0080C(M2C_UNK);                     /* extern */
 void func_8AF0007C(s32);                         /* extern */
-M2C_UNK func_8AF01910();                            /* extern */
+void func_8AF01910(void);
 s32 func_8AF01D7C(s32);                             /* extern */
 M2C_UNK func_8AF0282C(M2C_UNK *, M2C_UNK);          /* extern */
 extern s32 D_8AF2BA84;
