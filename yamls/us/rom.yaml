@@ -1199,6 +1199,8 @@
     - [0x23C2E0, textbin, fragments/46/fragment46_header]
     - [0x23C300, c,       fragments/46/fragment46_code]
     - [0x242AA0, data,    fragments/46/fragment46_data]
+    - [0x2446B0, .rodata, fragments/46/fragment46_code] # strings, jump tables, float literals
+    - [0x244770, rodata, fragments/46/fragment46_tail] # tables after the code object's rodata
 
   - name: fragment47
     type: code
