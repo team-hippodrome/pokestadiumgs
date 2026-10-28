@@ -610,7 +610,33 @@ void func_84140270(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841402FC.s")
+// Draws texture (0x157, 1) as two 64-pixel-wide rectangles at the left and right
+// edges of the box at arg0 + 0xA (x, y, width, height); the right one starts at
+// s = 0x800.
+void func_841402FC(void *arg0) {
+    u8 *asset;
+    s32 width;
+    s32 height;
+    s32 format;
+    s32 size;
+    u8 *texture;
+
+    asset = func_8004C990(0x157, 1);
+    width = func_8004CA10((u16 *)asset);
+    height = func_8004CA24((u16 *)asset);
+    texture = func_8004CA60(asset);
+    format = func_8004CA38(asset);
+    size = func_8004CA4C(asset);
+    gSPDisplayList(D_800D0510++, D_841869E0);
+    ParticleGfx_SetPrimColor_fragment79(*(u8 *)((u8 *)arg0 + 0x22), *(u8 *)((u8 *)arg0 + 0x23),
+                                        *(u8 *)((u8 *)arg0 + 0x24), *(u8 *)((u8 *)arg0 + 0x25));
+    func_800459AC(texture, format, size, width, height, 1, 0, 1, 1, 6, 6, 0, 0);
+    GfxRect_DrawTextured(*(s16 *)((u8 *)arg0 + 0xA), *(s16 *)((u8 *)arg0 + 0xC), 64,
+                         *(s16 *)((u8 *)arg0 + 0x10), 0, 0, 0x400, 0, 0);
+    GfxRect_DrawTextured((s16)(*(s16 *)((u8 *)arg0 + 0xE) + *(s16 *)((u8 *)arg0 + 0xA) - 64),
+                         *(s16 *)((u8 *)arg0 + 0xC), 64, *(s16 *)((u8 *)arg0 + 0x10), 0x800, 0, 0x400, 0, 0);
+    func_8413FDB0(arg0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -2460,7 +2486,29 @@ void func_841482BC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414831C.s")
+void func_8414831C(u8 arg0) {
+    s32 offset;
+
+    D_8419A0B0 = func_80047588(3, 0);
+    func_8413E7A8(arg0);
+    func_8413E728(arg0);
+    func_8413FC34();
+    // For each of the 52 0x28-byte entries at D_84186188: func_84146B0C,
+    // func_84146DBC, then set bits 0 and 1 of byte 8.
+    offset = 0;
+    do {
+        func_84146B0C(&D_84186188[offset], 0);
+        func_84146DBC(&D_84186188[offset], 0);
+        offset += 0x28;
+        D_84186188[offset - 0x20] |= 1;
+        D_84186188[offset - 0x20] |= 2;
+    } while (offset != 52 * 0x28); // D_841869A8 ends the array
+    if (arg0 != 0 && func_800061EC() == 0) {
+        D_8419D7A0 = func_80049148(2, -1, func_8004C874(22, 0)) + 80;
+        D_84186188[0x788] &= ~1;
+        D_84186188[0x788] &= ~2;
+    }
+}
 #endif
 
 #ifdef VERSION_US

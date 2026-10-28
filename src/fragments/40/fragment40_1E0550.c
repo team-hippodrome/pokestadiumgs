@@ -81,7 +81,55 @@ s32 func_88B046F0(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04724.s")
+extern u8 D_88B05F80[];
+extern u8 D_88B05F82[];
+extern u8 D_88B0636C[];
+extern u8 D_88B069AC[];
+extern u8 D_88B069CE[];
+void func_88B04724(void) {
+    u32 index;
+    void *handle;
+    u8 *cursor;
+
+    _bzero(D_88B05F80, 2674);
+
+    // D_88B05F80[0] counts the leading used 20-byte entries at D_88B05F82.
+    handle = func_8006218C(28, 0, 0, 0);
+    Deck_ReadEntries(D_88B05F82, 50, handle);
+    func_8006229C(handle);
+    cursor = D_88B05F82;
+    index = 0; // FAKE: clearing index before the count reorders the stores; diff score 60 without it.
+    D_88B05F80[0] = 0;
+    for (; index < 50; index++, cursor += 20) {
+        if (*(u16 *)(cursor + 4) == 0 && *(s8 *)(cursor + 8) == 0) {
+            break;
+        }
+        D_88B05F80[0]++;
+    }
+
+    // D_88B05F80[0x3EA] counts the leading used 16-byte entries at D_88B0636C.
+    handle = func_8006218C(29, 0, 0, 0);
+    Deck_ReadEntries(D_88B0636C, 100, handle);
+    func_8006229C(handle);
+    // FAKE: one source line for both statements keeps retail's schedule; diff score 60 on two lines.
+    D_88B05F80[0x3EA] = 0; cursor = D_88B0636C;
+    for (index = 0; index < 100; index++, cursor += 16) {
+        if (*(u16 *)(cursor + 2) == 0 && *(s8 *)(cursor + 4) == 0) {
+            break;
+        }
+        D_88B05F80[0x3EA]++;
+    }
+
+    for (index = 0; index < 34; index++) {
+        D_88B069AC[index] = func_80055CCC(index);
+        func_88B043B8(index);
+    }
+
+    for (index = 0; index < 36; index++) {
+        D_88B069CE[index] = func_80055D44(index);
+        func_88B043EC(index);
+    }
+}
 
 extern u8 D_88006868[];
 extern u16 D_88B05D1C;

@@ -2937,7 +2937,44 @@ void func_8005E6B8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005E728.s")
+// Counts how many of three bit arrays have bit (arg1 - 1) set: two inside the buffer at
+// *(D_801285D0 + arg0 * 112), chosen by the func_8005D92C result, and one in the
+// D_80128570 + arg0 * 112 record at +8. Bits past limit count as 0.
+s32 func_8005E728(s32 arg0, s32 arg1) {
+    u8 *first;
+    u8 *second;
+    s32 index;
+    u8 limit;
+
+    switch (func_8005D92C(arg0)) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            first = (u8 *)(*(s32 *)(D_801285D0 + arg0 * 112) + 0x23);
+            second = (u8 *)(*(s32 *)(D_801285D0 + arg0 * 112) + 0x36);
+            limit = 151;
+            break;
+        case 5:
+        case 6:
+            first = (u8 *)(*(s32 *)(D_801285D0 + arg0 * 112) + 0xA4C);
+            second = (u8 *)(*(s32 *)(D_801285D0 + arg0 * 112) + 0xA6C);
+            limit = 251;
+            break;
+        case 7:
+            first = (u8 *)(*(s32 *)(D_801285D0 + arg0 * 112) + 0xA27);
+            second = (u8 *)(*(s32 *)(D_801285D0 + arg0 * 112) + 0xA47);
+            limit = 251;
+            break;
+    }
+
+    if (arg1 > 0 && limit >= arg1) {
+        index = (arg1 - 1) / 8;
+        return ((first[index] >> ((arg1 - 1) % 8)) & 1) + ((second[index] >> ((arg1 - 1) % 8)) & 1) +
+               (((D_80128570 + 8 + arg0 * 112)[index] >> ((arg1 - 1) % 8)) & 1);
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

@@ -183,7 +183,38 @@ s32 func_82B010BC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B01130.s")
+s32 func_82B01130(void) {
+    s32 index;
+    s32 result;
+    u16 *dest;
+    u8 *base;
+
+    base = func_82B02800(10, 0);
+    result = 0;
+    D_82B13008 = 1;
+    index = 0;
+    // FAKE: the loop head shares a line with the dest initialization, as in
+    // func_82B010BC; the assembler orders the address setup by source line.
+    // Diff score 45 without it.
+    dest = (u16 *)(base + 0x50); do {
+        switch (*(u16 *)((u8 *)(&D_82B12450 + index) + 0xBDC)) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                result = 1;
+                *dest = *(u16 *)((u8 *)(&D_82B12450 + index) + 0xBDC);
+                break;
+            default:
+                *dest = 0;
+                break;
+        }
+        index++;
+        dest++;
+    } while ((u8 *)&D_82B12454 != (u8 *)(&D_82B12450 + index));
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -225,11 +256,51 @@ s32 func_82B01254(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B0173C.s")
+extern s32 func_8004C874(s32, s32);
+
+s32 func_82B0173C(s32 arg0, s32 arg1) {
+    s32 result = 0;
+
+    switch (arg0) {
+        case 1:
+        case 2:
+            result = func_8004C874(27, 59);
+            break;
+        case 3:
+            result = func_8004C874(27, 65);
+            break;
+        case 4:
+            result = func_8004C874(27, 63);
+            break;
+        case 5:
+            result = func_8004C874(27, 64);
+            break;
+        case 6:
+            switch (arg1) {
+                case 0:
+                    result = func_8004C874(27, 60);
+                    break;
+                case 1:
+                    result = func_8004C874(27, 61);
+                    break;
+                case 2:
+                    result = func_8004C874(27, 62);
+                    break;
+                case 3:
+                    result = func_8004C874(27, 63);
+                    break;
+                case 4:
+                    result = func_8004C874(27, 64);
+                    break;
+            }
+            break;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_82B0173C(s32, s32);
+extern s32 func_82B0173C(s32, s32);
 void func_82B01850(s32 arg0, s32 arg1) {
     s32 mode;
     switch (arg1 & 0xFFFF0000) {

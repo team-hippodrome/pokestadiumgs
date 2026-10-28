@@ -904,7 +904,34 @@ void func_8290AC2C(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290ACA8.s")
+extern unk_D_8291A7C0_000_004 D_8291A388[3];
+extern u8 D_8291A3AC[];
+extern u8 D_8291A3B8[];
+extern u8 D_829139E4[];
+
+void func_8290ACA8(void) {
+    u8 *model;
+    u8 *scale;
+    u8 *position;
+    u8 *origin;
+
+    // FAKE: one source line for the four initializations and the loop head;
+    // the assembler orders the address setup by line. Diff score 100 without it.
+    model = (u8 *)D_8291A388; position = D_8291A3AC; scale = D_8291A3B8; origin = (u8 *)D_829139C0; do {
+        func_8003F1DC(model);
+        func_8003F018((s32)model);
+        func_8003F114(model, 0, -1, D_8291B86C);
+        func_8003F210(model, 0);
+        model[1] &= ~1;
+        Vec3f_SetComponentsDuplicate((f32 *)scale, 0.5f, 0.5f, 0.5f);
+        Vec3f_SetComponentsDuplicate((f32 *)position, ((f32 *)origin)[0], ((f32 *)origin)[1], ((f32 *)origin)[2]);
+        Vec3f_SetComponentsDuplicate((f32 *)position, ((f32 *)origin)[0], 0.0f, 0.0f);
+        origin += 12;
+        model += sizeof(unk_D_8291A7C0_000_004);
+        scale += sizeof(unk_D_8291A7C0_000_004);
+        position += sizeof(unk_D_8291A7C0_000_004);
+    } while (origin != D_829139E4);
+}
 #endif
 
 #ifdef VERSION_US

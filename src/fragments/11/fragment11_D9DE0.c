@@ -204,7 +204,16 @@ void func_816031F4(void) {
     func_81602DD8();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_8160324C.s")
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern void func_8004D1FC(void *);
+
+void func_8160324C(f32 alpha) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 100, 255, 255, 255.0f * alpha);
+    func_8004D1FC(D_8160BDB8);
+}
 
 void func_8160335C(u8 *arg0, s32 arg1) {}
 
@@ -576,7 +585,21 @@ void func_81606F88(s32 arg0, s32 arg1, f32 arg2, s32 arg3) {
     Fragment11_DrawThickPanelFrame(sp20[0], sp20[1], sp20[2], sp20[3]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606FE0.s")
+void func_81606FE0(s32 arg0, s32 arg1, f32 arg2, s32 arg3) {
+    struct {
+        s16 x;
+        s16 y;
+        s16 width;
+        s16 height;
+    } rect;
+
+    func_81606E84(&rect.x, arg0, arg1, arg2, arg3);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    func_8004D1FC((void *)(u32)D_8160BDB0);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x0F0A7008, 0);
+    func_81602240(rect.x + rect.width / 2 - 4, arg1 + 29, 8.0f, 6.0f, 0, 0, 1.0f, 1.0f);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+}
 
 extern u32 D_800D0510;
 #define GFX_DL (*(Gfx **)&D_800D0510)

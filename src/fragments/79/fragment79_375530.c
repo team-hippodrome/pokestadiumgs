@@ -149,7 +149,38 @@ s16 func_84105E9C(s16 sign, u16 range) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_841063D8.s")
+typedef struct {
+    u16 x;
+    u16 y;
+    u16 width;
+} RectJitterRange;
+
+extern s16 D_84190158[3];
+
+// Adds func_84105E9C offsets to rect's first three halfwords: mode 0 draws them
+// with sign 0 (ParticleMath_RandomRange), mode 1 with sign 1
+// (ParticleMath_RandomSigned), and mode 4 adds the offsets cached in
+// D_84190158, redrawing them with sign 0 first when keep is 0.
+void func_841063D8(s16 *rect, s16 mode, RectJitterRange range, s16 keep) {
+    if (mode == 0) {
+        rect[0] += func_84105E9C(0, range.x);
+        rect[1] += func_84105E9C(0, range.y);
+        rect[2] += func_84105E9C(0, range.width);
+    } else if (mode == 1) {
+        rect[0] += func_84105E9C(1, range.x);
+        rect[1] += func_84105E9C(1, range.y);
+        rect[2] += func_84105E9C(1, range.width);
+    } else if (mode == 4) {
+        if (keep == 0) {
+            D_84190158[0] = func_84105E9C(0, range.x);
+            D_84190158[1] = func_84105E9C(0, range.y);
+            D_84190158[2] = func_84105E9C(0, range.width);
+        }
+        rect[0] += D_84190158[0];
+        rect[1] += D_84190158[1];
+        rect[2] += D_84190158[2];
+    }
+}
 #endif
 
 #ifdef VERSION_US

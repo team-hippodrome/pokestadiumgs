@@ -259,7 +259,75 @@ s32 func_8AB103B0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB104FC.s")
+extern u8 *D_8AB12678[];
+extern s8 *D_8AB112F8;
+extern u32 D_8AB1268C;
+extern u8 D_8AB17260[];
+extern s16 D_8AB17442;
+extern s16 D_8AB17444;
+s32 func_8AB104FC(s32 mode) {
+    s32 id = 66;
+    s32 i;
+    u8 *p;
+    u8 *q;
+
+    switch (mode) {
+        case 0:
+            func_8AB03394();
+            TextChoice_ShuffleAndRefresh();
+            D_8AB17442 = 1;
+            D_8AB17444 = 0;
+            _bzero(D_8AB17260, 256);
+            D_8AB12694++;
+            if (D_8AB12694 >= 269) {
+                D_8AB12694 = 0;
+            }
+            for (i = 0; i < 4; i++) {
+                *(u16 *)(D_8AB12678[i] + 2) |= 1;
+            }
+            *(u16 *)((u8 *)D_8AB1725C + 2) |= 1;
+            *(u16 *)((u8 *)D_8AB11D00 + 2) &= ~1;
+            func_8AB04AE4();
+            func_8004C594(2, D_8AB12694);
+            break;
+        case 1:
+            func_8004C8A0(D_8AB17260, 256, *(u16 *)((u8 *)D_8AB11D00 + 0x30), *(u16 *)((u8 *)D_8AB11D00 + 0x32));
+            // Walk D_8AB17442 characters (one byte for ASCII and '\n', two for a
+            // high-bit lead byte) and cut the string after them.
+            p = D_8AB17260;
+            for (i = 0; i < D_8AB17442; i++) {
+                q = p;
+                if (*p == 0) {
+                    D_8AB17444 = 1;
+                    break;
+                }
+                if (*p == '\n') {
+                    p++;
+                } else if ((*p & 0x80) == 0) {
+                    p++;
+                } else {
+                    p += 2;
+                }
+            }
+            *p = 0;
+            if ((D_8AB1268C & 1) == 0) {
+                // q points at the last character examined; D_8AB112F8 points at "\n" (D_8AB11C90).
+                if (HAL_Strcmp(q, D_8AB112F8) == 0) {
+                    func_8AB00BA4(0x1000D, 0, 0);
+                } else {
+                    func_8AB00BA4(0x1000C, 0, 0);
+                }
+                D_8AB17442++;
+            }
+            if (D_8AB17444 == 1) {
+                id = func_8AB1075C(0);
+            }
+            break;
+        case 2:
+            break;
+    }
+    return id;
+}
 #endif
 
 #ifdef VERSION_US

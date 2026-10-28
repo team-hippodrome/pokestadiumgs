@@ -265,7 +265,31 @@ void func_87E105FC(void *arg0, u8 arg1) {
 extern void func_8004C8C0(s32);
 void func_87E10628(void) { func_8004C8C0(0x164); func_8004C8C0(0x165); func_8004C8C0(0x171); func_8004C8C0(0x170); func_8004C8C0(0x1B5); func_8004C8C0(0x1B8); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E10670.s")
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_87E0F33C(void);
+
+void func_87E10670(void) {
+    u8 *entry;
+    u8 *node;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        entry = func_87F025B8((u8 *)D_87E1EBB8 + 0x2C8, func_87E0F33C);
+        if (entry != NULL) {
+            node = entry + 0x24;
+            func_8003F1DC(node);
+            func_8003F114(node, 0, -1, *(s32 *)((u8 *)D_87E1EBB8 + 0x90C));
+            *(f32 *)(entry + 0x48) = i * 44.0f + 96.0f + -160.0f;
+            *(f32 *)(entry + 0x4C) = -38.0f;
+            *(f32 *)(entry + 0x50) = 0.0f;
+            *(f32 *)(entry + 0x5C) = 0.0f;
+            *(f32 *)(entry + 0x58) = 0.0f;
+            *(f32 *)(entry + 0x54) = 0.0f;
+        }
+    }
+}
 
 extern void func_87F02684(s32);
 void func_87E1078C(void) {
@@ -668,7 +692,30 @@ void func_87E11CC0(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E11D00.s")
+extern s32 D_87E1AB14[];
+
+void func_87E11D00(s32 arg0, s32 arg1) {
+    u8 *context;
+    void *temp_v0;
+    u8 *model;
+    s32 index;
+
+    if (arg0 != 5) {
+        return;
+    }
+
+    context = (u8 *)D_8009491C;
+    temp_v0 = *(void **)(context + 0x14);
+    model = *(u8 **)((u8 *)temp_v0 + 0x90);
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0xFCFFD3FF, 0xFFFCFE38);
+    gDPSetEnvColor(D_800D0510++, 0, 0, 0, context[0x1D]);
+    index = *(u32 *)((u8 *)temp_v0 + 0x8C) % 7;
+    gSPSegment(D_800D0510++, 0xF, func_8004CA60((u8 *)func_8004C990(352, D_87E1AB14[index])));
+    gSPDisplayList(D_800D0510++, *(void **)(model + 0x14));
+    GeoRender_ApplyMaterialState();
+}
 
 extern void func_87E11E48(s32 *, s32, s32);
 extern u8 D_80126420;

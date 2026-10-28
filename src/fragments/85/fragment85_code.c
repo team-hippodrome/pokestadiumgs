@@ -495,7 +495,21 @@ void func_8FD01B90(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD01DA8.s")
+extern s16 D_8FD02194; // D_8FD02188 + 0xC
+// Centers the rendered widths (func_80049148) of texts (74, 7) and (74, 8) from
+// func_8004C874, plus 110, on x = 160. The left x goes to D_8FD02188 + 0xC and
+// the second x (left x + width of (74, 7) + 80) to D_8FD02188 + 0xE.
+void func_8FD01DA8(u8 *arg0) {
+    s32 width;
+
+    if (arg0) {} // karodo: diff score 115 without it (arg0 is stored to its home slot).
+    width = func_80049148(2, -1, func_8004C874(74, 7));
+    width += func_80049148(2, -1, func_8004C874(74, 8));
+    width += 110;
+    D_8FD02194 = 160 - width / 2;
+    M2C_FIELD(&D_8FD02188, s16 *, 0xE) =
+        M2C_FIELD(&D_8FD02188, u16 *, 0xC) + func_80049148(2, -1, func_8004C874(74, 7)) + 80;
+}
 #endif
 
 #ifdef VERSION_US

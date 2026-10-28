@@ -228,7 +228,34 @@ void func_869054CC(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_869054D4.s")
+extern void func_8003F1DC(u8 *);
+extern void func_8003F114(u8 *, s32, s32, s32);
+extern s32 D_86919030[];
+void func_869054D4(void) {
+    s32 i;
+    s16 frame;
+
+    for (i = 0; i < 4; i++) {
+        if (ModelAnim_IsFinished(&D_86919040 + i * 0x168)) {
+            ModelAnim_SetFrame(&D_86919040 + i * 0x168, 10);
+        }
+    }
+
+    if (StageContext_GetFadeMode() == 1) {
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC(&D_86919040 + i * 0x168);
+            func_8003F114(&D_869195E0 + i * 0x168, 0, -1, D_86919030[i]);
+            func_8003F210(&D_869195E0 + i * 0x168, 0);
+            frame = guRandom() % 20;
+            ModelAnim_SetFrame(&D_869195E0 + i * 0x168, frame);
+            func_8003F3BC(&D_869195E0 + i * 0x168, 0);
+        }
+        StageFade_StartFromOpaque(20);
+        *(s32 *)D_8691AD58 = 4;
+        fragment64_main(25);
+        func_87F00688();
+    }
+}
 #endif
 
 #ifdef VERSION_US

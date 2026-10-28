@@ -91,7 +91,34 @@ void func_87E0CBC8(void *arg0) {
     MainPool_FinalizeAllocation(temp);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CC18.s")
+extern void func_87E0E9B0(void);
+extern f32 D_87E1A434[][3];
+void func_87E0CC18(void *arg0) {
+    u8 *node;
+    s32 i;
+    f32 scale;
+
+    func_87F0ADE0((u8 *)arg0 + 0x10, 4);
+    scale = 0.7f;
+    for (i = 0; i < 4; i++) {
+        func_87E0CA2C(arg0, i);
+        node = func_87F0AEC0((u8 *)arg0 + 0x10, func_87E0C93C, (void *)0x0F000000, 320, 36, func_87E0E9B0,
+                             (u8 *)arg0 + 0x28 + i * 0xEC);
+        if (node != NULL) {
+            func_8003F1DC(node + 0x24);
+            func_8003F114(node + 0x24, 0, -1, *(void **)((u8 *)arg0 + 8));
+            *(f32 *)(node + 0x5C) = scale;
+            *(f32 *)(node + 0x58) = scale;
+            *(f32 *)(node + 0x54) = scale;
+            *(f32 *)(node + 0x48) = D_87E1A434[i][0];
+            *(f32 *)(node + 0x4C) = D_87E1A434[i][1];
+            *(f32 *)(node + 0x50) = D_87E1A434[i][2];
+            func_87F0AFD0((u8 *)arg0 + 0x28 + i * 0xEC, node + 0x48, node + 0x54, node + 0x42);
+            node[0x25] &= ~1;
+        }
+    }
+    func_87E11E18((u8 *)arg0 + 0x3D8, 3);
+}
 
 extern void func_87F02684(s32);
 extern void func_87E134C0(void);
@@ -112,7 +139,28 @@ void func_87E0CDAC(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CDDC.s")
+void func_87E0CDDC(u8 *arg0, s32 arg1, s32 arg2) {
+    u8 *entry;
+    u8 *temp_v1;
+    u8 *flags;
+    s32 start;
+    s32 end;
+    s32 i;
+
+    // FAKE: the s32 round trip puts arg0 second in the addu; diff score 10 without it.
+    entry = (u8 *)((s32)arg0 + arg1 * 0xEC);
+    *(s32 *)(entry + 0x100) = 0;
+    temp_v1 = entry + 0x28;
+    flags = entry + 0xB4;
+    for (i = 0; i < *(s32 *)(*(u8 **)(arg0 + 4) + 0x2188); i++) {
+        start = **(s32 **)(temp_v1 + 0x88);
+        end = **(s32 **)(temp_v1 + 0x88) + arg2;
+        if (start <= i && i < end) {
+            *flags |= 3;
+        }
+        flags += 8;
+    }
+}
 
 void func_87E0CE60(u8 *arg0, s32 arg1, s32 arg2) {
     u8 *temp_a3;

@@ -266,11 +266,41 @@ void func_8AC00DE8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC00DF4.s")
+extern s32 func_8005049C(s32, s32);
+extern char D_8AC07E50[];
+extern void *D_8AC08528;
+
+// Looks up the nodes tagged "WP00" to "WP99" under arg0 (D_8AC07E50 is the format "%02d"),
+// appends each one found to the D_8AC08528 list and sets bit 1 of its halfword at +2.
+void func_8AC00DF4(s32 arg0) {
+    s32 i;
+    s32 node;
+    u16 digits;
+    s8 text[4];
+    u32 tag;
+
+    tag = 0x57503030;
+    if (D_8AC08524 >= 0 && D_8AC08524 < 100) {
+        i = 0;
+        do {
+            sprintf((char *)text, D_8AC07E50, i);
+            digits = (text[0] << 8) | text[1];
+            // FAKE: masking the u16 is a no-op that keeps the masked copy in its own register;
+            // diff score 80 without it.
+            tag = (tag & 0xFFFF0000) | (digits & 0xFFFF);
+            node = func_8005049C(arg0, tag);
+            if (node != 0) {
+                (&D_8AC08528)[D_8AC08524] = (void *)node;
+                *(u16 *)(node + 2) |= 2;
+                D_8AC08524++;
+            }
+            i++;
+        } while (i != 100);
+    }
+}
 #endif
 
 #ifdef VERSION_US
-extern void *D_8AC08528;
 extern void func_8AC00908(s32, s16, s16, s16, s32);
 void func_8AC00F04(s32 arg0) {
     s32 var_s0;
@@ -1696,7 +1726,6 @@ void func_8AC06D70(void *arg0, s32 arg1, s32 arg2, u16 arg3) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8005049C(s32, s32);
 extern u8 D_8AC0878C;
 extern s32 D_8AC08788;
 #pragma COALESCE_AT_LUI(func_8AC06D8C, D_8AC0878C, D_8AC08788)

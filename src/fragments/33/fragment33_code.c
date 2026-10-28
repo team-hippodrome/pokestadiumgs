@@ -138,7 +138,19 @@ void func_88400284(s32 arg0) {
     } while (var_s3 != 5);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/33/fragment33_code/func_8840045C.s")
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32); //@src/44E70.c
+
+// Draws a frame around (x, y, width, height) from 8x8 texture tiles: the top edge, the left and
+// right edges, the two bottom corners and the bottom edge, selecting each tile by its s
+// coordinate (0, 256, 512, 768, 224, 736).
+void func_8840045C(s16 x, s16 y, s16 width, s16 height) {
+    GfxRect_DrawTextured(x + 8, y, width - 16, 8, 224, 0, 0, 0x400, 0);
+    GfxRect_DrawTextured(x, y, 8, height - 8, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + width - 8, y, 8, height - 8, 0x100, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x, y + height - 8, 8, 8, 0x200, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + width - 8, y + height - 8, 8, 8, 768, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + 8, y + height - 8, width - 16, 8, 736, 0, 0, 0x400, 0);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/33/fragment33_code/func_88400610.s")
 
