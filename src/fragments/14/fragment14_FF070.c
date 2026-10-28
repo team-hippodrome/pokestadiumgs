@@ -24,11 +24,11 @@ s32 func_81306F20(void *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81306F74.s")
 
 extern void func_81306F74(void *, void *);
-extern void func_81609A90(u8 *, u8 *);
+extern void func_81609A90(s16 *, s16 *);
 void func_8130707C(void *arg0, s32 arg1) {
     struct S { u8 pad[0x137D0]; f32 value; };
-    u8 sp30[8];
-    u8 sp28[8];
+    s16 sp30[4];
+    s16 sp28[4];
     f32 sp24;
 
     sp24 = ((struct S *)arg0)->value;
@@ -686,12 +686,38 @@ void func_8130A88C(u8 *arg0) {
     func_8130A778(arg0, 4, func_80073450);
 }
 
-extern void func_8130B3B8(void *, void *);
-extern void func_81609A90(u8 *, u8 *);
+// The three nodes func_8130AF94 links into a ring (predecessor at 0x4D94, successor at
+// 0x4D98), and the state holding them, the current node and its index; func_8130B06C and
+// func_8130B0E0 step the current node forward and back.
+typedef struct unk_D_8130B06C_node {
+    /* 0x0000 */ u8 unk_0000[0x4D94];
+    /* 0x4D94 */ struct unk_D_8130B06C_node *unk_4D94;
+    /* 0x4D98 */ struct unk_D_8130B06C_node *unk_4D98;
+    /* 0x4D9C */ u8 unk_4D9C[4];
+} unk_D_8130B06C_node; // size = 0x4DA0
+typedef struct unk_func_8130B06C {
+    /* 0x0000 */ s16 unk_0000[4];
+    /* 0x0008 */ unk_D_8130B06C_node unk_0008[3];
+    /* 0xE8E8 */ unk_D_8130B06C_node *unk_E8E8;
+    /* 0xE8EC */ u8 unk_E8EC[4];
+    /* 0xE8F0 */ f32 unk_E8F0;
+    /* 0xE8F4 */ u8 unk_E8F4[0xE8FC - 0xE8F4];
+    /* 0xE8FC */ f32 unk_E8FC;
+    /* 0xE900 */ u8 unk_E900[0xE908 - 0xE900];
+    /* 0xE908 */ s32 unk_E908;
+    /* 0xE90C */ s32 unk_E90C;
+    /* 0xE910 */ u8 unk_E910;
+    /* 0xE911 */ u8 unk_E911;
+    /* 0xE912 */ u8 unk_E912;
+    /* 0xE913 */ u8 unk_E913;
+} unk_func_8130B06C;
+
+extern f32 func_8130B3B8(unk_func_8130B06C *, s16 *);
+extern void func_81609A90(s16 *, s16 *);
 void func_8130A8E0(void *arg0, s32 arg1) {
     struct S { u8 pad[0xE8F0]; f32 value; };
-    u8 sp30[8];
-    u8 sp28[8];
+    s16 sp30[4];
+    s16 sp28[4];
     f32 sp24;
 
     sp24 = ((struct S *)arg0)->value;
@@ -709,8 +735,8 @@ void func_8130A8E0(void *arg0, s32 arg1) {
 
 
 extern f32 (*D_8160BD1C)(f32);
-void func_8130A98C(void *arg0) {
-    D_8160BD1C(*(f32 *)((u8 *)arg0 + 0xE8FC) / 16);
+f32 func_8130A98C(unk_func_8130B06C *arg0) {
+    return D_8160BD1C(arg0->unk_E8FC / 16);
 }
 
 s32 func_8130A9C8(u8 *arg0) {
@@ -803,22 +829,6 @@ s32 func_8130AA54(u8 *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AC40.s")
 
-// The three nodes func_8130AF94 links into a ring (predecessor at 0x4D94, successor at
-// 0x4D98), and the state holding them, the current node and its index; func_8130B06C and
-// func_8130B0E0 step the current node forward and back.
-typedef struct unk_D_8130B06C_node {
-    /* 0x0000 */ u8 unk_0000[0x4D94];
-    /* 0x4D94 */ struct unk_D_8130B06C_node *unk_4D94;
-    /* 0x4D98 */ struct unk_D_8130B06C_node *unk_4D98;
-    /* 0x4D9C */ u8 unk_4D9C[4];
-} unk_D_8130B06C_node; // size = 0x4DA0
-typedef struct unk_func_8130B06C {
-    /* 0x0000 */ u8 unk_0000[8];
-    /* 0x0008 */ unk_D_8130B06C_node unk_0008[3];
-    /* 0xE8E8 */ unk_D_8130B06C_node *unk_E8E8;
-    /* 0xE8EC */ u8 unk_E8EC[0xE911 - 0xE8EC];
-    /* 0xE911 */ u8 unk_E911;
-} unk_func_8130B06C;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AEF4.s")
 
@@ -960,7 +970,30 @@ void func_8130B320(void *arg0, void *arg1, s32 arg2, s32 arg3) {
     func_8130A8E0(arg0, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130B3B8.s")
+extern f32 (*D_8160BD08)(f32);
+extern s16 *func_81609530(s32);
+extern void func_8160945C(s16 *, s16 *, s16 *, f32);
+f32 func_8130B3B8(unk_func_8130B06C *arg0, s16 *arg1) {
+    f32 scale;
+    s16 *colorA;
+    s16 *colorB;
+
+    scale = D_8160BD08(arg0->unk_E8F0 / 16);
+    colorA = arg0->unk_0000;
+    colorB = func_81609530(1);
+    if (arg0->unk_E8FC > 0.0f) {
+        scale = func_8130A98C(arg0);
+        colorA = func_81609530(1);
+        colorB = func_81609530(6);
+        func_8160945C(arg1, colorA, colorB, scale);
+        return 1.0f;
+    }
+    if ((arg0->unk_E912 == 12 || arg0->unk_E912 == 13) && arg0->unk_E913 == 0 && arg0->unk_E90C != 1) {
+        colorA = func_81609530(arg0->unk_E908 ? 10 : 3);
+    }
+    func_8160945C(arg1, colorA, colorB, scale);
+    return scale;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130B4E8.s")
 
