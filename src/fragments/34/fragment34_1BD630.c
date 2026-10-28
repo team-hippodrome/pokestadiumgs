@@ -4,7 +4,51 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_88500020.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_885002A0.s")
+extern s32 D_8850D670;
+extern void func_8850A0EC(s32);
+extern void func_88506618(void);
+extern u8 D_8850D6C8;
+extern s8 D_8850D6C9;
+extern s32 func_88504E94(s32);
+extern s32 main_pool_pop_state(s32);
+extern s32 main_pool_push_state(s32);
+extern void func_8005A0F4(s32);
+extern void func_88503830(s32, s32);
+extern void func_88507FA8(s32);
+extern s32 func_80001FF0(void);
+extern void StageFade_StartFromTransparent(s32);
+void func_885002A0(s32 mode) {
+    D_8850D670 = mode;
+    switch (mode) {
+    case 1:
+    case 3:
+        break;
+    case 2:
+        func_8850A0EC(0);
+        func_88506618();
+        break;
+    case 4:
+        if (D_8850D6C8 == 1 && func_88504E94(D_8850D6C8) != D_8850D6C9) {
+            if (D_8850D6C9 >= 0) {
+                main_pool_pop_state(0x65786368);
+            }
+            main_pool_push_state(0x65786368);
+            D_8850D6C9 = func_88504E94(D_8850D6C8);
+            func_8005A0F4(D_8850D6C9);
+        }
+        func_88503830(D_8850D6C8, (s8)func_88504E94(D_8850D6C8));
+        break;
+    case 5:
+        func_88507FA8(0);
+        break;
+    case 6:
+        func_88507FA8(1);
+        break;
+    case 7:
+        StageFade_StartFromTransparent((u16)((f32)func_80001FF0() * 0.3f / 2));
+        break;
+    }
+}
 
 extern void func_885002A0(s32);
 extern void func_8850A0EC(s32);
