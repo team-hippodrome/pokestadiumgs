@@ -352,7 +352,107 @@ void func_86604084(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866040B8.s")
+extern void *D_86607230;
+extern u8 D_86607320;
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern s32 D_86606714;
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(void *);
+extern void *D_866073DC;
+extern void *D_866073E0;
+extern void func_87F0CB68(void);
+extern void func_87F07FE8(void *);
+extern void func_86603604(void);
+extern void func_87F022F0(void);
+extern void func_86603108(void);
+extern void func_87F0CB24(void);
+extern void func_87F0C930(void *);
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+extern void func_87F0A5BC(void *);
+extern void func_87F0C88C(void *);
+extern void func_80008648(void);
+extern s32 D_86606728;
+extern s32 D_866067FC;
+extern s32 D_8660682C;
+extern s32 D_86607288[];
+extern u8 D_86607310;
+extern u8 D_86607358;
+extern void func_86604084(void);
+extern Gfx * D_800D0510;
+extern u8 D_86606788;
+void func_866040B8(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 1);
+    if (D_86606714 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(D_866073DC);
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) != 4) {
+        func_87F0CB68();
+    }
+    switch (*(s32 *)(&D_86606788 + 4)) {
+    case 2:
+    case 13:
+        if (*(s32 *)(&D_86606788 + 0x78) == 1) {
+            func_87F07FE8(&D_86607320);
+        } else {
+            func_86603604();
+        }
+        if (*(s32 *)(&D_86606788 + 0x78) == 2) {
+            func_86603604();
+            func_87F022F0();
+        }
+        if (*(s32 *)(&D_86606788 + 0x78) == 3) {
+            if (*(s32 *)(&D_86606788 + 0x84) == 1) {
+                func_86603604();
+            }
+            func_86604084();
+        }
+        break;
+    case 0:
+    case 4:
+    case 11:
+        if (*(u8 *)((u8 *)D_86607230 + 0x2180) != 4) {
+            func_87F07FE8(&D_86607320);
+        }
+        break;
+    case 9:
+        func_86603604();
+        func_86603108();
+        break;
+    case 1:
+        *(s32 *)(&D_86606788 + 0x84) = 1;
+    case 5:
+    case 10:
+        func_86603604();
+        func_86604084();
+        break;
+    case 8:
+        func_86603604();
+        if (D_866067FC == D_86606728 + 0x50) {
+            func_87F0CB24();
+            if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4) {
+                func_87F0C930(&D_86607310);
+            } else {
+                Fragment64_StartPlayerPanel(&D_86607358, D_86607230, 5, D_86607288[0], D_86607288[1], D_86607288[2], D_86607288[3]);
+            }
+        }
+        if ((1 - D_8660682C) * D_86606728 + 0x50 < D_866067FC) {
+            func_87F0A5BC(&D_86607358);
+        }
+        break;
+    case 7:
+        func_86603604();
+        func_87F022F0();
+        break;
+    }
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4) {
+        func_87F0C88C(&D_86607310);
+    }
+    func_8003C6B8(D_866073E0);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
