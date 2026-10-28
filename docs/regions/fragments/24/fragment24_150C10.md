@@ -65,3 +65,17 @@ at sp+0x30 in the 0x48 frame. An indexed loop with a separate `y` counter
 matches; a pointer walk does not. The dispatcher `func_82B05494` used to
 call it with no arguments and rely on `a0`; it now passes `arg0` (same
 bytes), and the stale `(void)` extern is retyped.
+
+## 2026-10-28 — `func_82B03F38`: requeue (loop-invariant address not hoisted)
+
+Sibling of `func_82B03688` (same `func_82B0284C`/`func_800496A4` setup): four
+rows, color (255,255,255,255) or (255,255,0,255) for the selected row
+`i == D_82B1246C`, text `func_8004C874(0x1B, i + 0x22)` at
+`(coords[0] + 9, coords[1] + y + 0xB)`, rows 0x1A apart. The dispatcher
+`func_82B05494` must pass `arg0` as for 03688. With locals
+`i, coords[8], y` everything lines up except that IDO 7.1 (and 5.3) hoist
+`&D_82B1246C` into an extra saved register (`$s2`) outside the loop, while
+retail re-forms it with `lui` + `lh %lo` every iteration and uses only
+`$s0`–`$s2` (i, y, 4). `volatile`, s32, and an array form don't change it.
+This is the same "uncached global address" behavior as `func_800258F4` and
+`func_8220D630`.
