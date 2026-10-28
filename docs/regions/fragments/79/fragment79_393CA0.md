@@ -705,3 +705,32 @@ its relation to the strided word-copy loop; preserve the verified field
 widths and color-adjustment type. Do not replay the rejected pointer-difference
 or narrow-index families, or add volatile/unused locals/output rewrites to
 manufacture the extra instruction. No impossibility has been established.
+
+## 2026-10-28: `func_84137404` command dispatch
+
+Replace the 204-byte owner with a switch over its unsigned halfword command.
+Command 0 does nothing. Commands 16, 18, 22, 39 and 69 call `func_8002B5B0`
+with the incoming byte index and byte 0 of `D_84195208[index]`. Commands 17,
+19, 20 and 21 call `Audio_RequestSlot` through its existing `func_8002B490`
+alias; command 111 calls `func_8002BE44`. Other commands go to
+`func_8002C2A0`, whose implementation appends the halfword to the audio event
+queue. The helper implementations establish their real parameter widths;
+`Audio_RequestSlot` takes only the byte index.
+//@src/229E0.c
+//@src/2C1B0.c
+
+The same-file caller `func_841374D0` supplies the byte at offset 384 and each
+halfword from offset 388, using the count byte at offset 386. Existing unknown
+names are preserved. The switch reproduces the original 24-byte frame, all
+51 instruction words, and the 40-entry jump table already assigned to this
+file's `.rodata` range. No storage, padding, instruction rewrite or layout
+change is needed.
+
+Validation on master `26838e62838b8485a54857683a930772ec848191` plus this
+replacement: fresh US extraction and the complete unchanged baseline passed;
+`make -W src/fragments/79/fragment79_393CA0.c -j4 VERSION=us rom` then passed
+with normal syntax checks and exact acceptance
+`build/pokestadiumgs-us.z64: OK`. Full ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; retail `cmp` and `git diff --check` pass.
+Independent original-assembly/raw-ROM comparisons cover instructions at
+`0x3A6C94..0x3A6D60` and the jump table at `0x3FA8B0..0x3FA950`.
