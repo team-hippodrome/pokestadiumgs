@@ -1226,3 +1226,15 @@ func_86A05B4C = ItemBounds_SumCostsAtPoint;
 func_86A05C94 = ItemBounds_AnyContainsPoint;
 
 func_82B02334 = Panel_InitializeAlternatingSlide;
+
+func_80059B08 = GbSave_LoadMainSave;
+
+func_8005F190 = GbSave_ReadRtcTime;
+
+func_8005F37C = GbSave_ReadRtcTimeWithSavedOffset;
+
+func_8005F3E0 = GbSave_WriteRtcTime;
+
+func_8821B5EC = StorageList_Initialize;
+
+func_88217DA8 = StorageList_DrawCategoryLabel;

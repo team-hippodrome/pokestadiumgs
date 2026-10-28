@@ -247,7 +247,7 @@ void func_88215BCC(void) {
                       ((StorageList186690 *)D_88234630)[i * 2 + 1].capacity);
     }
 }
-extern void func_800496A4(s32, s32); extern s32 func_8004C874(s32, s16); extern void func_80049064(s32, s32, s32, s32); extern s16 D_8800EF58; extern s32 D_882346F0; extern u8 *D_88234730;
+extern void func_800496A4(s32, s32); extern void *func_8004C874(s32, s32); extern void func_80049064(s32, s32, s32, s32); extern s16 D_8800EF58; extern s32 D_882346F0; extern u8 *D_88234730;
 void func_88215C4C(void) { if (D_8800EF58 == 0) { if (D_882346F0 == 0) { func_800496A4(4, 2); func_80049064(0x140, 0x198, 1, func_8004C874(0x23, 7)); } } func_800496A4(0x10, 2); func_80049064(0x140, 0x15F, 1, func_8004C874(0x23, *(s16 *)(D_88234730 + 8))); }
 
 s32 func_88215CE0(void) {
@@ -271,7 +271,7 @@ extern void func_80047634(s32);
 extern void func_80047650(s32);
 extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
 extern void func_80049064(s32, s32, s32, s32);
-extern s32 func_8004C874(s32, s16);
+extern void *func_8004C874(s32, s32);
 void func_88215D4C(void) { u8 *p; p = StorageList_GetEntry(1, *D_88234730); if (((s8 *)p)[0x66] != 0) { func_8004989C(0x20); func_800496A4(0x10, 2); func_80047634(1); func_80049064(0x13F, 0x154, 1, (s32)p); func_80047650(1); func_800496A4(8, 1); func_80048E30((u8 *)D_8800687C, 0xD5, 0x196, (const char *)(p + 0x66), 1); func_800496A4(4, 1); func_80048E30((u8 *)D_8800687C, 0x13E, 0x19A, (const char *)func_8004C874(0xD, 9), 1); func_80049668(0); func_800495F8(0x161, 0x19A, 0, D_88233F88, *(u16 *)(p + 0x72)); } }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88215E54.s")
@@ -431,13 +431,47 @@ void func_88217C90(s8 arg0, s16 arg1, s16 arg2) {
         var_s1 -= 1;
     } while (var_s0 >= 0);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88217DA8.s")
-
 typedef struct Color88217F70 {
     u8 red;
     u8 green;
     u8 blue;
 } Color88217F70;
+extern Color88217F70 D_88233700[];
+extern void func_880006E0(Color88217F70 *);
+extern void func_8004972C(s32, s32, s32, s32);
+extern const char D_88233FFC[];
+extern s32 func_80049290(s32, s32, const char *);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+extern void func_80049628(s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern u8 * D_88234740;
+void StorageList_DrawCategoryLabel(s16 x, s16 y, u8 category, u8 ordinal, u8 alpha) {
+    const char *text;
+    if (alpha == 0) return;
+    if (alpha == 255) {
+        func_880006E0(&D_88233700[category]);
+    } else {
+        func_8004972C(D_88233700[category].red, D_88233700[category].green,
+                     D_88233700[category].blue, alpha);
+    }
+    if (category == 0) {
+        func_80048E30((u8 *)D_8800687C, x + 11, y + 2, (const char *)func_8004C874(37, 9), 1);
+    } else {
+        text = (const char *)func_8004C874(37, category + 9);
+        x += 11;
+        y += 2;
+        func_80048E30((u8 *)D_8800687C, x, y, text, 1);
+        x += func_80049290(4, 1, text);
+        x += func_80049290(4, 1, D_88233FFC);
+        if (ordinal + 1 >= 10) {
+            func_80049628(x, y, 49);
+            func_80049628(x + D_88234740[148], y, ordinal + 39);
+        } else {
+            func_80049628(x, y, ordinal + 49);
+        }
+    }
+}
+
 extern Color88217F70 *func_88000510(Color88217F70 *, s8);
 extern void func_880006E0(Color88217F70 *);
 extern u8 func_80062D98(u8);
@@ -560,7 +594,50 @@ void StorageList_BuildPointers(s32 detect_marker) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_8821B5EC.s")
+struct MemPool3A00;
+extern void *mem_pool_alloc(struct MemPool3A00 *, s32);
+typedef struct {
+    s32 references[3];
+    u8 count;
+    u8 unk_0D[3];
+    u8 entries[8][68];
+} EntryCache186690;
+extern EntryCache186690 *D_882347C4;
+extern u8 *D_882345F4;
+extern s32 D_882347B0;
+extern u32 D_882347B4;
+extern s32 func_800718B8(s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 func_80062304(u8 *);
+
+extern u8 D_882347B8[];
+extern void func_8821B438(void);
+extern void func_8821B498(s32 arg0);
+extern s16 D_882345F0;
+extern u8 * D_88234750;
+extern s32 D_882347C0;
+void StorageList_Initialize(struct MemPool3A00 *pool) {
+    u8 *handle;
+
+    D_88234750 = mem_pool_alloc(pool, (u16)D_882345F0 * sizeof(u8 *));
+    func_8821B438();
+    D_882347B0 = 0;
+    D_882347B4 = 0;
+    D_882347C0 = 0;
+    func_8821B498(1);
+    D_882345F4 = *(u8 **)D_88234750;
+    D_882347B8[0] = 1;
+    D_882347B8[1] = 2;
+    D_882347B8[2] = 0;
+    D_882347C4 = mem_pool_alloc(pool, sizeof(EntryCache186690));
+    D_882347C4->references[0] = func_800718B8(0);
+    D_882347C4->references[1] = func_800718B8(7);
+    D_882347C4->references[2] = func_800718B8(12);
+    handle = func_8006218C(24, 0, 0, 0);
+    D_882347C4->count = Deck_ReadEntries(D_882347C4->entries[0], 8, handle);
+    func_80062304(handle);
+}
 
 extern s32 D_88234778; extern s32 D_8823477C; void func_8821B700(s32 arg0, s32 arg1) { D_88234778 = arg0; D_8823477C = arg1; }
 
