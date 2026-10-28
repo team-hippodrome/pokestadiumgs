@@ -477,7 +477,7 @@ void func_80025CBC(s32 arg0) {
     s32 temp_s0;
 
     func_8002B1A0();
-    func_800315E8();
+    Audio_DisableCommandQueue();
     func_80028140();
     temp_s0 = arg0 * 3;
     func_80018728(0x83000000U, temp_s0);

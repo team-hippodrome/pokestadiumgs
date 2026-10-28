@@ -118,7 +118,7 @@ void func_80025C50(u32 arg0) ;
 extern s32 func_80018C14(void);
 s32 func_80025C9C(void) ;
 
-extern void func_800315E8();
+void Audio_DisableCommandQueue(void);
 extern u8 D_80090B9C;
 void func_8002B1A0(void);
 extern void func_80028140(void);

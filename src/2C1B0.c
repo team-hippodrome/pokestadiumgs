@@ -470,7 +470,16 @@ void Audio_ClearCommandQueue(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_800315E8.s")
+void Audio_DisableCommandQueue(void) {
+    s32 i;
+
+    D_80091A10 = 0;
+    for (i = 0; i < 10; i++) {
+        gAudioQueuedState.command_queue[i] = 0;
+    }
+    D_80091A24 = 0;
+    D_80091A28 = 0;
+}
 
 void Audio_UpdateCommandQueue(void) {
     u32 command;

@@ -1086,3 +1086,6 @@ D_800D1B3B = gAudioQueuedState + 171;
 
 // Compatibility entry for assembly callers of the command-queue clear.
 func_80031564 = Audio_ClearCommandQueue;
+
+// Compatibility entry for assembly callers of the command-queue disable.
+func_800315E8 = Audio_DisableCommandQueue;
