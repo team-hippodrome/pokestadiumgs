@@ -175,7 +175,78 @@ void func_86A004AC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A012D4.s")
+extern Gfx *D_800D0510;
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern s32 func_87F00930(void);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(u8 *);
+extern void func_86A095A0(void);
+extern void func_87F07FE8(u8 *);
+extern s32 D_86A444C4;
+extern void func_86A07334(void);
+extern void func_87F022F0(void);
+extern void func_86A06E0C(void);
+extern void func_87F0A5BC(u8 *);
+extern void func_87F01D44(void);
+extern void func_87F0C88C(u8 *);
+extern void func_80008648(void);
+extern u8 D_86A0F920[];
+extern s32 D_86A0D4D0;
+extern s32 D_86A0D4D4;
+extern u8 D_86A0F8E8[];
+extern u8 * D_86A46548;
+void func_86A012D4(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 1);
+    func_8000766C(&D_800D0510, 0, 0, 0x140, 0xF0);
+    if (func_87F00930() == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(*(u8 **)(D_86A46548 + 8));
+    func_86A095A0();
+    switch (*(u32 *)D_86A46548) {
+    case 0:
+    case 1:
+    case 2:
+        func_87F07FE8(D_86A0F8E8);
+        break;
+    case 8:
+        if (D_86A0D4D0 != 0) {
+            func_87F07FE8(D_86A0F8E8);
+        }
+        if (D_86A444C4 != 0) {
+            func_86A07334();
+        }
+        if (D_86A0D4D4 != 0) {
+            func_87F022F0();
+        }
+        break;
+    case 4:
+        func_86A06E0C();
+        break;
+    case 5:
+        func_86A06E0C();
+        func_86A07334();
+        break;
+    case 6:
+        func_86A06E0C();
+        func_86A07334();
+        func_87F0A5BC(D_86A0F920);
+        break;
+    case 7:
+        func_86A06E0C();
+        func_86A07334();
+        func_87F022F0();
+        break;
+    }
+    if (func_87F00930() == 1) {
+        func_87F01D44();
+    }
+    func_87F0C88C(D_86A46548 + 0x1C);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
