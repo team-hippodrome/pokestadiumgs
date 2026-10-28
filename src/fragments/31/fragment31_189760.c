@@ -2,14 +2,23 @@
 
 
 #ifdef VERSION_US
-extern void *func_8004C874(s32, s32);
-extern s32 D_8800687C;
 extern u8 *D_88234564;
 extern void Util_Free(void *);
 extern void main_pool_pop_state(s32);
 extern void func_8821CE40(s32);
 extern s32 D_88234560;
 extern s32 func_8821BA34(u16, void *);
+typedef struct Color88217F70 {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color88217F70;
+extern void *func_8004C874(s32, s32);
+extern s32 D_8800687C;
+extern u8 * D_88234730;
+extern s32 D_882346F0;
+extern void func_80049064(s32, s32, s32, s32);
+extern void func_80047634(s32);
 void func_882164E0(void) {
     Util_Free(D_88234564);
     main_pool_pop_state(0x4C495354);
@@ -163,11 +172,6 @@ void func_88217C90(s8 arg0, s16 arg1, s16 arg2) {
         var_s1 -= 1;
     } while (var_s0 >= 0);
 }
-typedef struct Color88217F70 {
-    u8 red;
-    u8 green;
-    u8 blue;
-} Color88217F70;
 extern Color88217F70 D_88233700[];
 extern void func_880006E0(Color88217F70 *);
 extern void func_8004972C(s32, s32, s32, s32);

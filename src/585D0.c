@@ -340,7 +340,42 @@ s32 func_8005818C(s32 index) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80058614.s")
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+extern u16 func_800579D0(const u8* arg0);
+extern u8 D_80128570[];
+s32 GbSave_ReadCrystalMainSave(s32 port) {
+    s32 result = 0;
+    s32 i;
+    Arg1_80057F58 data;
+    data = *(Arg1_80057F58 *)&D_80128570[port * 112 + 96];
+    for (i = 0; i != 3; i++) {
+        if (GbPak_ReadCommand(port, data.p, 0x2000, 0xD20) == 0) {
+            result = func_80057F58(port, data);
+            if (result != 0) {
+                if (*(u32 *)&D_80128570[port * 112] & 0x80000000) {
+                    *(u16 *)&D_80128570[port * 112 + 6] = func_800579D0(data.p + 0xD0D);
+                    *(u32 *)&D_80128570[port * 112] &= 0x7FFFFFFF;
+                } else {
+                    result = *(u16 *)&D_80128570[port * 112 + 6] == func_800579D0(data.p + 0xD0D);
+                }
+                return result;
+            }
+            if (GbPak_ReadCommand(port, data.p, 0x1200, 0xD20) == 0) {
+                result = func_80057F58(port, data);
+                if (result != 0) {
+                    if (*(u32 *)&D_80128570[port * 112] & 0x80000000) {
+                        *(u16 *)&D_80128570[port * 112 + 6] = func_800579D0(data.p + 0xD0D);
+                        *(u32 *)&D_80128570[port * 112] &= 0x7FFFFFFF;
+                    } else {
+                        result = *(u16 *)&D_80128570[port * 112 + 6] == func_800579D0(data.p + 0xD0D);
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -360,7 +395,7 @@ s32 func_800587BC(s32 arg0)
         result = func_80058288(arg0);
         break;
     case 7:
-        result = func_80058614(arg0);
+        result = GbSave_ReadCrystalMainSave(arg0);
         if (result != 0) {
             func_8006072C(arg0);
         }
@@ -457,8 +492,8 @@ s32 func_80058D18(s32 arg0)
 
 #ifdef VERSION_US
 extern u8 D_801285D8[];
-void func_80058D98(s32 arg0) {
-    func_80057BCC(arg0, *(s32 *)(D_801285D8 + arg0 * 112), 0x600, 0x640);
+s32 func_80058D98(s32 arg0) {
+    return func_80057BCC(arg0, *(s32 *)(D_801285D8 + arg0 * 112), 0x600, 0x640);
 }
 void func_80058D98_padding(void) {}
 void func_80058D98_padding2(void) {}
@@ -630,12 +665,43 @@ s32 func_800592B0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80059320.s")
+extern s32 func_8005D964(s32);
+extern s32 func_8005CF20(s32, s32, s32);
+extern s32 func_80058D98(s32);
+extern s32 GbPak_ValidateAndRefresh(s32, u8 *, u8 *);
+extern s32 GbTower_CheckPakRemoved(s32, u8);
+extern s32 func_80058D18(s32 arg0);
+extern s32 func_800592B0(s32 arg0);
+extern u8 D_80128570[];
+s32 GbSave_WriteRequestedBuffers(s32 port, u8 flags) {
+    u8 status;
+    s32 result = 1;
+    s32 touched = 0;
+    if (GbPak_ValidateAndRefresh(port, &status, D_80128570 + port * 112 + 40) == 0) {
+        Game_ShutdownAndLoadFragment(port, 2);
+    }
+    if ((flags & 2) && (*(u32 *)(D_80128570 + port * 112) & 2)) {
+        result &= func_80058D98(port);
+        touched = 1;
+    }
+    if ((flags & 1) && (*(u32 *)(D_80128570 + port * 112) & 1)) {
+        result &= func_80058D18(port), touched = 1;
+        if (result != 0) {
+            func_8005D964(port);
+            (D_80128570 + port * 112)[72] = func_8005CF20(32, port, 0);
+        }
+    }
+    if ((flags & 4) && (*(u32 *)(D_80128570 + port * 112) & 4)) {
+        result &= func_800592B0(port), touched = 1;
+    }
+    result &= GbTower_CheckPakRemoved(port, status);
+    return result & touched;
+}
 #endif
 
 #ifdef VERSION_US
 void func_80059468(s32 arg0) {
-    func_80059320(arg0, 4);
+    GbSave_WriteRequestedBuffers(arg0, 4);
 }
 #endif
 
@@ -1214,7 +1280,7 @@ void func_8005AFF4(s32 arg0) {
 
 #ifdef VERSION_US
 void func_8005B058(s32 arg0) {
-    func_80059320(arg0, 1);
+    GbSave_WriteRequestedBuffers(arg0, 1);
 }
 #endif
 
@@ -1224,7 +1290,7 @@ s32 func_8005B078(s32 arg0) {
     if (func_80057A80(arg0) != 0) {
         return 1;
     }
-    return func_80059320(arg0, 2);
+    return GbSave_WriteRequestedBuffers(arg0, 2);
 }
 #endif
 
@@ -1234,7 +1300,7 @@ s32 func_8005B0B0(s32 arg0) {
     if (func_80057A80(arg0) != 0) {
         return 1;
     }
-    return func_80059320(arg0, 8);
+    return GbSave_WriteRequestedBuffers(arg0, 8);
 }
 #endif
 
@@ -1244,13 +1310,13 @@ s32 func_8005B0E8(s32 arg0) {
     if (func_80057A80(arg0) != 0) {
         return 1;
     }
-    return func_80059320(arg0, 16);
+    return GbSave_WriteRequestedBuffers(arg0, 16);
 }
 #endif
 
 #ifdef VERSION_US
 void func_8005B120(s32 arg0) {
-    func_80059320(arg0, 0xFF);
+    GbSave_WriteRequestedBuffers(arg0, 0xFF);
 }
 #endif
 
