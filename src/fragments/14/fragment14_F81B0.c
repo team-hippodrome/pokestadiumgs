@@ -426,7 +426,38 @@ void Fragment14_UpdateSlotDialog(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_81301648.s")
+extern void func_81300730(void *, s32);
+extern void func_81300BE8(void *, void *, s32);
+extern void func_8130F2C4(void *, s32);
+extern s32 func_81304AD0(void *);
+extern void func_81306F74(void *, void *);
+extern void func_813069BC(void *, s32);
+extern void func_81303EF4(void *, s32);
+extern void func_8130A044(void *, s32);
+extern void func_81311AAC(void *, s32);
+void func_81301648(Fragment14SetupState *arg0, s32 arg1) {
+    s32 result;
+
+    func_8130A044((u8 *)arg0 + 0xDA8, arg1);
+    func_81303EF4((u8 *)arg0 + 0x15370, arg1);
+    func_813000DC((u8 *)arg0 + 0x15370);
+    func_8130F2C4(arg0, arg1);
+    func_813069BC((u8 *)arg0 + 0xD18, arg1);
+    func_81311AAC((u8 *)arg0 + 0x74, arg1);
+    func_81306F74((u8 *)arg0 + 0xDA8, (u8 *)arg0 + 0x1A154);
+    result = func_81304AD0((u8 *)arg0 + 0x15370);
+    if (result == 0) {
+        return;
+    }
+    if (result > 0) {
+        func_81300BE8(arg0, (u8 *)arg0 + 0x15370, arg0->slot);
+        func_81300730(arg0, 1);
+    } else if (result < 0) {
+        _bzero(arg0->data + arg0->slot * 0x240, 0x240);
+        *(s8 *)(arg0->data + arg0->slot + 0x93C) = -1;
+        func_813000BC(arg0, 0);
+    }
+}
 
 extern void func_813000BC(void *arg0, s32 arg1);
 extern void func_81311AAC(void *, s32);
@@ -454,12 +485,7 @@ void Fragment14_UpdateSelectionPreview(void *arg0, s32 arg1) {
     func_81311AAC((u8 *)arg0 + 0x74, arg1);
 }
 
-extern void func_8130A044(void *, s32);
-extern void func_81303EF4(void *, s32);
 extern void Fragment14_UpdateGridState(u8 *, void *);
-extern void func_81306F74(void *, void *);
-extern s32 func_81304AD0(void *);
-extern void func_8130F2C4(void *, s32);
 void Fragment14_UpdateSelectionPage(void *arg0, s32 arg1) {
     u8 *panel;
 
@@ -672,7 +698,7 @@ void Fragment14_EnterSelectionState(void *arg0, s32 arg1) {
     }
 }
 
-extern void func_81301648(void *, s32);
+extern void func_81301648(Fragment14SetupState *, s32);
 extern void func_81609CB8(void);
 /* Renamed callees invoked through their func_ address symbols so the jal
  * relocations keep the retail spelling (Fragment14_UpdateSlotDialog is
