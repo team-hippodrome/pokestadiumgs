@@ -1124,3 +1124,8 @@ func_8AE020FC = Fragment46_InitializeSelection;
 func_8AE03324 = Fragment46_DrawVariantDetails;
 func_8AE03970 = Fragment46_DrawCategoryDetails;
 func_8AE05CB4 = Fragment46_HandleSelectionInput;
+
+func_82402B1C = Fragment13_DrawScrollIndicatorPanel;
+func_8240330C = Fragment13_DrawPageIndicatorPanel;
+func_8AC01160 = Fragment43_DrawDarkOverlayRect;
+func_8AC0479C = Fragment43_GrowthRectCallback;
