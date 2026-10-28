@@ -60,7 +60,40 @@ void func_87E13848(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E13924.s")
+void func_87E13924(void *arg0, s32 arg1) {
+    f32 v;
+
+    switch (*(s32 *)((u8 *)arg1 + 0x164)) {
+    case 0:
+    case 5:
+        ((u8 *)arg0)[0x41] = 0;
+        *(s32 *)((u8 *)arg0 + 0xC4) = 0xFF;
+        break;
+    case 1:
+        v = *(f32 *)((u8 *)arg1 + 0x16C) - 0.3f;
+        if (v < 0.0f) {
+            v = 0.0f;
+        }
+        ((u8 *)arg0)[0x41] = 255.0f * v * 1.4285715f;
+        *(s32 *)((u8 *)arg0 + 0xC4) = 0;
+        ((u8 *)arg0)[0xC7] = (1.0f - *(f32 *)((u8 *)arg1 + 0x16C)) * 255.0f;
+        break;
+    case 2:
+        ((u8 *)arg0)[0x41] = *(f32 *)((u8 *)arg1 + 0x16C) * 255.0f;
+        *(s32 *)((u8 *)arg0 + 0xC4) = 0;
+        break;
+    case 3:
+    case 4:
+        v = (1.0f - *(f32 *)((u8 *)arg1 + 0x16C) * 2.5f) * 255.0f;
+        if (v < 0.0f) {
+            v = 0.0f;
+        }
+        ((u8 *)arg0)[0x41] = (v >= 0.0f) ? (s32)(v + 0.5f) : (s32)(v - 0.5f);
+        *(s32 *)((u8 *)arg0 + 0xC4) = 0;
+        ((u8 *)arg0)[0xC7] = *(f32 *)((u8 *)arg1 + 0x16C) * 255.0f;
+        break;
+    }
+}
 
 extern void *func_87F025B8(void *, void *);
 extern void func_8003F1DC(void *);
