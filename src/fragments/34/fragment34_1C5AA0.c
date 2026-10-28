@@ -822,9 +822,103 @@ void func_8850ABCC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850ACD8.s")
+void func_8850ACD8(void) {
+    s32 i;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850AEA8.s")
+    if (D_88523030.unk_00 == 5) {
+        for (i = 0; i < 2; i++) {
+            if (*(s32 *)(D_88523100 + i * 0x24) == 4) {
+                func_885084EC(i, 8);
+            }
+        }
+        if (*(s32 *)D_88523100 != 0 || *(s32 *)(D_88523100 + 0x24) != 0) {
+            return;
+        }
+    } else if (D_88523030.unk_00 == 0x11) {
+        if (func_8850CED8(9) == 0) {
+            return;
+        }
+    }
+    if (D_88523030.unk_0E & 0x10) {
+        D_88523030.unk_0E &= 0xFFEF;
+        func_800226C0(0x141);
+    }
+    D_88523030.unk_18--;
+    D_88523030.unk_14 = (s16)((128.0f - (D_88523030.unk_18 * 96) / 30.0f) + ((128.0f > (D_88523030.unk_18 * 96) / 30.0f) ? 0.5f : -0.5f));
+    D_88523030.unk_16 = (s16)((64.0f - (D_88523030.unk_18 * -64) / 30.0f) + ((64.0f > (D_88523030.unk_18 * -64) / 30.0f) ? 0.5f : -0.5f));
+    if (D_88523030.unk_18 <= 0) {
+        func_8850A0EC(0);
+        D_88523030.unk_0E &= 0xFFF0;
+    }
+}
+
+extern void func_8850A5CC(void);
+extern void func_8850A6C8(void);
+extern void func_8850A8BC(void);
+extern void func_8850A988(void);
+extern void func_8850AAA8(void);
+extern void func_8850ABCC(void);
+extern void func_8850A2F4(void);
+extern void func_8850A3F0(void);
+extern void func_8850A614(void);
+extern void func_8850A958(void);
+extern void func_88508E34(void);
+extern void func_8850998C(void);
+void func_8850AEA8(void) {
+    if (D_880068B4 != 0) {
+        switch (D_88523030.unk_00) {
+            case 0:
+                break;
+            case 1:
+                func_8850A2F4();
+                break;
+            case 2:
+            case 4:
+                func_8850A3F0();
+                break;
+            case 3:
+                func_8850A5CC();
+                break;
+            case 6:
+                func_8850A614();
+                break;
+            case 7:
+                func_8850A6C8();
+                break;
+            case 8:
+            case 9:
+                func_8850A710();
+                break;
+            case 10:
+                func_8850A8BC();
+                break;
+            case 11:
+                func_8850A958();
+                break;
+            case 12:
+                func_8850A988();
+                break;
+            case 13:
+                func_8850A0EC(0xE);
+                break;
+            case 14:
+                func_8850AAA8();
+                break;
+            case 15:
+                func_8850A0EC(0x10);
+                break;
+            case 16:
+                func_8850ABCC();
+                break;
+            case 5:
+            case 17:
+                func_8850ACD8();
+                break;
+        }
+    }
+    func_88508E34();
+    func_8850998C();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850AFDC.s")
 
