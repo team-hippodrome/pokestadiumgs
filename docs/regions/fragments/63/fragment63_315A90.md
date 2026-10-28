@@ -56,3 +56,49 @@ The link prints `build/pokestadiumgs-us.z64: OK`; the full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail and whitespace checks pass.
 Independent original-assembly and raw retail comparisons verify the 252-byte
 span `0x316EC8..0x316FC4`.
+
+## func_87E126D4
+
+This 228-byte owner (57 instructions, 80-byte frame) walks eight 396-byte
+nodes from the pointer at context offset 12. For each node whose state word
+matches arg2, it starts a position transition using the corresponding
+three-float vector from arg1, duration arg3 and flags arg4. State zero also
+receives archive 359 entry `context->unk_00->unk_2188 - 5` at state offset 4.
+Unknown context and state fields retain offset names.
+
+`func_87E12568` allocates eight node records and eight 148-byte state
+records, installing each state pointer at node offset 56. The callers
+`func_87E127FC`, `func_87E12BE8` and their siblings supply the eight-vector
+tables `D_87E1ABC4` and `D_87E1AB64`, state IDs, durations and masks.
+The vector tables remain assembly-owned data.
+//@src/fragments/63/fragment63_315A90.c
+
+`func_87F0B1A4` consumes two pointers, three float components, a duration
+and flags; it captures the current vector and starts the transition.
+`func_8004C990` resolves an archive entry and returns its address as a word.
+The declarations before the new call sites express those existing interfaces.
+//@src/fragments/64/fragment64_32DC40.c
+//@src/4CC20.c
+
+The first recipe used a separate vector cursor and differed in four
+parameter-save instructions. Advancing the incoming vector pointer directly
+matches every instruction. No storage, layout, padding or compiler changes
+are required.
+
+Fresh validation uses master `64a8ad61cd35322f41313c105fd729502c1a9a67`
+plus this patch. Normal US extraction and the full unchanged baseline passed
+before the attempt; the subsequent upstream change only added an audio
+region note. Final validation forces the changed source through the default
+syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/63/fragment63_315A90.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The link prints `build/pokestadiumgs-us.z64: OK`; full ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail and whitespace checks pass.
+Independent original-assembly and raw retail comparisons verify all 57
+words at `0x316044..0x316128`.

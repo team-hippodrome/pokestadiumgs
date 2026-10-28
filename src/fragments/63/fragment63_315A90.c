@@ -104,7 +104,26 @@ void func_87E126B4(s32 arg0) {
     func_87F0277C((arg0 + 4));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E126D4.s")
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+void func_87E126D4(s32 arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4) {
+    u8 *var_s0;
+    u8 *var_s2 = *(u8 **)(arg0 + 12);
+    s32 var_s3;
+
+    for (var_s3 = 0; var_s3 != 8; var_s3++) {
+        var_s0 = *(u8 **)(var_s2 + 56);
+        if (*(s32 *)var_s0 == arg2) {
+            func_87F0B1A4(var_s0 + 12, (f32 *)(var_s2 + 72),
+                ((f32 *)arg1)[0], ((f32 *)arg1)[1], ((f32 *)arg1)[2], arg3, arg4);
+            if (*(s32 *)var_s0 == 0) {
+                *(s32 *)(var_s0 + 4) = func_8004C990(359, *(s32 *)(*(u8 **)arg0 + 8584) - 5);
+            }
+        }
+        var_s2 += 396;
+        arg1 = (u8 *)arg1 + 12;
+    }
+}
 
 void func_87E127B8(void *arg0, s32 arg1, void **arg2, void **arg3) {
     void *var_v0;
