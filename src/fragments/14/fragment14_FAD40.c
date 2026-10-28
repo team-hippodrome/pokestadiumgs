@@ -1,5 +1,47 @@
 #include "global.h"
 
+// A party entry as func_81302EE4 receives it: the 0x58-byte Pokemon data plus one more word.
+typedef struct unk_D_81302EE4_mon {
+    /* 0x00 */ u8 species;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 unk_02[2];
+    /* 0x04 */ s32 unk_04[0x15];
+} unk_D_81302EE4_mon; // size = 0x58
+typedef struct unk_D_81302EE4_party {
+    /* 0x00 */ unk_D_81302EE4_mon mon;
+    /* 0x58 */ s32 unk_58;
+    /* 0x5C */ u8 unk_5C[4];
+} unk_D_81302EE4_party; // size = 0x60
+// One of the six 0xCE8-byte party slots at the start of the selection screen object.
+typedef struct unk_D_81303648_slot {
+    /* 0x000 */ void *unk_000;
+    /* 0x004 */ u8 unk_004[0xA - 0x4];
+    /* 0x00A */ u8 unk_00A;
+    /* 0x00B */ u8 unk_00B[0x11 - 0xB];
+    /* 0x011 */ char unk_011[0x20 - 0x11];
+    /* 0x020 */ unk_D_81302EE4_mon mon;
+    /* 0x078 */ s32 unk_078;
+    /* 0x07C */ u8 unk_07C[4];
+    /* 0x080 */ u8 unk_080[0xCE8 - 0x80];
+} unk_D_81303648_slot; // size = 0xCE8
+// The selection screen object.
+typedef struct unk_func_81303648 {
+    /* 0x0000 */ unk_D_81303648_slot slots[6];
+    /* 0x4D70 */ u8 unk_4D70[0x4D90 - 0x4D70];
+    /* 0x4D90 */ s16 unk_4D90;
+    /* 0x4D92 */ u8 unk_4D92[0x4DA0 - 0x4D92];
+    /* 0x4DA0 */ s32 unk_4DA0;
+    /* 0x4DA4 */ f32 unk_4DA4;
+    /* 0x4DA8 */ u8 unk_4DA8[0x4DAC - 0x4DA8];
+    /* 0x4DAC */ s32 unk_4DAC;
+    /* 0x4DB0 */ s32 unk_4DB0;
+    /* 0x4DB4 */ s32 unk_4DB4;
+    /* 0x4DB8 */ u8 unk_4DB8[0x4DBC - 0x4DB8];
+    /* 0x4DBC */ s8 unk_4DBC;
+    /* 0x4DBD */ u8 unk_4DBD;
+    /* 0x4DBE */ u8 unk_4DBE[6];
+} unk_func_81303648;
+
 // The menu command lists fragment14_data's descriptors point at.
 const s16 D_813122B0[8] = { 66, 163, 1, 0, 67, 3, -1, 0 };
 const s16 D_813122C0[4] = { 31, 2, 0, 0 };
@@ -255,28 +297,6 @@ void *func_813035A0(void *arg0) {
     }
     return &D_81311E5C[((((u32) *(u32 *)(*(u8 **)(*(u8 **)((u8 *)(u32)(*(s32 *)((u8 *)arg0 + 0x4DA0) + 0x20000) - 0x5EB8) + 0x940) + 0x40) << 5) >> 0x1F) == 0) * 108 + idx * 36];
 }
-// One of the six 0xCE8-byte party slots at the start of the selection screen object.
-typedef struct unk_D_81303648_slot {
-    /* 0x000 */ void *unk_000;
-    /* 0x004 */ u8 unk_004[0xA - 0x4];
-    /* 0x00A */ u8 unk_00A;
-    /* 0x00B */ u8 unk_00B[0x21 - 0xB];
-    /* 0x021 */ u8 unk_021;
-    /* 0x022 */ u8 unk_022[0xCE8 - 0x22];
-} unk_D_81303648_slot; // size = 0xCE8
-// The selection screen object func_81303648 dispatches on.
-typedef struct unk_func_81303648 {
-    /* 0x0000 */ unk_D_81303648_slot slots[6];
-    /* 0x4D70 */ u8 unk_4D70[0x4DA0 - 0x4D70];
-    /* 0x4DA0 */ s32 unk_4DA0;
-    /* 0x4DA4 */ u8 unk_4DA4[0x4DAC - 0x4DA4];
-    /* 0x4DAC */ s32 unk_4DAC;
-    /* 0x4DB0 */ u8 unk_4DB0[4];
-    /* 0x4DB4 */ s32 unk_4DB4;
-    /* 0x4DB8 */ u8 unk_4DB8[0x4DBD - 0x4DB8];
-    /* 0x4DBD */ u8 unk_4DBD;
-    /* 0x4DBE */ u8 unk_4DBE[6];
-} unk_func_81303648;
 extern s32 func_81311C70(s32, s32 *, u8, s32);
 extern s32 func_8160A8DC(u8 *);
 extern void func_8160A928(u8 *, s32);
@@ -312,8 +332,8 @@ void func_81303648(unk_func_81303648 *arg0, s32 arg1) {
             break;
         case 6:
             for (count = 0; count < 6; count++) {
-                arg0->unk_4DBE[count] = arg0->slots[count].unk_021;
-                arg0->slots[count].unk_021 = 0;
+                arg0->unk_4DBE[count] = arg0->slots[count].mon.unk_01;
+                arg0->slots[count].mon.unk_01 = 0;
             }
             func_8160A928((u8 *)arg0, 0);
             arg0->unk_4DBD = 18;
