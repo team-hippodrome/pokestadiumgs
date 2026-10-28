@@ -3,7 +3,53 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800020.s")
+extern void main_pool_push_state(s32);
+extern void *Util_Malloc(s32);
+extern u8 *D_88804050;
+extern void func_8004C8C0(s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_88004FF0(s32);
+extern void func_8004C4B0(s32);
+extern void *D_80128C64;
+extern void *ModelPreview_Create(void *, s32, s32);
+extern void func_80042D74(void *, void *);
+extern void func_88005714(void);
+extern s32 func_80001FF0(void);
+void func_88800020(void) {
+
+    main_pool_push_state(0x504D494E);
+    D_88804050 = Util_Malloc(0x3C8);
+    func_8004C8C0(0x14C);
+    *(s32 *)(D_88804050 + 0x360) = func_8004C990(0x14C, 0);
+    *(s32 *)(D_88804050 + 0x364) = func_8004C990(0x14C, 1);
+    *(s32 *)(D_88804050 + 0x368) = func_8004C990(0x14C, 2);
+    *(s32 *)(D_88804050 + 0x36C) = func_8004C990(0x14C, 3);
+    *(s32 *)(D_88804050 + 0x370) = func_8004C990(0x14C, 4);
+    *(s32 *)(D_88804050 + 0x374) = func_8004C990(0x14C, 5);
+    *(s32 *)(D_88804050 + 0x378) = func_8004C990(0x14C, 6);
+    *(s32 *)(D_88804050 + 0x37C) = func_8004C990(0x14C, 7);
+    *(s32 *)(D_88804050 + 0x380) = func_8004C990(0x14C, 8);
+    *(s32 *)(D_88804050 + 0x384) = func_8004C990(0x14C, 9);
+    *(s32 *)(D_88804050 + 0x388) = func_8004C990(0x14C, 10);
+    *(s32 *)(D_88804050 + 0x38C) = func_8004C990(0x14C, 11);
+    *(s32 *)(D_88804050 + 0x390) = func_8004C990(0x14C, 12);
+    *(s32 *)(D_88804050 + 0x394) = func_8004C990(0x14C, 13);
+    *(s32 *)(D_88804050 + 0x398) = func_8004C990(0x14C, 14);
+    *(s32 *)(D_88804050 + 0x39C) = func_8004C990(0x14C, 15);
+    *(s32 *)(D_88804050 + 0x3A0) = func_8004C990(0x14C, 16);
+    *(s32 *)(D_88804050 + 0x3A4) = func_8004C990(0x14C, 17);
+    func_88004FF0(0x3A);
+    func_8004C4B0(0x26);
+    func_8004C4B0(0xE);
+    func_8004C4B0(7);
+    *(void **)(D_88804050 + 8) = ModelPreview_Create(D_80128C64, 0x8A, 0x6E);
+    **(u16 **)(D_88804050 + 8) &= 0xFFFD;
+    func_80042D74(*(void **)(D_88804050 + 8), func_88005714);
+    D_88804050[0x51] = (s32)(16.0f * func_80001FF0() / 60.0f + ((func_80001FF0() * 16.0f / 60.0f > 0.0f) ? 0.5f : -0.5f));
+    if (D_88804050[0x51] & 1) {
+        D_88804050[0x51]++;
+    }
+}
 
 extern void Util_Free(void *);
 extern void main_pool_pop_state(s32);

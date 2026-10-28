@@ -48,3 +48,29 @@ are not acceptable.
 Next: make `arg0`'s live range cross a call in the retail order (take its
 address once, or reload it through a `volatile`-free local copy declared first).
 Alternatively, pass it into the callee chain explicitly.
+
+## 2026-10-29 — `func_87E09F20`: requeue
+
+Status: **requeue**, best 0.9699 (166/166 words). The only diff left is that
+retail loads `arg0+0x14` into **`$v1`** in the 0x7B8 == 0x14 block (`lw
+v1,0x14(s0)` plus three `beq v1`), where ours uses `$v0`.
+
+Recipe that reaches 0.97:
+- Companion edit: `func_87E09BDC` returns `s32` (`return func_87E08E8C(...)`).
+  The bytes are unchanged; this function tests its result.
+- Locals in order: `sp3C, temp_v0, var_a1, temp_v1, sp2C, var_v1, sp24`, which
+  gives the 0x40 frame with sp3C@0x3C, sp2C@0x2C and sp24@0x24.
+- Block: `switch (x14) { case 1: case 3: case 4: var_a1 = 0; break; default:
+  var_a1 = *(s32 *)(*(u8 **)(arg0+0x20) + 0x2188); break; }`. Only this form
+  emits retail's redundant `b`.
+- The two rounding macros use the if/else form with `(f32)f() * 2` (an integer
+  2) and `(f32)f() / 2.0f`. Writing `* 0.5f` lets IDO share the 0.5f constant
+  across branches, which retail does not do.
+- Tail: `if (x14 != 3 && x14 != 4) { +4 = 6; func_87E155DC(sp24); EA8(-1);
+  F2C(-1); } else { +4 = 7; EA8(0x29); F2C(0); }`, then
+  `func_800279C4(0xCF02)`.
+
+Tried for `$v1`, none of which help: a temp for the scrutinee, an if-chain, a
+ternary argument, calls split per case, and an `s32` scrutinee. The permuter
+can't build this owner yet: it injects the stale `void func_87E09BDC`
+prototype next to the companion-edited definition.
