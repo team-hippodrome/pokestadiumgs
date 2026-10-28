@@ -127,3 +127,103 @@ assembly compatibility aliases.
 - `func_8AE01600` → `Fragment46_FindNeighborVariants`.
 - `func_8AE03BDC` → `Fragment46_DrawRecordRange`.
 - `func_8AE057A8` → `Fragment46_UpdateSelectionVisibility`.
+- `func_8AE03970`: accepted `text:sibling:03970-order0-width0-flow1`
+  (155 instructions, 620 bytes, 0x230-byte frame). Reuse the measured/padded
+  width separation and actual two-buffer layout. The label's initial byte
+  is read as signed (`lb`), including each empty-string test; plain `char`
+  on this compiler generated `lbu`. Its three optional labels follow the
+  low three input mask bits, with mask 7 bypassing those additions. Receipt:
+  `scratch/text-siblings-v1/gate-0/receipt.json`.
+- `func_8AE03324`: accepted `text:variant-range:switch-order0` (166
+  instructions, 664 bytes, 0x230-byte frame). The input field at offset 3
+  supplies a signed upper bound. For label selector 8, modes 0, 1, and 6
+  add four before narrowing it to `s8`; a three-case `switch` gives the
+  observed shared branch region, whereas the equivalent OR expression
+  changes that region's branch orientation and load schedule. The two
+  measured/padded-width values give the ordinary two-buffer layout.
+  Receipt: `scratch/text33-v2/gate-0/receipt.json`.
+- `func_8AE020FC`: accepted `selection:initialize:order0-field0-mask0`
+  (167 instructions, 668 bytes, 0x28-byte frame). Mode 0/1/2 copies the
+  corresponding 896-byte lookup template and collects availability. A
+  populated table advances selection and takes its position at offset 8;
+  otherwise the three camera-position floats are narrowed into a real
+  three-halfword local vector, then the two camera triples are copied.
+  Ordinary halfword bit operations reproduce the node flags. Declaring
+  the used lookup pointer before the vector gives vector offset 0x1C;
+  reversing them moves it to 0x20. Receipt:
+  `scratch/initialize20-v1/gate-0/receipt.json`.
+
+- `func_8AE05CB4`: accepted
+  `input:vector-home:var_v0-before-vector` (234 instructions, 936 bytes,
+  0x50-byte frame). A `switch` with default, camera mode 0, then camera
+  mode 1 gives the observed branch regions. Word-sized button snapshots
+  give the observed input-value register; each saved selection is declared
+  beside its returned lookup pointer. Placing the camera-state button
+  snapshot immediately before the real three-float target vector puts
+  that vector at offset 0x30. `func_8AE059A8` takes two arguments; the
+  context-free m2c draft inferred a spurious third argument from a residual
+  address in `$a2`, which must be removed using the actual accepted
+  definition. Receipt: `scratch/input5cb-v5/gate-0/receipt.json`.
+
+### Unresolved native candidates (requeue)
+
+- `func_8AE01738`: `requeue`. Best ordinary locals / saved-state record:
+  normalized 1.0, raw 0.8889, 108/108 bytes, both frames 0x28. The saved
+  variant uses stack offset 0x26 instead of 0x1C; selection and result homes
+  match. Separate locals, all six declaration/field orders, and a real
+  two-element snapshot array were tested. The array gives a smaller 0x20
+  frame and result offset 0x18. Next: establish the original saved-value
+  storage/lifetimes with compiler home-slot evidence; padding or unused
+  record fields would not establish that model. Retained manifests/results:
+  `scratch/b17.json`, `scratch/snapshot17-v1/result.json`,
+  `scratch/b17b.json`, `scratch/snapshot17-v2/result.json`,
+  `scratch/b17c.json`, `scratch/snapshot17-v3/result.json`.
+- `func_8AE017A4`: `requeue`. Best raw 0.9306, normalized 0.9306,
+  288/288 bytes, both frames 0x40. The initial table clear keeps a common
+  base in `$v1` and moves it to `$s0`, whereas retail materializes `$s0`
+  directly and rematerializes it for the search. An indexed clearing loop
+  reaches normalized 0.9861 but raw 0.6528 and different cursor/index
+  allocation; that score is not a closer byte match. Tested pointer/index
+  loops, end-symbol versus same-array bounds, separate initialization,
+  real declaration orders, and minimum/selected write order. Next: inspect
+  how the clearing-loop base and search cursor acquire their compiler live
+  ranges rather than replaying the same pointer spellings. Latest result:
+  `scratch/selection17a-v5/result.json`; indexed alternative:
+  `scratch/selection17a-v4/result.json`.
+- `func_8AE02470`: `requeue`. Best normalized 0.8387, raw 0.4839,
+  expected/actual 248/240 bytes, frame 0x18. The first structural residual
+  is expected `lw $a1, 28($sp)` versus a global-address `lui $a0`; later
+  stores share that global-address carrier instead of the observed scalar
+  value. Tested narrow/wide coordinates and current values, explicit
+  narrowing, if/switch layout, real declaration order, and a typed node
+  parameter with its stale callback prototype corrected transactionally.
+  `src/4F800.c` verifies that `func_800504BC(s16 *)` writes two halfword
+  coordinates; typing its destination as `s16[2]` does not change this
+  mismatch. Next: examine scalar/global store merging with the actual
+  node layout. Best result: `scratch/slide24-v1/result.json`; corrected
+  producer/callback model: `scratch/slide24-v4/result.json`.
+- `func_8AE04BFC`: `requeue`. Descending orientation cases 8, 4, 2, 1
+  give normalized 1.0, raw 0.8514, 700/700 bytes; retail frame 0x78 versus
+  candidate 0x70, plus differing cached-word homes/registers. Real cached
+  rectangle endpoints before the texture call obtain frame 0x78 but add
+  four instructions (716 bytes); computing them after the call gives a
+  different 760-byte allocation. Tested ordinary SDK texture/flip macros,
+  case ordering, coordinate parameter/local forms, early-return/guard
+  shape, and endpoint declaration/computation order. Next: inspect the SDK
+  macro scopes and actual packet/cursor roles; do not add filler to close
+  the frame. Best source/result: `scratch/b4bfb.json`,
+  `scratch/icons4bf-v2/result.json`; endpoint experiment:
+  `scratch/icons4bf-v3/result.json`.
+
+Parent review preserves the actual s32 variadic text-width contract in the
+two new drawing owners. The existing sound wrapper now explicitly forwards
+its real full-word sound ID to func_800226C0; it formerly relied on an
+unprototyped incoming register. The selected camera target is a three-float
+external view aliased to the12-byte assembly data at D_8AE084D0, with no new
+storage. Normal/+20blank controls preserve every module byte and extent
+modulo that data alias. New function names retain old assembly entry aliases.
+- `func_8AE00020` → `Fragment46_PlaySound`.
+- `func_8AE020FC` → `Fragment46_InitializeSelection`.
+- `func_8AE03324` → `Fragment46_DrawVariantDetails`.
+- `func_8AE03970` → `Fragment46_DrawCategoryDetails`.
+- `func_8AE05CB4` → `Fragment46_HandleSelectionInput`.

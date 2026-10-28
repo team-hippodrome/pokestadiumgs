@@ -1115,3 +1115,12 @@ func_8AC017B0 = Fragment43_DrawForwardTextureStrip;
 func_8AC0198C = Fragment43_DrawReverseTextureStrip;
 func_8AC02A34 = Fragment43_SecondaryTextureCallback;
 func_8AC030EC = Fragment43_ClippedTextureCallback;
+
+// Three-float view of the assembly-owned camera target.
+gFragment46CameraTarget = D_8AE084D0;
+
+func_8AE00020 = Fragment46_PlaySound;
+func_8AE020FC = Fragment46_InitializeSelection;
+func_8AE03324 = Fragment46_DrawVariantDetails;
+func_8AE03970 = Fragment46_DrawCategoryDetails;
+func_8AE05CB4 = Fragment46_HandleSelectionInput;
