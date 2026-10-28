@@ -141,7 +141,88 @@ s32 func_86900698(s32 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86901414.s")
+extern s32 D_8690F9E0;
+extern void func_80043E70(s32, s32);
+extern Gfx *D_800D0510;
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern s32 func_87F00930(void);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(u8 *);
+extern void func_87F07FE8(u8 *);
+extern void func_87F022F0(void);
+void func_86905804(void);
+void func_86907614(void);
+void func_869054CC(void);
+void func_86909EAC(void);
+void func_8690AA64(void);
+extern void func_87F0A5BC(u8 *);
+extern u8 D_8690FA20[];
+extern void func_81900214(s32);
+extern s32 D_8691A424;
+extern void func_87F01D44(void);
+extern void func_87F0C88C(u8 *);
+extern void func_80008648(void);
+extern s32 D_8690E11C;
+extern s32 D_8690E120;
+extern u8 D_8690F9E8;
+extern u8 * D_8691AD58;
+void func_86901414(void) {
+    func_80043E70(D_8690F9E0, 1);
+    func_800088DC();
+    if (*(s32 *)D_8691AD58 == 8 || *(s32 *)D_8691AD58 == 9 || *(s32 *)D_8691AD58 == 10) {
+        GfxImage_FillCurrent(&D_800D0510, 1);
+    }
+    func_8000766C(&D_800D0510, 0, 0, 0x140, 0xF0);
+    if (func_87F00930() == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(*(u8 **)(D_8691AD58 + 8));
+    switch (*(u32 *)D_8691AD58) {
+    case 0:
+    case 1:
+    case 2:
+        func_87F07FE8(&D_8690F9E8);
+        break;
+    case 11:
+        if (D_8690E11C != 0) {
+            func_87F07FE8(&D_8690F9E8);
+        }
+        if (D_8690E120 != 0) {
+            func_87F022F0();
+        }
+        break;
+    case 4:
+        func_86905804();
+        break;
+    case 5:
+        func_86907614();
+        break;
+    case 6:
+        func_869054CC();
+        break;
+    case 7:
+        func_86909EAC();
+        break;
+    case 8:
+        func_8690AA64();
+        break;
+    case 9:
+        func_87F0A5BC(D_8690FA20);
+        func_81900214(D_8691A424);
+        break;
+    case 10:
+        func_8690AA64();
+        func_87F022F0();
+        break;
+    }
+    if (func_87F00930() == 1) {
+        func_87F01D44();
+    }
+    func_87F0C88C(D_8691AD58 + 0x14);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US

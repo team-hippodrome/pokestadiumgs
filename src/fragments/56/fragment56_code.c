@@ -121,7 +121,6 @@ void func_86800A7C(void) {
 extern u32 func_8003570C(void);
 extern u8 D_868086C8[];
 extern u8 D_868085C0[];
-extern f32 D_86808218;
 extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
 void func_8680105C(s32 arg0) {
     volatile s32 pad[8];
@@ -135,7 +134,7 @@ void func_8680105C(s32 arg0) {
     func_8003570C();
     ptr = D_868086C8 + arg0 * 0x168;
     zero = 0.0f;
-    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * D_86808218 * (f32)(4 | (rand0 & 0)), 1);
+    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)(4 | (rand0 & 0)), 1);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86801160.s")
@@ -194,7 +193,94 @@ void func_86803EA4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86803ED8.s")
+extern Gfx *D_800D0510;
+extern void func_800088DC(void);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern void func_800468A0(s32);
+extern s32 D_8682F2B4;
+extern s32 D_8682F2A8;
+extern s32 D_8682F2B8;
+extern s32 D_868086C4;
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(s32);
+extern s32 D_86808558;
+extern void *D_86808590;
+extern u8 D_868084F0[];
+extern u8 D_86808630[];
+extern void func_87F07FE8(void *);
+extern void func_87F0A5BC(u8 *);
+extern void func_87F022F0(void);
+extern void func_87F0C88C(u8 *);
+extern void func_80008648(void);
+void func_868039F8(void);
+void func_86806CD8(void);
+void func_86802EE8(void);
+extern void func_86803EA4(void);
+extern s32 D_868086C0[];
+void func_86803ED8(void) {
+    func_800088DC();
+    func_8000766C(&D_800D0510, 0, 0, 0x140, 0xF0);
+    func_800468A0(D_868086C0[0]);
+    if (D_8682F2B4 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    if (D_8682F2A8 != 1) {
+        func_8003C6B8(D_868086C4);
+    }
+    switch (D_8682F2A8) {
+    case 9:
+    case 12:
+        if (D_8682F2B8 == 1) {
+            func_87F07FE8(&D_86808558);
+        } else {
+            func_868039F8();
+        }
+        if (D_8682F2B8 == 2) {
+            func_86806CD8();
+            func_868039F8();
+            func_87F022F0();
+        }
+        if (D_8682F2B8 == 3) {
+            func_868039F8();
+            func_86803EA4();
+        }
+        if (D_8682F2B8 == 0) {
+            func_86806CD8();
+        }
+        break;
+    case 0:
+    case 3:
+    case 4:
+        if (*(u8 *)((u8 *)D_86808590 + 0x2180) != 4) {
+            func_87F07FE8(&D_86808558);
+        }
+        break;
+    case 8:
+        func_86802EE8();
+    case 2:
+    case 5:
+        func_868039F8();
+        func_86803EA4();
+        break;
+    case 1:
+        func_868039F8();
+        func_8003C6B8(D_868086C4);
+        func_86803EA4();
+        break;
+    case 7:
+        func_868039F8();
+        func_87F0A5BC(D_868084F0);
+        break;
+    case 6:
+        func_868039F8();
+        func_87F022F0();
+        break;
+    }
+    if (*(u8 *)((u8 *)D_86808590 + 0x2180) == 4) {
+        func_87F0C88C(D_86808630);
+    }
+    func_80008648();
+}
 
 extern s32 D_86807C7C;
 extern u8 D_8682CD20[];
@@ -285,7 +371,6 @@ void func_86805D50(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86805DB8.s")
 
-extern f32 D_868083E0;
 extern u8 D_868085E8[];
 extern u8 D_86808C68[];
 extern f32 D_8682F30C;
@@ -299,7 +384,7 @@ void func_86806044(s32 arg0) {
     u32 rand2;
     u8 *ptr;
     D_8682F310 = 1;
-    D_8682F30C = D_868083E0;
+    D_8682F30C = 1.2f;
     rand0 = func_8003570C();
     rand1 = func_8003570C();
     rand2 = func_8003570C();
@@ -468,7 +553,6 @@ extern void main_pool_pop_state(s32);
 extern void func_87F0F480(void *);
 extern s32 D_86807CC4;
 extern f32 D_86807CC8;
-extern f32 D_868084C4;
 extern s32 D_86808640;
 extern s32 D_8680863C;
 extern s32 D_86808560;
@@ -484,7 +568,7 @@ extern s32 D_868086C0[];
 s32 func_8680729C(s32 arg0, void *arg1) {
     s32 sp24;
     if (func_80001FF0() == 0x3C) { D_86807CC4 = 0x1E; D_86807CC8 = 1.0f; }
-    else { D_86807CC4 = 0x19; D_86807CC8 = D_868084C4; }
+    else { D_86807CC4 = 0x19; D_86807CC8 = 1.4f; }
     D_86808590 = arg1;
     if (*(u8 *)((u8 *)D_86808590 + 0x2180) == 4) func_80027EE0(0xFFF);
     main_pool_push_state(0x4D523034);
