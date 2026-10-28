@@ -107,3 +107,12 @@ forced registers, or added filler storage were used.
   global-address carrier. The lookup-entry typedef moves before this new
   consumer; the accepted lookup helper is unchanged. Receipt:
   `scratch/projection00a-v2/gate-0/receipt.json`.
+- `func_8AE03BDC`: accepted `text:buffer-layout:group0-width1` (110
+  instructions, 440 bytes, 0x228-byte frame). Keep the measured text width
+  and padded column width as separate used values before the two 256-byte
+  buffer declarations. This gives the observed buffer offsets without
+  offsetting outside an array. The second buffer's zeroing is present in
+  the retail assembly even though no later operation reads it. Retype
+  `func_800495BC` to the variadic `(s32, s32, const char *, ...)` signature
+  verified in `src/47580.c`; the old five-argument declaration described
+  only one caller. Receipt: `scratch/text3bd-v2/gate-0/receipt.json`.

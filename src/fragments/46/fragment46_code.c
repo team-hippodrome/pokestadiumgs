@@ -1082,7 +1082,7 @@ extern char *D_8AE09ACC;
 extern char D_8AE083D4[];
 extern char D_8AE083DC[];
 extern char D_8AE083E4[];
-extern void func_800495BC();
+extern void func_800495BC(s32, s32, const char *, ...);
 extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
@@ -1168,7 +1168,7 @@ extern void _bzero(void *, s32);
 extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
-extern void func_800495BC(s32, s32, s32, s32, void *);
+extern void func_800495BC(s32, s32, const char *, ...);
 extern u8 D_8AE083EC[];
 extern s32 D_8AE09E64;
 extern s32 D_8AE09AE4;
@@ -1188,7 +1188,42 @@ void func_8AE038DC(s32 arg0, s32 arg1, void *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE03BDC.s")
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void _bzero(void *, s32);
+extern s16 func_80049148(s32, s32, s32);
+extern void func_8004C54C(s32, s32);
+extern void func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_8AE03214(s16 arg0);
+extern s32 func_8AE032C8();
+extern s32 D_8AE09AEC;
+extern s32 D_8AE09B5C;
+extern s32 D_8AE09E60;
+extern s32 D_8AE09E64;
+void func_8AE03BDC(s32 arg0, s32 arg1, u8 *arg2) {
+    s32 text_width;
+    s32 width;
+    char text[256];
+    char scratch[256];
+    _bzero(text, 256);
+    _bzero(scratch, 256);
+    if (D_8AE09E64 >= 4) func_800495BC(arg0, arg1, (const char *)D_8AE09AEC);
+    text_width = func_80049148(0, 0, D_8AE09AEC);
+    width = text_width + 10;
+    if (D_8AE09B5C < width) D_8AE09B5C = width;
+    if (arg2[2] == arg2[1]) {
+        func_8004C54C(51, func_8AE032C8(arg2[1], 0));
+        func_8004C8A0(text, 256, 43, 9);
+    } else {
+        func_8004C54C(52, func_8AE032C8(arg2[1], 0));
+        func_8004C54C(53, func_8AE032C8(arg2[2], 1));
+        func_8004C8A0(text, 256, 43, 10);
+    }
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C, arg1, text);
+    text_width = func_80049148(0, 0, (s32)text);
+    width = text_width + 10;
+    if (D_8AE09E60 < width) D_8AE09E60 = width;
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C + D_8AE09E60, arg1, (const char *)func_8AE03214(arg2[3]));
+}
 #endif
 
 #ifdef VERSION_US
