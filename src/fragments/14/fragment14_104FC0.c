@@ -43,8 +43,6 @@ s32 func_8130CEAC(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130CEF0.s")
-
 /* Overlay rectangle filled from an eased window-close progress: arg0 carries
  * the s16 origin (+8/+0xA) and the close progress at +0x2C, which the
  * func_8130F09C update in this file drives toward 1.0f. D_8160BD18 and
@@ -62,6 +60,8 @@ typedef struct unk_func_8130D45C {
     s16 unk_04;
     s16 unk_06;
 } unk_func_8130D45C;
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130CEF0.s")
 
 f32 func_8130D098(u8 *arg0, unk_func_8130D45C *arg1) {
     f32 progress;
@@ -251,7 +251,58 @@ void func_8130EA8C(u8 *arg0, u8 *arg1) {
         *(s32 *)(arg0 + 0x60) = 0;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130EB04.s")
+// The 0x20-byte record func_8130EB04 copies to +0x3C (func_81601A38 initializes it otherwise).
+typedef struct unk_D_8130EB04 {
+    /* 0x00 */ s32 unk_00[8];
+} unk_D_8130EB04; // size = 0x20
+extern void func_8130F5AC(u8 *arg0);
+extern void func_81601A38(void *, s32);
+extern s32 func_8130CE3C(u8 *arg0);
+extern s32 func_8130CEAC(u8 *arg0);
+extern void func_8130EA8C(u8 *arg0, u8 *arg1);
+void func_8130EB04(u8 *arg0, s16 arg1, u8 *arg2, s16 arg3, unk_D_8130EB04 *arg4, unk_func_8130D45C *arg5,
+                   unk_func_8130D45C *arg6, s32 arg7) {
+    *(s32 *)(arg0 + 4) = arg7;
+    if (arg2[0] == 0) {
+        func_8130F5AC(arg0);
+        *(s32 *)(arg0 + 0x6C) = 0;
+        arg0[0x34] = 0;
+        *(f32 *)(arg0 + 0x2C) = 0.0f;
+        return;
+    }
+    switch (arg0[0x34]) {
+        case 0:
+            *(s8 *)(arg0 + 0x38) = -1;
+            *(s16 *)(arg0 + 0x12) = 0;
+            *(s16 *)(arg0 + 0x10) = 0;
+            *(f32 *)(arg0 + 0x2C) = 0.0f;
+        case 2:
+        case 3:
+            arg0[0x34] = 2;
+            break;
+        case 1:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+            break;
+    }
+    arg0[0x35] = arg3;
+    arg0[0x37] = arg1;
+    *(unk_func_8130D45C *)(arg0 + 0x1C) = *arg5;
+    *(unk_func_8130D45C *)(arg0 + 0x14) = *arg6;
+    if (arg4 != NULL) {
+        *(unk_D_8130EB04 *)(arg0 + 0x3C) = *arg4;
+    } else {
+        func_81601A38(arg0 + 0x3C, 0);
+    }
+    func_8130EA8C(arg0, arg2);
+    if (func_8130CE3C(arg0)) {
+        *(s8 *)(arg0 + 0x36) = func_8130CEAC(arg0) - 1;
+    } else {
+        arg0[0x36] = 0;
+    }
+}
 
 void func_8130EC94(u8 *arg0) {
     *(u32 *)(arg0 + 0x6C) = 0;
