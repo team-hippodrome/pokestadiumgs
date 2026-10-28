@@ -229,7 +229,23 @@ void MoveDamage_ComputeBase_fragment79(void *arg0) {
 }
 /* mkdraft:MoveDamage_ComputeBase_fragment79 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_841496C0.s")
+extern void func_84124360(s32 *, u8, u8);
+extern s32 func_800632CC(s32 *, u8, u8, u8, s32);
+void func_841496C0(u8 *arg0) {
+    Fragment79DamageContext *ctx = (Fragment79DamageContext *)arg0;
+
+    if (ctx->unk_01 == 0xA5) {
+        return;
+    }
+    if (ctx->type == ctx->attacker[2] || ctx->type == ctx->attacker[3]) {
+        ctx->damage += ctx->damage >> 1;
+    }
+    func_84124360(&ctx->damage, ctx->unk_06, ctx->type);
+    if (ctx->effect == 0x97 && ctx->unk_06 == 1) {
+        ctx->damage >>= 1;
+    }
+    func_800632CC(&ctx->damage, ctx->type, ctx->defender[2], ctx->defender[3], (ctx->defender[0x15] & 8) != 0);
+}
 
 extern u8 func_80063454(u8, u8, u8, s32);
 void func_8414978C(u8 *arg0) {
