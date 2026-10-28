@@ -15,3 +15,21 @@ Current-master integration: after foreign #948 advanced master to `e5264768303a5
 ## 2026-10-27 — `func_8414C858`: matched
 
 Comparator: `records = func_84154B0C()` (declared with no parameters, as fragment79_3B7EA0 does); `first = func_8414C7D4((arg0 + 6)[records[0x19A]])`, `second` likewise for `records[0x19B]`; returns 1 if `second < first`, 0 if `first < second`, otherwise whether the `unk_42` halfword of 0xCC-byte record `records[0x19B]` is below that of `records[0x19A]` (`unk_func_84154B0C`). `u8` index locals spill as bytes; `(arg0 + 6)[index]` gives retail's `addu` operand order. `second` is an `s32` narrowed with `(u8)` only in the second comparison, marked `// FAKE` (diff score 120 without it).
+
+## 2026-10-28: func_8414B7BC, func_8414BF94 accepted; func_8414A2F0 requeue
+
+- `func_8414B7BC`: status-damage scale picked by `D_84195200[side][0x24]` flag
+  bits (0x20: ×255, 7: ×128, 8 with `[0x11] & 1`: −(byte × factor × 32)). The flags
+  byte must be re-read in each condition (a `flags` local adds a frame slot), and
+  the last product is written `D_84195208[side][0x14] * func_8414A258()` for the
+  `multu v0, t5` operand order.
+- `func_8414BF94`: move-usability predicate. The move pointer is
+  `(u8 *)((u32)mon + slot)`; `mon + slot` and `&mon[slot]` reverse the `addu`.
+  Its tail is `if (move[5] == mon[0x25]) return 0; return 1;`.
+- `func_8414A2F0` (requeue, 0.91): the same aligned-DMA record loader as
+  fragment84's `func_8FC00FF8`. It takes `(u8 side, volatile u8 index)`, caches
+  `index` once (`s32 current = index`) for the 0xFF/0 tests and re-reads the
+  parameter for the ROM offset. It `_bzero`s then `_bcopy`s
+  `D_841951F8[side] + 0x49C`. Code and frame (0x78, `u8 scratch[0x4C]` at
+  0x24) match; only the two spill slots are 8 bytes high (0x20/0x24 vs 0x18/0x1C).
+  The file's extern must become `func_8414A2F0(u8, volatile u8)`.
