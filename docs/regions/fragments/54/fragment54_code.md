@@ -38,3 +38,35 @@ re-loaded compare.
 - Next hypothesis: find the missing `arg1` uses, for example per-case
   `D_8660A990 + arg1 * 0x58` re-indexing for some fields, or a
   `(u16)(arg1 + K)` argument as in `func_86601F70`.
+
+### Same day: `func_86605F04`, `func_86605098` matched; `func_866044F0`, `func_86600678` requeue
+
+- `func_86605F04` (state update) matched. It needs
+  `s32 StageContext_GetFadeMode(void)`. With the `u8` prototype the `== 1`
+  compare comes out as `bne a1,v0` instead of `bne v0,a1`, which suggests the
+  original file had no prototype (implicit `int`). The file-level
+  declaration is now `s32`.
+- `func_86605098` (debug-menu input) matched as written, using
+  `ControllerState *D_80087200` (`buttonsPressed`/`buttonsHeld`) and the
+  `0.01`/`0.1` double literals. `controller.h` is included at the top of the
+  file.
+- `func_866044F0` (**requeue**, `scratch/c/4f0_best.c`). With the `s32`
+  fade-mode prototype the only difference left is which saved register each
+  hoisted constant gets. Retail has `s5=4`, `s3=3`, `s0=2`, `s6=1`; ours has
+  `s5=3`, `s3=2`, `s0=4`.
+  - Already tried: `switch (i)` (the right shape; an if-chain is worse),
+    `1 ==` operand order, else-branch instead of early return, a `rec`
+    pointer local, a `for (; i < 4;)` loop.
+  - A 300 s permuter run found nothing real.
+  - Next: change the use counts of the constants, for example with a
+    different rec-value expression or loop bound spelling.
+- `func_86600678` (**requeue**, 0.30 raw, `scratch/c/678_best.c`). The
+  structure is all written: four player cases, each with an inner switch
+  over `rec->x48`, plus the `placed`/`random` locals. Those two are
+  deliberately left uninitialised; retail loads them from `0x44/0x48(sp)` on
+  entry and stores them back at exit.
+  - Retail keeps `399` in `$a3`, re-materialised before the case switch
+    every iteration, and `offset` in `$s0`. Ours hoists `399` into `$fp`
+    and spills `offset`.
+  - Next: find a source shape that keeps the divisor out of the
+    loop-invariant pool, then permute.
