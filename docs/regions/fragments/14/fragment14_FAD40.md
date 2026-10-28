@@ -228,3 +228,13 @@ Splat migrates the late rodata into the owners' `.s` files; the lists and `D_813
   - state 15: x eases from -473 or 640 (by `+0x4DA8 > 0.5`) toward 85 with `D_8160BD08((p - 0.5) * ±2)`, y 91, returns 1;
   - otherwise `t = D_8160BD08(+0x4DA4 / 16)` when +0x4DB0, slot0.+0x20 and state 0/3, and x/y lerp from (85, -143) to (85, 91) by `t`.
   Retail converts all four integer endpoints with `cvt.s.w` at run time. IDO folds at least the start values for every spelling tried (literals, `s32`/`s16`/`u16` locals).
+
+## 2026-10-28 — `func_81303EF4` matched
+
+The per-frame update. It switches on the state (+0x4DBD) to its 19 handlers, in retail body order 11, 0, 1, 13, 12, 2, 3, 14, 4, 17, 5, 6, 9, 18, 10, 7, 8, 15, 16; handlers 13, 12, 2, 3, 17, 18, 10, 15 and 16 mark a redraw. After the switch:
+- it ORs in `func_8160B828`/`func_8160A50C`, and `func_81602AEC(slot0.+0, func_81602D70(owner.+0x1A142))`;
+- it consumes the pending flag +0x4DAC when nothing else redrew;
+- it draws the `func_81302CB4` rect with `func_81600A34(gfx, obj, redraw, rect)`;
+- when `func_81302BC0` holds, it draws the `func_8160B5BC` rect offset by it with `func_81600A34(gfx, obj + 1, 1, …)`.
+
+It reuses `unk_func_81303648` (slot 0's first word is now `void *unk_000`). `result` is declared before the two rects, which gives retail's slots.
