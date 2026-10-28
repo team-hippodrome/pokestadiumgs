@@ -266,3 +266,19 @@ second record lookup and the conditional calls before more source variants.
 ## 2026-10-28 — `func_8414CB10` matched
 
 Copies `mon + 0x28` (current HP) into both per-side `u16` slots at `+0x1E`/`+0x22`, and clears `+0xE` when the side's record byte 9 is 1. Retail reads the pointer from an uninitialized 16-byte stack record (`lw v0,0(sp)`, with no call filling it), so it is written as an unfilled `unk_func_8414CB10 info` and marked `//!bug`. The pointer must be copied to a local (`mon = info.mon;`) before computing `selected`; otherwise `$v0`/`$v1` swap. A record smaller than 0x10, or a different declaration order, changes the frame or the slot.
+
+## 2026-10-28: func_8414CD18, func_8414D9B8, func_8414DA70
+
+- `func_8414CD18`: two-hit damage spread. It copies `calculation.amount` and the
+  opponent HP into locals and declares `calculation` *last* (struct at
+  `0x28`). The loop is `for (i = 0; i < count; i++)` with `count = 2` held in a
+  local: a literal bound becomes a `bne` instead of retail's `slt`. The term is
+  `amount * (i + 1)` (strength-reduced), and the selected-side pointer
+  `(u8 *)((u32)state + side * 2 + 4)` is written inline, not as a local.
+- `func_8414D9B8`: a `switch` on the move effect, with five cases returning
+  early. `view` is assigned right after `other` so it stays live (and spilled)
+  across `func_84154B18`; an if-chain instead puts the spill 4 bytes high.
+- `func_8414DA70`: `view` is assigned early too. The discarded
+  `func_80062D20(...)` call sits in a `do { } while (0)` marked `// FAKE`. That is the
+  only spelling that gives `view` `v0` and the selected amount `v1` (a
+  `move` local, decl orders and a pointer local were tried).
