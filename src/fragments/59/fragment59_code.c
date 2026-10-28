@@ -114,7 +114,26 @@ void func_869004A4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86900698.s")
+extern u16 D_8691ADB0[];
+extern u16 D_80094904;
+extern u8 D_86919D00[];
+s32 func_86900698(s32 arg0, u8 *arg1) {
+    s32 idx;
+    u8 *rec;
+
+    idx = *(s32 *)(arg1 + 0x14);
+    if (D_80094904 != D_8691ADB0[idx]) {
+        if (arg0 != 0 && arg0 == 2 && *(s32 *)D_8691AD58 != 6) {
+            rec = D_86919D00 + idx * 0x168;
+            *(f32 *)(arg1 + 0x24) = *(f32 *)(rec + 0xDC);
+            *(f32 *)(arg1 + 0x28) = *(f32 *)(rec + 0xE0);
+            *(f32 *)(arg1 + 0x2C) = *(f32 *)(rec + 0xE4);
+            *(s16 *)(arg1 + 0x20) = *(s16 *)(rec + 0x20);
+        }
+    }
+    D_8691ADB0[idx] = D_80094904;
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
