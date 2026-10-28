@@ -1141,3 +1141,8 @@ func_8AE01738 = Fragment46_RefreshSavedSelection;
 func_84127194 = BattleTurn_CheckMoveStatus;
 
 func_82402E28 = Fragment13_DrawScrollingLabelPanel;
+
+func_8413DE28 = Battle_InitState;
+
+func_87F097B0 = Fragment64_IncrementMatchingCounters;
+func_8AC0036C = Fragment43_TryGrantCompletionReward;
