@@ -24,7 +24,11 @@ void func_841086F0(arg0, arg1, arg2)
 extern void func_841086F0();
 extern u32 D_84190188;
 void func_84108728(void) {
+#ifdef CC_CHECK
+    func_841086F0(0, NULL, NULL); // retail passes whatever is in a0-a2
+#else
     func_841086F0();
+#endif
     D_84190188 = 0;
 }
 
@@ -86,7 +90,20 @@ void func_841087B8(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-extern u32 D_84190188; extern u32 D_841901A8; extern void func_841086F0(); void func_841088CC(s32 arg0){ func_841086F0(); D_84190188=1; if(arg0==0x5B) D_841901A8=1; }
+extern u32 D_84190188;
+extern u32 D_841901A8;
+extern void func_841086F0();
+void func_841088CC(s32 arg0) {
+#ifdef CC_CHECK
+    func_841086F0(0, NULL, NULL); // retail passes whatever is in a0-a2
+#else
+    func_841086F0();
+#endif
+    D_84190188 = 1;
+    if (arg0 == 0x5B) {
+        D_841901A8 = 1;
+    }
+}
 
 extern s32 D_8419018C;
 extern s32 D_84190190;
