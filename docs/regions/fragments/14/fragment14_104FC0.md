@@ -28,3 +28,21 @@ The address-taken data splat does not migrate is defined in C at its retail posi
   - locals `input`, `counts`, `dir`, `cur`;
   - `cur` read after the 12.0 store.
 - `func_8130D340`: `t = min(+0x30 / 12, 1)`; the size is 302 × `D_8160BD18(t)` by 135 × `D_8160BD1C(t)`, centered on (+8 + 246, +0xA). It uses the file's `unk_func_8130D45C` rect.
+
+## 2026-10-28 — `func_8130D1FC` matched
+
+The color fill for the panel rect:
+- it picks row `arg0[0x35] >= 2` of a `const s16 colors[4][4]` local and calls `func_8160945C(rect, colors[row + 2], colors[row], t)`, with `t = +0x2C / 1` (an integer 1, as in `func_8130D098`; a `1.0f` divisor becomes a multiply);
+- it offsets the rect by (+8, +0xA);
+- in rows 0/1 at phase ≥ 5 it grows the height by `D_8160BD1C(+0x30 / 12) * 53`;
+- then `func_816072FC`.
+
+The local must be `const`. IDO then puts its initializer template (`D_81312730`) in `.rodata`, ahead of the file's other constants, as in retail; a non-`const` local puts it in `.data`. `t` is declared before `colors`. The runner rejects the data move as non-text layout drift, so this was installed by hand and verified with `make COMPARE=1 RUN_CC_CHECK=1`.
+
+## 2026-10-28 — `.data` window; `func_8130D4E0` matched
+
+`rom.yaml` gives this file the `.data` window 0x10A240–0x10A270, between `fragment14_FF070`'s data in the shared blob and `fragment14_1077C0`'s window.
+- `D_813120B0` is `func_8130D4E0`'s function `static f32` timer. Retail forms its address with `lui` on every access; IDO only does that for a function static (an `extern` or file-scope definition gets its address CSE'd into a saved register).
+- Function statics are emitted in source order with file-scope data, so the rest is defined just after `func_8130D4E0`: the highlight color `D_813120B4` (shared by `func_8130E99C` and the still-assembly `func_8130D6A4`), then `D_813120B8` and `D_813120C4`–`D_813120D4`.
+
+`func_8130D4E0` draws the four selector icons (`func_8004D19C` at `pos + D_81312750/758[i]`, texture `func_8004C990(51, D_81312760[i])`). The selected one (+0x38) blinks while `func_8160BCB0(timer, 32) > 16`, using `gDPSetEnvColor` 0x808080FF around it and white after. The whole draw is wrapped in the `D_80094E38`/`D_80094F50` display lists (`gSPDisplayList`). Positions are written `pos[k] + table[i]`. `D_81312760` is `u16`, since retail reads it with `lhu`.
