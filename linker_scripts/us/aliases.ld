@@ -1152,3 +1152,6 @@ func_84133B14 = Battle_ApplySwitchInState;
 func_8413DA18 = Battle_LoadPlayerDeck;
 
 func_87F098F4 = Fragment64_AdvancePanelAnimation;
+
+func_87F0A3E8 = Fragment64_UpdateBounceAndConfirm;
+func_87F09B7C = Fragment64_DrawExpandingPanel;

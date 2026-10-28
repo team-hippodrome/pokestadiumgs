@@ -44,7 +44,15 @@ void func_87F0989C(void *arg0) {
     Audio_PlayDefaultSound(0xCF11);
 }
 
-typedef struct { s32 mode; f32 x, y, width, velocity; u8 rgba[4]; s32 frame; } Fragment64MotionState;
+typedef struct {
+    u8 r, g, b, a;
+} Fragment64PanelColor;
+typedef struct {
+    s32 mode;
+    f32 x, y, width, velocity;
+    Fragment64PanelColor color;
+    s32 frame;
+} Fragment64MotionState;
 extern f32 D_87F116A0, D_87F116A4;
 extern f32 D_80088E50[0x1000];
 void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
@@ -86,7 +94,7 @@ void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
         break;
     case 3:
         frame = state->frame;
-        state->rgba[3] = (u32)(((f32)frame * 255.0f) / 8);
+        state->color.a = (u32)(((f32)frame * 255.0f) / 8);
         state->frame++;
         if (state->frame >= 9) {
             state->frame = 0;
@@ -96,7 +104,41 @@ void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F09B7C.s")
+typedef struct {
+    u16 width, height;
+} Fragment64TextureSize;
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[], D_80094F50[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+void Fragment64_DrawExpandingPanel(Fragment64MotionState *state) {
+    Fragment64TextureSize *texture;
+    if (state->mode != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        texture = (Fragment64TextureSize *)func_8004C990(444, 0);
+        func_8004D1FC((u8 *)texture);
+        GfxRect_DrawTextured(
+            ((state->x >= 20.0f) ? (s32)(((state->x - 20.0f)) + 0.5f) : (s32)(((state->x - 20.0f)) - 0.5f)),
+            ((state->y >= 0.0f) ? (s32)((state->y) + 0.5f) : (s32)((state->y) - 0.5f)),
+            (((state->width + 20.0f) >= 0.0f) ? (s32)(((state->width + 20.0f)) + 0.5f) : (s32)(((state->width + 20.0f)) - 0.5f)),
+            texture->height,
+            0, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(
+            ((state->x >= 0.0f) ? (s32)((state->x) + 0.5f) : (s32)((state->x) - 0.5f)) + ((state->width >= 0.0f) ? (s32)((state->width) + 0.5f) : (s32)((state->width) - 0.5f)),
+            ((state->y >= 0.0f) ? (s32)((state->y) + 0.5f) : (s32)((state->y) - 0.5f)),
+            texture->width,
+            texture->height,
+            (texture->width - 1) << 5, 0, -1024, 1024, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombineLERP(D_800D0510++, 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0,
+                                      0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0);
+        gDPSetPrimColor(D_800D0510++, 0, 0, state->color.r, state->color.g, state->color.b, state->color.a);
+        func_8004D19C(70, 115, func_8004C990(445, 0), 0, 0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+}
 
 extern void func_87F0E390(u8 *, s32);
 extern s32 func_8004DC6C(s32);
@@ -158,12 +200,71 @@ void func_87F09EBC(u8 *arg0, s32 arg1) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F0A098.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F0A3E8.s")
+typedef struct {
+    u8 unk_00[10];
+    s16 unk_0A;
+} Fragment64ModelPosition;
+typedef struct {
+    u8 unk_00[0x24];
+    Fragment64ModelPosition *model;
+    f32 y, velocity;
+    s32 wait_frames, elapsed_frames, flags;
+    Fragment64MotionState panel;
+    u8 input[12];
+} Fragment64BounceState;
+extern s32 func_80001FF0(void);
+extern s32 func_87F0E610(u8 *, u8 *);
+extern void func_80021ED8(s32);
+extern f32 D_87F116BC, D_87F116C0;
+s32 Fragment64_UpdateBounceAndConfirm(Fragment64BounceState *state) {
+    Fragment64MotionState *panel;
+    s32 done;
+    u16 buttons;
+
+    done = 0;
+    buttons = func_87F0E610(state->input, (u8 *)func_80001FF0());
+    if (state->flags & 1) {
+        state->velocity += D_87F116BC / (f32)func_80001FF0();
+        state->y += state->velocity;
+        if (state->y > 0.0f) {
+            state->y = 0.0f;
+
+            state->velocity = state->velocity * D_87F116C0;
+            if (!(state->flags & 2) && (state->flags & 4)) {
+                func_87F0989C(&state->panel);
+            }
+            state->flags |= 2;
+        }
+        panel = &state->panel;
+        if (state->y >= 0.0f) {
+            state->model->unk_0A = (s32)(state->y + 0.5f);
+        } else {
+            state->model->unk_0A = (s32)(state->y - 0.5f);
+        }
+        if (state->flags & 2) {
+            state->elapsed_frames++;
+            if (state->elapsed_frames == 120) func_80021ED8(80);
+            state->wait_frames++;
+            if (state->wait_frames >= 61) {
+                state->wait_frames = 60;
+                if (buttons & 0x8000) {
+                    done = 1;
+                    state->flags = 0;
+                }
+                if (done == 1) {
+                    Audio_PlayDefaultSound(0xCF02);
+                    if (state->elapsed_frames < 120) func_80021ED8(80);
+                }
+            }
+        }
+        Fragment64_AdvancePanelAnimation(panel);
+    }
+    return done;
+}
 
 extern void func_800503A4(s32);
-extern void func_87F09B7C(void *);
 void func_87F0A5BC(void *arg0) {
     func_800503A4(*(s32 *)((u8 *)arg0 + 0x24));
-    func_87F09B7C((u8 *)arg0 + 0x3C);
+    Fragment64_DrawExpandingPanel((Fragment64MotionState *)((u8 *)arg0 + 0x3C));
 }
 #endif

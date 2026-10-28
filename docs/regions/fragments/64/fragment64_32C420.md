@@ -92,3 +92,59 @@ prototype for the whole module. Integer `/ 8` retains the retail floating
 division. Normal and +20blank whole-module naming/extern cleanup controls
 preserve all allocated bytes, function extents and relocation topology
 modulo the reviewed compatibility alias. Stock IDO 7.1, unchanged flags.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_87F0A3E8` → `Fragment64_UpdateBounceAndConfirm`.
+- `func_87F09B7C` → `Fragment64_DrawExpandingPanel`.
+
+## 2026-10-28 — bounce, confirmation, and panel rendering accepted
+
+`func_87F0A3E8` → `Fragment64_UpdateBounceAndConfirm` matches 468 bytes /
+117 instructions through canonical batch `parent64-bounce-stack`, label
+`bounce:memory-velocity:decl-order4`. The initial opcode-exact candidate's
+extra velocity snapshot shifted the three retained locals' stack slots.
+Reading velocity directly from the state and declaring panel, result, then
+buttons recovers the retail frame and offsets. The resulting source has
+three consumed locals and no extra occupancy assignments.
+
+The initializer `func_87F09EBC` establishes the model pointer at +0x24,
+vertical position/velocity at +0x28/+0x2C, counters at +0x30/+0x34, flags at
++0x38, embedded panel at +0x3C, and input state at +0x58. The updater applies
+a downward acceleration scaled by `func_80001FF0`'s TV-dependent 50/60 Hz
+return, rebounds at zero, writes the model's +0xA halfword with signed
+rounding, and accepts the 0x8000 input after a 60-frame minimum wait.
+`func_87F0E610` and `func_87F0E524` in `src/fragments/64/fragment64_331000.c`
+show that their existing pointer-typed second argument is compared as an
+integer timeout; the call retains an explicit conversion to that interface.
+
+`func_87F09B7C` → `Fragment64_DrawExpandingPanel` matches 832 bytes / 208
+instructions through canonical batch `parent64-panel-draw-channels`, label
+`panel-draw:named-channels:add1:pack0`. Resource 444 supplies the texture's
+width/height halfwords. Two textured rectangles stretch and mirror its
+edges using the panel X/Y/width, followed by resource 445 at (70, 115).
+The second draw separately rounds X and width before summing them.
+Independent coordinate expressions recover the register roles that reused
+integer locals had tied together. Named RGBA byte members recover the
+primitive-color command's load schedule with the standard SDK macro.
+The combine command passes texture color and multiplies texture alpha by
+primitive alpha in both cycles; its SDK LERP operands reproduce the decoded
+RDP command. Real graphics signatures are verified in `src/44E70.c` and
+`src/4CC20.c`.
+
+Both canonical gates reproduce retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d` with explicit host syntax checks.
+Post-acceptance naming, duplicate-extern cleanup, shared named-color state,
+and formatting preserve complete-module allocated bytes, extents and
+relocations, normally and with twenty leading blank lines. The previous
+animation uses the same color byte at +0x17 after consolidation.
+
+Remaining owner `func_87F0A098` is `layout-prerequisite`: its five-entry
+`jtbl_87F116A8` remains in shared `asm/us/data/334310.rodata.s`, and this
+source has no per-file .rodata subsegment. The table and neighboring float
+constants occupy 0x334310 through 0x334333, followed by alignment to
+0x334340. Next: assign that verified range to this source, re-extract and
+gate the still-assembly owner before trying its C switch. A private M2C
+draft with the actual table confirms its case structure; no C candidate
+has been admitted for that owner.
