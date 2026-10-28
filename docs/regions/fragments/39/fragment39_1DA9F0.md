@@ -46,3 +46,14 @@ pass with `build/pokestadiumgs-us.z64: OK` and full-ROM MD5
 checks pass. Refreshed extraction and the initial unchanged baseline pass;
 after separate upstream changes, the updated unchanged baseline passes its
 own complete build and retail comparison before this source is reapplied.
+
+## 2026-10-28 — `func_88A016F0` matched (list insert)
+
+Registers the entry's first byte with `func_88A014C8(list, entry->unk_00,
+1)`, reads the new count (`func_88A007BC`), and walks from
+`func_88A00710(list, index)`, shifting entries up one slot until the last
+(`i == count - 1`), where it stores the carried entry and `break`s. Uses a
+new two-byte `Fragment39Entry`: copying through locals `cur`/`tmp` gives
+retail's `lbu`/`sb` pairs and the `lhu`/`sh` stack copy. Locals must be
+declared `p, i, count, cur, tmp` (count's u16 home at 0x26, cur at 0x24,
+tmp at 0x20), and the exit must be `break` (shared epilogue), not `return`.
