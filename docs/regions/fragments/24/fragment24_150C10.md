@@ -54,3 +54,14 @@ Searches `D_82B126A8` (20 records of 0x70 bytes, typed `unk_D_82B126A8`) for the
 ## 2026-10-27 — `func_82B055A0`: requeue
 
 requeue. Copies halfwords 4/6/8 of the record at `D_82B12450 + 0x254` into `+0x0E/+0x10/+0x12`, clears `+0x0C`, sets `D_82B12466`, `D_82B12464`, `D_82B12468`, `D_82B1246A` to 1, and calls `func_82B0556C`. Retail shares one `lui $at` for the (66, 64) pair and another for (68, 6A, in the call's delay slot), and loads each `1` into its own register (`t9`, `t0`, `t1`, `t2`), whereas IDO folds them into one register. Needs a `COALESCE_AT_LUI` symbol-list run per pair, plus a source shape that keeps four separate constants.
+
+## 2026-10-28 — `func_82B03688` matched (option list text)
+
+Fetch the panel position into `s16 coords[8]` with `func_82B0284C`, set the
+text color/mode, then draw each entry of the `-1`-terminated `D_82B08630`
+list with `func_8004C874(0x1B, id)` at `(x + 0x31, y + row + 9)`, rows 0x18
+apart. Locals must be declared `i, y, coords[8]`: that order puts `coords`
+at sp+0x30 in the 0x48 frame. An indexed loop with a separate `y` counter
+matches; a pointer walk does not. The dispatcher `func_82B05494` used to
+call it with no arguments and rely on `a0`; it now passes `arg0` (same
+bytes), and the stale `(void)` extern is retyped.

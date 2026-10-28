@@ -121,3 +121,12 @@ All three wait for this file to own its `.rodata`/`.data`.
   - After the switch: `result = 1` if `func_81602AEC(&owner + 0x1A144, func_81602D70(unk_E910))`; then `func_8160A50C(&unk_0008[i])` for the three nodes; then `func_81600A34(gfx, state, mode == 5 || mode == 2 || mode == 3, rectA…)` with `func_8130B3B8`'s rect, and `func_81600A34(gfx, (u8 *)state + 1, result, rectB…)` with `func_8130B4E8`'s rect.
   - Everything matches except the node loop: retail initializes the stack-spilled counter (`$v1`) in the `beqz` delay slot before the node pointer, while IDO puts `addiu s0, s2, 8` there and uses `$v0`.
   - Tried without effect: declaration orders, `u32`/`s16`/`u8` counters, `<=`/`!=` bounds, `while`, `arr + i`, a node local. A 300 s permuter stayed flat.
+
+## 2026-10-28 — `func_81307D08` matched (dialog line pointers)
+
+For each of `count + 1` 0x18-byte records at `arg0 + 0xC` (count = the u8
+at `arg0 + 0x137FB`), point the record's five lines into the text buffer
+at `arg0 + 0x137FC`. The running offset advances 0x1E per line, or 0xFE on
+the last record. Needs `i < count + 1` (retail's `addiu`/`blez` guard; `<=`
+gives `bltz`) and the step written as `if (i != count) 0x1E else 0xFE`.
+copt peels line 0 and unrolls the other four, like retail.
