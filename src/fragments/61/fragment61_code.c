@@ -98,7 +98,100 @@ void func_86B00994_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B014E8.s")
+extern void func_800088DC(void);
+extern void func_800468A0(s32);
+extern s32 D_86B0E0A4;
+extern Gfx *D_800D0510;
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern s32 func_87F00930(void);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(void *);
+extern void func_86B0990C(void);
+extern void func_87F07FE8(void *);
+extern void func_87F022F0(void);
+extern void func_86B08CEC(void);
+extern void func_86B08E08(void);
+extern void func_86B08214(void);
+extern void func_86B08F18(void);
+extern void func_86B09378(void);
+extern void func_86B09478(void);
+extern s32 D_86B17DD4;
+extern u8 D_86B0E0E0[];
+extern void func_87F0A5BC(void *);
+extern void func_87F01D44(void);
+extern void func_87F0C88C(void *);
+extern void func_80008648(void);
+extern s32 D_86B0D160;
+extern u8 * D_86B181C0;
+void func_86B014E8(void) {
+    s32 mode;
+
+    func_800088DC();
+    func_800468A0(D_86B0E0A4);
+    func_8000766C(&D_800D0510, 0, 0, 320, 240);
+    if (func_87F00930() == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(*(void **)(D_86B181C0 + 8));
+    if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4) {
+        mode = *(s32 *)D_86B181C0;
+        if (mode != 0 && mode != 1 && mode != 2 && D_86B0D160 == 0) {
+            func_86B0990C();
+        }
+    }
+    switch (*(s32 *)D_86B181C0) {
+    case 0:
+    case 1:
+    case 2:
+        func_87F07FE8(&D_86B0E0A8);
+        break;
+    case 12:
+        if (D_86B0D160 != 0) {
+            func_87F07FE8(&D_86B0E0A8);
+        }
+        if (D_86B0D164 != 0) {
+            func_87F022F0();
+        }
+        break;
+    case 4:
+        func_86B08CEC();
+        break;
+    case 5:
+        func_86B08E08();
+        func_86B08214();
+        break;
+    case 6:
+        func_86B08214();
+        break;
+    case 7:
+        func_86B08F18();
+        func_86B08214();
+        break;
+    case 8:
+        func_86B09378();
+        func_86B08214();
+        if (D_86B17DD4 != 0) {
+            func_87F0A5BC(D_86B0E0E0);
+        }
+        break;
+    case 9:
+        func_86B09478();
+        func_86B08214();
+        func_87F0A5BC(D_86B0E0E0);
+        break;
+    case 10:
+        func_87F0A5BC(D_86B0E0E0);
+        break;
+    case 11:
+        func_87F022F0();
+        break;
+    }
+    if (func_87F00930() == 1) {
+        func_87F01D44();
+    }
+    func_87F0C88C(D_86B181C0 + 0x1C);
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
