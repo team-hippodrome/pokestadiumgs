@@ -97,3 +97,25 @@ Sealed receipts in the worker's private worktree:
 The checkpoint directory also contains source, object, ELF, map, ROM,
 `gate.log` and `provenance.json`. These private artifacts are for parent
 integration and are not repository inputs.
+
+### Fourth owner: `func_86708EDC`
+
+The two-case `switch` on `func_87F08208` matches all 356 bytes with the 0x38
+frame. Result one selects animation one and speed 0x50000 for four rows;
+rows whose state +0x98 equals 206 instead select animation seven, mode ten,
+and speed 0x20000. It starts the transparent fade and advances the main
+state. Result two writes main-state words +0, +0x30 and +0x48 and starts
+the shorter fade. The counter at `D_8670BBB0` wraps after 200.
+
+`func_87F08208`'s result contract is visible in
+`src/fragments/64/fragment64_3290A0.c`; the model animation/speed signatures
+are visible in `src/340C0.c`, and the clear-color and audio argument widths
+in `src/8470.c` and `src/229E0.c`. These existing contracts determine the
+prototypes; return categories are not allocation hints.
+
+The individual sealed gate is `scratch/b08edc-v1/gate-0/receipt.json`.
+`scratch/checkpoint-4/receipt.json` seals all four owners after formatting
+cleanup, with matching retail MD5, the compiler identity above and
+`RUN_CC_CHECK=1`. Its `provenance.json` ties every removed pragma to an
+accepted canonical-runner result. Coverage and shared symbol/layout files
+are unchanged.

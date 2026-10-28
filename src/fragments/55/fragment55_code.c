@@ -491,7 +491,53 @@ void func_867086EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86708EDC.s")
+extern Row86706A30 D_867111C0[];
+extern s32 D_8670BBB0;
+extern s32 D_8670D880;
+extern s32 func_87F08208(void *);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_8003F210(void *, s32);
+extern void StageContext_SetClearColor(u16);
+extern void func_800225C4(s32);
+extern void func_800226C0(s32);
+extern void func_800279C4(u16);
+extern s32 StageFade_StartFromTransparent(s32);
+extern s32 D_8670BB48;
+void func_86708EDC(void) {
+    s32 result;
+    s32 index;
+    D_8670BBB0++;
+    if (D_8670BBB0 > 200) {
+        D_8670BBB0 = 0;
+    }
+    result = func_87F08208(&D_8670D880);
+    switch (result) {
+    case 1:
+        for (index = 0; index < 4; index++) {
+            func_8003F210(&D_867111C0[index], 1);
+            ModelAnim_SetSpeed((u8 *)&D_867111C0[index], 0x50000);
+            if (*(s32 *)((u8 *)&D_86728408[index] + 0x98) == 206) {
+                func_8003F210(&D_867111C0[index], 7);
+                D_86728408[index].unk2C = 10;
+                ModelAnim_SetSpeed((u8 *)&D_867111C0[index], 0x20000);
+            }
+        }
+        StageContext_SetClearColor(0xFFFF);
+        StageFade_StartFromTransparent(20);
+        D_8670BB48 = 10;
+        func_800225C4(40);
+        func_800279C4(0xCF0B);
+        break;
+    case 2:
+        D_8670BB48 = 2;
+        ((s32 *)&D_8670BB48)[12] = 1;
+        ((s32 *)&D_8670BB48)[18] = 0;
+        StageContext_SetClearColor(0xFFFF);
+        StageFade_StartFromTransparent(10);
+        func_800226C0(3);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -714,7 +760,7 @@ void func_8670A790(void) {
         func_86708720();
         D_8670BB48 = func_8670A4D4(D_8670BB48);
         if (D_8670BB48 == 3) { break; }
-    } 
+    }
 }
 #endif
 
