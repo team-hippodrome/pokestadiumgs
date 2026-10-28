@@ -84,3 +84,24 @@ complete ROM, reporting `build/pokestadiumgs-us.z64: OK`. MD5 was
 checks passed. All 63 instruction words at ROM `0xD0640..0xD073C` and the
 24-byte frame match. No new padding, fake, data layout change or instruction
 rewrite is used.
+
+## 2026-10-29: remove selection-pointer instruction rewriting
+
+`Fragment9_UpdateSelectionPointers` (`func_8FB024BC`) now emits its retail
+164-byte body without `REWRITE_FUNCTION_WORD`. The old directive swapped
+the operands of the address addition at function offset 0x80. Eight normal
+C address forms show that an indexed view of the actual 544-byte columns
+emits the required operand order directly. `Fragment9SelectionColumn` is
+a byte-array type for that existing stride; it allocates no storage. The
+selected record remains at base + 92 + column * 544 + row * 88, with the
+original column/row clamps and secondary table-pointer update unchanged.
+
+The accepted cleanup uses the first exact indexed form, with a named type
+and source identifiers added afterward. Both initial exact forms preserve
+the complete module: section bytes/layout, function extents and relocation
+topology all equal the original patched object. Unchanged/+20-leading-blank
+controls and normal/+20-blank cleanup/naming controls pass. The original
+address-keyed entry remains available as a linker alias. No replacement
+word patch, forced register, artificial storage, compiler flag change or
+new helper function is introduced. This cleans an existing C owner rather
+than increasing the new-owner count.
