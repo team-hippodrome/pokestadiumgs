@@ -87,13 +87,13 @@ jobs:
       - name: Build and compare against the retail checksum
         if: steps.coverage-only.outputs.skip != 'true'
         shell: bash
-        run: bash ci/gate-pr.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/pokestadiumgs-gate-out"
+        run: bash ci/gate-pr.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/pokestadiumgs-gate-out-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
       - name: Upload gate and proposed coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: public-pr-rom-gate-${{ github.event.pull_request.number || inputs.pr_number || github.run_id }}
-          path: ${{ runner.temp }}/pokestadiumgs-gate-out/
+          path: ${{ runner.temp }}/pokestadiumgs-gate-out-${{ github.run_id }}-${{ github.run_attempt }}/
           if-no-files-found: warn
           retention-days: 14
