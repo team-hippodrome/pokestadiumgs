@@ -340,5 +340,37 @@ void func_88505E9C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88506018.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88506618.s")
+extern void *Util_Malloc(s32);
+extern s32 D_885229B8;
+extern u8 D_8800ED50;
+extern void func_88505EDC(void);
+extern void func_88506018(void);
+extern void func_88504EB8(void);
+extern void func_88000288(void *, s32, s32, s32, s32, s32, s32, s32);
+extern s32 func_80001FF0(void);
+extern void func_880048D4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, s32 arg8, void (*arg9)(void), void (*arg10)(void), void *arg11, void (*arg12)(void), s32 arg13, s32 arg14, s32 arg15);
+extern void func_88504828(void);
+extern void func_88504EE8(void);
+extern void func_88505718(void);
+extern u8 D_88000E4C;
+extern s32 D_880068B4;
+extern void * D_885229A0;
+extern s8 D_88523009;
+void func_88506618(void) {
+    func_88504828();
+    D_885229A0 = Util_Malloc(0x24);
+    func_88505718();
+    D_88523009 = -1;
+    if (D_885229B8 == 0) {
+        D_88523009 = 0;
+    }
+    func_880048D4(0, 3, 0x41, 0x3E, 0, 1, 0xE6, 0xFF, 0xF0, func_88505EDC, func_88506018, &D_88000E4C, func_88504EB8, 0, 0, 0);
+    *(void **)((u8 *)D_885229A0 + 0) = &D_8800ED50;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 0) + 0x10) = 0x201;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 0) + 0x12) = 0x8E;
+    func_88504EE8();
+    func_88000288((u8 *)D_885229A0 + 0x10, 0, 0xAA, 0x46, (s32)((f32)1 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)1 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((f32)20 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)20 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((f32)1 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)1 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((f32)20 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)20 / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    D_880068B4 = 0;
+    *(s32 *)((u8 *)D_885229A0 + 0x1C) = 1;
+}
 #endif
