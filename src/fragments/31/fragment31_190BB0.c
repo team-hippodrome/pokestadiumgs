@@ -330,7 +330,48 @@ s32 func_88220248(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882202E8.s")
+extern u8 func_80063660(u8);
+s32 func_882202E8(u8 species, u8 item) {
+    s32 result = 0;
+
+    switch (species) {
+    case 163:
+        if (item == 0x19) {
+            result = 1;
+        }
+        break;
+    case 30:
+        if (item == 0x71) {
+            result = 1;
+        }
+        break;
+    case 105:
+        if (item == 0x53) {
+            result = 1;
+        }
+        break;
+    case 35:
+        if (item == 0x84) {
+            result = 1;
+        }
+        break;
+    case 118:
+        if (item == 0x68 || item == 0x69) {
+            result = 1;
+        }
+        break;
+    case 91:
+    case 94:
+    case 106:
+        break;
+    default:
+        if (func_80063660(species) != 0) {
+            result = 1;
+        }
+        break;
+    }
+    return result;
+}
 
 extern u16 D_882345F0;
 extern u8 *D_88A01C38;
