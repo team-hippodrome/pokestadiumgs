@@ -64,7 +64,36 @@ s32 func_84109BC0(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_379450/func_84109E18.s")
+// Same code as func_84109BC0 for the second color (row bytes 4-6) and the second tint;
+// the halfword at 0x1C is -0x2000 minus the angle and the one at 0x1E adds 24576.
+s32 func_84109E18(s32 arg0, u8 *arg1) {
+    s16 pad0, pad1, pad2; // FAKE: unused locals that set the frame size; diff score 27 without them.
+    s16 sp30;
+    s16 sp2E;
+    s16 sp2C;
+
+    if (arg0 == 0) {
+        arg1[0x18] = D_841833E0[D_84190208].unk_00[4];
+        arg1[0x19] = D_841833E0[D_84190208].unk_00[5];
+        arg1[0x1A] = D_841833E0[D_84190208].unk_00[6];
+    }
+    if (arg0 == 2) {
+        // FAKE: the white test reads the tint through pointer arithmetic on tints; diff score 20 without it.
+        if (((D_84190218.tints + 1)->r & (D_84190218.tints + 1)->g & (D_84190218.tints + 1)->b) == 0xFF) {
+            arg1[0x18] = D_841833E0[D_84190208].unk_00[4];
+            arg1[0x19] = D_841833E0[D_84190208].unk_00[5];
+            arg1[0x1A] = D_841833E0[D_84190208].unk_00[6];
+        } else {
+            arg1[0x18] = (D_84190218.tints[1].r * D_841833E0[D_84190208].unk_00[4]) / 255;
+            arg1[0x19] = (D_84190218.tints[1].g * D_841833E0[D_84190208].unk_00[5]) / 255;
+            arg1[0x1A] = (D_84190218.tints[1].b * D_841833E0[D_84190208].unk_00[6]) / 255;
+        }
+        func_80037120((u8 *)D_80094908 + 0xB4, (u8 *)D_80094908 + 0xA8, &sp30, &sp2E, &sp2C);
+        *(s16 *)(arg1 + 0x1C) = -0x2000 - sp2E;
+        *(s16 *)(arg1 + 0x1E) = sp2C + 24576;
+    }
+    return 0;
+}
 
 // Geo layout callback (command 0x08 in D_84183548): copies the RGB color of
 // table entry D_84190208 (set by func_8410A524) into node bytes 0x18-0x1A.
