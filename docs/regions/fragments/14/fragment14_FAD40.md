@@ -238,3 +238,15 @@ The per-frame update. It switches on the state (+0x4DBD) to its 19 handlers, in 
 - when `func_81302BC0` holds, it draws the `func_8160B5BC` rect offset by it with `func_81600A34(gfx, obj + 1, 1, …)`.
 
 It reuses `unk_func_81303648` (slot 0's first word is now `void *unk_000`). `result` is declared before the two rects, which gives retail's slots.
+
+## 2026-10-28 — screen types extended; `func_81302EE4`, `func_813038D0`, `func_8130456C` requeues
+
+The screen-object types now sit at the top of the file. A slot holds the copied party data at +0x20 (`unk_D_81302EE4_mon`, 0x58 bytes: species, battle-order byte, …), a word at +0x78 and a sub-object at +0x80. The object adds +0x4D90, +0x4DA4 (`f32`), +0x4DB0 and +0x4DBC. Byte-identical.
+- `func_81302EE4` (requeue): init:
+  - sets the owner at +0x4DA0, then `func_8160A994` and `func_8160B8A8(obj, func_813002D0(owner), arg5)`;
+  - copies the name to slot0 +0x11 and sets +0x4D90;
+  - for each non-empty party entry (`unk_D_81302EE4_party`, 0x60 bytes) copies the mon and +0x58 and calls `func_8004D878(slot + 0x80, 0)`;
+  - state 1 or 4 by `func_81302C40`.
+  11 ops: retail forms `&slot.mon` in `$a2` before the species test and copies through it with negative offsets; IDO folds every `dst` spelling. A 240 s permuter stayed flat.
+- `func_813038D0` (requeue): battle-order pick and cancel. A pick stores the order in the current slot through a slot pointer and steps forward; a cancel clears it and steps back. Either end finishes (state 4, `func_8130F5AC`, `func_81306E90`), and backing out restores +0x4DBE. 3 ops: retail spills the current index from `$v0` rather than its `$a1` copy, and reloads the slot pointer into `$v1`.
+- `func_8130456C` (requeue): the typed slot array does not fix its saved-register permutation (8 ops), with or without an entry pointer.
