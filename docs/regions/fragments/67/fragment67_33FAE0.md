@@ -49,3 +49,17 @@ Full US linking produces `build/pokestadiumgs-us.z64: OK`, MD5
 checks pass. Independent instruction comparisons cover ROM
 `0x33FAE0..0x33FB58` and `0x37B18C..0x37B204`, 240 bytes total. Previously
 matched C, section layout, and CI remain unchanged.
+
+## 2026-10-28 — `func_8290351C` and `func_829035C4` matched
+
+- `func_8290351C` (camera reset): set the target vector at
+  `D_82919C38 + 0xB4` from `D_82912098..D_829120A0`, store 30.0f at +0x2C,
+  then the globals in the order `D_82919D34 = 800.0f; D_82919D2E = 0;
+  D_82919D30 = -0x4000;`, and pass them to `func_800371B4`. The store order
+  decides the register assignment: only this order of the six matches.
+- `func_829035C4(u8 *arg0)` (model reset): `D_82919A08 = arg0 + 0x34C`, then
+  initialize and reset it. Index the 0x14-stride `D_82911FD4` table as
+  `*(f32 *)((u8 *)D_82911FD4 + D_82919C10 * 0x14)`: `[idx * 5]` on an `f32[]`
+  ends the `sll`/`addu`/`sll` chain in a different temp. The caller
+  `func_8290379C` used to call it with no arguments and rely on `a0` still
+  holding its own `arg0`; it now passes `arg0` explicitly (same bytes).
