@@ -89,3 +89,7 @@ file for C890/C380) also emits the second `lui`, for extern, static and global
 alike. This is the same shared-`$at` class as fragment21 `func_82508620` /
 `func_82507BFC` / `func_82507C48` and fragment17 `func_822068E0`. Next: the
 mechanism must be found once for the whole class, not per owner.
+Also ruled out: constant-address stores (`*(s32 *)0x8AF395B8 = …`). IDO
+materializes those with `lui $t1`/`lui $t3`, not `$at`, and still emits two
+`lui`s. A repo-wide scan finds 107 of 2,031 remaining owners that reuse one
+`lui $at` for a different `%lo` symbol.
