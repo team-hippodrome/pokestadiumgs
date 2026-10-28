@@ -111,3 +111,36 @@ the full retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
 The private receipt and sealed artifacts are in
 `scratch/e18-b1/gate-0/receipt.json`. Upstream `7a127bb6` still owns the
 assembly pragma for this function.
+
+
+## 2026-10-29 — `func_82B02334`: genuine native C match
+
+Canonical batch `scratch/2334-b3.json` accepted
+`panel:color-pointer-lifetimes:post-4` on top of renderer commit `734db747`.
+This initializes the alternating-column panel: size 515 by 106, position
+(64, 87) with delta (640, 0) for even `unk_02`, or position (64, 239) with
+delta (-640, 0) for odd `unk_02`. The RGB source is `D_82B085C0` or
+`D_82B085C4`, respectively. It copies the initial and opposite coordinate
+pairs into the four-element trail arrays, then adjusts the second trail
+pair in each array.
+
+Typed `Pair02198` cursors for the initial and opposite pairs reproduce the
+first 37 instruction words. Using the existing `State02198` fields for the
+post-loop edits ends those cursor lifetimes; explicit RGB-source pointers
+initialized before the field stores reproduce the remaining address setup
+and scheduling. A genuine four-iteration loop is compiled to the retail
+copy sequence. There are no dummy locals, manual unrolls, owner instruction
+rewrites, or register bindings. The complete function is 384 bytes with no
+stack frame; function bytes and link shape both compare exactly against the
+unchanged assembly control object.
+
+The normal and +20blank whole-module controls passed. Explicit host syntax
+and the full retail ROM gate passed with MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, using the same unmodified native IDO 7.1
+compiler recorded for `func_82B07E18`. Sealed evidence is in
+`scratch/2334-b3/gate-0/receipt.json`; the independent object diagnostic is
+`scratch/2334-b3/pending-object-diagnostic.json` (recorded before the ROM
+gate completed). Earlier struct-only forms had the correct 384-byte size
+but differed in pointer allocation and load scheduling; raw offset views
+alone were 392 bytes. This is an accepted source spelling, not an inference
+that the original source used the same field names.
