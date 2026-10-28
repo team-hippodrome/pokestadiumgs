@@ -19,3 +19,12 @@ style, it matched on the first probe.
 (state s32 at +0x1828), with `all = all && flags[i]`. If everyone is ready,
 call `func_87F0A098(arg0 + 0x751C, *(arg0 + 0x7580), 1, 0, 0, 0, 0)`;
 otherwise pass the four flags. It matched on the first probe.
+
+## func_86006364 (accepted 2026-10-28)
+
+Per-player loop over 4 records (0x2D8 stride at +0x775C, 0x1998-stride
+objects at +0x1890). Two things were needed. First, the first call's second
+argument must load into its own local (`data`) before the call. Inline, IDO
+copies `arg0` into `s3` in the prologue instead of reading `a0` first. Second,
+the stack vector is `f32 pos[3]` (frame 0x68). The indexed `i * 0x2D8` form
+scores higher than a separately advanced record pointer.
