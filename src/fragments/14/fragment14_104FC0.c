@@ -89,7 +89,26 @@ f32 func_8130D098(u8 *arg0, unk_func_8130D45C *arg1) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D1FC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D340.s")
+extern void func_816072FC(void *arg0);
+f32 func_8130D340(u8 *arg0, unk_func_8130D45C *arg1) {
+    f32 t;
+    f32 w;
+    f32 h;
+
+    if (*(f32 *)(arg0 + 0x30) < 12.0f) {
+        t = *(f32 *)(arg0 + 0x30) / 12.0f;
+    } else {
+        t = 1.0f;
+    }
+    w = D_8160BD18(t);
+    h = D_8160BD1C(t);
+    arg1->unk_04 = 302.0f * w;
+    arg1->unk_06 = 135.0f * h;
+    arg1->unk_00 = *(s16 *)(arg0 + 8) + (302 - arg1->unk_04) / 2 + 246;
+    arg1->unk_02 = *(s16 *)(arg0 + 0xA) + (135 - arg1->unk_06) / 2;
+    func_816072FC(arg1);
+    return t;
+}
 
 
 extern void func_8160732C(void* arg0, void* arg1);
