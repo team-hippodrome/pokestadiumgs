@@ -1,5 +1,6 @@
 #include "global.h"
 #include "controller.h"
+#include "color_adjustment.h"
 
 
 #ifdef VERSION_US
@@ -50,7 +51,44 @@ s32 func_833018B8(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833018E8.s")
+extern u8 *D_83308E34;
+extern ColorAdjustment D_8330A2A4;
+extern s32 D_8330A2A8;
+extern s32 D_8330A4CC;
+extern u16 D_8330ABDA;
+extern s32 D_8330ABDC;
+extern s32 D_8330A300;
+extern s32 D_8330ABE0;
+extern s32 func_80041FD0(s32, u16, ColorAdjustment, s32);
+extern ColorAdjustment func_8003F5AC(u8 *);
+extern s32 func_8006456C(s32);
+typedef struct unk_func_833018E8 {
+    u8 unk_00[2];
+    u8 unk_02[4];
+    u8 unk_06[16];
+    u16 unk_16;
+} unk_func_833018E8;
+void func_833018E8(void) {
+    unk_func_833018E8 *var_s0 = (unk_func_833018E8 *)(D_83308E34 + 4);
+    s32 var_v0;
+
+    func_80041FD0(D_8330A4CC, D_8330ABDA, D_8330A2A4, D_8330A2A8);
+    D_8330A2A4 = func_8003F5AC((u8 *)var_s0);
+    D_8330A2A8 = func_8006456C(var_s0->unk_16);
+    if (*(s16 *)(D_83308E34 + 2) != -1) {
+        D_8330ABDC = var_s0->unk_02[*(s16 *)(D_83308E34 + 2)];
+        D_8330A300 = *(s16 *)(D_83308E34 + 2);
+    } else {
+        for (var_v0 = 3; var_v0 >= 0; var_v0--) {
+            if (var_s0->unk_02[var_v0] != 0) {
+                D_8330ABDC = var_s0->unk_02[var_v0];
+                D_8330A300 = var_v0 + 1;
+                break;
+            }
+        }
+    }
+    D_8330ABE0 = *(s16 *)D_83308E34;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833019CC.s")
 
