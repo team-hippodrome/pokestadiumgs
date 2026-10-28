@@ -1711,6 +1711,7 @@
     - [0x3D9A00, data,    fragments/79/fragment79_data]
     - [0x3F83E0, .rodata, fragments/79/fragment79_36F8B0] # Jump tables, float literals.
     - [0x3F8480, rodata]
+    - [0x3F84C0, .rodata, fragments/79/fragment79_3749B0] # labels in this range are referenced only by this file
     - [0x3F84E0, .rodata, fragments/79/fragment79_375530] # Jump tables, float literals.
     - [0x3F8530, .rodata, fragments/79/fragment79_377570] # jtbl_84188CA0, jtbl_84188D08, jtbl_84188D74 (func_841083B0's switches)
     - [0x3F86B0, rodata]
@@ -1726,6 +1727,8 @@
     - [0x3FAA60, .rodata, fragments/79/fragment79_3ADCA0] # jtbl_8418B1D0 (+13 more, incl. jtbl_8418B738/jtbl_8418B74C)
     - [0x3FB010, .rodata, fragments/79/fragment79_3B7EA0] # Strings, jump tables, double literals.
     - [0x3FB230, rodata]
+    - [0x3FB2A0, .rodata, fragments/79/fragment79_3B9B80] # labels in this range are referenced only by this file
+    - [0x3FB2B0, .rodata, fragments/79/fragment79_3BC290] # labels in this range are referenced only by this file
     - [0x3FB760, .rodata, fragments/79/fragment79_3BEAF0] # labels in this range are referenced only by this file
     - [0x3FB9D0, .rodata, fragments/79/fragment79_3BF4C0] # Scoring constants and all three jump tables,720 bytes.
     - [0x3FBCA0, .rodata, fragments/79/fragment79_3C50B0] # Both selected-state jump tables,176 bytes.
