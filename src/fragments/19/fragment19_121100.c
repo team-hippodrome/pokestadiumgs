@@ -674,7 +674,30 @@ void func_823020EC(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302258.s")
+extern u8 D_82305D70[];
+void func_82302258(u8 *arg0) {
+    s32 i;
+    u8 value;
+
+    for (i = 0; i < 4; i++) {
+        value = 0;
+        switch (i) {
+            case 0:
+                value = D_82305D70[6];
+                break;
+            case 1:
+                value = D_82305D70[7];
+                break;
+            case 2:
+                value = D_82305D70[9];
+                break;
+            case 3:
+                value = D_82305D70[8];
+                break;
+        }
+        ((u16 *)(arg0 + 0x24))[i] = value;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302320.s")
 
