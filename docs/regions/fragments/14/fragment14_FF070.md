@@ -102,3 +102,14 @@ Both use the typed state (now through 0xE915, with `unk_E8EC` typed as the point
 - `func_8130AAA8(state, x, y)` interpolates between `166 * y + 128` and a target. The target is `(x - unk_E915 - unk_E914) * 166 + 101` with weight `func_8130A98C(state)` when `func_8130AA54` holds, else -143/91 by `unk_E908` with weight `1 - unk_E8F0 / 16`; in mode 9 past the threshold, `y -= D_8160BD04(unk_E904 / 16)`. This was a first-draft match.
 
 `func_8130AA54` keeps its `u8 *` signature: rewritten over the typed state, its own bytes change (its explicit `base` pointer is what retail compiled).
+
+## 2026-10-28 — `func_8130B4E8` and `func_81306F74` matched
+
+- `func_8130B4E8(state, rect)`: `scale = func_8130B3B8(state, rect)`, `dx = 19.0f * scale`, `t` = `1 - func_8130A98C(state)` when `unk_E8FC > 0`, else `scale`, and `dy = t * 30`. It insets `rect` by `8 + dx`/`8 + dy` and `19 + dx`/`19 + dy`, then returns `scale`. The insets use the integer `19`: with `19.0f` IDO keeps the first constant in a register across the branch, while retail rematerializes it.
+- `func_81306F74(state, out)` is `func_8130B3B8`'s twin for the 0x137xx state (`unk_func_81306F74`): default color is the state's first 8 bytes; color 2/4 (by `func_81302BB0(&owner->unk_15370)`) in modes 6/1/2 with `unk_137F0` set; color 8 in modes 5/2 with `unk_137EC` set. Then `func_8160945C(out, color, func_81609530(3), D_8160BD08(unk_137D0 / 16))`, returning the scale. `scale` must be declared before `color`. Its extern now takes the typed state.
+
+Remaining owners that need layout work first:
+- `func_81307128` reads a float constant from the shared rodata blob (`D_81312560`, at 0x10A6D0).
+- `func_8130C334` is a jump-table dispatcher.
+- `func_8130AC40` copies a 3-byte initialized local (`D_8131209C`).
+All three wait for this file to own its `.rodata`/`.data`.
