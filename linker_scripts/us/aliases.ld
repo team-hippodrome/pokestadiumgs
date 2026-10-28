@@ -1091,3 +1091,9 @@ func_80031564 = Audio_ClearCommandQueue;
 func_800315E8 = Audio_DisableCommandQueue;
 /* func_8130DEB8's loop end pointer, one past fragment14_104FC0's D_813127DC table. */
 D_813127E0 = D_813127DC + 0x4;
+
+func_8AE00AF4 = Fragment46_BuildLookupMatrices;
+func_8AE013B4 = Fragment46_CollectRecordData;
+func_8AE01600 = Fragment46_FindNeighborVariants;
+func_8AE03BDC = Fragment46_DrawRecordRange;
+func_8AE057A8 = Fragment46_UpdateSelectionVisibility;

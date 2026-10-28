@@ -74,7 +74,7 @@ extern s32 D_8AE09B44;
 extern s16 D_8AE09B48;
 extern s16 D_8AE09B54;
 extern s32 func_8004C874(s32, s32);
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern void func_8AE00020();
 void func_8AE001D4(void) {
     D_8AE09B54 = 1;
@@ -86,7 +86,7 @@ void func_8AE001D4(void) {
 
 #ifdef VERSION_US
 extern s16 D_8AE084EC;
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern s32 func_8004C874(s32, s32);
 extern void func_8AE00020();
 extern s32 D_8AE09B44;
@@ -164,7 +164,7 @@ extern void func_8AE004C0(Fragment46LookupEntry *, Mtx *, Mtx *, u8);
 extern s16 func_8AE0566C(s16);
 extern void * D_8AE084BC;
 extern s16 D_8AE084E0;
-void func_8AE00AF4(void) {
+void Fragment46_BuildLookupMatrices(void) {
     u8 *camera;
     f32 (*matrix)[4];
     f32 temporary[4][4];
@@ -403,7 +403,7 @@ extern s32 func_8AE01248(void *arg0, u8 *arg1);
 extern s32 func_8AE012B0(s32 arg0, u8 *arg1);
 extern s32 func_8AE01334(void *arg0, u8 *arg1);
 extern void * D_8AE084E4;
-s32 func_8AE013B4(u8 *arg0, s16 arg1, s16 arg2) {
+s32 Fragment46_CollectRecordData(u8 *arg0, s16 arg1, s16 arg2) {
     Fragment46Record *record;
     s32 count;
     count = 0;
@@ -451,8 +451,8 @@ void *func_8AE01564(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8AE013B4(u8 *, s16, s16); extern void _bzero(void *, s32);
-s32 func_8AE015C4(s16 arg0, s16 arg1) { s32 pad; u8 sp1C[0x50]; _bzero(sp1C, 0x50); return func_8AE013B4(sp1C, arg0, arg1); }
+extern s32 Fragment46_CollectRecordData(u8 *, s16, s16); extern void _bzero(void *, s32);
+s32 func_8AE015C4(s16 arg0, s16 arg1) { s32 pad; u8 sp1C[0x50]; _bzero(sp1C, 0x50); return Fragment46_CollectRecordData(sp1C, arg0, arg1); }
 #endif
 
 #ifdef VERSION_US
@@ -460,7 +460,7 @@ extern s16 D_8AE09B56, D_8AE09B58;
 extern s16 D_8AE08888[], D_8AE0889C;
 extern s32 func_8AE015C4(s16, s16);
 extern void * func_8AE01564(s16 arg0, s16 arg1);
-void func_8AE01600(s16 arg0, s16 arg1) {
+void Fragment46_FindNeighborVariants(s16 arg0, s16 arg1) {
     s32 candidate;
     s32 next;
     s32 count;
@@ -858,7 +858,7 @@ extern s32 func_8AC06D8C(s32, s32);
 extern s32 func_8AE00C1C(s32);
 extern s32 func_8AE00CC8(s32);
 extern void func_8AE020FC();
-extern void func_8AE057A8(void);
+extern void Fragment46_UpdateSelectionVisibility(void);
 extern s32 func_8AE02398(s32, void *);
 extern s32 func_8AE02470(s32, void *);
 extern s32 func_8AE02568(s32, void *);
@@ -979,7 +979,7 @@ void func_8AE029D0(void) {
     D_8AE084E0 = 0;
     D_8AE084E2 = 0;
     func_8AE020FC();
-    func_8AE057A8();
+    Fragment46_UpdateSelectionVisibility();
     D_8AE084E8 = func_8AE00F24();
     D_8AE084FC = 0x14;
     D_8AE084FE = 0x60;
@@ -1087,7 +1087,7 @@ extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
 extern void _bzero(void *, s32);
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern s32 func_8AE03214(s16 arg0);
 extern s16 D_8AE098B0;
 extern s32 D_8AE09B5C;
@@ -1190,7 +1190,7 @@ void func_8AE038DC(s32 arg0, s32 arg1, void *arg2) {
 #ifdef VERSION_US
 extern void func_800495BC(s32, s32, const char *, ...);
 extern void _bzero(void *, s32);
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
 extern s32 func_8AE03214(s16 arg0);
@@ -1199,7 +1199,7 @@ extern s32 D_8AE09AEC;
 extern s32 D_8AE09B5C;
 extern s32 D_8AE09E60;
 extern s32 D_8AE09E64;
-void func_8AE03BDC(s32 arg0, s32 arg1, u8 *arg2) {
+void Fragment46_DrawRecordRange(s32 arg0, s32 arg1, u8 *arg2) {
     s32 text_width;
     s32 width;
     char text[256];
@@ -1412,7 +1412,7 @@ extern s32 D_8AE09B28, D_8AE09B2C, D_8AE09B30;
 extern s16 D_8AE08504;
 extern s16 D_8AE084E0;
 extern s16 D_8AE098B0;
-void func_8AE057A8(void) {
+void Fragment46_UpdateSelectionVisibility(void) {
     if (D_8AE08504 != 0 && D_8AE084E0 != 0) {
         if (D_8AE098B0 == 2) {
             ((u16 *)D_8AE09B28)[1] &= ~1;
@@ -1441,7 +1441,7 @@ void func_8AE057A8(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8AE057A8(void);
+extern void Fragment46_UpdateSelectionVisibility(void);
 extern s16 D_8AE084EE;
 extern s16 D_8AE084F4;
 extern s16 D_8AE084F6;
@@ -1451,7 +1451,7 @@ void func_8AE05910(s16 arg0) {
     D_8AE084F6 = 0xA;
     D_8AE084EE = arg0;
     D_8AE084F0 = 12.0f;
-    func_8AE057A8();
+    Fragment46_UpdateSelectionVisibility();
 }
 #endif
 

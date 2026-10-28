@@ -116,3 +116,14 @@ forced registers, or added filler storage were used.
   `func_800495BC` to the variadic `(s32, s32, const char *, ...)` signature
   verified in `src/47580.c`; the old five-argument declaration described
   only one caller. Receipt: `scratch/text3bd-v2/gate-0/receipt.json`.
+
+Parent review: corrected all four local text-width declarations to the real
+`s32 func_80049148(s32, s32, const char *, ...)` signature in `src/47580.c`.
+The complete module remained byte-identical, including +20blank control.
+Descriptive names follow the operations above; old address-keyed names remain
+assembly compatibility aliases.
+- `func_8AE00AF4` → `Fragment46_BuildLookupMatrices`.
+- `func_8AE013B4` → `Fragment46_CollectRecordData`.
+- `func_8AE01600` → `Fragment46_FindNeighborVariants`.
+- `func_8AE03BDC` → `Fragment46_DrawRecordRange`.
+- `func_8AE057A8` → `Fragment46_UpdateSelectionVisibility`.
