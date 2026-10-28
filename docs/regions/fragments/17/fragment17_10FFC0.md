@@ -53,3 +53,31 @@ requeue (0.95). Returns 0 if any of the 30 twelve-byte entries
 structure. Retail keeps the result in `v1` and exits through `b` to the
 shared return; IDO tail-duplicates `jr ra; li v0,0`, and the record/end
 registers are named differently.
+
+## 2026-10-29: remove the `func_822016C8` byte rewrite
+
+`Fragment17_ResetAnimationEntries` now uses its existing C loop directly.
+Remove its whole-function HEX replacement and fourteen relocation-target
+directives; the control flow and data operations require no source changes.
+The loop resets four 60-byte records, chooses state zero or two from the
+input, sets quarter-turn angles, and clears the four following fields.
+Keep `func_822016C8` as a compatibility alias.
+
+The apparent object mismatch was relocation spelling alone. The ordinary
+loop addresses later records as `D_8220E378 + 60`, `+120`, and `+180`; the
+rewrite instead names `D_8220E3B4`, `D_8220E3F0`, and `D_8220E42C` with zero
+addends. Exactly five `addiu` immediate words differ before linking, at
+function offsets 0x4C, 0x5C, 0x80, 0x90 and 0x9C. Those aliases denote the
+same fixed addresses, and the authoritative native full-ROM comparison
+passes after all fifteen directives are removed. An object-only comparison
+had mistaken equivalent relocation expressions for a source mismatch.
+
+Verification: unchanged/+20-leading-blank whole-module controls; normal
+and +20-blank naming controls preserve every module byte/section/function
+extent/relocation after normalizing the renamed entry; explicit normal
+host syntax; stock IDO 7.1 native full-ROM comparison with retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The private receipt seals the compiled
+source, object, ELF, map, ROM and compiler identity. No replacement byte
+patch, changed compiler flag, register constraint, padding or added helper
+is needed. This cleans an existing C owner and does not add a new owner
+to the decompilation totals.

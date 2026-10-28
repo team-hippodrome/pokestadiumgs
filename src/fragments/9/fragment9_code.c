@@ -264,30 +264,30 @@ s32 func_8FB02494(s32 arg0) {
     return (func_8FB02418(arg0)->flags >> 31) == 0;
 }
 
-/* mkdraft:func_8FB024BC begin */
+/* mkdraft:Fragment9_UpdateSelectionPointers begin */
 extern u8 D_8FB034A0[];
-#pragma REWRITE_FUNCTION_WORD(func_8FB024BC, 0x80, 0x03244021, 0x00994021)
 
-void func_8FB024BC(void *arg0) {
-    s32 var_v0_2;
+typedef u8 Fragment9SelectionColumn[0x220];
+void Fragment9_UpdateSelectionPointers(void *state) {
+    s32 row_index;
 
-    if (*(s32 *)((u8 *)arg0 + 0x38) < 0) {
-        *(s32 *)((u8 *)arg0 + 0x38) = 9;
+    if (*(s32 *)((u8 *)state + 0x38) < 0) {
+        *(s32 *)((u8 *)state + 0x38) = 9;
     }
-    if (*(s32 *)((u8 *)arg0 + 0x38) >= 0xA) {
-        *(s32 *)((u8 *)arg0 + 0x38) = 0;
+    if (*(s32 *)((u8 *)state + 0x38) >= 0xA) {
+        *(s32 *)((u8 *)state + 0x38) = 0;
     }
-    if (*(s32 *)((u8 *)arg0 + 0x3C) < 0) {
-        *(s32 *)((u8 *)arg0 + 0x3C) = 5;
+    if (*(s32 *)((u8 *)state + 0x3C) < 0) {
+        *(s32 *)((u8 *)state + 0x3C) = 5;
     }
-    if (*(s32 *)((u8 *)arg0 + 0x3C) >= 6) {
-        *(s32 *)((u8 *)arg0 + 0x3C) = 0;
+    if (*(s32 *)((u8 *)state + 0x3C) >= 6) {
+        *(s32 *)((u8 *)state + 0x3C) = 0;
     }
-    var_v0_2 = *(s32 *)((u8 *)arg0 + 0x3C);
-    *(s32 *)((u8 *)arg0 + 0x48) = (s32)((s32)arg0 + (*(s32 *)((u8 *)arg0 + 0x38) * 0x220) + (var_v0_2 * 0x58) + 0x5C);
-    *(s32 *)((u8 *)arg0 + 0x44) = (s32)((*(s32 *)((u8 *)arg0 + 0x30) * 0x24) + (s32)&D_8FB034A0);
+    row_index = *(s32 *)((u8 *)state + 0x3C);
+    *(s32 *)((u8 *)state + 0x48) = (s32)(&((Fragment9SelectionColumn *)((u8 *)state + 0x5C))[*(s32 *)((u8 *)state + 0x38)][row_index * 0x58]);
+    *(s32 *)((u8 *)state + 0x44) = (s32)((*(s32 *)((u8 *)state + 0x30) * 0x24) + (s32)&D_8FB034A0);
 }
-/* mkdraft:func_8FB024BC end */
+/* mkdraft:Fragment9_UpdateSelectionPointers end */
 
 // Leading fields of the D_8FB03DF8 state. func_8FB031E0 draws images[index] with
 // func_800495F8; func_8FB029B4 dispatches on mode and func_8FB032C4 runs until mode is 2.
@@ -323,7 +323,7 @@ void func_8FB02560(unk_D_8FB03DF8 *state) {
     func_80055948(1);
     func_80055A74(state->index);
     func_80055BF8();
-    func_8FB024BC(state);
+    Fragment9_UpdateSelectionPointers(state);
     func_8FB02108((unk_func_8FB02108 *)state);
 }
 
@@ -351,7 +351,7 @@ void func_8FB02698(void *arg0) {
                     func_8FB02108(arg0);
                     *(s32 *)((u8 *)arg0 + 0x3C) = 0;
                     *(s32 *)((u8 *)arg0 + 0x38) = 0;
-                    func_8FB024BC(arg0);
+                    Fragment9_UpdateSelectionPointers(arg0);
                 }
             } else {
                 *(s32 *)((u8 *)arg0 + 0x40) = 2;
@@ -390,7 +390,7 @@ void func_8FB02698(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02878.s")
 
-extern void func_8FB024BC(void *);
+extern void Fragment9_UpdateSelectionPointers(void *);
 extern void func_8FB02698(void *);
 extern void func_8FB02878(void *);
 void func_8FB029B4(void *arg0) {
@@ -405,7 +405,7 @@ void func_8FB029B4(void *arg0) {
         func_8FB02878(arg0);
         break;
     }
-    func_8FB024BC(arg0);
+    Fragment9_UpdateSelectionPointers(arg0);
 }
 
 /* func_8FB02A10 is still GLOBAL_ASM, but its .s is hand-maintained (not the
