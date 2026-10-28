@@ -507,3 +507,31 @@ The first successful gate froze source, whole module, four collateral
 objects, linked outputs, layout inputs, and assembly dependencies; external
 hashes and all original-module/collateral comparisons passed before more
 compilation. The ROM MD5 remains `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+## 2026-10-28: native status checks before move execution
+
+`func_84127194` is accepted as genuine C through the canonical native runner
+from base `bf5c39aa5f7d927ef2ffc75b50ddf1ac1d264660`: 468 instructions,
+1,872 bytes, 40-byte frame. Direct indexed byte reads and compound updates
+preserve the original reloads across sleep, freeze, flinch, disable, confusion,
+attraction, and paralysis checks. Sleep uses `> 0`, preserving the retail
+`blez`; changing it to `!= 0` leaves one branch opcode different. Caching the
+move byte changes register allocation, so the accepted body leaves it inline.
+The three-argument `func_841566D0(u8, u8, u8)` call follows the existing
+party-status clear interface. No output rewrite, artificial local, extra
+argument, forced register, manual unroll, or new padding is involved.
+
+The unchanged whole module and a control with 20 leading blank lines have
+identical bytes, sections, function extents, and relocations. The first
+`status:initial:direct` candidate passed link-shape verification, the explicit
+normal host syntax recipe, and the full US ROM comparison under stock IDO7.1
+(SHA256 `975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`).
+Retail MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`. Private sealed evidence is
+`scratch/battle27194-first/gate-0/receipt.json` in the native worker checkout;
+parent integration must revalidate its combined tree. Evidence supports the
+name `BattleTurn_CheckMoveStatus`; shared names/aliases are left to integration.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_84127194` → `BattleTurn_CheckMoveStatus`.

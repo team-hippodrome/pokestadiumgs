@@ -1137,3 +1137,5 @@ func_8AE05118 = Fragment46_DrawSelectionFrame;
 func_8240239C = Fragment13_DrawTintedPanel;
 
 func_8AE01738 = Fragment46_RefreshSavedSelection;
+
+func_84127194 = BattleTurn_CheckMoveStatus;
