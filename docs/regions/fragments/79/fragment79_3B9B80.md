@@ -33,3 +33,46 @@ Comparator: `records = func_84154B0C()` (declared with no parameters, as fragmen
   `D_841951F8[side] + 0x49C`. Code and frame (0x78, `u8 scratch[0x4C]` at
   0x24) match; only the two spill slots are 8 bytes high (0x20/0x24 vs 0x18/0x1C).
   The file's extern must become `func_8414A2F0(u8, volatile u8)`.
+
+## `func_8414BDA0`: sum enabled record fields
+
+The 272-byte owner calls `func_8414A3A0(func_84154B24())`, then visits
+all 24 records of `D_8419D7C0` with a 168-byte stride. When a record's
+first byte has bit 0 set, it stores the sum of the words at offsets
+12, 16, 20 and 24 into offset 36. Other records retain their previous
+word at offset 36. The field meanings remain unresolved.
+
+`func_8414BEB0` invokes this owner after three other record-update
+passes. `func_8414BEE8` clears the full 4032-byte array, while
+`func_8414A440` and `func_8414A4E4` initialize these component words and
+the result word in individual records. The existing helper
+`func_8414A3A0` returns the selected side's pointer plus 1180; its result
+is unused by this owner, and the call is preserved.
+//@src/fragments/79/fragment79_3B9B80.c
+
+`func_84154B24` takes no arguments and returns the unsigned byte at
+`D_8419E91A`. The added declaration follows that implementation and is
+placed before the translation unit's first caller.
+//@src/fragments/79/fragment79_3C40B0.c
+
+The source uses unsigned word addition and a natural 24-iteration loop;
+IDO performs the retail four-record unrolling. Writing the terms in the
+order 20, 12, 24, 16 emits the inspected load order 16, 20, 12, 24.
+No manual unrolling, artificial storage, fake or instruction rewrite
+is introduced.
+
+Freshly tested for `VERSION=us` on master
+`aeda3404f40c61b6e9d60ed32c0a23d3ea610ed6` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/79/fragment79_3B9B80.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled Makefile forced recompilation and linked the
+complete ROM, reporting `build/pokestadiumgs-us.z64: OK`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks passed. Independent original-assembly/raw-ROM comparison verifies
+all 68 words at `0x3BB630..0x3BB740`, including the 24-byte frame.
