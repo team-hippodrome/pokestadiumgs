@@ -2,6 +2,21 @@
 
 
 #ifdef VERSION_US
+// Hex number editor state, laid out like the numeric view of fragment77's
+// F77EditorState; func_8F90083C clamps the entered value (words[5]) to 0-255.
+//@src/fragments/77/fragment77_code.c
+typedef union {
+    s32 words[9];
+    struct {
+        u16 geometry[4];
+        s16 selected;
+        u16 last;
+        s8 digits[8];
+        s32 value;
+    } numeric;
+} F78EditorState;
+extern F78EditorState D_8F911650;
+
 /* mkdraft:func_8F900020 begin */
 extern Gfx *D_800D0510;
 extern u8 D_80094DE0[];
@@ -14,7 +29,33 @@ void func_8F900020(s32 arg0, s32 arg1, s32 arg2) {
 }
 /* mkdraft:func_8F900020 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F9000D0.s")
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_80049628(s32, s32, s32);
+extern void func_800499EC(void);
+extern void func_8F900020(s32, s32, s32);
+extern Gfx * D_800D0510;
+void func_8F9000D0(void) {
+    s32 index;
+    F78EditorState *state = &D_8F911650;
+
+    func_80007444(&D_800D0510, state->numeric.geometry[0], state->numeric.geometry[1], 0x20, 0x16, 1);
+    func_800498C4();
+    func_800496A4(4, 0);
+    for (index = state->numeric.last; index >= 0; index--) {
+        if (state->numeric.digits[index] < 10) {
+            func_80049628(state->numeric.geometry[0] + (state->numeric.last - index) * 16,
+                          state->numeric.geometry[1], state->numeric.digits[index] + 0x30);
+        } else {
+            func_80049628(state->numeric.geometry[0] + (state->numeric.last - index) * 16,
+                          state->numeric.geometry[1], state->numeric.digits[index] + 0x37);
+        }
+    }
+    func_800499EC();
+    func_8F900020(state->numeric.geometry[0] + (state->numeric.last - state->numeric.selected) * 16,
+                  state->numeric.geometry[1] + 18, 16);
+}
 
 extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800495BC(s32, s32, s32 *);
@@ -47,24 +88,33 @@ void func_8F900594(void) {
     *(&D_8F901630 + D_8F91163C) = (s8) D_8F911664;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F9005B4.s")
+extern s32 D_8F911630;
+extern s32 D_8F911634;
+extern void func_8F900574(void);
+void func_8F9005B4(void) {
+    s32 value;
+    s32 index;
+
+    D_8F911650.numeric.geometry[0] = D_8F911630 * 34 + 0xB4;
+    D_8F911650.numeric.geometry[1] = D_8F911634 * 22 + 0x69;
+    D_8F911650.numeric.geometry[2] = 0x20;
+    D_8F911650.numeric.geometry[3] = 0x14;
+    D_8F911650.numeric.selected = 0;
+    D_8F911650.numeric.last = 1;
+    func_8F900574();
+    value = D_8F911650.numeric.value;
+    index = 0;
+    if (index <= D_8F911650.numeric.last) {
+        do {
+            D_8F911650.numeric.digits[index] = value % 16;
+            value /= 16;
+            index++;
+        } while (index <= D_8F911650.numeric.last);
+    }
+}
 
 extern s32 Input_GetRepeatedDPad(void);
 extern s32 D_80087200;
-// Hex number editor state, laid out like the numeric view of fragment77's
-// F77EditorState; func_8F90083C clamps the entered value (words[5]) to 0-255.
-//@src/fragments/77/fragment77_code.c
-typedef union {
-    s32 words[9];
-    struct {
-        u16 geometry[4];
-        s16 selected;
-        u16 last;
-        s8 digits[8];
-        s32 value;
-    } numeric;
-} F78EditorState;
-extern F78EditorState D_8F911650;
 
 // Same code as fragment77's func_8F802B40 on the editor state at D_8F911650; GS plays
 // no sound on D-pad input and switches on the input value without an s16 conversion.
@@ -121,7 +171,7 @@ s32 func_8F900690(void) {
 }
 
 extern s32 func_8F900690(void);
-extern s32 func_8F9000D0(void);
+extern void func_8F9000D0(void);
 extern void func_8F900594(void);
 extern s32 D_8F911648;
 s32 func_8F90083C(void) {
@@ -206,7 +256,44 @@ s32 func_8F9009E8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900A6C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900F14.s")
+extern s32 D_8F911644;
+extern u16 D_8F901534[][17];
+extern s32 D_8F901530;
+extern u16 func_8F900A6C(s32);
+extern s32 func_8F9009E8(void);
+extern s32 D_80087200;
+s32 func_8F900F14(void) {
+    s32 result = 1;
+
+    switch (func_8F900A6C(D_80087200)) {
+        case 0x8000:
+            result = func_8F9009E8();
+            break;
+        case 0x4000:
+            D_8F911644 = 0;
+            break;
+        case 0x800:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[12];
+            break;
+        case 0x400:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[13];
+            break;
+        case 0x200:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[14];
+            break;
+        case 0x100:
+            D_8F911644 = ((u8 *)D_8F901534[D_8F911644])[15];
+            break;
+        case 0x10:
+            if (D_8F901530 != 0) {
+                D_8F901530 = 0;
+            } else {
+                D_8F901530 = 1;
+            }
+            break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F901078.s")
 
