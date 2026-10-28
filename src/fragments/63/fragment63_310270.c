@@ -210,7 +210,33 @@ void func_87E0D41C(void) {
     func_87E0D18C();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0D43C.s")
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_800279C4(s32);
+void func_87E0D43C(void *arg0) {
+    u8 *node;
+    s32 offset;
+    s32 found;
+    u8 *model;
+
+    node = *(u8 **)((u8 *)arg0 + 0x1C);
+    found = 0;
+    if (node != NULL) {
+        offset = 0;
+        do {
+            model = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
+            if (((u32)*(s32 *)(*(u8 **)((u8 *)arg0 + 4) + offset + 0x21A4) << 18) >> 31) {
+                func_87F0B1A4(model, node + 0x48, *(f32 *)(node + 0x48),
+                              *(f32 *)(node + 0x4C), *(f32 *)(node + 0x50) + 20.0f, 10, 0x1000);
+                found = 1;
+            }
+            node = *(u8 **)(node + 4);
+            offset += 0x18;
+        } while (node != NULL);
+    }
+    if (found) {
+        func_800279C4(0xCF16);
+    }
+}
 
 extern void func_87E0D278(void);
 void func_87E0D500(void) {
