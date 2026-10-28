@@ -83,3 +83,35 @@ return whichever side has the smaller value, else `a`. Locals `s16 up;
 s16 upValue; s32 downValue;` give retail's homes (upValue at 0x24 behind
 `up`). `pos - step` stays an expression (a spilled temp, not a home), and a
 named s32 `down` adds a frame word.
+
+## 2026-10-29 — `.rodata` owned; `func_86B014E8` matched; `func_86B03228` requeue
+
+`fragment61_data` held this object's `.rodata` (no strings). It is now split:
+`data` up to 0x300B80 (`func_86B00A3C`'s first float), `fragment61_code`'s
+`.rodata` up to 0x300FC0 (end of `jtbl_86B0E058`), then a `fragment61_tail`
+rodata blob. The 20 C references into that range are now literals. Two
+needed care:
+
+- `0.072` must be written `0.07200000000000001`. IDO rounds the short
+  literal one ULP low (`...DF3B` instead of retail's `...DF3C`).
+- `func_86B05610` had hoisted its 900.0 threshold into a local to match
+  against the extern. With a literal that schedules differently. The real
+  shape is a `for (i = 0; i < 4; i++)` loop over the `s32` array at
+  `D_86B17A78 + 0x34` and the `f32` array at `+0x58`, comparing directly
+  against `900.0`.
+
+`func_86B014E8` (frame draw) matched.
+
+`func_86B03228` (**requeue**, 0.94, `scratch/c/228_best.c`):
+
+- Every case, the empty `for (i = 2; i < 10; i += 4) {}` loops, and the
+  final `D_86B178E0 = D_80094904` are exact.
+- The only difference is two delay slots. After `guRandom() % 300 == 0`,
+  retail uses `bnel` + a duplicated `lw v0,24(sp)` where ours hoists
+  `lui a0` above `bne`. The `arg0 == 2` test uses `bnel`/`lw ra` where ours
+  uses `bne`/`lui t9`.
+- Already tried: nested `if`, `else if`, `switch (arg0)`, `!(...)`. A
+  300 s permuter run found nothing real.
+
+`func_86B0B04C` (RNG setup, 308 lines) has been read but not written.
+`func_86B01A94`, `func_86B023FC` and `func_86B04970` are large.
