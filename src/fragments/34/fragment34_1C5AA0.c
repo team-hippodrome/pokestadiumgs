@@ -776,7 +776,6 @@ void func_8850A958(void) {
     }
 }
 
-extern void func_8850A0EC(s32);
 void func_8850A988(void) {
     s16 v = D_88523030.unk_18--;
 
@@ -791,7 +790,6 @@ void func_8850A988(void) {
     }
 }
 
-extern void func_8850A0EC(s32);
 void func_8850AAA8(void) {
     s16 v = D_88523030.unk_18--;
 
@@ -806,8 +804,6 @@ void func_8850AAA8(void) {
     }
 }
 
-extern void func_885084EC(u8, s32);
-extern void func_8850A0EC(s32);
 void func_8850ABCC(void) {
     D_88523030.unk_18--;
     D_88523030.unk_04 = (s16)((-20.0f - (D_88523030.unk_18 * 480) / 10.0f) + ((-20.0f > (D_88523030.unk_18 * 480) / 10.0f) ? 0.5f : -0.5f));
