@@ -100,7 +100,7 @@ void func_80024E8C(s32 arg0) ;
  * also carry 3 extra .late_rodata padding words ahead of jtbl_800A32C0. See
  * the comment in hand_asm/229E0/func_80024F20_manual.s for why. */
 
-extern void func_80018704(s32, s32);
+extern void func_80018704(s32, f32);
 void func_800251F8(s32 arg0) ;
 
 void func_80025848(s32 arg0) ;
