@@ -182,7 +182,24 @@ void func_87E0CE60(u8 *arg0, s32 arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CEE4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0D0A0.s")
+extern f32 D_87E1A464[][3];
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B24C(u8 *, u8 *, f32, f32, f32, s32, s32);
+void func_87E0D0A0(u8 *arg0) {
+    u8 *node;
+    s32 i;
+    u8 *object;
+
+    i = 0;
+    for (node = *(u8 **)(arg0 + 0x1C); node != NULL; node = *(u8 **)(node + 4)) {
+        object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
+        func_87F0B1A4(object, node + 0x48, D_87E1A464[i][0], D_87E1A464[i][1], D_87E1A464[i][2], i * 5 + 10, 0x5000);
+        func_87F0B2F4(object, node + 0x42, 0.0f, 0.0f, 0.0f, i * 5 + 10, 0x8000);
+        func_87F0B24C(object, node + 0x54, 0.7f, 0.7f, 0.7f, i * 5 + 10, 0);
+        i++;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0D18C.s")
 
@@ -332,7 +349,7 @@ s32 func_87E0D7D8(u8 *arg0) {
     return ret;
 }
 
-extern void func_87E0D0A0(void);
+extern void func_87E0D0A0(u8 *);
 extern void func_87E13558(void *, f32, f32, f32, s32);
 extern u32 func_8003570C(void);
 void func_87E0D8EC(u8 *arg0) {
@@ -344,7 +361,7 @@ void func_87E0D8EC(u8 *arg0) {
 
     min = 0;
     count = 0;
-    func_87E0D0A0();
+    func_87E0D0A0(arg0);
     entry = arg0 + 0x28;
     for (i = 0; i < 4; i++, entry += 0xEC) {
         if (i == 0 || *(s32 *)*(void **)(entry + 0x88) < min) {
