@@ -212,76 +212,57 @@ void func_813061E8(u8 *arg0) {
 }
 
 extern void func_800226C0(s32);
-#pragma pack(1)
-struct Fragment14PackedWord { s32 value; };
-#pragma pack(0)
-void func_81306208(void *arg0)
-{
-  if ((*((s16 *) (((u8 *) arg0) + 8))) > 0)
-  {
-    *((struct Fragment14PackedWord *) (((u8 *) arg0) + 0xC)) = *((struct Fragment14PackedWord *) (((u8 *) arg0) + 8));
-    *((s16 *) (((u8 *) arg0) + 8)) = (*((s16 *) (((u8 *) arg0) + 8))) - 1;
-    *((u8 *) (((u8 *) arg0) + 0x87)) = 2;
-    *((u8 *) (((u8 *) arg0) + 0x83)) = 0;
-    *((u8 *) (((u8 *) arg0) + 0x85)) = 4;
-    func_800226C0(1);
-  }
-}
-
-extern void func_800226C0(s32);
-#pragma pack(1)
-struct Fragment14CounterWordE { s32 value; };
-#pragma pack(0)
-void func_81306264(void *arg0)
-{
-  s16 *new_var;
-  u8 *base = (u8 *) arg0;
-  if ((*((s16 *) (((u8 *) arg0) + 8))) > 0)
-  {
-    return;
-  }
-  else
-  {
-    new_var = (s16 *) (base + 8);
-    *((struct Fragment14CounterWordE *) (((u8 *) arg0) + 0xC)) = *((struct Fragment14CounterWordE *) (base + 8));
-    *new_var = (*new_var) + 1;
-    *((u8 *) (((u8 *) arg0) + 0x87)) = 2;
-    *((u8 *) (base + 0x83)) = 0;
-    *((u8 *) (base + 0x85)) = 4;
-    func_800226C0(1);
-  }
-}
-
-extern void func_800226C0(s32);
 extern f32 D_81311F70;
-void func_813062C0(void *arg0)
-{
-  s16 temp_v0;
-  s32 temp_v1;
-  s32 var_v0;
-  temp_v0 = *((s16 *) (((u8 *) arg0) + 0x7C));
-  if ((*((s16 *) (((u8 *) arg0) + 0x7C))) > 0)
-  {
-    *((u8 *) (((u8 *) arg0) + 0x8A)) = (u8) (*((s16 *) (((u8 *) arg0) + 0x7C)));
-    *((s16 *) (((u8 *) arg0) + 0x7C)) = (*((s16 *) (((u8 *) arg0) + 0x7C))) - 4;
-    if ((*((s16 *) (((u8 *) arg0) + 0x7C))) < 0)
-    {
-      *((s16 *) (((u8 *) arg0) + 0x7C)) = 0;
+// The cursor cell (column, row) at +8, copied to +0xC as the previous cell.
+typedef struct unk_D_813064E8 {
+    /* 0x0 */ s16 x;
+    /* 0x2 */ s16 y;
+} unk_D_813064E8;
+
+void func_81306208(u8 *arg0) {
+    if (*(s16 *)(arg0 + 8) > 0) {
+        *(unk_D_813064E8 *)(arg0 + 0xC) = *(unk_D_813064E8 *)(arg0 + 8);
+        *(s16 *)(arg0 + 8) -= 1;
+        arg0[0x87] = 2;
+        arg0[0x83] = 0;
+        arg0[0x85] = 4;
+        func_800226C0(1);
     }
-    *((u8 *) (((u8 *) arg0) + 0x87)) = 3;
-    temp_v1 = (*((s16 *) (((u8 *) arg0) + 0x7C))) - (*((u8 *) (((u8 *) arg0) + 0x8A)));
-    *((u8 *) (((u8 *) arg0) + 0x82)) = 0;
-    if (temp_v1 > 0)
-    {
-      var_v0 = temp_v1;
+}
+
+void func_81306264(u8 *arg0) {
+    if (*(s16 *)(arg0 + 8) > 0) {
+        return;
     }
-    else
-    {
-      var_v0 = -temp_v1;
-    }
-    *((s8 *) (((u8 *) arg0) + 0x86)) = (s8) ((u32) (((f32) var_v0) * D_81311F70));
+    *(unk_D_813064E8 *)(arg0 + 0xC) = *(unk_D_813064E8 *)(arg0 + 8);
+    *(s16 *)(arg0 + 8) += 1;
+    arg0[0x87] = 2;
+    arg0[0x83] = 0;
+    arg0[0x85] = 4;
     func_800226C0(1);
-  }
+}
+
+void func_813062C0(u8 *arg0) {
+    s32 delta;
+    s32 distance;
+
+    if (*(s16 *)(arg0 + 0x7C) > 0) {
+        arg0[0x8A] = *(s16 *)(arg0 + 0x7C);
+        *(s16 *)(arg0 + 0x7C) -= 4;
+        if (*(s16 *)(arg0 + 0x7C) < 0) {
+            *(s16 *)(arg0 + 0x7C) = 0;
+        }
+        arg0[0x87] = 3;
+        delta = *(s16 *)(arg0 + 0x7C) - arg0[0x8A];
+        arg0[0x82] = 0;
+        if (delta > 0) {
+            distance = delta;
+        } else {
+            distance = -delta;
+        }
+        arg0[0x86] = (u32)((f32)distance * D_81311F70);
+        func_800226C0(1);
+    }
 }
 
 void Fragment14_ScrollGridForward(u8 *arg0) {
@@ -309,7 +290,34 @@ void Fragment14_ScrollGridForward(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_813064E8.s")
+void func_813064E8(u8 *arg0) {
+    s32 delta;
+    s32 distance;
+
+    if (*(s16 *)(arg0 + 0xA) > 0) {
+        *(unk_D_813064E8 *)(arg0 + 0xC) = *(unk_D_813064E8 *)(arg0 + 8);
+        *(s16 *)(arg0 + 0xA) -= 1;
+        arg0[0x87] = 2;
+        arg0[0x83] = 0;
+        arg0[0x85] = 1;
+        func_800226C0(1);
+        return;
+    }
+    if (*(s16 *)(arg0 + 0x7C) > 0) {
+        arg0[0x8A] = *(s16 *)(arg0 + 0x7C);
+        *(s16 *)(arg0 + 0x7C) -= 1;
+        arg0[0x87] = 3;
+        delta = *(s16 *)(arg0 + 0x7C) - arg0[0x8A];
+        arg0[0x82] = 0;
+        if (delta > 0) {
+            distance = delta;
+        } else {
+            distance = -delta;
+        }
+        arg0[0x86] = (u32)((f32)distance * D_81311F70);
+        func_800226C0(1);
+    }
+}
 
 // Moves the grid cursor down one row while the s16 row at 0xA is below 3; on the last
 // row it instead scrolls the grid forward by one row, the single-row counterpart of
@@ -320,7 +328,7 @@ void func_8130662C(u8 *grid) {
     s32 distance;
 
     if (*(s16 *)(grid + 0xA) < 3) {
-        *(struct Fragment14PackedWord *)(grid + 0xC) = *(struct Fragment14PackedWord *)(grid + 8);
+        *(unk_D_813064E8 *)(grid + 0xC) = *(unk_D_813064E8 *)(grid + 8);
         *(s16 *)(grid + 0xA) += 1;
         grid[0x87] = 2;
         grid[0x83] = 0;
@@ -379,7 +387,7 @@ void Fragment14_UpdateGridCursorStep(u8 *arg0) {
     if (count >= arg0[0x85]) {
         arg0[0x83] = 0;
         arg0[0x87] = 1;
-        *(struct Fragment14PackedWord *)(arg0 + 0xC) = *(struct Fragment14PackedWord *)(arg0 + 8);
+        *(unk_D_813064E8 *)(arg0 + 0xC) = *(unk_D_813064E8 *)(arg0 + 8);
     } else {
         arg0[0x83] = count + 1;
     }
@@ -474,7 +482,7 @@ void Fragment14_ResetGrid(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, void *arg4) {
     *(s16 *)(arg0 + 0xA) = 0;
     *(s32 *)arg0 = 0;
     *(s16 *)(arg0 + 0x7C) = 0;
-    *(struct Fragment14PackedWord *)(arg0 + 0xC) = *(struct Fragment14PackedWord *)(arg0 + 8);
+    *(unk_D_813064E8 *)(arg0 + 0xC) = *(unk_D_813064E8 *)(arg0 + 8);
     *(s16 *)(arg0 + 4) = arg1;
     *(s16 *)(arg0 + 6) = arg2;
     arg0[0x87] = 0;
