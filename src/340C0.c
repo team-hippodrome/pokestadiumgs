@@ -5236,7 +5236,34 @@ void func_800429A0(s32 arg0) {
     PokeIcon_ApplyResourceLoadResult(arg0, sp1C);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_800429D8.s")
+extern void func_80041FA0(s32 arg0, u16 arg1, Func80041FA0State arg2);
+extern s32 func_800422B4(u8 *arg0, s32 arg1, u16 arg2, u16 arg3);
+extern void func_800428F8(s32 arg0);
+extern void func_80042968(s32 arg0);
+extern s32 func_80042ADC(u8 *arg0);
+u8 *func_800429D8(s32 arg0, s32 arg1) {
+    u8 *bank;
+    Func80041FA0State state;
+    s32 resource;
+    s32 format;
+    u16 id;
+
+    resource = arg0;
+    id = arg1;
+    state.word = 0;
+    if (!arg0) {} // FAKE
+    func_80041FA0(resource, id, state);
+    func_800428F8(resource);
+    bank = *(u8 **)(resource + 0x38);
+    if (bank != NULL && bank[4] > 0) {
+        format = func_80042ADC(bank);
+        if (format >= 0) {
+            func_800422B4((u8 *)resource, format, id, 0);
+            func_80042968(resource);
+        }
+    }
+    return bank;
+}
 
 s32 func_80042A64(s32 arg0) { return 0; }
 
