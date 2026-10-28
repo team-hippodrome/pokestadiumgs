@@ -361,11 +361,76 @@ void func_86703F9C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670408C.s")
+typedef struct { u8 unk00[0x10]; f32 score; u8 unk14[0x10]; s32 whole; f32 fraction; s32 mode; u8 unk30[0x58]; s32 sound14; s32 sound32; u8 unk90[0x1C]; } Stage55SoundState;
+typedef struct { u8 unk00[0x48]; s32 frame; u8 unk4C[0x11C]; } Stage55SoundModel;
+extern void func_80027A28(u16, u8);
+void Stage55_UpdateModelSounds(s32 arg0) {
+    Stage55SoundModel *model;
+    model = (Stage55SoundModel *)&D_86710C20[arg0];
+    if (((Stage55SoundState *)D_86728408)[arg0].mode == 0) {
+        if ((model->frame >> 16) < 10) {
+            ((Stage55SoundState *)D_86728408)[arg0].sound14 = 0;
+            ((Stage55SoundState *)D_86728408)[arg0].sound32 = 0;
+        }
+        if ((model->frame >> 16) >= 14 && ((Stage55SoundState *)D_86728408)[arg0].sound14 == 0) {
+            func_80027A28(0x9F03, arg0);
+            ((Stage55SoundState *)D_86728408)[arg0].sound14 = 1;
+        }
+        if ((model->frame >> 16) >= 32 && ((Stage55SoundState *)D_86728408)[arg0].sound32 == 0) {
+            func_80027A28(0x9F03, arg0);
+            ((Stage55SoundState *)D_86728408)[arg0].sound32 = 1;
+        }
+    } else if (((Stage55SoundState *)D_86728408)[arg0].mode == 1) {
+        if ((model->frame >> 16) < 10) {
+            ((Stage55SoundState *)D_86728408)[arg0].sound14 = 0;
+            ((Stage55SoundState *)D_86728408)[arg0].sound32 = 0;
+        }
+        if ((model->frame >> 16) >= 14 && ((Stage55SoundState *)D_86728408)[arg0].sound14 == 0) {
+            func_80027A28(0x9F04, arg0);
+            ((Stage55SoundState *)D_86728408)[arg0].sound14 = 1;
+        }
+        if ((model->frame >> 16) >= 32 && ((Stage55SoundState *)D_86728408)[arg0].sound32 == 0) {
+            func_80027A28(0x9F04, arg0);
+            ((Stage55SoundState *)D_86728408)[arg0].sound32 = 1;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670427C.s")
+typedef struct { u8 unk00[0x94]; s32 mode; u8 unk98[0x14]; } Stage55FadeState;
+typedef struct { u8 unk00[0x1D]; u8 alpha; u8 unk1E[0x1A]; f32 scale_z; u8 unk3C[0x12C]; } Stage55FadeModel;
+extern Stage55FadeModel D_86710668[];
+extern State86703DF4 D_86728408[];
+extern f32 D_8670C404;
+extern void func_8003F1DC(void *);
+void Stage55_UpdateModelFade(s32 arg0) {
+
+    if (((Stage55FadeState *)D_86728408)[arg0].mode == 1) {
+        D_86710668[arg0].alpha -= 10;
+        if (D_86710668[arg0].alpha <= 70) {
+            D_86710668[arg0].alpha = 70;
+            D_86710668[arg0].scale_z = D_8670C404;
+            ((Stage55FadeState *)D_86728408)[arg0].mode = 0;
+        }
+    }
+
+    if (((Stage55FadeState *)D_86728408)[arg0].mode == -1) {
+        D_86710668[arg0].alpha -= 10;
+        if (D_86710668[arg0].alpha <= 20) {
+            D_86710668[arg0].alpha = 0;
+            ((Stage55FadeState *)D_86728408)[arg0].mode = 0;
+            func_8003F1DC(&D_86710668[arg0]);
+
+        }
+    }
+    if (D_86710668[arg0].alpha > 200) {
+        D_86710668[arg0].alpha = 200;
+    }
+    if (D_86710668[arg0].alpha < 5) {
+        D_86710668[arg0].alpha = 0;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -401,7 +466,45 @@ void D_867068E4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867068EC.s")
+typedef struct { s32 index; u8 unk04[0xA8]; } Stage55VariantIndex;
+extern Stage55VariantIndex D_86728458[];
+extern f32 D_8670C04C[];
+extern f32 D_8670C05C;
+extern f32 D_8670C060[];
+extern f32 D_8670C4F0;
+extern u8 D_8670D948[];
+extern u8 D_8670D920[];
+extern void *D_8670FF54;
+extern void *func_87F025B8(void *, void *);
+extern void func_87F0DB3C(u8 *, s32, void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+void Stage55_SpawnVariantEffect(s32 arg0) {
+    u8 *entry;
+    f32 *z;
+    s32 side;
+    f32 size;
+    side = 0;
+    if (arg0 % 2 == 1) {
+        side = 1;
+    }
+    entry = func_87F025B8(D_8670D948, D_867068E4);
+    if (entry != NULL) {
+        size = D_8670C4F0;
+        *(f32 *)(entry + 0x48) = D_8670C04C[(arg0 / 2)];
+        z = &D_8670C060[side];
+        *(f32 *)(entry + 0x4C) = D_8670C05C;
+        *(f32 *)(entry + 0x50) = *z;
+        *(s16 *)(entry + 0x42) = -0x4000;
+        *(f32 *)(entry + 0x54) = size;
+        *(f32 *)(entry + 0x58) = size;
+        *(f32 *)(entry + 0x5C) = size;
+        *(s32 *)(entry + 0x38) = D_86728458[(arg0 / 2)].index;
+        func_8003F114(entry + 0x24, 0, -1, D_8670FF54);
+        if (z == D_8670C060) {
+            func_87F0DB3C(D_8670D920, (arg0 / 2), entry + 0x24);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

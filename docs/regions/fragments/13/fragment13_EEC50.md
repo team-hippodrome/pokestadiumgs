@@ -1397,3 +1397,60 @@ preserve bytes, extents and relocation topology modulo those aliases.
 - `func_8240330C` → `Fragment13_DrawPageIndicatorPanel`.
 The external group-count span has the observed60-byte stride and allocates
 no storage; the named five-column value is used in all real page calculations.
+
+## 2026-10-28 — genuine tinted scaled panel accepted in third native box
+
+`func_8240239C` is genuine C: **278 words / 1,112 bytes**, original frame
+**0x50**. File: **71 C / 8 function ASM**. Canonical batch
+`box3-tinted-arity2`, candidate 0, passes the explicit normal host syntax
+recipe and authoritative sequential retail-ROM gate, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The object link-shape diagnostic remains
+`relocation_drift` at the already-renamed clipped-rectangle callee; this is
+not a link-verified probe. The full-ROM result is the acceptance evidence.
+
+The preceding frame-0x58 basin retained an unnecessary `scale` local beside
+`texture_scale`. Calibrated stock/blank/observer-off/on/on-blank builds of a
+retained candidate preserve complete sections, function extents and
+relocations (`scratch/box3-tinted-observer/calibration.json`). There are only
+two generated spill temporaries; most shifted geometry/blend slots are fixed
+local homes. The winning source repeats the real `1.0f + amount` expression
+at initialization and the later limit comparison, allowing ordinary optimizer
+sharing, and uses the direct SDK packet write. This closes the frame/home
+residual. Reusing a modified amount parameter instead gives the wrong 0x40
+frame; coordinate-to-color carrier reuse also does not solve it.
+
+Direct RGB reads, with the original channel before its weighted delta in each
+floating addition, close the remaining input/output expression allocation.
+Every channel preserves its unsigned float conversion, signed
+`220 - color[channel]` delta, clamped blend and final byte conversion.
+The three stale binder prototypes become the verified
+`s32 func_8004D1FC(u8 *)` declaration from `src/4CC20.c`, as a runner companion
+transaction. The visibility call uses its real two-argument interface,
+verified against `src/fragments/11/fragment11_D7BC0.c`; width/height happen
+to occupy argument registers as live temporaries and are not extra arguments.
+No padding, unused local, forced register, fabricated argument or compiler
+rewrite is used.
+
+Important withdrawn evidence: `box3-tinted-inline1` initially reports an
+accepted four-argument visibility call. Independent host syntax verification
+rejects it. That transaction was rolled back, and its accepted statistics row
+is **not** production credit. The old-style local declaration and fabricated
+width/height arguments were removed; `box3-tinted-arity2` then accepts the
+correct two-argument body immediately. The private batch wrapper now runs the
+normal host syntax recipe explicitly before its ROM gate, because copying a
+verified probe object can leave make's object current and skip its syntax
+recipe. This only strengthens verification; no tracked tooling is changed.
+All provisional receipts and the failed host log remain in scratch.
+
+Correct gate receipt: `scratch/box3-tinted-arity2/gate-0/receipt.json`.
+Post-acceptance normal/+20-blank whole-module controls and the specifically
+corrected accepted-ledger row: `scratch/box3-tinted-ready-controls/`.
+Independent full-ROM and explicit host syntax verification:
+`scratch/box3-tinted-ready-state/`. The two previous accepted owners remain
+frozen. Behavior-backed name suggestion: `Fragment13_DrawTintedPanel`.
+Naming and publication remain coordinator work.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8240239C` → `Fragment13_DrawTintedPanel`.
