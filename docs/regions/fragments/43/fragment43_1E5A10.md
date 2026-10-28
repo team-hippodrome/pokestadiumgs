@@ -203,3 +203,61 @@ the original address-keyed entry names as assembly compatibility aliases.
 - `func_8AC013FC` → `Fragment43_DrawTextEntries`.
 - `func_8AC02DA0` → `Fragment43_DualTextureCallback`.
 - `func_8AC039A4` → `Fragment43_FillRectangleCallback`.
+
+## 2026-10-28 — native texture-family follow-up
+
+Four additional genuine C owners passed the same native controls and complete
+syntax-enabled retail ROM gate:
+
+| Owner | Instruction bytes | Frame bytes | Sealed local receipt |
+| --- | ---: | ---: | --- |
+| `func_8AC017B0` | 476 | 88 | `scratch/strip05/gate-0/receipt.json` |
+| `func_8AC0198C` | 488 | 88 | `scratch/strip05/gate-0/receipt.json` |
+| `func_8AC030EC` | 584 | 96 | `scratch/dual-family01/gate-0/receipt.json` |
+| `func_8AC02A34` | 588 | 96 | `scratch/dual02/gate-0/receipt.json` |
+
+The strip callbacks capture their parent coordinates and primary/environment
+RGBA components, load the existing texture, then emit an ordinary SDK texture
+rectangle. Primary components are full-word locals; environment components
+are byte locals. Declaring three primary components before the four coordinate
+halfwords, with alpha after them, gives the original coordinate spill offsets
+without extra storage. A persistent payload view carries the rectangle fields
+across the texture-load call. `func_8AC0198C` starts texture T at
+`bottom << 5` and steps it backward with -0x400; `func_8AC017B0` starts at
+zero and steps forward. Both use a zero S increment.
+
+The actual definition in `src/4CC20.c` establishes
+`s32 func_8004D1FC(u8 *)`; this file's two earlier `void` declarations were
+corrected transactionally. The full-ROM gate verifies that existing compiled
+callers remain identical after that correction.
+//@src/4CC20.c
+
+The two remaining dual-texture callbacks follow the accepted
+`func_8AC02DA0` state layout. `func_8AC030EC` additionally copies node offset 4
+to `D_8AC07D20`, checks the upper edge against 480 and the lower edge against
+zero, and emits the rectangle with S = 64. `func_8AC02A34` loads the second
+image with a four-unit horizontal source range, synchronizes the RDP, and
+emits its rectangle. Its vertical source coordinate must be spelled
+`(height - 1) << 2`: multiplication by four is distributed into a shift then
+subtract, producing two different instructions. The final left-shift spelling
+matches all 147 words. These callbacks retain the original narrowing and
+edge arithmetic, including the distinct height adjustments.
+
+All four receipts again record compiler SHA256
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`
+and retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+The previous strip requeue is resolved by these accepts. The flag callback's
+latest candidate (`flags03`/`flags04`) has the same 372 bytes, opcode sequence
+and register operands as retail, but a 48-byte rather than 56-byte frame;
+its count and unlocked-byte stack slots are two bytes too low. That owner
+remains `requeue`; no padding or unused locals were installed.
+
+Parent integration preserves the previously merged callback names and removes
+the duplicate inner texture-state type declarations. Unchanged/cleanup and
++20blank controls reproduce the sealed eight-owner module modulo the four
+existing compatibility entries. The actual texture loader prototype remains
+`s32 func_8004D1FC(u8 *)`. New names preserve old assembly entry aliases.
+- `func_8AC017B0` → `Fragment43_DrawForwardTextureStrip`.
+- `func_8AC0198C` → `Fragment43_DrawReverseTextureStrip`.
+- `func_8AC02A34` → `Fragment43_SecondaryTextureCallback`.
+- `func_8AC030EC` → `Fragment43_ClippedTextureCallback`.
