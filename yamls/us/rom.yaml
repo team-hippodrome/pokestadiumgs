@@ -1413,6 +1413,8 @@
     - [0x2F2F50, textbin, fragments/61/fragment61_header]
     - [0x2F2F70, c,       fragments/61/fragment61_code]
     - [0x3000B0, data,    fragments/61/fragment61_data]
+    - [0x300B80, .rodata, fragments/61/fragment61_code] # jump tables and float literals
+    - [0x300FC0, rodata, fragments/61/fragment61_tail] # tables after the code object's rodata
 
   - name: fragment62
     type: code
