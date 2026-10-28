@@ -73,3 +73,8 @@ then `lbu/sb 1(v0)`) even inside one basic block, so IDO did not see a
 `slot + const` address there. Every spelling tried folds into `41(a0)`. Both
 owners likely share one sub-object spelling (an embedded struct reached by
 pointer from a helper or macro?). Solve it once for both.
+Evidence for the sub-object, from `func_88504828`'s last loop: the same
+`slot + 0x28` goes to `func_8003F018(obj)` and `func_8003F114(obj, 0, -1,
+D_88523004)`, then `obj->flags(+1) &= ~1` and `obj->index(+0x14) = i`
+through a copied register. So `+0x28` is an embedded animation object
+(`func_8003F114` is the anim init used elsewhere on `node + 0x24`).
