@@ -4271,6 +4271,7 @@ SECTIONS
         build/src/fragments/63/fragment63_312AE0.o(.text);
         build/src/fragments/63/fragment63_315A90.o(.text);
         build/src/fragments/63/fragment63_317060.o(.text);
+        build/src/fragments/63/fragment63_319010.o(.text);
         build/src/fragments/63/fragment63_31BD80.o(.text);
         build/src/fragments/63/fragment63_31CB20.o(.text);
         fragment63_TEXT_END = .;
@@ -4302,6 +4303,8 @@ SECTIONS
         build/src/fragments/63/fragment63_315A90.o(.data);
         fragments_63_fragment63_317060 = .;
         build/src/fragments/63/fragment63_317060.o(.data);
+        fragments_63_fragment63_319010 = .;
+        build/src/fragments/63/fragment63_319010.o(.data);
         fragments_63_fragment63_31BD80 = .;
         build/src/fragments/63/fragment63_31BD80.o(.data);
         fragments_63_fragment63_31CB20 = .;
@@ -4326,10 +4329,12 @@ SECTIONS
         build/src/fragments/63/fragment63_310270.o(.rodata);
         build/src/fragments/63/fragment63_312AE0.o(.rodata);
         build/src/fragments/63/fragment63_315A90.o(.rodata);
+        build/asm/us/data/31F150.rodata.o(.rodata);
         build/src/fragments/63/fragment63_317060.o(.rodata);
+        build/src/fragments/63/fragment63_319010.o(.rodata);
         build/src/fragments/63/fragment63_31BD80.o(.rodata);
         build/src/fragments/63/fragment63_31CB20.o(.rodata);
-        build/asm/us/data/31F150.rodata.o(.rodata);
+        build/asm/us/data/31F2F0.rodata.o(.rodata);
         fragment63_RODATA_END = .;
         fragment63_RODATA_SIZE = ABSOLUTE(fragment63_RODATA_END - fragment63_RODATA_START);
     }
@@ -4351,6 +4356,7 @@ SECTIONS
         build/src/fragments/63/fragment63_312AE0.o(.bss);
         build/src/fragments/63/fragment63_315A90.o(.bss);
         build/src/fragments/63/fragment63_317060.o(.bss);
+        build/src/fragments/63/fragment63_319010.o(.bss);
         build/src/fragments/63/fragment63_31BD80.o(.bss);
         build/src/fragments/63/fragment63_31CB20.o(.bss);
         fragment63_BSS_END = .;
