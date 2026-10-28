@@ -5033,6 +5033,7 @@ SECTIONS
         fragment75_RODATA_START = .;
         build/asm/us/data/fragments/75/fragment75_header.o(.rodata);
         build/src/fragments/75/fragment75_code.o(.rodata);
+        build/asm/us/data/fragments/75/fragment75_tail.rodata.o(.rodata);
         fragment75_RODATA_END = .;
         fragment75_RODATA_SIZE = ABSOLUTE(fragment75_RODATA_END - fragment75_RODATA_START);
     }
