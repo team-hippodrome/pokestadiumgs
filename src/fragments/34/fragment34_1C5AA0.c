@@ -545,10 +545,16 @@ void func_8850998C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88509A38.s")
 
-extern u8 D_885230F0;
+// The open evolution view: the species index, its party data and the view handle.
+typedef struct Fragment34EvolutionState {
+    /* 0x0 */ u8 species;
+    /* 0x4 */ u8 *pokemon;
+    /* 0x8 */ u8 view;
+} Fragment34EvolutionState;
+extern Fragment34EvolutionState D_885230F0;
 void func_8850A0A0(s16 arg0, s16 arg1, s16 arg2, s16 arg3);
 void func_88509E74(void) {
-    if (D_885230F0 == 0) {
+    if (D_885230F0.species == 0) {
         func_8850A0A0(0x200, 0xB9, 0x4C, 0x5A);
         return;
     }
@@ -563,8 +569,8 @@ void func_8850A0A0(s16 arg0, s16 arg1, s16 arg2, s16 arg3);
 void func_88509EC8(void) {
     func_8850A0A0(0, 0, 0x280, 0x1E0);
     D_880068B8 = 1;
-    if ((*(u8 *)((u8 *)(&D_885230F0) + (8))) != 0) {
-        func_8004D878((s32) (((*(u8 *)((u8 *)(&D_885230F0) + (0))) * 0xA960) + 8 + &D_8850D6D8), 0, (*(s32 *)((u8 *)(&D_885230F0) + (4))));
+    if (D_885230F0.view != 0) {
+        func_8004D878((s32)(D_885230F0.species * 0xA960 + 8 + &D_8850D6D8), 0, (s32)D_885230F0.pokemon);
     }
 }
 
@@ -576,7 +582,38 @@ void func_88509F40(void) {
     func_88900494();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88509F68.s")
+extern u8 *func_88500CF0(u8);
+extern void LabPC_InitEvolutionView(void);
+extern u8 LabPC_OpenEvolutionView(s32, u8 *, s32, s32, void *, void *, void *, s32);
+extern void *func_8004B7A4(s32);
+extern void func_88509E74(void);
+extern void func_88509EC8(void);
+extern void func_88509F40(void);
+extern s32 D_880068B4;
+extern u8 D_8850D6D8;
+void func_88509F68(s16 arg0) {
+    u8 i;
+    u8 *p;
+    u8 *rec;
+
+    D_885230F0.species = arg0;
+    D_885230F0.pokemon = func_88500CF0(arg0);
+    LabPC_InitEvolutionView();
+    p = D_885230F0.pokemon + 2;
+    for (i = 0; i < 4; i++, p++) {
+        if (*p == 0) {
+            break;
+        }
+        if (*p == 0xA5 || *p >= 0xFC) {
+            func_8004B7A4(*D_885230F0.pokemon);
+            *p = 0xFC;
+        }
+    }
+    rec = &D_8850D6D8 + arg0 * 0xA960;
+    D_885230F0.view = LabPC_OpenEvolutionView(0, D_885230F0.pokemon, *(s8 *)rec, 0, func_88509E74, func_88509F40, func_88509EC8, 0);
+    D_880068B4 = 0;
+    rec[0xA958] = *D_885230F0.pokemon;
+}
 
 extern u8 D_88523148;
 void func_8850A0A0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
