@@ -3113,7 +3113,24 @@ void func_8005E350(s32 arg0, s32 arg1, s32 arg2, s32 arg3)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005E420.s")
+void GbSave_BuildGen1SpeciesBitmap(s32 port) {
+    u8 *save;
+    u8 *boxes;
+    s32 bitmap;
+    s32 offset;
+    u8 *second_bank;
+    boxes = *(u8 **)(D_80128570 + port * 112 + 100);
+    save = *(u8 **)(D_80128570 + port * 112 + 96);
+    second_bank = *(u8 **)(D_80128570 + port * 112 + 100) + 6752;
+    bitmap = (s32)(D_80128570 + port * 112 + 8);
+    _bzero(bitmap, 32);
+    func_8005E350(bitmap, save[2476], (s32)(save + 2477), 0);
+    func_8005E350(bitmap, save[2880], (s32)(save + 2881), 0);
+    for (offset = 0; offset != 6732; offset += 1122) {
+        func_8005E350(bitmap, boxes[offset], (s32)(boxes + offset + 1), 0);
+        func_8005E350(bitmap, second_bank[offset], (s32)(second_bank + offset + 1), 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -3175,11 +3192,11 @@ void func_8005E648(s32 arg0) {
 
 #ifdef VERSION_US
 extern u8 func_8005D92C(s32 index);
-extern void func_8005E420(s32 arg0);
+extern void GbSave_BuildGen1SpeciesBitmap(s32 arg0);
 void func_8005E6B8(s32 arg0) {
     switch (func_8005D92C(arg0)) {
         case 1: case 2: case 3: case 4:
-            func_8005E420(arg0);
+            GbSave_BuildGen1SpeciesBitmap(arg0);
             break;
         case 5: case 6:
             func_8005E5D8(arg0);

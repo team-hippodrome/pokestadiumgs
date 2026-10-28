@@ -2,7 +2,22 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0C900.s")
+int ListSlots_FindSelectedRecord(void *context) {
+    typedef struct { s32 count; u8 unk_04[16]; u32 upper : 16; u32 selected : 1; u32 lower : 15; } SlotSelectionRecord;
+    typedef struct { u8 unk_0000[8592]; SlotSelectionRecord records[4]; } SlotSelectionData;
+    SlotSelectionRecord *record;
+    s32 result;
+    s32 i;
+    result = -1;
+    record = (*(SlotSelectionData **)((u8 *)context + 4))->records;
+    for (i = 0; i != 4; i++, record++) {
+        if (record->selected) {
+            result = i;
+            break;
+        }
+    }
+    return result;
+}
 
 extern void *D_87F119DC;
 extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
@@ -374,7 +389,7 @@ void func_87E0D75C(u8 *arg0) {
     *(s32 *)(arg0 + 0x3F4) = 2;
     *(s32 *)(arg0 + 0x3FC) = 0;
     *(s32 *)(arg0 + 0x3F8) = 0;
-    index = func_87E0C900(arg0);
+    index = ListSlots_FindSelectedRecord(arg0);
     if (index == -1) {
         *(s8 *)(*(u8 **)(arg0 + 4) + 0x218D) = 0;
         return;
@@ -430,7 +445,7 @@ s32 func_87E0D7D8(u8 *arg0) {
 }
 
 extern void func_87E0D0A0(u8 *);
-extern void func_87E13558(void *, f32, f32, f32, s32);
+extern void func_87E13558(u8 *, f32, f32, f32, s32);
 extern u32 func_8003570C(void);
 void func_87E0D8EC(u8 *arg0) {
     s32 selected;
@@ -517,7 +532,56 @@ void func_87E0DAE0(void *arg0, s32 arg1) {
     func_87E0CC18(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0DB40.s")
+extern void func_87E13654(void);
+typedef struct { u8 unk_00[233]; s8 unk_E9; u8 unk_EA[2]; } SlotCycleEntry;
+typedef u8 SlotCycleItem[396];
+typedef struct {
+    u8 unk_00[24];
+    SlotCycleItem *unk_18;
+    u8 unk_1C[12];
+    SlotCycleEntry unk_28[4];
+    u8 unk_3D8[28];
+    s32 unk_3F4;
+    u8 unk_3F8[4];
+    s32 unk_3FC;
+    s32 unk_400;
+    s32 unk_404;
+    s8 unk_408;
+} SlotCycleState;
+
+extern void func_87E13558(u8 *, f32, f32, f32, s32);
+extern void Audio_PlayDefaultSound(u16);
+void ListSlots_UpdateEntryCycling(u8 *context) {
+    typedef struct { u8 unk_00[232]; u32 upper:8; u32 selected:1; u32 lower:23; } SlotCycleEntryFlags;
+    s32 previous;
+    if (((SlotCycleState *)context)->unk_3FC > ((SlotCycleState *)context)->unk_400) {
+        previous = ((SlotCycleState *)context)->unk_408;
+        do {
+            (((SlotCycleState *)context)->unk_408)++;
+            if (((SlotCycleState *)context)->unk_408 >= 4) {
+                ((SlotCycleState *)context)->unk_408 = 0;
+            }
+        } while (!((SlotCycleEntryFlags *)(context + 40))[((SlotCycleState *)context)->unk_408].selected);
+        ((SlotCycleState *)context)->unk_3FC = 0;
+        (((SlotCycleState *)context)->unk_400)++;
+        func_87E13558((u8 *)&(*(SlotCycleItem **)(context + 24))[((SlotCycleState *)context)->unk_408], -123.0f, -2.0f, 0.0f, 1);
+        if (previous == ((SlotCycleState *)context)->unk_408) {
+            if (((SlotCycleState *)context)->unk_400 <= ((SlotCycleState *)context)->unk_404) {
+                ((SlotCycleState *)context)->unk_400 = ((SlotCycleState *)context)->unk_404;
+            } else {
+                Audio_PlayDefaultSound(0xCF01);
+            }
+        } else {
+            Audio_PlayDefaultSound(0xCF01);
+        }
+    }
+    if (((SlotCycleState *)context)->unk_404 < ((SlotCycleState *)context)->unk_400) {
+        ((SlotCycleState *)context)->unk_3F4 = 1;
+        ((SlotCycleState *)context)->unk_3FC = 0;
+        func_87E13654();
+        Audio_PlayDefaultSound(0xCF02);
+    }
+}
 
 s32 func_87E0DC78(u8 *arg0) {
     s32 result = 0;
@@ -530,7 +594,7 @@ s32 func_87E0DC78(u8 *arg0) {
 extern void *D_87F119D8;
 extern void func_87F026E8(void *, void *);
 extern f32 D_80087E50[];
-extern int func_87E0C900(void *);
+extern int ListSlots_FindSelectedRecord(void *);
 extern void Audio_PlayDefaultSound(u16);
 extern void ListSlots_ResetEntryState(void *arg0, s32 arg1);
 extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
@@ -563,7 +627,7 @@ void ListSlots_UpdateTransferAnimation(void) {
         Audio_PlayDefaultSound(0xCE0E);
     }
     if (*(s32 *)(*(u8 **)((u8 *)D_87F119DC + 56) + 136) == 0) {
-        selected = func_87E0C900(context);
+        selected = ListSlots_FindSelectedRecord(context);
         if (selected != -1) {
             (*(s32 *)(*(u8 **)(context + 4) + selected * 24 + 8592))++;
             ListSlots_ResetEntryState(context, selected);
@@ -709,7 +773,7 @@ s32 func_87E0E850(void *arg0)
   return var_v1;
 }
 
-extern void func_87E0DB40(u8 *);
+extern void ListSlots_UpdateEntryCycling(u8 *);
 extern void func_87E120F8(void *);
 extern void func_87F0277C(void *);
 extern s32 func_87E0DC78(u8 *arg0);
@@ -734,7 +798,7 @@ s32 ListSlots_UpdateState(u8 *state) {
                 if (func_87E0E110(state)) result = 0;
                 break;
             case 0:
-                func_87E0DB40(state);
+                ListSlots_UpdateEntryCycling(state);
                 break;
             case 1:
                 if (func_87E0DC78(state)) result = 0;

@@ -318,3 +318,49 @@ scaled by the double `0.1111111111111111`, then `node+0x20 = slot`, then the
 same anim switch. Adding `anim` and an `index = idx` copy reaches retail's
 0x38 frame. The slot pointer still spills at 0x34 where retail uses 0x20, and
 declaration order does not move it. Body: `scratch/c/b10ai.c`.
+
+## 2026-10-29 native acceptance: `func_86A0588C`
+
+Accepted in the21:38 UTC owner box by canonical runner, scratch/ring9.json
+candidate4 (offset-ring:byte-index-and-local-storage:4). Stock native IDO7.1
+emits the exact288-byte owner with56-byte frame; link verification, explicit
+normal host syntax and full retail ROM comparison pass. Initial transaction
+receipt: scratch/ring9/gate-0/receipt.json. Cleaned complete-unit source,
+normal/+20blank object controls, explicit host syntax, full-ROM receipt and
+provenance are retained under scratch/ring-final. Retail MD5 remains
+1561c75d11cedf356a8ddb1a4a5f9d5d.
+
+The genuine signature is s32(s32 player,f32 target_x,f32 target_z). Read the
+actual MathUtil_Atan2s definition at src/BF50.c:17: s16(f32,f32), with no
+third argument. Canonical companion transaction corrects the three stale
+s32 declarations in this file; accepted callers05AAC/0638C/06400 retain
+identical instructions (scratch/inspect-ring-neighbors.py evidence). After
+acceptance, duplicate declarations are removed while keeping the true s16
+prototype visible to every caller. Existing accepted function bodies remain
+unchanged. D_86A0F2D4 really holds six two-float offsets, D_86A0F2BC six
+squared radii; D_86A444D8[player] selects the offset, but the squared-radius
+threshold uses player, not that selected item. Verified data extents and
+assembly establish both indices.
+
+The working source computes atan(offset.x,offset.y), its magnitude, adds
+player heading and masks/shifts the angle. It computes negative-cosine and
+positive-sine rotated offsets, adds player position, subtracts the supplied
+point, then tests squared distance strictly below the player threshold.
+Staging the two rotated components before the position additions gives the
+original floating-point scheduling. Explicit byte indexing of both trig
+arrays ties the final scale to the angle integer web: this closes the
+argument-home scheduling and all GPR/FPU allocation differences. The same
+real integer is consumed first for offset selection, then the computed
+angle; a genuine player byte offset is reused for cost selection and radius
+threshold. Declaring z before x gives exactly the original44/48 stack slots.
+No redundant copies, physical bindings, padding or byte transformations.
+
+The old48 retained ledger rows all failed compilation under incorrect or
+missing MathUtil declarations and are not reachability evidence. This box
+uses the real prototype and verified visible declarations for every numeric
+reference; no rejected body was replayed merely for declaration-index speed.
+Nine controlled batches precede acceptance; byte-index web probes reach
+normalized1.0/raw0.9722 with only one local slot wrong, then declaration order
+closes it. Remaining candidates stop after the first accepted owner. Parent
+owns naming and integration; suggested meaning is a player rotated-offset
+point-in-radius predicate. No shared source/layout files changed.

@@ -1286,3 +1286,11 @@ func_84144EF4 = BattlePanel_DrawVerticalBorders;
 func_841450B4 = BattlePanel_DrawColumnAndRowBorders;
 
 func_84145340 = BattlePanel_DrawGridBorders;
+
+func_8005E420 = GbSave_BuildGen1SpeciesBitmap;
+
+func_86A0588C = ItemBounds_ContainsRotatedOffset;
+
+func_87E0C900 = ListSlots_FindSelectedRecord;
+
+func_87E0DB40 = ListSlots_UpdateEntryCycling;
