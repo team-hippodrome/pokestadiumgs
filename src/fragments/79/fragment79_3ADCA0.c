@@ -1485,21 +1485,88 @@ void func_84144BF4(void *arg0) { s32 resource = func_8004C874(0x16, 0); *(s16 *)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144EF4.s")
+extern s16 D_84186D20, D_84186D24, D_84186D28;
+extern Gfx *D_800D0510;
+void BattlePanel_DrawVerticalBorders(u8 *state) {
+    u16 x;
+    u16 y;
+    x = *(s16 *)(state + 18) + D_84186D20;
+    y = *(s16 *)(state + 20) + D_84186D24;
+    func_8413E63C(0, 0, 0, 1);
+    gDPFillRectangle(D_800D0510++, x, y, x, y + D_84186D28 - 1);
+    gDPFillRectangle(D_800D0510++, x + 67, y, x + 67, y + D_84186D28 - 1);
+    func_8413E63C(state[34], state[35], state[36], 1);
+    x++;
+    gDPFillRectangle(D_800D0510++, x, y, x, y + D_84186D28 - 1);
+    gDPFillRectangle(D_800D0510++, x + 67, y, x + 67, y + D_84186D28 - 1);
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841450B4.s")
+extern s16 D_84186D20, D_84186D24, D_84186D2C, D_84186D30, D_84186D34, D_84186D38;
+void BattlePanel_DrawColumnAndRowBorders(u8 *state) {
+    u16 x;
+    u16 horizontal_x;
+    u16 y;
+    u16 horizontal_y;
+
+    x = *(s16 *)(state + 18) + D_84186D20;
+    y = *(s16 *)(state + 20) + D_84186D24;
+    horizontal_x = *(s16 *)(state + 18) + D_84186D30;
+    horizontal_y = *(s16 *)(state + 20) + D_84186D34;
+    func_8413E63C(0, 0, 0, 1);
+    gDPFillRectangle(D_800D0510++, x, y, x, y + D_84186D2C - 1);
+    gDPFillRectangle(D_800D0510++, x + 67, y, x + 67, y + D_84186D2C - 1);
+    gDPFillRectangle(D_800D0510++, horizontal_x, horizontal_y, horizontal_x + D_84186D38 - 1, horizontal_y);
+    func_8413E63C(state[34], state[35], state[36], 1);
+    x++;
+    horizontal_y++;
+    gDPFillRectangle(D_800D0510++, x, y, x, y + D_84186D2C - 1);
+    gDPFillRectangle(D_800D0510++, x + 67, y, x + 67, y + D_84186D2C - 1);
+    gDPFillRectangle(D_800D0510++, horizontal_x, horizontal_y, horizontal_x + D_84186D38 - 1, horizontal_y);
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84145340.s")
+extern s16 D_84186DB8, D_84186DBC, D_84186DC0, D_84186DC4, D_84186DC8, D_84186DCC, D_84186DD0, D_84186DD4;
+void BattlePanel_DrawGridBorders(u8 *state) {
+    enum { VERTICAL_Y, FIRST_ROW_Y, SECOND_ROW_Y, THIRD_ROW_Y, VERTICAL_X, HORIZONTAL_X };
+    u16 coordinates[6];
+    coordinates[VERTICAL_X] = *(s16 *)(state + 10) + D_84186DB8;
+    coordinates[VERTICAL_Y] = *(s16 *)(state + 12) + D_84186DBC;
+    coordinates[HORIZONTAL_X] = *(s16 *)(state + 10) + D_84186DC4;
+    coordinates[FIRST_ROW_Y] = *(s16 *)(state + 12) + D_84186DC8;
+    coordinates[SECOND_ROW_Y] = *(s16 *)(state + 12) + D_84186DCC;
+    coordinates[THIRD_ROW_Y] = *(s16 *)(state + 12) + D_84186DD0;
+    func_8413E63C(0, 0, 0, 1);
+    gDPFillRectangle(D_800D0510++, coordinates[VERTICAL_X], coordinates[VERTICAL_Y],
+                     coordinates[VERTICAL_X], coordinates[VERTICAL_Y] + D_84186DC0 - 1);
+    gDPFillRectangle(D_800D0510++, coordinates[HORIZONTAL_X], coordinates[FIRST_ROW_Y],
+                     coordinates[HORIZONTAL_X] + D_84186DD4 - 1, coordinates[FIRST_ROW_Y]);
+    gDPFillRectangle(D_800D0510++, coordinates[HORIZONTAL_X], coordinates[SECOND_ROW_Y],
+                     coordinates[HORIZONTAL_X] + D_84186DD4 - 1, coordinates[SECOND_ROW_Y]);
+    gDPFillRectangle(D_800D0510++, coordinates[HORIZONTAL_X], coordinates[THIRD_ROW_Y],
+                     coordinates[HORIZONTAL_X] + D_84186DD4 - 1, coordinates[THIRD_ROW_Y]);
+    func_8413E63C(state[34], state[35], state[36], 1);
+    coordinates[VERTICAL_X]++;
+    coordinates[FIRST_ROW_Y]++;
+    coordinates[SECOND_ROW_Y]++;
+    coordinates[THIRD_ROW_Y]++;
+    gDPFillRectangle(D_800D0510++, coordinates[VERTICAL_X], coordinates[VERTICAL_Y],
+                     coordinates[VERTICAL_X], coordinates[VERTICAL_Y] + D_84186DC0 - 1);
+    gDPFillRectangle(D_800D0510++, coordinates[HORIZONTAL_X], coordinates[FIRST_ROW_Y],
+                     coordinates[HORIZONTAL_X] + D_84186DD4 - 1, coordinates[FIRST_ROW_Y]);
+    gDPFillRectangle(D_800D0510++, coordinates[HORIZONTAL_X], coordinates[SECOND_ROW_Y],
+                     coordinates[HORIZONTAL_X] + D_84186DD4 - 1, coordinates[SECOND_ROW_Y]);
+    gDPFillRectangle(D_800D0510++, coordinates[HORIZONTAL_X], coordinates[THIRD_ROW_Y],
+                     coordinates[HORIZONTAL_X] + D_84186DD4 - 1, coordinates[THIRD_ROW_Y]);
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_84144EF4();
-extern void func_841450B4();
-extern void func_84145340();
+extern void BattlePanel_DrawVerticalBorders(u8 *);
+extern void BattlePanel_DrawColumnAndRowBorders(u8 *);
+extern void BattlePanel_DrawGridBorders(u8 *);
 void func_84145744(void *arg0) {
     u8 temp_v0;
     u8 temp_v0_2;
@@ -1509,13 +1576,13 @@ void func_84145744(void *arg0) {
         temp_v0_2 = (*(u8 *)((u8 *)(arg0) + (0)));
         switch (temp_v0_2) {                        /* irregular */
         case 11:
-            func_84144EF4();
+            BattlePanel_DrawVerticalBorders((u8 *)arg0);
             return;
         case 12:
-            func_841450B4();
+            BattlePanel_DrawColumnAndRowBorders((u8 *)arg0);
             return;
         case 13:
-            func_84145340();
+            BattlePanel_DrawGridBorders((u8 *)arg0);
             break;
         }
     }
