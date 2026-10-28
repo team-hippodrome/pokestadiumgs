@@ -60,3 +60,16 @@ unk_01C`. Remaining: retail writes the model fields through a separate
 prove the two don't alias). Ours folds the offsets into `$s0` and hoists the
 loads. A `model` local, `(u32)` arithmetic and `slot->unk_028` all fold.
 Body: `scratch/c/5a0a.c`.
+
+## 2026-10-29 — `func_88505038`: requeue (same blocker as `func_885055A0`)
+
+The seven-state slot initialiser is fully written in the 2026-10-29 session's
+`scratch/c/038.c`, with a companion edit that moves the `unk_D_885229B0`
+typedef above it (`scratch/c/038_comp.json`; the parameter stays `void *` to
+match the existing externs). The slot index is `slot - D_885229B0` (signed
+`div` by 0x194), and x is `idx * 142 + 36`. The shared blocker: retail
+addresses the `+0x28` sub-object through its own base (`addiu v0, a0, 0x28`,
+then `lbu/sb 1(v0)`) even inside one basic block, so IDO did not see a
+`slot + const` address there. Every spelling tried folds into `41(a0)`. Both
+owners likely share one sub-object spelling (an embedded struct reached by
+pointer from a helper or macro?). Solve it once for both.
