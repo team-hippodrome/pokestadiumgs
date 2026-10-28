@@ -252,7 +252,90 @@ s32 func_82B01254(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B0128C.s")
+extern s32 func_80071CD0(s32, s32);
+extern s32 func_80071210(u8 *);
+extern s32 func_80071230(u8 *);
+extern s32 func_80071890(void *, s32);
+extern s32 func_81601EAC(u8, u8);
+extern s32 func_82B01254(void *, s32);
+typedef struct RuleFlag82B0128C {
+    u32 unk_high : 5;
+    u32 item_check : 1;
+    u32 unk_low : 26;
+} RuleFlag82B0128C;
+s32 TeamRules_ValidateSelection(s16 *per_mon, s16 *team_error, u8 *rules, s32 count, u8 *records) {
+    s32 any;
+    s16 species;
+    u8 item;
+    s32 total_level;
+    s32 total_error;
+    s16 flags;
+    s32 i;
+    s32 j;
+    s32 rejected;
+    u8 *record;
+    s32 lowest[3];
+    s32 result;
+    s32 item_index;
+    any = 0;
+    for (i = 0; i < count; i++) {
+        flags = 0;
+        if (rules != NULL) {
+            record = i * 88 + (u8 *)records;
+            species = record[0];
+            if (species != 0) {
+                if (((record[30]) & 1) || func_80071CD0((s32)(rules + 0x14), species - 1) == 0) {
+                    flags = 1;
+                }
+                if (func_82B01254(rules, (record[29])) == 0) flags |= 2;
+                if (func_80071210(rules) == 0) {
+                    for (j = 0; j < count; j++) {
+                        if (i != j && (*(j * 88 + (u8 *)records)) == (record[0])) {
+                            flags |= 4;
+                            break;
+                        }
+                    }
+                }
+                if (((RuleFlag82B0128C *)(rules + 0x40))->item_check && func_80071230(rules) == 0) {
+                    item = record[1];
+                    if (item != 0 && func_81601EAC(item, (record[0])) != 0) {
+                        for (item_index = 0; item_index < count; item_index++) {
+                            if (i != item_index && (*(item_index * 88 + (u8 *)records + 1)) == (record[1])) {
+                                flags |= 8;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (per_mon != NULL) per_mon[i] = flags;
+        if (flags != 0) any = 1;
+    }
+    total_error = 0;
+    rejected = any != 0;
+    if (rejected == 0 && rules != NULL) {
+        for (i = 0; i < 3; i++) lowest[i] = 999;
+        for (i = 0; i < count; i++) {
+            record = i * 88 + (u8 *)records;
+            if (record[29] <= lowest[2]) lowest[2] = record[29];
+            if (record[29] <= lowest[1]) {
+                lowest[2] = lowest[1];
+                lowest[1] = record[29];
+            }
+            if (record[29] <= lowest[0]) {
+                lowest[1] = lowest[0];
+                lowest[0] = record[29];
+            }
+        }
+        total_level = lowest[0] + lowest[1] + lowest[2];
+        if (func_80071890(rules, total_level) == 0) total_error = 1;
+    }
+    if (team_error != NULL) *team_error = total_error;
+    result = rejected;
+    if (result == 0) result = total_error != 0;
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
