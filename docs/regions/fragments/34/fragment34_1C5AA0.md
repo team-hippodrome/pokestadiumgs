@@ -121,3 +121,12 @@ product survives as `mtc1 $zero` + `cvt`.
   explicit `case 0: break;`. Without it, IDO biases the table by 1 (17
   entries, `addiu -1`). The jump table lands in the file's `.rodata`
   subsegment unchanged.
+- `func_88509F68` (open the evolution view, 312 bytes): store the species,
+  fetch its party data with `func_88500CF0`, clear move bytes 0xA5 or ≥ 0xFC
+  in the first four (stopping at 0) through `func_8004B7A4`, then open the
+  view via `LabPC_OpenEvolutionView(0, data, slot byte of the 0xA960 record,
+  0, func_88509E74, func_88509F40, func_88509EC8, 0)`. `D_885230F0` is now a
+  typed `Fragment34EvolutionState` {species @0, pokemon @4, view @8}. With
+  separate scalars `D_885230F4`/`D_885230F8`, IDO hoists the data reload
+  above the view store; one struct keeps retail's order. `func_88509EC8` now
+  uses the fields too (same bytes).
