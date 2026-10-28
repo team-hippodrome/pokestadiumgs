@@ -29,7 +29,7 @@ extern void func_81310894(void *, s32);
 extern s32 func_8131109C(void *);
 extern void func_8130F7B8(s32, s32);
 extern void func_81300E34(void *);
-extern void func_813010B0(void *);
+extern void func_813010B0(Fragment14SetupState *);
 extern void _bzero(void *, s32);
 
 extern void main_pool_pop_state(s32);
@@ -302,7 +302,27 @@ void Fragment14_InitSelectionPreview(void *arg0) {
     ((Fragment14SetupState *)arg0)->mode = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_813010B0.s")
+extern void func_8130FC80(void *, s32, s32, void *, s32);
+extern void func_8130FD10(void *, s32, s32, s32, s32, s32, void *, void *, s32, s32);
+void func_813010B0(Fragment14SetupState *arg0) {
+    s32 count;
+    s32 idle;
+    s32 result;
+
+    Fragment14_UpdateTitleText(arg0, 1);
+    func_81300350();
+    arg0->status = 0;
+    func_8130FC80((u8 *)arg0 + 0xF64C, 0,
+                  *(s16 *)(*(u8 **)(arg0->data + 0x940) + 0x34) != 14,
+                  (u8 *)arg0 + 0x1A144, *(s32 *)((u8 *)arg0 + 0x1A150));
+    result = func_813002D0(arg0);
+    idle = arg0->mode == 0;
+    count = func_81302290(arg0);
+    func_8130FD10((u8 *)arg0 + 0xF64C, result,
+                  *(s8 *)(arg0->data + arg0->slot + 0x93C), *(s8 *)(arg0->data + arg0->slot + 0x900),
+                  arg0->slot, idle, (u8 *)arg0 + 0x1A15C, (u8 *)arg0 + 0x1A15C, 1, count);
+    arg0->mode = 1;
+}
 
 void Fragment14_InitSelectedController(void *arg0) {
     Fragment14SetupState *state = arg0;
