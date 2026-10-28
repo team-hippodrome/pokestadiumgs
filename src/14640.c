@@ -127,12 +127,29 @@ typedef struct AudioCmd {
 // The audio context (Ocarina of Time / Majora's Mask gAudioContext). Only the fields the
 // C functions in this file use are named; the rest of the file still reads it as the raw
 // byte array D_8011BE90. linker_scripts/us/aliases.ld defines gAudioContext there.
+// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
+typedef struct BackgroundCopyRequest {
+    s8 active, delay, copy_type; u8 unknown_03;
+    s32 destination_base, source, destination;
+    s32 remaining;
+    s32 chunk_size;
+    u32 unknown_18, completion_message;
+    OSMesgQueue *completion_queue;
+    OSMesgQueue queue;
+    OSMesg message;
+    OSIoMesg request;
+} BackgroundCopyRequest;
+
 typedef struct AudioContext {
-    /* 0x0000 */ u8 unk_0000[0xAB8];
+    /* 0x0000 */ u8 unk_0000[0x8B8];
+    /* 0x08B8 */ Sample *usedSamples[128];
     /* 0x0AB8 */ AudioPreloadReq preloadSampleStack[128];
-    /* 0x14B8 */ u8 unk_14B8[4];
+    /* 0x14B8 */ s32 numUsedSamples;
     /* 0x14BC */ s32 preloadSampleStackTop;
-    /* 0x14C0 */ u8 unk_14C0[0x205C - 0x14C0];
+    /* 0x14C0 */ BackgroundCopyRequest asyncLoads[32];
+    /* 0x1FC0 */ OSMesgQueue asyncLoadUnkMediumQueue;
+    /* 0x1FD8 */ u8 unk_1FD8[0x2058 - 0x1FD8];
+    /* 0x2058 */ BackgroundCopyRequest *curUnkMediumLoad;
     /* 0x205C */ s32 slowLoadPos;
     /* 0x2060 */ AudioSlowLoad slowLoads[2];
     /* 0x2128 */ u8 unk_2128[0x21C8 - 0x2128];
@@ -170,7 +187,9 @@ typedef struct AudioContext {
     /* 0x2C34 */ s32 curAudioFrameDmaCount;
     /* 0x2C38 */ u8 unk_2C38[0x2D0C - 0x2C38];
     /* 0x2D0C */ s32 audioRandom;
-    /* 0x2D10 */ u8 unk_2D10[0x604C - 0x2D10];
+    /* 0x2D10 */ u8 unk_2D10[4];
+    /* 0x2D14 */ u32 resetTimer;
+    /* 0x2D18 */ u8 unk_2D18[0x604C - 0x2D18];
     /* 0x604C */ SequencePlayer *seqPlayers[5];
     /* 0x6060 */ u8 unk_6060[0x6314 - 0x6060];
     /* 0x6314 */ u8 cmdWrPos;
@@ -1110,7 +1129,7 @@ extern u8 D_8011F190;
 extern u8 D_8011F258;
 extern SoundFont *D_8011EA68;
 extern void *func_8001647C(s32, s32, s32, s32, s32, s32, s32, s32);
-extern void *func_80016500(s32, s32, s32, s32, s32, s32, s32);
+extern void *func_80016500(s32, s32, u32, s32, s32, s32, s32);
 s32 func_80015684(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     u32 size;
     AudioTable *table;
@@ -1591,7 +1610,7 @@ void GbApu_ResetSlotFlags(void) {
 }
 /* mkdraft:GbApu_ResetSlotFlags end */
 
-extern void *func_80016500(s32, s32, s32, s32, s32, s32, s32);
+extern void *func_80016500(s32, s32, u32, s32, s32, s32, s32);
 extern OSMesgQueue D_8011DE50;
 void *func_8001647C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
     void *temp_v0;
@@ -1608,7 +1627,7 @@ void *func_8001647C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, 
 
 extern u8 D_8011C990[];
 extern u8 D_8011BE90[];
-void *func_80016500(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
+void *func_80016500(s32 arg0, s32 arg1, u32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
 u8 *slot,*p=D_8011BE90,*limit; do { limit=D_8011C990; if (*(s8 *)(p+0x14C0)==0) { slot=p+0x14C0; break; } p+=0x58; } while(p!=limit); if(p==D_8011C990) return NULL;
 *(s8 *)(slot + 0) = 1;
 *(s32 *)(slot + 8) = arg0;
@@ -1617,7 +1636,7 @@ u8 *slot,*p=D_8011BE90,*limit; do { limit=D_8011C990; if (*(s8 *)(p+0x14C0)==0) 
 *(s32 *)(slot + 0x10) = arg2;
 if (arg4 == 0) *(s32 *)(slot + 0x14) = 0x1000;
 else if (arg4 == 1) *(s32 *)(slot + 0x14) = arg2;
-else { s32 n = ((arg2 / arg4) + 0xFF) & ~0xFF; *(s32 *)(slot + 0x14) = n; if ((u32)n < 0x100) *(s32 *)(slot + 0x14) = 0x100; }
+else { s32 n = (((s32)arg2 / arg4) + 0xFF) & ~0xFF; *(s32 *)(slot + 0x14) = n; if ((u32)n < 0x100) *(s32 *)(slot + 0x14) = 0x100; }
 *(s32 *)(slot + 0x20) = arg5;
 *(s8 *)(slot + 1) = 3;
 *(s8 *)(slot + 2) = arg3;
@@ -1627,22 +1646,45 @@ return slot;
 
 }
 
-// Initialized by func_80016500; queue and I/O request begin at 0x24 and 0x40.
-typedef struct {
-    s8 active, delay, copy_type; u8 unknown_03;
-    s32 destination_base, source, destination;
-    s32 remaining;
-    s32 chunk_size;
-    u32 unknown_18, completion_message;
-    OSMesgQueue *completion_queue;
-    OSMesgQueue queue;
-    OSMesg message;
-    OSIoMesg request;
-} BackgroundCopyRequest;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016624.s")
+void func_80016748(BackgroundCopyRequest *asyncLoad, s32 resetStatus);
+void BackgroundCopy_ServiceRequest(BackgroundCopyRequest *job, s32 stop_after_receive);
+// Ocarina of Time AudioLoad_ProcessAsyncLoads.
+void func_80016624(s32 resetStatus) {
+    BackgroundCopyRequest *asyncLoad;
+    s32 i;
 
-void func_80016748(s32 arg0, s32 arg1) {}
+    if (gAudioContext.resetTimer == 1) {
+        return;
+    }
+
+    if (gAudioContext.curUnkMediumLoad == NULL) {
+        if (resetStatus != 0) {
+            // Clear and ignore queue if resetting.
+            do {
+            } while (osRecvMesg(&gAudioContext.asyncLoadUnkMediumQueue, (OSMesg *)&asyncLoad, OS_MESG_NOBLOCK) != -1);
+        } else if (osRecvMesg(&gAudioContext.asyncLoadUnkMediumQueue, (OSMesg *)&asyncLoad, OS_MESG_NOBLOCK) == -1) {
+            gAudioContext.curUnkMediumLoad = NULL;
+        } else {
+            gAudioContext.curUnkMediumLoad = asyncLoad;
+        }
+    }
+
+    if (gAudioContext.curUnkMediumLoad != NULL) {
+        func_80016748(gAudioContext.curUnkMediumLoad, resetStatus);
+    }
+
+    for (i = 0; i < 32; i++) {
+        if (gAudioContext.asyncLoads[i].active == 1) {
+            asyncLoad = &gAudioContext.asyncLoads[i];
+            if (asyncLoad->copy_type != 1) {
+                BackgroundCopy_ServiceRequest(asyncLoad, resetStatus);
+            }
+        }
+    }
+}
+
+void func_80016748(BackgroundCopyRequest *asyncLoad, s32 resetStatus) {}
 
 // Same code as Majora's Mask AudioLoad_FinishAsyncLoad (src/audio/lib/load.c).
 // arg0 is a background copy request (see BackgroundCopyRequest below): status byte at 0x0, RAM
@@ -1959,7 +2001,169 @@ void func_800173A0(void *arg0) {
     *((s32 *) (D_8011BE90 + 0x14B8)) = (*((s32 *) (D_8011BE90 + 0x14B8))) + 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_800173F8.s")
+// Instrument records returned by func_8001A308/func_8001A3DC/func_8001A4C0; names follow Majora's Mask.
+typedef struct TunedSample {
+    /* 0x00 */ Sample *sample;
+    /* 0x04 */ f32 tuning;
+} TunedSample; // size = 0x8
+
+typedef struct Instrument {
+    /* 0x00 */ u8 isRelocated;
+    /* 0x01 */ u8 normalRangeLo;
+    /* 0x02 */ u8 normalRangeHi;
+    /* 0x03 */ u8 adsrDecayIndex;
+    /* 0x04 */ void *envelope;
+    /* 0x08 */ TunedSample lowPitchTunedSample;
+    /* 0x10 */ TunedSample normalPitchTunedSample;
+    /* 0x18 */ TunedSample highPitchTunedSample;
+} Instrument; // size = 0x20
+
+typedef struct Drum {
+    /* 0x00 */ u8 adsrDecayIndex;
+    /* 0x01 */ u8 pan;
+    /* 0x02 */ u8 isRelocated;
+    /* 0x04 */ TunedSample tunedSample;
+    /* 0x0C */ void *envelope;
+} Drum; // size = 0x10
+
+typedef struct SoundEffect {
+    /* 0x00 */ TunedSample tunedSample;
+} SoundEffect; // size = 0x8
+
+// Majora's Mask AudioLoad_PreloadSamplesForFont.
+void func_800173F8(s32 fontId, s32 async, SampleBankRelocInfo *sampleBankReloc) {
+    s32 numDrums;
+    s32 numInstruments;
+    s32 numSfx;
+    Drum *drum;
+    Instrument *instrument;
+    SoundEffect *soundEffect;
+    AudioPreloadReq *preload;
+    AudioPreloadReq *topPreload;
+    u8 *addr; //!bug: never initialized, so a sample on neither medium reuses the previous address
+    s32 size;
+    s32 i;
+    Sample *sample;
+    s32 preloadInProgress;
+    s32 nChunks;
+
+    preloadInProgress = FALSE;
+    if (gAudioContext.preloadSampleStackTop != 0) {
+        preloadInProgress = TRUE;
+    }
+
+    gAudioContext.numUsedSamples = 0;
+    numDrums = gAudioContext.soundFonts[fontId].numDrums;
+    numInstruments = gAudioContext.soundFonts[fontId].numInstruments;
+    numSfx = gAudioContext.soundFonts[fontId].numSfx;
+
+    for (i = 0; i < numInstruments; i++) {
+        instrument = (Instrument *)func_8001A308(fontId, i);
+        if (instrument != NULL) {
+            if (instrument->normalRangeLo != 0) {
+                func_800173A0(&instrument->lowPitchTunedSample);
+            }
+            if (instrument->normalRangeHi != 0x7F) {
+                func_800173A0(&instrument->highPitchTunedSample);
+            }
+            func_800173A0(&instrument->normalPitchTunedSample);
+        }
+    }
+
+    for (i = 0; i < numDrums; i++) {
+        drum = (Drum *)func_8001A3DC(fontId, i);
+        if (drum != NULL) {
+            func_800173A0(&drum->tunedSample);
+        }
+    }
+
+    for (i = 0; i < numSfx; i++) {
+        soundEffect = (SoundEffect *)func_8001A4C0(fontId, i);
+        if (soundEffect != NULL) {
+            func_800173A0(&soundEffect->tunedSample);
+        }
+    }
+
+    if (gAudioContext.numUsedSamples == 0) {
+        return;
+    }
+
+    size = 0;
+    for (i = 0; i < gAudioContext.numUsedSamples; i++) {
+        size += (gAudioContext.usedSamples[i]->size + 0xF) & ~0xF;
+    }
+    if (size) {}
+
+    for (i = 0; i < gAudioContext.numUsedSamples; i++) {
+        if (gAudioContext.preloadSampleStackTop == 120) {
+            break;
+        }
+
+        sample = gAudioContext.usedSamples[i];
+        if (sample->medium == 0) {
+            continue;
+        }
+
+        switch (async) {
+            case FALSE:
+                if (sample->medium == sampleBankReloc->medium1) {
+                    addr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId1, (s32)sample->sampleAddr,
+                                               sample->medium, 1);
+                } else if (sample->medium == sampleBankReloc->medium2) {
+                    addr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId2, (s32)sample->sampleAddr,
+                                               sample->medium, 1);
+                }
+                break;
+
+            case TRUE:
+                if (sample->medium == sampleBankReloc->medium1) {
+                    addr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId1, (s32)sample->sampleAddr,
+                                               sample->medium, 0);
+                } else if (sample->medium == sampleBankReloc->medium2) {
+                    addr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId2, (s32)sample->sampleAddr,
+                                               sample->medium, 0);
+                }
+                break;
+        }
+        if (addr == NULL) {
+            continue;
+        }
+
+        switch (async) {
+            case FALSE:
+                if (sample->medium == 1) {
+                    func_80015570((s32)sample->sampleAddr, (s32)addr, sample->size,
+                                  gAudioContext.sampleBankTable->unkMediumParam);
+                    sample->sampleAddr = addr;
+                    sample->medium = 0;
+                } else {
+                    func_8001544C((u32)sample->sampleAddr, addr, sample->size, sample->medium);
+                    sample->sampleAddr = addr;
+                    sample->medium = 0;
+                }
+                break;
+
+            case TRUE:
+                preload = &gAudioContext.preloadSampleStack[gAudioContext.preloadSampleStackTop];
+                preload->sample = sample;
+                preload->ramAddr = addr;
+                preload->encodedInfo = (gAudioContext.preloadSampleStackTop << 24) | 0xFFFFFF;
+                preload->isFree = FALSE;
+                preload->endAndMediumKey = (u32)sample->sampleAddr + sample->size + sample->medium;
+                gAudioContext.preloadSampleStackTop++;
+                break;
+        }
+    }
+    gAudioContext.numUsedSamples = 0;
+
+    if (gAudioContext.preloadSampleStackTop != 0 && !preloadInProgress) {
+        topPreload = &gAudioContext.preloadSampleStack[gAudioContext.preloadSampleStackTop - 1];
+        sample = topPreload->sample;
+        nChunks = (sample->size >> 12) + 1;
+        func_80016500((s32)sample->sampleAddr, (s32)topPreload->ramAddr, sample->size, sample->medium, nChunks,
+                      (s32)&gAudioContext.preloadSampleQueue, topPreload->encodedInfo);
+    }
+}
 
 // Same code as Majora's Mask AudioLoad_LoadPermanentSamples (src/audio/lib/load.c).
 extern void func_800173F8(s32, s32, SampleBankRelocInfo *);
