@@ -72,3 +72,17 @@ The limit is 0x78 in mode 5 (`arg0[0x1070]`), else 0x50. Save
 counter to 0xE, set the clear color (0xFFFF in mode 5, else 1) and start a
 0xC fade. Then call `func_82907188()` once the counter reaches `limit / 3`,
 and always call `func_829043B4(arg0)`. It matched on the first probe.
+
+## func_829050C8 (accepted 2026-10-28) and the .rodata extension
+
+`func_829050C8` is the scene-state dispatcher, a `switch` on the u16 at
+`+0x1068`. Its `jtbl_82917498` sat in the shared `rodata` blob right after this
+file's `.rodata` subsegment. The subsegment end moved from 0x353F80 to 0x353FD0,
+covering these items, all owned by this file:
+
+- `D_82917480` (-0.001): `func_829042A4` now writes it as a literal.
+- `D_82917488`..`D_82917490`: `func_829043B4`'s floats, now in its `.late_rodata`.
+- `D_82917494` (0.2f): `func_829046A8` now writes it as a literal.
+- `jtbl_82917498` plus 12 bytes of zero padding.
+
+Verified byte-identical with the owner still in assembly before the switch landed.

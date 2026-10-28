@@ -410,14 +410,13 @@ void func_82904208(void) {
 #endif
 
 #ifdef VERSION_US
-extern f64 D_82917480;
 void func_829042A4(f32 *arg0, f32 arg1, f32 arg2) {
     f32 temp_fv0;
     f64 temp_fv1;
     temp_fv0 = *arg0;
     *arg0 = ((arg1 - temp_fv0) * arg2) + temp_fv0;
     temp_fv1 = (f64)*(volatile f32 *)arg0;
-    if ((temp_fv1 < 0.001) && (D_82917480 < temp_fv1)) {
+    if ((temp_fv1 < 0.001) && (-0.001 < temp_fv1)) {
         *arg0 = 0.0f;
     }
 }
@@ -644,7 +643,6 @@ s32 func_829045E4(void *arg0, s16 arg1, s16 arg2) {
 
 #ifdef VERSION_US
 extern void *D_82919A08;
-extern f32 D_82917494;
 extern f32 Math_StepToF(f32, f32, f32, f32);
 void func_829046A8(void) {
     void *ptr;
@@ -658,7 +656,7 @@ void func_829046A8(void) {
     }
     ptr = D_82919A08;
     if (*(f32 *)((u8 *)ptr + 0x28) <= 10.0f) {
-        f32 step = D_82917494;
+        f32 step = 0.2f;
 
         *(f32 *)((u8 *)&D_82919A08 + 0x30) = Math_StepToF(*(f32 *)((u8 *)&D_82919A08 + 0x30), 3.0f, step, step);
         ptr = D_82919A08;
@@ -802,7 +800,39 @@ void func_82905078(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_829050C8.s")
+extern void func_82904F78(void *);
+extern void func_829048A0(void *);
+extern void func_82904C28(void *);
+extern void func_82906748(void *);
+void func_829050C8(void *arg0) {
+    switch (*(u16 *)((u8 *)arg0 + 0x1068)) {
+        case 0:
+            func_82904E9C(arg0);
+            break;
+        case 1:
+            func_82904F78(arg0);
+            break;
+        case 2:
+            func_82905078(arg0);
+            break;
+        case 7:
+            func_82904824(arg0);
+            func_82906748((u8 *)D_82919A08 + 0x24);
+            break;
+        case 8:
+            func_829048A0(arg0);
+            func_82906748((u8 *)D_82919A08 + 0x24);
+            break;
+        case 9:
+            func_82904C28(arg0);
+            func_82906748((u8 *)D_82919A08 + 0x24);
+            break;
+        case 10:
+            func_82904D78((s32)arg0);
+            func_82906748((u8 *)D_82919A08 + 0x24);
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
