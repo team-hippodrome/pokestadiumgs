@@ -46,3 +46,13 @@ The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks pass. Independent original-assembly and retail-span comparisons verify
 all 68 bytes at ROM `0x32D7D0..0x32D814`.
+
+## func_87F0ADE0 (accepted 2026-10-28)
+
+Pool-allocates `count` 396-byte nodes plus `count` 16-byte link records, then
+links each node's `+0x38` to its record and zeroes the record. Matching shape:
+`i = 0;` before a guarded `if (count != 0) { ... do { } while (i < count); }`,
+with the three pointer inits (`node`, `link`, `clr`) *inside* the guard. If they
+sit before the `if`, the `beqz` moves two instructions later (0.98). A plain
+`for` loop gets unrolled by copt. The `clr += 4; clr[-4..-1] = 0` order is from
+the retail store offsets.
