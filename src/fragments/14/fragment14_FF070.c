@@ -1379,17 +1379,16 @@ extern f32 func_816092FC(void);
 extern void func_8130AF94(unk_func_8130B06C *arg0);
 extern s32 func_81302290(void *arg0);
 extern void func_800226C0(s32 arg0);
-struct S8130BF1C { u8 pad0[0xE904]; f32 value; u8 gap[0xA]; u8 state; };
-s32 func_8130BF1C(struct S8130BF1C *arg0) {
-    arg0->value += func_816092FC();
-    if (arg0->value >= 16.0f) {
-        arg0->value = 16.0f;
+s32 func_8130BF1C(unk_func_8130B06C *arg0) {
+    arg0->unk_E904 += func_816092FC();
+    if (arg0->unk_E904 >= 16.0f) {
+        arg0->unk_E904 = 16.0f;
         func_8130AF94(arg0);
-        if (func_81302290(*(void **)((u8 *)arg0 + 0xE8EC)) > 0) {
-            arg0->state = 0xB;
+        if (func_81302290(arg0->unk_E8EC) > 0) {
+            arg0->unk_E912 = 11;
             func_800226C0(0x11);
         } else {
-            arg0->state = 2;
+            arg0->unk_E912 = 2;
         }
     }
     return 1;
