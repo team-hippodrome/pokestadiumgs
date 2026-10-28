@@ -93,3 +93,15 @@ func_861049C0: accepted by the normal native candidate runner with link verifica
 ## 2026-10-16
 
 func_861000B8: matched (stack-buffer:s8-record:padding-tail), native runner accept on the private baseline; IDO frame 0x28, s8[4] buffer at sp+0x24, callee passes (&data, 0x7F, *(f32*)((u8*)arg0+0x48), -364.4109191894531f, D_8610AA84), data[1]=0, then func_800277C4(arg1, arg0->[0x23], &data); duplicate jr/nop tail via empty func_861000B8_padding(). Callers' void (void*, u16) prototype retained (2 call sites in this file). No evidence-backed name.
+
+## 2026-10-28 — `func_861060F8`: requeue (proximity test, 0.85)
+
+Returns 1 when |dx| and |dz| between the objects' 0x48/0x4C positions are
+both below `700.0f * (0.04f * scale) + 30.0f`, where scale is the f32 at
+`D_8610AD20 + 0x9768` (the same range as line ~484). The absolute value
+compares the operands, not 0: `(b < a) ? a - b : -(a - b)`. A result
+variable returns through `$v1`. Residuals: retail loads the 0.04f literal
+before the scale, and `mul.s` operand order differs. Unchanged across
+four range spellings, `(u32)` casts, nested vs `&&`, and inline vs local
+range. A 180-second permuter got 690 -> 115 only with `(0, 30.0f)` and
+assignment-in-condition noise.
