@@ -227,7 +227,54 @@ void func_867006C4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670211C.s")
+extern s32 D_8670B3AC[];
+extern s32 D_8670BDB4[];
+void func_8670211C(void) {
+    s32 i;
+    s32 j;
+    s32 count;
+    s32 rnd;
+    s32 unused[2]; // never referenced; the original frame reserves these 8 bytes
+
+    for (i = 0; i < 5; i++) {
+        count = 0;
+        j = 0;
+        rnd = guRandom() % 100;
+        if (rnd > 50) {
+            D_8670BDB4[i] = 1;
+        } else {
+            D_8670BDB4[i] = 0;
+        }
+        while (1) {
+            switch (i) {
+            case 0:
+                D_8670B3AC[i] = guRandom() % 5;
+                break;
+            case 1:
+                D_8670B3AC[i] = guRandom() % 15;
+                break;
+            case 2:
+                D_8670B3AC[i] = guRandom() % 10 + 5;
+                break;
+            case 3:
+                D_8670B3AC[i] = guRandom() % 15 + 5;
+                break;
+            case 4:
+                D_8670B3AC[i] = guRandom() % 5 + 15;
+                break;
+            }
+            for (j = 0; j < i; j++) {
+                if (D_8670B3AC[i] == D_8670B3AC[j]) {
+                    count++;
+                }
+            }
+            if (count == 0) {
+                break;
+            }
+            count = 0;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -822,7 +869,129 @@ void func_8670A404(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670A4D4.s")
+extern s32 func_87F0C6F4(void *);
+extern void func_87F006BC(void);
+extern void func_86708B18(void);
+extern void func_8670A07C(void);
+extern void func_86709AD0(void);
+extern s32 Fragment64_UpdateBounceAndConfirm(void *);
+extern void func_87F02328(void);
+extern void func_86708944(void);
+extern void func_86702B28(void);
+extern void func_86709130(void);
+extern s32 func_87F02104(void);
+extern void func_87F0D5B8(void *);
+extern void func_87F0C9D0(s32);
+extern u8 D_8670FEB8[];
+extern u8 D_8670D8B8[];
+extern void Stage55_UpdateResourcePools(void);
+extern void Stage55_UpdateTransition(void);
+extern void StageContext_SetClearColor(u16);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_86709040(void);
+extern s32 func_867090A8(void);
+extern void func_86709128(void);
+extern void func_8670972C(void);
+extern void func_8670A404(void);
+extern s32 func_87F00930();
+extern s16 D_8670BE80;
+extern u8 D_8670D920[];
+extern void * D_8670FEB0;
+s32 func_8670A4D4(s32 arg0) {
+    if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) == 4 && func_87F0C6F4(D_8670FEB8) != 0) {
+        gStage55MainState.mode = 3;
+        gStage55MainState.exit_result = 3;
+    }
+    if (func_87F00930() == 0 && gStage55MainState.mode != 9) {
+        func_87F006BC();
+    }
+    switch (gStage55MainState.mode) {
+    case 0:
+        func_86709040();
+        break;
+    case 4:
+        Stage55_UpdateTransition();
+        break;
+    case 10:
+        func_86708B18();
+        break;
+    case 5:
+    case 13:
+        func_8670A07C();
+        func_8670972C();
+        func_867090A8();
+        break;
+    case 14:
+        func_86709AD0();
+    case 8:
+        func_86709128();
+        if (Fragment64_UpdateBounceAndConfirm(D_8670D8B8) != 0) {
+            if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) == 1) {
+                gStage55MainState.exit_result = 2;
+                gStage55MainState.mode = 2;
+                gStage55MainState.transition_mode = 0;
+                StageContext_SetClearColor(0xFFFF);
+                StageFade_StartFromTransparent(10);
+            } else {
+                func_87F02328();
+                gStage55MainState.mode = 7;
+            }
+        }
+        break;
+    case 12:
+        if (StageContext_GetFadeMode() == 1) {
+            gStage55MainState.mode = 11;
+            func_86708944();
+            func_8670A404();
+            func_86702B28();
+            StageFade_StartFromOpaque(10);
+        }
+        break;
+    case 11:
+        gStage55MainState.mode = 0;
+        break;
+    case 1:
+        func_8670972C();
+        Stage55_UpdateResourcePools();
+        break;
+    case 9:
+        func_86709130();
+        break;
+    case 7:
+        D_8670BE80 -= 0x80;
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(10);
+            gStage55MainState.mode = 12;
+            gStage55MainState.transition_mode = 2;
+            break;
+        case 2:
+            gStage55MainState.exit_result = 0;
+            gStage55MainState.mode = 2;
+            gStage55MainState.transition_mode = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        case 3:
+            gStage55MainState.exit_result = 1;
+            gStage55MainState.mode = 2;
+            gStage55MainState.transition_mode = 2;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(10);
+            break;
+        }
+        break;
+    case 2:
+        if (StageContext_GetFadeMode() == 1) {
+            gStage55MainState.mode = 3;
+        }
+        break;
+    }
+    func_87F0D5B8(D_8670D920);
+    func_87F0C9D0(func_87F00930());
+    return gStage55MainState.mode;
+}
 #endif
 
 #ifdef VERSION_US
