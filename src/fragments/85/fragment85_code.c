@@ -405,7 +405,29 @@ void func_8FD01A78(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD01AB8.s")
+extern void *func_8004C874(s32, s32);
+
+void *func_8FD01AB8(u8 arg0) {
+    switch (arg0) {
+        case 0:
+            return func_8004C874(16, 9);
+        case 1:
+            return func_8004C874(16, 11);
+        case 2:
+            return func_8004C874(16, 13);
+        case 3:
+            return func_8004C874(16, 14);
+        case 4:
+            return func_8004C874(16, 15);
+        case 5:
+            return func_8004C874(16, 12);
+        case 6:
+            return func_8004C874(16, 10);
+        case 7:
+            return func_8004C874(16, 8);
+    }
+    //!bug Indices outside 0..7 leave the result unspecified.
+}
 #endif
 
 #ifdef VERSION_US
