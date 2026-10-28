@@ -418,6 +418,8 @@
     - {vram: 0x800AB3C0, type:  bss, name: unk_bss2}
     - {vram: 0x800D0490, type: .bss, name: 7140} # src/7140.c sramHandle (0x74 bytes; SUBALIGN(16) pads to 0x80)
     - {vram: 0x800D0510, type:  bss, name: unk_bss3}
+    - {vram: 0x800D1A90, type: .bss, name: 2C1B0}
+    - {vram: 0x800D1B40, type:  bss, name: unk_bss4}
 
     # ultralib
     - {type: lib, vram: 0x8012B510, name: libultra, object: sptask, section: .bss}
