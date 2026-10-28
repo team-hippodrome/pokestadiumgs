@@ -274,7 +274,6 @@ extern s32 D_80091AA8, D_800D1AD4;
 extern u8 D_800D269E[], D_800D26AC[], D_800D26AE[];
 void func_800231A0(s32, u32, s32, u8);
 u32 func_80028540(u8, u32);
-void func_80031564(void);
 extern s8 D_80091AB4;
 
 void func_80030AD4(u8 arg0, u32 arg1, u32 arg2) {
@@ -305,7 +304,7 @@ void func_80030AD4(u8 arg0, u32 arg1, u32 arg2) {
         func_800231A0(185, arg2, 10, arg0);
     }
     if (D_80091A48 == 0) {
-        func_80031564();
+        Audio_ClearCommandQueue();
     }
     D_80091A48 = 0;
     D_800D269E[arg0] = 0;
@@ -456,7 +455,20 @@ void func_80031530(u16 a) {
 
 void func_80031530_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_80031564.s")
+void Audio_ClearCommandQueue(void) {
+    s32 i;
+
+    if ((u8)D_80091A0C != 0 && (u8)D_80091A10 != 0) {
+        for (i = 0; i < 10; i++) {
+            gAudioQueuedState.command_queue[i] = 0;
+        }
+        D_80091A24 = 0;
+        D_80091A28 = 0;
+        if (D_80091A30 != 0) {
+            D_80091A30 = 1;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_800315E8.s")
 

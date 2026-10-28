@@ -373,6 +373,7 @@ typedef struct {
     u8 unk_AB;
 } AudioQueuedState;
 extern AudioQueuedState gAudioQueuedState;
+void Audio_ClearCommandQueue(void);
 
 extern s32 D_800D1A90[10];
 extern u8 D_800D2660[32];

@@ -1083,3 +1083,6 @@ D_800D1B34 = gAudioQueuedState + 164;
 D_800D1B38 = gAudioQueuedState + 168;
 D_800D1B3A = gAudioQueuedState + 170;
 D_800D1B3B = gAudioQueuedState + 171;
+
+// Compatibility entry for assembly callers of the command-queue clear.
+func_80031564 = Audio_ClearCommandQueue;
