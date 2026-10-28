@@ -639,7 +639,92 @@ void func_867086EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86708720.s")
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern s32 D_8670C0C8;
+extern s32 D_8670C0CC;
+extern s32 D_8670C0D0;
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(void *);
+extern void *D_8670FEC4;
+extern void *D_8670FEB0;
+extern void func_87F0CB68(void);
+extern void func_87F07FE8(void *);
+extern s32 D_8670D880;
+extern void func_87F022F0(void);
+extern void func_86707E2C(void);
+extern void func_87F0A5BC(void *);
+extern u8 D_8670D8B8[];
+extern void func_87F0C88C(void *);
+extern u8 D_8670FEB8[];
+extern void func_80008648(void);
+extern s16 D_8670BE80;
+extern s32 D_8670B394;
+extern void func_867086E4(void);
+extern void func_867086EC(void);
+extern Gfx * D_800D0510;
+void func_86708720(void) {
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, (D_8670C0C8 << 11) | (D_8670C0CC << 6) | (D_8670C0D0 << 1) | 1);
+    if (D_8670B394 == 0) {
+        GeoRender_AdvanceFrameCounter();
+    }
+    func_8003C6B8(D_8670FEC4);
+    if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) != 4) {
+        func_87F0CB68();
+    }
+    switch (gStage55MainState.mode) {
+    case 2:
+    case 12:
+        if (gStage55MainState.transition_mode == 1) {
+            func_87F07FE8(&D_8670D880);
+        } else {
+            func_867086E4();
+        }
+        if (gStage55MainState.transition_mode == 2) {
+            D_8670BE80 -= 0x80;
+            func_867086E4();
+            func_87F022F0();
+        }
+        if (gStage55MainState.transition_mode == 3) {
+            func_867086EC();
+        }
+        if (gStage55MainState.transition_mode == 0) {
+            D_8670BE80 -= 0x80;
+        }
+        break;
+    case 0:
+    case 4:
+    case 10:
+        if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) != 4) {
+            func_87F07FE8(&D_8670D880);
+        }
+        break;
+    case 9:
+        func_86707E2C();
+        break;
+    case 1:
+        func_867086EC();
+        func_867086E4();
+        break;
+    case 8:
+    case 14:
+        func_867086E4();
+        func_87F0A5BC(D_8670D8B8);
+        break;
+    case 5:
+    case 13:
+        func_867086EC();
+        break;
+    case 7:
+        func_87F022F0();
+        break;
+    }
+    if (*(u8 *)((u8 *)D_8670FEB0 + 0x2180) == 4) {
+        func_87F0C88C(D_8670FEB8);
+    }
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
