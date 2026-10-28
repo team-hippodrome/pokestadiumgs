@@ -97,7 +97,6 @@ f64 func_86004EA8(void *arg0, void *arg1)
 }
 
 extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
-extern s32 func_86009C08(void *, void *);
 typedef struct Fragment47Vec3d {
     f64 v[3];
 } Fragment47Vec3d;
