@@ -492,7 +492,25 @@ void Fragment46_FindNeighborVariants(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE01738.s")
+extern u8 D_8AE09850;
+extern void Fragment46_FindNeighborVariants(s16, s16);
+extern void _bzero(void *, s32);
+extern void func_8AE01394(void);
+extern s32 Fragment46_CollectRecordData(u8 *arg0, s16 arg1, s16 arg2);
+extern s16 D_8AE084E0;
+extern s16 D_8AE084E2;
+s32 Fragment46_RefreshSavedSelection(void) {
+    u8 *info;
+    struct { s16 variant; s16 selection; s32 count; } saved;
+    saved.selection = D_8AE084E0;
+    saved.variant = D_8AE084E2;
+    info = &D_8AE09850;
+    _bzero(info, 80);
+    saved.count = Fragment46_CollectRecordData(info, saved.selection, saved.variant);
+    func_8AE01394();
+    Fragment46_FindNeighborVariants(saved.selection, saved.variant);
+    return saved.count;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1791,7 +1809,7 @@ void func_8AE05B1C(void) {
 #ifdef VERSION_US
 extern s32 D_8AE084E8;
 extern s16 func_8AE017A4(s16);
-extern void func_8AE01738(void);
+extern s32 Fragment46_RefreshSavedSelection(void);
 extern s32 func_8AE00F24(void);
 extern s16 D_8AE084E0;
 extern s16 D_8AE084E2;
@@ -1816,7 +1834,7 @@ Fragment46LookupEntry *func_8AE05B24(void) {
     if (locals.previous != D_8AE084E0) {
         locals.result = entry;
         D_8AE084E2 = func_8AE017A4(D_8AE084E0);
-        func_8AE01738();
+        Fragment46_RefreshSavedSelection();
         D_8AE084E8 = func_8AE00F24();
         entry = locals.result;
     }
@@ -1841,7 +1859,7 @@ extern s16 D_8AE084E2;
 extern s32 D_8AE084E8;
 extern Fragment46LookupEntry *func_8AE0559C(s16);
 extern s16 func_8AE017A4(s16);
-extern void func_8AE01738(void);
+extern s32 Fragment46_RefreshSavedSelection(void);
 extern s32 func_8AE00F24(void);
 Fragment46Entry *func_8AE05BF0(void) {
     volatile Fragment46SearchLocals16 locals;
@@ -1865,7 +1883,7 @@ Fragment46Entry *func_8AE05BF0(void) {
     if (locals.saved != D_8AE084E0) {
         locals.result = temp_v0;
         D_8AE084E2 = func_8AE017A4(D_8AE084E0);
-        func_8AE01738();
+        Fragment46_RefreshSavedSelection();
         D_8AE084E8 = func_8AE00F24();
         temp_v0 = locals.result;
     }
@@ -1883,7 +1901,7 @@ extern void func_8AE000C8(void);
 extern void func_8AE001D4(void);
 extern void func_8AE00230(s32 arg0);
 extern s32 func_8AE00F24(void);
-extern void func_8AE01738(void);
+extern s32 Fragment46_RefreshSavedSelection(void);
 extern void Fragment46_InitializeSelection(void);
 extern void func_8AE0575C(void *arg0);
 extern void func_8AE05910(s16 arg0);
@@ -1982,14 +2000,14 @@ void Fragment46_HandleSelectionInput(void) {
             var_v0_2 = D_80087200->buttonsPressed;
             if ((var_v0_2 & 4) && (D_8AE09B58 >= 0)) {
                 D_8AE084E2 = D_8AE09B58;
-                func_8AE01738();
+                Fragment46_RefreshSavedSelection();
                 D_8AE084E8 = func_8AE00F24();
                 Fragment46_PlaySound(0x46);
                 var_v0_2 = D_80087200->buttonsPressed;
             }
             if ((var_v0_2 & 8) && (D_8AE09B56 >= 0)) {
                 D_8AE084E2 = D_8AE09B56;
-                func_8AE01738();
+                Fragment46_RefreshSavedSelection();
                 D_8AE084E8 = func_8AE00F24();
                 Fragment46_PlaySound(0x46);
             }

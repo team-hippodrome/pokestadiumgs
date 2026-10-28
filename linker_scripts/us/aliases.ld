@@ -1135,3 +1135,5 @@ func_8670427C = Stage55_UpdateModelFade;
 func_867068EC = Stage55_SpawnVariantEffect;
 func_8AE05118 = Fragment46_DrawSelectionFrame;
 func_8240239C = Fragment13_DrawTintedPanel;
+
+func_8AE01738 = Fragment46_RefreshSavedSelection;
