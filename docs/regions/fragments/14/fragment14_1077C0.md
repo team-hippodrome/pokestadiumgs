@@ -93,3 +93,13 @@ IDO emits the plain data first, then the late rodata in function order. Defined 
 Retail copies the empty name as a one-byte record (address formed, then `lbu`/`sb`). A folded `D_81312944[0]` or `""[0]` load does not reproduce it, so `D_81312944` is typed `unk_D_81312944`. Locals are declared `status`, `i`, then the 14-byte `entry`.
 
 The remaining owners now have their rodata: `func_8130F7B8` (`jtbl_81312968`), `func_813102A4`, `func_81310894` (`jtbl_813129D4`) and `func_81310BF8`.
+
+## 2026-10-28 — `func_8130F7B8` matched
+
+The color picker for this object (`jtbl_81312968` is now in this file's `.rodata`). `scale = D_8160BD04(+0x30 / 16)` and the default color is the object's `s16[4]` at +0x20. In phases 4/5 it switches on the entry index (+0x48):
+- 0–3 and 6 → `func_81609530(3)`;
+- 4 → color 1;
+- 5 → color 2;
+- −1 → color 2 if +0x3C is set, else the record at +0x28. This must be written as if/else; assign-then-override adds a `beql`.
+
+Then `func_8160945C(out, color, func_81609530(0), scale)`, returning the scale. The output buffers in `func_8130F8B4`, and `func_8130F794`/`func_8130F6A4`'s output parameter, are now `s16`.
