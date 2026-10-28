@@ -301,3 +301,20 @@ syntax success, native IDO7.1 SHA256
 and full retail ROM MD5 1561c75d11cedf356a8ddb1a4a5f9d5d.
 All batches first passed exact whole-module normal/+20blank controls.
 Final declaration cleanup is independently resealed in scratch/timer-final.
+
+## 2026-10-29 — `func_86A03DDC` matched; `func_86A03B10` requeue
+
+`func_86A03DDC`: random-angle particle spawner. `u16 angle = guRandom() %
+0xFFFF`, then the node fields are written in this order: 0x48, 0x4C, 0x50,
+**0x10 (cos), then 0x14**, then **0x18 (sin) before** 0x41, 0x1C and the
+0.11111111f scales. An `anim = node + 0x24` local is used for both anim
+calls; the switch is on kind (0 / 1-2 / 3-8).
+
+`func_86A03B10` (**requeue**, 0.62): find a free 0x20-byte slot in
+`D_86A41490..D_86A42D50` (a `do`/`while` with the end test at the bottom),
+spawn a node (no NULL check), and set z by kind (-175 / -183.33333 / -175).
+Store `node+0x20 = D_86A41490`, then fill the slot from `D_86A0F154[idx*3]`
+scaled by the double `0.1111111111111111`, then `node+0x20 = slot`, then the
+same anim switch. Adding `anim` and an `index = idx` copy reaches retail's
+0x38 frame. The slot pointer still spills at 0x34 where retail uses 0x20, and
+declaration order does not move it. Body: `scratch/c/b10ai.c`.
