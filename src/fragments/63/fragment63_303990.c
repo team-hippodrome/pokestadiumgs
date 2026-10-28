@@ -509,7 +509,40 @@ void func_87E01128(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0123C.s")
+extern void func_87C037C0(void *, void *);
+extern void func_87E119DC(void);
+extern void func_87E133F0(void);
+extern void func_87F0DC4C(u8 *);
+
+void func_87E0123C(s32 *arg0) {
+    func_87C037C0(D_87E1BA20 + 12404, *(void **)(*(u8 **)(D_87E1BA20 + 32) + 12));
+    switch (*(s32 *)(D_87E1BA20 + 36)) {
+        case 0:
+            func_87E00C70(arg0);
+            break;
+        case 1:
+            func_87E00ED4((s32)arg0);
+            break;
+        case 2:
+            func_87E00E04((s32)arg0);
+            break;
+        case 3:
+            func_87E00F4C((s32)arg0);
+            break;
+        case 4:
+            func_87E0101C(arg0);
+            break;
+        case 5:
+            func_87E01128((s32)arg0);
+            break;
+        case 6:
+            func_87E00BDC(arg0);
+            break;
+    }
+    func_87E119DC();
+    func_87E133F0();
+    func_87F0DC4C(D_87E1BA20 + 12532);
+}
 
 extern void func_87E0123C(s32 *);
 u8 StageContext_GetFadeMode(void);
