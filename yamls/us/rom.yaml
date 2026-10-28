@@ -1333,6 +1333,8 @@
     - [0x2BB830, textbin, fragments/57/fragment57_header]
     - [0x2BB850, c,       fragments/57/fragment57_code]
     - [0x2C3F90, data,    fragments/57/fragment57_data]
+    - [0x2C4A60, .rodata, fragments/57/fragment57_code] # Strings, jump tables, float literals, double literals.
+    - [0x2C5A70, rodata]
 
   - name: fragment58
     type: code
