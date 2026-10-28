@@ -275,10 +275,9 @@ void func_882129DC(s16 arg0, s16 arg1, s32 arg2) {
 }
 
 extern void func_800495F8(s32, s32, s32, s32 *, s32);
-extern u8 D_88233F60;
 void func_88212A3C(s16 arg0, s16 arg1, u8 arg2) {
     func_800496A4(4, 1);
-    func_800495F8(arg0 + 0xD3, arg1 + 4, 2, &D_88233F60, (s32) arg2);
+    func_800495F8(arg0 + 0xD3, arg1 + 4, 2, "%d", (s32) arg2);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88212A94.s")

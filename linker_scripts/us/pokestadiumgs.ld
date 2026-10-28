@@ -2344,6 +2344,7 @@ SECTIONS
         build/src/fragments/31/fragment31_17F280.o(.text);
         build/src/fragments/31/fragment31_183700.o(.text);
         build/src/fragments/31/fragment31_186690.o(.text);
+        build/src/fragments/31/fragment31_189760.o(.text);
         build/src/fragments/31/fragment31_18F6D0.o(.text);
         build/src/fragments/31/fragment31_1900C0.o(.text);
         build/src/fragments/31/fragment31_190BB0.o(.text);
@@ -2406,6 +2407,8 @@ SECTIONS
         build/src/fragments/31/fragment31_183700.o(.data);
         fragments_31_fragment31_186690 = .;
         build/src/fragments/31/fragment31_186690.o(.data);
+        fragments_31_fragment31_189760 = .;
+        build/src/fragments/31/fragment31_189760.o(.data);
         fragments_31_fragment31_18F6D0 = .;
         build/src/fragments/31/fragment31_18F6D0.o(.data);
         fragments_31_fragment31_1900C0 = .;
@@ -2494,7 +2497,7 @@ SECTIONS
         build/src/fragments/31/fragment31_17F280.o(.rodata);
         build/src/fragments/31/fragment31_183700.o(.rodata);
         build/src/fragments/31/fragment31_186690.o(.rodata);
-        build/asm/us/data/1A71D0.rodata.o(.rodata);
+        build/src/fragments/31/fragment31_189760.o(.rodata);
         build/src/fragments/31/fragment31_18F6D0.o(.rodata);
         build/src/fragments/31/fragment31_1900C0.o(.rodata);
         build/asm/us/data/1A73D0.rodata.o(.rodata);
@@ -2555,6 +2558,7 @@ SECTIONS
         build/src/fragments/31/fragment31_17F280.o(.bss);
         build/src/fragments/31/fragment31_183700.o(.bss);
         build/src/fragments/31/fragment31_186690.o(.bss);
+        build/src/fragments/31/fragment31_189760.o(.bss);
         build/src/fragments/31/fragment31_18F6D0.o(.bss);
         build/src/fragments/31/fragment31_1900C0.o(.bss);
         build/src/fragments/31/fragment31_190BB0.o(.bss);
