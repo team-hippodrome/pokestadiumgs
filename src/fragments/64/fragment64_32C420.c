@@ -53,7 +53,6 @@ typedef struct {
     Fragment64PanelColor color;
     s32 frame;
 } Fragment64MotionState;
-extern f32 D_87F116A0, D_87F116A4;
 extern f32 D_80088E50[0x1000];
 void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
     s32 mode;
@@ -64,7 +63,7 @@ void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
     if (mode == 0) return;
     switch (mode) {
     case 1:
-        state->velocity -= D_87F116A0;
+        state->velocity -= 1.470000029f;
         state->y += state->velocity;
         if (state->y < 108.0f) {
             state->frame = 0;
@@ -77,7 +76,7 @@ void Fragment64_AdvancePanelAnimation(Fragment64MotionState *state) {
         return;
     case 2:
         frame = state->frame;
-        phase = (((f32)frame * 180.0f) / 7.0f) * D_87F116A4;
+        phase = (((f32)frame * 180.0f) / 7.0f) * 182.0416718f;
         if (phase >= 0.0f) angle = (s32)(phase + 0.5f);
         else angle = (s32)(phase - 0.5f);
         state->width = (1.0f - D_80088E50[(u16)angle >> 4]) * 90.0f;
@@ -215,7 +214,6 @@ typedef struct {
 extern s32 func_80001FF0(void);
 extern s32 func_87F0E610(u8 *, u8 *);
 extern void func_80021ED8(s32);
-extern f32 D_87F116BC, D_87F116C0;
 s32 Fragment64_UpdateBounceAndConfirm(Fragment64BounceState *state) {
     Fragment64MotionState *panel;
     s32 done;
@@ -224,12 +222,12 @@ s32 Fragment64_UpdateBounceAndConfirm(Fragment64BounceState *state) {
     done = 0;
     buttons = func_87F0E610(state->input, (u8 *)func_80001FF0());
     if (state->flags & 1) {
-        state->velocity += D_87F116BC / (f32)func_80001FF0();
+        state->velocity += 58.80000305f / (f32)func_80001FF0();
         state->y += state->velocity;
         if (state->y > 0.0f) {
             state->y = 0.0f;
 
-            state->velocity = state->velocity * D_87F116C0;
+            state->velocity = state->velocity * -0.3000000119f;
             if (!(state->flags & 2) && (state->flags & 4)) {
                 func_87F0989C(&state->panel);
             }

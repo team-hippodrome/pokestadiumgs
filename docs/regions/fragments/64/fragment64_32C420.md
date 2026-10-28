@@ -148,3 +148,28 @@ constants occupy 0x334310 through 0x334333, followed by alignment to
 gate the still-assembly owner before trying its C switch. A private M2C
 draft with the actual table confirms its case structure; no C candidate
 has been admitted for that owner.
+
+## 2026-10-28 — initializer jump-table layout prerequisite resolved
+
+The source now owns .rodata ROM range 0x334310..0x334340. Re-extraction places
+`jtbl_87F116A8` in `func_87F0A098.s` as .late_rodata, with its five existing
+case targets. The following shared blob starts at 0x334340. The tracked
+linker change replaces that shared object's path and preserves existing
+aliases and all other placements.
+
+The four float constants were referenced only by this source's accepted
+animation and bounce functions. Re-extraction no longer emits their old
+shared definitions after assigning this range to the source. Expressing
+their exact binary32 values as ordinary C literals gives the compiler the
+original pool: two constants, five table words, two constants, then zero
+alignment bytes. Explicit const global definitions were investigated in
+private controls and rejected because stock IDO places those definitions
+in .data; they are absent from the committed source. Literal controls
+preserve the complete object normally and with twenty leading blank lines.
+The compiler emits 48 bytes of .rodata and no new .data.
+
+The still-assembly initializer and accepted C siblings pass the native
+stock IDO 7.1 build with explicit host syntax checking and retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The source's only remaining GLOBAL_ASM
+is `func_87F0A098`; its C candidate can now use the original five-way switch.
+Private extraction/control/gate receipts identify the tested input hashes.
