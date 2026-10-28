@@ -49,3 +49,20 @@ requeue. The queue push that `func_86A0405C` pops:
 - returns 1.
 
 Retail keeps an `entry` pointer (which spills `arg1` to its home), loads the cost once, and reuses `head` for the wrapped slot. Best 12 ops: retail holds the queue base in `$v1` and copies `count` into a second register (`or a3,t0`). A 240 s permuter suggested computing `head + count` before the full check; that spelling alone does not match.
+
+## 2026-10-28 — `func_86A0588C`: requeue (offset-ring reach test)
+
+Semantics: `D_86A444D8` is `D_86A443F0.unk_00E8`. The per-player index
+selects an `F60C7Pair` from `D_86A0F2D4`, and its x/y feed
+`MathUtil_Atan2s` and `sqrtf`. The heading adds `unk_0E6C[arg0]` (an
+`s16[4]` at 0x0E6C), and the result indexes the cos/sin tables
+`D_80088E50`/`D_80087E50`. The test is whether
+`(pos.x - cos*d - arg1)^2 + (pos.z + sin*d - arg2)^2 < D_86A0F2BC[arg0]`.
+`angle` must be `s32`: `s16` adds an `sll`/`sra` pair. The best local
+similarity is 0.486 (72/72 instructions). A 96-form grid (struct field vs
+`D_86A444D8`, pair pointer vs direct, position pointer vs direct, three
+negation spellings, if vs expression return, three declaration orders) and
+a 300-second permuter (2660 -> 2170) did not close it. Retail homes `arg2`
+first and reuses `$a2` for `arg0 * 4`, which it spills to 0x18. Next: start
+from that early `$a2` reuse; check whether `D_86A0F2BC[arg0]` is loaded
+through the same `arg0 * 4` temporary before the call.
