@@ -429,3 +429,87 @@ sections/bytes/extents/semantic relocations, unchanged collateral and foreign
 files, and US ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d` passed. The
 earlier requeue entries above describe the rejected parents, not the final
 accepted body.
+
+## 2026-10-28: selected-party loading (`8260166C`)
+
+`RecordSelection_LoadSelectedParties` resolves four signed owner entries
+against a packed party table. Owner -1 uses the selected row; owner -2
+skips the side. Other owners select paired rows only for mode `0x400`
+and sides zero and one, subtracting one for the even side. Negative or
+out-of-range rows are skipped. The `load_records` flag controls unpacking
+into the six-entry working group; valid rows still supply metadata when
+that flag is zero. A zero metadata-layout byte uses side indices below two;
+the other layout uses the side-pair index.
+
+The header view records the observed signed owner bytes, metadata-layout
+byte at six, mode halfword at eight, and selected-index halfword at 136.
+The existing 152-byte packed rows and 88-byte working entries are shared
+with `RecordSelection_PrepareTwoParties`. `func_80071BB8` in
+`src/72720.c` is a void unpacking routine; `func_8006AED4` retains its
+actual integer return type even though this caller ignores the result.
+
+The near-match retained 109 of 110 exact instruction words. Its only
+residual was the commuted source pair of a `bnel` at owner offset 152
+(expected `56e2000e`, actual `5457000e`). Switch/if forms, reversed
+comparisons, mask widths, owner case order, and a named long-typed mode
+constant did not close it. A calibrated, restricted single-worker source
+search recovered an ordinary used `int` local for the paired-mode constant.
+The project `s32` alias is `long`; replacing that local with `s32` restores
+the one-word mismatch. The local participates directly in the mode test.
+There is no unused storage, fabricated interface, source unrolling,
+instruction rewrite, or padding.
+
+The canonical eight-candidate batch accepted its first signed-int candidate
+on base `9064fa56c9e4f51fea34b3e8b19917c2484ee33f`. Naming and declaration
+cleanup passed normal and twenty-leading-blank complete-module comparisons
+for sections, text bytes, function extents, and semantic relocations. The
+subsequent native `COMPARE=1 RUN_CC_CHECK=1` full-US-ROM build passed with
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The first-success source, object,
+ROM, ELF, and map were frozen before cleanup; no coverage change accompanies
+this implementation.
+
+### 2026-10-28 requeue: `82602FE8` current-HP validation
+
+The checked halfword is current HP. `func_80071E48` in `src/728D0.c`
+creates the 88-byte working record, including experience at eight, stat
+experience at 12 through 20, DVs at 22, and level at 29. `func_800619E8`
+in `src/615D0.c` calculates maximum HP at 40; the local `82600CF4` refresh
+copies it to current HP at 38. The descriptor's eight-byte header therefore
+places the first checked HP at 46. The actual experience word also establishes
+four-byte record alignment. Correcting the earlier two-byte-aligned partial
+view preserves the best candidate's instructions but does not finish it.
+
+A bounded native follow-up on base `ca1db4dd` records 128 candidates in 16
+canonical batches, with no acceptance. The retained 252-byte parent matches
+all 63 opcodes and 45 exact words. A real pointer to the entry array plus
+reuse of the count scalar improves the initial parent; both that form and
+a later bound-initialization form remain allocation-only residuals.
+Two calibrated single-worker source searches run for 120 and 180 seconds;
+the second improves its own score from 135 to 120 without reaching zero.
+Those search scores are diagnostic evidence, not matching claims.
+
+A private logging-only IDO 7.1 observer records five color-assignment sites
+in `globalcolor`. The generated recompiler source has SHA-256
+`5da5580a14ca58a0d1dae94a4c0fcfdefc0e08b07469e9c8ccfd8d572db7e38f`.
+Known-source and two retained-parent controls pass stock, stock with twenty
+leading blanks, observer disabled, observer enabled, and enabled with twenty
+leading blanks: fifteen complete-module section/byte/extent/relocation
+comparisons. The retained base parameter occupies A0 while its separate
+byte cursor occupies A1; retail advances A0 and preserves the base in A2.
+
+Expressing the advancing parameter directly reproduces a different 248-byte
+bulk loop: it compares integer offsets instead of record pointers and loses
+one address addition. This is a loop-induction difference as well as a
+coloring difference. Explicit pointer-bound loops lose retail's unrolling;
+raw address grouping, inline bounds, guarded-end construction, initialization
+ordering, ordinary register storage hints, comma initialization, and the
+correct record alignment do not resolve the owner. Do not repeat those
+families unchanged or install a near-match. Nonpositive sums must still
+return one, and all referenced HP fields must be checked without a
+source-level unroll.
+
+Next: compare the retained 252-byte base/cursor parent and the 248-byte
+advancing-parameter parent through calibrated logging at `findinduct`,
+`loopunroll`, and `eliminduct`. Identify why the latter selects an integer
+bulk-loop bound before changing another source lifetime. The owner remains
+assembly; coverage and production compiler selection are unchanged.
