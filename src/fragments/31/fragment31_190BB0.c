@@ -35,7 +35,32 @@ u8 *func_8821DA70(s32 arg0) {
  * coming from the unmodified data blob at their real retail addresses. */
 #pragma GLOBAL_ASM("hand_asm/fragments/31/func_8821DAC0_manual.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821DC48.s")
+extern u16 D_882345F0;
+extern s32 GbSave_GetRecordCapacity(s32);
+extern s32 func_80053230(s32);
+extern void *mem_pool_alloc(void *, s32);
+extern s32 func_80001FF0(void);
+extern void func_88001C6C(void *, u16, u8, s16, u8, s16, s16, s16, s16, s16, s32);
+void func_8821DC48(void *pool, u8 *arg1, u8 *arg2, u8 *arg3) {
+    s16 count;
+    u8 *entries[3];
+    s32 i;
+
+    count = GbSave_GetRecordCapacity(0x22) + func_80053230(0x12) * 2 + 0x72;
+    entries[0] = arg1;
+    entries[1] = arg2;
+    entries[2] = arg3;
+    for (i = 0; i < 3; i++) {
+        if (i == 0) {
+            *(void **)entries[i] = mem_pool_alloc(pool, count * 4);
+        } else {
+            *(void **)entries[i] = mem_pool_alloc(pool, D_882345F0 * 4);
+        }
+        func_88001C6C(entries[i] + 8, 1, 7, 0xC7, 23, 12,
+                      (s32)(540.0f / func_80001FF0() + ((540.0f / func_80001FF0() > 0.0f) ? 0.5f : -0.5f)),
+                      32, 32, 0xF0C, 70);
+    }
+}
 
 extern u32 D_882347F0;
 extern void func_8821E0BC(void);

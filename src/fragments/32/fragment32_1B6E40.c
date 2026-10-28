@@ -118,5 +118,44 @@ void func_88306430(void)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_883067C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_88306B24.s")
+extern u8 D_88006880[];
+extern u8 *D_8860189C;
+extern u8 D_88601896;
+extern s8 D_88601894[];
+extern s32 func_80001FF0(void);
+extern void func_88001C6C(void *, u16, u8, s16, u8, s16, s16, s16, s16, s16, s32);
+extern void *Util_Malloc(s32);
+extern s32 func_80060110(s32);
+extern s32 func_80064700(s32);
+void func_883064C8(s32);
+extern s8 D_88006868;
+extern u8 * D_88601890;
+extern void ** D_88601898;
+void func_88306B24(void) {
+    u32 i;
+    u16 *p;
+
+    D_8860189C = D_88006880;
+    func_88001C6C(D_8860189C, D_88601896, 7, 0x40, 30, 15,
+                  (s32)(720.0f / func_80001FF0() + ((720.0f / func_80001FF0() > 0.0f) ? 0.5f : -0.5f)),
+                  42, 42, 0xF00, 70);
+    D_88601898 = Util_Malloc(0x3EC);
+    D_88601894[0] = D_88601894[1] = 0;
+    *(s32 *)(D_88601890 + 0x244) = 0;
+    p = (u16 *)(D_88601890 + 0x18);
+    for (i = 1; i < 0xFC; i++, p++) {
+        if (i == 0xC9) {
+            *p = func_80064700((u8)func_80060110(D_88006868));
+        } else {
+            *p = i;
+        }
+    }
+    p = (u16 *)(D_88601890 + 0x20E);
+    *p++ = 0xC9;
+    *p++ = 0xFE;
+    for (i = 1; i < 0x19; i++, p++) {
+        *p = i + 0xFE;
+    }
+    func_883064C8(*(s32 *)D_88601890);
+}
 #endif
