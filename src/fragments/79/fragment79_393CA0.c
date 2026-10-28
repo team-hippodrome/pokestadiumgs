@@ -7393,7 +7393,138 @@ void func_8413D6D4(u8 *arg0, u8 *arg1) { u8 i; _bzero(arg0, 0x54); arg0[0] = arg
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413DE28.s")
+extern u8 D_84195279;
+extern s32 D_84187020;
+extern u8 D_8419A0A2;
+extern u8 D_8419A0A0[];
+extern u8 D_8419A0A1;
+extern u8 D_84195248[];
+extern u8 D_84195210[];
+extern s8 D_8419A005;
+extern u8 D_8419A008[];
+extern u8 D_8418AF70[];
+extern u8 D_8418AF78[];
+extern void Teams_GenerateLevel100_fragment86(u8 *, u32);
+extern s32 func_8005D8C0(void);
+extern void func_8413DA18(u8);
+extern void func_8413D7AC(u8);
+extern void func_8413D6D4(u8 *, u8 *);
+extern void func_84138530(u8, u8 *);
+extern void func_8413DB28(void);
+extern void func_8413DD94(void);
+extern void func_84138658(void);
+extern void func_8002A830(void *);
+extern void func_84148680(void);
+extern s32 func_80001FF0(void);
+extern void func_841348C0(void);
+extern s32 main_pool_push_state(s32);
+extern s32 main_pool_pop_state(s32);
+extern void * D_841951F0;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+extern u8 D_84195278;
+extern s32 D_8419527C;
+extern u8 D_8419A006;
+void Battle_InitState(s32 arg0, u8 *arg1) {
+    u8 i;
+    u8 j;
+    struct BattleName { u8 bytes[8]; };
+    struct PartyRow { u8 bytes[88]; };
+    struct Team { u8 header[24]; struct PartyRow rows[12]; u8 tail[168]; };
+
+    D_84195278 = 2;
+    D_84195279 = 2;
+    D_8419A006 = 2;
+    D_8419527C = 0;
+    D_84187020 = 0;
+    D_8419A0A2 = 0;
+    D_841951F0 = (void *)arg1;
+    if (D_841951F0 != NULL) {
+        D_8419A0A0[0] = ((u8 *)D_841951F0)[2499];
+        D_8419A0A1 = 0;
+        if (((u8 *)D_841951F0)[2] == 0) {
+            if (D_8419A0A0[0] != 0) {
+                Teams_GenerateLevel100_fragment86(D_841951F0, arg0);
+                D_84187020 = 1;
+            } else {
+                main_pool_push_state(0x504D4C44);
+                for (i = 0; i < 2; i++) {
+                    if (func_8005D8C0() & (1 << i)) {
+                        func_8413DA18(i);
+                    } else {
+                        func_8413D7AC(i);
+                    }
+                }
+                main_pool_pop_state(0x504D4C44);
+            }
+            for (i = 0; i < 2; i++) {
+                D_841951F8[i] = &((struct Team *)D_841951F0)[i];
+                ((u8 *)D_841951F8[i])[10] = 0;
+                D_84195200[i] = (u8 *)D_841951F8[i] + 24;
+                D_84195208[i] = (u8 *)D_841951F8[i] + 1080;
+                ((u8 *)D_841951F8[i])[1178] = 0;
+            }
+            *(struct BattleName *)((u8 *)D_841951F8[0] + 1164) = *(struct BattleName *)D_8418AF70;
+            *(struct BattleName *)((u8 *)D_841951F8[1] + 1164) = *(struct BattleName *)D_8418AF78;
+            D_84195248[10] = 0;
+            D_84195248[34] = 1;
+            D_84195248[11] = 2;
+            D_84195248[35] = 3;
+        } else {
+            D_841951F8[0] = D_841951F0;
+            D_841951F8[1] = &((struct Team *)D_841951F0)[1];
+            D_84195200[0] = ((struct Team *)D_841951F8[0])->rows[((u8 *)D_841951F8[0])[10]].bytes;
+            D_84195200[1] = ((struct Team *)D_841951F8[1])->rows[((u8 *)D_841951F8[1])[10]].bytes;
+            D_84195208[0] = (u8 *)D_841951F8[0] + 1080;
+            D_84195208[1] = (u8 *)D_841951F8[1] + 1080;
+            D_84195248[10] = ((u8 *)D_841951F8[0])[4];
+            D_84195248[11] = ((u8 *)D_841951F8[0])[5];
+            D_84195248[34] = ((u8 *)D_841951F8[1])[4];
+            D_84195248[35] = ((u8 *)D_841951F8[1])[5];
+        }
+        for (i = 0; i < 2; i++) {
+            for (j = 0; j < ((u8 *)D_841951F8[i])[7]; j++) {
+                ((struct Team *)D_841951F8[i])->rows[j].bytes[36] = 0;
+            }
+        }
+        func_8413D6D4(D_84195208[0], D_84195200[0]);
+        func_8413D6D4(D_84195208[1], D_84195200[1]);
+        func_84138530(0, D_84195200[0]);
+        func_84138530(1, D_84195200[1]);
+        func_8413DB28();
+        func_8413DD94();
+        func_84138658();
+        func_8002A830(D_841951F0);
+        D_84195210[0] = 1;
+        D_84195210[1] = 1;
+        D_8419A005 = 0;
+        func_84148680();
+        if (D_8419A0A0[0] != 0) {
+            ((u8 *)D_841951F0)[2496] = 7;
+            ((u8 *)D_841951F0)[2497] = 7;
+        }
+        if (((u8 *)D_841951F0)[2496] != 0) {
+            D_8419A008[18] |= 1;
+        }
+        if (((u8 *)D_841951F0)[2497] != 0) {
+            D_8419A008[18] |= 2;
+        }
+        D_8419A008[18] |= 4;
+        *(s32 *)(D_8419A008 + 0) = ((u8 *)D_841951F0)[2496] * func_80001FF0() * 60;
+        *(s32 *)(D_8419A008 + 4) = ((u8 *)D_841951F0)[2497] * func_80001FF0();
+        *(s32 *)(D_8419A008 + 8) = 0;
+        *(s16 *)(D_8419A008 + 12) = 0;
+        *(s16 *)(D_8419A008 + 16) = ((u8 *)D_841951F0)[2496] * 60;
+        if (((u8 *)D_841951F0)[2498] != 2) {
+            **(u32 **)((u8 *)D_841951F0 + 2520) = osGetCount();
+        }
+        if (((u8 *)D_841951F0)[2498] == 1) {
+            HAL_Memset(*(u8 **)((u8 *)D_841951F0 + 2520) + 4, 0xFF, 103);
+        }
+        func_841348C0();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -7426,7 +7557,7 @@ M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 M2C_UNK func_8410AA18(s32, s32, u8 *);              /* extern */
 void func_8413D37C(void);
-M2C_UNK func_8413DE28(s32, s32);                    /* extern */
+void Battle_InitState(s32, u8 *);                    /* extern */
 M2C_UNK func_8414831C(u8);                          /* extern */
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
@@ -7444,7 +7575,7 @@ u8 func_8413E2EC(s32 arg0, s32 arg1) {
     sp24 = func_800082E0(0, 1, 3, 1, 2, 1);
     Asset_LoadToSegment((u32) ((s32) &D_1000000 & 0x0F000000) >> 0x18, &D_446E30, &D_447D00, 0);
     func_8004C09C(0x43);
-    func_8413DE28(arg0, arg1);
+    Battle_InitState(arg0, arg1);
     func_8410AA18(sp24, arg0, D_84199D80);
     func_8414831C(*D_8419A0A0);
     func_84136564();

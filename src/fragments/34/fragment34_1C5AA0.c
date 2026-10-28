@@ -722,7 +722,14 @@ void func_8850A5CC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850A614.s")
+extern void func_8850A0EC(s32);
+void func_8850A614(void) {
+    D_88523030.unk_18--;
+    D_88523030.unk_04 = (s16)((-420.0f - (D_88523030.unk_18 * -610) / 10.0f) + ((-420.0f > (D_88523030.unk_18 * -610) / 10.0f) ? 0.5f : -0.5f));
+    if (D_88523030.unk_18 <= 0) {
+        func_8850A0EC(7);
+    }
+}
 
 void func_8850A6C8(void) {
     s16 v = D_88523030.unk_18;
