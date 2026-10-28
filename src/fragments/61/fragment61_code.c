@@ -195,7 +195,27 @@ s32 func_86B021E8(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0355C.s")
+extern u8 D_86B16DA0[];
+extern u8 D_86B17A78[];
+void func_86B05484(f32 arg0, f32 arg1, f32 arg2, s32 arg3);
+extern s32 func_8003EC54(s32 *);
+s32 func_86B0355C(s32 arg0, u8 *arg1) {
+    s32 idx = *(s32 *)(arg1 + 0x14);
+    s32 pad; // FAKE
+    u8 *model;
+
+    if ((arg0 != 0) && (arg0 == 2)) {
+        model = D_86B16DA0 + idx * 0x168;
+        *(f32 *)(arg1 + 0x24) = *(f32 *)(model + 0xAC);
+        *(f32 *)(arg1 + 0x2C) = *(f32 *)(model + 0xB4);
+        if (*(s32 *)(D_86B17A78 + idx * 4 + 0x34) == 16 && *(f32 *)(D_86B17A78 + idx * 4 + 0x48) != 180.0f) {
+            if (func_8003EC54((s32 *)model) % 3 == 0) {
+                func_86B05484(*(f32 *)(model + 0xAC), *(f32 *)(model + 0xB0), *(f32 *)(model + 0xB4), 0xFF);
+            }
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -802,7 +822,7 @@ void func_86B09834(void) {
 
 #ifdef VERSION_US
 extern void func_80037E3C(u8 *, void *, s32);
-extern void func_86B0355C(s32, u8 *);
+extern s32 func_86B0355C(s32, u8 *);
 extern void D_86B0B600(s32, u8 *);
 extern u8 D_86B17A78[];
 extern s32 D_86B0E7F0;

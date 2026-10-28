@@ -103,3 +103,17 @@ void func_88208FF0(void) {
 ## 2026-10-28 — `func_8820B09C` matched
 
 Predicate: returns 1 when the menu state has no pending word at + 4, `D_8800EF58 == 0`, the current entry's slot word at `+ 0x6C + index * 4` is 0, and the record `func_88201ED0(byte[0xA + 2i], byte[0xB + 2i])` has byte 0x15 set. It must be one `&&` chain with an initialized `result`; guard returns score 0.71.
+
+## 2026-10-28 — `func_8820A56C`: requeue, branch-likely residual (0.902)
+
+`s32 func_8820A56C(u8 arg0, u8 arg1)`: `switch (D_882346F0)` with an explicit
+`case 0: break;` first (this case order gives retail's compare chain):
+- `case 1: case 3:` return 1 when `arg0 != index` and
+  `arg1 == records[arg0].unk_10 - records[arg0].unk_12`;
+- `case 2:` result 1 when `arg0 == index` and
+  `(s16)arg1 == *(s16 *)(D_88234700 + 0x74) - records[arg0].unk_12`.
+Write the comparisons `arg0 != D_88234700->index` (arg first). The only
+residual: retail's failing tests use `bne` + `nop` into the shared
+`jr ra; or v0, v1` exit, while IDO fills them with `bnel` and a copied
+`or v0, v1`. Unchanged by `goto`-based exits, `ret = 1; return ret;`, or
+nested ifs. The 180-second permuter found nothing usable.
