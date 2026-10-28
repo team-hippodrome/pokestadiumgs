@@ -76,3 +76,30 @@ Based on master 224774092bdc686b39361e5308a59d6567d7ed75. Full US rebuild with d
 ## 2026-10-28 — `func_8130FD10` matched
 
 Initializer, the long-form sibling of `func_8130FC80`: it copies two 8-byte records (`unk_D_8130FD10`, `s16[4]`, so the copies use `lwl`/`lwr`) to 0x20/0x28, stores the scalar arguments (0x39, 0xA4, 0xA5, 0x44, 0x3C, 0xA0), runs `func_8130FA0C`/`func_8130FB58`, sets 0x48, then runs `func_8130FBC0`. It plays sound 0xA5 when `arg5` is set and moves phase 0/1/4 to 1 (phase 0 also clears 0x30; `case 3: break;` is required). Finally it calls `func_8130F8B4(obj, 1)`. The byte-stored parameters are `s32`: retail neither homes `a1`/`a3` nor narrows the stack-passed one.
+## 2026-10-28 — `.rodata` subsegment; `func_8130FA0C` matched
+
+`rom.yaml` gives this file the `.rodata` window 0x10AA10–0x10AB90:
+- The three command lists `D_81312880/888/890` at its start belong here: `D_813120E0`'s records in this file's `.data` point at them.
+- `D_81312A00` at 0x10AB90 is `fragment14_109280`'s and stays in the shared blob.
+
+IDO emits the plain data first, then the late rodata in function order. Defined in C at the top: the lists, `D_81312898`, the four `s16[4]` color sets `D_81312924`, `D_81312944` and the `D_81312948` angle table. The already-C math helpers now use literals instead of externs:
+- `func_8130FF70` is the plain two-loop wrap (`while (3.1415927f < x) x -= 6.2831855f; while (x <= -3.1415927f) x += 6.2831855f;`). The m2c copies emitted the literals in the wrong order.
+- `MathUtil_Atan2d_fragment14` uses float-precision pi/2 and pi as double literals.
+
+`func_8130FA0C` fills the four name slots from `func_81603404(i, 4)` (returns `s32`; its second parameter is `u8`, since retail rematerializes the 4):
+- status 0 copies name and id from `func_8005D9E0` and falls into status 6, which stores `func_81603368(i)`;
+- statuses 2/3 clear the slot (empty name, id 0xFFFF, value 7).
+
+Retail copies the empty name as a one-byte record (address formed, then `lbu`/`sb`). A folded `D_81312944[0]` or `""[0]` load does not reproduce it, so `D_81312944` is typed `unk_D_81312944`. Locals are declared `status`, `i`, then the 14-byte `entry`.
+
+The remaining owners now have their rodata: `func_8130F7B8` (`jtbl_81312968`), `func_813102A4`, `func_81310894` (`jtbl_813129D4`) and `func_81310BF8`.
+
+## 2026-10-28 — `func_8130F7B8` matched
+
+The color picker for this object (`jtbl_81312968` is now in this file's `.rodata`). `scale = D_8160BD04(+0x30 / 16)` and the default color is the object's `s16[4]` at +0x20. In phases 4/5 it switches on the entry index (+0x48):
+- 0–3 and 6 → `func_81609530(3)`;
+- 4 → color 1;
+- 5 → color 2;
+- −1 → color 2 if +0x3C is set, else the record at +0x28. This must be written as if/else; assign-then-override adds a `beql`.
+
+Then `func_8160945C(out, color, func_81609530(0), scale)`, returning the scale. The output buffers in `func_8130F8B4`, and `func_8130F794`/`func_8130F6A4`'s output parameter, are now `s16`.
