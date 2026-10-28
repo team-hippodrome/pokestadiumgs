@@ -165,7 +165,26 @@ void func_86006318(s32 arg0) {
     } while (var_s0 != 0xB60);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006364.s")
+extern void func_87C037C0(void *, void *);
+extern void *func_87C007B0(f32 *, void *);
+extern void func_87C03B60(void *, void *, void *);
+extern void func_800278C0(u16, u8, void *, f32);
+void func_86006364(s32 arg0) {
+    s32 i;
+    u8 *obj;
+    f32 pos[3];
+    void *data;
+
+    data = *(void **)(*(u8 **)((u8 *)arg0 + 0x7590) + 0xC);
+    func_87C037C0((u8 *)arg0 + 0x8150, data);
+    for (i = 0; i < 4; i++) {
+        if (*(s32 *)((u8 *)arg0 + i * 0x2D8 + 0x775C) != 0) {
+            obj = (u8 *)arg0 + i * 0x1998 + 0x1890;
+            func_87C03B60((u8 *)arg0 + 0x8150, func_87C007B0(pos, (u8 *)arg0 + i * 0x2D8 + 0x7760), obj);
+            func_800278C0(0x4401, i, obj, 1.25f);
+        }
+    }
+}
 
 extern s32 func_87F08208(void *);
 extern void func_800226C0(s32);

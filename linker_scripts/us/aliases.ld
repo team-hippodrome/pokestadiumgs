@@ -1150,3 +1150,5 @@ func_8AC0036C = Fragment43_TryGrantCompletionReward;
 func_800318FC = Party_CountLivingGroupMembers;
 func_84133B14 = Battle_ApplySwitchInState;
 func_8413DA18 = Battle_LoadPlayerDeck;
+
+func_87F098F4 = Fragment64_AdvancePanelAnimation;
