@@ -332,7 +332,39 @@ void func_87E176FC(s32 arg0, s32 arg1) {
 }
 void func_87E176FC_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E177E0.s")
+extern u8 *D_87F119DC;
+extern void func_87C037C0(void *, void *);
+extern void func_87C03B60(void *, void *, void *);
+extern void func_8002781C(u16, u8, void *);
+extern void MtxF_Copy(void *, void *);
+extern void * D_87E1EC88;
+void func_87E177E0(void) {
+    s8 screen[8];
+
+    func_87C037C0((u8 *)D_87E1EC88 + 0x10D8, *(void **)(*(u8 **)((u8 *)D_87E1EC88 + 0xC) + 0xC));
+    func_87C03B60((u8 *)D_87E1EC88 + 0x10D8, D_87F119DC + 0x48, screen);
+    switch (((u8 *)D_87E1EC88)[1]) {
+    case 0:
+    case 2:
+    case 4:
+        break;
+    case 1:
+        func_8002781C(0xC009, ((u8 *)D_87E1EC88)[2], screen);
+        break;
+    case 3:
+        if ((*(s32 *)(D_87F119DC + 0xC) << 2) < 0) {
+            func_8002781C(0xCF0D, ((u8 *)D_87E1EC88)[2], screen);
+            *(s32 *)(D_87F119DC + 0xC) &= ~0x20000000;
+        }
+        break;
+    case 5:
+        *(f32 *)(D_87F119DC + 0x54) *= 0.8f;
+        *(f32 *)(D_87F119DC + 0x58) *= 0.8f;
+        *(f32 *)(D_87F119DC + 0x5C) *= 0.8f;
+        break;
+    }
+    MtxF_Copy(D_87F119DC + 0x84, (u8 *)D_87E1EC88 + 0x348);
+}
 
 extern void func_87E177E0();
 void func_87E17928(u8 *arg0) {
