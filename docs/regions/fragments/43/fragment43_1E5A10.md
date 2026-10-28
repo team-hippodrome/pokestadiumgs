@@ -112,3 +112,94 @@ layout-prerequisite. Sine wobble: `u16 arg1; arg1 <<= 12;` (gives retail's `sw a
 The four wobble owners take the `func_8AC0619C` spelling with literal `0.3f`. `062A4`/`06328` are the X-axis twins: `unk48 = unk50 ± unk58 * 0.5f * (1.0f - unk40)`.
 
 `func_8AC05F38` (still assembly) now carries `D_8AC08170`/`74` as `.late_rodata` while `D_8AC0816C` is a data extern. Decompiling it as C needs the split moved down to cover `D_8AC0816C`, which is not 16-byte aligned (0x1EDB5C), or that one literal kept as an extern.
+
+## 2026-10-28 — native US render/menu batch
+
+Four owners were replaced with ordinary compiled C on base
+`a3884b41a6c4526790213ca0061ae61f7e603788`:
+
+| Owner | Operation | Instruction bytes | Frame bytes |
+| --- | --- | ---: | ---: |
+| `func_8AC00028` | Copy eighteen four-byte RGBA records from `D_8AC07BA0` to `D_8AC081B0` | 244 | 0 |
+| `func_8AC013FC` | Draw active text entries and record the selected entry's anchor and padded width | 376 | 64 |
+| `func_8AC02DA0` | Initialize texture metadata, then load the primary texture and draw its clipped rectangle | 556 | 96 |
+| `func_8AC039A4` | Draw a translated rectangle using a duplicated 16-bit RDP fill color | 344 | 80 |
+
+The RGBA copy uses a byte-aligned four-byte record and an unsigned loop index;
+IDO performs the loop expansion. The text renderer retains the existing
+integer-address parameter ABI and advances that cursor by the actual 32-byte
+entry size. Introducing a separate local pointer moves its initial copy later
+in the prologue; retaining the argument cursor reproduces the original
+schedule. Text entries expose the two signed coordinates, text pointer, state,
+and normal/selected color bytes that the assembly accesses. The selected
+entry's width is narrowed to a signed halfword after adding 20; the default
+result remains -1. The anchor is recorded even for an inactive selected entry.
+
+`func_8AC02D04` initializes the primary image at state offset 16;
+`func_8AC02DA0` obtains the second image and reads format, size and dimensions
+through the existing texture-header getters. Its draw path updates the signed
+halfwords at offsets 12 and 14 from the current origin plus node coordinates,
+checks the resulting Y coordinate, and captures rectangle coordinates before
+calling `func_80046204`. The right edge uses the second image's width. The
+existing callback installers' address-only declarations for `func_8AC02DA0`
+and `func_8AC0479C` were retyped as callback prototypes in the same verified
+transaction. Parent review removed unused growth-state typedefs; that callback remains assembly.
+//@src/fragments/43/fragment43_1E5A10.c
+//@src/4CC20.c
+//@src/44E70.c
+
+`func_8AC039A4` reads a word at node offset 32 and narrows it to the fill-color
+halfword before dispatch. Its callback adds the current origin only in draw
+mode. Source operand order matters: node-coordinate plus origin reproduces
+the retail load order; origin plus node-coordinate gives four instruction
+operand differences despite the same size and normalized opcode sequence.
+
+Each accepted owner passed the canonical runner and a complete US ROM gate
+with host syntax checking enabled. Every batch also rebuilt the unchanged
+whole module normally and with twenty leading blank lines, comparing all
+section bytes, function extents and relocations with the current object.
+Native IDO 7.1 compiler SHA256:
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`.
+The four sealed gates all produced retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The retained worker receipts are
+`scratch/copy01/gate-0/receipt.json`, `scratch/text02/gate-0/receipt.json`,
+`scratch/rect02/gate-0/receipt.json` and
+`scratch/growth-dual02/gate-0/receipt.json`. These are local evidence artifacts;
+the repository build remains the reproducibility oracle. No new rewrite,
+coalescing, padding, forced-register or data-layout mechanism is used.
+
+### Remaining owners: requeue
+
+- `func_8AC0479C`: typed growth state with separate signed-halfword X/Y
+  overshoot temporaries gives 524/524 bytes and a zero-byte frame, normalized
+  1.0 but raw 0.6489 (`growth02`, candidate 2). The mismatch is register
+  allocation, not acceptance. Next: shorten the output-node pointer lifetime
+  and vary center-coordinate assignment order. Preserve the original vertical
+  overshoot's write to the horizontal coordinate at node offset 8.
+- `func_8AC0036C`: 372/372 bytes and a 56-byte frame; best normalized 0.9247,
+  raw 0.8495 (`flags02`). Next: initialize the aggregate flag after the initial
+  switch, separate the bit extraction from accumulation, and use the positive
+  final guard. A verified `u8 func_800542B0(s32)` declaration must precede its
+  existing first caller; declaring it after the earlier implicit call fails
+  compilation and is not a source-shape result.
+- `func_8AC017B0` / `func_8AC0198C`: 480/492 bytes versus 476/488 retail;
+  40-byte frames versus 88. Payload-lifetime variants retain the same gap;
+  raw scores 0.7583/0.6016. Next: reuse the incoming argument as the payload
+  cursor, then inspect the true `s32 func_8004D1FC(u8 *)` signature in
+  `src/4CC20.c` against this file's existing `void` declarations. Any prototype
+  correction must also preserve the already-compiled callers through the full
+  ROM gate. Do not add filler locals for the frame difference.
+- `func_8AC03AFC`: best current 304 bytes versus 300, with the correct 64-byte
+  frame; normalized 0.7763, raw 0.1711. Ordinary scalar/aggregate locals,
+  callback guard spellings and typed record views retain an unwanted saved
+  `s0` and different color/coordinate scheduling. Next: inspect aggregate
+  color-copy placement and the pointer lifetime across `func_800504BC`.
+
+Parent review verified texture/text prototypes against their source definitions,
+removed the three unused growth-owner typedefs, and preserved the complete
+compiler module including +20blank controls. Descriptive callback names keep
+the original address-keyed entry names as assembly compatibility aliases.
+- `func_8AC00028` → `Fragment43_CopyMenuColors`.
+- `func_8AC013FC` → `Fragment43_DrawTextEntries`.
+- `func_8AC02DA0` → `Fragment43_DualTextureCallback`.
+- `func_8AC039A4` → `Fragment43_FillRectangleCallback`.
