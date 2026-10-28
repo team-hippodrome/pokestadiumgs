@@ -88,3 +88,26 @@ tooling-blocked (uncached globals, 0.70). B-button handler:
 - then plays sound 3.
 
 The file's `extern void func_800226C0(void)` must become `()`. Retail re-forms every scalar global's address with `lui $at` while keeping a separate $s2 = &D_82B12450 for the loop. Our compile caches D_82B12456's address in an s-register. Same shape as func_87E07CD0.
+
+## 2026-10-29 — `func_82B07E18`: genuine native C match
+
+On base `d06e6d3c`, canonical batch `scratch/e18-b1.json` accepted
+`fade:image-header:decl-order-0`. The renderer fetches archive entry 333/0,
+updates the signed halfword alpha `D_82B1269C` toward 255 or 0 in steps of
+25 according to `D_82B12454 & 2`, optionally sets the backing rectangle,
+and draws the image at (328, 199) with environment color (255, 255, 50, alpha).
+The first two unsigned halfwords of the image are width and height, as also
+read by `func_8004CA10`/`func_8004CA24` in `src/4CC20.c`.
+
+Locals declared `s16 alpha; u16 *image; s32 x;` preserve the 40-byte frame
+and image spill at sp+32. Reordering them can retain the opcode shape while
+moving that spill to sp+36 or increasing the frame to 48 bytes. All three
+locals carry values used by the renderer; no artificial stack storage or
+instruction rewriting is involved. The native IDO 7.1 compiler SHA256 is
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`.
+Normal and +20blank whole-module controls both reproduced sections, bytes,
+function extents, and relocations. Explicit host syntax passed, followed by
+the full retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+The private receipt and sealed artifacts are in
+`scratch/e18-b1/gate-0/receipt.json`. Upstream `7a127bb6` still owns the
+assembly pragma for this function.

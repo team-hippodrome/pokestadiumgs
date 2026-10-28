@@ -446,7 +446,42 @@ s32 func_86A0585C(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A059AC.s")
+// Each 24-byte entry supplies queue cost and collision dimensions.
+// func_86A0405C subtracts cost and unk_08 when removing an item.
+typedef struct {
+    s32 unk_00;
+    s32 cost;
+    f32 unk_08;
+    s32 unk_0C;
+    f32 width;
+    f32 height;
+} Fragment60QueueEntry;
+extern f32 D_86A45AC8;
+
+// Tests the player's position against the item's bounds around (arg1, arg2).
+// The upper vertical extent is zero; the lower extent spans the scaled height.
+s32 ItemBounds_ContainsPlayerPosition(s32 arg0, f32 arg1, f32 arg2, s32 arg3) {
+    F60C7Pair upper_extent;
+    f32 x;
+    f32 z;
+    f32 *position;
+    Fragment60QueueEntry *entry;
+    f32 margin;
+
+    position = D_86A443F0.position[arg0];
+    entry = &((Fragment60QueueEntry *)D_86A0D560)[arg3];
+    x = position[0];
+    z = position[1];
+    margin = D_86A45AC8;
+    upper_extent.x = entry->width * 8.333333f * 0.8f + margin;
+    upper_extent.y = 0.0f;
+    if (x < upper_extent.x + arg1 && arg1 - upper_extent.x < x &&
+        z < upper_extent.y + margin + arg2 &&
+        (f64)arg2 - (2.0 * (f64)(entry->height * 8.333333f) * (f64)0.8f + margin) < (f64)z) {
+        return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

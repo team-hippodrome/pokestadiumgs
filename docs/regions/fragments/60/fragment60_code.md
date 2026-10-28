@@ -75,3 +75,36 @@ requeue (0.28). `(s32 player, f32 x, f32 z, s32 kind)` box test against `D_86A44
 - and `(f64)z - ((f64)(entry[0x14] * 8.333333f) * 2 * 0.8f + margin) < (f64)pz` (the double literal is `(f64)0.8f`).
 
 Retail sets v0 = 0 before the first compare and keeps an explicit `add.s` of 0.0f, while IDO folds our `0.0f + margin`. Find the source of that unfolded zero (probably a zero-valued field or a variable) first.
+
+
+## 2026-10-29 native block: `func_86A059AC` accepted
+
+The 256-byte leaf tests a player's `position[arg0]` against the item selected
+by `arg3` in the 24-byte `D_86A0D560` table. The center comes from `(arg1,
+arg2)`. Horizontal half-width is `entry.width * 8.333333f * 0.8f + margin`;
+the upper z extent is zero plus the margin, and the lower z extent uses
+twice the scaled height in double precision. The strict comparisons leave
+the rectangle's edges outside. `func_86A02A9C` supplies each player index,
+the object's x/z coordinates, and the item index.
+
+The source uses a two-component upper extent, a real position pointer, and
+a margin loaded once. Both extent components feed comparisons. The scalar
+literal version folded the zero-plus-margin addition away and produced 248
+bytes. Keeping the consumed upper-extent components recovers the original
+256 bytes without dummy locals, altered ABI, instruction rewrites or
+coalescing. The final accepted spelling includes the margin in the horizontal
+extent before comparing it. Nearby `func_86A05B4C` and `func_86A05C94` use the
+same bounds calculation over 20-byte collision records.
+
+At base `d06e6d3c`, normal and twenty-leading-blank controls reproduce the
+whole module's sections, text, function extents and relocations. The canonical
+runner accepted `bounds:margin-in-extent:4` through the sequential full-ROM
+gate; its receipt is `scratch/bounds3/gate-0/receipt.json`. The receipt records
+an explicit normal host syntax check and retail ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, using native IDO 7.1 compiler SHA256
+`975142f2e9c4ceb72954a51da53af6e44792b91c7c8f628b05e980ce83980944`.
+The accepted installed object's independent link-shape check passes; its only
+raw instruction differences from the assembly control are three relocation
+fields for compiler-emitted constants. Probe-stat provenance confirms the
+removed pragma has an accepted attempt. The owner remains assembly in
+upstream `7a127bb6`, so this acceptance is novel at that revision.
