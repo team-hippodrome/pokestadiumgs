@@ -79,3 +79,12 @@ retail re-forms it with `lui` + `lh %lo` every iteration and uses only
 `$s0`–`$s2` (i, y, 4). `volatile`, s32, and an array form don't change it.
 This is the same "uncached global address" behavior as `func_800258F4` and
 `func_8220D630`.
+
+## 2026-10-29: `func_82B07960` tooling-blocked
+
+tooling-blocked (uncached globals, 0.70). B-button handler:
+- plays sound 5 once when D_82B12456 is first set;
+- on B: `switch (D_82B13008)`: case 0 resets D_82B12450 = 9, D_82B12456 = 0, D_82B1245A = -1; case 1 calls func_82B02A34 on each `(void **)(&D_82B12450 + 0xB18)[i]` for `i < *(s16 *)(&D_82B12450 + 0x250)`, then func_82B060A0(1);
+- then plays sound 3.
+
+The file's `extern void func_800226C0(void)` must become `()`. Retail re-forms every scalar global's address with `lui $at` while keeping a separate $s2 = &D_82B12450 for the loop. Our compile caches D_82B12456's address in an s-register. Same shape as func_87E07CD0.
