@@ -194,7 +194,79 @@ void func_82C00AE8(s16 arg0, s16 arg1, u16 arg2, f32 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C00C78.s")
+extern Gfx D_80094DE0[];
+extern u8 D_82C04918[];
+extern u8 D_82C04C38;
+extern s16 D_82C04C44;
+extern s16 D_82C04C46;
+extern s16 D_82C04C48;
+extern s16 D_82C04C4A;
+
+// Screen rectangle read by func_82C002B8 (scissor) as four s16 values.
+typedef struct unk_D_82C04C38_rect {
+    /* 0x0 */ s16 x;
+    /* 0x2 */ s16 y;
+    /* 0x4 */ s16 width;
+    /* 0x6 */ s16 height;
+} unk_D_82C04C38_rect; // size = 0x8
+
+typedef struct unk_D_82C04C38_entry {
+    /* 0x000 */ unk_D_82C04C38_rect rect;
+    /* 0x008 */ u8 unk_008[452];
+} unk_D_82C04C38_entry; // size = 0x1CC
+
+// Menu state at D_82C04C38. D_82C04C44..D_82C04C4A are the four fields of panelRect.
+typedef struct unk_D_82C04C38 {
+    /* 0x000 */ u8 unk_000;
+    /* 0x001 */ u8 mode;
+    /* 0x002 */ s8 row;
+    /* 0x003 */ u8 unk_003[9];
+    /* 0x00C */ unk_D_82C04C38_rect panelRect;
+    /* 0x014 */ u8 unk_014[0x200];
+    /* 0x214 */ unk_D_82C04C38_entry entries[1];
+} unk_D_82C04C38;
+
+// Draws the panel background for the current menu mode: scissor to a rectangle, run display list
+// D_80094DE0, then fill an inset rectangle in the RGB color at D_82C04918 (func_82C0012C).
+// Mode 3 uses the rectangle of the selected entry; mode 6 and modes >= 8 draw nothing.
+void func_82C00C78(void) {
+    unk_D_82C04C38_rect *rect;
+
+    switch (((unk_D_82C04C38 *)&D_82C04C38)->mode) {
+        case 0:
+            // FAKE: panelRect is the same address as D_82C04C44; naming it two ways keeps the address
+            // out of a saved register; diff score 1255 without it (all three cases passing &D_82C04C44).
+            func_82C002B8((u8 *)&((unk_D_82C04C38 *)&D_82C04C38)->panelRect);
+            gSPDisplayList(D_800D0510++, D_80094DE0);
+            func_82C0012C((s32)D_82C04918);
+            func_82C002EC(D_82C04C44 + 8, D_82C04C46 + 2, D_82C04C48 - 19, D_82C04C4A - 20);
+            break;
+        case 1:
+        case 2:
+        case 4:
+            func_82C002B8((u8 *)&((unk_D_82C04C38 *)&D_82C04C38)->panelRect);
+            gSPDisplayList(D_800D0510++, D_80094DE0);
+            func_82C0012C((s32)D_82C04918);
+            func_82C002EC(D_82C04C44 + 8, D_82C04C46 + 40, D_82C04C48 - 19, D_82C04C4A - 58);
+            break;
+        // Same drawing as modes 1, 2 and 4; the jump table at jtbl_82C04A20 sends modes 5 and 7
+        // to a separate copy of the code.
+        case 5:
+        case 7:
+            func_82C002B8((u8 *)&((unk_D_82C04C38 *)&D_82C04C38)->panelRect);
+            gSPDisplayList(D_800D0510++, D_80094DE0);
+            func_82C0012C((s32)D_82C04918);
+            func_82C002EC(D_82C04C44 + 8, D_82C04C46 + 40, D_82C04C48 - 19, D_82C04C4A - 58);
+            break;
+        case 3:
+            rect = &((unk_D_82C04C38 *)&D_82C04C38)->entries[((unk_D_82C04C38 *)&D_82C04C38)->row].rect;
+            func_82C002B8((u8 *)rect);
+            gSPDisplayList(D_800D0510++, D_80094DE0);
+            func_82C0012C((s32)D_82C04918);
+            func_82C002EC(rect->x + 8, rect->y + 36, rect->width - 19, rect->height - 46);
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
