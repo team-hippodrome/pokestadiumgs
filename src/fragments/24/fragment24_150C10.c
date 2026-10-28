@@ -1051,7 +1051,28 @@ void func_82B0341C(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B03688.s")
+extern s16 D_82B08630[];
+extern void func_800498C4(void);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800499EC(void);
+void func_82B03688(u8 *arg0) {
+    s32 i;
+    s32 y;
+    s16 coords[8];
+
+    func_82B0284C(arg0, (u8 *)coords);
+    func_800498C4();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800496A4(8, 0);
+    y = 0;
+    for (i = 0; D_82B08630[i] >= 0; i++) {
+        func_800495F8(coords[0] + 0x31, coords[1] + y + 9, 1, func_8004C874(0x1B, D_82B08630[i]));
+        y += 0x18;
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1281,7 +1302,7 @@ void func_82B0504C(void *arg0) {
 
 #ifdef VERSION_US
 extern void func_82B03538(void);
-extern void func_82B03688(void);
+extern void func_82B03688(u8 *);
 extern void func_82B0373C(void);
 extern void func_82B03978(void);
 extern void func_82B03F38(void);
@@ -1291,7 +1312,7 @@ extern void func_82B050E8(void);
 void func_82B05494(void *arg0) {
     switch (*(s16 *)arg0) {
     case 1: func_82B03538(); break;
-    case 2: func_82B03688(); break;
+    case 2: func_82B03688(arg0); break;
     case 3: func_82B0373C(); break;
     case 4: func_82B038BC(arg0); break;
     case 5: func_82B03978(); break;

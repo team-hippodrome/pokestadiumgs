@@ -96,7 +96,22 @@ f64 func_86004EA8(void *arg0, void *arg1)
     return func_87C007DC(((u8 *) arg0) + 0x6848, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004F2C.s")
+extern s32 func_86009FB8(void *arg0, void *arg1, void *arg2);
+typedef struct Fragment47Vec3d {
+    f64 v[3];
+} Fragment47Vec3d;
+void func_86004F2C(void *arg0, void *arg1, Fragment47Vec3d *arg2)
+{
+    if (func_86009C08(((u8 *) arg0) + 0x66B8, arg1) != 0)
+    {
+        func_86009FB8(((u8 *) arg0) + 0x66B8, arg1, arg2);
+    } else if (func_86009C08(((u8 *) arg0) + 0x6668, arg1) != 0)
+    {
+        func_86009FB8(((u8 *) arg0) + 0x6668, arg1, arg2);
+    } else {
+        *arg2 = *(Fragment47Vec3d *)((u8 *) arg0 + 0x6848);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004FDC.s")
 

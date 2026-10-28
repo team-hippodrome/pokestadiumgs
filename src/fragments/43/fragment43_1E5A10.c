@@ -86,6 +86,7 @@ s32 func_8AC00270(s32 arg0, u8 *arg1)
 #endif
 
 #ifdef VERSION_US
+extern u8 func_800542B0(s32);
 void func_8AC002D8(s16 arg0, s16 arg1, u8 arg2)
 {
   s32 temp_a2;
@@ -106,7 +107,46 @@ s32 func_8AC00334(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0036C.s")
+extern u8 func_8005453C(s32);
+extern s32 func_800545B4(s32, u8);
+extern void func_80051D64(s32, s32);
+extern s32 func_80054E48(s32);
+s32 Fragment43_TryGrantCompletionReward(s16 arg0) {
+    s32 i;
+    s16 mode;
+    s16 count;
+    u8 all;
+    u8 flag;
+    mode = arg0;
+    switch (mode) {
+    case 0: count = 20; break;
+    case 1: count = 11; break;
+    case 2: count = 11; break;
+    }
+    all = 1;
+    for (i = 0; i < count; i++) {
+        all &= (u8)((func_800542B0(i) >> mode) & 1);
+    }
+    if (all == 0) {
+        return 0;
+    }
+    switch (mode) {
+    case 0: flag = func_8005453C(6); break;
+    case 1: flag = func_8005453C(7); break;
+    case 2: flag = func_8005453C(8); break;
+    }
+    if (flag == 0) {
+    switch (mode) {
+    case 0: func_800545B4(6, 1); break;
+    case 1: func_800545B4(7, 1); break;
+    case 2: func_800545B4(8, 1); break;
+    }
+    func_80051D64(19, 0);
+    func_80054E48(3);
+    return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

@@ -143,7 +143,24 @@ void func_81307C94(void *arg0) {
     } while (var_s0 != 3);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81307D08.s")
+void func_81307D08(void *arg0) {
+    s32 offset = 0;
+    s32 i;
+    s32 j;
+    s32 step;
+
+    for (i = 0; i < ((u8 *)arg0)[0x137FB] + 1; i++) {
+        if (i != ((u8 *)arg0)[0x137FB]) {
+            step = 0x1E;
+        } else {
+            step = 0xFE;
+        }
+        for (j = 0; j < 5; j++) {
+            *(u8 **)((u8 *)arg0 + 0xC + i * 0x18 + j * 4) = (u8 *)arg0 + 0x137FC + offset;
+            offset += step;
+        }
+    }
+}
 
 extern void func_81307D08(void *);
 extern s32 func_81307600(void *, s32);

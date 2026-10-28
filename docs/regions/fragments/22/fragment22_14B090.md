@@ -69,3 +69,18 @@ MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks passed. All 38 instruction words, the exact 16-byte parameter section,
 and both assembly neighbors match; the leaf has no stack frame. No instruction
 rewriting, forced registers, fake homes, new guards or CI changes are added.
+
+## 2026-10-28 — `func_827030D0`: requeue (struct vs scalar globals)
+
+Shape: when `D_827034EC & 1` and `D_827034E2 == 0`: set state to 1,
+`row_counter` (0xEE) to 0 and `unk_00` (0xE0) to `arg0`. If `arg0 == 1`,
+fetch row entry `func_82700E70(2, 2, D_82703514, 0x10)` and set `unk_04`
+(0xE4) to 2. Then set the entry's +6 = 2, +0x14 = 0x34 and +0x12 = +0xE, and
+call `func_8270188C(2, 2, entry->+0xE, entry->+0x10)`. Return 1 once
+started, else 0. Retail emits a separate `lui` per store (E2, EE, E0, E4),
+i.e. independent scalar globals. Writing them as `D_827034E0.<field>` (this
+file declares `D_827034E0` as `Fragment22Menu`) CSEs the struct base (0.46).
+Matching needs scalar externs for those addresses. They can't share the
+`D_827034E0` name in this TU, so the next step is a scalar/alias split
+agreed with the file's other users (`func_82702658` reads the struct
+through `&D_827034E0`).
