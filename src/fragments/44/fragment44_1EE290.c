@@ -549,7 +549,30 @@ s32 func_8AF013D8(s32 mode, void *record) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF0145C.s")
+extern s16 D_8AF263F0[];
+extern s16 D_8AF2BAD0[];
+extern u8 func_80063804(u8);
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+void func_8AF0145C(void) {
+    s16 *out;
+    s32 t;
+    s32 i;
+    s16 species;
+    s16 value;
+
+    out = D_8AF2BAD0;
+    for (t = 0; t < 17; t++) {
+        value = D_8AF263F0[t];
+        for (i = 0; i != 0xFB; i++) {
+            species = func_80063804(i + 1);
+            if (value == func_8006397C(species) || value == func_800639C0(species)) {
+                *out++ = species;
+            }
+        }
+        *out++ = -1;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01530.s")
 

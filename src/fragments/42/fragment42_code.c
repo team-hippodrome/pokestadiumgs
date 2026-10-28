@@ -1,8 +1,45 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/42/fragment42_code/func_88D00020.s")
+extern u8 *D_88A01C64;
+extern void func_800226C0(s32);
+extern void func_88A01990(void);
+extern void func_80052ECC(s32);
+extern void func_80054E48(s32);
+extern u8 D_88D00740[250];
+extern u8 D_88D0083C[250];
+s32 func_88D00020(void) {
+    s32 ret = 0;
+    u8 *dst;
+    s32 i;
+
+    if (D_80087200->buttonsPressed & B_BUTTON) {
+        func_800226C0(3);
+        ret = 1;
+    } else if (D_80087200->buttonsPressed & START_BUTTON) {
+        func_800226C0(2);
+        dst = *(u8 **)(D_88A01C64 + 0xF8);
+        for (i = 0; i < 250; i++, dst += 2) {
+            dst[0] = D_88D00740[i];
+            dst[1] = 99;
+        }
+        dst = *(u8 **)(D_88A01C64 + 0x100);
+        for (i = 0; i < 250; i++, dst += 2) {
+            dst[0] = D_88D0083C[i];
+            dst[1] = 99;
+        }
+        D_88A01C64[0xFC] = 250;
+        D_88A01C64[0xF4] = D_88A01C64[0xFC];
+        *(s32 *)(D_88A01C64 + 0x110) = 1;
+        *(s32 *)(D_88A01C64 + 0x10C) = *(s32 *)(D_88A01C64 + 0x110);
+        func_88A01990();
+        func_80052ECC(3);
+        func_80054E48(3);
+    }
+    return ret;
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
