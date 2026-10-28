@@ -265,7 +265,20 @@ void func_8FD014D8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD01510.s")
+extern u8 D_8FD02188;
+void func_8FD01510(void) {
+    switch (*(&D_8FD02188 + 0)) {
+    case 0:
+        *(s16 *)(&D_8FD02188 + 4) = 4;
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        *(&D_8FD02188 + 0) = 0;
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -1280,3 +1280,9 @@ func_8005B378 = GbSave_ReadGen1PartyPokemon;
 func_8005B4B8 = GbSave_ReadGsPartyPokemon;
 
 func_8005B5D4 = GbSave_ReadCrystalPartyPokemon;
+
+func_84144EF4 = BattlePanel_DrawVerticalBorders;
+
+func_841450B4 = BattlePanel_DrawColumnAndRowBorders;
+
+func_84145340 = BattlePanel_DrawGridBorders;
