@@ -7,7 +7,7 @@ void fragment43_main(void) {
 #ifdef VERSION_US
 extern u8 D_8AC07BA0[];
 extern u8 D_8AC081B0[];
-void func_8AC00028(void) {
+void Fragment43_CopyMenuColors(void) {
     typedef struct { u8 rgba[4]; } CopyColor;
     CopyColor *src = (CopyColor *)D_8AC07BA0;
     CopyColor *dst = (CopyColor *)D_8AC081B0;
@@ -423,7 +423,7 @@ extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800495BC(s32, s32, const char *, ...);
 extern void func_800499EC(void);
 extern s32 func_80049148(s32, s32, const char *, ...);
-s32 func_8AC013FC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s16 arg4) {
+s32 Fragment43_DrawTextEntries(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s16 arg4) {
     typedef struct {
         s16 state;
         s16 x;
@@ -466,9 +466,9 @@ s32 func_8AC013FC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s16 arg4) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8AC013FC(s16, s16, s32, s32, s16);
+extern s32 Fragment43_DrawTextEntries(s16, s16, s32, s32, s16);
 void func_8AC01574(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s16 arg4) {
-    func_8AC013FC(arg0, arg1, arg2, arg3, arg4);
+    Fragment43_DrawTextEntries(arg0, arg1, arg2, arg3, arg4);
 }
 #endif
 
@@ -479,7 +479,7 @@ extern void func_8004B314(s32, s32, s32, s32);
 void func_8AC015B0(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s16 arg4) {
     s32 temp_v0;
     s16 temp_a2;
-    temp_v0 = func_8AC013FC(arg0, arg1, arg2, arg3, arg4);
+    temp_v0 = Fragment43_DrawTextEntries(arg0, arg1, arg2, arg3, arg4);
     temp_a2 = (s16) temp_v0;
     if (temp_v0 > 0) {
         func_8004B314(D_8AC099B8, D_8AC099BA, temp_a2, 0x1E);
@@ -829,7 +829,7 @@ extern void _bzero(void *, s32);
 extern s32 func_8AC06D8C(s32, s32);
 extern void func_8004E308(s32, s32 *, s32 *);
 extern u8 func_8AC02A34;
-extern s32 func_8AC02DA0(s32, void *);
+extern s32 Fragment43_DualTextureCallback(s32, void *);
 extern u8 func_8AC030EC;
 extern s32 func_8AC02998(s32, void *);
 extern s32 func_8AC02D04(s32, void *);
@@ -870,16 +870,6 @@ s32 func_8AC02D04(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-typedef struct Growth43Output { u16 unk_00; u16 flags; } Growth43Output;
-typedef struct Growth43State { Growth43Output *output; s16 x, y, width, height, finished; } Growth43State;
-typedef struct Growth43Node {
-    u8 unk_00[8];
-    s16 x, y, width, height;
-    u8 unk_10[16];
-    Growth43State *state;
-    u8 unk_24[4];
-    s16 inner_width, inner_height;
-} Growth43Node;
 typedef struct DualTexture43State {
     u8 unk_00[8];
     s16 left, top, x, y;
@@ -904,7 +894,7 @@ extern s32 func_8004C990(s32, s32);
 extern void func_800504BC(s16 *);
 extern Gfx * D_800D0510;
 extern u8 D_8AC099BC;
-s32 func_8AC02DA0(s32 arg0, void *arg1) {
+s32 Fragment43_DualTextureCallback(s32 arg0, void *arg1) {
     DualTexture43Node *node = arg1;
     DualTexture43State *state;
     s16 left;
@@ -955,7 +945,7 @@ void func_8AC02FCC(s32 arg0, s32 arg1, s32 arg2, void *arg3) {
     v0 = func_8AC06D8C(arg0, arg2);
     (*(s32 *)((u8 *)(arg3) + (4))) = v0;
     func_8004E308((*(s32 *)((u8 *)(arg3) + (0))), (s32 *) func_8AC02D04, (s32 *) arg3);
-    func_8004E308((*(s32 *)((u8 *)(arg3) + (4))), (s32 *) &func_8AC02DA0, (s32 *) arg3);
+    func_8004E308((*(s32 *)((u8 *)(arg3) + (4))), (s32 *) &Fragment43_DualTextureCallback, (s32 *) arg3);
 }
 #endif
 
@@ -1003,7 +993,7 @@ void func_8AC03334(s32 arg0, s32 arg1, s32 arg2, void *arg3) {
 #ifdef VERSION_US
 extern void func_800504BC(s16 *);
 extern Gfx * D_800D0510;
-s32 func_8AC039A4(s32 arg0, void *arg1) {
+s32 Fragment43_FillRectangleCallback(s32 arg0, void *arg1) {
     s16 pos[2];
     s16 x;
     s16 y;

@@ -143,8 +143,7 @@ checks the resulting Y coordinate, and captures rectangle coordinates before
 calling `func_80046204`. The right edge uses the second image's width. The
 existing callback installers' address-only declarations for `func_8AC02DA0`
 and `func_8AC0479C` were retyped as callback prototypes in the same verified
-transaction. The growth-state views describe the still-assembly callback's
-accessed fields and allocate no storage.
+transaction. Parent review removed unused growth-state typedefs; that callback remains assembly.
 //@src/fragments/43/fragment43_1E5A10.c
 //@src/4CC20.c
 //@src/44E70.c
@@ -195,3 +194,12 @@ coalescing, padding, forced-register or data-layout mechanism is used.
   callback guard spellings and typed record views retain an unwanted saved
   `s0` and different color/coordinate scheduling. Next: inspect aggregate
   color-copy placement and the pointer lifetime across `func_800504BC`.
+
+Parent review verified texture/text prototypes against their source definitions,
+removed the three unused growth-owner typedefs, and preserved the complete
+compiler module including +20blank controls. Descriptive callback names keep
+the original address-keyed entry names as assembly compatibility aliases.
+- `func_8AC00028` → `Fragment43_CopyMenuColors`.
+- `func_8AC013FC` → `Fragment43_DrawTextEntries`.
+- `func_8AC02DA0` → `Fragment43_DualTextureCallback`.
+- `func_8AC039A4` → `Fragment43_FillRectangleCallback`.

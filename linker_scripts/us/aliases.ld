@@ -1097,3 +1097,8 @@ func_8AE013B4 = Fragment46_CollectRecordData;
 func_8AE01600 = Fragment46_FindNeighborVariants;
 func_8AE03BDC = Fragment46_DrawRecordRange;
 func_8AE057A8 = Fragment46_UpdateSelectionVisibility;
+
+func_8AC00028 = Fragment43_CopyMenuColors;
+func_8AC013FC = Fragment43_DrawTextEntries;
+func_8AC02DA0 = Fragment43_DualTextureCallback;
+func_8AC039A4 = Fragment43_FillRectangleCallback;
