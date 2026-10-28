@@ -21,3 +21,14 @@ temps start at `$t6` where retail's start at `$t7`. A 240-second permuter got
 75 -> 25 only by splitting the shift (`<< 11 << 2 << 4`), which hints at a
 bitfield read. But a file-level `Fragment63Slot` bitfield indexed through
 `(u8 *)arg0 + 0x2190` changes the indexing (0.41).
+
+### `func_87E07E38` matched (2026-10-28, follow-up)
+
+The temp-numbering residual came from the two bit tests. Both must be
+unsigned 1-bit extracts, as IDO lowers bitfield reads:
+`(u32)*(u16 *)(slot + 0x16) >> 15` for `marked` (retail's `lh`/`bgez`) and
+`!(((u32)word << 17) >> 31)` for `tested`. The sign tests `< 0` / `>= 0`
+use one temp fewer and shift every later register. The rest of the earlier
+best form (`ret`/`found`, `case 1: case 2:` before `case 0:`, `ret = i;
+break;`) is unchanged. The caller now passes `arg0`, and the K&R prototype
+is retyped.
