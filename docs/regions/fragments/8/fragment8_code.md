@@ -100,3 +100,11 @@ instruction rewrites, data/layout, generated reports or CI changes are added.
 ## 2026-10-28 — `func_82F01220` matched
 
 Selection handler on the menu record (`void *arg0`): a negative selection sets state 1 and plays SFX 3. If the slot byte at `0xED0 + arg1` is set, it plays 0x90 and sets state `*(s32 *)(arg0 + 0xEE4) ? 6 : 9`; otherwise a nonzero selection plays 5. The state choice has to be a ternary: an if/else loads the 9/6 constants in the wrong order. A `u8 *` parameter commutes the `addu`, so it is `void *` with casts.
+
+## 2026-10-29: `func_82F00B28` requeue
+
+requeue (0.85). Move-select handler `(u8 *state, s32 slot)`:
+- slot < 0: cancel (`state[0x1E] = 5`, sound 3);
+- slot > 0: `move = state[state[0xEDF]*0x58 + slot - 0x1F]`. Zero plays sound 5. Otherwise `switch (*(s32 *)(state + 0xEC8))` picks func_80063044 (cases 0-4) or func_80062F98 (5-7) for the value; >= 51 sets 7 with sound 5, else 8 with sound 2.
+
+Declaring `u8 *state = arg0; u32 move; s32 value; u32 id;` fixes the frame (0x28). Remaining: retail keeps a separate $a2 copy of arg0 from the first instruction and an `id = move` copy in $v1, both of which IDO coalesces. The permuter only reaches 15 with an assignment-inside-expression fake.
