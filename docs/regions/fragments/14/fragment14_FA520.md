@@ -97,3 +97,18 @@ but is 276 bytes and a whole-TU control breaks three of four known C matches.
 This does not justify changing the file's compiler or optimization level.
 Keep stock IDO 7.1 / `-O2`; these are bounded observations, not proof that a
 source shape is unreachable.
+
+## 2026-10-28 — `func_81302854`, `func_81302438` matched; `func_8130251C` requeue
+
+`D_81327800` is the fragment's work area. Retail reaches its pointers at 0xA170/0xA174 (elsewhere read as `D_81331970`/`D_81331974`) through the struct base: `lui D_81327800` + `0x7FFF`/`0x8000` large-offset splits. They are therefore fields of a typed `extern unk_D_81327800 D_81327800`, not separate externs.
+- `func_81302854` is the screen's main loop:
+  - an optional fade-in first;
+  - each frame: `func_80064D28`, `func_816018CC(1)`, `func_81600954`/`func_81302390`/`func_8170024C`/`func_8130209C`/`func_81600B30` on the work pointer, then `func_81302634`;
+  - `state = func_813026D0(state)` until it returns 4.
+  It has no `return`, so it is `void`, along with the file's forward declaration.
+- `func_81302438` is the overlay-draw twin of `func_81302390`: it calls `func_81600F0C` for regions +0/+2/+1 of the 0xA170 pointer when `func_81600DA8` says each is visible, plus `func_81700908`.
+- `func_8130251C` (requeue) is the init:
+  - set `+0x904 + 12 * i` of the 0xA17C record to `D_813122A0` for i < 4 (a `for` loop gives retail's shared `+0x8000` base);
+  - `+0xA180 = BinArchive_Open(func_800356CC(11), 0, 1, 0)`, then `+0xA178 = func_80071B20(+0xA180, func_80071914(rec->+0x940))`;
+  - allocate the work buffer into +0xA174 with `func_81600E28(pool, 1, 0x1C)`, then `func_81300830(D_81317800, +0xA178, +0xA17C, +0xA170)` and `func_800355E4(0x1B)`.
+  Locals `i`, `size`, `pool` fix the frame. The remaining 6 ops are the unrolled loop's load order (retail reads the record pointer, then the value; IDO reads the value first after iteration 1).
