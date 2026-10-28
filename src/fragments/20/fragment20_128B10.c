@@ -37,20 +37,35 @@ void func_82600CF4(void *arg0) {
     (*(u16 *)((u8 *)(arg0) + (0x26))) = (u16) (*(u16 *)((u8 *)(arg0) + (0x28)));
 }
 
-// Stat experience consumed by Pokemon_CalculateStat through func_80071E48.
+// Working Pokemon fields unpacked by func_80071E48 and recalculated by func_800619E8.
 //@src/615D0.c
 //@src/728D0.c
 typedef struct {
-    u8 unk_00[12];
+    u8 species;
+    u8 unk_01[7];
+    u32 experience;
     u16 hp_stat_exp;
     u16 attack_stat_exp;
     u16 defense_stat_exp;
     u16 speed_stat_exp;
     u16 special_stat_exp;
-    u8 unk_16[66];
+    u16 dvs;
+    u8 unk_18[5];
+    u8 level;
+    u8 unk_1E[8];
+    u16 current_hp;
+    u16 maximum_hp;
+    u8 unk_2A[46];
 } RecordSelectionWorkingEntry;
 typedef struct {
-    u8 unk_00[144];
+    s8 owners[4];
+    u8 unk_04[2];
+    s8 metadata_layout;
+    u8 unk_07;
+    u16 mode_flags;
+    u8 unk_0A[126];
+    s16 selection;
+    u8 unk_8A[6];
     RecordSelectionWorkingEntry groups[4][6];
 } RecordSelectionWorkingGrid;
 typedef char RecordSelectionWorkingEntrySize[sizeof(RecordSelectionWorkingEntry) == 88 ? 1 : -1];
@@ -132,11 +147,59 @@ void RecordSelection_PrepareTwoParties(u8 *context, s32 randomize) {
     } while (side != 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82601070.s")
+extern void func_80071BB8(void *, void *);
+void RecordSelection_LoadLevelMatchedParties(u8 *context) {
+    s32 highest_level;
+    s32 side;
+    s32 member;
+    s32 index;
+    s32 level;
+    RecordPartyPackedRow *row;
+    RecordSelectionWorkingEntry *scan_entry;
+    RecordSelectionWorkingEntry *update_entry;
+    highest_level = 0;
+    side = 0;
+    do {
+        if ((*(RecordSelectionWorkingGrid **)context)->owners[side] >= 0) {
+            for (member = 0; member < 6; member++) {
+                scan_entry = &(*(RecordSelectionWorkingGrid **)context)->groups[side][member];
+                if (highest_level < scan_entry->level) {
+                    highest_level = scan_entry->level;
+                }
+            }
+        }
+        side++;
+    } while (side < 4);
+    side = 0;
+    do {
+        switch ((*(RecordSelectionWorkingGrid **)context)->owners[side]) {
+        case -1:
+            index = ((s16 *)(context + 24))[(*(RecordSelectionWorkingGrid **)context)->selection];
+            break;
+        case -2:
+            index = -1;
+            break;
+        default:
+            index = -1;
+            break;
+        }
+        if (index >= 0 && index < (*(u8 **)(context + 12))[0]) {
+            row = &((RecordPartyPackedRow *)(*(u8 **)(context + 12) + 4))[index];
+            func_80071BB8(&(*(RecordSelectionWorkingGrid **)context)->groups[side][0], row);
+            level = highest_level > 50 ? highest_level : 50;
+            for (member = 0; member < 6; member++) {
+                update_entry = &(*(RecordSelectionWorkingGrid **)context)->groups[side][member];
+                update_entry->level = level;
+                func_82600CF4(update_entry);
+            }
+            func_8006AED4(side, row);
+        }
+        side++;
+    } while (side != 2);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82601298.s")
 
-extern void func_80071BB8(void *, void *);
 // Owners -1/-2 select the indexed row or skip it; mode 0x400 selects paired rows.
 typedef struct {
     s8 owners[4];
@@ -149,7 +212,6 @@ typedef struct {
     u8 unk_8A[6];
 } RecordSelectedPartyHeader;
 typedef char RecordSelectedPartyHeaderSize[sizeof(RecordSelectedPartyHeader) == 144 ? 1 : -1];
-extern s32 func_8006AED4(s32, void *);
 void RecordSelection_LoadSelectedParties(u8 *context, s32 load_records) {
     s32 side;
     s32 index;

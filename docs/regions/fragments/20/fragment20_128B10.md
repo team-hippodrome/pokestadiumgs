@@ -513,3 +513,35 @@ advancing-parameter parent through calibrated logging at `findinduct`,
 `loopunroll`, and `eliminduct`. Identify why the latter selects an integer
 bulk-loop bound before changing another source lifetime. The owner remains
 assembly; coverage and production compiler selection are unchanged.
+
+### Resolved: `82601070` parties matched to the existing levels
+
+`RecordSelection_LoadLevelMatchedParties` is accepted at 552 bytes / 138
+instructions. It scans all six working records for each of four sides whose
+owner is nonnegative, retaining the highest level. For each of the first two
+sides with owner -1, it resolves the selected packed-party row, checks the
+row count, unpacks it, and sets all six levels to at least 50 or the observed
+maximum. `82600CF4` refreshes experience and calculated stats and restores
+current HP from maximum HP. Metadata loading follows each valid row. Owner
+-2 and other owner values skip this loading phase.
+
+The record view now exposes the producer-backed experience, stat experience,
+DVs, level, and current/maximum HP fields. The experience word gives the real
+88-byte record its four-byte alignment; the working grid remains 2,256 bytes
+with its records beginning at 144. Both the new loader and the existing
+party-preparation function share these views.
+
+Reading the state directly through the context preserves the temporary-root
+load seen in retail. Distinct scan and update pointers express the two
+phases; each pointer is consumed directly by its own level access or refresh
+call. This closes the final thirteen A0/V1 operand differences. The source
+retains ordinary loops: IDO emits the first scan's peeled/unrolled sequence.
+
+The canonical native runner accepted this source on base `6e084305`, with
+its normal host syntax recipe and a full retail-ROM gate. Naming, shared-
+record cleanup, and the signed loop-index alias each pass normal and twenty-
+leading-blank complete-module comparisons for sections, text bytes, function
+extents, and semantic relocations. A subsequent named-source build with
+`COMPARE=1 RUN_CC_CHECK=1` and an explicit host syntax check also passes.
+Retail ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`. Coverage and tracked
+tooling are unchanged.
