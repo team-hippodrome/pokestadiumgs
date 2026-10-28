@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -54,10 +55,14 @@ void func_83400038(s32 arg0) {
 // Fragment state record at D_83404188 (only the fields C code here reads are named).
 typedef struct {
     /* 0x00 */ s32 state;
-    /* 0x04 */ u8 unk_04[0x10];
+    /* 0x04 */ s32 unk_04;
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ u8 unk_0C[0x8];
     /* 0x14 */ s32 unk_14;
     /* 0x18 */ s32 unk_18;
-    /* 0x1C */ u8 unk_1C[0x5C];
+    /* 0x1C */ u8 unk_1C[0x18];
+    /* 0x34 */ s32 unk_34;
+    /* 0x38 */ u8 unk_38[0x40];
     /* 0x78 */ u8 colorA[4];
     /* 0x7C */ u8 unk_7C[0x10];
     /* 0x8C */ u8 colorB[4];
@@ -204,7 +209,28 @@ void func_8340295C(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83402A24.s")
+extern s32 D_834048B8;
+extern void func_800226C0(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_83400038(s32 arg0);
+void func_83402A24(void) {
+    if (D_83404188.unk_08 == 2) {
+        if ((D_80087200->buttonsPressed & A_BUTTON) && D_834048B8 == 0xFF) {
+            func_800226C0(2);
+            func_83400038(3);
+            D_83404188.state = 7;
+            D_83404188.unk_04 = 8;
+            D_83404188.unk_34 = 1;
+            StageFade_StartFromTransparent(20);
+        }
+    } else if ((D_80087200->buttonsPressed & A_BUTTON) && D_834048B8 == 0xFF) {
+        func_800226C0(2);
+        func_83400038(++D_83404188.unk_08);
+    }
+}
+
+void func_83402B08(void) {
+}
 
 extern f32 func_8004B888(s32);
 extern void func_8003F1DC(void *);
