@@ -241,7 +241,33 @@ void func_880009A8(s32 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s
     func_8004B2CC(arg1 - arg5, arg2 - arg6, arg3 + (arg5 * 2), arg4 + (arg6 * 2), 0x96, 0x96, 0x5A, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000A5C.s")
+extern s16 *D_8800ECFC;
+extern s16 *D_8800ED00;
+extern s16 *D_8800ED04;
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
+void func_88000A5C(s16 x, s16 y, u32 kind) {
+    switch (kind) {
+    case 0:
+        GfxRect_DrawTextured(x, y, D_8800ECFC[0], D_8800ECFC[1], 0, 0, 0x400, 0x400, 0);
+        break;
+    case 1:
+        GfxRect_DrawTextured(x, y, D_8800ECFC[0], ((u16 *)D_8800ECFC)[1], 0, (((u16 *)D_8800ECFC)[1] - 1) << 5, 0x400, -0x400, 0);
+        break;
+    case 2:
+        func_80044424(x, y, 14, D_8800ED04[1], 0, 0, 0x400, 0x400, 0, 1);
+        break;
+    case 3:
+        func_80044424(x, y, 14, D_8800ED04[1], 0x1A0, 0, -0x400, 0x400, 0, 1);
+        break;
+    case 4:
+        func_80044424(x, y, 10, D_8800ED00[1], 0, 0, 0x400, 0x400, 0, 2);
+        break;
+    case 5:
+        func_80044424(x, y, 10, D_8800ED00[1], 0x120, 0, -0x400, 0x400, 0, 2);
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000C2C.s")
 
