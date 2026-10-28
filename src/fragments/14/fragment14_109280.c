@@ -40,7 +40,44 @@ void func_81311A9C(u8 *arg0) {
     *(f32 *)(arg0 + 4) = 0.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311AAC.s")
+void func_81311894(u8 *);
+void func_81311368(u8 *, s16 *);
+extern void func_81600A34(void *, u8 *, s32, s32, s32, s32, s32);
+extern void func_813119E4(u8 *arg0);
+extern void func_81311A3C(u8 *arg0);
+extern void func_81311A90(u8 *arg0);
+extern void func_81311A9C(u8 *arg0);
+void func_81311AAC(u8 *arg0, void *arg1) {
+    s32 flag = 0;
+    s16 rect[4];
+
+    if (*(s32 *)arg0 != 0) {
+        switch (arg0[0x18]) {
+        case 2:
+            func_81311894(arg0);
+            flag = *(s32 *)(arg0 + 0x1C);
+            break;
+        case 1:
+            func_813119E4(arg0);
+            flag = 1;
+            break;
+        case 3:
+            func_81311A3C(arg0);
+            flag = 1;
+            break;
+        case 4:
+            func_81311A90(arg0);
+            break;
+        case 0:
+            func_81311A9C(arg0);
+            return;
+        default:
+            return;
+        }
+        func_81311368(arg0, rect);
+        func_81600A34(arg1, arg0, flag, rect[0], rect[1], rect[2], rect[3]);
+    }
+}
 
 extern void func_813110F0(u8 *arg0, void *arg1, s32 arg2, s32 arg3);
 void func_81311B98(u8 *arg0, void *arg1, s32 arg2, s32 arg3) {
