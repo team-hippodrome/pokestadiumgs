@@ -144,7 +144,106 @@ void func_80013B54(void) {
     *(u32 *)(D_8011BE90 + 0x29B8) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013C40.s")
+typedef struct SampleDma {
+    /* 0x00 */ u8 *ramAddr;
+    /* 0x04 */ u32 devAddr;
+    /* 0x08 */ u16 sizeUnused;
+    /* 0x0A */ u16 size;
+    /* 0x0C */ u8 unused;
+    /* 0x0D */ u8 reuseIndex;
+    /* 0x0E */ u8 ttl;
+} SampleDma; // size = 0x10
+
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0x29AC];
+    /* 0x29AC */ SampleDma *sampleDmas;
+    /* 0x29B0 */ u32 sampleDmaCount;
+    /* 0x29B4 */ u32 sampleDmaListSize1;
+    /* 0x29B8 */ u8 unk_29B8[4];
+    /* 0x29BC */ u8 sampleDmaReuseQueue1[0x100];
+    /* 0x2ABC */ u8 sampleDmaReuseQueue2[0x100];
+    /* 0x2BBC */ u8 sampleDmaReuseQueue1RdPos;
+    /* 0x2BBD */ u8 sampleDmaReuseQueue2RdPos;
+    /* 0x2BBE */ u8 sampleDmaReuseQueue1WrPos;
+    /* 0x2BBF */ u8 sampleDmaReuseQueue2WrPos;
+} AudioContextDmaView;
+
+extern void func_80013A40(u32, u8 *, u32, s32);
+
+#define CTX ((AudioContextDmaView *)D_8011BE90)
+
+// Close to Ocarina of Time AudioLoad_DmaSampleData (src/code/audio_load.c): GS checks only the
+// remembered short-lived DMA, marks a fresh DMA with ttl 3 and queues it through func_80013A40.
+void *func_80013C40(u32 devAddr, u32 size, s32 arg2, u8 *dmaIndexRef, s32 medium) {
+    s32 hasDma = FALSE;
+    SampleDma *dma;
+    s32 bufferPos;
+    u32 i;
+    u32 dmaDevAddr;
+    u32 dmaIndex;
+
+    if (arg2 != 0 || *dmaIndexRef >= CTX->sampleDmaListSize1) {
+        for (i = CTX->sampleDmaListSize1; i < CTX->sampleDmaCount; i++) {
+            dma = i + CTX->sampleDmas;
+            bufferPos = devAddr - dma->devAddr;
+            if (0 <= bufferPos && (u32)bufferPos <= dma->size - size) {
+                if (dma->ttl == 0 && CTX->sampleDmaReuseQueue2RdPos != CTX->sampleDmaReuseQueue2WrPos) {
+                    if (dma->reuseIndex != CTX->sampleDmaReuseQueue2RdPos) {
+                        CTX->sampleDmaReuseQueue2[dma->reuseIndex] =
+                            CTX->sampleDmaReuseQueue2[CTX->sampleDmaReuseQueue2RdPos];
+                        CTX->sampleDmas[CTX->sampleDmaReuseQueue2[CTX->sampleDmaReuseQueue2RdPos]].reuseIndex =
+                            dma->reuseIndex;
+                    }
+                    CTX->sampleDmaReuseQueue2RdPos++;
+                }
+                dma->ttl = 32;
+                *dmaIndexRef = (u8)i;
+                return &dma->ramAddr[devAddr - dma->devAddr];
+            }
+        }
+        if (CTX->sampleDmaReuseQueue2RdPos != CTX->sampleDmaReuseQueue2WrPos && arg2 != 0) {
+            dmaIndex = CTX->sampleDmaReuseQueue2[CTX->sampleDmaReuseQueue2RdPos];
+            CTX->sampleDmaReuseQueue2RdPos++;
+            dma = dmaIndex + CTX->sampleDmas;
+            hasDma = TRUE;
+        }
+    } else {
+        dma = CTX->sampleDmas + *dmaIndexRef;
+        bufferPos = devAddr - dma->devAddr;
+        if (0 <= bufferPos && (u32)bufferPos <= dma->size - size) {
+            if (dma->ttl == 0) {
+                if (dma->reuseIndex != CTX->sampleDmaReuseQueue1RdPos) {
+                    CTX->sampleDmaReuseQueue1[dma->reuseIndex] =
+                        CTX->sampleDmaReuseQueue1[CTX->sampleDmaReuseQueue1RdPos];
+                    CTX->sampleDmas[CTX->sampleDmaReuseQueue1[CTX->sampleDmaReuseQueue1RdPos]].reuseIndex =
+                        dma->reuseIndex;
+                }
+                CTX->sampleDmaReuseQueue1RdPos++;
+            }
+            dma->ttl = 2;
+            return dma->ramAddr + (devAddr - dma->devAddr);
+        }
+    }
+
+    if (!hasDma) {
+        if (CTX->sampleDmaReuseQueue1RdPos == CTX->sampleDmaReuseQueue1WrPos) {
+            return NULL;
+        }
+        dmaIndex = CTX->sampleDmaReuseQueue1[CTX->sampleDmaReuseQueue1RdPos++];
+        dma = dmaIndex + CTX->sampleDmas;
+        hasDma = TRUE;
+    }
+
+    dmaDevAddr = devAddr & ~0xF;
+    dma->ttl = 3;
+    dma->devAddr = dmaDevAddr;
+    dma->sizeUnused = dma->size;
+    func_80013A40(dmaDevAddr, dma->ramAddr, dma->size, medium);
+    *dmaIndexRef = dmaIndex;
+    return (devAddr - dmaDevAddr) + dma->ramAddr;
+}
+
+#undef CTX
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80013EF8.s")
 
@@ -1546,7 +1645,81 @@ void func_80016B38(Sample **arg0, u32 arg1, SampleBankRelocInfo *arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016C78.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80017070.s")
+typedef struct {
+    /* 0x0000 */ u8 unk_0000[0xAB8];
+    /* 0x0AB8 */ AudioPreloadReq preloadSampleStack[128];
+    /* 0x14B8 */ u8 unk_14B8[4];
+    /* 0x14BC */ s32 preloadSampleStackTop;
+    /* 0x14C0 */ u8 unk_14C0[0x21C8 - 0x14C0];
+    /* 0x21C8 */ OSMesgQueue preloadSampleQueue;
+} AudioContextPreloadView;
+
+// Same code as Ocarina of Time AudioLoad_ProcessSamplePreloads (src/code/audio_load.c), with the
+// sample address and size cached in locals; GS's RAM medium is 0.
+s32 func_80017070(s32 resetStatus) {
+    Sample *sample;
+    AudioPreloadReq *preload;
+    u32 preloadIndex;
+    u32 key;
+    u32 nChunks;
+    s32 pad;
+    u32 size;
+    u8 *sampleAddr;
+
+    if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop > 0) {
+        if (resetStatus != 0) {
+            osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK);
+            ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop = 0;
+            return 0;
+        }
+        if (osRecvMesg(&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, (OSMesg *)&preloadIndex,
+                       OS_MESG_NOBLOCK) == -1) {
+            return 0;
+        }
+
+        preloadIndex >>= 24;
+        preload = &((AudioContextPreloadView *)D_8011BE90)->preloadSampleStack[preloadIndex];
+
+        if (preload->isFree == FALSE) {
+            sample = preload->sample;
+            key = (u32)sample->sampleAddr + sample->size + sample->medium;
+            if (key == preload->endAndMediumKey) {
+                sample->sampleAddr = preload->ramAddr;
+                sample->medium = 0;
+            }
+            preload->isFree = TRUE;
+        }
+
+        for (;;) {
+            if (((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop <= 0) {
+                break;
+            }
+            preload = &((AudioContextPreloadView *)D_8011BE90)
+                           ->preloadSampleStack[((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop - 1];
+            if (preload->isFree == TRUE) {
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+                continue;
+            }
+
+            sample = preload->sample;
+            sampleAddr = sample->sampleAddr;
+            size = sample->size;
+            nChunks = (size >> 12) + 1;
+            key = (u32)sampleAddr + size + sample->medium;
+            if (key != preload->endAndMediumKey) {
+                preload->isFree = TRUE;
+                ((AudioContextPreloadView *)D_8011BE90)->preloadSampleStackTop--;
+            } else {
+                size = sample->size;
+                func_80016500((s32)sampleAddr, (s32)preload->ramAddr, size, sample->medium, nChunks,
+                              (s32)&((AudioContextPreloadView *)D_8011BE90)->preloadSampleQueue, preload->encodedInfo);
+                break;
+            }
+        }
+    }
+    return 1;
+}
 
 s32 func_80017224(void *arg0, s32 arg1, void **arg2) {
     s32 i = 0;

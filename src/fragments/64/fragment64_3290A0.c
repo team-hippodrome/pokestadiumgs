@@ -8,7 +8,26 @@ s32 func_87F064DC(s32 arg0, s32 arg1) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F064EC.s")
+s32 func_87F064EC(s32 arg0) {
+    s32 result;
+
+    switch (arg0) {
+        case 97: result = 0; break;
+        case 110: result = 10; break;
+        case 106: result = 5; break;
+        case 108: result = 8; break;
+        case 103: result = 7; break;
+        case 105: result = 11; break;
+        case 100: result = 6; break;
+        case 111: result = 9; break;
+        case 107: result = 2; break;
+        case 109: result = 1; break;
+        case 153: result = 4; break;
+        case 154: result = 3; break;
+        default: result = 0; break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F065B4.s")
 

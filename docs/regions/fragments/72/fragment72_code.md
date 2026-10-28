@@ -143,3 +143,12 @@ body or handle declaration remains installed. Next: inspect index-expression
 ownership and lifetimes across the signed quotient/remainder and display-list
 setup before trying more surface spelling. Do not repeat these cells or
 claim that byte count / normalized similarity is a match.
+
+## 2026-10-28 — `func_8F400DE8`: layout-prerequisite (two source files)
+
+layout-prerequisite. `func_8F400DE8` `_bzero`s the 0x48-byte record `D_8F4020C0` and fills its fields with stores that share one `lui $at` per pair, which IDO emits only for an object **defined** in the compiling file (see `func_82908B60`). The existing `// FAKE` local-pointer reads of `D_8F4020C0`/`D_8F4020FC` in this file are the same symptom. The fragment's data blob shows why:
+- 0x8F402030–0x8F40204F is `.data` (an `s16` list, two gradient colors, two words);
+- 0x8F402050–0x8F4020BF is `.rodata` (printf formats, `jtbl_8F402084`, `jtbl_8F4020A4`, padded to 16);
+- 0x8F4020C0 onward is another `.data` block.
+
+So `fragment72_code` contains (at least) two original source files, and the record belongs to the second one. Next: find the text split (the first function using the 0x8F4020C0+ data, and a 16-byte-aligned function boundary), split the `c` subsegment there, give the second file `.data` from 0x361D50, and define the record in C. That should also let the two FAKEs go.

@@ -207,9 +207,202 @@ void func_8AF00620(void) {
 void func_8AF00760(void) {}
 void func_8AF00760_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF00770.s")
+extern s32 D_8AF263EC;
+extern u8 D_8AF2A5B8[];
+extern s16 D_8AF2BA6C;
+extern s32 D_8AF2BACC;
+extern s32 D_8AF2BE80;
+extern s32 D_8AF2BF40;
+void func_8AF00770(s16 arg0) {
+    if (arg0 != D_8AF2BA6C) {
+        func_8AC00DE8();
+        D_8AF2BA6C = arg0;
+        D_8AF2BDDC = 0;
+        _bzero(D_8AF2A5B8, 5296);
+        func_8AF00690();
+        func_8AC006F4();
+        if (D_8AF2BF40 != 0) {
+            func_8AC01064(0x5273635A); // "RscZ"
+            D_8AF2BF40 = 0;
+        }
+        if (D_8AF2BE80 != 0) {
+            func_8AC01064(0x4F475343); // "OGSC"
+            D_8AF2BE80 = 0;
+        }
+        if (D_8AF263EC != 0) {
+            func_8AC01064(0x57414C4C); // "WALL"
+        }
+        func_8AC00FFC(0x57414C4C); // "WALL"
+        D_8AF263EC = 1;
+        switch (arg0) {
+        case 1:
+            D_8AF2BACC = func_8004D690(4);
+            func_8AF073B4();
+            return;
+        case 3:
+            D_8AF2BACC = func_8004D690(14);
+            func_8AF07AAC(2);
+            return;
+        case 4:
+            D_8AF2BACC = func_8004D690(14);
+            func_8AF07AAC(3);
+            return;
+        case 5:
+            D_8AF2BACC = func_8004D690(14);
+            func_8AF07AAC(4);
+            return;
+        case 7:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF08000();
+            return;
+        case 8:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF08CB4();
+            return;
+        case 9:
+            D_8AF2BACC = 0;
+            func_8AF09CF4();
+            return;
+        case 10:
+            D_8AF2BACC = 0;
+            func_8AF0ACDC();
+            return;
+        case 11:
+            D_8AF2BACC = 0;
+            func_8AF0D7C8();
+            return;
+        case 12:
+            D_8AF2BACC = 0;
+            func_8AF0F2EC();
+            return;
+        case 13:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF10D08();
+            return;
+        case 14:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF12EB8();
+            return;
+        case 15:
+            D_8AF2BACC = 0;
+            func_8AF14648();
+            return;
+        case 16:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF15F28();
+            return;
+        case 17:
+            D_8AF2BACC = 0;
+            func_8AF169A4();
+            return;
+        case 18:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF17264();
+            return;
+        case 19:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF181F4();
+            return;
+        case 20:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF1A764();
+            return;
+        case 21:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF1B5E0();
+            return;
+        case 22:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF1BB9C();
+            return;
+        case 23:
+            D_8AF2BACC = func_8004D690(16);
+            func_8AF1C830();
+            return;
+        case 24:
+            D_8AF2BACC = 0;
+            func_8AF1DCD4();
+            return;
+        case 25:
+            D_8AF2BACC = 0;
+            func_8AF1E54C();
+            return;
+        case 28:
+            D_8AF2BACC = 0;
+            func_8AF1EAF4();
+            return;
+        case 29:
+            D_8AF2BACC = 0;
+            func_8AF1FCA4();
+            return;
+        case 26:
+            D_8AF2BACC = 0;
+            func_8AF20B7C();
+            return;
+        case 27:
+            D_8AF2BACC = 0;
+            func_8AF2123C();
+            return;
+        case 31:
+            D_8AF2BACC = func_8004D690(14);
+            func_8AF233B4();
+            return;
+        case 36:
+            D_8AF2BACC = func_8004D690(4);
+            func_8AF25028();
+            return;
+        case 2:
+            D_8AF2BACC = 0;
+            func_8AF07160();
+            return;
+        default:
+            D_8AF2BACC = 0;
+            break;
+        }
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF00B74.s")
+extern s32 D_8AF2BA68;
+extern s16 D_8AF2BA6C;
+s16 func_8AF00B74(void) {
+    s16 result;
+
+    switch (D_8AF2BA6C) {
+    case 1: result = func_8AF0769C(); break;
+    case 3:
+    case 4:
+    case 5: result = func_8AF07BC0(); break;
+    case 7: result = func_8AF087D4(); break;
+    case 8: result = func_8AF09130(); break;
+    case 9: result = func_8AF0A0B4(); break;
+    case 10: result = func_8AF0B544(); break;
+    case 11: result = func_8AF0E190(); break;
+    case 12: result = func_8AF1000C(); break;
+    case 13: result = func_8AF113D8(); break;
+    case 14: result = func_8AF133C0(); break;
+    case 15: result = func_8AF14BE8(); break;
+    case 16: result = func_8AF16064(); break;
+    case 17: result = func_8AF16D2C(); break;
+    case 18: result = func_8AF174DC(); break;
+    case 19: result = func_8AF18888(); break;
+    case 20: result = func_8AF1AE30(); break;
+    case 21: result = func_8AF1B770(); break;
+    case 22: result = func_8AF1BF38(); break;
+    case 23: result = func_8AF1CE2C(); break;
+    case 24: result = func_8AF1E034(); break;
+    case 25: result = func_8AF1E840(); break;
+    case 28: result = func_8AF1EEA8(); break;
+    case 29: result = func_8AF2078C(); break;
+    case 26: result = func_8AF20DB0(); break;
+    case 27: result = func_8AF21610(); break;
+    case 31: result = func_8AF23B64(); break;
+    case 36: result = func_8AF25974(); break;
+    case 2: result = func_8AF07180(); break;
+    case 32: D_8AF2BA68 = 2; break;
+    default: result = D_8AF2BA6C; break;
+    }
+    return result;
+}
 
 s16 func_8AF00B74();
 extern s16 D_8AF2BA6C;
@@ -236,7 +429,98 @@ void func_8AF00D90(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF00E24.s")
+void func_8AF00E24(void) {
+    switch (D_8AF2BA6C) {
+    case 1:
+        func_8AF07954();
+        return;
+    case 3:
+    case 4:
+    case 5:
+        func_8AF07C84();
+        return;
+    case 7:
+        func_8AF0894C();
+        return;
+    case 8:
+        func_8AF09B2C();
+        return;
+    case 9:
+        func_8AF0A244();
+        return;
+    case 10:
+        func_8AF0B850();
+        return;
+    case 11:
+        func_8AF0E838();
+        return;
+    case 12:
+        func_8AF1043C();
+        return;
+    case 13:
+        func_8AF12398();
+        return;
+    case 14:
+        func_8AF13718();
+        return;
+    case 15:
+        func_8AF14D3C();
+        return;
+    case 16:
+        func_8AF1666C();
+        return;
+    case 17:
+        func_8AF16DC8();
+        return;
+    case 18:
+        func_8AF176C4();
+        return;
+    case 19:
+        func_8AF19850();
+        return;
+    case 20:
+        func_8AF1B23C();
+        return;
+    case 21:
+        func_8AF1B910();
+        return;
+    case 22:
+        func_8AF1C31C();
+        return;
+    case 23:
+        func_8AF1DB30();
+        return;
+    case 24:
+        func_8AF1E1F4();
+        return;
+    case 25:
+        func_8AF1E8E4();
+        return;
+    case 28:
+        func_8AF1F038();
+        return;
+    case 29:
+        func_8AF208D0();
+        return;
+    case 26:
+        func_8AF20E4C();
+        return;
+    case 27:
+        func_8AF21864();
+        return;
+    case 31:
+        func_8AF2447C();
+        return;
+    case 32:
+        func_8AF2447C();
+        return;
+    case 36:
+        func_8AF263AC();
+        /* fallthrough */
+    default:
+        return;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01020.s")
 
@@ -399,7 +683,23 @@ void func_8AF01A0C(s16 x, s16 y, s16 width, s16 height, void *image, s16 stride)
     gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + width) << 2, (y + height) << 2, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01C84.s")
+extern u8 D_80094F50[];
+
+// Draws a 96-pixel-wide image as 28 strips of 4 rows: after the D_80094E38 display list and a
+// white primitive color, strip i shows rows 4i-4i+3 of arg2 (0x300 bytes per strip) at
+// (arg0, arg1 + 4i) through func_8AF01A0C; the D_80094F50 display list follows.
+void func_8AF01C84(s32 arg0, s32 arg1, u8 *arg2) {
+    s16 x = arg0;
+    s32 i;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    for (i = 0; i < 28; i++) {
+        func_8AF01A0C(x, arg1 + i * 4, 96, 4, arg2, 96);
+        arg2 += 0x300;
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 extern s32 D_8AF2BA68;
 extern s16 D_8AF2BE40;

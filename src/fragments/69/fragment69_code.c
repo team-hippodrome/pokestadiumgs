@@ -466,7 +466,6 @@ void func_8F1008EC(Fragment69MenuState *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8F104010;
 extern s32 D_8F1DECA4;
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void Camera_ComputeEyeFromAngles(f32 *, s32 *, f32, s16, s32);
@@ -477,7 +476,7 @@ void func_8F100C64(f32 arg0, void *arg1) {
     s32 output[3];
 
     Vec3f_SetComponentsDuplicate(position, 0.0f, 250.0f / arg0, 0.0f);
-    Camera_ComputeEyeFromAngles(position, output, D_8F104010 / arg0, *(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2));
+    Camera_ComputeEyeFromAngles(position, output, 1.65e+03f / arg0, *(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2));
     func_80038E14(*(s32 *)((u8 *)(u32)D_8F1DECA4 + 0xC), output[0], output[1], output[2], position[0], position[1], position[2], 0);
     GeoCamera_SetPerspective((void *)(u32)*(s32 *)((u8 *)(u32)D_8F1DECA4 + 0xC), 30.0f, 100.0f / arg0, 12800.0f / arg0);
 }
@@ -578,7 +577,40 @@ void func_8F101CDC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F101FF4.s")
+// Four signed bytes passed to func_80041FD0 as one word.
+typedef union {
+    s32 word;
+    s8 bytes[4];
+} Fragment69PackedState;
+#endif
+
+#ifdef VERSION_US
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE44;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DECA0;
+extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
+void func_8F101FF4(void) {
+    s32 old = D_8F1DEE24;
+
+    if (D_80087200->buttonsRepeat & 0x200) {
+        D_8F1DEE24--;
+        if (D_8F1DEE24 < 0) {
+            D_8F1DEE24 = 0;
+        }
+    }
+    if (D_80087200->buttonsRepeat & 0x100) {
+        D_8F1DEE24++;
+        if (D_8F1DEE24 > 0x118) {
+            D_8F1DEE24 = 0x118;
+        }
+    }
+    if (old != D_8F1DEE24) {
+        D_8F1DEE44 = 0;
+        D_8F1DEE5C = 0;
+        func_80041FD0(D_8F1DECA0, D_8F1DEE24, *(Fragment69PackedState *)&D_8F1DEE44, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -619,10 +651,6 @@ void func_8F102394(void) {
 #endif
 
 #ifdef VERSION_US
-typedef union {
-    s32 word;
-    s8 bytes[4];
-} Fragment69PackedState;
 extern s8 D_8F1DEE48[];
 extern s32 D_8F1DECA0;
 extern s32 D_8F1DECF0;
@@ -833,7 +861,47 @@ void func_8F102B48(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F102BC8.s")
+extern s32 D_8F1DEE58;
+s32 func_8F102BC8(void) {
+    s32 result = 0;
+
+    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+        D_8F1DEE58--;
+        if (D_8F1DEE58 < 0) {
+            D_8F1DEE58 = 11;
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+        D_8F1DEE58++;
+        if (D_8F1DEE58 >= 12) {
+            D_8F1DEE58 = 0;
+        }
+    }
+
+    switch (D_8F1DEE58) {
+        case 0: func_8F101FF4(); break;
+        case 1: func_8F1020A4(); break;
+        case 2: func_8F102394(); break;
+        case 4: func_8F102488(); break;
+        case 5: func_8F102618(); break;
+        case 6: func_8F102708(); break;
+        case 7: func_8F10282C(); break;
+        case 8: func_8F1029CC(); break;
+        case 9: func_8F102A20(); break;
+        case 10: func_8F102A98(); break;
+        case 11: func_8F102B48(); break;
+    }
+
+    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x2000) {
+            result = 3;
+        } else {
+            result = 2;
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+        result = 1;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

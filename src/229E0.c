@@ -1174,11 +1174,11 @@ void Audio_RemoveRecentSoundAt(u16 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_80028ADC.s")
 
-void func_80028CA8() {
+void func_80028CA8(const void *sound_candidates) {
     s32 v0;
     s32 masked;
 
-    v0 = func_80028ADC();
+    v0 = func_80028ADC(sound_candidates);
     masked = v0 & 0xFFFF;
     if (v0 != 0) {
         func_800314D4(masked);

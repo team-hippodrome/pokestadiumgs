@@ -2,6 +2,13 @@
 
 
 #ifdef VERSION_US
+// Not referenced by code or data (debug format strings); they open this file's .rodata.
+const char D_8AF2A480[] = "ogMedalCheck() : Congratulation !!!  clear  Class (%d) !! \n";
+const char D_8AF2A4BC[] = "ogMedalCheckReigai() MORAISOKONE !!! \n";
+const char D_8AF2A4E4[] = "CLASS FUKKATU !!!!\n";
+const char D_8AF2A4F8[] = "medal_clear_event_flg = %d\n";
+const char D_8AF2A514[] = "ogSetPage_QUIZ_Recover() mode = %d\n";
+const char D_8AF2A538[] = "ogSetPage_BATTLE_Recover() class = %d\n";
 extern u8 func_80054794(void);
 s32 func_8AF244D0(void) {
     s32 var_v1;
@@ -238,7 +245,63 @@ void func_8AF25908(void) {
     func_8AF24508(*entry);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF25974.s")
+extern s16 D_8AF3A3D0;
+extern s16 D_8AF3A662;
+extern s32 D_8AF3A668;
+extern u16 D_8AF2BDC6;
+extern void func_8AC007FC(void);
+extern s16 func_8AF25A84(s32);
+extern void func_8AF25DF0(void);
+extern void func_8AF25EA0(void);
+extern void func_8AF2610C(void);
+extern void func_8AF26154(void);
+extern void func_8AF261C0(void);
+extern void func_8AF26234(void);
+extern void func_8AF262AC(void);
+extern void func_8AF26324(void);
+extern void func_8AC063AC(s32 *, u16);
+s16 func_8AF25974(void) {
+    s16 var_v0;
+
+    var_v0 = 36;
+    if (D_8AF3A3D0 < 16) {
+        D_8AF3A3D0 += 1;
+    } else {
+        func_8AC007FC();
+    }
+
+    switch (D_8AF3A662) {
+        case 0:
+            var_v0 = func_8AF25A84(36);
+            break;
+        case 1:
+            func_8AF25DF0();
+            break;
+        case 2:
+            func_8AF25EA0();
+            break;
+        case 3:
+            func_8AF2610C();
+            break;
+        case 4:
+            func_8AF26154();
+            break;
+        case 5:
+            func_8AF261C0();
+            break;
+        case 6:
+            func_8AF26234();
+            break;
+        case 7:
+            func_8AF262AC();
+            break;
+        case 8:
+            func_8AF26324();
+            break;
+    }
+    func_8AC063AC(&D_8AF3A668, D_8AF2BDC6);
+    return var_v0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF25A84.s")
 

@@ -217,7 +217,38 @@ s32 func_8414C7D4(u8 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C858.s")
+extern u8 *func_84154B0C(void);
+
+// 0xCC-byte records at the base returned by func_84154B0C.
+typedef struct unk_func_84154B0C {
+    /* 0x00 */ u8 unk_00[0x42];
+    /* 0x42 */ u16 unk_42;
+    /* 0x44 */ u8 unk_44[0x88];
+} unk_func_84154B0C; // size = 0xCC
+
+// Comparator over the two record indices stored at bytes 0x19A/0x19B of func_84154B0C's base:
+// ranks each by func_8414C7D4(arg0[6 + index]) and returns 1 when the second ranks below the first,
+// 0 when it ranks above; on a tie, returns whether the second record's unk_42 is below the first's.
+s32 func_8414C858(u8 *arg0) {
+    u8 *records = func_84154B0C();
+    u8 first_index = records[0x19A];
+    u8 second_index = records[0x19B];
+    u8 first;
+    s32 second; // FAKE: s32 and narrowed only for the second comparison; diff score 120 without it.
+
+    first = func_8414C7D4((arg0 + 6)[first_index]);
+    second = func_8414C7D4((arg0 + 6)[second_index]);
+    if (second < first) {
+        return 1;
+    }
+    if (first < (u8)second) {
+        return 0;
+    }
+    if (((unk_func_84154B0C *)records)[second_index].unk_42 < ((unk_func_84154B0C *)records)[first_index].unk_42) {
+        return 1;
+    }
+    return 0;
+}
 
 s32 func_8414C924(u8 arg0, u8 arg1) {
     return (D_8419D7C0[arg0 * 0xA8] & arg1) != 0;

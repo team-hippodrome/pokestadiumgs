@@ -94,7 +94,52 @@ void func_88800D34(s8 slot) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800DC0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800EC8.s")
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 func_8004D1FC(u8 *arg0);
+extern u8 func_80062D98(u8);
+void func_88800EC8(s8 arg0) {
+    u8 value;
+    void *ptr;
+
+    value = ((s8 *)D_880068B0)[arg0 + 2];
+    if (value == 252) {
+        D_88804050[0x29] = 19;
+    } else {
+        D_88804050[0x29] = func_80062D98(value);
+    }
+
+    if (((s8 *)D_88804050)[0x28] != ((s8 *)D_88804050)[0x29]) {
+        switch (((s8 *)D_88804050)[0x29]) {
+            case 7: ptr = *(void **)(D_88804050 + 0x360); break;
+            case 26: ptr = *(void **)(D_88804050 + 0x364); break;
+            case 23: ptr = *(void **)(D_88804050 + 0x368); break;
+            case 19: ptr = *(void **)(D_88804050 + 0x36C); break;
+            case 27: ptr = *(void **)(D_88804050 + 0x370); break;
+            case 1: ptr = *(void **)(D_88804050 + 0x374); break;
+            case 20: ptr = *(void **)(D_88804050 + 0x378); break;
+            case 2: ptr = *(void **)(D_88804050 + 0x37C); break;
+            case 8: ptr = *(void **)(D_88804050 + 0x380); break;
+            case 22: ptr = *(void **)(D_88804050 + 0x384); break;
+            case 4: ptr = *(void **)(D_88804050 + 0x388); break;
+            case 25: ptr = *(void **)(D_88804050 + 0x38C); break;
+            case 0: ptr = *(void **)(D_88804050 + 0x390); break;
+            case 3: ptr = *(void **)(D_88804050 + 0x394); break;
+            case 24: ptr = *(void **)(D_88804050 + 0x398); break;
+            case 5: ptr = *(void **)(D_88804050 + 0x39C); break;
+            case 9: ptr = *(void **)(D_88804050 + 0x3A0); break;
+            case 21: ptr = *(void **)(D_88804050 + 0x3A4); break;
+        }
+        func_8004D1FC(ptr);
+        ((s8 *)D_88804050)[0x28] = ((s8 *)D_88804050)[0x29];
+    }
+
+    GfxRect_DrawTextured(
+        111,
+        (s16)(arg0 * 27 + 256),
+        *(s16 *)((u8 *)*(void **)(D_88804050 + 0x360) + 0),
+        *(s16 *)((u8 *)*(void **)(D_88804050 + 0x360) + 2),
+        0, 0, 1024, 1024, 0);
+}
 
 extern void func_800496A4(s32, s32);
 extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);

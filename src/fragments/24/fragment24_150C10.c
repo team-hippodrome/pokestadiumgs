@@ -675,7 +675,31 @@ void func_82B026E8(State02198 *arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B02800.s")
+typedef struct unk_D_82B126A8 {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ u8 unk_04[0x6C];
+} unk_D_82B126A8; // size = 0x70
+
+extern unk_D_82B126A8 D_82B126A8[20];
+
+// Returns the D_82B126A8 record whose two leading halfwords equal (arg0, arg1), or NULL.
+void *func_82B02800(s32 arg0, s32 arg1) {
+    s32 count = 20; // FAKE: a variable bound keeps the loop rolled; diff score 770 without it.
+    s32 i;
+    unk_D_82B126A8 *entry;
+    unk_D_82B126A8 *result = NULL;
+
+    for (i = 0, entry = D_82B126A8; i < count; i++, entry++) {
+        if (entry->unk_00 == arg0) {
+            if (entry->unk_02 == arg1) {
+                result = entry;
+                break;
+            }
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
