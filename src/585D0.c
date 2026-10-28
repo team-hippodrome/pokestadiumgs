@@ -862,43 +862,73 @@ s32 func_80059DD0(s32 arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80059EF8.s")
+extern s32 D_80128748;
+extern s8 GbSave_LoadMainSave(s32);
+extern s32 GbPak_ValidateAndRefresh(s32, u8 *, u8 *);
+extern s32 GbTower_CheckPakRemoved(s32, u8);
+extern s32 func_80057A80(s32 arg0);
+extern s32 func_80059D00(s32 arg0);
+extern s32 func_80059DD0(s32 arg0);
+extern u8 D_80128570[];
+s32 GbSave_LoadRequestedBuffers(s32 port, u8 flags) {
+    u8 status;
+    s32 result = 0;
+    if ((D_80128748 & (1 << port)) && (D_80128570 + port * 112)[5] == 0) {
+        result = GbPak_ValidateAndRefresh(port, &status, D_80128570 + port * 112 + 40);
+        if (result == 0) {
+            Game_ShutdownAndLoadFragment(port, 2);
+        }
+        if (flags & 1) {
+            result &= !GbSave_LoadMainSave(port);
+        }
+        if (flags & 4) {
+            result &= func_80059DD0(port);
+        }
+        if (func_80057A80(port) == 0 && (flags & 2)) {
+            result &= func_80059D00(port);
+        }
+        if (GbTower_CheckPakRemoved(port, status) == 0) {
+            Game_ShutdownAndLoadFragment(port, 2);
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
 void func_8005A014(s32 arg0) {
-    func_80059EF8(arg0, 1);
+    GbSave_LoadRequestedBuffers(arg0, 1);
 }
 #endif
 
 #ifdef VERSION_US
 void func_8005A034(s32 arg0) {
-    func_80059EF8(arg0, 2);
+    GbSave_LoadRequestedBuffers(arg0, 2);
 }
 #endif
 
 #ifdef VERSION_US
 void func_8005A054(s32 arg0) {
-    func_80059EF8(arg0, 5);
+    GbSave_LoadRequestedBuffers(arg0, 5);
 }
 #endif
 
 #ifdef VERSION_US
 void func_8005A074(s32 arg0) {
-    func_80059EF8(arg0, 8);
+    GbSave_LoadRequestedBuffers(arg0, 8);
 }
 #endif
 
 #ifdef VERSION_US
 void func_8005A094(s32 arg0) {
-    func_80059EF8(arg0, 16);
+    GbSave_LoadRequestedBuffers(arg0, 16);
 }
 #endif
 
 #ifdef VERSION_US
 extern void func_8005E6B8(s32 arg0);
 s32 func_8005A0B4(s32 arg0) {
-    s32 result = func_80059EF8(arg0, 5);
+    s32 result = GbSave_LoadRequestedBuffers(arg0, 5);
     if (result != 0) {
         func_8005E6B8(arg0);
     }
@@ -908,7 +938,7 @@ s32 func_8005A0B4(s32 arg0) {
 
 #ifdef VERSION_US
 s32 func_8005A0F4(s32 arg0) {
-    s32 result = func_80059EF8(arg0, 7);
+    s32 result = GbSave_LoadRequestedBuffers(arg0, 7);
     if (result != 0) {
         func_8005E6B8(arg0);
     }
@@ -918,7 +948,7 @@ s32 func_8005A0F4(s32 arg0) {
 
 #ifdef VERSION_US
 s32 func_8005A134(s32 arg0) {
-    s32 result = func_80059EF8(arg0, 0xFF);
+    s32 result = GbSave_LoadRequestedBuffers(arg0, 0xFF);
     if (result != 0) {
         func_8005E6B8(arg0);
     }

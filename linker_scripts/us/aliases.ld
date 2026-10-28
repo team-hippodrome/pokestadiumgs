@@ -1248,3 +1248,11 @@ func_84144410 = BattleUi_DrawNameRow;
 func_84146DBC = BattleUi_UpdateElementColor;
 
 func_87E0E88C = ListSlots_UpdateState;
+
+func_80059EF8 = GbSave_LoadRequestedBuffers;
+
+func_82B0128C = TeamRules_ValidateSelection;
+
+func_87E0D278 = ListSlots_StartAlternatingAnimations;
+
+func_87E0D520 = ListSlots_UpdateAlternatingAnimations;
