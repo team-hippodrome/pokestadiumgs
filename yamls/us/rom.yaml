@@ -651,6 +651,7 @@
     - [0x10A110, .data,   fragments/14/fragment14_FF070] # D_81311F80 (func_81308014's 30-unit accumulator) and three
                                                             # unreferenced words in the same 16-byte IDO-padded section
     - [0x10A120, data]
+    - [0x10A240, .data,   fragments/14/fragment14_104FC0] # func_8130D4E0's timer, the shared highlight color and the asm owners' data
     - [0x10A270, .data,   fragments/14/fragment14_1077C0] # D_813120E0's three records and the color templates of func_81310894/func_81310A14
     - [0x10A300, data]
     - [0x10A310, .rodata, fragments/14/fragment14_F81B0] # D_81312180 and all seven jump tables

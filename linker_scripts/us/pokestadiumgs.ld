@@ -1431,10 +1431,10 @@ SECTIONS
         build/asm/us/data/fragments/14/fragment14_data.data.o(.data);
         fragments_14_fragment14_FF070 = .;
         build/src/fragments/14/fragment14_FF070.o(.data);
-        fragments_14_fragment14_104FC0 = .;
-        build/src/fragments/14/fragment14_104FC0.o(.data);
         _10A120_data = .;
         build/asm/us/data/10A120.data.o(.data);
+        fragments_14_fragment14_104FC0 = .;
+        build/src/fragments/14/fragment14_104FC0.o(.data);
         fragments_14_fragment14_1077C0 = .;
         build/src/fragments/14/fragment14_1077C0.o(.data);
         fragments_14_fragment14_109280 = .;

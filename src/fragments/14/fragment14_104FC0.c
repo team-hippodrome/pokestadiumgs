@@ -85,9 +85,30 @@ f32 func_8130D098(u8 *arg0, unk_func_8130D45C *arg1) {
     func_816072FC(arg1);
     return scale;
 }
-// func_8130D1FC's initializer template (still assembly).
-const s16 D_81312730[16] = { 401, 0, 147, 146, 401, 0, 147, 49, 474, 73, 0, 0, 474, 24, 0, 0 };
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D1FC.s")
+extern void func_8160945C(void *, const s16 *, const s16 *, f32);
+f32 func_8130D1FC(u8 *arg0, unk_func_8130D45C *arg1) {
+    f32 t;
+    const s16 colors[4][4] = {
+        { 401, 0, 147, 146 },
+        { 401, 0, 147, 49 },
+        { 474, 73, 0, 0 },
+        { 474, 24, 0, 0 },
+    };
+    s32 row;
+
+    // Retail divides the progress by 1, like func_8130D098; a float 1.0f divisor becomes a multiply.
+    t = *(f32 *)(arg0 + 0x2C) / 1;
+    row = arg0[0x35] >= 2;
+    func_8160945C(arg1, colors[row + 2], colors[row], t);
+    arg1->unk_00 += *(s16 *)(arg0 + 8);
+    arg1->unk_02 += *(s16 *)(arg0 + 0xA);
+    if (arg0[0x35] < 2 && arg0[0x34] >= 5) {
+        arg1->unk_06 += D_8160BD1C(*(f32 *)(arg0 + 0x30) / 12.0f) * 53.0f;
+    }
+    func_816072FC(arg1);
+    return t;
+}
+
 
 extern void func_816072FC(void *arg0);
 f32 func_8130D340(u8 *arg0, unk_func_8130D45C *arg1) {
@@ -131,8 +152,44 @@ void func_8130D45C(u8* arg0, unk_func_8130D45C* arg1, unk_func_8130D45C* arg2) {
 // Tables func_8130D4E0 (still assembly) reads.
 const s16 D_81312750[4] = { 24, 48, 24, 0 };
 const s16 D_81312758[4] = { 0, 24, 48, 24 };
-const s16 D_81312760[4] = { 6, 5, 3, 4 };
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D4E0.s")
+const u16 D_81312760[4] = { 6, 5, 3, 4 };
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern f32 func_816092FC(void);
+extern f32 func_8160BCB0(f32, f32);
+extern s32 func_8004C990(s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+void func_8130D4E0(u8 *arg0, s16 *pos) {
+    static f32 D_813120B0 = 0.0f;
+    s32 i;
+    s32 blink;
+
+    D_813120B0 += func_816092FC();
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (i = 0; i < 4; i++) {
+        blink = (i == *(s8 *)(arg0 + 0x38)) && (func_8160BCB0(D_813120B0, 32.0f) > 16.0f);
+        if (blink) {
+            gDPSetEnvColor(D_800D0510++, 0x80, 0x80, 0x80, 0xFF);
+        }
+        func_8004D19C(pos[0] + D_81312750[i], pos[1] + D_81312758[i], func_8004C990(51, D_81312760[i]), 1, 0);
+        if (blink) {
+            gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+
+
+// The highlight color func_8130E99C packs and func_8130D6A4 (still assembly) reads, then the
+// data of the still-assembly func_8130D6A4 and func_8130DEB8.
+u8 D_813120B4[4] = { 0x64, 0x96, 0xFF, 0x00 };
+s32 D_813120B8[3] = { 0x1C, 0x1E00, 0x9600 };
+s32 D_813120C4 = 100;
+s32 D_813120C8 = 100;
+s32 D_813120CC = 100;
+s32 D_813120D0 = 100;
+s32 D_813120D4 = 100;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D6A4.s")
 
