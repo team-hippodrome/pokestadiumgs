@@ -186,7 +186,36 @@ s32 func_880007B0(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000808.s")
+extern s32 func_8004C990(s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+void func_88000808(u8 type, s16 x, s16 y, s32 arg3, s32 arg4) {
+    s32 icon;
+
+    switch (type) {
+        case 1:
+            icon = 5;
+            break;
+        case 2:
+            icon = 4;
+            break;
+        case 3:
+            icon = 1;
+            break;
+        case 4:
+            icon = 7;
+            break;
+        case 5:
+            icon = 3;
+            break;
+        case 6:
+            icon = 6;
+            break;
+        default:
+            icon = 2;
+            break;
+    }
+    func_8004D19C(x, y, func_8004C990(0x38, icon), arg3, arg4);
+}
 
 extern Gfx *D_800D0510;
 void func_880008B0(s16 arg0, s16 arg1, s16 arg2) {
