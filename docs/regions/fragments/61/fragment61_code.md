@@ -73,3 +73,13 @@ value. Returns 0. Retail spills `model` to sp+0x18 in a 0x28 frame. The
 named local alone lands at 0x1C, and an inline expression shrinks the frame
 to 0x20. One marked `s32 pad; // FAKE` gives both (as in fragment19
 `func_823016B4`). The prototype is retyped from `void` to `s32`.
+## 2026-10-28 — `func_86B07FB0` matched (step choice)
+
+`s16 func_86B07FB0(s16 a, s16 pos, s16 step, s32 mode)`: if
+`step < func_86B08088(a, pos)`, evaluate `func_86B08088` at `pos + step`
+(kept as s16 `upValue`) and at `pos - step` (s32 `downValue`, compared
+untruncated). Mode 1 returns `pos - step`, mode 2 `pos + step`; otherwise
+return whichever side has the smaller value, else `a`. Locals `s16 up;
+s16 upValue; s32 downValue;` give retail's homes (upValue at 0x24 behind
+`up`). `pos - step` stays an expression (a spilled temp, not a home), and a
+named s32 `down` adds a frame word.
