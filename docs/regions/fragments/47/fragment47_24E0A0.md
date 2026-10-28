@@ -550,3 +550,13 @@ The geometry functions and `D_8600D970`/`D_8600D988` remain in this source's
 original layout. Continue the rendering owners using
 `docs/regions/fragments/47/fragment47_2507E0.md`; it records the successful
 `func_8600AB6C` spelling and current requeues.
+
+## func_86008E64 (accepted 2026-10-28)
+
+Plane-contact resolver: `s32 f(Fragment47MotionPrefix *, s32 flag, f64 *point,
+Fragment47Point *normal)`. The caller's stale `void` extern was retyped in the
+same transaction (`func_86009318`). Retail copies `*normal` into an unused
+24-byte local (kept as `copy = *normal;`). It also reserves three unreferenced
+regions: 24 bytes at 0xC8, 48 bytes at 0x80 and 64 bytes at 0x28 of a 0xF8 frame.
+These are reproduced with `// FAKE` arrays; without them every stack offset
+is 64 bytes low.
