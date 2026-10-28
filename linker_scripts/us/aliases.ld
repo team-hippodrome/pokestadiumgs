@@ -1060,3 +1060,5 @@ func_82505758 = Fragment21_DrawTexturedBorder;
 
 // Interior slot-coordinate pair named by re-extracted data.
 D_8600D9B8 = D_8600D9B0 + 8;
+/* Audio context (Ocarina of Time / Majora's Mask gAudioContext); src/14640.c reads it typed. */
+gAudioContext = D_8011BE90;

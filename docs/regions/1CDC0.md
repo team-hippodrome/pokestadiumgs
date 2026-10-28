@@ -37,3 +37,7 @@ Best 0.75. Two problems remain:
 - Retail ends the slot loop with `bne` on the pointer-table induction (`D_8011BE90 + 4i` against `D_8011BEA4`); IDO picks the pool pointer and `sltu`.
 - Retail forms every extra-player field address with its own `lui $at`, while IDO keeps `&player` in `$s0` once it is passed to `func_8001F9B0`. Routing everything through a context view makes it worse (0.73).
 Next: test an `extern` context *struct* (not the cast `u8[]`) in a scratch file, and an index loop whose body uses only `seqPlayers[i]`.
+
+## 2026-10-28 — `SequenceLayer` flags are `u32` bitfields
+
+`func_8001CE70` now takes the file's real `SequenceLayer *` instead of an ad-hoc view. Retail loads the layer flags with `lw`, so the leading bitfields are declared in a `u32` unit (they were `u8`). Every other user of the type stays byte-identical. The `SequencePlayer`/`SequenceChannel`/`SequenceLayer` typedef block is moved above `func_8001CE70` (declarations only), and its caller casts to `struct SequenceLayer *`.
