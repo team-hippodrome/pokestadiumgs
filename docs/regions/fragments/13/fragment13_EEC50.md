@@ -1224,6 +1224,289 @@ Source mechanisms:
 - IDO emits the unsigned `0x4F800000` correction for `u16` → `f32` by
   itself; an explicit `(u32)` cast changes nothing.
 
+## 2026-10-28 — second native box: page-arrow frontier accepted
+
+`func_8240330C` is genuine C: **198 words / 792 bytes**, frame **0x58**.
+The file advances from 68 C / 11 function ASM to **69 C / 10 function ASM**.
+The canonical `box2-order1` batch accepts candidate 0 with link verification
+and a full retail-ROM gate. There is no new compiler/output rewrite, padding,
+helper function, storage object or interface change.
+
+The decisive correction is the mapping between optimizer temporaries and
+physical stack offsets. With frame 0x58, displacement -40 maps to stack+0x30,
+-44 to +0x2C, and -48 to +0x28. In the old leader, temporary 0 held the initial
+position addition. The later web 87 is **`Ucvt(pages - 1)`**, not a float load.
+The first box's proposed direction of reuse was therefore reversed.
+
+A private logging-only recompiler observer records expression trees, exact
+region intersections, blocked temporary choices and the final allocation.
+Stock, twenty-leading-blank, observer-off/on and observer-on-with-leading-
+blanks builds preserve complete canonical object bytes/layout, function
+extents and relocations. It shows the last-page conversion blocked from
+both earlier slots by the position and Y regions. The public optimizer
+source is used to interpret those records; its version is not substituted
+for the production compiler.
+
+Eight upper-bound lifetime candidates preserve the instruction stream. The
+early-bound candidate moves position to +0x2C and Y to +0x28 while leaving
+all opcodes/registers intact. That measured permutation motivates the next
+eight-cell family. Its first candidate closes the frontier:
+
+1. Compute page count and the real floating last-page bound.
+2. Compute animated Y and its integer rectangle coordinate.
+3. Compute interpolated page position, fraction and retained triangle.
+4. Preserve both original arrow paths, directions, clipping and scale values.
+
+The stock compiler sinks/schedules the arithmetic into the original instruction
+order while the changed source registration order gives the correct spill
+homes. Every new local has a real consumed value. The count-only view of
+`D_824073AA` retains the existing 60-byte anchor stride and adds no storage.
+
+Post-acceptance normal/+20-leading-blank controls reproduce every byte/layout,
+function extent and relocation of the sealed accepted module. The accepted
+statistics row is present. A separate serialized `make COMPARE=1
+RUN_CC_CHECK=1` passes retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`, and an
+explicit normal host syntax check passes with the same two existing warnings.
+The gate receipt is retained at `scratch/box2-order1/gate-0/receipt.json`;
+post-acceptance controls and full verification are at
+`scratch/box2-final-controls/` and `scratch/box2-verification/receipt.json`.
+All diagnostic sources, tool copies, objects and ROMs remain private.
+
+The routine queues the scrolling panel and upper/lower page-arrow rectangles;
+`Fragment13_UpdatePageArrowPanels` is a behavior-backed naming suggestion for
+integration. Shared names/aliases and publication remain coordinator work.
+
+## 2026-10-28 — scrolling-indicator spill frontier accepted
+
+`func_82402B1C` is genuine C: **195 words / 780 bytes**, frame **0x60**.
+Together with the page-arrow owner, this box adds **393 words / 1,572 bytes**
+and advances the file to **70 C / 9 function ASM**. The canonical
+`box2-scroll-capture1` batch accepts its first candidate with link verification
+and a full retail-ROM gate. The global texture declarations remain unchanged.
+
+The calibrated observer identifies the exact blocker: the left texture
+header's pointer conversion occupies temporary 0 and overlaps the selection
+index and fraction. Retyping the verified header pointers and their initializer
+casts in a runner transaction does not eliminate that conversion; none of
+those metadata edits is installed. Simply moving index/fraction calculation
+earlier lets the optimizer sink and duplicate X calculations (832/836 bytes),
+so registration order cannot be changed independently of coordinate reuse.
+
+The winning source captures the integer selection and its fraction early,
+using the existing main-Y carrier after the main rectangle has consumed it.
+It then retains the original transient index reuse for negative texture width,
+X calculation and finally selection index. This preserves the coordinate
+calculation's source dependency while moving the real selection/fraction
+expressions ahead of the header conversion. Index/fraction now use the original
+stack+0x38/+0x34 homes; icon Y, triangle, all 195 opcodes/registers and all
+other offsets agree. No extra local, empty branch, padding, artificial argument
+or compiler rewrite is introduced.
+
+Normal and twenty-leading-blank whole-module builds reproduce the sealed
+accepted object's sections, function extents and relocations. The accepted
+statistics row is present. A separate serialized normal ROM build and explicit
+host syntax check pass; retail MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, with the same two existing host warnings.
+Exact gate and post-acceptance receipts are retained at
+`scratch/box2-scroll-capture1/gate-0/receipt.json`,
+`scratch/box2-scroll-final-controls/` and
+`scratch/box2-scroll-verification/receipt.json`. The accepted page-arrow
+neighbor remains byte-identical throughout these controls.
+
+The routine queues a sliding list panel and left/right scrolling-indicator
+panels, including direction-dependent scaling and terminal-entry handling.
+`Fragment13_UpdateScrollingIndicatorPanels` is a behavior-backed integration
+name suggestion; shared naming and publication remain coordinator work.
+
+## 2026-10-28 — second-box remaining-owner diagnostics
+
+The two accepted owners above remain frozen. No rejected companion prototype,
+texture-header retyping, RGB record, or clock body is installed.
+
+- `func_82403C84` — **requeue**. Eight two-texture-loop endpoint variants
+  preserve the prior 676-byte/frame-0x78 basin (target 652/frame-0x70).
+  Eight format-dispatch variants confirm that explicit case/default placement
+  retains the extra saved constants in the four-case form. Folding case 1
+  into the default gives 648 bytes, normalized/raw 0.9693/0.3804, still frame
+  0x78 and a different dispatch graph; it is not a closer raw match or a
+  padding candidate. Retain the original four-case leader at
+  `scratch/panel2.json` index 0, 0.9527/0.5740. New results are in
+  `scratch/box2-panel-loop1/result.json` and
+  `scratch/box2-panel-dispatch1/result.json`. Next: inspect the constant-web
+  lifetime/cost mechanism that decides whether 1 and 3 receive saved registers;
+  do not repeat pointer endpoints or case/default rearrangements.
+- `func_8240239C` — **requeue**. Eight RGB aggregate/capture variants, with
+  the live binder's verified `s32 func_8004D1FC(u8 *)` signature applied only
+  as a runner companion transaction, do not improve the scalar frontier.
+  The best new record spelling is 1,112 bytes/frame 0x58, normalized/raw
+  0.9676/0.5576 (`scratch/box2-rgb-record1/result.json`, index 5), against
+  target frame 0x50. The stronger first-box opcode basin remains
+  `scratch/render-pair2.json` index 5, 0.9748/0.5432, also frame 0x58.
+  The historical note's frame-0x50 candidate is not recovered by these bodies.
+  Next: trace the real RGB/coordinate spill live ranges and storage demands;
+  scalar-versus-three-byte-record rewrites alone do not remove the extra slot.
+- `func_824050A8` — **requeue**. Forty-eight new candidates cover late
+  day-unit definition with eight legal carry orders, direct versus retained
+  quotient expressions, signed/unsigned narrow divisor locals, consumed
+  divisor-carrier reuse, and real clock/calendar/byte-field views. The best
+  new opcode basin has the correct 412-byte/frame-0x18 extent but
+  normalized/raw 0.9515/0.3981 (`scratch/box2-clock-web1.json`, index 0).
+  Width and field-view changes reproduce it; consumed unit reuse changes
+  divisor colors but does not match. The historical 0.9709/0.7379 leader
+  remains stronger and is not present among the current retained candidates.
+  A calibrated logging-only observer on the direct-carry candidate reproduces
+  complete module sections, function extents and relocations in stock,
+  stock-plus-twenty-blank, observer-off/on/on-plus-blank modes; receipt:
+  `scratch/box2-clock-observer/calibration.json`. In that candidate the reused
+  carry local (web 19, cost 4) takes `$v0`, while constant 60 (web 117, cost
+  2.5) gets `$a3`; the target starts its divisor in `$v0`. These web numbers
+  describe this one calibrated candidate, not every clock body. Early
+  hours/day loads are another remaining scheduling difference. Next: recover
+  the historical leader and trace its first temporary-demand/load-hoisting
+  divergence before spending another box on ordinary carry-order variants.
+
+These are bounded source-shape negatives, not claims that genuine matching C
+is unreachable. The logging compiler, private recompiler sources, controls,
+probe manifests and captured objects remain under this worker's scratch tree.
+
+Clock closing checkpoint: a **150-second, single-worker** natural-source
+permuter pass has a raw-identical 412-byte calibration; best retained score
+is 1120 (nonzero). Eight reviewed output/product-lifetime candidates and
+eight literal-60 carry-order/field-view candidates receive canonical runner
+checks; none accepts. This adds sixteen clock comparisons to the forty-eight
+above. The best normalized/raw pair at equal normalized score improves to
+**0.9515/0.5825**, correct 412 bytes/frame 0x18, in
+`scratch/box2-clock-permuter1.json` index 0. A separate raw leader is
+**0.9417/0.6505**, same size/frame, index 1: literal 60 in all three early
+carry stages places the divisor in the target's `$v0`. Its first mismatch
+moves from the divisor at byte 29 to the old-seconds load at byte 41
+(`$t9` versus `$t8`); the first carry result is still `$a1` versus `$v1`,
+and hours/day loads and 24 are still early. The final eight legal reduction
+orders do not improve that raw leader. The next concrete hypothesis is to
+trace first-carry/old-field demand on this literal-60 body, alongside recovery
+of the stronger historical leader, rather than repeat divisor widths or
+ordinary reduction orders. Sources, calibration and canonical results remain
+in `scratch/box2-clock-web1-permute.json`,
+`scratch/box2-clock-permuter1/` and `scratch/box2-clock-literal-order1/`.
+
+Parent integration retains existing semantic names and unifies the texture-state
+views already merged. New callback/panel names preserve original assembly
+entries through compatibility aliases. Complete normal/+20blank module controls
+preserve bytes, extents and relocation topology modulo those aliases.
+- `func_82402B1C` → `Fragment13_DrawScrollIndicatorPanel`.
+- `func_8240330C` → `Fragment13_DrawPageIndicatorPanel`.
+The external group-count span has the observed60-byte stride and allocates
+no storage; the named five-column value is used in all real page calculations.
+
+## 2026-10-28 — genuine tinted scaled panel accepted in third native box
+
+`func_8240239C` is genuine C: **278 words / 1,112 bytes**, original frame
+**0x50**. File: **71 C / 8 function ASM**. Canonical batch
+`box3-tinted-arity2`, candidate 0, passes the explicit normal host syntax
+recipe and authoritative sequential retail-ROM gate, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The object link-shape diagnostic remains
+`relocation_drift` at the already-renamed clipped-rectangle callee; this is
+not a link-verified probe. The full-ROM result is the acceptance evidence.
+
+The preceding frame-0x58 basin retained an unnecessary `scale` local beside
+`texture_scale`. Calibrated stock/blank/observer-off/on/on-blank builds of a
+retained candidate preserve complete sections, function extents and
+relocations (`scratch/box3-tinted-observer/calibration.json`). There are only
+two generated spill temporaries; most shifted geometry/blend slots are fixed
+local homes. The winning source repeats the real `1.0f + amount` expression
+at initialization and the later limit comparison, allowing ordinary optimizer
+sharing, and uses the direct SDK packet write. This closes the frame/home
+residual. Reusing a modified amount parameter instead gives the wrong 0x40
+frame; coordinate-to-color carrier reuse also does not solve it.
+
+Direct RGB reads, with the original channel before its weighted delta in each
+floating addition, close the remaining input/output expression allocation.
+Every channel preserves its unsigned float conversion, signed
+`220 - color[channel]` delta, clamped blend and final byte conversion.
+The three stale binder prototypes become the verified
+`s32 func_8004D1FC(u8 *)` declaration from `src/4CC20.c`, as a runner companion
+transaction. The visibility call uses its real two-argument interface,
+verified against `src/fragments/11/fragment11_D7BC0.c`; width/height happen
+to occupy argument registers as live temporaries and are not extra arguments.
+No padding, unused local, forced register, fabricated argument or compiler
+rewrite is used.
+
+Important withdrawn evidence: `box3-tinted-inline1` initially reports an
+accepted four-argument visibility call. Independent host syntax verification
+rejects it. That transaction was rolled back, and its accepted statistics row
+is **not** production credit. The old-style local declaration and fabricated
+width/height arguments were removed; `box3-tinted-arity2` then accepts the
+correct two-argument body immediately. The private batch wrapper now runs the
+normal host syntax recipe explicitly before its ROM gate, because copying a
+verified probe object can leave make's object current and skip its syntax
+recipe. This only strengthens verification; no tracked tooling is changed.
+All provisional receipts and the failed host log remain in scratch.
+
+Correct gate receipt: `scratch/box3-tinted-arity2/gate-0/receipt.json`.
+Post-acceptance normal/+20-blank whole-module controls and the specifically
+corrected accepted-ledger row: `scratch/box3-tinted-ready-controls/`.
+Independent full-ROM and explicit host syntax verification:
+`scratch/box3-tinted-ready-state/`. The two previous accepted owners remain
+frozen. Behavior-backed name suggestion: `Fragment13_DrawTintedPanel`.
+Naming and publication remain coordinator work.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8240239C` → `Fragment13_DrawTintedPanel`.
+
+## 2026-10-28 — scrolling list renderer accepted
+
+`func_82402E28` is genuine C: **313 words / 1,252 bytes**, original frame
+**0x70**. File: **72 C / 7 function ASM**. This box adds two functions,
+**591 words / 2,364 bytes**, after the earlier two-owner checkpoint. The
+first candidate of `box3-list-reuse1` passes explicit normal host syntax and
+the authoritative sequential retail-ROM gate. Alias-related
+`relocation_drift` prevents isolated object link verification; the full-ROM
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d` is the acceptance evidence.
+
+The new tint helper supplies the correct seven-argument interface. A typed
+m2c draft becomes available after removing nine unrelated invalid extern
+prototypes from a private context copy; context cleanup does not affect the
+production compiler input. The renderer uses a real three-byte RGB struct
+assignment from `D_82407870`, retaining the original compiler-generated
+three-byte copy. All text, scissor, background, arrow, branch and clipping
+operations remain intact.
+
+The first natural body is 1,256 bytes/frame 0x78. Giving the group argument its
+actual signed halfword type removes a redundant shared narrowing spill and
+one word, yielding the correct 1,252-byte/frame-0x70 extent. The transaction
+updates the existing same-file prototype accordingly; its already-accepted
+caller remains exact. The text API is corrected to its verified
+`void func_800495F8(s32, s32, s32, const char *, ...)` definition, and the
+existing accepted text caller explicitly casts its returned string address.
+These are runner companion transactions, with no shared-header edits.
+
+A five-control calibrated spill trace preserves every complete section,
+function extent and relocation (`scratch/box3-list-observer/calibration.json`).
+It identifies the index/fraction/Y cycle. The successful source defines the
+real text index and fraction before animated Y, while the ordinary optimizer
+still emits their computations at the target's later use sites. Inline arrow
+Y expressions let their spill reuse animated Y's home. Initial pulse-to-
+triangle assignment restores the floating register roles; moving the consumed
+triangle declaration after clipping values restores its fixed home. Finally,
+calling the label getter directly in both text calls removes the transient
+label local and closes the last frame/slot residual. Every retained local
+has a real consumed value. There is no filler, fabricated argument, forced
+register, padding, manual unrolling or output rewrite.
+
+Correct gate receipt: `scratch/box3-list-reuse1/gate-0/receipt.json`.
+Normal/+20-blank whole-module controls and specifically accepted provenance:
+`scratch/box3-list-ready-controls/`. Independent full-ROM and host verification:
+`scratch/box3-list-ready-state/`. All three prior accepted owners remain
+frozen. Behavior-backed integration name suggestion:
+`Fragment13_DrawScrollingLabelPanel`. Naming/publication remain coordinator
+work.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_82402E28` → `Fragment13_DrawScrollingLabelPanel`.
 ### `func_8240641C` — 2026-10-28 follow-up (requeue)
 
 Two residuals are now explained:

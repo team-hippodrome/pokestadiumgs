@@ -92,3 +92,29 @@ preserve the full public base and transfer only this batch's owned delta.
 The verified operations are named
 `CellularTransition_SeedCells` (`func_82507DC0`), `CellularTransition_FindEmptyNeighbors` (`func_82507EE8`), `CellularTransition_Draw` (`func_8250850C`).
 The original names remain linker aliases. No other source implementation is replaced.
+
+## 2026-10-28 — `func_82508620`: requeue, with the overlay-bss mechanism tested
+
+`D_82509680` (a 0x12C8-byte block: state s16 @0, flags u16 @4, s16 @6,
+cell mask @8) is runtime bss that overlays fragment21's relocation table at
+the end of the loaded `fragment21_data` blob. Verified mechanics for owning
+such state in C:
+- A `datamig_bss.ld` NOLOAD section at 0x82509680 holding
+  `fragment21_147D10.o(.bss)` links without an overlap error and lands
+  exactly there; the ROM keeps the relocation bytes.
+- The C object must not reuse the splat name: the blob keeps a `dlabel
+  D_82509680` (splat labels every referenced address), so a global with that
+  name is a multiple definition. A different name (`gCellularTransition`)
+  links.
+- A file-scope `static` (any type) or a defined global makes IDO
+  CSE the address (`lui`/`addiu` base). That breaks `CellularTransition_Draw`
+  (it reuses the call argument's base for `flags`, shrinking it by 4 bytes),
+  and it does not give retail's per-access `lui` + shared `$at`.
+- With plain externs, retail's form is not reproducible either: separate
+  scalars, an extern struct, an extern array, and `((u16 *)&D_82509680)[2]`
+  all CSE the address, because the variable is both loaded and stored.
+
+The twin `func_825085E4` (state 0 -> 1, clear flag) matched with a CSE'd base
+pointer, while this owner has per-access `lui`. The two must have been written
+differently in a way not found yet. Status: requeue. Do not install the
+overlay bss for this owner alone; it costs `Draw`'s match.

@@ -420,6 +420,8 @@
     - {vram: 0x800D0510, type:  bss, name: unk_bss3}
     - {vram: 0x800D1A90, type: .bss, name: 2C1B0}
     - {vram: 0x800D1B40, type:  bss, name: unk_bss4}
+    - {vram: 0x80124D00, type: .bss, name: 340C0} # src/340C0.c D_80124D00 (19 words; SUBALIGN(16) pads to 0x50)
+    - {vram: 0x80124D50, type:  bss, name: unk_bss5}
 
     # ultralib
     - {type: lib, vram: 0x8012B510, name: libultra, object: sptask, section: .bss}

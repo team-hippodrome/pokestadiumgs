@@ -227,3 +227,184 @@ modulo that data alias. New function names retain old assembly entry aliases.
 - `func_8AE03324` → `Fragment46_DrawVariantDetails`.
 - `func_8AE03970` → `Fragment46_DrawCategoryDetails`.
 - `func_8AE05CB4` → `Fragment46_HandleSelectionInput`.
+
+## 2026-10-28 second native box (after aadbfd65)
+
+The first action resumed the oldest documented `requeue`,
+`func_8AE01738`, with a different storage-lifetime hypothesis. Eight C89
+scope variants placed the result at its definition, limited the two saved
+values to their call region, or introduced each snapshot at its establishing
+read. They retained the 108-byte opcode shape but reproduced the old stack
+home/frame residual; best raw 0.8519 in this family. The retained `.mdebug`
+record contains no usable local-symbol locations, so it does not establish
+an alternative storage model. This owner remains `requeue`; no padding or
+unused fields were introduced. Evidence:
+`scratch/b2-17-scopes.json`, `scratch/b2-snapshot17-scopes/result.json`.
+
+- `func_8AE05118`: accepted `frame:render:if0-mode0-position0`,
+  289 instructions, 1,156 bytes, 0x20-byte frame. Use the standard SDK
+  display-list and environment-color macros, mode-specific scene roots
+  and map overlays, and the observed signed halfword button positions.
+  `src/340C0.c` defines `Geo_RenderRootNode` (alias `func_8003C6B8`) with
+  one argument; remove the context-free draft's inferred second argument.
+  A local mode snapshot changes the dispatch value's register and rejects;
+  the direct global switch passes. Native baseline and +20-blank controls,
+  host syntax, linked shape, and retail ROM gate passed. Receipt:
+  `scratch/b2-render51-v2/gate-0/receipt.json`.
+
+`scratch/b2-preserved-nine.json` records exact definition hashes confirming
+that the nine functions accepted before this box remain textually unchanged.
+
+### Second-box unresolved handoffs
+
+- `func_8AE04618`: `requeue`. Expected 1,508 bytes / 377 instructions;
+  the nine-rectangle SDK reconstruction emits 1,436 bytes / 359 instructions
+  with the correct 0xF0 frame. Tested edge declaration/calculation order,
+  guard form, equivalent pixel-versus-quarter-pixel arithmetic, and a named
+  texture step; the latter family is byte-inert. The actual texture loader
+  is `s32 func_8004D1FC(u8 *)` in `src/4CC20.c`; the draft's residual packet
+  pointer in `$a1` is not an additional argument. Next: inspect SDK packet
+  temporary lifetimes against the retained assembly; retain the real border
+  geometry rather than adding arguments or packet-output rewrites.
+  `scratch/b2-window46-v1/result.json`,
+  `scratch/b2-window46-v2/result.json`.
+- `func_8AE004C0`: `requeue`. Best normalized 0.9849, raw 0.8640,
+  expected/actual 1,588/1,580 bytes, with the correct 0x170 frame in
+  `markers:record-array:view1-flags1-layout1`. The counter-derived angle is
+  established before the state guard. `SINS`/`COSS` use the exact definitions
+  at `include/229E0.h:1983`; their unsigned-16 angle contract explains the
+  second mask without adding manual duplicate masks. The producer-backed
+  marker view is key at 0, flags at 4, three halfword coordinates at 8.
+  Remaining structural residuals include retail's separate position-base
+  materialization and packet/texture-cursor register ownership. Tested
+  matrix declaration order, angle width/definition lifetime, real position
+  array/pointer views, and cached flag/alpha values. Next: inspect those
+  pointer live ranges; do not fill the frame or fabricate the texture
+  loader's unused second argument. `scratch/b2-markers04-v3/result.json`,
+  `scratch/b2-markers04-v4/result.json`,
+  `scratch/b2-markers04-v5/result.json`.
+- `func_8AE03D94`: `requeue`. The info view is an 80-byte object established
+  by `func_8AE013B4` and the 5/6/3/4-byte record writers, including three
+  four-byte events at offset 64. A direct global view plus four used header
+  positions gives the correct 0x58 frame and normalized 0.9932 / raw 0.8299,
+  1,756 versus 1,764 bytes. The initial flat-field version has raw 0.8662
+  but a 0x38 frame and 1,744 bytes. These are separate basins, not matches.
+  The remaining structural differences are around initial panel Y and
+  baseline-Y value flow; a final batch tests the order/lifetime of those
+  actual origin values and the animation-ready flag. None improved the best
+  basin; moving the flag default shortens the owner further to 1,748 bytes.
+  Next: inspect how the initial Y/base-Y values and their address
+  rematerialization reach the compiler, rather than replaying these source
+  orders. No unused draft spill local was retained.
+  `scratch/b2-panel3d-v3/result.json`,
+  `scratch/b2-panel3d-v5/result.json`,
+  `scratch/b2-panel3d-v6/result.json`.
+- `func_8AE02398`: `requeue`. The native shared-tail/target-snapshot family
+  has best normalized 0.8704 / raw 0.7593, 208 versus 216 bytes, with an
+  ordinary 0x18 frame. Tested one shared current-value store versus two,
+  a target snapshot, and coordinate widths using the verified two-halfword
+  producer `func_800504BC`. Next: establish the original global-position
+  object and store data flow, rather than repeating the same scalar-store
+  spellings. `scratch/b2-callback23-v1/result.json`.
+- `func_8AE00FC4`: `layout-prerequisite`. One confirmation only: a genuine
+  five-byte record-copy switch emits 416/416 bytes and normalized 1.0,
+  raw 0.8558 (register differences remain). Canonical link verification
+  rejects it as `section_layout_drift`, specifically "section .rodata
+  exists only in the candidate object". Native `pokestadiumgs-us.yaml`
+  gives fragment 46 only text/header/C/data subsegments, with no per-file
+  `.rodata`; the table remains in
+  `asm/us/data/fragments/46/fragment46_data.data.s` at ROM 0x2446F4.
+  The sibling tables start at 0x244714 (`func_8AE01F74`) and 0x244734 /
+  0x244750 (`func_8AE0626C`). Parent must perform and gate the shared
+  storage migration before further source attempts on these dispatchers.
+  Neither YAML, linker inputs, nor assembly were edited here. Prepared C
+  and the one confirming result:
+  `scratch/b2-lookup0f-prerequisite.json`,
+  `scratch/b2-lookup0f-layout-confirm/result.json`.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8AE05118` → `Fragment46_DrawSelectionFrame`.
+
+
+## 2026-10-28 third native box (after c227439c)
+
+The oldest `requeue`, `func_8AE01738`, was resumed first. Promoting either
+snapshot to a word and narrowing only at the calls adds word stores and
+conversion instructions (best new raw 0.8571, 112 versus 108 bytes). A real
+info-buffer pointer used by both calls was then introduced at four declaration
+positions, with assignment and declaration initialization variants. Those
+retain the 108-byte shape; the best still has a 0x20 rather than 0x28 frame.
+The pointer's earlier homes move the snapshots rather than solving the return
+value's home. No frame filler was introduced. Evidence:
+`scratch/b3-snapshot17-widths/result.json`,
+`scratch/b3-snapshot17-buffer/result.json`. Next: inspect compiler home-slot
+allocation for the three live saved values against a known matching native
+small caller; source scope and promoted-snapshot families now have direct
+negative evidence.
+
+`func_8AE017A4` remains `requeue`: independent C89 clearing/search cursor
+scopes, postfix versus explicit advancement, and end equality versus ordered
+comparison did not improve the 288-byte, raw 0.9306 basin. A word parameter
+with a real narrow selection local also worsens it. The closest source still
+shares the initial address in `$v1`; retail materializes `$s0` and later
+rematerializes it. Evidence: `scratch/b3-selection17a-lifetimes/result.json`,
+`scratch/b3-selection17a-argument/result.json`. Next: inspect the first
+address web and clear-loop/search-loop relationship rather than retrying
+those scopes or the argument-width change.
+
+A complete normalized diagnostic of `func_8AE03D94` corrects the earlier
+size interpretation: the two-instruction size deficit is retail's trailing
+second `jr $ra; nop` at 0x8AE04470, after the ordinary epilogue. The base/
+event cursor also differs, while the origin loads are present in both
+objects and are scheduled in a different order. This was obscured by the
+runner's 32-row display limit. Ordinary final `return;` and a void-returning
+call expression do not emit the extra return pair. No helper or padding was
+added. Full diagnostic: `scratch/b3-panel-full-diff.json`; source experiments:
+`scratch/b3-panel3d-return/result.json`. This remains a `requeue`; next
+resolve the original return-boundary/source-shape evidence before treating
+the missing eight bytes as ordinary body instructions.
+
+The real buffer pointer and count-first declaration family improves
+`func_8AE01738` to raw 0.9259 / normalized 1.0, 108/108 bytes, both frames
+0x28. All six snapshot accesses now match; only the result store/reload at
+0x24 instead of retail 0x20 remain. Best is
+`selection:buffer-homes:count,info,selection,variant` in
+`scratch/b3-snapshot17-buffer-homes/result.json`. This is not an acceptance.
+
+### Third-box accepted checkpoint
+
+- `func_8AE01738`: accepted
+  `selection:saved-buffer:pointer-first1-init0-scope0`, 27 instructions,
+  108 bytes, 0x28 frame. Declare the real buffer pointer before a saved-state
+  record containing variant, selection, and count, all used. The record
+  carries the two selections across buffer initialization and retains the
+  collector's count across the two follow-up calls. This gives variant at
+  0x1C, selection at 0x1E, and count at 0x20. Retype its three stale forward
+  declarations to the real `s32` count return. No padding, unused fields,
+  forced registers, or return-category tricks were used. Sealed native
+  source/object/ELF/map/retail ROM receipt:
+  `scratch/b3-snapshot17-state-buffer/gate-0/receipt.json`.
+
+The third-box oldest requeue is resolved by that checkpoint. Its earlier
+negative results above remain the experiment history, not an active blocker.
+`scratch/b3-preserved-ten.json` confirms that the prior ten accepted function
+bodies remain textually unchanged.
+
+The bounded `func_8AE017A4` allocator search is not an acceptance: five
+minutes with one worker reduced the permuter metric from 885 to 230, but
+source review rejects those outputs because they omit the search-cursor
+reset or retain dead references. No output was submitted as genuine C.
+Its isolated baseline exactly reproduces the canonical candidate's 288
+function bytes (`scratch/b3-permute17a-local-control.json`), and the raw
+results are `scratch/b3-permute17a-local-result.json`. The shared launcher
+initially overrode TMPDIR into the primary checkout's scratch directory;
+that run was stopped. A private `scratch/b3-permuter-entry.py` imports the
+unchanged package with temporary files confined to this worktree. Neither
+shared tool sources nor tracked parent files were edited.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8AE01738` → `Fragment46_RefreshSavedSelection`.

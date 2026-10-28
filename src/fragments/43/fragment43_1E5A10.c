@@ -86,6 +86,7 @@ s32 func_8AC00270(s32 arg0, u8 *arg1)
 #endif
 
 #ifdef VERSION_US
+extern u8 func_800542B0(s32);
 void func_8AC002D8(s16 arg0, s16 arg1, u8 arg2)
 {
   s32 temp_a2;
@@ -106,7 +107,46 @@ s32 func_8AC00334(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0036C.s")
+extern u8 func_8005453C(s32);
+extern s32 func_800545B4(s32, u8);
+extern void func_80051D64(s32, s32);
+extern s32 func_80054E48(s32);
+s32 Fragment43_TryGrantCompletionReward(s16 arg0) {
+    s32 i;
+    s16 mode;
+    s16 count;
+    u8 all;
+    u8 flag;
+    mode = arg0;
+    switch (mode) {
+    case 0: count = 20; break;
+    case 1: count = 11; break;
+    case 2: count = 11; break;
+    }
+    all = 1;
+    for (i = 0; i < count; i++) {
+        all &= (u8)((func_800542B0(i) >> mode) & 1);
+    }
+    if (all == 0) {
+        return 0;
+    }
+    switch (mode) {
+    case 0: flag = func_8005453C(6); break;
+    case 1: flag = func_8005453C(7); break;
+    case 2: flag = func_8005453C(8); break;
+    }
+    if (flag == 0) {
+    switch (mode) {
+    case 0: func_800545B4(6, 1); break;
+    case 1: func_800545B4(7, 1); break;
+    case 2: func_800545B4(8, 1); break;
+    }
+    func_80051D64(19, 0);
+    func_80054E48(3);
+    return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -377,7 +417,16 @@ s32 func_8AC010D4(u8 *arg0, u16 arg1, u16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC01160.s")
+extern Gfx D_8AC07C10[];
+extern u8 D_8AC07D18[];
+extern Gfx * D_800D0510;
+void Fragment43_DrawDarkOverlayRect(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    gSPDisplayList(D_800D0510++, D_8AC07C10);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 128);
+    gDPLoadTextureBlock(D_800D0510++, D_8AC07D18, G_IM_FMT_IA, G_IM_SIZ_16b, 4, 1, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+    gSPTextureRectangle(D_800D0510++, arg0 * 4, arg1 * 4,
+        (arg0 + arg2) * 4, (arg1 + arg3) * 4, G_TX_RENDERTILE, 0, 0, 0, 0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -1009,6 +1058,16 @@ s32 func_8AC02D04(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
+typedef struct Growth43Output { u16 unk_00; u16 flags; } Growth43Output;
+typedef struct Growth43State { Growth43Output *output; s16 x, y, width, height, finished; } Growth43State;
+typedef struct Growth43Node {
+    u8 unk_00[8];
+    s16 x, y, width, height;
+    u8 unk_10[16];
+    Growth43State *state;
+    u8 unk_24[4];
+    s16 inner_width, inner_height;
+} Growth43Node;
 extern s32 func_8004CA10(u16 *);
 extern s32 func_8004CA24(u16 *);
 extern s32 func_8004CA38(u8 *);
@@ -1452,19 +1511,89 @@ s32 func_8AC04604(s32 arg0, void *arg1) { s32 red; s16 index; s16 *entry; char *
 #ifdef VERSION_US
 extern void func_8004E308(s32, s32 *, s32 *);
 s32 func_8AC06D8C(s32, s32);
-extern s32 func_8AC0479C(s32, void *);
+extern s32 Fragment43_GrowthRectCallback(s32, void *);
 
 void func_8AC04744(s32 *arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 sp1C;
 
     sp1C = func_8AC06D8C(arg1, arg2);
     *arg0 = func_8AC06D8C(arg1, arg3);
-    func_8004E308(sp1C, &func_8AC0479C, arg0);
+    func_8004E308(sp1C, &Fragment43_GrowthRectCallback, arg0);
 }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0479C.s")
+s32 Fragment43_GrowthRectCallback(s32 arg0, void *arg1) {
+    s32 current_size;
+    Growth43State *state;
+    Growth43Node *node = arg1;
+    s16 center_x;
+    s16 center_y;
+    s16 changed;
+
+    s16 difference_x;
+    s16 difference_y;
+    state = node->state;
+    switch (arg0) {
+    case 0:
+        state->x = node->x;
+        state->y = node->y;
+        state->width = node->inner_width;
+        state->height = node->inner_height;
+        state->finished = 0;
+        if (state->output != NULL) {
+            state->output->flags &= ~2;
+        }
+        center_x = node->x + state->width / 2;
+        center_y = node->y + state->height / 2;
+        node->x = center_x - 45;
+        node->y = center_y - 7;
+        node->width = 90;
+        node->height = 14;
+        node->inner_width = node->width - 8;
+        node->inner_height = node->height - 8;
+        break;
+    case 1:
+        if (state->finished == 0) {
+            current_size = node->width;
+            changed = 0;
+            if (current_size < state->width) {
+                node->x -= 45;
+                node->width = current_size + 90;
+                current_size = node->width;
+                if (current_size >= state->width) {
+                    difference_x = current_size - state->width;
+                    node->x += difference_x / 2;
+                    node->width = current_size - difference_x;
+                }
+                changed = 1;
+            }
+            current_size = node->height;
+            if (current_size < state->height) {
+                node->y -= 7;
+                node->height = current_size + 14;
+                current_size = node->height;
+                if (current_size >= state->height) {
+                    difference_y = current_size - state->height;
+                    //!bug The vertical overshoot also changes the horizontal coordinate.
+                    node->x += difference_y / 2;
+                    node->height = current_size - difference_y;
+                }
+                changed = 1;
+            }
+            if (changed == 0) {
+                state->finished = 1;
+                if (state->output != NULL) {
+                    state->output->flags |= 2;
+                }
+            }
+        }
+        node->inner_width = node->width - 8;
+        node->inner_height = node->height - 8;
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

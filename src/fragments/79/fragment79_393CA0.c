@@ -1134,7 +1134,192 @@ s32 func_84127140(u8 a) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84127194.s")
+extern u8 D_841951D7;
+extern u8 D_841951D5;
+extern u16 D_841951EA;
+extern void *func_84156590(u8, u8);
+extern void func_841566D0(u8, u8, u8);
+extern s32 func_80062CE0(u8);
+extern void func_84136B9C(u8, s16, u16);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern void func_84124594(u8 arg0);
+extern void func_84124E44(u8 arg0);
+extern s32 func_84125080(void);
+extern void func_841264F0(u8 arg0);
+extern void func_841265D4(void);
+extern void func_841268A0(void);
+extern void func_84134CBC(u8 arg0, u8 arg1);
+extern void func_84135B00(u16 arg0);
+extern s32 func_841360C0(u8 arg0, s16 arg1, u16 arg2, u8 arg3, u8 arg4);
+extern void func_84136218(u8 arg0, u8 arg1);
+extern void func_84136678(u8 arg0, s16 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951D2;
+extern u8 D_841951D3;
+extern u8 D_841951E4;
+extern u8 D_841951E5;
+extern u8 D_841951E6;
+extern u8 D_841951E7;
+extern u16 D_841951E8;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleTurn_CheckMoveStatus(void) {
+    if (((u8 *)D_841951F8[D_841951BC])[1] == 0) {
+        func_841265D4();
+        return;
+    }
+    D_841951D2 = 0;
+    D_841951D3 = 0;
+    D_841951D7 = 0;
+    D_841951D5 = 10;
+    D_841951E5 = 10;
+    D_841951E4 = 0;
+    D_841951E6 = 0;
+    D_841951E7 = 0;
+    D_841951E8 = 0;
+    D_841951EA = 0;
+    if (D_84195208[D_841951BC][16] & 0x20) {
+        D_84195208[D_841951BC][16] &= ~0x20;
+        func_84136678(D_841951BC, -1);
+        func_84135B00(84);
+        BattleRecord_AdvanceWriteSlot();
+        func_84124594(D_841951BC);
+        BattleRecord_AdvanceWriteSlot();
+        func_841264F0(D_841951BC);
+        func_841265D4();
+        return;
+    }
+    if (D_84195200[D_841951BC][36] & 7) {
+        ((u8 *)func_84156590(D_841951BC, ((u8 *)D_841951F8[D_841951BC])[10]))[13]++;
+        D_84195200[D_841951BC][36]--;
+        if (D_84195200[D_841951BC][36] > 0) {
+            func_84136678(D_841951BC, -1);
+            func_84135B00(168);
+            BattleRecord_AdvanceWriteSlot();
+            func_84134CBC(D_841951BC, 4);
+            if (((u8 *)D_841951F8[D_841951BC])[1] != 173 && ((u8 *)D_841951F8[D_841951BC])[1] != 214) {
+                BattleRecord_AdvanceWriteSlot();
+                func_841264F0(D_841951BC);
+                func_841265D4();
+                return;
+            }
+        } else {
+            func_84136678(D_841951BC, -1);
+            func_84135B00(169);
+            BattleRecord_AdvanceWriteSlot();
+            func_84136B9C(D_841951BC, -1, 0);
+            func_84134CBC(D_841951BC, 29);
+            func_841264F0(D_841951BC);
+            D_84195208[D_841951BC][13] &= ~1;
+            func_841566D0(D_841951BC, ((u8 *)D_841951F8[D_841951BC])[10], 0x20);
+        }
+    }
+    if (D_84195200[D_841951BC][36] & 0x20) {
+        BattleRecord_AdvanceWriteSlot();
+        if (((u8 *)D_841951F8[D_841951BC])[1] != 172 && ((u8 *)D_841951F8[D_841951BC])[1] != 221) {
+            func_84136678(D_841951BC, -1);
+            func_84135B00(66);
+            func_84134CBC(D_841951BC, 2);
+            BattleRecord_AdvanceWriteSlot();
+            func_841264F0(D_841951BC);
+            func_841265D4();
+            return;
+        } else {
+            func_84136678(D_841951BC, -1);
+            func_84136B9C(D_841951BC, -1, 0);
+            func_84135B00(77);
+            func_84134CBC(D_841951BC, 44);
+            D_84195200[D_841951BC][36] &= ~0x20;
+        }
+    }
+    if (D_84195208[D_841951BC][15] & 8) {
+        BattleRecord_AdvanceWriteSlot();
+        func_84136678(D_841951BC, -1);
+        func_84135B00(90);
+        func_84124E44(D_841951BD);
+        func_84136218(D_841951BD, 6);
+        func_841360C0(D_841951BD, -2, 60, 6, 7);
+        func_84124594(D_841951BC);
+        BattleRecord_AdvanceWriteSlot();
+        D_84195208[D_841951BC][15] &= ~8;
+        func_841264F0(D_841951BC);
+        func_841265D4();
+        return;
+    }
+    if (D_84195208[D_841951BC][21] > 0) {
+        D_84195208[D_841951BC][21]--;
+        D_84195208[D_841951BC][21] &= 0xF;
+        if (D_84195208[D_841951BC][21] == 0) {
+            D_84195208[D_841951BC][37] = 0;
+            func_84136678(D_841951BC, -1);
+            func_84135B00(159);
+        }
+    }
+    if (D_84195208[D_841951BC][15] & 0x80) {
+        func_84136678(D_841951BC, -1);
+        D_84195208[D_841951BC][19]--;
+        if (D_84195208[D_841951BC][19] == 0) {
+            D_84195208[D_841951BC][15] &= ~0x80;
+            func_84135B00(93);
+        } else {
+            func_84135B00(91);
+            BattleRecord_AdvanceWriteSlot();
+            func_84134CBC(D_841951BC, 38);
+            if (func_84125080() < 128) {
+                BattleRecord_AdvanceWriteSlot();
+                D_84195208[D_841951BC][15] &= 0x80;
+                func_841268A0();
+                func_84134CBC(D_841951BC, 16);
+                BattleRecord_AdvanceWriteSlot();
+                func_841264F0(D_841951BC);
+                func_841265D4();
+                return;
+            }
+        }
+    }
+    if (D_84195208[D_841951BC][13] & 0x80) {
+        func_84136678(D_841951BC, -1);
+        func_84135B00(120);
+        BattleRecord_AdvanceWriteSlot();
+        if (func_84125080() >= 128) {
+            func_84136678(D_841951BC, -1);
+            func_84135B00(121);
+            func_841264F0(D_841951BC);
+            func_841265D4();
+            func_84134CBC(D_841951BC, 6);
+            BattleRecord_AdvanceWriteSlot();
+            return;
+        } else {
+            func_84134CBC(D_841951BC, 6);
+        }
+    }
+    if (((u8 *)D_841951F8[D_841951BC])[1] != 0 && ((u8 *)D_841951F8[D_841951BC])[1] == D_84195208[D_841951BC][37]) {
+        D_84195208[D_841951BC][15] &= ~0x10;
+        func_84136678(D_841951BC, -1);
+        func_8004C54C(29, func_80062CE0(((u8 *)D_841951F8[D_841951BC])[1]));
+        func_84135B00(42);
+        BattleRecord_AdvanceWriteSlot();
+        func_841264F0(D_841951BC);
+        func_841265D4();
+        func_84124594(D_841951BC);
+        BattleRecord_AdvanceWriteSlot();
+        return;
+    }
+    if (D_84195200[D_841951BC][36] & 0x40) {
+        if (func_84125080() < 63) {
+            func_84136678(D_841951BC, -1);
+            func_84135B00(109);
+            BattleRecord_AdvanceWriteSlot();
+            func_841264F0(D_841951BC);
+            func_841265D4();
+            func_84134CBC(D_841951BC, 54);
+            BattleRecord_AdvanceWriteSlot();
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -7208,7 +7393,138 @@ void func_8413D6D4(u8 *arg0, u8 *arg1) { u8 i; _bzero(arg0, 0x54); arg0[0] = arg
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413DE28.s")
+extern u8 D_84195279;
+extern s32 D_84187020;
+extern u8 D_8419A0A2;
+extern u8 D_8419A0A0[];
+extern u8 D_8419A0A1;
+extern u8 D_84195248[];
+extern u8 D_84195210[];
+extern s8 D_8419A005;
+extern u8 D_8419A008[];
+extern u8 D_8418AF70[];
+extern u8 D_8418AF78[];
+extern void Teams_GenerateLevel100_fragment86(u8 *, u32);
+extern s32 func_8005D8C0(void);
+extern void func_8413DA18(u8);
+extern void func_8413D7AC(u8);
+extern void func_8413D6D4(u8 *, u8 *);
+extern void func_84138530(u8, u8 *);
+extern void func_8413DB28(void);
+extern void func_8413DD94(void);
+extern void func_84138658(void);
+extern void func_8002A830(void *);
+extern void func_84148680(void);
+extern s32 func_80001FF0(void);
+extern void func_841348C0(void);
+extern s32 main_pool_push_state(s32);
+extern s32 main_pool_pop_state(s32);
+extern void * D_841951F0;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+extern u8 D_84195278;
+extern s32 D_8419527C;
+extern u8 D_8419A006;
+void Battle_InitState(s32 arg0, u8 *arg1) {
+    u8 i;
+    u8 j;
+    struct BattleName { u8 bytes[8]; };
+    struct PartyRow { u8 bytes[88]; };
+    struct Team { u8 header[24]; struct PartyRow rows[12]; u8 tail[168]; };
+
+    D_84195278 = 2;
+    D_84195279 = 2;
+    D_8419A006 = 2;
+    D_8419527C = 0;
+    D_84187020 = 0;
+    D_8419A0A2 = 0;
+    D_841951F0 = (void *)arg1;
+    if (D_841951F0 != NULL) {
+        D_8419A0A0[0] = ((u8 *)D_841951F0)[2499];
+        D_8419A0A1 = 0;
+        if (((u8 *)D_841951F0)[2] == 0) {
+            if (D_8419A0A0[0] != 0) {
+                Teams_GenerateLevel100_fragment86(D_841951F0, arg0);
+                D_84187020 = 1;
+            } else {
+                main_pool_push_state(0x504D4C44);
+                for (i = 0; i < 2; i++) {
+                    if (func_8005D8C0() & (1 << i)) {
+                        func_8413DA18(i);
+                    } else {
+                        func_8413D7AC(i);
+                    }
+                }
+                main_pool_pop_state(0x504D4C44);
+            }
+            for (i = 0; i < 2; i++) {
+                D_841951F8[i] = &((struct Team *)D_841951F0)[i];
+                ((u8 *)D_841951F8[i])[10] = 0;
+                D_84195200[i] = (u8 *)D_841951F8[i] + 24;
+                D_84195208[i] = (u8 *)D_841951F8[i] + 1080;
+                ((u8 *)D_841951F8[i])[1178] = 0;
+            }
+            *(struct BattleName *)((u8 *)D_841951F8[0] + 1164) = *(struct BattleName *)D_8418AF70;
+            *(struct BattleName *)((u8 *)D_841951F8[1] + 1164) = *(struct BattleName *)D_8418AF78;
+            D_84195248[10] = 0;
+            D_84195248[34] = 1;
+            D_84195248[11] = 2;
+            D_84195248[35] = 3;
+        } else {
+            D_841951F8[0] = D_841951F0;
+            D_841951F8[1] = &((struct Team *)D_841951F0)[1];
+            D_84195200[0] = ((struct Team *)D_841951F8[0])->rows[((u8 *)D_841951F8[0])[10]].bytes;
+            D_84195200[1] = ((struct Team *)D_841951F8[1])->rows[((u8 *)D_841951F8[1])[10]].bytes;
+            D_84195208[0] = (u8 *)D_841951F8[0] + 1080;
+            D_84195208[1] = (u8 *)D_841951F8[1] + 1080;
+            D_84195248[10] = ((u8 *)D_841951F8[0])[4];
+            D_84195248[11] = ((u8 *)D_841951F8[0])[5];
+            D_84195248[34] = ((u8 *)D_841951F8[1])[4];
+            D_84195248[35] = ((u8 *)D_841951F8[1])[5];
+        }
+        for (i = 0; i < 2; i++) {
+            for (j = 0; j < ((u8 *)D_841951F8[i])[7]; j++) {
+                ((struct Team *)D_841951F8[i])->rows[j].bytes[36] = 0;
+            }
+        }
+        func_8413D6D4(D_84195208[0], D_84195200[0]);
+        func_8413D6D4(D_84195208[1], D_84195200[1]);
+        func_84138530(0, D_84195200[0]);
+        func_84138530(1, D_84195200[1]);
+        func_8413DB28();
+        func_8413DD94();
+        func_84138658();
+        func_8002A830(D_841951F0);
+        D_84195210[0] = 1;
+        D_84195210[1] = 1;
+        D_8419A005 = 0;
+        func_84148680();
+        if (D_8419A0A0[0] != 0) {
+            ((u8 *)D_841951F0)[2496] = 7;
+            ((u8 *)D_841951F0)[2497] = 7;
+        }
+        if (((u8 *)D_841951F0)[2496] != 0) {
+            D_8419A008[18] |= 1;
+        }
+        if (((u8 *)D_841951F0)[2497] != 0) {
+            D_8419A008[18] |= 2;
+        }
+        D_8419A008[18] |= 4;
+        *(s32 *)(D_8419A008 + 0) = ((u8 *)D_841951F0)[2496] * func_80001FF0() * 60;
+        *(s32 *)(D_8419A008 + 4) = ((u8 *)D_841951F0)[2497] * func_80001FF0();
+        *(s32 *)(D_8419A008 + 8) = 0;
+        *(s16 *)(D_8419A008 + 12) = 0;
+        *(s16 *)(D_8419A008 + 16) = ((u8 *)D_841951F0)[2496] * 60;
+        if (((u8 *)D_841951F0)[2498] != 2) {
+            **(u32 **)((u8 *)D_841951F0 + 2520) = osGetCount();
+        }
+        if (((u8 *)D_841951F0)[2498] == 1) {
+            HAL_Memset(*(u8 **)((u8 *)D_841951F0 + 2520) + 4, 0xFF, 103);
+        }
+        func_841348C0();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -7241,7 +7557,7 @@ M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 M2C_UNK func_8410AA18(s32, s32, u8 *);              /* extern */
 void func_8413D37C(void);
-M2C_UNK func_8413DE28(s32, s32);                    /* extern */
+void Battle_InitState(s32, u8 *);                    /* extern */
 M2C_UNK func_8414831C(u8);                          /* extern */
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
@@ -7259,7 +7575,7 @@ u8 func_8413E2EC(s32 arg0, s32 arg1) {
     sp24 = func_800082E0(0, 1, 3, 1, 2, 1);
     Asset_LoadToSegment((u32) ((s32) &D_1000000 & 0x0F000000) >> 0x18, &D_446E30, &D_447D00, 0);
     func_8004C09C(0x43);
-    func_8413DE28(arg0, arg1);
+    Battle_InitState(arg0, arg1);
     func_8410AA18(sp24, arg0, D_84199D80);
     func_8414831C(*D_8419A0A0);
     func_84136564();

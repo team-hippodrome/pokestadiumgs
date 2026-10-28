@@ -130,3 +130,125 @@ Descriptive names keep original address-keyed function entries as aliases.
 - `func_86708EDC` → `Stage55_UpdateTransition`.
 - `func_86709934` → `Stage55_UpdateResourcePools`.
 - `func_8670A790` → `Stage55_RunStage`.
+
+## Second native box: `func_8670408C`, `func_8670427C`, `func_867068EC` accepted
+
+Continuation from `422256ef04e13bc5322fd00a7dbd7e68ac24623d`. These three
+acceptances supersede their earlier requeue entries. The four owners in
+the published checkpoint remain unchanged.
+
+- `func_8670408C`: 496 bytes, 0x28 frame. State modes zero and one emit
+  0x9F03 and 0x9F04 at animation frame thresholds 14 and 32, with separate
+  latches reset below frame ten. Retain the model pointer, but access the
+  exact-stride state array directly; removing the redundant state pointer
+  eliminates the extra eight frame bytes. The audio contract is
+  `void func_80027A28(u16, u8)`, confirmed by the argument masks in its
+  assembly in `asm/us/nonmatchings/229E0/func_80027A28.s`.
+- `func_8670427C`: 304 bytes, 0x28 frame. Direct array access eliminates
+  both redundant pointer locals and gives the retail pointer registers,
+  spill slot and frame. Mode one decrements the byte alpha, clamps it to
+  70 at the threshold, restores model scale Z at +0x38 and clears the mode.
+  Mode minus one clears alpha and hides the model below its threshold.
+  The final tests clamp above 200 to 200 and below five to zero. Byte
+  subtraction wraps before comparison. No FAKE branch is needed.
+- `func_867068EC`: 324 bytes, 0x38 frame. Inline the repeated `arg0 / 2`
+  expressions and model address `entry + 0x24`; the compiler shares them.
+  The four used locals are `entry`, Z-table pointer, side selector and
+  scale, in that declaration order. This removes the extra frame bytes
+  while retaining every measured spill. The side selector remains signed
+  `arg0 % 2 == 1`, and the Z-table pointer comparison remains after model
+  initialization. Pool stride 0x18C and node offset +0x24 are confirmed by
+  `func_87F0252C` and `func_87F025B8` in
+  `src/fragments/64/fragment64_324FB0.c`. `D_8670FF54` is modeled as the
+  pointer returned by `func_80040E80`, stored in `func_86706E34`.
+
+Sealed individual retail gates, with unmodified IDO 7.1 and host syntax
+checks enabled:
+
+- `scratch/box2-0408c-arrays/gate-0/receipt.json`
+- `scratch/box2-0427c-local-views/gate-0/receipt.json`
+- `scratch/box2-068-inline-half/gate-0/receipt.json`
+
+All three passed full-ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Each
+batch also passed the normal and +20blank whole-module byte/section/
+extent/relocation controls. The diagnostic `-g3 -keep` build of a retained
+068EC candidate is separate: its prologue differs from the production
+build and it supplies metadata only, never acceptance evidence.
+
+### Second-box remaining owners and prerequisites
+
+- `func_86708944`: **layout-prerequisite**, superseding the earlier frame
+  hypothesis. The genuine literal `0.3f` produces the exact 0x88 frame,
+  468-byte extent and all 117 opcode/register rows. The sole raw text
+  difference is the vector address: `D_867111C0 + 0x24` versus retail's
+  equivalent label `D_867111E4`. The runner rejects it because `.rodata`
+  exists only in the candidate object. The section is 16 bytes, aligned to
+  16, containing `3E99999A` followed by 12 zero bytes; the corresponding
+  retail constant is `D_8670C54C` at ROM 0x2AEA2C. This requires coordinator
+  work on pool ownership, ordering and alignment, including neighboring
+  constants; adding a four-byte segment alone is not established as safe.
+  No layout input was edited and no candidate was installed. Exact body,
+  object and result are in `scratch/box2-08944-literal`; section facts are
+  sealed in `scratch/box2-08944-layout-handoff.json`. Stop ordinary source
+  spelling probes until that prerequisite is addressed and assembly-gated.
+- `func_867097D8`: **layout-prerequisite / requeue**. Ordinary array
+  initialization emits a new `.data` section, rejected as
+  `section_layout_drift`; no layout workaround was installed. The best
+  ordinary-loop candidate is 344 versus 348 bytes, normalized 0.9080,
+  raw 0.4828, frame 0x28 versus retail 0x30. See
+  `scratch/box2-097d8/result.json` and `scratch/box2-097d8.json`.
+  Retail copies the four zero words at `D_8670C0D8` and then zeroes the
+  local array again. The generated initializer alone does not reproduce
+  that second store group. Next: establish original initializer/storage
+  ownership and lowering before further source variants. No redundant
+  explicit reset or manually unrolled override loop was introduced.
+- `func_86700FD4`: **requeue**, a new close sibling. A normal 60-element
+  loop automatically emits retail's four-way unrolled search. Best C has
+  all search-body instructions and registers correct. The return tail
+  still differs: the 592-byte candidate lacks retail's final unreachable
+  `jr ra; nop` pair in the 600-byte owner, and its fallback uses the
+  equivalent field address `D_86728328 + 0x20` rather than `D_86728348`.
+  Raw 0.9800, normalized 0.9867. Other genuine return trees reach 600
+  bytes but change reachable tail branches. No source instruction/padding
+  helper was added. See `scratch/box2-00fd4-tail/result.json` and
+  `scratch/box2-00fd4-tail.json`, candidate `lookup:return-topology:1`;
+  `scratch/box2-00fd4-goto` records direct shared-exit variants. No reference
+  to the final eight bytes was found in the code/data/symbol scan. Next:
+  inspect original owner boundaries and authentic return lowering; do not
+  invent an unreferenced empty function to fill the span.
+- `func_8670122C`: **requeue**. Complete rank/probability search candidate
+  is 664 versus 660 bytes, normalized 0.9699/raw 0.6145. Preheader saved
+  registers differ: retail keeps one in s8 and state/result in s4/s5;
+  candidate keeps the slot base in s8 and state/result in s5/s4. Correct
+  signed rank/probability comparisons and the 150-unit first-rank offset
+  are modeled. See `scratch/box2-0122c/result.json` and
+  `scratch/box2-0122c.json`, `lookup:ranked:ptrFalse-flagTrue-continueFalse`.
+  A direct `D_8670C984` field-symbol view and alternate boolean forms did
+  not improve it (`box2-0122c-filter`). Next: inspect preheader invariant
+  lifetimes and cached slot-base use with the current real prototypes.
+- `func_86706B88`: **requeue**. Complete interpolation callback draft has
+  retail's 436-byte extent and no frame, but remains 0.8624 normalized,
+  0.5229 raw, with pointer/index register roles and float evaluation order
+  differing. It models the tier split, mapped state X offset, node angle,
+  lane-progress Z interpolation and +/-600 reset. See
+  `scratch/box2-06b88/result.json`, best
+  `motion:interpolate:ptrTrue-distanceFalse-xorderFalse`. An explicit root
+  snapshot made allocation worse (`box2-06b88-root`). Next: compare the
+  expression tree and lifetimes, retaining the actual repeated current-
+  object pointer reloads rather than forcing registers.
+
+Post-cleanup second-box gate: `scratch/box2-checkpoint-3/receipt.json`,
+with source/object/ELF/map/ROM and `provenance.json` sealed beside it.
+Retail MD5 and host syntax checks pass for all seven accepted owners.
+`scratch/box2-protected-checkpoint.json` records exact definition hashes
+for the four published owners and verifies them unchanged from 422256ef.
+Cleanup affects only the three newly accepted definitions and their
+unused probe-only type declarations. No coverage, shared layout, symbol,
+compiler or core runner files were changed.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8670408C` → `Stage55_UpdateModelSounds`.
+- `func_8670427C` → `Stage55_UpdateModelFade`.
+- `func_867068EC` → `Stage55_SpawnVariantEffect`.

@@ -67,3 +67,29 @@ Source shape:
 ## 2026-10-28 — `func_8AF1F490`: requeue
 
 requeue. "Shares a type" predicate: `func_8AF01654(id)` returns a byte with type 1 in the high nibble and type 2 in the low nibble. It returns 1 when any of the four type pairs of `arg0` and `arg1` match. Retail homes both arguments, masks `arg0` (`move a2,a0; andi a0,a2,0xFF`, so `s32`), and reloads `arg1` from its home with `lbu` (a `u8` parameter). The first species' nibbles spill to `sp+0x1E`/`sp+0x1D`. Best 0.9394, with `(s32 arg0, u8 arg1)` and a `u8 types` temp declared first; the remaining differences are `$a0`/`$a1` choices and slot order. The permuter got 265 → 60. Next: K&R-style parameters, or both `arg0` and `arg1` read back from their homes.
+
+## 2026-10-28 — `func_8AF1F1F0`: requeue (shared-`$at` store pair)
+
+Body (sibling style of `func_8AF1F130`/`func_8AF1F294`): extend
+`Func8AF1F130Arg` with `u8 pad10[0x10]; void *list;` (0x20, the scroll list
+`func_8AF02F18` draws). Use `struct { s32 pad[2]; s16 angles[2]; } scratch;`
+for the 0x38 frame. Then, when `arg0 == 1`: `func_800504BC(scratch.angles)`;
+block locals `x, y, z, w` (z/w loaded before the stores, as retail does);
+`list+8 = x; list+0xC = y; D_8AF395BC = 0; D_8AF395B8 = arg1->type;`;
+`func_8AC007B8(x, y, z, w); func_8AF02F18(list); func_8AC00738();`, return 0.
+With plain externs, everything matches except one extra `lui $at` before the
+`D_8AF395B8` store (retail reuses the `D_8AF395BC` `$at`; the store sits in
+the `jal` delay slot).
+
+Ruled out for that residual: file-scope `static` and defined globals (both
+are past the image end, at 0x8AF395B8, so they could be pinned like
+fragment67). Each still emits the second `lui`. A defined or extern struct or
+array CSEs the base into `$v0`. IDO 5.3 (`tools/ido/*/5.3`, already used per
+file for C890/C380) also emits the second `lui`, for extern, static and global
+alike. This is the same shared-`$at` class as fragment21 `func_82508620` /
+`func_82507BFC` / `func_82507C48` and fragment17 `func_822068E0`. Next: the
+mechanism must be found once for the whole class, not per owner.
+Also ruled out: constant-address stores (`*(s32 *)0x8AF395B8 = …`). IDO
+materializes those with `lui $t1`/`lui $t3`, not `$at`, and still emits two
+`lui`s. A repo-wide scan finds 107 of 2,031 remaining owners that reuse one
+`lui $at` for a different `%lo` symbol.

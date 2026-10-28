@@ -492,7 +492,25 @@ void Fragment46_FindNeighborVariants(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE01738.s")
+extern u8 D_8AE09850;
+extern void Fragment46_FindNeighborVariants(s16, s16);
+extern void _bzero(void *, s32);
+extern void func_8AE01394(void);
+extern s32 Fragment46_CollectRecordData(u8 *arg0, s16 arg1, s16 arg2);
+extern s16 D_8AE084E0;
+extern s16 D_8AE084E2;
+s32 Fragment46_RefreshSavedSelection(void) {
+    u8 *info;
+    struct { s16 variant; s16 selection; s32 count; } saved;
+    saved.selection = D_8AE084E0;
+    saved.variant = D_8AE084E2;
+    info = &D_8AE09850;
+    _bzero(info, 80);
+    saved.count = Fragment46_CollectRecordData(info, saved.selection, saved.variant);
+    func_8AE01394();
+    Fragment46_FindNeighborVariants(saved.selection, saved.variant);
+    return saved.count;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1499,7 +1517,126 @@ void func_8AE050AC(s32 arg0, s16 arg1, s16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE05118.s")
+extern u8 D_80094E38[];
+extern s16 D_8AE076A0[], D_8AE07758[], D_8AE0781C[];
+extern s32 D_8AE07924;
+extern s16 D_8AE084F8, D_8AE084FA;
+extern u16 D_8AE08506;
+extern s32 D_8AE098D8, D_8AE098E0, D_8AE098E8;
+extern void func_800088DC(void);
+extern void GfxImage_FillCurrent(void *, u16);
+extern void func_8006D2C0(void);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(u8 *);
+extern void func_800503A4(u8 *);
+extern void func_8AE04618(s16, s16, s16, s16);
+extern void func_8AE04BFC(s32, s32, u16);
+extern void func_8AE03D94(void);
+extern s32 func_80008648(void);
+extern s16 D_8AE09E6A;
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_8AE0043C(void);
+extern void Fragment46_BuildLookupMatrices(void);
+extern void func_8AE04478(void);
+extern void func_8AE04EB8(s32 arg0, s32 arg1);
+extern void func_8AE04FA8(s16 *arg0, s16 arg1, s16 arg2);
+extern void func_8AE050AC(s32 arg0, s16 arg1, s16 arg2);
+extern Gfx * D_800D0510;
+extern void * D_8AE084A4;
+extern void * D_8AE084A8;
+extern void * D_8AE084AC;
+extern s32 D_8AE084E8;
+extern s16 D_8AE084EC;
+extern s16 D_8AE084EE;
+extern s16 D_8AE084FC;
+extern s16 D_8AE084FE;
+extern s16 D_8AE08500;
+extern s16 D_8AE08502;
+extern s16 D_8AE08504;
+extern s16 D_8AE098B0;
+extern s32 D_8AE09948;
+extern s16 D_8AE09B0C;
+extern s16 D_8AE09B54;
+extern s32 D_8AE09E64;
+extern u8 D_8AE09ED8;
+void Fragment46_DrawSelectionFrame(void) {
+
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 0x29);
+    func_8006D2C0();
+    GeoRender_AdvanceFrameCounter();
+    switch (D_8AE098B0) {
+    case 0:
+        func_8003C6B8(D_8AE084A4);
+        break;
+    case 1:
+        func_8003C6B8(D_8AE084A8);
+        break;
+    case 2:
+        func_8003C6B8(D_8AE084AC);
+        break;
+    }
+    Fragment46_BuildLookupMatrices();
+    if (D_8AE09B54 == 1) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 200);
+        switch (D_8AE098B0) {
+        case 0:
+            func_8004D19C(0x46, 0x2D, D_8AE098D8, 0, 0);
+            if (((s32) D_8AE08506 % 30) < 0x10) {
+                func_8AE04FA8(D_8AE076A0, 0x46, 0x2D);
+            }
+            func_8AE050AC((s32)D_8AE076A0, 0x46, 0x2D);
+            break;
+        case 1:
+            func_8004D19C(0x46, 0x2D, D_8AE098E0, 0, 0);
+            if (((s32) D_8AE08506 % 30) < 0x10) {
+                func_8AE04FA8(D_8AE07758, 0x46, 0x2D);
+            }
+            func_8AE050AC((s32)D_8AE07758, 0x46, 0x2D);
+            break;
+        case 2:
+            func_8004D19C(0x46, 0x2D, D_8AE098E8, 0, 0);
+            if (((s32) D_8AE08506 % 30) < 0x10) {
+                func_8AE04FA8(D_8AE0781C, 0x46, 0x2D);
+            }
+            func_8AE050AC((s32)D_8AE0781C, 0x46, 0x2D);
+            break;
+        }
+    }
+    func_8AE04478();
+    func_800503A4((u8 *)D_8AE09948);
+    if ((D_8AE08504 <= 0) && (D_8AE09E6A == 1)) {
+        func_8AE04618((s16) (0x91 - ((s16) D_8AE09B0C / 2)), 0x5D, (s16) (D_8AE09B0C + 0x14), 0x14);
+    }
+    if ((D_8AE084EC == 1) && (D_8AE084EE == 0) && (D_8AE09B54 == 0) && (D_8AE07924 != 0)) {
+        if (D_8AE084F8 == 0) {
+            D_8AE084FA = 1;
+        }
+        D_8AE084F8 = 1;
+        if (D_8AE084FA == 0) {
+            func_8AE04618(D_8AE084FC, D_8AE084FE, D_8AE08500, D_8AE08502);
+            if (D_8AE084E8 != 0) {
+                if (D_8AE09B56 >= 0) {
+                    func_8AE04BFC((D_8AE084FC + ((s16) D_8AE08500 / 8)) - 8, D_8AE084FE - 8, 8);
+                }
+                if (D_8AE09B58 >= 0) {
+                    func_8AE04BFC((D_8AE084FC + ((s16) D_8AE08500 / 8)) - 8, D_8AE084FE + D_8AE08502, 4);
+                }
+            }
+        }
+    } else {
+        D_8AE084F8 = 0;
+    }
+    func_8AE04EB8(*(s16 *)((u8 *)&D_8AE09ED8 + 14) + 2, *(s16 *)((u8 *)&D_8AE09ED8 + 16) + 4);
+    func_8AE0043C();
+    func_8AE03D94();
+    D_8AE08506 += 1;
+    if ((D_8AE084F8 == 1) && (D_8AE09E64 < 4)) {
+        D_8AE09E64 += 1;
+    }
+    func_80008648();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1672,7 +1809,7 @@ void func_8AE05B1C(void) {
 #ifdef VERSION_US
 extern s32 D_8AE084E8;
 extern s16 func_8AE017A4(s16);
-extern void func_8AE01738(void);
+extern s32 Fragment46_RefreshSavedSelection(void);
 extern s32 func_8AE00F24(void);
 extern s16 D_8AE084E0;
 extern s16 D_8AE084E2;
@@ -1697,7 +1834,7 @@ Fragment46LookupEntry *func_8AE05B24(void) {
     if (locals.previous != D_8AE084E0) {
         locals.result = entry;
         D_8AE084E2 = func_8AE017A4(D_8AE084E0);
-        func_8AE01738();
+        Fragment46_RefreshSavedSelection();
         D_8AE084E8 = func_8AE00F24();
         entry = locals.result;
     }
@@ -1722,7 +1859,7 @@ extern s16 D_8AE084E2;
 extern s32 D_8AE084E8;
 extern Fragment46LookupEntry *func_8AE0559C(s16);
 extern s16 func_8AE017A4(s16);
-extern void func_8AE01738(void);
+extern s32 Fragment46_RefreshSavedSelection(void);
 extern s32 func_8AE00F24(void);
 Fragment46Entry *func_8AE05BF0(void) {
     volatile Fragment46SearchLocals16 locals;
@@ -1746,7 +1883,7 @@ Fragment46Entry *func_8AE05BF0(void) {
     if (locals.saved != D_8AE084E0) {
         locals.result = temp_v0;
         D_8AE084E2 = func_8AE017A4(D_8AE084E0);
-        func_8AE01738();
+        Fragment46_RefreshSavedSelection();
         D_8AE084E8 = func_8AE00F24();
         temp_v0 = locals.result;
     }
@@ -1764,7 +1901,7 @@ extern void func_8AE000C8(void);
 extern void func_8AE001D4(void);
 extern void func_8AE00230(s32 arg0);
 extern s32 func_8AE00F24(void);
-extern void func_8AE01738(void);
+extern s32 Fragment46_RefreshSavedSelection(void);
 extern void Fragment46_InitializeSelection(void);
 extern void func_8AE0575C(void *arg0);
 extern void func_8AE05910(s16 arg0);
@@ -1863,14 +2000,14 @@ void Fragment46_HandleSelectionInput(void) {
             var_v0_2 = D_80087200->buttonsPressed;
             if ((var_v0_2 & 4) && (D_8AE09B58 >= 0)) {
                 D_8AE084E2 = D_8AE09B58;
-                func_8AE01738();
+                Fragment46_RefreshSavedSelection();
                 D_8AE084E8 = func_8AE00F24();
                 Fragment46_PlaySound(0x46);
                 var_v0_2 = D_80087200->buttonsPressed;
             }
             if ((var_v0_2 & 8) && (D_8AE09B56 >= 0)) {
                 D_8AE084E2 = D_8AE09B56;
-                func_8AE01738();
+                Fragment46_RefreshSavedSelection();
                 D_8AE084E8 = func_8AE00F24();
                 Fragment46_PlaySound(0x46);
             }
@@ -1918,7 +2055,7 @@ extern void StageFade_StartFromOpaque(s32);
 extern void func_800086A4(s32);
 extern void func_80064D28();
 extern void func_8AE00380();
-extern void func_8AE05118();
+extern void Fragment46_DrawSelectionFrame();
 extern void Fragment46_HandleSelectionInput();
 s32 func_8AE0605C(s32);
 
@@ -1935,7 +2072,7 @@ void func_8AE06118(void) {
             Fragment46_HandleSelectionInput();
         }
         func_8AE00380();
-        func_8AE05118();
+        Fragment46_DrawSelectionFrame();
         temp_v0 = func_8AE0605C(var_s0);
         var_s0 = temp_v0;
     } while (temp_v0 != 3);

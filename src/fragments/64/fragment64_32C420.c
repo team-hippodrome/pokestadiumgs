@@ -2,7 +2,32 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32C420/func_87F097B0.s")
+typedef struct { u8 bytes[0x6C0]; } Fragment64ModelSpan;
+typedef struct { u8 counts[18]; s16 state; u8 rest[4]; } Fragment64CounterRow;
+extern u8 D_87F113D0[18];
+void Fragment64_IncrementMatchingCounters(u8 *root, s32 slot) {
+    s32 row;
+    s32 kind;
+    u8 *counter;
+    u8 value;
+    u8 *cursor;
+    for (row = 0, cursor = root; row < 4; row++, cursor += 24) {
+        if ((*(u16 *)(cursor + 0x21A6) >> 15) != 0) {
+            for (kind = 0; kind < 18; kind++) {
+                if (D_87F113D0[kind] == (*(u8 **)(((Fragment64ModelSpan *)root)[row].bytes + slot * 4))[4]) {
+                    counter = &((Fragment64CounterRow *)(root + 0x2194))[row].counts[kind];
+                    break;
+                }
+            }
+            value = *counter;
+            if (value < 255) {
+                *counter = value + 1;
+            } else {
+                *counter = 255;
+            }
+        }
+    }
+}
 
 extern void _bzero(void *, s32);
 void func_87F09870(s32 *arg0) { _bzero(arg0, 0x1C); *arg0 = 0; }
