@@ -4,7 +4,16 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A340.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A3A8.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern u8 *D_8AF2D510[];
+extern s32 func_8004D1FC(u8 *);
+void func_8AF0A3A8(s32 x, s32 y, s16 index) {
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D1FC(D_8AF2D510[index]);
+    gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + 20) << 2, (y + 20) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10,
+                        1 << 10);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A4AC.s")
 
