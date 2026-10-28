@@ -328,7 +328,30 @@ f64 func_86008BB4(Fragment47MotionPrefix *object, s32 flag, u8 *point, void *nor
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008D2C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008E64.s")
+extern f64 func_87C007DC(const f64 *, const f64 *);
+extern void func_87C00814(void *, void *, f64 *);
+s32 func_86008E64(Fragment47MotionPrefix *object, s32 flag, f64 *point, Fragment47Point *normal) {
+    f64 contact[3];
+    f64 unused[3]; // FAKE: unreferenced locals pin retail's frame layout
+    f64 offset[3];
+    f64 unused2[6]; // FAKE
+    Fragment47Point copy;
+    f64 unused3[8]; // FAKE
+    f64 distance;
+
+    distance = func_87C007DC((f64 *)normal, point);
+    if (flag) {
+        distance -= object->radius;
+    }
+    if (0.0 < distance) {
+        return 0;
+    }
+    func_87C00814(normal, point, contact);
+    copy = *normal;
+    func_87C00160((u8 *)object, (s32)object, func_87C002A8(offset, normal, distance));
+    func_86007EB4(object);
+    return 1;
+}
 
 extern s32 func_86009C08(void *arg0, void *arg1);
 extern s32 func_86009EF8(void *arg0, f64 arg1);
@@ -384,13 +407,13 @@ void func_86009260(void *arg0, f64 arg1, void *arg2, s32 arg3, void *arg4) {
     }
 }
 
-extern void func_86008E64(void *, s32, void *, void *);
+extern s32 func_86008E64(Fragment47MotionPrefix *, s32, f64 *, Fragment47Point *);
 void func_86009318(void *arg0, void *arg1, s32 arg2) {
     s32 i;
 
     for (i = 0; i < arg2; i++) {
         if (func_87C00664((u8 *)arg1 + i * 0x40) > 0.0) {
-            func_86008E64(arg0, 1, arg0, (u8 *)arg1 + i * 0x40);
+            func_86008E64(arg0, 1, arg0, (Fragment47Point *)((u8 *)arg1 + i * 0x40));
         }
     }
 }
