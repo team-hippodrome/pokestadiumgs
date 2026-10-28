@@ -13,3 +13,13 @@ The full fleet note for this region was read. Its previous func_829012E4 normali
 ## 2026-10-27 — `func_82901AE0`: requeue
 
 requeue (global address CSE). Scrolling strip: unless func_800061EC(), texture = func_8004C874(0x16, 0), width = func_80049148(0x10, 0, texture), draw at D_82911E38 and D_82911E38 + width + 120 (func_800495BC(x, 400, texture) between func_800498C4/func_800496A4(0x10, 0) and func_800499EC), then scroll D_82911E38 by -2 and add width + 120 once it is <= -width. Best 0.76: the target re-emits `lui` for every D_82911E38 access (stores through $at), while IDO CSEs the address in every spelling tried. Permuter 120 s: 825 -> 105.
+
+## 2026-10-28 — `func_82900D78` matched (apply camera preset)
+
+New `Fragment67CameraPreset` (0x1C: f32 x/y/z, s16 pitch @0xC, s16 yaw
+@0xE, f32 dist @0x10) for the table `D_82911B80`, indexed by `D_82918858`.
+Set the camera target (`D_829188A0 + 0xB4`) from the preset's position,
+then store pitch, yaw and dist (truncated to s16) into
+`D_829188A8`/`AA`/`AC` *in that order*, and apply them with
+`func_800371B4(target, eye, (f32)dist, pitch, yaw)`. The store order picks
+the registers, as in fragment67_33FAE0's `func_8290351C`.
