@@ -257,7 +257,8 @@ void *func_813035A0(void *arg0) {
 }
 // One of the six 0xCE8-byte party slots at the start of the selection screen object.
 typedef struct unk_D_81303648_slot {
-    /* 0x000 */ u8 unk_000[0xA];
+    /* 0x000 */ void *unk_000;
+    /* 0x004 */ u8 unk_004[0xA - 0x4];
     /* 0x00A */ u8 unk_00A;
     /* 0x00B */ u8 unk_00B[0x21 - 0xB];
     /* 0x021 */ u8 unk_021;
@@ -467,7 +468,121 @@ void func_81303EA8(void *arg0) {
     (*(s8 *)((u8 *)(arg0) + (0x4DBD))) = 4;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81303EF4.s")
+extern s32 func_8160B828(void *);
+extern s32 func_8160A50C(void *);
+extern s32 *func_81602D70(s32);
+extern s32 func_81602AEC(void *, s32 *);
+extern void func_81600A34(void *, void *, s32, s32, s32, s32, s32);
+extern void func_8160B5BC(void *arg0, s16 *arg1);
+extern s32 func_81302BC0(u8 *arg0);
+extern void func_81302CB4(u8 *, s16 *);
+extern void func_81303228(u8 *arg0);
+extern void func_81303230(u8 *arg0);
+extern void func_81303240(u8 *arg0);
+extern void func_813032B0(u8 *arg0);
+extern void func_813032D0(void *arg0);
+extern void func_81303364(void *arg0);
+extern void func_813033DC(u8 *arg0);
+extern void func_8130345C(void *arg0);
+extern void func_813034E8(u8 *arg0);
+extern void func_813037F0(u8 *arg0);
+extern void func_81303BF4(u8 *arg0);
+extern void func_81303CA0(void *arg0);
+extern void func_81303D04(void *arg0);
+extern void func_81303D60(u8 *arg0);
+extern void func_81303E20(u8 *arg0);
+extern void func_81303EA8(void *arg0);
+void func_81303EF4(unk_func_81303648 *arg0, void *arg1) {
+    s32 result = 0;
+    s16 rect[4];
+    s16 inner[4];
+
+    switch (arg0->unk_4DBD) {
+        case 11:
+            func_8130345C(arg0);
+            break;
+        case 0:
+            func_81303230(arg0);
+            break;
+        case 1:
+            func_81303228(arg0);
+            break;
+        case 13:
+            func_81303240(arg0);
+            result = 1;
+            break;
+        case 12:
+            func_813032B0(arg0);
+            result = 1;
+            break;
+        case 2:
+            func_813032D0(arg0);
+            result = 1;
+            break;
+        case 3:
+            func_81303364(arg0);
+            result = 1;
+            break;
+        case 14:
+            func_813033DC(arg0);
+            break;
+        case 4:
+            func_81303648(arg0, arg1);
+            break;
+        case 17:
+            func_81303A88(arg0);
+            result = 1;
+            break;
+        case 5:
+            func_81303BF4(arg0);
+            break;
+        case 6:
+            func_81303D04(arg0);
+            break;
+        case 9:
+            func_81303D60(arg0);
+            break;
+        case 18:
+            func_813037F0(arg0);
+            result = 1;
+            break;
+        case 10:
+            func_813038D0(arg0);
+            result = 1;
+            break;
+        case 7:
+            func_81303E20(arg0);
+            break;
+        case 8:
+            func_81303EA8(arg0);
+            break;
+        case 15:
+            func_813034E8(arg0);
+            result = 1;
+            break;
+        case 16:
+            func_81303CA0(arg0);
+            result = 1;
+            break;
+    }
+    result |= func_8160B828(arg0);
+    result |= func_8160A50C(arg0);
+    if (func_81602AEC(arg0->slots[0].unk_000, func_81602D70(*(s8 *)(arg0->unk_4DA0 + 0x1A142)))) {
+        result = 1;
+    }
+    if (!result && arg0->unk_4DAC != 0) {
+        arg0->unk_4DAC = 0;
+        result = 1;
+    }
+    func_81302CB4((u8 *)arg0, rect);
+    func_81600A34(arg1, arg0, result, rect[0], rect[1], rect[2], rect[3]);
+    if (func_81302BC0((u8 *)arg0)) {
+        func_8160B5BC(arg0, inner);
+        inner[0] += rect[0];
+        inner[1] += rect[1];
+        func_81600A34(arg1, (u8 *)arg0 + 1, 1, inner[0], inner[1], inner[2], inner[3]);
+    }
+}
 
 extern s32 func_8160A8DC();
 extern void func_81302E58(void *arg0, s32 arg1);
