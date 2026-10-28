@@ -108,8 +108,6 @@ void func_88307DA4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8DE0/func_88307DE8.s")
-
 typedef struct unk_D_88308ED0 {
     /* 0x00 */ u8 unk_00[4];
     /* 0x04 */ s16 unk_04;
@@ -119,6 +117,36 @@ typedef struct unk_D_88308ED0 {
     /* 0x16 */ s16 unk_16;
     /* 0x18 */ u8 unk_18[8];
 } unk_D_88308ED0; // size = 0x20
+
+extern Gfx *D_800D0510;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_80049064(s32, s32, s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_88000510(u8 *, s8);
+extern s32 func_88307BCC(s32, u8);
+extern s32 func_88307AD0(s32, s8);
+extern s32 D_88308ED0;
+void func_88307DE8(void) {
+    s32 i;
+    s32 j;
+    s32 count;
+    s32 x;
+    s32 y;
+    unk_D_88308ED0 *node;
+    u8 color[4];
+
+    func_80006F70(&D_800D0510, 391, 0, 140, 480);
+    for (i = 0, y = 96; i < 2; i++, y += 56) {
+        node = &((unk_D_88308ED0 *)&D_88308ED0)[i];
+        count = (node->unk_16 == 0) ? 1 : 2;
+        for (j = 0, x = 461; j != count; j++, x += 140) {
+            func_88000510(color, func_88307AD0(i, j));
+            func_8004972C(color[0], color[1], color[2], 255);
+            func_80049064(x - node->unk_16, y, 1, func_88307BCC(i, j));
+        }
+    }
+    func_80006F70(&D_800D0510, 0, 0, 640, 480);
+}
 
 s32 func_88307F28(void) {
     s32 first;

@@ -56,3 +56,7 @@ with the three pointer inits (`node`, `link`, `clr`) *inside* the guard. If they
 sit before the `if`, the `beqz` moves two instructions later (0.98). A plain
 `for` loop gets unrolled by copt. The `clr += 4; clr[-4..-1] = 0` order is from
 the retail store offsets.
+
+## 2026-10-29: `func_87F0ABA4` requeue
+
+requeue (0.94). Returns ColorAdjustment by value; args `(s32 entry, s32 row)`. `result.raw = 0`. If `*(s8 *)entry == 0`, a 4-case switch picks `step` (0, 2, 1, 3 for rows 0-3), then `result.unk_00 = (func_8004B920(rec[0], 0) + (high - low) / 3 * step) << 6` with `rec = entry + 4`. Otherwise `result = func_8003F5AC(rec)`, replaced by `func_8004B9E0(rec[0])` when func_8006456C(rec+0x16) is set and func_8004B98C(rec[0]) == 2. Stack fixed by declaring `u8 *entry; ColorAdjustment result; s32 step; u8 *record; s16 high; s16 low;` (each declared local reserves a slot). Remaining: retail keeps the argument in $a3 and computes `record = arg + 4` in both arms, with a duplicated `lbu` on the switch's default path. Assigning `record` in each branch moves `entry` into $s1 and grows the frame. Next: drop the `entry` local but keep a fourth declared slot in a way that doesn't need it live.
