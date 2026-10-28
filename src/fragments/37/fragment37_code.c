@@ -125,7 +125,21 @@ void func_88800A30(void) {
     func_800226C0(*(s32 *)(D_88804050 + 0x354));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800B24.s")
+extern s32 func_80001FF0(void);
+extern void func_880002F4(u8 *, s16);
+extern u8 * D_88804050;
+void func_88800B24(void) {
+    ((s8 *)D_88804050)[0x27] = -1;
+    ((s8 *)D_88804050)[0x26] = ((s8 *)D_88804050)[0x27];
+    D_88804050[0x11] = 3;
+    if (D_88804050[0x2A] != 0) {
+        // Rounds frame-rate-scaled durations (func_80001FF0 returns 50 or 60).
+        func_880002F4(D_88804050 + 0x2C,
+                      (s32)((5.0f * func_80001FF0() / 60.0f) + (((func_80001FF0() * 5.0f / 60.0f) > 0.0f) ? 0.5f : -0.5f)) +
+                      (s32)((8.0f * func_80001FF0() / 60.0f) + (((func_80001FF0() * 8.0f / 60.0f) > 0.0f) ? 0.5f : -0.5f)) +
+                      (s32)((30.0f * func_80001FF0() / 60.0f) + (((func_80001FF0() * 30.0f / 60.0f) > 0.0f) ? 0.5f : -0.5f)));
+    }
+}
 
 extern u8 *D_880068B0;
 extern u8 func_80062EB0(u8, u8);
@@ -138,7 +152,36 @@ void func_88800D34(s8 slot) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800DC0.s")
+typedef struct Color88800DC0 {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color88800DC0;
+extern u8 *D_880068B0;
+extern u8 *D_8800687C;
+extern Color88800DC0 *func_88000510(Color88800DC0 *, s8);
+extern void func_880006E0(Color88800DC0 *);
+extern u8 func_80062D98(u8);
+extern const char *func_80062CE0(u8);
+extern const char *func_8004C874(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+void func_88800DC0(s8 index, u8 alpha) {
+    u8 move;
+    Color88800DC0 color;
+
+    if (alpha == 0) {
+        return;
+    }
+    move = (D_880068B0 + 2)[index];
+    func_88000510(&color, move == 252 ? 0 : func_80062D98(move));
+    if (alpha == 255) {
+        func_880006E0(&color);
+    } else {
+        func_8004972C(color.red, color.green, color.blue, alpha);
+    }
+    func_80048E30(D_8800687C, 0x87, index * 27 + 0x100, move == 252 ? func_8004C874(0x26, 0x2A) : func_80062CE0(move), 1);
+}
 
 extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
 extern s32 func_8004D1FC(u8 *arg0);

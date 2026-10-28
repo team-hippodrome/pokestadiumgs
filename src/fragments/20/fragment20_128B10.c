@@ -202,7 +202,8 @@ void RecordSelection_LoadLevelMatchedParties(u8 *context) {
 typedef struct {
     s16 count;
     s8 owners[2];
-    u8 unk_04[4];
+    s8 member_sizes[2];
+    u8 unk_06[2];
     RecordSelectionWorkingEntry entries[12];
 } RecordSelectionPartyDescriptor;
 typedef char RecordSelectionPartyDescriptorSize[sizeof(RecordSelectionPartyDescriptor) == 1064 ? 1 : -1];
@@ -398,7 +399,6 @@ typedef struct {
     u8 unk_00[136];
     s16 selection;
 } RecordTextSelectionView;
-extern void *func_8004C874(s32, s32);
 extern void _bcopy(void *, void *, s32);
 typedef struct {
     u8 unk_00[52];
@@ -446,8 +446,6 @@ void RecordText_CopyUnassignedEntries(void *arg0) {
     } while (outer != 4);
 }
 
-extern void *func_8004C874(s32, s32);
-extern void _bcopy(void *, void *, s32);
 void RecordNames_LoadFourSlots(u8 *context, s32 override_names) {
     s32 index;
     s32 selection;
@@ -874,8 +872,6 @@ void RecordNames_LoadSelectedOrDefaultPair(u8 *context) {
 extern s32 D_82615390[];
 extern s32 D_82615384[];
 extern s32 D_82615378[];
-extern void *func_8004C874(s32, s32);
-extern void func_80049C70(s32 *, s32 *, void *);
 void func_82602E14(void *arg0) {
     s32 selection;
     u8 *record;
@@ -927,14 +923,165 @@ void func_82602E14(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82602FE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_826030E4.s")
-
+#include "229E0.h"
+typedef struct PokeIconList44300 PokeIconList44300;
+extern PokeIconList44300 *func_800437B4(void *, s32, s32, s32);
+extern u8 *func_8004BA70(s32);
+extern s32 func_8004C4B0(s32);
+extern void func_80055EF0(void *, s32);
+extern s32 func_826058CC(s32);
+extern s32 func_82602FE8(void *);
+extern s32 func_82610C84(s32, s32);
 extern Func82615340StateX *D_82615370;
-extern void func_80008648(void);
-extern void BgStage_DrawFrame(void);
-extern void func_82602710(u8 *);
-extern void func_826042A0(void);
-extern void func_82614BD0(void);
+extern s32 D_82615374;
+extern u8 D_826163C0;
+typedef struct {
+    s16 width;
+    s16 height;
+} RecordSelectionTextDimensions;
+typedef char RecordSelectionTextDimensionsSize[sizeof(RecordSelectionTextDimensions) == 4 ? 1 : -1];
+extern void RecordNames_FormatTwoSlots(u8 *context);
+extern void RecordNames_LoadSelectedOrDefaultPair(u8 *context);
+extern void RecordNames_LoadTwoSlotsOptionalDefaults(u8 *context, s32 use_defaults);
+extern void RecordNames_LoadUnassignedFourSlots(u8 *context);
+extern void func_82602E14(void *arg0);
+// Initialize row selection, names, compact party descriptors, and icon resources.
+void RecordSelection_InitializeDisplayContext(u8 *context) {
+    SceneLoadContext *load_context;
+    u8 *state;
+    u8 *table;
+    PokeIconList44300 *list;
+    u16 mode;
+    s32 name_mode;
+    s16 selection;
+    s32 category;
+    s32 side;
+    s32 member;
+    s32 sum_member;
+    s32 scan_record;
+    s32 clear_record;
+    s32 group_count;
+    s32 used;
+    s32 total;
+    s32 icon_count;
+    s32 icon_height;
+    RecordSelectionPartyDescriptor *descriptor;
+    s8 *member_cursor;
+    u8 *row;
+    load_context = PokeIcon_AllocLoadContext(1);
+    state = *(u8 **)context;
+    table = *(u8 **)(context + 12);
+    mode = *(u16 *)(state + 8) & 0xFF00;
+    D_82615370 = (Func82615340StateX *)context;
+    if (((s8 *)state)[15] != 0) D_82615374 = 1;
+    else D_82615374 = 0;
+    func_80055EF0(&D_826163C0, D_82615374);
+
+    // Select the active row and preserve the entry mode for the final history update.
+    switch (mode) {
+    case 0x400:
+    case 0x600:
+        *(s16 *)(context + 20) = 1;
+        selection = *(s16 *)(state + 136);
+        if (selection != 0) {
+            *(s16 *)(context + 24) = ((s16 *)(context + 24))[selection];
+            *(s16 *)(context + 56) = ((s16 *)(context + 56))[*(s16 *)(state + 136)];
+            *(RecordSelectionTextDimensions *)(context + 88) = ((RecordSelectionTextDimensions *)(context + 88))[*(s16 *)(state + 136)];
+            *(s16 *)(state + 136) = 0;
+        }
+        break;
+    case 0x500:
+        *(s16 *)(context + 20) = 1;
+        if (*(s16 *)(state + 136) != 0) {
+            *(s16 *)(context + 24) = ((s16 *)(context + 28))[*(s16 *)(*(u8 **)context + 12)];
+            *(s16 *)(context + 56) = ((s16 *)(context + 60))[*(s16 *)(*(u8 **)context + 12)];
+            *(RecordSelectionTextDimensions *)(context + 88) = ((RecordSelectionTextDimensions *)(context + 96))[*(s16 *)(*(u8 **)context + 12)];
+            *(s16 *)(state + 136) = 0;
+        }
+        break;
+    case 0x200:
+        *(s16 *)(context + 20) = 1;
+            *(s16 *)(context + 24) = ((s16 *)(context + 28))[*(s16 *)(*(u8 **)context + 12)];
+            *(s16 *)(context + 56) = ((s16 *)(context + 60))[*(s16 *)(*(u8 **)context + 12)];
+            *(RecordSelectionTextDimensions *)(context + 88) = ((RecordSelectionTextDimensions *)(context + 96))[*(s16 *)(*(u8 **)context + 12)];
+        *(s16 *)(state + 136) = 0;
+        break;
+    }
+    *(s16 *)(state + 138) = *(s16 *)(context + 20);
+    category = func_826058CC(state[7]);
+    if (category >= 0 && category < 2) {
+        if (((s16 *)(state + 2304))[category] < 99) ((s16 *)(state + 2304))[category]++;
+    }
+    side = 0;
+    for (; side < *(s16 *)(context + 20); side++) {
+        row = table;
+        row += ((s16 *)(context + 24))[side] * 152;
+        row += 4;
+        func_8004C4B0(row[3] + 76);
+    }
+    side = 0;
+    // Name loaders and archive initialization precede display-record compaction.
+    name_mode = *(u16 *)(*(u8 **)context + 8) & 0xFF00;
+    switch (name_mode) {
+    case 0x500: RecordNames_LoadTwoSlotsOptionalDefaults(context, 1); break;
+    case 0x200: RecordNames_FormatTwoSlots(context); break;
+    case 0x400: RecordNames_LoadSelectedOrDefaultPair(context); break;
+    default:
+        if (*(u8 **)(context + 12) != NULL) RecordNames_LoadUnassignedFourSlots(context);
+        break;
+    }
+    if (*(u8 **)(context + 12) != NULL) func_82602E14(context);
+    PokeIcon_InitResourceArchives();
+    if (((s8 *)state)[6] != 0) group_count = 2;
+    else group_count = 1;
+    do {
+        used = 0;
+        member = 0;
+        if (group_count > 0) {
+            descriptor = &((RecordSelectionPartyDescriptor *)(context + 176))[side];
+            member_cursor = (s8 *)descriptor;
+            do {
+                member_cursor[4] = 0;
+                for (scan_record = 0; scan_record < 6; scan_record++) {
+                    if (((RecordSelectionWorkingGrid *)state)->groups[side * group_count + member][scan_record].species != 0) {
+                        member_cursor[4]++;
+                        descriptor->entries[used] = ((RecordSelectionWorkingGrid *)state)->groups[side * group_count + member][scan_record];
+                        used++;
+                    }
+                }
+            } while ((member_cursor++, ++member) < group_count);
+        }
+        for (clear_record = used; clear_record < 12; clear_record++) {
+            _bzero(&((RecordSelectionPartyDescriptor *)(context + 176))[side].entries[clear_record], sizeof(RecordSelectionWorkingEntry));
+        }
+        side++;
+    } while (side < 2);
+    // Four or more occupied entries select the twelve-icon resource layout.
+    *(s16 *)(context + 18) = 0;
+    side = 0;
+    do {
+        total = 0;
+        descriptor = &((RecordSelectionPartyDescriptor *)(context + 176))[side];
+        for (sum_member = 0; sum_member != 2; sum_member++) {
+            total += descriptor->member_sizes[sum_member];
+        }
+        if (total >= 4) *(s16 *)(context + 18) = 1;
+        side++;
+    } while (side != 2);
+    if (*(s16 *)(context + 18) != 0) { icon_count = 12; icon_height = 78; }
+    else { icon_count = 6; icon_height = 144; }
+    list = func_800437B4(load_context, icon_count, 118, icon_height);
+    *(PokeIconList44300 **)(context + 4) = list;
+    *(u16 *)list |= 0x4;
+    *(u8 **)(context + 8) = func_8004BA70(0);
+    *(s16 *)(context + 16) = 0;
+    if (mode == 0 && func_826058CC(state[7]) == 0 && func_82602FE8(context + 176) != 0) {
+        *(s16 *)(context + 16) = 1;
+        if (*(s16 *)(state + 140) < 99) (*(s16 *)(state + 140))++;
+    }
+    func_82610C84((s32)context, 1);
+}
+
 void func_82603684(void) {
     func_80043E70(D_82615370->unk_04, 0);
     BgStage_DrawFrame();
@@ -944,8 +1091,6 @@ void func_82603684(void) {
     func_80008648();
 }
 
-extern s32 D_82615374;
-extern u8 D_826163C0;
 extern s32 func_8006CBB8(s32);
 extern s32 func_8006CBA0(s32, s32);
 extern u16 func_80056024(s32);
@@ -1001,7 +1146,6 @@ s32 RecordOwners_AnyUnassigned(void) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82603870.s")
 
-extern s32 func_826058CC(s32);
 extern s32 func_82603870(s32);
 void RecordSelection_RunPhaseLoop(void) {
     s32 mode_category;

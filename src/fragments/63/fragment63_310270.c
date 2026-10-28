@@ -33,7 +33,7 @@ void func_87E0C974(s32 arg0, s32 arg1) {
 }
 
 extern void func_87F0BD30(void *, s32, s32, s32);
-extern void func_87E0CEE4(void *, s32);
+extern void ListSlots_ResetEntryState(void *, s32);
 void func_87E0CA2C(void *arg0, s32 arg1) {
     u8 *entry;
     s32 color1;
@@ -67,7 +67,7 @@ void func_87E0CA2C(void *arg0, s32 arg1) {
     }
 
     func_87F0BD30(entry + 0xDC, 0x140, 0x24, color1);
-    func_87E0CEE4(arg0, arg1);
+    ListSlots_ResetEntryState(arg0, arg1);
 }
 
 extern void func_8004C8C0(s32);
@@ -180,7 +180,26 @@ void func_87E0CE60(u8 *arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0CEE4.s")
+// Refresh nine slot flags and clear each slot value to -1.
+void ListSlots_ResetEntryState(void *arg0, s32 arg1) {
+    u8 *entry;
+    u8 *slot;
+    s32 i;
+    entry = (u8 *)arg0 + arg1 * 236 + 40;
+    slot = (u8 *)arg0 + arg1 * 236 + 180;
+    for (i = 0; i < 9; i++) {
+        if (i < **(s32 **)(entry + 136)) {
+            *slot = 1;
+        } else {
+            *slot = 0;
+        }
+        if (i < *(s32 *)(*(u8 **)((u8 *)arg0 + 4) + 8584)) {
+            *slot |= 8;
+        }
+        *(s32 *)(slot + 4) = -1;
+        slot += 8;
+    }
+}
 
 extern f32 D_87E1A464[][3];
 extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
@@ -412,7 +431,7 @@ void func_87E0D8EC(u8 *arg0) {
     *(s32 *)(arg0 + 0x404) = (func_8003570C() % 9) + 4;
 }
 
-extern void func_87E0CEE4(void *, s32);
+extern void ListSlots_ResetEntryState(void *, s32);
 extern void func_87E134C0(void);
 extern void func_87E13490(void);
 extern void func_87E13480(void *);
@@ -431,7 +450,7 @@ void func_87E0DA4C(void *arg0) {
     }
     i = 0;
     do {
-        func_87E0CEE4(arg0, i);
+        ListSlots_ResetEntryState(arg0, i);
         i += 1;
     } while (i != 4);
     func_87E134C0();
@@ -476,7 +495,7 @@ typedef struct {
     s32 *val;
     u8 pad2[0x60];
 } Fragment63_SubStruct;
-extern void func_87E0CEE4(void *, s32);
+extern void ListSlots_ResetEntryState(void *, s32);
 s32 func_87E0E110(void *arg0) {
     s32 sp24 = 0;
     s32 *sp20;
@@ -499,7 +518,7 @@ s32 func_87E0E110(void *arg0) {
                 func_87E0DE34(arg0);
                 *(s32 *)((u8 *)arg0 + 0x3FC) = 0;
                 (*sp20)--;
-                func_87E0CEE4(arg0, ((s8 *)arg0)[0x408]);
+                ListSlots_ResetEntryState(arg0, ((s8 *)arg0)[0x408]);
                 (*(s32 *)((u8 *)arg0 + 0x3F8))++;
             }
         }
@@ -528,7 +547,7 @@ void func_87E0E2C8(void *arg0) {
 
     if (*var_a3 < var_v0->unk_2188) {
         (*var_a3)++;
-        func_87E0CEE4(var_a2, *var_v1);
+        ListSlots_ResetEntryState(var_a2, *var_v1);
     }
 }
 
