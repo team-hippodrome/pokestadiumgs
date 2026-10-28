@@ -18,7 +18,31 @@ void func_8630500C(void *a) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305448.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_8630557C.s")
+extern f32 func_87D0059C(f32 *, f32 *);
+s32 func_8630557C(u8 *arg0, u8 *arg1, f32 *arg2, f32 arg3, f32 arg4, s32 *arg5) {
+    s32 result = 0;
+
+    *(f32 *)(arg0 + 128) = *(f32 *)(arg1 + 72) - arg2[0];
+    *(f32 *)(arg0 + 132) = *(f32 *)(arg1 + 76) - arg2[1];
+    *(f32 *)(arg0 + 116) = sqrtf(*(f32 *)(arg0 + 132) * *(f32 *)(arg0 + 132) +
+                                 *(f32 *)(arg0 + 128) * *(f32 *)(arg0 + 128));
+    if (*(f32 *)(arg0 + 116) < 21.0f) {
+        if (0.0f == *(f32 *)(arg0 + 116)) {
+            *(f32 *)(arg0 + 128) = arg3;
+            *(f32 *)(arg0 + 132) = arg4;
+        }
+        *(f32 *)(arg0 + 116) = 21.0f - *(f32 *)(arg0 + 116);
+        func_87D0059C((f32 *)(arg0 + 128), (f32 *)(arg0 + 132));
+        if (*(f32 *)(arg0 + 132) * *(f32 *)(*(u8 **)(arg0 + 8) + 36) +
+            *(f32 *)(*(u8 **)(arg0 + 8) + 32) * *(f32 *)(arg0 + 128) < 0.0f) {
+            *arg5 = 1;
+        } else {
+            *arg5 = 0;
+        }
+        result = 1;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305694.s")
 
@@ -41,7 +65,7 @@ void func_86305790_padding(void) {}
 #define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
 #endif
 
-M2C_UNK func_87D0059C(u8 *, u8 *);              /* extern */
+
 M2C_UNK func_87D00648(u8 *, u8 *, u8 *);      /* extern */
 
 void func_863057A0(u8 *arg0, u8 *arg1, u8 *arg2, u8 *arg3, f32 arg4, f32 arg5) {
@@ -49,7 +73,7 @@ void func_863057A0(u8 *arg0, u8 *arg1, u8 *arg2, u8 *arg3, f32 arg4, f32 arg5) {
     M2C_FIELD(arg0, f32 *, 4) = (f32) (M2C_FIELD(arg3, f32 *, 4) - M2C_FIELD(arg2, f32 *, 4));
     if ((M2C_FIELD(arg0, f32 *, 0) != 0.0f) || (M2C_FIELD(arg0, f32 *, 4) != 0.0f)) {
         func_87D00648(arg1, arg2, arg3);
-        func_87D0059C(arg1, arg1 + 4);
+        func_87D0059C((f32 *)arg1, (f32 *)(arg1 + 4));
         return;
     }
     M2C_FIELD(arg1, f32 *, 0) = arg4;
