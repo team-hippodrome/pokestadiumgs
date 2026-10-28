@@ -959,7 +959,17 @@
     - [0x1A7420, .rodata, fragments/31/fragment31_190BB0] # jtbl_882341A0, 16-byte aligned start; ends mid jtbl_882341B8
     - [0x1A7440, rodata]
     - [0x1A7590, .rodata, fragments/31/fragment31_194450] # Jump tables.
-    - [0x1A75C0, rodata]
+    - [0x1A75C0, .rodata, fragments/31/fragment31_194C30] # labels in this range are referenced only by this file
+    - [0x1A7610, .rodata, fragments/31/fragment31_195910] # labels in this range are referenced only by this file
+    - [0x1A7620, .rodata, fragments/31/fragment31_1965A0] # labels in this range are referenced only by this file
+    - [0x1A7630, .rodata, fragments/31/fragment31_197640] # labels in this range are referenced only by this file
+    - [0x1A7660, .rodata, fragments/31/fragment31_19C390] # labels in this range are referenced only by this file
+    - [0x1A76A0, rodata]
+    - [0x1A7780, .rodata, fragments/31/fragment31_19E800] # labels in this range are referenced only by this file
+    - [0x1A77B0, .rodata, fragments/31/fragment31_19F570] # labels in this range are referenced only by this file
+    - [0x1A77C0, rodata]
+    - [0x1A77D0, .rodata, fragments/31/fragment31_1A1BD0] # labels in this range are referenced only by this file
+    - [0x1A77E0, rodata]
 
   - name: fragment32
     type: code

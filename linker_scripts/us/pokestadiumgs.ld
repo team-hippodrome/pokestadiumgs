@@ -2513,10 +2513,12 @@ SECTIONS
         build/src/fragments/31/fragment31_19D160.o(.rodata);
         build/src/fragments/31/fragment31_19DCA0.o(.rodata);
         build/src/fragments/31/fragment31_19DFC0.o(.rodata);
+        build/asm/us/data/1A76A0.rodata.o(.rodata);
         build/src/fragments/31/fragment31_19E800.o(.rodata);
         build/src/fragments/31/fragment31_19F570.o(.rodata);
         build/src/fragments/31/fragment31_1A03C0.o(.rodata);
         build/src/fragments/31/fragment31_1A1AF0.o(.rodata);
+        build/asm/us/data/1A77C0.rodata.o(.rodata);
         build/src/fragments/31/fragment31_1A1BD0.o(.rodata);
         build/src/fragments/31/fragment31_1A3540.o(.rodata);
         build/src/fragments/31/fragment31_1A3730.o(.rodata);
@@ -2532,7 +2534,7 @@ SECTIONS
         build/src/fragments/31/fragment31_1A5E10.o(.rodata);
         build/src/fragments/31/fragment31_1A60F0.o(.rodata);
         build/src/fragments/31/fragment31_1A6360.o(.rodata);
-        build/asm/us/data/1A75C0.rodata.o(.rodata);
+        build/asm/us/data/1A77E0.rodata.o(.rodata);
         fragment31_RODATA_END = .;
         fragment31_RODATA_SIZE = ABSOLUTE(fragment31_RODATA_END - fragment31_RODATA_START);
     }
