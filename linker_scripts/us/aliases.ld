@@ -1124,3 +1124,14 @@ func_8AE020FC = Fragment46_InitializeSelection;
 func_8AE03324 = Fragment46_DrawVariantDetails;
 func_8AE03970 = Fragment46_DrawCategoryDetails;
 func_8AE05CB4 = Fragment46_HandleSelectionInput;
+
+func_82402B1C = Fragment13_DrawScrollIndicatorPanel;
+func_8240330C = Fragment13_DrawPageIndicatorPanel;
+func_8AC01160 = Fragment43_DrawDarkOverlayRect;
+func_8AC0479C = Fragment43_GrowthRectCallback;
+
+func_8670408C = Stage55_UpdateModelSounds;
+func_8670427C = Stage55_UpdateModelFade;
+func_867068EC = Stage55_SpawnVariantEffect;
+func_8AE05118 = Fragment46_DrawSelectionFrame;
+func_8240239C = Fragment13_DrawTintedPanel;

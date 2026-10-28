@@ -261,3 +261,88 @@ existing compatibility entries. The actual texture loader prototype remains
 - `func_8AC0198C` → `Fragment43_DrawReverseTextureStrip`.
 - `func_8AC02A34` → `Fragment43_SecondaryTextureCallback`.
 - `func_8AC030EC` → `Fragment43_ClippedTextureCallback`.
+
+## 2026-10-28 — native IA16 loader and growth callback
+
+`func_8AC01160` matches all 125 instruction words (500 bytes, 40-byte frame)
+with the ordinary `gDPLoadTextureBlock` macro: IA16, four texels wide and one
+row high, clamped in both directions. It emits the existing display list,
+sets black primary color with alpha 128, and draws the supplied signed-halfword
+rectangle with zero texture-coordinate increments. The first candidate passed;
+no manual expansion or output modification is needed. Receipt:
+`scratch/loader01/gate-0/receipt.json`.
+
+`func_8AC0479C` matches all 131 words (524 bytes, no stack frame). Its initial
+callback saves the original rectangle and target inner dimensions, hides the
+optional output node, and centers a 90-by-14 rectangle. Subsequent callbacks
+grow each dimension by its corresponding initial size, recenter, clamp the
+overshoot, and reveal the output node once neither dimension changes. Inner
+dimensions remain eight less than the outer dimensions. The original vertical
+overshoot updates X rather than Y; that operation is preserved and labeled
+with `//!bug` in the source.
+
+The winning source declares a promoted signed-word dimension first, reads the
+width before initializing the signed-halfword progress flag, adjusts a
+coordinate before its size, and uses that cached dimension in the size update.
+The cached value is read back after the signed-halfword store before testing
+overshoot, preserving narrowing. These ordinary lifetime and expression-tree
+changes resolve the remaining seven register operands; an earlier 0.9466 raw
+candidate was still rejected. Receipt: `scratch/growth07/gate-0/receipt.json`.
+The previous growth `requeue` is resolved.
+
+### Final unresolved handoff for this native box
+
+- `func_8AC0036C` — `requeue`: `flags08` candidate
+  `progress:remaining-local-order:0312` has 372/372 bytes, the correct 56-byte
+  frame and 92/93 exact instruction words (raw 0.9892). Its only difference
+  is the initial switch's invalid-mode path loading the uninitialized count
+  from stack offset 54 instead of retail's 48. All 24 orders of the four
+  existing locals were tested with the corrected bit extraction and guard;
+  phase-local scopes, narrower loop counters, bit temporaries and common
+  return carriers did not close it. Next: inspect IDO's count-slot allocation
+  and the original mode contract for a missing meaningful local or lifetime.
+  Keep the source in assembly until the entire function and ROM match;
+  adding padding for an undefined-path load was not attempted.
+- `func_8AC03AFC` — `requeue`: best normalized 0.7895, raw 0.1974,
+  304/300 bytes, 64-byte frame (`rect05`, packed-color-word candidate 1).
+  Byte-color records, typed node views, scalar or aggregate coordinate
+  locals, branch scopes, packed-word assignment and packed-member assignment
+  retain the extra saved node pointer and different load scheduling. Next:
+  inspect the pointer's allocation across `func_800504BC` and the aggregate
+  copy's IR cost; the callback's actual pointer ABI must remain intact.
+- `func_8AC05F38` — `layout-prerequisite` / `requeue`: the first decrement's
+  literal at ROM 0x1EDB5C still precedes this file's `.rodata` subsegment at
+  0x1EDB60. One externally referenced-literal confirmation gives 244/244 bytes,
+  no frame, normalized 1.0 but raw 0.7049; the external load uses f4 instead
+  of retail's f12 and advances subsequent float temporaries. Explicit step
+  carriers regress to raw 0.6393. Next: coordinator work on ownership of that
+  first literal, then retry the ordinary all-literal C form. No shared layout
+  input was changed by this worker.
+- `func_8AC0202C` / `func_8AC02564` — `layout-prerequisite`: the current
+  `.rodata` split covers only the float block. Their tables `jtbl_8AC08128`
+  and `jtbl_8AC08144` remain in the shared fragment data. Coordinator table
+  ownership and a still-assembly ROM gate precede useful switch probes.
+- `func_8AC00FFC` / `func_8AC01064` — `tooling-blocked` under the genuine-C
+  constraints: current assembly confirms the retained shared-LUI trace-store
+  patterns and empty indentation loops described above. No new probes,
+  coalescing, or empty-loop C were installed for them.
+- `func_8AC00908`, `func_8AC033B8`, `func_8AC049A8` — `requeue`, not probed
+  in this box. They retain 312-, 379- and 1318-instruction assembly owners.
+  Next: inspect the bounded rectangle path in the first, then the texture
+  draw family in the second; retain the final large owner for a separate box.
+
+The final native verification forces recompilation of this source, including
+its host syntax check, and performs the complete US link and retail checksum.
+The resulting ROM again has MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All ten newly compiled owners have canonical `accepted` statistics. The
+worker retains `scratch/final-full-gate.log` and `scratch/final-provenance.json`
+with the sealed artifacts and detailed manifests for handoff.
+
+Parent integration retains existing semantic names and unifies the texture-state
+views already merged. New callback/panel names preserve original assembly
+entries through compatibility aliases. Complete normal/+20blank module controls
+preserve bytes, extents and relocation topology modulo those aliases.
+- `func_8AC01160` → `Fragment43_DrawDarkOverlayRect`.
+- `func_8AC0479C` → `Fragment43_GrowthRectCallback`.
+Growth state views are now used by the accepted callback. Its original
+vertical-overshoot write to X is preserved; no behavior fix is mixed in.
