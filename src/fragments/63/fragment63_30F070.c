@@ -145,7 +145,24 @@ s32 func_87E0BE78(void *arg0)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0BFFC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0C290.s")
+extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+void func_87E0C290(u8 *arg0, s32 selected) {
+    u8 *node;
+    s32 i;
+    u8 *object;
+
+    i = 0;
+    for (node = *(u8 **)(arg0 + 0x18); node != NULL; node = *(u8 **)(node + 4)) {
+        object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
+        if (i == selected) {
+            func_87F0B1A4(object + 0x14, node + 0x48, *(f32 *)(node + 0x48) - 160.0f, *(s32 *)(node + 0x4C),
+                          *(f32 *)(node + 0x50) + 200.0f, 15, 0x2000);
+            func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, -90.0f, 0.0f, 15, 0);
+        }
+        i++;
+    }
+}
 
 extern f32 D_87E1A3B4[];
 extern void func_87E0BB5C();
@@ -238,9 +255,9 @@ void func_87E0C5E4(s32 arg0) {
     func_87E0BFFC(arg0, -1, 0);
 }
 
-extern void func_87E0C290(void);
-void func_87E0C608(void) {
-    func_87E0C290();
+extern void func_87E0C290(u8 *, s32);
+void func_87E0C608(u8 *arg0, s32 arg1) {
+    func_87E0C290(arg0, arg1);
 }
 
 extern void func_87E0B7F4();
