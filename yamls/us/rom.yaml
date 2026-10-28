@@ -1422,6 +1422,7 @@
     - [0x310270, c,       fragments/63/fragment63_310270]
     - [0x312AE0, c,       fragments/63/fragment63_312AE0]
     - [0x315A90, c,       fragments/63/fragment63_315A90]
+    - [0x3166F0, c,       fragments/63/fragment63_3166F0]
     - [0x317060, c,       fragments/63/fragment63_317060]
     - [0x319010, c,       fragments/63/fragment63_319010]
     - [0x31BD80, c,       fragments/63/fragment63_31BD80]
@@ -1435,7 +1436,8 @@
     - [0x31F000, rodata]
     - [0x31F020, .rodata, fragments/63/fragment63_310270] # labels in this range are referenced only by this file
     - [0x31F050, .rodata, fragments/63/fragment63_312AE0] # labels in this range are referenced only by this file
-    - [0x31F150, rodata]
+    - [0x31F150, .rodata, fragments/63/fragment63_315A90] # jtbl_87E1B7E0..D_87E1B844 (D_87E1B848 pad)
+    - [0x31F1C0, .rodata, fragments/63/fragment63_3166F0] # D_87E1B850/D_87E1B854 (D_87E1B858 pad)
     - [0x31F1D0, .rodata, fragments/63/fragment63_317060] # jtbl_87E1B864..D_87E1B8C4 (D_87E1B8C8 pad): referenced only by this file
     - [0x31F240, .rodata, fragments/63/fragment63_319010] # string literals + jtbl_87E1B91C..D_87E1B978: referenced only by this file
     - [0x31F2F0, rodata]
