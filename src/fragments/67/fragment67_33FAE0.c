@@ -750,7 +750,35 @@ void func_82904D78(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82904E9C.s")
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromTransparent(s32);
+extern void func_82907188(void);
+extern void func_829043B4(u8 *);
+void func_82904E9C(u8 *arg0) {
+    s16 limit;
+    s32 hit;
+
+    limit = 0x50;
+    if (arg0[0x1070] == 5) {
+        limit = 0x78;
+    }
+    hit = limit == arg0[0x1072];
+    arg0[0x1072]++;
+    if (hit) {
+        *(s16 *)(arg0 + 0x1068) = 1;
+        arg0[0x1072] = 0xE;
+        if (arg0[0x1070] == 5) {
+            StageContext_SetClearColor(0xFFFF);
+        } else {
+            StageContext_SetClearColor(1);
+        }
+        StageFade_StartFromTransparent(0xC);
+    }
+    if (arg0[0x1072] >= limit / 3) {
+        func_82907188();
+    }
+    func_829043B4(arg0);
+}
 #endif
 
 #ifdef VERSION_US

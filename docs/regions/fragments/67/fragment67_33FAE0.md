@@ -63,3 +63,12 @@ matched C, section layout, and CI remain unchanged.
   ends the `sll`/`addu`/`sll` chain in a different temp. The caller
   `func_8290379C` used to call it with no arguments and rely on `a0` still
   holding its own `arg0`; it now passes `arg0` explicitly (same bytes).
+
+## 2026-10-28 — `func_82904E9C` matched (intro countdown fade)
+
+The limit is 0x78 in mode 5 (`arg0[0x1070]`), else 0x50. Save
+`hit = limit == arg0[0x1072]` *before* incrementing the counter (retail's
+`xor`/`sltiu` boolean). On a hit: set the s16 at 0x1068 to 1, reset the
+counter to 0xE, set the clear color (0xFFFF in mode 5, else 1) and start a
+0xC fade. Then call `func_82907188()` once the counter reaches `limit / 3`,
+and always call `func_829043B4(arg0)`. It matched on the first probe.
