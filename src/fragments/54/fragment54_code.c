@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -593,7 +594,156 @@ s32 func_86604954(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86605098.s")
+extern s32 D_86606738;
+extern s32 D_86606720;
+extern s32 D_866066EC;
+extern s32 D_86606724;
+extern s32 D_8660722C;
+extern f32 D_86606750;
+extern s32 D_86606748;
+extern s32 D_866066F0;
+extern s32 D_86606728;
+extern u8 D_86606788;
+void func_86605098(void) {
+    if (D_86606738 == 0) {
+        if (D_80087200->buttonsPressed & 0x400) {
+            *(s32 *)(&D_86606788 + 8) += 1;
+            if (*(s32 *)(&D_86606788 + 8) > 10) {
+                *(s32 *)(&D_86606788 + 8) = 10;
+            }
+            if (*(s32 *)(&D_86606788 + 8) == 9 && (D_80087200->buttonsHeld & 0x8000)) {
+                D_86606738 = 1;
+            }
+        } else if (D_80087200->buttonsPressed & 0x800) {
+            *(s32 *)(&D_86606788 + 8) -= 1;
+            if (*(s32 *)(&D_86606788 + 8) < 1) {
+                *(s32 *)(&D_86606788 + 8) = 1;
+            }
+        } else if ((D_80087200->buttonsPressed & 0x100) || (D_80087200->buttonsHeld & 1)) {
+            switch (*(s32 *)(&D_86606788 + 8)) {
+            case 1:
+                D_86606720++;
+                break;
+            case 2:
+                D_866066F0++;
+                if (D_866066F0 > 2) {
+                    D_866066F0 = 2;
+                }
+                break;
+            case 3:
+                D_866066EC = 1 - D_866066EC;
+                break;
+            case 4:
+                D_86606724++;
+                if (D_86606724 > D_8660722C) {
+                    D_86606724 = D_8660722C;
+                }
+                break;
+            case 5:
+                D_86606728++;
+                break;
+            case 6:
+                D_8660722C += 10;
+                break;
+            case 7:
+                D_86606750 += 0.01;
+                break;
+            case 8:
+                D_86606748 = 0;
+                break;
+            }
+        } else if ((D_80087200->buttonsPressed & 0x200) || (D_80087200->buttonsHeld & 2)) {
+            switch (*(s32 *)(&D_86606788 + 8)) {
+            case 1:
+                D_86606720--;
+                if (D_86606720 < 5) {
+                    D_86606720 = 5;
+                }
+                break;
+            case 2:
+                D_866066F0--;
+                if (D_866066F0 < 0) {
+                    D_866066F0 = 0;
+                }
+                break;
+            case 3:
+                D_866066EC = 1 - D_866066EC;
+                break;
+            case 4:
+                D_86606724--;
+                if (D_86606724 < 0) {
+                    D_86606724 = 0;
+                }
+                break;
+            case 5:
+                D_86606728--;
+                if (D_86606728 < 0) {
+                    D_86606728 = 0;
+                }
+                break;
+            case 6:
+                D_8660722C -= 10;
+                if (D_8660722C < 40) {
+                    D_8660722C = 40;
+                }
+                break;
+            case 7:
+                D_86606750 -= 0.01;
+                if (D_86606750 <= 0.1) {
+                    D_86606750 = 0.1f;
+                }
+                break;
+            case 8:
+                D_86606748 = 1;
+                break;
+            }
+        }
+    } else if (*(s32 *)(&D_86606788 + 8) == 9 && D_86606738 > 0) {
+        if (D_80087200->buttonsPressed & 0x8000) {
+            D_86606738++;
+            if (D_86606738 >= 3) {
+                D_86606738 = 0;
+            }
+        }
+        if (D_80087200->buttonsHeld & 0x800) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x20) += 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x2C) += 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 0x400) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x20) -= 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x2C) -= 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 0x100) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x1C) += 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x28) += 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 0x200) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x1C) -= 10.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x28) -= 10.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 8) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x24) += 50.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x30) += 50.0f;
+            }
+        } else if (D_80087200->buttonsHeld & 4) {
+            if (D_86606738 == 1) {
+                *(f32 *)(&D_86606788 + 0x24) -= 50.0f;
+            } else {
+                *(f32 *)(&D_86606788 + 0x30) -= 50.0f;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
