@@ -7,7 +7,30 @@ void func_83F00020(void) {
     D_83F003F0 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/15/fragment15_code/func_83F0002C.s")
+extern Gfx *D_800D0510;
+extern void GfxImage_FillCurrent(void *, u16);
+extern void func_800088DC(void);
+extern void func_80008648(void);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+void func_83F0002C(void) {
+    u16 *image = (u16 *)func_8004C990(0xED, 0);
+
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 1);
+    if (image != NULL) {
+        s32 x = (640 - image[0]) / 2;
+        s32 y = (480 - image[1]) / 2;
+
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+        func_8004D19C(x, y, (s32)image, 0, 0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+    func_80008648();
+}
 
 extern OSTime D_83F00400;
 
