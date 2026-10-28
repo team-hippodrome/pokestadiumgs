@@ -592,12 +592,11 @@ void func_8820ECE8(u8 arg0, u8 *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17F280/func_8820ED44.s")
 
 extern void func_800495F8(s32, s32, s32, void *, s32);
-extern u8 D_88233F50[];
 extern void *func_88A00938(u8 *);
 void func_8820F74C(s16 arg0, s16 arg1, u8 *arg2, u8 arg3) {
     if (func_88202158(arg2, 1) == 0) {
         func_800496A4(4, 1);
-        func_800495F8((s32)arg0 + 0xD3, (s32)arg1 + 4, 2, D_88233F50, (s32)arg3);
+        func_800495F8((s32)arg0 + 0xD3, (s32)arg1 + 4, 2, "%d", (s32)arg3);
     }
     func_800496A4(8, 2);
     func_80048E30(D_8800687C, arg0, arg1, func_88A00938(arg2), 1);
@@ -605,7 +604,6 @@ void func_8820F74C(s16 arg0, s16 arg1, u8 *arg2, u8 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17F280/func_8820F7EC.s")
 
-extern char D_88233F54[];
 extern s32 func_8005CAA4(s32);
 extern s32 func_80053230(s32);
 extern void func_8004D5B8(s32, s32, s32, const char*, ...);
@@ -628,7 +626,7 @@ void func_8820FC78(u8 slot) {
         limit = func_80053230(0x12);
         break;
     }
-    func_8004D5B8(x, 341, 2, D_88233F54,
+    func_8004D5B8(x, 341, 2, "%d/%d",
                  func_88A007BC(*(s32*)((u8*)D_88234710 + slot * 4 + 12)), limit);
 }
 

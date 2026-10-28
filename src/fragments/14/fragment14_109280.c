@@ -42,14 +42,6 @@ void func_81311A9C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311AAC.s")
 
-/* Tail (last 2 entries) of the jump table used by the still-GLOBAL_ASM
- * func_81311AAC's own switch, immediately above. Not referenced from C: it
- * exists only so this file's own .rodata subsegment starts at a
- * 16-byte-aligned ROM address (0x81312A10) while still landing
- * func_81311B98's own jump table (jtbl_81312A18) at its real retail
- * address right below. */
-const u32 D_81312A10[2] = {0x81311B14, 0x81311B24};
-
 extern void func_813110F0(u8 *arg0, void *arg1, s32 arg2, s32 arg3);
 void func_81311B98(u8 *arg0, void *arg1, s32 arg2, s32 arg3) {
     s32 sp20 = arg2;

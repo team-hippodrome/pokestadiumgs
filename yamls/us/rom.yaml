@@ -665,8 +665,7 @@
     - [0x10A7D0, .rodata, fragments/14/fragment14_FF070] # jtbl_81312648, jtbl_81312680 (+2 more)
     - [0x10A8C0, .rodata, fragments/14/fragment14_104FC0] # D_81312730 through jtbl_8131285C
     - [0x10AA10, .rodata, fragments/14/fragment14_1077C0] # D_81312880 (the three command lists D_813120E0's records point at) through D_813129F0's padding
-    - [0x10AB90, rodata]
-    - [0x10ABA0, .rodata, fragments/14/fragment14_109280] # D_81312A10 (jtbl_81311AAC tail) + jtbl_81312A18 + jtbl_81312A2C, 16-byte aligned
+    - [0x10AB90, .rodata, fragments/14/fragment14_109280] # D_81312A00 + jtbl_81312A04 + D_81312A10 (jtbl_81311AAC tail) + jtbl_81312A18 + jtbl_81312A2C, 16-byte aligned
     - [0x10ABD0, rodata]
 
   - name: fragment15
@@ -913,6 +912,7 @@
     - [0x17F280, c,       fragments/31/fragment31_17F280]
     - [0x183700, c,       fragments/31/fragment31_183700]
     - [0x186690, c,       fragments/31/fragment31_186690]
+    - [0x189760, c,       fragments/31/fragment31_189760]
     - [0x18F6D0, c,       fragments/31/fragment31_18F6D0]
     - [0x1900C0, c,       fragments/31/fragment31_1900C0]
     - [0x190BB0, c,       fragments/31/fragment31_190BB0]
@@ -952,14 +952,28 @@
     - [0x1A6E00, .rodata, fragments/31/fragment31_1736F0] # jtbl_88233B80
     - [0x1A6E60, .rodata, fragments/31/fragment31_175260] # D_88233BE0..BF8 constants and jtbl_88233C00/C14/D3C/D50, all referenced only by this file
     - [0x1A6FF0, rodata]
+    - [0x1A7090, .rodata, fragments/31/fragment31_177430] # labels in this range are referenced only by this file
     - [0x1A7120, .rodata, fragments/31/fragment31_17B150] # Strings, jump tables.
-    - [0x1A71D0, rodata]
+    - [0x1A71D0, .rodata, fragments/31/fragment31_17F280] # labels in this range are referenced only by this file
+    - [0x1A71E0, .rodata, fragments/31/fragment31_183700] # labels in this range are referenced only by this file
+    - [0x1A7200, .rodata, fragments/31/fragment31_186690] # strings + jtbl_88233F90..jtbl_88233FD4
+    - [0x1A7270, .rodata, fragments/31/fragment31_189760] # strings + floats + jtbl_88234014..: a second object (strings after the previous object's jump tables)
     - [0x1A7350, .rodata, fragments/31/fragment31_18F6D0] # Jump tables.
     - [0x1A73D0, rodata]
     - [0x1A7420, .rodata, fragments/31/fragment31_190BB0] # jtbl_882341A0, 16-byte aligned start; ends mid jtbl_882341B8
     - [0x1A7440, rodata]
     - [0x1A7590, .rodata, fragments/31/fragment31_194450] # Jump tables.
-    - [0x1A75C0, rodata]
+    - [0x1A75C0, .rodata, fragments/31/fragment31_194C30] # labels in this range are referenced only by this file
+    - [0x1A7610, .rodata, fragments/31/fragment31_195910] # labels in this range are referenced only by this file
+    - [0x1A7620, .rodata, fragments/31/fragment31_1965A0] # labels in this range are referenced only by this file
+    - [0x1A7630, .rodata, fragments/31/fragment31_197640] # labels in this range are referenced only by this file
+    - [0x1A7660, .rodata, fragments/31/fragment31_19C390] # labels in this range are referenced only by this file
+    - [0x1A76A0, rodata]
+    - [0x1A7780, .rodata, fragments/31/fragment31_19E800] # labels in this range are referenced only by this file
+    - [0x1A77B0, .rodata, fragments/31/fragment31_19F570] # labels in this range are referenced only by this file
+    - [0x1A77C0, rodata]
+    - [0x1A77D0, .rodata, fragments/31/fragment31_1A1BD0] # labels in this range are referenced only by this file
+    - [0x1A77E0, rodata]
 
   - name: fragment32
     type: code
@@ -1002,7 +1016,8 @@
     - [0x1CA690, data,    fragments/34/fragment34_data]
     - [0x1CA9C0, .rodata, fragments/34/fragment34_1BD630] # Jump tables, float literals.
     - [0x1CAA60, .rodata, fragments/34/fragment34_1BE300] # Strings, jump tables, float literals.
-    - [0x1CAA90, rodata]
+    - [0x1CAA90, .rodata, fragments/34/fragment34_1C1BC0] # strings, jump tables, float literals: referenced only by this file
+    - [0x1CAB20, .rodata, fragments/34/fragment34_1C3FA0] # strings: referenced only by this file
     - [0x1CAB40, .rodata, fragments/34/fragment34_1C5AA0] # Debug string, light/sequence jump tables and their float constants. Extended to 0x1CAB40-0x1CAC80: jump tables.
     - [0x1CAC80, rodata, fragments/34/fragment34_tail]
 
@@ -1150,6 +1165,8 @@
     - [0x214630, data,    fragments/44/fragment44_data]
     - [0x2169D0, .rodata, fragments/44/fragment44_1EE290] # Strings, jump tables.
     - [0x216BB0, rodata]
+    - [0x217300, .rodata, fragments/44/fragment44_1F5F20] # labels in this range are referenced only by this file
+    - [0x217360, rodata]
     - [0x217840, .rodata, fragments/44/fragment44_1FD260]
     - [0x217930, rodata,  fragments/44/fragment44_rodata_tail]
     - [0x2186F0, .rodata, fragments/44/fragment44_212740] # Strings, jump tables, float literals.
@@ -1422,6 +1439,7 @@
     - [0x310270, c,       fragments/63/fragment63_310270]
     - [0x312AE0, c,       fragments/63/fragment63_312AE0]
     - [0x315A90, c,       fragments/63/fragment63_315A90]
+    - [0x3166F0, c,       fragments/63/fragment63_3166F0]
     - [0x317060, c,       fragments/63/fragment63_317060]
     - [0x319010, c,       fragments/63/fragment63_319010]
     - [0x31BD80, c,       fragments/63/fragment63_31BD80]
@@ -1435,7 +1453,8 @@
     - [0x31F000, rodata]
     - [0x31F020, .rodata, fragments/63/fragment63_310270] # labels in this range are referenced only by this file
     - [0x31F050, .rodata, fragments/63/fragment63_312AE0] # labels in this range are referenced only by this file
-    - [0x31F150, rodata]
+    - [0x31F150, .rodata, fragments/63/fragment63_315A90] # jtbl_87E1B7E0..D_87E1B844 (D_87E1B848 pad)
+    - [0x31F1C0, .rodata, fragments/63/fragment63_3166F0] # D_87E1B850/D_87E1B854 (D_87E1B858 pad)
     - [0x31F1D0, .rodata, fragments/63/fragment63_317060] # jtbl_87E1B864..D_87E1B8C4 (D_87E1B8C8 pad): referenced only by this file
     - [0x31F240, .rodata, fragments/63/fragment63_319010] # string literals + jtbl_87E1B91C..D_87E1B978: referenced only by this file
     - [0x31F2F0, rodata]
@@ -1708,6 +1727,7 @@
     - [0x3D9A00, data,    fragments/79/fragment79_data]
     - [0x3F83E0, .rodata, fragments/79/fragment79_36F8B0] # Jump tables, float literals.
     - [0x3F8480, rodata]
+    - [0x3F84C0, .rodata, fragments/79/fragment79_3749B0] # labels in this range are referenced only by this file
     - [0x3F84E0, .rodata, fragments/79/fragment79_375530] # Jump tables, float literals.
     - [0x3F8530, .rodata, fragments/79/fragment79_377570] # jtbl_84188CA0, jtbl_84188D08, jtbl_84188D74 (func_841083B0's switches)
     - [0x3F86B0, rodata]
@@ -1723,6 +1743,8 @@
     - [0x3FAA60, .rodata, fragments/79/fragment79_3ADCA0] # jtbl_8418B1D0 (+13 more, incl. jtbl_8418B738/jtbl_8418B74C)
     - [0x3FB010, .rodata, fragments/79/fragment79_3B7EA0] # Strings, jump tables, double literals.
     - [0x3FB230, rodata]
+    - [0x3FB2A0, .rodata, fragments/79/fragment79_3B9B80] # labels in this range are referenced only by this file
+    - [0x3FB2B0, .rodata, fragments/79/fragment79_3BC290] # labels in this range are referenced only by this file
     - [0x3FB760, .rodata, fragments/79/fragment79_3BEAF0] # labels in this range are referenced only by this file
     - [0x3FB9D0, .rodata, fragments/79/fragment79_3BF4C0] # Scoring constants and all three jump tables,720 bytes.
     - [0x3FBCA0, .rodata, fragments/79/fragment79_3C50B0] # Both selected-state jump tables,176 bytes.
