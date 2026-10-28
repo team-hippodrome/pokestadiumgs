@@ -477,7 +477,8 @@ extern void AudioLayer_PrepareNote(AudioLayerPreparePrefix *);
 extern s32 func_8001CF5C(void *);
 extern s32 func_8001DA54();
 extern s32 func_8001D340(void *, s32);
-extern s32 func_8001CE70(void *, s32);
+struct SequenceLayer;
+extern s32 func_8001CE70(struct SequenceLayer *, s32);
 typedef struct { u32 enabled:1; u32 finished:1; u32 stop:1; u32 continuous_notes:1; u32 low:28; } AudioLayerUpdateWordFlags;
 typedef struct { AudioLayerUpdateWordFlags flags; u8 unknown04[22]; s16 delay; s16 gate; u8 unknown1E[30]; void *note; } AudioLayerUpdatePrefix;
 void AudioLayer_UpdateScript(AudioLayerUpdatePrefix *layer) {
@@ -498,7 +499,7 @@ void AudioLayer_UpdateScript(AudioLayerUpdatePrefix *layer) {
                 command = func_8001DA54(layer, command);
             } while (command == -1 && layer->delay == 0);
             if (command != -1) { command = func_8001D340(layer, command); }
-            if (command != -1) { func_8001CE70(layer, command); }
+            if (command != -1) { func_8001CE70((struct SequenceLayer *)layer, command); }
             if (layer->flags.stop == 1 && (layer->note != NULL || layer->flags.continuous_notes != 0)) {
                 func_8001A994(layer);
             }
@@ -523,19 +524,210 @@ void AudioLayer_PrepareNote(AudioLayerPreparePrefix *layer) {
     ((LayerLowFlags *)layer)->bit0 = 1;
 }
 
+// Sequence player, channel and layer records, laid out like Majora's Mask
+// SequencePlayer, SequenceChannel and SequenceLayer (include/audio/seqplayer.h),
+// except that GS's channel has two more bytes at 0x12 and six layers
+// (func_8001C404 and func_8001C794 use the shifted offsets and the layer count).
+// The players are the 0x160-byte records at D_8011BE90 + 0x346C that
+// Audio_UpdateSequencesAndNotes steps. Only the members that the script
+// interpreters below use are typed; pointers to notes, instruments and samples
+// are left as u8 *.
 typedef struct {
+    /* 0x0 */ u16 vibratoRateStart;
+    /* 0x2 */ u16 vibratoDepthStart;
+    /* 0x4 */ u16 vibratoRateTarget;
+    /* 0x6 */ u16 vibratoDepthTarget;
+    /* 0x8 */ u16 vibratoRateChangeDelay;
+    /* 0xA */ u16 vibratoDepthChangeDelay;
+    /* 0xC */ u16 vibratoDelay;
+} VibratoSubStruct; // size = 0xE
+
+typedef struct {
+    /* 0x0 */ u8 decayIndex;
+    /* 0x1 */ u8 sustain;
+    /* 0x4 */ u8 *envelope;
+} AdsrSettings; // size = 0x8
+
+typedef struct {
+    /* 0x0 */ u8 mode;
+    /* 0x2 */ u16 cur;
+    /* 0x4 */ u16 speed;
+    /* 0x8 */ f32 extent;
+} Portamento; // size = 0xC
+
+typedef struct AudioListItem {
+    /* 0x0 */ struct AudioListItem *prev;
+    /* 0x4 */ struct AudioListItem *next;
+    /* 0x8 */ void *value;
+    /* 0xC */ void *pool;
+} AudioListItem; // size = 0x10
+
+typedef struct {
+    /* 0x00 */ AudioListItem disabled;
+    /* 0x10 */ AudioListItem decaying;
+    /* 0x20 */ AudioListItem releasing;
+    /* 0x30 */ AudioListItem active;
+} NotePool; // size = 0x40
+
+typedef union {
+    struct {
+        u8 unused : 2;
+        u8 type : 2;
+        u8 strongRight : 1;
+        u8 strongLeft : 1;
+        u8 strongReverbRight : 1;
+        u8 strongReverbLeft : 1;
+    } s;
+    u8 asByte;
+} StereoData; // size = 0x1
+
+typedef struct SequencePlayer {
+    /* 0x000 */ u8 enabled : 1;
+    /* 0x000 */ u8 finished : 1;
+    /* 0x000 */ u8 muted : 1;
+    /* 0x000 */ u8 seqDmaInProgress : 1;
+    /* 0x000 */ u8 fontDmaInProgress : 1;
+    /* 0x000 */ u8 recalculateVolume : 1;
+    /* 0x000 */ u8 stopScript : 1;
+    /* 0x000 */ u8 applyBend : 1;
+    /* 0x001 */ u8 state;
+    /* 0x002 */ u8 noteAllocPolicy;
+    /* 0x003 */ u8 muteFlags;
+    /* 0x004 */ u8 seqId;
+    /* 0x005 */ u8 defaultFont;
+    /* 0x006 */ u8 unk_06[1];
+    /* 0x007 */ s8 playerIndex;
+    /* 0x008 */ u16 tempo;
+    /* 0x00A */ u16 tempoAcc;
+    /* 0x00C */ s16 tempoChange;
+    /* 0x00E */ s16 transposition;
+    /* 0x010 */ u16 delay;
+    /* 0x012 */ u16 fadeTimer;
+    /* 0x014 */ u16 storedFadeTimer;
+    /* 0x016 */ u16 unk_16;
+    /* 0x018 */ u8 *seqData;
+    /* 0x01C */ f32 fadeVolume;
+    /* 0x020 */ f32 fadeVelocity;
+    /* 0x024 */ f32 volume;
+    /* 0x028 */ f32 muteVolumeScale;
+    /* 0x02C */ f32 fadeVolumeScale;
+    /* 0x030 */ f32 appliedFadeVolume;
+    /* 0x034 */ f32 bend;
+    /* 0x038 */ struct SequenceChannel *channels[16];
+    /* 0x078 */ AudioScriptState scriptState;
+    /* 0x094 */ u8 *shortNoteVelocityTable;
+    /* 0x098 */ u8 *shortNoteGateTimeTable;
+    /* 0x09C */ NotePool notePool;
+    /* 0x0DC */ s32 skipTicks;
+    /* 0x0E0 */ u32 scriptCounter;
+    /* 0x0E4 */ u8 unk_E4[0x74];
+    /* 0x158 */ s8 seqScriptIO[8];
+} SequencePlayer; // size = 0x160
+
+typedef struct SequenceChannel {
+    /* 0x00 */ u8 enabled : 1;
+    /* 0x00 */ u8 finished : 1;
+    /* 0x00 */ u8 stopScript : 1;
+    /* 0x00 */ u8 muted : 1;
+    /* 0x00 */ u8 hasInstrument : 1;
+    /* 0x00 */ u8 stereoHeadsetEffects : 1;
+    /* 0x00 */ u8 largeNotes : 1;
+    /* 0x00 */ u8 unused : 1;
+    union {
+        struct {
+            /* 0x01 */ u8 freqScale : 1;
+            /* 0x01 */ u8 volume : 1;
+            /* 0x01 */ u8 pan : 1;
+        } s;
+        /* 0x01 */ u8 asByte;
+    } changes;
+    /* 0x02 */ u8 noteAllocPolicy;
+    /* 0x03 */ u8 muteFlags;
+    /* 0x04 */ u8 targetReverbVol;
+    /* 0x05 */ u8 notePriority;
+    /* 0x06 */ u8 someOtherPriority;
+    /* 0x07 */ u8 fontId;
+    /* 0x08 */ u8 reverbIndex;
+    /* 0x09 */ u8 bookOffset;
+    /* 0x0A */ u8 newPan;
+    /* 0x0B */ u8 panChannelWeight;
+    /* 0x0C */ u8 gain;
+    /* 0x0D */ u8 velocityRandomVariance;
+    /* 0x0E */ u8 gateTimeRandomVariance;
+    /* 0x0F */ u8 combFilterSize;
+    /* 0x10 */ u8 surroundEffectIndex;
+    /* 0x11 */ u8 channelIndex;
+    /* 0x12 */ u8 unk_12[2];
+    /* 0x14 */ VibratoSubStruct vibrato;
+    /* 0x22 */ u16 delay;
+    /* 0x24 */ u16 combFilterGain;
+    /* 0x26 */ u16 unk_22;
+    /* 0x28 */ s16 instOrWave;
+    /* 0x2A */ s16 transposition;
+    /* 0x2C */ f32 volumeScale;
+    /* 0x30 */ f32 volume;
+    /* 0x34 */ s32 pan;
+    /* 0x38 */ f32 appliedVolume;
+    /* 0x3C */ f32 freqScale;
+    /* 0x40 */ u8 (*dynTable)[][2];
+    /* 0x44 */ u8 *noteUnused;
+    /* 0x48 */ struct SequenceLayer *layerUnused;
+    /* 0x4C */ u8 *instrument;
+    /* 0x50 */ SequencePlayer *seqPlayer;
+    /* 0x54 */ struct SequenceLayer *layers[6];
+    /* 0x6C */ AudioScriptState scriptState;
+    /* 0x88 */ AdsrSettings adsr;
+    /* 0x90 */ NotePool notePool;
+    /* 0xD0 */ s8 seqScriptIO[8];
+    /* 0xD8 */ u8 *sfxState;
+    /* 0xDC */ s16 *filter;
+    /* 0xE0 */ StereoData stereoData;
+    /* 0xE4 */ s32 startSamplePos;
+    /* 0xE8 */ s32 unk_E0;
+} SequenceChannel; // size = 0xEC
+
+typedef struct SequenceLayer {
     /* 0x00 */ u32 enabled : 1;
     /* 0x00 */ u32 finished : 1;
-    /* 0x00 */ u32 stopSomething : 1;
+    /* 0x00 */ u32 muted : 1;
     /* 0x00 */ u32 continuousNotes : 1;
     /* 0x00 */ u32 bit3 : 1;
     /* 0x00 */ u32 ignoreDrumPan : 1;
     /* 0x00 */ u32 bit1 : 1;
     /* 0x00 */ u32 notePropertiesNeedInit : 1;
-    /* 0x01 */ u32 unk_01 : 24;
-    /* 0x04 */ u8 unk_04[0x38];
+    /* 0x01 */ StereoData stereoData;
+    /* 0x02 */ u8 instOrWave;
+    /* 0x03 */ u8 gateTime;
+    /* 0x04 */ u8 semitone;
+    /* 0x05 */ u8 portamentoTargetNote;
+    /* 0x06 */ u8 pan;
+    /* 0x07 */ u8 notePan;
+    /* 0x08 */ u8 surroundEffectIndex;
+    /* 0x09 */ u8 targetReverbVol;
+    /* 0x0A */ u16 unk_0A;
+    /* 0x0C */ VibratoSubStruct vibrato;
+    /* 0x1A */ s16 delay;
+    /* 0x1C */ s16 gateDelay;
+    /* 0x1E */ s16 delay2;
+    /* 0x20 */ u16 portamentoTime;
+    /* 0x22 */ s16 transposition;
+    /* 0x24 */ s16 shortNoteDefaultDelay;
+    /* 0x26 */ s16 lastDelay;
+    /* 0x28 */ AdsrSettings adsr;
+    /* 0x30 */ Portamento portamento;
     /* 0x3C */ u8 *note;
-} AudioLayerStep5View;
+    /* 0x40 */ f32 freqScale;
+    /* 0x44 */ f32 bend;
+    /* 0x48 */ f32 velocitySquare2;
+    /* 0x4C */ f32 velocitySquare;
+    /* 0x50 */ f32 noteVelocity;
+    /* 0x54 */ f32 noteFreqScale;
+    /* 0x58 */ u8 *instrument;
+    /* 0x5C */ u8 *tunedSample;
+    /* 0x60 */ SequenceChannel *channel;
+    /* 0x64 */ AudioScriptState scriptState;
+    /* 0x80 */ AudioListItem listItem;
+} SequenceLayer; // size = 0x90
 
 extern void *AudioVoice_AcquireForRequest(u8 *request);
 extern void AudioVibrato_Init(void *);
@@ -543,28 +735,28 @@ extern void func_8001BDF0(u8 *);
 
 // Same code as Ocarina of Time AudioSeq_SeqLayerProcessScriptStep5 (src/code/audio_seqplayer.c),
 // without the synthetic-wave reinit. A note's parent layer is at note + 0x44.
-s32 func_8001CE70(void *arg0, s32 sameSound) {
+s32 func_8001CE70(SequenceLayer *layer, s32 sameSound) {
     u8 *note;
 
-    if ((((AudioLayerStep5View *)arg0)->continuousNotes == 1) && (((AudioLayerStep5View *)arg0)->bit1 == 1)) {
+    if ((layer->continuousNotes == 1) && (layer->bit1 == 1)) {
         return 0;
     }
 
-    if ((((AudioLayerStep5View *)arg0)->continuousNotes == 1) && (((AudioLayerStep5View *)arg0)->note != NULL) && ((AudioLayerStep5View *)arg0)->bit3 && (sameSound == 1U) &&
-        (*(void **)(((AudioLayerStep5View *)arg0)->note + 0x44) == arg0)) {
+    if ((layer->continuousNotes == 1) && (layer->note != NULL) && layer->bit3 && (sameSound == 1U) &&
+        (*(void **)(layer->note + 0x44) == layer)) {
         // OoT reinitializes a synthetic wave here; GS has no such call.
     } else {
         if (sameSound == 0) {
-            func_8001A994(arg0);
+            func_8001A994(layer);
         }
-        ((AudioLayerStep5View *)arg0)->note = AudioVoice_AcquireForRequest((u8 *)arg0);
-        if ((((AudioLayerStep5View *)arg0)->note != NULL) && (*(void **)(((AudioLayerStep5View *)arg0)->note + 0x44) == arg0)) {
-            AudioVibrato_Init(((AudioLayerStep5View *)arg0)->note);
+        layer->note = AudioVoice_AcquireForRequest((u8 *)layer);
+        if ((layer->note != NULL) && (*(void **)(layer->note + 0x44) == layer)) {
+            AudioVibrato_Init(layer->note);
         }
     }
 
-    if ((((AudioLayerStep5View *)arg0)->note != NULL) && (*(void **)(((AudioLayerStep5View *)arg0)->note + 0x44) == arg0)) {
-        note = ((AudioLayerStep5View *)arg0)->note;
+    if ((layer->note != NULL) && (*(void **)(layer->note + 0x44) == layer)) {
+        note = layer->note;
         func_8001BDF0(note);
     }
     return 0;
@@ -740,210 +932,6 @@ s32 func_8001CF5C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001D340.s")
 
-// Sequence player, channel and layer records, laid out like Majora's Mask
-// SequencePlayer, SequenceChannel and SequenceLayer (include/audio/seqplayer.h),
-// except that GS's channel has two more bytes at 0x12 and six layers
-// (func_8001C404 and func_8001C794 use the shifted offsets and the layer count).
-// The players are the 0x160-byte records at D_8011BE90 + 0x346C that
-// Audio_UpdateSequencesAndNotes steps. Only the members that the script
-// interpreters below use are typed; pointers to notes, instruments and samples
-// are left as u8 *.
-typedef struct {
-    /* 0x0 */ u16 vibratoRateStart;
-    /* 0x2 */ u16 vibratoDepthStart;
-    /* 0x4 */ u16 vibratoRateTarget;
-    /* 0x6 */ u16 vibratoDepthTarget;
-    /* 0x8 */ u16 vibratoRateChangeDelay;
-    /* 0xA */ u16 vibratoDepthChangeDelay;
-    /* 0xC */ u16 vibratoDelay;
-} VibratoSubStruct; // size = 0xE
-
-typedef struct {
-    /* 0x0 */ u8 decayIndex;
-    /* 0x1 */ u8 sustain;
-    /* 0x4 */ u8 *envelope;
-} AdsrSettings; // size = 0x8
-
-typedef struct {
-    /* 0x0 */ u8 mode;
-    /* 0x2 */ u16 cur;
-    /* 0x4 */ u16 speed;
-    /* 0x8 */ f32 extent;
-} Portamento; // size = 0xC
-
-typedef struct AudioListItem {
-    /* 0x0 */ struct AudioListItem *prev;
-    /* 0x4 */ struct AudioListItem *next;
-    /* 0x8 */ void *value;
-    /* 0xC */ void *pool;
-} AudioListItem; // size = 0x10
-
-typedef struct {
-    /* 0x00 */ AudioListItem disabled;
-    /* 0x10 */ AudioListItem decaying;
-    /* 0x20 */ AudioListItem releasing;
-    /* 0x30 */ AudioListItem active;
-} NotePool; // size = 0x40
-
-typedef union {
-    struct {
-        u8 unused : 2;
-        u8 type : 2;
-        u8 strongRight : 1;
-        u8 strongLeft : 1;
-        u8 strongReverbRight : 1;
-        u8 strongReverbLeft : 1;
-    } s;
-    u8 asByte;
-} StereoData; // size = 0x1
-
-typedef struct SequencePlayer {
-    /* 0x000 */ u8 enabled : 1;
-    /* 0x000 */ u8 finished : 1;
-    /* 0x000 */ u8 muted : 1;
-    /* 0x000 */ u8 seqDmaInProgress : 1;
-    /* 0x000 */ u8 fontDmaInProgress : 1;
-    /* 0x000 */ u8 recalculateVolume : 1;
-    /* 0x000 */ u8 stopScript : 1;
-    /* 0x000 */ u8 applyBend : 1;
-    /* 0x001 */ u8 state;
-    /* 0x002 */ u8 noteAllocPolicy;
-    /* 0x003 */ u8 muteFlags;
-    /* 0x004 */ u8 seqId;
-    /* 0x005 */ u8 defaultFont;
-    /* 0x006 */ u8 unk_06[1];
-    /* 0x007 */ s8 playerIndex;
-    /* 0x008 */ u16 tempo;
-    /* 0x00A */ u16 tempoAcc;
-    /* 0x00C */ s16 tempoChange;
-    /* 0x00E */ s16 transposition;
-    /* 0x010 */ u16 delay;
-    /* 0x012 */ u16 fadeTimer;
-    /* 0x014 */ u16 storedFadeTimer;
-    /* 0x016 */ u16 unk_16;
-    /* 0x018 */ u8 *seqData;
-    /* 0x01C */ f32 fadeVolume;
-    /* 0x020 */ f32 fadeVelocity;
-    /* 0x024 */ f32 volume;
-    /* 0x028 */ f32 muteVolumeScale;
-    /* 0x02C */ f32 fadeVolumeScale;
-    /* 0x030 */ f32 appliedFadeVolume;
-    /* 0x034 */ f32 bend;
-    /* 0x038 */ struct SequenceChannel *channels[16];
-    /* 0x078 */ AudioScriptState scriptState;
-    /* 0x094 */ u8 *shortNoteVelocityTable;
-    /* 0x098 */ u8 *shortNoteGateTimeTable;
-    /* 0x09C */ NotePool notePool;
-    /* 0x0DC */ s32 skipTicks;
-    /* 0x0E0 */ u32 scriptCounter;
-    /* 0x0E4 */ u8 unk_E4[0x74];
-    /* 0x158 */ s8 seqScriptIO[8];
-} SequencePlayer; // size = 0x160
-
-typedef struct SequenceChannel {
-    /* 0x00 */ u8 enabled : 1;
-    /* 0x00 */ u8 finished : 1;
-    /* 0x00 */ u8 stopScript : 1;
-    /* 0x00 */ u8 muted : 1;
-    /* 0x00 */ u8 hasInstrument : 1;
-    /* 0x00 */ u8 stereoHeadsetEffects : 1;
-    /* 0x00 */ u8 largeNotes : 1;
-    /* 0x00 */ u8 unused : 1;
-    union {
-        struct {
-            /* 0x01 */ u8 freqScale : 1;
-            /* 0x01 */ u8 volume : 1;
-            /* 0x01 */ u8 pan : 1;
-        } s;
-        /* 0x01 */ u8 asByte;
-    } changes;
-    /* 0x02 */ u8 noteAllocPolicy;
-    /* 0x03 */ u8 muteFlags;
-    /* 0x04 */ u8 targetReverbVol;
-    /* 0x05 */ u8 notePriority;
-    /* 0x06 */ u8 someOtherPriority;
-    /* 0x07 */ u8 fontId;
-    /* 0x08 */ u8 reverbIndex;
-    /* 0x09 */ u8 bookOffset;
-    /* 0x0A */ u8 newPan;
-    /* 0x0B */ u8 panChannelWeight;
-    /* 0x0C */ u8 gain;
-    /* 0x0D */ u8 velocityRandomVariance;
-    /* 0x0E */ u8 gateTimeRandomVariance;
-    /* 0x0F */ u8 combFilterSize;
-    /* 0x10 */ u8 surroundEffectIndex;
-    /* 0x11 */ u8 channelIndex;
-    /* 0x12 */ u8 unk_12[2];
-    /* 0x14 */ VibratoSubStruct vibrato;
-    /* 0x22 */ u16 delay;
-    /* 0x24 */ u16 combFilterGain;
-    /* 0x26 */ u16 unk_22;
-    /* 0x28 */ s16 instOrWave;
-    /* 0x2A */ s16 transposition;
-    /* 0x2C */ f32 volumeScale;
-    /* 0x30 */ f32 volume;
-    /* 0x34 */ s32 pan;
-    /* 0x38 */ f32 appliedVolume;
-    /* 0x3C */ f32 freqScale;
-    /* 0x40 */ u8 (*dynTable)[][2];
-    /* 0x44 */ u8 *noteUnused;
-    /* 0x48 */ struct SequenceLayer *layerUnused;
-    /* 0x4C */ u8 *instrument;
-    /* 0x50 */ SequencePlayer *seqPlayer;
-    /* 0x54 */ struct SequenceLayer *layers[6];
-    /* 0x6C */ AudioScriptState scriptState;
-    /* 0x88 */ AdsrSettings adsr;
-    /* 0x90 */ NotePool notePool;
-    /* 0xD0 */ s8 seqScriptIO[8];
-    /* 0xD8 */ u8 *sfxState;
-    /* 0xDC */ s16 *filter;
-    /* 0xE0 */ StereoData stereoData;
-    /* 0xE4 */ s32 startSamplePos;
-    /* 0xE8 */ s32 unk_E0;
-} SequenceChannel; // size = 0xEC
-
-typedef struct SequenceLayer {
-    /* 0x00 */ u8 enabled : 1;
-    /* 0x00 */ u8 finished : 1;
-    /* 0x00 */ u8 muted : 1;
-    /* 0x00 */ u8 continuousNotes : 1;
-    /* 0x00 */ u8 bit3 : 1;
-    /* 0x00 */ u8 ignoreDrumPan : 1;
-    /* 0x00 */ u8 bit1 : 1;
-    /* 0x00 */ u8 notePropertiesNeedInit : 1;
-    /* 0x01 */ StereoData stereoData;
-    /* 0x02 */ u8 instOrWave;
-    /* 0x03 */ u8 gateTime;
-    /* 0x04 */ u8 semitone;
-    /* 0x05 */ u8 portamentoTargetNote;
-    /* 0x06 */ u8 pan;
-    /* 0x07 */ u8 notePan;
-    /* 0x08 */ u8 surroundEffectIndex;
-    /* 0x09 */ u8 targetReverbVol;
-    /* 0x0A */ u16 unk_0A;
-    /* 0x0C */ VibratoSubStruct vibrato;
-    /* 0x1A */ s16 delay;
-    /* 0x1C */ s16 gateDelay;
-    /* 0x1E */ s16 delay2;
-    /* 0x20 */ u16 portamentoTime;
-    /* 0x22 */ s16 transposition;
-    /* 0x24 */ s16 shortNoteDefaultDelay;
-    /* 0x26 */ s16 lastDelay;
-    /* 0x28 */ AdsrSettings adsr;
-    /* 0x30 */ Portamento portamento;
-    /* 0x3C */ u8 *note;
-    /* 0x40 */ f32 freqScale;
-    /* 0x44 */ f32 bend;
-    /* 0x48 */ f32 velocitySquare2;
-    /* 0x4C */ f32 velocitySquare;
-    /* 0x50 */ f32 noteVelocity;
-    /* 0x54 */ f32 noteFreqScale;
-    /* 0x58 */ u8 *instrument;
-    /* 0x5C */ u8 *tunedSample;
-    /* 0x60 */ SequenceChannel *channel;
-    /* 0x64 */ AudioScriptState scriptState;
-    /* 0x80 */ AudioListItem listItem;
-} SequenceLayer; // size = 0x90
 
 // Close to Majora's Mask AudioScript_SeqLayerProcessScriptStep3 (src/audio/lib/seqplayer.c);
 // GS does not check the channel's muted flag before the skip-ticks check.
