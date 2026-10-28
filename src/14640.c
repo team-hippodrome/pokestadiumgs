@@ -2472,7 +2472,7 @@ void func_800186B8(u32 arg0, void **arg1) {
     }
 }
 
-void func_80018704(s32 arg0, s32 arg1) {
+void func_80018704(s32 arg0, f32 arg1) {
     func_800186B8(arg0, &arg1);
 }
 
