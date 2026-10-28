@@ -578,3 +578,130 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_8413DE28` → `Battle_InitState`.
+
+### Extended native checkpoint: oldest scalar-mask requeue
+
+`func_84128B30` remains `requeue`. The September 18 scalar-mask residual was
+reproduced with stock IDO7.1: retail is a 28-byte, frameless body with the
+masked value in `v1`, its store before `jr`, and a nop delay slot. Ordinary
+byte/promoted/halfword locals, unsigned remainder, byte bitfield extraction,
+explicit void return, and source tail-location variants produce a 24-byte
+body with the store in the return delay slot (best normalized 0.7143, raw
+0.2857). This is a size/scheduling mismatch, not a register-only tie.
+
+A separate diagnostic fixture compiled with both unmodified native IDO7.1
+and IDO5.3. Both emitted a 24-byte return-delay-slot store for the byte-local
+mask; IDO5.3 changed register allocation but did not recover the retail tail.
+That compiler comparison was diagnostic only and installed no owner. Private
+evidence: `scratch/mask-compiler-fingerprint/result.json`,
+`scratch/battle28b30-native/result.json`, and
+`scratch/battle28b30-tail/result.json`. No ABI/return-category hint, volatile
+barrier, padding or instruction rewrite was tried. The bounded stale-owner
+box did not find a genuine source match. Next: compare a larger authentic
+source context or a measured scheduler/frontend lineage witness before
+spending another box on scalar mask algebra. No impossibility is established.
+
+### `84133B14`: accepted switch-in state update
+
+The next September 18 requeue, `func_84133B14`, is accepted as genuine C:
+63 instructions, 252 bytes, 40-byte frame. Its signed-word fainted flag is
+initialized before `func_84137DB8`, set from the active record's **halfword** HP
+at offset 38, and passed to `func_84133714(u8, s32, s32)` after refreshing
+the selected party slot and derived battle values. The helper then clears
+move bytes in both sides' records and runs `func_84131EAC`'s item check.
+The word argument loads in `func_84133714` verify the two word flag arguments;
+the older history's byte-argument declarations are not the interface used here.
+
+Direct array-field accesses recover the original common shifted index without
+an explicit offset or table-entry pointer local. The mirrored pointer table
+uses `(u8 *)D_8419520C + -(arg0 << 2)` as a **byte** displacement; indexing
+`D_8419520C[-offset]` when `offset` already equals `arg0 * 4` multiplies the
+stride twice. That incorrect old spelling and a byte-sized HP test help
+explain why the historical 0.9688 normalized result was only 0.75 raw. No
+near-match or historical `probe_one` match marker was admitted as acceptance.
+
+The successful `replace-switch:direct-fields:byte-offset:early:bytes` body
+passed canonical link verification, explicit normal host syntax, and the full
+retail ROM gate under stock IDO7.1. Private receipt:
+`scratch/battle33b14-direct/gate-0/receipt.json`. The original whole-module
+106,496 text bytes, section layout, function extents, and sorted semantic
+relocations remain identical with all three new owners installed. No ABI
+hint, unused local, forced register, padding, manual unrolling or output
+rewrite was introduced. An evidence-backed name is `Battle_ApplySwitchInState`.
+
+### `8413DA18`: accepted player deck load
+
+`func_8413DA18` is accepted as genuine C: 68 instructions, 272 bytes,
+48-byte frame. It establishes one player's 1,248-byte team record, party
+pointer at offset 24 and active battle pointer at 1080, selects the controller,
+opens deck type 32, reads up to six entries, and updates the count fields.
+An empty read uses the existing fallback `func_8413D7AC`; both paths close
+the opened handle. `src/615D0.c` verifies the real byte-pointer handle,
+word count return from `Deck_ReadEntries`, and four word arguments to
+`func_8006218C`. `src/585D0.c` verifies `func_8005A014(s32)`.
+
+Typed team indexing reproduces the arithmetic and register sequence. The
+initial 272-byte/48-byte candidate differed only in a controller spill at
+stack offset 32 instead of 36. Independent controller and read-count locals,
+entry-pointer types, handle scope, and declaration placement did not close
+that residual. The accepted body directly indexes the global team table and
+reuses one **used signed-word temporary**: first the controller value passed
+to both word-argument APIs, then the read result stored into the count byte.
+Both values participate in the real computation; there is no unused/filler
+local, fake ABI, extra argument, volatile barrier or output rewrite.
+
+The accepted label is `deck-load:shared-word-lifetime:s32:early:direct`.
+Canonical link verification, explicit host syntax, and full retail ROM passed.
+Private receipt: `scratch/battle3da18-word/gate-0/receipt.json`. The complete
+module's 106,496 text bytes, sections, function extents, and sorted semantic
+relocations still match the original baseline with all four owners installed.
+Evidence supports the name `Battle_LoadPlayerDeck`; naming/aliases remain
+integration work.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_84133B14` → `Battle_ApplySwitchInState`.
+- `func_8413DA18` → `Battle_LoadPlayerDeck`.
+
+### `8413DD94`: requeue, snapshot indirections and loop representation
+
+The extended native box leaves `func_8413DD94` as `requeue`, still assembly.
+Retail is 37 instructions/148 bytes with a 24-byte frame. It clears 19,844
+bytes at `D_84195280`, then initializes two snapshot entries on a 16-byte
+stride. The writes at root offsets 12, 14, 16 and 20 are **halfwords**;
+the last four-byte field is at offset 24. Two active-record pointer loads
+from `D_84195208` appear in the retail loop, alongside one party pointer
+load from `D_84195200`.
+
+Forty canonical native candidates tested scalar/aggregate transfers, typed
+entry and 84-byte active-record views, distinct index widths, numeric versus
+pointer-derived loop control, and value/flag store order. The compact scalar
+form is 132 bytes; a four-byte aggregate or the actual color-adjustment union
+produces 144 bytes with the correct 24-byte frame (best normalized 0.9459,
+raw 0.4324 for the separate word-symbol view). The latter still merges an
+active-record pointer load and rotates the remaining address/register roles.
+It is not a register-only tie. Narrow index views expand to 156/172 bytes;
+reconstructing indices from a strided destination pointer expands to
+560/580 bytes and a 64-byte frame. Those are rejected source families, not
+native compiler or ROM acceptance failures.
+
+The last field is the real four-byte color-adjustment aggregate: the producer
+`func_8413D6D4` passes record offset 80 to `func_8003F5AC`; the latter's
+assembly uses a hidden aggregate-result pointer. Existing declarations in
+`src/fragments/7/fragment7_C4C10.c`, `src/4CC20.c`, and
+`include/color_adjustment.h` establish the union's halfword/two-byte fields
+and raw-word view. No producer signature or existing accepted body was changed.
+Using this actual union rather than a generic one-word struct preserves the
+same unresolved loop result in the tested forms.
+
+Private evidence: `scratch/battle3dd94-records/result.json`,
+`scratch/battle3dd94-views/result.json`,
+`scratch/battle3dd94-indices/result.json`,
+`scratch/battle3dd94-cursor/result.json`, and
+`scratch/battle3dd94-tint/result.json`. Next: obtain an authentic source or
+measured compiler-stage witness for the duplicated active-record load and
+its relation to the strided word-copy loop; preserve the verified field
+widths and color-adjustment type. Do not replay the rejected pointer-difference
+or narrow-index families, or add volatile/unused locals/output rewrites to
+manufacture the extra instruction. No impossibility has been established.
