@@ -287,7 +287,25 @@ s32 func_82301494(s32 value) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823014EC.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_82305B04[];
+void func_82302B8C(s32 x, s32 y, s32 width, s32 height, unk_func_82302B8C *color, s32 flip);
+s32 func_823014EC(s32 arg0, u8 *arg1) {
+    s32 slot;
+    s32 index;
+    u8 *entry;
+
+    index = *(s32 *)(arg1 + 0x20);
+    entry = D_82305B04 + index * 6;
+    slot = func_82301494(index);
+    if ((arg0 != 0) && (arg0 == 1)) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        func_82302B8C(*(s16 *)(arg1 + 8) + *(s16 *)((u8 *)&D_82305E68[slot] + 0x52), *(s16 *)(arg1 + 0xA),
+                      *(s16 *)(arg1 + 0xC), *(s16 *)(arg1 + 0xE), (unk_func_82302B8C *)(entry + 2), *(s16 *)entry);
+    }
+    return 0;
+}
 
 extern u16 D_82305E72;
 extern f32 D_82305EE0;
