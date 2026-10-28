@@ -172,7 +172,67 @@ s32 func_8006A5AC(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006A600.s")
+extern s32 D_8009DF78[];
+extern s32 D_8009DF88[];
+extern s32 func_8006A5AC(s32);
+s32 func_8006A600(u16 code, s32 arg1, s32 arg2) {
+    s32 result = -1;
+    s32 index;
+
+    switch (code & 0xFF00) {
+    case 0x000:
+    case 0x100:
+    case 0x200:
+        switch (code & 0xFF) {
+        case 0:
+            result = 0;
+            break;
+        case 1:
+            index = func_8006A5AC(arg1);
+            if (index >= 0) {
+                result = D_8009DF78[index];
+            }
+            break;
+        case 2:
+            index = func_8006A5AC(arg1);
+            if (index >= 0) {
+                result = D_8009DF88[index];
+            }
+            break;
+        case 3:
+            if (arg2 != 0) {
+                result = 13;
+            } else {
+                result = 12;
+            }
+            break;
+        case 32:
+            result = 5;
+            break;
+        case 16:
+            result = 14;
+            break;
+        }
+        break;
+    case 0x300:
+        result = 6;
+        break;
+    case 0x400:
+        result = 12;
+        break;
+    case 0x500:
+        if (arg2 != 0) {
+            result = 13;
+        } else {
+            result = 12;
+        }
+        break;
+    case 0x600:
+        result = 11;
+        break;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006A73C.s")
 
