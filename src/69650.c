@@ -14,7 +14,60 @@ void func_80068A50(void *arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/69650/func_80068AB0.s")
+extern s32 func_8006A3B8(u16);
+extern s32 func_8006A400(s32);
+void func_80068AB0(u32 arg0) {
+    u16 id = 0xFFFF;
+    s16 level = 4;
+
+    switch (arg0) {
+    case 0:
+        id = 0x200;
+        break;
+    case 1:
+        id = 0x202;
+        level = 1;
+        break;
+    case 2:
+        id = 0x202;
+        level = 2;
+        break;
+    case 3:
+        id = 0x202;
+        level = 3;
+        break;
+    case 4:
+        id = 0x202;
+        break;
+    case 5:
+        id = 0x220;
+        break;
+    case 7:
+        id = 0x201;
+        level = 1;
+        break;
+    case 8:
+        id = 0x201;
+        level = 2;
+        break;
+    case 9:
+        id = 0x201;
+        level = 3;
+        break;
+    case 10:
+        id = 0x201;
+        break;
+    case 12:
+    case 13:
+        id = 0x203;
+        break;
+    case 14:
+        id = 0x210;
+        break;
+    }
+    func_8006A3B8(id);
+    func_8006A400(level);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/69650/func_80068B78.s")
 
