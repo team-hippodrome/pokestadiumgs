@@ -62,3 +62,14 @@ The default host syntax check, forced translation-unit rebuild and full US
 link pass with `build/pokestadiumgs-us.z64: OK`. The complete ROM has MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d` and matches retail byte-for-byte,
 including every existing caller affected by the declaration corrections.
+
+## 2026-10-28 — `func_86B07FB0` matched (step choice)
+
+`s16 func_86B07FB0(s16 a, s16 pos, s16 step, s32 mode)`: if
+`step < func_86B08088(a, pos)`, evaluate `func_86B08088` at `pos + step`
+(kept as s16 `upValue`) and at `pos - step` (s32 `downValue`, compared
+untruncated). Mode 1 returns `pos - step`, mode 2 `pos + step`; otherwise
+return whichever side has the smaller value, else `a`. Locals `s16 up;
+s16 upValue; s32 downValue;` give retail's homes (upValue at 0x24 behind
+`up`). `pos - step` stays an expression (a spilled temp, not a home), and a
+named s32 `down` adds a frame word.

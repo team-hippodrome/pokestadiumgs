@@ -479,7 +479,29 @@ s16 func_86B07D58(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B07FB0.s")
+s32 func_86B08088(s16 arg0, s16 arg1);
+s16 func_86B07FB0(s16 arg0, s16 arg1, s16 arg2, s32 arg3) {
+    s16 up;
+    s16 upValue;
+    s32 downValue;
+
+    if (arg2 < func_86B08088(arg0, arg1)) {
+        up = arg1 + arg2;
+        upValue = func_86B08088(arg0, up);
+        downValue = func_86B08088(arg0, (s16)(arg1 - arg2));
+        if (arg3 == 1) {
+            return (s16)(arg1 - arg2);
+        }
+        if (arg3 == 2) {
+            return up;
+        }
+        if (upValue < downValue) {
+            return up;
+        }
+        return (s16)(arg1 - arg2);
+    }
+    return arg0;
+}
 #endif
 
 #ifdef VERSION_US
