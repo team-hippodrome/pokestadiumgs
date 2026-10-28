@@ -627,3 +627,16 @@ Mirrors `func_8220AC38`: reads the flag through `*(s16 *)(D_82210698 + 0x1A)` (a
 ## 2026-10-27 — `func_822068E0`: tooling-blocked
 
 tooling-blocked. `_bzero(&D_8220EC40, 0x650); D_8220EC40 = func_8004D690(7); D_8220EC48 = -1;` then `D_8220EC44/46 = (255, 5)` when `StageContext_GetFadeMode() == 0`, else `(0, 0)`. Retail shares `$at` for the pair in both branches. With `COALESCE_AT_LUI(func_822068E0, D_8220EC44, D_8220EC46)` the if-branch folds, but retail's scheduler also hoisted `li t8, 5` above the first store (`lui; li; sh; b; sh` vs folded `lui; sh; li; b; sh`), which deleting a `lui` cannot reproduce. The else-branch's surviving `lui` sits in the `bnez` delay slot, which the fold refuses. 0.93 best.
+
+## 2026-10-28 — layout prerequisite for the `D_8220EB80`..`D_82210844` globals
+
+`func_822068E0`, `func_82206854` and the other owners that share one `lui $at`
+across adjacent `D_8220EBxx`/`D_8220EC4x` globals need this file to *define*
+those globals, so IDO folds `%lo(sym+off)` itself (no `COALESCE_AT_LUI`). They
+are runtime `.bss`, but unlike fragment67's pinned `.bss` (past the image end),
+these addresses overlay the fragment's relocation table. The table sits inside
+the loaded image, in the `0x11DB70` `rodata` blob (`.word 0x05003BA4`… from
+0x8220EB88; image end 0x822108A0). Owning them needs (1) a `datamig_bss.ld`
+NOLOAD section at 0x8220EB80 that overlaps a loaded section's VMA, and (2) the
+blob's `dlabel`s for those addresses dropped. Status: `layout-prerequisite`; do
+not spend spelling probes on these owners until that is done.

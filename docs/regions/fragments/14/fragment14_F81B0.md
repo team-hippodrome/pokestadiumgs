@@ -575,3 +575,14 @@ Next bounded pass: inspect an accepted sibling with the same return topology
 or test a genuine result/lookup carrier reuse. Do not repeat this batch's
 guard/order families or interpret normalized similarity as exactness.
 Ship the four verified siblings without holding them behind this owner.
+
+2026-10-28 pass (requeue): every spelling still lands at 0.4706 with the loaded
+byte in `$v1` and the zero carrier in `$v0` (the reverse of retail). Tested:
+initialized/statement `ret`, declaration order, s8/s16/s32/u32 carriers,
+s8/s16/u8/s32 return types, nested and compound guards, `goto`, a `switch` over
+0..3 (19 instructions), an assign-then-return carrier (16 instructions), the
+sibling's explicit `u8 *base = arg0 + 0x18000` local, and reusing `base` as the
+zero carrier. A 180-second permuter improved 195 -> 185 only through
+duplicated loads. Next: look for a Stadium 1 counterpart or a caller-side
+inline expansion; the register choice probably comes from a different
+statement structure, not from types.
