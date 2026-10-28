@@ -437,3 +437,38 @@ The fourth-box source did not change. No coverage, shared layout, symbols,
 headers, compiler, core tools, push, naming or PR operation belongs to this
 handoff. Final machine-readable record: `scratch/agent-report.json`; previous
 sealed checkpoints and their reports remain in place.
+
+## 2026-10-29 — `.rodata` owned; three switch owners matched; `func_8670A07C` layout-prerequisite
+
+`fragment55_data` held this object's `.rodata`. It is now split: `data` up
+to 0x2AE5F0 (the first string, `"angle=%f"`), `fragment55_code`'s `.rodata`
+up to 0x2AEBB0 (after `13.6f`), then a `fragment55_tail` rodata blob. The 11
+C references into that range are now literals. `-5000.0f`, `5000.0f`,
+`7450.0f` and `1610.0f` still go to rodata through IDO's `li.s`; the ROM
+was verified.
+
+Matched:
+
+- `func_8670A4D4` (state update, same template as fragment54's
+  `func_86605F04`). This file already calls `StageContext_GetFadeMode` and
+  `StageFade_StartFromOpaque` without prototypes, so don't add `s32`
+  externs: `s32` is `long` here and conflicts.
+- `func_8670211C` (per-slot random table). The shape is
+  `while (1) { switch (i) {...}; for (j = 0; j < i; j++) ...; if (count == 0) break; count = 0; }`.
+  It needs a `rnd` temporary plus an unreferenced `s32 unused[2]` (marked
+  in the source) to reach retail's 0x68 frame.
+- `func_86708720` (frame draw).
+
+`func_8670A07C` (**layout-prerequisite**, `scratch/c/07c_best.c`):
+
+- The body is written; only the `D_8670C108` accesses differ. Retail
+  re-forms `lui at` for every store and never materialises the address.
+- `D_8670C108` (initial value `0xC0`) is referenced only by this function,
+  so it is almost certainly a function-local `static s32`.
+- Its neighbours `D_8670C0E8`..`D_8670C104` belong to `func_86709AD0`, and
+  earlier words belong to other single functions in file order. So
+  `fragment55_code`'s own `.data` starts somewhere at or before 0x2AE5C0
+  and must be split out before the static can be written.
+
+`func_867037B8` (403 lines, collision maths using `$ra` as a GPR) has not
+been attempted.
