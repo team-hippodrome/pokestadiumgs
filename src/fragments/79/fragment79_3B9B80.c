@@ -2,6 +2,7 @@
 
 
 #ifdef VERSION_US
+extern u8 func_84154B24(void);
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414A2F0.s")
 
 extern u8 *D_841951F8[];
@@ -155,7 +156,19 @@ s32 func_8414B958(u8 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B9D0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414BDA0.s")
+void func_8414BDA0(void) {
+    s32 i;
+    u8 *entry;
+
+    func_8414A3A0(func_84154B24());
+    for (i = 0; i < 24; i++) {
+        entry = D_8419D7C0 + i * 168;
+        if (entry[0] & 1) {
+            *(u32 *)(entry + 36) = *(u32 *)(entry + 20) + *(u32 *)(entry + 12) +
+                                   *(u32 *)(entry + 24) + *(u32 *)(entry + 16);
+        }
+    }
+}
 
 extern void func_8414B574(void);
 extern void func_8414B73C(void);
