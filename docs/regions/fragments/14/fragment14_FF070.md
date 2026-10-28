@@ -80,3 +80,17 @@ Both read a real state struct (`unk_func_8130B06C`: current node at 0xE8E8, inde
 It links the state's three inline 0x4DA0-byte nodes (`unk_0008[3]`, ending exactly at the current-node pointer at 0xE8E8) into a ring. For each `i` it calls `func_8130AEF4(state, &node[i], index + i)`, sets the predecessor (`node[2]` when `i <= 0`) and the successor (`node[0]` when `i + 1 >= 3`), then makes `node[0]` current. Those condition polarities give retail's `bgtz`/`bnez` (`i == 0` gives `bne`; the positive forms swap the hoisted constants). The `func_8130AF94` externs take the typed state.
 
 `func_8130AEF4` (requeue): with the same types, `count = func_81302290(state->unk_E8EC)`, `func_8160B8A8(node, func_813002D0(state->unk_E8EC), 0)`, then `func_8160A438(node, state->unk_E8EC->unk_1A148->unk_944)` when `0 <= arg2 < count`, else `func_8160A994(node)`, then `func_8160A6AC(node)`. Normalized 1.0: everything matches except that retail reloads `arg2` from its home into `$a2` and IDO uses `$v0`. Condition spellings and a 240 s permuter did not move it.
+
+## 2026-10-28 — `func_8130B3B8` matched; `func_8130A98C` returns `f32`
+
+`func_8130B3B8(state, out)` fills `out` through `func_8160945C(out, colorA, colorB, scale)` and returns the scale:
+- `scale = D_8160BD08(state->unk_E8F0 / 16)`, `colorA = state->unk_0000` (the state's first 8 bytes are a default `s16[4]` color), `colorB = func_81609530(1)`;
+- when `unk_E8FC > 0`: scale from `func_8130A98C(state)`, colors 1/6, return 1.0;
+- otherwise, for mode 12/13 with `unk_E913 == 0` and `unk_E90C != 1`, `colorA = func_81609530(unk_E908 ? 10 : 3)`.
+
+Spelling notes:
+- the divisor is the integer `16` (`16.0f` becomes a multiply by 0.0625);
+- locals are declared `scale`, `colorA`, `colorB`;
+- `colorA` is assigned after the scale call.
+
+`func_8130A98C` was declared `void` but returns `D_8160BD1C(...)`'s float. Its two callers' 8-byte buffers are now `s16[4]`, and `func_81609A90` takes `s16 *`.
