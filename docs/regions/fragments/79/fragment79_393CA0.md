@@ -535,3 +535,46 @@ Parent integration preserves all previously merged semantic names and real
 callback/sound signatures. Full normal/+20blank module controls retain every
 allocated byte, extent and relocation topology modulo reviewed aliases.
 - `func_84127194` → `BattleTurn_CheckMoveStatus`.
+
+### Battle-state initializer: `8413DE28`
+
+`func_8413DE28` is accepted through `battle-init:global-flow:global:global:global`
+as genuine C: 305 instructions, 1,220 bytes, 40-byte frame. The incoming state
+pointer selects generation versus existing team data. Team records have a
+1,248-byte stride; the 88-byte party rows begin at offset 24, and the active
+battle record begins at offset 1080. Typed team indexing recovers the byte
+cursor's separate shift-count value across `func_8005D8C0`; typed party-row
+indexing with a byte cursor recovers the original inner loop and frame.
+Eight-byte aggregate copies reproduce the two unaligned name-field transfers.
+The initializer also sets both view records, timer flags/limits, record storage,
+replay seed/data, and the battle thread. Evidence supports `Battle_InitState`.
+
+The last eight-word residual was resolved by testing the assigned global
+pointer for null and reading its mode bytes directly for the two timer-flag
+conditions. A cached pointer changes the allocator's state-pointer register
+and the prologue schedule. Signed loop cursors, explicit shift casts,
+independent loader cursors, declaration permutations, explicit early pointer
+locals, state refreshes, and alternate null-return topology were tested but
+did not reproduce the complete owner. These are measured source-shape limits,
+not evidence that IDO cannot emit the original function.
+
+The real two-argument interface is `void (s32, u8 *)`: the assembly initializes
+state and supplies no return value, and the existing caller discards it. Its
+stale later prototype was corrected in the same accepted companion transaction.
+The pool functions are explicitly declared `s32 (s32)`, consistent with their
+implementations in `src/3280.c`; automatic synthesis had instead introduced
+conflicting void declarations in an initial compile-only failure.
+
+The canonical runner's first successful gate passed explicit normal host
+syntax and the full retail ROM comparison with the same stock IDO7.1 hash
+recorded above. Private receipt: `scratch/battle3de28-global/gate-0/receipt.json`.
+An independent comparison against the original module confirms all 106,496
+text bytes, section layout, function extents, and sorted semantic relocations
+remain identical with both new owners installed. The captures include the
+original baseline object and SHA256 manifests. No output patch, fake local,
+extra argument, forced register, padding, unrolling, or coverage edit was added.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8413DE28` → `Battle_InitState`.

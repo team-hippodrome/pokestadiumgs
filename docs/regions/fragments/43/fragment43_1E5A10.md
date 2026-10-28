@@ -346,3 +346,210 @@ preserve bytes, extents and relocation topology modulo those aliases.
 - `func_8AC0479C` → `Fragment43_GrowthRectCallback`.
 Growth state views are now used by the accepted callback. Its original
 vertical-overshoot write to X is preserved; no behavior fix is mixed in.
+
+## Native second box after 8da736fd (2026-10-28)
+
+No additional owner accepted. The source, including all ten accepted owners,
+remains byte-for-byte identical to `8da736fd`. Twenty canonical batches tested
+230 distinct candidates: eight for the documented `func_8AC03AFC` requeue,
+112 for `func_8AC00908`, and 110 for `func_8AC033B8`. Every submitted batch
+passed the ordinary and +20-blank whole-module controls. A rejected-body
+preflight on the initial lifetime batch was corrected by removing the repeated
+body; that preflight is not included in these counts. No candidate ran a retail
+gate or was installed. `scratch/box2-evidence.json` records exact manifests,
+indices, objects, results, frame sizes and separate normalized/raw leaders.
+
+- `func_8AC03AFC` — `requeue`: the materially new hypothesis was a genuinely
+  word-aligned origin union, with both coordinate operand orders, aggregate
+  color representations and scopes. Best remains 304/300 bytes, frame 64,
+  normalized 0.7895/raw 0.1974 (`b2-origin01`, candidate 1). The extra saved
+  node register and early color-copy scheduling remain. Next: investigate
+  aggregate alias/lifetime allocation across the origin getter using the
+  compiler's IR, rather than repeating pointer views or color packing.
+- `func_8AC00908` — `requeue`: recovered a clipped 640x480 tiled-background
+  path, drawing 16x16 RGBA16 source tiles at 2x scale in 32-pixel screen blocks.
+  Source tiles occupy 512 bytes in a 20-column grid. SDK render setup, scissor,
+  texture loads, rectangles and final full-screen scissor are represented by
+  ordinary SDK macros. Best normalized candidate is
+  `b2:clipping:retained-height:5` (`b2-clipping03`, index 5): 1260/1248 bytes,
+  frame 72/96, normalized 0.9460/raw 0.3714. Best raw is
+  `b2:clipping:height-carrier:0` (`b2-clipping02`, index 0): 1268 bytes,
+  frame 64, normalized 0.9401/raw 0.6025. Actual quarter-pixel scissor and
+  rectangle locals can reproduce frame 96, without closing the instruction
+  schedule. Tested meaningful height captures, clipped endpoint expressions,
+  working coordinates, traversal-bound captures, while/guarded-do/for forms,
+  tile addressing and row caches, and fixed-point command corners. Retail
+  retains height across the right clamp, uses two endpoint copies around the
+  scissor, and saves parameter homes only inside an entered inner loop.
+  Important correction to the raw m2c draft: horizontal next-edge arithmetic
+  is 32-bit (no halfword narrowing instructions); vertical row advancement
+  explicitly narrows to s16. Next: inspect allocation/lifetime decisions at
+  the scissor-to-traversal boundary and SDK local-scope expansion. Do not add
+  filler locals merely to reproduce the 96-byte frame. The corrected s16
+  height prototype at the existing 00F04 caller was only a probe companion;
+  it was not installed.
+- `func_8AC033B8` — `requeue`: recovered the dual scrolling-sampler callback,
+  including all four symbolic SDK combine modes, primary/environment colors,
+  four signed-halfword UV updates, texture-loader calls and two tile sizes.
+  Its payload is an image pointer at +0; UVs at +4..+A; increments +C..+12;
+  primary/LOD/environment bytes +14..+1C; four shifts +1D..+20; mode +21;
+  four word clamp flags +24..+30. Best normalized candidate is
+  `b2:scroll:promoted-load-metadata:4` (`b2-limits-scroll02`, index 12):
+  1496/1516 bytes, correct frame 200, normalized 0.9683/raw 0.4749.
+  Best raw is `b2:scroll:shared-loader-arguments:0` (`b2-sharedargs01`,
+  index 0): 1480 bytes/frame 200, normalized 0.9367/raw 0.7361.
+  A direct-node/word-format candidate (`b2-scrollorder01`, index 15) reaches
+  1512 bytes/frame 200 and reproduces origin/coordinate/data/dimension slots,
+  but still differs in color slots and metadata operations. Neither proximity
+  in size nor normalized similarity constitutes a match. Tested declaration
+  grouping/order (all 24 metadata orders), real display-list pointer locals,
+  direct node accesses, metadata widths and narrowing casts, block lifetimes,
+  promoted loader values, branch-local captures, switch dispatch and shared
+  first/second-call arguments. Retail loads signed size before display-list
+  setup, keeps format in t2 and size in t3, then preserves four promoted word
+  values across the first loader call; candidates tend to reload halfwords
+  or keep format directly in a3. Next: inspect IDO IR/allocator decisions for
+  those values and audit the historical texture-loader declaration against
+  its callee. No speculative ABI change was attempted.
+
+Other unresolved owners retain the previous handoff and were not replayed.
+In particular, the shared literal/jump-table layout remains parent work.
+Private helpers added under scratch decode actual combine fields, run the
+read-only m2c clone, capture instruction listings and summarize diagnostics;
+none changes compiler output or is part of the commit. Final verification
+and sealed artifacts for the unchanged source are retained separately in
+`scratch/box2-final-verification/`; first-box receipts remain untouched.
+
+A final `03AFC` batch used a word-aligned RGBA union with named byte channels,
+matching the representation documented in `include/229E0.h`, instead of casts
+on a packed word or a byte-aligned local record. All eight variants rejected
+(`scratch/b2-colorunion01/result.json`), retaining the extra saved node and
+unchanged best score. The complete second-box total is therefore 21 batches /
+238 candidates, including 16 for `03AFC`; the source remains unchanged.
+
+## Native extended third box checkpoint (2026-10-28, 06:55 target)
+
+The checkpoint verification completed just after the requested time. No owner
+accepted: 32 canonical batches recorded 252 attempts (240 byte rejections,
+12 compile failures). Source remains identical to `8da736fd`; the ten accepted
+function definitions were individually compared with the checkpoint and remain
+unchanged. Evidence: `scratch/box3-evidence.json`, `scratch/box3-provenance.json`
+and `scratch/box3-final-verification/receipt.json`. A forced native source
+rebuild, host syntax check and complete retail-ROM byte comparison passed.
+The MD5 remains `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+### func_8AC049A8: requeue, substantial new SDK reconstruction
+
+Recovered initialization and rendering for a sliced/scaled image, including
+six standard `gSPScisTextureRectangle` paths: normal, X-flipped and Y-flipped
+for full strips and a final remainder. The payload has archive/index at
++24/+26, image data +38, retained display list +3C, scale/center/initial-center
+floats +40..+54, signed dimensions and slice metadata +58..+68, RGBA +6C,
+a signed-halfword allocation flag +70, and a word follow-position flag +74.
+It allocates `(count * 10) * sizeof(Gfx) + 112` bytes when retaining a list.
+Preserve the existing origin/center calculations and reverse-strip indexing;
+this work did not attempt behavioral fixes.
+
+The useful source-shape change was computing full scaled image height beside
+full scaled width, before strip height and rectangle positions. This reproduced
+the retail float-global allocation (height f0, strip height f2, half f12,
+rectangle top f14, quarter-pixel scale f16, rectangle left f18), including the
+width spill/reload. Two real pairs of texel-step values, the signed size/format
+results, and the image/geometry locals reproduce the known 328-byte frame and
+all observed high local slots. No padding, forced registers or output rewriting
+was used.
+
+Best normalized candidate:
+`scratch/b3-layoutdataflow01/batch.json`, index 0,
+`b3:sliced-image:recovered-geometry-local-dataflow:0`:
+5276/5272 bytes, frame 328, normalized 0.9939/raw 0.8537. It has one excess nop
+in initialization, and differing temporary allocation/scheduling.
+
+Best raw candidate:
+`scratch/b3-permuterreview01/batch.json`, index 0,
+`b3:sliced-image:reviewed-permuter-center-pair`:
+5272/5272 bytes, frame 328, normalized 0.9932/raw 0.9560. This is ordinary
+preprocessed SDK C with center Y moved beside center X before the remaining
+initialization resets. The instruction counts and all opcode counts agree;
+remaining differences include initialization constant scheduling, some SDK
+word-store scheduling, operand order on row additions, and compiler spill
+slots (e.g. 88 vs retail 96, 80 vs 84, 96 vs 104). Listings are retained at
+`scratch/b3-permuterreview01/func_8AC049A8-{actual,expected}.asm`.
+This is a rejected near-match, not an accepted C owner.
+
+Other tested families: meaningful screen-edge captures, metadata narrowing
+results, block/function texel-step lifetimes, signed/unsigned texture origins,
+zero comparison types, explicit reverse-remainder screen offset, declaration
+orders, initialization field order, full-image dimension captures, compatible
+old-style loader declarations, actual integer loader-address representation,
+and signed/unsigned loop-counter widths. None closed the byte mismatch.
+Next: investigate frontend lineage between the host-preprocessed SDK form and
+the original SDK macro source, then the remaining spill/allocation differences.
+The numeric normalized score alone must not be treated as an allocation-only
+classification.
+
+Two single-worker, three-minute permuter diagnostics were retained. Restricting
+the second to initialization found the independent center-Y reorder above.
+A generated empty-loop alternative was explicitly discarded. An initial
+permuter parser failure on `sizeof(Gfx)` was repaired by explicit parentheses
+in its private input. Its shared entry point overrides TMPDIR; the private
+retry calls the unchanged module through an adapter that keeps temporary files
+in this worktree. No shared optional-tool source was edited. Canonical probes,
+not permuter scores, supplied all mismatch evidence above.
+
+### Older owners
+
+- `func_8AC0036C` — `requeue`: eight new named-mode/extracted-bit lifetime
+  candidates leave the previous 92/93-word result unchanged (372 bytes,
+  frame 56, normalized 1.0/raw 0.9892). The invalid-mode count load remains
+  at +54 instead of +48. Next: a materially new count-storage/lifetime
+  hypothesis; do not replay declaration permutations or add filler.
+- `func_8AC03AFC` — `requeue`: 32 new candidates tested integer-address
+  expressions, unaligned packed-word loads into aligned named-channel unions,
+  packed typed node parameters and dispatch-control shapes. Best remains
+  normalized 0.7895; the saved node and aggregate-copy schedule remain.
+  Next: compiler IR/alias analysis, rather than more packing variants.
+- `func_8AC00908` — `requeue`: eight local rectangle/tile record candidates
+  did not improve its earlier best. Preserve the second-box handoff.
+- `func_8AC033B8` — `requeue`: eight compatible old-style void-loader
+  declaration candidates did not close it. Preserve the second-box handoff.
+- Literal/table ownership and shared-LUI prerequisites were not replayed.
+
+Parent owns publication, names and shared layout. Only this region note is
+committed at this checkpoint; no new C batch is ready for publication.
+
+## 2026-10-28 07:03 UTC — progress-mode requeue resolved
+
+`func_8AC0036C` is accepted as genuine C: 372 bytes, frame 56, complete native
+ROM and host syntax gates passed. The winning source declares the live index
+first, then a signed-halfword mode snapshot and count, then the two byte flags.
+The mode snapshot supplies every dispatch and the progress-bit extraction; it
+is neither unused nor padding. This puts the invalid-mode count load at +48
+while retaining the flag at +46, closing the last instruction word.
+
+Correction to the preceding handoff: reading the retained third-box objects
+shows its first mode-snapshot variant already moved the count from +54 to +52;
+raw similarity remained 0.9892 because exactly one word still differed. The
+missing combination was the five-local index/mode/count order, rather than
+another permutation of the original four locals. Candidate 0 of the first new
+batch accepted; seven later alternatives were skipped.
+
+Winner: `scratch/b4-flagslayout01/batch.json`, index 0,
+`b4:progress:index-mode-count-storage:0`.
+Canonical sealed gate: `scratch/b4-flagslayout01/gate-0/receipt.json`.
+A separate forced source rebuild and provenance/previous-ten definition audit
+are sealed in `scratch/box4-flags-final-verification/receipt.json`.
+Source SHA256: `ce6f8e443877fba98ba8383da1187448f912b59c610663f6c0523b22a79bf279`.
+Retail MD5 and native compiler SHA256 remain the values recorded above.
+The earlier uninitialized invalid-mode behavior is preserved; valid modes are
+0, 1 and 2, with 20/11/11 progress records and reward flags 6/7/8.
+
+The required `u8 func_800542B0(s32)` declaration is placed before its existing
+first caller. This changes no earlier function body. All previous ten accepted
+C definitions are byte-for-byte unchanged. No new output rewrite, coalescing,
+padding or shared input was introduced. Parent owns naming and publication.
+
+Parent integration preserves all previously merged semantic names and real
+callback/sound signatures. Full normal/+20blank module controls retain every
+allocated byte, extent and relocation topology modulo reviewed aliases.
+- `func_8AC0036C` → `Fragment43_TryGrantCompletionReward`.
