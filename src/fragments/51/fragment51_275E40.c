@@ -256,7 +256,36 @@ void Fragment51_ComputeActorInput(s32 *arg0, s32 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86300EF8.s")
+extern void func_87F06094(f32 *, u16 *);
+extern void MtxF_Multiply(void *, void *, void *);
+void func_86300EF8(u8 *arg0) {
+    f32 unused[2][4][4]; // FAKE: unreferenced; retail's frame has 0x80 more bytes of locals
+    f32 rotation[4][4];
+    f32 axes[4][4];
+
+    func_87F06094((f32 *)rotation, (u16 *)(arg0 + 0x42));
+    axes[0][0] = 1.0f;
+    axes[0][1] = 0.0f;
+    axes[0][2] = 0.0f;
+    axes[0][3] = 0.0f;
+    axes[1][0] = 0.0f;
+    axes[1][1] = 0.0f;
+    axes[1][2] = 1.0f;
+    axes[1][3] = 0.0f;
+    axes[2][0] = 0.0f;
+    axes[2][1] = -1.0f;
+    axes[2][2] = 0.0f;
+    axes[2][3] = 0.0f;
+    axes[3][0] = 0.0f;
+    axes[3][1] = 0.0f;
+    axes[3][2] = 0.0f;
+    axes[3][3] = 1.0f;
+    MtxF_Multiply(arg0 + 0x84, axes, rotation);
+    *(f32 *)(arg0 + 0xB4) = *(f32 *)(arg0 + 0x48);
+    *(f32 *)(arg0 + 0xB8) = *(f32 *)(arg0 + 0x4C);
+    *(f32 *)(arg0 + 0xBC) = *(f32 *)(arg0 + 0x50);
+    *(f32 *)(arg0 + 0xC0) = 1.0f;
+}
 #endif
 
 #ifdef VERSION_US
@@ -437,7 +466,7 @@ typedef struct {
 extern u8 D_8630745C;
 extern u8 D_8630745D;
 extern void func_863013C8(void);
-extern void func_86300EF8(void *);
+extern void func_86300EF8(u8 *);
 extern void func_80037E3C(void *, s32 (*)(s32, void *), void *);
 extern void * Fragment51_CloneScaledActor(void *arg0);
 extern s32 ModelAnim_SetSpeed(u8 *, s32);
