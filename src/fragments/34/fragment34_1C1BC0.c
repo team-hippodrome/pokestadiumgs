@@ -87,7 +87,56 @@ void func_88504A54(void) {
     func_88504828();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88504AF0.s")
+// Eight-byte header at the start of a texture returned by func_8004C990; same
+// layout as TextureRenderHeader in src/4CC20.c.
+//@src/4CC20.c
+typedef struct TextureRenderHeader {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u16 unk_06;
+} TextureRenderHeader;
+
+extern TextureRenderHeader *func_8004C990(s32, s32);
+extern u16 *func_8004CA60(TextureRenderHeader *);
+extern void func_800459AC(u16 *, u8, u8, u16, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+// Phase of the horizontal wobble; bits 4-15 index the D_80087E50 sine table.
+extern u16 D_8850D2BC;
+extern f32 D_80087E50[];
+
+// Draws texture 324 twice: once at x shifted right by the wobble offset, and once mirrored
+// (s from the last column, dsdx -1024) at x + 12 shifted left by the same offset, 36 pixels
+// lower. The wobble is 2 * sine(D_8850D2BC) rounded to an integer. The texture is loaded and
+// drawn in two half-height bands; func_800459AC loads each band from data.
+//@src/44E70.c
+void func_88504AF0(s16 x, s16 y) {
+    TextureRenderHeader *tex;
+    u16 *data;
+    s32 i;
+    s16 offset;
+    f32 wobble;
+
+    tex = func_8004C990(324, 0);
+    data = func_8004CA60(tex);
+    wobble = D_80087E50[D_8850D2BC >> 4] * 2.0f;
+    offset = (s32)(((wobble > 0.0f) ? 0.5f : -0.5f) + wobble);
+    // FAKE: dead store; diff score 70 without it (x + offset and x - offset + 12 swap s4/s5).
+    wobble = 0.0f;
+    // FAKE: the unsigned bound keeps IDO from reusing the loop-limit register for the two 2
+    // arguments of func_800459AC; diff score 593 without it.
+    for (i = 0; i != 2U; i++) {
+        func_800459AC(data, tex->format, tex->size, tex->width, tex->height / 2, 1, 0, 2, 2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(x + offset, y + (i * tex->height) / 2, tex->width, tex->height / 2, -16, -16,
+                             1024, 1024, 0);
+        GfxRect_DrawTextured(x - offset + 12, y + (i * tex->height) / 2 + 36, tex->width, tex->height / 2,
+                             ((tex->width - 1) << 5) - 16, -16, -1024, 1024, 0);
+        data += tex->width * tex->height / 2;
+    }
+    D_8850D2BC = (s16)D_8850D2BC + 0x1000;
+}
+
 
 extern void func_8004AF18(s32 arg0, s16 arg1);
 extern u8 D_885229A8;
