@@ -141,7 +141,22 @@ s16 func_84105E9C(s16 sign, u16 range) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84105F10.s")
+typedef struct ParticleVec3f {
+    f32 x, y, z;
+} ParticleVec3f;
+typedef struct ParticleVec3s {
+    s16 x, y, z;
+} ParticleVec3s;
+extern ParticleVec3f *ParticleMath_RotateVec3fY(ParticleVec3f *, ParticleVec3f, ParticleVec3s);
+extern s32 D_84190194;
+void func_84105F10(ParticleVec3f *pos, ParticleVec3f velocity, f32 scale) {
+    ParticleVec3f rotated;
+
+    ParticleMath_RotateVec3fY(&rotated, velocity, *(ParticleVec3s *)((u8 *)D_84190194 + 0x1E));
+    pos->x += rotated.x * scale;
+    pos->y += rotated.y * scale;
+    pos->z += rotated.z * scale;
+}
 #endif
 
 #ifdef VERSION_US
