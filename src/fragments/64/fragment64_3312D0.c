@@ -33,7 +33,38 @@ void func_87F0E660(unk_func_87F0E660 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0E6B8.s")
+extern void _bcopy(void *, void *, s32);
+s32 func_87F0E6B8(u8 *arg0, s8 arg1, u8 *arg2, s32 arg3, u8 arg4) {
+    s32 found = 0;
+    s32 i;
+
+    for (i = 0; i < arg3; i++, arg2 += 0x58) {
+        s32 ok = 0;
+
+        if (arg2[0x1E] & 1) {
+            continue;
+        }
+        if (arg4 == arg2[0]) {
+            if (arg4 == 0x19) {
+                if (arg2[0x1E] & 2) {
+                    ok = 1;
+                } else if (arg2[0x1C] >= 0xFA) {
+                    ok = 1;
+                }
+            } else {
+                ok = 1;
+            }
+            if (ok) {
+                arg0[0] = i + 1;
+                arg0[1] = arg1;
+                _bcopy(arg2, arg0 + 4, 0x58);
+                found = 1;
+            }
+            break;
+        }
+    }
+    return found;
+}
 
 extern s32 func_8005CAA4(s32);
 extern s32 main_pool_alloc(s32, s32);
@@ -41,7 +72,7 @@ extern s32 main_pool_try_free(s32);
 extern u8 *func_8006218C(s32, s32, s32, s32);
 extern s8 func_80062390(void *, s32, u8 *);
 extern s32 func_80062304(u8 *);
-extern s32 func_87F0E6B8(void *, s32, void *, s32, u8);
+extern s32 func_87F0E6B8(u8 *, s8, u8 *, s32, u8);
 s32 func_87F0E790(void *arg0, void *arg1, u8 arg2) {
     void *block;
     u8 *handle;
