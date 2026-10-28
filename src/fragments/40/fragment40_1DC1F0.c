@@ -182,7 +182,36 @@ void func_88B01438(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4, u8 *arg5) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01A60.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01C54.s")
+extern u8 D_88B05B60[];
+extern s32 func_80001FF0(void);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern Gfx * D_800D0510;
+extern void * D_88B05F60;
+void func_88B01C54(u8 *tex0, u8 *tex1, s32 left, s32 top, s32 width, s32 height) {
+    Gfx *gfx;
+    s32 x;
+    s32 y;
+
+    gSPDisplayList(D_800D0510++, D_88B05B60);
+    gfx = D_800D0510++;
+    gDPSetPrimColor(gfx, 0,
+                    (s32)(255.0f * (u32)*(u16 *)((u8 *)D_88B05F60 + 0x28) / func_80001FF0() +
+                          ((255.0f * (u32)*(u16 *)((u8 *)D_88B05F60 + 0x28) / func_80001FF0() > 0.0f) ? 0.5f : -0.5f)),
+                    255, 255, 255, 255);
+    for (y = 0; y != 480; y += 32) {
+        for (x = 0; x != 640; x += 32, tex0 += 0x200, tex1 += 0x200) {
+            if (x + 31 >= left && x < left + width && y + 31 >= top && y < top + height) {
+                gDPLoadTextureBlock(D_800D0510++, tex0, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP,
+                                    G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                gDPLoadMultiBlock(D_800D0510++, tex1, 0x100, 1, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                  G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP,
+                                  G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                GfxRect_DrawTextured(x, y, 32, 32, 0, 0, 0x200, 0x200, 0);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01FE0.s")
 
