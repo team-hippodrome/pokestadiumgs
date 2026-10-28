@@ -320,7 +320,34 @@ s32 func_88220248(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882202E8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_88220400.s")
+extern u16 D_882345F0;
+extern u8 *D_88A01C38;
+extern s32 func_80063754(s32);
+extern s32 func_88220248(u8 *arg0);
+void func_88220400(s32 mode, u8 *list) {
+    u8 *entry;
+    u8 **dst;
+    u32 i;
+    u16 ok;
+
+    *(s16 *)(list + 4) = 0;
+    dst = *(u8 ***)list;
+    entry = D_88A01C38;
+    for (i = 0; i < D_882345F0; i++, entry += 0x60) {
+        switch (mode) {
+            case 4:
+                ok = func_88220248(entry);
+                break;
+            case 5:
+                ok = func_80063754(entry[9]);
+                break;
+        }
+        if (ok) {
+            *dst++ = entry;
+            (*(s16 *)(list + 4))++;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882204F8.s")
 
