@@ -9,6 +9,7 @@ extern Gfx D_80094E00[];
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
 extern u8 D_882345D4;
 extern s32 D_882347E4;
+extern s32 func_88205D7C(void);
 void func_8821D308(void) {
     if (func_88205D7C()) {
         func_80006F70(&D_800D0510, 50, 68, 590, 349);
@@ -24,19 +25,73 @@ void func_8821D308(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1900C0/func_8821D3FC.s")
+extern u8 *D_882347E0;
+extern u8 *D_88234564;
+extern s32 D_88234560;
+extern s8 D_8800EF18;
+extern s32 ModelAnim_IsFinished(void *);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern f32 func_8004B888(s32);
+extern s32 func_80043678(void *);
+extern void func_800088DC(void);
+extern void func_8821811C(void);
+extern void func_8820B6C8(void);
+extern void func_88212EA0(void);
+extern void func_8820FDF8(void);
+extern void func_882160F8(void);
+extern void func_88004180(void);
+extern void func_80008648(void);
+extern s32 func_88205D7C(void);
+extern void func_8821D308(void);
+extern u8 D_882345D4;
+extern s32 D_882347E4;
+void func_8821D3FC(void) {
+    u8 *anim;
+
+    if (D_882345D4 != 0 && D_88234560 == 5 && func_88205D7C() != 0) {
+        anim = *(u8 **)(D_882347E0 + 0x1C);
+        if (ModelAnim_IsFinished(anim) != 0) {
+            ModelAnim_SetFrame(anim, 0);
+        }
+        *(f32 *)(D_882347E0 + 0x10) = func_8004B888(0xAC) * (f32)*(s8 *)(D_88234564 + 0x20) / (f32)D_8800EF18;
+        D_882347E4 = func_80043678(D_882347E0);
+    }
+    func_800088DC();
+    switch (D_88234560) {
+    case 5:
+    case 6:
+        func_8821D308();
+        break;
+    case 0:
+        func_8821811C();
+        break;
+    case 1:
+        func_8820B6C8();
+        break;
+    case 2:
+        func_88212EA0();
+        break;
+    case 3:
+        func_8820FDF8();
+        break;
+    case 4:
+        func_882160F8();
+        break;
+    }
+    func_88004180();
+    func_80008648();
+}
 
 /* mkdraft:func_8821D550 begin */
 extern s32 func_80001FF0(void);
 extern void StageFade_StartFromOpaque(s32);
 extern void func_80064D28(void);
 extern void func_8821D3FC(void);
-extern f32 D_8823416C;
 
 void func_8821D550(void) {
-    u16 count;
+    u32 count;
     s32 i;
-    count = (u16)((f32)func_80001FF0() * D_8823416C / 2);
+    count = (u16)((f32)func_80001FF0() * 0.3f / 2);
     StageFade_StartFromOpaque(count);
     if (count != 0) {
         i = 0;
@@ -49,19 +104,57 @@ void func_8821D550(void) {
 }
 /* mkdraft:func_8821D550 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1900C0/func_8821D64C.s")
+extern s32 D_88234560;
+extern s8 D_8800EF40;
+extern void func_80064D28(void);
+extern void func_88204400(void);
+extern void func_88217040(void);
+extern void func_88209278(void);
+extern void func_88211550(void);
+extern void func_8820CF8C(void);
+extern void func_882143EC(void);
+extern void func_880040D4(void);
+void func_8821D3FC(void);
+void func_8821D64C(void) {
+    while (D_88234560 != 6) {
+        if (D_8800EF40 == -1) {
+            func_80064D28();
+        }
+        switch (D_88234560) {
+        case 5:
+            func_88204400();
+            break;
+        case 0:
+            func_88217040();
+            break;
+        case 1:
+            func_88209278();
+            break;
+        case 2:
+            func_88211550();
+            break;
+        case 3:
+            func_8820CF8C();
+            break;
+        case 4:
+            func_882143EC();
+            break;
+        }
+        func_880040D4();
+        func_8821D3FC();
+    }
+}
 
 /* mkdraft:func_8821D74C begin */
 extern s32 func_80001FF0(void);
 extern void StageFade_StartFromTransparent(s32);
 extern void func_80064D28(void);
 extern void func_8821D3FC(void);
-extern f32 D_88234188;
 
 void func_8821D74C(void) {
-    u16 count;
+    u32 count;
     s32 i;
-    count = (u16)((f32)func_80001FF0() * D_88234188 / 2);
+    count = (u16)((f32)func_80001FF0() * 0.3f / 2);
     StageFade_StartFromTransparent(count);
     if (count != 0) {
         i = 0;
@@ -101,7 +194,6 @@ M2C_UNK func_80047610();                            /* extern */
 M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 M2C_UNK func_8821CE40(M2C_UNK);                     /* extern */
-M2C_UNK func_8821D64C();                            /* extern */
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
 extern s32 D_8800687C;

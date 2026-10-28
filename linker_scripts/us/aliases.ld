@@ -1274,3 +1274,9 @@ func_86A014D0 = StageCountdown_UpdateAndCheckExit;
 func_87E0DC98 = ListSlots_UpdateTransferAnimation;
 
 func_87E0E9B0 = ListSlots_DrawPanel;
+
+func_8005B378 = GbSave_ReadGen1PartyPokemon;
+
+func_8005B4B8 = GbSave_ReadGsPartyPokemon;
+
+func_8005B5D4 = GbSave_ReadCrystalPartyPokemon;

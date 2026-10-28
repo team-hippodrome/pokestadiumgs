@@ -1394,31 +1394,92 @@ void func_8005B314(u8 *arg0, const u8 *arg1, const u8 *arg2)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005B378.s")
+extern void func_800612B8(u8 *, u8 *);
+extern void func_80062BD4(void *, s32, s32);
+extern void *func_8004B7A4(s32);
+extern void func_8005B314(u8 *arg0, const u8 *arg1, const u8 *arg2);
+void GbSave_ReadGen1PartyPokemon(u8 *out, s32 port, s32 slot) {
+    u8 *save;
+    u8 *party;
+    u8 *row;
+    save = *(u8 **)(D_80128570 + port * 112 + 96);
+    party = save + 2476;
+    func_800612B8(out, save + 2484 + slot * 44);
+    func_80062BD4(out, port, 1);
+    row = ((GbSaveBoxName *)party)[slot];
+    bcopy(row + 272, out + 76, 11);
+    row = func_8004B7A4(out[0]);
+    func_8005B314(out + 52, (((GbSaveBoxName *)party)[slot]) + 338, row);
+    func_8005B314(out + 64, (((GbSaveBoxName *)party)[slot]) + 272, D_80128570 + port * 112 + 82);
+    out[30] = 0;
+    if (out[0] == 25 && (D_80128570 + port * 112)[4] == 4 && *(u16 *)(out + 6) == *(u16 *)(D_80128570 + port * 112 + 80) &&
+        HAL_Strcmp((const s8 *)(out + 64), (const s8 *)(D_80128570 + port * 112 + 82)) == 0) {
+        out[30] |= 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005B4B8.s")
+extern void func_8006136C(u8 *, u8 *);
+void GbSave_ReadGsPartyPokemon(u8 *out, s32 port, s32 slot) {
+    u8 *save;
+    u8 *party;
+    u8 *row;
+    save = *(u8 **)(D_80128570 + port * 112 + 96);
+    party = save + 2186;
+    func_8006136C(out, save + 2194 + slot * 48);
+    func_80062BD4(out, port, 1);
+    row = ((GbSaveBoxName *)party)[slot];
+    bcopy(row + 296, out + 76, 11);
+    row = func_8004B7A4(out[0]);
+    func_8005B314(out + 52, (((GbSaveBoxName *)party)[slot]) + 362, row);
+    func_8005B314(out + 64, (((GbSaveBoxName *)party)[slot]) + 296, D_80128570 + port * 112 + 82);
+    out[30] = 0;
+    if (*(party + slot + 1) == 0xFD) {
+        out[30] |= 1;
+    } else {
+        out[30] &= ~1;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005B5D4.s")
+void GbSave_ReadCrystalPartyPokemon(u8 *out, s32 port, s32 slot) {
+    u8 *save;
+    u8 *party;
+    u8 *row;
+    save = *(u8 **)(D_80128570 + port * 112 + 96);
+    party = save + 2149;
+    func_8006136C(out, save + 2157 + slot * 48);
+    func_80062BD4(out, port, 1);
+    row = ((GbSaveBoxName *)party)[slot];
+    bcopy(row + 296, out + 76, 11);
+    row = func_8004B7A4(out[0]);
+    func_8005B314(out + 52, (((GbSaveBoxName *)party)[slot]) + 362, row);
+    func_8005B314(out + 64, (((GbSaveBoxName *)party)[slot]) + 296, D_80128570 + port * 112 + 82);
+    out[30] = 0;
+    if (*(party + slot + 1) == 0xFD) {
+        out[30] |= 1;
+    } else {
+        out[30] &= ~1;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_8005B378(u8 *, s32, s32);
-extern void func_8005B4B8(u8 *, s32, s32);
-extern void func_8005B5D4(u8 *, s32, s32);
+extern void GbSave_ReadGen1PartyPokemon(u8 *, s32, s32);
+extern void GbSave_ReadGsPartyPokemon(u8 *, s32, s32);
+extern void GbSave_ReadCrystalPartyPokemon(u8 *, s32, s32);
 void func_8005B6F0(u8 *arg0, s32 arg1, s32 arg2) {
     switch (func_8005D92C(arg1)) {
         case 1: case 2: case 3: case 4:
-            func_8005B378(arg0, arg1, arg2);
+            GbSave_ReadGen1PartyPokemon(arg0, arg1, arg2);
             return;
         case 5: case 6:
-            func_8005B4B8(arg0, arg1, arg2);
+            GbSave_ReadGsPartyPokemon(arg0, arg1, arg2);
             return;
         case 7:
-            func_8005B5D4(arg0, arg1, arg2);
+            GbSave_ReadCrystalPartyPokemon(arg0, arg1, arg2);
             return;
     }
 }
