@@ -304,15 +304,78 @@ void func_87E14D24(void) {
     *((u8 *)D_87F119DC + 0xC7) = 220 - rounded;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14E08.s")
+void func_87E14E08(u8 *arg0) {
+    s32 duration;
+    s32 next;
+
+    (*(s32 *)(arg0 + 0x160))++;
+    switch (*(s32 *)(arg0 + 0x164)) {
+    case 0:
+        duration = 15;
+        next = 1;
+        break;
+    case 1:
+        duration = 20;
+        next = 2;
+        break;
+    case 2:
+        duration = 150;
+        next = 3;
+        break;
+    case 3:
+        duration = 30;
+        next = 0;
+        break;
+    case 4:
+        duration = 10;
+        next = 5;
+        break;
+    case 5:
+        duration = 1;
+        next = 5;
+        break;
+    }
+    if (*(s32 *)(arg0 + 0x164) == 4) {
+        if (duration < *(s32 *)(arg0 + 0x160)) {
+            *(s32 *)(arg0 + 0x160) = duration;
+            *(s32 *)(arg0 + 0x164) = next;
+        }
+    } else {
+        if (*(s32 *)(arg0 + 0x164) == 2 && *(s32 *)(arg0 + 0x168) != -1) {
+            *(s32 *)(arg0 + 0x160) = 0;
+            *(s32 *)(arg0 + 0x164) = *(s32 *)(arg0 + 0x168);
+            *(s32 *)(arg0 + 0x168) = -1;
+        }
+        if (duration < *(s32 *)(arg0 + 0x160)) {
+            *(s32 *)(arg0 + 0x160) = 0;
+            if (*(s32 *)(arg0 + 0x168) != -1) {
+                *(s32 *)(arg0 + 0x164) = *(s32 *)(arg0 + 0x168);
+                *(s32 *)(arg0 + 0x168) = -1;
+            } else {
+                *(s32 *)(arg0 + 0x164) = next;
+            }
+        }
+    }
+    switch (*(s32 *)(arg0 + 0x164)) {
+    case 2:
+        *(f32 *)(arg0 + 0x16C) = 1.0f;
+        break;
+    case 0:
+    case 5:
+        *(f32 *)(arg0 + 0x16C) = 0.0f;
+        break;
+    default:
+        *(f32 *)(arg0 + 0x16C) = (f32)*(s32 *)(arg0 + 0x160) / duration;
+        break;
+    }
+}
 
 extern void func_87E120F8(s32);
 extern void func_87E1425C(s32);
-extern void func_87E14E08();
 extern void func_87F0277C(s32);
 extern void func_87F0C3EC(s32 *);
 void func_87E14F98(s32 arg0) {
-    func_87E14E08();
+    func_87E14E08((u8 *)arg0);
     func_87F0277C(arg0 + 4);
     func_87F0277C(arg0 + 0x18);
     func_87F0277C(arg0 + 0x2C);
