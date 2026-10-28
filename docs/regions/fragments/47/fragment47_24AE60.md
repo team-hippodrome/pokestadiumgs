@@ -12,3 +12,10 @@ otherwise copy the default `Fragment47Vec3d` (three `f64`) at `arg0 + 0x6848`
 into `arg2` by struct assignment. Retail's interleaved `lw`/`sw` word pairs
 are IDO's struct-copy lowering. Written in the sibling's repeated-expression
 style, it matched on the first probe.
+
+## 2026-10-28 — `func_8600688C` matched (all-players-ready banner)
+
+`flags[i] = state == 6 || state == 5` over four 0x1998-byte player records
+(state s32 at +0x1828), with `all = all && flags[i]`. If everyone is ready,
+call `func_87F0A098(arg0 + 0x751C, *(arg0 + 0x7580), 1, 0, 0, 0, 0)`;
+otherwise pass the four flags. It matched on the first probe.

@@ -63,6 +63,16 @@ link pass with `build/pokestadiumgs-us.z64: OK`. The complete ROM has MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d` and matches retail byte-for-byte,
 including every existing caller affected by the declaration corrections.
 
+## 2026-10-28 — `func_86B0355C` matched (model-follow callback)
+
+For mode 2: copy the x/z (0xAC/0xB4) of the 0x168-byte model record
+`D_86B16DA0[idx]` (idx = s32 at `arg1 + 0x14`) into `arg1` +0x24/+0x2C. When
+`D_86B17A78[idx]`'s s32 at +0x34 is 16 and its f32 at +0x48 is not 180.0f,
+spawn `func_86B05484(x, y, z, 0xFF)` on every third `func_8003EC54(model)`
+value. Returns 0. Retail spills `model` to sp+0x18 in a 0x28 frame. The
+named local alone lands at 0x1C, and an inline expression shrinks the frame
+to 0x20. One marked `s32 pad; // FAKE` gives both (as in fragment19
+`func_823016B4`). The prototype is retyped from `void` to `s32`.
 ## 2026-10-28 — `func_86B07FB0` matched (step choice)
 
 `s16 func_86B07FB0(s16 a, s16 pos, s16 step, s32 mode)`: if
