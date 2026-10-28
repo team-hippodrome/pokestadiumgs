@@ -74,7 +74,7 @@ extern s32 D_8AE09B44;
 extern s16 D_8AE09B48;
 extern s16 D_8AE09B54;
 extern s32 func_8004C874(s32, s32);
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern void func_8AE00020();
 void func_8AE001D4(void) {
     D_8AE09B54 = 1;
@@ -86,7 +86,7 @@ void func_8AE001D4(void) {
 
 #ifdef VERSION_US
 extern s16 D_8AE084EC;
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern s32 func_8004C874(s32, s32);
 extern void func_8AE00020();
 extern s32 D_8AE09B44;
@@ -153,7 +153,40 @@ void func_8AE0043C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE00AF4.s")
+typedef struct { s16 key; u8 pad2[2]; s32 value; u8 pad8[8]; } Fragment46LookupEntry;
+extern Fragment46LookupEntry D_8AE08508[];
+extern s32 D_8AE0A158;
+extern Mtx *D_8AE084DC;
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern void MtxF_SetLookAt(f32 (*)[4], void *, void *, s16);
+extern void func_80070DEC(f32 (*)[4], f32 (*)[4]);
+extern void func_8AE004C0(Fragment46LookupEntry *, Mtx *, Mtx *, u8);
+extern s16 func_8AE0566C(s16);
+extern void * D_8AE084BC;
+extern s16 D_8AE084E0;
+void Fragment46_BuildLookupMatrices(void) {
+    u8 *camera;
+    f32 (*matrix)[4];
+    f32 temporary[4][4];
+    Mtx *output;
+    Fragment46LookupEntry *entry;
+    s32 index;
+    s32 alpha;
+    Mtx fixed;
+    camera = (u8 *)D_8AE084BC + 96;
+    output = D_8AE084DC = (Mtx *)Gfx_AllocDisplayList(D_8AE0A158 * sizeof(Mtx));
+    matrix = (f32 (*)[4])(camera + 4);
+    MtxF_SetLookAt(matrix, camera + 72, camera + 84, 0);
+    func_80070DEC(temporary, matrix);
+    guMtxF2L(temporary, &fixed);
+    entry = D_8AE08508;
+    for (index = 0; index < D_8AE0A158; index++, entry++, output++) {
+        if (entry->key <= 0) break;
+        alpha = 160;
+        if (func_8AE0566C(D_8AE084E0) == index) alpha = 230;
+        if (entry->value != 0) func_8AE004C0(entry, output, &fixed, alpha);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -231,7 +264,6 @@ s32 func_8AE00CC8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-typedef struct { s16 key; u8 pad2[2]; s32 value; u8 pad8[8]; } Fragment46LookupEntry;
 extern Fragment46LookupEntry D_8AE08508[];
 Fragment46LookupEntry *func_8AE00E54(s16 arg0) {
     Fragment46LookupEntry *entry;
@@ -362,7 +394,43 @@ void func_8AE01394(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE013B4.s")
+typedef struct { s16 unk0; s16 variant; s32 unk4; s32 unk8; s32 unkC; s32 unk10; s32 unk14; s32 unk18; s32 unk1C; s32 unk20; u8 tail[4]; } Fragment46Record;
+extern s32 func_8AE00FC4(u8 *, s32);
+extern s16 D_8AE09E68;
+extern s32 func_8AE01164(void *arg0, u8 *arg1, s32 arg2);
+extern s32 func_8AE011E0(void *arg0, u8 *arg1);
+extern s32 func_8AE01248(void *arg0, u8 *arg1);
+extern s32 func_8AE012B0(s32 arg0, u8 *arg1);
+extern s32 func_8AE01334(void *arg0, u8 *arg1);
+extern void * D_8AE084E4;
+s32 Fragment46_CollectRecordData(u8 *arg0, s16 arg1, s16 arg2) {
+    Fragment46Record *record;
+    s32 count;
+    count = 0;
+    record = D_8AE084E4;
+    for (;;) {
+        if (record->unk0 == -1) break;
+        if (record->unk0 == arg1 && ((s16 *)record)[1] == arg2) {
+            count += func_8AE00FC4(arg0, record->unk4);
+            count += func_8AE00FC4(arg0, record->unk8);
+            if (D_8AE09E68 == 6) {
+                count += func_8AE01164(arg0 + 22, (u8 *)record->unkC, 1);
+                count += func_8AE01164(arg0 + 28, (u8 *)record->unkC, 2);
+                count += func_8AE01164(arg0 + 34, (u8 *)record->unkC, 3);
+                count += func_8AE01248(arg0, (u8 *)record->unk14);
+            } else {
+                count += func_8AE01164(arg0 + 40, (u8 *)record->unk10, 1);
+                count += func_8AE01164(arg0 + 46, (u8 *)record->unk10, 2);
+                count += func_8AE01164(arg0 + 52, (u8 *)record->unk10, 3);
+                count += func_8AE011E0(arg0, (u8 *)record->unk18);
+            }
+            count += func_8AE012B0((s32)arg0, (u8 *)record->unk1C);
+            count += func_8AE01334(arg0, (u8 *)record->unk20);
+        }
+        record++;
+    }
+    return count;
+}
 #endif
 
 #ifdef VERSION_US
@@ -383,12 +451,44 @@ void *func_8AE01564(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8AE013B4(); extern void _bzero(void *, s32);
-void func_8AE015C4(s16 arg0, s16 arg1) { s32 pad; u8 sp1C[0x50]; _bzero(sp1C, 0x50); func_8AE013B4(sp1C, arg0, arg1); }
+extern s32 Fragment46_CollectRecordData(u8 *, s16, s16); extern void _bzero(void *, s32);
+s32 func_8AE015C4(s16 arg0, s16 arg1) { s32 pad; u8 sp1C[0x50]; _bzero(sp1C, 0x50); return Fragment46_CollectRecordData(sp1C, arg0, arg1); }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE01600.s")
+extern s16 D_8AE09B56, D_8AE09B58;
+extern s16 D_8AE08888[], D_8AE0889C;
+extern s32 func_8AE015C4(s16, s16);
+extern void * func_8AE01564(s16 arg0, s16 arg1);
+void Fragment46_FindNeighborVariants(s16 arg0, s16 arg1) {
+    s32 candidate;
+    s32 next;
+    s32 count;
+    s32 i;
+    D_8AE09B56 = -1;
+    D_8AE09B58 = -1;
+    count = 0;
+    for (i = 1, candidate = arg1 - 1; i < 10; i++, candidate--) {
+        if (candidate >= 0) {
+        count += func_8AE015C4(arg0, candidate);
+        if (count > 0) {
+            D_8AE09B58 = candidate;
+            break;
+        }
+        } else break;
+    }
+    count = 0;
+    for (i = 1, next = arg1 + 1; i != 10; i++, next++) {
+        if (next > 10) break;
+        if (func_8AE01564(arg0, next) != NULL) {
+            count += func_8AE015C4(arg0, next);
+            if (count > 0) {
+                D_8AE09B56 = next;
+                break;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -758,7 +858,7 @@ extern s32 func_8AC06D8C(s32, s32);
 extern s32 func_8AE00C1C(s32);
 extern s32 func_8AE00CC8(s32);
 extern void func_8AE020FC();
-extern void func_8AE057A8(void);
+extern void Fragment46_UpdateSelectionVisibility(void);
 extern s32 func_8AE02398(s32, void *);
 extern s32 func_8AE02470(s32, void *);
 extern s32 func_8AE02568(s32, void *);
@@ -879,7 +979,7 @@ void func_8AE029D0(void) {
     D_8AE084E0 = 0;
     D_8AE084E2 = 0;
     func_8AE020FC();
-    func_8AE057A8();
+    Fragment46_UpdateSelectionVisibility();
     D_8AE084E8 = func_8AE00F24();
     D_8AE084FC = 0x14;
     D_8AE084FE = 0x60;
@@ -982,12 +1082,12 @@ extern char *D_8AE09ACC;
 extern char D_8AE083D4[];
 extern char D_8AE083DC[];
 extern char D_8AE083E4[];
-extern void func_800495BC();
+extern void func_800495BC(s32, s32, const char *, ...);
 extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
 extern void _bzero(void *, s32);
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern s32 func_8AE03214(s16 arg0);
 extern s16 D_8AE098B0;
 extern s32 D_8AE09B5C;
@@ -1068,7 +1168,7 @@ extern void _bzero(void *, s32);
 extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
-extern void func_800495BC(s32, s32, s32, s32, void *);
+extern void func_800495BC(s32, s32, const char *, ...);
 extern u8 D_8AE083EC[];
 extern s32 D_8AE09E64;
 extern s32 D_8AE09AE4;
@@ -1088,7 +1188,42 @@ void func_8AE038DC(s32 arg0, s32 arg1, void *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE03BDC.s")
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void _bzero(void *, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern void func_8004C54C(s32, s32);
+extern void func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_8AE03214(s16 arg0);
+extern s32 func_8AE032C8();
+extern s32 D_8AE09AEC;
+extern s32 D_8AE09B5C;
+extern s32 D_8AE09E60;
+extern s32 D_8AE09E64;
+void Fragment46_DrawRecordRange(s32 arg0, s32 arg1, u8 *arg2) {
+    s32 text_width;
+    s32 width;
+    char text[256];
+    char scratch[256];
+    _bzero(text, 256);
+    _bzero(scratch, 256);
+    if (D_8AE09E64 >= 4) func_800495BC(arg0, arg1, (const char *)D_8AE09AEC);
+    text_width = func_80049148(0, 0, D_8AE09AEC);
+    width = text_width + 10;
+    if (D_8AE09B5C < width) D_8AE09B5C = width;
+    if (arg2[2] == arg2[1]) {
+        func_8004C54C(51, func_8AE032C8(arg2[1], 0));
+        func_8004C8A0(text, 256, 43, 9);
+    } else {
+        func_8004C54C(52, func_8AE032C8(arg2[1], 0));
+        func_8004C54C(53, func_8AE032C8(arg2[2], 1));
+        func_8004C8A0(text, 256, 43, 10);
+    }
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C, arg1, text);
+    text_width = func_80049148(0, 0, (s32)text);
+    width = text_width + 10;
+    if (D_8AE09E60 < width) D_8AE09E60 = width;
+    if (D_8AE09E64 >= 4) func_800495BC(arg0 + D_8AE09B5C + D_8AE09E60, arg1, (const char *)func_8AE03214(arg2[3]));
+}
 #endif
 
 #ifdef VERSION_US
@@ -1271,11 +1406,42 @@ void func_8AE0575C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE057A8.s")
+extern Fragment46LookupEntry *D_8AE09B3C;
+extern Fragment46LookupEntry *func_8AE0559C(s16);
+extern s32 D_8AE09B28, D_8AE09B2C, D_8AE09B30;
+extern s16 D_8AE08504;
+extern s16 D_8AE084E0;
+extern s16 D_8AE098B0;
+void Fragment46_UpdateSelectionVisibility(void) {
+    if (D_8AE08504 != 0 && D_8AE084E0 != 0) {
+        if (D_8AE098B0 == 2) {
+            ((u16 *)D_8AE09B28)[1] &= ~1;
+            ((u16 *)D_8AE09B2C)[1] &= ~1;
+            ((u16 *)D_8AE09B30)[1] &= ~1;
+        } else {
+            D_8AE09B3C = func_8AE0559C(D_8AE084E0);
+            if (D_8AE09B3C->value & 0x4901) {
+                ((u16 *)D_8AE09B28)[1] |= 1;
+            } else {
+                ((u16 *)D_8AE09B28)[1] &= ~1;
+            }
+            if (D_8AE09B3C->value & 0x9202) {
+                ((u16 *)D_8AE09B2C)[1] |= 1;
+            } else {
+                ((u16 *)D_8AE09B2C)[1] &= ~1;
+            }
+            if (D_8AE09B3C->value & 0x12404) {
+                ((u16 *)D_8AE09B30)[1] |= 1;
+            } else {
+                ((u16 *)D_8AE09B30)[1] &= ~1;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_8AE057A8(void);
+extern void Fragment46_UpdateSelectionVisibility(void);
 extern s16 D_8AE084EE;
 extern s16 D_8AE084F4;
 extern s16 D_8AE084F6;
@@ -1285,7 +1451,7 @@ void func_8AE05910(s16 arg0) {
     D_8AE084F6 = 0xA;
     D_8AE084EE = arg0;
     D_8AE084F0 = 12.0f;
-    func_8AE057A8();
+    Fragment46_UpdateSelectionVisibility();
 }
 #endif
 
