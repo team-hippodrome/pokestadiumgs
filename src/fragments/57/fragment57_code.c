@@ -22,10 +22,13 @@ s32 func_83300398(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_8330173C.s")
 
-// Fields of D_8330A2B0 that func_83303AB0 writes. D_8330A344 (+0x94) and D_8330A368 (+0xB8) are
+// Fields of D_8330A2B0 that func_83303AB0 writes and func_83302AC8 prints. D_8330A344 (+0x94) and D_8330A368 (+0xB8) are
 // three-float vectors inside this object; unk_98 and unk_C0 alias their second and third components.
 typedef struct unk_D_8330A2B0 {
-    /* 0x00 */ u8 unk_00[0x5C];
+    /* 0x00 */ u8 unk_00[0xC];
+    /* 0x0C */ s32 frame; // printed as "frame:%d"
+    /* 0x10 */ s32 unk_10; // below 3, func_83302AC8 prints D_8330AC5C..D_8330ACD8 instead of cameraPos/cameraAt
+    /* 0x14 */ u8 unk_14[0x5C - 0x14];
     /* 0x5C */ f32 unk_5C;
     /* 0x60 */ f32 unk_60;
     /* 0x64 */ f32 unk_64;
@@ -38,6 +41,8 @@ typedef struct unk_D_8330A2B0 {
     /* 0x98 */ f32 unk_98;
     /* 0x9C */ u8 unk_9C[0xC0 - 0x9C];
     /* 0xC0 */ f32 unk_C0;
+    /* 0xC4 */ f32 cameraPos[3]; // printed as "cam posx", "cam posy", "cam posz"
+    /* 0xD0 */ f32 cameraAt[3]; // printed as "cam latx", "cam laty", "cam latz" (look-at point)
 } unk_D_8330A2B0;
 
 extern unk_D_8330A2B0 D_8330A2B0;
@@ -100,7 +105,52 @@ void func_833018E8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302290.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302AC8.s")
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800497E4(s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern f32 D_8330AC5C;
+extern f32 D_8330AC60;
+extern f32 D_8330ACCC;
+extern f32 D_8330ACD0;
+extern f32 D_8330ACD4;
+extern f32 D_8330ACD8;
+extern f32 D_8330ACDC;
+// Debug overlay: prints the frame counter, then a camera position, look-at point and fovy.
+// While D_8330A2B0.unk_10 is below 3 the six vector values come from D_8330AC5C..D_8330ACD8,
+// otherwise from D_8330A2B0's cameraPos and cameraAt; fovy is always D_8330ACDC.
+//@src/47580.c
+void func_83302AC8(void) {
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(20, 20, 0, "frame:%d", D_8330A2B0.frame);
+    if (D_8330A2B0.unk_10 < 3) {
+        func_800495F8(20, 30, 0, "cam posx:%0.1f", D_8330AC5C);
+        func_800495F8(20, 40, 0, "cam posy:%0.1f", D_8330AC60);
+        func_800495F8(20, 50, 0, "cam posz:%0.1f", D_8330ACCC);
+        func_800495F8(20, 60, 0, "cam latx:%0.1f", D_8330ACD0);
+        func_800495F8(20, 70, 0, "cam laty:%0.1f", D_8330ACD4);
+        func_800495F8(20, 80, 0, "cam latz:%0.1f", D_8330ACD8);
+        func_800495F8(20, 90, 0, "cam fovy:%0.1f", D_8330ACDC);
+    } else {
+        func_800495F8(20, 30, 0, "cam posx:%0.1f", D_8330A2B0.cameraPos[0]);
+        func_800495F8(20, 40, 0, "cam posy:%0.1f", D_8330A2B0.cameraPos[1]);
+        func_800495F8(20, 50, 0, "cam posz:%0.1f", D_8330A2B0.cameraPos[2]);
+        func_800495F8(20, 60, 0, "cam latx:%0.1f", D_8330A2B0.cameraAt[0]);
+        func_800495F8(20, 70, 0, "cam laty:%0.1f", D_8330A2B0.cameraAt[1]);
+        func_800495F8(20, 80, 0, "cam latz:%0.1f", D_8330A2B0.cameraAt[2]);
+        func_800495F8(20, 90, 0, "cam fovy:%0.1f", D_8330ACDC);
+    }
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302D8C.s")
 

@@ -63,7 +63,68 @@ void func_84100134(void) {
     D_8418C954 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100174.s")
+// Resets a 0x9C-byte record that func_84100260 has just claimed from the pool at D_8418C950:
+// clears its fields, sets the bytes at 0x83-0x88 and 0x8B-0x8F to 0xFF and the floats at 0x18
+// and 0x1C to 1.0f, and sets byte 0x92, which func_84100094 clears and func_8410009C tests.
+void func_84100174(u8 *arg0) {
+    s32 value;
+
+    *(s16 *)(arg0 + 0x6E) = 0;
+    *(f32 *)(arg0 + 0x4C) = 0.0f;
+    // FAKE: the do-while (0) wrapper; diff score 505 without it.
+    do {
+        // FAKE: the first two statements share a line; diff score 390 without it.
+        value = *(s16 *)(arg0 + 0x6E); *(f32 *)(arg0 + 0x48) = *(f32 *)(arg0 + 0x4C);
+        *(f32 *)(arg0 + 0x44) = *(f32 *)(arg0 + 0x4C);
+        *(s16 *)(arg0 + 0x74) = 0;
+        *(s16 *)(arg0 + 0x6C) = value;
+        *(s16 *)(arg0 + 0x6A) = value;
+        value = *(s16 *)(arg0 + 0x74);
+        arg0[0x92] = 1;
+        arg0[0x95] = 0;
+        *(u32 *)(arg0 + 0x8) = 0;
+        *(u32 *)(arg0 + 0xC) = 0;
+        *(u32 *)(arg0 + 0x0) = 0;
+        *(u32 *)(arg0 + 0x4) = 0;
+        *(u32 *)(arg0 + 0x14) = 0;
+        *(s16 *)(arg0 + 0x60) = 0;
+        *(s16 *)(arg0 + 0x66) = 0;
+        arg0[0x7F] = 0;
+        arg0[0x80] = 0;
+    } while (0);
+    arg0[0x81] = 0;
+    arg0[0x82] = 0;
+    arg0[0x83] = 0xFF;
+    arg0[0x87] = 0xFF;
+    arg0[0x86] = 0xFF;
+    arg0[0x85] = 0xFF;
+    arg0[0x84] = 0xFF;
+    arg0[0x8E] = 0xFF;
+    arg0[0x8D] = 0xFF;
+    arg0[0x8C] = 0xFF;
+    arg0[0x8B] = 0xFF;
+    arg0[0x88] = 0xFF;
+    arg0[0x89] = 0;
+    arg0[0x8F] = 0xFF;
+    arg0[0x90] = 0;
+    *(f32 *)(arg0 + 0x28) = 0.0f;
+    *(f32 *)(arg0 + 0x24) = 0.0f;
+    *(f32 *)(arg0 + 0x20) = 0.0f;
+    *(f32 *)(arg0 + 0x34) = 0.0f;
+    *(f32 *)(arg0 + 0x30) = 0.0f;
+    *(f32 *)(arg0 + 0x2C) = 0.0f;
+    *(f32 *)(arg0 + 0x40) = 0.0f;
+    *(f32 *)(arg0 + 0x3C) = 0.0f;
+    *(f32 *)(arg0 + 0x38) = 0.0f;
+    *(f32 *)(arg0 + 0x58) = 0.0f;
+    *(f32 *)(arg0 + 0x54) = 0.0f;
+    *(f32 *)(arg0 + 0x50) = 0.0f;
+    *(f32 *)(arg0 + 0x5C) = 0.0f;
+    *(s16 *)(arg0 + 0x72) = value;
+    *(s16 *)(arg0 + 0x70) = value;
+    *(f32 *)(arg0 + 0x18) = 1.0f;
+    *(f32 *)(arg0 + 0x1C) = 1.0f;
+}
 
 extern void func_84100174(u8 *arg0);
 extern u8 *D_8418C950;
