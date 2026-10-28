@@ -36,3 +36,15 @@ is retyped.
 ## 2026-10-29: `func_87E07CD0` tooling-blocked
 
 tooling-blocked (uncached globals, 0.38). Two 30-button cheat sequences: compare D_80087200's pressed buttons against `D_87E1A180[D_87E1A1F8]` and `D_87E1A1BC[D_87E1A1FC]`. On completion it plays 0xCF0C and calls func_87E07CB0 / func_87E07C90; on a mismatch the index resets. The logic matches, but retail re-forms each counter's address with `lui $at` per store, where IDO caches the address in $a1. This is the known per-access global-address shape; no C spelling found yet. Also note: controller.h conflicts with this file's `D_800CE060` byte-array declaration.
+
+## 2026-10-29 — `func_87E09514`: requeue
+
+Status: **requeue**, best ≈0.74 (hand body kept locally as `514_b.c`). The only
+structural divergence left is that retail keeps `arg0` in its stack home and
+reloads it, while our compile allocates it to `$s0`. A permuter run found
+improvements only through fakes (`if (1) {}` / comma expressions), and those
+are not acceptable.
+
+Next: make `arg0`'s live range cross a call in the retail order (take its
+address once, or reload it through a `volatile`-free local copy declared first).
+Alternatively, pass it into the callee chain explicitly.
