@@ -703,6 +703,7 @@ SECTIONS
         build/src/unk_220C0.o(.bss);
         build/src/226C0.o(.bss);
         build/src/229E0.o(.bss);
+        build/asm/us/data/unk_bss3.bss.o(.bss);
         build/src/2C1B0.o(.bss);
         build/src/340C0.o(.bss);
         build/src/43700.o(.bss);
@@ -748,7 +749,7 @@ SECTIONS
         build/src/72C30.o(.bss);
         build/src/73C80.o(.bss);
         build/src/74020.o(.bss);
-        build/asm/us/data/unk_bss3.bss.o(.bss);
+        build/asm/us/data/unk_bss4.bss.o(.bss);
         build/lib/libultra.a:sptask.o(.bss);
         build/lib/libultra.a:controller.o(.bss);
         build/lib/libultra.a:siacs.o(.bss);

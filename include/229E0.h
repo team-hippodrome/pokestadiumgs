@@ -356,6 +356,24 @@ s32 func_80028E60(u32 arg0)
 
 void func_80028EA8(void) ;
 
+// Command/event queues and their battle-response snapshots occupy one BSS run.
+// Legacy address labels refer to the corresponding fields through aliases.ld.
+//@src/2C1B0.c
+typedef struct {
+    s32 command_queue[10];
+    s16 event_queue[10];
+    u8 unk_3C[2];
+    u8 unk_3E[2];
+    u8 unk_40[2];
+    u8 result_code;
+    s32 hp_delta;
+    u32 history[24];
+    u8 active_slot[2];
+    u8 unk_AA;
+    u8 unk_AB;
+} AudioQueuedState;
+extern AudioQueuedState gAudioQueuedState;
+
 extern s32 D_800D1A90[10];
 extern u8 D_800D2660[32];
 extern u32 D_80091A24;

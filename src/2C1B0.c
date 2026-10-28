@@ -2,6 +2,8 @@
 
 #ifdef VERSION_US
 
+AudioQueuedState gAudioQueuedState;
+
 typedef struct {
     u32 words[21];
 } BattleMetadata84;

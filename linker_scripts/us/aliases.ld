@@ -1062,3 +1062,24 @@ func_82505758 = Fragment21_DrawTexturedBorder;
 D_8600D9B8 = D_8600D9B0 + 8;
 /* Audio context (Ocarina of Time / Majora's Mask gAudioContext); src/14640.c reads it typed. */
 gAudioContext = D_8011BE90;
+
+// Interior labels of the queued-audio BSS state; offsets follow AudioQueuedState.
+D_800D1A90 = gAudioQueuedState;
+D_800D1A94 = gAudioQueuedState + 4;
+D_800D1A98 = gAudioQueuedState + 8;
+D_800D1AB8 = gAudioQueuedState + 40;
+D_800D1ABA = gAudioQueuedState + 42;
+D_800D1ABC = gAudioQueuedState + 44;
+D_800D1ACC = gAudioQueuedState + 60;
+D_800D1ACE = gAudioQueuedState + 62;
+D_800D1AD0 = gAudioQueuedState + 64;
+D_800D1AD2 = gAudioQueuedState + 66;
+D_800D1AD4 = gAudioQueuedState + 68;
+D_800D1AD8 = gAudioQueuedState + 72;
+D_800D1ADC = gAudioQueuedState + 76;
+D_800D1AE0 = gAudioQueuedState + 80;
+D_800D1AE4 = gAudioQueuedState + 84;
+D_800D1B34 = gAudioQueuedState + 164;
+D_800D1B38 = gAudioQueuedState + 168;
+D_800D1B3A = gAudioQueuedState + 170;
+D_800D1B3B = gAudioQueuedState + 171;
