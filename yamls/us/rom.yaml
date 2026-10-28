@@ -1682,6 +1682,8 @@
     - [0x36DD90, textbin, fragments/78/fragment78_header]
     - [0x36DDB0, c,       fragments/78/fragment78_code]
     - [0x36F2C0, data,    fragments/78/fragment78_data]
+    - [0x36F340, .rodata, fragments/78/fragment78_code] # strings and jump table
+    - [0x36F3B0, rodata, fragments/78/fragment78_tail] # tables after the code object's rodata
   
   - name: fragment79
     type: code
