@@ -2,6 +2,21 @@
 
 
 #ifdef VERSION_US
+// Hex number editor state, laid out like the numeric view of fragment77's
+// F77EditorState; func_8F90083C clamps the entered value (words[5]) to 0-255.
+//@src/fragments/77/fragment77_code.c
+typedef union {
+    s32 words[9];
+    struct {
+        u16 geometry[4];
+        s16 selected;
+        u16 last;
+        s8 digits[8];
+        s32 value;
+    } numeric;
+} F78EditorState;
+extern F78EditorState D_8F911650;
+
 /* mkdraft:func_8F900020 begin */
 extern Gfx *D_800D0510;
 extern u8 D_80094DE0[];
@@ -14,7 +29,33 @@ void func_8F900020(s32 arg0, s32 arg1, s32 arg2) {
 }
 /* mkdraft:func_8F900020 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F9000D0.s")
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_80049628(s32, s32, s32);
+extern void func_800499EC(void);
+extern void func_8F900020(s32, s32, s32);
+extern Gfx * D_800D0510;
+void func_8F9000D0(void) {
+    s32 index;
+    F78EditorState *state = &D_8F911650;
+
+    func_80007444(&D_800D0510, state->numeric.geometry[0], state->numeric.geometry[1], 0x20, 0x16, 1);
+    func_800498C4();
+    func_800496A4(4, 0);
+    for (index = state->numeric.last; index >= 0; index--) {
+        if (state->numeric.digits[index] < 10) {
+            func_80049628(state->numeric.geometry[0] + (state->numeric.last - index) * 16,
+                          state->numeric.geometry[1], state->numeric.digits[index] + 0x30);
+        } else {
+            func_80049628(state->numeric.geometry[0] + (state->numeric.last - index) * 16,
+                          state->numeric.geometry[1], state->numeric.digits[index] + 0x37);
+        }
+    }
+    func_800499EC();
+    func_8F900020(state->numeric.geometry[0] + (state->numeric.last - state->numeric.selected) * 16,
+                  state->numeric.geometry[1] + 18, 16);
+}
 
 extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800495BC(s32, s32, s32 *);
@@ -47,20 +88,6 @@ void func_8F900594(void) {
     *(&D_8F901630 + D_8F91163C) = (s8) D_8F911664;
 }
 
-// Hex number editor state, laid out like the numeric view of fragment77's
-// F77EditorState; func_8F90083C clamps the entered value (words[5]) to 0-255.
-//@src/fragments/77/fragment77_code.c
-typedef union {
-    s32 words[9];
-    struct {
-        u16 geometry[4];
-        s16 selected;
-        u16 last;
-        s8 digits[8];
-        s32 value;
-    } numeric;
-} F78EditorState;
-extern F78EditorState D_8F911650;
 extern s32 D_8F911630;
 extern s32 D_8F911634;
 extern void func_8F900574(void);
@@ -144,7 +171,7 @@ s32 func_8F900690(void) {
 }
 
 extern s32 func_8F900690(void);
-extern s32 func_8F9000D0(void);
+extern void func_8F9000D0(void);
 extern void func_8F900594(void);
 extern s32 D_8F911648;
 s32 func_8F90083C(void) {
