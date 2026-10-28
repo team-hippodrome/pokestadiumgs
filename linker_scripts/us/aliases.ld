@@ -1139,3 +1139,5 @@ func_8240239C = Fragment13_DrawTintedPanel;
 func_8AE01738 = Fragment46_RefreshSavedSelection;
 
 func_84127194 = BattleTurn_CheckMoveStatus;
+
+func_82402E28 = Fragment13_DrawScrollingLabelPanel;
