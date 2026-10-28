@@ -70,3 +70,7 @@ layout-prerequisite. A 12-case switch on `*(u8 *)(arg0 + 0x137F5)`, after a `+0x
   matches except the frame: 0x30 vs retail's 0x20, because the named
   `base`/`store_base` locals reserve slots. Neither declaration order nor the
   stack-aware permuter (200 s) fixes it.
+
+## 2026-10-28 — `func_8130B06C` matched; `func_8130B0E0` cleaned
+
+Both read a real state struct (`unk_func_8130B06C`: current node at 0xE8E8, index byte at 0xE911) and node struct (`unk_D_8130B06C_node`: predecessor 0x4D94, successor 0x4D98). With typed fields IDO forms the two large-offset bases itself (`a0 + 0x8000` for loads, `a0 + 0x7FFF` for stores) and keeps the 0x20 frame. The named `base`/`store_base` locals were what cost the extra 0x10. `func_8130B0E0`'s permuter body (`new_var`, `((0, 0x7FFF))`) is replaced by the plain decrement twin, byte-identical.

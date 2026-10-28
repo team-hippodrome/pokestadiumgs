@@ -807,27 +807,34 @@ s32 func_8130AA54(u8 *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AF94.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130B06C.s")
-
 extern void func_8130AEF4(void *, void *, s32);
-void func_8130B0E0(void *arg0) {
-    u8 *new_var;
-    u8 *base = ((u8 *)arg0) + 0x8000;
-    u8 *store_base = ((u8 *)arg0) + ((0, 0x7FFF));
-    u8 count;
-    u8 *new_var3;
-    u8 *new_var4;
-    void *node;
-    u8 new_var2;
-    new_var4 = base;
-    new_var = store_base + 0x68E9;
-    count = new_var4[0x6911];
-    if (count > 0) {
-        store_base[0x6912] = (count & 0xFFFFFFFF) - 1;
-        ;
-        *((void **)new_var) = *((void **)(((u8 *)(*((void **)(base + 0x68E8)))) + 0x4D94));
-        new_var2 = new_var4[0x6911];
-        func_8130AEF4(arg0, *((void **)(new_var3 = new_var4 + 0x68E8)), new_var2);
+extern s32 func_8160A33C(s32 arg0, u8 arg1);
+// A node in the doubly linked list func_8130B06C/func_8130B0E0 step through (successor at
+// 0x4D98, predecessor at 0x4D94), and the state holding the current node and its index.
+typedef struct unk_D_8130B06C_node {
+    /* 0x0000 */ u8 unk_0000[0x4D94];
+    /* 0x4D94 */ struct unk_D_8130B06C_node *unk_4D94;
+    /* 0x4D98 */ struct unk_D_8130B06C_node *unk_4D98;
+} unk_D_8130B06C_node;
+typedef struct unk_func_8130B06C {
+    /* 0x0000 */ u8 unk_0000[0xE8E8];
+    /* 0xE8E8 */ unk_D_8130B06C_node *unk_E8E8;
+    /* 0xE8EC */ u8 unk_E8EC[0xE911 - 0xE8EC];
+    /* 0xE911 */ u8 unk_E911;
+} unk_func_8130B06C;
+void func_8130B06C(unk_func_8130B06C *arg0) {
+    if (arg0->unk_E911 < 8) {
+        arg0->unk_E911++;
+        arg0->unk_E8E8 = arg0->unk_E8E8->unk_4D98;
+        func_8130AEF4(arg0, (void *)func_8160A33C((s32)arg0->unk_E8E8, 2), arg0->unk_E911 + 2);
+    }
+}
+
+void func_8130B0E0(unk_func_8130B06C *arg0) {
+    if (arg0->unk_E911 > 0) {
+        arg0->unk_E911--;
+        arg0->unk_E8E8 = arg0->unk_E8E8->unk_4D94;
+        func_8130AEF4(arg0, arg0->unk_E8E8, arg0->unk_E911);
     }
 }
 
