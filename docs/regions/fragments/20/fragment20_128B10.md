@@ -467,3 +467,49 @@ subsequent native `COMPARE=1 RUN_CC_CHECK=1` full-US-ROM build passed with
 MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The first-success source, object,
 ROM, ELF, and map were frozen before cleanup; no coverage change accompanies
 this implementation.
+
+### 2026-10-28 requeue: `82602FE8` current-HP validation
+
+The checked halfword is current HP. `func_80071E48` in `src/728D0.c`
+creates the 88-byte working record, including experience at eight, stat
+experience at 12 through 20, DVs at 22, and level at 29. `func_800619E8`
+in `src/615D0.c` calculates maximum HP at 40; the local `82600CF4` refresh
+copies it to current HP at 38. The descriptor's eight-byte header therefore
+places the first checked HP at 46. The actual experience word also establishes
+four-byte record alignment. Correcting the earlier two-byte-aligned partial
+view preserves the best candidate's instructions but does not finish it.
+
+A bounded native follow-up on base `ca1db4dd` records 128 candidates in 16
+canonical batches, with no acceptance. The retained 252-byte parent matches
+all 63 opcodes and 45 exact words. A real pointer to the entry array plus
+reuse of the count scalar improves the initial parent; both that form and
+a later bound-initialization form remain allocation-only residuals.
+Two calibrated single-worker source searches run for 120 and 180 seconds;
+the second improves its own score from 135 to 120 without reaching zero.
+Those search scores are diagnostic evidence, not matching claims.
+
+A private logging-only IDO 7.1 observer records five color-assignment sites
+in `globalcolor`. The generated recompiler source has SHA-256
+`5da5580a14ca58a0d1dae94a4c0fcfdefc0e08b07469e9c8ccfd8d572db7e38f`.
+Known-source and two retained-parent controls pass stock, stock with twenty
+leading blanks, observer disabled, observer enabled, and enabled with twenty
+leading blanks: fifteen complete-module section/byte/extent/relocation
+comparisons. The retained base parameter occupies A0 while its separate
+byte cursor occupies A1; retail advances A0 and preserves the base in A2.
+
+Expressing the advancing parameter directly reproduces a different 248-byte
+bulk loop: it compares integer offsets instead of record pointers and loses
+one address addition. This is a loop-induction difference as well as a
+coloring difference. Explicit pointer-bound loops lose retail's unrolling;
+raw address grouping, inline bounds, guarded-end construction, initialization
+ordering, ordinary register storage hints, comma initialization, and the
+correct record alignment do not resolve the owner. Do not repeat those
+families unchanged or install a near-match. Nonpositive sums must still
+return one, and all referenced HP fields must be checked without a
+source-level unroll.
+
+Next: compare the retained 252-byte base/cursor parent and the 248-byte
+advancing-parameter parent through calibrated logging at `findinduct`,
+`loopunroll`, and `eliminduct`. Identify why the latter selects an integer
+bulk-loop bound before changing another source lifetime. The owner remains
+assembly; coverage and production compiler selection are unchanged.
