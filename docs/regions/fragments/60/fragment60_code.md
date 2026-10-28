@@ -39,3 +39,13 @@ normal ROM gate retains MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
 Only this callback and its helper declaration change in the source file.
 Unrelated assembly owners and existing C remain untouched. No private helper
 or coverage changes are part of the public correction.
+
+## 2026-10-28 — `func_86A03F48`: requeue
+
+requeue. The queue push that `func_86A0405C` pops:
+- returns 0 when the player's queue holds 5, or when `D_86A0D560[item].cost (+4) + unk_00E8[player] >= 6`;
+- otherwise `count + 1` and `values[(head + count) wrapped at 5] = item`;
+- adds the entry's `f32 +8` to `unk_00D8` and its cost to `unk_00E8`, sets `unk_00F8 = item`, and calls `func_86A0BA80(player)` when the cost total reaches 5;
+- returns 1.
+
+Retail keeps an `entry` pointer (which spills `arg1` to its home), loads the cost once, and reuses `head` for the wrapped slot. Best 12 ops: retail holds the queue base in `$v1` and copies `count` into a second register (`or a3,t0`). A 240 s permuter suggested computing `head + count` before the full check; that spelling alone does not match.
