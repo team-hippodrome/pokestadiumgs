@@ -305,3 +305,11 @@ that splits it around the packed coordinate copy. For the renderer, map the
 argument-pointer web's final fragment and UGEN allocations at the cursor
 call before more source guesses. Do not replay the completed families or
 interpret the normalized 1.0/first-difference literal relocation as acceptance.
+
+## 2026-10-28 — `func_813064E8` matched; cursor helpers cleaned
+
+`func_813064E8` is the cursor-up step:
+- with row (+0xA) > 0: save the cell (+8) to +0xC, decrement the row, phase 2, +0x83 = 0, +0x85 = 1, sound 1;
+- otherwise with the scroll (+0x7C) > 0: the `Fragment14_ScrollGridForward` pattern with a step of 1 (save the old scroll in +0x8A, phase 3, +0x86 = `(u32)(|delta| * D_81311F70)`).
+
+The 4-byte cell copy uses `unk_D_813064E8` (two `s16`, 2-byte alignment, so `lwl`/`lwr`). The same type replaces the file's `#pragma pack(1)` word structs. `func_81306208`, `func_81306264` (which had a permuter `new_var`) and `func_813062C0` are rewritten in plain form, all byte-identical.
