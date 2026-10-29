@@ -1388,3 +1388,13 @@ func_84129374 = BattleCommand_018;
 func_84129900 = BattleCommand_020;
 
 func_8412E680 = BattleCommand_080;
+
+func_8412AAE8 = BattleCommand_035;
+
+func_8412B958 = BattleCommand_041;
+
+func_8412B65C = BattleCommand_040;
+
+func_8412C294 = BattleCommand_048;
+
+func_8412DE98 = BattleCommand_075;
