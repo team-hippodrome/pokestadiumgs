@@ -1089,3 +1089,93 @@ Normal/+20-line post-acceptance controls preserve all module bytes, function
 extents and semantic relocation tuples while removing only redundant
 declarations in this new block. Source integration is on the merged text/HP
 base; its two earlier functions remain unchanged.
+## 2026-10-29 — native next-three: `84131664` accepted; two durable requeues
+
+Scope resumed from `5bbb127a` in the isolated battle-followup checkout. Selected
+`84131664` (252B/63 instructions), `84137778` (468B/117) and `841334D8`
+(572B/143). The last slightly exceeds the preferred128 instructions but was
+fresh in available local history and is a direct sibling of accepted33714.
+`84129374` was excluded after reading its branch on currently-void36124;
+existing D6C0/scalar-mask/shared-LUI/layout blockers were not restarted.
+
+### `84131664`: accepted, 252 bytes / frame24
+
+The winning void(u8) body reads the stored acting/target globals at each
+original point, including after calls, instead of recomputing the opposing
+index. It clears D_841951D6, calls36D84 and BattleTurn_CheckMoveStatus, then
+conditionally calls266C4 and BattleCommand_RunSequence. First accepted
+candidate is `next3-31664-global8` index6; probing stopped for this owner.
+The ordinary canonical runner verified link shape and passed both the explicit
+normal host syntax check and authoritative full native retail ROM gate.
+Receipt: `scratch/next3-31664-global8/gate-0/receipt.json`.
+Retail MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+Independent module seal `scratch/next3-final-seal/module-seal.json` compares
+the prior A804-gated object with this gate object: every allocated section's
+bytes/descriptors (including .reginfo), all function extents and all semantic
+relocations agree. Earlier33714,36440,A804 accepts remain identical. No private
+A804 verifier is loaded for these owners; no admission/tooling changes made.
+
+### `841334D8`: requeue — UOPT promotes the real byte parameter
+
+Best source-faithful parent `scratch/next3-334d8-direct8.json` index0:
+576B versus retail572B, frame64, normalized .8958/raw .7986. First diff byte7
+is savedRA28 versus36. Candidate reserves S0 for the u8 argument and inserts
+save/ANDI/reloads; retail repeatedly reads its stack byte and saves no S reg.
+The real signed HP-difference ratio, u16 animation/message locals and all real
+callee contracts are retained. Tried real table-entry/other-index forms,
+local order, direct opposing expression, staged arithmetic/nested guards,
+threshold direction, live pair defaults and scoped ratio; no family removes
+the entry fingerprint.32 canonical attempts; no candidate gate reached.
+
+Passive unmodified stock pass captures with normal/+20 complete-module controls
+localize the change: frontend `Ulod Ldt Pmt length1 offset3` becomes an entry
+copy and Rmt16 reads; UOPT output adds `Uregs i1=2 length1 offset16`. Accepted
+33714 instead keeps Pmt byte reads with no corresponding reservation. Evidence:
+`scratch/next3-stock-passes/decoded-summary.json` and owner-specific rows.
+Next action: original-source/real-caller control-topology evidence or a narrow
+observational UOPT eligibility/cost trace for this parameter versus33714,
+then a genuine lifetime/control hypothesis. Do not repeat home/default grids
+or force a memory home with unused work, address escapes or fabricated ABI.
+
+### `84137778`: requeue — optimizer commoning of scalar timer addresses
+
+Best source-faithful parent `scratch/next3-37778-forward8.json` index4:
+464B versus retail468B/frame24, normalized .9316/raw .7778. Direct count
+index0 is468B/.9145/raw .7692. First diff byte29: scalar LUI t8 becomes an
+address LUI a1; compiler then shares pointer-based LH/SH rather than separate
+scalar accesses. Stock pass capture shows Smt scalar input becomes `Urlda`
+and indirect accesses before resets in UOPT output; no saved integer block.
+
+Historical semantic errors fixed in candidates: no duplicated3771C; display
+buffer offset is2 bytes; first/second channels17/16; signed sentinel threshold
+is>=-1; preserve each branch's actual cleanup call. Confirmed real484CC API is
+s32(u8,u8,u8,u8) in neighboring fragment79_3ADCA0.c. Initial8 compile failures
+from its synthesized prototype appearing after accepted callers are preserved
+in `next3-37778-branches8`. Exact-once forward-prototype companion before37648
+plus own M2C_UNK-to-void prototype repair passes preflight; neither installs
+without acceptance. No signature-comment scanner fix or workaround was used.
+An eventual winner must verify affected37648/3771C/later timer callers.
+
+48 canonical attempts include those8 compile failures. Correct branches,
+early returns/count pointers, sentinel switches, explicit signed reads from
+u16 storage and real branch-local timer lifetimes retain the same fingerprint.
+A diagnostic field-view parent reaches .9402/raw .8205/464B, but numeric label
+relationships alone do not prove original array/object bounds: obtain source
+provenance before treating it as an eligible source parent. No such view gated
+or installed. Next action: original timer/global object typing/access evidence
+and UOPT scalar/address-commoning diagnosis; keep ASM without that evidence.
+Do not invent bigger buffers/aliases, absolute-address C, barriers or broaden
+the private A804 admission verifier.
+
+Full private handoff: `scratch/next3-final-seal/handoff.md`. Eleven canonical
+batches each contained8 candidates, with one skipped after acceptance. Statistics
+remain enabled; stock IDO7.1/production flags unchanged. Only31664 source and
+this region note are committed; no metadata/naming/coverage changes.
+
+
+Integration names84131664 as Battle_RunSideCommandSequence, describing its
+actual side selection and guarded command-sequence calls. Normal/+20-line
+complete module controls preserve sections, bytes, function extents and
+semantic relocations while removing redundant declarations only from its new
+block. The old address-keyed symbol remains an explicit linker alias.

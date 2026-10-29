@@ -4499,7 +4499,24 @@ void BattleCommand_RunSequence(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84131664.s")
+extern void func_84136D84(void);
+void Battle_RunSideCommandSequence(u8 arg0) {
+    if (((u8 *)D_841951F8[arg0])[16] == 0) {
+        D_841951BC = arg0;
+        D_841951BD = 1 - arg0;
+        D_841951C5 = D_84195200[D_841951BC][1];
+        D_841951C6 = D_84195200[D_841951BD][1];
+        func_84124E44(D_841951BC);
+        func_8004C54C(42, func_800635E0(D_84195200[D_841951BD][1]));
+        D_841951D6 = 0;
+        func_84136D84();
+        BattleTurn_CheckMoveStatus();
+        if (D_841951D6 == 0) {
+            func_841266C4();
+            BattleCommand_RunSequence();
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -4912,7 +4929,7 @@ void func_841331F8(void) {
 #ifdef VERSION_US
 extern void func_84124E44(u8);
 extern s32 func_841270D8(u8, u8);
-extern void func_84131664(u8);
+extern void Battle_RunSideCommandSequence(u8);
 extern u8 func_80062D20(u8);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
@@ -4928,7 +4945,7 @@ s32 func_84133304(u8 arg0) {
         return 1;
     }
     if (func_80062D20(((u8 *)D_841951F8[other])[1]) == 0x80) {
-        func_84131664(other);
+        Battle_RunSideCommandSequence(other);
         ((u8 *)D_841951F8[other])[1] = 0;
         if (*(u16 *)(D_84195200[arg0] + 0x26) == 0) {
             func_841270D8(arg0, ((u8 *)D_841951F8[arg0])[0xA]);
