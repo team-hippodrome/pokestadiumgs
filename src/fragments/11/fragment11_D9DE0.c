@@ -55,7 +55,69 @@ s32 func_81602AEC(u8 *arg0, u8 *arg1) {
     return changed;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81602C68.s")
+extern u8 D_8160BDF8[];
+extern u8 D_8160BDFC[];
+extern u8 D_8160BE00[];
+extern u8 D_8160BE04[];
+extern u8 D_8160BE08[];
+extern u8 D_8160BE0C[];
+extern u8 D_8160BE10[];
+extern u8 D_8160BE14[];
+extern u8 D_8160BE18[];
+extern u8 D_8160BE1C[];
+extern u8 D_8160BE20[];
+extern u8 D_8160BE24[];
+extern u8 D_8160BE28[];
+extern u8 D_8160BE2C[];
+extern u8 D_8160BE30[];
+extern u8 D_8160BE34[];
+extern u8 D_8160BE38[];
+extern u8 D_8160BE3C[];
+void *func_81602C68(arg0)
+    s32 arg0;
+{
+    switch (arg0) {
+    case 7:
+        return D_8160BDF8;
+    case 26:
+        return D_8160BE00;
+    case 23:
+        return D_8160BE08;
+    case 27:
+        return D_8160BE18;
+    case 1:
+        return D_8160BE20;
+    case 20:
+        return D_8160BE28;
+    case 2:
+    case 6:
+        return D_8160BE30;
+    case 8:
+        return D_8160BE38;
+    case 22:
+        return D_8160BDFC;
+    case 4:
+        return D_8160BE04;
+    case 25:
+        return D_8160BE0C;
+    case 0:
+        return D_8160BE14;
+    case 3:
+        return D_8160BE1C;
+    case 24:
+        return D_8160BE24;
+    case 5:
+        return D_8160BE2C;
+    case 9:
+        return D_8160BE34;
+    case 21:
+        return D_8160BE3C;
+    case 19:
+        return D_8160BE10;
+    default:
+        return D_8160BE14;
+    }
+}
 
 extern u8 D_8160BE40;
 extern u8 D_8160BE4C;
@@ -73,7 +135,11 @@ void *func_81602C68();
 void func_81602DA4(void) {
     void *temp_v0;
 
+#ifdef CC_CHECK
+    temp_v0 = func_81602C68(0);
+#else
     temp_v0 = func_81602C68();
+#endif
     func_8004972C((*(u8 *)((u8 *)(temp_v0) + (0))), (*(u8 *)((u8 *)(temp_v0) + (1))), (*(u8 *)((u8 *)(temp_v0) + (2))), 0xFF);
 }
 
