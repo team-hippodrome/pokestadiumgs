@@ -4482,7 +4482,7 @@ void BattleCommand_RunSequence(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
@@ -4963,7 +4963,46 @@ void func_84133440(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84133714.s")
+extern void func_84135C78(u8 arg0, s16 arg1, u16 arg2, u16 arg3);
+void Battle_QueueSwitchInHpMessage(u8 arg0, s32 arg1, s32 arg2) {
+    s32 ratio;
+    u16 animation;
+    u16 message;
+
+    func_84136678(arg0, -1);
+    func_8004C54C(25, func_8004B7A4(D_84195208[arg0][0]));
+    func_8004C54C(26, (s32)(D_84195200[arg0] + 52));
+    if (((u8 *)D_841951F0)[2503]) {
+        animation = 3;
+        message = 22;
+        func_84134CBC(arg0, 34);
+    } else {
+        *(u16 *)(D_84195208[1 - arg0] + 72) = *(u16 *)(D_84195200[1 - arg0] + 38);
+        if (*(u16 *)(D_84195208[arg0] + 72) == 0) {
+            *(u16 *)(D_84195208[arg0] + 72) = *(u16 *)(D_84195200[arg0] + 38);
+        }
+        ratio = (*(u16 *)((*(u8 **)((u8 *)&D_84195204 + -(arg0 << 2))) + 38)) * 25 / (*(u16 *)((*(u8 **)((u8 *)&D_84195204 + -(arg0 << 2))) + 40) >> 2);
+        if (ratio >= 70 || (*(u16 *)((*(u8 **)((u8 *)&D_84195204 + -(arg0 << 2))) + 38)) == 0) {
+            animation = 4;
+            message = 22;
+        } else if (ratio >= 40) {
+            animation = 5;
+            message = 18;
+        } else if (ratio >= 10) {
+            animation = 6;
+            message = 16;
+        } else {
+            animation = 7;
+            message = 39;
+        }
+        func_84124CC4(arg0, arg1, arg2);
+    }
+    func_84135B00(message);
+    if (func_84127140(arg0)) {
+        func_84135C78(arg0, -1, 60, animation);
+    }
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
@@ -5013,7 +5052,7 @@ extern void func_84137DB8(void);
 extern void func_841383B4(u8, u8, u8);
 extern void func_84131AB8(u8);
 extern void func_84125734(u8);
-extern void func_84133714(u8, s32, s32);
+extern void Battle_QueueSwitchInHpMessage(u8, s32, s32);
 extern void func_84131EAC(u8);
 extern u8 *D_84195200[];
 extern void *D_841951F8[];
@@ -5029,7 +5068,7 @@ void Battle_ApplySwitchInState(u8 arg0) {
     if (*(u16 *)(D_84195200[arg0] + 38) == 0) fainted = 1;
     func_84131AB8(arg0);
     func_84125734(arg0);
-    func_84133714(arg0, fainted, 1);
+    Battle_QueueSwitchInHpMessage(arg0, fainted, 1);
     ((u8 *)D_841951F8[arg0])[1] = 0;
     D_84195208[arg0][38] = 0;
     (*(u8 **)((u8 *)D_8419520C + -(arg0 << 2)))[38] = 0;
@@ -5123,9 +5162,9 @@ void func_8413425C(void) {
     }
     if (((u8 *)D_841951F0)[0x9C3] == 0) {
         func_84136A9C(0, -1, ((u8 *)D_841951F8[0])[0xA], 4);
-        func_84133714(0, 0, 0);
+        Battle_QueueSwitchInHpMessage(0, 0, 0);
         func_84136A9C(1, -1, ((u8 *)D_841951F8[1])[0xA], 4);
-        func_84133714(1, 0, 0);
+        Battle_QueueSwitchInHpMessage(1, 0, 0);
     }
     func_84126A64();
 }
@@ -5843,11 +5882,35 @@ void func_84136354(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84136440.s")
+extern void func_80049D9C(u8 *, u8 *, u8 *, u8 *);
+typedef struct { u32 mask; u32 other; u8 count; u8 entries[13][4]; } BattleTextRecord;
+void BattleText_CollectEntriesForSide(u8 side) {
+    s32 text_id;
+    u8 code;
+    u8 parameter0;
+    u8 parameter1;
+    u8 *entry;
+
+    for (text_id = 21; text_id != 25; text_id++) {
+        parameter1 = 0;
+        parameter0 = 0;
+        code = 0;
+        func_80049D9C(&code, &parameter0, &parameter1, func_8004C874(((u8 *)D_841951F8[side])[1179] + 76, text_id));
+        if (code > 0) {
+            ((BattleTextRecord *)D_8419A020)[side].mask |= 1 << code;
+            entry = ((BattleTextRecord *)D_8419A020)[side].entries[((BattleTextRecord *)D_8419A020)[side].count];
+            entry[0] = code;
+            entry[1] = parameter0;
+            entry[2] = parameter1;
+            entry[3] = text_id;
+            ((BattleTextRecord *)D_8419A020)[side].count++;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_84136440(u8);
+extern void BattleText_CollectEntriesForSide(u8);
 extern void func_84136354(u8 arg0);
 extern void * D_841951F8[];
 extern u32 D_8419A020[];
@@ -5857,7 +5920,7 @@ void func_84136564(void) {
         if (((u8 *)D_841951F8[i])[0x49A] != 0) {
             *(u32 *)((u8 *)D_8419A020 + i * 0x40) = 0;
             func_84136354((u8)i);
-            func_84136440((u8)i);
+            BattleText_CollectEntriesForSide((u8)i);
         }
     }
 }

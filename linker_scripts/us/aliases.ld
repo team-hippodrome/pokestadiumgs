@@ -1336,3 +1336,7 @@ func_8290A2F4 = Scene67_DefaultCallback;
 func_8290B934 = Scene67_UpdateModelMotionPositiveX;
 
 func_8290BADC = Scene67_UpdateModelMotionNegativeX;
+
+func_84133714 = Battle_QueueSwitchInHpMessage;
+
+func_84136440 = BattleText_CollectEntriesForSide;
