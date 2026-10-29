@@ -640,3 +640,18 @@ the loaded image, in the `0x11DB70` `rodata` blob (`.word 0x05003BA4`… from
 NOLOAD section at 0x8220EB80 that overlaps a loaded section's VMA, and (2) the
 blob's `dlabel`s for those addresses dropped. Status: `layout-prerequisite`; do
 not spend spelling probes on these owners until that is done.
+
+## 2026-10-29 — full `.rodata` owned; `func_82209F50` matched
+
+`fragment17_113A60` now owns 0x11DAE0–0x11DB80 ("%02d", `jtbl_8220E128`,
+`jtbl_8220E14C`, its floats), and `fragment17_11A7F0` owns 0x11DB80. Before,
+113A60's slice was widened around 0x11DB40 and the rest sat in blobs.
+`func_82209F50` (camera fade) matched. Like its matched sibling
+`func_8220A098`, it needs a marked `s32 pad[4]` to reach the original frame.
+
+Blocked: `func_82209360`, `func_822091F0` and several others store pairs
+into this object's bss (`D_822106B2`/`B4`, `D_822106D0`/`D2`,
+`D_822106C8`/`CE`) with one shared `lui $at`. That needs the object's bss
+(0x822105E8–0x822109B4) defined in this file and pinned by
+`datamig_bss.ld`, which would also let the existing `COALESCE_AT_LUI`
+pragmas go. Many C users with assorted extern types would need retyping.

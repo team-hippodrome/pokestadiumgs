@@ -727,7 +727,32 @@ s32 func_82209EA8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82209F50.s")
+extern s16 D_822106CC, D_822106CE;
+extern s16 D_822106D2;
+extern f32 D_822106C4;
+extern f32 D_822106C8;
+extern u16 D_822106B6;
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+s32 func_82209F50(void *arg0) {
+    s32 pad[4]; // FAKE: reserves the 0x38-byte frame, as in sibling func_8220A098.
+    f32 fade;
+    f32 x;
+    f32 y;
+
+    fade = 1.0f - (f32)(320 - D_822106CE) / 360.0f;
+    if (fade < 0.001f) {
+        fade = 0.0f;
+    } else if (1.0f < fade) {
+        fade = 1.0f;
+    }
+    x = D_822106C4 * fade;
+    y = D_822106C8 * fade;
+    if (D_822106B6 & 1) {
+        x = 0.0f - x;
+    }
+    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x24), (f32)D_822106CC - 320.0f, 240.0f - (f32)(D_822106D2 + 0x15E), -579.0f);
+    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x30), x, y, 1.0f);
+}
 
 // Sets the vectors at arg0 + 0x24 to the screen point (D_822106CC, D_822106CE) relative to the
 // 640x480 center at depth -579, and at arg0 + 0x30 to (x, D_822106C8, 1), where x is
