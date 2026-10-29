@@ -29,3 +29,20 @@ Already tried without gain:
 `func_82404DD8` (fragment13_EEC50) is now typed
 `s32 func_82404DD8(u8 *)`, returning `func_81A00074`'s result; this caller
 consumes it (declaration-only change, ROM verified).
+
+## 2026-10-29 — `func_824005D8` requeue
+
+Model-anim reset callback (`scratch/c/5d8_best.c`, normalized 1.0,
+raw 0.83):
+
+- The animation id is
+  `((s16 *)(state + x1A0 * 2 + 0x54))[x16A]`. That spelling gives retail's
+  load order.
+- `switch` cases 9/0x2A/0xB add 1/5/9 to `state->x1F4`, then
+  `func_8003F1DC` / `func_8003F114(arg1, 0, -1, func_80071ADC(D_82409FC0, D_82408EE0[index]))`.
+- Retail's frame is 0x28 (ours 0x20).
+- Retail hoists `lui %hi(D_82407458)` into `$t2` above the `arg0 != 2`
+  test (ours loads it after, in `$t3`). A `type` local, an `s16` id and a
+  separate model local don't change it.
+- Next: find the extra 8 bytes of locals and a shape that evaluates the
+  table pointer before the guard.
