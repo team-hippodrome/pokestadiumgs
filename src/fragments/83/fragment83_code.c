@@ -1038,7 +1038,63 @@ void func_82C0423C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C0458C.s")
+extern s32 D_82C04C50;
+extern s32 D_82C04C54;
+extern s32 func_8004C54C(s32, s8 *);
+
+// Mode-indexed window setup for the menu whose context pointer sits in
+// D_82C04C50; the mode is the u16 at offset 0x34 of that context. Every
+// handled mode stores a value under settings index 0x26 (func_8004C54C writes
+// the word at block + 0x26*4 + 0x2C of the block at D_80097120) and then
+// func_8004C8A0 opens the window at D_82C04C54 with args 0x32, 0x15, 1.
+// Modes 0..13 store the string returned by func_8004C874(0x13, n) with n
+// chosen per mode; mode 14 stores the context pointer itself. Modes 15 and
+// above do nothing.
+void func_82C0458C(void) {
+    switch (*(u16 *)((u8 *)D_82C04C50 + 0x34)) {
+    case 0:
+        func_8004C54C(0x26, func_8004C874(0x13, 3));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        func_8004C54C(0x26, func_8004C874(0x13, 2));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 5:
+        func_8004C54C(0x26, func_8004C874(0x13, 0));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 6:
+        func_8004C54C(0x26, func_8004C874(0x13, 9));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 11:
+        func_8004C54C(0x26, func_8004C874(0x13, 0xA));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        func_8004C54C(0x26, func_8004C874(0x13, 1));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 12:
+    case 13:
+        func_8004C54C(0x26, func_8004C874(0x13, 6));
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        return;
+    case 14:
+        func_8004C54C(0x26, (s8 *)D_82C04C50);
+        func_8004C8A0(&D_82C04C54, 0x32, 0x15, 1);
+        /* fallthrough */
+    default:
+        return;
+    }
+}
 #endif
 
 #ifdef VERSION_US
