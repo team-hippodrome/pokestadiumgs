@@ -53,3 +53,64 @@ The complete link prints `build/pokestadiumgs-us.z64: OK`. ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail byte comparison and whitespace
 checks pass. Independent original-assembly and retail-span comparisons cover
 all 156 bytes at ROM `0x3305DC..0x330678`.
+
+
+## func_87F0D48C — optional four-object initialization
+
+This three-pointer owner stores its second argument at state offset 0,
+clears the word at 4 and model-data pointer at 32, updates the state through
+`func_87F0D44C`, and requests resource 372. A null third argument ends there.
+Otherwise it obtains resource entry 0, passes it and address `0x0F000000`
+to `func_87F08E3C`, and stores the returned word at offset 36. It creates a
+main-pool state, processes geometry script `D_87F112C0` into offset 32 and
+finalizes that allocation. The script contains `func_87F0DA08` as callback.
+The `func_80040E80` alias resolves to `process_geo_layout`, whose actual
+parameters are pool/script pointers and whose result is a node pointer.
+//@src/fragments/64/fragment64_32AEF0.c
+//@src/3280.c
+//@src/3A00.c
+//@src/340C0.c
+//@src/4CC20.c
+//@linker_scripts/us/aliases.ld
+
+The nonnull third argument is the graph passed to `func_87F0252C`. This
+helper initializes four 396-byte objects using the pool embedded at state
+offset 12. A separate 48-byte allocation holds four three-word callback
+records. Each object's offset 56 points to its record, whose first word
+receives index 0 through 3, second word is null and third word points to
+the supplied state. `func_87F0DB3C` later writes the first two words and
+registers `func_87F0D96C`; that callback uses the third word's state pointer
+to obtain its color. These producers and consumers establish the local
+12-byte record view. Unresolved fields keep their offset names.
+//@src/fragments/64/fragment64_324FB0.c
+
+Compiled `Fragment51_InitScene` supplies its state/context pointers and zero as
+the third argument. Inspected assembly callers `func_86107A20` and
+`func_8690073C` instead pass `D_87F119C0` as the graph; neither consumes a
+result. The owner has a void result and three pointer parameters.
+//@src/fragments/51/fragment51_275E40.c
+//@src/fragments/49/fragment49_code.c
+//@src/fragments/59/fragment59_code.c
+
+The first C trial matches all 75 instruction words (300 bytes) and the
+48-byte frame. A normal four-iteration indexed loop reproduces the retail
+unrolling. Consumed pool, object-array, record-array and index locals give
+the original stack homes. All previous C text remains unchanged. No fake,
+extra storage, padding, manual unrolling, instruction rewrite, layout or
+helper implementation change is introduced.
+
+Fresh validation on master `e051df38bf3fb563890a2d0a85d5b2ea71b9bd9b` plus
+this patch forces the changed translation unit through the normal
+syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/64/fragment64_32FE10.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Complete retail comparison and whitespace
+checks pass. Independent original-assembly and raw-retail comparisons verify
+all 300 bytes at ROM `0x3300FC..0x330228`.
