@@ -995,3 +995,26 @@ interface. Any return-contract repair needs independent evidence, exact-once
 companions and affected-caller verification. Do not fabricate that interface,
 add register hints, introduce unused work, or replay the failed width/home/
 guard families. No owner replacement or native acceptance is claimed here.
+
+
+## 2026-10-29 — Text/HP follow-up integration names
+
+The accepted33714 and36440 owners are named
+`Battle_QueueSwitchInHpMessage` and `BattleText_CollectEntriesForSide`,
+with address aliases retained. The former's switch-in/init callers support
+the name; its existing side/flag word arguments and signed HP ratio remain
+unchanged. The latter parses three bytes from each text21..24 and appends
+code/parameter0/parameter1/text_id records. `BattleTextRecord` retains the
+observed64-byte stride, mask0/count8 and four-byte entries starting9.
+The actual void-pointer return declaration for func_8004C874 is preserved.
+Naming, parser-output names and removal of duplicate declarations in only
+these two new blocks pass normal/+20-line complete-module byte/section/extent/
+semantic-relocation controls. No helper function, instruction rewrite or
+coverage edit is introduced by this integration. A804/D6C0 remain ASM with
+the earlier tooling/requeue handoffs; neither is included as an acceptance.
+
+The remaining assembly caller of33714 keeps its original address-name alias.
+Post-acceptance naming controls resolve that exact alias to the renamed C
+definition before comparing relocation targets; raw module bytes and all
+function extents are identical. The final extracted build resolves it through
+the tracked alias/symbol definitions and still requires the full ROM gate.
