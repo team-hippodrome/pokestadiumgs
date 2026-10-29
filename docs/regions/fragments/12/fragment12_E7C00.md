@@ -77,3 +77,13 @@ Same day: `func_81404040`, `func_8140463C`, `func_8140438C` and
   since its home is 0x2E), an `sfx` local, a `pad`-in-condition form,
   `s32 buttons` (frame shrinks).
 - The permuter ignores stack offsets and scores the base 0.
+
+`func_81403304` (per-row nearest-candidate pick; **requeue**,
+`scratch/c/304_best.c`, normalized 1.0, raw 0.89):
+
+- Exact except that `s2`/`s3` are swapped between the `arg0` copy and the
+  `0..0xC60` row offset.
+- A 240 s permuter run only won with a fake `if (arg0) {}` that extends
+  `arg0`'s lifetime. Not used.
+- Next: find a real later use of `arg0` (the original may have had one),
+  or a loop form that keeps `arg0` live.
