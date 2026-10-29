@@ -742,3 +742,101 @@ layout-prerequisite (0.92, shared `$at`). It refreshes a 10-byte LCG pool with `
 ## 2026-10-29: `func_84124410` requeue
 
 requeue (0.42). Stat-stage scaling: `value = (u16)(stat * ratio[0]) / ratio[1]`, with `ratio = D_8418542C[(u8)(stage - 1)]`, floored at 1; then the same with `D_8418542C[(u8)(13 - opposing)]`, capped at 255, stored back to *stat. Its caller's extern needs `(u8 *, u8, u8)`. Retail keeps the table pointers in $a3/$a1, the running value in $v0 and a copy in $v1. Our temporaries land in v0/t registers and the multiply operands are swapped.
+
+
+## 2026-10-29 — Independently callable return entries
+
+The command table based at D_84185EB0 contains address8412DE90 at index74
+(ROM3F5868/VRAM84185FD8) and8412E944 at index84
+(ROM3F5890/VRAM84186000). BattleCommand_RunSequence invokes table entries
+as void functions with no arguments. Each target is a retail JR RA/NOP pair.
+These are independently referenced callable entries, not solely an inference
+from consecutive return instructions.
+
+Explicit function symbols and adjacent assembly pragmas separate these entries
+from func_8412DDC0 and func_8412E82C. The extractor otherwise merges a following
+JR/NOP into an unbounded preceding function when its redundant-end heuristic
+is enabled. Explicitly naming proven entries preserves that heuristic for
+unproven boundaries. This evidence supplies no boundary claim for8005A5BC.
+Source callback bodies must still pass canonical owner comparison and the
+normal host/native retail ROM gate before admission.
+//@src/fragments/79/fragment79_393CA0.c
+
+
+## 2026-10-29 — Four command owners accepted after proven boundary extraction
+
+The boundary baseline at `1389fa80e9c0c34f4c8b63ac3e4a121b9831d18b`
+passes the native retail build with the two independently referenced entries
+already symbolized. All four adjacent owners now have canonical accepted C:
+
+| Owner | Command index in D_84185EB0 | Bytes | Frame |
+| --- | --- | --- | --- |
+| func_8412DDC0 | 73 | 208 | 24 |
+| func_8412DE90 | 74 | 8 | 0 |
+| func_8412E82C | 83 | 280 | 0 |
+| func_8412E944 | 84 | 8 | 0 |
+
+The entries at indices 74 and 84 are ordinary no-argument void callbacks with
+empty bodies. The first ANSI `(void)` spelling won for each. Their table
+pointers, zero-argument dispatcher calls, and original two instruction words
+establish callable behavior independently of neighboring return sequences.
+
+Command 73 loads the target active record selected by D_841951BD. It calls
+func_84126BA8 for active-record byte 15 mask 0x60, byte 16 mask 0x10,
+a clear low-three-bit field in party-record byte 36, or an already-set active
+byte 13 bit 0. Otherwise it sets that bit and calls func_84136678 with the
+real `(u8, s16)` arguments `(D_841951BD, -1)`, then func_84135B00(30),
+func_84134E30(5), func_84124604, and BattleRecord_AdvanceWriteSlot.
+The accepted form uses one byte pointer and direct global indexing.
+BattleTurn_CheckMoveStatus clears the same bit when the party status becomes
+zero; BattleEffect_ClearPartyStatus also clears it. These consumers support
+its relationship to the party status, but no move-specific name is installed.
+
+Command 83 first requires the acting party record's byte 36 low-three-bit
+field to be clear. A nonzero D_841951D2 clears active byte 13 mask 0x40.
+Otherwise it increments active byte 18, sets mask 0x40 while that byte is
+below 5 and clears it at 5 or above, and shifts D_841951C8 by byte 18 plus
+31 plus a zero/one value from active byte 14 bit 0. Results at or above
+65536 are capped at 65535. The neighboring BattleAnim_Table_84185FDC_007
+resets byte 18 when the flag is clear; func_84126568 and func_84134018
+also inspect mask 0x40. These are verified operations; the record-field and
+move meanings remain unnamed.
+
+The first command-83 batch emitted 276 bytes: its initialized-zero conditional
+lowered to a branch-likely and omitted one retail instruction. Assigning both
+zero and one through a genuine `if/else`, followed by the direct compound
+shift and cap, matches all 280 bytes. No filler, padding, artificial arguments,
+return category, storage, labels, output rewrites, or other boundaries were
+introduced. Generic owner names remain for coordinator naming review.
+
+Three canonical batches of eight candidates retain statistics and accepted
+rows for all four owners. Every winning installation passed link verification,
+the explicit normal host syntax recipe, and the full native retail ROM gate
+using unchanged production IDO7.1 and flags. Final ROM MD5:
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Normal and 20-blank-line whole-module
+controls passed before each batch. Final module section bytes, all function
+extents, and sorted semantic relocation tuples match the earlier callback-only
+gated module; raw relocation record ordering changes while the tuples agree.
+The comparator sorts records for diagnosis; no object or instruction rewriting
+is performed. YAML, linker script, aliases, and symbol metadata hashes remain
+identical to the coordinator's boundary baseline.
+
+Private evidence:
+- `scratch/callable-battle-boundaries-baseline-seal/receipt.json`
+- `scratch/battle-entries-ansi8/gate-0/receipt.json`
+- `scratch/battle-parents-first8/gate-0/receipt.json`
+- `scratch/battle-e82c-terminal8/gate-0/receipt.json` (all four installed)
+- `scratch/battle-command-entries-final-receipt.json`
+- `scratch/battle-command-entries-handoff.md`
+
+These verified callback boundaries supply no boundary claim for 8005A5BC;
+the Gen-1 scanner's separate 340-byte prefix proof remains independently scoped.
+
+### Accepted command entry names
+
+The four accepted definitions are named `BattleCommand_073`,
+`BattleCommand_NoOp074`, `BattleCommand_083`, and `BattleCommand_NoOp084`
+from their actual command-table indices. Generic-address aliases remain in
+`aliases.ld`. Names preserve the full module sections, text, function extents
+and semantic relocation tuples in normal and +20-line controls.
+No move-specific semantics or scanner boundary follows from these names.
