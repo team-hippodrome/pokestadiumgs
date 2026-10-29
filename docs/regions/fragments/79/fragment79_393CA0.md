@@ -1699,3 +1699,16 @@ normal/+20 whole-module controls. Stock IDO7.1/flags, one worker/shared flock,
 canonical admission and host/full-ROM gates are unchanged; the A804 plug-in
 was not loaded. Source/region only, explicit-path hooks-disabled commit; no
 metadata/naming/coverage/private helpers shipped, integration, push or PR.
+
+
+### Native five-command integration on PR2055 master
+
+The original D_84185EB0 table identifiesAAE8 as35,B65C as40,B958 as41,
+C294 as48 andDE98 as75. These five C owners cover3520B; evidence-backed
+BattleCommand_035/040/041/048/075 names retain old address aliases. The
+existing360C0 s32 result is explicitly returned with unchanged native code.
+Naming plus111 duplicate new-block declaration removals preserve normal/+20
+whole allocated module bytes/extents/semantic relocations. Real PP-byte
+address arithmetic and HP-derived scalar carriers remain; no fake work,
+padding or instruction patch. Separate scene67/61 research, coverage and
+private helpers are excluded. The unresolved25778 layout remains separate.
