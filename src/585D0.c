@@ -1283,13 +1283,117 @@ void GbSave_ReadAuxiliaryStatus(u8 port) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005A98C.s")
+extern void func_8005487C(void *);
+extern void func_800548C4(void *);
+void GbSave_CollectCrystalFeatureFlags(s32 port) {
+    s32 item_count;
+    u8 *item_cursor;
+    u8 *payload;
+    /* The item byte survives the first callback; the other byte holds feature flags. */
+    u16 item_and_features;
+    u8 progress_flags;
+    u8 current_item;
+    u8 *save_data;
+    u8 *port_state;
+    s32 item_index;
+    u8 command_block[32];
+    struct { u16 unknown_00; u16 flags; u32 unknown_04[3]; } persistent_status;
+    port_state = (D_80128570 + port * 112);
+    save_data = *(u8 **)(port_state + 96);
+    payload = save_data + 9;
+    port_state[72] = func_8005CF20(32, port, 0);
+    if (GbPak_ReadCommand(port, command_block, 0xBE0, 32) == 0 && command_block[5] != 255) {
+        *(u32 *)port_state |= 0x1000;
+        if (command_block[4] != 0) {
+            *(u32 *)port_state |= 0x2000;
+        }
+    }
+    if (func_8005F9A4(port, 68) != 0) {
+        *(u32 *)port_state |= 0x800;
+    }
+    if (func_8005F9A4(port, 31) != 0) {
+        *(u32 *)port_state |= 0x100000;
+    }
+    progress_flags = payload[977];
+    if (progress_flags & 1) {
+        *(u32 *)port_state |= 0x200;
+    }
+    progress_flags = payload[977];
+    if (progress_flags & 2) {
+        *(u32 *)port_state |= 0x200000;
+    }
+    progress_flags = payload[977];
+    if (progress_flags & 64) {
+        *(u32 *)port_state |= 0x80000;
+    }
+    ((u8 *)&item_and_features)[1] = func_8005431C();
+    item_count = func_8005CF20(44, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = payload;
+        do {
+            current_item = item_cursor[item_index + 1090];
+            if (current_item == 54) {
+                *(u32 *)port_state |= 0x4000;
+            }
+            func_8005A8EC(current_item, &((u8 *)&item_and_features)[1]);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    item_count = func_8005CF20(32, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = save_data + 2149;
+        do {
+            func_8005A5C4(((u8 (*)[48])(item_cursor + 8))[item_index][1], &((u8 *)&item_and_features)[1]);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    item_count = func_8005CF20(43, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = payload;
+        do {
+            func_8005A5C4(((u8 (*)[2])(item_cursor + 1048))[item_index][0], &((u8 *)&item_and_features)[1]);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    item_count = func_8005CF20(34, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = payload;
+        do {
+            current_item = ((u8 (*)[2])(item_cursor + 1143))[item_index][0];
+            if (current_item == 54) {
+                *(u32 *)port_state |= 0x4000;
+            }
+            ((u8 *)&item_and_features)[0] = current_item;
+            func_8005A8EC(current_item, &((u8 *)&item_and_features)[1]);
+            func_8005A5C4(((u8 *)&item_and_features)[0], &((u8 *)&item_and_features)[1]);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    func_8005487C(&persistent_status);
+    if ((persistent_status.flags & 0x100) == 0) {
+        persistent_status.flags |= 0x100;
+        func_800548C4(&persistent_status);
+        func_80051D64(20, 0);
+    }
+    if (func_8005F9A4(port, 0x340) != 0) {
+        ((u8 *)&item_and_features)[1] |= 0x10;
+    }
+    GbSave_ReadAuxiliaryStatus((u8)port);
+    if (((u8 *)&item_and_features)[1] != func_8005431C()) {
+        func_8005437C(((u8 *)&item_and_features)[1]);
+        func_80051D64(19, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern void func_8005A468(s32);
 extern void GbSave_CollectGsFeatureFlags(s32);
-extern void func_8005A98C(s32);
+extern void GbSave_CollectCrystalFeatureFlags(s32);
 void func_8005ACE8(s32 arg0) {
     switch (func_8005D92C(arg0)) {
         case 1: case 2: case 3: case 4:
@@ -1299,7 +1403,7 @@ void func_8005ACE8(s32 arg0) {
             GbSave_CollectGsFeatureFlags(arg0);
             break;
         case 7:
-            func_8005A98C(arg0);
+            GbSave_CollectCrystalFeatureFlags(arg0);
             break;
     }
 }
