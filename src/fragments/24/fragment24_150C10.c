@@ -3,13 +3,13 @@
 
 #ifdef VERSION_US
 /* mkdraft:func_82B00E10 begin */
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 
 void func_82B00E10(void) {
     s32 i;
 
     for (i = 0; i < 2; i++) {
-        *(s16 *)((u8 *)(&D_82B12450 + i) + 0xFF4) = 0;
+        *(s16 *)((u8 *)((s16 *)D_82B12450 + i) + 0xFF4) = 0;
     }
 }
 /* mkdraft:func_82B00E10 end */
@@ -17,7 +17,7 @@ void func_82B00E10(void) {
 
 #ifdef VERSION_US
 extern void func_800226C0(void);
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 s32 func_82B00E34(s32 arg0) {
     s16 *sp1C;
     s16 *temp_v1;
@@ -26,7 +26,7 @@ s32 func_82B00E34(s32 arg0) {
     var_a1 = 0;
     var_v0 = 0;
     if ((arg0 == 0xA6) || (arg0 == 0xA8)) var_v0 = 1;
-    temp_v1 = &(&D_82B12450)[var_v0];
+    temp_v1 = &((s16 *)D_82B12450)[var_v0];
     if ((*(s16 *)((u8 *)(temp_v1) + (0xFF4))) == 0) {
         sp1C = temp_v1;
         func_800226C0();
@@ -167,7 +167,7 @@ s32 func_82B010BC(void) {
     D_82B13008 = 0;
     index = 0;
     var_v1 = (u16 *)((u8 *)temp_v0 + 0x50); do {
-        temp_v0_2 = *(u16 *)((u8 *)(&D_82B12450 + index) + 0xBDC);
+        temp_v0_2 = *(u16 *)((u8 *)((s16 *)D_82B12450 + index) + 0xBDC);
         index++;
         if (temp_v0_2 == 2) {
             var_a3 = 1;
@@ -176,7 +176,7 @@ s32 func_82B010BC(void) {
             *var_v1 = 0;
         }
         var_v1 += 1;
-    } while ((u8 *)&D_82B12454 != (u8 *)(&D_82B12450 + index));
+    } while ((u8 *)&D_82B12454 != (u8 *)((s16 *)D_82B12450 + index));
     return var_a3;
 }
 /* mkdraft:func_82B010BC end */
@@ -197,14 +197,14 @@ s32 func_82B01130(void) {
     // func_82B010BC; the assembler orders the address setup by source line.
     // Diff score 45 without it.
     dest = (u16 *)(base + 0x50); do {
-        switch (*(u16 *)((u8 *)(&D_82B12450 + index) + 0xBDC)) {
+        switch (*(u16 *)((u8 *)((s16 *)D_82B12450 + index) + 0xBDC)) {
             case 1:
             case 2:
             case 3:
             case 4:
             case 5:
                 result = 1;
-                *dest = *(u16 *)((u8 *)(&D_82B12450 + index) + 0xBDC);
+                *dest = *(u16 *)((u8 *)((s16 *)D_82B12450 + index) + 0xBDC);
                 break;
             default:
                 *dest = 0;
@@ -212,7 +212,7 @@ s32 func_82B01130(void) {
         }
         index++;
         dest++;
-    } while ((u8 *)&D_82B12454 != (u8 *)(&D_82B12450 + index));
+    } while ((u8 *)&D_82B12454 != (u8 *)((s16 *)D_82B12450 + index));
     return result;
 }
 #endif
@@ -438,7 +438,96 @@ void *func_82B018CC(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B01904.s")
+extern u8 D_82B12450[0xFF8];
+extern s16 D_82B12470;
+extern s32 func_82B011C0(s32, s32);
+extern s32 func_82B0128C(s16 *, s16 *, u8 *, s32, u8 *);
+typedef struct CupPanelPoint { s16 x; s16 y; } CupPanelPoint;
+typedef struct CupPanelFade { s16 active; s16 tick; } CupPanelFade;
+typedef struct CupPanelInitState {
+    s16 kind;
+    s16 subtype;
+    u16 flags;
+    s16 state;
+    u8 unknown_08[4];
+    CupPanelPoint slide_delta;
+    CupPanelPoint position;
+    CupPanelPoint entry_offset;
+    CupPanelPoint exit_offset;
+    CupPanelPoint entry_offsets[4];
+    CupPanelPoint exit_offsets[4];
+    CupPanelPoint base_position;
+    u8 unknown_40[8];
+    s16 width;
+    s16 height;
+    u8 unknown_4C[4];
+    CupPanelFade fade;
+} CupPanelInitState;
+void Panel_InitCupSelection(void *context) {
+    CupPanelInitState *panel;
+    s32 cup_index;
+    s32 grid_cell[2];
+    s32 slot_index;
+    u8 *rules;
+    u8 *selection_context;
+    CupPanelPoint *entry_offset;
+    CupPanelPoint *exit_offset;
+    CupPanelFade *fade;
+    panel = context;
+    cup_index = panel->subtype;
+    grid_cell[1] = (int)cup_index % 3;
+    grid_cell[0] = (int)cup_index / 3;
+    switch (cup_index) {
+    case 0:
+    case 1:
+    case 2:
+        rules = (u8 *)func_82B011C0(cup_index, -1);
+        selection_context = D_82B12450;
+        for (slot_index = 0; slot_index < 2; slot_index++) {
+            if (((u16 *)(selection_context + 0xBDC))[slot_index] != 0 ||
+                func_82B0128C(NULL, NULL, rules, ((s16 *)(selection_context + 0xBC8))[slot_index], ((u8 **)(selection_context + 0xBCC))[slot_index]) != 0) {
+                panel->flags &= ~2;
+            }
+        }
+        break;
+    case 3:
+        break;
+    case 4:
+        if (D_82B12470 <= 0) {
+            panel->flags &= ~2;
+        }
+        break;
+    default:
+        break;
+    }
+    if (grid_cell[0] == 0) {
+        panel->slide_delta.x = 640;
+    } else {
+        panel->slide_delta.x = -640;
+    }
+    panel->slide_delta.y = 0;
+    panel->position.x = grid_cell[1] * 153 + 98;
+    panel->position.y = grid_cell[0] * 138 + 82;
+    panel->base_position = panel->position;
+    entry_offset = (CupPanelPoint *)((u8 *)context + 0x14);
+    *entry_offset = panel->slide_delta;
+    exit_offset = (CupPanelPoint *)((u8 *)context + 0x18);
+    exit_offset->x = -entry_offset->x;
+    exit_offset->y = -entry_offset->y;
+    fade = (CupPanelFade *)((u32)context + 0x50);
+    for (slot_index = 0; slot_index < 4; slot_index++) {
+        *(CupPanelPoint *)((u8 *)context + 0x1C + slot_index * 4) = *entry_offset;
+        *(CupPanelPoint *)((u8 *)context + 0x2C + slot_index * 4) = *exit_offset;
+    }
+    panel->entry_offsets[1].x = -panel->entry_offset.x;
+    panel->entry_offsets[1].y = -panel->entry_offset.y;
+    panel->exit_offsets[1].x = 0;
+    panel->exit_offsets[1].y = -480;
+    panel->width = 141;
+    panel->height = 130;
+    fade->active = 0;
+    fade->tick = 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -765,7 +854,7 @@ void func_82B026E8(State02198 *arg0, s32 arg1, s32 arg2) {
     arg0->unk_06 = 0;
     switch (arg0->unk_00) {
         case 1:
-            func_82B01904(arg0);
+            Panel_InitCupSelection(arg0);
             break;
         case 2:
             func_82B01BB8(arg0);
@@ -1511,7 +1600,7 @@ void func_82B0556C(void) {
 #endif
 
 #ifdef VERSION_US
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 extern void func_82B0556C(void);
 void func_82B0560C(void) {
     u8 *base;
@@ -1550,7 +1639,7 @@ void func_82B05E3C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 void func_82B05E98(s32 arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5, u8 arg6) {
     u8 *base;
     u8 *half;
@@ -1601,7 +1690,7 @@ extern s16 D_82B12456;
 
 void func_82B062BC(void) {
     if (func_82B02870() != 0) {
-        D_82B12450 = 2;
+        *(s16 *)D_82B12450 = 2;
         D_82B12456 = 0;
         func_82B01054(2);
     }
@@ -1656,7 +1745,7 @@ void func_82B062F8(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 extern s16 D_82B12456;
 extern s32 func_82B028CC(void);
 
@@ -1668,7 +1757,7 @@ void func_82B07A5C(void) {
     s16 *counter = &D_82B12456;
     if (func_82B028CC() != 0) {
         if (++*counter >= 2) {
-            D_82B12450 = 9;
+            *(s16 *)D_82B12450 = 9;
             *counter = 0;
         }
     }
@@ -1681,7 +1770,7 @@ void func_82B07AB4(void) {
 
 #ifdef VERSION_US
 extern u16 D_82B12454;
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 extern s16 D_82B12452;
 extern s16 D_82B12D10;
 extern void func_82B062BC(void);
@@ -1698,7 +1787,7 @@ extern void func_82B00E10(void);
 
 /* mkdraft:func_82B07ABC begin */
 extern u16 D_82B12454;
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 extern s16 D_82B12452;
 extern s16 D_82B12D10;
 extern void func_82B062BC(void);
@@ -1718,7 +1807,7 @@ s32 func_82B07ABC(void) {
     u8 *end;
     if (D_82B12454 & 1) {
         func_82B00E10();
-        switch (D_82B12450) {
+        switch (*(s16 *)D_82B12450) {
         case 1:
             func_82B062BC();
             break;
@@ -1764,12 +1853,12 @@ s32 func_82B07ABC(void) {
 extern s16 D_82B12458;
 extern s16 D_82B12694;
 extern void func_8004B314(s32, s32, s32, s32);
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 void func_82B07BEC(void) {
     void *var_s0;
     s16 sp24[4];
     var_s0 = NULL;
-    switch (D_82B12450) {
+    switch (*(s16 *)D_82B12450) {
     case 2:
     {
         var_s0 = *(void **)((u8 *)&D_82B12450 + (D_82B12458 << 2) + 0xB68);
@@ -1905,14 +1994,14 @@ s32 func_82B084CC(void) {
 #endif
 
 #ifdef VERSION_US
-extern s16 D_82B12450;
+extern u8 D_82B12450[0xFF8];
 extern s16 D_82B1245A;
 
 s16 func_82B084D4(void) {
     s16 var_v1;
 
     var_v1 = -2;
-    if (D_82B12450 == 9) {
+    if (*(s16 *)D_82B12450 == 9) {
         var_v1 = D_82B1245A;
     }
     return var_v1;

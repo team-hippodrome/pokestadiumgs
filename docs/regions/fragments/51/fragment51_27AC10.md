@@ -101,3 +101,48 @@ Exact acceptance: `build/pokestadiumgs-us.z64: OK`. Full ROM MD5:
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks pass. Original-assembly and raw retail comparisons verify all 70
 words at `0x27B39C..0x27B4B4`.
+
+## `func_86305038`: select and dispatch positional sounds
+
+This 268-byte owner computes the length of the two floats at `arg1 + 16`
+and `arg1 + 20`. It starts with sound 28419, chooses 28426 above
+`D_86307564`, otherwise chooses 28423 when bit 30 of the word at
+`*(arg0 + 4) + 12` is set, then tests `D_86307568` and `D_8630756C` for
+sounds 28425 and 28424. The three threshold words stay in their existing
+read-only blob: `0x3D6978D4`, `0x3CF5C28F` and `0x3C449BA6`.
+
+It passes the matrix block at `D_863075D8 + 36700` and position at
+`*(arg0 + 12) + 72` to `func_87C03B60`, receiving two signed bytes. It
+passes those bytes to `func_800277F0` with the selected sound. Sounds
+28426 and 28423 also dispatch 28428 using the same position.
+Original `func_86305144` invokes this owner with its work record and
+object while the root state word equals four.
+//@src/fragments/51/fragment51_27AC10.c
+
+The inspected `func_87C03B60` consumes three pointers, projects the three
+position floats through its matrix and writes only destination bytes 0
+and 1, clamped to -127..127. `func_800277F0` takes an unsigned halfword
+resource ID and context pointer. These implementations establish the
+two-byte local extent and helper interfaces.
+//@src/fragments/48/fragment48_2597B0.c
+//@src/229E0.c
+
+The consumed locals reproduce the sound halfword at stack offset 38,
+position pair at 40, and 48-byte frame. No extra storage, fake, padding,
+helper call, instruction rewrite or data-layout change is introduced.
+
+Fresh validation on master
+`2c8831ef93f06c724ef005a010e02f80636b57af` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/51/fragment51_27AC10.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+Fresh extraction and the unchanged baseline passed first. Final forced
+syntax-enabled recompilation and the complete US link reported
+`build/pokestadiumgs-us.z64: OK`, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Full retail comparison and whitespace checks passed. All 67 words at ROM
+`0x27AE58..0x27AF64` independently match original assembly and retail.

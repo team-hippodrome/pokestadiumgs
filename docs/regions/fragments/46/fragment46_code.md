@@ -621,3 +621,6 @@ literals `"%d"`, `"%s%s"`, `"%s %s"` and `1333.0f` in place of
   `or a1,zero` in the `bne` delay slot. Ours loads straight into `$a1`.
 - Already tried: if-chain vs `switch`, a `mode` local (worse), parameter
   widths. Two 300 s permuter runs found only fakes.
+Same day, later: `func_8AE01F74` **matched**. A plain `switch (D_8AE09E68)` on
+the `s16` global gives retail's `lhu`; only the `(u16)` cast produced
+`lh`+`andi`. The order is `D_8AE09E70 = D_8AE08504; D_8AE09E6A = 0;`.

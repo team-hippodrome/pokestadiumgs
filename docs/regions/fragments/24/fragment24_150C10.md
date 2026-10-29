@@ -338,3 +338,63 @@ near a preceding comment containing function names. Anchoring that exact
 prototype correction to the existing `func_8004C874` prototype passed the
 canonical validator; no guard or runner modification was made. Retained
 linked ten-word negative diagnostic: `scratch/3538-b1/linked-2/diagnostic.json`.
+
+
+## 2026-10-29 — `func_82B01904`: genuine cup-panel initializer accepted
+
+accepted. Canonical `scratch/1904-b5.json` index0,
+`init:real-fade-substate-pointer:lifetime-0`, replaces only01904's ASM owner.
+It is novel against origin/master `c3a17b2fd78e1e06b9d13eed21c9838cf47e6653` checked at sealing. Retail692 bytes,
+frame80. Normal/+20blank whole-module sections, bytes, extents and relocations
+PASS, explicit normal host syntax PASS, authoritative serialized native retail
+ROM gate PASS. Receipt: `scratch/1904-b5/gate-0/receipt.json`; source SHA256
+`70780d4cd15f4bf6168e15e06b780e7a1d0a81c2d3343f0f61d97d56c4d0d3f4`; ROM MD5
+1561c75d11cedf356a8ddb1a4a5f9d5d. Object/ELF/map/ROM/source are sealed alongside
+the receipt. Probe was relocation-masked, not link-verified; the sequential
+full retail gate is the acceptance evidence. No new rewrite/coalescing or
+physical bindings were introduced, and production compiler/uopt hashes stay
+unchanged.
+
+Real C mechanisms: a two-element s32 coordinate array keeps both quotient
+and remainder live before the rule-validation callbacks and emits the single
+hardware DIV plus the actual two word spills atsp40/44. Both elements feed
+panel geometry: quotient is grid row, remainder is column. There is no dummy
+denominator variable. SDK div/ldiv calls were negative experiments: they emit
+external calls absent from the retained ROM symbols. Plain arithmetic with
+separate scalar/struct fields was sunk past callbacks and divided twice.
+The explicit CUP3 case represents the no-validation table entry seen in ASM;
+it preserves the five-entry jump table in the already-owned .rodata segment.
+The integer division and all four Pair copies remain compiler-generated from
+ordinary C operators and a rolled four-iteration loop, without manual unroll.
+
+The two-halfword coordinate records have genuine alignment2 and size4, giving
+the observed LWL/LWR/SWL/SWR copies. The last four-byte residual in b4 was the
+actual fade-substate address atarg0+0x50: direct nested-member stores folded it
+away. The winning live FadeHead pointer derives from the real argument using
+the native32-bit pointer width and that verified field offset, then writes
+active/tick through it. No absolute VM address, forced register, volatile,
+unused local or extra coordinate element is used. Both coordinate entries,
+the Pair source pointers and fade pointer have actual consumers.
+
+Actual callee interfaces were used: 011C0 is s32(s32,s32), not m2c's guessed
+three-argument declaration; its computed rule address is cast to u8* for
+128C's real s32(s16*,s16*,u8*,s32,u8*) signature. The panel's generic void*
+argument accepts the existing State02198 caller without an ABI invention.
+The source-local Panel01904 view extends the proven constructor prefix through
+the two fade halfwords, inside the112-byte record initialized by026E8.
+
+Eleven canonical companions correct D_82B12450's inherited scalar declaration
+to its producer-proven0xFF8-byte opaque context extent. Every existing
+halfword-array stride and state scalar access is preserved using explicit
+casts; all companions are in this owned source and passed the combined ROM
+gate. Preserve that coherence when integrating the accepted snapshot. No
+shared header, linker alias or YAML changed. The unused CellIndex01904 type
+and unused SDK div/ldiv declarations came from the shared candidate context;
+parent may remove them during its controlled naming/declaration cleanup with
+fresh normal/+20whole-module and retail controls. They are not extra locals.
+
+Semantic spelling clarification for earlier notes: tag0x43555030 is CUP0
+(C-U-P), not CPU0; the constructor creates five cup choices. No address-keyed
+function or shared symbol was renamed by this worker.
+
+Parent integration: named the accepted entry point; normal/+20 blank-line complete-module controls preserve sections, instruction bytes, extents and relocations. Cup initializer cleanup removes the unused quotient/remainder union and unused SDK declarations. No coverage or tooling edits.

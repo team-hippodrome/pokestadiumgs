@@ -1304,3 +1304,11 @@ func_84143508 = BattlePanel_DrawPartyLevelHpColumns;
 func_841436EC = BattlePanel_DrawPartyLevelHpGrid;
 
 func_841438EC = BattlePanel_DrawSelectedLevelHpAndPp;
+
+func_8005A364 = GbTower_ValidatePortCartridge;
+
+func_82B01904 = Panel_InitCupSelection;
+
+func_8005A60C = GbSave_CollectGsFeatureFlags;
+
+func_8005A98C = GbSave_CollectCrystalFeatureFlags;

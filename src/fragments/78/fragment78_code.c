@@ -202,7 +202,7 @@ extern void func_8005B140(s32);
 extern u8 func_8005D92C(s32);
 extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
 extern void GbSave_RequirePakPresent(s32);
-extern s32 D_8F911640;
+extern u32 D_8F911640;
 
 // Same code as func_8F900968 with GbPak_ReadCommand instead of GbPak_WriteCommand;
 // GS also sets D_8F911640 to 0xFF80 (0x10000-byte read) or 0x7F80 (0x8000-byte read).
@@ -295,7 +295,92 @@ s32 func_8F900F14(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F901078.s")
+extern s32 D_8F911630;
+extern s32 D_8F911634;
+extern s32 D_8F911638;
+extern s32 D_8F91163C;
+extern u32 D_8F911640;
+extern s32 D_8F911648;
+extern s32 D_8F901530;
+extern void func_8F9005B4(void);
+extern u16 func_8F900A6C(s32);
+extern s32 D_80087200;
+s32 func_8F901078(void) {
+    switch (func_8F900A6C((s32)D_80087200)) {
+    case 0x8000:
+        func_8F9005B4();
+        D_8F911648 = 2;
+        break;
+    case 0x4000:
+        D_8F911648 = 0;
+        break;
+    case 0x800:
+        D_8F911634--;
+        if (D_8F911634 < 0) {
+            D_8F911634 = 0;
+            D_8F911638 -= 8;
+            if (D_8F911638 < 0) {
+                D_8F911638 = 0;
+            }
+        }
+        break;
+    case 0x400:
+        D_8F911634++;
+        if (D_8F911634 >= 16) {
+            D_8F911634 = 15;
+            D_8F911638 += 8;
+            if (D_8F911640 < D_8F911638) {
+                D_8F911638 = D_8F911640;
+            }
+        }
+        break;
+    case 0x200:
+        D_8F911630--;
+        if (D_8F911630 < 0) {
+            D_8F911630 = 7;
+        }
+        break;
+    case 0x100:
+        D_8F911630++;
+        if (D_8F911630 >= 8) {
+            D_8F911630 = 0;
+        }
+        break;
+    case 8:
+        D_8F911638 -= 0x80;
+        if (D_8F911638 < 0) {
+            D_8F911638 = 0;
+        }
+        break;
+    case 4:
+        D_8F911638 += 0x80;
+        if (D_8F911640 < D_8F911638) {
+            D_8F911638 = D_8F911640;
+        }
+        break;
+    case 2:
+        D_8F911638 -= 0x800;
+        if (D_8F911638 < 0) {
+            D_8F911638 = 0;
+        }
+        break;
+    case 1:
+        D_8F911638 += 0x800;
+        if (D_8F911640 < D_8F911638) {
+            D_8F911638 = D_8F911640;
+        }
+        break;
+    case 0x10:
+        if (D_8F901530 != 0) {
+            D_8F901530 = 0;
+        } else {
+            D_8F901530 = 1;
+        }
+        break;
+    }
+    D_8F91163C = D_8F911634 * 8 + D_8F911638 + D_8F911630;
+    return 1;
+}
 
 extern void func_80064D28(void);
 extern void func_8F900284(void);
