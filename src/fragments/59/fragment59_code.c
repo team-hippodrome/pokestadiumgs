@@ -1339,7 +1339,121 @@ void func_8690B89C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690C46C.s")
+extern u32 D_8691A2E8;
+extern void func_8690C6C4(s32 arg0);
+
+// Computes the label variant func_8690C6C4 draws (its NMxC string groups on
+// D_8690FAC0..D_8690FACC) from the game mode word D_8691A2E8. With
+// D_8691A448.unk_388 set (the special stage flag func_86902640 rolls),
+// modes 0/1 and 4 give 0 and 3 and mode 2/3 map unk_330 (0,1 -> 0; 2 -> 1;
+// 3 -> 0; 6 -> 2). Without it, mode 2 indexes D_8690E928[unk_32C] (13 keeps
+// unk_330 == 0 at 0; kinds 0,3,5,8,10,15 use the unk_330 mapping) and mode 3
+// indexes D_8690E944[unk_32C] (kind 0 uses the 3/6 mapping; kinds 3,5,8 use
+// the 0/1/2 mapping). Returns the variant it passed on.
+s32 func_8690C46C(void) {
+    s32 variant;
+
+    if (D_8691A448.unk_388 != 0) {
+        switch (D_8691A2E8) {
+        case 0:
+        case 1:
+            variant = 0;
+            break;
+        case 2:
+            switch (D_8691A448.unk_330) {           /* irregular */
+            case 0:
+            case 1:
+                variant = 0;
+                break;
+            case 2:
+                variant = 1;
+                break;
+            }
+            break;
+        case 3:
+            switch (D_8691A448.unk_330) {           /* irregular */
+            case 0:
+            case 1:
+            case 3:
+                variant = 0;
+                break;
+            case 6:
+                variant = 2;
+                break;
+            }
+            break;
+        case 4:
+            variant = 3;
+            break;
+        }
+    } else {
+        switch (D_8691A2E8) {
+        case 0:
+        case 1:
+            variant = 0;
+            break;
+        case 2:
+            switch (D_8690E928[D_8691A448.unk_32C]) {
+            case 13:
+                if (D_8691A448.unk_330 == 0) {
+                    variant = 0;
+                }
+                break;
+            case 0:
+            case 3:
+            case 5:
+            case 8:
+            case 10:
+            case 15:
+                switch (D_8691A448.unk_330) {       /* irregular */
+                case 0:
+                case 1:
+                    variant = 0;
+                    break;
+                case 2:
+                    variant = 1;
+                    break;
+                }
+                break;
+            }
+            break;
+        case 3:
+            switch (D_8690E944[D_8691A448.unk_32C]) { /* irregular */
+            case 0:
+                switch (D_8691A448.unk_330) {       /* irregular */
+                case 0:
+                case 1:
+                case 3:
+                    variant = 0;
+                    break;
+                case 6:
+                    variant = 2;
+                    break;
+                }
+                break;
+            case 3:
+            case 5:
+            case 8:
+                switch (D_8691A448.unk_330) {       /* irregular */
+                case 0:
+                case 1:
+                    variant = 0;
+                    break;
+                case 2:
+                    variant = 1;
+                    break;
+                }
+                break;
+            }
+            break;
+        case 4:
+            variant = 3;
+            break;
+        }
+    }
+    func_8690C6C4(variant);
+    return variant;
+}
 #endif
 
 #ifdef VERSION_US
