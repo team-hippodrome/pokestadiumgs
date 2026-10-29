@@ -1368,3 +1368,7 @@ func_8290CD54 = Scene67_UpdateStaggeredAnimations;
 func_8290D124 = Scene67_UpdateFadeOutSequence;
 
 func_8290D42C = Scene67_UpdateDirectionalMotion;
+
+func_8412E510 = BattleCommand_079;
+
+func_841330BC = Battle_ProcessLowHpHeldItems;
