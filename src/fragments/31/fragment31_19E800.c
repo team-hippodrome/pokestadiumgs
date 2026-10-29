@@ -22,7 +22,7 @@ extern s32 D_880068B8;
 #endif
 
 M2C_UNK func_800226C0(M2C_UNK);                     /* extern */
-M2C_UNK func_88004990(u8, M2C_UNK);                 /* extern */
+void func_88004990(u8, u8);                 /* extern */
 M2C_UNK func_882026A4(s32, s32);                    /* extern */
 
 void func_8822B580(s32 arg0) {
@@ -57,7 +57,45 @@ void func_8822B63C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822B6A4.s")
+typedef struct unk_func_88002720 {
+    s32 unk_00;
+    u8 *unk_04;
+} unk_func_88002720;
+extern void func_88002720(s16 *, u16, unk_func_88002720 *);
+void func_8822B6A4(void) {
+    u32 buttons;
+    u8 *menu;
+
+    buttons = *(u16 *)(D_80087200 + 8);
+    menu = (u8 *)(D_88234910 + 116);
+    if (buttons & 0x8000) {
+        if (*(s16 *)(menu + 40) == 0) {
+            *(s32 *)(D_88234910 + 396) = 1;
+            switch (*(s16 *)(D_88234910 + 76)) {
+            case 2:
+                func_8822B580(2);
+                break;
+            case 3:
+                func_8822B580(3);
+                break;
+            case 1:
+            case 4:
+                func_8822B580(4);
+                break;
+            }
+        } else {
+            func_800226C0(72);
+            D_880068B8 = 1;
+        }
+        func_88004990(**(u8 **)(D_88234910 + 4), 0);
+    } else if (buttons & 0x4000) {
+        func_800226C0(72);
+        func_88004990(**(u8 **)(D_88234910 + 4), 0);
+        D_880068B8 = 1;
+    } else {
+        func_88002720((s16 *)(menu + 40), *(u16 *)(menu + 12), (unk_func_88002720 *)(menu + 44));
+    }
+}
 
 extern u32 D_88234910;
 extern void func_8821D930(s32);
