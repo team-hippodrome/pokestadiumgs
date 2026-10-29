@@ -640,3 +640,14 @@ the loaded image, in the `0x11DB70` `rodata` blob (`.word 0x05003BA4`… from
 NOLOAD section at 0x8220EB80 that overlaps a loaded section's VMA, and (2) the
 blob's `dlabel`s for those addresses dropped. Status: `layout-prerequisite`; do
 not spend spelling probes on these owners until that is done.
+
+`func_82205C14` (geo callback, slide `y` by 0x30 up to 0x1E0; **requeue**,
+`scratch/c/c14_best.c`): the same family as 10F9E0's `func_82200020`.
+
+- Retail re-forms `lui` for every access to the scalar `D_82210642`. Ours
+  CSEs its address into `$v1` (`lui v1`/`addiu`), with these as extern
+  scalars or in-file statics.
+- `D_82210644`/`D_82210646` share one `$at` in retail, which suggests an
+  in-file two-element object.
+- Next: find what suppresses IDO's address CSE for repeated scalar access
+  in this family.
