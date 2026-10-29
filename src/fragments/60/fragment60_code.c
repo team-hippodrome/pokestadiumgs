@@ -116,7 +116,78 @@ s32 func_86A00144(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A001B0.s")
+typedef struct {
+    s32 count;
+    u8 unk_04[4];
+    u8 *items;
+} StagePoolResetState;
+extern void func_87F02684(StagePoolResetState *);
+extern void func_87F02328(void);
+extern u8 D_86A45AD0[];
+extern u8 D_86A45F20[];
+extern unk_D_86A443F0 D_86A0D924;
+extern s32 D_86A0F8E4;
+extern u8 *D_86A46548;
+extern u8 D_86A11190;
+extern u8 D_86A1AAD0;
+extern u8 D_86A2DD40;
+extern u8 D_86A40FA0;
+extern u8 D_86A104F0;
+extern u8 D_86A0FEA0;
+extern u8 D_86A10B38;
+// Both allocators scan all 198 records and test active at offset 0x1C.
+typedef struct {
+    u8 unk_00[28];
+    s32 active;
+} StagePoolResetRecord;
+extern StagePoolResetRecord D_86A41490[198];
+
+// Clears stage pools, restores the complete default state, and applies context flags.
+void StageState_ResetPoolsAndDefaults(void) {
+    s32 *word;
+    s32 i;
+
+    for (word = (s32 *)D_86A45AD0; word < (s32 *)(D_86A45AD0 + 0x44C); word++) {
+        *word = 0;
+    }
+    for (word = (s32 *)D_86A45F20; word < (s32 *)(D_86A45F20 + 0x550); word++) {
+        *word = 0;
+    }
+    for (i = 0; i < 198; i++) {
+        *(s32 *)((u8 *)D_86A41490 + i * 0x20 + 0x1C) = 0;
+    }
+    func_87F02684((StagePoolResetState *)&D_86A11190);
+    func_87F02684((StagePoolResetState *)&D_86A1AAD0);
+    func_87F02684((StagePoolResetState *)&D_86A2DD40);
+    func_87F02684((StagePoolResetState *)&D_86A40FA0);
+    func_87F02684((StagePoolResetState *)&D_86A104F0);
+    func_87F02684((StagePoolResetState *)&D_86A0FEA0);
+    func_87F02684((StagePoolResetState *)&D_86A10B38);
+    D_86A443F0 = D_86A0D924;
+    D_86A443F0.unk_0000 = D_86A0F8E4 * 60;
+    switch ((*(s8 *)((*(u8 **)(D_86A46548 + 0xC)) + 0x2181))) {
+        case 0:
+            *(s32 *)D_86A443F0.unk_01B0 = 0;
+            break;
+        case 1:
+            *(s32 *)D_86A443F0.unk_01B0 = 1;
+            break;
+        case 2:
+            *(s32 *)D_86A443F0.unk_01B0 = 2;
+            break;
+        case 3:
+            *(s32 *)D_86A443F0.unk_01B0 = 3;
+            break;
+    }
+    if (((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 1) && ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 2) &&
+        ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 4) && ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 8)) {
+        *(s32 *)(D_86A443F0.unk_01B0 + 4) = 1;
+        *(s32 *)D_86A443F0.unk_01B0 = 1;
+    } else {
+        *(s32 *)(D_86A443F0.unk_01B0 + 4) = 0;
+    }
+    func_87F02328();
+}
 #endif
 
 #ifdef VERSION_US
@@ -665,7 +736,26 @@ s32 CollisionBounds_ContainsPoint(f32 point_x, f32 point_z) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A05678.s")
+s32 PlayerBounds_ContainsPointExceptPlayer(s32 excluded_player, f32 point_x, f32 point_z) {
+    s32 player;
+    f32 half_size;
+    f32 x;
+    f32 z;
+
+    for (player = 0; player < 4; player++) {
+        if (player == excluded_player) {
+            continue;
+        }
+        half_size = 31.19999886f;
+        x = D_86A443F0.position[player][0];
+        z = D_86A443F0.position[player][1];
+        if (x - half_size < point_x && point_x < x + half_size &&
+            z - half_size < point_z && point_z < z + half_size) {
+            return 1;
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
