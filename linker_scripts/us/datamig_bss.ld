@@ -23,4 +23,18 @@ SECTIONS
     {
         build/src/fragments/67/fragment67_344D70.o(.bss)
     }
+
+    /* fragment54_code's per-player position records (file-scope static
+     * D_866098A0), 0x866098A0-0x86609E40. */
+    .fragment54_code_bss 0x866098A0 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/54/fragment54_code.o(.bss)
+    }
+
+    /* fragment43_1E5A10's main-pool push/pop marks (function-local statics
+     * in func_8AC00FFC/func_8AC01064), 0x8AC09798-0x8AC097B0. */
+    .fragment43_1E5A10_bss 0x8AC09798 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/43/fragment43_1E5A10.o(.bss)
+    }
 }
