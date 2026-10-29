@@ -29,7 +29,28 @@ typedef struct unk_D_8291BC68 {
 static unk_D_8291BC68 D_8291BC68;
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E5F0.s")
+extern void *func_8004C874(s32, s32);
+void func_8290E5F0(void) {
+    s32 i;
+
+    D_8291BC50.unk_00 = 0x2A8;
+    D_8291BC50.unk_02 = 0x36;
+    D_8291BC50.unk_10 = 0;
+    D_8291BC50.unk_0C = 0;
+    D_8291BC50.unk_12 = 3;
+    D_8291BC50.unk_0E = 0;
+    D_8291BC50.unk_08 = 0;
+    D_8291BC50.unk_0A = 0;
+    D_8291BC50.unk_04 = 0;
+    D_8291BC68.unk_00 = -0x1D6;
+    D_8291BC68.unk_02 = 0x11F;
+    D_8291BC68.index = 0;
+    for (i = 0; i < 255; i++) {
+        D_8291BC68.text[i] = 0;
+    }
+    for (i = 0; i < 255; i++) D_8291BC68.revealed[i] = 0;
+    sprintf(D_8291BC68.text, func_8004C874(0x30, 0));
+}
 #endif
 
 #ifdef VERSION_US
