@@ -182,7 +182,26 @@ void func_82D00444(void) {
 }
 void func_82D00444_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D0049C.s")
+extern u8 D_82D07428[];
+extern u8 D_82D23904[];
+extern s32 func_82D00030(u8 *, u8);
+void func_82D0049C(void) {
+    s32 i;
+    s32 j;
+    u8 *record;
+
+    for (i = 0; i < 6; i++) {
+        record = D_82D07428 + 0x110 + i * 0x4B28;
+        *(s32 *)record = 1;
+        for (j = 0; j < 6; j++) {
+            record[5 + j] = D_82D07428[0x11 + i * 6 + j];
+            *(u16 *)(record + 0xC + j * 2) = record[5 + j];
+            if (func_82D00030(D_82D23904, record[5 + j]) != 0) {
+                record[4] |= 1 << j;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D00590.s")
 
