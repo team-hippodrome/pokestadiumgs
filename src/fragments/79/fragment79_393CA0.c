@@ -1565,7 +1565,61 @@ void func_841284A4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84128664.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_841246AC(u8 arg0, u8 arg1);
+extern void func_841254E0(void);
+extern u32 func_84126804(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8 arg0, u8 arg1);
+extern void func_84134DD8(u8 arg0);
+extern void func_84135B00(u16 arg0);
+extern void func_84136678(u8 arg0, s16 arg1);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 D_841951C3;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 D_841951D5;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void func_84128664(void) {
+    if (D_841951D2 != 0) {
+        func_84136678(D_841951BC, -1);
+        if ((D_841951D5 & 0x7F) == 0) {
+            func_84135B00(102);
+        } else if (D_841951C3 == 148) {
+            func_84135B00(129);
+            if (D_84195208[D_841951BD][13] & 0x4) func_84135B00(182);
+            else func_84135B00(181);
+        } else if (D_841951D1 != 255) {
+            if (D_84195208[D_841951BD][13] & 0x4) func_84135B00(86);
+            else func_84135B00(85);
+        } else {
+            func_84135B00(191);
+        }
+        func_841246AC(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+        D_841951D1 = 0;
+        if (D_841951C3 == 45 && (D_841951D5 & 0x7F)) {
+            D_841951C8 >>= 3;
+            if (D_841951C8 == 0) D_841951C8 = 1;
+            func_84136678(D_841951BC, -1);
+            func_84135B00(38);
+            if (*(u16 *)(D_84195200[D_841951BC] + 38) < D_841951C8) D_841951C8 = *(u16 *)(D_84195200[D_841951BC] + 38);
+            func_84136A9C(D_841951BC, -1, (s16)-func_84126804(D_841951BC, (u16)D_841951C8), 2);
+            func_84134CBC(D_841951BC, 20);
+            BattleRecord_AdvanceWriteSlot();
+        }
+        if (D_841951BF == 251) {
+            func_84134CBC(D_841951BC, 40);
+            func_84134DD8(D_841951BF);
+            BattleRecord_AdvanceWriteSlot();
+            D_84195208[D_841951BC][15] &= 0xFFFB;
+        }
+        func_841254E0();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -4159,7 +4213,52 @@ void BattleAnim_Table_84186004_064(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841308A8.s")
+extern void func_8413523C(u8, u8);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern void func_84125424(u8 arg0);
+extern void func_84134CBC(u8 arg0, u8 arg1);
+extern void func_84134DD8(u8 arg0);
+extern void func_84135034(u8 arg0, u8 arg1);
+extern void func_84135B00(u16 arg0);
+extern void func_84136678(u8 arg0, s16 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s32 D_841951C8;
+extern u8 D_841951D0;
+extern s32 D_841951E0;
+extern void * D_841951F8[];
+extern u8 * D_84195208[];
+void func_841308A8(void) {
+    u8 slot;
+    D_841951C8 = 0;
+    if ((D_84195208[D_841951BC][15] & 0x4) == 0) {
+        D_84195208[D_841951BC][18] = 0;
+        D_841951E0 = 0;
+    }
+    slot = D_84195208[D_841951BC][18];
+    if (*(u16 *)(((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88) + 62) == 0 || ((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88)[60] != 0) {
+        func_84125424(13);
+        return;
+    }
+    D_841951E0 = 1;
+    D_841951CC = *(u16 *)(((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88) + 66);
+    D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 52);
+    D_841951D0 = ((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88)[53];
+    func_84136678(D_841951BC, -1);
+    func_8004C54C(26, (s32)((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88 + 76));
+    func_84135B00(52);
+    func_84134CBC(D_841951BC, 0);
+    if (D_84195208[D_841951BC][15] & 0x4) {
+        func_84135034((u8)(*(s32 *)(D_84195208[D_841951BC] + 76) - slot), (u8)(*(s32 *)(D_84195208[D_841951BC] + 76) - 1));
+    } else {
+        func_84135034(0, 1);
+    }
+    func_84134DD8(D_841951BF);
+    func_8413523C(D_841951BC, slot);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US

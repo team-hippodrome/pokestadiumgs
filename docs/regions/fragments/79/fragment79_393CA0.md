@@ -1305,3 +1305,73 @@ formatter call explicitly converts the real pointer into its word payload.
 No return category is invented to obtain a match. Naming, these type repairs
 and redundant new-block declaration removal preserve all module bytes,
 sections, function extents and semantic relocations in normal/+20-line checks.
+## 2026-10-29 — native command family:28664 and308A8 accepted
+
+Starting revisionea5a86ce. Refreshed available history selected28664 (zero
+rows),EC70 (18 compile failures) and308A8 (34 compile failures), sharing the
+36678/35B00/AdvanceWriteSlot command family. Six preceding accepts,2517C's real
+predicate repair and all existing blocked/requeue notes remain preserved.
+
+`func_84128664(void)` is accepted at632B/frame24. The direct branch-specific
+message calls, fresh global reads, signed C8 reduction/cap and original record
+sequence match. First winner `wave3-28664-branches8` index0; normal host syntax
+and full native retail ROM passed. Receipt:
+`scratch/wave3-28664-branches8/gate-0/receipt.json`.
+
+`func_841308A8(void)` is accepted at460B/frame48. Real semantics corrected from
+historical candidates: the slot is saved from active byte18, counter76 is a
+word, CE comes from target active halfword52, and invalid halfword62 or nonzero
+record byte60 both take the original error path. Record stride88 and fresh
+base reload after36678 are preserved. First winner:
+`scratch/wave3-308a8-minimal8.json` index0; normal host/full native gate passed.
+
+The decisive308A8 mechanism is independently scoped: unsigned address promotion
+removes the extra byte carrier; real slot-first declarations resolve its home.
+A retained exact-shape parent still saves/reloads the offset at24 instead of28.
+Captured compiler input has an8-byte local area. Prior variants replaced the
+named word counter with another named word local, retaining that area. The
+final hypothesis removes the named counter and directly reads its actual word
+field in both arguments; CSE keeps the original single load. This leaves only
+the actual byte slot as source storage and closes the spill homes without
+padding, unused work or fabricated ABI. Final passive captures measure CFE
+Mmt8->1 and optimized Mmt24->20 while the native frame stays48. No further
+probing after acceptance.
+
+Verified post-acceptance indentation/mask notation cleanup also passes whole
+allocated-module identity, normal host syntax and a fresh full native retail
+ROM gate. Final receipt:
+`scratch/wave3-final-seal/tidy-final-gate/receipt.json`.
+Source SHA256 `c1ae936afb7f21852af5cae8b31d2aefd715c4207d526171d062dd1b81f436cb`.
+Retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+`scratch/wave3-final-seal/final-module-current-seal.json` compares every
+allocated byte/descriptor (including.reginfo), all function extents and semantic
+relocations with the starting gated module, preserving all six prior accepts.
+
+### EC70: requeue — call-result coalescing
+
+Best opcode parent `scratch/wave3-ec70-lifetimes8.json` index0 is488B versus
+retail492B/frame32, normalized.9919/raw.9512. The random query remains inV0
+where retail moves it toA1, and the sentinel usesA1 rather thanA2. A cutoff
+prefetch parent has492B/raw.9756 but rematerializes a table address and still
+compares againstV0; it is not an owner match.
+
+The initial eight compile failures preserve missing synthesis of the existing
+signed-byte C1 declaration. A verified forward declaration resolves compilation;
+local order/scopes fix frame40 to32. Paired/raw threshold views, lookup controls,
+real query carrier reuse and native-int local forms retain the missing-MOVE
+fingerprint. No ABI/prototype change or alias was used.25080's final LBU proves
+the produced byte value, not an original narrow C return declaration; its word
+interface remains unchanged.
+
+Next action: authentic source/interface evidence or a narrow observational
+UOPT call-result coalescing/eligibility trace. Keep ASM and do not replay the
+above scopes/query grids or manufacture a return category to occupyV0.
+
+Stock passive captures with normal/+20 controls remain in
+`scratch/wave3-stock-passes` and `scratch/wave3-final-stock-passes`, including
+stage inputs/outputs, hashes and decoded rows. Final accepted308A8 input rows
+measure the local-area reduction. Full private handoff:
+`scratch/wave3-final-seal/handoff.md`. Fourteen8-candidate canonical batches
+retain112 enabled-statistics rows:88 rejected,8 compile_failed,2 accepted,
+14 skipped. Source/region only; no metadata, naming, coverage, admission-tool
+changes, push or PR.33F10's existing prototype/guard and252D0's requeue untouched.
