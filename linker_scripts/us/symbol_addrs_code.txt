@@ -8387,6 +8387,7 @@ func_8290954C = 0x8290954C; // type:func
 func_8290A0B0 = 0x8290A0B0; // type:func
 func_8290A0D0 = 0x8290A0D0; // type:func
 func_8290A208 = 0x8290A208; // type:func
+func_8290A2F4 = 0x8290A2F4; // type:func
 func_8290A2FC = 0x8290A2FC; // type:func
 func_8290A358 = 0x8290A358; // type:func
 func_8290A3C4 = 0x8290A3C4; // type:func

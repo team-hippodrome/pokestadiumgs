@@ -772,6 +772,7 @@ void func_8290A0D0(f32 *arg0, u16 *arg1) {
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290A208.s")
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290A2F4.s")
 #endif
 
 #ifdef VERSION_US

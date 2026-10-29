@@ -14,3 +14,17 @@ requeue (0.79). Record transform for `D_8291A7C0.records[index]`:
 - It is followed by an empty function at 0x8290A2F4.
 
 Stack matches with locals declared `offset, position, translation1, rotation, translation2, tmp, record`. Remaining: retail keeps 0.05f in $f2 and computes y in $f0 before z, while ours uses $f0 for the constant. A `scale` local (any position) grows the frame by 8. The permuter (400 s) only reached 230.
+
+
+## 2026-10-29 — Independently callable default callback boundary
+
+`8290A2F4` is an original zero-argument void callback, not transform padding.
+The retail word at ROM34FA80 (`D_82912F80`) contains this address; additional
+entries in the four-pointer records beginning34FA84 repeat it.
+`func_829084E4` installs a four-pointer record into `D_8291B838`, resetters
+including `func_8290ADD0` load the default pointer from `D_82912F80`, and
+`func_82908520` invokes every installed slot as void(void). Its instruction
+pair is JR RA; NOP at ROM346DF4. Explicitly identifying that referenced
+entry corrects the previous extraction extent of `func_8290A208` to236B.
+No other function boundary or global detector option changes. The separate
+scanner tail8005A5BC has no equivalent independent evidence.
