@@ -1375,3 +1375,102 @@ measure the local-area reduction. Full private handoff:
 retain112 enabled-statistics rows:88 rejected,8 compile_failed,2 accepted,
 14 skipped. Source/region only; no metadata, naming, coverage, admission-tool
 changes, push or PR.33F10's existing prototype/guard and252D0's requeue untouched.
+
+## 2026-10-29 native display-state family: BC64/DB28 accepted; D7AC requeue
+
+Tested from942c2972 in the isolated source79 native checkout. Selected the
+24-byte per-side display-state family: DB28 had no available prior rows,
+D7AC had17 mostly semantically unsuitable historical rows, and BC64 had41
+rows including a .9091 parent with an address-escape spelling and incorrect
+operations. DB28 and BC64 share the actual47228 property setter; D7AC
+produces their team/party data. No historical candidate with volatile or
+address-escape work was reused.
+
+**Accepted func_8413DB28**,620B/frame64, void(void):
+`scratch/wave4-db28-loop8.json` index0. The two-side loop uses an existing
+40-byte controller-record view (see `include/controller.h`), two real
+controller indices from state bytes10/11, the original team predicate, and
+fourteen distinct channel/property calls. Moving controller-base and loop
+index initialization into the real for-header fixes the final two-instruction
+initializer ordering difference (.9935 raw parent). The body retains the
+original two-side loop and all fourteen independently specified setter calls.
+Host/full native retail receipt:
+`scratch/wave4-db28-loop8/gate-0/receipt.json`.
+
+The existing setter definition in `src/fragments/79/fragment79_3ADCA0.c:2423`
+is `void func_84147228(u8,u8,u8,u8,s32)`. Fourteen old declarations in this
+file instead used `void(s32,u8,s32,s32,s32)`. The accepted transaction repairs
+all14 through exact-once contextual companion edits. Initial compile failures
+are retained, including the incomplete two-context repair; no preflight guard
+or original-ASM callee prototype was changed. Whole allocated-module equality
+including `.reginfo`, every function extent and semantic relocation against
+the prior gated module confirms all affected accepted callers are unchanged.
+
+**Accepted func_8413BC64**,304B/frame40, void(u8):
+`scratch/wave4-bc64-minimal8.json` index4. Capture the selected controller
+before the real word-returning48494 query, truncate its result to the original
+byte, and read pressed buttons at controller+8. Preserve the confirm path's
+one-argument sound call, fresh context accesses, signed `<104` test, context
+child byte107 store and state transition. The toggle setter's channel is14.
+The winning existing24-byte state-record view removes redundant state/flags
+locals. Host/full native retail receipt:
+`scratch/wave4-bc64-minimal8/gate-0/receipt.json`.
+
+Verified post-acceptance braces/mask-notation cleanup has identical allocated
+module bytes/extents/relocations and another normal host/full native ROM PASS:
+`scratch/wave4-final-seal/tidy-gate/receipt.json`. Retail MD5 remains
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All eight prior accepts and2517C's real
+return repair remain byte-identical. Generic names await coordinator review.
+
+**requeue func_8413D7AC**, original620B/frame104, void(u8).
+Source-faithful parent `scratch/wave4-d7ac-recordview8.json` index0 reaches
+620B/frame104, normalized1.0000/raw.7935, rejected. First difference at owner
+byte191: retail `sw a1,68(sp)`, candidate `sw a1,64(sp)`; corresponding
+v1/a3 homes are72/88 versus68/84. The first47 instructions match exactly.
+Opcode shape/owner size/frame equality does not establish acceptance.
+
+The actual initializer traverses six88-byte records after a24-byte team
+header, with a four-move inner loop. Species = side*3+slot+6; moves =
+251-side*24-slot*4-move_index. Level100, five distinct stat-experience fields
+12/14/16/18/20 set to65535, random DVs at22, byte28=255, species-name copy,
+exact seven-byte aggregate copy at64, stat recalculation and current HP38
+from maximum HP40. The independent stat consumers are in
+`src/615D0.c:476`; `src/728D0.c:85` confirms the same record offsets. The
+seven-byte type is only a view of existing storage. Keep both real loops,
+fresh party-pointer reloads across calls and actual APIs: 62E10 returnsu8;
+61B88 is s32(s32,u16);647C8 returnss32; HAL_Strcpy is s8*(s8*,s8*).
+
+Five8-candidate families measured: typed1248-byte team/address vs byte
+arithmetic, cached party entry vs direct table, for/do; stat-loop induction
+and move-index reuse; distinct actual stat fields; final team-pointer snapshot;
+and actual88-byte record views/direct team-table access. A hypothesized
+five-item stat loop partially unrolls and retains index arithmetic (648B);
+writing the five independently consumed fields reduces to624B. The final
+team-pointer snapshot removes the extra terminal reload (620B). Direct team
+access removes the112-byte frame (104B), while all four address associations
+have the same remaining fingerprint. Do not repeat these equivalent address
+or scope grids. Further differences begin around the random-DV store and
+propagate temporary allocation through the name/seven-byte copy and final
+stores. The retained snapshots/objdump are private evidence, not admission.
+
+Next action: inspect the captured CFE/UOPT local-symbol homes and the actual
+random-result narrowing/copy source interface before choosing a new source
+hypothesis. A meaningful used DV/name temporary is an untested possibility,
+not permission for padding, unused locals, dummy data or forced registers.
+Source stays ASM. Passive stock-stage captures with normal/+20 controls live
+in `scratch/wave4-stock-passes`; private handoff and aggregate receipt are
+`scratch/wave4-final-seal/handoff.md` and `receipt.json`.
+
+Twelve canonical8-candidate batches retain96 enabled-statistics rows:
+68 rejected,16 compile_failed,2 accepted,10 skipped after acceptance. Production
+IDO7.1/flags, one worker and shared ROM lock remain unchanged. EC70,33F10,
+252D0,D6C0 and other documented blockers were not probed. No naming, metadata,
+coverage or admission-tool changes; no push, PR or integration.
+
+Passive stage measurement: finalbase4 CFE/UOPT input Mmt local area20 bytes
+becomes44 bytes at UGEN input; direct-team recordview0 is16 then40 bytes.
+Both preserve the same saved-register set throughFP. Six normal/+20 replays
+match every allocated section, including `.reginfo`, against their retained
+objects (`scratch/wave4-stock-passes/allocated-controls-seal.json`). The
+4-byte source-local reduction explains the frame112-to104 transition while
+the remaining home displacement persists; it does not prove retail C locals.
