@@ -1312,3 +1312,5 @@ func_82B01904 = Panel_InitCupSelection;
 func_8005A60C = GbSave_CollectGsFeatureFlags;
 
 func_8005A98C = GbSave_CollectCrystalFeatureFlags;
+
+func_8005E8A0 = GbSave_SetSeenOwnedBits;
