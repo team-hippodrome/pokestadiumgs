@@ -706,3 +706,7 @@ Tried: header/entries locals in every combination, assign-late, a count local
 Permuter 300 s: best 120, fakes only.
 Next: a single struct with entries embedded (union/array at offset 0), or loop 1
 written with an explicit `s8 *` walk of the parameter itself.
+Update: the argument is a `RecordSelectionPartyDescriptor *` (count, member_sizes[],
+entries[].current_hp — 0x2E = 8 + 0x26), so this is "every party member has HP".
+Typed parameter (companion-retyped extern) + separate `j` gives normalized 1.0 / raw
+0.5238 — the same a0/a2 register tie, so the typing is right but not sufficient.
