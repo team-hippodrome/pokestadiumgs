@@ -1286,3 +1286,22 @@ submit8 candidates each; one stops in preflight, and the other twelve retain
 96 enabled-statistics rows (72 rejected,8 compile_failed,2 accepted,14 skipped).
 Only the accepted source/helper repair and this note are committed, with no
 naming, metadata, coverage or production/private admission-tool changes.
+
+
+### Integration names and real item-metadata return type
+
+The original table D_84185EB0 at ROM3F5740 contains8412E510 at slot79
+(ROM3F587C / VRAM84185FEC). It is therefore BattleCommand_079, matching the
+existing command-index convention. The two-entry HP/item loop is
+Battle_ProcessLowHpHeldItems:641E0.c implements the item-name/effect/parameter
+queries and fragment7's held-item classifier consumes the same effect lookup.
+The original address-keyed names remain explicit linker aliases.
+
+Producer24EFC returns a membership predicate, and the new loop branches on2517C;
+returning that real s32 result repairs its older void wrapper without changing
+its emitted bytes. The metadata-name provider635E0 actually returns s32* in
+641E0.c. Existing file declarations now use that pointer result, and the new
+formatter call explicitly converts the real pointer into its word payload.
+No return category is invented to obtain a match. Naming, these type repairs
+and redundant new-block declaration removal preserve all module bytes,
+sections, function extents and semantic relocations in normal/+20-line checks.

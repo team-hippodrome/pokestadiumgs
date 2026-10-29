@@ -143,7 +143,7 @@ void func_841248DC(u8 arg0) {
 #ifdef VERSION_US
 extern u8 D_841951E7;
 extern u8 D_841951C6;
-extern s32 func_800635E0(u8);
+extern s32 *func_800635E0(u8);
 extern s32 func_8004C54C(u8, s32);
 void func_84124954(u8 arg0) {
     switch (D_841951E7) {
@@ -3184,19 +3184,7 @@ void func_8412E420(void) {
 #endif
 
 #ifdef VERSION_US
-extern void BattleRecord_AdvanceWriteSlot(void);
-extern void func_84124604(u8 arg0, u8 arg1);
-extern s32 func_84126320(u8 arg0);
-extern void func_84126BFC(u8 arg0);
-extern void func_84134CBC(u8 arg0, u8 arg1);
-extern void func_84134E30(s32 arg0);
-extern void func_84135B00(u16 arg0);
-extern void func_84136678(u8 arg0, s16 arg1);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951BF;
-extern u8 * D_84195208[];
-void func_8412E510(void) {
+void BattleCommand_079(void) {
     if (((D_84195208[D_841951BC][13] & 0x10) && (D_84195208[D_841951BD][13] & 0x10)) || func_84126320(D_841951BC) < 2) {
         func_84126BFC(D_841951BC);
         return;
@@ -4795,7 +4783,7 @@ extern u16 func_84126850(u8, u16);
 extern void func_84136A9C(u8, s16, s16, u8);
 extern void func_84136678(u8, s16);
 extern s32 func_8004C54C(u8, s32);
-extern s32 func_800635E0(u8);
+extern s32 *func_800635E0(u8);
 extern void func_84135B00(u16);
 extern void func_84134CBC(u8, u8);
 extern void func_84136CA8(void);
@@ -4930,21 +4918,8 @@ void func_841330B4(void) {
 }
 
 #ifdef VERSION_US
-extern s32 func_8412517C(u8);
 extern void func_84125778(u8);
-extern void BattleRecord_AdvanceWriteSlot(void);
-extern s32 func_8004C54C(u8, s32);
-extern s32 func_800635E0(u8);
-extern u8 func_80063660(u8);
-extern u8 func_80063690(u8);
-extern void func_841259D4(u8 arg0);
-extern u16 func_84126850(u8 arg0, u16 arg1);
-extern void func_84134CBC(u8 arg0, u8 arg1);
-extern void func_84135B00(u16 arg0);
-extern void func_84136678(u8 arg0, s16 arg1);
-extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
-extern u8 * D_84195200[];
-void func_841330BC(void) {
+void Battle_ProcessLowHpHeldItems(void) {
     s32 i;
     u8 side;
     u8 **entry;
@@ -4952,7 +4927,7 @@ void func_841330BC(void) {
     i = 0;
     do {
         func_8004C54C(28, (s32)((*entry) + 52));
-        func_8004C54C(42, func_800635E0((*entry)[1]));
+        func_8004C54C(42, (s32)func_800635E0((*entry)[1]));
         if (func_80063660((*entry)[1]) == 1) {
             if (*(u16 *)((*entry) + 38) < (*(u16 *)((*entry) + 40) >> 1)) {
                 side = i;
@@ -5048,7 +5023,7 @@ extern void func_84132B9C(void);
 extern void func_84132D44(void);
 extern void func_84132E40(void);
 extern void func_84132F34(void);
-extern void func_841330BC(void);
+extern void Battle_ProcessLowHpHeldItems(void);
 extern void func_841331F8(void);
 void func_84133440(void) {
     func_84132300();
@@ -5065,7 +5040,7 @@ void func_84133440(void) {
     func_84132D44();
     func_84132E40();
     func_84132F34();
-    func_841330BC();
+    Battle_ProcessLowHpHeldItems();
     func_841331F8();
 }
 #endif
