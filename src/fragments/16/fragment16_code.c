@@ -198,7 +198,72 @@ void func_82000DE0(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_82000DE8.s")
+extern void *D_82001CD0;
+extern s32 D_82001CD4;
+extern s32 D_82001D50;
+extern s32 D_82001EB0;
+extern s32 D_82001EB4;
+extern s32 D_82001EC4;
+extern s32 D_82001EC8;
+extern s32 D_82001EAC;
+extern void *BinArchive_Open(s32, s32, s32, s32);
+extern s32 MainPool_AllocState(s32, s32);
+extern s32 MainPool_FinalizeAllocation(s32);
+extern s32 func_80001FF0(void);
+extern s32 func_800356CC(s32);
+extern s32 func_8004DC6C(s32, s16 *);
+extern s32 func_8004DCFC(s32, s32);
+extern s32 func_8004E308(s32, s32 (*)(s32, u8 *), s32);
+extern void *func_8004EB58(s32, s32);
+extern s32 func_8005049C(void *, s32);
+extern s32 func_82000020(void);
+extern s32 func_8200070C(void);
+extern s32 main_pool_get_available(void);
+
+// Fragment 16 (title screen) setup. Resets the menu state words, sets the
+// version-stamp delay D_82001D50 to half the current VI count plus 10, and
+// zeroes the layout dims at D_82001EB8/D_82001EBC..D_82001EC0. Opens UI
+// window config 0xA1; when that succeeds, func_82000DE8 stores its handle,
+// finalizes a main-pool allocation for D_82001CD0, and registers the
+// title/kuro/moji/EXPA archive callbacks func_82000D10/D24/D64/D80 through
+// func_8004E308. Finishes by resetting the fade state (func_8200070C) and
+// caching resource 0x10's word at offset 0xC in D_82001EB4.
+void func_82000DE8(void) {
+    s32 sp20;
+    s32 temp_v0;
+    s32 sp1C;
+    s32 temp_v0_2;
+
+    func_82000020();
+    D_82001CD4 = 0;
+    func_82000DE0();
+    D_82001EC4 = 0;
+    D_82001EC8 = 0;
+    D_82001EAC = 0;
+    D_82001EB0 = 0;
+    D_82001D50 = (func_80001FF0() / 2) + 0xA;
+    (*(s16 *)((u8 *)(&D_82001EB8) + (2))) = 0;
+    D_82001EBE = 0;
+    (*(s16 *)((u8 *)(&D_82001EB8) + (0))) = (s16) (*(s16 *)((u8 *)(&D_82001EB8) + (2)));
+    D_82001EBC = D_82001EBE;
+    D_82001EC0 = 0x170;
+    D_82001CD0 = NULL;
+    temp_v0 = func_8004DC6C(0xA1, &D_82001EBE);
+    if (temp_v0 != 0) {
+        sp20 = temp_v0;
+        func_8004DCFC(temp_v0, 0);
+        temp_v0_2 = MainPool_AllocState(main_pool_get_available(), 0);
+        sp1C = temp_v0_2;
+        D_82001CD0 = func_8004EB58(temp_v0_2, sp20);
+        MainPool_FinalizeAllocation(sp1C);
+        func_8004E308(func_8005049C(D_82001CD0, 0x7469746C), func_82000D10, 0);
+        func_8004E308(func_8005049C(D_82001CD0, 0x6B75726F), (s32 (*)(s32, u8 *)) func_82000D24, 0);
+        func_8004E308(func_8005049C(D_82001CD0, 0x6D6F6A69), (s32 (*)(s32, u8 *)) func_82000D64, 0);
+        func_8004E308(func_8005049C(D_82001CD0, 0x45585041), (s32 (*)(s32, u8 *)) func_82000D80, 0);
+    }
+    func_8200070C();
+    D_82001EB4 = (*(s32 *)((u8 *)(BinArchive_Open(func_800356CC(0x10), 0, 1, 1)) + (0xC)));
+}
 #endif
 
 #ifdef VERSION_US
