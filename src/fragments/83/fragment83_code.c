@@ -1,6 +1,22 @@
 #include "global.h"
 #include "controller.h"
 
+// Shuffle-order state at 0x82C05E80 (file-scope bss, pinned by
+// linker_scripts/us/datamig_bss.ld). order[] holds slot ids 1..251.
+typedef struct Fragment83OrderState {
+    /* 0x000 */ u8 unk_000;
+    /* 0x001 */ u8 unk_001;
+    /* 0x002 */ u8 unk_002;
+    /* 0x003 */ u8 unk_003;
+    /* 0x004 */ s16 unk_004;
+    /* 0x006 */ s16 unk_006;
+    /* 0x008 */ u8 unk_008[0x44];
+    /* 0x04C */ u8 order[0xFC];
+    /* 0x148 */ u8 unk_148[4];
+} Fragment83OrderState; // size = 0x14C
+
+static Fragment83OrderState D_82C05E80;
+
 
 #ifdef VERSION_US
 extern Gfx* D_800D0510;

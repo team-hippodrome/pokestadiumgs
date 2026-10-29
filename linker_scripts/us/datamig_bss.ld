@@ -37,4 +37,18 @@ SECTIONS
     {
         build/src/fragments/43/fragment43_1E5A10.o(.bss)
     }
+
+    /* fragment67_34B0F0's text-reveal state (file-scope static D_8291BC68),
+     * 0x8291BC68-0x8291BE6E. */
+    .fragment67_34B0F0_bss 0x8291BC68 (NOLOAD) : SUBALIGN(8)
+    {
+        build/src/fragments/67/fragment67_34B0F0.o(.bss)
+    }
+
+    /* fragment83_code's shuffle-order state (file-scope static D_82C05E80),
+     * 0x82C05E80-0x82C05FCC. */
+    .fragment83_code_bss 0x82C05E80 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/83/fragment83_code.o(.bss)
+    }
 }
