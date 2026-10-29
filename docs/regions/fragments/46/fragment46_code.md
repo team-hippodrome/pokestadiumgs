@@ -608,3 +608,16 @@ literals `"%d"`, `"%s%s"`, `"%s %s"` and `1333.0f` in place of
 - Retail also stores `D_8AE09E6A = 0` after `D_8AE09E70` is loaded.
 - Next: find the `u16`-typed access, perhaps a state struct field
   overlaying 0x8AE09E68, then fix the store order.
+
+`func_8AE0626C` (module entry, **requeue**, 0.95, `scratch/c/26c_best.c`):
+
+- The whole body is written: mode switch, `D_8AE07924` gate, resource
+  loads, the `D_8AE0993C` switch, archive tables, segment loads, teardown.
+- The 5/6/7 test must be a `switch (arg0) { case 5: case 6: case 7: ...; default: D_8AE07924 = 1; }`.
+  An `if (arg0 != 5 && ...)` chain copies `arg0` into `$v0`.
+- The only difference left is in the archive-table switch on
+  `D_8AE09E68`. Retail loads the value into `$a3` and copies it with
+  `or a1,a3` for the first call, which lets the default path put
+  `or a1,zero` in the `bne` delay slot. Ours loads straight into `$a1`.
+- Already tried: if-chain vs `switch`, a `mode` local (worse), parameter
+  widths. Two 300 s permuter runs found only fakes.
