@@ -136,7 +136,41 @@ void func_88201A74(u8 *a, u8 *b) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201B74.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201CF4.s")
+extern void func_88201B74(void *, void *);
+extern u32 func_8820030C(u32 *, u32 *);
+void func_88201CF4(u8 *arg0, u8 *arg1) {
+    u8 *owner_a;
+    u8 *owner_b;
+    u32 *entry_a;
+    u32 *entry_b;
+    s8 index;
+    void *owner;
+
+    owner_a = *(u8 **)arg0;
+    owner_b = *(u8 **)arg1;
+    if (((*(u8 **)owner_a)[8] == 2 && (*(u8 **)owner_b)[8] != 2) ||
+        ((*(u8 **)owner_a)[8] != 2 && (*(u8 **)owner_b)[8] == 2)) {
+        if (((arg0[38] & 1) != 0) == 0) {
+            arg0[36] = 70;
+        }
+        if (((arg1[38] & 1) != 0) == 0) {
+            arg1[36] = 70;
+        }
+    }
+    *(s32 *)(owner_a + 12) = *(s32 *)(owner_b + 12) = 1;
+    func_88201B74(arg0, arg1);
+    entry_a = *(u32 **)(owner_a + 16);
+    entry_a += func_882012E4(arg0);
+    entry_b = *(u32 **)(owner_b + 16);
+    entry_b += func_882012E4(arg1);
+    index = *(s8 *)(arg0 + 4);
+    arg0[4] = *(s8 *)(arg1 + 4);
+    arg1[4] = index;
+    owner = *(void **)arg0;
+    *(void **)arg0 = *(void **)arg1;
+    *(void **)arg1 = owner;
+    func_8820030C(entry_a, entry_b);
+}
 
 void func_88201E28(void *arg0, void *arg1) {
     void **var_v1;
