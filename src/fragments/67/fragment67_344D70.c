@@ -1300,14 +1300,6 @@ void func_8290B478(void) {
 
 #ifdef VERSION_US
 extern s32 func_800427B8(s32);
-extern s32 func_80001FF0(void);
-extern void func_8290A208(s32);
-extern void func_8290A358(s32 arg0, u16 arg1);
-extern void func_8290ABB0(s32 arg0, s32 arg1);
-extern void func_8290B264(void);
-extern s32 func_8290B3BC(void);
-extern s32 func_8290B40C(void);
-extern u8 D_82913210[];
 void Scene67_UpdateModelMotionPositiveX(void) {
     s32 i;
     unk_D_8291A7C0_000 *record;
@@ -1335,14 +1327,6 @@ void Scene67_UpdateModelMotionPositiveX(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_80001FF0(void);
-extern void func_8290A208(s32);
-extern void func_8290A358(s32 arg0, u16 arg1);
-extern void func_8290ABB0(s32 arg0, s32 arg1);
-extern void func_8290B264(void);
-extern s32 func_8290B3BC(void);
-extern s32 func_8290B40C(void);
-extern u8 D_82913210[];
 void Scene67_UpdateModelMotionNegativeX(void) {
     s32 i;
     unk_D_8291A7C0_000 *record;
