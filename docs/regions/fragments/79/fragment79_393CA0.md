@@ -1179,3 +1179,110 @@ actual side selection and guarded command-sequence calls. Normal/+20-line
 complete module controls preserve sections, bytes, function extents and
 semantic relocations while removing redundant declarations only from its new
 block. The old address-keyed symbol remains an explicit linker alias.
+## 2026-10-29 — native command family: `8412E510` / `841330BC` accepted
+
+This isolated wave starts at `d8d54ac6`, preserving the four earlier accepts
+and the334D8/37778 requeues. Selected66–92-instruction33F10/330BC/E510 from
+actual ASM and refreshed available histories (33/33/25 rows respectively;
+330BC's old rows all compile failures). A fourth small setup sibling252D0
+(73 instructions;34 old compile failures) followed33F10's preflight blocker.
+No D6C0, documented scalar-mask/shared-LUI/layout blockers or higher-attempt
+33C10/31AF8 source search was restarted.
+
+### `8412E510`: accepted, 368 bytes / frame24
+
+The winning void(void) source combines both already-set side flags and the
+26320(actor)<2 failure into one short-circuit fallback call site. Otherwise it
+sets byte13 bit0x10 and byte23=4 for each side whose bit was clear, preserving
+fresh global reads and the original command sequence. First winner:
+`scratch/wave2-e510-common8.json` index0. Normal host syntax and authoritative
+full native retail ROM gate passed:
+`scratch/wave2-e510-common8/gate-0/receipt.json`.
+
+### `841330BC`: accepted, 316 bytes / frame48
+
+A genuine two-entry table loop reloads the party pointer after calls, reads HP
+as halfwords38/40, preserves byte-side arguments and the original conditional
+command sequence, then always calls25778/259D4. First winner:
+`scratch/wave2-330bc-bytecallee8.json` index0. Normal host syntax and full native
+retail ROM passed: `scratch/wave2-330bc-bytecallee8/gate-0/receipt.json`.
+
+Its exact-once companion repairs2517C to return the real s32 membership result
+from24EFC(63660(arg0),8549C). The accepted24EFC source produces0/1 for a
+255-terminated table, and retail330BC branches on the wrapper result. The
+initial8 compile failures preserve a synthesized stale void redeclaration;
+adding the actual forward prototype with the companion resolves it. A .9873
+raw/exact-size parent then differed only at25778's argument: MOVE versus retail
+ANDI255. Original25778 SW-homes the argument then LBU-loads home+3; supplying
+that missing u8 prototype closes the caller. No guessed narrow return category.
+The repaired2517C remains byte-identical to the starting gated module.
+
+### Final source and preservation gate
+
+Post-acceptance cleanup changes only mask notation, precedence parentheses and
+nested indentation. All allocated sections (including.reginfo), function
+extents and semantic relocations were independently checked before rerunning
+normal host syntax and the full native retail gate. Final receipt:
+`scratch/wave2-final-seal/tidy-gate/receipt.json`.
+Final source SHA256:
+`f39e7323c7fe9314c5207fcd9bb70f7c4321e1f1e0bde46258d48a559f42857d`.
+Retail MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+`scratch/wave2-final-seal/final-module-seal.json` proves the entire final
+allocated module, all function extents and semantic relocations equal the
+starting module, including33714/36440/A804/31664 and the2517C/32300 witnesses.
+Production IDO7.1/flags and canonical tooling remain unchanged.
+
+### `84133F10`: tooling-blocked / requeue — existing ASM-callee declaration
+
+The retained historical parent used byte HP loads where retail uses halfwords.
+Corrected `scratch/wave2-33f10-halfword8.json` index0 gives268B versus264B,
+normalized .9403/raw .6119, frame40. A byte-contract hypothesis for33C10 is
+supported by its incoming ANDI and this caller's outgoing masks; the existing
+`extern void func_84133C10(s32);` would need a u8 exact-once companion repair.
+Canonical preflight for `wave2-33f10-bytecallee8` refuses before compiling:
+`target func_84133C10 is still a GLOBAL_ASM owner; resolve that owner separately
+before using a companion edit`. Its log is retained; no attempts/gate or source
+change for that transaction. Signature-comment parsing was not changed.
+
+Next action: coordinator resolves192-instruction33C10 (63 retained rows) or
+reviews a narrow canonical allowance for repairing an existing prototype for
+an ASM callee. Private unapplied declaration patch:
+`scratch/wave2-final-seal/proposed-33c10-prototype.patch`. Then resume the real
+byte-contract hypotheses and gate the whole module plus existing32300 caller.
+That changed-prototype caller check is NOT RUN because preflight stopped it.
+No shadow declaration, cast call, direct tracked repair or other bypass used.
+
+### `841252D0`: requeue — slot induction and byte-copy value web
+
+The source-faithful56-candidate search retains the original input/global query
+sequence, four-slot scan, and bounded255-terminated byte copy. Best narrow
+parent `wave2-252d0-induction8` index0:296B versus292B/frame32, normalized .9730/
+raw .8108. First176 bytes are independently exact, but index truncation adds
+ANDI and the copy value/register web still differs. Best exact-size word parent
+`wave2-252d0-bounds8` index1:292B, .9589/raw .8082, first152 bytes exact; LI4/BNE
+replaces retail SLTI4/BNEZ. Prefix seals are independently scoped at
+`scratch/wave2-final-seal/252d0-prefix-seal.json`; neither owner nor candidate
+ROM acceptance follows from them.
+
+Tried actual declaration/global repairs, pointer/index scan, source-pointer
+reuse, stored-byte/word sentinel forms, increment placement/real bound exits,
+narrow/word index legality, meaningful post-search store, combined loop tests,
+and reuse of the consumed input parameter as the real slot index. Passive
+stock captures with normal/+20 controls at `scratch/wave2-252d0-stock-passes`
+reproduce all allocated bytes/descriptors (including.reginfo), functions and
+relocations. UOPT demonstrably changes the word parent's Ules to Uneq; the byte
+parent retains Ules and truncation. Inputs/outputs/decoded rows and hashes are
+retained. The candidate copy value is Rmt2; retail uses t1/t2, without an
+original optimizer trace establishing its eligibility.
+
+Next action: authentic search/copy source evidence or a narrow observational
+UOPT induction/virtual-register eligibility trace. Seek a real word index
+whose range test survives and the correct natural copy-value expression.
+Do not repeat these control/width/lifetime grids or invent barriers, address
+escapes, ABI changes or padding. Keep ASM; no candidate native gate reached.
+
+Full durable handoff: `scratch/wave2-final-seal/handoff.md`. Thirteen batches
+submit8 candidates each; one stops in preflight, and the other twelve retain
+96 enabled-statistics rows (72 rejected,8 compile_failed,2 accepted,14 skipped).
+Only the accepted source/helper repair and this note are committed, with no
+naming, metadata, coverage or production/private admission-tool changes.
