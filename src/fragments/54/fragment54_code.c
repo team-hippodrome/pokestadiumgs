@@ -793,7 +793,6 @@ extern void StageContext_SetClearColor(s32);
 extern s32 StageFade_StartFromTransparent(s32);
 extern s32 D_86606714;
 extern u8 D_86606788;
-extern static u8 D_866098A0[4 * 0x168];
 extern u8 D_8660A990[];
 void func_86605DCC(void) {
     s32 i;
