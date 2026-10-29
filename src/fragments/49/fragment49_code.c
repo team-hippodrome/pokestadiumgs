@@ -1169,7 +1169,70 @@ void func_8610519C(void) {
     (*(s16 *)((u8 *)(D_87F119DC) + (0x44))) = MathUtil_Atan2s((*(f32 *)((u8 *)(D_87F119DC) + (0x18))), (*(f32 *)((u8 *)(D_87F119DC) + (0x10))));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86105204.s")
+extern f32 D_8610AC38;
+extern void func_800277C4(u16, u8, void *);
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+void func_86105204(void) {
+    // One 44-byte record of the array at D_8610AD20 + 0x8DE0; the D_87F119DC actor's
+    // +0x20 field points at its current record, and func_86105070 rolls the x/y/z at
+    // +0x18 as the next position for the actor to chase.
+    typedef struct {
+        u8 unk_00[0x18];
+        f32 x;
+        f32 y;
+        f32 z;
+    } Record86105204;
+    typedef struct {
+        f32 x;
+        f32 y;
+        f32 z;
+    } Vec86105204;
+    Record86105204 *target;
+    Vec86105204 delta;
+    s8 data[2];
+    f32 limit;
+    f32 dz;
+
+    target = *(Record86105204 **)((u8 *)D_87F119DC + 0x20);
+    delta.x = target->x - *(f32 *)((u8 *)D_87F119DC + 0x48);
+    delta.z = target->z - *(f32 *)((u8 *)D_87F119DC + 0x50);
+    // func_86101558 normalizes the x/z direction toward the target position.
+    func_86101558(&delta.x, &delta.z);
+    delta.z *= 6.0f;
+    if (*(f32 *)((u8 *)D_87F119DC + 0x4C) < target->y) {
+        delta.y = 5.0f;
+    } else {
+        delta.y = 0.0f;
+    }
+    // Steer the actor's velocity (+0x10): the y bias of -1.0f sinks it when the
+    // target is not above, and the position (+0x48) follows the new velocity.
+    *(f32 *)((u8 *)D_87F119DC + 0x10) += delta.x;
+    *(f32 *)((u8 *)D_87F119DC + 0x14) += delta.y - 1.0f;
+    *(f32 *)((u8 *)D_87F119DC + 0x18) += delta.z;
+    *(s16 *)((u8 *)D_87F119DC + 0x44) = MathUtil_Atan2s(*(f32 *)((u8 *)D_87F119DC + 0x18), *(f32 *)((u8 *)D_87F119DC + 0x10));
+    *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u8 *)D_87F119DC + 0x10);
+    *(f32 *)((u8 *)D_87F119DC + 0x4C) += *(f32 *)((u8 *)D_87F119DC + 0x14);
+    *(f32 *)((u8 *)D_87F119DC + 0x50) += *(f32 *)((u8 *)D_87F119DC + 0x18);
+    dz = (target->x > *(f32 *)((u8 *)D_87F119DC + 0x48)) ? (target->x - *(f32 *)((u8 *)D_87F119DC + 0x48)) : -(target->x - *(f32 *)((u8 *)D_87F119DC + 0x48));
+    // FAKE: the comma expression schedules the D_8610AC38 load before the address
+    // chain of D_8610AD20 + 0x9768; diff score 290 without it.
+    limit = (D_8610AC38 * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f) * 10.0f;
+    if (dz < limit) {
+        if (((target->y > *(f32 *)((u8 *)D_87F119DC + 0x4C)) ? (target->y - *(f32 *)((u8 *)D_87F119DC + 0x4C)) : -(target->y - *(f32 *)((u8 *)D_87F119DC + 0x4C))) < limit) {
+            dz = (target->z > *(f32 *)((u8 *)D_87F119DC + 0x50)) ? (target->z - *(f32 *)((u8 *)D_87F119DC + 0x50)) : -(target->z - *(f32 *)((u8 *)D_87F119DC + 0x50));
+            if (dz < limit) {
+                func_86105070(D_87F119DC, (f32 *)target);
+            }
+        }
+    }
+    if ((*(s32 *)((u8 *)D_87F119DC + 0x6C) >> 16) == 0) {
+        data[1] = 0;
+        data[0] = 0;
+        // The second argument is the record's index in the D_8610AD20 + 0x8DE0 array.
+        func_800277C4(0xF03, ((s32)((u8 *)target - (u8 *)(u32)D_8610AD20) - 0x8DE0) / 44 & 0xFF, data);
+    }
+}
 
 extern void func_8610519C(void);
 extern void func_86105204(void);
