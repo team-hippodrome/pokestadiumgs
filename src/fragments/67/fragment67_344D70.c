@@ -36,7 +36,7 @@ typedef struct unk_D_8291A7C0_000 {
     /* 0x19C */ char unk_19C[4];
     /* 0x1A0 */ u16 unk_1A0; // frame counter; func_8290CFD8 increments it, func_8290B478 compares record 0's
     /* 0x1A2 */ u8 active; // set by func_8290A5B0/func_8290ABB0; per-frame updates skip records where it is 0
-    /* 0x1A3 */ s8 unk_1A3; // func_8290A6F4 copies it from the D_82913820 entry
+    /* 0x1A3 */ u8 unk_1A3; // unsigned direction-table index copied from D_82913820
 } unk_D_8291A7C0_000; // size = 0x1A4
 
 // Fragment67 scene state: the model records followed by the scene selector and activation count.
@@ -1484,7 +1484,39 @@ void func_8290BCF0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290BEEC.s")
+extern u8 D_829131CC;
+extern u8 D_829131D6;
+extern u8 D_829131E0;
+void Scene67_UpdateAlternatingAnimationMotion(void) {
+    s32 i;
+    u8 *model;
+    for (i = 0; i < 4; i++) {
+        if (D_8291A7C0.records[i].active == 1) {
+            model = (u8 *)&D_8291A7C0.records[i].model;
+            if (D_8291B862 == 0) func_8290BC84(model, 42);
+            if (func_80001FF0() == 50) {
+                if (D_8291B862 < 34) {
+                    if ((i & 1) == 0) D_8291A7C0.records[i].position[0] += 3.6000001f;
+                    else D_8291A7C0.records[i].position[0] -= 3.6000001f;
+                }
+            } else if (D_8291B862 < 41) {
+                if ((i & 1) == 0) D_8291A7C0.records[i].position[0] += 3.0f;
+                else D_8291A7C0.records[i].position[0] -= 3.0f;
+            }
+            if (D_8291B862 == 41) {
+                if (D_8291A7C0.records[i].model.modelId == 154) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
+                if (D_8291A7C0.records[i].model.modelId == 157) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
+                if (D_8291A7C0.records[i].model.modelId == 160) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
+                if (D_8291A7C0.records[i].model.modelId == 243) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
+                if (D_8291A7C0.records[i].model.modelId == 244) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
+                if (D_8291A7C0.records[i].model.modelId == 245) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
+            }
+            if (ModelAnim_IsFinished(model)) ModelAnim_SetFrame(model, 0);
+            func_8290A208(i);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1683,7 +1715,50 @@ void Scene67_UpdateCountdownFade(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290CD54.s")
+void Scene67_UpdateStaggeredAnimations(void) {
+    u8 *config;
+    unk_D_8291A7C0_000 *record;
+    s32 i;
+    u8 *model;
+    if (D_8291A7C0.unk_1068 == 32) config = &D_829131CC;
+    else if (D_8291A7C0.unk_1068 == 33) config = &D_829131D6;
+    else if (D_8291A7C0.unk_1068 == 34) config = &D_829131E0;
+    for (i = 0; i < 3; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            model = (u8 *)&record->model;
+            if (record->unk_1A0 == 0) func_8003F2C4(record->loadContext, model, config[i]);
+            record->unk_1A0++;
+            record->model.alpha = Math_StepToS32(record->model.alpha, 255, 40, 40);
+            if (ModelAnim_IsFinished(model)) func_8003F2C4(record->loadContext, model, 0);
+            func_8290A208(i);
+        }
+    }
+    if (func_80001FF0() == 50) {
+        if ((f32)(u32)D_8291A7C0.records[0].unk_1A0 == (f32)(u32)*(u16 *)(config + 4) * 0.8f) {
+            D_8291A7C0.records[1].active = 1;
+            D_8291A7C0.records[1].model.unk_001 |= 1;
+            D_8291A7C0.records[1].unk_1A0 = 0;
+        }
+        if ((f32)(u32)D_8291A7C0.records[0].unk_1A0 == (f32)(u32)*(u16 *)(config + 6) * 0.8f) {
+            D_8291A7C0.records[2].active = 1;
+            D_8291A7C0.records[2].unk_1A0 = 0;
+            D_8291A7C0.records[2].model.unk_001 |= 1;
+        }
+    } else {
+        if (D_8291A7C0.records[0].unk_1A0 == *(u16 *)(config + 4)) {
+            D_8291A7C0.records[1].active = 1;
+            D_8291A7C0.records[1].unk_1A0 = 0;
+            D_8291A7C0.records[1].model.unk_001 |= 1;
+        }
+        if (D_8291A7C0.records[0].unk_1A0 == *(u16 *)(config + 6)) {
+            D_8291A7C0.records[2].active = 1;
+            D_8291A7C0.records[2].unk_1A0 = 0;
+            D_8291A7C0.records[2].model.unk_001 |= 1;
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1723,11 +1798,105 @@ void func_8290CFD8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290D124.s")
+void Scene67_UpdateFadeOutSequence(void) {
+    s32 i;
+    f32 distance;
+    s16 pitch;
+    s16 yaw;
+    u8 *config;
+    if (D_8291A7C0.unk_1068 == 36) config = &D_829131EC;
+    if (D_8291A7C0.unk_1068 == 37) config = &D_829131F8;
+    if (D_8291A7C0.unk_1068 == 38) config = &D_82913204;
+    D_8291B87A = 1;
+    D_8291A7C0.records[0].unk_1A0++;
+    if (D_8291A7C0.records[0].unk_1A0 >= *(s16 *)(config + 10)) D_8291B874 = Math_StepToS32(D_8291B874, D_8291B878, 40, 40);
+    for (i = 0; i < D_8291A7C0.unk_1071; i++) {
+        D_8291A7C0.records[i].model.alpha = Math_StepToS32(D_8291A7C0.records[i].model.alpha, 0, 45, 45);
+        if (D_8291A7C0.records[i].model.alpha == 0) D_8291A7C0.records[i].model.unk_001 &= ~1;
+    }
+    if ((D_8291A7C0.records[0].unk_1A0 % 5) == 0 && D_8291A7C0.unk_1071 < 5) {
+        D_8291A7C0.records[D_8291A7C0.unk_1071].model.unk_002 &= 0xFFDF;
+        D_8291A7C0.unk_1071++;
+        D_8291A7C0.records[D_8291A7C0.unk_1071].model.unk_001 |= 1;
+        ModelAnim_SetFrame((u8 *)&D_8291A7C0.records[D_8291A7C0.unk_1071].model, config[1] + D_8291A7C0.records[0].unk_1A0);
+    }
+    for (i = 0; i < 6; i++) {
+        func_80037120(D_8291A7C0.records[i].position, (void *)(D_8291A380 + 0xA8), (void *)&distance, &pitch, &yaw);
+        D_8291A7C0.records[i].rotation[1] = yaw;
+        func_8290A208(i);
+    }
+    if (*(u16 *)(config + 2) == D_8291A7C0.records[0].unk_1A0) StageFade_StartFromTransparent(5);
+    if (*(u16 *)(config + 2) + 6 == D_8291A7C0.records[0].unk_1A0) {
+        for (i = 0; i < 10; i++) {
+            D_8291A7C0.records[i].model.unk_001 &= ~1;
+            D_8291A7C0.records[i].active = 0;
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290D42C.s")
+typedef struct { u16 unk_0; u16 angle; } Scene67Direction;
+extern Scene67Direction D_829137E0[];
+void Scene67_UpdateDirectionalMotion(void) {
+    s32 i;
+    for (i = 0; i < 3; i++) {
+        if (D_8291A7C0.records[i].active == 1) {
+            D_8291A7C0.records[i].model.unk_002 &= 0xFFDF;
+            if (func_80001FF0() == 50) {
+                D_8291A7C0.records[i].position[0] += 7.2000003f * D_80087E50[D_829137E0[D_8291A7C0.records[i].unk_1A3].angle >> 4];
+                D_8291A7C0.records[i].position[1] += 7.2000003f * D_80088E50[D_829137E0[D_8291A7C0.records[i].unk_1A3].angle >> 4];
+            } else {
+                D_8291A7C0.records[i].position[0] += 6.0f * D_80087E50[D_829137E0[D_8291A7C0.records[i].unk_1A3].angle >> 4];
+                D_8291A7C0.records[i].position[1] += 6.0f * D_80088E50[D_829137E0[D_8291A7C0.records[i].unk_1A3].angle >> 4];
+            }
+            D_8291A7C0.records[i].rotation[1] -= 0x1554;
+            func_8290A208(i);
+            switch (D_8291A7C0.records[i].unk_1A3) {
+                case 0:
+                case 2:
+                case 9:
+                case 11:
+                    if (D_8291A7C0.records[i].position[0] >= 130.0f) {
+                        D_8291A7C0.records[i].active = 0;
+                        if (func_8290B3E4() == 0) func_8290A358(i, D_829137A8[D_8291A7C0.unk_1071]);
+                    }
+                    break;
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                    if (D_8291A7C0.records[i].position[1] >= 120.0f) {
+                        D_8291A7C0.records[i].active = 0;
+                        if (func_8290B3E4() == 0) func_8290A358(i, D_829137A8[D_8291A7C0.unk_1071]);
+                    }
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    if (D_8291A7C0.records[i].position[1] <= -120.0f) {
+                        D_8291A7C0.records[i].active = 0;
+                        if (func_8290B3E4() == 0) func_8290A358(i, D_829137A8[D_8291A7C0.unk_1071]);
+                    }
+                    break;
+                case 1:
+                case 3:
+                case 8:
+                case 10:
+                    if (D_8291A7C0.records[i].position[0] <= -130.0f) {
+                        D_8291A7C0.records[i].active = 0;
+                        if (func_8290B3E4() == 0) func_8290A358(i, D_829137A8[D_8291A7C0.unk_1071]);
+                    }
+                    break;
+            }
+        } else if (func_800427B8(D_8291A7C0.records[i].loadContext) != 0) {
+            func_8290AC2C(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
