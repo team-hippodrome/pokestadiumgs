@@ -2143,7 +2143,28 @@ void BattleAnim_Table_84185F10_006(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412A804.s")
+extern u8 func_80062DD4(u8);
+void BattleCommand_031(void) {
+    D_841951C8 = 0;
+    if (!(D_841951D5 & 0x7F) || D_84195200[D_841951BC][29] < D_84195200[D_841951BD][29]) {
+        D_841951D1 = 255;
+        D_841951E4 = 255;
+        D_841951D2 = 1;
+    } else {
+        u16 result = func_80062DD4(D_841951BF);
+        result += (D_84195200[D_841951BC][29] - D_84195200[D_841951BD][29]) * 2;
+        if (result >= 256) {
+            result = 255;
+        }
+        D_841951C4 = result;
+        func_841284A4();
+        if (D_841951D2 == 0) {
+            D_841951C8 = 65535;
+            D_841951D1 = 2;
+            D_841951E4 = 2;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
