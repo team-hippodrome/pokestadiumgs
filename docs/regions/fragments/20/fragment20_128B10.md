@@ -689,3 +689,24 @@ in the canonical runner. A diagnostic-only object batch ran while the
 current-master baseline build held the gate queue; its first exact body was
 then submitted for installation and the authoritative full-ROM comparison.
 Private receipts retain the source, object, ELF, map and retail ROM hashes.
+
+## func_82602FE8 — register-tie (2026-10-29)
+
+Best: normalized 1.0 / raw 0.5238 (`pool-check:alias-both-cast`), size 252 matches.
+Shape: `void *arg`; `total = 0; result = 1;`; loop 1 sums
+`((Header *)arg)->counts[i]` (header `{ s16 count; u8 unk_02[2]; s8 counts[]; }`)
+for `i < ->count`; loop 2 uses a *separate* counter `j` over
+`((Entry *)arg)[j].unk_2E` (0x58-byte entry, u16 at 0x2E), `if (== 0) result = 0;`.
+A separate `j` is what got the copt 4x unroll + remainder right (one shared `i` = 0.87).
+Remaining diff: retail copies arg0 to a2 up front and walks a0 itself as the loop-1
+pointer (count in a3, end in a1); ours keeps arg in a0 and walks a copy. `result = 1`
+first gives retail's `li v1,1` placement but the normalized score drops to 0.984.
+Tried: header/entries locals in every combination, assign-late, a count local
+(makes copt unroll loop 1, 316 bytes — wrong), byte-offset access (0.87).
+Permuter 300 s: best 120, fakes only.
+Next: a single struct with entries embedded (union/array at offset 0), or loop 1
+written with an explicit `s8 *` walk of the parameter itself.
+Update: the argument is a `RecordSelectionPartyDescriptor *` (count, member_sizes[],
+entries[].current_hp — 0x2E = 8 + 0x26), so this is "every party member has HP".
+Typed parameter (companion-retyped extern) + separate `j` gives normalized 1.0 / raw
+0.5238 — the same a0/a2 register tie, so the typing is right but not sufficient.

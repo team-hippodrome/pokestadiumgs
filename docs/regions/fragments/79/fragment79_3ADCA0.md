@@ -349,3 +349,21 @@ sealed receipt/source hashes in `gate-0/post-controls.json`. Private control
 helper only invokes the unchanged canonical object recipe; no source mutation
 or runner/guard/compiler change. Existing own prototype takes the real state
 pointer. Earlier selected-detail note timestamp corrected to actual UTC.
+
+## func_84147BA4 — register-tie (2026-10-29)
+
+Best: normalized 1.0 / raw 0.8065 (`ramp:pair-post:v0-out-idx`, scratch body below).
+Shape that got there: `Fragment79Ramp { s16 values[10]; }` struct copy of
+`D_84187004` declared *between* `v` and `index` (lands at sp+0xC like retail);
+step-6 loop `for (i = 0, out = (s16 *)(arg0 + 0xC); i < 12; i += 6)` with two
+explicit stores per pass, `out[9]` (thresholds 0x20/0x16, `v - 0x16`) then
+`out[7]` (thresholds 0x1D/0x13, `v - 0x13`, re-reading `arg0[9]`), then
+`out -= 4`; `s32 v = 0;` initializer moves `v` into v0 like retail.
+Remaining diff: `out` and `index` swap a1/a2 (retail out=a2, index=a1).
+Tried: every declaration order of out/index/i, `index = 0` before the loop,
+`i = index = 0` chains. Permuter (300 s) reached score 0 only with an
+empty `if (!i) {}` fake — rejected per the no-fakes rule.
+Next: look for a non-fake source shape that gives `index` the earlier
+register (e.g. index as a `s16 *` into `ramp.values`, or a step-3 loop
+original copt-unrolled by 2); else leave for a permuter run with fakes
+disallowed.
