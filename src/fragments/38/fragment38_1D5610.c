@@ -349,7 +349,65 @@ void func_88900EE4(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/38/fragment38_1D5610/func_88901A24.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/38/fragment38_1D5610/func_88902624.s")
+extern void *BinArchive_Open();
+extern u8 LabPC_FindFireStoneEvolution(u8 species);
+extern u8 LabPC_FindLeafStoneEvolution(u8 species);
+extern s32 LabPC_FindLevelUpEvolution(u8 *pokemon, s32 use_clock);
+extern u8 LabPC_FindWaterStoneEvolution(u8 species);
+extern void *func_80004B4C(s32 arg0, s32 arg1);
+extern s32 func_800356CC(s32 arg0);
+extern u8 func_88903084(u8 arg0);
+extern u8 func_8890311C(u8 arg0);
+extern u8 func_889031EC(u8 arg0);
+extern s32 func_88903220(u8 *arg0, s8 arg1);
+
+// Evolution dispatcher for the lab PC's evolution view (LabPC_OpenEvolutionView
+// passes its kind/mode through). Mode 0 evolves by level through
+// func_88903220, 1 through LabPC_FindLevelUpEvolution with the clock flag,
+// 2/4/7 through the table lookups func_8890311C and func_889031EC, and
+// 3/5/6 through the fire/water/leaf stone checks. The resulting species is
+// stored at D_88904190[0x134]; when it is nonzero the function pushes the
+// 'EXCL' main-pool state, opens the archive func_800356CC(0) returns, and
+// copies byte 0x13B0 of the entry func_80004B4C selects with species - 1
+// into D_88904190[0x135] before popping the state again.
+void func_88902624(s32 mode, u8 *pokemon, s8 level) {
+    typedef struct { u8 bytes[0x136]; } ResourceRecord;
+    u8 *record;
+
+    switch (mode) {
+        case 0:
+            D_88904190[0x134] = func_88903220(pokemon, level);
+            break;
+        case 1:
+            D_88904190[0x134] = LabPC_FindLevelUpEvolution(pokemon, 1);
+            break;
+        case 2:
+            D_88904190[0x134] = func_88903084(pokemon[0]);
+            break;
+        case 3:
+            D_88904190[0x134] = LabPC_FindFireStoneEvolution(pokemon[0]);
+            break;
+        case 4:
+            D_88904190[0x134] = func_8890311C(pokemon[0]);
+            break;
+        case 5:
+            D_88904190[0x134] = LabPC_FindWaterStoneEvolution(pokemon[0]);
+            break;
+        case 6:
+            D_88904190[0x134] = LabPC_FindLeafStoneEvolution(pokemon[0]);
+            break;
+        case 7:
+            D_88904190[0x134] = func_889031EC(pokemon[0]);
+            break;
+    }
+    if (D_88904190[0x134] != 0) {
+        main_pool_push_state(0x4558434C);
+        record = (ResourceRecord *)func_800356CC(0);
+        record = (ResourceRecord *)BinArchive_Open(record, 0, 1, 1);
+        D_88904190[0x135] = ((u8 *)func_80004B4C(record, D_88904190[0x134] - 1))[0x13B0];
+        main_pool_pop_state(0x4558434C);
+    }
+}
 
 typedef struct { u8 r, g, b, a; } LabPCControllerColor;
 extern LabPCControllerColor *Color_SetRGB(LabPCControllerColor *, u8, u8, u8);
