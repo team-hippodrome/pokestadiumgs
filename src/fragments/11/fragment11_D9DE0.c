@@ -15,7 +15,50 @@ void Fragment11_SetClippedScissor(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 
     }
     func_80006F70(arg0, arg1, arg2, arg3, arg4);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81602940.s")
+extern s32 func_8004C990(s32, s32);
+s32 func_81602940(s32 arg0) {
+    switch (arg0) {
+    case 7:
+        return func_8004C990(0x14C, 0);
+    case 26:
+        return func_8004C990(0x14C, 1);
+    case 23:
+        return func_8004C990(0x14C, 2);
+    case 27:
+        return func_8004C990(0x14C, 4);
+    case 1:
+        return func_8004C990(0x14C, 5);
+    case 20:
+        return func_8004C990(0x14C, 6);
+    case 2:
+    case 6:
+        return func_8004C990(0x14C, 7);
+    case 8:
+        return func_8004C990(0x14C, 8);
+    case 22:
+        return func_8004C990(0x14C, 9);
+    case 4:
+        return func_8004C990(0x14C, 10);
+    case 25:
+        return func_8004C990(0x14C, 11);
+    case 0:
+        return func_8004C990(0x14C, 12);
+    case 3:
+        return func_8004C990(0x14C, 13);
+    case 24:
+        return func_8004C990(0x14C, 14);
+    case 5:
+        return func_8004C990(0x14C, 15);
+    case 9:
+        return func_8004C990(0x14C, 16);
+    case 21:
+        return func_8004C990(0x14C, 17);
+    case 19:
+        return func_8004C990(0x14C, 3);
+    default:
+        return func_8004C990(0x14C, 12);
+    }
+}
 
 extern f32 func_816092FC(void);
 s32 func_81602AEC(u8 *arg0, u8 *arg1) {
