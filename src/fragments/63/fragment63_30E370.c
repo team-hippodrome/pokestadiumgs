@@ -153,7 +153,42 @@ void func_87E0AE64(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0AF44.s")
+extern u32 func_8003570C(void);
+
+// Walks the node list at arg0 + 0x28 and for each node submits its state
+// (the object at node + 0x38's offset 0xC) to func_87F0B1A4 with the node's
+// position floats at offsets 0x48..0x50 (the second offset shifted by
+// -360.0f), then randomizes the node's rotation through func_87F0B2F4:
+// three draws from the LCG at func_8003570C, each scaled from [0,1) over
+// 4294967296.0f to -45..45 degrees for the first two and -180..180 degrees
+// for the third. func_87E0AE64 above is the same loop with fixed angles.
+void func_87E0AF44(void *arg0) {
+    f32 var_ft4;
+    f32 var_ft5;
+    u32 temp_s2;
+    u32 temp_s3;
+    u32 temp_v0;
+    u8 *temp_s1;
+    u8 *var_s0;
+
+    var_s0 = *(u8 **)((u8 *)arg0 + 0x28);
+    if (var_s0 != NULL) {
+        do {
+            temp_s1 = *(u8 **)(*(u8 **)(var_s0 + 0x38) + 0xC);
+            func_87F0B1A4(temp_s1, var_s0 + 0x48, *(f32 *)(var_s0 + 0x48),
+                *(f32 *)(var_s0 + 0x4C) + -360.0f, *(f32 *)(var_s0 + 0x50), 0xF, 0x2000);
+            temp_s2 = func_8003570C();
+            temp_s3 = func_8003570C();
+            temp_v0 = func_8003570C();
+            var_ft5 = (f32)(u32)temp_s3;
+            var_ft4 = (f32)(u32)temp_v0;
+            func_87F0B2F4(temp_s1, var_s0 + 0x42, (((f32)temp_s2 / 4294967296.0f) * 90.0f) - 45.0f,
+                ((var_ft5 / 4294967296.0f) * 90.0f) - 45.0f,
+                ((var_ft4 / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            var_s0 = *(u8 **)(var_s0 + 4);
+        } while (var_s0 != NULL);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0B0EC.s")
 
