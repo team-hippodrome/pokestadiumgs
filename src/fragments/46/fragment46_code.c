@@ -745,7 +745,63 @@ void func_8AE01EA4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE01F74.s")
+extern void func_8AE000C8(void);
+extern void func_8AE00040(void);
+extern void func_8AE0014C(void);
+extern void func_8AE01EA4(void);
+extern u8 D_8AE07AE0[], D_8AE07DC0[], D_8AE080D0[];
+extern void _bcopy(const void *, void *, s32);
+extern s16 D_8AE08504;
+extern s16 D_8AE09E68;
+extern s16 D_8AE09E6A;
+extern s16 D_8AE09E6C;
+extern s16 D_8AE09E6E;
+extern s16 D_8AE09E70;
+void func_8AE01F74(void) {
+    D_8AE08504 = 0;
+    func_8AE000C8();
+    _bcopy(D_8AE07AE0, D_8AE08508, 0x380);
+    func_8AE01EA4();
+    D_8AE09E6C = D_8AE08504;
+    D_8AE08504 = 0;
+    func_8AE00040();
+    _bcopy(D_8AE07DC0, D_8AE08508, 0x380);
+    func_8AE01EA4();
+    D_8AE09E6E = D_8AE08504;
+    D_8AE08504 = 0;
+    func_8AE0014C();
+    _bcopy(D_8AE080D0, D_8AE08508, 0x380);
+    func_8AE01EA4();
+    D_8AE09E70 = D_8AE08504;
+    D_8AE09E6A = 0;
+    switch (D_8AE09E68) {
+    case 0:
+    case 1:
+    case 6:
+        if (D_8AE09E6C + D_8AE09E6E == 0) {
+            D_8AE09E6A = 1;
+            func_8AE000C8();
+        } else if (D_8AE09E6C > 0) {
+            func_8AE000C8();
+        } else {
+            func_8AE00040();
+        }
+        break;
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        if (D_8AE09E70 == 0) {
+            D_8AE09E6A = 1;
+        }
+        func_8AE0014C();
+        break;
+    default:
+        D_8AE09E6A = 1;
+        func_8AE0014C();
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

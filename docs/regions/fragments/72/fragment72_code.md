@@ -152,3 +152,20 @@ layout-prerequisite. `func_8F400DE8` `_bzero`s the 0x48-byte record `D_8F4020C0`
 - 0x8F4020C0 onward is another `.data` block.
 
 So `fragment72_code` contains (at least) two original source files, and the record belongs to the second one. Next: find the text split (the first function using the 0x8F4020C0+ data, and a 16-byte-aligned function boundary), split the `c` subsegment there, give the second file `.data` from 0x361D50, and define the record in C. That should also let the two FAKEs go.
+
+## 2026-10-29 — `.rodata` owned; `func_8F401C30` layout-prerequisite
+
+`fragment72_code` owns `.rodata` 0x361CE0–0x361D50 (PR "Own .rodata for
+fragments 46, 58, 72, 75 and 78").
+
+`func_8F401C30` (**layout-prerequisite**, 0.91, `scratch/c/c30_best.c`):
+
+- The state machine is exact. `D_8F4020C4`, `D_8F4020CC` and `D_8F4020D8`
+  must be separate externs (each store re-forms its own `lui at`).
+- What's left: retail clears `D_8F4020D0` and `D_8F4020D4` with one shared
+  `lui at` + two `sw zero`. Neither an `s32[2]` (materialises a base), an
+  `s64` (`li` pairs) nor an `f64` (`sdc1`) reproduces that.
+- The words live at 0x361D50+ in `fragment72_tail`, right after this
+  object's `.rodata`. They are probably this object's own definitions
+  (statics), which would let the original assembler share `%hi`.
+- Revisit once the object's `.data`/`.bss` ownership is understood.
