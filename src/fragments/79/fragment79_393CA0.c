@@ -1565,7 +1565,43 @@ void func_841284A4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84128664.s")
+void BattleCommand_008(void) {
+    if (D_841951D2 != 0) {
+        func_84136678(D_841951BC, -1);
+        if ((D_841951D5 & 0x7F) == 0) {
+            func_84135B00(102);
+        } else if (D_841951C3 == 148) {
+            func_84135B00(129);
+            if (D_84195208[D_841951BD][13] & 0x4) func_84135B00(182);
+            else func_84135B00(181);
+        } else if (D_841951D1 != 255) {
+            if (D_84195208[D_841951BD][13] & 0x4) func_84135B00(86);
+            else func_84135B00(85);
+        } else {
+            func_84135B00(191);
+        }
+        func_841246AC(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+        D_841951D1 = 0;
+        if (D_841951C3 == 45 && (D_841951D5 & 0x7F)) {
+            D_841951C8 >>= 3;
+            if (D_841951C8 == 0) D_841951C8 = 1;
+            func_84136678(D_841951BC, -1);
+            func_84135B00(38);
+            if (*(u16 *)(D_84195200[D_841951BC] + 38) < D_841951C8) D_841951C8 = *(u16 *)(D_84195200[D_841951BC] + 38);
+            func_84136A9C(D_841951BC, -1, (s16)-func_84126804(D_841951BC, (u16)D_841951C8), 2);
+            func_84134CBC(D_841951BC, 20);
+            BattleRecord_AdvanceWriteSlot();
+        }
+        if (D_841951BF == 251) {
+            func_84134CBC(D_841951BC, 40);
+            func_84134DD8(D_841951BF);
+            BattleRecord_AdvanceWriteSlot();
+            D_84195208[D_841951BC][15] &= 0xFFFB;
+        }
+        func_841254E0();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -4159,7 +4195,37 @@ void BattleAnim_Table_84186004_064(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841308A8.s")
+extern void func_8413523C(u8, u8);
+extern s32 D_841951E0;
+void BattleCommand_150(void) {
+    u8 slot;
+    D_841951C8 = 0;
+    if ((D_84195208[D_841951BC][15] & 0x4) == 0) {
+        D_84195208[D_841951BC][18] = 0;
+        D_841951E0 = 0;
+    }
+    slot = D_84195208[D_841951BC][18];
+    if (*(u16 *)(((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88) + 62) == 0 || ((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88)[60] != 0) {
+        func_84125424(13);
+        return;
+    }
+    D_841951E0 = 1;
+    D_841951CC = *(u16 *)(((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88) + 66);
+    D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 52);
+    D_841951D0 = ((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88)[53];
+    func_84136678(D_841951BC, -1);
+    func_8004C54C(26, (s32)((u8 *)D_841951F8[D_841951BC] + (u32)slot * 88 + 76));
+    func_84135B00(52);
+    func_84134CBC(D_841951BC, 0);
+    if (D_84195208[D_841951BC][15] & 0x4) {
+        func_84135034((u8)(*(s32 *)(D_84195208[D_841951BC] + 76) - slot), (u8)(*(s32 *)(D_84195208[D_841951BC] + 76) - 1));
+    } else {
+        func_84135034(0, 1);
+    }
+    func_84134DD8(D_841951BF);
+    func_8413523C(D_841951BC, slot);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
@@ -5545,7 +5611,7 @@ void func_841352DC_padding2(void) {}
 #endif
 
 #ifdef VERSION_US
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 void func_84135338(u8 arg0) {
     func_84147228(0, arg0, 0, 0xB, 3);
     func_84147228(1, arg0, 0, 0xB, 2);
@@ -5625,7 +5691,7 @@ void func_84135808(u8 *arg0) { if (arg0[2] != 0) { switch (*(u16 *)(arg0 + 4)) {
 
 #ifdef VERSION_US
 extern void StageFade_StartFromTransparent(u8);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195278;
 void func_8413584C(u8 arg0) {
     StageFade_StartFromTransparent(arg0);
@@ -6255,7 +6321,7 @@ void func_841376B0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 s32 func_8413771C(void) {
     s32 result = 0;
     if (func_841484CC(0x10, 0, 0, 1) == 0) {
@@ -6319,7 +6385,7 @@ void func_84137CA4(void) {
 
 #ifdef VERSION_US
 extern u8 D_84195256[];
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_8419521C[];
 void func_84137D04(u8 arg0) {
     if (*(f32 *)(D_8419521C + arg0 * 24) > 0.0f) {
@@ -6373,7 +6439,7 @@ void func_84137DB8(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_8419521C[];
 extern u8 D_84195248[];
 void func_84137ED4(u8 arg0) {
@@ -6445,7 +6511,7 @@ extern void func_80023A3C(s32, s32, s32);
 extern u8 D_8419A0A1;
 extern s32 func_84134968(void);
 extern void func_84138364(u8 arg0);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195248[];
 extern u8 D_84195278;
 extern u8 D_8419A0A0[];
@@ -6585,7 +6651,7 @@ s32 func_84138960(u8 arg0) {
 #ifdef VERSION_US
 extern u8 D_84195255[];
 extern s32 func_84148494(u8, u8, u8);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 void func_84138D74(u8 arg0) {
     func_84147228(7, arg0, 0, 10, 0);
     func_84147228(8, arg0, 0, 10, 0);
@@ -6726,7 +6792,7 @@ void func_84139770(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_800226C0(s32);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195255[];
 void func_841397FC(u8 arg0, u8 arg1) {
     u8 index = arg0;
@@ -6795,7 +6861,7 @@ void func_84139958(u8 arg0, u8 arg1) {
 #ifdef VERSION_US
 extern u8 D_8419526D;
 extern void func_800226C0(s32);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195255[];
 void func_84139C54(u8 arg0) {
     if (*(&D_8419526D + -(arg0 * 24)) != 8) {
@@ -6815,7 +6881,7 @@ void func_84139C54(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_800226C0(s32);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195255[];
 void func_84139D94(u8 arg0) {
     u8 index = arg0;
@@ -6845,7 +6911,7 @@ void func_84139EB0(s32 arg0) {
 
 #ifdef VERSION_US
 extern void func_800226C0(s32);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195248[];
 void func_84139F44(u8 arg0) {
     switch (D_84195248[arg0 * 24 + 0xD]) {
@@ -6994,7 +7060,7 @@ void func_8413A8C4(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_800226C0(s32);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern void * D_841951F8[];
 extern u8 D_84195248[];
 // Close to func_8413AD98; gated on arg2 being below byte 8 of D_841951F8[arg0] instead of a
@@ -7035,7 +7101,7 @@ void func_8413AB2C(u8 arg0, u8 arg1, s8 arg2, u8 arg3) {
 
 #ifdef VERSION_US
 extern void func_800226C0(s32);
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern void * D_841951F8[];
 extern u8 D_84195248[];
 void func_8413AD98(u8 arg0, u8 arg1, s8 arg2) {
@@ -7103,7 +7169,7 @@ void func_8413B08C(u8 arg0, volatile u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84147228(s32, u8, s32, s32, s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_84195248[];
 void func_8413B254(u8 arg0) {
     switch (D_84195248[(u32)arg0 * 24 + 0xD]) {
@@ -7163,7 +7229,28 @@ void func_8413BBEC(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413BC64.s")
+void Battle_HandleConfirmChoiceInput(u8 arg0) {
+    u8 *controller;
+    u8 current;
+    controller = ((u8 **)(((u8 (*)[24])D_84195248)[arg0]))[((u8 (*)[24])D_84195248)[arg0][9]];
+    current = func_84148494(14, arg0, 0);
+    if (*(u16 *)(controller + 8) & 0x8000) {
+        if (current != 0) {
+            func_800226C0(9);
+            ((u8 *)D_841951F0)[2502] = arg0 + 3;
+            if (((u8 *)D_841951F0)[2498] == 1 && D_8419527C < 104) {
+                (*(u8 **)((u8 *)D_841951F0 + 2520))[107] = D_8419527C;
+            }
+            func_8413584C(20);
+        } else {
+            func_84139D94(arg0);
+        }
+    } else if (*(u16 *)(controller + 8) & 0x300) {
+        func_800226C0(1);
+        current = (current + 1) & 0x1;
+        func_84147228(14, arg0, 0, 7, current);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -7194,7 +7281,7 @@ extern u8 D_84195255[];
 extern u8 D_84195210[];
 extern void func_84139EB0(s32);
 extern void func_8413A53C(u8);
-extern void func_8413BC64(u8);
+extern void Battle_HandleConfirmChoiceInput(u8);
 extern void func_8413BE1C(u8);
 extern u8 func_84148510(u8);
 extern void func_8413BBEC(s32 arg0);
@@ -7215,7 +7302,7 @@ void func_8413BE84(s32 arg0) {
         func_8413BBEC((u8)arg0);
         break;
     case 7:
-        func_8413BC64((u8)arg0);
+        Battle_HandleConfirmChoiceInput((u8)arg0);
         break;
     case 8:
         func_8413BE1C((u8)arg0);
@@ -7682,7 +7769,45 @@ void Battle_LoadPlayerDeck(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8413DB28.s")
+extern u8 D_800CE060[];
+void Battle_InitializeSideDisplayStates(void) {
+    s32 i;
+    u8 side;
+    u8 *state;
+    u8 *team;
+    u8 (*inputs)[40];
+    for (inputs = (u8 (*)[40])D_800CE060, i = 0; i < 2; i++) {
+        state = D_84195248 + i * 24;
+        team = (u8 *)D_841951F8[i];
+        *(void **)(state + 0) = inputs[state[10]];
+        *(void **)(state + 4) = inputs[state[11]];
+        state[13] = 1;
+        state[14] = 1;
+        state[15] = 10;
+        state[8] = 0;
+        state[12] = 1;
+        if (team[2] == 2 && team[10] >= team[3]) {
+            state[9] = 1;
+        } else {
+            state[9] = 0;
+        }
+        side = i;
+        func_84147228(1, side, 0, 8, state[9]);
+        func_84147228(1, side, 0, 3, 0);
+        func_84147228(0, side, 0, 8, state[9]);
+        func_84147228(0, side, 0, 3, 0);
+        func_84147228(2, side, 0, 8, state[9]);
+        func_84147228(2, side, 0, 3, 0);
+        func_84147228(10, side, 0, 8, state[9]);
+        func_84147228(10, side, 0, 3, 0);
+        func_84147228(14, side, 0, 8, state[9]);
+        func_84147228(14, side, 0, 3, 0);
+        func_84147228(15, side, 0, 8, state[9]);
+        func_84147228(15, side, 0, 3, 0);
+        func_84147228(28, side, 0, 8, state[9]);
+        func_84147228(28, side, 0, 3, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -7707,7 +7832,7 @@ extern void Battle_LoadPlayerDeck(u8);
 extern void func_8413D7AC(u8);
 extern void func_8413D6D4(u8 *, u8 *);
 extern void func_84138530(u8, u8 *);
-extern void func_8413DB28(void);
+extern void Battle_InitializeSideDisplayStates(void);
 extern void func_8413DD94(void);
 extern void func_84138658(void);
 extern void func_8002A830(void *);
@@ -7789,7 +7914,7 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
         func_8413D6D4(D_84195208[1], D_84195200[1]);
         func_84138530(0, D_84195200[0]);
         func_84138530(1, D_84195200[1]);
-        func_8413DB28();
+        Battle_InitializeSideDisplayStates();
         func_8413DD94();
         func_84138658();
         func_8002A830(D_841951F0);
