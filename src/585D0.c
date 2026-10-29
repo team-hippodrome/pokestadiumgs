@@ -3483,7 +3483,82 @@ s32 func_8005E728(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005E8A0.s")
+extern u8 func_80064520(u16);
+void GbSave_SetSeenOwnedBits(s32 port, s32 species, u16 dvs, s32 discovery_state) {
+    u8 *owned;
+    u8 *seen;
+    s32 species_mask;
+    u8 *unown_forms;
+    u8 *first_unown_form;
+    u8 unown_form;
+    s32 form_index;
+    u8 species_limit;
+    s32 byte_index;
+    s32 form_result;
+    /* The local holds the port index first, then its native descriptor address. */
+    s32 port_record;
+    port_record = port;
+    switch (func_8005D92C(port_record)) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            owned = *(u8 **)(D_801285D0 + port_record * 112) + 35;
+            seen = *(u8 **)(D_801285D0 + port_record * 112) + 54;
+            species_limit = 151;
+            break;
+        case 5:
+        case 6:
+            owned = *(u8 **)(D_801285D0 + port_record * 112) + 2636;
+            seen = *(u8 **)(D_801285D0 + port_record * 112) + 2668;
+            unown_forms = *(u8 **)(D_801285D0 + port_record * 112) + 2700;
+            first_unown_form = *(u8 **)(D_801285D0 + port_record * 112) + 2727;
+            species_limit = 251;
+            break;
+        case 7:
+            owned = *(u8 **)(D_801285D0 + port_record * 112) + 2599;
+            seen = *(u8 **)(D_801285D0 + port_record * 112) + 2631;
+            unown_forms = *(u8 **)(D_801285D0 + port_record * 112) + 2663;
+            first_unown_form = *(u8 **)(D_801285D0 + port_record * 112) + 2690;
+            species_limit = 251;
+            break;
+    }
+    if (species > 0 && species_limit >= species) {
+        port_record = (s32)(D_80128570 + port_record * 112);
+        byte_index = (species - 1) / 8;
+        if (discovery_state > 0) {
+            seen[byte_index] |= (species_mask = 1 << ((species - 1) % 8));
+        } else {
+            seen[byte_index] &= ~(species_mask = 1 << ((species - 1) % 8));
+        }
+        if (discovery_state >= 2) {
+            owned[byte_index] |= species_mask;
+        } else {
+            owned[byte_index] &= ~species_mask;
+        }
+        if (discovery_state >= 3) {
+            *(u8 *)(port_record + byte_index + 8) |= species_mask;
+        } else {
+            *(u8 *)(port_record + byte_index + 8) &= ~species_mask;
+        }
+        if ((species - 1) == 200) {
+            form_result = func_80064520((u16)dvs);
+            unown_form = (u8)form_result;
+            if (*first_unown_form == 0) {
+                *first_unown_form = form_result;
+            }
+            for (form_index = 0; form_index < 26; form_index++) {
+                if (unown_forms[form_index] == unown_form) {
+                    break;
+                }
+                if (unown_forms[form_index] == 0) {
+                    unown_forms[form_index] = unown_form;
+                    break;
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
