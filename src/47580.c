@@ -1098,7 +1098,85 @@ u8 *func_80048390(u8 *state, u8 *input, s32 *x, s32 y, s32 draw) {
     return input;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/47580/func_80048830.s")
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+s32 func_80048830(u8 *state, s32 x, s32 y, s32 character, s32 draw) {
+    s32 index;
+    struct FontHeightRecord *record;
+    s32 width;
+    s32 offset;
+    s32 tile;
+
+    index = func_80047104(((struct FontHeightState *)state)->fontStack[state[0x7B]]);
+    record = &((struct FontHeightState *)state)->fonts[index];
+    width = func_800471D8((u8 *)record, index, character);
+    if (x < -0x27F || x >= 0x281) {
+        draw = 0;
+    } else if (y < -0x1DF || y >= 0x1E1) {
+        draw = 0;
+    }
+    if (draw != 0) {
+        offset = func_800470B8(character) * record->unk00 * record->height;
+        if (state[0x7A] & 1) {
+            if (!(state[0x7A] & 2)) {
+                state[0x7A] |= 2;
+                gDPLoadMultiBlock(
+                    D_800D0510++,
+                    record->unk08 + D_80126F5A * record->unk00 * record->height,
+                    0x100,
+                    1,
+                    G_IM_FMT_I,
+                    G_IM_SIZ_8b,
+                    record->unk00,
+                    record->height,
+                    0,
+                    G_TX_NOMIRROR | G_TX_CLAMP,
+                    G_TX_NOMIRROR | G_TX_CLAMP,
+                    G_TX_NOMASK,
+                    G_TX_NOMASK,
+                    G_TX_NOLOD,
+                    G_TX_NOLOD
+                );
+            }
+        }
+        if (*(s32 *)(state + 0x4C) != (0, record->unk08 + offset)) {
+            *(s32 *)(state + 0x4C) = record->unk08 + offset;
+            gDPLoadTextureBlock(
+                D_800D0510++,
+                record->unk08 + offset,
+                G_IM_FMT_IA,
+                G_IM_SIZ_8b,
+                record->unk00,
+                record->height,
+                0,
+                G_TX_NOMIRROR | G_TX_CLAMP,
+                G_TX_NOMIRROR | G_TX_CLAMP,
+                G_TX_NOMASK,
+                G_TX_NOMASK,
+                G_TX_NOLOD,
+                G_TX_NOLOD
+            );
+        }
+        tile = (state[0x7A] & 1) == 0 ? 1 : 0;
+        if (state[0x7A] & 4) {
+            GfxRect_DrawTextured(x, y, record->unk00 - 1, record->height, tile << 5, 0, 0x400, 0x400, 0);
+        } else {
+            gSPTextureRectangle(
+                D_800D0510++,
+                x << 2,
+                y << 2,
+                (x + tile + record->unk00 - 1) << 2,
+                (y + record->height) << 2,
+                G_TX_RENDERTILE,
+                tile << 5,
+                0,
+                0x400,
+                0x400
+            );
+        }
+    }
+    x += width + (s8)state[0x78];
+    return x;
+}
 
 extern u8 *func_80048390(u8 *, u8 *, s32 *, s32, s32);
 extern s32 func_80048830(u8 *, s32, s32, s32, s32);
