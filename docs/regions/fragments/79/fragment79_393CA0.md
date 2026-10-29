@@ -1599,3 +1599,103 @@ Naming and removal of48 duplicate declarations in these accepted blocks pass
 normal/+20 complete-module section/byte/extent/semantic-relocation controls.
 The return-result and unsigned-halfword repairs above preserve their actual
 consumer contracts; source61/67 research, coverage and private helpers are absent.
+
+## 2026-10-29 native command-guard family: five accepted;25778 layout prerequisite
+
+Scope began at470457c6 in the isolated native source79 checkout. First checked
+25778 for2955C. This file has a576-byte `.rodata` range at ROM3FA810..3FAA50,
+but the helper's six-entry `jtbl_8418AD94` is at3FA624..3FA63C in
+`asm/us/data/3F9690.rodata.s`. The current gated source object still lists that
+symbol UND. All six words were independently checked against the retail ROM.
+Available history has187 rows (126 rejected,61 compile failures); its best raw
+parent is .7815/.9735 normalized, rejected as `section_layout_drift`.
+**layout-prerequisite:** no new C hypothesis or confirming compiler probe was
+needed. Proof: `scratch/wave6-25778-layout/receipt.json`.
+
+Coordinator next action: plan ownership/layout for the earlier AD94 table,
+reconcile adjacent ADAC/ADCC tables and existing later source tables, re-extract
+with pinned tooling and gate the unchanged ASM baseline. A24-byte table move
+alone is not asserted sufficient. Only then resume25778's real return contract
+with its recorded history.2955C remains ASM behind that prerequisite/prototype
+guard;360C0's separate explicit-return prerequisite is now resolved below.
+No YAML, linker, table, alias, coverage or verifier changes were made here.
+
+The replacement family was selected from refreshed available history:
+B958 (17 compile/companion failures), AAE8 (26 compile failures), B65C
+(45 compile failures). Their real record/message/predicate callees overlap.
+After their accepts, C294 (48 compile failures, no scored local body) and DE98
+(no available attempts) joined the same family. Old D7AC/EC70/33F10/252D0,
+334D8/37778 and known layout/shared-LUI grids were not restarted.
+
+| Accepted owner | Retail bytes | Frame | Canonical manifest/index |
+| --- | ---: | ---: | --- |
+| func_8412B958 |580|40|`wave6-b958-companion8.json`,0|
+| func_8412AAE8 |784|32|`wave6-aae8-initial8.json`,0|
+| func_8412B65C |764|40|`wave6-b65c-initial8.json`,0|
+| func_8412C294 |488|40|`wave6-c294-ppaddress8.json`,4|
+| func_8412DE98 |904|56|`wave6-de98-hpvalues8.json`,1|
+
+All are void(void),3520 bytes total. Each owner's first accepted candidate
+stops its probes. Host/full native gate receipts are
+`scratch/<manifest stem>/gate-0/receipt.json`.
+
+B958 preserves three distinct rejecting messages102/110/71, the status/active
+record guard, shared side-record creation, original message108 and final25778
+call with ignored result. AAE8 preserves its25-type rejection, flag0x80 path,
+three command exceptions76/92/118, real RNG duration, fresh records after calls
+and separate15/16-type terminal cleanup. B65C preserves messages102/150/71,
+status0x8 creation, command33's original extra active fields,149/148 messages
+and distinct3/2 side-event queries. All globals remain fresh where the original
+calls can modify them; no original condition or data operation was omitted.
+
+**360C0 genuine return repair:** its existing s32 signature was correct but
+its C body omitted return of36014. The original100-byte retail body calls the
+existing explicit0/1 provider36014, then restoresRA/SP and returns without
+changingV0. B958/AAE8/B65C/C294 branch on the value. One exact-once companion
+adds the real return; signature and arguments remain unchanged. Whole allocated
+module bytes including.reginfo, every function extent and semantic relocation
+remain identical. Direct ROM slice at3A5950 and original/accepted disassembly:
+`scratch/wave6-360c0-proof/receipt.json`. An initial invalid companion lacked
+its target's name in the old-text context; canonical preflight rejected it
+before any candidate compile/statistics row. The corrected transaction uses
+the complete existing function as exact-once context. No guard was bypassed.
+
+C294 captures the original move byte38 and retains the meaningful RNG retry
+loop. Its byte duration and move have retail homes SP39/SP38. The initial
+488-byte parent had matching opcode shape but .8279 raw. Updating the real
+duration byte with `+=` before its store removed the post-call temporary drift
+(.9918 raw); the remaining one-word PP-address operand order at owner byte72
+matched with `*(slot + (active_record + 9))`. This is an ordinary access to the
+existing PP bytes, with no escaped address or allocated buffer. Earlier direct
+PP address spellings retained the same negative; unselected struct/pointer
+forms were not installed. Provider calls, all stores and the retry count stay
+original. Retained diagnostics: `scratch/wave6-c294-*/result.json`.
+
+DE98's initial904-byte parent differed only at frame entry/exit (owner offsets
+0/892):48 versus56. The saved callback flag is SP47 in both. The accepted
+source names the actual bounded HP amount (`u16`, from2676C), returned damage
+(`u32`, from26804), then the used byte flag. It forwards the real signed
+negative halfword to36AF8 and preserves each distinct callback and state-store
+sequence. No dummy or unused locals were added. Stock pass evidence shows the
+inline parent UOPT local span12→UGEN1 byte; the accepted named-quantity order
+is9→9 bytes, with flag Mmt offset-9 instead of-1. Its saved-register set is
+unchanged. Six normal/+20 passive replays for the final evidence independently
+match all allocated bytes including.reginfo, function extents and semantic
+relocations. See `scratch/wave6-de98-final-stock-passes/decoded-summary.json`
+and `allocated-controls-seal.json`; initial captures are also preserved.
+
+Final accepted indentation/mask/cast cleanup was independently compiled before
+installation, checked for complete allocated-module identity, then normal
+host/full-native-ROM gated again:
+`scratch/wave6-final-seal/tidy-final-gate/receipt.json`. Retail MD5 remains
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All14 earlier accepts and2517C/47228/
+36124/36BEC interface repairs remain unchanged. Private aggregate receipt and
+handoff: `scratch/wave6-final-seal/receipt.json`, `handoff.md`.
+
+Eight valid canonical8-candidate batches retain64 enabled-statistics rows:
+5 accepted,29 rejected,30 skipped after acceptance. The separate invalid
+companion preflight consumed zero candidate hypotheses. Every batch retained
+normal/+20 whole-module controls. Stock IDO7.1/flags, one worker/shared flock,
+canonical admission and host/full-ROM gates are unchanged; the A804 plug-in
+was not loaded. Source/region only, explicit-path hooks-disabled commit; no
+metadata/naming/coverage/private helpers shipped, integration, push or PR.
