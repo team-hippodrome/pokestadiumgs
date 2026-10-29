@@ -70,3 +70,19 @@ re-loaded compare.
     and spills `offset`.
   - Next: find a source shape that keeps the divisor out of the
     loop-invariant pool, then permute.
+
+### 2026-10-29 — `D_866098A0` owned as file-scope bss; `func_86605DCC` matched
+
+`D_866098A0` (four 0x168-byte position records, bss past the ROM image) is
+now `static u8 D_866098A0[4 * 0x168]` in this file. It is pinned at
+0x866098A0 by `linker_scripts/us/datamig_bss.ld`, the same mechanism as
+fragment67's `D_8291B880`. Existing C users are byte-identical, and
+assembly users still resolve through `undefined_syms_auto`.
+
+`func_86605DCC` (retry-menu result) matched. The `for (i = 0; i < 4; i++)`
+loop is unrolled by `copt`, and retail's shared `lui $at` across each
+`+0x34`/`+0x30` pair needs the array defined in this file.
+
+Shared-`$at` owners against other bss here (for example `D_8660A990`
+records past 0x86608BC0) can use the same mechanism. `func_86600E00`'s
+pairs target `D_86607440..`, which is ROM data in `fragment54_tail`, not bss.

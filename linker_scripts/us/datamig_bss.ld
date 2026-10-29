@@ -23,4 +23,11 @@ SECTIONS
     {
         build/src/fragments/67/fragment67_344D70.o(.bss)
     }
+
+    /* fragment54_code's per-player position records (file-scope static
+     * D_866098A0), 0x866098A0-0x86609E40. */
+    .fragment54_code_bss 0x866098A0 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/54/fragment54_code.o(.bss)
+    }
 }

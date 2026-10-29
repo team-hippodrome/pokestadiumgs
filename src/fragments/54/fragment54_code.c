@@ -1,6 +1,10 @@
 #include "global.h"
 #include "controller.h"
 
+// File-scope bss, pinned at 0x866098A0 by linker_scripts/us/datamig_bss.ld:
+// four 0x168-byte per-player position records.
+static u8 D_866098A0[4 * 0x168];
+
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86600020.s")
@@ -784,7 +788,46 @@ if (D_8660A9B8 == 8) { D_8660746C = value; } if (D_8660AA10 == 8) { D_866075D4 =
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86605DCC.s")
+extern s32 func_87F01A40(void);
+extern void StageContext_SetClearColor(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+extern s32 D_86606714;
+extern u8 D_86606788;
+extern static u8 D_866098A0[4 * 0x168];
+extern u8 D_8660A990[];
+void func_86605DCC(void) {
+    s32 i;
+
+    D_86606714 = 1;
+    switch (func_87F01A40()) {
+    case 0:
+    case 2:
+        D_86606714 = 0;
+        break;
+    case 3:
+        *(s32 *)(&D_86606788 + 0x8C) = 0;
+        *(s32 *)(&D_86606788 + 4) = 2;
+        *(s32 *)(&D_86606788 + 0x78) = 3;
+        StageContext_SetClearColor(0xFFFF);
+        StageFade_StartFromTransparent(10);
+        break;
+    case 4:
+        *(s32 *)(&D_86606788 + 0x8C) = 1;
+        *(s32 *)(&D_86606788 + 4) = 2;
+        *(s32 *)(&D_86606788 + 0x78) = 3;
+        StageContext_SetClearColor(0xFFFF);
+        StageFade_StartFromTransparent(10);
+        break;
+    }
+    if (D_86606714 == 1) {
+        for (i = 0; i < 4; i++) {
+            if (*(s32 *)(D_8660A990 + i * 0x58 + 0x4C) == 1) {
+                *(f32 *)(D_866098A0 + i * 0x168 + 0x34) = 8.0f;
+                *(f32 *)(D_866098A0 + i * 0x168 + 0x30) = 8.0f;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
