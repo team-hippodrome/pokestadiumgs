@@ -1315,3 +1315,7 @@ func_8005A98C = GbSave_CollectCrystalFeatureFlags;
 
 func_8005E8A0 = GbSave_SetSeenOwnedBits;
 D_81407954 = D_81407950 + 4;
+
+func_80058288 = GbSave_ReadGoldSilverMainSave;
+
+func_800589A4 = GbSave_WriteGoldSilverMainSave;
