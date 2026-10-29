@@ -163,3 +163,58 @@ relocations in normal/+20-line controls. Earlier prototypes required by BCF0
 remain visible; address-keyed entry aliases are retained. Private scripts and
 coverage are unchanged in this commit. Remaining ASM owners in this file:
 0954C,A208,BEEC,CD54,D124,D42C; A208 retains its independent requeue evidence.
+
+
+## 2026-10-29 — Four remaining scene updates accepted
+
+BEEC/CD54/D124/D42C replace520/644/776/768 bytes of ASM. Names:
+Scene67_UpdateAlternatingAnimationMotion, Scene67_UpdateStaggeredAnimations,
+Scene67_UpdateFadeOutSequence and Scene67_UpdateDirectionalMotion.
+
+BEEC moves four active records in alternating X directions, synchronizes their
+animations, and handles all six model cases154/157/160/243/244/245. Direct
+record indexing avoids redundant timer reloads after position writes. Its
+canonical full native gate passes in scene67-sequence-diagnostics8.
+CD54 selects the actual10-byte configuration by scene32/33/34 and activates
+the second/third records at configured timers, scaled by0.8f in mode50.
+The first fast activation writes its visibility flag before resetting its
+counter; correcting that source order closes the two scheduled store words.
+D124 selects the12-byte configurations for36/37/38, fades previous records,
+activates the next every five ticks, computes camera-facing yaw for six records,
+and clears all ten at the final fade threshold. Declaring index,distance,pitch,
+yaw,config in that order reproduces the actual stack homes; placing config[1]
+first in the frame-offset addition reproduces the operand lifetimes. The ten-
+record clear is an ordinary loop; stock IDO emits the original peeled/unrolled
+body. Distance is a real f32 output of37120; pitch/yaw are real s16 outputs.
+The file's older37120 prototype still spells its distance pointer s16*; this
+new caller passes the actual f32 object through void* for that legacy interface.
+The provider340C0.c establishes the true f32 output contract. No dummy local,
+manual unroll, new false prototype or ABI change is introduced.
+
+CD54/D124 probe hits initially encounter missing BEEC generated ASM after that
+owner accepted; these are failed build-input gates, not accepted source or new
+hypotheses. Against the accepted baseline both pass in
+scene67-sequence-angle-width8. The initial four-owner batch also retains eight
+compile failures from a redundant void StageFade declaration; provider8470.c
+and this file already declare its real s32 result. Removing that redundant
+wrong declaration fixes compilation without changing the API.
+
+D42C's rodata subsegment was already ready, including its16-entry switch table.
+Four-byte direction records have a halfword angle at+2. The actual index at
+record+0x1a3 is unsigned: every retail read is LBU, while the only existing C
+use copies its byte. Correcting s8 to u8 preserves complete existing module
+bytes under normal/+20 controls. Unused provisional u16[][2] declarations are
+removed under the same controls. A real direction struct, direct global
+record indexing and repeated angle-field expressions let IDO share the original
+angle load/shift and select the original table-base registers. Merely caching
+an angle/index in scalar locals did not close the register residual. The first
+link/gate-eligible global-direct-table body accepts in
+scene67-direction-table-flow8. No character-view casts remain in accepted C.
+
+All four have explicit normal host syntax and native retail-ROM PASS, enabled
+canonical statistics and no patches/padding/forced registers/artificial work.
+Private gate receipts live under the three accepted batch tags; naming and43
+redundant-declaration removals preserve complete module sections, bytes,
+function extents and semantic relocations in normal/+20 controls. Old address
+aliases are retained. The remaining ASM owners are0954C and A208. A208's
+five-word transform requeue and bounded negative search remain unchanged.

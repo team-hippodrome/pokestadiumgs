@@ -1360,3 +1360,11 @@ func_8290C6D0 = Scene67_UpdateHeadingMotion;
 func_8290C908 = Scene67_UpdateSpinningHeadingMotion;
 
 func_8290CB2C = Scene67_UpdateCountdownFade;
+
+func_8290BEEC = Scene67_UpdateAlternatingAnimationMotion;
+
+func_8290CD54 = Scene67_UpdateStaggeredAnimations;
+
+func_8290D124 = Scene67_UpdateFadeOutSequence;
+
+func_8290D42C = Scene67_UpdateDirectionalMotion;
