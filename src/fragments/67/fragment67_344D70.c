@@ -772,6 +772,8 @@ void func_8290A0D0(f32 *arg0, u16 *arg1) {
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290A208.s")
+void Scene67_DefaultCallback(void) {
+}
 #endif
 
 #ifdef VERSION_US
@@ -1297,11 +1299,58 @@ void func_8290B478(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290B934.s")
+extern s32 func_800427B8(s32);
+void Scene67_UpdateModelMotionPositiveX(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 3; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            if (func_80001FF0() == 50) {
+                record->position[0] += 1.44f;
+            } else {
+                record->position[0] += 1.2f;
+            }
+            func_8290A208(i);
+            if (record->position[0] >= 70.0f) {
+                record->active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290BADC.s")
+void Scene67_UpdateModelMotionNegativeX(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 3; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            if (func_80001FF0() == 50) {
+                record->position[0] -= 1.44f;
+            } else {
+                record->position[0] -= 1.2f;
+            }
+            func_8290A208(i);
+            if (record->position[0] <= -70.0f) {
+                record->active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
