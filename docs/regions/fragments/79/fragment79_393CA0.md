@@ -840,3 +840,158 @@ from their actual command-table indices. Generic-address aliases remain in
 `aliases.ld`. Names preserve the full module sections, text, function extents
 and semantic relocation tuples in normal and +20-line controls.
 No move-specific semantics or scanner boundary follows from these names.
+
+
+## 2026-10-29 — Native follow-up on four prepared owners
+
+### `84136440`: accepted text-control record collection
+
+`func_84136440(u8)` is accepted at 292 bytes with an 80-byte frame. For
+text keys 21 through 24, it obtains text from `func_8004C874` using the
+player record's byte 1179 plus 76 as the resource selector. It passes the
+returned pointer to `func_80049D9C`, which parses three byte outputs.
+When the first byte is positive, it sets its bit in the selected record's
+word at offset 0 and appends all three outputs plus the text key to a
+four-byte entry. Records have a 64-byte stride, count byte at offset 8,
+and 13 four-byte entries beginning at offset 9.
+
+The historical body discarded the returned text, passed null to the parser,
+omitted the third output and placed the text key in the wrong byte. Those
+operations were corrected before comparing source shapes. A typed view of
+the verified record layout recovers the retail loop's load/store scheduling.
+The accepted local order is signed-word cursor, three used byte outputs,
+then entry pointer. It gives the actual output homes at stack offsets
+75, 74 and 73 without added storage or padding.
+
+The same accepted transaction repairs the one existing declaration of
+`func_8004C874` from a word result to its real pointer result, established
+by `src/4CC20.c`. Its only existing same-file caller, `func_84131760`, remains
+exact across all 352 bytes and semantic relocations. The parser's real
+four-byte-pointer, void-result interface is established by `src/47580.c`.
+No accepted caller body or unrelated helper implementation was changed.
+//@src/4CC20.c
+//@src/47580.c
+
+Acceptance label: `text-record:interleave-real-locals:i,first,second,third,entry`.
+Canonical link verification, explicit normal host syntax and the full native
+retail ROM gate passed under unchanged production IDO7.1 and flags.
+Private receipt: `scratch/followup-36440-interleave8/gate-0/receipt.json`.
+
+### `84133714`: accepted HP-based message selection
+
+`func_84133714(u8, s32, s32)` is accepted at 528 bytes with a 48-byte frame.
+It formats the acting active-record identifier and party name, refreshes
+HP snapshots, and selects message/animation halfwords using the opposing
+party's current and maximum HP. The signed-word ratio is exactly
+`current_hp * 25 / (maximum_hp >> 2)`; the division is preserved rather than
+replaced with an algebraically different percent calculation. The thresholds
+are 70, 40 and 10, with a separate zero-HP case. A mode byte at state offset
+2503 selects its existing special path. The two incoming word arguments are
+forwarded unchanged to `func_84124CC4` on the normal path.
+
+Direct halfword reads and the three real locals (ratio, animation, message)
+recover the retail instructions and stack homes. A separate cached HP or
+party-pointer local enlarged the frame. The accepted expression accesses the
+mirrored party pointer through the existing `D_84195204` scalar pointer's
+byte address and a negative four-byte displacement; no array bound or global
+alias was invented. Animation and message are actual used halfword locals,
+not storage to shape the frame. The existing `Battle_ApplySwitchInState` and
+`Battle_InitState` callers corroborate the byte/word/word interface.
+
+Acceptance label:
+`hp-message:direct-hp:('ratio', 'animation', 'message'):constant-leftFalse`.
+Canonical link verification, explicit normal host syntax and full native
+retail ROM comparison passed. Private receipt:
+`scratch/followup-33714-locals8/gate-0/receipt.json`.
+The combined accepted module has identical allocated section bytes, all
+function extents and sorted semantic relocation tuples to the original
+named baseline at `788e0e30`. Raw relocation record ordering differs.
+Independent check: `scratch/followup-module-seal.json`.
+Both retail receipts report MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+### `8412A804`: tooling-blocked, symbolic load admission
+
+The corrected arithmetic uses acting-party byte 29 minus target-party byte
+29 and falls back when the acting value is smaller, as established by the
+retail `slt`/`beqz` and `subu`. The retained canonical candidate is
+`scratch/followup-a804-ordered8.json` candidate 2: 304 bytes/frame 24,
+all opcode/operand shapes exact, with only two raw word differences.
+At owner offsets 80 and 140 the baseline object has literal
+`lui a0,0x8419` / `lbu a0,20927(a0)` fields; the symbolic candidate has
+HI16/LO16 references to `D_841951BF`. The baseline object has no relocation
+at either site, so strict canonical probing rejects the added topology.
+The candidate remains unaccepted and the owner remains assembly.
+
+Ordinary GNU linking of the unchanged canonical object at addresses from the
+current retail-gated ELF/map reproduces all 106,496 text bytes and 576 rodata
+bytes, including all 304 owner bytes, directly against the original ROM.
+This is diagnostic evidence, not an acceptance or full-ROM gate for this
+candidate. No instruction, relocation, object or source bytes were rewritten.
+Receipts: `scratch/followup-a804-relocation-proof/receipt.json` and
+`scratch/followup-a804-relocation-proof/linked-receipt.json`.
+
+Next action: coordinator review of a bounded canonical admission path that
+validates added symbolic load fields by real linking before the mandatory
+host/full native ROM gate. The existing absolute-load matcher handles a
+different direction and a word-load pattern; it does not cover this literal
+baseline / symbolic candidate byte load. Do not hardcode the address in C,
+rewrite the baseline assembly/relocations, or install this candidate manually.
+No production runner or metadata path was edited in this worker checkout.
+
+
+### `8412D6C0`: requeue, move-slot promotion and PP clamp
+
+`func_8412D6C0` remains assembly: retail is 520 bytes/frame 48. It obtains a
+one-based move slot from `func_841263D8`, rejects invalid or empty PP slots,
+then subtracts a random 2–5 PP amount limited by the current low-six-bit PP.
+The conditional mask write and subsequent global-pointer/byte reload are
+retained as real operations. Party PP is also updated unless active byte 17
+mask 8 is set. The normal path preserves the original formatting, event and
+record calls; existing callee implementations and return categories were not
+changed to improve allocation.
+
+Eighty-eight canonical candidates in eleven batches tested raw result versus
+narrow slot carriers, count lifetimes and clamp selection, direct and actual
+four-slot move/PP field views, declaration/home placement, an explicit used
+global-target pointer, and success-first/guard-return topology. One additional
+carrier batch was refused before probing for a repeated body; it contributes
+zero source attempts. It was not bypassed with irrelevant declarations.
+No candidate matched. The source is not a register-only near-match.
+
+Retained diagnostics include `followup-d6c0-fields8` candidate 0:
+524 bytes/frame 56, normalized 0.9313/raw 0.4809; and
+`followup-d6c0-byte-homes8` candidate 3: exact 520-byte length/frame 48,
+normalized 0.9077/raw 0.4462, with different slot promotion and clamp code.
+The numerically highest normalized result, 0.9328, is a larger 536-byte/frame
+64 body (`followup-d6c0-field-carriers8` candidate 7), not a better match by
+length or native instruction evidence. Wider local/home/positive-guard grids
+repeated the same early fingerprint and are not a useful next batch.
+
+Passive stock IDO7.1 replay retains normal and +20-line controls for the
+accepted module and two unchanged canonical parents: six complete-module
+byte/section/extent/relocation controls pass. Before UGEN, the raw parent's
+optimized Ucode reserves 28 local memory bytes versus 16 entering UOPT; the
+field parent's reserves 20 versus 12. The latter already writes its narrowed
+slot as a byte in Mmt offset -2 in UGEN input. This localizes the observed
+stack representation before UGEN/assembler scheduling; it does not establish
+that a saved-register slot is impossible. A read-only comparison of the
+accepted `func_8412F170` byte counter also finds a stack byte across calls,
+so that sibling is a negative control, not the missing positive witness.
+
+Private receipts and decoded streams:
+`scratch/followup-d6c0-stock-passes-v3/receipt.json`,
+`scratch/followup-d6c0-stock-passes-v3/frame-summary.json`, and
+`scratch/followup-byte-register-witness/receipt.json`.
+Initial replay failures from cleaned accepted ASM includes and an overstrict
+include-count assertion remain recorded; final replay uses private,
+byte-identical preparation snapshots, and its whole-module controls pass.
+No compiler decisions or production flags were modified.
+
+Next action: trace the real slot's UOPT web eligibility/cost and obtain an
+authentic matching byte-slot/return-contract witness. In particular,
+`func_841263D8` currently has an accepted word-result definition while its
+implemented range is 0–4; range alone does not prove an original byte-result
+interface. Any return-contract repair needs independent evidence, exact-once
+companions and affected-caller verification. Do not fabricate that interface,
+add register hints, introduce unused work, or replay the failed width/home/
+guard families. No owner replacement or native acceptance is claimed here.

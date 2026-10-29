@@ -4482,7 +4482,7 @@ void BattleCommand_RunSequence(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
@@ -4963,7 +4963,58 @@ void func_84133440(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84133714.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004B7A4(s32);
+extern s32 func_8004C54C(u8, s32);
+extern void func_84124CC4(u8 arg0, s32 arg1, s32 arg2);
+extern s32 func_84127140(u8 a);
+extern void func_84134CBC(u8 arg0, u8 arg1);
+extern void func_84135B00(u16 arg0);
+extern void func_84135C78(u8 arg0, s16 arg1, u16 arg2, u16 arg3);
+extern void func_84136678(u8 arg0, s16 arg1);
+extern void * D_841951F0;
+extern u8 * D_84195200[];
+extern void * D_84195204;
+extern u8 * D_84195208[];
+void func_84133714(u8 arg0, s32 arg1, s32 arg2) {
+    s32 ratio;
+    u16 animation;
+    u16 message;
+
+    func_84136678(arg0, -1);
+    func_8004C54C(25, func_8004B7A4(D_84195208[arg0][0]));
+    func_8004C54C(26, (s32)(D_84195200[arg0] + 52));
+    if (((u8 *)D_841951F0)[2503]) {
+        animation = 3;
+        message = 22;
+        func_84134CBC(arg0, 34);
+    } else {
+        *(u16 *)(D_84195208[1 - arg0] + 72) = *(u16 *)(D_84195200[1 - arg0] + 38);
+        if (*(u16 *)(D_84195208[arg0] + 72) == 0) {
+            *(u16 *)(D_84195208[arg0] + 72) = *(u16 *)(D_84195200[arg0] + 38);
+        }
+        ratio = (*(u16 *)((*(u8 **)((u8 *)&D_84195204 + -(arg0 << 2))) + 38)) * 25 / (*(u16 *)((*(u8 **)((u8 *)&D_84195204 + -(arg0 << 2))) + 40) >> 2);
+        if (ratio >= 70 || (*(u16 *)((*(u8 **)((u8 *)&D_84195204 + -(arg0 << 2))) + 38)) == 0) {
+            animation = 4;
+            message = 22;
+        } else if (ratio >= 40) {
+            animation = 5;
+            message = 18;
+        } else if (ratio >= 10) {
+            animation = 6;
+            message = 16;
+        } else {
+            animation = 7;
+            message = 39;
+        }
+        func_84124CC4(arg0, arg1, arg2);
+    }
+    func_84135B00(message);
+    if (func_84127140(arg0)) {
+        func_84135C78(arg0, -1, 60, animation);
+    }
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
@@ -5843,7 +5894,34 @@ void func_84136354(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84136440.s")
+extern void func_80049D9C(u8 *, u8 *, u8 *, u8 *);
+extern void *func_8004C874(s32, s32);
+typedef struct { u32 mask; u32 other; u8 count; u8 entries[13][4]; } BattleFollowupTextRecord;
+extern void * D_841951F8[];
+extern u32 D_8419A020[];
+void func_84136440(u8 arg0) {
+    s32 i;
+    u8 first;
+    u8 second;
+    u8 third;
+    u8 *entry;
+
+    for (i = 21; i != 25; i++) {
+        third = 0;
+        second = 0;
+        first = 0;
+        func_80049D9C(&first, &second, &third, func_8004C874(((u8 *)D_841951F8[arg0])[1179] + 76, i));
+        if (first > 0) {
+            ((BattleFollowupTextRecord *)D_8419A020)[arg0].mask |= 1 << first;
+            entry = ((BattleFollowupTextRecord *)D_8419A020)[arg0].entries[((BattleFollowupTextRecord *)D_8419A020)[arg0].count];
+            entry[0] = first;
+            entry[1] = second;
+            entry[2] = third;
+            entry[3] = i;
+            ((BattleFollowupTextRecord *)D_8419A020)[arg0].count++;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
