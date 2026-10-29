@@ -1342,3 +1342,11 @@ func_84133714 = Battle_QueueSwitchInHpMessage;
 func_84136440 = BattleText_CollectEntriesForSide;
 
 func_8412A804 = BattleCommand_031;
+
+func_8290B5A4 = Scene67_UpdateSpinningMotionNegativeX;
+
+func_8290B76C = Scene67_UpdateSpinningMotionPositiveX;
+
+func_8290C0F4 = Scene67_UpdateSpinningMotionPositiveY;
+
+func_8290C2A8 = Scene67_UpdateSpinningMotionNegativeY;
