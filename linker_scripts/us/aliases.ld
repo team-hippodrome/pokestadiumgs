@@ -1310,3 +1310,5 @@ func_8005A364 = GbTower_ValidatePortCartridge;
 func_82B01904 = Panel_InitCupSelection;
 
 func_8005A60C = GbSave_CollectGsFeatureFlags;
+
+func_8005A98C = GbSave_CollectCrystalFeatureFlags;
