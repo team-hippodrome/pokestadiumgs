@@ -897,5 +897,32 @@ s32 func_843020F0(void) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/81/fragment81_code/func_84302148.s")
+extern void _bzero(void *, s32);
+extern void func_80035700(u32);
+extern s32 func_8006A424(void);
+extern void func_84301DEC(void *);
+extern Fragment81RulePrefix D_843028DC[];
+extern Fragment81RulePrefix D_84302A44[];
+void func_84302148(u8 *arg0, u8 arg1, s32 arg2) {
+    D_84302C80 = arg0;
+    if (D_84302C80 != NULL) {
+        _bzero(&D_84302C88, 24);
+        func_80035700(osGetCount());
+        D_84302C88.selector = func_8006A424() - 1;
+        D_84302C88.unk_0C = 0;
+        D_84302C88.stat_limit = 0;
+        D_84302C88.count = 0;
+        D_84302C88.unk_02 = arg1;
+        D_84302C88.unk_03 = (arg2 != 0 ? 0 : 101 - D_84302C88.selector * 12) + 128;
+        D_84302C88.unk_04 = func_843020F0();
+        D_84302C88.used_types = 0;
+        D_84302C88.use_rule_table = arg2;
+        if (arg2 != 0) {
+            D_84302C88.rules = &D_843028DC[(D_84302C88.selector & 3) * 8 + D_84302C88.unk_02];
+        } else {
+            D_84302C88.rules = &D_84302A44[func_8003570C() % 6];
+        }
+        func_84301DEC(arg0);
+    }
+}
 #endif
