@@ -1,5 +1,26 @@
 #include "global.h"
 
+// This object's .data (0x8220D6F0-0x8220D770): four animation key lists, the
+// records that point at them, the record table used by func_822000F0, and the
+// slide state func_82200020 keeps between geo callbacks.
+typedef struct Fragment17AnimKeys {
+    /* 0x0 */ s16 unk_0;
+    /* 0x2 */ s16 count;
+    /* 0x4 */ s16 *keys;
+} Fragment17AnimKeys; // size = 0x8
+
+s16 D_8220D6F0[8] = { 0x3C, -1, 2, 1, 2, 2, 2, 1 };
+Fragment17AnimKeys D_8220D700 = { 1, 4, D_8220D6F0 };
+s16 D_8220D708[12] = { 0x28, -1, 1, 1, 1, 2, 2, 1, 2, 2, 2, 1 };
+Fragment17AnimKeys D_8220D720 = { 1, 6, D_8220D708 };
+s16 D_8220D728[8] = { 0x50, -1, 2, 1, 2, 2, 2, 1 };
+Fragment17AnimKeys D_8220D738 = { 1, 4, D_8220D728 };
+s16 D_8220D740[8] = { 0x78, -1, 1, 1, 1, 2, 1, 1 };
+Fragment17AnimKeys D_8220D750 = { 1, 4, D_8220D740 };
+s32 D_8220D758[4] = { (s32)&D_8220D700, (s32)&D_8220D720, (s32)&D_8220D738, (s32)&D_8220D750 };
+static s16 D_8220D768 = 0;
+static s16 D_8220D76C = 0;
+
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10F9E0/func_82200020.s")
@@ -7,7 +28,6 @@
 /* mkdraft:func_822000F0 begin */
 extern s32 func_800506A4(void *);
 extern void func_80050578(void *, s32);
-extern s32 D_8220D758[];
 
 s32 func_822000F0(s32 arg0, void *arg1) {
     s32 index = *(s32 *)((u8 *)arg1 + 0x20);

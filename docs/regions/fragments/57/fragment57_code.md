@@ -67,3 +67,19 @@ Exact acceptance: `build/pokestadiumgs-us.z64: OK`. Full ROM MD5:
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
 checks pass. Original-assembly and raw retail comparisons verify all 57
 words at `0x2BD118..0x2BD1FC`.
+
+## 2026-10-29 — `func_83302088` layout-prerequisite (needs this object's `.data`)
+
+`func_83302088` is the zoom-in step: `x1C == -1` resets it, then the zoom
+grows by 8 up to `x10 / 2`, and it writes `x8`/`xC`/`x2C`.
+
+Its body is written (`scratch/c/088.json`). Retail accesses the float
+`D_833091E4` with one `lui` per access; IDO only does that when the
+variable is defined in this file. A probe with a function-local
+`static f32` reproduces the access pattern; the remaining difference is
+retail keeping `x1C` in a local after the reset.
+
+`D_833091E4` lives in `fragment57_data` (ROM `.data`). This object's
+`.data` must be split out and defined in C before the owner can land.
+fragment58's `func_8340135C` (`D_83403F18`) is the same function with the
+same blocker.

@@ -655,3 +655,13 @@ into this object's bss (`D_822106B2`/`B4`, `D_822106D0`/`D2`,
 (0x822105E8–0x822109B4) defined in this file and pinned by
 `datamig_bss.ld`, which would also let the existing `COALESCE_AT_LUI`
 pragmas go. Many C users with assorted extern types would need retyping.
+`func_82205C14` (geo callback, slide `y` by 0x30 up to 0x1E0; **requeue**,
+`scratch/c/c14_best.c`): the same family as 10F9E0's `func_82200020`.
+
+- Retail re-forms `lui` for every access to the scalar `D_82210642`. Ours
+  CSEs its address into `$v1` (`lui v1`/`addiu`), with these as extern
+  scalars or in-file statics.
+- `D_82210644`/`D_82210646` share one `$at` in retail, which suggests an
+  in-file two-element object.
+- Next: find what suppresses IDO's address CSE for repeated scalar access
+  in this family.
