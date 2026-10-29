@@ -1322,3 +1322,11 @@ func_80058288 = GbSave_ReadGoldSilverMainSave;
 func_800589A4 = GbSave_WriteGoldSilverMainSave;
 
 func_8006072C = GbSave_RepairCrystalEggTrainerNames;
+
+func_8412DDC0 = BattleCommand_073;
+
+func_8412DE90 = BattleCommand_NoOp074;
+
+func_8412E82C = BattleCommand_083;
+
+func_8412E944 = BattleCommand_NoOp084;

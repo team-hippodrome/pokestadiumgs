@@ -831,3 +831,12 @@ Private evidence:
 
 These verified callback boundaries supply no boundary claim for 8005A5BC;
 the Gen-1 scanner's separate 340-byte prefix proof remains independently scoped.
+
+### Accepted command entry names
+
+The four accepted definitions are named `BattleCommand_073`,
+`BattleCommand_NoOp074`, `BattleCommand_083`, and `BattleCommand_NoOp084`
+from their actual command-table indices. Generic-address aliases remain in
+`aliases.ld`. Names preserve the full module sections, text, function extents
+and semantic relocation tuples in normal and +20-line controls.
+No move-specific semantics or scanner boundary follows from these names.

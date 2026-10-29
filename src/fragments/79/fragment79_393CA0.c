@@ -3033,7 +3033,7 @@ extern u8 D_841951BD;
 extern u8 D_841951BF;
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
-void func_8412DDC0(void) {
+void BattleCommand_073(void) {
     u8 *ptr = D_84195208[D_841951BD];
     if ((ptr[15] & 0x60) || (ptr[16] & 0x10) || !(D_84195200[D_841951BD][36] & 7) || (ptr[13] & 1)) {
         func_84126BA8(D_841951BC);
@@ -3046,7 +3046,7 @@ void func_8412DDC0(void) {
         BattleRecord_AdvanceWriteSlot();
     }
 }
-void func_8412DE90(void) {
+void BattleCommand_NoOp074(void) {
 }
 #endif
 
@@ -3206,7 +3206,7 @@ extern s32 D_841951C8;
 extern u8 D_841951D2;
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
-void func_8412E82C(void) {
+void BattleCommand_083(void) {
     u8 *ptr;
     s32 bit;
     if (!(D_84195200[D_841951BC][36] & 7)) {
@@ -3235,7 +3235,7 @@ void func_8412E82C(void) {
         }
     }
 }
-void func_8412E944(void) {
+void BattleCommand_NoOp084(void) {
 }
 #endif
 
