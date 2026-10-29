@@ -3434,6 +3434,7 @@ SECTIONS
         fragment46_RODATA_START = .;
         build/asm/us/data/fragments/46/fragment46_header.o(.rodata);
         build/src/fragments/46/fragment46_code.o(.rodata);
+        build/asm/us/data/fragments/46/fragment46_tail.rodata.o(.rodata);
         fragment46_RODATA_END = .;
         fragment46_RODATA_SIZE = ABSOLUTE(fragment46_RODATA_END - fragment46_RODATA_START);
     }
@@ -4073,6 +4074,7 @@ SECTIONS
         fragment58_RODATA_START = .;
         build/asm/us/data/fragments/58/fragment58_header.o(.rodata);
         build/src/fragments/58/fragment58_code.o(.rodata);
+        build/asm/us/data/fragments/58/fragment58_tail.rodata.o(.rodata);
         fragment58_RODATA_END = .;
         fragment58_RODATA_SIZE = ABSOLUTE(fragment58_RODATA_END - fragment58_RODATA_START);
     }
@@ -4909,6 +4911,7 @@ SECTIONS
         fragment72_RODATA_START = .;
         build/asm/us/data/fragments/72/fragment72_header.o(.rodata);
         build/src/fragments/72/fragment72_code.o(.rodata);
+        build/asm/us/data/fragments/72/fragment72_tail.rodata.o(.rodata);
         fragment72_RODATA_END = .;
         fragment72_RODATA_SIZE = ABSOLUTE(fragment72_RODATA_END - fragment72_RODATA_START);
     }
@@ -5032,6 +5035,7 @@ SECTIONS
         fragment75_RODATA_START = .;
         build/asm/us/data/fragments/75/fragment75_header.o(.rodata);
         build/src/fragments/75/fragment75_code.o(.rodata);
+        build/asm/us/data/fragments/75/fragment75_tail.rodata.o(.rodata);
         fragment75_RODATA_END = .;
         fragment75_RODATA_SIZE = ABSOLUTE(fragment75_RODATA_END - fragment75_RODATA_START);
     }
@@ -5157,6 +5161,7 @@ SECTIONS
         fragment78_RODATA_START = .;
         build/asm/us/data/fragments/78/fragment78_header.o(.rodata);
         build/src/fragments/78/fragment78_code.o(.rodata);
+        build/asm/us/data/fragments/78/fragment78_tail.rodata.o(.rodata);
         fragment78_RODATA_END = .;
         fragment78_RODATA_SIZE = ABSOLUTE(fragment78_RODATA_END - fragment78_RODATA_START);
     }
