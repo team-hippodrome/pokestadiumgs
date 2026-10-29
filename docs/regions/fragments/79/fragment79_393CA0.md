@@ -1501,3 +1501,89 @@ This public batch includes only these four C owners, genuine interface/naming
 metadata and region evidence. It excludes private scripts, coverage changes and
 the separate unresolved scene-renderer type checkpoint. No forced register,
 no-op helper, padding, artificial work or instruction/relocation rewrite.
+
+## 2026-10-29 native side-event family: four accepted, real interfaces repaired
+
+Fromc68fca8e, a refreshed six-history inventory selected E680 (18 historical
+compile/companion failures),28D48 (16 compile failures) and29900 (8 companion
+failures). Their shared real callees are36218,366C4,35B40 and36124. Once the
+interface prerequisites passed,29374 (122 instructions, no available prior
+rows) joined the same family. No documented D7AC/EC70/33F10/252D0 grid was
+restarted. All ten prior accepts and2517C/47228 repairs remain unchanged.
+
+**Accepted E680**,212B/frame32, void(void):
+`scratch/wave5-e680-initial8.json` index0. Direct if/else on context byte2500;
+original second-store reload, side6/5 setup, message178, and conditional second
+36124 call remain. Native host/full-ROM receipt:
+`scratch/wave5-e680-initial8/gate-0/receipt.json`.
+
+**Genuine36124 return repair:** the native retail112-byte wrapper calls the
+existing s32-returning36014 and returns without modifyingV0; original E680,
+28D48 and29900 branch on that result.36014's accepted C explicitly returns
+zero/one. The companion changes the existing36124 definition to s32 and
+returns that existing call's result, and repairs its one old extern. Existing
+ignored-result callers (BattleAnim table entries16/17) remain byte-identical.
+The direct retail ROM slice, linked/object disassembly and whole allocated
+module comparison are in `scratch/wave5-return-proof/receipt.json`.
+
+**Accepted28D48**,376B/frame32, and **29900**,384B/frame40, both void(void):
+`scratch/wave5-sideinterface8.json` indices2 and4.28D48 uses sequential real
+rejecting guards before setting party byte36 bit0x8 and message148.29900 uses
+a conjunctive guard, sets bit0x40, message108 and quarters the original active
+halfword64. Both preserve fresh globals across calls and conditional6/5 side
+records. Combined host/full native gate:
+`scratch/wave5-sideinterface8/gate-0/receipt.json`.
+
+**Genuine36BEC halfword interface repair:** first body probes were otherwise
+exact but passed sign-extended-1 to the current s16 formal. Original calls use
+ORI A1,zero,0xFFFF. All five available original ASM calls show that unsigned
+sentinel, including2955C's branch from84129694 to84129734. Its separate36B9C
+call instead loads signed-1.36BEC only forwards the halfword to existing
+36B60's signed halfword parameter/store. Making the existing wrapper's second
+formal u16 preserves that signed conversion and every allocated instruction;
+36B9C remains signed. No accepted C callers of36BEC existed before the
+transaction. The exact-once companion changes that existing C definition;
+no ASM-owner prototype, cast-call, shadow declaration or verifier changes.
+`scratch/wave5-return-proof/unsigned-parameter.md` records the bounded source
+interpretation and all original callsites; the typedef is not claimed to be
+uniquely determined by assembly. Full allocated-module equality including
+.reginfo, all function extents and semantic relocations is sealed separately
+in `unsigned-interface-module-receipt.json` in that directory.
+
+**Accepted29374**,488B/frame40, void(void):
+`scratch/wave5-29374-existingtype8.json` index0. The nonzero party-byte36 path
+conditionally clears bit0x20 state through36BEC, message119 and34D28 before
+resetting that byte. The zero path preserves the optional26390 query,
+query-type21 rejection, halves active halfword60, sets party bit0x10,
+message188 and conditional side records. D_841951C1 has a later existing s8
+declaration; the early forward declaration keeps that type and explicitu8
+conversions reproduce the original LBU. Initial undefined-byte and conflicting
+u8-extern failures remain recorded. Host/full native gate:
+`scratch/wave5-29374-existingtype8/gate-0/receipt.json`.
+
+Final accepted guard/mask/continuation readability cleanup was compiled before
+installation and checked for identical allocated module bytes/extents/relocs,
+then normal host/full native retail-gated again:
+`scratch/wave5-final-seal/tidy-final-gate/receipt.json`. All four owners stop
+on first acceptance; the full batch accounts for1460 retail text bytes.
+
+**tooling-blocked fifth-family prerequisite,2955C:** assembly-only inspection
+finds an actual conditional25778 return consumer.25778 remains an active ASM
+owner with its existing void declaration. Read-only canonical preflight
+reports `companion_edits[0] target func_84125778 is still a GLOBAL_ASM owner;
+resolve that owner separately before using a companion edit`. No fifth-owner
+C body or compiler probe ran. Preserve ASM; resolve that actual interface in
+its own scope. A future2955C transaction also needs an explicit return of the
+existing36014 result in accepted s32 helper360C0. Its older parents wrongly
+cached mutable globals, used acting instead of target side for two calls, and
+used36CA8 instead of AdvanceWriteSlot. Do not transplant them unchanged.
+Exact diagnostic: `scratch/wave5-return-proof/2955c-prerequisite.json`.
+
+Six canonical8-candidate batches retain48 enabled-statistics rows:4 accepted,
+10 rejected,16 compile failures,18 skipped after acceptance. Every batch has
+normal/+20 whole-module controls. Production IDO7.1/flags, one worker/shared
+ROM lock, host/full retail gates and canonical tools remain unchanged.
+Retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Durable private handoff and
+aggregate receipt: `scratch/wave5-final-seal/handoff.md`, `receipt.json`.
+Only assigned source/region tracked; no naming, metadata, coverage, private
+helpers, push/PR or integration changes.
