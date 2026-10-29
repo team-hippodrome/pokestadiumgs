@@ -92,3 +92,24 @@ Scratch generators, rejected candidates, compiler output, statistics,
 objects and ROMs stay local. Tracked hooks and decomp-workbench are absent
 in this public clone; native runner/object/provenance checks are the stated
 fallback, not a claim that unavailable checks ran.
+
+## 2026-10-29 — `.rodata` owned; `func_8FA0125C` requeue (one stack slot)
+
+`fragment75_code` owns `.rodata` 0x365FB0–0x366230 (PR "Own .rodata for
+fragments 46, 58, 72, 75 and 78"). `D_8FA01D04` is now the literal
+`1650.0f`.
+
+`func_8FA0125C` (debug menu, **requeue**, 0.977, `scratch/c/25c_best.c`):
+
+- Every instruction matches except the spill slot of the case-5 byte `c`.
+  Retail uses `sb/lbu a2,0x24(sp)`; ours uses 0x21 (or 0x23/0x27/0x22,
+  depending on declaration order).
+- Learned: a plain `switch (D_8FA01984)` on the `s16` global gives retail's
+  `lhu`. Don't cast. The loop index must be `s32` with a separate
+  `s16 row = i`.
+- Already tried: every order of `flag`/`i`/`a`/`b`/`c`/`row`, block-scoped
+  `a`/`b`/`c` (frame grows to 0x38), and `c` as `s32`/`u32`/`s16`.
+- The permuter scores the base 0 because its metric ignores stack offsets,
+  so it is no help here.
+- Next: find what puts `c` at a word-aligned 0x24 home, perhaps a
+  compiler temporary rather than a declared local.
