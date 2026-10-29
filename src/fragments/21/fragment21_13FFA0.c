@@ -594,7 +594,48 @@ s32 func_82502114(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82502120.s")
+#ifndef ROUND_MAX
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+#endif
+
+void func_82502120(void *arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4)
+{
+    s32 *new_var;
+    new_var = &D_82508F80;
+    if ((*new_var) != 0)
+    {
+        u8 *p0;
+        u8 *p1;
+        f32 scale;
+        p0 = arg0;
+        p1 = arg1;
+        if (arg4 < 0)
+        {
+            scale = 0.0f;
+        }
+        else
+        {
+            scale = ((f32) (arg2 - arg4)) / ((f32) ((arg3 - arg4) - 1));
+            if (scale < 0.0f)
+            {
+                scale = 0.0f;
+            }
+        }
+        p0[0] = (u8) ((s32) ROUND_MAX(((f32) (*((u8 *) (((u8 *) (*new_var)) + 0x28)))) * scale));
+        p0[1] = (u8) ((s32) ROUND_MAX(((f32) (*((u8 *) (((u8 *) (*new_var)) + 0x29)))) * scale));
+        p0[2] = (u8) ((s32) ROUND_MAX(((f32) (*((u8 *) (((u8 *) (*new_var)) + 0x2A)))) * scale));
+        p0[3] = 0xFF;
+        p1[0] = (u8) ((s32) ROUND_MAX(((f32) (*((u8 *) (((u8 *) (*new_var)) + 0x2C)))) * scale));
+        p1[1] = (u8) ((s32) ROUND_MAX(((f32) (*((u8 *) (((u8 *) (*new_var)) + 0x2D)))) * scale));
+        p1[2] = (u8) ((s32) ROUND_MAX(((f32) (*((u8 *) (((u8 *) (*new_var)) + 0x2E)))) * scale));
+        p1[3] = 0xFF;
+    }
+    else
+    {
+        *((u32 *) arg0) = 0xFF;
+        *((u32 *) arg1) = 0xFF;
+    }
+}
 #endif
 
 #ifdef VERSION_US
