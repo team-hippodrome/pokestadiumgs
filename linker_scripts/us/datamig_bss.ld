@@ -24,9 +24,9 @@ SECTIONS
         build/src/fragments/67/fragment67_344D70.o(.bss)
     }
 
-    /* fragment67_34B0F0's second 0x100-byte text buffer (file-scope static
-     * D_8291BD70), 0x8291BD70-0x8291BE70. */
-    .fragment67_34B0F0_bss 0x8291BD70 (NOLOAD) : SUBALIGN(16)
+    /* fragment67_34B0F0's text-reveal state (file-scope static D_8291BC68),
+     * 0x8291BC68-0x8291BE6E. */
+    .fragment67_34B0F0_bss 0x8291BC68 (NOLOAD) : SUBALIGN(8)
     {
         build/src/fragments/67/fragment67_34B0F0.o(.bss)
     }
