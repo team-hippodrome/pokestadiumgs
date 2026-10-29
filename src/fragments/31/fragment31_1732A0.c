@@ -71,7 +71,17 @@ u32 func_8820030C(u32 *arg0, u32 *arg1) {
     return value;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1732A0/func_88200320.s")
+typedef struct unk_func_88200320_record {
+    u16 halfwords[59];
+} unk_func_88200320_record;
+
+void func_88200320(void *arg0, void *arg1) {
+    unk_func_88200320_record saved;
+
+    saved = *(unk_func_88200320_record *)arg0;
+    *(unk_func_88200320_record *)arg0 = *(unk_func_88200320_record *)arg1;
+    *(unk_func_88200320_record *)arg1 = saved;
+}
 
 u32 func_88200458(u32 *arg0, u32 *arg1) {
     u32 value = *arg0;
