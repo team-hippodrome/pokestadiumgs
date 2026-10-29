@@ -11,7 +11,48 @@ void func_87F03700(s32 arg0, s32 arg1) {
     func_87F034F0(&D_80126420, arg0, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326160/func_87F03730.s")
+extern u16 D_80094904;
+extern void *D_80094908;
+extern void func_87F026E8(void *, u8 *);
+extern void func_87F05FB0(f32 [4][4], f32 [4][4], f32 *, u16 *, void *);
+s32 func_87F03730(s32 arg0, u8 *arg1) {
+    u8 *object;
+    f32 *scale;
+    u8 *record;
+
+    object = *(u8 **)(arg1 + 20);
+    record = *(u8 **)(object + 32);
+    if (D_80094904 != *(u16 *)(record + 24) && arg0 == 2) {
+        *(s32 *)(object + 28) += 1;
+        *(u16 *)(record + 26) += 1;
+        if (*(s32 *)(object + 28) > *(s32 *)(record + 20)) {
+            func_87F026E8(*(void **)record, object);
+        } else {
+            scale = (f32 *)(object + 84);
+            switch (record[28]) {
+            case 0:
+                *(s16 *)(object + 70) += 127;
+                break;
+            case 1:
+                break;
+            }
+            *(f32 *)(object + 72) = *(f32 *)(record + 4);
+            *(f32 *)(object + 76) = *(f32 *)(record + 8);
+            *(f32 *)(object + 80) = *(f32 *)(record + 12);
+            if (*(u8 **)(record + 16) != NULL) {
+                *(f32 *)(object + 72) += *(f32 *)(*(u8 **)(record + 16) + 36);
+                *(f32 *)(object + 76) += *(f32 *)(*(u8 **)(record + 16) + 40);
+                *(f32 *)(object + 80) += *(f32 *)(*(u8 **)(record + 16) + 44);
+            }
+            func_87F05FB0((f32 (*)[4])(object + 132),
+                          (f32 (*)[4])((u8 *)D_80094908 + 100), (f32 *)(object + 72),
+                          (u16 *)(object + 66), scale);
+        }
+    }
+    *(u16 *)(record + 24) = D_80094904;
+    //!bug The graph dispatcher consumes a result, but this callback defines none.
+    //@src/340C0.c
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326160/func_87F03884.s")
 
