@@ -65,3 +65,50 @@ comparison. Independent original-word and raw-retail comparisons cover all
 67 words at `0x19EC6C..0x19ED78`, including the original 24-byte frame.
 No new fake, padding, storage, instruction rewrite, layout or CI change is
 introduced. The separate `func_8822BAF8` requeue above remains unresolved.
+
+
+## `func_8822B6A4` — menu button dispatch
+
+The 320-byte owner is registered by `func_8822B80C` as the first callback
+passed to `func_88004804`. It reads the controller button halfword at
+offset 8 and uses the menu at record offset 116. Button mask `0x8000`
+checks the signed selection at menu offset 40. A zero selection sets record
+word 396, then maps record selector 2 to `func_8822B580(2)`, selector 3 to
+`func_8822B580(3)`, and selectors 1 or 4 to `func_8822B580(4)`. The other
+selection plays sound 72 and sets `D_880068B8`. Both paths call
+`func_88004990` using the slot byte reached through record offset 4.
+//@src/fragments/31/fragment31_19E800.c
+
+Button mask `0x4000` plays sound 72, calls the slot helper, then sets
+`D_880068B8`. With neither mask set, `func_88002720` updates the signed
+selection using the count at menu offset 12 and the descriptor at offset
+44. Its actual assembly reads that descriptor's word flag at offset 0 and
+byte-array pointer at offset 4. The partial type represents those two real
+fields and introduces no storage. Broader screen meanings remain unresolved.
+//@src/fragments/29/fragment29_168330.c
+
+`func_88004990`'s declaration now follows its actual void result and two
+byte arguments. Its existing definition increments an active slot's state
+byte by `amount + 1`. The existing callers and matched C remain byte-identical.
+A word local holding the zero-extended controller halfword preserves its
+original `a0` carrier; the halfword-local trial used `a1` at the same three
+instructions. The final owner reproduces all 80 words and its 24-byte frame.
+
+Fresh validation uses master `b1dd5eccd53fb1fabd69b4ba64ae1deb86666a82`
+plus this patch. The unchanged baseline passed first. The normal
+syntax-enabled Makefile forcibly recompiles the changed source and links
+the complete US ROM:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/31/fragment31_19E800.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The result is `build/pokestadiumgs-us.z64: OK`, full ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, and a successful complete retail byte
+comparison. Independent original-word and raw-retail comparisons cover all
+320 bytes at `0x19E924..0x19EA64`. No new fake, padding, storage, instruction
+rewrite, layout or CI change is introduced. The separate `func_8822BAF8`
+requeue above remains unresolved.
