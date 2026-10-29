@@ -1,6 +1,7 @@
 #include "global.h"
 
 #ifdef VERSION_US
+extern void Game_ShutdownAndLoadFragment(s32, s32);
 extern s32 GbTower_CheckPakRemoved(s32, u8);
 #endif
 
@@ -1098,7 +1099,40 @@ s32 GbTower_PollPortState(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005A364.s")
+extern s32 D_80128748;
+extern u8 D_8012874D;
+extern u8 D_80128570[];
+extern s32 GbPak_InitializeCartridge(s32);
+extern s32 GbSave_IdentifyFormat(s32);
+extern s32 GbTower_VerifyPakStillInserted(s32, u8 *);
+extern s32 GbTower_CheckPakRemoved(s32, u8);
+extern void Game_ShutdownAndLoadFragment(s32, s32);
+extern void func_80057970(u8);
+extern void GbSave_ResetPortCache(u8);
+s32 GbTower_ValidatePortCartridge(s32 port) {
+    s32 format;
+    s32 result = 0;
+    if ((1 << port) & D_80128748) {
+        if (GbPak_InitializeCartridge(port) != 0) {
+            format = GbSave_IdentifyFormat(port);
+            if (format == (D_80128570 + port * 112)[4]) {
+                if (GbTower_VerifyPakStillInserted(port, D_80128570 + port * 112 + 40) != 0) {
+                    result = 1;
+                }
+            }
+        }
+        if (GbTower_CheckPakRemoved(port, 0) == 0) {
+            Game_ShutdownAndLoadFragment(port, 2);
+        }
+    }
+    if (result == 0) {
+        D_80128748 &= ~(1 << port);
+        D_8012874D &= ~(1 << port);
+        func_80057970((u8)port);
+        GbSave_ResetPortCache((u8)port);
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1121,7 +1155,102 @@ u8 func_8005A5C4(u8 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005A60C.s")
+extern u8 D_80128570[];
+extern s32 func_8005CF20(s32, s32, s32);
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+extern s32 func_8005F9A4(s32, u16);
+extern u8 func_8005431C(void);
+extern s32 func_8005437C(u8);
+extern void func_80051D64(s32, s32);
+extern u8 func_8005A5C4(u8, u8 *);
+void GbSave_CollectGsFeatureFlags(s32 port) {
+    u8 *save_data;
+    u8 *port_state;
+    s32 item_count;
+    u8 flags;
+    u8 item;
+    u8 progress;
+    s32 item_index;
+    u8 *item_cursor;
+    u8 *payload;
+    u8 command_block[32];
+    port_state = (D_80128570 + port * 112);
+    save_data = *(u8 **)(port_state + 96);
+    payload = save_data + 9;
+    port_state[72] = func_8005CF20(32, port, 0);
+    if (GbPak_ReadCommand(port, command_block, 0xBE0, 32) == 0 && command_block[5] != 255) {
+        *(u32 *)port_state |= 0x1000;
+        if (command_block[4] != 0) {
+            *(u32 *)port_state |= 0x2000;
+        }
+    }
+    if (func_8005F9A4(port, 68) != 0) {
+        *(u32 *)port_state |= 0x800;
+    }
+    if (func_8005F9A4(port, 31) != 0) {
+        *(u32 *)port_state |= 0x100000;
+    }
+    progress = payload[976];
+    if (progress & 1) {
+        *(u32 *)port_state |= 0x200;
+    }
+    progress = payload[976];
+    if (progress & 2) {
+        *(u32 *)port_state |= 0x200000;
+    }
+    progress = payload[976];
+    if (progress & 64) {
+        *(u32 *)port_state |= 0x80000;
+    }
+    flags = func_8005431C();
+    item_count = func_8005CF20(44, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = payload;
+        do {
+            item = item_cursor[item_index + 1089];
+            if (item == 54) {
+                *(u32 *)port_state |= 0x4000;
+            }
+            item_index++;
+        } while (item_index < item_count);
+    }
+    item_count = func_8005CF20(32, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = save_data + 2186;
+        do {
+            func_8005A5C4(((u8 (*)[48])(item_cursor + 8))[item_index][1], &flags);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    item_count = func_8005CF20(43, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = payload;
+        do {
+            func_8005A5C4(((u8 (*)[2])(item_cursor + 1047))[item_index][0], &flags);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    item_count = func_8005CF20(34, port, 0);
+    item_index = 0;
+    if (item_count > 0) {
+        item_cursor = payload;
+        do {
+            item = ((u8 (*)[2])(item_cursor + 1142))[item_index][0];
+            if (item == 54) {
+                *(u32 *)port_state |= 0x4000;
+            }
+            func_8005A5C4(item, &flags);
+            item_index++;
+        } while (item_index < item_count);
+    }
+    if (flags != func_8005431C()) {
+        func_8005437C(flags);
+        func_80051D64(19, 0);
+    }
+}
 #endif
 
 void func_8005A8E4(void) {
@@ -1159,7 +1288,7 @@ void GbSave_ReadAuxiliaryStatus(u8 port) {
 
 #ifdef VERSION_US
 extern void func_8005A468(s32);
-extern void func_8005A60C(s32);
+extern void GbSave_CollectGsFeatureFlags(s32);
 extern void func_8005A98C(s32);
 void func_8005ACE8(s32 arg0) {
     switch (func_8005D92C(arg0)) {
@@ -1167,7 +1296,7 @@ void func_8005ACE8(s32 arg0) {
             func_8005A468(arg0);
             break;
         case 5: case 6:
-            func_8005A60C(arg0);
+            GbSave_CollectGsFeatureFlags(arg0);
             break;
         case 7:
             func_8005A98C(arg0);
