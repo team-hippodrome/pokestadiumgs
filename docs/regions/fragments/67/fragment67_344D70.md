@@ -83,3 +83,37 @@ trace the actual float expression/interference web from the exact-frame
 parent under passive stock UOPT/UGEN captures and compare an independently
 matched three-component transform before proposing another source family.
 No guessed terminal bytes or boundary relaxation is relevant to this owner.
+
+
+## 2026-10-29 — Four spinning motion updates accepted
+
+B5A4/B76C (456B each) visit four records, clear model flag0x20, rotate Z
+by +/-0x71c, move X by1.5 or the retail fast step, and transition at -/+80.
+The fast constant is float bits3fe66667 (1.8000001f), one ULP above1.8f.
+C0F4/C2A8 (436B each) move Y by2.0f/2.4f then rotate Y by +/-0x71c;
+their exit thresholds are independently +65 and -70, not symmetric.
+The ordinary indexed for-loop and real17-halfword scene rows reuse the
+already accepted X-motion source shape. Names are
+Scene67_UpdateSpinningMotionNegativeX/PositiveX/PositiveY/NegativeY.
+No instruction/relocation rewrite, padding, artificial work or manual unroll.
+
+Canonical source manifests scene67-four-motion8 and scene67-motion-remaining8
+retain enabled stats, normal/+20 whole-module controls, and explicit host
+syntax/full native retail-ROM gates. The initial later gates failed when
+extraction removed an already accepted owner's generated ASM while a runner
+snapshot still referenced it; these are build-input failures, not C syntax
+failures. Pinned extraction restored generated inputs before retrying against
+the accepted baseline. Only the corrected negative-Y threshold changed source
+semantics on retry. All four ultimately accepted; retail MD5 remains
+1561c75d11cedf356a8ddb1a4a5f9d5d. Naming preserves complete module section
+bytes/extents/semantic relocations under normal/+20-line controls.
+Private receipts: scratch/scene67-four-motion8/gate-0,
+scratch/scene67-motion-remaining8/gate-*, scene67-four-motion-naming.
+
+A208 remains ASM/requeue: the retained local five-word frontier checkpoint
+c906e711 and scratch/scene67-transform-final-attempt-audit.json now cover140
+compiled rejections. Actual S1_MtxF matrix locals preserve the best236B,
+frame320 body, with five physical F12/F0 operand words unresolved. Existing
+factor ownership adds16B data and is rejected. A restricted300-second native
+search completed2348 compiles with no improvement. No candidate was installed;
+continue from the stock UOPT/UGEN Y-web evidence, not another declaration grid.

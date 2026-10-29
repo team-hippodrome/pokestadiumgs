@@ -1291,11 +1291,79 @@ void func_8290B478(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290B5A4.s")
+extern s32 func_800427B8(s32);
+extern s32 func_80001FF0(void);
+extern void func_8290A208(s32);
+extern void func_8290A358(s32 arg0, u16 arg1);
+extern void func_8290ABB0(s32 arg0, s32 arg1);
+extern void func_8290B264(void);
+extern s32 func_8290B3BC(void);
+extern s32 func_8290B40C(void);
+extern u8 D_82913210[];
+void Scene67_UpdateSpinningMotionNegativeX(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 4; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            record->model.unk_002 &= ~0x20;
+            record->rotation[2] += 0x71C;
+            if (func_80001FF0() == 50) {
+                record->position[0] -= 1.8000001f;
+            } else {
+                record->position[0] -= 1.5f;
+            }
+            func_8290A208(i);
+            if (record->position[0] <= -80.0f) {
+                record->active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290B76C.s")
+extern s32 func_800427B8(s32);
+extern s32 func_80001FF0(void);
+extern void func_8290A208(s32);
+extern void func_8290A358(s32 arg0, u16 arg1);
+extern void func_8290ABB0(s32 arg0, s32 arg1);
+extern void func_8290B264(void);
+extern s32 func_8290B3BC(void);
+extern s32 func_8290B40C(void);
+extern u8 D_82913210[];
+void Scene67_UpdateSpinningMotionPositiveX(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 4; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            record->model.unk_002 &= ~0x20;
+            record->rotation[2] -= 0x71C;
+            if (func_80001FF0() == 50) {
+                record->position[0] += 1.8000001f;
+            } else {
+                record->position[0] += 1.5f;
+            }
+            func_8290A208(i);
+            if (record->position[0] >= 80.0f) {
+                record->active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1417,11 +1485,75 @@ void func_8290BCF0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290C0F4.s")
+extern s32 func_80001FF0(void);
+extern void func_8290A208(s32);
+extern void func_8290A358(s32 arg0, u16 arg1);
+extern void func_8290ABB0(s32 arg0, s32 arg1);
+extern void func_8290B264(void);
+extern s32 func_8290B3BC(void);
+extern s32 func_8290B40C(void);
+extern u8 D_82913210[];
+void Scene67_UpdateSpinningMotionPositiveY(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 4; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            if (func_80001FF0() == 50) {
+                record->position[1] += 2.4f;
+            } else {
+                record->position[1] += 2.0f;
+            }
+            record->rotation[1] += 0x71C;
+            func_8290A208(i);
+            if (record->position[1] >= 65.0f) {
+                record->active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290C2A8.s")
+extern s32 func_80001FF0(void);
+extern void func_8290A208(s32);
+extern void func_8290A358(s32 arg0, u16 arg1);
+extern void func_8290ABB0(s32 arg0, s32 arg1);
+extern void func_8290B264(void);
+extern s32 func_8290B3BC(void);
+extern s32 func_8290B40C(void);
+extern u8 D_82913210[];
+void Scene67_UpdateSpinningMotionNegativeY(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 4; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            if (func_80001FF0() == 50) {
+                record->position[1] -= 2.4f;
+            } else {
+                record->position[1] -= 2.0f;
+            }
+            record->rotation[1] -= 0x71C;
+            func_8290A208(i);
+            if (record->position[1] <= -70.0f) {
+                record->active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
