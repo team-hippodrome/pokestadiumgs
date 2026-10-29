@@ -1350,3 +1350,5 @@ func_8290B76C = Scene67_UpdateSpinningMotionPositiveX;
 func_8290C0F4 = Scene67_UpdateSpinningMotionPositiveY;
 
 func_8290C2A8 = Scene67_UpdateSpinningMotionNegativeY;
+
+func_84131664 = Battle_RunSideCommandSequence;
