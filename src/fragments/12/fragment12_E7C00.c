@@ -18,6 +18,15 @@ typedef struct Fragment12Rows {
 } Fragment12Rows;
 
 
+// This file's .rodata tables, in retail order (D_81407954 is an alias for D_81407950[1]).
+const s32 D_81407950[6] = { 0, 220, 497, 480, 230, -17 };
+const s16 D_81407968[2][5][4][2] = { 339, 31, 339, 31, 43, 301, 43, 301, 339, 110, 339, 110, 82, 240, 82, 240, 339, 110, 339, 110, 130, 254, 130, 254, 339, 31, 339, 31, 43, 301, 43, 301, 339, 110, 339, 110, 82, 240, 82, 240, 82, 67, 339, 67, 43, 265, 300, 265, 82, 67, 339, 67, 43, 265, 300, 265, 125, 83, 382, 83, 86, 281, 343, 281, 82, 67, 339, 67, 43, 265, 300, 265, 82, 67, 339, 67, 43, 265, 300, 265 };
+const s16 D_81407A08[5][2] = { 261, 121, 222, 103, 174, 89, 261, 121, 222, 103 };
+const s16 D_81407A1C[4][2] = { 339, 31, 339, 31, 221, 339, 221, 339 };
+const s16 D_81407A2C[4][2] = { 418, 31, 418, 31, 98, 371, 98, 371 };
+const s16 D_81407A3C[16] = { 82, -193, 640, 31, -261, 229, 300, 480, 640, 31, 640, 31, -261, 229, -261, 229 };
+const s16 D_81407A5C[8] = { 82, 31, 339, 31, 43, 229, 300, 229 };
+
 #ifdef VERSION_US
 f32 MathUtil_Random_ZeroOne();
 
@@ -355,8 +364,6 @@ void func_81403E2C(void *arg0) {
     }
 }
 
-extern s16 D_81407968[2][5][4][2];
-extern s16 D_81407A08[5][2];
 void func_81403E7C(void *arg0, s16 *arg1) {
     typedef struct { s16 width; s16 height; } Extent;
     s32 mode;
@@ -406,7 +413,26 @@ s32 func_81404030(u8 *arg0) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404040.s")
+extern f32 func_816092FC(void);
+extern void func_800226C0(s32 arg0);
+s32 func_81404040(void *arg0) {
+    *(f32 *)((u8 *)arg0 + 4) += func_816092FC();
+    if (16.0f <= *(f32 *)((u8 *)arg0 + 4)) {
+        switch (*(u8 *)((u8 *)arg0 + 0xE)) {
+        case 3:
+        case 4:
+            func_800226C0(5);
+            break;
+        case 0:
+        case 1:
+        case 2:
+            break;
+        }
+        *(u8 *)((u8 *)arg0 + 0xC) = 2;
+        *(f32 *)((u8 *)arg0 + 4) = 16.0f;
+    }
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814040D8.s")
 
@@ -420,13 +446,111 @@ s32 func_81404334(void *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_8140438C.s")
+extern s32 func_814040D8(void *arg0);
+extern void func_81403E7C(void *arg0, s16 *arg1);
+extern s32 func_81404030(u8 *arg0);
+extern s32 func_81404040(void *arg0);
+extern s32 func_81404334(void *arg0);
+extern void func_81600A34(void *arg0, void *arg1, void *arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+void func_8140438C(void *arg0, void *arg1) {
+    void *result;
+    s16 rect[4];
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404470.s")
+    result = NULL;
+    switch (*(u8 *)((u8 *)arg0 + 0xC)) {
+    case 0:
+    case 4:
+        result = (void *)func_81404030(arg0);
+        break;
+    case 1:
+        result = (void *)func_81404040(arg0);
+        break;
+    case 2:
+        result = (void *)func_814040D8(arg0);
+        break;
+    case 3:
+        result = (void *)func_81404334(arg0);
+        break;
+    }
+    if (*(u8 *)((u8 *)arg0 + 0xC) != 0 && *(u8 *)((u8 *)arg0 + 0xC) != 4) {
+        func_81403E7C(arg0, rect);
+        func_81600A34(arg1, arg0, result, rect[0], rect[1], rect[2], rect[3]);
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_8140463C.s")
+extern void func_81400A50(s32, s32, s32, s32, f32, s32, s32, void *);
+extern void func_81400884(s32, s32, s32, s32, f32, s32, s32, void *);
+extern void func_81400C24(s32, s32, s32, s32, f32, s32);
+extern void func_81400DE8(s32, s32, s32, s32, s32, f32, s32);
+extern void func_81400FA4(s32, s32, s32, s32, s32, f32, s32);
+extern void func_81403E7C(void *arg0, s16 *arg1);
+extern s32 func_81600DA8(void *, void *);
+void func_81404470(void *arg0, void *arg1) {
+    s16 rect[4];
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814046C4.s")
+    if (func_81600DA8(arg1, arg0) != 0) {
+        func_81403E7C(arg0, rect);
+        switch (*(u8 *)((u8 *)arg0 + 0xE)) {
+        case 1:
+            func_81400A50(rect[0], rect[1], rect[2], rect[3], 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0,
+                          *(s8 *)((u8 *)arg0 + 0x10), (u8 *)arg0 + 8);
+            break;
+        case 0:
+            func_81400884(rect[0], rect[1], rect[2], rect[3], 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0,
+                          *(s8 *)((u8 *)arg0 + 0x10), (u8 *)arg0 + 8);
+            break;
+        case 2:
+            func_81400C24(rect[0], rect[1], rect[2], rect[3], 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0);
+            break;
+        case 3:
+            func_81400DE8(rect[0], rect[1], rect[2], rect[3], *(s32 *)arg0, 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0);
+            break;
+        case 4:
+            func_81400FA4(rect[0], rect[1], rect[2], rect[3], *(s32 *)arg0, 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0);
+            break;
+        }
+    }
+}
+
+s32 func_8140463C(void *arg0, s32 arg1, s32 arg2) {
+    s32 index;
+
+    if (arg1 != *(s8 *)((u8 *)arg0 + 0xE)) {
+        switch (*(u8 *)((u8 *)arg0 + 0xC)) {
+        case 0:
+        case 2:
+        case 4:
+            *(f32 *)((u8 *)arg0 + 4) = 0.0f;
+        case 3:
+            *(u8 *)((u8 *)arg0 + 0xC) = 1;
+        case 1:
+            *(s8 *)((u8 *)arg0 + 0xE) = arg1;
+            *(s8 *)((u8 *)arg0 + 0x10) = 0;
+            *(s32 *)arg0 = arg2;
+            break;
+        }
+    } else if (*(u8 *)((u8 *)arg0 + 0xC) == 4) {
+        index = *(s8 *)((u8 *)arg0 + 0x10);
+        *(s8 *)((u8 *)arg0 + 0xE) = -1;
+        *(s8 *)((u8 *)arg0 + 0x10) = -2;
+        return index + 1;
+    }
+    return 0;
+}
+
+void func_814046C4(void *arg0) {
+    *(s8 *)((u8 *)arg0 + 0x10) = -2;
+    switch (*(u8 *)((u8 *)arg0 + 0xC)) {
+    case 1:
+    case 2:
+        *(u8 *)((u8 *)arg0 + 0xC) = 3;
+        break;
+    case 0:
+    case 3:
+    case 4:
+        break;
+    }
+}
 
 s32 func_81404700(u8 *arg0) {
     s32 ret = *(s32 *)(arg0 + 0x14) != 0;
@@ -437,7 +561,6 @@ s32 func_81404700(u8 *arg0) {
     //!bug No return when the word at 0x14 is 0; callers get whatever is left in v0 (here 0).
 }
 
-extern s16 D_81407A1C[][2];
 void func_81404724(void *arg0, void *arg1) {
     f32 t;
     f32 inv;
@@ -452,7 +575,6 @@ void func_81404724(void *arg0, void *arg1) {
     out[3] = 83.0f * t;
 }
 
-extern s16 D_81407A2C[][2];
 void func_814047C0(void *arg0, void *arg1)
 {
   f32 t;
@@ -541,7 +663,22 @@ void func_81404A08(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, void *arg5,
     HAL_Strcpy((char *)(arg0 + 0x4D50), arg10);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404BEC.s")
+void func_81404BEC(void *arg0) {
+    switch (*(u8 *)((u8 *)arg0 + 6)) {
+    case 0:
+        *(f32 *)arg0 = 0.0f;
+    case 6:
+        *(u8 *)((u8 *)arg0 + 6) = 1;
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 7:
+        break;
+    }
+}
 
 s32 func_81404C2C(u8 *arg0) {
     *(f32 *)(arg0 + 0) = 0.0f;
@@ -846,22 +983,6 @@ void func_814053E4(void *arg0, void *arg1, void *arg2) {
         func_81600A34(arg1, (u8 *)arg0 + 1, arg2, first[0], first[1], first[2], first[3]);
 }
 
-/* Tail (last 3 entries) of jtbl_81407B2C, a jump table used by an earlier,
- * still-GLOBAL_ASM switch in this file (func_81404BEC). Not referenced
- * from C: it exists only so this file's own .rodata subsegment starts at
- * a 16-byte-aligned ROM address (required by this fragment's SUBALIGN(16))
- * while still landing func_814054CC's own jump table (jtbl_81407B4C,
- * right below) at its real retail address. */
-const u32 D_81407B40[3] = {0x81404C24, 0x81404C1C, 0x81404C24};
-/* This file's owned .rodata run is 0xECE50..0xECEA0 (both ends 16-byte
- * aligned, per this fragment's SUBALIGN(16)): [D_81407B40 tail, 12B] +
- * [func_814054CC's own switch -> jtbl_81407B4C, compiler-generated, 32B] +
- * [jtbl_81407B6C, 32B] + [D_81407B8C, 4B] = 80B. The last two are late_rodata
- * belonging to the still-GLOBAL_ASM func_81405514 and func_81405CC4 below;
- * asm-processor places their late_rodata content here automatically (no C
- * needed for them), which is what let the 16-byte-aligned cut land exactly
- * on real jtbl_81407B6C/D_81407B8C boundaries instead of the middle of one
- * of IDO's own generated tables. */
 
 void func_814054CC(u8 *arg0, void *arg1)
 {
