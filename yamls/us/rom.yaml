@@ -599,8 +599,7 @@
     - [0xE3850, c,       fragments/11/fragment11_E3850]
     - [0xE38A0, data,    fragments/11/fragment11_data]
     - [0xE3BB0, .rodata, fragments/11/fragment11_D9520] # func_816020BC's empty-string default and func_81601FA0's jump table.
-    - [0xE3C60, rodata]
-    - [0xE3E10, .rodata, fragments/11/fragment11_D9DE0] # jtbl_8160C20C tail (3 words) + jtbl_8160C27C, 16-byte aligned
+    - [0xE3C60, .rodata, fragments/11/fragment11_D9DE0] # all of this object's strings, tables and jump tables
     - [0xE3E50, rodata]
 
   - name: fragment12

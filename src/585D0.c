@@ -337,7 +337,60 @@ s32 func_8005818C(s32 index) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_80058288.s")
+extern void _bcopy(const void *, void *, s32);
+typedef struct { u8 bytes[0x4DF]; } GbSaveBackupBlock4DF;
+typedef struct { u8 bytes[0x34]; } GbSaveBackupBlock34;
+typedef struct { u8 bytes[8]; } GbSaveBackupHeader8;
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+extern u16 func_800579D0(const u8* arg0);
+extern u8 D_80128570[];
+s32 GbSave_ReadGoldSilverMainSave(s32 port) {
+    s32 result = 0;
+    s32 attempt;
+    Arg1_80057F58 data;
+    u8 backup_primary[0xBA0];
+    u8 backup_secondary[0x1C0];
+    u8 backup_metadata[0x60];
+    data = *(Arg1_80057F58 *)&D_80128570[port * 112 + 0x60];
+    for (attempt = 0; attempt != 3; attempt++) {
+        if (GbPak_ReadCommand(port, data.p, 0x2000, 0xD80) == 0) {
+            result = func_80057F58(port, data);
+            if (result != 0) {
+                if (*(u32 *)&D_80128570[port * 112] & 0x80000000) {
+                    *(u16 *)&D_80128570[port * 112 + 6] = func_800579D0(data.p + 0xD69);
+                    *(u32 *)&D_80128570[port * 112] &= 0x7FFFFFFF;
+                } else {
+                    result = *(u16 *)&D_80128570[port * 112 + 6] == func_800579D0(data.p + 0xD69);
+                }
+                return result;
+            }
+            if (GbPak_ReadCommand(port, backup_primary, 0xC60, 0xBA0) == 0 &&
+                GbPak_ReadCommand(port, backup_secondary, 0x3D80, 0x1C0) == 0 &&
+                GbPak_ReadCommand(port, backup_metadata, 0x7E20, 0x60) == 0) {
+                _bcopy(backup_primary + 0xB, data.p + 0x3D9, 0x47D);
+                *(GbSaveBackupBlock4DF *)(data.p + 0x88A) = *(GbSaveBackupBlock4DF *)(backup_primary + 0x488);
+                _bcopy(backup_primary + 0x967, data.p + 9, 0x226);
+                _bcopy(backup_secondary + 0x16, data.p + 0x22F, 0x1AA);
+                *(GbSaveBackupHeader8 *)data.p = *(GbSaveBackupHeader8 *)(backup_metadata + 0x10);
+                data.p[8] = backup_metadata[0x18];
+                *(GbSaveBackupBlock34 *)(data.p + 0x856) = *(GbSaveBackupBlock34 *)(backup_metadata + 0x19);
+                _bcopy(backup_metadata + 0x4D, data.p + 0xD69, 2);
+                data.p[0xD6B] = backup_metadata[0x4F];
+                result = func_80057F58(port, data);
+                if (result != 0) {
+                    if (*(u32 *)&D_80128570[port * 112] & 0x80000000) {
+                        *(u16 *)&D_80128570[port * 112 + 6] = func_800579D0(data.p + 0xD69);
+                        *(u32 *)&D_80128570[port * 112] &= 0x7FFFFFFF;
+                    } else {
+                        result = *(u16 *)&D_80128570[port * 112 + 6] == func_800579D0(data.p + 0xD69);
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -393,7 +446,7 @@ s32 func_800587BC(s32 arg0)
         break;
     case 5:
     case 6:
-        result = func_80058288(arg0);
+        result = GbSave_ReadGoldSilverMainSave(arg0);
         break;
     case 7:
         result = GbSave_ReadCrystalMainSave(arg0);
@@ -450,7 +503,39 @@ s32 GbSave_WriteGen1SaveBlock(s32 index) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_800589A4.s")
+extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
+extern void GbSave_ComputeChecksumRange(u8 *arg0, u8 *arg1, u8 *arg2);
+extern u16 func_800579D0(const u8* arg0);
+extern s32 func_80057BCC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern u8 D_80128570[];
+s32 GbSave_WriteGoldSilverMainSave(s32 port) {
+    Arg1_80057F58 data;
+    u8 backup_primary[0xBA0];
+    u8 backup_secondary[0x1C0];
+    u8 backup_metadata[0x60];
+    data = *(Arg1_80057F58 *)&D_80128570[port * 112 + 0x60];
+    GbSave_ComputeChecksumRange(data.p + 9, data.p + 0xD68, data.p + 0xD69);
+    *(u16 *)&D_80128570[port * 112 + 6] = func_800579D0(data.p + 0xD69);
+    if (func_80057BCC(port, (s32)data.p, 0x2000, 0xD80) != 0) {
+        if (GbPak_ReadCommand(port, backup_primary, 0xC60, 0x20) != 0) return 0;
+        if (GbPak_ReadCommand(port, backup_primary + 0xB80, 0x17E0, 0x20) != 0) return 0;
+        _bcopy(data.p + 0x3D9, backup_primary + 0xB, 0x47D);
+        *(GbSaveBackupBlock4DF *)(backup_primary + 0x488) = *(GbSaveBackupBlock4DF *)(data.p + 0x88A);
+        _bcopy(data.p + 9, backup_primary + 0x967, 0x226);
+        if (GbPak_ReadCommand(port, backup_secondary, 0x3D80, 0x20) != 0) return 0;
+        _bcopy(data.p + 0x22F, backup_secondary + 0x16, 0x1AA);
+        if (GbPak_ReadCommand(port, backup_metadata, 0x7E20, 0x20) != 0) return 0;
+        *(GbSaveBackupHeader8 *)(backup_metadata + 0x10) = *(GbSaveBackupHeader8 *)data.p;
+        backup_metadata[0x18] = data.p[8];
+        *(GbSaveBackupBlock34 *)(backup_metadata + 0x19) = *(GbSaveBackupBlock34 *)(data.p + 0x856);
+        _bcopy(data.p + 0xD69, backup_metadata + 0x4D, 2);
+        backup_metadata[0x4F] = data.p[0xD6B];
+        if (func_80057BCC(port, (s32)backup_primary, 0xC60, 0xBA0) != 0 &&
+            func_80057BCC(port, (s32)backup_secondary, 0x3D80, 0x1C0) != 0 &&
+            func_80057BCC(port, (s32)backup_metadata, 0x7E20, 0x60) != 0) return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -481,7 +566,7 @@ s32 func_80058D18(s32 arg0)
         break;
     case 5:
     case 6:
-        result = func_800589A4(arg0);
+        result = GbSave_WriteGoldSilverMainSave(arg0);
         break;
     case 7:
         result = func_80058C6C(arg0);
@@ -1272,7 +1357,6 @@ u8 func_8005A8EC(u8 arg0, u8 *arg1) {
 
 #ifdef VERSION_US
 extern s32 GbPak_ReadCommand(s32, u8 *, s32, s32);
-extern void _bcopy(s32, s32, s32);
 extern u8 D_80128570[];
 void GbSave_ReadAuxiliaryStatus(u8 port) {
     u8 block[32];
@@ -1611,7 +1695,6 @@ u8 *GbSave_GetGen2BoxBuffer(s32 index, s32 box) {
 #ifdef VERSION_US
 extern s32 func_80062C24(void *);
 extern void func_80060E88(void *, void *);
-extern void _bcopy(s32, s32, s32);
 void func_8005B314(u8 *arg0, const u8 *arg1, const u8 *arg2)
 {
     u8 buffer[11];
@@ -1744,7 +1827,6 @@ void GbSave_WriteGen1PartyPokemon(u8 *mon, s32 port, s32 slot) {
 #ifdef VERSION_US
 extern void func_800616BC(u8 *, u8 *);
 extern u8 *func_80060EC8(void *, void *);
-extern void _bcopy(s32, s32, s32);
 extern u8 D_801285D0[];
 void func_8005B848(u8 *arg0, s32 arg1, s32 arg2) {
     s32 base;
@@ -1760,7 +1842,6 @@ void func_8005B848(u8 *arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-extern void _bcopy(s32, s32, s32);
 extern u8 *func_80060EC8(void *, void *);
 extern void func_800616BC(u8 *arg0, u8 *arg1);
 extern u8 D_801285D0[];
@@ -2181,7 +2262,6 @@ void GbSave_ClampInventoryPacket(u8 *data) {
 #ifdef VERSION_US
 extern u8 D_801285D0[];
 extern u8 D_801285D8[];
-extern void _bcopy(s32, s32, s32);
 extern void _bzero(s32, s32);
 void func_8005C52C(s32 arg0, s32 arg1) {
     s32 v0 = *(s32 *)(D_801285D0 + arg1 * 112);
