@@ -40,7 +40,36 @@ void func_88220BB8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_193D50/func_88220BDC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_193D50/func_88220E08.s")
+extern void *Util_Malloc(s32);
+extern void _bzero(void *, s32);
+extern void func_88700364(u32, u8 *, u32);
+extern s32 func_887002F4(void);
+extern s32 func_8870032C(void);
+extern void func_88700CE4(void);
+extern void func_88701240(void);
+extern void func_88220BDC(void);
+extern u8 D_8800ED50[];
+extern u8 func_88004804(s32, s32, s16, s16, s32, s32, u8, u8, u8,
+                         s32 *, s32 *, s32 *, s32 *, u8, u8);
+void func_88220E08(s32 arg0) {
+    s32 index;
+    s16 x;
+    s16 y;
+
+    D_88234800 = Util_Malloc(128);
+    *(s32 *)((u8 *)D_88234800 + 124) = arg0;
+    _bzero((u8 *)D_88234800 + 4, 118);
+    func_88700364(arg0, (u8 *)D_88234800 + 4, (u32)func_88220B80);
+    x = func_887002F4();
+    y = func_8870032C();
+    index = func_88004804(0, 3, x, y, 0, 1, 220, 220, 180,
+        (s32 *)func_88700CE4, (s32 *)func_88701240,
+        (s32 *)func_88220BB8, (s32 *)func_88220BDC, 0, 0);
+    *D_88234800 = D_8800ED50 + index * 76;
+    *(s16 *)(*D_88234800 + 16) = 385;
+    *(s16 *)(*D_88234800 + 18) = 348;
+    D_880068B4 = 0;
+}
 
 void func_88220F40(void) {
     D_880068B8 = 0;
