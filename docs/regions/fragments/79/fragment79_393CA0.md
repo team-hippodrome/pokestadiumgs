@@ -1018,3 +1018,63 @@ Post-acceptance naming controls resolve that exact alias to the renamed C
 definition before comparing relocation targets; raw module bytes and all
 function extents are identical. The final extracted build resolves it through
 the tracked alias/symbol definitions and still requires the full ROM gate.
+
+
+## 2026-10-29 — `8412A804` accepted through bounded symbolic byte-load proof
+
+This acceptance supersedes the earlier `8412A804` tooling-blocked handoff.
+`func_8412A804(void)` is now genuine C: 304 bytes with the original 24-byte
+frame. It clears D_841951C8, rejects a clear D_841951D5 low-seven-bit field
+or an acting party byte 29 smaller than the target's, and otherwise forms
+an unsigned-halfword result from `func_80062DD4(D_841951BF)` plus twice the
+acting-minus-target byte difference. It caps the result at 255, stores it
+in D_841951C4 and runs `func_841284A4`; the existing success path sets
+D_841951C8 to 65535 and D_841951D1/D_841951E4 to 2. The result local is
+initialized inside the branch where it is used. No absolute-address C or
+ABI/data-operation change is involved.
+
+A private, owner-bound verifier resolves the exact canonical admission gap:
+the original object has literal LUI/LBU fields at owner offsets 80/140,
+while ordinary C adds one HI16/LO16 pair for D_841951BF. It requires the same
+304-byte owner span, every module function extent, all allocated input-section
+descriptors, unchanged non-text bytes, and no removed or unrelated added
+relocation. Only this two-site ordinary LUI/LBU pair is eligible; opcode,
+register flow, zero addend, and the fixed symbol address from the sealed
+retail-gated ELF must agree. Every other module text word remains exact.
+
+The verifier then GNU-links both original, unmodified objects using sealed
+map/ELF addresses. All allocated output sections, their bytes and all function
+extents must agree, including retained `.reginfo`. Text and rodata must also
+match the uniquely named `.fragment79` section of the gated game ELF. The
+first read-only regression exposed overlapping overlay VRAM ranges; the final
+checker explicitly selects `.fragment79` instead of accepting another overlay
+with a containing numeric range. Original failure records remain preserved.
+No object bytes, relocations, original assembly, symbols or metadata are edited.
+
+Eighteen focused private regressions pass: the old unchanged candidate is a
+read-only positive link control, while wrong addresses/opcodes/registers,
+nonzero addends, unrelated relocation/text changes, non-text content, section
+sets, module/owner sizes, other function extents and missing map entries reject.
+Invalid regression views exist only in memory; no modified object files are
+written. The old rejected source was not replayed through admission or its
+statistics changed. Deduplication and the declarations block remain unchanged.
+
+Eight genuinely new canonical source hypotheses tested branch-local result
+lifetimes, a used byte-base temporary, result width and natural guard-return
+forms. The first candidate won:
+`a804:branch-local-result:u16:named-byte-baseFalse:guard-returnFalse`.
+The verifier provides gate eligibility with `link_verified: false`; the
+canonical sequential path still performs the explicit normal host syntax
+check and authoritative full native retail ROM comparison. Both passed.
+The accepted statistics row retains the exact verifier hash and proof receipt.
+
+Private verifier SHA256:
+`3852553b04f3d7e244613f1f04172f9bc1d1e505ee36e5d02f42c4f0f3a560eb`.
+Gate receipt: `scratch/a804-lifetimes8/gate-0/receipt.json`.
+Complete audit: `scratch/a804-tooling-v1/final-receipt.json`.
+Tests: `scratch/a804-tooling-v1/tests-receipt.json`.
+Native retail MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+The earlier `84133714` and `84136440` accepts and the affected `84131760`
+caller remain byte-identical. Production compiler/flags and metadata are
+unchanged. Private verifier/tests remain ignored scratch artifacts; no
+production tooling or coverage change is part of this source commit.
