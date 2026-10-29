@@ -1352,3 +1352,11 @@ func_8290C0F4 = Scene67_UpdateSpinningMotionPositiveY;
 func_8290C2A8 = Scene67_UpdateSpinningMotionNegativeY;
 
 func_84131664 = Battle_RunSideCommandSequence;
+
+func_8290C45C = Scene67_UpdateDepthMotion;
+
+func_8290C6D0 = Scene67_UpdateHeadingMotion;
+
+func_8290C908 = Scene67_UpdateSpinningHeadingMotion;
+
+func_8290CB2C = Scene67_UpdateCountdownFade;

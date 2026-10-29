@@ -1432,6 +1432,9 @@ void func_8290BC84(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
+extern s32 func_8003F2C4(s32, u8 *, s32);
+extern s32 ModelAnim_IsFinished(u8 *);
+extern void func_800371B4(f32 *, f32 *, f32, s16, s16);
 void func_8290BCF0(void) {
     f32 step;
     s32 i;
@@ -1557,19 +1560,126 @@ void Scene67_UpdateSpinningMotionNegativeY(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290C45C.s")
+void Scene67_UpdateDepthMotion(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    for (i = 0; i < 4; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            if (func_80001FF0() == 50) record->position[2] += 3.6000001f;
+            else record->position[2] += 3.0f;
+            if (record->model.modelId == 0x78) {
+                record->rotation[1] += 0xE38;
+                record->model.unk_002 &= 0xFFDF;
+            }
+            func_8290A208(i);
+            if (record->model.modelId == 0xE3) func_8003F2C4(record->loadContext, (u8 *)&record->model, 8);
+            if (record->model.modelId == 0xE3 && ModelAnim_IsFinished((u8 *)&record->model)) ModelAnim_SetFrame((u8 *)&record->model, 0);
+            if (record->position[2] <= -210.0f) record->model.unk_001 &= ~1;
+            else record->model.unk_001 |= 1;
+            if (record->position[2] >= 80.0f) {
+                record->active = 0;
+                record->model.unk_001 &= ~1;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290C6D0.s")
+void Scene67_UpdateHeadingMotion(void) {
+    f32 position[3];
+    s32 i;
+    for (i = 0; i < 2; i++) {
+        if (D_8291A7C0.records[i].active == 1) {
+            if (func_80001FF0() == 50) func_800371B4(D_8291A7C0.records[i].position, position, 3.6000001f, 0, D_8291A7C0.records[i].rotation[1]);
+            else func_800371B4(D_8291A7C0.records[i].position, position, 3.0f, 0, D_8291A7C0.records[i].rotation[1]);
+            Vec3f_SetComponentsDuplicate(D_8291A7C0.records[i].position, position[0], position[1], position[2]);
+            func_8290A208(i);
+            if (D_8291A7C0.records[i].model.modelId == 0x92 || D_8291A7C0.records[i].model.modelId == 0x90 || D_8291A7C0.records[i].model.modelId == 0xA4) func_8003F2C4(D_8291A7C0.records[i].loadContext, (u8 *)&D_8291A7C0.records[i].model, 9);
+            if ((D_8291A7C0.records[i].model.modelId == 0x92 || D_8291A7C0.records[i].model.modelId == 0x90 || D_8291A7C0.records[i].model.modelId == 0xA4) && ModelAnim_IsFinished((u8 *)&D_8291A7C0.records[i].model)) ModelAnim_SetFrame((u8 *)&D_8291A7C0.records[i].model, 0);
+            if (D_8291A7C0.records[i].position[2] >= 100.0f) {
+                D_8291A7C0.records[i].active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(D_8291A7C0.records[i].loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290C908.s")
+void Scene67_UpdateSpinningHeadingMotion(void) {
+    f32 position[3];
+    s32 i;
+    for (i = 0; i < 4; i++) {
+        if (D_8291A7C0.records[i].active == 1) {
+            D_8291A7C0.records[i].model.unk_002 &= ~0x20;
+            D_8291A7C0.records[i].model.alpha = Math_StepToS32(D_8291A7C0.records[i].model.alpha, 255, 40, 40);
+            if (func_80001FF0() == 50) func_800371B4(D_8291A7C0.records[i].position, position, 10.8f, D_8291A7C0.records[i].rotation[0], D_8291A7C0.records[i].rotation[1]);
+            else func_800371B4(D_8291A7C0.records[i].position, position, 9.0f, D_8291A7C0.records[i].rotation[0], D_8291A7C0.records[i].rotation[1]);
+            Vec3f_SetComponentsDuplicate(D_8291A7C0.records[i].position, position[0], position[1], position[2]);
+            D_8291A7C0.records[i].rotation[2] -= 0x71C;
+            func_8290A208(i);
+            if (D_8291A7C0.records[i].position[2] >= 150.0f) {
+                D_8291A7C0.records[i].active = 0;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(D_8291A7C0.records[i].loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+            D_8291A7C0.records[i].model.alpha = 0;
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290CB2C.s")
+void Scene67_UpdateCountdownFade(void) {
+    s32 i;
+    unk_D_8291A7C0_000 *record;
+    s32 threshold = 90;
+    if (func_80001FF0() == 50) threshold = 72;
+    for (i = 0; i < 3; i++) {
+        record = &D_8291A7C0.records[i];
+        if (record->active == 1) {
+            if (func_80001FF0() == 50) {
+                if (record->unk_1A0 > 0) record->unk_1A0--;
+                if (record->unk_1A0 < 7) record->model.alpha = Math_StepToS32(record->model.alpha, 0, 48, 48);
+                else if (record->unk_1A0 <= threshold) record->model.alpha = Math_StepToS32(record->model.alpha, 255, 48, 48);
+            } else {
+                if (record->unk_1A0 > 0) record->unk_1A0--;
+                if (record->unk_1A0 < 9) record->model.alpha = Math_StepToS32(record->model.alpha, 0, 40, 40);
+                else if (record->unk_1A0 <= threshold) record->model.alpha = Math_StepToS32(record->model.alpha, 255, 40, 40);
+            }
+            func_8290A208(i);
+            if (record->unk_1A0 == 0) {
+                record->active = 0;
+                record->model.unk_001 &= 0xFFFE;
+                if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
+                    func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071]);
+                }
+            }
+        } else if (func_800427B8(record->loadContext) != 0 && func_8290B40C() != 0) {
+            func_8290ABB0(i, D_8291A7C0.unk_1071);
+            record->model.alpha = 0;
+            record->unk_1A0 = threshold;
+        }
+    }
+    func_8290B264();
+}
 #endif
 
 #ifdef VERSION_US

@@ -117,3 +117,49 @@ frame320 body, with five physical F12/F0 operand words unresolved. Existing
 factor ownership adds16B data and is rejected. A restricted300-second native
 search completed2348 compiles with no improvement. No candidate was installed;
 continue from the stock UOPT/UGEN Y-web evidence, not another declaration grid.
+
+
+## 2026-10-29 — Depth, heading and countdown-fade batch accepted
+
+C45C/C6D0/C908/CB2C are genuine C:628/568/548/552 bytes respectively.
+Scene67_UpdateDepthMotion moves four records along Z and handles model120
+rotation, model227 animation and visibility/deactivation thresholds.
+Scene67_UpdateHeadingMotion advances two records from their heading and
+handles the146/144/164 animation family. Scene67_UpdateSpinningHeadingMotion
+advances four records, fades alpha in and rotates Z. CountdownFade updates
+three timers, fades at the beginning/end, and loads the next scene entry.
+Fast heading speed is3.6000001f (retail40666667); spinning speed is10.8f.
+All four use the real17-halfword scene rows, actual model fields and consumed
+position outputs. No instruction rewrite, padding or artificial work.
+
+The first eight attempts failed because verified animation prototypes appeared
+after existing BCF0 callers. An exact-once companion inserts the real return/
+argument contracts before BCF0; the full-ROM gate verifies affected older C.
+CB2C then accepts with the ordinary indexed for-loop. The two heading bodies
+have all opcodes and local vector homes correct but frames eight bytes too
+large. Arrays versus genuine vector structs, normal register hints and local
+scope do not fix it. Passive stock captures, with normal/+20 complete-module
+controls, show source Mmt20 becomes28 in UOPT output. Direct global record
+indexing removes the pointer local; declaring the actual output vector before
+the index yields exact frames96/120. C908 accepts sequentially. C6D0's combined
+hit initially fails because the shared vector-helper prototype appears after
+its call; inserting that verified prototype before BCF0 accepts unchanged C.
+No incorrect signature or compiler setting is introduced.
+
+C45C's apparent pointer residual was instead a constant-sharing difference:
+the body mixed ~1 with0xFFFE when clearing the same visibility flag. Using ~1
+for both actual clears retains the shared -2 register, restores the original
+constant/register schedule and accepts immediately. Earlier pointer-lifetime
+variants and direct indexing were measured negatives, not solutions. Do not
+replay them. Canonical tags are scene67-next-motion-forward8 (CB2C),
+scene67-motion-direct-record8 (C908), scene67-depth-vector-forward8 (C6D0),
+and scene67-depth-consistent-mask8 (C45C). Enabled statistics and explicit
+host syntax/full native-ROM receipts remain under scratch/<tag>/gate-*;
+retail MD5 is1561c75d11cedf356a8ddb1a4a5f9d5d.
+
+Naming and removal of54 redundant declarations from the four new blocks
+preserve complete module sections, bytes, function extents and semantic
+relocations in normal/+20-line controls. Earlier prototypes required by BCF0
+remain visible; address-keyed entry aliases are retained. Private scripts and
+coverage are unchanged in this commit. Remaining ASM owners in this file:
+0954C,A208,BEEC,CD54,D124,D42C; A208 retains its independent requeue evidence.
