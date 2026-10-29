@@ -2,14 +2,38 @@
 
 
 #ifdef VERSION_US
-extern void func_87F02CE0(s32 *, s32, s32);
+extern void func_87F02CE0(void *, u8 *, s32);
 extern u8 D_80126420;
 
 void func_87F02CB0(s32 arg0, s32 arg1) {
-    func_87F02CE0(&D_80126420, arg0, arg1);
+    func_87F02CE0(&D_80126420, (u8 *)arg0, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_325920/func_87F02CE0.s")
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern s32 MainPool_AllocAligned(void *, s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *func_80040E80(void *, void *);
+extern s32 func_8004C8C0(u16);
+extern void func_87F0252C(void *, void *, u8 *, s32);
+extern u8 D_87F0F808[];
+
+void func_87F02CE0(void *arg0, u8 *arg1, s32 arg2) {
+    s32 i;
+    u8 *pool;
+
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    *(u8 **)(arg1 + 20) = (u8 *)MainPool_AllocAligned(pool, arg2 * 396, 4);
+    *(u8 **)(arg1 + 24) = (u8 *)MainPool_AllocAligned(pool, arg2 * 52, 4);
+    *(void **)(arg1 + 28) = func_80040E80(pool, D_87F0F808);
+    MainPool_FinalizeAllocation(pool);
+    func_8004C8C0(147);
+    func_87F0252C(arg0, arg1, *(u8 **)(arg1 + 20), arg2);
+    for (i = 0; i < arg2; i++) {
+        *(u8 **)(*(u8 **)(arg1 + 24) + i * 52 + 8) = arg1;
+        *(u8 **)(*(u8 **)(arg1 + 20) + i * 396 + 32) = *(u8 **)(arg1 + 24) + i * 52;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_325920/func_87F02F00.s")
 
