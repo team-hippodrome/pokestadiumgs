@@ -90,7 +90,7 @@ void func_8822B8FC(void) {
 
 extern u8 D_880068B4[];
 extern u8 func_88903B00[];
-void func_8822B930(u8 *arg0) {
+void func_8822B930(s32 arg0) {
     u8 buffer[128];
     LabPC_OpenMessageDialog(func_8004C8A0(buffer, 128, 37, arg0),
         380, 287, 4, 219, 220, 180, 2, 0, &D_880068B4, &D_880068B8,
@@ -103,7 +103,39 @@ void func_8822B9C4(void) {
     D_880068B8 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822B9EC.s")
+extern s32 *func_800635E0(u8);
+extern s32 func_8004C54C(s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_88001900(void);
+extern void Util_Free(s32);
+
+void func_8822B9EC(void) {
+    if (*(s32 *)(D_88234910 + 400) != 0) {
+        func_8004C54C(24, (s32)func_800635E0(*(u8 *)(D_88234910 + 393)));
+        if (*(s32 *)(D_88234910 + 404) == 4) {
+            if (*(s32 *)(D_88234910 + 396) != 0) {
+                func_8822B930(116);
+            } else {
+                func_8822B930(108);
+            }
+        } else {
+            if (*(s32 *)(D_88234910 + 404) == 3) {
+                func_8004C54C(25, D_88234910 + 329);
+            } else {
+                func_8004C54C(25, (s32)func_8004C874(37, *(s32 *)(D_88234910 + 404) + 103));
+            }
+            if (*(s32 *)(D_88234910 + 396) != 0) {
+                func_8822B930(115);
+            } else {
+                func_8822B930(114);
+            }
+        }
+    } else {
+        func_88001900();
+        *(s32 *)D_880068B4 = 1;
+    }
+    Util_Free(D_88234910);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822BAF8.s")
 
