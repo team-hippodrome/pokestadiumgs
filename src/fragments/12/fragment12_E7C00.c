@@ -478,7 +478,39 @@ void func_8140438C(void *arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404470.s")
+extern void func_81400A50(s32, s32, s32, s32, f32, s32, s32, void *);
+extern void func_81400884(s32, s32, s32, s32, f32, s32, s32, void *);
+extern void func_81400C24(s32, s32, s32, s32, f32, s32);
+extern void func_81400DE8(s32, s32, s32, s32, s32, f32, s32);
+extern void func_81400FA4(s32, s32, s32, s32, s32, f32, s32);
+extern void func_81403E7C(void *arg0, s16 *arg1);
+extern s32 func_81600DA8(void *, void *);
+void func_81404470(void *arg0, void *arg1) {
+    s16 rect[4];
+
+    if (func_81600DA8(arg1, arg0) != 0) {
+        func_81403E7C(arg0, rect);
+        switch (*(u8 *)((u8 *)arg0 + 0xE)) {
+        case 1:
+            func_81400A50(rect[0], rect[1], rect[2], rect[3], 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0,
+                          *(s8 *)((u8 *)arg0 + 0x10), (u8 *)arg0 + 8);
+            break;
+        case 0:
+            func_81400884(rect[0], rect[1], rect[2], rect[3], 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0,
+                          *(s8 *)((u8 *)arg0 + 0x10), (u8 *)arg0 + 8);
+            break;
+        case 2:
+            func_81400C24(rect[0], rect[1], rect[2], rect[3], 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0);
+            break;
+        case 3:
+            func_81400DE8(rect[0], rect[1], rect[2], rect[3], *(s32 *)arg0, 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0);
+            break;
+        case 4:
+            func_81400FA4(rect[0], rect[1], rect[2], rect[3], *(s32 *)arg0, 1.0f - *(f32 *)((u8 *)arg0 + 4) / 16, 0);
+            break;
+        }
+    }
+}
 
 s32 func_8140463C(void *arg0, s32 arg1, s32 arg2) {
     s32 index;
