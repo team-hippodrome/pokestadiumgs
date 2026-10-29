@@ -1523,7 +1523,70 @@ void func_8690C7F0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690CA50.s")
+extern s32 D_8690FAB0;
+extern s32 func_87F0A688(s32, s32, s32);
+
+// Draws the count func_86904D48 returns on the two D_8690FAB0 text objects
+// (loaded by func_8690073C): a one-digit layout on D_8690FAB0 when the count
+// is under 10, a tens/ones pair of fields (PA1M/PA2M) on D_8690FAB0 + 4
+// otherwise. Both layouts color their fields through func_87F0A6C8 with
+// color words 0xFFB400FF and 0x96FF, store the digits with func_87F0A688,
+// and finish with func_800503A4. PB7M receives 3 when the displayed digit is
+// 0, 1, 6 or 8, 0 for 3, and 1 otherwise. The (u8 *)&D_8690FAB0 casts keep
+// one cached base register for both word loads.
+void func_8690CA50(void) {
+    s32 color1;
+    s32 color2;
+    u32 digit;
+
+    color1 = -0x4BFF01;
+    color2 = 0x96FF;
+    if (func_86904D48() < 10) {
+        func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x50503743, &color1, &color2);
+        func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, &color1, &color2);
+        func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5041304D, &color1, &color2);
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5041304D, func_86904D48());
+        digit = func_86904D48();
+        switch (digit) {
+        case 0:
+        case 1:
+        case 6:
+        case 8:
+            func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, 3);
+            break;
+        case 3:
+            func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, 0);
+            break;
+        default:
+            func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, 1);
+            break;
+        }
+        func_800503A4((*(s32 *)((u8 *)(&D_8690FAB0) + (0))));
+        return;
+    }
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x50503743, &color1, &color2);
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, &color1, &color2);
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041314D, &color1, &color2);
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041324D, &color1, &color2);
+    func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041314D, func_86904D48() / 10);
+    func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041324D, func_86904D48() % 10);
+    digit = func_86904D48() % 10U;
+    switch (digit) {
+    case 0:
+    case 1:
+    case 6:
+    case 8:
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, 3);
+        break;
+    case 3:
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, 0);
+        break;
+    default:
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, 1);
+        break;
+    }
+    func_800503A4((*(s32 *)((u8 *)(&D_8690FAB0) + (4))));
+}
 #endif
 
 #ifdef VERSION_US
