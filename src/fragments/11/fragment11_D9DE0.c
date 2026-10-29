@@ -15,13 +15,55 @@ void Fragment11_SetClippedScissor(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 
     }
     func_80006F70(arg0, arg1, arg2, arg3, arg4);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81602940.s")
+extern s32 func_8004C990(s32, s32);
+s32 func_81602940(s32 arg0) {
+    switch (arg0) {
+    case 7:
+        return func_8004C990(0x14C, 0);
+    case 26:
+        return func_8004C990(0x14C, 1);
+    case 23:
+        return func_8004C990(0x14C, 2);
+    case 27:
+        return func_8004C990(0x14C, 4);
+    case 1:
+        return func_8004C990(0x14C, 5);
+    case 20:
+        return func_8004C990(0x14C, 6);
+    case 2:
+    case 6:
+        return func_8004C990(0x14C, 7);
+    case 8:
+        return func_8004C990(0x14C, 8);
+    case 22:
+        return func_8004C990(0x14C, 9);
+    case 4:
+        return func_8004C990(0x14C, 10);
+    case 25:
+        return func_8004C990(0x14C, 11);
+    case 0:
+        return func_8004C990(0x14C, 12);
+    case 3:
+        return func_8004C990(0x14C, 13);
+    case 24:
+        return func_8004C990(0x14C, 14);
+    case 5:
+        return func_8004C990(0x14C, 15);
+    case 9:
+        return func_8004C990(0x14C, 16);
+    case 21:
+        return func_8004C990(0x14C, 17);
+    case 19:
+        return func_8004C990(0x14C, 3);
+    default:
+        return func_8004C990(0x14C, 12);
+    }
+}
 
-extern f32 D_8160C208;
 extern f32 func_816092FC(void);
 s32 func_81602AEC(u8 *arg0, u8 *arg1) {
     s32 changed = (arg0 == 0) * 0;
-    s32 step = (s32)(func_816092FC() * D_8160C208);
+    s32 step = (s32)(func_816092FC() * 0.4f);
     if (step <= 0) step = 1;
     if (arg1[0] != arg0[0]) {
         changed = 1;
@@ -56,7 +98,69 @@ s32 func_81602AEC(u8 *arg0, u8 *arg1) {
     return changed;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81602C68.s")
+extern u8 D_8160BDF8[];
+extern u8 D_8160BDFC[];
+extern u8 D_8160BE00[];
+extern u8 D_8160BE04[];
+extern u8 D_8160BE08[];
+extern u8 D_8160BE0C[];
+extern u8 D_8160BE10[];
+extern u8 D_8160BE14[];
+extern u8 D_8160BE18[];
+extern u8 D_8160BE1C[];
+extern u8 D_8160BE20[];
+extern u8 D_8160BE24[];
+extern u8 D_8160BE28[];
+extern u8 D_8160BE2C[];
+extern u8 D_8160BE30[];
+extern u8 D_8160BE34[];
+extern u8 D_8160BE38[];
+extern u8 D_8160BE3C[];
+void *func_81602C68(arg0)
+    s32 arg0;
+{
+    switch (arg0) {
+    case 7:
+        return D_8160BDF8;
+    case 26:
+        return D_8160BE00;
+    case 23:
+        return D_8160BE08;
+    case 27:
+        return D_8160BE18;
+    case 1:
+        return D_8160BE20;
+    case 20:
+        return D_8160BE28;
+    case 2:
+    case 6:
+        return D_8160BE30;
+    case 8:
+        return D_8160BE38;
+    case 22:
+        return D_8160BDFC;
+    case 4:
+        return D_8160BE04;
+    case 25:
+        return D_8160BE0C;
+    case 0:
+        return D_8160BE14;
+    case 3:
+        return D_8160BE1C;
+    case 24:
+        return D_8160BE24;
+    case 5:
+        return D_8160BE2C;
+    case 9:
+        return D_8160BE34;
+    case 21:
+        return D_8160BE3C;
+    case 19:
+        return D_8160BE10;
+    default:
+        return D_8160BE14;
+    }
+}
 
 extern u8 D_8160BE40;
 extern u8 D_8160BE4C;
@@ -74,7 +178,11 @@ void *func_81602C68();
 void func_81602DA4(void) {
     void *temp_v0;
 
+#ifdef CC_CHECK
+    temp_v0 = func_81602C68(0);
+#else
     temp_v0 = func_81602C68();
+#endif
     func_8004972C((*(u8 *)((u8 *)(temp_v0) + (0))), (*(u8 *)((u8 *)(temp_v0) + (1))), (*(u8 *)((u8 *)(temp_v0) + (2))), 0xFF);
 }
 
@@ -217,13 +325,6 @@ void func_8160324C(f32 alpha) {
 
 void func_8160335C(u8 *arg0, s32 arg1) {}
 
-/* Tail (last 3 entries) of jtbl_8160C20C, a jump table used by an earlier,
- * still-GLOBAL_ASM switch in this file. Not referenced from C: it exists
- * only so this file's own .rodata subsegment starts at a 16-byte-aligned
- * ROM address (required by this fragment's SUBALIGN(16)) while still
- * landing func_81603368's own jump table (jtbl_8160C27C, right below) at
- * its real retail address. */
-const u32 D_8160C270[3] = {0x81602D00, 0x81602C94, 0x81602CAC};
 
 extern s32 GbSave_GetPortAvailability(s32);
 extern u8 func_8005D92C(s32);
@@ -564,7 +665,8 @@ void func_81605F94(s32 arg0, s32 arg1, s32 arg2, u8 *arg3, f32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606B5C.s")
 
-extern s16 D_8160C0F0[];
+// [14..15] are D_8160C10C (aliases.ld), a zero word read by func_816078C4.
+const s16 D_8160C0F0[16] = { 0, 60, 88, 116, 144, 172, 200, 228, 256, 284, 312, 372, 432, 0, 0, 0 };
 f32 func_81606E14(f32 arg0, s32 arg1) {
     s32 index;
     if (arg1) {
@@ -784,8 +886,6 @@ void func_8160877C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
     }
 }
 
-extern u8 D_8160C120[];
-extern u8 D_8160C124[];
 extern s32 HAL_Strcmp(const s8 *, const s8 *);
 extern s32 func_80064474(u8, u16);
 extern s32 func_800647C8(u8);
@@ -801,11 +901,11 @@ s32 func_816087C8(u8 *arg0) {
 
     gender = func_80064474(arg0[0], *(u16 *)(arg0 + 0x16));
     if ((arg0[0] == 29 || arg0[0] == 32) && HAL_Strcmp((s8 *)(arg0 + 0x34), (s8 *)func_800647C8(arg0[0])) == 0) {
-        return (s32)D_8160C120;
+        return (s32)"";
     }
     switch (gender) {
         case 0:
-            return (s32)D_8160C124;
+            return (s32)"";
         case 1:
             return func_8004C874(13, 29);
         case 2:
@@ -919,13 +1019,15 @@ void func_81609344(s32 arg0,s32 arg1,s32 arg2,s32 arg3,s32 arg4){s32 width=arg4?
 
 void func_8160945C(s16 *arg0, s16 *arg1, s16 *arg2, f32 arg3) { arg0[0] = arg1[0] + (arg2[0] - arg1[0]) * arg3; arg0[1] = arg1[1] + (arg2[1] - arg1[1]) * arg3; arg0[2] = arg1[2] + (arg2[2] - arg1[2]) * arg3; arg0[3] = arg1[3] + (arg2[3] - arg1[3]) * arg3; }
 
-extern u8 D_8160C128;
+const u8 D_8160C128[0x58] = { 0x00, 0x3A, 0x00, 0xA5, 0x02, 0x0F, 0x01, 0x1B, 0x00, 0x35, 0x00, 0x46, 0x02, 0x19, 0x01, 0x80, 0x00, 0x55, 0x00, 0x67, 0x01, 0xD8, 0x01, 0x3E, 0x00, 0x2F, 0x01, 0x27, 0x02, 0x24, 0x00, 0x9F, 0x00, 0x2F, 0x01, 0xF4, 0x02, 0x24, 0x00, 0x9F, 0xFD, 0xF1, 0x00, 0xA5, 0x02, 0x0F, 0x01, 0x1B, 0x00, 0x35, 0x00, 0x46, 0x02, 0x19, 0x00, 0xBF, 0x02, 0x80, 0x00, 0xA5, 0x02, 0x0F, 0x01, 0x1B, 0x02, 0x80, 0x01, 0x27, 0x02, 0x24, 0x00, 0x9F, 0xFD, 0xDC, 0x01, 0x27, 0x02, 0x24, 0x00, 0x9F, 0x00, 0x35, 0x01, 0xE0, 0x02, 0x19, 0x00, 0x14 };
+// .rodata color read by func_8160955C (still assembly).
+const u8 D_8160C180[8] = { 0x96, 0x96, 0x96, 0xFF, 0xFF, 0x00, 0x00, 0x00 };
 
 void *func_81609530(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= 0xB)) {
         return NULL;
     }
-    return (arg0 * 8) + &D_8160C128;
+    return (arg0 * 8) + D_8160C128;
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_8160955C.s")
@@ -952,7 +1054,7 @@ void func_816098B0(void *arg0, struct Color098 *arg1) {
 
 extern f32 D_8160C2D4;
 extern f32 D_8160C2D8;
-extern u16 D_8160C188[];
+static const u16 D_8160C188[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 extern s32 func_8004C990(s32, s32);
 extern void func_8004D19C(s32, s32, void *, s32, s32);
 extern void func_8004D1FC(void *);
