@@ -11,3 +11,27 @@ final `jr ra` delay slot with `or v0, v1, zero`, while ours puts the move
 before the `jr` and leaves a `nop`. Also tried: no `break` on case 5, a
 separate `result = 0`, an explicit `default`, `u8 result`, and the permuter
 (120 s, flat at 60).
+
+## 2026-10-29 — `.data` owned in C; `func_82200020` requeue
+
+`fragment17_10F9E0` now owns its `.data` (0x11D0B0–0x11D130):
+
+- four `s16` animation key lists;
+- their `{ s16, s16 count, s16 *keys }` records;
+- `D_8220D758[4]`, the record table `func_822000F0` reads;
+- `static s16 D_8220D768`, `D_8220D76C`. IDO 4-aligns each, matching
+  retail.
+
+The fragment17 data blob now starts at 0x11D130.
+
+`func_82200020` (geo callback that slides `x8` by 0x40 up to 640;
+**requeue**, `scratch/c/020_best.c`):
+
+- The logic is right. Retail re-forms `lui $at` for every access to
+  `D_8220D768`/`D_8220D76C` and keeps the slide in a truncated `s16`
+  register.
+- Ours CSEs the address into `$v1`, whether the variables are extern or
+  in-file static.
+- Next: find the access shape that stops IDO materialising the base, for
+  example separate expressions per block, or a `switch` with `return` per
+  case and no shared local.
