@@ -365,7 +365,64 @@ s32 func_82201D08(void *arg0) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82201D30.s")
+// Steps the F82201C70_State animation started by func_82201D08: while mode is
+// 2, advances the step counter at offset 2 and lerps the four current fields
+// (current.x/y/w/h) from their saved values toward the k0..k3 constants over
+// eight steps. currentPair.x/y is recomputed to keep the offset savedPair.x/y
+// had from the saved width/height (current.w - (saved.w - savedPair.x));
+// negative results clamp to zero. One step past seven the current fields snap
+// to the k constants and mode becomes 3. Always returns 1.
+s32 func_82201D30(u8 *arg0) {
+    s32 saved_h_minus_pair_y;
+    s32 saved_w_minus_pair_x;
+    s32 step;
+
+    if (*(s16 *)arg0 == 2) {
+        saved_w_minus_pair_x = *(s16 *)(arg0 + 0x10) - *(s16 *)(arg0 + 0x20);
+        saved_h_minus_pair_y = *(s16 *)(arg0 + 0x12) - *(s16 *)(arg0 + 0x22);
+
+        if (*(s16 *)(arg0 + 2) < 8) {
+            *(s16 *)(arg0 + 2) += 1;
+        }
+
+        if (*(s16 *)(arg0 + 2) < 8) {
+            step = *(s16 *)(arg0 + 2);
+            *(s16 *)(arg0 + 4) =
+                ((((*(s16 *)(arg0 + 0x14) - *(s16 *)(arg0 + 0xC)) *
+                   step) /
+                  8) + *(s16 *)(arg0 + 0xC));
+            *(s16 *)(arg0 + 8) =
+                ((((*(s16 *)(arg0 + 0x18) - *(s16 *)(arg0 + 0x10)) *
+                   step) /
+                  8) + *(s16 *)(arg0 + 0x10));
+            *(s16 *)(arg0 + 0x1C) = *(s16 *)(arg0 + 8) - saved_w_minus_pair_x;
+            if (*(s16 *)(arg0 + 0x1C) < 0) {
+                *(s16 *)(arg0 + 0x1C) = 0;
+            }
+            *(s16 *)(arg0 + 6) =
+                ((((*(s16 *)(arg0 + 0x16) - *(s16 *)(arg0 + 0xE)) *
+                   step) /
+                  8) + *(s16 *)(arg0 + 0xE));
+            *(s16 *)(arg0 + 0xA) =
+                ((((*(s16 *)(arg0 + 0x1A) - *(s16 *)(arg0 + 0x12)) *
+                   step) /
+                  8) + *(s16 *)(arg0 + 0x12));
+            *(s16 *)(arg0 + 0x1E) = *(s16 *)(arg0 + 0xA) - saved_h_minus_pair_y;
+            if (*(s16 *)(arg0 + 0x1E) < 0) {
+                *(s16 *)(arg0 + 0x1E) = 0;
+            }
+        } else {
+            *(s16 *)(arg0 + 4) = *(s16 *)(arg0 + 0x14);
+            *(s16 *)(arg0 + 8) = *(s16 *)(arg0 + 0x18);
+            *(s16 *)(arg0 + 0x1C) = *(s16 *)(arg0 + 8) - saved_w_minus_pair_x;
+            *(s16 *)(arg0 + 6) = *(s16 *)(arg0 + 0x16);
+            *(s16 *)(arg0 + 0xA) = *(s16 *)(arg0 + 0x1A);
+            *(s16 *)(arg0 + 0x1E) = *(s16 *)(arg0 + 0xA) - saved_h_minus_pair_y;
+            *(s16 *)(arg0 + 0) = 3;
+        }
+    }
+    return 1;
+}
 
 extern void func_8004C990(u16, u16, u8 *);
 extern s16 D_8220D788;
