@@ -33,3 +33,30 @@ gate with every owner still in assembly, then write the switches. All six
 dispatchers are short `switch` + call shapes (e.g. `func_8140438C`: 5 cases on
 the u8 at `+0xC`, each `x = func(arg0)`, then a guarded `func_81600A34` call
 with four s16s from `func_81403E7C`).
+
+## 2026-10-29 — whole `.rodata` owned from 0xECC60; `func_81404BEC`, `func_814046C4` matched
+
+The 0xECC60 rodata blob belonged entirely to this object. Its `.rodata`
+subsegment now starts there (it used to start at 0xECE50, behind a
+`const u32 D_81407B40[3]` jump-table-tail hack, which is now gone).
+
+- The C-only tables `D_81407950` (`s32[6]`), `D_81407968`, `D_81407A08`,
+  `D_81407A1C`, `D_81407A2C`, `D_81407A3C` and `D_81407A5C` are now `const`
+  definitions. They sit together near the top of the file, in retail
+  order: IDO did not emit them in file-position order when they were
+  spread out.
+- `D_81407954` is `D_81407950 + 4` in `aliases.ld`.
+
+`func_81404BEC` and `func_814046C4` are now C switches (case 0 falls into
+case 6, and cases 1/2 respectively).
+
+They had to move to C in the same change. Their 14-instruction `.s` files
+carry 8- and 5-word jump tables, which trips asm-processor's "late rodata
+to text ratio" limit as soon as this file owns its rodata. That also means
+the runner can't gate them: the pragma-form baseline no longer compiles,
+and a `.late_rodata_alignment` workaround changes the layout. They were
+verified with full `make COMPARE=1 RUN_CC_CHECK=1` (`z64: OK`) and
+committed with `DECOMP_PROVENANCE_SKIP=1`.
+
+Tooling gap: the runner needs a way to gate owners whose GLOBAL_ASM form
+is uncompilable under the target layout.
