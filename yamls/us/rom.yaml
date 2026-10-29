@@ -702,7 +702,8 @@
     - [0x113A60, c,       fragments/17/fragment17_113A60]
     - [0x11A7F0, c,       fragments/17/fragment17_11A7F0]
     - [0x11B210, c,       fragments/17/fragment17_11B210]
-    - [0x11D0B0, data,    fragments/17/fragment17_data]
+    - [0x11D0B0, .data, fragments/17/fragment17_10F9E0] # animation key tables and slide state
+    - [0x11D130, data,    fragments/17/fragment17_data]
     - [0x11DA40, .rodata, fragments/17/fragment17_10F9E0] # Jump tables.
     - [0x11DA80, rodata]
     - [0x11DA90, .rodata, fragments/17/fragment17_10FFC0] # jtbl_8220E0F0, widened to 16-byte boundary (first word of jtbl_8220E10C)
