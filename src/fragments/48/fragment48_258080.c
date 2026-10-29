@@ -26,14 +26,14 @@ void func_87C02138(u8 *arg0, f64 arg3, f64 arg4) {
     *(f64 *)(arg0 + 0x18) = temp_fv0;
 }
 
-extern s32 func_87C00160(u8 *, s32, u8 *);
-extern s32 func_87C00238(u8 *, u8 *, s32);
-extern void func_87C00198();
+extern void *func_87C00160(void *, void *, void *);
+extern void *func_87C00238(void *, void *, void *);
+extern void *func_87C00198(void *, void *, void *);
 void func_87C021A4(u8 *arg0, s32 arg1, u8 *arg2) {
     s32 temp[7];
     s32 value;
-    value = func_87C00160((u8 *)(temp + 1), arg1, arg0 + 0xA0);
-    value = func_87C00238(arg2, arg0 + 0x58, value);
+    value = (s32)func_87C00160((u8 *)(temp + 1), (void *)arg1, arg0 + 0xA0);
+    value = (s32)func_87C00238(arg2, arg0 + 0x58, (void *)value);
     func_87C00198(arg2, arg2, arg0 + 0x20);
 }
 
@@ -93,26 +93,52 @@ void func_87C02594(u8 *arg0, s32 arg1, s32 arg2) {
     u8 temp0[0x18];
     u8 temp1[0x18];
     s32 value;
-    func_87C00198(arg0 + 0x70, arg0 + 0x70);
-    func_87C00160(temp0, arg1, arg0 + 0xA0);
-    value = func_87C00238(temp1, temp0, arg2);
-    func_87C00198(arg0 + 0x88, arg0 + 0x88, value);
+    func_87C00198(arg0 + 0x70, arg0 + 0x70, (void *)arg2);
+    func_87C00160(temp0, (void *)arg1, arg0 + 0xA0);
+    value = (s32)func_87C00238(temp1, temp0, (void *)arg2);
+    func_87C00198(arg0 + 0x88, arg0 + 0x88, (void *)value);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258080/func_87C025FC.s")
 
-extern f64 func_87C00208(s32, u8 *);
+extern f64 func_87C00208(void *, void *);
 extern f64 func_87C025FC(u8 *, u8 *, u8 *);
-f64 func_87C02690(u8 *arg0, u8 *arg1, f64 arg2, u8 *arg3, u8 *arg4, f64 arg5, f64 arg6) {
+f64 func_87C02690(u8 *arg0, u8 *arg1, f64 arg2, u8 *arg3, u8 *arg4, f64 arg5) {
     u8 sp30[0x18];
 
-    return (-(1.0f + arg2) * func_87C00208(func_87C00160(sp30, (s32)(arg0 + 0x20), arg1 + 0x20), arg3)) /
+    return (-(1.0f + arg2) * func_87C00208(func_87C00160(sp30, arg0 + 0x20, arg1 + 0x20), arg3)) /
            ((1.0 / *(f64 *)(*(u8 **)arg0) + 1.0 / *(f64 *)(*(u8 **)arg1) + func_87C025FC(arg0, arg3, arg4) +
              func_87C025FC(arg1, arg3, arg4)) *
             arg5);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258080/func_87C02764.s")
+extern void func_87C003BC(void *, void *, void *);
+extern void *func_87C00718(void *, void *, f64);
+extern void *func_87C002A8(void *, void *, f64);
+extern void *func_87C002DC(void *, void *);
+f64 func_87C02764(u8 *arg0, u8 *arg1, u8 *arg2, u8 *arg3, f64 arg4, f64 arg6, f64 arg8) {
+    f64 result;
+    f64 var_spE8[3];
+    f64 var_spD0[3];
+    f64 var_spB8[3];
+    f64 var_spA0[3];
+    f64 var_sp88[3];
+    f64 var_sp70[3];
+    f64 var_sp58[3];
+    f64 var_sp40[3];
+
+    func_87C021A4(arg0, (s32)arg3, (u8 *)var_sp58);
+    func_87C021A4(arg1, (s32)arg3, (u8 *)var_sp40);
+    func_87C00160(var_sp88, var_sp40, var_sp58);
+    func_87C003BC(var_spA0, var_sp88, arg2);
+    func_87C00718(var_spA0, var_spA0, 1.0);
+    result = func_87C02690(arg0, arg1, arg4, arg2, arg3, arg8);
+    func_87C00198(var_sp70, func_87C002A8(var_spD0, arg2, result),
+                  func_87C002A8(var_spB8, var_spA0, arg6 * result));
+    func_87C02594(arg0, (s32)arg3, (s32)var_sp70);
+    func_87C02594(arg1, (s32)arg3, (s32)func_87C002DC(var_spE8, var_sp70));
+    return result;
+}
 
 extern void* func_87C00120(void*, f64, f64, f64);
 void* func_87C0288C(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
