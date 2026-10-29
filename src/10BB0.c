@@ -2,7 +2,174 @@
 
 
 #ifdef VERSION_US
-extern u8 D_8011BE90[];
+// Reverb buffer sample header, laid out like Majora's Mask Sample
+// (include/audio/soundfont.h).
+typedef struct {
+    u32 unk_0 : 1;
+    u32 codec : 3;
+    u32 medium : 2;
+    u32 unk_bit26 : 1;
+    u32 isRelocated : 1;
+    u32 size : 24;
+    u8 *sampleAddr;
+    void *loop;
+    void *book;
+} ReverbSample; // size = 0x10
+
+// Reverb settings record passed to func_800137AC, laid out like Majora's Mask
+// ReverbSettings (include/audio/reverb.h).
+typedef struct {
+    /* 0x00 */ u8 downsampleRate;
+    /* 0x02 */ u16 delayNumSamples;
+    /* 0x04 */ u16 decayRatio;
+    /* 0x06 */ u16 subDelay;
+    /* 0x08 */ u16 subVolume;
+    /* 0x0A */ u16 volume;
+    /* 0x0C */ u16 leakRtl;
+    /* 0x0E */ u16 leakLtr;
+    /* 0x10 */ s8 mixReverbIndex;
+    /* 0x12 */ u16 mixReverbStrength;
+    /* 0x14 */ s16 lowPassFilterCutoffLeft;
+    /* 0x16 */ s16 lowPassFilterCutoffRight;
+} ReverbSettings; // size = 0x18
+
+// Reverb state, laid out like Majora's Mask SynthesisReverb
+// (include/audio/reverb.h); D_8011BE90 + 0x18 holds an array of these.
+// src/CE80.c declares the synthesis-side view of the same records.
+//@src/CE80.c
+typedef struct {
+    /* 0x000 */ u8 resampleFlags;
+    /* 0x001 */ u8 useReverb;
+    /* 0x002 */ u8 framesToIgnore;
+    /* 0x003 */ u8 curFrame;
+    /* 0x004 */ u8 downsampleRate;
+    /* 0x005 */ s8 mixReverbIndex;
+    /* 0x006 */ u16 delayNumSamples;
+    /* 0x008 */ s16 mixReverbStrength;
+    /* 0x00A */ s16 volume;
+    /* 0x00C */ u16 decayRatio;
+    /* 0x00E */ u16 downsamplePitch;
+    /* 0x010 */ s16 leakRtl;
+    /* 0x012 */ s16 leakLtr;
+    /* 0x014 */ u16 subDelay;
+    /* 0x016 */ s16 subVolume;
+    /* 0x018 */ u8 resampleEffectOn;
+    /* 0x019 */ s8 resampleEffectExtraSamples;
+    /* 0x01A */ u16 resampleEffectLoadUnk;
+    /* 0x01C */ u16 resampleEffectSaveUnk;
+    /* 0x01E */ u8 delayNumSamplesAfterDownsampling;
+    /* 0x020 */ s32 nextReverbBufPos;
+    /* 0x024 */ s32 delayNumSamplesUnk;
+    /* 0x028 */ s16 *leftReverbBuf;
+    /* 0x02C */ s16 *rightReverbBuf;
+    /* 0x030 */ s16 *leftLoadResampleBuf;
+    /* 0x034 */ s16 *rightLoadResampleBuf;
+    /* 0x038 */ s16 *leftSaveResampleBuf;
+    /* 0x03C */ s16 *rightSaveResampleBuf;
+    /* 0x040 */ u8 bufEntry[0x270 - 0x40];
+    /* 0x270 */ s16 *filterLeft;
+    /* 0x274 */ s16 *filterRight;
+    /* 0x278 */ s16 *filterLeftInit;
+    /* 0x27C */ s16 *filterRightInit;
+    /* 0x280 */ s16 *filterLeftState;
+    /* 0x284 */ s16 *filterRightState;
+    /* 0x288 */ ReverbSample *tunedSampleSample;
+    /* 0x28C */ f32 tunedSampleTuning;
+    /* 0x290 */ ReverbSample sample;
+    /* 0x2A0 */ struct {
+        u32 start;
+        u32 loopEnd;
+        u32 count;
+        u32 sampleEnd;
+    } loop;
+    /* 0x2B0 */ u8 unk_2B0[0x2D0 - 0x2B0];
+} SynthesisReverb; // size = 0x2D0
+
+typedef struct {
+    /* 0x00 */ u32 wantSeq;
+    /* 0x04 */ u32 wantFont;
+    /* 0x08 */ u32 wantSample;
+    /* 0x0C */ u32 wantCustom;
+} AudioSessionPoolSplit; // size = 0x10
+
+typedef struct {
+    /* 0x00 */ u32 persistentCommonPoolSize;
+    /* 0x04 */ u32 temporaryCommonPoolSize;
+} AudioCachePoolSplit; // size = 0x8
+
+typedef struct {
+    /* 0x00 */ u32 seqCacheSize;
+    /* 0x04 */ u32 fontCacheSize;
+    /* 0x08 */ u32 sampleBankCacheSize;
+} AudioCommonPoolSplit; // size = 0xC
+
+typedef union {
+    u8 raw[1];
+    struct {
+        /* 0x0000 */ s8 unk_00;
+        /* 0x0001 */ s8 numSynthesisReverbs;
+        /* 0x0002 */ u16 unk_02;
+        /* 0x0004 */ u16 unk_04;
+        /* 0x0006 */ u8 unk_06[0x14 - 6];
+        /* 0x0014 */ void *unk_14;
+        /* 0x0018 */ SynthesisReverb synthesisReverbs[3];
+        /* 0x0888 */ u8 unk_888[0x14BC - 0x888];
+        /* 0x14BC */ s32 preloadSampleStackTop;
+        /* 0x14C0 */ u8 unk_14C0[0x29B0 - 0x14C0];
+        /* 0x29B0 */ s32 sampleDmaCount;
+        /* 0x29B4 */ u8 unk_29B4[0x2BDC - 0x29B4];
+        /* 0x2BDC */ s16 specUnk4;
+        /* 0x2BDE */ u16 samplingFrequency;
+        /* 0x2BE0 */ u16 aiFrequency;
+        /* 0x2BE2 */ s16 samplesPerFrameTarget;
+        /* 0x2BE4 */ s16 maxAiBufferLength;
+        /* 0x2BE6 */ s16 minAiBufferLength;
+        /* 0x2BE8 */ s16 updatesPerFrame;
+        /* 0x2BEA */ s16 samplesPerUpdate;
+        /* 0x2BEC */ s16 samplesPerUpdateMax;
+        /* 0x2BEE */ s16 samplesPerUpdateMin;
+        /* 0x2BF0 */ s16 numSequencePlayers;
+        /* 0x2BF4 */ f32 resampleRate;
+        /* 0x2BF8 */ f32 updatesPerFrameInv;
+        /* 0x2BFC */ f32 updatesPerFrameInvScaled;
+        /* 0x2C00 */ f32 updatesPerFrameScaled;
+        /* 0x2C04 */ f32 unk_2C04;
+        /* 0x2C08 */ s32 sampleDmaBufSize1;
+        /* 0x2C0C */ s32 sampleDmaBufSize2;
+        /* 0x2C10 */ u8 unk_2C10[0x2C24 - 0x2C10];
+        /* 0x2C24 */ s32 maxAudioCmds;
+        /* 0x2C28 */ s32 numNotes;
+        /* 0x2C2C */ s16 maxTempoMultiplicative;
+        /* 0x2C2E */ u8 unk_2C2E[0x2C40 - 0x2C2E];
+        /* 0x2C40 */ s32 abiCmdBufs[2];
+        /* 0x2C48 */ u8 unk_2C48[0x2CF0 - 0x2C48];
+        /* 0x2CF0 */ f32 unk_2CF0;
+        /* 0x2CF4 */ s32 refreshRate;
+        /* 0x2CF8 */ u8 unk_2CF8[0x2D2C - 0x2CF8];
+        /* 0x2D2C */ s32 unk_2D2C;
+        /* 0x2D30 */ u8 unk_2D30[0x2D38 - 0x2D30];
+        /* 0x2D38 */ s32 audioSessionPoolSize;
+        /* 0x2D3C */ s32 unk_2D3C;
+        /* 0x2D40 */ s32 externalPoolStartAddr;
+        /* 0x2D44 */ s32 externalPoolCurAddr;
+        /* 0x2D48 */ u8 unk_2D48[0x32D0 - 0x2D48];
+        /* 0x32D0 */ AudioSessionPoolSplit sessionPoolSplit;
+        /* 0x32E0 */ AudioCachePoolSplit cachePoolSplit;
+        /* 0x32E8 */ AudioCommonPoolSplit persistentCommonPoolSplit;
+        /* 0x32F4 */ AudioCommonPoolSplit temporaryCommonPoolSplit;
+        /* 0x3300 */ u8 unk_3300[0x3455 - 0x3300];
+        /* 0x3455 */ u8 specId;
+        /* 0x3456 */ u8 unk_3456[0x345C - 0x3456];
+        /* 0x345C */ s32 adsrDecayTable;
+        /* 0x3460 */ u8 unk_3460[0x3468 - 0x3460];
+        /* 0x3468 */ s32 notes;
+        /* 0x346C */ u8 unk_346C[0x604C - 0x346C];
+        /* 0x604C */ void *seqPlayers[5];
+    } s;
+} AudioContext;
+
+extern AudioContext D_8011BE90;
+#define D_8011BE90 (D_8011BE90.raw)
 
 // Bit 4 of a note's ADSR action byte (playback state + 0x30) requests release.
 typedef struct {
@@ -129,7 +296,6 @@ void func_800102BC(s32 arg0) {
     }
 }
 
-extern u8 D_8011BE90[];
 extern void func_8001CA3C(s32);
 void func_80010334(s32 arg0)
 {
@@ -349,7 +515,6 @@ void func_8001068C(s32 arg0)
 extern u8 D_8011EBC0;
 extern u8 D_8011EBE0;
 extern s32 D_8011F2F0;
-extern u8 D_8011BE90[];
 extern s32 D_8011EBD0;
 
 void func_800107CC(s32 arg0) {
@@ -882,7 +1047,6 @@ void func_80011A48(void) {
     }
 }
 
-extern u8 D_8011BE90[];
 void func_80011B0C(void)
 {
     s32 index;
@@ -997,9 +1161,184 @@ s32 func_80011B78(void) {
     return TRUE;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/10BB0/func_80011E7C.s")
+#undef D_8011BE90
+#define D_8011BE90 (D_8011BE90.s)
 
-extern u8 D_8011BE90[];
+typedef struct {
+    /* 0x00 */ u32 samplingFrequency;
+    /* 0x04 */ u8 unk_04;
+    /* 0x05 */ u8 numNotes;
+    /* 0x06 */ u8 numSequencePlayers;
+    /* 0x07 */ u8 unk_07;
+    /* 0x08 */ u8 unk_08;
+    /* 0x09 */ u8 numReverbs;
+    /* 0x0C */ ReverbSettings *reverbSettings;
+    /* 0x10 */ u16 sampleDmaBufSize1;
+    /* 0x12 */ u16 sampleDmaBufSize2;
+    /* 0x14 */ u16 unk_14;
+    /* 0x18 */ u32 persistentSeqCacheSize;
+    /* 0x1C */ u32 persistentFontCacheSize;
+    /* 0x20 */ u32 persistentSampleBankCacheSize;
+    /* 0x24 */ u32 temporarySeqCacheSize;
+    /* 0x28 */ u32 temporaryFontCacheSize;
+    /* 0x2C */ u32 temporarySampleBankCacheSize;
+    /* 0x30 */ s32 persistentSampleCacheSize;
+    /* 0x34 */ s32 temporarySampleCacheSize;
+} AudioSpec; // size = 0x38
+
+extern AudioSpec D_80094658[];
+extern s16 D_800A42A2;
+
+void AudioVoicePool_Init(void);
+void ResourcePool_InitLists(void);
+void func_800137AC(s32 reverb_index, ReverbSettings *settings, s32 is_first_init);
+void func_8001FA80(void);
+void AudioSequence_AllocateChannels(s32 player_index);
+void func_8001F7F0(void *seqPlayer);
+void func_80012598(s32 persistentSize, s32 temporarySize);
+void func_8000C614(u32 arg0);
+void func_80013EF8(s32 numNotes);
+void func_80015E58(void);
+void func_80017A90(void);
+void GbApu_ResetSlotFlags(void);
+void func_80017874(void);
+
+// Same code as Majora's Mask AudioHeap_ResetLoad (src/audio/lib/heap.c).
+void func_80011E7C(void) {
+    s32 i;
+    s32 j;
+    AudioSpec *spec;
+    s32 persistentSize;
+    s32 temporarySize;
+    s32 totalSize;
+    s32 sessionPoolSize;
+    OSIntMask intMask;
+
+    spec = &D_80094658[D_8011BE90.specId];
+    D_8011BE90.sampleDmaCount = 0;
+
+    D_8011BE90.samplingFrequency = spec->samplingFrequency;
+    D_8011BE90.aiFrequency = osAiSetFrequency(D_8011BE90.samplingFrequency);
+
+    D_8011BE90.samplesPerFrameTarget = ((D_8011BE90.samplingFrequency / D_8011BE90.refreshRate) + 0xF) & 0xFFF0;
+    D_8011BE90.minAiBufferLength = D_8011BE90.samplesPerFrameTarget - 0x10;
+    D_8011BE90.maxAiBufferLength = D_8011BE90.samplesPerFrameTarget + 0x10;
+    D_8011BE90.updatesPerFrame = ((D_8011BE90.samplesPerFrameTarget + 0x10) / 0xD0) + 1;
+    D_8011BE90.samplesPerUpdate = (D_8011BE90.samplesPerFrameTarget / D_8011BE90.updatesPerFrame) & ~7;
+    D_8011BE90.samplesPerUpdateMax = D_8011BE90.samplesPerUpdate + 8;
+    D_8011BE90.samplesPerUpdateMin = D_8011BE90.samplesPerUpdate - 8;
+
+    D_8011BE90.resampleRate = 32000.0f / (s32)D_8011BE90.samplingFrequency;
+    D_8011BE90.updatesPerFrameInvScaled = (1.0f / 256.0f) / D_8011BE90.updatesPerFrame;
+    D_8011BE90.updatesPerFrameScaled = D_8011BE90.updatesPerFrame / 4.0f;
+    D_8011BE90.updatesPerFrameInv = 1.0f / D_8011BE90.updatesPerFrame;
+
+    D_8011BE90.sampleDmaBufSize1 = spec->sampleDmaBufSize1;
+    D_8011BE90.sampleDmaBufSize2 = spec->sampleDmaBufSize2;
+
+    D_8011BE90.numNotes = spec->numNotes;
+    D_8011BE90.numSequencePlayers = spec->numSequencePlayers;
+    if (D_8011BE90.numSequencePlayers > 5) {
+        D_8011BE90.numSequencePlayers = 5;
+    }
+
+    D_8011BE90.unk_2D2C = 8;
+    D_8011BE90.unk_02 = spec->unk_14;
+
+    D_8011BE90.maxTempoMultiplicative = (u16)(D_8011BE90.updatesPerFrame * 2880000.0f / D_800A42A2 / D_8011BE90.unk_2CF0);
+
+    D_8011BE90.unk_2C04 = D_8011BE90.refreshRate;
+    D_8011BE90.unk_2C04 *= D_8011BE90.updatesPerFrame;
+    D_8011BE90.unk_2C04 /= (u32)D_8011BE90.aiFrequency;
+    D_8011BE90.unk_2C04 /= D_8011BE90.maxTempoMultiplicative;
+
+    D_8011BE90.specUnk4 = spec->unk_04;
+    D_8011BE90.samplesPerFrameTarget *= D_8011BE90.specUnk4;
+    D_8011BE90.maxAiBufferLength *= D_8011BE90.specUnk4;
+    D_8011BE90.minAiBufferLength *= D_8011BE90.specUnk4;
+    D_8011BE90.updatesPerFrame *= D_8011BE90.specUnk4;
+
+    if (D_8011BE90.specUnk4 >= 2) {
+        D_8011BE90.maxAiBufferLength -= 0x10;
+    }
+
+    D_8011BE90.maxAudioCmds = D_8011BE90.numNotes * 20 * D_8011BE90.updatesPerFrame + spec->numReverbs * 30 + 0x190;
+
+    persistentSize = spec->persistentSeqCacheSize + spec->persistentFontCacheSize + spec->persistentSampleBankCacheSize + 0x10;
+    temporarySize = spec->temporarySeqCacheSize + spec->temporaryFontCacheSize + spec->temporarySampleBankCacheSize + 0x10;
+    totalSize = persistentSize + temporarySize;
+    sessionPoolSize = D_8011BE90.audioSessionPoolSize - totalSize - 0x100;
+
+    if (D_8011BE90.externalPoolStartAddr != 0) {
+        D_8011BE90.externalPoolCurAddr = D_8011BE90.externalPoolStartAddr;
+    }
+
+    D_8011BE90.sessionPoolSplit.wantSeq = sessionPoolSize;
+    D_8011BE90.sessionPoolSplit.wantCustom = totalSize;
+    func_8001082C(&D_8011BE90.sessionPoolSplit);
+
+    D_8011BE90.cachePoolSplit.persistentCommonPoolSize = persistentSize;
+    D_8011BE90.cachePoolSplit.temporaryCommonPoolSize = temporarySize;
+    func_800108B0(&D_8011BE90.cachePoolSplit);
+
+    D_8011BE90.persistentCommonPoolSplit.seqCacheSize = spec->persistentSeqCacheSize;
+    D_8011BE90.persistentCommonPoolSplit.fontCacheSize = spec->persistentFontCacheSize;
+    D_8011BE90.persistentCommonPoolSplit.sampleBankCacheSize = spec->persistentSampleBankCacheSize;
+    func_80010934(&D_8011BE90.persistentCommonPoolSplit);
+
+    D_8011BE90.temporaryCommonPoolSplit.seqCacheSize = spec->temporarySeqCacheSize;
+    D_8011BE90.temporaryCommonPoolSplit.fontCacheSize = spec->temporaryFontCacheSize;
+    D_8011BE90.temporaryCommonPoolSplit.sampleBankCacheSize = spec->temporarySampleBankCacheSize;
+    func_800109F8(&D_8011BE90.temporaryCommonPoolSplit);
+
+    func_80010110();
+
+    D_8011BE90.notes = func_80010510(&D_8011EBF0, D_8011BE90.numNotes * 0x100);
+    AudioVoicePool_Init();
+    ResourcePool_InitLists();
+    D_8011BE90.unk_14 = (void *)func_80010510(&D_8011EBF0, D_8011BE90.updatesPerFrame * D_8011BE90.numNotes * 0x20);
+
+    for (i = 0; i < 2; i++) {
+        D_8011BE90.abiCmdBufs[i] = func_800104D8(&D_8011EBF0, D_8011BE90.maxAudioCmds * 8);
+    }
+
+    D_8011BE90.adsrDecayTable = GbApu_Alloc((S1_unk_func_81206FA0 *)&D_8011EBF0, 0x400);
+    func_8000FFCC();
+
+    for (j = 0; j < 3; j++) {
+        D_8011BE90.synthesisReverbs[j].useReverb = 0;
+    }
+
+    D_8011BE90.numSynthesisReverbs = spec->numReverbs;
+    for (j = 0; j < D_8011BE90.numSynthesisReverbs; j++) {
+        func_800137AC(j, &spec->reverbSettings[j], 1);
+    }
+
+    func_8001FA80();
+
+    for (i = 0; i < D_8011BE90.numSequencePlayers; i++) {
+        AudioSequence_AllocateChannels(i);
+        func_8001F7F0(D_8011BE90.seqPlayers[i]);
+    }
+
+    func_80012598(spec->persistentSampleCacheSize, spec->temporarySampleCacheSize);
+    func_8000C614(spec->unk_07 & 7);
+    func_80013EF8(D_8011BE90.numNotes);
+    D_8011BE90.preloadSampleStackTop = 0;
+    func_80015E58();
+    func_80017A90();
+    GbApu_ResetSlotFlags();
+    D_8011BE90.unk_04 = 0x1000;
+    func_80017874();
+
+    intMask = osSetIntMask(OS_IM_NONE);
+    osWritebackDCacheAll();
+    osSetIntMask(intMask);
+}
+
+#undef D_8011BE90
+#define D_8011BE90 (D_8011BE90.raw)
+
 extern s32 D_8011EF8C;
 s32 func_8001244C(s32 arg0, s32 arg1) {
     s32 i;
@@ -1507,89 +1846,6 @@ void func_80013174(void) {
         func_80012EAC(*(s16 *)(persistent + i * 0xC + 0x1E));
     }
 }
-
-// Reverb buffer sample header, laid out like Majora's Mask Sample
-// (include/audio/soundfont.h).
-typedef struct {
-    u32 unk_0 : 1;
-    u32 codec : 3;
-    u32 medium : 2;
-    u32 unk_bit26 : 1;
-    u32 isRelocated : 1;
-    u32 size : 24;
-    u8 *sampleAddr;
-    void *loop;
-    void *book;
-} ReverbSample; // size = 0x10
-
-// Reverb settings record passed to func_800137AC, laid out like Majora's Mask
-// ReverbSettings (include/audio/reverb.h).
-typedef struct {
-    /* 0x00 */ u8 downsampleRate;
-    /* 0x02 */ u16 delayNumSamples;
-    /* 0x04 */ u16 decayRatio;
-    /* 0x06 */ u16 subDelay;
-    /* 0x08 */ u16 subVolume;
-    /* 0x0A */ u16 volume;
-    /* 0x0C */ u16 leakRtl;
-    /* 0x0E */ u16 leakLtr;
-    /* 0x10 */ s8 mixReverbIndex;
-    /* 0x12 */ u16 mixReverbStrength;
-    /* 0x14 */ s16 lowPassFilterCutoffLeft;
-    /* 0x16 */ s16 lowPassFilterCutoffRight;
-} ReverbSettings; // size = 0x18
-
-// Reverb state, laid out like Majora's Mask SynthesisReverb
-// (include/audio/reverb.h); D_8011BE90 + 0x18 holds an array of these.
-// src/CE80.c declares the synthesis-side view of the same records.
-//@src/CE80.c
-typedef struct {
-    /* 0x000 */ u8 resampleFlags;
-    /* 0x001 */ u8 useReverb;
-    /* 0x002 */ u8 framesToIgnore;
-    /* 0x003 */ u8 curFrame;
-    /* 0x004 */ u8 downsampleRate;
-    /* 0x005 */ s8 mixReverbIndex;
-    /* 0x006 */ u16 delayNumSamples;
-    /* 0x008 */ s16 mixReverbStrength;
-    /* 0x00A */ s16 volume;
-    /* 0x00C */ u16 decayRatio;
-    /* 0x00E */ u16 downsamplePitch;
-    /* 0x010 */ s16 leakRtl;
-    /* 0x012 */ s16 leakLtr;
-    /* 0x014 */ u16 subDelay;
-    /* 0x016 */ s16 subVolume;
-    /* 0x018 */ u8 resampleEffectOn;
-    /* 0x019 */ s8 resampleEffectExtraSamples;
-    /* 0x01A */ u16 resampleEffectLoadUnk;
-    /* 0x01C */ u16 resampleEffectSaveUnk;
-    /* 0x01E */ u8 delayNumSamplesAfterDownsampling;
-    /* 0x020 */ s32 nextReverbBufPos;
-    /* 0x024 */ s32 delayNumSamplesUnk;
-    /* 0x028 */ s16 *leftReverbBuf;
-    /* 0x02C */ s16 *rightReverbBuf;
-    /* 0x030 */ s16 *leftLoadResampleBuf;
-    /* 0x034 */ s16 *rightLoadResampleBuf;
-    /* 0x038 */ s16 *leftSaveResampleBuf;
-    /* 0x03C */ s16 *rightSaveResampleBuf;
-    /* 0x040 */ u8 bufEntry[0x270 - 0x40];
-    /* 0x270 */ s16 *filterLeft;
-    /* 0x274 */ s16 *filterRight;
-    /* 0x278 */ s16 *filterLeftInit;
-    /* 0x27C */ s16 *filterRightInit;
-    /* 0x280 */ s16 *filterLeftState;
-    /* 0x284 */ s16 *filterRightState;
-    /* 0x288 */ ReverbSample *tunedSampleSample;
-    /* 0x28C */ f32 tunedSampleTuning;
-    /* 0x290 */ ReverbSample sample;
-    /* 0x2A0 */ struct {
-        u32 start;
-        u32 loopEnd;
-        u32 count;
-        u32 sampleEnd;
-    } loop;
-    /* 0x2B0 */ u8 unk_2B0[0x2D0 - 0x2B0];
-} SynthesisReverb; // size = 0x2D0
 
 void func_800137AC(s32 reverb_index, ReverbSettings *settings, s32 is_first_init);
 // Close to Majora's Mask AudioHeap_SetReverbData (src/audio/lib/heap.c); GS
