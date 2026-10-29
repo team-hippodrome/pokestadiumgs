@@ -2144,17 +2144,7 @@ void BattleAnim_Table_84185F10_006(void) {
 
 #ifdef VERSION_US
 extern u8 func_80062DD4(u8);
-extern void func_841284A4(void);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951BF;
-extern u8 D_841951C4;
-extern s32 D_841951C8;
-extern u8 D_841951D2;
-extern u8 D_841951D5;
-extern u8 D_841951E4;
-extern u8 * D_84195200[];
-void func_8412A804(void) {
+void BattleCommand_031(void) {
     D_841951C8 = 0;
     if (!(D_841951D5 & 0x7F) || D_84195200[D_841951BC][29] < D_84195200[D_841951BD][29]) {
         D_841951D1 = 255;

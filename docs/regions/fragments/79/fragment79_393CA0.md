@@ -1078,3 +1078,14 @@ The earlier `84133714` and `84136440` accepts and the affected `84131760`
 caller remain byte-identical. Production compiler/flags and metadata are
 unchanged. Private verifier/tests remain ignored scratch artifacts; no
 production tooling or coverage change is part of this source commit.
+
+
+### Accepted command31 integration name
+
+The original word at ROM3F57BC/VRAM84185F2C places8412A804 in
+D_84185EB0 slot31, consumed by BattleCommand_RunSequence. The accepted C
+therefore uses `BattleCommand_031`; its address alias remains available.
+Normal/+20-line post-acceptance controls preserve all module bytes, function
+extents and semantic relocation tuples while removing only redundant
+declarations in this new block. Source integration is on the merged text/HP
+base; its two earlier functions remain unchanged.

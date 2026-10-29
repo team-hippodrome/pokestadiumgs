@@ -1340,3 +1340,5 @@ func_8290BADC = Scene67_UpdateModelMotionNegativeX;
 func_84133714 = Battle_QueueSwitchInHpMessage;
 
 func_84136440 = BattleText_CollectEntriesForSide;
+
+func_8412A804 = BattleCommand_031;
