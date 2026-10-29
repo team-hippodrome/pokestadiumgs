@@ -1565,25 +1565,7 @@ void func_841284A4(void) {
 #endif
 
 #ifdef VERSION_US
-extern void BattleRecord_AdvanceWriteSlot(void);
-extern void func_841246AC(u8 arg0, u8 arg1);
-extern void func_841254E0(void);
-extern u32 func_84126804(u8 arg0, u16 arg1);
-extern void func_84134CBC(u8 arg0, u8 arg1);
-extern void func_84134DD8(u8 arg0);
-extern void func_84135B00(u16 arg0);
-extern void func_84136678(u8 arg0, s16 arg1);
-extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951BF;
-extern u8 D_841951C3;
-extern s32 D_841951C8;
-extern u8 D_841951D2;
-extern u8 D_841951D5;
-extern u8 * D_84195200[];
-extern u8 * D_84195208[];
-void func_84128664(void) {
+void BattleCommand_008(void) {
     if (D_841951D2 != 0) {
         func_84136678(D_841951BC, -1);
         if ((D_841951D5 & 0x7F) == 0) {
@@ -4214,23 +4196,8 @@ void BattleAnim_Table_84186004_064(void) {
 
 #ifdef VERSION_US
 extern void func_8413523C(u8, u8);
-extern void BattleRecord_AdvanceWriteSlot(void);
-extern s32 func_8004C54C(u8, s32);
-extern void func_84125424(u8 arg0);
-extern void func_84134CBC(u8 arg0, u8 arg1);
-extern void func_84134DD8(u8 arg0);
-extern void func_84135034(u8 arg0, u8 arg1);
-extern void func_84135B00(u16 arg0);
-extern void func_84136678(u8 arg0, s16 arg1);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951BF;
-extern s32 D_841951C8;
-extern u8 D_841951D0;
 extern s32 D_841951E0;
-extern void * D_841951F8[];
-extern u8 * D_84195208[];
-void func_841308A8(void) {
+void BattleCommand_150(void) {
     u8 slot;
     D_841951C8 = 0;
     if ((D_84195208[D_841951BC][15] & 0x4) == 0) {
@@ -7262,15 +7229,7 @@ void func_8413BBEC(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84148494(u8, u8, u8);
-extern void func_84147228(u8, u8, u8, u8, s32);
-extern void func_800226C0(s32);
-extern void func_8413584C(u8 arg0);
-extern void func_84139D94(u8 arg0);
-extern void * D_841951F0;
-extern u8 D_84195248[];
-extern s32 D_8419527C;
-void func_8413BC64(u8 arg0) {
+void Battle_HandleConfirmChoiceInput(u8 arg0) {
     u8 *controller;
     u8 current;
     controller = ((u8 **)(((u8 (*)[24])D_84195248)[arg0]))[((u8 (*)[24])D_84195248)[arg0][9]];
@@ -7322,7 +7281,7 @@ extern u8 D_84195255[];
 extern u8 D_84195210[];
 extern void func_84139EB0(s32);
 extern void func_8413A53C(u8);
-extern void func_8413BC64(u8);
+extern void Battle_HandleConfirmChoiceInput(u8);
 extern void func_8413BE1C(u8);
 extern u8 func_84148510(u8);
 extern void func_8413BBEC(s32 arg0);
@@ -7343,7 +7302,7 @@ void func_8413BE84(s32 arg0) {
         func_8413BBEC((u8)arg0);
         break;
     case 7:
-        func_8413BC64((u8)arg0);
+        Battle_HandleConfirmChoiceInput((u8)arg0);
         break;
     case 8:
         func_8413BE1C((u8)arg0);
@@ -7811,10 +7770,7 @@ void Battle_LoadPlayerDeck(u8 arg0) {
 
 #ifdef VERSION_US
 extern u8 D_800CE060[];
-extern u8 D_84195248[];
-extern void *D_841951F8[];
-extern void func_84147228(u8, u8, u8, u8, s32);
-void func_8413DB28(void) {
+void Battle_InitializeSideDisplayStates(void) {
     s32 i;
     u8 side;
     u8 *state;
@@ -7876,7 +7832,7 @@ extern void Battle_LoadPlayerDeck(u8);
 extern void func_8413D7AC(u8);
 extern void func_8413D6D4(u8 *, u8 *);
 extern void func_84138530(u8, u8 *);
-extern void func_8413DB28(void);
+extern void Battle_InitializeSideDisplayStates(void);
 extern void func_8413DD94(void);
 extern void func_84138658(void);
 extern void func_8002A830(void *);
@@ -7958,7 +7914,7 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
         func_8413D6D4(D_84195208[1], D_84195200[1]);
         func_84138530(0, D_84195200[0]);
         func_84138530(1, D_84195200[1]);
-        func_8413DB28();
+        Battle_InitializeSideDisplayStates();
         func_8413DD94();
         func_84138658();
         func_8002A830(D_841951F0);

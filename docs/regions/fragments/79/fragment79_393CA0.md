@@ -1474,3 +1474,30 @@ match every allocated section, including `.reginfo`, against their retained
 objects (`scratch/wave4-stock-passes/allocated-controls-seal.json`). The
 4-byte source-local reduction explains the frame112-to104 transition while
 the remaining home displacement persists; it does not prove retail C locals.
+
+
+### Integration of native waves3/4 on the current public base
+
+Four ASM owners replace2016 bytes:632-byte BattleCommand_008 (28664),
+460-byte BattleCommand_150 (308A8),304-byte Battle_HandleConfirmChoiceInput
+(3BC64), and620-byte Battle_InitializeSideDisplayStates (3DB28). The original
+D_84185EB0 command table at ROM3F5740 identifies slots8/150 at ROM3F5760 /
+3F5998, VRAM84185ED0 /84186108. Numeric names avoid guessing move semantics.
+The input handler reads the real controller before querying the selection,
+handles A confirmation or left/right toggling, and preserves its byte carrier.
+The initializer uses the real40-byte controller rows and two24-byte side
+states; its fourteen distinct property operations are original separate calls,
+inside the genuine two-side loop.
+
+The real external setter47228 in fragment79_3ADCA0.c:2423 is
+void(u8,u8,u8,u8,s32). Existing declarations are repaired through the accepted
+transaction; old callers retain identical code. Full module normal/+20 controls
+preserve sections, bytes, all function extents and semantic relocations across
+naming and44 redundant new-block declaration removals. Old names remain exact
+linker aliases. Canonical wave3/4 receipts, ownership and requeue evidence above
+remain applicable; new final integration has its own native receipt.
+
+This public batch includes only these four C owners, genuine interface/naming
+metadata and region evidence. It excludes private scripts, coverage changes and
+the separate unresolved scene-renderer type checkpoint. No forced register,
+no-op helper, padding, artificial work or instruction/relocation rewrite.

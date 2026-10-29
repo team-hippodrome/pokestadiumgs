@@ -1372,3 +1372,11 @@ func_8290D42C = Scene67_UpdateDirectionalMotion;
 func_8412E510 = BattleCommand_079;
 
 func_841330BC = Battle_ProcessLowHpHeldItems;
+
+func_84128664 = BattleCommand_008;
+
+func_841308A8 = BattleCommand_150;
+
+func_8413BC64 = Battle_HandleConfirmChoiceInput;
+
+func_8413DB28 = Battle_InitializeSideDisplayStates;
