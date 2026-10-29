@@ -446,7 +446,37 @@ s32 func_81404334(void *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_8140438C.s")
+extern s32 func_814040D8(void *arg0);
+extern void func_81403E7C(void *arg0, s16 *arg1);
+extern s32 func_81404030(u8 *arg0);
+extern s32 func_81404040(void *arg0);
+extern s32 func_81404334(void *arg0);
+extern void func_81600A34(void *arg0, void *arg1, void *arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+void func_8140438C(void *arg0, void *arg1) {
+    void *result;
+    s16 rect[4];
+
+    result = NULL;
+    switch (*(u8 *)((u8 *)arg0 + 0xC)) {
+    case 0:
+    case 4:
+        result = (void *)func_81404030(arg0);
+        break;
+    case 1:
+        result = (void *)func_81404040(arg0);
+        break;
+    case 2:
+        result = (void *)func_814040D8(arg0);
+        break;
+    case 3:
+        result = (void *)func_81404334(arg0);
+        break;
+    }
+    if (*(u8 *)((u8 *)arg0 + 0xC) != 0 && *(u8 *)((u8 *)arg0 + 0xC) != 4) {
+        func_81403E7C(arg0, rect);
+        func_81600A34(arg1, arg0, result, rect[0], rect[1], rect[2], rect[3]);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404470.s")
 
