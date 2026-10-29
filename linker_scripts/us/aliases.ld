@@ -1330,3 +1330,9 @@ func_8412DE90 = BattleCommand_NoOp074;
 func_8412E82C = BattleCommand_083;
 
 func_8412E944 = BattleCommand_NoOp084;
+
+func_8290A2F4 = Scene67_DefaultCallback;
+
+func_8290B934 = Scene67_UpdateModelMotionPositiveX;
+
+func_8290BADC = Scene67_UpdateModelMotionNegativeX;
