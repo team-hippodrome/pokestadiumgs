@@ -1139,7 +1139,6 @@ s32 func_8AE03214(s16 arg0) {
 
 #ifdef VERSION_US
 extern char D_8AE09B60[];
-extern char D_8AE083D0[];
 extern void _bzero(void *, s32);
 s32 func_8AE032C8(arg0, arg1)
 volatile int arg0;
@@ -1148,13 +1147,12 @@ s32 arg1;
     char *result;
     result = ((arg1 % 3) << 8) + D_8AE09B60;
     _bzero(result, 0x100);
-    sprintf(result, D_8AE083D0, arg0);
+    sprintf(result, "%d", arg0);
     return (s32) result;
 }
 #endif
 
 #ifdef VERSION_US
-extern char D_8AE083F4[], D_8AE083FC[], D_8AE08404[];
 extern s16 D_8AE09E68;
 extern void _bzero(void *, s32);
 extern s32 func_80049148(s32, s32, const char *, ...);
@@ -1224,9 +1222,6 @@ extern char *D_8AE09AF8;
 extern char *D_8AE09ABC;
 extern char *D_8AE09AC4;
 extern char *D_8AE09ACC;
-extern char D_8AE083D4[];
-extern char D_8AE083DC[];
-extern char D_8AE083E4[];
 extern void func_800495BC(s32, s32, const char *, ...);
 extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
@@ -1262,21 +1257,21 @@ void func_8AE035BC(s32 arg0, s32 arg1, u8 *arg2) {
             if ((s8)sp20[-8] == 0) {
                 sprintf((sp20 - 8), D_8AE09ABC);
             } else {
-                sprintf((sp20 - 8), D_8AE083D4, (sp20 - 8), D_8AE09ABC);
+                sprintf((sp20 - 8), "%s%s", (sp20 - 8), D_8AE09ABC);
             }
         }
         if (arg2[3] & 2) {
             if ((s8)sp20[-8] == 0) {
                 sprintf((sp20 - 8), D_8AE09AC4);
             } else {
-                sprintf((sp20 - 8), D_8AE083DC, (sp20 - 8), D_8AE09AC4);
+                sprintf((sp20 - 8), "%s%s", (sp20 - 8), D_8AE09AC4);
             }
         }
         if (arg2[3] & 4) {
             if ((s8)sp20[-8] == 0) {
                 sprintf((sp20 - 8), D_8AE09ACC);
             } else {
-                sprintf((sp20 - 8), D_8AE083E4, (sp20 - 8), D_8AE09ACC);
+                sprintf((sp20 - 8), "%s%s", (sp20 - 8), D_8AE09ACC);
             }
         }
     }
@@ -1314,7 +1309,6 @@ extern s32 func_8AE032C8();
 extern void func_8004C54C(s32, s32);
 extern void func_8004C8A0(void *, s32, s32, s32);
 extern void func_800495BC(s32, s32, const char *, ...);
-extern u8 D_8AE083EC[];
 extern s32 D_8AE09E64;
 extern s32 D_8AE09AE4;
 void func_8AE038DC(s32 arg0, s32 arg1, void *arg2) {
@@ -1323,13 +1317,12 @@ void func_8AE038DC(s32 arg0, s32 arg1, void *arg2) {
     func_8004C54C(0x33, func_8AE032C8(*(u8 *)((u8 *)arg2 + 2), 0));
     func_8004C8A0(sp28, 0x100, 0x2B, 9);
     if (D_8AE09E64 >= 4) {
-        func_800495BC(arg0, arg1, D_8AE083EC, D_8AE09AE4, sp28);
+        func_800495BC(arg0, arg1, "%s %s", D_8AE09AE4, sp28);
     }
 }
 #endif
 
 #ifdef VERSION_US
-extern char D_8AE083F4[], D_8AE083FC[], D_8AE08404[];
 extern s16 D_8AE09E68;
 extern void _bzero(void *, s32);
 extern s32 func_80049148(s32, s32, const char *, ...);
@@ -1356,15 +1349,15 @@ void Fragment46_DrawCategoryDetails(s32 arg0, s32 arg1, u8 *arg2) {
     if (arg2[0] != 7) {
         if (arg2[0] & 1) {
             if ((s8)label[0] == 0) sprintf(label, D_8AE09ABC);
-            else sprintf(label, D_8AE083F4, label, D_8AE09ABC);
+            else sprintf(label, "%s%s", label, D_8AE09ABC);
         }
         if (arg2[0] & 2) {
             if ((s8)label[0] == 0) sprintf(label, D_8AE09AC4);
-            else sprintf(label, D_8AE083FC, label, D_8AE09AC4);
+            else sprintf(label, "%s%s", label, D_8AE09AC4);
         }
         if (arg2[0] & 4) {
             if ((s8)label[0] == 0) sprintf(label, D_8AE09ACC);
-            else sprintf(label, D_8AE08404, label, D_8AE09ACC);
+            else sprintf(label, "%s%s", label, D_8AE09ACC);
         }
     }
     if (D_8AE09E64 >= 4) func_800495BC(arg0, arg1, label);
@@ -1892,7 +1885,6 @@ Fragment46Entry *func_8AE05BF0(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8AE08450;
 extern s32 D_8AE084A0;
 extern void func_80064D28(void);
 extern void Fragment46_PlaySound(s32 sound);
@@ -1976,7 +1968,7 @@ void Fragment46_HandleSelectionInput(void) {
         case 1: func_8AE059A8((u8 *)D_8AE084BC + 0xB4, gFragment46CameraTarget);
                 sight[0] = gFragment46CameraTarget[0];
                 sight[1] = gFragment46CameraTarget[1] + 1000.0f;
-                sight[2] = gFragment46CameraTarget[2] + D_8AE08450;
+                sight[2] = gFragment46CameraTarget[2] + 1333.0f;
                 func_8AE059A8((u8 *)D_8AE084BC + 0xA8, sight);
                 var_v0 = D_80087200->buttonsPressed;
                 if (var_v0 & 0x4000) {

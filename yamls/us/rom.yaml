@@ -1199,6 +1199,8 @@
     - [0x23C2E0, textbin, fragments/46/fragment46_header]
     - [0x23C300, c,       fragments/46/fragment46_code]
     - [0x242AA0, data,    fragments/46/fragment46_data]
+    - [0x2446B0, .rodata, fragments/46/fragment46_code] # strings, jump tables, float literals
+    - [0x244770, rodata, fragments/46/fragment46_tail] # tables after the code object's rodata
 
   - name: fragment47
     type: code
@@ -1381,6 +1383,8 @@
     - [0x2C8410, textbin, fragments/58/fragment58_header]
     - [0x2C8430, c,       fragments/58/fragment58_code]
     - [0x2CBB90, data,    fragments/58/fragment58_data]
+    - [0x2CC360, .rodata, fragments/58/fragment58_code] # strings, jump tables, float literals
+    - [0x2CC540, rodata, fragments/58/fragment58_tail] # tables after the code object's rodata
 
   - name: fragment59
     type: code
@@ -1614,6 +1618,8 @@
     - [0x35FC90, textbin, fragments/72/fragment72_header]
     - [0x35FCB0, c,       fragments/72/fragment72_code]
     - [0x361CC0, data,    fragments/72/fragment72_data]
+    - [0x361CE0, .rodata, fragments/72/fragment72_code] # strings and jump tables
+    - [0x361D50, rodata, fragments/72/fragment72_tail] # tables after the code object's rodata
 
   - name: fragment73
     type: code
@@ -1644,6 +1650,8 @@
     - [0x364500, textbin, fragments/75/fragment75_header]
     - [0x364520, c,       fragments/75/fragment75_code]
     - [0x365E50, data,    fragments/75/fragment75_data]
+    - [0x365FB0, .rodata, fragments/75/fragment75_code] # strings, float literals, jump table
+    - [0x366230, rodata, fragments/75/fragment75_tail] # tables after the code object's rodata
   
   - name: fragment76
     type: code
@@ -1678,6 +1686,8 @@
     - [0x36DD90, textbin, fragments/78/fragment78_header]
     - [0x36DDB0, c,       fragments/78/fragment78_code]
     - [0x36F2C0, data,    fragments/78/fragment78_data]
+    - [0x36F340, .rodata, fragments/78/fragment78_code] # strings and jump table
+    - [0x36F3B0, rodata, fragments/78/fragment78_tail] # tables after the code object's rodata
   
   - name: fragment79
     type: code

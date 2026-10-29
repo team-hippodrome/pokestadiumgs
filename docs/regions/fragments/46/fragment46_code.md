@@ -574,3 +574,37 @@ or inspect the retained UCODE with a functioning stock listing runtime.
 Do not infer C unreachability or replay the now-inert aggregate, address,
 extent, and declaration-lifetime families. All eleven earlier accepted
 bodies remain protected, with their existing sealed receipts retained.
+
+## 2026-10-29 — `.rodata` owned (layout prerequisite done); dispatchers requeue
+
+`fragment46_data` held this object's `.rodata`. It is now split: `data` up
+to 0x2446B0 (`"%d"`), `fragment46_code`'s `.rodata` up to 0x244770 (end of
+`jtbl_8AE08470`), then a `fragment46_tail` rodata blob. The C now uses the
+literals `"%d"`, `"%s%s"`, `"%s %s"` and `1333.0f` in place of
+`D_8AE083D0..D_8AE08404` and `D_8AE08450`. The `layout-prerequisite` on
+`func_8AE00FC4`, `func_8AE01F74` and `func_8AE0626C` is cleared.
+
+`func_8AE00FC4` (**requeue/register-tie**, `scratch/c/fc4_best.c`):
+
+- The prepared five-byte-copy switch now links. Retype the stale
+  `extern s32 func_8AE00FC4(u8 *, s32)` above
+  `Fragment46_CollectRecordData` to `(u8 *, u8 *)`.
+- The only difference is that `found` and the constant 1 swap between
+  `$s1` and `$s2`.
+- A 300 s permuter run reached 0 only with fakes (`do {} while (0)` after
+  case 2's `found = 1`, a dead `if (1) {}` after default's `break`). Both
+  were rejected.
+- Already tried: declaration order, `return found`, an initializer,
+  `found = 1` before the `sh`, `continue` per case, `while (TRUE)`, default
+  first or without `break`.
+- Next: look for a real extra block in case 2 or default.
+
+`func_8AE01F74` (**requeue**, 0.75, `scratch/c/f74_best.c`):
+
+- The body is written: three `_bcopy`/`func_8AE01EA4` passes, then
+  `switch` cases {0,1,6}, {2..5} and default.
+- Retail switches on an `lhu` of `D_8AE09E68`, but every accepted user
+  declares it `s16`, and `(u16)` gives `lh`+`andi`.
+- Retail also stores `D_8AE09E6A = 0` after `D_8AE09E70` is loaded.
+- Next: find the `u16`-typed access, perhaps a state struct field
+  overlaying 0x8AE09E68, then fix the store order.
