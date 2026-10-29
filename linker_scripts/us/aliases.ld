@@ -1320,3 +1320,5 @@ D_81407954 = D_81407950 + 4;
 func_80058288 = GbSave_ReadGoldSilverMainSave;
 
 func_800589A4 = GbSave_WriteGoldSilverMainSave;
+
+func_8006072C = GbSave_RepairCrystalEggTrainerNames;

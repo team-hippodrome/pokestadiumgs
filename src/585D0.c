@@ -433,7 +433,7 @@ s32 GbSave_ReadCrystalMainSave(s32 port) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_8006072C(s32 arg0);
+extern s32 GbSave_RepairCrystalEggTrainerNames(s32 arg0);
 s32 func_800587BC(s32 arg0)
 {
     s32 result = 0;
@@ -451,7 +451,7 @@ s32 func_800587BC(s32 arg0)
     case 7:
         result = GbSave_ReadCrystalMainSave(arg0);
         if (result != 0) {
-            func_8006072C(arg0);
+            GbSave_RepairCrystalEggTrainerNames(arg0);
         }
         break;
     }
@@ -793,6 +793,7 @@ void func_80059468(s32 arg0) {
 
 #ifdef VERSION_US
 extern u8 D_80128570[];
+extern char *HAL_Memset(char *, s32, u32);
 void func_80059488(s32 arg0)
 {
     s32 i;
@@ -4429,7 +4430,66 @@ u8 func_800606F4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8006072C.s")
+extern void func_8006136C(u8 *, u8 *);
+extern void func_80062BD4(void *, s32, s32);
+extern void *func_8004B7A4(s32);
+extern void *func_8004C874(s32, s32);
+extern void func_80060E48(void *, void *);
+extern s32 func_8005CF20(s32, s32, s32);
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern u8 func_8005D92C(s32 index);
+extern u8 * func_80060EC8(void *, void *);
+extern u8 D_80128570[];
+s32 GbSave_RepairCrystalEggTrainerNames(s32 port) {
+    u8 changed = 0;
+    u8 key_count;
+    u8 party_count;
+    s32 key_index;
+    s32 party_index;
+    s8 decoded_name[11];
+    u8 *save;
+    u8 *cursor;
+    u8 *trainer_name;
+    if (func_8005D92C(port) != 7) {
+        return 0;
+    }
+    if ((*(u32 *)(D_80128570 + port * 112) & 1) == 0) {
+        return 0;
+    }
+    save = *(u8 **)(D_80128570 + port * 112 + 96);
+    key_count = func_8005CF20(44, port, 0);
+    party_count = party_index = func_8005CF20(32, port, 0);
+    cursor = save + 9;
+    for (key_index = 0; key_index < key_count; key_index++) {
+        if (cursor[1090 + key_index] == 129) {
+            cursor = save + 2149;
+            if ((u8)party_index > 0) {
+                party_index = 0;
+                do {
+                    if (cursor[party_index + 1] == 0xFD) {
+                        trainer_name = ((GbSaveBoxName *)cursor)[party_index] + 296;
+                        func_80060E48(decoded_name, trainer_name);
+                        if (HAL_Strcmp(decoded_name, func_8004C874(65, 4)) == 0) {
+                            HAL_Memset(trainer_name, 0x50, 11);
+                            changed = 1;
+                            func_80060EC8(trainer_name, func_8004C874(65, 3));
+                        }
+                    }
+                    party_index++;
+                } while (party_index != party_count);
+            }
+            break;
+        }
+    }
+    cursor = save + 9;
+    if ((u32)changed != 0) {
+        cursor[1089]--;
+        for (; key_index < key_count; key_index++) {
+            *(cursor + key_index + 1090) = *(cursor + key_index + 1091);
+        }
+    }
+    return changed;
+}
 #endif
 
 #ifdef VERSION_US
