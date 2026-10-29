@@ -3022,8 +3022,32 @@ void BattleAnim_Table_84185F10_048(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412DDC0.s")
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412DE90.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84124604(u8 arg0, u8 arg1);
+extern void func_84126BA8(u8 arg0);
+extern void func_84134E30(s32 arg0);
+extern void func_84135B00(u16 arg0);
+extern void func_84136678(u8 arg0, s16 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void func_8412DDC0(void) {
+    u8 *ptr = D_84195208[D_841951BD];
+    if ((ptr[15] & 0x60) || (ptr[16] & 0x10) || !(D_84195200[D_841951BD][36] & 7) || (ptr[13] & 1)) {
+        func_84126BA8(D_841951BC);
+    } else {
+        ptr[13] |= 1;
+        func_84136678(D_841951BD, -1);
+        func_84135B00(30);
+        func_84134E30(5);
+        func_84124604(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+    }
+}
+void func_8412DE90(void) {
+}
 #endif
 
 #ifdef VERSION_US
@@ -3177,8 +3201,42 @@ void BattleAnim_Table_84185FDC_007(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412E82C.s")
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412E944.s")
+extern u8 D_841951BC;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void func_8412E82C(void) {
+    u8 *ptr;
+    s32 bit;
+    if (!(D_84195200[D_841951BC][36] & 7)) {
+        if (D_841951D2) {
+            ptr = D_84195208[D_841951BC];
+            ptr[13] &= 0xFFBF;
+            return;
+        }
+        ptr = D_84195208[D_841951BC];
+        ptr[18]++;
+        ptr = D_84195208[D_841951BC];
+        if (ptr[18] >= 5) {
+            ptr[13] &= 0xFFBF;
+        } else {
+            ptr[13] |= 0x40;
+        }
+        ptr = D_84195208[D_841951BC];
+        if (ptr[14] & 1) {
+            bit = 1;
+        } else {
+            bit = 0;
+        }
+        D_841951C8 <<= ptr[18] + bit + 31;
+        if (D_841951C8 >= 0x10000) {
+            D_841951C8 = 0xFFFF;
+        }
+    }
+}
+void func_8412E944(void) {
+}
 #endif
 
 #ifdef VERSION_US
