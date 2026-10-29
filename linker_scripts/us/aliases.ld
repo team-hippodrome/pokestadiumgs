@@ -1380,3 +1380,11 @@ func_841308A8 = BattleCommand_150;
 func_8413BC64 = Battle_HandleConfirmChoiceInput;
 
 func_8413DB28 = Battle_InitializeSideDisplayStates;
+
+func_84128D48 = BattleCommand_014;
+
+func_84129374 = BattleCommand_018;
+
+func_84129900 = BattleCommand_020;
+
+func_8412E680 = BattleCommand_080;

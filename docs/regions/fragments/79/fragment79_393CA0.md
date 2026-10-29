@@ -1587,3 +1587,15 @@ Retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Durable private handoff and
 aggregate receipt: `scratch/wave5-final-seal/handoff.md`, `receipt.json`.
 Only assigned source/region tracked; no naming, metadata, coverage, private
 helpers, push/PR or integration changes.
+
+
+### Native side-event integration on PR2054 master
+
+The retail command table D_84185EB0 at ROM3F5740 identifies 28D48 as slot14,
+29374 as18,29900 as20 and2E680 as80. Names BattleCommand_014/018/020/080
+therefore follow the original dispatch indices without speculative move names.
+The four owners cover1460B (376+488+384+212); original address aliases remain.
+Naming and removal of48 duplicate declarations in these accepted blocks pass
+normal/+20 complete-module section/byte/extent/semantic-relocation controls.
+The return-result and unsigned-halfword repairs above preserve their actual
+consumer contracts; source61/67 research, coverage and private helpers are absent.

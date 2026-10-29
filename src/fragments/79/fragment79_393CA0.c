@@ -1758,21 +1758,10 @@ void func_84128CB8(void) {
 #ifdef VERSION_US
 extern void func_84125778(u8);
 extern void func_84136BEC(u8, u16, u16);
-extern u8 func_80063660(u8);
-extern s32 func_84126390(u8 arg0, u8 arg1);
 extern void func_84135B40(u16 arg0);
 extern s32 func_84136124(u8 arg0, s16 arg1, u16 arg2, u8 arg3, u8 arg4);
-extern void func_84136218(u8 arg0, u8 arg1);
 extern void func_841366C4(u8 arg0, s16 arg1);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951C6;
-extern u8 D_841951D3;
-extern u8 D_841951D5;
-extern void * D_841951F8[];
-extern u8 * D_84195200[];
-extern u8 * D_84195208[];
-void func_84128D48(void) {
+void BattleCommand_014(void) {
     if ((D_84195208[D_841951BD][16] & 0x10) != 0) {
         return;
     }
@@ -1880,25 +1869,9 @@ void func_841292C4(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84125778(u8);
 extern s8 D_841951C1;
-extern u8 func_80063660(u8);
-extern s32 func_84126390(u8 arg0, u8 arg1);
 extern void func_84134D28(u8 arg0, u8 arg1);
-extern void func_84135B40(u16 arg0);
-extern s32 func_84136124(u8 arg0, s16 arg1, u16 arg2, u8 arg3, u8 arg4);
-extern void func_84136218(u8 arg0, u8 arg1);
-extern void func_841366C4(u8 arg0, s16 arg1);
-extern void func_84136BEC(u8 arg0, u16 arg1, u16 arg2);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951C6;
-extern u8 D_841951D3;
-extern u8 D_841951D5;
-extern void * D_841951F8[];
-extern u8 * D_84195200[];
-extern u8 * D_84195208[];
-void func_84129374(void) {
+void BattleCommand_018(void) {
     if ((D_84195208[D_841951BD][16] & 0x10) == 0) {
         if (D_84195200[D_841951BD][36] != 0) {
             if ((D_84195200[D_841951BD][36] & 0x20) != 0) {
@@ -1936,20 +1909,7 @@ void func_84129374(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 func_80063660(u8);
-extern void func_84135B40(u16 arg0);
-extern s32 func_84136124(u8 arg0, s16 arg1, u16 arg2, u8 arg3, u8 arg4);
-extern void func_84136218(u8 arg0, u8 arg1);
-extern void func_841366C4(u8 arg0, s16 arg1);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern u8 D_841951C6;
-extern u8 D_841951D3;
-extern u8 D_841951D5;
-extern void * D_841951F8[];
-extern u8 * D_84195200[];
-extern u8 * D_84195208[];
-void func_84129900(void) {
+void BattleCommand_020(void) {
     if ((D_84195208[D_841951BD][16] & 0x10) == 0 &&
         D_84195200[D_841951BD][36] == 0 &&
         (D_841951D5 & 0x7F) != 0 &&
@@ -3372,15 +3332,7 @@ void BattleCommand_079(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84136124(u8, s16, u16, u8, u8);
-extern void func_84126BFC(u8 arg0);
-extern void func_84135B40(u16 arg0);
-extern void func_84136218(u8 arg0, u8 arg1);
-extern void func_841366C4(u8 arg0, s16 arg1);
-extern u8 D_841951BC;
-extern u8 D_841951BD;
-extern void * D_841951F0;
-void func_8412E680(void) {
+void BattleCommand_080(void) {
     if (((u8 *)D_841951F0)[2500] == 3) {
         func_84126BFC(D_841951BC);
     } else {
@@ -4484,13 +4436,13 @@ void BattleAnim_Table_84186004_072(void) {
     } while (val == 0);
     switch (val) {
     case 1:
-        func_84129900();
+        BattleCommand_020();
         break;
     case 2:
         func_8412955C();
         break;
     case 3:
-        func_84129374();
+        BattleCommand_018();
         break;
     }
 }
