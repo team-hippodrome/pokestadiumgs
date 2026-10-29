@@ -396,6 +396,17 @@ void func_8AC00FEC(void) {
 }
 #endif
 
+typedef struct Fragment43PoolMark {
+    s32 tag;
+    u8 active;
+} Fragment43PoolMark;
+
+// File-scope bss, pinned at 0x8AC09798 by linker_scripts/us/datamig_bss.ld:
+// the main-pool push mark and the pop marks.
+static Fragment43PoolMark sPoolPushMark;
+static Fragment43PoolMark sPoolPopMarkBefore;
+static Fragment43PoolMark sPoolPopMarkAfter;
+
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC00FFC.s")
 #endif
