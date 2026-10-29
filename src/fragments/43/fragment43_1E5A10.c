@@ -396,6 +396,15 @@ void func_8AC00FEC(void) {
 }
 #endif
 
+// File-scope bss, pinned at 0x8AC09798 by linker_scripts/us/datamig_bss.ld:
+// the main-pool push mark and the two pop marks (tag word, active byte).
+static s32 sPoolPushTag;
+static u8 sPoolPushActive;
+static s32 sPoolPopTagBefore;
+static u8 sPoolPopActiveBefore;
+static s32 sPoolPopTagAfter;
+static u8 sPoolPopActiveAfter;
+
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC00FFC.s")
 #endif

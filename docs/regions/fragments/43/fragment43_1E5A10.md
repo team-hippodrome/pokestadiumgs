@@ -617,3 +617,25 @@ normal/+20-blank module controls. No shared layout/header/symbol inputs,
 coverage files, tool clones, other source owners or published branches were
 changed. Parent owns publication, naming and aliases. There is one new C
 checkpoint to integrate, not a claim that the remaining owners match.
+
+## 2026-10-29 — main-pool marks owned as file bss; `func_8AC00FFC`/`func_8AC01064` requeue
+
+The six words at 0x8AC09798–0x8AC097AF are used only by the push/pop
+wrappers `func_8AC00FFC` and `func_8AC01064`. They are now scalar file
+statics (`sPoolPushTag/Active`, `sPoolPopTagBefore/ActiveBefore`,
+`sPoolPopTagAfter/ActiveAfter`), pinned by `linker_scripts/us/datamig_bss.ld`
+at 0x8AC09798. The ROM is unchanged.
+
+- Use scalars, not a `{ s32; u8; }` struct. A struct makes IDO materialise
+  a base register instead of `%lo`-per-field stores.
+- `func_8AC00FFC` (0.94): all exact except that retail shares one `lui $at`
+  for `sb zero,active` and `sw tag`. Ours re-forms `lui $at` before the
+  `sw`.
+- `func_8AC01064`: ours shares `$at` across the `jal` exactly like retail,
+  but schedules `lui at`/`sw` above `addiu sp`. Retail keeps the normal
+  prologue first.
+- Next: try function-local statics (that needs the file-scope ones removed
+  in the same transaction, or the runner flags `.bss` drift).
+- Note: a candidate that adds a `.bss` section the baseline object lacks is
+  rejected as `section_layout_drift` before the gate. Land the statics first
+  as a declaration-only change verified by `make COMPARE=1`.
