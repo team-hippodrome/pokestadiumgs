@@ -12,7 +12,38 @@ void func_8630500C(void *a) {
     );
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305038.s")
+extern const f32 D_86307564;
+extern const f32 D_86307568;
+extern const f32 D_8630756C;
+extern u8 *D_863075D8;
+extern void func_87C03B60(void *, void *, void *);
+extern void func_800277F0(u16, void *);
+void func_86305038(u8 *arg0, u8 *arg1) {
+    f32 x;
+    s8 position[2];
+    u16 sound;
+    f32 y;
+    f32 length;
+
+    x = *(f32 *)(arg1 + 16);
+    y = *(f32 *)(arg1 + 20);
+    length = sqrtf(x * x + y * y);
+    sound = 28419;
+    if (D_86307564 < length) {
+        sound = 28426;
+    } else if (*(u32 *)(*(u8 **)(arg0 + 4) + 12) & 0x40000000) {
+        sound = 28423;
+    } else if (D_86307568 < length) {
+        sound = 28425;
+    } else if (D_8630756C < length) {
+        sound = 28424;
+    }
+    func_87C03B60(D_863075D8 + 36700, *(u8 **)(arg0 + 12) + 72, position);
+    func_800277F0(sound, position);
+    if (sound == 28426 || sound == 28423) {
+        func_800277F0(28428, position);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305144.s")
 
