@@ -608,3 +608,7 @@ literals `"%d"`, `"%s%s"`, `"%s %s"` and `1333.0f` in place of
 - Retail also stores `D_8AE09E6A = 0` after `D_8AE09E70` is loaded.
 - Next: find the `u16`-typed access, perhaps a state struct field
   overlaying 0x8AE09E68, then fix the store order.
+
+Same day, later: `func_8AE01F74` **matched**. A plain `switch (D_8AE09E68)` on
+the `s16` global gives retail's `lhu`; only the `(u16)` cast produced
+`lh`+`andi`. The order is `D_8AE09E70 = D_8AE08504; D_8AE09E6A = 0;`.
