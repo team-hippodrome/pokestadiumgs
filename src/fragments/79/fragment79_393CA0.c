@@ -3023,6 +3023,7 @@ void BattleAnim_Table_84185F10_048(void) {
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412DDC0.s")
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412DE90.s")
 #endif
 
 #ifdef VERSION_US
@@ -3177,6 +3178,7 @@ void BattleAnim_Table_84185FDC_007(void) {
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412E82C.s")
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412E944.s")
 #endif
 
 #ifdef VERSION_US

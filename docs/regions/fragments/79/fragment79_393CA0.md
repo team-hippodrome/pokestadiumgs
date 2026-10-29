@@ -742,3 +742,22 @@ layout-prerequisite (0.92, shared `$at`). It refreshes a 10-byte LCG pool with `
 ## 2026-10-29: `func_84124410` requeue
 
 requeue (0.42). Stat-stage scaling: `value = (u16)(stat * ratio[0]) / ratio[1]`, with `ratio = D_8418542C[(u8)(stage - 1)]`, floored at 1; then the same with `D_8418542C[(u8)(13 - opposing)]`, capped at 255, stored back to *stat. Its caller's extern needs `(u8 *, u8, u8)`. Retail keeps the table pointers in $a3/$a1, the running value in $v0 and a copy in $v1. Our temporaries land in v0/t registers and the multiply operands are swapped.
+
+
+## 2026-10-29 — Independently callable return entries
+
+The command table based at D_84185EB0 contains address8412DE90 at index74
+(ROM3F5868/VRAM84185FD8) and8412E944 at index84
+(ROM3F5890/VRAM84186000). BattleCommand_RunSequence invokes table entries
+as void functions with no arguments. Each target is a retail JR RA/NOP pair.
+These are independently referenced callable entries, not solely an inference
+from consecutive return instructions.
+
+Explicit function symbols and adjacent assembly pragmas separate these entries
+from func_8412DDC0 and func_8412E82C. The extractor otherwise merges a following
+JR/NOP into an unbounded preceding function when its redundant-end heuristic
+is enabled. Explicitly naming proven entries preserves that heuristic for
+unproven boundaries. This evidence supplies no boundary claim for8005A5BC.
+Source callback bodies must still pass canonical owner comparison and the
+normal host/native retail ROM gate before admission.
+//@src/fragments/79/fragment79_393CA0.c
