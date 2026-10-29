@@ -115,3 +115,18 @@ needed care:
 
 `func_86B0B04C` (RNG setup, 308 lines) has been read but not written.
 `func_86B01A94`, `func_86B023FC` and `func_86B04970` are large.
+
+`func_86B0B500` (**requeue**, `scratch/c/b500_best.c`):
+
+- The `.s` also holds the empty callback `D_86B0B600(s32, u8 *)`, which
+  `func_87F025B8` uses, so the candidate must define both.
+- Max over the four `s32` at `D_86B17A78 + 0x17C`, then four
+  `if (best == D_86B17BF4..C00) D_86B17CEC..CF8 = 1`, then zero 0x274..0x280
+  if their product is nonzero.
+- Any index loop (`for` or do-while) is fully unrolled by `copt`.
+- A pointer do-while from `D_86B17A78` to `D_86B17A88` gives retail's loop
+  shape. But ours keeps the `D_86B17A78` base live in `$a1` (pointer in
+  `$v1`) and reuses it for the 0x274.. block. Retail walks the pointer in
+  `$a0` and re-forms `lui v0` for the later block.
+- Next: a spelling where the loop's base and the later block's base don't
+  CSE, such as a struct type for the 0x274 block.
