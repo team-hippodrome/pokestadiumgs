@@ -1267,7 +1267,6 @@ SECTIONS
         build/asm/us/data/fragments/11/fragment11_header.o(.rodata);
         build/src/fragments/11/fragment11_D7BC0.o(.rodata);
         build/src/fragments/11/fragment11_D9520.o(.rodata);
-        build/asm/us/data/E3C60.rodata.o(.rodata);
         build/src/fragments/11/fragment11_D9DE0.o(.rodata);
         build/src/fragments/11/fragment11_E1E10.o(.rodata);
         build/src/fragments/11/fragment11_E35C0.o(.rodata);

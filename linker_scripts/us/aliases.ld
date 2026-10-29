@@ -1314,3 +1314,4 @@ func_8005A60C = GbSave_CollectGsFeatureFlags;
 func_8005A98C = GbSave_CollectCrystalFeatureFlags;
 
 func_8005E8A0 = GbSave_SetSeenOwnedBits;
+D_8160C10C = D_8160C0F0 + 0x1C;
