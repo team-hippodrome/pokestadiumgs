@@ -707,9 +707,10 @@
     - [0x11DA40, .rodata, fragments/17/fragment17_10F9E0] # Jump tables.
     - [0x11DA80, rodata]
     - [0x11DA90, .rodata, fragments/17/fragment17_10FFC0] # jtbl_8220E0F0, widened to 16-byte boundary (first word of jtbl_8220E10C)
-    - [0x11DAD0, rodata] # D_8220E110 + "%02d" fmt + jtbl_8220E128 + jtbl_8220E14C + D_8220E170-17C, no local-label relocations owned by this file, stays hand-written
-    - [0x11DB40, .rodata, fragments/17/fragment17_113A60] # D_8220E180-184 (splat auto-attributes to func_82209BA4's own late_rodata) + jtbl_8220E188 (func_82209EA8, now C) + D_8220E1A8-1AC (splat auto-attributes to func_82209F50/func_8220A1C4), widened to 16-byte boundary on both ends
-    - [0x11DB70, rodata]
+    - [0x11DAD0, rodata] # jtbl_8220E10C's last four entries (func_82203E70, hand_asm; the first entry rides in its .late_rodata)
+    - [0x11DAE0, .rodata, fragments/17/fragment17_113A60] # "%02d", jump tables, float literals
+    - [0x11DB80, .rodata, fragments/17/fragment17_11A7F0] # float literal
+    - [0x11DB90, rodata]
 
   - name: fragment18
     type: code
