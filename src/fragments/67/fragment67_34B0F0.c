@@ -1,11 +1,6 @@
 #include "global.h"
 
 
-#ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E5F0.s")
-#endif
-
-#ifdef VERSION_US
 typedef struct unk_D_8291BC50 {
     /* 0x00 */ s16 unk_00;
     /* 0x02 */ s16 unk_02;
@@ -20,6 +15,15 @@ typedef struct unk_D_8291BC50 {
 } unk_D_8291BC50;
 
 extern unk_D_8291BC50 D_8291BC50;
+
+// File-scope bss, pinned at 0x8291BD70 by linker_scripts/us/datamig_bss.ld.
+static u8 D_8291BD70[0x100];
+
+#ifdef VERSION_US
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290E5F0.s")
+#endif
+
+#ifdef VERSION_US
 
 void func_8290E6D4(void) {
     D_8291BC50.unk_0E++;
