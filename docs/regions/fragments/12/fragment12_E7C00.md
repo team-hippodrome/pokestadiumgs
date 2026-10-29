@@ -60,3 +60,20 @@ committed with `DECOMP_PROVENANCE_SKIP=1`.
 
 Tooling gap: the runner needs a way to gate owners whose GLOBAL_ASM form
 is uncompilable under the target layout.
+
+Same day: `func_81404040`, `func_8140463C`, `func_8140438C` and
+`func_81404470` matched through the runner.
+
+- `func_8140463C`: the equal-index branch goes in `else`, after the switch.
+- `func_81404470`: write the divisor as an integer, `x / 16`. With
+  `/ 16.0f`, IDO turns the division into `* 0.0625f` (`mul.s`).
+
+`func_814040D8` (input handler, **requeue**, `scratch/c/0d8_best.c`):
+
+- Exact except one compiler spill slot. Retail spills the button mask
+  copied to `$v0` at `0x18(sp)`; ours uses `0x1C`.
+- Use a ternary for the 0xA1/0xA2 sound; an if/else is much worse.
+- Already tried: declaration order (`buttons` must be declared first,
+  since its home is 0x2E), an `sfx` local, a `pad`-in-condition form,
+  `s32 buttons` (frame shrinks).
+- The permuter ignores stack offsets and scores the base 0.
