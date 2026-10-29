@@ -54,7 +54,52 @@ s32 func_87F03730(s32 arg0, u8 *arg1) {
     //@src/340C0.c
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326160/func_87F03884.s")
+extern void *func_87F025B8(void *, void *);
+extern void func_80037E3C(void *, s32 (*)(s32, u8 *), void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+u8 *func_87F03884(u8 *arg0, s32 arg1, void *arg2, f32 arg3, f32 arg4,
+                     f32 arg5, s16 arg6, f32 arg7, s32 arg8) {
+    u8 *object;
+    u8 *record;
+
+    object = func_87F025B8(arg0, NULL);
+    if (object != NULL) {
+        func_80037E3C(object + 36, func_87F03730, object);
+        func_8003F1DC(object + 36);
+        switch (arg1) {
+        case 0:
+            func_8003F114(object + 36, 0, -1, *(void **)(arg0 + 28));
+            break;
+        case 1:
+            func_8003F114(object + 36, 0, -1, *(void **)(arg0 + 28));
+            break;
+        }
+        record = *(u8 **)(object + 32);
+        object[38] |= 0x10;
+        record[28] = arg1;
+        *(s32 *)(record + 20) = arg8;
+        *(u16 *)(record + 24) = D_80094904;
+        *(u16 *)(record + 26) = 0;
+        *(f32 *)(record + 4) = arg3;
+        *(f32 *)(record + 8) = arg4;
+        *(f32 *)(record + 12) = arg5;
+        *(void **)(record + 16) = arg2;
+        *(f32 *)(object + 72) = arg3;
+        *(f32 *)(object + 76) = *(f32 *)(record + 8);
+        *(f32 *)(object + 80) = *(f32 *)(record + 12);
+        if (*(u8 **)(record + 16) != NULL) {
+            *(f32 *)(object + 72) += *(f32 *)(*(u8 **)(record + 16) + 36);
+            *(f32 *)(object + 76) += *(f32 *)(*(u8 **)(record + 16) + 40);
+            *(f32 *)(object + 80) += *(f32 *)(*(u8 **)(record + 16) + 44);
+        }
+        *(f32 *)(object + 84) = arg7;
+        *(f32 *)(object + 88) = arg7;
+        *(f32 *)(object + 92) = arg7;
+        *(s16 *)(object + 70) = arg6;
+    }
+    return object;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326160/func_87F039F0.s")
 
