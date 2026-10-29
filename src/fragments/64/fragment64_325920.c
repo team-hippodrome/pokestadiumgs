@@ -40,7 +40,65 @@ void func_87F03204(void *arg0, void *arg1)
   }
 
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_325920/func_87F0328C.s")
+typedef struct unk_func_87F0328C {
+    f32 unk_00;
+    s32 unk_04;
+    void *unk_08;
+    u8 mode;
+    u8 unk_0D;
+    u16 unk_0E;
+    u32 environment;
+    u32 primitive;
+    f32 unk_18;
+    s16 unk_1C;
+    u8 unk_1E[2];
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    s32 unk_2C;
+    f32 unk_30;
+} unk_func_87F0328C;
+
+typedef struct S1_GraphNode S1_GraphNode;
+extern void *func_87F025B8(void *, void *);
+extern s32 func_87F02F00(s32, S1_GraphNode *);
+extern void func_80037E3C(S1_GraphNode *, s32 (*)(s32, S1_GraphNode *), void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+void *func_87F0328C(u8 *arg0, s32 arg1, f32 x, f32 y, f32 z, f32 scale, s32 arg6) {
+    u8 *object;
+    u8 *model;
+    unk_func_87F0328C *state;
+
+    object = func_87F025B8(arg0, NULL);
+    if (object != NULL) {
+        model = object + 36;
+        func_80037E3C((S1_GraphNode *)model, func_87F02F00, object);
+        func_8003F1DC(model);
+        func_8003F114(model, 0, -1, *(void **)(arg0 + 28));
+        object[38] |= 0x10;
+        state = *(unk_func_87F0328C **)(object + 32);
+        *(f32 *)(object + 72) = x;
+        *(f32 *)(object + 76) = y;
+        *(f32 *)(object + 80) = z;
+        *(f32 *)(object + 84) = scale;
+        *(f32 *)(object + 88) = scale;
+        *(f32 *)(object + 92) = scale;
+        state->mode = arg1;
+        state->unk_04 = arg6;
+        state->unk_00 = scale;
+        state->environment = 0xFFFFFFFF;
+        state->primitive = 0xFFFF00FF;
+        state->unk_18 = 1.0f;
+        state->unk_30 = 128.0f * scale;
+        state->unk_2C = 0;
+        state->unk_20 = 0.0f;
+        state->unk_24 = 0.0f;
+        state->unk_28 = 0.0f;
+        func_87F03204(object, state);
+    }
+    return object;
+}
 
 typedef struct unk_func_87F0339C_color {
     u8 r, g, b, a;
