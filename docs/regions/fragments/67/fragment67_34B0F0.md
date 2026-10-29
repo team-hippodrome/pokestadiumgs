@@ -62,3 +62,18 @@ Two owners on the record at `D_8291BC50` (overlay `unk_D_8291BC50`) are now C:
 
 `func_8290E8D8` and `func_8290F42C` remain assembly but can now be written
 as C switches.
+
+## 2026-10-29 — `D_8291BC68` owned as file bss; `func_8290E5F0` matched
+
+`D_8291BC68` is the text-reveal state: three `s16`, then `text[255]` at
+0x8291BC70 and `revealed[255]` at 0x8291BD6F. It is now
+`static unk_D_8291BC68 D_8291BC68;`, pinned by `datamig_bss.ld` at
+0x8291BC68. The typedefs moved above the first function, a pure reorder.
+
+`func_8290E5F0` (init) matched. Two plain `for (i = 0; i < 255; i++)`
+clears; `copt` peels three iterations of the `revealed` loop, and the
+shared `$at` on `revealed[1]`/`[2]` comes from the in-file definition. The
+`revealed` clear must be written on one line,
+`for (i = 0; i < 255; i++) D_8291BC68.revealed[i] = 0;`. With a braced
+multi-line body, IDO fills the unrolled body's delay slot with the first
+store instead of the last.
