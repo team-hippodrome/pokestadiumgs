@@ -179,3 +179,20 @@ Final gate: `scratch/tail-final-seal/tidy-gate/receipt.json`. Passive captures:
 Only this source/region pair is committed; no naming/global metadata, coverage,
 private helpers, push or PR. D7AC/EC70/33F10/252D0 and other unrelated requeues
 remain outside this block.
+
+### Integrated selection contracts and semantic names
+
+38A0C is `BattleSelection_ShowChoiceError`: both the move-choice caller39528
+and party-choice handler39618 pass the actual error reason through its second
+byte parameter; it emits the mode-dependent selection feedback and enters
+state9. The provider never consumes a third argument. 39618 is
+`BattleSelection_HandlePartyChoice`: it checks party size, HP, active slot and
+switch restrictions, emits the corresponding choice error, or forwards the
+valid party choice to38EA4. Both original address names remain linker aliases.
+
+Only redundant declarations in the new blocks were removed. Normal/+20
+complete-module controls against the accepted tail gate object preserve all
+allocated bytes, reginfo, function extents and semantic relocations, including
+39528's existing240-byte body. The separate B870/AD98 failed-gate prerequisite
+remains unchanged; neither owner is claimed accepted by this publication.
+Private proof: `scratch/battle-party-selection-two-naming/receipt.json`.

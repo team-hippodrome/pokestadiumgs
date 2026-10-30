@@ -1365,12 +1365,11 @@ s32 func_84138960(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84147228(u8, u8, u8, u8, s32);
-extern void func_84138A0C(u8, u8);
+extern void BattleSelection_ShowChoiceError(u8, u8);
 extern void func_800226C0(s32);
 extern void * D_841951F8[];
 extern u8 D_84195248[];
-void func_84138A0C(u8 arg0, u8 arg1) {
+void BattleSelection_ShowChoiceError(u8 arg0, u8 arg1) {
     switch (D_84195248[arg0 * 24 + 13]) {
     case 2:
     case 5:
@@ -1516,7 +1515,7 @@ void func_84139364(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84138A0C(u8, u8);
+extern void BattleSelection_ShowChoiceError(u8, u8);
 extern void func_800226C0(s32);
 extern s32 func_84138960(u8 arg0);
 extern void func_84138EA4(u8, u8);
@@ -1527,9 +1526,9 @@ void func_84139528(u8 arg0, u8 arg1) {
         if (D_84195208[arg0][arg1 + 5] == 0) {
             func_800226C0(5);
         } else if ((D_84195208[arg0][arg1 + 9] & 0x3F) == 0) {
-            func_84138A0C(arg0, 0);
+            BattleSelection_ShowChoiceError(arg0, 0);
         } else if (D_84195208[arg0][arg1 + 5] == D_84195208[arg0][0x25]) {
-            func_84138A0C(arg0, 1);
+            BattleSelection_ShowChoiceError(arg0, 1);
         } else {
             func_84138EA4(arg0, arg1);
         }
@@ -1544,38 +1543,31 @@ void func_84139528(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84195256[];
-extern void func_84138A0C(u8, u8);
-extern void func_800226C0(s32);
-extern s32 func_8413882C(u8 arg0, u8 arg1);
-extern void func_84138EA4(u8, u8);
-extern void * D_841951F8[];
-extern u8 * D_84195208[];
 extern u8 * D_8419520C[];
-void func_84139618(u8 arg0, u8 arg1) {
+void BattleSelection_HandlePartyChoice(u8 arg0, u8 arg1) {
     if (arg1 >= ((u8 *)D_841951F8[arg0])[8]) {
         func_800226C0(5);
         return;
     }
     if (*(u16 *)((u8 *)D_841951F8[arg0] + (u32)arg1 * 88 + 62) == 0) {
-        func_84138A0C(arg0, 2);
+        BattleSelection_ShowChoiceError(arg0, 2);
         return;
     }
     if (arg1 == ((u8 *)D_841951F8[arg0])[10]) {
-        func_84138A0C(arg0, 5);
+        BattleSelection_ShowChoiceError(arg0, 5);
         return;
     }
     /* D_8419520C names slot 1 of the two-pointer record table. */
     if (D_84195256[(u32)arg0 * 24] != 5 && ((*(u8 **)((u8 *)D_8419520C + -((s32)arg0 * (s32)sizeof(D_8419520C[0]))))[17] & 0x80) != 0) {
-        func_84138A0C(arg0, 4);
+        BattleSelection_ShowChoiceError(arg0, 4);
         return;
     }
     if (D_84195256[(u32)arg0 * 24] != 5 && D_84195208[arg0][27] > 0) {
-        func_84138A0C(arg0, 4);
+        BattleSelection_ShowChoiceError(arg0, 4);
         return;
     }
     if (func_8413882C(arg0, arg1) == 0) {
-        func_84138A0C(arg0, 6);
+        BattleSelection_ShowChoiceError(arg0, 6);
     } else {
         func_84138EA4(arg0, arg1 + 4);
     }
@@ -2127,9 +2119,9 @@ void func_8413BE84(s32 arg0) {
 #ifdef VERSION_US
 extern void func_841397FC(u8,u8);
 extern void func_84139528(u8,u8);
-extern void func_84139618(u8,u8);
+extern void BattleSelection_HandlePartyChoice(u8,u8);
 extern u8 D_84195248[];
-void func_8413BF58(s32 arg0){u8 *ptr=D_84195248+arg0*24;switch(ptr[0xD]){case 1:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x12]&0xF)*3+3;else if(--ptr[0xF]==0)func_841397FC(arg0,(ptr[0x12]&0xF0)>>4);break;case 2:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*3+3;else if(--ptr[0xF]==0)func_84139528(arg0,(ptr[0x13]&0xF0)>>4);break;case 5:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*4+4;else if(--ptr[0xF]==0)func_84139618(arg0,(ptr[0x13]&0xF0)>>4);break;}}
+void func_8413BF58(s32 arg0){u8 *ptr=D_84195248+arg0*24;switch(ptr[0xD]){case 1:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x12]&0xF)*3+3;else if(--ptr[0xF]==0)func_841397FC(arg0,(ptr[0x12]&0xF0)>>4);break;case 2:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*3+3;else if(--ptr[0xF]==0)func_84139528(arg0,(ptr[0x13]&0xF0)>>4);break;case 5:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*4+4;else if(--ptr[0xF]==0)BattleSelection_HandlePartyChoice(arg0,(ptr[0x13]&0xF0)>>4);break;}}
 #endif
 
 #ifdef VERSION_US
