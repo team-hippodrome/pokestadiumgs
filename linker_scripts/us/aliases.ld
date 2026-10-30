@@ -1484,3 +1484,5 @@ func_84132778 = Battle_ApplyTrappingDamage;
 func_841318C0 = Battle_InitializeActivePokemon;
 
 func_8412ADF8 = BattleEffect_ApplySecondaryConfusion;
+
+func_84128EC0 = BattleEffect_ApplySleep;

@@ -2448,3 +2448,36 @@ on the first candidate. Canonical manifest `battle-secondary-confusion8`,
 candidate0, passed the normal host check and full retail ROM comparison
 (MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`). Naming preserved complete-module
 bytes, symbol extents and relocations in normal and +20-line controls.
+
+#### Sleep effect: accepted through linked comparison (2026-10-31)
+
+`func_84128EC0` / `BattleEffect_ApplySleep` checks held-item immunity,
+existing status, battle guards and move failure before selecting a sleep
+counter. Its loop draws a three-bit value, redraws once when it is one,
+and repeats until the resulting value is one through three. It stores that
+value plus one, records the status and animation changes, handles the move-142
+special event, and clears the selected party record's auxiliary byte.
+
+Historical drafts contained `M2C_ERROR()` after `func_841360C0` and used
+`func_84136CA8` where the original assembly calls
+`BattleRecord_AdvanceWriteSlot`. Correct signatures, the actual record helper,
+and two byte locals produced all 176 instructions with identical registers
+and a 32-byte frame. Only the address fields for `D_841951D2` differed in the
+objects: the assembly embeds the high and low constants, while C emits
+HI16/LO16 relocations. This is a link-time representation difference.
+
+A real link at the existing game's section addresses reproduced all 66,448
+module text bytes and all 352 read-only-data bytes. The private runner's
+opt-in resolved-relocation check was extended to admit added relocation fields
+only after that complete linked comparison; it does not rewrite any bytes.
+Wrong-symbol, changed-opcode, changed-rodata, wrong-placement, missing-layout
+and disabled-option controls rejected, and all 32 existing link-shape tests
+passed using their native or legacy fixture layouts. The enabled verifier hash
+is recorded in the attempt context so a changed comparator can reassess old
+rejections without weakening duplicate checks for unchanged experiments.
+
+Canonical `battle-sleep-linked8` candidate0 passed the normal host check and
+full retail ROM gate, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming and readable
+formatting then preserved complete-module bytes, symbol extents and relocations
+in normal and +20-line controls. Function size: 704 bytes. No compiler changes,
+hardcoded C symbol addresses, binary rewriting or padding were used.

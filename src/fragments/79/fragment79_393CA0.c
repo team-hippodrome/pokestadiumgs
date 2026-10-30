@@ -2104,7 +2104,82 @@ void BattleCommand_014(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84128EC0.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern u8 func_80063660(u8);
+extern void func_841246AC(u8 arg0, u8 arg1);
+extern u8 func_84125080(void);
+extern s32 func_84125778(u8 arg0);
+extern void func_841264F0(u8 arg0);
+extern void func_84126A90(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84126B1C(u8 arg0, u8 arg1, u8 arg2);
+extern s32 func_84126F2C(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84134DD8(u8 arg0);
+extern void func_84134E30(s32 arg0);
+extern void func_84135B00(u16);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_84136B9C(u8, s16, u16);
+extern void * func_84156590(u8, u8);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 D_841951C6;
+extern u8 D_841951D2;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplySleep(void) {
+    u8 choice;
+    u8 next;
+
+    if (func_80063660(D_841951C6) == 23) {
+        func_84136678(D_841951BD, -1);
+        func_84135B00(71);
+        func_841246AC(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+        return;
+    }
+    if (D_84195200[D_841951BD][36] & 7) {
+        func_84136678(D_841951BD, -1);
+        func_84135B00(32);
+        func_841246AC(D_841951BD, D_841951BF);
+        BattleRecord_AdvanceWriteSlot();
+        return;
+    }
+    if (D_84195200[D_841951BD][36] || func_84126F2C(D_841951BD, 7) ||
+        (D_84195208[D_841951BD][16] & 0x10)) {
+        func_84126A90(D_841951BC, D_841951BD, 0);
+        return;
+    }
+    if (D_841951D2) {
+        func_84126B1C(D_841951BC, D_841951BD, 1);
+        return;
+    }
+    for (;;) {
+        choice = func_84125080() & 7;
+        next = choice;
+        if (choice == 1) {
+            next = func_84125080() & 7;
+        }
+        if (next > 0 && next < 4) break;
+    }
+    D_84195200[D_841951BD][36] = next + 1;
+    func_84136218(D_841951BC, 6);
+    func_84136218(D_841951BD, 5);
+    func_84136678(D_841951BD, -1);
+    func_84135B00(167);
+    if (func_841360C0(D_841951BC, -2, 60, 6, 1) == 0)
+        func_841360C0(D_841951BD, -2, 60, 5, 1);
+    func_84136B9C(D_841951BD, -1, 7);
+    func_84134CBC(D_841951BD, 12);
+    func_84134DD8(D_841951BF);
+    if (D_841951BF == 142) func_84134E30(5);
+    BattleRecord_AdvanceWriteSlot();
+    if (!func_84125778(D_841951BD)) func_841264F0(D_841951BD);
+    ((u8 *)func_84156590(D_841951BD, ((u8 *)D_841951F8[D_841951BD])[10]))[13] = 0;
+}
 #endif
 
 #ifdef VERSION_US
