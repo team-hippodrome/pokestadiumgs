@@ -2014,3 +2014,29 @@ Both functions passed canonical native acceptance, the normal host syntax
 check, and the full retail US ROM comparison. Descriptive names and formatting
 also passed complete-module controls with and without twenty leading blank
 lines. Original addresses remain linker aliases.
+
+### 2026-10-31: special damage formula accepted
+
+`func_8412C95C` / `BattleDamage_ApplySpecialFormula` (420 bytes) now matches
+through the native canonical runner, normal host syntax check, and complete
+retail ROM comparison (MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`).
+The function selects level damage, bounded random level damage, half current
+HP, variable-power damage, or fixed move power with the rules flag guard.
+
+Two independently measured source corrections resolved the residual:
+
+- The RNG returns a byte (`lbu v0` in its assembly return), so its declarations
+  now use `u8`. Existing callers retain identical instructions with a byte
+  `value` in `func_8412E220` and unsigned `raw` plus an explicit signed
+  comparison in `func_8412F170`. The RNG range makes those conversions exact.
+  The declaration/caller cleanup alone preserves the entire module, including
+  sections, function extents, and relocations.
+- The rules word at offset 64 uses a bitfield view of bit 27. A direct mask
+  produced the right operations but six wrong temporary-register operands;
+  the bitfield produced the exact function without rewriting object bytes.
+  This is one-file evidence, not a general compiler rule.
+
+Canonical result: `battle-special-damage-bitfield-confirm`, label
+`special-damage:verified-unsigned-bitfield:byte-rng`. Naming was independently
+checked against the accepted module with normal and 20-leading-blank-line
+controls. Private diagnostics and helper scripts are not repository changes.

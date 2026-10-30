@@ -1462,3 +1462,5 @@ func_84132B9C = Battle_ProcessPpRestoringHeldItems;
 func_8412EE5C = BattleDamage_AccumulateBaseDamage;
 
 func_841278E4 = BattleMove_AnnounceUse;
+
+func_8412C95C = BattleDamage_ApplySpecialFormula;
