@@ -492,3 +492,8 @@ Boundary proof: `scratch/3794c-boundary-analysis/ownership-and-winner-proof.json
 Only this source and region note are committed, with hooks disabled; no naming,
 metadata, coverage, private tools, agents, Docker, push or PR. Coordinator
 handles evidence-backed naming and publication. No remaining3794C prerequisite.
+
+
+### Integrated snapshot side-change consumer
+
+3794C is `BattleSnapshot_ApplySideChanges`: the existing snapshot consumer applies pending value/party/status updates for the two sides, processes its event component, and clears the original input header. Its actual event address is bound before the loop, with the original field guard and event call after it. The old address name remains a linker alias. Normal/+20 full-tail sections/bytes/function extents/semantic relocations/reginfo match the worker's accepted object after naming and removal of only duplicated declarations in this block. The648B/frame80 source has no companion repair, padding, extra helper or ABI change. Earlier3794C requeues above are resolved. Private naming proof: `scratch/battle-snapshot-side-changes-naming/receipt.json`.

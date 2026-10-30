@@ -1058,11 +1058,7 @@ s32 func_8413771C(void) {
 
 #ifdef VERSION_US
 extern u8 D_84195218[];
-extern s32 func_841349C0(f32);
-extern void func_841374D0(void *);
-extern void * D_841951F8[];
-extern u8 * D_84195200[];
-void func_8413794C(u8 *arg0) {
+void BattleSnapshot_ApplySideChanges(u8 *arg0) {
     struct Change { u16 unk00, value, maximum, status, dvs, active; f32 delta; void *name; u8 unk14, unk15, kind, unk17; };
     struct State { void *name; f32 value; u16 maximum, status, dvs; u8 unk0E, species; u8 unk10[8]; };
     u8 i;
@@ -1112,20 +1108,20 @@ void func_8413794C(u8 *arg0) {
 
 #ifdef VERSION_US
 typedef struct { u32 words[0xA0]; } Copy84137BD4;
-extern void func_8413794C(u8 *);
+extern void BattleSnapshot_ApplySideChanges(u8 *);
 extern u8 D_84195280[];
 extern u8 D_84199D80[];
 void func_84137BD4(void) {
     u8 *destination = D_84199D80;
     while (D_84195280[0x4D81] != D_84195280[0x4D80]) {
-        func_8413794C(destination);
+        BattleSnapshot_ApplySideChanges(destination);
         D_84195280[0x4D80]++;
         if (D_84195280[0x4D80] >= 0x1E) {
             D_84195280[0x4D80] = 0;
         }
         *(Copy84137BD4 *)destination = *(Copy84137BD4 *)&D_84195280[D_84195280[0x4D80] * 0x280];
     }
-    func_8413794C(destination);
+    BattleSnapshot_ApplySideChanges(destination);
 }
 #endif
 
