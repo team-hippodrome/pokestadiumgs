@@ -483,12 +483,14 @@ void func_841256E0(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
+extern u8 *D_84195200[];
+extern u8 *D_84195208[];
 extern void *D_841951F8[];
 extern void func_84125650(u8 *, u8);
 extern void func_841334D8(u8);
 extern void Battle_RefreshSideAfterSwitch(u8);
-void func_84125734(u8 side) {
-    func_84125650(D_84195208[side], D_84195200[side][0x24]);
+void func_84125734(u8 arg0) {
+    func_84125650(D_84195208[arg0], D_84195200[arg0][0x24]);
 }
 #endif
 
@@ -5763,33 +5765,33 @@ void func_84133984(u8 arg0, u8 arg1) {
 #ifdef VERSION_US
 extern void Battle_QueueSwitchInHpMessage(u8, s32, s32);
 extern void func_841252D0(u8);
-extern void func_8412693C(u8 arg0);
-extern void func_84126994(u8 arg0);
+extern void func_8412693C(u8 side);
+extern void func_84126994(u8 side);
 extern void func_84126A64(void);
-extern void func_84131AB8(u8 arg0);
-extern void func_84131EAC(u8 arg0);
+extern void func_84131AB8(u8 side);
+extern void func_84131EAC(u8 side);
 extern u8 D_841951D5;
 extern void * D_841951F8[];
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
 extern u8 * D_8419520C[];
-void Battle_RefreshSideAfterSwitch(u8 arg0) {
+void Battle_RefreshSideAfterSwitch(u8 side) {
     s32 fainted;
-    D_84195208[arg0][16] &= ~0x40;
+    D_84195208[side][16] &= ~0x40;
     fainted = 0;
-    if (*(u16 *)(D_84195200[arg0] + 38) == 0) fainted = 1;
-    func_84131AB8(arg0);
-    func_8412693C(arg0);
-    Battle_QueueSwitchInHpMessage(arg0, fainted, 0);
-    func_84126994(arg0);
+    if (*(u16 *)(D_84195200[side] + 38) == 0) fainted = 1;
+    func_84131AB8(side);
+    func_8412693C(side);
+    Battle_QueueSwitchInHpMessage(side, fainted, 0);
+    func_84126994(side);
     func_84126A64();
-    ((u8 *)D_841951F8[arg0])[1] = 0;
-    D_84195208[arg0][38] = 0;
-    (*(u8 **)((u8 *)D_8419520C + -(arg0 << 2)))[38] = 0;
-    D_84195208[arg0][39] = 0;
+    ((u8 *)D_841951F8[side])[1] = 0;
+    D_84195208[side][38] = 0;
+    (*(u8 **)((u8 *)D_8419520C + -(side << 2)))[38] = 0;
+    D_84195208[side][39] = 0;
     D_841951D5 = 0;
     func_841252D0(0);
-    func_84131EAC(arg0);
+    func_84131EAC(side);
 }
 #endif
 
