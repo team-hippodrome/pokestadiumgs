@@ -1048,7 +1048,127 @@ void func_84136D84(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_84136D9C.s")
+extern u8 D_84199D80[];
+extern u16 D_84199D86;
+extern u8 D_84199D81;
+extern u8 D_84195218[];
+extern u8 D_84195251[];
+void func_84136D9C(void);
+
+    struct DispatcherSearchDisplayState { u32 name; f32 value; u16 maximum, status, dvs; u8 level, species; u8 tail[8]; };
+    struct DispatcherSearchInputChange { s16 start; u16 value, maximum, status, dvs, timer; f32 delta; u32 name; u8 species, level, kind, pad; };
+    struct DispatcherSearchStatusChange { s16 start; u16 timer, value; };
+    struct DispatcherSearchSnapshotRoot {
+        u8 kind, flags;
+        u16 enabled, command, duration;
+        u8 prefix[36];
+        struct DispatcherSearchInputChange changes[2];
+        struct DispatcherSearchStatusChange statuses[2];
+        u8 remainder[536];
+    };
+
+struct unk_D_84195248 {
+    u8 *inputs[2];
+    u8 unk08, selected, input0, input1, active, phase, kind, unk0F;
+    u8 unk10[8];
+};
+extern struct unk_D_84195248 D_84195248[2];
+
+struct DispatcherPartyMember { u8 bytes[88]; };
+struct DispatcherParty { u8 prefix[24]; struct DispatcherPartyMember members[6]; };
+extern s32 func_841349C0(f32 arg0);
+extern s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2);
+extern void func_84147228(u8, u8, u8, u8, s32);
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+void func_84136D9C(void) {
+
+
+
+
+    struct DispatcherSearchSnapshotRoot *snapshot = (struct DispatcherSearchSnapshotRoot *)D_84199D80;
+    struct unk_D_84195248 *effects;
+    u8 i;
+    u16 duration = D_84199D86;
+    u8 *party;
+    f32 step;
+    s32 divisor;
+    u16 remaining;
+    for (i = 0; i < 2; i++) {
+        if ((snapshot->flags & 4) && snapshot->statuses[i].start == -1)
+            snapshot->statuses[i].start = 0;
+        if (func_84134A10(duration, &snapshot->statuses[i].start, &snapshot->statuses[i].timer))
+            ((struct DispatcherSearchDisplayState *)D_84195218)[i].status = snapshot->statuses[i].value;
+        if ((snapshot->flags & 1) && snapshot->changes[i].start == -1)
+            snapshot->changes[i].start = 0;
+        switch (snapshot->changes[i].kind) {
+        case 1:
+        case 2:
+        case 3:
+            if (func_84134A10(duration, &snapshot->changes[i].start, &snapshot->changes[i].timer)) {
+                if (snapshot->changes[i].kind == 2) {
+                    func_84147228(1, i, 0, 16, snapshot->changes[i].timer);
+                    snapshot->changes[i].kind = 1;
+                }
+                remaining = snapshot->changes[i].timer;
+                divisor = remaining ? remaining : 1;
+                step = snapshot->changes[i].delta / divisor;
+                snapshot->changes[i].delta -= step;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].value += step;
+                if (snapshot->changes[i].delta == 0.0)
+                    ((struct DispatcherSearchDisplayState *)D_84195218)[i].value = (f32)func_841349C0(((struct DispatcherSearchDisplayState *)D_84195218)[i].value);
+            }
+            break;
+        case 4:
+            if (func_84134A10(duration, &snapshot->changes[i].start, &snapshot->changes[i].timer)) {
+                party = (u8 *)D_841951F8[i];
+                D_84195200[i] = (u8 *)&((struct DispatcherParty *)party)->members[(u16)snapshot->changes[i].delta];
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].name = snapshot->changes[i].name;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].value = (f32)snapshot->changes[i].value;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].maximum = snapshot->changes[i].maximum;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].status = snapshot->changes[i].status;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].dvs = snapshot->changes[i].dvs;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].species = snapshot->changes[i].species;
+                ((struct DispatcherSearchDisplayState *)D_84195218)[i].level = snapshot->changes[i].level;
+                if (party[2] == 2) {
+                    if ((u16)snapshot->changes[i].delta < party[3])
+                        D_84195248[i].selected = 0;
+                    else
+                        D_84195248[i].selected = 1;
+                }
+                effects = &D_84195248[i];
+                func_84147228(1, i, 0, 5, 16);
+                func_84147228(2, i, 0, 5, 16);
+                func_84147228(1, i, 0, 8, effects->selected);
+                func_84147228(1, i, 0, 3, 0);
+                func_84147228(1, i, 0, 2, 0);
+                func_84147228(1, i, 0, 15, 0);
+                func_84147228(1, i, 0, 10, 0);
+                func_84147228(0, i, 0, 8, effects->selected);
+                func_84147228(0, i, 0, 3, 0);
+                func_84147228(2, i, 0, 8, effects->selected);
+                func_84147228(2, i, 0, 3, 0);
+                func_84147228(10, i, 0, 8, effects->selected);
+                func_84147228(10, i, 0, 3, 0);
+                func_84147228(14, i, 0, 8, effects->selected);
+                func_84147228(14, i, 0, 3, 0);
+                func_84147228(15, i, 0, 8, effects->selected);
+                func_84147228(15, i, 0, 3, 0);
+                func_84147228(28, i, 0, 8, effects->selected);
+                func_84147228(28, i, 0, 3, 0);
+            }
+            break;
+        case 5:
+            if (func_84134A10(duration, &snapshot->changes[i].start, &snapshot->changes[i].timer))
+                func_84147228(1, i, 0, 11, 0);
+            break;
+        case 6:
+            if (func_84134A10(duration, &snapshot->changes[i].start, &snapshot->changes[i].timer))
+                func_84147228(1, i, 0, 17, 0);
+            break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1309,11 +1429,6 @@ void func_84137D04(u8 arg0) {
 
 #ifdef VERSION_US
 void func_80023A3C(s32, s32, s32);
-struct unk_D_84195248 {
-    u8 *inputs[2];
-    u8 unk08, selected, input0, input1, active, phase, kind, unk0F;
-    u8 unk10[8];
-};
 extern struct unk_D_84195248 D_84195248[2];
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
@@ -2880,7 +2995,7 @@ M2C_UNK func_80064D28();                            /* extern */
 M2C_UNK func_8410A608();                            /* extern */
 M2C_UNK func_8410A884();                            /* extern */
 M2C_UNK func_8410A9B4();                            /* extern */
-M2C_UNK func_84136D9C();                            /* extern */
+void func_84136D9C(void);                            /* extern */
 void BattleSnapshot_UpdateDisplay(void);
 void Battle_UpdatePhase(void);                            /* extern */
 M2C_UNK func_8413CE84();                            /* extern */
