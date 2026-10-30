@@ -1432,3 +1432,5 @@ func_841350F4 = BattleSnapshot_SetPartyMember;
 func_84137778 = BattleSnapshot_UpdateDisplay;
 
 func_8413677C = BattleSnapshot_SetSideChange;
+
+func_84136D9C = BattleSnapshot_AdvanceSideChanges;

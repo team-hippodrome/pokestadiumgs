@@ -1048,24 +1048,37 @@ void func_84136D84(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84199D80[];
-extern u16 D_84199D86;
 extern u8 D_84199D81;
 extern u8 D_84195218[];
 extern u8 D_84195251[];
-void func_84136D9C(void);
+void BattleSnapshot_AdvanceSideChanges(void);
 
-    struct DispatcherSearchDisplayState { u32 name; f32 value; u16 maximum, status, dvs; u8 level, species; u8 tail[8]; };
-    struct DispatcherSearchInputChange { s16 start; u16 value, maximum, status, dvs, timer; f32 delta; u32 name; u8 species, level, kind, pad; };
-    struct DispatcherSearchStatusChange { s16 start; u16 timer, value; };
-    struct DispatcherSearchSnapshotRoot {
-        u8 kind, flags;
-        u16 enabled, command, duration;
-        u8 prefix[36];
-        struct DispatcherSearchInputChange changes[2];
-        struct DispatcherSearchStatusChange statuses[2];
-        u8 remainder[536];
-    };
+struct BattleSnapshotDisplayState {
+    u32 name;
+    f32 value;
+    u16 maximum, status, dvs;
+    u8 level, species;
+    u8 tail[8];
+};
+struct BattleSnapshotSideChange {
+    s16 start;
+    u16 value, maximum, status, dvs, timer;
+    f32 delta;
+    u32 name;
+    u8 species, level, kind, pad;
+};
+struct BattleSnapshotStatusChange {
+    s16 start;
+    u16 timer, value;
+};
+struct BattleSnapshotState {
+    u8 kind, flags;
+    u16 enabled, command, duration;
+    u8 prefix[36];
+    struct BattleSnapshotSideChange changes[2];
+    struct BattleSnapshotStatusChange statuses[2];
+    u8 remainder[536];
+};
 
 struct unk_D_84195248 {
     u8 *inputs[2];
@@ -1074,19 +1087,21 @@ struct unk_D_84195248 {
 };
 extern struct unk_D_84195248 D_84195248[2];
 
-struct DispatcherPartyMember { u8 bytes[88]; };
-struct DispatcherParty { u8 prefix[24]; struct DispatcherPartyMember members[6]; };
+struct BattleSnapshotPartyMember {
+    u8 bytes[88];
+};
+struct BattleSnapshotParty {
+    u8 prefix[24];
+    struct BattleSnapshotPartyMember members[6];
+};
 extern s32 func_841349C0(f32 arg0);
 extern s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2);
 extern void func_84147228(u8, u8, u8, u8, s32);
 extern void * D_841951F8[];
 extern u8 * D_84195200[];
-void func_84136D9C(void) {
+void BattleSnapshot_AdvanceSideChanges(void) {
 
-
-
-
-    struct DispatcherSearchSnapshotRoot *snapshot = (struct DispatcherSearchSnapshotRoot *)D_84199D80;
+    struct BattleSnapshotState *snapshot = (struct BattleSnapshotState *)D_84199D80;
     struct unk_D_84195248 *effects;
     u8 i;
     u16 duration = D_84199D86;
@@ -1098,7 +1113,7 @@ void func_84136D9C(void) {
         if ((snapshot->flags & 4) && snapshot->statuses[i].start == -1)
             snapshot->statuses[i].start = 0;
         if (func_84134A10(duration, &snapshot->statuses[i].start, &snapshot->statuses[i].timer))
-            ((struct DispatcherSearchDisplayState *)D_84195218)[i].status = snapshot->statuses[i].value;
+            ((struct BattleSnapshotDisplayState *)D_84195218)[i].status = snapshot->statuses[i].value;
         if ((snapshot->flags & 1) && snapshot->changes[i].start == -1)
             snapshot->changes[i].start = 0;
         switch (snapshot->changes[i].kind) {
@@ -1114,22 +1129,23 @@ void func_84136D9C(void) {
                 divisor = remaining ? remaining : 1;
                 step = snapshot->changes[i].delta / divisor;
                 snapshot->changes[i].delta -= step;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].value += step;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].value += step;
                 if (snapshot->changes[i].delta == 0.0)
-                    ((struct DispatcherSearchDisplayState *)D_84195218)[i].value = (f32)func_841349C0(((struct DispatcherSearchDisplayState *)D_84195218)[i].value);
+                    ((struct BattleSnapshotDisplayState *)D_84195218)[i].value =
+                        (f32)func_841349C0(((struct BattleSnapshotDisplayState *)D_84195218)[i].value);
             }
             break;
         case 4:
             if (func_84134A10(duration, &snapshot->changes[i].start, &snapshot->changes[i].timer)) {
                 party = (u8 *)D_841951F8[i];
-                D_84195200[i] = (u8 *)&((struct DispatcherParty *)party)->members[(u16)snapshot->changes[i].delta];
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].name = snapshot->changes[i].name;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].value = (f32)snapshot->changes[i].value;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].maximum = snapshot->changes[i].maximum;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].status = snapshot->changes[i].status;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].dvs = snapshot->changes[i].dvs;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].species = snapshot->changes[i].species;
-                ((struct DispatcherSearchDisplayState *)D_84195218)[i].level = snapshot->changes[i].level;
+                D_84195200[i] = (u8 *)&((struct BattleSnapshotParty *)party)->members[(u16)snapshot->changes[i].delta];
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].name = snapshot->changes[i].name;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].value = (f32)snapshot->changes[i].value;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].maximum = snapshot->changes[i].maximum;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].status = snapshot->changes[i].status;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].dvs = snapshot->changes[i].dvs;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].species = snapshot->changes[i].species;
+                ((struct BattleSnapshotDisplayState *)D_84195218)[i].level = snapshot->changes[i].level;
                 if (party[2] == 2) {
                     if ((u16)snapshot->changes[i].delta < party[3])
                         D_84195248[i].selected = 0;
@@ -2995,7 +3011,7 @@ M2C_UNK func_80064D28();                            /* extern */
 M2C_UNK func_8410A608();                            /* extern */
 M2C_UNK func_8410A884();                            /* extern */
 M2C_UNK func_8410A9B4();                            /* extern */
-void func_84136D9C(void);                            /* extern */
+void BattleSnapshot_AdvanceSideChanges(void);                            /* extern */
 void BattleSnapshot_UpdateDisplay(void);
 void Battle_UpdatePhase(void);                            /* extern */
 M2C_UNK func_8413CE84();                            /* extern */
@@ -3049,7 +3065,7 @@ void func_8413D37C(void) {
             func_841359D0();
         }
         BattleSnapshot_UpdateDisplay();
-        func_84136D9C();
+        BattleSnapshot_AdvanceSideChanges();
         func_84137CA4();
         func_800088DC();
         if (D_84186170 != 0) {
