@@ -1450,3 +1450,11 @@ func_84131F80 = BattleMove_GetCurrentPriority;
 func_841339D0 = Battle_RefreshSideAfterSwitch;
 
 func_841264CC = BattleMove_IsSleepTalkEffectExcluded;
+
+func_841280D8 = BattleDamage_ApplyTypeAndWeather;
+
+func_84126CD0 = BattleMove_ResolveSelectedMoves;
+
+func_84125CF8 = BattleStats_ApplyGuardedStageChange;
+
+func_84132B9C = Battle_ProcessPpRestoringHeldItems;

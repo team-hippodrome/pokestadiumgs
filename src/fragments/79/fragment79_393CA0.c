@@ -656,7 +656,47 @@ s32 func_84125C68(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84125CF8.s")
+extern void func_841256E0(u8 arg0, u8 arg1);
+extern s32 func_84125AB8(u8 arg0);
+extern s32 func_84125B88(u8 arg0, u8 arg1, u8 arg2);
+extern s32 func_84125C68(u8 arg0, u8 arg1);
+extern u8 D_841951BF;
+extern u8 D_841951D2;
+extern u8 D_841951D8;
+extern u8 D_841951D9;
+extern u8 * D_84195208[];
+void BattleStats_ApplyGuardedStageChange(u8 side, u8 stat, u8 amount, u8 lower) {
+    D_841951D9 = stat | ((amount - 1) << 4);
+    if (func_84125C68(side, lower) == 0) {
+        D_841951D8 = 1;
+        D_841951D2 = 1;
+        return;
+    }
+    if (lower == 1 && func_84125AB8(side) != 0) {
+        D_841951D8 = 3;
+        D_841951D2 = 1;
+        return;
+    }
+    if (func_84125B88(side, stat, lower) != 0) {
+        *(D_84195208[side] + stat + 0x1E) += (1 - lower * 2) * amount;
+        if (*(D_84195208[side] + stat + 0x1E) >= 0xE) {
+            *(D_84195208[side] + stat + 0x1E) = 0xD;
+            }
+        if (*(D_84195208[side] + stat + 0x1E) <= 0) {
+            *(D_84195208[side] + stat + 0x1E) = 1;
+        }
+        if (stat < 5) {
+            func_841256E0(side, stat);
+        }
+        if (stat == 6 && D_841951BF == 0x6B) {
+            D_84195208[side][0x2A] = 1;
+        }
+        D_841951D8 = 0;
+        return;
+    }
+    D_841951D8 = 2;
+    D_841951D2 = 1;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1115,7 +1155,41 @@ void func_84126C3C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84126CD0.s")
+extern void func_80031844(s32, s32);
+extern u8 func_80062D20(u8);
+extern s32 func_84126568(u8 arg0);
+extern void * D_841951F8[];
+extern u8 * D_84195208[];
+void BattleMove_ResolveSelectedMoves(void) {
+    s32 side;
+    u8 effect;
+    for (side = 0; side < 2; side = (u8)(side + 1)) {
+        if (((u8 *)D_841951F8[side])[0] != 255) {
+            if (((u8 *)D_841951F8[side])[0] < 4) {
+                if (D_84195208[side][17] & 0x10) {
+                    ((u8 *)D_841951F8[side])[1] = D_84195208[side][39];
+                } else if (D_84195208[side][15] & 1) {
+                    ((u8 *)D_841951F8[side])[1] = 117;
+                } else if ((*(((u8 *)D_841951F8[side])[0] + D_84195208[side] + 9) & 0x3F) > 0) {
+                    ((u8 *)D_841951F8[side])[1] = *(((u8 *)D_841951F8[side])[0] + D_84195208[side] + 5);
+                } else {
+                    ((u8 *)D_841951F8[side])[1] = 165;
+                }
+            } else {
+                ((u8 *)D_841951F8[side])[1] = 0;
+            }
+        }
+        if (func_84126568(side) == 0) D_84195208[side][41] = 0;
+        effect = func_80062D20(((u8 *)D_841951F8[side])[1]);
+        if (effect != 119) D_84195208[side][24] = 0;
+        if ((u8)effect != 81) {
+            D_84195208[side][16] &= ~0x40;
+            D_84195208[side][29] = 0;
+        }
+        if ((u8)effect != 111 && (u8)effect != 116) D_84195208[side][25] = 0;
+        func_80031844(side & 0xFF, ((u8 *)D_841951F8[side])[1] > 0 ? ((u8 *)D_841951F8[side])[1] : -1);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1525,7 +1599,35 @@ void BattleDamage_RollCriticalHit(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841280D8.s")
+extern u8 func_800632CC(s32 *, u8, u8, u8, s32);
+extern void func_84124360(s32 *, u8, u8);
+extern s32 func_84126390(u8 arg0, u8 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s8 D_841951C1;
+extern u8 D_841951C3;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 D_841951D5;
+extern void * D_841951F0;
+extern u8 * D_84195208[];
+void BattleDamage_ApplyTypeAndWeather(void) {
+    u8 result;
+    if (D_841951BF != 165) {
+    if (func_84126390(D_841951BC, D_841951C1) != 0) {
+            D_841951C8 += D_841951C8 >> 1;
+            D_841951D5 |= 0x80;
+        }
+        func_84124360(&D_841951C8, ((u8 *)D_841951F0)[2500], D_841951C1);
+        if (D_841951C3 == 151 && ((u8 *)D_841951F0)[2500] == 1) {
+            D_841951C8 >>= 1;
+        }
+        result = func_800632CC(&D_841951C8, D_841951C1, D_84195208[D_841951BD][1], D_84195208[D_841951BD][2], (D_84195208[D_841951BD][13] & 8) != 0);
+        if (result == 0) D_841951D2 = 1;
+        D_841951D5 = (D_841951D5 & 0x80) | result;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -4202,115 +4304,115 @@ void BattleAnim_Table_84186004_017(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_018(void) { func_84125CF8(D_841951BC, 0, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_018(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 0, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_019(void) { func_84125CF8(D_841951BC, 1, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_019(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 1, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_020(void) { func_84125CF8(D_841951BC, 2, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_020(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 2, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_021(void) { func_84125CF8(D_841951BC, 3, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_021(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 3, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_022(void) { func_84125CF8(D_841951BC, 4, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_022(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 4, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_023(void) { func_84125CF8(D_841951BC, 5, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_023(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 5, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_024(void) { func_84125CF8(D_841951BC, 6, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_024(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 6, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_025(void) { func_84125CF8(D_841951BC, 0, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_025(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 0, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_026(void) { func_84125CF8(D_841951BC, 1, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_026(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 1, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_027(void) { func_84125CF8(D_841951BC, 2, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_027(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 2, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_028(void) { func_84125CF8(D_841951BC, 3, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_028(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 3, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_029(void) { func_84125CF8(D_841951BC, 4, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_029(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 4, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_030(void) { func_84125CF8(D_841951BC, 5, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_030(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 5, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_031(void) { func_84125CF8(D_841951BC, 6, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_031(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 6, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_032(void) { func_84125CF8(D_841951BD, 0, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_032(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 0, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_033(void) { func_84125CF8(D_841951BD, 1, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_033(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 1, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_034(void) { func_84125CF8(D_841951BD, 2, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_034(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 2, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_035(void) { func_84125CF8(D_841951BD, 3, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_035(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 3, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_036(void) { func_84125CF8(D_841951BD, 4, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_036(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 4, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_037(void) { func_84125CF8(D_841951BD, 5, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_037(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 5, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_038(void) { func_84125CF8(D_841951BD, 6, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_038(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 6, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_039(void) { func_84125CF8(D_841951BD, 0, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_039(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 0, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_040(void) { func_84125CF8(D_841951BD, 1, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_040(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 1, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_041(void) { func_84125CF8(D_841951BD, 2, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_041(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 2, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_042(void) { func_84125CF8(D_841951BD, 3, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_042(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 3, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_043(void) { func_84125CF8(D_841951BD, 4, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_043(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 4, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_044(void) { func_84125CF8(D_841951BD, 5, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_044(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 5, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_045(void) { func_84125CF8(D_841951BD, 6, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_045(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 6, 2, 1); }
 #endif
 
 #ifdef VERSION_US
@@ -4804,7 +4906,7 @@ void BattleAnim_Table_84186004_068(void) {
     s32 i;
     for (i = 0; i < 5; i = (i + 1) & 0xFF) {
         D_841951D2 = 0;
-        func_84125CF8(D_841951BC, (u8)i, 1, 0);
+        BattleStats_ApplyGuardedStageChange(D_841951BC, (u8)i, 1, 0);
         if (D_841951D8 == 0) done = 1;
     }
     if (done != 0) {
@@ -5195,7 +5297,7 @@ void func_84131760(void) {
             D_84195208[i][0x13] = (ret & 3) + 2;
             D_841951D2 = 0;
             D_841951D3 = 0;
-            func_84125CF8(t & 0xFF, 0, 2, 0);
+            BattleStats_ApplyGuardedStageChange(t, 0, 2, 0);
             func_84136678(t, -1);
             func_8004C54C(26, D_84195200[i] + 0x34);
             func_8004C54C(42, func_8004C874(8, 151));
@@ -5459,7 +5561,41 @@ void func_84132A94(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132B9C.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern s32 * func_800635E0(u8);
+extern u8 func_80063660(u8);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void Battle_ProcessPpRestoringHeldItems(void) {
+    s32 side;
+    s32 slot;
+    for (side = 0; side < 2; side++) {
+        if (func_80063660(D_84195200[side][1]) == 6) {
+            for (slot = 0; slot < 4; slot = (u8)(slot + 1)) {
+                if (D_84195208[side][slot + 5] == 0) break;
+                if ((D_84195208[side][slot + 9] & 0x3F) == 0) {
+                    if (D_84195208[side][slot + 5] == 166) D_84195208[side][slot + 9] += 1;
+                    else D_84195208[side][slot + 9] += 5;
+                    if (D_84195200[side][slot + 2] == D_84195208[side][slot + 5] && !(D_84195208[side][17] & 8)) {
+                        if (D_84195208[side][slot + 5] == 166) D_84195200[side][slot + 24] += 1;
+                        else D_84195200[side][slot + 24] += 5;
+                    }
+                    func_84136678(side, -1);
+                    func_8004C54C(26, (s32)(D_84195200[side] + 52));
+                    func_8004C54C(42, (s32)func_800635E0(D_84195200[side][1]));
+                    func_84135B00(153);
+                    func_84134CBC(side, 77);
+                    BattleRecord_AdvanceWriteSlot();
+                    D_84195200[side][1] = 0;
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -5659,7 +5795,7 @@ extern void func_841324EC(void);
 extern void func_84132778(void);
 extern void func_8413293C(void);
 extern void func_84132A94(void);
-extern void func_84132B9C(void);
+extern void Battle_ProcessPpRestoringHeldItems(void);
 extern void func_84132D44(void);
 extern void func_84132E40(void);
 extern void func_84132F34(void);
@@ -5676,7 +5812,7 @@ void func_84133440(void) {
     func_8413293C();
     func_84132300();
     func_84132A94();
-    func_84132B9C();
+    Battle_ProcessPpRestoringHeldItems();
     func_84132D44();
     func_84132E40();
     func_84132F34();
