@@ -1504,7 +1504,54 @@ void BattleTurn_CheckMoveStatus(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841278E4.s")
+extern u8 D_841854B4[];
+extern u8 D_841854D4[];
+extern u8 D_841854DC[];
+extern u8 D_841854E8[];
+extern void BattleMoveState_UpdateMoveSlot(u8, u8);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern s32 func_80062CE0(u8);
+extern s32 func_84124EFC(u8 arg0, u8 *arg1);
+extern s32 func_84134D04(void);
+extern void func_84135B00(u16);
+extern void func_84135B40(u16 arg0);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_841366C4(u8 arg0, s16 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BF;
+extern u8 D_841951C3;
+extern void * D_841951F8[];
+extern u8 * D_84195208[];
+void func_841278E4(void) {
+    u16 message;
+    if (D_84195208[D_841951BC][41] == 0) {
+        D_84195208[D_841951BC][38] = D_841951BF;
+        D_84195208[D_841951BC][39] = D_841951BF;
+    }
+    if (func_84124EFC(D_841951BF, D_841854B4)) message = 185;
+    else if (func_84124EFC(D_841951BF, D_841854D4)) message = 166;
+    else if (func_84124EFC(D_841951BF, D_841854DC)) message = 184;
+    else if (func_84124EFC(D_841951BF, D_841854E8)) message = 101;
+    else message = 43;
+    func_8004C54C(29, (s32)func_80062CE0(D_841951BF));
+    if (D_84195208[D_841951BC][41] != 0) {
+        func_841366C4(D_841951BC, -1);
+        func_84135B40(message);
+    } else {
+    BattleMoveState_UpdateMoveSlot(D_841951BC, ((u8 *)D_841951F8[D_841951BC])[0]);
+    func_84136218(D_841951BC, 8);
+    func_84136218(D_841951BC, 12);
+    func_84136678(D_841951BC, -1);
+    func_84135B00(message);
+    if (func_841360C0(D_841951BC, -1, 60, 8, D_841951BF) == 0) {
+        func_841360C0(D_841951BC, -1, 60, 12, D_841951C3);
+    }
+    if (D_841951BF != 228 || func_84134D04() != 0) BattleRecord_AdvanceWriteSlot();
+    }
+}
 #endif
 
 #ifdef VERSION_US
