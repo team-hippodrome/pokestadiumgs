@@ -479,7 +479,26 @@ void func_841359D0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_84135A2C.s")
+extern s32 func_800472E0(u8 *);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void * func_8004C874(s32, s32);
+void func_84135A2C(u8 *snapshot, u16 text_id) {
+    u8 *part;
+    s32 lines;
+    u8 *text;
+    part = snapshot + 0x68;
+    if (snapshot[0x1EA] + 1 < 4) {
+        text = func_8004C874(0x10, text_id);
+        
+        if (part[0x183] + (lines = func_800472E0(text)) < 4) {
+            *(u16 *)(part + 0x184 + part[0x182] * 2) = text_id;
+            func_8004C8A0(((u8 (*)[0x80])part)[part[0x182]], 0x80, 0x10, text_id);
+            part[0x182]++;
+ part[0x183] += lines;
+ *(s16 *)(part + 0x18C) = 30 + 10 * part[0x183];
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
