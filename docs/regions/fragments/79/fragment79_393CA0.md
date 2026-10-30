@@ -2165,3 +2165,19 @@ despite their existing signed declarations. Direct halfword accesses and
 ordinary compound shifts produce the original register allocation and
 24-byte frame without auxiliary storage. Naming preserves the complete
 module in normal and twenty-leading-blank-line controls.
+
+### 2026-10-31: Present accepted with verified byte RNG interface
+
+`func_8412EC70` / `BattleEffect_ApplyPresent` (492 bytes) passed canonical
+runner acceptance, normal host syntax, and the complete retail ROM gate.
+It chooses damage power from the probability table or executes Present's
+healing outcome with the original battle text and recording calls.
+
+The earlier candidate history predates the independently verified byte RNG
+declaration. Under that corrected interface, the pair-table spelling with
+`u8 random`, `u8 bucket`, and a native `int effectiveness` temporary matches.
+Accepted label: `present:byte-rng-context:parent1:random-u8` in
+`battle-present-byte-rng8`. This is a real interface-context change, not a
+retry using irrelevant declarations. The RNG and existing callers were
+already validated in the preceding merged batch. Complete-module naming
+controls pass both normally and with twenty leading blank lines.

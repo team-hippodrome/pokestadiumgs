@@ -1470,3 +1470,5 @@ func_8412CBE8 = BattleEffect_ApplyEncore;
 func_8412CDA4 = BattleEffect_ApplyPainSplit;
 
 func_84127DB8 = BattleDamage_PrepareAttackDefense;
+
+func_8412EC70 = BattleEffect_ApplyPresent;

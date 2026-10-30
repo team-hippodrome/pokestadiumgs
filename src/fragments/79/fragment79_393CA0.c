@@ -4272,7 +4272,71 @@ void BattleAnim_Table_84186004_002(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412EC70.s")
+extern u8 D_84185454[];
+extern s8 D_841951C1;
+extern u8 func_84125080(void);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern u8 func_80063454(u8, u8, u8, s32);
+extern void func_84124604(u8 arg0, u8 arg1);
+extern void func_841254E0(void);
+extern s32 func_841267B4(u8 arg0, u8 arg1);
+extern u16 func_84126850(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84134DD8(u8 arg0);
+extern void func_84134E00(u8);
+extern void func_84134E30(s32 arg0);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s8 D_841951C2;
+extern u8 D_841951D2;
+extern u8 D_841951D7;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplyPresent(void) {
+    u8 random;
+    u8 (*table)[2];
+    u8 bucket;
+    int effectiveness;
+    table = (u8 (*)[2])D_84185454;
+    if (D_841951D2 != 0) return;
+    effectiveness = func_80063454((u8)D_841951C1, D_84195208[D_841951BD][1], D_84195208[D_841951BD][2], (D_84195208[D_841951BD][13] & 8) != 0);
+    if (effectiveness != 0) {
+        random = func_84125080();
+        bucket = 0;
+        do {
+            if ((*table)[0] >= random) {
+                D_841951D7 = bucket;
+                D_841951C2 = (*table)[1];
+                return;
+            }
+            bucket++;
+            table++;
+        } while ((*table)[0] != 255);
+        func_84134DD8(D_841951BF);
+        func_84134CBC(D_841951BC, 0);
+        BattleRecord_AdvanceWriteSlot();
+        if (*(u16 *)(D_84195200[D_841951BD] + 38) == *(u16 *)(D_84195200[D_841951BD] + 40)) {
+            func_84136678(D_841951BD, -1);
+            func_84135B00(154);
+        } else {
+            func_84136A9C(D_841951BD, -1, (s16)func_84126850(D_841951BD, (u16)func_841267B4(D_841951BD, 2)), 1);
+            func_8004C54C(26, (s32)(D_84195200[D_841951BD] + 52));
+            func_84136678(D_841951BD, -1);
+            func_84135B00(80);
+            func_8004C54C(26, (s32)(D_84195200[D_841951BC] + 52));
+        }
+        func_84134E30(5);
+        func_84124604(D_841951BD, D_841951BF);
+        func_84134E00(64);
+        BattleRecord_AdvanceWriteSlot();
+        func_841254E0();
+    }
+}
 #endif
 
 #ifdef VERSION_US
