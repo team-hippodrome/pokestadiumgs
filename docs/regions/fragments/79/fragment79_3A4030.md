@@ -787,3 +787,30 @@ second gate includes both new functions. ROM MD5:
 duplicated externs passed normal and 20-leading-line complete-module
 comparisons against the jointly accepted object. No compiler modification,
 instruction rewrite, extra helper, padding, or forced register was used.
+
+
+### Roster-selection transition: accepted
+
+`func_8413A6CC` is `BattleSelection_EnterRosterSelection`: 504 bytes,
+126 instructions, and the original 48-byte frame. Its three byte arguments
+select a side, controller partition, and UI element. The small/large roster
+input handlers pass elements 11/12; phase 5 and phase 7 select the original
+UI update sequences, and every path stores phase 6. The UI dispatcher
+`func_84147228` in `src/fragments/79/fragment79_3ADCA0.c` resolves the
+element/side/partition before applying a command with `func_841470C4`.
+This caller/consumer chain establishes the transition name. The original
+address remains a linker alias.
+
+The accepted source switches directly on the existing typed selection-state
+array and writes its phase directly. It needs no pointer or cached-phase
+local. The three byte formals reproduce the original saved registers and
+third-argument byte reloads without volatile or address-taking. Seventeen
+older historical candidates with the wrong number of parameters were
+excluded from this baseline; their scores are not valid ABI evidence.
+
+Canonical runner label:
+`selection-helper:correct-three-byte-abi:localFalse:switchTrue:cachedFalse`.
+The full US retail-ROM gate and explicit host syntax check passed with
+statistics enabled. ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`. Normal and
+20-leading-line complete-module comparisons preserve the accepted object
+after naming, formatting, and removal of duplicated declarations.

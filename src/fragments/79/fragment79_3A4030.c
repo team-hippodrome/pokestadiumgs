@@ -1898,31 +1898,29 @@ void func_8413A53C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_800226C0(s32);
-extern void func_84147228(u8, u8, u8, u8, s32);
-void func_8413A6CC(u8 arg0, u8 arg1, u8 arg2) {
-    switch (D_84195248[arg0].phase) {
+void BattleSelection_EnterRosterSelection(u8 side, u8 partition, u8 element) {
+    switch (D_84195248[side].phase) {
     case 5:
-        func_84147228(7, arg0, 0, 0xB, 0);
-        func_84147228(8, arg0, 0, 0xB, 0);
-        func_84147228(7, arg0, 0, 5, 4);
-        func_84147228(8, arg0, 0, 5, 4);
-        func_84147228(arg2, arg0, arg1, 0xA, 0);
-        func_84147228(arg2, arg0, arg1, 5, 6);
-        func_84147228(0x14, arg0, 0, 0xA, 0);
-        func_84147228(0x14, arg0, 0, 5, 6);
+        func_84147228(7, side, 0, 11, 0);
+        func_84147228(8, side, 0, 11, 0);
+        func_84147228(7, side, 0, 5, 4);
+        func_84147228(8, side, 0, 5, 4);
+        func_84147228(element, side, partition, 10, 0);
+        func_84147228(element, side, partition, 5, 6);
+        func_84147228(20, side, 0, 10, 0);
+        func_84147228(20, side, 0, 5, 6);
         func_800226C0(8);
         break;
     case 7:
-        func_84147228(0xD, arg0, arg1, 4, 1);
-        func_84147228(arg2, arg0, arg1, 1, 0);
-        func_84147228(arg2, arg0, arg1, 3, 0);
-        func_84147228(arg2, arg0, arg1, 5, 3);
-        func_84147228(0x14, arg0, 0, 5, 3);
-        func_84147228(0x14, arg0, 0, 3, 0);
+        func_84147228(13, side, partition, 4, 1);
+        func_84147228(element, side, partition, 1, 0);
+        func_84147228(element, side, partition, 3, 0);
+        func_84147228(element, side, partition, 5, 3);
+        func_84147228(20, side, 0, 5, 3);
+        func_84147228(20, side, 0, 3, 0);
         break;
     }
-    D_84195248[arg0].phase = 6;
+    D_84195248[side].phase = 6;
 }
 #endif
 
@@ -2100,7 +2098,7 @@ void func_8413B254(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8413A6CC(u8, u8, u8);
+extern void BattleSelection_EnterRosterSelection(u8, u8, u8);
 void BattleSelection_HandleSmallRosterInput(u8 side) {
     u8 *record;
     record = D_84195248[side].inputs[0];
@@ -2111,7 +2109,7 @@ void BattleSelection_HandleSmallRosterInput(u8 side) {
     else if (*(u16 *)(record + 6) & 0x800)
         func_8413AB2C(side, 0, 1, 11);
     else if (*(u16 *)(record + 6) & 0x10)
-        func_8413A6CC(side, 0, 11);
+        BattleSelection_EnterRosterSelection(side, 0, 11);
     else
         func_8413B08C(side, 11);
     if (*(u16 *)(record + 8) & 0x20) {
@@ -2151,7 +2149,7 @@ void BattleSelection_HandleLargeRosterInput(u8 side) {
         else if (*(u16 *)(record + 6) & 0x400)
             func_8413AB2C(side, 0, 4, 12);
     } else if (*(u16 *)(record + 6) & 0x10)
-        func_8413A6CC(side, 0, 12);
+        BattleSelection_EnterRosterSelection(side, 0, 12);
     else
         func_8413B08C(side, 12);
     if (*(u16 *)(record + 8) & 0x20) {
