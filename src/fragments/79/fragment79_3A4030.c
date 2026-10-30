@@ -119,7 +119,86 @@ s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_84134A6C.s")
+#include "color_adjustment.h"
+    struct HeaderSearchR {
+        u8 x[44];
+        u16 a;
+        u8 y[34];
+        ColorAdjustment z;
+    };
+    struct HeaderSearchC {
+        u8 x[36];
+        u8 a;
+        u8 y;
+        u16 z;
+    };
+    struct HeaderSearchHeaderChange {
+        s16 kindValue;
+        u16 value, maximum, status, dvs, timer;
+        f32 delta;
+        u8 *name;
+        u8 species, level, kind, pad;
+    };
+
+struct HeaderRootSide {
+ u16 value, hp, species, flags, dvs, reserved;
+ ColorAdjustment color;
+};
+struct HeaderRoot {
+ u8 kind, flags, enabled, pad3;
+ u16 command;
+ u8 gap6[6];
+ struct HeaderRootSide sides[2];
+ struct HeaderSearchHeaderChange changes[2];
+ u8 tail[548];
+};
+extern void * D_841951F0;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void func_84134A6C(u8 *a, u8 b, u8 c) {
+
+
+
+    s32 i;
+    struct HeaderSearchR **p;
+    struct HeaderSearchC **q;
+    u8 *changeBase;
+    struct HeaderSearchC **e;
+    struct HeaderRoot *snapshot = (struct HeaderRoot *)a;
+    snapshot->kind = b;
+    snapshot->enabled = 1;
+    snapshot->command = c;
+    i = 0;     p = (struct HeaderSearchR **)D_84195208;     changeBase = a;     q = (struct HeaderSearchC **)D_84195200; do {
+        snapshot->sides[i].value = (*p)->a;
+        if (changeBase[66] > 0 && changeBase[66] < 4)
+            snapshot->sides[i].hp = (u16)((*q)->z - *(f32 *)(changeBase + 56));
+        else
+            snapshot->sides[i].hp = (*q)->z;
+        snapshot->sides[i].species = (*q)->a;
+        snapshot->sides[i].dvs = *(u16 *)((u8 *)*q + 22);
+        snapshot->sides[i].color = (*p)->z;
+        snapshot->sides[i].flags = 0;
+        if (((u8 *)*p)[15] & 64)
+            snapshot->sides[i].flags |= 2;
+        if (((u8 *)*p)[15] & 32)
+            snapshot->sides[i].flags |= 4;
+        if (((u8 *)*p)[16] & 16)
+            snapshot->sides[i].flags |= 1;
+        if (((u8 *)*p)[42])
+            snapshot->sides[i].flags |= 8;
+        if (((u8 *)D_841951F0)[0x9c4] == 1)
+            snapshot->sides[i].flags |= 16;
+        else if (((u8 *)D_841951F0)[0x9c4] == 2)
+            snapshot->sides[i].flags |= 32;
+        else if (((u8 *)D_841951F0)[0x9c4] == 3)
+            snapshot->sides[i].flags |= 64;
+        changeBase += 24;
+        q++;
+        i++;
+        p++;
+        e = (struct HeaderSearchC **)D_84195200 + 2;
+    } while (q != e);
+}
 #endif
 
 #ifdef VERSION_US
