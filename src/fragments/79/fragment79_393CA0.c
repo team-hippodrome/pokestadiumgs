@@ -1525,7 +1525,35 @@ void BattleDamage_RollCriticalHit(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841280D8.s")
+extern u8 func_800632CC(s32 *, u8, u8, u8, s32);
+extern void func_84124360(s32 *, u8, u8);
+extern s32 func_84126390(u8 arg0, u8 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s8 D_841951C1;
+extern u8 D_841951C3;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 D_841951D5;
+extern void * D_841951F0;
+extern u8 * D_84195208[];
+void func_841280D8(void) {
+    u8 result;
+    if (D_841951BF != 165) {
+    if (func_84126390(D_841951BC, D_841951C1) != 0) {
+        D_841951C8 += D_841951C8 >> 1;
+        D_841951D5 |= 0x80;
+    }
+    func_84124360(&D_841951C8, ((u8 *)D_841951F0)[2500], D_841951C1);
+    if (D_841951C3 == 151 && ((u8 *)D_841951F0)[2500] == 1) {
+        D_841951C8 >>= 1;
+    }
+    result = func_800632CC(&D_841951C8, D_841951C1, D_84195208[D_841951BD][1], D_84195208[D_841951BD][2], (D_84195208[D_841951BD][13] & 8) != 0);
+    if (result == 0) D_841951D2 = 1;
+    D_841951D5 = (D_841951D5 & 0x80) | result;
+    }
+}
 #endif
 
 #ifdef VERSION_US
