@@ -1879,3 +1879,58 @@ redundant declarations in the five new blocks; independent normal and +20-line
 complete-module controls preserve allocated bytes, metadata, function extents
 and semantic relocations. The other three owners retain address names until
 stronger naming evidence exists.
+
+
+## 2026-10-31 — Sleep Talk selection, move priority, and switch refresh
+
+Four assembly owners now have matching C, admitted on master
+`54cab2256c97c68473fd4116f17ef97762197245` and retained in raw commits
+`48cd07ad` and `d20ff772`:
+
+| Original owner | C name | Bytes | Stack frame |
+| --- | --- | ---: | ---: |
+| `func_8412D390` | `BattleMove_HasSleepTalkChoice` | 280 | 48 |
+| `func_8412D4A8` | `BattleMove_IsSleepTalkSlotEligible` | 148 | 32 |
+| `func_84131F80` | `BattleMove_GetCurrentPriority` | 172 | 40 |
+| `func_841339D0` | `Battle_RefreshSideAfterSwitch` | 252 | 48 |
+
+The Sleep Talk scan checks the low three sleep-status bits at party-record
+byte 36, then visits four move slots at active-record offsets 5–8. It writes
+the inspected move to `D_841951BF` and rejects empty slots, move 214
+(Sleep Talk), excluded effects, and the disabled move at offset 37. The
+per-slot predicate applies the same move restrictions. Their caller
+`func_8412D53C` first checks for an available choice and then selects a random
+slot until the predicate accepts it. The scan's byte-wrapped counter and the
+predicate's shared zero-return path reproduce the original control flow.
+
+The existing wrapper at `0x841264CC` forwards `func_84126440`'s return value;
+both newly decompiled callers test that value. Its previous `void` return
+annotation was incorrect. It is now named
+`BattleMove_IsSleepTalkEffectExcluded`, replacing the unrelated particle-name
+annotation. The effect table read by `func_80062D20` maps its six excluded
+effects to move IDs 130, 13, 143, 76, 19/91, and 117. This is a predicate,
+with no particle-system operation.
+//@src/638E0.c
+
+The priority lookup treats move 233 as priority zero, then scans effect/value
+pairs at `D_8418545C` until effect 255. The decoded pairs are
+`6F:3, 74:3, 67:2, 1C:0, 59:0, 90:0`; unlisted effects return one.
+`func_8413202C` compares the two sides' values to choose which side acts first.
+Using the team table directly avoids a redundant pointer local and recovers
+the original call-save slots without padding or unused storage.
+
+The switch refresh is called by `func_84133ACC` after `func_841334D8`.
+It clears active-record byte 16 bit 0x40, derives the fainted flag from the
+party-record halfword at offset 38, runs the existing refresh routines and
+queues the HP message, then clears the selected move and the existing
+selection-state bytes. It preserves the original negated byte offset into
+`D_8419520C`; replacing that expression with subtraction changes the compiler's
+address construction.
+
+Each owner passed the canonical object/link checks, explicit normal host
+syntax check, and the complete US-ROM comparison. The final four-owner gate
+produced retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming and declaration
+cleanup are separately checked against the entire accepted module, including
+sections, instruction bytes, function extents, and resolved relocations, with
+normal source and a 20-blank-line control. Old symbol aliases remain available.
+No coverage files, instruction rewrites, padding, or compiler flags changed.

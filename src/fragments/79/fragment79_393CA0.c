@@ -488,7 +488,7 @@ extern u8 *D_84195208[];
 extern void *D_841951F8[];
 extern void func_84125650(u8 *, u8);
 extern void func_841334D8(u8);
-extern void func_841339D0(u8);
+extern void Battle_RefreshSideAfterSwitch(u8);
 void func_84125734(u8 arg0) {
     func_84125650(D_84195208[arg0], D_84195200[arg0][0x24]);
 }
@@ -856,8 +856,8 @@ s32 func_84126440(u8 arg0) {
 
 #ifdef VERSION_US
 extern s32 func_84126440(u8);
-void BattleAnim_StopOwnerCategoryParticles(u8 arg0) {
-    func_84126440(arg0);
+s32 BattleMove_IsSleepTalkEffectExcluded(u8 move) {
+    return func_84126440(move);
 }
 #endif
 
@@ -3293,11 +3293,25 @@ void BattleAnim_Table_84185F10_038(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412D390.s")
+s32 BattleMove_HasSleepTalkChoice(void) {
+    s32 slot;
+    if (D_841951D2 != 0) return 0;
+    if ((D_84195200[D_841951BC][36] & 7) == 0) return 0;
+    for (slot = 0; slot < 4; slot = (u8)(slot + 1)) {
+        D_841951BF = D_84195208[D_841951BC][slot + 5];
+        if (D_841951BF == 0) return 0;
+        if (BattleMove_IsSleepTalkEffectExcluded(D_841951BF) == 0 && D_841951BF != 214 && D_841951BF != D_84195208[D_841951BC][37]) return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412D4A8.s")
+s32 BattleMove_IsSleepTalkSlotEligible(u8 slot) {
+    u8 move = D_84195208[D_841951BC][slot + 5];
+    if (move == 0 || move == 214 || BattleMove_IsSleepTalkEffectExcluded(move) != 0 || move == D_84195208[D_841951BC][37]) return 0;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
@@ -3312,10 +3326,10 @@ void func_8412D53C(void) {
     u8 choice;
     D_84195208[D_841951BC][0x26] = 0;
     D_84195208[D_841951BC][0x27] = 0;
-    if (func_8412D390() != 0) {
+    if (BattleMove_HasSleepTalkChoice() != 0) {
         do {
             choice = func_84125080() & 3;
-        } while (func_8412D4A8(choice) == 0);
+        } while (BattleMove_IsSleepTalkSlotEligible(choice) == 0);
         ((u8 *)D_841951F8[D_841951BC])[0] = 0xFF;
         ((u8 *)D_841951F8[D_841951BC])[1] = *((u8 *)D_84195208[D_841951BC] + choice + 5);
         func_841252D0(*((u8 *)D_84195208[D_841951BC] + choice + 5));
@@ -5242,17 +5256,27 @@ void func_84131EAC(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84131F80.s")
+extern u8 D_8418545C[];
+u8 BattleMove_GetCurrentPriority(u8 side) {
+    u8 *table = D_8418545C;
+    s32 effect = func_80062D20(((u8 *)D_841951F8[side])[1]);
+    if (((u8 *)D_841951F8[side])[1] == 233) return 0;
+    while (table[0] != 255) {
+        if (effect == table[0]) return table[1];
+        table += 2;
+    }
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
-extern u8 func_84131F80(s32);
+extern u8 BattleMove_GetCurrentPriority(u8);
 s32 func_8413202C(void) {
     u8 first;
     s32 second;
 
-    first = func_84131F80(0);
-    second = func_84131F80(1);
+    first = BattleMove_GetCurrentPriority(0);
+    second = BattleMove_GetCurrentPriority(1);
     if (second == first) {
         return 0;
     }
@@ -5739,14 +5763,43 @@ void func_84133984(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841339D0.s")
+extern void Battle_QueueSwitchInHpMessage(u8, s32, s32);
+extern void func_841252D0(u8);
+extern void func_8412693C(u8 side);
+extern void func_84126994(u8 side);
+extern void func_84126A64(void);
+extern void func_84131AB8(u8 side);
+extern void func_84131EAC(u8 side);
+extern u8 D_841951D5;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+extern u8 * D_8419520C[];
+void Battle_RefreshSideAfterSwitch(u8 side) {
+    s32 fainted;
+    D_84195208[side][16] &= ~0x40;
+    fainted = 0;
+    if (*(u16 *)(D_84195200[side] + 38) == 0) fainted = 1;
+    func_84131AB8(side);
+    func_8412693C(side);
+    Battle_QueueSwitchInHpMessage(side, fainted, 0);
+    func_84126994(side);
+    func_84126A64();
+    ((u8 *)D_841951F8[side])[1] = 0;
+    D_84195208[side][38] = 0;
+    (*(u8 **)((u8 *)D_8419520C + -(side << 2)))[38] = 0;
+    D_84195208[side][39] = 0;
+    D_841951D5 = 0;
+    func_841252D0(0);
+    func_84131EAC(side);
+}
 #endif
 
 #ifdef VERSION_US
 void func_84133ACC(u8 arg0) {
     ((u8 *) D_841951F8[arg0])[0x10] = 1;
     func_841334D8(arg0);
-    func_841339D0(arg0);
+    Battle_RefreshSideAfterSwitch(arg0);
 }
 #endif
 
