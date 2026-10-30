@@ -1057,7 +1057,57 @@ s32 func_8413771C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413794C.s")
+extern u8 D_84195218[];
+extern s32 func_841349C0(f32);
+extern void func_841374D0(void *);
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+void func_8413794C(u8 *arg0) {
+    struct Change { u16 unk00, value, maximum, status, dvs, active; f32 delta; void *name; u8 unk14, unk15, kind, unk17; };
+    struct State { void *name; f32 value; u16 maximum, status, dvs; u8 unk0E, species; u8 unk10[8]; };
+    u8 i;
+    struct Change *change;
+    struct State *state;
+    u8 *status;
+    u8 *events = arg0 + 104;
+
+    for (i = 0; i < 2; i++) {
+        change = (struct Change *)(arg0 + 44 + (u32)i * 24);
+        if (change->active != 0) {
+            state = (struct State *)(D_84195218 + (u32)i * 24);
+            switch (change->kind) {
+            case 1:
+            case 2:
+            case 3:
+                state->value += change->delta;
+                change->delta = 0.0f;
+                if (change->delta == 0.0) {
+                    state->value = (f32)func_841349C0(state->value);
+                }
+                break;
+            case 4:
+                D_84195200[i] = (u8 *)D_841951F8[i] + (u16)change->delta * 88 + 24;
+                state->name = change->name;
+                state->value = change->value;
+                state->dvs = change->dvs;
+                state->species = change->unk14;
+                state->maximum = change->maximum;
+                state->status = change->status;
+                break;
+            }
+            change->active = 0;
+        }
+        status = arg0 + 92;
+        status += (u32)i * 6;
+        if ((*(u16 *)(status + 2)) != 0) {
+            ((struct State *)(D_84195218 + (u32)i * 24))->status = (*(u16 *)(status + 4));
+        }
+    }
+    if (*(u16 *)(events + 396) > 0) {
+        func_841374D0(events);
+    }
+    *(u16 *)(arg0 + 6) = 0;
+}
 #endif
 
 #ifdef VERSION_US
