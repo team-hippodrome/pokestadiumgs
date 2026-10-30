@@ -2216,3 +2216,26 @@ Next: capture stock UOPT/globalcolor ordering for those three webs and test
 an evidence-backed lifetime change. No source candidate is installed, and no
 ROM acceptance is claimed. Private manifest: battle-future-sight8 candidate 4;
 diagnostics: future-sight-disassembly; permuter: func_84132350-3u017tzj.
+
+#### Future Sight allocator follow-up (2026-10-31)
+
+Stock CFE/UOPT/UGEN/as1 capture passed four complete-module controls (known
+and candidate, each normally and with twenty leading blank lines). The
+logging-only UOPT cost observer passed ten complete-module comparisons,
+including observer disabled/enabled/blank-line controls. Procedure ordinal
+283 emits the three differing saved registers during global coloring, so
+this residual is not a UGEN temporary-register rotation. Recorded selection
+savings for internal colors 19/20/21 are 6.666667/5/5; final machine-code
+mapping is saved move / constant one / opponent-selector address. The target
+instead uses s6/s7/s5 for those roles. Preserve the trace identity when
+interpreting these numbers; late observer `web` fields are stale, so use the
+range's identity word rather than the printed web label.
+
+Eight do/while and real early-exit forms all rejected (best raw 0.8738).
+Eight unsigned-loop/constant/local-type forms also rejected (best raw
+0.8835, unchanged from the signed parent; some introduce a 416-byte body).
+Total canonical candidate count is now 40, with no acceptance. Next useful
+experiment is an explicit, semantically faithful selector-address local,
+with before/after globalcolor costs, rather than more countdown or integer
+width permutations. Capture receipts and trace summary remain private under
+future-sight-stock-passes and future-sight-cost-controls.
