@@ -481,30 +481,29 @@ void func_841359D0(void) {
 #ifdef VERSION_US
 extern s32 func_800472E0(u8 *);
 extern void *func_8004C8A0(void *, s32, s32, s32);
-extern void * func_8004C874(s32, s32);
-void func_84135A2C(u8 *snapshot, u16 text_id) {
+void BattleSnapshot_AppendText(u8 *snapshot, u16 text_id) {
     u8 *part;
     s32 lines;
     u8 *text;
     part = snapshot + 0x68;
     if (snapshot[0x1EA] + 1 < 4) {
         text = func_8004C874(0x10, text_id);
-        
+
         if (part[0x183] + (lines = func_800472E0(text)) < 4) {
             *(u16 *)(part + 0x184 + part[0x182] * 2) = text_id;
             func_8004C8A0(((u8 (*)[0x80])part)[part[0x182]], 0x80, 0x10, text_id);
             part[0x182]++;
- part[0x183] += lines;
- *(s16 *)(part + 0x18C) = 30 + 10 * part[0x183];
+            part[0x183] += lines;
+            *(s16 *)(part + 0x18C) = 30 + 10 * part[0x183];
         }
     }
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_84135A2C(u8 *, u16);
+extern void BattleSnapshot_AppendText(u8 *, u16);
 void func_84135B00(u16 arg0) {
-    func_84135A2C(&D_84195280[D_84195280[0x4D81] * 0x280], arg0);
+    BattleSnapshot_AppendText(&D_84195280[D_84195280[0x4D81] * 0x280], arg0);
 }
 #endif
 
@@ -514,18 +513,18 @@ void func_84135B40(u16 arg0) {
     if (index < 0) {
         index = 0x1D;
     }
-    func_84135A2C(D_84195280 + index * 0x280, arg0);
+    BattleSnapshot_AppendText(D_84195280 + index * 0x280, arg0);
 }
 #endif
 
 #ifdef VERSION_US
 extern u8 *D_84186160[];
-extern void func_84135A2C(u8 *, u16);
+extern void BattleSnapshot_AppendText(u8 *, u16);
 void func_84135B8C(u8 arg0, u16 arg1) {
     if (arg0 < 4) {
         u8 *ptr = D_84186160[arg0];
         if (ptr != NULL) {
-            func_84135A2C(ptr, arg1);
+            BattleSnapshot_AppendText(ptr, arg1);
         }
     }
 }

@@ -725,3 +725,32 @@ retail ROM MD5 is 1561c75d11cedf356a8ddb1a4a5f9d5d.
 Evidence: scratch/battle-snapshot-buffer-address-discovery8/gate-0/receipt.json.
 Naming and duplicate-declaration cleanup preserve the entire module under
 normal and +20-line controls: scratch/battle-snapshot-buffer-naming/receipt.json.
+
+
+### Snapshot text insertion: accepted
+
+`func_84135A2C` is `BattleSnapshot_AppendText` (212 bytes, 53 instructions,
+48-byte frame). It accepts a snapshot and a text ID, limits the snapshot to
+three entries and three combined lines, stores the ID, and copies bank-16
+text into a 128-byte row. It advances the byte counters and sets the duration
+halfword to 30 + 10 times the updated line count. The guard uses a full-width
+sum before the byte counter update.
+
+The name follows the callers selecting current/previous snapshots and the
+text helpers: `func_800472E0` in `src/47580.c` counts one plus newline bytes;
+`func_8004C874` and `func_8004C8A0` in `src/4CC20.c` resolve and copy bank text.
+The original address remains available as a linker alias.
+
+The accepted spelling keeps the looked-up text pointer in an outer-scope
+local and assigns the line count inside the capacity guard. This reproduces
+the addition operand order and stack slots with ordinary C. A separate count
+assignment left one commuted instruction; introducing a second count variable
+fixed that instruction but changed stack allocation. Diagnostic frontend
+tracing identified the simple-local versus converted-load ordering rule;
+only the stock compiler was used for acceptance.
+
+Canonical runner label: `snapshot-text:lookup-then-count-guard:False:outer:True`.
+The US retail gate passed from baseline `1fe02cb1` with the accepted source,
+including the host syntax check. ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Naming and formatting passed normal and 20-leading-line complete-module
+comparisons against the accepted object.
