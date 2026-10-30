@@ -1410,3 +1410,5 @@ func_84138A0C = BattleSelection_ShowChoiceError;
 func_84139618 = BattleSelection_HandlePartyChoice;
 
 func_8413B870 = BattleSelection_ProcessControllerPartitions;
+
+func_8413D7AC = BattleParty_InitializeFallbackTeam;

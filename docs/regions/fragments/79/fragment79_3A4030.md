@@ -300,3 +300,108 @@ all allocatedbytes/reginfo/functionextents/semanticrelocations. Existing public
 choice-handler names are resolved consistently; only new-block duplicates removed.
 The former AD98/B870 gate blocker above is resolved by this true callee repair.
 Private cleanup proof: `scratch/battle-controller-partitions-naming/receipt.json`.
+
+## 2026-10-30 D7AC fallback-team initializer accepted;3794C requeue
+
+Tested from `0986add48430aca1d433ec8fd05a88458bdb70af` in isolated native root
+`/private/tmp/gs-agent-d7ac-tail-96l_23y3/repo`. **func_8413D7AC is accepted:
+620 bytes/frame104**, canonical `d7ac-masked-carriers8` index0. No companion
+repair was required. Explicit host syntax and full native retail ROM passed;
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. The original initializer requeue is
+resolved. The caller `Battle_LoadPlayerDeck` uses it when the deck read is empty.
+
+### Source mechanism and original data contracts
+
+The initializer retains six88-byte party records after the24-byte header,
+the four-move inner loop, all independently consumed stat-experience fields,
+random DVs, name copy, seven-byte aggregate copy and stat recalculation. The
+1248-byte team stride and seven-byte aggregate are views of existing storage;
+neither allocates a local buffer. Party pointers reload across the original
+calls. The original void(u8) ABI and real provider contracts remain unchanged.
+
+The RNG implementation in `src/340C0.c` returns a real u32 word. Explicitly
+masking that result with0xFFFF before storing the16-bit DVs restores the
+original downstream temporary sequence. A separate consumed scalar result
+then reached152/155 exact instructions, but enlarged the frame to112; its only
+three differences were frame/argument-home/epilogue immediates. That parent is
+not an accepted source. The final winner stores the masked word directly and
+uses one actual pointer first for the species-name copy, then for the final
+team-base snapshot. The name provider `src/641E0.c:func_800647C8` returns the
+lookup pointer as s32, consistent with the existing cast. Reusing those real,
+nonoverlapping pointer values removes a frontend temporary without an escape,
+forced home, dummy use, fake ABI or extra storage. The private stock capture
+measures local areas12 bytes at UOPT input and36 at UGEN input, versus16/40
+for the earlier direct-team parent and20/44 for the separate scalar parent.
+These are observed memory areas, not inferred allocator priorities.
+
+Five canonical8-member D7AC batches retained40 rows:32 probe_rejected,
+1 accepted,7 skipped. The new mechanisms were consumed call-result bindings;
+actual scalar/index reuse; disjoint result lifetimes; explicit RNG narrowing;
+and real name/team pointer reuse. Index reuse produced612 bytes; disjoint
+lifetimes retained frame112. Narrowing and pointer reuse compose to the exact
+620-byte/frame104 winner. The owner stopped at its first acceptance. No old
+record/address/scope grid was replayed unchanged. No manual unrolling, padding,
+volatile, fabricated return category, instruction rewrite or helper was used.
+
+### 3794C: measured consumer requeue, preserved as ASM
+
+The remaining roster has15 ASM owners. An apparent zero-row350F4 has extensive
+older negative families in this archive; the copied statistics alone do not
+make it fresh. Most other small owners have17–222 prior rows. The remaining
+418-instruction C820 dispatcher has its own table but exceeds the tractable
+small-owner band. There was no eligible three-to-five-owner fresh family.
+3794C had one older suspicious batch noted here and no rows in the available
+copied ledger; it was selected as a related snapshot consumer with accepted
+rounding and event-list callees.
+
+`requeue` **func_8413794C**, original648B/frame80. Best source-faithful parent:
+`scratch/tail3794c-advances8.json` index0, actual run/output tag
+`tail3794c-advances8a`. It has644B/frame80, normalized.9877/raw.9815 and the
+**first141 instructions/564 bytes independently exact** against the original
+object. First difference: retail `addiu a0,s5,104`, candidate
+`lhu t4,500(s5)`. Retail then loads396(a0) and has a nop in the eventual call's
+delay slot; the candidate computes a0=s5+104 in that delay slot. No missing
+instruction was filled artificially and no rejected body reached a ROM gate.
+
+Unsigned scaled-index arithmetic removes a duplicated signed/byte induction
+web. Building the actual six-byte status-record pointer with a used advance
+recovers retail's +92 address materialization and improves the640-byte parent
+to644. Nine new8-member batches retain72 rejected rows: record/loop/dispatch
+forms; unsigned index/status views; compound array-address nodes; real pointer
+reuse; equivalent guard controls; used pointer advances; adjacent-record
+continuation; true record cursors; and consumed event-active values. The
+648-byte adjacent-record parent uses the wrong event-address provenance and
+is weaker than the644-byte parent. Cursor forms produce628/640B; event-value
+captures remain644B and add a register difference. Do not replay these grids.
+
+Next action: decode the retained stock UGEN/as1 binary boundary for the final
+event guard/call, establish which late pass folds +104/+396 into +500 and
+moves the argument address into the call delay slot, then choose a genuinely
+supported source construct. The owning late pass is not yet established;
+this is a source requeue, not a proven compiler or layout impossibility.
+Do not change374D0's real ABI, add a use, manufacture storage or pad the gap.
+
+### Final preservation and private evidence
+
+All161 tail functions, every allocated section includingreginfo, all function
+extents and semantic relocations equal the starting module. Prefix66448B plus
+tail40048B equals all106496 linked retail code bytes. Every prior accepted
+neighbor and interface repair is unchanged, including B870/AD98. The sealed
+0986add4 root, original94-byte failure proof and all80 prior rows remain intact.
+Stock IDO7.1/flags, one compiler worker, shared native ROM flock and enabled
+canonical stats remain unchanged. Fourteen8-member batches total112 new rows:
+104 rejected,1 accepted,7 skipped. Twenty-four passive normal/+20 captures
+preserve their canonical full modules, with all actual stock stage inputs and
+compiler hashes retained. Post-acceptance local pointer rename/declaration
+spacing passed normal/+20 whole-module checks and host/full native ROM again.
+
+Canonical acceptance: `scratch/d7ac-masked-carriers8/gate-0/receipt.json`.
+Final gate: `scratch/d7ac-tail-final-seal/tidy-gate/receipt.json`.
+Aggregate proof, commit receipt and durable handoff are under
+`scratch/d7ac-tail-final-seal/`. Only this source and region note are committed;
+no naming/global metadata, coverage, private tooling, push or PR is included.
+
+
+### Integrated fallback-team initializer
+
+D7AC is named `BattleParty_InitializeFallbackTeam`, matching both the empty-deck path in `Battle_LoadPlayerDeck` and the explicit fallback branch in `Battle_InitState`. The original address remains a linker alias. Normal/+20 complete-tail sections, bytes, function extents, semantic relocations and reginfo match the agent's accepted object after naming and removal of five duplicated declarations from this new block. The original620B/frame104, actual u32 RNG-to16-bit mask, six-party/four-move loops and consumed name/team-base pointer phases are preserved. `3794C` remains ASM with its measured requeue above. Private naming proof: `scratch/battle-fallback-team-naming/receipt.json`.
