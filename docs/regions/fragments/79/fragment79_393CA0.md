@@ -1712,3 +1712,43 @@ whole allocated module bytes/extents/semantic relocations. Real PP-byte
 address arithmetic and HP-derived scalar carriers remain; no fake work,
 padding or instruction patch. Separate scene67/61 research, coverage and
 private helpers are excluded. The unresolved25778 layout remains separate.
+
+
+## 2026-10-30 early table prerequisite resolved by aligned TU split
+
+**RESOLVED:** previous layout-prerequisite notes for25778/26FA0/3146C/343FC
+no longer describe current layout. The source now ends at existing function
+boundary841347A0 (ROM3A4030); later owners live in fragment79_3A4030.c.
+No function body or signature changed. Both native source halves reproduce
+all106496 original code bytes when ordinarily linked against native baseline
+exports, under normal/+20 controls. Early-source text66448B, later40048B.
+
+The existing17-byte `SendFightThread\n` literal at ROM3FA610 is retained as
+a real const char asset, followed by its natural4-byte table alignment. With
+the four original tables (24+32+256+20B) it occupies352B at3FA610..3FA770.
+This preserves real ROM data; no invented padding, helper, instruction or
+relocation rewrite is used. The shared format-string gap3FA770..3FA810 stays
+shared. Later576B of tables at3FA810..3FAA50 follow the later source object.
+The code cut and both owned data windows satisfy existing16-byte SUBALIGN.
+
+Pinned extraction defines AD94,ADAC,ADCC,AECC inside their respective original
+ASM owners; all four source-object symbols are defined in .rodata, not UND.
+The still-assembly host/full native retail ROM gate PASSED with unchanged MD5
+1561c75d11cedf356a8ddb1a4a5f9d5d. Four final normal/+20 object controls preserve
+all allocated bytes,reginfo,extents andsemantic relocations. Eighteen duplicate
+inherited declarations in the later TU were removed only after those controls.
+
+New ready owners: func_84125778,func_84126FA0,func_8413146C,func_841343FC.
+Retain their old source histories and restore their best genuine candidates
+only through canonical batches in this new layout. Cases must match actual
+table target words; layout readiness does not establish a C body match.
+2955C still needs the real25778 return contract accepted first; the genuine
+360C0 return repair is already present. No active-ASM prototype guard bypass.
+
+Earlier mixed-file notes remain historical evidence; later-file requeues and
+current paths are summarized in fragment79_3A4030.md. Private proof packets:
+battle-early-table-layout-plan, battle-early-tu-native-preview,
+battle-early-tu-module-controls and battle-early-table-layout-gate1. The
+proposed direct --just-symbols preview failed with R_MIPS26 overflow; ordinary
+PROVIDE exports of actual native baseline addresses produced exact code.
+Only the final normal production host/full-ROM gate establishes admission.
