@@ -1434,3 +1434,5 @@ func_84137778 = BattleSnapshot_UpdateDisplay;
 func_8413677C = BattleSnapshot_SetSideChange;
 
 func_84136D9C = BattleSnapshot_AdvanceSideChanges;
+
+func_84138EA4 = BattleSelection_ConfirmChoice;

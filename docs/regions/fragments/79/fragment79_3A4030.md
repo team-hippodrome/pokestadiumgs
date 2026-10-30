@@ -920,3 +920,29 @@ baseline pass. Naming and formatting preserve the whole module's sections,
 instruction bytes, function extents, and relocations, both normally and
 with 20 leading blank lines. No instruction rewriting, padding, or artificial
 ABI is used.
+
+
+### Battle selection confirmation: accepted
+
+`func_84138EA4` is now `BattleSelection_ConfirmChoice` (928 bytes,
+232 instructions, frame48). The move-choice validation paths at
+`func_84139244`, `func_841392E0`, and `func_84139528` pass the selected
+index here. The function dispatches effects for the current selection phase,
+handles the element22 query and conditional sound, stores the choice in the
+side's party state, then sets phase11 and clears the active byte.
+
+The existing 24-byte effect record supplies the phase and active fields.
+Direct array accesses allow IDO to reuse the two state addresses without
+reserving extra space for explicit pointer locals. Stock compiler captures
+showed optimized local reservations of16 bytes with both pointer locals
+and12 bytes with only the effect-state local; both produced frame56. The
+accepted direct accesses produce the retail frame48 and instruction stream.
+
+Canonical acceptance: `selection-dispatch-direct-state8`, candidate0,
+on revision `83619cefa8b733b037bd4cd1efe714028a86f795`. The jump table
+`jtbl_8418B0F4` uses the existing per-file rodata segment. Its relocation
+difference went through the sequential full-ROM gate, which passed with
+retail US MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`; the explicit host
+syntax check also passed. Naming and removal of duplicate declarations
+preserve the complete module normally and with20 leading blank lines.
+No instruction rewriting, padding, extra storage, or ABI change is used.
