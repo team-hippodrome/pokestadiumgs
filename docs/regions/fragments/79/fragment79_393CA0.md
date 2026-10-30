@@ -2264,3 +2264,25 @@ controls/{calibration.json,best-saved.json,pointer-saved.json}, and
 future-sight-pointer-disassembly.json. Next: investigate why the original
 selector-address range has a lower allocation priority than the saved byte;
 do not repeat the rejected full-pointer or move-field-view families.
+
+### Future Sight accepted: selector use fixes allocation (2026-10-31)
+
+`Battle_ResolveFutureSight` (`func_84132350`, 412 bytes) is now accepted.
+The decisive source distinction is checking target HP through
+`D_84195200[D_841951BD]`, while retaining the full-width `other = 1 - side`
+for the later battle-record command. Using `(u8)other` for both had removed
+one use of the stored selector, reducing its address-allocation savings from
+7.5 to 5 and placing it after the saved move. Keeping the genuine selector
+use reproduces every instruction, including the original raw subtraction,
+byte indexing conversion, and saved-register assignment.
+
+Before acceptance, eight saved-local scope variants stayed at raw 0.8835;
+eight narrow loop-counter variants added instructions. Chained selector
+assignment improved to four differing operands (raw 0.9612), and fifteen
+calibrated module comparisons identified the selector's increased savings.
+Eight separate raw-local assignment variants restored the old mismatch.
+Canonical hp-selector batch candidate 0 then passed the normal host syntax
+check and full retail ROM gate, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Naming passed normal and twenty-blank-line complete-module controls. Earlier
+requeue entries above are superseded. No padding, volatile workaround, forced
+registers, or binary rewrite is part of the accepted source.

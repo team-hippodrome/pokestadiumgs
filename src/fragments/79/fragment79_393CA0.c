@@ -5822,7 +5822,61 @@ void func_84132300(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132350.s")
+extern void BattleCommand_RunSequence(void);
+extern s32 func_8004C54C(u8, s32);
+extern void func_841266C4(void);
+extern void func_84135B8C(u8 arg0, u16 arg1);
+extern void func_84136720(u8 arg0, u8 arg1, s16 arg2);
+extern void func_84136D84(void);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 D_841951D5;
+extern u8 D_841951E4;
+extern u8 D_841951E5;
+extern u8 D_841951E6;
+extern u8 D_841951E7;
+extern u16 D_841951E8;
+extern u16 D_841951EA;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void Battle_ResolveFutureSight(void) {
+    s32 side;
+    s32 other;
+    u8 saved;
+    for (side = 0; side < 2; side++) {
+        if (D_84195208[side][26] != 0) {
+            D_84195208[side][26]--;
+            if (D_84195208[side][26] == 1) {
+                D_841951BC = side;
+                other = 1 - side;
+                D_841951BD = other;
+                if (*(u16 *)(D_84195200[D_841951BD] + 38) > 0) {
+                    saved = ((u8 *)D_841951F8[side])[1];
+                    ((u8 *)D_841951F8[side])[1] = 248;
+                    func_8004C54C(28, (s32)(D_84195200[D_841951BD] + 52));
+                    func_841266C4();
+                    D_841951D2 = 0;
+                    D_841951D5 = 10;
+                    D_841951E5 = 10;
+                    D_841951E4 = 0;
+                    D_841951E6 = 0;
+                    D_841951E7 = 0;
+                    D_841951E8 = 0;
+                    D_841951EA = 0;
+                    func_84136D84();
+                    BattleCommand_RunSequence();
+                    func_84136720(2, other, -1);
+                    func_84135B8C(2, 129);
+                    D_841951C8 = 0;
+                    ((u8 *)D_841951F8[side])[1] = saved;
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -6187,7 +6241,7 @@ s32 func_84133304(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_84132300(void);
-extern void func_84132350(void);
+extern void Battle_ResolveFutureSight(void);
 extern void func_841324EC(void);
 extern void func_84132778(void);
 extern void func_8413293C(void);
@@ -6200,7 +6254,7 @@ extern void Battle_ProcessLowHpHeldItems(void);
 extern void func_841331F8(void);
 void func_84133440(void) {
     func_84132300();
-    func_84132350();
+    Battle_ResolveFutureSight();
     func_84132300();
     func_841324EC();
     func_84132300();
