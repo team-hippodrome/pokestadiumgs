@@ -1408,3 +1408,5 @@ func_8290A208 = Scene67_UpdateRecordTransform;
 func_84138A0C = BattleSelection_ShowChoiceError;
 
 func_84139618 = BattleSelection_HandlePartyChoice;
+
+func_8413B870 = BattleSelection_ProcessControllerPartitions;
