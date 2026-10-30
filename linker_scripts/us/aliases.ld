@@ -1476,3 +1476,5 @@ func_8412EC70 = BattleEffect_ApplyPresent;
 func_84131AF8 = Battle_ApplyResidualStatusDamage;
 
 func_84132350 = Battle_ResolveFutureSight;
+
+func_841320E8 = Battle_SelectTurnOrder;

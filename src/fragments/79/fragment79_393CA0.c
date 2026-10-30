@@ -5805,7 +5805,56 @@ s32 func_8413207C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841320E8.s")
+extern void *D_84195204;
+extern u8 func_80063690(u8);
+extern u8 func_80063660(u8);
+extern u8 func_84125080(void);
+extern s32 func_8413202C(void);
+extern s32 func_8413207C(void);
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+s32 Battle_SelectTurnOrder(void) {
+    s32 quick[2];
+    s32 action;
+    u8 chance;
+    const s32 invalidAction = 255;
+    action = ((u8 *)D_841951F8[0])[0];
+    if (!(action < 4 || invalidAction == action)) {
+        action = ((u8 *)D_841951F8[1])[0];
+        if (!(action < 4 || invalidAction == action)) return 5;
+        return 3;
+    }
+    action = ((u8 *)D_841951F8[1])[0];
+    if (!(action < 4 || invalidAction == action)) return 4;
+    switch (func_8413202C()) {
+    case 0:
+        quick[0] = func_80063660(D_84195200[0][1]) == 74;
+        quick[1] = func_80063660(((u8 *)D_84195204)[1]) == 74;
+        if (func_84125080() & 1) {
+            if (quick[0]) {
+                chance = func_80063690(D_84195200[0][1]);
+                if (func_84125080() < chance) return 1;
+            }
+            if (quick[1]) {
+                chance = func_80063690(((u8 *)D_84195204)[1]);
+                if (func_84125080() < chance) return 2;
+            }
+            return func_8413207C();
+        } else {
+            if (quick[1]) {
+                chance = func_80063690(((u8 *)D_84195204)[1]);
+                if (func_84125080() < chance) return 2;
+            }
+            if (quick[0]) {
+                chance = func_80063690(D_84195200[0][1]);
+                if (func_84125080() < chance) return 1;
+            }
+            return func_8413207C();
+        }
+    case 1: return 1;
+    case 2: return 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -6514,14 +6563,14 @@ void func_8413425C(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_841320E8(void);
+extern s32 Battle_SelectTurnOrder(void);
 extern s32 func_84133F10(u8);
 extern void *D_841951FC[];
 void func_841343FC(void) {
     u8 side;
     s32 result;
 
-    switch (func_841320E8()) {
+    switch (Battle_SelectTurnOrder()) {
     case 1:
         func_84134CBC(0, 91);
         func_84136A9C(0, 5, 0, 6);

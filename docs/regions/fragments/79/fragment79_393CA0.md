@@ -2286,3 +2286,20 @@ check and full retail ROM gate, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
 Naming passed normal and twenty-blank-line complete-module controls. Earlier
 requeue entries above are superseded. No padding, volatile workaround, forced
 registers, or binary rewrite is part of the accepted source.
+
+### Turn-order selection accepted (2026-10-31)
+
+`Battle_SelectTurnOrder` (`func_841320E8`, 536 bytes) selects non-move action
+order, then move priority, randomized Quick Claw checks, and finally speed.
+The accepted source switches directly on `func_8413202C()`; that helper's
+complete definition returns only 0, 1, or 2, all covered by the switch.
+Keeping an extra priority fallback value adds instructions. `quick[2]`, then
+`s32 action`, then `u8 chance` gives the original 40-byte frame and chance
+home at sp+27. A named `const s32 invalidAction = 255` on the left of the
+three equality tests is decisive: literal comparisons normalize to reversed
+branch operands, while the named constant retains the target operand order.
+Unsigned literal/cast variants did not fix that; byte casts regressed.
+
+Canonical sentinel batch candidate 1 passed normal host syntax and full ROM,
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming passed normal and twenty-blank-
+line complete-module comparisons. No binary rewrite or padding was needed.
