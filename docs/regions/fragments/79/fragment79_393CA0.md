@@ -2122,3 +2122,31 @@ decoded `field-ugen-rows.json` and `bits-ugen-rows.json`,
 `battle-spite-narrow-bytes4/result.json`. Requeue at UOPT web eligibility/cost;
 no additional declaration-width or decrement-spelling grid is justified by
 these results. Source and interfaces remain unchanged.
+
+### 2026-10-31: Spite slot allocation cost measured
+
+The private logging-only UOPT observer is calibrated against stock on the
+accepted module and both typed-field/packed-PP parents. All 15 comparisons
+per observer (stock, stock +20 lines, observer off, on, on +20 lines for each
+source) preserve the complete module. No production compiler was modified.
+
+The slot expression is the byte local at offset -2 (expression kind 3,
+dtype 8). Global coloring considers its split ranges, then assigns color
+255 at the `compute_save` rejection site. Measured savings for the three
+rejected ranges are 0.0, 0.0, and -0.5; state 2 follows the nonpositive
+savings branch in `compute_save`. Thus these ranges reach allocation and
+are rejected on estimated profitability, not simply absent from the pool.
+The trace does not prove that changing a source spelling can reach retail.
+Both parent shapes show the same three rejected slot costs.
+
+A follow-up reused the move byte as the slot after validation, when the move
+value is dead. Eight canonical variants (guard/else topology, one/two-step
+narrowing, signed/unsigned lookup carrier) all rejected at 544 bytes/frame56.
+Do not repeat this phase-reuse family. The earlier maximum 524-byte/frame56
+candidate remains available; no owner replacement was installed.
+
+Private receipts: `spite-color-controls/calibration.json`,
+`spite-cost-controls/calibration.json`, `spite-cost-controls/slot-cost-summary.json`,
+and `battle-spite-phase-reuse8/result.json`. Preserve this requeue for a
+source/control-flow witness that changes the measured slot range costs;
+do not force colors, add fake accesses, or alter compiler heuristics.
