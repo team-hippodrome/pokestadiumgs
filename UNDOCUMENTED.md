@@ -3,14 +3,14 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **54 / 8,839 (0.6%)**
-- Functions with a real name: **1,881 / 10,904 (17.3%)** (9,023 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 5,675 (4.4%)** (5,427 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Functions defined in `src/` with a `/* ... */` comment: **54 / 8,854 (0.6%)**
+- Functions with a real name: **1,896 / 10,904 (17.4%)** (9,008 still `func_XXXXXXXX`)
+- Variables with a real name: **248 / 5,680 (4.4%)** (5,432 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **995**
-- Functions with generic `arg0`, `arg1`, ... parameters: **5,321 / 8,839 (60.2%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,041 / 1,869**
-- Struct fields with a real name: **5,409 / 8,648 (62.5%)**
-- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **8,645**
+- Functions with generic `arg0`, `arg1`, ... parameters: **5,322 / 8,854 (60.1%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,041 / 1,870**
+- Struct fields with a real name: **5,413 / 8,652 (62.6%)**
+- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **8,672**
 <!-- AUTO_UNDOCUMENTED:END -->
 
 A function counts as commented when a `/* ... */` block ends on the line directly above its definition.
@@ -27,8 +27,8 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/79/fragment79_380A00.c` | 237 | 234 | 233 | 75 | 19 | 220 | 552 |
 | `src/340C0.c` | 404 | 404 | 216 | 117 | 44 | 235 | 116 |
 | `src/fragments/79/fragment79_3ADCA0.c` | 142 | 142 | 197 | 222 | 22 | 116 | 231 |
+| `src/fragments/79/fragment79_393CA0.c` | 266 | 266 | 226 | 62 | 19 | 77 | 129 |
 | `src/fragments/47/fragment47_246640.c` | 69 | 69 | 125 | 52 | 5 | 61 | 428 |
-| `src/fragments/79/fragment79_393CA0.c` | 251 | 251 | 233 | 57 | 19 | 76 | 102 |
 | `src/fragments/20/fragment20_12C460.c` | 102 | 102 | 175 | 73 | 32 | 96 | 237 |
 | `src/585D0.c` | 218 | 218 | 202 | 16 | 10 | 138 | 83 |
 | `src/fragments/49/fragment49_code.c` | 95 | 95 | 173 | 39 | 19 | 49 | 283 |
