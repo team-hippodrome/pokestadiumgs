@@ -2791,7 +2791,50 @@ void BattleCommand_035(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412ADF8.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern u8 func_80063660(u8);
+extern u8 func_84125080(void);
+extern void func_84134CBC(u8, u8);
+extern void func_84134DD8(u8 arg0);
+extern void func_84135B00(u16);
+extern void func_84135B40(u16 arg0);
+extern s32 func_84136124(u8 arg0, s16 arg1, u16 arg2, u8 arg3, u8 arg4);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_841366C4(u8 arg0, s16 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 D_841951C6;
+extern u8 D_841951D3;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplySecondaryConfusion(void) {
+    u8 type;
+    if (func_80063660(D_841951C6) != 25 && D_841951D3 == 0 && !(((u8 *)D_841951F8[D_841951BD])[11] & 4) && !(D_84195208[D_841951BD][16] & 16) && !(D_84195208[D_841951BD][15] & 0x80)) {
+        D_84195208[D_841951BD][19] = (func_84125080() & 3) + 2;
+        D_84195208[D_841951BD][15] |= 0x80;
+        func_84136218(D_841951BC, 6);
+        func_84136218(D_841951BD, 5);
+        func_841366C4(D_841951BD, -1);
+        func_84135B40(94);
+        if (func_84136124(D_841951BC, -2, 60, 6, 9) == 0) {
+            func_84136124(D_841951BD, -2, 60, 5, 9);
+        }
+        type = func_80063660(D_841951C6);
+        if (type == 15 || type == 16) {
+            D_84195200[D_841951BD][1] = 0;
+            D_841951C6 = 0;
+            D_84195208[D_841951BD][15] &= ~0x80;
+            func_84136678(D_841951BD, -1);
+            func_84135B00(95);
+            func_84134CBC(D_841951BD, 86);
+            func_84134DD8(D_841951BF);
+            BattleRecord_AdvanceWriteSlot();
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

@@ -2430,3 +2430,21 @@ passed. Naming passed complete-module byte, symbol-extent and relocation
 comparisons normally and with twenty leading blank lines. The stock UGEN O1
 diagnostic crashed as1 even for an accepted witness and provides no scheduling
 conclusion; production O2 replays reproduced all three captured raw modules.
+
+#### Secondary confusion: accepted (2026-10-31)
+
+`func_8412ADF8` / `BattleEffect_ApplySecondaryConfusion` checks held-item
+immunity and battle-state guards, sets a random confusion countdown and flag,
+records the effect, and consumes a confusion/status-curing held item when
+present. Its 488-byte implementation shares the countdown and cure logic
+with `BattleCommand_035` while using the previous-record helper
+`func_84136124` for the secondary effect.
+
+Forty historical attempts included stale call casts and a final call to
+`func_84136CA8`; the original assembly instead calls
+`BattleRecord_AdvanceWriteSlot`. Reusing the current real helper signatures,
+that correct final call, a byte item-effect local, and a combined guard matched
+on the first candidate. Canonical manifest `battle-secondary-confusion8`,
+candidate0, passed the normal host check and full retail ROM comparison
+(MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`). Naming preserved complete-module
+bytes, symbol extents and relocations in normal and +20-line controls.
