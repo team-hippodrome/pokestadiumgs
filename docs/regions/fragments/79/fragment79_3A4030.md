@@ -282,3 +282,21 @@ and all80 prior rows are preserved, now historical evidence of the resolved
 prerequisite. No remaining requeue in this family; unrelated tail owners were
 not rotated in. Only this source/region pair is committed, without hooks,
 naming/global metadata, coverage, private helpers, push or PR.
+
+### Integrated controller partitions and repaired party-input contract
+
+B870 is `BattleSelection_ProcessControllerPartitions`: the existing24-byte
+side state supplies primary/secondary controller records; the current index
+maps their party counts/offsets. Six actual per-controller button arms route
+party actions/selections, preserving the original hold/press fields and checks.
+Its local data view is `BattleSelectionInputState`, with original24-byte layout.
+Old address name remains a linker alias.
+
+The alreadyaccepted AD98 keeps every756 bytes/frame48 while its third argument
+is correctlyu8. Direct argument use replaces the old argument-byte view, and
+unsigned party-index arithmetic retains the actual88-byte record stride.
+Normal/+20 complete-tail controls against the worker's accepted object preserve
+all allocatedbytes/reginfo/functionextents/semanticrelocations. Existing public
+choice-handler names are resolved consistently; only new-block duplicates removed.
+The former AD98/B870 gate blocker above is resolved by this true callee repair.
+Private cleanup proof: `scratch/battle-controller-partitions-naming/receipt.json`.

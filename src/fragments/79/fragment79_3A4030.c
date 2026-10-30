@@ -2008,17 +2008,9 @@ void func_8413B254(u8 arg0) {
 
 #ifdef VERSION_US
 extern u8 func_84148470(u8);
-extern void func_8413AD98(u8, u8, u8);
-extern void func_800226C0(s32);
-extern void func_84139618(u8 arg0, u8 arg1);
-extern void func_84139958(u8 arg0, u8 arg1);
-extern void func_8413A8C4(u8 arg0);
-extern void func_8413B254(u8 arg0);
-extern void * D_841951F8[];
-extern u8 D_84195248[];
-void func_8413B870(u8 arg0) {
+void BattleSelection_ProcessControllerPartitions(u8 arg0) {
     /* The 24-byte state stores controller pointers at offsets 0 and 4. */
-    struct unk_func_8413B870 {
+    struct BattleSelectionInputState {
         u8 *primary;
         u8 *secondary;
         u8 unk08, unk09, unk0A, unk0B, unk0C, mode, activity;
@@ -2030,8 +2022,8 @@ void func_8413B870(u8 arg0) {
     u8 index;
 
     index = func_84148470(arg0);
-    records[index] = ((struct unk_func_8413B870 *)D_84195248)[arg0].primary;
-    records[(1 - index)] = ((struct unk_func_8413B870 *)D_84195248)[arg0].secondary;
+    records[index] = ((struct BattleSelectionInputState *)D_84195248)[arg0].primary;
+    records[(1 - index)] = ((struct BattleSelectionInputState *)D_84195248)[arg0].secondary;
     offsets[index] = 0;
     offsets[(1 - index)] = ((u8 *)D_841951F8[arg0])[3];
     counts[index] = ((u8 *)D_841951F8[arg0])[3];
@@ -2054,22 +2046,22 @@ void func_8413B870(u8 arg0) {
         func_8413B254(arg0);
     }
     if (((*(u16 *)(records[0] + 8)) | (*(u16 *)(records[1] + 8))) & 0x20) {
-        if (((struct unk_func_8413B870 *)D_84195248)[arg0].activity < 2) {
+        if (((struct BattleSelectionInputState *)D_84195248)[arg0].activity < 2) {
             func_800226C0(3);
             func_84139958(arg0, 1);
         }
     } else if ((*(u16 *)(records[0] + 8) & 0x2) != 0 && counts[0] > 0) {
-        func_84139618(arg0, offsets[0]);
+        BattleSelection_HandlePartyChoice(arg0, offsets[0]);
     } else if ((*(u16 *)(records[0] + 8) & 0x8) != 0 && counts[0] >= 2) {
-        func_84139618(arg0, offsets[0] + 1);
+        BattleSelection_HandlePartyChoice(arg0, offsets[0] + 1);
     } else if ((*(u16 *)(records[0] + 8) & 0x1) != 0 && counts[0] >= 3) {
-        func_84139618(arg0, offsets[0] + 2);
+        BattleSelection_HandlePartyChoice(arg0, offsets[0] + 2);
     } else if ((*(u16 *)(records[1] + 8) & 0x2) != 0 && counts[1] > 0) {
-        func_84139618(arg0, offsets[1]);
+        BattleSelection_HandlePartyChoice(arg0, offsets[1]);
     } else if ((*(u16 *)(records[1] + 8) & 0x8) != 0 && counts[1] >= 2) {
-        func_84139618(arg0, offsets[1] + 1);
+        BattleSelection_HandlePartyChoice(arg0, offsets[1] + 1);
     } else if ((*(u16 *)(records[1] + 8) & 0x1) != 0 && counts[1] >= 3) {
-        func_84139618(arg0, offsets[1] + 2);
+        BattleSelection_HandlePartyChoice(arg0, offsets[1] + 2);
     }
 }
 #endif
@@ -2077,7 +2069,7 @@ void func_8413B870(u8 arg0) {
 #ifdef VERSION_US
 extern void func_8413B468(u8);
 extern void func_8413B5D4(u8);
-extern void func_8413B870(u8);
+extern void BattleSelection_ProcessControllerPartitions(u8);
 extern void * D_841951F8[];
 void func_8413BBEC(s32 arg0) {
     s32 *home = &arg0;
@@ -2087,7 +2079,7 @@ void func_8413BBEC(s32 arg0) {
         if (ptr[8] >= 4) func_8413B5D4(index);
         else func_8413B468(index);
     } else {
-        func_8413B870(index);
+        BattleSelection_ProcessControllerPartitions(index);
     }
 }
 #endif
