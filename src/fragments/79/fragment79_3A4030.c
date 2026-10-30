@@ -891,72 +891,65 @@ void func_84136720(u8 arg0, u8 arg1, s16 arg2) {
 extern f32 func_8000B770(f32);
 struct Change { s16 kindValue; u16 value, maximum, status, dvs, timer; f32 delta; u8 *name; u8 species, level, kind, pad; };
     struct Snapshot { u8 prefix[44]; struct Change changes[2]; };
-extern u8 * D_84195200[];
-void func_8413677C(void *arg0, u8 arg1, s16 arg2, s16 arg3, u8 arg4)
-{
-  struct Change *change;
-  ((struct Snapshot *) arg0)->changes[arg1].kindValue = arg2;
-  ((struct Snapshot *) arg0)->changes[arg1].kind = (u8) arg4;
-  change = &((struct Snapshot *) arg0)->changes[arg1];
-  switch (arg4)
-  {
+void BattleSnapshot_SetSideChange(void *arg0, u8 arg1, s16 arg2, s16 arg3, u8 arg4) {
+    struct Change *change;
+    ((struct Snapshot *)arg0)->changes[arg1].kindValue = arg2;
+    ((struct Snapshot *)arg0)->changes[arg1].kind = (u8)arg4;
+    change = &((struct Snapshot *)arg0)->changes[arg1];
+    switch (arg4) {
     case 0:
-      ((struct Snapshot *) arg0)->changes[arg1].timer = 0;
-      break;
+        ((struct Snapshot *)arg0)->changes[arg1].timer = 0;
+        break;
 
     case 1:
 
     case 2:
-      change->delta = (f32) arg3;
-      change->timer = (u16) ((90.0f * func_8000B770((f32) arg3)) / ((f32) (*((u16 *) (D_84195200[arg1] + 40)))));
-      if (arg3 && (change->timer == 0))
-    {
-      change->timer++;
-    }
-      break;
+        change->delta = (f32)arg3;
+        change->timer = (u16)((90.0f * func_8000B770((f32)arg3)) / ((f32)(*((u16 *)(D_84195200[arg1] + 40)))));
+        if (arg3 && (change->timer == 0)) {
+            change->timer++;
+        }
+        break;
 
     case 3:
-      change->delta = (f32) arg3;
-      change->timer = (u16) ((20.0f * func_8000B770((f32) arg3)) / ((f32) (*((u16 *) (D_84195200[arg1] + 40)))));
-      if (arg3 && (change->timer == 0))
-    {
-      change->timer++;
-    }
-      break;
+        change->delta = (f32)arg3;
+        change->timer = (u16)((20.0f * func_8000B770((f32)arg3)) / ((f32)(*((u16 *)(D_84195200[arg1] + 40)))));
+        if (arg3 && (change->timer == 0)) {
+            change->timer++;
+        }
+        break;
 
     case 4:
-      change->delta = (f32) arg3;
-      change->value = *((u16 *) (D_84195200[arg1] + 38));
-      change->maximum = *((u16 *) (D_84195200[arg1] + 40));
-      change->status = *((u8 *) (D_84195200[arg1] + 36));
-      change->name = D_84195200[arg1] + 52;
-      change->dvs = *((u16 *) (D_84195200[arg1] + 22));
-      change->species = *((u8 *) D_84195200[arg1]);
-      change->level = *((u8 *) (D_84195200[arg1] + 29));
-      change->timer = 1;
-      break;
+        change->delta = (f32)arg3;
+        change->value = *((u16 *)(D_84195200[arg1] + 38));
+        change->maximum = *((u16 *)(D_84195200[arg1] + 40));
+        change->status = *((u8 *)(D_84195200[arg1] + 36));
+        change->name = D_84195200[arg1] + 52;
+        change->dvs = *((u16 *)(D_84195200[arg1] + 22));
+        change->species = *((u8 *)D_84195200[arg1]);
+        change->level = *((u8 *)(D_84195200[arg1] + 29));
+        change->timer = 1;
+        break;
 
     case 5:
 
     case 6:
-      ((struct Snapshot *) arg0)->changes[arg1].timer = 1;
-      break;
-
-  }
-
+        ((struct Snapshot *)arg0)->changes[arg1].timer = 1;
+        break;
+    }
 }
 #endif
 
 #ifdef VERSION_US
 extern u8 D_84195280[];
-extern void func_8413677C(void *, u8, s16, s16, u8);
+extern void BattleSnapshot_SetSideChange(void *, u8, s16, s16, u8);
 void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3) {
-    func_8413677C(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1, arg2, arg3);
+    BattleSnapshot_SetSideChange(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1, arg2, arg3);
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_8413677C(void *, u8, s16, s16, u8);
+extern void BattleSnapshot_SetSideChange(void *, u8, s16, s16, u8);
 void func_84136AF8(u8 arg0, s16 arg1, s16 arg2, u8 arg3) {
     s32 var_v0;
 
@@ -964,7 +957,7 @@ void func_84136AF8(u8 arg0, s16 arg1, s16 arg2, u8 arg3) {
     if (var_v0 < 0) {
         var_v0 = 0x1D;
     }
-    func_8413677C(D_84195280 + (var_v0 * 0x280), arg0, arg1, arg2, (s32) arg3);
+    BattleSnapshot_SetSideChange(D_84195280 + (var_v0 * 0x280), arg0, arg1, arg2, (s32) arg3);
 }
 #endif
 
