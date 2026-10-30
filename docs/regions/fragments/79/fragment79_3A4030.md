@@ -869,3 +869,26 @@ Canonical acceptance: `snapshot-dispatch-field-writes8`, candidate6.
 Object relocation differences required the sequential full-ROM gate; the
 US retail MD5 remained `1561c75d11cedf356a8ddb1a4a5f9d5d`, and the host
 syntax check passed. No instruction rewriting, padding or fake ABI is used.
+
+
+### Snapshot side change builder: accepted
+
+`func_8413677C` is now `BattleSnapshot_SetSideChange` (800 bytes,
+200 instructions, frame40). It records one side's snapshot change, derives
+a nonzero duration for nonzero deltas, and copies the party display fields
+for the replacement case. The owning layout is a 44-byte prefix followed
+by 24-byte change records.
+
+The fifth argument is a byte, matching the retail stack load. The two
+existing caller prototypes were corrected in the same runner transaction.
+The absolute-value callee at 0x8000B770 takes one float; its retail body is
+`jr ra; abs.s f0,f12`. Historical four-argument prototypes were rejected,
+as was a historical halfword read for the party's byte field at offset36.
+
+Canonical acceptance: `snapshot-change-emitted-source8`, candidate0.
+The captured AST-emitted C resolved the case4 address scheduling mismatch;
+the exact emitted source, rather than the permuter's pre-transformation
+input text, was sent through the full-module runner. Jump-table relocation
+differences required the sequential full-ROM gate. Retail US MD5 remained
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; the host syntax check passed.
+No instruction rewriting, padding, or artificial ABI is used.
