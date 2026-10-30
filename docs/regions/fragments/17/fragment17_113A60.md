@@ -665,3 +665,49 @@ pragmas go. Many C users with assorted extern types would need retyping.
   in-file two-element object.
 - Next: find what suppresses IDO's address CSE for repeated scalar access
   in this family.
+
+## func_82206304 — cached-color highlight callback
+
+Event zero saves the node's two four-byte colors at offsets 40 and 44 in
+four-byte entries at `D_82210688` and `D_82210698`, indexed by the word at
+node offset 32. Event one enables mask 2 in the halfword at node offset 2
+when `D_8220EC38 == 2`. In that mode, a matching index receives RGBA
+`(255, 255, 0, 255)` in both colors; other indices restore their saved
+colors. The selected index is the signed halfword at offset 4 of the
+record referenced by the pointer at `D_8220DA08 + 32`. Event one in
+other modes clears mask 2 and retains the colors. Other events retain
+both colors and flags. Every path returns zero.
+
+Original `func_8220792C` finds three nodes through `func_8005049C` and
+registers this callback through `func_8004E308`, passing indices 0, 1 and 2.
+The compiled registration helper stores the callback and index at node
+offsets 28 and 32, then invokes event zero. The existing node constructor
+`func_8004E610` allocates with four-byte alignment and copies the color
+words to offsets 40 and 44. These operations establish the callback
+interface, index and packed-color representation.
+//@src/fragments/17/fragment17_113A60.c
+//@src/4EE50.c
+
+The word/RGBA union describes the original four-byte alignment and the
+byte writes used for the yellow highlight. A byte-only aggregate instead
+emits unaligned load/store pairs. The union reproduces all 63 instruction
+words (252 bytes), with no stack frame. All previous C text and existing
+assembly owners remain unchanged. No new fake, unused local, qualifier,
+allocated storage, helper, layout or instruction rewrite is introduced.
+
+Fresh validation on master `83fbe0cbd60e950c21d927d0a29d87b1bbaabc4b`
+plus this replacement follows normal extraction and an exact unchanged
+baseline. Final validation forces the changed translation unit through
+the normal syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/17/fragment17_113A60.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The complete US link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Full retail comparison and whitespace
+checks pass. Independent original-assembly and raw-retail comparisons
+verify all 252 bytes at ROM `0x115CC4..0x115DC0`.

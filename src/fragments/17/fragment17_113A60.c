@@ -185,7 +185,51 @@ s32 func_82206124(s32 arg0, void *arg1) { s32 value; s32 result; value = *(s32 *
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822061A8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82206304.s")
+typedef union unk_func_82206304_color {
+    u32 word;
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 a;
+    } rgba;
+} unk_func_82206304_color;
+extern u8 D_82210688[];
+extern u8 D_82210698[];
+s32 func_82206304(s32 arg0, u8 *arg1) {
+    s32 var_v0;
+    s32 var_v1;
+
+    var_v0 = *(s32 *)(arg1 + 32);
+    var_v1 = 0;
+    switch (arg0) {
+    case 0:
+        ((unk_func_82206304_color *)D_82210688)[var_v0] = *(unk_func_82206304_color *)(arg1 + 40);
+        ((unk_func_82206304_color *)D_82210698)[var_v0] = *(unk_func_82206304_color *)(arg1 + 44);
+        break;
+    case 1:
+        if (D_8220EC38 == 2) {
+            var_v1 = 1;
+            if (var_v0 == *(s16 *)((u8 *)*(void **)((u8 *)D_8220DA08 + 32) + 4)) {
+                ((unk_func_82206304_color *)(arg1 + 40))->rgba.r = 0xFF;
+                ((unk_func_82206304_color *)(arg1 + 40))->rgba.g = 0xFF;
+                ((unk_func_82206304_color *)(arg1 + 40))->rgba.b = 0;
+                ((unk_func_82206304_color *)(arg1 + 40))->rgba.a = 0xFF;
+                *(unk_func_82206304_color *)(arg1 + 44) = *(unk_func_82206304_color *)(arg1 + 40);
+            } else {
+                *(unk_func_82206304_color *)(arg1 + 40) = ((unk_func_82206304_color *)D_82210688)[var_v0];
+                *(unk_func_82206304_color *)(arg1 + 44) = ((unk_func_82206304_color *)D_82210698)[var_v0];
+            }
+        }
+        if (var_v1 != 0) {
+            *(u16 *)(arg1 + 2) |= 2;
+        } else {
+            *(u16 *)(arg1 + 2) &= 0xFFFD;
+        }
+        break;
+    }
+    return 0;
+}
 
 /* mkdraft:func_82206400 begin */
 u32 func_800060E8(void);
