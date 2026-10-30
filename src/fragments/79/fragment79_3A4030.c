@@ -120,93 +120,86 @@ s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2) {
 
 #ifdef VERSION_US
 #include "color_adjustment.h"
-    struct HeaderSearchR {
-        u8 x[44];
-        u16 a;
-        u8 y[34];
-        ColorAdjustment z;
-    };
-    struct HeaderSearchC {
-        u8 x[36];
-        u8 a;
-        u8 y;
-        u16 z;
-    };
-    struct HeaderSearchHeaderChange {
-        s16 kindValue;
-        u16 value, maximum, status, dvs, timer;
-        f32 delta;
-        u8 *name;
-        u8 species, level, kind, pad;
-    };
 
-struct HeaderRootSide {
- u16 value, hp, species, flags, dvs, reserved;
- ColorAdjustment color;
+struct BattleHeaderDisplayView {
+    u8 unk_00[44];
+    u16 unk_2C;
+    u8 unk_2E[34];
+    ColorAdjustment color;
 };
-struct HeaderRoot {
- u8 kind, flags, enabled, pad3;
- u16 command;
- u8 gap6[6];
- struct HeaderRootSide sides[2];
- struct HeaderSearchHeaderChange changes[2];
- u8 tail[548];
+
+struct BattleHeaderPartyView {
+    u8 unk_00[36];
+    u8 status;
+    u8 unk_25;
+    u16 hp;
 };
-extern void * D_841951F0;
-extern u8 * D_84195200[];
-extern u8 * D_84195208[];
-void func_84134A6C(u8 *a, u8 b, u8 c) {
 
+struct BattleHeaderSide {
+    u16 unk_00, hp, status, flags, dvs, unk_0A;
+    ColorAdjustment color;
+};
 
+/* The prefix used here; the full snapshot occupies 640 bytes. */
+struct BattleHeaderView {
+    u8 unk_00, unk_01, enabled, unk_03;
+    u16 command;
+    u8 unk_06[6];
+    struct BattleHeaderSide sides[2];
+};
 
-    s32 i;
-    struct HeaderSearchR **p;
-    struct HeaderSearchC **q;
-    u8 *changeBase;
-    struct HeaderSearchC **e;
-    struct HeaderRoot *snapshot = (struct HeaderRoot *)a;
-    snapshot->kind = b;
+void BattleSnapshot_InitializeHeader(u8 *data, u8 arg1, u8 command) {
+    s32 side;
+    struct BattleHeaderDisplayView **display;
+    struct BattleHeaderPartyView **party;
+    u8 *change_base;
+    struct BattleHeaderPartyView **end;
+    struct BattleHeaderView *snapshot = (struct BattleHeaderView *)data;
+    snapshot->unk_00 = arg1;
     snapshot->enabled = 1;
-    snapshot->command = c;
-    i = 0;     p = (struct HeaderSearchR **)D_84195208;     changeBase = a;     q = (struct HeaderSearchC **)D_84195200; do {
-        snapshot->sides[i].value = (*p)->a;
-        if (changeBase[66] > 0 && changeBase[66] < 4)
-            snapshot->sides[i].hp = (u16)((*q)->z - *(f32 *)(changeBase + 56));
+    snapshot->command = command;
+    /* IDO schedules this prologue from the shared initializer/loop-entry line. */
+    /* clang-format off */
+    side = 0; display = (struct BattleHeaderDisplayView **)D_84195208; change_base = data; party = (struct BattleHeaderPartyView **)D_84195200; do {
+        /* clang-format on */
+        snapshot->sides[side].unk_00 = (*display)->unk_2C;
+        if (change_base[66] > 0 && change_base[66] < 4)
+            snapshot->sides[side].hp = (u16)((*party)->hp - *(f32 *)(change_base + 56));
         else
-            snapshot->sides[i].hp = (*q)->z;
-        snapshot->sides[i].species = (*q)->a;
-        snapshot->sides[i].dvs = *(u16 *)((u8 *)*q + 22);
-        snapshot->sides[i].color = (*p)->z;
-        snapshot->sides[i].flags = 0;
-        if (((u8 *)*p)[15] & 64)
-            snapshot->sides[i].flags |= 2;
-        if (((u8 *)*p)[15] & 32)
-            snapshot->sides[i].flags |= 4;
-        if (((u8 *)*p)[16] & 16)
-            snapshot->sides[i].flags |= 1;
-        if (((u8 *)*p)[42])
-            snapshot->sides[i].flags |= 8;
-        if (((u8 *)D_841951F0)[0x9c4] == 1)
-            snapshot->sides[i].flags |= 16;
-        else if (((u8 *)D_841951F0)[0x9c4] == 2)
-            snapshot->sides[i].flags |= 32;
-        else if (((u8 *)D_841951F0)[0x9c4] == 3)
-            snapshot->sides[i].flags |= 64;
-        changeBase += 24;
-        q++;
-        i++;
-        p++;
-        e = (struct HeaderSearchC **)D_84195200 + 2;
-    } while (q != e);
+            snapshot->sides[side].hp = (*party)->hp;
+        snapshot->sides[side].status = (*party)->status;
+        snapshot->sides[side].dvs = *(u16 *)((u8 *)*party + 22);
+        snapshot->sides[side].color = (*display)->color;
+        snapshot->sides[side].flags = 0;
+        if (((u8 *)*display)[15] & 0x40)
+            snapshot->sides[side].flags |= 0x2;
+        if (((u8 *)*display)[15] & 0x20)
+            snapshot->sides[side].flags |= 0x4;
+        if (((u8 *)*display)[16] & 0x10)
+            snapshot->sides[side].flags |= 0x1;
+        if (((u8 *)*display)[42])
+            snapshot->sides[side].flags |= 0x8;
+        if (((u8 *)D_841951F0)[2500] == 1)
+            snapshot->sides[side].flags |= 0x10;
+        else if (((u8 *)D_841951F0)[2500] == 2)
+            snapshot->sides[side].flags |= 0x20;
+        else if (((u8 *)D_841951F0)[2500] == 3)
+            snapshot->sides[side].flags |= 0x40;
+        change_base += 24;
+        party++;
+        side++;
+        display++;
+        end = (struct BattleHeaderPartyView **)D_84195200 + 2;
+    } while (party != end);
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_84134A6C(u8 *, u8, u8);
+extern void BattleSnapshot_InitializeHeader(u8 *, u8, u8);
 extern void BattleSnapshot_SetPartyMember(u8 *, u8, u8);
 extern u8 D_84195280[];
 void func_84134CBC(u8 arg0, u8 arg1) {
-    func_84134A6C(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
+    BattleSnapshot_InitializeHeader(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
 }
 #endif
 
@@ -224,18 +217,18 @@ void func_84134D28(u8 arg0, u8 arg1) {
     if (idx < 0) {
         idx = 0x1D;
     }
-    func_84134A6C(D_84195280 + idx * 0x280, arg0, arg1);
+    BattleSnapshot_InitializeHeader(D_84195280 + idx * 0x280, arg0, arg1);
 }
 #endif
 
 #ifdef VERSION_US
 extern u8 *D_84186160[];
-extern void func_84134A6C(u8 *, u8, u8);
+extern void BattleSnapshot_InitializeHeader(u8 *, u8, u8);
 void func_84134D80(u8 arg0, u8 arg1, u8 arg2) {
     if (arg0 < 4) {
         u8 *ptr = D_84186160[arg0];
         if (ptr != NULL) {
-            func_84134A6C(ptr, arg1, arg2);
+            BattleSnapshot_InitializeHeader(ptr, arg1, arg2);
         }
     }
 }
@@ -448,11 +441,11 @@ extern u16 D_84199D86;
 extern u8 D_8418615C, D_8419A006, D_8419A007, D_84199D82;
 extern u8 D_84199D80[];
 extern void _bzero(void *, s32);
-extern void func_84134A6C(u8 *, u8, u8);
+extern void BattleSnapshot_InitializeHeader(u8 *, u8, u8);
 extern u8 * D_84195200[];
 extern void * D_84195204;
 extern s8 D_8419A005;
-void func_8413543C(void){if(D_84199D86==0&&D_8418615C==0){_bzero(D_84199D80,0x280);if(D_8419A006==0&&(D_84195200[0][0x24]&0x27))D_8419A006++;if(D_8419A006==1&&(*(u8*)((u8*)D_84195204+0x24)&0x27))D_8419A006++;switch(D_8419A006){case 0:func_84134A6C(D_84199D80,0,0x62);break;case 1:func_84134A6C(D_84199D80,1,0x62);break;case 2:func_84134A6C(D_84199D80,0,0x5C);break;case 3:func_84134A6C(D_84199D80,0,0x5D);break;case 4:func_84134A6C(D_84199D80,0,0x60);break;case 5:func_84134A6C(D_84199D80,0,0x61);break;case 6:func_84134A6C(D_84199D80,1,0x60);break;case 7:func_84134A6C(D_84199D80,1,0x61);break;case 8:func_84134A6C(D_84199D80,0,0x5E);break;case 9:func_84134A6C(D_84199D80,0,0x64);break;case 10:func_84134A6C(D_84199D80,0,D_8419A007?0x63:0x5F);break;case 11:func_84134A6C(D_84199D80,1,D_8419A007?0x63:0x5F);break;}D_8419A006++;if(D_8419A006>=0xC){D_8419A007=0;D_8419A006=2;}D_84199D82=1;}D_8419A005=1;}
+void func_8413543C(void){if(D_84199D86==0&&D_8418615C==0){_bzero(D_84199D80,0x280);if(D_8419A006==0&&(D_84195200[0][0x24]&0x27))D_8419A006++;if(D_8419A006==1&&(*(u8*)((u8*)D_84195204+0x24)&0x27))D_8419A006++;switch(D_8419A006){case 0:BattleSnapshot_InitializeHeader(D_84199D80,0,0x62);break;case 1:BattleSnapshot_InitializeHeader(D_84199D80,1,0x62);break;case 2:BattleSnapshot_InitializeHeader(D_84199D80,0,0x5C);break;case 3:BattleSnapshot_InitializeHeader(D_84199D80,0,0x5D);break;case 4:BattleSnapshot_InitializeHeader(D_84199D80,0,0x60);break;case 5:BattleSnapshot_InitializeHeader(D_84199D80,0,0x61);break;case 6:BattleSnapshot_InitializeHeader(D_84199D80,1,0x60);break;case 7:BattleSnapshot_InitializeHeader(D_84199D80,1,0x61);break;case 8:BattleSnapshot_InitializeHeader(D_84199D80,0,0x5E);break;case 9:BattleSnapshot_InitializeHeader(D_84199D80,0,0x64);break;case 10:BattleSnapshot_InitializeHeader(D_84199D80,0,D_8419A007?0x63:0x5F);break;case 11:BattleSnapshot_InitializeHeader(D_84199D80,1,D_8419A007?0x63:0x5F);break;}D_8419A006++;if(D_8419A006>=0xC){D_8419A007=0;D_8419A006=2;}D_84199D82=1;}D_8419A005=1;}
 #endif
 
 #ifdef VERSION_US

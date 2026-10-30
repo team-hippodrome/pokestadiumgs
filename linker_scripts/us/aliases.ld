@@ -1436,3 +1436,5 @@ func_8413677C = BattleSnapshot_SetSideChange;
 func_84136D9C = BattleSnapshot_AdvanceSideChanges;
 
 func_84138EA4 = BattleSelection_ConfirmChoice;
+
+func_84134A6C = BattleSnapshot_InitializeHeader;
