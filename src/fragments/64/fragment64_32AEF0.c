@@ -44,7 +44,37 @@ void func_87F088EC(Vtx *vtx, f32 s, f32 t, f32 x_offset, f32 y_offset, f32 scale
     vtx->n.a = 0xFF;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32AEF0/func_87F08A94.s")
+typedef struct unk_func_87F08A94 {
+    u8 unk_00;
+    u8 unk_01;
+    u16 unk_02;
+    u16 unk_04;
+    u8 unk_06[2];
+    f32 unk_08;
+    f32 unk_0C;
+} unk_func_87F08A94;
+extern s32 main_pool_alloc(s32, s32);
+s32 func_87F08A94(unk_func_87F08A94 *arg0, u16 *arg1) {
+    Vtx *var_s1;
+    s32 var_s2;
+    Vtx *var_v0;
+    f32 var_f20;
+
+    var_v0 = (Vtx *)main_pool_alloc((arg0->unk_02 + 1) * 32, 0);
+    var_s1 = var_v0;
+    for (var_s2 = 0; var_s2 < arg0->unk_02 + 1; var_s2++) {
+        if (var_s2 < arg0->unk_02) {
+            var_f20 = (u32)arg0->unk_04 * (f32)var_s2;
+        } else {
+            var_f20 = (u32)arg1[1];
+        }
+        func_87F088EC(var_s1, 0.0f, var_f20, arg0->unk_08, arg0->unk_0C, 1.0f, arg1);
+        var_s1++;
+        func_87F088EC(var_s1, (u32)arg1[0], var_f20, arg0->unk_08, arg0->unk_0C, 1.0f, arg1);
+        var_s1++;
+    }
+    return (s32)var_v0;
+}
 
 void func_87F08C08(s8 *arg0, void *arg1) {
     u8 temp_v0;
@@ -69,7 +99,7 @@ void func_87F08C08(s8 *arg0, void *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32AEF0/func_87F08C68.s")
 
 extern void func_87F08C68(s8 *, void *);
-extern s32 func_87F08A94(s8 *, void *);
+extern s32 func_87F08A94(unk_func_87F08A94 *, u16 *);
 extern s32 func_87F08280(s8 *, s32, void *, s32, s32, s32);
 typedef struct {
     s8 record;
@@ -88,7 +118,7 @@ s32 func_87F08D6C(void *arg0, s32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) 
         local.arg3 = arg3;
         func_87F08C08((s8 *)&local.record, arg0);
         func_87F08C68((s8 *)&local.record, arg0);
-        result = func_87F08280((s8 *)&local.record, arg1, arg0, arg4, func_87F08A94((s8 *)&local.record, arg0), arg5);
+        result = func_87F08280((s8 *)&local.record, arg1, arg0, arg4, func_87F08A94((unk_func_87F08A94 *)&local.record, arg0), arg5);
     }
     return result;
 }
