@@ -65,7 +65,20 @@ void func_822006CC(F822006CC_Particle *arg0, s32 arg1, s32 arg2) {
     arg0->unkA = (s16)(s32)(D_80087E50[index] * radius + (f32)arg2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822007D8.s")
+void func_822007D8(u8 *arg0) {
+    s32 i;
+    F822006CC_Particle *particle;
+
+    for (i = 0; i < 30; i++) {
+        particle = (F822006CC_Particle *)(arg0 + 36) + i;
+        if (particle->unk0 != 0) {
+            particle->unk2++;
+            if (particle->unk2 >= 10) {
+                particle->unk0 = 0;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("hand_asm/fragments/17/func_82200918_manual.s")
 
