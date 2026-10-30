@@ -2095,3 +2095,30 @@ Do not repeat return-type, width/home, or packed-PP grids without new pass
 or caller evidence. Private receipts: `spite-slot-contract-v2/receipt.json`
 and `battle-spite-bitfields8/result.json`. No source or interface change was
 installed, and no ROM acceptance is claimed for this owner.
+
+### 2026-10-31: Spite optimizer-boundary capture
+
+A fresh passive stock-compiler capture validates six complete-module controls:
+accepted source and both current typed-field/packed-PP candidates, each
+normally and with twenty leading blank lines. No compiler decisions changed.
+The typed-field candidate enters UOPT with 12 local bytes and leaves with
+20; packed PP enters with 12 and leaves with 24. Both keep the slot at Mmt
+-2: optimized `Uvreg`/`Ustr` rows 91/92, a memory load for the move-name call
+at row 136, and `Urlod` to register 8 after the RNG call at row 155. The
+party-PP update loads Mmt -2 again (field row 264, packed row 261).
+These are UOPT output operations, so the spill is already present before
+UGEN. This does not yet identify eligibility versus allocation cost.
+
+A targeted single-expression decrement/narrowing experiment with signed and
+unsigned word carriers, cast and mask forms, and typed-field/direct-byte
+accesses did not eliminate the spill: all eight valid forms produced 528
+bytes/frame 64. Four direct-byte inputs initially had a private generator
+member-substitution syntax error; corrected inputs were rerun separately,
+and those compile failures are not source-shape evidence.
+
+Private evidence: `spite-stock-passes/receipt.json`, `slot-ownership.json`,
+decoded `field-ugen-rows.json` and `bits-ugen-rows.json`,
+`battle-spite-narrow-update8/result.json`, and the corrected
+`battle-spite-narrow-bytes4/result.json`. Requeue at UOPT web eligibility/cost;
+no additional declaration-width or decrement-spelling grid is justified by
+these results. Source and interfaces remain unchanged.
