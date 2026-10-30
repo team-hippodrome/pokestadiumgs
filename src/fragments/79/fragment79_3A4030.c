@@ -1898,7 +1898,32 @@ void func_8413A53C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413A6CC.s")
+extern void func_800226C0(s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
+void func_8413A6CC(u8 arg0, u8 arg1, u8 arg2) {
+    switch (D_84195248[arg0].phase) {
+    case 5:
+        func_84147228(7, arg0, 0, 0xB, 0);
+        func_84147228(8, arg0, 0, 0xB, 0);
+        func_84147228(7, arg0, 0, 5, 4);
+        func_84147228(8, arg0, 0, 5, 4);
+        func_84147228(arg2, arg0, arg1, 0xA, 0);
+        func_84147228(arg2, arg0, arg1, 5, 6);
+        func_84147228(0x14, arg0, 0, 0xA, 0);
+        func_84147228(0x14, arg0, 0, 5, 6);
+        func_800226C0(8);
+        break;
+    case 7:
+        func_84147228(0xD, arg0, arg1, 4, 1);
+        func_84147228(arg2, arg0, arg1, 1, 0);
+        func_84147228(arg2, arg0, arg1, 3, 0);
+        func_84147228(arg2, arg0, arg1, 5, 3);
+        func_84147228(0x14, arg0, 0, 5, 3);
+        func_84147228(0x14, arg0, 0, 3, 0);
+        break;
+    }
+    D_84195248[arg0].phase = 6;
+}
 #endif
 
 #ifdef VERSION_US
