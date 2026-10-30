@@ -1414,3 +1414,5 @@ func_8413B870 = BattleSelection_ProcessControllerPartitions;
 func_8413D7AC = BattleParty_InitializeFallbackTeam;
 
 func_8413794C = BattleSnapshot_ApplySideChanges;
+
+func_8413C820 = Battle_UpdatePhase;

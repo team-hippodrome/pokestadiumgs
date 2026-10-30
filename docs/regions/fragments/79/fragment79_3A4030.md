@@ -496,9 +496,10 @@ handles evidence-backed naming and publication. No remaining3794C prerequisite.
 
 ### Integrated snapshot side-change consumer
 
-<<<<<<< HEAD
 3794C is `BattleSnapshot_ApplySideChanges`: the existing snapshot consumer applies pending value/party/status updates for the two sides, processes its event component, and clears the original input header. Its actual event address is bound before the loop, with the original field guard and event call after it. The old address name remains a linker alias. Normal/+20 full-tail sections/bytes/function extents/semantic relocations/reginfo match the worker's accepted object after naming and removal of only duplicated declarations in this block. The648B/frame80 source has no companion repair, padding, extra helper or ABI change. Earlier3794C requeues above are resolved. Private naming proof: `scratch/battle-snapshot-side-changes-naming/receipt.json`.
-=======
+
+## 2026-10-30 C820 dispatcher requeue and acceptance
+
 ### Measured source and pass boundary
 
 The best legitimate candidate is `c820:flow:direct-control-field-tests`,
@@ -699,4 +700,8 @@ Aggregate, commit receipt and durable handoff:
 Private checkpoint/tests/diffs: `scratch/c820-scanner-resume/`.
 Only this source and region note are committed with coverage hooks disabled.
 No remaining C820 prerequisite; coordinator handles naming/integration/publication.
->>>>>>> 44814cc5 (Decompile battle state dispatcher with verified record interfaces)
+
+
+### Integrated battle phase dispatcher
+
+C820 is `Battle_UpdatePhase`, the existing phase dispatcher that synchronizes both side-state records, updates timer/control flags, queues the original events and advances the battle phase. The original address remains a linker alias. Its1636B/frame56 source and eight-entry table preserve the worker's complete tail object under normal/+20 naming and duplicate-declaration controls, including every affected accepted record consumer. Public selection/snapshot names and local record names are retained while the new global record views and byte access contracts are merged. Source17's independent current-master change is retained. No coverage, helpers, layout edits or instruction rewriting enter this change. Private proof: `scratch/battle-phase-dispatch-naming/receipt.json`.

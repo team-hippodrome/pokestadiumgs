@@ -2394,32 +2394,14 @@ void func_8413C7C0(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84195278;
-extern s32 D_8419527C;
 extern s32 D_84186150, D_84186154, D_84186158;
 extern struct unk_D_8419A008 D_8419A008[];
-extern u8 D_8419A0A1;
-extern u8 D_84195210[];
 extern void func_8413C500(void);
 extern void func_84148650(u8);
 extern void func_8410A6A4(void);
 extern s32 func_80001FF0(void);
-extern s32 func_841484CC(u8, u8, u8, u8);
 extern struct unk_D_84195248 D_84195248[2];
-extern void Display_QueueFramebufferRequest_fragment79(OSMesg arg0);
-extern void func_80023A3C(s32, s32, s32);
-extern void func_8002AAFC(s32);
-extern void func_84135338(u8 arg0);
-extern void func_84137ED4(u8 arg0);
-extern void func_841385A8(u8 arg0, u8 arg1);
-extern void func_8413C3A8(void);
-extern void func_8413C6AC(u8 arg0, u16 arg1);
-extern void func_84147228(u8, u8, u8, u8, s32);
-extern void * D_841951F0;
-extern void * D_841951F8[];
-extern u8 D_84195280[];
-extern u8 D_8419A006;
-void func_8413C820(void) {
+void Battle_UpdatePhase(void) {
     s32 i;
 
     switch (D_84195278) {
@@ -2670,7 +2652,7 @@ M2C_UNK func_8410A884();                            /* extern */
 M2C_UNK func_8410A9B4();                            /* extern */
 M2C_UNK func_84136D9C();                            /* extern */
 M2C_UNK func_84137778();                            /* extern */
-void func_8413C820(void);                            /* extern */
+void Battle_UpdatePhase(void);                            /* extern */
 M2C_UNK func_8413CE84();                            /* extern */
 M2C_UNK func_84145BA0(u8);                          /* extern */
 M2C_UNK func_8414605C();                            /* extern */
@@ -2710,7 +2692,7 @@ void func_8413D37C(void) {
             D_8419A0A3 -= 1;
         }
         func_841482BC();
-        func_8413C820();
+        Battle_UpdatePhase();
         if (var_s7 == 0) {
             var_s7 = 1;
             func_8002B1CC();
