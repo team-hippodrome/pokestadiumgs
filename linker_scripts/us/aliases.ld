@@ -1418,3 +1418,5 @@ func_8413794C = BattleSnapshot_ApplySideChanges;
 func_8413C820 = Battle_UpdatePhase;
 
 func_8413DD94 = BattleSnapshot_InitializeBuffer;
+
+func_84135A2C = BattleSnapshot_AppendText;
