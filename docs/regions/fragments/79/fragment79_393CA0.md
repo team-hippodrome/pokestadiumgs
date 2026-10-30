@@ -2349,3 +2349,36 @@ no shadow prototype, cast call, or direct source workaround was used.
 Private evidence: battle-switch-in-slot8, switch-in-stock-passes,
 check-switch-in-capture.py. Earlier progress is three accepted functions,
 not an acceptance of this owner.
+
+#### Switch-in frame resolved; adjacent schedule residual (2026-10-31)
+
+Best is now `battle-switch-in-record8` candidate0: 504 bytes and the exact
+32-byte frame, with only instruction rows5/6 swapped (`sll t6,a1,2` and
+`lui v1,%hi(D_841951F8)`). Every other instruction and operand matches.
+Initialize `rec = base`, then `rec += (u32)arg1 * 0x58`, then `rec += 0x18`.
+The explicit u32 conversion is decisive: merely spelling the multiplier
+`0x58U` does not remove the long-lived converted slot spill. The cast separates
+record indexing from the later signed command argument, restores the byte
+parameter home, and removes all extra local frame allocation. Incremental
+pointer construction also fixes the addition operand order.
+
+A private two-module recorder-contract diagnostic had already ruled out
+widening its third parameter: it changed five existing393CA0 callers and the
+92-byte recorder wrapper, while leaving the candidate's56-byte frame. No
+signature change was installed. Wider switch-in input candidates failed on
+existing u8 declarations; no companion repair was used. Local slot copies
+failed to improve. The logging-only identity observer passed ten module
+controls and identified converted expression web126 (kind4/dtype6, source
+byte web15) with savings0 and divisor6. This motivated the successful explicit
+unsigned stride, rather than another ABI change.
+
+Eight record-layout/line-grouping variants and eight real offset-local
+initialization variants did not close the final swap. Normal and +20-line
+controls reproduce it; diagnostic -g0 and -g0+20 do too. The initial attempt
+to pass -g0 through asm-processor failed its argument parser, so a private
+stock-driver forwarding wrapper supplied -g0 directly; this was diagnostic
+only and is not an acceptance path. Receipt: switch-in-g0-driver/receipt.json.
+Next: capture the best candidate's UGEN/as1 boundary and isolate the ready
+order for the first slot multiply and team-table address load. No forced
+schedule or binary swap is acceptable. Total current canonical candidates64
+(including eight declaration compile failures); owner remains ASM.
