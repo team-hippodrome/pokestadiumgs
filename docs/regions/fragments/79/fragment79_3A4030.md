@@ -497,3 +497,211 @@ handles evidence-backed naming and publication. No remaining3794C prerequisite.
 ### Integrated snapshot side-change consumer
 
 3794C is `BattleSnapshot_ApplySideChanges`: the existing snapshot consumer applies pending value/party/status updates for the two sides, processes its event component, and clears the original input header. Its actual event address is bound before the loop, with the original field guard and event call after it. The old address name remains a linker alias. Normal/+20 full-tail sections/bytes/function extents/semantic relocations/reginfo match the worker's accepted object after naming and removal of only duplicated declarations in this block. The648B/frame80 source has no companion repair, padding, extra helper or ABI change. Earlier3794C requeues above are resolved. Private naming proof: `scratch/battle-snapshot-side-changes-naming/receipt.json`.
+
+## 2026-10-30 C820 dispatcher requeue and acceptance
+
+### Measured source and pass boundary
+
+The best legitimate candidate is `c820:flow:direct-control-field-tests`,
+index6 of `scratch/c820-dispatch-flow8/batch.json`:1664B/frame56,
+normalized0.9062/raw0.7957, `operand_or_scheduling_drift`. The smaller
+threshold-before-increment candidate is1660B/frame64 at0.8892/raw0.5325.
+Neither is accepted or link-verified. The usual first fingerprint is the
+entry range-guard branch: retail `0x1020018d`, candidate `0x10200194`
+(first differing byte27). That branch displacement reflects the longer
+body; it does not identify a register tie.
+
+Retained stock7.1 CFE output assigns the actual `D_84195248` address to the
+state pointer and emits indirect byte reads. UOPT changes these to direct
+`Ulod Smt` reads of the same global at offsets13,37,12,36 and subsequent
+fields, before UGEN. Retail instead retains the state-record base in`s0`.
+Four untouched stock-AS1 replays of normal/+20 captures reproduce their
+entire raw output objects exactly. The captured transition attributes this
+candidate's fold to UOPT; it proves neither compiler impossibility nor an
+accepted source shape. Stock5.3 read-only lineage controls also retain the
+1664-byte byte/record parents, with their own normal/+20 identity and actual
+callable-sibling controls. Production remains stock7.1 with its original flags.
+
+Completed families cover byte/typed/row record views; pointer binding before
+the switch; real aligned pointer prefixes; control-object views; byte/signed/
+unsigned flag captures; a real rate-query binding; side-index versus cursor
+loops; genuine source loops for paired calls; positive guards, independent
+void exits and exchanged phase arms; the confirmed48-byte record-pair extent;
+and two-side predicate scans. Ordinary bindings and type views repeat1664B.
+Source loops for the paired calls remain1676B; predicate scans retain extra
+loop/control work at1684–1756B. Do not repeat these spelling, lifetime, width,
+guard or loop grids without new causal evidence.
+
+There are64 retained enabled canonical rows:52 probe rejections and12 compile
+failures, across eight8-member batches. The initial eight compile failures
+are the real query-prototype ordering problem described below. A private
+CFG generator also selected a nested `else` incorrectly: dispatch-flow rows
+1/2 are excluded from source-shape conclusions, and rows3/4/5/7 failed
+compilation. Their original records remain intact. The following reviewed
+`c820-real-flow8` batch replaces that experiment; it does not erase or
+reinterpret the invalid rows. No failed or rejected candidate was installed.
+
+### Genuine contracts and terminal tooling prerequisite
+
+The actual provider `func_841484CC` in `fragment79_3ADCA0.c` returns`s32`
+and takes four`u8` arguments; it returns whether the selected record's flag
+byte contains the mask. Its earliest two accepted callers in this file
+previously relied on an implicit declaration. An exact-once companion adds
+the provider's real declaration before `func_84137648`; the candidate's own
+later `M2C_UNK func_8413C820()` declaration is corrected to`void(void)`.
+These are retained transactions only, with no source change installed.
+`func_80001FF0` remains the actual`s32(void)` TV-rate provider; the elapsed
+counter is read as`u32`, producing the retail unsigned remainder operation.
+The real framebuffer message is`0x4B495054` (`KIPT`), passed through the
+existing`OSMesg` queue interface.
+
+`Battle_InitializeSideDisplayStates` independently proves two24-byte state
+records, controller pointers at0/4, controller-selection bytes9/10/11, and
+byte stores at8/12/13/14/15. Consumers dereference those two pointers through
+byte9. The next materially different hypothesis is a coherent actual record
+array declaration, rather than another cast of the incomplete byte array.
+`scratch/c820-typed-global8.json` retains eight hypotheses,18 exact-once data
+declaration repairs and byte views preserving all26 existing C consumers'
+data operations. This transaction has not compiled or passed a native gate.
+
+Canonical preflight refuses that transaction because the existing real C
+functions `func_8413AB2C` and `func_8413B08C` are not recognized beneath their
+leading line comments. The unmodified signature scanner returns`None` for
+both original definitions at lines1925/2005. A read-only in-memory diagnostic
+that isolates those comments recovers their exact existing signatures,
+including B08C's pre-existing volatile parameter. No qualifier, prototype,
+comment, source body, guard or runner was changed to evade the refusal.
+No compiler worker or hypothesis row was consumed by this preflight failure.
+
+**Next action — tooling-blocked/requeue:** use the coordinator's reviewed
+comment-aware signature-scanner checkpoint with unchanged admission guards,
+then submit the retained `c820-typed-global8` transaction once. Check all26
+actual consumers and allocated module sections before crediting any C820 hit;
+require the normal host/full-native retail gate. If the coherent interface
+still gives the same direct-load fold, stop that family and retain this
+negative. No global naming, aliases, layout or other-owner change is proposed.
+
+### Preservation and receipts
+
+The source remains byte-identical to5519c9d0. Both initial and final normal
+host/full-native retail baseline gates pass with ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All161 tail functions, allocated sections,
+function extents, semantic relocations and the106496-byte linked fragment
+code match the starting module/retail baseline. All prior accepts and repairs
+remain preserved. The sealed3794C root remains clean and unchanged.
+
+Private evidence:
+
+- `scratch/c820-baseline-gate/receipt.json`
+- `scratch/c820-final-baseline-gate/receipt.json`
+- `scratch/c820-oracle/receipt.json`
+- `scratch/c820-boundary-analysis/receipt.json`
+- `scratch/c820-stock-passes/receipt.json`
+- `scratch/c820-stock53-lineage/receipt.json`
+- `scratch/c820-preflight-proof/receipt.json`
+- `scratch/c820-final-seal/receipt.json` and`handoff.md`
+
+No C820 source or companion repair is accepted. Only this durable region
+note is committed, by explicit path with hooks disabled; source, naming,
+metadata, coverage and private tools remain unshipped. No agents, Docker,
+other owner, push or PR.
+
+## 2026-10-30 — C820 accepted with actual state/control record interfaces
+
+The C820 requeue above is resolved. `func_8413C820` is accepted at1636B,
+409 instructions/frame56, with all32 original jump-table bytes and case
+targets preserved. Canonical winner: `c820-control-record8`, index1,
+`c820:control-record-view:direct-flag-field-tests`. The runner stopped at its
+first acceptance; no further owner hypotheses were submitted.
+
+### Source mechanism and genuine companion contracts
+
+The source uses the existing two24-byte side-state records as a typed global
+array, and directly reads their actual byte fields. The initializer provides
+the pointers at0/4 and byte-field layout. Its26 existing consumers retain
+byte views of that same storage. A typed cast of the former incomplete byte
+array was insufficient: direct fields on the coherent array improved1664B
+to1648B. An indexed two-side loop improved that to1632B, with the timer/control
+addressing still wrong.
+
+The control record describes the existing words at0/4/8, halfwords12/14/16,
+and flags byte18. `Battle_InitState`, `func_841383B4` and `func_8413CE84`
+provide its actual reads/writes and widths. It remains an unsized external
+record view; C820 accesses only record0. No object is defined, allocated,
+enlarged or moved. Those three existing consumers retain their byte views;
+two also belong to the26 state consumers, for27 distinct record consumers.
+Direct control flag-field tests, rather than an intervening flag-value
+local, produce the remaining retail address-base reuse. The original signed
+TV-rate provider and unsigned elapsed-word remainder are preserved.
+
+The actual query declaration`s32 func_841484CC(u8,u8,u8,u8)` is installed
+before its earliest implicit caller, using the real provider in
+`fragment79_3ADCA0.c`. C820's own stale`M2C_UNK` declaration becomes`void(void)`.
+All declaration/body changes went through one exact-once canonical companion
+transaction. All original function addresses, sizes and linked instructions,
+including every affected accepted neighbor, equal the ASM baseline. No
+padding, helper, new volatile, artificial storage, return-category workaround,
+address escape, register binding, unrolling or instruction/relocation rewrite
+is used. Existing unrelated source fakes remain unchanged.
+
+### Private scanner checkpoint and attempt accounting
+
+The reviewed coordinator checkpoint masks C comments/string/character literals
+before the existing callee-signature scan. It recognizes the real AB2C/B08C
+definitions without changing any owner/companion, dedup, link or gate logic.
+The private verifier changes from SHA256
+`655bb39ccb33adfa9fa230fb762513e6288c577e6342b8935c20a7fc39b0dd84`
+to`53c5a655e7393e2807e7f15f162e838e3338419efdf55a6ac573d80f28345657`,
+exactly the coordinator checkpoint. Twenty-one focused tests pass, including
+real definitions, quoted/commented fake definitions, invalid owners, active
+ASM companions, exact-once edits, pragma edits, rejected-body dedup and the
+retained eight-member transaction with real history. Every other verifier
+function has an unchanged AST. The scanner and tests remain ignored/private;
+no public tooling path is changed. The initial test's assumption that C820's
+old prototype was already recognized was corrected after observing that the
+same comment defect hid it too; both test records remain available.
+
+This continuation retains three canonical8-member batches/24 enabled rows:
+15 rejections,2 compile failures,1 accepted and6 skipped after acceptance.
+The two compile failures are a private generator's duplicated member expression
+in `c820-real-control8`; they establish no source-shape conclusion. The next
+manifest corrects the token substitution and all eight bodies compile. Across
+both C820 blocks there are88 rows:67 rejected,14 compile failures,1 accepted,
+6 skipped. All original refusals, failed constructions and seals remain intact.
+
+### Authoritative admission and preservation
+
+The winner has recognized relocation-field differences, including the original
+side1 alias versus the equivalent side-array+4 reference. Raw relocation
+shape verification reports`relocation_drift`; it is not silently declared
+link-verified. The unchanged canonical sequential host/full-native retail gate
+accepts it with ROM MD5`1561c75d11cedf356a8ddb1a4a5f9d5d`.
+No acceptance rule or topology check was relaxed.
+
+A whitespace-only post-acceptance cleanup formats the two record declarations
+and separates C820's declaration/statements. Normal/+20 controls preserve the
+entire accepted object's allocated sections, function extents and semantic
+relocations, followed by another normal host/full-native retail PASS.
+An independent replay then passes the untouched accepted object to the normal
+GNU linker, captures the actual command/map/ELF, and reproduces the entire ELF
+byte-for-byte without recompilation. All allocated ELF sections,161 tail
+function addresses/sizes/linked bytes, the409 original C820 instruction words
+and its eight original table entries match the starting ASM baseline.
+Stock IDO7.1, production flags, native worker/statistics and shared ROM lock
+remain unchanged. Prefix, metadata, naming and coverage are unchanged.
+
+Canonical receipt: `scratch/c820-control-record8/gate-0/receipt.json`.
+Final formatted-source gate:
+`scratch/c820-accepted-final-seal/tidy-gate/receipt.json`.
+Untouched-object GNU link/allocated-module proof:
+`scratch/c820-accepted-final-seal/link-replay/receipt.json`.
+Aggregate, commit receipt and durable handoff:
+`scratch/c820-accepted-final-seal/`.
+Private checkpoint/tests/diffs: `scratch/c820-scanner-resume/`.
+Only this source and region note are committed with coverage hooks disabled.
+No remaining C820 prerequisite; coordinator handles naming/integration/publication.
+
+
+### Integrated battle phase dispatcher
+
+C820 is `Battle_UpdatePhase`, the existing phase dispatcher that synchronizes both side-state records, updates timer/control flags, queues the original events and advances the battle phase. The original address remains a linker alias. Its1636B/frame56 source and eight-entry table preserve the worker's complete tail object under normal/+20 naming and duplicate-declaration controls, including every affected accepted record consumer. Public selection/snapshot names and local record names are retained while the new global record views and byte access contracts are merged. Source17's independent current-master change is retained. No coverage, helpers, layout edits or instruction rewriting enter this change. Private proof: `scratch/battle-phase-dispatch-naming/receipt.json`.
