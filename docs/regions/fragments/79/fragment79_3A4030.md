@@ -946,3 +946,34 @@ retail US MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`; the explicit host
 syntax check also passed. Naming and removal of duplicate declarations
 preserve the complete module normally and with20 leading blank lines.
 No instruction rewriting, padding, extra storage, or ABI change is used.
+
+
+### Battle snapshot header: accepted
+
+`func_84134A6C` is now `BattleSnapshot_InitializeHeader` (592 bytes,
+148 instructions, frame8). It writes the snapshot header and captures both
+sides' HP, status, DVs, display color and flags. Pending side changes use
+24-byte records: their kind and floating delta are read at snapshot offsets
+66 and56, respectively, plus the side's 24-byte stride. The original
+address remains a linker alias.
+
+The existing loop counter must be initialized before the source pointers.
+A byte cursor follows the change records, while the side index follows the
+16-byte output records. Computing the actual table end at the bottom of
+the loop gives IDO the required register lifetimes. Keeping the initializer
+statements and `do` entry on one source line gives the retail prologue
+schedule; the source marks that line against automatic formatting. Stock
+UOPT captures have the same operations with different location records for
+the nearby nonmatching spelling. Logging-only register traces were checked
+against complete-module stock outputs before interpreting them.
+
+Canonical acceptance: `snapshot-header-loop-entry-lines8`, candidate4,
+on revision `d02f6520511eb0e106fb63fcc39fcae28230778e`. The equivalent
+end-of-table relocation (`D_84195200 + 8` versus `D_84195208`) went through
+the sequential full-ROM gate. Retail US MD5 was
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, and the explicit host syntax check
+passed. Naming, partial structure views and removal of duplicate declarations
+preserve the complete module's sections, bytes, function extents and
+relocations, normally and with20 leading blank lines. No instruction
+rewriting, padding, extra storage or ABI change is used. Earlier header
+requeues are resolved.
