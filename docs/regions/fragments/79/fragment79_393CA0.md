@@ -2196,3 +2196,23 @@ matches every instruction and the 48-byte frame. Canonical runner acceptance
 and normal host syntax check passed, followed by retail ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming also passed both module controls.
 No binary rewriting, padding, or forced-register mechanism was used.
+
+### Future Sight delayed execution: requeue (2026-10-31)
+
+`func_84132350` is the 412-byte delayed Future Sight handler: it decrements
+both active countdowns, temporarily selects move 248, runs the attack command
+sequence against a surviving opponent, and restores the previous move.
+Twenty-four canonical candidates tested local widths/order, opposing-side
+calculation placement, loop termination, countdown expression forms, and
+independent global-store ordering. Best uses `s32 side`, `s32 other`, `u8 saved`;
+size, 64-byte frame and opcode sequence match. Twelve operands differ because
+three saved registers rotate: opponent-selector address target s5 / actual s7,
+saved move target s6 / actual s5, constant one target s7 / actual s6.
+Moving `other` ahead of the countdown test worsens allocation; countdown
+prefix/guard/combined/cached forms do not improve the best result.
+A 60-second local, one-worker permuter run calibrated byte-identically against
+the canonical probe and stayed at score 81, with no output candidates.
+Next: capture stock UOPT/globalcolor ordering for those three webs and test
+an evidence-backed lifetime change. No source candidate is installed, and no
+ROM acceptance is claimed. Private manifest: battle-future-sight8 candidate 4;
+diagnostics: future-sight-disassembly; permuter: func_84132350-3u017tzj.
