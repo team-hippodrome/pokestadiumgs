@@ -814,3 +814,31 @@ The full US retail-ROM gate and explicit host syntax check passed with
 statistics enabled. ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`. Normal and
 20-leading-line complete-module comparisons preserve the accepted object
 after naming, formatting, and removal of duplicated declarations.
+
+
+### Snapshot party member update: accepted
+
+`func_841350F4` is now `BattleSnapshot_SetPartyMember` (248 bytes, 62
+instructions, 40-byte frame). It selects the party record at the provider's
+24-byte header plus an 88-byte stride. The active member uses the current
+battle species, value and color; other members use the party record and the
+color-adjustment routine. Both paths copy the remaining record fields into
+the snapshot's side-specific slot.
+
+The callee `func_8003F5AC` returns `ColorAdjustment` through the ABI's hidden
+result pointer. Its old two-pointer void declaration and the accepted
+`func_8413D6D4` call were corrected in the same runner transaction. Existing
+accepted callers in fragments 57 and 63 support this declaration; the full
+retail-ROM gate verifies both changed bodies together.
+
+The winning source initializes the destination pointer in its declaration
+using a 16-byte array view. A separate assignment left two stack offsets
+wrong (24 instead of 28); introducing a consumed scalar enlarged the frame
+to 48 bytes. Stock compiler captures confirmed frontend/optimized local
+storage of 8/16 bytes for the baseline and 12/20 for the scalar variant.
+No unused storage, instruction rewrite, or forced register was needed.
+
+Canonical acceptance: `snapshot-party-local-storage8`, candidate 1.
+The retail ROM retained MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`, and the
+host syntax check passed. Naming and formatting passed complete-module
+comparisons both normally and with twenty extra leading source lines.

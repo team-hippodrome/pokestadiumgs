@@ -124,7 +124,7 @@ s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2) {
 
 #ifdef VERSION_US
 extern void func_84134A6C(u8 *, u8, u8);
-extern void func_841350F4(u8 *, u8, u8);
+extern void BattleSnapshot_SetPartyMember(u8 *, u8, u8);
 extern u8 D_84195280[];
 void func_84134CBC(u8 arg0, u8 arg1) {
     func_84134A6C(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
@@ -286,9 +286,9 @@ extern ColorAdjustment func_8003F5AC(u8 *);
 extern void * D_841951F8[];
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
-void func_841350F4(u8 *snapshot, u8 side, u8 index) {
+void BattleSnapshot_SetPartyMember(u8 *snapshot, u8 side, u8 index) {
     u8 *party;
-    u8 *dst = (u8 *)&((u8 (*)[16])snapshot)[side];
+    u8 *dst = (u8 *)&((u8(*)[16])snapshot)[side];
     party = (u8 *)D_841951F8[side] + index * 88 + 24;
     if (index == ((u8 *)D_841951F8[side])[10]) {
         *(u16 *)(dst + 12) = *(u16 *)(D_84195208[side] + 44);
@@ -320,19 +320,19 @@ void func_841351EC(void *arg0, u8 arg1) {
 
 #ifdef VERSION_US
 void func_8413523C(u8 arg0, u8 arg1) {
-    func_841350F4(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
+    BattleSnapshot_SetPartyMember(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_841350F4(u8 *, u8, u8);
+extern void BattleSnapshot_SetPartyMember(u8 *, u8, u8);
 extern u8 D_84195280[];
 void func_84135284(u8 arg0, u8 arg1) {
     s32 idx = D_84195280[0x4D81] - 1;
     if (idx < 0) {
         idx = 0x1D;
     }
-    func_841350F4(D_84195280 + idx * 0x280, arg0, arg1);
+    BattleSnapshot_SetPartyMember(D_84195280 + idx * 0x280, arg0, arg1);
 }
 #endif
 
