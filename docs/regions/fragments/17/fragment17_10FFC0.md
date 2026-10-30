@@ -81,3 +81,48 @@ source, object, ELF, map, ROM and compiler identity. No replacement byte
 patch, changed compiler flag, register constraint, padding or added helper
 is needed. This cleans an existing C owner and does not add a new owner
 to the decompilation totals.
+
+
+## func_822007D8 — record-counter expiration
+
+This one-pointer, void owner walks 30 twelve-byte records at argument offset
+36. For every record whose signed halfword at offset 0 is nonzero, it
+increments the signed halfword at offset 2 and clears offset 0 when the
+updated value is at least 10. Inactive records retain their counters. The
+existing `F822006CC_Particle` view provides both narrow fields; no new type
+or storage is needed.
+
+`func_82200694` searches the same 30 records for a zero first halfword.
+`func_822006CC` initializes an available record with first halfword 1 and
+counter 0, along with its remaining float/coordinate fields. Original
+`func_82200E04` calls that initializer at record offset 36 plus an index
+times 12, then passes the owning record to this updater and ignores its
+result. These producers and consumers establish the active flag, counter,
+stride and void interface. Unknown function and field names remain unchanged.
+//@src/fragments/17/fragment17_10FFC0.c
+
+The first C trial for this owner matches all 80 instruction words (320
+bytes), with no stack frame. The ordinary indexed loop reproduces IDO's
+initial two-record peel and subsequent four-record unrolling. Signed-halfword
+increment/narrowing and the comparison after the store remain intact. All
+previous C and existing assembly owners remain unchanged. No new fake,
+unused local, extra storage, padding, instruction rewrite, layout or helper
+change is introduced.
+
+Fresh validation on master `0fd5e1868fa3456b2f36c74484ff3ca1bb01a772` plus
+this patch follows normal extraction and an exact unchanged baseline. An
+unsuccessful sorting candidate was restored and freshly compiled before
+this replacement. Final validation forces the changed translation unit
+through the normal syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/17/fragment17_10FFC0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Complete retail comparison and whitespace
+checks pass. Independent original-assembly and raw-retail comparisons verify
+all 320 bytes at ROM `0x110198..0x1102D8`.
