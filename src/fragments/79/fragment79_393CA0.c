@@ -856,8 +856,8 @@ s32 func_84126440(u8 arg0) {
 
 #ifdef VERSION_US
 extern s32 func_84126440(u8);
-void BattleAnim_StopOwnerCategoryParticles(u8 arg0) {
-    func_84126440(arg0);
+s32 BattleAnim_StopOwnerCategoryParticles(u8 arg0) {
+    return func_84126440(arg0);
 }
 #endif
 
@@ -3297,7 +3297,14 @@ void BattleAnim_Table_84185F10_038(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412D4A8.s")
+extern s32 BattleAnim_StopOwnerCategoryParticles(u8);
+extern u8 D_841951BC;
+extern u8 * D_84195208[];
+s32 func_8412D4A8(u8 arg0) {
+    u8 move = D_84195208[D_841951BC][arg0 + 5];
+    if (move == 0 || move == 214 || BattleAnim_StopOwnerCategoryParticles(move) != 0 || move == D_84195208[D_841951BC][37]) return 0;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
