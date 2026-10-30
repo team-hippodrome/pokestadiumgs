@@ -1934,3 +1934,20 @@ cleanup are separately checked against the entire accepted module, including
 sections, instruction bytes, function extents, and resolved relocations, with
 normal source and a 20-blank-line control. Old symbol aliases remain available.
 No coverage files, instruction rewrites, padding, or compiler flags changed.
+
+## 2026-10-31 native damage modifiers
+
+`func_841280D8` is now `BattleDamage_ApplyTypeAndWeather` (300 bytes).
+The function bypasses move 165, applies the matching-attacker-type bonus,
+calls the weather multiplier, halves effect 151 damage in weather 1, and
+applies defender type effectiveness. `func_84126390` compares the move type
+with both attacker types; `func_800632CC` returns the effectiveness byte and
+updates damage through its pointer. A zero effectiveness sets the failure
+flag, while the status byte preserves the same-type bonus bit.
+
+The native runner accepted a byte-sized effectiveness local and direct global
+record accesses. The complete US ROM matched retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, with the normal host syntax check enabled.
+Naming and indentation passed whole-module byte, section, symbol extent, and
+relocation comparisons in both normal and 20-leading-blank-line controls.
+The original address remains a linker alias.

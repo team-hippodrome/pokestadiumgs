@@ -1450,3 +1450,5 @@ func_84131F80 = BattleMove_GetCurrentPriority;
 func_841339D0 = Battle_RefreshSideAfterSwitch;
 
 func_841264CC = BattleMove_IsSleepTalkEffectExcluded;
+
+func_841280D8 = BattleDamage_ApplyTypeAndWeather;
