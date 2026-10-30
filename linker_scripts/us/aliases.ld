@@ -1488,3 +1488,5 @@ func_8412ADF8 = BattleEffect_ApplySecondaryConfusion;
 func_84128EC0 = BattleEffect_ApplySleep;
 
 func_84124F40 = Battle_SeedRandomByteBuffer;
+
+func_84133C10 = Battle_ResolveOpponentFaint;

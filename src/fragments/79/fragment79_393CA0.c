@@ -6042,14 +6042,14 @@ s32 Battle_SelectTurnOrder(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84133C10(s32);
+extern void Battle_ResolveOpponentFaint(u8);
 extern void *D_84195204;
 void func_84132300(void) {
     if ((*(u16 *)((u8 *)(*D_84195200) + (0x26))) == 0) {
-        func_84133C10(1);
+        Battle_ResolveOpponentFaint(1);
     }
     if ((*(u16 *)((u8 *)(D_84195204) + (0x26))) == 0) {
-        func_84133C10(0);
+        Battle_ResolveOpponentFaint(0);
     }
 }
 #endif
@@ -6697,7 +6697,76 @@ void Battle_ApplySwitchInState(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84133C10.s")
+extern void func_8413D2E4(u8);
+extern void func_84137DB8(void);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void Battle_RefreshSideAfterSwitch(u8 side);
+extern void func_84124E44(u8 arg0);
+extern s32 func_84126320(u8 arg0);
+extern void func_84126994(u8 arg0);
+extern s32 func_841270D8(u8 arg0, u8 arg1);
+extern void func_841334D8(u8);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_841383B4(u8, u8, u8);
+extern u8 D_841951C3;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void Battle_ResolveOpponentFaint(u8 side) {
+    s32 remaining[2];
+    u8 peer;
+    peer = 1 - side;
+    D_84195208[side][0xF] &= 0xFFFB;
+    *(s32 *)(D_84195208[peer] + 0x4C) = 0;
+    func_84126994(peer);
+    func_841270D8(peer, ((u8 *)D_841951F8[peer])[0xA]);
+    func_84124E44(side);
+    func_841360C0(side, -1, 60, 2, 0);
+    func_84124E44(peer);
+    func_84136678(peer, -1);
+    func_84135B00(111);
+    func_84134CBC(peer, 28);
+    BattleRecord_AdvanceWriteSlot();
+    func_841334D8(peer);
+    remaining[peer] = func_84126320(peer) > 0;
+    if (*(u16 *)(D_84195200[side] + 0x26) == 0) {
+        D_84195208[peer][0xF] &= 0xFFFB;
+        *(s32 *)(D_84195208[side] + 0x4C) = 0;
+        func_84126994(side);
+        func_84124E44(side);
+        func_841270D8(side, ((u8 *)D_841951F8[side])[0xA]);
+        func_841360C0(peer, -1, 60, 2, 0);
+        func_84136678(side, -1);
+        func_84135B00(111);
+        func_84134CBC(side, 28);
+        BattleRecord_AdvanceWriteSlot();
+        func_841334D8(side);
+        func_84137DB8();
+        remaining[side] = func_84126320(side) > 0;
+        if (remaining[0] == 0 && remaining[1] == 0) {
+            if (D_841951C3 == 7) {
+                if ((u32)side != 0) func_8413D2E4(0);
+                else func_8413D2E4(1);
+            } else func_8413D2E4(2);
+        } else if (remaining[0] == 0) {
+            func_8413D2E4(1);
+        } else if (remaining[1] == 0) {
+            func_8413D2E4(0);
+        }
+        func_841383B4(5, 5, 0);
+        Battle_RefreshSideAfterSwitch(side);
+    } else {
+        func_84137DB8();
+        if (remaining[peer] == 0) func_8413D2E4(side);
+        if (D_84195200 != &D_84195200[side]) func_841383B4(5, 12, 0);
+        else func_841383B4(12, 5, 0);
+    }
+    Battle_RefreshSideAfterSwitch(peer);
+    func_84137DB8();
+}
 #endif
 
 #ifdef VERSION_US
