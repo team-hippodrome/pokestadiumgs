@@ -1752,3 +1752,120 @@ battle-early-tu-module-controls and battle-early-table-layout-gate1. The
 proposed direct --just-symbols preview failed with R_MIPS26 overflow; ordinary
 PROVIDE exports of actual native baseline addresses produced exact code.
 Only the final normal production host/full-ROM gate establishes admission.
+
+## 2026-10-30 native early-table family: five owners accepted after layout checkpoint
+
+Base `6689d7d30f61fc23aaccb6e7e557166aa6ac43f5` supplies the aligned TU split
+and four source-owned early tables. This block replaces five ASM owners with
+ordinary C, totaling **2,984 retail code bytes**. Each owner stopped at its
+first canonical acceptance; all five passed explicit normal host syntax and
+full native retail ROM gates. Final MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+| Owner | Bytes | Frame | Canonical winning batch/index |
+|---|---:|---:|---|
+| `func_84125778` |604|48|`early-25778-masks8`,0|
+| `func_8412955C` |932|48|`early-2955c-byte8`,0|
+| `func_84126FA0` |312|24|`early-26fa0-byteprovider8`,0|
+| `func_8413146C` |204|24|`early-3146c-initial8`,2|
+| `func_841343FC` |932|40|`early-343fc-homes8`,2|
+
+### 25778: real return, six masks and complete record cleanup
+
+The documented 187-row requeue is resolved. Historical best C used the wrong
+advance routine, read the wrong table for the active slot passed to566D0,
+and omitted the conditional final clear. None of the187 retained bodies used
+`BattleRecord_AdvanceWriteSlot`;179 explicitly used36CA8. The accepted C calls
+AdvanceWriteSlot, reads slot10 from the selected `D_841951F8` record, and clears
+entry byte1 only when the existing real2517C result is nonzero.
+
+The selector is63660(entry byte1), followed by a fresh byte36 load. Actual
+cases10..15 require masks08/20/10/07/40/7F respectively, all nonzero; defaults
+return0. Successful paths retain the flags across calls, perform original
+record mutations/reloads, and return1. Retail uses full16-bit clearing masks
+FFFE/FF7F before byte stores; those immediates closed the initial604B/frame48
+parent's three mask differences. Table relocation addends were handled by
+ordinary linking and the authoritative ROM gate, without object rewriting.
+
+The provider's original returns0/1 and2955C's branch at841297A4 establish the
+`s32(u8)` contract. Two existing void forward declarations were repaired via
+exact-once canonical companions. All previously accepted caller bodies remain
+byte-identical. The old separate-provider/prototype blocker for2955C is closed.
+
+### 2955C: observed unsigned byte and existing return-bearing helpers
+
+The accepted caller preserves changing globals across calls, target/acting
+side choices, AdvanceWriteSlot and the existing360C0/36124 result checks.
+The mode2 path uses signed-1 with36B9C; the other path uses the actual unsigned
+65535 with36BEC. The360C0 explicit return repair was already in the baseline;
+it was preserved, not re-edited.25778's actual result controls the subsequent
+record cleanup. The saved entry flag is a realu16, matching SH/LHU atSP46.
+
+A932B parent differed in exactly four instructions around `D_841951C1`:
+its existing global declaration is s8, but retail uses LBU. Explicit `(u8)`
+interpretation in both the guard and26390 argument closes those differences;
+the global declaration was unchanged. An initial redundant u8 extern conflicted
+with the existing s8 declaration; the diagnostic and corrected declaration
+context remain in the private batches. No prototype or deduplication bypass.
+
+### 26FA0 and3146C: original table operations and byte provider contract
+
+26FA0's eight cases call C874(16,index) for indices9/11/13/14/15/12/10/8,
+then pass that real pointer through the32-bit C54C argument with command43.
+The provider's initial ANDI and argument home establish its u8 parameter.
+Six stale s32 prototypes in existing accepted callers were retyped through
+exact-once companions. All301 other prefix functions, including those callers,
+retain identical unlinked code bytes; no artificial branches or unused locals
+from the historical permuter parent were used.
+
+3146C keeps the actual D8 guard, twelve selector cases14/96/97/104/106/107/
+110/111/112/133/151/159, and all64 original jump-table targets. Its default
+path calls366C4(target,-1),34EC8(8), then uses the cached real D9 value for the
+low-nibble26FA0 argument and high-nibble143/144 continuation. The winning
+local is u32; the narrower local changed allocation. Actual provider/consumer
+signatures are used throughout.
+
+### 343FC: real33F10 result and distinct five-case sequences
+
+Retail stores33F10's s32 result atSP32 **before** calling the already-defined
+void37DB8, then tests the saved result after the counter increment. The old
+volatile parent instead consumed37DB8 and also inserted/omitted actual case
+calls. Accepted C preserves the unusual original counter choices in cases1/2,
+keeps33ACC only at the observed sites, and expresses case5's final counter as
+`D_841951F8[1 - side]`. Declaring the real byte side before the result places
+it atSP39 while the result occupiesSP32, matching the original frame40.
+
+The added consumer prototype for previously undeclared33F10 is supported by
+its actual byte argument mask and explicit0/1 return paths. Its ASM body was
+not changed. The existing wrong33C10 prototype and33F10's separate blocked
+owner remain untouched; no companion targeted either active ASM owner. The
+existing `D_841951FC` symbol identifies the second pointer slot for constant
+counter accesses; no global alias or metadata definition was introduced.
+
+### Preservation and receipts
+
+Ten canonical batches of8 retain80 enabled-statistics rows:5 accepted,
+28 rejected,16 compile failures and31 skipped after acceptance. Both initial
+compile-failure batches are retained:2955C's redundant data declaration and
+26FA0's existing s32 prototypes. Each batch kept normal/+20 whole-module
+controls, one probe compiler worker and the shared native ROM gate lock.
+Production IDO7.1/flags and canonical tools were unchanged; no A804 plug-in.
+
+Final post-acceptance braces, indentation and numeric-notation cleanup was
+compiled before installation. Normal/+20 objects preserve all allocated
+bytes including.reginfo, extents and semantic relocations relative to the
+accepted module, followed by another explicit host/full native ROM PASS.
+All301 other prefix functions retain exact object code and every function
+extent is unchanged. Source-owned352B rodata is identical; linked prefix66448B
+plus untouched tail40048B reproduces all106496 retail code bytes. At the raw
+object stage only five relocation-controlled text words differ from baseline,
+and one compiler.reginfo FP mask bit differs; reginfo is discarded by the
+existing linker script and absent from the native ELF. This is recorded,
+not normalized or patched. Final normal/+20 controls include that metadata.
+
+Private root `/private/tmp/gs-agent-battle-early-m0s2kbwm/repo`:
+`scratch/early-final-seal/{receipt.json,handoff.md,module-preservation.json,owned-layout.json}`.
+Final gate: `scratch/early-final-seal/tidy-gate/receipt.json`. Per-owner gates:
+`scratch/<winning-batch>/gate-0/receipt.json`. Earlier19 accepts, all existing
+interface repairs, the later TU, metadata and coverage are preserved. Old
+38A0C/B870 and other sealed requeues remain in their original workspace; no
+new requeue from these five owners. Naming/public integration stays separate.
