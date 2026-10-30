@@ -892,3 +892,31 @@ input text, was sent through the full-module runner. Jump-table relocation
 differences required the sequential full-ROM gate. Retail US MD5 remained
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; the host syntax check passed.
 No instruction rewriting, padding, or artificial ABI is used.
+
+
+### Snapshot side-change dispatcher: accepted
+
+`func_84136D9C` is now `BattleSnapshot_AdvanceSideChanges` (1640 bytes,
+410 instructions, frame80). The battle update caller invokes it before
+`BattleSnapshot_UpdateDisplay`. It advances both sides' status and value
+timers, interpolates remaining value deltas, copies replacement-party display
+fields, and dispatches the corresponding presentation effects.
+
+The snapshot owns two 24-byte side-change records at offset44 and two
+6-byte status records at offset92. The replacement path indexes six
+88-byte party members after a 24-byte party header. These accesses agree
+with `BattleSnapshot_SetSideChange` and the retail dispatcher loads.
+The existing effect-state definition is moved before this consumer without
+changing its fields or storage; its selected byte is at offset9.
+
+Canonical acceptance: `snapshot-dispatcher-gate-retry`, candidate0,
+against revision `a254f1698d5956f0eaba14a6b6db02466a3fe13e`. The object
+differences were relocation fields for equivalent owning-buffer aliases;
+the sequential full-ROM gate passed with retail US MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`, and the explicit host syntax check
+passed. The initial gate could not run because the primary checkout lacked
+its base ROM; restoring the verified local input also made the unchanged
+baseline pass. Naming and formatting preserve the whole module's sections,
+instruction bytes, function extents, and relocations, both normally and
+with 20 leading blank lines. No instruction rewriting, padding, or artificial
+ABI is used.
