@@ -2315,3 +2315,37 @@ trap-damage batch candidate 0 accepted immediately; the normal host syntax
 check and full ROM passed with MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
 Naming passed complete-module equality normally and with twenty leading blank
 lines. No compiler changes, padding, or binary rewriting were used.
+
+### Switch-in initialization: requeue (2026-10-31)
+
+`func_841318C0` (504 bytes) has a refreshed, compiling candidate. The old
+shared-history raw draft had a byte store for the halfword display species,
+wrong side arguments, a missing second argument to `func_841567B8`, an
+incorrect opponent pointer base, and a fabricated two-argument declaration
+for the struct-returning `func_8003F5AC`. The refreshed candidate uses the
+existing `ColorAdjustment` return type and the accepted snapshot caller's
+assignment form, current function names, and verified byte/halfword offsets.
+The 51 retained shared-history rows lack usable scores; several explicitly
+failed on `_bcopy` declaration conflicts. Do not replay those old bodies.
+
+Twenty-four current canonical candidates tested record-expression order,
+shift/divide forms, negative opponent-table indexing and slot conversions.
+Best is slot8 candidate1: 504 bytes, raw 0.8968, still a 56-byte frame versus
+32. The multiply-before-negate opponent address restores two target
+instructions. Remaining mismatches include the incoming slot's converted
+spill (word save/halfword reload versus byte save/reload in its parameter
+home), frame fields, and entry scheduling/operand order. No candidate gated.
+
+Passive stock capture passed four module controls and independently matched
+the canonical candidate's 504 function bytes. CFE reserves20 bytes for local
+homes/nested-call scratch; UOPT emits a converted slot spill at -24 and keeps
+24 local bytes. No aggregate-return temporary is present: the struct call
+already writes directly to the real output field. Existing recorder wrapper
+`func_84136A9C` reloads signed-halfword arguments before forwarding them;
+its current signature remains unchanged. Next: trace the slot conversion
+and its home selection. Any wider-wrapper contract hypothesis must first
+prove the wrapper, underlying call, and existing callers independently;
+no shadow prototype, cast call, or direct source workaround was used.
+Private evidence: battle-switch-in-slot8, switch-in-stock-passes,
+check-switch-in-capture.py. Earlier progress is three accepted functions,
+not an acceptance of this owner.
