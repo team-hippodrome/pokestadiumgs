@@ -124,7 +124,7 @@ s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2) {
 
 #ifdef VERSION_US
 extern void func_84134A6C(u8 *, u8, u8);
-extern void func_841350F4(u8 *, u8, u8);
+extern void BattleSnapshot_SetPartyMember(u8 *, u8, u8);
 extern u8 D_84195280[];
 void func_84134CBC(u8 arg0, u8 arg1) {
     func_84134A6C(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
@@ -281,7 +281,27 @@ void func_841350AC(u8 arg0, u8 arg1, u8 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_841350F4.s")
+#include "color_adjustment.h"
+extern ColorAdjustment func_8003F5AC(u8 *);
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleSnapshot_SetPartyMember(u8 *snapshot, u8 side, u8 index) {
+    u8 *party;
+    u8 *dst = (u8 *)&((u8(*)[16])snapshot)[side];
+    party = (u8 *)D_841951F8[side] + index * 88 + 24;
+    if (index == ((u8 *)D_841951F8[side])[10]) {
+        *(u16 *)(dst + 12) = *(u16 *)(D_84195208[side] + 44);
+        *(u16 *)(dst + 20) = *(u16 *)(D_84195200[side] + 22);
+        *(ColorAdjustment *)(dst + 24) = *(ColorAdjustment *)(D_84195208[side] + 80);
+    } else {
+        *(u16 *)(dst + 12) = Pokemon_GetDisplaySpecies(party);
+        *(u16 *)(dst + 20) = *(u16 *)(party + 22);
+        *(ColorAdjustment *)(dst + 24) = func_8003F5AC(party);
+    }
+    *(u16 *)(dst + 14) = *(u16 *)(party + 38);
+    *(u16 *)(dst + 16) = party[36];
+}
 #endif
 
 #ifdef VERSION_US
@@ -300,19 +320,19 @@ void func_841351EC(void *arg0, u8 arg1) {
 
 #ifdef VERSION_US
 void func_8413523C(u8 arg0, u8 arg1) {
-    func_841350F4(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
+    BattleSnapshot_SetPartyMember(&D_84195280[D_84195280[0x4D81] * 0x280], arg0, arg1);
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_841350F4(u8 *, u8, u8);
+extern void BattleSnapshot_SetPartyMember(u8 *, u8, u8);
 extern u8 D_84195280[];
 void func_84135284(u8 arg0, u8 arg1) {
     s32 idx = D_84195280[0x4D81] - 1;
     if (idx < 0) {
         idx = 0x1D;
     }
-    func_841350F4(D_84195280 + idx * 0x280, arg0, arg1);
+    BattleSnapshot_SetPartyMember(D_84195280 + idx * 0x280, arg0, arg1);
 }
 #endif
 
@@ -2854,9 +2874,9 @@ extern void _bcopy(void *, void *, s32);
 extern s32 func_80064728(void *);
 extern u8 func_8006397C(u8);
 extern u8 func_800639C0(u8);
-extern void func_8003F5AC(void *, void *);
+extern ColorAdjustment func_8003F5AC(u8 *);
 extern void _bzero(void *, s32);
-void func_8413D6D4(u8 *arg0, u8 *arg1) { u8 i; _bzero(arg0, 0x54); arg0[0] = arg1[0]; *(u16 *)(arg0 + 0x2C) = func_80064728(arg1); arg0[1] = func_8006397C(arg0[0]); arg0[2] = func_800639C0(arg0[0]); _bcopy(arg1 + 2, arg0 + 5, 4); _bcopy(arg1 + 0x18, arg0 + 9, 4); *(u16 *)(arg0 + 0x2E) = *(u16 *)(arg1 + 0x16); _bcopy(arg1 + 0x2A, arg0 + 0x32, 0xA); _bcopy(arg1 + 0x2A, arg0 + 0x3C, 0xA); for (i = 0; i < 7; ++i) *(arg0 + i + 0x1E) = 7; func_8003F5AC(arg0 + 0x50, arg1); }
+void func_8413D6D4(u8 *arg0, u8 *arg1) { u8 i; _bzero(arg0, 0x54); arg0[0] = arg1[0]; *(u16 *)(arg0 + 0x2C) = func_80064728(arg1); arg0[1] = func_8006397C(arg0[0]); arg0[2] = func_800639C0(arg0[0]); _bcopy(arg1 + 2, arg0 + 5, 4); _bcopy(arg1 + 0x18, arg0 + 9, 4); *(u16 *)(arg0 + 0x2E) = *(u16 *)(arg1 + 0x16); _bcopy(arg1 + 0x2A, arg0 + 0x32, 0xA); _bcopy(arg1 + 0x2A, arg0 + 0x3C, 0xA); for (i = 0; i < 7; ++i) *(arg0 + i + 0x1E) = 7; *(ColorAdjustment *)(arg0 + 0x50) = func_8003F5AC(arg1); }
 #endif
 
 #ifdef VERSION_US
