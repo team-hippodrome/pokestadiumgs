@@ -1777,7 +1777,64 @@ void func_84138D74(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_84138EA4.s")
+extern void func_800226C0(s32);
+extern void func_84147228(u8, u8, u8, u8, s32);
+extern s32 func_841484CC(u8, u8, u8, u8);
+extern void * D_841951F8[];
+extern u8 D_8419A0A0[];
+void func_84138EA4(u8 side, u8 selection) {
+    switch (D_84195248[side].phase) {
+    case 2:
+    case 5:
+        func_84147228(7, side, 0, 11, 0);
+        func_84147228(8, side, 0, 11, 0);
+        func_84147228(7, side, 0, 4, 4);
+        func_84147228(8, side, 0, 4, 4);
+        break;
+    case 3:
+        func_84147228(9, side, 0, 11, 0);
+        func_84147228(19, side, 0, 11, 0);
+        func_84147228(9, side, 0, 4, 4);
+        func_84147228(19, side, 0, 4, 4);
+        break;
+    case 4:
+        func_84147228(10, side, 0, 11, 0);
+        func_84147228(10, side, 0, 4, 4);
+        break;
+    case 6:
+        if (((u8 *)D_841951F8[side])[2] == 1) {
+            if (((u8 *)D_841951F8[side])[8] >= 4) {
+                func_84147228(12, side, 0, 11, 0);
+                func_84147228(12, side, 0, 4, 4);
+            } else {
+                func_84147228(11, side, 0, 11, 0);
+                func_84147228(11, side, 0, 4, 4);
+            }
+        } else {
+            func_84147228(11, side, 0, 11, 0);
+            func_84147228(11, side, 0, 4, 4);
+            func_84147228(11, side, 1, 11, 0);
+            func_84147228(11, side, 1, 4, 4);
+        }
+        func_84147228(20, side, 0, 11, 0);
+        func_84147228(20, side, 0, 4, 4);
+        break;
+    case 7:
+        func_84147228(13, side, 0, 11, 0);
+        func_84147228(13, side, 0, 4, 4);
+        break;
+    }
+    if (func_841484CC(22, side, 0, 1) == 0) {
+        func_84147228(22, side, 0, 11, 0);
+        func_84147228(22, side, 0, 4, 4);
+    }
+    if (D_8419A0A0[0] == 0) {
+        func_800226C0(2);
+    }
+    ((u8 *)D_841951F8[side])[0] = selection;
+    D_84195248[side].phase = 11;
+    D_84195248[side].active = 0;
+}
 #endif
 
 #ifdef VERSION_US
