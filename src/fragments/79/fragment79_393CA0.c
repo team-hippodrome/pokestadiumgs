@@ -5570,7 +5570,7 @@ extern void func_84135B00(u16);
 extern void func_84136678(u8, s16);
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
-void func_84132B9C(void) {
+void Battle_ProcessPpRestoringHeldItems(void) {
     s32 side;
     s32 slot;
     for (side = 0; side < 2; side++) {
@@ -5795,7 +5795,7 @@ extern void func_841324EC(void);
 extern void func_84132778(void);
 extern void func_8413293C(void);
 extern void func_84132A94(void);
-extern void func_84132B9C(void);
+extern void Battle_ProcessPpRestoringHeldItems(void);
 extern void func_84132D44(void);
 extern void func_84132E40(void);
 extern void func_84132F34(void);
@@ -5812,7 +5812,7 @@ void func_84133440(void) {
     func_8413293C();
     func_84132300();
     func_84132A94();
-    func_84132B9C();
+    Battle_ProcessPpRestoringHeldItems();
     func_84132D44();
     func_84132E40();
     func_84132F34();

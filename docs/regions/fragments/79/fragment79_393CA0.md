@@ -1976,3 +1976,18 @@ edit, the caller grew by four bytes and shifted later jump-table entries.
 Both functions and the caller edit passed the native runner's full US-ROM
 comparison and normal host syntax checks. Naming retained original-address
 aliases and passed normal plus 20-leading-blank whole-module controls.
+
+### PP-restoring held items
+
+`Battle_ProcessPpRestoringHeldItems` (`84132B9C`, 424 bytes) checks held-item
+effect 6 and scans each side's four move slots. An exhausted slot gains five
+PP, or one PP for Sketch (166). The party record receives the same change
+when its move matches the active record and the transformed-state flag is
+clear. The function queues the item message, advances the battle record,
+and consumes the held item. The move slot counter narrows after increment;
+the side counter remains a full integer. Direct global record accesses match
+the original pointer lifetimes. The native runner accepted the function with
+a byte-identical retail US ROM and normal host syntax checks.
+
+The four-function batch replaces 1,620 bytes of assembly. No coverage files
+or private search tools are part of the change.
