@@ -1428,3 +1428,5 @@ func_8413B5D4 = BattleSelection_HandleLargeRosterInput;
 func_8413A6CC = BattleSelection_EnterRosterSelection;
 
 func_841350F4 = BattleSnapshot_SetPartyMember;
+
+func_84137778 = BattleSnapshot_UpdateDisplay;
