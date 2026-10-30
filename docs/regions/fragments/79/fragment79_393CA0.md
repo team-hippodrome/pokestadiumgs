@@ -1951,3 +1951,28 @@ record accesses. The complete US ROM matched retail MD5
 Naming and indentation passed whole-module byte, section, symbol extent, and
 relocation comparisons in both normal and 20-leading-blank-line controls.
 The original address remains a linker alias.
+
+### Selected moves and guarded stat stages
+
+`BattleMove_ResolveSelectedMoves` (`84126CD0`, 440 bytes) resolves each side's
+command into a move, selecting the locked move, Bide (117), the selected slot,
+or Struggle (165) when PP is exhausted. It clears counters whose move effects
+are no longer selected and publishes the move through `func_80031844`.
+Direct global record accesses and index-before-pointer addition reproduce
+the original register allocation; the side mask preserves the call's byte
+argument without a separate long-lived conversion temporary.
+
+`BattleStats_ApplyGuardedStageChange` (`84125CF8`, 456 bytes) checks battle
+failure and target-state guards, rejects blocked decreases and saturated
+stages, adjusts the selected stage within 1..13, and refreshes derived stats
+for indices below 5. Stat 6 with move 107 sets the Minimize marker. The packed
+stat/amount and result fields are also maintained for message consumers.
+Its close sibling `func_84125EC0` supplies the same stage arithmetic.
+
+Introducing its byte-parameter prototype exposed a redundant mask in caller
+`func_84131760`. Passing `t` directly delegates the byte conversion to that
+prototype and restores the caller's 352-byte size. Without that companion
+edit, the caller grew by four bytes and shifted later jump-table entries.
+Both functions and the caller edit passed the native runner's full US-ROM
+comparison and normal host syntax checks. Naming retained original-address
+aliases and passed normal plus 20-leading-blank whole-module controls.

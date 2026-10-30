@@ -665,31 +665,31 @@ extern u8 D_841951D2;
 extern u8 D_841951D8;
 extern u8 D_841951D9;
 extern u8 * D_84195208[];
-void func_84125CF8(u8 arg0, u8 arg1, u8 arg2, u8 arg3) {
-    D_841951D9 = arg1 | ((arg2 - 1) << 4);
-    if (func_84125C68(arg0, arg3) == 0) {
+void BattleStats_ApplyGuardedStageChange(u8 side, u8 stat, u8 amount, u8 lower) {
+    D_841951D9 = stat | ((amount - 1) << 4);
+    if (func_84125C68(side, lower) == 0) {
         D_841951D8 = 1;
         D_841951D2 = 1;
         return;
     }
-    if (arg3 == 1 && func_84125AB8(arg0) != 0) {
+    if (lower == 1 && func_84125AB8(side) != 0) {
         D_841951D8 = 3;
         D_841951D2 = 1;
         return;
     }
-    if (func_84125B88(arg0, arg1, arg3) != 0) {
-        *(D_84195208[arg0] + arg1 + 0x1E) += (1 - arg3 * 2) * arg2;
-        if (*(D_84195208[arg0] + arg1 + 0x1E) >= 0xE) {
-            *(D_84195208[arg0] + arg1 + 0x1E) = 0xD;
+    if (func_84125B88(side, stat, lower) != 0) {
+        *(D_84195208[side] + stat + 0x1E) += (1 - lower * 2) * amount;
+        if (*(D_84195208[side] + stat + 0x1E) >= 0xE) {
+            *(D_84195208[side] + stat + 0x1E) = 0xD;
             }
-        if (*(D_84195208[arg0] + arg1 + 0x1E) <= 0) {
-            *(D_84195208[arg0] + arg1 + 0x1E) = 1;
+        if (*(D_84195208[side] + stat + 0x1E) <= 0) {
+            *(D_84195208[side] + stat + 0x1E) = 1;
         }
-        if (arg1 < 5) {
-            func_841256E0(arg0, arg1);
+        if (stat < 5) {
+            func_841256E0(side, stat);
         }
-        if (arg1 == 6 && D_841951BF == 0x6B) {
-            D_84195208[arg0][0x2A] = 1;
+        if (stat == 6 && D_841951BF == 0x6B) {
+            D_84195208[side][0x2A] = 1;
         }
         D_841951D8 = 0;
         return;
@@ -1160,7 +1160,7 @@ extern u8 func_80062D20(u8);
 extern s32 func_84126568(u8 arg0);
 extern void * D_841951F8[];
 extern u8 * D_84195208[];
-void func_84126CD0(void) {
+void BattleMove_ResolveSelectedMoves(void) {
     s32 side;
     u8 effect;
     for (side = 0; side < 2; side = (u8)(side + 1)) {
@@ -4304,115 +4304,115 @@ void BattleAnim_Table_84186004_017(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_018(void) { func_84125CF8(D_841951BC, 0, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_018(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 0, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_019(void) { func_84125CF8(D_841951BC, 1, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_019(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 1, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_020(void) { func_84125CF8(D_841951BC, 2, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_020(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 2, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_021(void) { func_84125CF8(D_841951BC, 3, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_021(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 3, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_022(void) { func_84125CF8(D_841951BC, 4, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_022(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 4, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_023(void) { func_84125CF8(D_841951BC, 5, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_023(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 5, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_024(void) { func_84125CF8(D_841951BC, 6, 1, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_024(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 6, 1, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_025(void) { func_84125CF8(D_841951BC, 0, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_025(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 0, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_026(void) { func_84125CF8(D_841951BC, 1, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_026(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 1, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_027(void) { func_84125CF8(D_841951BC, 2, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_027(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 2, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_028(void) { func_84125CF8(D_841951BC, 3, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_028(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 3, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_029(void) { func_84125CF8(D_841951BC, 4, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_029(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 4, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_030(void) { func_84125CF8(D_841951BC, 5, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_030(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 5, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; void BattleAnim_Table_84186004_031(void) { func_84125CF8(D_841951BC, 6, 2, 0); }
+extern u8 D_841951BC; void BattleAnim_Table_84186004_031(void) { BattleStats_ApplyGuardedStageChange(D_841951BC, 6, 2, 0); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_032(void) { func_84125CF8(D_841951BD, 0, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_032(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 0, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_033(void) { func_84125CF8(D_841951BD, 1, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_033(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 1, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_034(void) { func_84125CF8(D_841951BD, 2, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_034(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 2, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_035(void) { func_84125CF8(D_841951BD, 3, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_035(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 3, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_036(void) { func_84125CF8(D_841951BD, 4, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_036(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 4, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_037(void) { func_84125CF8(D_841951BD, 5, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_037(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 5, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_038(void) { func_84125CF8(D_841951BD, 6, 1, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_038(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 6, 1, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_039(void) { func_84125CF8(D_841951BD, 0, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_039(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 0, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_040(void) { func_84125CF8(D_841951BD, 1, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_040(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 1, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_041(void) { func_84125CF8(D_841951BD, 2, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_041(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 2, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_042(void) { func_84125CF8(D_841951BD, 3, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_042(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 3, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_043(void) { func_84125CF8(D_841951BD, 4, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_043(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 4, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_044(void) { func_84125CF8(D_841951BD, 5, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_044(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 5, 2, 1); }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BD; void BattleAnim_Table_84186004_045(void) { func_84125CF8(D_841951BD, 6, 2, 1); }
+extern u8 D_841951BD; void BattleAnim_Table_84186004_045(void) { BattleStats_ApplyGuardedStageChange(D_841951BD, 6, 2, 1); }
 #endif
 
 #ifdef VERSION_US
@@ -4906,7 +4906,7 @@ void BattleAnim_Table_84186004_068(void) {
     s32 i;
     for (i = 0; i < 5; i = (i + 1) & 0xFF) {
         D_841951D2 = 0;
-        func_84125CF8(D_841951BC, (u8)i, 1, 0);
+        BattleStats_ApplyGuardedStageChange(D_841951BC, (u8)i, 1, 0);
         if (D_841951D8 == 0) done = 1;
     }
     if (done != 0) {
@@ -5297,7 +5297,7 @@ void func_84131760(void) {
             D_84195208[i][0x13] = (ret & 3) + 2;
             D_841951D2 = 0;
             D_841951D3 = 0;
-            func_84125CF8(t, 0, 2, 0);
+            BattleStats_ApplyGuardedStageChange(t, 0, 2, 0);
             func_84136678(t, -1);
             func_8004C54C(26, D_84195200[i] + 0x34);
             func_8004C54C(42, func_8004C874(8, 151));
