@@ -1716,6 +1716,7 @@
     - [0x393B40, c,       fragments/79/fragment79_393B40]
     - [0x393BF0, c,       fragments/79/fragment79_393BF0]
     - [0x393CA0, c,       fragments/79/fragment79_393CA0]
+    - [0x3A4030, c,       fragments/79/fragment79_3A4030] # Aligned boundary after early command dispatcher tables.
     - [0x3ADCA0, c,       fragments/79/fragment79_3ADCA0]
     - [0x3B7DB0, c,       fragments/79/fragment79_3B7DB0]
     - [0x3B7EA0, c,       fragments/79/fragment79_3B7EA0]
@@ -1754,7 +1755,9 @@
     - [0x3F90B0, rodata]
     - [0x3F95D0, .rodata, fragments/79/fragment79_38EFE0] # Movement setup/update dispatch tables, 192 bytes.
     - [0x3F9690, rodata]
-    - [0x3FA810, .rodata, fragments/79/fragment79_393CA0] # jtbl_8418AF80, jtbl_8418AFB0, jtbl_8418AFEC, jtbl_8418B008, jtbl_8418B020, jtbl_8418B0C0, jtbl_8418B0D8, jtbl_8418B0F4, jtbl_8418B10C, jtbl_8418B124, jtbl_8418B150, jtbl_8418B174, jtbl_8418B194
+    - [0x3FA610, .rodata, fragments/79/fragment79_393CA0] # Existing SendFightThread literal, then AD94/ADAC/ADCC/AECC tables.
+    - [0x3FA770, rodata]
+    - [0x3FA810, .rodata, fragments/79/fragment79_3A4030] # jtbl_8418AF80, jtbl_8418AFB0, jtbl_8418AFEC, jtbl_8418B008, jtbl_8418B020, jtbl_8418B0C0, jtbl_8418B0D8, jtbl_8418B0F4, jtbl_8418B10C, jtbl_8418B124, jtbl_8418B150, jtbl_8418B174, jtbl_8418B194
     - [0x3FAA50, rodata]
     - [0x3FAA60, .rodata, fragments/79/fragment79_3ADCA0] # jtbl_8418B1D0 (+13 more, incl. jtbl_8418B738/jtbl_8418B74C)
     - [0x3FB010, .rodata, fragments/79/fragment79_3B7EA0] # Strings, jump tables, double literals.
