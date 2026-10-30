@@ -1420,3 +1420,7 @@ func_8413C820 = Battle_UpdatePhase;
 func_8413DD94 = BattleSnapshot_InitializeBuffer;
 
 func_84135A2C = BattleSnapshot_AppendText;
+
+func_8413B468 = BattleSelection_HandleSmallRosterInput;
+
+func_8413B5D4 = BattleSelection_HandleLargeRosterInput;
