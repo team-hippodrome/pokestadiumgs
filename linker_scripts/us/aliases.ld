@@ -1472,3 +1472,5 @@ func_8412CDA4 = BattleEffect_ApplyPainSplit;
 func_84127DB8 = BattleDamage_PrepareAttackDefense;
 
 func_8412EC70 = BattleEffect_ApplyPresent;
+
+func_84131AF8 = Battle_ApplyResidualStatusDamage;

@@ -2181,3 +2181,18 @@ Accepted label: `present:byte-rng-context:parent1:random-u8` in
 retry using irrelevant declarations. The RNG and existing callers were
 already validated in the preceding merged batch. Complete-module naming
 controls pass both normally and with twenty leading blank lines.
+
+### Residual status damage accepted (2026-10-31)
+
+`Battle_ApplyResidualStatusDamage` (`func_84131AF8`, 948 bytes) now matches
+with a single `u16 amount` local and ordinary sequential calls. The damage
+helper `func_84126804` returns its clamped `u16` argument; correcting its
+return type and all five existing extern declarations from `u32` to `u16`
+removes redundant caller copies. Private known/20-blank-line controls and
+a complete-module comparison showed no changed existing function bytes.
+The earlier two-local candidate had identical instructions but a 56-byte
+frame instead of 48; the single-local candidate under the corrected contract
+matches every instruction and the 48-byte frame. Canonical runner acceptance
+and normal host syntax check passed, followed by retail ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming also passed both module controls.
+No binary rewriting, padding, or forced-register mechanism was used.

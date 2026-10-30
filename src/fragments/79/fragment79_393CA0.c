@@ -1004,7 +1004,7 @@ extern u8 *D_84195200[];
 extern u8 *D_84195200[];
 extern u8 *D_84195200[];
 
-u32 func_84126804(u8 arg0, u16 arg1)
+u16 func_84126804(u8 arg0, u16 arg1)
 {
   u8 *ptr = D_84195200[arg0];
   u16 take = arg1;
@@ -1037,7 +1037,7 @@ u16 func_84126850(u8 arg0, u16 arg1) {
 extern u16 D_841951CA;
 extern void BattleDamage_AccumulateBaseDamage(void);
 extern void func_841265EC(void);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8 arg0, s16 arg1);
@@ -3040,7 +3040,7 @@ void BattleCommand_041(void) {
 #ifdef VERSION_US
 extern void func_84124594(u8 arg0);
 extern s32 func_8412676C(u8 arg0, u8 arg1);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84134DD8(u8 arg0);
 extern void func_84135B00(u16);
@@ -4933,7 +4933,7 @@ void BattleAnim_Table_84186004_052(void) {
 #ifdef VERSION_US
 extern s32 func_84125B88(u8, u8, u8);
 extern s32 func_8412676C(u8 arg0, u8 arg1);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8, s16);
@@ -5649,12 +5649,84 @@ void func_84131AB8(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84131AF8.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern u16 func_84126804(u8 arg0, u16 arg1);
+extern void func_84124E44(u8 arg0);
+extern s32 func_8412676C(u8 arg0, u8 arg1);
+extern u16 func_84126850(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+s32 Battle_ApplyResidualStatusDamage(u8 side) {
+    u16 amount;
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    func_84124E44(side);
+    if (D_84195200[side][36] & 8) {
+        func_84136678(side, -1);
+        func_84135B00(44);
+        if (D_84195208[side][17] & 1) {
+            D_84195208[side][20]++;
+            amount = (*(u16 *)(D_84195200[side] + 40) >> 4) * D_84195208[side][20];
+            func_84134CBC(side, 61);
+        } else {
+            amount = func_8412676C(side, 3);
+            func_84134CBC(side, 60);
+        }
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        BattleRecord_AdvanceWriteSlot();
+    } else if (D_84195200[side][36] & 16) {
+        func_84136678(side, -1);
+        func_84135B00(189);
+        amount = func_8412676C(side, 3);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        func_84134CBC(side, 62);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    if (D_84195208[side][16] & 128) {
+        amount = func_8412676C(side, 3);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        amount = func_84126850(1 - side, amount);
+        func_84136A9C(1 - side, -1, (s16)amount, 1);
+        func_84136678(side, -1);
+        func_84135B00(187);
+        func_84134CBC(side, 63);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    if (D_84195208[side][13] & 1) {
+        amount = func_8412676C(side, 2);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        func_84136678(side, -1);
+        func_84135B00(31);
+        func_84134CBC(side, 64);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    if (D_84195208[side][13] & 2) {
+        amount = func_8412676C(side, 2);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        func_84136678(side, -1);
+        func_84135B00(139);
+        func_84134CBC(side, 67);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
 extern s32 func_8412676C(u8, u8);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
@@ -5755,7 +5827,7 @@ void func_84132300(void) {
 
 #ifdef VERSION_US
 extern s32 func_8412676C(u8, u8);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
