@@ -1024,6 +1024,7 @@ void func_8413753C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
+extern s32 func_841484CC(u8, u8, u8, u8);
 void func_84137648(void) {
     if (func_841484CC(0x11, 0, 0, 1) == 0) {
         func_84147228(0x11, 0U, 0, 4, 3);
@@ -1166,7 +1167,12 @@ void func_84137D04(u8 arg0) {
 
 #ifdef VERSION_US
 void func_80023A3C(s32, s32, s32);
-extern u8 D_84195248[];
+struct unk_D_84195248 {
+    u8 *inputs[2];
+    u8 unk08, selected, input0, input1, active, phase, kind, unk0F;
+    u8 unk10[8];
+};
+extern struct unk_D_84195248 D_84195248[2];
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
 #define M2C_UNK8 s8
@@ -1188,7 +1194,7 @@ void func_84137DB8(void) {
         if (D_84195278 == 3) {
             func_84137D04(0U);
             func_84137D04(1U);
-            if ((M2C_FIELD(D_84195248, u8 *, 0xE) == 5) || (M2C_FIELD(D_84195248, u8 *, 0x26) == 5)) {
+            if ((M2C_FIELD(((u8 *)D_84195248), u8 *, 0xE) == 5) || (M2C_FIELD(((u8 *)D_84195248), u8 *, 0x26) == 5)) {
                 func_84147228(0x17, 0U, 0, 7, 1);
                 func_84147228(0x17, 0U, 0, 0xB, 4);
             } else {
@@ -1207,7 +1213,7 @@ void func_84137DB8(void) {
 #ifdef VERSION_US
 extern void func_84147228(u8, u8, u8, u8, s32);
 extern u8 D_8419521C[];
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_84137ED4(u8 arg0) {
     func_84147228(0, arg0, 0, 1, 0);
     func_84147228(1, arg0, 0, 1, 0);
@@ -1217,7 +1223,7 @@ void func_84137ED4(u8 arg0) {
     func_84147228(5, arg0, 0, 1, 0);
     func_84147228(6, arg0, 0, 1, 0);
     func_84147228(7, arg0, 0, 1, 0);
-    func_84147228(8, arg0, 0, 1, D_84195248[(arg0 * 24) + 0xE] != 1);
+    func_84147228(8, arg0, 0, 1, ((u8 *)D_84195248)[(arg0 * 24) + 0xE] != 1);
     func_84147228(0, arg0, 0, 0xF, 0);
     func_84147228(1, arg0, 0, 0xF, 0);
     func_84147228(2, arg0, 0, 0xF, 0);
@@ -1235,7 +1241,7 @@ void func_84137ED4(u8 arg0) {
     func_84147228(1, arg0, 0, 4, 4);
     func_84147228(2, arg0, 0, 4, 4);
     func_84147228(3, arg0, 0, 4, 4);
-    switch (D_84195248[(arg0 * 24) + 0xE]) {
+    switch (((u8 *)D_84195248)[(arg0 * 24) + 0xE]) {
     case 1:
         func_84147228(4, arg0, 0, 0xA, 0);
         func_84147228(5, arg0, 0, 0xA, 0);
@@ -1269,7 +1275,13 @@ void func_84138364(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8419A008[];
+struct unk_D_8419A008 {
+    s32 unk00, unk04;
+    u32 elapsed;
+    s16 fraction, unk0E, unk10;
+    u8 flags;
+};
+extern struct unk_D_8419A008 D_8419A008[];
 extern s32 D_84186170;
 extern void func_8002B47C(u16, u16);
 extern void func_8002AAFC(s32);
@@ -1278,20 +1290,20 @@ extern u8 D_8419A0A1;
 extern s32 func_84134968(void);
 extern void func_84138364(u8 arg0);
 extern void func_84147228(u8, u8, u8, u8, s32);
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 extern u8 D_84195278;
 extern u8 D_8419A0A0[];
 void func_841383B4(u8 arg0, u8 arg1, u8 arg2) {
     s32 i;
-    D_84195248[0xD] = arg0; D_84195248[0xE] = arg0;
-    D_84195248[0x25] = arg1; D_84195248[0x26] = arg1;
+    ((u8 *)D_84195248)[0xD] = arg0; ((u8 *)D_84195248)[0xE] = arg0;
+    ((u8 *)D_84195248)[0x25] = arg1; ((u8 *)D_84195248)[0x26] = arg1;
     D_8418615C = arg2; D_84195278 = 4;
-    func_8002B47C(*(u16 *)(D_8419A008 + 0xE), *(u16 *)(D_8419A008 + 0x10));
+    func_8002B47C(*(u16 *)(((u8 *)&D_8419A008) + 0xE), *(u16 *)(((u8 *)&D_8419A008) + 0x10));
     if (D_84186170 != 0) func_8002AAFC(1);
     i = 0;
     do { func_84138364((u8)i); i++; } while (i != 2);
     if ((D_8419A0A0[0] == 0 || D_8419A0A1 != 0) && arg2 == 0) {
-        if (D_84195248[0xE] == 5 || D_84195248[0x26] == 5) func_84147228(0x17, 0, 0, 7, 2);
+        if (((u8 *)D_84195248)[0xE] == 5 || ((u8 *)D_84195248)[0x26] == 5) func_84147228(0x17, 0, 0, 7, 2);
         else func_84147228(0x17, 0, 0, 7, 0);
         func_84147228(0x17, 0, 0, 10, 0);
         func_84147228(0x17, 0, 0, 4, 4);
@@ -1414,9 +1426,9 @@ s32 func_84138960(u8 arg0) {
 extern void BattleSelection_ShowChoiceError(u8, u8);
 extern void func_800226C0(s32);
 extern void * D_841951F8[];
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void BattleSelection_ShowChoiceError(u8 arg0, u8 arg1) {
-    switch (D_84195248[arg0 * 24 + 13]) {
+    switch (((u8 *)D_84195248)[arg0 * 24 + 13]) {
     case 2:
     case 5:
         func_84147228(7, arg0, 0, 11, 0);
@@ -1461,7 +1473,7 @@ void BattleSelection_ShowChoiceError(u8 arg0, u8 arg1) {
     func_84147228(15, arg0, 0, 10, 0);
     func_84147228(15, arg0, 0, 4, 4);
     func_800226C0(5);
-    D_84195248[arg0 * 24 + 13] = 9;
+    ((u8 *)D_84195248)[arg0 * 24 + 13] = 9;
 }
 #endif
 
@@ -1534,7 +1546,7 @@ extern void func_800226C0(s32);
 extern u8 D_8419A01A;
 
 void func_84139364(u8 arg0) {
-    switch (D_84195248[(u32)arg0 * 24 + 14]) {
+    switch (((u8 *)D_84195248)[(u32)arg0 * 24 + 14]) {
         case 1:
             func_84147228(4, arg0, 0, 13, 0);
             func_84147228(5, arg0, 0, 13, 0);
@@ -1555,7 +1567,7 @@ void func_84139364(u8 arg0) {
         func_84147228(22, arg0, 0, 10, 0);
         func_84147228(22, arg0, 0, 4, 4);
     }
-    D_84195248[(u32)arg0 * 24 + 13] = D_84195248[(u32)arg0 * 24 + 14];
+    ((u8 *)D_84195248)[(u32)arg0 * 24 + 13] = ((u8 *)D_84195248)[(u32)arg0 * 24 + 14];
     func_800226C0(3);
 }
 #endif
@@ -1658,7 +1670,7 @@ void func_841397FC(u8 arg0, u8 arg1) {
 
 #ifdef VERSION_US
 void func_84139958(u8 arg0, u8 arg1) {
-    switch (D_84195248[arg0 * 24 + 13]) {
+    switch (((u8 *)D_84195248)[arg0 * 24 + 13]) {
         case 2:
         case 5:
             func_84147228(7, arg0, 0, 11, 0);
@@ -1699,7 +1711,7 @@ void func_84139958(u8 arg0, u8 arg1) {
     func_84147228(5, arg0, 0, 4, 4);
     func_84147228(6, arg0, 0, 4, 4);
     func_800226C0(3);
-    D_84195248[arg0 * 24 + 13] = arg1;
+    ((u8 *)D_84195248)[arg0 * 24 + 13] = arg1;
 }
 #endif
 
@@ -1746,10 +1758,10 @@ void func_84139D94(u8 arg0) {
 #ifdef VERSION_US
 extern void func_84139C54(u8);
 extern void func_841397FC(u8,u8);
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_84139EB0(s32 arg0) {
     u8 *record; u8 *data; s32 flags;
-    record = D_84195248 + arg0 * 24; data = ((u8 **)record)[record[9]]; flags = *(u16 *)(data + 8);
+    record = ((u8 *)D_84195248) + arg0 * 24; data = ((u8 **)record)[record[9]]; flags = *(u16 *)(data + 8);
     if (flags & 0x8000) func_841397FC(arg0, 2); else if (flags & 0x4000) func_841397FC(arg0, 5); else if (flags & 0x1000) func_84139C54(arg0);
 }
 #endif
@@ -1757,9 +1769,9 @@ void func_84139EB0(s32 arg0) {
 #ifdef VERSION_US
 extern void func_800226C0(s32);
 extern void func_84147228(u8, u8, u8, u8, s32);
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_84139F44(u8 arg0) {
-    switch (D_84195248[arg0 * 24 + 0xD]) {
+    switch (((u8 *)D_84195248)[arg0 * 24 + 0xD]) {
         case 2:
             func_84147228(7, arg0, 0, 11, 0);
             func_84147228(8, arg0, 0, 11, 0);
@@ -1780,7 +1792,7 @@ void func_84139F44(u8 arg0) {
             func_84147228(19, arg0, 0, 5, 3);
             break;
     }
-    D_84195248[arg0 * 24 + 0xD] = 3;
+    ((u8 *)D_84195248)[arg0 * 24 + 0xD] = 3;
 }
 #endif
 
@@ -1789,7 +1801,7 @@ void func_8413A12C(u8 arg0, u8 arg1) {
     if (((u8 *)D_84195208[(u32)arg0])[(u32)arg1 + 5] == 0) {
         return;
     }
-    switch (D_84195248[arg0 * 24 + 13]) {
+    switch (((u8 *)D_84195248)[arg0 * 24 + 13]) {
         case 2:
             func_84147228(7, arg0, 0, 11, 0);
             func_84147228(8, arg0, 0, 11, 0);
@@ -1810,15 +1822,15 @@ void func_8413A12C(u8 arg0, u8 arg1) {
             func_800226C0(8);
             break;
     }
-    D_84195248[arg0 * 24 + 13] = 4;
+    ((u8 *)D_84195248)[arg0 * 24 + 13] = 4;
     func_84147228(10, arg0, 0, 7, arg1);
 }
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_8413A340(u8 arg0) {
-    switch (D_84195248[arg0 * 24 + 0xD]) {
+    switch (((u8 *)D_84195248)[arg0 * 24 + 0xD]) {
     case 3:
         func_84147228(7,arg0,0,10,0);
         func_84147228(8,arg0,0,10,0);
@@ -1839,7 +1851,7 @@ void func_8413A340(u8 arg0) {
         func_84147228(10,arg0,0,4,4);
         break;
     }
-    D_84195248[arg0 * 24 + 0xD] = 2;
+    ((u8 *)D_84195248)[arg0 * 24 + 0xD] = 2;
 }
 #endif
 
@@ -1849,9 +1861,9 @@ extern void func_84139F44(u8);
 extern void func_84139528(u8 arg0, u8 arg1);
 extern void func_84139958(u8, u8);
 extern void func_8413A340(u8 arg0);
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_8413A53C(u8 arg0) {
-    u8 *data = ((u8 **)(D_84195248 + arg0 * 24))[(D_84195248 + arg0 * 24)[9]];
+    u8 *data = ((u8 **)(((u8 *)D_84195248) + arg0 * 24))[(((u8 *)D_84195248) + arg0 * 24)[9]];
     if (*(u16 *)(data + 6) & 0x800) func_8413A12C(arg0, 0);
     else if (*(u16 *)(data + 6) & 0x100) func_8413A12C(arg0, 1);
     else if (*(u16 *)(data + 6) & 0x400) func_8413A12C(arg0, 2);
@@ -1859,7 +1871,7 @@ void func_8413A53C(u8 arg0) {
     else if (*(u16 *)(data + 6) & 0x10) func_84139F44(arg0);
     else func_8413A340(arg0);
     if (*(u16 *)(data + 8) & 0x20) {
-        if ((D_84195248 + arg0 * 24)[0xE] < 2) func_84139958(arg0, 1);
+        if ((((u8 *)D_84195248) + arg0 * 24)[0xE] < 2) func_84139958(arg0, 1);
     } else if (*(u16 *)(data + 8) & 8) func_84139528(arg0, 0);
     else if (*(u16 *)(data + 8) & 1) func_84139528(arg0, 1);
     else if (*(u16 *)(data + 8) & 4) func_84139528(arg0, 2);
@@ -1873,7 +1885,7 @@ void func_8413A53C(u8 arg0) {
 
 #ifdef VERSION_US
 void func_8413A8C4(u8 arg0) {
-    switch (D_84195248[(u32)arg0 * 24 + 13]) {
+    switch (((u8 *)D_84195248)[(u32)arg0 * 24 + 13]) {
         case 5:
             func_84147228(7, arg0, 0, 11, 0);
             func_84147228(8, arg0, 0, 11, 0);
@@ -1899,7 +1911,7 @@ void func_8413A8C4(u8 arg0) {
             func_84147228(20, arg0, 0, 3, 0);
             break;
     }
-    D_84195248[(u32)arg0 * 24 + 13] = 6;
+    ((u8 *)D_84195248)[(u32)arg0 * 24 + 13] = 6;
 }
 #endif
 
@@ -1907,12 +1919,12 @@ void func_8413A8C4(u8 arg0) {
 extern void func_800226C0(s32);
 extern void func_84147228(u8, u8, u8, u8, s32);
 extern void * D_841951F8[];
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 // Close to func_8413AD98; gated on arg2 being below byte 8 of D_841951F8[arg0] instead of a
 // per-slot flag, has no case 7, and case 6 starts with two calls whose first argument is arg3.
 void func_8413AB2C(u8 arg0, u8 arg1, s8 arg2, u8 arg3) {
     if ((u8)arg2 < ((u8 *)D_841951F8[arg0])[8]) {
-        switch (D_84195248[arg0 * 24 + 0xD]) {
+        switch (((u8 *)D_84195248)[arg0 * 24 + 0xD]) {
         case 5:
             func_84147228(7, arg0, 0, 11, 0);
             func_84147228(8, arg0, 0, 11, 0);
@@ -1938,7 +1950,7 @@ void func_8413AB2C(u8 arg0, u8 arg1, s8 arg2, u8 arg3) {
             func_800226C0(8);
             break;
         }
-        D_84195248[arg0 * 24 + 0xD] = 7;
+        ((u8 *)D_84195248)[arg0 * 24 + 0xD] = 7;
         func_84147228(13, arg0, 0, 7, *(u8 *)&arg2);
     }
 }
@@ -1948,11 +1960,11 @@ void func_8413AB2C(u8 arg0, u8 arg1, s8 arg2, u8 arg3) {
 extern void func_800226C0(s32);
 extern void func_84147228(u8, u8, u8, u8, s32);
 extern void * D_841951F8[];
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_8413AD98(u8 arg0, u8 arg1, u8 arg2) {
     /* Party records use an unsigned byte index and an 88-byte stride. */
     if (((u8 *)D_841951F8[arg0])[(u32)arg2 * 88 + 24] != 0) {
-        switch (D_84195248[arg0 * 24 + 0xD]) {
+        switch (((u8 *)D_84195248)[arg0 * 24 + 0xD]) {
         case 5:
             func_84147228(7, arg0, 0, 11, 0);
             func_84147228(8, arg0, 0, 11, 0);
@@ -1982,7 +1994,7 @@ void func_8413AD98(u8 arg0, u8 arg1, u8 arg2) {
             func_84147228(13, arg0, 0, 3, 0);
             break;
         }
-        D_84195248[arg0 * 24 + 0xD] = 7;
+        ((u8 *)D_84195248)[arg0 * 24 + 0xD] = 7;
         func_84147228(13, arg0, 0, 7, arg2);
     }
 }
@@ -1991,7 +2003,7 @@ void func_8413AD98(u8 arg0, u8 arg1, u8 arg2) {
 #ifdef VERSION_US
 // FAKE: volatile makes each use of arg1 reload it from its stack home; diff score 784 without it.
 void func_8413B08C(u8 arg0, volatile u8 arg1) {
-    switch (D_84195248[(u32)arg0 * 24 + 13]) {
+    switch (((u8 *)D_84195248)[(u32)arg0 * 24 + 13]) {
         case 6:
             func_84147228(7, arg0, 0, 10, 0);
             func_84147228(8, arg0, 0, 10, 0);
@@ -2010,15 +2022,15 @@ void func_8413B08C(u8 arg0, volatile u8 arg1) {
             func_84147228(13, arg0, 0, 11, 0);
             break;
     }
-    D_84195248[(u32)arg0 * 24 + 13] = 5;
+    ((u8 *)D_84195248)[(u32)arg0 * 24 + 13] = 5;
 }
 #endif
 
 #ifdef VERSION_US
 extern void func_84147228(u8, u8, u8, u8, s32);
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_8413B254(u8 arg0) {
-    switch (D_84195248[(u32)arg0 * 24 + 0xD]) {
+    switch (((u8 *)D_84195248)[(u32)arg0 * 24 + 0xD]) {
     case 6:
         func_84147228(7, arg0, 0, 0xA, 0);
         func_84147228(8, arg0, 0, 0xA, 0);
@@ -2040,7 +2052,7 @@ void func_8413B254(u8 arg0) {
         func_84147228(0xD, arg0, 0, 0xB, 0);
         break;
     }
-    D_84195248[(u32)arg0 * 24 + 0xD] = 5;
+    ((u8 *)D_84195248)[(u32)arg0 * 24 + 0xD] = 5;
 }
 #endif
 
@@ -2068,8 +2080,8 @@ void BattleSelection_ProcessControllerPartitions(u8 arg0) {
     u8 index;
 
     index = func_84148470(arg0);
-    records[index] = ((struct BattleSelectionInputState *)D_84195248)[arg0].primary;
-    records[(1 - index)] = ((struct BattleSelectionInputState *)D_84195248)[arg0].secondary;
+    records[index] = ((struct BattleSelectionInputState *)((u8 *)D_84195248))[arg0].primary;
+    records[(1 - index)] = ((struct BattleSelectionInputState *)((u8 *)D_84195248))[arg0].secondary;
     offsets[index] = 0;
     offsets[(1 - index)] = ((u8 *)D_841951F8[arg0])[3];
     counts[index] = ((u8 *)D_841951F8[arg0])[3];
@@ -2092,7 +2104,7 @@ void BattleSelection_ProcessControllerPartitions(u8 arg0) {
         func_8413B254(arg0);
     }
     if (((*(u16 *)(records[0] + 8)) | (*(u16 *)(records[1] + 8))) & 0x20) {
-        if (((struct BattleSelectionInputState *)D_84195248)[arg0].activity < 2) {
+        if (((struct BattleSelectionInputState *)((u8 *)D_84195248))[arg0].activity < 2) {
             func_800226C0(3);
             func_84139958(arg0, 1);
         }
@@ -2134,7 +2146,7 @@ void func_8413BBEC(s32 arg0) {
 void Battle_HandleConfirmChoiceInput(u8 arg0) {
     u8 *controller;
     u8 current;
-    controller = ((u8 **)(((u8 (*)[24])D_84195248)[arg0]))[((u8 (*)[24])D_84195248)[arg0][9]];
+    controller = ((u8 **)(((u8 (*)[24])((u8 *)D_84195248))[arg0]))[((u8 (*)[24])((u8 *)D_84195248))[arg0][9]];
     current = func_84148494(14, arg0, 0);
     if (*(u16 *)(controller + 8) & 0x8000) {
         if (current != 0) {
@@ -2156,11 +2168,11 @@ void Battle_HandleConfirmChoiceInput(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 extern void *D_841951F8[];
 extern void func_84139364(u8);
 void func_8413BD94(u8 arg0) {
-    u8 **entry = (u8 **)((u8 *)D_84195248 + arg0 * 24);
+    u8 **entry = (u8 **)((u8 *)((u8 *)D_84195248) + arg0 * 24);
     if (((*(u16 *)(entry[0] + 8) & 0x20) != 0) || (((u8 *)D_841951F8[arg0])[2] == 2 && ((*(u16 *)(entry[1] + 8) & 0x20) != 0))) {
         func_84139364(arg0);
     }
@@ -2169,9 +2181,9 @@ void func_8413BD94(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_84138D74(u8 arg0);
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 void func_8413BE1C(u8 arg0) {
-    u8 **entry = (u8 **)(D_84195248 + arg0 * 24);
+    u8 **entry = (u8 **)(((u8 *)D_84195248) + arg0 * 24);
     if (*(u16 *)(entry[0] + 8) != 0 || (entry[1] != NULL && *(u16 *)(entry[1] + 8) != 0)) {
         func_84138D74(arg0);
     }
@@ -2223,8 +2235,8 @@ void func_8413BE84(s32 arg0) {
 extern void func_841397FC(u8,u8);
 extern void func_84139528(u8,u8);
 extern void BattleSelection_HandlePartyChoice(u8,u8);
-extern u8 D_84195248[];
-void func_8413BF58(s32 arg0){u8 *ptr=D_84195248+arg0*24;switch(ptr[0xD]){case 1:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x12]&0xF)*3+3;else if(--ptr[0xF]==0)func_841397FC(arg0,(ptr[0x12]&0xF0)>>4);break;case 2:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*3+3;else if(--ptr[0xF]==0)func_84139528(arg0,(ptr[0x13]&0xF0)>>4);break;case 5:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*4+4;else if(--ptr[0xF]==0)BattleSelection_HandlePartyChoice(arg0,(ptr[0x13]&0xF0)>>4);break;}}
+extern struct unk_D_84195248 D_84195248[2];
+void func_8413BF58(s32 arg0){u8 *ptr=((u8 *)D_84195248)+arg0*24;switch(ptr[0xD]){case 1:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x12]&0xF)*3+3;else if(--ptr[0xF]==0)func_841397FC(arg0,(ptr[0x12]&0xF0)>>4);break;case 2:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*3+3;else if(--ptr[0xF]==0)func_84139528(arg0,(ptr[0x13]&0xF0)>>4);break;case 5:if(ptr[0xF]==0)ptr[0xF]=(ptr[0x13]&0xF)*4+4;else if(--ptr[0xF]==0)BattleSelection_HandlePartyChoice(arg0,(ptr[0x13]&0xF0)>>4);break;}}
 #endif
 
 #ifdef VERSION_US
@@ -2236,7 +2248,7 @@ extern void func_84139770(u8);
 extern void func_84139D94(u8);
 extern void func_84138D74(u8);
 void func_8413C0A4(u8 arg0) {
-    switch (D_84195248[arg0 * 24 + 0xD] - 1) {
+    switch (((u8 *)D_84195248)[arg0 * 24 + 0xD] - 1) {
     case 0:
         func_841397FC(arg0, 2);
         break;
@@ -2249,7 +2261,7 @@ void func_8413C0A4(u8 arg0) {
     case 4:
     case 5:
     case 6:
-        if (D_84195248[arg0 * 24 + 0xE] < 5) func_84139958(arg0, 1);
+        if (((u8 *)D_84195248)[arg0 * 24 + 0xE] < 5) func_84139958(arg0, 1);
         else func_84139770(arg0);
         break;
     case 7:
@@ -2264,8 +2276,8 @@ void func_8413C0A4(u8 arg0) {
 
 #ifdef VERSION_US
 extern s32 func_8413860C(u8);
-extern u8 D_84195248[];
-void func_8413C18C(u8 arg0) { u8 *ptr = D_84195248 + arg0 * 24; switch (ptr[0xD]) { case 1: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) { if (func_8413860C(arg0) < 4) func_841397FC(arg0, 2); else if (func_8413860C(arg0) < 10) func_841397FC(arg0, 5); } break; case 2: case 5: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) func_84138EA4(arg0, (u8)func_8413860C(arg0)); break; } }
+extern struct unk_D_84195248 D_84195248[2];
+void func_8413C18C(u8 arg0) { u8 *ptr = ((u8 *)D_84195248) + arg0 * 24; switch (ptr[0xD]) { case 1: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) { if (func_8413860C(arg0) < 4) func_841397FC(arg0, 2); else if (func_8413860C(arg0) < 10) func_841397FC(arg0, 5); } break; case 2: case 5: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) func_84138EA4(arg0, (u8)func_8413860C(arg0)); break; } }
 #endif
 
 #ifdef VERSION_US
@@ -2312,7 +2324,7 @@ extern void func_8413C18C(u8 arg0);
 extern void * D_841951F0;
 extern void * D_841951F8[];
 extern u8 D_84195210[];
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 extern u8 D_84195278;
 void func_8413C3A8(void) {
     s32 mode;
@@ -2321,7 +2333,7 @@ void func_8413C3A8(void) {
     mode = ((u8 *)D_841951F0)[0x9C2] == 2;
     if (D_84195278 == 1) {
         for (i = 0; i < 2; i++) {
-            if (D_84195248[i * 24 + 0xC] != 0) {
+            if (((u8 *)D_84195248)[i * 24 + 0xC] != 0) {
                 active = D_84195210[i] != 0;
                 if (active) active = ((u8 **)D_841951F8)[i][0x49A] != 0;
                 if (mode) func_8413C18C((u8)i);
@@ -2382,7 +2394,135 @@ void func_8413C7C0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413C820.s")
+extern u8 D_84195278;
+extern s32 D_8419527C;
+extern s32 D_84186150, D_84186154, D_84186158;
+extern struct unk_D_8419A008 D_8419A008[];
+extern u8 D_8419A0A1;
+extern u8 D_84195210[];
+extern void func_8413C500(void);
+extern void func_84148650(u8);
+extern void func_8410A6A4(void);
+extern s32 func_80001FF0(void);
+extern s32 func_841484CC(u8, u8, u8, u8);
+extern struct unk_D_84195248 D_84195248[2];
+extern void Display_QueueFramebufferRequest_fragment79(OSMesg arg0);
+extern void func_80023A3C(s32, s32, s32);
+extern void func_8002AAFC(s32);
+extern void func_84135338(u8 arg0);
+extern void func_84137ED4(u8 arg0);
+extern void func_841385A8(u8 arg0, u8 arg1);
+extern void func_8413C3A8(void);
+extern void func_8413C6AC(u8 arg0, u16 arg1);
+extern void func_84147228(u8, u8, u8, u8, s32);
+extern void * D_841951F0;
+extern void * D_841951F8[];
+extern u8 D_84195280[];
+extern u8 D_8419A006;
+void func_8413C820(void) {
+    s32 i;
+
+    switch (D_84195278) {
+    case 1:
+        if (D_84195248[0].phase >= 11 && D_84195248[1].phase >= 11) {
+            if (D_84195248[0].active == 0 || D_84195248[1].active == 0) break;
+            func_84135338(0);
+            func_84135338(1);
+            if (D_8419A008[0].flags & 1) {
+                func_84147228(21, 0, 0, 11, 0);
+                func_84147228(21, 0, 0, 4, 4);
+            }
+            if (((u8 *)D_841951F0)[2498] == 1) {
+                if (D_84195248[0].kind != 12) func_841385A8(0, ((u8 *)D_841951F8[0])[0]);
+                if (D_84195248[1].kind != 12) func_841385A8(1, ((u8 *)D_841951F8[1])[0]);
+            }
+            if (D_8419527C + 1 >= 256) D_8419527C = 254;
+            D_8419527C++;
+            if (((u8 *)D_841951F0)[2498] == 2 && D_8419527C >= (*(u8 **)((u8 *)D_841951F0 + 2520))[107]) {
+                D_84186158 = 1;
+            }
+            if (D_84195248[0].kind == 5 || D_84195248[1].kind == 5) {
+                func_84147228(23, 0, 0, 7, 2);
+            } else {
+                func_84147228(23, 0, 0, 7, 0);
+            }
+            func_84147228(23, 0, 0, 10, 0);
+            func_84147228(23, 0, 0, 4, 4);
+            func_80023A3C(38, 0, 0);
+            D_84195278 = 3;
+        } else {
+            if ((D_8419A008[0].flags & 3) && (D_8419A008[0].flags & 4)) {
+                D_8419A008[0].flags = D_8419A008[0].flags & ~4;
+                D_8419A008[0].elapsed = 0;
+            }
+            func_8413C3A8();
+        }
+        break;
+    case 4:
+        if (D_84195248[0].active == 0 || D_84195248[1].active == 0) break;
+        func_84137ED4(0);
+        func_84137ED4(1);
+        D_8419A007 = 1;
+        if (func_841484CC(23, 0, 0, 1) == 0) {
+            if (D_84195248[0].kind == 5 || D_84195248[1].kind == 5) {
+                func_84147228(23, 0, 0, 7, 1);
+                func_84147228(23, 0, 0, 11, 4);
+            } else {
+                func_84147228(23, 0, 0, 7, 0);
+                func_84147228(23, 0, 0, 11, 2);
+            }
+            func_84147228(23, 0, 0, 4, 4);
+        }
+        if (D_84186158 != 0) {
+            func_8002AAFC(0);
+            func_8413C500();
+            func_80023A3C(52, 0, 0);
+            func_8413C6AC(((u8 *)D_841951F0)[2502], 104);
+        } else {
+            if (D_84195248[0].phase == 12 && D_84195248[1].phase == 12) {
+                func_84147228(29, 0, 0, 10, 120);
+                func_84147228(29, 0, 0, 4, 4);
+            }
+            D_84195278 = 5;
+        }
+        break;
+    case 3:
+        if (D_84195248[0].active == 0 || D_84195248[1].active == 0) break;
+        D_8419A0A1++;
+        func_8002AAFC(0);
+        *(u16 *)(D_84195280 + 19206) = 0;
+        D_84195280[19202] = 0;
+        if (D_8419A006 < 2) D_8419A006 = 2;
+        Display_QueueFramebufferRequest_fragment79((OSMesg)0x4B495054);
+        break;
+    case 5:
+        if (D_84195248[0].phase < 11 && ((u8 *)D_841951F8[0])[1178] != 0 && D_84195210[0] != 0) func_84148650(0);
+        if (D_84195248[1].phase < 11 && ((u8 *)D_841951F8[1])[1178] != 0 && D_84195210[1] != 0) func_84148650(1);
+        if (D_8419A008[0].flags & 2) {
+            D_84186154 = 0;
+            D_8419A008[0].fraction = D_8419A008[0].elapsed % func_80001FF0();
+            for (i = 0; i != 2; i++) {
+                if (D_84195248[i].phase < 11) {
+                    func_84147228(22, (u8)i, 0, 10, 0);
+                    func_84147228(22, (u8)i, 0, 4, 4);
+                }
+            }
+        }
+        if (D_8419A008[0].flags & 1) {
+            func_84147228(21, 0, 0, 10, 0);
+            func_84147228(21, 0, 0, 4, 4);
+        }
+        func_80023A3C(39, 0, 0);
+        D_84195278 = 1;
+        break;
+    case 7:
+        if (D_84195248[0].active != 0 && D_84195248[1].active != 0) D_84186150 = 0;
+        break;
+    case 8:
+        func_8410A6A4();
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -2401,10 +2541,10 @@ s32 func_8413CE84(void) {
     s32 sp20;
 
     if ((D_8419A01A & 3) && !(D_8419A01A & 4)) {
-        *(s32 *)(D_8419A008 + 8) = func_80002014() + *(s32 *)(D_8419A008 + 8);
-        *(s16 *)(D_8419A008 + 0xC) = func_80002014() + *(s16 *)(D_8419A008 + 0xC);
-        sp2C = *(s32 *)(D_8419A008 + 0) - *(s32 *)(D_8419A008 + 8);
-        sp28 = *(s32 *)(D_8419A008 + 4) - *(s16 *)(D_8419A008 + 0xC);
+        *(s32 *)(((u8 *)&D_8419A008) + 8) = func_80002014() + *(s32 *)(((u8 *)&D_8419A008) + 8);
+        *(s16 *)(((u8 *)&D_8419A008) + 0xC) = func_80002014() + *(s16 *)(((u8 *)&D_8419A008) + 0xC);
+        sp2C = *(s32 *)(((u8 *)&D_8419A008) + 0) - *(s32 *)(((u8 *)&D_8419A008) + 8);
+        sp28 = *(s32 *)(((u8 *)&D_8419A008) + 4) - *(s16 *)(((u8 *)&D_8419A008) + 0xC);
         if (sp2C < 0) {
             sp2C = 0;
             D_84186158 = 1;
@@ -2530,7 +2670,7 @@ M2C_UNK func_8410A884();                            /* extern */
 M2C_UNK func_8410A9B4();                            /* extern */
 M2C_UNK func_84136D9C();                            /* extern */
 M2C_UNK func_84137778();                            /* extern */
-M2C_UNK func_8413C820();                            /* extern */
+void func_8413C820(void);                            /* extern */
 M2C_UNK func_8413CE84();                            /* extern */
 M2C_UNK func_84145BA0(u8);                          /* extern */
 M2C_UNK func_8414605C();                            /* extern */
@@ -2722,7 +2862,7 @@ void Battle_InitializeSideDisplayStates(void) {
     u8 *team;
     u8 (*inputs)[40];
     for (inputs = (u8 (*)[40])D_800CE060, i = 0; i < 2; i++) {
-        state = D_84195248 + i * 24;
+        state = ((u8 *)D_84195248) + i * 24;
         team = (u8 *)D_841951F8[i];
         *(void **)(state + 0) = inputs[state[10]];
         *(void **)(state + 4) = inputs[state[11]];
@@ -2765,10 +2905,10 @@ extern s32 D_84187020;
 extern u8 D_8419A0A2;
 extern u8 D_8419A0A0[];
 extern u8 D_8419A0A1;
-extern u8 D_84195248[];
+extern struct unk_D_84195248 D_84195248[2];
 extern u8 D_84195210[];
 extern s8 D_8419A005;
-extern u8 D_8419A008[];
+extern struct unk_D_8419A008 D_8419A008[];
 extern u8 D_8418AF70[];
 extern u8 D_8418AF78[];
 extern void Teams_GenerateLevel100_fragment86(u8 *, u32);
@@ -2834,10 +2974,10 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
             }
             *(struct BattleName *)((u8 *)D_841951F8[0] + 1164) = *(struct BattleName *)D_8418AF70;
             *(struct BattleName *)((u8 *)D_841951F8[1] + 1164) = *(struct BattleName *)D_8418AF78;
-            D_84195248[10] = 0;
-            D_84195248[34] = 1;
-            D_84195248[11] = 2;
-            D_84195248[35] = 3;
+            ((u8 *)D_84195248)[10] = 0;
+            ((u8 *)D_84195248)[34] = 1;
+            ((u8 *)D_84195248)[11] = 2;
+            ((u8 *)D_84195248)[35] = 3;
         } else {
             D_841951F8[0] = D_841951F0;
             D_841951F8[1] = &((struct Team *)D_841951F0)[1];
@@ -2845,10 +2985,10 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
             D_84195200[1] = ((struct Team *)D_841951F8[1])->rows[((u8 *)D_841951F8[1])[10]].bytes;
             D_84195208[0] = (u8 *)D_841951F8[0] + 1080;
             D_84195208[1] = (u8 *)D_841951F8[1] + 1080;
-            D_84195248[10] = ((u8 *)D_841951F8[0])[4];
-            D_84195248[11] = ((u8 *)D_841951F8[0])[5];
-            D_84195248[34] = ((u8 *)D_841951F8[1])[4];
-            D_84195248[35] = ((u8 *)D_841951F8[1])[5];
+            ((u8 *)D_84195248)[10] = ((u8 *)D_841951F8[0])[4];
+            ((u8 *)D_84195248)[11] = ((u8 *)D_841951F8[0])[5];
+            ((u8 *)D_84195248)[34] = ((u8 *)D_841951F8[1])[4];
+            ((u8 *)D_84195248)[35] = ((u8 *)D_841951F8[1])[5];
         }
         for (i = 0; i < 2; i++) {
             for (j = 0; j < ((u8 *)D_841951F8[i])[7]; j++) {
@@ -2872,17 +3012,17 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
             ((u8 *)D_841951F0)[2497] = 7;
         }
         if (((u8 *)D_841951F0)[2496] != 0) {
-            D_8419A008[18] |= 1;
+            ((u8 *)&D_8419A008)[18] |= 1;
         }
         if (((u8 *)D_841951F0)[2497] != 0) {
-            D_8419A008[18] |= 2;
+            ((u8 *)&D_8419A008)[18] |= 2;
         }
-        D_8419A008[18] |= 4;
-        *(s32 *)(D_8419A008 + 0) = ((u8 *)D_841951F0)[2496] * func_80001FF0() * 60;
-        *(s32 *)(D_8419A008 + 4) = ((u8 *)D_841951F0)[2497] * func_80001FF0();
-        *(s32 *)(D_8419A008 + 8) = 0;
-        *(s16 *)(D_8419A008 + 12) = 0;
-        *(s16 *)(D_8419A008 + 16) = ((u8 *)D_841951F0)[2496] * 60;
+        ((u8 *)&D_8419A008)[18] |= 4;
+        *(s32 *)(((u8 *)&D_8419A008) + 0) = ((u8 *)D_841951F0)[2496] * func_80001FF0() * 60;
+        *(s32 *)(((u8 *)&D_8419A008) + 4) = ((u8 *)D_841951F0)[2497] * func_80001FF0();
+        *(s32 *)(((u8 *)&D_8419A008) + 8) = 0;
+        *(s16 *)(((u8 *)&D_8419A008) + 12) = 0;
+        *(s16 *)(((u8 *)&D_8419A008) + 16) = ((u8 *)D_841951F0)[2496] * 60;
         if (((u8 *)D_841951F0)[2498] != 2) {
             **(u32 **)((u8 *)D_841951F0 + 2520) = osGetCount();
         }
