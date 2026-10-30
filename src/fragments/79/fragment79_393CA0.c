@@ -1035,7 +1035,7 @@ u16 func_84126850(u8 arg0, u16 arg1) {
 
 #ifdef VERSION_US
 extern u16 D_841951CA;
-extern void func_8412EE5C(void);
+extern void BattleDamage_AccumulateBaseDamage(void);
 extern void func_841265EC(void);
 extern u32 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
@@ -1052,7 +1052,7 @@ void func_841268A0(void) {
     func_84136CA8();
     D_841951D1 = 0;
     func_841265EC();
-    func_8412EE5C();
+    BattleDamage_AccumulateBaseDamage();
     D_841951C8 = func_84126804(D_841951BC, D_841951CA);
     func_84136A9C(D_841951BC, -1, -D_841951C8, 1);
 }
@@ -1326,7 +1326,7 @@ extern void BattleRecord_AdvanceWriteSlot(void);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84124594(u8 arg0);
 extern void func_84124E44(u8 arg0);
-extern s32 func_84125080(void);
+extern u8 func_84125080(void);
 extern void func_841264F0(u8 arg0);
 extern void func_841265D4(void);
 extern void func_841268A0(void);
@@ -1504,7 +1504,54 @@ void BattleTurn_CheckMoveStatus(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841278E4.s")
+extern u8 D_841854B4[];
+extern u8 D_841854D4[];
+extern u8 D_841854DC[];
+extern u8 D_841854E8[];
+extern void BattleMoveState_UpdateMoveSlot(u8, u8);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern s32 func_80062CE0(u8);
+extern s32 func_84124EFC(u8 arg0, u8 *arg1);
+extern s32 func_84134D04(void);
+extern void func_84135B00(u16);
+extern void func_84135B40(u16 arg0);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_841366C4(u8 arg0, s16 arg1);
+extern u8 D_841951BC;
+extern u8 D_841951BF;
+extern u8 D_841951C3;
+extern void * D_841951F8[];
+extern u8 * D_84195208[];
+void BattleMove_AnnounceUse(void) {
+    u16 message;
+    if (D_84195208[D_841951BC][41] == 0) {
+        D_84195208[D_841951BC][38] = D_841951BF;
+        D_84195208[D_841951BC][39] = D_841951BF;
+    }
+    if (func_84124EFC(D_841951BF, D_841854B4)) message = 185;
+    else if (func_84124EFC(D_841951BF, D_841854D4)) message = 166;
+    else if (func_84124EFC(D_841951BF, D_841854DC)) message = 184;
+    else if (func_84124EFC(D_841951BF, D_841854E8)) message = 101;
+    else message = 43;
+    func_8004C54C(29, (s32)func_80062CE0(D_841951BF));
+    if (D_84195208[D_841951BC][41] != 0) {
+        func_841366C4(D_841951BC, -1);
+        func_84135B40(message);
+    } else {
+    BattleMoveState_UpdateMoveSlot(D_841951BC, ((u8 *)D_841951F8[D_841951BC])[0]);
+    func_84136218(D_841951BC, 8);
+    func_84136218(D_841951BC, 12);
+    func_84136678(D_841951BC, -1);
+    func_84135B00(message);
+    if (func_841360C0(D_841951BC, -1, 60, 8, D_841951BF) == 0) {
+        func_841360C0(D_841951BC, -1, 60, 12, D_841951C3);
+    }
+    if (D_841951BF != 228 || func_84134D04() != 0) BattleRecord_AdvanceWriteSlot();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1550,7 +1597,7 @@ void func_84127B00(void) {
 extern u8 D_8418547C[];
 extern u8 D_84185484[];
 extern u8 D_841951C5;
-extern s32 func_84125080(void);
+extern u8 func_84125080(void);
 extern u8 func_80063660(u8);
 extern s32 func_84124EFC(u8 arg0, u8 *arg1);
 extern u8 D_841951BC;
@@ -1751,7 +1798,7 @@ extern void func_84128438(void);
 extern s32 D_84187020;
 extern u8 func_80063660(u8);
 extern u8 func_80063690(u8);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_84128298(void);
 extern s32 func_841283FC(void);
 extern u8 D_841951BC;
@@ -1837,7 +1884,7 @@ void func_841288DC(void) {
 extern void func_8412D8C8(void);
 extern u8 func_80063660(u8);
 extern u8 func_80063690(u8);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_841288DC(void);
 extern u8 D_841951BD;
 extern u8 D_841951C6;
@@ -2302,7 +2349,7 @@ s32 func_84129D3C(void) {
 #ifdef VERSION_US
 s32 func_80063270(u8);
 extern s32 func_8004C54C(u8, s32);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern s32 func_84129C8C(u8);
 extern void func_84135B40(u16);
 extern void func_841366C4(u8, s16);
@@ -2393,7 +2440,7 @@ void func_8412A028(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_841254E0(void);
 void BattleAnim_Table_84185F10_003(void) {
     u8 *temp_v0;
@@ -2428,7 +2475,7 @@ s32 func_8412A23C(u8 arg0,u8 arg1){s32 result=arg1;u8 *ptr=D_841951F8[arg0];u8 *
 extern s32 func_8412A23C(u8, u8);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84124604(u8 arg0, u8 arg1);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_84126BA8(u8 arg0);
 extern s32 func_8412A200(u8 arg0);
 extern void func_84131EAC(u8 arg0);
@@ -2458,7 +2505,7 @@ void BattleAnim_Table_84185F10_004(void) {
 
 #ifdef VERSION_US
 extern void BattleAnim_Table_84186004_070(void);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_84125484(u8 arg0);
 extern void func_841254E0(void);
 extern void func_84134CBC(u8 arg0, u8 arg1);
@@ -3054,7 +3101,7 @@ s32 func_8412BF4C(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_841252D0(u8);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_841253F4(void);
 extern s32 func_8412BF4C(u8 arg0);
 extern u8 D_841951BC;
@@ -3194,7 +3241,7 @@ void BattleAnim_Table_84185F10_026(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 void BattleAnim_Table_84185F10_027(void) {
     u8 *temp_v0;
     temp_v0 = D_84195208[D_841951BD];
@@ -3207,7 +3254,7 @@ void BattleAnim_Table_84185F10_027(void) {
 #endif
 
 #ifdef VERSION_US
-s32 func_84125080();
+extern u8 func_84125080(void);
 void BattleAnim_Table_84185F10_028(void) {
     u8 *temp_v0;
 
@@ -3220,7 +3267,7 @@ void BattleAnim_Table_84185F10_028(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_84125424(u8);
 extern u8 D_841951BC;
 extern void * D_841951F8[];
@@ -3242,7 +3289,59 @@ void BattleAnim_Table_84185F10_029(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412C95C.s")
+typedef struct { u32 words[16]; unsigned int :4; unsigned int fixed_damage:1; unsigned int :27; } SpecialDamageBits;
+extern u8 Audio_LookupScaledRatio_fragment79(u16 numerator, u16 denominator);
+extern void BattleDamage_AccumulateBaseDamage(void);
+extern u8 func_84125080(void);
+extern void func_84127DB8(void);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s8 D_841951C2;
+extern u8 D_841951C3;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern void * D_841951F0;
+extern u8 * D_84195200[];
+void BattleDamage_ApplySpecialFormula(void) {
+    s32 limit;
+    s32 roll;
+    u8 bounded_roll;
+    s32 level;
+    switch (D_841951C3) {
+    case 87:
+        D_841951C8 = D_84195200[D_841951BC][29];
+        break;
+    case 88:
+        level = D_84195200[D_841951BC][29];
+        limit = (level >> 1) + level;
+        do {
+            roll = func_84125080();
+            bounded_roll = (u8)roll;
+        } while (roll == 0 || bounded_roll > limit);
+        D_841951C8 = roll;
+        break;
+    case 40:
+        limit = *(u16 *)(D_84195200[D_841951BD] + 38) >> 1;
+        if (limit == 0) limit++;
+        D_841951C8 = limit;
+        break;
+    case 99:
+        D_841951C2 = Audio_LookupScaledRatio_fragment79(*(u16 *)(D_84195200[D_841951BC] + 38), *(u16 *)(D_84195200[D_841951BC] + 40));
+        func_84127DB8();
+        BattleDamage_AccumulateBaseDamage();
+        D_841951C2 = 1;
+        break;
+    default:
+        if ((D_841951BF == 49 || D_841951BF == 82) && ((((SpecialDamageBits *)*(void **)((u8 *)D_841951F0 + 2516))->fixed_damage) == 0)) {
+            D_841951C8 = 0;
+            D_841951D2 = 1;
+        } else {
+            D_841951C8 = (u8)D_841951C2;
+        }
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -3269,7 +3368,50 @@ void BattleAnim_Table_84185F10_031(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412CBE8.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84124604(u8 arg0, u8 arg1);
+extern u8 func_84125080(void);
+extern s32 func_84126374(void);
+extern s32 func_841263D8(u8 arg0, u8 arg1);
+extern void func_84126A90(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84126B1C(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84134E30(s32 arg0);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 D_841951D2;
+extern void * D_841951F8[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplyEncore(void) {
+    u8 move;
+    u8 slot;
+    s32 raw_slot;
+    move = D_84195208[D_841951BD][39];
+    raw_slot = func_841263D8(D_841951BD, move);
+    slot = raw_slot;
+    if (move == 0 || move == 165 || move == 227 || move == 119 || raw_slot == 0 || (D_84195208[D_841951BD][raw_slot + 8] & 63) == 0 || (D_84195208[D_841951BD][17] & 16)) {
+        func_84126A90(D_841951BC, D_841951BD, 0);
+        return;
+    }
+    if (D_841951D2 != 0) {
+        func_84126B1C(D_841951BC, D_841951BD, 1);
+        return;
+    }
+    D_84195208[D_841951BD][17] |= 16;
+    D_84195208[D_841951BD][22] = (func_84125080() & 3) + 3;
+    if (func_84126374() != 0) {
+        ((u8 *)D_841951F8[D_841951BD])[1] = move;
+        D_84195208[D_841951BD][3] = move;
+        D_84195208[D_841951BD][4] = slot - 1;
+    }
+    func_84136678(D_841951BC, -1);
+    func_84135B00(50);
+    func_84124604(D_841951BD, D_841951BF);
+    func_84134E30(5);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
@@ -3306,7 +3448,7 @@ s32 func_8412CFE4(u8 arg0, u8 arg1) {
 #ifdef VERSION_US
 extern s32 func_80063270(u8);
 extern s32 func_8004C54C(u8, s32);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern s32 func_8412CFE4(u8 arg0, u8 arg1);
 extern void func_84135B40(u16);
 extern void func_841366C4(u8, s16);
@@ -3417,7 +3559,7 @@ s32 BattleMove_IsSleepTalkSlotEligible(u8 slot) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_841252D0(u8);
 extern void func_841253F4(void);
 extern void func_84126BFC(u8 arg0);
@@ -3541,7 +3683,7 @@ void BattleEffect_ClearPartyStatus(void) {
 extern u8 D_841951C5;
 extern u8 func_80063690(u8);
 extern u8 func_80063660(u8);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 void BattleAnim_Table_84185F10_044(void) {
     u8 limit;
     if ((D_841951D2 == 0) &&
@@ -3731,14 +3873,14 @@ void BattleCommand_075(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern s32 func_84126374(void);
 extern u8 D_841951BC;
 extern u8 * D_84195208[];
 s32 func_8412E220(void) {
     u8 pad[8];
     s32 count;
-    s32 value;
+    u8 value;
     if (func_84126374() != 0) {
         if (!(D_84195208[D_841951BC][0x10] & 0x10)) {
             count = (0xFF >> D_84195208[D_841951BC][0x19]) & 0xFF;
@@ -4040,7 +4182,32 @@ void BattleAnim_Table_84186004_002(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412EE5C.s")
+extern u8 func_80063690(u8);
+extern s8 D_841951C1;
+extern s8 D_841951C2;
+extern u8 D_841951C3;
+extern u8 D_841951C5;
+extern s32 D_841951C8;
+extern u8 D_841951D0;
+void BattleDamage_AccumulateBaseDamage(void) {
+    u32 damage;
+    if (D_841951C3 == 7) D_841951CE >>= 1;
+    if (D_841951CE == 0) D_841951CE++;
+    if (((u8)D_841951C2) != 0) {
+        damage = ((D_841951D0 * 2 / 5 + 2) * ((u8)D_841951C2) * D_841951CC / D_841951CE) / 50;
+        if (func_800636C0(D_841951C5, ((u8)D_841951C1)) != 0) {
+            damage *= func_80063690(D_841951C5) + 100;
+            damage /= 100;
+        }
+        if (D_841951D1 == 1) {
+            damage <<= 1;
+            if (damage >= 65536) damage = 65535;
+        }
+        D_841951C8 += damage;
+        if (D_841951C8 >= 999) D_841951C8 = 996;
+        D_841951C8 += 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -4090,7 +4257,7 @@ void BattleAnim_Table_84186004_007(void) {
 extern u8 D_8418546C[];
 void func_84135034(u8, u8);
 extern void func_8004C594(s32, s32);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_84135B00(u16);
 extern void func_84136678(u8 arg0, s16 arg1);
 extern u8 D_841951BC;
@@ -4099,13 +4266,13 @@ void func_8412F170(void) {
     u8 value;
     u8 count;
     u8 (*p)[2];
-    s32 raw;
+    u32 raw;
 
     raw = func_84125080();
     value = raw;
     p = (u8 (*)[2])D_8418546C;
     count = 4;
-    if ((*p)[0] < raw) {
+    if ((*p)[0] < (s32)raw) {
         do {
             count++;
             p++;
@@ -4556,7 +4723,7 @@ void func_8412FF80(void) {
 
 #ifdef VERSION_US
 extern u8 func_80062F2C(u8);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern u8 D_841951BD;
 extern u8 D_841951BF;
 extern u8 D_841951D3;
@@ -4957,7 +5124,7 @@ void BattleAnim_Table_84186004_071(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 void BattleAnim_Table_84186004_072(void) {
     u8 val;
 
@@ -5600,7 +5767,7 @@ void Battle_ProcessPpRestoringHeldItems(void) {
 
 #ifdef VERSION_US
 extern s32 func_8004C54C(u8, s32);
-extern s32 func_84125080();
+extern u8 func_84125080(void);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8, s16);

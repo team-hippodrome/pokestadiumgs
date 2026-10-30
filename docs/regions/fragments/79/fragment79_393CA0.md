@@ -1991,3 +1991,64 @@ a byte-identical retail US ROM and normal host syntax checks.
 
 The four-function batch replaces 1,620 bytes of assembly. No coverage files
 or private search tools are part of the change.
+
+## 2026-10-31 base damage and move announcements
+
+`BattleDamage_AccumulateBaseDamage` (`8412EE5C`, 416 bytes) calculates the
+level/power/attack/defense damage term, applies the held-item type bonus and
+critical multiplier, then adds the capped result and constant offset to the
+damage accumulator. Effect 7 halves defense before calculation; zero defense
+is raised to one. Explicit byte casts preserve the unsigned move power and
+type loads despite their existing signed declarations. Compound multiplication
+followed by division reproduces the original multiplication operand order.
+
+`BattleMove_AnnounceUse` (`841278E4`, 540 bytes) records the current move,
+selects a message from four move-category tables, supplies its name to the
+message formatter, and dispatches either the continued-move message or the
+normal move-slot update and battle recording sequence. Move 228 additionally
+checks `func_84134D04` before advancing the record. The named helper
+`BattleMoveState_UpdateMoveSlot` requires its actual byte-parameter prototype;
+an implicit declaration changes argument handling and adds two instructions.
+
+Both functions passed canonical native acceptance, the normal host syntax
+check, and the full retail US ROM comparison. Descriptive names and formatting
+also passed complete-module controls with and without twenty leading blank
+lines. Original addresses remain linker aliases.
+
+### 2026-10-31: special damage formula accepted
+
+`func_8412C95C` / `BattleDamage_ApplySpecialFormula` (420 bytes) now matches
+through the native canonical runner, normal host syntax check, and complete
+retail ROM comparison (MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`).
+The function selects level damage, bounded random level damage, half current
+HP, variable-power damage, or fixed move power with the rules flag guard.
+
+Two independently measured source corrections resolved the residual:
+
+- The RNG returns a byte (`lbu v0` in its assembly return), so its declarations
+  now use `u8`. Existing callers retain identical instructions with a byte
+  `value` in `func_8412E220` and unsigned `raw` plus an explicit signed
+  comparison in `func_8412F170`. The RNG range makes those conversions exact.
+  The declaration/caller cleanup alone preserves the entire module, including
+  sections, function extents, and relocations.
+- The rules word at offset 64 uses a bitfield view of bit 27. A direct mask
+  produced the right operations but six wrong temporary-register operands;
+  the bitfield produced the exact function without rewriting object bytes.
+  This is one-file evidence, not a general compiler rule.
+
+Canonical result: `battle-special-damage-bitfield-confirm`, label
+`special-damage:verified-unsigned-bitfield:byte-rng`. Naming was independently
+checked against the accepted module with normal and 20-leading-blank-line
+controls. Private diagnostics and helper scripts are not repository changes.
+
+### 2026-10-31: Encore handler accepted
+
+`func_8412CBE8` / `BattleEffect_ApplyEncore` (444 bytes) passed canonical
+runner acceptance, normal host syntax, and the full retail ROM comparison.
+The move and saved slot are byte locals, declared in that order. Keep the
+full `s32` slot return for the immediate zero/PP checks and copy it to the
+byte slot for use after calls. Using only a byte introduces an extra mask;
+using only a word changes the saved slot's store/load width. The accepted
+label is `encore:raw-s32:order0:assign0` in `battle-encore-raw8`.
+Naming preserves complete-module sections, bytes, extents, and relocations
+with both normal and twenty-leading-blank-line controls.
