@@ -2586,7 +2586,55 @@ void func_8413D6D4(u8 *arg0, u8 *arg1) { u8 i; _bzero(arg0, 0x54); arg0[0] = arg
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413D7AC.s")
+extern u8 func_80062E10(u8);
+extern s32 func_80061B88(s32, u16);
+extern s32 func_800647C8(u8);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+extern void func_800619E8(u8 *);
+extern u8 D_8418AF68[];
+extern u32 func_8003570C(void);
+extern void * D_841951F0;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void func_8413D7AC(u8 arg0) {
+    struct Label7 { u8 bytes[7]; };
+    u8 *data;
+    s32 i;
+    s32 j;
+
+    D_841951F8[arg0] = ((u8 (*)[1248])D_841951F0)[arg0];
+    ((u8 *)D_841951F8[arg0])[2] = 1;
+    ((u8 *)D_841951F8[arg0])[7] = 6;
+    ((u8 *)D_841951F8[arg0])[8] = 3;
+    ((u8 *)D_841951F8[arg0])[9] = 3;
+    ((u8 *)D_841951F8[arg0])[3] = 3;
+    for (i = 0; i < 6; i++) {
+        D_84195200[arg0] = (u8 *)D_841951F8[arg0] + i * 88 + 24;
+        D_84195200[arg0][0] = arg0 * 3 + i + 6;
+        for (j = 0; j < 4; j++) {
+            D_84195200[arg0][j + 2] = 251 - arg0 * 24 - i * 4 - j;
+            D_84195200[arg0][j + 24] = func_80062E10(D_84195200[arg0][j + 2]);
+        }
+        D_84195200[arg0][29] = 100;
+        *(s32 *)(D_84195200[arg0] + 8) = func_80061B88(D_84195200[arg0][0], D_84195200[arg0][29]);
+        *(u16 *)(D_84195200[arg0] + 12) = 0xFFFF;
+        *(u16 *)(D_84195200[arg0] + 14) = 0xFFFF;
+        *(u16 *)(D_84195200[arg0] + 16) = 0xFFFF;
+        *(u16 *)(D_84195200[arg0] + 18) = 0xFFFF;
+        *(u16 *)(D_84195200[arg0] + 20) = 0xFFFF;
+        *(u16 *)(D_84195200[arg0] + 22) = func_8003570C() & 0xFFFF;
+        D_84195200[arg0][28] = 255;
+        data = (u8 *)func_800647C8(D_84195200[arg0][0]);
+        HAL_Strcpy((s8 *)(D_84195200[arg0] + 52), (s8 *)data);
+        *(struct Label7 *)(D_84195200[arg0] + 64) = *(struct Label7 *)D_8418AF68;
+        func_800619E8(D_84195200[arg0]);
+        *(u16 *)(D_84195200[arg0] + 38) = *(u16 *)(D_84195200[arg0] + 40);
+    }
+    data = (u8 *)D_841951F8[arg0];
+    D_84195200[arg0] = data + 24;
+    D_84195208[arg0] = data + 1080;
+}
 #endif
 
 #ifdef VERSION_US
