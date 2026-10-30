@@ -2403,3 +2403,113 @@ best. Captures: switch-in-final-stock-passes; replay receipt:
 switch-in-final-as1-options/receipt.json. No production flags changed.
 The three accepted functions are being published independently; this owner
 remains active for the next batch, with the schedule residual retained.
+
+#### Switch-in initialization: accepted clean source (2026-10-31)
+
+`func_841318C0` / `Battle_InitializeActivePokemon` initializes one side's
+active Pokemon from a party slot: it selects the party record, copies species,
+types, moves, PP, level, HP and battle statistics, computes its color adjustment,
+applies status-dependent stat reductions, and records the side/slot change.
+Callers pass a side and party slot, including the switch-action wrapper's
+selected action minus four.
+
+A one-worker, 60-second permuter search calibrated byte-identically against
+record8 candidate0 found the last SLL/LUI scheduling change by using direct
+team-table references. Its zero-score result retained an unused base local.
+That form passed the canonical host and retail ROM gates but was deliberately
+removed; the assembly baseline was rebuilt and passed a fresh full-ROM gate.
+The cleanup instead uses both live pointers: `base` for the selected-slot
+store and `rec` for the party-record address, initialized before `out`.
+This closes the opening schedule without unused locals, ABI changes, binary
+rewriting, forced registers, or padding. The explicit unsigned slot stride
+retains the required 32-byte frame. The function occupies 504 bytes.
+
+Canonical acceptance: `battle-switch-in-live-base8` candidate2; normal host
+syntax check and full retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`
+passed. Naming passed complete-module byte, symbol-extent and relocation
+comparisons normally and with twenty leading blank lines. The stock UGEN O1
+diagnostic crashed as1 even for an accepted witness and provides no scheduling
+conclusion; production O2 replays reproduced all three captured raw modules.
+
+#### Secondary confusion: accepted (2026-10-31)
+
+`func_8412ADF8` / `BattleEffect_ApplySecondaryConfusion` checks held-item
+immunity and battle-state guards, sets a random confusion countdown and flag,
+records the effect, and consumes a confusion/status-curing held item when
+present. Its 488-byte implementation shares the countdown and cure logic
+with `BattleCommand_035` while using the previous-record helper
+`func_84136124` for the secondary effect.
+
+Forty historical attempts included stale call casts and a final call to
+`func_84136CA8`; the original assembly instead calls
+`BattleRecord_AdvanceWriteSlot`. Reusing the current real helper signatures,
+that correct final call, a byte item-effect local, and a combined guard matched
+on the first candidate. Canonical manifest `battle-secondary-confusion8`,
+candidate0, passed the normal host check and full retail ROM comparison
+(MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`). Naming preserved complete-module
+bytes, symbol extents and relocations in normal and +20-line controls.
+
+#### Sleep effect: accepted through linked comparison (2026-10-31)
+
+`func_84128EC0` / `BattleEffect_ApplySleep` checks held-item immunity,
+existing status, battle guards and move failure before selecting a sleep
+counter. Its loop draws a three-bit value, redraws once when it is one,
+and repeats until the resulting value is one through three. It stores that
+value plus one, records the status and animation changes, handles the move-142
+special event, and clears the selected party record's auxiliary byte.
+
+Historical drafts contained `M2C_ERROR()` after `func_841360C0` and used
+`func_84136CA8` where the original assembly calls
+`BattleRecord_AdvanceWriteSlot`. Correct signatures, the actual record helper,
+and two byte locals produced all 176 instructions with identical registers
+and a 32-byte frame. Only the address fields for `D_841951D2` differed in the
+objects: the assembly embeds the high and low constants, while C emits
+HI16/LO16 relocations. This is a link-time representation difference.
+
+A real link at the existing game's section addresses reproduced all 66,448
+module text bytes and all 352 read-only-data bytes. The private runner's
+opt-in resolved-relocation check was extended to admit added relocation fields
+only after that complete linked comparison; it does not rewrite any bytes.
+Wrong-symbol, changed-opcode, changed-rodata, wrong-placement, missing-layout
+and disabled-option controls rejected, and all 32 existing link-shape tests
+passed using their native or legacy fixture layouts. The enabled verifier hash
+is recorded in the attempt context so a changed comparator can reassess old
+rejections without weakening duplicate checks for unchanged experiments.
+
+Canonical `battle-sleep-linked8` candidate0 passed the normal host check and
+full retail ROM gate, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming and readable
+formatting then preserved complete-module bytes, symbol extents and relocations
+in normal and +20-line controls. Function size: 704 bytes. No compiler changes,
+hardcoded C symbol addresses, binary rewriting or padding were used.
+
+#### Battle RNG initializer: requeue, final schedule pair (2026-10-31)
+
+`func_84124F40` swaps the seed's halfwords, seeds the shared generator, and
+fills ten battle RNG bytes while interrupts are masked. Native unsigned-to-float
+and float-to-unsigned conversions reproduce the retail conversion sequence;
+manual signed conversion/conditional adjustment drafts are unnecessary.
+An explicit low-halfword mask in the seed rotation fixes the temporary register
+sequence. Best current source is `battle-rng-scale8` candidate2: a const float
+byte scale and the pointer initialization on the same line as `do` fix the
+initial pointer-address schedule. Size320/frame48 and all operands match.
+Only rows66/67 differ: retail increments s0 before restoring FCSR; candidate
+restores FCSR before incrementing s0 (offsets264/268, raw0.9875).
+
+Forty canonical candidates covered native conversion, seed halfword forms,
+end-pointer forms, pointer increment/value lifetimes, named float constants,
+and eight natural line groupings around the conversion. None accepted.
+A calibrated one-worker 60-second permuter search produced no zero-score body;
+its named-scale lead motivated the current best. Increment-before-store and
+separate converted-value forms regress. Preserve the best rather than replaying
+those families.
+
+Stock CFE/UOPT/UGEN/as1 captures passed four complete-module controls, and the
+captured best function independently equals its canonical probe. as1 O2 replay
+reproduced the full raw modules for both candidate and accepted trapping-damage
+witness. Diagnostic g3/O2 was identical; O0/O1 changed other instructions but
+kept FCSR restore before pointer increment. This bounds the tested assembler
+options; it does not prove every assembler scheduling pass was disabled.
+Next: inspect UGEN emission ordering for unsigned float conversion and its
+pointer update, or trace that pair's scheduler dependency. No forced schedule
+or binary rewriting is admissible. Evidence: `battle-rng-stock-passes`,
+`battle-rng-capture-proof.json`, `battle-rng-as1-options/receipt.json`.
