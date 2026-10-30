@@ -315,7 +315,23 @@ s32 func_84124EFC(u8 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84124F40.s")
+extern u8 D_84195188[];
+extern u8 D_84195192[];
+extern void func_80035700(u32);
+extern u32 func_8003570C(void);
+void Battle_SeedRandomByteBuffer(u32 seed) {
+    s32 i;
+    const f32 byte_scale = 255.0f;
+
+    osSetIntMask(1);
+    func_80035700(((seed & 0xFFFF0000) >> 16) | ((seed & 0xFFFF) << 16));
+
+    for (i = 0; i < 10; i++) {
+        D_84195188[i] = (u32)(((f32)func_8003570C() / 4294967296.0f) * byte_scale);
+    }
+
+    osSetIntMask(0x3FFF01);
+}
 #endif
 
 #ifdef VERSION_US
@@ -6739,7 +6755,7 @@ void func_841341D8(void) {
 void func_8413425C(void) {
     u8 i;
 
-    func_84124F40(**(void ***)((u8 *)D_841951F0 + 0x9D8));
+    Battle_SeedRandomByteBuffer(**(void ***)((u8 *)D_841951F0 + 0x9D8));
     func_841341D8();
     ((u8 *)D_841951F0)[0x9C7] = 1;
     ((u8 *)D_841951F0)[0x9C4] = 0;
