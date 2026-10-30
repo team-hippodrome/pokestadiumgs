@@ -22,3 +22,52 @@ forwards both float arguments, still in `$f12`/`$f14`, to
 `extern void func_87F005F0(f32, f32)` and callers establish the two
 parameters; there is no `mov.s` because the registers are untouched. The
 raw-offset spelling follows `func_87F00030`.
+
+
+## func_87F006BC — countdown and object-list update
+
+This no-argument owner clears state word 12. If word 8 has bit 0 set, it
+writes status 3. Otherwise, bit 1 enables decrementing word 4, dividing it
+by word 0 into word 16, and storing the fractional remainder at float
+offset 20. On an exact multiple of word 0, quotient 0 writes status 3 and
+sets word-8 bit 0 plus word-64 mask `0x10000000`; quotient 1 writes status 2;
+other quotients write status 1. It always calls `func_87F0277C` on state
+plus 32, then reloads and returns the status word. Repeated global reads and
+all signed division checks remain intact.
+
+`func_87F005F0` initializes the same countdown to five times word 0 and
+sets word 8 to 2. `func_87F0085C` reads the quotient and fractional value
+while drawing the overlay; `func_87F006AC` independently returns word 12.
+These operations establish the shared state fields. The existing global
+pointer declaration and unknown names remain unchanged.
+//@src/fragments/64/fragment64_322C90.c
+
+`func_87F0277C` follows the state's linked object list, calls each active
+item's nonnull callback and increments its word counter. Compiled caller
+`func_861095EC` and original caller `func_86A0167C` invoke the new owner
+without arguments when `func_87F00930` is zero; both ignore its returned
+word. The retail owner explicitly reloads that result after the list update.
+//@src/fragments/64/fragment64_324FB0.c
+//@src/fragments/49/fragment49_code.c
+//@src/fragments/60/fragment60_code.c
+
+The first C trial matches all 104 instruction words (416 bytes) and the
+24-byte frame. All previous C text remains unchanged. No new fake, local
+storage, padding, instruction rewrite, layout or helper change is introduced.
+
+Fresh validation on master `69d73da168356f78ab231d797199a5a88738606c` plus
+this patch follows normal extraction for the upstream fragment 79 split.
+The unchanged full-ROM baseline passes before the replacement. Final
+validation forces the changed source through the syntax-enabled Makefile:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/64/fragment64_322C90.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The full link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Complete retail comparison and whitespace
+checks pass. Independent original-assembly and raw-retail comparisons verify
+all 416 bytes at ROM `0x32332C..0x3234CC`.
