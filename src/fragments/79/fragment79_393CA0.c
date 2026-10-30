@@ -5805,7 +5805,56 @@ s32 func_8413207C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841320E8.s")
+extern void *D_84195204;
+extern u8 func_80063690(u8);
+extern u8 func_80063660(u8);
+extern u8 func_84125080(void);
+extern s32 func_8413202C(void);
+extern s32 func_8413207C(void);
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+s32 Battle_SelectTurnOrder(void) {
+    s32 quick[2];
+    s32 action;
+    u8 chance;
+    const s32 invalidAction = 255;
+    action = ((u8 *)D_841951F8[0])[0];
+    if (!(action < 4 || invalidAction == action)) {
+        action = ((u8 *)D_841951F8[1])[0];
+        if (!(action < 4 || invalidAction == action)) return 5;
+        return 3;
+    }
+    action = ((u8 *)D_841951F8[1])[0];
+    if (!(action < 4 || invalidAction == action)) return 4;
+    switch (func_8413202C()) {
+    case 0:
+        quick[0] = func_80063660(D_84195200[0][1]) == 74;
+        quick[1] = func_80063660(((u8 *)D_84195204)[1]) == 74;
+        if (func_84125080() & 1) {
+            if (quick[0]) {
+                chance = func_80063690(D_84195200[0][1]);
+                if (func_84125080() < chance) return 1;
+            }
+            if (quick[1]) {
+                chance = func_80063690(((u8 *)D_84195204)[1]);
+                if (func_84125080() < chance) return 2;
+            }
+            return func_8413207C();
+        } else {
+            if (quick[1]) {
+                chance = func_80063690(((u8 *)D_84195204)[1]);
+                if (func_84125080() < chance) return 2;
+            }
+            if (quick[0]) {
+                chance = func_80063690(D_84195200[0][1]);
+                if (func_84125080() < chance) return 1;
+            }
+            return func_8413207C();
+        }
+    case 1: return 1;
+    case 2: return 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -5822,7 +5871,61 @@ void func_84132300(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132350.s")
+extern void BattleCommand_RunSequence(void);
+extern s32 func_8004C54C(u8, s32);
+extern void func_841266C4(void);
+extern void func_84135B8C(u8 arg0, u16 arg1);
+extern void func_84136720(u8 arg0, u8 arg1, s16 arg2);
+extern void func_84136D84(void);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 D_841951D5;
+extern u8 D_841951E4;
+extern u8 D_841951E5;
+extern u8 D_841951E6;
+extern u8 D_841951E7;
+extern u16 D_841951E8;
+extern u16 D_841951EA;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void Battle_ResolveFutureSight(void) {
+    s32 side;
+    s32 other;
+    u8 saved;
+    for (side = 0; side < 2; side++) {
+        if (D_84195208[side][26] != 0) {
+            D_84195208[side][26]--;
+            if (D_84195208[side][26] == 1) {
+                D_841951BC = side;
+                other = 1 - side;
+                D_841951BD = other;
+                if (*(u16 *)(D_84195200[D_841951BD] + 38) > 0) {
+                    saved = ((u8 *)D_841951F8[side])[1];
+                    ((u8 *)D_841951F8[side])[1] = 248;
+                    func_8004C54C(28, (s32)(D_84195200[D_841951BD] + 52));
+                    func_841266C4();
+                    D_841951D2 = 0;
+                    D_841951D5 = 10;
+                    D_841951E5 = 10;
+                    D_841951E4 = 0;
+                    D_841951E6 = 0;
+                    D_841951E7 = 0;
+                    D_841951E8 = 0;
+                    D_841951EA = 0;
+                    func_84136D84();
+                    BattleCommand_RunSequence();
+                    func_84136720(2, other, -1);
+                    func_84135B8C(2, 129);
+                    D_841951C8 = 0;
+                    ((u8 *)D_841951F8[side])[1] = saved;
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -5873,7 +5976,49 @@ void func_841324EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132778.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern s32 func_80062CE0(u8);
+extern void func_84124594(u8 arg0);
+extern void func_84124E44(u8 arg0);
+extern s32 func_8412676C(u8 arg0, u8 arg1);
+extern u16 func_84126804(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 * D_84195208[];
+void Battle_ApplyTrappingDamage(void) {
+    s32 i;
+    u8 side;
+    for (i = 0; i < 2; i++) {
+        if (D_84195208[i][27] > 0 && !(D_84195208[i][16] & 16)) {
+            side = i;
+            func_84124E44(side);
+            func_84136678(side, -1);
+            func_8004C54C(30, (s32)func_80062CE0(D_84195208[i][28]));
+            D_84195208[i][27]--;
+            if (D_84195208[i][27] > 0) {
+            func_84136A9C(side, -1, (s16)-func_84126804(side, func_8412676C(side, 4)), 1);
+                func_84136218(side, 7);
+                func_841360C0(side, -1, 60, 7, 0);
+                func_84135B00(161);
+                switch (D_84195208[i][28]) {
+            case 250: func_84134CBC(side, 80); break;
+            case 83: func_84134CBC(side, 76); break;
+            case 128: func_84134CBC(side, 88); break;
+                default: func_84134CBC(side, 69); break;
+                }
+            } else {
+                func_84135B00(162);
+                func_84124594(side);
+            }
+            BattleRecord_AdvanceWriteSlot();
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -6187,9 +6332,9 @@ s32 func_84133304(u8 arg0) {
 
 #ifdef VERSION_US
 extern void func_84132300(void);
-extern void func_84132350(void);
+extern void Battle_ResolveFutureSight(void);
 extern void func_841324EC(void);
-extern void func_84132778(void);
+extern void Battle_ApplyTrappingDamage(void);
 extern void func_8413293C(void);
 extern void func_84132A94(void);
 extern void Battle_ProcessPpRestoringHeldItems(void);
@@ -6200,11 +6345,11 @@ extern void Battle_ProcessLowHpHeldItems(void);
 extern void func_841331F8(void);
 void func_84133440(void) {
     func_84132300();
-    func_84132350();
+    Battle_ResolveFutureSight();
     func_84132300();
     func_841324EC();
     func_84132300();
-    func_84132778();
+    Battle_ApplyTrappingDamage();
     func_84132300();
     func_8413293C();
     func_84132300();
@@ -6460,14 +6605,14 @@ void func_8413425C(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_841320E8(void);
+extern s32 Battle_SelectTurnOrder(void);
 extern s32 func_84133F10(u8);
 extern void *D_841951FC[];
 void func_841343FC(void) {
     u8 side;
     s32 result;
 
-    switch (func_841320E8()) {
+    switch (Battle_SelectTurnOrder()) {
     case 1:
         func_84134CBC(0, 91);
         func_84136A9C(0, 5, 0, 6);

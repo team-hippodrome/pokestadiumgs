@@ -2196,3 +2196,210 @@ matches every instruction and the 48-byte frame. Canonical runner acceptance
 and normal host syntax check passed, followed by retail ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming also passed both module controls.
 No binary rewriting, padding, or forced-register mechanism was used.
+
+### Future Sight delayed execution: requeue (2026-10-31)
+
+`func_84132350` is the 412-byte delayed Future Sight handler: it decrements
+both active countdowns, temporarily selects move 248, runs the attack command
+sequence against a surviving opponent, and restores the previous move.
+Twenty-four canonical candidates tested local widths/order, opposing-side
+calculation placement, loop termination, countdown expression forms, and
+independent global-store ordering. Best uses `s32 side`, `s32 other`, `u8 saved`;
+size, 64-byte frame and opcode sequence match. Twelve operands differ because
+three saved registers rotate: opponent-selector address target s5 / actual s7,
+saved move target s6 / actual s5, constant one target s7 / actual s6.
+Moving `other` ahead of the countdown test worsens allocation; countdown
+prefix/guard/combined/cached forms do not improve the best result.
+A 60-second local, one-worker permuter run calibrated byte-identically against
+the canonical probe and stayed at score 81, with no output candidates.
+Next: capture stock UOPT/globalcolor ordering for those three webs and test
+an evidence-backed lifetime change. No source candidate is installed, and no
+ROM acceptance is claimed. Private manifest: battle-future-sight8 candidate 4;
+diagnostics: future-sight-disassembly; permuter: func_84132350-3u017tzj.
+
+#### Future Sight allocator follow-up (2026-10-31)
+
+Stock CFE/UOPT/UGEN/as1 capture passed four complete-module controls (known
+and candidate, each normally and with twenty leading blank lines). The
+logging-only UOPT cost observer passed ten complete-module comparisons,
+including observer disabled/enabled/blank-line controls. Procedure ordinal
+283 emits the three differing saved registers during global coloring, so
+this residual is not a UGEN temporary-register rotation. Recorded selection
+savings for internal colors 19/20/21 are 6.666667/5/5; final machine-code
+mapping is saved move / constant one / opponent-selector address. The target
+instead uses s6/s7/s5 for those roles. Preserve the trace identity when
+interpreting these numbers; late observer `web` fields are stale, so use the
+range's identity word rather than the printed web label.
+
+Eight do/while and real early-exit forms all rejected (best raw 0.8738).
+Eight unsigned-loop/constant/local-type forms also rejected (best raw
+0.8835, unchanged from the signed parent; some introduce a 416-byte body).
+Total canonical candidate count is now 40, with no acceptance. Next useful
+experiment is an explicit, semantically faithful selector-address local,
+with before/after globalcolor costs, rather than more countdown or integer
+width permutations. Capture receipts and trace summary remain private under
+future-sight-stock-passes and future-sight-cost-controls.
+
+#### Future Sight selector-address experiment (2026-10-31)
+
+Eight explicit `u8 *opponentSelector` forms (four initialization scopes,
+dereference/index spellings) rejected at raw 0.767. Disassembly shows a
+material change, not merely renamed registers: the selector address is no
+longer kept in a saved register, its accesses use separate `lui` sequences,
+and constant 10 is promoted instead. Eight two-byte move-record struct-view
+forms with saved-value widths u8/u16/s16/s32 all reproduce the original
+0.8835 result. Canonical attempted total is 56; no source was installed.
+
+Private logging-only observer now gets the web identity from the live
+range's +4 field, with the expression-table range-pointer equality check
+retained. Fifteen full-module controls (known, best, pointer; stock,
+stock+blank, observer off/on/on+blank) passed. Best final allocations identify
+web29 as the saved byte local (kind3, dtype8, offset -9), web59 as integer
+constant one (kind2), web61 as the selector address (kind1), web62 as the
+party-pointer-table address (kind1). Pointer form drops the selector-address
+promotion and adds constant ten (web77, kind2, dtype8). Thus equal numeric
+savings alone did not establish equal allocator populations; the disassembly
+and corrected identities are authoritative. Artifacts: future-sight-identity-
+controls/{calibration.json,best-saved.json,pointer-saved.json}, and
+future-sight-pointer-disassembly.json. Next: investigate why the original
+selector-address range has a lower allocation priority than the saved byte;
+do not repeat the rejected full-pointer or move-field-view families.
+
+### Future Sight accepted: selector use fixes allocation (2026-10-31)
+
+`Battle_ResolveFutureSight` (`func_84132350`, 412 bytes) is now accepted.
+The decisive source distinction is checking target HP through
+`D_84195200[D_841951BD]`, while retaining the full-width `other = 1 - side`
+for the later battle-record command. Using `(u8)other` for both had removed
+one use of the stored selector, reducing its address-allocation savings from
+7.5 to 5 and placing it after the saved move. Keeping the genuine selector
+use reproduces every instruction, including the original raw subtraction,
+byte indexing conversion, and saved-register assignment.
+
+Before acceptance, eight saved-local scope variants stayed at raw 0.8835;
+eight narrow loop-counter variants added instructions. Chained selector
+assignment improved to four differing operands (raw 0.9612), and fifteen
+calibrated module comparisons identified the selector's increased savings.
+Eight separate raw-local assignment variants restored the old mismatch.
+Canonical hp-selector batch candidate 0 then passed the normal host syntax
+check and full retail ROM gate, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Naming passed normal and twenty-blank-line complete-module controls. Earlier
+requeue entries above are superseded. No padding, volatile workaround, forced
+registers, or binary rewrite is part of the accepted source.
+
+### Turn-order selection accepted (2026-10-31)
+
+`Battle_SelectTurnOrder` (`func_841320E8`, 536 bytes) selects non-move action
+order, then move priority, randomized Quick Claw checks, and finally speed.
+The accepted source switches directly on `func_8413202C()`; that helper's
+complete definition returns only 0, 1, or 2, all covered by the switch.
+Keeping an extra priority fallback value adds instructions. `quick[2]`, then
+`s32 action`, then `u8 chance` gives the original 40-byte frame and chance
+home at sp+27. A named `const s32 invalidAction = 255` on the left of the
+three equality tests is decisive: literal comparisons normalize to reversed
+branch operands, while the named constant retains the target operand order.
+Unsigned literal/cast variants did not fix that; byte casts regressed.
+
+Canonical sentinel batch candidate 1 passed normal host syntax and full ROM,
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming passed normal and twenty-blank-
+line complete-module comparisons. No binary rewrite or padding was needed.
+
+### Trapping residual damage accepted (2026-10-31)
+
+`Battle_ApplyTrappingDamage` (`func_84132778`, 452 bytes) decrements active
+trapping durations, applies one-sixteenth max-HP damage while a trap remains,
+records the move-specific message, and clears an expired trap. A word loop
+counter with a byte side local, nested damage calls, and switch body order
+250/83/128/default match the 64-byte frame and every instruction. Canonical
+trap-damage batch candidate 0 accepted immediately; the normal host syntax
+check and full ROM passed with MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Naming passed complete-module equality normally and with twenty leading blank
+lines. No compiler changes, padding, or binary rewriting were used.
+
+### Switch-in initialization: requeue (2026-10-31)
+
+`func_841318C0` (504 bytes) has a refreshed, compiling candidate. The old
+shared-history raw draft had a byte store for the halfword display species,
+wrong side arguments, a missing second argument to `func_841567B8`, an
+incorrect opponent pointer base, and a fabricated two-argument declaration
+for the struct-returning `func_8003F5AC`. The refreshed candidate uses the
+existing `ColorAdjustment` return type and the accepted snapshot caller's
+assignment form, current function names, and verified byte/halfword offsets.
+The 51 retained shared-history rows lack usable scores; several explicitly
+failed on `_bcopy` declaration conflicts. Do not replay those old bodies.
+
+Twenty-four current canonical candidates tested record-expression order,
+shift/divide forms, negative opponent-table indexing and slot conversions.
+Best is slot8 candidate1: 504 bytes, raw 0.8968, still a 56-byte frame versus
+32. The multiply-before-negate opponent address restores two target
+instructions. Remaining mismatches include the incoming slot's converted
+spill (word save/halfword reload versus byte save/reload in its parameter
+home), frame fields, and entry scheduling/operand order. No candidate gated.
+
+Passive stock capture passed four module controls and independently matched
+the canonical candidate's 504 function bytes. CFE reserves20 bytes for local
+homes/nested-call scratch; UOPT emits a converted slot spill at -24 and keeps
+24 local bytes. No aggregate-return temporary is present: the struct call
+already writes directly to the real output field. Existing recorder wrapper
+`func_84136A9C` reloads signed-halfword arguments before forwarding them;
+its current signature remains unchanged. Next: trace the slot conversion
+and its home selection. Any wider-wrapper contract hypothesis must first
+prove the wrapper, underlying call, and existing callers independently;
+no shadow prototype, cast call, or direct source workaround was used.
+Private evidence: battle-switch-in-slot8, switch-in-stock-passes,
+check-switch-in-capture.py. Earlier progress is three accepted functions,
+not an acceptance of this owner.
+
+#### Switch-in frame resolved; adjacent schedule residual (2026-10-31)
+
+Best is now `battle-switch-in-record8` candidate0: 504 bytes and the exact
+32-byte frame, with only instruction rows5/6 swapped (`sll t6,a1,2` and
+`lui v1,%hi(D_841951F8)`). Every other instruction and operand matches.
+Initialize `rec = base`, then `rec += (u32)arg1 * 0x58`, then `rec += 0x18`.
+The explicit u32 conversion is decisive: merely spelling the multiplier
+`0x58U` does not remove the long-lived converted slot spill. The cast separates
+record indexing from the later signed command argument, restores the byte
+parameter home, and removes all extra local frame allocation. Incremental
+pointer construction also fixes the addition operand order.
+
+A private two-module recorder-contract diagnostic had already ruled out
+widening its third parameter: it changed five existing393CA0 callers and the
+92-byte recorder wrapper, while leaving the candidate's56-byte frame. No
+signature change was installed. Wider switch-in input candidates failed on
+existing u8 declarations; no companion repair was used. Local slot copies
+failed to improve. The logging-only identity observer passed ten module
+controls and identified converted expression web126 (kind4/dtype6, source
+byte web15) with savings0 and divisor6. This motivated the successful explicit
+unsigned stride, rather than another ABI change.
+
+Eight record-layout/line-grouping variants and eight real offset-local
+initialization variants did not close the final swap. Normal and +20-line
+controls reproduce it; diagnostic -g0 and -g0+20 do too. The initial attempt
+to pass -g0 through asm-processor failed its argument parser, so a private
+stock-driver forwarding wrapper supplied -g0 directly; this was diagnostic
+only and is not an acceptance path. Receipt: switch-in-g0-driver/receipt.json.
+Next: capture the best candidate's UGEN/as1 boundary and isolate the ready
+order for the first slot multiply and team-table address load. No forced
+schedule or binary swap is acceptable. Total current canonical candidates64
+(including eight declaration compile failures); owner remains ASM.
+
+#### Switch-in pass-boundary refresh (2026-10-31)
+
+The best candidate was recaptured through unmodified stock passes with four
+full-module controls; its function bytes were independently checked against
+the canonical probe. Captured UGEN and as1 commands already use `-g0`, so the
+earlier -g0 forwarding test did not establish a debug-metadata distinction.
+Stock as1 replay at production -O2 exactly reproduced both the candidate and
+accepted trapping-damage witness. Diagnostic -g3/-O2 also reproduced them.
+At -O0/-O1 the candidate's opening LUI/SLL order remains unchanged (other
+instructions change); this narrows the investigation upstream of as1's
+optimization-level choice, without claiming every internal assembler pass
+was disabled. The best optimized Ucode reserves zero local bytes.
+
+Sixteen further slot/side-index cast and multiplication-order candidates did
+not accept. Unsigned-long slot indexing retains the same two-row residual;
+short/int forms regress the frame or body. Preserve record8 candidate0 as
+best. Captures: switch-in-final-stock-passes; replay receipt:
+switch-in-final-as1-options/receipt.json. No production flags changed.
+The three accepted functions are being published independently; this owner
+remains active for the next batch, with the schedule residual retained.
