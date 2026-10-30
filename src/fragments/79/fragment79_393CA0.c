@@ -3415,7 +3415,50 @@ void BattleEffect_ApplyEncore(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412CDA4.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84126A90(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84126B1C(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84134CBC(u8, u8);
+extern void func_84134DD8(u8 arg0);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplyPainSplit(void) {
+    u16 average;
+    s32 changes[2];
+    s32 capped;
+    if (D_84195208[D_841951BD][16] & 16) {
+        func_84126A90(D_841951BC, D_841951BD, 0);
+        return;
+    }
+    if (D_841951D2) {
+        func_84126B1C(D_841951BC, D_841951BD, 1);
+        return;
+    }
+    average = *(u16 *)(D_84195200[D_841951BC] + 38) + *(u16 *)(D_84195200[D_841951BD] + 38);
+    average >>= 1;
+    capped = average < *(u16 *)(D_84195200[D_841951BC] + 40) ? average : *(u16 *)(D_84195200[D_841951BC] + 40);
+    changes[D_841951BC] = capped - *(u16 *)(D_84195200[D_841951BC] + 38);
+    capped = average < *(u16 *)(D_84195200[D_841951BD] + 40) ? average : *(u16 *)(D_84195200[D_841951BD] + 40);
+    changes[D_841951BD] = capped - *(u16 *)(D_84195200[D_841951BD] + 38);
+    *(u16 *)(D_84195200[D_841951BC] + 38) += changes[D_841951BC];
+    *(u16 *)(D_84195200[D_841951BD] + 38) += changes[D_841951BD];
+    func_84136A9C(D_841951BC, -1, changes[D_841951BC], 1);
+    func_84136A9C(D_841951BD, -1, changes[D_841951BD], 1);
+    D_841951C8 = 0;
+    func_84136678(D_841951BC, -1);
+    func_84135B00(70);
+    func_84134DD8(D_841951BF);
+    func_84134CBC(D_841951BC, 0);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US

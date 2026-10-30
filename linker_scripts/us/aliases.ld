@@ -1466,3 +1466,5 @@ func_841278E4 = BattleMove_AnnounceUse;
 func_8412C95C = BattleDamage_ApplySpecialFormula;
 
 func_8412CBE8 = BattleEffect_ApplyEncore;
+
+func_8412CDA4 = BattleEffect_ApplyPainSplit;

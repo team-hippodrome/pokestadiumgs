@@ -2052,3 +2052,18 @@ using only a word changes the saved slot's store/load width. The accepted
 label is `encore:raw-s32:order0:assign0` in `battle-encore-raw8`.
 Naming preserves complete-module sections, bytes, extents, and relocations
 with both normal and twenty-leading-blank-line controls.
+
+### 2026-10-31: Pain Split accepted
+
+`func_8412CDA4` / `BattleEffect_ApplyPainSplit` (480 bytes) passed canonical
+runner acceptance, normal host syntax, and the complete retail ROM gate.
+It averages the current HP values with the original 16-bit truncation,
+caps each result at that side's maximum HP, applies both deltas, and records
+the battle effect. Keep `u16 average` before `s32 changes[2]`, with an `s32`
+clamped temporary. The HP sum's attacker-first source order fixes five
+register operands; the defender-first spelling had the same size and opcode
+sequence. Both the 80-byte frame and array placement arise naturally.
+
+Accepted label: `pain-split:attacker-first:order0:cap-s32:ternary` in
+`battle-pain-split-sum8`. The function name and address alias were verified
+with normal and twenty-leading-blank-line complete-module comparisons.
