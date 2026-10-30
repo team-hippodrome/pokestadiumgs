@@ -1438,3 +1438,15 @@ func_84136D9C = BattleSnapshot_AdvanceSideChanges;
 func_84138EA4 = BattleSelection_ConfirmChoice;
 
 func_84134A6C = BattleSnapshot_InitializeHeader;
+
+BattleAnim_StopOwnerCategoryParticles = BattleMove_IsSleepTalkEffectExcluded;
+
+func_8412D390 = BattleMove_HasSleepTalkChoice;
+
+func_8412D4A8 = BattleMove_IsSleepTalkSlotEligible;
+
+func_84131F80 = BattleMove_GetCurrentPriority;
+
+func_841339D0 = Battle_RefreshSideAfterSwitch;
+
+func_841264CC = BattleMove_IsSleepTalkEffectExcluded;
