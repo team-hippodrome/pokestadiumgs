@@ -3368,7 +3368,50 @@ void BattleAnim_Table_84185F10_031(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412CBE8.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84124604(u8 arg0, u8 arg1);
+extern u8 func_84125080(void);
+extern s32 func_84126374(void);
+extern s32 func_841263D8(u8 arg0, u8 arg1);
+extern void func_84126A90(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84126B1C(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84134E30(s32 arg0);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 D_841951D2;
+extern void * D_841951F8[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplyEncore(void) {
+    u8 move;
+    u8 slot;
+    s32 raw_slot;
+    move = D_84195208[D_841951BD][39];
+    raw_slot = func_841263D8(D_841951BD, move);
+    slot = raw_slot;
+    if (move == 0 || move == 165 || move == 227 || move == 119 || raw_slot == 0 || (D_84195208[D_841951BD][raw_slot + 8] & 63) == 0 || (D_84195208[D_841951BD][17] & 16)) {
+        func_84126A90(D_841951BC, D_841951BD, 0);
+        return;
+    }
+    if (D_841951D2 != 0) {
+        func_84126B1C(D_841951BC, D_841951BD, 1);
+        return;
+    }
+    D_84195208[D_841951BD][17] |= 16;
+    D_84195208[D_841951BD][22] = (func_84125080() & 3) + 3;
+    if (func_84126374() != 0) {
+        ((u8 *)D_841951F8[D_841951BD])[1] = move;
+        D_84195208[D_841951BD][3] = move;
+        D_84195208[D_841951BD][4] = slot - 1;
+    }
+    func_84136678(D_841951BC, -1);
+    func_84135B00(50);
+    func_84124604(D_841951BD, D_841951BF);
+    func_84134E30(5);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US

@@ -2040,3 +2040,15 @@ Canonical result: `battle-special-damage-bitfield-confirm`, label
 `special-damage:verified-unsigned-bitfield:byte-rng`. Naming was independently
 checked against the accepted module with normal and 20-leading-blank-line
 controls. Private diagnostics and helper scripts are not repository changes.
+
+### 2026-10-31: Encore handler accepted
+
+`func_8412CBE8` / `BattleEffect_ApplyEncore` (444 bytes) passed canonical
+runner acceptance, normal host syntax, and the full retail ROM comparison.
+The move and saved slot are byte locals, declared in that order. Keep the
+full `s32` slot return for the immediate zero/PP checks and copy it to the
+byte slot for use after calls. Using only a byte introduces an extra mask;
+using only a word changes the saved slot's store/load width. The accepted
+label is `encore:raw-s32:order0:assign0` in `battle-encore-raw8`.
+Naming preserves complete-module sections, bytes, extents, and relocations
+with both normal and twenty-leading-blank-line controls.

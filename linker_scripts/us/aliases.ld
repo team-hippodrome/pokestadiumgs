@@ -1464,3 +1464,5 @@ func_8412EE5C = BattleDamage_AccumulateBaseDamage;
 func_841278E4 = BattleMove_AnnounceUse;
 
 func_8412C95C = BattleDamage_ApplySpecialFormula;
+
+func_8412CBE8 = BattleEffect_ApplyEncore;
