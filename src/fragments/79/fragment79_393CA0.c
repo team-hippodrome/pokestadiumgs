@@ -1004,7 +1004,7 @@ extern u8 *D_84195200[];
 extern u8 *D_84195200[];
 extern u8 *D_84195200[];
 
-u32 func_84126804(u8 arg0, u16 arg1)
+u16 func_84126804(u8 arg0, u16 arg1)
 {
   u8 *ptr = D_84195200[arg0];
   u16 take = arg1;
@@ -1037,7 +1037,7 @@ u16 func_84126850(u8 arg0, u16 arg1) {
 extern u16 D_841951CA;
 extern void BattleDamage_AccumulateBaseDamage(void);
 extern void func_841265EC(void);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8 arg0, s16 arg1);
@@ -1642,7 +1642,58 @@ void BattleDamage_RollCriticalHit(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84127DB8.s")
+extern s32 func_84125200(u8 arg0);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern s8 D_841951C1;
+extern s8 D_841951C2;
+extern u8 D_841951C5;
+extern u8 D_841951C6;
+extern s32 D_841951C8;
+extern u8 D_841951D0;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleDamage_PrepareAttackDefense(void) {
+    D_841951C8 = 0;
+    if ((u8)D_841951C2 == 0) return;
+    if ((u8)D_841951C1 < 20) {
+        if (func_84125200(0)) {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 60);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 62);
+            if (((u8 *)D_841951F8[D_841951BD])[11] & 16) D_841951CE <<= 1;
+        } else {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 50);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 52);
+        }
+        if (D_841951C5 == 118 && (D_84195208[D_841951BC][0] == 104 || D_84195208[D_841951BC][0] == 105)) D_841951CC <<= 1;
+    } else {
+        if (func_84125200(1)) {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 66);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 68);
+            if (((u8 *)D_841951F8[D_841951BD])[11] & 8) D_841951CE <<= 1;
+        } else {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 56);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 58);
+        }
+        if (D_841951C5 == 163 && D_84195208[D_841951BC][0] == 25) D_841951CC <<= 1;
+    }
+    if (D_841951CC >= 256 || D_841951CE >= 256) {
+        D_841951CC >>= 2;
+        if (D_841951CC == 0) D_841951CC = 1;
+        D_841951CE >>= 2;
+        if (D_841951CE == 0) D_841951CE = 1;
+    }
+    if (D_841951C6 == 35 && D_84195208[D_841951BD][0] == 132) {
+        D_841951CE = D_841951CE + (D_841951CE >> 1);
+        if (D_841951CE >= 256) {
+            D_841951CC >>= 1;
+            if (D_841951CC == 0) D_841951CC = 1;
+            D_841951CE >>= 1;
+        }
+    }
+    D_841951D0 = D_84195200[D_841951BC][29];
+}
 #endif
 
 #ifdef VERSION_US
@@ -2989,7 +3040,7 @@ void BattleCommand_041(void) {
 #ifdef VERSION_US
 extern void func_84124594(u8 arg0);
 extern s32 func_8412676C(u8 arg0, u8 arg1);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84134DD8(u8 arg0);
 extern void func_84135B00(u16);
@@ -3293,7 +3344,7 @@ typedef struct { u32 words[16]; unsigned int :4; unsigned int fixed_damage:1; un
 extern u8 Audio_LookupScaledRatio_fragment79(u16 numerator, u16 denominator);
 extern void BattleDamage_AccumulateBaseDamage(void);
 extern u8 func_84125080(void);
-extern void func_84127DB8(void);
+extern void BattleDamage_PrepareAttackDefense(void);
 extern u8 D_841951BC;
 extern u8 D_841951BD;
 extern u8 D_841951BF;
@@ -3328,7 +3379,7 @@ void BattleDamage_ApplySpecialFormula(void) {
         break;
     case 99:
         D_841951C2 = Audio_LookupScaledRatio_fragment79(*(u16 *)(D_84195200[D_841951BC] + 38), *(u16 *)(D_84195200[D_841951BC] + 40));
-        func_84127DB8();
+        BattleDamage_PrepareAttackDefense();
         BattleDamage_AccumulateBaseDamage();
         D_841951C2 = 1;
         break;
@@ -3415,7 +3466,50 @@ void BattleEffect_ApplyEncore(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412CDA4.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern void func_84126A90(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84126B1C(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84134CBC(u8, u8);
+extern void func_84134DD8(u8 arg0);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s32 D_841951C8;
+extern u8 D_841951D2;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplyPainSplit(void) {
+    u16 average;
+    s32 changes[2];
+    s32 capped;
+    if (D_84195208[D_841951BD][16] & 16) {
+        func_84126A90(D_841951BC, D_841951BD, 0);
+        return;
+    }
+    if (D_841951D2) {
+        func_84126B1C(D_841951BC, D_841951BD, 1);
+        return;
+    }
+    average = *(u16 *)(D_84195200[D_841951BC] + 38) + *(u16 *)(D_84195200[D_841951BD] + 38);
+    average >>= 1;
+    capped = average < *(u16 *)(D_84195200[D_841951BC] + 40) ? average : *(u16 *)(D_84195200[D_841951BC] + 40);
+    changes[D_841951BC] = capped - *(u16 *)(D_84195200[D_841951BC] + 38);
+    capped = average < *(u16 *)(D_84195200[D_841951BD] + 40) ? average : *(u16 *)(D_84195200[D_841951BD] + 40);
+    changes[D_841951BD] = capped - *(u16 *)(D_84195200[D_841951BD] + 38);
+    *(u16 *)(D_84195200[D_841951BC] + 38) += changes[D_841951BC];
+    *(u16 *)(D_84195200[D_841951BD] + 38) += changes[D_841951BD];
+    func_84136A9C(D_841951BC, -1, changes[D_841951BC], 1);
+    func_84136A9C(D_841951BD, -1, changes[D_841951BD], 1);
+    D_841951C8 = 0;
+    func_84136678(D_841951BC, -1);
+    func_84135B00(70);
+    func_84134DD8(D_841951BF);
+    func_84134CBC(D_841951BC, 0);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
@@ -4178,7 +4272,71 @@ void BattleAnim_Table_84186004_002(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412EC70.s")
+extern u8 D_84185454[];
+extern s8 D_841951C1;
+extern u8 func_84125080(void);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern u8 func_80063454(u8, u8, u8, s32);
+extern void func_84124604(u8 arg0, u8 arg1);
+extern void func_841254E0(void);
+extern s32 func_841267B4(u8 arg0, u8 arg1);
+extern u16 func_84126850(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84134DD8(u8 arg0);
+extern void func_84134E00(u8);
+extern void func_84134E30(s32 arg0);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern s8 D_841951C2;
+extern u8 D_841951D2;
+extern u8 D_841951D7;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleEffect_ApplyPresent(void) {
+    u8 random;
+    u8 (*table)[2];
+    u8 bucket;
+    int effectiveness;
+    table = (u8 (*)[2])D_84185454;
+    if (D_841951D2 != 0) return;
+    effectiveness = func_80063454((u8)D_841951C1, D_84195208[D_841951BD][1], D_84195208[D_841951BD][2], (D_84195208[D_841951BD][13] & 8) != 0);
+    if (effectiveness != 0) {
+        random = func_84125080();
+        bucket = 0;
+        do {
+            if ((*table)[0] >= random) {
+                D_841951D7 = bucket;
+                D_841951C2 = (*table)[1];
+                return;
+            }
+            bucket++;
+            table++;
+        } while ((*table)[0] != 255);
+        func_84134DD8(D_841951BF);
+        func_84134CBC(D_841951BC, 0);
+        BattleRecord_AdvanceWriteSlot();
+        if (*(u16 *)(D_84195200[D_841951BD] + 38) == *(u16 *)(D_84195200[D_841951BD] + 40)) {
+            func_84136678(D_841951BD, -1);
+            func_84135B00(154);
+        } else {
+            func_84136A9C(D_841951BD, -1, (s16)func_84126850(D_841951BD, (u16)func_841267B4(D_841951BD, 2)), 1);
+            func_8004C54C(26, (s32)(D_84195200[D_841951BD] + 52));
+            func_84136678(D_841951BD, -1);
+            func_84135B00(80);
+            func_8004C54C(26, (s32)(D_84195200[D_841951BC] + 52));
+        }
+        func_84134E30(5);
+        func_84124604(D_841951BD, D_841951BF);
+        func_84134E00(64);
+        BattleRecord_AdvanceWriteSlot();
+        func_841254E0();
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -4433,12 +4591,12 @@ void BattleAnim_Table_84186004_014(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; extern u8 *D_84195208[]; extern s8 D_841951C1; extern s8 D_841951C2; extern s32 func_84126EDC(u16); extern s32 func_84126E88(u16); extern void func_84127DB8(void);
+extern u8 D_841951BC; extern u8 *D_84195208[]; extern s8 D_841951C1; extern s8 D_841951C2; extern s32 func_84126EDC(u16); extern s32 func_84126E88(u16); extern void BattleDamage_PrepareAttackDefense(void);
 void BattleAnim_Table_84186004_015(void) {
     u16 val = *(u16 *)(D_84195208[D_841951BC] + 0x2E);
     D_841951C1 = func_84126EDC(val);
     D_841951C2 = func_84126E88(val);
-    func_84127DB8();
+    BattleDamage_PrepareAttackDefense();
 }
 #endif
 
@@ -4775,7 +4933,7 @@ void BattleAnim_Table_84186004_052(void) {
 #ifdef VERSION_US
 extern s32 func_84125B88(u8, u8, u8);
 extern s32 func_8412676C(u8 arg0, u8 arg1);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
 extern void func_84136678(u8, s16);
@@ -5491,12 +5649,84 @@ void func_84131AB8(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84131AF8.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern u16 func_84126804(u8 arg0, u16 arg1);
+extern void func_84124E44(u8 arg0);
+extern s32 func_8412676C(u8 arg0, u8 arg1);
+extern u16 func_84126850(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+s32 Battle_ApplyResidualStatusDamage(u8 side) {
+    u16 amount;
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    func_84124E44(side);
+    if (D_84195200[side][36] & 8) {
+        func_84136678(side, -1);
+        func_84135B00(44);
+        if (D_84195208[side][17] & 1) {
+            D_84195208[side][20]++;
+            amount = (*(u16 *)(D_84195200[side] + 40) >> 4) * D_84195208[side][20];
+            func_84134CBC(side, 61);
+        } else {
+            amount = func_8412676C(side, 3);
+            func_84134CBC(side, 60);
+        }
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        BattleRecord_AdvanceWriteSlot();
+    } else if (D_84195200[side][36] & 16) {
+        func_84136678(side, -1);
+        func_84135B00(189);
+        amount = func_8412676C(side, 3);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        func_84134CBC(side, 62);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    if (D_84195208[side][16] & 128) {
+        amount = func_8412676C(side, 3);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        amount = func_84126850(1 - side, amount);
+        func_84136A9C(1 - side, -1, (s16)amount, 1);
+        func_84136678(side, -1);
+        func_84135B00(187);
+        func_84134CBC(side, 63);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    if (D_84195208[side][13] & 1) {
+        amount = func_8412676C(side, 2);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        func_84136678(side, -1);
+        func_84135B00(31);
+        func_84134CBC(side, 64);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    if (D_84195208[side][13] & 2) {
+        amount = func_8412676C(side, 2);
+        amount = func_84126804(side, amount);
+        func_84136A9C(side, -1, (s16)-amount, 1);
+        func_84136678(side, -1);
+        func_84135B00(139);
+        func_84134CBC(side, 67);
+        BattleRecord_AdvanceWriteSlot();
+    }
+    if (*(u16 *)(D_84195200[side] + 38) == 0) return 0;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
 extern s32 func_8412676C(u8, u8);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);
@@ -5597,7 +5827,7 @@ void func_84132300(void) {
 
 #ifdef VERSION_US
 extern s32 func_8412676C(u8, u8);
-extern u32 func_84126804(u8, u16);
+extern u16 func_84126804(u8, u16);
 extern s32 func_8004C54C(u8, s32);
 extern void func_84134CBC(u8 arg0, u8 arg1);
 extern void func_84135B00(u16);

@@ -2052,3 +2052,147 @@ using only a word changes the saved slot's store/load width. The accepted
 label is `encore:raw-s32:order0:assign0` in `battle-encore-raw8`.
 Naming preserves complete-module sections, bytes, extents, and relocations
 with both normal and twenty-leading-blank-line controls.
+
+### 2026-10-31: Pain Split accepted
+
+`func_8412CDA4` / `BattleEffect_ApplyPainSplit` (480 bytes) passed canonical
+runner acceptance, normal host syntax, and the complete retail ROM gate.
+It averages the current HP values with the original 16-bit truncation,
+caps each result at that side's maximum HP, applies both deltas, and records
+the battle effect. Keep `u16 average` before `s32 changes[2]`, with an `s32`
+clamped temporary. The HP sum's attacker-first source order fixes five
+register operands; the defender-first spelling had the same size and opcode
+sequence. Both the 80-byte frame and array placement arise naturally.
+
+Accepted label: `pain-split:attacker-first:order0:cap-s32:ternary` in
+`battle-pain-split-sum8`. The function name and address alias were verified
+with normal and twenty-leading-blank-line complete-module comparisons.
+
+### 2026-10-31: Spite requeue — return contract and packed PP follow-up
+
+`func_8412D6C0` remains assembly. The initial `battle-spite8` refresh under
+the current accepted module reproduced the documented 56-byte frame drift;
+read the earlier 88-attempt handoff before selecting more source variants.
+
+A controlled, uninstalled return-contract experiment changed the three
+`func_841263D8` declarations/definition to `u8`. The helper's own bytes stayed
+identical, but `func_841266C4` and `BattleEffect_ApplyEncore` changed. Spite
+still used a 56-byte frame (540/532 bytes for the two tested amount types).
+Thus this change does not solve the current mismatch and is not justified
+for installation. Normal and +20-line whole-module controls passed. The
+first diagnostic failed because its direct compile omitted an existing
+`func_8004C594` prototype; the corrected v2 result supersedes that failure.
+
+A separate canonical eight-candidate batch, `battle-spite-bitfields8`, used
+a one-byte PP union with a two-bit boost field and six-bit count field.
+Independent substitutions covered the initial PP read, clamp read, and
+mask-store RHS while preserving the subsequent reload. No candidate passed.
+Candidates 6/7 reach 524 bytes, normalized 0.9313/raw 0.4962, but retain the
+56-byte frame versus retail's 48; this is not a register-only mismatch.
+
+Requeue with the existing slot-web UOPT eligibility/cost investigation.
+Do not repeat return-type, width/home, or packed-PP grids without new pass
+or caller evidence. Private receipts: `spite-slot-contract-v2/receipt.json`
+and `battle-spite-bitfields8/result.json`. No source or interface change was
+installed, and no ROM acceptance is claimed for this owner.
+
+### 2026-10-31: Spite optimizer-boundary capture
+
+A fresh passive stock-compiler capture validates six complete-module controls:
+accepted source and both current typed-field/packed-PP candidates, each
+normally and with twenty leading blank lines. No compiler decisions changed.
+The typed-field candidate enters UOPT with 12 local bytes and leaves with
+20; packed PP enters with 12 and leaves with 24. Both keep the slot at Mmt
+-2: optimized `Uvreg`/`Ustr` rows 91/92, a memory load for the move-name call
+at row 136, and `Urlod` to register 8 after the RNG call at row 155. The
+party-PP update loads Mmt -2 again (field row 264, packed row 261).
+These are UOPT output operations, so the spill is already present before
+UGEN. This does not yet identify eligibility versus allocation cost.
+
+A targeted single-expression decrement/narrowing experiment with signed and
+unsigned word carriers, cast and mask forms, and typed-field/direct-byte
+accesses did not eliminate the spill: all eight valid forms produced 528
+bytes/frame 64. Four direct-byte inputs initially had a private generator
+member-substitution syntax error; corrected inputs were rerun separately,
+and those compile failures are not source-shape evidence.
+
+Private evidence: `spite-stock-passes/receipt.json`, `slot-ownership.json`,
+decoded `field-ugen-rows.json` and `bits-ugen-rows.json`,
+`battle-spite-narrow-update8/result.json`, and the corrected
+`battle-spite-narrow-bytes4/result.json`. Requeue at UOPT web eligibility/cost;
+no additional declaration-width or decrement-spelling grid is justified by
+these results. Source and interfaces remain unchanged.
+
+### 2026-10-31: Spite slot allocation cost measured
+
+The private logging-only UOPT observer is calibrated against stock on the
+accepted module and both typed-field/packed-PP parents. All 15 comparisons
+per observer (stock, stock +20 lines, observer off, on, on +20 lines for each
+source) preserve the complete module. No production compiler was modified.
+
+The slot expression is the byte local at offset -2 (expression kind 3,
+dtype 8). Global coloring considers its split ranges, then assigns color
+255 at the `compute_save` rejection site. Measured savings for the three
+rejected ranges are 0.0, 0.0, and -0.5; state 2 follows the nonpositive
+savings branch in `compute_save`. Thus these ranges reach allocation and
+are rejected on estimated profitability, not simply absent from the pool.
+The trace does not prove that changing a source spelling can reach retail.
+Both parent shapes show the same three rejected slot costs.
+
+A follow-up reused the move byte as the slot after validation, when the move
+value is dead. Eight canonical variants (guard/else topology, one/two-step
+narrowing, signed/unsigned lookup carrier) all rejected at 544 bytes/frame56.
+Do not repeat this phase-reuse family. The earlier maximum 524-byte/frame56
+candidate remains available; no owner replacement was installed.
+
+Private receipts: `spite-color-controls/calibration.json`,
+`spite-cost-controls/calibration.json`, `spite-cost-controls/slot-cost-summary.json`,
+and `battle-spite-phase-reuse8/result.json`. Preserve this requeue for a
+source/control-flow witness that changes the measured slot range costs;
+do not force colors, add fake accesses, or alter compiler heuristics.
+
+### 2026-10-31: damage-stat preparation accepted
+
+`func_84127DB8` / `BattleDamage_PrepareAttackDefense` (800 bytes) passed
+canonical runner acceptance, normal host syntax, and the complete retail
+ROM comparison. The helper selects physical/special stats, handles screens
+and species-specific held-item modifiers, scales stats above 255, applies
+the defender modifier, and records the attacking level.
+
+The first batch accepted `damage-stats:return:compoundFalse:bytes`.
+Explicit `u8` casts on move power and type preserve the unsigned byte loads
+despite their existing signed declarations. Direct halfword accesses and
+ordinary compound shifts produce the original register allocation and
+24-byte frame without auxiliary storage. Naming preserves the complete
+module in normal and twenty-leading-blank-line controls.
+
+### 2026-10-31: Present accepted with verified byte RNG interface
+
+`func_8412EC70` / `BattleEffect_ApplyPresent` (492 bytes) passed canonical
+runner acceptance, normal host syntax, and the complete retail ROM gate.
+It chooses damage power from the probability table or executes Present's
+healing outcome with the original battle text and recording calls.
+
+The earlier candidate history predates the independently verified byte RNG
+declaration. Under that corrected interface, the pair-table spelling with
+`u8 random`, `u8 bucket`, and a native `int effectiveness` temporary matches.
+Accepted label: `present:byte-rng-context:parent1:random-u8` in
+`battle-present-byte-rng8`. This is a real interface-context change, not a
+retry using irrelevant declarations. The RNG and existing callers were
+already validated in the preceding merged batch. Complete-module naming
+controls pass both normally and with twenty leading blank lines.
+
+### Residual status damage accepted (2026-10-31)
+
+`Battle_ApplyResidualStatusDamage` (`func_84131AF8`, 948 bytes) now matches
+with a single `u16 amount` local and ordinary sequential calls. The damage
+helper `func_84126804` returns its clamped `u16` argument; correcting its
+return type and all five existing extern declarations from `u32` to `u16`
+removes redundant caller copies. Private known/20-blank-line controls and
+a complete-module comparison showed no changed existing function bytes.
+The earlier two-local candidate had identical instructions but a 56-byte
+frame instead of 48; the single-local candidate under the corrected contract
+matches every instruction and the 48-byte frame. Canonical runner acceptance
+and normal host syntax check passed, followed by retail ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming also passed both module controls.
+No binary rewriting, padding, or forced-register mechanism was used.
