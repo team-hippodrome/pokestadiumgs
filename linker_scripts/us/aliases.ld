@@ -1404,3 +1404,7 @@ func_8412955C = BattleCommand_019;
 func_8413146C = BattleAnim_Table_84186004_081;
 
 func_8290A208 = Scene67_UpdateRecordTransform;
+
+func_84138A0C = BattleSelection_ShowChoiceError;
+
+func_84139618 = BattleSelection_HandlePartyChoice;
