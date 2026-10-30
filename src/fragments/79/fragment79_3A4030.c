@@ -1094,15 +1094,11 @@ s32 func_8413771C(void) {
 #ifdef VERSION_US
 extern s16 D_84199F72;
 extern s16 D_84199FFA;
-extern u16 D_84199FFC;
 extern u8 D_84199F6A;
 extern u8 D_84199D81;
-extern u16 D_84199D86;
 extern u8 D_84199F74[];
 extern u8 D_84199DE8[];
-extern u8 D_8419A004;
-extern s32 func_841484CC(u8, u8, u8, u8);
-void func_84137778(void);
+void BattleSnapshot_UpdateDisplay(void);
 extern u8 D_84199D80[];
 extern s32 func_84134A10(u16 arg0, s16 *arg1, u16 *arg2);
 extern void func_841374D0(void *arg0);
@@ -1110,10 +1106,12 @@ extern void func_8413753C(void *arg0);
 extern void func_84137648(void);
 extern void func_841376B0(void *arg0);
 extern s32 func_8413771C(void);
-void func_84137778(void) {
+void BattleSnapshot_UpdateDisplay(void) {
     if (D_84199D81 & 1) {
-        if (D_84199F72 == -1) *(s16 *)(D_84199D80 + 498) = 0;
-        if (D_84199FFA == -1) *(s16 *)(D_84199D80 + 634) = 0;
+        if (D_84199F72 == -1)
+            *(s16 *)(D_84199D80 + 498) = 0;
+        if (D_84199FFA == -1)
+            *(s16 *)(D_84199D80 + 634) = 0;
     }
     if (D_84199FFC != 0 && D_84199F6A < 2 && D_84199FFA != -2) {
         if (func_84134A10(D_84199D86, (s16 *)(D_84199D80 + 634), (u16 *)(D_84199D80 + 636))) {
@@ -1133,8 +1131,10 @@ void func_84137778(void) {
             if (func_841484CC(16, 0, 0, 1)) {
                 func_841376B0(D_84199DE8);
                 func_841374D0(D_84199DE8);
-                if (D_84199FFA >= -1) D_84199FFC = 0;
-                else D_8419A004 = 1;
+                if (D_84199FFA >= -1)
+                    D_84199FFC = 0;
+                else
+                    D_8419A004 = 1;
             }
         } else {
             func_8413771C();
@@ -2832,7 +2832,7 @@ M2C_UNK func_8410A608();                            /* extern */
 M2C_UNK func_8410A884();                            /* extern */
 M2C_UNK func_8410A9B4();                            /* extern */
 M2C_UNK func_84136D9C();                            /* extern */
-void func_84137778(void);
+void BattleSnapshot_UpdateDisplay(void);
 void Battle_UpdatePhase(void);                            /* extern */
 M2C_UNK func_8413CE84();                            /* extern */
 M2C_UNK func_84145BA0(u8);                          /* extern */
@@ -2884,7 +2884,7 @@ void func_8413D37C(void) {
         if (D_84195278 != 8) {
             func_841359D0();
         }
-        func_84137778();
+        BattleSnapshot_UpdateDisplay();
         func_84136D9C();
         func_84137CA4();
         func_800088DC();

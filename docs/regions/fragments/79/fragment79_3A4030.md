@@ -842,3 +842,30 @@ Canonical acceptance: `snapshot-party-local-storage8`, candidate 1.
 The retail ROM retained MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`, and the
 host syntax check passed. Naming and formatting passed complete-module
 comparisons both normally and with twenty extra leading source lines.
+
+
+### Snapshot display update: accepted
+
+`func_84137778` is now `BattleSnapshot_UpdateDisplay` (468 bytes,
+117 instructions, frame24). It advances the snapshot's timed text/event
+presentation, handles the -1/-2 timer sentinels, updates UI elements16/17,
+and preserves the original completion and fallback call order.
+
+The timer aliases lie inside the actual640-byte `D_84199D80` snapshot:
+first timer498, first remaining-count500, second timer634 and second
+remaining-count636. This ownership is established by `func_841358B0`'s
+160-word aggregate copy and `func_8413543C`'s0x280-byte clear, not address
+proximity alone. `func_841365F4` independently writes the first timer at
+snapshot+0x68+0x18A. The accepted body keeps scalar alias reads and uses
+these owning-buffer fields for timer writes and pointer arguments. This
+avoids incorrect address commoning without changing compiler instructions.
+
+The stale `M2C_UNK func_84137778()` declaration in the existing caller was
+corrected to void through the same runner companion transaction. Historical
+candidates with repeated completion calls or a >=0 instead of >=-1 sentinel
+condition were excluded.
+
+Canonical acceptance: `snapshot-dispatch-field-writes8`, candidate6.
+Object relocation differences required the sequential full-ROM gate; the
+US retail MD5 remained `1561c75d11cedf356a8ddb1a4a5f9d5d`, and the host
+syntax check passed. No instruction rewriting, padding or fake ABI is used.
