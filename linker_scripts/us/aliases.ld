@@ -1458,3 +1458,7 @@ func_84126CD0 = BattleMove_ResolveSelectedMoves;
 func_84125CF8 = BattleStats_ApplyGuardedStageChange;
 
 func_84132B9C = Battle_ProcessPpRestoringHeldItems;
+
+func_8412EE5C = BattleDamage_AccumulateBaseDamage;
+
+func_841278E4 = BattleMove_AnnounceUse;

@@ -1035,7 +1035,7 @@ u16 func_84126850(u8 arg0, u16 arg1) {
 
 #ifdef VERSION_US
 extern u16 D_841951CA;
-extern void func_8412EE5C(void);
+extern void BattleDamage_AccumulateBaseDamage(void);
 extern void func_841265EC(void);
 extern u32 func_84126804(u8, u16);
 extern void func_84134CBC(u8 arg0, u8 arg1);
@@ -1052,7 +1052,7 @@ void func_841268A0(void) {
     func_84136CA8();
     D_841951D1 = 0;
     func_841265EC();
-    func_8412EE5C();
+    BattleDamage_AccumulateBaseDamage();
     D_841951C8 = func_84126804(D_841951BC, D_841951CA);
     func_84136A9C(D_841951BC, -1, -D_841951C8, 1);
 }
@@ -1525,7 +1525,7 @@ extern u8 D_841951BF;
 extern u8 D_841951C3;
 extern void * D_841951F8[];
 extern u8 * D_84195208[];
-void func_841278E4(void) {
+void BattleMove_AnnounceUse(void) {
     u16 message;
     if (D_84195208[D_841951BC][41] == 0) {
         D_84195208[D_841951BC][38] = D_841951BF;
@@ -4094,23 +4094,23 @@ extern u8 D_841951C3;
 extern u8 D_841951C5;
 extern s32 D_841951C8;
 extern u8 D_841951D0;
-void func_8412EE5C(void) {
+void BattleDamage_AccumulateBaseDamage(void) {
     u32 damage;
     if (D_841951C3 == 7) D_841951CE >>= 1;
     if (D_841951CE == 0) D_841951CE++;
     if (((u8)D_841951C2) != 0) {
-    damage = ((D_841951D0 * 2 / 5 + 2) * ((u8)D_841951C2) * D_841951CC / D_841951CE) / 50;
-    if (func_800636C0(D_841951C5, ((u8)D_841951C1)) != 0) {
-        damage *= func_80063690(D_841951C5) + 100;
-        damage /= 100;
-    }
-    if (D_841951D1 == 1) {
-        damage <<= 1;
-        if (damage >= 65536) damage = 65535;
-    }
-    D_841951C8 += damage;
-    if (D_841951C8 >= 999) D_841951C8 = 996;
-    D_841951C8 += 2;
+        damage = ((D_841951D0 * 2 / 5 + 2) * ((u8)D_841951C2) * D_841951CC / D_841951CE) / 50;
+        if (func_800636C0(D_841951C5, ((u8)D_841951C1)) != 0) {
+            damage *= func_80063690(D_841951C5) + 100;
+            damage /= 100;
+        }
+        if (D_841951D1 == 1) {
+            damage <<= 1;
+            if (damage >= 65536) damage = 65535;
+        }
+        D_841951C8 += damage;
+        if (D_841951C8 >= 999) D_841951C8 = 996;
+        D_841951C8 += 2;
     }
 }
 #endif

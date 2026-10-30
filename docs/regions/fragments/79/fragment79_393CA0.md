@@ -1991,3 +1991,26 @@ a byte-identical retail US ROM and normal host syntax checks.
 
 The four-function batch replaces 1,620 bytes of assembly. No coverage files
 or private search tools are part of the change.
+
+## 2026-10-31 base damage and move announcements
+
+`BattleDamage_AccumulateBaseDamage` (`8412EE5C`, 416 bytes) calculates the
+level/power/attack/defense damage term, applies the held-item type bonus and
+critical multiplier, then adds the capped result and constant offset to the
+damage accumulator. Effect 7 halves defense before calculation; zero defense
+is raised to one. Explicit byte casts preserve the unsigned move power and
+type loads despite their existing signed declarations. Compound multiplication
+followed by division reproduces the original multiplication operand order.
+
+`BattleMove_AnnounceUse` (`841278E4`, 540 bytes) records the current move,
+selects a message from four move-category tables, supplies its name to the
+message formatter, and dispatches either the continued-move message or the
+normal move-slot update and battle recording sequence. Move 228 additionally
+checks `func_84134D04` before advancing the record. The named helper
+`BattleMoveState_UpdateMoveSlot` requires its actual byte-parameter prototype;
+an implicit declaration changes argument handling and adds two instructions.
+
+Both functions passed canonical native acceptance, the normal host syntax
+check, and the full retail US ROM comparison. Descriptive names and formatting
+also passed complete-module controls with and without twenty leading blank
+lines. Original addresses remain linker aliases.
