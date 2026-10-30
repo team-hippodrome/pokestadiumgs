@@ -18,7 +18,7 @@ typedef struct unk_D_8291A7C0_000_004 {
     /* 0x03C */ char unk_03C[4];
     /* 0x040 */ s16 animation; // index ModelAnim_SetResourceAnimation compares and rebinds
     /* 0x042 */ char unk_042[0x1E];
-    /* 0x060 */ f32 mtx[4][4]; // func_8003F114 sets identity; func_8290A208 stores the record's transform
+    /* 0x060 */ f32 mtx[4][4]; // func_8003F114 sets identity; Scene67_UpdateRecordTransform stores the record's transform
     /* 0x0A0 */ char unk_0A0[0xC8];
 } unk_D_8291A7C0_000_004; // size = 0x168
 
@@ -28,11 +28,11 @@ typedef struct unk_D_8291A7C0_000_004 {
 typedef struct unk_D_8291A7C0_000 {
     /* 0x000 */ s32 loadContext; // PokeIcon_AllocLoadContext(5) result; ModelAnim_SetResourceAnimation's resource
     /* 0x004 */ unk_D_8291A7C0_000_004 model;
-    /* 0x16C */ f32 position[3]; // translation func_8290A208 builds into model.mtx
+    /* 0x16C */ f32 position[3]; // translation Scene67_UpdateRecordTransform builds into model.mtx
     /* 0x178 */ char unk_178[0x18];
-    /* 0x190 */ s16 rotation[3]; // angles func_8290A208 passes to func_8290A0D0 for the rotation matrix
+    /* 0x190 */ s16 rotation[3]; // angles Scene67_UpdateRecordTransform passes to func_8290A0D0 for the rotation matrix
     /* 0x196 */ char unk_196[2];
-    /* 0x198 */ f32 unk_198; // subtracted from the model-dependent height offset in func_8290A208
+    /* 0x198 */ f32 unk_198; // subtracted from the model-dependent height offset in Scene67_UpdateRecordTransform
     /* 0x19C */ char unk_19C[4];
     /* 0x1A0 */ u16 unk_1A0; // frame counter; func_8290CFD8 increments it, func_8290B478 compares record 0's
     /* 0x1A2 */ u8 active; // set by func_8290A5B0/func_8290ABB0; per-frame updates skip records where it is 0
@@ -771,7 +771,34 @@ void func_8290A0D0(f32 *arg0, u16 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290A208.s")
+typedef float S1_MtxF_t[4][4];
+typedef union {
+    S1_MtxF_t mf;
+    struct { float xx, yx, zx, wx, xy, yy, zy, wy, xz, yz, zz, wz, xw, yw, zw, ww; };
+} S1_MtxF;
+extern void MtxF_SetTranslation(f32 *, f32 *);
+extern void MtxF_Multiply(S1_MtxF *, S1_MtxF *, S1_MtxF *);
+void Scene67_UpdateRecordTransform(s32 index) {
+    f32 offset[3];
+    f32 position[3];
+    S1_MtxF translation1;
+    S1_MtxF rotation;
+    S1_MtxF translation2;
+    S1_MtxF product;
+    f32 scale;
+    func_8290A0B0(D_8291A7C0.records[index].model.modelId, offset);
+    scale = 0.05f;
+    offset[0] *= scale;
+    offset[1] *= scale;
+    offset[2] *= scale;
+    offset[1] -= D_8291A7C0.records[index].unk_198;
+    Vec3f_SetComponentsDuplicate(position, D_8291A7C0.records[index].position[0], D_8291A7C0.records[index].position[1] - offset[1], D_8291A7C0.records[index].position[2]);
+    func_8290A0D0(&rotation.mf[0][0], (u16 *)D_8291A7C0.records[index].rotation);
+    MtxF_SetTranslation(&translation1.mf[0][0], offset);
+    MtxF_SetTranslation(&translation2.mf[0][0], position);
+    MtxF_Multiply(&product, &translation1, &rotation);
+    MtxF_Multiply((S1_MtxF *)D_8291A7C0.records[index].model.mtx, &product, &translation2);
+}
 void Scene67_DefaultCallback(void) {
 }
 #endif
@@ -827,7 +854,7 @@ void func_8290A3C4(s32 arg0, s32 arg1) {
 #ifdef VERSION_US
 extern void func_82908B60(void);
 extern void func_800428F8(s32);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 extern void func_8290A358(s32 arg0, u16 arg1);
 extern s16 D_8291B862;
 void func_8290A5B0(s32 arg0) {
@@ -849,7 +876,7 @@ void func_8290A5B0(s32 arg0) {
             func_8290A358(i, ((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][i]);
             func_800428F8(actor->loadContext);
             func_8290A3C4(i, i);
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             actor->model.unk_002 |= 0x10;
             D_8291A7C0.unk_1071++;
         } else {
@@ -899,7 +926,7 @@ void func_8290A81C(s32 arg0) {
             func_8290A358(i, D_829137A8[i]);
             func_800428F8(D_8291A7C0.records[i].loadContext);
             func_8290A6F4(i, i);
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             D_8291A7C0.records[i].model.unk_002 |= 0x10;
             D_8291A7C0.unk_1071++;
         } else {
@@ -927,7 +954,7 @@ void func_8290A920(s32 arg0, s32 arg1) {
 
 #ifdef VERSION_US
 extern void func_8290A920(s32, s32);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 void func_8290AB10(s32 arg0) {
     s32 i;
 
@@ -938,7 +965,7 @@ void func_8290AB10(s32 arg0) {
         record = &D_8291A7C0.records[1];
         do {
             func_8290A920(i, i);
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             record++;
             record[-1].model.unk_002 = record[-1].model.unk_002 | 0x10;
             record[-1].model.unk_001 = record[-1].model.unk_001 & -2;
@@ -950,22 +977,22 @@ void func_8290AB10(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 void func_8290ABB0(s32 arg0, s32 arg1) {
     D_8291A7C0.records[arg0].active = 1;
     func_8290A3C4(arg0, arg1);
-    func_8290A208(arg0);
+    Scene67_UpdateRecordTransform(arg0);
     D_8291A7C0.records[arg0].model.unk_002 |= 0x10;
     D_8291A7C0.unk_1071++;
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 void func_8290AC2C(s32 arg0, s32 arg1) {
     D_8291A7C0.records[arg0].active = 1;
     func_8290A6F4(arg0, arg1);
-    func_8290A208(arg0);
+    Scene67_UpdateRecordTransform(arg0);
     D_8291A7C0.records[arg0].model.unk_002 |= 0x10;
     D_8291A7C0.unk_1071++;
 }
@@ -1293,7 +1320,7 @@ void func_8290B478(void) {
 #ifdef VERSION_US
 extern s32 func_800427B8(s32);
 extern s32 func_80001FF0(void);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 extern void func_8290A358(s32 arg0, u16 arg1);
 extern void func_8290ABB0(s32 arg0, s32 arg1);
 extern void func_8290B264(void);
@@ -1313,7 +1340,7 @@ void Scene67_UpdateSpinningMotionNegativeX(void) {
             } else {
                 record->position[0] -= 1.5f;
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->position[0] <= -80.0f) {
                 record->active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1331,7 +1358,7 @@ void Scene67_UpdateSpinningMotionNegativeX(void) {
 #ifdef VERSION_US
 extern s32 func_800427B8(s32);
 extern s32 func_80001FF0(void);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 extern void func_8290A358(s32 arg0, u16 arg1);
 extern void func_8290ABB0(s32 arg0, s32 arg1);
 extern void func_8290B264(void);
@@ -1351,7 +1378,7 @@ void Scene67_UpdateSpinningMotionPositiveX(void) {
             } else {
                 record->position[0] += 1.5f;
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->position[0] >= 80.0f) {
                 record->active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1379,7 +1406,7 @@ void Scene67_UpdateModelMotionPositiveX(void) {
             } else {
                 record->position[0] += 1.2f;
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->position[0] >= 70.0f) {
                 record->active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1406,7 +1433,7 @@ void Scene67_UpdateModelMotionNegativeX(void) {
             } else {
                 record->position[0] -= 1.2f;
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->position[0] <= -70.0f) {
                 record->active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1476,7 +1503,7 @@ void func_8290BCF0(void) {
             if (ModelAnim_IsFinished(p + i * 0x1A4 + 4) != 0) {
                 ModelAnim_SetFrame(p + i * 0x1A4 + 4, 0);
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
         }
     }
     func_8290B264();
@@ -1512,7 +1539,7 @@ void Scene67_UpdateAlternatingAnimationMotion(void) {
                 if (D_8291A7C0.records[i].model.modelId == 245) func_8003F2C4(D_8291A7C0.records[i].loadContext, model, 2);
             }
             if (ModelAnim_IsFinished(model)) ModelAnim_SetFrame(model, 0);
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
         }
     }
     func_8290B264();
@@ -1521,7 +1548,7 @@ void Scene67_UpdateAlternatingAnimationMotion(void) {
 
 #ifdef VERSION_US
 extern s32 func_80001FF0(void);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 extern void func_8290A358(s32 arg0, u16 arg1);
 extern void func_8290ABB0(s32 arg0, s32 arg1);
 extern void func_8290B264(void);
@@ -1540,7 +1567,7 @@ void Scene67_UpdateSpinningMotionPositiveY(void) {
                 record->position[1] += 2.0f;
             }
             record->rotation[1] += 0x71C;
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->position[1] >= 65.0f) {
                 record->active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1557,7 +1584,7 @@ void Scene67_UpdateSpinningMotionPositiveY(void) {
 
 #ifdef VERSION_US
 extern s32 func_80001FF0(void);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 extern void func_8290A358(s32 arg0, u16 arg1);
 extern void func_8290ABB0(s32 arg0, s32 arg1);
 extern void func_8290B264(void);
@@ -1576,7 +1603,7 @@ void Scene67_UpdateSpinningMotionNegativeY(void) {
                 record->position[1] -= 2.0f;
             }
             record->rotation[1] -= 0x71C;
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->position[1] <= -70.0f) {
                 record->active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1604,7 +1631,7 @@ void Scene67_UpdateDepthMotion(void) {
                 record->rotation[1] += 0xE38;
                 record->model.unk_002 &= 0xFFDF;
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->model.modelId == 0xE3) func_8003F2C4(record->loadContext, (u8 *)&record->model, 8);
             if (record->model.modelId == 0xE3 && ModelAnim_IsFinished((u8 *)&record->model)) ModelAnim_SetFrame((u8 *)&record->model, 0);
             if (record->position[2] <= -210.0f) record->model.unk_001 &= ~1;
@@ -1633,7 +1660,7 @@ void Scene67_UpdateHeadingMotion(void) {
             if (func_80001FF0() == 50) func_800371B4(D_8291A7C0.records[i].position, position, 3.6000001f, 0, D_8291A7C0.records[i].rotation[1]);
             else func_800371B4(D_8291A7C0.records[i].position, position, 3.0f, 0, D_8291A7C0.records[i].rotation[1]);
             Vec3f_SetComponentsDuplicate(D_8291A7C0.records[i].position, position[0], position[1], position[2]);
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (D_8291A7C0.records[i].model.modelId == 0x92 || D_8291A7C0.records[i].model.modelId == 0x90 || D_8291A7C0.records[i].model.modelId == 0xA4) func_8003F2C4(D_8291A7C0.records[i].loadContext, (u8 *)&D_8291A7C0.records[i].model, 9);
             if ((D_8291A7C0.records[i].model.modelId == 0x92 || D_8291A7C0.records[i].model.modelId == 0x90 || D_8291A7C0.records[i].model.modelId == 0xA4) && ModelAnim_IsFinished((u8 *)&D_8291A7C0.records[i].model)) ModelAnim_SetFrame((u8 *)&D_8291A7C0.records[i].model, 0);
             if (D_8291A7C0.records[i].position[2] >= 100.0f) {
@@ -1662,7 +1689,7 @@ void Scene67_UpdateSpinningHeadingMotion(void) {
             else func_800371B4(D_8291A7C0.records[i].position, position, 9.0f, D_8291A7C0.records[i].rotation[0], D_8291A7C0.records[i].rotation[1]);
             Vec3f_SetComponentsDuplicate(D_8291A7C0.records[i].position, position[0], position[1], position[2]);
             D_8291A7C0.records[i].rotation[2] -= 0x71C;
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (D_8291A7C0.records[i].position[2] >= 150.0f) {
                 D_8291A7C0.records[i].active = 0;
                 if (((u16 (*)[17])D_82913210)[D_8291A7C0.unk_1068][D_8291A7C0.unk_1071] != 0 && func_8290B3BC() == 0) {
@@ -1696,7 +1723,7 @@ void Scene67_UpdateCountdownFade(void) {
                 if (record->unk_1A0 < 9) record->model.alpha = Math_StepToS32(record->model.alpha, 0, 40, 40);
                 else if (record->unk_1A0 <= threshold) record->model.alpha = Math_StepToS32(record->model.alpha, 255, 40, 40);
             }
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             if (record->unk_1A0 == 0) {
                 record->active = 0;
                 record->model.unk_001 &= 0xFFFE;
@@ -1731,7 +1758,7 @@ void Scene67_UpdateStaggeredAnimations(void) {
             record->unk_1A0++;
             record->model.alpha = Math_StepToS32(record->model.alpha, 255, 40, 40);
             if (ModelAnim_IsFinished(model)) func_8003F2C4(record->loadContext, model, 0);
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
         }
     }
     if (func_80001FF0() == 50) {
@@ -1764,7 +1791,7 @@ void Scene67_UpdateStaggeredAnimations(void) {
 #ifdef VERSION_US
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_80037120(void *, void *, s16 *, s16 *, s16 *);
-extern void func_8290A208(s32);
+extern void Scene67_UpdateRecordTransform(s32);
 extern void func_8290B264(void);
 void func_8290CFD8(void) {
     f32 sp6C[3];
@@ -1782,7 +1809,7 @@ void func_8290CFD8(void) {
             if (D_8291A7C0.records[i].unk_1A0 < 151) {
                 func_80037120(sp6C, D_8291A7C0.records[i].position, &sp68, &sp66, &sp64);
                 D_8291A7C0.records[i].rotation[1] = sp64;
-                func_8290A208(i);
+                Scene67_UpdateRecordTransform(i);
             }
             if (D_8291A7C0.records[i].unk_1A0 == 0) {
                 ModelAnim_SetResourceAnimation(D_8291A7C0.records[i].loadContext, &D_8291A7C0.records[i].model, 2);
@@ -1823,7 +1850,7 @@ void Scene67_UpdateFadeOutSequence(void) {
     for (i = 0; i < 6; i++) {
         func_80037120(D_8291A7C0.records[i].position, (void *)(D_8291A380 + 0xA8), (void *)&distance, &pitch, &yaw);
         D_8291A7C0.records[i].rotation[1] = yaw;
-        func_8290A208(i);
+        Scene67_UpdateRecordTransform(i);
     }
     if (*(u16 *)(config + 2) == D_8291A7C0.records[0].unk_1A0) StageFade_StartFromTransparent(5);
     if (*(u16 *)(config + 2) + 6 == D_8291A7C0.records[0].unk_1A0) {
@@ -1852,7 +1879,7 @@ void Scene67_UpdateDirectionalMotion(void) {
                 D_8291A7C0.records[i].position[1] += 6.0f * D_80088E50[D_829137E0[D_8291A7C0.records[i].unk_1A3].angle >> 4];
             }
             D_8291A7C0.records[i].rotation[1] -= 0x1554;
-            func_8290A208(i);
+            Scene67_UpdateRecordTransform(i);
             switch (D_8291A7C0.records[i].unk_1A3) {
                 case 0:
                 case 2:

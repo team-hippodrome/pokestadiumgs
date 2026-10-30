@@ -218,3 +218,36 @@ redundant-declaration removals preserve complete module sections, bytes,
 function extents and semantic relocations in normal/+20 controls. Old address
 aliases are retained. The remaining ASM owners are0954C and A208. A208's
 five-word transform requeue and bounded negative search remain unchanged.
+
+## 2026-10-30 — Record transform accepted as ordinary C
+
+`func_8290A208` is now `Scene67_UpdateRecordTransform`, 236 retail text bytes,
+frame320. This supersedes the earlier five-word requeue. It samples the model
+offset, scales its three components by0.05f, subtracts the record height fromY,
+constructs the complementary world translation, and combines two translations
+with the existing rotation into the model matrix. The matrix union is the
+actual `S1_MtxF` representation from `include/229E0.h`, not an invented frame.
+
+Passive stock UOPT/UGEN evidence exposed distinct registers for the old scalar
+Y temporary and array Y field. A real in-place product read reduced the residual
+to four factor-register words. Adding another factor local enlarged the frame
+and failed. The winning spelling uses the existing scalar slot solely for the
+real scale factor consumed by all three multiplies, then subtracts height in
+place. It has no unused local, artificial use, forced register, barrier, padding,
+extra ROM data, instruction rewrite or ABI change.
+
+Canonical `scene67-transform-scalar-phase-reuse8`, index1
+`factor-only-inplace-y`, accepted through the sequential native full-ROM gate;
+ordinary relocation fields were gate admission only. Explicit normal host syntax
+passed and retail MD5 was1561c75d11cedf356a8ddb1a4a5f9d5d with stock IDO7.1.
+Stopped owner probing on acceptance. The discarded intermediate assignment-only
+scalar experiment did not qualify as a source leader and was never installed.
+
+Publication isolates this accepted function from private renderer preparation.
+Its meaningful scale name, function name and actual matrix declarations preserve
+complete-module sections/bytes/extents/semantic relocations/.reginfo under normal
+and+20-line controls against the accepted gate object. The original address name
+remains a linker alias; all existing callers retain the same native code.
+Private acceptance receipt: `scratch/scene67-transform-scalar-phase-reuse8/gate-0/receipt.json`.
+Private cleanup proof: `scratch/scene67-record-transform-naming/receipt.json`.
+The renderer0954C remains ASM and its separate investigation is preserved.
