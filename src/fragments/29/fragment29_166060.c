@@ -328,7 +328,41 @@ void func_88001144(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88001234.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_880014A4.s")
+u16 func_880014A4(s32 arg0, u16 arg1) {
+    u8 var_a3;
+    u8 var_a2; //!bug Size selectors outside 0..3 leave the divisor uninitialized.
+
+    switch (arg0) {
+    case 0:
+        var_a2 = 16;
+        break;
+    case 1:
+        var_a2 = 8;
+        break;
+    case 2:
+        var_a2 = 4;
+        break;
+    case 3:
+        var_a2 = 2;
+        break;
+    }
+    var_a3 = arg1 % var_a2;
+    if (var_a3 != 0) {
+        arg1 = (arg1 + var_a2) - var_a3;
+    }
+    switch (arg0) {
+    case 0:
+        arg1 = (s32)arg1 >> 2;
+        break;
+    case 1:
+        arg1 = (s32)arg1 >> 1;
+        break;
+    case 3:
+        arg1 <<= 1;
+        break;
+    }
+    return 2048 / arg1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_880015F4.s")
 #endif
