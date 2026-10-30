@@ -2382,3 +2382,24 @@ Next: capture the best candidate's UGEN/as1 boundary and isolate the ready
 order for the first slot multiply and team-table address load. No forced
 schedule or binary swap is acceptable. Total current canonical candidates64
 (including eight declaration compile failures); owner remains ASM.
+
+#### Switch-in pass-boundary refresh (2026-10-31)
+
+The best candidate was recaptured through unmodified stock passes with four
+full-module controls; its function bytes were independently checked against
+the canonical probe. Captured UGEN and as1 commands already use `-g0`, so the
+earlier -g0 forwarding test did not establish a debug-metadata distinction.
+Stock as1 replay at production -O2 exactly reproduced both the candidate and
+accepted trapping-damage witness. Diagnostic -g3/-O2 also reproduced them.
+At -O0/-O1 the candidate's opening LUI/SLL order remains unchanged (other
+instructions change); this narrows the investigation upstream of as1's
+optimization-level choice, without claiming every internal assembler pass
+was disabled. The best optimized Ucode reserves zero local bytes.
+
+Sixteen further slot/side-index cast and multiplication-order candidates did
+not accept. Unsigned-long slot indexing retains the same two-row residual;
+short/int forms regress the frame or body. Preserve record8 candidate0 as
+best. Captures: switch-in-final-stock-passes; replay receipt:
+switch-in-final-as1-options/receipt.json. No production flags changed.
+The three accepted functions are being published independently; this owner
+remains active for the next batch, with the schedule residual retained.
