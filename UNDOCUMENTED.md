@@ -3,13 +3,13 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **54 / 8,824 (0.6%)**
-- Functions with a real name: **1,866 / 10,904 (17.1%)** (9,038 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 5,670 (4.4%)** (5,422 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Functions defined in `src/` with a `/* ... */` comment: **54 / 8,839 (0.6%)**
+- Functions with a real name: **1,881 / 10,904 (17.3%)** (9,023 still `func_XXXXXXXX`)
+- Variables with a real name: **248 / 5,675 (4.4%)** (5,427 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **995**
-- Functions with generic `arg0`, `arg1`, ... parameters: **5,320 / 8,824 (60.3%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,035 / 1,857**
-- Struct fields with a real name: **5,377 / 8,606 (62.5%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **5,321 / 8,839 (60.2%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,041 / 1,869**
+- Struct fields with a real name: **5,409 / 8,648 (62.5%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **8,645**
 <!-- AUTO_UNDOCUMENTED:END -->
 
@@ -28,11 +28,11 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/340C0.c` | 404 | 404 | 216 | 117 | 44 | 235 | 116 |
 | `src/fragments/79/fragment79_3ADCA0.c` | 142 | 142 | 197 | 222 | 22 | 116 | 231 |
 | `src/fragments/47/fragment47_246640.c` | 69 | 69 | 125 | 52 | 5 | 61 | 428 |
-| `src/fragments/79/fragment79_393CA0.c` | 243 | 243 | 238 | 56 | 19 | 77 | 102 |
+| `src/fragments/79/fragment79_393CA0.c` | 251 | 251 | 233 | 57 | 19 | 76 | 102 |
 | `src/fragments/20/fragment20_12C460.c` | 102 | 102 | 175 | 73 | 32 | 96 | 237 |
 | `src/585D0.c` | 218 | 218 | 202 | 16 | 10 | 138 | 83 |
 | `src/fragments/49/fragment49_code.c` | 95 | 95 | 173 | 39 | 19 | 49 | 283 |
-| `src/fragments/79/fragment79_3A4030.c` | 150 | 150 | 207 | 68 | 5 | 115 | 45 |
+| `src/fragments/79/fragment79_3A4030.c` | 157 | 157 | 201 | 72 | 5 | 117 | 45 |
 | `src/14640.c` | 111 | 111 | 138 | 61 | 7 | 69 | 179 |
 | `src/fragments/79/fragment79_37A6E0.c` | 71 | 70 | 71 | 22 | 12 | 64 | 309 |
 | `src/fragments/79/fragment79_38EFE0.c` | 94 | 94 | 112 | 65 | 7 | 91 | 169 |
