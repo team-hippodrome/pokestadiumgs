@@ -1424,3 +1424,5 @@ func_84135A2C = BattleSnapshot_AppendText;
 func_8413B468 = BattleSelection_HandleSmallRosterInput;
 
 func_8413B5D4 = BattleSelection_HandleLargeRosterInput;
+
+func_8413A6CC = BattleSelection_EnterRosterSelection;
