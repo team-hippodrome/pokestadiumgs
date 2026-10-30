@@ -3293,7 +3293,23 @@ void BattleAnim_Table_84185F10_038(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412D390.s")
+extern s32 BattleAnim_StopOwnerCategoryParticles(u8);
+extern u8 D_841951BC;
+extern u8 D_841951BF;
+extern u8 D_841951D2;
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+s32 func_8412D390(void) {
+    s32 slot;
+    if (D_841951D2 != 0) return 0;
+    if ((D_84195200[D_841951BC][36] & 7) == 0) return 0;
+    for (slot = 0; slot < 4; slot = (u8)(slot + 1)) {
+        D_841951BF = D_84195208[D_841951BC][slot + 5];
+        if (D_841951BF == 0) return 0;
+        if (BattleAnim_StopOwnerCategoryParticles(D_841951BF) == 0 && D_841951BF != 214 && D_841951BF != D_84195208[D_841951BC][37]) return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -5249,11 +5265,24 @@ void func_84131EAC(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84131F80.s")
+extern u8 D_8418545C[];
+struct MoveEffectEntry { u8 effect; u8 value; };
+extern u8 func_80062D20(u8);
+extern void * D_841951F8[];
+u8 func_84131F80(u8 arg0) {
+    u8 *table = D_8418545C;
+    s32 effect = func_80062D20(((u8 *)D_841951F8[arg0])[1]);
+    if (((u8 *)D_841951F8[arg0])[1] == 233) return 0;
+    while (table[0] != 255) {
+        if (effect == table[0]) return table[1];
+        table += 2;
+    }
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
-extern u8 func_84131F80(s32);
+extern u8 func_84131F80(u8);
 s32 func_8413202C(void) {
     u8 first;
     s32 second;
@@ -5746,7 +5775,36 @@ void func_84133984(u8 arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841339D0.s")
+extern void Battle_QueueSwitchInHpMessage(u8, s32, s32);
+extern void func_841252D0(u8);
+extern void func_8412693C(u8 arg0);
+extern void func_84126994(u8 arg0);
+extern void func_84126A64(void);
+extern void func_84131AB8(u8 arg0);
+extern void func_84131EAC(u8 arg0);
+extern u8 D_841951D5;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+extern u8 * D_8419520C[];
+void func_841339D0(u8 arg0) {
+    s32 fainted;
+    D_84195208[arg0][16] &= ~0x40;
+    fainted = 0;
+    if (*(u16 *)(D_84195200[arg0] + 38) == 0) fainted = 1;
+    func_84131AB8(arg0);
+    func_8412693C(arg0);
+    Battle_QueueSwitchInHpMessage(arg0, fainted, 0);
+    func_84126994(arg0);
+    func_84126A64();
+    ((u8 *)D_841951F8[arg0])[1] = 0;
+    D_84195208[arg0][38] = 0;
+    (*(u8 **)((u8 *)D_8419520C + -(arg0 << 2)))[38] = 0;
+    D_84195208[arg0][39] = 0;
+    D_841951D5 = 0;
+    func_841252D0(0);
+    func_84131EAC(arg0);
+}
 #endif
 
 #ifdef VERSION_US
