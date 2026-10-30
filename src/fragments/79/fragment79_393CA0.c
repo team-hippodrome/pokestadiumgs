@@ -5976,7 +5976,49 @@ void func_841324EC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132778.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern s32 func_80062CE0(u8);
+extern void func_84124594(u8 arg0);
+extern void func_84124E44(u8 arg0);
+extern s32 func_8412676C(u8 arg0, u8 arg1);
+extern u16 func_84126804(u8 arg0, u16 arg1);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern s32 func_841360C0(u8, s16, u16, u8, u8);
+extern void func_84136218(u8, u8);
+extern void func_84136678(u8, s16);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern u8 * D_84195208[];
+void Battle_ApplyTrappingDamage(void) {
+    s32 i;
+    u8 side;
+    for (i = 0; i < 2; i++) {
+        if (D_84195208[i][27] > 0 && !(D_84195208[i][16] & 16)) {
+            side = i;
+            func_84124E44(side);
+            func_84136678(side, -1);
+            func_8004C54C(30, (s32)func_80062CE0(D_84195208[i][28]));
+            D_84195208[i][27]--;
+            if (D_84195208[i][27] > 0) {
+            func_84136A9C(side, -1, (s16)-func_84126804(side, func_8412676C(side, 4)), 1);
+                func_84136218(side, 7);
+                func_841360C0(side, -1, 60, 7, 0);
+                func_84135B00(161);
+                switch (D_84195208[i][28]) {
+            case 250: func_84134CBC(side, 80); break;
+            case 83: func_84134CBC(side, 76); break;
+            case 128: func_84134CBC(side, 88); break;
+                default: func_84134CBC(side, 69); break;
+                }
+            } else {
+                func_84135B00(162);
+                func_84124594(side);
+            }
+            BattleRecord_AdvanceWriteSlot();
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -6292,7 +6334,7 @@ s32 func_84133304(u8 arg0) {
 extern void func_84132300(void);
 extern void Battle_ResolveFutureSight(void);
 extern void func_841324EC(void);
-extern void func_84132778(void);
+extern void Battle_ApplyTrappingDamage(void);
 extern void func_8413293C(void);
 extern void func_84132A94(void);
 extern void Battle_ProcessPpRestoringHeldItems(void);
@@ -6307,7 +6349,7 @@ void func_84133440(void) {
     func_84132300();
     func_841324EC();
     func_84132300();
-    func_84132778();
+    Battle_ApplyTrappingDamage();
     func_84132300();
     func_8413293C();
     func_84132300();

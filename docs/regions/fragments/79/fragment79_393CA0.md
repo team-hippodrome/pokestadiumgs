@@ -2303,3 +2303,15 @@ Unsigned literal/cast variants did not fix that; byte casts regressed.
 Canonical sentinel batch candidate 1 passed normal host syntax and full ROM,
 MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming passed normal and twenty-blank-
 line complete-module comparisons. No binary rewrite or padding was needed.
+
+### Trapping residual damage accepted (2026-10-31)
+
+`Battle_ApplyTrappingDamage` (`func_84132778`, 452 bytes) decrements active
+trapping durations, applies one-sixteenth max-HP damage while a trap remains,
+records the move-specific message, and clears an expired trap. A word loop
+counter with a byte side local, nested damage calls, and switch body order
+250/83/128/default match the 64-byte frame and every instruction. Canonical
+trap-damage batch candidate 0 accepted immediately; the normal host syntax
+check and full ROM passed with MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Naming passed complete-module equality normally and with twenty leading blank
+lines. No compiler changes, padding, or binary rewriting were used.
