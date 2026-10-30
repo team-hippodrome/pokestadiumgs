@@ -1398,3 +1398,7 @@ func_8412B65C = BattleCommand_040;
 func_8412C294 = BattleCommand_048;
 
 func_8412DE98 = BattleCommand_075;
+
+func_8412955C = BattleCommand_019;
+
+func_8413146C = BattleAnim_Table_84186004_081;
