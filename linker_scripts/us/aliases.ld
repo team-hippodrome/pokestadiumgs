@@ -1402,3 +1402,5 @@ func_8412DE98 = BattleCommand_075;
 func_8412955C = BattleCommand_019;
 
 func_8413146C = BattleAnim_Table_84186004_081;
+
+func_8290A208 = Scene67_UpdateRecordTransform;
