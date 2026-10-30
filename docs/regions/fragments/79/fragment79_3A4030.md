@@ -400,3 +400,8 @@ Final gate: `scratch/d7ac-tail-final-seal/tidy-gate/receipt.json`.
 Aggregate proof, commit receipt and durable handoff are under
 `scratch/d7ac-tail-final-seal/`. Only this source and region note are committed;
 no naming/global metadata, coverage, private tooling, push or PR is included.
+
+
+### Integrated fallback-team initializer
+
+D7AC is named `BattleParty_InitializeFallbackTeam`, matching both the empty-deck path in `Battle_LoadPlayerDeck` and the explicit fallback branch in `Battle_InitState`. The original address remains a linker alias. Normal/+20 complete-tail sections, bytes, function extents, semantic relocations and reginfo match the agent's accepted object after naming and removal of five duplicated declarations from this new block. The original620B/frame104, actual u32 RNG-to16-bit mask, six-party/four-move loops and consumed name/team-base pointer phases are preserved. `3794C` remains ASM with its measured requeue above. Private naming proof: `scratch/battle-fallback-team-naming/receipt.json`.

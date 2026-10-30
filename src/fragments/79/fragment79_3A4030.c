@@ -2592,12 +2592,7 @@ extern s32 func_800647C8(u8);
 extern s8 *HAL_Strcpy(s8 *, s8 *);
 extern void func_800619E8(u8 *);
 extern u8 D_8418AF68[];
-extern u32 func_8003570C(void);
-extern void * D_841951F0;
-extern void * D_841951F8[];
-extern u8 * D_84195200[];
-extern u8 * D_84195208[];
-void func_8413D7AC(u8 arg0) {
+void BattleParty_InitializeFallbackTeam(u8 arg0) {
     struct Label7 { u8 bytes[7]; };
     u8 *data;
     s32 i;
@@ -2642,7 +2637,7 @@ extern void func_8005A014(s32);
 extern u8 *func_8006218C(s32, s32, s32, s32);
 extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
 extern s32 func_80062304(u8 *);
-extern void func_8413D7AC(u8);
+extern void BattleParty_InitializeFallbackTeam(u8);
 extern void *D_841951F0;
 extern void *D_841951F8[];
 extern u8 *D_84195200[];
@@ -2662,7 +2657,7 @@ void Battle_LoadPlayerDeck(u8 arg0) {
     value = Deck_ReadEntries((u8 *)D_841951F8[arg0] + 24, 6, handle);
     ((u8 *)D_841951F8[arg0])[7] = value;
     if (((u8 *)D_841951F8[arg0])[7] == 0) {
-        func_8413D7AC(arg0);
+        BattleParty_InitializeFallbackTeam(arg0);
     } else {
         ((u8 *)D_841951F8[arg0])[8] = ((u8 *)D_841951F8[arg0])[7];
         ((u8 *)D_841951F8[arg0])[9] = ((u8 *)D_841951F8[arg0])[8];
@@ -2733,7 +2728,7 @@ extern u8 D_8418AF78[];
 extern void Teams_GenerateLevel100_fragment86(u8 *, u32);
 extern s32 func_8005D8C0(void);
 extern void Battle_LoadPlayerDeck(u8);
-extern void func_8413D7AC(u8);
+extern void BattleParty_InitializeFallbackTeam(u8);
 extern void func_8413D6D4(u8 *, u8 *);
 extern void func_84138530(u8, u8 *);
 extern void Battle_InitializeSideDisplayStates(void);
@@ -2779,7 +2774,7 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
                     if (func_8005D8C0() & (1 << i)) {
                         Battle_LoadPlayerDeck(i);
                     } else {
-                        func_8413D7AC(i);
+                        BattleParty_InitializeFallbackTeam(i);
                     }
                 }
                 main_pool_pop_state(0x504D4C44);
