@@ -84,7 +84,35 @@ u32 func_87F006AC(void) {
     return *(u32 *)((u8 *)D_87F11768 + 0xC);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F006BC.s")
+extern void func_87F0277C(void *);
+
+s32 func_87F006BC(void) {
+    *(s32 *)((u8 *)D_87F11768 + 12) = 0;
+    if (*(s32 *)((u8 *)D_87F11768 + 8) & 1) {
+        *(s32 *)((u8 *)D_87F11768 + 12) = 3;
+    } else if (*(s32 *)((u8 *)D_87F11768 + 8) & 2) {
+        *(s32 *)((u8 *)D_87F11768 + 4) -= 1;
+        *(s32 *)((u8 *)D_87F11768 + 16) = *(s32 *)((u8 *)D_87F11768 + 4) / *(s32 *)D_87F11768;
+        *(f32 *)((u8 *)D_87F11768 + 20) = (f32)(*(s32 *)((u8 *)D_87F11768 + 4) % *(s32 *)D_87F11768) / *(s32 *)D_87F11768;
+        if (*(s32 *)((u8 *)D_87F11768 + 4) % *(s32 *)D_87F11768 == 0) {
+            switch (*(s32 *)((u8 *)D_87F11768 + 16)) {
+            case 0:
+                *(s32 *)((u8 *)D_87F11768 + 12) = 3;
+                *(s32 *)((u8 *)D_87F11768 + 8) |= 1;
+                *(s32 *)((u8 *)D_87F11768 + 64) |= 0x10000000;
+                break;
+            case 1:
+                *(s32 *)((u8 *)D_87F11768 + 12) = 2;
+                break;
+            default:
+                *(s32 *)((u8 *)D_87F11768 + 12) = 1;
+                break;
+            }
+        }
+    }
+    func_87F0277C((u8 *)D_87F11768 + 32);
+    return *(s32 *)((u8 *)D_87F11768 + 12);
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
