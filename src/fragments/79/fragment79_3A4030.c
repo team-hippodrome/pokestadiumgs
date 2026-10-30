@@ -2075,11 +2075,76 @@ void func_8413B254(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413B468.s")
+extern void func_8413A6CC(u8, u8, u8);
+void BattleSelection_HandleSmallRosterInput(u8 side) {
+    u8 *record;
+    record = D_84195248[side].inputs[0];
+    if (*(u16 *)(record + 6) & 0x200)
+        func_8413AB2C(side, 0, 0, 11);
+    else if (*(u16 *)(record + 6) & 0x100)
+        func_8413AB2C(side, 0, 2, 11);
+    else if (*(u16 *)(record + 6) & 0x800)
+        func_8413AB2C(side, 0, 1, 11);
+    else if (*(u16 *)(record + 6) & 0x10)
+        func_8413A6CC(side, 0, 11);
+    else
+        func_8413B08C(side, 11);
+    if (*(u16 *)(record + 8) & 0x20) {
+        if (D_84195248[side].kind < 2)
+            func_84139958(side, 1);
+    } else if (*(u16 *)(record + 8) & 2)
+        BattleSelection_HandlePartyChoice(side, 0);
+    else if (*(u16 *)(record + 8) & 8)
+        BattleSelection_HandlePartyChoice(side, 1);
+    else if (*(u16 *)(record + 8) & 1)
+        BattleSelection_HandlePartyChoice(side, 2);
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413B5D4.s")
+void BattleSelection_HandleLargeRosterInput(u8 side) {
+    u8 *record = D_84195248[side].inputs[0];
+    if (*(u16 *)(record + 6) & 0x800) {
+        D_84195248[side].unk08 = 1;
+    } else if (*(u16 *)(record + 6) & 0x400) {
+        D_84195248[side].unk08 = 2;
+    } else if (!(*(u16 *)(record + 6) & 0x300)) {
+        D_84195248[side].unk08 = 0;
+    }
+    if (D_84195248[side].unk08 == 1) {
+        if (*(u16 *)(record + 6) & 0x200)
+            func_8413AB2C(side, 0, 0, 12);
+        else if (*(u16 *)(record + 6) & 0x100)
+            func_8413AB2C(side, 0, 2, 12);
+        else if (*(u16 *)(record + 6) & 0x800)
+            func_8413AB2C(side, 0, 1, 12);
+    } else if (D_84195248[side].unk08 == 2) {
+        if (*(u16 *)(record + 6) & 0x200)
+            func_8413AB2C(side, 0, 3, 12);
+        else if (*(u16 *)(record + 6) & 0x100)
+            func_8413AB2C(side, 0, 5, 12);
+        else if (*(u16 *)(record + 6) & 0x400)
+            func_8413AB2C(side, 0, 4, 12);
+    } else if (*(u16 *)(record + 6) & 0x10)
+        func_8413A6CC(side, 0, 12);
+    else
+        func_8413B08C(side, 12);
+    if (*(u16 *)(record + 8) & 0x20) {
+        if (D_84195248[side].kind < 2)
+            func_84139958(side, 1);
+    } else if (*(u16 *)(record + 8) & 0x4000)
+        BattleSelection_HandlePartyChoice(side, 0);
+    else if (*(u16 *)(record + 8) & 2)
+        BattleSelection_HandlePartyChoice(side, 1);
+    else if (*(u16 *)(record + 8) & 8)
+        BattleSelection_HandlePartyChoice(side, 2);
+    else if (*(u16 *)(record + 8) & 0x8000)
+        BattleSelection_HandlePartyChoice(side, 3);
+    else if (*(u16 *)(record + 8) & 4)
+        BattleSelection_HandlePartyChoice(side, 4);
+    else if (*(u16 *)(record + 8) & 1)
+        BattleSelection_HandlePartyChoice(side, 5);
+}
 #endif
 
 #ifdef VERSION_US
@@ -2143,8 +2208,8 @@ void BattleSelection_ProcessControllerPartitions(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8413B468(u8);
-extern void func_8413B5D4(u8);
+extern void BattleSelection_HandleSmallRosterInput(u8);
+extern void BattleSelection_HandleLargeRosterInput(u8);
 extern void BattleSelection_ProcessControllerPartitions(u8);
 extern void * D_841951F8[];
 void func_8413BBEC(s32 arg0) {
@@ -2152,8 +2217,8 @@ void func_8413BBEC(s32 arg0) {
     u8 index = (u8)(*home & 0xFF);
     u8 *ptr = (u8 *)D_841951F8[index];
     if (ptr[2] == 1) {
-        if (ptr[8] >= 4) func_8413B5D4(index);
-        else func_8413B468(index);
+        if (ptr[8] >= 4) BattleSelection_HandleLargeRosterInput(index);
+        else BattleSelection_HandleSmallRosterInput(index);
     } else {
         BattleSelection_ProcessControllerPartitions(index);
     }

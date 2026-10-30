@@ -754,3 +754,36 @@ The US retail gate passed from baseline `1fe02cb1` with the accepted source,
 including the host syntax check. ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
 Naming and formatting passed normal and 20-leading-line complete-module
 comparisons against the accepted object.
+
+
+### Single-controller roster input handlers: accepted
+
+`func_8413B468` is `BattleSelection_HandleSmallRosterInput` (364 bytes,
+91 instructions). `func_8413B5D4` is `BattleSelection_HandleLargeRosterInput`
+(668 bytes, 167 instructions). Both retain the original 40-byte frame.
+`func_8413BBEC` selects them for a single-controller provider according to
+whether its party count at offset 8 is below four or at least four.
+`BattleSelection_HandlePartyChoice` bounds the selected slot by this same
+count and indexes the provider's 88-byte party records. The larger handler
+selects between two groups of three slots before processing direct choices.
+These callers and consumers establish the names; both old addresses remain
+linker aliases.
+
+Both accepted bodies retain only the controller-record pointer and access
+the selection entry through the existing `D_84195248` typed array. The
+compiler retains the shared entry address itself. A separate entry-pointer
+local duplicated that storage: the small handler's direct-field parent had
+8 frontend local bytes, 12 optimized local bytes, and a 48-byte frame.
+Removing the redundant local reproduces the original saves at stack offsets
+32 and 36 and the 40-byte frame. Direct halfword reads retain the necessary
+reloads after the larger handler changes its group byte.
+
+The canonical accepted labels are
+`command11:record-only:halfFalse:flagsFalse:rawFalse` and
+`command12:record-only:typedTrue:halfFalse:flagsFalse`. Each passed the full
+US retail gate and explicit host syntax check with statistics enabled; the
+second gate includes both new functions. ROM MD5:
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming, formatting, and removal of newly
+duplicated externs passed normal and 20-leading-line complete-module
+comparisons against the jointly accepted object. No compiler modification,
+instruction rewrite, extra helper, padding, or forced register was used.
