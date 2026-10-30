@@ -2067,3 +2067,31 @@ sequence. Both the 80-byte frame and array placement arise naturally.
 Accepted label: `pain-split:attacker-first:order0:cap-s32:ternary` in
 `battle-pain-split-sum8`. The function name and address alias were verified
 with normal and twenty-leading-blank-line complete-module comparisons.
+
+### 2026-10-31: Spite requeue — return contract and packed PP follow-up
+
+`func_8412D6C0` remains assembly. The initial `battle-spite8` refresh under
+the current accepted module reproduced the documented 56-byte frame drift;
+read the earlier 88-attempt handoff before selecting more source variants.
+
+A controlled, uninstalled return-contract experiment changed the three
+`func_841263D8` declarations/definition to `u8`. The helper's own bytes stayed
+identical, but `func_841266C4` and `BattleEffect_ApplyEncore` changed. Spite
+still used a 56-byte frame (540/532 bytes for the two tested amount types).
+Thus this change does not solve the current mismatch and is not justified
+for installation. Normal and +20-line whole-module controls passed. The
+first diagnostic failed because its direct compile omitted an existing
+`func_8004C594` prototype; the corrected v2 result supersedes that failure.
+
+A separate canonical eight-candidate batch, `battle-spite-bitfields8`, used
+a one-byte PP union with a two-bit boost field and six-bit count field.
+Independent substitutions covered the initial PP read, clamp read, and
+mask-store RHS while preserving the subsequent reload. No candidate passed.
+Candidates 6/7 reach 524 bytes, normalized 0.9313/raw 0.4962, but retain the
+56-byte frame versus retail's 48; this is not a register-only mismatch.
+
+Requeue with the existing slot-web UOPT eligibility/cost investigation.
+Do not repeat return-type, width/home, or packed-PP grids without new pass
+or caller evidence. Private receipts: `spite-slot-contract-v2/receipt.json`
+and `battle-spite-bitfields8/result.json`. No source or interface change was
+installed, and no ROM acceptance is claimed for this owner.
