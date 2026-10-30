@@ -5561,7 +5561,41 @@ void func_84132A94(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84132B9C.s")
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern s32 func_8004C54C(u8, s32);
+extern s32 * func_800635E0(u8);
+extern u8 func_80063660(u8);
+extern void func_84134CBC(u8, u8);
+extern void func_84135B00(u16);
+extern void func_84136678(u8, s16);
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void func_84132B9C(void) {
+    s32 side;
+    s32 slot;
+    for (side = 0; side < 2; side++) {
+        if (func_80063660(D_84195200[side][1]) == 6) {
+            for (slot = 0; slot < 4; slot = (u8)(slot + 1)) {
+                if (D_84195208[side][slot + 5] == 0) break;
+                if ((D_84195208[side][slot + 9] & 0x3F) == 0) {
+                    if (D_84195208[side][slot + 5] == 166) D_84195208[side][slot + 9] += 1;
+                    else D_84195208[side][slot + 9] += 5;
+                    if (D_84195200[side][slot + 2] == D_84195208[side][slot + 5] && !(D_84195208[side][17] & 8)) {
+                        if (D_84195208[side][slot + 5] == 166) D_84195200[side][slot + 24] += 1;
+                        else D_84195200[side][slot + 24] += 5;
+                    }
+                    func_84136678(side, -1);
+                    func_8004C54C(26, (s32)(D_84195200[side] + 52));
+                    func_8004C54C(42, (s32)func_800635E0(D_84195200[side][1]));
+                    func_84135B00(153);
+                    func_84134CBC(side, 77);
+                    BattleRecord_AdvanceWriteSlot();
+                    D_84195200[side][1] = 0;
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
