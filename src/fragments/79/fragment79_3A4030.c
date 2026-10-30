@@ -2075,7 +2075,24 @@ void func_8413B254(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413B468.s")
+extern void func_8413A6CC(u8, u8, u8);
+extern void BattleSelection_HandlePartyChoice(u8 arg0, u8 arg1);
+extern void func_84139958(u8 arg0, u8 arg1);
+extern void func_8413AB2C(u8 arg0, u8 arg1, s8 arg2, u8 arg3);
+extern void func_8413B08C(u8 arg0, volatile u8 arg1);
+void func_8413B468(u8 arg0) {
+    u8 *record;
+    record = D_84195248[arg0].inputs[0];
+    if (*(u16 *)(record + 6) & 0x200) func_8413AB2C(arg0, 0, 0, 0xB);
+    else if (*(u16 *)(record + 6) & 0x100) func_8413AB2C(arg0, 0, 2, 0xB);
+    else if (*(u16 *)(record + 6) & 0x800) func_8413AB2C(arg0, 0, 1, 0xB);
+    else if (*(u16 *)(record + 6) & 0x10) func_8413A6CC(arg0, 0, 0xB);
+    else func_8413B08C(arg0, 0xB);
+    if (*(u16 *)(record + 8) & 0x20) { if (D_84195248[arg0].kind < 2) func_84139958(arg0, 1); }
+    else if (*(u16 *)(record + 8) & 2) BattleSelection_HandlePartyChoice(arg0, 0);
+    else if (*(u16 *)(record + 8) & 8) BattleSelection_HandlePartyChoice(arg0, 1);
+    else if (*(u16 *)(record + 8) & 1) BattleSelection_HandlePartyChoice(arg0, 2);
+}
 #endif
 
 #ifdef VERSION_US
