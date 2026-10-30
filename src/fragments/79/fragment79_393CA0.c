@@ -4040,7 +4040,32 @@ void BattleAnim_Table_84186004_002(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412EE5C.s")
+extern u8 func_80063690(u8);
+extern s8 D_841951C1;
+extern s8 D_841951C2;
+extern u8 D_841951C3;
+extern u8 D_841951C5;
+extern s32 D_841951C8;
+extern u8 D_841951D0;
+void func_8412EE5C(void) {
+    u32 damage;
+    if (D_841951C3 == 7) D_841951CE >>= 1;
+    if (D_841951CE == 0) D_841951CE++;
+    if (((u8)D_841951C2) != 0) {
+    damage = ((D_841951D0 * 2 / 5 + 2) * ((u8)D_841951C2) * D_841951CC / D_841951CE) / 50;
+    if (func_800636C0(D_841951C5, ((u8)D_841951C1)) != 0) {
+        damage *= func_80063690(D_841951C5) + 100;
+        damage /= 100;
+    }
+    if (D_841951D1 == 1) {
+        damage <<= 1;
+        if (damage >= 65536) damage = 65535;
+    }
+    D_841951C8 += damage;
+    if (D_841951C8 >= 999) D_841951C8 = 996;
+    D_841951C8 += 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
