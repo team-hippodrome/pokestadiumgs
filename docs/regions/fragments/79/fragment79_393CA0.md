@@ -2481,3 +2481,35 @@ full retail ROM gate, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming and readabl
 formatting then preserved complete-module bytes, symbol extents and relocations
 in normal and +20-line controls. Function size: 704 bytes. No compiler changes,
 hardcoded C symbol addresses, binary rewriting or padding were used.
+
+#### Battle RNG initializer: requeue, final schedule pair (2026-10-31)
+
+`func_84124F40` swaps the seed's halfwords, seeds the shared generator, and
+fills ten battle RNG bytes while interrupts are masked. Native unsigned-to-float
+and float-to-unsigned conversions reproduce the retail conversion sequence;
+manual signed conversion/conditional adjustment drafts are unnecessary.
+An explicit low-halfword mask in the seed rotation fixes the temporary register
+sequence. Best current source is `battle-rng-scale8` candidate2: a const float
+byte scale and the pointer initialization on the same line as `do` fix the
+initial pointer-address schedule. Size320/frame48 and all operands match.
+Only rows66/67 differ: retail increments s0 before restoring FCSR; candidate
+restores FCSR before incrementing s0 (offsets264/268, raw0.9875).
+
+Forty canonical candidates covered native conversion, seed halfword forms,
+end-pointer forms, pointer increment/value lifetimes, named float constants,
+and eight natural line groupings around the conversion. None accepted.
+A calibrated one-worker 60-second permuter search produced no zero-score body;
+its named-scale lead motivated the current best. Increment-before-store and
+separate converted-value forms regress. Preserve the best rather than replaying
+those families.
+
+Stock CFE/UOPT/UGEN/as1 captures passed four complete-module controls, and the
+captured best function independently equals its canonical probe. as1 O2 replay
+reproduced the full raw modules for both candidate and accepted trapping-damage
+witness. Diagnostic g3/O2 was identical; O0/O1 changed other instructions but
+kept FCSR restore before pointer increment. This bounds the tested assembler
+options; it does not prove every assembler scheduling pass was disabled.
+Next: inspect UGEN emission ordering for unsigned float conversion and its
+pointer update, or trace that pair's scheduler dependency. No forced schedule
+or binary rewriting is admissible. Evidence: `battle-rng-stock-passes`,
+`battle-rng-capture-proof.json`, `battle-rng-as1-options/receipt.json`.
