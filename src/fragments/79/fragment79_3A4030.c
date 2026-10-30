@@ -1777,12 +1777,7 @@ void func_84138D74(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_800226C0(s32);
-extern void func_84147228(u8, u8, u8, u8, s32);
-extern s32 func_841484CC(u8, u8, u8, u8);
-extern void * D_841951F8[];
-extern u8 D_8419A0A0[];
-void func_84138EA4(u8 side, u8 selection) {
+void BattleSelection_ConfirmChoice(u8 side, u8 selection) {
     switch (D_84195248[side].phase) {
     case 2:
     case 5:
@@ -1838,7 +1833,7 @@ void func_84138EA4(u8 side, u8 selection) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84138EA4(u8, u8);
+extern void BattleSelection_ConfirmChoice(u8, u8);
 extern u8 * D_84195208[];
 void func_84139244(u8 arg0) {
     s32 i;
@@ -1847,15 +1842,15 @@ void func_84139244(u8 arg0) {
     for (i = 0; i != 4; i++) {
         p = D_84195208[arg0] + i;
         if ((p[5] != 0) && ((p[9] & 0x3F) == 0)) {
-            func_84138EA4(arg0, i);
+            BattleSelection_ConfirmChoice(arg0, i);
         }
     }
-    func_84138EA4(arg0, 0);
+    BattleSelection_ConfirmChoice(arg0, 0);
 }
 #endif
 
 #ifdef VERSION_US
-extern void func_84138EA4(u8, u8);
+extern void BattleSelection_ConfirmChoice(u8, u8);
 extern u8 * D_84195208[];
 void func_841392E0(u8 arg0) {
     u8 index = arg0;
@@ -1864,7 +1859,7 @@ void func_841392E0(u8 arg0) {
     for (i = 0; i < 4; i++) {
         u8 *ptr = base + i;
         if (ptr[5] != 0 && ptr[5] != base[0x25] && (ptr[9] & 0x3F) > 0) {
-            func_84138EA4(index, i);
+            BattleSelection_ConfirmChoice(index, i);
             return;
         }
     }
@@ -1906,7 +1901,7 @@ void func_84139364(u8 arg0) {
 extern void BattleSelection_ShowChoiceError(u8, u8);
 extern void func_800226C0(s32);
 extern s32 func_84138960(u8 arg0);
-extern void func_84138EA4(u8, u8);
+extern void BattleSelection_ConfirmChoice(u8, u8);
 extern void func_84139244(u8);
 extern u8 * D_84195208[];
 void func_84139528(u8 arg0, u8 arg1) {
@@ -1918,7 +1913,7 @@ void func_84139528(u8 arg0, u8 arg1) {
         } else if (D_84195208[arg0][arg1 + 5] == D_84195208[arg0][0x25]) {
             BattleSelection_ShowChoiceError(arg0, 1);
         } else {
-            func_84138EA4(arg0, arg1);
+            BattleSelection_ConfirmChoice(arg0, arg1);
         }
     } else {
         if (D_84195208[arg0][arg1 + 5] == 0) {
@@ -1957,7 +1952,7 @@ void BattleSelection_HandlePartyChoice(u8 arg0, u8 arg1) {
     if (func_8413882C(arg0, arg1) == 0) {
         BattleSelection_ShowChoiceError(arg0, 6);
     } else {
-        func_84138EA4(arg0, arg1 + 4);
+        BattleSelection_ConfirmChoice(arg0, arg1 + 4);
     }
 }
 #endif
@@ -1970,7 +1965,7 @@ void func_84139770(u8 arg0) {
     for (i = 0; i < base[8]; i++) {
         u8 *ptr = base + i * 0x58;
         if (ptr[0x18] != 0 && *(u16 *)(ptr + 0x3E) > 0 && i != base[0xA]) {
-            func_84138EA4(arg0, (u8)(i + 4));
+            BattleSelection_ConfirmChoice(arg0, (u8)(i + 4));
             return;
         }
     }
@@ -2695,12 +2690,12 @@ void func_8413C0A4(u8 arg0) {
 #ifdef VERSION_US
 extern s32 func_8413860C(u8);
 extern struct unk_D_84195248 D_84195248[2];
-void func_8413C18C(u8 arg0) { u8 *ptr = ((u8 *)D_84195248) + arg0 * 24; switch (ptr[0xD]) { case 1: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) { if (func_8413860C(arg0) < 4) func_841397FC(arg0, 2); else if (func_8413860C(arg0) < 10) func_841397FC(arg0, 5); } break; case 2: case 5: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) func_84138EA4(arg0, (u8)func_8413860C(arg0)); break; } }
+void func_8413C18C(u8 arg0) { u8 *ptr = ((u8 *)D_84195248) + arg0 * 24; switch (ptr[0xD]) { case 1: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) { if (func_8413860C(arg0) < 4) func_841397FC(arg0, 2); else if (func_8413860C(arg0) < 10) func_841397FC(arg0, 5); } break; case 2: case 5: if (ptr[0xF] == 0) ptr[0xF] = (func_8003570C() & 0xF) * 3 + 3; else if (--ptr[0xF] == 0) BattleSelection_ConfirmChoice(arg0, (u8)func_8413860C(arg0)); break; } }
 #endif
 
 #ifdef VERSION_US
 extern void func_8413584C(u8 arg0);
-extern void func_84138EA4(u8, u8);
+extern void BattleSelection_ConfirmChoice(u8, u8);
 extern s32 D_84186154;
 extern u8 * D_84195200[];
 extern u8 * D_84195208[];
@@ -2719,9 +2714,9 @@ void func_8413C2C0(u8 arg0) {
                     if (D_84195208[arg0][index + 5] == 0) {
                         index = 0;
                     }
-                    func_84138EA4(arg0, index);
+                    BattleSelection_ConfirmChoice(arg0, index);
                 } else {
-                    func_84138EA4(arg0, index + 4);
+                    BattleSelection_ConfirmChoice(arg0, index + 4);
                 }
             }
         } else {
