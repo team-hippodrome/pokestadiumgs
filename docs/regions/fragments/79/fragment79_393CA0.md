@@ -1869,3 +1869,13 @@ Final gate: `scratch/early-final-seal/tidy-gate/receipt.json`. Per-owner gates:
 interface repairs, the later TU, metadata and coverage are preserved. Old
 38A0C/B870 and other sealed requeues remain in their original workspace; no
 new requeue from these five owners. Naming/public integration stays separate.
+
+### Integrated early-table family naming
+
+The retail command table at 0x84185EB0 places 0x8412955C at slot 19:
+`BattleCommand_019`. The table at 0x84186004 places 0x8413146C at slot 81:
+`BattleAnim_Table_84186004_081`. Both retain old-address aliases. Removed only
+redundant declarations in the five new blocks; independent normal and +20-line
+complete-module controls preserve allocated bytes, metadata, function extents
+and semantic relocations. The other three owners retain address names until
+stronger naming evidence exists.
