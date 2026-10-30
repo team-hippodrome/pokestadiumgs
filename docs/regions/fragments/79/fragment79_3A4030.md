@@ -405,3 +405,95 @@ no naming/global metadata, coverage, private tooling, push or PR is included.
 ### Integrated fallback-team initializer
 
 D7AC is named `BattleParty_InitializeFallbackTeam`, matching both the empty-deck path in `Battle_LoadPlayerDeck` and the explicit fallback branch in `Battle_InitState`. The original address remains a linker alias. Normal/+20 complete-tail sections, bytes, function extents, semantic relocations and reginfo match the agent's accepted object after naming and removal of five duplicated declarations from this new block. The original620B/frame104, actual u32 RNG-to16-bit mask, six-party/four-move loops and consumed name/team-base pointer phases are preserved. `3794C` remains ASM with its measured requeue above. Private naming proof: `scratch/battle-fallback-team-naming/receipt.json`.
+## 2026-10-30 3794C snapshot consumer accepted; requeue resolved
+
+Tested from `005bb88c06e25bb5ba7bfa223995421462237b97` in isolated native root
+`/private/tmp/gs-agent-3794c-boundary-wj8f07jc/repo`. **func_8413794C is accepted:
+648 bytes/frame80**, `3794c-early-component8` index0. Explicit host syntax and
+full native retail ROM passed, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All earlier3794C requeues are resolved. No companion repair, ABI change or
+original-ASM prototype workaround was installed.
+
+### Retained boundary evidence and genuine source mechanism
+
+The original640/644/648-byte parents were decoded before new source work.
+Six unmodified stock AS1 replays, normal/+20 for each parent, reproduce their
+captured raw objects byte-for-byte. A standalone ignored stock-AS0 fixture
+calibrates the relevant Binasm opcodes/register operands; no captured stream
+or object was patched. The644B parent's CFE output assigns the event pointer
+input+104 and accesses its396-byte field. UOPT replaces this with an input+500
+load and a separate +104 call argument. That folded load is already present
+in UGEN output. AS1 subsequently places the late argument calculation into
+the call delay slot. Thus the fold belongs to **UOPT**, and the final delay-slot
+scheduling to **AS1**; it was not an assembler-only pointer rewrite.
+
+The accepted source initializes the real event-record pointer **before** the
+two-side processing loop. Its flag load and actual call remain after the loop.
+The source retains the original input pointer, two24-byte change records,
+two six-byte status records, byte loop counter, all original field widths,
+float/double operations, switch cases and final header clear. It preserves
+the retail comparison of the cleared delta; no intended behavior is inferred
+from that redundant-looking test. The existing unsigned scaled indices and
+used status-pointer advance still reproduce the original loop/state code.
+
+The winning stock UGEN stream now contains the input+104 argument pointer
+before a396(a0) halfword load. Its later direct call naturally gets the retail
+nop delay slot. The object is648 bytes, not a644-byte body plus manufactured
+padding. The pointer is a real subrecord address used by the original guard
+and callee; no extra read, dummy use, address escape, volatile, forced register,
+helper, new storage, manual unrolling or instruction/relocation rewrite exists.
+The local record types describe existing storage only. Definition lifetime
+across the loop is the useful source distinction; no numerical allocator cost
+or universal compiler-impossibility claim is made.
+
+### Diagnostic scope and retained negatives
+
+Eight canonical8-member batches retain64 enabled rows:56 probe_rejected,
+1 accepted,7 skipped. The new families were post-loop range-end addresses;
+independent real void exits; unsigned/sizeof prefix addresses; actual640-byte
+record members and initializers; nonoverlapping display/event pointer roles;
+actual typed snapshot contract; real input-cursor advance; and component binding
+before the processing loop. Ordinary late bindings retained644B; independent
+exits gave652B; post-loop indices added arithmetic. The parameter-cursor forms
+gave652/656B and did not repair the fold. Do not rerun these negatives now that
+the owner is accepted. The runner stopped at its first acceptance.
+
+The typed snapshot hypothesis included exact-once prototype/caller typing in
+37BD4. All160 other functions, including that accepted caller, remain exact
+in all eight compiled candidates, but3794C rejected. Those companion edits
+were restored and are absent from the accepted source. Its initial preflight
+refused an edit without target-function context; the contextual correction
+was admitted normally, without altering the guard or hypothesis history.
+
+Eight read-only stock-native5.3 lineage controls preserve normal/+20 module
+identity within that compiler and pass the original ASM oracle plus both real
+callable no-op controls. They retain the same644-byte fold, with additional
+loop/register differences;5.3 is not the production or acceptance compiler.
+Stock7.1/flags remain unchanged. Public optimizer source was read as a static
+reference for local base+constant forwarding/displacement absorption; it was
+not built or substituted for the stock compiler. The actual ownership proof
+is the captured stage transition and exact raw-object replay.
+
+### Preservation and receipts
+
+All161 tail functions/code/extents, allocated sections includingreginfo and
+semantic relocations equal the005bb88c baseline. Prefix66448B+tail40048B equals
+all106496 linked retail code bytes. All prior accepts and real repairs, the
+sealed D7AC root, original94-byte failure proof and80 rows remain intact.
+The winning source's declaration spacing cleanup passed normal/+20 whole-module
+controls and another host/full native ROM gate. Ten stock7.1 passive captures
+also preserve their canonical complete modules; the final pair captures the
+winning CFE/UOPT/UGEN/AS1 stages under normal/+20 controls.
+
+Canonical receipt: `scratch/3794c-early-component8/gate-0/receipt.json`.
+Final gate: `scratch/3794c-boundary-final-seal/tidy-gate/receipt.json`.
+Aggregate seal/commit receipt/handoff: `scratch/3794c-boundary-final-seal/`.
+Boundary proof: `scratch/3794c-boundary-analysis/ownership-and-winner-proof.json`.
+Only this source and region note are committed, with hooks disabled; no naming,
+metadata, coverage, private tools, agents, Docker, push or PR. Coordinator
+handles evidence-backed naming and publication. No remaining3794C prerequisite.
+
+
+### Integrated snapshot side-change consumer
+
+3794C is `BattleSnapshot_ApplySideChanges`: the existing snapshot consumer applies pending value/party/status updates for the two sides, processes its event component, and clears the original input header. Its actual event address is bound before the loop, with the original field guard and event call after it. The old address name remains a linker alias. Normal/+20 full-tail sections/bytes/function extents/semantic relocations/reginfo match the worker's accepted object after naming and removal of only duplicated declarations in this block. The648B/frame80 source has no companion repair, padding, extra helper or ABI change. Earlier3794C requeues above are resolved. Private naming proof: `scratch/battle-snapshot-side-changes-naming/receipt.json`.
