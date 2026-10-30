@@ -1903,8 +1903,9 @@ extern void func_800226C0(s32);
 extern void func_84147228(u8, u8, u8, u8, s32);
 extern void * D_841951F8[];
 extern u8 D_84195248[];
-void func_8413AD98(u8 arg0, u8 arg1, s8 arg2) {
-    if (((u8 *)D_841951F8[arg0])[((u8)arg2) * 0x58 + 0x18] != 0) {
+void func_8413AD98(u8 arg0, u8 arg1, u8 arg2) {
+    /* Party records use an unsigned byte index and an 88-byte stride. */
+    if (((u8 *)D_841951F8[arg0])[(u32)arg2 * 88 + 24] != 0) {
         switch (D_84195248[arg0 * 24 + 0xD]) {
         case 5:
             func_84147228(7, arg0, 0, 11, 0);
@@ -1936,7 +1937,7 @@ void func_8413AD98(u8 arg0, u8 arg1, s8 arg2) {
             break;
         }
         D_84195248[arg0 * 24 + 0xD] = 7;
-        func_84147228(13, arg0, 0, 7, *(u8 *)&arg2);
+        func_84147228(13, arg0, 0, 7, arg2);
     }
 }
 #endif
@@ -2006,7 +2007,71 @@ void func_8413B254(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413B870.s")
+extern u8 func_84148470(u8);
+extern void func_8413AD98(u8, u8, u8);
+extern void func_800226C0(s32);
+extern void func_84139618(u8 arg0, u8 arg1);
+extern void func_84139958(u8 arg0, u8 arg1);
+extern void func_8413A8C4(u8 arg0);
+extern void func_8413B254(u8 arg0);
+extern void * D_841951F8[];
+extern u8 D_84195248[];
+void func_8413B870(u8 arg0) {
+    /* The 24-byte state stores controller pointers at offsets 0 and 4. */
+    struct unk_func_8413B870 {
+        u8 *primary;
+        u8 *secondary;
+        u8 unk08, unk09, unk0A, unk0B, unk0C, mode, activity;
+        u8 unk0F, unk10, unk11, unk12, unk13, unk14, unk15, unk16, unk17;
+    };
+    u8 *records[2];
+    u8 counts[2];
+    u8 offsets[2];
+    u8 index;
+
+    index = func_84148470(arg0);
+    records[index] = ((struct unk_func_8413B870 *)D_84195248)[arg0].primary;
+    records[(1 - index)] = ((struct unk_func_8413B870 *)D_84195248)[arg0].secondary;
+    offsets[index] = 0;
+    offsets[(1 - index)] = ((u8 *)D_841951F8[arg0])[3];
+    counts[index] = ((u8 *)D_841951F8[arg0])[3];
+    counts[(1 - index)] = ((u8 *)D_841951F8[arg0])[8] - ((u8 *)D_841951F8[arg0])[3];
+    if ((*(u16 *)(records[0] + 6) & 0x200) != 0 && counts[0] > 0) {
+        func_8413AD98(arg0, index, offsets[0]);
+    } else if ((*(u16 *)(records[0] + 6) & 0x100) != 0 && counts[0] >= 3) {
+        func_8413AD98(arg0, index, offsets[0] + 2);
+    } else if ((*(u16 *)(records[0] + 6) & 0x800) != 0 && counts[0] >= 2) {
+        func_8413AD98(arg0, index, offsets[0] + 1);
+    } else if ((*(u16 *)(records[1] + 6) & 0x200) != 0 && counts[1] > 0) {
+        func_8413AD98(arg0, (1 - index), offsets[1]);
+    } else if ((*(u16 *)(records[1] + 6) & 0x100) != 0 && counts[1] >= 3) {
+        func_8413AD98(arg0, (1 - index), offsets[1] + 2);
+    } else if ((*(u16 *)(records[1] + 6) & 0x800) != 0 && counts[1] >= 2) {
+        func_8413AD98(arg0, (1 - index), offsets[1] + 1);
+    } else if (((*(u16 *)(records[0] + 6)) | (*(u16 *)(records[1] + 6))) & 0x10) {
+        func_8413A8C4(arg0);
+    } else {
+        func_8413B254(arg0);
+    }
+    if (((*(u16 *)(records[0] + 8)) | (*(u16 *)(records[1] + 8))) & 0x20) {
+        if (((struct unk_func_8413B870 *)D_84195248)[arg0].activity < 2) {
+            func_800226C0(3);
+            func_84139958(arg0, 1);
+        }
+    } else if ((*(u16 *)(records[0] + 8) & 0x2) != 0 && counts[0] > 0) {
+        func_84139618(arg0, offsets[0]);
+    } else if ((*(u16 *)(records[0] + 8) & 0x8) != 0 && counts[0] >= 2) {
+        func_84139618(arg0, offsets[0] + 1);
+    } else if ((*(u16 *)(records[0] + 8) & 0x1) != 0 && counts[0] >= 3) {
+        func_84139618(arg0, offsets[0] + 2);
+    } else if ((*(u16 *)(records[1] + 8) & 0x2) != 0 && counts[1] > 0) {
+        func_84139618(arg0, offsets[1]);
+    } else if ((*(u16 *)(records[1] + 8) & 0x8) != 0 && counts[1] >= 2) {
+        func_84139618(arg0, offsets[1] + 1);
+    } else if ((*(u16 *)(records[1] + 8) & 0x1) != 0 && counts[1] >= 3) {
+        func_84139618(arg0, offsets[1] + 2);
+    }
+}
 #endif
 
 #ifdef VERSION_US

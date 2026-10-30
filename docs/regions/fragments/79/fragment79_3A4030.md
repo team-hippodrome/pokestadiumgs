@@ -196,3 +196,89 @@ allocated bytes, reginfo, function extents and semantic relocations, including
 39528's existing240-byte body. The separate B870/AD98 failed-gate prerequisite
 remains unchanged; neither owner is claimed accepted by this publication.
 Private proof: `scratch/battle-party-selection-two-naming/receipt.json`.
+
+## 2026-10-30 AD98 byte-input prerequisite resolved; B870 accepted
+
+Base `a387cb6f622e1742b0af1fb3a3bc67bcd20d9ec8`, isolated native root
+`/private/tmp/gs-agent-ad98-contract-aixaqyp2/repo`. The AD98/B870 requeue is
+**resolved**. B870 contributes **892 newly decompiled bytes/frame64**; its real
+AD98 companion preserves the existing **756 bytes/frame48** exactly. Canonical
+first acceptance: `ad98-clean-switch8` index0. Explicit host syntax and full
+native retail ROM gate passed, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+### Actual body repair, without an argument-storage workaround
+
+AD98 now takes the real unsigned byte input. Party-record addressing explicitly
+uses `(u32)arg2 * 88 + 24`, and the final property call reads `arg2` directly.
+The old `*(u8 *)&arg2` expression is removed. The original switch and all cases,
+record mutations, property calls and sounds remain. This is an actual body and
+contract repair, not another signedness/char-only experiment. No escape, fake
+ABI, qualifier, register binding, dummy work, added storage or padding is used.
+
+The widening in the party-record index changes the frontend value web while
+preserving the observed byte data operations. The first LBU again uses the
+original temporary; retaining the original switch preserves its dispatch
+shape and natural frontend memory area. Stock pass capture measures frontend
+Mmt4 and optimized Mmt8/state web-8 for the accepted clean unsigned body,
+matching the original frame48/homeSP40. Earlier declaration-only unsigned C
+used Mmt4→12/state-12 and frame56. No stack slot was manufactured in source.
+
+The first new body hypothesis replaced the switch with an equivalent if/else
+chain, used unsigned record indices and removed the byte view. It restored
+the initial byte-load register but generated frame40, recomputed the state
+address and changed dispatch ordering. B870 itself matched, but the real full
+ROM gate rejected the companion. Its failed ROM/object/ELF/map and subsequent
+ordinary accepted-baseline recovery are preserved. The second body hypothesis
+kept the original switch and mode-field expression, with unsigned party-index
+arithmetic and direct byte value. It matched and passed the full gate.
+
+Each shared companion hypothesis ran through a canonical eight-member batch
+of genuine B870 record/array/index source forms. These are actual data and
+lifetime representations within the existing family, not cosmetic fillers.
+The selected existing exact B870 form was retested in the materially changed
+callee-body context; no irrelevant declaration or duplicate-guard bypass was
+used. One compiler worker, enabled statistics and shared ROM flock remained.
+
+### B870 and preservation proof
+
+B870 retains exactly two controller pointers, two byte counts and two byte
+offsets. Its local type describes the actual24-byte state record; it allocates
+no new record or buffer. The accepted source preserves the two actual button
+halfword phases, original six branches per phase, partition count/offset
+selection, calls and continuation. No unrolling transformation was introduced.
+The prior removal of the unnecessary state-pointer local gives the original
+frame64 and all original homes.
+
+Independent comparison proves **all allocated bytes of the complete tail
+module are identical to the starting module**: text40048B, rodata576B,
+reginfo24B, all161 function extents/code and semantic relocations. AD98's code
+SHA remains `8e61dac82ae4b1d250813761c7c70a25f24693e53b775b728b5541d70cb80986`;
+B870's892B code SHA is `e940b5df86a8038ae4bf84fc4d5dacb19e8a37d620aaa94a955c08367c715071`.
+38A0C/39528/39618 and every accepted neighbor are exact. Early source/code,
+metadata, coverage, other workspaces and all prior seals remain unchanged.
+Full linked early66448B+tail40048B still equals all106496 retail code bytes.
+
+Two canonical8-candidate batches retain16 new rows:1 accepted,
+1 compare_rejected,7 probe_rejected,7 skipped. The first rejected owner had
+real combined+individual failing ROM gates; the second batch stopped after its
+first acceptance. Both kept normal/+20 whole-module controls. Stock IDO7.1,
+flags and canonical admission remained unchanged. No A804 plug-in or agents.
+
+Four completed read-only stock-pass captures (accepted source and first
+rejected body, normal/+20) preserve all allocated bytes/reginfo/extents/
+relocations against their own canonical references. An optional replay of the
+older unsigned-declaration-only full source could not complete because its
+39618 ASM is no longer extracted in this accepted-C base. That diagnostic is
+retained; no ASM was regenerated or altered and no new legacy capture is
+claimed. Its earlier completed proof remains in the untouched predecessor.
+
+Final explanatory comments/blank line were compiled before installation;
+normal/+20 controls and the explicit host/full native ROM gate passed again.
+Private aggregate receipt and handoff: `scratch/ad98-final-seal/{receipt.json,handoff.md}`.
+Final gate: `scratch/ad98-final-seal/tidy-gate/receipt.json`. Complete module
+proof: `module-preservation.json`; accepted gate:
+`scratch/ad98-clean-switch8/gate-0/receipt.json`. Original94-byte failure proof
+and all80 prior rows are preserved, now historical evidence of the resolved
+prerequisite. No remaining requeue in this family; unrelated tail owners were
+not rotated in. Only this source/region pair is committed, without hooks,
+naming/global metadata, coverage, private helpers, push or PR.
