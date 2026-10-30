@@ -250,10 +250,79 @@ s32 func_87F02800(s32 arg0, u8 *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324FB0/func_87F02878.s")
 
 extern u32 D_87F119C0;
-extern void func_87F029EC(u32 *, s32, s32);
+extern void func_87F029EC(void *, u8 *, u8);
 void func_87F029B8(s32 arg0, u8 arg1) {
-    func_87F029EC(&D_87F119C0, arg0, arg1);
+    func_87F029EC(&D_87F119C0, (u8 *)arg0, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324FB0/func_87F029EC.s")
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern s32 MainPool_AllocAligned(void *, s32, s32);
+extern void *func_80040E80(void *, void *);
+extern void MainPool_FinalizeAllocation(void *);
+extern s32 func_8004C8C0(u16);
+extern void func_80037E3C(void *, s32 (*)(s32, u8 *), void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+extern u8 D_87F0F728[];
+
+void func_87F029EC(void *arg0, u8 *arg1, u8 arg2) {
+    u8 *pool;
+    u8 *object;
+    u8 *model;
+    s32 i;
+    s32 offset;
+
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    *(u8 **)(arg1 + 20) = (u8 *)MainPool_AllocAligned(pool, 1584, 4);
+    *(u8 **)(arg1 + 24) = (u8 *)MainPool_AllocAligned(pool, 96, 4);
+    *(void **)(arg1 + 28) = func_80040E80(pool, D_87F0F728);
+    MainPool_FinalizeAllocation(pool);
+    func_8004C8C0(434);
+    func_87F0252C(arg0, (F2684State *)arg1, *(u8 **)(arg1 + 20), 4);
+    for (i = 0; i != 4; i++) {
+        object = func_87F025B8(arg1, NULL);
+        if (object != NULL) {
+            offset = i * 24;
+            model = object + 36;
+            func_80037E3C(model, func_87F02800, object);
+            *(u8 **)(object + 32) = *(u8 **)(arg1 + 24) + offset;
+            func_8003F1DC(model);
+            func_8003F114(model, 0, -1, *(void **)(arg1 + 28));
+            object[38] |= 8;
+        }
+    }
+    (*(u8 **)(arg1 + 24))[18] = 0xFF;
+    (*(u8 **)(arg1 + 24))[19] = 0xFF;
+    (*(u8 **)(arg1 + 24))[20] = 0xFF;
+    (*(u8 **)(arg1 + 24))[21] = 0xFF;
+    (*(u8 **)(arg1 + 24))[17] = arg2 & 1;
+    (*(u8 **)(arg1 + 24))[16] = 0;
+    *(s32 *)(*(u8 **)(arg1 + 24) + 0) = 0;
+    Vec3f_SetComponentsDuplicate(*(u8 **)(arg1 + 24) + 4, 0.0f, 0.0f, 0.0f);
+    (*(u8 **)(arg1 + 24))[42] = 0xFF;
+    (*(u8 **)(arg1 + 24))[43] = 0xFF;
+    (*(u8 **)(arg1 + 24))[44] = 0xFF;
+    (*(u8 **)(arg1 + 24))[45] = 0xFF;
+    (*(u8 **)(arg1 + 24))[41] = arg2 & 2;
+    (*(u8 **)(arg1 + 24))[40] = 1;
+    *(s32 *)(*(u8 **)(arg1 + 24) + 24) = 0;
+    Vec3f_SetComponentsDuplicate(*(u8 **)(arg1 + 24) + 28, 0.0f, 0.0f, 0.0f);
+    (*(u8 **)(arg1 + 24))[66] = 0xFF;
+    (*(u8 **)(arg1 + 24))[67] = 0xFF;
+    (*(u8 **)(arg1 + 24))[68] = 0xFF;
+    (*(u8 **)(arg1 + 24))[69] = 0xFF;
+    (*(u8 **)(arg1 + 24))[65] = arg2 & 4;
+    (*(u8 **)(arg1 + 24))[64] = 2;
+    *(s32 *)(*(u8 **)(arg1 + 24) + 48) = 0;
+    Vec3f_SetComponentsDuplicate(*(u8 **)(arg1 + 24) + 52, 0.0f, 0.0f, 0.0f);
+    (*(u8 **)(arg1 + 24))[90] = 0xFF;
+    (*(u8 **)(arg1 + 24))[91] = 0xFF;
+    (*(u8 **)(arg1 + 24))[92] = 0xFF;
+    (*(u8 **)(arg1 + 24))[93] = 0xFF;
+    (*(u8 **)(arg1 + 24))[89] = arg2 & 8;
+    (*(u8 **)(arg1 + 24))[88] = 3;
+    *(s32 *)(*(u8 **)(arg1 + 24) + 72) = 0;
+    Vec3f_SetComponentsDuplicate(*(u8 **)(arg1 + 24) + 76, 0.0f, 0.0f, 0.0f);
+}
 #endif
