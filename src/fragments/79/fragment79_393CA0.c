@@ -5637,14 +5637,64 @@ void func_84131760(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841318C0.s")
+#include "color_adjustment.h"
+extern ColorAdjustment func_8003F5AC(u8 *);
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern void func_841567B8(u8, u8);
+extern void BattleMoveState_CopySelectedMoves(u8);
+extern void *D_84195204;
+extern void _bcopy(void *, void *, s32);
+extern s32 func_8004B7A4(s32);
+extern s32 func_8004C54C(u8, s32);
+extern void func_84136A9C(u8 arg0, s16 arg1, s16 arg2, u8 arg3);
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void Battle_InitializeActivePokemon(u8 arg0, u8 arg1) {
+    u8 *base = (u8 *)D_841951F8[arg0];
+    u8 *rec = (u8 *)D_841951F8[arg0];
+    u8 *out = D_84195208[arg0];
+    rec += (u32)arg1 * 0x58;
+    rec += 0x18;
+    base[0xA] = arg1;
+    D_84195200[arg0] = rec;
+    out[0] = rec[0];
+    *(u16 *)(out + 0x2C) = Pokemon_GetDisplaySpecies(rec);
+    out[1] = func_8006397C(rec[0]);
+    out[2] = func_800639C0(rec[0]);
+    _bcopy(rec + 2, out + 5, 4);
+    _bcopy(rec + 0x18, out + 9, 4);
+    *(u16 *)(out + 0x2E) = *(u16 *)(rec + 0x16);
+    *(u16 *)(out + 0x32) = *(u16 *)(rec + 0x2A);
+    *(u16 *)(out + 0x34) = *(u16 *)(rec + 0x2C);
+    *(u16 *)(out + 0x36) = *(u16 *)(rec + 0x2E);
+    *(u16 *)(out + 0x38) = *(u16 *)(rec + 0x30);
+    *(u16 *)(out + 0x3A) = *(u16 *)(rec + 0x32);
+    *(u16 *)(out + 0x3C) = *(u16 *)(rec + 0x2A);
+    *(u16 *)(out + 0x3E) = *(u16 *)(rec + 0x2C);
+    *(u16 *)(out + 0x40) = *(u16 *)(rec + 0x2E);
+    *(u16 *)(out + 0x42) = *(u16 *)(rec + 0x30);
+    *(u16 *)(out + 0x44) = *(u16 *)(rec + 0x32);
+    *(u16 *)(out + 0x48) = *(u16 *)(rec + 0x26);
+    *(ColorAdjustment *)(out + 0x50) = func_8003F5AC(rec);
+    if (rec[0x24] & 0x40) *(u16 *)(out + 0x40) >>= 2;
+    if (rec[0x24] & 0x10) *(u16 *)(out + 0x3C) >>= 1;
+    func_841567B8(arg0, 1);
+    BattleMoveState_CopySelectedMoves(arg0);
+    func_8004C54C(0x19, func_8004B7A4(rec[0]));
+    func_8004C54C(0x1A, (s32)(rec + 0x34));
+    { u8 **opponent = (u8 **)((u8 *)&D_84195204 + -(arg0 * 4));
+      func_8004C54C(0x1B, func_8004B7A4((*opponent)[0]));
+      func_8004C54C(0x1C, (s32)(*opponent + 0x34)); }
+    func_84136A9C(arg0, -1, (s32)arg1, 4);
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_841318C0(u8, u8);
+extern void Battle_InitializeActivePokemon(u8, u8);
 extern void * D_841951F8[];
 void func_84131AB8(u8 arg0) {
-    func_841318C0(arg0, ((u8 *) D_841951F8[arg0])[0] - 4);
+    Battle_InitializeActivePokemon(arg0, ((u8 *) D_841951F8[arg0])[0] - 4);
 }
 #endif
 
@@ -6429,11 +6479,11 @@ void func_84133924(u8 arg0) {
 #ifdef VERSION_US
 extern void func_8412693C(u8);
 extern void func_84126994(u8);
-extern void func_841318C0(u8, u8);
+extern void Battle_InitializeActivePokemon(u8, u8);
 extern void func_84133924(u8);
 void func_84133984(u8 arg0, u8 arg1) {
     func_84133924(arg0);
-    func_841318C0(arg0, arg1);
+    Battle_InitializeActivePokemon(arg0, arg1);
     func_84126994(arg0);
     func_8412693C(arg0);
     func_84126A64();

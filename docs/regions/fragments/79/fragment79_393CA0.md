@@ -2403,3 +2403,30 @@ best. Captures: switch-in-final-stock-passes; replay receipt:
 switch-in-final-as1-options/receipt.json. No production flags changed.
 The three accepted functions are being published independently; this owner
 remains active for the next batch, with the schedule residual retained.
+
+#### Switch-in initialization: accepted clean source (2026-10-31)
+
+`func_841318C0` / `Battle_InitializeActivePokemon` initializes one side's
+active Pokemon from a party slot: it selects the party record, copies species,
+types, moves, PP, level, HP and battle statistics, computes its color adjustment,
+applies status-dependent stat reductions, and records the side/slot change.
+Callers pass a side and party slot, including the switch-action wrapper's
+selected action minus four.
+
+A one-worker, 60-second permuter search calibrated byte-identically against
+record8 candidate0 found the last SLL/LUI scheduling change by using direct
+team-table references. Its zero-score result retained an unused base local.
+That form passed the canonical host and retail ROM gates but was deliberately
+removed; the assembly baseline was rebuilt and passed a fresh full-ROM gate.
+The cleanup instead uses both live pointers: `base` for the selected-slot
+store and `rec` for the party-record address, initialized before `out`.
+This closes the opening schedule without unused locals, ABI changes, binary
+rewriting, forced registers, or padding. The explicit unsigned slot stride
+retains the required 32-byte frame. The function occupies 504 bytes.
+
+Canonical acceptance: `battle-switch-in-live-base8` candidate2; normal host
+syntax check and full retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`
+passed. Naming passed complete-module byte, symbol-extent and relocation
+comparisons normally and with twenty leading blank lines. The stock UGEN O1
+diagnostic crashed as1 even for an accepted witness and provides no scheduling
+conclusion; production O2 replays reproduced all three captured raw modules.
