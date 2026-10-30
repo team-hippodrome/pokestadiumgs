@@ -1416,3 +1416,5 @@ func_8413D7AC = BattleParty_InitializeFallbackTeam;
 func_8413794C = BattleSnapshot_ApplySideChanges;
 
 func_8413C820 = Battle_UpdatePhase;
+
+func_8413DD94 = BattleSnapshot_InitializeBuffer;

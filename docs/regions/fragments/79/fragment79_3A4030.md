@@ -705,3 +705,23 @@ No remaining C820 prerequisite; coordinator handles naming/integration/publicati
 ### Integrated battle phase dispatcher
 
 C820 is `Battle_UpdatePhase`, the existing phase dispatcher that synchronizes both side-state records, updates timer/control flags, queues the original events and advances the battle phase. The original address remains a linker alias. Its1636B/frame56 source and eight-entry table preserve the worker's complete tail object under normal/+20 naming and duplicate-declaration controls, including every affected accepted record consumer. Public selection/snapshot names and local record names are retained while the new global record views and byte access contracts are merged. Source17's independent current-master change is retained. No coverage, helpers, layout edits or instruction rewriting enter this change. Private proof: `scratch/battle-phase-dispatch-naming/receipt.json`.
+
+
+### Snapshot buffer initialization (DD94)
+
+`BattleSnapshot_InitializeBuffer` replaces the 148-byte/frame-24 assembly owner.
+It clears the 0x4D84-byte snapshot buffer and seeds the two side records with
+cached 16-bit provider fields and the actual four-byte ColorAdjustment value.
+The old address-keyed symbol remains a linker alias.
+
+Computing consumed addresses inside the loop in provider-slot, other-provider,
+fields, color order reproduces the original induction setup and updates. The
+late native-word view preserves the second provider-slot load. No padding,
+volatile barrier, artificial consumer, or instruction rewriting is used.
+The canonical runner accepted the candidate through its sequential full-ROM
+gate despite relocation-alias shape differences; host syntax passed and the
+retail ROM MD5 is 1561c75d11cedf356a8ddb1a4a5f9d5d.
+
+Evidence: scratch/battle-snapshot-buffer-address-discovery8/gate-0/receipt.json.
+Naming and duplicate-declaration cleanup preserve the entire module under
+normal and +20-line controls: scratch/battle-snapshot-buffer-naming/receipt.json.

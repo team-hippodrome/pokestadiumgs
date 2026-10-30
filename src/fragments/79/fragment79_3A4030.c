@@ -2878,7 +2878,25 @@ void Battle_InitializeSideDisplayStates(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413DD94.s")
+#include "color_adjustment.h"
+extern u8 D_84199D98[];
+extern u8 D_84199DB8[];
+void BattleSnapshot_InitializeBuffer(void) {
+    s32 i;
+
+    _bzero(D_84195280, 0x4D84);
+    for (i = 0; i < 2; i++) {
+        u8 **left = &D_84195208[i];
+        u8 **right = &D_84195200[i];
+        u8 *fields = D_84199D80 + i * 16;
+        u8 *colors = D_84199D98 + i * 16;
+        *(u16 *)(fields + 0xC) = *(u16 *)(*(u8 **)left + 0x2C);
+        *(u16 *)(fields + 0xE) = 1;
+        *(u16 *)(fields + 0x10) = 0;
+        *(u16 *)(fields + 0x14) = *(u16 *)(*(u8 **)right + 0x16);
+        *(ColorAdjustment *)(colors) = *((ColorAdjustment *)((u8 *)*(u32 *)left + 0x50));
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -2900,7 +2918,7 @@ extern void BattleParty_InitializeFallbackTeam(u8);
 extern void func_8413D6D4(u8 *, u8 *);
 extern void func_84138530(u8, u8 *);
 extern void Battle_InitializeSideDisplayStates(void);
-extern void func_8413DD94(void);
+extern void BattleSnapshot_InitializeBuffer(void);
 extern void func_84138658(void);
 extern void func_8002A830(void *);
 extern void func_84148680(void);
@@ -2982,7 +3000,7 @@ void Battle_InitState(s32 arg0, u8 *arg1) {
         func_84138530(0, D_84195200[0]);
         func_84138530(1, D_84195200[1]);
         Battle_InitializeSideDisplayStates();
-        func_8413DD94();
+        BattleSnapshot_InitializeBuffer();
         func_84138658();
         func_8002A830(D_841951F0);
         D_84195210[0] = 1;
