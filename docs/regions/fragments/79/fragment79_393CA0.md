@@ -2239,3 +2239,28 @@ experiment is an explicit, semantically faithful selector-address local,
 with before/after globalcolor costs, rather than more countdown or integer
 width permutations. Capture receipts and trace summary remain private under
 future-sight-stock-passes and future-sight-cost-controls.
+
+#### Future Sight selector-address experiment (2026-10-31)
+
+Eight explicit `u8 *opponentSelector` forms (four initialization scopes,
+dereference/index spellings) rejected at raw 0.767. Disassembly shows a
+material change, not merely renamed registers: the selector address is no
+longer kept in a saved register, its accesses use separate `lui` sequences,
+and constant 10 is promoted instead. Eight two-byte move-record struct-view
+forms with saved-value widths u8/u16/s16/s32 all reproduce the original
+0.8835 result. Canonical attempted total is 56; no source was installed.
+
+Private logging-only observer now gets the web identity from the live
+range's +4 field, with the expression-table range-pointer equality check
+retained. Fifteen full-module controls (known, best, pointer; stock,
+stock+blank, observer off/on/on+blank) passed. Best final allocations identify
+web29 as the saved byte local (kind3, dtype8, offset -9), web59 as integer
+constant one (kind2), web61 as the selector address (kind1), web62 as the
+party-pointer-table address (kind1). Pointer form drops the selector-address
+promotion and adds constant ten (web77, kind2, dtype8). Thus equal numeric
+savings alone did not establish equal allocator populations; the disassembly
+and corrected identities are authoritative. Artifacts: future-sight-identity-
+controls/{calibration.json,best-saved.json,pointer-saved.json}, and
+future-sight-pointer-disassembly.json. Next: investigate why the original
+selector-address range has a lower allocation priority than the saved byte;
+do not repeat the rejected full-pointer or move-field-view families.
