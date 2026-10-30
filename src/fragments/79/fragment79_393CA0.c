@@ -1642,7 +1642,58 @@ void BattleDamage_RollCriticalHit(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84127DB8.s")
+extern s32 func_84125200(u8 arg0);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern s8 D_841951C1;
+extern s8 D_841951C2;
+extern u8 D_841951C5;
+extern u8 D_841951C6;
+extern s32 D_841951C8;
+extern u8 D_841951D0;
+extern void * D_841951F8[];
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+void BattleDamage_PrepareAttackDefense(void) {
+    D_841951C8 = 0;
+    if ((u8)D_841951C2 == 0) return;
+    if ((u8)D_841951C1 < 20) {
+        if (func_84125200(0)) {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 60);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 62);
+            if (((u8 *)D_841951F8[D_841951BD])[11] & 16) D_841951CE <<= 1;
+        } else {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 50);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 52);
+        }
+        if (D_841951C5 == 118 && (D_84195208[D_841951BC][0] == 104 || D_84195208[D_841951BC][0] == 105)) D_841951CC <<= 1;
+    } else {
+        if (func_84125200(1)) {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 66);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 68);
+            if (((u8 *)D_841951F8[D_841951BD])[11] & 8) D_841951CE <<= 1;
+        } else {
+            D_841951CC = *(u16 *)(D_84195208[D_841951BC] + 56);
+            D_841951CE = *(u16 *)(D_84195208[D_841951BD] + 58);
+        }
+        if (D_841951C5 == 163 && D_84195208[D_841951BC][0] == 25) D_841951CC <<= 1;
+    }
+    if (D_841951CC >= 256 || D_841951CE >= 256) {
+        D_841951CC >>= 2;
+        if (D_841951CC == 0) D_841951CC = 1;
+        D_841951CE >>= 2;
+        if (D_841951CE == 0) D_841951CE = 1;
+    }
+    if (D_841951C6 == 35 && D_84195208[D_841951BD][0] == 132) {
+        D_841951CE = D_841951CE + (D_841951CE >> 1);
+        if (D_841951CE >= 256) {
+            D_841951CC >>= 1;
+            if (D_841951CC == 0) D_841951CC = 1;
+            D_841951CE >>= 1;
+        }
+    }
+    D_841951D0 = D_84195200[D_841951BC][29];
+}
 #endif
 
 #ifdef VERSION_US
@@ -3293,7 +3344,7 @@ typedef struct { u32 words[16]; unsigned int :4; unsigned int fixed_damage:1; un
 extern u8 Audio_LookupScaledRatio_fragment79(u16 numerator, u16 denominator);
 extern void BattleDamage_AccumulateBaseDamage(void);
 extern u8 func_84125080(void);
-extern void func_84127DB8(void);
+extern void BattleDamage_PrepareAttackDefense(void);
 extern u8 D_841951BC;
 extern u8 D_841951BD;
 extern u8 D_841951BF;
@@ -3328,7 +3379,7 @@ void BattleDamage_ApplySpecialFormula(void) {
         break;
     case 99:
         D_841951C2 = Audio_LookupScaledRatio_fragment79(*(u16 *)(D_84195200[D_841951BC] + 38), *(u16 *)(D_84195200[D_841951BC] + 40));
-        func_84127DB8();
+        BattleDamage_PrepareAttackDefense();
         BattleDamage_AccumulateBaseDamage();
         D_841951C2 = 1;
         break;
@@ -4476,12 +4527,12 @@ void BattleAnim_Table_84186004_014(void) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_841951BC; extern u8 *D_84195208[]; extern s8 D_841951C1; extern s8 D_841951C2; extern s32 func_84126EDC(u16); extern s32 func_84126E88(u16); extern void func_84127DB8(void);
+extern u8 D_841951BC; extern u8 *D_84195208[]; extern s8 D_841951C1; extern s8 D_841951C2; extern s32 func_84126EDC(u16); extern s32 func_84126E88(u16); extern void BattleDamage_PrepareAttackDefense(void);
 void BattleAnim_Table_84186004_015(void) {
     u16 val = *(u16 *)(D_84195208[D_841951BC] + 0x2E);
     D_841951C1 = func_84126EDC(val);
     D_841951C2 = func_84126E88(val);
-    func_84127DB8();
+    BattleDamage_PrepareAttackDefense();
 }
 #endif
 

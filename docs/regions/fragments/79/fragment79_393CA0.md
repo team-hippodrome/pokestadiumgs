@@ -2150,3 +2150,18 @@ Private receipts: `spite-color-controls/calibration.json`,
 and `battle-spite-phase-reuse8/result.json`. Preserve this requeue for a
 source/control-flow witness that changes the measured slot range costs;
 do not force colors, add fake accesses, or alter compiler heuristics.
+
+### 2026-10-31: damage-stat preparation accepted
+
+`func_84127DB8` / `BattleDamage_PrepareAttackDefense` (800 bytes) passed
+canonical runner acceptance, normal host syntax, and the complete retail
+ROM comparison. The helper selects physical/special stats, handles screens
+and species-specific held-item modifiers, scales stats above 255, applies
+the defender modifier, and records the attacking level.
+
+The first batch accepted `damage-stats:return:compoundFalse:bytes`.
+Explicit `u8` casts on move power and type preserve the unsigned byte loads
+despite their existing signed declarations. Direct halfword accesses and
+ordinary compound shifts produce the original register allocation and
+24-byte frame without auxiliary storage. Naming preserves the complete
+module in normal and twenty-leading-blank-line controls.
