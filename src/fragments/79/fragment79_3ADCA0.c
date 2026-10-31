@@ -1542,7 +1542,46 @@ void BattleUi_DrawNameRow(void *row) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144514.s")
+/* mkdraft:func_84144514 begin */
+extern s16 D_84186D18;
+extern s16 D_84186D1C;
+extern u8 * D_841951F8;
+extern void func_84143E64(u16 arg0, u16 arg1, s32 arg2, u16 arg3, s32 arg4);
+
+#ifndef M2C_FIELD
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#endif
+
+
+
+void func_84144514(void *arg0) {
+    s32 var_s2;
+    u16 var_s3;
+    s32 var_s4;
+    u8 *var_v1;
+    u8 **var_t0;
+
+    var_s3 = 0;
+    var_s4 = 0;
+    // karodo: empty if on the arg0 byte re-walks uopt's GPR pool -- the extra dead
+    // value web (lbu arg0+1) is colored ahead of the table-base computation, so the
+    // entry webs land on v0/t6/t7 and the loop-body webs shift one slot (ring
+    // rotation). 135 -> 0, no code emitted (condition CSEs into the real load).
+    if (M2C_FIELD(arg0, u8 *, 1) == 0) {
+    }
+    var_t0 = &(&D_841951F8)[M2C_FIELD(arg0, u8 *, 1)];
+    var_v1 = *var_t0;
+    for (var_s2 = 0; var_s2 < (s32) var_v1[8]; var_s2++) {
+        func_84143E64((M2C_FIELD(arg0, s16 *, 0x12) + D_84186D18 + var_s3) & 0xFFFF, (M2C_FIELD(arg0, s16 *, 0x14) + D_84186D1C + var_s4) & 0xFFFF, (s32) M2C_FIELD(var_v1, u8 *, var_s2 * 0x58 + 0x18), M2C_FIELD(var_v1, u16 *, var_s2 * 0x58 + 0x2E), (s32) (var_v1 + var_s2 * 0x58 + 0x4C));
+        var_s3 = (var_s3 + 0x43) & 0xFFFF;
+        if (var_s2 == 2) {
+            var_s3 = 0;
+            var_s4 = 0x2E;
+        }
+        var_v1 = *var_t0;
+    }
+}
+/* mkdraft:func_84144514 end */
 #endif
 
 #ifdef VERSION_US
