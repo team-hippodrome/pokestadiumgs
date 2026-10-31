@@ -139,7 +139,46 @@ u8 func_84148BB4(u8 arg0) {
     return 0xFF;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84148C74.s")
+/* mkdraft:func_84148C74 begin */
+extern void _bzero(void *, s32);
+extern u8 func_84155D5C(u8 arg0, u8 arg1, u8 arg2);
+
+
+s32 func_84148C74(u8 arg0) {
+    u8 value;
+    // Candidate-search record shared with func_841487A8 and the candidate
+    // enumerators above: bytes[0] is the current species and bytes[1] the
+    // candidate being tried; func_841487A8 records its selections in
+    // bytes[2] and bytes[3], with comparison values in bytes[4] and
+    // bytes[6] (u16).
+    u8 record[8];
+
+    value = func_84148BB4(arg0);
+    if (value != 0xFF) {
+        return value;
+    }
+
+    _bzero(record, 8);
+    record[0] = arg0;
+    value = func_84155D5C(
+        arg0,
+        func_84154B30(arg0)[1],
+        func_84154B30((1 - (u32)arg0) & 0xFF)[1]
+    );
+    record[1] = value;
+    if (value != 0) {
+        func_841487A8(record);
+        func_84148B40(record);
+        return record[3];
+    }
+    if (func_84156618(arg0, func_84154B30(arg0)[1], 2) != 0) {
+        func_84148AC8(record);
+        return record[3];
+    }
+    func_84148A4C(record);
+    return record[3];
+}
+/* mkdraft:func_84148C74 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84148D54.s")
 
