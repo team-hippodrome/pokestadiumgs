@@ -150,27 +150,18 @@ extern u8 D_8009D27C[];
 s32 func_80063BB8(u8 arg0) { s32 index = arg0; if ((arg0 > 0) && (arg0 < 0xFC)) return *(s32 *)(D_8009D27C + index * 12); return 0; }
 
 extern u8 D_80098318[];
-s32 func_80063BF4(arg0, arg1) u8 arg0; u8 arg1; { s32 index = arg0; s32 bit_index; if ((arg0 > 0) && (arg0 < 0xFC) && (arg1 > 0) && (arg1 < 0x3A)) { bit_index = arg1 - 1; return (D_80098318[index * 22 + (bit_index / 8)] & (1 << (bit_index % 8))) != 0; } return 0; }
+s32 func_80063BF4(u8 arg0, u8 arg1) { s32 index = arg0; s32 bit_index; if ((arg0 > 0) && (arg0 < 0xFC) && (arg1 > 0) && (arg1 < 0x3A)) { bit_index = arg1 - 1; return (D_80098318[index * 22 + (bit_index / 8)] & (1 << (bit_index % 8))) != 0; } return 0; }
 
-void func_80063C90(u8 arg0, unsigned short arg1)
-{
-  u8 *new_var2;
-  int new_var4;
-  u8 *new_var3;
-  int new_var;
-  new_var = func_80062F98(arg1 & 0xFF) & 0xFF;
-  new_var3 = &arg0;
-  new_var2 = new_var3;
-  new_var4 = new_var;
-  func_80063BF4(*new_var2, new_var4);
+extern u8 func_80062F98(u8);
+s32 func_80063C90(u8 arg0, u8 arg1) {
+    u8 a = arg0;
+    return func_80063BF4(a, func_80062F98(arg1));
 }
 
 extern u8 D_800998AC[];
 s32 func_80063CC4(u8 arg0, u8 arg1) { s32 index = arg0; s32 bit_index; if ((arg0 > 0) && (arg0 < 0x98) && (arg1 > 0) && (arg1 < 0x38)) { bit_index = arg1 - 1; return (D_800998AC[index * 9 + (bit_index / 8)] & (1 << (bit_index % 8))) != 0; } return 0; }
 
-s32 Pokemon_CanLearnGen1Machine(species, machine)
-u8 species;
-u8 machine;
+s32 Pokemon_CanLearnGen1Machine(u8 species, u8 machine)
 {
     if (species > 0 && species < 152) {
         switch (species) {
@@ -237,25 +228,20 @@ u8 machine;
     return 0;
 }
 
-void func_80063EE4(u8 arg0, s32 arg1)
-{
-  s32 *new_var2;
-  s32 new_var;
-  new_var2 = &arg1;
-  new_var = *new_var2;
-  func_80063CC4(arg0, func_80063044(new_var & 0xFF));
+extern u8 func_80063044(u8);
+void func_80063EE4(u8 arg0, u8 arg1) {
+    u8 a = arg0;
+    func_80063CC4(a, func_80063044(arg1));
 }
 
-void func_80063F18(u8 arg0, s32 arg1)
-{
-  s32 *new_var;
-  new_var = &arg1;
-  Pokemon_CanLearnGen1Machine(arg0, func_80063044((*new_var) & 0xFF) & (0xFF & 0xFFFFu));
+s32 func_80063F18(u8 arg0, u8 arg1) {
+    u8 a = arg0;
+    return Pokemon_CanLearnGen1Machine(a, func_80063044(arg1));
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/641E0/func_80063F4C.s")
 
-extern s32 func_80063F4C(u8, u8, u8, s32, s32);
+extern s32 func_80063F4C(u8, u8, u8, u8, u8);
 s32 func_80064070(u8 arg0, u8 arg1, u8 arg2) {
     return func_80063F4C(arg0, arg1, arg2, 0xF, 1) != 0;
 }
@@ -298,9 +284,67 @@ s32 Pokemon_IsSmeargleMoveAllowed(u8 move) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/641E0/func_80064248.s")
-
 extern s32 func_80064248(u8, u8, u8, u8);
+extern u8 D_8009D284[];
+
+s32 func_80064248(arg0, arg1, arg2, arg3)
+u8 arg0;
+u8 arg1;
+u8 arg2;
+u8 arg3;
+{
+  u8 *temp_s1;
+  u8 temp_a0;
+  s32 temp_v0;
+  u8 cur;
+  if ((arg0 > 0) && (arg0 < 252))
+  {
+    if (1) { }
+    cur = arg0;
+loop_3:
+    if ((cur == 235) && (Pokemon_IsSmeargleMoveAllowed(arg1) != 0))
+    {
+      return 1;
+    }
+
+    if (func_80063F4C(arg0, arg1, arg2, arg3, 1) != 0)
+    {
+      return 1;
+    }
+    if (0)
+    {
+    }
+    if (func_80063C90(arg0, arg1) != 0)
+    {
+      return 1;
+    }
+    if ((arg3 & 2) && (func_80063F18(arg0, arg1) != 0))
+    {
+      return 1;
+    }
+    temp_s1 = D_8009D284 + (cur * 12);
+    temp_a0 = *(temp_s1 - 12);
+    if (temp_a0 != 0)
+    {
+      switch (Pokemon_FindEvolutionMethod(temp_a0, arg0, arg2))
+      {
+        case 0:
+          return 0;
+
+        case 1:
+          arg2--;
+
+        default:
+          break;
+      }
+
+      cur = (arg0 = *(temp_s1 - 12));
+      goto loop_3;
+    }
+    return 0;
+  }
+  return 0;
+}
 
 s32 func_800643CC(s32 arg0, s32 arg1, s32 arg2) {
     return func_80064248(arg0 & 0xFF, arg1 & 0xFF, arg2 & 0xFF, 0xFF);
