@@ -130,7 +130,67 @@ void func_83501D3C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83502EF0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83503048.s")
+/* mkdraft:func_83503048 begin */
+extern s32 D_83503BA8;
+
+extern s32 D_83503AD4;
+extern s32 D_83503AEC;
+extern f32 D_83503BE8;
+extern f32 D_83503DA0;
+
+
+
+void func_83503048(void)
+{
+  f32 **new_var2;
+  f32 new_var;
+  f32 *D_83503DA0_ptr = &D_83503DA0;
+  f32 temp_fa1;
+  f32 temp_ft4;
+  f32 var_fv1;
+  s32 temp_t2;
+  if ((120.0f * D_83503BE8) < 320.0f)
+  {
+    var_fv1 = 0.5f;
+  }
+  else
+  {
+    var_fv1 = -0.5f;
+  }
+  new_var = *D_83503DA0_ptr;
+  temp_fa1 = ((f32) D_83503AD4) + (new_var * new_var);
+  temp_ft4 = 320.0f - (120.0f * D_83503BE8);
+  if (((f32) ((s32) (var_fv1 + temp_ft4))) <= temp_fa1)
+  {
+    if (1)
+    {
+      if ((120.0f * D_83503BE8) < 320.0f)
+      {
+        var_fv1 = 0.5f;
+      }
+      else
+      {
+        var_fv1 = -0.5f;
+      }
+      D_83503AD4 = (s32) (var_fv1 + temp_ft4);
+    }
+    D_83503AEC = 0;
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x10)) -= 2;
+    if (((temp_t2 = *((s32 *) (((u8 *) (&D_83503BA8)) + 0x10)), temp_t2 < 0)) != 0)
+    {
+      *((s32 *) (((u8 *) (&D_83503BA8)) + 0xC)) = 1;
+      *((s32 *) (((u8 *) (&D_83503BA8)) + 0x10)) = 0x1E;
+    }
+  }
+  else
+  {
+    D_83503AD4 = (s32) temp_fa1;
+    new_var2 = &D_83503DA0_ptr;
+    new_var = (f32) (((f64) new_var) + 0.5);
+    *(*new_var2) = new_var;
+  }
+}
+/* mkdraft:func_83503048 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83503188.s")
 
