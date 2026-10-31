@@ -335,7 +335,64 @@ void func_86601F70(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86602260.s")
+/* mkdraft:func_86602260 begin */
+extern s32 D_8660678C;
+extern s32 D_86606714;
+extern u8 D_8660A990[];
+extern u8 D_8660A9AC[];
+extern void ModelAnim_SetSpeed(void *, s32);
+extern void func_86601A04(void *, s32);
+extern s32 func_86601C98(void *, s32);
+extern void func_866017E0(s32);
+extern void func_86601F70(void *, s32);
+extern void func_80027A28(u16, u8);
+extern u8 D_866098A0[];
+
+
+
+void func_86602260(s32 arg0, void *arg1) {
+    s32 temp_s0;
+    s32 temp_v0;
+    u8 *temp_v0_2;
+    u8 *temp_v1;
+
+    temp_s0 = *(s32 *)((u8 *)arg1 + 0x14);
+    if ((arg0 != 0) && (arg0 == 2) && (D_8660678C == 1)) {
+        if (D_86606714 == 1) {
+            *(s32 *)(D_8660A9AC + (temp_s0 * 0x58)) = 1;
+            return;
+        }
+        ModelAnim_SetSpeed(arg1, 0x10000);
+        temp_v1 = D_8660A990 + (temp_s0 * 0x58);
+        arg0 = *(s32 *)(temp_v1 + 0x3C);
+        if (arg0 > 0) {
+            *(s32 *)(temp_v1 + 0x3C) = arg0 + 1;
+        }
+        func_86601A04(arg1, temp_s0);
+        temp_v0 = *(s32 *)(temp_v1 + 0x28);
+        *(s32 *)(temp_v1 + 0x10) = 0;
+        if (temp_v0 != -1) {
+            if ((temp_v0 != 1) && (temp_v0 != 2) && (temp_v0 != 3)) {
+                if (temp_v0 == 4) {
+                    goto block_14;
+                }
+            } else {
+block_14:
+                        func_80027A28(((temp_s0 << 8) | 0x200B) & 0xFFFF, (u8)temp_s0);
+            }
+            *(s32 *)(temp_v1 + 0x4C) = 0;
+            if (func_86601C98((u8 *)&D_800CE060[temp_s0], temp_s0) == 1) {
+                func_866017E0(temp_s0);
+                func_86601F70(arg1, temp_s0);
+                return;
+            }
+            temp_v0_2 = D_866098A0 + (temp_s0 * 0x168);
+            *(f32 *)(temp_v0_2 + 0x34) = 0.0f;
+            *(f32 *)(temp_v0_2 + 0x30) = 0.0f;
+        }
+    }
+}
+/* mkdraft:func_86602260 end */
 #endif
 
 #ifdef VERSION_US
