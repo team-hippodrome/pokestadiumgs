@@ -2027,6 +2027,23 @@ SECTIONS
     __romPos = ALIGN(__romPos, 16);
     . = ALIGN(., 16);
 
+    fragment25_data2_ROM_START = __romPos;
+    fragment25_data2_VRAM = ADDR(.fragment25_data2);
+    .fragment25_data2 0x82104130 : AT(fragment25_data2_ROM_START) SUBALIGN(16)
+    {
+        FILL(0x00000000);
+        fragment25_data2_DATA_START = .;
+        fragments_25_fragment25_data2_data = .;
+        build/asm/us/data/fragments/25/fragment25_data2.data.o(.data);
+        fragment25_data2_DATA_END = .;
+        fragment25_data2_DATA_SIZE = ABSOLUTE(fragment25_data2_DATA_END - fragment25_data2_DATA_START);
+    }
+    __romPos += SIZEOF(.fragment25_data2);
+    fragment25_data2_ROM_END = __romPos;
+    fragment25_data2_VRAM_END = .;
+    __romPos = ALIGN(__romPos, 16);
+    . = ALIGN(., 16);
+
     fragment26_ROM_START = __romPos;
     fragment26_VRAM = ADDR(.fragment26);
     .fragment26 0x81000000 : AT(fragment26_ROM_START) SUBALIGN(16)
