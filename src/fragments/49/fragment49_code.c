@@ -1642,7 +1642,80 @@ void func_861072AC(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86107360.s")
+/* mkdraft:func_86107360 begin */
+extern s32 D_8610AD20;
+typedef struct {
+    u8 pad0000[0x9768];
+    f32 f9768;
+    f32 f976C;
+    f32 f9770;
+    f32 f9774;
+    f32 f9778;
+    f32 f977C;
+    s8 s9780;
+    s8 s9781;
+    s8 s9782;
+    s8 s9783;
+    f32 f9784;
+    f32 f9788;
+    f32 f978C;
+    f32 f9790;
+    f32 f9794;
+    f32 f9798;
+    f32 f979C;
+    f32 f97A0;
+    f32 f97A4;
+    f32 f97A8;
+    f32 f97AC;
+    f32 f97B0;
+    s32 f97B4;
+    s32 f97B8;
+    s32 f97BC;
+    f32 f97C0;
+    f32 f97C4;
+    f32 f97C8;
+    f32 f97CC;
+    f32 f97D0;
+    f32 f97D4;
+    s8 s97D8;
+} Context86107360;
+
+
+void func_86107360(void) {
+    ((Context86107360 *)(u32)D_8610AD20)->s97D8 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->f9768 = 1.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f976C = (f32) 0.1f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9770 = 10.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9774 = -8.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9778 = -50.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f977C = 50.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->s9780 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->s9781 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->s9782 = 1;
+    ((Context86107360 *)(u32)D_8610AD20)->f9784 = 9.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9788 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f978C = (f32) (((Context86107360 *)(u32)D_8610AD20)->f9784 * 100.0f);
+    ((Context86107360 *)(u32)D_8610AD20)->f9790 = (f32) 0.023f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9794 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9798 = 1.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97A8 = 20.5f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97AC = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97B0 = 99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f979C = (f32) 0.6f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97A0 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97A4 = 99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97B4 = 0x4B0;
+    ((Context86107360 *)(u32)D_8610AD20)->f97B8 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->f97BC = 0x1A5E0;
+    ((Context86107360 *)(u32)D_8610AD20)->f97CC = (f32) (-0.58f);
+    ((Context86107360 *)(u32)D_8610AD20)->f97D0 = -99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97D4 = 99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97C0 = 0.5f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97C4 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97C8 = 1.0f;
+
+}
+/* mkdraft:func_86107360 end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
