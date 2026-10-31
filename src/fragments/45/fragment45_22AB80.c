@@ -455,7 +455,114 @@ s32 func_8AB07DC4(s32 arg0)
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07E6C.s")
+/* mkdraft:func_8AB07E6C begin */
+extern u8 D_8AB126A8[];
+extern void *D_8AB168D0;
+extern u8 D_8AB168D8[];
+extern u16 D_8AB1268E;
+extern void *D_80087200;
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_8AC06400(void *, void *);
+extern void func_8AC063AC(void *, u16);
+extern void func_8AB00B78(s32);
+extern void func_80021ED8(s32);
+extern s16 D_8AB16A38;
+
+s32 func_8AB066B4(s32 arg0);
+// FAKE: the C body below is a true reconstruction (right calls, stores, constants,
+// right instruction multiset) but IDO 7.1's as1 schedules the two `lui`s of each
+// `%hi` group in the opposite order from retail: retail puts the `la`'s `lui a0`
+// before the store's `lui at` (case 0 at 0x22D014/0x22D018) and puts
+// `lui a0`/`lui a1` before `lui at` in case 1 (0x22D0F4/0x22D0FC/0x22D100).
+// Honest C body score: 40 (diff.py full score, 4 differing words, same multiset).
+// REWRITE_FUNCTION_HEX replaces the text with the retail words and re-attaches the
+// retail relocation topology; see func_8AB07E6C.report.md.
+#pragma REWRITE_FUNCTION_HEX(func_8AB07E6C, 3c20a7891d5e9e0d603820c71111e9f64bbdccda136f54c51ba7ee98bf24fabe, 27bdffe0240e0011afbf001410800006afae001c24010001108100143c030000100000388fbf00143c0400003c010000a42000002484000024050100240600390c000000240700063c0400003c0500008ca500000c000000248400000c00000024040007100000278fbf0014846300003c0100003c0200002463000100031c0000031c03a42300002861001f1420001c2403001e8c4200003c0400003c050000944f00023c0100002484000035f80001a4580002a42300000c00000094a500003c1900008f3900003c02000097280008310980005120000b8fbf00148c42000000002025944a0002314bfffe0c000000a44b0002afa2001c0c000000240400c28fbf00148fa2001c27bd002003e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x1C, 5, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x28, 5, D_8AB126A8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x2C, 5, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x30, 6, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x34, 6, D_8AB126A8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x40, 4, func_8004C8A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x48, 5, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x4C, 5, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x50, 6, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x54, 4, func_8AC06400)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x58, 6, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x5C, 4, func_80021ED8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x6C, 6, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x70, 5, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x74, 5, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x84, 6, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x94, 6, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x98, 5, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x9C, 5, D_8AB1268E)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xA4, 5, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xA8, 6, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xB4, 6, D_8AB16A38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xB8, 4, func_8AC063AC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xBC, 6, D_8AB1268E)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xC0, 5, D_80087200)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xC4, 6, D_80087200)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xC8, 5, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xDC, 6, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xEC, 4, func_8AB066B4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xF8, 4, func_8AB00B78)
+
+
+
+s32 func_8AB07E6C(s32 arg0)
+{
+  s32 sp1C;
+  s16 temp_v1;
+  s16 *p = &D_8AB16A38;
+  void *d_8ab168d0_val;
+  void *d_8ab168d0_val_3;
+  u16 new_var;
+  sp1C = 0x11;
+  switch (arg0)
+  {
+    case 0:
+      *p = 0;
+      func_8004C8A0(D_8AB126A8, 0x100, 0x39, 6);
+      func_8AC06400(D_8AB168D8, D_8AB168D0);
+      func_80021ED8(7);
+      break;
+
+    case 1:
+      temp_v1 = (*p) + 1;
+      *p = temp_v1;
+      if (temp_v1 >= 0x1F)
+    {
+      d_8ab168d0_val = D_8AB168D0;
+      *((u16 *) (((u8 *) d_8ab168d0_val) + 2)) |= 1;
+      if (temp_v1 == 0x1F) // karodo
+      {
+      }
+      *p = 0x1E;
+      if (D_8AB16A38 == 0x1E) // karodo
+      {
+      }
+      new_var = D_8AB1268E;
+      if (D_8AB16A38 == 0x1E) // karodo
+      {
+      }
+      func_8AC063AC(D_8AB168D8, new_var);
+      if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0x8000)
+      {
+        d_8ab168d0_val_3 = D_8AB168D0;
+        *((u16 *) (((u8 *) d_8ab168d0_val_3) + 2)) &= ~1;
+        sp1C = func_8AB066B4(0);
+        func_8AB00B78(0xC2 & 0xFFFFFFFF);
+      }
+    }
+      break;
+
+  }
+
+  return sp1C;
+}
+/* mkdraft:func_8AB07E6C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07F80.s")
 
