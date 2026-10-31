@@ -283,7 +283,57 @@ s16 func_8AF08758(s16 arg0)
   }
   return arg0;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5F20/func_8AF087D4.s")
+/* mkdraft:func_8AF087D4 begin */
+extern s16 D_8AF2C9CC;
+void func_8AF08390(void);
+void func_8AC007FC(void);
+
+
+
+s16 func_8AF087D4(void) {
+    s16 ret;
+    s16 d1; // FAKE: d1..d5 are unused pads that walk the frame to 0x28 and put ret at 0x26(sp), state at 0x1a(sp); diff score 62 without them.
+    s16 d2; // FAKE: see d1.
+    s16 d3; // FAKE: see d1.
+    s16 d4; // FAKE: see d1.
+    s16 d5; // FAKE: see d1.
+    s16 state;
+
+    ret = 7;
+    if (D_8AF2C9CC < 4) {
+        D_8AF2C9CC++;
+    } else {
+        func_8AC007FC();
+    }
+    if (*(u16 *)((u8 *)D_8AF263C0 + 8) & 0x4000) {
+        func_8AF00130(3);
+        ret = 1;
+    } else {
+        state = D_8AF2C960;
+        switch (D_8AF2C960) {
+        case 0:
+            ret = func_8AF084BC(7); break;
+        case 1:
+            ret = func_8AF08538(7); break;
+        case 2:
+            ret = func_8AF085C8(7); break;
+        case 3:
+            ret = func_8AF08644(7); break;
+        case 5:
+            ret = func_8AF086C4(7); break;
+        case 4:
+            ret = func_8AF08758(7); break;
+        }
+        if (state != D_8AF2C960) {
+            func_8AF00130(1);
+        }
+    }
+    func_8AF07EBC();
+    func_8AF08390();
+    func_8AF07CBC();
+    return ret;
+}
+/* mkdraft:func_8AF087D4 end */
 
 extern void func_800498C4(void);
 extern void func_800499EC(void);
