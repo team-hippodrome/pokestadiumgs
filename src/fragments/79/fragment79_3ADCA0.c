@@ -935,7 +935,55 @@ void func_84141BE0(u8 *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141F20.s")
+/* mkdraft:func_84141F20 begin */
+extern void func_84141D1C(u8 *);
+extern u8 *D_84195208[];
+extern s16 D_84186C44[];
+extern s16 D_84186C4C[];
+extern s16 D_84186C9C;
+extern s16 D_84186CA0;
+extern s32 func_80062D98(u8);
+
+
+void func_84141F20(u8 *arg0)
+{
+    u8 index;
+    s32 i;
+    s32 move;
+
+    index = arg0[1];
+    if ((arg0[8] & 1) == 0 && (arg0[8] & 2) == 0)
+    {
+        switch (arg0[0])
+        {
+            case 9:
+                for (i = 0; i < 4; i++)
+                {
+                    if (D_84195208[index][i + 5] == 0)
+                    {
+                        break;
+                    }
+                    move = D_84195208[index][i + 5];
+                    func_8413F640(*(s16 *)(arg0 + 10) + D_84186C44[i],
+                                  *(s16 *)(arg0 + 12) + D_84186C4C[i],
+                                  func_80062D98(move));
+                }
+                break;
+
+            case 10:
+                move = (*(s32 *)(arg0 + 4) + D_84195208[index])[5];
+                func_8413F640(*(s16 *)(arg0 + 10) + D_84186C9C,
+                              *(s16 *)(arg0 + 12) + D_84186CA0,
+                              func_80062D98(move));
+                break;
+
+            case 13:
+                func_84141D1C(arg0);
+                break;
+        }
+    }
+}
+/* mkdraft:func_84141F20 end */
 #endif
 
 #ifdef VERSION_US
