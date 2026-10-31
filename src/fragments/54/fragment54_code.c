@@ -159,7 +159,52 @@ void func_866016D0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866017E0.s")
+/* mkdraft:func_866017E0 begin */
+extern u8 D_8660A990[];
+extern s32 D_866066F0;
+extern s32 D_866066F4[];
+extern s32 D_8660AAEC[];
+extern void func_86600C70(s32);
+extern void func_86601398(s32);
+extern void func_86601408(s32);
+
+
+
+void func_866017E0(s32 arg0) {
+    u8 *record;
+
+    record = D_8660A990 + arg0 * 0x58;
+    if (*(s32 *)(record + 8) == 0) {
+        return;
+    }
+    // The field and table reads below repeat on purpose: uopt common-expressions
+    // each pair into one load, and keeping them out of named locals is what
+    // leaves the frame at 0x30 rather than 0x38.
+    if (D_8660AAEC[*(s32 *)(record + 8)] == 0) {
+        if (*(s32 *)(record + 0x24) == 0) {
+            func_86600C70(arg0);
+        }
+        if (*(s32 *)(record + 0x24) == 1) {
+            func_86601398(arg0);
+            *(s32 *)(record + 0x24) = 0;
+        }
+    } else {
+        if ((D_866066F0 == 0) && (D_866066F4[arg0] == 0)) {
+            if (D_8660AAEC[*(s32 *)(record + 8)] == *(s32 *)(record + 0x20)) {
+                func_86601398(arg0);
+            } else {
+                func_86600C70(arg0);
+            }
+        } else {
+            func_86601398(arg0);
+            if (D_866066F4[arg0] != 0) {
+                *(s32 *)(record + 4) = 0;
+            }
+        }
+        func_86601408(arg0);
+    }
+}
+/* mkdraft:func_866017E0 end */
 #endif
 
 #ifdef VERSION_US
