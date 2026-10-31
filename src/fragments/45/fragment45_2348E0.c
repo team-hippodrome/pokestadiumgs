@@ -53,7 +53,73 @@ void func_8AB0FE08(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB0FE10.s")
+/* mkdraft:func_8AB0FE10 begin */
+extern void func_8AB00B78(s32);
+extern s32 func_8AB1007C(s32);
+extern s32 func_8AB100E0(s32);
+extern s32 func_8AB10144(s32);
+extern s32 func_8AB10248(s32);
+extern s32 func_8AB103B0(s32);
+extern s32 func_8AB104FC(s32);
+extern s32 func_8AB1075C(s32);
+extern s32 func_8AB10AD0(s32);
+extern s32 func_8AB10D28();
+extern s32 func_8AB10D30(s32);
+extern s32 func_8AB10DE4(s32);
+extern s32 func_8AB10F14(s32);
+extern void *D_80087200;
+
+// Runs one update step of stage state arg0 and returns the next state. Each
+// handler is launched with mode 1 and its result becomes the state that the
+// epilogue tests, so the argument is reused as the return value.
+
+
+s32 func_8AB0FE10(s32 arg0) {
+    switch (arg0) {
+    case 61:
+        arg0 = func_8AB1007C(1);
+        break;
+    case 62:
+        arg0 = func_8AB100E0(1);
+        break;
+    case 63:
+        arg0 = func_8AB10144(1);
+        break;
+    case 64:
+        arg0 = func_8AB10248(1);
+        break;
+    case 65:
+        arg0 = func_8AB103B0(1);
+        break;
+    case 66:
+        arg0 = func_8AB104FC(1);
+        break;
+    case 67:
+        arg0 = func_8AB1075C(1);
+        break;
+    case 68:
+        arg0 = func_8AB10AD0(1);
+        break;
+    case 70:
+        arg0 = func_8AB10D30(1);
+        break;
+    case 69:
+        arg0 = func_8AB10D28(1);
+        break;
+    case 71:
+        arg0 = func_8AB10DE4(1);
+        break;
+    case 73:
+        arg0 = func_8AB10F14(1);
+        break;
+    }
+    if ((arg0 == 63) && (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000)) {
+        func_8AB00B78(3);
+        arg0 = func_8AB100E0(0);
+    }
+    return arg0;
+}
+/* mkdraft:func_8AB0FE10 end */
 #endif
 
 #ifdef VERSION_US
