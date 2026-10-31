@@ -72,7 +72,19 @@ void func_880002F4(u8 *arg0, s16 arg1) {
     *(s16 *)arg0 = arg1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000308.s")
+/* mkdraft:func_88000308 begin */
+extern u8 D_88005FA4[];
+
+
+
+u8 *func_88000308(u8 *arg0, s16 arg1) {
+
+    arg0[0] = (s8)(s32)(((f32)((D_88005FA4[3] * arg1) + (D_88005FA4[0] * (0xFF - arg1))) / 255.0f) + (((f32)((D_88005FA4[3] * arg1) + (D_88005FA4[0] * (0xFF - arg1))) / 255.0f) > 0.0f ? 0.5f : -0.5f));
+    arg0[1] = (s8)(s32)(((f32)((D_88005FA4[4] * arg1) + (D_88005FA4[1] * (0xFF - arg1))) / 255.0f) + (((f32)((D_88005FA4[4] * arg1) + (D_88005FA4[1] * (0xFF - arg1))) / 255.0f) > 0.0f ? 0.5f : -0.5f));
+    arg0[2] = (s8)(s32)(((f32)((D_88005FA4[5] * arg1) + (D_88005FA4[2] * (0xFF - arg1))) / 255.0f) + (((f32)((D_88005FA4[5] * arg1) + (D_88005FA4[2] * (0xFF - arg1))) / 255.0f) > 0.0f ? 0.5f : -0.5f));
+    return arg0;
+}
+/* mkdraft:func_88000308 end */
 
 extern Gfx *D_800D0510;
 void func_88000488(s32 *arg0, s32 arg1) {
