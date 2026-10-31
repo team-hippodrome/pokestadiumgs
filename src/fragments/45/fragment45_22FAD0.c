@@ -559,7 +559,57 @@ void func_8AB0CBCC(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0CD00.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0D08C.s")
+/* mkdraft:func_8AB0D08C begin */
+extern s16 D_8AB126A0;
+extern s16 D_8AB12CB2;
+extern s16 D_8AB13F2C;
+extern s16 D_8AB16F9C;
+extern void TextHighlight_AnimateScales(void);
+extern u8 func_80054668(s32 arg0);
+extern s32 func_8AB0CD00();
+extern s32 func_8AB0D20C();
+
+
+
+s32 func_8AB0D08C(s32 arg0) {
+    s32 result;
+    s16 *timer;
+    s32 selection;
+
+    timer = &D_8AB16F9C;
+    result = 0x3B;
+    switch (arg0) {
+    case 0:
+        *timer = 0;
+        *(u16 *)((u8 *)D_8AB16D08 + 2) &= ~1;
+        func_8AB04AE4();
+        func_8004C594(3,
+                     *(s16 *)((u8 *)&D_8AB12CB2 +
+                              D_8AB13F2C * 0x94));
+        func_8004C8A0(D_8AB126A8, 0x100, 0x39, 4);
+        *(u16 *)((u8 *)D_8AB11D00 + 2) |= 1;
+        func_80021ED8(0x37);
+        func_80027774(0xCA0F, 0x24);
+        D_8AB126A0 = 0;
+        break;
+    case 1:
+        *timer += 1;
+        TextHighlight_AnimateScales();
+        if ((u32)func_80025D44() < 2U && *timer >= 0x3D) {
+            selection = func_80054668(*((u8 *)D_8AB11D0C + 2) - 1);
+            *timer = 0x78;
+            if (selection < *(s16 *)((u8 *)&D_8AB12CB2 +
+                                     D_8AB13F2C * 0x94)) {
+                result = func_8AB0D20C(0);
+            } else {
+                result = func_8AB0CD00(0);
+            }
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB0D08C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0D20C.s")
 #endif
