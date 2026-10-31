@@ -93,7 +93,30 @@ void func_841036E8(s32 arg0, s16 arg1) {
     PokeIcon_RequestBackgroundForObject(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_372DE0/func_8410373C.s")
+/* mkdraft:func_8410373C begin */
+extern u8 D_8418D260[];
+extern void func_8003F864();
+
+// Registers every asset table linked into the DMA table D_8418D260 (NULL terminated).
+// `index` is a leftover counter: its value is never read, and the empty block below is
+// all that is left of whatever consumed it in the original source.
+
+
+void func_8410373C(void) {
+    s32 index = 0;
+    S1_arg1_func_80019420 **table = (S1_arg1_func_80019420 **) D_8418D260;
+    S1_arg1_func_80019420 *new_var;
+
+    func_8003F864();
+    while ((*table) != NULL) {
+        new_var = *table;
+        BattleAnim_RegisterAssetTable(new_var);
+        table++;
+        index++;
+        if (index) { } // karodo
+    }
+}
+/* mkdraft:func_8410373C end */
 
 extern s32 D_84190070;
 typedef struct unk_D_84190074 {
