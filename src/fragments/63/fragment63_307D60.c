@@ -122,7 +122,66 @@ s32 func_87E04AC4(u32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04AFC.s")
+/* mkdraft:func_87E04AFC begin */
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B24C(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern u32 func_8003570C(void);
+
+// Walks the list at arg0 + 0x14. Each node carries an object at offset 0x20;
+// the object's drawable at object + 0xC and the node's position floats at
+// 0x48..0x50 go to func_87F0B1A4. When the object's word at offset 0 matches
+// the owner's word at arg0 + 4 the drawable is placed at 0.0f/36.5f with the
+// height from +0x50 (priority 10), and func_87F0B24C scales it by 2.0f in all
+// three axes from the node's floats at +0x54. Otherwise the position floats
+// are used raw with the second shifted by -360 degrees (priority 15), and
+// func_87F0B2F4 sets the rotation from the halfword pair at +0x42 plus three
+// LCG draws at func_8003570C, each scaled from [0,1) over 4294967296.0f to
+// -45..45, -45..45 and -180..180 degrees.
+// The same call pair over the same list shape is in func_87E01F44 and
+// func_87E04D2C.
+//@src/fragments/63/fragment63_305090.c
+
+
+void func_87E04AFC(void *arg0) {
+    f32 second_angle;
+    f32 third_angle;
+    u32 first_draw;
+    u32 second_draw;
+    u32 third_draw;
+    u8 *object;
+    u8 *state;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)arg0 + 0x14);
+    if (node != NULL) {
+        do {
+            object = *(u8 **)(node + 0x20);
+            state = object + 0xC;
+            if (*(s32 *)((u8 *)arg0 + 4) == *(s32 *)object) {
+                func_87F0B1A4(state, (f32 *)(node + 0x48), 0.0f, 36.5f,
+                    *(f32 *)(node + 0x50), 0xA, 0x2000);
+                func_87F0B24C(state, (f32 *)(node + 0x54), 2.0f, 2.0f, 2.0f,
+                    0xA, 0);
+            } else {
+                func_87F0B1A4(state, (f32 *)(node + 0x48), *(f32 *)(node + 0x48),
+                    *(f32 *)(node + 0x4C) + -360.0f, *(f32 *)(node + 0x50), 0xF,
+                    0x2000);
+                first_draw = func_8003570C();
+                second_draw = func_8003570C();
+                third_draw = func_8003570C();
+                second_angle = (f32)(u32)second_draw;
+                third_angle = (f32)(u32)third_draw;
+                func_87F0B2F4(state, (s16 *)(node + 0x42),
+                    (((f32)first_draw / 4294967296.0f) * 90.0f) - 45.0f,
+                    ((second_angle / 4294967296.0f) * 90.0f) - 45.0f,
+                    ((third_angle / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            }
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_87E04AFC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04D2C.s")
 
