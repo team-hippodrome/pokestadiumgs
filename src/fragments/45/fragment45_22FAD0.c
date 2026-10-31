@@ -454,7 +454,78 @@ s32 func_8AB0C9B8(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0CA58.s")
+/* mkdraft:func_8AB0CA58 begin */
+extern void *D_8AB16F48;
+extern void *D_8AB16F58;
+extern void *D_8AB1267C;
+extern void *D_8AB12680;
+extern void *D_8AB12684;
+extern s32 D_8AB16F70;
+extern s16 D_8AB16F74;
+extern s16 D_8AB16F94;
+extern s32 func_8AB0D08C(s32);
+extern void TextHighlight_AnimateScales(void);
+
+// Per-call handler for the highlighted-text state that func_8AB0B54C enters with
+// func_8AB0CA58(0). Case 0 arms the state: it clears bit 0 of the status halfword of
+// D_8AB16D08, D_8AB12678, D_8AB1267C, D_8AB12680 and D_8AB12684, clears bit 1 of the
+// status halfword of the four pointers at D_8AB16F48, loads the panel resources and
+// zeroes D_8AB16F70/D_8AB16F74. Case 1 animates the highlight and counts D_8AB16F94;
+// after 0x3D calls func_8AB0D08C supplies the next state id. Until then the function
+// keeps returning state id 0x39.
+
+
+s32 func_8AB0CA58(s32 arg0) {
+    s16 *state_frames = &D_8AB16F94;
+    s32 result;
+    void **node_ptr;
+    void **end;
+    void *node;
+    // FAKE: four copies of the addresses of D_8AB1267C/D_8AB12678/D_8AB12680/D_8AB12684
+    // push the five status-halfword clears below into the register set the retail code
+    // uses (v1/t3/t6/t9/t2 instead of v0/v1/...); each one is required - the clears
+    // read straight from the globals score 185, 230, 140 and 350 respectively, and 355
+    // with all four replaced.
+    void **D_8AB1267C_ptr = &D_8AB1267C;
+    u8 **D_8AB12678_ptr = D_8AB12678;
+    void **D_8AB12684_ptr = &D_8AB12684;
+    void **D_8AB12680_ptr = &D_8AB12680;
+
+    result = 0x39;
+    switch (arg0) {
+    case 0:
+        *state_frames = 0;
+        node_ptr = &D_8AB16F48, end = &D_8AB16F58;
+        *(u16 *)((u8 *)D_8AB11D00 + 2) = (u16)(*(u16 *)((u8 *)D_8AB11D00 + 2) | 1);
+        do {
+            node = *node_ptr;
+            node_ptr++;
+            *(u16 *)((u8 *)node + 2) = (u16)(*(u16 *)((u8 *)node + 2) & ~2);
+        } while (node_ptr < end);
+        func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x185);
+        func_8AB04AE4();
+        *(u16 *)((u8 *)D_8AB16D08 + 2) = (u16)(*(u16 *)((u8 *)D_8AB16D08 + 2) & ~1);
+        *(u16 *)((u8 *)*D_8AB12678_ptr + 2) = (u16)(*(u16 *)((u8 *)*D_8AB12678_ptr + 2) & ~1);
+        *(u16 *)((u8 *)(*D_8AB1267C_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB1267C_ptr) + 2) & ~1);
+        *(u16 *)((u8 *)(*D_8AB12680_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB12680_ptr) + 2) & ~1);
+        *(u16 *)((u8 *)(*D_8AB12684_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB12684_ptr) + 2) & ~1);
+        func_8AB00BA4(0x66, 0, 0);
+        func_800279C4(0xCF06);
+        func_800225C4(0x28);
+        D_8AB16F70 = 0;
+        D_8AB16F74 = 0;
+        break;
+    case 1:
+        *state_frames += 1;
+        TextHighlight_AnimateScales();
+        if (*state_frames >= 0x3D) {
+            result = func_8AB0D08C(0);
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB0CA58 end */
 
 extern void *D_8AB16E30;
 extern void *D_8AB16E34;
