@@ -839,7 +839,70 @@ void func_82507BD0(void) {
 }
 /* mkdraft:func_82507BD0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507BFC.s")
+/* mkdraft:func_82507BFC begin */
+extern u16 D_82508FF6;
+extern s16 D_82508FF4;
+extern s16 D_82508FF8;
+//
+// Fragment21 context restart. States 2 and 4 are rewritten to 6 (the state
+// Fragment21_UpdateCloseTransition processes), the halfwords at D_82508FF4
+// and D_82508FF8 are zeroed, and bit 3 (0x8) of D_82508FF6 is cleared -- the
+// close-request flag that Fragment21_RequestClose sets.
+//@src/fragments/21/fragment21_144790.c
+//
+// Retail is 76 bytes (asm/us/nonmatchings/fragments/21/fragment21_144790/
+// func_82507BFC.s): 19 instructions in which the D_82508FF4 store reuses the
+// $at page base loaded for the D_82508FF0 store, the D_82508FF8 store loads
+// its own base, and the D_82508FF6 load is scheduled after the D_82508FF8
+// store. IDO gives every extern-symbolic memory operand its own `lui $at`,
+// so the body below compiles to 80 bytes: a fourth `lui $at` before the
+// D_82508FF4 store, and the D_82508FF6 `lhu` scheduled into that same gap.
+//
+// COALESCE_AT_LUI cannot close it: coalesce_object.plan_runs joins only macro
+// pairs whose gap holds no load, and the `lhu` sits inside the D_82508FF4
+// pair's gap. Deleting that `lui` alone would also leave the `lhu` before the
+// D_82508FF4 store, so the folded text still would not be retail's
+// instruction order. The pragmas install the retail text and its relocation
+// topology instead. The hash is the sha256 of the compiler's 80-byte text for
+// the body written here; a different body or compiler refuses rather than
+// silently emitting the unfolded form.
+//
+// The `new_state`/`mask` locals are not required by the pragmas (they replace
+// the text); they keep the body on IDO's `$at`-macro lowering, so the text
+// the hash authenticates is the 80-byte form. Written with literal constants
+// the same statements materialize the address of D_82508FF0 in a register
+// instead and compile to a larger, differently shaped body.
+//
+// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
+// diff.py 160, rscore 165 (.text 4 bytes long, one extra `lui $at`, and the
+// D_82508FF6 load two instructions early).
+#pragma REWRITE_FUNCTION_HEX(func_82507BFC, 993e5b856fc392bf9146ed006ec2c75326ab46b194ac5d718b05c4415e44d46d, 3c0200008442000024010002240e0006104100033c0f000024010004144100093c010000a42e0000a42000003c010000a420000095ef00003c01000031f8fff7a438000003e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x0, 5, D_82508FF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x4, 6, D_82508FF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x14, 5, D_82508FF6)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x20, 5, D_82508FF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x24, 6, D_82508FF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x28, 6, D_82508FF4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x2C, 5, D_82508FF8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x30, 6, D_82508FF8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x34, 6, D_82508FF6)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x38, 5, D_82508FF6)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x40, 6, D_82508FF6)
+
+
+void func_82507BFC(void)
+{
+    int new_state = 6;
+    u16 mask = 0xFFF7;
+
+    if (*((s16 *) (&D_82508FF0)) == 2 || *((s16 *) (&D_82508FF0)) == 4) {
+        *((s16 *) (&D_82508FF0)) = new_state;
+        *((s16 *) (&D_82508FF4)) = 0;
+        *((s16 *) (&D_82508FF8)) = 0;
+        D_82508FF6 &= mask;
+    }
+}
+/* mkdraft:func_82507BFC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507C48.s")
 
