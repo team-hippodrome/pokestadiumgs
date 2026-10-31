@@ -1046,7 +1046,63 @@ void func_86103B74(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86103C48.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861044EC.s")
+/* mkdraft:func_861044EC begin */
+extern s32 D_8610AD20;
+extern void * D_87F119DC;
+s16 MathUtil_Atan2s(f32 y, f32 x);
+
+
+
+s32 func_861044EC(void *arg0) {
+    f32 x_delta;
+    f32 y_delta;
+    s32 result;
+    f32 delta;
+    f32 limit;
+    f32 angle;
+    f32 scaled;
+
+    result = 0;
+    delta = (*(f32 *)((u8 *)arg0 + 0x18) > *(f32 *)((u8 *)D_87F119DC + 0x48)) ? (*(f32 *)((u8 *)arg0 + 0x18) - *(f32 *)((u8 *)D_87F119DC + 0x48)) : -(*(f32 *)((u8 *)arg0 + 0x18) - *(f32 *)((u8 *)D_87F119DC + 0x48));
+    // FAKE: `(0, 700.0f)` is the comma operator: it evaluates to 700.0f and emits nothing, but
+    // it forces IDO to compute the 0.04f*D[0x9768] product first and pass it to mul.s as the
+    // multiplier (without it: differ 565 / 184).
+    limit = (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f);
+    if ((delta < limit)
+        && (((*(f32 *)((u8 *)arg0 + 0x1C) > *(f32 *)((u8 *)D_87F119DC + 0x4C)) ? (*(f32 *)((u8 *)arg0 + 0x1C) - *(f32 *)((u8 *)D_87F119DC + 0x4C)) : -(*(f32 *)((u8 *)arg0 + 0x1C) - *(f32 *)((u8 *)D_87F119DC + 0x4C))) < limit)
+        && (((*(f32 *)((u8 *)D_87F119DC + 0x18) > 0.0f) ? *(f32 *)((u8 *)D_87F119DC + 0x18) : -*(f32 *)((u8 *)D_87F119DC + 0x18)) < (limit * 0.25f))) {
+        *(f32 *)((u8 *)D_87F119DC + 0x18) = 0.0f;
+        *(f32 *)((u8 *)D_87F119DC + 0x50) = 0.0f;
+        func_86102B30(arg0, &x_delta, &y_delta);
+        func_86101E04(x_delta, y_delta, 0);
+        func_861023D4();
+        func_86103B74();
+        angle = (f32)*(s16 *)((u8 *)D_87F119DC + 0x44) * 0.005493248f;
+        if (((angle > 90.0f) ? (angle - 90.0f) : -(angle - 90.0f)) < 5.0f) {
+            result = 1;
+            *(s16 *)((u8 *)D_87F119DC + 0x44) = 0x3FFF;
+        } else {
+            delta = ((angle >= 0.0f) && (angle <= 280.0f)) ? (90.0f - angle) : (450.0f - angle);
+            angle += delta * 0.075f;
+            scaled = angle * 182.04167f;
+            if (scaled >= 0.0f) {
+                *(s16 *)((u8 *)D_87F119DC + 0x44) = (s16)(scaled + 0.5f);
+            } else {
+                *(s16 *)((u8 *)D_87F119DC + 0x44) = (s16)(scaled - 0.5f);
+            }
+        }
+    } else {
+        func_86102B30(arg0, &x_delta, &y_delta);
+        *(s16 *)((u8 *)D_87F119DC + 0x44) = MathUtil_Atan2s(*(f32 *)((u8 *)D_87F119DC + 0x18), *(f32 *)((u8 *)D_87F119DC + 0x10));
+        func_86101E04(x_delta, y_delta, 0);
+        func_861023D4();
+        *(f32 *)((u8 *)D_87F119DC + 0x18) = (*(f32 *)((u8 *)arg0 + 0x20) - *(f32 *)((u8 *)D_87F119DC + 0x50)) * 0.05f;
+        func_86103B74();
+    }
+    func_86102FF0();
+    return result;
+}
+/* mkdraft:func_861044EC end */
 
 extern f32 D_8610ABE4;
 extern f32 D_8610ABE8;
