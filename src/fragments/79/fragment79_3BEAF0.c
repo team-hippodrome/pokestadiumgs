@@ -99,7 +99,50 @@ void func_8414F444(u8 *arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F4A0.s")
+/* mkdraft:func_8414F4A0 begin */
+extern u8 *func_8414C960(u8 arg0);
+extern u8 func_84154B24(void);
+extern u8 *func_84154B64(u8 arg0);
+
+
+
+void func_8414F4A0(s32 arg0, s32 arg1) {
+    s32 pad[2]; // FAKE: stack-frame padding only; without it the diff score rises to 50
+    s32 sp34;
+    s32 temp_s4;
+    s32 temp_v1_2;
+    s32 var_s0;
+    u16 var_s2;
+    u16 temp_v1;
+    s32 var_v0;
+    u8 *temp_s1;
+    u8 temp_a0;
+    u8 temp_v0;
+
+    temp_v0 = func_84154B24();
+    temp_s4 = temp_v0 & 0xFF;
+    temp_a0 = (1 - temp_v0) & 0xFF;
+    sp34 = *(s32 *)(arg0 + 0x14);
+    temp_s1 = func_84154B64(temp_a0);
+    var_s2 = 0;
+    for (var_s0 = 0; var_s0 != 4;) {
+        temp_v1 = *(u16 *)(func_8414C960(((*(u8 *)((u8 *)D_841951F8[temp_s4] + 0xA) * 4) + var_s0) & 0xFF) + 6);
+        var_s0 += 1;
+        if ((s32)temp_v1 < (s32)*(u16 *)((u8 *)temp_s1 + 0x28)) {
+            var_v0 = temp_v1;
+        } else {
+            var_v0 = *(u16 *)((u8 *)temp_s1 + 0x28);
+        }
+        temp_v1_2 = ((s32)(var_v0 * 0xFF) / (s32)*(u16 *)((u8 *)temp_s1 + 0x2A)) & 0xFF;
+        if (var_s2 < temp_v1_2) {
+            var_s2 = temp_v1_2 & 0xFF;
+        }
+    }
+    if ((s32)(u8)arg1 < var_s2) {
+        *(s32 *)(arg0 + 0x18) = *(s32 *)(arg0 + 0x18) - sp34;
+    }
+}
+/* mkdraft:func_8414F4A0 end */
 #endif
 
 #ifdef VERSION_US
