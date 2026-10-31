@@ -103,7 +103,31 @@ void func_8AF1F378(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4,
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F40C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F490.s")
+/* mkdraft:func_8AF1F490 begin */
+extern u8 func_8AF01654(u8);
+
+
+s32 func_8AF1F490(u8 arg0, s32 arg1) {
+    u8 val;
+    u8 fh;
+    u8 fl;
+    u8 sh;
+    u8 sl;
+    s32 tmp;
+
+    tmp = arg0;
+    val = func_8AF01654(tmp);
+    fh = (val & 0xF0) >> 4;
+    fl = val & 0xF;
+    val = func_8AF01654(arg1);
+    sh = (val & 0xF0) >> 4;
+    sl = val & 0xF;
+    if ((fh == sh) || (fh == sl) || (fl == sh) || (fl == sl)) {
+        return 1;
+    }
+    return 0;
+}
+/* mkdraft:func_8AF1F490 end */
 
 s32 func_8AF1F514(s16 arg0) {
     s32 var_v1 = 0;
