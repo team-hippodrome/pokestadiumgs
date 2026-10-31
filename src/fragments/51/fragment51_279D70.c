@@ -4,7 +4,37 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_279D70/func_86303F50.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_279D70/func_863040C4.s")
+/* mkdraft:func_863040C4 begin */
+extern Gfx *D_800D0510;
+extern u8 *D_8009491C;
+extern u8 *D_863075D8;
+extern s32 func_8004C990(s32, s32, Gfx **, u8 *);
+extern s32 func_8004CA60(s32);
+extern void func_8003CD84(void);
+
+
+
+void func_863040C4(s32 arg0, s32 arg1) {
+    u8 *node;
+
+    if (arg0 == 5) {
+        node = D_8009491C;
+        gSPSegment(D_800D0510++, 0xF, func_8004CA60(func_8004C990(0x97, 0, &D_800D0510, node)));
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0x371BFF, 0x5FFEFE38);
+        {
+            Gfx *_g = D_800D0510++;
+            _g->words.w0 = 0xFA000000 | node[0x1D] | (node[0x1D] << 8);
+            // FAKE: gDPSetPrimColor's w1 channels ORed green, blue, alpha, red;
+            // diff score 575 with the macro's red, green, blue, alpha order.
+            _g->words.w1 = _SHIFTL(node[0xA1], 16, 8) | _SHIFTL(node[0xA2], 8, 8) | _SHIFTL(node[0xA3], 0, 8) | _SHIFTL(node[0xA0], 24, 8);
+        }
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, node[0x1D]);
+        gSPDisplayList(D_800D0510++, *(s32 *)(D_863075D8 + 0x8F20));
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_863040C4 end */
 
 s32 func_87F026E8(s32, void *);
 extern s32 D_87F119D8;
