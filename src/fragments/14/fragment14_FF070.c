@@ -923,7 +923,36 @@ f32 func_8130AAA8(unk_func_8130B06C *arg0, f32 arg1, f32 arg2) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AC40.s")
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AEF4.s")
+/* mkdraft:func_8130AEF4 begin */
+extern s32 func_813002D0(void *);
+extern s32 func_8160A438();
+extern void func_8160A6AC(void *arg0);
+extern void func_8160A994(u8 *arg0);
+extern void func_8160B8A8(u8 *arg0, s32 arg1, s32 arg2);
+extern s32 func_81302290(void *arg0);
+// State block based at arg0 + 0x8000; its 0x68EC word holds the record pointer that
+// func_81302290 and func_813002D0 inspect. Each use spells the base out because a
+// named u8 *local for it takes the 0x18 home slot, while retail keeps the value in
+// the 0x1C compiler-temp slot.
+
+
+void func_8130AEF4(void *arg0, void *arg1, s32 arg2) {
+    s32 limit;
+
+    limit = func_81302290(*(s32 *)((u8 *)arg0 + 0x8000 + 0x68EC));
+    func_8160B8A8(arg1, func_813002D0(*(s32 *)((u8 *)arg0 + 0x8000 + 0x68EC)), 0);
+    if ((arg2 >= 0) && (arg2 < limit)) {
+        func_8160A438(arg1,
+                      *(s8 *)((u8 *)(*(s32 *)((u8 *)(*(s32 *)((u8 *)arg0 + 0x8000 + 0x68EC) + 0x20000) -
+                                                     0x5EB8)) +
+                              0x944),
+                      arg2);
+    } else {
+        func_8160A994(arg1);
+    }
+    func_8160A6AC(arg1);
+}
+/* mkdraft:func_8130AEF4 end */
 
 extern void func_8130AEF4(void *, void *, s32);
 void func_8130AF94(unk_func_8130B06C *arg0) {
