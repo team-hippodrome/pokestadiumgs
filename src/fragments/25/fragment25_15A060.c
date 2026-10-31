@@ -353,7 +353,75 @@ void func_82101420(s32 arg0) {
     main_pool_pop_state(0x50535253);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_8210144C.s")
+/* mkdraft:func_8210144C begin */
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern u8 D_82900000[];
+extern u8 fragment67_ROM_START[];
+extern u8 fragment68_ROM_START[];
+extern u8 D_1000000[];
+extern u8 *Asset_LoadToSegment(s32 id, u8 *rom_start, u8 *rom_end, s32 arg3);
+extern s32 Fragment_LoadAndCall(s32 arg0, u8 *romStart, u8 *romEnd, u32 arg3, u32 arg4);
+extern void Gfx_InitDisplayListBuffers(s32 arg0, s32 arg1);
+extern s32 StageFade_StartFromOpaque(s32 duration);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern void func_80008514(s32 arg0);
+extern void func_800086A4(s32 frames);
+extern u8 *func_80047588(s32 flags, s32 side);
+extern s32 func_80055948(s32 arg0);
+extern void func_80057944(u8 arg0);
+extern void main_pool_push_state(s32);
+extern s32 func_82101E70(u8 *, s32, s32, s32, f32, f32, f32, f32, f32, f32);
+extern s32 D_82103D94;
+extern s32 D_82103D98;
+extern f32 D_82103D9C;
+extern f32 D_82103DA0;
+extern f32 D_82103DA4;
+
+// Clears the stage state and, when a stage fragment is pending (unk_3C is 1 or 2), loads and
+// runs fragment 67's code. Then creates the stage object, loads the shared archives, sets up the
+// display lists and buffer allocations, and fades in over 8 frames before the first update.
+
+
+void func_8210144C(u8 *arg0, s32 arg1) {
+    s32 var_s0;
+    u8 *temp_v0;
+    u8 temp_v1;
+
+    _bzero(arg0, 0xA0);
+    *(s32 *) (arg0 + 0x24) = 0;
+    func_80055948(3);
+    func_821008BC(arg0);
+    temp_v1 = *(u8 *) (arg0 + 0x3C);
+    if ((temp_v1 == 1) || (temp_v1 == 2)) {
+        main_pool_push_state(0x504C4742);
+        Fragment_LoadAndCall(((u32) ((s32) &D_82900000 & 0x0FF00000) >> 0x14) - 0x10, fragment67_ROM_START,
+                             fragment68_ROM_START, 4U, *(u8 *) (arg0 + 0x3C) - 1);
+        main_pool_pop_state(0x504C4742);
+        func_82100A40(arg0);
+        *(u8 *) (arg0 + 0x3C) = 0U;
+    }
+    temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
+    *(s32 *) arg0 = func_82101E70(temp_v0, 0, D_82103D98, D_82103D94, D_82103DA0, D_82103D9C,
+                                  D_82103DA4, 100.0f, 100.0f, 100.0f);
+    MainPool_FinalizeAllocation((struct S1_MemoryBlock *) temp_v0);
+    var_s0 = 0;
+    do {
+        func_80057944((u8) var_s0);
+        var_s0 += 1;
+    } while (var_s0 != 4);
+    Asset_LoadToSegment((s32) ((u32) ((s32) D_1000000 & 0x0F000000) >> 0x18), D_446E30, D_447D00, 0);
+    Gfx_InitDisplayListBuffers(0x10000, 0);
+    func_80047588(8, 0);
+    func_80008514(func_800082E0(1, 0, 2, 0, 2, 1));
+    func_800086A4(2);
+    StageFade_StartFromOpaque(8);
+    func_82101094(arg0, arg1, 1);
+    if (*(s32 *) (arg0 + 0x38) != 0) {
+        func_800226C0(0x2D);
+    }
+}
+/* mkdraft:func_8210144C end */
 
 extern void func_80008574(void);
 extern void func_80047610(void);
