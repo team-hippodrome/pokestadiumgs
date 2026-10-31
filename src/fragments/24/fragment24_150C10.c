@@ -2014,7 +2014,149 @@ void func_82B07F84(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B080D0.s")
+/* mkdraft:func_82B080D0 begin */
+extern u8 D_82B12450[0xFF8];
+extern u16 D_82B12454;
+extern s16 D_82B12696[];
+extern s16 D_82B12452;
+extern s16 D_82B12D10;
+extern Gfx *D_800D0510;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void *func_82B00F14(s32);
+extern s32 func_82B00F68(s32);
+extern void func_82B0284C(u8 *, u8 *);
+extern void func_82B02F78(u8 *);
+extern void func_82B05494(void *, s32);
+extern void func_82B07BEC(void);
+extern void func_82B07C88(void);
+extern void func_82B07F84(s32);
+extern void ImageFade_UpdateAndDraw(s32);
+extern s32 func_81700908(void);
+extern s32 func_81700AF4(s32, void *);
+extern s32 func_81700B2C(s32);
+extern s32 func_81700B58(s32);
+
+// Draws the panel labels of the active menu screen. When bit 0 of the mode word at
+// D_82B12450+4 is set: switch to fullscreen when func_82B00F68("FULL") reports the
+// fullscreen text, otherwise draw a strip per controller port (func_81700B2C returns
+// the strip width, func_81700B58 whether it is centred) and clear the screen. Then walk
+// the 20 panel entries at D_82B12450+0x258 (stride 0x70, ending at D_82B12D10) and
+// position the label sprite of each entry that is present (entry[0] != 0 and the
+// halfword at entry+6 != 0). The label id comes from entry[0]; entries of type 1 and 9
+// first decide func_82B05494's flag/active argument from the cursor row (panelY) and
+// from D_82B12696[entry[1]]. Returns bit 0 of D_82B12454.
+
+
+s32 func_82B080D0(void) {
+    // Declaration order fixes the home-slot offsets: cursor and string fill the two
+    // words retail keeps above panelY, and panelY/fullscreen/pos/bounds follow in that
+    // order down the frame.
+    s16 *cursor;
+    s32 string;
+    s32 panelY;
+    s32 fullscreen;
+    s16 pos[2];
+    s16 *panel;
+    void *object;
+    s32 active;
+    s32 flag;
+    s32 i;
+    s32 count;
+    s16 bounds[2];
+    s32 pad[2]; // FAKE: retail's frame is 0x88, not 0x80; these two words stand in for
+                // the two compiler-temp slots its frame has below bounds. Diff score 156
+                // without them (frame 0x80, every slot below panelY moves down 8).
+
+    fullscreen = 0;
+    panelY = *(s16 *)(D_82B12450 + 8);
+    if (*(u16 *)(D_82B12450 + 4) & 1) {
+        if (func_82B00F68(0x46554C4C)) {
+            func_82B07C88();
+            fullscreen = 1;
+        }
+        if (!fullscreen) {
+            for (i = 0; i < 2; i++) {
+                func_81700AF4(i, pos);
+                count = func_81700B2C(i);
+                if (count > 0) {
+                    if (func_81700B58(i)) {
+                        func_80006F70(&D_800D0510, (s16)(pos[0] - count), (s16)(pos[1] - 10), (s16)count, 0x1C);
+                    } else {
+                        func_80006F70(&D_800D0510, pos[0], (s16)(pos[1] - 10), (s16)count, 0x1C);
+                    }
+                    func_82B07C88();
+                }
+            }
+            func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        }
+        func_81700908();
+        // s16 cursor: +0x38 elements per entry is the entry stride 0x70, and
+        // +0x12C elements is the 0x258-byte offset of the first entry.
+        cursor = (s16 *)((u8 *)&D_82B12452 - 2);
+        do {
+            panel = cursor + 0x12C;
+            if (*(s16 *)((u8 *)cursor + 0x258) != 0 && *(u16 *)((u8 *)panel + 6) != 0) {
+                flag = 0;
+                active = 1;
+                switch (panel[0]) {
+                case 1:
+                    if (panelY == panel[1] && !(D_82B12454 & 0x10)) {
+                        flag = 1;
+                    }
+                    break;
+                case 9:
+                    if (D_82B12696[panel[1]] == 0) {
+                        active = 0;
+                    }
+                    break;
+                }
+                if (active) {
+                    string = 0;
+                    switch (panel[0]) {
+                    case 1: string = panel[1] + 0x43555030; break;
+                    case 2: string = 0x434E4647; break;
+                    case 3: string = 0x4D535347; break;
+                    case 4: string = 0x53504331; break;
+                    case 5: string = 0x53504332; break;
+                    case 6: string = 0x43484C47; break;
+                    case 7: string = 0x45444954; break;
+                    case 8: string = panel[1] + 0x504B4D30; break;
+                    case 9: string = panel[1] + 0x42544C30; break;
+                    case 10: string = 0x45524F52; break;
+                    }
+                    if (fullscreen == 0) {
+                        object = func_82B00F14(string);
+                        func_82B0284C((u8 *)panel, (u8 *)bounds);
+                        if (object != NULL) {
+                            *(s16 *)((u8 *)object + 4) = -1;
+                            *(s16 *)((u8 *)object + 8) = bounds[0] - 2;
+                            *(s16 *)((u8 *)object + 0xA) = *(s16 *)((u8 *)panel + 0x48) + bounds[0] + 5;
+                            *(s16 *)((u8 *)object + 0xE) = bounds[1] - 2;
+                            *(s16 *)((u8 *)object + 0xC) = *(s16 *)((u8 *)panel + 0x4A) + bounds[1] + 5;
+                        }
+                    } else {
+                        object = func_82B00F14(string);
+                        if (object != NULL) {
+                            *(s16 *)((u8 *)object + 4) = 1;
+                        }
+                    }
+                    if (func_82B00F68(string)) {
+                        func_82B07C88();
+                    }
+                    func_82B02F78((u8 *)panel);
+                    func_82B05494(panel, flag);
+                }
+            }
+            cursor += 0x38;
+        } while (cursor != &D_82B12D10);
+        func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        func_82B07BEC();
+        ImageFade_UpdateAndDraw(fullscreen);
+        func_82B07F84(fullscreen);
+    }
+    return (D_82B12454 & 1) != 0;
+}
+/* mkdraft:func_82B080D0 end */
 #endif
 
 #ifdef VERSION_US
