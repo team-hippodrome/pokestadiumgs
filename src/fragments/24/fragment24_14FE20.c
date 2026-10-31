@@ -56,7 +56,136 @@ s32 func_82B0069C(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B006D8.s")
+/* mkdraft:func_82B006D8 begin */
+extern s16 D_82B12220;
+extern s32 D_82B08524;
+extern s32 D_82B08528;
+extern s32 func_82B0052C(void);
+extern void func_82B084AC(void);
+extern s32 func_82B084CC(void);
+extern s32 func_82B08508(void);
+extern s32 func_82B08514(void);
+extern u8 StageContext_GetFadeMode(void);
+extern s32 StageFade_StartFromTransparent(s32 duration);
+extern s32 func_81700C0C(s32 arg0);
+// FAKE: func_80035424 returns void (include/229E0.h:961, src/340C0.c:811); the s32
+// return only re-colors the case-3 tail. Score without it: 110.
+extern s32 func_80035424(s32 arg0);
+// func_82B0069C is defined above this function in src/fragments/24/fragment24_14FE20.c.
+
+
+
+s32 func_82B006D8(s32 arg0, s32 arg1) {
+    // FAKE: result[0] is the only element read. Taking the address of a two-element
+    // array is what homes the return value in the 0x18/0x1C stack slots and yields the
+    // 0x20 frame. Score with a plain s32 return local: 32.
+    s32 result[2];
+    s16 var_v1;
+    s32 temp_v0;
+    // FAKE: reading D_82B12220 directly makes IDO emit the load with a different
+    // register; the retail read is `lui v1,%hi` + `lh v1,%lo(v1)`. Score without this
+    // local pointer: 545.
+    s16 *D_82B12220_ptr = &D_82B12220;
+
+    result[0] = arg0;
+    switch (arg0) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            result[0] = 1;
+            if (arg1 != 0) {
+                func_82B084AC();
+                func_81700C0C(0);
+                func_81700C0C(1);
+            } else {
+                func_82B084CC();
+            }
+        }
+        break;
+    case 1:
+        temp_v0 = func_82B0052C();
+        if (temp_v0 != 0) {
+            switch (temp_v0) {
+            case -1:
+                D_82B08524 = -1;
+                D_82B08528 = -1;
+                result[0] = 3;
+                D_82B12220 = 0;
+                StageFade_StartFromTransparent(5);
+                break;
+            case 1:
+                switch (D_82B08524) {
+                case 3:
+                    D_82B08528 = func_82B08508();
+                    break;
+                case 4:
+                    D_82B08528 = func_82B08514();
+                    break;
+                default:
+                    D_82B08528 = 0;
+                    break;
+                }
+                result[0] = 3;
+                // FAKE: separates `result[0] = 3` from the fade store so IDO schedules
+                // `addiu t9,zero,3` ahead of `addiu v1,zero,15`; the label is the only
+                // reason the store is not emitted in the other order. Score without it: 20.
+                goto Lfade;
+            Lfade:
+                // FAKE: the pair is a dead compare that leaves the 15 in v1 instead of
+                // v0; one compare gives 10, none gives 40. The mask keeps the compare's
+                // operand a full register read of arg1.
+                if ((arg1 & 0xF) == 0xF) {
+                }
+                if ((arg1 & 0xF) == 0xF) {
+                }
+                D_82B12220 = 15;
+                StageFade_StartFromTransparent(5);
+                break;
+            case 2:
+                switch (D_82B08524) {
+                case 3:
+                    D_82B08528 = func_82B08508();
+                    break;
+                case 4:
+                    D_82B08528 = func_82B08514();
+                    break;
+                default:
+                    D_82B08528 = 0;
+                    break;
+                }
+                result[0] = 2;
+                D_82B12220 = 0;
+                break;
+            }
+        }
+        break;
+    case 2:
+        if (func_82B0069C() != 0) {
+            result[0] = 5;
+        }
+        break;
+    case 3:
+        var_v1 = *D_82B12220_ptr;
+        if (var_v1 > 0) {
+            var_v1 -= 1;
+        }
+        if (var_v1 == 0) {
+            // FAKE: duplicate of the store below (var_v1 is 0 here); it keeps the
+            // D_82B12220 store inside the branch. Score without it: 260.
+            D_82B12220 = var_v1;
+            func_80035424(10);
+            var_v1 = -1;
+        }
+        D_82B12220 = var_v1;
+        // FAKE: `^ 0` is a no-op that flips the bne operand order to retail's
+        // `bne a1,v1`. Score without it: 10.
+        if (((var_v1 ^ 0) == -1) && (StageContext_GetFadeMode() == 1)) {
+            result[0] = 5;
+        }
+        break;
+    }
+    return result[0];
+}
+/* mkdraft:func_82B006D8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B00914.s")
 
