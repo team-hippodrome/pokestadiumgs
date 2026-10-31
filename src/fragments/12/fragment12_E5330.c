@@ -336,7 +336,36 @@ void func_81401178(s32 arg0) {
     func_8004D1FC(D_814077D0[var_v0]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814011B4.s")
+/* mkdraft:func_814011B4 begin */
+extern u8 *D_814077D0[];
+extern Gfx *D_800D0510;
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+
+
+
+void func_814011B4(s32 arg0, s32 arg1, f32 arg2, f32 arg3) {
+    f32 d;
+    f32 w;
+    f32 s;
+    s32 pad[2]; // FAKE: reserves the target's 0x40-byte frame; diff score 50 without it.
+    volatile f32 sp28; // FAKE: forces arg1 to stay in memory across the bounds tests; diff score 395 without the volatility.
+
+    d = ((f32) * (u16 *)(D_814077D0[0] + 2) * arg2 * 0.5f) + 1.0f;
+    if (!((f32) arg0 < -d)) {
+        sp28 = (f32) arg1;
+        if (!(sp28 < -d) && !((640.0f + d) < (f32) arg0) && !((480.0f + d) < sp28)) {
+            {
+                Gfx *_g = D_800D0510++;
+                _g->words.w0 = 0xFB000000;
+                _g->words.w1 = ((u32) (255.0f * arg3) & 0xFF) | ~0xFF;
+            }
+            s = 1.0f / arg2;
+            w = 2.0f * d;
+            func_81602240((f32) arg0 - d, sp28 - d, w, w, 0, 0, s, s);
+        }
+    }
+}
+/* mkdraft:func_814011B4 end */
 
 extern Gfx *D_800D0510;
 extern u8 *D_814077C0;
