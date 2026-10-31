@@ -88,7 +88,43 @@ void func_87E059F4(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E05AB0.s")
+/* mkdraft:func_87E05AB0 begin */
+extern s32 func_87E05458();
+extern void func_87F0B0FC(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4);
+extern void func_87F0B154();
+
+
+void func_87E05AB0(void) {
+    struct Position { f32 x; f32 y; f32 z; };
+    u8 *object;
+    struct Position saved_position;
+    u8 alpha;
+
+    object = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    func_87F0B4AC(object, (f32 *)((u8 *)D_87F119DC + 0x48), (f32 *)((u8 *)D_87F119DC + 0x54), (s16 *)((u8 *)D_87F119DC + 0x42));
+    if (*(s32 *)((u8 *)D_87E1EB90 + 8) == *(s8 *)(object + 0x98)) {
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 230) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) += 25;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 255;
+        }
+        func_87F0B0FC(object, 0, 15.0f, 5.0f, 6);
+        saved_position = *(struct Position *)((u8 *)D_87F119DC + 0x48);
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) += 15.0f;
+        func_87E05458(D_87F119DC);
+        *(struct Position *)((u8 *)D_87F119DC + 0x48) = saved_position;
+    } else {
+        *(u8 *)((u8 *)D_87F119DC + 0x60) -= 25;
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 200) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 200;
+        }
+        func_87F0B154();
+    }
+    alpha = *(u8 *)((u8 *)D_87F119DC + 0x60);
+    *(u8 *)((u8 *)D_87F119DC + 0x62) = alpha;
+    *(u8 *)((u8 *)D_87F119DC + 0x61) = alpha;
+}
+/* mkdraft:func_87E05AB0 end */
 
 /* mkdraft:func_87E05BF0 begin */
 extern Gfx *D_800D0510;
