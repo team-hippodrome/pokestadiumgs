@@ -1,4 +1,8 @@
 entry_bss = 0x800A7E80; // size:0x400
+// fragment25's C-owned .rodata slice [0x15E150, 0x15E170): defined by the
+// const array in src/fragments/25/fragment25_15BBC0.c, so the late-rodata
+// migration must leave it there instead of moving it into func_82102444's .s.
+D_82104110 = 0x82104110; // type:u16 size:0x8 force_not_migration:true
 D_84400C40 = 0x84400C40; // size:0x7 force_not_migration:true
 D_81312180 = 0x81312180; // type:u8 size:0x18 force_not_migration:true
 D_82408F00 = 0x82408F00; // size:0x4 force_not_migration:true
