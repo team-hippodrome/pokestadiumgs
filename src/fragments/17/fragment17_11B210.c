@@ -590,7 +590,33 @@ void func_8220D560(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220D630.s")
+/* mkdraft:func_8220D630 begin */
+extern s16 D_82210C30;
+extern s16 D_82210C32;
+extern s16 D_82210C34;
+extern s16 D_82210C38;
+
+#pragma COALESCE_AT_LUI(func_8220D630, D_82210C32, D_82210C34)
+
+
+
+s32 func_8220D630(void)
+{
+  // Storing a literal makes IDO address D_82210C32 through $v0
+  // (lui v0,%hi; addiu v0,%lo, reused by the load and store) and shifts the
+  // branch targets; storing a local reproduces retail's
+  // lui at,%hi; ...; sh t8,%lo(at) shape.
+  s32 one = 1;
+
+  if ((D_82210C30 != 0) && (D_82210C32 == 0))
+  {
+    D_82210C32 = one;
+    D_82210C34 = 0;
+    D_82210C38 = -1;
+  }
+  return 0;
+}
+/* mkdraft:func_8220D630 end */
 
 extern s16 D_82210C38;
 s32 func_8220D670(void) { s32 result = D_82210C38; return result; }
