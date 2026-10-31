@@ -640,7 +640,183 @@ void func_8005253C(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80052928.s")
+/* mkdraft:func_80052928 begin */
+extern s32 D_800972C0;
+extern u8 D_801281F0[];
+extern void func_80054AF4(s32 arg0);
+extern void func_80060D70(u8 *arg0, u8 *arg1);
+extern s32 func_80050E88(s32 arg0, s32 arg1, s32 arg2);
+extern void *func_80051028(s32 arg0, s32 arg1);
+extern void *func_800510CC(s32 arg0);
+extern void *func_80051138(s32 arg0);
+extern s32 func_800511A4(s32 arg0);
+extern void *func_80051208(s32 arg0);
+extern void *func_80051274(s32 arg0);
+extern void *func_800512E0(s32 arg0);
+extern void *func_8005134C(s32 arg0);
+extern void *func_800513B8(s32 arg0);
+extern void *func_80051424(s32 arg0);
+extern void *func_80051490(s32 arg0);
+extern void *func_800514FC(s32 arg0);
+extern void *func_80051568(s32 arg0);
+extern s32 func_80050DE4(s32 arg0);
+extern s32 func_80050D20(s32 arg0, s32 arg1);
+extern void Save_ClearRecord(u8 *arg0, s32 arg1, s32 arg2);
+
+
+
+void func_80052928(s32 arg0, s32 arg1) {
+    u8 *p16;
+    u8 *p17;
+    u8 *p18;
+    u8 *p19;
+    u8 *p20;
+    u8 *p21;
+    u8 *p22;
+    u8 *p23;
+    u8 *p24;
+    u8 *p25;
+    u8 *p26;
+    s32 i;
+    u8 *p27;
+    u8 *walk27;
+    s32 j;
+    u8 *p28;
+    u8 *walk28;
+    s32 k;
+    u8 *p29;
+    u8 *walk29;
+    u8 *p30;
+
+    switch (arg0) {
+    case 16:
+        p16 = (u8 *)func_80050E88(0, D_800972C0, arg1);
+        Save_ClearRecord(p16, func_80050DE4(arg0), func_80050D20(arg0, D_800972C0));
+        p16[4] = 0x50;
+        return;
+    case 17:
+        p17 = (u8 *)func_80050F60(0, arg1);
+        Save_ClearRecord(p17, func_80050DE4(arg0), func_80050D20(arg0, arg1));
+        p17[4] = 0x50;
+        func_80060D70(p17 + 0x10, (arg1 << 5) + D_801281F0);
+        p17[0] |= 1;
+        return;
+    case 18:
+        p18 = (u8 *)func_80051028(0, arg1);
+        Save_ClearRecord(p18, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p18[4] = 0x50;
+        return;
+    case 19:
+        p19 = (u8 *)func_800510CC(0);
+        Save_ClearRecord(p19, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p19[0] |= 1;
+        p19[0x48] = 0x19;
+        p19[0x49] = 0xF;
+        p19[0x4A] = 5;
+        return;
+    case 20:
+        p20 = (u8 *)func_80051138(0);
+        Save_ClearRecord(p20, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p20[5] |= 1;
+        func_80054AF4(0x1C);
+        func_80054AF4(0x19);
+        func_80054AF4(0x18);
+        func_80054AF4(0x17);
+        func_80054AF4(0x1A);
+        func_80054AF4(0x1B);
+        p20[0] |= 1;
+        return;
+    case 21:
+        p21 = (u8 *)func_800511A4(0);
+        Save_ClearRecord(p21, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        *(u16 *)(p21 + 2) = 0xFFFF;
+        p21[0] |= 1;
+        return;
+    case 22:
+        p22 = (u8 *)func_80051208(0);
+        Save_ClearRecord(p22, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p22[0] |= 1;
+        return;
+    case 23:
+        p23 = (u8 *)func_80051274(0);
+        Save_ClearRecord(p23, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p23[0] |= 1;
+        return;
+    case 24:
+        p24 = (u8 *)func_800512E0(0);
+        Save_ClearRecord(p24, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p24[0] |= 1;
+        return;
+    case 25:
+        p25 = (u8 *)func_8005134C(0);
+        Save_ClearRecord(p25, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p25[0] |= 1;
+        /* fallthrough */
+    case 26:
+        p26 = (u8 *)func_800513B8(0);
+        Save_ClearRecord(p26, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p26[0] |= 1;
+        return;
+    case 27:
+        p27 = (u8 *)func_80051424(0);
+        Save_ClearRecord(p27, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        i = 0;
+        walk27 = p27;
+        do {
+            i += 4;
+            walk27[0x17C] = 0x50;
+            walk27[0x2F4] = 0x50;
+            walk27[0x46C] = 0x50;
+            walk27 += 0x5E0;
+            walk27[-0x5DC] = 0x50;
+        } while (i != 8);
+        p27[0] |= 1;
+        return;
+    case 28:
+        p28 = (u8 *)func_80051490(0);
+        Save_ClearRecord(p28, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        j = 2;
+        p28[0xA] = 0x50;
+        p28[0x1E] = 0x50;
+        walk28 = p28 + 0x28;
+        while (1) {
+            j += 4;
+            walk28[0x1E] = 0x50;
+            walk28[0x32] = 0x50;
+            walk28[0x46] = 0x50;
+            walk28 += 0x50;
+            walk28[-0x46] = 0x50;
+            if (j == 0x32) break;
+        }
+        p28[0] |= 1;
+        return;
+    case 29:
+        p29 = (u8 *)func_800514FC(0);
+        Save_ClearRecord(p29, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        k = 0;
+        walk29 = p29;
+        while (1) {
+            k += 4;
+            walk29[0x16] = 0x50;
+            walk29[0x26] = 0x50;
+            walk29[0x36] = 0x50;
+            walk29 += 0x40;
+            walk29[-0x3A] = 0x50;
+            if (k == 0x64) break;
+        }
+
+        p29[0] |= 1;
+        return;
+    case 30:
+        p30 = (u8 *)func_80051568(0);
+        Save_ClearRecord(p30, func_80050DE4(arg0), func_80050D20(arg0, -1));
+        p30[0] |= 1;
+        return;
+    default:
+        return;
+    }
+}
+/* mkdraft:func_80052928 end */
 
 extern void func_80051D64(s32,s32);
 extern s32 D_800972C0;
