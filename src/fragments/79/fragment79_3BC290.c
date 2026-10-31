@@ -542,7 +542,76 @@ void BattleEffects_DoubleScaleForIncomingAmount(void *state) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414E880.s")
+/* mkdraft:func_8414E880 begin */
+extern u8 func_84154B24(void);
+extern u8 *func_84154B64(u8);
+extern u8 func_80062D20(u8);
+extern void func_8414DD94(s32);
+extern void func_8414E2A8(s32, u8, s32);
+extern void func_8414DC58(s32, u8);
+
+
+
+void func_8414E880(s32 arg0) {
+    u8 side;
+    u8 other;
+    s32 move;
+
+    side = func_84154B24();
+    other = 1 - side;
+    func_84154B64(side);
+    func_84154B64(other);
+    move = func_80062D20(*((u8 *)(u32)arg0 + side + 6));
+    switch (move) {
+    case 0x9:
+        BattleEffects_CopyOpposingMove((void *)arg0);
+        return;
+    case 0x27:
+    case 0x4B:
+    case 0x91:
+    case 0x97:
+        func_8414D9B8((void *)arg0);
+        func_8414E760(arg0);
+        func_8414E2A8(arg0, side, 1);
+        return;
+    case 0x50:
+        func_8414DA70((void *)arg0);
+        func_8414E2A8(arg0, side, 0);
+        return;
+    case 0x59:
+    case 0x90:
+        func_8414DC58(arg0, side);
+        return;
+    case 0x20:
+    case 0x84:
+    case 0x85:
+    case 0x86:
+        BattleEffects_DoubleConditionalScale((void *)arg0);
+        return;
+    case 0x7:
+        BattleEffects_ClearInsufficientAmount((void *)arg0);
+        return;
+    case 0x9B:
+        func_8414DD94(arg0);
+        func_8414E760(arg0);
+        func_8414E2A8(arg0, side, 1);
+        return;
+    case 0x62:
+        BattleEffects_SetOpposingAmountFromHP((void *)arg0);
+        return;
+    case 0x75:
+        func_8414E658(arg0);
+        func_8414E2A8(arg0, side, 1);
+        return;
+    case 0x7F:
+        BattleEffects_DoubleScaleForIncomingAmount((void *)arg0);
+        return;
+    default:
+        func_8414E2A8(arg0, side, 0);
+        return;
+    }
+}
+/* mkdraft:func_8414E880 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414EA4C.s")
 
