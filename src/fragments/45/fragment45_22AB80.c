@@ -564,7 +564,47 @@ s32 func_8AB07E6C(s32 arg0)
 }
 /* mkdraft:func_8AB07E6C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07F80.s")
+/* mkdraft:func_8AB07F80 begin */
+extern void *D_8AB16960;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
+extern s16 D_8AB16A3A;
+extern void func_8AB00BA4(s32, s32, s32);
+
+
+
+s32 func_8AB07F80(s32 arg0) {
+    s16 *D_8AB16A3A_ptr = &D_8AB16A3A;
+    s32 result;
+    void *ptr;
+
+    result = 0x12;
+    switch (arg0) {
+    case 0:
+        (*D_8AB16A3A_ptr) = 0;
+        func_8AB05A00();
+        *(u16 *)((u8 *)D_8AB167AC + 2) &= 0xFFFE;
+        func_8004C8A0(D_8AB126A8, 0x100, 0x3A, 0x24);
+        *(u16 *)((u8 *)D_8AB11D00 + 2) |= 1;
+        func_8AB04AE4();
+        *(u16 *)((u8 *)D_8AB16960 + 2) |= 2;
+        *(u16 *)((u8 *)D_8AB16A0C + 2) |= 2;
+        ptr = D_8AB16A10;
+        *(u16 *)((u8 *)ptr + 2) |= 2;
+        func_8AB00BA4(0x66, 0, 0);
+        func_80021ED8(7);
+        break;
+    case 1:
+        (*D_8AB16A3A_ptr) += 1;
+        if ((*D_8AB16A3A_ptr) >= 0x1F) {
+            (*D_8AB16A3A_ptr) = 0x1E;
+            result = func_8AB066B4(0);
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB07F80 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB080A0.s")
 
