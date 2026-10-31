@@ -419,7 +419,76 @@ void func_8AB0C7C0(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0C7FC.s")
+/* mkdraft:func_8AB0C7FC begin */
+extern u8 D_8AB12CB0[];
+extern void TextHighlight_AnimateScales(void);
+extern s32 func_8AB0C9B8(s32 arg0);
+extern s32 D_8AB16F70;
+extern s16 D_8AB16F74;
+extern s32 D_8AB16F68;
+extern s16 D_8AB16F90;
+extern s32 func_80001FF0(void);
+extern void func_8AB00BA4();
+extern s32 func_8AB0B54C(s32 arg0);
+extern void func_8AB0C7C0(void *arg0, s32 arg1);
+
+// Same state machine shape as func_8AB09E28 (fragment45_22AB80.c) over this file's
+// row table and counters: D_8AB12CB0 holds four 148-byte rows, ending at D_8AB12F00.
+//@src/fragments/45/fragment45_22AB80.c
+
+
+s32 func_8AB0C7FC(s32 arg0) {
+    s32 result;
+    s16 *counter = &D_8AB16F90;
+    s32 i;
+    s32 all_wrong;
+    u8 *row;
+
+    result = 0x36;
+    switch (arg0) {
+    case 2:
+        break;
+    case 0:
+        *counter = 0;
+        all_wrong = 1;
+        for (i = 0; i < 4; i++) {
+            row = D_8AB12CB0 + i * 148;
+            if (*(s16 *)row != 0 && *(s16 *)(row + 4) != 2) {
+                all_wrong = 0;
+            }
+        }
+        if (all_wrong) {
+            for (i = 0; i < 4; i++) {
+                row = D_8AB12CB0 + i * 148;
+                func_8AB0C7C0(row, i);
+            }
+            D_8AB16F70 = 1;
+            D_8AB16F74 = 10;
+            D_8AB16F68 = 1;
+        } else {
+            for (i = 0; i < 4; i++) {
+                row = D_8AB12CB0 + i * 148;
+                if (*(s16 *)row != 0 && *(s16 *)(row + 4) == 0) {
+                    func_8AB0C7C0(row, i);
+                }
+            }
+        }
+        break;
+    case 1:
+        *counter += 1;
+        TextHighlight_AnimateScales();
+        if (*counter == func_80001FF0() / 4) {
+            func_8AB00BA4(0x66, 0, 0);
+        }
+        if (*counter >= 0x1F) {
+            result = func_8AB0C9B8(0);
+        }
+        result = func_8AB0B54C(result);
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB0C7FC end */
 
 s32 func_8AB0C9B0(void) {
     return 0x37;
