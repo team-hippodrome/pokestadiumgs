@@ -22,7 +22,64 @@ s32 func_82303D84(u32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82303E14.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304260.s")
+/* mkdraft:func_82304260 begin */
+extern void func_82303E14(u8 *);
+extern s32 func_82301428(void);
+extern void Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+extern f32 D_82305D64;
+extern Vec2s D_82306AF4;
+extern u8 D_82306AF8[];
+extern s16 D_82306DDA[];
+
+
+
+s32 func_82304260(s32 arg0, u8 *arg1) {
+    u8 padding[0xC]; /* FAKE: only claims stack so the frame is 0x50; without it the frame is 0x48 and the score is 27 */
+    s32 index;
+    u8 *record;
+    Vec2s result;
+    f32 scale;
+    Vec2s *result_dst = &D_82306AF4;
+
+    index = *(s32 *)(arg1 + 0x14);
+    switch (arg0) {
+    case 0:
+        /* Per-instance flag array: one s16 flag per 0x2F0-byte slot. */
+        *(s16 *)((u8 *)D_82306DDA + index * 0x2F0) = 0;
+        break;
+    case 2:
+        /* Records start 8 bytes past D_82306AF8's header fields. */
+        record = D_82306AF8 + index * 0x2F0 + 8;
+        func_82303E14(record);
+        if (*(s16 *)(record + 0x2D4) != 0) {
+            /* Index-dependent id written to the renderable at arg1+0x1D. */
+            if (index < *(s16 *)D_82306AF8) {
+                *(u8 *)(arg1 + 0x1D) = 0xFF;
+            } else {
+                *(u8 *)(arg1 + 0x1D) = 0x80;
+            }
+            /* func_82303D60 sums two Vec2s near the end of the record. */
+            func_82303D60(&result, (Vec2s *)(record + 0x2DE), (Vec2s *)(record + 0x2E2));
+            /* Screen position: 320/240 is the screen centre, -579 the fixed depth. */
+            Vec3f_SetComponentsDuplicate((void *)(arg1 + 0x24),
+                                         (f32)result.x - 320.0f,
+                                         240.0f - (f32)result.y,
+                                         -579.0f);
+            *(s16 *)(arg1 + 0x22) = *(s16 *)(record + 0x2DA);
+            if (func_82301428() != index) {
+                scale = 1.0f;
+            } else {
+                /* Only the entry func_82301428 reports as current updates D_82306AF4. */
+                scale = D_82305D64;
+                *result_dst = result;
+            }
+            Vec3f_SetComponentsDuplicate((void *)(arg1 + 0x30), scale, scale, scale);
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82304260 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_823043D8.s")
 
