@@ -137,7 +137,101 @@ s32 func_860053F8(Func860053F8Record *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_860057D0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005A00.s")
+/* mkdraft:func_86005A00 begin */
+extern f32 D_8600D8B8;
+extern f32 D_8600D8BC;
+extern f32 D_8600D8C0;
+extern f32 D_8600D8C4;
+extern f32 D_8600D8C8;
+extern f32 D_8600D8CC;
+
+// Direction deltas: 64 along an axis, 64/sqrt(2) = 45.255 diagonally.
+// 0x100/0x200 select +x/-x, 0x800/0x400 select +y/-y; with no axis bit set
+// the direction is (0, +-64).
+//
+// The value pairs are block-scoped temporaries. IDO allocates a temporary
+// pair per block and reuses the lowest free pair, which reproduces the retail
+// register usage: $f0/$f2 in the 0x800 cases and 0x400&0x100 ($f2 alone for
+// 0x400&0x200), $f4/$f6 in the 0x800-only and 0x200-only cases, $f8/$f10 in
+// 0x400-only and the first s16 conversion, $f16/$f18 in 0x100-only and the
+// second conversion.
+
+
+void func_86005A00(void *arg0, f32 *arg1, f32 *arg2) {
+    s32 temp_v0;
+
+    temp_v0 = *(u16 *)((u8 *)arg0 + 6);
+    if (temp_v0 & 0xF00) {
+        if (temp_v0 & 0x800) {
+            if (temp_v0 & 0x100) {
+                {
+                    f32 a = D_8600D8B8;
+                    *arg1 = a;
+                    *arg2 = a;
+                }
+                return;
+            }
+            if (temp_v0 & 0x200) {
+                // The first value loaded is the one that goes to *arg2.
+                {
+                    f32 a = D_8600D8BC, b = D_8600D8C0;
+                    *arg1 = b;
+                    *arg2 = a;
+                }
+                return;
+            }
+            {
+                f32 a = 0.0f, b = 64.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+            return;
+        }
+        if (temp_v0 & 0x400) {
+            if (temp_v0 & 0x100) {
+                {
+                    f32 a = D_8600D8C4, b = D_8600D8C8;
+                    *arg1 = a;
+                    *arg2 = b;
+                }
+                return;
+            }
+            if (temp_v0 & 0x200) {
+                {
+                    f32 a = D_8600D8CC, b = D_8600D8CC;
+                    *arg1 = a;
+                    *arg2 = b;
+                }
+                return;
+            }
+            {
+                f32 a = 0.0f, b = -64.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+            return;
+        }
+        if (temp_v0 & 0x100) {
+            {
+                f32 a = 64.0f, b = 0.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+            return;
+        }
+        if (temp_v0 & 0x200) {
+            {
+                f32 a = -64.0f, b = 0.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+        }
+    } else {
+        *arg1 = (f32) *(s16 *)((u8 *)arg0 + 2);
+        *arg2 = (f32) *(s16 *)((u8 *)arg0 + 4);
+    }
+}
+/* mkdraft:func_86005A00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005B3C.s")
 
