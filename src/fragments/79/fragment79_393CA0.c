@@ -6042,7 +6042,7 @@ s32 Battle_SelectTurnOrder(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84133C10(s32);
+extern void func_84133C10(char);
 extern void *D_84195204;
 void func_84132300(void) {
     if ((*(u16 *)((u8 *)(*D_84195200) + (0x26))) == 0) {
@@ -6701,7 +6701,37 @@ void Battle_ApplySwitchInState(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84133F10.s")
+/* mkdraft:func_84133F10 begin */
+extern void Battle_RunSideCommandSequence(u8);
+extern s32 Battle_ApplyResidualStatusDamage(u8);
+extern void func_84133C10(char);
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+
+
+s32 func_84133F10(u8 arg0) {
+    u8 other;
+
+    D_84195208[arg0][0x11] &= 0xFFBF;
+    Battle_RunSideCommandSequence(arg0);
+    other = 1 - arg0;
+    D_84195208[other][0xD] &= 0xFFDB;
+    D_84195208[other][0x11] &= 0xFFBF;
+    if (*(u16 *)(D_84195200[other] + 0x26) == 0) {
+        func_84133C10(arg0);
+        return 1;
+    }
+    if (*(u16 *)(D_84195200[arg0] + 0x26) == 0) {
+        func_84133C10(other);
+        return 1;
+    }
+    if (Battle_ApplyResidualStatusDamage(arg0) == 0) {
+        func_84133C10(other);
+        return 1;
+    }
+    return 0;
+}
+/* mkdraft:func_84133F10 end */
 #endif
 
 #ifdef VERSION_US
