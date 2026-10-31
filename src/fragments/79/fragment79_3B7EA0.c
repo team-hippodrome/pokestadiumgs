@@ -524,7 +524,49 @@ void func_84149D0C(void *arg0) {
     func_84149AC8(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149D54.s")
+/* mkdraft:func_84149D54 begin */
+extern void _bzero(void *, s32);
+extern u8 *func_84154B0C(void);
+extern s32 *func_8414A3A0(u8);
+extern s8 func_80062D20(u8);
+extern s8 func_80062D5C(u8);
+extern u8 func_80062D98(u8);
+
+
+
+void func_84149D54(void *arg0, u8 arg1, u8 arg2) {
+    u8 *records;
+    s32 *info;
+    u8 *defender;
+    u8 *attacker;
+    s32 record_offset;
+    s32 negated_offset;
+
+    records = func_84154B0C();
+    info = func_8414A3A0(arg1);
+    _bzero(arg0, 0x20);
+    if (*info & 1) {
+        *(u8 *)((u8 *)arg0 + 0) = (u8)(*(u8 *)((u8 *)arg0 + 0) | 1);
+    }
+    *(u8 *)((u8 *)arg0 + 1) = arg2;
+    *(s8 *)((u8 *)arg0 + 2) = func_80062D20(arg2);
+    *(s8 *)((u8 *)arg0 + 3) = func_80062D5C(arg2);
+    *(u8 *)((u8 *)arg0 + 4) = func_80062D98(arg2);
+    *(u8 *)((u8 *)arg0 + 6) = *(u8 *)(records + 0x198);
+    // One 0xCC-byte record per side: the attacker at arg1, the defender at
+    // 1 - arg1, i.e. -(arg1 * 0xCC) + 0xCC from the base. The typed index gives
+    // the attacker pointer a multiply chain separate from the negated one.
+    attacker = ((u8 (*)[0xCC])records)[arg1];
+    record_offset = arg1 * 0xCC;
+    negated_offset = record_offset * -1;
+    defender = &records[negated_offset];
+    defender += 0xCC;
+    *(u8 **)((u8 *)arg0 + 0x18) = attacker;
+    *(u8 **)((u8 *)arg0 + 0x1C) = defender;
+    *(u8 **)((u8 *)arg0 + 0x10) = attacker + 8;
+    *(u8 **)((u8 *)arg0 + 0x14) = defender + 8;
+}
+/* mkdraft:func_84149D54 end */
 
 u8 func_84149E58(u8 *arg0) {
     if (arg0[1] == 8) {
