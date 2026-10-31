@@ -830,5 +830,73 @@ s32 func_8006CF70(s16 arg0) {
     return id;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006D068.s")
+/* mkdraft:func_8006D068 begin */
+extern s32 func_8004C594(s32, s32);
+extern void func_8004C8A0(s8 *, s32, s32, s32);
+
+
+
+void func_8006D068(s8 *arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    s32 temp_a1;
+    s32 temp_a1_2;
+    s32 temp_a2;
+    s32 temp_v0;
+    s32 var_s0;
+
+    // FAKE: never read -- temp_a2 is reassigned before its only use in case 0 --
+    // but the extra web advances uopt's colour walk so arg5 takes $v0 at the
+    // case-0 and default compares. diff score 70 without it.
+    temp_a2 = arg5;
+
+    temp_v0 = arg2 & 0xFF00;
+    var_s0 = -1;
+    *arg0 = 0;
+    switch (temp_v0) {
+    case 0x0:
+        temp_a1 = arg4 + 1;
+        if (arg5 == temp_a1) {
+            var_s0 = 0x57;
+        } else {
+            temp_a2 = arg4 + 2;
+            if (arg5 == temp_a2) {
+                var_s0 = 0x58;
+            } else {
+                func_8004C594(1, arg4 + 1);
+                var_s0 = 0x4B;
+            }
+        }
+        break;
+    case 0x300:
+        switch (arg3) {
+        case 15:
+            var_s0 = 0x50;
+            break;
+        case 11:
+            func_8004C594(1, arg4 + 1);
+            var_s0 = 0x4B;
+            break;
+        case 14:
+            func_8004C594(1, arg4 + 1);
+            var_s0 = 0x4E;
+            break;
+        case 24:
+            var_s0 = 0x51;
+            break;
+        default:
+            temp_a1_2 = arg4 + 1;
+            if (arg5 == temp_a1_2) {
+                var_s0 = 0x4D;
+            } else {
+                func_8004C594(1, arg4 + 1);
+                var_s0 = 0x4C;
+            }
+            break;
+        }
+        break;
+    }
+    if (var_s0 >= 0) {
+        func_8004C8A0(arg0, arg1, 0x12, var_s0);
+    }
+}
+/* mkdraft:func_8006D068 end */
 #endif
