@@ -190,7 +190,102 @@ void func_87E02150(s32 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E021CC.s")
+/* mkdraft:func_87E021CC begin */
+extern void func_800226C0(s32);
+extern s32 func_800279C4(s32);
+extern u8 *func_87E016C8(void);
+extern void func_87E0168C(s32, s32, s32);
+extern s32 func_87E01F0C(u32);
+extern void func_87E01F44(void *);
+extern void func_87E02150(s32 *);
+extern void func_87E134E8(void);
+extern s32 func_87E13688(void);
+extern s32 func_87E1369C(void);
+extern void func_87F0277C(void *);
+extern s32 func_87F0E610(u8 *, u8 *);
+
+extern u32 D_87E1EB50;
+
+
+
+s32 func_87E021CC(u32 arg0) {
+    u32 sp34;
+    s32 sp30;
+    u16 temp_a1;
+
+    sp34 = 5;
+    sp30 = func_87E01F0C(arg0);
+    D_87E1EB50 = arg0;
+    temp_a1 = func_87F0E610(func_87E016C8(), (u8 *)-1);
+    switch (*(s32 *)((u8 *)arg0 + 0)) {
+    case 0:
+        if (sp30 != 0) {
+            *(s32 *)((u8 *)arg0 + 0) = 1;
+        }
+        break;
+    case 1:
+        if ((func_87E1369C() != 0) && !(temp_a1 & 0x8000) && !(temp_a1 & 0x4000)) {
+            *(s8 *)((u8 *)arg0 + 0x284) = (s8) ((*(s8 *)((u8 *)arg0 + 0x284) + ((temp_a1 & 0x400) > 0)) - ((temp_a1 & 0x800) > 0));
+            *(s8 *)((u8 *)arg0 + 0x285) = (s8) ((*(s8 *)((u8 *)arg0 + 0x285) + ((temp_a1 & 0x100) > 0)) - ((temp_a1 & 0x200) > 0));
+            if (*(s8 *)((u8 *)arg0 + 0x284) < 0) {
+                *(s8 *)((u8 *)arg0 + 0x284) = 1;
+            }
+            if (*(s8 *)((u8 *)arg0 + 0x284) >= 2) {
+                *(s8 *)((u8 *)arg0 + 0x284) = 0;
+            }
+            if (*(s8 *)((u8 *)arg0 + 0x285) < 0) {
+                *(s8 *)((u8 *)arg0 + 0x285) = 1;
+            }
+            if (*(s8 *)((u8 *)arg0 + 0x285) >= 2) {
+                *(s8 *)((u8 *)arg0 + 0x285) = 0;
+            }
+            *(s32 *)((u8 *)arg0 + 4) = (s32) ((*(s8 *)((u8 *)arg0 + 0x285) * 2) + *(s8 *)((u8 *)arg0 + 0x284));
+            if (temp_a1 & 0xF00) {
+                func_800279C4(0xCF01);
+            }
+        }
+        if (temp_a1 & 0x8000) {
+            func_87E01F44(arg0);
+            *(s32 *)((u8 *)arg0 + 0) = 2;
+            func_87E134E8();
+            func_800279C4(0xCF02);
+            func_87E0168C(3, 0x8C, 0xE);
+        }
+        if ((temp_a1 & 0x4000) && (func_87E13688() != 0)) {
+            sp34 = 4;
+            func_800226C0(3);
+        }
+        break;
+    case 2:
+        if (sp30 != 0) {
+            switch (*(s32 *)((u8 *)arg0 + 4)) {
+            case 0:
+                *(u8 *)((u8 *)(*(void **)((u8 *)arg0 + 0x280)) + 0x2180) = 0;
+                sp34 = 0;
+                break;
+            case 1:
+                *(u8 *)((u8 *)(*(void **)((u8 *)arg0 + 0x280)) + 0x2180) = 1;
+                sp34 = 1;
+                break;
+            case 2:
+                *(u8 *)((u8 *)(*(void **)((u8 *)arg0 + 0x280)) + 0x2180) = 2;
+                sp34 = 2;
+                break;
+            case 3:
+                *(u8 *)((u8 *)(*(void **)((u8 *)arg0 + 0x280)) + 0x2180) = 3;
+                sp34 = 3;
+                break;
+            }
+        }
+        break;
+    }
+    func_87F0277C(arg0 + 8);
+    if (sp30 != 0) {
+        func_87E02150((s32 *) arg0);
+    }
+    return sp34;
+}
+/* mkdraft:func_87E021CC end */
 
 extern void func_8004C8C0(s32);
 void func_87E02438(void) {
