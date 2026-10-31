@@ -440,7 +440,62 @@ void func_84101084(Func84100688Table **arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841013F4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101888.s")
+/* mkdraft:func_84101888 begin */
+extern s32 ParticleMath_RandomSignedOffsetBySign(u32, s32);
+extern s32 func_81100120(u32, s32);
+extern s32 func_81100144(u32, s32);
+
+// The callees take two arguments and are defined with s32 formals in fragment27_code.c; their
+// first formal is spelled u32 here because retail loads state->step into v0 and copies it with
+// `or a0,v0,zero` at each call. With an s32 first formal IDO loads step straight into a0 instead
+// (diff score 695).
+//@src/fragments/27/fragment27_code.c
+
+
+void func_84101888(s16 *arg0, void *arg1, u8 arg2, s16 *arg3) {
+    typedef struct {
+        u16 flags;
+        s16 value;
+        s16 minimum;
+        s16 maximum;
+        s16 step;
+        s16 offset;
+    } State;
+    State *state = arg1;
+    if (((s16 *)arg1)[2] == 0 || arg2 < ((s16 *)arg1)[2]) {
+        if (arg2 == state->value) {
+            if (state->step == 0) {
+                *arg3 = state->offset;
+            } else if ((state->flags & 0xFF00) == 0x200) {
+                *arg3 = ParticleMath_RandomSignedOffsetBySign(state->step, state->offset);
+            } else if ((state->flags & 0xFF00) == 0x100) {
+                *arg3 = func_81100120(state->step, state->offset);
+            } else {
+                *arg3 = func_81100144(state->step, state->offset);
+            }
+        }
+        if (arg2 >= state->value) {
+            if (state->flags == 0) {
+                if (state->maximum != *arg0) {
+                    if (state->maximum < *arg0) {
+                        *arg0 -= *arg3;
+                        if (*arg0 < state->maximum) {
+                            *arg0 = state->maximum;
+                        }
+                    } else {
+                        *arg0 += *arg3;
+                        if (state->maximum < *arg0) {
+                            *arg0 = state->maximum;
+                        }
+                    }
+                }
+            } else {
+                *arg0 += *arg3;
+            }
+        }
+    }
+}
+/* mkdraft:func_84101888 end */
 
 void func_84101A08(f32 *arg0, u8 *arg1, u8 arg2) {
     f32 value;
