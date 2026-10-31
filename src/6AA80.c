@@ -277,7 +277,119 @@ s32 func_8006ACCC(s32 value) { s32 result = 0; if (D_8009DF70 != 0) { *(s16 *)((
 
 s32 func_8006ACF0(void) { s32 result = 0; s32 ptr = D_8009DF70; if (ptr != 0) result = *(s16 *)((u8 *)(u32)ptr + 0x16); return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006AD10.s")
+/* mkdraft:func_8006AD10 begin */
+
+
+s32 func_8006AD10(u16 code, s32 kind, s32 level) {
+    s32 result = -1;
+    // FAKE: `code` is already u16, so this mask is an arithmetic nop; it keeps a
+    // zero-extended copy of `code` alive in a second register for the default
+    // path's low-byte read below. Score as `s32 value = code;`: 460.
+    s32 value = code & 0xFFFF;
+    u16 group = code & 0xFF00;
+
+    switch (group) {
+    case 0x300:
+        switch (kind - 5) {
+        case 0:
+            result = 0;
+            break;
+        case 1:
+            result = 1;
+            break;
+        case 2:
+            result = 2;
+            break;
+        case 3:
+            result = 3;
+            break;
+        case 4:
+            result = 5;
+            break;
+        case 5:
+            result = 4;
+            break;
+        case 6:
+            result = 8;
+            break;
+        case 7:
+            result = 6;
+            break;
+        case 8:
+            result = 7;
+            break;
+        case 9:
+            if ((level >= 0) && (level < 4)) {
+                result = level + 9;
+            } else {
+                result = 9;
+            }
+            break;
+        case 10:
+            result = 13;
+            break;
+        case 11:
+            result = 14;
+            break;
+        case 12:
+            result = 15;
+            break;
+        case 13:
+            result = 18;
+            break;
+        case 14:
+            result = 16;
+            break;
+        case 15:
+            result = 17;
+            break;
+        case 16:
+            result = 19;
+            break;
+        case 17:
+            result = 20;
+            break;
+        case 18:
+            result = 21;
+            break;
+        case 19:
+            result = 22;
+            break;
+        }
+        break;
+    case 0x400:
+        result = 27;
+        break;
+    case 0x500:
+        result = 28;
+        break;
+    case 0x600:
+        result = 29;
+        break;
+    default:
+        result = value & 0xFF;
+        switch (result) {
+        case 0:
+            result = 23;
+            break;
+        case 1:
+            result = 25;
+            break;
+        case 2:
+            result = 24;
+            break;
+        case 3:
+            result = 26;
+            break;
+        default:
+            result = 28;
+            break;
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8006AD10 end */
 
 s32 func_8006AE90(s32 value) { s32 result = 0; if (D_8009DF70 != 0) { *(s16 *)((u8 *)(u32)D_8009DF70 + 0x14) = value; result = 1; } return result; }
 
