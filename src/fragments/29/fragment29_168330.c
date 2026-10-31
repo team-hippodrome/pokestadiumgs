@@ -161,7 +161,58 @@ done:
     func_8800254C(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_168330/func_88002720.s")
+/* mkdraft:func_88002720 begin */
+// func_88002720 -- dpad-driven selection advance, from
+// asm/us/nonmatchings/fragments/29/fragment29_168330/func_88002720.s.
+//
+// Input_GetRepeatedDPad returns 0, 0x100, 0x200, 0x400 or 0x800 (//@src/4AAD0.c), so a
+// 16-bit declaration represents every value it can produce. The value is only compared
+// against the 0x800/0x400 masks, and the 16-bit declared return makes the assignment to
+// `button` a plain copy. With the s32 prototype visible, IDO emits a shift pair to
+// truncate the call result for the s16 local and the frame becomes 0x28; retail keeps the
+// result unreduced in $v0 and a 0x20 frame.
+extern s32 D_80128C60;
+extern s16 Input_GetRepeatedDPad(void); // FAKE: declared s16 (real return type s32, //@src/4AAD0.c); diff score 58 with the s32 prototype.
+
+
+
+void func_88002720(s16 *arg0, u16 arg1, s32 *arg2) {
+    s16 button;
+    s16 prev;
+
+    if (arg1 >= 2) {
+        button = Input_GetRepeatedDPad();
+        prev = *arg0;
+        // Sound only advances while a dpad direction is held.
+        if ((button == 0x800) || (button == 0x400)) {
+            do {
+                if (button == 0x800) {
+                    (*arg0)--;
+                    if (*arg0 < 0) {
+                        *arg0 = arg1 - 1;
+                    }
+                } else if (button == 0x400) {
+                    (*arg0)++;
+                    if (*arg0 >= arg1) {
+                        *arg0 = 0;
+                    }
+                }
+                // Stop on a slot with no sound id; arg2[1] is the s8 id table.
+                if ((*arg2 == 0) || (((u8 *)*(void **)((u8 *)arg2 + 4))[*arg0] == 0)) {
+                    break;
+                }
+            } while (1);
+            if (prev != *arg0) {
+                if (D_80128C60 < 4) {
+                    func_800226C0(70);
+                } else {
+                    func_800226C0(1);
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_88002720 end */
 
 extern s32 func_800472B8(s32);
 void func_88002820(s16 x, s16 y, s8 style, u8 **text, u16 count,
