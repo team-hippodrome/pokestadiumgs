@@ -194,7 +194,43 @@ void func_8830765C(u16 *arg0, u16 *arg1, s16 arg2, s16 arg3, u16 arg4) {
 }
 /* mkdraft:func_8830765C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8010/func_8830780C.s")
+/* mkdraft:func_8830780C begin */
+extern void func_800459AC(u8 *, u8, u8, u16, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern u8 *func_8004CA60(u8 *arg0);
+
+typedef struct {
+    u16 unk0;
+    u16 unk2;
+    u8 unk4;
+    u8 unk5;
+} unk_func_8830780C;
+
+typedef struct {
+    s32 unk0;
+    s32 unk4; // FAKE: unused second word; sizes the record so the two locals land at 0x50/0x48 (diff score 12 with plain s32 locals).
+} unk_func_8830780C_pos;
+
+
+
+void func_8830780C(unk_func_8830780C *arg0, s8 arg1) {
+    unk_func_8830780C_pos var_v1;
+    unk_func_8830780C_pos var_a1;
+
+    if (!arg1) {
+        var_v1.unk0 = 95;
+        var_a1.unk0 = 95;
+    } else {
+        var_v1.unk0 = 150;
+        var_a1.unk0 = 150;
+    }
+    func_800459AC(func_8004CA60((u8 *)arg0), arg0->unk4, arg0->unk5, arg0->unk0, arg0->unk2,
+                  1, 0, 1, 2, 4, 0, 0, 0);
+    GfxRect_DrawTextured(0x172, (s16)var_v1.unk0, (s16)arg0->unk0, (s16)arg0->unk2,
+                         -0x10, -0x10, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(0x21A, (s16)var_a1.unk0, (s16)arg0->unk0, (s16)arg0->unk2,
+                         (s16)((arg0->unk0 << 5) - 0x10), -0x10, 0x400, 0x400, 0);
+}
+/* mkdraft:func_8830780C end */
 
 extern s32 func_8004C990(s32, s32);
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
