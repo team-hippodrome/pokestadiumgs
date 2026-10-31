@@ -737,7 +737,32 @@ void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606694.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606800.s")
+/* mkdraft:func_81606800 begin */
+extern s32 D_8160BE5C;
+
+// FAKE: IDO emits the `arg1 != 0 || arg0 != D_8160BE5C` test as `beq $a0,$t6`, while retail
+// has the same pair commuted (`beq $t6,$a0`, the loaded global in $rs). Rewriting only the
+// two register fields leaves every other word, the scheduling and both relocations intact;
+// without it this body scores 10.
+#pragma REWRITE_FUNCTION_WORD(func_81606800, 0xC, 0x108E002A, 0x11C4002A)
+// Colour state for the panel frame: D_8160BE5C caches arg0 so the display-list update is
+// emitted only when arg0 changes or arg1 forces it.
+
+
+void func_81606800(s32 arg0, s32 arg1) {
+    if (arg1 != 0 || arg0 != D_8160BE5C) {
+        D_8160BE5C = arg0;
+        gDPPipeSync((*(Gfx **)&D_800D0510)++);
+        if (arg0 != 0) {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0, 0, 0, 0xFF);
+            gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+        } else {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0xFF, 0xFF);
+            gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+        }
+    }
+}
+/* mkdraft:func_81606800 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816068C0.s")
 
