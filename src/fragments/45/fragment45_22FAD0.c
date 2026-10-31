@@ -557,7 +557,155 @@ void func_8AB0CBCC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0CD00.s")
+/* mkdraft:func_8AB0CD00 begin */
+extern s16 D_8AB126A0;
+extern s16 D_8AB12CB4;
+extern s16 D_8AB12CB2;
+extern s32 D_8AB12CB8;
+extern s16 D_8AB12CC0;
+extern s16 D_8AB12D46;
+extern s16 D_8AB12D48;
+extern s32 D_8AB12D4C;
+extern s16 D_8AB12D54;
+extern s16 D_8AB12DDA;
+extern s16 D_8AB12DDC;
+extern s32 D_8AB12DE0;
+extern s16 D_8AB12DE8;
+extern s16 D_8AB12E6E;
+extern s16 D_8AB12E70;
+extern s32 D_8AB12E74;
+extern s16 D_8AB12E7C;
+extern void *D_8AB16E3C;
+extern void *D_8AB16F48;
+extern void *D_8AB16F4C;
+extern void *D_8AB16F50;
+extern void *D_8AB16F54;
+extern s32 D_8AB16F70;
+extern s16 D_8AB16F74;
+extern s32 D_8AB16F98;
+extern void TextReference_BuildModeSelection(void);
+extern void func_8AB005B0(void);
+extern void func_8AB01288(void);
+
+
+s32 func_8AB0CD00(s32 arg0)
+{
+    s32 temp_v0; /* Declaration order places result at 0x18 in the 0x20-byte frame. */
+    s32 result;
+    void *new_var; /* FAKE: dead store; splits the two loads of D_8AB16F50. Without it: 860. */
+    void **p_f48 = &D_8AB16F48; /* FAKE: address-of-extern indirection; direct use: 835. */
+    void **p_f4c = &D_8AB16F4C; /* FAKE: address-of-extern indirection; direct use: 825. */
+    void **p_f50 = &D_8AB16F50; /* FAKE: address-of-extern indirection; direct use: 990. */
+    void **p_f54 = &D_8AB16F54; /* FAKE: address-of-extern indirection; direct use: 990. */
+    if (result != 0x3A)
+    {
+        D_8AB16F98 = result;
+        result = 0x3A;
+    }
+    switch (arg0)
+    {
+        case 0:
+            D_8AB16F96 = 0;
+            *((u16 *) (((u8 *) D_8AB16D08) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16D08) + 2))) & 0xFFFE);
+            *((u16 *) (((u8 *) D_8AB11D00) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB11D00) + 2))) & 0xFFFE);
+            *((u16 *) (((u8 *) D_8AB16E3C) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E3C) + 2))) | 2);
+            *((u16 *) (((u8 *) D_8AB16E40) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E40) + 2))) | 2);
+            *((u16 *) (((u8 *) D_8AB16E44) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E44) + 2))) | 2);
+            *((u16 *) (((u8 *) D_8AB16E48) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E48) + 2))) | 2);
+            *((u16 *) (((u8 *) (*p_f48)) + 2)) = (u16) ((*((u16 *) (((u8 *) (*p_f48)) + 2))) & 0xFFFD);
+            *((u16 *) (((u8 *) (*p_f4c)) + 2)) = (u16) ((*((u16 *) (((u8 *) (*p_f4c)) + 2))) & 0xFFFD);
+            *((u16 *) (((u8 *) (*p_f50)) + 2)) = (u16) ((*((u16 *) (((u8 *) (new_var = *p_f50)) + 2))) & 0xFFFD);
+            *((u16 *) (((u8 *) (*p_f54)) + 2)) = (u16) ((*((u16 *) (((u8 *) (*p_f54)) + 2))) & 0xFFFD);
+            func_8AB04AE4();
+            D_8AB126A0 = 0;
+            func_8AB00BA4(0x66, 0, 0);
+            func_80021ED8(0x50);
+            D_8AB1269C = 0x14;
+            func_8AB005B0();
+            D_8AB16F70 = 0;
+            D_8AB16F74 = 0;
+            break;
+
+        case 1:
+            temp_v0 = *((u16 *) (((u8 *) D_8AB13F28) + 8));
+            if (temp_v0 & 0x800)
+        {
+            D_8AB16F96 = D_8AB16F96 - 1;
+            if (D_8AB16F96 < 0)
+            {
+                D_8AB16F96 = 2;
+            }
+            func_800279C4(0xCF01);
+        }
+        else
+            if (temp_v0 & 0x400)
+        {
+            D_8AB16F96 += 1;
+            if (D_8AB16F96 >= 3)
+            {
+                D_8AB16F96 = 0;
+            }
+            func_800279C4(0xCF01);
+        }
+        else
+            if (temp_v0 & 0x8000)
+        {
+            switch (D_8AB16F96)
+            {
+                case 0:
+                    func_800279C4(0xCF02);
+                    *((u16 *) (((u8 *) D_8AB16E3C) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E3C) + 2))) & 0xFFFD);
+                    *((u16 *) (((u8 *) D_8AB16E40) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E40) + 2))) & 0xFFFD);
+                    *((u16 *) (((u8 *) D_8AB16E44) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E44) + 2))) & 0xFFFD);
+                    *((u16 *) (((u8 *) D_8AB16E48) + 2)) = (u16) ((*((u16 *) (((u8 *) D_8AB16E48) + 2))) & 0xFFFD);
+                    D_8AB16F96 = -1;
+                    func_8AB01288();
+                    D_8AB12CB2 = 0;
+                    D_8AB12CB4 = 0;
+                    D_8AB12CB8 = 0;
+                    D_8AB12CBC = 0;
+                    D_8AB12CC0 = 0;
+                    D_8AB12D46 = 0;
+                    D_8AB12D48 = 0;
+                    D_8AB12D4C = 0;
+                    D_8AB12D50 = 0;
+                    D_8AB12D54 = 0;
+                    D_8AB12DDA = 0;
+                    D_8AB12DDC = 0;
+                    D_8AB12DE0 = 0;
+                    D_8AB12DE4 = 0;
+                    D_8AB12DE8 = 0;
+                    D_8AB12E6E = 0;
+                    D_8AB12E70 = 0;
+                    D_8AB12E74 = 0;
+                    D_8AB12E78 = 0;
+                    D_8AB12E7C = 0;
+                    TextReference_BuildModeSelection();
+                    result = func_8AB0B7CC(0);
+                    break;
+
+                case 1:
+                    func_800279C4(0xCF02);
+                    *((s32 *) (((u8 *) D_8AB11D0C) + 0x10)) = 1;
+                    result = func_8AB0B74C(0);
+                    break;
+
+                case 2:
+                    func_8AB00B78(3);
+                    result = func_8AB0B74C(0);
+                    break;
+
+            }
+
+        }
+            func_8AB0CBCC();
+            break;
+
+    }
+
+    return result;
+}
+/* mkdraft:func_8AB0CD00 end */
 
 /* mkdraft:func_8AB0D08C begin */
 extern s16 D_8AB126A0;
