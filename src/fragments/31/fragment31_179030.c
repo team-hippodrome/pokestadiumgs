@@ -268,5 +268,49 @@ void func_88207D14(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_179030/func_88207D80.s")
+/* mkdraft:func_88207D80 begin */
+// func_88207D80 -- matched, ROM-gated (build/pokestadiumgs-us.z64: OK,
+// md5 1561c75d11cedf356a8ddb1a4a5f9d5d) on gs-night-4, 2026-10-30.
+// D_882346F8 is already declared as `extern void *D_882346F8;` at the top of
+// src/fragments/31/fragment31_179030.c; it is repeated here so this file
+// stands alone.
+extern void *D_882346F8;
+extern s16 D_8800EF58;
+extern s32 D_880068B4;
+extern void func_880009A8(s32, s16, s16, s16, s16, s16, s16);
+extern void func_8004B2CC(s32, s32, s32, s32, u8, u8, u8, s32);
+extern void func_8004B314(s32, s32, s32, s32);
+
+// Draws list row arg2: the background rectangle at +0x4A/+0x4C (x/y), +0x4E
+// (width) and row_height = byte +1 (height), then the slot highlight expanded
+// by 2 pixels on every side. arg0 == 0 selects the highlight rect at
+// +0x52/+0x56/+0x58, otherwise +0x5A/+0x5E/+0x60; its y comes from field 0x10
+// of arg3 or arg4. arg1 selects the textured background (func_880009A8) over
+// the solid fill (func_8004B2CC), and arg5 gates the highlight.
+
+
+void func_88207D80(u8 arg0, s32 arg1, s16 arg2, void *arg3, void *arg4, u16 arg5) {
+    s32 pos_x;
+    s32 pos_y;
+    s32 row_height;
+
+    row_height = *(u8 *)((u8 *)D_882346F8 + 1);
+    pos_x = *(s16 *)((u8 *)D_882346F8 + 0x4A);
+    pos_y = *(s16 *)((u8 *)D_882346F8 + 0x4C) + (arg2 * row_height);
+    if (arg1 != 0) {
+        func_880009A8(D_880068B4, pos_x, pos_y, *(s16 *)((u8 *)D_882346F8 + 0x4E), row_height, -2, -2);
+        return;
+    }
+    func_8004B2CC(pos_x + 2, pos_y + 2, *(s16 *)((u8 *)D_882346F8 + 0x4E) - 4, row_height - 4, 0x96, 0x96, 0x5A, 0);
+    if ((D_8800EF58 == 0) && (arg5 != 0)) {
+        if (arg0 == 0) {
+            func_8004B314(*(s16 *)((u8 *)D_882346F8 + 0x52) - 2, *(s16 *)((u8 *)arg3 + 0x10) - 2,
+                          *(s16 *)((u8 *)D_882346F8 + 0x56) + 4, *(s16 *)((u8 *)D_882346F8 + 0x58) + 4);
+            return;
+        }
+        func_8004B314(*(s16 *)((u8 *)D_882346F8 + 0x5A) - 2, *(s16 *)((u8 *)arg4 + 0x10) - 2,
+                      *(s16 *)((u8 *)D_882346F8 + 0x5E) + 4, *(s16 *)((u8 *)D_882346F8 + 0x60) + 4);
+    }
+}
+/* mkdraft:func_88207D80 end */
 #endif
