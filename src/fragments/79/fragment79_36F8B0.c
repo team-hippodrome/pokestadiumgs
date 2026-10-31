@@ -191,7 +191,83 @@ void func_84100350(u8 *arg0) {
     arg0[0x98] = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841003AC.s")
+/* mkdraft:func_841003AC begin */
+extern void Audio_SetChannelGroupCounts(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
+extern void func_84100350(u8 *arg0);
+extern void func_84104818(s32 arg0);
+extern s32 func_8411E188(s8 arg0);
+extern u8 *D_8418C950;
+extern u8 D_84190218[];
+extern s32 D_84193DD0;
+
+// Per-frame particle-system update: picks the audio channel group when the sound state byte at
+// D_84193DD0+8 is one of 0x27/0x2B/0x86/0xB8, silences the 9 channel bytes of D_84190218, and then
+// walks the 300 0x9C-byte records func_84100260 claims from D_8418C950, freeing (func_84104818) the
+// object at 0xC and ticking (func_84100350) each active record that is not muted by its flags.
+
+
+void func_841003AC(s32 arg0) {
+    s32 flag;
+    s32 i;
+    u8 *record;
+    s32 handle1;
+    s32 handle2;
+
+    record = D_8418C950;
+    switch (((u8 *)D_84193DD0)[8]) {
+        case 0x27:
+            arg0 = 1;
+            break;
+        case 0x2B:
+            arg0 = 1;
+            break;
+        case 0x86:
+            arg0 = 1;
+            break;
+        case 0xB8:
+            arg0 = 1;
+            break;
+    }
+
+    D_84190218[0] = 0xFF;
+    D_84190218[1] = 0xFF;
+    D_84190218[2] = 0xFF;
+    D_84190218[4] = 0xFF;
+    D_84190218[5] = 0xFF;
+    D_84190218[6] = 0xFF;
+    D_84190218[8] = 0xFF;
+    D_84190218[9] = 0xFF;
+    D_84190218[10] = 0xFF;
+
+    if (arg0 == 1) {
+        handle1 = func_8411E188(0);
+        handle2 = func_8411E188(1);
+        Audio_SetChannelGroupCounts(0xFF, 0xFF, 0xFF, 0);
+        func_8003F454(handle1, 0xFF, 0xFF, 0xFF, 0);
+        func_8003F454(handle2, 0xFF, 0xFF, 0xFF, 0);
+        func_8003F4DC((u8 *)handle1, 0xFF);
+        func_8003F4DC((u8 *)handle2, 0xFF);
+    }
+
+    for (i = 0; i < 300; i++, record += 0x9C) {
+        if (*(s8 *)(record + 0x98) != 0) {
+            flag = 1;
+            // else-if, not a second `if`: the then-branch jumps past the flag&0x10000 test.
+            if ((*(u32 *)(record + 0x14) & 1) && (arg0 == 0)) {
+                flag = 0;
+            } else if (*(u32 *)(record + 0x14) & 0x10000) {
+                flag = 0;
+            }
+            if (flag != 0) {
+                if (*(s32 *)(record + 0xC) != 0) {
+                    func_84104818(*(s32 *)(record + 0xC));
+                }
+                func_84100350(record);
+            }
+        }
+    }
+}
+/* mkdraft:func_841003AC end */
 
 typedef struct Func8410056CParticleS8 {
     u8 pad[0x98];
