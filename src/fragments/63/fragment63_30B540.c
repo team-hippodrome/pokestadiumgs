@@ -130,7 +130,36 @@ void func_87E07F18(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E07F4C.s")
+/* mkdraft:func_87E07F4C begin */
+s32 func_87E07F4C(void *arg0) {
+    s32 next;
+    s32 value;
+    u8 *node;
+
+    next = *(s32 *)((u8 *)arg0 + 0x21A8);
+    value = *(s32 *)((u8 *)arg0 + 0x2190);
+    node = arg0;
+    // FAKE: diff score 120 without this store. uopt copy-propagates `node = arg0`
+    // away, folding the 0x21C0/0x21D8 loads back onto a0. Clearing arg0 after the copy
+    // makes a0 dead at that point so the copy survives in a1, matching the target's
+    // `or a1,a0,zero` at 0x30B8C4 and its two a1-based loads. The cleared value is
+    // never read. Living source shape for this residual is still unknown; see
+    // matching_notes/IDO_TRICKS.md, "uopt copy propagation and live-range identity".
+    arg0 = 0;
+    if (value < next) {
+        value = next;
+    }
+    next = *(s32 *)((u8 *)node + 0x21C0);
+    if (value < next) {
+        value = next;
+    }
+    next = *(s32 *)((u8 *)node + 0x21D8);
+    if (value < next) {
+        value = next;
+    }
+    return value;
+}
+/* mkdraft:func_87E07F4C end */
 
 s32 func_87E07F4C(void *);
 typedef struct { s32 id; u8 pad[0x12]; u8 flags; u8 tail; } F98UnsignedRecord;
