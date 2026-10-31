@@ -53,7 +53,45 @@ void func_88200180(u8 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1732A0/func_882001E8.s")
+/* mkdraft:func_882001E8 begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_8004D1FC(u8 *);
+extern Gfx *D_800D0510;
+extern Gfx D_88233718[];
+extern u8 *D_8823457C;
+extern s32 D_88234580;
+
+
+
+void func_882001E8(void) {
+    s32 var_s0;
+    s32 var_s2;
+    s32 var_s3;
+
+    gSPDisplayList(D_800D0510++, D_88233718);
+    func_8004D1FC(D_8823457C);
+
+    var_s3 = 0;
+    var_s2 = 0;
+    do {
+        if (var_s3 & 1) {
+            var_s0 = -0x40;
+        } else {
+            var_s0 = 0;
+        }
+        if (var_s0 < 0x280) {
+            do {
+                GfxRect_DrawTextured(var_s0, var_s2, 0x80, 0x40, 0, 0, 0x400, 0x400, 0);
+                var_s0 += 0x80;
+            } while (var_s0 < 0x280);
+        }
+        var_s2 += 0x40;
+        var_s3 += 1;
+    } while (var_s2 != 0x200);
+    func_8004D19C(0x1A0, 0x20, D_88234580, 0, 0);
+}
+/* mkdraft:func_882001E8 end */
 
 u8 func_882002F8(u8 *arg0, u8 *arg1) {
     u8 value = *arg0;
