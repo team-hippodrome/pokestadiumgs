@@ -194,7 +194,55 @@ void func_88200DCC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88200EDC.s")
+/* mkdraft:func_88200EDC begin */
+extern u8 D_882345E0;
+extern s8 D_88006868;
+extern s32 D_88A01C30;
+extern s32 D_88234670[];
+extern void func_80053584(s32 slot, void *text);
+extern s32 GbSave_WriteGen2BoxName(s32 port, s32 box, void *text);
+
+typedef struct unk_D_88A01C30_20_entry {
+    /* 0x00 */ u8 *unk_00;
+    /* 0x04 */ u8 unk_04;
+} unk_D_88A01C30_20_entry;
+
+// Copies the name tables that func_88204080 filled in D_88234670 back into the Game
+// Boy save. Pass 0, gated by bit 0x40 of D_882345E0, writes Gen 2 box names through
+// GbSave_WriteGen2BoxName on port D_88006868; pass 1, gated by bit 0x80, calls
+// func_80053584, which stores the 18-byte names of D_88234670[1]. Both passes read the
+// same list: the entry pointers sit at D_88A01C30 + i * 20 + 0x20 and the entry count
+// in the byte at +0x25, for i = 0 and i = 1. An entry's unk_00[8] byte selects one of
+// the two D_88234670 tables (one-based) and its unk_04 byte selects the name in it.
+//@src/fragments/31/fragment31_1768F0.c
+//@src/585D0.c
+//@src/517E0.c
+
+
+void func_88200EDC(void) {
+    u32 i;
+    s32 j;
+    s32 count;
+    u8 *list;
+    unk_D_88A01C30_20_entry **entries;
+
+    for (i = 0; i != 2; i++) {
+        if (i == 0 && !(D_882345E0 & 0x40)) continue;
+        if (i == 1 && !(D_882345E0 & 0x80)) continue;
+        list = (u8 *)(D_88A01C30 + i * 20);
+        count = list[0x25];
+        entries = *(unk_D_88A01C30_20_entry ***)(list + 0x20);
+        for (j = 0; j != count; j++) {
+            if (i == 0) {
+                GbSave_WriteGen2BoxName(D_88006868, j, ((u8 **)D_88234670[(*entries)->unk_00[8] - 1])[(*entries)->unk_04]);
+            } else if (i == 1) {
+                func_80053584(j, ((u8 **)D_88234670[(*entries)->unk_00[8] - 1])[(*entries)->unk_04]);
+            }
+            entries++;
+        }
+    }
+}
+/* mkdraft:func_88200EDC end */
 
 /* mkdraft:func_88201048 begin */
 extern s32 D_88233750;
