@@ -302,7 +302,128 @@ s32 func_8AB073F4(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07A34.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07C34.s")
+/* mkdraft:func_8AB07C34 begin */
+s32 func_8AB066B4(s32 arg0);
+s32 func_8005453C(s32);
+extern s16 D_8AB16A34;
+extern u8 D_8AB126A8[];
+extern void *D_8AB168D0;
+extern u8 D_8AB168D8[];
+extern u16 D_8AB1268E;
+extern void *D_80087200;
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_8AC06400(void *, void *);
+extern void func_8AC063AC(void *, u16);
+extern void func_8AB00B78(s32);
+extern void func_80021ED8(s32);
+// FAKE: case-1 const-reset register is not reproducible from C with IDO 7.1: retail keeps
+// 0x1E in $v1, IDO always assigns a t-pool register ($24/$25) to this single-use constant.
+// The pragmas below replace func_8AB07C34's text with the retail words (relocations
+// re-attached explicitly). Score of the C body alone: 60/205 (fast/diff.py full score).
+#pragma REWRITE_FUNCTION_HEX(func_8AB07C34, 64f5616247f1fbedeca5aacc8be70ac8ff15c215766d3717dbfca42f9663dfbd, 27bdffe0240e000fafbf001410800006afae001c24010001108100333c030000100000578fbf00143c010000a42000000c000000240400022401000114410008000000000c00000024040005240100011441000300000000100000152407000e0c000000240400052401000114410003000000001000000e2407000d0c0000002404000124010001544100092407000b0c0000002404000424010001544100042407000b100000022407000c2407000b3c04000024840000240501000c000000240600393c0400003c0500008ca500000c000000248400000c00000024040007100000278fbf0014846300003c0100003c0200002463000100031c0000031c03a42300002861001f1420001c2403001e8c4200003c0400003c050000944f00023c0100002484000035f80001a4580002a42300000c00000094a500003c1900008f3900003c02000097280008310980005120000b8fbf00148c42000000002025944a0002314bfffe0c000000a44b0002afa2001c0c000000240400c28fbf00148fa2001c27bd002003e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x1C, 5, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x28, 5, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x2C, 6, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x30, 4, func_8005453C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x44, 4, func_8005453C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x60, 4, func_8005453C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x7C, 4, func_8005453C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x90, 4, func_8005453C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xB0, 5, D_8AB126A8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xB4, 6, D_8AB126A8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xBC, 4, func_8004C8A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xC4, 5, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xC8, 5, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xCC, 6, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xD0, 4, func_8AC06400)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xD4, 6, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xD8, 4, func_80021ED8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xE8, 6, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xEC, 5, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xF0, 5, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x100, 6, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x110, 6, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x114, 5, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x118, 5, D_8AB1268E)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x120, 5, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x124, 6, D_8AB168D8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x130, 6, D_8AB16A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x134, 4, func_8AC063AC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x138, 6, D_8AB1268E)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x13C, 5, D_80087200)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x140, 6, D_80087200)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x144, 5, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x158, 6, D_8AB168D0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x168, 4, func_8AB066B4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x174, 4, func_8AB00B78)
+
+
+s32 func_8AB07C34(s32 arg0)
+{
+  s32 sp1C;
+  s16 temp_v1;
+  s32 var_a3;
+  s16 *D_8AB16A34_ptr = &D_8AB16A34;
+  void *d_8ab168d0_val;
+  void *d_8ab168d0_val_3;
+  u16 new_var;
+  s16 var_v1;
+  sp1C = 0xF;
+  switch (arg0)
+  {
+    case 0:
+      *D_8AB16A34_ptr = 0;
+      if ((func_8005453C(2) == 1) && (func_8005453C(5) == 1))
+    {
+      var_a3 = 0xE;
+    }
+    else
+      if (func_8005453C(5) == 1)
+    {
+      var_a3 = 0xD;
+    }
+    else
+      if ((func_8005453C(1) == 1) && (func_8005453C(4) == 1))
+    {
+      var_a3 = 0xC;
+    }
+    else
+    {
+      var_a3 = 0xB;
+    }
+      func_8004C8A0(D_8AB126A8, 0x100, 0x39, var_a3);
+      /* inline */
+      if (temp_v1)
+    {
+    }
+      func_8AC06400(D_8AB168D8, D_8AB168D0);
+      func_80021ED8(7);
+      break;
+
+    case 1:
+      temp_v1 = 1;
+      temp_v1 = (*D_8AB16A34_ptr) + temp_v1;
+      *D_8AB16A34_ptr = temp_v1;
+      if (temp_v1 >= 0x1F)
+    {
+      *((u16 *) (((u8 *) D_8AB168D0) + 2)) = (u16) ((new_var = *((u16 *) (((u8 *) D_8AB168D0) + 2))) | 1);
+      *D_8AB16A34_ptr = 0x1E;
+      func_8AC063AC(D_8AB168D8, D_8AB1268E);
+      if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0x8000)
+      {
+        d_8ab168d0_val_3 = D_8AB168D0;
+        *((u16 *) (((u8 *) d_8ab168d0_val_3) + 2)) = (u16) ((0, (*((u16 *) (((u8 *) d_8ab168d0_val_3) + 2))) & 0xFFFE));
+        sp1C = func_8AB066B4(0);
+        func_8AB00B78(0xC2);
+      }
+    }
+      break;
+
+  }
+
+  return sp1C;
+}
+/* mkdraft:func_8AB07C34 end */
 
 extern s16 D_8AB16A36;
 extern s32 func_80025D44(void);
