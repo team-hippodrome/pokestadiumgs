@@ -956,5 +956,81 @@ s32 func_82303B5C(void) {
     return (var_a0 << 16) | var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82303B94.s")
+/* mkdraft:func_82303B94 begin */
+extern u8 *Asset_LoadToSegment(s32, u8 *, u8 *, s32);
+extern s32 Fragment_LoadAndCall(s32, u8 *, u8 *, s32, s32);
+extern s32 func_80047588(s32, s32);
+extern void func_80047610(void);
+extern void func_8004C398(void);
+extern void func_80055948(s32);
+extern void func_80055EF0(u8 *, s32);
+extern void func_80008624(void);
+extern void StageLoader_WaitForRetrace(void);
+extern s32 main_pool_push_state(s32);
+extern s32 main_pool_pop_state(s32);
+extern s32 func_82303A04(s32, s32);
+extern s32 func_82303B5C(void);
+extern s8 *D_82305A70;
+extern u8 D_82305D70[];
+extern s16 D_82305E6A;
+extern s32 D_82305EA8;
+extern u8 D_1000000;
+extern u8 D_446E30;
+extern u8 D_447D00;
+extern u8 D_82C00000;
+extern u8 fragment83_ROM_START;
+extern u8 fragment84_ROM_START;
+
+
+
+void func_82303B94(s32 arg0, s8 *arg1) {
+    // FAKE: alias so uopt loads D_82305EA8 as lui/lw (direct global read hoists its address into an s-register); 1085 without
+    s32 *D_82305EA8_ptr = &D_82305EA8;
+    s32 var_a1;
+    u32 var_s0;
+    s32 var_s2;
+    s32 var_s3;
+
+    var_s2 = arg0;
+    var_s0 = 1;
+    var_s3 = 1;
+    D_82305A70 = arg1;
+    main_pool_push_state(0x4350534C);
+    func_80047588(0x1C, 0);
+    Asset_LoadToSegment((u32) ((s32) &D_1000000 & 0x0F000000) >> 0x18, &D_446E30, &D_447D00, 0);
+    func_80055948(3);
+    var_a1 = 0;
+    // FAKE: the redundant else arm keeps the two-arm block uopt folds into beqz/b/li (plain ``if (x) var_a1 = 1;'' gives no branch); 300 without
+    if (*(s16 *) D_82305A70 != 0) {
+        var_a1 = 1;
+    } else {
+        var_a1 = 0;
+    }
+    func_80055EF0(D_82305D70, var_a1);
+    func_80008624();
+    do {
+        main_pool_push_state(0x6C6F6F70);
+        // FAKE: the (s32) dispatch keeps the case constants from being CSE'd with ``var_s0 = 1'' below (uncast switch gives move s0,s4); 200 without
+        switch ((s32) var_s0) {
+            case 1:
+                var_s0 = func_82303A04(var_s2, var_s3);
+                var_s3 = 0;
+                func_8004C398();
+                break;
+            case 2:
+                var_s0 = 1;
+                if ((*D_82305EA8_ptr) != 0) {
+                    Fragment_LoadAndCall(((u32) ((s32) &D_82C00000 & 0x0FF00000) >> 0x14) - 0x10, &fragment83_ROM_START, &fragment84_ROM_START, 0, *D_82305EA8_ptr);
+                }
+                var_s2 = (D_82305E6A + 1) & 0xFFFF;
+                break;
+        }
+        main_pool_pop_state(0x6C6F6F70);
+    } while (var_s0 != 0);
+    StageLoader_WaitForRetrace();
+    func_80047610();
+    main_pool_pop_state(0x4350534C);
+    func_82303B5C();
+}
+/* mkdraft:func_82303B94 end */
 #endif
