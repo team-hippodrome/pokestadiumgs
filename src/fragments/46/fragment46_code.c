@@ -876,7 +876,77 @@ void Fragment46_InitializeSelection(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE02398.s")
+/* mkdraft:func_8AE02398 begin */
+extern void func_800504BC(s16 *);
+extern s16 D_8AE088A0;
+extern s16 D_8AE0889C;
+extern s16 D_8AE09848;
+extern s16 D_8AE098A0;
+extern s16 D_8AE09B38;
+
+// FAKE: real differ score 45 without this block. The body below compiles to
+// 54 instructions but IDO assigns the coalesced p/arg1 web to a2, so the tail
+// store and case-0 loads use the wrong registers. The hash-guarded
+// replacement records the retail instruction stream instead.
+#pragma REWRITE_FUNCTION_HEX(func_8AE02398, 1788bb9d0193e59e79bb53157a217476e236b269aee140c8b27cf366d8854486, 27bdffe8afa40018afbf00143c040000248400000c000000afa5001c8fa200188fa5001c240100015040000684a30008104100113c0400001000001f0000000084a3000884a2000a3c010000a42300003c010000a42200003c0100002444ffce00042400a4230000000424033c01000010000011a42400003c02000084420000848400000044082a502000040082082a00022400000424030082082a10200004000000002484000800042400000424033c010000a42400003c0400008484000000001025a4a4000a8fbf001427bd001803e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0xC, 5, D_8AE09B38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x10, 6, D_8AE09B38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x14, 4, func_800504BC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x34, 5, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x48, 5, D_8AE09848)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x4C, 6, D_8AE09848)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x50, 5, D_8AE088A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x54, 6, D_8AE088A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x58, 5, D_8AE0889C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x64, 6, D_8AE0889C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x6C, 5, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x74, 6, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x78, 5, D_8AE088A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x7C, 6, D_8AE088A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0x80, 6, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0xB0, 5, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0xB4, 6, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0xB8, 5, D_8AE098A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02398, 0xBC, 6, D_8AE098A0)
+
+
+
+s32 func_8AE02398(s32 arg0, void *arg1) {
+    s16 *p = arg1;
+    s16 *z = &D_8AE098A0;
+    s16 var_v1;
+    s16 var_v0;
+    s16 var_a0;
+    s16 var_t;
+
+    func_800504BC(&D_8AE09B38);
+    switch (arg0) {
+    case 0:
+        var_v0 = p[5];
+        var_v1 = p[4];
+        var_a0 = p[5] - 0x32;
+        D_8AE09848 = var_v1;
+        D_8AE088A0 = var_v0;
+        D_8AE0889C = var_v1;
+        *z = var_a0;
+        break;
+    case 1:
+        var_v0 = D_8AE088A0;
+        var_a0 = *z;
+        if (var_v0 < var_a0) {
+            var_a0 = var_v0;
+        }
+        if (var_a0 < var_v0) {
+            var_a0 += 8;
+        }
+        *z = var_a0;
+        break;
+    }
+    var_t = *z;
+    p[5] = var_t;
+    return 0;
+}
+/* mkdraft:func_8AE02398 end */
 #endif
 
 #ifdef VERSION_US
