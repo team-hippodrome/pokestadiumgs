@@ -210,7 +210,40 @@ void func_87E10214(s32 arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E102D4.s")
+/* mkdraft:func_87E102D4 begin */
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+// Integer return type: the final gSPDisplayList keeps the display-list head in v0 and its
+// incremented value in t1. The body itself has no return statement, so no value is produced;
+// a void declaration colours the head v1 and its increment t9 instead.
+
+
+s32 func_87E102D4(s32 arg0, u8 *arg1) {
+    s16 sp58[4];
+    u16 *obj;
+    s32 sp50;
+
+    switch (arg0) {
+    case 0:
+        *(u16 *)(arg1 + 2) &= 0xFFFD;
+        return;
+    case 1:
+        if (((1 << *(s32 *)(arg1 + 0x20)) & *(u8 *)((u8 *)*(void **)((u8 *)(u32)D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) {
+            sp50 = *(s32 *)(arg1 + 0x20) + ((((1 << *(s32 *)(arg1 + 0x20)) & *(u8 *)((u8 *)*(void **)((u8 *)(u32)D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) ? 6 : 2);
+            func_800504BC(sp58);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            obj = (u16 *)func_8004C990(*(u16 *)(arg1 + 0x24), sp50);
+            func_8004D1FC((u8 *)obj);
+            GfxRect_DrawTextured((s16) (*(s16 *)(arg1 + 8) + sp58[0]), (s16) (*(s16 *)(arg1 + 0xA) + sp58[1]),
+                                 (s16) (((f32) (u32)obj[0] * 0.6f >= 0.0f) ? (s32) ((f32) (u32)obj[0] * 0.6f + 0.5f) : (s32) ((f32) (u32)obj[0] * 0.6f - 0.5f)),
+                                 (s16) (((f32) (u32)obj[1] * 0.6f >= 0.0f) ? (s32) ((f32) (u32)obj[1] * 0.6f + 0.5f) : (s32) ((f32) (u32)obj[1] * 0.6f - 0.5f)),
+                                 0, 0, 0x6AB, 0x6AB, 0);
+            gSPDisplayList(D_800D0510++, D_80094F50);
+        }
+        return;
+    }
+}
+/* mkdraft:func_87E102D4 end */
 
 void func_87E10500(s32 arg0, u8 *arg1) { if ((arg0 != 0) && (arg0 == 1)) { *(s16 *)(arg1 + 0x26) = *(s8 *)((u8 *)(u32)D_87E1EBB8 + 0x938); } }
 
