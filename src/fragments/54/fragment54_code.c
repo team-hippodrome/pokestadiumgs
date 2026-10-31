@@ -1097,7 +1097,58 @@ s32 func_86605F04(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866061E0.s")
+/* mkdraft:func_866061E0 begin */
+extern s32 D_8660672C;
+extern u8 D_866067A0[];
+extern u8 D_86606884[];
+extern u8 D_8660AAF0[];
+extern void func_8003F210(void *, s32);
+
+
+
+void func_866061E0(void) {
+    u8 *src;
+    u8 *dst;
+    u8 *anim;
+    u8 *entry;
+    u8 *model;
+    u8 *node;
+
+    func_800086A4(2);
+    if ((*(u8 *)((u8 *)D_86607230 + 0x2180)) == 4) {
+        dst = (u8 *)&D_866067A0 - 0x18;
+        src = D_86606884 + D_8660672C * 0x18;
+        do {
+            *(f32 *)(dst + 0x1C) = *(f32 *)src;
+            src += 4;
+            dst += 4;
+        } while (dst < (u8 *)&D_866067A0);
+        /* Retail materializes the loop-end address D_8660AAF0 before the four
+         * pointer bases, in reverse assignment order. IDO treats source-line
+         * boundaries as scheduling barriers here, so the initializations stay
+         * on the loop's line. */
+        anim = D_866079B0; entry = D_86607410; model = D_866073E8; node = D_8660A990; do {
+            func_8003F1DC(anim);
+            func_8003F114(entry, 0, -1, *(s32 *)model);
+            ModelAnim_SetEventFrame(entry, 0);
+            func_8003F3BC(entry, 0);
+            func_8003F210(entry, 0);
+            ModelAnim_SetFrame(entry, (s16)(guRandom() % 25));
+            node += 0x58;
+            anim += 0x168;
+            entry += 0x168;
+            model += 4;
+            *(s32 *)(node - 0x30) = 0;
+        } while (node != D_8660AAF0);
+    }
+    StageFade_StartFromOpaque(10);
+    do {
+        func_80064D28();
+        func_866040B8();
+        *(s32 *)((u8 *)&D_86606788 + 4) = func_86605F04(*(s32 *)((u8 *)&D_86606788 + 4));
+    } while (*(s32 *)((u8 *)&D_86606788 + 4) != 3);
+}
+/* mkdraft:func_866061E0 end */
 #endif
 
 #ifdef VERSION_US
