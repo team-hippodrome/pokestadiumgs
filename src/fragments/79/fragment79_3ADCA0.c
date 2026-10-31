@@ -752,7 +752,74 @@ void func_84140CFC(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84140D68.s")
+/* mkdraft:func_84140D68 begin */
+extern u8 *D_841951F8;
+extern u16 D_84186BFC;
+extern u8 D_84186F8C[];
+void ParticleGfx_SetPrimColor_fragment79(u8 r, u8 g, u8 b, u8 a);
+void func_8413FB3C(s16 arg0, s16 arg1);
+void func_8413FB80(s16 arg0, s16 arg1);
+
+
+
+void func_84140D68(u8 *arg0) {
+    u8 idx;
+    u8 count;
+    s32 i;
+    s32 offset;
+    s16 dx;
+    u8 *party;
+    u8 **slot;
+    u16 x;
+
+    idx = arg0[1];
+    if (((arg0[8] & 1) == 0) && (arg0[0] == 3)) {
+        if (idx != 0) {
+            slot = &(&D_841951F8)[idx];
+            party = *slot;
+            count = party[8];
+            dx = (6 - count) * D_84186BFC;
+        } else {
+            slot = &(&D_841951F8)[idx];
+            party = *slot;
+            count = party[8];
+            dx = 0;
+        }
+        x = (u16)(*(s16 *)(arg0 + 0xA) + dx);
+        i = 0;
+        offset = 0;
+        if ((count = party[8]) > 0) {
+            do {
+                /* FAKE: the u32 add keeps the record address a runtime word sum, so the
+                 * addu that indexes the record is followed by the target's addiu; typed
+                 * pointer arithmetic folds record + 0x18 into the 0x3E HP and 0x24 status
+                 * displacements and drops the addiu. Pipeline score 285 (12 rows) without
+                 * it. */
+                u8 *record = party + offset;
+                record = (u8 *)((u32)record + 0x18);
+                if (*(u16 *)(record + 0x26) == 0) {
+                    func_8413FB80((s16)x, *(s16 *)(arg0 + 0xC));
+                } else if (record[0x24] == 0) {
+                    func_8413FB3C((s16)x, *(s16 *)(arg0 + 0xC));
+                } else {
+                    ParticleGfx_SetPrimColor_fragment79(D_84186F8C[0], D_84186F8C[1], D_84186F8C[2], 0xFF);
+                    func_8413FB3C((s16)x, *(s16 *)(arg0 + 0xC));
+                    ParticleGfx_SetPrimColor_fragment79(0xFF, 0xFF, 0xFF, 0xFF);
+                }
+                party = *slot;
+                i++;
+                offset += 0x58;
+                x = (u16)(x + D_84186BFC) & 0xFFFF;
+                /* FAKE: the 16-bit mask leaves the zero-extended party-byte count unchanged.
+                 * It is load-bearing for register colors: masked, the late count is its own
+                 * web that IDO colors t0 while the preheader count stays in v0, matching the
+                 * target; unmasked, both counts color v0. Pipeline score 10 (2 rows)
+                 * without it. */
+            } while (i < ((count = party[8]) & 0xFFFF));
+        }
+    }
+}
+/* mkdraft:func_84140D68 end */
 #endif
 
 #ifdef VERSION_US
