@@ -138,7 +138,24 @@ void func_81300244(s32 arg0, s32 arg1, s32 arg2) {
     Fragment14_ResetGrid((u8 *)(arg0 + 0xD18), 0x9B, 0xE1, arg2, &D_81312A40);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_813002D0.s")
+/* mkdraft:func_813002D0 begin */
+
+
+s32 func_813002D0(void *arg0) {
+    Fragment14SetupState *state;
+    s8 value;
+    s32 result;
+
+    state = (Fragment14SetupState *)arg0;
+    value = *(s8 *)(state->data + state->slot + 0x900);
+    if ((value < 4) && (value >= 0)) {
+        result = value;
+    } else {
+        result = 0;
+    }
+    return result;
+}
+/* mkdraft:func_813002D0 end */
 
 s32 func_81300314(void *arg0, s32 arg1, s32 arg2) { u8 *base = (u8 *)arg0 + 0x18000; do { arg1 += arg2; if (arg1 < 0 || arg1 >= 4) break; if (*(s8 *)(*(u8 **)(base + 0x2148) + arg1 + 0x900) >= -1) break; } while (1); return arg1; }
 
