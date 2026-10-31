@@ -1193,7 +1193,67 @@ void func_82C0423C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C04350.s")
+/* mkdraft:func_82C04350 begin */
+extern void _bzero(void *, s32);
+extern s32 func_82C0359C(s32 *, s32, u8 *);
+extern s32 func_82C03674(s32, s32, void *);
+extern s32 func_82C036E4(s32, s32, void *);
+extern s32 func_82C0383C(s32, s32, void *);
+extern s32 func_82C03904(s32, s32, void *);
+extern s32 func_82C03974(s32, s32, void *);
+extern s32 func_82C03CA8(s32, s32, void *);
+extern s32 func_82C03D50(s32, s32, s32);
+extern s32 func_82C03DC0(s32, s32, void *);
+extern s32 func_82C03EE0(s8 *, s32, s32);
+extern s32 func_82C03F40(s32, s32, void *);
+extern s32 func_82C03FB4(s32, s32, void *);
+extern s32 func_82C0405C(s32, s32, void *);
+extern s32 func_82C0412C(s32, s32, void *);
+extern s32 func_82C041CC(s32, s32, s32);
+extern u8 D_82C04C38;
+extern u8 D_82C04C88[];
+
+// Rebuilds the text records of the menu at D_82C04C38. The 0x11F8-byte record
+// area starts at D_82C04C88 (offset 0x50 of the menu state) and holds records of
+// 0x1CC bytes; D_82C04C88 itself is the record at index 0. Each of the 15 row
+// writers fills the two strings of one record and returns 1 when it printed the
+// record for the current page, 0 when it did not, so the running count is the
+// address of the next record. The count lands at byte 3 of the menu state, where
+// func_82C02078 reads it as the number of rows. The second argument of every
+// writer is the word at 0x14 of the menu state, whose bits 8..15 select message
+// variants; the third is the word at 0x18, which is the context pointer also
+// named D_82C04C50.
+
+
+void func_82C04350(void) {
+    s32 settings;
+    s32 context;
+    s32 count;
+    u8 *menu;
+
+    menu = &D_82C04C38;
+    settings = *(s32 *)(menu + 0x14);
+    context = *(s32 *)(menu + 0x18);
+    count = 0;
+    _bzero((s32 *)&D_82C04C88, 0x11F8);
+    count += func_82C0359C((s32 *)&D_82C04C88, settings, (u8 *)context);
+    count += func_82C03674((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C036E4((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C0383C((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03904((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03974((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03CA8((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03D50((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, context);
+    count += func_82C03DC0((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03EE0((s8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, context);
+    count += func_82C03F40((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03FB4((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C0405C((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C0412C((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C041CC((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, context);
+    ((u8 *)&D_82C04C38)[3] = count;
+}
+/* mkdraft:func_82C04350 end */
 #endif
 
 #ifdef VERSION_US
