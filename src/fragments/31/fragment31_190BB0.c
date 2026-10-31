@@ -137,7 +137,42 @@ void func_8821E1E4(void) {
     D_880068B8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E21C.s")
+/* mkdraft:func_8821E21C begin */
+extern void D_88000E4C(void);
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+extern u32 D_882347F0;
+extern s32 D_882345F4;
+extern char *LabPC_FormatColoredMoveName(char *output, u8 move);
+extern void LabPC_OpenMessageDialog(s8 *title,s16 x,s16 y,s32 style,u8 red,u8 green,u8 blue,u8 delay,u8 kind,s32 *done,s32 *cancel,s32 *extra,void (*callback)(void));
+extern s32 func_8004C54C(s32 index,s32 value);
+extern void *func_8004C8A0(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_88903B00(void);
+
+
+
+void func_8821E21C(u8 arg0, s32 arg1) {
+    s8 sp150[0x80];
+    u8 sp50[0x100];
+
+    func_8004C54C(0x1E, LabPC_FormatColoredMoveName(sp150, arg0));
+    switch (arg1) {
+    case 0:
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x61), 0x24D, 0x118, 2, 0xFFU, 0xAAU, 0x8CU, 2U, 2U, (s32 *)(*(s32 *)((u8 *)D_882347F0 + 0x58) + 0x2C), (s32 *)(*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *) D_88000E4C, D_88000E4C);
+        return;
+    case 1:
+        func_8004C54C(0x1D, D_882345F4 + 0x3C);
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x62), 0x17C, 0x11F, 4, 0xDBU, 0xDCU, 0xB4U, 2U, 0U, &D_880068B4, &D_880068B8, (s32 *) func_88903B00, D_88000E4C);
+        return;
+    case 2:
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x64), 0x1F6, 0xA1, 2, 0xFFU, 0xAAU, 0x8CU, 0U, 2U, NULL, (s32 *)(*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *) D_88000E4C, D_88000E4C);
+        return;
+    case 3:
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x64), 0x1FC, 0x1AC, 8, 0xFFU, 0xAAU, 0x8CU, 0U, 2U, NULL, (s32 *)(*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *) D_88000E4C, D_88000E4C);
+        return;
+    }
+}
+/* mkdraft:func_8821E21C end */
 
 extern void Input_SetRepeatController(void *);
 void func_8821E490(void) {
