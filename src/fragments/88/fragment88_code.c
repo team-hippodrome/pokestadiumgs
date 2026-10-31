@@ -237,5 +237,33 @@ void func_81C00740(u8 arg0, s16 *arg1, s16 *arg2, s32 arg3, u8 arg4) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/88/fragment88_code/func_81C007A4.s")
+/* mkdraft:func_81C007A4 begin */
+extern void func_8005E07C(s32, u8);
+extern void func_8005E278(u8 arg0, void *arg1);
+extern void func_8005E2BC(u8 arg0, void *arg1);
+// Read the slot's three bytes at D_801285D8[...] + 0x5FA, subtract
+// (arg1 - data[1]) from data[0], adding 140 when that subtrahend is negative,
+// write data[0] = 1 and data[1] = arg1's low byte back, then clear the
+// D_80128570 entry's 0x5E5 byte when the difference is not positive.
+//@src/585D0.c
+
+
+void func_81C007A4(u8 arg0, u16 arg1) {
+    u8 data[3];
+    s32 result;
+
+    func_8005E278(arg0, data);
+    result = arg1 - data[1];
+    if (result < 0) {
+        result += 140;
+    }
+    result = data[0] - result;
+    data[0] = 1;
+    data[1] = arg1 & 0xFF; // FAKE: mask is a no-op on this u8 store; without it the diff scores 35
+    func_8005E2BC(arg0, data);
+    if (result <= 0) {
+        func_8005E07C(arg0, 0);
+    }
+}
+/* mkdraft:func_81C007A4 end */
 #endif
