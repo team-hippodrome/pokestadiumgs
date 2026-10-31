@@ -430,7 +430,82 @@ void func_84102750(s32 arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841027B4.s")
+/* mkdraft:func_841027B4 begin */
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+
+typedef struct unk_func_841027B4_vec3f {
+    /* 0x0 */ f32 x;
+    /* 0x4 */ f32 y;
+    /* 0x8 */ f32 z;
+} unk_func_841027B4_vec3f;
+
+typedef struct unk_func_841027B4 {
+    /* 0x00 */ u8 unk_00[0x18];
+    /* 0x18 */ f32 unk_18;
+    /* 0x1C */ f32 unk_1C;
+    /* 0x20 */ unk_func_841027B4_vec3f unk_20;
+    /* 0x2C */ unk_func_841027B4_vec3f unk_2C;
+    /* 0x38 */ unk_func_841027B4_vec3f unk_38;
+    /* 0x44 */ unk_func_841027B4_vec3f unk_44;
+    /* 0x50 */ unk_func_841027B4_vec3f unk_50;
+} unk_func_841027B4;
+
+M2C_UNK func_84101D54(u8 *);                        /* extern */
+
+
+
+void func_841027B4(u8 *arg0) {
+    void *sp24;
+    s32 temp_v0_2;
+    u8 temp_v0;
+    unk_func_841027B4 *rec = (unk_func_841027B4 *)arg0;
+
+    sp24 = M2C_FIELD(arg0, void **, 0x10);
+    temp_v0 = M2C_FIELD(arg0, u8 *, 0x7C);
+    switch (temp_v0) {                              /* irregular */
+    case 0:
+        func_84101D54(arg0);
+        break;
+    case 1:
+        func_84101D54(arg0);
+        break;
+    case 7:
+        func_84101D54(arg0);
+        break;
+    }
+    M2C_FIELD(arg0, f32 *, 0x20) = (f32) (rec->unk_38.x + rec->unk_2C.x + rec->unk_44.x + rec->unk_50.x);
+    M2C_FIELD(arg0, f32 *, 0x24) = (f32) (rec->unk_38.y + rec->unk_2C.y + rec->unk_44.y + rec->unk_50.y);
+    M2C_FIELD(arg0, f32 *, 0x28) = (f32) (rec->unk_38.z + rec->unk_2C.z + rec->unk_44.z + rec->unk_50.z);
+    func_84102750(M2C_FIELD(arg0, s32 *, 0xC), sp24);
+    temp_v0_2 = M2C_FIELD(arg0, s32 *, 0xC);
+    if (temp_v0_2 != 0) {
+        M2C_FIELD(temp_v0_2, f32 *, 0x24) = (f32) M2C_FIELD(arg0, f32 *, 0x20);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x28) = (f32) M2C_FIELD(arg0, f32 *, 0x24);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x2C) = (f32) M2C_FIELD(arg0, f32 *, 0x28);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x30) = (f32) M2C_FIELD(arg0, f32 *, 0x18);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x34) = (f32) M2C_FIELD(arg0, f32 *, 0x18);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x38) = (f32) M2C_FIELD(arg0, f32 *, 0x18);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), s16 *, 0x1E) = (s16) M2C_FIELD(arg0, s16 *, 0x6A);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), s16 *, 0x20) = (s16) M2C_FIELD(arg0, s16 *, 0x6C);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), s16 *, 0x22) = (s16) M2C_FIELD(arg0, s16 *, 0x6E);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), u8 *, 0x1D) = (u8) M2C_FIELD(arg0, u8 *, 0x87);
+    }
+}
+/* mkdraft:func_841027B4 end */
 
 extern s32 ParticleMath_LacksBits(void *arg0, s32 arg1);
 extern s32 ParticleMath_HasBits(void *arg0, s32 arg1);
