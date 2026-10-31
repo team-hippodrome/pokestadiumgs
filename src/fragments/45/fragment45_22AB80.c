@@ -205,7 +205,142 @@ s32 func_8AB0699C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB06AE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB06D78.s")
+/* mkdraft:func_8AB06D78 begin */
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+extern u8 *D_8AB12668[];
+extern s16 D_8AB1269A;
+extern u8 D_8AB12CB0[];
+extern u8 D_8AB12F00[];
+extern void TextHighlight_AnimateScales(void);
+extern void TextPanels_UpdateVisibility(void);
+extern void TextRow_SetOrangeState(s16 row_index);
+extern s32 func_80001FF0(void);
+extern void func_8AB00B98(u8 *, u32);
+extern void func_8AB01728(void);
+extern void func_8AB03DFC(s16, s16);
+extern void func_8AB04038(void);
+
+s32 func_8AB07128(M2C_UNK);                         /* extern */
+extern u8 *D_8AB1266C;
+extern u8 *D_8AB12670;
+extern u8 *D_8AB12674;
+extern void *D_8AB16960;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
+extern s32 D_8AB16A24;
+
+
+
+s32 func_8AB06D78(s32 arg0) {
+    u16 temp_v0;
+    s32 sp20;
+    s16 sp1E_arr[2];
+    u8 *var_v0;
+    u8 *end;
+    s16 level;
+    s32 changed;
+
+    sp20 = 8;
+    switch (arg0) {                                 /* irregular */
+    case 2:
+        break;
+    case 0:
+        TextPanels_UpdateVisibility();
+        D_8AB1269C = 0x14;
+        D_8AB16A24 = 0;
+        M2C_FIELD(D_8AB16960, u16 *, 2) = (u16) (M2C_FIELD(D_8AB16960, u16 *, 2) & 0xFFFD);
+        M2C_FIELD(D_8AB16A0C, u16 *, 2) = (u16) (M2C_FIELD(D_8AB16A0C, u16 *, 2) & 0xFFFD);
+        M2C_FIELD(D_8AB16A10, u16 *, 2) = (u16) (M2C_FIELD(D_8AB16A10, u16 *, 2) & 0xFFFD);
+        break;
+    case 1:
+        sp1E_arr[1] = 0;
+        func_8AB01728();
+        temp_v0 = M2C_FIELD(D_80087200, u16 *, 8);
+        if (temp_v0 & 8) {
+            if (D_8AB1269A == 0) {
+                TextRow_SetOrangeState(0);
+            } else {
+                func_8AB03DFC(0, 0);
+            }
+            sp1E_arr[1] = 1;
+            func_8AB00B98(*D_8AB12668, 0xFFFF00FFU);
+        } else if (temp_v0 & 1) {
+            if (D_8AB1269A == 1) {
+                TextRow_SetOrangeState(0);
+            } else {
+                func_8AB03DFC(0, 1);
+            }
+            sp1E_arr[1] = 1;
+            func_8AB00B98(D_8AB1266C, 0xFFFF00FFU);
+        } else if (temp_v0 & 4) {
+            if (D_8AB1269A == 2) {
+                TextRow_SetOrangeState(0);
+            } else {
+                func_8AB03DFC(0, 2);
+            }
+            sp1E_arr[1] = 1;
+            func_8AB00B98(D_8AB12670, 0xFFFF00FFU);
+        } else if (temp_v0 & 2) {
+            if (D_8AB1269A == 3) {
+                TextRow_SetOrangeState(0);
+            } else {
+                func_8AB03DFC(0, 3);
+            }
+            sp1E_arr[1] = 1;
+            func_8AB00B98(D_8AB12674, 0xFFFF00FFU);
+        }
+        TextHighlight_AnimateScales();
+        func_8AB04038();
+        if (((s32) D_8AB16A24 % (s32) (func_80001FF0() / 4)) == 0) {
+            D_8AB1269C -= 1;
+            if (D_8AB1269C < 0) {
+                D_8AB1269C = 0;
+                // FAKE: both assignments must share one source line, which ties the two
+                // loop-preheader address chains in as1's line-number ordering; diff score 30
+                // without it.
+                var_v0 = D_8AB12CB0, end = D_8AB12F00;
+                do {
+                    if (M2C_FIELD(var_v0, s16 *, 4) == 0) {
+                        M2C_FIELD(var_v0, s16 *, 4) = 2;
+                    }
+                    var_v0 += 148;
+                } while (var_v0 != end);
+                changed = (sp1E_arr[1] == 0);
+                sp1E_arr[1] = 1;
+                if (changed) {
+                    func_8AB00BA4(0x65, 0, 0);
+                }
+            }
+        }
+        if (((s32) D_8AB16A24 % (s32) ((func_80001FF0() / 4) * 2)) == 0) {
+            level = D_8AB1269C / 2 + 1;
+            if (sp1E_arr[1] == 0) {
+                func_8AB00BA4(0x65, level, 0);
+            }
+        }
+        if (sp1E_arr[1] == 1) {
+            sp20 = func_8AB07128(0);
+        }
+        D_8AB16A24 += 1;
+        break;
+    }
+    return sp20;
+}
+/* mkdraft:func_8AB06D78 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07128.s")
 
