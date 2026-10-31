@@ -1,5 +1,10 @@
+
+
+# AI Disclaimer
+AI was used heavily in making this decompilation.
+
 # Pokemon Stadium 2 (US)
-A WIP decomp of Pokemon Stadium 2 (US/JP).
+A WIP decomp of Pokemon Stadium 2 (US/JP). This was originally based off work from pret/pokestadiumgs; however the vast majority of work originates from our original efforts.
 
 Current US decompilation progress, including a per-source-file breakdown, is
 documented in [COVERAGE.md](COVERAGE.md).
@@ -35,4 +40,6 @@ python3 -m pip install -r requirements.txt
 2. Set up tools and extract the rom: `VERSION=us make init`
 3. Re-assemble the rom: `make`
 
-For contacts and other pret projects, see [pret.github.io](https://pret.github.io/).
+Done by [Team Hippodrome](https://discord.gg/8EvuQxbxu8).
+
+Part of the [R.A.I.D. (Retro AI Development)](https://discord.gg/eCvnsvrjnY) community.
