@@ -64,7 +64,30 @@ void func_82101CB4(f32 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5) 
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82101D88.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82101E70.s")
+/* mkdraft:func_82101E70 begin */
+f32 *func_82101E70(void *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4,
+                   f32 arg5, f32 arg6, f32 arg7, f32 arg8, f32 arg9) {
+    f32 *var_s1;
+    f32 *var_s2;
+    f32 *var_s3;
+    s32 var_s0;
+
+    if (arg0 != NULL) {
+        arg1 = MainPool_AllocAligned(arg0, 0xA0, 4);
+    }
+    *(f32 *)((u8 *)arg1 + 0x90) = arg3;
+    *(f32 *)((u8 *)arg1 + 0x94) = arg2;
+    *(f32 *)((u8 *)arg1 + 0x98) = arg5;
+    *(f32 *)((u8 *)arg1 + 0x9C) = arg6;
+    for (var_s0 = 0, var_s1 = arg1, var_s2 = arg1, var_s3 = arg1; var_s0 != 3;
+         var_s0++, var_s1 += 11, var_s2 += 1, var_s3 += 11) {
+        func_82101B94(NULL, var_s1, arg4, ((f32) var_s0 * 6.2831855f) / 3, arg2,
+                      arg7, arg8, arg9);
+        *(f32 **)((u8 *)var_s2 + 0x84) = var_s3;
+    }
+    return arg1;
+}
+/* mkdraft:func_82101E70 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82101FB4.s")
 
