@@ -366,7 +366,28 @@ void func_841091CC(void) {
     D_841901B0 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_8410922C.s")
+/* mkdraft:func_8410922C begin */
+extern s32 D_84183700[];
+extern s32 D_84183778[];
+extern s32 D_841837F0[];
+
+
+
+void func_8410922C(s32 arg0) {
+    ((void (*)(s32))D_84183700[arg0])(arg0);
+    if (*(s8 *)((u8 *)&D_841901B4 + 0) >= 8) {
+        D_841901B4 = 0;
+    }
+    // FAKE: dead address comparison forces IDO to materialize the destination base with `la`
+    // (lui+addiu+addu) while the source load stays folded (lui %hi + addu + lw %lo); without
+    // this line the store folds too and the function is 34 instructions (score 955).
+    if (&D_841901C0[*(s8 *)((u8 *)&D_841901B4 + 0)] == (s32 *)0) {
+    }
+    D_841901C0[*(s8 *)((u8 *)&D_841901B4 + 0)] = D_84183778[arg0];
+    D_841901E0[*(s8 *)((u8 *)&D_841901B4 + 0)] = D_841837F0[arg0];
+    *(s8 *)((u8 *)&D_841901B4 + 0) += 1;
+}
+/* mkdraft:func_8410922C end */
 
 /* mkdraft:func_841092B8 begin */
 void func_841092B8(void* arg0) {
