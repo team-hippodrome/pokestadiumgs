@@ -87,7 +87,63 @@ s32 func_823052FC(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_823053A8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_823055DC.s")
+/* mkdraft:func_823055DC begin */
+extern void func_800226C0(s32);
+extern s32 D_82305C60;
+
+
+
+void func_823055DC(u8 *arg0) {
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_s6;
+    s32 var_v0;
+    u8 *temp_s3;
+    u8 *var_s0;
+
+    *((s16 *) (arg0 + 6)) = (*((s16 *) (arg0 + 6))) + 1;
+    var_s6 = 1;
+    var_s2 = (*(s16 *) (arg0 + 6)) / D_82305C60;
+    // Written after the division.  With the addition textually first, as1
+    // substitutes $4 for $fp in `addiu $16,$30,8` and the saved-register copy
+    // becomes `addiu s0,a0,8`; the division expands to a trapping sequence
+    // that ends the propagation window, giving the target's `addiu s0,fp,8`.
+    var_s0 = arg0 + 8;
+    temp_s3 = (var_s2 * 0x2F0) + arg0 + 8;
+    var_s1 = 0;
+    // Shares the `do` line: the zero initialization then carries the loop's
+    // .loc and as1 schedules it after the loop-invariant li group, at 0x5660.
+    // On a line of its own it lands at 0x5650, before the li group.
+    var_v0 = 0; do {
+        if ((temp_s3 >= var_s0) && ((*((s16 *) (var_s0 + 0x2D4))) == 0)) {
+            *((s16 *) (var_s0 + 0x2D4)) = 1;
+            *((s16 *) (var_s0 + 0x2D6)) = 0;
+            func_800226C0(0xAF);
+            // FAKE: dead store, read only by the empty comparison below; it
+            // keeps var_v0's zero initialization from being deleted, which
+            // supplies the target's `or v0,zero,zero`.  Score without: 100.
+            var_v0 = var_s1;
+        }
+        // FAKE: emits no instructions, but keeps var_s2's web loop-carried so
+        // the quotient stays in s2 across the jal instead of taking v0.
+        // Score without: 647.
+        var_s2 ^= 0;
+        var_s1 += 0x2F0;
+        if ((*((s16 *) (var_s0 + 0x2D4))) != 2) {
+            var_s6 = 0;
+        }
+        var_s0 += 0x2F0;
+    } while (var_s1 != 0xBC0);
+    // karodo: never taken (var_v0 is 0 or a multiple of 0x2F0); it is the
+    // reader that keeps var_v0 live.
+    if (var_v0 == 2) {
+    }
+    if (var_s6 != 0) {
+        *((s16 *) (arg0 + 2)) = 2;
+        *((s16 *) (arg0 + 6)) = 0;
+    }
+}
+/* mkdraft:func_823055DC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_8230570C.s")
 
