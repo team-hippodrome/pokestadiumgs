@@ -87,7 +87,54 @@ void func_82200C3C(u8* arg0) {
     _bzero(arg0 + 36, 360);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82200C60.s")
+/* mkdraft:func_82200C60 begin */
+extern s32 D_8220E4E0;
+extern s32 D_8220EB10;
+
+
+
+s32 func_82200C60(void) {
+    u8 *var_a0;
+    u8 *var_a2;
+    s32 var_a1;
+    s32 var_v1;
+    s32 extra;
+
+    /* FAKE: D_8220E0C8 is the f32 scale factor func_822006CC multiplies by;
+     * it is not a byte counter. This dead byte read and the empty if(test)
+     * after the loop exist only to move the loop cursor's register: with
+     * them the ROM's assignment comes out (cursor a0, loop bound a3, 360 in
+     * t0); without them the same body scores 110 with the cursor in v0, the
+     * bound in a2 and 360 in a3. as1 drops the load because nothing reads
+     * its result, so the pair costs no instruction. */
+    extra = *(u8 *)&D_8220E0C8;
+    var_v1 = 1;
+    /* The `do` sits on this line deliberately: uopt hoists the loop bound
+     * &D_8220EB10 into the preheader carrying the loop head's source line,
+     * and as1 breaks the lui/addiu scheduling tie between the two address
+     * computations by those lines. Same line puts the bound's addiu before
+     * the cursor's, as in the ROM; separate lines put the cursor's first
+     * (two-word residual, score 30). */
+    var_a0 = (u8 *)&D_8220E4E0; do {
+        var_a1 = 0;
+        var_a2 = var_a0;
+loop_2:
+        var_a1 += 12;
+        if (*(s16 *)(var_a2 + 0x24) != 0) {
+            var_v1 = 0;
+        } else {
+            var_a2 += 12;
+            if (var_a1 != 360) {
+                goto loop_2;
+            }
+        }
+        var_a0 += 396;
+    } while (var_a0 != (u8 *)&D_8220EB10);
+    /* FAKE: the dead use that keeps the load at the top of the function. */
+    if (extra) { }
+    return var_v1;
+}
+/* mkdraft:func_82200C60 end */
 
 extern s32 func_8004C8C0(s32);
 extern s32 D_8220E4E0;
