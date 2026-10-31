@@ -179,7 +179,79 @@ void func_8821E490(void) {
     Input_SetRepeatController(D_80087200);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E4B4.s")
+/* mkdraft:func_8821E4B4 begin */
+extern u32 D_882347F0;
+extern void *D_88234620;
+extern s32 D_882345F4;
+extern u8 D_8823474F;
+extern u8 D_889041A0;
+extern void func_8821DE04(void);
+extern void LabPC_StartMoveFieldAnimation(void);
+extern void LabPC_StartStatChangeAnimation(void);
+extern s32 func_88202158();
+extern void func_882033B0(void *, void *);
+extern void func_8821E21C(u8, s32);
+
+
+
+void func_8821E4B4(void)
+{
+  s32 temp_v0;
+  if (*((s32 *) (((u8 *) D_882347F0) + 0x54)))
+  {
+    temp_v0 = *((s32 *) (((u8 *) D_882347F0) + 4));
+    switch (temp_v0)
+    {
+      case 5:
+        func_8821DE04();
+        return;
+
+      case 6:
+        *((s32 *) (((u8 *) D_882347F0) + 4)) = 3;
+        *((s32 *) (((u8 *) (*((s32 *) (((u8 *) D_882347F0) + 0x58)))) + 0x2C)) = 1;
+        return;
+
+      case 7:
+        *((s32 *) (((u8 *) D_882347F0) + 4)) = 4;
+        *((s32 *) (((u8 *) (*((s32 *) (((u8 *) D_882347F0) + 0x58)))) + 0x2C)) = 1;
+ do { } while (0);  // FAKE: temp-pool perturbation; without this empty statement IDO hoists
+                        // the D_88234620/2 compare constants late and the score is 340.
+        return;
+
+      default:
+        return;
+
+    }
+
+  }
+  else
+  {
+    temp_v0 = *((s32 *) (((u8 *) D_882347F0) + 4));
+    if ((temp_v0 != 5) && (temp_v0 != 6))
+    {
+      if (temp_v0 == 7)
+      {
+        func_882033B0((s32) D_882345F4, D_88234620);
+        func_8821E21C(((u8 *) D_882345F4)[(s8) D_889041A0 + 0xA], 1);
+      }
+    }
+    else
+      if (func_88202158(D_88234620, 2) != 0)
+    {
+      LabPC_StartMoveFieldAnimation();
+    }
+    else
+      if (func_88202158(D_88234620, 0xFC00) != 0)
+    {
+      D_8823474F = 3;
+    }
+    else
+    {
+      LabPC_StartStatChangeAnimation();
+    }
+  }
+}
+/* mkdraft:func_8821E4B4 end */
 
 extern u32 D_882347F0;
 extern void func_88004990(u8, s32);
