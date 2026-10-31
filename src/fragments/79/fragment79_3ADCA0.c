@@ -1657,7 +1657,86 @@ void func_84144BF4(void *arg0) { s32 resource = func_8004C874(0x16, 0); *(s16 *)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144C88.s")
+/* mkdraft:func_84144C88 begin */
+extern s16 D_84186C20;
+extern s16 D_84186C24;
+extern s16 D_84186C28;
+extern void func_84144118();
+extern void func_84144514();
+extern void func_84144634();
+
+
+void func_84144C88(void *arg0) {
+    u8 flags;
+
+    flags = *(u8 *)((u8 *)arg0 + 8);
+    if ((flags & 1) == 0 && (flags & 2) == 0 && (flags & 0x10) == 0) {
+        switch (*(u8 *)((u8 *)arg0 + 0)) {
+        case 0:
+            func_84143FF4(arg0);
+            break;
+        case 1:
+            func_841440B4(arg0);
+            break;
+        case 4:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C20,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 0));
+            break;
+        case 5:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C20,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 4));
+            break;
+        case 6:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C20,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 3));
+            break;
+        case 7:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C24,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 1));
+            break;
+        case 8:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C24,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 2));
+            break;
+        case 9:
+            func_84144118(arg0);
+            break;
+        case 10:
+            func_841442BC(arg0);
+            break;
+        case 11:
+            BattleUi_DrawNameRow(arg0);
+            break;
+        case 12:
+            func_84144514(arg0);
+            break;
+        case 13:
+            func_84144634(arg0);
+            break;
+        case 14:
+            func_8414491C(arg0);
+            break;
+        case 15:
+            func_84144A00(arg0);
+            break;
+        case 16:
+            func_84144A90(arg0);
+            break;
+        case 17:
+            func_84144B98(arg0);
+            break;
+        case 27:
+            func_84144BF4(arg0);
+            break;
+        }
+    }
+}
+/* mkdraft:func_84144C88 end */
 #endif
 
 #ifdef VERSION_US
