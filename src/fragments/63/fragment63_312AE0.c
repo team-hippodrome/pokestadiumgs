@@ -535,7 +535,72 @@ s32 func_87E11534(s32 count, s32 selected, u8 *entry, u8 inc, u8 dec) {
     return done;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E1162C.s")
+/* mkdraft:func_87E1162C begin */
+void func_87E0FBB4(s32 arg0, u8 *arg1, u32 arg2, u32 arg3);
+void func_87E0FC90(s32 arg0, u8 *arg1, void *arg2, u32 arg3, u32 arg4);
+s32 func_87E0FDB4(s32, u8 *, void *, u32, u32);
+extern s32 D_87E1A870[];
+extern s32 D_87E1A988[];
+extern s32 D_87E1AA10[];
+
+
+
+void func_87E1162C(s32 *arg0, s32 *arg1, s32 *arg2) {
+    s32 advance;
+    u8 *node;
+    s32 i;
+
+    // Func_87E11534 fades the selected entry of the two 8-byte entries at
+    // base+0x1C and returns 1 once it has reached 0xFF.
+    advance = 1;
+    if (func_87E11534(2, *(s32 *)((u8 *)(u32)D_87E1EBB8 + 8), (u8 *)(u32)D_87E1EBB8 + 0x1C, 0x20, 0x20) != 0) {
+        *arg0 = *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0xC);
+        *arg1 = *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x10);
+        *arg2 = *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x14);
+    } else {
+        *arg0 = -1;
+        *arg1 = -1;
+        *arg2 = -1;
+    }
+    switch (*arg0) {
+        case 6:
+            advance = 0;
+            break;
+        case 48:
+            advance = 0;
+            break;
+        default:
+            for (node = (u8 *)(u32)D_87E1EBB8 + 0x1C, i = 0; i != 2; i++) {
+                if ((node[4] < 0xFF) && (node[4] > 0)) {
+                    advance = 0;
+                }
+                node += 8;
+            }
+            break;
+    }
+    // A zero first argument makes the frame helpers below reset their frame
+    // instead of advancing it (//@{src/fragments/63/fragment63_312AE0.c}
+    // func_87E0FBB4, func_87E0FC90, func_87E0FDB4).
+    func_87E0FBB4(advance, (u8 *)(u32)D_87E1EBB8 + 0x1FC, 7, 3);
+    i = 2; // FAKE: reuses the loop counter so the 2 is shared with the calls below; passing the literal 2 instead scores 710
+    func_87E0FC90(advance, (u8 *)(u32)D_87E1EBB8 + 0x1FC, D_87E1A988, 3, 3);
+    func_87E0FBB4(advance, (u8 *)(u32)D_87E1EBB8 + 0x1E4, 7, i);
+    func_87E0FDB4((*(s32 *)((u8 *)(u32)D_87E1EBB8 + 8) == 0) && (advance != 0),
+                  (u8 *)(u32)D_87E1EBB8 + 0x1E4, D_87E1A870, 6, i);
+    func_87E0FBB4(advance, (u8 *)(u32)D_87E1EBB8 + 0x214, 7, i);
+    func_87E0FDB4((*(s32 *)((u8 *)(u32)D_87E1EBB8 + 8) == 1) && (advance != 0),
+                  (u8 *)(u32)D_87E1EBB8 + 0x214, D_87E1AA10, 6, i);
+    if (advance != 0) {
+        // 0x1EC indexes D_87E1A800 / D_87E1A81C in func_87E10094.
+        switch (*arg0) {
+            case 36:
+            case 41:
+                *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x1EC) = 2;
+                break;
+        }
+    }
+}
+/* mkdraft:func_87E1162C end */
 
 extern void *func_8005049C(void *, s32);
 extern s32 func_8004C874(s32, s32);
