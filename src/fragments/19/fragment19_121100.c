@@ -190,7 +190,52 @@ s32 func_82300F4C(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82300F6C.s")
+/* mkdraft:func_82300F6C begin */
+extern s32 D_82305B94;
+extern s32 D_82305B98;
+extern s16 D_82305EDC;
+extern s16 D_82305EDE;
+extern f32 D_82305EE0;
+
+
+
+void func_82300F6C(void) {
+    s16 *counter;
+    s16 *state;
+    f32 *progress;
+    s32 limit;
+
+    state = &D_82305EDC;
+    counter = &D_82305EDE;
+    progress = &D_82305EE0;
+    switch (*state) {
+    case 1:
+        limit = D_82305B94;
+        *counter += 1;
+        if (*counter < limit) {
+            *progress = (f32)*counter / (f32)limit;
+            return;
+        }
+        *state = 2;
+        *progress = 1.0f;
+        *counter = 0;
+        break;
+    case 2:
+        break;
+    case 3:
+        limit = D_82305B98;
+        *counter += 1;
+        if (*counter < limit) {
+            *progress = 1.0f - ((f32)*counter / (f32)limit);
+            return;
+        }
+        *state = 0;
+        *progress = 0.0f;
+        *counter = 0;
+        break;
+    }
+}
+/* mkdraft:func_82300F6C end */
 
 extern void _bzero(void *, s32);
 extern u32 D_82305D88;
