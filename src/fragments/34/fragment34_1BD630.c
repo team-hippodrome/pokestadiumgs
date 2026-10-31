@@ -230,7 +230,36 @@ s32 func_8850052C(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_8850089C.s")
+extern s32 StageFade_StartFromOpaque(s32);
+extern s32 func_80064D28(void);
+extern s32 func_880040D4(void);
+extern s32 func_8850AEA8(void);
+extern s32 D_8850D674;
+extern s32 D_88523018;
+
+// Fragment 34's main loop. Starts an opaque fade whose duration is the VI
+// count from func_80001FF0 times 0.3f, halved and truncated to 16 bits
+// (the same formula func_885002A0's mode 7 uses for
+// StageFade_StartFromTransparent), then per frame runs func_80064D28
+// (skipped while D_88523018 is 3), func_8850AEA8, func_880040D4 and
+// func_88500494, stepping the frame counter D_8850D674, until
+// func_8850052C signals completion. Returns that signal.
+s32 func_8850089C(void) {
+    s32 temp_v0;
+
+    StageFade_StartFromOpaque((u32) (((f32) func_80001FF0() * 0.3f) / 2) & 0xFFFF);
+    do {
+        if (D_88523018 != 3) {
+            func_80064D28();
+        }
+        func_8850AEA8();
+        func_880040D4();
+        func_88500494();
+        D_8850D674 += 1;
+        temp_v0 = func_8850052C();
+    } while (temp_v0 != 0);
+    return temp_v0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_885009D0.s")
 

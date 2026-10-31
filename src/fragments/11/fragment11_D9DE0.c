@@ -944,7 +944,26 @@ void func_81608918(s32 arg0, s32 arg1, f32 *arg2) {
     func_8004AF18(arg0, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816089E0.s")
+extern s32 D_8160BE80;
+
+// Returns the previously cached image pointer while adopting the current one:
+// func_8000731C returns the GfxImage that GfxImage_SetRenderTarget bound last
+// (D_80087220), whose img_p field sits at offset 8. With no render target
+// bound, the cached pointer is returned unchanged.
+//@src/7A50.c
+s32 func_816089E0(void) {
+    s32 *cached_image = &D_8160BE80;
+    s32 previous;
+    s32 target;
+
+    target = func_8000731C();
+    if ((target != 0) && (*(s32 *)((u8 *)target + 8) != 0)) {
+        previous = *cached_image;
+        *cached_image = *(s32 *)((u8 *)target + 8);
+        return previous;
+    }
+    return *cached_image;
+}
 
 extern u8 D_80094D90[];
 extern u8 D_80094DB8[];

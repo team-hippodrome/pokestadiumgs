@@ -45,7 +45,78 @@ void func_883002B8(void) {
 
 void func_88300304(void) { func_8004C8C0(155); func_8004C8C0(265); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_8830032C.s")
+extern s8 D_88006868;
+extern s8 D_88308DFF;
+extern u8 D_88308E00;
+extern u8 D_88308E18[];
+extern s32 D_88601890;
+extern s32 D_88308930;
+extern s16 D_88308E02;
+extern s8 D_88308E05;
+extern s32 func_8000204C(void);
+extern s32 func_8005DE1C(s32 index);
+extern s32 func_8800005C(void);
+extern void func_880002F4(u8 *arg0, s16 arg1);
+extern void func_880022F0(void);
+extern void func_88306E90(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, s8 arg5);
+extern s32 main_pool_pop_state(s32);
+extern s32 main_pool_push_state(s32);
+
+// Screen-mode switcher for fragment 32, storing arg0 in D_88308930. Mode 0
+// (or leaving mode 0) clears D_88308E05. Mode 1 (or coming from mode 0)
+// waits for a retrace, then pops and pushes the 'part' main-pool state and
+// rebuilds the screen through func_883002B8 (entering) or func_88300304
+// (already in mode 1). Mode 2 resets the window at D_88308E18 through
+// func_880002F4 and calls func_88306E90 with colors 0x5D/0x91/0xC3/0xF6,
+// a kind of 4 or 3 (4 when the word at D_88601890 + 0x244 is zero,
+// func_8800005C returns 0 and func_8005DE1C accepts D_88006868) and the
+// byte at D_88601890 + 0. Mode 3 resets the same window with colors
+// 0x69/0xA0/0xC9/0xF2 kind 4, runs func_880022F0 and zeroes the fade
+// words D_88308DFF/D_88308E00/D_88308E02/D_88308E04.
+void func_8830032C(s32 arg0) {
+    s32 sp23;
+    u8 var_v0;
+
+    if ((arg0 == 0) || (D_88308930 == 0)) {
+        D_88308E05 = 0;
+    }
+    if ((arg0 == 1) || (D_88308930 == 1)) {
+        if (func_8000204C() == 0) {
+            do {
+
+            } while (func_8000204C() == 0);
+        }
+        main_pool_pop_state(0x70617274);
+        main_pool_push_state(0x70617274);
+        if (arg0 == 1) {
+            func_883002B8();
+        } else {
+            func_88300304();
+        }
+    }
+    switch (arg0) {                                 /* irregular */
+    case 2:
+        if ((*(s32 *)((u8 *)D_88601890 + 0x244) == 0) && (func_8800005C() == 0) && (func_8005DE1C((s32)D_88006868) != 0)) {
+            var_v0 = 4;
+        } else {
+            var_v0 = 3;
+        }
+        sp23 = var_v0;
+        func_880002F4(&D_88308E18, 0);
+        func_88306E90(0x5D, 0x91, 0xC3, 0xF6, (u8)(s32)var_v0, (s8)(*(s32 *)((u8 *)D_88601890 + 0)));
+        break;
+    case 3:
+        func_880002F4(&D_88308E18, 0);
+        func_88306E90(0x69, 0xA0, 0xC9, 0xF2, 4U, 0);
+        func_880022F0();
+        D_88308DFF = 0;
+        D_88308E04 = 0;
+        D_88308E00 = 0;
+        D_88308E02 = 0;
+        break;
+    }
+    D_88308930 = arg0;
+}
 
 extern void func_88306404(s32);
 void func_883004E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {

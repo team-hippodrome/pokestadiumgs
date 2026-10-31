@@ -1461,7 +1461,84 @@ void func_83306BF0(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307088.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833078C4.s")
+extern void Audio_SetPreset(s32);
+extern s32 D_8330A2C0;
+extern s32 D_8330A680;
+extern s32 D_8330A7E8;
+extern s32 D_8330A950;
+
+// Chooses an audio preset from the high halfword of one of the selection
+// words: D_8330A2C0 picks D_8330A680 (1), D_8330A7E8 (2) or D_8330A950 (3);
+// func_83307C7C stores the same halfwords as the list cursor at offset 0xC.
+// Selection 1: values 8, 18, 28, 38, 48, 58 and 68 play preset 6; 49 plays 2;
+// 99 plays 3 then 4; 149 plays 5. Selection 2: 0, 49, 159 and 168 play
+// presets 7, 9, 10 and 8. Selection 3: 105 plays 11. Every other value plays
+// nothing.
+void func_833078C4(void) {
+    s32 selection;
+    s32 selection2;
+
+    switch (D_8330A2C0) {                           /* irregular */
+    case 1:
+        selection = (s32)D_8330A680 >> 0x10;
+        switch (selection) {                         /* irregular */
+        case 8:
+            Audio_SetPreset(6);
+            return;
+        case 18:
+            Audio_SetPreset(6);
+            return;
+        case 28:
+            Audio_SetPreset(6);
+            return;
+        case 38:
+            Audio_SetPreset(6);
+            return;
+        case 48:
+            Audio_SetPreset(6);
+            return;
+        case 58:
+            Audio_SetPreset(6);
+            return;
+        case 68:
+            Audio_SetPreset(6);
+            return;
+        case 49:
+            Audio_SetPreset(2);
+            return;
+        case 99:
+            Audio_SetPreset(3);
+            Audio_SetPreset(4);
+            return;
+        case 149:
+            Audio_SetPreset(5);
+            return;
+        }
+        break;
+    case 2:
+        selection2 = (s32)D_8330A7E8 >> 0x10;
+        switch (selection2) {                         /* irregular */
+        case 0:
+            Audio_SetPreset(7);
+            return;
+        case 49:
+            Audio_SetPreset(9);
+            return;
+        case 159:
+            Audio_SetPreset(10);
+            return;
+        case 168:
+            Audio_SetPreset(8);
+            return;
+        }
+        break;
+    case 3:
+        if (((s32)D_8330A950 >> 0x10) == 105) {
+            Audio_SetPreset(11);
+        }
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307AAC.s")
 

@@ -125,7 +125,53 @@ s32 func_87E01F0C(u32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E01F44.s")
+extern void func_87F0B1A4(u8 *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5, s32 arg6);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern u32 func_8003570C(void);
+
+// Walks the list at arg0 + 0x14. Each entry carries an object at offset
+// 0x20; func_87F0B1A4 receives the object's state at object + 0x10 and the
+// entry's position floats at offsets 0x48..0x50. When the entry's word at
+// offset 4 matches the owner's word at arg0 + 4 (arg2..arg4 are 0.0f, 20.0f
+// and the third float plus 200.0f, priority 10), the angles stay fixed;
+// otherwise the same call runs with the raw floats (second shifted by
+// -360.0f, priority 15) and func_87F0B2F4 randomizes the rotation from
+// three LCG draws at func_8003570C, each scaled from [0,1) over
+// 4294967296.0f to -45..45, -45..45 and -180..180 degrees.
+void func_87E01F44(void *arg0) {
+    f32 var_ft1;
+    f32 var_ft2;
+    u32 temp_s2;
+    u32 temp_s3;
+    u32 temp_v0_2;
+    u8 *temp_s1;
+    u8 *temp_v0;
+    u8 *var_s0;
+
+    var_s0 = *(u8 **)((u8 *)arg0 + 0x14);
+    if (var_s0 != NULL) {
+        do {
+            temp_v0 = *(u8 **)(var_s0 + 0x20);
+            temp_s1 = temp_v0 + 0x10;
+            if (*(s32 *)((u8 *)arg0 + 4) == *(s32 *)(temp_v0 + 4)) {
+                func_87F0B1A4(temp_v0 + 0x10, var_s0 + 0x48, 0.0f, 20.0f,
+                    *(f32 *)(var_s0 + 0x50) + 200.0f, 0xA, 0x2000);
+            } else {
+                func_87F0B1A4(temp_s1, var_s0 + 0x48, *(f32 *)(var_s0 + 0x48),
+                    *(f32 *)(var_s0 + 0x4C) + -360.0f, *(f32 *)(var_s0 + 0x50), 0xF, 0x2000);
+                temp_s2 = func_8003570C();
+                temp_s3 = func_8003570C();
+                temp_v0_2 = func_8003570C();
+                var_ft2 = (f32)(u32)temp_s3;
+                var_ft1 = (f32)(u32)temp_v0_2;
+                func_87F0B2F4(temp_s1, var_s0 + 0x42, (((f32)temp_s2 / 4294967296.0f) * 90.0f) - 45.0f,
+                    ((var_ft2 / 4294967296.0f) * 90.0f) - 45.0f,
+                    ((var_ft1 / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            }
+            var_s0 = *(u8 **)(var_s0 + 4);
+        } while (var_s0 != NULL);
+    }
+}
 
 extern u8 D_87E1979C[];
 extern void func_87E10E64(s32);

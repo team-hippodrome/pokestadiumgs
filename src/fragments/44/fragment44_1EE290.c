@@ -910,7 +910,101 @@ void func_8AF01EAC(void) {
         var_s1 = temp_v0;
     } while (temp_v0 != 4);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01FFC.s")
+extern s16 D_8AF2BA6E;
+extern s16 D_8AF2BA74;
+extern s32 D_8AF2BDD8;
+extern void Fragment43_CopyMenuColors(void);
+extern void func_80041E2C(void);
+extern void func_8AC0011C(u8 *bias);
+extern void func_8AF07960(s16 arg0, s16 arg1);
+extern void func_8AF25870(s16 arg0);
+extern void func_8AF258B4(s16 arg0, s16 arg1);
+extern void func_8AF25908(void);
+
+// Fragment 44's menu setup. Resets the menu state words (D_8AF2BA68/
+// D_8AF2BA74/D_8AF2BAC8/D_8AF2BDC4/D_8AF2BACC), rebuilds the lists through
+// func_8AC0080C(0), func_8AF0145C and Fragment43_CopyMenuColors, applies
+// the color bias 0x14141400 through func_8AC0011C, and runs func_8AF00150.
+// The kind in D_8AF2BA6E then picks the window func_8AF00770 opens: kind 0
+// opens 1. Kind 1 reads the byte at the object D_8AF2BDD8 points to: 0..2
+// open 31 after func_8AF25908; anything else opens 36. Kind 2 reads the
+// record at offset 8 of that object: halfwords 0/1, 2 and 3 open 36 after
+// func_8AF258B4(1, 0/1/2); otherwise a byte 1 at offset 0x1A opens 36
+// after func_8AF25870 on the byte at offset 3, and any other value calls
+// func_8AF07960 with the bytes at offsets 3 and 0x15 before opening 3, 4
+// or 5 for the offset-3 byte 0, 1 or 2.
+void func_8AF01FFC(void) {
+    s32 bias;
+    s16 temp_a0;
+    s16 temp_v0;
+    void *temp_v1;
+
+    bias = 0x14141400;
+    func_80041E2C();
+    D_8AF2BA68 = 0;
+    D_8AF2BA74 = 0;
+    D_8AF2BAC8 = 0;
+    D_8AF2BDC4 = 0;
+    D_8AF2BACC = 0;
+    func_8AC0080C(0);
+    func_8AF0145C();
+    Fragment43_CopyMenuColors();
+    func_8AC0011C((u8 *)&bias);
+    func_8AF00150();
+    switch (D_8AF2BA6E) {                            /* irregular */
+    case 0:
+        func_8AF00770(1);
+        return;
+    case 1:
+        temp_v0 = (*(u8 *)((u8 *)D_8AF2BDD8 + (0)));
+        if ((temp_v0 == 0) || (temp_v0 == 1) || (temp_v0 == 2)) {
+            func_8AF00770(0x1F);
+            func_8AF25908();
+            return;
+        }
+        func_8AF00770(0x24);
+        return;
+    case 2:
+        temp_v1 = (*(void **)((u8 *)D_8AF2BDD8 + (8)));
+        switch ((*(u16 *)((u8 *)temp_v1 + (0)))) {  /* irregular */
+        case 0:
+        case 1:
+            func_8AF258B4(1, 0);
+            func_8AF00770(0x24);
+            return;
+        case 2:
+            func_8AF258B4(1, 1);
+            func_8AF00770(0x24);
+            return;
+        case 3:
+            func_8AF258B4(1, 2);
+            func_8AF00770(0x24);
+            return;
+        default:
+            if ((*(s8 *)((u8 *)temp_v1 + (0x1A))) == 1) {
+                func_8AF25870((s16)(*(u8 *)((u8 *)temp_v1 + (3))));
+                func_8AF00770(0x24);
+                return;
+            }
+            temp_a0 = (*(u8 *)((u8 *)temp_v1 + (3)));
+            temp_v0 = (s16)temp_a0;
+            func_8AF07960((s16)temp_a0, (s16)(*(s8 *)((u8 *)temp_v1 + (0x15))));
+            switch (temp_a0) {                      /* irregular */
+            case 0:
+                func_8AF00770(3);
+                return;
+            case 1:
+                func_8AF00770(4);
+                return;
+            case 2:
+                func_8AF00770(5);
+                return;
+            }
+            break;
+        }
+        break;
+    }
+}
 
 /* mkdraft:func_8AF02208 begin */
 extern s16 D_8AF2BA6E;

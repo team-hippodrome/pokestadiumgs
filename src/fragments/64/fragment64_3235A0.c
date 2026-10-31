@@ -12,7 +12,93 @@ u32 func_87F00930(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F01110.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F012BC.s")
+// Sets or clears bit 1 of the u16 at arg1 + 2. arg0 == 0 always clears it.
+// arg0 == 1 clears it unless a mode pairing matches: the word at
+// D_87F0F610 + 0x10 picks a row (0..2), the word at arg1 + 0x20 picks a
+// column, and the word at D_87F0F610 + 0x30 must equal the column's
+// required value (row 0: columns 0/1/2 require 2/3/4; rows 1 and 2:
+// columns 0/1 require 2 and 4). func_87F01870 writes both state words.
+void func_87F012BC(s32 arg0, void *arg1) {
+    s32 temp_v0;
+    u32 temp_v0_2;
+    u32 temp_v0_3;
+    u32 temp_v0_4;
+
+    switch (arg0) {                                 /* irregular */
+    case 0:
+        (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+        return;
+    case 1:
+        temp_v0 = (*(s32 *)(D_87F0F610 + 0x10));
+        switch (temp_v0) {                          /* irregular */
+        case 0:
+            temp_v0_2 = (*(s32 *)((u8 *)arg1 + 0x20));
+            switch (temp_v0_2) {                    /* irregular */
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 3) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            case 2:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            }
+            break;
+        case 1:
+            temp_v0_3 = (*(s32 *)((u8 *)arg1 + 0x20));
+            switch (temp_v0_3) {                    /* irregular */
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            }
+            break;
+        case 2:
+            temp_v0_4 = (*(s32 *)((u8 *)arg1 + 0x20));
+            switch (temp_v0_4) {                    /* irregular */
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) | 2);
+                    return;
+                }
+                (*(u16 *)((u8 *)arg1 + 2)) = (u16) ((*(u16 *)((u8 *)arg1 + 2)) & 0xFFFD);
+                return;
+            }
+            break;
+        }
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F014C4.s")
 

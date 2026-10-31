@@ -1339,7 +1339,121 @@ void func_8690B89C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690C46C.s")
+extern u32 D_8691A2E8;
+extern void func_8690C6C4(s32 arg0);
+
+// Computes the label variant func_8690C6C4 draws (its NMxC string groups on
+// D_8690FAC0..D_8690FACC) from the game mode word D_8691A2E8. With
+// D_8691A448.unk_388 set (the special stage flag func_86902640 rolls),
+// modes 0/1 and 4 give 0 and 3 and mode 2/3 map unk_330 (0,1 -> 0; 2 -> 1;
+// 3 -> 0; 6 -> 2). Without it, mode 2 indexes D_8690E928[unk_32C] (13 keeps
+// unk_330 == 0 at 0; kinds 0,3,5,8,10,15 use the unk_330 mapping) and mode 3
+// indexes D_8690E944[unk_32C] (kind 0 uses the 3/6 mapping; kinds 3,5,8 use
+// the 0/1/2 mapping). Returns the variant it passed on.
+s32 func_8690C46C(void) {
+    s32 variant;
+
+    if (D_8691A448.unk_388 != 0) {
+        switch (D_8691A2E8) {
+        case 0:
+        case 1:
+            variant = 0;
+            break;
+        case 2:
+            switch (D_8691A448.unk_330) {           /* irregular */
+            case 0:
+            case 1:
+                variant = 0;
+                break;
+            case 2:
+                variant = 1;
+                break;
+            }
+            break;
+        case 3:
+            switch (D_8691A448.unk_330) {           /* irregular */
+            case 0:
+            case 1:
+            case 3:
+                variant = 0;
+                break;
+            case 6:
+                variant = 2;
+                break;
+            }
+            break;
+        case 4:
+            variant = 3;
+            break;
+        }
+    } else {
+        switch (D_8691A2E8) {
+        case 0:
+        case 1:
+            variant = 0;
+            break;
+        case 2:
+            switch (D_8690E928[D_8691A448.unk_32C]) {
+            case 13:
+                if (D_8691A448.unk_330 == 0) {
+                    variant = 0;
+                }
+                break;
+            case 0:
+            case 3:
+            case 5:
+            case 8:
+            case 10:
+            case 15:
+                switch (D_8691A448.unk_330) {       /* irregular */
+                case 0:
+                case 1:
+                    variant = 0;
+                    break;
+                case 2:
+                    variant = 1;
+                    break;
+                }
+                break;
+            }
+            break;
+        case 3:
+            switch (D_8690E944[D_8691A448.unk_32C]) { /* irregular */
+            case 0:
+                switch (D_8691A448.unk_330) {       /* irregular */
+                case 0:
+                case 1:
+                case 3:
+                    variant = 0;
+                    break;
+                case 6:
+                    variant = 2;
+                    break;
+                }
+                break;
+            case 3:
+            case 5:
+            case 8:
+                switch (D_8691A448.unk_330) {       /* irregular */
+                case 0:
+                case 1:
+                    variant = 0;
+                    break;
+                case 2:
+                    variant = 1;
+                    break;
+                }
+                break;
+            }
+            break;
+        case 4:
+            variant = 3;
+            break;
+        }
+    }
+    func_8690C6C4(variant);
+    return variant;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1409,11 +1523,161 @@ void func_8690C7F0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690CA50.s")
+extern s32 D_8690FAB0;
+extern s32 func_87F0A688(s32, s32, s32);
+
+// Draws the count func_86904D48 returns on the two D_8690FAB0 text objects
+// (loaded by func_8690073C): a one-digit layout on D_8690FAB0 when the count
+// is under 10, a tens/ones pair of fields (PA1M/PA2M) on D_8690FAB0 + 4
+// otherwise. Both layouts color their fields through func_87F0A6C8 with
+// color words 0xFFB400FF and 0x96FF, store the digits with func_87F0A688,
+// and finish with func_800503A4. PB7M receives 3 when the displayed digit is
+// 0, 1, 6 or 8, 0 for 3, and 1 otherwise. The (u8 *)&D_8690FAB0 casts keep
+// one cached base register for both word loads.
+void func_8690CA50(void) {
+    s32 color1;
+    s32 color2;
+    u32 digit;
+
+    color1 = -0x4BFF01;
+    color2 = 0x96FF;
+    if (func_86904D48() < 10) {
+        func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x50503743, &color1, &color2);
+        func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, &color1, &color2);
+        func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5041304D, &color1, &color2);
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5041304D, func_86904D48());
+        digit = func_86904D48();
+        switch (digit) {
+        case 0:
+        case 1:
+        case 6:
+        case 8:
+            func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, 3);
+            break;
+        case 3:
+            func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, 0);
+            break;
+        default:
+            func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (0))), 0x5042374D, 1);
+            break;
+        }
+        func_800503A4((*(s32 *)((u8 *)(&D_8690FAB0) + (0))));
+        return;
+    }
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x50503743, &color1, &color2);
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, &color1, &color2);
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041314D, &color1, &color2);
+    func_87F0A6C8((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041324D, &color1, &color2);
+    func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041314D, func_86904D48() / 10);
+    func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5041324D, func_86904D48() % 10);
+    digit = func_86904D48() % 10U;
+    switch (digit) {
+    case 0:
+    case 1:
+    case 6:
+    case 8:
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, 3);
+        break;
+    case 3:
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, 0);
+        break;
+    default:
+        func_87F0A688((*(s32 *)((u8 *)(&D_8690FAB0) + (4))), 0x5042374D, 1);
+        break;
+    }
+    func_800503A4((*(s32 *)((u8 *)(&D_8690FAB0) + (4))));
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690CCB8.s")
+extern void *D_87F119DC;
+
+// Copies a camera pose from the D_86919D00 table into the object
+// D_87F119DC points at: three floats to offsets 0x48/0x4C/0x50 and a
+// halfword to 0x44. The selector is the word at D_87F119DC + 0x20; cases
+// 0..11 pick source triples at offsets 0xAC, 0xBC, 0xCC, 0x214, 0x224,
+// 0x234, 0x37C, 0x38C, 0x39C, 0x4E4, 0x4F4 and 0x504, and halfwords at
+// 0x20 (cases 0..2), 0x188 (cases 3..5), 0x2F0 (cases 6..8) and 0x458
+// (cases 9..11). Any other selector returns without copying.
+void func_8690CCB8(void) {
+
+    switch ((*(u32 *)((u8 *)D_87F119DC + 0x20))) {
+    case 0:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xAC));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xB0));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xB4));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x20));
+        return;
+    case 1:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xBC));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xC0));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xC4));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x20));
+        return;
+    case 2:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xCC));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xD0));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0xD4));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x20));
+        return;
+    case 3:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x214));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x218));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x21C));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x188));
+        return;
+    case 4:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x224));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x228));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x22C));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x188));
+        return;
+    case 5:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x234));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x238));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x23C));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x188));
+        return;
+    case 6:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x37C));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x380));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x384));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x2F0));
+        return;
+    case 7:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x38C));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x390));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x394));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x2F0));
+        return;
+    case 8:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x39C));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x3A0));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x3A4));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x2F0));
+        return;
+    case 9:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x4E4));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x4E8));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x4EC));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x458));
+        return;
+    case 10:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x4F4));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x4F8));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x4FC));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x458));
+        return;
+    case 11:
+        (*(f32 *)((u8 *)D_87F119DC + 0x48)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x504));
+        (*(f32 *)((u8 *)D_87F119DC + 0x4C)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x508));
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) = (f32) (*(f32 *)((u8 *)D_86919D00 + 0x50C));
+        (*(s16 *)((u8 *)D_87F119DC + 0x44)) = (s16) (*(s16 *)((u8 *)D_86919D00 + 0x458));
+        /* fallthrough */
+    default:
+        return;
+    }
+}
 #endif
 
 #ifdef VERSION_US
