@@ -586,7 +586,34 @@ void func_8410CAE4(u8 *arg0, s32 arg1, s16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410CC90.s")
+/* mkdraft:func_8410CC90 begin */
+extern u8 *D_841911E8;
+extern u8 D_8418393C;
+extern u8 *func_8410B330(u8 *);
+extern s32 func_8411DC80(u16, s32 *, s32);
+extern s32 func_8411E140(s32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+
+void func_8410CC90(u8 *arg0, s32 arg1, s16 arg2) {
+    s16 var_a2;
+    u8 *arg1_ptr = (u8 *)(u32)arg1;
+
+    D_841911E8 = func_8410B330(arg0);
+    var_a2 = arg1_ptr[0x61F];
+    if (func_8411DC80(var_a2, (s32 *)&D_8418393C, 8) != 0) {
+        func_8411E140(arg1);
+    } else {
+        var_a2 = *(s16 *)(arg1_ptr + 0x20);
+        // FAKE: self-assign keeps var_a2 live across the branch, which forces the D_841911E8 `la` temp into t0 on both paths
+        var_a2 = var_a2;
+    }
+    *(f32 *)(D_841911E8 + 0x44) = 0.0f;
+    *(f32 *)(arg0 + 0x2C) = 45.0f;
+    *(f32 *)(D_841911E8 + 0x88) = 45.0f;
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x68), *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+}
+/* mkdraft:func_8410CC90 end */
 #endif
 
 #ifdef VERSION_US
