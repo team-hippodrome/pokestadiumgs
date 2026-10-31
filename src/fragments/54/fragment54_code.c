@@ -7,7 +7,45 @@ static u8 D_866098A0[4 * 0x168];
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86600020.s")
+/* mkdraft:func_86600020 begin */
+extern void func_8003CD84(void);
+extern Gfx *D_800D0510;
+extern s32 D_86607218;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern u8 D_86606600[];
+
+
+
+void func_86600020(s32 arg0, s32 arg1) {
+    s32 pad[4]; // FAKE: unused; enlarges the frame from 0x20 to the retail 0x30 bytes; diff score 26 without it.
+    Gfx *gfx;
+    s32 counter;
+    s32 *counter_ptr = &D_86607218; // FAKE: keeps IDO from CSE-ing the address into one register; diff score 940 without it.
+
+    if (arg0 == 5) {
+        counter = (*counter_ptr) + 1;
+        gDPPipeSync(D_800D0510++);
+        if (counter >= 7) {
+            (*counter_ptr) = counter;
+            counter = guRandom() % 7;
+        }
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0, 0xFF);
+        gDPSetCombine(D_800D0510++, 0x509BFF, 0x3FFDFE38);
+        // Segment 0xF entry whose w1 is the 0xE1 sub-resource for counter; the
+        // D_86607218 store sits between the two words, so the word writes are
+        // written out instead of using gSPSegment (which would evaluate the
+        // calls before w0).
+        gfx = D_800D0510++;
+        gfx->words.w0 = 0xDB06003C;
+        (*counter_ptr) = counter;
+        gfx->words.w1 = (u32)func_8004CA60((u8 *)func_8004C990(0xE1, counter));
+        gSPDisplayList(D_800D0510++, D_86606600);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_86600020 end */
 #endif
 
 #ifdef VERSION_US
