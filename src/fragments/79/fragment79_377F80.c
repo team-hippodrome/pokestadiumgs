@@ -593,7 +593,33 @@ void func_841098C0(s32 arg0) {
     func_84109630(D_8419019C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_841098FC.s")
+/* mkdraft:func_841098FC begin */
+extern s32 func_8003C9B8(u8 *, s16, ParticleVec3f *);
+extern f32 func_8411E1BC(u8 *);
+extern s32 func_8411E1F8(u8 *);
+
+
+
+void func_841098FC(ParticleVec3f *arg0) {
+    if (func_8003C9B8(D_8419019C, func_8411E22C(D_8419019C), arg0) == 0) {
+        arg0->x = *(f32 *)(D_8419019C + 0x24);
+        arg0->z = *(f32 *)(D_8419019C + 0x2C);
+    }
+    arg0->y = *(f32 *)(D_8419019C + 0x28) + func_8411E1BC(D_8419019C);
+    func_84109630(D_8419019C, arg0);
+    if (((u16 (*)[8])D_84193DD0)[func_8411E1F8(D_8419019C)][9] & 4) {
+        arg0->z = 0.0f;
+        if (arg0->y >= 30.0f) {
+            arg0->y = 30.0f;
+        }
+    }
+    if (arg0->y < 0.0f) {
+        arg0->y = 0.0f;
+    } else if (arg0->y > 200.0f) {
+        arg0->y = 200.0f;
+    }
+}
+/* mkdraft:func_841098FC end */
 
 extern s32 D_8419018C;
 extern s32 func_8411E46C(u8 *, s32);
