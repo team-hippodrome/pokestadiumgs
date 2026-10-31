@@ -851,7 +851,94 @@ s32 func_823030A4(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823030C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82303308.s")
+/* mkdraft:func_82303308 begin */
+extern s16 D_82305E68[];
+extern s16 D_82305E6E;
+extern s16 D_82305E70;
+extern void *D_80087200;
+s32 func_82300F4C(void);
+s32 func_82305A28();
+s32 func_800226C0(s32);
+
+// Controller-driven counter: D_82305E6E is stepped down/up by the 0x200/0x100
+// flags at D_80087200+0x8 and clamped to [0, ceiling]. The ceiling is the u16
+// at +0x1C of the record D_82305E68[D_82305E68[2]] (s16 index at D_82305E68+4,
+// scaled by two). When the counter differs from the value saved at entry,
+// func_800226C0(1) is called. The 0x8000/0x4000 flags latch D_82305E70 from the
+// counter (or -1) and return 1; otherwise the function returns 0.
+
+
+s32 func_82303308(void)
+{
+    s32 result;
+    s32 pad[2]; // Stack spacer: ceiling at 0x20(sp), result at 0x2C(sp).
+    s32 ceiling;
+    s32 previous;
+    s16 counterDown;
+    s16 selected;
+    s16 counterUp;
+    s32 current;
+    s32 buttons;
+    // Pointer form: each access reloads D_82305E6E through %hi/%lo, matching
+    // the two lui/addiu pairs in the target.
+    s16 *counterPtr = &D_82305E6E;
+
+    result = 0;
+    ceiling = (s32) (*((u16 *) (((u8 *) (&D_82305E68[*((s16 *) (((u8 *) D_82305E68) + 4))])) + 0x1C)));
+    previous = (s32) (*((s16 *) (((u8 *) D_82305E68) + 6)));
+    if (func_82300F4C() == 0)
+    {
+        return 0;
+    }
+    if (func_82305A28() == 0)
+    {
+        return 0;
+    }
+    if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0x200)
+    {
+        counterDown = (*counterPtr) - 1;
+        *counterPtr = counterDown;
+        if (counterDown < 0)
+        {
+            *counterPtr = 0;
+        }
+    }
+    if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0x100)
+    {
+        counterUp = (*counterPtr) + 1;
+        *counterPtr = counterUp;
+        if (counterUp >= ceiling)
+        {
+            counterUp = ceiling - 1;
+            // FAKE: dead re-read of the ceiling; diff score 285 without it. The
+            // extra load extends the ceiling web so the counter reload colors a0
+            // and the clamp keeps its sll/sra truncation.
+            ceiling = (*((u16 *) (((u8 *) (&D_82305E68[*((s16 *) (((u8 *) D_82305E68) + 4))])) + 0x1C)));
+            *counterPtr = counterUp;
+        }
+    }
+    current = *counterPtr;
+    if (previous != current)
+    {
+        func_800226C0(1);
+    }
+    buttons = *((u16 *) (((u8 *) D_80087200) + 8));
+    if (buttons & 0x8000)
+    {
+        result = 1;
+        selected = *counterPtr;
+        D_82305E70 = selected;
+        func_800226C0(0x8D);
+    }
+    else if (buttons & 0x4000)
+    {
+        result = 1;
+        D_82305E70 = -1;
+        func_800226C0(3);
+    }
+    return result;
+}
+/* mkdraft:func_82303308 end */
 
 extern s32 func_82300AB4(void);
 extern s32 func_82300F4C(void);
