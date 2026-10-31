@@ -202,7 +202,39 @@ void func_8AF00620(void) {
     } while (var_s1 != 0xA);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF00690.s")
+/* mkdraft:func_8AF00690 begin */
+extern void func_8AC01064(s32);
+extern s32 func_8AF00360(s32);
+extern s32 D_8AF2BF10;
+
+
+
+void func_8AF00690(void) {
+    u8 *entry;
+    s32 i;
+
+    if (D_8AF2BF10 > 0) {
+        i = 0;
+        do {
+            entry = func_8AF00240((s16)D_8AF2BF10);
+            if (entry == NULL) {
+                D_8AF2BF10 = D_8AF2BF10 - 1;
+                if (D_8AF2BF10 <= 0) break;
+            } else {
+                do {
+                    func_8AC01064(func_8AF00360(((u8 *)&D_8AF2BF10)[3]));
+                    *(u16 *)((u8 *)(*(void **)(entry + 8)) + 2) =
+                        (u16)(*(u16 *)((u8 *)(*(void **)(entry + 8)) + 2) & ~1);
+                    D_8AF2BF10 = D_8AF2BF10 - 1;
+                    _bzero(entry, 0xC);
+                } while (0);
+                if (D_8AF2BF10 <= 0) break;
+            }
+            i++;
+        } while (i != 10);
+    }
+}
+/* mkdraft:func_8AF00690 end */
 
 void func_8AF00760(void) {}
 void func_8AF00760_padding(void) {}
