@@ -248,7 +248,70 @@ void func_83503188(void) {
 }
 /* mkdraft:func_83503188 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83503324.s")
+/* mkdraft:func_83503324 begin */
+extern s32 D_83503AC8;
+extern f32 D_83503BE8;
+extern f32 D_83503DA8;
+extern f32 D_83503E40;
+extern f32 D_83503E44;
+extern f64 D_83503E48;
+extern s32 D_83503AF4;
+extern s32 D_83503AD4;
+extern s32 D_83503BA8;
+extern void func_800226C0(s32);
+
+
+
+void func_83503324(void) {
+    f32 *D_83503DA8_ptr = &D_83503DA8;
+    f32 temp_fa0;
+    f32 var_fa0;
+    f32 var_fa1;
+    f32 var_fv1;
+    f32 var_fv0;
+
+    var_fa1 = D_83503E40;
+    // karodo: weights the D_83503DA8 web; diff score 70 without it.
+    if (D_83503DA8_ptr && D_83503DA8_ptr) {}
+    // karodo: rotates the FPR free list so da8/tgt land in f16/f18; diff score 120 without
+    // these six empty statements (and 200 without both this and the dead if above).
+    if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
+    var_fv0 = 32.0f * D_83503BE8;
+    if (var_fv0 < var_fa1) {
+        var_fv1 = 0.5f;
+    } else {
+        var_fv1 = -0.5f;
+    }
+    var_fa0 = var_fa1 - var_fv0;
+    // Arena timer read: D_83503AD4+0x14 holds the countdown (580 = 10 s of frames).
+    temp_fa0 = ((f32) (*((s32 *) (((u8 *) (&D_83503AD4)) + 0x14)))) - ((*D_83503DA8_ptr) * (*D_83503DA8_ptr));
+    if (temp_fa0 <= ((f32) ((s32) (var_fv1 + var_fa0)))) {
+        if (D_83503AC8 == 0) {
+            func_800226C0(0x66);
+            var_fa1 = D_83503E44;
+            D_83503AC8 = 1;
+            var_fv0 = 32.0f * D_83503BE8;
+            var_fa0 = var_fa1 - var_fv0;
+        }
+        // D_83503BA8+0x10 / +0xC are the two arena counters (see func_835034A8 below).
+        *((s32 *) (((u8 *) (&D_83503BA8)) + 0x10)) = 0;
+        *((s32 *) (((u8 *) (&D_83503BA8)) + 0xC)) = 3;
+        if (var_fv0 < var_fa1) {
+            var_fv1 = 0.5f;
+        } else {
+            var_fv1 = -0.5f;
+        }
+        // The (u32) cast is load-bearing: plain (u8 *) &D_83503AD4 folds the store into
+        // lui at,%hi + sw %lo, while the cast keeps the base in $v1 and re-materialises it
+        // after the call (diff score 340 without it).
+        *((s32 *) (((u8 *) ((u32) &D_83503AD4)) + 0x14)) = (s32) (var_fv1 + var_fa0);
+        D_83503AF4 = 0;
+        return;
+    }
+    *((s32 *) (((u8 *) (&D_83503AD4)) + 0x14)) = (s32) temp_fa0;
+    *D_83503DA8_ptr = (f32) (((f64) (*D_83503DA8_ptr)) + D_83503E48);
+}
+/* mkdraft:func_83503324 end */
 
 s32 func_800225C4(s32);
 extern s32 D_83503BA8;
