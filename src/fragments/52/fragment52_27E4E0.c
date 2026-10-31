@@ -503,7 +503,81 @@ void func_86402158(u8 *arg0, u16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86402304.s")
+/* mkdraft:func_86402304 begin */
+extern float sqrtf(float value);
+extern s32 func_80001FF0(void);
+extern void func_8002781C(s32, u8, void *);
+extern u8 *D_86416C00;
+
+
+
+void func_86402304(u8 *arg0) {
+    f32 temp_fa0;
+    f32 temp_fv1;
+    s32 temp_t6;
+    s32 temp_v0;
+    s32 temp_v1;
+    s32 var_t3;
+    s32 var_v1;
+    s32 var_v1_2;
+    u8 *temp_s1;
+    u8 *var_s0;
+    u8 *child;
+
+    var_s0 = *(u8 **)(D_86416C00 + 0xE0C);
+    temp_s1 = *(u8 **)(arg0 + 0x20);
+    if (var_s0 != NULL) {
+        do {
+            child = *(u8 **)(var_s0 + 0x20);
+            if ((*(u8 *)(child + 4) != *(s32 *)(temp_s1 + 0)) && (*(s32 *)(var_s0 + 0xC) & 0x20000000)) {
+                temp_fv1 = *(f32 *)(arg0 + 0x48) - *(f32 *)(var_s0 + 0x48);
+                temp_fa0 = *(f32 *)(arg0 + 0x50) - *(f32 *)(var_s0 + 0x50);
+                if (sqrtf((temp_fv1 * temp_fv1) + (temp_fa0 * temp_fa0)) < 30.0f) {
+                    temp_v0 = *(s32 *)(arg0 + 0xC);
+                    if (!(temp_v0 & 0x40000) && !(temp_v0 & 0x80000000)) {
+                        *(f32 *)(temp_s1 + 0x1C) = 0.0f;
+                        *(f32 *)(arg0 + 0x14) = 34.800003f;
+                        var_v1 = *(s32 *)(temp_s1 + 0x14);
+                        switch (var_v1) {
+                        case 0:
+                            if ((((f32) func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                                var_t3 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                                *(s32 *)(temp_s1 + 0x38) = var_t3;
+                            } else {
+                                *(s32 *)(temp_s1 + 0x38) = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                            }
+                            break;
+                        case 1:
+                            if ((((f32) func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                                var_v1 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                            } else {
+                                var_v1 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                            }
+                            *(s32 *)(temp_s1 + 0x38) = (s32) ((f32) var_v1 * 0.7f);
+                            break;
+                        case 2:
+                        case 3:
+                            if ((((f32) func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                                var_v1_2 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                            } else {
+                                var_v1_2 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                            }
+                            *(s32 *)(temp_s1 + 0x38) = (s32) ((f32) var_v1_2 * 0.4f);
+                            break;
+                        }
+                        *(s32 *)(arg0 + 0xC) |= 0x80000000;
+                        func_8002781C(0x5F03, *(u8 *)(temp_s1 + 3), temp_s1 + 0x58);
+                    }
+                    *(s32 *)(var_s0 + 0xC) |= 0x40000000;
+                    *(s32 *)(var_s0 + 0xC) &= 0xDFFFFFFF;
+                    *(s32 *)(var_s0 + 0x1C) = 0;
+                }
+            }
+            var_s0 = *(u8 **)(var_s0 + 4);
+        } while (var_s0 != NULL);
+    }
+}
+/* mkdraft:func_86402304 end */
 #endif
 
 #ifdef VERSION_US
