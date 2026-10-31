@@ -1199,7 +1199,41 @@ void func_8AB0318C(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB03194.s")
+/* mkdraft:func_8AB03194 begin */
+extern s32 D_8AB14198;
+
+// `D_8AB14198` holds the source pointer (loaded with lw). The standalone destination
+// increment keeps the second store's source a bare temporary (`lhu $t6, 2($s1)`), while
+// `second` reloads the halfword just written at the same textual address (`-2($dest)`);
+// as1 forwards that reload, so the argument becomes `andi $a1, $t6, 0xFFFF`.
+
+
+s32 func_8AB03194(void) {
+    u16 *source;
+    u16 *destination;
+    s16 count;
+    u16 first;
+    u16 second;
+    u16 terminator;
+    source = *(u16 **)((u8 *)&D_8AB14198);
+    destination = (u16 *)D_8AB14D08;
+    count = 0;
+    terminator = 0xFFFF;
+loop:
+    if (*source != terminator) {
+        *destination++ = first = *source++;
+        destination++;
+        destination[-1] = *source++;
+        second = destination[-1];
+        func_8004C874(first & 0xFFFF, second);
+        count++;
+        goto loop;
+    }
+    *destination++ = 0xFFFF;
+    *destination++ = 0xFFFF;
+    return count & 0xFFFF;
+}
+/* mkdraft:func_8AB03194 end */
 #endif
 
 #ifdef VERSION_US
