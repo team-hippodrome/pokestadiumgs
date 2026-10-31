@@ -90,7 +90,76 @@ void func_88A00938(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A00B44.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A00D0C.s")
+/* mkdraft:func_88A00D0C begin */
+extern s8 D_88006868;
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 func_8006229C(u8 *);
+extern u8 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 GbSave_GetRecordCapacity(s32);
+extern s32 _bcopy(u8 *, u8 *, s32);
+extern u16 func_80053230(s32);
+extern s32 func_88A00978(u8 *, u8 *);
+extern s32 func_88A015A0(s32);
+extern u8 *mem_pool_alloc(s32, s32);
+extern u8 *D_88A01C60;
+extern u8 *D_88A01C64;
+
+
+
+void func_88A00D0C(s32 arg0) {
+    s32 pad[2]; // FAKE: dead stack pad; DIFF 2 without it
+    u16 sp3C[2]; // FAKE: 2-element array only to force the 4-byte-aligned frame slot at 0x3c; DIFF 2 as a scalar u16
+    s32 sp38_arr[2];
+    s32 sp2C; // FAKE: dead store; DIFF 13 without it
+    s32 temp_a1;
+    s32 temp_s1;
+    s32 temp_s1_2;
+    s32 var_s1;
+    u8 *temp_v0;
+    u8 *temp_v0_2;
+    u8 *temp_v0_3;
+    u8 *temp_v0_4;
+
+    temp_s1 = GbSave_GetRecordCapacity(0x22) & 0xFFFF;
+    sp3C[0] = func_80053230(0x12);
+    D_88A01C60 = mem_pool_alloc(arg0, 0xB0);
+    D_88A01C64 = mem_pool_alloc(arg0, 0x114);
+    *(u8 **)((u8 *)D_88A01C60 + 0x9C) = mem_pool_alloc(arg0, (sp38_arr[1] = temp_s1) * 2);
+    *(u8 **)((u8 *)D_88A01C64 + 0xF0) = mem_pool_alloc(arg0, (sp38_arr[1] * 2) + 2);
+    temp_s1_2 = sp3C[0] * 2;
+    sp38_arr[0] = (s32) sp3C[0];
+    *(u8 **)((u8 *)D_88A01C60 + 0xA4) = mem_pool_alloc(arg0, temp_s1_2);
+    temp_a1 = (sp38_arr[0] * 2) + 2;
+    sp2C = temp_a1; // FAKE: dead store; DIFF 13 without it
+    *(u8 **)((u8 *)D_88A01C64 + 0xF8) = mem_pool_alloc(arg0, temp_a1);
+    *(u8 **)((u8 *)D_88A01C60 + 0xAC) = mem_pool_alloc(arg0, temp_s1_2);
+    *(u8 **)((u8 *)D_88A01C64 + 0x100) = mem_pool_alloc(arg0, temp_a1);
+    temp_v0 = func_8006218C(0x23, (s32) D_88006868, 0, 0);
+    Deck_ReadEntries(D_88A01C60, 1, temp_v0);
+    func_8006229C(temp_v0);
+    func_88A00978(D_88A01C60, D_88A01C64);
+    temp_v0_2 = func_8006218C(0x22, (s32) D_88006868, 0, 0);
+    *(u8 *)((u8 *)D_88A01C60 + 0x98) = Deck_ReadEntries(*(u8 **)((u8 *)D_88A01C60 + 0x9C), sp38_arr[1], temp_v0_2);
+    func_8006229C(temp_v0_2);
+    _bcopy(*(u8 **)((u8 *)D_88A01C60 + 0x9C), *(u8 **)((u8 *)D_88A01C64 + 0xF0), *(u8 *)((u8 *)D_88A01C60 + 0x98) * 2);
+    *(u8 *)((u8 *)D_88A01C64 + 0xEF) = *(u8 *)((u8 *)D_88A01C60 + 0x98);
+    temp_v0_3 = func_8006218C(0x12, 0, 0, 0);
+    *(u8 *)((u8 *)D_88A01C60 + 0xA0) = Deck_ReadEntries(*(u8 **)((u8 *)D_88A01C60 + 0xA4), sp38_arr[0], temp_v0_3);
+    func_8006229C(temp_v0_3);
+    _bcopy(*(u8 **)((u8 *)D_88A01C60 + 0xA4), *(u8 **)((u8 *)D_88A01C64 + 0xF8), *(u8 *)((u8 *)D_88A01C60 + 0xA0) * 2);
+    *(u8 *)((u8 *)D_88A01C64 + 0xF4) = *(u8 *)((u8 *)D_88A01C60 + 0xA0);
+    temp_v0_4 = func_8006218C(0x12, 0, 1, 0);
+    *(u8 *)((u8 *)D_88A01C60 + 0xA8) = Deck_ReadEntries(*(u8 **)((u8 *)D_88A01C60 + 0xAC), sp38_arr[0], temp_v0_4);
+    func_8006229C(temp_v0_4);
+    _bcopy(*(u8 **)((u8 *)D_88A01C60 + 0xAC), *(u8 **)((u8 *)D_88A01C64 + 0x100), *(u8 *)((u8 *)D_88A01C60 + 0xA8) * 2);
+    *(u8 *)((u8 *)D_88A01C64 + 0xFC) = *(u8 *)((u8 *)D_88A01C60 + 0xA8);
+    for (var_s1 = 0; var_s1 != 4; var_s1++) {
+        temp_s1 = var_s1 * 4;
+        *(s32 *)((u8 *)&D_88A01C64[temp_s1] + 0x104) = 0;
+        func_88A015A0(var_s1);
+    }
+}
+/* mkdraft:func_88A00D0C end */
 
 s32 func_88A00FD4(u8 arg0) {
     s32 result = 0;
