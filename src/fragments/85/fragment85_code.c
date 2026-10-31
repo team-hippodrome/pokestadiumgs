@@ -65,7 +65,36 @@ void func_8FD00514(s16 arg0, s16 arg1, u16 arg2, u16 arg3, u16 *arg4) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD005B4.s")
+/* mkdraft:func_8FD005B4 begin */
+extern u8 D_8FD02188;
+extern u16 D_8FD022A8;
+u8 *func_8004E0F0(u8 *, s32, s32);
+
+
+
+void func_8FD005B4(s16 arg0, s16 arg1, u16 arg2, u16 arg3) {
+    u8 sp24;
+    u8 sp28;
+
+    sp28 = *((u8 *) ((&D_8FD02188) + 0x13));
+    sp24 = *((u8 *) ((&D_8FD02188) + 0x17));
+    // FAKE: `(0, x)` discards a constant before each pushed byte. Without it IDO colours
+    // the 0x18 word load to t7 and emits the compare as `bne v0,t7`; the retail object
+    // loads into t6 and compares `bne t6,v0`. Diff score 25 with plain `sp28` and `sp24`.
+    if (((*((s32 *) ((&D_8FD02188) + 0x18))) != ((0, sp28))) || ((*((s32 *) ((&D_8FD02188) + 0x1C))) != ((0, sp24)))) {
+        if (func_8004E0F0((u8 *) (&D_8FD022A8), sp28, sp24) != 0) {
+            *((s32 *) ((&D_8FD02188) + 0x1C)) = sp24;
+            *((s32 *) ((&D_8FD02188) + 0x18)) = sp28;
+            goto block_4;
+        }
+    } else {
+        // Join target of the second compare and of the two stores above.
+        block_4:
+        func_8FD00514(arg0, arg1, arg2, arg3, &D_8FD022A8);
+
+    }
+}
+/* mkdraft:func_8FD005B4 end */
 #endif
 
 #ifdef VERSION_US
