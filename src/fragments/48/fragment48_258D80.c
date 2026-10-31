@@ -19,7 +19,50 @@ void func_87C02DF0(u8 *arg0, s32 arg1, void *arg2, f32 arg3) {
     *(f32 *)(arg0 + 0x388) = arg3;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C02E24.s")
+/* mkdraft:func_87C02E24 begin */
+extern void func_8003F03C(s32 arg0, void *arg1);
+extern void func_8003F1DC(void *arg0);
+extern void func_8003F114(u8 *arg0, s16 arg1, s16 arg2, void *arg3);
+extern void func_87C02D1C(u8 *arg0, u8 *arg1);
+
+
+
+
+void func_87C02E24(u8 *arg0, void *arg1, void *arg2, void *arg3) {
+    f32 scale;
+    s32 i;
+    s32 offset;
+    u8 *model;
+    u8 *target;
+
+    scale = *(f32 *)(arg0 + 0x388) / 250.0f;
+    func_8003F03C((s32)arg0, arg2);
+    func_8003F03C((s32)(arg0 + 0x168), arg1);
+    i = 0;
+    model = arg0;
+    offset = 0;
+    do {
+        func_8003F1DC(model);
+        func_8003F114(model, 0, -1, arg3);
+        *(f32 *)(model + 0x30) = scale;
+        *(f32 *)(model + 0x34) = scale;
+        *(f32 *)(model + 0x38) = scale;
+        func_87C02D1C(arg0 + 0x2D0, arg0 + 0x60 + offset);
+        model += 0x168;
+        switch (i) {
+        case 1:
+            target = (u8 *)arg0 + i * 0x168;
+            *(f32 *)(target + 0x64) = *(f32 *)(target + 0x64) * -1.0f;
+            *(f32 *)(target + 0x74) = *(f32 *)(target + 0x74) * -1.0f;
+            *(f32 *)(target + 0x84) = *(f32 *)(target + 0x84) * -1.0f;
+            *(f32 *)(target + 0x94) = *(f32 *)(target + 0x94) * -1.0f;
+            break;
+        }
+        i++;
+        offset += 0x168;
+    } while (i != 2);
+}
+/* mkdraft:func_87C02E24 end */
 
 extern void *func_87C008B0(void *arg0);
 extern void func_87C010AC(void *arg0, void *arg1, void *arg2);
