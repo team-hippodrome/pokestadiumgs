@@ -563,7 +563,55 @@ f64 func_86009C58(void *arg0, u8 *arg1) {
     return *(f64 *)arg0 - func_87C0068C(data);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86009C98.s")
+/* mkdraft:func_86009C98 begin */
+extern float sqrtf(float value);
+#pragma intrinsic(sqrtf);
+
+// Curve height at (arg1, arg2): the center_y field plus the signed root of
+// radius^2 - min(point_y^2, horizontal_distance^2). point_y is the f64 at arg0+0x8 and the
+// horizontal distance runs from the center (arg0+0x10, arg0+0x20) to the query point. The
+// sign is the flag at arg0+0x48: nonzero gives +1, zero gives -1.
+
+
+f64 func_86009C98(void *arg0, f64 arg1, f64 arg2) {
+    // FAKE: the copy pins the incoming arg1 into $f12; subtracting arg1 directly makes cfe
+    // place it in $f14 and changes four instructions.
+    f64 query_x = arg1;
+    f64 point_y;
+    f64 point_y_sq;
+    f64 dx;
+    f64 dx2;
+    f64 dz;
+    f64 dz2;
+    f64 dd;
+    f64 radius;
+    f64 value;
+    s32 sign;
+
+    point_y = *(f64 *)((u8 *)arg0 + 0x8);
+    point_y_sq = point_y * point_y;
+    dx = *(f64 *)((u8 *)arg0 + 0x10) - query_x;
+    dx2 = dx * dx;
+    dz = *(f64 *)((u8 *)arg0 + 0x20) - arg2;
+    dz2 = dz * dz;
+    dd = dx2 + dz2;
+
+    if (point_y_sq < dd) {
+        sign = *(s32 *)((u8 *)arg0 + 0x48) != 0 ? 1 : -1;
+        radius = *(f64 *)arg0;
+        value = radius * radius - point_y_sq;
+        return *(f64 *)((u8 *)arg0 + 0x18) + sqrtf((f32)value) * (f32)sign;
+    }
+
+    radius = *(f64 *)arg0;
+    value = radius * radius - dx2 - dz2;
+    // FAKE: dead store. Without it uopt folds value into the return expression and sinks
+    // the radius chain below the sign test, changing eighteen instructions.
+    radius = value;
+    sign = *(s32 *)((u8 *)arg0 + 0x48) != 0 ? 1 : -1;
+    return *(f64 *)((u8 *)arg0 + 0x18) + sqrtf((f32)value) * (f32)sign;
+}
+/* mkdraft:func_86009C98 end */
 
 extern f64 D_8600D988;
 
