@@ -87,5 +87,17 @@ void func_8290299C(u8 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33F420/func_82902AC0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33F420/func_82902EC0.s")
+/* mkdraft:func_82902EC0 begin */
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern void func_82902AC0(u8);
+extern f32 D_82918974;
+extern f32 D_82918978;
+
+
+
+void func_82902EC0(u8 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    func_82902AC0(arg0);
+    GfxRect_DrawTextured(arg1, arg2, arg3, arg4, 0, 0, (s16) (s32) (((D_82918974 * 1024.0f * 32.0f) / (f32) arg3) + ((((D_82918974 * 1024.0f * 32.0f) / (f32) arg3) > 0.0f) ? 0.5f : -0.5f)), (s16) (s32) (((D_82918978 * 1024.0f * 32.0f) / (f32) arg4) + ((((D_82918978 * 1024.0f * 32.0f) / (f32) arg4) > 0.0f) ? 0.5f : -0.5f)), 0);
+}
+/* mkdraft:func_82902EC0 end */
 #endif
