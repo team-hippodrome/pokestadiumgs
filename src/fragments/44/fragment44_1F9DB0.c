@@ -106,7 +106,45 @@ s32 func_8AF0C5BC(s16 arg0, s16 arg1) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C6F8.s")
+/* mkdraft:func_8AF0C6F8 begin */
+extern u8 D_8AF2E8F8[];
+
+
+
+s16 func_8AF0C6F8(u8 *arg0) {
+    s16 var_v1;
+    u8 *var_a2;
+    u8 *var_t1;
+    u8 temp_t0;
+    u8 temp_v0;
+
+    var_v1 = 0;
+    var_t1 = D_8AF2E8F8;
+loop_1:
+    temp_v0 = *arg0;
+    if (temp_v0 != 0) {
+        var_a2 = var_t1;
+init_2:
+        temp_t0 = *var_a2;
+        if (temp_t0 != temp_v0) {
+            if (((!var_a2) && (!var_a2)) && (!var_a2)) { // FAKE: three redundant var_a2 tests widen its live range so uopt colors temp_t0 as t0; without it the inner lbu takes a3 (score 15)
+            }
+            if (temp_t0 == 0) {
+                *var_a2 = temp_v0;
+                var_v1 += 1;
+                arg0 += 0x14;
+            } else {
+                var_a2 += 1;
+                goto init_2;
+            }
+        } else {
+            arg0 += 0x14;
+        }
+        goto loop_1;
+    }
+    return var_v1;
+}
+/* mkdraft:func_8AF0C6F8 end */
 
 extern void _bzero(s32 *, s32);
 extern s16 func_8AF0C6F8(u8 *);
