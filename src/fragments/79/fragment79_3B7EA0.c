@@ -539,7 +539,59 @@ void func_84149F74(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149FB8.s")
+/* mkdraft:func_84149FB8 begin */
+extern u8 func_80063660(u8);
+
+
+
+void func_84149FB8(u8 *arg0) {
+    s32 temp_v0_2;
+    s32 temp_v1;
+    u8 temp_v1_2;
+    void *temp_v0;
+
+    if (func_84149E58(arg0) != 0) {
+        arg0[2] = 0;
+        return;
+    }
+    if (func_84149EC8(arg0) != 0) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    if (func_84149F30(arg0) != 0) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    temp_v0 = *(void **)(arg0 + 4);
+    if (*(u8 *)((u8 *)temp_v0 + 0x18) & 1) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    temp_v1 = arg0[1];
+    if (temp_v1 == 0x11) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    if (temp_v1 == 0x5C) {
+        if (!(*(u16 *)((u8 *)temp_v0 + 0x26) & 7)) {
+            arg0[2] = 0;
+            return;
+        }
+    }
+    func_84149F74(arg0);
+    if (func_80063660(*(*(u8 **)(arg0 + 8) + 1)) == 0x4D) {
+        temp_v0_2 = func_80063690(*(*(u8 **)(arg0 + 8) + 1));
+        temp_v1_2 = arg0[2];
+        if ((s32)temp_v1_2 >= temp_v0_2) {
+            // FAKE: the mask folds to nothing but consumes the temp-register slot
+            // that colors subu as t7; without it the differ scores 10 (t6).
+            arg0[2] = (temp_v1_2 - temp_v0_2) & 0xFF;
+        } else {
+            arg0[2] = 0;
+        }
+    }
+}
+/* mkdraft:func_84149FB8 end */
 
 extern u8 func_80062D98(u8);
 extern s32 func_84155574(u8 *, u8);
