@@ -2,7 +2,38 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A340.s")
+/* mkdraft:func_8AF0A340 begin */
+extern s32 D_8AF2698C[];
+extern u8 *D_8AF2D510[];
+extern u8 *D_8AF2D558[];
+s32 func_8004C990(s32, s32);
+s32 func_8004C8C0(u16);
+
+// Fills the 18 pointer slots D_8AF2D510 to D_8AF2D558 (D_8AF2D558 is the slot just past
+// the end, 0x48 bytes in total) with the archive 0x14C entries named by the index table
+// D_8AF2698C, in table order. func_8004C8C0 marks archive 0x14C's entries as loaded;
+// func_8AF0A3A8 then draws through D_8AF2D510[index]. Its only caller is func_8AF15F28
+// (//@src/fragments/44/fragment44_2030B0.c).
+
+
+void func_8AF0A340(void) {
+    s32 *src;
+    u8 **dst;
+    u8 **end;
+    u8 *p;
+
+    func_8004C8C0(0x14C);
+    // One comma expression, not three statements: as separate statements IDO emits the
+    // %lo addends in statement order (src, dst, end), while the retail preheader takes
+    // them in reverse (end, dst, src).
+    src = D_8AF2698C, dst = D_8AF2D510, end = D_8AF2D558;
+    do {
+        p = (u8 *)func_8004C990(0x14C, *src);
+        src++;
+        *(dst++) = p;
+    } while (dst != end);
+}
+/* mkdraft:func_8AF0A340 end */
 
 extern Gfx *D_800D0510;
 extern Gfx D_80094E38[];
