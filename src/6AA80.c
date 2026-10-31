@@ -655,7 +655,43 @@ s32 func_8006B854(s32 arg0, s32 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006B928.s")
+/* mkdraft:func_8006B928 begin */
+extern s32 func_800718B8(s32);
+
+
+
+u8 * func_8006B928(void) {
+    s32 state;
+    u8 *record = 0;
+    state = D_8009DF70;
+    if (state != 0) {
+        if (*(u8 **)((u8 *)(u32)state + 0x24) != 0) {
+            u16 mode = *(u16 *)((u8 *)(u32)state) & 0xFF00;
+            record = *(u8 **)((u8 *)(u32)state + 0x24);
+            func_8006AFE4((s8 *)(*(u8 **)((u8 *)(u32)state + 0x24) + 0x900), (s8 *)((u8 *)(u32)state + 8));
+            if (mode != 0x200) {
+                s32 i;
+                for (i = 0; i < 4; i++) {
+                    if (*(s8 *)(record + 0x900 + i) == -1) {
+                        *(s8 *)(record + 0x900 + i) = -2;
+                    }
+                }
+            }
+            if (*(s16 *)((u8 *)(u32)D_8009DF70 + 6) != 0xE) {
+                *(s32 *)(record + 0x940) = func_800718B8(*(s16 *)((u8 *)(u32)D_8009DF70 + 6));
+            } else {
+                *(s32 *)(record + 0x940) = (s32)(u8 *)(u32)D_8009DF70 + 0x3C;
+            }
+            *(u8 *)(record + 0x944) = func_8006B854(*(u16 *)((u8 *)(u32)D_8009DF70), *(s16 *)((u8 *)(u32)D_8009DF70 + 6));
+            *(s32 *)(record + 0x948) = *(u32 *)((u8 *)(u32)D_8009DF70 + 0x20);
+            *(s32 *)(record + 0x94C) = (*(u16 *)((u8 *)(u32)D_8009DF70 + 4) & 1) != 0;
+            *(u16 *)(record + 0x950) = *(u16 *)((u8 *)(u32)D_8009DF70);
+            *(u16 *)(record + 0x952) = *(s16 *)((u8 *)(u32)D_8009DF70 + 2);
+        }
+    }
+    return record;
+}
+/* mkdraft:func_8006B928 end */
 
 void func_8006BA74(u8 *arg0) {
     s32 i;
