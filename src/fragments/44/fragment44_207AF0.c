@@ -271,7 +271,96 @@ void func_8AF1A72C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF1AE30.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF1B23C.s")
+/* mkdraft:func_8AF1B23C begin */
+extern void func_800495BC(s32, s32, s32 *);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_8004B314(s16, s16, s32, s32);
+extern void func_8AC00738(void);
+extern void func_8AC0077C(s16, s16, s16, s16);
+extern void func_8AC05F00(void *);
+extern s32 func_8AC0665C(u8 *, s16);
+extern s32 func_8AC0672C(u8 *, s16);
+extern u8 *D_8AF35180;
+extern u8 D_8AF35058;
+extern u8 D_8AF350D0;
+extern s16 D_8AF357A8;
+extern s16 D_8AF357AA;
+extern s16 D_8AF357AC;
+extern s16 D_8AF357AE;
+extern s16 D_8AF357C2;
+extern s16 D_8AF357C4;
+extern u8 D_8AF357C0;
+extern s32 D_8AF357D0;
+extern s16 D_8AF36F28;
+extern s16 D_8AF370F0;
+extern s16 D_8AF370F2;
+
+// Lays the D_8AF357D0 cell table out over the D_8AF35180 rectangle: one
+// func_800495BC call per 12-byte cell, 4 columns per row and sp42 rows, after
+// clipping to (x-3, y, x+w, y+h) and setting the 0xFF fill. Then runs the
+// func_8AC0665C / func_8AC0672C-gated overlay updates and, when D_8AF357C4 is
+// clear, moves the 130x36 area at D_8AF370F0/D_8AF370F2.
+
+
+void func_8AF1B23C(void) {
+    // FAKE: nothing else occupies these 24 bytes; removing the array shrinks the
+    // frame to 0x48 and changes only the two addiu sp lines (score 10).
+    s32 pad[6];
+    // FAKE: reading D_8AF357C2 directly hoists lui %hi(D_8AF357C2) out of the
+    // loop and puts sp42 at 0x46(sp); through this pointer the address is
+    // rebuilt once per iteration (score 2659 without it).
+    s16 *D_8AF357C2_ptr = &D_8AF357C2;
+    s16 sp42;
+    s16 left, right, bottom;
+    // FAKE: the tail load needs its own lui %hi / lh %lo of D_8AF357C0; through
+    // the base register the two query calls below carry, IDO reloads 0(base)
+    // instead (score 310 without this pointer). The loop read keeps the symbol
+    // spelling.
+    u8 *D_8AF357C0_ptr = &D_8AF357C0;
+    s32 var_s2;
+    u8 *var_s1;
+    s32 var_s0;
+    u8 temp_v1_2;
+
+    sp42 = ((s32)(D_8AF36F28 - 1) / 4) + 1;
+    left = *(s16 *)(D_8AF35180 + 8) - 3;
+    right = *(s16 *)(D_8AF35180 + 12) + *(s16 *)(D_8AF35180 + 8);
+    bottom = *(s16 *)(D_8AF35180 + 14) + *(s16 *)(D_8AF35180 + 10);
+    func_8AC0077C(left, *(s16 *)(D_8AF35180 + 10), right, bottom);
+    func_800498C4();
+    func_800496A4(4, 0);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    var_s1 = (u8 *)&D_8AF357D0;
+    for (var_s2 = 0; var_s2 < sp42; var_s2++) {
+        for (var_s0 = 0; var_s0 != 4; var_s0++, var_s1 += 12) {
+            temp_v1_2 = var_s1[0];
+            if (temp_v1_2 == 0) {
+                var_s2 = sp42;
+                break;
+            }
+            if ((temp_v1_2 != 0xFFU) && ((*D_8AF357C2_ptr - 2) < var_s2) && (var_s2 < (*D_8AF357C2_ptr + 11))) {
+                func_800495BC(*(s16 *)(D_8AF35180 + 8) + (var_s0 * 130) + 6, ((*(s16 *)(D_8AF35180 + 10) + (var_s2 * 20)) - *(s16 *)&D_8AF357C0) + 4, *(s32 *)(var_s1 + 4));
+            }
+        }
+    }
+    func_800499EC();
+    func_8AC00738();
+    if (func_8AC0665C(D_8AF357C0_ptr, D_8AF357AE) != 0) {
+        func_8AC05F00(&D_8AF35058);
+    }
+    if (func_8AC0672C(D_8AF357C0_ptr, D_8AF357AE) != 0) {
+        func_8AC05F00(&D_8AF350D0);
+    }
+    if (D_8AF357C4 == 0) {
+        D_8AF370F0 = (D_8AF357A8 + (D_8AF357AC * 130)) - 4;
+        D_8AF370F2 = ((D_8AF357AA + (D_8AF357AE * 20)) - *(s16 *)D_8AF357C0_ptr) - 6;
+    }
+    func_8004B314(D_8AF370F0, D_8AF370F2, 130, 36);
+}
+/* mkdraft:func_8AF1B23C end */
 
 void func_8AF1B4D0(u8 *arg0, s32 arg1, s32 arg2) {
     *(s32 *)(arg0 + 0x28) = arg1;
