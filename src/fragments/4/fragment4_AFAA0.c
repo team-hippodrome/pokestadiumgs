@@ -757,7 +757,107 @@ f32 WidgetSelection_AngleDifference(f32 from, f32 to) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AFAA0/func_81804088.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AFAA0/func_818042E4.s")
+/* mkdraft:func_818042E4 begin */
+extern s32 func_8004972C(s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_81803A74(u8 *arg0, u8 *arg1, f32 arg2, s32 arg3);
+extern void WidgetText_DrawRecordList(u8 *record, void *origin, f32 weight, s32 variant);
+extern u8 *WidgetSelection_GetValuePointer(void *arg0, void *state);
+extern s32 WidgetSelection_GetMask(void *arg0, void *state);
+
+
+
+void func_818042E4(void *arg0, u8 *arg1, void *arg2, f32 arg3, s32 arg4) {
+    s32 temp_v0;
+    s32 var_a3;
+    s32 var_a3_2;
+    s32 var_s0;
+    s32 var_s1_2;
+    s32 var_s4;
+    u8 *temp_a0;
+    u8 *temp_a0_2;
+    u8 *temp_a0_3;
+    u8 *temp_a0_4;
+    u8 var_s1;
+    void *temp_v0_2;
+    void *temp_v0_3;
+    void *var_s3;
+
+    var_s3 = NULL;
+    var_s4 = 0;
+    if (*(s32 *)((u8 *)(arg0) + 0) != 0) {
+        if (arg2 != NULL) {
+            var_s1 = *WidgetSelection_GetValuePointer(arg0, arg2);
+            temp_v0 = WidgetSelection_GetMask(arg0, arg2);
+            var_s4 = temp_v0;
+            if (((s32) var_s1 <= 0) || ((s32) *(u8 *)((u8 *)(arg0) + 4) < (s32) var_s1)) {
+                var_s1 = *(u8 *)((u8 *)(arg0) + 5);
+            }
+            if ((arg4 != 0) && (((s32) var_s1 >= 0x20) || !((1 << (var_s1 + 0x1F)) & temp_v0))) {
+                var_s3 = (*(s32 *)((u8 *)(arg0) + 0) + (var_s1 * 0x18)) - 0x18;
+            }
+        }
+        var_s0 = 1;
+        var_s1_2 = 0x18;
+        if ((s32) *(u8 *)((u8 *)(arg0) + 4) > 0) {
+            do {
+                temp_v0_2 = (*(s32 *)((u8 *)(arg0) + 0) + var_s1_2) - 0x18;
+                if (temp_v0_2 != var_s3) {
+                    temp_a0 = *(u8 **)((u8 *)(temp_v0_2) + 0x14);
+                    if (temp_a0 != NULL) {
+                        if ((1 << (var_s0 + 0x1F)) & var_s4) {
+                            var_a3 = 2;
+                        } else {
+                            var_a3 = 0;
+                        }
+                        func_81803A74(temp_a0, arg1, arg3, var_a3);
+                    }
+                }
+                var_s0 += 1;
+                var_s1_2 += 0x18;
+            } while ((s32) *(u8 *)((u8 *)(arg0) + 4) >= var_s0);
+            var_s0 = 1;
+        }
+        if (var_s3 != NULL) {
+            temp_a0_2 = *(u8 **)((u8 *)(var_s3) + 0x14);
+            if (temp_a0_2 != NULL) {
+                func_81803A74(temp_a0_2, arg1, arg3, 1);
+            }
+        }
+        func_800498C4();
+        func_8004972C(0xFF, 0xFF, 0xFF, (s32) (255.0f * arg3));
+        if (var_s1_2) {
+            // karodo
+        }
+        if ((s32) *(u8 *)((u8 *)(arg0) + 4) > 0) {
+            var_s1_2 = 0x18;
+            do {
+                temp_v0_3 = (*(s32 *)((u8 *)(arg0) + 0) + var_s1_2) - 0x18;
+                if (temp_v0_3 != var_s3) {
+                    temp_a0_3 = *(u8 **)((u8 *)(temp_v0_3) + 0x10);
+                    if (temp_a0_3 != NULL) {
+                        if ((1 << (var_s0 + 0x1F)) & var_s4) {
+                            var_a3_2 = 2;
+                        } else {
+                            var_a3_2 = 0;
+                        }
+                        WidgetText_DrawRecordList(temp_a0_3, arg1, arg3, var_a3_2);
+                    }
+                }
+                var_s0 += 1;
+                var_s1_2 += 0x18;
+            } while ((s32) *(u8 *)((u8 *)(arg0) + 4) >= var_s0);
+        }
+        if (var_s3 != NULL) {
+            temp_a0_4 = *(u8 **)((u8 *)(var_s3) + 0x10);
+            if (temp_a0_4 != NULL) {
+                WidgetText_DrawRecordList(temp_a0_4, arg1, arg3, 1);
+            }
+        }
+        func_800499EC();
+    }
+}
+/* mkdraft:func_818042E4 end */
 
 extern void Ui_DrawAnimatedTextureMarker(s16, s16);
 extern void func_8004AF18(s32, s32);
