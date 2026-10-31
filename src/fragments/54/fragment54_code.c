@@ -478,7 +478,114 @@ void func_86603100(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86603108.s")
+/* mkdraft:func_86603108 begin */
+extern void Font_DisableTwoCycleTexturing(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800497E4(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_87F09040(void);
+extern s32 func_86600E00();
+extern s32 D_866066EC;
+extern s32 D_866066F0;
+extern s32 D_86606720;
+extern s32 D_86606724;
+extern s32 D_86606728;
+extern s32 D_86606738;
+extern s32 D_86606748;
+extern f32 D_86606750;
+extern s32 D_86606790;
+extern s32 D_86606E20;
+extern s32 D_8660722C;
+
+
+
+void func_86603108(void) {
+    func_87F09040();
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    D_86606E20 = D_86606E20 + 1;
+    if (D_86606E20 >= 0x15) {
+        D_86606E20 = 0;
+    }
+    // These string literals are this file's ordinary .rodata, 0x2A0800-0x2A0943;
+    // IDO emits them in first-use order, so the call order fixes their addresses.
+    func_800495F8(0x5A, 0x3C, 0, "R:もどる");
+    func_800495F8(0x5A, 0x46, 0, "しゅうりょうスコア:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 1)) {
+        func_800495F8(0xE6, 0x46, 0, "%d", D_86606720);
+    }
+    func_800495F8(0x5A, 0x50, 0, "にゅうりょくボタン:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 2)) {
+        switch (D_866066F0) {
+        case 0:
+            func_800495F8(0xE6, 0x50, 0, "J+ABくべつ");
+            break;
+        case 1:
+            func_800495F8(0xE6, 0x50, 0, "J+ABきょうつう");
+            break;
+        case 2:
+            func_800495F8(0xE6, 0x50, 0, "Cボタン");
+            break;
+        }
+    }
+    func_800495F8(0x5A, 0x5A, 0, "ランダムタイプ:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 3)) {
+        if (D_866066EC != 0) {
+            func_800495F8(0xE6, 0x5A, 0, "せいせい");
+        } else {
+            func_800495F8(0xE6, 0x5A, 0, "パターン");
+        }
+    }
+    func_800495F8(0x5A, 0x64, 0, "かさなりじかん:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 4)) {
+        func_800495F8(0xE6, 0x64, 0, "%d", D_86606724);
+    }
+    func_800495F8(0x5A, 0x6E, 0, "デモまちじかん:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 5)) {
+        func_800495F8(0xE6, 0x6E, 0, "%d", D_86606728);
+    }
+    func_800495F8(0x5A, 0x78, 0, "きりかえじかん:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 6)) {
+        func_800495F8(0xE6, 0x78, 0, "%d", D_8660722C);
+    }
+    func_800495F8(0x5A, 0x82, 0, "ピカチュウスケール:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 7)) {
+        func_800495F8(0xE6, 0x82, 0, "%0.2f", (f64) D_86606750);
+    }
+    func_800495F8(0x5A, 0x8C, 0, "ミスアニメーション:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 8)) {
+        if (D_86606748 == 1) {
+            func_800495F8(0xE6, 0x8C, 0, "ほかんあり");
+        } else {
+            func_800495F8(0xE6, 0x8C, 0, "ほかんなし");
+        }
+    }
+    func_800495F8(0x5A, 0x96, 0, "いどうオブジェ:");
+    if ((D_86606E20 >= 0xA) || (D_86606790 != 9)) {
+        switch (D_86606738) {
+        case 0:
+            func_800495F8(0xE6, 0x96, 0, "なし");
+            break;
+        case 1:
+            func_800495F8(0xE6, 0x96, 0, "カメラいち");
+            break;
+        case 2:
+            func_800495F8(0xE6, 0x96, 0, "カメラちゅうしてん");
+            break;
+        }
+    }
+    func_86600E00();
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+/* mkdraft:func_86603108 end */
 #endif
 
 #ifdef VERSION_US
