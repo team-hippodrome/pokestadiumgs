@@ -24,7 +24,35 @@ void func_86305C48(void *arg0, void *arg1, f32 arg2) {
     *(f32 *)((u8 *)arg0 + 0x4C) += *(f32 *)((u8 *)arg1 + 4) * arg2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305C78.s")
+/* mkdraft:func_86305C78 begin */
+extern f32 D_86307580;
+extern f32 D_86307584;
+extern f32 D_86307588;
+extern f32 D_8630758C;
+extern u32 func_8003570C(void);
+
+// Bounces the 2D vector at +0x10/+0x14 off a surface facing along arg1:
+// v -= 2 * (v . dir) * dir. Each arg1 component is jittered before use by a
+// uniform value in [-0.0025, 0.0025) (func_8003570C returns the next LCG word,
+// divided by 2^32, times 0.005, minus 0.0025). The caller then rescales the
+// resulting vector with func_86305D88.
+
+
+void func_86305C78(u8* arg0, f32* arg1) {
+    // FAKE: the two reserved slots keep the frame at 0x28 and put dir_x's spill
+    // at 0x18. Diff score 50 without the pad, 8 with pad[1], 58 with pad[3].
+    s32 pad[2];
+    f32 dot_scale;
+    f32 dir_x;
+    f32 dir_y;
+
+    dir_x = (arg1[0] + ((f32)func_8003570C() / 4294967296.0f) * D_86307580) - D_86307584;
+    dir_y = (arg1[1] + ((f32)func_8003570C() / 4294967296.0f) * D_86307588) - D_8630758C;
+    dot_scale = (*((f32*)(arg0 + 0x14)) * arg1[1] + arg1[0] * *((f32*)(arg0 + 0x10))) * -2.0f;
+    *(f32*)(arg0 + 0x10) += dir_x * dot_scale;
+    *(f32*)(arg0 + 0x14) += dir_y * dot_scale;
+}
+/* mkdraft:func_86305C78 end */
 
 extern u8 *D_863075D8;
 // Rescales the 2D vector at +0x10/+0x14 to length (its current length + 1),
