@@ -33,7 +33,51 @@ s32 func_82400584(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824005D8.s")
+/* mkdraft:func_824005D8 begin */
+// 12-byte entries: func_824005D8 scales the index by 12 and reads unk_0.
+typedef struct {
+    s16 unk_0;
+    s16 unk_2;
+    s32 unk_4;
+    s32 unk_8;
+} unk_D_82407458;
+
+extern unk_D_82407458 *D_82407458;
+extern u16 D_82408EE0[];
+extern u8 D_82409FC0[];
+extern void func_8003F114(void *arg0, s16 arg1, s16 arg2, void *arg3);
+extern void func_8003F1DC(void *arg0);
+extern s32 func_80071ADC(u8 *arg0, s32 arg1);
+
+
+
+s32 func_824005D8(s32 arg0, void *arg1) {
+    s32 value;
+    s32 pad; // FAKE: unused; without it the frame is 0x20 and the diff score is 8.
+    u8 *state;
+    s32 result;
+
+    state = *(u8 **)((u8 *)arg1 + 0x14);
+    result = 0;
+    value = ((s16 *)((u8 *)state + *(s32 *)((u8 *)state + 0x1A0) * 2))[*(s16 *)((u8 *)state + 0x16A) + 0x2A];
+    if (arg0 != 2) {
+        return 0;
+    }
+    switch (D_82407458[value].unk_0) {
+        case 9:
+            result = *(s32 *)((u8 *)state + 0x1F4) + 1;
+            break;
+        case 42:
+            result = *(s32 *)((u8 *)state + 0x1F4) + 5;
+            break;
+        case 11:
+            result = *(s32 *)((u8 *)state + 0x1F4) + 9;
+            break;
+    }
+    func_8003F1DC(arg1);
+    func_8003F114(arg1, 0, -1, func_80071ADC(D_82409FC0, D_82408EE0[result]));
+}
+/* mkdraft:func_824005D8 end */
 
 extern u8 D_824090F3;
 extern u8 D_82408A60[];
