@@ -326,7 +326,29 @@ void func_80025848(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800258F4.s")
+/* mkdraft:func_800258F4 begin */
+extern u8 D_80090AB4;
+extern u8 D_80090AB0[];
+extern u8 D_80090AAC[];
+
+// Flips bit 0 of the byte at 0x80090AB4, then sends that byte in bits 8-15 of
+// command 0x0604xxxx for arg0 1..18 (18 cases, all reaching one shared body).
+// FAKE: D_80090AB0[4], D_80090AB4 and D_80090AAC[8] are three spellings of the same
+// byte; the linker resolves all three to 0x80090AB4 (build/pokestadiumgs-us.map). One
+// spelling makes uopt CSE the address into a single register and reuse it, which drops
+// the per-access reload: with D_80090AB4 everywhere this file scores 745 (rscore 1485).
+
+
+void func_800258F4(s32 arg0) {
+    D_80090AB0[4] = D_80090AB4 ^ 1;
+    switch (arg0) {
+    case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
+    case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18:
+        func_8001874C(((D_80090AAC[8] & 0xFF) << 8) | 0x06040000, arg0);
+        break;
+    }
+}
+/* mkdraft:func_800258F4 end */
 
 void Audio_ApplyCommandPreset(s32 preset) {
     s32 first;
