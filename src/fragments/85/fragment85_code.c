@@ -210,7 +210,99 @@ void func_8FD00BA4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD00CD0.s")
+/* mkdraft:func_8FD00CD0 begin */
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+extern u8 D_8FD021A8[];
+extern void func_80049064(s32 x, s32 y, s32 mode, const char *text);
+extern void func_800495BC(s32 arg0, s32 arg1, const char *arg2, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0,s32 a1,s32 a2,s32 a3);
+extern void func_8004989C(s32 arg0);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void *func_8004C874(s32, s32);
+
+extern s16 D_8FD020C0;
+extern s16 D_8FD020C4;
+extern u16 D_8FD020C8;
+
+
+
+void func_8FD00CD0(void) {
+    s32 list_index;
+    s32 text_y;
+
+    func_800498C4();
+    func_800496A4(4, 0);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_80049064(0xA0, 0x19, 1, func_8004C874(0x4A, 0));
+    func_800496A4(2, -1);
+    func_8004989C((s32) D_8FD020C8);
+    switch (M2C_FIELD(&D_8FD02188, u8 *, 0)) {
+    case 0:
+        // Five rows of the 0x4A text list, drawn top to bottom at x = 0x32.
+        list_index = 0;
+        text_y = 0x32;
+        do {
+            func_80049064(0x32, text_y, 0, func_8004C874(0x4A, list_index + 1));
+            list_index++;
+            text_y += 0xE;
+        } while (list_index != 5);
+        break;
+    case 1:
+        func_80049064(0x32, 0x32, 0, func_8004C874(0x4A, 1));
+        func_800495BC(0x64, 0x46, "%s:%3d", func_8004C874(0x4A, 8), M2C_FIELD(&D_8FD02188, s16 *, 6) + 2);
+        func_80049064((u16) D_8FD020B0 + D_8FD020C0, (u16) D_8FD020B4 + D_8FD020C4, 0, (s8 *) D_8FD021A8);
+        break;
+    case 2:
+        func_80049064(0x32, 0x32, 0, func_8004C874(0x4A, 2));
+        func_800495BC((s32) M2C_FIELD(&D_8FD02188, u16 *, 0xC), 0x46, "%s:%3d", func_8004C874(0x4A, 7), M2C_FIELD(&D_8FD02188, s16 *, 8) - 0x4C);
+        func_800495BC((s32) M2C_FIELD(&D_8FD02188, u16 *, 0xE), 0x46, "%s:%3d", func_8004C874(0x4A, 8), M2C_FIELD(&D_8FD02188, s16 *, 0xA) + 2);
+        func_80049064((u16) D_8FD020B0 + D_8FD020C0, (u16) D_8FD020B4 + D_8FD020C4, 0, (s8 *) D_8FD021A8);
+        break;
+    case 3:
+        func_80049064(0x32, 0x32, 0, func_8004C874(0x4A, 3));
+        func_800495BC(0x64, 0x46, "%s:%2d", func_8004C874(0x4A, 8), M2C_FIELD(&D_8FD02188, s16 *, 6) + 2);
+        if (M2C_FIELD(&D_8FD02188, u8 *, 1) == 0) {
+            func_80049064(0x82, 0x5A, 0, func_8004C874(0x4A, 9));
+        } else {
+            func_80049064((u16) D_8FD020B0 + D_8FD020C0, (u16) D_8FD020B4 + D_8FD020C4, 0, (s8 *) D_8FD021A8);
+        }
+        if (M2C_FIELD(&D_8FD02188, u8 *, 1) == 2) {
+            func_80049064(0x82, 0x5A, 0, func_8004C874(0x4A, 6));
+        }
+        break;
+    case 4:
+        func_80049064(0x32, 0x32, 0, func_8004C874(0x4A, 4));
+        func_800495BC((s32) M2C_FIELD(&D_8FD02188, u16 *, 0xC), 0x46, "%s:%3d", func_8004C874(0x4A, 7), M2C_FIELD(&D_8FD02188, s16 *, 8) - 0x4C);
+        func_800495BC((s32) M2C_FIELD(&D_8FD02188, u16 *, 0xE), 0x46, "%s:%2d", func_8004C874(0x4A, 8), M2C_FIELD(&D_8FD02188, s16 *, 0xA) + 2);
+        if (M2C_FIELD(&D_8FD02188, u8 *, 1) == 0) {
+            func_80049064(0x82, 0x5A, 0, func_8004C874(0x4A, 9));
+        } else {
+            func_80049064((u16) D_8FD020B0 + D_8FD020C0, (u16) D_8FD020B4 + D_8FD020C4, 0, (s8 *) D_8FD021A8);
+        }
+        if (M2C_FIELD(&D_8FD02188, u8 *, 1) == 2) {
+            func_80049064(0x82, 0x5A, 0, func_8004C874(0x4A, 6));
+        }
+        break;
+    }
+    func_800499EC();
+}
+/* mkdraft:func_8FD00CD0 end */
 #endif
 
 #ifdef VERSION_US
