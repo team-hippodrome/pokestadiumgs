@@ -182,7 +182,46 @@ s32 func_84148C74(u8 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84148D54.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149294.s")
+/* mkdraft:func_84149294 begin */
+extern u8 D_8419D7B0[];
+extern u8 *D_841951F8[];
+extern u8 *D_84195208[];
+extern void func_84148D54(u8);
+// The definition takes a u8 battler index (//@src/fragments/79/fragment79_3B9B80.c),
+// but this prototype is s32 so that IDO passes the index through instead of
+// masking it with andi at each call site.
+extern s32 func_8414A3C0(s32, u32);
+extern void func_84156800(u8 *, s32);
+
+
+
+void func_84149294(u8 arg0) {
+    // IDO assigns spill slots in declaration order: idx -> 0x20(sp),
+    // add -> 0x28(sp), ptr -> 0x1c(sp). Declaring add after ptr moves it to
+    // 0x24(sp) and no longer matches.
+    s32 idx;
+    s32 add;
+    u8 **ptr;
+
+    // (1 - arg0) selects the other battler's entry; D_841951F8 is a
+    // two-element table (func_8414A3E8 walks both entries).
+    idx = (1 - arg0) & 0xFF;
+    add = 0;
+    D_8419D7B0[0] = 0;
+    D_8419D7B0[1] = 0;
+    if (func_8414A3C0(idx, 4) == 0) {
+        ptr = &D_841951F8[arg0];
+        if (!(D_84195208[idx][17] & 0x80) && ((*ptr)[9] >= 2)) {
+            func_84148D54(arg0);
+            if ((D_84195208[arg0][13] & 0x10) && (D_84195208[arg0][23] == 1)) {
+                add = 80;
+            }
+            D_8419D7B0[1] = (D_8419D7B0[1] + add >= 0x100) ? 0xFF : D_8419D7B0[1] + add;
+            func_84156800(D_8419D7B0[0] * 88 + *ptr + 76, 0);
+        }
+    }
+}
+/* mkdraft:func_84149294 end */
 
 extern u8 D_8419D7B0[];
 extern u8 D_8419D7B1;
