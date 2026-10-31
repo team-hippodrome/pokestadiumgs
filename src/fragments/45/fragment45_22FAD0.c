@@ -611,5 +611,48 @@ s32 func_8AB0D08C(s32 arg0) {
 }
 /* mkdraft:func_8AB0D08C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0D20C.s")
+/* mkdraft:func_8AB0D20C begin */
+extern u8 D_8AB12CB3[];
+extern s16 D_8AB13F2C;
+extern s16 D_8AB16F9E;
+extern s32 func_800546E0(s32, u8);
+extern s32 func_80051D64(s32, s32);
+extern s32 func_80054E48(s32);
+extern s32 func_8AB007E0(void);
+extern s32 func_8AB00618(void);
+extern s32 func_8AB0CD00(s32);
+
+
+
+s32 func_8AB0D20C(s32 arg0) {
+    s32 result;
+    s16 timer_value;
+    s32 selection;
+    s16 *timer = &D_8AB16F9E;
+
+    result = 0x3C;
+    switch (arg0) {
+    case 0:
+        selection = D_8AB11D0C[2] - 1;
+        (*timer) = 0, func_800546E0(selection, D_8AB12CB3[D_8AB13F2C * 0x94]);
+        func_80051D64(0x13, 0);
+        func_80054E48(3);
+        func_8004C8A0(D_8AB126A8, 0x100, 0x39, 7);
+        *(u16 *)((u8 *)D_8AB11D00 + 2) = *(u16 *)((u8 *)D_8AB11D00 + 2) | 1;
+        func_8AB007E0();
+        func_80021ED8(0x39);
+        func_80027774(0xCA0F, 0x24);
+        break;
+    case 1:
+        timer_value = (*timer) + 1;
+        (*timer) = timer_value;
+        if (timer_value >= 0x97) {
+            result = func_8AB0CD00(0);
+        }
+        func_8AB00618();
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB0D20C end */
 #endif
