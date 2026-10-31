@@ -1422,7 +1422,40 @@ void func_86106044(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861060F8.s")
+/* mkdraft:func_861060F8 begin */
+extern s32 D_8610AD20;
+
+// Retail builds this threshold as `0.04f * D_8610AD20[0x9768] * 700.0f + 30.0f`; the 0.04f
+// factor is the float word the retail disassembly labels D_8610AC68.
+
+
+s32 func_861060F8(void *arg0, void *arg1) {
+    f32 temp_fa0;
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    f32 temp_fv1;
+    f32 temp_fv1_2;
+    f32 temp_fa1;
+    f32 var_fa0;
+    f32 var_fa1;
+
+    temp_fv0 = *(f32 *)((u8 *)arg1 + 0x48);
+    temp_fv1 = *(f32 *)((u8 *)arg0 + 0x48);
+    var_fa0 = (temp_fv0 < temp_fv1) ? (temp_fv1 - temp_fv0) : -(temp_fv1 - temp_fv0);
+    // FAKE: the `(0, 700.0f)` comma forces 700.0f to be materialized after the 0.04f load;
+    // written plainly the score is 455.
+    temp_fv0_2 = ((0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f)) + 30.0f;
+    // FAKE: `&&` inside `? 1 : 0`, with the inner loads and absolute value in a comma
+    // expression, is what makes IDO share one `or v1,zero,zero` false value and one
+    // `jr ra; or v0,v1,zero` exit. The natural form (if (outer) { ... if (inner) return 1; }
+    // return 0;) scores 300.
+    return ((var_fa0 < temp_fv0_2) && (
+        temp_fv1_2 = *(f32 *)((u8 *)arg1 + 0x4C),
+        temp_fa1 = *(f32 *)((u8 *)arg0 + 0x4C),
+        var_fa1 = (temp_fv1_2 < temp_fa1) ? (temp_fa1 - temp_fv1_2) : -(temp_fa1 - temp_fv1_2),
+        var_fa1 < temp_fv0_2)) ? 1 : 0;
+}
+/* mkdraft:func_861060F8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861061B0.s")
 
