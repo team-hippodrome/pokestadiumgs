@@ -183,7 +183,53 @@ void func_87E04AFC(void *arg0) {
 }
 /* mkdraft:func_87E04AFC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04D2C.s")
+/* mkdraft:func_87E04D2C begin */
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern u32 func_8003570C(void);
+
+// Walks the node list at arg0 + 0x14. Each node's state pointer (the word at
+// node + 0x20, plus 0xC) goes to func_87F0B1A4 with the node's position floats
+// at 0x48..0x50, the second shifted by -360 degrees, priority 15.
+// func_87F0B2F4 then receives the same state pointer with the node's halfword
+// pair at 0x42 and three angles built from func_8003570C draws, each scaled
+// from [0,1) over 4294967296.0f to -45..45 for the first two and -180..180 for
+// the third.
+// The same pair of calls runs over another node list in func_87E0AF44.
+//@src/fragments/63/fragment63_30E370.c
+
+
+void func_87E04D2C(void *arg0) {
+    f32 second_angle;
+    f32 third_angle;
+    u8 *state;
+    u32 first_draw;
+    u32 second_draw;
+    u32 third_draw;
+    u8 *object;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)arg0 + 0x14);
+    if (node != NULL) {
+        do {
+            object = *(u8 **)(node + 0x20);
+            state = object + 0xC;
+            func_87F0B1A4(state, (f32 *)(node + 0x48), *(f32 *)(node + 0x48),
+                *(f32 *)(node + 0x4C) + -360.0f, *(f32 *)(node + 0x50), 0xF, 0x2000);
+            first_draw = func_8003570C();
+            second_draw = func_8003570C();
+            third_draw = func_8003570C();
+            second_angle = (f32)(u32)second_draw;
+            third_angle = (f32)(u32)third_draw;
+            func_87F0B2F4(state, (s16 *)(node + 0x42),
+                (((f32)first_draw / 4294967296.0f) * 90.0f) - 45.0f,
+                ((second_angle / 4294967296.0f) * 90.0f) - 45.0f,
+                ((third_angle / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_87E04D2C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04ED4.s")
 
