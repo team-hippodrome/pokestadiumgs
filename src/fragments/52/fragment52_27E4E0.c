@@ -216,7 +216,86 @@ void func_86400804(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864009D4.s")
+/* mkdraft:func_864009D4 begin */
+extern s32 func_80001FF0(void);
+extern s32 func_87F026E8(s32, void *);
+extern s32 D_87F119D8;
+extern void *D_87F119DC;
+extern u8 *D_86416C00;
+
+// Per-frame callback of the D_87F119DC effect node. func_864012A0 registers it
+// through func_87F025B8(D_86416C00 + 0xE00, func_864009D4) and sets the fields
+// read here: word 0xC = 0x10000000, counter 0x1C = 0, position 0x48/0x4C/0x50 =
+// its three f32 arguments, scale 0x54/0x58/0x5C = 2.5f, velocity 0x10/0x14/0x18
+// = 0.0f, and the u8 at (*(node + 0x20)) + 4.
+//
+// Position 0x48/0x4C/0x50 += velocity 0x10/0x14/0x18, velocity *= 0.95f, and the
+// s32 addressed by node + 0x20 is incremented. Word 0xC selects one of three
+// stages; each compares the frame counter at 0x1C (incremented by the walker
+// that invokes the callback - func_864002CC reads the same counter) against a
+// frame count scaled from 60 Hz, then zeroes 0x1C:
+//   bit28 set (by func_864012A0): 5 frames, clear bit28, set bit29;
+//   bit28 and bit30 clear (the only arm left for bit29): 175 frames, clear
+//     bit29, set bit30;
+//   bit30 set: 10 frames, then decrement the s32 at 0x4BC8 of record
+//     (*(u8 *) (node + 0x20) + 4) in the D_86416C00 + 0x8000 array of 0x5C-byte
+//     records, and hand the node to func_87F026E8(D_87F119D8, D_87F119DC).
+// The frame count is ((f32)func_80001FF0() / 60.0f) * N and func_80001FF0
+// returns 50 or 60 from osTvType, so N is a 60 Hz frame count scaled to the
+// console's refresh rate; func_864002CC converts the same way.
+
+
+void func_864009D4(void) {
+    s32 *counter;
+    u8 *entry;
+    s32 state;
+    s32 threshold;
+
+    counter = *(s32 **)((u8 *)D_87F119DC + 0x20);
+    *counter += 1;
+    *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u8 *)D_87F119DC + 0x10);
+    *(f32 *)((u8 *)D_87F119DC + 0x4C) += *(f32 *)((u8 *)D_87F119DC + 0x14);
+    *(f32 *)((u8 *)D_87F119DC + 0x50) += *(f32 *)((u8 *)D_87F119DC + 0x18);
+    *(f32 *)((u8 *)D_87F119DC + 0x10) *= 0.95f;
+    *(f32 *)((u8 *)D_87F119DC + 0x14) *= 0.95f;
+    *(f32 *)((u8 *)D_87F119DC + 0x18) *= 0.95f;
+    state = *(s32 *)((u8 *)D_87F119DC + 0xC);
+    if (state & 0x10000000) {
+        if ((((f32)func_80001FF0() / 60.0f) * 5.0f) >= 0.0f) {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 5.0f) + 0.5f);
+        } else {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 5.0f) - 0.5f);
+        }
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= threshold) {
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= 0xEFFFFFFF;
+            *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x20000000;
+            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        }
+    } else if (state & 0x40000000) {
+        if ((((f32)func_80001FF0() / 60.0f) * 10.0f) >= 0.0f) {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 10.0f) + 0.5f);
+        } else {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 10.0f) - 0.5f);
+        }
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= threshold) {
+            entry = ((u8 (*)[0x5C]) (D_86416C00 + 0x8000))[*(u8 *)((u8 *)counter + 4)];
+            *(s32 *)(entry + 0x4BC8) -= 1;
+            func_87F026E8(D_87F119D8, D_87F119DC);
+        }
+    } else {
+        if ((((f32)func_80001FF0() / 60.0f) * 175.0f) >= 0.0f) {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 175.0f) + 0.5f);
+        } else {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 175.0f) - 0.5f);
+        }
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= threshold) {
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= 0xDFFFFFFF;
+            *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x40000000;
+            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        }
+    }
+}
+/* mkdraft:func_864009D4 end */
 #endif
 
 #ifdef VERSION_US
