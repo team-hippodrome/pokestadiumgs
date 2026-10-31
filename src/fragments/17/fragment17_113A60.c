@@ -322,7 +322,48 @@ extern void func_80046634();
 extern void * D_8220DA08;
 void func_822069A4(void) { s16 *count_ptr = &D_8220EC44; if (*count_ptr > 0) { gSPDisplayList(D_800D0510++, D_8220DBC8); gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, *count_ptr); func_80046634(((s32 *)D_8220DA08)[1]); } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82206A2C.s")
+/* mkdraft:func_82206A2C begin */
+extern s32 D_8220EC40;
+extern s16 D_8220EC48;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_800468A0(s32 arg0);
+extern void func_81600F0C(void *, s32, s32, s32, s32);
+
+
+void func_82206A2C(void) {
+    s16 *D_8220EC48_ptr = &D_8220EC48;
+    s32 var_s2;
+    u8 *var_s4;
+    u8 *var_s0;
+    u8 *var_s1;
+    u8 *base;
+    base = (u8 *)&D_8220EC40;
+    // FAKE: 802 is the ROM's index stride (0x322); spelled as an array-element
+    // size so IDO emits the shift/add multiply. diff score 215 with the
+    // recorded 0xCC stride instead.
+    var_s4 = ((u8 (*)[802])base)[(((s16 *)base)[5])] + 0xC;
+    if (((s16 *)base)[4] != 0) {
+        func_800468A0(*(s32 *)base);
+    } else {
+        var_s2 = 0;
+        var_s0 = var_s4;
+        var_s1 = var_s4 + 2;
+        if (*(s16 *)var_s0 > 0) {
+            do {
+                func_80006F70(&D_800D0510, *(s16 *)(var_s0 + 2), *(s16 *)(var_s0 + 4), *(s16 *)(var_s0 + 6), *(s16 *)(var_s0 + 8));
+                func_81600F0C(*(s32 *)base, *(s16 *)var_s1, *(s16 *)(var_s1 + 2), *(s16 *)(var_s1 + 4), *(s16 *)(var_s1 + 6));
+                var_s2 += 1;
+                var_s0 += 8;
+                var_s1 += 8;
+            } while (var_s2 < *(s16 *)var_s4);
+        }
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+    if ((*D_8220EC48_ptr) > 0) {
+        (*D_8220EC48_ptr)--;
+    }
+}
+/* mkdraft:func_82206A2C end */
 
 s32 func_82206B64(s32 arg0) {
     return (0x800 / arg0) & ~1;
