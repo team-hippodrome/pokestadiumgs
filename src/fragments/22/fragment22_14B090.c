@@ -1014,7 +1014,52 @@ void func_82702E78(void *record) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82702F70.s")
+/* mkdraft:func_82702F70 begin */
+extern s16 D_827034F6;
+extern s16 *D_827034F8;
+extern void Ui_DrawAnimatedTextureMarker(s16, s16);
+
+
+
+s32 func_82702F70(void) {
+    s32 i;
+    s32 selected;
+    Fragment22RowEntry *entry;
+    u16 *p_ec;
+    u16 *p_ec2;
+    s16 *p_f6;
+    s16 **p_f8;
+    Gfx *p_dl;
+
+    p_ec = &D_827034EC;
+    p_ec2 = &D_827034EC;
+    p_f6 = &D_827034F6;
+    p_f8 = &D_827034F8;
+    p_dl = D_80094E38;
+
+    if ((*p_ec) & 1) {
+        for (i = 0; i < 16; i++) {
+            entry = &D_827034E0.rows[i];
+            if (entry->kind != 0 && entry->state != 0) {
+                selected = 0;
+                // A row is selectable when its kind (the s16 at offset 0, the field
+                // func_82702DF8 switches on) equals D_827034F6.
+                if (((*p_ec2) & 2) && *p_f6 == *(s16 *)entry && entry->row_index == *(*p_f8)) {
+                    selected = 1;
+                }
+                func_82702810(entry);
+                func_82702DF8(entry, selected);
+                if (selected != 0) {
+                    gSPDisplayList(D_800D0510++, p_dl);
+                    Ui_DrawAnimatedTextureMarker(entry->position.x + 0x1B, entry->position.y + 4);
+                }
+            }
+        }
+        func_82702E78(&D_827034E0);
+    }
+    return ((*p_ec) & 1) != 0;
+}
+/* mkdraft:func_82702F70 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_827030D0.s")
 
