@@ -1044,7 +1044,70 @@ void func_86405EA4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_8640633C.s")
+/* mkdraft:func_8640633C begin */
+extern u8 *D_86416C00;
+extern void func_80027774(s32, s32);
+extern void func_800279C4(s32);
+extern void func_87F0CA58(void);
+extern void func_8640826C(void);
+
+
+
+s32 func_8640633C(void) {
+    s32 should_stop;
+    s32 result;
+    s32 count;
+    u8 *p;
+    s32 i;
+    s32 k;
+    u8 *obj;
+    u8 *entry;
+    s32 flags;
+
+    should_stop = 0;
+    result = 0;
+    count = 0;
+    p = D_86416C00 + 0x7D0;
+    for (k = 0; k < 4; k++) {
+        if (*(s32 *)(p + 0xC) & 0x40000) {
+            count++;
+        }
+        p += 0x18C;
+    }
+    obj = D_86416C00 + 0x7D0;
+    i = 0;
+    do {
+        entry = *(u8 **)(obj + 0x20);
+        if (*(s32 *)(entry + 0xC) <= 0) {
+            if (count == 4) {
+                result = 1;
+            }
+            if (count == 0) {
+                should_stop = 1;
+                *(s32 *)(obj + 0xC) |= 0x10000;
+            }
+            flags = *(s32 *)(obj + 0xC);
+            if (!(flags & 0x40000)) {
+                *(s32 *)(obj + 0xC) = flags | 0x40000;
+                *(f32 *)(entry + 0x10) = 10000.0f - (f32)*(s32 *)(entry + 0x14);
+                if (*(s32 *)(obj + 0xC) & 0x10000) {
+                    func_80027774(0x1C07, 0x44);
+                    func_800279C4(0x5F08);
+                } else {
+                    func_800279C4(0x5F08);
+                }
+            }
+        }
+        i++;
+        obj += 0x18C;
+    } while (i != 4);
+    if (should_stop != 0) {
+        func_87F0CA58();
+        func_8640826C();
+    }
+    return result;
+}
+/* mkdraft:func_8640633C end */
 #endif
 
 #ifdef VERSION_US
