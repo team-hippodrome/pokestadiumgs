@@ -48,7 +48,53 @@ void func_80073600_padding(void) {}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/74020/func_80073638.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/74020/func_80073828.s")
+extern void _bzero(void *dst, s32 size);
+extern int func_80073638(s8 *src, u8 *dst, int maxLen);
+
+s32 func_80073828(s8 *str1, s8 *str2) {
+    s32 i;
+    u8 buf1[0x100];
+    u8 buf2[0x100];
+
+    _bzero(buf1, 0x100);
+    func_80073638(str1, buf1, 0x80);
+    _bzero(buf2, 0x100);
+    func_80073638(str2, buf2, 0x80);
+
+    for (i = 0; i < 0x80 && buf1[i * 2] != 0; i++) {
+        if (buf2[i * 2] < buf1[i * 2]) {
+            return 1;
+        }
+        if (buf1[i * 2] < buf2[i * 2]) {
+            return -1;
+        }
+    }
+
+    if (buf2[i * 2] != 0) {
+        return 1;
+    }
+
+    for (i = 0; i < 0x80 && buf1[i * 2] != 0; i++) {
+        if ((s32)((u32)buf2[i * 2 + 1] >> 1) < (s32)((u32)buf1[i * 2 + 1] >> 1)) {
+            return 1;
+        }
+        if ((s32)((u32)buf1[i * 2 + 1] >> 1) < (s32)((u32)buf2[i * 2 + 1] >> 1)) {
+            return -1;
+        }
+    }
+
+    for (i = 0; i < 0x80 && buf1[i * 2] != 0; i++) {
+        if ((buf2[i * 2 + 1] & 1) < (buf1[i * 2 + 1] & 1)) {
+            return 1;
+        }
+        if ((buf1[i * 2 + 1] & 1) < (buf2[i * 2 + 1] & 1)) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/74020/func_800739EC.s")
+
 #endif
