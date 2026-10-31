@@ -394,7 +394,70 @@ void func_84149A50(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149AC8.s")
+/* mkdraft:func_84149AC8 begin */
+
+
+void func_84149AC8(void *arg0) {
+    s32 mask;
+
+    if (((u8 *)arg0)[0] & 2) {
+        return;
+    }
+    switch (((u8 *)arg0)[2]) {
+    case 92:
+        if ((*(u16 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x26) & 7) == 0) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = 0;
+        }
+        break;
+    case 101:
+        if (*(s32 *)(((u8 *)arg0) + 0xC) >= *(u16 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x28)) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = *(u16 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x28) - 1;
+        }
+        break;
+    case 117:
+        mask = (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x16) & 1) ? 1 : 0;
+        *(s32 *)(((u8 *)arg0) + 0xC) <<= *(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x1A) + mask;
+        if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+        }
+        break;
+    case 119:
+        if (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x20) != 0) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= *(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x20) + 0x1F;
+        }
+        if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+        }
+        break;
+    case 126:
+    case 147:
+        if (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x17) & 0x20) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= 1;
+            if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+                *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+            }
+        }
+        break;
+    case 146:
+    case 149:
+        if (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x17) & 0x40) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= 1;
+            if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+                *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+            }
+        }
+        break;
+    case 150:
+        if (*(s32 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x48) != 0) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= 1;
+            if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+                *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+            }
+        }
+        break;
+    }
+}
+/* mkdraft:func_84149AC8 end */
 
 extern f64 D_8418B9A0;
 void func_84149C70(void *arg0) {
