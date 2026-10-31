@@ -836,7 +836,75 @@ s32 func_8220336C(s32 arg0, s32 arg1) { gDPPipeSync(D_800D0510++); gDPSetEnvColo
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822033BC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822037E4.s")
+/* mkdraft:func_822037E4 begin */
+extern void Font_EnableTwoCycleTexturing();
+extern void func_8004972C();
+
+
+
+void func_822037E4(void) {
+    u8 **slot;
+    u8 *record;
+    s32 flag; // FAKE: never read; diff score 18 without it.
+    s32 result;
+    s32 dirty;
+    u8 *text;
+    u8 *style; // FAKE: never read; diff score 10 without it and its assignment.
+    u8 *old_color;
+    u8 *new_color;
+    s32 font_id;
+
+    if (((*(u16 *)((u8 *)&D_8220E4C0)) & 8) == 0) {
+        return;
+    }
+    func_800498C4();
+    record = D_8220E310; slot = D_8220E4D0;
+    do {
+        text = *slot;
+        style = text + 0x28; // FAKE: same value as new_color below.
+        old_color = text + 0x2C;
+        new_color = text + 0x28;
+        dirty = 0;
+        font_id = 0;
+        switch (record[5]) {
+        case 0: break;
+        case 4: font_id = (s32)func_8004C874(23, 25); break;
+        case 3: font_id = (s32)func_8004C874(23, 26); break;
+        case 5: font_id = (s32)func_8004C874(23, 27); break;
+        }
+        if (font_id != 0) {
+            Font_EnableTwoCycleTexturing();
+            func_800496A4(*(u16 *)(text + 0x24), 1);
+            func_8004989C(*(s8 *)(text + 0x26));
+            func_8004972C(new_color[0], new_color[1], new_color[2], new_color[3]);
+            if (*(u32 *)old_color != *(u32 *)new_color) {
+                dirty = 1;
+                Font_EnableTwoCycleTexturing();
+                func_800497E4(old_color[0], old_color[1], old_color[2], old_color[3]);
+            }
+            if (font_id != 0) {
+                result = func_80050518(text[0x27]);
+                switch (result) {
+                case 2:
+                    func_800495BC(*(s16 *)(text + 8), *(s16 *)(text + 0xA), font_id);
+                    break;
+                case 0:
+                    func_800495F8(*(s16 *)(text + 8), *(s16 *)(text + 0xA), 1, font_id);
+                    break;
+                case 1:
+                    func_800495F8(*(s16 *)(text + 8), *(s16 *)(text + 0xA), 2, font_id);
+                    break;
+                }
+            }
+            if (dirty != 0) {
+                Font_DisableTwoCycleTexturing();
+            }
+        }
+        record += 0x14;
+    } while (++slot != (u8 **)&D_8220E4E0);
+    func_800499EC();
+}
+/* mkdraft:func_822037E4 end */
 
 extern void *StageContext_GetCurrentImage(void);
 extern void BgStage_DrawFrame(void);
