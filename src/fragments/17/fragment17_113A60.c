@@ -294,7 +294,72 @@ s32 func_82205E04(s32 mode, void *state) {
 extern s32 D_8220EC38;
 s32 func_82206124(s32 arg0, void *arg1) { s32 value; s32 result; value = *(s32 *)((u8 *)arg1 + 0x20); result = 0; if (arg0 == 0) goto done; if (arg0 != 1) goto done; switch (D_8220EC38) { case 1: if (value == 0) result = 1; break; case 2: if (value == 1) result = 1; break; default: break; } if (result != 0) *(u16 *)((u8 *)arg1 + 2) |= 2; else *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD; done: return 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822061A8.s")
+/* mkdraft:func_822061A8 begin */
+extern u8 D_82210678[];
+extern u8 D_82210680[];
+typedef union unk_func_822061A8_color {
+    u32 word;
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 a;
+    } rgba;
+} unk_func_822061A8_color;
+u32 func_800060E8(void);
+
+
+s32 func_822061A8(s32 arg0, void *arg1) {
+    u32 flags;
+    // Entry index: indexes both color caches and selects a bit of `flags`.
+    s32 index;
+    s32 changed;
+    s32 bit;
+
+    index = *(s32 *)((u8 *)arg1 + 0x20);
+    changed = 0;
+    flags = func_800060E8();
+    switch (arg0) {
+    case 0:
+        ((unk_func_822061A8_color *)D_82210678)[index] = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28);
+        ((unk_func_822061A8_color *)D_82210680)[index] = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C);
+        break;
+    case 1:
+        if (D_8220EC38 == 1) {
+            bit = ((flags & 0xFF & (1 << index)) != 0);
+            if (bit != 0) {
+                // The selected entry (index at +2 of D_8220DA08->[0x20]) is yellow.
+                if (index == *(s16 *)((u8 *)*(void **)((u8 *)D_8220DA08 + 0x20) + 2)) {
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.r = 0xFF;
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.g = 0xFF;
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.b = 0;
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.a = 0xFF;
+                    *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C) = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28);
+                } else {
+                    *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28) = ((unk_func_822061A8_color *)D_82210678)[index];
+                    *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C) = ((unk_func_822061A8_color *)D_82210680)[index];
+                }
+            } else {
+                // Entries without a mask bit are gray.
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.r = 0x80;
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.g = 0x80;
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.b = 0x80;
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.a = 0xFF;
+                *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C) = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28);
+            }
+            changed = 1;
+        }
+        // Bit 1 of the u16 at +2 is set by every sibling callback that keeps the node drawn.
+        if (changed != 0) {
+            *(u16 *)((u8 *)arg1 + 2) |= 2;
+        } else {
+            *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD;
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_822061A8 end */
 
 typedef union unk_func_82206304_color {
     u32 word;
