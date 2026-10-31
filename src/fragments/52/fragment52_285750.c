@@ -39,7 +39,36 @@ void func_86407290(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, s
     ((unk_func_86407290 *)D_86416C00)->unk_5C = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_86407330.s")
+/* mkdraft:func_86407330 begin */
+extern void *D_86416C00;
+typedef struct { f32 x, y, z; } V3;
+typedef struct {
+    V3 cur0;
+    V3 cur1;
+    V3 from;
+    V3 unk38;
+    V3 to;
+    V3 unk50;
+    s32 f5C;
+    s32 f60;
+} POSE;
+
+
+
+void func_86407330(f32 a, f32 b, u32 c, u32 d, f32 e, f32 g) {
+    POSE *s = (POSE *)((u8 *)D_86416C00 + 0x14);
+    s->cur0.x = a;
+    s->cur0.y = b;
+    s->cur0.z = *(f32 *)&c;
+    s->cur1.x = *(f32 *)&d;
+    s->cur1.y = e;
+    s->cur1.z = g;
+    s->from = s->cur0;
+    s->to = s->cur0;
+    s->f5C = 2;
+    s->f60 = 1;
+}
+/* mkdraft:func_86407330 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_864073B0.s")
 
