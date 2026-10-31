@@ -254,7 +254,179 @@ s32 func_8F9009E8(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900A6C.s")
+/* mkdraft:func_8F900A6C begin */
+extern s16 D_8F90159C;
+extern s16 D_8F9015A0;
+
+
+
+u16 func_8F900A6C(s32 arg0) {
+/* Menu-input auto-repeat for the controller whose state pointer is arg0: the all-button
+   counterpart of Input_GetRepeatedDPad (@src/4AAD0.c), which repeats only U/D/L/R on
+   D_801270AC. A fresh press is reported at once and reloads the countdown (D_8F90159C = 10)
+   and the repeat interval (D_8F9015A0 = 3); while the countdown is non-zero nothing is
+   reported. Once the countdown reaches 0 a held button is reported, its interval value is
+   copied into the countdown, and the interval is decremented, so later repeats come sooner.
+   D_8F9015A0 is clamped at 0 (it also supplies the next countdown) before the held scan.
+   The return value is the button mask that func_8F900F14 and func_8F901078 switch on.
+   Each pair of stores is a comma expression: IDO evaluates the right operand first, which
+   materializes D_8F90159C's 10 ahead of D_8F9015A0's 3 in the generated instruction order. */
+    s32 pressed;
+    s32 held;
+    s16 interval;
+
+    pressed = *(u16 *)((u8 *)(u32)arg0 + 8);
+    if (pressed & 0x200) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x200;
+    }
+    if (pressed & 0x100) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x100;
+    }
+    if (pressed & 0x800) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x800;
+    }
+    if (pressed & 0x400) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x400;
+    }
+    if (pressed & 0x8000) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x8000;
+    }
+    if (pressed & 0x4000) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x4000;
+    }
+    if (pressed & 0x1000) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x1000;
+    }
+    if (pressed & 0x20) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x20;
+    }
+    if (pressed & 0x10) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x10;
+    }
+    if (pressed & 0x2000) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x2000;
+    }
+    if (pressed & 0x8) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x8;
+    }
+    if (pressed & 0x4) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x4;
+    }
+    if (pressed & 0x2) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x2;
+    }
+    if (pressed & 0x1) {
+        D_8F90159C = 0xA, D_8F9015A0 = 3;
+        return 0x1;
+    }
+    if (D_8F90159C == 0) {
+        if (D_8F9015A0 < 0) {
+            D_8F9015A0 = 0;
+        }
+        held = *(u16 *)((u8 *)(u32)arg0 + 6);
+        if (held & 0x200) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x200;
+        }
+        if (held & 0x100) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x100;
+        }
+        if (held & 0x800) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x800;
+        }
+        if (held & 0x400) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x400;
+        }
+        if (held & 0x8000) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x8000;
+        }
+        if (held & 0x4000) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x4000;
+        }
+        if (held & 0x1000) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x1000;
+        }
+        if (held & 0x20) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x20;
+        }
+        if (held & 0x10) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x10;
+        }
+        if (held & 0x2000) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x2000;
+        }
+        if (held & 0x8) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x8;
+        }
+        if (held & 0x4) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x4;
+        }
+        if (held & 0x2) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x2;
+        }
+        if (held & 0x1) {
+            interval = D_8F9015A0;
+            D_8F9015A0 = interval - 1;
+            D_8F90159C = interval;
+            return 0x1;
+        }
+    } else {
+        D_8F90159C -= 1;
+    }
+    return 0;
+}
+/* mkdraft:func_8F900A6C end */
 
 extern s32 D_8F911644;
 extern u16 D_8F901534[][17];
