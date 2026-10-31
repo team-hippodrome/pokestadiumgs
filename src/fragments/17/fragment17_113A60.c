@@ -232,7 +232,62 @@ s32 func_82205D78(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205E04.s")
+/* mkdraft:func_82205E04 begin */
+extern s32 D_8220EB90;
+extern u8 D_82210648[];
+extern u8 D_82210660[];
+typedef struct { s32 unk_0; } unk_func_82205E04_word;
+
+
+
+s32 func_82205E04(s32 mode, void *state) {
+    s32 value;
+    s32 index;
+    s32 show;
+
+    index = *(s32 *)((u8 *)state + 0x20);
+    value = func_8220AD10();
+    switch (mode) {
+    case 0:
+        ((unk_func_82205E04_word *)D_82210648)[index] =
+            *(unk_func_82205E04_word *)((u8 *)state + 0x3C);
+        ((unk_func_82205E04_word *)D_82210660)[index] =
+            *(unk_func_82205E04_word *)((u8 *)state + 0x40);
+        break;
+    case 1:
+        show = 1;
+        // FAKE: a one-case switch on index makes IDO color index into v1;
+        // diff score 94 with `if (index == 5)` instead.
+        switch (index) {
+        case 5:
+            if (D_8220EB90 != 0) {
+                *(u16 *)((u8 *)state + 2) |= 2;
+            } else {
+                *(u16 *)((u8 *)state + 2) &= ~2;
+                show = 0;
+            }
+            break;
+        }
+        if (show != 0) {
+            if (value != index) {
+                *(unk_func_82205E04_word *)((u8 *)state + 0x3C) =
+                    ((unk_func_82205E04_word *)D_82210648)[index];
+                *(unk_func_82205E04_word *)((u8 *)state + 0x40) =
+                    ((unk_func_82205E04_word *)D_82210660)[index];
+            } else {
+                *(u8 *)((u8 *)state + 0x3C) = 0;
+                *(u8 *)((u8 *)state + 0x3D) = 0x9C;
+                *(u8 *)((u8 *)state + 0x3E) = 0xD8;
+                *(u8 *)((u8 *)state + 0x40) = 0x34;
+                *(u8 *)((u8 *)state + 0x41) = 0x2B;
+                *(u8 *)((u8 *)state + 0x42) = 0x87;
+            }
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82205E04 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205F2C.s")
 
