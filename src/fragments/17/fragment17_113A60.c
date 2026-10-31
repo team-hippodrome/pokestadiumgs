@@ -144,7 +144,63 @@ s32 func_82205A8C(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205B00.s")
+/* mkdraft:func_82205B00 begin */
+extern s32 D_82210610[];
+extern s32 D_82210628[];
+extern s32 func_8220AD10(void);
+extern s32 D_8220EB90;
+
+// IDO's as1 schedules the three independent prologue words as
+// [lw v1,0x20(a1)] [sw a1,0x24(sp)] [sw a0,0x20(sp)] (the arg0/arg1 home
+// saves last); the ROM has the arg0 save first.  Rotate the three
+// relocation-free words into ROM order.  Semantics are unchanged: the words
+// touch disjoint state (v1 <- a1 memory; spill a1; spill a0).
+#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x08, 0x8CA30020, 0xAFA40020)
+#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x0C, 0xAFA50024, 0x8CA30020)
+#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x10, 0xAFA40020, 0xAFA50024)
+
+
+
+s32 func_82205B00(s32 arg0, void *arg1) {
+    s32 *D_82210610_ptr = D_82210610;
+    typedef struct { s32 value; } Record;
+
+    s32 saved_index = *(s32 *)((u8 *)arg1 + 0x20);
+    s32 current_mode = func_8220AD10();
+    Record *record1 = (Record *)&D_82210610_ptr[saved_index];
+    Record *record2 = (Record *)&D_82210628[saved_index];
+
+    switch (arg0) {
+    case 0:
+        *record1 = *(Record *)((u8 *)arg1 + 0x28);
+        *record2 = *(Record *)((u8 *)arg1 + 0x2C);
+        break;
+    case 1:
+        arg0 = 1;
+        if (saved_index == 5) {
+            if (D_8220EB90 != 0) {
+                *(u16 *)((u8 *)arg1 + 2) |= 2;
+            } else {
+                *(u16 *)((u8 *)arg1 + 2) &= ~2;
+                arg0 = 0;
+            }
+        }
+        if (arg0 != 0) {
+            if (current_mode != saved_index) {
+                *(Record *)((u8 *)arg1 + 0x28) = *record1;
+                *(Record *)((u8 *)arg1 + 0x2C) = *record2;
+            } else {
+                *(u8 *)((u8 *)arg1 + 0x28) = 0xFF;
+                *(u8 *)((u8 *)arg1 + 0x29) = 0xFF;
+                *(u8 *)((u8 *)arg1 + 0x2A) = 0;
+                *(Record *)((u8 *)arg1 + 0x2C) = *(Record *)((u8 *)arg1 + 0x28);
+            }
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82205B00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205C14.s")
 
