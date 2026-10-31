@@ -67,7 +67,43 @@ void func_82F00020(u32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F001CC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00460.s")
+/* mkdraft:func_82F00460 begin */
+s32 func_8004C54C(s32 index, s32 value);
+
+u8 *func_8004D878(u8 *destination, s32 id, u8 *mon);
+void func_82F001CC(u8 *, u8 *, s32);
+
+
+
+s32 func_82F00460(u8 *arg0) {
+    s32 i;
+    u8 index;
+    u8 *mon;
+
+    if (*(u8 *)(arg0 + 0xEDF) == *(u8 *)(arg0 + 0xECE)) {
+        return 0;
+    }
+    func_82F001CC(arg0 + 0xED1, ((u8 (*)[0x58])arg0)[*(u8 *)(arg0 + 0xECE)] - 0x20, *(s32 *)(arg0 + 0xEC8));
+    mon = ((u8 (*)[0x58])arg0)[*(u8 *)(arg0 + 0xECE)];
+    if (*(u8 *)(mon - 0x20) == 0) {
+        return 0;
+    }
+    func_8004C54C(0x19, (s32)(mon + 0x14));
+    func_8004D878(arg0 + 0x248, 0, ((u8 (*)[0x58])arg0)[*(u8 *)(arg0 + 0xECE)] - 0x20);
+    // Read the selected slot once: the store to 0xEDF and the loop's stride both use it.
+    index = *(u8 *)(arg0 + 0xECE);
+    *(s32 *)(arg0 + 0xEE4) = 1;
+    *(u8 *)(arg0 + 0xEDF) = index;
+    // Clear the busy flag if any of the slot's four state bytes is zero.
+    for (i = 0; i < 4; i++) {
+        if (*(u8 *)((u8 *)arg0 + index * 0x58 + i - 0x1E) == 0) {
+            *(s32 *)(arg0 + 0xEE4) = 0;
+            break;
+        }
+    }
+    return 1;
+}
+/* mkdraft:func_82F00460 end */
 
 void func_82F00580(u8 *arg0) {
     // FAKE: the comma expression puts arg0 second in the addu; diff score 10 without it.
