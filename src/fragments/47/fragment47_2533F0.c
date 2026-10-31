@@ -97,5 +97,80 @@ void func_8600CF80(void) {
     } while (temp_v0 != 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_2533F0/func_8600CFDC.s")
+/* mkdraft:func_8600CFDC begin */
+extern s32 main_pool_push_state(s32);
+extern s32 main_pool_pop_state(s32);
+extern void Gfx_InitDisplayListBuffers(s32, s32);
+extern void Gfx_FreeDisplayListBuffers(void);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern s32 func_8004C09C(s32);
+extern u8 *func_80047588(s32, s32);
+extern u8 *Asset_LoadToSegment(s32, u8 *, u8 *, s32);
+extern void func_80008514(s32);
+extern void func_80008574(void);
+extern void func_8004C8C0(s32);
+extern void func_8004C398(void);
+extern void func_80047610(void);
+extern void func_80027EE0(s32);
+extern void func_87F0F480(void *);
+extern u8 D_1000000[], D_446E30[], D_447D00[];
+extern s32 D_8601569C;
+
+// D_8600E110 + 0x75C0 as separate one-bit flags. Fragment47StageFlags groups
+// bits 30-26 into unk_30; the tail below tests bits 29 and 28 individually.
+typedef struct {
+    u32 active : 1;
+    u32 unk_30 : 1;
+    u32 unk_29 : 1;
+    u32 unk_28 : 1;
+    u32 unk_27 : 1;
+    u32 unk_26 : 1;
+    u32 skip : 1;
+    u32 rest : 25;
+} Fragment47StageFlagBits;
+
+
+
+s32 func_8600CFDC(s32 arg0, void *arg1) {
+    s32 temp_v0;
+    s32 sp20;
+
+    if ((*(u8 *)((u8 *)arg1 + 0x2180)) == 4) {
+        func_80027EE0(0xFFF);
+    }
+    main_pool_push_state(0x4D474B50);
+    Gfx_InitDisplayListBuffers(0x30000, 0);
+    sp20 = func_800082E0(0, 1, 3, 1, 2, 1);
+    func_8004C09C(0x123);
+    func_8004C8C0(0x97);
+    Asset_LoadToSegment(((u32)D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    func_8600CDD0((s32)arg1);
+    func_80047588(D_8601569C | 0xC, 0);
+    func_80008514(sp20);
+    func_8600CF80();
+    func_80008574();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4D474B50);
+    func_87F0F480(arg1);
+    func_80027EE0(0xFFE);
+    // FAKE (karodo): empty if, emits no instructions. Its branch node rotates uopt's
+    // register pool; without it the stage read and the 0x75C0 load swap registers
+    // (diff score 35, 7 lines).
+    if (1) {
+    }
+    temp_v0 = (*(u8 **)(D_8600E110 + 0x7580))[0x2180];
+    if (temp_v0 == 4) {
+        return 3;
+    }
+    if (((Fragment47StageFlagBits *)(D_8600E110 + 0x75C0))->unk_29) {
+        return 0;
+    }
+    if ((temp_v0 == 1) && !((Fragment47StageFlagBits *)(D_8600E110 + 0x75C0))->unk_28) {
+        return 2;
+    }
+    return 1;
+}
+/* mkdraft:func_8600CFDC end */
 #endif
