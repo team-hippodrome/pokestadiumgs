@@ -69,7 +69,72 @@ void func_8F400C08(s32 arg0, s32 arg1) {
     Dma_CopyChunks(arg1, temp_a1, temp_a1 + 0xC80);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400C58.s")
+/* mkdraft:func_8F400C58 begin */
+extern s32 D_8F4020D0;
+extern s32 D_8F4020D4;
+extern s16 D_8F4020FC;
+extern s16 D_8F4020FE;
+extern s16 D_8F402100;
+extern s16 D_8F402102;
+extern s16 D_8F402104;
+extern s16 D_8F402106;
+extern void func_80043A0C(void* arg0, void* arg1, s32 arg2);
+extern s32 func_8004410C();
+extern s32 func_80044144();
+extern void func_80044250(s8 value);
+
+
+
+void func_8F400C58(void) {
+    s16 state;
+    s16* state_ptr;
+    s16* counter_ptr;
+    s16* timer_ptr;
+    s16* index_ptr;
+    s16* mode_ptr;
+    s32* base_ptr;
+
+    state_ptr = &D_8F4020FE;
+    counter_ptr = &D_8F402102;
+    timer_ptr = &D_8F402106;
+    index_ptr = &D_8F402100;
+    mode_ptr = &D_8F4020FC;
+    base_ptr = &D_8F4020D0;
+    state = *state_ptr;
+    switch (state) {
+    case 0:
+        func_80043A0C(*base_ptr, 0, *index_ptr);
+        if (*mode_ptr == 2) {
+            func_80044250((*counter_ptr) + 1);
+        }
+        *state_ptr = 1;
+        *timer_ptr = 0;
+        break;
+    case 1:
+        if (func_80044144(*base_ptr) != 0) {
+            *timer_ptr += 1;
+            if (*timer_ptr >= 2) {
+                *state_ptr = 2;
+                *timer_ptr = 0;
+            }
+        }
+        break;
+    case 2:
+        *counter_ptr += 1;
+        func_8F400B88(*(u16**)((u8*)D_8F4020D4 + 8), func_8004410C(*base_ptr, 0));
+        func_8F400C08(*counter_ptr, *(u16**)((u8*)D_8F4020D4 + 8));
+        if (*counter_ptr < (D_8F402104 - 1)) {
+            *state_ptr = 0;
+            if (state_ptr[-1] != 2) { // FAKE: D_8F4020FC read through state_ptr (diff score 420 without it); same base symbol stops IDO hoisting the load above the store.
+                *index_ptr += 1;
+            }
+        } else {
+            *state_ptr = 3;
+        }
+        break;
+    }
+}
+/* mkdraft:func_8F400C58 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400DE8.s")
 
