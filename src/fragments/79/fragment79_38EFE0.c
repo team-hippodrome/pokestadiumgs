@@ -1226,7 +1226,52 @@ void func_84123A90(void *arg0) {
     (*(u8 *)((u8 *)(arg0) + (0x623))) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84123B08.s")
+/* mkdraft:func_84123B08 begin */
+extern f32 D_80087E50[];
+extern f32 D_80088E50[0x1000];
+extern f32 D_84189D30;
+extern u8 *D_841911E0;
+extern void func_80037120(u8 *, u8 *, f32 *, s16 *, s16 *);
+extern void func_8411F1AC(u8 *, f32 *);
+extern void func_841203B4(f32 *, f32, f32);
+extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
+extern void func_841204BC(void *, s32, s32, s32, f32);
+
+
+
+void func_84123B08(u8 *arg0) {
+    f32 sp44[3];
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    s32 temp_t2;  // FAKE: unused; reserves the 4-byte home slot at 0x38.  Dropping it costs 6 diff lines.
+    f32 sp34;
+    s32 temp_v0;  // FAKE: unused; reserves the 4-byte home slot at 0x30.  Dropping it costs 5 diff lines.
+    s16 sp2E;
+    s16 sp2C;
+
+    *(s8 *)(arg0 + 0x623) += 1;
+    if (*(s8 *)(arg0 + 0x623) >= 0x13) {
+        func_841203B4((f32 *)(arg0 + 0x38), 0.2f, 0.5f);
+        BattleAnim_StepToS16((s16 *)(arg0 + 0x606), -0x4000, 0xAAA);
+        if (*(s16 *)(arg0 + 0x606) == -0x4000) {
+            func_80037120((*(u8 **)D_841911E0) + 0xB4, (*(u8 **)D_841911E0) + 0xA8, &sp34, &sp2E, &sp2C);
+            func_8411F1AC(arg0, sp44);
+            *(s16 *)(arg0 + 0x602) = *(s16 *)(arg0 + 0x602) + 0x71C;
+            temp_fv0 = D_80087E50[((u16)*(s16 *)(arg0 + 0x602)) >> 4] * 12.0f;
+            *(f32 *)(arg0 + 0x24) = sp44[0] + D_80087E50[((u16)(sp2C + 0x4000)) >> 4] * temp_fv0;
+            *(f32 *)(arg0 + 0x2C) = sp44[2] + D_80088E50[((u16)(sp2C + 0x4000)) >> 4] * temp_fv0;
+            func_841204BC(arg0, 0x3F71EB85, 0x3CCCCCCD, 0x4000, D_84189D30);
+            sp2E = (s16)(s32)(D_80087E50[((u16)*(s16 *)(arg0 + 0x602)) >> 4] * 12.0f * 262.0f);
+            temp_fv0_2 = *(f32 *)(arg0 + 0x650) + 2.0f;
+            if (*(f32 *)(arg0 + 0x28) < temp_fv0_2) {
+                *(f32 *)(arg0 + 0x28) = temp_fv0_2;
+            }
+        } else {
+            *(s16 *)(arg0 + 0x1E) = *(s16 *)(arg0 + 0x606);
+        }
+    }
+}
+/* mkdraft:func_84123B08 end */
 
 void func_84123CD8(u8 *arg0) {
     *(s16 *)(arg0 + 0x5FE) = 0;
