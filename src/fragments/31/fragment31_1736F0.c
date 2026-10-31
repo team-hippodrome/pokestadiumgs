@@ -2,7 +2,73 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88200470.s")
+/* mkdraft:func_88200470 begin */
+extern u8 D_882345E0;
+
+// Sets one bit of the eight-bit D_882345E0 mask. arg0 selects a bit pair:
+// 1/2, 4/8, 0x10/0x20 or 0x40/0x80; arg1 == 0 and arg1 == 1 set the lower bit
+// of the pair and every other arg1 value sets the upper. Any other arg0 leaves
+// the mask unchanged. Each inner switch is written out because the compare
+// forms compile to a different branch sequence.
+
+
+
+void func_88200470(s32 arg0, u8 arg1) {
+    switch (arg0) {
+        case 1:
+            switch (arg1) {
+                case 0:
+                case 1:
+                    D_882345E0 |= 1;
+                    break;
+
+                default:
+                    D_882345E0 |= 2;
+                    break;
+            }
+            return;
+
+        case 2:
+            switch (arg1) {
+                case 0:
+                case 1:
+                    D_882345E0 |= 4;
+                    break;
+
+                default:
+                    D_882345E0 |= 8;
+                    break;
+            }
+            return;
+
+        case 4:
+            switch (arg1) {
+                case 0:
+                case 1:
+                    D_882345E0 |= 0x10;
+                    break;
+
+                default:
+                    D_882345E0 |= 0x20;
+                    break;
+            }
+            return;
+
+        case 8:
+            switch (arg1) {
+                case 0:
+                case 1:
+                    D_882345E0 |= 0x40;
+                    break;
+
+                default:
+                    D_882345E0 |= 0x80;
+                    break;
+            }
+            return;
+    }
+}
+/* mkdraft:func_88200470 end */
 
 extern s32 func_8005370C(s32, s32);
 extern s32 func_8005CF20(s32, s32, s32);
