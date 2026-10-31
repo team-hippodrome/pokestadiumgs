@@ -233,7 +233,39 @@ void func_86005A00(void *arg0, f32 *arg1, f32 *arg2) {
 }
 /* mkdraft:func_86005A00 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005B3C.s")
+/* mkdraft:func_86005B3C begin */
+extern s32 func_8003F210(void *, s32);
+
+extern s32 D_8600E0DC;
+extern f64 D_8600E100;
+
+
+
+void func_86005B3C(u8 *arg0, s32 arg1, s32 arg2, u8 *arg3, s32 arg4) {
+    u8 *base;
+    u8 *node;
+
+    if (D_8600E0DC != 0) {
+        base = (u8 *) ((u32) arg0 + arg1 * 0x5A0 + arg2 * 0x168);
+        node = base + 0x81D0;
+        ((f32 *)(base + 0x8000))[0x7D] = (f32) *(f64 *)(arg3 + 0);
+        ((f32 *)(base + 0x8000))[0x7E] = (f32) *(f64 *)(arg3 + 8);
+        ((f32 *)(base + 0x8000))[0x7F] = (f32) *(f64 *)(arg3 + 0x10);
+        func_8003F210(node, 0);
+        node[1] |= 1;
+        ((f32 *)(arg0 + arg1 * 16 + arg2 * 4 + 0x8000))[0xBB4] = (f32) D_8600E100;
+        if (arg4 != 0) {
+            ((f32 *)(base + 0x8000))[0x61D] = (f32) *(f64 *)(arg3 + 0);
+            ((f32 *)(base + 0x8000))[0x61E] = (f32) *(f64 *)(arg3 + 8);
+            ((f32 *)(base + 0x8000))[0x61F] = (f32) *(f64 *)(arg3 + 0x10);
+            node = base + 0x9850;
+            func_8003F210(node, 0);
+            node[1] |= 1;
+            ((f32 *)(arg0 + arg1 * 16 + arg2 * 4 + 0x8000))[0xBC4] = (f32) D_8600E100;
+        }
+    }
+}
+/* mkdraft:func_86005B3C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005CB4.s")
 
