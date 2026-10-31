@@ -129,7 +129,41 @@ void func_87E18A14(u8 *arg0, s32 arg1, s32 arg2) {
     func_87E10EA8(-1);
     func_87E10F2C(-1);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18B0C.s")
+extern u32 func_8003570C(void);
+extern u32 *D_87E1EC90;
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+/* mkdraft:func_87E18B0C begin */
+
+// The two 0xC/0x8 steps follow the retail loads: the list node's 0x38 pointer leads to a
+// descriptor whose 0xC word is a pointer; that pointer's first word is the id compared
+// against *D_87E1EC90 and the drawing record handed to func_87F0B1A4 starts 8 bytes in.
+
+
+void func_87E18B0C(void *arg0) {
+    u8 *node = *(u8 **)((u8 *)arg0 + 0x18);
+
+    while (node != NULL) {
+        u8 *desc = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
+        u8 *draw_record = desc + 8;
+
+        if (*D_87E1EC90 == *(u32 *)desc) {
+            func_87F0B1A4(draw_record, (f32 *)(node + 0x48), 0.0f, 20.0f,
+                          *(f32 *)(node + 0x50) + 150.0f, 0xA, 0x5000);
+        } else {
+            func_87F0B1A4(draw_record, (f32 *)(node + 0x48), *(f32 *)(node + 0x48),
+                          *(f32 *)(node + 0x4C) + -360.0f, *(f32 *)(node + 0x50), 0xF, 0x2000);
+            // func_8003570C returns an unsigned 32-bit value; the divide and the -45/-180
+            // offsets map it onto the 90/360 degree ranges used by func_87F0B2F4.
+            func_87F0B2F4(draw_record, (s16 *)(node + 0x42),
+                          ((f32) func_8003570C() / 4294967296.0f) * 90.0f - 45.0f,
+                          ((f32) func_8003570C() / 4294967296.0f) * 90.0f - 45.0f,
+                          ((f32) func_8003570C() / 4294967296.0f) * 360.0f - 180.0f, 0xF, 0);
+        }
+        node = *(u8 **)(node + 4);
+    }
+}
+/* mkdraft:func_87E18B0C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18D20.s")
 
