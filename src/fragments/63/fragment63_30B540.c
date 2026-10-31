@@ -248,7 +248,44 @@ void func_87E08168(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E081A0.s")
+/* mkdraft:func_87E081A0 begin */
+typedef struct {
+    u8 pad[0x16];
+    u8 a : 2;
+    u8 flag : 1;
+    u8 rest : 5;
+} F87E081A0Record;
+
+
+
+void func_87E081A0(void *arg0) {
+    u8 *ptr;
+    s32 value;
+    s32 i;
+    ptr = (u8 *)arg0 + 0x2190;
+    for (i = 0; i < 4; i++) {
+        switch (*(s8 *)((u8 *)arg0 + 0x218E)) {
+        case 1:
+        case 2:
+            if ((*(s32 *)(ptr + 0x14) << 17) >> 31) {
+                value = *(s32 *)ptr;
+            } else {
+                value = *(s8 *)((u8 *)arg0 + 0x218D) + *(s32 *)ptr;
+            }
+            break;
+        case 0:
+            value = *(s8 *)((u8 *)arg0 + 0x218D) + *(s32 *)ptr;
+            break;
+        default:
+            value = *(s8 *)((u8 *)arg0 + 0x218D) + *(s32 *)ptr;
+            break;
+        }
+        if (value >= *(s32 *)((u8 *)arg0 + 0x2188)) ((F87E081A0Record *)ptr)->flag = 1;
+        else ((F87E081A0Record *)ptr)->flag = 0;
+        ptr += 0x18;
+    }
+}
+/* mkdraft:func_87E081A0 end */
 
 extern void func_87E080F8(s32);
 extern void func_87E01628(void);
