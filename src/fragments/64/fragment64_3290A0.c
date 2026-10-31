@@ -2,7 +2,22 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06430.s")
+/* mkdraft:func_87F06430 begin */
+extern f32 D_80087E50[];
+extern f32 D_80088E50[0x1000];
+
+// Writes a three-component vector to arg0; callers copy the components in order into
+// consecutive f64 fields of a position. x varies with the row index arg1, y is constant
+// and z is zero. Both x and y are scaled by the sine/cosine ratio (a tangent) at table
+// element 113, byte offset 0x1C4.
+
+
+void func_87F06430(f32 *arg0, s32 arg1) {
+    arg0[0] = D_80087E50[113] / D_80088E50[113] * 1000.0f * 1.3333334f * (2.0f * ((46.5f + (f32) arg1 * 39.0f) / 320.0f) - 1.0f);
+    arg0[1] = D_80087E50[113] / D_80088E50[113] * 1000.0f * 0.45416665f;
+    arg0[2] = 0.0f;
+}
+/* mkdraft:func_87F06430 end */
 
 s32 func_87F064DC(s32 arg0, s32 arg1) {
     return 1;
