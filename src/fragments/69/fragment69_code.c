@@ -573,7 +573,67 @@ void func_8F101CDC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F101DA0.s")
+/* mkdraft:func_8F101DA0 begin */
+extern f32 D_8F1DEE4C;
+extern u8 D_8F1DEE50[];
+extern s32 D_8F1DECA0;
+extern u8 D_8F1DECA8;
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE2C;
+extern s32 D_8F1DEE38;
+extern s32 D_8F1DEE3C;
+extern s32 func_8003F2C4(s32, u8 *, s32);
+extern s32 func_8003F3BC(u8 *, s32);
+
+
+
+
+void func_8F101DA0(void) {
+    if (D_80087200->buttonsHeld & 4) {
+        D_8F1DEE4C -= 0.1f;
+        if (D_8F1DEE4C < 0.1f) {
+            D_8F1DEE4C = 0.1f;
+        }
+    }
+    if (D_80087200->buttonsHeld & 8) {
+        D_8F1DEE4C += 0.1f;
+        if (D_8F1DEE4C > 100.0f) {
+            D_8F1DEE4C = 100.0f;
+        }
+    }
+    if (D_80087200->stickXNorm != 0.0f) {
+        *(s16 *)((u8 *)D_8F1DEE50 + 2) -= (s16)(D_80087200->stickXNorm * 32.0f);
+    }
+    if (D_80087200->stickYNorm != 0.0f) {
+        *(s16 *)((u8 *)D_8F1DEE50 + 0) += (s16)(D_80087200->stickYNorm * 32.0f);
+        if (*(s16 *)((u8 *)D_8F1DEE50 + 0) > 0x3F00) {
+            *(s16 *)((u8 *)D_8F1DEE50 + 0) = 0x3F00;
+        }
+        if (*(s16 *)((u8 *)D_8F1DEE50 + 0) < -0x3F00) {
+            *(s16 *)((u8 *)D_8F1DEE50 + 0) = -0x3F00;
+        }
+    }
+    func_8F100C64(D_8F1DEE4C, D_8F1DEE50);
+    if (D_80087200->buttonsPressed & 0x20) {
+        D_8F1DEE28 = D_8F1DEE2C;
+        func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, -1);
+        func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+        D_8F1DEE38 = D_8F1DEE3C;
+        func_8003F3BC(&D_8F1DECA8, -1);
+        func_8003F3BC(&D_8F1DECA8, D_8F1DEE38);
+    }
+    if (D_80087200->buttonsPressed & 0x1000) {
+        if (D_8F103988 == -1) {
+            D_8F103988 = 0;
+        } else {
+            D_8F103988 = -1;
+        }
+    }
+    if ((D_8F103988 == 0) && (D_80087200->buttonsPressed & 0x8000)) {
+        D_8F103988 = D_8F103988 + 1;
+    }
+}
+/* mkdraft:func_8F101DA0 end */
 #endif
 
 #ifdef VERSION_US
