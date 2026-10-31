@@ -57,7 +57,46 @@ void func_8AF20F64(u8* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5, u8
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF20FF8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF210FC.s")
+/* mkdraft:func_8AF210FC begin */
+extern u8 *D_8AF279B0;
+extern s32 D_8AF3A000;
+extern s32 D_8AF3A004;
+extern s16 D_8AF3A008;
+extern void func_8AC06570(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5);
+extern s32 func_8AF02C28();
+extern s32 func_8AF20FF8();
+
+
+
+
+void func_8AF210FC(s16 arg0) {
+    extern u8 D_8AF39A00[];
+    extern u8 D_8AF2BE28[];
+    extern u8 D_8AF39C00[];
+    extern u8 D_8AF2BE48[];
+    extern u8 D_8AF39FE0;
+    extern u8 D_8AF39FF0;
+    u8 *ptr;
+
+    D_8AF3A008 = arg0;
+    switch (D_8AF3A008) {
+    case 0:
+        func_8AF20FF8((s32)D_8AF3A000, D_8AF279B0);
+        func_8AF02C28(D_8AF279B0, D_8AF39A00, D_8AF2BE28, 0x494C5331);
+        ptr = D_8AF279B0 + 0x28;
+        *(s16 *)(ptr + 0x18) = 1;
+        func_8AC06570(&D_8AF39FE0, *(s16 *)(ptr + 0x22), 0x41, 3, 2, 0xA);
+        break;
+    case 1:
+        func_8AF20FF8((s32)D_8AF3A004, D_8AF279B0 + 0x52C);
+        func_8AF02C28(D_8AF279B0 + 0x52C, D_8AF39C00, D_8AF2BE48, 0x494C5332);
+        ptr = D_8AF279B0 + 0x554;
+        *(s16 *)(ptr + 0x18) = 1;
+        func_8AC06570(&D_8AF39FF0, *(s16 *)(ptr + 0x22), 0x41, 3, 2, 0xA);
+        break;
+    }
+}
+/* mkdraft:func_8AF210FC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF2123C.s")
 
