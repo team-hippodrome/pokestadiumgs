@@ -21,7 +21,46 @@ void func_86200020_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86200080.s")
+/* mkdraft:func_86200080 begin */
+typedef struct F86200080Vec { f32 x, y, z; } F86200080Vec;
+typedef struct F86200080Node {
+    f32 r;
+    f32 g;
+    f32 b;
+    u8 unk_C[4];
+    u8 indices[3];
+    u8 unk_13;
+} F86200080Node;
+
+
+
+void func_86200080(s32 arg0, u8 *arg1) {
+    s32 node_index;
+    s32 point_index;
+    F86200080Node *node;
+
+    node = (F86200080Node *)*(u32 *)(arg1 + 4);
+    for (node_index = 0; node_index < *(s32 *)(arg1 + 8); node_index++, node++) {
+        point_index = 0;
+        while (point_index != 3) {
+            F86200080Vec *point = &((F86200080Vec *)*(u32 *)arg1)[node->indices[point_index]];
+
+            point_index++;
+            arg0 += 0x10;
+            *(s16 *)(arg0 - 0x10) = (s16)point->x;
+            *(s16 *)(arg0 - 0xE) = (s16)point->y;
+            *(s16 *)(arg0 - 0xC) = (s16)point->z;
+            *(s16 *)(arg0 - 0xA) = 0;
+            *(s16 *)(arg0 - 8) = (s16)(point->x * 32.0f);
+            *(s16 *)(arg0 - 6) = (s16)(point->z * 32.0f);
+            *(s8 *)(arg0 - 4) = (s8)(node->r * 127.0f);
+            *(s8 *)(arg0 - 3) = (s8)(node->g * 127.0f);
+            *(s8 *)(arg0 - 2) = (s8)(node->b * 127.0f);
+            *(u8 *)(arg0 - 1) = 0xFF;
+        }
+    }
+}
+/* mkdraft:func_86200080 end */
 #endif
 
 #ifdef VERSION_US
