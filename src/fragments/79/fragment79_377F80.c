@@ -162,7 +162,35 @@ void func_84108A10(s32 arg0)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108AF8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108CE8.s")
+/* mkdraft:func_84108CE8 begin */
+extern u8 *D_8418C950;
+
+
+
+void func_84108CE8(s32 arg0) {
+    s16 *temp_v1;
+    s32 var_s1;
+    u8 *var_s0;
+    void *temp_v0;
+    void *temp_v0_2;
+
+    var_s0 = D_8418C950;
+    for (var_s1 = 0; var_s1 != 0x12C; var_s0 += 0x9C) {
+        if ((*((s8 *) (((u8 *) var_s0) + 0x98)) != 0) && (func_84100054(var_s0, 0x10000) != 0) && (arg0 == *((s32 *) (((u8 *) var_s0) + 8))) && ((temp_v0 = *((void **) (((u8 *) var_s0) + 0x10)), (temp_v0 == NULL)) || (temp_v1 = *((s16 **) (((u8 *) temp_v0) + 0x14)), (temp_v1 == NULL)) || (*temp_v1 != 0xD3))) {
+            func_84100030(var_s0, 0x10080);
+            if (func_84100054(var_s0, 0x8000) != 0) {
+                func_84100348(var_s0);
+                if (0) { } // karodo: empty block after the call; without it IDO colors the 0xC pointer v1 instead of v0
+                temp_v0_2 = *((void **) (((u8 *) var_s0) + 0xC));
+                if (temp_v0_2 != NULL) {
+                    *((u8 *) (((u8 *) temp_v0_2) + 1)) = (u8) ((*((u8 *) (((u8 *) temp_v0_2) + 1))) & (~1));
+                }
+            }
+        }
+        var_s1 += 1;
+    }
+}
+/* mkdraft:func_84108CE8 end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
