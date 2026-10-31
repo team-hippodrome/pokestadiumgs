@@ -59,7 +59,114 @@ void func_8AF0BBF0(void *arg0) {
     sprintf(D_8AF26A20 + 0xA00, D_8AF2E8F4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0BD2C.s")
+/* mkdraft:func_8AF0BD2C begin */
+extern s32 D_8AF26A20;
+extern s8 *D_8AF2E8E8;
+extern s8 *D_8AF2E8E4;
+extern s8 D_8AF29230;
+extern s8 D_8AF29234;
+extern s8 D_8AF29238;
+extern s8 D_8AF2923C;
+extern int sprintf(char *, const char *, ...);
+extern s32 func_8004C594(s32 index, s32 value);
+extern void *func_8004C8A0(void *dst, s32 size, s32 arg2, s32 arg3);
+
+
+
+void func_8AF0BD2C(void *arg0) {
+    u8 name_kind;
+    u8 name_kind_2;
+    u8 name_kind_3;
+    u8 name_kind_4;
+
+    // Bytes 1 through 4 each pick one of three name formats rendered into
+    // D_8AF26A20 + 0x300 + 0x100 * i; kinds other than 0 and 1 share the
+    // string at D_8AF29230 + 4 * i.
+    name_kind = *(u8 *)((u8 *)arg0 + 1);
+    if (name_kind == 0) {
+        sprintf(D_8AF26A20 + 0x300, D_8AF2E8E8, name_kind);
+    } else if (name_kind == 1) {
+        sprintf(D_8AF26A20 + 0x300, D_8AF2E8E4, name_kind);
+    } else {
+        sprintf(D_8AF26A20 + 0x300, &D_8AF29230, name_kind);
+    }
+    name_kind_2 = *(u8 *)((u8 *)arg0 + 2);
+    if (name_kind_2 == 0) {
+        sprintf(D_8AF26A20 + 0x400, D_8AF2E8E8, name_kind_2);
+    } else if (name_kind_2 == 1) {
+        sprintf(D_8AF26A20 + 0x400, D_8AF2E8E4, name_kind_2);
+    } else {
+        sprintf(D_8AF26A20 + 0x400, &D_8AF29234, name_kind_2);
+    }
+    name_kind_3 = *(u8 *)((u8 *)arg0 + 3);
+    if (name_kind_3 == 0) {
+        sprintf(D_8AF26A20 + 0x500, D_8AF2E8E8, name_kind_3);
+    } else if (name_kind_3 == 1) {
+        sprintf(D_8AF26A20 + 0x500, D_8AF2E8E4, name_kind_3);
+    } else {
+        sprintf(D_8AF26A20 + 0x500, &D_8AF29238, name_kind_3);
+    }
+    name_kind_4 = *(u8 *)((u8 *)arg0 + 4);
+    if (name_kind_4 == 0) {
+        sprintf(D_8AF26A20 + 0x600, D_8AF2E8E8, name_kind_4);
+    } else if (name_kind_4 == 1) {
+        sprintf(D_8AF26A20 + 0x600, D_8AF2E8E4, name_kind_4);
+    } else {
+        sprintf(D_8AF26A20 + 0x600, &D_8AF2923C, name_kind_4);
+    }
+    // Bytes 6 through 9 are scanned for the first nonzero value, which is
+    // handed to func_8004C594(2, ...); 0x33 and above are stored reduced by
+    // 0x32.
+    if ((s32) * (u8 *)((u8 *)arg0 + 6) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 6) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 6) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 6));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 7) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 7) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 7) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 7));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 8) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 8) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 8) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 8));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 9) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 9) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 9) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 9));
+    }
+    // The same four bytes are rendered into D_8AF26A20 + 0x700 + 0x100 * i.
+    if (*(u8 *)((u8 *)arg0 + 6) == 0) {
+        sprintf(D_8AF26A20 + 0x700, D_8AF2E8E8);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 6) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0x700, 0x100, 0x3B, 0x39);
+    } else {
+        func_8004C8A0(D_8AF26A20 + 0x700, 0x100, 0x3B, 0x3A);
+    }
+    if (*(u8 *)((u8 *)arg0 + 7) == 0) {
+        sprintf(D_8AF26A20 + 0x800, D_8AF2E8E8, *(u8 *)((u8 *)arg0 + 7));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 7) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0x800, 0x100, 0x3B, 0x39);
+    } else {
+        func_8004C8A0(D_8AF26A20 + 0x800, 0x100, 0x3B, 0x3A);
+    }
+    if (*(u8 *)((u8 *)arg0 + 8) == 0) {
+        sprintf(D_8AF26A20 + 0x900, D_8AF2E8E8, *(u8 *)((u8 *)arg0 + 8));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 8) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0x900, 0x100, 0x3B, 0x39);
+    } else {
+        func_8004C8A0(D_8AF26A20 + 0x900, 0x100, 0x3B, 0x3A);
+    }
+    if (*(u8 *)((u8 *)arg0 + 9) == 0) {
+        sprintf(D_8AF26A20 + 0xA00, D_8AF2E8E8, *(u8 *)((u8 *)arg0 + 9));
+        return;
+    }
+    if ((s32) * (u8 *)((u8 *)arg0 + 9) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0xA00, 0x100, 0x3B, 0x39);
+        return;
+    }
+    func_8004C8A0(D_8AF26A20 + 0xA00, 0x100, 0x3B, 0x3A);
+}
+/* mkdraft:func_8AF0BD2C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C1D8.s")
 
