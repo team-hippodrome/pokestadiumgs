@@ -274,7 +274,53 @@ void func_82C00C78(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C019B4.s")
+/* mkdraft:func_82C019B4 begin */
+extern Gfx D_82C049A0[];
+extern u8 D_82C04900[];
+extern u8 D_82C0492C[];
+
+
+// Draws the mode-specific panel contents: a display list append followed by a color set and one
+// or two inset rectangles. Modes 1, 2 and 4 draw two fixed rectangles, mode 3 draws the selected
+// entry's rectangle (entries at 0x214, stride 0x1CC), and modes 5 and 7 offset the second
+// rectangle by 8 pixels per count stored in the s16 at D_82C04C38+8. Mode 6 and modes >= 8 draw
+// nothing.
+
+
+void func_82C019B4(void) {
+    unk_D_82C04C38_rect *rect;
+
+    func_82C002B8(D_82C04900);
+    switch (((unk_D_82C04C38 *)&D_82C04C38)->mode) {
+    case 1:
+    case 2:
+    case 4:
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + 7, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + 0x138, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        break;
+    case 3:
+        rect = &((unk_D_82C04C38 *)&D_82C04C38)->entries[((unk_D_82C04C38 *)&D_82C04C38)->row].rect;
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C009F8(rect->x + 7, rect->y + 7, (rect->width - 0x11) & 0xFFFF, 0x1E);
+        break;
+    case 5:
+    case 7:
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + 7, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        // The s16 at D_82C04C38+8 falls inside unk_003 of unk_D_82C04C38; it is read here as a
+        // signed count. An isolated struct (same pattern as func_82C01E24) keeps that read
+        // distinct from the byte region the rest of the file indexes.
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + ((struct { s16 unk_000[4]; s16 unk_008; } *)&D_82C04C38)->unk_008 * 8 + 0x138, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        /* fallthrough */
+    default:
+        break;
+    }
+}
+/* mkdraft:func_82C019B4 end */
 #endif
 
 #ifdef VERSION_US
