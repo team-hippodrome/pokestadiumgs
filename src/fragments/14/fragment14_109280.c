@@ -2,7 +2,130 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_813110F0.s")
+extern void *func_8004C874(s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_8004C594(s32, s32);
+extern s32 func_80049148(s32 font, s32 flags, const char *format, ...);
+extern s32 func_800472E0(u8 *);
+
+typedef struct {
+    // Second argument to the string lookups func_8004C874/func_8004C8A0.
+    u16 unk_00;
+    u8 pad02[2];
+    s16 value;
+    u8 pad06[2];
+} Frag14Entry;
+
+// Text box layout; func_813110F0 sizes and positions the box from its entries' strings.
+typedef struct {
+    u8 pad00[8];
+    s16 anchor_x;
+    s16 anchor_y;
+    // -1 = box starts at the anchor, 0 = centered on it, 1 = ends at it.
+    s16 align_x;
+    s16 align_y;
+    s8 unk_10;
+    s8 unk_11;
+    s8 unk_12;
+    s8 unk_13;
+    s8 font;
+    s8 unk_15;
+    s8 line_height;
+    s8 unk_17;
+    s16 fallback;
+    u8 pad1A[2];
+    u16 entry_count;
+    u16 unk_1E;
+    Frag14Entry *entries;
+} Frag14Record;
+
+typedef struct {
+    Frag14Record *owner;
+    f32 unk_04;
+    f32 unk_08;
+    s32 unk_0C;
+    s16 box_x;
+    s16 box_y;
+    s16 box_width;
+    s16 box_height;
+    u8 status;
+    s8 index;
+    s8 unk_1A;
+    u8 pad1B;
+    // Set when any two consecutive entries have different values.
+    s32 unk_1C;
+} Frag14State;
+
+// Binds arg0 to record arg1 and computes the box size from the widest entry string
+// (func_80049148) and the total line count (func_800472E0), then places the box by its
+// alignment. Returns 0 without changes if arg1 is already bound, otherwise 1.
+//@src/47580.c
+s32 func_813110F0(Frag14State *arg0, Frag14Record *arg1, s32 arg2) {
+    char buf[256];
+    s32 i;
+    s32 max_width;
+    s32 line_count;
+    void *str;
+    s32 width;
+
+    if (arg1 == arg0->owner) {
+        return 0;
+    }
+    arg0->owner = arg1;
+    arg0->unk_1C = 0;
+    arg0->unk_0C = arg2;
+    line_count = 0;
+    max_width = 0;
+    for (i = 0; i < arg1->entry_count; i++) {
+        if (arg0->unk_0C < 0) {
+            str = func_8004C874(arg1->unk_1E, arg0->owner->entries[i].unk_00);
+        } else {
+            func_8004C594(3, arg0->unk_0C);
+            str = func_8004C8A0(buf, sizeof(buf), arg1->unk_1E, arg0->owner->entries[i].unk_00);
+        }
+        width = func_80049148(arg1->font, arg1->unk_17 + 2, str);
+        if (max_width < width) {
+            max_width = width;
+        }
+        line_count += func_800472E0(str);
+        if (i > 0) {
+            if (arg1->entries[i].value != arg1->entries[i - 1].value) {
+                arg0->unk_1C = 1;
+            }
+        }
+    }
+    arg0->box_width = arg1->unk_13 + max_width + arg1->unk_12;
+    arg0->box_height =
+        (arg1->line_height * line_count) + arg1->unk_15 - arg1->line_height + arg1->unk_10 + arg1->unk_11;
+    arg0->box_x = arg1->anchor_x - arg0->box_width / 2;
+    switch (arg1->align_x) {
+        case 1:
+            arg0->box_x = arg1->anchor_x - arg0->box_width;
+            break;
+        case -1:
+            arg0->box_x = arg1->anchor_x;
+            break;
+        case 0:
+            arg0->box_x = arg1->anchor_x - arg0->box_width / 2;
+            break;
+    }
+    // The default vertical position uses anchor_x, not anchor_y; only align_y values -1, 0
+    // and 1 overwrite it.
+    arg0->box_y = arg1->anchor_x - arg0->box_height / 2;
+    switch (arg1->align_y) {
+        case 1:
+            arg0->box_y = arg1->anchor_y - arg0->box_height;
+            break;
+        case -1:
+            arg0->box_y = arg1->anchor_y;
+            break;
+        case 0:
+            arg0->box_y = arg1->anchor_y - arg0->box_height / 2;
+            break;
+    }
+    return 1;
+}
+
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311368.s")
 
@@ -79,11 +202,10 @@ void func_81311AAC(u8 *arg0, void *arg1) {
     }
 }
 
-extern void func_813110F0(u8 *arg0, void *arg1, s32 arg2, s32 arg3);
 void func_81311B98(u8 *arg0, void *arg1, s32 arg2, s32 arg3) {
     s32 sp20 = arg2;
 
-    func_813110F0(arg0, arg1, arg3, arg3);
+    func_813110F0(arg0, arg1, arg3);
     switch (arg0[0x18]) {
         case 2:
             *(f32 *)(arg0 + 4) = 16.0f;
@@ -118,23 +240,6 @@ void func_81311C18(u8 *arg0) {
     arg0[0x18] = 3;
 }
 
-typedef struct {
-    void *owner;
-    u8 pad04[0x14];
-    u8 status;
-    s8 index;
-} Frag14State;
-typedef struct {
-    u8 pad00[4];
-    s16 value;
-    u8 pad06[2];
-} Frag14Entry;
-typedef struct {
-    u8 pad00[0x18];
-    s16 fallback;
-    u8 pad1A[6];
-    Frag14Entry *entries;
-} Frag14Record;
 s32 func_81311C70(void *arg0, void *arg1, s32 arg2, s32 arg3) {
     Frag14State *state = arg0;
     Frag14Record *record = arg1;

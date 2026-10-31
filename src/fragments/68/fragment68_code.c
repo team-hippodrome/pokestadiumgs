@@ -26,7 +26,57 @@ void func_8F000020(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/68/fragment68_code/func_8F000098.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/68/fragment68_code/func_8F000284.s")
+extern Gfx* D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_8F000918;
+extern s32 D_8F00091C;
+extern s32 D_8F000928;
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+/*
+ * Draws the scrolling background: the 128x128 RGBA16 image at D_8F000928 (set each frame from
+ * func_80043678 in func_8F00068C) is loaded as eight 128x16 bands of 4 KiB each, and every band
+ * is drawn in a 5x5 grid of rectangles spaced 128 pixels apart. D_8F000918 is the horizontal
+ * texture offset in texels (+1 per frame, wraps at 128); D_8F00091C is the vertical screen
+ * offset (-1 per frame, reset to 0 below -127).
+ */
+void func_8F000284(void) {
+    s32 band;
+    s32 band_y;
+    s32 row;
+    u32 column; // FAKE: unsigned column counter; diff score 1250 without it.
+    s32 scroll_s;
+    s32 scroll_y;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (band = 0, band_y = 0; band < 8; band++, band_y += 16) {
+        for (row = 0; row < 640; row += 128) {
+            for (column = 0; column < 640; column += 128) {
+                if (column == 0 && row == 0) {
+                    gDPLoadTextureBlock(D_800D0510++, D_8F000928 + (band << 12), G_IM_FMT_RGBA, G_IM_SIZ_16b, 128,
+                                        16, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 7, G_TX_NOMASK,
+                                        G_TX_NOLOD, G_TX_NOLOD);
+                }
+                scroll_y = D_8F00091C;
+                scroll_s = D_8F000918;
+                GfxRect_DrawTextured(column, row + scroll_y + band_y, 128, 16, scroll_s << 5, 0, 1024, 1024, 0);
+            }
+        }
+    }
+    scroll_s = D_8F000918 + 1;
+    D_8F000918 = scroll_s;
+    if (scroll_s >= 128) {
+        D_8F000918 = 0;
+    }
+    scroll_y = D_8F00091C - 1;
+    D_8F00091C = scroll_y;
+    if (scroll_y < -127) {
+        D_8F00091C = 0;
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+
 
 extern void func_80008648();
 extern void BgStage_DrawFrame();
@@ -96,7 +146,6 @@ typedef struct F68SavedVector {
     u16 values[3];
 } F68SavedVector;
 extern s32 D_8F000910;
-extern s32 D_8F000928;
 extern void func_800086A4(s32);
 extern void StageFade_StartFromOpaque(s32);
 extern s32 func_80042FBC(void *, s32);

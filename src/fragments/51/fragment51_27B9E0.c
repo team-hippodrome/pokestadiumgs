@@ -75,9 +75,62 @@ void func_863060CC(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_863060FC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_863063C0.s")
-
 extern void *D_87F119DC;
+
+// Advances the screen tint state at D_87F119DC by one frame. The mode word at
+// +0xC holds two fade bits: while 0x1000000 is set the tint is white and its
+// alpha at +0xC7 fades from 255 to 0 as the frame counter at +0x1C goes from 0
+// to 15; while 0x2000000 is set the tint fades over 60 frames instead, taking
+// its color from +0xC4 (white for the first 3 frames, then the color chosen by
+// the signed byte at arg0 + 0x20). Each fade bit clears itself, zeroing the
+// alpha, once the counter passes that fade's length.
+void func_863063C0(void *arg0) {
+    s32 elapsed;
+
+    if ((*(s32 *)((u8 *)D_87F119DC + 0xC)) & 0x3000000) {
+        if ((*(s32 *)((u8 *)D_87F119DC + 0xC)) & 0x1000000) {
+            (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xFFFFFF00;
+            elapsed = (*(s32 *)((u8 *)D_87F119DC + 0x1C));
+            if (elapsed >= 0x10) {
+                (*(s32 *)((u8 *)D_87F119DC + 0xC)) &= ~0x1000000;
+                (*(u8 *)((u8 *)D_87F119DC + 0xC7)) = 0;
+            } else {
+                (*(u8 *)((u8 *)D_87F119DC + 0xC7)) = (u8)(255.0f - (((f32)elapsed / 15.0f) * 255.0f));
+            }
+        } else {
+            if ((*(s32 *)((u8 *)D_87F119DC + 0x1C)) < 3) {
+                (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xFFFFFF00;
+            } else {
+                switch (*(s8 *)((u8 *)arg0 + 0x20)) {
+                    case 0:
+                        (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xAAAAFF00;
+                        break;
+                    case 1:
+                        (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xAAFFAA00;
+                        break;
+                    case 2:
+                        (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xFFAAAA00;
+                        break;
+                    case 3:
+                        (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xFFFFAA00;
+                        break;
+                    default:
+                        (*(s32 *)((u8 *)D_87F119DC + 0xC4)) = 0xFFFFFF00;
+                        break;
+                }
+            }
+            elapsed = (*(s32 *)((u8 *)D_87F119DC + 0x1C));
+            if (elapsed >= 61) {
+                (*(s32 *)((u8 *)D_87F119DC + 0xC)) &= ~0x2000000;
+                (*(u8 *)((u8 *)D_87F119DC + 0xC7)) = 0;
+            } else {
+                (*(u8 *)((u8 *)D_87F119DC + 0xC7)) = (u8)(255.0f - (((f32)elapsed / 60.0f) * 255.0f));
+            }
+        }
+    } else {
+        (*(u8 *)((u8 *)D_87F119DC + 0xC7)) = 0;
+    }
+}
 
 void func_86306638(void *arg0) {
     (*(f32 *)((u8 *)(arg0) + (0))) = (f32) (*(f32 *)((u8 *)(D_87F119DC) + (0x48)));

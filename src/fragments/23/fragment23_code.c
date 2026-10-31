@@ -14,7 +14,59 @@ s32 func_82A00178(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A001DC.s")
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern Gfx *D_800D0510;
+extern Mtx D_80094890;
+extern s32 func_8000731C(void);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+
+// Draws a textured band from (x0, y0) to (x1, y1) in an orthographic screen projection: a quad
+// whose top edge spans x0 - 3 .. x0 + 4 at row y0 and bottom edge x1 - 3 .. x1 + 4 at row y1
+// (texture s 0..224, t 2048..0), white vertices, decal RGBA combine and translucent surface
+// mode, textured with the image func_8004C990(14, 1) returns. The projection setup and vertex
+// order follow func_88100C80's gradient quad.
+//@src/fragments/30/fragment30_16D4F0.c
+void func_82A001DC(s32 x0, s16 y0, s32 x1, s16 y1) {
+    s32 temp; // FAKE: holds the screen dimensions pointer, then y0; diff score 28 without it (separate locals).
+    Vtx *vertices;
+    Mtx *matrix;
+    s32 viewport; // FAKE: Vp * reused for y1; diff score 8 without it (a separate y1 local).
+
+    temp = func_8000731C();
+    vertices = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    matrix = Gfx_AllocDisplayList(sizeof(Mtx) * 1);
+    viewport = (s32)Gfx_AllocDisplayList(sizeof(Vp) * 1);
+
+    Gfx_SetViewportDimensions((Vp *)viewport, ((s16 *)temp)[2], ((s16 *)temp)[3]);
+
+    gSPViewport(D_800D0510++, (u32)viewport & 0x1FFFFFFF);
+
+    guOrtho(matrix, 0.5f, (u16)((s16 *)temp)[2] - 0.5f, (u16)((s16 *)temp)[3] - 0.5f, 0.5f, -2.0f, 2.0f,
+            1.0f);
+    temp = y0;
+    Gfx_SetVertexAttributes(&vertices[0], x0 - 3, temp, -1, 0, 2048, 0xFF, 0xFF, 0xFF, 0xFF);
+    viewport = y1;
+    Gfx_SetVertexAttributes(&vertices[1], x1 - 3, viewport, -1, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[2], x0 + 4, temp, -1, 224, 2048, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[3], x1 + 4, viewport, -1, 224, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombineMode(D_800D0510++, G_CC_DECALRGBA, G_CC_DECALRGBA);
+    gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    gSPMatrix(D_800D0510++, (u32)matrix & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)&D_80094890 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    func_8004D1FC((u8 *)func_8004C990(14, 1));
+    gSPVertex(D_800D0510++, (u32)vertices & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A005D8.s")
 

@@ -4,7 +4,45 @@
 #ifdef VERSION_US
 // Pointed to by D_8AB112F8 in .data; it opens this file's .rodata.
 const char D_8AB11C90[] = "\n";
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB0F760.s")
+extern u8 D_8AB1743C[];
+extern s32 D_8AB17408;
+extern void func_800504BC(s16 *);
+extern void func_8AB00BC4(s16, s16, s16, u8, u8, u8);
+extern s16 D_8AB1269C;
+extern void *D_8AB1740C;
+
+// Same code as func_8AB05A6C in fragment45_22AB80.c, but this copy draws only while
+// the state D_8AB17408 (set by func_8AB0FF40) is 67, where the template tests its
+// state D_8AB16958 against 8; the color is D_8AB1743C and the node D_8AB1740C.
+//@src/fragments/45/fragment45_22AB80.c
+s32 func_8AB0F760(s32 arg0, u8 *arg1) {
+    s16 offset[2];
+    s16 x;
+    s16 y;
+    u8 *color;
+
+    color = D_8AB1743C;
+    switch (arg0) {
+    case 0:
+        *(u16 *)(arg1 + 2) &= 0xFFFD;
+        color[0] = 0xFF;
+        color[1] = 0xFF;
+        color[2] = 0;
+        break;
+    case 1:
+        if (D_8AB17408 == 67) {
+            func_800504BC(offset);
+            x = *(s16 *)(arg1 + 8) + offset[0];
+            y = *(s16 *)(arg1 + 0xA) + offset[1];
+            func_8AB00BC4(x, y, D_8AB1269C / 2 + 1, color[0], color[1], color[2]);
+            *(u16 *)((u8 *)D_8AB1740C + 2) |= 2;
+        } else {
+            *(u16 *)((u8 *)D_8AB1740C + 2) &= 0xFFFD;
+        }
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -19,7 +57,6 @@ void func_8AB0FE08(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 D_8AB17408;
 extern void *D_8AB11D08;
 extern u8 *D_8AB17250;
 extern void func_8AC00F04(void *);

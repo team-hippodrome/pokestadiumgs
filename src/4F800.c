@@ -117,7 +117,65 @@ void func_8004EE94(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004EE9C.s")
+// Same layout as TextureRenderHeader in 4CC20.c: texture data begins after this eight-byte header.
+//@src/4CC20.c
+typedef struct TextureRenderHeader {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u16 unk_06;
+} TextureRenderHeader;
+
+extern u8 *func_8004CA60(TextureRenderHeader *texture);
+extern void func_800459AC(u8 *image, u8 format, u8 size, u16 width, s32 height, s32 swapped, s32 palette, s32 cms,
+                          s32 cmt, s32 masks, s32 maskt, s32 shifts, s32 shiftt);
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+// Draws the border of the width x height box at (x, y) from four corner textures. Each corner is drawn
+// at its own size; the edges between corners are drawn with dsdx or dtdy 0, which repeats the
+// corner texture's first column or row across the edge. The interior is not drawn.
+// Draws nothing unless all four textures are non-NULL.
+void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *topLeft, TextureRenderHeader *topRight,
+                   TextureRenderHeader *bottomLeft, TextureRenderHeader *bottomRight) {
+    s32 right;
+    s32 bottom;
+    s32 pad[2]; // FAKE: unused; enlarges the frame from 0x68 to 0x70 bytes; diff score 186 without it.
+
+    if ((topLeft != NULL) && (topRight != NULL) && (bottomLeft != NULL) && (bottomRight != NULL)) {
+        func_800459AC(func_8004CA60(topLeft), topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
+                      2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(x, y, topLeft->width, topLeft->height, 0, 0, 0x400, 0x400, 0);
+
+        // Top edge, then the top-right corner.
+        func_800459AC(func_8004CA60(topRight), topRight->format, topRight->size, topRight->width, topRight->height, 1,
+                      0, 2, 2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(topLeft->width + x, y, width - topLeft->width - topRight->width, topRight->height, 0, 0,
+                             0, 0x400, 0);
+        right = x + width;
+        GfxRect_DrawTextured(right - topRight->width, y, topRight->width, topRight->height, 0, 0, 0x400, 0x400, 0);
+
+        // Left edge, then the bottom-left corner.
+        func_800459AC(func_8004CA60(bottomLeft), bottomLeft->format, bottomLeft->size, bottomLeft->width,
+                      bottomLeft->height, 1, 0, 2, 2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(x, topLeft->height + y, bottomLeft->width, height - topLeft->height - bottomLeft->height,
+                             0, 0, 0x400, 0, 0);
+        bottom = y + height;
+        GfxRect_DrawTextured(x, bottom - bottomLeft->height, bottomLeft->width, bottomLeft->height, 0, 0, 0x400, 0x400,
+                             0);
+
+        // Bottom edge, right edge, then the bottom-right corner.
+        func_800459AC(func_8004CA60(bottomRight), bottomRight->format, bottomRight->size, bottomRight->width,
+                      bottomRight->height, 1, 0, 2, 2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(bottomLeft->width + x, bottom - bottomLeft->height,
+                             width - bottomLeft->width - bottomRight->width, bottomRight->height, 0, 0, 0, 0x400, 0);
+        GfxRect_DrawTextured(right - bottomRight->width, topRight->height + y, bottomRight->width,
+                             height - topRight->height - bottomRight->height, 0, 0, 0x400, 0, 0);
+        GfxRect_DrawTextured(right - bottomRight->width, bottom - bottomRight->height, bottomRight->width,
+                             bottomRight->height, 0, 0, 0x400, 0x400, 0);
+    }
+}
+
 #endif
 
 #ifdef VERSION_US

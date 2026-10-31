@@ -414,7 +414,61 @@ s32 func_81603404(s32 arg0, s32 arg1)
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81603598.s")
+extern s32 func_8004CA10(void *);
+extern s32 func_8004CA24(void *);
+extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern void func_8004D1FC(void *);
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+
+// Draws the image in entry imageIndex of the table at D_8160BDCC (resource 0x39
+// images loaded by func_81602DD8) twice: a black copy offset by (6, 6), then a
+// white copy at (x, y). Below an alpha of 0.99 both copies are faded through the
+// environment alpha; otherwise they are drawn opaque with render mode 0x0F0A7008.
+// For the eight entries D_8160BDCC..D_8160BDE8 (D_8160BDEC is the first address
+// past them) an iconIndex of 0-3 also draws resource 0x104 image iconIndex,
+// scaled to 0.8, at (x + 10, y + 26). fragment14_FCD40.c passes iconIndex -1.
+//@src/fragments/14/fragment14_FCD40.c
+void func_81603598(s32 x, s32 y, s32 imageIndex, s32 iconIndex, f32 alpha) {
+    void *texture;
+
+    if (imageIndex >= 0) {
+        texture = *(void **)(&D_8160BDCC + imageIndex);
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+        if (alpha < 0.99f) {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0, 0, 0, 255.0f * alpha);
+        } else {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0, 0, 0, 255);
+            gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0, 0x0F0A7008);
+        }
+        func_8004D19C(x + 6, y + 6, texture, 0, 0);
+        if (alpha < 0.99f) {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 255, 255, 255, 255.0f * alpha);
+        } else {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 255, 255, 255, 255);
+            gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0, 0x0F0A7008);
+        }
+        func_8004D19C(x, y, texture, 0, 0);
+        // The range test compares the entry's address with the table bounds.
+        if ((&D_8160BDCC + imageIndex >= &D_8160BDCC) && (&D_8160BDCC + imageIndex < &D_8160BDEC) &&
+            (iconIndex >= 0) && (iconIndex < 4)) {
+            f32 width;
+            f32 height;
+
+            // D_8160BD74 holds resource 0x104 image 4; the next four words
+            // (D_8160BD78[0..3]) hold images 0-3. Retail indexes them from D_8160BD74.
+            width = func_8004CA10(((void **)&D_8160BD74)[iconIndex + 1]) * 0.8f;
+            height = func_8004CA24(((void **)&D_8160BD74)[iconIndex + 1]) * 0.8f;
+            gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0, 0x504240);
+            func_8004D1FC(((void **)&D_8160BD74)[iconIndex + 1]);
+            // 1.2515644f is the float nearest 1 / 0.799.
+            func_81602240(x + 10, y + 26, width, height, 0, 0, 1.2515644f, 1.2515644f);
+        }
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    }
+}
 
 extern void *D_8160BDB8;
 extern void func_8004D19C(s32, s32, void *, s32, s32);
@@ -967,13 +1021,12 @@ s32 func_816089E0(void) {
 
 extern u8 D_80094D90[];
 extern u8 D_80094DB8[];
-extern f32 D_8160C2C8;
 extern void Gfx_FillRectRgb(s16, s16, s16, s16, u32, u32, u32);
 extern void Gfx_FillRectRgba(s16, s16, s16, s16, u32, u32, u32, u32);
 extern u32 D_800D0510;
 void func_81608A38(s32 arg0, s32 arg1, u8 arg2, f32 arg3) {
     Gfx *gfx;
-    if (D_8160C2C8 < arg3) {
+    if (0.98f < arg3) {
         gfx = (Gfx *)D_800D0510;
         D_800D0510 += 8;
         gSPDisplayList(gfx, D_80094D90);
@@ -1071,8 +1124,6 @@ void func_816098B0(void *arg0, struct Color098 *arg1) {
     gSPDisplayList(GFX_DL++, D_80094F50);
 }
 
-extern f32 D_8160C2D4;
-extern f32 D_8160C2D8;
 static const u16 D_8160C188[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 extern s32 func_8004C990(s32, s32);
 extern void func_8004D19C(s32, s32, void *, s32, s32);
@@ -1081,12 +1132,12 @@ void func_816099E0(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
     void *temp;
 
     if (arg3 > 1.0f) {
-        arg3 = D_8160C2D4;
+        arg3 = 0.99f;
     }
     if (arg3 < 0.0f) {
         arg3 = 0.0f;
     }
-    temp = (void *)func_8004C990(0x9F, D_8160C188[(s32)(arg3 * D_8160C2D8)]);
+    temp = (void *)func_8004C990(0x9F, D_8160C188[(s32)(arg3 * 8.01f)]);
     func_8004D1FC(temp);
     func_8004D19C(arg0 - 0x10, arg1 - 0x10, temp, 0, 0);
 }

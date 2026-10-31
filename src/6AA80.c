@@ -381,7 +381,80 @@ s32 func_8006B07C(s8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006B0B8.s")
+typedef struct unk_D_8009DF70_58 {
+    s32 unk_00[22];
+} unk_D_8009DF70_58;
+
+typedef struct unk_D_8009DF70_60 {
+    unk_D_8009DF70_58 unk_00;
+    u8 unk_58[8];
+} unk_D_8009DF70_60;
+
+typedef struct unk_D_8009DF70_0C {
+    s32 unk_00[3];
+} unk_D_8009DF70_0C;
+
+// Destination block: four slots of six entries, the slot map built by func_8006AFE4 and one
+// 12-byte record per slot.
+typedef struct unk_D_8009DF70_24 {
+    unk_D_8009DF70_60 unk_000[4][6];
+    s8 unk_900[4];
+    unk_D_8009DF70_0C unk_904[4];
+} unk_D_8009DF70_24;
+
+// Source block: four groups of six entries and one 12-byte record per group, indexed like unk_08.
+typedef struct unk_D_8009DF70_2C {
+    u8 unk_00[144];
+    unk_D_8009DF70_58 unk_90[4][6];
+    unk_D_8009DF70_0C unk_8D0[4];
+} unk_D_8009DF70_2C;
+
+typedef struct unk_D_8009DF70 {
+    u8 unk_00[8];
+    s8 unk_08[4];
+    u8 unk_0C[24];
+    unk_D_8009DF70_24 *unk_24;
+    u8 unk_28[4];
+    unk_D_8009DF70_2C *unk_2C;
+} unk_D_8009DF70;
+
+extern void _bcopy(void *, void *, s32);
+
+// For each of the four unk_08 entries, copies source group i (its 12-byte record and its six
+// 0x58-byte entries) from unk_2C into the unk_24 slot that unk_08[i] names; -1 selects the slot
+// func_8006B07C reports as free, and other negative values skip the group. Returns 1 when
+// D_8009DF70 is set, else 0.
+s32 func_8006B0B8(void) {
+    s32 result = 0;
+    s32 free_slot;
+    s32 i;
+    s32 j;
+    s32 slot;
+
+    // D_8009DF70 is declared s32 for this file's offset-based accessors. Comparing it as a
+    // pointer is needed for the match (s32 compare: diff score 385).
+    if ((unk_D_8009DF70 *)D_8009DF70 != NULL) {
+        result = 1;
+        func_8006AFE4(((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_900, ((unk_D_8009DF70 *)D_8009DF70)->unk_08);
+        free_slot = func_8006B07C(((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_900);
+        for (i = 0; i < 4; i++) {
+            slot = ((unk_D_8009DF70 *)D_8009DF70)->unk_08[i];
+            if (slot == -1) {
+                slot = free_slot;
+            }
+            if (slot >= 0) {
+                _bcopy(&((unk_D_8009DF70 *)D_8009DF70)->unk_2C->unk_8D0[i],
+                       &((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_904[slot], 12);
+                for (j = 0; j < 6; j++) {
+                    ((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_000[slot][j].unk_00 =
+                        ((unk_D_8009DF70 *)D_8009DF70)->unk_2C->unk_90[i][j];
+                }
+            }
+        }
+    }
+    return result;
+}
+
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006B428.s")
 

@@ -48,5 +48,40 @@ extern u8 D_8AF39190[]; extern s32 D_8AF27968; void func_8AF1EAC8(void) { _bzero
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20CBF0/func_8AF1EEA8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20CBF0/func_8AF1F038.s")
+extern void func_8AC007B8(s32, s32, s32, s32);
+extern void func_8AF02F18(void *);
+extern void func_8004B314(s32, s32, s32, s32);
+extern void func_8AC00738(void);
+extern void func_8AC05F00(void *);
+extern s32 func_8AC0665C(s16 *, s16);
+extern s32 func_8AC0672C(void *, s16);
+extern u8 D_8AF38DF0[];
+extern u8 D_8AF38E68[];
+
+// Same code as func_8AF1E1F4 in fragment44_20BDB0.c, for this file's snapshot D_8AF27960,
+// list D_8AF39190 and strings D_8AF38DF0/D_8AF38E68.
+//@src/fragments/44/fragment44_20BDB0.c
+void func_8AF1F038(void) {
+    Snapshot_8AF1E9D4 *snapshot;
+    u8 *bytes; // FAKE: a u8 * copy of snapshot; diff score 24 without it.
+    u8 *sub;
+    s32 x;
+    s32 y;
+
+    snapshot = D_8AF27960;
+    bytes = (u8 *)snapshot;
+    sub = bytes + 0x28;
+    x = *(s16 *)(bytes + 0x34) * *(s32 *)(bytes + 0x4C) + *(s32 *)(bytes + 0x5C) + *(s32 *)(bytes + 8) - 4;
+    y = *(s16 *)(bytes + 0x36) * *(s32 *)(bytes + 0x50) + *(s32 *)(bytes + 0x60) + *(s32 *)(bytes + 0xC) - 2;
+    func_8AC007B8(*(s32 *)(bytes + 8), *(s32 *)(bytes + 0xC), *(s16 *)sub, 260);
+    func_8AF02F18(snapshot);
+    func_8004B314(x, y, 88, 68);
+    func_8AC00738();
+    if (func_8AC0665C((s16 *)D_8AF39190, *(s16 *)(sub + 0x10)) != 0) {
+        func_8AC05F00(D_8AF38DF0);
+    }
+    if (func_8AC0672C(D_8AF39190, *(s16 *)(sub + 0x10)) != 0) {
+        func_8AC05F00(D_8AF38E68);
+    }
+}
 #endif
