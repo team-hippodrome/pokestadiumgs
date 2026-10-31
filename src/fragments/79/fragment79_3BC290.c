@@ -613,7 +613,66 @@ void func_8414E880(s32 arg0) {
 }
 /* mkdraft:func_8414E880 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414EA4C.s")
+/* mkdraft:func_8414EA4C begin */
+extern u8 func_84154B24(void);
+extern u8 *func_84154B64(u8);
+extern u8 func_80062D20(u8);
+
+// Clears amount_0A of the active side when the guard bit selected by its move is set in the
+// opposing side record, and clears amount_0A of the inactive side unless the guard bit is set.
+// move is the byte at +2 of view + side, with view at arg0 + 4; bits 0x40, 0x20 and 0x10 of
+// byte 0x17 in the record gate move groups 0x59/0x5A/0xDE, 0x10/0x12/0x57/0xEF and all
+// other moves respectively. Byte arg0 + 5 is the active side; when side differs from it,
+// func_80062D20 runs the move and the guard bit 0x10 is tested against the other side.
+
+
+void func_8414EA4C(s32 arg0) {
+    u8 side;
+    u8 other;
+    u8 *entry;
+    u8 *mon;
+    Fragment79EffectView *view;
+
+    side = func_84154B24();
+    other = 1 - side;
+    func_84154B64(side);
+    mon = func_84154B64(other);
+    // FAKE: the mask is a no-op; without it IDO rematerialises view from the stack slot after
+    // the branch instead of keeping arg0 in a3 (diff score 552).
+    view = (Fragment79EffectView *)(((u32)arg0 & 0xFFFFFFFF) + 4);
+    entry = (u8 *)view + side;
+
+    if (side == *((u8 *)(u32)arg0 + 5)) {
+        switch (entry[2]) {
+        case 0x59:
+        case 0x5A:
+        case 0xDE:
+            if (*(u8 *)(mon + 0x17) & 0x40) {
+                view->amount_0A[side] = 0;
+            }
+            break;
+        case 0x10:
+        case 0x12:
+        case 0x57:
+        case 0xEF:
+            if (*(u8 *)(mon + 0x17) & 0x20) {
+                view->amount_0A[side] = 0;
+            }
+            break;
+        default:
+            if (*(u8 *)(mon + 0x17) & 0x10) {
+                view->amount_0A[side] = 0;
+            }
+            break;
+        }
+    } else {
+        func_80062D20(entry[2]);
+        if (!(*(u8 *)(mon + 0x17) & 0x10)) {
+            view->amount_0A[other] = 0;
+        }
+    }
+}
+/* mkdraft:func_8414EA4C end */
 
 void BattleEffects_ApplyOpposingByteWeight(s32 state) {
     u8 side;
