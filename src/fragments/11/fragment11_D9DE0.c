@@ -416,7 +416,7 @@ s32 func_81603404(s32 arg0, s32 arg1)
 
 extern s32 func_8004CA10(void *);
 extern s32 func_8004CA24(void *);
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern void func_8004D1FC(void *);
 extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
 extern u32 D_800D0510;
@@ -471,7 +471,7 @@ void func_81603598(s32 x, s32 y, s32 imageIndex, s32 iconIndex, f32 alpha) {
 }
 
 extern void *D_8160BDB8;
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 void func_81603984(s32 arg0, s32 arg1) {
     func_8004D19C(arg0, arg1, D_8160BDB8, 0, 0);
 }
@@ -707,7 +707,31 @@ void func_81605F94(s32 arg0, s32 arg1, s32 arg2, u8 *arg3, f32 arg4) {
     gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_8160615C.s")
+const char D_8160C0C0[] = "%d";
+
+/* mkdraft:func_8160615C begin */
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(u8, u8, u8, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
+extern void func_800495BC();
+extern const char D_8160C0C0[];
+
+
+
+void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 255, 255, 255, 255.0f * arg3);
+    func_8004D19C(arg0 + 0x11, arg1 - 0x13, (void *)func_8004C990(0x11B, 0), 0, 0);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    func_800498C4();
+    func_800496A4(8, -4);
+    func_8004972C(0xFF, 0xFF, 0xFF, (s32)(255.0f * arg3));
+    func_800495BC(arg0 - 6, arg1 - 0x11, D_8160C0C0, arg2);
+    func_800499EC();
+}
+/* mkdraft:func_8160615C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606304.s")
 
@@ -763,7 +787,7 @@ extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern void *D_8160BD94;
 extern void *D_8160BD90;
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 void func_8160710C(s32 arg0, s32 arg1) {
     gSPDisplayList(GFX_DL++, D_80094E38);
     gDPSetRenderMode(GFX_DL++, 0x0F0A7008, 0);
@@ -771,7 +795,7 @@ void func_8160710C(s32 arg0, s32 arg1) {
     gSPDisplayList(GFX_DL++, D_80094F50);
 }
 
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 void func_816071AC(s32 arg0, s32 arg1) {
     gSPDisplayList(GFX_DL++, D_80094E38);
     gDPSetRenderMode(GFX_DL++, 0x0F0A7008, 0);
@@ -1138,7 +1162,7 @@ void *func_81609530(s32 arg0) {
 struct Color098 { u8 r, g, b; };
 extern s32 func_8004CA10(void *);
 extern s32 func_8004CA24(void *);
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 void func_816098B0(void *arg0, struct Color098 *arg1) {
@@ -1157,7 +1181,7 @@ void func_816098B0(void *arg0, struct Color098 *arg1) {
 
 static const u16 D_8160C188[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 extern s32 func_8004C990(s32, s32);
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern void func_8004D1FC(void *);
 void func_816099E0(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
     void *temp;
