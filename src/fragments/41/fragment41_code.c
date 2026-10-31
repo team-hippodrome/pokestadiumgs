@@ -191,7 +191,94 @@ void func_88C014D8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C015DC.s")
+/* mkdraft:func_88C015DC begin */
+extern void func_8004C8C0(s32);
+extern void func_80057908(s32);
+extern void func_8005A014(s32);
+extern void func_8005A034(s32);
+extern s32 func_8005D92C(s32);
+extern s32 GbSave_ReadRtcTimeWithSavedOffset(u8, u16 *, u8 *, u8 *, u8 *);
+extern s32 func_8005F3B0(s32, s32, s32, s32, s32);
+extern void *Util_Malloc(s32);
+extern u32 D_800CDA34;
+
+// Fields func_88C015DC writes into the 0x30-byte block D_88C01A60 points at.
+// Frag41_State (above) names the 0x20-0x2E words for func_88C00020 and
+// func_88C006B8; this view adds the RTC fields at 0x00-0x04 and 0x10-0x14 and
+// the 0x08/0x0C timestamp.
+typedef struct {
+    u16 unk00;      // days, as reported by GbSave_ReadRtcTimeWithSavedOffset
+    u8 unk02;       // hours
+    u8 unk03;       // minutes
+    u8 unk04;       // seconds
+    u8 pad05[3];
+    s32 unk08;      // D_800CDA34 plus 0x20
+    s16 unk0C;
+    s16 pad0E;
+    u16 unk10;      // days, as reported by func_8005F3B0
+    u8 unk12;       // hours
+    u8 unk13;       // minutes
+    u8 unk14;       // seconds
+    u8 pad15[0x13];
+    s32 unk28;      // 2 when the saved RTC time could not be read, 1 when the
+                    // time source is busy, 0 when a time was read
+    s16 unk2C;      // days elapsed since the saved time, or 0
+    u16 unk2E;      // 0x1FF plus the elapsed days; the day text's printf value
+} Frag41_SaveState;
+
+// FAKE: func_8005F3B0 is void in src/585D0.c. Declaring the s32 return type here
+// is what reproduces the target's argument staging; with void it scores 255.
+
+
+void func_88C015DC(void) {
+    Frag41_SaveState *state;
+    s32 day_delta;
+    s32 rtc_status;
+    s32 status;
+
+    func_80057908(0);
+    func_8005A014(0);
+    func_8005A034(0);
+    D_88C01A60 = Util_Malloc(0x30);
+    func_8004C8C0(0x1C3);
+    func_8004C8C0(0x1C1);
+    func_8004C8C0(0x1C5);
+    D_88C01A60->unk28 = 0;
+    // The block is cached here, but the stores at 0x10-0x14 and the two 0x28
+    // reads below reload D_88C01A60 from the global.
+    state = (Frag41_SaveState *) D_88C01A60;
+    rtc_status = func_8005D92C(0);
+    if ((rtc_status == 1) || (rtc_status == 2) || (rtc_status == 3) || (rtc_status == 4)) {
+        D_88C01A60->unk28 = 1;
+        status = D_88C01A60->unk28;
+    } else {
+        if (GbSave_ReadRtcTimeWithSavedOffset(0, &state->unk00, &state->unk02, &state->unk03, &state->unk04) != 0) {
+            D_88C01A60->unk28 = 2;
+        }
+        ((Frag41_SaveState *) D_88C01A60)->unk2C = 0;
+        D_88C01A60->unk2E = 0x1FF;
+        status = D_88C01A60->unk28;
+        if (D_88C01A60->unk28 != 2) {
+            func_8005F3B0(0, (s32) &((Frag41_SaveState *) D_88C01A60)->unk10, (s32) &((Frag41_SaveState *) D_88C01A60)->unk12,
+                          (s32) &((Frag41_SaveState *) D_88C01A60)->unk13, (s32) &((Frag41_SaveState *) D_88C01A60)->unk14);
+            day_delta = (state->unk00 - ((Frag41_SaveState *) D_88C01A60)->unk10) & 0xFF;
+            ((Frag41_SaveState *) D_88C01A60)->unk2C = day_delta;
+            D_88C01A60->unk2E = day_delta + 0x1FF;
+            status = D_88C01A60->unk28;
+        }
+    }
+    if (status != 0) {
+        // No usable time: display day 1, 00:00.
+        state->unk00 = 1;
+        state->unk02 = 1;
+        state->unk03 = 0;
+        state->unk04 = 0;
+    }
+    state->unk08 = *(u32 *) ((u8 *) &D_800CDA34 + 0x20);
+    state->unk0C = 0;
+    func_88C00020((Frag41_Input *) state);
+}
+/* mkdraft:func_88C015DC end */
 
 extern void Gfx_InitDisplayListBuffers(s32, s32);
 s32 StageContext_Allocate(s32, s32, s32, s32, s32, s32);
