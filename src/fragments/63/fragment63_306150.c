@@ -316,7 +316,47 @@ void func_87E03D80(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03E48.s")
+/* mkdraft:func_87E03E48 begin */
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern u32 func_8003570C(void);
+
+// Walks the list at arg0 + 0x14. Each entry's object pointer at offset 0x20
+// names a state block at object + 0x10, which func_87F0B1A4 receives with the
+// entry's position floats at offsets 0x48..0x50 (the second shifted by
+// -360.0f, priority 15). func_87F0B2F4 then randomizes the entry's rotation at
+// offset 0x42 from three LCG draws at func_8003570C, each scaled from [0,1)
+// over 4294967296.0f to -45..45 degrees for the first two and -180..180
+// degrees for the third. func_87E03D80 above is the same walk with the fixed
+// angle table instead of the draws.
+
+
+void func_87E03E48(void *arg0) {
+    u32 rand_x;
+    u32 rand_y;
+    u32 rand_z;
+    u8 *state;
+    u8 *object;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)arg0 + 0x14);
+    if (node != NULL) {
+        do {
+            object = *(u8 **)(node + 0x20);
+            state = object + 0x10;
+            func_87F0B1A4(state, node + 0x48, *(f32 *)(node + 0x48),
+                *(f32 *)(node + 0x4C) + -360.0f, *(f32 *)(node + 0x50), 0xF, 0x2000);
+            rand_x = func_8003570C();
+            rand_y = func_8003570C();
+            rand_z = func_8003570C();
+            func_87F0B2F4(state, node + 0x42, (((f32)rand_x / 4294967296.0f) * 90.0f) - 45.0f,
+                (((f32)rand_y / 4294967296.0f) * 90.0f) - 45.0f,
+                (((f32)rand_z / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_87E03E48 end */
 
 extern s32 func_87E016D8(void *);
 s32 func_87E03FF0(void *arg0) {
