@@ -107,7 +107,22 @@ void func_86100728(void) {
     func_87F0277C(D_8610AD20 + 0x7C);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86100790.s")
+/* mkdraft:func_86100790 begin */
+extern s32 D_8610AD20;
+extern s32 StageContext_GetFadeMode(void);
+extern void func_87F0277C(s32);
+
+
+
+void func_86100790(void) {
+    if (StageContext_GetFadeMode() == 0) {
+        (void)(D_8610AD20 ? 1 : 2); // FAKE: dead statement; without it score 100 (branch gone)
+        (void)(D_8610AD20 ? 3 : 4); // FAKE: dead statement; without it score 100
+    }
+    func_87F0277C(D_8610AD20 + 0x6E8);
+    func_87F0277C(D_8610AD20 + 0x8914);
+}
+/* mkdraft:func_86100790 end */
 
 extern s32 func_87F0C930(s32);
 extern s32 func_87F0A098(void *, void *, s32, u32, u32, u32, u32);
