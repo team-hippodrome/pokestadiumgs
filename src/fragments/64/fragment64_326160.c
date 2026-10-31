@@ -128,7 +128,71 @@ u8 *func_87F03884(u8 *arg0, s32 arg1, void *arg2, f32 arg3, f32 arg4,
     return object;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326160/func_87F039F0.s")
+/* mkdraft:func_87F039F0 begin */
+extern void func_8003CD84(void);
+extern s32 func_8004C990(s32, s32, void *);
+extern s32 func_8004CA60(s32);
+extern u8 *D_8009491C;
+extern Gfx *D_800D0510;
+extern u8 D_87F0F660[];
+extern u8 D_87F0F668[];
+extern Gfx D_87F0F880[];
+extern Gfx D_87F0F960[];
+
+// On animation event 5, selects the palette row from the object's entry byte and
+// emits pipe sync, env/prim color, a texture segment and a display list, then
+// calls func_8003CD84.
+
+
+void func_87F039F0(s32 arg0, s32 arg1) {
+    s32 pad[4]; // FAKE: unused frame slots at 0x20-0x2F; texture and list land at 0x1C and 0x18 only because of them; diff score 26 without.
+    s32 texture;
+    u8 *list;
+    u8 *entry;
+    s32 index;
+
+    if (arg0 == 5) {
+        // karodo: both reads below are dead, but each makes one pointer load of
+        // the entry chain a two-use web, so uopt colors the two heads $v0/$v1
+        // instead of the single-use $t6/$t7; that shifts the tail's t-register
+        // ring to start at $t9. Diff score 210 without the first line, 230
+        // without the second, 230 without both.
+        if (D_8009491C == 0) {}
+        if (*(u8 **)(D_8009491C + 0x14) == 0) {}
+        entry = *(u8 **)(*(u8 **)(D_8009491C + 0x14) + 0x20);
+        // FAKE: the entry byte is loaded into the first parameter, whose variable
+        // is already colored $a0 (it is compared with 5 and never spilled), so the
+        // reassigned web keeps $a0, where the target's lbu lands. Loading into a
+        // local, into the stack-homed second parameter, or reading entry[0x1C]
+        // directly colors the load $v0. Diff score 15 without this assignment.
+        arg0 = entry[0x1C];
+        switch (arg0) {
+        case 0:
+            index = *(u16 *)(entry + 0x1A);
+            index %= 16;
+            index /= 2;
+            texture = func_8004CA60(func_8004C990(0xE0, D_87F0F660[index], entry));
+            list = (u8 *)D_87F0F880;
+            break;
+        case 1:
+            index = *(u16 *)(entry + 0x1A);
+            index %= 16;
+            index /= 2;
+            texture = func_8004CA60(func_8004C990(0xE1, D_87F0F668[index], entry));
+            list = (u8 *)D_87F0F960;
+            break;
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 0, 255);
+        { Gfx* segment = D_800D0510++;
+        segment->words.w0 = 0xDB06003C;
+        segment->words.w1 = (u32)texture; }
+        gSPDisplayList(D_800D0510++, list);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_87F039F0 end */
 
 extern void func_87F02684(void);
 void func_87F03B8C(void) {
