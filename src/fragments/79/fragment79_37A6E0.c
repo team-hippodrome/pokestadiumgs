@@ -366,7 +366,35 @@ void func_8410C304(u8 *arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410C400.s")
+/* mkdraft:func_8410C400 begin */
+extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
+
+
+
+void func_8410C400(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s16 arg5) {
+    f32 target[3];
+    f32 pos[3];
+    f32 pad1[3]; // FAKE: never referenced; the original frame leaves 12 unused bytes between pos and distance (score without it: 134).
+    f32 distance;
+    s16 angle1;
+    s16 angle0;
+    s32 pad2[2]; // FAKE: never referenced; restores the original 0x60-byte frame (score without it: 146).
+
+    D_841911E8 = func_8410B330(arg0);
+    if (arg4 != 0.0f) {
+        BattleAnim_StepToS16((s16 *)(D_841911E8 + 0x3C), -0xFA4, arg5);
+        func_841203B4(D_841911E8 + 0x44, 0.15f, 0.03f);
+        func_841203B4(arg0 + 0xB8, arg3, *(f32 *)(D_841911E8 + 0x44) * arg4);
+        *(f32 *)(D_841911E8 + 0x54) = *(f32 *)(arg0 + 0xB8);
+        func_800371B4(D_841911E8 + 0x50, (u8 *)target, arg2, *(s16 *)(D_841911E8 + 0x3C), *(s16 *)(D_841911E8 + 0x3E));
+        Vec3f_SetComponentsDuplicate(pos, *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+        func_80037120(pos, (u8 *)target, &distance, &angle0, &angle1);
+        func_800371B4((u8 *)pos, arg0 + 0xA8, *(f32 *)(D_841911E8 + 0x44) * distance, angle0, angle1);
+        return;
+    }
+    func_8410BDA0(arg0, arg1);
+}
+/* mkdraft:func_8410C400 end */
 #endif
 
 #ifdef VERSION_US
