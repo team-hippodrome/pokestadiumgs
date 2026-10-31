@@ -192,7 +192,61 @@ void func_83503048(void)
 }
 /* mkdraft:func_83503048 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83503188.s")
+/* mkdraft:func_83503188 begin */
+extern s32 D_83503BA8;
+extern s32 D_83503AC4;
+extern s32 D_83503AD4;
+extern s32 D_83503AF0;
+extern f32 D_83503BE8;
+extern f32 D_83503DA4;
+extern f64 D_83503E38;
+extern void func_800226C0(s32);
+
+// Arena timer state; D_83503BA8+0xC / +0x10 are its two counters.
+// func_835034A8 (below in this file) drives the same block.
+
+
+
+void func_83503188(void) {
+    f32 *D_83503DA4_ptr = &D_83503DA4;
+    f32 temp_fa0;
+    f32 var_fa1;
+    f32 var_fv0;
+    f32 var_fv1;
+    
+    var_fv0 = 27.0f * D_83503BE8;
+    if (var_fv0 < 155.0f) {
+        var_fv1 = 0.5f;
+    } else {
+        var_fv1 = -0.5f;
+    }
+    var_fa1 = 155.0f - var_fv0;
+    temp_fa0 = ((*D_83503DA4_ptr) * (*D_83503DA4_ptr)) + (f32) (*(s32 *) ((u8 *) (&D_83503AD4) + 0xC));
+    if ((f32) (s32) (var_fv1 + var_fa1) <= temp_fa0) {
+        if (D_83503AC4 == 0) {
+            func_800226C0(0x66);
+            D_83503AC4 = 1;
+            var_fv0 = 27.0f * D_83503BE8;
+            var_fa1 = 155.0f - var_fv0;
+        }
+        if (var_fv0 < 155.0f) {
+            var_fv1 = 0.5f;
+        } else {
+            var_fv1 = -0.5f;
+        }
+        (*(s32 *) ((u8 *) ((u32) &D_83503AD4) + 0xC)) = (s32) (var_fv1 + var_fa1);
+        D_83503AF0 = 0;
+        if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x10)) -= 2) < 0) {
+            *((s32 *) (((u8 *) (&D_83503BA8)) + 0xC)) = 2;
+            *((s32 *) (((u8 *) (&D_83503BA8)) + 0x10)) = 0x1E;
+        }
+
+    } else {
+        (*(s32 *) ((u8 *) (&D_83503AD4) + 0xC)) = (s32) temp_fa0;
+        (*D_83503DA4_ptr) = (f32) ((f64) (*D_83503DA4_ptr) + (D_83503E38));
+    }
+}
+/* mkdraft:func_83503188 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83503324.s")
 
