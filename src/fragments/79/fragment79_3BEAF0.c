@@ -29,7 +29,52 @@ void func_8414F268(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F2F4.s")
+/* mkdraft:func_8414F2F4 begin */
+extern u8 func_84154B24(void);
+extern u8 *func_8414C960(u8);
+extern u8 *D_841951F8[];
+
+// Stores the magnitude at +0x14 of arg0, negated, at +0x18: scaled by (level + 10) / 255
+// when the level is below 0x80, stored unscaled otherwise. The level is the largest of the
+// four bytes at +3 of the u16 selected by the side in the D_8419D7C0 record that
+// func_8414C960 returns; the record is selected by byte 0xA of the side record times 4 plus i.
+// func_8414F268 applies the same scaling to a single level read from a u16 table.
+
+
+void func_8414F2F4(void *arg0) {
+    u8 side;
+    s32 amount;
+    s32 i;
+    u8 max;
+    s32 side_offset;
+    u8 **entry;
+    u8 level;
+
+    // FAKE: func_84154B24 returns u8, so the mask is a no-op; without it IDO drops the
+    // andi (diff score 110).
+    side = func_84154B24() & 0xFF;
+    amount = *(s32 *)((u8 *)arg0 + 0x14);
+    entry = &D_841951F8[side];
+    side_offset = side * 2;
+    max = 0;
+    for (i = 0; i != 4; i++) {
+        level = ((u8 *)func_8414C960((((*entry)[0xA] * 4) + i)))[side_offset + 3];
+        if (max < level) {
+            max = level;
+        }
+    }
+    if (max != 0) {
+        if (amount < 0) {
+            amount = -amount;
+        }
+        if (max < 0x80) {
+            *(s32 *)((u8 *)arg0 + 0x18) = -amount * (max + 10) / 255;
+            return;
+        }
+        *(s32 *)((u8 *)arg0 + 0x18) = -amount;
+    }
+}
+/* mkdraft:func_8414F2F4 end */
 #endif
 
 #ifdef VERSION_US
