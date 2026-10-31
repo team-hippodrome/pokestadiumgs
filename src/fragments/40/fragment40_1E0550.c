@@ -280,7 +280,63 @@ void func_88B05494(u16 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B0552C.s")
+/* mkdraft:func_88B0552C begin */
+extern s32 D_88B05F64;
+extern s32 D_88B05F68;
+extern u16 D_88B05F6C;
+extern u16 D_88B05F6E;
+extern void func_88B04FB0(u16 arg0);
+extern void func_88B052B0(u16 arg0);
+extern void func_80052ECC(s32 arg0);
+extern void func_80054E48(s32 arg0);
+extern s32 func_8005B120(s8 arg0);
+extern void func_81C00740(u8 arg0, s16 *arg1, s16 *arg2, s32 arg3, u8 arg4);
+extern void GbSave_RequirePakPresent(s8 arg0);
+
+// Hands out Mystery Gift reward Pokemon and saves them to the deck lists.
+// arg2 != 0 is the short path: func_88B04FB0 appends arg0 to the 16-byte entry list at
+// D_88B0636C, then sound command 3 is sent. Otherwise, when arg3 != 0, func_81C00740
+// writes the receive and select reward ids to D_88B05F6C/D_88B05F6E
+// (@{src/fragments/88/fragment88_code.c}), func_88B04420 resolves both through the
+// id-to-pointer lookups (func_800635E0 / func_8004C874), func_88B05494 records the
+// select id, and func_88B052B0 merges arg0 into the 20-byte entry list at D_88B05F82;
+// arg1 appends arg0 to D_88B0636C before that. A nonzero func_8005B120 result is the
+// return value and is recorded in D_88B05F68; arg3 == 0 calls GbSave_RequirePakPresent
+// first.
+
+
+s32 func_88B0552C(u16 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 result = 1;
+
+    if (arg2 != 0) {
+        func_88B04FB0(arg0);
+        func_80052ECC(3);
+        func_80054E48(3);
+    } else {
+        if (arg3 != 0) {
+            D_88B069F4 = 0;
+            if (arg1 != 0) {
+                func_88B04FB0(arg0);
+            }
+            func_88B052B0(arg0);
+            func_81C00740(*D_88006868, (s16 *)&D_88B05F6C, (s16 *)&D_88B05F6E, (s32)D_88B069CE, D_88B05F64);
+            func_88B04420(D_88B05F6C);
+            func_88B04420(D_88B05F6E);
+            func_88B05494(D_88B05F6E);
+            func_80052ECC(3);
+            func_80054E48(3);
+        }
+        result = func_8005B120((s8)*D_88006868);
+        if (arg3 == 0) {
+            GbSave_RequirePakPresent((s8)*D_88006868);
+        }
+        if (result != 0) {
+            D_88B05F68 = 1;
+        }
+    }
+    return result;
+}
+/* mkdraft:func_88B0552C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B05650.s")
 #endif
