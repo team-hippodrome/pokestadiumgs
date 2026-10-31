@@ -228,7 +228,47 @@ void func_8414F8B4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F93C.s")
+/* mkdraft:func_8414F93C begin */
+extern s32 func_8414C924(u8 arg0, u8 arg1);
+extern u8 *func_8414C960(u8 arg0);
+
+
+
+void func_8414F93C(void *arg0) {
+    u8 temp_s0;
+    s32 temp_s1;
+    s32 var_s2;
+    s32 var_s3;
+    s32 var_s4;
+    u8 *temp_v0;
+
+    var_s3 = 0x80000000;
+    var_s4 = 0x80000000;
+    func_8414F268(arg0);
+    func_8414F2F4(arg0);
+    var_s2 = 0;
+    do {
+        temp_s0 = var_s2;
+        if (func_8414C924(temp_s0, 1U) != 0) {
+            temp_v0 = func_8414C960(temp_s0);
+            if (temp_v0 != arg0) {
+                temp_s1 = *(s32 *)(temp_v0 + 0x14) + *(s32 *)(temp_v0 + 0xC) + *(s32 *)(temp_v0 + 0x10);
+                if (func_8414C924(temp_s0, 2U) != 0) {
+                    if (var_s4 < temp_s1) {
+                        var_s4 = temp_s1;
+                    }
+                } else if (var_s3 < temp_s1) {
+                    var_s3 = temp_s1;
+                }
+            }
+        }
+        var_s2 += 1;
+    } while (var_s2 != 0x18);
+    if (var_s3 < var_s4) {
+        *(s32 *)((u8 *)arg0 + 0x18) = *(s32 *)((u8 *)arg0 + 0x18) - *(s32 *)((u8 *)arg0 + 0x14);
+    }
+}
+/* mkdraft:func_8414F93C end */
 #endif
 
 #ifdef VERSION_US
