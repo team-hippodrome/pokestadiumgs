@@ -52,7 +52,64 @@ s32 func_82304520(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304608.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_823049A8.s")
+/* mkdraft:func_823049A8 begin */
+extern void *D_8009491C;
+extern u8 D_82305BC0[];
+extern u8 D_82305BD0[];
+extern u8 D_82305BE8[];
+extern u8 D_82305C08[];
+extern u16 D_82306AEC;
+extern s16 D_82306AFC;
+
+extern s32 func_82301428(void);
+extern s32 func_82303D84(u32);
+extern void *func_8004C990(s32, s32);
+extern void func_82304608(s32, s32, void *, u8 *, u8 *, s32);
+extern void func_8003CD84(void);
+
+
+
+s32 func_823049A8(s32 arg0, s32 arg1) {
+    s32 palette_index;
+    s32 blend;
+    u8 *target_color;
+    u8 color[3];
+    u8 shade[3];
+    u8 *palette;
+    void *sprite;
+    // FAKE: unused; IDO places color[3]/shade[3] at 0x40/0x3C only in a 0x50 frame. Score without this line: 196.
+    u8 padding[12];
+
+    if ((arg0 != 0) && (arg0 == 5)) {
+        palette_index = *(s32 *)((u8 *)D_8009491C + 0x14);
+        if (func_82301428() != palette_index) {
+            blend = 0;
+        } else {
+            blend = func_82303D84(D_82306AEC);
+        }
+        if (D_82306AFC == 1) {
+            palette = D_82305BC0 + palette_index * 3;
+            target_color = D_82305BD0;
+        } else {
+            palette = D_82305BE8 + palette_index * 3;
+            target_color = D_82305C08;
+        }
+        color[0] = palette[0] + ((target_color[0] - palette[0]) * blend) / 0xFF;
+        color[1] = palette[1] + ((target_color[1] - palette[1]) * blend) / 0xFF;
+        color[2] = palette[2] + ((target_color[2] - palette[2]) * blend) / 0xFF;
+        shade[0] = (target_color[3] * blend) / 0xFF;
+        shade[1] = (target_color[4] * blend) / 0xFF;
+        shade[2] = (target_color[5] * blend) / 0xFF;
+        sprite = func_8004C990(0x49, 2);
+        func_82304608(-((s32)*(u16 *)((u8 *)sprite + 0) / 2),
+                      (s32)*(u16 *)((u8 *)sprite + 2) / 2,
+                      sprite, color, shade,
+                      *(u8 *)((u8 *)D_8009491C + 0x1D));
+        func_8003CD84();
+    }
+    return 0;
+}
+/* mkdraft:func_823049A8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304C88.s")
 
