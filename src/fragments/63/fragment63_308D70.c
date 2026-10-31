@@ -235,7 +235,54 @@ void func_87E06908(s32 arg0) {
     func_8004C8C0(0x1B2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E069A4.s")
+/* mkdraft:func_87E069A4 begin */
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 func_80040E80(s32, void *);
+extern u8 D_87E19AB0;
+extern s32 func_87F08E7C(u16, u16, u8, u8, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_87F0BD30(u8 *, u16, u16, s32);
+
+
+
+void func_87E069A4(u8 *arg0) {
+    s32 state;
+    s32 sp28;
+    s32 var_v1;
+    u8 *var_v0;
+
+    state = MainPool_AllocState(main_pool_get_available(), 0);
+    sp28 = state;
+    *(s32 *)((u8 *)arg0 + 0x160) = func_80040E80(state, &D_87E19AB0);
+    MainPool_FinalizeAllocation(sp28);
+    *(s32 *)((u8 *)arg0 + 0x58) = func_87F08E7C(0x102, 0x17, 0, 2, 0xF000000);
+    func_87F0BD30(arg0 + 0x148, 0x102, 0x17, 0xFFC85AFF);
+    var_v1 = 0;
+    var_v0 = arg0;
+    do {
+        var_v1 += 4;
+        *(u8 *)(var_v0 + 0xF4) = 0;
+        *(u8 *)(var_v0 + 0xFC) = 0;
+        *(u8 *)(var_v0 + 0x104) = 0;
+        var_v0 += 0x20;
+        *(u8 *)(var_v0 + 0xCC) = 0;
+    } while (var_v1 != 0xC);
+    *(s32 *)((u8 *)arg0 + 0xE8) = func_8004C990(0x18B, 0);
+    *(s32 *)((u8 *)arg0 + 0xF0) = func_8004C990(0x190, 0);
+    *(s32 *)((u8 *)arg0 + 0xF8) = func_8004C990(0x18C, 0);
+    *(s32 *)((u8 *)arg0 + 0x100) = func_8004C990(0x195, 0);
+    *(s32 *)((u8 *)arg0 + 0x108) = func_8004C990(0x176, 0);
+    *(s32 *)((u8 *)arg0 + 0x110) = func_8004C990(0x198, 0);
+    *(s32 *)((u8 *)arg0 + 0x118) = func_8004C990(0x17F, 0);
+    *(s32 *)((u8 *)arg0 + 0x120) = func_8004C990(0x19B, 0);
+    *(s32 *)((u8 *)arg0 + 0x128) = func_8004C990(0x1A1, 0);
+    *(s32 *)((u8 *)arg0 + 0x130) = func_8004C990(0x177, 0);
+    *(s32 *)((u8 *)arg0 + 0x138) = func_8004C990(0x193, 0);
+    *(s32 *)((u8 *)arg0 + 0x140) = func_8004C990(0x184, 0);
+}
+/* mkdraft:func_87E069A4 end */
 
 s32 func_800071A4(s32, s32, s32, s32, s32);
 
