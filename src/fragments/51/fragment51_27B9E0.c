@@ -90,7 +90,70 @@ void func_86305E20(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305E70.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305FD8.s")
+/* mkdraft:func_86305FD8 begin */
+typedef struct unk_func_86304ACC {
+    f32 x;
+    f32 y;
+} unk_func_86304ACC;
+
+// arg1 is the position the delta is measured from, arg3 receives that delta
+// and arg4 its length, replaced by 21 - length when it returns 1.
+//@src/fragments/51/fragment51_27A740.c
+s32 func_86304ACC(void *, unk_func_86304ACC *, unk_func_86304ACC *, unk_func_86304ACC *, f32 *);
+
+// 8-byte positions; the D_863072B8 entries index this table.
+extern u8 D_863071F0[];
+
+// Approach targets: each entry is an index into the position table D_863071F0
+// (vector_index * 8) followed by the target's own direction vector.
+typedef struct unk_D_863072B8 {
+    u8 vector_index;
+    char unk01[3];
+    unk_func_86304ACC dir;
+} unk_D_863072B8;
+
+extern unk_D_863072B8 D_863072B8[];
+// Entry count for D_863072B8.
+extern s32 D_863072E8;
+
+// Moves actor arg0 back out to 21 units from each approach target it is closer
+// to than that. func_86304ACC returns the actor-to-target delta as a unit
+// direction plus 21 - distance as the step length; func_86305BC0 applies that
+// step to the actor position at +0x48/+0x4C, adding or subtracting according to
+// the sign of its dot product with the entry's dir; func_86305C78 then reflects
+// the actor velocity at +0x10/+0x14 about the step direction, func_86305D88
+// rescales it and func_86305E20 queues the effect.
+
+
+void func_86305FD8(s32 arg0) {
+    // FAKE: 12 bytes reserved above the other locals set the frame to 0x68.
+    // Scores by pad size: none 24, 1 10, 2 14, 3 (this) 0, 4 24, 5 10, 6 24;
+    // at pad[1] only the two `addiu sp` lines differ.
+    s32 pad[3];
+    s32 i;
+    unk_func_86304ACC *entry_dir;
+    unk_D_863072B8 *entry;
+    unk_func_86304ACC step_dir;
+    f32 step_length;
+
+    entry = D_863072B8;
+    i = 0;
+    if (D_863072E8 > 0) {
+        do {
+            entry_dir = &entry->dir;
+            if (func_86304ACC(arg0, (unk_func_86304ACC *) &D_863071F0[entry->vector_index * 8], entry_dir,
+                               &step_dir, &step_length) != 0) {
+                func_86305BC0((u8 *) arg0, (u8 *) &step_dir, (u8 *) entry_dir, step_length);
+                func_86305C78(arg0, &step_dir);
+                func_86305D88((u8 *) arg0);
+                func_86305E20((u8 *) arg0);
+            }
+            i += 1;
+            entry += 1;
+        } while (i < D_863072E8);
+    }
+}
+/* mkdraft:func_86305FD8 end */
 
 s32 func_86305E70();
 extern void func_86305FD8(s32);
