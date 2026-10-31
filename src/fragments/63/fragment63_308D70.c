@@ -410,7 +410,56 @@ void func_87E07330(void *arg0) {
     func_87E0168C(0, 0x64, -1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E0736C.s")
+/* mkdraft:func_87E0736C begin */
+extern s32 func_800279C4(s32);
+extern void func_87E015F4(s32 arg0, s32 arg1);
+
+s32 func_87E07278(u8 *arg0);
+
+
+
+void func_87E0736C(void *arg0) {
+    u8 buffer[4];
+    u16 mask;
+
+    // 0x188 selects the running phase; 0x17C counts the frames spent in it.
+    switch (*(u32 *)((u8 *)arg0 + 0x188)) {
+    case 0:
+        if (*(u32 *)((u8 *)arg0 + 0x17C) >= 21U) {
+            func_87E015F4(*(u32 *)((u8 *)arg0 + 0x54) + 72, buffer);
+            func_8002781C(0xCF04, *(u8 *)((u8 *)arg0 + 0x17B), buffer);
+            (*(s32 *)((u8 *)arg0 + 8))++;
+            if (*(s32 *)((u8 *)arg0 + 8) >= 12) {
+                *(s32 *)((u8 *)arg0 + 8) = 0;
+            }
+            (*(s32 *)((u8 *)arg0 + 0x180))++;
+            if (*(s32 *)((u8 *)arg0 + 0x184) < *(s32 *)((u8 *)arg0 + 0x180)) {
+                mask = 1 << *(s32 *)((u8 *)arg0 + 8);
+                if ((*(u16 *)((u8 *)(*(void **)((u8 *)arg0 + 0x170)) + 0x21F4) & mask) == 0) {
+                    if ((func_8003570C() % (13 - func_87E07278(arg0))) == 0) {
+                        func_87E072FC(arg0, mask);
+                        *(u32 *)((u8 *)arg0 + 0x188) = 1;
+                        *(u32 *)((u8 *)arg0 + 0x17C) = 0;
+                    }
+                }
+            }
+        }
+        break;
+    case 1:
+        if (*(u32 *)((u8 *)arg0 + 0x17C) >= 31U) {
+            func_87E07330(arg0);
+            func_800279C4(0xCF05);
+            if (1) { } // karodo: the empty block boundary keeps the tail increment's
+                       // temp in v0; without it uopt colors it v1 (diff score 40).
+        }
+        break;
+    default:
+        break;
+    }
+
+    (*(u32 *)((u8 *)arg0 + 0x17C)) += 1;
+}
+/* mkdraft:func_87E0736C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E074BC.s")
 
