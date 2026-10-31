@@ -247,7 +247,65 @@ void func_82F00A3C(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00B28.s")
+/* mkdraft:func_82F00B28 begin */
+extern void func_800226C0(s32);
+extern s32 func_80062F98(u8);
+extern s32 func_80063044(u8);
+
+
+
+void func_82F00B28(void *arg0, s32 arg1) {
+    u8 *base = (u8 *)(u32)arg0;
+    s32 result[2];
+
+    if (arg1 < 0) {
+        // FAKE: empty if/else on a short-circuit condition. The bodyless branches leave a
+        // two-predecessor merge block ahead of the store below; without it IDO folds that
+        // store's saved-parameter use back to $a0, while retail reaches it through $a2
+        // (`sb $t6, 0x1E($a2)` at 0xCD1EC). Diff score 5 without the if/else.
+        if ((arg1 == -1) || (arg1 == 1)) {
+        } else {
+        }
+        *(base + 0x1E) = 5;
+        func_800226C0(3);
+        return;
+    }
+    if (arg1 == 0) {
+        return;
+    }
+    // Records are 0x58 bytes long, selected by the u8 index at 0xEDF; arg1 then indexes the
+    // byte inside the record, biased by 0x1F.
+    if (((u8 (*)[0x58])base)[base[0xEDF]][arg1 - 0x1F] != 0) {
+        s32 value = ((u8 (*)[0x58])base)[base[0xEDF]][arg1 - 0x1F];
+
+        //!bug switch values outside 0..7 leave result uninitialized; the unsigned bound test
+        // also sends negative values down that path.
+        switch (*(s32 *)(base + 0xEC8)) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            result[0] = func_80063044(value);
+            break;
+        case 5:
+        case 6:
+        case 7:
+            result[0] = func_80062F98(value);
+            break;
+        }
+        if (result[0] >= 0x33) {
+            *(base + 0x1E) = 7;
+            func_800226C0(5);
+        } else {
+            *(base + 0x1E) = 8;
+            func_800226C0(2);
+        }
+    } else {
+        func_800226C0(5);
+    }
+}
+/* mkdraft:func_82F00B28 end */
 
 extern s32 func_80064474(u8, u16);
 extern s32 func_800647C8(u8);
