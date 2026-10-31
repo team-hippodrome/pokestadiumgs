@@ -465,7 +465,66 @@ s32 func_8AF22384(void) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF223C8.s")
+/* mkdraft:func_8AF223C8 begin */
+extern u8 func_80054410(s32 arg0);
+extern s32 D_8AF3A148;
+extern s16 D_8AF3A14C;
+extern s16 D_8AF3A19C;
+extern u8 *D_8AF2BDD8;
+extern u8 *D_8AF3A198;
+
+
+
+s32 func_8AF223C8(void) {
+    s16 ret;
+    s16 count;
+    s32 i;
+    s32 mode;
+    u8 *entry;
+
+    mode = 0;
+    count = 0;
+    if ((*D_8AF2BDD8) == 1) {
+        mode = 7;
+    } else if ((*D_8AF2BDD8) == 2) {
+        mode = 0xC;
+    }
+    entry = D_8AF3A198;
+    i = 0;
+    if (D_8AF3A19C > 0) {
+        do {
+            ret = func_80054410(mode + i);
+            *(s16 *)(entry + 0x40) = ret;
+            if ((D_8AF3A148 != 0) && (i == D_8AF3A14C)) {
+                *(u16 *)(*(u8 **)(entry + 0x20) + 2) &= ~2;
+                *(u16 *)(*(u8 **)(entry + 0x24) + 2) &= ~2;
+                if (ret == 1) {
+                    count += 1;
+                }
+            } else {
+                switch (ret) {
+                case 1:
+                    *(u16 *)(*(u8 **)(entry + 0x20) + 2) |= 2;
+                    count += 1;
+                    *(u16 *)(*(u8 **)(entry + 0x24) + 2) &= ~2;
+                    break;
+                case 2:
+                    *(u16 *)(*(u8 **)(entry + 0x20) + 2) &= ~2;
+                    *(u16 *)(*(u8 **)(entry + 0x24) + 2) |= 2;
+                    break;
+                default:
+                    *(u16 *)(*(u8 **)(entry + 0x20) + 2) &= ~2;
+                    *(u16 *)(*(u8 **)(entry + 0x24) + 2) &= ~2;
+                    break;
+                }
+            }
+            i += 1;
+            entry += 0x44;
+        } while (i < D_8AF3A19C);
+    }
+    return count;
+}
+/* mkdraft:func_8AF223C8 end */
 
 extern void func_80051D64(s32, s32);
 s8 func_8005453C(u8);
