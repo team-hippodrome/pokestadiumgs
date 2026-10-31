@@ -224,7 +224,118 @@ s32 func_8AF03F4C(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF03FF8.s")
+/* mkdraft:func_8AF03FF8 begin */
+extern void *D_8AF263C0;
+extern s32 D_8AF26470;
+extern s32 D_8AF26474;
+extern s32 D_8AF2BF74;
+extern s16 D_8AF2C08A;
+extern s16 D_8AF2C094;
+extern s32 D_8AF2C2F0;
+extern s32 D_8AF2C324;
+extern s32 D_8AF2C574;
+extern s32 D_8AF2C578;
+extern s32 func_80026098(); /* FAKE: void in src/229E0.c; s32 here so the caller's `bnez v0` test exists (score without the s32 typing: 1085) */
+extern s32 func_8004C594(s32, s32);
+extern s32 func_8AF03B38(void);
+extern void func_8AF00130(s32);
+
+
+
+s32 func_8AF03FF8(s32 arg0, void *arg1) {
+    void *node;
+    s16 delta;
+    s16 extent;
+    s32 position;
+    s32 bound;
+    s32 step;
+    s32 limit;
+
+    node = *(void **)((u8 *)arg1 + 0x20);
+    switch (arg0) {
+    case 0:
+        D_8AF2C574 = *(s16 *)((u8 *)arg1 + 8);
+        D_8AF2C578 = *(s16 *)((u8 *)arg1 + 0xA);
+        *(s32 *)((u8 *)node + 0x4E4) = 0;
+        *(s32 *)((u8 *)node + 0x4E8) = 0;
+        *(s32 *)((u8 *)node + 0x4EC) = 0;
+        break;
+    case 1:
+        if (D_8AF2BF74 == 0 && D_8AF2C094 == 1) {
+            if (D_8AF2C2F0 != 0 && func_80026098() == 0 && D_8AF2C324 == 0 && (*(u16 *)((u8 *)D_8AF263C0 + 8) & 0x800) && func_8AF03B38() == 0) {
+                delta = *(s16 *)((u8 *)*(void **)((u8 *)node + 0x4C8) + 0xE) + *(s32 *)((u8 *)node + 0x4E8);
+                if (delta > 0) {
+                    *(s32 *)((u8 *)node + 0x4EC) = 0;
+                    if (D_8AF2C08A >= 2) {
+                        func_8AF00130(0xC4);
+                    }
+                    D_8AF2C08A = 1;
+                } else {
+                    *(s32 *)((u8 *)node + 0x4EC) = delta;
+                    func_8AF00130(0xC4);
+                    D_8AF2BF74 = 1;
+                    D_8AF2C08A -= 1;
+                }
+                func_8004C594(2, D_8AF2C08A);
+            } else if (D_8AF2C2F0 != 0 && func_80026098() == 0 && D_8AF2C324 == 0 && (*(u16 *)((u8 *)D_8AF263C0 + 8) & 0x8400) && func_8AF03B38() == 0) {
+                extent = *(s16 *)((u8 *)*(void **)((u8 *)node + 0x4C8) + 0xE);
+                delta = *(s32 *)((u8 *)node + 0x4E8) - extent;
+                if (delta != (-D_8AF26470 - extent)) {
+                    *(s32 *)((u8 *)node + 0x4EC) = delta;
+                    func_8AF00130(0xC4);
+                    D_8AF2BF74 = 2;
+                    D_8AF2C08A += 1;
+                    func_8004C594(2, D_8AF2C08A);
+                }
+            } else {
+                *(s32 *)((u8 *)node + 0x4F4) = 0;
+                *(s32 *)((u8 *)node + 0x4F0) = 0;
+            }
+        }
+        limit = *(s32 *)((u8 *)node + 0x4EC);
+        if (limit > 0) {
+            *(s32 *)((u8 *)node + 0x4EC) = 0;
+            limit = 0;
+        }
+        bound = -D_8AF26470;
+        if (limit < bound) {
+            *(s32 *)((u8 *)node + 0x4EC) = bound;
+            limit = bound;
+        }
+        position = *(s32 *)((u8 *)node + 0x4E8);
+        step = limit - position;
+        limit = 0; // FAKE: register-only dead store that ends the limit web (score without it: 85)
+        if (step >= 0x14) {
+            step = 0x13;
+        }
+        if (step < -0x13) {
+            step = -0x13;
+        }
+        *(s32 *)((u8 *)node + 0x4E8) = position + step;
+        if (step != 0) {
+            *(s16 *)((u8 *)node + 0x4FC) = 1;
+        } else {
+            *(s16 *)((u8 *)node + 0x4FC) = 0;
+            D_8AF2BF74 = 0;
+        }
+        position = *(s32 *)((u8 *)node + 0x4E8);
+        if (position > 0) {
+            *(s32 *)((u8 *)node + 0x4E8) = 0;
+            position = 0;
+        }
+        bound = -D_8AF26470;
+        if (position < bound) {
+            *(s32 *)((u8 *)node + 0x4E8) = bound;
+            position = bound;
+        }
+        D_8AF26474 = position;
+        *(s16 *)((u8 *)arg1 + 8) = *(s32 *)((u8 *)node + 0x4E4) + D_8AF2C574;
+        *(s16 *)((u8 *)arg1 + 0xA) = *(s32 *)((u8 *)node + 0x4E8) + D_8AF2C578;
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_8AF03FF8 end */
 
 extern s32 D_8AF26474;
 extern s16 D_8AF2C088;
