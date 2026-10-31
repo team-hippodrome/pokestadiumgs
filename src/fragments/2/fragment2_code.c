@@ -52,7 +52,63 @@ void func_81900164(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/2/fragment2_code/func_8190037C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/2/fragment2_code/func_81900500.s")
+/* mkdraft:func_81900500 begin */
+// Partial view of the active scene object at D_8009491C: only the field this
+// function reads is typed.
+typedef struct Fragment2SceneObject {
+    /* 0x00 */ u8 unk_00[0x14];
+    /* 0x14 */ s32 colorIndex;
+} Fragment2SceneObject;
+
+// Row of D_81900784. Each channel is stored as its own word (the accesses are
+// lw, not lbu) and gDPSetPrimColor/gDPSetEnvColor keep only its low 8 bits.
+// The env color reuses primAlpha because the table has no separate env alpha.
+typedef struct Fragment2Color {
+    /* 0x00 */ s32 primRed;
+    /* 0x04 */ s32 primGreen;
+    /* 0x08 */ s32 primBlue;
+    /* 0x0C */ s32 primAlpha;
+    /* 0x10 */ s32 envRed;
+    /* 0x14 */ s32 envGreen;
+    /* 0x18 */ s32 envBlue;
+} Fragment2Color;
+
+extern Gfx *D_800D0510;
+extern void *D_8009491C;
+extern Fragment2Color D_81900784[];
+extern s32 D_81900838;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+
+
+void func_81900500(s32 arg0, s32 arg1) {
+    s32 pad; // FAKE: unused stack slot the retail frame reserves (score 16 without it)
+    Fragment2SceneObject *sceneObject;
+    s32 asset;
+
+    if (arg0 == 5) {
+        sceneObject = D_8009491C;
+        asset = func_8004C990(0x1B1, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetPrimColor(D_800D0510++, 0, 0,
+                        D_81900784[sceneObject->colorIndex].primRed,
+                        D_81900784[sceneObject->colorIndex].primGreen,
+                        D_81900784[sceneObject->colorIndex].primBlue,
+                        D_81900784[sceneObject->colorIndex].primAlpha);
+        gDPSetEnvColor(D_800D0510++,
+                       D_81900784[sceneObject->colorIndex].envRed,
+                       D_81900784[sceneObject->colorIndex].envGreen,
+                       D_81900784[sceneObject->colorIndex].envBlue,
+                       D_81900784[sceneObject->colorIndex].primAlpha);
+        gDPSetCombine(D_800D0510++, 0x30B3FF, 0x5FFEFE38);
+        gSPSegment(D_800D0510++, 0xF, func_8004CA60((u8 *)asset));
+        gSPDisplayList(D_800D0510++, D_81900838);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_81900500 end */
 
 extern void func_8003F1DC(void *);
 extern s16 D_81900834;
