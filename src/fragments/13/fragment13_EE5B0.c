@@ -117,7 +117,57 @@ void func_82400880(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824008C4.s")
+/* mkdraft:func_824008C4 begin */
+extern u8 D_824090A0[];
+s32 StageContext_GetFadeMode();
+s32 StageFade_StartFromTransparent(s32);
+s32 func_800226C0(s32);
+s32 func_80035424(s32);
+s32 func_82404DD8(u8 *);
+s32 func_82406CCC(u8 *);
+extern s32 D_82409284;
+extern s32 D_82409288;
+extern s32 D_824092B0;
+
+
+
+s32 func_824008C4(s32 arg0) {
+    s32 sp1C;
+
+    sp1C = arg0;
+    switch (arg0) {                                 /* irregular */
+    case 0:
+        D_82409288 = D_82409284 + 1;
+        if (StageContext_GetFadeMode() == 0) {
+            sp1C = 1;
+        }
+        break;
+    case 1:
+        if (func_82406CCC(D_824090A0) != 0) {
+            if (*(s32 *)(D_824090A0 + 0x210) != 0) {
+                // FAKE: the * 0 is an arithmetic nop; its only effect is to keep the
+                // D_824090A0 address live across the call, which schedules the second
+                // lui a0 after the branch. Diff score 60 without it.
+                if (func_82404DD8(D_824090A0) != *(s32 *)(D_824090A0 + 0x210) * 0) {
+                    func_800226C0(0x11);
+                    D_824092B0 = 0;
+                }
+            } else {
+                sp1C = 2;
+                StageFade_StartFromTransparent(0xC);
+                func_80035424(0x18);
+            }
+        }
+        break;
+    case 2:
+        if (StageContext_GetFadeMode() == 1) {
+            sp1C = 3;
+        }
+        break;
+    }
+    return sp1C;
+}
+/* mkdraft:func_824008C4 end */
 
 void func_824009AC(void) {
     s32 state = 0;
