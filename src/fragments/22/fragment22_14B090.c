@@ -1061,7 +1061,49 @@ s32 func_82702F70(void) {
 }
 /* mkdraft:func_82702F70 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_827030D0.s")
+/* mkdraft:func_827030D0 begin */
+extern s16 D_827034E4;
+extern s16 D_827034EE;
+
+
+
+s32 func_827030D0(s32 arg0) {
+    s32 var_v1;
+    s32 value;
+    s16 *p_state;
+    s16 *p_kind;
+    s16 *p_count;
+    u8 *temp_v0;
+    s16 temp_a2;
+
+    var_v1 = 0;
+    p_state = &D_827034E2;
+    p_kind = &D_827034E4;
+    p_count = &D_827034EE;
+    // FAKE: `* 0` is an arithmetic nop. With `*p_state == 0` the sign extension of arg0 is
+    // materialized at the D_827034E0 store; the multiply operand makes IDO emit sll/sra for
+    // the s16 conversion in the entry block, which is the scheduling the retail code uses.
+    // Without the fake the best nonmatching candidate scores 105.
+    if ((D_827034EC & 1) && (*p_state == ((s16)arg0 * 0))) {
+        *p_state = 1;
+        *p_count = 0;
+        value = (s16)arg0;
+        D_827034E0.unk_00 = value;
+
+        if (value == 1) {
+            temp_v0 = func_82700E70(2, 2, D_82703514, 0x10);
+            *p_kind = 2;
+            temp_a2 = *(s16 *)((u8 *)temp_v0 + 0xE);
+            *(s16 *)((u8 *)temp_v0 + 6) = 2;
+            *(s16 *)((u8 *)temp_v0 + 0x14) = 0x34;
+            *(s16 *)((u8 *)temp_v0 + 0x12) = temp_a2;
+            func_8270188C(2, 2, temp_a2, *(s16 *)((u8 *)temp_v0 + 0x10));
+        }
+        var_v1 = 1;
+    }
+    return var_v1;
+}
+/* mkdraft:func_827030D0 end */
 
 extern s16 D_827034EA;
 s32 func_82703188(void) {
