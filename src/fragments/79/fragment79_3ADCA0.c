@@ -2649,7 +2649,38 @@ void func_8414760C(void *arg0, s16 arg1, u8 arg2, s16 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841476E0.s")
+/* mkdraft:func_841476E0 begin */
+extern void func_84146B0C(u8 *, s32);
+extern void func_84147270(u8 *, u8, s16);
+
+
+
+void func_841476E0(u8 *arg0, s16 arg1, u8 arg2, u8 arg3, s32 arg4) {
+    if (arg3 >= arg0[9]) {
+        s16 divisor = 30;
+        s16 x_step;
+        s16 y_step;
+        u8 step_count;
+
+        func_84146B0C(arg0, 0);
+        x_step = *(s16 *)(arg0 + 14) / divisor;
+        y_step = *(s16 *)(arg0 + 16) / divisor;
+        if (arg2 < arg0[9]) {
+            if (arg1 > 0) {
+                step_count = arg0[9] - arg2;
+            } else {
+                step_count = arg3 - arg0[9] + 1;
+            }
+            *(s16 *)(arg0 + 10) += x_step * step_count;
+            *(s16 *)(arg0 + 12) += y_step * step_count;
+            *(s16 *)(arg0 + 14) -= x_step * step_count * 2;
+            *(s16 *)(arg0 + 16) -= y_step * step_count * 2;
+        }
+        arg0[8] &= ~1;
+        func_84147270(arg0, arg3, arg4);
+    }
+}
+/* mkdraft:func_841476E0 end */
 #endif
 
 #ifdef VERSION_US
