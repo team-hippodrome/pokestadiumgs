@@ -189,7 +189,82 @@ void func_84154DF8(u8 *arg0, u8 arg1, u8 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154FC4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_841551D4.s")
+/* mkdraft:func_841551D4 begin */
+extern u8 *func_84156590(u8, u8);
+extern u8 *func_841565E0(u8 arg0);
+
+
+
+void func_841551D4(u8 *arg0, u8 arg1, u8 arg2) {
+    u8 *sp1C;
+    u8 *temp_v0;
+    u8 *temp_v1;
+    u8 *temp_a1;
+
+    sp1C = func_841565E0(arg1);
+    temp_v0 = func_84156590(arg1, arg2);
+    temp_v1 = D_84195208[arg1];
+    temp_a1 = D_841951F8[arg1] + arg2 * 0x58;
+    arg0[0] = temp_v1[0];
+    arg0[1] = temp_v0[0xB];
+    *(s16 *)(arg0 + 0x26) = *(u8 *)(temp_a1 + 0x3C);
+    temp_a1 += 0x18;
+    arg0[2] = temp_v1[1];
+    arg0[3] = temp_v1[2];
+    arg0[4] = sp1C[1];
+    arg0[5] = sp1C[2];
+    arg0[6] = sp1C[3];
+    arg0[7] = sp1C[4];
+    if (!sp1C && !sp1C && !sp1C) {} // karodo
+    arg0[8] = temp_v1[9];
+    arg0[9] = temp_v1[0xA];
+    arg0[0xA] = temp_v1[0xB];
+    arg0[0xB] = temp_v1[0xC];
+    arg0[0xC] = temp_a1[0x1D];
+    *(u16 *)(arg0 + 0x28) = *(u16 *)(temp_a1 + 0x26);
+    *(u16 *)(arg0 + 0x2A) = *(u16 *)(temp_a1 + 0x28);
+    *(u16 *)(arg0 + 0x2C) = *(u16 *)(temp_v0 + 0xE);
+    *(u16 *)(arg0 + 0x2E) = *(u16 *)(temp_v0 + 0x10);
+    *(u16 *)(arg0 + 0x30) = *(u16 *)(temp_v0 + 0x12);
+    *(u16 *)(arg0 + 0x32) = *(u16 *)(temp_v0 + 0x14);
+    *(u16 *)(arg0 + 0x34) = *(u16 *)(temp_v0 + 0x16);
+    *(u16 *)(arg0 + 0x36) = *(u16 *)(sp1C + 6);
+    *(u16 *)(arg0 + 0x38) = *(u16 *)(sp1C + 8);
+    *(u16 *)(arg0 + 0x3A) = *(u16 *)(sp1C + 0xA);
+    *(u16 *)(arg0 + 0x3C) = *(u16 *)(sp1C + 0xC);
+    *(u16 *)(arg0 + 0x3E) = *(u16 *)(sp1C + 0xE);
+    arg0[0xD] = temp_v1[0x1E];
+    arg0[0xE] = temp_v1[0x1F];
+    arg0[0xF] = temp_v1[0x20];
+    arg0[0x10] = temp_v1[0x21];
+    arg0[0x11] = temp_v1[0x22];
+    arg0[0x12] = temp_v1[0x23];
+    arg0[0x13] = temp_v1[0x24];
+    arg0[0x14] = temp_v0[0xC];
+    *(u16 *)(arg0 + 0x40) = *(u16 *)(temp_a1 + 0x16);
+    *(u16 *)(arg0 + 0x42) = *(u16 *)(temp_v1 + 0x46);
+    arg0[0x15] = temp_v1[0xD];
+    arg0[0x16] = temp_v1[0xE];
+    arg0[0x17] = temp_v1[0xF];
+    arg0[0x18] = temp_v1[0x10];
+    arg0[0x19] = temp_v1[0x11];
+    arg0[0x1A] = temp_v1[0x12];
+    arg0[0x1B] = temp_v1[0x13];
+    arg0[0x1C] = temp_v1[0x14];
+    arg0[0x1D] = temp_v1[0x15];
+    arg0[0x1E] = temp_v1[0x16];
+    arg0[0x1F] = temp_v1[0x17];
+    arg0[0x20] = temp_v1[0x18];
+    arg0[0x21] = temp_v1[0x19];
+    arg0[0x23] = temp_v1[0x1B];
+    arg0[0x24] = temp_v1[0x26];
+    arg0[0x25] = temp_v1[0x27];
+    *(s16 *)(arg0 + 0x44) = *(s32 *)(temp_v1 + 0x4C);
+    arg0[0x22] = temp_v1[0x1A];
+    *(u16 *)(arg0 + 0x46) = *(u16 *)(temp_v1 + 0x30);
+    *(s32 *)(arg0 + 0x48) = temp_v1[0x2A];
+}
+/* mkdraft:func_841551D4 end */
 
 void func_8415541C(u8 *arg0, u8 arg1, u8 arg2) {
     u8 *value;
