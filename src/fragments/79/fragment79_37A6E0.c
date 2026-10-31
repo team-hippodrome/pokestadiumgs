@@ -936,7 +936,69 @@ void BattleAnim_ModelDispatch_127(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410F3E8.s")
+/* mkdraft:func_8410F3E8 begin */
+extern s32 func_80001FF0();
+
+// sp40 receives the three floats Vec3f_SetComponentsDuplicate writes, and its 12-byte
+// home is what places sp4C at sp+0x4C; sp4C is only reached through its address.
+
+
+void func_8410F3E8(u8 *arg0, void *arg1) {
+    s16 temp_a0;
+    u8 *sp28;
+    s32 sp4C;
+    f32 sp40[3];
+    s32 sp3C;
+    s16 sp3A;
+    s16 sp38;
+    s16 temp_v0_2;
+    s16 sp34;
+    s16 sp36;
+
+    sp34 = 1;
+    D_841911E8 = func_8410B330(arg0);
+    temp_a0 = *(s16 *)(D_841911E8 + 0xA2);
+    switch (temp_a0) {
+    case 0:
+        func_841203B4(arg0 + 0x2C, *(f32 *)(D_841911E8 + 0x88), 0.02f);
+        temp_v0_2 = *(s16 *)((u8 *)arg1 + 0x20);
+        if (temp_v0_2 < 0) {
+            sp34 = -1;
+        }
+        sp36 = temp_v0_2;
+        func_841203B4(D_841911E8 + 0x44, *(f32 *)(D_841911E8 + 0x4C), *(f32 *)(D_841911E8 + 0x48));
+        sp28 = arg0 + 0xB4;
+        func_80037120(D_841911E8 + 0x50, sp28, &sp3C, &sp38, &sp3A);
+        Vec3f_SetComponentsDuplicate(sp40, *(f32 *)(arg0 + 0xB4), *(f32 *)(arg0 + 0xB8), *(f32 *)(arg0 + 0xBC));
+        func_80037120(sp40, D_841911E8 + 0x50, &sp3C, &sp38, &sp3A);
+        func_800371B4((u8 *)sp40, sp28, *(f32 *)&sp3C * *(f32 *)(D_841911E8 + 0x44), sp38, (s32)sp3A);
+        func_8410B884(arg0, arg1, D_841911E8, sp36);
+        if (func_80001FF0() == 0x32) {
+            *(f32 *)(D_841911E8 + 0x48) *= 1.3f;
+        }
+        if (((u16 (*)[8])(D_84193DD0 + 0x12))[func_8411E1F8(arg1)][0] & 2) {
+            *(f32 *)(D_841911E8 + 0x40) *= 1.3f;
+            *(s16 *)(D_841911E8 + 0x3E) = sp34 * 0x1555;
+        }
+        func_800371B4(D_841911E8 + 0x50, &sp4C, *(f32 *)(D_841911E8 + 0x40), *(s16 *)(D_841911E8 + 0x3C), *(s16 *)(D_841911E8 + 0x3E));
+        Vec3f_SetComponentsDuplicate(sp40, *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+        func_80037120((s32)sp40, (s32)&sp4C, &sp3C, &sp38, &sp3A);
+        func_800371B4((u8 *)sp40, arg0 + 0xA8, *(f32 *)&sp3C * *(f32 *)(D_841911E8 + 0x44), sp38, (s32)sp3A);
+        if (*(f32 *)&sp3C <= 1.75f) {
+            *(s16 *)(D_841911E8 + 0xA2) = 1;
+        }
+        *(s16 *)(D_841911E8 + 0x94) = 0;
+        break;
+    case 1:
+        *(s16 *)(D_841911E8 + 0x94) = *(s16 *)(D_841911E8 + 0x94) + 1;
+        if (*(s16 *)(D_841911E8 + 0x94) == 0x14) {
+            func_8411FEE8(0);
+            *(s32 *)(D_841911E8 + (D_841911EC * 8) + 8) = D_84184148;
+        }
+        break;
+    }
+}
+/* mkdraft:func_8410F3E8 end */
 #endif
 
 #ifdef VERSION_US
