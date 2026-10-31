@@ -196,5 +196,94 @@ void func_88200DCC(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88200EDC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88201048.s")
+/* mkdraft:func_88201048 begin */
+extern s32 D_88233750;
+extern u8 D_88233754;
+extern u8 D_882345E0;
+extern s8 D_88006868;
+extern void func_88A0057C(void);
+extern void func_88A01990(void);
+extern void func_88200DCC(void);
+extern void func_88200EDC(void);
+extern s32 func_8005B120(s32);
+extern void func_8005ADD8(s32);
+extern void GbSave_RequirePakPresent(s32);
+extern void func_80052ECC(s32);
+extern void func_80054E48(s32);
+
+// Runs one flush probe per 2-bit field of the state byte D_882345E0 (bits 0-1
+// func_88A0057C, 2-3 func_88A01990, 4-5 func_88200DCC, 6-7 func_88200EDC) while
+// D_88233750 is zero, re-reading the byte after every probe because the probe can
+// clear its own field. When any field's low bit is set (0x55) it also services the
+// GB Tower port D_88006868 through func_8005B120, GbSave_RequirePakPresent and
+// func_8005ADD8, then walks the three mask bytes at D_88233754 and passes slot+1
+// to func_80052ECC and func_80054E48 for each byte with a bit in common with the
+// state byte. Returns 1 when D_882345E0 is zero or the port query succeeded; on
+// success the state byte and D_88233750 are cleared, otherwise D_88233750 is set.
+
+
+s32 func_88201048(void) {
+    s32 ret;
+    s32 var_s0;
+    s32 i;
+    u8 *var_s2;
+    u8 cur;
+    u8 flags;
+
+    ret = 1;
+    cur = D_882345E0;
+    if (D_882345E0 != 0) {
+        if (D_88233750 == 0) {
+            if (cur & 3) {
+                func_88A0057C();
+                cur = D_882345E0;
+            }
+            flags = cur;
+            if (flags & 0xC) {
+                func_88A01990();
+                cur = D_882345E0;
+                flags = cur;
+            }
+            if (flags & 0x30) {
+                func_88200DCC();
+                cur = D_882345E0;
+                flags = cur;
+            }
+            if (flags & 0xC0) {
+                func_88200EDC();
+                cur = D_882345E0;
+            }
+        }
+        if (cur & 0x55) {
+            ret = func_8005B120(D_88006868);
+            if (D_88233750 != 0) {
+                GbSave_RequirePakPresent(D_88006868);
+            }
+            if (ret != 0) {
+                func_8005ADD8(D_88006868);
+            }
+        }
+        var_s2 = &D_88233754;
+        i = 0;
+        if (D_88233750 == 0) {
+            do {
+                var_s0 = i + 1;
+                if ((*var_s2) & D_882345E0) {
+                    func_80052ECC(var_s0);
+                    func_80054E48(var_s0);
+                }
+                i++;
+                var_s2++;
+            } while (i != 3);
+        }
+        if (ret != 0) {
+            D_882345E0 = 0;
+            D_88233750 = 0;
+        } else {
+            D_88233750 = 1;
+        }
+    }
+    return ret;
+}
+/* mkdraft:func_88201048 end */
 #endif
