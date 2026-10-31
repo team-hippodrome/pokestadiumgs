@@ -687,7 +687,60 @@ void Audio_ResetCategoryState(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800265B0.s")
+/* mkdraft:func_800265B0 begin */
+extern s32 D_80090B94;
+
+// Case 18's body is emitted before the -1 and -2 bodies: jump-table entries 16, 17 and 18
+// point at 0x80026658, 0x80026660 and 0x80026650, so the case labels appear in that order.
+
+
+s32 func_800265B0(u32 arg0, s32 arg1) {
+    s32 result;
+
+    switch (arg0) {
+    case 0: result = 0; break;
+    case 1: result = 9; break;
+    case 2: result = 18; break;
+    case 3: result = 27; break;
+    case 4: result = 36; break;
+    case 5: result = 45; break;
+    case 6: result = 54; break;
+    case 7: result = 63; break;
+    case 8: result = 72; break;
+    case 9: result = 81; break;
+    case 10: result = 90; break;
+    case 11: result = 113; break;
+    case 12: return 118;
+    case 13: result = 119; break;
+    case 14: return 127;
+    case 15: return 128;
+    case 18: return 131;
+    case 16: result = -1; break;
+    case 17: result = -2; break;
+    default: return 132;
+    }
+    switch (arg1) {
+    case 10:
+        if (D_80090B94 >= 10 && D_80090B94 < 16) {
+            result += arg1;
+        }
+        break;
+    case 11:
+        if (D_80090B94 >= 10 && D_80090B94 < 16) {
+            result += arg1;
+            break;
+        }
+        return -2;
+    case 40:
+        return -3;
+    default:
+        // No break: the add falls out of the switch into `return result`, which schedules it
+        // into the delay slot of the 40 comparison.
+        result += arg1;
+    }
+    return result;
+}
+/* mkdraft:func_800265B0 end */
 
 s32 Audio_GetEventConfigIndex(s32 category, u32 request) {
     switch (request) {
