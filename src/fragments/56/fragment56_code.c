@@ -182,7 +182,49 @@ void func_86800A7C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800B98.s")
+extern f32 D_86807C60;
+extern f32 D_86807C94;
+extern f32 D_86807C98;
+extern f32 D_86807C9C;
+extern f32 D_86807CC8;
+extern s32 D_8682F2E4;
+void Fragment56_UpdateScaledParameters(void) {
+    switch (D_8682F2E4) {
+    case 1:
+        D_86807C60 = 17.0f * D_86807CC8;
+        if (D_86807C98 == D_86807C94) {
+            D_86807C9C = 4.5f;
+        } else {
+            D_86807C9C = D_86807C98;
+        }
+        break;
+    case 2:
+        D_86807C60 = 13.0f * D_86807CC8;
+        if (D_86807C98 == D_86807C94) {
+            D_86807C9C = 5.1f;
+        } else {
+            D_86807C9C = D_86807C98;
+        }
+        break;
+    case 3:
+        D_86807C60 = 10.0f * D_86807CC8;
+        if (D_86807C98 == D_86807C94) {
+            D_86807C9C = 5.4f;
+        } else {
+            D_86807C9C = D_86807C98;
+        }
+        break;
+    case 4:
+        D_86807C60 = 8.0f * D_86807CC8;
+        if (D_86807C98 == D_86807C94) {
+            D_86807C9C = 8.0f;
+        } else {
+            D_86807C9C = D_86807C98;
+        }
+        break;
+    }
+    D_86807C9C *= D_86807CC8;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800D5C.s")
 

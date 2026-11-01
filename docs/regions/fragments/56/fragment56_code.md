@@ -150,3 +150,24 @@ host syntax check and full US retail ROM gate on `77ad3fdb`, MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming and readable struct fields preserve
 all module sections, function extents, and relocations in normal and +20-line
 controls. The original address remains a linker alias.
+
+## 2026-11-01 — scaled parameter selection accepted
+
+`Fragment56_UpdateScaledParameters` (formerly `func_86800B98`, 452 bytes)
+selects two floating-point parameters from four selector cases. It scales
+`D_86807C60` by `D_86807CC8`, selects the base for `D_86807C9C` using the
+comparison of `D_86807C98` and `D_86807C94`, then scales `D_86807C9C`.
+The default case preserves `D_86807C60` and still scales `D_86807C9C`.
+The selector's broader game meaning remains unresolved.
+
+An ordinary four-case switch with separate if/else assignments reproduces
+the retail control flow. Writing `D_86807C98 == D_86807C94` preserves the
+original floating-point comparison operand order; reversing that expression
+changes four instruction words. Constants5.1f and5.4f occupy the file's
+existing rodata subsegment. No jump table or additional layout work is needed.
+
+Candidate0 of `fragment56-scale-compare8` passed the canonical normal host
+syntax check and full US retail ROM gate on `505f5bc3`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Function naming preserves all module
+sections, function extents, and relocations in normal and +20-leading-line
+controls. The original function name remains a linker alias.

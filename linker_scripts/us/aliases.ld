@@ -1502,3 +1502,5 @@ func_8680671C = Fragment56_UpdateModelGridTransforms;
 func_868000AC = Fragment56_TextureFadeCallback;
 
 func_86806CD8 = Fragment56_UpdateModelAnimations;
+
+func_86800B98 = Fragment56_UpdateScaledParameters;
