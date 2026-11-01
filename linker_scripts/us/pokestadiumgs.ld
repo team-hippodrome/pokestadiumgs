@@ -3313,11 +3313,11 @@ SECTIONS
         build/src/fragments/44/fragment44_205C30.o(.rodata);
         build/src/fragments/44/fragment44_207AF0.o(.rodata);
         build/src/fragments/44/fragment44_209BD0.o(.rodata);
+        build/asm/us/data/217AF0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20A610.o(.rodata);
         build/src/fragments/44/fragment44_20BDB0.o(.rodata);
         build/src/fragments/44/fragment44_20C560.o(.rodata);
         build/src/fragments/44/fragment44_20CBF0.o(.rodata);
-        build/asm/us/data/217AF0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20D3A0.o(.rodata);
         build/src/fragments/44/fragment44_20EBC0.o(.rodata);
         build/src/fragments/44/fragment44_20F140.o(.rodata);

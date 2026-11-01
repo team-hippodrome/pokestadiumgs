@@ -317,3 +317,4 @@ D_87F11494 = 0x87F11494; // size:0x4 force_migration:true
 D_87F11498 = 0x87F11498; // size:0x4 force_migration:true
 D_87F1149C = 0x87F1149C; // size:0x4 force_migration:true
 D_87F114A0 = 0x87F114A0; // size:0x4 force_migration:true
+D_8AF29EB4 = 0x8AF29EB4; // type:f32 size:0x10C force_migration:true
