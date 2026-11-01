@@ -16,6 +16,11 @@ const char D_84302AFC[] = "ShuffleWaza\n";
 const char D_84302B0C[] = "SetPP\n";
 const char D_84302B14[] = "ShufflePokeMon\n";
 const char D_84302B24[] = "SetPokeMonData\n";
+// The five-byte species name template func_84301DEC copies into each party record. Its
+// nonmatchings .s carried these bytes in its .rodata section; this definition keeps the
+// object's .rodata (the [0x4201D0, .rodata, fragments/81/fragment81_code] subsegment)
+// byte-identical now that the function is C.
+const u8 D_84302B34[] = "DAI8";
 
 extern u32 func_8003570C(void);
 u8 HeldItem_ForSpecies_fragment81(u8 species) {
@@ -880,7 +885,85 @@ void TeamRoster_Shuffle_fragment81(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/81/fragment81_code/func_84301DEC.s")
+/* mkdraft:func_84301DEC begin */
+extern u32 Pokemon_CalculateStat(s32, s32, u16, u16, u16);
+extern u8 *func_80060EC8(void *, void *);
+extern s32 func_80061B88(s32, u16);
+extern s32 func_800625E0(s32, s32);
+extern void _bzero(void *, s32);
+extern u8 func_84300BE8(void);
+extern u8 func_843016CC(u8 *);
+extern void func_84301BA4(u8 *);
+extern void func_84301C58(u8 *);
+extern void Pokemon_ShuffleMoves_fragment81(u8 *);
+extern void TeamRoster_Shuffle_fragment81(void);
+extern void SpeciesCandidates_PopulateTypes_fragment81(u8);
+
+extern const u8 D_84302B34[];
+
+typedef struct {
+    u8 name[5];
+} Fragment81PokemonName;
+
+// Writes a six-entry party, one 0x58-byte record per iteration.
+//
+// The loop steps arg0 itself instead of declaring `u8 *mon = arg0;`. IDO only copies the
+// parameter into $s0 at entry (`or s0,a0,zero` before `sw ra,0x44(sp)`, 0x84301E24/0x84301E28)
+// when the parameter is modified in the body; a separate pointer turns the same copy into a
+// body instruction that the scheduler places after the ra save (diff score 60).
+
+
+void func_84301DEC(void *arg0) {
+    s32 i;
+
+    for (i = 0; i != 6; i++) {
+        _bzero(&D_84302CA0, 0x362);
+        _bzero(D_84303008, 0x200);
+        SpeciesCandidates_PopulateTypes_fragment81(i);
+        ((u8 *)arg0)[0] = func_84300BE8();
+        ((u8 *)arg0)[0x1D] = D_84302564[D_84302C88.selector].level;
+        func_84301BA4(((u8 *)arg0));
+        ((u8 *)arg0)[1] = func_843016CC(((u8 *)arg0));
+        // FAKE: the & 0xFFFF costs no instruction but one temp slot; it keeps the following
+        // call's t-registers in the target's numbering (diff score 315 without the mask).
+        *(u16 *)(((u8 *)arg0) + 6) = (u16)(func_8003570C() & 0xFFFF);
+        Pokemon_ShuffleMoves_fragment81(((u8 *)arg0));
+        func_84301C58(((u8 *)arg0));
+        *(s32 *)(((u8 *)arg0) + 8) = func_80061B88(((u8 *)arg0)[0], ((u8 *)arg0)[0x1D]);
+        if (D_84302C88.use_rule_table == 0) {
+            s32 cut = (s32)((0x2A8 - D_84302CA0.base_stat_total) * 0xFFFF) / 500;
+
+            *(u16 *)(((u8 *)arg0) + 0xC) = cut;
+            *(u16 *)(((u8 *)arg0) + 0xE) = cut;
+            *(u16 *)(((u8 *)arg0) + 0x10) = cut;
+            *(u16 *)(((u8 *)arg0) + 0x12) = cut;
+            *(u16 *)(((u8 *)arg0) + 0x14) = cut;
+        }
+        // FAKE: temp slot from the & 0xFFFF as above; diff score 285 without the mask.
+        *(u16 *)(((u8 *)arg0) + 0x16) = (u16)(func_8003570C() & 0xFFFF);
+        // FAKE: temp slot from the & 0xFF as above; diff score 285 without the mask.
+        ((u8 *)arg0)[0x1C] = (u8)(func_8003570C() & 0xFF);
+        if (((u8 *)arg0)[0] == 0x19 && !(func_8003570C() & 0xFF)) {
+            ((u8 *)arg0)[0x1E] |= 2;
+        }
+        *(u16 *)(((u8 *)arg0) + 0x26) = Pokemon_CalculateStat(0, ((u8 *)arg0)[0], *(u16 *)(((u8 *)arg0) + 0xC), ((u8 *)arg0)[0x1D], *(u16 *)(((u8 *)arg0) + 0x16));
+        *(u16 *)(((u8 *)arg0) + 0x2A) = Pokemon_CalculateStat(1, ((u8 *)arg0)[0], *(u16 *)(((u8 *)arg0) + 0xE), ((u8 *)arg0)[0x1D], *(u16 *)(((u8 *)arg0) + 0x16));
+        *(u16 *)(((u8 *)arg0) + 0x2C) = Pokemon_CalculateStat(2, ((u8 *)arg0)[0], *(u16 *)(((u8 *)arg0) + 0x10), ((u8 *)arg0)[0x1D], *(u16 *)(((u8 *)arg0) + 0x16));
+        *(u16 *)(((u8 *)arg0) + 0x2E) = Pokemon_CalculateStat(3, ((u8 *)arg0)[0], *(u16 *)(((u8 *)arg0) + 0x12), ((u8 *)arg0)[0x1D], *(u16 *)(((u8 *)arg0) + 0x16));
+        *(u16 *)(((u8 *)arg0) + 0x30) = Pokemon_CalculateStat(4, ((u8 *)arg0)[0], *(u16 *)(((u8 *)arg0) + 0x14), ((u8 *)arg0)[0x1D], *(u16 *)(((u8 *)arg0) + 0x16));
+        *(u16 *)(((u8 *)arg0) + 0x32) = Pokemon_CalculateStat(5, ((u8 *)arg0)[0], *(u16 *)(((u8 *)arg0) + 0x14), ((u8 *)arg0)[0x1D], *(u16 *)(((u8 *)arg0) + 0x16));
+        *(u16 *)(((u8 *)arg0) + 0x28) = *(u16 *)(((u8 *)arg0) + 0x26);
+        *(Fragment81PokemonName *)(((u8 *)arg0) + 0x40) = *(Fragment81PokemonName *)D_84302B34;
+        func_80060EC8(((u8 *)arg0) + 0x4C, ((u8 *)arg0) + 0x40);
+        func_800625E0((s32)(((u8 *)arg0) + 0x34), ((u8 *)arg0)[0]);
+        arg0 = ((u8 *)arg0) + 0x58;
+        D_84302C88.count = D_84302C88.count + 1;
+        D_84302C88.unk_0C = D_84302C88.unk_0C + D_84302CA0.base_stat_total;
+        D_84302C88.stat_limit = (s32)D_84302C88.unk_0C / (s32)D_84302C88.count;
+    }
+    TeamRoster_Shuffle_fragment81();
+}
+/* mkdraft:func_84301DEC end */
 
 extern s32 func_8006A388(void);
 extern s32 func_8006A3E0(void);
