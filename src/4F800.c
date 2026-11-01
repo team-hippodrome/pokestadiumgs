@@ -349,7 +349,7 @@ void UiImageNode_SetRenderState(u8 *node) {
 #endif
 
 #ifdef VERSION_US
-extern s32 func_80050640(u8 *);
+extern s32 UiAnimationCursor_Step(u8 *);
 extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
 extern Gfx D_80094F50[];
 // Resolves the animated image entry, clips it, and draws at its native dimensions.
@@ -369,7 +369,7 @@ void UiImageNode_DrawUnscaled(u8 *node, s32 x, s32 y) {
     entry = *(u16 *)(node + 38);
     flags = 0;
     if ((animation = *(u8 **)(node + 52)) != NULL) {
-        animated_entry = func_80050640(animation);
+        animated_entry = UiAnimationCursor_Step(animation);
         if (animated_entry >= 0) {
             entry = animated_entry;
         } else if (animated_entry == -1) {
@@ -653,24 +653,50 @@ void func_80050578(u8 *arg0, s32 arg1) { if (arg0 != NULL) { u8 *value = *(u8 **
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_800505A4.s")
+// Advances the entry index at duration boundaries and returns the next frame counter.
+// The header stores flags, an entry count, and a 32-bit address of four-byte entries.
+// UiAnimationCursor_Step stores the returned counter and reads the selected entry value.
+s32 UiAnimationCursor_NextFrame(u8 *cursor) {
+    u8 *animation_data;
+    u8 *entry;
+    s16 next_frame;
+
+    next_frame = *(s16 *)cursor + 1;
+    animation_data = *(u8 **)(cursor + 8);
+    entry = (u8 *)(*(s16 *)(cursor + 2) * 4 + *(u32 *)(animation_data + 4));
+    if (next_frame >= *(s16 *)entry) {
+        if (*(u16 *)animation_data & 1) {
+            *(s16 *)(cursor + 2) = *(s16 *)(cursor + 2) + 1;
+            next_frame = 0;
+            if (*(s16 *)(cursor + 2) >= *(u16 *)(*(u8 **)(cursor + 8) + 2)) {
+                (*(s16 *)(cursor + 2))--;
+                next_frame = *(s16 *)cursor;
+            }
+        } else {
+            *(s16 *)(cursor + 2) = *(s16 *)(cursor + 2) + 1;
+            next_frame = 0;
+            if (*(s16 *)(cursor + 2) >= *(u16 *)(animation_data + 2)) {
+                *(s16 *)(cursor + 2) = 0;
+            }
+        }
+    }
+    return next_frame;
+}
 #endif
 
 #ifdef VERSION_US
-extern s32 func_800505A4(u8 *);
-s32 func_80050640(u8 *arg0)
-{
-  s32 result = -2;
-  int new_var;
-  if ((*((u16 *) (arg0 + 4))) & 1)
-  {
-    if ((*((u8 **) (arg0 + 8))) != 0)
-    {
-      *((s16 *) arg0) = func_800505A4(arg0);
-      result = *((s16 *) (((*((u8 **) ((*((u8 **) (arg0 + 8))) + 4))) + ((*((s16 *) (arg0 + 2))) * 4)) + (new_var = 2)));
+// Updates an enabled cursor and returns its entry value, or -2 when no animation is active.
+s32 UiAnimationCursor_Step(u8 *cursor) {
+    s32 result = -2;
+
+    if (*(u16 *)(cursor + 4) & 1) {
+        if (*(u8 **)(cursor + 8) != NULL) {
+            *(s16 *)cursor = UiAnimationCursor_NextFrame(cursor);
+            result = *(s16 *)(*(s16 *)(cursor + 2) * 4 +
+                             *(u32 *)(*(u8 **)(cursor + 8) + 4) + 2);
+        }
     }
-  }
-  return result;
+    return result;
 }
 #endif
 
