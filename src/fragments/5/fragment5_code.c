@@ -19,7 +19,53 @@ void func_83200028(void *arg0, void *arg1, void *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/5/fragment5_code/func_83200484.s")
+/* mkdraft:func_83200484 begin */
+extern void WidgetResources_DrawRecords(s32 arg0, s32 arg1, s32 arg2);
+extern u8 *WidgetTexture_GetDescriptor(void *arg0);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern void func_818055E0(void *arg0, void *arg1);
+extern Gfx *D_800D0510;
+
+extern void func_83200078(void *arg0, s32 arg1, s32 arg2, f32 arg3, s32 arg4);
+extern f32 D_83200DA4;
+extern f32 D_83200DA8;
+extern f32 D_83200DAC;
+
+typedef struct {
+    s16 unk0;
+    s16 unk2;
+} WidgetTextureRef;
+
+typedef struct {
+    WidgetTextureRef refs[3];
+} WidgetTextureRefList;
+
+extern WidgetTextureRefList D_83200CF8;
+
+
+
+void func_83200484(void *arg0, u8 *arg1, void *arg2) {
+    WidgetTextureRefList refs = D_83200CF8;
+    s32 pad[2]; // FAKE: unused; allocates the 0x50-byte frame with refs at sp+0x44 as in the target. Score without it: 54.
+
+    func_818055E0(arg0, arg1);
+    func_83200078(WidgetTexture_GetDescriptor(&refs.refs[0]), *(s16 *)((u8 *)arg2 + 0) + 0x48, *(s16 *)((u8 *)arg2 + 2) + 0x34, ((((f32)*(u8 *)(arg1 + 0x43) / 60.0f) + (f32)*(u8 *)(arg1 + 0x42)) / 12.0f) * D_83200DA4, 1);
+    func_83200078(WidgetTexture_GetDescriptor(&refs.refs[1]), *(s16 *)((u8 *)arg2 + 0) + 0x48, *(s16 *)((u8 *)arg2 + 2) + 0x34, ((((f32)*(u8 *)(arg1 + 0x44) / 60.0f) + (f32)*(u8 *)(arg1 + 0x43)) / 60.0f) * D_83200DA8, 1);
+    func_83200078(WidgetTexture_GetDescriptor(&refs.refs[2]), *(s16 *)((u8 *)arg2 + 0) + 0x48, *(s16 *)((u8 *)arg2 + 2) + 0x34, ((f32)*(u8 *)(arg1 + 0x44) / 60.0f) * D_83200DAC, 0);
+    WidgetResources_DrawRecords((s32)arg0, (s32)arg1, (s32)arg2);
+    func_800498C4();
+    func_800496A4(4, 0);
+    gDPSetCombine(D_800D0510++, 0xFC30FE61, 0x55FEF379);
+    gDPSetPrimColor(D_800D0510++, 0xFF, 0xFF, 0x6E, 0x6E, 0x6E, 0xFF);
+    gDPSetEnvColor(D_800D0510++, 0xBE, 0xBE, 0xD2, 0);
+    func_800495F8(*(s16 *)((u8 *)arg2 + 0) + 0x49, *(s16 *)((u8 *)arg2 + 2) + 0x6F, 1, func_8004C874(0x3D, (*(u16 *)(arg1 + 0x40) % 7) + 0xB));
+    func_800499EC();
+}
+/* mkdraft:func_83200484 end */
 #endif
 
 #ifdef VERSION_US
