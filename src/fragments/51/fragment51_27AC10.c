@@ -2,7 +2,54 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86304DF0.s")
+/* mkdraft:func_86304DF0 begin */
+extern const f32 D_86307464[];
+extern const f32 D_86307560;
+
+
+
+void func_86304DF0(f32 *arg0, f32 *arg1, f32 *arg2, u8 *arg3, u8 *arg4) {
+    f32 var_fv1;
+    f32 frac;
+    f32 scale;
+    s32 temp_v0;
+    s32 temp_lo;
+    s32 var_a0;
+
+    if (*(s32 *)(arg3 + 0xC) & 0x40000000) {
+        temp_v0 = *(s32 *)(arg3 + 0x1C);
+        if (temp_v0 < 0xB) {
+            temp_lo = temp_v0 / 3;
+            var_a0 = temp_lo + 1;
+            if (temp_lo == 0xA) {
+                var_a0 = 0;
+            }
+            frac = (f32)(temp_v0 % 3) / 3.0f;
+            var_fv1 = (D_86307464[temp_lo] * (1.0f - frac)) + (D_86307464[var_a0] * frac);
+        } else {
+            var_fv1 = D_86307464[0];
+        }
+    } else {
+        var_fv1 = D_86307464[0];
+    }
+    scale = D_86307560;
+    if (arg0) { } // karodo: empty block; its line boundary attributes the 60.0f materialization here instead of uopt's entry constant pool, so as1 fills the multiply latency slot with it. Without it: 495.
+    arg0[0] = (*(f32 *)(arg4 + 0x20) * var_fv1 * scale) + *(f32 *)(arg3 + 0x48);
+    arg0[1] = (*(f32 *)(arg4 + 0x24) * var_fv1 * scale) + *(f32 *)(arg3 + 0x4C);
+
+    arg1[0] = arg0[0] - (*(f32 *)(arg4 + 0x18) * 60.0f);
+    arg1[1] = arg0[1] - (*(f32 *)(arg4 + 0x1C) * 60.0f);
+    arg1[2] = (*(f32 *)(arg4 + 0x18) * 60.0f) + arg0[0];
+    arg1[3] = (*(f32 *)(arg4 + 0x1C) * 60.0f) + arg0[1];
+    arg1[4] = *(f32 *)(arg4 + 0x44) - (*(f32 *)(arg4 + 0x18) * 60.0f);
+    arg1[5] = *(f32 *)(arg4 + 0x48) - (*(f32 *)(arg4 + 0x1C) * 60.0f);
+    arg1[6] = (*(f32 *)(arg4 + 0x18) * 60.0f) + *(f32 *)(arg4 + 0x44);
+    arg1[7] = (*(f32 *)(arg4 + 0x1C) * 60.0f) + *(f32 *)(arg4 + 0x48);
+
+    arg2[0] = arg0[0] - *(f32 *)(arg4 + 0x44);
+    arg2[1] = arg0[1] - *(f32 *)(arg4 + 0x48);
+}
+/* mkdraft:func_86304DF0 end */
 
 void func_8630500C(void *a) {
     func_86305C48(
@@ -75,7 +122,48 @@ s32 func_8630557C(u8 *arg0, u8 *arg1, f32 *arg2, f32 arg3, f32 arg4, s32 *arg5) 
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305694.s")
+/* mkdraft:func_86305694 begin */
+// Probes the two sample points of the object at arg0 and commits an
+// interpolation toward the object's own direction vector (0x40/0x44):
+// 0x78/0x7C become the interpolation endpoints and 0x70 the alpha, which
+// func_86305144 reads as "0 = stay at arg0 + 0x20, 1 = reach arg0 + 0x40".
+// The first probe runs the direction reversed and the second one as stored;
+// func_8630557C reports a hit only when the probe point lies within 21 units
+// and writes through its last argument whether the probed bearing is
+// negative (dot product with the object's 0x20/0x24 vector), which
+// func_86305144 uses to choose its offset pair (0x48/0x4C).
+// Returns 1 when neither probe point was in range and 0 after a commit.
+
+
+s32 func_86305694(u8 *arg0) {
+    s32 result;
+    s32 dot_negative;
+    f32 *start;
+    f32 *probe;
+    s32 pad0;  // FAKE: two unused words inflate the frame to 0x48; without
+    s32 pad1;  // them every stack slot lands 8 bytes low (diff score 68).
+
+    probe = (f32 *)(arg0 + 0x20);
+    start = probe;
+    result = 1;
+    if (func_8630557C(arg0, *(u8 **)(arg0 + 0xC), probe, -*(f32 *)(arg0 + 0x40), -*(f32 *)(arg0 + 0x44), &dot_negative) != 0) {
+        *(f32 *)(arg0 + 0x70) = 0.0f;
+        *(f32 **)(arg0 + 0x78) = start;
+        *(f32 **)(arg0 + 0x7C) = (f32 *)(arg0 + 0x40);
+        func_8630500C(arg0);
+        func_86305144(arg0, dot_negative);
+        result = 0;
+    } else if (func_8630557C(arg0, *(u8 **)(arg0 + 0xC), (f32 *)(arg0 + 0x28), *(f32 *)(arg0 + 0x40), *(f32 *)(arg0 + 0x44), &dot_negative) != 0) {
+        *(f32 *)(arg0 + 0x70) = 1.0f;
+        *(f32 **)(arg0 + 0x78) = start;
+        *(f32 **)(arg0 + 0x7C) = (f32 *)(arg0 + 0x40);
+        func_8630500C(arg0);
+        func_86305144(arg0, dot_negative);
+        result = 0;
+    }
+    return result;
+}
+/* mkdraft:func_86305694 end */
 
 void func_86305790(void) {}
 void func_86305790_padding(void) {}

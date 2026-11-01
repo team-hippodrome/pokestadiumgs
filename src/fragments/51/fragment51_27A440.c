@@ -28,7 +28,48 @@ void func_86304620(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27A440/func_8630470C.s")
+/* mkdraft:func_8630470C begin */
+extern u8 *D_863075D8;
+extern u8 D_8630745C;
+extern u8 D_8630745D;
+extern void func_86304620(void);
+extern void *func_87F025B8(u8 *, void (*)());
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern s32 func_8003F210(void *, s32);
+extern u32 func_8003570C(void);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_87F06430(void *, s32);
+
+
+
+void func_8630470C(void) {
+    // FAKE: these two pointer locals only force the D_8630745D/D_8630745C loads back
+    // into the loop body; using the globals directly scores 2221.
+    u8 *D_8630745D_ptr = &D_8630745D;
+    u8 *D_8630745C_ptr = &D_8630745C;
+    s32 slot;
+    u8 *anim;
+    u8 *node;
+
+    for (slot = 0; slot != 4; slot++) {
+        node = func_87F025B8(D_863075D8 + 0x88DC, func_86304620);
+        func_8003F1DC(node + 0x24);
+        anim = node + 0x24;
+        func_8003F114(anim, 0, -1, ((s32 (*)[2])(D_863075D8 + 0xE0))[slot][*D_8630745C_ptr]);
+        func_8003F210(anim, *D_8630745D_ptr);
+        ModelAnim_SetFrame(anim, (s16) (func_8003570C() % 41));
+        ModelAnim_SetSpeed(anim, 0x17FFE);
+        func_87F06430(node + 0x48, slot);
+        *(s32 *)(node + 0x20) = slot;
+        *(f32 *)(node + 0x5C) = 0.1f;
+        *(f32 *)(node + 0x58) = 0.1f;
+        *(f32 *)(node + 0x54) = 0.1f;
+        *(f32 *)(node + 0x4C) = *(f32 *)(node + 0x4C) - 30.0f;
+    }
+}
+/* mkdraft:func_8630470C end */
 
 extern u8 *D_863075D8;
 extern void func_87F02684(void *);
