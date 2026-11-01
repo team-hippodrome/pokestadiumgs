@@ -475,7 +475,42 @@ void *func_87C01278(void *arg0, void *arg1) {
 }
 /* mkdraft:func_87C01278 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C013CC.s")
+/* mkdraft:func_87C013CC begin */
+
+
+void func_87C013CC(void *arg0, void *arg1) {
+    typedef struct { f64 x; f64 y; f64 z; f64 w; } V;
+    // Quaternion (x, y, z, w) to a column-major 4x4 rotation matrix; zz is
+    // 2*z*z and so on. The 2 stays an integer literal: IDO compiles `z * 2` to
+    // a multiply by a materialized 2.0 but rewrites `z * 2.0` as `z + z`.
+    f64 zz = ((V *)arg0)->z * 2 * ((V *)arg0)->z;
+    f64 ww = ((V *)arg0)->w * 2 * ((V *)arg0)->w;
+    f64 yy = ((V *)arg0)->y * 2 * ((V *)arg0)->y;
+    f64 yz = ((V *)arg0)->y * 2 * ((V *)arg0)->z;
+    f64 yw = ((V *)arg0)->y * 2 * ((V *)arg0)->w;
+    f64 zw = ((V *)arg0)->z * 2 * ((V *)arg0)->w;
+    f64 xw = ((V *)arg0)->x * 2 * ((V *)arg0)->w;
+    f64 xy = ((V *)arg0)->x * 2 * ((V *)arg0)->y;
+    f64 xz = ((V *)arg0)->x * 2 * ((V *)arg0)->z;
+    f32 *m = arg1;
+    m[0]  = (f32)((1.0 - zz) - ww);
+    m[4]  = (f32)(yz - xw);
+    m[8]  = (f32)(yw + xz);
+    m[12] = 0.0f;
+    m[1]  = (f32)(yz + xw);
+    m[5]  = (f32)((1.0 - yy) - ww);
+    m[9]  = (f32)(zw - xy);
+    m[13] = 0.0f;
+    m[2]  = (f32)(yw - xz);
+    m[6]  = (f32)(zw + xy);
+    m[10] = (f32)((1.0 - yy) - zz);
+    m[14] = 0.0f;
+    m[3] = 0.0f;
+    m[7] = 0.0f;
+    m[11] = 0.0f;
+    m[15] = 1.0f;
+}
+/* mkdraft:func_87C013CC end */
 
 void func_87C01540(void *arg0, void *arg1) {
     typedef struct { f64 x; f64 y; f64 z; f64 w; } V;
