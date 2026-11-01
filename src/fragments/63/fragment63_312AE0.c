@@ -23,14 +23,17 @@ void func_87E0F288(void *arg0, s32 arg1) {
         Audio_PlayDefaultSound(0xCF01);
         value = *(s32 *)((u8 *)state + 0xC);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     if (((value << 2) >= 0) && ((arg1 << 2) < 0)) {
         Audio_PlayDefaultSound(0xCF02);
         value = *(s32 *)((u8 *)state + 0xC);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     if (((value << 1) >= 0) && ((arg1 << 1) < 0)) {
         Audio_PlayDefaultSound(0xCF01);
         value = *(s32 *)((u8 *)state + 0xC);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     *(s32 *)((u8 *)state + 0xC) = value | arg1;
     *(s32 *)((u8 *)state + 0x1C) = 0;
 }
@@ -77,6 +80,7 @@ void func_87E0F33C(void) {
             }
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x20000000) {
         if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 5) {
             *(s32 *)((u8 *)D_87F119DC + 0xC) &= ~0x20000000;
@@ -102,20 +106,24 @@ void func_87E0F33C(void) {
             }
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x10000000) {
         *(f32 *)((u8 *)D_87F119DC + 0x5C) += 0.25f;
     } else {
         *(f32 *)((u8 *)D_87F119DC + 0x5C) -= 0.25f;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
     if (level > 1.0f) {
         *(f32 *)((u8 *)D_87F119DC + 0x5C) = 1.0f;
         level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     if (level < 0.0f) {
         *(f32 *)((u8 *)D_87F119DC + 0x5C) = 0.0f;
         level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     *(f32 *)((u8 *)D_87F119DC + 0x58) = level;
     *(f32 *)((u8 *)D_87F119DC + 0x54) = level;
 }
@@ -140,6 +148,7 @@ void func_87E0F664(s32 arg0, s32 arg1) {
         gSPDisplayList(D_800D0510++, *(void **)((u8 *)temp_v0 + 0x648));
         GeoRender_ApplyMaterialState();
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 void func_87E0F740(u8 *arg0, s32 arg1) {
@@ -164,6 +173,7 @@ void func_87E0FBB4(s32 arg0, u8 *arg1, u32 arg2, u32 arg3) {
             *(u32 *)(arg1 + 0x14) |= 1;
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern u32 func_8003570C(void);
@@ -185,6 +195,7 @@ void func_87E0FC90(s32 arg0, u8 *arg1, void *arg2, u32 arg3, u32 arg4) {
             *(u32 *)(arg1 + 0xC) = func_8003570C() % arg3;
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E0FDB4.s")
@@ -214,6 +225,7 @@ void func_87E0FFA0(void *arg0, s32 arg1) {
                       0, 0, 0x400, 0x400, 0);
         gSPDisplayList(D_800D0510++, D_80094F50);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 /* mkdraft:func_87E10094 begin */
@@ -241,6 +253,7 @@ void func_87E10094(s32 arg0, void *arg1) {
         func_87E0FFA0(arg1, value);
         break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 /* mkdraft:func_87E10094 end */
 
@@ -267,6 +280,7 @@ void func_87E10154(s32 arg0, void *arg1) {
         func_87E0FFA0(arg1, value);
         break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern s32 D_87E1A9A0[];
@@ -292,6 +306,7 @@ void func_87E10214(s32 arg0, void *arg1) {
         func_87E0FFA0(arg1, value);
         break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 /* mkdraft:func_87E102D4 begin */
@@ -310,7 +325,7 @@ s32 func_87E102D4(s32 arg0, u8 *arg1) {
     switch (arg0) {
     case 0:
         *(u16 *)(arg1 + 2) &= 0xFFFD;
-        return;
+        break;
     case 1:
         if (((1 << *(s32 *)(arg1 + 0x20)) & *(u8 *)((u8 *)*(void **)((u8 *)(u32)D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) {
             sp50 = *(s32 *)(arg1 + 0x20) + ((((1 << *(s32 *)(arg1 + 0x20)) & *(u8 *)((u8 *)*(void **)((u8 *)(u32)D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) ? 6 : 2);
@@ -324,8 +339,9 @@ s32 func_87E102D4(s32 arg0, u8 *arg1) {
                                  0, 0, 0x6AB, 0x6AB, 0);
             gSPDisplayList(D_800D0510++, D_80094F50);
         }
-        return;
+        break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 /* mkdraft:func_87E102D4 end */
 
@@ -346,6 +362,7 @@ void func_87E10524(void *arg0, s32 (*arg1)(s32, void *), s32 arg2) {
             var_s0 = (*(void **)((u8 *)(var_s0) + (0x14)));
         } while (var_s0 != temp_s3);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 s32 func_87E10598(s32 arg0, void *arg1) {
@@ -367,6 +384,7 @@ s32 func_87E10598(s32 arg0, void *arg1) {
             p[0x47] = value;
             break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern s32 func_87E10598(s32, void *);
@@ -406,6 +424,7 @@ void func_87E10670(void) {
             *(f32 *)(entry + 0x54) = 0.0f;
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern void func_87F02684(s32);
@@ -461,6 +480,7 @@ void func_87E1097C(s32 *arg0, s32 arg1) {
         func_87F0AA80(*arg0, 0x44425F4D, &D_87E1A5E4);
         func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44425F50, func_87E10500, NULL);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 void func_87E109FC(s32 *arg0, s32 arg1) {
@@ -479,6 +499,7 @@ void func_87E109FC(s32 *arg0, s32 arg1) {
             func_87F0AB08((TreeNode_80050428 *)*arg0, 0x4B4D4D31, func_87E10214, (void *)2); // 'KMM1'
             break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E10B30.s")
@@ -488,6 +509,7 @@ void func_87E10E64(s32 arg0) {
         (*(s32 *)((u8 *)(D_87E1EBB8) + (8))) = arg0;
         func_87E0F170();
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern void func_87E1078C(void);
@@ -498,12 +520,14 @@ void func_87E10F2C(s32 arg0) {
     if ((arg0 >= -1) && (arg0 < 4)) {
         (*(s32 *)((u8 *)(D_87E1EBB8) + (0x10))) = arg0;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 void func_87E10F50(s32 arg0) {
     if ((arg0 >= -1) && (arg0 <= 0)) {
         (*(s32 *)((u8 *)(D_87E1EBB8) + (0x14))) = arg0;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 void func_87E10F74(void *arg0, s32 arg1) {
@@ -549,6 +573,7 @@ void func_87E11148(void *arg0, s32 arg1) {
         digit = *(u16 *)((u8 *)(u32)D_87E1EBB8 + 0x93A) % 10;
         break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     *(s32 *)((u8 *)arg0 + 4) = func_8004C990(0x1B8, D_87E1AA40[(u8)digit]);
 }
 
@@ -649,6 +674,7 @@ s32 func_87E11534(s32 count, s32 selected, u8 *entry, u8 inc, u8 dec) {
             entry += 8;
         } while (i != count);
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     return done;
 }
 
@@ -679,6 +705,7 @@ void func_87E1162C(s32 *arg0, s32 *arg1, s32 *arg2) {
         *arg1 = -1;
         *arg2 = -1;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     switch (*arg0) {
         case 6:
             advance = 0;
@@ -695,6 +722,7 @@ void func_87E1162C(s32 *arg0, s32 *arg1, s32 *arg2) {
             }
             break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     // A zero first argument makes the frame helpers below reset their frame
     // instead of advancing it (//@{src/fragments/63/fragment63_312AE0.c}
     // func_87E0FBB4, func_87E0FC90, func_87E0FDB4).
@@ -716,6 +744,7 @@ void func_87E1162C(s32 *arg0, s32 *arg1, s32 *arg2) {
                 break;
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 /* mkdraft:func_87E1162C end */
 
@@ -747,6 +776,7 @@ void func_87E11850(s32 arg0) {
         }
         entry += 8;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 void func_87E11924(s32 arg0) {
@@ -764,6 +794,7 @@ void func_87E11924(s32 arg0) {
             }
         }
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern void func_87E1162C(s32 *, s32 *, s32 *);
@@ -793,6 +824,7 @@ void func_87E11A5C(s32 arg0, s32 arg1) {
         i++;
         arg1 += 8;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern void Geo_RenderRootNode(s32);
@@ -817,6 +849,7 @@ void func_87E11B30(s32 arg0) {
     } else {
         var_a1 = D_87E1A4B0;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     func_8004C54C(0x15, (s32)var_a1);
 }
 
@@ -840,6 +873,7 @@ void func_87E11BA4(s32 arg0) {
         sp18 = 2;
         break;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     func_8004C54C(0x53, func_8004C874(0x32, sp1C));
     *(s16 *)((u8 *)(u32)D_87E1EBB8 + 0x93A) = func_80054668(sp18);
 }
@@ -853,6 +887,7 @@ void func_87E11C38(s32 arg0) {
     if ((arg0 < 5) || (arg0 >= 10)) {
         arg0 = 7;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     func_8004C594(1, arg0);
     entry = D_87E1A4B4;
     entry += (arg0 - 5) * 8;
@@ -872,6 +907,7 @@ void func_87E11CC0(void) {
     if (temp_v1 != NULL) {
         temp_v1();
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 }
 
 extern s32 D_87E1AB14[];
@@ -885,6 +921,7 @@ void func_87E11D00(s32 arg0, s32 arg1) {
     if (arg0 != 5) {
         return;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
 
     context = (u8 *)D_8009491C;
     temp_v0 = *(void **)(context + 0x14);
@@ -925,6 +962,7 @@ void *func_87E12070(void *arg0, s32 arg1, s32 arg2) {
         *(s32 *)((u8 *)temp_a0 + 0x94) = arg1;
         *(s32 *)temp_a0 = arg2;
     }
+    //!bug: no return value (retail asm leaves v0 unset on both paths)
     return temp_v0;
 }
 
