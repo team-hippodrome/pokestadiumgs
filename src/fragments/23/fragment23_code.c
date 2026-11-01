@@ -193,7 +193,54 @@ s32 func_82A00A90(void *arg0) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A00ABC.s")
+/* mkdraft:func_82A00ABC begin */
+extern u8 D_82A01A09;
+extern s8 D_82A01A08;
+extern s32 func_82A00A04(s32, s32);
+extern s32 func_82A00A90(void *);
+
+
+
+s32 func_82A00ABC(s32 arg0, u8 *arg1) {
+    s32 var_a1;
+    s32 index;
+    s16 dx;
+    s16 dy;
+    u8 *entry;
+
+    index = *(s32 *)(arg1 + 0x20);
+    if (index < 2) {
+        var_a1 = 1;
+    } else {
+        var_a1 = 0;
+    }
+    switch (arg0) {
+        case 0:
+            *(s16 *)(arg1 + 0x26) = func_82A00A04(*(&D_82A01A09 + index * 4), var_a1);
+            entry = D_82A019C8 + index * 0x10;
+            // FAKE: dead test that splits the case-0 block; IDO then schedules the
+            // case-1 index*4 shift into the beq delay slot. Diff score 160 without it.
+            if (!entry) {
+            }
+            *(s16 *)(entry + 0xC) = *(s16 *)(arg1 + 8);
+            *(s16 *)(entry + 0xE) = *(s16 *)(arg1 + 0xA);
+            break;
+        case 1:
+            if (func_82A00A90(&D_82A01A08 + index * 4) != 0) {
+                *(u16 *)(arg1 + 2) |= 2;
+                entry = D_82A019C8 + index * 0x10;
+                dx = *(s16 *)(entry + 0xC) - *(s16 *)(entry + 4);
+                dy = *(s16 *)(entry + 0xE) - *(s16 *)(entry + 6);
+                *(s16 *)(arg1 + 8) = *(s16 *)(entry + 8) + *(s16 *)(entry + 4) + dx;
+                *(s16 *)(arg1 + 0xA) = *(s16 *)(entry + 0xA) + *(s16 *)(entry + 6) + dy;
+            } else {
+                *(u16 *)(arg1 + 2) &= 0xFFFD;
+            }
+            break;
+    }
+    return 0;
+}
+/* mkdraft:func_82A00ABC end */
 
 s32 func_800060E8();
 s8 func_8005D8CC(s32);
