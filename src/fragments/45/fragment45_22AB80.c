@@ -816,9 +816,156 @@ s32 func_8AB07F80(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB080A0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB0896C.s")
+/* mkdraft:func_8AB0896C begin */
+extern void *D_80087200;
+extern s32 func_800279C4(s32);
+extern s32 func_8AB0148C(s16);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB08B14.s")
+// Dispatches arg0 (a stage-menu state) to its handler with arg1 = 1, then
+// re-dispatches the result while any of Rumble/Start-type buttons is held
+// (states 24-26 redraw through func_8AB0A2D8) before stepping the four
+// cursor/icon refresh handlers.
+s32 func_8AB0896C(s32 arg0) {
+    extern s32 func_8AB08C6C(s32);
+    extern s32 func_8AB08D3C(s32);
+    extern s32 func_8AB08CD0(s32);
+    extern s32 func_8AB08DBC(s32);
+    extern s32 func_8AB08F58(s32);
+    extern s32 func_8AB090B8(s32);
+    extern s32 func_8AB09A28(s32);
+    extern s32 func_8AB09BD8(s32);
+    extern s32 func_8AB09E28(s32);
+    extern s32 func_8AB09FC4(s32);
+    extern s32 func_8AB09FBC();
+    extern s32 func_8AB0A074(s32);
+    extern s32 func_8AB0A2D8(s32);
+    extern s32 func_8AB0A720(s32);
+    extern s32 func_8AB0A8D4(s32);
+
+    s32 i;
+
+    switch (arg0) {
+    case 19: arg0 = func_8AB08C6C(1); break;
+    case 20: arg0 = func_8AB08D3C(1); break;
+    case 21: arg0 = func_8AB08CD0(1); break;
+    case 22: arg0 = func_8AB08DBC(1); break;
+    case 23: arg0 = func_8AB08F58(1); break;
+    case 24: arg0 = func_8AB090B8(1); break;
+    case 25: arg0 = func_8AB09A28(1); break;
+    case 26: arg0 = func_8AB09BD8(1); break;
+    case 27: arg0 = func_8AB09E28(1); break;
+    case 29: arg0 = func_8AB09FC4(1); break;
+    case 28: arg0 = func_8AB09FBC(1); break;
+    case 30: arg0 = func_8AB0A074(1); break;
+    case 31: arg0 = func_8AB0A2D8(1); break;
+    case 32: arg0 = func_8AB0A720(1); break;
+    case 33: arg0 = func_8AB0A8D4(1); break;
+    }
+    switch (arg0) {
+    case 19:
+        break;
+    case 24:
+    case 25:
+    case 26:
+        if ((*(u16 *)((u8 *)D_80087200 + 8) & 0x1000) != 0) {
+            func_800279C4(0xCF07);
+            arg0 = func_8AB0A2D8(0);
+        }
+        break;
+    }
+    for (i = 0; i < 4; i++) {
+        func_8AB0148C(i);
+    }
+    return arg0;
+}
+/* mkdraft:func_8AB0896C end */
+
+/* mkdraft:func_8AB08B14 begin */
+extern s32 D_8AB16A40;
+extern void func_800503A4(u8 *arg0);
+extern s32 func_8AB09A28(s32 arg0);
+// Unprototyped on purpose: the file's own matched definition is
+// `s32 func_8AB09FBC(void)` (it returns 0x1C and ignores $a0), but the retail
+// caller still puts 2 in $a0 before the jal. A (s32) prototype clashes with
+// that definition; an unprototyped declaration is compatible with it and
+// still lets the constant be passed.
+extern s32 func_8AB09FBC();
+
+// Same dispatch table as func_8AB0896C but entered with arg1 = 2 after
+// switching the stage background (func_800503A4 with D_8AB16A40's texture).
+void func_8AB08B14(s32 arg0) {
+    extern s32 func_8AB08C6C(s32);
+    extern s32 func_8AB08D3C(s32);
+    extern s32 func_8AB08CD0(s32);
+    extern s32 func_8AB08DBC(s32);
+    extern s32 func_8AB08F58(s32);
+    extern s32 func_8AB090B8(s32);
+    extern s32 func_8AB09A28(s32);
+    extern s32 func_8AB09BD8(s32);
+    extern s32 func_8AB09E28(s32);
+    extern s32 func_8AB09FC4(s32);
+    extern s32 func_8AB09FBC();
+    extern s32 func_8AB0A074(s32);
+    extern s32 func_8AB0A2D8(s32);
+    extern s32 func_8AB0A720(s32);
+    extern s32 func_8AB0A8D4(s32);
+
+    func_800503A4(D_8AB16A40);
+    switch (arg0) {
+        case 19:
+            func_8AB08C6C(2);
+            return;
+        case 20:
+            func_8AB08D3C(2);
+            return;
+        case 21:
+            func_8AB08CD0(2);
+            return;
+        case 22:
+            func_8AB08DBC(2);
+            return;
+        case 23:
+            func_8AB08F58(2);
+            return;
+        case 24:
+            func_8AB090B8(2);
+            return;
+        case 25:
+            func_8AB09A28(2);
+            return;
+        case 26:
+            func_8AB09BD8(2);
+            return;
+        case 27:
+            func_8AB09E28(2);
+            return;
+        /* 29 is deliberately written before 28: the retail jump table
+         * (jtbl_8AB11A44) sends case 28 to func_8AB09FBC and case 29 to
+         * func_8AB09FC4, while IDO lays case bodies out in SOURCE order and
+         * retail has the 9FC4 body first (0x8AB08BE4) and the 9FBC body
+         * second (0x8AB08BF4). Ascending case order puts them the other way
+         * round (two jal relocation diffs, score 1510). */
+        case 29:
+            func_8AB09FC4(2);
+            return;
+        case 28:
+            func_8AB09FBC(2);
+            return;
+        case 30:
+            func_8AB0A074(2);
+            return;
+        case 31:
+            func_8AB0A2D8(2);
+            return;
+        case 32:
+            func_8AB0A720(2);
+            return;
+        case 33:
+            func_8AB0A8D4(2);
+            return;
+    }
+}
+/* mkdraft:func_8AB08B14 end */
 
 extern s32 func_8AB08C6C(s32);
 s32 func_8AB08C4C(void) {
