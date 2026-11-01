@@ -1510,3 +1510,5 @@ func_86805AA4 = Fragment56_InitModelGroups;
 func_868058C0 = Fragment56_UpdatePoolCompletion;
 
 func_86805DB8 = Fragment56_ResetMovingModels;
+
+func_86800D5C = Fragment56_InitStateRecords;

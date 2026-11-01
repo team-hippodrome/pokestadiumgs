@@ -226,7 +226,100 @@ void Fragment56_UpdateScaledParameters(void) {
     D_86807C9C *= D_86807CC8;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800D5C.s")
+extern u8 D_8682EE18[];
+extern u8 D_8682E618[];
+extern u8 D_8682CD18[];
+extern s32 D_86807C40;
+extern s32 D_86807CC4;
+extern s32 D_86807C44;
+extern s32 D_86807C3C;
+extern s32 D_86807C48;
+extern s32 D_86807A74[];
+extern s32 D_868084E8;
+extern u8 D_868085E8[];
+extern u32 func_8003570C(void);
+extern void func_87F03B8C(void *);
+extern void func_86800594(void);
+// Resets four group headers, their word arrays and their 20- and 40-entry pools.
+void Fragment56_InitStateRecords(void) {
+    u8 *group_state;
+    s32 entry_index;
+    s32 group_index;
+    s32 word_index;
+
+    func_86800A7C();
+    for (group_index = 0, group_state = D_8682EE18; group_index < 4; group_index++, group_state += 292) {
+        *(s32 *)(group_state + 0) = 1;
+        *(s32 *)(group_state + 4) = 0;
+        *(s32 *)(group_state + 16) = 1;
+        *(s32 *)(group_state + 20) = 0;
+        *(s32 *)(group_state + 24) = 0;
+        *(s32 *)(group_state + 28) = 0;
+        *(s32 *)(group_state + 32) = 0;
+        *(s32 *)(group_state + 36) = -1;
+        *(s32 *)(group_state + 48) = 0;
+        *(s32 *)(group_state + 40) = 1;
+        *(s32 *)(group_state + 56) = 0;
+        *(s32 *)(group_state + 52) = 0;
+        *(s32 *)(group_state + 64) = 0;
+        *(s32 *)(group_state + 68) = -1;
+        *(s32 *)(group_state + 72) = 0;
+        *(s32 *)(group_state + 76) = 0;
+
+        word_index = 0;
+        while (word_index < 40) {
+            ((s32 *)(D_8682EE18 + group_index * 292 + 80))[word_index] = 0;
+            word_index++;
+        }
+
+        for (entry_index = 0; entry_index < 20; entry_index++) {
+            *(s16 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 8) = 0;
+            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 4) = 0.0f;
+            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 12) = (f32)(func_8003570C() % 3U + 1U);
+            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 16) = 0.0f;
+            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 20) = 0.0f;
+            *(s32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 0) = 0;
+        }
+
+        for (entry_index = 0; entry_index < 40; entry_index++) {
+            *(s16 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 0) = 0;
+            *(s32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 4) = -1;
+            *(s32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 8) = 0;
+            *(s32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 12) = 500;
+            *(s32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 20) = 0;
+            *(f32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 32) = 0.0f;
+            *(s32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 16) = 0;
+            *(f32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 36) = 0.0f;
+            *(s32 *)(D_8682CD18 + group_index * 1600 + entry_index * 40 + 28) = 0;
+        }
+    }
+
+    D_86807C3C = D_86807CC4 + D_86807C40 - 1;
+    D_86807C48 = D_86807C44;
+    *(s32 *)((u8 *)&D_8682F2A8 + 36) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 16) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 12) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 20) = 1;
+    *(s32 *)((u8 *)&D_8682F2A8 + 24) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 40) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 28) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 44) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 48) = 1;
+    *(s32 *)((u8 *)&D_8682F2A8 + 52) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 68) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 72) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 80) = 1;
+    *(s32 *)((u8 *)&D_8682F2A8 + 64) = 0;
+    *(s32 *)((u8 *)&D_8682F2A8 + 32) = D_86807C40;
+    if (*(s32 *)((u8 *)&D_8682F2A8 + 76) != 0) {
+        *(s32 *)((u8 *)&D_8682F2A8 + 60) = 3;
+    }
+    Fragment56_UpdateScaledParameters();
+    D_868084E8 = D_86807A74[*(s32 *)((u8 *)&D_8682F2A8 + 36)];
+    func_87F03B8C(D_868085E8);
+    func_86800508();
+    func_86800594();
+}
 
 extern u32 func_8003570C(void);
 extern u8 D_868086C8[];
@@ -507,7 +600,7 @@ extern u8 D_86808C8C[];
 extern void *D_8682F308;
 extern void func_87F06430(f32 *, s32);
 extern void func_819006A0(void *);
-extern void func_86800D5C(void);
+extern void Fragment56_InitStateRecords(void);
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F114(u8 *, s16, s16, void *);
 extern void func_8003F1DC(void *);
@@ -541,7 +634,7 @@ void Fragment56_InitModelGroups(void) {
         *(f32 *)(D_86808C68 + group_index * 0x168 + 0x28) = height;
     }
     func_819006A0(D_8682F308);
-    func_86800D5C();
+    Fragment56_InitStateRecords();
 }
 
 extern s32 D_8682F2A8;
