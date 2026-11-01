@@ -2372,7 +2372,75 @@ void func_8414605C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841460C0.s")
+/* mkdraft:func_841460C0 begin */
+extern u8 D_84186188[];
+extern u8 D_841866D8[];
+extern u8 D_84186700[];
+extern u8 D_84186728[];
+extern u8 D_841867F0[];
+extern u8 D_84186868[];
+extern u8 D_84186890[];
+extern u8 D_841868B8[];
+extern u8 D_84186908[];
+extern u8 D_84186930[];
+
+
+u8 *func_841460C0(u8 arg0, u8 arg1, u8 arg2) {
+    u8 *result = NULL;
+    // Count of 0x28-byte records within a slot.
+    u32 index;
+
+    // Selects a table from the shared blob at D_84186188: area arg0, slot arg1,
+    // and for case 11 a record selected by arg2. Cases 0 and 1 stride by 0xC8
+    // and 0x78 bytes, the other blob cases by 0x28 bytes; cases 16-29 return
+    // fixed tables outside the blob. Unlisted areas return NULL.
+    switch (arg0) {
+    case 0:
+        // FAKE: splitting the 0xC8-byte stride into 5 * 0x28 reproduces the
+        // retail two-step multiply chain; arg1 * 0xC8 alone scores 1640.
+        index = arg1 * 5;
+        result = &D_84186188[index * 0x28];
+        break;
+    case 1:
+        // FAKE: as case 0; 0x78 = 3 * 0x28.
+        index = arg1 * 3;
+        result = &D_84186188[(index * 0x28) + 0x28];
+        break;
+    case 2: result = &D_84186188[(arg1 * 0x28) + 0x50]; break;
+    case 3: result = &D_84186188[(arg1 * 0x28) + 0xF0]; break;
+    case 4: result = &D_84186188[(arg1 * 0x28) + 0x140]; break;
+    case 5: result = &D_84186188[(arg1 * 0x28) + 0x190]; break;
+    case 6: result = &D_84186188[(arg1 * 0x28) + 0x1E0]; break;
+    case 7: result = &D_84186188[(arg1 * 0x28) + 0x230]; break;
+    case 8: result = &D_84186188[(arg1 * 0x28) + 0x280]; break;
+    case 9: result = &D_84186188[(arg1 * 0x28) + 0x2D0]; break;
+    case 10: result = &D_84186188[(arg1 * 0x28) + 0x320]; break;
+    case 11:
+        // FAKE: as case 0; arg2's 0x50-byte stride is 2 * 0x28.
+        index = arg2 * 2;
+        result = &D_84186188[(arg1 * 0x28) + (index * 0x28) + 0x370];
+        break;
+    case 12: result = &D_84186188[(arg1 * 0x28) + 0x410]; break;
+    case 13: result = &D_84186188[(arg1 * 0x28) + 0x460]; break;
+    case 14: result = &D_84186188[(arg1 * 0x28) + 0x4B0]; break;
+    case 15: result = &D_84186188[(arg1 * 0x28) + 0x500]; break;
+    case 16: result = D_841866D8; break;
+    case 17: result = D_84186700; break;
+    case 18: result = D_84186728; break;
+    case 19: result = &D_84186188[(arg1 * 0x28) + 0x5C8]; break;
+    case 20: result = &D_84186188[(arg1 * 0x28) + 0x618]; break;
+    case 21: result = D_841867F0; break;
+    case 22: result = &D_84186188[(arg1 * 0x28) + 0x690]; break;
+    case 23: result = D_84186868; break;
+    case 24: result = D_84186890; break;
+    case 25: result = D_841868B8; break;
+    case 27: result = D_84186908; break;
+    case 29: result = D_84186930; break;
+    case 28: result = &D_84186188[(arg1 * 0x28) + 0x7D0]; break;
+    }
+    return result;
+}
+/* mkdraft:func_841460C0 end */
 #endif
 
 #ifdef VERSION_US
