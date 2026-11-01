@@ -171,3 +171,89 @@ syntax check and full US retail ROM gate on `505f5bc3`, MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Function naming preserves all module
 sections, function extents, and relocations in normal and +20-leading-line
 controls. The original function name remains a linker alias.
+
+## 2026-11-01 — model-group initializer accepted
+
+`Fragment56_InitModelGroups` (formerly `func_86805AA4`, 484 bytes) resets
+three model pools per group (40, 40, and20 entries), resets the corresponding
+base model, initializes a model with its asset and animation0, chooses a random
+starting frame modulo24, and initializes the group's position vector. It sets
+all three scale components to0.045f and the vertical position to56.0f before
+clearing the shared model context and calling `func_86800D5C`.
+
+Direct indexed model accesses allow the compiler to update induction pointers
+before the final transform stores, reproducing the original negative offsets.
+A separate model-pointer local introduced an extra register copy and delayed
+those stores. Live `scale` and `height` locals reproduce the original136-byte
+frame and spill homes while supplying the values written to each model; no
+unused locals or padding are required. The three loop comparisons preserve
+the original inequality/equality forms.
+
+Candidate4 of `fragment56-model-group-values8` passed the canonical normal
+host syntax check and full US retail ROM gate on `dbb8e9a3`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Readable index names, address expressions,
+and function naming preserve all module sections, function extents, and
+relocations in normal and +20-leading-line controls. The old function name
+remains a linker alias.
+
+## 2026-11-01 — pool-completion update accepted
+
+`Fragment56_UpdatePoolCompletion` (formerly `func_868058C0`, 484 bytes)
+updates the frame state, scans four groups of40 records for the -1 sentinel
+and20 records for active state1, and advances completion when the pools are
+empty. In the delayed branch it increments a persistent counter on empty
+scans, plays sound0xCF06 at5, and completes at31. A positive outstanding
+count resets the counter. The other branch completes directly after an empty
+scan when its gate flag is clear.
+
+The uninitialized local form placed the new counter and the existing texture
+counter together in BSS, where their required addresses cannot both be met by
+one section base. Explicit `static s32 drain_counter = 0` uses IDO's separate
+`.data` section and leaves the texture counter at BSS offset0. The linker pins
+this initialized counter at its original word86808048 with a NOLOAD overlay;
+the loaded data blob retains its zero initializer at ROM2B9588. Compiler
+alignment bytes have no load image, preserving neighboring data. Future data
+objects in this C file need separate layout review.
+
+The still-assembly baseline passed a normal full-ROM build with the pin on
+`0fdac26f`. A private verifier requires the sole initialized scalar at data
+offset0, zero-filled PROGBITS size16, unchanged texture-counter BSS placement,
+exact pins, and loaded zero backing. It real-links the complete module and
+compares every text/rodata byte to the game ELF. Fourteen controls cover wrong
+owners, paths, storage classes, sizes, offsets, initializers, pins, and another
+function's corrupted instruction. The proof permits a sequential ROM gate.
+
+Candidate0 of `fragment56-drain-admission-and-vectors8` passed normal host
+syntax checks and the full retail ROM gate on `0fdac26f`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming, readable indices, and unused
+shared-declaration cleanup preserve all module sections, function extents, and
+relocations in normal and +20-line controls. The original function name remains
+a linker alias. This resolves the drain counter's initial layout prerequisite.
+
+## 2026-11-01 — moving-model update requeue
+
+`func_86806180` remains assembly (**requeue**). The best retained source is
+`fragment56-moving-position-order8` candidate1: expected588 bytes, actual592,
+frame96, normalized0.9797/raw0.9595. Direct array-element access for the
+animated model, a live byte-offset cursor, inline tick update, and parallel
+`for` initialization reproduce the collision branch and GPR/prologue shape.
+The remaining difference is floating-point load/operation scheduling and a
+latency NOP in the position calculation. Parameter snapshots and final XYZ
+temporaries can reach588 bytes but change FP allocation/order.
+
+There are78 runner attempts, including two rejected generated declaration
+errors corrected in later variants. Tried pointer scope/type, array versus
+pointer address spelling, opaque/typed record views, pointer initialization,
+time temporaries/compound assignment, index signedness, parameter snapshots,
+and position-store order. A120-second single-worker permuter run calibrated
+the592-byte parent exactly but retained no improvements; its quiet log does not
+report an iteration count. No searched body was installed. The actual
+`ModelAnim_SetAnimation` signature returns s32 and takes the tagged model
+pointer; using that verified API changes no bytes compared with the legacy
+void-return alias in this owner.
+
+Next: capture stock UOPT/UGEN/assembler boundaries for the near-match, then
+localize the FP parameter-load delay and temporary-register phase before
+another source-shape campaign. Preserve the exact collision branch. The
+pre-existing `func_86806044` unused `pad[3]` is a separate source-quality cleanup;
+its declaration is now marked FAKE and its behavior is unchanged.

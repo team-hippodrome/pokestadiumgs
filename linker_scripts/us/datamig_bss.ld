@@ -9,6 +9,14 @@
 
 SECTIONS
 {
+    /* Pool-drain counter, explicitly initialized to zero. Its retail zero
+     * word remains in the loaded data blob. Only this scalar belongs here;
+     * compiler alignment bytes have no load image. */
+    .fragment56_drain_counter_data 0x86808048 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/56/fragment56_code.o(.data)
+    }
+
     /* Texture callback's four-byte frame counter. The loaded data blob keeps
      * the retail zero initializer; compiler section alignment contributes only
      * NOLOAD tail space. This word overlays the fragment's loaded image. */
