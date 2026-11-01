@@ -1540,3 +1540,7 @@ func_841252D0 = Battle_LoadMoveCommandStream;
 func_8004F2D0 = Ui_DrawMirroredTextureBorder;
 
 func_84124410 = Battle_ApplyAccuracyEvasionStages;
+
+func_81400884 = Fragment12_DrawChoicePanel;
+
+func_81400A50 = Fragment12_DrawCompactChoicePanel;
