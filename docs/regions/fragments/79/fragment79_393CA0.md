@@ -2676,3 +2676,30 @@ and the full US retail ROM comparison. A fresh extraction and native IDO 7.1
 build after naming/type cleanup passes again on `c91a08a2` plus this change:
 MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Every final instruction word also
 matches the saved original assembly. Coverage and private tooling are unchanged.
+
+
+## Accepted: accuracy and evasion stage scaling (2026-11-02)
+
+`Battle_ApplyAccuracyEvasionStages` (`func_84124410`, 65 instructions,
+260 bytes) updates the supplied accuracy byte using the accuracy stage and
+inverse evasion stage. Its caller `func_84128438` supplies battle-record
+bytes at offsets `0x23` and `0x24` and the accuracy byte `D_841951C4`.
+The ratio table consists of adjacent unsigned numerator/denominator bytes.
+Each multiplication and division truncates through the running `u16`;
+each stage floors zero to one, and the final result caps at 255.
+
+One `u16` working value, compound assignments, and ordinary `if` floors
+recover all retail registers and scheduling. The Stadium 1 semantic peer
+`func_84370790` suggested the byte-pair record and single running value;
+GS additionally requires the halfword truncations. Earlier explicit
+input/default copies are unnecessary. The function retains its void
+interface and all parameters are consumed.
+
+Canonical runner acceptance includes link verification, normal host syntax,
+and the full retail US ROM gate at base `8b0f3a3d`. Naming, braces, local
+names, and redundant-prototype removal preserve all module sections,
+function extents, instruction bytes, and semantic relocations under both
+normal and +20-leading-blank builds. Final validation on the integrated
+upstream revision includes a fresh native IDO 7.1 extraction/build and
+full-ROM comparison, plus all 65 instruction words against original
+assembly at ROM `0x393CA0` / VRAM `0x84124410`.
