@@ -1173,7 +1173,66 @@ void func_826090F4(u8 *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260933C.s")
+/* mkdraft:func_8260933C begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern s16 D_826156A8[];
+extern s16 D_8261DA4C;
+extern s16 D_8261DA4E;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+
+
+
+void func_8260933C(u8 *arg0, s32 arg1) {
+    s32 i;
+    u8 *border;
+    s32 k;
+    s32 tex;
+    s32 x;
+    s32 y;
+    s16 cx;
+    s16 cy;
+
+    border = arg0 + 0x30;
+    cx = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    cy = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+    }
+    for (i = 0; i < *(s16 *)border; i++) {
+        k = *(s16 *)(arg0 + 2) * 4 + i;
+        tex = func_8004C990(0x56, D_826156A8[k]);
+        gDPPipeSync(D_800D0510++);
+        switch (D_8261DA4C) {
+        case 6:
+            gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            x = cx + i * 135 + 35;
+            y = cy + 36;
+            break;
+        case 5:
+            x = cx + i * 135 + 35;
+            y = cy + 36;
+            if (i != *(s16 *)(border + 2)) {
+                gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            } else {
+                gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255 - D_8261DA4E);
+            }
+            break;
+        default:
+            if (i != *(s16 *)(border + 2)) {
+                x = cx + i * 135 + 35;
+                y = cy + 36;
+            } else {
+                continue;
+            }
+            break;
+        }
+        func_8004D19C(x, y, tex, 0, 0);
+    }
+}
+/* mkdraft:func_8260933C end */
 
 typedef struct unk_func_82609584_rgb {
     /* 0x00 */ u8 r;
@@ -1550,7 +1609,48 @@ void func_8260DD84(u8 *arg0, s32 arg1) {
     func_8004D19C(x + 74, y + 144, (s32)tex, 1, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260E03C.s")
+/* mkdraft:func_8260E03C begin */
+extern void Ui_DrawAnimatedTextureMarker(s16, s16);
+
+// View of the object func_8260E03C draws: unk_30 selects the marker size, unk_32 is
+// the frame offset whose product with 25 shifts the marker vertically.
+typedef struct {
+    u8 unk_00[0x32];
+    s16 unk_32;
+} unk_func_8260E03C;
+
+// Draws the object's animated texture marker at (x + var_v0, y + var_v1 + unk_32 * 25).
+// x and y are the sums of the object's two position pairs; var_v0/var_v1 are the
+// per-case size offsets selected by unk_30.
+
+
+void func_8260E03C(u8 *arg0, s32 arg1) {
+    s32 var_v0;
+    s32 var_v1;
+    s16 x;
+    s16 y;
+
+    var_v0 = 0;
+    var_v1 = 0;
+    x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    switch (*(u16 *)(arg0 + 0x30)) {
+    case 0: var_v0 = 0x1E; var_v1 = 9; break;
+    case 1: var_v0 = 0x3E; var_v1 = 0x32; break;
+    case 2: var_v0 = 0x1E; var_v1 = 9; break;
+    case 3: var_v0 = 0x1E; var_v1 = 9; break;
+    case 4: var_v0 = 0x3E; var_v1 = 0x32; break;
+    case 5: var_v0 = 0x1E; var_v1 = 0x13; break;
+    case 6: var_v0 = 0x1E; var_v1 = 9; break;
+    case 7: var_v0 = 0x1E; var_v1 = 9; break;
+    }
+    // FAKE: the struct member read leaves `y + var_v1` as the left operand of the
+    // outer `+`, producing retail's `addu a1,t2,t4`; the plain
+    // `*(s16 *)(arg0 + 0x32)` spelling orders the x25 multiply first (diff score 65).
+    Ui_DrawAnimatedTextureMarker((s16)(x + var_v0),
+                                 (s16)(y + var_v1 + ((unk_func_8260E03C *)arg0)->unk_32 * 25));
+}
+/* mkdraft:func_8260E03C end */
 
 extern void Ui_DrawAnimatedTextureMarker(s16, s16);
 extern s16 D_8261A4AE;
@@ -3486,5 +3586,91 @@ void func_82614F40(u16 *arg0, u16 *arg1, u16 arg2, s32 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826150A4.s")
+/* mkdraft:func_826150A4 begin */
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+extern s32 func_8004C54C(s32, s32);
+
+// FAKE: arg5 is int rather than the s32 (long) used elsewhere in this file; the comparison
+// against arg4 + 1 then colors its result v1/a1/a2 as the target does instead of t1/t2/v1.
+// Diff score 460 with s32. Callers pass the sign-extended `lh` of a s16 field
+// (func_826063AC, func_8260EA60), so the value is int-width either way.
+
+
+void func_826150A4(s8 *arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, int arg5) {
+    // FAKE: unused; the extra 2-byte home slot puts index at 0xAC with the target's hole at
+    // 0xAE. Diff score 12 without it (index lands at 0xAE).
+    s16 pad;
+    s16 index;
+    s8 *text;
+    s8 *sub;
+    char buf[0x80];
+
+    index = -1;
+    switch (arg2 & 0xFF00) {
+    case 0:
+        switch (arg3) {
+        case 1:
+            index = 0x5A;
+            break;
+        case 2:
+            index = 0x5B;
+            break;
+        case 3:
+            index = 0x5C;
+            break;
+        case 4:
+            index = 0x5D;
+            break;
+        }
+        text = (s8 *)func_8004C874(0x12, index);
+        if (arg5 == arg4 + 1) {
+            sub = (s8 *)func_8004C874(0x12, 0x57);
+        } else if (arg5 == arg4 + 2) {
+            sub = (s8 *)func_8004C874(0x12, 0x58);
+        } else {
+            func_8004C594(1, arg4 + 1);
+            sub = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4B);
+        }
+        if ((text != 0) && (sub != 0)) {
+            func_8004C54C(0xA, text);
+            func_8004C54C(0xB, sub);
+            func_8004C8A0(arg0, arg1, 0x12, 0x38);
+        } else if (text != 0) {
+            HAL_Strcpy(arg0, text);
+        } else if (sub != 0) {
+            HAL_Strcpy(arg0, sub);
+        }
+        return;
+    case 0x300:
+        switch (arg3) {
+        case 15:
+            text = (s8 *)func_8004C874(0x12, 0x50);
+            break;
+        case 11:
+            func_8004C594(1, arg4 + 1);
+            text = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4B);
+            break;
+        case 14:
+            func_8004C594(1, arg4 + 1);
+            text = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4E);
+            break;
+        case 24:
+            text = (s8 *)func_8004C874(0x12, 0x51);
+            break;
+        default:
+            if (arg5 == arg4 + 1) {
+                text = (s8 *)func_8004C874(0x12, 0x4D);
+            } else {
+                func_8004C594(1, arg4 + 1);
+                text = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4C);
+            }
+            break;
+        }
+        if (text != 0) {
+            HAL_Strcpy(arg0, text);
+        }
+        break;
+    }
+}
+/* mkdraft:func_826150A4 end */
 #endif

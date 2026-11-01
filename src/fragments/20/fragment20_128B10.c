@@ -1144,7 +1144,55 @@ s32 RecordOwners_AnyUnassigned(void) {
     }
     return result;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82603870.s")
+/* mkdraft:func_82603870 begin */
+extern s32 D_826153A0;
+extern s32 D_82615390[];
+
+
+
+s32 func_82603870(s32 arg0) {
+    u8 *state;
+    s32 result;
+
+    state = *(u8 **)D_82615370;
+    result = arg0;
+    // FAKE: two names for one address. The target materialises D_826153A0's
+    // address twice in this block (lui t7 + lw, then lui at + sw); IDO 7.1 emits
+    // one lui/addiu pair when a block references a symbol twice, so the store is
+    // spelled through D_82615390 + 0x10, which links to D_826153A0.
+    // Score as D_826153A0++: 430.
+    D_82615390[4] = D_826153A0 + 1;
+    switch (arg0) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) result = 1;
+        break;
+    case 1:
+        if (func_80044144(D_82615370->unk_04) != 0) {
+            result = 2;
+            func_82614CE0();
+            if (RecordOwners_AnyUnassigned() != 0 && func_826058CC(state[7]) != 0) {
+                func_800355E4(78);
+            } else {
+                func_800355E4(39);
+            }
+        }
+        break;
+    case 2:
+        if (func_82614F0C() != 0) {
+            result = 3;
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(5);
+            func_800226C0(101);
+            func_80035424(10);
+        }
+        break;
+    case 3:
+        if (StageContext_GetFadeMode() == 1) result = 4;
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_82603870 end */
 
 extern s32 func_82603870(s32);
 void RecordSelection_RunPhaseLoop(void) {
