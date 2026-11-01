@@ -817,7 +817,15 @@
     - [0x15BBC0, c,       fragments/25/fragment25_15BBC0]
     - [0x15C920, c,       fragments/25/fragment25_15C920]
     - [0x15CBC0, c,       fragments/25/fragment25_15CBC0]
-    - [0x15CE40, data,    fragments/25/fragment25_data]
+    - [0x15CE40, data,    fragments/25/fragment25_data]  # [0x15CE40, 0x15E150): through D_82104104's u16 table
+    - [0x15E150, .rodata, fragments/25/fragment25_15BBC0] # [0x15E150, 0x15E170): D_82104110's u16 table, pi/2 (D_82104118), then the 2*pi/1.01 words migrated as .late_rodata into func_82101D88/func_82101E70/func_82102190's .s files
+  - name: fragment25_data2
+    type: code
+    bss_size: 0x0
+    start: 0x15E170
+    vram: 0x82104130
+    subsegments:
+    - [0x15E170, data,    fragments/25/fragment25_data2] # [0x15E170, 0x15E8B0): from D_82104130 (pi/2) through the mutable fragment data
   
   - name: fragment26
     type: code

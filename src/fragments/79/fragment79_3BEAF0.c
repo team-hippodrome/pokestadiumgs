@@ -29,7 +29,52 @@ void func_8414F268(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F2F4.s")
+/* mkdraft:func_8414F2F4 begin */
+extern u8 func_84154B24(void);
+extern u8 *func_8414C960(u8);
+extern u8 *D_841951F8[];
+
+// Stores the magnitude at +0x14 of arg0, negated, at +0x18: scaled by (level + 10) / 255
+// when the level is below 0x80, stored unscaled otherwise. The level is the largest of the
+// four bytes at +3 of the u16 selected by the side in the D_8419D7C0 record that
+// func_8414C960 returns; the record is selected by byte 0xA of the side record times 4 plus i.
+// func_8414F268 applies the same scaling to a single level read from a u16 table.
+
+
+void func_8414F2F4(void *arg0) {
+    u8 side;
+    s32 amount;
+    s32 i;
+    u8 max;
+    s32 side_offset;
+    u8 **entry;
+    u8 level;
+
+    // FAKE: func_84154B24 returns u8, so the mask is a no-op; without it IDO drops the
+    // andi (diff score 110).
+    side = func_84154B24() & 0xFF;
+    amount = *(s32 *)((u8 *)arg0 + 0x14);
+    entry = &D_841951F8[side];
+    side_offset = side * 2;
+    max = 0;
+    for (i = 0; i != 4; i++) {
+        level = ((u8 *)func_8414C960((((*entry)[0xA] * 4) + i)))[side_offset + 3];
+        if (max < level) {
+            max = level;
+        }
+    }
+    if (max != 0) {
+        if (amount < 0) {
+            amount = -amount;
+        }
+        if (max < 0x80) {
+            *(s32 *)((u8 *)arg0 + 0x18) = -amount * (max + 10) / 255;
+            return;
+        }
+        *(s32 *)((u8 *)arg0 + 0x18) = -amount;
+    }
+}
+/* mkdraft:func_8414F2F4 end */
 #endif
 
 #ifdef VERSION_US
@@ -54,7 +99,50 @@ void func_8414F444(u8 *arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F4A0.s")
+/* mkdraft:func_8414F4A0 begin */
+extern u8 *func_8414C960(u8 arg0);
+extern u8 func_84154B24(void);
+extern u8 *func_84154B64(u8 arg0);
+
+
+
+void func_8414F4A0(s32 arg0, s32 arg1) {
+    s32 pad[2]; // FAKE: stack-frame padding only; without it the diff score rises to 50
+    s32 sp34;
+    s32 temp_s4;
+    s32 temp_v1_2;
+    s32 var_s0;
+    u16 var_s2;
+    u16 temp_v1;
+    s32 var_v0;
+    u8 *temp_s1;
+    u8 temp_a0;
+    u8 temp_v0;
+
+    temp_v0 = func_84154B24();
+    temp_s4 = temp_v0 & 0xFF;
+    temp_a0 = (1 - temp_v0) & 0xFF;
+    sp34 = *(s32 *)(arg0 + 0x14);
+    temp_s1 = func_84154B64(temp_a0);
+    var_s2 = 0;
+    for (var_s0 = 0; var_s0 != 4;) {
+        temp_v1 = *(u16 *)(func_8414C960(((*(u8 *)((u8 *)D_841951F8[temp_s4] + 0xA) * 4) + var_s0) & 0xFF) + 6);
+        var_s0 += 1;
+        if ((s32)temp_v1 < (s32)*(u16 *)((u8 *)temp_s1 + 0x28)) {
+            var_v0 = temp_v1;
+        } else {
+            var_v0 = *(u16 *)((u8 *)temp_s1 + 0x28);
+        }
+        temp_v1_2 = ((s32)(var_v0 * 0xFF) / (s32)*(u16 *)((u8 *)temp_s1 + 0x2A)) & 0xFF;
+        if (var_s2 < temp_v1_2) {
+            var_s2 = temp_v1_2 & 0xFF;
+        }
+    }
+    if ((s32)(u8)arg1 < var_s2) {
+        *(s32 *)(arg0 + 0x18) = *(s32 *)(arg0 + 0x18) - sp34;
+    }
+}
+/* mkdraft:func_8414F4A0 end */
 #endif
 
 #ifdef VERSION_US
@@ -113,7 +201,50 @@ void func_8414F6D0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F748.s")
+/* mkdraft:func_8414F748 begin */
+extern u8 *D_841951F8[];
+extern u8 *D_84195208[];
+extern u8 func_84154B24(void);
+extern s32 func_84126440(u8 arg0);
+extern u8 *func_8414C960(u8 arg0);
+
+// Averages the s32 fields at +0x1C and +0x20 of each qualifying move's D_8419D7C0
+// record (func_8414C960) over the party record at D_84195208[side], then adds that
+// average to the s32 accumulator at +0x18 of arg0. Move slots run from +5 to +8;
+// a zero slot ends the scan, and slot +0x25 holds a move that is skipped.
+
+
+void func_8414F748(void *arg0) {
+    u8 move;
+    u8 side;
+    s32 record_base;
+    s32 total;
+    s32 i;
+    u8 *record;
+
+    side = func_84154B24();
+    total = 0;
+    record_base = D_841951F8[side][0xA] * 4;
+    for (i = 0; i != 4; i++) {
+        move = D_84195208[side][i + 5];
+        if (move == 0) {
+            break;
+        }
+        if (func_84126440(move) == 0 && move != 0xD6 && move != D_84195208[side][0x25]) {
+            record = func_8414C960(record_base + i);
+            total += *(s32 *)(record + 0x1C);
+            total += *(s32 *)(record + 0x20);
+        }
+    }
+    if (i >= 2) {
+        total = total / i;
+    }
+    if (total < 0) {
+        total = 1;
+    }
+    *(s32 *)((u8 *)arg0 + 0x18) += total;
+}
+/* mkdraft:func_8414F748 end */
 #endif
 
 #ifdef VERSION_US
@@ -140,7 +271,47 @@ void func_8414F8B4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F93C.s")
+/* mkdraft:func_8414F93C begin */
+extern s32 func_8414C924(u8 arg0, u8 arg1);
+extern u8 *func_8414C960(u8 arg0);
+
+
+
+void func_8414F93C(void *arg0) {
+    u8 temp_s0;
+    s32 temp_s1;
+    s32 var_s2;
+    s32 var_s3;
+    s32 var_s4;
+    u8 *temp_v0;
+
+    var_s3 = 0x80000000;
+    var_s4 = 0x80000000;
+    func_8414F268(arg0);
+    func_8414F2F4(arg0);
+    var_s2 = 0;
+    do {
+        temp_s0 = var_s2;
+        if (func_8414C924(temp_s0, 1U) != 0) {
+            temp_v0 = func_8414C960(temp_s0);
+            if (temp_v0 != arg0) {
+                temp_s1 = *(s32 *)(temp_v0 + 0x14) + *(s32 *)(temp_v0 + 0xC) + *(s32 *)(temp_v0 + 0x10);
+                if (func_8414C924(temp_s0, 2U) != 0) {
+                    if (var_s4 < temp_s1) {
+                        var_s4 = temp_s1;
+                    }
+                } else if (var_s3 < temp_s1) {
+                    var_s3 = temp_s1;
+                }
+            }
+        }
+        var_s2 += 1;
+    } while (var_s2 != 0x18);
+    if (var_s3 < var_s4) {
+        *(s32 *)((u8 *)arg0 + 0x18) = *(s32 *)((u8 *)arg0 + 0x18) - *(s32 *)((u8 *)arg0 + 0x14);
+    }
+}
+/* mkdraft:func_8414F93C end */
 #endif
 
 #ifdef VERSION_US

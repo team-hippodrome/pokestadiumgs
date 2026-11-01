@@ -10,7 +10,92 @@ u32 func_87F00930(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F00944.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F01110.s")
+/* mkdraft:func_87F01110 begin */
+extern u8 *D_87F0F610;
+
+// Color pair handed to func_87F00944. The callee reads both words byte-by-byte
+// (lbu at 0x54..0x57 and 0x58..0x5B of its frame) and rebuilds each as
+// (r << 24) | (g << 16) | (b << 8) | a, so the word stores big-endian RGBA.
+typedef union { u8 rgba[4]; u32 word; } unk_func_87F01110_color;
+extern void func_87F00944(u8 *arg0, unk_func_87F01110_color arg1, unk_func_87F01110_color arg2, s32 arg3);
+
+// Always returns 1. arg0 == 0 only clears bit 1 of the u16 at arg1 + 2.
+// arg0 == 1 picks a color pair for func_87F00944: the word at D_87F0F610 + 0x10
+// selects a row (0..2), the word at arg1 + 0x20 a column, and the word at
+// D_87F0F610 + 0x30 must equal the pair's value (row 0: columns 0/1/2 require
+// 2/3/4; rows 1 and 2: columns 0/1 require 2 and 4). func_87F01870 writes the
+// row word. //@{src/fragments/64/fragment64_3235A0.c}
+
+
+s32 func_87F01110(s32 arg0, u8 *arg1) {
+    u32 mode;
+    unk_func_87F01110_color prim;
+    unk_func_87F01110_color env;
+    s32 selected;
+
+    selected = 0;
+    switch (arg0) {
+    case 0:
+        (*(u16 *)(arg1 + 2)) = (u16) ((*(u16 *)(arg1 + 2)) & 0xFFFD);
+        break;
+    case 1:
+        switch ((*(s32 *)(D_87F0F610 + 0x10))) {
+        case 0:
+            switch ((mode = *(u32 *)(arg1 + 0x20))) {
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    selected = 1;
+                }
+                break;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 3) {
+                    selected = 1;
+                }
+                break;
+            case 2:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    selected = 1;
+                }
+                break;
+            }
+            break;
+        case 1:
+            switch ((mode = *(u32 *)(arg1 + 0x20))) {
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    selected = 1;
+                }
+                break;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    selected = 1;
+                }
+                break;
+            }
+            break;
+        case 2:
+            switch ((mode = *(u32 *)(arg1 + 0x20))) {
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    selected = 1;
+                }
+                break;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    selected = 1;
+                }
+                break;
+            }
+            break;
+        }
+        prim.word = 0xFFFFEBFF;
+        env.word = 0xAA5A00FF;
+        func_87F00944(arg1, prim, env, selected);
+        break;
+    }
+    return 1;
+}
+/* mkdraft:func_87F01110 end */
 
 // Sets or clears bit 1 of the u16 at arg1 + 2. arg0 == 0 always clears it.
 // arg0 == 1 clears it unless a mode pairing matches: the word at
@@ -100,7 +185,83 @@ void func_87F012BC(s32 arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F014C4.s")
+/* mkdraft:func_87F014C4 begin */
+// Sound setup for one player slot: loads bank arg1 into the slot's resource
+// field, starts a sequence player for it, and registers that bank's sequences
+// and channels on the player node. arg0 is the slot index (the table entry is
+// D_87F0F610 + arg0 * 4: resource at +0x14, player node at +0x20); arg1 is the
+// bank id. func_87F01870 calls it with (0, 118) for the one-player mode and
+// (1, 194), (2, 121) for the two-player mode.
+extern s32 func_8004DC6C(s32 id);
+extern s32 func_8004EB58(s32 resource, s32 arg1);
+extern void func_87F0AA80(void *node, s32 id, void *data);
+extern void *func_87F0AB08(void *node, s32 id, void (*callback)(s32, void *), void *arg);
+extern s32 func_87F01110(s32, u8 *);
+extern u8 D_87F1121C;
+extern u8 D_87F11234;
+extern u8 D_87F11298;
+// FAKE: the callee returns void (//@src/4CC20.c) but is declared with an s32
+// result, because the discarded result keeps v0 reserved in uopt's temp
+// coloring. A void declaration scores 20 (the slot pointer lands in $v1).
+extern s32 func_8004DCFC(u8 *cursor, s32 *errors);
+// Not declared by the included headers; the prototype is required because an
+// implicit int result also keeps v0 reserved after the call (score 15).
+extern void MainPool_FinalizeAllocation(void *block);
+extern u8 *MainPool_AllocState(s32 size, s32 align);
+extern s32 main_pool_get_available(void);
+
+
+
+void func_87F014C4(s32 arg0, s32 arg1) {
+    u8 *pool_block;
+    s32 pad[8]; // FAKE: named-local area; without it the callback pointer spills to 0x24 instead of 0x20 (score 202)
+    s32 slot_offset;
+    s32 resource;
+
+    resource = func_8004DC6C(arg1);
+    slot_offset = arg0 * 4;
+    *(s32 *)(D_87F0F610 + slot_offset + 0x14) = resource;
+    if (resource != 0) {
+        pool_block = MainPool_AllocState(main_pool_get_available(), 0);
+        *(s32 *)(D_87F0F610 + slot_offset + 0x20) = func_8004EB58((s32)pool_block,
+            *(s32 *)(D_87F0F610 + slot_offset + 0x14));
+        MainPool_FinalizeAllocation(pool_block);
+        func_8004DCFC(*(u8 **)(D_87F0F610 + slot_offset + 0x14), (s32 *)(D_87F0F610 + 0x2C));
+        // 'PNC1'..'PNC3' channel ids and 'PKM1'..'PKM4' sequence ids.
+        // func_87F01110 and func_87F012BC are the per-sequence callbacks;
+        // func_87F012BC sets or clears bit 1 of the node's flags word.
+        switch (arg1) {
+        case 118:
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4331, func_87F01110, NULL);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4332, func_87F01110, (void *)1);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4333, func_87F01110, (void *)2);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D31, func_87F012BC, NULL);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D34, func_87F012BC, (void *)1);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D32, func_87F012BC, (void *)2);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D31, &D_87F1121C);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D32, &D_87F11234);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D34, &D_87F11298);
+            return;
+        case 194:
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4331, func_87F01110, NULL);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4332, func_87F01110, (void *)1);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D31, func_87F012BC, NULL);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D32, func_87F012BC, (void *)1);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D31, &D_87F1121C);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D32, &D_87F11234);
+            return;
+        case 121:
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4331, func_87F01110, NULL);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504E4332, func_87F01110, (void *)1);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D34, func_87F012BC, NULL);
+            func_87F0AB08(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D32, func_87F012BC, (void *)1);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D34, &D_87F11298);
+            func_87F0AA80(*(void **)(D_87F0F610 + slot_offset + 0x20), 0x504B4D32, &D_87F11234);
+            break;
+        }
+    }
+}
+/* mkdraft:func_87F014C4 end */
 
 extern u8 D_87F11940[];
 void func_87F01870(void *arg0) {

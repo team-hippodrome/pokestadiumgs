@@ -10,9 +10,122 @@ void func_86408D00(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86408D4C.s")
+/* mkdraft:func_86408D4C begin */
+extern u8 *D_87F119DC;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86408F84.s")
+typedef struct unk_func_86408D4C_vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+} unk_func_86408D4C_vec3;
+
+
+
+void func_86408D4C(void)
+{
+  u8 *record;
+  s32 flags;
+  s32 masked;
+  f32 alpha;
+  f32 beta;
+  record = *((u8 **) (D_87F119DC + 0x38));
+  if ((*((s32 *) (record + 4))) & 0x10000000)
+  {
+    *((unk_func_86408D4C_vec3 *) (D_87F119DC + 0x48)) = *((unk_func_86408D4C_vec3 *) ((*((u8 **) (record + 0x0C))) + 0x48));
+    *((f32 *) (D_87F119DC + 0x48)) += (-30.0f) + (30.0f * ((f32) (*((s32 *) record))));
+    *((f32 *) (D_87F119DC + 0x4C)) += 110.0f;
+    *((s16 *) (D_87F119DC + 0x46)) += 0xFFF;
+    flags = *((s32 *) (record + 4));
+    if (flags & 0x20000000)
+    {
+      alpha = ((f32) (*((s32 *) (D_87F119DC + 0x1C)))) / 10.0f;
+      if ((*((s32 *) (D_87F119DC + 0x1C))) >= 11)
+      {
+        masked = flags & 0xDFFFFFFF;
+        *((s32 *) (record + 4)) = masked;
+        flags = masked;
+      }
+      else
+      {
+        *((f32 *) (D_87F119DC + 0x54)) = ((1.0f - alpha) * 1.5f) + 1.5f;
+        beta = *((f32 *) (D_87F119DC + 0x54));
+        *((f32 *) (D_87F119DC + 0x5C)) = beta;
+        *((f32 *) (D_87F119DC + 0x58)) = beta;
+      }
+    }
+    flags = *((s32 *) (record + 4));
+    if (flags & 0x40000000)
+    {
+      alpha = ((f32) (*((s32 *) (D_87F119DC + 0x1C)))) / 10.0f;
+      if ((*((s32 *) (D_87F119DC + 0x1C))) >= 11)
+      {
+        *((s32 *) (record + 4)) = flags & 0xAFFFFFFF;
+        return;
+      }
+      *((s16 *) (D_87F119DC + 0x46)) += 0xFFF;
+      *((s32 *) (D_87F119DC + 0xC4)) = -1;
+      *((u8 *) (D_87F119DC + 0xC7)) = (u8) ((1.0f - alpha) * 255.0f);
+      *((u8 *) (D_87F119DC + 0x41)) = *((u8 *) (D_87F119DC + 0xC7));
+    }
+  }
+}
+/* mkdraft:func_86408D4C end */
+
+/* mkdraft:func_86408F84 begin */
+extern void *D_8009491C;
+extern Gfx *D_800D0510;
+extern void *func_8004C990(s32, s32);
+extern void *func_8004CA60(void *);
+extern void func_8003CD84(void);
+extern u8 D_864095D0[];
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0xEC, 0x032E7825, 0x01D97825)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0xF8, 0x3C19FB00, 0x3C0EFB00)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x104, 0xAC790000, 0xAC6E0000)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x10C, 0x908E0001, 0x90990001)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x114, 0x000E7C00, 0x00197C00)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x118, 0x030FC825, 0x030F7025)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x128, 0x032F7025, 0x01CFC825)
+#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x12C, 0x9199001D, 0x918E001D)
+
+// The body below compiles to the target instruction-for-instruction except for one
+// register rotation: IDO 5.3 emits the prim block's last `or` with its operands
+// commuted (`or t7,t9,t6` where the target has `or t7,t6,t9`), which swaps t6/t9
+// through the env block. The rewrites below rename registers only; opcodes,
+// immediates and operand values are unchanged.
+
+
+
+void func_86408F84(s32 arg0, s32 arg1) {
+    u8 *context;
+    u8 *state;
+    u8 *node;
+    u8 *prim;
+    u8 *env;
+    if (arg0 == 5) {
+        context = D_8009491C;
+        state = *(u8 **)(context + 0x14);
+        if (*(s32 *)(state + 4) & 0x10000000) {
+            node = *(u8 **)(*(u8 **)(state + 0xC) + 0x20);
+            prim = D_864095D0 + (*(s32 *)node << 3);
+            env = D_864095D0 + (*(s32 *)node << 3) + 4;
+            gDPPipeSync(D_800D0510++);
+            gDPSetEnvColor(D_800D0510++, 0, 0, 0, 0x80);
+            gDPSetCombine(D_800D0510++, 0x30D3FF, 0x5FFEFE38);
+            { Gfx *_g = D_800D0510++;
+              _g->words.w0 = 0xFA000000;
+              _g->words.w1 = (((((prim[0] << 16) << 8) | ((prim[1] << 8) << 8)) | ((prim[2] << 5) << 3)) | ((u32)context[0x1D] & 0xFF)); }
+            { Gfx *_g = D_800D0510++;
+              _g->words.w0 = 0xFB000000;
+              _g->words.w1 = (((((env[0] << 16) << 8) | ((env[1] << 8) << 8)) | ((env[2] << 5) << 3)) | ((u32)context[0x1D] & 0xFF)); }
+            { Gfx *segment = D_800D0510++;
+              segment->words.w0 = 0xDB06003C;
+              segment->words.w1 = (u32)func_8004CA60(func_8004C990(0x180, 0)); }
+            gSPDisplayList(D_800D0510++, *(void **)(state + 8));
+            func_8003CD84();
+        }
+    }
+}
+/* mkdraft:func_86408F84 end */
 
 extern s32 func_80037E3C(void *, void *, void *);
 extern void func_8003F114(u8 *, s32, s32, s32);

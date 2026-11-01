@@ -211,7 +211,64 @@ void func_88400F48(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/33/fragment33_code/func_8840104C.s")
+/* mkdraft:func_8840104C begin */
+extern void func_800226C0(s32);
+extern void func_80026068(u32);
+extern s32 func_80026098(void);
+extern void func_80064D28(void);
+extern void func_88400610(void);
+
+typedef struct {
+    s16 x;
+    s16 y;
+    s16 z;
+} PreviewRotation;
+
+extern PreviewRotation D_800948DC;
+
+// Species preview loop. Button input is ignored while the GB audio channel mask is nonzero
+// and for three more frames after it becomes 0; then B (0x4000) queues sound 0x48 and exits,
+// A (0x8000) queues the selected species' GB audio sequence, and Start (0x1000) restarts the
+// idle rotation. Ids above 253 index the species tables as 201 (Unown), as in func_88401364.
+//@src/43700.c
+
+
+void func_8840104C(void) {
+    u8 channels;
+    s32 exitRequested;
+
+    exitRequested = 0;
+    D_884017E0->flags |= 4;
+    D_884017E0->flags |= 2;
+    *(s32 *)(D_884017E0->model + 0x4C) = 0x10000;
+    do {
+        // Nonzero while a GB audio channel is active; input is ignored until the sound ends.
+        channels = func_80026098();
+        func_80064D28();
+        if (D_884017E0->unk_31 != 0 && channels == 0) {
+            D_884017E0->unk_30 = 3;
+        }
+        D_884017E0->unk_31 = channels;
+        if (D_884017E0->unk_30 != 0) {
+            D_884017E0->unk_30 = D_884017E0->unk_30 - 1;
+        } else if (channels == 0 && (D_80087200->buttonsPressed & 0x4000)) {
+            func_800226C0(0x48);
+            exitRequested = 1;
+        } else if (channels == 0 && (D_80087200->buttonsPressed & 0x8000)) {
+            s32 species = D_884017E0->species;
+            func_80026068(species > 253 ? 201 : species);
+        } else if (D_80087200->buttonsPressed & 0x1000) {
+            if (channels == 0) {
+                func_800226C0(0x137);
+            }
+            D_884017E0->countdown = 0;
+            D_884017E0->rotationStep = 256;
+            *(PreviewRotation *)(D_884017E0->model + 0x1E) = D_800948DC;
+        }
+        func_88400610();
+    } while (exitRequested == 0);
+}
+/* mkdraft:func_8840104C end */
 
 extern s32 func_80001FF0(void);
 extern void func_80064D28(void);

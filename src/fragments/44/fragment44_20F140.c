@@ -57,7 +57,46 @@ void func_8AF20F64(u8* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5, u8
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF20FF8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF210FC.s")
+/* mkdraft:func_8AF210FC begin */
+extern u8 *D_8AF279B0;
+extern s32 D_8AF3A000;
+extern s32 D_8AF3A004;
+extern s16 D_8AF3A008;
+extern void func_8AC06570(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5);
+extern s32 func_8AF02C28();
+extern s32 func_8AF20FF8();
+
+
+
+
+void func_8AF210FC(s16 arg0) {
+    extern u8 D_8AF39A00[];
+    extern u8 D_8AF2BE28[];
+    extern u8 D_8AF39C00[];
+    extern u8 D_8AF2BE48[];
+    extern u8 D_8AF39FE0;
+    extern u8 D_8AF39FF0;
+    u8 *ptr;
+
+    D_8AF3A008 = arg0;
+    switch (D_8AF3A008) {
+    case 0:
+        func_8AF20FF8((s32)D_8AF3A000, D_8AF279B0);
+        func_8AF02C28(D_8AF279B0, D_8AF39A00, D_8AF2BE28, 0x494C5331);
+        ptr = D_8AF279B0 + 0x28;
+        *(s16 *)(ptr + 0x18) = 1;
+        func_8AC06570(&D_8AF39FE0, *(s16 *)(ptr + 0x22), 0x41, 3, 2, 0xA);
+        break;
+    case 1:
+        func_8AF20FF8((s32)D_8AF3A004, D_8AF279B0 + 0x52C);
+        func_8AF02C28(D_8AF279B0 + 0x52C, D_8AF39C00, D_8AF2BE48, 0x494C5332);
+        ptr = D_8AF279B0 + 0x554;
+        *(s16 *)(ptr + 0x18) = 1;
+        func_8AC06570(&D_8AF39FF0, *(s16 *)(ptr + 0x22), 0x41, 3, 2, 0xA);
+        break;
+    }
+}
+/* mkdraft:func_8AF210FC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF2123C.s")
 
@@ -234,7 +273,61 @@ void func_8AF21C58(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF21D14.s")
+/* mkdraft:func_8AF21D14 begin */
+extern s16 D_8AF2BA6E;
+extern u8 *D_8AF3A08C;
+extern u8 *D_8AF3A094;
+extern s16 D_8AF3A174;
+extern u8 *D_8AF3A198;
+extern u8 func_80054410(s32 arg0);
+
+
+
+void func_8AF21D14(void) {
+    s16 value;
+    u8 *entry;
+
+    *(u8 *)(D_8AF2BDD8 + 1) = (u8) D_8AF3A082;
+    value = func_8AF21C04();
+    *(s16 *)(D_8AF3A094 + 0x32) = value + 0xBA;
+    entry = (D_8AF3A082 * 0x44) + D_8AF3A198;
+    if (*(s16 *)(entry + 0x40) == 1) {
+        *(s32 *)(D_8AF3A094 + 0x28) = 0xC8C8C8FF;
+        *(s32 *)(D_8AF3A094 + 0x2C) = 0xC8C8C8FF;
+    } else {
+        *(s32 *)(D_8AF3A094 + 0x28) = -1;
+        *(s32 *)(D_8AF3A094 + 0x2C) = -1;
+    }
+    if (D_8AF2BA6E == 1) {
+        switch (D_8AF3A174) {
+        case 1:
+            *(s16 *)(D_8AF3A08C + 0x32) = (value * 10) + 3;
+            break;
+        case 2:
+            *(s16 *)(D_8AF3A08C + 0x32) = (value * 10) + 6;
+            break;
+        default:
+        case 3:
+            *(s16 *)(D_8AF3A08C + 0x32) = (value * 10) + 8;
+            break;
+        }
+    } else {
+        switch (func_80054410(value)) {
+        case 1:
+            *(s16 *)(D_8AF3A08C + 0x32) = (value * 10) + 1;
+            break;
+        case 2:
+            *(s16 *)(D_8AF3A08C + 0x32) = (value * 10) + 2;
+            break;
+        default:
+        case 3:
+            *(s16 *)(D_8AF3A08C + 0x32) = value * 10;
+            break;
+        }
+    }
+    func_8AF21C58();
+}
+/* mkdraft:func_8AF21D14 end */
 
 extern u8 *D_8AF2BDD8;
 extern s16 D_8AF3A082;
@@ -372,7 +465,66 @@ s32 func_8AF22384(void) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF223C8.s")
+/* mkdraft:func_8AF223C8 begin */
+extern u8 func_80054410(s32 arg0);
+extern s32 D_8AF3A148;
+extern s16 D_8AF3A14C;
+extern s16 D_8AF3A19C;
+extern u8 *D_8AF2BDD8;
+extern u8 *D_8AF3A198;
+
+
+
+s32 func_8AF223C8(void) {
+    s16 ret;
+    s16 count;
+    s32 i;
+    s32 mode;
+    u8 *entry;
+
+    mode = 0;
+    count = 0;
+    if ((*D_8AF2BDD8) == 1) {
+        mode = 7;
+    } else if ((*D_8AF2BDD8) == 2) {
+        mode = 0xC;
+    }
+    entry = D_8AF3A198;
+    i = 0;
+    if (D_8AF3A19C > 0) {
+        do {
+            ret = func_80054410(mode + i);
+            *(s16 *)(entry + 0x40) = ret;
+            if ((D_8AF3A148 != 0) && (i == D_8AF3A14C)) {
+                *(u16 *)(*(u8 **)(entry + 0x20) + 2) &= ~2;
+                *(u16 *)(*(u8 **)(entry + 0x24) + 2) &= ~2;
+                if (ret == 1) {
+                    count += 1;
+                }
+            } else {
+                switch (ret) {
+                case 1:
+                    *(u16 *)(*(u8 **)(entry + 0x20) + 2) |= 2;
+                    count += 1;
+                    *(u16 *)(*(u8 **)(entry + 0x24) + 2) &= ~2;
+                    break;
+                case 2:
+                    *(u16 *)(*(u8 **)(entry + 0x20) + 2) &= ~2;
+                    *(u16 *)(*(u8 **)(entry + 0x24) + 2) |= 2;
+                    break;
+                default:
+                    *(u16 *)(*(u8 **)(entry + 0x20) + 2) &= ~2;
+                    *(u16 *)(*(u8 **)(entry + 0x24) + 2) &= ~2;
+                    break;
+                }
+            }
+            i += 1;
+            entry += 0x44;
+        } while (i < D_8AF3A19C);
+    }
+    return count;
+}
+/* mkdraft:func_8AF223C8 end */
 
 extern void func_80051D64(s32, s32);
 s8 func_8005453C(u8);

@@ -59,7 +59,89 @@ void func_8AF209E4(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4,
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20EBC0/func_8AF20A78.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20EBC0/func_8AF20B7C.s")
+/* mkdraft:func_8AF20B7C begin */
+extern u8 *D_8AF279A0;
+extern void *D_8AF39940;
+extern s32 D_8AF39560;
+extern s32 D_8AF39840;
+extern s32 D_8AF398B8;
+extern s32 D_8AF39930;
+extern s32 D_8AF39948;
+extern s32 D_8AF39640;
+extern s32 D_8AF2BE28;
+extern s16 D_8AF37798;
+extern u8 D_8AF37799;
+
+extern s32 func_8004B7A4(s16);
+extern s32 func_8004C54C(s32, s32);
+extern s32 func_8004C874(s32, s32);
+extern void func_8004E308(void *, void (*)(s32, u8 *), u8 *);
+extern void func_8AC02C80(s32, s32, s32, s32 *);
+extern void func_8AC05ED4(s32, s32, s32 *);
+extern s32 func_8AC0651C(s32 *, s16, s16, s16, s16);
+extern void *func_8AC06D8C(s32, s32);
+extern void func_8AC06E98(s32);
+extern s32 func_8AF003A8(s32);
+extern void func_8AF00504(s32);
+extern u8 func_8AF01654(u8);
+extern void func_8AF02C28(u8 *, s32 *, s32 *, s32);
+extern void func_8AF1E32C(s16 *, u8);
+extern void func_8AF20A78(void *, u8 *);
+
+
+
+void func_8AF20B7C(void) {
+    s32 page;
+    s32 pad[326]; /* FAKE: unused; forces the 0x550-byte frame (score 7834 without) */
+    void *node;
+    u8 *state;
+    u8 dead; /* FAKE: unused; packs grp into 0x2A instead of 0x2B (score 2 without) */
+    u8 grp;
+
+    func_8004B7A4(D_8AF37798);
+    func_8AF00504(139);
+    page = func_8AF003A8(139);
+    func_8AC06E98(page);
+    D_8AF39940 = func_8AC06D8C(page, 0x77695F31);
+    func_8004E308(D_8AF39940, func_8AF20950, D_8AF279A0);
+    func_8AC02C80(page, 0x725F6C5F, 0x725F725F, &D_8AF39948);
+    func_8AC05ED4(page, 0x79613175, &D_8AF39840);
+    func_8AC05ED4(page, 0x79613173, &D_8AF398B8);
+    func_8AF20A78(D_8AF39940, D_8AF279A0);
+    grp = func_8AF01654(D_8AF37799) & 0xF;
+    if (grp == 0) {
+        grp = 0x10;
+    }
+    func_8AF1E32C(&D_8AF39640, grp);
+    func_8004C54C(68, func_8004C874(59, grp + 235));
+    node = func_8AC06D8C(page, 0x736C6966);
+    *(s16 *)((u8 *)node + 48) = 59;
+    *(u16 *)((u8 *)node + 2) = *(u16 *)((u8 *)node + 2) & 0xFFFD;
+    switch (grp) {
+    default:
+        *(s16 *)((u8 *)node + 50) = 260;
+        break;
+    case 16:
+        *(s16 *)((u8 *)node + 50) = 256;
+        break;
+    case 15:
+        *(s16 *)((u8 *)node + 50) = 0xFF;
+        break;
+    case 13:
+        *(s16 *)((u8 *)node + 50) = 276;
+        break;
+    }
+    func_8004C54C(25, func_8004B7A4(D_8AF37798));
+    func_8AF02C28(D_8AF279A0, &D_8AF39640, &D_8AF2BE28, 0x494C5331);
+    state = (u8 *)D_8AF279A0 + 40;
+    *(s16 *)(state + 24) = 1;
+    func_8AC0651C(&D_8AF39930, (*(s32 *)(state + 32) - 1) / 6, 60, 3, 10);
+    /* FAKE: single-trip loop; makes IDO allocate the final node reload to v0 (score 15 without) */
+    do {
+        *(u16 *)((u8 *)node + 2) = *(u16 *)((u8 *)node + 2) | 2;
+    } while (0);
+}
+/* mkdraft:func_8AF20B7C end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32

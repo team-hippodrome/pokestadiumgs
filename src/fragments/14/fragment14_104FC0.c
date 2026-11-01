@@ -308,7 +308,116 @@ void func_8130EC94(u8 *arg0) {
     *(u32 *)(arg0 + 0x6C) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130EC9C.s")
+/* mkdraft:func_8130EC9C begin */
+extern void func_800226C0(s32);
+extern void func_81306C18(void *, s32, s32 *, s32);
+extern u8 D_800CE060[];
+
+/* m2c field-access helper (see matching_notes/TECHNIQUES.md). */
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+
+
+
+void func_8130EC9C(u8 *arg0) {
+    s32 sp34;
+    void *temp_v1;
+    s32 sp2C;
+    s32 sp28;
+    u16 sp26;
+    u16 sp24;
+    s32 sp20;
+    void *sp30;
+    s32 temp_v0;
+    s32 var_v0;
+    s8 temp_v0_2;
+    u8 temp_v0_3;
+
+    sp34 = 0;
+    temp_v1 = (M2C_FIELD(arg0, u8 *, 0x37) * 0x28) + D_800CE060;
+    sp2C = M2C_FIELD(arg0, s32 *, 0x6C);
+    sp28 = -1;
+    sp26 = M2C_FIELD(temp_v1, u16 *, 0xC);
+    sp30 = temp_v1;
+    sp24 = M2C_FIELD(temp_v1, u16 *, 8);
+    temp_v0 = func_8130CE3C(arg0);
+    sp20 = temp_v0;
+    if ((s32) M2C_FIELD(arg0, u8 *, 0x35) < 2) {
+        if (M2C_FIELD(temp_v1, u16 *, 0xC) & 0x8000) {
+            temp_v0_2 = M2C_FIELD(arg0, s8 *, 0x36);
+            if (temp_v0_2 == 2) {
+                func_81306C18(M2C_FIELD(arg0, void **, 0x5C), (s32) M2C_FIELD(arg0, u8 *, 0x39), (s32 *) (arg0 + 0x3C), 0);
+                temp_v0_3 = M2C_FIELD(arg0, u8 *, 0x35);
+                M2C_FIELD(arg0, s8 *, 0x34) = 4;
+                switch (temp_v0_3) {                /* irregular */
+                case 1:
+                    func_800226C0(0x96);
+                    break;
+                case 0:
+                case 2:
+                    func_800226C0(2);
+                    break;
+                }
+            } else if (temp_v0_2 == 1) {
+                func_800226C0(3);
+                M2C_FIELD(arg0, s8 *, 0x34) = 3;
+                M2C_FIELD(arg0, f32 *, 0x2C) = 1.0f;
+            } else {
+                func_800226C0(M2C_FIELD(arg0, s32 *, 4));
+                M2C_FIELD(arg0, s8 *, 0x34) = 3;
+                M2C_FIELD(arg0, f32 *, 0x2C) = 1.0f;
+            }
+        } else if (sp26 & 0x4000) {
+            func_800226C0(3);
+            M2C_FIELD(arg0, s8 *, 0x36) = 1;
+            M2C_FIELD(arg0, s8 *, 0x34) = 3;
+            M2C_FIELD(arg0, f32 *, 0x2C) = 1.0f;
+        } else if (sp26 & 0x800) {
+            if (temp_v0 != 0) {
+                var_v0 = 1;
+            } else {
+                var_v0 = 0;
+            }
+            if (var_v0 < M2C_FIELD(arg0, s8 *, 0x36)) {
+                func_800226C0(1);
+                M2C_FIELD(arg0, s8 *, 0x36) = (s8) (M2C_FIELD(arg0, s8 *, 0x36) - 1);
+            }
+        } else if (sp26 & 0x400) {
+            if (M2C_FIELD(arg0, s8 *, 0x36) < (func_8130CEAC(arg0) - 1)) {
+                func_800226C0(1);
+                M2C_FIELD(arg0, s8 *, 0x36) = (s8) (M2C_FIELD(arg0, s8 *, 0x36) + 1);
+            }
+        } else {
+            sp34 = 1;
+        }
+    } else {
+        sp34 = 1;
+    }
+    M2C_FIELD(arg0, s8 *, 0x38) = -1;
+    if ((sp34 != 0) && (M2C_FIELD(arg0, u8 *, 0x35) != 3)) {
+        if ((sp20 != 0) && (M2C_FIELD(arg0, s8 *, 0x36) == 0)) {
+            M2C_FIELD(arg0, s8 *, 0x36) = 1;
+        } else if (sp24 & 8) {
+            sp28 = 0;
+        } else if (sp24 & 1) {
+            sp28 = 1;
+        } else if (sp24 & 4) {
+            sp28 = 2;
+        } else if (sp24 & 2) {
+            sp28 = 3;
+        }
+    }
+    if (sp28 >= 0) {
+        if ((s32) M2C_FIELD((sp2C + sp28), u8 *, 2) > 0) {
+            func_800226C0(0x91);
+            M2C_FIELD(arg0, s8 *, 0x38) = (s8) sp28;
+            M2C_FIELD(arg0, s8 *, 0x34) = 5;
+        } else {
+            func_800226C0(5);
+        }
+    }
+    M2C_FIELD(arg0, f32 *, 0x30) = 0.0f;
+}
+/* mkdraft:func_8130EC9C end */
 
 extern u8 D_800CE060[];
 extern void func_800226C0(s32);

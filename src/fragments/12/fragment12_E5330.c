@@ -336,7 +336,36 @@ void func_81401178(s32 arg0) {
     func_8004D1FC(D_814077D0[var_v0]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814011B4.s")
+/* mkdraft:func_814011B4 begin */
+extern u8 *D_814077D0[];
+extern Gfx *D_800D0510;
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+
+
+
+void func_814011B4(s32 arg0, s32 arg1, f32 arg2, f32 arg3) {
+    f32 d;
+    f32 w;
+    f32 s;
+    s32 pad[2]; // FAKE: reserves the target's 0x40-byte frame; diff score 50 without it.
+    volatile f32 sp28; // FAKE: forces arg1 to stay in memory across the bounds tests; diff score 395 without the volatility.
+
+    d = ((f32) * (u16 *)(D_814077D0[0] + 2) * arg2 * 0.5f) + 1.0f;
+    if (!((f32) arg0 < -d)) {
+        sp28 = (f32) arg1;
+        if (!(sp28 < -d) && !((640.0f + d) < (f32) arg0) && !((480.0f + d) < sp28)) {
+            {
+                Gfx *_g = D_800D0510++;
+                _g->words.w0 = 0xFB000000;
+                _g->words.w1 = ((u32) (255.0f * arg3) & 0xFF) | ~0xFF;
+            }
+            s = 1.0f / arg2;
+            w = 2.0f * d;
+            func_81602240((f32) arg0 - d, sp28 - d, w, w, 0, 0, s, s);
+        }
+    }
+}
+/* mkdraft:func_814011B4 end */
 
 extern Gfx *D_800D0510;
 extern u8 *D_814077C0;
@@ -370,7 +399,40 @@ void func_81401404(s32 arg0, s32 arg1, f32 arg2) {
     func_81602240(arg0 - width * 0.5f, arg1 - height * 0.5f, width, height, 0, 0, 1.0f / arg2, 1.0f / arg2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814014C8.s")
+/* mkdraft:func_814014C8 begin */
+extern Gfx *D_800D0510;
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern void func_816083A4(void);
+
+
+
+void func_814014C8(void *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, u8 *arg6, u8 *arg7) {
+    Vtx *vtx;
+
+    vtx = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    func_816083A4();
+    if (arg5 != 0) {
+        Gfx_SetVertexAttributes(&vtx[0], (s16)arg1, (s16)arg2, -1, 0, ((u16 *)arg0)[1] << 5, arg6[0], arg6[1], arg6[2], 0xFF);
+        Gfx_SetVertexAttributes(&vtx[1], (s16)(arg1 + arg3), (s16)arg2, -1, ((u16 *)arg0)[0] << 5, ((u16 *)arg0)[1] << 5, arg6[0], arg6[1], arg6[2], 0xFF);
+        Gfx_SetVertexAttributes(&vtx[2], (s16)arg1, (s16)(arg2 + arg4), -1, 0, 0, arg7[0], arg7[1], arg7[2], 0xFF);
+        Gfx_SetVertexAttributes(&vtx[3], (s16)(arg1 + arg3), (s16)(arg2 + arg4), -1, ((u16 *)arg0)[0] << 5, 0, arg7[0], arg7[1], arg7[2], 0xFF);
+    } else {
+        Gfx_SetVertexAttributes(&vtx[0], (s16)arg1, (s16)arg2, -1, 0, 0, arg6[0], arg6[1], arg6[2], 0xFF);
+        Gfx_SetVertexAttributes(&vtx[1], (s16)(arg1 + arg3), (s16)arg2, -1, ((u16 *)arg0)[0] << 5, 0, arg6[0], arg6[1], arg6[2], 0xFF);
+        Gfx_SetVertexAttributes(&vtx[2], (s16)arg1, (s16)(arg2 + arg4), -1, 0, ((u16 *)arg0)[1] << 5, arg7[0], arg7[1], arg7[2], 0xFF);
+        Gfx_SetVertexAttributes(&vtx[3], (s16)(arg1 + arg3), (s16)(arg2 + arg4), -1, ((u16 *)arg0)[0] << 5, ((u16 *)arg0)[1] << 5, arg7[0], arg7[1], arg7[2], 0xFF);
+    }
+    gDPPipeSync(D_800D0510++);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, 0, 1);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombine(D_800D0510++, 0xFC40C281, 0xFF87FFFF);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+    gSPVertex(D_800D0510++, (u32)vtx & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_814014C8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814018F4.s")
 

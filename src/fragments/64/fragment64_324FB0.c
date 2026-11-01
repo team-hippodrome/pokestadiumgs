@@ -247,7 +247,52 @@ s32 func_87F02800(s32 arg0, u8 *arg1) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324FB0/func_87F02878.s")
+/* mkdraft:func_87F02878 begin */
+extern Gfx *D_800D0510;
+extern void *D_8009491C;
+extern s32 D_87F0F640[];
+extern s32 D_87F0F650[];
+extern Gfx D_87F0F6C0[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004CA60(s32);
+extern void func_8003CD84(void);
+
+
+s32 func_87F02878(s32 arg0, s32 arg1) {
+    void *context;
+    void *record;
+    u8 *tex;
+    u8 index;
+    s32 palette;
+    s32 texture;
+    Gfx *gfx;
+
+    context = D_8009491C;
+    if (arg0 == 5) {
+        record = *(void **)((u8 *)context + 0x14);
+        if (!(*(s32 *)((u8 *)record + 0xC) & 0x10000000)) {
+            tex = *(u8 **)((u8 *)record + 0x20);
+            index = tex[0x10];
+            if (tex[0x11] & (1 << index)) {
+                palette = *(s32 *)((u8 *)D_87F0F650 + index * 4);
+            } else {
+                palette = D_87F0F640[index];
+            }
+            texture = func_8004CA60(func_8004C990(0x1B2, palette));
+            gDPPipeSync(D_800D0510++);
+            { Gfx *segment = D_800D0510++;
+            segment->words.w1 = texture;
+            segment->words.w0 = 0xDB06003C; }
+            { Gfx *segment = D_800D0510++;
+            segment->words.w0 = 0xFB000000;
+            segment->words.w1 = _SHIFTL(tex[0x13], 16, 8) | _SHIFTL(tex[0x14], 8, 8) | _SHIFTL(tex[0x15], 0, 8) | _SHIFTL(tex[0x12], 24, 8); }
+            gSPDisplayList(D_800D0510++, D_87F0F6C0);
+            func_8003CD84();
+        }
+    }
+    return 1;
+}
+/* mkdraft:func_87F02878 end */
 
 extern u32 D_87F119C0;
 extern void func_87F029EC(void *, u8 *, u8);

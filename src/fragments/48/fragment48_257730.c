@@ -133,7 +133,40 @@ s32 func_87C019DC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_257730/func_87C01A90.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_257730/func_87C01CBC.s")
+/* mkdraft:func_87C01CBC begin */
+extern void func_8003F210(void *, s32); /* alias of ModelAnim_SetAnimation */
+extern void func_8003F3BC(void *, s32); /* alias of ModelAnim_SetEventTrack */
+
+
+
+void func_87C01CBC(u8 *player) {
+    s32 frame;
+    s16 animation;
+    u8 *track;
+
+    animation = *(s16 *)(player + 0x14);
+    if (animation >= 0) {
+        func_8003F210(*(void **)player, animation);
+        ModelAnim_SetSpeed(*(u8 **)player, 0);
+        ModelAnim_SetFrame(*(u8 **)player, (s16)(s32)*(f32 *)(player + 8));
+        if (*(s32 *)(player + 0x20) != 0) {
+            frame = (s32)*(f32 *)(player + 8);
+            // Table at 0x24 holds 12-byte entries; func_87C01910 also indexes it by the 0x14 animation index.
+            track = *(s16 *)(player + 0x14) * 12 + *(u8 **)(player + 0x24);
+            if (*(s32 *)(track + 4) == 0) {
+                frame = (s32)*(f32 *)(player + 0x10);
+            }
+            func_8003F3BC(*(void **)player, *(s16 *)track);
+            ModelAnim_SetEventFrame(*(u8 **)player, (s16)frame);
+            return;
+        }
+        ModelAnim_ClearEventTrack(*(u8 **)player);
+        return;
+    }
+    ModelAnim_ClearTransformChannel(*(u8 **)player, animation);
+    ModelAnim_ClearEventTrack(*(u8 **)player);
+}
+/* mkdraft:func_87C01CBC end */
 
 extern void func_87C019B0(u8 *arg0, s16 arg1);
 void func_87C01DB8(u8 *arg0, s32 arg1, s32 arg2) {

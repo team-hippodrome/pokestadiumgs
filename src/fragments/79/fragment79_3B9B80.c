@@ -78,7 +78,74 @@ void func_8414A4E4(u8 *arg0, u8 arg1, u8 arg2, u8 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414A59C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B574.s")
+/* mkdraft:func_8414B574 begin */
+extern u8 D_8419D7C0[];
+extern u8 *D_841951F8[];
+extern u8 *D_84195208[];
+extern u8 func_84154B24(void);
+extern void func_84149294(u8);
+extern void func_8414A440(u8 *, u8, u8);
+extern void func_8414A4E4(u8 *, u8, u8, u8);
+extern void func_8414EFD0(u8 *);
+extern void func_8414EFF0(u8 *);
+extern void func_8414A59C(u8 *, u8);
+extern s32 func_8414A3C0(u8, u32);
+extern s32 func_8414C924(u8, u8);
+
+// 0x58-byte record stride: the target indexes the same base with a
+// /4 quotient (record) and a %4 remainder (byte within the record).
+typedef struct { u8 unk00[0x58]; } TeamRecord;
+
+
+
+void func_8414B574(void)
+{
+  s32 temp_v0;
+  s32 var_s2;
+  u8 *var_s0;
+  u8 *temp_t0;
+  u8 **new_var;
+  temp_v0 = func_84154B24();
+  if (func_8414A3C0((u8) temp_v0, 4) == 0)
+  {
+    func_84149294(1 - temp_v0);
+  }
+  // Comma init/incr keeps both walkers in one for-clause; this is what lets the
+  // loop-invariant &D_841951F8 / &D_84195208 bases materialize before the
+  // var_s0 / var_s2 initializations in the target's prologue.
+  for (var_s0 = D_8419D7C0, var_s2 = 0; var_s2 != 0x18; var_s2++, var_s0 += 0xA8)
+  {
+    if ((*var_s0) & 1)
+    {
+      // FAKE: pointer-to-pointer alias retained only for codegen; the plain
+      // `temp_t0 = D_841951F8[temp_v0]` scores 320.
+      temp_t0 = *(new_var = &D_841951F8[temp_v0]);
+      if ((var_s2 / 4) == temp_t0[0xA])
+      {
+        if (((&D_84195208[temp_v0][var_s2 % 4])[9] & 0x3F) > 0)
+        {
+          func_8414A440(var_s0, temp_v0, (&D_84195208[temp_v0][var_s2 % 4])[5]);
+        }
+        else
+        {
+          func_8414A440(var_s0, temp_v0, 0xA5);
+        }
+        func_8414EFD0(var_s0);
+        func_8414A59C(var_s0, temp_v0);
+      }
+      else
+      {
+        func_8414A4E4(var_s0, temp_v0, var_s2 / 4, ((TeamRecord *) temp_t0)[var_s2 / 4].unk00[(var_s2 % 4) + 0x1A]);
+        if ((func_8414A3C0(temp_v0, 2) == 0) || (func_8414C924(var_s2, 4) != 0))
+        {
+          func_8414EFF0(var_s0);
+          func_8414A59C(var_s0, temp_v0);
+        }
+      }
+    }
+  }
+}
+/* mkdraft:func_8414B574 end */
 
 extern u8 D_8419D7C0[];
 // D_8419D7C0 holds 24 0xA8-byte records; func_8414BEE8 clears all 0xFC0 bytes.
@@ -224,7 +291,55 @@ s32 func_8414BF94(u8 side, u8 slot) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C048.s")
+/* mkdraft:func_8414C048 begin */
+extern u8 * D_8419520C[];
+
+// Selectability test for one party slot of side arg0. Returns 0 when the side is
+// in state 2, when arg1 is outside the party (bound test against party[8]), when
+// the slot's u16 at 0x3E is zero, or when byte 0x1A + arg2 of its 0x58-byte
+// record is zero. Unless the side is in state 5, the choice is also rejected by
+// slot 1 of the D_8419520C record table carrying flag 0x80 in byte 0x11, by
+// D_84195208[arg0][27] being nonzero, and by func_8414A3C0(arg0, 2) being
+// nonzero.
+
+
+s32 func_8414C048(u8 arg0, u8 arg1, u8 arg2) {
+    // FAKE: u32 copy of arg1 that only steers codegen. The bound test below is
+    // signed (slt), and the two record-stride products keep separate types
+    // (mulu through slot, mul through arg1), so uopt emits retail's two shift
+    // chains and leaves masked arg0 in $a0. Without the copy uopt promotes
+    // arg1 into a fresh register, evicts arg0 to $a3 and the closest signed
+    // spelling scores 76 differences; the closest copy-free source, an unsigned
+    // bound test, scores 2 (sltu for slt).
+    u32 slot = arg1;
+
+    if (D_84195256[(u32)arg0 * 24] == 2) {
+        return 0;
+    }
+    if ((s32)slot >= ((u8 *)D_841951F8[arg0])[8]) {
+        return 0;
+    }
+    if (*(u16 *)(((u8 *)D_841951F8[arg0]) + slot * 88 + 62) == 0) {
+        return 0;
+    }
+    if (((u8 *)D_841951F8[arg0])[arg1 * 88 + 26 + arg2] == 0) {
+        return 0;
+    }
+    if (D_84195256[(u32)arg0 * 24] != 5) {
+        /* D_8419520C names slot 1 of the two-pointer record table. */
+        if ((*(u8 **)((u8 *)D_8419520C + -((s32)arg0 * (s32)sizeof(D_8419520C[0]))))[17] & 0x80) {
+            return 0;
+        }
+        if (D_84195208[arg0][27] > 0) {
+            return 0;
+        }
+        if (func_8414A3C0(arg0, 2) != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+/* mkdraft:func_8414C048 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C18C.s")
 

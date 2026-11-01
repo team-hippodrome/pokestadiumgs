@@ -99,7 +99,34 @@ void func_87C02594(u8 *arg0, s32 arg1, s32 arg2) {
     func_87C00198(arg0 + 0x88, arg0 + 0x88, (void *)value);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258080/func_87C025FC.s")
+/* mkdraft:func_87C025FC begin */
+extern void func_87C00628(s32, s32, s32);
+
+
+f64 func_87C025FC(u8 *arg0, u8 *arg1, u8 *arg2) {
+    u8 temp0[0x18];
+    u8 temp1[0x18];
+
+    func_87C00160(temp0, arg2, arg0 + 0xA0);
+    func_87C00238(temp1, temp0, arg1);
+    func_87C00628((s32)temp1, (s32)temp1, (s32)(arg0 + 0x38));
+
+    // The three quotients are the per-axis terms v[i]*v[i] / inertia[i]; the
+    // inertia triple is the three doubles at *(u8 **)arg0 + 8 (func_87C0288C
+    // indexes the same address as its arg3[0..2]).
+    // FAKE: the sum is written in reverse axis order (2, then 1, then 0)
+    // because the add.d operand order follows the source term order: in axis
+    // order 0,1,2 the final add.d comes out commuted (relocation-aware diff
+    // score 10), and only the reversed spelling reproduces retail's
+    // add.d $f0,$f8,$f10.
+    return (*(f64 *)(temp1 + 0x10) * *(f64 *)(temp1 + 0x10)) /
+               *(f64 *)((u8 *)*(void **)((void *)arg0) + 0x18) +
+           ((*(f64 *)(temp1 + 8) * *(f64 *)(temp1 + 8)) /
+                *(f64 *)((u8 *)*(void **)((void *)arg0) + 0x10) +
+            (*(f64 *)(temp1) * *(f64 *)(temp1)) /
+                *(f64 *)((u8 *)*(void **)((void *)arg0) + 0x8));
+}
+/* mkdraft:func_87C025FC end */
 
 extern f64 func_87C00208(void *, void *);
 extern f64 func_87C025FC(u8 *, u8 *, u8 *);

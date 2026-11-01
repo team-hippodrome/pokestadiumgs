@@ -133,7 +133,55 @@ s32 func_813110F0(Frag14State *arg0, Frag14Record *arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311650.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311894.s")
+/* mkdraft:func_81311894 begin */
+extern void func_800226C0(s32);
+extern u8 D_800CE060[];
+
+
+
+void func_81311894(u8 *arg0) {
+    s16 count;
+    s32 spare; // FAKE: unused word at 0x20(sp); keeps the frame at 0x28
+    u16 flags;
+    u8 *entry;
+    Frag14Record *record;
+
+
+    record = (Frag14Record *)*(void **)arg0;
+    count = record->entry_count;
+    if (*(s8 *)(arg0 + 0x1A) >= 0) {
+        entry = D_800CE060 + *(s8 *)(arg0 + 0x1A) * 0x28;
+        flags = *(u16 *)(entry + 0xC);
+        if (*(u16 *)(entry + 0xC) & 0x8000) {
+            s16 idx = ((Frag14State *)arg0)->index;
+            ((Frag14State *)arg0)->status = 3;
+            if (idx >= 0) {
+                func_800226C0(*(u16 *)((u8 *)((Frag14State *)arg0)->owner->entries + idx * 8 + 2));
+            }
+        } else if (*(u16 *)(entry + 0xC) & 0x4000) {
+            func_800226C0(*(u16 *)((u8 *)record + 0x1A));
+            ((Frag14State *)arg0)->index = -1;
+            ((Frag14State *)arg0)->status = 3;
+        }
+        if (((Frag14State *)arg0)->unk_1C != 0) {
+            if (flags & 0x800) {
+                func_800226C0(1);
+                ((Frag14State *)arg0)->index = ((Frag14State *)arg0)->index - 1;
+                if (((Frag14State *)arg0)->index < 0) {
+                    ((Frag14State *)arg0)->index = count - 1;
+                }
+            } else if (flags & 0x400) {
+                func_800226C0(1);
+                ((Frag14State *)arg0)->index = ((Frag14State *)arg0)->index + 1;
+                if (((Frag14State *)arg0)->index >= count) {
+                    ((Frag14State *)arg0)->index = 0;
+                }
+            }
+        }
+    }
+    *(f32 *)(arg0 + 4) = 16.0f;
+}
+/* mkdraft:func_81311894 end */
 
 extern f32 func_816092FC(void);
 void func_813119E4(u8 *arg0) {

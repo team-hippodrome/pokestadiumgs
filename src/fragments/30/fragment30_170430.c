@@ -65,7 +65,102 @@ void func_881030BC(void) {
     D_880068B8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170430/func_881030F4.s")
+/* mkdraft:func_881030F4 begin */
+extern void func_800226C0(s32);
+extern s32 func_8005A228(s8);
+extern void func_88002720(void *, u16, void *);
+extern s8 D_8800EF40;
+extern s8 D_8800EF41;
+
+// Per-frame update of the GB Tower port menu state at D_88104E90. The u8 at +0xD0 counts
+// 0 -> 1 -> 2 and then runs the sequence held in the s8 at +0xD1: 1 runs the func_8005A228
+// checks on port D_88006868 and stores 1 or 3 in the result byte +0xD3, while a result of 2
+// moves +0xD1 to 2 and loads the countdown +0xD2 with 3; 2 counts +0xD2 down and plays
+// func_800226C0(330) on its last frame, or clears +0xD1 and +0xD2 when it reaches 0; 0 calls
+// func_88102F60 and either finishes with +0xD3 = -1 or restarts with +0xD3 = 2.
+// While +0xD0 is 0, a set +0xC8 flag (set below by A_BUTTON) is cleared by any button in
+// 0xCF00; otherwise B_BUTTON closes the port session through func_881030BC and A_BUTTON sets
+// +0xC8 = 1, leaving any other input to func_88002720 with the cursor at +0x2C, the count
+// read from +0x10 and the repeat state at +0x30. The result byte +0xD3 is published as
+// D_8800EF40, and port D_88006868 as D_8800EF41 unless +0xD3 is -1.
+// The same state machine drives the list menu func_88103DC8, which uses the equivalent s8
+// fields at D_88104EA0 +0x16C..+0x16F.
+//@src/fragments/30/fragment30_170D70.c
+
+
+void func_881030F4(void) {
+    if (*(u8 *)((u8 *)D_88104E90 + 0xD0) != 0) {
+        if (*(u8 *)((u8 *)D_88104E90 + 0xD0) == 2) {
+            if (*(s8 *)((u8 *)D_88104E90 + 0xD1) == 1) {
+                switch (func_8005A228(D_88006868)) {
+                    case 1:
+                        *(s8 *)((u8 *)D_88104E90 + 0xD3) = 1;
+                        break;
+                    case 3:
+                        *(s8 *)((u8 *)D_88104E90 + 0xD3) = 3;
+                        break;
+                    case 2:
+                        *(s8 *)((u8 *)D_88104E90 + 0xD1) = 2;
+                        *(s8 *)((u8 *)D_88104E90 + 0xD2) = 3;
+                        *(s8 *)((u8 *)D_88104E90 + 0xD3) = 0;
+                        break;
+                }
+            }
+            if (*(s8 *)((u8 *)D_88104E90 + 0xD1) == 2) {
+                *(s8 *)((u8 *)D_88104E90 + 0xD2) -= 1;
+                if (*(s8 *)((u8 *)D_88104E90 + 0xD2) == 1) {
+                    func_800226C0(330);
+                } else if (*(s8 *)((u8 *)D_88104E90 + 0xD2) <= 0) {
+                    *(s8 *)((u8 *)D_88104E90 + 0xD1) = 0;
+                    *(s8 *)((u8 *)D_88104E90 + 0xD2) = 0;
+                }
+            }
+            if (*(s8 *)((u8 *)D_88104E90 + 0xD1) == 0) {
+                if (func_88102F60() != 0) {
+                    func_800226C0(17);
+                    func_881030BC();
+                    *(s8 *)((u8 *)D_88104E90 + 0xD3) = -1;
+                } else {
+                    *(s8 *)((u8 *)D_88104E90 + 0xD1) = 1;
+                    func_800226C0(5);
+                    *(s8 *)((u8 *)D_88104E90 + 0xD3) = 2;
+                    switch (func_8005A228(D_88006868)) {
+                        case 1:
+                            *(s8 *)((u8 *)D_88104E90 + 0xD3) = 1;
+                            break;
+                        case 3:
+                            *(s8 *)((u8 *)D_88104E90 + 0xD3) = 3;
+                            break;
+                    }
+                }
+            }
+        } else {
+            *(u8 *)((u8 *)D_88104E90 + 0xD0) += 1;
+        }
+    } else if (*(s32 *)((u8 *)D_88104E90 + 0xC8) != 0) {
+        if (D_80087200->buttonsPressed & 0xCF00) {
+            func_800226C0(330);
+            *(s32 *)((u8 *)D_88104E90 + 0xC8) = 0;
+            *(u8 *)((u8 *)D_88104E90 + 0xD0) = 1;
+        }
+    } else {
+        if (D_80087200->buttonsPressed & B_BUTTON) {
+            func_800226C0(3);
+            func_881030BC();
+        } else if (D_80087200->buttonsPressed & A_BUTTON) {
+            func_800226C0(333);
+            *(s32 *)((u8 *)D_88104E90 + 0xC8) = 1;
+        } else {
+            func_88002720((u8 *)D_88104E90 + 0x2C, *(u16 *)((u8 *)D_88104E90 + 0x10),
+                          (u8 *)D_88104E90 + 0x30);
+        }
+    }
+    D_8800EF40 = *(s8 *)((u8 *)D_88104E90 + 0xD3);
+    if (*(s8 *)((u8 *)D_88104E90 + 0xD3) != -1) {
+        D_8800EF41 = D_88006868;
+    }
+}
+/* mkdraft:func_881030F4 end */
 
 extern void *D_88104E90;
 extern s32 D_8800687C;

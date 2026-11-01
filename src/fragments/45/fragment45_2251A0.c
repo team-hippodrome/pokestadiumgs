@@ -1199,7 +1199,41 @@ void func_8AB0318C(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB03194.s")
+/* mkdraft:func_8AB03194 begin */
+extern s32 D_8AB14198;
+
+// `D_8AB14198` holds the source pointer (loaded with lw). The standalone destination
+// increment keeps the second store's source a bare temporary (`lhu $t6, 2($s1)`), while
+// `second` reloads the halfword just written at the same textual address (`-2($dest)`);
+// as1 forwards that reload, so the argument becomes `andi $a1, $t6, 0xFFFF`.
+
+
+s32 func_8AB03194(void) {
+    u16 *source;
+    u16 *destination;
+    s16 count;
+    u16 first;
+    u16 second;
+    u16 terminator;
+    source = *(u16 **)((u8 *)&D_8AB14198);
+    destination = (u16 *)D_8AB14D08;
+    count = 0;
+    terminator = 0xFFFF;
+loop:
+    if (*source != terminator) {
+        *destination++ = first = *source++;
+        destination++;
+        destination[-1] = *source++;
+        second = destination[-1];
+        func_8004C874(first & 0xFFFF, second);
+        count++;
+        goto loop;
+    }
+    *destination++ = 0xFFFF;
+    *destination++ = 0xFFFF;
+    return count & 0xFFFF;
+}
+/* mkdraft:func_8AB03194 end */
 #endif
 
 #ifdef VERSION_US
@@ -1391,7 +1425,109 @@ void func_8AB04ED8_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB04EE8.s")
+/* mkdraft:func_8AB04EE8 begin */
+extern void func_800088DC(void);
+extern void func_800468A0(s32);
+extern void func_8AB00858(s32, s32);
+extern void func_8AB009E0(s32, s32);
+extern void func_8AB0234C(void);
+extern void func_8AB064C4(s32);
+extern void func_8AB08B14(s32);
+extern void func_8AB0B3F4(s32);
+extern void func_8AB0FF40(s32);
+extern void TextMode8_DrawState(s32);
+extern void TextInterface_DrawMarkers(void);
+extern s16 D_8AB1418C;
+extern s16 D_8AB1418E;
+extern u32 D_8AB11D08;
+extern u16 D_8AB1269E;
+extern u32 D_8AB1268C;
+extern void *D_8AB141AC;
+extern void *D_8AB141B0;
+extern void *D_8AB141B4;
+extern void *D_8AB141B8;
+extern void *D_8AB141BC;
+extern void *D_8AB141C0;
+
+
+
+void func_8AB04EE8(s32 arg0) {
+    s32 state;
+    u32 obj;
+
+    func_800088DC();
+    if (D_8AB1418E > 0) {
+        D_8AB1418E -= 1;
+        if (D_8AB1418E == 0) {
+            D_8AB1418C = 0;
+        } else {
+            D_8AB1418C = 1;
+        }
+    }
+    if (D_8AB1418C == 1) {
+        obj = D_8AB11D08;
+        if (obj != 0) {
+            func_800468A0(obj);
+        } else {
+            func_8AB00858(0x114, 0);
+        }
+        state = D_8AB1269E;
+        if ((state == 4) || (state == 6) || (state == 8)) {
+            *(u16 *)((u8 *)D_8AB141AC + 2) |= 1;
+            *(u16 *)((u8 *)D_8AB141B0 + 2) |= 1;
+            *(u16 *)((u8 *)D_8AB141B4 + 2) |= 1;
+            *(u16 *)((u8 *)D_8AB141B8 + 2) |= 1;
+            *(u16 *)((u8 *)D_8AB141BC + 2) |= 1;
+            *(u16 *)((u8 *)D_8AB141C0 + 2) |= 1;
+        }
+    } else {
+        if (D_8AB11D08 == 0) {
+            func_8AB009E0(0x114, 0);
+        }
+        state = D_8AB1269E;
+        if ((state == 4) || (state == 6) || (state == 8)) {
+            *(u16 *)((u8 *)D_8AB141AC + 2) &= ~1;
+            *(u16 *)((u8 *)D_8AB141B0 + 2) &= ~1;
+            *(u16 *)((u8 *)D_8AB141B4 + 2) &= ~1;
+            *(u16 *)((u8 *)D_8AB141B8 + 2) &= ~1;
+            *(u16 *)((u8 *)D_8AB141BC + 2) &= ~1;
+            *(u16 *)((u8 *)D_8AB141C0 + 2) &= ~1;
+        }
+    }
+    switch (D_8AB1269E) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        func_8AB064C4(arg0);
+        break;
+    case 11:
+        func_8AB0FF40(arg0);
+        break;
+    case 4:
+    case 5:
+        func_8AB08B14(arg0);
+        TextInterface_DrawMarkers();
+        break;
+    case 6:
+        func_8AB0B3F4(arg0);
+        TextInterface_DrawMarkers();
+        break;
+    case 8:
+        TextMode8_DrawState(arg0);
+        TextInterface_DrawMarkers();
+        break;
+    default:
+        func_8AB064C4(arg0);
+        TextInterface_DrawMarkers();
+        break;
+    }
+    func_8AB0234C();
+    D_8AB1268C++;
+    D_8AB1268C &= 0xFFFF;
+    func_80008648();
+}
+/* mkdraft:func_8AB04EE8 end */
 #endif
 
 #ifdef VERSION_US

@@ -579,7 +579,73 @@ s16 func_86B07D58(f32 arg0, f32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B07D94.s")
+/* mkdraft:func_86B07D94 begin */
+extern u8 D_86B17A78[];
+extern s32 func_86B08088(s16 arg0, s16 arg1);
+extern s16 func_86B07FB0(s16 arg0, s16 arg1, s16 arg2, s32 arg3);
+
+// Writes func_86B07FB0's result back over the s16 at 0xE8 of the arg0-th entry of
+// D_86B17A78. The step argument comes from the s32 state at 0x34 (indexed by arg0 * 4,
+// unlike the s16 fields, which are indexed by arg0 * 2); states 2 and 9 instead take a
+// quarter of the largest threshold that still exceeds func_86B08088's distance between
+// the 0xF0 and 0xE8 fields.
+
+
+void func_86B07D94(s32 arg0, s32 arg1) {
+    s16 field_e8;
+    s16 field_f0;
+    s16 step;
+
+    field_e8 = ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2];
+    field_f0 = ((s16 *)(D_86B17A78 + arg0 * 2))[0xF0 / 2];
+    step = 0x1999;
+    switch (*(u32 *)(D_86B17A78 + arg0 * 4 + 0x34)) {
+    case 6:
+        ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2] = func_86B07FB0(field_f0, field_e8, 0x1999, arg1);
+        return;
+    case 12:
+        ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2] = func_86B07FB0(field_f0, field_e8, 0x3332, arg1);
+        return;
+    case 0:
+    case 1:
+    case 3:
+    case 5:
+    case 8:
+    case 10:
+    case 13:
+    case 15:
+    case 19:
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+        ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2] = func_86B07FB0(field_f0, field_e8, 0xCCC, arg1);
+        return;
+    case 7:
+        ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2] = func_86B07FB0(field_f0, field_e8, 0x666, arg1);
+        return;
+    case 2:
+    case 9:
+        if (func_86B08088(field_f0, field_e8) < 0x1999) {
+            step = 0xCCC;
+        }
+        if (func_86B08088(field_f0, field_e8) < 0xCCC) {
+            step = 0x666;
+        }
+        if (func_86B08088(field_f0, field_e8) < 0x666) {
+            step = 0x333;
+        }
+        if (func_86B08088(field_f0, field_e8) < 0x333) {
+            step = 0x199;
+        }
+        ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2] = func_86B07FB0(field_f0, field_e8, (s16)(step / 4), arg1);
+        return;
+    default:
+        ((s16 *)(D_86B17A78 + arg0 * 2))[0xE8 / 2] = func_86B07FB0(field_f0, field_e8, 0xCCC, arg1);
+        return;
+    }
+}
+/* mkdraft:func_86B07D94 end */
 #endif
 
 #ifdef VERSION_US

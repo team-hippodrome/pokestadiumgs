@@ -234,7 +234,81 @@ s32 func_8006A600(u16 code, s32 arg1, s32 arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006A73C.s")
+/* mkdraft:func_8006A73C begin */
+
+
+s32 func_8006A73C(u16 arg0, s32 arg1, s32 arg2) {
+ u16 high; s32 value; s32 low; s32 result; u16 *home=&arg0;
+ /* arg0's address is taken only to reproduce the 0(sp) store IDO emits in the prologue;
+    no statement reads through home. Same declaration shape as func_8006CEE8. */
+ high=arg0;
+ value=high;
+ result=-1;
+ high&=0xFF00;
+ switch(high){
+ case 0:
+  low=(u16)value; low&=0xFF;
+  switch(low){
+   case 0: if(arg2!=0){result=38;}else{result=11;} break;
+   case 2:
+    switch(arg1){
+     case 1: if(arg2!=0){result=65;}else{result=61;} break;
+     case 2: if(arg2!=0){result=66;}else{result=62;} break;
+     case 3: if(arg2!=0){result=67;}else{result=63;} break;
+     case 4: if(arg2!=0){result=68;}else{result=64;} break;
+    }
+    break;
+   case 1:
+    switch(arg1){
+     case 1: if(arg2!=0){result=34;}else{result=7;} break;
+     case 2: if(arg2!=0){result=35;}else{result=8;} break;
+     case 3: if(arg2!=0){result=36;}else{result=9;} break;
+     case 4: if(arg2!=0){result=37;}else{result=10;} break;
+    }
+    break;
+   case 3: if(arg2!=0){result=39;}else{result=12;} break;
+  }
+  break;
+ case 0x300:
+  switch(arg1){
+   case 5: if(arg2!=0){result=40;}else{result=13;} break;
+   case 6: if(arg2!=0){result=41;}else{result=14;} break;
+   case 7: if(arg2!=0){result=42;}else{result=15;} break;
+   case 8: if(arg2!=0){result=43;}else{result=16;} break;
+   case 9: if(arg2!=0){result=44;}else{result=17;} break;
+   case 10: if(arg2!=0){result=45;}else{result=18;} break;
+   case 11: if(arg2!=0){result=46;}else{result=19;} break;
+   case 12: if(arg2!=0){result=47;}else{result=20;} break;
+   case 13: if(arg2!=0){result=48;}else{result=21;} break;
+   case 14: if(arg2!=0){result=49;}else{result=22;} break;
+   case 15: if(arg2!=0){result=50;}else{result=23;} break;
+   case 16: if(arg2!=0){result=51;}else{result=24;} break;
+   case 17: if(arg2!=0){result=52;}else{result=25;} break;
+   case 18: if(arg2!=0){result=53;}else{result=26;} break;
+   case 19: if(arg2!=0){result=54;}else{result=27;} break;
+   case 20: if(arg2!=0){result=55;}else{result=28;} break;
+   case 21: if(arg2!=0){result=56;}else{result=29;} break;
+   case 22: if(arg2!=0){result=57;}else{result=30;} break;
+   case 23: if(arg2!=0){result=58;}else{result=31;} break;
+   case 24: if(arg2!=0){result=59;}else{result=32;} break;
+  }
+  break;
+ case 0x600: if(arg2!=0){result=60;}else{result=33;} break;
+ case 0x400:
+  switch(arg1){
+   case 25: result=69; break;
+   case 26: result=70; break;
+   case 27: result=71; break;
+  }
+  break;
+ case 0x200:
+ case 0x500:
+  if(arg2!=0){result=6;}else{result=5;}
+  break;
+ }
+ return result;
+}
+/* mkdraft:func_8006A73C end */
 
 extern s32 func_8006A73C(u16, s32, s32);
 void func_8006AB68(s32 arg0, s32 arg1, s32 arg2) { s32 *p = &arg0; func_8006A73C(arg0 & 0xFFFF, arg1, arg2); }
@@ -277,7 +351,119 @@ s32 func_8006ACCC(s32 value) { s32 result = 0; if (D_8009DF70 != 0) { *(s16 *)((
 
 s32 func_8006ACF0(void) { s32 result = 0; s32 ptr = D_8009DF70; if (ptr != 0) result = *(s16 *)((u8 *)(u32)ptr + 0x16); return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006AD10.s")
+/* mkdraft:func_8006AD10 begin */
+
+
+s32 func_8006AD10(u16 code, s32 kind, s32 level) {
+    s32 result = -1;
+    // FAKE: `code` is already u16, so this mask is an arithmetic nop; it keeps a
+    // zero-extended copy of `code` alive in a second register for the default
+    // path's low-byte read below. Score as `s32 value = code;`: 460.
+    s32 value = code & 0xFFFF;
+    u16 group = code & 0xFF00;
+
+    switch (group) {
+    case 0x300:
+        switch (kind - 5) {
+        case 0:
+            result = 0;
+            break;
+        case 1:
+            result = 1;
+            break;
+        case 2:
+            result = 2;
+            break;
+        case 3:
+            result = 3;
+            break;
+        case 4:
+            result = 5;
+            break;
+        case 5:
+            result = 4;
+            break;
+        case 6:
+            result = 8;
+            break;
+        case 7:
+            result = 6;
+            break;
+        case 8:
+            result = 7;
+            break;
+        case 9:
+            if ((level >= 0) && (level < 4)) {
+                result = level + 9;
+            } else {
+                result = 9;
+            }
+            break;
+        case 10:
+            result = 13;
+            break;
+        case 11:
+            result = 14;
+            break;
+        case 12:
+            result = 15;
+            break;
+        case 13:
+            result = 18;
+            break;
+        case 14:
+            result = 16;
+            break;
+        case 15:
+            result = 17;
+            break;
+        case 16:
+            result = 19;
+            break;
+        case 17:
+            result = 20;
+            break;
+        case 18:
+            result = 21;
+            break;
+        case 19:
+            result = 22;
+            break;
+        }
+        break;
+    case 0x400:
+        result = 27;
+        break;
+    case 0x500:
+        result = 28;
+        break;
+    case 0x600:
+        result = 29;
+        break;
+    default:
+        result = value & 0xFF;
+        switch (result) {
+        case 0:
+            result = 23;
+            break;
+        case 1:
+            result = 25;
+            break;
+        case 2:
+            result = 24;
+            break;
+        case 3:
+            result = 26;
+            break;
+        default:
+            result = 28;
+            break;
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8006AD10 end */
 
 s32 func_8006AE90(s32 value) { s32 result = 0; if (D_8009DF70 != 0) { *(s16 *)((u8 *)(u32)D_8009DF70 + 0x14) = value; result = 1; } return result; }
 
@@ -543,7 +729,43 @@ s32 func_8006B854(s32 arg0, s32 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006B928.s")
+/* mkdraft:func_8006B928 begin */
+extern s32 func_800718B8(s32);
+
+
+
+u8 * func_8006B928(void) {
+    s32 state;
+    u8 *record = 0;
+    state = D_8009DF70;
+    if (state != 0) {
+        if (*(u8 **)((u8 *)(u32)state + 0x24) != 0) {
+            u16 mode = *(u16 *)((u8 *)(u32)state) & 0xFF00;
+            record = *(u8 **)((u8 *)(u32)state + 0x24);
+            func_8006AFE4((s8 *)(*(u8 **)((u8 *)(u32)state + 0x24) + 0x900), (s8 *)((u8 *)(u32)state + 8));
+            if (mode != 0x200) {
+                s32 i;
+                for (i = 0; i < 4; i++) {
+                    if (*(s8 *)(record + 0x900 + i) == -1) {
+                        *(s8 *)(record + 0x900 + i) = -2;
+                    }
+                }
+            }
+            if (*(s16 *)((u8 *)(u32)D_8009DF70 + 6) != 0xE) {
+                *(s32 *)(record + 0x940) = func_800718B8(*(s16 *)((u8 *)(u32)D_8009DF70 + 6));
+            } else {
+                *(s32 *)(record + 0x940) = (s32)(u8 *)(u32)D_8009DF70 + 0x3C;
+            }
+            *(u8 *)(record + 0x944) = func_8006B854(*(u16 *)((u8 *)(u32)D_8009DF70), *(s16 *)((u8 *)(u32)D_8009DF70 + 6));
+            *(s32 *)(record + 0x948) = *(u32 *)((u8 *)(u32)D_8009DF70 + 0x20);
+            *(s32 *)(record + 0x94C) = (*(u16 *)((u8 *)(u32)D_8009DF70 + 4) & 1) != 0;
+            *(u16 *)(record + 0x950) = *(u16 *)((u8 *)(u32)D_8009DF70);
+            *(u16 *)(record + 0x952) = *(s16 *)((u8 *)(u32)D_8009DF70 + 2);
+        }
+    }
+    return record;
+}
+/* mkdraft:func_8006B928 end */
 
 void func_8006BA74(u8 *arg0) {
     s32 i;
@@ -830,5 +1052,73 @@ s32 func_8006CF70(s16 arg0) {
     return id;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006D068.s")
+/* mkdraft:func_8006D068 begin */
+extern s32 func_8004C594(s32, s32);
+extern void func_8004C8A0(s8 *, s32, s32, s32);
+
+
+
+void func_8006D068(s8 *arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    s32 temp_a1;
+    s32 temp_a1_2;
+    s32 temp_a2;
+    s32 temp_v0;
+    s32 var_s0;
+
+    // FAKE: never read -- temp_a2 is reassigned before its only use in case 0 --
+    // but the extra web advances uopt's colour walk so arg5 takes $v0 at the
+    // case-0 and default compares. diff score 70 without it.
+    temp_a2 = arg5;
+
+    temp_v0 = arg2 & 0xFF00;
+    var_s0 = -1;
+    *arg0 = 0;
+    switch (temp_v0) {
+    case 0x0:
+        temp_a1 = arg4 + 1;
+        if (arg5 == temp_a1) {
+            var_s0 = 0x57;
+        } else {
+            temp_a2 = arg4 + 2;
+            if (arg5 == temp_a2) {
+                var_s0 = 0x58;
+            } else {
+                func_8004C594(1, arg4 + 1);
+                var_s0 = 0x4B;
+            }
+        }
+        break;
+    case 0x300:
+        switch (arg3) {
+        case 15:
+            var_s0 = 0x50;
+            break;
+        case 11:
+            func_8004C594(1, arg4 + 1);
+            var_s0 = 0x4B;
+            break;
+        case 14:
+            func_8004C594(1, arg4 + 1);
+            var_s0 = 0x4E;
+            break;
+        case 24:
+            var_s0 = 0x51;
+            break;
+        default:
+            temp_a1_2 = arg4 + 1;
+            if (arg5 == temp_a1_2) {
+                var_s0 = 0x4D;
+            } else {
+                func_8004C594(1, arg4 + 1);
+                var_s0 = 0x4C;
+            }
+            break;
+        }
+        break;
+    }
+    if (var_s0 >= 0) {
+        func_8004C8A0(arg0, arg1, 0x12, var_s0);
+    }
+}
+/* mkdraft:func_8006D068 end */
 #endif

@@ -526,7 +526,71 @@ void Particle31_DisplayListCallback(s32 phase, ParticleDisplayListState26 *state
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/26/fragment26_162710/func_81005628.s")
+/* mkdraft:func_81005628 begin */
+extern ParticleEffectModel26 *D_8009491C;
+extern Func81003ECCHeaderRetry *D_8100678C;
+extern Func81003E60StateRetry *D_81006780;
+extern void *func_8003F54C(void *);
+
+
+
+void func_81005628(u8 *arg0) {
+    s32 i;
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 vx;
+    s16 vy;
+    s16 vz;
+    u8 flags;
+    u8 type;
+
+    D_8100678C = func_8003F54C(D_8009491C);
+    if (D_8100678C != NULL) {
+        D_81006780 = (Func81003E60StateRetry *)D_8100678C->pool;
+        if (D_81006780 != NULL) {
+            for (i = 0; i < 10; i++) {
+                if (((Func81003E60State *)D_81006780)->active == 1) {
+                    flags = 0x80;
+                    type = ((Func81003E60State *)D_81006780)->misc & 0x7F;
+                    x = (s16)(((Func81003E60State *)D_81006780)->position.x * 10.0f);
+                    y = (s16)(((Func81003E60State *)D_81006780)->position.y * 10.0f);
+                    z = (s16)(((Func81003E60State *)D_81006780)->position.z * 10.0f);
+                    vx = (s16)(((Func81003E60State *)D_81006780)->velocity.x * 10.0f);
+                    vy = (s16)(((Func81003E60State *)D_81006780)->velocity.y * 10.0f);
+                    vz = (s16)(((Func81003E60State *)D_81006780)->velocity.z * 10.0f);
+                } else {
+                    flags = 0;
+                    type = 0;
+                    x = 0;
+                    y = 0;
+                    z = 0;
+                    vx = 0;
+                    vy = 0;
+                    vz = 0;
+                }
+                if (vx) { } // FAKE: dead test, steers uopt's t-pool (without it: differ 46/76)
+                if (vy) { } // FAKE: dead test, steers uopt's t-pool (without it: differ 46/76)
+                if (flags) { } // FAKE: dead test, steers uopt's t-pool (without it: differ 29/76)
+                if (type) { } // FAKE: dead test, steers uopt's t-pool (without it: differ 26/76)
+                // FAKE: the second `& 0xFF` is redundant (0xFF & 0xFF) and emits no code; it exists
+                // only to claim one more hidden temp slot before the flags web (without it: differ 16/76)
+                *arg0++ = (flags & 0xFF & 0xFF & 0x80) | (type & 0x7F);
+                // FAKE: the six `& 0xFF` below are all dead (the sb truncates anyway); they only
+                // rotate the temp pool so the three `sra` results land in t9/t8/t7
+                // (without them: differ 10/76)
+                *arg0++ = x & 0xFF;
+                *arg0++ = (x >> 8) & 0xFF;
+                *arg0++ = y & 0xFF;
+                *arg0++ = (y >> 8) & 0xFF;
+                *arg0++ = z & 0xFF;
+                *arg0++ = (z >> 8) & 0xFF;
+                D_81006780++;
+            }
+        }
+    }
+}
+/* mkdraft:func_81005628 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/26/fragment26_162710/func_81005758.s")
 #endif

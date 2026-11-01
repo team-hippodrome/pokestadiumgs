@@ -110,8 +110,21 @@ class ScheduledPairs(unittest.TestCase):
         expected[1] = 0x15E00004
         self.assertEqual((actual, count), (expected, 1))
 
-    def test_hoisted_lui_needs_an_empty_delay_slot_and_no_link(self):
-        for branch, slot in [(0x15E00005, MOVE), (0x05F00005, 0)]:
+    def test_lui_hoisted_above_conditional_branch_with_safe_filled_delay_slot(self):
+        # lui at,%hi(A) / bnel t7,+5 / or a2,a0,zero / sb A / lui at,%hi(B) / sw B / ...
+        # A delay-slot fill that does not write $at still carries the hoisted
+        # lui into the fall-through store (func_8220D630).
+        words = [HI, 0x15E00005, MOVE, STORE_A, HI, STORE_B, 0x03E00008, 0, 0, 0]
+        relocs = {0: [(A, 5)], 12: [(A, 6)], 16: [(B, 5)], 20: [(B, 6)]}
+        actual, _, count = fold.fold_function_words(words, relocs, ADDRESSES, None, "synthetic")
+        expected = words[:4] + words[5:]
+        expected[4] |= 0xBF30
+        expected[1] = 0x15E00004
+        self.assertEqual((actual, count), (expected, 1))
+
+    def test_hoisted_lui_needs_a_safe_delay_slot_and_no_link(self):
+        AT_FILL = 0x00800825  # or at,a0,zero -- writes $at
+        for branch, slot in [(0x05F00005, 0), (0x15E00005, AT_FILL)]:
             words = [HI, branch, slot, STORE_A, HI, STORE_B, 0x03E00008, 0, 0, 0]
             relocs = {0: [(A, 5)], 12: [(A, 6)], 16: [(B, 5)], 20: [(B, 6)]}
             with self.subTest(branch=hex(branch), slot=hex(slot)):

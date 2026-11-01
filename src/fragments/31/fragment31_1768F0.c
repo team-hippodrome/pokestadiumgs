@@ -30,7 +30,42 @@ void func_88203670(s32 type, u8 *entries, u8 count) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203744.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_8820390C.s")
+typedef struct LabPCStorageList {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList;
+
+// One 0x76-byte Lab PC storage entry (halfword aligned); see func_88203670's 0x76 stride.
+typedef struct unk_func_88203ED8 {
+    u16 unk_00[0x3B];
+} unk_func_88203ED8;
+
+extern LabPCStorageList D_88234630[];
+
+/* mkdraft:func_8820390C begin */
+
+// Index of the D_88234630 list whose 0x76-byte entry array contains the
+// address arg0, or 0 when none does. The upper bound is the start address of
+// the last allocated entry (entries + count * 0x76 - 0x76), so only that
+// entry's first byte is inside the compared range.
+
+
+s32 func_8820390C(u8 *arg0) {
+    LabPCStorageList *list;
+    s32 i;
+
+    list = D_88234630;
+    for (i = 0; i < 4; i++) {
+        if (arg0 >= (u8 *)list->entries && arg0 <= (u8 *)list->entries + list->count * 0x76 - 0x76) {
+            return i;
+        }
+        list++;
+    }
+    return 0;
+}
+/* mkdraft:func_8820390C end */
 
 /* mkdraft:func_88203A18 begin */
 #pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x00, 0x90A60001, 0x90A20001)
@@ -67,19 +102,6 @@ s32 func_88203A18(s32 arg0, void *arg1) {
 
 // Same 12-byte layout as LabPCStorageList in
 //@src/fragments/31/fragment31_1736F0.c
-typedef struct LabPCStorageList {
-    u8 count;
-    u8 capacity;
-    void *entries;
-    s32 changed;
-} LabPCStorageList;
-
-// One 0x76-byte Lab PC storage entry (halfword aligned); see func_88203670's 0x76 stride.
-typedef struct unk_func_88203ED8 {
-    u16 unk_00[0x3B];
-} unk_func_88203ED8;
-
-extern LabPCStorageList D_88234630[];
 void func_88203A58(u8 *);
 
 void func_88203ED8(u8 *entry, s32 list) {

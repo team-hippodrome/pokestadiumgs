@@ -139,11 +139,89 @@ u8 func_84148BB4(u8 arg0) {
     return 0xFF;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84148C74.s")
+/* mkdraft:func_84148C74 begin */
+extern void _bzero(void *, s32);
+extern u8 func_84155D5C(u8 arg0, u8 arg1, u8 arg2);
+
+
+s32 func_84148C74(u8 arg0) {
+    u8 value;
+    // Candidate-search record shared with func_841487A8 and the candidate
+    // enumerators above: bytes[0] is the current species and bytes[1] the
+    // candidate being tried; func_841487A8 records its selections in
+    // bytes[2] and bytes[3], with comparison values in bytes[4] and
+    // bytes[6] (u16).
+    u8 record[8];
+
+    value = func_84148BB4(arg0);
+    if (value != 0xFF) {
+        return value;
+    }
+
+    _bzero(record, 8);
+    record[0] = arg0;
+    value = func_84155D5C(
+        arg0,
+        func_84154B30(arg0)[1],
+        func_84154B30((1 - (u32)arg0) & 0xFF)[1]
+    );
+    record[1] = value;
+    if (value != 0) {
+        func_841487A8(record);
+        func_84148B40(record);
+        return record[3];
+    }
+    if (func_84156618(arg0, func_84154B30(arg0)[1], 2) != 0) {
+        func_84148AC8(record);
+        return record[3];
+    }
+    func_84148A4C(record);
+    return record[3];
+}
+/* mkdraft:func_84148C74 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84148D54.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149294.s")
+/* mkdraft:func_84149294 begin */
+extern u8 D_8419D7B0[];
+extern u8 *D_841951F8[];
+extern u8 *D_84195208[];
+extern void func_84148D54(u8);
+// The definition takes a u8 battler index (//@src/fragments/79/fragment79_3B9B80.c),
+// but this prototype is s32 so that IDO passes the index through instead of
+// masking it with andi at each call site.
+extern s32 func_8414A3C0(s32, u32);
+extern void func_84156800(u8 *, s32);
+
+
+
+void func_84149294(u8 arg0) {
+    // IDO assigns spill slots in declaration order: idx -> 0x20(sp),
+    // add -> 0x28(sp), ptr -> 0x1c(sp). Declaring add after ptr moves it to
+    // 0x24(sp) and no longer matches.
+    s32 idx;
+    s32 add;
+    u8 **ptr;
+
+    // (1 - arg0) selects the other battler's entry; D_841951F8 is a
+    // two-element table (func_8414A3E8 walks both entries).
+    idx = (1 - arg0) & 0xFF;
+    add = 0;
+    D_8419D7B0[0] = 0;
+    D_8419D7B0[1] = 0;
+    if (func_8414A3C0(idx, 4) == 0) {
+        ptr = &D_841951F8[arg0];
+        if (!(D_84195208[idx][17] & 0x80) && ((*ptr)[9] >= 2)) {
+            func_84148D54(arg0);
+            if ((D_84195208[arg0][13] & 0x10) && (D_84195208[arg0][23] == 1)) {
+                add = 80;
+            }
+            D_8419D7B0[1] = (D_8419D7B0[1] + add >= 0x100) ? 0xFF : D_8419D7B0[1] + add;
+            func_84156800(D_8419D7B0[0] * 88 + *ptr + 76, 0);
+        }
+    }
+}
+/* mkdraft:func_84149294 end */
 
 extern u8 D_8419D7B0[];
 extern u8 D_8419D7B1;
@@ -355,7 +433,70 @@ void func_84149A50(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149AC8.s")
+/* mkdraft:func_84149AC8 begin */
+
+
+void func_84149AC8(void *arg0) {
+    s32 mask;
+
+    if (((u8 *)arg0)[0] & 2) {
+        return;
+    }
+    switch (((u8 *)arg0)[2]) {
+    case 92:
+        if ((*(u16 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x26) & 7) == 0) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = 0;
+        }
+        break;
+    case 101:
+        if (*(s32 *)(((u8 *)arg0) + 0xC) >= *(u16 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x28)) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = *(u16 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x28) - 1;
+        }
+        break;
+    case 117:
+        mask = (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x16) & 1) ? 1 : 0;
+        *(s32 *)(((u8 *)arg0) + 0xC) <<= *(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x1A) + mask;
+        if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+        }
+        break;
+    case 119:
+        if (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x20) != 0) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= *(u8 *)(*(u8 **)(((u8 *)arg0) + 0x10) + 0x20) + 0x1F;
+        }
+        if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+            *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+        }
+        break;
+    case 126:
+    case 147:
+        if (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x17) & 0x20) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= 1;
+            if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+                *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+            }
+        }
+        break;
+    case 146:
+    case 149:
+        if (*(u8 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x17) & 0x40) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= 1;
+            if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+                *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+            }
+        }
+        break;
+    case 150:
+        if (*(s32 *)(*(u8 **)(((u8 *)arg0) + 0x14) + 0x48) != 0) {
+            *(s32 *)(((u8 *)arg0) + 0xC) <<= 1;
+            if (*(s32 *)(((u8 *)arg0) + 0xC) >= 0x10000) {
+                *(s32 *)(((u8 *)arg0) + 0xC) = 0xFFFF;
+            }
+        }
+        break;
+    }
+}
+/* mkdraft:func_84149AC8 end */
 
 extern f64 D_8418B9A0;
 void func_84149C70(void *arg0) {
@@ -383,7 +524,49 @@ void func_84149D0C(void *arg0) {
     func_84149AC8(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149D54.s")
+/* mkdraft:func_84149D54 begin */
+extern void _bzero(void *, s32);
+extern u8 *func_84154B0C(void);
+extern s32 *func_8414A3A0(u8);
+extern s8 func_80062D20(u8);
+extern s8 func_80062D5C(u8);
+extern u8 func_80062D98(u8);
+
+
+
+void func_84149D54(void *arg0, u8 arg1, u8 arg2) {
+    u8 *records;
+    s32 *info;
+    u8 *defender;
+    u8 *attacker;
+    s32 record_offset;
+    s32 negated_offset;
+
+    records = func_84154B0C();
+    info = func_8414A3A0(arg1);
+    _bzero(arg0, 0x20);
+    if (*info & 1) {
+        *(u8 *)((u8 *)arg0 + 0) = (u8)(*(u8 *)((u8 *)arg0 + 0) | 1);
+    }
+    *(u8 *)((u8 *)arg0 + 1) = arg2;
+    *(s8 *)((u8 *)arg0 + 2) = func_80062D20(arg2);
+    *(s8 *)((u8 *)arg0 + 3) = func_80062D5C(arg2);
+    *(u8 *)((u8 *)arg0 + 4) = func_80062D98(arg2);
+    *(u8 *)((u8 *)arg0 + 6) = *(u8 *)(records + 0x198);
+    // One 0xCC-byte record per side: the attacker at arg1, the defender at
+    // 1 - arg1, i.e. -(arg1 * 0xCC) + 0xCC from the base. The typed index gives
+    // the attacker pointer a multiply chain separate from the negated one.
+    attacker = ((u8 (*)[0xCC])records)[arg1];
+    record_offset = arg1 * 0xCC;
+    negated_offset = record_offset * -1;
+    defender = &records[negated_offset];
+    defender += 0xCC;
+    *(u8 **)((u8 *)arg0 + 0x18) = attacker;
+    *(u8 **)((u8 *)arg0 + 0x1C) = defender;
+    *(u8 **)((u8 *)arg0 + 0x10) = attacker + 8;
+    *(u8 **)((u8 *)arg0 + 0x14) = defender + 8;
+}
+/* mkdraft:func_84149D54 end */
 
 u8 func_84149E58(u8 *arg0) {
     if (arg0[1] == 8) {
@@ -437,7 +620,59 @@ void func_84149F74(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84149FB8.s")
+/* mkdraft:func_84149FB8 begin */
+extern u8 func_80063660(u8);
+
+
+
+void func_84149FB8(u8 *arg0) {
+    s32 temp_v0_2;
+    s32 temp_v1;
+    u8 temp_v1_2;
+    void *temp_v0;
+
+    if (func_84149E58(arg0) != 0) {
+        arg0[2] = 0;
+        return;
+    }
+    if (func_84149EC8(arg0) != 0) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    if (func_84149F30(arg0) != 0) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    temp_v0 = *(void **)(arg0 + 4);
+    if (*(u8 *)((u8 *)temp_v0 + 0x18) & 1) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    temp_v1 = arg0[1];
+    if (temp_v1 == 0x11) {
+        arg0[2] = 0xFF;
+        return;
+    }
+    if (temp_v1 == 0x5C) {
+        if (!(*(u16 *)((u8 *)temp_v0 + 0x26) & 7)) {
+            arg0[2] = 0;
+            return;
+        }
+    }
+    func_84149F74(arg0);
+    if (func_80063660(*(*(u8 **)(arg0 + 8) + 1)) == 0x4D) {
+        temp_v0_2 = func_80063690(*(*(u8 **)(arg0 + 8) + 1));
+        temp_v1_2 = arg0[2];
+        if ((s32)temp_v1_2 >= temp_v0_2) {
+            // FAKE: the mask folds to nothing but consumes the temp-register slot
+            // that colors subu as t7; without it the differ scores 10 (t6).
+            arg0[2] = (temp_v1_2 - temp_v0_2) & 0xFF;
+        } else {
+            arg0[2] = 0;
+        }
+    }
+}
+/* mkdraft:func_84149FB8 end */
 
 extern u8 func_80062D98(u8);
 extern s32 func_84155574(u8 *, u8);

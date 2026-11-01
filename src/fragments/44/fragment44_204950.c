@@ -176,7 +176,85 @@ void func_8AF1722C(void) {
     _bzero(&D_8AF34808, 0xE);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF17264.s")
+/* mkdraft:func_8AF17264 begin */
+extern s32 D_8AF341F0;
+extern s32 D_8AF34268;
+extern u8 D_8AF34818[][3];
+extern s32 func_8AC06D8C(s32 arg0, s32 arg1);
+extern void func_8AC06E98(void *arg0);
+extern void func_8AC02C80(s32 arg0, s32 arg1, s32 arg2, void *arg3);
+extern void func_8AC05ED4(s32 arg0, s32 arg1, s32 arg2);
+extern void func_8AC0651C(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+extern s32 func_8AF003A8(s16 arg0);
+extern void func_8AF00504(s32);
+
+extern s32 D_8AF342E4;
+extern s32 D_8AF342E8;
+extern s32 D_8AF342EC;
+extern s16 D_8AF347F0;
+extern s16 D_8AF347F2;
+extern void *D_8AF347F8;
+extern void *D_8AF347FC;
+extern s16 D_8AF34C32;
+extern s32 D_8AF34D38;
+
+
+
+void func_8AF17264(void) {
+    s32 pad[3];
+    s16 sp2A;
+    s32 temp_v0_3;
+    s32 temp_v0_4;
+    s32 temp_v0_5;
+    s32 var_a0;
+    u8 *var_v1;
+    void *temp_v0;
+
+    func_8AF1722C();
+    func_8004C4B0(6);
+    func_8004C4B0(7);
+    func_8AF00504(0x74);
+    temp_v0 = func_8AF003A8(0x74);
+    func_8AC06E98(temp_v0);
+    D_8AF34800 = 0;
+    D_8AF34C32 = 0;
+    var_v1 = (u8 *) D_8AF34818;
+    var_a0 = 0;
+loop_1:
+    var_a0 += 1;
+    if ((s32) var_v1[0] > 0) {
+        D_8AF34C32 += 1;
+        if ((var_v1[0] != 0xFF) && (var_v1[0] != 0xFE)) {
+            D_8AF34800 += 1;
+        }
+        var_v1 += 3;
+        if (var_a0 != 0xFA) {
+            goto loop_1;
+        }
+    }
+    temp_v0_3 = func_8AC06D8C((s32) temp_v0, 0x7469746C);
+    D_8AF342EC = temp_v0_3;
+    (*(s16 *) ((u8 *) D_8AF342EC + 0x30)) = 0x3B;
+    (*(s16 *) ((u8 *) D_8AF342EC + 0x32)) = 0xC5;
+    temp_v0_4 = func_8AC06D8C((s32) temp_v0, 0x736C6966);
+    D_8AF342E4 = temp_v0_4;
+    (*(s16 *) ((u8 *) D_8AF342E4 + 0x30)) = 0x3B;
+    (*(s16 *) ((u8 *) D_8AF342E4 + 0x32)) = 0x67;
+    D_8AF342E0 = func_8AC06D8C((s32) temp_v0, 0x62756E31);
+    temp_v0_5 = func_8AC06D8C((s32) temp_v0, 0x77695F31);
+    D_8AF342E8 = temp_v0_5;
+    D_8AF347F0 = *(s16 *) ((u8 *) D_8AF342E8 + 8);
+    D_8AF347F2 = *(s16 *) ((u8 *) D_8AF342E8 + 0xA);
+    sp2A = (s16) ((s16) (*(s16 *) ((u8 *) D_8AF342E8 + 0xE)) / 20);
+    D_8AF347F8 = func_8004C874(0x3B, 0x3D);
+    D_8AF347FC = func_8004C874(0x3B, 0x46);
+    func_8AC02C80((s32) temp_v0, 0x725F6C5F, 0x725F725F, &D_8AF34D38);
+    func_8AC05ED4((s32) temp_v0, 0x79615F75, (s32) &D_8AF341F0);
+    func_8AC05ED4((s32) temp_v0, 0x79615F73, (s32) &D_8AF34268);
+    func_8AF171D8((s32) ((D_8AF347F4 * 3) + &D_8AF34818[D_8AF347F6 * 4][0]));
+    func_8AC0651C(&D_8AF34808, (s16) ((s32) (D_8AF34C32 - 1) / 4), 0x14, sp2A, 0xA);
+}
+/* mkdraft:func_8AF17264 end */
 
 /* mkdraft:func_8AF174DC begin */
 extern void func_8AC007FC(void);

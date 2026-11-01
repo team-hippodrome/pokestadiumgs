@@ -130,7 +130,24 @@ void Fragment14_ComputeGridCursorPosition(u8 *arg0, s16 *arg1) {
     arg1[1] = (s16)(28.0f * y + 18.0f);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_81305BA8.s")
+/* mkdraft:func_81305BA8 begin */
+extern f32 func_80071CA0(f32 value, f32 *whole);
+
+
+
+void func_81305BA8(void *arg0, s32 *arg1, s32 *arg2) {
+    s32 offset;
+    f32 whole;
+
+    offset = (s32) (-func_80071CA0(
+        (f32)(u32)(*(u8 *)((u8 *)arg0 + 0x8A)) +
+            (((f32)(*(s16 *)((u8 *)arg0 + 0x7C)) - (f32)(u32)(*(u8 *)((u8 *)arg0 + 0x8A))) *
+             func_8130571C(arg0)),
+        &whole) * 28.0f);
+    *arg1 = (s32) whole;
+    *arg2 = offset;
+}
+/* mkdraft:func_81305BA8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_81305C54.s")
 

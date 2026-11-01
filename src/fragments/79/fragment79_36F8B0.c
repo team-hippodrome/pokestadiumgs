@@ -191,7 +191,83 @@ void func_84100350(u8 *arg0) {
     arg0[0x98] = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841003AC.s")
+/* mkdraft:func_841003AC begin */
+extern void Audio_SetChannelGroupCounts(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
+extern void func_84100350(u8 *arg0);
+extern void func_84104818(s32 arg0);
+extern s32 func_8411E188(s8 arg0);
+extern u8 *D_8418C950;
+extern u8 D_84190218[];
+extern s32 D_84193DD0;
+
+// Per-frame particle-system update: picks the audio channel group when the sound state byte at
+// D_84193DD0+8 is one of 0x27/0x2B/0x86/0xB8, silences the 9 channel bytes of D_84190218, and then
+// walks the 300 0x9C-byte records func_84100260 claims from D_8418C950, freeing (func_84104818) the
+// object at 0xC and ticking (func_84100350) each active record that is not muted by its flags.
+
+
+void func_841003AC(s32 arg0) {
+    s32 flag;
+    s32 i;
+    u8 *record;
+    s32 handle1;
+    s32 handle2;
+
+    record = D_8418C950;
+    switch (((u8 *)D_84193DD0)[8]) {
+        case 0x27:
+            arg0 = 1;
+            break;
+        case 0x2B:
+            arg0 = 1;
+            break;
+        case 0x86:
+            arg0 = 1;
+            break;
+        case 0xB8:
+            arg0 = 1;
+            break;
+    }
+
+    D_84190218[0] = 0xFF;
+    D_84190218[1] = 0xFF;
+    D_84190218[2] = 0xFF;
+    D_84190218[4] = 0xFF;
+    D_84190218[5] = 0xFF;
+    D_84190218[6] = 0xFF;
+    D_84190218[8] = 0xFF;
+    D_84190218[9] = 0xFF;
+    D_84190218[10] = 0xFF;
+
+    if (arg0 == 1) {
+        handle1 = func_8411E188(0);
+        handle2 = func_8411E188(1);
+        Audio_SetChannelGroupCounts(0xFF, 0xFF, 0xFF, 0);
+        func_8003F454(handle1, 0xFF, 0xFF, 0xFF, 0);
+        func_8003F454(handle2, 0xFF, 0xFF, 0xFF, 0);
+        func_8003F4DC((u8 *)handle1, 0xFF);
+        func_8003F4DC((u8 *)handle2, 0xFF);
+    }
+
+    for (i = 0; i < 300; i++, record += 0x9C) {
+        if (*(s8 *)(record + 0x98) != 0) {
+            flag = 1;
+            // else-if, not a second `if`: the then-branch jumps past the flag&0x10000 test.
+            if ((*(u32 *)(record + 0x14) & 1) && (arg0 == 0)) {
+                flag = 0;
+            } else if (*(u32 *)(record + 0x14) & 0x10000) {
+                flag = 0;
+            }
+            if (flag != 0) {
+                if (*(s32 *)(record + 0xC) != 0) {
+                    func_84104818(*(s32 *)(record + 0xC));
+                }
+                func_84100350(record);
+            }
+        }
+    }
+}
+/* mkdraft:func_841003AC end */
 
 typedef struct Func8410056CParticleS8 {
     u8 pad[0x98];
@@ -364,7 +440,62 @@ void func_84101084(Func84100688Table **arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841013F4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101888.s")
+/* mkdraft:func_84101888 begin */
+extern s32 ParticleMath_RandomSignedOffsetBySign(u32, s32);
+extern s32 func_81100120(u32, s32);
+extern s32 func_81100144(u32, s32);
+
+// The callees take two arguments and are defined with s32 formals in fragment27_code.c; their
+// first formal is spelled u32 here because retail loads state->step into v0 and copies it with
+// `or a0,v0,zero` at each call. With an s32 first formal IDO loads step straight into a0 instead
+// (diff score 695).
+//@src/fragments/27/fragment27_code.c
+
+
+void func_84101888(s16 *arg0, void *arg1, u8 arg2, s16 *arg3) {
+    typedef struct {
+        u16 flags;
+        s16 value;
+        s16 minimum;
+        s16 maximum;
+        s16 step;
+        s16 offset;
+    } State;
+    State *state = arg1;
+    if (((s16 *)arg1)[2] == 0 || arg2 < ((s16 *)arg1)[2]) {
+        if (arg2 == state->value) {
+            if (state->step == 0) {
+                *arg3 = state->offset;
+            } else if ((state->flags & 0xFF00) == 0x200) {
+                *arg3 = ParticleMath_RandomSignedOffsetBySign(state->step, state->offset);
+            } else if ((state->flags & 0xFF00) == 0x100) {
+                *arg3 = func_81100120(state->step, state->offset);
+            } else {
+                *arg3 = func_81100144(state->step, state->offset);
+            }
+        }
+        if (arg2 >= state->value) {
+            if (state->flags == 0) {
+                if (state->maximum != *arg0) {
+                    if (state->maximum < *arg0) {
+                        *arg0 -= *arg3;
+                        if (*arg0 < state->maximum) {
+                            *arg0 = state->maximum;
+                        }
+                    } else {
+                        *arg0 += *arg3;
+                        if (state->maximum < *arg0) {
+                            *arg0 = state->maximum;
+                        }
+                    }
+                }
+            } else {
+                *arg0 += *arg3;
+            }
+        }
+    }
+}
+/* mkdraft:func_84101888 end */
 
 void func_84101A08(f32 *arg0, u8 *arg1, u8 arg2) {
     f32 value;
@@ -430,7 +561,82 @@ void func_84102750(s32 arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841027B4.s")
+/* mkdraft:func_841027B4 begin */
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+
+typedef struct unk_func_841027B4_vec3f {
+    /* 0x0 */ f32 x;
+    /* 0x4 */ f32 y;
+    /* 0x8 */ f32 z;
+} unk_func_841027B4_vec3f;
+
+typedef struct unk_func_841027B4 {
+    /* 0x00 */ u8 unk_00[0x18];
+    /* 0x18 */ f32 unk_18;
+    /* 0x1C */ f32 unk_1C;
+    /* 0x20 */ unk_func_841027B4_vec3f unk_20;
+    /* 0x2C */ unk_func_841027B4_vec3f unk_2C;
+    /* 0x38 */ unk_func_841027B4_vec3f unk_38;
+    /* 0x44 */ unk_func_841027B4_vec3f unk_44;
+    /* 0x50 */ unk_func_841027B4_vec3f unk_50;
+} unk_func_841027B4;
+
+M2C_UNK func_84101D54(u8 *);                        /* extern */
+
+
+
+void func_841027B4(u8 *arg0) {
+    void *sp24;
+    s32 temp_v0_2;
+    u8 temp_v0;
+    unk_func_841027B4 *rec = (unk_func_841027B4 *)arg0;
+
+    sp24 = M2C_FIELD(arg0, void **, 0x10);
+    temp_v0 = M2C_FIELD(arg0, u8 *, 0x7C);
+    switch (temp_v0) {                              /* irregular */
+    case 0:
+        func_84101D54(arg0);
+        break;
+    case 1:
+        func_84101D54(arg0);
+        break;
+    case 7:
+        func_84101D54(arg0);
+        break;
+    }
+    M2C_FIELD(arg0, f32 *, 0x20) = (f32) (rec->unk_38.x + rec->unk_2C.x + rec->unk_44.x + rec->unk_50.x);
+    M2C_FIELD(arg0, f32 *, 0x24) = (f32) (rec->unk_38.y + rec->unk_2C.y + rec->unk_44.y + rec->unk_50.y);
+    M2C_FIELD(arg0, f32 *, 0x28) = (f32) (rec->unk_38.z + rec->unk_2C.z + rec->unk_44.z + rec->unk_50.z);
+    func_84102750(M2C_FIELD(arg0, s32 *, 0xC), sp24);
+    temp_v0_2 = M2C_FIELD(arg0, s32 *, 0xC);
+    if (temp_v0_2 != 0) {
+        M2C_FIELD(temp_v0_2, f32 *, 0x24) = (f32) M2C_FIELD(arg0, f32 *, 0x20);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x28) = (f32) M2C_FIELD(arg0, f32 *, 0x24);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x2C) = (f32) M2C_FIELD(arg0, f32 *, 0x28);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x30) = (f32) M2C_FIELD(arg0, f32 *, 0x18);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x34) = (f32) M2C_FIELD(arg0, f32 *, 0x18);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), f32 *, 0x38) = (f32) M2C_FIELD(arg0, f32 *, 0x18);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), s16 *, 0x1E) = (s16) M2C_FIELD(arg0, s16 *, 0x6A);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), s16 *, 0x20) = (s16) M2C_FIELD(arg0, s16 *, 0x6C);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), s16 *, 0x22) = (s16) M2C_FIELD(arg0, s16 *, 0x6E);
+        M2C_FIELD(M2C_FIELD(arg0, s32 *, 0xC), u8 *, 0x1D) = (u8) M2C_FIELD(arg0, u8 *, 0x87);
+    }
+}
+/* mkdraft:func_841027B4 end */
 
 extern s32 ParticleMath_LacksBits(void *arg0, s32 arg1);
 extern s32 ParticleMath_HasBits(void *arg0, s32 arg1);

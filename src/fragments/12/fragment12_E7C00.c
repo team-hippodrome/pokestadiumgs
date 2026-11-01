@@ -434,7 +434,99 @@ s32 func_81404040(void *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814040D8.s")
+/* mkdraft:func_814040D8 begin */
+// Flags for this frame come from the u16 at +8 of func_81403FAC(arg0)'s record.
+// When that call returns null, the countdown byte at 0x11 drops by
+// func_816092FC() per frame and, at 0, is refilled by func_814028F0() (a random
+// 6..21) while the flags become 0x8000. Bit 0x800 clears the 0x10 latch and bit
+// 0x400 sets it, each calling func_800226C0(1) only when the latch sits on the
+// other side. 0x8000 and 0x4000 store 3 into the 0xC state, call func_800226C0
+// with a sub-state-dependent id (0xA1/0xA2 from the 0x10 latch for cases 0-2,
+// else 2) and re-read the 0xE sub-state, which the return value compares to 2.
+
+
+
+s32 func_814040D8(void *arg0) {
+    u16 var_a2 = 0;
+    void *temp_v0;
+    s32 var_v0;
+    s8 var_v1;
+
+    temp_v0 = func_81403FAC(arg0);
+    if (temp_v0 != 0) {
+        var_a2 = *(u16 *)((u8 *)temp_v0 + 8);
+    } else {
+        *(s8 *)((u8 *)arg0 + 0x11) = (s8)(s32)((f32)(*(s8 *)((u8 *)arg0 + 0x11)) - func_816092FC());
+        if (*(s8 *)((u8 *)arg0 + 0x11) <= 0) {
+            *(u8 *)((u8 *)arg0 + 0x11) = func_814028F0();
+            var_a2 = 0x8000;
+        }
+    }
+    var_v1 = *(s8 *)((u8 *)arg0 + 0xE);
+    *(f32 *)((u8 *)arg0 + 4) = 16.0f;
+    if (var_v1 == 0 || var_v1 == 1) {
+        var_v0 = var_a2;
+        if (var_a2 & 0x800) {
+            if (*(s8 *)((u8 *)arg0 + 0x10) > 0) {
+                func_800226C0(1);
+                *(u8 *)((u8 *)arg0 + 0x10) = 0;
+                // FAKE: u8 lvalue for a signed field. With (s8 *) here the reload
+                // is cloned into the 0x8000 arm too, so the compiler emits a
+                // second lb of 0xE instead of the single shared lb after the
+                // join: differ 280, versus 0 with this spelling. The byte holds
+                // the small sub-state tested by the switches below, so the
+                // zero-extending load yields the same value.
+                var_v1 = *(u8 *)((u8 *)arg0 + 0xE);
+            }
+        } else if ((var_v0 & 0x400) && *(s8 *)((u8 *)arg0 + 0x10) <= 0) {
+            func_800226C0(1);
+            *(u8 *)((u8 *)arg0 + 0x10) = 1;
+            var_v1 = *(s8 *)((u8 *)arg0 + 0xE);
+        }
+        if (var_v0 & 0x8000) {
+            switch (var_v1) {
+            case 0:
+            case 1:
+            case 2:
+                func_800226C0(*(s8 *)((u8 *)arg0 + 0x10) == 0 ? 0xA1 : 0xA2);
+                break;
+            case 3:
+            case 4:
+                func_800226C0(2);
+                break;
+            }
+            *(u8 *)((u8 *)arg0 + 0xC) = 3;
+            var_v1 = *(s8 *)((u8 *)arg0 + 0xE);
+        } else if (var_v0 & 0x4000) {
+            *(s8 *)((u8 *)arg0 + 0x10) = -2;
+            switch (var_v1) {
+            case 0:
+            case 1:
+                func_800226C0(0xA2);
+                *(u8 *)((u8 *)arg0 + 0x10) = 1;
+                break;
+            case 2:
+                func_800226C0(0xA2);
+                break;
+            case 3:
+            case 4:
+                func_800226C0(2);
+                break;
+            }
+            *(u8 *)((u8 *)arg0 + 0xC) = 3;
+            var_v1 = *(s8 *)((u8 *)arg0 + 0xE);
+            *(f32 *)((u8 *)arg0 + 4) = 16.0f;
+        }
+    } else if (var_a2 & 0x4000) {
+        func_800226C0(0xA2);
+        *(s8 *)((u8 *)arg0 + 0x10) = -2;
+        *(u8 *)((u8 *)arg0 + 0xC) = 3;
+        var_v1 = *(s8 *)((u8 *)arg0 + 0xE);
+        *(f32 *)((u8 *)arg0 + 4) = 16.0f;
+    }
+    return var_v1 != 2;
+}
+/* mkdraft:func_814040D8 end */
 
 f32 func_816092FC(void);
 s32 func_81404334(void *arg0) {

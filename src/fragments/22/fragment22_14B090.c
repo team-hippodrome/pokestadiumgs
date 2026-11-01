@@ -249,7 +249,57 @@ s32 func_827015A4(s32 arg0, s32 arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_8270160C.s")
+/* mkdraft:func_8270160C begin */
+
+
+void func_8270160C(void *arg0) {
+    s32 pad[2];
+    s32 sp34;
+    s32 temp_a1;
+    s32 var_s0;
+    s32 count;
+    void *temp_v0;
+    void *temp_v0_2;
+
+    count = 6;
+    sp34 = 1;
+    if (*(s16 *)((u8 *)arg0 + 0xE) >= 0) {
+        if ((*(s16 *)((u8 *)arg0 + 0xE) & 3) == 0) {
+            temp_a1 = *(s16 *)((u8 *)arg0 + 0xE) / 4;
+            if (temp_a1 < count) {
+                if (temp_a1 != 0) {
+                    temp_a1 -= 1;
+                    func_827015A4(2, temp_a1);
+                } else {
+                    func_827015A4(1, 0);
+                }
+            } else {
+                *(s16 *)((u8 *)arg0 + 0xE) = -1;
+            }
+        }
+        if (*(s16 *)((u8 *)arg0 + 0xE) >= 0) {
+            *(s16 *)((u8 *)arg0 + 0xE) = *(s16 *)((u8 *)arg0 + 0xE) + 1;
+        }
+    }
+    var_s0 = 0;
+    while (var_s0 != count) {
+        if (var_s0 != 0) {
+            temp_v0_2 = func_82700E70(2, var_s0 - 1, (u8 *)arg0 + 0x34, 0x10);
+        } else {
+            temp_v0_2 = func_82700E70(1, 0, (u8 *)arg0 + 0x34, 0x10);
+        }
+        var_s0 += 1;
+        if ((temp_v0_2 != NULL) && (*(s16 *)((u8 *)temp_v0_2 + 6) != 2)) {
+            sp34 = 0;
+            break;
+        }
+    }
+    if (sp34 != 0) {
+        *(s16 *)((u8 *)arg0 + 2) = 2;
+        *(u16 *)((u8 *)arg0 + 0xC) |= 2;
+    }
+}
+/* mkdraft:func_8270160C end */
 
 extern void * func_82700E70(s32 arg0, s32 arg1, void *arg2, s32 arg3);
 void func_8270174C(void *arg0) {
@@ -1014,9 +1064,96 @@ void func_82702E78(void *record) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82702F70.s")
+/* mkdraft:func_82702F70 begin */
+extern s16 D_827034F6;
+extern s16 *D_827034F8;
+extern void Ui_DrawAnimatedTextureMarker(s16, s16);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_827030D0.s")
+
+
+s32 func_82702F70(void) {
+    s32 i;
+    s32 selected;
+    Fragment22RowEntry *entry;
+    u16 *p_ec;
+    u16 *p_ec2;
+    s16 *p_f6;
+    s16 **p_f8;
+    Gfx *p_dl;
+
+    p_ec = &D_827034EC;
+    p_ec2 = &D_827034EC;
+    p_f6 = &D_827034F6;
+    p_f8 = &D_827034F8;
+    p_dl = D_80094E38;
+
+    if ((*p_ec) & 1) {
+        for (i = 0; i < 16; i++) {
+            entry = &D_827034E0.rows[i];
+            if (entry->kind != 0 && entry->state != 0) {
+                selected = 0;
+                // A row is selectable when its kind (the s16 at offset 0, the field
+                // func_82702DF8 switches on) equals D_827034F6.
+                if (((*p_ec2) & 2) && *p_f6 == *(s16 *)entry && entry->row_index == *(*p_f8)) {
+                    selected = 1;
+                }
+                func_82702810(entry);
+                func_82702DF8(entry, selected);
+                if (selected != 0) {
+                    gSPDisplayList(D_800D0510++, p_dl);
+                    Ui_DrawAnimatedTextureMarker(entry->position.x + 0x1B, entry->position.y + 4);
+                }
+            }
+        }
+        func_82702E78(&D_827034E0);
+    }
+    return ((*p_ec) & 1) != 0;
+}
+/* mkdraft:func_82702F70 end */
+
+/* mkdraft:func_827030D0 begin */
+extern s16 D_827034E4;
+extern s16 D_827034EE;
+
+
+
+s32 func_827030D0(s32 arg0) {
+    s32 var_v1;
+    s32 value;
+    s16 *p_state;
+    s16 *p_kind;
+    s16 *p_count;
+    u8 *temp_v0;
+    s16 temp_a2;
+
+    var_v1 = 0;
+    p_state = &D_827034E2;
+    p_kind = &D_827034E4;
+    p_count = &D_827034EE;
+    // FAKE: `* 0` is an arithmetic nop. With `*p_state == 0` the sign extension of arg0 is
+    // materialized at the D_827034E0 store; the multiply operand makes IDO emit sll/sra for
+    // the s16 conversion in the entry block, which is the scheduling the retail code uses.
+    // Without the fake the best nonmatching candidate scores 105.
+    if ((D_827034EC & 1) && (*p_state == ((s16)arg0 * 0))) {
+        *p_state = 1;
+        *p_count = 0;
+        value = (s16)arg0;
+        D_827034E0.unk_00 = value;
+
+        if (value == 1) {
+            temp_v0 = func_82700E70(2, 2, D_82703514, 0x10);
+            *p_kind = 2;
+            temp_a2 = *(s16 *)((u8 *)temp_v0 + 0xE);
+            *(s16 *)((u8 *)temp_v0 + 6) = 2;
+            *(s16 *)((u8 *)temp_v0 + 0x14) = 0x34;
+            *(s16 *)((u8 *)temp_v0 + 0x12) = temp_a2;
+            func_8270188C(2, 2, temp_a2, *(s16 *)((u8 *)temp_v0 + 0x10));
+        }
+        var_v1 = 1;
+    }
+    return var_v1;
+}
+/* mkdraft:func_827030D0 end */
 
 extern s16 D_827034EA;
 s32 func_82703188(void) {

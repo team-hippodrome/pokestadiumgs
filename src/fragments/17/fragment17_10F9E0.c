@@ -50,7 +50,95 @@ s32 func_822000F0(s32 arg0, void *arg1) {
 }
 /* mkdraft:func_822000F0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10F9E0/func_82200184.s")
+/* mkdraft:func_82200184 begin */
+extern void _bzero(void *, s32);
+extern u8 *func_80047588(s32 flags, s32 side);
+extern s32 func_8004C8C0(u16 arg0);
+extern s32 func_8004D690(s32 value);
+extern s32 func_8004DC6C(s32 arg0);
+extern void func_8004DCFC(u8 *cursor, s32 *flags);
+extern void func_8004E308(void *arg0, void *arg1, void *arg2);
+extern s32 func_8004EB58(s32 pool_state, s32 arg1);
+extern void *func_8005049C(void *arg0, s32 arg1);
+extern void func_8005053C(void *arg0, u8 *arg1);
+extern void func_80050578(void *arg0, s32 arg1);
+extern s32 func_822000F0(s32 arg0, void *arg1);
+extern void *main_pool_get_available(void);
+extern void *MainPool_AllocState(s32 arg0, s32 arg1);
+extern void MainPool_FinalizeAllocation(void *arg0);
+extern u8 D_8220E2F8;
+extern s32 func_82200020;
+
+// Slide state kept between this fragment's geo callbacks; func_822003EC passes
+// the address of D_8220E2D0 to func_82200184. Fields 0x8-0x18 hold the cursors
+// that func_8004DCFC scans for the condition flags combined at 0x8220025C.
+typedef struct Fragment17SlideState {
+    /* 0x00 */ s32 unk_00;
+    /* 0x04 */ s32 unk_04;
+    /* 0x08 */ u8 *unk_08;
+    /* 0x0C */ u8 *unk_0C;
+    /* 0x10 */ u8 *unk_10;
+    /* 0x14 */ u8 *unk_14;
+    /* 0x18 */ u8 *unk_18;
+    /* 0x1C */ void *unk_1C;
+    /* 0x20 */ void *unk_20;
+    /* 0x24 */ s16 unk_24;
+} Fragment17SlideState;
+
+// arg0 is typed s32 * by the file's prototype, which func_822003EC calls with
+// &D_8220E2D0; the casts below reach the state fields through that prototype.
+
+
+void func_82200184(s32 *arg0, s32 arg1) {
+    s32 scan_flags_0;
+    s32 scan_flags_1;
+    s32 scan_flags_2;
+    s32 scan_flags_3;
+    s32 scan_flags_4;
+    void *pool_state;
+    void *node;
+
+    _bzero(((Fragment17SlideState *)arg0), 0x28);
+    ((Fragment17SlideState *)arg0)->unk_00 = -1;
+    ((Fragment17SlideState *)arg0)->unk_04 = func_8004D690(6);
+    ((Fragment17SlideState *)arg0)->unk_08 = (u8 *)func_8004DC6C(0xD);
+    ((Fragment17SlideState *)arg0)->unk_0C = (u8 *)func_8004DC6C(0x14);
+    ((Fragment17SlideState *)arg0)->unk_10 = (u8 *)func_8004DC6C(0x1A);
+    ((Fragment17SlideState *)arg0)->unk_14 = (u8 *)func_8004DC6C(0xAA);
+    ((Fragment17SlideState *)arg0)->unk_18 = (u8 *)func_8004DC6C(0xBD);
+    if (((Fragment17SlideState *)arg0)->unk_08 != NULL) {
+        func_8004DCFC(((Fragment17SlideState *)arg0)->unk_08, &scan_flags_0);
+    }
+    if (((Fragment17SlideState *)arg0)->unk_0C != NULL) {
+        func_8004DCFC(((Fragment17SlideState *)arg0)->unk_0C, &scan_flags_1);
+    }
+    if (((Fragment17SlideState *)arg0)->unk_10 != NULL) {
+        func_8004DCFC(((Fragment17SlideState *)arg0)->unk_10, &scan_flags_2);
+    }
+    if (((Fragment17SlideState *)arg0)->unk_14 != NULL) {
+        func_8004DCFC(((Fragment17SlideState *)arg0)->unk_14, &scan_flags_3);
+    }
+    if (((Fragment17SlideState *)arg0)->unk_18 != NULL) {
+        func_8004DCFC(((Fragment17SlideState *)arg0)->unk_18, &scan_flags_4);
+    }
+    func_8004C8C0(0xE);
+    func_80047588(scan_flags_0 | 8 | scan_flags_1 | scan_flags_2 | scan_flags_3 | scan_flags_4, 0);
+    pool_state = MainPool_AllocState(main_pool_get_available(), 0);
+    ((Fragment17SlideState *)arg0)->unk_1C =
+        (void *)func_8004EB58((s32)pool_state, (s32)((Fragment17SlideState *)arg0)->unk_08);
+    MainPool_FinalizeAllocation(pool_state);
+    func_8004E308(func_8005049C(((Fragment17SlideState *)arg0)->unk_1C, 0x6D61696B), &func_82200020, NULL);
+    node = func_8005049C(((Fragment17SlideState *)arg0)->unk_1C, 0x45594553);
+    func_8004E308(node, func_822000F0, NULL);
+    func_8005053C(node, &D_8220E2F8);
+    func_80050578(node, D_8220D758[0]);
+    func_8004E308(func_8005049C(((Fragment17SlideState *)arg0)->unk_1C, 0x4D415955), func_822000F0,
+                  (void *)1);
+    ((Fragment17SlideState *)arg0)->unk_20 = (void *)arg1;
+    _bzero((void *)arg1, 0x28);
+    ((Fragment17SlideState *)arg0)->unk_24 = 0;
+}
+/* mkdraft:func_82200184 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10F9E0/func_82200374.s")
 

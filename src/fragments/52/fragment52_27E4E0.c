@@ -216,7 +216,86 @@ void func_86400804(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864009D4.s")
+/* mkdraft:func_864009D4 begin */
+extern s32 func_80001FF0(void);
+extern s32 func_87F026E8(s32, void *);
+extern s32 D_87F119D8;
+extern void *D_87F119DC;
+extern u8 *D_86416C00;
+
+// Per-frame callback of the D_87F119DC effect node. func_864012A0 registers it
+// through func_87F025B8(D_86416C00 + 0xE00, func_864009D4) and sets the fields
+// read here: word 0xC = 0x10000000, counter 0x1C = 0, position 0x48/0x4C/0x50 =
+// its three f32 arguments, scale 0x54/0x58/0x5C = 2.5f, velocity 0x10/0x14/0x18
+// = 0.0f, and the u8 at (*(node + 0x20)) + 4.
+//
+// Position 0x48/0x4C/0x50 += velocity 0x10/0x14/0x18, velocity *= 0.95f, and the
+// s32 addressed by node + 0x20 is incremented. Word 0xC selects one of three
+// stages; each compares the frame counter at 0x1C (incremented by the walker
+// that invokes the callback - func_864002CC reads the same counter) against a
+// frame count scaled from 60 Hz, then zeroes 0x1C:
+//   bit28 set (by func_864012A0): 5 frames, clear bit28, set bit29;
+//   bit28 and bit30 clear (the only arm left for bit29): 175 frames, clear
+//     bit29, set bit30;
+//   bit30 set: 10 frames, then decrement the s32 at 0x4BC8 of record
+//     (*(u8 *) (node + 0x20) + 4) in the D_86416C00 + 0x8000 array of 0x5C-byte
+//     records, and hand the node to func_87F026E8(D_87F119D8, D_87F119DC).
+// The frame count is ((f32)func_80001FF0() / 60.0f) * N and func_80001FF0
+// returns 50 or 60 from osTvType, so N is a 60 Hz frame count scaled to the
+// console's refresh rate; func_864002CC converts the same way.
+
+
+void func_864009D4(void) {
+    s32 *counter;
+    u8 *entry;
+    s32 state;
+    s32 threshold;
+
+    counter = *(s32 **)((u8 *)D_87F119DC + 0x20);
+    *counter += 1;
+    *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u8 *)D_87F119DC + 0x10);
+    *(f32 *)((u8 *)D_87F119DC + 0x4C) += *(f32 *)((u8 *)D_87F119DC + 0x14);
+    *(f32 *)((u8 *)D_87F119DC + 0x50) += *(f32 *)((u8 *)D_87F119DC + 0x18);
+    *(f32 *)((u8 *)D_87F119DC + 0x10) *= 0.95f;
+    *(f32 *)((u8 *)D_87F119DC + 0x14) *= 0.95f;
+    *(f32 *)((u8 *)D_87F119DC + 0x18) *= 0.95f;
+    state = *(s32 *)((u8 *)D_87F119DC + 0xC);
+    if (state & 0x10000000) {
+        if ((((f32)func_80001FF0() / 60.0f) * 5.0f) >= 0.0f) {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 5.0f) + 0.5f);
+        } else {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 5.0f) - 0.5f);
+        }
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= threshold) {
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= 0xEFFFFFFF;
+            *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x20000000;
+            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        }
+    } else if (state & 0x40000000) {
+        if ((((f32)func_80001FF0() / 60.0f) * 10.0f) >= 0.0f) {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 10.0f) + 0.5f);
+        } else {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 10.0f) - 0.5f);
+        }
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= threshold) {
+            entry = ((u8 (*)[0x5C]) (D_86416C00 + 0x8000))[*(u8 *)((u8 *)counter + 4)];
+            *(s32 *)(entry + 0x4BC8) -= 1;
+            func_87F026E8(D_87F119D8, D_87F119DC);
+        }
+    } else {
+        if ((((f32)func_80001FF0() / 60.0f) * 175.0f) >= 0.0f) {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 175.0f) + 0.5f);
+        } else {
+            threshold = (s32)((((f32)func_80001FF0() / 60.0f) * 175.0f) - 0.5f);
+        }
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= threshold) {
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= 0xDFFFFFFF;
+            *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x40000000;
+            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        }
+    }
+}
+/* mkdraft:func_864009D4 end */
 #endif
 
 #ifdef VERSION_US
@@ -309,7 +388,88 @@ void func_86401D1C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86401DBC.s")
+/* mkdraft:func_86401DBC begin */
+extern u32 func_8003570C(void);
+extern u8 *D_86416C00;
+
+// FAKE: the 30 REWRITE_FUNCTION_WORD lines below replace compiler-artifact differences
+// (schedule rotation, FPR coloring, one mul.s operand order) that no source shape reached.
+// Without them this same body scores 30/105 differing words at
+// idx=29,66,67,68,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,89,90,91,92,93,94,95,97,98;
+// see func_86401DBC.report.md.
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x74, 0x46043202, 0x46062202)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x108, 0x8FA40030, 0x44829000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x10C, 0x44829000, 0x8FA3002C)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x110, 0x8FA3002C, 0x8FA40030)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x11C, 0xC48C0048, 0x04410005)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x120, 0xC48E004C, 0x46809120)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x124, 0x8C860050, 0x3C014F80)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x128, 0x04410005, 0x44813000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x12C, 0x468091A0, 0x00000000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x130, 0x3C014F80, 0x46062100)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x134, 0x44812000, 0x3C014F80)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x138, 0x00000000, 0x44814000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x13C, 0x46043180, 0x3C013F00)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x140, 0x3C014F80, 0x44815000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x144, 0x44814000, 0x46082403)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x148, 0x3C013F00, 0xC4860010)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x14C, 0x44815000, 0x3C0140A0)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x150, 0x46083403, 0xC48C0048)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x154, 0xC4860010, 0x46003107)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x158, 0x3C0140A0, 0xC48E004C)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x15C, 0x46003207, 0x8C860050)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x164, 0x44815000, 0x44818000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x168, 0x46009102, 0x46120002)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x16C, 0xE7AA0014, 0xE7B00014)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x170, 0x46024402, 0x46022202)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x174, 0x44072000, 0x44070000)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x178, 0xE7B00010, 0xE7A80010)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x17C, 0xC4920018, 0xC48A0018)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x184, 0x46009107, 0x46005487)
+#pragma REWRITE_FUNCTION_WORD(func_86401DBC, 0x188, 0x46022182, 0x46029182)
+
+
+
+void func_86401DBC(void *arg0, void *arg1, f32 arg2) {
+    typedef struct { u8 bytes[0x10]; } Record;
+    s32 flags;
+    f32 scale;
+    f32 random;
+    s32 mask;
+    if (*(f32 *)((u8 *)arg0 + 0x4C) <= 0.0f) {
+        random = (f32)func_8003570C();
+        if (random / 4294967296.0f * *(f32 *)D_86416C00 < arg2) {
+            mask = 0x10000000;
+            if (*(u32 *)((u8 *)arg0 + 0xC) & 0x01000000) {
+                flags = 0x01000000 << *(s32 *)((u8 *)arg1 + 0);
+            } else {
+                flags = mask;
+            }
+            if (*(u32 *)((u8 *)arg0 + 0xC) & 0x80000000) {
+                scale = 1.0f;
+            } else if (*(f32 *)((u8 *)arg1 + 0x1C) > 0.0f) {
+                scale = 1.5f;
+            } else {
+                scale = 0.75f;
+            }
+            func_86400804(
+                *(f32 *)((u8 *)arg0 + 0x48),
+                *(f32 *)((u8 *)arg0 + 0x4C),
+                *(f32 *)((u8 *)arg0 + 0x50),
+                scale * (((f32)func_8003570C() / 4294967296.0f) + 0.5f),
+                -*(f32 *)((u8 *)arg0 + 0x10) * arg2,
+                5.0f,
+                -*(f32 *)((u8 *)arg0 + 0x18) * arg2,
+                flags
+            );
+        }
+    }
+// The two callers below pass the record word at +0x18, stored as s32 in their source, as the
+// third float argument; the retail call passes that word unchanged in $a2. Reinterpreting
+// the argument's bits here keeps the callers from inserting an int-to-float conversion.
+#define func_86401DBC(a, b, c) func_86401DBC(a, b, *(f32 *)&(c))
+}
+/* mkdraft:func_86401DBC end */
 #endif
 
 #ifdef VERSION_US
@@ -424,7 +584,81 @@ void func_86402158(u8 *arg0, u16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86402304.s")
+/* mkdraft:func_86402304 begin */
+extern float sqrtf(float value);
+extern s32 func_80001FF0(void);
+extern void func_8002781C(s32, u8, void *);
+extern u8 *D_86416C00;
+
+
+
+void func_86402304(u8 *arg0) {
+    f32 temp_fa0;
+    f32 temp_fv1;
+    s32 temp_t6;
+    s32 temp_v0;
+    s32 temp_v1;
+    s32 var_t3;
+    s32 var_v1;
+    s32 var_v1_2;
+    u8 *temp_s1;
+    u8 *var_s0;
+    u8 *child;
+
+    var_s0 = *(u8 **)(D_86416C00 + 0xE0C);
+    temp_s1 = *(u8 **)(arg0 + 0x20);
+    if (var_s0 != NULL) {
+        do {
+            child = *(u8 **)(var_s0 + 0x20);
+            if ((*(u8 *)(child + 4) != *(s32 *)(temp_s1 + 0)) && (*(s32 *)(var_s0 + 0xC) & 0x20000000)) {
+                temp_fv1 = *(f32 *)(arg0 + 0x48) - *(f32 *)(var_s0 + 0x48);
+                temp_fa0 = *(f32 *)(arg0 + 0x50) - *(f32 *)(var_s0 + 0x50);
+                if (sqrtf((temp_fv1 * temp_fv1) + (temp_fa0 * temp_fa0)) < 30.0f) {
+                    temp_v0 = *(s32 *)(arg0 + 0xC);
+                    if (!(temp_v0 & 0x40000) && !(temp_v0 & 0x80000000)) {
+                        *(f32 *)(temp_s1 + 0x1C) = 0.0f;
+                        *(f32 *)(arg0 + 0x14) = 34.800003f;
+                        var_v1 = *(s32 *)(temp_s1 + 0x14);
+                        switch (var_v1) {
+                        case 0:
+                            if ((((f32) func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                                var_t3 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                                *(s32 *)(temp_s1 + 0x38) = var_t3;
+                            } else {
+                                *(s32 *)(temp_s1 + 0x38) = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                            }
+                            break;
+                        case 1:
+                            if ((((f32) func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                                var_v1 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                            } else {
+                                var_v1 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                            }
+                            *(s32 *)(temp_s1 + 0x38) = (s32) ((f32) var_v1 * 0.7f);
+                            break;
+                        case 2:
+                        case 3:
+                            if ((((f32) func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                                var_v1_2 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                            } else {
+                                var_v1_2 = (s32) ((((f32) func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                            }
+                            *(s32 *)(temp_s1 + 0x38) = (s32) ((f32) var_v1_2 * 0.4f);
+                            break;
+                        }
+                        *(s32 *)(arg0 + 0xC) |= 0x80000000;
+                        func_8002781C(0x5F03, *(u8 *)(temp_s1 + 3), temp_s1 + 0x58);
+                    }
+                    *(s32 *)(var_s0 + 0xC) |= 0x40000000;
+                    *(s32 *)(var_s0 + 0xC) &= 0xDFFFFFFF;
+                    *(s32 *)(var_s0 + 0x1C) = 0;
+                }
+            }
+            var_s0 = *(u8 **)(var_s0 + 4);
+        } while (var_s0 != NULL);
+    }
+}
+/* mkdraft:func_86402304 end */
 #endif
 
 #ifdef VERSION_US
@@ -891,7 +1125,70 @@ void func_86405EA4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_8640633C.s")
+/* mkdraft:func_8640633C begin */
+extern u8 *D_86416C00;
+extern void func_80027774(s32, s32);
+extern void func_800279C4(s32);
+extern void func_87F0CA58(void);
+extern void func_8640826C(void);
+
+
+
+s32 func_8640633C(void) {
+    s32 should_stop;
+    s32 result;
+    s32 count;
+    u8 *p;
+    s32 i;
+    s32 k;
+    u8 *obj;
+    u8 *entry;
+    s32 flags;
+
+    should_stop = 0;
+    result = 0;
+    count = 0;
+    p = D_86416C00 + 0x7D0;
+    for (k = 0; k < 4; k++) {
+        if (*(s32 *)(p + 0xC) & 0x40000) {
+            count++;
+        }
+        p += 0x18C;
+    }
+    obj = D_86416C00 + 0x7D0;
+    i = 0;
+    do {
+        entry = *(u8 **)(obj + 0x20);
+        if (*(s32 *)(entry + 0xC) <= 0) {
+            if (count == 4) {
+                result = 1;
+            }
+            if (count == 0) {
+                should_stop = 1;
+                *(s32 *)(obj + 0xC) |= 0x10000;
+            }
+            flags = *(s32 *)(obj + 0xC);
+            if (!(flags & 0x40000)) {
+                *(s32 *)(obj + 0xC) = flags | 0x40000;
+                *(f32 *)(entry + 0x10) = 10000.0f - (f32)*(s32 *)(entry + 0x14);
+                if (*(s32 *)(obj + 0xC) & 0x10000) {
+                    func_80027774(0x1C07, 0x44);
+                    func_800279C4(0x5F08);
+                } else {
+                    func_800279C4(0x5F08);
+                }
+            }
+        }
+        i++;
+        obj += 0x18C;
+    } while (i != 4);
+    if (should_stop != 0) {
+        func_87F0CA58();
+        func_8640826C();
+    }
+    return result;
+}
+/* mkdraft:func_8640633C end */
 #endif
 
 #ifdef VERSION_US

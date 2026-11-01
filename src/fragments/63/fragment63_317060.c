@@ -271,7 +271,43 @@ void func_87E14984(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14A60.s")
+/* mkdraft:func_87E14A60 begin */
+extern void * D_87F119DC;
+extern void func_87E146DC(void *, s32, s32);
+
+
+
+void func_87E14A60(void) {
+    void *ptr;
+    void *sub;
+    ptr = *((void **) (((u8 *) D_87F119DC) + 0x20));
+    // FAKE: the zero product keeps the child pointer, loaded from ptr + 4, in $a1 for
+    // the 0x164 test; comparing against a plain 0 loads it into $v0 instead and copies
+    // it with an extra move (diff score 340). The product is zero for every pointer.
+    if ((*((s32 *) (((u8 *) (*((void **) (((u8 *) ptr) + 4)))) + 0x164))) == (((s32) (*((void **) (((u8 *) ptr) + 4)))) * 0)) {
+        if (!((*((s32 *) (((u8 *) D_87F119DC) + 0xC))) & 0x10000000)) {
+            func_87E146DC(((u8 *) D_87F119DC), (s32) ptr, 1);
+            sub = *((void **) (((u8 *) (*((void **) (((u8 *) ptr) + 4)))) + 0x40));
+            if (sub != NULL) {
+                *((f32 *) (((u8 *) D_87F119DC) + 0x48)) += *(((f32 *) sub) + 0x34);
+                *((f32 *) (((u8 *) D_87F119DC) + 0x4C)) += *((f32 *) (((u8 *) (*((void **) (((u8 *) (*((void **) (((u8 *) ptr) + 4)))) + 0x40)))) + 0xD4));
+                *((f32 *) (((u8 *) D_87F119DC) + 0x50)) += *((f32 *) (((u8 *) (*((void **) (((u8 *) (*((void **) (((u8 *) ptr) + 4)))) + 0x40)))) + 0xD8));
+            }
+            *((u32 *) (((u8 *) D_87F119DC) + 0xC)) |= 0x10000000;
+        }
+    } else {
+        *((u32 *) (((u8 *) D_87F119DC) + 0xC)) &= ~0x10000000;
+    }
+    func_87E13924(((u8 *) D_87F119DC), (s32) (*((void **) (((u8 *) ptr) + 4))));
+    if ((*((u8 *) (((u8 *) D_87F119DC) + 0x41))) == 0) {
+        *((u8 *) (((u8 *) D_87F119DC) + 0x25)) = (*((u8 *) (((u8 *) D_87F119DC) + 0x25)) & 0xFFFE);
+    } else {
+        *((u8 *) (((u8 *) D_87F119DC) + 0x25)) |= 1;
+    }
+    func_87E14898(ptr);
+    func_87E14984(ptr);
+}
+/* mkdraft:func_87E14A60 end */
 
 extern s32 ModelAnim_IsFinished(void *);
 extern void ModelAnim_SetFrame(void *, s32);

@@ -178,7 +178,97 @@ s32 func_882110FC(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88211168.s")
+/* mkdraft:func_88211168 begin */
+typedef struct LabPCListExchangeMotion {
+    /* 0x00 */ u8 *lists[2];
+    /* 0x08 */ s8 rows[2];
+    /* 0x0A */ u8 columns[2];
+    /* 0x0C */ s32 rename;
+    /* 0x10 */ s8 names[2][0x20];
+} LabPCListExchangeMotion;
+
+// Published through D_8800EF54; size 0x50.
+
+extern s32 D_88234720;
+extern void *D_8800EF54;
+extern s8 **D_8823466C[];
+extern void *Util_Malloc(s32);
+extern void func_800226C0(s32);
+extern void func_88232820(s32);
+
+
+
+void func_88211168(s32 arg0, s8 *arg1) {
+    LabPCListExchangeMotion *motion;
+    s16 start;
+    s16 remaining;
+    s32 mode;
+    s32 i;
+
+    start = ((unk_D_88234720 *)D_88234720)[*(u8 *)D_88234720].unk_16;
+    mode = ((s16 *)(s32)D_88234720)[4] + 9;
+    motion = Util_Malloc(0x50);
+    motion->rename = arg0;
+    switch (mode) {
+    case 11:
+        motion->lists[0] = func_882104DC(3, *(u8 *)D_88234720);
+        motion->lists[1] = func_882104DC(1, *(u8 *)D_88234720);
+        remaining = *(s16 *)(D_88234720 + 0x66) - start;
+        if (remaining >= 0 && remaining < 9) {
+            motion->rows[0] = remaining;
+        } else {
+            motion->rows[0] = -1;
+        }
+        motion->rows[1] = ((unk_D_88234720 *)D_88234720)[*(u8 *)D_88234720].unk_14 - start;
+        motion->columns[0] = motion->columns[1] = *(u8 *)D_88234720;
+        break;
+    case 10:
+    case 12:
+        for (i = 0; i != 2; i++) {
+            motion->lists[i] = func_882104DC(1, i);
+            motion->rows[i] = ((unk_D_88234720 *)D_88234720)[i].unk_14 -
+                              ((unk_D_88234720 *)D_88234720)[i].unk_16;
+            motion->columns[i] = i;
+        }
+        break;
+    case 13:
+        motion->lists[0] = func_882104DC(1, *(u8 *)D_88234720);
+        motion->lists[1] = NULL;
+        motion->rows[0] = ((unk_D_88234720 *)D_88234720)[*(u8 *)D_88234720].unk_14 - start;
+        motion->rows[1] = -1;
+        motion->columns[0] = motion->columns[1] = *(u8 *)D_88234720;
+        break;
+    }
+    if (arg0 != 0) {
+        switch (mode) {
+        case 11:
+        case 12:
+            for (i = 0; i != 2; i++) {
+                if (func_882110FC(motion->lists[i]) != 0) {
+                    HAL_Strcpy(motion->names[1 - i],
+                               D_8823466C[(*(u8 **)motion->lists[i])[8]][motion->lists[i][4]]);
+                } else {
+                    func_88211084(motion->lists[1 - i], motion->names[1 - i]);
+                }
+            }
+            break;
+        case 10:
+            HAL_Strcpy(motion->names[*(u8 *)D_88234720],
+                       D_8823466C[(*(u8 **)motion->lists[1 - *(u8 *)D_88234720])[8]]
+                                 [motion->lists[1 - *(u8 *)D_88234720][4]]);
+            func_88211084(motion->lists[1 - *(u8 *)D_88234720],
+                          motion->names[1 - *(u8 *)D_88234720]);
+            break;
+        case 13:
+            HAL_Strcpy(motion->names[0], arg1);
+            break;
+        }
+    }
+    D_8800EF54 = motion;
+    func_800226C0(0x63);
+    func_88232820(mode);
+}
+/* mkdraft:func_88211168 end */
 
 extern void func_800226C0(s32);
 extern s32 D_88234724;

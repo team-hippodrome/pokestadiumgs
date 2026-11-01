@@ -188,7 +188,32 @@ void func_88504EB8(void) {
     Util_Free(D_885229A0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88504EE8.s")
+/* mkdraft:func_88504EE8 begin */
+extern u8 D_88000E4C;
+extern void func_880048D4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, s32 arg8, void (*arg9)(void), void (*arg10)(void), void *arg11, void (*arg12)(void), s32 arg13, s32 arg14, s32 arg15);
+
+extern void *D_885229A0;
+extern u8 D_8800ED9C[];
+extern u8 D_8800EDE8[];
+
+// Create the two secondary trade-machine panels in func_880048D4 node slots 1 and 2, then give
+// their rects their retail sizes: slot 1 is 0x1C7 x 0xA7 at (0x5E, 0xDA) and slot 2 is
+// 0x1CC x 0x31 at (0x5B, 0x18F). D_885229A0[slot] holds the 0x4C-byte node; its width and
+// height sit at +0x10/+0x12 (F29Rect at node + 4 in fragment29).
+//@src/fragments/29/fragment29_168330.c
+
+
+void func_88504EE8(void) {
+    func_880048D4(0, 3, 0x5E, 0xDA, 0, 1, 0xE6, 0xFF, 0xF0, (void (*)(void)) ((u32) &D_88000E4C), (void (*)(void)) ((u32) &D_88000E4C), func_88504EAC, (void (*)(void)) ((u32) &D_88000E4C), 0, 0, 1); // FAKE: keeping the node callback address as a u32 expression makes IDO spill it at 0x4C; spelling it as a plain address rematerializes the constant (diff 2001).
+    *(void **)((u8 *)D_885229A0 + 4) = &D_8800ED9C;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 4) + 0x10) = 0x1C7;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 4) + 0x12) = 0xA7;
+    func_880048D4(0, 3, 0x5B, 0x18F, 0, 1, 0xE6, 0xFF, 0xF0, (void (*)(void)) ((u32) &D_88000E4C), (void (*)(void)) ((u32) &D_88000E4C), (void *) ((u32) &D_88000E4C), (void (*)(void)) ((u32) &D_88000E4C), 0, 0, 2);
+    *(void **)((u8 *)D_885229A0 + 8) = &D_8800EDE8;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 8) + 0x10) = 0x1CC;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 8) + 0x12) = 0x31;
+}
+/* mkdraft:func_88504EE8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88505038.s")
 
@@ -294,7 +319,72 @@ void Trade_UpdateBoxSlotShrink(void *arg0)
   }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_885055A0.s")
+/* mkdraft:func_885055A0 begin */
+extern u8 D_88523008[];
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+// Per-slot animation step: dispatch on the slot's state word, then push the slot's animation
+// values into the display object embedded at offset 0x28 of the record. State 0 is the idle
+// state written by func_88505038, so it runs no step here but still syncs the object.
+// The embedded object's field layout (alpha at 0x1D, rotation at 0x1E, position at 0x24,
+// scale at 0x30) is S1_unk_D_86002F58_004_000's; //@include/229E0.h
+
+
+void func_885055A0(void) {
+    struct SlotModel {
+        u8 unk_000[0x1D];
+        u8 alpha;        /* 0x01D */
+        u8 unk_01E[4];   /* 0x01E rotation, x and y */
+        s16 rotationZ;   /* 0x022 */
+        f32 position[3]; /* 0x024 */
+        f32 scaleX;      /* 0x030 */
+        f32 scaleY;      /* 0x034 */
+    };
+    s32 i;
+    unk_D_885229B0 *p;
+
+    p = &D_885229B0[0];
+    i = 0;
+    if (*(s8 *)D_88523008 > 0) {
+        do {
+            switch (*(s32 *)p) {
+                case 0:
+                case 1:
+                    break;
+                case 2:
+                    func_885053E8(p);
+                    break;
+                case 3:
+                    func_88505440(p);
+                    break;
+                case 4:
+                    func_88505460(p);
+                    break;
+                case 5:
+                    func_88505514(p);
+                    break;
+                case 6:
+                    Trade_UpdateBoxSlotShrink(p);
+                    break;
+            }
+            if (*(s32 *)p != 0) {
+                struct SlotModel *model = (struct SlotModel *)((u8 *)p + 0x28);
+
+                Vec3f_SetComponentsDuplicate(model->position,
+                                             (f32)p->unk_00C - 320.0f,
+                                             240.0f - (f32)p->unk_00E,
+                                             -579.0f);
+                model->rotationZ = p->unk_018;
+                model->alpha = p->unk_01A;
+                model->scaleX = p->unk_020 * p->unk_01C;
+                model->scaleY = p->unk_024 * p->unk_01C;
+            }
+            i++;
+            p++;
+        } while (i < *(s8 *)D_88523008);
+    }
+}
+/* mkdraft:func_885055A0 end */
 
 extern void func_80057944(u8);
 void func_88505718(void) {
@@ -383,7 +473,79 @@ void func_88505E9C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88505EDC.s")
+/* mkdraft:func_88505EDC begin */
+// func_88505EDC: per-frame refresh of the four trade records in D_885229B0 plus
+// the trade state machine step.
+//
+// When the trade state word is nonzero the records are rebuilt from controller
+// state by func_88504704 (it fills four 20-byte entries of D_8850D678), then
+// each of the four 0x194-byte slots has its readiness re-evaluated:
+// func_885047B4 reads the entry selected by the slot's s16 index at +4 and the
+// result is cached at +8; a failed (-1) evaluation clears the slot index and
+// hides the slot with func_88505038(slot, 0).
+//
+// The switch then dispatches on the state word: 1 enters func_88505B58 when the
+// menu object's +0x20 word is 2 and D_885229A0+0x1C is set, 2 counts down via
+// func_88505E9C, 3 does nothing. func_885055A0 runs every frame.
+//
+// Score 0 in the GS decomp tree (build/pokestadiumgs-us.z64: OK); the
+// formatting constraints that hold the match are annotated below.
+extern u8 D_8850D678[];
+extern void func_88504704(void);
+extern s16 func_885047B4(u8 *arg0);
+extern void func_88505038(void *arg0, s32 arg1);
+extern u8 D_885229A8;
+extern void *D_885229A0;
+extern void func_88505B58(void);
+extern void func_88505E9C(void);
+extern void func_885055A0(void);
+
+/* mkdraft:func_88505EDC begin */
+
+
+
+void func_88505EDC(void)
+{
+  u8 *new_var2;
+  u8 *var_s0;
+  s32 temp_v0_2;
+  s32 var_s2;
+  // FAKE: the single header line below is load-bearing. as1 breaks scheduling
+  // ties by .loc line number: emitting the two pointer initializations, the
+  // D_885229A8 test, the func_88504704() call and the for header on separate
+  // lines swaps the lui/addiu order of the s4 (D_8850D678) and s0
+  // (D_885229B0) address materialization.
+  // FAKE: the empty `if (var_s2 == 4)` at the top of the loop body places the
+  // loop bound in $s3 (bne $s2,$s3) and the 20-byte record stride in $s5
+  // (multu $v0,$s5); without it the two constants take each other's register
+  // and seven instruction words differ.
+  new_var2 = (u8 *)D_885229B0; var_s0 = (u8 *)D_885229B0; if ((*((s32 *) (((u8 *) (&D_885229A8)) + 0))) != 0) { func_88504704(); var_s0 = new_var2; for (var_s2 = 0; var_s2 < 4; var_s2++, var_s0 += 0x194) {
+    if (var_s2 == 4) {}
+    if ((*((s16 *) (var_s0 + 4))) != (-1)) {
+      temp_v0_2 = func_885047B4(&D_8850D678[*((s16 *) (var_s0 + 4)) * 20]);
+      *((s32 *) (var_s0 + 8)) = temp_v0_2;
+      if ((temp_v0_2 == (-1)) && ((*((s16 *) (var_s0 + 4))) != (-1))) {
+        *((s16 *) (var_s0 + 4)) = -1;
+        func_88505038(var_s0, 0);
+      }
+    }
+  }
+  switch (*((s32 *) (((u8 *) (&D_885229A8)) + 0))) {
+    case 3:
+      break;
+    case 1:
+      if (((*((s32 *) (((u8 *) (*((void **) (((u8 *) D_885229A0) + 4)))) + 0x20))) == 2) && ((*((s32 *) (((u8 *) D_885229A0) + 0x1C))) != 0)) {
+        func_88505B58();
+      }
+      break;
+    case 2:
+      func_88505E9C();
+      break;
+  }
+  func_885055A0();
+  }
+}
+/* mkdraft:func_88505EDC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88506018.s")
 

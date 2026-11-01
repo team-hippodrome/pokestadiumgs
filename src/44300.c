@@ -241,7 +241,89 @@ s32 func_80043BD4(Func80043BD4State *arg0, s32 arg1, s32 arg2) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/44300/func_80043C14.s")
+/* mkdraft:func_80043C14 begin */
+extern s8 D_80094CF4;
+extern Gfx *D_800D0510;
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void GfxImage_SetRenderTarget(Gfx **, s32);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C964(s32);
+extern void Geo_RenderRootNode(s32);
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern void GfxImage_ClearDepthRectangle(Gfx **, s32, s32, s32, s32);
+extern void Camera_ComputeEyeFromAngles(u8 *, u8 *, f32, s16, s16);
+extern void ModelAnim_SetResourceAnimation(void *, void *, s32);
+extern s32 SceneObject_SetModelVariant(u8 *, s32, u16);
+extern void ModelAnim_SetFrame(u8 *, s16);
+
+// Three-component vector copied into the model's 0x24 field.
+typedef struct { s32 x, y, z; } IconVector44300;
+
+// Textures the icon slots into a shared color/depth pair, choosing one of two
+// render paths per slot.
+
+
+void func_80043C14(PokeIconList44300 *arg0, s32 arg1) {
+    void *camera;
+    PokeIconSlot44300 *slot;
+    void *model0;
+    s32 species;
+    u8 *record;
+    u16 variant;
+
+    camera = *(void **)(arg0->unk_14 + 0xC);
+    slot = &arg0->slots[arg1];
+    model0 = **(void ***)(*(u8 **)((u8 *)arg0->unk_08 + 0x38) + 8);
+    if (*(u16 *)((u8 *)slot + 0x0) & 2) {
+        record = (u8 *)slot->unk_1C;
+        species = Pokemon_GetDisplaySpecies(record);
+        variant = *(u16 *)(record + 0x16);
+    } else {
+        species = slot->unk_1C;
+        variant = 0;
+    }
+    *(IconVector44300 *)((u8 *)arg0->unk_18 + 0x24) = *(IconVector44300 *)((u8 *)slot + 0x8);
+    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0->unk_18 + 0x30), *(f32 *)((u8 *)slot + 0x14), *(f32 *)((u8 *)slot + 0x14), *(f32 *)((u8 *)slot + 0x14));
+    *(s16 *)((u8 *)arg0->unk_18 + 0x20) = *(s16 *)((u8 *)slot + 0x2);
+    func_8003F1DC((void *)arg0->unk_18);
+    // The high halfword of species is the second s16 the model setup reads; the
+    // byte-cast form keeps the load as the retail lh rather than a shift.
+    func_8003F114((u8 *)arg0->unk_18, 0, *(s16 *)((u8 *)&species + 2), model0);
+    SceneObject_SetModelVariant((u8 *)arg0->unk_18, species, variant);
+    if (D_80094CF4 != -1) {
+        *(s8 *)((u8 *)arg0->unk_18 + 0xA6) = D_80094CF4;
+        D_80094CF4 = -1;
+    }
+    ModelAnim_SetResourceAnimation((void *)arg0->unk_08, (void *)arg0->unk_18, 1);
+    ModelAnim_SetFrame((u8 *)arg0->unk_18, *(u8 *)((u8 *)slot + 0x6));
+    *(u8 *)((u8 *)arg0->unk_18 + 0x2) &= ~0x40;
+    *(u8 *)((u8 *)arg0->unk_18 + 0x2) |= 0x80;
+    Camera_ComputeEyeFromAngles((u8 *)camera + 0xB4, (u8 *)camera + 0xA8, 1250.0f, 0x71C, -0xE39);
+    GfxImage_SetRenderTarget(&D_800D0510, (s32)arg0->slots[arg1].image);
+    GeoRender_AdvanceFrameCounter();
+    func_8003C964(3);
+    Geo_RenderRootNode(arg0->unk_14);
+    if (slot->unk_20 == 0) {
+        GfxImage_FillCurrent(&D_800D0510, *(u16 *)((u8 *)slot + 0x4));
+    } else {
+        // The callback's value is discarded. Declaration-only change: `s32`
+        // instead of `void` keeps that return in $v0 across the two packet
+        // writes, which is the retail allocation. With `void` the differ scores
+        // 420 plain / 385 with FD_RELOC=1.
+        // FAKE: the return type does not describe the callee; it exists to hold
+        // $v0 live. Score without this cast: 420 plain, 385 relocated.
+        ((s32 (*)())slot->unk_20)(slot);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTexturePersp(D_800D0510++, G_TP_PERSP);
+        GfxImage_ClearDepthRectangle(&D_800D0510, 0, 0, *(u16 *)((u8 *)slot->image + 0x4), *(u16 *)((u8 *)slot->image + 0x6));
+    }
+    func_8003C964(1);
+    Geo_RenderRootNode(arg0->unk_14);
+}
+/* mkdraft:func_80043C14 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/44300/func_80043E70.s")
 

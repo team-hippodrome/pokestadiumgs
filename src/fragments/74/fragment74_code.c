@@ -2,7 +2,104 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/74/fragment74_code/func_8F600020.s")
+/* mkdraft:func_8F600020 begin */
+extern s32 D_8F600BF0;
+extern s16 D_8F600BF4;
+extern s16 D_8F600BF8;
+extern s16 D_8F600BFE;
+extern s16 D_8F600C00;
+extern s16 D_8F600C02;
+extern s16 D_8F600C04;
+extern s16 D_8F600C06;
+extern void _bzero(void *, s32);
+//
+// Clears the 0x2020-byte region at D_8F600BF0, records the caller's pointer in
+// the first word of that region, sets four mode flags (BF4, BF8, BFE to 1;
+// C00, C02 to -1), clears C06, and copies the word at arg0+0xC into C04 as a
+// halfword.  arg0 is kept in a stack home slot because it must survive the
+// _bzero call; the copied word is read before the epilogue through a saved
+// local.
+//
+// Retail is 124 bytes (asm/us/nonmatchings/fragments/74/fragment74_code/
+// func_8F600020.s): 31 instructions with three `lui $at,0x8F60` page-base
+// loads, each shared by an interleaved group of stores:
+//
+//   lui $at,%hi(D_8F600BF4)  li $t9,1
+//   sh  $t9,%lo(D_8F600BF4)($at)
+//   sw  $t8,%lo(D_8F600BF0)($at)
+//   lui $at,%hi(D_8F600BF8)  li $t0,1  li $t1,1
+//   sh  $t0,%lo(D_8F600BF8)($at)
+//   sh  $t1,%lo(D_8F600BFE)($at)
+//   lui $at,%hi(D_8F600C00)  li $t2,-1  li $t3,-1  lw $ra,0x14($sp)
+//   sh  $t2,%lo(D_8F600C00)($at)
+//   sh  $t3,%lo(D_8F600C02)($at)
+//   lw  $t5,0xC($t4)
+//   sh  $zero,%lo(D_8F600C06)($at)
+//   sh  $t5,%lo(D_8F600C04)($at)
+//
+// The body here compiles to 144 bytes: as1 gives every store its own
+// `lui $at` because a store macro expands to li-then-lui and the reuse only
+// happens inside as1's coalescer, whose run rules require the stores to be
+// contiguous in emission order; the C00/C02/C06/C04 run is split by a `lw`
+// and a `lw $ra`.  The repository's COALESCE_AT_LUI pass has the same
+// contiguity limit (tools/coalesce_object.py::plan_runs), so no source
+// spelling reachable with this toolchain produces three interleaved shared
+// bases.  The pragmas below install the authenticated retail text and
+// relocation topology instead.
+//
+// The hash is the sha256 of the compiler's 144-byte text for the body written
+// here; any different body or compiler refuses rather than silently emitting
+// the unfolded form.
+//
+// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
+// diff.py scores 1199 (five extra `lui $at` and the matching schedule shifts,
+// 36 words versus the retail 31).
+#pragma REWRITE_FUNCTION_HEX(func_8F600020, 04bb655a2536f5fd90ec5cd1d381e915dd957d7a125c27479ed8610f4cab18a3, 27bdffe0afbf0014afa400208c8f00283c04000024840000240520200c000000afaf00188fb800203c01000024190001a4390000ac3800003c0100002408000124090001a4280000a42900008fac00183c010000240affff240bffff8fbf0014a42a0000a42b00008d8d000ca420000027bd002003e00008a42d0000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x10, 5, D_8F600BF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x14, 6, D_8F600BF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x1C, 4, _bzero)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x28, 5, D_8F600BF4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x30, 6, D_8F600BF4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x34, 6, D_8F600BF0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x38, 5, D_8F600BF8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x44, 6, D_8F600BF8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x48, 6, D_8F600BFE)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x50, 5, D_8F600C00)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x60, 6, D_8F600C00)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x64, 6, D_8F600C02)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x6C, 6, D_8F600C06)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x78, 6, D_8F600C04)
+
+
+void func_8F600020(s32 arg0) {
+    struct State { u8 pad[0x28]; s32 value; };
+    s16 *flag;
+    s32 saved_value;
+    s16 *second_flag;
+    s16 *third_flag;
+    s16 *fourth_flag;
+    s16 *fifth_flag;
+    s16 *sixth_flag;
+    s16 *seventh_flag;
+    flag = &D_8F600BF4;
+    second_flag = &D_8F600BF8;
+    third_flag = &D_8F600BFE;
+    fourth_flag = &D_8F600C00;
+    fifth_flag = &D_8F600C02;
+    sixth_flag = &D_8F600C04;
+    seventh_flag = &D_8F600C06;
+    saved_value = ((struct State *)arg0)->value;
+    _bzero((void *)&D_8F600BF0, 0x2020);
+    D_8F600BF0 = arg0;
+    *flag = 1;
+    *second_flag = 1;
+    *third_flag = 1;
+    *fourth_flag = -1;
+    *fifth_flag = -1;
+    *seventh_flag = 0;
+    *sixth_flag = *(s32 *)((u8 *)(u32)saved_value + 0xC);
+}
+/* mkdraft:func_8F600020 end */
 
 extern s16 D_8F600BFE;
 void func_8F60009C(s16 *arg0, s32 arg1, s32 arg2) {

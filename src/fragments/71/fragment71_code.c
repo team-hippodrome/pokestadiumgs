@@ -187,7 +187,118 @@ s32 func_8F3007B0(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/71/fragment71_code/func_8F300AD0.s")
+/* mkdraft:func_8F300AD0 begin */
+extern s32 D_8F300F24;
+extern u8 StageContext_GetFadeMode(void);
+extern s32 StageFade_StartFromTransparent(s32);
+
+// Stage-1 update: 0 waits for the fade mode, 1 applies the controller-driven fade
+// value, 2 waits for func_8F3007B0, 3 advances once the fade mode reaches 1.
+
+
+s32 func_8F300AD0(s32 arg0)
+{
+  u8 *var_v1;
+  s32 var_v0;
+  s16 *counter;
+  u8 **base;
+  s32 *D_8F300F24_ptr;
+
+  counter = (s16 *)D_8F300F20;
+  var_v0 = arg0;
+  base = &D_80087200;
+  D_8F300F24_ptr = &D_8F300F24;
+  switch (var_v0)
+  {
+    case 0:
+      if (!StageContext_GetFadeMode())
+      {
+        var_v0 = 2;
+      }
+      break;
+
+    case 1:
+      // D_80087200 holds the controller state pointer. Retail keeps it in a local
+      // that is re-read from the global after every store, which is what the
+      // lui/lw relocations in front of each lhu 0xC test show; writing the
+      // dereference inline at every use instead folds the address into a
+      // lui/addiu pair and does not reproduce those loads.
+      var_v1 = *base;
+      if (*(u16 *)(var_v1 + 0xC) & 0x800)
+      {
+        if ((*D_8F300F24_ptr) != 0)
+        {
+          (*D_8F300F24_ptr) -= 8;
+          var_v1 = *base;
+        }
+      }
+      if (*(u16 *)(var_v1 + 0xC) & 0x400)
+      {
+        (*D_8F300F24_ptr) += 8;
+        var_v1 = *base;
+      }
+      if (*(u16 *)(var_v1 + 0xC) & 8)
+      {
+        if ((*D_8F300F24_ptr) != 0)
+        {
+          (*D_8F300F24_ptr) -= 0x1000;
+          var_v1 = *base;
+        }
+      }
+      if (*(u16 *)(var_v1 + 0xC) & 4)
+      {
+        (*D_8F300F24_ptr) += 0x1000;
+        var_v1 = *base;
+      }
+      // 0x200 steps D_8F300F20 (an s16 counter, clamped to [0, 3)) down; 0x100
+      // steps it up. The pointer is re-read inside each clamp arm, not after it:
+      // the retail lui v0,%hi(D_80087200) lands between the clamp add and the
+      // sh, and the lw follows the sh.
+      if (*(u16 *)(var_v1 + 0xC) & 0x200)
+      {
+        if ((*counter) > 0)
+        {
+          (*counter)--;
+          var_v1 = *base;
+        }
+      }
+      if (*(u16 *)(var_v1 + 0xC) & 0x100)
+      {
+        if ((*counter) < 3)
+        {
+          (*counter)++;
+          var_v1 = *base;
+        }
+      }
+      // 0x4000 of the halfword at +0x8 (buttonsPressed) starts the fade-out and
+      // advances to state 3.
+      if (*(u16 *)(var_v1 + 8) & 0x4000)
+      {
+        var_v0 = 3;
+        StageFade_StartFromTransparent(5);
+      }
+      break;
+
+    case 2:
+      if (func_8F3007B0())
+      {
+        var_v0 = 3;
+        StageFade_StartFromTransparent(5);
+      }
+      break;
+
+    case 3:
+      if (StageContext_GetFadeMode() == 1)
+      {
+        var_v0 = 4;
+      }
+      break;
+
+  }
+
+  return var_v0;
+}
+/* mkdraft:func_8F300AD0 end */
 
 extern void StageFade_StartFromOpaque(s32);
 extern void func_800086A4(s32);

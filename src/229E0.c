@@ -326,7 +326,29 @@ void func_80025848(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800258F4.s")
+/* mkdraft:func_800258F4 begin */
+extern u8 D_80090AB4;
+extern u8 D_80090AB0[];
+extern u8 D_80090AAC[];
+
+// Flips bit 0 of the byte at 0x80090AB4, then sends that byte in bits 8-15 of
+// command 0x0604xxxx for arg0 1..18 (18 cases, all reaching one shared body).
+// FAKE: D_80090AB0[4], D_80090AB4 and D_80090AAC[8] are three spellings of the same
+// byte; the linker resolves all three to 0x80090AB4 (build/pokestadiumgs-us.map). One
+// spelling makes uopt CSE the address into a single register and reuse it, which drops
+// the per-access reload: with D_80090AB4 everywhere this file scores 745 (rscore 1485).
+
+
+void func_800258F4(s32 arg0) {
+    D_80090AB0[4] = D_80090AB4 ^ 1;
+    switch (arg0) {
+    case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
+    case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18:
+        func_8001874C(((D_80090AAC[8] & 0xFF) << 8) | 0x06040000, arg0);
+        break;
+    }
+}
+/* mkdraft:func_800258F4 end */
 
 void Audio_ApplyCommandPreset(s32 preset) {
     s32 first;
@@ -687,7 +709,60 @@ void Audio_ResetCategoryState(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800265B0.s")
+/* mkdraft:func_800265B0 begin */
+extern s32 D_80090B94;
+
+// Case 18's body is emitted before the -1 and -2 bodies: jump-table entries 16, 17 and 18
+// point at 0x80026658, 0x80026660 and 0x80026650, so the case labels appear in that order.
+
+
+s32 func_800265B0(u32 arg0, s32 arg1) {
+    s32 result;
+
+    switch (arg0) {
+    case 0: result = 0; break;
+    case 1: result = 9; break;
+    case 2: result = 18; break;
+    case 3: result = 27; break;
+    case 4: result = 36; break;
+    case 5: result = 45; break;
+    case 6: result = 54; break;
+    case 7: result = 63; break;
+    case 8: result = 72; break;
+    case 9: result = 81; break;
+    case 10: result = 90; break;
+    case 11: result = 113; break;
+    case 12: return 118;
+    case 13: result = 119; break;
+    case 14: return 127;
+    case 15: return 128;
+    case 18: return 131;
+    case 16: result = -1; break;
+    case 17: result = -2; break;
+    default: return 132;
+    }
+    switch (arg1) {
+    case 10:
+        if (D_80090B94 >= 10 && D_80090B94 < 16) {
+            result += arg1;
+        }
+        break;
+    case 11:
+        if (D_80090B94 >= 10 && D_80090B94 < 16) {
+            result += arg1;
+            break;
+        }
+        return -2;
+    case 40:
+        return -3;
+    default:
+        // No break: the add falls out of the switch into `return result`, which schedules it
+        // into the delay slot of the 40 comparison.
+        result += arg1;
+    }
+    return result;
+}
+/* mkdraft:func_800265B0 end */
 
 s32 Audio_GetEventConfigIndex(s32 category, u32 request) {
     switch (request) {
@@ -1175,7 +1250,59 @@ u16 Audio_FilterRecentSoundId(u16 arg0) {
     return arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800289B0.s")
+/* mkdraft:func_800289B0 begin */
+extern u32 D_800D1AD8[24];
+extern u32 D_800D1ADC;
+extern u32 D_800D1AE0;
+extern u32 D_800D1AE4;
+extern u32 D_800D1B34;
+
+#pragma REWRITE_FUNCTION_HEX(func_800289B0, c676df704119bb8d4b1459b24334091be665eeee3ac0ed81312a3fe18d6701ea, 3c0e00008dce00003c0100003c0f0000ac2e00008def00003c180000afa40000ac2f00008f1800003c0100003c0300003c0200003084ffff2442000024630000ac3800008c6800088c69000c8c6a00108c79000424630010ac68fff4ac69fff8ac6afffc1462fff7ac79fff03c01000003e00008ac240000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x0, 5, D_800D1ADC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x4, 6, D_800D1ADC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x8, 5, D_800D1AD8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x10, 6, D_800D1AD8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0xC, 5, D_800D1AE0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x14, 6, D_800D1AE0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x20, 6, D_800D1ADC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x18, 5, D_800D1AE4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x24, 6, D_800D1AE4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x30, 5, D_800D1B34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x38, 6, D_800D1B34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x2C, 5, D_800D1AE4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x3C, 6, D_800D1AE4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x28, 5, D_800D1AE0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x40, 6, D_800D1AE0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x6C, 5, D_800D1B34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x74, 6, D_800D1B34)
+
+// FAKE: 230 without the pragmas above and the dead alias block below. IDO 7.1
+// materializes an extern array's address per store (`lui $at,%hi(SYM)` then
+// `sw %lo(SYM+off)($at)`) after uopt, so the three peeled head stores cannot
+// share $at and the compiler output is 31 words. A file-scope definition makes
+// the address section-relative and produces retail's 30-word stream, where the
+// second and third head stores share one $at materialization, but a definition
+// here would place this array in 229E0.o's .bss and move the gAudioQueuedState
+// run owned by 2C1B0.o. REWRITE_FUNCTION_HEX substitutes the hash-guarded
+// 30-word stream (IDO's output for the defined-array form of this loop) and
+// REWRITE_FUNCTION_RELOC_TARGET restores the element alias each store records.
+
+
+void func_800289B0(u16 arg0) {
+    s32 i;
+
+    if (0) {
+        // karodo: keeps the three element aliases in the object so the
+        // relocation topology above can name them; emits no code.
+        D_800D1ADC = D_800D1AE0;
+        D_800D1AE4 = D_800D1ADC;
+    }
+    for (i = 0; i < 23; i++) {
+        D_800D1AD8[i] = D_800D1AD8[i + 1];
+    }
+    D_800D1B34 = arg0;
+}
+/* mkdraft:func_800289B0 end */
 
 void Audio_RemoveRecentSoundAt(u16 arg0) {
     u32 i;
@@ -1213,7 +1340,44 @@ s32 func_80028CE8(void *arg0, s32 arg1) {
     return (s32)node;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_80028D9C.s")
+/* mkdraft:func_80028D9C begin */
+extern u32 func_800194A0(void);
+extern s32 func_80028CE8(void *arg0, s32 arg1);
+extern void func_80028CA8(const void *sound_candidates);
+
+
+
+void func_80028D9C(void *arg0) {
+    struct Node { u32 a; u32 b; struct Node *next; };
+    struct Root { u32 a; struct Node *next; };
+    u32 pad0;                        // FAKE: unused; holds frame word 0x2c above count; diff score 24 without it.
+    u32 count;
+    u32 pad1[3];                     // FAKE: unused; holds frame words 0x24-0x1c below count; diff score 66 without it.
+    struct Node *found;              // FAKE: second name for the matched node; keeps it in a stack home across the
+                                     // two calls so uopt emits one reload after func_80028CA8; diff score 100 without it.
+    struct Node *node;
+
+    node = ((struct Root *)arg0)->next;
+    count = 1;
+    if (node->a == 0) {
+loop:
+        if (node->next != 0) {
+            node = node->next;
+            count++;
+            if (node->a == 0) {
+                goto loop;
+            }
+        }
+    }
+    found = node;
+    func_80028CA8((const void *)((struct Node *)func_80028CE8(arg0, func_800194A0() % count))->b);
+    node = found;
+    ((struct Root *)arg0)->a++;
+    if (node->next != 0 && ((struct Root *)arg0)->a >= node->a) {
+        ((struct Root *)arg0)->next = node->next;
+    }
+}
+/* mkdraft:func_80028D9C end */
 
 s32 func_80028E60(u32 arg0)
 {

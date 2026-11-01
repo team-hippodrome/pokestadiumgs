@@ -103,9 +103,209 @@ void func_888003CC(void) {
     D_88804050[0x11] = 2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_888003EC.s")
+/* mkdraft:func_888003EC begin */
+extern u8 *D_88804050;
+extern u8 *D_880068B0;
+extern s16 D_8800EF58;
+extern void func_800226C0(s32);
+extern s32 func_8880030C(void);
+extern void func_88004990(u8, u8);
+extern void func_88002720(s16 *, u16, u8 *);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88800714.s")
+
+
+void func_888003EC(void)
+{
+  u32 buttons;
+  s32 item;
+  u8 index;
+  if ((*((s32 *) D_88804050)) == 1)
+  {
+    buttons = D_80087200->buttonsPressed;
+    if (buttons & 0x4000)
+    {
+      func_800226C0(*((s32 *) (D_88804050 + 0x358)));
+      func_88004990(*(*((u8 **) (D_88804050 + 0x20))), 0);
+      *((s32 *) (D_88804050 + 0x14)) = 1;
+      D_88804050[0x50] = 0;
+      *((s8 *) (D_88804050 + 0x26)) = -1;
+    }
+    else
+      if (buttons & 0xF)
+    {
+      item = func_8880030C();
+      index = item;
+      if ((item == (*((s8 *) (D_88804050 + 0x26)))) || ((*((u8 *) ((D_880068B0 + item) + 2))) == 0))
+      {
+        func_800226C0(*((s32 *) (D_88804050 + 0x35C)));
+      }
+      else
+      {
+        *((s8 *) (D_88804050 + 0x26)) = index;
+        func_800226C0(*((s32 *) (D_88804050 + 0x354)));
+        D_88804050[0x50] = D_88804050[0x51] >> 1;
+      }
+    }
+    D_88804050[0x50]++;
+    if (D_88804050[0x50] < D_88804050[0x51])
+    {
+      return;
+    }
+    D_88804050[0x50] = 0;
+  }
+  else
+    if ((*((s32 *) D_88804050)) == 2)
+  {
+    if (D_8800EF58 == 0)
+    {
+      buttons = D_80087200->buttonsPressed;
+      if ((buttons & 0x1000) || ((buttons & 0x4000) && ((*((s8 *) (D_88804050 + 0x26))) == (-1))))
+      {
+        func_800226C0(*((s32 *) (D_88804050 + 0x358)));
+        func_88004990(*(*((u8 **) (D_88804050 + 0x20))), 0);
+        *((s32 *) (D_88804050 + 0x14)) = 1;
+        *((s8 *) (D_88804050 + 0x27)) = -1;
+        *((s8 *) (D_88804050 + 0x26)) = *((s8 *) (D_88804050 + 0x27));
+        return;
+      }
+      if ((buttons & 0x4000) && ((*((s8 *) (D_88804050 + 0x26))) != (-1)))
+      {
+        func_800226C0(*((s32 *) (D_88804050 + 0x358)));
+        *((s8 *) (D_88804050 + 0x11)) = 3;
+        D_88804050[(*((s8 *) (D_88804050 + 0x26))) + 0x3B0] = 0;
+        *((s8 *) (D_88804050 + 0x26)) = -1;
+        return;
+      }
+      if (buttons & 0x8000)
+      {
+        if (D_880068B0[3] != 0)
+        {
+          if ((*((s8 *) (D_88804050 + 0x26))) == (-1))
+          {
+            unsigned int cursor;
+            func_800226C0(*((s32 *) (D_88804050 + 0x354)));
+            *((s8 *) (D_88804050 + 0x11)) = 3;
+            *((s8 *) (D_88804050 + 0x26)) = *((s16 *) (D_88804050 + 0x24));
+            D_88804050[(*((s16 *) (D_88804050 + 0x24))) + 0x3B0] = 1;
+            cursor = *((s16 *) (D_88804050 + 0x24));
+            do
+            {
+              if (3 == (cursor ^ 0))
+              {
+                *((s16 *) (D_88804050 + 0x24)) = 0;
+              }
+              else
+              {
+                *((s16 *) (D_88804050 + 0x24)) = cursor + 1;
+              }
+              cursor = *((s16 *) (D_88804050 + 0x24));
+            }
+            while ((*((u8 *) ((D_88804050 + cursor) + 0x3B0))) != 0);
+            return;
+          }
+          if ((*((s8 *) (D_88804050 + 0x27))) == (-1))
+          {
+            func_800226C0(0x5D);
+            func_800226C0(0x63);
+            *((s8 *) (D_88804050 + 0x11)) = 3;
+            *((s8 *) (D_88804050 + 0x27)) = *((s16 *) (D_88804050 + 0x24));
+ D_88804050[(*((s8 *) (D_88804050 + 0x26))) + 0x3B0] = 0; D_88804050[(*((s8 *) (D_88804050 + 0x27))) + 0x3B0] = 0;
+            (*((void (**)(s8, s8, u16)) (D_88804050 + 0x58)))(*((s8 *) (D_88804050 + 0x26)), *((s8 *) (D_88804050 + 0x27)), *((u16 *) (D_88804050 + 0x3B4)));
+          }
+        }
+      }
+      else
+      {
+        func_88002720((s16 *) (D_88804050 + 0x24), 4, D_88804050 + 0x3A8);
+      }
+    }
+  }
+}
+/* mkdraft:func_888003EC end */
+
+/* mkdraft:func_88800714 begin */
+struct Color88800DC0;
+extern u8 *D_88804050;
+extern u8 *D_8800687C;
+extern u8 *D_880068B0;
+extern u8 D_88005FA0[];
+extern s16 D_8800EF58;
+extern struct Color88800DC0 *func_88000510(struct Color88800DC0 *, s8);
+extern void func_880006E0(struct Color88800DC0 *);
+extern void func_880006BC(void *);
+extern const char *func_8004C874(s32, s32);
+extern const char *func_80062CE0(u8);
+extern u8 func_80062D98(u8);
+extern u8 func_80062D5C(u8);
+extern u8 func_80062DD4(u8);
+extern s8 *func_80063270(u8);
+extern s8 *func_80049290(s32, s8, s8 *);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800498C4(void);
+extern void func_8004989C(s32);
+extern void func_800499EC(void);
+extern void func_800496A4(s32, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+
+// Draws the move summary panel: the move name (func_8004C874 table 0x26), a 0..100
+// value derived from func_80062DD4(move) * 100 / 255, a color that func_88000510
+// builds from func_80062D98(move) and func_880006E0 draws, and the effect string
+// from func_80062CE0(move). The move ID is read from the per-Pokemon move table
+// (move IDs at +2, as in func_88800D34), indexed by the s8 at 0x26 of D_88804050
+// for state 1 and by the s16 at 0x24 for state 2.
+
+
+void func_88800714(void) {
+    const char *sp44;
+    u8 sp43;
+    u8 sp40[3];
+    u8 sp3F;
+    u8 sp3E;
+
+    sp44 = func_8004C874(0x26, 0x15);
+    if (*(s32 *)D_88804050 == 1) {
+        // FAKE: D_880068B0 is reached through `*(u8 **)&D_880068B0`, the pointer stored
+        // at the symbol's address instead of the symbol's value. Both spellings name the
+        // same pointer, but uopt only loads the table base before the index byte
+        // (`lw t6,%lo(D_880068B0)`, then `lb t7,0x26(v1)`) with the address-of form;
+        // diff score 430 without it (plain `D_880068B0` in both branches), 215 with it
+        // in one branch only.
+        sp43 = (*(s8 *)(D_88804050 + 0x26) + *(u8 **)&D_880068B0)[2];
+    } else if (*(s32 *)D_88804050 == 2) {
+        if (D_8800EF58 != 0) {
+            return;
+        }
+        sp43 = (*(s16 *)(D_88804050 + 0x24) + *(u8 **)&D_880068B0)[2];
+    }
+    //!bug: only state 1 and state 2 assign sp43. Any other state falls through and the
+    // test below reads the uninitialized stack slot (retail `lbu t5,0x43(sp)`).
+    if (((s32)sp43 > 0) && ((s32)sp43 < 252)) {
+        sp3E = func_80062D5C(sp43);
+        func_800498C4();
+        func_8004989C(0x14);
+        func_880006BC(D_88005FA0);
+        func_800496A4(4, 0);
+        func_80048E30(D_8800687C, 0x1BB, 0x103, sp44, 1);
+        if ((sp3E == 0) || (sp3E == 1)) {
+            func_800495F8(0x12F, 0x117, 0, "%s%s", func_8004C874(0x26, 0x16), func_8004C874(0x26, 0x18));
+        } else {
+            func_800495F8(0x12F, 0x117, 0, "%s%3d", func_8004C874(0x26, 0x16), (s32)sp3E);
+        }
+        func_800495F8(0x1AD, 0x117, 0, "%s%3d", func_8004C874(0x26, 0x17),
+            (s32)(((f32)(func_80062DD4(sp43) * 100) / 255.0f) +
+                (((f32)(func_80062DD4(sp43) * 100) / 255.0f) > 0.0f ? 0.5f : -0.5f)));
+        func_80048E30(D_8800687C, 0x12F, 0x12F, func_8004C874(7, (s32)sp43 - 1), 1);
+        sp3F = func_80062D98(sp43);
+        func_880006E0(func_88000510((struct Color88800DC0 *)&sp40, (s8)sp3F));
+        // Message 0x1BB, plus the byte at 0x78 of D_8800687C twice: once through
+        // func_80049290 and once directly.
+        func_80048E30(D_8800687C, (s32)(*(s8 *)(D_8800687C + 0x78) + func_80049290(0, *(s8 *)(D_8800687C + 0x78), sp44)) + 0x1BB, 0x103, func_80063270(sp3F), 1);
+        func_800496A4(8, 0);
+        func_80048E30(D_8800687C, 0x12F, 0xFF, func_80062CE0(sp43), 1);
+        func_800499EC();
+    }
+}
+/* mkdraft:func_88800714 end */
 
 extern s32 func_88004804(s32, s32, s16, s16, s32, s32, s32, s32, s32,
                          void (*)(void), void (*)(void), void (*)(void),

@@ -59,9 +59,226 @@ void func_8AF0BBF0(void *arg0) {
     sprintf(D_8AF26A20 + 0xA00, D_8AF2E8F4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0BD2C.s")
+/* mkdraft:func_8AF0BD2C begin */
+extern s32 D_8AF26A20;
+extern s8 *D_8AF2E8E8;
+extern s8 *D_8AF2E8E4;
+extern s8 D_8AF29230;
+extern s8 D_8AF29234;
+extern s8 D_8AF29238;
+extern s8 D_8AF2923C;
+extern int sprintf(char *, const char *, ...);
+extern s32 func_8004C594(s32 index, s32 value);
+extern void *func_8004C8A0(void *dst, s32 size, s32 arg2, s32 arg3);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C1D8.s")
+
+
+void func_8AF0BD2C(void *arg0) {
+    u8 name_kind;
+    u8 name_kind_2;
+    u8 name_kind_3;
+    u8 name_kind_4;
+
+    // Bytes 1 through 4 each pick one of three name formats rendered into
+    // D_8AF26A20 + 0x300 + 0x100 * i; kinds other than 0 and 1 share the
+    // string at D_8AF29230 + 4 * i.
+    name_kind = *(u8 *)((u8 *)arg0 + 1);
+    if (name_kind == 0) {
+        sprintf(D_8AF26A20 + 0x300, D_8AF2E8E8, name_kind);
+    } else if (name_kind == 1) {
+        sprintf(D_8AF26A20 + 0x300, D_8AF2E8E4, name_kind);
+    } else {
+        sprintf(D_8AF26A20 + 0x300, &D_8AF29230, name_kind);
+    }
+    name_kind_2 = *(u8 *)((u8 *)arg0 + 2);
+    if (name_kind_2 == 0) {
+        sprintf(D_8AF26A20 + 0x400, D_8AF2E8E8, name_kind_2);
+    } else if (name_kind_2 == 1) {
+        sprintf(D_8AF26A20 + 0x400, D_8AF2E8E4, name_kind_2);
+    } else {
+        sprintf(D_8AF26A20 + 0x400, &D_8AF29234, name_kind_2);
+    }
+    name_kind_3 = *(u8 *)((u8 *)arg0 + 3);
+    if (name_kind_3 == 0) {
+        sprintf(D_8AF26A20 + 0x500, D_8AF2E8E8, name_kind_3);
+    } else if (name_kind_3 == 1) {
+        sprintf(D_8AF26A20 + 0x500, D_8AF2E8E4, name_kind_3);
+    } else {
+        sprintf(D_8AF26A20 + 0x500, &D_8AF29238, name_kind_3);
+    }
+    name_kind_4 = *(u8 *)((u8 *)arg0 + 4);
+    if (name_kind_4 == 0) {
+        sprintf(D_8AF26A20 + 0x600, D_8AF2E8E8, name_kind_4);
+    } else if (name_kind_4 == 1) {
+        sprintf(D_8AF26A20 + 0x600, D_8AF2E8E4, name_kind_4);
+    } else {
+        sprintf(D_8AF26A20 + 0x600, &D_8AF2923C, name_kind_4);
+    }
+    // Bytes 6 through 9 are scanned for the first nonzero value, which is
+    // handed to func_8004C594(2, ...); 0x33 and above are stored reduced by
+    // 0x32.
+    if ((s32) * (u8 *)((u8 *)arg0 + 6) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 6) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 6) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 6));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 7) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 7) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 7) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 7));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 8) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 8) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 8) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 8));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 9) >= 0x33) {
+        func_8004C594(2, *(u8 *)((u8 *)arg0 + 9) - 0x32);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 9) > 0) {
+        func_8004C594(2, (s32) * (u8 *)((u8 *)arg0 + 9));
+    }
+    // The same four bytes are rendered into D_8AF26A20 + 0x700 + 0x100 * i.
+    if (*(u8 *)((u8 *)arg0 + 6) == 0) {
+        sprintf(D_8AF26A20 + 0x700, D_8AF2E8E8);
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 6) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0x700, 0x100, 0x3B, 0x39);
+    } else {
+        func_8004C8A0(D_8AF26A20 + 0x700, 0x100, 0x3B, 0x3A);
+    }
+    if (*(u8 *)((u8 *)arg0 + 7) == 0) {
+        sprintf(D_8AF26A20 + 0x800, D_8AF2E8E8, *(u8 *)((u8 *)arg0 + 7));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 7) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0x800, 0x100, 0x3B, 0x39);
+    } else {
+        func_8004C8A0(D_8AF26A20 + 0x800, 0x100, 0x3B, 0x3A);
+    }
+    if (*(u8 *)((u8 *)arg0 + 8) == 0) {
+        sprintf(D_8AF26A20 + 0x900, D_8AF2E8E8, *(u8 *)((u8 *)arg0 + 8));
+    } else if ((s32) * (u8 *)((u8 *)arg0 + 8) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0x900, 0x100, 0x3B, 0x39);
+    } else {
+        func_8004C8A0(D_8AF26A20 + 0x900, 0x100, 0x3B, 0x3A);
+    }
+    if (*(u8 *)((u8 *)arg0 + 9) == 0) {
+        sprintf(D_8AF26A20 + 0xA00, D_8AF2E8E8, *(u8 *)((u8 *)arg0 + 9));
+        return;
+    }
+    if ((s32) * (u8 *)((u8 *)arg0 + 9) < 0x33) {
+        func_8004C8A0(D_8AF26A20 + 0xA00, 0x100, 0x3B, 0x39);
+        return;
+    }
+    func_8004C8A0(D_8AF26A20 + 0xA00, 0x100, 0x3B, 0x3A);
+}
+/* mkdraft:func_8AF0BD2C end */
+
+/* mkdraft:func_8AF0C1D8 begin */
+extern s16 D_8AF263C4[];
+extern s16 D_8AF2ECF8;
+extern s32 func_8004C54C(s32 index, s32 value);
+extern s32 func_8004C594(s32 index, s32 value);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern u8 func_80062D5C(u8 arg0);
+extern u8 func_80062DD4(u8 arg0);
+extern u8 func_80062E10(u8 arg0);
+extern u8 func_80062D98(u8 arg0);
+extern s32 func_8AF00020(void);
+extern s16 func_8AF01530(s16 arg0);
+extern int sprintf(char *, const char *, ...);
+
+extern s32 D_8AF26940;
+extern s8 D_8AF292A0;
+extern s8 D_8AF292A4;
+extern s8 D_8AF292A8;
+extern s8 D_8AF292AC;
+extern s8 D_8AF292B0;
+extern s8 D_8AF292B4;
+extern s8 D_8AF292B8;
+extern s8 D_8AF292BC;
+extern void *D_8AF2E88C;
+extern void *D_8AF2E890;
+extern void *D_8AF2E8C4;
+extern s32 D_8AF2E8EC;
+extern s16 D_8AF2ED04;
+extern u8 D_8AF2F988;
+extern u8 D_8AF2F989;
+
+
+
+void func_8AF0C1D8(void *arg0) {
+    u8 id;
+    u8 pp;
+    s16 texture_index;
+    f32 rounding_bias;
+    u8 hit;
+    f32 hit_percent;
+
+    id = *(u8 *)arg0;
+    texture_index = id - 1;
+    *(s16 *)((u8 *)D_8AF2E88C + 0x30) = 6;
+    *(s16 *)((u8 *)D_8AF2E88C + 0x32) = texture_index;
+    *(s16 *)((u8 *)D_8AF2E890 + 0x30) = 7;
+    *(s16 *)((u8 *)D_8AF2E890 + 0x32) = texture_index;
+    // Move record fields at D_8009782A: power, PP, hit rate on a 0-255 scale
+    // and type, read through func_80062D5C, func_80062E10, func_80062DD4 and
+    // func_80062D98 respectively.
+    D_8AF2F989 = func_80062D5C(id);
+    pp = func_80062E10(id);
+    hit = func_80062DD4(id);
+    // Round the hit rate percentage to the nearest integer for display.
+    if (((f32)func_80062DD4(id) * 100.0f) / 255.0f > 0.0f) {
+        rounding_bias = 0.5f;
+    } else {
+        rounding_bias = -0.5f;
+    }
+    D_8AF2F988 = func_80062D98(id);
+    sprintf(D_8AF26A20 + 0x100, &D_8AF292A0, pp);
+    hit_percent = ((f32)hit * 100.0f) / 255.0f;
+    sprintf(D_8AF26A20 + 0x200, &D_8AF292A4, (s32)(rounding_bias + hit_percent) & 0xFF);
+    func_8004C54C(0x2F, (s32)func_8004C874(0xC, D_8AF263C4[func_8AF01530(D_8AF2F988)]));
+    func_8004C54C(0x31, D_8AF26A20 + 0x100);
+    func_8004C54C(0x32, D_8AF26A20 + 0x200);
+    if (D_8AF2ECF8 == 1) {
+        func_8AF0BBF0(arg0);
+    } else {
+        func_8AF0BD2C(arg0);
+    }
+    func_8004C54C(0x33, D_8AF26A20 + 0x300);
+    func_8004C54C(0x34, D_8AF26A20 + 0x400);
+    func_8004C54C(0x37, D_8AF26A20 + 0x700);
+    func_8004C54C(0x38, D_8AF26A20 + 0x800);
+    if (D_8AF26940 != 0) {
+        func_8004C54C(0x35, D_8AF26A20 + 0x500);
+        func_8004C54C(0x36, D_8AF26A20 + 0x600);
+        func_8004C54C(0x39, D_8AF26A20 + 0x900);
+        func_8004C54C(0x3A, D_8AF26A20 + 0xA00);
+    } else {
+        func_8004C54C(0x35, D_8AF2E8EC);
+        func_8004C54C(0x36, D_8AF2E8EC);
+        func_8004C54C(0x39, D_8AF2E8EC);
+        func_8004C54C(0x3A, D_8AF2E8EC);
+    }
+    if (func_8AF00020() == 0) {
+        func_8004C54C(0x36, &D_8AF292A8);
+        func_8004C54C(0x3A, &D_8AF292AC);
+        if (D_8AF2ECF8 == 1) {
+            func_8004C54C(0x37, &D_8AF292B0);
+            func_8004C54C(0x38, &D_8AF292B4);
+            func_8004C54C(0x39, &D_8AF292B8);
+        }
+    }
+    func_8004C594(3, D_8AF2ED04);
+    *(s16 *)((u8 *)D_8AF2E8C4 + 0x30) = 0x3B;
+    if (*(u8 *)((u8 *)arg0 + 0xA) == 1) {
+        *(s16 *)((u8 *)D_8AF2E8C4 + 0x32) = 0x3C;
+    } else {
+        *(s16 *)((u8 *)D_8AF2E8C4 + 0x32) = 0x3B;
+    }
+    // Power 0 and 1 print the shared blank string instead of a number.
+    if (D_8AF2F989 >= 2) {
+        sprintf(D_8AF26A20, &D_8AF292BC, D_8AF2F989);
+    } else {
+        sprintf(D_8AF26A20, D_8AF2E8E8, D_8AF2F989);
+    }
+    func_8004C54C(0x30, D_8AF26A20);
+}
+/* mkdraft:func_8AF0C1D8 end */
 
 s32 func_8AF0C5BC(s16 arg0, s16 arg1) {
     s32 var_v1;
@@ -106,7 +323,45 @@ s32 func_8AF0C5BC(s16 arg0, s16 arg1) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C6F8.s")
+/* mkdraft:func_8AF0C6F8 begin */
+extern u8 D_8AF2E8F8[];
+
+
+
+s16 func_8AF0C6F8(u8 *arg0) {
+    s16 var_v1;
+    u8 *var_a2;
+    u8 *var_t1;
+    u8 temp_t0;
+    u8 temp_v0;
+
+    var_v1 = 0;
+    var_t1 = D_8AF2E8F8;
+loop_1:
+    temp_v0 = *arg0;
+    if (temp_v0 != 0) {
+        var_a2 = var_t1;
+init_2:
+        temp_t0 = *var_a2;
+        if (temp_t0 != temp_v0) {
+            if (((!var_a2) && (!var_a2)) && (!var_a2)) { // FAKE: three redundant var_a2 tests widen its live range so uopt colors temp_t0 as t0; without it the inner lbu takes a3 (score 15)
+            }
+            if (temp_t0 == 0) {
+                *var_a2 = temp_v0;
+                var_v1 += 1;
+                arg0 += 0x14;
+            } else {
+                var_a2 += 1;
+                goto init_2;
+            }
+        } else {
+            arg0 += 0x14;
+        }
+        goto loop_1;
+    }
+    return var_v1;
+}
+/* mkdraft:func_8AF0C6F8 end */
 
 extern void _bzero(s32 *, s32);
 extern s16 func_8AF0C6F8(u8 *);
@@ -128,7 +383,49 @@ s16 func_8AF0C758(void) {
     total += temp;
     return total;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C7C8.s")
+/* mkdraft:func_8AF0C7C8 begin */
+
+
+s32 func_8AF0C7C8(u8 *arg0, u8 *arg1) {
+    s16 count;
+    u8 *base;
+    u8 value;
+
+    base = arg1;
+    count = 0;
+    for (;;) {
+        if (arg0[0] == 0) break;
+        arg1 = base;
+        do {
+            value = arg1[0];
+            if (!value) break;
+            if (arg0[0] == value) {
+                count++;
+                if (arg0[1] == 0) arg0[1] = arg1[1];
+                if (arg0[2] == 0) arg0[2] = arg1[2];
+                if (arg0[3] == 0) arg0[3] = arg1[3];
+                if (arg0[4] == 0) arg0[4] = arg1[4];
+                if (arg0[6] == 0) arg0[6] = arg1[6];
+                if (arg0[7] == 0) arg0[7] = arg1[7];
+                if (arg0[8] == 0) arg0[8] = arg1[8];
+                if (arg0[9] == 0) arg0[9] = arg1[9];
+                if (arg1[5] == 0) arg1[5] = arg0[5];
+                if (arg1[1] == 0) arg1[1] = arg0[1];
+                if (arg1[2] == 0) arg1[2] = arg0[2];
+                if (arg1[3] == 0) arg1[3] = arg0[3];
+                if (arg1[4] == 0) arg1[4] = arg0[4];
+                if (arg1[6] == 0) arg1[6] = arg0[6];
+                if (arg1[7] == 0) arg1[7] = arg0[7];
+                if (arg1[8] == 0) arg1[8] = arg0[8];
+                if (arg1[9] == 0) arg1[9] = arg0[9];
+            }
+            arg1 += 0x14;
+        } while (1);
+        arg0 += 0x14;
+    }
+    return count;
+}
+/* mkdraft:func_8AF0C7C8 end */
 
 u8 func_8AF0C96C(u8 *arg0) {
     volatile u8 pad; // FAKE: never accessed; without it the function does not match (diff score 40)

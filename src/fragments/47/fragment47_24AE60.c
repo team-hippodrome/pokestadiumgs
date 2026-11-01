@@ -115,7 +115,99 @@ void func_86004F2C(void *arg0, void *arg1, Fragment47Vec3d *arg2)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004FDC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_8600520C.s")
+/* mkdraft:func_8600520C begin */
+extern void func_87F029B8(s32, u8);
+extern void func_87F02CB0(s32, s32);
+extern void func_86002470(s32, s32, s32);
+extern void func_86001A60(s32, s32);
+extern void func_8003F018(s32);
+extern s32 func_80071ADC(s32, s32);
+extern void func_8003F114(s32, s32, s32, s32);
+extern void func_86007648(s32, s32);
+
+// Model grid at +0x81D0: 2 sides x 4 x 4 entries of 0x168 bytes. This function
+// touches the flag byte at +1 of an entry; the remainder is untouched padding.
+typedef struct {
+    u8 pad_0000[1];
+    u8 flags;
+    u8 pad_0002[0x166];
+} Func8600520CNode;
+
+typedef struct {
+    u8 pad_0000[0x81D0];
+    Func8600520CNode nodes[2][4][4];
+} Func8600520CContext;
+
+// Rebuilds both sides' model and animation data, then every grid entry with
+// j < k, then dispatches on the byte at *(arg0 + 0x7580) + 0x2180: mode 2 when
+// that byte is 4, otherwise mode 0.
+//
+// Loop 1 runs until the running offset reaches 0xB60 (6 iterations of 0x2D8):
+// func_86002470 re-creates a side's model, submodel, effect and overlay graph
+// nodes from the resource file (+0x68A0) and the model array (+0x8128),
+// func_86001A60 initializes the animation block that starts at +0x75C8, and the
+// object advances 0x1998 per iteration.
+//
+// The do/while form and the statement order (offset, object, anim) are what put
+// the animation addiu in the branch delay slot.
+//
+// Loop 2 walks i < 2, j < 4, k < 4 and acts only on j < k. Each selected entry
+// is re-created by func_8003F018, the handle from func_80071ADC (0xC7 on side 0,
+// 0xC8 on side 1) is func_8003F114's fourth argument, and flag bit 0 is cleared.
+//
+// The entry address is spelled as a cast of arg0 at each use. With a node
+// pointer local the flag load shares the call argument's base (`lbu 1($s0)`);
+// retail derives the flag address from a second base, element + 0x8000 with
+// displacement 0x1D1, which also lets the ~1 mask live in $fp.
+//
+// The declaration order below is what produces the retail 0x60-byte frame with
+// resource_file at 0x40(sp) and the arg0 home at 0x60(sp): IDO homes a register
+// parameter at the frame size, so an order that changes the frame moves both.
+
+
+void func_8600520C(s32 arg0) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 offset;
+    s32 anim;
+    s32 object;
+    s32 *models;
+    s32 *resource_file;
+
+    func_87F029B8(arg0 + 0x74B0, *(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2182));
+    func_87F02CB0(arg0 + 0x74D0, 0x63);
+    object = arg0;
+    offset = 0;
+    resource_file = (s32 *)(arg0 + 0x68A0);
+    models = (s32 *)(arg0 + 0x8128);
+    anim = arg0 + 0x75C8;
+    do {
+        func_86002470(object, (s32)resource_file, (s32)models);
+        func_86001A60(anim, (s32)models);
+        offset += 0x2D8;
+        object += 0x1998;
+        anim += 0x2D8;
+    } while (offset != 0xB60);
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
+                if (j < k) {
+                    func_8003F018((s32)&((Func8600520CContext *)arg0)->nodes[i][j][k]);
+                    func_8003F114((s32)&((Func8600520CContext *)arg0)->nodes[i][j][k], 0, -1,
+                                  func_80071ADC((s32)resource_file, i > 0 ? 0xC8 : 0xC7));
+                    ((Func8600520CContext *)arg0)->nodes[i][j][k].flags &= ~1;
+                }
+            }
+        }
+    }
+    if (*(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2180) == 4) {
+        func_86007648(arg0, 2);
+        return;
+    }
+    func_86007648(arg0, 0);
+}
+/* mkdraft:func_8600520C end */
 
 typedef struct Func860053F8Record {
     u8 pad_0000[0x1814];
@@ -137,9 +229,135 @@ s32 func_860053F8(Func860053F8Record *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_860057D0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005A00.s")
+/* mkdraft:func_86005A00 begin */
+extern f32 D_8600D8B8;
+extern f32 D_8600D8BC;
+extern f32 D_8600D8C0;
+extern f32 D_8600D8C4;
+extern f32 D_8600D8C8;
+extern f32 D_8600D8CC;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005B3C.s")
+// Direction deltas: 64 along an axis, 64/sqrt(2) = 45.255 diagonally.
+// 0x100/0x200 select +x/-x, 0x800/0x400 select +y/-y; with no axis bit set
+// the direction is (0, +-64).
+//
+// The value pairs are block-scoped temporaries. IDO allocates a temporary
+// pair per block and reuses the lowest free pair, which reproduces the retail
+// register usage: $f0/$f2 in the 0x800 cases and 0x400&0x100 ($f2 alone for
+// 0x400&0x200), $f4/$f6 in the 0x800-only and 0x200-only cases, $f8/$f10 in
+// 0x400-only and the first s16 conversion, $f16/$f18 in 0x100-only and the
+// second conversion.
+
+
+void func_86005A00(void *arg0, f32 *arg1, f32 *arg2) {
+    s32 temp_v0;
+
+    temp_v0 = *(u16 *)((u8 *)arg0 + 6);
+    if (temp_v0 & 0xF00) {
+        if (temp_v0 & 0x800) {
+            if (temp_v0 & 0x100) {
+                {
+                    f32 a = D_8600D8B8;
+                    *arg1 = a;
+                    *arg2 = a;
+                }
+                return;
+            }
+            if (temp_v0 & 0x200) {
+                // The first value loaded is the one that goes to *arg2.
+                {
+                    f32 a = D_8600D8BC, b = D_8600D8C0;
+                    *arg1 = b;
+                    *arg2 = a;
+                }
+                return;
+            }
+            {
+                f32 a = 0.0f, b = 64.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+            return;
+        }
+        if (temp_v0 & 0x400) {
+            if (temp_v0 & 0x100) {
+                {
+                    f32 a = D_8600D8C4, b = D_8600D8C8;
+                    *arg1 = a;
+                    *arg2 = b;
+                }
+                return;
+            }
+            if (temp_v0 & 0x200) {
+                {
+                    f32 a = D_8600D8CC, b = D_8600D8CC;
+                    *arg1 = a;
+                    *arg2 = b;
+                }
+                return;
+            }
+            {
+                f32 a = 0.0f, b = -64.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+            return;
+        }
+        if (temp_v0 & 0x100) {
+            {
+                f32 a = 64.0f, b = 0.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+            return;
+        }
+        if (temp_v0 & 0x200) {
+            {
+                f32 a = -64.0f, b = 0.0f;
+                *arg1 = a;
+                *arg2 = b;
+            }
+        }
+    } else {
+        *arg1 = (f32) *(s16 *)((u8 *)arg0 + 2);
+        *arg2 = (f32) *(s16 *)((u8 *)arg0 + 4);
+    }
+}
+/* mkdraft:func_86005A00 end */
+
+/* mkdraft:func_86005B3C begin */
+extern s32 func_8003F210(void *, s32);
+
+extern s32 D_8600E0DC;
+extern f64 D_8600E100;
+
+
+
+void func_86005B3C(u8 *arg0, s32 arg1, s32 arg2, u8 *arg3, s32 arg4) {
+    u8 *base;
+    u8 *node;
+
+    if (D_8600E0DC != 0) {
+        base = (u8 *) ((u32) arg0 + arg1 * 0x5A0 + arg2 * 0x168);
+        node = base + 0x81D0;
+        ((f32 *)(base + 0x8000))[0x7D] = (f32) *(f64 *)(arg3 + 0);
+        ((f32 *)(base + 0x8000))[0x7E] = (f32) *(f64 *)(arg3 + 8);
+        ((f32 *)(base + 0x8000))[0x7F] = (f32) *(f64 *)(arg3 + 0x10);
+        func_8003F210(node, 0);
+        node[1] |= 1;
+        ((f32 *)(arg0 + arg1 * 16 + arg2 * 4 + 0x8000))[0xBB4] = (f32) D_8600E100;
+        if (arg4 != 0) {
+            ((f32 *)(base + 0x8000))[0x61D] = (f32) *(f64 *)(arg3 + 0);
+            ((f32 *)(base + 0x8000))[0x61E] = (f32) *(f64 *)(arg3 + 8);
+            ((f32 *)(base + 0x8000))[0x61F] = (f32) *(f64 *)(arg3 + 0x10);
+            node = base + 0x9850;
+            func_8003F210(node, 0);
+            node[1] |= 1;
+            ((f32 *)(arg0 + arg1 * 16 + arg2 * 4 + 0x8000))[0xBC4] = (f32) D_8600E100;
+        }
+    }
+}
+/* mkdraft:func_86005B3C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005CB4.s")
 
@@ -400,7 +618,58 @@ void func_8600734C(s32 arg0) {
     Audio_PlayDefaultSound(0xCF0B);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86007428.s")
+/* mkdraft:func_86007428 begin */
+extern void func_87F00688();
+extern void func_86004BD4(s32);
+extern void func_86004968();
+extern void func_860021C4(s32, s32, f32, void *, s32);
+extern void func_86003EFC(s32, s32);
+extern void func_8600062C();
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromOpaque(s32);
+extern u8 D_8600DE30[];
+
+// Four stage slots of stride 0x1998; D_8600DE30+0x214 is the first slot that
+// func_86003EFC(ptr, 7) still has to run on, and 0x6660 is 4 slots.
+
+
+
+void func_86007428(s32 arg0) {
+    s32 i;
+    s32 offset;
+    s32 ptr;
+    void *callback;
+    void *node;
+    *(f64 *)(arg0 + 0x6888) = 0.0;
+    *(u8 *)(arg0 + 0x75C0) &= 0xFF7F;
+    *(f64 *)(arg0 + 0x6898) = 0.0;
+    StageContext_SetClearColor(0xFFFF);
+    StageFade_StartFromOpaque(0x14);
+    func_87F00688();
+    func_86004BD4(arg0);
+    func_86004968(arg0);
+    offset = 0;
+    for (i = 0; i < 4; i++) {
+        node = *(void **)(arg0 + 0x7580);
+        callback = (*(u8 *)((u8 *)node + 0x2182) & (1 << i) &&
+                    (*(u8 *)((u8 *)node + 0x2180) == 4) == 0) ? NULL : &func_8600062C;
+        func_860021C4(arg0 + offset, i, (f32)*(f64 *)(D_8600DE30 + 0xF8), callback, arg0);
+        offset += 0x1998;
+    }
+    i = *(s32 *)(D_8600DE30 + 0x214);
+    if (i < 4) {
+        offset = i * 0x1998;
+        ptr = arg0 + offset;
+        do {
+            func_86003EFC(ptr, 7);
+            offset += 0x1998;
+            ptr += 0x1998;
+        } while (offset != 0x6660);
+    }
+    *(s8 *)(arg0 + 0x75C1) = MathUtil_Random16() % 4;
+    *(s32 *)(arg0 + 0xAF5C) = 0x15F90;
+}
+/* mkdraft:func_86007428 end */
 
 extern void func_80021ED8(s32);
 extern void func_86004968();

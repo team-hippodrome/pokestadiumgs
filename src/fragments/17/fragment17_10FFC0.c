@@ -87,7 +87,54 @@ void func_82200C3C(u8* arg0) {
     _bzero(arg0 + 36, 360);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82200C60.s")
+/* mkdraft:func_82200C60 begin */
+extern s32 D_8220E4E0;
+extern s32 D_8220EB10;
+
+
+
+s32 func_82200C60(void) {
+    u8 *var_a0;
+    u8 *var_a2;
+    s32 var_a1;
+    s32 var_v1;
+    s32 extra;
+
+    /* FAKE: D_8220E0C8 is the f32 scale factor func_822006CC multiplies by;
+     * it is not a byte counter. This dead byte read and the empty if(test)
+     * after the loop exist only to move the loop cursor's register: with
+     * them the ROM's assignment comes out (cursor a0, loop bound a3, 360 in
+     * t0); without them the same body scores 110 with the cursor in v0, the
+     * bound in a2 and 360 in a3. as1 drops the load because nothing reads
+     * its result, so the pair costs no instruction. */
+    extra = *(u8 *)&D_8220E0C8;
+    var_v1 = 1;
+    /* The `do` sits on this line deliberately: uopt hoists the loop bound
+     * &D_8220EB10 into the preheader carrying the loop head's source line,
+     * and as1 breaks the lui/addiu scheduling tie between the two address
+     * computations by those lines. Same line puts the bound's addiu before
+     * the cursor's, as in the ROM; separate lines put the cursor's first
+     * (two-word residual, score 30). */
+    var_a0 = (u8 *)&D_8220E4E0; do {
+        var_a1 = 0;
+        var_a2 = var_a0;
+loop_2:
+        var_a1 += 12;
+        if (*(s16 *)(var_a2 + 0x24) != 0) {
+            var_v1 = 0;
+        } else {
+            var_a2 += 12;
+            if (var_a1 != 360) {
+                goto loop_2;
+            }
+        }
+        var_a0 += 396;
+    } while (var_a0 != (u8 *)&D_8220EB10);
+    /* FAKE: the dead use that keeps the load at the top of the function. */
+    if (extra) { }
+    return var_v1;
+}
+/* mkdraft:func_82200C60 end */
 
 extern s32 func_8004C8C0(s32);
 extern s32 D_8220E4E0;
@@ -789,7 +836,75 @@ s32 func_8220336C(s32 arg0, s32 arg1) { gDPPipeSync(D_800D0510++); gDPSetEnvColo
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822033BC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822037E4.s")
+/* mkdraft:func_822037E4 begin */
+extern void Font_EnableTwoCycleTexturing();
+extern void func_8004972C();
+
+
+
+void func_822037E4(void) {
+    u8 **slot;
+    u8 *record;
+    s32 flag; // FAKE: never read; diff score 18 without it.
+    s32 result;
+    s32 dirty;
+    u8 *text;
+    u8 *style; // FAKE: never read; diff score 10 without it and its assignment.
+    u8 *old_color;
+    u8 *new_color;
+    s32 font_id;
+
+    if (((*(u16 *)((u8 *)&D_8220E4C0)) & 8) == 0) {
+        return;
+    }
+    func_800498C4();
+    record = D_8220E310; slot = D_8220E4D0;
+    do {
+        text = *slot;
+        style = text + 0x28; // FAKE: same value as new_color below.
+        old_color = text + 0x2C;
+        new_color = text + 0x28;
+        dirty = 0;
+        font_id = 0;
+        switch (record[5]) {
+        case 0: break;
+        case 4: font_id = (s32)func_8004C874(23, 25); break;
+        case 3: font_id = (s32)func_8004C874(23, 26); break;
+        case 5: font_id = (s32)func_8004C874(23, 27); break;
+        }
+        if (font_id != 0) {
+            Font_EnableTwoCycleTexturing();
+            func_800496A4(*(u16 *)(text + 0x24), 1);
+            func_8004989C(*(s8 *)(text + 0x26));
+            func_8004972C(new_color[0], new_color[1], new_color[2], new_color[3]);
+            if (*(u32 *)old_color != *(u32 *)new_color) {
+                dirty = 1;
+                Font_EnableTwoCycleTexturing();
+                func_800497E4(old_color[0], old_color[1], old_color[2], old_color[3]);
+            }
+            if (font_id != 0) {
+                result = func_80050518(text[0x27]);
+                switch (result) {
+                case 2:
+                    func_800495BC(*(s16 *)(text + 8), *(s16 *)(text + 0xA), font_id);
+                    break;
+                case 0:
+                    func_800495F8(*(s16 *)(text + 8), *(s16 *)(text + 0xA), 1, font_id);
+                    break;
+                case 1:
+                    func_800495F8(*(s16 *)(text + 8), *(s16 *)(text + 0xA), 2, font_id);
+                    break;
+                }
+            }
+            if (dirty != 0) {
+                Font_DisableTwoCycleTexturing();
+            }
+        }
+        record += 0x14;
+    } while (++slot != (u8 **)&D_8220E4E0);
+    func_800499EC();
+}
+/* mkdraft:func_822037E4 end */
 
 extern void *StageContext_GetCurrentImage(void);
 extern void BgStage_DrawFrame(void);

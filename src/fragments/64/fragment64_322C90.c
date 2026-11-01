@@ -40,7 +40,39 @@ void func_87F00030(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F00138.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F003F8.s")
+/* mkdraft:func_87F003F8 begin */
+extern Gfx *D_800D0510;
+extern s32 D_87F0F5EC[];
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+
+
+void func_87F003F8(s32 arg0, s32 arg1) {
+    u8 *state;
+    s32 handle;
+    u8 *display_list;
+
+    if (arg0 == 5) {
+        state = (u8 *)D_87F11768;
+        if (*(s32 *)(state + 0x10) < 4) {
+            if (*(s32 *)(state + 0x10) == 0) {
+                display_list = *(u8 **)(state + 0x1C);
+            } else {
+                display_list = *(u8 **)(state + 0x18);
+            }
+            handle = func_8004C990(360, D_87F0F5EC[*(s32 *)(state + 0x10)]);
+            gDPPipeSync(D_800D0510++);
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 150, 240, 255);
+            gDPSetEnvColor(D_800D0510++, 30, 0, 25, 255);
+            gDPSetCombine(D_800D0510++, 0x30FFFF, 0x5FFEF238);
+            gSPSegment(D_800D0510++, 15, func_8004CA60((u8 *)handle));
+            gSPDisplayList(D_800D0510++, display_list);
+            func_8003CD84();
+        }
+    }
+}
+/* mkdraft:func_87F003F8 end */
 
 extern s32 func_87F00138();
 extern void func_87F026E8(void *, void *);

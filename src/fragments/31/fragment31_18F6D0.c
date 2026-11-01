@@ -201,7 +201,51 @@ s32 func_8821CAFC(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821CB48.s")
+/* mkdraft:func_8821CB48 begin */
+s32 func_8821CB48(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1)
+{
+  s32 temp_v0;
+  s32 var_v1;
+  s32 var_a0;
+  temp_v0 = arg0->unk18[0xE] & 1;
+  if ((temp_v0 == 0) && (!(arg1->unk18[0xE] & 1)))
+  {
+    var_v1 = func_80073828(((s8 *) arg0) + 0x48, ((s8 *) arg1) + 0x48);
+  }
+  else
+    if ((temp_v0 != 0) && (!(arg1->unk18[0xE] & 1)))
+  {
+    var_v1 = 1;
+  }
+  else
+  {
+    if ((temp_v0 == 0) && (arg1->unk18[0xE] & 1))
+    {
+      var_v1 = -1;
+    }
+    else
+    {
+      var_v1 = 0;
+    }
+    // FAKE: no-op read of arg0 after func_80073828. uopt counts it as two uses
+    // of the arg0 parameter copy, which colors that copy $a2 and the arg1 copy
+    // $a3; without the statement the copies are $a3/$a2 (score 46, 39 of 49
+    // words equal).
+    if (arg0 && arg0)
+    {
+    }
+  }
+  if (var_v1 != 0)
+  {
+    var_a0 = var_v1;
+  }
+  else
+  {
+    var_a0 = LabPCList_CompareByPointer(arg0, arg1);
+  }
+  return var_a0;
+}
+/* mkdraft:func_8821CB48 end */
 
 extern u8 func_800735A0(u8);
 s32 func_8821CC0C(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1) {

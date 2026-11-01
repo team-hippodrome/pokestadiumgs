@@ -20,7 +20,134 @@ typedef struct Fragment22ModelPreview {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14A2E0/func_82700020.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14A2E0/func_827000B8.s")
+/* mkdraft:func_827000B8 begin */
+extern Fragment22ModelPreview *D_827031C4;
+extern void *D_827031C0;
+
+s32 ModelAnim_IsFinished(u8 *);
+s32 Vec3f_SetComponentsDuplicate(s32 *, f32, f32, s32);
+s32 func_8003F2C4(void *, u8 *, s16);
+extern void *D_80087200;
+extern s32 D_82703360;
+extern s16 D_82703382;
+extern s32 D_82703384;
+extern s16 D_827034CC;
+extern s16 D_827034CE;
+extern s16 D_827034D0;
+extern s16 D_827034D2;
+extern s16 D_827034D4;
+extern s16 D_827034D6;
+extern s16 D_827034D8;
+
+#pragma COALESCE_AT_LUI(func_827000B8, D_827034CC, D_827034CE)
+
+
+void func_827000B8(void)
+{
+  s16 *D_827034CC_ptr = &D_827034CC;
+  u8 *sp1C;
+  u8 *temp_a0;
+  s16 counter;
+  s32 var_v1;
+  s16 *D_827034CE_ptr = &D_827034CE;
+  s16 *D_827034D2_ptr = &D_827034D2;
+  s32 *D_82703360_ptr = &D_82703360;
+  temp_a0 = D_827031C4->model;
+  if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0xCC00)
+  {
+    var_v1 = 1;
+  }
+  else
+  {
+    var_v1 = 0;
+  }
+  switch (*D_827034CC_ptr)
+  {
+    case 0:
+      if (var_v1 != 0)
+    {
+      *D_827034CE_ptr = 0;
+    }
+    else
+    {
+      counter = (*D_827034CE_ptr) + 1;
+      *D_827034CE_ptr = counter;
+      // FAKE: dead pointer test (both pointers are non-null) used as a scheduling
+      // barrier. Its `la`/`bne` pair is deleted by as1, but the split keeps the
+      // D_827034CE `lh` ahead of the D_827034D0 `lh`; without it the two loads
+      // swap and the score is 340 (10 with it).
+      if (((!D_827034D2_ptr) && (!D_827034D2_ptr)) && (!D_827034D2_ptr))
+      {
+      }
+      if (counter >= D_827034D0)
+      {
+        D_827034CC = 1, D_827034CE = 0;
+        D_827034D4 = guRandom() & 3;
+        D_827034D6 = (s16) (guRandom() % 640U);
+        D_827034D8 = (s16) (guRandom() % 480U);
+
+        // FAKE: `& 0xFFFF` is a no-op for a 16-bit store and as1 deletes the
+        // `andi 0xFFFF` it emits, but uopt claims one temp-pool slot for the
+        // masked expression, which is what numbers case 1's temps one slot
+        // higher (without the mask: 190). A bare `guRandom()` call here also
+        // gets common-subexpression-eliminated against the identical call in
+        // case 1, which removes this store (both branches bare: 810).
+        D_82703382 = guRandom() & 0xFFFF;
+      }
+    }
+      break;
+
+    case 1:
+      if (var_v1 != 0)
+    {
+      *D_827034CC_ptr = 0;
+
+      *D_827034CE_ptr = 0;
+
+    }
+    else
+    {
+      sp1C = temp_a0;
+
+      if (ModelAnim_IsFinished(temp_a0) != 0)
+      {
+        if ((*D_827034D2_ptr) == 0)
+        {
+          *D_827034D2_ptr = 2;
+        }
+        else
+        {
+          *D_827034D2_ptr = 0;
+          D_827034D4 = guRandom() & 3;
+          D_827034D6 = (s16) (guRandom() % 640U);
+          D_827034D8 = (s16) (guRandom() % 480U);
+          // FAKE: same `& 0xFFFF` temp-pool claim as the case-0 store. Without
+          // it the later temps in this branch and the tail come out one slot
+          // lower than retail (score 440).
+          D_82703382 = guRandom() & 0xFFFF;
+        }
+        func_8003F2C4(D_827031C0, sp1C, -1);
+        func_8003F2C4(D_827031C0, sp1C, *D_827034D2_ptr);
+      }
+
+    }
+      break;
+
+  }
+
+
+  if ((*D_827034CC_ptr) == 0)
+  {
+    *((u8 *) (((u8 *) D_82703360_ptr) + 2)) = (u8) ((*((u8 *) (((u8 *) D_82703360_ptr) + 2))) | 4);
+  }
+  else
+  {
+    *((u8 *) (((u8 *) D_82703360_ptr) + 2)) = (u8) ((*((u8 *) (((u8 *) D_82703360_ptr) + 2))) & 0xFFFB);
+  }
+  Vec3f_SetComponentsDuplicate(&D_82703384, ((f32) D_827034D6) - 320.0f, 240.0f - ((f32) D_827034D8), 0xC410C000);
+
+}
+/* mkdraft:func_827000B8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14A2E0/func_8270030C.s")
 

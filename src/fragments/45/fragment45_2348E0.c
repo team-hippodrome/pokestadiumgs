@@ -53,7 +53,73 @@ void func_8AB0FE08(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB0FE10.s")
+/* mkdraft:func_8AB0FE10 begin */
+extern void func_8AB00B78(s32);
+extern s32 func_8AB1007C(s32);
+extern s32 func_8AB100E0(s32);
+extern s32 func_8AB10144(s32);
+extern s32 func_8AB10248(s32);
+extern s32 func_8AB103B0(s32);
+extern s32 func_8AB104FC(s32);
+extern s32 func_8AB1075C(s32);
+extern s32 func_8AB10AD0(s32);
+extern s32 func_8AB10D28();
+extern s32 func_8AB10D30(s32);
+extern s32 func_8AB10DE4(s32);
+extern s32 func_8AB10F14(s32);
+extern void *D_80087200;
+
+// Runs one update step of stage state arg0 and returns the next state. Each
+// handler is launched with mode 1 and its result becomes the state that the
+// epilogue tests, so the argument is reused as the return value.
+
+
+s32 func_8AB0FE10(s32 arg0) {
+    switch (arg0) {
+    case 61:
+        arg0 = func_8AB1007C(1);
+        break;
+    case 62:
+        arg0 = func_8AB100E0(1);
+        break;
+    case 63:
+        arg0 = func_8AB10144(1);
+        break;
+    case 64:
+        arg0 = func_8AB10248(1);
+        break;
+    case 65:
+        arg0 = func_8AB103B0(1);
+        break;
+    case 66:
+        arg0 = func_8AB104FC(1);
+        break;
+    case 67:
+        arg0 = func_8AB1075C(1);
+        break;
+    case 68:
+        arg0 = func_8AB10AD0(1);
+        break;
+    case 70:
+        arg0 = func_8AB10D30(1);
+        break;
+    case 69:
+        arg0 = func_8AB10D28(1);
+        break;
+    case 71:
+        arg0 = func_8AB10DE4(1);
+        break;
+    case 73:
+        arg0 = func_8AB10F14(1);
+        break;
+    }
+    if ((arg0 == 63) && (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000)) {
+        func_8AB00B78(3);
+        arg0 = func_8AB100E0(0);
+    }
+    return arg0;
+}
+/* mkdraft:func_8AB0FE10 end */
 #endif
 
 #ifdef VERSION_US
@@ -368,7 +434,122 @@ s32 func_8AB104FC(s32 mode) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB1075C.s")
+/* mkdraft:func_8AB1075C begin */
+extern u8 *D_8AB12668[];
+extern u8 *D_8AB1266C;
+extern u8 *D_8AB12670;
+extern u8 *D_8AB12674;
+extern s16 D_8AB1269A;
+extern s16 D_8AB1269C;
+extern u8 D_8AB12CB0[];
+extern u8 D_8AB12F00[];
+extern s32 D_8AB17448;
+extern void TextPanels_UpdateVisibility(void);
+extern void TextRow_SetOrangeState(s16 row_index);
+extern s32 func_80001FF0(void);
+extern void func_8AB01728(void);
+extern void func_8AB03DFC(s16, s16);
+extern void func_8AB04038(void);
+extern void TextHighlight_AnimateScales(void);
+extern void func_8AB00B98(u8 *, u32);
+
+
+s32 func_8AB1075C(s32 arg0) {
+    s32 i;
+    s32 result;
+    s16 handled;
+    s16 parameter;
+
+    result = 67;
+    switch (arg0) {
+    case 0:
+        TextPanels_UpdateVisibility();
+        D_8AB1269C = 20;
+        D_8AB17448 = 0;
+        break;
+    case 1:
+        // 0 while no choice row was taken this frame, 1 once a row was taken or the
+        // countdown below ran out. A set value suppresses the two countdown beeps and
+        // selects the transition to func_8AB10AD0.
+        handled = 0;
+        func_8AB01728();
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 8) {
+            if (D_8AB1269A == 0) {
+                TextRow_SetOrangeState(0);
+            } else {
+                func_8AB03DFC(0, 0);
+            }
+            handled = 1;
+            func_8AB00B98(D_8AB12668[0], 0xFFFF00FF);
+        } else {
+            if (*(u16 *)((u8 *)D_80087200 + 8) & 1) {
+                if (D_8AB1269A == 1) {
+                    TextRow_SetOrangeState(0);
+                } else {
+                    func_8AB03DFC(0, 1);
+                }
+                handled = 1;
+                func_8AB00B98(D_8AB1266C, 0xFFFF00FF);
+            } else if (*(u16 *)((u8 *)D_80087200 + 8) & 4) {
+                if (D_8AB1269A == 2) {
+                    TextRow_SetOrangeState(0);
+                } else {
+                    func_8AB03DFC(0, 2);
+                }
+                handled = 1;
+                func_8AB00B98(D_8AB12670, 0xFFFF00FF);
+            } else if (*(u16 *)((u8 *)D_80087200 + 8) & 2) {
+                if (D_8AB1269A == 3) {
+                    TextRow_SetOrangeState(0);
+                } else {
+                    func_8AB03DFC(0, 3);
+                }
+                handled = 1;
+                func_8AB00B98(D_8AB12674, 0xFFFF00FF);
+            }
+        }
+        TextHighlight_AnimateScales();
+        func_8AB04038();
+        // D_8AB17448 counts frames and func_80001FF0 returns the refresh rate (60 or
+        // 50), so this ticks the countdown four times a second. func_8AB09BD8 runs the
+        // same countdown.
+        //@src/fragments/45/fragment45_22AB80.c
+        if ((D_8AB17448 % (func_80001FF0() / 4)) == 0) {
+            D_8AB1269C -= 1;
+            if (D_8AB1269C < 0) {
+                D_8AB1269C = 0;
+                // Each choice row is a 0x94-byte record; a row whose s16 at +4 is 0
+                // gets 2 instead. D_8AB12F00 ends the four-row array.
+                i = 0;
+                do {
+                    if (*(s16 *)(D_8AB12CB0 + i * 148 + 4) == 0) {
+                        *(s16 *)(D_8AB12CB0 + i * 148 + 4) = 2;
+                    }
+                    i++;
+                } while (D_8AB12F00 != D_8AB12CB0 + i * 148);
+                if (handled == 0) {
+                    func_8AB00BA4(0x65, 0, 0);
+                }
+                handled = 1;
+            }
+        }
+        if ((D_8AB17448 % ((func_80001FF0() / 4) * 2)) == 0) {
+            parameter = D_8AB1269C / 2 + 1;
+            if (handled == 0) {
+                func_8AB00BA4(0x65, parameter, 0);
+            }
+        }
+        if (handled == 1) {
+            result = func_8AB10AD0(0);
+        }
+        D_8AB17448 += 1;
+        break;
+    case 2:
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB1075C end */
 #endif
 
 #ifdef VERSION_US

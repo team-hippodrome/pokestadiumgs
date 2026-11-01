@@ -420,7 +420,97 @@ void func_81600AF0(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D7BC0/func_81600B30.s")
+/* mkdraft:func_81600B30 begin */
+void func_81600B30(B1648Root *arg0) {
+    B1648Node *node;
+    B1648Node *cand;
+    B1648Node *cur;
+    B1648Node *next;
+    s32 temp;
+    s32 area;
+    s32 found;
+
+    node = arg0->holder->head;
+    while (node != NULL) {
+        temp = func_816007F8(arg0, node->key);
+        if (temp != 0) {
+            if (func_816005E8(node, (void *)temp) != 0) {
+                if (*(s32 *)((u8 *)temp + 0x18) == 0) {
+                    *(s16 *)((u8 *)temp + 0xC) = *(s16 *)((u8 *)node + 0xC);
+                } else {
+                    *(s16 *)((u8 *)temp + 0xC) = 0;
+                }
+                node = node->next;
+                continue;
+            }
+            *(s32 *)((u8 *)temp + 0x18) = 1;
+        }
+        cand = NULL;
+        cur = (B1648Node *)func_816007BC(arg0);
+        while (cur != NULL) {
+            if (Rect_Contains((u8 *)cur, node) != 0) {
+                if ((cand != NULL) && (*(s32 *)((u8 *)cur + 0x18) == 0)) {
+                    area = func_8160072C((s16 *)cur);
+                    if (func_8160072C((s16 *)cand) < area) {
+                        goto cur_next;
+                    }
+                }
+                cand = cur;
+            } else if ((cand == NULL) && (func_81600520(cur, *(s32 *)((u8 *)arg0 + 0xC)) != 0)) {
+                cand = cur;
+            }
+        cur_next:
+            cur = *(B1648Node **)((u8 *)cur + 0x14);
+        }
+        if (cand != NULL) {
+            *(s32 *)((u8 *)cand + 0x18) = 1;
+        }
+        node = node->next;
+    }
+
+    node = (B1648Node *)func_816007BC(arg0);
+    while (node != NULL) {
+        if (*(s32 *)((u8 *)node + 0x18) == 0) {
+            if (*(s16 *)((u8 *)node + 0xC) < 2) {
+                *(s16 *)((u8 *)node + 0xC) = *(s16 *)((u8 *)node + 0xC) + 1;
+            } else {
+                if (func_81600848(arg0, node->key) != NULL) {
+                    found = 0;
+                    for (cur = (B1648Node *)func_816007BC(arg0); (cur != NULL) && (cur != node);
+                         cur = *(B1648Node **)((u8 *)cur + 0x14)) {
+                        if ((*(s32 *)((u8 *)cur + 0x18) != 0) && (func_816004C0((u8 *)node, (u8 *)cur) == 0)) {
+                            found = 1;
+                            break;
+                        }
+                    }
+                    if (found == 0) {
+                        node = *(B1648Node **)((u8 *)node + 0x14);
+                        continue;
+                    }
+                }
+            }
+        } else {
+            *(s16 *)((u8 *)node + 0xC) = 0;
+        }
+        func_81600648((u8 *)node);
+        node = *(B1648Node **)((u8 *)node + 0x14);
+    }
+
+    *(B1648Node **)((u8 *)arg0->holder + 0) = (B1648Node *)func_816007BC(arg0);
+    node = arg0->holder->head;
+    while (node != NULL) {
+        next = node->next;
+        func_816008EC(arg0, (u8 *)node);
+        node = next;
+    }
+    arg0->holder->head = *(B1648Node **)((u8 *)arg0->holder + 4);
+    node = *(B1648Node **)((u8 *)arg0->holder + 4);
+    while (node != NULL) {
+        func_816006BC((u8 *)node);
+        node = node->next;
+    }
+}
+/* mkdraft:func_81600B30 end */
 
 extern void * func_81600744(void *arg0, s32 arg1);
 s32 func_81600DA8(void *arg0, void *arg1) {

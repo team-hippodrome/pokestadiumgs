@@ -160,5 +160,35 @@ void func_882300E4(void) {
     func_8821D930(D_88234980 + 4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A1BD0/func_8823010C.s")
+/* mkdraft:func_8823010C begin */
+extern u8 D_88006020[];
+extern u8 D_8800ED50[];
+extern u32 D_88234980;
+extern void *func_8004C874(s32, s32);
+extern u8 *func_88002AA8(u8 *, s32, u8 **, u16, s32, s16, s16, s16, s16, s16, s16, s32, s16, void *);
+extern s32 func_88004804(void *, s32, s16, s16, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
+
+
+
+void func_8823010C(s32 arg0) {
+    s32 var_s0;
+    u32 var_s1;
+    void *temp_v0;
+
+    D_88234980 = Util_Malloc(0x60);
+    for (var_s0 = 0; var_s0 != 2; var_s0++) {
+        temp_v0 = func_8004C874(0x22, var_s0 + 0x13);
+        M2C_FIELD(D_88234980 + var_s0 * 4, void **, 0x54) = temp_v0;
+    }
+    func_88002AA8(D_88234980 + 0x20, 0, D_88234980 + 0x54, 2U, 8, 1, 6, 0, 0, 0, 0, 0, 0, D_88006020);
+    M2C_FIELD(D_88234980, s32 *, 0xC) = arg0;
+    M2C_FIELD(D_88234980, s32 *, 8) = 0;
+    M2C_FIELD(D_88234980, s32 *, 0x10) = 4;
+    M2C_FIELD(D_88234980, s16 *, 0x14) = 1;
+    M2C_FIELD(D_88234980, s16 *, 0x16) = 4;
+    M2C_FIELD(D_88234980, void **, 0) = (void *) ((func_88004804(D_88234980 + 4, 2, 0x140, 0xF0, 4, 1, 0xDC, 0xDC, 0xB4, (s32 *) func_88230048, (s32 *) func_882300E4, (s32 *) func_8822FF80, (s32 *) func_8822FFA8, 0, 0) * 0x4C) + D_8800ED50);
+    D_880068B4 = 0;
+    D_88234724 = 1;
+}
+/* mkdraft:func_8823010C end */
 #endif

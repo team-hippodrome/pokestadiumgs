@@ -261,7 +261,96 @@ s32 func_8850089C(void) {
     return temp_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_885009D0.s")
+/* mkdraft:func_885009D0 begin */
+extern s32 D_80128C64;
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+extern s32 D_8800ECC0;
+extern s32 D_8800ECC4;
+extern s32 D_8800ECC8;
+extern s32 D_8800ECCC;
+extern s32 D_8800ECD0;
+extern s32 D_8800ECE0;
+extern s32 D_8800ECE4;
+extern s32 D_8800ECE8;
+extern s32 D_8800ECEC;
+extern s32 D_8800ECF4;
+extern s32 D_8800ECF8;
+extern s32 D_8800ED08;
+extern s32 D_8850D670;
+extern s32 D_8850D674;
+extern u8 D_8850D6C8;
+extern s8 D_8850D6C9;
+extern s32 D_88523018;
+
+s32 func_80041C98(s32);          /* extern */
+s32 func_800476A0(s32 *, s32);   /* extern */
+s32 func_800476FC(s32 *, s32);   /* extern */
+s32 func_8004C4B0(s32);          /* extern */
+s32 func_8004C8C0(s32);          /* extern */
+s32 func_8004C990(s32, s32);     /* extern */
+s32 func_88004014(void);         /* extern */
+s32 func_88504A54(void);         /* extern */
+s32 func_8850C948(void);         /* extern */
+
+// One-time setup for fragment 34: registers its sound effects and the voices
+// behind them, initializes the display list buffers and the two renderer
+// roots, clears the frame counter and scene state, and then starts the
+// fragment's own script in func_8850C948/func_88504A54. Returns
+// func_88004014's status.
+
+
+s32 func_885009D0(void) {
+    func_8004C8C0(0xEF);
+    func_8004C8C0(0x1B);
+    func_8004C8C0(0x79);
+    func_8004C8C0(0x38);
+    func_8004C8C0(0x10);
+    D_8800ECC0 = func_8004C990(0x10, 1);
+    D_8800ECC8 = func_8004C990(0x10, 0);
+    func_8004C8C0(0x11);
+    D_8800ECC4 = func_8004C990(0x11, 0);
+    func_8004C8C0(0x32);
+    D_8800ECCC = func_8004C990(0x32, 0);
+    D_8800ECD0 = func_8004C990(0x32, 1);
+    func_8004C8C0(0x33);
+    D_8800ECE0 = func_8004C990(0x33, 6);
+    D_8800ECE4 = func_8004C990(0x33, 3);
+    D_8800ECE8 = func_8004C990(0x33, 4);
+    D_8800ECEC = func_8004C990(0x33, 5);
+    func_8004C8C0(0xBF);
+    D_8800ECF4 = func_8004C990(0xBF, 5);
+    D_8800ECF8 = func_8004C990(0xBF, 4);
+    func_800476A0(&D_8800ED08, 1);
+    func_800476FC(&D_8800ED08, 1);
+    func_8004C8C0(0x147);
+    func_8004C8C0(0x148);
+    func_8004C8C0(0x146);
+    func_8004C8C0(0x14A);
+    func_8004C8C0(0x149);
+    func_8004C8C0(0x145);
+    func_8004C8C0(0x144);
+    func_8004C8C0(0x39);
+    func_8004C8C0(0x104);
+    func_8004C4B0(0x34);
+    func_8004C4B0(0x27);
+    func_8004C4B0(0xD);
+    func_8004C4B0(6);
+    func_8004C4B0(0xC);
+    func_8004C4B0(8);
+    ModelRenderer_InitDisplayRoots();
+    D_80128C64 = func_80041C98(1);
+    D_880068B4 = D_880068B8 = 1;
+    D_8850D670 = 0;
+    D_8850D674 = 0;
+    D_8850D6C8 = 0;
+    D_8850D6C9 = -1;
+    func_8850C948();
+    func_88504A54();
+    D_88523018 = 0;
+    return func_88004014();
+}
+/* mkdraft:func_885009D0 end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32

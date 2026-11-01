@@ -94,7 +94,50 @@ s32 func_87F0E790(void *arg0, void *arg1, u8 arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0E84C.s")
+/* mkdraft:func_87F0E84C begin */
+extern s32 Deck_ReadEntries(u8 *buffer, s32 remaining, u8 *handle);
+extern s32 GbSave_GetRecordCapacity(s32 selector);
+extern s32 func_8005CB38(s32 arg0, s32 arg1);
+
+
+s32 func_87F0E84C(void *arg0, void *arg1, u8 arg2) {
+    s32 i;
+    s32 block;
+    s32 count;
+    s32 cap;
+    s32 res;
+    s32 read;
+    u8 *handle;
+
+    res = 0;
+    count = func_8005CB38((s32) arg0, 0x21);
+    for (i = 0; i < count; i++) {
+        if (res == 0) {
+            cap = GbSave_GetRecordCapacity(0x21);
+            block = main_pool_alloc(cap * 0x58, 0);
+            handle = func_8006218C(0x21, (s32) arg0, i, 0);
+            if (handle != 0) {
+                read = Deck_ReadEntries((u8 *) block, cap, handle);
+                if (func_87F0E6B8((u8 *) arg1, (s8) i, (u8 *) block, read, arg2) != 0) {
+                    // FAKE: the do/while gives the assignment its own basic block, which
+                    // makes IDO 7.1 colour the callee-saved registers as retail does
+                    // (i=$s0, cap=$s1, block=$s2, handle=$s3, res=$s4, count=$s5,
+                    // 0x58=$s6, arg0=$s7, arg1=$fp) and spill the u8 arg2 to 0x53($sp),
+                    // reloaded after Deck_ReadEntries. Written as a plain `res = 1;`
+                    // the identical instruction sequence gets a different assignment
+                    // (diff score 154).
+                    do {
+                        res = 1;
+                    } while (0);
+                }
+                func_80062304(handle);
+            }
+            main_pool_try_free(block);
+        }
+    }
+    return res;
+}
+/* mkdraft:func_87F0E84C end */
 
 extern u8 D_87F113D0[];
 extern s32 func_800625E0(s32, s32);

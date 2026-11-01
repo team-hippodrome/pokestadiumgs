@@ -31,11 +31,118 @@ extern struct Fragment53Model D_8650E120[];
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500D5C.s")
+/* mkdraft:func_86500D5C begin */
+extern Gfx *D_800D0510;
+extern Gfx D_8650CEA8[];
+extern Vtx D_8650BFC0;
+extern Vtx D_8650BFD0;
+extern Vtx D_8650BFE0;
+extern Vtx D_8650BFF0;
+extern u8 D_8650DB80[];
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern void func_8003CD84(void);
+
+
+
+void func_86500D5C(s32 arg0, void *arg1) {
+    typedef struct {
+        u8 pad[0x28];
+        f32 height;
+        u8 rest[0x13C];
+    } ModelA;
+    // FAKE: decomp slop. Every use of zero_index is a constant zero index, so IDO folds
+    // all three away and emits no instructions for the declaration, the assignment or the
+    // subscripts. The bindings nevertheless claim $3 (v1) while the D_8650DB80 address is
+    // live; that is what moves the base into $4 (a0) and the 0x168 stride constant into
+    // $6 (a2) in block B. Without the three uses the score is 50 (9 diff rows, all
+    // register-color changes: li/lui/addiu/multu/addu of the first subscript and the
+    // multu/addu pair of each later subscript reuse).
+    unsigned short zero_index;
+    Vtx *vtx;
+
+    if (arg0 == 5) {
+        vtx = (Vtx *)Gfx_AllocDisplayList(0x40);
+        if (((ModelA *)D_8650DB80)[*(s32 *)((u8 *)arg1 + 0x14)].height > 200.0f) {
+            vtx[0] = D_8650BFC0;
+            vtx[1] = D_8650BFD0;
+            vtx[2] = D_8650BFE0;
+            vtx[3] = D_8650BFF0;
+            zero_index = 0;
+            vtx[zero_index].v.ob[zero_index] = (s16)(vtx[zero_index].v.ob[zero_index] - ((ModelA *)D_8650DB80)[*(s32 *)((u8 *)arg1 + 0x14)].height);
+            vtx[3].v.ob[zero_index] = (s16)(vtx[3].v.ob[zero_index] - ((ModelA *)D_8650DB80)[*(s32 *)((u8 *)arg1 + 0x14)].height);
+        }
+        gSPDisplayList(D_800D0510++, D_8650CEA8);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_86500D5C end */
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500EF8.s")
+/* mkdraft:func_86500EF8 begin */
+extern Gfx *D_800D0510;
+extern s32 D_8650CFB0[];
+extern s32 D_8650CFC0;
+extern u8 D_865116F0[];
+extern Gfx D_8650CF18[];
+extern Gfx D_8650CF98[];
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+
+
+void func_86500EF8(s32 arg0, u8 *arg1)
+{
+    s32 texture_index;
+    s32 frame;
+    s32 texture;
+    // FAKE: without this pointer (reading and writing D_8650CFC0 directly) the
+    // store's address setup moves and the diff score is 893.
+    s32 *frame_counter;
+    Gfx *pkt;
+
+    texture_index = *(s32 *)(arg1 + 0x14);
+    if (arg0 == 5) {
+        gDPPipeSync(D_800D0510++);
+        if (*(s32 *)(arg1 + 0x14) == 4) {
+            // D_8650CFC0 counts 0..23; D_8650CFB0 holds one texture per six frames.
+            frame_counter = &D_8650CFC0;
+            frame = *frame_counter + 1;
+            if (frame >= 24) {
+                frame = 0;
+            }
+            // FAKE: one comma expression keeps the counter store ahead of the
+            // D_8650CFB0 load; splitting it into two statements scores 120.
+            texture = D_8650CFB0[frame / 6], *frame_counter = frame;
+        } else {
+            texture = D_8650CFB0[*(s32 *)(D_865116F0 + texture_index * 0x98) / 6];
+        }
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        pkt = D_800D0510++;
+        gSPSegment(pkt, 15, func_8004CA60((u8 *)func_8004C990(0x18D, texture)));
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, 0x0F000000);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 0, 0, G_TX_LOADTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 679, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 10, 0, G_TX_RENDERTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 156, 64);
+        gSPVertex(D_800D0510++, D_8650CF18, 8, 0);
+        gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, 0x0F000A00);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 0, 0, G_TX_LOADTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 679, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 10, 0, G_TX_RENDERTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 156, 64);
+        gSP2Triangles(D_800D0510++, 4, 5, 6, 0, 4, 6, 7, 0);
+        gSPDisplayList(D_800D0510++, D_8650CF98);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_86500EF8 end */
 #endif
 
 #ifdef VERSION_US
@@ -557,7 +664,162 @@ s32 func_86505934(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_865064B0.s")
+/* mkdraft:func_865064B0 begin */
+extern void Font_DisableTwoCycleTexturing(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0,s32 a1,s32 a2,s32 a3);
+extern void func_800497E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_87F09040(void);
+extern s32 D_8650C470;
+extern s32 D_8650C4BC;
+extern s32 D_8650C4C0;
+extern s32 D_8650C4F0;
+extern f32 D_8650C4F4;
+extern f32 D_8650C4F8;
+extern f32 D_8650C4FC;
+extern s32 D_8650C500;
+extern s32 D_8650C504;
+extern s32 D_8650C5FC;
+extern s32 D_8650D2E8;
+extern s8 D_8650D490;
+extern s8 D_8650D49C;
+extern s8 D_8650D4A8;
+extern s8 D_8650D4B4;
+extern s8 D_8650D4B8;
+extern s8 D_8650D4C8;
+extern s8 D_8650D4CC;
+extern s8 D_8650D4DC;
+extern s8 D_8650D4E4;
+extern s8 D_8650D4F4;
+extern s8 D_8650D4F8;
+extern s8 D_8650D508;
+extern s8 D_8650D50C;
+extern s8 D_8650D520;
+extern s8 D_8650D528;
+extern s8 D_8650D530;
+extern s8 D_8650D540;
+extern s8 D_8650D554;
+extern s8 D_8650D55C;
+extern s8 D_8650D56C;
+extern s8 D_8650D578;
+extern s8 D_8650D588;
+extern s8 D_8650D594;
+extern s8 D_8650D5A0;
+extern s8 D_8650D5B0;
+extern s8 D_8650D5BC;
+extern s8 D_8650D5C8;
+extern s8 D_8650D5DC;
+extern s8 D_8650D5E8;
+extern s8 D_8650D5F8;
+extern s8 D_8650D60C;
+extern s8 D_8650D618;
+extern s8 D_8650D624;
+extern s8 D_8650D634;
+
+
+
+void func_865064B0(void) {
+    func_87F09040();
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    D_8650D2E8++;
+    if (D_8650D2E8 >= 0x15) {
+        D_8650D2E8 = 0;
+    }
+    func_800495F8(0x78, 0x32, 0, &D_8650D490);
+    func_800495F8(0x78, 0x3C, 0, &D_8650D49C, D_8650D9D4);
+    func_800495F8(0x78, 0x46, 0, &D_8650D4A8);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 1)) {
+        func_800495F8(0xE6, 0x46, 0, &D_8650D4B4, D_8650C4AC);
+    }
+    func_800495F8(0x78, 0x50, 0, &D_8650D4B8);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 2)) {
+        func_800495F8(0xE6, 0x50, 0, &D_8650D4C8, D_8650C4CC);
+    }
+    func_800495F8(0x78, 0x5A, 0, &D_8650D4CC);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 3)) {
+        func_800495F8(0xE6, 0x5A, 0, &D_8650D4DC, (f64) D_8650C4B8);
+    }
+    func_800495F8(0x78, 0x64, 0, &D_8650D4E4);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 4)) {
+        func_800495F8(0xE6, 0x64, 0, &D_8650D4F4, D_8650C4BC);
+    }
+    func_800495F8(0x78, 0x6E, 0, &D_8650D4F8);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 5)) {
+        func_800495F8(0xE6, 0x6E, 0, &D_8650D508, D_8650C4B0);
+    }
+    func_800495F8(0x78, 0x78, 0, &D_8650D50C);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 6)) {
+        switch (D_8650C4C0) {                       /* switch 1; irregular */
+        case 0:                                     /* switch 1 */
+            func_800495F8(0xE6, 0x78, 0, &D_8650D520);
+            break;
+        case 1:                                     /* switch 1 */
+            func_800495F8(0xE6, 0x78, 0, &D_8650D528);
+            break;
+        case 2:                                     /* switch 1 */
+            func_800495F8(0xE6, 0x78, 0, &D_8650D530);
+            break;
+        }
+    }
+    func_800495F8(0x78, 0x82, 0, &D_8650D540);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 7)) {
+        func_800495F8(0xE6, 0x82, 0, &D_8650D554, (f64) D_8650C4F4);
+    }
+    func_800495F8(0x78, 0x8C, 0, &D_8650D55C);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 8)) {
+        switch (D_8650C470) {                       /* switch 2; irregular */
+        case 0:                                     /* switch 2 */
+            func_800495F8(0xE6, 0x8C, 0, &D_8650D56C);
+            break;
+        case 1:                                     /* switch 2 */
+            func_800495F8(0xE6, 0x8C, 0, &D_8650D578);
+            break;
+        case 2:                                     /* switch 2 */
+            func_800495F8(0xE6, 0x8C, 0, &D_8650D588);
+            break;
+        case 3:                                     /* switch 2 */
+            func_800495F8(0xE6, 0x8C, 0, &D_8650D594);
+            break;
+        }
+    }
+    func_800495F8(0x78, 0x96, 0, &D_8650D5A0);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 9)) {
+        if (D_8650C4F0 == 1) {
+            func_800495F8(0xE6, 0x96, 0, &D_8650D5B0);
+        } else {
+            func_800495F8(0xE6, 0x96, 0, &D_8650D5BC);
+        }
+    }
+    func_800495F8(0x78, 0xA0, 0, &D_8650D5C8);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 0xA)) {
+        if (D_8650C500 == 0) {
+            func_800495F8(0xE6, 0xA0, 0, &D_8650D5DC, (f64) D_8650C4F8);
+        } else {
+            func_800495F8(0xE6, 0xA0, 0, &D_8650D5E8, (f64) D_8650C4FC);
+        }
+    }
+    func_800495F8(0x78, 0xAA, 0, &D_8650D5F8);
+    if ((D_8650D2E8 >= 0xA) || (D_8650C5FC != 0xB)) {
+        if (D_8650C504 == 0) {
+            func_800495F8(0xE6, 0xAA, 0, &D_8650D60C);
+        } else {
+            func_800495F8(0xE6, 0xAA, 0, &D_8650D618);
+        }
+    }
+    func_800495F8(0x78, 0xB4, 0, &D_8650D624);
+    func_800495F8(0xE6, 0xB4, 0, &D_8650D634, D_8650C4D4);
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+/* mkdraft:func_865064B0 end */
 #endif
 
 #ifdef VERSION_US

@@ -97,7 +97,69 @@ void func_8AF07A90(void) {
     D_8AF26564 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5BD0/func_8AF07AAC.s")
+/* mkdraft:func_8AF07AAC begin */
+extern void *D_8AF26560;
+extern s32 D_8AF2656C;
+extern s32 D_8AF26564;
+extern s32 D_8AF26568;
+extern s32 D_8AF26570;
+extern s32 D_8AF2BDCC;
+extern s32 D_8AF2BE84;
+extern u8 *D_8AF2BDD8;
+extern u16 D_8AF2C680;
+extern void func_8AF05C10(void *);
+extern s32 func_8AF05E94(void *);
+extern void func_8AF05EE0(void *);
+extern void func_8004C8C0(s32);
+extern s32 func_8004C990(s32, s32);
+
+// Copies the pending table selection into D_8AF26570 and reinitializes the
+// 0xAB resource, then commits the selection to the current object. When
+// D_8AF26564 is set, the selection lives in that object's 0x28 entry and is
+// committed only if func_8AF05E94 returns a value other than -1 and other than
+// the entry's 0x4B4 field.
+
+
+
+void func_8AF07AAC(s32 arg0)
+{
+  u8 *object;
+  s16 pad; // FAKE: unused; home slot 0x18(sp) for entry instead of 0x1c(sp); diff score 8 without it.
+  u8 *entry;
+  u8 *other;
+  s32 temp_v0;
+  D_8AF26570 = D_8AF26568;
+  D_8AF2BE84 = arg0;
+  func_8AF05C10(D_8AF26560);
+  *((s32 *) D_8AF26560) = 4;
+  func_8004C8C0(0xAB);
+  D_8AF2BDCC = func_8004C990(0xAB, 2);
+  if (D_8AF26564 != 0)
+  {
+    object = D_8AF26560;
+    entry = object + 0x28;
+    *((s32 *) (object + 0x4E0)) = D_8AF26568;
+    *((s32 *) (object + 0x4E8)) = D_8AF2656C;
+    temp_v0 = func_8AF05E94(entry);
+    if ((temp_v0 != (-1)) && (temp_v0 != (*((s32 *) (entry + 0x4B4)))))
+    {
+      func_8AF05EE0(object);
+    }
+  }
+  else
+    if (D_8AF26568 != 0)
+  {
+    other = D_8AF26560;
+    *((s32 *) (other + 0x4E0)) = D_8AF26568;
+    *((s32 *) (other + 0x4E8)) = D_8AF2656C;
+    // The 0x514 store reads 0x510 back; uopt forwards the first store's value,
+    // so one lh of the 0x18 field feeds both sw instructions.
+    *((s32 *) (other + 0x510)) = *((s16 *) (((u8 *) (*((void **) (D_8AF2BDD8 + 8)))) + 0x18));
+    *((s32 *) (other + 0x514)) = *((s32 *) (other + 0x510));
+  }
+  D_8AF2C680 = 0;
+}
+/* mkdraft:func_8AF07AAC end */
 
 extern void *D_8AF26560;
 extern s32 D_8AF2BA68;

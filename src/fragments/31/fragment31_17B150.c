@@ -82,7 +82,69 @@ void func_88208FF0(void) {
     func_882322B8();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820908C.s")
+/* mkdraft:func_8820908C begin */
+extern u8 *func_88201ED0(u8, u8);
+extern s32 func_88207F18(s32, s32);
+extern void func_800226C0(s32);
+extern void func_88001900(void);
+extern void func_88001C24(u8 *, u8, s32);
+extern void func_88001D0C(u8 *);
+extern void func_88201608(s32);
+extern void func_882017F8(s32, u8 *, s8);
+extern void func_88220AD0(s32, s32);
+extern s32 D_88234660;
+extern s32 D_882346F0;
+
+// Per-round update of the two-slot state in D_88234700; the s16 at +8 selects the
+// branch. Case 2 runs the state-2-only setup (actor from func_88207F18 for the
+// other slot, per-slot word clear, index flip) and falls into the shared record
+// refresh; case 5 reaches the same refresh after refreshing the actor only; case 4
+// just flips the active slot.
+
+
+void func_8820908C(void) {
+    u8 *pair;
+    s32 obj; // func_88207F18 result; func_882017F8 dereferences it as a pointer
+
+    if (*(s16 *)((u8 *)D_88234700 + 8) == 5) {
+        func_800226C0(0x136);
+    } else {
+        func_800226C0(0x5E);
+    }
+    func_88001900();
+    D_882346F0 = 0;
+    // Read a second time instead of caching the first load in a local: no store to
+    // D_88234700 lies between the two reads of +8, so both see the same value.
+    switch (*(s16 *)((u8 *)D_88234700 + 8)) {
+        case 2:
+        case 5:
+            if (*(s16 *)((u8 *)D_88234700 + 8) == 2) {
+                obj = func_88207F18(1, (1 - D_88234700->index) & 0xFF);
+                pair = (u8 *)D_88234700 + D_88234700->index * 2;
+                func_882017F8(obj, func_88201ED0(pair[0xA], pair[0xB]),
+                              *(s8 *)((u8 *)D_88234700 + D_88234700->index * 0x2C + 0x19));
+                // Per-index word at +0x6C, also read by func_8820B09C.
+                *(s32 *)((u8 *)D_88234700 + D_88234700->index * 4 + 0x6C) = 0;
+                D_88234700->index ^= 1;
+            } else {
+                func_88201608(func_88207F18(1, D_88234700->index));
+            }
+            pair = (u8 *)D_88234700 + D_88234700->index * 2;
+            func_88001C24((u8 *)D_88234700 + D_88234700->index * 0x2C + 0x10,
+                          func_88201ED0(pair[0xA], pair[0xB])[0x15], 6);
+            func_88001D0C((u8 *)D_88234700 + D_88234700->index * 0x2C + 0x10);
+            break;
+
+        case 4:
+            D_88234700->index ^= 1;
+            break;
+    }
+    if (D_88234660 != 0) {
+        *((u8 *)D_88234700 + 0x68) = 2;
+        func_88220AD0(0x140, 0xF0);
+    }
+}
+/* mkdraft:func_8820908C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88209278.s")
 

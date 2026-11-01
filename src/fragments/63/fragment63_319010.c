@@ -446,7 +446,45 @@ void func_87E17D40(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E17DAC.s")
+/* mkdraft:func_87E17DAC begin */
+extern void *D_87E1EC88;
+extern void func_87F02684(u8 *);
+extern void func_87E17928(u8 *);
+extern void func_87E15AD0(u8 *);
+
+// Re-initialises the record published through D_87E1EC88: the first four bytes
+// become (-1, 1, arg1, 0), the pointer is advanced 0x30 bytes to the field block
+// whose bit 0 at +0x25 and floats at +0x10..+0x5C (80/400/-20 and 1.2 x3,
+// 1000/0/-1000) are set, then bit 0 of the record's 0x1BD byte is set and
+// func_87E15AD0 is handed arg0 + 0x348.
+
+
+void func_87E17DAC(u8 *arg0, s32 arg1) {
+    u8 *p;
+
+    D_87E1EC88 = arg0;
+    func_87F02684(arg0 + 0x1C);
+    func_87E17928(arg0);
+    *(s8 *)((u8 *)D_87E1EC88 + 0) = -1;
+    *(s32 *)((u8 *)D_87E1EC88 + 4) = 0;
+    *(s8 *)((u8 *)D_87E1EC88 + 2) = (s8) arg1;
+    *(s8 *)((u8 *)D_87E1EC88 + 1) = 1;
+    p = D_87E1EC88;
+    p += 0x30;
+    p[0x25] |= 1;
+    *(f32 *)(p + 0x54) = 1.2f;
+    *(f32 *)(p + 0x58) = 1.2f;
+    *(f32 *)(p + 0x5C) = 1.2f;
+    *(f32 *)(p + 0x48) = -1000.0f;
+    *(f32 *)(p + 0x4C) = 0.0f;
+    *(f32 *)(p + 0x50) = 1000.0f;
+    *(f32 *)(p + 0x10) = 80.0f;
+    *(f32 *)(p + 0x14) = 400.0f;
+    *(f32 *)(p + 0x18) = -20.0f;
+    *(u8 *)((u8 *)D_87E1EC88 + 0x1BD) |= 1;
+    func_87E15AD0(arg0 + 0x348);
+}
+/* mkdraft:func_87E17DAC end */
 
 s32 func_87E17EA8(u8 *arg0) {
     return *(s8 *)(arg0 + 1) == 5;

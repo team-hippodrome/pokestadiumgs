@@ -47,7 +47,55 @@ void func_87E07CB0(void) {
     func_87E07C20(1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E07CD0.s")
+/* mkdraft:func_87E07CD0 begin */
+extern s32 func_8003514C();
+extern void func_800279C4(s32);
+extern void func_87E07C90();
+extern void func_87E07CB0();
+extern void *D_80087200;
+extern u16 D_87E1A180[];
+extern u16 D_87E1A1BC[];
+extern s32 D_87E1A1F8;
+extern s32 D_87E1A1FC;
+
+
+
+void func_87E07CD0(void) {
+    u32 value;
+    u32 var_v1;
+    s32 *p;
+    s32 *q;
+    p = &D_87E1A1F8;
+    q = &D_87E1A1FC;
+    if (func_8003514C() != 0) {
+        value = *(u16 *)((u8 *)D_80087200 + 8);
+        if (value != 0) {
+            var_v1 = value;
+            if (value == D_87E1A180[*p]) {
+                ++*p;
+                if (*p == 0x1E) {
+                    func_800279C4(0xCF0C);
+                    func_87E07CB0();
+                    var_v1 = *(u16 *)((u8 *)D_80087200 + 8);
+                    *p = 0;
+                }
+            } else {
+                *p = 0;
+            }
+            if (var_v1 == D_87E1A1BC[*q]) {
+                ++*q;
+                if (*q == 0x1E) {
+                    func_800279C4(0xCF0C);
+                    func_87E07C90();
+                    *q = 0;
+                }
+            } else {
+                *q = 0;
+            }
+        }
+    }
+}
+/* mkdraft:func_87E07CD0 end */
 
 /* mkdraft:func_87E07DD0 begin */
 #pragma REWRITE_FUNCTION_WORD(func_87E07DD0, 0x10, 0x84AE21A6, 0x84AF21A6)
@@ -130,7 +178,36 @@ void func_87E07F18(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E07F4C.s")
+/* mkdraft:func_87E07F4C begin */
+s32 func_87E07F4C(void *arg0) {
+    s32 next;
+    s32 value;
+    u8 *node;
+
+    next = *(s32 *)((u8 *)arg0 + 0x21A8);
+    value = *(s32 *)((u8 *)arg0 + 0x2190);
+    node = arg0;
+    // FAKE: diff score 120 without this store. uopt copy-propagates `node = arg0`
+    // away, folding the 0x21C0/0x21D8 loads back onto a0. Clearing arg0 after the copy
+    // makes a0 dead at that point so the copy survives in a1, matching the target's
+    // `or a1,a0,zero` at 0x30B8C4 and its two a1-based loads. The cleared value is
+    // never read. Living source shape for this residual is still unknown; see
+    // matching_notes/IDO_TRICKS.md, "uopt copy propagation and live-range identity".
+    arg0 = 0;
+    if (value < next) {
+        value = next;
+    }
+    next = *(s32 *)((u8 *)node + 0x21C0);
+    if (value < next) {
+        value = next;
+    }
+    next = *(s32 *)((u8 *)node + 0x21D8);
+    if (value < next) {
+        value = next;
+    }
+    return value;
+}
+/* mkdraft:func_87E07F4C end */
 
 s32 func_87E07F4C(void *);
 typedef struct { s32 id; u8 pad[0x12]; u8 flags; u8 tail; } F98UnsignedRecord;
@@ -219,7 +296,44 @@ void func_87E08168(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E081A0.s")
+/* mkdraft:func_87E081A0 begin */
+typedef struct {
+    u8 pad[0x16];
+    u8 a : 2;
+    u8 flag : 1;
+    u8 rest : 5;
+} F87E081A0Record;
+
+
+
+void func_87E081A0(void *arg0) {
+    u8 *ptr;
+    s32 value;
+    s32 i;
+    ptr = (u8 *)arg0 + 0x2190;
+    for (i = 0; i < 4; i++) {
+        switch (*(s8 *)((u8 *)arg0 + 0x218E)) {
+        case 1:
+        case 2:
+            if ((*(s32 *)(ptr + 0x14) << 17) >> 31) {
+                value = *(s32 *)ptr;
+            } else {
+                value = *(s8 *)((u8 *)arg0 + 0x218D) + *(s32 *)ptr;
+            }
+            break;
+        case 0:
+            value = *(s8 *)((u8 *)arg0 + 0x218D) + *(s32 *)ptr;
+            break;
+        default:
+            value = *(s8 *)((u8 *)arg0 + 0x218D) + *(s32 *)ptr;
+            break;
+        }
+        if (value >= *(s32 *)((u8 *)arg0 + 0x2188)) ((F87E081A0Record *)ptr)->flag = 1;
+        else ((F87E081A0Record *)ptr)->flag = 0;
+        ptr += 0x18;
+    }
+}
+/* mkdraft:func_87E081A0 end */
 
 extern void func_87E080F8(s32);
 extern void func_87E01628(void);
@@ -618,7 +732,51 @@ void func_87E094C0(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E09514.s")
+/* mkdraft:func_87E09514 begin */
+extern s32 func_80001FF0(void);
+extern void func_800279C4(s32);
+extern s32 func_87E07ED8(s32);
+extern s32 func_87E08E8C(u8 *, s32, u32);
+extern void func_87E085CC(u8 *, s32);
+extern void func_87E0C4B4(u8 *);
+extern void func_87E10F50(s32);
+extern void func_87E10EA8(s32);
+extern void func_87E10F2C(s32);
+extern void func_87E11B30(s32);
+
+
+
+void func_87E09514(F63_088E0_Owner *arg0) {
+    s32 temp_v0;
+    s32 sp18;
+    s32 var_a2;
+    F63_088E0_Owner *p;
+
+    temp_v0 = func_87E07ED8((s32) arg0->data);
+    p = *(F63_088E0_Owner **) &arg0;
+    sp18 = p->selection;
+    if (temp_v0 != -1) {
+        func_87E085CC((u8 *) p, temp_v0);
+        return;
+    }
+    if (((f32) func_80001FF0() * 0.5f) >= 0.0f) {
+        var_a2 = (s32) (((f32) func_80001FF0() / 2.0f) + 0.5f);
+    } else {
+        var_a2 = (s32) (((f32) func_80001FF0() / 2.0f) - 0.5f);
+    }
+    if (func_87E08E8C((u8 *) arg0, sp18, var_a2) != 0) {
+        func_87E0C4B4(arg0->widget60);
+        func_87E10F50(-1);
+        func_87E10EA8(-1);
+        func_87E10F2C(-1);
+        arg0->mode = 5;
+        func_800279C4(0xCF02);
+        return;
+    }
+    func_87E11B30(sp18);
+    func_87E10F50(0);
+}
+/* mkdraft:func_87E09514 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E09654.s")
 

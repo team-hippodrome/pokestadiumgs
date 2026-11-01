@@ -6,7 +6,55 @@
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA00380.s")
+/* mkdraft:func_8FA00380 begin */
+u8 func_8005453C(s32);
+u8 func_80054794();
+s32 func_800547F4(u8);
+extern u8 D_8FA01990;
+
+
+
+void func_8FA00380(void) {
+    u8 sp27;
+    u8 sp26;
+    u8 sp25;
+    u8 sp24;
+    u8 sp23;
+    u8 sp22;
+    u8 sp21;
+    u8 sp20;
+    u8 sp1F;
+    u8 temp_v0;
+
+    sp27 = func_8005453C(0);
+    sp26 = func_8005453C(1);
+    sp25 = func_8005453C(2);
+    sp24 = func_8005453C(3);
+    sp23 = func_8005453C(4);
+    sp22 = func_8005453C(5);
+    sp21 = func_8005453C(6);
+    sp20 = func_8005453C(7);
+    sp1F = func_8005453C(8);
+    temp_v0 = func_80054794();
+    D_8FA01990 = temp_v0;
+    if ((sp24 == 1) && (sp27 == 1) && (sp21 == 1)) {
+        D_8FA01990 |= 1;
+    } else {
+        D_8FA01990 &= 0xFE;
+    }
+    if ((sp23 == 1) && (sp26 == 1) && (sp20 == 1)) {
+        D_8FA01990 |= 2;
+    } else {
+        D_8FA01990 &= 0xFD;
+    }
+    if ((sp22 == 1) && (sp25 == 1) && (sp1F == 1)) {
+        D_8FA01990 |= 4;
+    } else {
+        D_8FA01990 &= 0xFB;
+    }
+    func_800547F4(D_8FA01990);
+}
+/* mkdraft:func_8FA00380 end */
 #endif
 
 #ifdef VERSION_US
@@ -93,7 +141,64 @@ void func_8FA00AC0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA00F4C.s")
+/* mkdraft:func_8FA00F4C begin */
+extern void *D_80087200;
+extern f32 D_8FA02044[1];
+extern s16 D_8FA02048[2];
+extern void func_8FA005A0(f32, void *);
+
+
+
+void func_8FA00F4C(void)
+{
+  u8 *context = D_80087200;
+  unsigned int new_var2;
+  f32 stick;
+  // FAKE: a named zero keeps the stick comparisons in `c.eq.s $f2,$f0` operand
+  // order ($f2 holds the zero constant); with an inline 0.0f literal the diff
+  // score is 20.
+  f32 zero = 0.0f;
+  if ((*((u16 *) (context + 6))) & 4)
+  {
+    D_8FA02044[0] -= 0.1f;
+    if (D_8FA02044[0] < 0.1f)
+    {
+      D_8FA02044[0] = 0.1f;
+    }
+  }
+  if ((*((u16 *) (context + 6))) & 8)
+  {
+    D_8FA02044[0] += 0.1f;
+    if (D_8FA02044[0] > 100.0f)
+    {
+      D_8FA02044[0] = 100.0f;
+    }
+  }
+  stick = *((f32 *) (context + 0x18));
+  if (zero != stick)
+  {
+    // FAKE: the (short) cast truncates the scaled stick value with
+    // trunc.w.s/mfc1 before the s16 store; without both casts the diff score
+    // is 70.
+    new_var2 = (s32) ((short) (stick * 32.0f));
+    D_8FA02048[1] -= new_var2;
+  }
+  stick = *((f32 *) (context + 0x1C));
+  if (zero != stick)
+  {
+    D_8FA02048[0] += (s32) ((short) (stick * 32.0f));
+    if (D_8FA02048[0] >= 0x3F01)
+    {
+      D_8FA02048[0] = 0x3F00;
+    }
+    if (D_8FA02048[0] < (-0x3F00))
+    {
+      D_8FA02048[0] = -0x3F00;
+    }
+  }
+  func_8FA005A0(D_8FA02044[0], D_8FA02048);
+}
+/* mkdraft:func_8FA00F4C end */
 #endif
 
 #ifdef VERSION_US

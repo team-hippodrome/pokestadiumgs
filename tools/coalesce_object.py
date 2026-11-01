@@ -320,6 +320,11 @@ def _macro_pairs(words, by_offset):
                 # delay slot it leaves empty; the store then opens the
                 # fall-through path (``func_8230009C``).
                 candidates.append(index + 3)
+            elif _is_conditional_branch(words[index + 1]) and _is_safe_register_gap(words[index + 2]):
+                # A filled delay slot that does not write ``$at`` still carries
+                # the hoisted ``lui`` into the fall-through store
+                # (``func_8220D630``).
+                candidates.append(index + 3)
         if entry_targets is not None and not (
             index and _is_control_transfer(words[index - 1])
         ):

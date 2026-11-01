@@ -32,3 +32,18 @@ scores higher than a separately advanced record pointer.
 ## 2026-10-29: `func_8600666C` layout-prerequisite
 
 layout-prerequisite. Its switch table jtbl_8600D8D8 sits in `fragment47_data_tail_rodata` (0x253D40-0x253F30), next to this file's other literals. Existing C in this file references those literals by D_ name, so the file's `.rodata` subsegment can't just grow down to 0x253D40. The shape is straightforward: func_860065E8/func_87F00930 guards, the per-step loop, then a seven-way switch on func_87F006AC().
+
+## 2026-10-31: precise data-tail boundary for the 24AE60 rodata carve-out
+
+func_8600666C is code-complete (all 79 words encode retail instructions) but blocked at
+link: retail's jtbl_8600D8D8 lives in the shared `fragment47_data_tail_rodata` blob at
+0x253EF8 and relocates against the `.global` jlabels the asm body defines; compiling the
+body as C drops those labels and emits the identical 7-word table at the object's own
+`.rodata` start (0x8600D910, 0x38 late), shifting the fragment's other tables and growing
+.rodata 0x40→0x60. The four tables sit in source order at 0x253EF8 (func_8600666C),
+0x253F14 (func_86006D64), 0x253F30 (func_86006F20), 0x253F4C (func_86007648). Minimal
+adoption: end `fragment47_data_tail_rodata` at 0x253EF8, give fragment47_24AE60 a
+.rodata subsegment there, and match func_86006D64 in C so its table is emitted between
+ours and the existing ones. Candidate banked at
+/scratch/tsranso/adopt_work/night_20261030/laneC/func_8600666C.best.c; full analysis in
+its .report.md.

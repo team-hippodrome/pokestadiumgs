@@ -96,7 +96,43 @@ void func_87F08C08(s8 *arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32AEF0/func_87F08C68.s")
+/* mkdraft:func_87F08C68 begin */
+// Sets the step (u16 at +4) and span (u16 at +2) of the record whose first byte
+// func_87F08C08 fills: the step starts as 0x2000 / (arg1[0] * record) and is made even
+// (minus 2, or minus 3 when odd), then the span becomes ceil(arg1[2] / step); arg1[2]
+// below the step collapses to step = arg1[2], span = 1. Each field is reloaded as u16
+// after its store, so the following division and multiply read the truncated value.
+
+
+void func_87F08C68(s8 *arg0, void *arg1)
+{
+    s32 var_v0;
+    s32 var_v1;
+
+    *(u16 *) ((u8 *) arg0 + 4) = 0x2000 / ((s32) (*(u16 *) ((u8 *) arg1 + 0) * (u8) *(s8 *) ((u8 *) arg0 + 0)));
+    var_v0 = (s32) *(u16 *) ((u8 *) arg1 + 2);
+    var_v1 = *(u16 *) ((u8 *) arg0 + 4);
+    if (var_v0 < var_v1)
+    {
+        *(u16 *) ((u8 *) arg0 + 4) = var_v0;
+        *(s16 *) ((u8 *) arg0 + 2) = 1;
+        return;
+    }
+    if (var_v1 % 2)
+    {
+        *(u16 *) ((u8 *) arg0 + 4) = var_v1 - 1;
+        var_v1 = *(u16 *) ((u8 *) arg0 + 4);
+    }
+    *(u16 *) ((u8 *) arg0 + 4) = var_v1 - 2;
+    var_v1 = *(u16 *) ((u8 *) arg0 + 4);
+    *(s16 *) ((u8 *) arg0 + 2) = ((s32) *(u16 *) ((u8 *) arg1 + 2)) / var_v1;
+    var_v0 = *(u16 *) ((u8 *) arg0 + 2);
+    if ((var_v0 * var_v1) < ((s32) *(u16 *) ((u8 *) arg1 + 2)))
+    {
+        *(s16 *) ((u8 *) arg0 + 2) = (s16) (var_v0 + 1);
+    }
+}
+/* mkdraft:func_87F08C68 end */
 
 extern void func_87F08C68(s8 *, void *);
 extern s32 func_87F08A94(unk_func_87F08A94 *, u16 *);
