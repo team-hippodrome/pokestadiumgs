@@ -28,7 +28,7 @@ extern s32 D_80128120; void func_8004EC5C(void) { if (D_80128120 > 0) { D_801281
 
 #ifdef VERSION_US
 // Returns 1 if (x, y) lies within x = -640..640 and y = -479..480, else 0.
-// Callers (func_8004F64C, UiImageNode_DrawUnscaled, UiTextNode_Draw) branch past their following code when it returns 0.
+// Callers (UiPanelNode_Draw, UiImageNode_DrawUnscaled, UiTextNode_Draw) branch past their following code when it returns 0.
 s32 func_8004EC7C(s16 x, s16 y) {
     s32 in_bounds = 1;
 
@@ -183,11 +183,126 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004F64C.s")
+extern s32 func_80008494(void);
+extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
+extern void Ui_DrawGradientQuad(s32, s32, s32, s32, u8 *, u8 *);
+extern void func_8004F2D0(s32, s32, s32, s32, TextureRenderHeader *);
+extern Gfx *D_800D0510;
+extern Gfx D_80094DB8[], D_80094DE0[], D_80097218[];
+extern u8 *D_800971F4;
+typedef union UiPanelImageKey {
+    struct { u16 archive, entry; } id;
+    u32 packed;
+} UiPanelImageKey;
+typedef union UiPanelTint {
+    u32 packed;
+    u8 rgba[4];
+    struct { u8 r, g, b, a; } channels;
+} UiPanelTint;
+extern s32 func_8004C990(s32, s32);
+// Fills the panel interior, draws its texture border, then traverses child nodes.
+void UiPanelNode_Draw(u8 *node, s32 x, s32 y) {
+    s32 fill_value;
+    u16 *key_fields;
+    s32 same_keys;
+    s32 fill_mode;
+    s16 fill_y;
+    s16 fill_x;
+    UiPanelImageKey top_left;
+    UiPanelImageKey top_right;
+    UiPanelImageKey bottom_left;
+    UiPanelImageKey bottom_right;
+    u8 first_rgb[3];
+    u8 second_rgb[3];
+    u16 packed_fill;
+    UiPanelTint tint;
+
+    func_80008494();
+    key_fields = (u16 *)&top_left;
+    key_fields[0] = *(u16 *)(node + 44);
+    key_fields[1] = *(u16 *)(node + 46);
+    key_fields = (u16 *)&top_right;
+    key_fields[0] = *(u16 *)(node + 48);
+    key_fields[1] = *(u16 *)(node + 50);
+    key_fields = (u16 *)&bottom_left;
+    key_fields[0] = *(u16 *)(node + 52);
+    key_fields[1] = *(u16 *)(node + 54);
+    key_fields = (u16 *)&bottom_right;
+    key_fields[0] = *(u16 *)(node + 56);
+    key_fields[1] = *(u16 *)(node + 58);
+    same_keys = 0;
+    if (top_left.packed == top_right.packed && top_left.packed == bottom_left.packed &&
+        top_left.packed == bottom_right.packed) {
+        same_keys = 1;
+    }
+    if (node[63] != 0xFF) {
+        fill_mode = 0;
+    } else {
+        node[67] = 0xFF;
+        if (*(u32 *)(node + 64) != *(u32 *)(node + 60)) {
+            fill_mode = 1;
+        } else {
+            fill_mode = 2;
+        }
+    }
+    fill_x = *(s16 *)(node + 36) + x;
+    fill_y = *(s16 *)(node + 38) + y;
+    if (*(u16 *)(node + 2) & 2) {
+        if (func_8004EC7C((s16)x, (s16)y) != 0 && *(s16 *)(node + 40) > 0 && *(s16 *)(node + 42) > 0) {
+            switch (fill_mode) {
+            case 0:
+                gSPDisplayList(D_800D0510++, D_80094DB8);
+                Gfx_FillRectRgba(fill_x, fill_y, *(s16 *)(node + 40), *(s16 *)(node + 42),
+                                 node[60], node[61], node[62], node[63]);
+                tint = *(UiPanelTint *)(node + 68);
+                break;
+            case 1:
+                func_8004EE30(first_rgb, node + 60);
+                func_8004EE30(second_rgb, node + 64);
+                Ui_DrawGradientQuad(fill_x, fill_y, *(s16 *)(node + 40), *(s16 *)(node + 42), first_rgb, second_rgb);
+                tint.packed = 0xFFFFFFFF;
+                break;
+            case 2:
+                func_8004EE4C(&packed_fill, node + 60);
+                gSPDisplayList(D_800D0510++, D_80094DE0);
+                {
+                    Gfx *color_packet = D_800D0510++;
+                    color_packet->words.w0 = _SHIFTL(G_SETFILLCOLOR, 24, 8);
+                    fill_value = packed_fill;
+                    color_packet->words.w1 = ((u32)fill_value << 16) | fill_value;
+                }
+                {
+                    Gfx *fill_packet = D_800D0510++;
+                    // The RDP rectangle ends at the inclusive lower-right pixel.
+                    fill_packet->words.w0 =
+                        _SHIFTL(fill_y + *(s16 *)(node + 42) - 1, 2, 10) |
+                        (_SHIFTL(fill_x - (1 - *(s16 *)(node + 40)), 14, 10) | _SHIFTL(G_FILLRECT, 24, 8)),
+                    fill_packet->words.w1 = _SHIFTL(fill_x, 14, 10) | _SHIFTL(fill_y, 2, 10);
+                }
+                tint = *(UiPanelTint *)(node + 68);
+                break;
+            }
+            gSPDisplayList(D_800D0510++, D_80097218);
+            gDPSetEnvColor(D_800D0510++, tint.channels.r, tint.channels.g, tint.channels.b, tint.channels.a);
+            if (!same_keys) {
+                func_8004EE9C(x, y, *(s16 *)(node + 12), *(s16 *)(node + 14),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 44), *(u16 *)(node + 46)),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 48), *(u16 *)(node + 50)),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 52), *(u16 *)(node + 54)),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 56), *(u16 *)(node + 58)));
+            } else {
+                func_8004F2D0(x, y, *(s16 *)(node + 12), *(s16 *)(node + 14),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 52), *(u16 *)(node + 54)));
+            }
+        }
+    }
+    D_800971F4 = node;
+    func_8004ECD4(node, x, y);
+    D_800971F4 = NULL;
+}
 #endif
 
 #ifdef VERSION_US
-extern Gfx *D_800D0510;
 extern Gfx D_80097250[];
 typedef struct UiImageStateColor {
     u8 r, g, b, a;
@@ -235,7 +350,6 @@ void UiImageNode_SetRenderState(u8 *node) {
 
 #ifdef VERSION_US
 extern s32 func_80050640(u8 *);
-extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
 extern Gfx D_80094F50[];
 // Resolves the animated image entry, clips it, and draws at its native dimensions.

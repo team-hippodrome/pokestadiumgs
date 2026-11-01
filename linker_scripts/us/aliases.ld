@@ -1528,3 +1528,5 @@ func_8004FA6C = UiImageNode_SetRenderState;
 func_8004FE00 = UiImageNode_DrawTiled;
 
 func_80050218 = UiTextNode_Draw;
+
+func_8004F64C = UiPanelNode_Draw;
