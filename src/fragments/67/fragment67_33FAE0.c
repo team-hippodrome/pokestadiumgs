@@ -50,7 +50,57 @@ void func_8290325C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82903298.s")
+/* mkdraft:func_82903298 begin */
+extern void *D_82919C14;
+extern u8 *D_82919C18;
+extern f32 D_82919CE8;
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern void func_8003F1DC(void *);
+extern s32 func_8006456C(u16);
+extern void func_800428F8(s32);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F9AC(void *, s16, u16);
+extern void func_8003F2C4(s32, void *, s32);
+extern void Vec3s_SetComponents(void *, s16, s16, s16);
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+// Four-byte color adjustment word func_8003F5AC writes through its first argument and
+// func_80041FD0 reads by value.
+//@include/229E0.h
+typedef union { s32 word; s8 bytes[4]; } Func80041FA0State;
+extern void func_8003F5AC(Func80041FA0State *, u8 *);
+extern s32 func_80041FD0(s32, u16, Func80041FA0State, s32);
+// Row of the table D_82919C14 points at, selected by the mode byte at arg0+0x1070; 0x58 bytes
+// per row. D_82919C18 receives the address of the Pokemon record at row offset 8.
+typedef struct {
+    u8 unk_00[8];
+    u8 unk_08[0x50];
+} unk_D_82919C14_000;
+
+
+
+void func_82903298(void *arg0) {
+    u8 *model;
+    s32 variant;
+    Func80041FA0State adjustment;
+
+    model = (u8 *)arg0 + 4;
+    D_82919C18 = ((unk_D_82919C14_000 *)D_82919C14)[*(u8 *)((u8 *)arg0 + 0x1070)].unk_08;
+    *(u16 *)((u8 *)arg0 + 0x106C) = Pokemon_GetDisplaySpecies(D_82919C18);
+    func_8003F1DC(model);
+    func_8003F5AC(&adjustment, D_82919C18);
+    variant = func_8006456C(*(u16 *)(D_82919C18 + 0x16));
+    func_80041FD0(*(s32 *)((u8 *)arg0 + 0), *(u16 *)((u8 *)arg0 + 0x106C), adjustment, variant);
+    func_800428F8(*(s32 *)((u8 *)arg0 + 0));
+    func_8003F114(model, 0, *(s16 *)((u8 *)arg0 + 0x106C),
+                  **(s32 **)(*(u8 **)((u8 *)*(s32 *)((u8 *)arg0 + 0) + 0x38) + 8));
+    func_8003F9AC(model, *(s16 *)((u8 *)arg0 + 0x106C), *(u16 *)(D_82919C18 + 0x16));
+    func_8003F2C4(*(s32 *)((u8 *)arg0 + 0), model, 0);
+    Vec3s_SetComponents((u8 *)arg0 + 0x22, 0, -0x4000, 0);
+    Vec3f_SetComponentsDuplicate((u8 *)arg0 + 0x28, 0.0f, 0.0f, 0.0f);
+    func_829031F4(arg0);
+    *(f32 *)((u8 *)arg0 + 0x2C) += D_82919CE8;
+}
+/* mkdraft:func_82903298 end */
 #endif
 
 #ifdef VERSION_US
