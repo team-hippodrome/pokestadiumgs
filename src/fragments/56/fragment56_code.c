@@ -885,7 +885,61 @@ void func_86806044(s32 arg0) {
     func_87F03884(D_868085E8, 0, ptr, 0.0f, *(f32 *)(ptr + 0xB0) - 20.0f, -20.0f, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.5f * D_8682F30C, (rand2 % (D_8682F310 + 1)) + 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86806180.s")
+extern s32 D_8680804C;
+extern f32 D_86808060;
+extern f32 D_86808064;
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+typedef struct S1_unk_D_86002F58_004_000 S1_unk_D_86002F58_004_000;
+extern s32 ModelAnim_SetAnimation(S1_unk_D_86002F58_004_000 *, s32);
+
+// Updates four model trajectories and selects companion animations at negative depth.
+void Fragment56_UpdateMovingModels(void) {
+    u8 *companion_model;
+    s32 model_index;
+    f32 elapsed_ticks;
+    f32 depth;
+
+    for (model_index = 0; model_index < 4; model_index++) {
+        if (D_8682EE18[model_index].mode == 13) {
+            func_86806044(model_index);
+        }
+        if (D_8682ED98[model_index].state != -1 && D_8681E388[model_index].position[2] < 0.0f) {
+            companion_model = &D_86808C68[model_index * 360];
+            func_8003F1DC(&D_8681E388[model_index]);
+            if (D_8682ED98[model_index].state == 1) {
+                func_80027A28(32514, (u8)model_index);
+                ModelAnim_SetAnimation((S1_unk_D_86002F58_004_000 *)companion_model, 13);
+                D_8682EE18[model_index].mode = 13;
+            } else {
+                func_80027A28(32513, (u8)model_index);
+                if (D_8682ED98[model_index].variant == 1) {
+                    ModelAnim_SetAnimation((S1_unk_D_86002F58_004_000 *)companion_model, 10);
+                }
+                if (D_8682ED98[model_index].variant == 2) {
+                    ModelAnim_SetAnimation((S1_unk_D_86002F58_004_000 *)companion_model, 12);
+                }
+                if (D_8682ED98[model_index].variant == 3) {
+                    ModelAnim_SetAnimation((S1_unk_D_86002F58_004_000 *)companion_model, 11);
+                }
+            }
+            ModelAnim_SetSpeed(companion_model, 0x20000);
+            D_8682ED98[model_index].state = -1;
+        } else {
+            D_8682ED98[model_index].ticks = (s32)((f32)D_8682ED98[model_index].ticks + D_86808060);
+            elapsed_ticks = (f32)D_8682ED98[model_index].ticks;
+            // X and Z are projections of the same depth curve.
+            D_8681E388[model_index].position[0] =
+                ((1000.0f + D_8682ED98[model_index].horizontal_offset) -
+                 ((1000.0f + (f32)D_8680804C) - elapsed_ticks * (D_86808064 * elapsed_ticks))) /
+                D_8682ED98[model_index].horizontal_divisor;
+            depth = (1000.0f + (f32)D_8680804C) - elapsed_ticks * (D_86808064 * elapsed_ticks);
+            D_8681E388[model_index].position[2] = depth;
+            D_8681E388[model_index].position[1] = depth;
+            D_8681E388[model_index].position[1] *= D_8682ED98[model_index].vertical_multiplier;
+            D_8681E388[model_index].position[1] += 56.0f + 7.0f * D_8682F300;
+        }
+    }
+}
 
 extern s32 D_86807CB4;
 extern s32 D_86808558;
@@ -928,7 +982,7 @@ extern void func_8003F114(u8 *, s16, s16, void *);
 extern void func_8003F1DC(void *);
 extern void func_8003F210(void *, s32);
 extern void func_86800A7C(void);
-extern void func_86806180(void);
+extern void Fragment56_UpdateMovingModels(void);
 extern u8 D_868086C8[];
 extern u8 D_86808C68[];
 extern s32 D_8682CD00[];
@@ -964,7 +1018,7 @@ void func_8680649C(void) {
         D_8682F2A8 = 5;
         return;
     }
-    func_86806180();
+    Fragment56_UpdateMovingModels();
 }
 extern s32 D_8682F2A8;
 extern s32 func_87F01A40(void);

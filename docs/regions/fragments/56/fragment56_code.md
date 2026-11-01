@@ -481,3 +481,39 @@ normal and +20-leading-line controls. The original function name remains a
 linker alias. The new function uses no padding, unused locals, instruction
 rewrites, forced registers, or source-line directives. Private diagnostics and
 coverage are excluded from the change.
+
+## 2026-11-01 — moving-model update accepted
+
+`Fragment56_UpdateMovingModels` (formerly `func_86806180`, 588 bytes)
+resolves the motion requeue above. It advances four trajectory records, updates
+their X/Y/Z positions, and resets models at negative depth while selecting the
+companion animation from the motion state and variant. Its record fields are
+established by `Fragment56_ResetMovingModels`; the called animation setters'
+contracts are defined in `src/340C0.c`.
+
+A plain indexed loop over the existing model, motion, and group arrays lets IDO
+recreate the original advancing addresses and removes the extra instruction
+seen in explicit-cursor sources. That source initially differed only in the
+operand order of one floating add and one multiply. Retained CFE and UGEN
+pass captures locate both orders in CFE's output before optimization. A
+logging-only observer preserves the frontend's ucode and symbol table and the
+whole compiler module with tracing off/on for both a known source and the
+candidate. CFE's expression pass marks the two operations for right-first
+evaluation when their left operands are simple and the expression context is
+empty; exchanging the operands in C does not correct that rule.
+
+The matching source first computes the X projection using the depth curve,
+then evaluates the same curve for the named depth used by Z. IDO shares that
+calculation. The Y component starts at depth, is multiplied by the vertical
+parameter, and receives the scene height offset. Every intermediate value is
+used, and the compiler combines those steps into the original final store.
+This reproduces the original 96-byte frame and both floating operand orders
+without padding, unused locals, forced registers, instruction rewriting, or
+source-line directives.
+
+Candidate2 of `fragment56-motion-cfe-context8` passed the canonical runner,
+normal host syntax check, and full US ROM gate on `5c768c7e`, retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming, local-variable cleanup, and readable
+formatting preserve every module section, function extent, and semantic
+relocation in normal and +20-leading-line controls. The original function name
+remains a linker alias. Coverage and private diagnostic tools are excluded.
