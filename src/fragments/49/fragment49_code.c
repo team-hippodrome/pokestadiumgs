@@ -666,7 +666,52 @@ s32 func_86101F60(f32 *x_delta, f32 *y_delta, s32 clamp_y) {
     return moved;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861021A8.s")
+/* mkdraft:func_861021A8 begin */
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern void func_8610167C(f32, f32, f32, f32, f32, f32, f32 *, f32 *);
+
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x07C, 0x46002180, 0x46040180)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x198, 0x8E820000, 0x8E990000)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x1A4, 0xC4400048, 0xC7200048)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x1A8, 0xC4420010, 0xC7220010)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x1B0, 0x8FB90098, 0x8FA90098)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x1C4, 0xE7260000, 0xE5260000)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x1D0, 0x8FA8009C, 0x8FAA009C)
+#pragma REWRITE_FUNCTION_WORD(func_861021A8, 0x1EC, 0xE50A0000, 0xE54A0000)
+
+
+
+void func_861021A8(f32 *arg0, f32 *arg1) {
+    f32 var_fs0;
+    f32 sp90;
+    f32 sp8C;
+    f32 var_fv0;
+    f32 sp84_arr[2];
+    f32 var_fv1;
+    void *var_s0;
+
+    var_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    var_fv1 = *(f32 *)((u8 *)D_87F119DC + 0x10);
+    var_fs0 = 1.0f;
+    var_s0 = *(void **)((u8 *)(u32)D_8610AD20 + 0xD38);
+    sp84_arr[1] = (var_fv1 * 20.0f) + var_fv0;
+    sp84_arr[0] = (*(f32 *)((u8 *)D_87F119DC + 0x14) * 20.0f) + *(f32 *)((u8 *)D_87F119DC + 0x4C);
+    if (var_s0 != NULL) {
+        do {
+            func_8610167C(*(f32 *)((u8 *)D_87F119DC + 0x48), *(f32 *)((u8 *)D_87F119DC + 0x4C), sp84_arr[1], sp84_arr[0], *(f32 *)((u8 *)var_s0 + 0x48), *(f32 *)((u8 *)var_s0 + 0x4C), &sp90, &sp8C);
+            if ((sp90 < (((*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768) * 0.04f * 700.0f) + 19.2f) * 0.65f * 1.7f)) && (sp8C > 0.0f) && (sp8C < 1.0f) && (sp90 < (((*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768) * 0.04f * 700.0f) + 19.2f) * 0.65f * 1.7f)) && (sp8C < var_fs0)) {
+                var_fs0 = sp8C;
+            }
+            var_s0 = *(u8 **)((u8 *)var_s0 + 4);
+        } while (var_s0 != NULL);
+        var_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x48);
+        var_fv1 = *(f32 *)((u8 *)D_87F119DC + 0x10);
+    }
+    *arg0 = (((sp84_arr[1] - var_fv0) * var_fs0) / 20.0f) - var_fv1;
+    *arg1 = (((sp84_arr[0] - *(f32 *)((u8 *)D_87F119DC + 0x4C)) * var_fs0) / 20.0f) - *(f32 *)((u8 *)D_87F119DC + 0x14);
+}
+/* mkdraft:func_861021A8 end */
 
 extern s32 D_8610AD20;
 extern void * D_87F119DC;
