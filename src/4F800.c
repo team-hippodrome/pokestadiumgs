@@ -28,7 +28,7 @@ extern s32 D_80128120; void func_8004EC5C(void) { if (D_80128120 > 0) { D_801281
 
 #ifdef VERSION_US
 // Returns 1 if (x, y) lies within x = -640..640 and y = -479..480, else 0.
-// Callers (func_8004F64C, func_8004FC58, func_80050218) branch past their following code when it returns 0.
+// Callers (func_8004F64C, UiImageNode_DrawUnscaled, func_80050218) branch past their following code when it returns 0.
 s32 func_8004EC7C(s16 x, s16 y) {
     s32 in_bounds = 1;
 
@@ -191,7 +191,63 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004FC58.s")
+extern s32 func_80050640(u8 *);
+extern s32 func_8004C990(s32, s32);
+extern void func_8004FA6C(u8 *);
+extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
+extern Gfx *D_800D0510;
+extern Gfx D_80094F50[];
+// Resolves the animated image entry, clips it, and draws at its native dimensions.
+// Palette lookup is enabled only for CI images and restored before the default display list.
+//@src/4CC20.c
+void UiImageNode_DrawUnscaled(u8 *node, s32 x, s32 y) {
+    u16 flags;
+    s32 image_address;
+    s32 entry;
+    Gfx *setup_packet;
+    Gfx *restore_packet;
+    Gfx *footer_packet;
+    s32 animated_entry;
+    u8 *animation;
+
+    image_address = 0;
+    entry = *(u16 *)(node + 38);
+    flags = 0;
+    if ((animation = *(u8 **)(node + 52)) != NULL) {
+        animated_entry = func_80050640(animation);
+        if (animated_entry >= 0) {
+            entry = animated_entry;
+        } else if (animated_entry == -1) {
+            entry = -1;
+        }
+    }
+    if (entry >= 0) {
+        image_address = func_8004C990(*(u16 *)(node + 36), entry);
+    }
+    if (node[1] & 1) {
+        flags = 1;
+    }
+    if (node[1] & 2) {
+        flags |= 2;
+    }
+    if (node[1] & 4) {
+        flags |= 0x100;
+    }
+    if (image_address != 0 && func_8004EC7C((s16)x, (s16)y) != 0) {
+        func_8004FA6C(node);
+        if (((u8 *)image_address)[4] == G_IM_FMT_CI) {
+            setup_packet = D_800D0510++;
+            gDPSetTextureLUT(setup_packet, G_TT_RGBA16);
+        }
+        func_8004D150(x, y, image_address, 0, flags, 0);
+        if (((u8 *)image_address)[4] == G_IM_FMT_CI) {
+            restore_packet = D_800D0510++;
+            gDPSetTextureLUT(restore_packet, G_TT_NONE);
+        }
+        footer_packet = D_800D0510++;
+        gSPDisplayList(footer_packet, D_80094F50);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -200,13 +256,13 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 
 #ifdef VERSION_US
 extern s32 D_800971F8;
-extern void func_8004FC58(u8 *, s32, s32);
+extern void UiImageNode_DrawUnscaled(u8 *, s32, s32);
 extern void func_8004FE00(u8 *, s32, s32);
 extern void func_8004ECD4(void *, s32, s32);
 void func_800501A0(u8 *arg0, s32 arg1, s32 arg2) {
     if (*(u16 *)(arg0 + 2) & 2) {
         if (*(u8 *)(arg0 + 0x29) == 0) {
-            func_8004FC58(arg0, arg1, arg2);
+            UiImageNode_DrawUnscaled(arg0, arg1, arg2);
         } else {
             func_8004FE00(arg0, arg1, arg2);
         }

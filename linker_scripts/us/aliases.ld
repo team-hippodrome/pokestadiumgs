@@ -1520,3 +1520,5 @@ func_86806180 = Fragment56_UpdateMovingModels;
 func_841334D8 = Battle_QueueHpLossFeedback;
 
 func_80050878 = GbTower_LoadPartyIcons;
+
+func_8004FC58 = UiImageNode_DrawUnscaled;
