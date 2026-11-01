@@ -137,14 +137,121 @@ void func_8821E1E4(void) {
     D_880068B8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E21C.s")
+/* mkdraft:func_8821E21C begin */
+extern void D_88000E4C(void);
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+extern u32 D_882347F0;
+extern s32 D_882345F4;
+extern char *LabPC_FormatColoredMoveName(char *output, u8 move);
+extern void LabPC_OpenMessageDialog(s8 *title,s16 x,s16 y,s32 style,u8 red,u8 green,u8 blue,u8 delay,u8 kind,s32 *done,s32 *cancel,s32 *extra,void (*callback)(void));
+extern s32 func_8004C54C(s32 index,s32 value);
+extern void *func_8004C8A0(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_88903B00(void);
+
+
+
+void func_8821E21C(u8 arg0, s32 arg1) {
+    s8 sp150[0x80];
+    u8 sp50[0x100];
+
+    func_8004C54C(0x1E, LabPC_FormatColoredMoveName(sp150, arg0));
+    switch (arg1) {
+    case 0:
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x61), 0x24D, 0x118, 2, 0xFFU, 0xAAU, 0x8CU, 2U, 2U, (s32 *)(*(s32 *)((u8 *)D_882347F0 + 0x58) + 0x2C), (s32 *)(*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *) D_88000E4C, D_88000E4C);
+        return;
+    case 1:
+        func_8004C54C(0x1D, D_882345F4 + 0x3C);
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x62), 0x17C, 0x11F, 4, 0xDBU, 0xDCU, 0xB4U, 2U, 0U, &D_880068B4, &D_880068B8, (s32 *) func_88903B00, D_88000E4C);
+        return;
+    case 2:
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x64), 0x1F6, 0xA1, 2, 0xFFU, 0xAAU, 0x8CU, 0U, 2U, NULL, (s32 *)(*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *) D_88000E4C, D_88000E4C);
+        return;
+    case 3:
+        LabPC_OpenMessageDialog(func_8004C8A0(sp50, 0x100, 0x25, 0x64), 0x1FC, 0x1AC, 8, 0xFFU, 0xAAU, 0x8CU, 0U, 2U, NULL, (s32 *)(*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *) D_88000E4C, D_88000E4C);
+        return;
+    }
+}
+/* mkdraft:func_8821E21C end */
 
 extern void Input_SetRepeatController(void *);
 void func_8821E490(void) {
     Input_SetRepeatController(D_80087200);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E4B4.s")
+/* mkdraft:func_8821E4B4 begin */
+extern u32 D_882347F0;
+extern void *D_88234620;
+extern s32 D_882345F4;
+extern u8 D_8823474F;
+extern u8 D_889041A0;
+extern void func_8821DE04(void);
+extern void LabPC_StartMoveFieldAnimation(void);
+extern void LabPC_StartStatChangeAnimation(void);
+extern s32 func_88202158();
+extern void func_882033B0(void *, void *);
+extern void func_8821E21C(u8, s32);
+
+
+
+void func_8821E4B4(void)
+{
+  s32 temp_v0;
+  if (*((s32 *) (((u8 *) D_882347F0) + 0x54)))
+  {
+    temp_v0 = *((s32 *) (((u8 *) D_882347F0) + 4));
+    switch (temp_v0)
+    {
+      case 5:
+        func_8821DE04();
+        return;
+
+      case 6:
+        *((s32 *) (((u8 *) D_882347F0) + 4)) = 3;
+        *((s32 *) (((u8 *) (*((s32 *) (((u8 *) D_882347F0) + 0x58)))) + 0x2C)) = 1;
+        return;
+
+      case 7:
+        *((s32 *) (((u8 *) D_882347F0) + 4)) = 4;
+        *((s32 *) (((u8 *) (*((s32 *) (((u8 *) D_882347F0) + 0x58)))) + 0x2C)) = 1;
+ do { } while (0);  // FAKE: temp-pool perturbation; without this empty statement IDO hoists
+                        // the D_88234620/2 compare constants late and the score is 340.
+        return;
+
+      default:
+        return;
+
+    }
+
+  }
+  else
+  {
+    temp_v0 = *((s32 *) (((u8 *) D_882347F0) + 4));
+    if ((temp_v0 != 5) && (temp_v0 != 6))
+    {
+      if (temp_v0 == 7)
+      {
+        func_882033B0((s32) D_882345F4, D_88234620);
+        func_8821E21C(((u8 *) D_882345F4)[(s8) D_889041A0 + 0xA], 1);
+      }
+    }
+    else
+      if (func_88202158(D_88234620, 2) != 0)
+    {
+      LabPC_StartMoveFieldAnimation();
+    }
+    else
+      if (func_88202158(D_88234620, 0xFC00) != 0)
+    {
+      D_8823474F = 3;
+    }
+    else
+    {
+      LabPC_StartStatChangeAnimation();
+    }
+  }
+}
+/* mkdraft:func_8821E4B4 end */
 
 extern u32 D_882347F0;
 extern void func_88004990(u8, s32);
@@ -293,7 +400,103 @@ void func_8821EC10(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821EC34.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821EE00.s")
+/* mkdraft:func_8821EE00 begin */
+extern s32 func_880020CC();
+extern void func_88214394(void);
+
+typedef struct {
+    s16 unk_00;
+    s32 unk_04;
+    s16 unk_08;
+    u8 unk_0A[0x18];
+    s16 unk_22;
+} unk_func_8821EE00_selection;
+
+typedef struct {
+    void **unk_00;
+    s16 unk_04;
+} unk_func_8821EE00_list;
+
+typedef struct {
+    s32 unk_00;
+    s32 unk_04;
+    void *unk_08;
+    unk_func_8821EE00_list *unk_0C;
+    unk_func_8821EE00_selection *unk_10;
+} unk_func_8821EE00_state;
+
+// `pressed` is set in both branches of the guard: IDO 7.1 then leaves the
+// redundant `b` plus `addiu v0,1` after the test, matching the target.
+//
+// FAKE: `selected` is a second name for the same selection pointer and carries
+// no state of its own. It only changes IDO's register choice for that pointer;
+// reading through `selection` alone gives the same instructions with the
+// pointer in $a1 and its loaded unk_00 in $a0, which scores 65.
+
+
+void func_8821EE00(void) {
+    s32 pressed;
+    unk_func_8821EE00_state *state;
+    unk_func_8821EE00_selection *selection;
+    unk_func_8821EE00_selection *selected;
+
+    if (*(u8 *)&D_889041B8 != 0) {
+        return;
+    }
+    state = (unk_func_8821EE00_state *)D_882347F0;
+    selection = state->unk_10;
+    selected = selection;
+    if (selected->unk_00 == 0 && selected->unk_04 == 0 && selected->unk_22 == 0) {
+        pressed = 1;
+    } else {
+        pressed = 0;
+    }
+    if (pressed && (D_80087200->buttonsPressed & B_BUTTON)) {
+        func_800226C0(0x48);
+        func_8821E1E4();
+        return;
+    }
+    if (selected->unk_00 == 0 && selected->unk_04 == 0 && selected->unk_22 == 0) {
+        pressed = 1;
+    } else {
+        pressed = 0;
+    }
+    if (pressed && (D_80087200->buttonsPressed & A_BUTTON)) {
+        if (state->unk_0C->unk_04 == 0 ||
+            *(u8 *)((u8 *)state + selected->unk_08 + 0x9C) == 1) {
+            func_800226C0(0x49);
+            return;
+        }
+        if (state->unk_00 == 4 &&
+            *(u8 *)((u8 *)state->unk_0C->unk_00[selected->unk_08] + 9) == 0) {
+            func_88214394();
+        } else {
+            func_800226C0(0x47);
+        }
+        if (*(s32 *)((u8 *)D_882347F0 + 4) == 1) {
+            func_8821E0BC();
+            return;
+        }
+        func_8821E1E4();
+        *(s32 *)((u8 *)D_882347F0 + 0x49C) = 1;
+        state = (unk_func_8821EE00_state *)D_882347F0;
+        switch (state->unk_00) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                D_88234620 = state->unk_0C->unk_00[state->unk_10->unk_08];
+                break;
+            case 4:
+            case 5:
+                D_882345F4 = state->unk_0C->unk_00[state->unk_10->unk_08];
+                break;
+        }
+    } else {
+        func_880020CC();
+    }
+}
+/* mkdraft:func_8821EE00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821F01C.s")
 
@@ -448,5 +651,107 @@ void func_882204F8(s32 mode, u8 *list) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882206A0.s")
+/* mkdraft:func_882206A0 begin */
+extern void func_88001C24(void *, u16, u8);
+extern void func_88001D0C(void *);
+extern void func_8821EE00(void);
+extern void func_8821F01C(void);
+extern void func_8821EC34(void);
+
+
+
+void func_882206A0(s32 arg0) {
+    u32 *global;
+    s32 result;
+
+    global = (u32 *)(u32)&D_882347F0;
+    *global = (u32)Util_Malloc(0x4A8);
+    if ((arg0 != 0) && (arg0 != 1)) {
+        (*(s32 *)((u8 *)(*global) + 4)) = 0;
+    } else {
+        (*(s32 *)((u8 *)(*global) + 4)) = 1;
+    }
+    switch (arg0) {
+    case 0:
+    case 1:
+    case 2:
+        (*(s16 *)((u8 *)(*global) + 0x6C)) = 0xFD;
+        (*(s16 *)((u8 *)(*global) + 0x6E)) = 0x7C;
+        (*(s16 *)((u8 *)(*global) + 0x70)) = 0x10F;
+        (*(s16 *)((u8 *)(*global) + 0x72)) = 0xD2;
+        (*(s16 *)((u8 *)(*global) + 0x74)) = 0xC4;
+        (*(s16 *)((u8 *)(*global) + 0x76)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x78)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x7C)) = 0x1D3;
+        (*(s16 *)((u8 *)(*global) + 0x7E)) = 0xD2;
+        (*(s16 *)((u8 *)(*global) + 0x80)) = 0x6B;
+        (*(s16 *)((u8 *)(*global) + 0x82)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x84)) = 0xDF00DF;
+        (*(s16 *)((u8 *)(*global) + 0x94)) = 0x117;
+        (*(s16 *)((u8 *)(*global) + 0x96)) = 0xD5;
+        (*(s16 *)((u8 *)(*global) + 0x98)) = 0x19D;
+        (*(s16 *)((u8 *)(*global) + 0x9A)) = 0x1DB;
+        break;
+    case 3:
+        (*(s16 *)((u8 *)(*global) + 0x6C)) = 0x97;
+        (*(s16 *)((u8 *)(*global) + 0x6E)) = 0x71;
+        (*(s16 *)((u8 *)(*global) + 0x70)) = 0xA9;
+        (*(s16 *)((u8 *)(*global) + 0x72)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x74)) = 0xC4;
+        (*(s16 *)((u8 *)(*global) + 0x76)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x78)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x7C)) = 0x16D;
+        (*(s16 *)((u8 *)(*global) + 0x7E)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x80)) = 0x6B;
+        (*(s16 *)((u8 *)(*global) + 0x82)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x84)) = 0xDF00DF;
+        (*(s16 *)((u8 *)(*global) + 0x94)) = 0xB1;
+        (*(s16 *)((u8 *)(*global) + 0x96)) = 0xCA;
+        (*(s16 *)((u8 *)(*global) + 0x98)) = 0x137;
+        (*(s16 *)((u8 *)(*global) + 0x9A)) = 0x175;
+        break;
+    case 4:
+    case 5:
+        (*(s16 *)((u8 *)(*global) + 0x6C)) = 0x97;
+        (*(s16 *)((u8 *)(*global) + 0x6E)) = 0x71;
+        (*(s16 *)((u8 *)(*global) + 0x70)) = 0xA9;
+        (*(s16 *)((u8 *)(*global) + 0x72)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x74)) = 0x5C;
+        (*(s16 *)((u8 *)(*global) + 0x76)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x78)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x7C)) = 0x105;
+        (*(s16 *)((u8 *)(*global) + 0x7E)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x80)) = 0x4D;
+        (*(s16 *)((u8 *)(*global) + 0x82)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x84)) = 0xDF00DF;
+        (*(s16 *)((u8 *)(*global) + 0x88)) = 0x152;
+        (*(s16 *)((u8 *)(*global) + 0x8A)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x8C)) = 0x86;
+        (*(s16 *)((u8 *)(*global) + 0x8E)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x90)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x94)) = 0xB1;
+        (*(s16 *)((u8 *)(*global) + 0x96)) = 0xCA;
+        (*(s16 *)((u8 *)(*global) + 0x98)) = 0x10D;
+        (*(s16 *)((u8 *)(*global) + 0x9A)) = 0x159;
+        break;
+    }
+    (*(u8 **)((u8 *)(*global) + 0xC)) = func_8821DA70(arg0);
+    (*(u8 **)((u8 *)(*global) + 0x10)) = (u8 *)(*(u8 **)((u8 *)(*global) + 0xC)) + 8;
+    func_882204F8(arg0, *(u8 **)((u8 *)(*global) + 0xC));
+    func_88001C24(*(void **)((u8 *)(*global) + 0x10),
+                  *(u16 *)((u8 *)(*(void **)((u8 *)(*global) + 0xC)) + 4), 7);
+    func_88001D0C(*(void **)((u8 *)(*global) + 0x10));
+    result = func_88004804(0, 3, *(s16 *)((u8 *)(*global) + 0x6C),
+                           *(s16 *)((u8 *)(*global) + 0x6E), 0, 1, 0xDC, 0xDC, 0xB4,
+                           func_8821EE00, func_8821F01C,
+                           func_8821EC10, func_8821EC34, 2, 0);
+    (*(void **)((u8 *)(*global) + 8)) = D_8800ED50 + (result * 0x4C);
+    (*(s16 *)((u8 *)(*(void **)((u8 *)(*global) + 8)) + 0x10)) = 0x156;
+    (*(s16 *)((u8 *)(*(void **)((u8 *)(*global) + 8)) + 0x12)) = 0x146;
+    (*(u32 *)((u8 *)(*global) + 0)) = arg0;
+    (*(s32 *)((u8 *)(*global) + 0x49C)) = 0;
+    (*(u8 *)((u8 *)(*global) + 0x4A0)) = 0;
+    D_880068B4 = 0;
+}
+/* mkdraft:func_882206A0 end */
 #endif

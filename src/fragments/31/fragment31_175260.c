@@ -75,7 +75,70 @@ s32 func_88202104(u8 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202158.s")
+/* mkdraft:func_88202158 begin */
+
+
+s32 func_88202158(u8 *arg0, s32 arg1) {
+    s32 var_v1;
+
+    var_v1 = func_88A008CC(arg0);
+    if ((arg1 & 1) && (((var_v1 == 1) && (func_88202098(*arg0) != 0)) || ((var_v1 == 0) && (func_88202104(*arg0) != 0)))) {
+        return 1;
+    }
+    if (arg1 & 2) {
+        if (func_88201FE0(arg0) != 0) {
+            return 1;
+        }
+    }
+    if ((arg1 & 4) && (var_v1 == 0)) {
+        if (func_88202104(*arg0) == 0) {
+            if ((*arg0 > 0) && (*arg0 < 251)) {
+                return 1;
+            }
+        }
+    }
+    if ((arg1 & 8) && (((var_v1 == 1) && (*arg0 == 40)) || ((var_v1 == 0) && (*arg0 == 32)))) {
+        return 1;
+    }
+    if ((arg1 & 0x10) && (((var_v1 == 1) && (*arg0 == 35)) || ((var_v1 == 0) && (*arg0 == 26)))) {
+        return 1;
+    }
+    if ((arg1 & 0x20) && (((var_v1 == 1) && (*arg0 == 36)) || ((var_v1 == 0) && (*arg0 == 27)))) {
+        return 1;
+    }
+    if ((arg1 & 0x40) && (((var_v1 == 1) && (*arg0 == 37)) || ((var_v1 == 0) && (*arg0 == 28)))) {
+        return 1;
+    }
+    if ((arg1 & 0x80) && (((var_v1 == 1) && (*arg0 == 38)) || ((var_v1 == 0) && (*arg0 == 29)))) {
+        return 1;
+    }
+    if ((arg1 & 0x100) && (((var_v1 == 1) && (*arg0 == 39)) || ((var_v1 == 0) && (*arg0 == 31)))) {
+        return 1;
+    }
+    if ((arg1 & 0x200) && (((var_v1 == 1) && (*arg0 == 79)) || ((var_v1 == 0) && (*arg0 == 62)))) {
+        return 1;
+    }
+    if ((arg1 & 0x400) && (((var_v1 == 1) && (*arg0 == 10)) || ((var_v1 == 0) && (*arg0 == 8)))) {
+        return 1;
+    }
+    if ((arg1 & 0x800) && (((var_v1 == 1) && (*arg0 == 32)) || ((var_v1 == 0) && (*arg0 == 22)))) {
+        return 1;
+    }
+    if ((arg1 & 0x1000) && (((var_v1 == 1) && (*arg0 == 33)) || ((var_v1 == 0) && (*arg0 == 23)))) {
+        return 1;
+    }
+    if ((arg1 & 0x2000) && (((var_v1 == 1) && (*arg0 == 34)) || ((var_v1 == 0) && (*arg0 == 24)))) {
+        return 1;
+    }
+    if ((arg1 & 0x4000) && (((var_v1 == 1) && (*arg0 == 47)) || ((var_v1 == 0) && (*arg0 == 34)))) {
+        return 1;
+    }
+    if ((arg1 & 0x8000) && (var_v1 == 0) && (*arg0 == 169)) {
+        return 1;
+    }
+    return 0;
+}
+/* mkdraft:func_88202158 end */
 
 // Same 12-byte layout as LabPCStorageList in
 //@src/fragments/31/fragment31_1736F0.c
@@ -166,7 +229,97 @@ void func_882026A4(u8 *arg0, s32 arg1) {
     *(s32 *)(*(u8 **)arg0 + 0xC) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_882027F0.s")
+/* mkdraft:func_882027F0 begin */
+// Color triple consumed by func_88000510/func_880006E0; same layout and name as the
+// Color88217F70 typedef used by matched fragment 31 code.
+//@src/fragments/31/fragment31_189760.c
+typedef struct Color88217F70 {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color88217F70;
+
+extern u8 func_88201FE0(u8 *);
+extern s32 func_88A008CC(u8 *);
+extern void func_880006E0(Color88217F70 *);
+extern Color88217F70 *func_88000510(Color88217F70 *, s8);
+extern void *func_8004C874(s32, s32);
+extern u8 func_80062D5C(u8);
+extern u8 func_80062D98(u8);
+extern u8 func_80062DD4(u8);
+// The definition in 638E0.c returns u8, but declaring it u8 here makes IDO reserve
+// an extra (unreferenced) stack word, pushing sp46's spill from 0x24 to 0x20 (score 8).
+//@src/638E0.c
+extern s32 func_80062E10(u8); // FAKE: declared s32 (real return type u8, //@src/638E0.c); diff score 8 with the u8 prototype.
+extern s32 func_80062CE0(u8);
+extern s32 func_80063270(u8);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern Color88217F70 D_88005FA0;
+extern s32 D_8800687C;
+
+// Draws the three-part readout for one record `arg0`: its first byte is a species id,
+// which func_88201FE0 resolves to the six-byte-stride table index used by the
+// func_80062D5x accessors. Rows are "%s%d" at (arg5, arg1), "%s%s" or "%s%d" at
+// (arg3, arg2), the 0-100 scaled func_80062DD4 byte at (arg6, arg2), then two icon
+// strings via func_80048E30.
+//@src/fragments/31/fragment31_175260.c
+
+
+void func_882027F0(u8 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6) {
+    // Stack slots follow the target with locals declared in this order: named slots
+    // fill downward from 0x47, and the first free word after sp2C is 0x24 (0x28 stays
+    // a hole). Declaring any further local takes 0x24 and moves the sp46 spill (the
+    // func_80062D5C result across the else-branch func_8004C874 call) to 0x20.
+    u8 sp47;
+    u8 sp46;
+    s8 sp45;
+    Color88217F70 sp40;
+    f32 var_fv1;
+    f32 var_fv0;
+    u8 sp37;
+    s32 sp30;
+    s32 sp2C;
+
+    sp47 = func_88201FE0(arg0);
+    func_880006E0(&D_88005FA0);
+    if (sp47 != 0) {
+        sp46 = func_80062D5C(sp47);
+        sp45 = func_80062D98(sp47);
+        sp30 = (s32) func_8004C874(0x1F, 0xB);
+        func_800495F8(arg5, arg1, 0, "%s%d", sp30, func_80062E10(sp47));
+        if ((sp46 == 0) || (sp46 == 1)) {
+            sp2C = (s32) func_8004C874(0x1F, 0xC);
+            func_800495F8(arg3, arg2, 0, "%s%s", sp2C, func_8004C874(0x1F, 0xE));
+        } else {
+            func_800495F8(arg3, arg2, 0, "%s%d", func_8004C874(0x1F, 0xC), sp46);
+        }
+        sp30 = (s32) func_8004C874(0x1F, 0xD);
+        sp37 = func_80062DD4(sp47);
+        // Both rounding operands are named f32 locals. uopt commutes add.s only when
+        // one side is an interior expression node; with two leaves source order decides,
+        // giving the bias first (add.s $ft2,$fv0,$ft1) as in the target.
+        if (((f32) (func_80062DD4(sp47) * 0x64) / 255.0f) > 0.0f) {
+            var_fv0 = 0.5f;
+        } else {
+            var_fv0 = -0.5f;
+        }
+        var_fv1 = (f32) (sp37 * 0x64) / 255.0f;
+        func_800495F8(arg6, arg2, 0, "%s%d", sp30, (s32) (var_fv0 + var_fv1));
+        func_880006E0(func_88000510(&sp40, sp45));
+        func_80048E30((u8 *) D_8800687C, arg3, arg1, (const char *) func_80062CE0(sp47), 1);
+        func_80048E30((u8 *) D_8800687C, arg4, arg1, (const char *) func_80063270(sp45), 1);
+        func_880006E0(&D_88005FA0);
+        return;
+    }
+    // The mode select stays inline: naming it would take a stack slot and make the tail
+    // call result spill instead of staying in $v0 for the beqz/or pair.
+    sp30 = (s32) func_8004C874(func_88A008CC(arg0) != 0 ? 0xB : 9, *arg0 - 1);
+    if (sp30 != 0) {
+        func_80048E30((u8 *) D_8800687C, arg3, arg1, (const char *) sp30, 1);
+    }
+}
+/* mkdraft:func_882027F0 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202AA0.s")
 
