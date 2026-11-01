@@ -182,12 +182,64 @@ void func_8AF19E50(s16 arg0) {
     func_8AF19CB0(arg0, 0xC);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19E7C.s")
+/* mkdraft:func_8AF19E7C begin */
+extern u8 D_8AF36F30[];
+extern s32 func_8AF19BDC(u8);
+extern s32 func_8AF19AC4(u8);
+extern s32 *func_8AF19880(s16);
+extern u8 *func_8AF19908(u8 *);
+extern s32 *func_8AF199D8(s16);
+
+
+
+u8 *func_8AF19E7C(u8 *arg0, s32 arg1, u16 arg2, s16 arg3)
+{
+  u8 *src;
+  u8 *end;
+  s16 filled;
+  s32 value;
+  s32 index;
+  s32 id;
+  s16 count;
+  filled = 0;
+  count = arg3;
+  if (arg3 > 0)
+  {
+    src = D_8AF36F30;
+    do
+    {
+      value = *src;
+      index = value * 2;
+      id = (u8)(*src);
+      if (((*((s16 *) ((arg1 + index) - 2))) & arg2) && (func_8AF19BDC(id) != 0))
+      {
+        *arg0 = value;
+        arg0[1] = func_8AF19AC4(id);
+        *((s32 **) (arg0 + 4)) = func_8AF19880(arg0[0]);
+        if ((index < 0x17C) || (index == 0x1FE))
+        {
+          *((s32 **) (arg0 + 8)) = func_8AF19908(arg0);
+        }
+        else
+        {
+          *((s32 **) (arg0 + 8)) = func_8AF199D8(arg0[1]);
+        }
+        arg0 += 0xC;
+        filled++;
+      }
+      end = D_8AF36F30 + count;
+      src++;
+    }
+    while (src != end);
+  }
+  return arg0;
+}
+/* mkdraft:func_8AF19E7C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19FAC.s")
 
 extern s16 func_8AF19A1C(s16);
-extern u8 *func_8AF19E7C(u8 *, s32, s32, s16);
+extern u8 *func_8AF19E7C(u8 *, s32, u16, s16);
 extern s8 D_8AF29D44;
 extern s32 D_8AF2BAAC;
 extern s16 D_8AF35050;
