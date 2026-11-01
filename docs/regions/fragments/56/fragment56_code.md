@@ -241,7 +241,7 @@ The remaining difference is floating-point load/operation scheduling and a
 latency NOP in the position calculation. Parameter snapshots and final XYZ
 temporaries can reach588 bytes but change FP allocation/order.
 
-There are78 runner attempts, including two rejected generated declaration
+There are118 runner attempts, including two rejected generated declaration
 errors corrected in later variants. Tried pointer scope/type, array versus
 pointer address spelling, opaque/typed record views, pointer initialization,
 time temporaries/compound assignment, index signedness, parameter snapshots,
@@ -252,8 +252,70 @@ report an iteration count. No searched body was installed. The actual
 pointer; using that verified API changes no bytes compared with the legacy
 void-return alias in this owner.
 
-Next: capture stock UOPT/UGEN/assembler boundaries for the near-match, then
-localize the FP parameter-load delay and temporary-register phase before
-another source-shape campaign. Preserve the exact collision branch. The
+Stock CFE/UOPT/UGEN/AS1 pass captures reproduce the complete module in normal
+and +20-line controls. UGEN's optional textual listing reproduces every
+allocated byte and relocation after stock AS1 replay. A printf-capable native
+AS1 diagnostic build also reproduces stock output with tracing off and on for
+both the accepted module and the near-match. Production compiler decisions
+and flags are unchanged in these controls.
+
+The scheduling trace identifies alias edges from the X/Z stores to the
+subsequent Y-multiplier load at motion offset16. Those edges prevent AS1 from
+hoisting that load. Ground truth loads it before both stores and overlaps the
+Y multiplication with the X division, avoiding the extra latency NOP. The
+near-match also reverses operands in the base-height addition and the Y
+multiplication. This is a source/UGEN input-order problem, rather than evidence
+that a different AS1 scheduling flag is needed.
+
+Forty further probes cover early Y products and field updates, local-vector
+aggregate assignment in six calculation orders, bounded arrays, typed/global
+indexed records, nested Z assignments, and scoped/const coefficient locals.
+Aggregates add stack/copy work (616 or620 bytes); bounded arrays preserve the
+592-byte residual. Coefficient snapshots reach588 bytes but color the
+coefficient as a separate FP variable and alter the temporary sequence. Scoped
+initializers improve that family to raw0.9456; they do not beat the retained
+592-byte parent. No body was installed.
+
+Next: inspect UOPT's coefficient-web lifetime in the best588-byte scoped
+snapshot, then seek a natural source form that preserves its early load while
+recovering the target FP temporary sequence. Do not repeat the measured array
+extent or vector-copy families. Preserve the exact collision branch. The
 pre-existing `func_86806044` unused `pad[3]` is a separate source-quality cleanup;
-its declaration is now marked FAKE and its behavior is unchanged.
+its declaration is marked FAKE and its behavior is unchanged.
+
+## 2026-11-01 — moving-model reset accepted
+
+`Fragment56_ResetMovingModels` (formerly `func_86805DB8`,652 bytes) resets
+four32-byte motion records and their360-byte model nodes. It clears elapsed
+ticks, chooses signed random offsets and one of three variants, initializes
+the model asset and scale, and derives the two trajectory coefficients read
+by `func_86806180`. The asset pointer at8682CCFC is written by
+`func_86802740` from `func_80040E80` and passed to `func_8003F114` here;
+its pointer type follows that producer/consumer chain.
+
+The winning source uses a four-iteration counted loop with indexed motion
+records and height-table entries, plus a model cursor initialized alongside
+the loop index. A bare signed remainder in the ternary preserves the original
+negative-remainder handling; spelling the condition with explicit `!=0`
+caused IDO to simplify it to a bit test. Live distance and scale values serve
+both trajectory coefficients. Initializing distance to1000 then accumulating
+the record offset recovers the target addition's operand order. These locals
+all contribute to the model trajectory; no unused locals or register directives
+are introduced.
+
+Stock pass captures and optional UGEN listings reproduce the whole module in
+normal and +20-line controls. AS1 tracing on and off also reproduces every
+allocated byte and relocation. A120-second quiet permuter run retained no
+outputs; a subsequent unbuffered60-second run recorded358 iterations and
+proposed a lower score by introducing an unused local. That proposal was
+rejected, and its cursor-initialization split was tested without the unused
+variable. The final counted-loop/accumulator source was accepted independently
+by the canonical runner.
+
+Candidate1 of `fragment56-reset-distance-init8` passed the normal host syntax
+check and full retail ROM gate on `e7d279dd`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Post-acceptance cleanup removes an
+unused draft struct and extern, gives the loop/cursor readable names, and
+retains the original symbol as a linker alias. Whole-module section bytes,
+function extents, and relocations are unchanged in normal and +20-line naming
+controls. `func_86806180` remains the separate requeue documented above.

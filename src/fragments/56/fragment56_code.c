@@ -589,7 +589,65 @@ void func_86805D50(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86805DB8.s")
+extern u8 D_8682ED98[];
+extern u8 D_8681E388[];
+extern f32 D_86808050[4];
+extern f32 D_8682F300;
+extern void *D_8682CCFC;
+extern void *D_8682CD10;
+extern u32 func_8003570C(void);
+extern void func_8003F114(u8 *, s16, s16, void *);
+void Fragment56_ResetMovingModels(void) {
+    u8 *moving_model;
+    s32 random_value;
+    s32 sign;
+    s32 variant_offset;
+    s32 group_index;
+    f32 position_scale;
+    f32 travel_distance;
+    for (group_index = 0, moving_model = D_8681E388; group_index < 4; group_index++) {
+        variant_offset = 0;
+        random_value = func_8003570C() % 101;
+        sign = random_value % 2 ? 1 : -1;
+        *(s32 *)(D_8682ED98 + group_index * 32 + 8) = 0;
+        *(f32 *)(moving_model + 0x2C) = 1000.0f;
+        *(f32 *)(D_8682ED98 + group_index * 32 + 0x1C) = (f32)(sign * random_value * 2);
+        *(f32 *)(D_8682ED98 + group_index * 32 + 0x18) = (f32)((sign * random_value) / 4);
+        *(f32 *)(moving_model + 0x28) = *(f32 *)(D_8682ED98 + group_index * 32 + 0x18);
+        *(f32 *)(D_8682ED98 + group_index * 32 + 0x14) = (f32)(-sign * random_value * 5);
+        *(f32 *)(moving_model + 0x24) = *(f32 *)(D_8682ED98 + group_index * 32 + 0x14);
+        random_value = func_8003570C() % 51;
+        if (random_value < 10) {
+            *(s32 *)(D_8682ED98 + group_index * 32) = 1;
+            *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 1;
+            func_8003F114(moving_model, 0, -1, D_8682CCFC);
+            *(f32 *)(moving_model + 0x38) = 1.1f;
+            *(f32 *)(moving_model + 0x34) = 1.1f;
+            *(f32 *)(moving_model + 0x30) = 1.1f;
+        } else {
+            *(s32 *)(D_8682ED98 + group_index * 32) = 0;
+            *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 1;
+            if (random_value >= 21) {
+                *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 3;
+                variant_offset = -5;
+            }
+            if (random_value >= 36) {
+                *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 2;
+                variant_offset = 5;
+            }
+            func_8003F114(moving_model, 0, -1, D_8682CD10);
+            *(f32 *)(moving_model + 0x38) = 0.05f;
+            *(f32 *)(moving_model + 0x34) = 0.05f;
+            *(f32 *)(moving_model + 0x30) = 0.05f;
+        }
+        travel_distance = 1000.0f;
+        travel_distance += *(f32 *)(D_8682ED98 + group_index * 32 + 0x1C);
+        position_scale = D_8682F300;
+        *(f32 *)(D_8682ED98 + group_index * 32 + 0xC) = travel_distance / (D_86808050[group_index] + (f32)variant_offset * position_scale);
+        *(f32 *)(D_8682ED98 + group_index * 32 + 0x10) = -((56.0f + 7.0f * position_scale) - *(f32 *)(D_8682ED98 + group_index * 32 + 0x18)) / travel_distance;
+        moving_model += 360;
+    }
+}
 
 extern u8 D_868085E8[];
 extern u8 D_86808C68[];
@@ -617,7 +675,7 @@ void func_86806044(s32 arg0) {
 extern s32 D_86807CB4;
 extern s32 D_86808558;
 extern s32 func_87F08208(void *);
-extern void func_86805DB8(void);
+extern void Fragment56_ResetMovingModels(void);
 extern void func_800225C4(s32);
 extern void func_800226C0(s32);
 extern void StageContext_SetClearColor(s32);
@@ -634,7 +692,7 @@ void func_868063CC(void) {
     case 1:
         StageContext_SetClearColor(0xFFFF);
         StageFade_StartFromTransparent(0x14);
-        func_86805DB8();
+        Fragment56_ResetMovingModels();
         D_8682F2A8 = 4;
         func_800225C4(0x28);
         Audio_PlayDefaultSound(0xCF0B);

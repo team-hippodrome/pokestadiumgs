@@ -1508,3 +1508,5 @@ func_86800B98 = Fragment56_UpdateScaledParameters;
 func_86805AA4 = Fragment56_InitModelGroups;
 
 func_868058C0 = Fragment56_UpdatePoolCompletion;
+
+func_86805DB8 = Fragment56_ResetMovingModels;
