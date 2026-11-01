@@ -280,7 +280,50 @@ void func_82901628_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33D6A0/func_829016B0.s")
+/* mkdraft:func_829016B0 begin */
+extern u8 D_82918868[];
+extern s16 D_829188B0[];
+extern void func_82901554(s16, s16, u16, u16);
+extern void func_82901628(s16, s16, s16, s16);
+
+// Draws the transition strips for the mode in D_82918868[0x31] once the fade state
+// machine in D_82918868[0x32] is running: mode 0 covers the whole screen through
+// func_82901554, modes 1 and 2 draw the two inset strips through func_82901628, and
+// mode 3 draws nothing. D_82918868[0x30] suppresses drawing for the whole frame.
+
+
+void func_829016B0(void) {
+    if (D_82918868[0x30] != 0) {
+        return;
+    }
+    if (D_82918868[0x31] != 0 && D_82918868[0x32] == 3) {
+        return;
+    }
+    if (D_82918868[0x32] == 0) {
+        return;
+    }
+    switch (D_82918868[0x31]) {
+    case 0:
+        func_82901554((u16)*(f32 *)(D_82918868 + 0x0), (u16)*(f32 *)(D_82918868 + 0x8),
+                      (u16)*(f32 *)(D_82918868 + 0x18), (u16)*(f32 *)(D_82918868 + 0x20));
+        return;
+    case 1:
+        func_82901628(D_829188B0[3], D_829188B0[4],
+                      (s16)((s32)*(f32 *)(D_82918868 + 0x4)) - D_829188B0[5], D_829188B0[2]);
+        func_82901628((s16)*(f32 *)(D_82918868 + 0x10), D_829188B0[4],
+                      (s16)(D_829188B0[6] - (s16)*(f32 *)(D_82918868 + 0x10)), D_829188B0[2]);
+        return;
+    case 2:
+        func_82901628(D_829188B0[3], D_829188B0[4], D_829188B0[1],
+                      (s16)((s32)*(f32 *)(D_82918868 + 0x4)) - D_829188B0[5]);
+        func_82901628(D_829188B0[3], (s16)*(f32 *)(D_82918868 + 0x10), D_829188B0[1],
+                      (s16)(D_829188B0[6] - (s16)*(f32 *)(D_82918868 + 0x10)));
+        return;
+    case 3:
+        return;
+    }
+}
+/* mkdraft:func_829016B0 end */
 #endif
 
 #ifdef VERSION_US
