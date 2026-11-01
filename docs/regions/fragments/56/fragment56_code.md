@@ -53,3 +53,18 @@ that overlay before candidate admission. Naming preserves all module bytes,
 function extents, and normalized relocations normally and with20 leading blank
 lines. The old function address remains a linker alias. Diagnostic tools and
 receipts stay private; the production source and linker pin are reproducible.
+
+## 2026-11-01 — scene loop accepted
+
+`Fragment56_RunSceneLoop` (formerly `func_86807120`, 380 bytes) initializes
+four model groups when the scene mode byte at offset0x2180 equals4, selects
+random starting animation frames, starts a fade, and renders/updates until
+state13. Its indexed model initialization reuses the accepted source shape
+from `func_8680649C`, with the target's call order and state writes.
+
+`fragment56-setup8` candidate0 passed the canonical host syntax check and
+full retail ROM gate on `582d79e4`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming preserves all module sections,
+function extents, and relocations in normal and +20-line controls. The original
+address is retained as a linker alias. No additional bss or linker changes
+were required by this function.

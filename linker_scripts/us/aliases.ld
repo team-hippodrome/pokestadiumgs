@@ -1494,3 +1494,5 @@ func_84133C10 = Battle_ResolveOpponentFaint;
 func_84133F10 = Battle_ResolveSideAfterCommands;
 
 func_86800298 = Fragment56_AnimatedTextureCallback;
+
+func_86807120 = Fragment56_RunSceneLoop;
