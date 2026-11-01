@@ -241,7 +241,7 @@ The remaining difference is floating-point load/operation scheduling and a
 latency NOP in the position calculation. Parameter snapshots and final XYZ
 temporaries can reach588 bytes but change FP allocation/order.
 
-There are118 runner attempts, including two rejected generated declaration
+There are126 runner attempts, including two rejected generated declaration
 errors corrected in later variants. Tried pointer scope/type, array versus
 pointer address spelling, opaque/typed record views, pointer initialization,
 time temporaries/compound assignment, index signedness, parameter snapshots,
@@ -319,3 +319,34 @@ unused draft struct and extern, gives the loop/cursor readable names, and
 retains the original symbol as a linker alias. Whole-module section bytes,
 function extents, and relocations are unchanged in normal and +20-line naming
 controls. `func_86806180` remains the separate requeue documented above.
+
+## 2026-11-01 — typed moving-model data and coefficient-web evidence
+
+The post-acceptance data cleanup gives `D_8682ED98` four32-byte motion
+records and `D_8681E388` four360-byte model views. Record fields follow the
+reset routine's stores and `func_86806180`'s trajectory reads. The model view
+names its position and scale vectors and retains the occupied, unresolved
+header/tail fields as byte ranges. Existing accepted operations keep their
+byte views; their field offsets and arithmetic are unchanged.
+
+Native compile-time size checks pass. Complete module section bytes,
+function extents, and relocations match before cleanup both normally and
+with20 leading blank lines. The cleanup then passes the normal full US retail
+ROM gate on the `a5f20992` baseline, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. These declarations add no data storage
+or executable functions and do not change decompilation totals.
+
+For the588-byte coefficient-snapshot near-match, stock pass capture reproduces
+the full module in normal/+20-line controls. Native UOPT replay with tracing
+on and off preserves both optimized ucode and the in-place symbol file.
+The coefficient is a separate live web (40, adjusted savings20), interfering
+with elapsed/depth webs50/53. UOPT assigns it register26, which the generated
+code loads as FP12. This explains why an explicit snapshot reaches the target
+size while losing the target's temporary-register sequence; it does not prove
+the early-load source spelling is impossible.
+
+Eight probes applying the reset's indexed-record/depth-accumulator spelling to
+the opaque motion view preserve the592-byte residual rather than admitting C.
+Next: use the now-verified global record types for the moving-model candidate
+and inspect whether its load/store alias dependencies change. Do not infer
+acceptance from the improved type information alone.
