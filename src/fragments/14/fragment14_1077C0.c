@@ -454,7 +454,86 @@ f64 MathUtil_Atan2d_fragment14(f64 arg0, f64 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_8131058C.s")
+/* mkdraft:func_8131058C begin */
+extern u8 D_800CE060[];
+extern s32 func_813102A4(u8 *, s32, s32);
+
+
+
+s32 func_8131058C(u8 *arg0) {
+    u8 *entry;
+    s32 old;
+    s32 index;
+    s32 direction;
+
+    // D_800CE060 holds four 0x28-byte ControllerState records; +0x8 is buttonsPressed and
+    // +0xC is buttonsRepeat.
+    //@include/controller.h
+    entry = D_800CE060 + arg0[0x39] * 0x28;
+    *(f32 *)(arg0 + 0x30) = 16.0f;
+    if (*(s32 *)(arg0 + 0xA8) == 0) {
+        func_800226C0(5);
+        arg0[0x38] = 2;
+        *(s32 *)(arg0 + 0x48) = -1;
+        return 1;
+    }
+    index = *(s32 *)(arg0 + 0x48);
+    if (index >= 0) {
+        old = index;
+        direction = -1;
+        // buttonsRepeat D-pad bits; the direction value selects one of the four s16 neighbours
+        // at D_81312898 + index * 0x14 + direction * 2 + 0xC inside func_813102A4.
+        if (*(u16 *)(entry + 0xC) & 0x800) {
+            direction = 0;
+        } else if (*(u16 *)(entry + 0xC) & 0x100) {
+            direction = 1;
+        } else if (*(u16 *)(entry + 0xC) & 0x400) {
+            direction = 2;
+        } else if (*(u16 *)(entry + 0xC) & 0x200) {
+            direction = 3;
+        }
+        if (direction >= 0) {
+            // func_813102A4 returns the index reached from `index` along `direction` in
+            // D_81312898, following the neighbour entries while func_8130F970 returns 0.
+            index = func_813102A4(arg0, index, direction);
+            *(s32 *)(arg0 + 0x48) = index;
+        }
+        if (old != index) {
+            func_800226C0(1);
+        }
+    } else {
+        *(s32 *)(arg0 + 0x48) = 0;
+        func_8130FBC0(arg0);
+    }
+    if (*(u16 *)(entry + 8) & 0x8000) {
+        index = *(s32 *)(arg0 + 0x48);
+        if (index < 4) {
+            // Written base first: `arg0[index + 0x8C]` makes IDO emit `addu $t9,$a1,$a3`.
+            switch (*(u8 *)(arg0 + 0x8C + index)) {
+            case 0:
+                func_800226C0(0x8F);
+                arg0[0x38] = 4;
+                func_8130F8B4(arg0, 0);
+                break;
+            case 3:
+            case 6:
+                arg0[0x38] = 2;
+                break;
+            }
+        } else {
+            func_800226C0(0x8F);
+            arg0[0x38] = 4;
+            func_8130F8B4(arg0, 0);
+        }
+    } else if (*(u16 *)(entry + 0xC) & 0x4000) {
+        arg0[0x38] = 4;
+        func_8130F8B4(arg0, 0);
+        *(s32 *)(arg0 + 0x48) = -1;
+        func_800226C0(3);
+    }
+    return 1;
+}
+/* mkdraft:func_8131058C end */
 #endif
 
 #ifdef VERSION_US
