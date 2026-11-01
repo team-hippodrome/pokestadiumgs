@@ -126,7 +126,74 @@ void func_87F0B24C(u8 *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5, 
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0B2F4.s")
+/* mkdraft:func_87F0B2F4 begin */
+#include "global.h"
+extern f32 D_87F116D4;
+extern f32 D_87F116D8;
+extern void func_87F0B18C(u8 *arg0);
+
+// Degree-valued counterpart of func_87F0B1A4 and func_87F0B24C. The requested
+// components (arg2..arg4) are scaled by 65536/360 and rounded to the nearest
+// integer before being compared with the previous orientation, which arg1 holds
+// as s16 binary angles. On any mismatch the state captures the old orientation
+// in degrees (bytes 24/28/32), the new orientation in degrees (bytes 60/64/68),
+// the elapsed word (124), the duration (128), and flag 0x100 together with the
+// caller's mask (byte 132), then calls func_87F0B18C.
+// The first rounding block and the two arg1 comparisons share one source line.
+// IDO 7.1 breaks scheduling ties with .loc line numbers; splitting them moves
+// the lwc1 of arg3 (0x24(sp)) after the 0.5f constant and changes two words.
+
+
+
+void func_87F0B2F4(u8 *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5, s32 arg6) {
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    f32 temp_fv0_3;
+    s16 temp_v1;
+    s32 var_v0;
+    s32 var_v0_2;
+    s32 var_v0_3;
+    f32 to_degrees;
+
+    temp_fv0 = arg2 * D_87F116D4;
+    do {
+        if ((arg2 * D_87F116D4) >= 0.0f) {
+            var_v0 = (s32) (temp_fv0 + 0.5f); } else { var_v0 = (s32) (temp_fv0 - 0.5f); } temp_v1 = *((s16 *) ((u8 *) arg1)); if (temp_v1 == ((s16) var_v0)) { temp_fv0_2 = arg3 * D_87F116D4;
+            if (temp_fv0_2 >= 0.0f) {
+                var_v0_2 = (s32) (temp_fv0_2 + 0.5f);
+            } else {
+                var_v0_2 = (s32) (temp_fv0_2 - 0.5f);
+            }
+            if (*((s16 *) ((u8 *) arg1 + 2)) == (0, (s16) var_v0_2)) { // FAKE: comma keeps the arg1 load ahead of the narrowing cast
+                temp_fv0_3 = arg4 * D_87F116D4;
+                if (temp_fv0_3 >= 0.0f) {
+                    var_v0_3 = (s32) (temp_fv0_3 + 0.5f);
+                } else {
+                    var_v0_3 = (s32) (temp_fv0_3 - 0.5f);
+                }
+                if (*((s16 *) ((u8 *) arg1 + 4)) != (0, (s16) var_v0_3)) { // FAKE: as above
+                    goto block_12;
+                }
+            } else {
+                goto block_12;
+            }
+        } else {
+        block_12:
+            to_degrees = D_87F116D8;
+            *(f32 *) (arg0 + 24) = (f32) (((f32) temp_v1) * to_degrees);
+            *(f32 *) (arg0 + 28) = (f32) (((f32) (*((s16 *) ((u8 *) arg1 + 2))) * to_degrees));
+            *(f32 *) (arg0 + 32) = (f32) (((f32) (*((s16 *) ((u8 *) arg1 + 4))) * to_degrees));
+            *(s32 *) (arg0 + 124) = 0;
+            *(s32 *) (arg0 + 128) = arg5;
+            *(s32 *) (arg0 + 132) = (s32) (((*(s32 *) (arg0 + 132)) | 0x100) | arg6);
+            *(f32 *) (arg0 + 60) = arg2;
+            *(f32 *) (arg0 + 64) = arg3;
+            *(f32 *) (arg0 + 68) = arg4;
+            func_87F0B18C(arg0);
+        }
+    } while (0);
+}
+/* mkdraft:func_87F0B2F4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0B4AC.s")
 
