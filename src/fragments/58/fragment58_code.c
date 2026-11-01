@@ -463,7 +463,188 @@ void func_83402F08(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83402FE8.s")
+/* mkdraft:func_83402FE8 begin */
+extern void ModelAnim_SetEventFrame(u8 *arg0, s16 value);
+extern void ModelAnim_SetFrame(u8 *arg0, s16 value);
+extern s32 StageContext_GetFadeMode(void);
+extern void StageFade_StartFromOpaque(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_80025B54(u8);
+extern void func_80021ED8(s32);
+extern void func_800225C4(s32);
+extern void func_80025CBC(s32);
+extern void func_8003F210(u8 *, s16);
+extern void func_83402DA8(void);
+extern void func_87F0DBFC(u8 *arg0, s32 arg1, u8 arg2, s32 arg3);
+extern void func_87F0DC3C(u8 *arg0);
+extern void func_87F0DC4C(u8 *arg0);
+
+// Records copied wholesale by the stage setup cases below: D_83404848 gets
+// 0x40 bytes from D_83403D8C and D_83404188 gets 0xA4 bytes from D_83403CC4.
+// The fields are not read individually here; the sizes are what the copy
+// loops encode.
+typedef struct {
+    s32 unk00[16];
+} Fragment58NodePair;
+typedef struct {
+    s32 unk00[41];
+} Fragment58StageRecord;
+
+extern Fragment58NodePair D_83404848;
+extern Fragment58NodePair D_83403D8C;
+extern Fragment58StageRecord D_83403CC4;
+extern u8 D_834043B8;
+extern s32 D_83404160;
+extern s32 D_83404148[7];
+extern s16 D_83403E18;
+extern s16 D_83403E1C;
+extern s32 D_83404900;
+extern s32 D_834048FC[1];
+
+extern void *D_83404164;
+extern f32 D_83403C78;
+extern s32 D_83403C7C;
+extern s32 D_834047F8;
+
+
+
+s32 func_83402FE8(s32 arg0) {
+    s32 unused;
+    s32 frame;
+
+    D_83404188.state = arg0;
+    if (*(s32 *)((u8 *)&D_83404188 + 0x10) == 1) {
+        *(s32 *)((u8 *)&D_83404188 + 0xC) = (*(s32 *)((u8 *)&D_834043B8 + 0x48)) >> 16;
+    }
+    switch (D_83404188.state) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            D_83404188.state = D_83404188.unk_04;
+        }
+        break;
+    case 1:
+        D_83404848 = D_83403D8C;
+        *(Fragment58StageRecord *)&D_83404188 = D_83403CC4;
+        *(s32 *)((u8 *)&D_83404188 + 0x44) = 1;
+        ((s32 *)&D_83404164)[-1] = 0;
+        *(s32 *)((u8 *)&D_83404188 + 0xC) = 0;
+        D_83403E18 = 0x4000;
+        D_83403E1C = 0;
+        *(f32 *)((u8 *)&D_83404188 + 0x5C) = 200.0f;
+        *(f32 *)((u8 *)&D_83404188 + 0x60) = 400.0f;
+        *(f32 *)((u8 *)&D_83404188 + 0x64) = 0.0f;
+        *(f32 *)((u8 *)&D_83404188 + 0x68) = 10.0f;
+        func_80021ED8(0x59);
+        D_83404188.state = 2;
+        break;
+    case 2:
+        D_83404160 = D_83404148[6] + 1;
+        if (*(s32 *)((u8 *)&D_83404188 + 0x3C) == 0) {
+            D_83404188.state = 7;
+            D_83404188.unk_04 = 3;
+            StageFade_StartFromTransparent(10);
+        }
+        break;
+    case 3:
+        D_83404888 = D_83403DCC;
+        *(s32 *)((u8 *)&D_83404188 + 0x10) = 1;
+        func_8003F114(&D_834043B8, 0, -1, (void *)D_834047F8);
+        func_8003F210(&D_834043B8, 0);
+        ModelAnim_SetFrame(&D_834043B8, 0);
+        *(s32 *)((u8 *)&D_83404188 + 0xC) = 0;
+        D_83404188.state = 4;
+        *(s32 *)((u8 *)&D_83404188 + 0x30) = 0;
+        break;
+    case 5:
+        D_83404188.state = 6;
+        D_83404900 = 0;
+        break;
+    case 4:
+        frame = (*(s32 *)((u8 *)&D_834043B8 + 0x48)) >> 16;
+        switch (*(s32 *)((u8 *)&D_83404188 + 0x48)) {
+        case 0:
+            if (frame == (s32)(7.0f / D_83403C78)) {
+                func_80025B54(1);
+                *(s32 *)((u8 *)&D_83404188 + 0x48) = 1;
+            }
+            break;
+        case 1:
+            if (frame == 90) {
+                func_83402B10();
+                *(s32 *)((u8 *)&D_83404188 + 0x48) = 2;
+            }
+            break;
+        case 2:
+            if (frame == 105) {
+                ModelAnim_SetFrame(&D_83404250, 0);
+                ModelAnim_SetEventFrame(&D_83404250, 0);
+                *(s32 *)((u8 *)&D_83404188 + 0x48) = 3;
+            }
+            break;
+        case 3:
+            if (frame == (s32)(140.0f / D_83403C78)) {
+                func_800225C4(10);
+                *(s32 *)((u8 *)&D_83404188 + 0x48) = 4;
+            }
+            break;
+        case 4:
+            if (frame == 150) {
+                func_87F0DBFC(&D_83404170, 0, 200, -1);
+                func_80021ED8(0x31);
+                *(s32 *)((u8 *)&D_83404188 + 0x34) = 1;
+                *(s32 *)((u8 *)&D_83404188 + 0x30) = 1;
+                *(s32 *)((u8 *)&D_83404188 + 0x48) = 5;
+            }
+            break;
+        case 5:
+            if (frame == 190) {
+                func_87F0DC3C(&D_83404170);
+                *(s32 *)((u8 *)&D_83404188 + 0x48) = 6;
+            }
+            break;
+        }
+        if (frame >= 96) {
+            func_83402F08();
+        }
+        if (frame >= 209) {
+            D_83404188.state = 5;
+            *(s32 *)((u8 *)&D_83404188 + 0x30) = 2;
+        }
+        if (*(s32 *)((u8 *)&D_83404188 + 0x34) > 0) {
+            (*(s32 *)((u8 *)&D_83404188 + 0x34))++;
+        }
+        break;
+    case 6:
+        D_83404900 = D_834048FC[1] + 1;
+        if (*(s32 *)((u8 *)&D_83404188 + 0x34) > 0) {
+            (*(s32 *)((u8 *)&D_83404188 + 0x34))++;
+        }
+        if (D_83404188.unk_34 == D_83403C7C << 2) {
+            func_80021ED8(0x57);
+        }
+        func_83402F08();
+        func_83402A24();
+        break;
+    case 7:
+        if (D_83404188.unk_04 == 8) {
+            if (*(s32 *)((u8 *)&D_83404188 + 0x34) == 15) {
+                func_80025CBC(2);
+            }
+            (*(s32 *)((u8 *)&D_83404188 + 0x34))++;
+        }
+        if (StageContext_GetFadeMode() == 1) {
+            D_83404188.state = D_83404188.unk_04;
+            if (D_83404188.state != 8) {
+                StageFade_StartFromOpaque(0x14);
+            }
+        }
+        break;
+    }
+    func_83402DA8();
+    func_87F0DC4C(&D_83404170);
+    return D_83404188.state;
+}
+/* mkdraft:func_83402FE8 end */
 
 extern void func_80055948(s32);
 extern void func_80054A24(s32, s32);
