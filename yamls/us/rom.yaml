@@ -1136,8 +1136,8 @@
     - [0x1E5A10, c,       fragments/43/fragment43_1E5A10]
     - [0x1EC950, c,       fragments/43/fragment43_1EC950]
     - [0x1ED590, data,    fragments/43/fragment43_data]
-    - [0x1EDB60, .rodata, fragments/43/fragment43_1E5A10] # D_8AC08170..D_8AC0818C (0.05f x2, 0.3f x6), 16-byte aligned
-    - [0x1EDB80, rodata,  fragments/43/fragment43_rodata_tail]
+    - [0x1ED840, .rodata, fragments/43/fragment43_1E5A10] # D_8AC08170..D_8AC0818C (0.05f x2, 0.3f x6), 16-byte aligned. Extended to 0x1ED840-0x1EDB90: strings, jump tables, float literals.
+    - [0x1EDB90, rodata, fragments/43/fragment43_rodata_tail]
   
   - name: fragment44
     type: code
