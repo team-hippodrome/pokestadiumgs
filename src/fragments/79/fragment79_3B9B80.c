@@ -382,7 +382,131 @@ u8 func_8414C3BC(void) {
 }
 /* mkdraft:func_8414C3BC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C4AC.s")
+/* mkdraft:func_8414C4AC begin */
+extern u8 D_8419D7C0[];
+extern u8 D_84195248[];
+extern s32 *func_80062CE0(u8);
+extern void func_84156730(u8, u8);
+extern s32 func_84156774(u8, u8);
+extern s32 func_84156800(s32, s32);
+
+// Chooses this side's command for the turn and stores it in D_84195248[side].
+// Two scans over the 24 D_8419D7C0 records keep the highest priority entry
+// (record word 0x24) among records with and without flag bit 0x10; the
+// non-0x10 pick is preferred, with the 0x10 pick used when none qualified.
+
+
+void func_8414C4AC(void) {
+    s32 pad[5]; // FAKE: fixes the 0x50 frame, which makes side spill to 0x38(sp); score 30 without it.
+    s32 side;
+    s32 side_offset;
+    s32 party_slot;
+    s32 move_slot;
+    s32 base_index;
+    s32 i;
+    s32 best_value;
+    s32 best_value_flag10;
+    s32 best_index_flag10;
+    s32 best_index;
+    u8 **record_ptr;
+    u8 *record;
+    u8 *entry;
+    u8 flag;
+    u8 *command;
+    s32 roll;
+    best_value = 0x80000000;
+    best_value_flag10 = 0x80000000;
+    best_index = -1;
+    best_index_flag10 = -1;
+    side = func_84154B24();
+    entry = D_8419D7C0;
+    i = 0;
+    for (;;) {
+        flag = *((u8 *) (((u8 *) entry) + 0));
+        if (flag & 1) {
+            if (flag & 0x10) {
+                if (best_value_flag10 < (*((s32 *) (((u8 *) entry) + 0x24)))) {
+                    goto accept_entry_flag10;
+                }
+                if (best_value_flag10 != (*((s32 *) (((u8 *) entry) + 0x24)))) {
+                    goto skip_entry_flag10;
+                }
+                if (best_index_flag10 == (-1)) {
+                    goto accept_entry_flag10;
+                }
+                if (!(func_8003570C() & 1)) {
+                    goto skip_entry_flag10;
+                }
+                accept_entry_flag10:
+                best_value_flag10 = *((s32 *) (((u8 *) entry) + 0x24));
+
+                best_index_flag10 = i;
+                skip_entry_flag10:
+                ;
+            } else {
+                if (best_value < (*((s32 *) (((u8 *) entry) + 0x24)))) {
+                    goto accept_entry;
+                }
+                if (best_value != (*((s32 *) (((u8 *) entry) + 0x24)))) {
+                    goto skip_entry;
+                }
+                if (best_index == (-1)) {
+                    goto accept_entry;
+                }
+                if (!(func_8003570C() & 1)) {
+                    goto skip_entry;
+                }
+                accept_entry:
+                best_value = *((s32 *) (((u8 *) entry) + 0x24));
+
+                best_index = i;
+                skip_entry:
+                ;
+            }
+        }
+        i += 1;
+        entry += 0xA8;
+        if (i < 24) { continue; }
+        break;
+    }
+    if ((best_index == (-1)) && (best_index_flag10 != (-1))) {
+        best_index = best_index_flag10;
+    }
+    side_offset = side * 4;
+    record_ptr = (u8 **) (((u8 *) D_841951F8) + side_offset);
+    record = *record_ptr;
+    party_slot = best_index / 4;
+    if (party_slot == (*((u8 *) (((u8 *) record) + 0xA)))) {
+        if (func_8414A3C0(side, 0x400U) != 0) {
+            base_index = (*((u8 *) (((u8 *) (*record_ptr)) + 0xA))) * 4;
+            if (((*((u8 *) (((u8 *) D_8419D7C0) + (base_index * 0xA8)))) & 1) && (func_84156774(side, 1) == 0)) {
+                best_index = base_index;
+                func_84156730(side, 1);
+            }
+        } else if (func_8414A3C0(side, 0x200U) != 0) {
+            // karodo: empty if; keeps best_index_flag10 live across the 0x200
+            // check so IDO assigns it $s5 and the -1 constant to $s4 (score 68
+            // without it).
+            if (best_index_flag10) {
+            }
+            best_index = func_8414C3BC();
+        }
+        move_slot = best_index % 4;
+        func_84156800((s32) func_80062CE0(*((u8 *) (((u8 *) ((*((u8 **) (((u8 *) D_84195208) + side_offset))) + move_slot)) + 5))), 0);
+        roll = func_8003570C();
+        command = D_84195248 + (side * 0x18);
+        *((s8 *) (((u8 *) command) + 0x12)) = (s8) ((roll & 7) | 0x20);
+        *((s8 *) (((u8 *) command) + 0x13)) = (s8) ((func_8003570C() & 7) | (move_slot * 0x10));
+        return;
+    }
+    func_84156800((s32) ((u8 *) (&((u8 (*)[0x58]) record)[party_slot][0x4C])), 0);
+    func_84156800((s32) func_80062CE0(((u8 *) (&((u8 (*)[0x58]) (*record_ptr))[party_slot][(best_index % 4) + 0x1A]))[0]), 0);
+    roll = func_8003570C();
+    command = D_84195248 + (side * 0x18);
+    *((s8 *) (((u8 *) command) + 0x12)) = (s8) ((roll & 7) | 0x50);
+    *((s8 *) (((u8 *) command) + 0x13)) = (s8) ((func_8003570C() & 7) | (party_slot * 0x10));
+}
+/* mkdraft:func_8414C4AC end */
 
 s32 func_8414C7D4(u8 arg0) {
     switch (func_80062D20(arg0)) {
