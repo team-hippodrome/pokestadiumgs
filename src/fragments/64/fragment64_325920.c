@@ -35,7 +35,103 @@ void func_87F02CE0(void *arg0, u8 *arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_325920/func_87F02F00.s")
+/* mkdraft:func_87F02F00 begin */
+typedef struct S1_GraphNode S1_GraphNode;
+
+typedef struct {
+    f32 mf[4][4];
+} unk_87F02F00_matrix;
+
+extern u16 D_80094904;
+extern void *D_80094908;
+extern void func_87F026E8(void *, u8 *);
+extern void func_87F05FB0(f32 [4][4], f32 [4][4], f32 *, u16 *, void *);
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 D_87F11470;
+extern f32 __sinf(f32);
+
+// Per-frame graph-node update. object+0x1C is the record's animation frame counter and
+// object+0x46 its angle; record+0x4 bounds the counter and record+0xC selects the position
+// mode: 2 rotates the sine/cosine offset (object+0x30, D_80088E50/D_80087E50) by the view
+// matrix at D_80094908+0x64, 3 applies it as a billboard offset, and every other value
+// integrates the record's velocity (record+0x20) into the node position (object+0x48).
+
+
+s32 func_87F02F00(s32 arg0, S1_GraphNode *arg1)
+{
+  u8 *object;
+  s32 index;
+  u8 *record;
+  f32 offset_x;
+  unk_87F02F00_matrix view;
+  float new_var;
+  f32 offset_z;
+  object = *((u8 **) (((u8 *) arg1) + 0x14));
+  record = *((u8 **) (object + 0x20));
+  if ((D_80094904 != (*((u16 *) (record + 0xE)))) && (arg0 == 2))
+  {
+    *((s32 *) (object + 0x1C)) += 1;
+    if ((*((s32 *) (object + 0x1C))) > (*((s32 *) (record + 0x4))))
+    {
+      func_87F026E8(*((void **) (record + 0x8)), object);
+    }
+    else
+    {
+      new_var = ((f32) (*((s32 *) (object + 0x1C)))) / ((f32) (*((s32 *) (record + 0x4))));
+      *((f32 *) (object + 0x54)) = (*((f32 *) (object + 0x58)) = (*((f32 *) (object + 0x5C)) = (*((f32 *) (record + 0x0))) * __sinf(D_87F11470 * new_var)));
+      *((s16 *) (object + 0x46)) += *((s16 *) (record + 0x1C));
+      switch (*((u8 *) (record + 0xC)))
+      {
+        case 2:
+        case 3:
+        {
+        if ((*((u8 **) (record + 0x2C))) != 0)
+        {
+          view = *((unk_87F02F00_matrix *) (((u8 *) D_80094908) + 0x64));
+          offset_x = (*((f32 *) (record + 0x30))) * D_80088E50[((u16) (*((u16 *) (object + 0x46)))) >> 4];
+          offset_z = (*((f32 *) (record + 0x30))) * D_80087E50[((u16) (*((u16 *) (object + 0x46)))) >> 4];
+          *((f32 *) (object + 0x48)) = *((f32 *) ((*((u8 **) (record + 0x2C))) + 0x24));
+          *((f32 *) (object + 0x4C)) = *((f32 *) ((*((u8 **) (record + 0x2C))) + 0x28));
+          *((f32 *) (object + 0x50)) = *((f32 *) ((*((u8 **) (record + 0x2C))) + 0x2C));
+          switch (*((u8 *) (record + 0xC)))
+          {
+            case 2:
+              *((f32 *) (object + 0x48)) += (view.mf[0][0] * offset_x) + (view.mf[1][0] * offset_z);
+              *((f32 *) (object + 0x4C)) += (view.mf[0][1] * offset_x) + (view.mf[1][1] * offset_z);
+              *((f32 *) (object + 0x50)) += (view.mf[0][2] * offset_x) + (view.mf[1][2] * offset_z);
+              break;
+
+            case 3:
+              *((f32 *) (object + 0x48)) += offset_x;
+              *((f32 *) (object + 0x50)) -= offset_z;
+              break;
+
+          }
+        }
+        }
+        break;
+
+        default:
+        {
+        *((f32 *) (object + 0x10)) += *((f32 *) (record + 0x20));
+        *((f32 *) (object + 0x14)) += *((f32 *) (record + 0x24));
+        *((f32 *) (object + 0x18)) += *((f32 *) (record + 0x28));
+        *((f32 *) (object + 0x48)) += *((f32 *) (object + 0x10));
+        *((f32 *) (object + 0x4C)) += *((f32 *) (object + 0x14));
+        *((f32 *) (object + 0x50)) += *((f32 *) (object + 0x18));
+        *((s16 *) (object + 0x46)) += *((s16 *) (record + 0x1C));
+        *((f32 *) (object + 0x10)) *= *((f32 *) (record + 0x18));
+        *((f32 *) (object + 0x14)) *= *((f32 *) (record + 0x18));
+        *((f32 *) (object + 0x18)) *= *((f32 *) (record + 0x18));
+        }
+      }
+      func_87F05FB0((f32 (*)[4]) (object + 0x84), (f32 (*)[4]) (((u8 *) D_80094908) + 0x64), (f32 *) (object + 0x48), (u16 *) (object + 0x42), (f32 *) (object + 0x54));
+    }
+  }
+  *((u16 *) (record + 0xE)) = D_80094904;
+}
+/* mkdraft:func_87F02F00 end */
 
 void func_87F03204(void *arg0, void *arg1)
 {
