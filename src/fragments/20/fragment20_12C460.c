@@ -1609,7 +1609,48 @@ void func_8260DD84(u8 *arg0, s32 arg1) {
     func_8004D19C(x + 74, y + 144, (s32)tex, 1, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260E03C.s")
+/* mkdraft:func_8260E03C begin */
+extern void Ui_DrawAnimatedTextureMarker(s16, s16);
+
+// View of the object func_8260E03C draws: unk_30 selects the marker size, unk_32 is
+// the frame offset whose product with 25 shifts the marker vertically.
+typedef struct {
+    u8 unk_00[0x32];
+    s16 unk_32;
+} unk_func_8260E03C;
+
+// Draws the object's animated texture marker at (x + var_v0, y + var_v1 + unk_32 * 25).
+// x and y are the sums of the object's two position pairs; var_v0/var_v1 are the
+// per-case size offsets selected by unk_30.
+
+
+void func_8260E03C(u8 *arg0, s32 arg1) {
+    s32 var_v0;
+    s32 var_v1;
+    s16 x;
+    s16 y;
+
+    var_v0 = 0;
+    var_v1 = 0;
+    x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    switch (*(u16 *)(arg0 + 0x30)) {
+    case 0: var_v0 = 0x1E; var_v1 = 9; break;
+    case 1: var_v0 = 0x3E; var_v1 = 0x32; break;
+    case 2: var_v0 = 0x1E; var_v1 = 9; break;
+    case 3: var_v0 = 0x1E; var_v1 = 9; break;
+    case 4: var_v0 = 0x3E; var_v1 = 0x32; break;
+    case 5: var_v0 = 0x1E; var_v1 = 0x13; break;
+    case 6: var_v0 = 0x1E; var_v1 = 9; break;
+    case 7: var_v0 = 0x1E; var_v1 = 9; break;
+    }
+    // FAKE: the struct member read leaves `y + var_v1` as the left operand of the
+    // outer `+`, producing retail's `addu a1,t2,t4`; the plain
+    // `*(s16 *)(arg0 + 0x32)` spelling orders the x25 multiply first (diff score 65).
+    Ui_DrawAnimatedTextureMarker((s16)(x + var_v0),
+                                 (s16)(y + var_v1 + ((unk_func_8260E03C *)arg0)->unk_32 * 25));
+}
+/* mkdraft:func_8260E03C end */
 
 extern void Ui_DrawAnimatedTextureMarker(s16, s16);
 extern s16 D_8261A4AE;
