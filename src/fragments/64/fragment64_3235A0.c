@@ -10,7 +10,92 @@ u32 func_87F00930(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F00944.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F01110.s")
+/* mkdraft:func_87F01110 begin */
+extern u8 *D_87F0F610;
+
+// Color pair handed to func_87F00944. The callee reads both words byte-by-byte
+// (lbu at 0x54..0x57 and 0x58..0x5B of its frame) and rebuilds each as
+// (r << 24) | (g << 16) | (b << 8) | a, so the word stores big-endian RGBA.
+typedef union { u8 rgba[4]; u32 word; } unk_func_87F01110_color;
+extern void func_87F00944(u8 *arg0, unk_func_87F01110_color arg1, unk_func_87F01110_color arg2, s32 arg3);
+
+// Always returns 1. arg0 == 0 only clears bit 1 of the u16 at arg1 + 2.
+// arg0 == 1 picks a color pair for func_87F00944: the word at D_87F0F610 + 0x10
+// selects a row (0..2), the word at arg1 + 0x20 a column, and the word at
+// D_87F0F610 + 0x30 must equal the pair's value (row 0: columns 0/1/2 require
+// 2/3/4; rows 1 and 2: columns 0/1 require 2 and 4). func_87F01870 writes the
+// row word. //@{src/fragments/64/fragment64_3235A0.c}
+
+
+s32 func_87F01110(s32 arg0, u8 *arg1) {
+    u32 mode;
+    unk_func_87F01110_color prim;
+    unk_func_87F01110_color env;
+    s32 selected;
+
+    selected = 0;
+    switch (arg0) {
+    case 0:
+        (*(u16 *)(arg1 + 2)) = (u16) ((*(u16 *)(arg1 + 2)) & 0xFFFD);
+        break;
+    case 1:
+        switch ((*(s32 *)(D_87F0F610 + 0x10))) {
+        case 0:
+            switch ((mode = *(u32 *)(arg1 + 0x20))) {
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    selected = 1;
+                }
+                break;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 3) {
+                    selected = 1;
+                }
+                break;
+            case 2:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    selected = 1;
+                }
+                break;
+            }
+            break;
+        case 1:
+            switch ((mode = *(u32 *)(arg1 + 0x20))) {
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    selected = 1;
+                }
+                break;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    selected = 1;
+                }
+                break;
+            }
+            break;
+        case 2:
+            switch ((mode = *(u32 *)(arg1 + 0x20))) {
+            case 0:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 2) {
+                    selected = 1;
+                }
+                break;
+            case 1:
+                if ((*(s32 *)(D_87F0F610 + 0x30)) == 4) {
+                    selected = 1;
+                }
+                break;
+            }
+            break;
+        }
+        prim.word = 0xFFFFEBFF;
+        env.word = 0xAA5A00FF;
+        func_87F00944(arg1, prim, env, selected);
+        break;
+    }
+    return 1;
+}
+/* mkdraft:func_87F01110 end */
 
 // Sets or clears bit 1 of the u16 at arg1 + 2. arg0 == 0 always clears it.
 // arg0 == 1 clears it unless a mode pairing matches: the word at
@@ -111,7 +196,7 @@ extern s32 func_8004DC6C(s32 id);
 extern s32 func_8004EB58(s32 resource, s32 arg1);
 extern void func_87F0AA80(void *node, s32 id, void *data);
 extern void *func_87F0AB08(void *node, s32 id, void (*callback)(s32, void *), void *arg);
-extern void func_87F01110(s32, void *);
+extern s32 func_87F01110(s32, u8 *);
 extern u8 D_87F1121C;
 extern u8 D_87F11234;
 extern u8 D_87F11298;
