@@ -671,7 +671,31 @@ void func_8AF00E24(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF01020.s")
+/* mkdraft:func_8AF01020 begin */
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_8AF2BF20;
+extern s32 func_8004D1FC(u8 *arg0);
+extern Gfx *D_800D0510;
+extern f32 D_80087E50[];
+extern s32 D_8AF2BDC4;
+
+
+
+void func_8AF01020(s16 arg0, s16 arg1) {
+    // arg0 converts to float, gains 10.0f * D_80087E50[index], then narrows back to s16 at
+    // the compound store; the add keeps the converted arg0 as its left operand.
+    // FAKE: ((D_8AF2BDC4 << 6) << 6) folds to << 0xC; the unfolded pair claims one extra
+    // temp-walk slot, which puts the index chain's integer temps in retail order
+    // (t6, t7, t8, t9, t2, t3). Diff score 350 with a single << 0xC.
+    arg0 += 10.0f * D_80087E50[(((D_8AF2BDC4 << 6) << 6) & 0xFFFF) >> 4];
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D1FC((u8 *) D_8AF2BF20);
+    gSPTextureRectangle(D_800D0510++, arg0 << 2, arg1 << 2, (arg0 + 0x28) << 2, (arg1 + 0x19) << 2, G_TX_RENDERTILE, 0, 0,
+                        1 << 10, 1 << 10);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_8AF01020 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF0118C.s")
 
