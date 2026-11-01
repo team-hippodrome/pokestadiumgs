@@ -104,3 +104,25 @@ guard or replaced advancing pointers with first-element addresses. No searched
 body was installed. Next: inspect the allocator webs for the state pointer and
 inner bound, rather than repeating width/cursor grids. The assembly masks the
 sound call's second argument to a byte; model-frame calls take signed halfwords.
+
+## 2026-11-01 — texture-fade callback accepted
+
+`Fragment56_TextureFadeCallback` (formerly `func_868000AC`, 492 bytes) loads
+archive152 at event0. At event5 it clamps the node's unsigned frame word at
+0x14 to11, selects one of twelve table entries, computes primitive alpha with
+`func_86800020`, and emits texture segment15 and `D_8680863C`. Scene-state
+words then control frame increment/decrement. The sound-independent frame
+word remains unsigned so decrement wrap agrees with the original instructions.
+
+Direct field clamping removes a duplicated constant-load instruction. Loading
+a live texture-index temporary after clamping reproduces the original stack
+homes (asset at56, node at48) and segment-command spill at32 within the
+64-byte frame. Frame values after helper calls are reloaded from the node;
+reusing the pre-call index there would change behavior. No dummy locals,
+manual padding, source-line directives, or instruction rewriting are used.
+
+Candidate0 of `fragment56-fade-live-index8` passed link-shape verification,
+normal host syntax checks, and the canonical full US retail ROM gate on
+`d568dad6`, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming preserves all
+module sections, function extents, and relocations in normal and +20-line
+controls. The original function name remains a linker alias.
