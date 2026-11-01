@@ -97,7 +97,94 @@ s32 func_88200598(s32 arg0, s32 arg1, s32 arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_882005F8.s")
+/* mkdraft:func_882005F8 begin */
+extern s32 D_88A01C30;
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 _bcmp(const void *, const void *, s32);
+extern void _bzero(void *, s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 func_8006229C(u8 *);
+extern void func_88200470(s32, u8);
+
+typedef struct BoxEntry58 {
+    u8 unk_00[8];
+    u8 data[0x58];
+} BoxEntry58;
+
+typedef struct Box {
+    u8 unk_00[0xC];
+    s32 changed;
+    BoxEntry58 **entries;
+    u8 unk_14;
+    u8 count;
+} Box;
+
+typedef struct BoxGroup {
+    s32 type;
+    s32 port;
+    u8 unk_08[4];
+    Box **boxes;
+    u8 count;
+} BoxGroup;
+
+
+
+s32 func_882005F8(void) {
+    s32 changed;
+    s32 i;
+    BoxGroup *group;
+    Box **box;
+    u8 count;
+    u8 *handle;
+    s32 n;                  // FAKE: unused; claims the fourth word from the frame top so buf lands at
+                            // 0x4C instead of 0x50. Score 5 without it.
+    u32 j;
+    BoxEntry58 **entry;
+    u8 buf[0x58];
+    u32 x;
+
+    changed = 0;
+    group = (BoxGroup *)D_88A01C30;
+    for (i = 0; i != 3; i++, group++) {
+        box = group->boxes;
+        // karodo: both empty ifs emit no instructions. As a pair they move group from s8 to s7,
+        // leaving fp for j; dropping either one scores 123.
+        if (group == 0) {}
+        if (group && group) {}
+        for (j = 0; j < group->count; j++, box++) {
+            count = func_88200598(group->type, group->port, j);
+            if ((*box)->changed != 0) {
+                (*box)->changed = 0;
+                if (count != (*box)->count) {
+                    (*box)->changed = 1;
+                    changed = (*box)->changed;
+                } else {
+                    handle = func_8006218C(group->type, group->port, j, 0);
+                    if (handle == NULL) {
+                        continue;
+                    }
+                    entry = (*box)->entries;
+                    for (x = 0; x != count; x++) {
+                        _bzero(buf, 0x58);
+                        Deck_ReadEntries(buf, 1, handle);
+                        if (_bcmp((*entry)->data, buf, 0x58) != 0) {
+                            (*box)->changed = 1;
+                            changed = (*box)->changed;
+                            break;
+                        }
+                        entry++;
+                    }
+                    func_8006229C(handle);
+                }
+                if ((*box)->changed != 0) {
+                    func_88200470(1, i);
+                }
+            }
+        }
+    }
+    return changed;
+}
+/* mkdraft:func_882005F8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_882007B0.s")
 
