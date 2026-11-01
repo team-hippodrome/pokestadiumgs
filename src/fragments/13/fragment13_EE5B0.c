@@ -33,7 +33,51 @@ s32 func_82400584(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824005D8.s")
+/* mkdraft:func_824005D8 begin */
+// 12-byte entries: func_824005D8 scales the index by 12 and reads unk_0.
+typedef struct {
+    s16 unk_0;
+    s16 unk_2;
+    s32 unk_4;
+    s32 unk_8;
+} unk_D_82407458;
+
+extern unk_D_82407458 *D_82407458;
+extern u16 D_82408EE0[];
+extern u8 D_82409FC0[];
+extern void func_8003F114(void *arg0, s16 arg1, s16 arg2, void *arg3);
+extern void func_8003F1DC(void *arg0);
+extern s32 func_80071ADC(u8 *arg0, s32 arg1);
+
+
+
+s32 func_824005D8(s32 arg0, void *arg1) {
+    s32 value;
+    s32 pad; // FAKE: unused; without it the frame is 0x20 and the diff score is 8.
+    u8 *state;
+    s32 result;
+
+    state = *(u8 **)((u8 *)arg1 + 0x14);
+    result = 0;
+    value = ((s16 *)((u8 *)state + *(s32 *)((u8 *)state + 0x1A0) * 2))[*(s16 *)((u8 *)state + 0x16A) + 0x2A];
+    if (arg0 != 2) {
+        return 0;
+    }
+    switch (D_82407458[value].unk_0) {
+        case 9:
+            result = *(s32 *)((u8 *)state + 0x1F4) + 1;
+            break;
+        case 42:
+            result = *(s32 *)((u8 *)state + 0x1F4) + 5;
+            break;
+        case 11:
+            result = *(s32 *)((u8 *)state + 0x1F4) + 9;
+            break;
+    }
+    func_8003F1DC(arg1);
+    func_8003F114(arg1, 0, -1, func_80071ADC(D_82409FC0, D_82408EE0[result]));
+}
+/* mkdraft:func_824005D8 end */
 
 extern u8 D_824090F3;
 extern u8 D_82408A60[];
@@ -117,7 +161,57 @@ void func_82400880(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EE5B0/func_824008C4.s")
+/* mkdraft:func_824008C4 begin */
+extern u8 D_824090A0[];
+s32 StageContext_GetFadeMode();
+s32 StageFade_StartFromTransparent(s32);
+s32 func_800226C0(s32);
+s32 func_80035424(s32);
+s32 func_82404DD8(u8 *);
+s32 func_82406CCC(u8 *);
+extern s32 D_82409284;
+extern s32 D_82409288;
+extern s32 D_824092B0;
+
+
+
+s32 func_824008C4(s32 arg0) {
+    s32 sp1C;
+
+    sp1C = arg0;
+    switch (arg0) {                                 /* irregular */
+    case 0:
+        D_82409288 = D_82409284 + 1;
+        if (StageContext_GetFadeMode() == 0) {
+            sp1C = 1;
+        }
+        break;
+    case 1:
+        if (func_82406CCC(D_824090A0) != 0) {
+            if (*(s32 *)(D_824090A0 + 0x210) != 0) {
+                // FAKE: the * 0 is an arithmetic nop; its only effect is to keep the
+                // D_824090A0 address live across the call, which schedules the second
+                // lui a0 after the branch. Diff score 60 without it.
+                if (func_82404DD8(D_824090A0) != *(s32 *)(D_824090A0 + 0x210) * 0) {
+                    func_800226C0(0x11);
+                    D_824092B0 = 0;
+                }
+            } else {
+                sp1C = 2;
+                StageFade_StartFromTransparent(0xC);
+                func_80035424(0x18);
+            }
+        }
+        break;
+    case 2:
+        if (StageContext_GetFadeMode() == 1) {
+            sp1C = 3;
+        }
+        break;
+    }
+    return sp1C;
+}
+/* mkdraft:func_824008C4 end */
 
 void func_824009AC(void) {
     s32 state = 0;

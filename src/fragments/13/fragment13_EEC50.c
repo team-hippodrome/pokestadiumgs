@@ -602,7 +602,60 @@ void Fragment13_DrawPageIndicatorPanel(void *arg0, s32 group, f32 amount, s32 en
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82403624.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82403C84.s")
+/* mkdraft:func_82403C84 begin */
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004CA24(u16 *);
+extern s32 func_8004CA4C(u8 *);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern void func_82400BD0(f32, f32, f32, f32, s32, s32, f32, f32);
+extern u8 D_80094EC0[];
+
+
+
+void func_82403C84(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    u32 size;
+    s32 assets[2];
+    s32 i;
+
+    size = 0;
+    if (arg0 + 0x24 < 0) return;
+    if (arg0 >= 0x141) return;
+    if (arg1 + 0x24 < 0) return;
+    if (arg1 >= 0xF1) return;
+    if (arg1 < 0x64) return;
+    if (arg3 >= 0 && arg3 < D_82407370[arg2].count) {
+        assets[0] = func_8004C990(0xE7, *(s16 *)((u8 *)&D_82407370[arg2].items[arg3] + 2));
+        assets[1] = func_8004C990(0xE9, *(s16 *)((u8 *)&D_82407370[arg2].items[arg3] + 4));
+    } else {
+        assets[0] = func_8004C990(0xE7, 7);
+        assets[1] = func_8004C990(0xE9, 7);
+    }
+    for (i = 0; i < 2; i++) {
+        s32 scale = 8;
+        func_8004D27C((u8 *)assets[i], size >> 3, i);
+        switch (func_8004CA4C((u8 *)assets[i])) {
+        case 1:
+            break;
+        case 0:
+            scale = 4;
+            break;
+        case 2:
+            scale = 0x10;
+            break;
+        case 3:
+            scale = 0x20;
+            break;
+        }
+        size += (s32)((u32)scale * (u32)func_8004CA10((u16 *)assets[i]) * (u32)func_8004CA24((u16 *)assets[i])) / 8;
+    }
+    gSPDisplayList(D_800D0510++, D_80094EC0);
+    if (arg4 != 0) {
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0x64);
+    }
+    func_82400BD0((f32)arg0, (f32)arg1, (f32)func_8004CA10((u16 *)assets[0]), (f32)func_8004CA24((u16 *)assets[0]), 0, 0, 1.0f, 1.0f);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_82403C84 end */
 
 s32 func_80001FF0();
 s32 func_80008970();
