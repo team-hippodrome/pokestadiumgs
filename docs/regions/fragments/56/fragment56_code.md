@@ -86,7 +86,7 @@ normal host syntax check and full US retail ROM gate on `c90635d5`, MD5
 preserve every module section, function extent, and relocation in normal and
 +20-leading-line controls. The old function name remains a linker alias.
 
-## 2026-11-01 — animation-state update requeue
+## 2026-11-01 — animation-state update requeue (resolved below)
 
 `func_86806CD8` remains assembly (**requeue**, **register-tie**). Forty
 canonical source variants reproduced the target's 444-byte size and 64-byte
@@ -125,4 +125,49 @@ Candidate0 of `fragment56-fade-live-index8` passed link-shape verification,
 normal host syntax checks, and the canonical full US retail ROM gate on
 `d568dad6`, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming preserves all
 module sections, function extents, and relocations in normal and +20-line
+controls. The original function name remains a linker alias.
+
+## 2026-11-01 — animation-state update accepted
+
+`Fragment56_UpdateModelAnimations` (formerly `func_86806CD8`, 444 bytes)
+updates four animation tick counters. Mode15 holds frame49 and enables event
+track1 after completion; mode14 resets frame14, clears forty effect models at
+the trigger frame, and runs the per-model update. Its tick threshold is70.
+
+Calibrated stock CFE/UOPT/UGEN/assembler captures preserve the entire module
+in normal and +20-leading-line controls. A logging-only UOPT replay preserves
+optimized ucode and symbols both with and without diagnostics. For the prior
+`do`-loop source, the state pointer's adjusted benefit is13.875 while the
+inner bound's is14.2857141; the bound takes the earlier saved register. Using
+`for` loops for both iterations restores the target allocation, leaving only
+two swapped instruction pairs in the prologue. Initializing the parallel
+state/model cursors and model index in the outer `for` header closes both
+ordering differences. No compiler decisions, register bindings, or instruction
+bytes are forced. The earlier width/cursor requeue is resolved.
+
+Candidate0 of `fragment56-animation-for-init8` passed the canonical normal
+host syntax check and full US retail ROM gate on `77ad3fdb`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming and readable struct fields preserve
+all module sections, function extents, and relocations in normal and +20-line
+controls. The original address remains a linker alias.
+
+## 2026-11-01 — scaled parameter selection accepted
+
+`Fragment56_UpdateScaledParameters` (formerly `func_86800B98`, 452 bytes)
+selects two floating-point parameters from four selector cases. It scales
+`D_86807C60` by `D_86807CC8`, selects the base for `D_86807C9C` using the
+comparison of `D_86807C98` and `D_86807C94`, then scales `D_86807C9C`.
+The default case preserves `D_86807C60` and still scales `D_86807C9C`.
+The selector's broader game meaning remains unresolved.
+
+An ordinary four-case switch with separate if/else assignments reproduces
+the retail control flow. Writing `D_86807C98 == D_86807C94` preserves the
+original floating-point comparison operand order; reversing that expression
+changes four instruction words. Constants5.1f and5.4f occupy the file's
+existing rodata subsegment. No jump table or additional layout work is needed.
+
+Candidate0 of `fragment56-scale-compare8` passed the canonical normal host
+syntax check and full US retail ROM gate on `505f5bc3`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Function naming preserves all module
+sections, function extents, and relocations in normal and +20-leading-line
 controls. The original function name remains a linker alias.
