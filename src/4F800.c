@@ -223,7 +223,81 @@ void func_8004F2D0(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *tex
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004FC58.s")
+/* mkdraft:func_8004FC58 begin */
+extern u8 D_80094F50[];
+extern s32 func_8004C990(s32 arg0, s32 arg1);
+extern s32 func_8004D150(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
+extern s32 func_80050640(u8 *arg0);
+extern Gfx *D_800D0510;
+
+void func_8004FA6C(u8 *);
+
+// Draws the animation frame selected by arg0 onto the asset returned by
+// func_8004C990, when (arg1, arg2) projects inside the viewport. The sp* names
+// are the frame slots the retail code stores through (0x20, 0x34, 0x38, 0x3E)
+// and are kept because each one's home is what makes the register assignment
+// come out the same.
+
+
+void func_8004FC58(u8 *arg0, s32 arg1, s32 arg2) {
+    u16 var_t1;
+    s32 sp38;
+    s32 var_a3;
+    u16 sp3E;
+    s32 sp34;
+    u8 *sp20;
+    s32 temp_v0;
+    u8 *temp_t7;
+    s32 temp_v0_2;
+
+    sp38 = 0;
+    var_a3 = *(u16 *)(arg0 + 0x26);
+    temp_t7 = *(u8 **)(arg0 + 0x34);
+    var_t1 = 0;
+    sp20 = temp_t7; // FAKE: dead store into the retail frame's 0x20 slot, never read; removing it scores 4.
+    if (temp_t7 != NULL) {
+        sp34 = var_a3;
+        sp3E = 0;
+        temp_v0 = func_80050640(temp_t7);
+        var_t1 = sp3E;
+        if (temp_v0 >= 0) {
+            var_a3 = temp_v0;
+        } else if (temp_v0 == -1) {
+            var_a3 = -1U;
+        }
+    }
+    if (var_a3 >= 0) {
+        sp3E = var_t1;
+        sp38 = func_8004C990(*(u16 *)(arg0 + 0x24), var_a3);
+    }
+    temp_v0_2 = *(u8 *)(arg0 + 1);
+    if (temp_v0_2 & 1) {
+        var_t1 = 1;
+    }
+    if (temp_v0_2 & 2) {
+        var_t1 = (var_t1 | 2) & 0xFFFF;
+    }
+    if (temp_v0_2 & 4) {
+        var_t1 = (var_t1 | 0x100) & 0xFFFF;
+    }
+    if (sp38 != 0) {
+        sp3E = var_t1;
+        if (func_8004EC7C((s16) arg1, (s16) arg2) != 0) {
+            sp3E = var_t1;
+            func_8004FA6C(arg0);
+            // Byte 4 of the asset picks the RGBA16 texture LUT used while drawing the frame.
+            if (*(u8 *)(sp38 + 4) == 2) {
+                gDPSetTextureLUT(D_800D0510++, G_TT_RGBA16);
+            }
+            func_8004D150(arg1, arg2, sp38, 0, var_t1, 0);
+            if (*(u8 *)(sp38 + 4) == 2) {
+                gDPSetTextureLUT(D_800D0510++, G_TT_NONE);
+            }
+            gSPDisplayList(D_800D0510++, D_80094F50);
+        }
+    }
+}
+/* mkdraft:func_8004FC58 end */
 #endif
 
 #ifdef VERSION_US
