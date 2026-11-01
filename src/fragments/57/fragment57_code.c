@@ -1708,7 +1708,112 @@ void func_83306BF0(void) {
         }
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83306D0C.s")
+/* mkdraft:func_83306D0C begin */
+// The retail bytes for this function end at 0x8330707C with the normal
+// epilogue; 0x83307080 holds an unreferenced `jr ra; nop` stub that the
+// symbol map lists without a name. It is reproduced as the empty
+// func_83306D0C_padding below, the same way src/6E850.c carries
+// func_8006EB14_padding after Model_CopyPositionBuffer.
+typedef struct unk_D_8330907C {
+    s32 words[12];
+} unk_D_8330907C;
+
+extern s32 D_83308E2C;
+extern s32 D_83308E38[];
+extern s32 D_8330907C[];
+extern s32 D_8330921C;
+extern s32 D_8330AA70[];
+extern s32 D_8330AC38;
+extern void StageContext_SetClearColor(u16 arg0);
+extern s32 StageFade_StartFromTransparent(s32 duration);
+extern s32 func_800225C4(s32);
+extern void func_800226C0(s32);
+extern void func_87F034CC(void *);
+
+void func_83306D0C(void) {
+    // FAKE: pins D_8330921C's address in $a1 for the hold-timer increment,
+    // reset, and repeat-delay compare; referring to D_8330921C by name scores
+    // 1035 because each use then reloads the address.
+    s32 *holdTimer = &D_8330921C;
+    s32 var_v1;
+    s32 temp_v0;
+    s32 temp_v0_2;
+
+    if ((ModelAnim_IsFinished(&D_8330A4D0) == 1) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x30) == 1)) {
+        func_8003F2C4(D_8330A4CC, &D_8330A4D0, 0);
+        func_8003F3BC(&D_8330A4D0, 0);
+        M2C_FIELD(&D_8330A2B0, s32 *, 0x54) = 1;
+        M2C_FIELD(&D_8330A2B0, s32 *, 0x30) = 0;
+    }
+    func_83300020(2);
+    func_83303640(2);
+    if (M2C_FIELD(&D_8330A2B0, s32 *, 0x14) == 0) {
+        (*holdTimer) += 1;
+    }
+    temp_v0 = D_80087200->buttonsPressed;
+    if ((temp_v0 & 0x2030) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x30) == 0) && (D_833090AC == 1)) {
+        if ((temp_v0 & 0x10) || ((D_83308E2C * 20) < (*holdTimer))) {
+            D_8330ABD8 += 1;
+        } else if ((temp_v0 & 0x20) && (D_8330ABD8 >= 2)) {
+            D_8330ABD8 -= 1;
+        }
+        if (D_8330ABD8 >= 252) {
+            D_8330ABD8 = 1;
+        }
+        (*holdTimer) = 0;
+        func_87F034CC(&D_8330AC38);
+        M2C_FIELD(&D_8330AA70, u8 *, 0x1D) = 0xFF;
+        M2C_FIELD(&D_8330AA70, f32 *, 0x34) = 0.45f;
+        M2C_FIELD(&D_8330AA70, f32 *, 0x38) = (f32) M2C_FIELD(&D_8330AA70, f32 *, 0x34);
+        M2C_FIELD(&D_8330A2B0, s32 *, 0) = 7;
+        M2C_FIELD(&D_8330AA70, f32 *, 0x30) = (f32) M2C_FIELD(&D_8330AA70, f32 *, 0x38);
+        *(unk_D_8330907C *) &D_8330AC08 = *(unk_D_8330907C *) D_8330907C;
+        func_800225C4(10);
+        StageContext_SetClearColor(1);
+        StageFade_StartFromTransparent(20);
+    }
+    var_v1 = D_83308E38[M2C_FIELD(&D_8330A2B0, s32 *, 8)];
+    if (var_v1 == 17) {
+        temp_v0_2 = D_80087200->buttonsPressed;
+        if ((temp_v0_2 & 0x8000) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x54) == 2)) {
+            func_800226C0(2);
+            func_833003B0(7);
+            if (D_833090AC == 1) {
+                M2C_FIELD(&D_8330A2B0, s32 *, 0) = 13;
+                M2C_FIELD(&D_8330A2B0, s32 *, 4) = 14;
+                M2C_FIELD(&D_8330A2B0, s32 *, 0x4C) = 1;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(30);
+            } else {
+                M2C_FIELD(&D_8330A2B0, s32 *, 0x58) = -1;
+                M2C_FIELD(&D_8330A2B0, s32 *, 0x4C) = 1;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(30);
+                M2C_FIELD(&D_8330A2B0, s32 *, 0) = 10;
+            }
+            var_v1 = D_83308E38[M2C_FIELD(&D_8330A2B0, s32 *, 8)];
+        } else if ((temp_v0_2 & 0x4000) && (D_833090AC == 1)) {
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(5);
+            M2C_FIELD(&D_8330A2B0, s32 *, 0) = 13;
+            M2C_FIELD(&D_8330A2B0, s32 *, 4) = 1;
+            func_800225C4(5);
+            var_v1 = D_83308E38[M2C_FIELD(&D_8330A2B0, s32 *, 8)];
+        }
+    }
+    if ((var_v1 == 16) && (D_80087200->buttonsPressed & 0x8000) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x54) == 2)) {
+        func_833003B0(6);
+        func_800226C0(2);
+    }
+}
+/* mkdraft:func_83306D0C end */
+
+/* mkdraft:func_83306D0C_padding begin */
+// Bytes at 0x83307080: the retail jr ra/nop stub between this function and
+// func_83307088; the symbol map has no name for it. Kept adjacent so the
+// linker places it at the retail address.
+void func_83306D0C_padding(void) {}
+/* mkdraft:func_83306D0C_padding end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307088.s")
 
