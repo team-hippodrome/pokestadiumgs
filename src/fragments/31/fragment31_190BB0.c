@@ -651,5 +651,107 @@ void func_882204F8(s32 mode, u8 *list) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_882206A0.s")
+/* mkdraft:func_882206A0 begin */
+extern void func_88001C24(void *, u16, u8);
+extern void func_88001D0C(void *);
+extern void func_8821EE00(void);
+extern void func_8821F01C(void);
+extern void func_8821EC34(void);
+
+
+
+void func_882206A0(s32 arg0) {
+    u32 *global;
+    s32 result;
+
+    global = (u32 *)(u32)&D_882347F0;
+    *global = (u32)Util_Malloc(0x4A8);
+    if ((arg0 != 0) && (arg0 != 1)) {
+        (*(s32 *)((u8 *)(*global) + 4)) = 0;
+    } else {
+        (*(s32 *)((u8 *)(*global) + 4)) = 1;
+    }
+    switch (arg0) {
+    case 0:
+    case 1:
+    case 2:
+        (*(s16 *)((u8 *)(*global) + 0x6C)) = 0xFD;
+        (*(s16 *)((u8 *)(*global) + 0x6E)) = 0x7C;
+        (*(s16 *)((u8 *)(*global) + 0x70)) = 0x10F;
+        (*(s16 *)((u8 *)(*global) + 0x72)) = 0xD2;
+        (*(s16 *)((u8 *)(*global) + 0x74)) = 0xC4;
+        (*(s16 *)((u8 *)(*global) + 0x76)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x78)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x7C)) = 0x1D3;
+        (*(s16 *)((u8 *)(*global) + 0x7E)) = 0xD2;
+        (*(s16 *)((u8 *)(*global) + 0x80)) = 0x6B;
+        (*(s16 *)((u8 *)(*global) + 0x82)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x84)) = 0xDF00DF;
+        (*(s16 *)((u8 *)(*global) + 0x94)) = 0x117;
+        (*(s16 *)((u8 *)(*global) + 0x96)) = 0xD5;
+        (*(s16 *)((u8 *)(*global) + 0x98)) = 0x19D;
+        (*(s16 *)((u8 *)(*global) + 0x9A)) = 0x1DB;
+        break;
+    case 3:
+        (*(s16 *)((u8 *)(*global) + 0x6C)) = 0x97;
+        (*(s16 *)((u8 *)(*global) + 0x6E)) = 0x71;
+        (*(s16 *)((u8 *)(*global) + 0x70)) = 0xA9;
+        (*(s16 *)((u8 *)(*global) + 0x72)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x74)) = 0xC4;
+        (*(s16 *)((u8 *)(*global) + 0x76)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x78)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x7C)) = 0x16D;
+        (*(s16 *)((u8 *)(*global) + 0x7E)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x80)) = 0x6B;
+        (*(s16 *)((u8 *)(*global) + 0x82)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x84)) = 0xDF00DF;
+        (*(s16 *)((u8 *)(*global) + 0x94)) = 0xB1;
+        (*(s16 *)((u8 *)(*global) + 0x96)) = 0xCA;
+        (*(s16 *)((u8 *)(*global) + 0x98)) = 0x137;
+        (*(s16 *)((u8 *)(*global) + 0x9A)) = 0x175;
+        break;
+    case 4:
+    case 5:
+        (*(s16 *)((u8 *)(*global) + 0x6C)) = 0x97;
+        (*(s16 *)((u8 *)(*global) + 0x6E)) = 0x71;
+        (*(s16 *)((u8 *)(*global) + 0x70)) = 0xA9;
+        (*(s16 *)((u8 *)(*global) + 0x72)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x74)) = 0x5C;
+        (*(s16 *)((u8 *)(*global) + 0x76)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x78)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x7C)) = 0x105;
+        (*(s16 *)((u8 *)(*global) + 0x7E)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x80)) = 0x4D;
+        (*(s16 *)((u8 *)(*global) + 0x82)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x84)) = 0xDF00DF;
+        (*(s16 *)((u8 *)(*global) + 0x88)) = 0x152;
+        (*(s16 *)((u8 *)(*global) + 0x8A)) = 0xC7;
+        (*(s16 *)((u8 *)(*global) + 0x8C)) = 0x86;
+        (*(s16 *)((u8 *)(*global) + 0x8E)) = 0x16;
+        (*(s32 *)((u8 *)(*global) + 0x90)) = 0x9A909A9;
+        (*(s16 *)((u8 *)(*global) + 0x94)) = 0xB1;
+        (*(s16 *)((u8 *)(*global) + 0x96)) = 0xCA;
+        (*(s16 *)((u8 *)(*global) + 0x98)) = 0x10D;
+        (*(s16 *)((u8 *)(*global) + 0x9A)) = 0x159;
+        break;
+    }
+    (*(u8 **)((u8 *)(*global) + 0xC)) = func_8821DA70(arg0);
+    (*(u8 **)((u8 *)(*global) + 0x10)) = (u8 *)(*(u8 **)((u8 *)(*global) + 0xC)) + 8;
+    func_882204F8(arg0, *(u8 **)((u8 *)(*global) + 0xC));
+    func_88001C24(*(void **)((u8 *)(*global) + 0x10),
+                  *(u16 *)((u8 *)(*(void **)((u8 *)(*global) + 0xC)) + 4), 7);
+    func_88001D0C(*(void **)((u8 *)(*global) + 0x10));
+    result = func_88004804(0, 3, *(s16 *)((u8 *)(*global) + 0x6C),
+                           *(s16 *)((u8 *)(*global) + 0x6E), 0, 1, 0xDC, 0xDC, 0xB4,
+                           func_8821EE00, func_8821F01C,
+                           func_8821EC10, func_8821EC34, 2, 0);
+    (*(void **)((u8 *)(*global) + 8)) = D_8800ED50 + (result * 0x4C);
+    (*(s16 *)((u8 *)(*(void **)((u8 *)(*global) + 8)) + 0x10)) = 0x156;
+    (*(s16 *)((u8 *)(*(void **)((u8 *)(*global) + 8)) + 0x12)) = 0x146;
+    (*(u32 *)((u8 *)(*global) + 0)) = arg0;
+    (*(s32 *)((u8 *)(*global) + 0x49C)) = 0;
+    (*(u8 *)((u8 *)(*global) + 0x4A0)) = 0;
+    D_880068B4 = 0;
+}
+/* mkdraft:func_882206A0 end */
 #endif
