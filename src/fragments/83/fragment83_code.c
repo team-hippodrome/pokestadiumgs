@@ -661,8 +661,8 @@ void func_82C02B30(void) {
 #ifdef VERSION_US
 extern u8 D_82C04A1C;
 extern u16 D_82C04C30;
-s32 func_82C03134(void) {
-    s32 result = 0;
+u16 func_82C03134(void) {
+    u16 result = 0;
     s8 *state = (s8 *)&D_82C04A1C;
 
     if (D_82C04C32 & 0x800) {
@@ -710,7 +710,71 @@ s32 func_82C03134(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C0329C.s")
+/* mkdraft:func_82C0329C begin */
+#include "global.h"
+extern u16 D_82C04C32;
+extern u8 D_82C04C38;
+extern u8 D_82C04A18;
+extern u8 D_82C05E82;
+extern u8 D_82C05E83;
+extern u8 D_82C05E84;
+extern u8 D_82C05E86;
+extern u8 D_82C05E88;
+extern u8 D_82C05E90;
+extern void func_800226C0(s32);
+extern void func_82C02834(s32);
+extern void func_82C02B84(void);
+extern u16 func_82C03134(void);
+
+
+
+void func_82C0329C(void) {
+    s16 value;
+    u16 mode;
+    s32 slot;
+
+    mode = func_82C03134();
+    if (mode & 0x800) {
+        value = *(s16 *)((u8 *)&D_82C05E86 + 0);
+        if (value != 0) {
+            value -= 0x3D;
+            *(s16 *)((u8 *)&D_82C05E88 - 2) = value;
+            if (value < 0) {
+                *(s16 *)((u8 *)&D_82C05E84 + 2) = 0;
+            }
+            *(u8 *)((u8 *)&D_82C05E84 - 4) = 4;
+            func_800226C0(1);
+        }
+    } else if (mode & 0x400) {
+        if ((value = *(s16 *)((u8 *)&D_82C05E82 + 4)) != 0x8D1u) {
+            value += 0x3D;
+            *(s16 *)((u8 *)&D_82C05E90 - 10) = value;
+            if (value >= 0x8D2) {
+                // FAKE: diff 14 without the (value & 0) fold; it keeps the clamp
+                // constant in the value register (v0) instead of a temp.
+                value = (value & 0) + 0x8D1;
+                *(s16 *)((u8 *)&D_82C05E86 + 0) = value;
+            }
+            *(u8 *)((u8 *)&D_82C05E84 - 4) = 4;
+            func_800226C0(1);
+        }
+    }
+    if (D_82C04C32 & 1) {
+        slot = (*(u8 *)((u8 *)&D_82C05E82 - 1) + 1) & 0xFF;
+        if (slot >= 3) {
+            slot = 0;
+        }
+        *(u8 *)((u8 *)&D_82C05E83 - 2) = slot;
+        func_82C02834(slot);
+        func_800226C0(0x12);
+    } else if (D_82C04C32 & 0x4000) {
+        *(s8 *)((u8 *)&D_82C04C38 + 1) = 7;
+        *(u8 *)((u8 *)&D_82C04C38 + 0xA) = D_82C04A18;
+        func_800226C0(3);
+    }
+    func_82C02B84();
+}
+/* mkdraft:func_82C0329C end */
 #endif
 
 #ifdef VERSION_US
