@@ -34,7 +34,182 @@ void func_8F800020(s32 arg0, s32 arg1, s32 arg2) {
     gDPFillRectangle(D_800D0510++, arg0, arg1, arg0 + arg2, arg1 + 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/77/fragment77_code/func_8F8000D0.s")
+/* mkdraft:func_8F8000D0 begin */
+extern u8 D_8F8038A0[];
+extern u8 D_8F8038A4[];
+extern u8 D_8F8038AC[];
+extern u8 D_8F8038B0[];
+extern u8 D_8F8038B4[];
+extern u8 D_8F8038B8[];
+extern u8 D_8F8038BC[];
+extern u8 D_8F8038C0[];
+extern u8 D_8F8038C4[];
+extern u8 D_8F8038CC[];
+extern u8 D_8F8038D0[];
+extern u8 D_8F8038D8[];
+extern u8 D_8F8038DC[];
+extern u8 D_8F8038E0[];
+extern u8 D_8F8038E4[];
+extern u8 D_8F8038E8[];
+extern u8 D_8F8038EC[];
+extern u8 D_8F8038F4[];
+extern u8 D_8F8038F8[];
+extern u8 D_8F803900[];
+extern u8 D_8F803904[];
+extern u8 D_8F803908[];
+extern u8 D_8F80390C[];
+extern u8 D_8F803914[];
+extern u8 D_8F803918[];
+extern u8 D_8F803920[];
+extern u8 D_8F803924[];
+extern u8 D_8F803928[];
+extern u8 D_8F80392C[];
+extern u8 *D_8F809FB0;
+extern s32 D_8F809FEC;
+extern u16 D_8F809FF0;
+extern s32 func_80048E30(u8 *state, s32 x, s32 y, const char *text, s32 draw);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void *func_8004B7A4(s32 arg0);
+extern s32 *func_80062CE0(u8 arg0);
+extern s32 *func_800635E0();
+extern s32 func_800643CC(s32 arg0, u8 arg1, s32 arg2);
+extern s32 func_8006461C(s32 arg0);
+extern void func_800495BC(s32, s32, const char*, ...);
+extern void func_800495F8(s32, s32, s32, const char*, ...);
+
+
+
+void func_8F8000D0(void *arg0, s32 arg1) {
+    u8 value;
+    // karodo: never read or written. The declaration alone keeps `result` in the 0x28
+    // slot; dropping it moves `result` to 0x2C and scores 8.
+    u8 *text;
+    s32 slot;
+    s32 result;
+
+    if (arg1 != 0) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    switch (*(u16 *)((u8 *)arg0)) {
+        case 0:
+        case 1:
+        case 2:
+            func_80048E30((u8 *)D_8F809FEC, *(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)((u8 *)arg0 + 0x10), 1);
+            break;
+        case 3:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038A0, (const char *)((u8 *)arg0 + 0x10));
+            if (D_8F809FB0[0] != 0) {
+                slot = D_8F809FB0[0];
+                result = (s32)func_8004B7A4(slot);
+                func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038A4, result,
+                              func_8006461C(D_8F809FB0[0x20]) == 1 ? D_8F8038AC :
+                              func_8006461C(D_8F809FB0[0x20]) == 2 ? D_8F8038B0 : D_8F8038B4);
+            }
+            break;
+        case 4:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038B8, (const char *)((u8 *)arg0 + 0x10));
+            {
+                slot = D_8F809FB0[1];
+                if (slot != 0) {
+                    func_80048E30((u8 *)D_8F809FEC, *(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)func_800635E0(), 1);
+                }
+            }
+            break;
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038BC, (const char *)((u8 *)arg0 + 0x10));
+            // FAKE: the [0][...] indirection through a one-element array exists only
+            // to make ugen emit the address add as (base, index); plain D_8F809FB0[...]
+            // scores 10. Both uses below share this shape.
+            if (((u8 (*)[1])D_8F809FB0)[0][*(u16 *)((u8 *)arg0) - 3] == 0) {
+                return;
+            }
+            value = (u8)(s32)((u8 (*)[1])D_8F809FB0)[0][*(u16 *)((u8 *)arg0) - 3];
+            if (func_800643CC(D_8F809FB0[0], value, D_8F809FB0[0x1D]) != 0) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            } else if (func_800643CC(D_8F809FB0[0], value, 0x64) != 0) {
+                func_8004972C(0xFF, 0xFF, 0x64, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0x64, 0x64, 0xFF);
+            }
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)func_80062CE0(value));
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            break;
+        case 9:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038C0, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038C4, *(u16 *)((u8 *)D_8F809FB0 + 6));
+            break;
+        case 33:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038CC, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038D0, D_8F809FF0);
+            break;
+        case 10:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038D8, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038DC, *(s32 *)((u8 *)D_8F809FB0 + 8));
+            break;
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038E0, (const char *)((u8 *)arg0 + 0x10));
+            // FAKE: indexing a u16 cast of the table makes ugen emit the address add
+            // as (base, scaled index); the scaled pointer form scores 120.
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038E4, ((u16 *)((u8 *)D_8F809FB0))[*(u16 *)((u8 *)arg0) - 5]);
+            break;
+        case 16:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038E8, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038EC, *(u16 *)((u8 *)D_8F809FB0 + 0x16));
+            break;
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F8038F4, (const char *)((u8 *)arg0 + 0x10));
+            // FAKE: the [0][...] indirection through a one-element array exists only
+            // to make ugen emit the address add as (base, index); plain D_8F809FB0[...]
+            // scores 20.
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F8038F8, ((u8 (*)[1])D_8F809FB0)[0][*(u16 *)((u8 *)arg0) + 0xD]);
+            break;
+        case 23:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F803900, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F803904, D_8F809FB0[0x20]);
+            break;
+        case 24:
+        case 25:
+        case 26:
+        case 27:
+        case 28:
+        case 29:
+        case 30:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F803908, (const char *)((u8 *)arg0 + 0x10));
+            // FAKE: indexing a u16 cast of the table makes ugen emit the address add
+            // as (base, scaled index); the scaled pointer form scores 120.
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F80390C, ((u16 *)((u8 *)D_8F809FB0))[*(u16 *)((u8 *)arg0) - 5]);
+            break;
+        case 21:
+        case 22:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F803914, (const char *)((u8 *)arg0 + 0x10));
+            // FAKE: the [0][...] indirection through a one-element array exists only
+            // to make ugen emit the address add as (base, index); plain D_8F809FB0[...]
+            // scores 20.
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F803918, ((u8 (*)[1])D_8F809FB0)[0][*(u16 *)((u8 *)arg0) + 7]);
+            break;
+        case 31:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F803920, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F803924, (const char *)(D_8F809FB0 + 0x34));
+            break;
+        case 32:
+            func_800495F8(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), 2, (const char *)D_8F803928, (const char *)((u8 *)arg0 + 0x10));
+            func_800495BC(*(u16 *)((u8 *)arg0 + 2), *(u16 *)((u8 *)arg0 + 4), (const char *)D_8F80392C, (const char *)(D_8F809FB0 + 0x40));
+            break;
+    }
+}
+/* mkdraft:func_8F8000D0 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/77/fragment77_code/func_8F8006B0.s")
 
