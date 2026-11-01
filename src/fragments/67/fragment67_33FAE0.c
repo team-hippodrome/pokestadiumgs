@@ -825,7 +825,35 @@ void func_82904AC8(u8 *arg0, u16 *arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, 
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82904C28.s")
+/* mkdraft:func_82904C28 begin */
+extern u8 D_82919A88[];
+extern u8 D_82919AF8[];
+extern u8 D_82919B68[];
+extern u8 D_82919AA4[];
+extern void func_82904AC8(u8 *, u16 *, u16, u16, u16, u16, u16, u16, s16);
+// The three 0x70-byte blocks at D_82919A88, D_82919AF8 and D_82919B68 each hold four
+// 0x1C-byte state records; byte 0x18 of a record carries its flag. Starting at record 1
+// (D_82919AA4), this clears bit 0 of records 1..3 in every block and leaves record 0
+// alone: the 0x88 and 0xF8 offsets are records 5 and 9 of the flattened 0x1C stride.
+// func_82904AC8 re-toggles the flag of a block's record 0, which the final test reads.
+
+
+void func_82904C28(void *arg0) {
+    s32 i;
+
+    for (i = 0; i != 3; i += 1) {
+        D_82919AA4[i * 0x1C + 0x18] &= ~1;
+        D_82919AA4[i * 0x1C + 0x88] &= ~1;
+        D_82919AA4[i * 0x1C + 0xF8] &= ~1;
+    }
+    func_82904AC8(D_82919A88, (u16 *)D_82919A88, 0xFF, 0xFF, 0xFF, 0, 0xC8, 0xFF, 0x14);
+    func_82904AC8(D_82919AF8, (u16 *)D_82919AF8, 0xFF, 0xFF, 0xFF, 0, 0xC8, 0xFF, 0x14);
+    func_82904AC8(D_82919B68, (u16 *)D_82919B68, 0xFF, 0xFF, 0xFF, 0xFF, 0xC8, 0, 0x14);
+    if ((D_82919A88[0x18] & 2) && (D_82919A88[0x88] & 2) && (D_82919A88[0xF8] & 2)) {
+        *(s16 *)((u8 *)arg0 + 0x1068) = 10;
+    }
+}
+/* mkdraft:func_82904C28 end */
 #endif
 
 #ifdef VERSION_US
