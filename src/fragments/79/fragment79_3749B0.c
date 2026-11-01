@@ -30,7 +30,73 @@ void func_84105250(u16 *arg0, u16 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3749B0/func_841052AC.s")
+/* mkdraft:func_841052AC begin */
+extern u16 *D_84162A30[];
+extern u8 D_84182A5C[];
+extern u8 D_84182A5E[];
+extern u8 D_84172A18[];
+extern u8 D_84172A1A[];
+extern s32 D_84190180;
+extern s32 D_84190184;
+extern s32 D_84190188;
+extern s32 func_841051D8(u16, u16);
+void func_84105250(u16 *, u16);
+
+// Dispatches on D_84190188 for index D_84190180: reads a 16-bit table word and
+// either plays the list at D_84162A30[word] (0x8000 set) or forwards the word to
+// func_841051D8, then clears D_84190184. Case 0 reads D_84182A5C + index*8 and,
+// when 0x4000 is set, re-indexes through D_84172A18; case 1 reads D_84182A5C +
+// index*8 and uses it as an index into D_84172A1A; case 2 reads
+// D_84182A5E + index*8. Case 1 leaves its index load unnamed, so uopt keeps it
+// as a one-use expression temporary in a `t` register (t5 in the retail body);
+// naming it in a local puts it in a global web register instead (score 130).
+
+
+void func_841052AC(void) {
+    s32 index;
+    s32 flag;
+    s32 value;
+
+    if (D_84190184 == 0) return;
+    switch (D_84190188) {
+    case 0:
+        index = D_84190180;
+        flag = *(u16 *)(D_84182A5C + index * 8);
+        if (flag & 0x8000) {
+            func_84105250(D_84162A30[flag], index);
+        } else if (flag & 0x4000) {
+            value = *(u16 *)(D_84172A18 + flag * 4);
+            if (value & 0x8000) {
+                func_84105250(D_84162A30[value], index);
+            } else {
+                func_841051D8(*(u16 *)(D_84172A18 + flag * 4), index);
+            }
+        } else {
+            func_841051D8(*(u16 *)(D_84182A5C + index * 8), index);
+        }
+        break;
+    case 1:
+        index = D_84190180;
+        value = *(u16 *)(D_84172A1A + *(u16 *)(D_84182A5C + index * 8) * 4);
+        if (value & 0x8000) {
+            func_84105250(D_84162A30[value], index);
+        } else {
+            func_841051D8(*(u16 *)(D_84172A1A + *(u16 *)(D_84182A5C + index * 8) * 4), index);
+        }
+        break;
+    case 2:
+        index = D_84190180;
+        value = *(u16 *)(D_84182A5E + index * 8);
+        if (value & 0x8000) {
+            func_84105250(D_84162A30[value], index);
+        } else {
+            func_841051D8(*(u16 *)(D_84182A5E + index * 8), index);
+        }
+        break;
+    }
+    D_84190184 = 0;
+}
+/* mkdraft:func_841052AC end */
 
 /* mkdraft:func_8410545C begin */
 extern s32 D_84190190;

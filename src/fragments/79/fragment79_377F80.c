@@ -160,9 +160,96 @@ void func_84108A10(s32 arg0)
 }
 /* mkdraft:func_84108A10 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108AF8.s")
+/* mkdraft:func_84108AF8 begin */
+extern s32 func_8411E1F8(s32);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108CE8.s")
+extern u8 *D_8418C950;
+
+
+
+void func_84108AF8(u8 *arg0) {
+    s32 index;
+    u8 *entry;
+    u8 *child;
+    u8 *object;
+    u8 result;
+
+    entry = D_8418C950;
+    for (index = 0; index < 300; index++, entry += 156) {
+        if ((*(s8 *)(entry + 152) != 0) && (func_84100054(entry, 0x10000) != 0) &&
+            (*(u8 **)(entry + 8) == arg0)) {
+            result = 0;
+            // Both locals read entry+0x10. IDO folds the second read into a copy of
+            // the first, which keeps the pointer live in a second callee-saved
+            // register across the func_8411E1F8 calls: `object` serves the 0x20 and
+            // 4-mask checks, `child` serves the 7-mask check.
+            object = *(u8 **)(entry + 16);
+            child = *(u8 **)(entry + 16);
+            // D_84193DD0 + 16 is an array of 16-byte species records; element 0 is
+            // the flag word tested here.
+            if (((((u16 (*)[8])((D_84193DD0 + 16)))[func_8411E1F8((s32)arg0)][0] & 7) != 0) &&
+                (child != NULL) && (*(u8 **)(child + 20) != NULL)) {
+                // Species 18 in the 7-mask case.
+                if (*(s16 *)(*(u8 **)(child + 20)) == 18) {
+                    result = 1;
+                }
+            }
+            if (((((u16 (*)[8])((D_84193DD0 + 16)))[func_8411E1F8((s32)arg0)][0] == 0x20) &&
+                 (object != NULL) && (*(u8 **)(object + 20) != NULL)) &&
+                (*(s16 *)(*(u8 **)(object + 20)) == 317)) {
+                result = 1;
+            }
+            if (((((u16 (*)[8])((D_84193DD0 + 18)))[func_8411E1F8((s32)arg0)][0] & 4) != 0) &&
+                (object != NULL) && (*(u8 **)(object + 20) != NULL)) {
+                // Species 211 in the 4-mask case.
+                if (*(s16 *)(*(u8 **)(object + 20)) == 211) {
+                    result = 1;
+                }
+            }
+            if (result == 0) {
+                func_84100030(entry, 0x10080);
+                if (func_84100054(entry, 0x8000) != 0) {
+                    func_84100348(entry);
+                    if (1) { } // karodo
+                    if (*(u8 **)(entry + 12) != NULL) {
+                        *(u8 *)(*(u8 **)(entry + 12) + 1) &= ~1;
+                    }
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_84108AF8 end */
+
+/* mkdraft:func_84108CE8 begin */
+extern u8 *D_8418C950;
+
+
+
+void func_84108CE8(s32 arg0) {
+    s16 *temp_v1;
+    s32 var_s1;
+    u8 *var_s0;
+    void *temp_v0;
+    void *temp_v0_2;
+
+    var_s0 = D_8418C950;
+    for (var_s1 = 0; var_s1 != 0x12C; var_s0 += 0x9C) {
+        if ((*((s8 *) (((u8 *) var_s0) + 0x98)) != 0) && (func_84100054(var_s0, 0x10000) != 0) && (arg0 == *((s32 *) (((u8 *) var_s0) + 8))) && ((temp_v0 = *((void **) (((u8 *) var_s0) + 0x10)), (temp_v0 == NULL)) || (temp_v1 = *((s16 **) (((u8 *) temp_v0) + 0x14)), (temp_v1 == NULL)) || (*temp_v1 != 0xD3))) {
+            func_84100030(var_s0, 0x10080);
+            if (func_84100054(var_s0, 0x8000) != 0) {
+                func_84100348(var_s0);
+                if (0) { } // karodo: empty block after the call; without it IDO colors the 0xC pointer v1 instead of v0
+                temp_v0_2 = *((void **) (((u8 *) var_s0) + 0xC));
+                if (temp_v0_2 != NULL) {
+                    *((u8 *) (((u8 *) temp_v0_2) + 1)) = (u8) ((*((u8 *) (((u8 *) temp_v0_2) + 1))) & (~1));
+                }
+            }
+        }
+        var_s1 += 1;
+    }
+}
+/* mkdraft:func_84108CE8 end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
@@ -338,7 +425,28 @@ void func_841091CC(void) {
     D_841901B0 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_8410922C.s")
+/* mkdraft:func_8410922C begin */
+extern s32 D_84183700[];
+extern s32 D_84183778[];
+extern s32 D_841837F0[];
+
+
+
+void func_8410922C(s32 arg0) {
+    ((void (*)(s32))D_84183700[arg0])(arg0);
+    if (*(s8 *)((u8 *)&D_841901B4 + 0) >= 8) {
+        D_841901B4 = 0;
+    }
+    // FAKE: dead address comparison forces IDO to materialize the destination base with `la`
+    // (lui+addiu+addu) while the source load stays folded (lui %hi + addu + lw %lo); without
+    // this line the store folds too and the function is 34 instructions (score 955).
+    if (&D_841901C0[*(s8 *)((u8 *)&D_841901B4 + 0)] == (s32 *)0) {
+    }
+    D_841901C0[*(s8 *)((u8 *)&D_841901B4 + 0)] = D_84183778[arg0];
+    D_841901E0[*(s8 *)((u8 *)&D_841901B4 + 0)] = D_841837F0[arg0];
+    *(s8 *)((u8 *)&D_841901B4 + 0) += 1;
+}
+/* mkdraft:func_8410922C end */
 
 /* mkdraft:func_841092B8 begin */
 void func_841092B8(void* arg0) {
@@ -544,7 +652,33 @@ void func_841098C0(s32 arg0) {
     func_84109630(D_8419019C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_841098FC.s")
+/* mkdraft:func_841098FC begin */
+extern s32 func_8003C9B8(u8 *, s16, ParticleVec3f *);
+extern f32 func_8411E1BC(u8 *);
+extern s32 func_8411E1F8(s32);
+
+
+
+void func_841098FC(ParticleVec3f *arg0) {
+    if (func_8003C9B8(D_8419019C, func_8411E22C(D_8419019C), arg0) == 0) {
+        arg0->x = *(f32 *)(D_8419019C + 0x24);
+        arg0->z = *(f32 *)(D_8419019C + 0x2C);
+    }
+    arg0->y = *(f32 *)(D_8419019C + 0x28) + func_8411E1BC(D_8419019C);
+    func_84109630(D_8419019C, arg0);
+    if (((u16 (*)[8])D_84193DD0)[func_8411E1F8(D_8419019C)][9] & 4) {
+        arg0->z = 0.0f;
+        if (arg0->y >= 30.0f) {
+            arg0->y = 30.0f;
+        }
+    }
+    if (arg0->y < 0.0f) {
+        arg0->y = 0.0f;
+    } else if (arg0->y > 200.0f) {
+        arg0->y = 200.0f;
+    }
+}
+/* mkdraft:func_841098FC end */
 
 extern s32 D_8419018C;
 extern s32 func_8411E46C(u8 *, s32);

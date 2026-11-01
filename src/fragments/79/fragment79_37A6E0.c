@@ -366,11 +366,88 @@ void func_8410C304(u8 *arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410C400.s")
+/* mkdraft:func_8410C400 begin */
+extern s32 BattleAnim_StepToS16(s16 *, s16, s16);
+
+
+
+void func_8410C400(u8 *arg0, u8 *arg1, f32 arg2, f32 arg3, f32 arg4, s16 arg5) {
+    f32 target[3];
+    f32 pos[3];
+    f32 pad1[3]; // FAKE: never referenced; the original frame leaves 12 unused bytes between pos and distance (score without it: 134).
+    f32 distance;
+    s16 angle1;
+    s16 angle0;
+    s32 pad2[2]; // FAKE: never referenced; restores the original 0x60-byte frame (score without it: 146).
+
+    D_841911E8 = func_8410B330(arg0);
+    if (arg4 != 0.0f) {
+        BattleAnim_StepToS16((s16 *)(D_841911E8 + 0x3C), -0xFA4, arg5);
+        func_841203B4(D_841911E8 + 0x44, 0.15f, 0.03f);
+        func_841203B4(arg0 + 0xB8, arg3, *(f32 *)(D_841911E8 + 0x44) * arg4);
+        *(f32 *)(D_841911E8 + 0x54) = *(f32 *)(arg0 + 0xB8);
+        func_800371B4(D_841911E8 + 0x50, (u8 *)target, arg2, *(s16 *)(D_841911E8 + 0x3C), *(s16 *)(D_841911E8 + 0x3E));
+        Vec3f_SetComponentsDuplicate(pos, *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+        func_80037120(pos, (u8 *)target, &distance, &angle0, &angle1);
+        func_800371B4((u8 *)pos, arg0 + 0xA8, *(f32 *)(D_841911E8 + 0x44) * distance, angle0, angle1);
+        return;
+    }
+    func_8410BDA0(arg0, arg1);
+}
+/* mkdraft:func_8410C400 end */
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410C544.s")
+/* mkdraft:func_8410C544 begin */
+// func_8410C544 battle-camera setter; sibling of func_8410B420 (same store pairs).
+// The func_800371B4 first argument must be spelled arg0 + 0xB4, not D_841911E8 + 0x10
+// (a different address: D_841911E8 = func_8410B330(arg0) = arg0 + 0x64, so +0x10 is
+// arg0 + 0x74): the target hoists `addiu a0, s0, 0xB4` out of arg0 across the
+// multu/mflo pair, which only schedules when a0 is arg0-relative.
+extern u8 *D_841911E8;
+extern u8 D_8418393C;
+extern u8 D_8418455C;
+extern u8 *func_8410B330(u8 *);
+extern s32 func_8411DC80(u16, s32 *, s32);
+extern s32 func_8411E140(s32);
+extern void func_84120BB4(u8 *, s32);
+extern void func_8410B974(u8 *, void *, s16, s32, s32);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+
+
+void func_8410C544(u8 *arg0, void *arg1, s32 arg2) {
+    s16 angle;
+    s16 side;
+    u8 *record;
+    f32 speed;
+    record = &D_8418455C;
+    side = 1;
+    D_841911E8 = func_8410B330(arg0);
+    func_84120BB4(arg0, (s32)arg1);
+    if (func_8411DC80(*(u8 *)((u8 *)arg1 + 0x61F), (s32 *)&D_8418393C, 8)) { angle = func_8411E140((s32)arg1); } else { angle = *(s16 *)((u8 *)arg1 + 0x20); }
+    if (angle < 0) { side = -1; }
+    *(f32 *)(D_841911E8 + 0x44) = 0.0f;
+    func_8410B974(arg0, arg1, angle, arg2, 1);
+    *(s16 *)(D_841911E8 + 0x90) = *(s16 *)(record + arg2 * 0x1C);
+    *(s16 *)(D_841911E8 + 0x92) = (*(s16 *)(record + arg2 * 0x1C + 2) * side) + angle;
+    *(f32 *)(D_841911E8 + 0x74) *= *(f32 *)(record + arg2 * 0x1C + 4);
+    *(f32 *)(D_841911E8 + 0x88) = *(f32 *)(record + arg2 * 0x1C + 0x10);
+    *(f32 *)(arg0 + 0x2C) = 45.0f;
+    *(f32 *)(D_841911E8 + 0x88) = 45.0f;
+    speed = (f32)side * -150.0f;
+    *(f32 *)(arg0 + 0xB4) = speed;
+    *(f32 *)(D_841911E8 + 0x50) = speed;
+    *(f32 *)(arg0 + 0xB8) = 20.0f;
+    *(f32 *)(D_841911E8 + 0x54) = 20.0f;
+    *(f32 *)(arg0 + 0xBC) = 0.0f;
+    *(f32 *)(D_841911E8 + 0x58) = 0.0f;
+    *(f32 *)(D_841911E8 + 0x74) = 50.0f;
+    func_800371B4(arg0 + 0xB4, arg0 + 0xA8, *(f32 *)(D_841911E8 + 0x74), *(s16 *)(D_841911E8 + 0x90), (s32)*(s16 *)(D_841911E8 + 0x92));
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x68), *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+}
+/* mkdraft:func_8410C544 end */
 #endif
 
 #ifdef VERSION_US
@@ -509,7 +586,34 @@ void func_8410CAE4(u8 *arg0, s32 arg1, s16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410CC90.s")
+/* mkdraft:func_8410CC90 begin */
+extern u8 *D_841911E8;
+extern u8 D_8418393C;
+extern u8 *func_8410B330(u8 *);
+extern s32 func_8411DC80(u16, s32 *, s32);
+extern s32 func_8411E140(s32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+
+void func_8410CC90(u8 *arg0, s32 arg1, s16 arg2) {
+    s16 var_a2;
+    u8 *arg1_ptr = (u8 *)(u32)arg1;
+
+    D_841911E8 = func_8410B330(arg0);
+    var_a2 = arg1_ptr[0x61F];
+    if (func_8411DC80(var_a2, (s32 *)&D_8418393C, 8) != 0) {
+        func_8411E140(arg1);
+    } else {
+        var_a2 = *(s16 *)(arg1_ptr + 0x20);
+        // FAKE: self-assign keeps var_a2 live across the branch, which forces the D_841911E8 `la` temp into t0 on both paths
+        var_a2 = var_a2;
+    }
+    *(f32 *)(D_841911E8 + 0x44) = 0.0f;
+    *(f32 *)(arg0 + 0x2C) = 45.0f;
+    *(f32 *)(D_841911E8 + 0x88) = 45.0f;
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x68), *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+}
+/* mkdraft:func_8410CC90 end */
 #endif
 
 #ifdef VERSION_US
@@ -739,7 +843,34 @@ void func_8410E878(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410E8E4.s")
+/* mkdraft:func_8410E8E4 begin */
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_84120BB4(u8 *, s32);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+
+
+void func_8410E8E4(u8 *arg0, u8 *arg1) {
+    f32 sp44;
+    f32 sp40;
+    f32 zf; // FAKE: 4th Vec3f argument kept in a named local; diff score 20 when inlined into the call
+    f32 sp38;
+    s16 sp36;
+    s16 sp34; // FAKE: the s16 assignment truncates func_8411E1D4's product in place; diff score 368 with an s32 local
+
+    func_84120BB4(arg0, arg1);
+    *(f32 *)(arg0 + 0x2C) = 80.0f;
+    sp44 = *(f32 *)(*(u8 **)(arg1 + 0x678) + 4) + *(f32 *)(arg1 + 0x28);
+    sp40 = (*(f32 *)(arg1 + 0x24) + (*(f32 *)(*(u8 **)(arg1 + 0x678)) * (f32)func_8411E1D4((s32)arg1) * D_80088E50[*(u16 *)(arg1 + 0x20) >> 4])) - (*(f32 *)(*(u8 **)(arg1 + 0x678) + 8) * D_80087E50[*(u16 *)(arg1 + 0x20) >> 4]);
+    zf = (*(f32 *)(arg1 + 0x2C) + (*(f32 *)(*(u8 **)(arg1 + 0x678)) * (f32)func_8411E1D4((s32)arg1) * D_80087E50[*(u16 *)(arg1 + 0x20) >> 4])) + (*(f32 *)(*(u8 **)(arg1 + 0x678) + 8) * D_80088E50[*(u16 *)(arg1 + 0x20) >> 4]);
+    Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), sp40, sp44, zf);
+    sp38 = *(f32 *)(*(u8 **)(arg1 + 0x678) + 0xC);
+    sp36 = *(s16 *)(*(u8 **)(arg1 + 0x678) + 0x10);
+    sp34 = *(s16 *)(*(u8 **)(arg1 + 0x678) + 0x12) * func_8411E1D4((s32)arg1);
+    func_800371B4((u8 *)(arg0 + 0xB4), arg0 + 0xA8, sp38, sp36, sp34);
+}
+/* mkdraft:func_8410E8E4 end */
 #endif
 
 #ifdef VERSION_US
@@ -859,7 +990,69 @@ void BattleAnim_ModelDispatch_127(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410F3E8.s")
+/* mkdraft:func_8410F3E8 begin */
+extern s32 func_80001FF0();
+
+// sp40 receives the three floats Vec3f_SetComponentsDuplicate writes, and its 12-byte
+// home is what places sp4C at sp+0x4C; sp4C is only reached through its address.
+
+
+void func_8410F3E8(u8 *arg0, void *arg1) {
+    s16 temp_a0;
+    u8 *sp28;
+    s32 sp4C;
+    f32 sp40[3];
+    s32 sp3C;
+    s16 sp3A;
+    s16 sp38;
+    s16 temp_v0_2;
+    s16 sp34;
+    s16 sp36;
+
+    sp34 = 1;
+    D_841911E8 = func_8410B330(arg0);
+    temp_a0 = *(s16 *)(D_841911E8 + 0xA2);
+    switch (temp_a0) {
+    case 0:
+        func_841203B4(arg0 + 0x2C, *(f32 *)(D_841911E8 + 0x88), 0.02f);
+        temp_v0_2 = *(s16 *)((u8 *)arg1 + 0x20);
+        if (temp_v0_2 < 0) {
+            sp34 = -1;
+        }
+        sp36 = temp_v0_2;
+        func_841203B4(D_841911E8 + 0x44, *(f32 *)(D_841911E8 + 0x4C), *(f32 *)(D_841911E8 + 0x48));
+        sp28 = arg0 + 0xB4;
+        func_80037120(D_841911E8 + 0x50, sp28, &sp3C, &sp38, &sp3A);
+        Vec3f_SetComponentsDuplicate(sp40, *(f32 *)(arg0 + 0xB4), *(f32 *)(arg0 + 0xB8), *(f32 *)(arg0 + 0xBC));
+        func_80037120(sp40, D_841911E8 + 0x50, &sp3C, &sp38, &sp3A);
+        func_800371B4((u8 *)sp40, sp28, *(f32 *)&sp3C * *(f32 *)(D_841911E8 + 0x44), sp38, (s32)sp3A);
+        func_8410B884(arg0, arg1, D_841911E8, sp36);
+        if (func_80001FF0() == 0x32) {
+            *(f32 *)(D_841911E8 + 0x48) *= 1.3f;
+        }
+        if (((u16 (*)[8])(D_84193DD0 + 0x12))[func_8411E1F8(arg1)][0] & 2) {
+            *(f32 *)(D_841911E8 + 0x40) *= 1.3f;
+            *(s16 *)(D_841911E8 + 0x3E) = sp34 * 0x1555;
+        }
+        func_800371B4(D_841911E8 + 0x50, &sp4C, *(f32 *)(D_841911E8 + 0x40), *(s16 *)(D_841911E8 + 0x3C), *(s16 *)(D_841911E8 + 0x3E));
+        Vec3f_SetComponentsDuplicate(sp40, *(f32 *)(arg0 + 0xA8), *(f32 *)(arg0 + 0xAC), *(f32 *)(arg0 + 0xB0));
+        func_80037120((s32)sp40, (s32)&sp4C, &sp3C, &sp38, &sp3A);
+        func_800371B4((u8 *)sp40, arg0 + 0xA8, *(f32 *)&sp3C * *(f32 *)(D_841911E8 + 0x44), sp38, (s32)sp3A);
+        if (*(f32 *)&sp3C <= 1.75f) {
+            *(s16 *)(D_841911E8 + 0xA2) = 1;
+        }
+        *(s16 *)(D_841911E8 + 0x94) = 0;
+        break;
+    case 1:
+        *(s16 *)(D_841911E8 + 0x94) = *(s16 *)(D_841911E8 + 0x94) + 1;
+        if (*(s16 *)(D_841911E8 + 0x94) == 0x14) {
+            func_8411FEE8(0);
+            *(s32 *)(D_841911E8 + (D_841911EC * 8) + 8) = D_84184148;
+        }
+        break;
+    }
+}
+/* mkdraft:func_8410F3E8 end */
 #endif
 
 #ifdef VERSION_US

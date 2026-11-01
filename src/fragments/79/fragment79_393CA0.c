@@ -2009,7 +2009,24 @@ void func_84128954(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84128B30.s")
+/* mkdraft:func_84128B30 begin */
+extern u8 D_841951D5;
+extern u8 D_841951E5;
+
+
+void func_84128B30(void) {
+    s32 c, v;
+    // FAKE: c is always 0, so uopt deletes the branch but keeps its join label
+    // before the jr. as1 declines to move the store into the delay slot across
+    // that label, which is what leaves the trailing nop. Without it: score 325.
+    c = D_841951D5 & 0;
+    v = D_841951D5 & 0x7F;
+    if (c) {
+    } else {
+        D_841951E5 = v;
+    }
+}
+/* mkdraft:func_84128B30 end */
 #endif
 
 #ifdef VERSION_US

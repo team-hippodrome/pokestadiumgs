@@ -752,7 +752,74 @@ void func_84140CFC(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84140D68.s")
+/* mkdraft:func_84140D68 begin */
+extern u8 *D_841951F8;
+extern u16 D_84186BFC;
+extern u8 D_84186F8C[];
+void ParticleGfx_SetPrimColor_fragment79(u8 r, u8 g, u8 b, u8 a);
+void func_8413FB3C(s16 arg0, s16 arg1);
+void func_8413FB80(s16 arg0, s16 arg1);
+
+
+
+void func_84140D68(u8 *arg0) {
+    u8 idx;
+    u8 count;
+    s32 i;
+    s32 offset;
+    s16 dx;
+    u8 *party;
+    u8 **slot;
+    u16 x;
+
+    idx = arg0[1];
+    if (((arg0[8] & 1) == 0) && (arg0[0] == 3)) {
+        if (idx != 0) {
+            slot = &(&D_841951F8)[idx];
+            party = *slot;
+            count = party[8];
+            dx = (6 - count) * D_84186BFC;
+        } else {
+            slot = &(&D_841951F8)[idx];
+            party = *slot;
+            count = party[8];
+            dx = 0;
+        }
+        x = (u16)(*(s16 *)(arg0 + 0xA) + dx);
+        i = 0;
+        offset = 0;
+        if ((count = party[8]) > 0) {
+            do {
+                /* FAKE: the u32 add keeps the record address a runtime word sum, so the
+                 * addu that indexes the record is followed by the target's addiu; typed
+                 * pointer arithmetic folds record + 0x18 into the 0x3E HP and 0x24 status
+                 * displacements and drops the addiu. Pipeline score 285 (12 rows) without
+                 * it. */
+                u8 *record = party + offset;
+                record = (u8 *)((u32)record + 0x18);
+                if (*(u16 *)(record + 0x26) == 0) {
+                    func_8413FB80((s16)x, *(s16 *)(arg0 + 0xC));
+                } else if (record[0x24] == 0) {
+                    func_8413FB3C((s16)x, *(s16 *)(arg0 + 0xC));
+                } else {
+                    ParticleGfx_SetPrimColor_fragment79(D_84186F8C[0], D_84186F8C[1], D_84186F8C[2], 0xFF);
+                    func_8413FB3C((s16)x, *(s16 *)(arg0 + 0xC));
+                    ParticleGfx_SetPrimColor_fragment79(0xFF, 0xFF, 0xFF, 0xFF);
+                }
+                party = *slot;
+                i++;
+                offset += 0x58;
+                x = (u16)(x + D_84186BFC) & 0xFFFF;
+                /* FAKE: the 16-bit mask leaves the zero-extended party-byte count unchanged.
+                 * It is load-bearing for register colors: masked, the late count is its own
+                 * web that IDO colors t0 while the preheader count stays in v0, matching the
+                 * target; unmasked, both counts color v0. Pipeline score 10 (2 rows)
+                 * without it. */
+            } while (i < ((count = party[8]) & 0xFFFF));
+        }
+    }
+}
+/* mkdraft:func_84140D68 end */
 #endif
 
 #ifdef VERSION_US
@@ -875,7 +942,37 @@ void func_841410A0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414111C.s")
+/* mkdraft:func_8414111C begin */
+extern u8 D_84186F70[];
+extern s16 D_84186CF4;
+extern s16 D_84186D00;
+
+// Sets the shared primary color, then draws the layers at
+// (arg0[0x12] + D_84186D00, arg0[0x14] + D_84186CF4). The first coordinate is
+// stepped by 0x43 for each further layer that func_8413FD04 reports present.
+
+
+void func_8414111C(u8 *arg0) {
+    u8 index;
+    u16 offset = 0;
+
+    index = arg0[1];
+    if (!(arg0[8] & 2)) {
+        if (func_8413FD04(index, arg0[2], 0) != 0xFF) {
+            ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+            func_8413F6C0((s16)(*(s16 *)(arg0 + 0x12) + D_84186D00), (s16)(*(s16 *)(arg0 + 0x14) + D_84186CF4), 3);
+            if (func_8413FD04(index, arg0[2], 1) != 0xFF) {
+                offset += 0x43;
+                func_8413F6C0((s16)(*(s16 *)(arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)(arg0 + 0x14) + D_84186CF4), 5);
+                if (func_8413FD04(index, arg0[2], 2) != 0xFF) {
+                    offset += 0x43;
+                    func_8413F6C0((s16)(*(s16 *)(arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)(arg0 + 0x14) + D_84186CF4), 4);
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_8414111C end */
 #endif
 
 #ifdef VERSION_US
@@ -883,7 +980,79 @@ void func_841410A0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141538.s")
+/* mkdraft:func_84141538 begin */
+extern u8 *D_841951F8;
+extern u8 D_84186F68[];
+extern u8 D_84186F6C[];
+extern u8 D_84186F70[];
+extern s16 D_84186D4C;
+extern s16 D_84186D50;
+extern void ParticleGfx_SetPrimColor_fragment79(u8 r, u8 g, u8 b, u8 a);
+extern void func_8413F6C0(s16 arg0, s16 arg1, u16 arg3);
+
+
+
+void func_84141538(u8 *arg0) {
+    u32 sprite;
+    UNUSED u8 pad0; // FAKE: byte stack home only; without pad0+pad1 the color byte spills to 0x23 instead of 0x21 (diff score 20)
+    UNUSED u8 pad1; // FAKE: see pad0
+    u8 color;
+    u8 slot;
+    u8 *state;
+
+    slot = arg0[1];
+    if (!(arg0[8] & 2)) {
+        state = (&D_841951F8)[slot];
+        if ((state[2] == 1) && (state[8] >= 4)) {
+            switch (*(u32 *)(arg0 + 4)) {
+            case 0:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F6C[0], D_84186F6C[1], D_84186F6C[2], 0xFF);
+                color = 1;
+                break;
+            case 1:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 3;
+                break;
+            case 2:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 5;
+                break;
+            case 3:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F68[0], D_84186F68[1], D_84186F68[2], 0xFF);
+                color = 0;
+                break;
+            case 4:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 2;
+                break;
+            case 5:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 4;
+                break;
+            }
+        } else {
+            if (arg0[2] == 0) {
+                sprite = *(u32 *)(arg0 + 4);
+            } else {
+                sprite = *(u32 *)(arg0 + 4) - state[3];
+            }
+            ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+            switch (sprite) {
+            case 0:
+                color = 3;
+                break;
+            case 1:
+                color = 5;
+                break;
+            case 2:
+                color = 4;
+                break;
+            }
+        }
+        func_8413F6C0((s16) (*(s16 *)(arg0 + 0xA) + D_84186D4C), (s16) (*(s16 *)(arg0 + 0xC) + D_84186D50), color);
+    }
+}
+/* mkdraft:func_84141538 end */
 #endif
 
 #ifdef VERSION_US
@@ -935,7 +1104,55 @@ void func_84141BE0(u8 *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141F20.s")
+/* mkdraft:func_84141F20 begin */
+extern void func_84141D1C(u8 *);
+extern u8 *D_84195208[];
+extern s16 D_84186C44[];
+extern s16 D_84186C4C[];
+extern s16 D_84186C9C;
+extern s16 D_84186CA0;
+extern s32 func_80062D98(u8);
+
+
+void func_84141F20(u8 *arg0)
+{
+    u8 index;
+    s32 i;
+    s32 move;
+
+    index = arg0[1];
+    if ((arg0[8] & 1) == 0 && (arg0[8] & 2) == 0)
+    {
+        switch (arg0[0])
+        {
+            case 9:
+                for (i = 0; i < 4; i++)
+                {
+                    if (D_84195208[index][i + 5] == 0)
+                    {
+                        break;
+                    }
+                    move = D_84195208[index][i + 5];
+                    func_8413F640(*(s16 *)(arg0 + 10) + D_84186C44[i],
+                                  *(s16 *)(arg0 + 12) + D_84186C4C[i],
+                                  func_80062D98(move));
+                }
+                break;
+
+            case 10:
+                move = (*(s32 *)(arg0 + 4) + D_84195208[index])[5];
+                func_8413F640(*(s16 *)(arg0 + 10) + D_84186C9C,
+                              *(s16 *)(arg0 + 12) + D_84186CA0,
+                              func_80062D98(move));
+                break;
+
+            case 13:
+                func_84141D1C(arg0);
+                break;
+        }
+    }
+}
+/* mkdraft:func_84141F20 end */
 #endif
 
 #ifdef VERSION_US
@@ -967,7 +1184,124 @@ void func_841420A4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841427DC.s")
+/* mkdraft:func_841427DC begin */
+// The two-entry party pointer table. The fragment-wide declaration above types
+// the symbol as one pointer, so the table entries are read through a cast.
+extern u8 *D_841951F8;
+extern u8 D_84195218[];
+extern s16 D_84186BD8;
+extern s16 D_84186BDC;
+extern s16 D_84186CF8;
+extern s16 D_84186CFC;
+extern s16 D_84186D60;
+extern s16 D_84186D64;
+extern s32 func_80064650(u16, u8);
+extern u8 func_8413FD04(u8, u8, u8);
+extern void func_8413F5F4(s16, s16, s32);
+
+// One 24-byte battle-snapshot display record per side. name (0x0) and value
+// (0x4) agree with struct BattleSnapshotDisplayState in the fragment 79
+// snapshot file; that file stores a u16 status at 0xA, whereas this function
+// passes the status byte at 0xB to func_80064650.
+//@{src/fragments/79/fragment79_3A4030.c}
+typedef struct {
+    u32 name;
+    f32 value;
+    u16 maximum;
+    u8 unk_0A;
+    u8 status;
+    u16 dvs;
+    u8 level;
+    u8 species;
+    u8 unk_10[8];
+} BattleSnapshotDisplay;
+
+// Party member (0x58 bytes), reached from offset 0x18 of the party record.
+// status (0x24) and hp (0x26) are the two arguments func_80064650 turns into
+// an icon; the hp/status offsets match BattlePanelPokemon further down this file.
+typedef struct {
+    u8 unk_00[0x24];
+    u8 status;
+    u8 unk_25;
+    u16 hp;
+    u8 unk_28[0x30];
+} PartyMon;
+
+// Party record: member count at 0x8, members from 0x18, as in the
+// BattlePanelParty view declared further down this file.
+typedef struct {
+    u8 unk_00[8];
+    u8 count;
+    u8 unk_09[15];
+    PartyMon mons[6];
+} Party;
+
+// Draw the battle-snapshot readouts for one side: the stat change (case 1), the
+// three resolved party-list slots (case 11), the party grid (case 12) and a
+// single changed party member (case 13). state[8] gates all four cases; state[0]
+// selects the case and state[1] the side.
+
+
+void func_841427DC(u8 *state) {
+    // Declaration order matters for the match: IDO assigns stack slots by live
+    // range, so reordering these declarations changes where the case-12 index
+    // spills (0x44 in the retail frame, 0x40 for most other orders).
+    u8 side;
+    u16 column_offset;
+    u16 row_offset;
+    u8 value;
+    s32 i;
+    PartyMon *pokemon;
+
+    column_offset = 0;
+    row_offset = 0;
+    if (!(state[8] & 1) && !(state[8] & 2) && !(state[8] & 0x10)) {
+        side = state[1];
+        switch (state[0]) {
+        case 1:
+            func_8413F5F4(*(s16 *)(state + 0xA) + D_84186BD8,
+                          *(s16 *)(state + 0xC) + D_84186BDC,
+                          func_80064650((u16)((BattleSnapshotDisplay *)D_84195218)[side].value,
+                                        ((BattleSnapshotDisplay *)D_84195218)[side].status));
+            break;
+        case 11:
+            // At most three slots are listed; 0xFF ends the list early.
+            for (i = 0; i != 3; i++) {
+                value = func_8413FD04(side, state[2], i);
+                if (value == 0xFF) break;
+                pokemon = &((Party *)((u8 **)&D_841951F8)[side])->mons[(s32)value];
+                func_8413F5F4(*(s16 *)(state + 0x12) + D_84186CF8 + column_offset,
+                              *(s16 *)(state + 0x14) + D_84186CFC,
+                              func_80064650(pokemon->hp, pokemon->status));
+                column_offset += 67;
+            }
+            break;
+        case 12:
+            // Three slots per row; the fourth member wraps to the next row.
+            for (i = 0; i < ((Party *)((u8 **)&D_841951F8)[side])->count; i++) {
+                pokemon = &((Party *)((u8 **)&D_841951F8)[side])->mons[i];
+                func_8413F5F4(*(s16 *)(state + 0x12) + D_84186CF8 + column_offset,
+                              *(s16 *)(state + 0x14) + D_84186CFC + row_offset,
+                              func_80064650(pokemon->hp, pokemon->status));
+                column_offset += 67;
+                if (i == 2) {
+                    column_offset = 0;
+                    row_offset = 46;
+                }
+            }
+            break;
+        case 13:
+            pokemon = &((Party *)((u8 **)&D_841951F8)[side])->mons[*(s32 *)(state + 4)];
+            func_8413F5F4(*(s16 *)(state + 0xA) + D_84186D60,
+                          *(s16 *)(state + 0xC) + D_84186D64,
+                          func_80064650(pokemon->hp, pokemon->status));
+            break;
+        default:
+            break;
+        }
+    }
+}
+/* mkdraft:func_841427DC end */
 #endif
 
 #ifdef VERSION_US
@@ -1122,7 +1456,62 @@ void func_841430D0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414327C.s")
+/* mkdraft:func_8414327C begin */
+extern s16 D_84186CA0;
+extern s16 D_84186CA4;
+extern s16 D_84186CA8;
+extern s16 D_84186CAC;
+extern s16 D_84186CB0;
+extern s16 D_84186CB4;
+extern u8 D_84186F94[];
+extern u8 *D_84195208[];
+extern u8 func_80062D5C(u8);
+extern u8 func_80062DD4(u8);
+extern u8 func_80062EB0(u8, u8);
+extern void ParticleGfx_SetPrimColor_fragment79(u8, u8, u8, u8);
+extern void func_8413F32C(s16, s16, u8);
+extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F498(s16, s16, s16, u16);
+extern s32 func_8413E840(f32);
+
+
+typedef struct Unk8414327C {
+    /* 0x00 */ u8 unk0;
+    /* 0x01 */ u8 index;
+    /* 0x02 */ u16 unk2;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+} Unk8414327C;
+
+
+
+void func_8414327C(u8 *arg0) {
+u8 move; u8 pp; u16 x; u16 y; u16 power; u8 index;
+    index = ((Unk8414327C *)arg0)->index;
+    move = D_84195208[index][((Unk8414327C *)arg0)->unk4 + 5];
+    pp = D_84195208[index][((Unk8414327C *)arg0)->unk4 + 9];
+
+    y = ((Unk8414327C *)arg0)->unkC + D_84186CA0;
+    ParticleGfx_SetPrimColor_fragment79(D_84186F94[0], D_84186F94[1], D_84186F94[2], 0xFF);
+    func_8413F498(((Unk8414327C *)arg0)->unkA + D_84186CA4, y, 0, pp & 0x3F);
+    func_8413F32C(((Unk8414327C *)arg0)->unkA + D_84186CA8, y, 10);
+    func_8413F390(((Unk8414327C *)arg0)->unkA + D_84186CAC, y, 0, func_80062EB0(move, pp) & 0x3F);
+    ParticleGfx_SetPrimColor_fragment79(0xFF, 0xFF, 0xFF, 0xFF);
+    x = ((Unk8414327C *)arg0)->unkA + D_84186CB0;
+    power = func_80062D5C(move);
+    if (power < 2) {
+        func_8413F32C(x - 18, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 12);
+        func_8413F32C(x - 12, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 12);
+        func_8413F32C(x - 6, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 12);
+    } else {
+        func_8413F498(x, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 0, power);
+    }
+    func_8413F498((s16)x, y, 0, func_8413E840((f32)func_80062DD4(move) * 100.0f / 255.0f));
+}
+/* mkdraft:func_8414327C end */
 #endif
 
 #ifdef VERSION_US
@@ -1494,11 +1883,119 @@ void BattleUi_DrawNameRow(void *row) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144514.s")
+/* mkdraft:func_84144514 begin */
+extern s16 D_84186D18;
+extern s16 D_84186D1C;
+extern u8 * D_841951F8;
+extern void func_84143E64(u16 arg0, u16 arg1, s32 arg2, u16 arg3, s32 arg4);
+
+#ifndef M2C_FIELD
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#endif
+
+
+
+void func_84144514(void *arg0) {
+    s32 var_s2;
+    u16 var_s3;
+    s32 var_s4;
+    u8 *var_v1;
+    u8 **var_t0;
+
+    var_s3 = 0;
+    var_s4 = 0;
+    // karodo: empty if on the arg0 byte re-walks uopt's GPR pool -- the extra dead
+    // value web (lbu arg0+1) is colored ahead of the table-base computation, so the
+    // entry webs land on v0/t6/t7 and the loop-body webs shift one slot (ring
+    // rotation). 135 -> 0, no code emitted (condition CSEs into the real load).
+    if (M2C_FIELD(arg0, u8 *, 1) == 0) {
+    }
+    var_t0 = &(&D_841951F8)[M2C_FIELD(arg0, u8 *, 1)];
+    var_v1 = *var_t0;
+    for (var_s2 = 0; var_s2 < (s32) var_v1[8]; var_s2++) {
+        func_84143E64((M2C_FIELD(arg0, s16 *, 0x12) + D_84186D18 + var_s3) & 0xFFFF, (M2C_FIELD(arg0, s16 *, 0x14) + D_84186D1C + var_s4) & 0xFFFF, (s32) M2C_FIELD(var_v1, u8 *, var_s2 * 0x58 + 0x18), M2C_FIELD(var_v1, u16 *, var_s2 * 0x58 + 0x2E), (s32) (var_v1 + var_s2 * 0x58 + 0x4C));
+        var_s3 = (var_s3 + 0x43) & 0xFFFF;
+        if (var_s2 == 2) {
+            var_s3 = 0;
+            var_s4 = 0x2E;
+        }
+        var_v1 = *var_t0;
+    }
+}
+/* mkdraft:func_84144514 end */
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144634.s")
+/* mkdraft:func_84144634 begin */
+extern u8 *D_841951F8;
+extern u8 *D_84195208[];
+extern void *D_8419A0B0;
+extern s16 D_84186D98;
+extern s16 D_84186D9C;
+extern s16 D_84186DA0;
+extern s16 D_84186DA4;
+extern s16 D_84186DA8;
+extern s16 D_84186DAC;
+extern s16 D_84186DB0;
+extern s16 D_84186DB4;
+extern void func_800495F8(s32, s32, s32, void *, ...);
+extern void func_80048E30(void *, s32, s32, s32, s32);
+extern s32 func_80062CE0(u8);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern s32 *func_800635E0(u8);
+extern s32 func_800647C8(u8);
+
+// Draws the selected party Pokemon panel: the text blob at pokemon+0x34, one
+// row per move slot, then the name label and image at +1,+1 in dark gray and
+// again at the origin in white. Move ids come from D_84195208 when the selected
+// slot is the active battler, and from the party record otherwise.
+
+
+void func_84144634(u8 *state) {
+    u8 side;
+    u16 row;
+    s32 i;
+    u8 move;
+    u8 name;
+    s32 *image;
+    // FAKE: declared after `image` only to land its stack home at 0x54; the natural
+    // order (before `image`) compiles the same body but spills it at 0x58 (diff 24).
+    BattlePanelPokemon *pokemon;
+
+    side = state[1];
+    pokemon = &((BattlePanelParty *)((u8 **)&D_841951F8)[side])->mons[*(s32 *)(state + 4)];
+    row = 0;
+    func_800495F8(*(s16 *)(state + 10) + D_84186D98, *(s16 *)(state + 12) + D_84186D9C, 1, (void *)((char *)pokemon + 0x34));
+    for (i = 0; i != 4; i++) {
+        if (*(s32 *)(state + 4) == ((u8 **)&D_841951F8)[side][0xA]) {
+            move = D_84195208[side][i + 5];
+        } else {
+            move = pokemon->moves[i];
+        }
+        func_80048E30(D_8419A0B0, *(s16 *)(state + 10) + D_84186DA8, *(s16 *)(state + 12) + D_84186DAC + row, func_80062CE0(move), 1);
+        row = row + 23;
+    }
+    func_800496A4(1, 0);
+    if (*(s32 *)(state + 4) == ((u8 **)&D_841951F8)[side][0xA]) {
+        name = D_84195208[side][0];
+    } else {
+        name = pokemon->unk_00[0];
+    }
+    image = func_800635E0(pokemon->unk_00[1]);
+    func_8004972C(20, 20, 20, 255);
+    BattleUi_DrawNameLabel((*(s16 *)(state + 10) + D_84186DA0 + 1) & 0xFFFF,
+                           (*(s16 *)(state + 12) + D_84186DA4 + 1) & 0xFFFF,
+                           pokemon->unk_00[0], *(u16 *)((u8 *)pokemon + 0x16), (char *)func_800647C8(name));
+    func_800495F8(*(s16 *)(state + 10) + D_84186DB0 + 1, *(s16 *)(state + 12) + D_84186DB4 + 1, 1, (void *)image);
+    func_8004972C(255, 255, 255, 255);
+    BattleUi_DrawNameLabel((*(s16 *)(state + 10) + D_84186DA0) & 0xFFFF,
+                           (*(s16 *)(state + 12) + D_84186DA4) & 0xFFFF,
+                           pokemon->unk_00[0], *(u16 *)((u8 *)pokemon + 0x16), (char *)func_800647C8(name));
+    func_800495F8(*(s16 *)(state + 10) + D_84186DB0, *(s16 *)(state + 12) + D_84186DB4, 1, (void *)image);
+    func_800496A4(2, -1);
+}
+/* mkdraft:func_84144634 end */
 #endif
 
 #ifdef VERSION_US
@@ -1609,7 +2106,86 @@ void func_84144BF4(void *arg0) { s32 resource = func_8004C874(0x16, 0); *(s16 *)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144C88.s")
+/* mkdraft:func_84144C88 begin */
+extern s16 D_84186C20;
+extern s16 D_84186C24;
+extern s16 D_84186C28;
+extern void func_84144118();
+extern void func_84144514();
+extern void func_84144634();
+
+
+void func_84144C88(void *arg0) {
+    u8 flags;
+
+    flags = *(u8 *)((u8 *)arg0 + 8);
+    if ((flags & 1) == 0 && (flags & 2) == 0 && (flags & 0x10) == 0) {
+        switch (*(u8 *)((u8 *)arg0 + 0)) {
+        case 0:
+            func_84143FF4(arg0);
+            break;
+        case 1:
+            func_841440B4(arg0);
+            break;
+        case 4:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C20,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 0));
+            break;
+        case 5:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C20,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 4));
+            break;
+        case 6:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C20,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 3));
+            break;
+        case 7:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C24,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 1));
+            break;
+        case 8:
+            func_800495BC(*(s16 *)((u8 *)arg0 + 10) + D_84186C24,
+                          *(s16 *)((u8 *)arg0 + 12) + D_84186C28,
+                          func_8004C874(0x10, 2));
+            break;
+        case 9:
+            func_84144118(arg0);
+            break;
+        case 10:
+            func_841442BC(arg0);
+            break;
+        case 11:
+            BattleUi_DrawNameRow(arg0);
+            break;
+        case 12:
+            func_84144514(arg0);
+            break;
+        case 13:
+            func_84144634(arg0);
+            break;
+        case 14:
+            func_8414491C(arg0);
+            break;
+        case 15:
+            func_84144A00(arg0);
+            break;
+        case 16:
+            func_84144A90(arg0);
+            break;
+        case 17:
+            func_84144B98(arg0);
+            break;
+        case 27:
+            func_84144BF4(arg0);
+            break;
+        }
+    }
+}
+/* mkdraft:func_84144C88 end */
 #endif
 
 #ifdef VERSION_US
@@ -1796,7 +2372,75 @@ void func_8414605C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841460C0.s")
+/* mkdraft:func_841460C0 begin */
+extern u8 D_84186188[];
+extern u8 D_841866D8[];
+extern u8 D_84186700[];
+extern u8 D_84186728[];
+extern u8 D_841867F0[];
+extern u8 D_84186868[];
+extern u8 D_84186890[];
+extern u8 D_841868B8[];
+extern u8 D_84186908[];
+extern u8 D_84186930[];
+
+
+u8 *func_841460C0(u8 arg0, u8 arg1, u8 arg2) {
+    u8 *result = NULL;
+    // Count of 0x28-byte records within a slot.
+    u32 index;
+
+    // Selects a table from the shared blob at D_84186188: area arg0, slot arg1,
+    // and for case 11 a record selected by arg2. Cases 0 and 1 stride by 0xC8
+    // and 0x78 bytes, the other blob cases by 0x28 bytes; cases 16-29 return
+    // fixed tables outside the blob. Unlisted areas return NULL.
+    switch (arg0) {
+    case 0:
+        // FAKE: splitting the 0xC8-byte stride into 5 * 0x28 reproduces the
+        // retail two-step multiply chain; arg1 * 0xC8 alone scores 1640.
+        index = arg1 * 5;
+        result = &D_84186188[index * 0x28];
+        break;
+    case 1:
+        // FAKE: as case 0; 0x78 = 3 * 0x28.
+        index = arg1 * 3;
+        result = &D_84186188[(index * 0x28) + 0x28];
+        break;
+    case 2: result = &D_84186188[(arg1 * 0x28) + 0x50]; break;
+    case 3: result = &D_84186188[(arg1 * 0x28) + 0xF0]; break;
+    case 4: result = &D_84186188[(arg1 * 0x28) + 0x140]; break;
+    case 5: result = &D_84186188[(arg1 * 0x28) + 0x190]; break;
+    case 6: result = &D_84186188[(arg1 * 0x28) + 0x1E0]; break;
+    case 7: result = &D_84186188[(arg1 * 0x28) + 0x230]; break;
+    case 8: result = &D_84186188[(arg1 * 0x28) + 0x280]; break;
+    case 9: result = &D_84186188[(arg1 * 0x28) + 0x2D0]; break;
+    case 10: result = &D_84186188[(arg1 * 0x28) + 0x320]; break;
+    case 11:
+        // FAKE: as case 0; arg2's 0x50-byte stride is 2 * 0x28.
+        index = arg2 * 2;
+        result = &D_84186188[(arg1 * 0x28) + (index * 0x28) + 0x370];
+        break;
+    case 12: result = &D_84186188[(arg1 * 0x28) + 0x410]; break;
+    case 13: result = &D_84186188[(arg1 * 0x28) + 0x460]; break;
+    case 14: result = &D_84186188[(arg1 * 0x28) + 0x4B0]; break;
+    case 15: result = &D_84186188[(arg1 * 0x28) + 0x500]; break;
+    case 16: result = D_841866D8; break;
+    case 17: result = D_84186700; break;
+    case 18: result = D_84186728; break;
+    case 19: result = &D_84186188[(arg1 * 0x28) + 0x5C8]; break;
+    case 20: result = &D_84186188[(arg1 * 0x28) + 0x618]; break;
+    case 21: result = D_841867F0; break;
+    case 22: result = &D_84186188[(arg1 * 0x28) + 0x690]; break;
+    case 23: result = D_84186868; break;
+    case 24: result = D_84186890; break;
+    case 25: result = D_841868B8; break;
+    case 27: result = D_84186908; break;
+    case 29: result = D_84186930; break;
+    case 28: result = &D_84186188[(arg1 * 0x28) + 0x7D0]; break;
+    }
+    return result;
+}
+/* mkdraft:func_841460C0 end */
 #endif
 
 #ifdef VERSION_US
@@ -2522,7 +3166,38 @@ void func_8414760C(void *arg0, s16 arg1, u8 arg2, s16 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841476E0.s")
+/* mkdraft:func_841476E0 begin */
+extern void func_84146B0C(u8 *, s32);
+extern void func_84147270(u8 *, u8, s16);
+
+
+
+void func_841476E0(u8 *arg0, s16 arg1, u8 arg2, u8 arg3, s32 arg4) {
+    if (arg3 >= arg0[9]) {
+        s16 divisor = 30;
+        s16 x_step;
+        s16 y_step;
+        u8 step_count;
+
+        func_84146B0C(arg0, 0);
+        x_step = *(s16 *)(arg0 + 14) / divisor;
+        y_step = *(s16 *)(arg0 + 16) / divisor;
+        if (arg2 < arg0[9]) {
+            if (arg1 > 0) {
+                step_count = arg0[9] - arg2;
+            } else {
+                step_count = arg3 - arg0[9] + 1;
+            }
+            *(s16 *)(arg0 + 10) += x_step * step_count;
+            *(s16 *)(arg0 + 12) += y_step * step_count;
+            *(s16 *)(arg0 + 14) -= x_step * step_count * 2;
+            *(s16 *)(arg0 + 16) -= y_step * step_count * 2;
+        }
+        arg0[8] &= ~1;
+        func_84147270(arg0, arg3, arg4);
+    }
+}
+/* mkdraft:func_841476E0 end */
 #endif
 
 #ifdef VERSION_US
