@@ -1508,7 +1508,84 @@ s32 func_8AB0A2D8(s32 arg0) {
 }
 /* mkdraft:func_8AB0A2D8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB0A720.s")
+/* mkdraft:func_8AB0A720 begin */
+extern s32 D_8AB11A04;
+extern void *D_8AB11D00;
+extern void *D_8AB16A58;
+extern void *D_8AB16C98;
+extern void *D_8AB16C9C;
+extern void *D_8AB16CA0;
+extern void *D_8AB16CA4;
+extern s16 D_8AB16CAC;
+extern u16 *D_8AB16C20[];
+extern s32 D_8AB16CC0;
+extern s16 D_8AB16CE4;
+extern u8 D_8AB126A8[];
+extern s16 D_8AB126A0;
+extern void func_8004C54C(s32, s32);
+extern void func_80021ED8(s32);
+extern s32 func_8AB00618(void);
+extern s32 func_8AB007E0(void);
+extern void func_80027774(s32, s32);
+extern s32 func_8AB0A8D4(s32);
+extern void func_8AB04AE4(void);
+extern void TextHighlight_AnimateScales(void);
+
+// Retail names the D_8AB16C20[0] pointer with $v0.  This body keeps the
+// discarded func_8AB007E0() result in $v0 for the rest of the element
+// clears, so IDO 7.1 allocates $v1 there.  The three rewritten words differ
+// only in that register field and carry no relocation.
+
+#pragma REWRITE_FUNCTION_WORD(func_8AB0A720, 0x114, 0x8CE30000, 0x8CE20000)
+#pragma REWRITE_FUNCTION_WORD(func_8AB0A720, 0x118, 0x946A0002, 0x944A0002)
+#pragma REWRITE_FUNCTION_WORD(func_8AB0A720, 0x120, 0xA46E0002, 0xA44E0002)
+
+
+
+s32 func_8AB0A720(s32 arg0) {
+    s32 result = 0x20;
+    s16 *counter = &D_8AB16CE4;
+    void **p_c98 = &D_8AB16C98;
+    void **p_c9c = &D_8AB16C9C;
+    void **p_ca0 = &D_8AB16CA0;
+    void **p_ca4 = &D_8AB16CA4;
+
+    switch (arg0) {
+    case 0:
+        *counter = 0;
+        *(u16 *)((u8 *)D_8AB16A58 + 2) = (u16)(*(u16 *)((u8 *)D_8AB16A58 + 2) & 0xFFFE);
+        func_8AB04AE4();
+        *((u16 *)((u8 *)(*p_c98) + 2)) = (u16)(*((u16 *)((u8 *)(*p_c98) + 2)) & 0xFFFD);
+        *((u16 *)((u8 *)(*p_c9c) + 2)) = (u16)(*((u16 *)((u8 *)(*p_c9c) + 2)) & 0xFFFD);
+        *((u16 *)((u8 *)(*p_ca0) + 2)) = (u16)(*((u16 *)((u8 *)(*p_ca0) + 2)) & 0xFFFD);
+        *((u16 *)((u8 *)(*p_ca4) + 2)) = (u16)(*((u16 *)((u8 *)(*p_ca4) + 2)) & 0xFFFD);
+        func_8004C54C(0xF, (s32)&D_8AB11A04);
+        func_8004C8A0(D_8AB126A8, 0x100, 0x39, D_8AB16CAC + 0x224);
+        { void *d; d = D_8AB11D00; if (d == 0) {} } // karodo
+        *(u16 *)((u8 *)D_8AB11D00 + 2) = (u16)(*(u16 *)((u8 *)D_8AB11D00 + 2) | 1);
+        D_8AB16CC0 = 1;
+        func_80021ED8(0x37);
+        func_80027774(0xCA0F, 0x24);
+        func_8AB007E0();
+        D_8AB126A0 = 0;
+        *(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 0)) + 2) = (u16)(*(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 0)) + 2) & 0xFFFD);
+        *(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 4)) + 2) = (u16)(*(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 4)) + 2) & 0xFFFD);
+        *(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 8)) + 2) = (u16)(*(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 8)) + 2) & 0xFFFD);
+        *(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 12)) + 2) = (u16)(*(u16 *)((u8 *)(*(u16 **)((u8 *)D_8AB16C20 + 12)) + 2) & 0xFFFD);
+        break;
+    case 1:
+        *counter += 1;
+        TextHighlight_AnimateScales();
+        func_8AB00618();
+        if (*counter >= 0x79) {
+            *counter = 0x78;
+            result = func_8AB0A8D4(0);
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB0A720 end */
 
 extern s16 D_8AB16CE6;
 extern s32 func_8AB0A2D8(s32);
