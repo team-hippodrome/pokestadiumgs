@@ -226,8 +226,40 @@ void Fragment56_UpdateScaledParameters(void) {
     D_86807C9C *= D_86807CC8;
 }
 
-extern u8 D_8682EE18[];
-extern u8 D_8682E618[];
+// Transform fields shared by the 360-byte models in both per-group pools.
+typedef struct Fragment56PointModelView {
+    u8 unk_000[20];
+    s32 unk_014;
+    u8 unk_018[6];
+    s16 rotation[3];
+    f32 position[3];
+    f32 scale[3];
+    u8 unk_03C[300];
+} Fragment56PointModelView;
+
+typedef struct Fragment56PointRecord {
+    s32 state;
+    f32 angle;
+    s16 spin;
+    s16 unk_00A;
+    f32 apex_time;
+    f32 elapsed;
+    f32 unk_014;
+} Fragment56PointRecord;
+
+typedef struct Fragment56PointGroupView {
+    u8 unk_000[16];
+    s32 mode;
+    u8 unk_014[56];
+    s32 pool_cursor;
+    s32 active[40];
+    u8 unk_0F0[52];
+} Fragment56PointGroupView;
+
+extern Fragment56PointModelView D_86817308[4][20];
+extern Fragment56PointModelView D_8681EBF8[4][40];
+extern Fragment56PointRecord D_8682E618[4][20];
+extern Fragment56PointGroupView D_8682EE18[4];
 extern u8 D_8682CD18[];
 extern s32 D_86807C40;
 extern s32 D_86807CC4;
@@ -248,7 +280,7 @@ void Fragment56_InitStateRecords(void) {
     s32 word_index;
 
     func_86800A7C();
-    for (group_index = 0, group_state = D_8682EE18; group_index < 4; group_index++, group_state += 292) {
+    for (group_index = 0, group_state = ((u8 *)D_8682EE18); group_index < 4; group_index++, group_state += 292) {
         *(s32 *)(group_state + 0) = 1;
         *(s32 *)(group_state + 4) = 0;
         *(s32 *)(group_state + 16) = 1;
@@ -268,17 +300,17 @@ void Fragment56_InitStateRecords(void) {
 
         word_index = 0;
         while (word_index < 40) {
-            ((s32 *)(D_8682EE18 + group_index * 292 + 80))[word_index] = 0;
+            ((s32 *)(((u8 *)D_8682EE18) + group_index * 292 + 80))[word_index] = 0;
             word_index++;
         }
 
         for (entry_index = 0; entry_index < 20; entry_index++) {
-            *(s16 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 8) = 0;
-            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 4) = 0.0f;
-            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 12) = (f32)(func_8003570C() % 3U + 1U);
-            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 16) = 0.0f;
-            *(f32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 20) = 0.0f;
-            *(s32 *)(D_8682E618 + group_index * 480 + entry_index * 24 + 0) = 0;
+            *(s16 *)(((u8 *)D_8682E618) + group_index * 480 + entry_index * 24 + 8) = 0;
+            *(f32 *)(((u8 *)D_8682E618) + group_index * 480 + entry_index * 24 + 4) = 0.0f;
+            *(f32 *)(((u8 *)D_8682E618) + group_index * 480 + entry_index * 24 + 12) = (f32)(func_8003570C() % 3U + 1U);
+            *(f32 *)(((u8 *)D_8682E618) + group_index * 480 + entry_index * 24 + 16) = 0.0f;
+            *(f32 *)(((u8 *)D_8682E618) + group_index * 480 + entry_index * 24 + 20) = 0.0f;
+            *(s32 *)(((u8 *)D_8682E618) + group_index * 480 + entry_index * 24 + 0) = 0;
         }
 
         for (entry_index = 0; entry_index < 40; entry_index++) {
@@ -340,7 +372,83 @@ void func_8680105C(s32 arg0) {
     func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)scale_multiplier, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86801160.s")
+extern f32 __cosf(f32);
+extern f32 __sinf(f32);
+extern void func_80027A28(u16, u8);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern s32 D_86807C4C;
+extern s32 D_86807CB8;
+extern f32 D_86807CC0;
+extern s32 D_86807DF0;
+extern f32 D_86807DF4;
+extern void *D_8682CD14;
+
+// Advances parabolic model paths and recycles models below the group height threshold.
+void Fragment56_UpdateBallisticModels(s32 group_index) {
+    f32 elapsed;
+    f32 apex_time;
+    f32 angle;
+    f32 height;
+    f32 scale;
+    s16 spin;
+    s32 base_height;
+    s32 slot;
+    s32 entry_index;
+    s32 sound_played;
+    Fragment56PointGroupView *group_state;
+
+    sound_played = 0;
+    for (entry_index = 0; entry_index < 20; entry_index++) {
+        if (D_8682E618[group_index][entry_index].state == 1) {
+            D_8682E618[group_index][entry_index].elapsed = (f32)((f64)D_8682E618[group_index][entry_index].elapsed + 0.5 * (f64)D_86807DF4);
+            spin = D_8682E618[group_index][entry_index].spin;
+            D_86817308[group_index][entry_index].rotation[0] = D_86817308[group_index][entry_index].rotation[0] + spin;
+            D_86817308[group_index][entry_index].rotation[2] = D_86817308[group_index][entry_index].rotation[2] + spin;
+            elapsed = D_8682E618[group_index][entry_index].elapsed;
+            apex_time = D_8682E618[group_index][entry_index].apex_time;
+            angle = D_8682E618[group_index][entry_index].angle;
+            group_state = &D_8682EE18[group_index];
+            D_86817308[group_index][entry_index].position[0] += (f64)(__cosf(angle) * elapsed) / 3.0;
+            D_86817308[group_index][entry_index].position[2] += (f64)(__sinf(angle) * elapsed) * 0.5f;
+            base_height = D_86807C4C;
+            D_86817308[group_index][entry_index].position[1] =
+                (f32)((f64)base_height
+                    + (4.9 * (f64)apex_time * (f64)apex_time)
+                    - (4.9 * (f64)(elapsed - apex_time) * (f64)(elapsed - apex_time)));
+            if (D_8682EE18[group_index].mode == 14) {
+                height =
+                    (f32)((f64)(base_height + 60)
+                        + (4.9 * (f64)apex_time * (f64)apex_time)
+                        - (4.9 * (f64)(elapsed - apex_time) * (f64)(elapsed - apex_time)));
+                D_86817308[group_index][entry_index].position[1] = height;
+                if (height < (f32)(base_height - D_86807DF0)) {
+                    func_8003F1DC(&D_86817308[group_index][entry_index]);
+                    if (sound_played == 0) {
+                        func_80027A28(32517, (u8)group_index);
+                        sound_played = 1;
+                    }
+                    slot = group_state->pool_cursor;
+                    group_state->active[slot] = 1;
+                    func_8003F114((u8 *)&D_8681EBF8[group_index][slot], 0, -1, D_8682CD14);
+                    D_8681EBF8[group_index][slot].position[2] = D_86817308[group_index][entry_index].position[2];
+                    D_8681EBF8[group_index][slot].unk_014 = 0;
+                    D_8681EBF8[group_index][slot].position[0] = D_86817308[group_index][entry_index].position[0];
+                    D_8681EBF8[group_index][slot].position[1] = (f32)D_86807CB8;
+                    scale = D_86807CC0;
+                    D_8681EBF8[group_index][slot].scale[2] = scale;
+                    D_8681EBF8[group_index][slot].scale[1] = scale;
+                    D_8681EBF8[group_index][slot].scale[0] = scale;
+                    group_state->pool_cursor++;
+                    if (group_state->pool_cursor >= 40) {
+                        group_state->pool_cursor = 0;
+                    }
+                    D_8682E618[group_index][entry_index].state = 0;
+                }
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868014C0.s")
 
@@ -487,25 +595,24 @@ void func_86803ED8(void) {
 
 extern s32 D_86807C7C;
 extern u8 D_8682CD20[];
-extern u8 D_8682EE18[];
 s32 func_868040EC(s32 arg0, s32 arg1) {
     s32 value;
     s32 result = -1;
     if (D_86807C7C == 0) {
         return 1;
     }
-    value = *(s32 *)(&D_8682EE18[arg0 * 0x124] + 0x1C);
+    value = *(s32 *)(&((u8 *)D_8682EE18)[arg0 * 0x124] + 0x1C);
     switch (value) {
     case 0:
         break;
     case 2:
-        if (*(s32 *)&D_8682CD20[(arg0 * 0x640) + (arg1 * 0x28)] == 1) { result = 1; *(s32 *)(&D_8682EE18[arg0 * 0x124] + 0x10) = 1; }
+        if (*(s32 *)&D_8682CD20[(arg0 * 0x640) + (arg1 * 0x28)] == 1) { result = 1; *(s32 *)(&((u8 *)D_8682EE18)[arg0 * 0x124] + 0x10) = 1; }
         break;
     case 1:
-        if (*(s32 *)&D_8682CD20[(arg0 * 0x640) + (arg1 * 0x28)] == 3) { result = 1; *(s32 *)(&D_8682EE18[arg0 * 0x124] + 0x10) = 3; }
+        if (*(s32 *)&D_8682CD20[(arg0 * 0x640) + (arg1 * 0x28)] == 3) { result = 1; *(s32 *)(&((u8 *)D_8682EE18)[arg0 * 0x124] + 0x10) = 3; }
         break;
     case 3:
-        if (*(s32 *)&D_8682CD20[(arg0 * 0x640) + (arg1 * 0x28)] == 2) { result = 1; *(s32 *)(&D_8682EE18[arg0 * 0x124] + 0x10) = 2; }
+        if (*(s32 *)&D_8682CD20[(arg0 * 0x640) + (arg1 * 0x28)] == 2) { result = 1; *(s32 *)(&((u8 *)D_8682EE18)[arg0 * 0x124] + 0x10) = 2; }
         break;
     }
     return result;
@@ -529,7 +636,6 @@ extern s32 D_86807C88;
 extern s32 D_86807C48;
 extern s32 D_868084E8;
 extern u8 D_8682CD18[];
-extern u8 D_8682E618[];
 extern void func_8680537C(void);
 extern void func_868044D4(void);
 extern void func_868048C8(void);
@@ -555,7 +661,7 @@ void Fragment56_UpdatePoolCompletion(void) {
                         }
                     }
                     for (entry_index = 0; entry_index != 20; entry_index++) {
-                        if (*(s32 *)(D_8682E618 + group_index * 0x1E0 + entry_index * 0x18) == 1) {
+                        if (*(s32 *)(((u8 *)D_8682E618) + group_index * 0x1E0 + entry_index * 0x18) == 1) {
                             all_empty = 0;
                         }
                     }
@@ -581,7 +687,7 @@ void Fragment56_UpdatePoolCompletion(void) {
                     }
                 }
                 for (entry_index = 0; entry_index != 20; entry_index++) {
-                    if (*(s32 *)(D_8682E618 + group_index * 0x1E0 + entry_index * 0x18) == 1) {
+                    if (*(s32 *)(((u8 *)D_8682E618) + group_index * 0x1E0 + entry_index * 0x18) == 1) {
                         all_empty = 0;
                     }
                 }
@@ -593,9 +699,7 @@ void Fragment56_UpdatePoolCompletion(void) {
     }
 }
 
-extern u8 D_8681EBF8[];
 extern u8 D_86809208[];
-extern u8 D_86817308[];
 extern u8 D_86808C8C[];
 extern void *D_8682F308;
 extern void func_87F06430(f32 *, s32);
@@ -615,13 +719,13 @@ void Fragment56_InitModelGroups(void) {
     f32 height = 56.0f;
     for (group_index = 0; group_index < 4; group_index++) {
         for (model_index = 0; model_index != 40; model_index++) {
-            func_8003F1DC(D_8681EBF8 + group_index * 0x3840 + model_index * 0x168);
+            func_8003F1DC(((u8 *)D_8681EBF8) + group_index * 0x3840 + model_index * 0x168);
         }
         for (model_index = 0; model_index < 40; model_index++) {
             func_8003F1DC(D_86809208 + group_index * 0x3840 + model_index * 0x168);
         }
         for (model_index = 0; model_index != 20; model_index++) {
-            func_8003F1DC(D_86817308 + group_index * 0x1C20 + model_index * 0x168);
+            func_8003F1DC(((u8 *)D_86817308) + group_index * 0x1C20 + model_index * 0x168);
         }
         func_8003F1DC(D_868086C8 + group_index * 0x168);
         func_8003F114(D_86808C68 + group_index * 0x168, 0, -1, (void *)D_8682CD00[group_index]);
@@ -828,7 +932,6 @@ extern void func_86806180(void);
 extern u8 D_868086C8[];
 extern u8 D_86808C68[];
 extern s32 D_8682CD00[];
-extern u8 D_8682EE18[];
 extern s32 D_8682F2A8;
 
 void func_8680649C(void) {
@@ -850,7 +953,7 @@ void func_8680649C(void) {
             D_868086C8[i * 0x168 + 0xA0] = 0xFF;
             D_868086C8[i * 0x168 + 0xA1] = 0;
             D_868086C8[i * 0x168 + 0xA2] = 0;
-            *(s32 *)(&D_8682EE18[i * 0x124] + 0x10) = 1;
+            *(s32 *)(&((u8 *)D_8682EE18)[i * 0x124] + 0x10) = 1;
             func_8003F210(&D_868086C8[i * 0x168], 1);
             ModelAnim_SetFrame(&D_868086C8[i * 0x168], (s16)(guRandom() % 10));
             i++;
@@ -912,7 +1015,6 @@ extern f32 D_86807C54;
 extern s32 D_86807C78;
 extern f32 D_8682F2FC;
 extern f32 D_8682F304;
-extern u8 D_86817308[];
 extern u8 D_8681E928[];
 extern void func_86800508(void);
 extern u8 D_868086C8[];
@@ -931,7 +1033,7 @@ void Fragment56_UpdateModelGridTransforms(void) {
         *(f32 *)(model + 0x28) = height;
         *(f32 *)(model + 0x24) = (row * 16 - 24) * D_8682F2FC;
         for (column = 0; column < 20; column++) {
-            grid_model = D_86817308 + row * 0x1C20 + column * 0x168;
+            grid_model = ((u8 *)D_86817308) + row * 0x1C20 + column * 0x168;
             *(f32 *)(grid_model + 0x30) = *(f32 *)(grid_model + 0x34) = *(f32 *)(grid_model + 0x38) = D_86807C50;
         }
     }
@@ -942,7 +1044,6 @@ void Fragment56_UpdateModelGridTransforms(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680686C.s")
 
-extern u8 D_8681EBF8[];
 extern s32 D_8680806C;
 typedef struct { u8 pad[0x44]; u8 *value44; s32 value48; } Func3EC34;
 extern s32 ModelAnim_IsFinished(Func3EC34 *);
@@ -950,12 +1051,11 @@ extern void ModelAnim_SetEventFrame(u8 *, s16);
 extern s32 ModelAnim_SetEventTrack(void *, s32);
 extern void func_80027A28(u16, u8);
 extern void func_8680422C(s32);
-extern void func_86801160(s32);
+extern void Fragment56_UpdateBallisticModels(s32);
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F1DC(void *);
 extern void func_8003F210(void *, s32);
 extern u8 D_868086C8[];
-extern u8 D_8682EE18[];
 void Fragment56_UpdateModelAnimations(void) {
     struct AnimState {
         u8 before_state[0x10];
@@ -968,7 +1068,7 @@ void Fragment56_UpdateModelAnimations(void) {
     u8 *node;
     s32 model_index;
     s32 effect_index;
-    for (state = (struct AnimState *)D_8682EE18, node = D_868086C8, model_index = 0; model_index < 4; model_index++, state++, node += 0x168) {
+    for (state = (struct AnimState *)((u8 *)D_8682EE18), node = D_868086C8, model_index = 0; model_index < 4; model_index++, state++, node += 0x168) {
         state->ticks++;
         if (ModelAnim_IsFinished((Func3EC34 *)node)) {
             if (state->state == 15) {
@@ -988,11 +1088,11 @@ void Fragment56_UpdateModelAnimations(void) {
             if (D_8680806C == (*(s32 *)(node + 0x48) >> 16)) {
                 func_80027A28(0x7F00, (u8)model_index);
                 for (effect_index = 0; effect_index < 40; effect_index++) {
-                    func_8003F1DC(D_8681EBF8 + model_index * 0x3840 + effect_index * 0x168);
+                    func_8003F1DC(((u8 *)D_8681EBF8) + model_index * 0x3840 + effect_index * 0x168);
                 }
                 func_8680422C(model_index);
             }
-            func_86801160(model_index);
+            Fragment56_UpdateBallisticModels(model_index);
             if (state->ticks >= 70) {
                 func_8003F210(node, 14);
                 ModelAnim_SetFrame(node, 14);
@@ -1016,7 +1116,6 @@ extern void func_86803ED8(void);
 extern u8 D_868086C8[];
 extern u8 D_86808C68[];
 extern s32 D_8682CD00[];
-extern u8 D_8682EE18[];
 extern s32 D_8682F2A8;
 void Fragment56_RunSceneLoop(void) {
     s32 i;
@@ -1027,7 +1126,7 @@ void Fragment56_RunSceneLoop(void) {
             func_8003F1DC(&D_86808C68[i * 0x168]);
             func_8003F1DC(&((u8 *)D_8681E388)[i * 0x168]);
             func_8003F114(&D_868086C8[i * 0x168], 0, -1, (void *)D_8682CD00[i]);
-            *(s32 *)(&D_8682EE18[i * 0x124] + 0x10) = 1;
+            *(s32 *)(&((u8 *)D_8682EE18)[i * 0x124] + 0x10) = 1;
             func_8003F210(&D_868086C8[i * 0x168], 1);
             ModelAnim_SetFrame(&D_868086C8[i * 0x168], (s16)(guRandom() % 10));
             i++;
