@@ -4502,6 +4502,7 @@ SECTIONS
         build/src/fragments/64/fragment64_326ED0.o(.rodata);
         build/src/fragments/64/fragment64_328C20.o(.rodata);
         build/src/fragments/64/fragment64_328E40.o(.rodata);
+        build/asm/us/data/3341A0.rodata.o(.rodata);
         build/src/fragments/64/fragment64_3290A0.o(.rodata);
         build/src/fragments/64/fragment64_32AEF0.o(.rodata);
         build/src/fragments/64/fragment64_32BC10.o(.rodata);
