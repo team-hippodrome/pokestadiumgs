@@ -99,7 +99,63 @@ void func_833018E8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83301C60.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302088.s")
+/* mkdraft:func_83302088 begin */
+extern f32 D_833091E4;
+
+// Zoom-in step on the record passed in arg0; its only caller, func_83302D8C,
+// enters with $a0 = &D_8330AC08 and does not reload it before the call.
+// 0x1C caches the offset's progress: -1 unstarted (reset to 0 here), 0 in
+// progress, 1 once the offset has clamped. The offset in D_833091E4 is reset to
+// 4.0, grows by 8 per step and is capped at half of the value at 0x10; 0x08 and
+// 0x0C receive the position moved inward by it (0x0C by the offset scaled with
+// 0x14/0x10), and 0x2C the applied fraction of that half span.
+// func_8340135C in fragment58 is the same routine against D_83403F18.
+// D_833091E4 is defined in asm/us/data/fragments/57/fragment57_data.data.s.
+
+
+void func_83302088(void *arg0) {
+    f32 *offset_accum = &D_833091E4;
+    f32 half_span;
+    f32 offset;
+    f32 ratio;
+    s32 new_x;
+    s32 x;
+    s32 span;
+    s32 state;
+    s32 state_clamped;
+
+    state_clamped = 1;
+    state = *(s32 *)((u8 *)arg0 + 0x1C);
+    if (state == -1) {
+        // FAKE: one statement expression. As three statements the
+        // sw zero,0x1C moves ahead of the lui $at,%hi(D_833091E4) that the
+        // final store shares (diff score 60).
+        *(s32 *)((u8 *)arg0 + 0x1C) = state = 0, offset = 4.0f, *offset_accum = offset;
+        // karodo: empty test, emits nothing. Its use of offset is what keeps the
+        // reset's 4.0f constant in $f0; without it, or with if (1), the mtc1
+        // targets $f4 and every later FPR shifts (diff score 190).
+        if (offset) {
+        }
+    }
+    offset = *offset_accum;
+    if (state_clamped != state) {
+        offset = offset + 8.0f;
+        span = *(s32 *)((u8 *)arg0 + 0x10);
+        half_span = (f32) (span / 2);
+        if (half_span < offset) {
+            offset = half_span;
+            *(s32 *)((u8 *)arg0 + 0x1C) = state_clamped;
+        }
+        ratio = (f32) *(s32 *)((u8 *)arg0 + 0x14) / (f32) span;
+        x = *(s32 *)((u8 *)arg0 + 0);
+        new_x = (s32) ((f32) x - offset);
+        *(s32 *)((u8 *)arg0 + 8) = new_x;
+        *(s32 *)((u8 *)arg0 + 0xC) = (s32) ((f32) *(s32 *)((u8 *)arg0 + 4) - offset * ratio);
+        *(f32 *)((u8 *)arg0 + 0x2C) = (f32) (x - new_x) / half_span;
+        *offset_accum = offset;
+    }
+}
+/* mkdraft:func_83302088 end */
 
 /* mkdraft:func_83302180 begin */
 extern f32 D_833091EC;
@@ -192,7 +248,7 @@ s32 func_8004C54C(s32, s32);
 s32 func_8004C874(s32, s32);
 s8 *func_8004C8A0(s32 *, s32, s32, s32);
 s32 func_8330084C(s32 *);
-s32 func_83302088(s32 *);
+void func_83302088(void *);
 void func_83302180(void *);
 extern s32 D_83308E38[];
 extern s32 D_8330A2B8;
