@@ -797,7 +797,46 @@ s32 func_81304444(u8 *arg0, s32 arg1, s32 arg2) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_8130456C.s")
+/* mkdraft:func_8130456C begin */
+
+
+s32 func_8130456C(u8 *arg0, u8 *arg1) {
+    s32 i;
+    u8 *base;
+    u8 *entry;
+
+    if (arg1[0] == 0) {
+        return 0;
+    }
+    if (func_8007126C(*(s32 *)(*(u8 **)(*(u8 **)(arg0 + 0x4DA0) + 0x1A148) + 0x940), arg1[0] - 1, arg1[0x1D]) == 0) {
+        return 0;
+    }
+    i = 0;
+    do {
+        base = arg0 + i;
+        if (base[0x20] != 0) {
+            entry = base + 0x20;
+            if (func_80071210(*(s32 *)(*(u8 **)(*(u8 **)(arg0 + 0x4DA0) + 0x1A148) + 0x940)) != 0) {
+                if (*(s32 *)(arg1 + 0x58) == *(s32 *)(entry + 0x58)) {
+                    return 0;
+                }
+                // FAKE: an unreachable empty loop and label; the goto is the label's
+                // only incoming edge and follows the return above, so neither runs.
+                // Their block boundaries make IDO put the 0x18000 state-chain
+                // constant in $s4 and the 0x4D70 loop bound in $s5, as retail does;
+                // diff score 55 without the three statements.
+                do { } while (0);
+                goto dummy_label_784554;
+            dummy_label_784554: ;
+            } else if (arg1[0] == entry[0]) {
+                return 0;
+            }
+        }
+        i += 0xCE8;
+    } while (i != 0x4D70);
+    return 1;
+}
+/* mkdraft:func_8130456C end */
 
 s32 func_81304678(u8 *arg0, u8 *arg1) {
     u8 *entry; entry = arg0 + 0x20;

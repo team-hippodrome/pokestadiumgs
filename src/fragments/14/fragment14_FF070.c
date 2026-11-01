@@ -923,7 +923,36 @@ f32 func_8130AAA8(unk_func_8130B06C *arg0, f32 arg1, f32 arg2) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AC40.s")
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130AEF4.s")
+/* mkdraft:func_8130AEF4 begin */
+extern s32 func_813002D0(void *);
+extern s32 func_8160A438();
+extern void func_8160A6AC(void *arg0);
+extern void func_8160A994(u8 *arg0);
+extern void func_8160B8A8(u8 *arg0, s32 arg1, s32 arg2);
+extern s32 func_81302290(void *arg0);
+// State block based at arg0 + 0x8000; its 0x68EC word holds the record pointer that
+// func_81302290 and func_813002D0 inspect. Each use spells the base out because a
+// named u8 *local for it takes the 0x18 home slot, while retail keeps the value in
+// the 0x1C compiler-temp slot.
+
+
+void func_8130AEF4(void *arg0, void *arg1, s32 arg2) {
+    s32 limit;
+
+    limit = func_81302290(*(s32 *)((u8 *)arg0 + 0x8000 + 0x68EC));
+    func_8160B8A8(arg1, func_813002D0(*(s32 *)((u8 *)arg0 + 0x8000 + 0x68EC)), 0);
+    if ((arg2 >= 0) && (arg2 < limit)) {
+        func_8160A438(arg1,
+                      *(s8 *)((u8 *)(*(s32 *)((u8 *)(*(s32 *)((u8 *)arg0 + 0x8000 + 0x68EC) + 0x20000) -
+                                                     0x5EB8)) +
+                              0x944),
+                      arg2);
+    } else {
+        func_8160A994(arg1);
+    }
+    func_8160A6AC(arg1);
+}
+/* mkdraft:func_8130AEF4 end */
 
 extern void func_8130AEF4(void *, void *, s32);
 void func_8130AF94(unk_func_8130B06C *arg0) {
@@ -1531,7 +1560,85 @@ s32 func_8130C270(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130C334.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130C570.s")
+/* mkdraft:func_8130C570 begin */
+extern f32 __sinf(f32);
+extern void func_800495BC(s32 arg0, s32 arg1, const char *arg2, ...);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern s32 func_8004C54C(s32 index, s32 value);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern void *func_8004C8A0(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_816048E0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4);
+extern void func_816054D8(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_816054FC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_816073A0(void *arg0);
+extern void func_81607408(void);
+extern void func_81607440(s32, s32, s32, s32, f32, s32, s32);
+extern s32 D_813120A0;
+extern s32 D_813120A4;
+extern const u8 D_81312640[8];
+
+
+
+void func_8130C570(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, void *arg5) {
+    u8 buf[0x80];
+    u16 unk56;
+    u8 pad56[6]; // FAKE: unreferenced; without it color[] lands at 0x50 and phase at 0x4C instead of 0x4C and 0x48 (diff score 32).
+    u8 color[4];
+    f32 phase;
+    f32 var_fs0;
+
+    unk56 = 0x55;
+    if (arg2 > 0.0f) {
+        var_fs0 = (1.0f - arg2) * 30.0f;
+    } else {
+        var_fs0 = 30.0f * arg1;
+    }
+    phase = (__sinf(((f32) D_813120A4 * 6.2831855f) / (f32) D_813120A0) * 0.5f) + 0.5f;
+    // FAKE: stores D_813120A4 through the address of the word before it (D_813120A0 + 4 is
+    // D_813120A4). Two spellings of that address stop IDO from folding the load and the store
+    // into one register: the target materializes the load as lui t9/lw t9 and the store as
+    // lui at/sw. With D_813120A4 on both sides the address is hoisted once (diff score 765).
+    // The call is the left operand because IDO emits add.s operands in reverse of source
+    // order, which yields the target's add.s $f16,$f8,$f0: the converted load first, the
+    // call result second.
+    *(s32 *) ((u8 *) &D_813120A0 + 4) = (s32) (func_816092FC() + (f32) *(s32 *) &D_813120A4);
+    color[0] = (u8) (((f32) (D_81312640[0] - D_81312640[3]) * phase) + (f32) D_81312640[3]);
+    color[1] = (u8) (((f32) (D_81312640[1] - D_81312640[4]) * phase) + (f32) D_81312640[4]);
+    color[2] = (u8) (((f32) (D_81312640[2] - D_81312640[5]) * phase) + (f32) D_81312640[5]);
+    switch (arg4) {
+    case 0:
+        unk56 = 0x56;
+        break;
+    case 1:
+        unk56 = 0x4C;
+        break;
+    case 2:
+        break;
+    }
+    func_816048E0(*(s16 *) ((u8 *) arg0 + 0), *(s16 *) ((u8 *) arg0 + 2), *(s16 *) ((u8 *) arg0 + 4), *(s16 *) ((u8 *) arg0 + 6), 0.0f);
+    if (arg1 > 0.99f) {
+        func_81607440(*(s16 *) ((u8 *) arg0 + 0) + 7, (s32) ((f32) (*(s16 *) ((u8 *) arg0 + 2) + 7) + var_fs0), (s32) (19.0f * arg1), (s32) (((f32) *(s16 *) ((u8 *) arg0 + 6) - var_fs0) - 17.0f), arg3, 1, 1);
+    } else {
+        func_816054D8(*(s16 *) ((u8 *) arg0 + 0) + 7, (s32) ((f32) (*(s16 *) ((u8 *) arg0 + 2) + 7) + var_fs0), (s32) (19.0f * arg1), (s32) (((f32) *(s16 *) ((u8 *) arg0 + 6) - var_fs0) - 17.0f));
+    }
+    func_816073A0(arg0);
+    func_816054FC(*(s16 *) ((u8 *) arg0 + 0) + 7, *(s16 *) ((u8 *) arg0 + 2) + 7, *(s16 *) ((u8 *) arg0 + 4) - 0x11, (s32) var_fs0);
+    if (var_fs0 > 3.0f) {
+        func_8004C54C(0x14, func_8004C874(0xF, *(s16 *) ((u8 *) arg5 + 0x3E)));
+        func_800498C4();
+        func_800496A4(4, 1);
+        func_800495F8((*(s16 *) ((u8 *) arg0 + 4) + *(s16 *) ((u8 *) arg0 + 0)) - 0x18, (s32) (((f32) (*(s16 *) ((u8 *) arg0 + 2) + 0xE) - 30.0f) + var_fs0), 2, func_8004C8A0(buf, 0x80, 0xF, 0x4D));
+        func_8004972C(color[0], color[1], color[2], (s32) (255.0f * arg1));
+        func_800495BC(*(s16 *) ((u8 *) arg0 + 0) + 0x14, (s32) (((f32) (*(s16 *) ((u8 *) arg0 + 2) + 0xE) - 30.0f) + var_fs0), func_8004C874(0xF, unk56));
+        func_800499EC();
+    }
+    func_81607408();
+}
+/* mkdraft:func_8130C570 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130CB5C.s")
 
