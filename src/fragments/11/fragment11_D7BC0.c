@@ -305,7 +305,25 @@ s32 func_816007F8(void *arg0, s32 arg1) {
 typedef struct B1648Node B1648Node; typedef struct B1648Holder B1648Holder; typedef struct B1648Root B1648Root; struct B1648Node { u8 pad0[8]; s32 key; u8 pad0C[4]; B1648Node *next; }; struct B1648Holder { u8 pad0[8]; B1648Node *head; }; struct B1648Root { u8 pad0[0x28]; B1648Holder *holder; };
 void *func_81600848(B1648Root *arg0, s32 arg1) { B1648Node *node = arg0->holder->head; while (node != NULL) { if (arg1 == node->key) return node; node = node->next; } return NULL; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D7BC0/func_81600884.s")
+typedef struct unk_func_81600884_node {
+    /* 0x00 */ s16 rect[4];
+    /* 0x08 */ s32 id;
+    /* 0x0C */ u8 unk_0C[20];
+} unk_func_81600884_node; // size = 0x20
+
+void *func_81600884(void *arg0) {
+    s32 node_index;
+    unk_func_81600884_node *node;
+
+    for (node_index = 0; node_index < *(s32 *)arg0; node_index++) {
+        if ((*(unk_func_81600884_node **)((u8 *)arg0 + 8))[node_index].id == 0) {
+            node = &(*(unk_func_81600884_node **)((u8 *)arg0 + 8))[node_index];
+            func_816003C8((u8 *)node);
+            return node;
+        }
+    }
+    return NULL;
+}
 
 extern void func_81600408(u8 *arg0);
 void func_816008EC(void *arg0, u8 *arg1) {
@@ -381,7 +399,6 @@ void func_816009C0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     *(s32 *)((u8 *)(u32)arg1 + 0x18) = arg3;
 }
 
-extern void *func_81600884(void *);
 typedef struct unk_func_81600A34_List {
     u8 *head;
     u8 *tail;

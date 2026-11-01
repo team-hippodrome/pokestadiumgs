@@ -41,3 +41,38 @@ Source shape: inside the list loop, assign `ctx->list = &ctx->lists[i]`
 and then clear `ctx->list->tail` (not `ctx->lists[i].tail` or an
 assignment expression; those add two words). Finish with the chained
 `ctx->list->head = ctx->list->unk_08 = ctx->list->tail;`.
+
+## Free region-node lookup
+
+`func_81600884` has a matching C implementation (26 instructions, 104 bytes).
+It reads the signed node count at context offset zero and the array pointer
+at offset eight, scans the 32-byte records in order, and returns the first
+record whose ID at offset eight is zero after calling `func_816003C8` to
+reset it. A nonpositive count or an array with no free record returns NULL.
+The reset clears the rectangle, ID, list links, and other existing fields;
+it does not reserve the record by assigning a nonzero ID.
+
+`func_81600E28` allocates and initializes this array with `count * 4 + 1`
+records. The caller `func_81600A34` writes the returned record's rectangle
+and ID before appending it to the current list. These producers and
+consumers establish the record stride and ID field. The node view allocates
+no storage and leaves the remaining bytes unnamed. Indexed struct accesses
+preserve the retail scan cursor and separate returned-record address.
+//@src/fragments/11/fragment11_D7BC0.c
+
+Verification targets master `bcca6fe6161cec32b2e2d902cfd49d3f49464c61` plus
+this replacement and declaration cleanup:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/11/fragment11_D7BC0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled forced compile and complete US ROM link report
+`build/pokestadiumgs-us.z64: OK`. The ROM compares byte-for-byte with retail;
+MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`. The 32-byte frame and original
+owner extent are preserved. No new fake, storage, layout change, compiler
+flag, or instruction rewrite is used. Behavior is established by source
+and original disassembly inspection.
