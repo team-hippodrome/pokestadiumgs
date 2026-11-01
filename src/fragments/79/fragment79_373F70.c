@@ -111,7 +111,111 @@ s32 BattleAnim_IsModelAnimComplete(u8 *arg0) { s32 result = 0; if (*(s32 *)(arg0
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_373F70/func_84104A00.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_373F70/func_84104D28.s")
+/* mkdraft:func_84104D28 begin */
+// func_84104D28 - matched in src/fragments/79/fragment79_373F70.c
+// (replaces the GLOBAL_ASM pragma for asm/us/nonmatchings/fragments/79/
+//  fragment79_373F70/func_84104D28.s).
+//
+// File-scope declarations already present in fragment79_373F70.c:
+//   extern u8 D_84190020[];
+//   extern u8 D_8418D2A0[];
+// and the functions defined above the splice point:
+//   func_841047AC, func_841048E0, BattleAnim_BindModelAnim,
+//   BattleAnim_BindModelAnimReversed, func_841049B4.
+
+extern u8 D_84190020[];
+
+// The four 3-float vectors summed by func_84104D28 at arg1+0x38, +0x2C, +0x44
+// and +0x50. Reading their components through a struct pointer is what makes
+// IDO emit the loads and adds in the retail object's order; the same sum over
+// *(f32 *)(arg1 + n) casts orders the last add's operands differently.
+typedef struct unk_func_84104D28_Vec3f {
+    /* 0x0 */ f32 x;
+    /* 0x4 */ f32 y;
+    /* 0x8 */ f32 z;
+} unk_func_84104D28_Vec3f;
+
+extern s32 ParticleMath_HasBits(void *, s32);
+extern void func_84102750(u8 *, void *);
+extern s32 func_84104A00(u8 *);
+extern void BattleAnim_GetPointAlongCameraRay(u8 *, f32);
+
+// Allocates an effect object with func_841047AC (an entry of D_8418D2A0),
+// cross-links it with the record arg1 (obj+0x14 = arg1, arg1+0xC = obj) and
+// binds the animations named by the s16 indices at *(u8 **)(model + 0x14).
+// obj+0x24, +0x28 and +0x2C become the component-wise sum of the four vectors
+// at arg1+0x38, +0x2C, +0x44 and +0x50; when bit 0x10 of the word at model+8
+// is set, D_84190020 also receives the sum of the first two.
+
+
+u8 *func_84104D28(u8 *arg0, u8 *arg1, s32 arg2) {
+    u8 *obj;
+    u8 *state;
+    u8 *model;
+
+    obj = func_841047AC();
+    state = *(u8 **)(arg1 + 8);
+    model = *(u8 **)arg0;
+    if (obj != NULL) {
+        *(u8 **)(obj + 0x14) = arg1;
+        *(u8 **)(arg1 + 0xC) = obj;
+        arg1[0x7E] = arg2;
+        if (ParticleMath_HasBits(model + 4, 1)) {
+            BattleAnim_GetPointAlongCameraRay(arg1 + 0x38,
+                *(s16 *)(*(u8 **)(model + 0x14) + 6));
+        } else {
+            func_84104A00(arg1);
+        }
+        *(f32 *)(obj + 0x24) = ((unk_func_84104D28_Vec3f *)(arg1 + 0x38))->x +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x2C))->x +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x44))->x +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x50))->x;
+        *(f32 *)(obj + 0x28) = ((unk_func_84104D28_Vec3f *)(arg1 + 0x38))->y +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x2C))->y +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x44))->y +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x50))->y;
+        *(f32 *)(obj + 0x2C) = ((unk_func_84104D28_Vec3f *)(arg1 + 0x38))->z +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x2C))->z +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x44))->z +
+            ((unk_func_84104D28_Vec3f *)(arg1 + 0x50))->z;
+        if (ParticleMath_HasBits(model + 8, 0x10)) {
+            *(f32 *)(D_84190020 + 0) =
+                ((unk_func_84104D28_Vec3f *)(arg1 + 0x38))->x +
+                ((unk_func_84104D28_Vec3f *)(arg1 + 0x2C))->x;
+            *(f32 *)(D_84190020 + 4) =
+                ((unk_func_84104D28_Vec3f *)(arg1 + 0x38))->y +
+                ((unk_func_84104D28_Vec3f *)(arg1 + 0x2C))->y;
+            *(f32 *)(D_84190020 + 8) =
+                ((unk_func_84104D28_Vec3f *)(arg1 + 0x38))->z +
+                ((unk_func_84104D28_Vec3f *)(arg1 + 0x2C))->z;
+        }
+        func_84102750(*(u8 **)(arg1 + 0xC), model);
+        if (*(s16 *)(*(u8 **)(model + 0x14))) {
+            func_841048E0(obj, *(s16 *)(*(u8 **)(model + 0x14)));
+            if (state[2] & 2) {
+                obj[2] |= 2;
+            }
+            if (ParticleMath_HasBits(model + 8, 2)) {
+                *(s16 *)(obj + 0x18) = 3;
+            }
+        }
+        if (*(s16 *)(*(u8 **)(model + 0x14) + 2)) {
+            if (ParticleMath_HasBits(model + 4, 0x4000)) {
+                BattleAnim_BindModelAnimReversed(obj,
+                    *(s16 *)(*(u8 **)(model + 0x14) + 2));
+            } else {
+                BattleAnim_BindModelAnim(obj,
+                    *(s16 *)(*(u8 **)(model + 0x14) + 2));
+            }
+            if (ParticleMath_HasBits(model + 4, 0x8000)) {
+                func_841049B4(obj);
+            }
+        }
+        obj[0x1D] = arg1[0x87];
+    }
+    return obj;
+}
+/* mkdraft:func_84104D28 end */
 
 extern u8 *func_841047AC(void);
 extern void BattleAnim_GetPointAlongCameraRay(u8 *, f32);
