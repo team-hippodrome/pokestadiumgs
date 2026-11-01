@@ -10,7 +10,66 @@ void func_86408D00(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86408D4C.s")
+/* mkdraft:func_86408D4C begin */
+extern u8 *D_87F119DC;
+
+typedef struct unk_func_86408D4C_vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+} unk_func_86408D4C_vec3;
+
+
+
+void func_86408D4C(void)
+{
+  u8 *record;
+  s32 flags;
+  s32 masked;
+  f32 alpha;
+  f32 beta;
+  record = *((u8 **) (D_87F119DC + 0x38));
+  if ((*((s32 *) (record + 4))) & 0x10000000)
+  {
+    *((unk_func_86408D4C_vec3 *) (D_87F119DC + 0x48)) = *((unk_func_86408D4C_vec3 *) ((*((u8 **) (record + 0x0C))) + 0x48));
+    *((f32 *) (D_87F119DC + 0x48)) += (-30.0f) + (30.0f * ((f32) (*((s32 *) record))));
+    *((f32 *) (D_87F119DC + 0x4C)) += 110.0f;
+    *((s16 *) (D_87F119DC + 0x46)) += 0xFFF;
+    flags = *((s32 *) (record + 4));
+    if (flags & 0x20000000)
+    {
+      alpha = ((f32) (*((s32 *) (D_87F119DC + 0x1C)))) / 10.0f;
+      if ((*((s32 *) (D_87F119DC + 0x1C))) >= 11)
+      {
+        masked = flags & 0xDFFFFFFF;
+        *((s32 *) (record + 4)) = masked;
+        flags = masked;
+      }
+      else
+      {
+        *((f32 *) (D_87F119DC + 0x54)) = ((1.0f - alpha) * 1.5f) + 1.5f;
+        beta = *((f32 *) (D_87F119DC + 0x54));
+        *((f32 *) (D_87F119DC + 0x5C)) = beta;
+        *((f32 *) (D_87F119DC + 0x58)) = beta;
+      }
+    }
+    flags = *((s32 *) (record + 4));
+    if (flags & 0x40000000)
+    {
+      alpha = ((f32) (*((s32 *) (D_87F119DC + 0x1C)))) / 10.0f;
+      if ((*((s32 *) (D_87F119DC + 0x1C))) >= 11)
+      {
+        *((s32 *) (record + 4)) = flags & 0xAFFFFFFF;
+        return;
+      }
+      *((s16 *) (D_87F119DC + 0x46)) += 0xFFF;
+      *((s32 *) (D_87F119DC + 0xC4)) = -1;
+      *((u8 *) (D_87F119DC + 0xC7)) = (u8) ((1.0f - alpha) * 255.0f);
+      *((u8 *) (D_87F119DC + 0x41)) = *((u8 *) (D_87F119DC + 0xC7));
+    }
+  }
+}
+/* mkdraft:func_86408D4C end */
 
 /* mkdraft:func_86408F84 begin */
 extern void *D_8009491C;
