@@ -142,7 +142,61 @@ void func_8AF03B74(void) {
     }
     func_800238C4();
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF03BC4.s")
+/* mkdraft:func_8AF03BC4 begin */
+extern s32 D_8AF2BF74;
+extern s32 D_8AF2BF78;
+extern s32 D_8AF2BF7C;
+extern s16 D_8AF2C308;
+extern void func_800226C0(s32);
+extern void func_800504BC(void *);
+
+// Per-object UI sound trigger. obj+0x22 selects one of 12 slots. Mode 0 clears the
+// slot; mode 1 sets it and plays sound 0xDC + slot the first time the object's x
+// coordinate (obj+0xA plus the second halfword of the rectangle filled by
+// func_800504BC) falls inside the [D_8AF2BF7C, D_8AF2BF7C + D_8AF2BF78) window,
+// provided D_8AF2BF74 is clear.
+s32 func_8AF03BC4(s32 mode, void *obj) {
+    s16 x;
+    // FAKE: unused local. It claims a 4-byte stack home that moves rect to sp+0x28;
+    // without it the frame shifts and the diff scores 1218.
+    s16 y;
+    s16 index;
+    s16 rect[4];
+    s16 value;
+
+    index = (*(s16 *)((u8 *)obj + 0x22) % 12);
+    switch (mode) {
+    case 0:
+        ((s16 *)&D_8AF2C308)[index] = 0;
+        break;
+    case 1:
+        func_800504BC(rect);
+        x = *(s16 *)((u8 *)obj + 0xA) + rect[1];
+        if (((s16 *)&D_8AF2C308)[index] == 0 && D_8AF2BF74 == 0 &&
+            x > *(s32 *)&D_8AF2BF7C && x < *(s32 *)&D_8AF2BF7C + D_8AF2BF78) {
+            ((s16 *)&D_8AF2C308)[index] = 1;
+            switch (index) {
+            case 0: value = 220; break;
+            case 1: value = 221; break;
+            case 2: value = 222; break;
+            case 3: value = 223; break;
+            case 4: value = 224; break;
+            case 5: value = 225; break;
+            case 6: value = 226; break;
+            case 7: value = 227; break;
+            case 8: value = 228; break;
+            case 9: value = 229; break;
+            case 10: value = 230; break;
+            case 11: value = 231; break;
+            default: value = 220; break;
+            }
+            func_800226C0(value);
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_8AF03BC4 end */
 
 extern s32 D_8AF2C56C;
 extern s32 D_8AF2C570;
