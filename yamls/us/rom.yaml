@@ -1197,6 +1197,7 @@
     - [0x2361E0, data,    fragments/45/fragment45_data]
     - [0x2367E0, .rodata, fragments/45/fragment45_2251A0] # Tail literals and jump tables, 16-byte aligned.
     - [0x236990, rodata]
+    - [0x236C00, .rodata, fragments/45/fragment45_22FAD0] # Strings, jump tables.
     - [0x236D40, .rodata, fragments/45/fragment45_2324B0] # Existing strings and the two phase-dispatch tables.
     - [0x236E10, .rodata, fragments/45/fragment45_2348E0] # Strings, jump tables.
     - [0x236E80, rodata]
