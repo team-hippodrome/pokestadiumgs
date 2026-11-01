@@ -199,7 +199,35 @@ void func_8AF02DA4(s32 arg0, s32 arg1) {
     Fragment44_InitializeScrollList(arg0, arg1, &D_8AF2BE10, 0x4943414C);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF02DD0.s")
+/* mkdraft:func_8AF02DD0 begin */
+extern void Gfx_DrawTextureRgba16(s16, s16, s16, s16, u8 *, s16, s32);
+
+
+
+void func_8AF02DD0(void *arg0) {
+    u8 *image;
+    s32 width;
+    s32 height;
+    u8 *texture;
+    s16 kind;
+    s16 x;
+
+    if (*(s16 *)((u8 *)arg0) != 1) {
+        return;
+    }
+    texture = *(u8 **)((u8 *)arg0 + 0xC);
+    kind = *(s16 *)((u8 *)arg0 + 4);
+    height = *(u16 *)(texture + 6);
+    width = *(u16 *)(texture + 4);
+    x = *(s16 *)((u8 *)arg0 + 6);
+    image = *(u8 **)(texture + 8);
+    Gfx_DrawTextureRgba16(kind, x, width, height / 3, image, width, 0x200000);
+    image += width * height / 3 * 2;
+    Gfx_DrawTextureRgba16(kind, x + height / 3, width, height / 3, image, width, 0x200000);
+    image += width * height / 3 * 2;
+    Gfx_DrawTextureRgba16(kind, x + height * 2 / 3, width, height / 3, image, width, 0x200000);
+}
+/* mkdraft:func_8AF02DD0 end */
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E00[];

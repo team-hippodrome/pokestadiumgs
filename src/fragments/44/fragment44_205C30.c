@@ -196,7 +196,168 @@ void func_8AF18190(void) {
     *(f32 *)(D_8AF34F78 + 0x4C) = 260.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_205C30/func_8AF181F4.s")
+/* mkdraft:func_8AF181F4 begin */
+extern void func_800476A0(u8 *arg0, s32 arg1);
+extern s32 func_800476FC(s32 arg0, s32 arg1);
+extern s32 func_80047738(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern s32 func_8004C4B0(s32 value);
+extern s32 func_8004C8C0(u16 arg0);
+extern s32 func_8004C990(s32 arg0, s32 arg1);
+extern void func_8004E308();
+extern void func_8AC02C80(s32 arg0, s32 arg1, s32 arg2, void *arg3);
+extern void func_8AC05E40(s32 arg0, s32 arg1, s32 arg2);
+extern s32 func_8AC06D8C(s32 arg0, s32 arg1);
+extern void func_8AC06E98(void *arg0);
+extern s32 func_8AF00020(void);
+extern s32 func_8AF003A8(s16 arg0);
+extern void func_8AF00504(s32);
+
+s32 func_8AF17BA8();                            /* extern */
+extern u8 D_8AF34D78;
+extern u8 D_8AF34DF0;
+extern u8 D_8AF34E68;
+extern u8 D_8AF34EE0;
+extern u8 *D_8AF34F58;
+extern u8 *D_8AF34F5C;
+extern u8 *D_8AF34F60;
+extern u8 *D_8AF34F64;
+extern s32 D_8AF34F80;
+extern s32 D_8AF34FB8;
+extern s32 D_8AF34FBC;
+extern s32 D_8AF34FC0;
+extern s32 D_8AF34FC4;
+extern s32 D_8AF34FC8;
+extern s32 D_8AF34FCC;
+extern s32 D_8AF34FD0;
+extern s32 D_8AF34FD4;
+extern s32 D_8AF34FD8;
+extern s32 D_8AF34FDC;
+extern s32 D_8AF34FF0;
+extern s32 D_8AF35020;
+extern s32 D_8AF35024;
+extern s32 D_8AF35028;
+extern s32 D_8AF3502C;
+extern u8 D_8AF35030;
+extern void func_8AF013D8(void);
+
+
+
+void func_8AF181F4(void) {
+    s32 temp_v0_2;
+    // FAKE: no instruction reads this local; the only C read is the copy-propagated
+    // D_8AF34FF0 assignment below. Its named-local home slot moves the compiler's $a1
+    // spill from 0x24(sp) to the retail 0x20(sp); diff score 8 without it.
+    s32 temp_v0_3;
+    void *temp_v0;
+    s32 d_8af34fcc_val;
+
+    func_8004C4B0(8);
+    func_8004C4B0(0xA);
+    func_8004C4B0(9);
+    func_8004C4B0(0xB);
+    func_8004C4B0(7);
+    func_8004C8C0(0x37U);
+    func_8004C8C0(0x143U);
+    func_800476A0(&D_8AF35030, 2);
+    func_800476FC((s32) &D_8AF35030, 2);
+    func_80047738(0, func_8004C990(0x37, 0), 0, 0);
+    if (func_8AF00020() != 0) {
+        func_80047738(1, func_8004C990(0x37, 1), 0, 0);
+    } else {
+        func_80047738(1, func_8004C990(0x143, 0), 0, 0);
+    }
+    func_8AF00504(0x78);
+    func_8AF00504(0x35);
+    temp_v0 = func_8AF003A8(0x78);
+    func_8AC06E98(temp_v0);
+    D_8AF34FC0 = func_8AC06D8C((s32) temp_v0, 0x6E616D65);
+    D_8AF34FC4 = func_8AC06D8C((s32) temp_v0, 0x6B6F6B61);
+    D_8AF34FC8 = func_8AC06D8C((s32) temp_v0, 0x616B615F);
+    D_8AF34FCC = func_8AC06D8C((s32) temp_v0, 0x6B696E5F);
+    if (func_8AF00020() != 0) {
+        d_8af34fcc_val = D_8AF34FCC;
+        *(s16 *)((u8 *)(d_8af34fcc_val) + 0x24) = 0xB1;
+        *(s16 *)((u8 *)(d_8af34fcc_val) + 0x26) = 1;
+    } else {
+        d_8af34fcc_val = D_8AF34FCC;
+        *(s16 *)((u8 *)(d_8af34fcc_val) + 0x24) = 0x143;
+        *(s16 *)((u8 *)(d_8af34fcc_val) + 0x26) = 1;
+    }
+    func_8AC05E40((s32) temp_v0, 0x6E616D65, (s32) &D_8AF34D78);
+    func_8AC05E40((s32) temp_v0, 0x6B6F6B61, (s32) &D_8AF34DF0);
+    func_8AC05E40((s32) temp_v0, 0x616B615F, (s32) &D_8AF34E68);
+    func_8AC05E40((s32) temp_v0, 0x6B696E5F, (s32) &D_8AF34EE0);
+    D_8AF34F58 = &D_8AF34D78;
+    D_8AF34F5C = &D_8AF34DF0;
+    D_8AF34F60 = &D_8AF34E68;
+    D_8AF34F64 = &D_8AF34EE0;
+    D_8AF34FB0 = func_8AC06D8C((s32) temp_v0, 0x74655F31);
+    D_8AF34FB4 = func_8AC06D8C((s32) temp_v0, 0x74655F33);
+    func_8004E308((s32) D_8AF34FB0, func_8AF013D8, NULL);
+    func_8004E308((s32) D_8AF34FB4, func_8AF013D8, NULL);
+    D_8AF34FB8 = func_8AC06D8C((s32) temp_v0, 0x626F6F6B);
+    D_8AF34FBC = func_8AC06D8C((s32) temp_v0, 0x70616765);
+    D_8AF34FD0 = func_8AC06D8C((s32) temp_v0, 0x6E5F7769);
+    D_8AF34FD4 = func_8AC06D8C((s32) temp_v0, 0x6B5F7769);
+    D_8AF34FD8 = func_8AC06D8C((s32) temp_v0, 0x615F7769);
+    D_8AF34FDC = func_8AC06D8C((s32) temp_v0, 0x675F7769);
+    D_8AF34FE0 = func_8AC06D8C((s32) temp_v0, 0x6E5F665F);
+    D_8AF34FE4 = func_8AC06D8C((s32) temp_v0, 0x6B5F665F);
+    D_8AF34FE8 = func_8AC06D8C((s32) temp_v0, 0x615F665F);
+    D_8AF34FEC = func_8AC06D8C((s32) temp_v0, 0x675F665F);
+    D_8AF35020 = func_8AC06D8C((s32) temp_v0, 0x6E6E6E6E);
+    D_8AF35024 = func_8AC06D8C((s32) temp_v0, 0x6E5F6E5F);
+    *(u16 *)((u8 *)(D_8AF35020) + 2) = (u16) (*(u16 *)((u8 *)(D_8AF35020) + 2) & 0xFFFE);
+    *(u16 *)((u8 *)(D_8AF35020) + 2) = (u16) (*(u16 *)((u8 *)(D_8AF35020) + 2) & 0xFFFD);
+    D_8AF35028 = func_8AC06D8C((s32) temp_v0, 0x6B6B6B6B);
+    D_8AF3502C = func_8AC06D8C((s32) temp_v0, 0x6B5F6B5F);
+    *(u16 *)((u8 *)(D_8AF35028) + 2) = (u16) (*(u16 *)((u8 *)(D_8AF35028) + 2) & 0xFFFE);
+    *(u16 *)((u8 *)(D_8AF35028) + 2) = (u16) (*(u16 *)((u8 *)(D_8AF35028) + 2) & 0xFFFD);
+    func_8004E308(D_8AF35024, (s32 *) func_8AF179C0, NULL);
+    func_8004E308(D_8AF3502C, (s32 *) func_8AF17A5C, NULL);
+    temp_v0_2 = func_8AF003A8(0x35);
+    temp_v0_3 = func_8AC06D8C(temp_v0_2, 0x7469746C);
+    D_8AF34FF0 = temp_v0_3;
+    *(s16 *)((u8 *)(D_8AF34FF0) + 0x30) = 0x36;
+    *(s16 *)((u8 *)(D_8AF34FF0) + 0x32) = 0x10;
+    func_8AC02C80(temp_v0_2, 0x74697431, 0x74697432, &D_8AF34F80);
+    func_8AF17AF8();
+    func_8AF17F18();
+    switch (D_8AF3500C) {                           /* switch 1; irregular */
+    case 1:                                         /* switch 1 */
+        D_8AF34F78 = D_8AF34F58;
+        D_8AF34F7C = D_8AF34F5C;
+        func_8AF17BA8();
+        func_8AF1812C();
+        func_8AF18190();
+        return;
+    case 4:                                         /* switch 1 */
+        D_8AF34F7C = D_8AF34F58;
+        D_8AF34F78 = D_8AF34F5C;
+        func_8AF17BA8();
+        func_8AF1812C();
+        func_8AF18190();
+        return;
+    case 0:                                         /* switch 1 */
+    case 7:                                         /* switch 1 */
+        switch (D_8AF34FAC) {                       /* switch 2; irregular */
+        case 2:                                     /* switch 2 */
+            D_8AF34F70 = D_8AF34F60;
+            D_8AF34F74 = D_8AF34F64;
+            func_8AF17BA8();
+            func_8AF1812C();
+            return;
+        case 3:                                     /* switch 2 */
+            D_8AF34F74 = D_8AF34F60;
+            D_8AF34F70 = D_8AF34F64;
+            func_8AF17BA8();
+            func_8AF1812C();
+            return;
+        }
+        break;
+    }
+}
+/* mkdraft:func_8AF181F4 end */
 
 void func_8AF18808(f32 *arg0, f32 arg1, f32 arg2) {
     f32 value = *arg0;

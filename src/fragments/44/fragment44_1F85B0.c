@@ -2,7 +2,38 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A340.s")
+/* mkdraft:func_8AF0A340 begin */
+extern s32 D_8AF2698C[];
+extern u8 *D_8AF2D510[];
+extern u8 *D_8AF2D558[];
+s32 func_8004C990(s32, s32);
+s32 func_8004C8C0(u16);
+
+// Fills the 18 pointer slots D_8AF2D510 to D_8AF2D558 (D_8AF2D558 is the slot just past
+// the end, 0x48 bytes in total) with the archive 0x14C entries named by the index table
+// D_8AF2698C, in table order. func_8004C8C0 marks archive 0x14C's entries as loaded;
+// func_8AF0A3A8 then draws through D_8AF2D510[index]. Its only caller is func_8AF15F28
+// (//@src/fragments/44/fragment44_2030B0.c).
+
+
+void func_8AF0A340(void) {
+    s32 *src;
+    u8 **dst;
+    u8 **end;
+    u8 *p;
+
+    func_8004C8C0(0x14C);
+    // One comma expression, not three statements: as separate statements IDO emits the
+    // %lo addends in statement order (src, dst, end), while the retail preheader takes
+    // them in reverse (end, dst, src).
+    src = D_8AF2698C, dst = D_8AF2D510, end = D_8AF2D558;
+    do {
+        p = (u8 *)func_8004C990(0x14C, *src);
+        src++;
+        *(dst++) = p;
+    } while (dst != end);
+}
+/* mkdraft:func_8AF0A340 end */
 
 extern Gfx *D_800D0510;
 extern Gfx D_80094E38[];
@@ -15,7 +46,44 @@ void func_8AF0A3A8(s32 x, s32 y, s16 index) {
                         1 << 10);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A4AC.s")
+/* mkdraft:func_8AF0A4AC begin */
+extern Gfx D_80094F50[];
+extern u8 *D_8AF2D558[];
+extern u8 *D_8AF2D568[];
+extern u8 *D_8AF2D578[];
+extern s32 func_8AC010D4(u8 *arg0, u16 arg1, u16 arg2);
+extern s32 func_8004D19C(s32, s32, u8 *, s32, s32);
+
+
+
+void func_8AF0A4AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    s32 var_t3;
+    s32 var_t2;
+    s32 var_t0;
+
+    var_t0 = 0;
+    if (arg4 < arg3) {
+        var_t2 = arg2 - 8;
+        var_t0 = 1;
+    } else {
+        // FAKE: the false arm repeats the quotient; the single-assignment form scores 116.
+        var_t2 = (arg2 * arg3 / arg4 >= 8) ? arg2 * arg3 / arg4 - 8 : arg2 * arg3 / arg4;
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    // D_8AF2D568/D_8AF2D558/D_8AF2D578 are three parallel pointer tables indexed by arg5;
+    // func_8AC010D4 uploads the 3x4 tile, func_8004D19C draws one end cap of the bar.
+    func_8AC010D4(D_8AF2D568[arg5], 3, 4);
+    var_t3 = arg0 + var_t2;
+    gSPTextureRectangle(D_800D0510++, (arg0 + 8) << 2, arg1 << 2, var_t3 << 2, (arg1 + 0xE) << 2, G_TX_RENDERTILE, 0, 0,
+                        0x400, 0x400);
+    func_8004D19C(arg0, arg1, D_8AF2D558[arg5], 0, 0);
+    func_8004D19C(var_t3, arg1, D_8AF2D578[arg5], 0, 0);
+    if (var_t0 == 1) {
+        func_8AF0A4AC(arg0, arg1 + 4, arg2, arg3 - arg4, arg4, arg5);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_8AF0A4AC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A6E4.s")
 
