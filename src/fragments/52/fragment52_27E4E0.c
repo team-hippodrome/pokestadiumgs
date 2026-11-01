@@ -343,7 +343,50 @@ void func_864012A0_padding(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864013A8.s")
+/* mkdraft:func_864013A8 begin */
+typedef struct {
+    u8 pad[0x18];
+    f32 unk_18;
+    u8 pad_1C[0x2C];
+    f32 unk_48;
+} unk_func_864013A8;
+
+typedef struct {
+    f32 unk_00;
+} unk_D_86416C00;
+
+extern u8 *D_86416C00;
+extern s32 func_80001FF0(void);
+
+// Frame update for the node in arg0. arg0+0x1C takes the TV refresh rate
+// (func_80001FF0 returns 50 or 60) as ((f32)refresh / 60.0f) * 2.0f, rounded to
+// s32, times 1 - arg1's 0x18 float / the f32 at D_86416C00; 0x10000000 is then
+// ORed into arg0+0xC. When arg2 is non-NULL, bit 18 of the 0x0C word (the sign
+// of the word shifted left 13) selects the -0.1 decay of arg0+0x10 and
+// arg0+0x18 over copying arg2's floats at 0 and 4 into them and arg2's 0x8
+// halfword into the f32 at arg1+0x48.
+
+
+void func_864013A8(u8 *arg0, unk_func_864013A8 *arg1, u8 *arg2) {
+    f32 rate = 2.0f;
+    s32 value;
+    if ((((f32)func_80001FF0() / 60.0f) * rate) >= 0.0f) {
+        value = (s32)((((f32)func_80001FF0() / 60.0f) * rate) + 0.5f);
+    } else {
+        value = (s32)((((f32)func_80001FF0() / 60.0f) * rate) - 0.5f); } *(s32 *)(arg0 + 0x1C) = (s32)((f32)value * (1.0f - arg1->unk_18 / ((unk_D_86416C00 *)D_86416C00)->unk_00)); // FAKE: this store shares a line with the else assignment and its closing brace; IDO's local scheduler breaks the load-order tie by source line, and splitting them schedules the arg1 spill reload ahead of the D_86416C00 pointer load. diff score 60 without it.
+    *(s32 *)(arg0 + 0xC) |= 0x10000000;
+    if (arg2 != NULL) {
+        if ((*(s32 *)(arg0 + 0xC) << 13) < 0) {
+            *(f32 *)(arg0 + 0x10) *= -0.1f;
+            *(f32 *)(arg0 + 0x18) *= -0.1f;
+        } else {
+            arg1->unk_48 = (f32)*(u16 *)(arg2 + 8);
+            *(f32 *)(arg0 + 0x10) = *(f32 *)(arg2 + 0);
+            *(f32 *)(arg0 + 0x18) = *(f32 *)(arg2 + 4);
+        }
+    }
+}
+/* mkdraft:func_864013A8 end */
 #endif
 
 #ifdef VERSION_US
