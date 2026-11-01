@@ -774,7 +774,41 @@ void func_86402A2C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864033AC.s")
+/* mkdraft:func_864033AC begin */
+extern u8 *D_86416C00;
+
+// Sorts pointers to the four records at D_86416C00 + 0xCB8C (stride 0x5C) in
+// descending order of the f32 at +0x10, stores the winning record's pointer at
+// D_86416C00 + 0x8000 + 0x4DFC, then writes each record's sorted position
+// (0 = highest f32) into the s32 at +0x14.
+
+
+void func_864033AC(void) {
+    u8 *entries[4];
+    s32 i;
+    s32 j;
+    u8 *p;
+
+    for (i = 0; i < 4; i++) {
+        entries[i] = D_86416C00 + 0xCB8C + i * 0x5C;
+    }
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3 - i; j++) {
+            if (*(f32 *)(entries[j] + 0x10) < *(f32 *)(entries[j + 1] + 0x10)) {
+                p = entries[j];
+                entries[j] = entries[j + 1];
+                entries[j + 1] = p;
+            }
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (i == 0) {
+            *(void **)(D_86416C00 + 0x8000 + 0x4DFC) = entries[0];
+        }
+        *(s32 *)(entries[i] + 0x14) = i;
+    }
+}
+/* mkdraft:func_864033AC end */
 #endif
 
 #ifdef VERSION_US
