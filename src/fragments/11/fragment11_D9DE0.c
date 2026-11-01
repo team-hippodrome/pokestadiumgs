@@ -660,7 +660,39 @@ void func_81605950(void) {
         1, 0, 1, 1, 4, 4, 0, 0
     );
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816059CC.s")
+/* mkdraft:func_816059CC begin */
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+
+// Draws the panel border as nine func_81602240 quads: four 16x16 corners, two 16-wide
+// vertical edges of height arg3 - 0x20, two 16-high horizontal edges of width
+// arg2 - 0x20, and the centre quad arg2 - 0x20 by arg3 - 0x20. UVs are 0 or 0x10 and
+// s/t are 1, -1 or 0 for each piece.
+//
+// The prim-color bytes are OR'd in the order arg4[1], arg4[2], arg4[3], arg4[0].
+// Ascending order 0,1,2,3 builds a different `or` tree: 62 instructions differ, same value.
+
+
+void func_816059CC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x119623, 0xFF2FFFFF);
+    gDPSetColor((*(Gfx **)&D_800D0510)++, G_SETPRIMCOLOR,
+                _SHIFTL(((u8 *)arg4)[1], 16, 8) | _SHIFTL(((u8 *)arg4)[2], 8, 8) |
+                    _SHIFTL(((u8 *)arg4)[3], 0, 8) | _SHIFTL(((u8 *)arg4)[0], 24, 8));
+    func_81602240(arg0, arg1, 16.0f, 16.0f, 0, 0x10, 1.0f, -1.0f);
+    func_81602240((arg0 + arg2) - 0x10, arg1, 16.0f, 16.0f, 0x10, 0x10, -1.0f, -1.0f);
+    func_81602240(arg0, (arg1 + arg3) - 0x10, 16.0f, 16.0f, 0, 0, 1.0f, 1.0f);
+    func_81602240((arg0 + arg2) - 0x10, (arg1 + arg3) - 0x10, 16.0f, 16.0f, 0x10, 0, -1.0f, 1.0f);
+    func_81602240(arg0, arg1 + 0x10, 16.0f, arg3 - 0x20, 0, 0, 1.0f, 0.0f);
+    func_81602240(arg0 + 0x10, arg1, arg2 - 0x20, 16.0f, 0x10, 0x10, 0.0f, -1.0f);
+    func_81602240((arg0 + arg2) - 0x10, arg1 + 0x10, 16.0f, arg3 - 0x20, 0x10, 0, -1.0f, 0.0f);
+    func_81602240(arg0 + 0x10, (arg1 + arg3) - 0x10, arg2 - 0x20, 16.0f, 0x10, 0, 0.0f, 1.0f);
+    func_81602240(arg0 + 0x10, arg1 + 0x10, arg2 - 0x20, arg3 - 0x20, 0x10, 0, 0.0f, 0.0f);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+}
+/* mkdraft:func_816059CC end */
 
 extern void func_81605950(void);
 extern void func_816059CC(s32, s32, s32, s32, s32);
