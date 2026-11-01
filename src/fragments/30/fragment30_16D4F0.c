@@ -176,7 +176,44 @@ void func_881014E4(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_16D4F0/func_881015A8.s")
+/* mkdraft:func_881015A8 begin */
+extern Gfx *D_800D0510;
+extern Gfx D_88104D88;
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+
+void func_881015A8(u32 texture, s32 clipX, s32 clipY, s32 clipWidth, s32 clipHeight) {
+    s32 tileX;
+    s32 tileY;
+
+    gSPDisplayList(D_800D0510++, &D_88104D88);
+    for (tileY = 0; tileY != 0x1E0; tileY += 0x20) {
+        tileX = 0;
+draw_tile:
+        if (((tileX + 0x1F) >= clipX) && (tileX < (clipX + clipWidth)) &&
+            ((tileY + 0x1F) >= clipY) && (tileY < (clipY + clipHeight))) {
+            gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texture);
+            gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0,
+                       G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOLOD,
+                       G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOLOD);
+            gDPLoadSync(D_800D0510++);
+            gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 255, 512);
+            gDPPipeSync(D_800D0510++);
+            gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 4, 0, G_TX_RENDERTILE, 0,
+                       G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOLOD,
+                       G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOLOD);
+            gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 60, 60);
+            GfxRect_DrawTextured(tileX, tileY, 0x20, 0x20, 0, 0, 0x200, 0x200, 0);
+        }
+        tileX += 0x20;
+        texture += 0x200;
+        if (tileX != 0x280) {
+            goto draw_tile;
+        }
+    }
+}
+/* mkdraft:func_881015A8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_16D4F0/func_8810179C.s")
 

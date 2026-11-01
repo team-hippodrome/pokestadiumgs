@@ -3,17 +3,6 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_881038A0.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_88103A64.s")
-
-extern void Input_SetRepeatController(void *);
-extern s32 D_880068B8;
-void func_88103B90(void) {
-    Input_SetRepeatController(D_80087200);
-    D_880068B8 = 0;
-}
-
 
 typedef struct unk_func_88103D30 unk_func_88103D30;
 
@@ -61,6 +50,72 @@ typedef struct {
 } unk_D_88104EA0;
 
 extern unk_D_88104EA0 *D_88104EA0;
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_881038A0.s")
+
+/* mkdraft:func_88103A64 begin */
+// Transfer Pak check for the GB Tower screen. While the session flag unk_168 is set it reruns the
+// func_80052ECC/func_80054E48 setup for entry 3, or for entries 1 and 2 when unk_44 selects the
+// second list; otherwise it reads the pak status of port D_88006868, requires the pak to stay
+// inserted and calls func_8005ADD8 when the status is nonzero. Returns the status (1 when the
+// unk_44 == 2 path runs); a zero result clears unk_168 so the screen returns to the pak prompt.
+extern s8 D_88006868;
+extern s32 func_8005B120(s32);
+extern void GbSave_RequirePakPresent(s32);
+extern void func_8005ADD8(s32);
+extern void func_80054A24(u8, s32);
+extern void func_80052ECC(s32);
+extern s32 func_80054E48(s32);
+extern void func_881038A0(void);
+extern void func_88A0057C(void);
+extern void func_881000B8(void);
+
+
+
+s32 func_88103A64(void) {
+    s32 result;
+    u32 i;
+
+    result = 1;
+    if (D_88104EA0->unk_168 != 0) {
+        func_881038A0();
+        func_88A0057C();
+        func_80054A24(D_88104EA0->selected, 0);
+        func_80052ECC(3);
+        func_80054E48(3);
+    }
+    if (D_88104EA0->unk_44 == 2) {
+        if (D_88104EA0->unk_168 != 0) {
+            for (i = 0; i < 2; i++) {
+                func_80052ECC(i + 1);
+                func_80054E48(i + 1);
+            }
+        }
+    } else {
+        result = func_8005B120(D_88006868);
+        if (D_88104EA0->unk_168 == 0) {
+            GbSave_RequirePakPresent(D_88006868);
+        }
+        if (result != 0) {
+            func_8005ADD8(D_88006868);
+        }
+    }
+    if (result != 0) {
+        func_881000B8();
+    } else {
+        D_88104EA0->unk_168 = 0;
+    }
+    return result;
+}
+/* mkdraft:func_88103A64 end */
+
+extern void Input_SetRepeatController(void *);
+extern s32 D_880068B8;
+void func_88103B90(void) {
+    Input_SetRepeatController(D_80087200);
+    D_880068B8 = 0;
+}
+
 extern void Util_Free(void *);
 void func_88103BB8(void) {
     u32 var_s0;
