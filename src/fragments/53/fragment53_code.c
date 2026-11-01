@@ -31,7 +31,51 @@ extern struct Fragment53Model D_8650E120[];
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500D5C.s")
+/* mkdraft:func_86500D5C begin */
+extern Gfx *D_800D0510;
+extern Gfx D_8650CEA8[];
+extern Vtx D_8650BFC0;
+extern Vtx D_8650BFD0;
+extern Vtx D_8650BFE0;
+extern Vtx D_8650BFF0;
+extern u8 D_8650DB80[];
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern void func_8003CD84(void);
+
+
+
+void func_86500D5C(s32 arg0, void *arg1) {
+    typedef struct {
+        u8 pad[0x28];
+        f32 height;
+        u8 rest[0x13C];
+    } ModelA;
+    // FAKE: decomp slop. Every use of zero_index is a constant zero index, so IDO folds
+    // all three away and emits no instructions for the declaration, the assignment or the
+    // subscripts. The bindings nevertheless claim $3 (v1) while the D_8650DB80 address is
+    // live; that is what moves the base into $4 (a0) and the 0x168 stride constant into
+    // $6 (a2) in block B. Without the three uses the score is 50 (9 diff rows, all
+    // register-color changes: li/lui/addiu/multu/addu of the first subscript and the
+    // multu/addu pair of each later subscript reuse).
+    unsigned short zero_index;
+    Vtx *vtx;
+
+    if (arg0 == 5) {
+        vtx = (Vtx *)Gfx_AllocDisplayList(0x40);
+        if (((ModelA *)D_8650DB80)[*(s32 *)((u8 *)arg1 + 0x14)].height > 200.0f) {
+            vtx[0] = D_8650BFC0;
+            vtx[1] = D_8650BFD0;
+            vtx[2] = D_8650BFE0;
+            vtx[3] = D_8650BFF0;
+            zero_index = 0;
+            vtx[zero_index].v.ob[zero_index] = (s16)(vtx[zero_index].v.ob[zero_index] - ((ModelA *)D_8650DB80)[*(s32 *)((u8 *)arg1 + 0x14)].height);
+            vtx[3].v.ob[zero_index] = (s16)(vtx[3].v.ob[zero_index] - ((ModelA *)D_8650DB80)[*(s32 *)((u8 *)arg1 + 0x14)].height);
+        }
+        gSPDisplayList(D_800D0510++, D_8650CEA8);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_86500D5C end */
 #endif
 
 #ifdef VERSION_US
