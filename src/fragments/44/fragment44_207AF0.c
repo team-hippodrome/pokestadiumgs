@@ -236,7 +236,52 @@ u8 *func_8AF19E7C(u8 *arg0, s32 arg1, u16 arg2, s16 arg3)
 }
 /* mkdraft:func_8AF19E7C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF19FAC.s")
+/* mkdraft:func_8AF19FAC begin */
+extern u8 D_8AF36F30[];
+extern s32 func_8AF19BDC(u8);
+extern s32 func_8AF19B40(u8);
+extern s32 *func_8AF198C4(s16);
+extern u8 *func_8AF19970(u8 *);
+extern s32 *func_8AF199D8(s16);
+
+
+
+u8 *func_8AF19FAC(u8 *arg0, s32 arg1, u16 arg2, s16 arg3) {
+    u8 *src;
+    u8 *end;
+    s16 filled;
+    s32 value;
+    s32 index;
+    s32 id;
+    s16 count;
+
+    filled = 0;
+    count = arg3;
+    if (arg3 > 0) {
+        src = D_8AF36F30;
+        do {
+            value = *src;
+            index = value * 2;
+            id = (u8)(*src);
+            if (((*((s16 *)((arg1 + index) - 2))) & arg2) && (func_8AF19BDC(id) != 0)) {
+                *arg0 = value;
+                arg0[1] = func_8AF19B40(id);
+                *((s32 **)(arg0 + 4)) = func_8AF198C4(arg0[0]);
+                if ((index < 0x17C) || (index == 0x1FE)) {
+                    *((s32 **)(arg0 + 8)) = func_8AF19970(arg0);
+                } else {
+                    *((s32 **)(arg0 + 8)) = func_8AF199D8(arg0[1]);
+                }
+                arg0 += 0xC;
+                filled++;
+            }
+            end = D_8AF36F30 + count;
+            src++;
+        } while (src != end);
+    }
+    return arg0;
+}
+/* mkdraft:func_8AF19FAC end */
 
 extern s16 func_8AF19A1C(s16);
 extern u8 *func_8AF19E7C(u8 *, s32, u16, s16);
@@ -272,7 +317,7 @@ void func_8AF1A0DC(s16 arg0) {
     func_8AF19E7C(&D_8AF357D0, sp1C, (0x8000 >> value) & 0xFFFF, sp22);
 }
 
-extern u8 *func_8AF19FAC(u8 *, s32, s32, s16);
+extern u8 *func_8AF19FAC(u8 *, s32, u16, s16);
 extern s8 D_8AF29DA0;
 extern s32 D_8AF2BAC4;
 extern void *func_8004C874(s32, s32);
