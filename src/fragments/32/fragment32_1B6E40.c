@@ -194,7 +194,29 @@ s32 func_8830609C(void) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_8830610C.s")
+/* mkdraft:func_8830610C begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Draws the 8-pixel border of the width x height box at (x, y) from one texture.
+// The four 8x8 corner tiles are drawn at full texture scale; each edge repeats the
+// adjacent corner's first row or column (dsdx or dtdy 0). The interior is not drawn.
+// Nothing is drawn for boxes narrower or shorter than 0x10 pixels.
+
+
+void func_8830610C(s16 x, s16 y, u16 width, u16 height) {
+    if ((width < 0x10) || (height < 0x10)) {
+        return;
+    }
+    GfxRect_DrawTextured(x, y, 8, 8, -0x10, 0xF0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + width - 8, y, 8, 8, 0xF0, 0xF0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x, y + height - 8, 8, 8, -0x10, -0x10, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + width - 8, y + height - 8, 8, 8, 0xF0, -0x10, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x, y + 8, 8, height - 0x10, -0x10, -0x10, 0x400, 0, 0);
+    GfxRect_DrawTextured(x + width - 8, y + 8, 8, height - 0x10, 0xF0, -0x10, 0x400, 0, 0);
+    GfxRect_DrawTextured(x + 8, y, width - 0x10, 8, 0xD0, 0xF0, 0, 0x400, 0);
+    GfxRect_DrawTextured(x + 8, y + height - 8, width - 0x10, 8, 0xD0, -0x10, 0, 0x400, 0);
+}
+/* mkdraft:func_8830610C end */
 
 extern void func_8830610C(s16, s16, u16, u16);
 extern u8 D_88308E38;
