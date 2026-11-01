@@ -79,7 +79,70 @@ void func_86500D5C(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500EF8.s")
+/* mkdraft:func_86500EF8 begin */
+extern Gfx *D_800D0510;
+extern s32 D_8650CFB0[];
+extern s32 D_8650CFC0;
+extern u8 D_865116F0[];
+extern Gfx D_8650CF18[];
+extern Gfx D_8650CF98[];
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+
+
+void func_86500EF8(s32 arg0, u8 *arg1)
+{
+    s32 texture_index;
+    s32 frame;
+    s32 texture;
+    // FAKE: without this pointer (reading and writing D_8650CFC0 directly) the
+    // store's address setup moves and the diff score is 893.
+    s32 *frame_counter;
+    Gfx *pkt;
+
+    texture_index = *(s32 *)(arg1 + 0x14);
+    if (arg0 == 5) {
+        gDPPipeSync(D_800D0510++);
+        if (*(s32 *)(arg1 + 0x14) == 4) {
+            // D_8650CFC0 counts 0..23; D_8650CFB0 holds one texture per six frames.
+            frame_counter = &D_8650CFC0;
+            frame = *frame_counter + 1;
+            if (frame >= 24) {
+                frame = 0;
+            }
+            // FAKE: one comma expression keeps the counter store ahead of the
+            // D_8650CFB0 load; splitting it into two statements scores 120.
+            texture = D_8650CFB0[frame / 6], *frame_counter = frame;
+        } else {
+            texture = D_8650CFB0[*(s32 *)(D_865116F0 + texture_index * 0x98) / 6];
+        }
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        pkt = D_800D0510++;
+        gSPSegment(pkt, 15, func_8004CA60((u8 *)func_8004C990(0x18D, texture)));
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, 0x0F000000);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 0, 0, G_TX_LOADTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 679, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 10, 0, G_TX_RENDERTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 156, 64);
+        gSPVertex(D_800D0510++, D_8650CF18, 8, 0);
+        gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, 0x0F000A00);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 0, 0, G_TX_LOADTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 679, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 10, 0, G_TX_RENDERTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 156, 64);
+        gSP2Triangles(D_800D0510++, 4, 5, 6, 0, 4, 6, 7, 0);
+        gSPDisplayList(D_800D0510++, D_8650CF98);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_86500EF8 end */
 #endif
 
 #ifdef VERSION_US
