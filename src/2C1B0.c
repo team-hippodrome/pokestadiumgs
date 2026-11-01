@@ -2127,7 +2127,54 @@ void func_80033188(void) {
 
  void func_800331C8(void) { D_800D2B41 = 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_800331D4.s")
+/* mkdraft:func_800331D4 begin */
+void func_800333CC(u8 arg0);
+
+// D_800D2B78 holds eight 0x3C-byte GbAudioStreamRecord entries; the record
+// checks below address them through this base.
+#define REC(i) (((GbAudioStreamRecord *)&D_800D2B78)[i])
+
+
+
+void func_800331D4(void) {
+    u32 i;
+    u8 channel;
+
+    if (D_800D2B41 != 0) {
+        D_800D2B4A = 0;
+        for (i = 0; i != 8; i++) {
+            if (REC(i).flags_03 & 1) {
+                channel = i;
+                if (REC(i).unk_1D < 2) {
+                    REC(i).unk_26 = REC(i).unk_27;
+                    REC(i).flags_04 &= ~2;
+                    GbAudio_ProcessChannelStream(channel);
+                } else {
+                    REC(i).unk_1D--;
+                }
+                func_80033BF4(channel);
+                D_800D2B42 = REC(i).unk_16;
+                D_800D2B43 = REC(i).unk_17;
+                D_800D2B44 = REC(i).unk_18;
+                func_800339EC(channel);
+                func_80033C48(channel & 0xFF);
+                if (D_800D2B6A != 0 && i < 4 &&
+                        ((REC(4).flags_03 & 1) || (REC(5).flags_03 & 1) ||
+                         (REC(6).flags_03 & 1) || (REC(7).flags_03 & 1))) {
+                    REC(i).flags_14 |= 0x20;
+                }
+                if (i >= 4 || !(REC(4).flags_03 & 1)) {
+                    func_800333CC(channel);
+                    D_800D2B4A |= REC(i).unk_24;
+                }
+                REC(i).flags_14 = 0;
+            }
+        }
+        func_800319D0(0xFF24, D_800D2B49, 0);
+        func_800319D0(0xFF25, D_800D2B4A, 0);
+    }
+}
+/* mkdraft:func_800331D4 end */
 
 /* mkdraft:func_800333CC begin */
 extern void func_80033488(u8 arg0);
