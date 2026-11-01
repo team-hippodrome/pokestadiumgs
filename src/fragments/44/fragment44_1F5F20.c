@@ -93,7 +93,95 @@ void func_8AF07FF0(void) {
     D_8AF2C960 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5F20/func_8AF08000.s")
+/* mkdraft:func_8AF08000 begin */
+extern s16 D_8AF2BDDC;
+extern s32 D_8AF2C690;
+extern s32 D_8AF2C708;
+extern s32 D_8AF2C780;
+extern s32 D_8AF2C7F8;
+extern s32 D_8AF2C870;
+extern s32 D_8AF2C8E8;
+extern s32 D_8AF2C998;
+extern u8 *D_8AF2C97C;
+extern u8 *D_8AF2C964;
+extern u8 *D_8AF2C968;
+extern u8 *D_8AF2C96C;
+extern u8 *D_8AF2C970;
+extern u8 *D_8AF2C974;
+extern u8 *D_8AF2C978;
+extern u8 *D_8AF2C980;
+extern u8 *D_8AF2C984;
+extern u8 *D_8AF2C988;
+extern u8 *D_8AF2C98C;
+extern u8 *D_8AF2C990;
+extern u8 *D_8AF2C994;
+extern u8 *D_8AF2C9C4;
+extern u8 *D_8AF2C9C8;
+extern s16 D_8AF2C9CC;
+extern s32 D_8AF2C9D0;
+extern s32 func_8AC00270;
+extern s32 func_8AF013D8(s32, void *);
+
+s32 func_8AF00504(s32 arg0);
+s32 func_8AF003A8(s32 arg0);
+u8 *func_8AC06D8C(s32 arg0, s32 arg1);
+s32 func_8004E308(s32 arg0, s32 *arg1, s32 arg2);
+s32 func_8AC04744(s32 *arg0, s32 arg1, s32 arg2, s32 arg3);
+s32 func_8AC05E40(s32 arg0, s32 arg1, s32 *arg2);
+s32 func_8AC02C80(s32 arg0, s32 arg1, s32 arg2, s32 *arg3);
+void func_8AF07EBC(void);
+
+
+
+void func_8AF08000(void) {
+    s32 page;
+
+    func_8AF00504(0x20);
+    func_8AF00504(0x4C);
+    func_8AF00504(0x35);
+    page = func_8AF003A8(0x4C);
+    D_8AF2C9C8 = func_8AC06D8C(page, 0x736C6966);
+    *(s16 *)(D_8AF2C9C8 + 0x30) = 0x3B;
+    *(s16 *)(D_8AF2C9C8 + 0x32) = 7;
+    func_8AC04744(&D_8AF2C9D0, page, 0x73686133, 0x736C6966);
+    func_8004E308((s32)func_8AC06D8C(page, 0x6579655F), &func_8AC00270, 0);
+    page = func_8AF003A8(0x20);
+    D_8AF2C964 = func_8AC06D8C(page, 0x74655F31);
+    D_8AF2C968 = func_8AC06D8C(page, 0x74655F32);
+    D_8AF2C96C = func_8AC06D8C(page, 0x74655F33);
+    D_8AF2C970 = func_8AC06D8C(page, 0x74655F34);
+    D_8AF2C974 = func_8AC06D8C(page, 0x74655F35);
+    D_8AF2C978 = func_8AC06D8C(page, 0x74655F36);
+    func_8004E308((s32)D_8AF2C964, (s32 *)&func_8AF013D8, NULL);
+    func_8004E308((s32)D_8AF2C968, (s32 *)&func_8AF013D8, NULL);
+    func_8004E308((s32)D_8AF2C96C, (s32 *)&func_8AF013D8, NULL);
+    func_8004E308((s32)D_8AF2C970, (s32 *)&func_8AF013D8, NULL);
+    func_8004E308((s32)D_8AF2C974, (s32 *)&func_8AF013D8, NULL);
+    func_8004E308((s32)D_8AF2C978, (s32 *)&func_8AF013D8, NULL);
+    D_8AF2C980 = func_8AC06D8C(page, 0x706F5F66);
+    D_8AF2C984 = func_8AC06D8C(page, 0x69745F66);
+    D_8AF2C988 = func_8AC06D8C(page, 0x77615F66);
+    D_8AF2C98C = func_8AC06D8C(page, 0x74615F66);
+    D_8AF2C990 = func_8AC06D8C(page, 0x736F5F66);
+    D_8AF2C994 = func_8AC06D8C(page, 0x61695F66);
+    D_8AF2C97C = func_8AC06D8C(page, 0x626F6F6B);
+    func_8AC05E40(page, 0x6974656D, &D_8AF2C690);
+    func_8AC05E40(page, 0x706F6B65, &D_8AF2C708);
+    func_8AC05E40(page, 0x77617A61, &D_8AF2C780);
+    func_8AC05E40(page, 0x61697368, &D_8AF2C7F8);
+    func_8AC05E40(page, 0x74616D61, &D_8AF2C870);
+    func_8AC05E40(page, 0x736F7361, &D_8AF2C8E8);
+    page = func_8AF003A8(0x35);
+    func_8AC02C80(page, 0x74697431, 0x74697432, &D_8AF2C998);
+    D_8AF2C9C4 = func_8AC06D8C(page, 0x7469746C);
+    *(s16 *)(D_8AF2C9C4 + 0x30) = 0x36;
+    *(s16 *)(D_8AF2C9C4 + 0x32) = 0x10;
+    func_8AF07EBC();
+    *(u16 *)(D_8AF2C97C + 2) &= ~(1 << 1);
+    D_8AF2C9CC = 0;
+    D_8AF2BDDC = 1;
+}
+/* mkdraft:func_8AF08000 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5F20/func_8AF08390.s")
 
