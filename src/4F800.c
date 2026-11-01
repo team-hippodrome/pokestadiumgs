@@ -237,7 +237,6 @@ void UiImageNode_SetRenderState(u8 *node) {
 extern s32 func_80050640(u8 *);
 extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
-extern Gfx *D_800D0510;
 extern Gfx D_80094F50[];
 // Resolves the animated image entry, clips it, and draws at its native dimensions.
 // Palette lookup is enabled only for CI images and restored before the default display list.
@@ -293,20 +292,73 @@ void UiImageNode_DrawUnscaled(u8 *node, s32 x, s32 y) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004FE00.s")
+extern s32 func_8004DDAC(s32);
+extern Gfx D_80097278[];
+// Scales a row-major grid of 16-by-16 RGBA16 tiles to the node dimensions.
+// Each tile occupies 512 bytes in the image returned by the current resource pack.
+//@src/4CC20.c
+void UiImageNode_DrawTiled(u8 *node, s32 x, s32 y) {
+    s32 row;
+    s32 column;
+    s32 draw_x;
+    f32 scale;
+    f32 rounding;
+    f32 vertical_scale;
+    s32 image_address;
+    s32 tile_width;
+    s32 tile_height;
+    s32 dsdx;
+    f32 unrounded;
+
+    tile_width = node[42] * 16;
+    tile_height = node[43] * 16;
+    if (tile_width > 0 && tile_height > 0) {
+        scale = (f32)*(s16 *)(node + 12) / tile_width;
+        vertical_scale = (f32)*(s16 *)(node + 14) / tile_height;
+        image_address = func_8004DDAC(*(u16 *)(node + 38));
+        rounding = (16.0f * scale) > 0.0f ? 0.5f : -0.5f;
+        unrounded = (16.0f * scale);
+        tile_width = (s32)(rounding + unrounded);
+        rounding = (16.0f * vertical_scale) > 0.0f ? 0.5f : -0.5f;
+        unrounded = (16.0f * vertical_scale);
+        tile_height = (s32)(rounding + unrounded);
+        rounding = (1024.0f / scale) > 0.0f ? 0.5f : -0.5f;
+        unrounded = 1024.0f / scale;
+        dsdx = (s32)(rounding + unrounded);
+        // Carry the inverse vertical texture step through the drawing loop.
+        scale = 1024.0f / vertical_scale;
+        rounding = scale > 0.0f ? 0.5f : -0.5f;
+        gSPDisplayList(D_800D0510++, D_80097278);
+        for (row = 0; row < node[43]; row++) {
+            column = 0;
+            if (node[42] > 0) {
+                draw_x = x;
+                do {
+                    gDPLoadTextureBlock(D_800D0510++, image_address + (node[42] * row + column) * 512,
+                                        G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                        G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                    GfxRect_DrawTextured((s16)draw_x, (s16)(tile_height * row + y),
+                                         (s16)tile_width, (s16)tile_height, 0, 0, (s16)dsdx,
+                                         (s16)(s32)(rounding + scale), 0);
+                    draw_x += tile_width;
+                    column++;
+                } while (column < node[42]);
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern s32 D_800971F8;
 extern void UiImageNode_DrawUnscaled(u8 *, s32, s32);
-extern void func_8004FE00(u8 *, s32, s32);
 extern void func_8004ECD4(void *, s32, s32);
 void func_800501A0(u8 *arg0, s32 arg1, s32 arg2) {
     if (*(u16 *)(arg0 + 2) & 2) {
         if (*(u8 *)(arg0 + 0x29) == 0) {
             UiImageNode_DrawUnscaled(arg0, arg1, arg2);
         } else {
-            func_8004FE00(arg0, arg1, arg2);
+            UiImageNode_DrawTiled(arg0, arg1, arg2);
         }
     }
     D_800971F8 = (s32)arg0;
