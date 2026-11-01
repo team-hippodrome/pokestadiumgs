@@ -2530,3 +2530,18 @@ callers. Naming preserves its original linker alias. Whole-module naming
 controls passed normally and with twenty leading blank lines. The earlier
 33F10 prototype prerequisite is resolved; its draft still needs independent
 acceptance. Compiler captures and helpers remain private diagnostic artifacts.
+
+#### Side command faint routing accepted (2026-11-01)
+
+`Battle_ResolveSideAfterCommands` (formerly `func_84133F10`, 264 bytes) clears
+transient flags, runs the side command sequence, and checks both sides' halfword
+HP fields at offset 0x26. It calls `Battle_ResolveOpponentFaint` with the
+opposite side of a fainted Pokemon and returns one when fainting is handled.
+Otherwise it applies residual status damage and returns zero if play continues.
+
+The previously blocked byte-callee transaction is now resolved by the accepted
+resolver. `battle-turn-faint8` candidate 0 uses byte side/peer indices and direct
+halfword HP checks; it passed the canonical host syntax check and full US ROM
+gate on `6aa30b4f`, retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming
+preserved complete-module sections, function extents, and relocations in normal
+and +20-line controls. The original function address remains a linker alias.

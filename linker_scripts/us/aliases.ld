@@ -1490,3 +1490,5 @@ func_84128EC0 = BattleEffect_ApplySleep;
 func_84124F40 = Battle_SeedRandomByteBuffer;
 
 func_84133C10 = Battle_ResolveOpponentFaint;
+
+func_84133F10 = Battle_ResolveSideAfterCommands;

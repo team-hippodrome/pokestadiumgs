@@ -6770,7 +6770,32 @@ void Battle_ResolveOpponentFaint(u8 side) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84133F10.s")
+extern s32 Battle_ApplyResidualStatusDamage(u8 side);
+extern void Battle_ResolveOpponentFaint(u8 side);
+extern void Battle_RunSideCommandSequence(u8 arg0);
+extern u8 * D_84195200[];
+extern u8 * D_84195208[];
+s32 Battle_ResolveSideAfterCommands(u8 side) {
+    u8 peer;
+    D_84195208[side][0x11] &= 0xFFBF;
+    Battle_RunSideCommandSequence(side);
+    peer = 1 - side;
+    D_84195208[peer][0xD] &= 0xFFDB;
+    D_84195208[peer][0x11] &= 0xFFBF;
+    if (*(u16 *)(D_84195200[peer] + 0x26) == 0) {
+        Battle_ResolveOpponentFaint(side);
+        return 1;
+    }
+    if (*(u16 *)(D_84195200[side] + 0x26) == 0) {
+        Battle_ResolveOpponentFaint(peer);
+        return 1;
+    }
+    if (Battle_ApplyResidualStatusDamage(side) == 0) {
+        Battle_ResolveOpponentFaint(peer);
+        return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -6859,7 +6884,7 @@ void func_8413425C(void) {
 
 #ifdef VERSION_US
 extern s32 Battle_SelectTurnOrder(void);
-extern s32 func_84133F10(u8);
+extern s32 Battle_ResolveSideAfterCommands(u8);
 extern void *D_841951FC[];
 void func_841343FC(void) {
     u8 side;
@@ -6870,13 +6895,13 @@ void func_841343FC(void) {
         func_84134CBC(0, 91);
         func_84136A9C(0, 5, 0, 6);
         D_841951BE = 0;
-        result = func_84133F10(0);
+        result = Battle_ResolveSideAfterCommands(0);
         func_84137DB8();
         ((u8 *)D_841951F8[0])[6]++;
         if (result == 0) {
             func_84124BA0(1);
             func_84136A9C(1, 5, 0, 6);
-            func_84133F10(1);
+            Battle_ResolveSideAfterCommands(1);
             func_84137DB8();
             ((u8 *)D_841951FC[0])[6]++;
         }
@@ -6885,13 +6910,13 @@ void func_841343FC(void) {
         func_84134CBC(1, 91);
         func_84136A9C(1, 5, 0, 6);
         D_841951BE = 1;
-        result = func_84133F10(1);
+        result = Battle_ResolveSideAfterCommands(1);
         func_84137DB8();
         ((u8 *)D_841951F8[0])[6]++;
         if (result == 0) {
             func_84124BA0(0);
             func_84136A9C(0, 5, 0, 6);
-            func_84133F10(0);
+            Battle_ResolveSideAfterCommands(0);
             func_84137DB8();
             ((u8 *)D_841951FC[0])[6]++;
         }
@@ -6901,13 +6926,13 @@ void func_841343FC(void) {
         func_84136A9C(0, 5, 0, 6);
         D_841951BE = 0;
         func_84133ACC(0);
-        result = func_84133F10(0);
+        result = Battle_ResolveSideAfterCommands(0);
         func_84137DB8();
         ((u8 *)D_841951F8[0])[6]++;
         if (result == 0) {
             func_84124BA0(1);
             func_84136A9C(1, 5, 0, 6);
-            func_84133F10(1);
+            Battle_ResolveSideAfterCommands(1);
             func_84137DB8();
             ((u8 *)D_841951FC[0])[6]++;
         }
@@ -6917,13 +6942,13 @@ void func_841343FC(void) {
         func_84136A9C(1, 5, 0, 6);
         D_841951BE = 1;
         func_84133ACC(1);
-        result = func_84133F10(1);
+        result = Battle_ResolveSideAfterCommands(1);
         func_84137DB8();
         ((u8 *)D_841951FC[0])[6]++;
         if (result == 0) {
             func_84124BA0(0);
             func_84136A9C(0, 5, 0, 6);
-            func_84133F10(0);
+            Battle_ResolveSideAfterCommands(0);
             func_84137DB8();
             ((u8 *)D_841951F8[0])[6]++;
         }
@@ -6938,10 +6963,10 @@ void func_841343FC(void) {
         func_84124BA0(1 - side);
         func_84136A9C(1 - side, 5, 0, 6);
         func_84133ACC(1 - side);
-        func_84133F10(1 - side);
+        Battle_ResolveSideAfterCommands(1 - side);
         func_84137DB8();
         ((u8 *)D_841951F8[1 - side])[6]++;
-        func_84133F10(side);
+        Battle_ResolveSideAfterCommands(side);
         func_84137DB8();
         break;
     }
