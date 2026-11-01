@@ -409,11 +409,107 @@ void Fragment12_DrawCompactChoicePanel(s32 x, s32 y, s32 width, s32 height, f32 
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81400C24.s")
+void func_8004989C(s32);
+s32 func_800472E0(u8 *);
+s32 func_8004C594(s32, s32);
+void *func_8004C8A0(void *, s32, s32, s32);
+extern u8 D_8140784C[];
+extern u8 D_81407850[];
+extern u8 D_81407854[];
+extern u8 D_81407857[];
+extern u8 D_8140785C[];
+extern u8 D_81407860[];
+extern u8 D_81407864[];
+extern u8 D_81407867[];
+extern u8 D_8140786C[];
+extern u8 D_81407870[];
+extern u8 D_81407874[];
+extern u8 D_81407877[];
+// Draw table 17 message 8; messages shorter than two lines start 15 pixels lower.
+//@src/fragments/12/fragment12_E7C00.c
+//@src/fragments/11/fragment11_D9DE0.c
+void Fragment12_DrawMessagePanel(s32 x, s32 y, s32 width, s32 height, f32 transition, s32 translucent) {
+    u8 *message;
+    s32 line_offset;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81400DE8.s")
+    message = func_8004C874(17, 8);
+    if (func_800472E0(message) >= 2) {
+        line_offset = 0;
+    } else {
+        line_offset = 15;
+    }
+    Fragment11_DrawThickPanelFrame(x, y, width, height);
+    if (translucent != 0) {
+        func_81607DB0(x + 8, y + 8, width - 19, height - 19,
+                         transition, D_8140784C, D_81407850);
+    } else {
+        func_81607B1C(x + 8, y + 8, width - 19, height - 19,
+                         transition, D_81407854, D_81407857);
+    }
+    if (!(transition > 0.1f)) {
+        func_80006F70(&D_800D0510, (s16)(x + 8), (s16)(y + 8), (s16)(width - 19), (s16)(height - 19));
+        func_800498C4();
+        func_800496A4(16, 1);
+        func_8004989C(30);
+        func_800495F8(x + 85, y + line_offset + 16, 3, (const char *)message);
+        func_800499EC();
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81400FA4.s")
+// Format value slot 3 into table 17 message 7, then draw it inside the panel.
+//@src/fragments/12/fragment12_E7C00.c
+//@src/fragments/11/fragment11_D9DE0.c
+void Fragment12_DrawValueMessagePanel(s32 x, s32 y, s32 width, s32 height, s32 value, f32 transition, s32 translucent) {
+    char formatted_text[128];
+
+    Fragment11_DrawThickPanelFrame(x, y, width, height);
+    if (translucent != 0) {
+        func_81607DB0(x + 8, y + 8, width - 19, height - 19,
+                         transition, D_8140785C, D_81407860);
+    } else {
+        func_81607B1C(x + 8, y + 8, width - 19, height - 19,
+                         transition, D_81407864, D_81407867);
+    }
+    if (!(transition > 0.1f)) {
+        func_8004C594(3, value);
+        func_8004C8A0(formatted_text, 128, 17, 7);
+        func_80006F70(&D_800D0510, (s16)(x + 8), (s16)(y + 8), (s16)(width - 19), (s16)(height - 19));
+        func_800498C4();
+        func_800496A4(16, 1);
+        func_8004989C(30);
+        func_800495F8(x + 129, y + 16, 3, formatted_text);
+        func_800499EC();
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+}
+
+// Format value slot 3 into table 17 message 7, then draw it inside the panel.
+//@src/fragments/12/fragment12_E7C00.c
+//@src/fragments/11/fragment11_D9DE0.c
+void Fragment12_DrawCompactValueMessagePanel(s32 x, s32 y, s32 width, s32 height, s32 value, f32 transition, s32 translucent) {
+    char formatted_text[128];
+
+    Fragment11_DrawThickPanelFrame(x, y, width, height);
+    if (translucent != 0) {
+        func_81607DB0(x + 8, y + 8, width - 19, height - 19,
+                         transition, D_8140786C, D_81407870);
+    } else {
+        func_81607B1C(x + 8, y + 8, width - 19, height - 19,
+                         transition, D_81407874, D_81407877);
+    }
+    if (!(transition > 0.1f)) {
+        func_8004C594(3, value);
+        func_8004C8A0(formatted_text, 128, 17, 7);
+        func_80006F70(&D_800D0510, (s16)(x + 8), (s16)(y + 8), (s16)(width - 19), (s16)(height - 19));
+        func_800498C4();
+        func_800496A4(8, 1);
+        func_8004989C(26);
+        func_800495F8((width / 2) + x, y + 14, 3, formatted_text);
+        func_800499EC();
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+}
 
 extern u8 *D_814077D0[];
 extern s32 func_8004D1FC(u8 *);
