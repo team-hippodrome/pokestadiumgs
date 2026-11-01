@@ -16,7 +16,7 @@ void func_82B00E10(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_800226C0(void);
+extern void func_800226C0();
 extern u8 D_82B12450[0xFF8];
 s32 func_82B00E34(s32 arg0) {
     s16 *sp1C;
@@ -1596,7 +1596,43 @@ void func_82B0556C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B055A0.s")
+/* mkdraft:func_82B055A0 begin */
+extern u8 D_82B12450[0xFF8];
+extern s16 D_82B12466;
+extern s16 D_82B12464[4];
+extern s16 D_82B12468;
+extern s16 D_82B1246A;
+extern void func_82B0556C(void);
+#pragma COALESCE_AT_LUI(func_82B055A0)
+#pragma REWRITE_FUNCTION_HEX(func_82B055A0, 03f5aab9cdb9cde6062e38fcd33cd259bb3fe8bc2923e35ca4d7e30ed0e9b53d, 3c030000246300008c62025427bdffe8afbf0014a460000c844e00043c01000024190001a46e000e844f00062408000124090001a46f001084580008240a0001a4780012a4280000a43900003c010000a42900000c000000a42a00008fbf001427bd001803e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x0, 5, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x4, 6, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x1C, 5, D_82B12466)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x44, 6, D_82B12466)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x48, 6, D_82B12464)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x4C, 5, D_82B12468)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x50, 6, D_82B12468)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x54, 4, func_82B0556C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x58, 6, D_82B1246A)
+
+
+
+
+void func_82B055A0(void) {
+    u8 *temp_v0;
+    s32 i;
+    temp_v0 = (*(u8 **)((u8 *)(&D_82B12450) + 0x254));
+    (*(s16 *)((u8 *)(&D_82B12450) + 0xC)) = 0;
+    (*(s16 *)((u8 *)(&D_82B12450) + 0xE)) = (*((s16 *)(((u8 *)(temp_v0)) + 4)));
+    (*(s16 *)((u8 *)(&D_82B12450) + 0x10)) = (*((s16 *)(((u8 *)(temp_v0)) + 6)));
+    (*(s16 *)((u8 *)(&D_82B12450) + 0x12)) = (*((s16 *)(((u8 *)(temp_v0)) + 8)));
+    for (i = 0; i < 4; i++) {
+        D_82B12464[i] = 1;
+    }
+    D_82B1246A = 1;
+    func_82B0556C();
+}
+/* mkdraft:func_82B055A0 end */
 #endif
 
 #ifdef VERSION_US
@@ -1729,11 +1765,128 @@ void func_82B062F8(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B072DC.s")
+/* mkdraft:func_82B072DC begin */
+extern s16 D_82B1246C;
+
+extern void *D_80087200;
+
+// Compares the D_82B1246C value from before the func_82B02870() gate with the
+// value left by the two 0xC-button clamps, reports a change with
+// func_800226C0(1), then dispatches the 0x8 word's 0x8000/0x4000 buttons.
+// The address local and the compare read straight from memory are what give the
+// target's frame (0x20 bytes, ra at 0x14, the saved value at 0x18): a named
+// compare temporary scores 195, named clamp temporaries 250, and reading the
+// extern directly instead of through the local scores 4588
+// (matching_notes/try_candidate.py, IDO 7.1).
+// Needs `extern void func_800226C0();` at file scope: the three calls pass
+// arguments and the retail file declares that extern old-style.
+
+
+void func_82B072DC(void) {
+    s16 *D_82B1246C_ptr = &D_82B1246C;
+    s32 sp18;
+    s32 input;
+
+    sp18 = (s32) (*D_82B1246C_ptr);
+    if (func_82B02870() != 0) {
+        if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x800) {
+            (*D_82B1246C_ptr) = (*D_82B1246C_ptr) - 1;
+            if ((*D_82B1246C_ptr) < 0) {
+                (*D_82B1246C_ptr) = 0;
+            }
+        }
+        if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x400) {
+            (*D_82B1246C_ptr) = (*D_82B1246C_ptr) + 1;
+            if ((*D_82B1246C_ptr) >= 4) {
+                (*D_82B1246C_ptr) = 3;
+            }
+        }
+        if (sp18 != (*D_82B1246C_ptr)) {
+            func_800226C0(1);
+        }
+        input = *(u16 *)((u8 *)D_80087200 + 8);
+        if (input & 0x8000) {
+            func_82B02A34(func_82B02800(1, 3), 1);
+            func_82B02A34(func_82B02800(6, 0), 0);
+            func_82B06360(1);
+            func_800226C0(0x8D);
+            return;
+        }
+        if (input & 0x4000) {
+            func_82B029B8(func_82B02800(1, 3), -1);
+            func_82B02A34(func_82B02800(6, 0), 1);
+            func_82B060A0(1);
+            func_800226C0(3);
+        }
+    }
+}
+/* mkdraft:func_82B072DC end */
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B07454.s")
+/* mkdraft:func_82B07454 begin */
+extern s16 D_82B1246E;
+extern s16 D_82B12470;
+extern void *D_80087200;
+extern void *func_82B02800(s32, s32);
+extern void func_82B02A34(void *, s32);
+extern void func_82B029B8(u8 *, s32);
+extern void func_82B06360(s32);
+extern void func_82B060A0(s32);
+extern s32 func_82B02870(void);
+
+// Moves the cup cursor D_82B1246E with the pad word at D_80087200+0xC: bit 0x800 decrements
+// it (clamped at 0), bit 0x400 increments it (clamped at D_82B12470-1). A changed cursor
+// reports func_800226C0(1). The pad word at D_80087200+0x8 then selects the confirm path
+// (bit 0x8000: func_82B06360(1), then func_800226C0(0x8D) when the cursor is below
+// D_82B12470, else func_800226C0(5)) or the cancel path (bit 0x4000:
+// func_82B029B8(..., -1), func_82B02A34(..., 1), func_82B060A0(1), func_800226C0(3)).
+
+
+void func_82B07454(void) {
+    s16 *D_82B1246E_ptr = &D_82B1246E;
+    s32 sp18;
+    s32 temp_v0_2;
+    s16 *D_82B12470_ptr = &D_82B12470;
+
+    sp18 = (*D_82B1246E_ptr);
+    if (func_82B02870() != 0) {
+        if ((*D_82B12470_ptr) > 0) {
+            if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x800) {
+                if (--(*D_82B1246E_ptr) < 0) {
+                    (*D_82B1246E_ptr) = 0;
+                }
+            }
+            if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x400) {
+                if (++(*D_82B1246E_ptr) > (*D_82B12470_ptr) - 1) {
+                    (*D_82B1246E_ptr) = (*D_82B12470_ptr) - 1;
+                }
+            }
+        }
+        if (sp18 != (*D_82B1246E_ptr)) {
+            func_800226C0(1);
+        }
+        temp_v0_2 = (*(u16 *)((u8 *)D_80087200 + 0x8));
+        if (temp_v0_2 & 0x8000) {
+            if ((*D_82B1246E_ptr) < (*D_82B12470_ptr)) {
+                func_82B02A34(func_82B02800(1, 4), 1);
+                func_82B02A34(func_82B02800(7, 0), 0);
+                func_82B06360(1);
+                func_800226C0(0x8D);
+                return;
+            }
+            func_800226C0(5);
+            return;
+        }
+        if (temp_v0_2 & 0x4000) {
+            func_82B029B8(func_82B02800(1, 4), -1);
+            func_82B02A34(func_82B02800(7, 0), 1);
+            func_82B060A0(1);
+            func_800226C0(3);
+        }
+    }
+}
+/* mkdraft:func_82B07454 end */
 #endif
 
 #ifdef VERSION_US
@@ -1741,7 +1894,122 @@ void func_82B062F8(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B07960.s")
+/* mkdraft:func_82B07960 begin */
+extern u8 D_82B12450[4088];
+extern u16 D_82B12454;
+extern s16 D_82B12456;
+extern s16 D_82B1245A;
+extern s16 D_82B126A0;
+extern s16 D_82B13008;
+extern void func_800226C0();
+extern void *D_80087200;
+extern s32 func_82B02870(void);
+extern void func_82B02A34(void *, s32);
+extern void func_82B060A0(s32);
+//
+// Fragment24 handler: when func_82B02870 reports nonzero, it services the
+// halfword flags at D_82B12450 and, if bit 0x4000 of the word D_80087200
+// points at is set, dispatches on the s16 at D_82B13008.
+//
+//   case 0  D_82B12450 (s16 at +0x0) = 9
+//           D_82B12456 (s16 at +0x6) = 0
+//           D_82B1245A (s16 at +0xA) = -1
+//   case 1  if D_82B126A0 (s16 at +0x250) > 0, call
+//           func_82B02A34(*(void **)(entry + 0xB18), 0) for each of
+//           D_82B126A0 entries walking 4 bytes at a time, then func_82B060A0(1)
+//
+// Both cases fall through to func_800226C0(3). Before the switch, a zero
+// D_82B12456 is raised to 1 with func_800226C0(5).
+//
+// Retail is 63 instructions (252 bytes), and its two case-0 stores share one
+// page base:
+//
+//   82B079C8  lui  $at,%hi(D_82B12450)      <- loaded before the dispatch
+//   82B079CC  beqz $v0,.L82B079E8
+//   82B079E8  sh   $t1,%lo(D_82B12450)($at)
+//   82B079EC  sh   $zero,%lo(D_82B12456)($at)   <- reuses that $at
+//   82B079F0  lui  $at,%hi(D_82B1245A)
+//
+// IDO 7.1 emits one `lui $at` per store macro, so the body below compiles to
+// 64 instructions with an extra `lui $at,%hi(D_82B12456)` between the two
+// `sh`. `COALESCE_AT_LUI` cannot fold that pair: coalesce_object.plan_runs
+// caps a fold at _MAX_SCHEDULED_GAP = 4 instructions, and this pair is
+// separated by the whole switch dispatch (`beqz`, `li $t2,-1`, `li $at,1`,
+// `beq`, `lui $t3`, `b`, `nop`), whose `li $at,1` also clobbers `$at`.
+//
+// The body leaves the flag read as `*(s16 *)((u8 *)&D_82B12454 + 2)`; the
+// direct `D_82B12456` spelling lets IDO CSE the address into `$s0`, which
+// costs more than the inserted `lui`. `s32 i = 0;` needs its initializer on
+// the declaration to reproduce retail's loop allocation (counter `$s0`,
+// entry pointer `$s1`).
+//
+// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; diff score 110
+// without it (one inserted `lui $at,%hi(D_82B12456)` between the two case-0
+// halfword stores). Writing the flag read as `D_82B12456 == 0` instead scores
+// 760: IDO materializes the page base in `$s0`, so the store block and the
+// dispatch lose their `$at`-relative form.
+#pragma REWRITE_FUNCTION_HEX(func_82B07960, 249f8d0554777b1f103e9a6cd5a3e38e4032e9b5edebd418c8bd568758635087, 27bdffd8afb20020afbf00243c120000afb1001cafb000180c00000026520000104000303c0e000085ce0000240f00013c01000015c00003240400050c000000a42f00003c1800008f1800003c0200009719000833284000510000238fbf002484420000240900093c01000010400006240affff24010001104100083c0b00001000001600000000a4290000a42000003c01000010000011a42a0000856b00003c110000263100001960000a000080258e240b180c00000000002825864c02502610000126310004020c082a5420fff98e240b180c000000240400010c000000240400038fbf00248fb000188fb1001c8fb2002003e0000827bd0028)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xC, 5, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x18, 4, func_82B02870)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x1C, 6, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x24, 5, D_82B12456)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x28, 6, D_82B12456)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x30, 5, D_82B12456)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x3C, 4, func_800226C0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x40, 6, D_82B12456)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x44, 5, D_80087200)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x48, 6, D_80087200)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x4C, 5, D_82B13008)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x60, 6, D_82B13008)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x68, 5, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x7C, 5, D_82B126A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x88, 6, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x8C, 6, D_82B12456)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x90, 5, D_82B1245A)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x98, 6, D_82B1245A)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x9C, 6, D_82B126A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xA0, 5, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xA4, 6, D_82B12450)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xB4, 4, func_82B02A34)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xD4, 4, func_82B060A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xDC, 4, func_800226C0)
+
+
+void func_82B07960(void) {
+    u8 *base = (u8 *)&D_82B12450;
+    u8 *entry;
+    s32 i = 0;
+
+    if (func_82B02870() != 0) {
+        if (*(s16 *)((u8 *)&D_82B12454 + 2) == 0) {
+            D_82B12456 = 1;
+            func_800226C0(5);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+            switch (D_82B13008) {
+            case 0:
+                *(s16 *)D_82B12450 = 9;
+                D_82B12456 = 0;
+                D_82B1245A = -1;
+                break;
+            case 1:
+                if (D_82B126A0 > 0) {
+                    entry = (u8 *)&D_82B12450;
+                    i = 0;
+                    do {
+                        func_82B02A34(*(void **)(entry + 0xB18), 0);
+                        i++;
+                        entry += 4;
+                    } while (i < *(s16 *)(base + 0x250));
+                }
+                func_82B060A0(1);
+                break;
+            }
+            func_800226C0(3);
+        }
+    }
+}
+/* mkdraft:func_82B07960 end */
 #endif
 
 #ifdef VERSION_US
@@ -1978,7 +2246,149 @@ void func_82B07F84(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B080D0.s")
+/* mkdraft:func_82B080D0 begin */
+extern u8 D_82B12450[0xFF8];
+extern u16 D_82B12454;
+extern s16 D_82B12696[];
+extern s16 D_82B12452;
+extern s16 D_82B12D10;
+extern Gfx *D_800D0510;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void *func_82B00F14(s32);
+extern s32 func_82B00F68(s32);
+extern void func_82B0284C(u8 *, u8 *);
+extern void func_82B02F78(u8 *);
+extern void func_82B05494(void *, s32);
+extern void func_82B07BEC(void);
+extern void func_82B07C88(void);
+extern void func_82B07F84(s32);
+extern void ImageFade_UpdateAndDraw(s32);
+extern s32 func_81700908(void);
+extern s32 func_81700AF4(s32, void *);
+extern s32 func_81700B2C(s32);
+extern s32 func_81700B58(s32);
+
+// Draws the panel labels of the active menu screen. When bit 0 of the mode word at
+// D_82B12450+4 is set: switch to fullscreen when func_82B00F68("FULL") reports the
+// fullscreen text, otherwise draw a strip per controller port (func_81700B2C returns
+// the strip width, func_81700B58 whether it is centred) and clear the screen. Then walk
+// the 20 panel entries at D_82B12450+0x258 (stride 0x70, ending at D_82B12D10) and
+// position the label sprite of each entry that is present (entry[0] != 0 and the
+// halfword at entry+6 != 0). The label id comes from entry[0]; entries of type 1 and 9
+// first decide func_82B05494's flag/active argument from the cursor row (panelY) and
+// from D_82B12696[entry[1]]. Returns bit 0 of D_82B12454.
+
+
+s32 func_82B080D0(void) {
+    // Declaration order fixes the home-slot offsets: cursor and string fill the two
+    // words retail keeps above panelY, and panelY/fullscreen/pos/bounds follow in that
+    // order down the frame.
+    s16 *cursor;
+    s32 string;
+    s32 panelY;
+    s32 fullscreen;
+    s16 pos[2];
+    s16 *panel;
+    void *object;
+    s32 active;
+    s32 flag;
+    s32 i;
+    s32 count;
+    s16 bounds[2];
+    s32 pad[2]; // FAKE: retail's frame is 0x88, not 0x80; these two words stand in for
+                // the two compiler-temp slots its frame has below bounds. Diff score 156
+                // without them (frame 0x80, every slot below panelY moves down 8).
+
+    fullscreen = 0;
+    panelY = *(s16 *)(D_82B12450 + 8);
+    if (*(u16 *)(D_82B12450 + 4) & 1) {
+        if (func_82B00F68(0x46554C4C)) {
+            func_82B07C88();
+            fullscreen = 1;
+        }
+        if (!fullscreen) {
+            for (i = 0; i < 2; i++) {
+                func_81700AF4(i, pos);
+                count = func_81700B2C(i);
+                if (count > 0) {
+                    if (func_81700B58(i)) {
+                        func_80006F70(&D_800D0510, (s16)(pos[0] - count), (s16)(pos[1] - 10), (s16)count, 0x1C);
+                    } else {
+                        func_80006F70(&D_800D0510, pos[0], (s16)(pos[1] - 10), (s16)count, 0x1C);
+                    }
+                    func_82B07C88();
+                }
+            }
+            func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        }
+        func_81700908();
+        // s16 cursor: +0x38 elements per entry is the entry stride 0x70, and
+        // +0x12C elements is the 0x258-byte offset of the first entry.
+        cursor = (s16 *)((u8 *)&D_82B12452 - 2);
+        do {
+            panel = cursor + 0x12C;
+            if (*(s16 *)((u8 *)cursor + 0x258) != 0 && *(u16 *)((u8 *)panel + 6) != 0) {
+                flag = 0;
+                active = 1;
+                switch (panel[0]) {
+                case 1:
+                    if (panelY == panel[1] && !(D_82B12454 & 0x10)) {
+                        flag = 1;
+                    }
+                    break;
+                case 9:
+                    if (D_82B12696[panel[1]] == 0) {
+                        active = 0;
+                    }
+                    break;
+                }
+                if (active) {
+                    string = 0;
+                    switch (panel[0]) {
+                    case 1: string = panel[1] + 0x43555030; break;
+                    case 2: string = 0x434E4647; break;
+                    case 3: string = 0x4D535347; break;
+                    case 4: string = 0x53504331; break;
+                    case 5: string = 0x53504332; break;
+                    case 6: string = 0x43484C47; break;
+                    case 7: string = 0x45444954; break;
+                    case 8: string = panel[1] + 0x504B4D30; break;
+                    case 9: string = panel[1] + 0x42544C30; break;
+                    case 10: string = 0x45524F52; break;
+                    }
+                    if (fullscreen == 0) {
+                        object = func_82B00F14(string);
+                        func_82B0284C((u8 *)panel, (u8 *)bounds);
+                        if (object != NULL) {
+                            *(s16 *)((u8 *)object + 4) = -1;
+                            *(s16 *)((u8 *)object + 8) = bounds[0] - 2;
+                            *(s16 *)((u8 *)object + 0xA) = *(s16 *)((u8 *)panel + 0x48) + bounds[0] + 5;
+                            *(s16 *)((u8 *)object + 0xE) = bounds[1] - 2;
+                            *(s16 *)((u8 *)object + 0xC) = *(s16 *)((u8 *)panel + 0x4A) + bounds[1] + 5;
+                        }
+                    } else {
+                        object = func_82B00F14(string);
+                        if (object != NULL) {
+                            *(s16 *)((u8 *)object + 4) = 1;
+                        }
+                    }
+                    if (func_82B00F68(string)) {
+                        func_82B07C88();
+                    }
+                    func_82B02F78((u8 *)panel);
+                    func_82B05494(panel, flag);
+                }
+            }
+            cursor += 0x38;
+        } while (cursor != &D_82B12D10);
+        func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        func_82B07BEC();
+        ImageFade_UpdateAndDraw(fullscreen);
+        func_82B07F84(fullscreen);
+    }
+    return (D_82B12454 & 1) != 0;
+}
+/* mkdraft:func_82B080D0 end */
 #endif
 
 #ifdef VERSION_US
