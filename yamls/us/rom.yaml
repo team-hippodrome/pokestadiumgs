@@ -997,6 +997,8 @@
     - [0x1B9390, c,       fragments/32/fragment32_1B9390]
     - [0x1B9840, c,       fragments/32/fragment32_1B9840]
     - [0x1B9A50, data,    fragments/32/fragment32_data]
+    - [0x1B9C00, .rodata, fragments/32/fragment32_1B1330] # Strings, jump tables, float literals.
+    - [0x1B9C30, rodata]
   
   - name: fragment33
     type: code
