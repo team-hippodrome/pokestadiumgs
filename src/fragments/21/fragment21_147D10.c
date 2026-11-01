@@ -50,7 +50,79 @@ s32 CellularTransition_FindEmptyNeighbors(s32 *arg0, u8 *arg1, s32 arg2, s16 *ar
     return count;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_147D10/func_82508014.s")
+/* mkdraft:func_82508014 begin */
+extern s16 D_82508828[];
+extern s16 D_82508836[];
+
+
+
+void func_82508014(s16 *arg0) {
+    // FAKE: neither s32 is referenced; the two homes they occupy (with r, also
+    // register-only) raise the frame from 0x98 to 0xA0. Removing them scores 50.
+    s32 unused_0;
+    s32 unused_1;
+    s32 r;
+    s32 row;
+    s32 cell;
+    s32 neighbors[8];
+    s32 completed;
+    s32 filled;
+    s32 col;
+    s32 count;
+    s32 i;
+    s32 other;
+    u8 *cells;
+
+    completed = 0;
+    row = 0;
+    // karodo: dead read of D_82508828[0]. It puts D's address at the end of
+    // uopt's register walk, so D takes fp and the 19200 constant takes s7, as
+    // in the target. Without this line the score is 510.
+    if (D_82508828[0] == 0) {}
+    if (((u16 *)arg0)[3] > 0) {
+        cells = (u8 *)arg0 + 8;
+        do {
+            filled = 0;
+            for (col = 0; col < 19200; col++) {
+                cell = (cells[col >> 2] >> ((col & 3) * 2)) & 3;
+                if ((u8)cell == 2) {
+                    filled++;
+                }
+                if ((u8)cell == 1) {
+                    count = CellularTransition_FindEmptyNeighbors(neighbors, cells, col, D_82508828);
+                    if (count == 0) {
+                        cells[col >> 2] = (cells[col >> 2] & ((3 << ((col & 3) * 2)) ^ 0xFF)) | (2 << ((col & 3) * 2));
+                    } else if ((r = guRandom(), !(r & D_82508836[count]))) {
+                        i = guRandom() & 7;
+                        if (neighbors[i] == 0) {
+                            do {
+                                i = (i + 1) & 7;
+                            } while (neighbors[i] == 0);
+                        }
+                        other = (D_82508828[i] + col) % 19200;
+                        if (other < 0) {
+                            other += 19200;
+                        }
+                        cells[other >> 2] = (cells[other >> 2] & ((3 << ((other & 3) * 2)) ^ 0xFF)) | (1 << ((other & 3) * 2));
+                    }
+                }
+            }
+            if (filled >= 19200) {
+                completed = 1;
+            }
+            row++;
+        } while (row < ((u16 *)arg0)[3]);
+    }
+    if (completed) {
+        if (arg0[0] == 2) {
+            arg0[0] = 3;
+        } else {
+            arg0[0] = 0;
+        }
+        arg0[1] = 0;
+    }
+}
+/* mkdraft:func_82508014 end */
 
 extern void func_82508014(s16 *);
 void func_82508268(void) {
