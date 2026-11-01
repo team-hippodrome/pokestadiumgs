@@ -526,7 +526,58 @@ void func_8600734C(s32 arg0) {
     Audio_PlayDefaultSound(0xCF0B);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86007428.s")
+/* mkdraft:func_86007428 begin */
+extern void func_87F00688();
+extern void func_86004BD4(s32);
+extern void func_86004968();
+extern void func_860021C4(s32, s32, f32, void *, s32);
+extern void func_86003EFC(s32, s32);
+extern void func_8600062C();
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromOpaque(s32);
+extern u8 D_8600DE30[];
+
+// Four stage slots of stride 0x1998; D_8600DE30+0x214 is the first slot that
+// func_86003EFC(ptr, 7) still has to run on, and 0x6660 is 4 slots.
+
+
+
+void func_86007428(s32 arg0) {
+    s32 i;
+    s32 offset;
+    s32 ptr;
+    void *callback;
+    void *node;
+    *(f64 *)(arg0 + 0x6888) = 0.0;
+    *(u8 *)(arg0 + 0x75C0) &= 0xFF7F;
+    *(f64 *)(arg0 + 0x6898) = 0.0;
+    StageContext_SetClearColor(0xFFFF);
+    StageFade_StartFromOpaque(0x14);
+    func_87F00688();
+    func_86004BD4(arg0);
+    func_86004968(arg0);
+    offset = 0;
+    for (i = 0; i < 4; i++) {
+        node = *(void **)(arg0 + 0x7580);
+        callback = (*(u8 *)((u8 *)node + 0x2182) & (1 << i) &&
+                    (*(u8 *)((u8 *)node + 0x2180) == 4) == 0) ? NULL : &func_8600062C;
+        func_860021C4(arg0 + offset, i, (f32)*(f64 *)(D_8600DE30 + 0xF8), callback, arg0);
+        offset += 0x1998;
+    }
+    i = *(s32 *)(D_8600DE30 + 0x214);
+    if (i < 4) {
+        offset = i * 0x1998;
+        ptr = arg0 + offset;
+        do {
+            func_86003EFC(ptr, 7);
+            offset += 0x1998;
+            ptr += 0x1998;
+        } while (offset != 0x6660);
+    }
+    *(s8 *)(arg0 + 0x75C1) = MathUtil_Random16() % 4;
+    *(s32 *)(arg0 + 0xAF5C) = 0x15F90;
+}
+/* mkdraft:func_86007428 end */
 
 extern void func_80021ED8(s32);
 extern void func_86004968();
