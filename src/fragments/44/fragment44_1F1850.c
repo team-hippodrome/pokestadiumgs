@@ -474,7 +474,50 @@ s32 func_8AF04A14(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF04A54.s")
+/* mkdraft:func_8AF04A54 begin */
+extern u8 D_8AF2C590;
+extern u8 D_8AF2C594;
+extern s16 D_8AF2C598;
+extern s16 D_8AF2C59A;
+
+typedef struct { u8 r, g, b, a; } Func8AF04A54RGBA;
+
+// Case 0 blends the working color D_8AF2C590 with D_8AF2C594, weighting the D_8AF2C594 bytes
+// 217/292 and the D_8AF2C590 bytes 75/292, and stores the result in the two RGBA fields
+// arg1+0x2C and arg1+0x30 (func_8AF04530 writes 0xDC0000FF, opaque red, to arg1+0x2C).
+// unk_D_8AF2BFB4 and D_8AF2BFB4/D_8AF2BFB8 are declared for func_8AF04A14 above.
+// The byte loads reach both words through these two pointers rather than through the symbols
+// themselves so they cannot be hoisted above the word stores that initialize the words: the
+// retail code loads each byte after the store that wrote it.
+
+
+s32 func_8AF04A54(s32 arg0, u8 *arg1) {
+    s32 pad; // FAKE: never read or written; as the first auto it moves c from sp+0xC
+             // to sp+0x10 and the frame from 0x10 to 0x18. Score 31 without it.
+    Func8AF04A54RGBA c;
+    u8 *cur = &D_8AF2C590;
+    u8 *tgt = &D_8AF2C594;
+
+    switch (arg0) {
+    case 0:
+        D_8AF2C598 = *(s16 *)(arg1 + 8);
+        D_8AF2C59A = *(s16 *)(arg1 + 0xA);
+        *(s32 *)&D_8AF2C590 = *(s32 *)&D_8AF2BFB4;
+        *(s32 *)&D_8AF2C594 = *(s32 *)&D_8AF2BFB8;
+        c.r = (tgt[0] * 217 + cur[0] * 75) / 292;
+        c.g = (tgt[1] * 217 + cur[1] * 75) / 292;
+        c.b = (tgt[2] * 217 + cur[2] * 75) / 292;
+        c.a = (tgt[3] * 217 + cur[3] * 75) / 292;
+        arg1[0x28] = 0x22;
+        *(Func8AF04A54RGBA *)(arg1 + 0x2C) = c;
+        *(Func8AF04A54RGBA *)(arg1 + 0x30) = c;
+        break;
+    case 1: // karodo: empty arm; without it the switch compiles as an if
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_8AF04A54 end */
 
 extern void func_8AF0455C();
 extern void func_8004E308(s32, void *, s32);
