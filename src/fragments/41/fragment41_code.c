@@ -99,7 +99,80 @@ void func_88C006B8(void) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00AB0.s")
+/* mkdraft:func_88C00AB0 begin */
+extern u32 D_800CDA34;
+extern s32 func_80001FF0(void);
+extern void func_800226C0(s32);
+
+// View of D_88C01A60 as a wall clock: func_88C00AB0 advances unk0C by the frame
+// count elapsed since the unk08 timestamp, then cascades unk04/unk03/unk02/unk00
+// through 60 seconds, 60 minutes, 24 hours and a day count that wraps at unk2E.
+typedef struct {
+    u16 unk00;
+    u8 unk02;
+    u8 unk03;
+    u8 unk04;
+    u8 pad05[3];
+    u32 unk08;
+    u16 unk0C;
+    u8 pad0E[0x12];
+    u16 unk20;
+    u8 unk22;
+    u8 unk23;
+    u8 unk24;
+    s16 unk26;
+    s32 unk28;
+    u16 unk2C;
+    u16 unk2E;
+} Frag41_Clock;
+
+
+
+void func_88C00AB0(s32 arg0) {
+    Frag41_Clock *clk = (Frag41_Clock *)D_88C01A60;
+    // The frame counter at D_800CDA34 + 0x20 has no symbol of its own.
+    u32 now = *(u32 *)((u8 *)&D_800CDA34 + 0x20);
+    s32 period;
+
+    // The two arms compute the same value because the late timestamp is handled by
+    // the wrap-around form in the second arm; the ROM keeps the two tests separate.
+    if (clk->unk08 < now) {
+        clk->unk0C = (u16)((clk->unk0C + now) - clk->unk08);
+    } else if (now < clk->unk08) {
+        // FAKE: 330 without it. Adding 2^32 to now is discarded by the u16 store; the
+        // 64-bit type is what makes IDO copy the sum to a new temporary before the
+        // subtraction, which sets the register coloring for the rest of the function.
+        // Time deltas elsewhere in the engine use this same wrap-around idiom, so the
+        // 64-bit add may be original source rather than match-only padding.
+        clk->unk0C = (u16)((clk->unk0C + (now + 0xFFFFFFFFLL + 1)) - clk->unk08);
+    }
+    clk->unk08 = now;
+
+    // func_80001FF0 returns the frame rate, so unk0C accumulates the frames since
+    // the last whole second and a full period of them advances the seconds counter.
+    period = func_80001FF0();
+    if (clk->unk0C < period) {
+        return;
+    }
+    if (arg0 == 1) {
+        func_800226C0(0x155);
+    }
+    clk->unk0C = (u16)(clk->unk0C - func_80001FF0());
+
+    if (++clk->unk04 >= 0x3C) {
+        clk->unk04 -= 0x3C;
+        if (++clk->unk03 >= 0x3C) {
+            clk->unk03 -= 0x3C;
+            if (++clk->unk02 >= 0x18) {
+                clk->unk02 -= 0x18;
+                if (++clk->unk00 > D_88C01A60->unk2E) {
+                    clk->unk00 = 0;
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_88C00AB0 end */
 
 typedef float Frag41_MtxF_t[4][4];
 typedef union {
