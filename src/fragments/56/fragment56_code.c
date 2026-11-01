@@ -430,7 +430,75 @@ s32 func_868040EC(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680537C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868058C0.s")
+extern s32 D_8682F2B4;
+extern s32 D_86807C3C;
+extern s32 D_86807C88;
+extern s32 D_86807C48;
+extern s32 D_868084E8;
+extern u8 D_8682CD18[];
+extern u8 D_8682E618[];
+extern void func_8680537C(void);
+extern void func_868044D4(void);
+extern void func_868048C8(void);
+extern void func_86804C5C(void);
+extern void func_800279C4(u16);
+void Fragment56_UpdatePoolCompletion(void) {
+    static s32 drain_counter = 0;
+    s32 group_index;
+    s32 entry_index;
+    s32 all_empty;
+    if (D_8682F2B4 != 1) {
+        D_86807C3C--;
+        func_8680537C();
+        func_868044D4();
+        func_868048C8();
+        if (D_86807C88 == 1) {
+            if (D_86807C48 <= 0) {
+                all_empty = 1;
+                for (group_index = 0; group_index < 4; group_index++) {
+                    for (entry_index = 0; entry_index < 40; entry_index++) {
+                        if (*(s32 *)(D_8682CD18 + group_index * 0x640 + entry_index * 0x28 + 4) != -1) {
+                            all_empty = 0;
+                        }
+                    }
+                    for (entry_index = 0; entry_index != 20; entry_index++) {
+                        if (*(s32 *)(D_8682E618 + group_index * 0x1E0 + entry_index * 0x18) == 1) {
+                            all_empty = 0;
+                        }
+                    }
+                }
+                if (all_empty == 1) {
+                    drain_counter++;
+                }
+                if (drain_counter == 5) {
+                    func_800279C4(0xCF06);
+                }
+                if (drain_counter >= 31) {
+                    func_86804C5C();
+                }
+            } else {
+                drain_counter = 0;
+            }
+        } else if (D_868084E8 == 0) {
+            all_empty = 1;
+            for (group_index = 0; group_index < 4; group_index++) {
+                for (entry_index = 0; entry_index < 40; entry_index++) {
+                    if (*(s32 *)(D_8682CD18 + group_index * 0x640 + entry_index * 0x28 + 4) != -1) {
+                        all_empty = 0;
+                    }
+                }
+                for (entry_index = 0; entry_index != 20; entry_index++) {
+                    if (*(s32 *)(D_8682E618 + group_index * 0x1E0 + entry_index * 0x18) == 1) {
+                        all_empty = 0;
+                    }
+                }
+            }
+            if (all_empty == 1) {
+                func_86804C5C();
+            }
+        }
+    }
+}
 
 extern u8 D_8681EBF8[];
 extern u8 D_86809208[];
@@ -530,7 +598,7 @@ extern s32 D_8682F310;
 extern u32 func_8003570C(void);
 extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
 void func_86806044(s32 arg0) {
-    volatile s32 pad[3];
+    volatile s32 pad[3]; // FAKE: unused stack space; original live locals remain unrecovered.
     u32 rand1;
     u32 rand0;
     u32 rand2;
