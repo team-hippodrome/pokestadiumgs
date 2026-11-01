@@ -108,7 +108,118 @@ s32 func_8170024C(void)
 }
 /* mkdraft:func_8170024C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/18/fragment18_code/func_8170031C.s")
+/* mkdraft:func_8170031C begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u16 *func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D19C(s32, s32, u16 *, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800499EC(void);
+extern s32 func_800472B8(s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// FAKE: IDO colors this addu with the freshly loaded mid[0] as the first operand;
+// retail lists the coordinate x first. Without this rewrite the function scores 10:
+// the only difference is the operand order of the addu at +0x18C.
+#pragma REWRITE_FUNCTION_WORD(func_8170031C, 0x18C, 0x0302C821, 0x0058C821)
+
+
+
+s32 func_8170031C(u8 *arg0) {
+    s32 x;
+    s32 textX;
+    s32 innerX;
+    s32 tile;
+    s32 step;
+    s32 alignment;
+    u16 *capLeft;
+    u16 *capRight;
+    u16 *mid;
+    u8 *env;
+    s32 unused2;
+    f32 scale;
+
+    innerX = 0;
+    capLeft = func_8004C990(0x13F, 0);
+    capRight = func_8004C990(0x13F, 1);
+    mid = NULL;
+    if (*(s16 *)(arg0 + 0x10) > 0) {
+        switch (*(s16 *)(arg0 + 0x18)) {
+        case 1:
+            mid = func_8004C990(0x11C, 0);
+            break;
+        case 2:
+            mid = func_8004C990(0x11C, 1);
+            break;
+        }
+        scale = (f32)*(s16 *)(arg0 + 0x10) / (f32)(u32)*capLeft;
+        env = arg0 + 0x1E;
+        if (*(u16 *)(arg0 + 0xC) & 2) {
+            textX = *(s16 *)arg0 - 0x38;
+            x = *(s16 *)arg0 - *(s16 *)(arg0 + 0x10);
+            if (mid != NULL) {
+                innerX = textX - *(s16 *)(arg0 + 0x12) - *mid - 2;
+            }
+            tile = (*capLeft - 1) << 5;
+            step = (s32)((-1024.0f / scale) + (((-1024.0f / scale) > 0.0f) ? 0.5f : -0.5f));
+            alignment = 2;
+        } else {
+            unused2 = *(s16 *)arg0;
+            tile = unused2;
+            x = tile;
+            if (mid == NULL) {
+                textX = x + 0x37;
+            } else {
+                textX = x + *mid + 0x39;
+            }
+            innerX = x + 0x37;
+            tile = 0;
+            step = (s32)((1024.0f / scale) + (((1024.0f / scale) > 0.0f) ? 0.5f : -0.5f));
+            alignment = 0;
+        }
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR, _SHIFTL(env[1], 16, 8) | _SHIFTL(env[2], 8, 8) | _SHIFTL(*(s16 *)(arg0 + 0x1A), 0, 8) | _SHIFTL(env[0], 24, 8));
+        func_8004D1FC((u8 *)capLeft);
+        GfxRect_DrawTextured(x, *(s16 *)(arg0 + 2), *(s16 *)(arg0 + 0x10), 2, tile, 0, step, 0x400, 0);
+        GfxRect_DrawTextured(x, *(s16 *)(arg0 + 2) + 0x10, *(s16 *)(arg0 + 0x10), 2, tile, 0, step, 0x400, 0);
+        scale = (f32)*(s16 *)(arg0 + 0x10) / (f32)(u32)*capRight;
+        env = arg0 + 0x21;
+        if (*(u16 *)(arg0 + 0xC) & 2) {
+            tile = (*capRight - 1) << 5;
+            step = (s32)((-1024.0f / scale) + (((-1024.0f / scale) > 0.0f) ? 0.5f : -0.5f));
+        } else {
+            tile = 0;
+            step = (s32)((1024.0f / scale) + (((1024.0f / scale) > 0.0f) ? 0.5f : -0.5f));
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR, _SHIFTL(env[1], 16, 8) | _SHIFTL(env[2], 8, 8) | _SHIFTL(*(s16 *)(arg0 + 0x1A), 0, 8) | _SHIFTL(env[0], 24, 8));
+        func_8004D1FC((u8 *)capRight);
+        GfxRect_DrawTextured(x, *(s16 *)(arg0 + 2) + 2, *(s16 *)(arg0 + 0x10), 0xE, tile, 0, step, 0x400, 0);
+        if (*(s16 *)(arg0 + 0x14) == *(s16 *)(arg0 + 0x10)) {
+            s32 offset = 0xC - func_800472B8(*(s16 *)(arg0 + 6));
+
+            if (mid != NULL) {
+                s32 unused1 = 0xE - mid[1];
+
+                gSPDisplayList(D_800D0510++, D_80094E38);
+                gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, *(s16 *)(arg0 + 0x1C));
+                func_8004D19C(innerX, *(s16 *)(arg0 + 2) + unused1, mid, 0, 0);
+            }
+            func_800498C4();
+            func_800496A4(*(s16 *)(arg0 + 6), 0);
+            func_8004972C(0, 0, 0, *(s16 *)(arg0 + 0x1C));
+            func_800495F8(textX + 2, *(s16 *)(arg0 + 2) + offset + 2, alignment, *(s32 *)(arg0 + 8));
+            func_8004972C(0xFF, 0xFF, 0xFF, *(s16 *)(arg0 + 0x1C));
+            func_800495F8(textX, *(s16 *)(arg0 + 2) + offset, alignment, *(s32 *)(arg0 + 8));
+            func_800499EC();
+        }
+    }
+}
+/* mkdraft:func_8170031C end */
 
 extern void _bzero(void *, s32);
 extern s32 func_8004C8C0(s32);
