@@ -1303,7 +1303,7 @@ extern u8 D_86808598[];
 
 
 
-s32 func_86806E94(u8 arg0) {
+s32 func_86806E94(s32 arg0) {
     if (((u8 *)D_86808590)[0x2180] == 4 && func_87F0C6F4(D_86808630) != 0) {
         D_8682F2A8 = 13;
         D_8682F2B0 = 3;
@@ -1403,7 +1403,7 @@ s32 func_86806E94(u8 arg0) {
 }
 /* mkdraft:func_86806E94 end */
 
-extern s32 func_86806E94(u8);
+extern s32 func_86806E94(s32);
 extern void *D_86808590;
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F114(u8 *, s16, s16, void *);
