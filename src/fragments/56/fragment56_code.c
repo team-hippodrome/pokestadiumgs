@@ -281,7 +281,7 @@ extern void func_87F022F0(void);
 extern void func_87F0C88C(u8 *);
 extern void func_80008648(void);
 void func_868039F8(void);
-void func_86806CD8(void);
+void Fragment56_UpdateModelAnimations(void);
 void func_86802EE8(void);
 extern void func_86803EA4(void);
 extern s32 D_868086C0[];
@@ -304,7 +304,7 @@ void func_86803ED8(void) {
             func_868039F8();
         }
         if (D_8682F2B8 == 2) {
-            func_86806CD8();
+            Fragment56_UpdateModelAnimations();
             func_868039F8();
             func_87F022F0();
         }
@@ -313,7 +313,7 @@ void func_86803ED8(void) {
             func_86803EA4();
         }
         if (D_8682F2B8 == 0) {
-            func_86806CD8();
+            Fragment56_UpdateModelAnimations();
         }
         break;
     case 0:
@@ -622,7 +622,66 @@ void Fragment56_UpdateModelGridTransforms(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680686C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86806CD8.s")
+extern u8 D_8681EBF8[];
+extern s32 D_8680806C;
+typedef struct { u8 pad[0x44]; u8 *value44; s32 value48; } Func3EC34;
+extern s32 ModelAnim_IsFinished(Func3EC34 *);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern s32 ModelAnim_SetEventTrack(void *, s32);
+extern void func_80027A28(u16, u8);
+extern void func_8680422C(s32);
+extern void func_86801160(s32);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_8003F1DC(void *);
+extern void func_8003F210(void *, s32);
+extern u8 D_868086C8[];
+extern u8 D_8682EE18[];
+void Fragment56_UpdateModelAnimations(void) {
+    struct AnimState {
+        u8 before_state[0x10];
+        s32 state;
+        u8 before_ticks[0x34];
+        s32 ticks;
+        u8 tail[0xD8];
+    };
+    struct AnimState *state;
+    u8 *node;
+    s32 model_index;
+    s32 effect_index;
+    for (state = (struct AnimState *)D_8682EE18, node = D_868086C8, model_index = 0; model_index < 4; model_index++, state++, node += 0x168) {
+        state->ticks++;
+        if (ModelAnim_IsFinished((Func3EC34 *)node)) {
+            if (state->state == 15) {
+                state->ticks = 49;
+                ModelAnim_SetEventFrame(node, 49);
+                ModelAnim_SetFrame(node, 49);
+                ModelAnim_SetEventTrack(node, 1);
+            }
+            if (state->state == 14) {
+                func_8003F210(node, 14);
+                ModelAnim_SetFrame(node, 14);
+                state->ticks = 14;
+                node[0x1D] = 255;
+            }
+        }
+        if (state->state == 14) {
+            if (D_8680806C == (*(s32 *)(node + 0x48) >> 16)) {
+                func_80027A28(0x7F00, (u8)model_index);
+                for (effect_index = 0; effect_index < 40; effect_index++) {
+                    func_8003F1DC(D_8681EBF8 + model_index * 0x3840 + effect_index * 0x168);
+                }
+                func_8680422C(model_index);
+            }
+            func_86801160(model_index);
+            if (state->ticks >= 70) {
+                func_8003F210(node, 14);
+                ModelAnim_SetFrame(node, 14);
+                node[0x1D] = 255;
+                state->ticks = 14;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86806E94.s")
 

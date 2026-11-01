@@ -1500,3 +1500,5 @@ func_86807120 = Fragment56_RunSceneLoop;
 func_8680671C = Fragment56_UpdateModelGridTransforms;
 
 func_868000AC = Fragment56_TextureFadeCallback;
+
+func_86806CD8 = Fragment56_UpdateModelAnimations;
