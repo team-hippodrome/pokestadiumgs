@@ -706,7 +706,122 @@ void func_868066B8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86806CD8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86806E94.s")
+/* mkdraft:func_86806E94 begin */
+extern void *D_86808590;
+extern u8 D_868084F0[];
+extern u8 D_86808630[];
+extern s32 D_8682F2A8;
+extern s32 D_8682F2B0;
+extern s32 D_8682F2B4;
+extern s32 D_8682F2B8;
+extern s32 D_86808070;
+extern s32 D_8680806C;
+extern s32 D_86808060;
+extern s32 D_86808064;
+extern s32 D_8682F308;
+extern u8 D_86808598[];
+
+
+
+s32 func_86806E94(u8 arg0) {
+    if (((u8 *)D_86808590)[0x2180] == 4 && func_87F0C6F4(D_86808630) != 0) {
+        D_8682F2A8 = 13;
+        D_8682F2B0 = 3;
+    }
+    if (func_87F00930() == 0 && D_8682F2A8 != 8) {
+        func_87F006BC();
+    }
+    // IDO 7.1 emits switch bodies in source order, so the cases are written in
+    // the order retail's .text lays them out (0, 3, 4, 5, 7, 2, 1, 6, 12, 11,
+    // 8, 9), not numerically; numeric order diff score 7530.
+    switch (D_8682F2A8) {
+    case 0:
+        func_86805D50();
+        break;
+    case 3:
+        func_868063CC();
+        break;
+    case 4:
+        func_8680649C();
+        break;
+    case 5:
+        func_8680660C();
+        func_868066B8();
+        break;
+    case 7:
+        func_81900214(D_8682F308);
+        func_86806CD8();
+        if (Fragment64_UpdateBounceAndConfirm(D_868084F0) != 0) {
+            if (((u8 *)D_86808590)[0x2180] == 1) {
+                D_8682F2B0 = 2;
+                D_8682F2A8 = 9;
+                D_8682F2B8 = 0;
+                StageContext_SetClearColor(0xFFFF);
+                StageFade_StartFromTransparent(10);
+            } else {
+                func_87F02328();
+                D_8682F2A8 = 6;
+            }
+        }
+        break;
+    case 2:
+        func_8680660C();
+        // FAKE: all four accesses below are the s32 at 0x86808070, reached
+        // through different symbols: D_86808070 itself, D_8680806C + 4,
+        // D_86808060 + 16 and D_86808064 + 12 all name it in the 0x2B95A0
+        // ..0x2B95B0 data run.
+        //@{asm/us/data/fragments/56/fragment56_data.data.s}
+        // Retail reloads %hi for each access; IDO 7.1 -O2 instead computes one
+        // extern's address once and reuses it for every access, and distinct
+        // symbol/addend pairs escape that CSE while assembling to the same
+        // address. Diff score 860 with all four spelled as D_86808070.
+        if (D_8682F2B4 == 0) {
+            *(s32 *)((u8 *)&D_8680806C + 4) = D_86808070 + 1;
+        }
+        if (*(s32 *)((u8 *)&D_86808060 + 16) >= 31) {
+            func_80021ED8(45);
+            D_8682F2A8 = 1;
+            *(s32 *)((u8 *)&D_86808064 + 12) = 0;
+        }
+        break;
+    case 1:
+        func_8680660C();
+        func_868058C0();
+        break;
+    case 6:
+        func_86806CD8();
+        func_86805C88();
+        break;
+    case 12:
+        if (StageContext_GetFadeMode() == 1) {
+            func_86805AA4();
+            D_8682F2A8 = 11;
+            StageFade_StartFromOpaque(10);
+        }
+        break;
+    case 11:
+        D_8682F2A8 = 0;
+        break;
+    case 8:
+        func_8680686C();
+        break;
+    case 9:
+        if (StageContext_GetFadeMode() == 1) {
+            D_8682F2A8 = 13;
+        }
+        break;
+    }
+    func_87F0D5B8(D_86808598);
+    // FAKE: the copy leaves D_8682F2A8's address in $v1 (value to $v0);
+    // `return D_8682F2A8;` puts the address in $v0 and diff scores 40. Both
+    // forms return the same value.
+    {
+        s32 r;
+        r = D_8682F2A8;
+        return r;
+    }
+}
+/* mkdraft:func_86806E94 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86807120.s")
 
