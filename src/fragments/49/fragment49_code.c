@@ -1483,7 +1483,98 @@ void func_86105C30(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86105CD8.s")
+/* mkdraft:func_86105CD8 begin */
+extern u8 D_8610A10C;
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern s32 func_80001FF0(void);
+extern void func_800279C4(s32);
+extern void func_861072AC(f32);
+
+
+void func_86105CD8(void) {
+    struct StageContext {
+        u8 pad0[0x708];
+        s32 flag708;
+        u8 gap708[0x188];
+        s32 flag894;
+        u8 gap894[0x188];
+        s32 flagA20;
+        u8 gapA20[0x188];
+        s32 flagBAC;
+        u8 gapBAC[0x8368];
+        s32 unk8F18;
+        u8 gap8F18[0x858];
+        f32 unk9774;
+        u8 gap9774[0x3C];
+        s32 unk97B4;
+        u8 gap97B4[0x21];
+        u8 unk97D9;
+    };
+    // One of four 0x18C-byte entries starting at D_8610AD20 + 0x6FC; the field at +0xC
+    // is the flag word cleared below.
+    struct Rec {
+        u8 pad[0xC];
+        s32 flag;
+        u8 rest[0x17C];
+    };
+    s32 *state;
+    f32 limit;
+    f32 pos;
+    // FAKE: unused word keeps the five-slot frame (0x30) and period at 0x1C.
+    s32 unused0;
+    s32 period;
+    s32 i;
+    struct Rec *rec;
+    limit = 864.0f;
+    state = *(s32 **)((u8 *)D_87F119DC + 0x20);
+    if (*state == *(u8 *)((u8 *)&D_8610A10C + 2)) {
+        pos = *(f32 *)((u8 *)D_87F119DC + 0x48);
+        if (pos < limit * 0.95f) {
+            *(u8 *)((u8 *)(u32)D_8610AD20 + 0x97D9) &= 0xFF7F;
+            pos = *(f32 *)((u8 *)D_87F119DC + 0x48);
+        }
+        if (pos < 10.0f) {
+            ((struct StageContext *)(u32)D_8610AD20)->unk9774 = 0.0f;
+        }
+        if (*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774) != 0.0f) {
+            period = (s32)((10.0f - *(f32 *)((u8 *)D_87F119DC + 0x48)) /
+                           (*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774) * 0.5f)) * 2;
+            if (func_80001FF0() == period || period == func_80001FF0() * 2 ||
+                period == func_80001FF0() * 3) {
+                func_800279C4(0xCF00);
+            }
+            // FAKE: the dead D_8610AD20 * 0 operand steers IDO's colouring of the
+            // address web; `period == 0` scores 135 instead of 0.
+            if (period == (u32)D_8610AD20 * 0) {
+                func_800279C4(0xCF06);
+            }
+        }
+    }
+    *(f32 *)((u8 *)D_87F119DC + 0x48) +=
+        *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774) * 0.5f;
+    pos = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    if (pos < -limit) {
+        // FAKE: the leading (0, pos) comma expression steers IDO's temp colouring;
+        // plain `pos + (limit + limit)` scores 10 instead of 0.
+        *(f32 *)((u8 *)D_87F119DC + 0x48) = (0, pos) + (limit + limit);
+        if (*(s32 *)((u8 *)(u32)D_8610AD20 + 0x97B4) < 0) {
+            if (*(s32 *)((u8 *)(u32)D_8610AD20 + 0x8F18) == 0) {
+                *state = *(u8 *)((u8 *)&D_8610A10C + 1);
+                ((struct StageContext *)(u32)D_8610AD20)->unk8F18 = 1;
+            } else {
+                *state = *(u8 *)((u8 *)&D_8610A10C + 2);
+                func_861072AC(limit * 1.35f);
+                rec = (struct Rec *)((u8 *)(u32)D_8610AD20 + 0x6FC);
+                for (i = 0; i < 4; i++) {
+                    rec->flag &= 0xFFFEFFFF;
+                    rec++;
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_86105CD8 end */
 
 extern Gfx *D_800D0510;
 extern void *D_8009491C;
