@@ -942,7 +942,37 @@ void func_841410A0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414111C.s")
+/* mkdraft:func_8414111C begin */
+extern u8 D_84186F70[];
+extern s16 D_84186CF4;
+extern s16 D_84186D00;
+
+// Sets the shared primary color, then draws the layers at
+// (arg0[0x12] + D_84186D00, arg0[0x14] + D_84186CF4). The first coordinate is
+// stepped by 0x43 for each further layer that func_8413FD04 reports present.
+
+
+void func_8414111C(u8 *arg0) {
+    u8 index;
+    u16 offset = 0;
+
+    index = arg0[1];
+    if (!(arg0[8] & 2)) {
+        if (func_8413FD04(index, arg0[2], 0) != 0xFF) {
+            ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+            func_8413F6C0((s16)(*(s16 *)(arg0 + 0x12) + D_84186D00), (s16)(*(s16 *)(arg0 + 0x14) + D_84186CF4), 3);
+            if (func_8413FD04(index, arg0[2], 1) != 0xFF) {
+                offset += 0x43;
+                func_8413F6C0((s16)(*(s16 *)(arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)(arg0 + 0x14) + D_84186CF4), 5);
+                if (func_8413FD04(index, arg0[2], 2) != 0xFF) {
+                    offset += 0x43;
+                    func_8413F6C0((s16)(*(s16 *)(arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)(arg0 + 0x14) + D_84186CF4), 4);
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_8414111C end */
 #endif
 
 #ifdef VERSION_US
