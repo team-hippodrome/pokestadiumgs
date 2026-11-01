@@ -843,7 +843,34 @@ void func_8410E878(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410E8E4.s")
+/* mkdraft:func_8410E8E4 begin */
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_84120BB4(u8 *, s32);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+
+
+void func_8410E8E4(u8 *arg0, u8 *arg1) {
+    f32 sp44;
+    f32 sp40;
+    f32 zf; // FAKE: 4th Vec3f argument kept in a named local; diff score 20 when inlined into the call
+    f32 sp38;
+    s16 sp36;
+    s16 sp34; // FAKE: the s16 assignment truncates func_8411E1D4's product in place; diff score 368 with an s32 local
+
+    func_84120BB4(arg0, arg1);
+    *(f32 *)(arg0 + 0x2C) = 80.0f;
+    sp44 = *(f32 *)(*(u8 **)(arg1 + 0x678) + 4) + *(f32 *)(arg1 + 0x28);
+    sp40 = (*(f32 *)(arg1 + 0x24) + (*(f32 *)(*(u8 **)(arg1 + 0x678)) * (f32)func_8411E1D4((s32)arg1) * D_80088E50[*(u16 *)(arg1 + 0x20) >> 4])) - (*(f32 *)(*(u8 **)(arg1 + 0x678) + 8) * D_80087E50[*(u16 *)(arg1 + 0x20) >> 4]);
+    zf = (*(f32 *)(arg1 + 0x2C) + (*(f32 *)(*(u8 **)(arg1 + 0x678)) * (f32)func_8411E1D4((s32)arg1) * D_80087E50[*(u16 *)(arg1 + 0x20) >> 4])) + (*(f32 *)(*(u8 **)(arg1 + 0x678) + 8) * D_80088E50[*(u16 *)(arg1 + 0x20) >> 4]);
+    Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), sp40, sp44, zf);
+    sp38 = *(f32 *)(*(u8 **)(arg1 + 0x678) + 0xC);
+    sp36 = *(s16 *)(*(u8 **)(arg1 + 0x678) + 0x10);
+    sp34 = *(s16 *)(*(u8 **)(arg1 + 0x678) + 0x12) * func_8411E1D4((s32)arg1);
+    func_800371B4((u8 *)(arg0 + 0xB4), arg0 + 0xA8, sp38, sp36, sp34);
+}
+/* mkdraft:func_8410E8E4 end */
 #endif
 
 #ifdef VERSION_US
