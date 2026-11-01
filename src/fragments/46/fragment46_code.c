@@ -1040,7 +1040,55 @@ block_9:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE026C8.s")
+/* mkdraft:func_8AE026C8 begin */
+extern void func_800504BC(s16 *);
+extern short D_8AE0991C;
+extern short D_8AE09924;
+extern short D_8AE0992C;
+extern short D_8AE09934;
+extern s16 D_8AE09B38;
+
+
+
+s32 func_8AE026C8(s32 arg0, void *arg1) {
+    short *p = &D_8AE0991C;
+    short *q = &D_8AE0992C;
+    short t0;
+    short t1v;
+    short va;
+    func_800504BC(&D_8AE09B38);
+    switch (arg0) {
+    case 0:
+        t0 = *(s16 *)((u8 *)arg1 + 8);
+        t1v = *(s16 *)((u8 *)arg1 + 0xA);
+        D_8AE09934 = t1v;
+        *p = t0;
+        va = t0 - 0x32;
+        t0 = *(s16 *)((u8 *)arg1 + 8); // FAKE: dead reload of arg1+8; diff score 95 without it.
+        D_8AE09924 = t1v;
+        if (va) {} // FAKE: empty use of va keeps uopt from folding the subtraction into *q; diff score 145 without it.
+        *q = va;
+        break;
+    case 1:
+        va = *q;
+        if (va < *p) {
+            if (1) { // FAKE: the block keeps case-0 t1v/t0 in v1/v0; diff score 145 without it.
+                va += 8;
+            }
+        }
+        if (*p < va) {
+            va = *p;
+        }
+        *(u8 *)((u8 *)arg1 + 0x28) = 1;
+        *(s32 *)((u8 *)arg1 + 0x2C) = 0xC8C8FFFF;
+        *q = va;
+        break;
+    }
+    va = D_8AE0992C;
+    *(s16 *)((u8 *)arg1 + 8) = va;
+    return 0;
+}
+/* mkdraft:func_8AE026C8 end */
 #endif
 
 #ifdef VERSION_US
