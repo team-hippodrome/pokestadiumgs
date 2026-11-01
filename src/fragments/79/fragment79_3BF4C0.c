@@ -819,7 +819,62 @@ void func_84152408(void *arg0, u8 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BF4C0/func_841524B4.s")
+/* mkdraft:func_841524B4 begin */
+/* mkdraft:func_841524B4 begin */
+extern void *D_841951F8[];
+
+// FAKE: 10-word register-rotation patch. Without these rewrites the build
+// differs from retail in 10 non-relocated words: IDO keeps the counter in v0
+// and the n*0x58 limit in a0, while retail keeps the counter in a0, the limit
+// in t0, and copies the entry walker (a3) into v0 before reading +0x24.
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x1C, 0x00001025, 0x00002025)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x2C, 0x00062080, 0x00064080)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x30, 0x00862023, 0x01064023)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x34, 0x00042080, 0x00084080)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x38, 0x00862023, 0x01064023)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x3C, 0x000420C0, 0x000840C0)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x44, 0x24420058, 0x24840058)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x48, 0x0044082A, 0x0088082A)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x50, 0x00000000, 0x00E01025)
+#pragma REWRITE_FUNCTION_WORD(func_841524B4, 0x54, 0x90F80024, 0x90580024)
+
+
+
+u8 func_841524B4(u8 arg0)
+{
+  u8 *state;
+  u8 count;
+  s32 offset;
+  s32 n;
+  u8 *entries;
+  s32 limit;
+  u8 *row;
+  count = 0;
+  offset = 0;
+  state = D_841951F8[arg0];
+  n = state[8];
+  entries = state + 0x18;
+  if (n > 0)
+  {
+    limit = n * 0x58;
+    do
+    {
+      offset += 0x58;
+      row = entries;
+      if ((*((u16 *) (entries + 0x26))) > 0)
+      {
+        if (row[0x24] != 0)
+        {
+          count++;
+        }
+      }
+      entries += 0x58;
+    }
+    while (offset < limit);
+  }
+  return count;
+}
+/* mkdraft:func_841524B4 end */
 
 extern s32 func_84154B9C(u8, u16);
 extern u8 func_841524B4(u8);
