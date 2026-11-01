@@ -497,5 +497,96 @@ void func_834034CC(void) {
     } while (temp_v0 != var_s1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83403560.s")
+/* mkdraft:func_83403560 begin */
+u8 *Asset_LoadToSegment(s32, u8 *, u8 *, s32); /* extern */
+void Gfx_FreeDisplayListBuffers(void);          /* extern */
+void Gfx_InitDisplayListBuffers(s32, s32);      /* extern */
+s32 func_80001FF0(void);                        /* extern */
+s32 func_800082E0(s32, s32, s32, s32, s32, s32); /* extern */
+void func_80008514(s32);                        /* extern */
+void func_80008574(void);                       /* extern */
+s32 func_80047588(s32, s32);                    /* extern */
+s32 func_80047610(void);                        /* extern */
+s32 func_8004C09C(s32);                         /* extern */
+s32 func_8004C398(void);                        /* extern */
+s32 func_8004C4B0(s32);                         /* extern */
+s32 func_8004C8C0(s32);                         /* extern */
+s32 func_8004D690(s32);                         /* extern */
+void func_80051D64(s32, s32);                   /* extern */
+void func_8005487C(void *);                     /* extern */
+void func_800548C4(void *);                     /* extern */
+s32 func_80055028(void);                        /* extern */
+void func_80055EF0(void *, s32);                /* extern */
+void func_80055F6C(void *, s32);                /* extern */
+s32 func_83400B98(void);                        /* extern */
+s32 func_87F0DBE0(u8 *, s32);                   /* extern */
+s32 main_pool_pop_state(s32);                   /* extern */
+s32 main_pool_push_state(s32);                  /* extern */
+extern s32 D_1000000;
+extern u8 D_446E30;
+extern u8 D_447D00;
+extern f32 D_83403C78;
+extern s32 D_83403C7C;
+extern s16 *D_8340416C;
+extern u8 D_83404170;
+extern s32 D_83404244;
+
+
+
+s32 func_83403560(s32 arg0, s16 *arg1) {
+    s32 sp4C;
+    s32 sp48;
+    u8 sp30[0x18];  /* 0x18-byte per-player record copied from func_80051138(0) + mode*0x18 + 0x1C by
+                       func_80055EF0 and written back by func_80055F6C. */
+    u8 sp20[0x10];  /* 0x10-byte quad copied from func_80051138(0) + 4 by func_8005487C and written
+                       back by func_800548C4. */
+
+    if (func_80001FF0() == 0x3C) {
+        D_83403C7C = 0x1E;
+        D_83403C78 = 1.0f;
+    } else {
+        D_83403C7C = 0x19;
+        D_83403C78 = 1.2f;  /* Value of the D_83404120 literal pool entry (late_rodata, 1.2). */
+    }
+    D_8340416C = arg1;
+    main_pool_push_state(0x504D5052);
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    sp4C = func_800082E0(0, 1, 2, 1, 2, 1);
+    func_8004C09C(0x127);
+    D_83404244 = func_8004D690(0x18);
+    func_8004C4B0(0);
+    func_8004C4B0(0x14);
+    func_8004C8C0(0x164);
+    func_8004C8C0(0x102);
+    func_8004C8C0(0x101);
+    func_8004C8C0(0x4E);
+    func_8004C8C0(0xF9);
+    func_8004C8C0(0xF8);
+    func_80047588(0x13, 0);
+    Asset_LoadToSegment((u32) ((s32) &D_1000000 & 0x0F000000) >> 0x18, &D_446E30, &D_447D00, 0);
+    func_83400B98();
+    func_80008514(sp4C);
+    func_87F0DBE0(&D_83404170, sp4C);
+    func_834034CC();
+    func_80008574();
+    /* *D_8340416C selects the record set: func_80055EF0/func_80055F6C accept 0 or 1 and index
+       func_80051138(0) + mode*0x18. */
+    sp48 = (*D_8340416C != 0) ? 1 : 0;
+    func_80055EF0(sp30, sp48);
+    sp30[0xD] = 1;
+    func_80055F6C(sp30, sp48);
+    if (*D_8340416C == 0) {
+        func_8005487C(sp20);
+        *(u16 *)(sp20 + 2) |= 1;
+        func_800548C4(sp20);
+    }
+    func_80051D64(0x14, 0);
+    func_80055028();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x504D5052);
+    return 0;
+}
+/* mkdraft:func_83403560 end */
 #endif
