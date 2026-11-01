@@ -272,7 +272,81 @@ done:
 }
 /* mkdraft:func_882152F4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88215420.s")
+/* mkdraft:func_88215420 begin */
+extern u8 D_88234630[];
+extern Gfx *D_800D0510;
+
+// Storage list header; same layout as StorageList186690, which is declared
+// further down this file, after this function.
+typedef struct {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} ListHeader186690;
+
+// Emits the display-list packets for one storage list column: for each row, a
+// pipe sync, a fill color, and a fill rectangle covering x..x+222 and
+// top..bottom, followed by a one-pixel separator line while the list is on
+// screen. Rows are 25 pixels tall with 27-pixel spacing; the visible part of
+// the list spans y = 125..285.
+
+
+void func_88215420(u8 column, u8 count) {
+    u32 row;
+    s16 x;
+    s16 y;
+    s16 top;
+    s16 bottom;
+
+    x = column == 0 ? 52 : 363;
+    y = 125 - ((StorageListScrollRecord *)(D_88234730 + 12))[column].residual;
+    for (row = 0; row != count; row++, y += 27) {
+        top = y;
+        bottom = y + 25;
+        // Clip the first and last row to the edges of the list viewport.
+        if (row == 0) {
+            if (top < 125) {
+                top = 125;
+            }
+        } else if (row == 6) {
+            if (bottom >= 286) {
+                bottom = 285;
+            }
+        }
+        gDPPipeSync(D_800D0510++);
+        // Empty columns and rows past the stored record count use 0x39CF39CF;
+        // the row at the column's scroll cursor (func_882152F4) uses 0x2AFF2AFF
+        // in the active column and 0x39D739D7 otherwise.
+        if (((ListHeader186690 *)D_88234630)[column * 2 + 1].count == 0 ||
+            row >= ((StorageListScrollRecord *)(D_88234730 + 12))[column].count) {
+            gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+        } else if (func_882152F4(column, row) != 0) {
+            if (D_882346F0 == 1 || D_882346F0 == 3 || column == *D_88234730) {
+                gDPSetFillColor(D_800D0510++, 0x2AFF2AFF);
+            } else {
+                gDPSetFillColor(D_800D0510++, 0x39D739D7);
+            }
+        } else if (D_882346F0 == 1 || D_882346F0 == 3 || column == *D_88234730) {
+            gDPSetFillColor(D_800D0510++, 0x09A909A9);
+        } else {
+            gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+        }
+        gDPFillRectangle(D_800D0510++, x, top, x + 222, bottom);
+        // Separator: both y coordinates are the row's lower edge plus one.
+        bottom++;
+        if (bottom < 286) {
+            gDPPipeSync(D_800D0510++);
+            if (D_882346F0 == 1 || D_882346F0 == 3 || column == *D_88234730) {
+                gDPSetFillColor(D_800D0510++, 0x7D3F7D3F);
+            } else {
+                gDPSetFillColor(D_800D0510++, 0x63196319);
+            }
+            gDPFillRectangle(D_800D0510++, x, bottom, x + 222, bottom);
+        }
+    }
+}
+/* mkdraft:func_88215420 end */
 
 extern s32 func_8003514C(void);
 // Copy at most limit characters, treating high bytes as two-byte characters in mode zero.

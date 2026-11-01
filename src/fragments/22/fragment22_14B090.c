@@ -209,7 +209,38 @@ void func_827010F0(void* arg0) {
 
 s32 D_827032B8 = 8;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82701188.s")
+/* mkdraft:func_82701188 begin */
+extern s32 D_827032B8;
+
+
+
+void func_82701188(void* arg0) {
+    Fragment22RowEntry* entry;
+    s32 total;
+    s32 elapsed;
+
+    entry = arg0;
+    // FAKE: dead store; seeds v0 as elapsed's home so the total load takes v1.
+    // Without it (with the block below kept) the diff scores 70 on v0/v1 swaps only.
+    elapsed = 0;
+    // FAKE: empty-weight block; together with the dead store above it fixes the
+    // schedule (lui/lw of D_827032B8 ahead of the counter reload and li t8,2).
+    // Without it (with the dead store kept) the diff also scores 70 on v0/v1 swaps.
+    if (1) {
+        total = D_827032B8;
+        entry->counter++;
+    }
+    elapsed = entry->counter;
+    if (elapsed < total) {
+        entry->position.x = ((entry->animation_target.x - entry->animation_start.x) * elapsed) / total + entry->animation_start.x;
+        entry->position.y = ((entry->animation_target.y - entry->animation_start.y) * elapsed) / total + entry->animation_start.y;
+    } else {
+        entry->state = 2;
+        entry->counter = 0;
+        entry->position = entry->animation_target;
+    }
+}
+/* mkdraft:func_82701188 end */
 
 void func_82701278(void* arg0) {
     static s32 D_827032BC = 5;

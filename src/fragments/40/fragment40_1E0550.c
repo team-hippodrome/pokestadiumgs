@@ -227,7 +227,113 @@ u32 func_88B04BB4(void) {
     return count;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04C38.s")
+/* mkdraft:func_88B04C38 begin */
+extern s32 HAL_Strcmp(s8 *, s8 *);
+extern s8 D_8800686D[];
+extern u8 D_88006868[];
+extern u8 D_88B05F80[];
+
+
+
+s32 func_88B04C38(u16 arg0) {
+    u8 *ptr;
+    u32 i;
+    u8 state;
+    u16 first_id;
+    u32 old;
+
+    ptr = &D_88B05F80[D_88B05F80[0x3EA] * 16] + 0x3DC;
+    state = 0;
+    i = 0;
+    while (i < D_88B05F80[0x3EA]) {
+        if ((*(u16 *)(D_88006868 + 2) == *(u16 *)(ptr + 2)) &&
+            (HAL_Strcmp((s8 *)(ptr + 4), D_8800686D) == 0)) {
+            switch (state) {
+            case 0:
+                if (arg0 == *(u16 *)ptr + 7) {
+                    state++;
+                } else {
+                    i = D_88B05F80[0x3EA];
+                }
+                break;
+            case 1:
+                if (arg0 == *(u16 *)ptr + 0xE) {
+                    return 0;
+                }
+                return 1;
+            }
+        }
+        i++;
+        ptr -= 16;
+    }
+
+    ptr = &D_88B05F80[D_88B05F80[0x3EA] * 16] + 0x3DC;
+    state = 0;
+    i = 0;
+    while (i < D_88B05F80[0x3EA]) {
+        if ((*(u16 *)(D_88006868 + 2) == *(u16 *)(ptr + 2)) &&
+            (HAL_Strcmp((s8 *)(ptr + 4), D_8800686D) == 0)) {
+            if (state == 0) {
+                state++;
+                if (*(u16 *)ptr < arg0 - 1) {
+                    first_id = *(u16 *)ptr;
+                } else {
+                    break;
+                }
+            } else {
+                old = state++;
+                if (first_id - old == *(u16 *)ptr) {
+                    if (state >= 5) {
+                        return 2;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+        i++;
+        ptr -= 16;
+    }
+
+    ptr = &D_88B05F80[D_88B05F80[0x3EA] * 16] + 0x3DC;
+    i = 0;
+    while (i < D_88B05F80[0x3EA]) {
+        if ((*(u16 *)(D_88006868 + 2) == *(u16 *)(ptr + 2)) &&
+            (HAL_Strcmp((s8 *)(ptr + 4), D_8800686D) == 0)) {
+            if (arg0 - 3 >= *(u16 *)ptr) {
+                return 3;
+            }
+            break;
+        }
+        i++;
+        ptr -= 16;
+    }
+
+    ptr = &D_88B05F80[D_88B05F80[0x3EA] * 16] + 0x3DC;
+    i = 0;
+    state = 0;
+    while (i < D_88B05F80[0x3EA]) {
+        if ((*(u16 *)(D_88006868 + 2) == *(u16 *)(ptr + 2)) &&
+            (HAL_Strcmp((s8 *)(ptr + 4), D_8800686D) == 0)) {
+            if (arg0 - state == *(u16 *)ptr + 1) {
+                state++;
+                if (state >= 2) {
+                    return 4;
+                }
+            } else {
+                break;
+            }
+        }
+        i++;
+        ptr -= 16;
+    }
+
+    if (state == 1) {
+        return 5;
+    }
+    return 6;
+}
+/* mkdraft:func_88B04C38 end */
 
 extern s8 *HAL_Strcpy(s8 *, s8 *);
 extern u16 D_8800686A;

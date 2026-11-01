@@ -107,6 +107,54 @@ class ObjectTest(unittest.TestCase):
                     object_path.read_bytes(), "func_a", 0, 0xAAAAAAAA, 0xBBBBBBBB
                 )
 
+    def test_swap_moves_a_word_attached_relocation(self):
+        import shutil
+        import subprocess
+        import tempfile
+
+        if shutil.which("mips-linux-gnu-as") is None:
+            self.skipTest("mips-linux-gnu-as is unavailable")
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "fixture.s"
+            object_path = Path(directory) / "fixture.o"
+            source.write_text(
+                ".text\n.globl func_a\nfunc_a:\n"
+                "lui $at, %hi(D_x)\n"
+                "sw $t0, %lo(D_x)($at)\n"
+                "addiu $sp, $sp, 0x18\n"
+                ".size func_a, .-func_a\n"
+                ".data\n.globl D_x\nD_x: .word 0\n"
+            )
+            subprocess.run(
+                ["mips-linux-gnu-as", "-mips2", "-o", str(object_path), str(source)],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            original = object_path.read_bytes()
+            import elf32
+
+            before = elf32.parse(original)
+            symbol = next(s for s in before.symbols() if s.name == "func_a")
+            words = struct.unpack(
+                ">3I",
+                before.section(".text").data[symbol.value : symbol.value + symbol.size],
+            )
+            patched, count = schedule_patch.swap_function_words_in_object(
+                original, "func_a", 4, words[1], words[2]
+            )
+            self.assertEqual(count, 1)
+            after = elf32.parse(patched)
+            patched_words = struct.unpack(
+                ">3I",
+                after.section(".text").data[symbol.value : symbol.value + symbol.size],
+            )
+            self.assertEqual(patched_words, (words[0], words[2], words[1]))
+            self.assertEqual(
+                [(r.offset, r.type) for r in after.relocations(".rel.text")],
+                [(0, 5), (8, 6)],
+            )
+
     def test_rewrite_function_hex_realigns_trailing_padding(self):
         import shutil
         import subprocess

@@ -152,7 +152,58 @@ typedef struct Fragment80MatchupTeam {
     u8 unk228[0x2B8];
 } Fragment80MatchupTeam;
 typedef char Fragment80MatchupTeamSize[sizeof(Fragment80MatchupTeam)==0x4E0 ? 1 : -1];
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/80/fragment80_41AC50/func_8420199C.s")
+/* mkdraft:func_8420199C begin */
+extern F80BattleParameters D_84203A40;
+extern void func_842016BC(u8, unk_func_842016BC *);
+extern void func_8420168C(void *);
+extern s32 MoveEffect_UsesDamageSimulation_fragment80(u8);
+extern s32 func_800643CC(s32, s32, s32);
+
+// Returns the highest simulated damage among the attacker's usable moves.
+// D_84203A40.flags bit 0x8000 selects the branch: set scans the four party
+// move slots at arg0[2..5]; clear scans move ids 252 down to 1. The shared
+// Fragment80DamageContext carries the 20-byte unk_func_842016BC result plus the
+// parameters/attacker/defender pointers that func_842016BC and func_8420168C
+// expect.
+
+
+u16 func_8420199C(u8 *arg0, u8 *arg1) {
+    s32 i;
+    u16 best = 0;
+    Fragment80DamageContext context;
+    context.parameters = (F80BattleParameters *)&D_84203A40;
+    context.attacker = arg0;
+    context.defender = arg1;
+    if (D_84203A40.flags & 0x8000) {
+        for (i = 0; i < 4; i++) {
+            if (arg0[i + 2] == 0) {
+                break;
+            }
+            func_842016BC(arg0[i + 2], &context.move);
+            if (context.move.power != 0 &&
+                MoveEffect_UsesDamageSimulation_fragment80(context.move.effect)) {
+                func_8420168C(&context.move);
+                if (best < context.move.damage) {
+                    best = context.move.damage;
+                }
+            }
+        }
+    } else {
+        for (i = 252; i > 0; i--) {
+            func_842016BC((u8)i, &context.move);
+            if (context.move.power != 0 &&
+                MoveEffect_UsesDamageSimulation_fragment80(context.move.effect) &&
+                func_800643CC(arg0[0], (u8)i & 0xFF, context.move.level)) {
+                func_8420168C(&context.move);
+                if (best < context.move.damage) {
+                    best = context.move.damage;
+                }
+            }
+        }
+    }
+    return best;
+}
+/* mkdraft:func_8420199C end */
 
 s32 TeamMember_ComputeMatchupValue_fragment80(u8 arg0, u8 arg1, u8 arg2, u8 arg3) {
     u8 *attacker = (u8 *)&((Fragment80MatchupTeam *)D_84203B54)[arg0].members[arg2];

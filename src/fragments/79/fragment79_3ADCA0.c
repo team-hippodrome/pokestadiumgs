@@ -1100,7 +1100,89 @@ void func_84141BE0(u8 *arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141D1C.s")
+/* mkdraft:func_84141D1C begin */
+extern u8 *D_841951F8;
+extern u8 *D_84195208[];
+extern s16 D_84186D78[];
+extern s16 D_84186D7C;
+extern s16 D_84186D80;
+extern s16 D_84186D84;
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern void func_8413F640(s16, s16, s32);
+extern s32 func_80062D98(u8);
+
+// Layout of the BattlePanelParty/BattlePanelPokemon typedefs declared later in
+// this file for BattlePanel_DrawPartyLevelHpColumns; that block is not in scope
+// here.
+typedef struct {
+    u8 unk_00[2];
+    u8 moves[4];
+    u8 unk_06[2];
+    u32 experience;
+    u8 unk_0C[12];
+    u8 pps[4];
+    u8 unk_1C;
+    u8 level;
+    u8 unk_1E[8];
+    u16 hp;
+    u16 max_hp;
+    u8 unk_2A[46];
+} Candidate84141D1CPokemon;
+typedef struct {
+    u8 unk_00[8];
+    u8 count;
+    u8 unk_09;
+    u8 active_slot;
+    u8 unk_0B[13];
+    Candidate84141D1CPokemon mons[6];
+} Candidate84141D1CParty;
+
+
+
+void func_84141D1C(u8 *state)
+{
+    Candidate84141D1CPokemon *pokemon;
+    u8 move;
+    u8 type[2];
+    s32 i;
+    u16 row_offset;
+    u8 side;
+
+    row_offset = 0;
+    side = state[1];
+    pokemon = &((Candidate84141D1CParty *)((u8 **)&D_841951F8)[side])->mons[*(s32 *)(state + 4)];
+    if (*(s32 *)(state + 4) == ((Candidate84141D1CParty *)((u8 **)&D_841951F8)[side])->active_slot)
+    {
+        type[0] = D_84195208[side][1];
+        type[1] = D_84195208[side][2];
+    }
+    else
+    {
+        type[0] = func_8006397C(pokemon->unk_00[0]);
+        type[1] = func_800639C0(pokemon->unk_00[0]);
+    }
+    func_8413F640(*(s16 *)(state + 10) + D_84186D78[0], *(s16 *)(state + 12) + D_84186D7C, type[0]);
+    if (type[0] != type[1])
+    {
+        func_8413F640(*(s16 *)(state + 10) + D_84186D78[1], *(s16 *)(state + 12) + D_84186D7C, type[1]);
+    }
+    for (i = 0; i != 4; i++)
+    {
+        if (*(s32 *)(state + 4) == ((Candidate84141D1CParty *)((u8 **)&D_841951F8)[side])->active_slot)
+        {
+            move = D_84195208[side][i + 5];
+        }
+        else
+        {
+            move = pokemon->moves[i];
+        }
+        if (move == 0) break;
+        func_8413F640(*(s16 *)(state + 10) + D_84186D80, *(s16 *)(state + 12) + D_84186D84 + row_offset, func_80062D98(move));
+        row_offset = row_offset + 23;
+    }
+}
+/* mkdraft:func_84141D1C end */
 #endif
 
 #ifdef VERSION_US

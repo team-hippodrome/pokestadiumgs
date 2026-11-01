@@ -101,7 +101,42 @@ void func_88201608(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201628.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_8820172C.s")
+/* mkdraft:func_8820172C begin */
+extern s32 func_88204050(void);
+extern void func_88203BE4(void *, void *, s8);
+extern void *func_8820137C(void *arg0);
+extern u8 D_88234630[];
+extern void *D_88234664;
+
+
+
+void func_8820172C(u8 *arg0, u8 **arg1, s8 arg2) {
+    struct {
+        u8 unk_00[2]; // FAKE: unused stack slot; puts types at 0x1E/0x1F; diff score 12 without it.
+        u8 types[2];  // [0] destination list type from *arg1; [1] source list type from **(void ***)arg0
+    } ts;
+    u8 *entry;
+    s8 slot;
+
+    ts.types[1] = ((u8 *)*(void **)*(void **)arg0)[8];
+    ts.types[0] = ((u8 *)*arg1)[8];
+    entry = func_8820137C(arg0);
+    if (ts.types[0] == 2) {
+        if (ts.types[1] == 2) {
+            return;
+        }
+        slot = func_88204050();
+        arg0[39] = slot + 1;
+    } else {
+        slot = arg2;
+        arg0[39] = 0;
+    }
+    if (entry == D_88234664) {
+        entry[0x75] = arg0[9];
+    }
+    func_88203BE4(entry, (u8 *)D_88234630 + ts.types[0] * 12, slot);
+}
+/* mkdraft:func_8820172C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_882017F8.s")
 

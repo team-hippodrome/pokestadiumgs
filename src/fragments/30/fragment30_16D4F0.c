@@ -157,7 +157,66 @@ void func_8810106C(u8 *arg0, u8 *arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5, u8 
     func_80044270(arg2, arg3, *(s16 *)arg0, *(s16 *)(arg0 + 2), -16, -16, 1024, 1024, G_CYC_2CYCLE);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_16D4F0/func_88101184.s")
+/* mkdraft:func_88101184 begin */
+extern u8 *func_8004CA60(u8 *);
+extern void func_800459AC(u8 *, u8, u8, u16, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+// Same definition as include/229E0.h, which this translation unit does not include.
+//@{include/229E0.h}
+#ifndef ROUND_MAX
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+#endif
+
+// Eight-byte header of a texture returned by func_8004C990; same layout as
+// TextureRenderHeader in src/4CC20.c.
+//@src/4CC20.c
+typedef struct TextureRenderHeader {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u16 unk_06;
+} TextureRenderHeader;
+
+// Draws the texture in two half-height bands, centered on (center_x, center_y) and scaled
+// by scale. Each band is loaded by func_800459AC and covered by one textured rectangle of
+// the scaled width and half height; the rectangle's texture coordinates are 0..1024/scale
+// so the band is stretched across it, and y advances by the band height between bands.
+
+
+void func_88101184(s32 center_x, s32 center_y, s32 texture, f32 scale) {
+    // FAKE: second view of the same texture pointer. The extra pointer local makes the frame
+    // 0xB0 (with the half-height spill at 0x9C); a single view gives a 0xA8 frame with the spill
+    // at 0x98 and a diff of 18. Unused s32 locals and arrays do not change the frame.
+    u8 *texture_bytes = (u8 *)texture;
+    TextureRenderHeader *header = (TextureRenderHeader *)texture;
+    u8 *image;
+    f32 scaled_width;
+    f32 half_height;
+    f32 x;
+    f32 y;
+    f32 right;
+    f32 left;
+    s32 step;
+    s32 i;
+
+    image = func_8004CA60(texture_bytes);
+    scaled_width = (f32)(u32)header->width * scale;
+    half_height = (f32)(u32)header->height * scale / 2;
+    x = (f32)((header->width >> 1) + center_x) - scaled_width * 0.5f;
+    y = (f32)((header->height >> 1) + center_y) - half_height;
+    step = (s32)ROUND_MAX(1024.0f / scale);
+    right = (x + scaled_width) * 4.0f;
+    left = x * 4.0f;
+    for (i = 0; i < 2; i++) {
+        func_800459AC(image, header->format, header->size, header->width, header->height / 2, 1, 0, 2, 2, 0, 0, 0, 0);
+        gSPTextureRectangle(D_800D0510++, (s32)ROUND_MAX(left), (s32)ROUND_MAX(y * 4.0f), (s32)ROUND_MAX(right),
+                            (s32)ROUND_MAX((y + half_height) * 4.0f), G_TX_RENDERTILE, -16, -16, step, step);
+        y += half_height;
+        image += header->width * header->height / 2 * 2;
+    }
+}
+/* mkdraft:func_88101184 end */
 
 extern s32 D_880068B8;
 extern s32 func_8004C990(s32, s32);

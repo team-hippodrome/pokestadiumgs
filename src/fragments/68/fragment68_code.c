@@ -24,7 +24,57 @@ void func_8F000020(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/68/fragment68_code/func_8F000098.s")
+/* mkdraft:func_8F000098 begin */
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern void func_80049064(s32 arg0, s32 arg1, s32 arg2, const char *arg3);
+extern void func_800495F8(s32 arg0, s32 arg1, s32 arg2, const char *arg3, ...);
+extern void func_800496A4(s32 arg0, s32 arg1);
+extern void func_8004972C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_800497E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern s16 D_8F0008F0;
+extern s32 D_8F000914;
+
+// Per-frame draw of the 16-entry selection list. D_8F0008F0 supplies the string archive 0x42
+// entry id of each row; index / 10 selects the column (x = column * 320 + 160) and index % 10 the
+// row (y = row * 26 + 70). The row equal to D_8F000920, the index func_8F000524 moves with 0..15
+// wrap, is drawn yellow instead of white. C-up toggles D_8F000914.
+
+
+void func_8F000098(void) {
+    // FAKE: only this pointer local produces the target's `lui t9; lw t9; lui at; sw t0,lo(at)`
+    // address materialization; the direct `D_8F000914 ^= 1` writes `lui v0; addiu v0; lw; sw` and
+    // scores 225.
+    s32 *D_8F000914_ptr = &D_8F000914;
+    s16 *entry_id;
+    const char *text;
+    s32 index;
+
+    if (D_80087200->buttonsPressed & U_CBUTTONS) {
+        (*D_8F000914_ptr) ^= 1;
+    }
+    func_800498C4();
+    func_800496A4(16, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0, 0, 0xFF, 0xFF);
+    func_800495F8(320, 40, 1, func_8004C874(0x42, 0));
+    Font_DisableTwoCycleTexturing();
+    for (index = 0, entry_id = &D_8F0008F0; index != 16; index++, entry_id++) {
+        text = func_8004C874(0x42, *entry_id);
+        if (index == D_8F000920) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_80049064(((index / 10) * 320) + 160, ((index % 10) * 26) + 70, 1, text);
+    }
+    func_800499EC();
+}
+/* mkdraft:func_8F000098 end */
 
 extern Gfx* D_800D0510;
 extern u8 D_80094E38[];

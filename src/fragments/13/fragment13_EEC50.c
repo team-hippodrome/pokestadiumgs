@@ -1109,7 +1109,37 @@ void func_8240504C(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_824050A8.s")
+/* mkdraft:func_824050A8 begin */
+f32 func_82403F10(void);
+
+
+void func_824050A8(void *arg0, f32 arg1)
+{
+  u8 *clock = arg0;
+  int hours_carry;
+  s32 carry;
+  f32 seconds_accum;
+  s32 seconds_byte;
+  s32 hours_byte;
+  *((f32 *) clock) += func_82403F10() * arg1;
+  seconds_accum = *((f32 *) clock);
+  carry = ((s32) seconds_accum) / 60;
+  *((f32 *) clock) = seconds_accum - ((f32) (carry * 60));
+  clock[8] = clock[8] + carry;
+  seconds_byte = clock[8];
+  carry = seconds_byte / 60;
+  clock[8] = seconds_byte - carry * 60;
+  clock[7] = clock[7] + carry;
+  hours_carry = clock[7] / 60;
+  clock[7] -= hours_carry * 60;
+  clock[6] = clock[6] + hours_carry;
+  hours_byte = clock[6];
+  carry = hours_byte / 24;
+  clock[6] = hours_byte - carry * 24;
+  *((u16 *) (clock + 4)) += carry;
+  *((u16 *) (clock + 4)) %= 7;
+}
+/* mkdraft:func_824050A8 end */
 
 void Fragment13_LerpRgb(void *arg0, void *arg1, void *arg2, f32 arg3) {
     u8 *dst = arg0;
@@ -1385,7 +1415,143 @@ s32 Fragment13_StepVectorToward(struct Fragment13MotionVector *arg0, struct Frag
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82406060.s")
+/* mkdraft:func_82406060 begin */
+extern s32 func_82404AE8(void *);
+extern s32 func_82407170(void *);
+extern void func_82405F8C(void *, void *, f32);
+extern f32 func_82403F10(void);
+extern u8 D_800CE070[];
+extern f32 D_82408BB4;
+extern u8 D_800CE050[];
+
+// Per-frame mover for one fragment-13 record. The mode buttons at
+// D_800CE060+0xC re-target it (0x82404AE8 lookup, or a group selection through
+// 0x82407170); otherwise the analog stick drives the x/z velocity at
+// +0x1F8/+0x1FC, which is integrated, damped by 0.95 while +0x20C is set,
+// clamped, and used to step the motion vectors at +0x174 and +0x180
+// (0x82405F8C).
+//
+// D_800CE050, D_800CE060 and D_800CE070 are overlapping views of the same
+// controller block (D_800CE060 is ControllerState[4]; D_800CE060 =
+// D_800CE050 + 0x10, D_800CE070 = D_800CE050 + 0x20). Spelling one address
+// through different bases keeps uopt from merging the loads, and the linked
+// instruction bytes are the same for every spelling.
+
+
+void func_82406060(void *arg0) {
+    s32 result;
+    f32 time_scale;
+    f32 x_step;
+    f32 z_step;
+    struct Fragment13MotionVector position;
+    struct Fragment13MotionVector target_position;
+    struct Fragment13MotionVector target_velocity;
+    // FAKE: declared, never referenced. Retail reserves 0x3C bytes of locals,
+    // and without this word the 0x20 spill slot moves to 0x1C (score 28).
+    f32 pad_a;
+    // FAKE: one base register for the four button tests, as retail's repeated
+    // `lhu 6(v1)` does; testing D_800CE060+6 inline at each site scores 38.
+    u16 *btns;
+
+    result = 0;
+    x_step = 0.0f;
+    z_step = 0.0f;
+    btns = (u16 *)((u8 *)&D_800CE060 + 6);
+
+    // FAKE: the retail load names D_800CE060+0xC; the alias spelling below
+    // (same address as D_800CE050+0x1C) is what stops uopt from merging it
+    // with the D_800CE070+0xC load. One spelling everywhere scores 535.
+    if ((*(u16 *)((u8 *)&D_800CE060 + 0xC)) & 0x4000) {
+        // 0x82404AE8 loads the record through its argument (`move $a1,$a0;
+        // lw $t6,0x194($a1)`), so the pointer has to be passed.
+        result = func_82404AE8(arg0);
+        if (result != 0) {
+            *((s32 *)((u8 *)arg0 + 0x1E4)) = 3;
+        } else {
+            *((s32 *)((u8 *)arg0 + 0x1E4)) = 4;
+        }
+        func_800226C0(3);
+        result = 1;
+    } else if ((*(u16 *)((u8 *)&D_800CE050 + 0x1C)) & 0x8000) {
+        position = *((struct Fragment13MotionVector *)((u8 *)arg0 + 0x180));
+        result = func_82407170(&position);
+        *((s32 *)((u8 *)arg0 + 0x1E0)) = result;
+        *((s32 *)((u8 *)arg0 + 0x1DC)) = result;
+        *((s32 *)((u8 *)arg0 + 0x20C)) = 0;
+        *((s32 *)((u8 *)arg0 + 0x1E4)) = 1;
+        func_80006148(D_80087200);
+        func_800226C0(2);
+        result = 1;
+    }
+
+    if (result == 0) {
+        // FAKE: D_800CE070+8 and D_800CE050+0x2C (same block, 0x10 apart) are
+        // the analog X/Y inputs; the two bases keep the loads distinct.
+        x_step = *(f32 *)((u8 *)&D_800CE070 + 8) * 0.015625f;
+        z_step = 0.0f - (*(f32 *)((u8 *)&D_800CE050 + 0x2C) * 0.015625f);
+
+        if ((*btns) & 0x800) {
+            z_step = -1.0f;
+        }
+        if ((*btns) & 0x100) {
+            x_step = 1.0f;
+        }
+        if ((*btns) & 0x400) {
+            z_step = 1.0f;
+        }
+        if ((*btns) & 0x200) {
+            x_step = -1.0f;
+        }
+    }
+
+    if (x_step > 0.0f) {
+        time_scale = x_step;
+    } else {
+        time_scale = -x_step;
+    }
+    if (time_scale > 0.5f ||
+        (time_scale = (z_step > 0.0f ? z_step : -z_step), time_scale > 0.5f)) {
+        *((s32 *)((u8 *)arg0 + 0x20C)) = 0;
+    }
+
+    *((f32 *)((u8 *)arg0 + 0x1FC)) = z_step * func_82403F10() * D_82408BB4 + *((f32 *)((u8 *)arg0 + 0x1FC));
+    *((f32 *)((u8 *)arg0 + 0x1F8)) = x_step * func_82403F10() * D_82408BB4 + *((f32 *)((u8 *)arg0 + 0x1F8));
+
+    if (*((s32 *)((u8 *)arg0 + 0x20C)) != 0) {
+        // 0.95f is the value at 0x82409078 (asm .late_rodata 0x3F733333); the
+        // literal emits into this object's .rodata at the same offset.
+        z_step = 0.95f;
+        *((f32 *)((u8 *)arg0 + 0x1FC)) =
+            ((*((f32 *)((u8 *)arg0 + 0x1FC))) - D_82408BA8) * z_step + D_82408BA8;
+        *((f32 *)((u8 *)arg0 + 0x1F8)) =
+            *((f32 *)((u8 *)arg0 + 0x1F8)) * z_step;
+    }
+
+    if (*((f32 *)((u8 *)arg0 + 0x1FC)) < D_82408BAC) {
+        *((f32 *)((u8 *)arg0 + 0x1FC)) = D_82408BAC;
+    }
+    if (*((f32 *)((u8 *)arg0 + 0x1F8)) < D_82408BA4) {
+        *((f32 *)((u8 *)arg0 + 0x1F8)) = D_82408BA4;
+    }
+    if (*((f32 *)((u8 *)arg0 + 0x1FC)) > D_82408BA8) {
+        *((f32 *)((u8 *)arg0 + 0x1FC)) = D_82408BA8;
+    }
+    if (*((f32 *)((u8 *)arg0 + 0x1F8)) > D_82408BA0) {
+        *((f32 *)((u8 *)arg0 + 0x1F8)) = D_82408BA0;
+    }
+
+    target_position = D_82408F20;
+    target_velocity = D_82408F2C;
+
+    target_position.x += *((f32 *)((u8 *)arg0 + 0x1F8));
+    target_position.z += *((f32 *)((u8 *)arg0 + 0x1FC));
+    target_velocity.x += *((f32 *)((u8 *)arg0 + 0x1F8));
+    target_velocity.z += *((f32 *)((u8 *)arg0 + 0x1FC));
+
+    func_82405F8C((u8 *)arg0 + 0x174, &target_position, -1.0f);
+    func_82405F8C((u8 *)arg0 + 0x180, &target_velocity, -1.0f);
+}
+/* mkdraft:func_82406060 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_8240641C.s")
 

@@ -783,7 +783,23 @@ void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606304.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606694.s")
+/* mkdraft:func_81606694 begin */
+extern u32 D_800D0510;
+
+
+
+void func_81606694(s32 arg0, s32 arg1, s32 arg2) {
+    // FAKE: the u16 narrowing of s is invisible in the target code: _SHIFTL takes s - corr
+    // and masks it to 16 bits, so truncating s here changes no instruction. It decides only
+    // which registers IDO gives the last three Gfx words. Without it the function scores 80
+    // (thirteen register-name differences at 0x4524-0x45BC); any other 16-bit-narrowing node
+    // in the same place reaches score 0 as well ((u8)/(u16)/(u32) cast of arg2 before the
+    // shift, arg2 & 0xff, arg2 & 0xffff, or a u16 local holding arg2 << 8).
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 << 2, arg1 << 2,
+                            (arg0 + 8) << 2, (arg1 + 0xE) << 2,
+                            G_TX_RENDERTILE, (u16)(arg2 << 8), 0, 0x400, 0x400);
+}
+/* mkdraft:func_81606694 end */
 
 /* mkdraft:func_81606800 begin */
 extern s32 D_8160BE5C;
@@ -1017,9 +1033,80 @@ void func_81607834(u16 arg0, u16 arg1, u16 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816078C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607B1C.s")
+/* mkdraft:func_81607B1C begin */
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern void func_816083A4(void);
+extern u32 D_800D0510;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607DB0.s")
+// Draws a screen-space gradient quad of four vertices: allocates the vertices,
+// writes the two corners' positions and the two per-corner colors, then emits
+// the 1-cycle prim-color pipeline plus the two-triangle display list that
+// references them. A negative width or height aborts after the allocation.
+
+
+void func_81607B1C(s32 x, s32 y, s32 width, s32 height, f32 alpha, u8 *color1, u8 *color2) {
+    Vtx *vertex;
+    s32 pad; // FAKE: unused; IDO reserves a stack home for every declared local, which moves the three corner temporaries from 0x38/0x3c/0x40 to 0x3c/0x40/0x44 and the frame from 0x68 to 0x70 bytes; diff score 170 without it.
+
+    vertex = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    if ((height < 0) || (width < 0)) {
+        return;
+    }
+    func_816083A4();
+    Gfx_SetVertexAttributes(&vertex[0], (s16)x, (s16)y, -1, 0, 0, color1[0], color1[1], color1[2], 255);
+    Gfx_SetVertexAttributes(&vertex[1], (s16)(x + width), (s16)y, -1, 0, 0, color1[0], color1[1], color1[2], 255);
+    Gfx_SetVertexAttributes(&vertex[2], (s16)x, (s16)(y + height), -1, 0, 0, color2[0], color2[1], color2[2], 255);
+    Gfx_SetVertexAttributes(&vertex[3], (s16)(x + width), (s16)(y + height), -1, 0, 0, color2[0], color2[1], color2[2], 255);
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_1CYCLE);
+    gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+    gSPClearGeometryMode((*(Gfx **)&D_800D0510)++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x71FEE3, 0x44FE793C);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x0F0A4000, 0);
+    gSPVertex((*(Gfx **)&D_800D0510)++, (u32)vertex & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles((*(Gfx **)&D_800D0510)++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_81607B1C end */
+
+/* mkdraft:func_81607DB0 begin */
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern void func_816083A4(void);
+
+// Draws a translucent width x height quad at (x, y), shading from color1 on the top edge to
+// color2 on the bottom edge. The fifth argument slot carries a float from the callers, which
+// places the two color pointers in the sixth and seventh slots; this body does not read it.
+
+
+void func_81607DB0(s32 x, s32 y, s32 width, s32 height, f32 unused, u8 *color1, u8 *color2) {
+    Vtx *vertex;
+    // FAKE: unused; IDO reserves a stack home for each declared local, which shifts the corner
+    // temporaries to 0x3C/0x40/0x44 and the frame from 0x68 to 0x70 bytes; score 170 without it.
+    s32 pad;
+
+    vertex = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    if ((height < 0) || (width < 0)) {
+        return;
+    }
+
+    func_816083A4();
+
+    Gfx_SetVertexAttributes(&vertex[0], x, y, -1, 0, 0, color1[0], color1[1], color1[2], color1[3]);
+    Gfx_SetVertexAttributes(&vertex[1], x + width, y, -1, 0, 0, color1[0], color1[1], color1[2], color1[3]);
+    Gfx_SetVertexAttributes(&vertex[2], x, y + height, -1, 0, 0, color2[0], color2[1], color2[2], color2[3]);
+    Gfx_SetVertexAttributes(&vertex[3], x + width, y + height, -1, 0, 0, color2[0], color2[1], color2[2], color2[3]);
+
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_1CYCLE);
+    gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+    gSPClearGeometryMode((*(Gfx **)&D_800D0510)++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x71FEE3, 0x44FE793C);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x00504240, 0);
+    gSPVertex((*(Gfx **)&D_800D0510)++, (u32)vertex & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles((*(Gfx **)&D_800D0510)++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_81607DB0 end */
 
 /* mkdraft:func_81608044 begin */
 void func_81608044(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, s32 *arg5) {

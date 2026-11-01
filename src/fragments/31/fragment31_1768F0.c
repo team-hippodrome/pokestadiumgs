@@ -98,7 +98,52 @@ s32 func_88203A18(s32 arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203A58.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203BE4.s")
+/* mkdraft:func_88203BE4 begin */
+extern LabPCStorageList D_88234630[];
+extern LabPCStorageList D_88234648;
+extern s32 D_88234660;
+extern u8 D_88A01C40[];
+void func_88203A58(u8 *);
+
+struct Record0 { u8 bytes[0x74]; u16 tail; };
+
+
+
+void func_88203BE4(u8 *arg0, void *arg1, s8 arg2) {
+    struct Record0 src;
+    struct Record0 temp;
+    struct Record0 *v1;
+
+    src = *(struct Record0 *)arg0;
+    v1 = (struct Record0 *)((LabPCStorageList *)arg1)->entries + arg2;
+    ((LabPCStorageList *)arg1)->changed = 1;
+
+    if (arg1 == (void *)D_88234630) {
+        *v1 = src;
+        goto end;
+    }
+    if (arg1 == (void *)&D_88234648) {
+        *v1 = src;
+        D_88A01C40[arg2] = 1;
+        D_88234660 = 1;
+        goto end;
+    }
+
+    ((LabPCStorageList *)arg1)->count = ((LabPCStorageList *)arg1)->count + 1;
+    for (; arg2 < (u8)((LabPCStorageList *)arg1)->count; arg2++, v1++) {
+        if (arg2 + 1 != ((LabPCStorageList *)arg1)->count) {
+            temp = *v1;
+        }
+        *v1 = src;
+        if (arg2 + 1 != ((LabPCStorageList *)arg1)->count) {
+            src = temp;
+        }
+    }
+
+end:
+    func_88203A58(arg0);
+}
+/* mkdraft:func_88203BE4 end */
 
 // Same 12-byte layout as LabPCStorageList in
 //@src/fragments/31/fragment31_1736F0.c

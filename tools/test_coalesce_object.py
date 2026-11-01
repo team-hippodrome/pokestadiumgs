@@ -214,6 +214,21 @@ class ScheduledPairs(unittest.TestCase):
         words[2] = 0x8C210000
         self.assertEqual(fold.plan_runs(words, relocs, ADDRESSES), [])
 
+    def test_store_in_delay_slot_after_stack_teardown_shares_page(self):
+        # lui $at,%hi(A) / swc1 %lo(A)(at) / lui $at,%hi(B) / addiu
+        # $sp,$sp,0x18 / jr $ra / swc1 %lo(B)(at): the store is the return's
+        # delay slot, and the frame teardown between the hoisted lui and the
+        # store neither reads nor writes $at.
+        store = 0xE4200000
+        words = [HI, store, HI, 0x27BD0018, 0x03E00008, store]
+        relocs = {0: [(A, 5)], 4: [(A, 6)], 8: [(B, 5)], 20: [(B, 6)]}
+        actual, kept, count = fold.fold_function_words(
+            words, relocs, ADDRESSES, None, "synthetic"
+        )
+        expected = [HI, store, 0x27BD0018, 0x03E00008, store | 0xBF30]
+        self.assertEqual((actual, count), (expected, 1))
+        self.assertEqual(kept, [(0, A, 5), (4, A, 6)])
+
 
 if __name__ == "__main__":
     unittest.main()

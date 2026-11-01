@@ -99,7 +99,76 @@ void SceneMotion_RemoveInwardVelocity(u8 *object, f32 *normal) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_26BF40/func_8620581C.s")
+/* mkdraft:func_8620581C begin */
+extern f32 func_87D005E8(f32 *, f32 *, f32 *);
+typedef struct SceneDirectionChoice {
+    f32 origin[3];
+    f32 directions[4][3];
+    s16 buttons;
+} SceneDirectionChoice;
+
+extern SceneDirectionChoice D_86208F28[5];
+
+// Pushes a scene motion node out of the nearest direction choice of its model and
+// records the contact velocity; returns 0 when the node is out of range.
+
+
+s32 func_8620581C(s32 arg0, u8 *arg1, u8 *arg2) {
+    u8 *metadata;
+    u8 *model;
+    f32 delta[3];
+    f32 dist;
+    f32 limit;
+    s32 hit;
+    f32 dot;
+    // FAKE: never read or written; the declaration only claims stack slot 0x30 so
+    // `normal` lands at 0x2C.  Diff score 209 without it.
+    SceneDirectionChoice *choice;
+    f32 *normal;
+    // FAKE: never read or written; the declaration only rounds the frame to 0x58.
+    // Diff score 217 without it.
+    s32 spare1;
+
+    metadata = *(u8 **)(arg2 + 0x20);
+    model = *(u8 **)(arg1 + 0x20);
+    delta[0] = *(f32 *)(model + 0xC) - *(f32 *)(arg2 + 0x48);
+    delta[1] = *(f32 *)(model + 0x10) - *(f32 *)(arg2 + 0x4C);
+    delta[2] = *(f32 *)(model + 0x14) - *(f32 *)(arg2 + 0x50);
+    hit = 0;
+    dist = func_87D005E8(&delta[0], &delta[1], &delta[2]);
+    limit = *(f32 *)(metadata + 0x34) * (*(f32 *)((u8 *)(u32)D_8620E198 + 0x64) * 0.75f * 100.0f) + 108.5f;
+    if (dist < limit) {
+        *(f32 *)(metadata + 0x18) += -delta[0] * (limit - dist);
+        *(f32 *)(metadata + 0x1C) += -delta[1] * (limit - dist);
+        *(f32 *)(metadata + 0x20) += -delta[2] * (limit - dist);
+        // Contact only while the node's state counter at arg1+0x1C stays below
+        // three times the global limit at D_8620E198+0x3C and the node has not
+        // been touched this update (bit 0x1000000 of arg1+0xC).
+        if (*(s32 *)(arg1 + 0x1C) < *(s32 *)((u8 *)(u32)D_8620E198 + 0x3C) * 3 - 1 && !(*(u32 *)(arg1 + 0xC) & 0x1000000)) {
+            // `hit` holds one plus the byte in the per-player table at
+            // D_8620E198+0x73BD2 (0x18-byte stride).  The increment has to be
+            // stored in `hit`: keeping the raw index and addressing
+            // directions[index] (or `+ (index + 1) * 12` bytes) scores 250,
+            // because IDO folds the +1 into the 0xC offset instead of emitting
+            // the target's `addiu v1,v1,1` before the 12-byte row scaling.
+            hit = *(u8 *)((u8 *)(u32)D_8620E198 + arg0 * 24 + 0x73BD2) + 1;
+            // Entry `model+4` of the shared table, direction row `hit - 1`.
+            normal = &D_86208F28[*(s32 *)(model + 4)].directions[hit - 1][0];
+            func_8620573C((f32 *)(metadata + 0x24), normal);
+            SceneMotion_RemoveInwardVelocity(arg2, normal);
+            func_8002781C(0xBF01, (u8)arg0, metadata + 0x38);
+        } else {
+            dot = *(f32 *)(arg2 + 0x18) * delta[2] + (*(f32 *)(arg2 + 0x14) * delta[1] + delta[0] * *(f32 *)(arg2 + 0x10));
+            *(f32 *)(metadata + 0x24) += -delta[0] * dot;
+            *(f32 *)(metadata + 0x28) += -delta[1] * dot;
+            *(f32 *)(metadata + 0x2C) += -delta[2] * dot;
+        }
+        hit = 1;
+        *(u32 *)(arg1 + 0xC) |= 0x1000000;
+    }
+    return hit;
+}
+/* mkdraft:func_8620581C end */
 #endif
 
 #ifdef VERSION_US

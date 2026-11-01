@@ -1226,7 +1226,160 @@ void func_83006308(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_83006330.s")
+/* mkdraft:func_83006330 begin */
+extern s32 func_8300B988(void *);
+
+// Each record category has a source and a target bank; the category in state[0x45]
+// picks the pair: 1 = team (0x3A290, 0x3BDF4), 2 = profile (0x3D958, 0x3EA5C),
+// 3 = saved record (0x39E48, 0x3A06C). A bank's capacity and count are its first
+// two bytes, so the count is at base + 1.
+
+
+void func_83006330(void *arg0, s32 arg1) {
+    u8 *state = arg0;
+    volatile s32 *status;
+
+    switch (arg1) {
+    case -1:
+        state[0x1E] = 4;
+        state[0x52] = 0;
+        func_800226C0(3);
+        break;
+    case 1:
+        switch (state[0x45]) {
+        case 1:
+            if (state[0x3A291] <= 0) {
+                state[0x1E] = 21;
+                func_800226C0(5);
+            } else {
+                state[0x1E] = 24;
+                func_800226C0(2);
+            }
+            break;
+        case 2:
+            if (state[0x3D959] <= 0) {
+                state[0x1E] = 29;
+                func_800226C0(5);
+            } else {
+                status = (volatile s32 *)(state + 0x4E040);
+                *status = func_8300B988(state + 0x3EA5C);
+                // FAKE: the repeated assignment forces a reload of the status word;
+                // written once, IDO reuses the stored pointer and the score is 340.
+                status = (volatile s32 *)(state + 0x4E040);
+                state[0x1E] = *status != 0 ? 32 : 33;
+                func_800226C0(2);
+            }
+            break;
+        case 3:
+            if (state[0x39E49] <= 0) {
+                state[0x1E] = 36;
+                func_800226C0(5);
+            } else {
+                state[0x1E] = 39;
+                func_800226C0(2);
+            }
+            break;
+        }
+        break;
+    case 2:
+        switch (state[0x45]) {
+        case 1:
+            if (state[0x3A291] + state[0x3BDF5] > 0) {
+                state[0x1E] = 22;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 21;
+                func_800226C0(5);
+            }
+            break;
+        case 2:
+            if (state[0x3D959] + state[0x3EA5D] > 0) {
+                state[0x1E] = 30;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 29;
+                func_800226C0(5);
+            }
+            break;
+        case 3:
+            if (state[0x39E49] + state[0x3A06D] > 0) {
+                state[0x1E] = 37;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 36;
+                func_800226C0(5);
+            }
+            break;
+        }
+        break;
+    case 3:
+        switch (state[0x45]) {
+        case 1:
+            if (state[0x3BDF5] >= 2) {
+                state[0x1E] = 25;
+                state[0x52] = 0;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 21;
+                func_800226C0(5);
+            }
+            break;
+        case 2:
+            if (state[0x3EA5D] >= 2) {
+                state[0x1E] = 32;
+                state[0x52] = 0;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 29;
+                func_800226C0(5);
+            }
+            break;
+        case 3:
+            if (state[0x3A06D] >= 2) {
+                state[0x1E] = 40;
+                state[0x52] = 0;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 36;
+                func_800226C0(5);
+            }
+            break;
+        }
+        break;
+    case 4:
+        switch (state[0x45]) {
+        case 1:
+            if (state[0x3BDF5] > 0) {
+                state[0x1E] = 25;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 21;
+                func_800226C0(5);
+            }
+            break;
+        case 2:
+            if (state[0x3EA5D] > 0) {
+                state[0x1E] = 32;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 29;
+                func_800226C0(5);
+            }
+            break;
+        case 3:
+            if (state[0x3A06D] > 0) {
+                state[0x1E] = 40;
+                func_800226C0(2);
+            } else {
+                state[0x1E] = 36;
+                func_800226C0(5);
+            }
+            break;
+        }
+        break;
+    }
+}
+/* mkdraft:func_83006330 end */
 #endif
 
 #ifdef VERSION_US

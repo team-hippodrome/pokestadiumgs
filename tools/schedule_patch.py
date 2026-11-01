@@ -5,9 +5,10 @@ IDO occasionally emits the right instruction multiset but schedules two
 independent instructions in the opposite order from the matching ROM.  This
 module provides a deliberately narrow escape hatch for that compiler artifact:
 the source must opt in with an exact expected-word pragma, and the object
-must contain those words at that function-relative offset with no relocations
-on either word.  The patch changes only the two text words; symbols, section
-sizes, and relocations are otherwise untouched.
+must contain those words at that function-relative offset.  The patch swaps
+the two text words; a relocation naming either word follows its own word by
+four bytes (a MIPS REL relocation always names exactly one word), while every
+other symbol, section size, and relocation stays untouched.
 
 This is not a general binary patcher.  It is intended for a source-level
 decompilation whose ordinary C body has already been reduced to one proven
@@ -552,12 +553,29 @@ def swap_function_words_in_object(
             f"{first:#010x}, {second:#010x}"
         )
 
+    relocations = []
     for relocation in obj.relocations(".rel.text"):
         if start <= relocation.offset < start + 8:
-            raise SchedulePatchError(
-                f"{function_name}: refusing to swap relocation-bearing words "
-                f"at +{byte_offset:#x}"
+            # An instruction's %hi/%lo relocation names that one word.  The
+            # swap moves each word by exactly four bytes, so move any
+            # relocation naming it the same way; leaving it behind would
+            # apply this instruction's immediate to the other instruction
+            # (func_86502524's last store keeps its %lo symbol while the
+            # adjacent stack teardown has none).  The table keeps its
+            # order, which is what pairs an R_MIPS_HI16 with the next
+            # R_MIPS_LO16 for the same symbol.
+            relocated = start + 4 if relocation.offset == start else start
+            relocations.append(
+                elf32.Relocation(
+                    offset=relocated,
+                    sym_index=relocation.sym_index,
+                    type=relocation.type,
+                )
             )
+        else:
+            relocations.append(relocation)
+    if relocations:
+        obj.set_relocations(".rel.text", relocations)
 
     replacement = struct.pack(">2I", second, first)
     new_text = text_section.data[:start] + replacement + text_section.data[start + 8 :]

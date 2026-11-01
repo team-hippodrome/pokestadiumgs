@@ -170,7 +170,65 @@ void func_87F06734(s32 a0, u8 *out_base, u8 *src_base)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06AA8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06D24.s")
+/* mkdraft:func_87F06D24 begin */
+// FAKE: one-word aggregate so `s` is passed by value in $a1 and spilled at sp+0x30;
+// as a plain u32 argument it stays in a register (diff score 9).
+struct unk_func_87F06804 {
+    u32 unk_0;
+};
+
+extern u8 *D_87F15B88;
+extern f32 D_80087E50[];
+extern s32 func_87F06804(u8 *node, struct unk_func_87F06804 s);
+
+// The literals 182.0416718f and 455.0f land at .rodata +0x94/+0x98, the slots the
+// replaced pragma filled with D_87F115D4 and D_87F115D8.
+//@asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06D24.s
+
+
+void func_87F06D24(s32 kind, u8 *node) {
+    // FAKE: unused; it shifts the other locals so the frame stays 0x38
+    // (diff score 2 without it).
+    u32 color;
+    struct unk_func_87F06804 s;
+    s32 value;
+    s32 limit;
+    f32 scale;
+    f32 tmp;
+
+    switch (kind) {
+        case 0:
+            *((u16 *) (node + 2)) = (*((u16 *) (node + 2))) & (~2);
+            return;
+        case 1:
+            limit = 360;
+            value = ((*((u32 *) (D_87F15B88 + 0x28))) - ((*((s32 *) (node + 0x20))) * 4)) % limit;
+            // FAKE: the product is written out in all three places; naming it in a
+            // temporary adds a mov.s (diff score 3 with a named temporary).
+            if (((((f32) value) * 10.0f) * 182.0416718f) >= 0.0f) {
+                value = (s32) (((((f32) value) * 10.0f) * 182.0416718f) + 0.5f);
+            } else {
+                value = (s32) (((((f32) value) * 10.0f) * 182.0416718f) - 0.5f);
+            }
+            tmp = (D_80087E50[((u16) value) >> 4] + 1.0f) * 0.5f;
+            scale = 455.0f * tmp;
+            if (scale >= 100.0f) {
+                value = (s32) ((scale - 100.0f) + 0.5f);
+            } else {
+                value = (s32) ((scale - 100.0f) - 0.5f);
+            }
+            if (value < 0) {
+                value = 0;
+            }
+            if (value >= 256) {
+                value = 255;
+            }
+            s.unk_0 = 0xFFE60000 | value;
+            func_87F06804(node, s);
+            break;
+    }
+}
+/* mkdraft:func_87F06D24 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06EAC.s")
 

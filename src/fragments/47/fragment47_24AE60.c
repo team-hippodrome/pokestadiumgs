@@ -3,7 +3,52 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004840.s")
+/* mkdraft:func_86004840 begin */
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
+extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
+extern void func_87C037C0(void *, void *);
+extern f64 D_8600D840;
+extern f64 D_8600D848;
+extern f64 D_8600D850;
+extern f64 D_8600D858;
+extern f64 D_8600DFD8;
+extern f64 D_8600DFE0;
+extern u8 D_8600DE30[];
+extern u8 *D_8600D234;
+
+s32 func_86004840(s32 arg0, void *arg1) {
+    f64 k;
+    f32 s;
+    f32 c;
+    f64 b;
+
+    if (arg0 != 2) {
+        return 0;
+    }
+    s = __sinf((f32)((D_8600D840 * D_8600DFE0) / D_8600D848));
+    c = __cosf((f32)((D_8600D850 * D_8600DFE0) / D_8600D858));
+    k = *(f64 *)(D_8600DE30 + 0x1C0);
+    b = *(f64 *)(D_8600DE30 + 0x1B8);
+    func_80038E14(arg1, 0, (f32)(b + (f64)s * k),
+                  (f32)((f64)c * k), 0.0f,
+                  (f32)b, 0.0f, 0);
+    GeoCamera_SetPerspective(arg1, (f32)D_8600DFD8, 64.0f, 32768.0f);
+    if (D_8600D234 != 0) {
+        func_87C037C0(D_8600D234 + 0x8150, arg1);
+    }
+    return 1;
+}
+/* mkdraft:func_86004840 end */
+
+/* mkdraft:func_86004840_padding begin */
+// Bytes at 0x86004960: the retail jr ra/nop stub between this function and
+// func_86004968; no symbol covers that address. An unreferenced empty function
+// compiles to those eight bytes and keeps the fragment layout (same convention
+// as func_86004BC4_padding and func_860062E0_padding in this file).
+void func_86004840_padding(void) {}
+/* mkdraft:func_86004840_padding end */
 
 void func_86004968(void *arg0) {
     typedef struct {

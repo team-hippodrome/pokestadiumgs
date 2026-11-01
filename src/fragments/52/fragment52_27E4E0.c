@@ -343,7 +343,50 @@ void func_864012A0_padding(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864013A8.s")
+/* mkdraft:func_864013A8 begin */
+typedef struct {
+    u8 pad[0x18];
+    f32 unk_18;
+    u8 pad_1C[0x2C];
+    f32 unk_48;
+} unk_func_864013A8;
+
+typedef struct {
+    f32 unk_00;
+} unk_D_86416C00;
+
+extern u8 *D_86416C00;
+extern s32 func_80001FF0(void);
+
+// Frame update for the node in arg0. arg0+0x1C takes the TV refresh rate
+// (func_80001FF0 returns 50 or 60) as ((f32)refresh / 60.0f) * 2.0f, rounded to
+// s32, times 1 - arg1's 0x18 float / the f32 at D_86416C00; 0x10000000 is then
+// ORed into arg0+0xC. When arg2 is non-NULL, bit 18 of the 0x0C word (the sign
+// of the word shifted left 13) selects the -0.1 decay of arg0+0x10 and
+// arg0+0x18 over copying arg2's floats at 0 and 4 into them and arg2's 0x8
+// halfword into the f32 at arg1+0x48.
+
+
+void func_864013A8(u8 *arg0, unk_func_864013A8 *arg1, u8 *arg2) {
+    f32 rate = 2.0f;
+    s32 value;
+    if ((((f32)func_80001FF0() / 60.0f) * rate) >= 0.0f) {
+        value = (s32)((((f32)func_80001FF0() / 60.0f) * rate) + 0.5f);
+    } else {
+        value = (s32)((((f32)func_80001FF0() / 60.0f) * rate) - 0.5f); } *(s32 *)(arg0 + 0x1C) = (s32)((f32)value * (1.0f - arg1->unk_18 / ((unk_D_86416C00 *)D_86416C00)->unk_00)); // FAKE: this store shares a line with the else assignment and its closing brace; IDO's local scheduler breaks the load-order tie by source line, and splitting them schedules the arg1 spill reload ahead of the D_86416C00 pointer load. diff score 60 without it.
+    *(s32 *)(arg0 + 0xC) |= 0x10000000;
+    if (arg2 != NULL) {
+        if ((*(s32 *)(arg0 + 0xC) << 13) < 0) {
+            *(f32 *)(arg0 + 0x10) *= -0.1f;
+            *(f32 *)(arg0 + 0x18) *= -0.1f;
+        } else {
+            arg1->unk_48 = (f32)*(u16 *)(arg2 + 8);
+            *(f32 *)(arg0 + 0x10) = *(f32 *)(arg2 + 0);
+            *(f32 *)(arg0 + 0x18) = *(f32 *)(arg2 + 4);
+        }
+    }
+}
+/* mkdraft:func_864013A8 end */
 #endif
 
 #ifdef VERSION_US
@@ -693,7 +736,55 @@ void func_86402688(u8 *arg0, u16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864028B8.s")
+/* mkdraft:func_864028B8 begin */
+extern void func_8002781C(s32, u8, void *);
+
+
+
+s32 func_864028B8(u8 *arg0, u8 *arg1, u16 *arg2) {
+    s32 flags;
+    s32 ret;
+    s32 state;
+
+    flags = *(s32 *)(arg0 + 0xC);
+    ret = 1;
+    if (flags & 0x20000000) {
+        *(u32 *)(arg0 + 0xC) = flags & 0x7FFFFFFF;
+        if (--*(s32 *)(arg1 + 0x38) > 0) {
+            if (*(s32 *)(arg1 + 0x38) >= 18) {
+                *(u32 *)(arg0 + 0xC4) = 0xFF6464C8;
+            } else {
+                *(u32 *)(arg0 + 0xC4) = 0xFF000000;
+            }
+            if (*(s32 *)(arg1 + 0x38) % 5 == 0) {
+                func_8002781C(0x5404, *(u8 *)(arg1 + 3), arg1 + 0x58);
+            }
+            *arg2 &= 0xF0FF;
+            state = *(s32 *)(arg1 + 0x14);
+            switch (state) {
+                case 0:
+                    *(f32 *)(arg1 + 0x18) *= 0.9f;
+                    break;
+                case 1:
+                    *(f32 *)(arg1 + 0x18) *= 0.92f;
+                    break;
+                case 2:
+                    *(f32 *)(arg1 + 0x18) *= 0.95f;
+                    break;
+                case 3:
+                    *(f32 *)(arg1 + 0x18) *= 0.95f;
+                    break;
+            }
+            ret = 0;
+        } else {
+            *(f32 *)(arg0 + 0x14) = 0.0f;
+            *(u32 *)(arg0 + 0xC) &= 0xDFFFFFFF;
+            *(f32 *)(arg0 + 0x4C) = 0.0f;
+        }
+    }
+    return ret;
+}
+/* mkdraft:func_864028B8 end */
 #endif
 
 #ifdef VERSION_US
@@ -726,7 +817,41 @@ void func_86402A2C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864033AC.s")
+/* mkdraft:func_864033AC begin */
+extern u8 *D_86416C00;
+
+// Sorts pointers to the four records at D_86416C00 + 0xCB8C (stride 0x5C) in
+// descending order of the f32 at +0x10, stores the winning record's pointer at
+// D_86416C00 + 0x8000 + 0x4DFC, then writes each record's sorted position
+// (0 = highest f32) into the s32 at +0x14.
+
+
+void func_864033AC(void) {
+    u8 *entries[4];
+    s32 i;
+    s32 j;
+    u8 *p;
+
+    for (i = 0; i < 4; i++) {
+        entries[i] = D_86416C00 + 0xCB8C + i * 0x5C;
+    }
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3 - i; j++) {
+            if (*(f32 *)(entries[j] + 0x10) < *(f32 *)(entries[j + 1] + 0x10)) {
+                p = entries[j];
+                entries[j] = entries[j + 1];
+                entries[j + 1] = p;
+            }
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (i == 0) {
+            *(void **)(D_86416C00 + 0x8000 + 0x4DFC) = entries[0];
+        }
+        *(s32 *)(entries[i] + 0x14) = i;
+    }
+}
+/* mkdraft:func_864033AC end */
 #endif
 
 #ifdef VERSION_US
@@ -777,7 +902,46 @@ void func_8640377C(void *arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86403B3C.s")
+/* mkdraft:func_86403B3C begin */
+
+
+
+f32 func_86403B3C(u8 *arg0, void *arg1, f32 arg2, f32 *arg3, void *arg4) {
+    f32 current;
+    f32 result;
+    f32 near[2];
+    f32 far[2];
+    f32 second;
+    f32 first;
+    void *tag;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)D_86416C00 + 0x7C8);
+    result = 0.0f;
+    while (node != NULL) {
+        tag = *(void **)(node + 0x20);
+        if (arg1 != tag) {
+            near[0] = *(f32 *)(arg0 + 0x48);
+            near[1] = *(f32 *)(arg0 + 0x50);
+            far[0] = *(f32 *)(node + 0x48);
+            far[1] = *(f32 *)(node + 0x50);
+            if (func_87D00670(near, arg3, &second, far, arg4, &first) != 0) {
+                if (arg2 < second) {
+                    current = second - arg2;
+                } else {
+                    current = second - arg2;
+                    current = -current;
+                }
+                if (current < 46.4f && first > 0.0f && result < first) {
+                    result = first;
+                }
+            }
+        }
+        node = *(u8 **)(node + 4);
+    }
+    return result;
+}
+/* mkdraft:func_86403B3C end */
 #endif
 
 #ifdef VERSION_US

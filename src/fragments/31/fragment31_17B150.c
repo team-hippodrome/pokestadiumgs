@@ -148,7 +148,50 @@ void func_8820908C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88209278.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820A56C.s")
+/* mkdraft:func_8820A56C begin */
+extern s32 D_882346F0;
+extern unk_D_88234700 *D_88234700;
+
+// Mode-dependent test of whether arg1 matches the progress recorded for slot
+// arg0. Modes 1 and 3 use records[arg0].unk_10 minus unk_12 and apply to slots
+// other than the selected index; mode 2 uses the halfword at 0x74 minus unk_12
+// and applies to the selected index. func_88209278 compares that same 0x74
+// halfword against records[index].unk_10.
+
+
+s32 func_8820A56C(u8 arg0, u8 arg1) {
+    u32 index = arg0;
+    unk_D_88234700 *state;
+    s32 result = 0;
+
+    switch (D_882346F0) {
+    default:
+        break;
+    case 0:
+        break;
+    case 1:
+    case 3:
+        state = D_88234700;
+        if (arg0 == state->index) {
+            break;
+        }
+        if (arg1 == state->records[index].unk_10 - state->records[index].unk_12) {
+            result = 1;
+        }
+        break;
+    case 2:
+        state = D_88234700;
+        if (arg0 != state->index) {
+            break;
+        }
+        if ((s16)arg1 == *(s16 *)((u8 *)state + 0x74) - state->records[index].unk_12) {
+            result = 1;
+        }
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8820A56C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820A638.s")
 

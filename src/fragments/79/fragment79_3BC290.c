@@ -190,7 +190,135 @@ void func_8414CF74(s32 arg0, u8 arg1, u8 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414D008.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414D198.s")
+/* mkdraft:func_8414D198 begin */
+extern u8 func_80062D20(u8 arg0);
+extern void func_8414CB74(s32 arg0, u8 arg1, u8 arg2);
+extern void func_8414D008(s32 arg0, u8 arg1, u8 arg2);
+extern u8 *func_84154B0C(void);
+
+
+void func_8414D198(void *state, u8 side) {
+    u8 move;
+    u8 weather;
+    s32 pad; // FAKE: unreferenced; grows the frame from 0x20 to 0x28 and places the byte copy of move at 0x27 instead of 0x1E; diff score 154 without it.
+
+    move = *((u8 *)state + side + 6);
+    if (move != 0) {
+        switch (func_80062D20(move)) {
+            case 0:
+            case 2:
+            case 4:
+            case 5:
+            case 6:
+            case 17:
+            case 26:
+            case 27:
+            case 31:
+            case 34:
+            case 36:
+            case 38:
+            case 39:
+            case 40:
+            case 41:
+            case 42:
+            case 68:
+            case 69:
+            case 70:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 80:
+            case 81:
+            case 87:
+            case 88:
+            case 92:
+            case 99:
+            case 101:
+            case 103:
+            case 105:
+            case 108:
+            case 117:
+            case 119:
+            case 121:
+            case 122:
+            case 123:
+            case 125:
+            case 126:
+            case 128:
+            case 129:
+            case 135:
+            case 138:
+            case 139:
+            case 140:
+            case 145:
+            case 146:
+            case 147:
+            case 149:
+            case 150:
+            case 151:
+            case 152:
+            case 155:
+                func_8414CA00((s32)state, side, move);
+                break;
+            case 3:
+            case 8:
+                BattleEffects_PlanCalculatedRecovery(state, side, move);
+                break;
+            case 7:
+                func_8414CA00((s32)state, side, move);
+                func_8414CB10(state, side, move);
+                break;
+            case 29:
+            case 44:
+            case 77:
+                func_8414CB74((s32)state, side, move);
+                break;
+            case 104:
+                func_8414CD18((s32)state, side, move);
+                break;
+            case 32:
+                if (move == 156) {
+                    func_8414CDB8((u8 *)state, side, 0);
+                } else {
+                    func_8414CDB8((u8 *)state, side, 1);
+                }
+                break;
+            case 132:
+            case 133:
+            case 134:
+                // Byte 408 of the func_84154B0C() base; the BattlePlan_AddRainDanceBonus and
+                // BattlePlan_AddSunnyDayBonus planners read it as 1 (rain) and 2 (sun).
+                //@src/fragments/79/fragment79_3BF4C0.c
+                weather = ((u8 *)func_84154B0C())[408];
+                if (weather != 1) {
+                    if (weather == 2) {
+                        func_8414CDB8((u8 *)state, side, 0);
+                    } else {
+                        func_8414CDB8((u8 *)state, side, 1);
+                    }
+                } else {
+                    func_8414CDB8((u8 *)state, side, 2);
+                }
+                break;
+            case 91:
+                BattleEffects_PlanSharedHP(state, side);
+                break;
+            case 45:
+                func_8414CEE0((s32)state, side, move);
+                break;
+            case 48:
+                func_8414CF74((s32)state, side, move);
+                break;
+            case 154:
+                func_8414D008((s32)state, side, move);
+                break;
+        }
+    }
+}
+/* mkdraft:func_8414D198 end */
 
 void BattleEffects_PlanResidualDamage(void *state, u8 side) {
     const u8 *opponent;

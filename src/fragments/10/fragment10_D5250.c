@@ -217,7 +217,80 @@ s32 func_82801718(u8 *arg0, s32 arg1, s32 arg2) {
 }
 /* mkdraft:func_82801718 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801774.s")
+/* mkdraft:func_82801774 begin */
+extern s32 func_82800B94(u8 *);
+extern s32 func_82801718(u8 *, s32, s32);
+extern void func_800226C0(s32);
+extern void func_80057908(u8);
+extern u8 D_800CE060[];
+
+// The selected slot is the s32 at +0x10 (-1 when nothing is selected) and the four bytes at
+// +0x18 are per-slot enable flags; func_82801718 walks those flags from a start index in steps
+// of +1/-1 and returns the index it reached.
+// D_800CE060 holds four 0x28-byte controller records; +0x8 is the pressed-button mask.
+//@include/controller.h
+
+
+s32 func_82801774(u8 *arg0) {
+    s32 next;
+    u8 *record;
+    s32 index;
+
+    record = D_800CE060 + arg0[0xD] * 40;
+    *(f32 *)(arg0 + 4) = 12.0f;
+    if (func_82800B94(arg0) != 0 && arg0[0x90] == 0) {
+        if (*(u16 *)(record + 8) & 0x200) {
+            next = func_82801718(arg0, *(s32 *)(arg0 + 0x10), -1);
+            if (next < *(s32 *)(arg0 + 0x10)) {
+                func_800226C0(1);
+                *(s32 *)(arg0 + 0x10) = next;
+                return 1;
+            }
+        }
+        if (*(u16 *)(record + 8) & 0x100) {
+            next = func_82801718(arg0, *(s32 *)(arg0 + 0x10), 1);
+            if (*(s32 *)(arg0 + 0x10) < next) {
+                func_800226C0(1);
+                *(s32 *)(arg0 + 0x10) = next;
+                return 1;
+            }
+        }
+    }
+    // The +0x18 flags are read through an array subscript because that is the ROM's
+    // addressing form: it puts the base in the first addu operand, where a pointer sum
+    // puts the index there.
+    if (*(u16 *)(record + 8) & 0x4000) {
+        func_800226C0(3);
+        *(s32 *)(arg0 + 0x10) = -1;
+        arg0[0xC] = 3;
+    } else if (*(u16 *)(record + 8) & 0x8000) {
+        if (arg0[0x90] != 0) {
+            // FAKE: the enclosing `else if` already tested this bit; the ROM repeats the
+            // test (diff score 380 without the repetition).
+            if (*(u16 *)(record + 8) & 0x8000) {
+                func_800226C0(2);
+                arg0[0x90] = 0;
+            }
+        } else if ((*(u8 (*)[4])(arg0 + 0x18))[*(s32 *)(arg0 + 0x10)] == 0) {
+            func_800226C0(0xF);
+            index = *(s32 *)(arg0 + 0x10);
+            arg0[0xC] = 3;
+            if (index >= 0 && index < 4 && *(u8 *)(arg0 + 0x18 + index) == 0) {
+                func_80057908(index);
+            }
+        } else if (*(s32 *)(arg0 + 0x8C) != 0 && (*(s32 *)(arg0) & 0x20000000)) {
+            func_800226C0(0xF);
+            arg0[0xC] = 3;
+        } else {
+            func_800226C0(5);
+        }
+    } else if (func_82800B94(arg0) != 0 && (*(u16 *)(record + 8) & 1) && (*(s32 *)(arg0) & 0x20000)) {
+        *(s32 *)(arg0 + 0x84) = !*(s32 *)(arg0 + 0x84);
+        func_800226C0(0x12);
+    }
+    return 1;
+}
+/* mkdraft:func_82801774 end */
 
 s32 func_828019B4(u8 *arg0) {
     f32 step = func_816092FC();
@@ -271,9 +344,137 @@ void func_82801BE8(u8 *arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801D7C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801F88.s")
+/* mkdraft:func_82801F88 begin */
+extern u8 D_8280284C[][3];
+extern s32 func_800472E0(s32);
+extern void func_81607408(void);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_828020C4.s")
+// Draws the box behind the annotation text of entry arg1: 122 pixels wide,
+// (line count * 20) + 14 tall, at the position func_8280105C computes for the entry,
+// filled with D_8280284C[flag] where flag is the entry's byte at 0x18. The entry's
+// font string is drawn into it once the scale factor (entry + 4 over 12) passes 0.99.
+// func_8004C874 returns a pointer to that font string; this file's prototypes carry
+// these strings as s32 (see the func_800495BC declaration above), and the s32 text
+// local follows them.
+//@src/47580.c
+
+
+void func_82801F88(u8 *arg0, s32 arg1) {
+    s32 text;
+    s32 lines;
+    s32 height;
+    f32 ratio;
+    s16 position[2];
+
+    if (*(s32 *)((u8 *)arg0 + arg1 * 4 + 0x74) >= 0) {
+        // FAKE: the (u8 *) casts on this u8 * argument are redundant but set IDO's
+        // temp-register coloring; spelled without them the differ scores 35.
+        text = func_8004C874(0x19, *(s32 *)((u8 *)arg0 + arg1 * 4 + 0x74));
+        lines = func_800472E0(text);
+        height = (lines * 20) + 14;
+        ratio = D_8160BD08(*(f32 *)(arg0 + 4) / 12.0f);
+        func_8280105C(arg0, position, arg1);
+        Fragment11_DrawBorderedPanelFill(position[0], position[1], 122, height, 1,
+            D_8280284C[*(u8 *)(arg0 + arg1 + 0x18) == 0]);
+        if (ratio > 0.99f) {
+            func_800498C4();
+            func_800496A4(4, 1);
+            func_8004989C(20);
+            func_800495BC(position[0] + 7, position[1] + 7, text);
+            func_800499EC();
+        }
+        func_81607408();
+    }
+}
+/* mkdraft:func_82801F88 end */
+
+/* mkdraft:func_828020C4 begin */
+extern f32 D_82802854;
+extern f32 D_82802858;
+extern f32 __sinf(f32);
+extern Gfx *D_800D0510;
+extern f32 func_816092FC(void);
+extern void func_82800620(s32, s32, f32);
+extern void func_82800984(s32, f32);
+extern void func_82800AE0(u8 *);
+
+// Per-frame animation tick for the four-slot record block in arg0.
+//
+// D_82802858 is a shared frame counter in units of D_82802854 (60.0f): it is
+// advanced by one tick (func_816092FC returns the frame delta) and wrapped back
+// by one period when it reaches the period boundary, then written back. The
+// phase is converted to an angle (2*pi * frame / 60.0f) and to a 0..1 value
+// (sin(angle) * 0.5f + 0.5f) before the per-slot dispatch, so the four slots
+// share one rounded sine.
+//
+// The slot type byte at arg0[0x18 + i] selects an animation mode through
+// jtbl_8280296C (asm/us/nonmatchings/fragments/10/fragment10_D5250/
+// func_828020C4.s: types 0..10 are in range; only 0, 4, 7, 8, 9 and 10 have a
+// case body). Type 0 passes mode 0 to func_82800620, the other five pass mode
+// 1; both then hand the slot's f32 at arg0[0x98 + i*4] to func_82800984 with
+// the slot index. func_82800AE0(record) runs after the fourth iteration.
+//
+// Two spellings below are load-bearing for IDO 7.1's register allocation, both
+// measured with the ROM gate, not chosen for style:
+//   * The frame write goes through `pf`, a separate pointer object, so the
+//     driver load at D_82802858 and this store each get their own `lui $at`
+//     address temp; the direct `D_82802858 = frame;` CSEs into one $v0 base.
+//   * The `do { } while (0);` after type 0's func_82800984 call (see FAKE).
+
+
+void func_828020C4(u8 *arg0)
+{
+  s32 i;
+  f32 frame;
+  f32 amplitude;
+  f32 sine;
+  u8 *record;
+  f32 new_var2;
+  f32 *pf = &D_82802858;
+  amplitude = func_816092FC();
+  frame = D_82802858;
+  frame += amplitude;
+  if (frame >= D_82802854)
+  {
+    frame -= D_82802854;
+  }
+  new_var2 = (6.2831855f * frame) / D_82802854;
+  *pf = frame;
+  sine = (__sinf(new_var2) * 0.5f) + 0.5f;
+  record = arg0;
+  gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT);
+  for (i = 0; i < 4; i++)
+  {
+    switch ((*((u8 *) (((u8 *) arg0) + (i + 0x18)))))
+    {
+      case 0:
+        func_82800620(i, 0, sine);
+        func_82800984(i, (*((f32 *) (((u8 *) arg0) + (i * 4) + 0x98))));
+        // FAKE: empty loop after the type-0 calls; see the report. Without it the
+        // block scores 80 with $s0/$s1 swapped in the loop body (14 lines).
+        do { } while (0);
+        break;
+
+      case 4:
+
+      case 7:
+
+      case 8:
+
+      case 9:
+
+      case 10:
+        func_82800620(i, 1, sine);
+        func_82800984(i, (*((f32 *) (((u8 *) arg0) + (i * 4) + 0x98))));
+        break;
+
+    }
+
+  }
+
+  func_82800AE0(record);
+}
+/* mkdraft:func_828020C4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82802224.s")
 

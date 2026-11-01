@@ -1003,7 +1003,101 @@ void func_8850C948(void) {
     D_8852304C = func_800071A4(0, 2, 0x20, 0x20, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850C998.s")
+/* mkdraft:func_8850C998 begin */
+// Scissor rectangle at D_88523148: func_8850A0A0 stores four s16 fields and func_88509290
+// hands them to Gfx_SetScissorRect. All four reads in func_8850C998 go through this one
+// lvalue so the base address stays in a single register instead of being recalculated.
+typedef struct {
+    s16 x;
+    s16 y;
+    s16 w;
+    s16 h;
+} unk_D_88523148;
+#define SCISSOR_RECT ((unk_D_88523148 *) &D_88523148)
+
+extern u8 D_80094DE0[];
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_8850D670;
+extern u32 D_8850D674;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_8850BDE8(void);
+// func_88509A38 is still GLOBAL_ASM earlier in this file, so its prototype has to be here;
+// an implicit declaration makes IDO color the later D_8850D674 load as v1, not v0.
+extern void func_88509A38(void);
+extern void func_8850AFDC(s32, s16, s16, f32, s16, s16, s16);
+extern void func_8850BACC(s16, s16, f32, s16, s16, s16);
+extern void func_8850C514(s16, s16, f32, s16, s16, s16);
+
+
+
+void func_8850C998(void) {
+    u8 alpha;
+    s32 tint;
+
+    if ((D_88523030.unk_0E & 4) && (D_88523030.unk_0E & 0x10)) {
+        func_8850BDE8();
+    }
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    gDPSetFillColor(D_800D0510++, 0x10001);
+    func_80006F70(&D_800D0510, SCISSOR_RECT->x, SCISSOR_RECT->y, SCISSOR_RECT->w, SCISSOR_RECT->h);
+    gDPFillRectangle(D_800D0510++, SCISSOR_RECT->x, SCISSOR_RECT->y, SCISSOR_RECT->x + SCISSOR_RECT->w - 1, SCISSOR_RECT->y + SCISSOR_RECT->h - 1);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    gDPSetEnvColor(D_800D0510++, D_88523030.unk_14, D_88523030.unk_14, D_88523030.unk_14, 255);
+    func_8850B914(D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10);
+    if (D_8850D670 != 2) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        if (D_88523030.unk_0E & 8) {
+            alpha = (D_88523030.unk_16 * (D_8850D674 & 0x3F)) / 63;
+            if (D_8850D674 & 0x40) {
+                alpha = D_88523030.unk_16 - alpha;
+            }
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255, alpha);
+            func_8850AFDC(func_8004C990(0x146, 1), D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, D_88523030.unk_08, D_88523030.unk_0A, D_88523030.unk_0C);
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        func_88509290();
+        func_88509A38();
+        alpha = ((D_8850D674 & 0x3F) * 0x80) / 63;
+        if (D_8850D674 & 0x40) {
+            alpha = 0x80 - alpha;
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, alpha);
+        if (D_88523030.unk_0E & 1) {
+            func_8850AFDC(func_8004C990(0x146, 0), D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, 0xB4, 0xFA, 0x73);
+        }
+        if (D_88523030.unk_0E & 2) {
+            func_8850AFDC(func_8004C990(0x146, 2), D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, 0xD4, 0xE4, 2);
+        }
+        if (D_88523030.unk_0E & 2) {
+            if (D_88523030.unk_0E & 0x20) {
+                tint = 0x64;
+            } else {
+                tint = 0x32;
+            }
+            func_8850B9F4(D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, 0x81, 0xE5, 0, tint);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255, alpha);
+            if (!(D_88523030.unk_0E & 0x20)) {
+                func_8850B980(D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, 0x81, 0xE5, 0);
+            }
+        }
+        if (D_88523030.unk_0E & 4) {
+            if (D_88523030.unk_0E & 0x10) {
+                func_8850C514(D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, 0x23, 0x164, 0x68);
+            } else {
+                func_8850BACC(D_88523030.unk_04, D_88523030.unk_06, D_88523030.unk_10, 0x23, 0x164, 0x68);
+            }
+        }
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+    func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+}
+/* mkdraft:func_8850C998 end */
 
 s32 func_8850CED8(s32 arg0) {
     s32 var_v1;

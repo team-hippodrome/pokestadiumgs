@@ -2,6 +2,17 @@
 
 
 #ifdef VERSION_US
+// Not referenced by code or data (debug format strings); they open this file's .rodata.
+const char D_8AF2A0F0[] = "ogSetPage_EGG_NAME_S1() target = [%s]\n";
+const char D_8AF2A118[] = "size of OG_WIN_TYPE = %d\n";
+const char D_8AF2A134[] = "Egg Group %d\n";
+const char D_8AF2A144[] = "ogSetPage_EGG_NAME_S1() end\n";
+const char D_8AF2A164[] = "";
+const char D_8AF2A168[] = "";
+const char D_8AF2A16C[] = "";
+const char D_8AF2A170[] = "EGG_NAME_S2 : ogSetCursorMode() step1\n";
+const char D_8AF2A198[] = "EGG_NAME_S2 : ogSetCursorMode() step2\n";
+const char D_8AF2A1C0[] = "pane_wi_1(%d,%d) pane_wi_2(%d,%d)\n";
 /* mkdraft:func_8AF20ED0 begin */
 extern void func_800504BC(s16 *);
 extern void func_8AC007B8(s32, s32, s32, s32);
@@ -199,14 +210,13 @@ void func_8AF21864(void) {
 
 /* mkdraft:func_8AF21960 begin */
 extern f32 D_80088E50[];
-extern f32 D_8AF2A3E8;
 
 void func_8AF21960(void *arg0, u16 *arg1) {
     f32 scale;
     u16 temp_v0;
 
     temp_v0 = *arg1;
-    scale = D_8AF2A3E8;
+    scale = 0.3f;
     // karodo: empty block. Its line boundary keeps the 1.0f materialization attributed
     // here instead of uopt's entry constant pool, so as1 schedules it next to the multiplies.
     if (arg0) {

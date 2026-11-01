@@ -50,7 +50,57 @@ void func_8290325C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82903298.s")
+/* mkdraft:func_82903298 begin */
+extern void *D_82919C14;
+extern u8 *D_82919C18;
+extern f32 D_82919CE8;
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern void func_8003F1DC(void *);
+extern s32 func_8006456C(u16);
+extern void func_800428F8(s32);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F9AC(void *, s16, u16);
+extern void func_8003F2C4(s32, void *, s32);
+extern void Vec3s_SetComponents(void *, s16, s16, s16);
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+// Four-byte color adjustment word func_8003F5AC writes through its first argument and
+// func_80041FD0 reads by value.
+//@include/229E0.h
+typedef union { s32 word; s8 bytes[4]; } Func80041FA0State;
+extern void func_8003F5AC(Func80041FA0State *, u8 *);
+extern s32 func_80041FD0(s32, u16, Func80041FA0State, s32);
+// Row of the table D_82919C14 points at, selected by the mode byte at arg0+0x1070; 0x58 bytes
+// per row. D_82919C18 receives the address of the Pokemon record at row offset 8.
+typedef struct {
+    u8 unk_00[8];
+    u8 unk_08[0x50];
+} unk_D_82919C14_000;
+
+
+
+void func_82903298(void *arg0) {
+    u8 *model;
+    s32 variant;
+    Func80041FA0State adjustment;
+
+    model = (u8 *)arg0 + 4;
+    D_82919C18 = ((unk_D_82919C14_000 *)D_82919C14)[*(u8 *)((u8 *)arg0 + 0x1070)].unk_08;
+    *(u16 *)((u8 *)arg0 + 0x106C) = Pokemon_GetDisplaySpecies(D_82919C18);
+    func_8003F1DC(model);
+    func_8003F5AC(&adjustment, D_82919C18);
+    variant = func_8006456C(*(u16 *)(D_82919C18 + 0x16));
+    func_80041FD0(*(s32 *)((u8 *)arg0 + 0), *(u16 *)((u8 *)arg0 + 0x106C), adjustment, variant);
+    func_800428F8(*(s32 *)((u8 *)arg0 + 0));
+    func_8003F114(model, 0, *(s16 *)((u8 *)arg0 + 0x106C),
+                  **(s32 **)(*(u8 **)((u8 *)*(s32 *)((u8 *)arg0 + 0) + 0x38) + 8));
+    func_8003F9AC(model, *(s16 *)((u8 *)arg0 + 0x106C), *(u16 *)(D_82919C18 + 0x16));
+    func_8003F2C4(*(s32 *)((u8 *)arg0 + 0), model, 0);
+    Vec3s_SetComponents((u8 *)arg0 + 0x22, 0, -0x4000, 0);
+    Vec3f_SetComponentsDuplicate((u8 *)arg0 + 0x28, 0.0f, 0.0f, 0.0f);
+    func_829031F4(arg0);
+    *(f32 *)((u8 *)arg0 + 0x2C) += D_82919CE8;
+}
+/* mkdraft:func_82903298 end */
 #endif
 
 #ifdef VERSION_US
@@ -448,7 +498,55 @@ void func_8290430C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_829043B4.s")
+/* mkdraft:func_829043B4 begin */
+extern u8 D_82919C88[];
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern f32 Math_StepToF(f32, f32, f32, f32);
+
+// Per-frame update of the D_82919C38 record. Captures 0xAC with a 6.0 floor into
+// speed[0], writes Math_StepToF(0x44, 0x4C, 0x48, 0x48) back to 0x44, fills `eye`
+// from the 0x3C/0x3E rotation, copies the pointee's 0xA8 vector into `position`,
+// calls func_80037120 to obtain the distance/rotation pair for eye vs position,
+// then calls func_800371B4 again with &position, pointee+0xA8 and the scale
+// distance * 0x44 * 0.7f. The trailing blocks decay 0xAC 0.85 of the way back to
+// 6.0 from the captured speed[0], the second one only while 6.0 < 0xAC <= 7.0.
+
+
+
+void func_829043B4(u8 *arg0) {
+    typedef struct { f32 x; f32 y; f32 z; } V3;
+    V3 eye;
+    V3 position;
+    f32 distance[1]; // FAKE: one-element array read as distance[0]; diff score 20 without it.
+    s16 rotation[2];
+    f32 speed[2];
+    f32 padding[2]; // FAKE: unused, reserves retail's 0x68-byte frame; diff score 114 without it.
+
+    func_8290430C(arg0);
+    if (*(f32 *)((u8 *)D_82919C38 + 0xAC) >= 6.0f) {
+        speed[0] = *(f32 *)((u8 *)D_82919C38 + 0xAC);
+    } else {
+        speed[0] = 6.0f;
+    }
+    func_829042A4((f32 *)((u8 *)D_82919C38 + 0x2C), *(f32 *)((u8 *)&D_82919C38 + 0x88), 0.02f);
+    *(f32 *)((u8 *)&D_82919C38 + 0x44) =
+        Math_StepToF(*(f32 *)((u8 *)&D_82919C38 + 0x44), *(f32 *)((u8 *)&D_82919C38 + 0x4C),
+                     *(f32 *)((u8 *)&D_82919C38 + 0x48), *(f32 *)((u8 *)&D_82919C38 + 0x48));
+    func_800371B4(D_82919C88, &eye, *(f32 *)((u8 *)&D_82919C38 + 0x40),
+                  *(s16 *)((u8 *)&D_82919C38 + 0x3C), *(s16 *)((u8 *)&D_82919C38 + 0x3E));
+    Vec3f_SetComponentsDuplicate(&position, *(f32 *)((u8 *)D_82919C38 + 0xA8),
+                                 *(f32 *)((u8 *)D_82919C38 + 0xAC), *(f32 *)((u8 *)D_82919C38 + 0xB0));
+    func_80037120(&position, &eye, distance, &rotation[0], &rotation[1]);
+    func_800371B4(&position, (u8 *)D_82919C38 + 0xA8,
+                  *(f32 *)((u8 *)&D_82919C38 + 0x44) * distance[0] * 0.7f, rotation[0], rotation[1]);
+    if (*(f32 *)((u8 *)D_82919C38 + 0xAC) <= 6.0f) {
+        *(f32 *)((u8 *)D_82919C38 + 0xAC) = (speed[0] - 6.0f) * 0.85f + 6.0f;
+    }
+    if (*(f32 *)((u8 *)D_82919C38 + 0xAC) <= 7.0f && *(f32 *)((u8 *)D_82919C38 + 0xAC) > 6.0f) {
+        *(f32 *)((u8 *)D_82919C38 + 0xAC) = (speed[0] - 6.0f) * 0.85f + 6.0f;
+    }
+}
+/* mkdraft:func_829043B4 end */
 #endif
 
 void func_82904554(void) {
@@ -727,7 +825,35 @@ void func_82904AC8(u8 *arg0, u16 *arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, 
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82904C28.s")
+/* mkdraft:func_82904C28 begin */
+extern u8 D_82919A88[];
+extern u8 D_82919AF8[];
+extern u8 D_82919B68[];
+extern u8 D_82919AA4[];
+extern void func_82904AC8(u8 *, u16 *, u16, u16, u16, u16, u16, u16, s16);
+// The three 0x70-byte blocks at D_82919A88, D_82919AF8 and D_82919B68 each hold four
+// 0x1C-byte state records; byte 0x18 of a record carries its flag. Starting at record 1
+// (D_82919AA4), this clears bit 0 of records 1..3 in every block and leaves record 0
+// alone: the 0x88 and 0xF8 offsets are records 5 and 9 of the flattened 0x1C stride.
+// func_82904AC8 re-toggles the flag of a block's record 0, which the final test reads.
+
+
+void func_82904C28(void *arg0) {
+    s32 i;
+
+    for (i = 0; i != 3; i += 1) {
+        D_82919AA4[i * 0x1C + 0x18] &= ~1;
+        D_82919AA4[i * 0x1C + 0x88] &= ~1;
+        D_82919AA4[i * 0x1C + 0xF8] &= ~1;
+    }
+    func_82904AC8(D_82919A88, (u16 *)D_82919A88, 0xFF, 0xFF, 0xFF, 0, 0xC8, 0xFF, 0x14);
+    func_82904AC8(D_82919AF8, (u16 *)D_82919AF8, 0xFF, 0xFF, 0xFF, 0, 0xC8, 0xFF, 0x14);
+    func_82904AC8(D_82919B68, (u16 *)D_82919B68, 0xFF, 0xFF, 0xFF, 0xFF, 0xC8, 0, 0x14);
+    if ((D_82919A88[0x18] & 2) && (D_82919A88[0x88] & 2) && (D_82919A88[0xF8] & 2)) {
+        *(s16 *)((u8 *)arg0 + 0x1068) = 10;
+    }
+}
+/* mkdraft:func_82904C28 end */
 #endif
 
 #ifdef VERSION_US

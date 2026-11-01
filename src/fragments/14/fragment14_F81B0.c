@@ -285,7 +285,50 @@ void func_81300BA0(s32 arg0) { func_8130A570(arg0 + 0xDA8, 0); func_81304208(arg
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_81300BE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_81300E34.s")
+/* mkdraft:func_81300E34 begin */
+extern void func_8130015C(void *, s32);
+extern s32 func_813002D0(void *);
+extern void func_8130FC80(void *, s32, s32, void *, s32);
+extern void func_8130FD10(void *, s32, s32, s32, s32, s32, void *, void *, s32, s32);
+extern void func_81300350(void);
+extern s32 func_81302290(void *);
+extern void *func_81609530(s32);
+
+// Resets the mode-14 setup state and hands both halves of the selection UI to the
+// renderer pair: func_8130FC80 for the 0xF64C panel and func_8130FD10 for the
+// selection grid. `idle` is true while mode is still 0, `control` is the caller's
+// 0x1A15C control block except in slot 0 where func_81609530 supplies it, and
+// `count` is func_81302290's entry count for the grid, passed as FD10's last
+// argument (func_813010B0 does the same with `count`).
+
+
+void func_81300E34(void *arg0) {
+    s32 count;
+    void *control;
+    s32 idle;
+    s32 result;
+
+    func_81300350();
+    ((Fragment14SetupState *)arg0)->status = 0;
+    func_8130015C(arg0, 0);
+    func_8130FC80((u8 *)arg0 + 0xF64C, *(s8 *)(((Fragment14SetupState *)arg0)->data + 0x944) >= 0,
+                  *(s16 *)(*(u8 **)(((Fragment14SetupState *)arg0)->data + 0x940) + 0x34) != 14,
+                  (u8 *)arg0 + 0x1A144, *(s32 *)((u8 *)arg0 + 0x1A150));
+    result = func_813002D0(arg0);
+    idle = ((Fragment14SetupState *)arg0)->mode == 0;
+    if (((Fragment14SetupState *)arg0)->slot == 0) {
+        control = func_81609530(5);
+    } else {
+        control = (u8 *)arg0 + 0x1A15C;
+    }
+    count = func_81302290(arg0);
+    func_8130FD10((u8 *)arg0 + 0xF64C, result,
+                  *(s8 *)(((Fragment14SetupState *)arg0)->data + ((Fragment14SetupState *)arg0)->slot + 0x93C),
+                  *(s8 *)(((Fragment14SetupState *)arg0)->data + ((Fragment14SetupState *)arg0)->slot + 0x900),
+                  ((Fragment14SetupState *)arg0)->slot, idle, (u8 *)arg0 + 0x1A15C, control, 0, count);
+    ((Fragment14SetupState *)arg0)->mode = 1;
+}
+/* mkdraft:func_81300E34 end */
 
 extern void Fragment14_UpdateTitleText(void *, s32);
 extern s32 func_813002D0(void *);

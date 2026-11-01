@@ -18,9 +18,107 @@ s32 func_83300398(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300CB0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833015C8.s")
+/* mkdraft:func_833015C8 begin */
+extern void *D_80094908;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_8330173C.s")
+
+
+s32 func_833015C8(s32 arg0, u8 *arg1) {
+    typedef struct {
+        u8 unk_00[0xE4];
+        u8 unk_E4[8];
+    } Overlay;
+    s32 i;
+    u8 *dst = arg1;
+    s32 mode_flag;
+    f32 distance;
+    s16 angleX;
+    s16 angleY;
+
+    if (arg0 == 2) {
+        for (i = 0; i < 3; i++) {
+            dst[0x18 + i] = ((Overlay *)&D_8330A2B0)->unk_E4[i];
+        }
+        dst[0x1B] = *(u8 *)((u8 *)&D_8330A2B0 + 0xE7);
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x18) == 2 && *(s32 *)((u8 *)&D_8330A2B0 + 0x1C) == 0) {
+            if (D_80087200->stickX >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF6) += 256;
+            }
+            if (D_80087200->stickX < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF6) -= 256;
+            }
+            if (D_80087200->stickY >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF4) += 256;
+            }
+            if (D_80087200->stickY < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF4) -= 256;
+            }
+        }
+        mode_flag = 1;
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x10) > 0 && *(s32 *)((u8 *)&D_8330A2B0 + 0x10) < 4) {
+            mode_flag = 0;
+        }
+        func_80037120((u8 *)D_80094908 + 0xB4, (u8 *)D_80094908 + 0xA8, &distance, &angleX, &angleY);
+        *(s16 *)(dst + 0x1C) = (*(s16 *)((u8 *)&D_8330A2B0 + 0xF4) + angleX) + 0x2000;
+        *(s16 *)(dst + 0x1E) = angleY - ((*(s16 *)((u8 *)&D_8330A2B0 + 0xF6) + 0x2000) * mode_flag);
+    }
+    return 0;
+}
+/* mkdraft:func_833015C8 end */
+
+/* mkdraft:func_8330173C begin */
+extern void *D_80094908;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
+
+
+
+s32 func_8330173C(s32 arg0, u8 *arg1) {
+    typedef struct {
+        u8 unk_00[0xF8];
+        u8 unk_F8[8];
+    } Overlay;
+    s32 i;
+    u8 *dst = arg1;
+    s32 mode_flag;
+    f32 distance;
+    s16 angleX;
+    s16 angleY;
+
+    if (arg0 == 2) {
+        for (i = 0; i < 3; i++) {
+            dst[0x18 + i] = ((Overlay *)&D_8330A2B0)->unk_F8[i];
+        }
+        dst[0x1B] = *(u8 *)((u8 *)&D_8330A2B0 + 0xFB);
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x18) == 2 && *(s32 *)((u8 *)&D_8330A2B0 + 0x1C) == 1) {
+            if (D_80087200->stickX >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x10A) += 256;
+            }
+            if (D_80087200->stickX < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x10A) -= 256;
+            }
+            if (D_80087200->stickY >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x108) += 256;
+            }
+            if (D_80087200->stickY < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x108) -= 256;
+            }
+        }
+        mode_flag = 1;
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x10) > 0 && *(s32 *)((u8 *)&D_8330A2B0 + 0x10) < 4) {
+            mode_flag = 0;
+        }
+        func_80037120((u8 *)D_80094908 + 0xB4, (u8 *)D_80094908 + 0xA8, &distance, &angleX, &angleY);
+        *(s16 *)(dst + 0x1C) = -0x2000 - (u32)(*(s16 *)((u8 *)&D_8330A2B0 + 0x108) + angleX);
+        *(s16 *)(dst + 0x1E) = (*(s16 *)((u8 *)&D_8330A2B0 + 0x10A) + 0x6000) * mode_flag + angleY;
+    }
+    return 0;
+}
+/* mkdraft:func_8330173C end */
 
 // Fields of D_8330A2B0 that func_83303AB0 writes and func_83302AC8 prints. D_8330A344 (+0x94) and D_8330A368 (+0xB8) are
 // three-float vectors inside this object; unk_98 and unk_C0 alias their second and third components.
@@ -1708,7 +1806,112 @@ void func_83306BF0(void) {
         }
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83306D0C.s")
+/* mkdraft:func_83306D0C begin */
+// The retail bytes for this function end at 0x8330707C with the normal
+// epilogue; 0x83307080 holds an unreferenced `jr ra; nop` stub that the
+// symbol map lists without a name. It is reproduced as the empty
+// func_83306D0C_padding below, the same way src/6E850.c carries
+// func_8006EB14_padding after Model_CopyPositionBuffer.
+typedef struct unk_D_8330907C {
+    s32 words[12];
+} unk_D_8330907C;
+
+extern s32 D_83308E2C;
+extern s32 D_83308E38[];
+extern s32 D_8330907C[];
+extern s32 D_8330921C;
+extern s32 D_8330AA70[];
+extern s32 D_8330AC38;
+extern void StageContext_SetClearColor(u16 arg0);
+extern s32 StageFade_StartFromTransparent(s32 duration);
+extern s32 func_800225C4(s32);
+extern void func_800226C0(s32);
+extern void func_87F034CC(void *);
+
+void func_83306D0C(void) {
+    // FAKE: pins D_8330921C's address in $a1 for the hold-timer increment,
+    // reset, and repeat-delay compare; referring to D_8330921C by name scores
+    // 1035 because each use then reloads the address.
+    s32 *holdTimer = &D_8330921C;
+    s32 var_v1;
+    s32 temp_v0;
+    s32 temp_v0_2;
+
+    if ((ModelAnim_IsFinished(&D_8330A4D0) == 1) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x30) == 1)) {
+        func_8003F2C4(D_8330A4CC, &D_8330A4D0, 0);
+        func_8003F3BC(&D_8330A4D0, 0);
+        M2C_FIELD(&D_8330A2B0, s32 *, 0x54) = 1;
+        M2C_FIELD(&D_8330A2B0, s32 *, 0x30) = 0;
+    }
+    func_83300020(2);
+    func_83303640(2);
+    if (M2C_FIELD(&D_8330A2B0, s32 *, 0x14) == 0) {
+        (*holdTimer) += 1;
+    }
+    temp_v0 = D_80087200->buttonsPressed;
+    if ((temp_v0 & 0x2030) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x30) == 0) && (D_833090AC == 1)) {
+        if ((temp_v0 & 0x10) || ((D_83308E2C * 20) < (*holdTimer))) {
+            D_8330ABD8 += 1;
+        } else if ((temp_v0 & 0x20) && (D_8330ABD8 >= 2)) {
+            D_8330ABD8 -= 1;
+        }
+        if (D_8330ABD8 >= 252) {
+            D_8330ABD8 = 1;
+        }
+        (*holdTimer) = 0;
+        func_87F034CC(&D_8330AC38);
+        M2C_FIELD(&D_8330AA70, u8 *, 0x1D) = 0xFF;
+        M2C_FIELD(&D_8330AA70, f32 *, 0x34) = 0.45f;
+        M2C_FIELD(&D_8330AA70, f32 *, 0x38) = (f32) M2C_FIELD(&D_8330AA70, f32 *, 0x34);
+        M2C_FIELD(&D_8330A2B0, s32 *, 0) = 7;
+        M2C_FIELD(&D_8330AA70, f32 *, 0x30) = (f32) M2C_FIELD(&D_8330AA70, f32 *, 0x38);
+        *(unk_D_8330907C *) &D_8330AC08 = *(unk_D_8330907C *) D_8330907C;
+        func_800225C4(10);
+        StageContext_SetClearColor(1);
+        StageFade_StartFromTransparent(20);
+    }
+    var_v1 = D_83308E38[M2C_FIELD(&D_8330A2B0, s32 *, 8)];
+    if (var_v1 == 17) {
+        temp_v0_2 = D_80087200->buttonsPressed;
+        if ((temp_v0_2 & 0x8000) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x54) == 2)) {
+            func_800226C0(2);
+            func_833003B0(7);
+            if (D_833090AC == 1) {
+                M2C_FIELD(&D_8330A2B0, s32 *, 0) = 13;
+                M2C_FIELD(&D_8330A2B0, s32 *, 4) = 14;
+                M2C_FIELD(&D_8330A2B0, s32 *, 0x4C) = 1;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(30);
+            } else {
+                M2C_FIELD(&D_8330A2B0, s32 *, 0x58) = -1;
+                M2C_FIELD(&D_8330A2B0, s32 *, 0x4C) = 1;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(30);
+                M2C_FIELD(&D_8330A2B0, s32 *, 0) = 10;
+            }
+            var_v1 = D_83308E38[M2C_FIELD(&D_8330A2B0, s32 *, 8)];
+        } else if ((temp_v0_2 & 0x4000) && (D_833090AC == 1)) {
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(5);
+            M2C_FIELD(&D_8330A2B0, s32 *, 0) = 13;
+            M2C_FIELD(&D_8330A2B0, s32 *, 4) = 1;
+            func_800225C4(5);
+            var_v1 = D_83308E38[M2C_FIELD(&D_8330A2B0, s32 *, 8)];
+        }
+    }
+    if ((var_v1 == 16) && (D_80087200->buttonsPressed & 0x8000) && (M2C_FIELD(&D_8330A2B0, s32 *, 0x54) == 2)) {
+        func_833003B0(6);
+        func_800226C0(2);
+    }
+}
+/* mkdraft:func_83306D0C end */
+
+/* mkdraft:func_83306D0C_padding begin */
+// Bytes at 0x83307080: the retail jr ra/nop stub between this function and
+// func_83307088; the symbol map has no name for it. Kept adjacent so the
+// linker places it at the retail address.
+void func_83306D0C_padding(void) {}
+/* mkdraft:func_83306D0C_padding end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307088.s")
 

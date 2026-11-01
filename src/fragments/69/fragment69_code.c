@@ -833,7 +833,60 @@ void func_8F102394(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F102488.s")
+/* mkdraft:func_8F102488 begin */
+extern s32 D_8F1DECF0;
+extern u16 D_8F1DEE26;
+extern s32 D_8F1DEE30;
+extern s8 D_8F1DEE48[];
+
+// Fragment69PackedState (union of the four state bytes) is declared above
+// func_8F101FF4 in src/fragments/69/fragment69_code.c.
+
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE44;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DECA0;
+extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
+extern void func_8004BDB0(s32 arg0, s32 arg1, s16 arg2);
+// The packed state reaches func_8004BE18 as a 4-byte value; the union parameter
+// makes IDO copy it to the outgoing argument slot as the ROM does.
+extern void func_8004BE18(s32 a, Fragment69PackedState b);
+
+
+void func_8F102488(void) {
+    if (D_80087200->buttonsRepeat & 0x200) {
+        *(s16 *)(D_8F1DEE48 + 0) -= 0x40;
+        if (*(s16 *)(D_8F1DEE48 + 0) < -0x2D00) {
+            *(s16 *)(D_8F1DEE48 + 0) = 0x2CC0;
+        }
+    }
+    if (D_80087200->buttonsRepeat & 0x100) {
+        *(s16 *)(D_8F1DEE48 + 0) += 0x40;
+        if (*(s16 *)(D_8F1DEE48 + 0) > 0x2D00) {
+            *(s16 *)(D_8F1DEE48 + 0) = -0x2CC0;
+        }
+    }
+    if (D_8F1DEE24 >= 0x98) {
+        if (D_80087200->buttonsPressed & 2) {
+            func_8004BDB0(D_8F1DEE24, 0, *(s16 *)(D_8F1DEE48 + 0) >> 6);
+        }
+        if (D_80087200->buttonsPressed & 1) {
+            func_8004BDB0(D_8F1DEE24, 1, *(s16 *)(D_8F1DEE48 + 0) >> 6);
+        }
+    }
+    if (D_80087200->buttonsPressed & 0x8000) {
+        func_8004BE18(D_8F1DEE24, *(Fragment69PackedState *)D_8F1DEE48);
+    }
+    if (D_8F1DEE44 != ((Fragment69PackedState *)D_8F1DEE48)->word) {
+        D_8F1DEE5C = 0;
+        if (func_80041FD0(D_8F1DECA0, D_8F1DEE26,
+                          *(Fragment69PackedState *)D_8F1DEE48, 0) != 0) {
+            D_8F1DEE44 = ((Fragment69PackedState *)D_8F1DEE48)->word;
+            D_8F1DEE30 = D_8F1DECF0;
+        }
+    }
+}
+/* mkdraft:func_8F102488 end */
 #endif
 
 #ifdef VERSION_US
