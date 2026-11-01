@@ -578,7 +578,59 @@ void func_8FD016E4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD01794.s")
+/* mkdraft:func_8FD01794 begin */
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern s32 func_8004C504(s32);
+// Per-frame update for the two phases selected by D_8FD02188, each running only while the
+// byte at +1 equals 1. Case 3 advances the counter at +6 while it stays below 0xC0 and
+// reloads it from 0x10 once it reaches 0xC0. Case 4 steps the frame index at +8, which wraps
+// to 0x4C at 0x14B, then sets the field at +0xA to 3 and reissues func_8004C8A0 and
+// func_80049C70. A func_80049148 width of at least 0xF9 sets the byte at +1 to 2.
+
+
+void func_8FD01794(void) {
+    switch (D_8FD02188) {
+    case 3:
+        if ((&D_8FD02188)[1] == 1) {
+            *(s16 *)(&D_8FD02188 + 6) = *(s16 *)(&D_8FD02188 + 6) + 1;
+            if (*(s16 *)(&D_8FD02188 + 6) < 0xC0) {
+                func_8004C8A0(D_8FD021A8, 0x100, 0x10, *(s16 *)(&D_8FD02188 + 6));
+                if (func_80049148(2, -1, (const char *)D_8FD021A8) >= 0xF9) {
+                    (&D_8FD02188)[1] = 2;
+                }
+            } else {
+                *(s16 *)(&D_8FD02188 + 6) = 0x10;
+                (&D_8FD02188)[1] = 0;
+                func_8004C8A0(D_8FD021A8, 0x100, 0x10, *(s16 *)(&D_8FD02188 + 6));
+            }
+        }
+        break;
+    case 4:
+        if ((&D_8FD02188)[1] == 1) {
+            *(s16 *)(&D_8FD02188 + 0xA) = *(s16 *)(&D_8FD02188 + 0xA) + 1;
+            if (*(s16 *)(&D_8FD02188 + 0xA) < 0x19) {
+                func_8004C8A0(D_8FD021A8, 0x100, *(s16 *)(&D_8FD02188 + 8), *(s16 *)(&D_8FD02188 + 0xA));
+                func_80049C70(D_8FD02198, D_8FD0219C, D_8FD021A8);
+                if (func_80049148(2, -1, (const char *)D_8FD021A8) >= 0xF9) {
+                    (&D_8FD02188)[1] = 2;
+                }
+            } else {
+                func_8004C504(*(s16 *)(&D_8FD02188 + 8));
+                *(s16 *)(&D_8FD02188 + 8) = *(s16 *)(&D_8FD02188 + 8) + 1;
+                if (*(s16 *)(&D_8FD02188 + 8) >= 0x14B) {
+                    (&D_8FD02188)[1] = 0;
+                    *(s16 *)(&D_8FD02188 + 8) = 0x4C;
+                }
+                *(s16 *)(&D_8FD02188 + 0xA) = 3;
+                func_8004C4B0(*(s16 *)(&D_8FD02188 + 8));
+                func_8004C8A0(D_8FD021A8, 0x100, *(s16 *)(&D_8FD02188 + 8), *(s16 *)(&D_8FD02188 + 0xA));
+                func_80049C70(D_8FD02198, D_8FD0219C, D_8FD021A8);
+            }
+        }
+        break;
+    }
+}
+/* mkdraft:func_8FD01794 end */
 #endif
 
 #ifdef VERSION_US
