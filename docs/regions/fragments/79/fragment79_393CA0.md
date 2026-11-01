@@ -2635,3 +2635,44 @@ and declaration cleanup preserve complete-module sections, function extents,
 and semantic relocations in normal and twenty-leading-blank-line controls.
 The original function address remains a linker alias. This resolves the
 HP-loss-animation requeue above; the move-slot-copy requeue is still open.
+
+
+## 2026-11-02 — Move command-stream loader accepted
+
+`func_841252D0` is now `Battle_LoadMoveCommandStream`: 73 instructions /
+292 bytes, with a 32-byte frame, at VRAM `0x841252D0` / ROM `0x394B60`.
+It records the selected move and metadata, registers its name, searches the
+acting combatant's four move slots, and copies the effect's command stream
+through `0xFF` or the 30-byte destination limit. This resolves the earlier
+move-slot-copy and command-stream-copy requeues for this owner.
+
+The matching copy increments the destination separately, stores the unsigned
+source byte at `destination[-1]`, then compares a reload at that same address.
+The normal assembler forwards the reload into `andi`, leaving the source
+byte in the retail T1 temporary. A solved halfword copy in fragment 45
+(`func_8AB03194`) supplied this store/readback shape. Naming a copied-word
+local instead makes UOPT allocate it globally in V0 and displaces the
+destination; an inline signed-store result folds the load into `lb`.
+
+Direct comparison against the end symbol removes another global variable
+and recovers the sentinel/bound registers. An unconditional `for` with
+meaningful initialization and explicit terminator/bound breaks recovers the
+last two address-materialization instructions. Stock-pass and assembler
+observations preserve complete-module bytes and relocation targets; the
+two-instruction predecessor had both address additions ready at equal
+priority and chose their earlier emission order. The matching source uses
+ordinary C, without register bindings, unused locals, padding or instruction
+rewriting. Its byte argument and void return remain intact.
+
+Callee declarations now agree with their definitions: `func_80062CE0`
+returns `s32 *`, and `func_8004C54C` takes two signed words. Calls explicitly
+convert the name pointer to the parameter table's address word. Normal
+and twenty-leading-blank complete-module controls cover these corrections,
+behavior-backed naming and formatting, including all existing callers.
+The original function name remains a compatibility alias.
+
+Canonical admission passes link verification, the normal host syntax check
+and the full US retail ROM comparison. A fresh extraction and native IDO 7.1
+build after naming/type cleanup passes again on `c91a08a2` plus this change:
+MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Every final instruction word also
+matches the saved original assembly. Coverage and private tooling are unchanged.
