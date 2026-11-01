@@ -1658,6 +1658,7 @@ s32 func_8AB0A2D8(s32 arg0) {
 /* mkdraft:func_8AB0A2D8 end */
 
 /* mkdraft:func_8AB0A720 begin */
+extern s32 D_8AB11A04;
 extern void *D_8AB11D00;
 extern void *D_8AB16A58;
 extern void *D_8AB16C98;
@@ -1707,7 +1708,7 @@ s32 func_8AB0A720(s32 arg0) {
         *((u16 *)((u8 *)(*p_c9c) + 2)) = (u16)(*((u16 *)((u8 *)(*p_c9c) + 2)) & 0xFFFD);
         *((u16 *)((u8 *)(*p_ca0) + 2)) = (u16)(*((u16 *)((u8 *)(*p_ca0) + 2)) & 0xFFFD);
         *((u16 *)((u8 *)(*p_ca4) + 2)) = (u16)(*((u16 *)((u8 *)(*p_ca4) + 2)) & 0xFFFD);
-        func_8004C54C(0xF, (s32)"");
+        func_8004C54C(0xF, (s32)&D_8AB11A04);
         func_8004C8A0(D_8AB126A8, 0x100, 0x39, D_8AB16CAC + 0x224);
         { void *d; d = D_8AB11D00; if (d == 0) {} } // karodo
         *(u16 *)((u8 *)D_8AB11D00 + 2) = (u16)(*(u16 *)((u8 *)D_8AB11D00 + 2) | 1);

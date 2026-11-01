@@ -28,7 +28,7 @@ extern s32 D_80128120; void func_8004EC5C(void) { if (D_80128120 > 0) { D_801281
 
 #ifdef VERSION_US
 // Returns 1 if (x, y) lies within x = -640..640 and y = -479..480, else 0.
-// Callers (func_8004F64C, func_8004FC58, func_80050218) branch past their following code when it returns 0.
+// Callers (UiPanelNode_Draw, UiImageNode_DrawUnscaled, UiTextNode_Draw) branch past their following code when it returns 0.
 s32 func_8004EC7C(s16 x, s16 y) {
     s32 in_bounds = 1;
 
@@ -140,12 +140,17 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
                    TextureRenderHeader *bottomLeft, TextureRenderHeader *bottomRight) {
     s32 right;
     s32 bottom;
-    s32 pad[2]; // FAKE: unused; enlarges the frame from 0x68 to 0x70 bytes; diff score 186 without it.
+    s16 first_corner_width;
+    s16 first_corner_height;
+    u8 *image;
 
     if ((topLeft != NULL) && (topRight != NULL) && (bottomLeft != NULL) && (bottomRight != NULL)) {
-        func_800459AC(func_8004CA60(topLeft), topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
+        image = func_8004CA60(topLeft);
+        func_800459AC(image, topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
                       2, 0, 0, 0, 0);
-        GfxRect_DrawTextured(x, y, topLeft->width, topLeft->height, 0, 0, 0x400, 0x400, 0);
+        first_corner_width = topLeft->width;
+        first_corner_height = topLeft->height;
+        GfxRect_DrawTextured(x, y, first_corner_width, first_corner_height, 0, 0, 0x400, 0x400, 0);
 
         // Top edge, then the top-right corner.
         func_800459AC(func_8004CA60(topRight), topRight->format, topRight->size, topRight->width, topRight->height, 1,
@@ -215,106 +220,296 @@ void func_8004F2D0(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *tex
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004F64C.s")
-#endif
-
-#ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004FA6C.s")
-#endif
-
-#ifdef VERSION_US
-/* mkdraft:func_8004FC58 begin */
-extern u8 D_80094F50[];
-extern s32 func_8004C990(s32 arg0, s32 arg1);
-extern s32 func_8004D150(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
-extern s32 func_80050640(u8 *arg0);
+extern s32 func_80008494(void);
+extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
+extern void Ui_DrawGradientQuad(s32, s32, s32, s32, u8 *, u8 *);
+extern void func_8004F2D0(s32, s32, s32, s32, TextureRenderHeader *);
 extern Gfx *D_800D0510;
+extern Gfx D_80094DB8[], D_80094DE0[], D_80097218[];
+extern u8 *D_800971F4;
+typedef union UiPanelImageKey {
+    struct { u16 archive, entry; } id;
+    u32 packed;
+} UiPanelImageKey;
+typedef union UiPanelTint {
+    u32 packed;
+    u8 rgba[4];
+    struct { u8 r, g, b, a; } channels;
+} UiPanelTint;
+extern s32 func_8004C990(s32, s32);
+// Fills the panel interior, draws its texture border, then traverses child nodes.
+void UiPanelNode_Draw(u8 *node, s32 x, s32 y) {
+    s32 fill_value;
+    u16 *key_fields;
+    s32 same_keys;
+    s32 fill_mode;
+    s16 fill_y;
+    s16 fill_x;
+    UiPanelImageKey top_left;
+    UiPanelImageKey top_right;
+    UiPanelImageKey bottom_left;
+    UiPanelImageKey bottom_right;
+    u8 first_rgb[3];
+    u8 second_rgb[3];
+    u16 packed_fill;
+    UiPanelTint tint;
 
-void func_8004FA6C(u8 *);
-
-// Draws the animation frame selected by arg0 onto the asset returned by
-// func_8004C990, when (arg1, arg2) projects inside the viewport. The sp* names
-// are the frame slots the retail code stores through (0x20, 0x34, 0x38, 0x3E)
-// and are kept because each one's home is what makes the register assignment
-// come out the same.
-
-
-void func_8004FC58(u8 *arg0, s32 arg1, s32 arg2) {
-    u16 var_t1;
-    s32 sp38;
-    s32 var_a3;
-    u16 sp3E;
-    s32 sp34;
-    u8 *sp20;
-    s32 temp_v0;
-    u8 *temp_t7;
-    s32 temp_v0_2;
-
-    sp38 = 0;
-    var_a3 = *(u16 *)(arg0 + 0x26);
-    temp_t7 = *(u8 **)(arg0 + 0x34);
-    var_t1 = 0;
-    sp20 = temp_t7; // FAKE: dead store into the retail frame's 0x20 slot, never read; removing it scores 4.
-    if (temp_t7 != NULL) {
-        sp34 = var_a3;
-        sp3E = 0;
-        temp_v0 = func_80050640(temp_t7);
-        var_t1 = sp3E;
-        if (temp_v0 >= 0) {
-            var_a3 = temp_v0;
-        } else if (temp_v0 == -1) {
-            var_a3 = -1U;
+    func_80008494();
+    key_fields = (u16 *)&top_left;
+    key_fields[0] = *(u16 *)(node + 44);
+    key_fields[1] = *(u16 *)(node + 46);
+    key_fields = (u16 *)&top_right;
+    key_fields[0] = *(u16 *)(node + 48);
+    key_fields[1] = *(u16 *)(node + 50);
+    key_fields = (u16 *)&bottom_left;
+    key_fields[0] = *(u16 *)(node + 52);
+    key_fields[1] = *(u16 *)(node + 54);
+    key_fields = (u16 *)&bottom_right;
+    key_fields[0] = *(u16 *)(node + 56);
+    key_fields[1] = *(u16 *)(node + 58);
+    same_keys = 0;
+    if (top_left.packed == top_right.packed && top_left.packed == bottom_left.packed &&
+        top_left.packed == bottom_right.packed) {
+        same_keys = 1;
+    }
+    if (node[63] != 0xFF) {
+        fill_mode = 0;
+    } else {
+        node[67] = 0xFF;
+        if (*(u32 *)(node + 64) != *(u32 *)(node + 60)) {
+            fill_mode = 1;
+        } else {
+            fill_mode = 2;
         }
     }
-    if (var_a3 >= 0) {
-        sp3E = var_t1;
-        sp38 = func_8004C990(*(u16 *)(arg0 + 0x24), var_a3);
-    }
-    temp_v0_2 = *(u8 *)(arg0 + 1);
-    if (temp_v0_2 & 1) {
-        var_t1 = 1;
-    }
-    if (temp_v0_2 & 2) {
-        var_t1 = (var_t1 | 2) & 0xFFFF;
-    }
-    if (temp_v0_2 & 4) {
-        var_t1 = (var_t1 | 0x100) & 0xFFFF;
-    }
-    if (sp38 != 0) {
-        sp3E = var_t1;
-        if (func_8004EC7C((s16) arg1, (s16) arg2) != 0) {
-            sp3E = var_t1;
-            func_8004FA6C(arg0);
-            // Byte 4 of the asset picks the RGBA16 texture LUT used while drawing the frame.
-            if (*(u8 *)(sp38 + 4) == 2) {
-                gDPSetTextureLUT(D_800D0510++, G_TT_RGBA16);
+    fill_x = *(s16 *)(node + 36) + x;
+    fill_y = *(s16 *)(node + 38) + y;
+    if (*(u16 *)(node + 2) & 2) {
+        if (func_8004EC7C((s16)x, (s16)y) != 0 && *(s16 *)(node + 40) > 0 && *(s16 *)(node + 42) > 0) {
+            switch (fill_mode) {
+            case 0:
+                gSPDisplayList(D_800D0510++, D_80094DB8);
+                Gfx_FillRectRgba(fill_x, fill_y, *(s16 *)(node + 40), *(s16 *)(node + 42),
+                                 node[60], node[61], node[62], node[63]);
+                tint = *(UiPanelTint *)(node + 68);
+                break;
+            case 1:
+                func_8004EE30(first_rgb, node + 60);
+                func_8004EE30(second_rgb, node + 64);
+                Ui_DrawGradientQuad(fill_x, fill_y, *(s16 *)(node + 40), *(s16 *)(node + 42), first_rgb, second_rgb);
+                tint.packed = 0xFFFFFFFF;
+                break;
+            case 2:
+                func_8004EE4C(&packed_fill, node + 60);
+                gSPDisplayList(D_800D0510++, D_80094DE0);
+                {
+                    Gfx *color_packet = D_800D0510++;
+                    color_packet->words.w0 = _SHIFTL(G_SETFILLCOLOR, 24, 8);
+                    fill_value = packed_fill;
+                    color_packet->words.w1 = ((u32)fill_value << 16) | fill_value;
+                }
+                {
+                    Gfx *fill_packet = D_800D0510++;
+                    // The RDP rectangle ends at the inclusive lower-right pixel.
+                    fill_packet->words.w0 =
+                        _SHIFTL(fill_y + *(s16 *)(node + 42) - 1, 2, 10) |
+                        (_SHIFTL(fill_x - (1 - *(s16 *)(node + 40)), 14, 10) | _SHIFTL(G_FILLRECT, 24, 8)),
+                    fill_packet->words.w1 = _SHIFTL(fill_x, 14, 10) | _SHIFTL(fill_y, 2, 10);
+                }
+                tint = *(UiPanelTint *)(node + 68);
+                break;
             }
-            func_8004D150(arg1, arg2, sp38, 0, var_t1, 0);
-            if (*(u8 *)(sp38 + 4) == 2) {
-                gDPSetTextureLUT(D_800D0510++, G_TT_NONE);
+            gSPDisplayList(D_800D0510++, D_80097218);
+            gDPSetEnvColor(D_800D0510++, tint.channels.r, tint.channels.g, tint.channels.b, tint.channels.a);
+            if (!same_keys) {
+                func_8004EE9C(x, y, *(s16 *)(node + 12), *(s16 *)(node + 14),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 44), *(u16 *)(node + 46)),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 48), *(u16 *)(node + 50)),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 52), *(u16 *)(node + 54)),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 56), *(u16 *)(node + 58)));
+            } else {
+                func_8004F2D0(x, y, *(s16 *)(node + 12), *(s16 *)(node + 14),
+                              (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 52), *(u16 *)(node + 54)));
             }
-            gSPDisplayList(D_800D0510++, D_80094F50);
+        }
+    }
+    D_800971F4 = node;
+    func_8004ECD4(node, x, y);
+    D_800971F4 = NULL;
+}
+#endif
+
+#ifdef VERSION_US
+extern Gfx D_80097250[];
+typedef struct UiImageStateColor {
+    u8 r, g, b, a;
+} UiImageStateColor;
+// Selects the image combiner and render mode, then loads primary and environment colors.
+void UiImageNode_SetRenderState(u8 *node) {
+    s32 enabled;
+    UiImageStateColor *primary;
+    UiImageStateColor *environment;
+
+    primary = (UiImageStateColor *)(node + 44);
+    environment = (UiImageStateColor *)(node + 48);
+    enabled = 1;
+    switch (node[40] & 0xF) {
+    case 1:
+        gSPDisplayList(D_800D0510++, D_80097250);
+        gDPSetCombineMode(D_800D0510++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        break;
+    case 2:
+        gSPDisplayList(D_800D0510++, D_80097250);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
+        break;
+    default:
+        enabled = 0;
+        break;
+    }
+    if (enabled) {
+        switch (node[40] & 0xF0) {
+        default:
+            gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            break;
+        case 0x10:
+            gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+            break;
+        case 0x20:
+            gDPSetRenderMode(D_800D0510++, G_RM_TEX_EDGE, G_RM_TEX_EDGE2);
+            break;
+        }
+        gDPSetPrimColor(D_800D0510++, 0, 0, primary->r, primary->g, primary->b, primary->a);
+        gDPSetEnvColor(D_800D0510++, environment->r, environment->g, environment->b, environment->a);
+    }
+}
+#endif
+
+#ifdef VERSION_US
+extern s32 UiAnimationCursor_Step(u8 *);
+extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
+extern Gfx D_80094F50[];
+// Resolves the animated image entry, clips it, and draws at its native dimensions.
+// Palette lookup is enabled only for CI images and restored before the default display list.
+//@src/4CC20.c
+void UiImageNode_DrawUnscaled(u8 *node, s32 x, s32 y) {
+    u16 flags;
+    s32 image_address;
+    s32 entry;
+    Gfx *setup_packet;
+    Gfx *restore_packet;
+    Gfx *footer_packet;
+    s32 animated_entry;
+    u8 *animation;
+
+    image_address = 0;
+    entry = *(u16 *)(node + 38);
+    flags = 0;
+    if ((animation = *(u8 **)(node + 52)) != NULL) {
+        animated_entry = UiAnimationCursor_Step(animation);
+        if (animated_entry >= 0) {
+            entry = animated_entry;
+        } else if (animated_entry == -1) {
+            entry = -1;
+        }
+    }
+    if (entry >= 0) {
+        image_address = func_8004C990(*(u16 *)(node + 36), entry);
+    }
+    if (node[1] & 1) {
+        flags = 1;
+    }
+    if (node[1] & 2) {
+        flags |= 2;
+    }
+    if (node[1] & 4) {
+        flags |= 0x100;
+    }
+    if (image_address != 0 && func_8004EC7C((s16)x, (s16)y) != 0) {
+        UiImageNode_SetRenderState(node);
+        if (((u8 *)image_address)[4] == G_IM_FMT_CI) {
+            setup_packet = D_800D0510++;
+            gDPSetTextureLUT(setup_packet, G_TT_RGBA16);
+        }
+        func_8004D150(x, y, image_address, 0, flags, 0);
+        if (((u8 *)image_address)[4] == G_IM_FMT_CI) {
+            restore_packet = D_800D0510++;
+            gDPSetTextureLUT(restore_packet, G_TT_NONE);
+        }
+        footer_packet = D_800D0510++;
+        gSPDisplayList(footer_packet, D_80094F50);
+    }
+}
+#endif
+
+#ifdef VERSION_US
+extern s32 func_8004DDAC(s32);
+extern Gfx D_80097278[];
+// Scales a row-major grid of 16-by-16 RGBA16 tiles to the node dimensions.
+// Each tile occupies 512 bytes in the image returned by the current resource pack.
+//@src/4CC20.c
+void UiImageNode_DrawTiled(u8 *node, s32 x, s32 y) {
+    s32 row;
+    s32 column;
+    s32 draw_x;
+    f32 scale;
+    f32 rounding;
+    f32 vertical_scale;
+    s32 image_address;
+    s32 tile_width;
+    s32 tile_height;
+    s32 dsdx;
+    f32 unrounded;
+
+    tile_width = node[42] * 16;
+    tile_height = node[43] * 16;
+    if (tile_width > 0 && tile_height > 0) {
+        scale = (f32)*(s16 *)(node + 12) / tile_width;
+        vertical_scale = (f32)*(s16 *)(node + 14) / tile_height;
+        image_address = func_8004DDAC(*(u16 *)(node + 38));
+        rounding = (16.0f * scale) > 0.0f ? 0.5f : -0.5f;
+        unrounded = (16.0f * scale);
+        tile_width = (s32)(rounding + unrounded);
+        rounding = (16.0f * vertical_scale) > 0.0f ? 0.5f : -0.5f;
+        unrounded = (16.0f * vertical_scale);
+        tile_height = (s32)(rounding + unrounded);
+        rounding = (1024.0f / scale) > 0.0f ? 0.5f : -0.5f;
+        unrounded = 1024.0f / scale;
+        dsdx = (s32)(rounding + unrounded);
+        // Carry the inverse vertical texture step through the drawing loop.
+        scale = 1024.0f / vertical_scale;
+        rounding = scale > 0.0f ? 0.5f : -0.5f;
+        gSPDisplayList(D_800D0510++, D_80097278);
+        for (row = 0; row < node[43]; row++) {
+            column = 0;
+            if (node[42] > 0) {
+                draw_x = x;
+                do {
+                    gDPLoadTextureBlock(D_800D0510++, image_address + (node[42] * row + column) * 512,
+                                        G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                        G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                    GfxRect_DrawTextured((s16)draw_x, (s16)(tile_height * row + y),
+                                         (s16)tile_width, (s16)tile_height, 0, 0, (s16)dsdx,
+                                         (s16)(s32)(rounding + scale), 0);
+                    draw_x += tile_width;
+                    column++;
+                } while (column < node[42]);
+            }
         }
     }
 }
-/* mkdraft:func_8004FC58 end */
-#endif
-
-#ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004FE00.s")
 #endif
 
 #ifdef VERSION_US
 extern s32 D_800971F8;
-extern void func_8004FC58(u8 *, s32, s32);
-extern void func_8004FE00(u8 *, s32, s32);
+extern void UiImageNode_DrawUnscaled(u8 *, s32, s32);
 extern void func_8004ECD4(void *, s32, s32);
 void func_800501A0(u8 *arg0, s32 arg1, s32 arg2) {
     if (*(u16 *)(arg0 + 2) & 2) {
         if (*(u8 *)(arg0 + 0x29) == 0) {
-            func_8004FC58(arg0, arg1, arg2);
+            UiImageNode_DrawUnscaled(arg0, arg1, arg2);
         } else {
-            func_8004FE00(arg0, arg1, arg2);
+            UiImageNode_DrawTiled(arg0, arg1, arg2);
         }
     }
     D_800971F8 = (s32)arg0;
@@ -324,7 +519,77 @@ void func_800501A0(u8 *arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_80050218.s")
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern u8 func_80050518(u8);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800497E4(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern void func_800499EC(void);
+extern u8 *D_800971FC;
+// Loads and aligns resource text, applies font spacing and optional two-color rendering,
+// then traverses child nodes through func_8004ECD4.
+//@src/47580.c
+//@src/4CC20.c
+void UiTextNode_Draw(u8 *node, s32 x, s32 y) {
+    u16 *archive_key;
+    u8 *secondary_color;
+    u8 *primary_color;
+    char buffer[512];
+    u16 font_id;
+    s32 two_colors;
+    s32 draw_x;
+    s32 alignment;
+    const char *text;
+    s32 text_width;
+
+    archive_key = (u16 *)(node + 48);
+    two_colors = 0;
+    draw_x = x;
+    if (*(u16 *)(node + 2) & 2) {
+        text = func_8004C8A0(buffer, 512, archive_key[0], *(u16 *)(node + 50));
+        font_id = *(u16 *)(node + 36);
+        if (font_id != 0 && text != NULL) {
+            text_width = func_80049148(font_id, 0, text);
+            alignment = func_80050518(node[39]);
+            switch (alignment) {
+                case 0:
+                    draw_x = x - text_width / 2;
+                    break;
+                case 1:
+                    draw_x = x - text_width;
+                    break;
+            }
+            if (func_8004EC7C((s16)draw_x, (s16)y) != 0) {
+                func_800498C4();
+                secondary_color = node + 44;
+                func_800496A4(*(u16 *)(node + 36), 0);
+                func_8004989C(*(s8 *)(node + 38));
+                primary_color = node + 40;
+                func_8004972C(primary_color[0], primary_color[1], primary_color[2], primary_color[3]);
+                if (*(u32 *)secondary_color != *(u32 *)(node + 40)) {
+                    two_colors = 1;
+                    Font_EnableTwoCycleTexturing();
+                    func_800497E4(secondary_color[0], secondary_color[1],
+                                      secondary_color[2], secondary_color[3]);
+                }
+                func_800495BC(draw_x, y, text);
+                if (two_colors) {
+                    Font_DisableTwoCycleTexturing();
+                }
+                func_800499EC();
+            }
+        }
+    }
+    D_800971FC = node;
+    func_8004ECD4(node, x, y);
+    D_800971FC = NULL;
+}
 #endif
 
 #ifdef VERSION_US
@@ -425,24 +690,50 @@ void func_80050578(u8 *arg0, s32 arg1) { if (arg0 != NULL) { u8 *value = *(u8 **
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_800505A4.s")
+// Advances the entry index at duration boundaries and returns the next frame counter.
+// The header stores flags, an entry count, and a 32-bit address of four-byte entries.
+// UiAnimationCursor_Step stores the returned counter and reads the selected entry value.
+s32 UiAnimationCursor_NextFrame(u8 *cursor) {
+    u8 *animation_data;
+    u8 *entry;
+    s16 next_frame;
+
+    next_frame = *(s16 *)cursor + 1;
+    animation_data = *(u8 **)(cursor + 8);
+    entry = (u8 *)(*(s16 *)(cursor + 2) * 4 + *(u32 *)(animation_data + 4));
+    if (next_frame >= *(s16 *)entry) {
+        if (*(u16 *)animation_data & 1) {
+            *(s16 *)(cursor + 2) = *(s16 *)(cursor + 2) + 1;
+            next_frame = 0;
+            if (*(s16 *)(cursor + 2) >= *(u16 *)(*(u8 **)(cursor + 8) + 2)) {
+                (*(s16 *)(cursor + 2))--;
+                next_frame = *(s16 *)cursor;
+            }
+        } else {
+            *(s16 *)(cursor + 2) = *(s16 *)(cursor + 2) + 1;
+            next_frame = 0;
+            if (*(s16 *)(cursor + 2) >= *(u16 *)(animation_data + 2)) {
+                *(s16 *)(cursor + 2) = 0;
+            }
+        }
+    }
+    return next_frame;
+}
 #endif
 
 #ifdef VERSION_US
-extern s32 func_800505A4(u8 *);
-s32 func_80050640(u8 *arg0)
-{
-  s32 result = -2;
-  int new_var;
-  if ((*((u16 *) (arg0 + 4))) & 1)
-  {
-    if ((*((u8 **) (arg0 + 8))) != 0)
-    {
-      *((s16 *) arg0) = func_800505A4(arg0);
-      result = *((s16 *) (((*((u8 **) ((*((u8 **) (arg0 + 8))) + 4))) + ((*((s16 *) (arg0 + 2))) * 4)) + (new_var = 2)));
+// Updates an enabled cursor and returns its entry value, or -2 when no animation is active.
+s32 UiAnimationCursor_Step(u8 *cursor) {
+    s32 result = -2;
+
+    if (*(u16 *)(cursor + 4) & 1) {
+        if (*(u8 **)(cursor + 8) != NULL) {
+            *(s16 *)cursor = UiAnimationCursor_NextFrame(cursor);
+            result = *(s16 *)(*(s16 *)(cursor + 2) * 4 +
+                             *(u32 *)(*(u8 **)(cursor + 8) + 4) + 2);
+        }
     }
-  }
-  return result;
+    return result;
 }
 #endif
 
@@ -513,7 +804,58 @@ loop:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_80050878.s")
+extern s32 main_pool_alloc(s32, s32);
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern s32 func_80064C88(void);
+extern s32 func_8005A014(s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 func_80062304(u8 *);
+
+extern s32 func_8004C09C(u16);
+extern u8 *func_8004D878(u8 *, s32, u8 *);
+extern void func_8004C398(void);
+extern void _bzero(void *, s32);
+// Builds six 40-by-40 RGBA16 party-icon slots for the GB Tower state at +0x2204.
+// Deck_ReadEntries supplies the party records; func_8004D878 renders each icon.
+//@src/615D0.c
+//@src/4CC20.c
+u8 *GbTower_LoadPartyIcons(void) {
+    u8 *result;
+    u8 *allocated;
+    s32 port;
+    u8 party[6][88];
+    u8 *handle;
+    s32 count;
+    s32 i;
+    u8 *cursor;
+
+    allocated = (u8 *)main_pool_alloc(19200, 0);
+    result = NULL;
+    if (allocated != NULL) {
+        port = func_80064C88();
+        _bzero(allocated, 19200);
+        if (port != -1) {
+            main_pool_push_state(0x6769636E);
+            if (func_8005A014(port) != 0) {
+                handle = func_8006218C(32, port, 0, 0);
+                count = Deck_ReadEntries(party[0], 6, handle);
+                func_80062304(handle);
+                func_8004C09C(8);
+                cursor = allocated;
+                for (i = 0; i < count; i++) {
+                    func_8004D878(cursor, 0, party[i]);
+                    cursor += 3200;
+                }
+                func_8004C398();
+                result = allocated;
+            }
+            main_pool_pop_state(0x6769636E);
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -526,14 +868,14 @@ extern s32 main_pool_alloc(s32, s32);
 extern void Fragment_Load(s32, void *, void *);
 extern s32 func_80047524(void);
 extern s32 func_80047558(s32, s32);
-extern s32 func_80050878(void);
+extern u8 *GbTower_LoadPartyIcons(void);
 extern u8 GbTower_SetPollMask(u8);
 typedef struct Copy8_80050994 { u8 bytes[8]; } Copy8_80050994;
 
 // Same code as Pokemon Stadium's GbTower_Start (src/gb_tower_audio.c): allocates the
 // emulator state (D_801281B0) and audio thread (D_801281B4), loads the fragment at
 // 0x81500000, and starts both threads. GS takes both fonts from the archive returned
-// by func_80047524, stores func_80050878's result at 0x2204, and keeps the poll mask
+// by func_80047524, stores GbTower_LoadPartyIcons's result at 0x2204, and keeps the poll mask
 // in D_801281B8.
 void func_80050994(void *arg0) {
     s32 archive;
@@ -545,7 +887,7 @@ void func_80050994(void *arg0) {
     archive = func_80047524();
     *(s32 *)((u8 *)D_801281B0 + 0x21FC) = func_80047558(archive, 1);
     *(s32 *)((u8 *)D_801281B0 + 0x2200) = func_80047558(archive, 2);
-    *(s32 *)((u8 *)D_801281B0 + 0x2204) = func_80050878();
+    *(u8 **)((u8 *)D_801281B0 + 0x2204) = GbTower_LoadPartyIcons();
     *(Copy8_80050994 *)((u8 *)D_801281B0 + 0x2208) = *(Copy8_80050994 *)arg0;
     osCreateMesgQueue((OSMesgQueue *)((u8 *)D_801281B0 + 0x21E4), (OSMesg *)((u8 *)D_801281B0 + 0x21E0), 1);
     osCreateThread((OSThread *)D_801281B4, 10, GbTower_AudioThread, NULL, (u8 *)D_801281B4 + 0x21E0, 17);

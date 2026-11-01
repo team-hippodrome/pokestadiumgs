@@ -2,129 +2,6 @@
 
 
 #ifdef VERSION_US
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189820[] = "MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189824[] = "YOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418982C[] = "MAEUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189834[] = "YOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418983C[] = "KOUKAKU";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189844[] = "USHIRO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418984C[] = "NANAMEYOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189858[] = "NANAMEYOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189868[] = "USHIROUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189874[] = "SITAYOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189880[] = "MAEUE2MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418988C[] = "YOKOUE2MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189898[] = "YOKO2MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898A4[] = "UE2MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898AC[] = "MAE2USHIRO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898B8[] = "LMAE2MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898C4[] = "MAE2UE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898CC[] = "SITA2MAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898D8[] = "MAE2YOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898E4[] = "SITA2MAEUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898F0[] = "YOKO2YOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841898FC[] = "LMAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189904[] = "LYOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418990C[] = "LMAEUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189914[] = "LYOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418991C[] = "LNANAMEYOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189928[] = "LNANAMEYOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189938[] = "SMAE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189940[] = "SYOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189948[] = "SMAEUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189950[] = "SYOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189958[] = "SNANAMEYOKO";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189964[] = "SNANAMEYOKOUE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189974[] = "FREE";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_8418997C[] = "ステータス";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189988[] = "コウリ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189990[] = "ホロビ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189998[] = "ネムリ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899A0[] = "ドク";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899A8[] = "コンラン";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899B4[] = "シメツケ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899C0[] = "メロメロ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899CC[] = "アクム";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899D4[] = "マキビシ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899E0[] = "マヒ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899E8[] = "カイフク";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_841899F4[] = "ウズシオ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A00[] = "キュウケツ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A0C[] = "シュツドウ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A18[] = "ミチズレ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A24[] = "ハレ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A2C[] = "アメ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A34[] = "スナ";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A3C[] = "DOWN";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A44[] = "UPUP";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A4C[] = "UPDOWN";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A54[] = "MEGA";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A5C[] = "GIGA";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A64[] = "SUITORU";
-// Pointed to by D_84183AB0 in .data; it opens this file's .rodata.
-const char D_84189A6C[] = "PPUP";
-const char D_84189A74[] = "";
-const char D_84189A78[] = "";
-const char D_84189A7C[] = "";
 extern s32 D_84191208;
 extern s32 D_8419120C;
 s32 func_8411F750(s32 arg0) {
@@ -363,6 +240,8 @@ s32 BattleAnim_StepToS16(s16* arg0, s16 arg1, s16 arg2) {
     return 1;
 }
 
+extern f64 D_84189C30;
+extern f64 D_84189C38;
 void func_841203B4(f32 *arg0, f32 arg1, f32 arg2) {
     f32 temp_fv0;
     f64 temp_fv1;
@@ -370,7 +249,7 @@ void func_841203B4(f32 *arg0, f32 arg1, f32 arg2) {
     temp_fv0 = *arg0;
     *arg0 = ((arg1 - temp_fv0) * arg2) + temp_fv0;
     temp_fv1 = (f64)*(volatile f32 *)arg0;
-    if ((temp_fv1 < 0.001) && (-0.001 < temp_fv1)) {
+    if ((temp_fv1 < D_84189C30) && (D_84189C38 < temp_fv1)) {
         *arg0 = 0.0f;
     }
 }
@@ -387,11 +266,12 @@ void BattleAnim_Vec3fSetPolarXZ(void *arg0, f32 arg1, s16 arg2) {
 
 extern f32 D_80087E50[];
 extern f32 D_80088E50[0x1000];
+extern f32 D_84189C40;
 void BattleAnim_InitSwayOffset(void *arg0, f32 arg1, s16 arg2) {
     (*(f32 *)((u8 *)(arg0) + (0x608))) = arg1;
     (*(f32 *)((u8 *)(arg0) + (0x5F8))) = D_80088E50[(u16) arg2 >> 4] * arg1;
     (*(f32 *)((u8 *)(arg0) + (0x5F4))) = D_80087E50[(u16) arg2 >> 4] * arg1;
-    (*(f32 *)((u8 *)(arg0) + (0x610))) = 0.01f;
+    (*(f32 *)((u8 *)(arg0) + (0x610))) = D_84189C40;
 }
 // Close to Pokemon Stadium's BattleAnim_UpdateSwayPhysicsToTarget; GS takes the downward
 // pull as arg4 instead of a 20.0f constant and steers along rotationY + 0x4000 instead of
@@ -417,6 +297,8 @@ typedef struct unk_func_841204BC {
 } unk_func_841204BC;
 extern f32 Math_StepToF(f32, f32, f32, f32);
 extern void Vec3f_AddInPlace(f32 *, f32 *);
+extern f32 D_84189C44;
+extern f32 D_84189C48;
 void func_841204BC(void *arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
     f32 sp54;
     f32 sp50;
@@ -444,8 +326,8 @@ void func_841204BC(void *arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
     temp_fa1 = -sp54 * ((sp50 * ((unk_func_841204BC *)arg0)->unk_5F0.z) + sp3C.z);
     temp_fa2 = -arg4 - (sp54 * ((sp50 * ((unk_func_841204BC *)arg0)->unk_5F0.y) + sp3C.y));
 
-    ((unk_func_841204BC *)arg0)->unk_5F0.z = ((unk_func_841204BC *)arg0)->unk_5F0.z + sp3C.z + (temp_fa1 * 0.05f);
-    ((unk_func_841204BC *)arg0)->unk_5F0.y = ((unk_func_841204BC *)arg0)->unk_5F0.y + sp3C.y + (temp_fa2 * 0.05f);
+    ((unk_func_841204BC *)arg0)->unk_5F0.z = ((unk_func_841204BC *)arg0)->unk_5F0.z + sp3C.z + (temp_fa1 * D_84189C44);
+    ((unk_func_841204BC *)arg0)->unk_5F0.y = ((unk_func_841204BC *)arg0)->unk_5F0.y + sp3C.y + (temp_fa2 * D_84189C48);
     sp3C.y = ((unk_func_841204BC *)arg0)->unk_5F0.y;
     ((unk_func_841204BC *)arg0)->unk_5F0.x = 0.0f;
 
@@ -512,6 +394,8 @@ extern void func_8411EF08(u8 *arg0);
 extern void BattleAnim_InitActorFromActionFlags(u8 *);
 extern void func_8410B578(f32 arg0);
 extern u8 *D_84193DD0;
+extern f32 D_84189C4C;
+extern f32 D_84189C54;
 void func_84120960(void *arg0, void *arg1) {
     f32 f1;
     (*(s16 *)((u8 *)(arg1) + (0x7EA))) = 0;
@@ -521,9 +405,9 @@ void func_84120960(void *arg0, void *arg1) {
     BattleAnim_InitActorFromActionFlags(D_84191208);
     BattleAnim_InitActorFromActionFlags(D_8419120C);
     if (*(u16 *)((u8 *) D_84193DD0 + 0x12) & 8) {
-        Vec3f_SetComponentsDuplicate((f32 *)((u8 *)(D_84191208) + 0x30), 0.8f, 0.8f, 0.8f);
+        Vec3f_SetComponentsDuplicate((f32 *)((u8 *)(D_84191208) + 0x30), D_84189C4C, D_84189C4C, D_84189C4C);
     }
-    f1 = 0.8f;
+    f1 = D_84189C54;
     if (*(u16 *)((u8 *) D_84193DD0 + 0x22) & 8) {
         Vec3f_SetComponentsDuplicate((f32 *)((u8 *)(D_8419120C) + 0x30), f1, f1, f1);
     }
@@ -553,6 +437,8 @@ extern void func_8411EF08(u8 *arg0);
 extern void BattleAnim_InitActorFromActionFlags(u8 *);
 extern void func_8410B578(f32 arg0);
 extern u8 *D_84193DD0;
+extern f32 D_84189C58;
+extern f32 D_84189C60;
 void func_84120AC4(void *arg0, void *arg1) {
     f32 f1;
     (*(s16 *)((u8 *)(arg1) + (0x7EA))) = 0;
@@ -562,9 +448,9 @@ void func_84120AC4(void *arg0, void *arg1) {
     BattleAnim_InitActorFromActionFlags(D_84191208);
     BattleAnim_InitActorFromActionFlags(D_8419120C);
     if (*(u16 *)((u8 *) D_84193DD0 + 0x12) & 8) {
-        Vec3f_SetComponentsDuplicate((f32 *)((u8 *)(D_84191208) + 0x30), 0.8f, 0.8f, 0.8f);
+        Vec3f_SetComponentsDuplicate((f32 *)((u8 *)(D_84191208) + 0x30), D_84189C58, D_84189C58, D_84189C58);
     }
-    f1 = 0.8f;
+    f1 = D_84189C60;
     if (*(u16 *)((u8 *) D_84193DD0 + 0x22) & 8) {
         Vec3f_SetComponentsDuplicate((f32 *)((u8 *)(D_8419120C) + 0x30), f1, f1, f1);
     }
@@ -606,6 +492,7 @@ extern void BattleAnim_InitActorFromActionFlags(u8 *);
 extern s32 func_8411E164(s32 arg0);
 extern void func_841125F4(s32, s32);
 extern void func_8410B578(f32 arg0);
+extern f32 D_84189C70;
 extern void BattleAnim_InitSwayOffset(void *, f32, s16);
 void func_84120CA4(void *arg0, void *arg1) {
     (*(s16 *)((u8 *)(arg1) + (0x7EA))) = 0;
@@ -777,6 +664,7 @@ void func_84121260(void *arg0) {
 
 extern s32 func_8411E1D4(s32);
 extern s32 func_841211CC(void *, s16, s16);
+extern f64 D_84189C68;
 extern s32 D_84191208;
 void BattleAnim_UpdateStagedTurn(u8 *arg0) {
     f32 remaining;
@@ -792,7 +680,7 @@ void BattleAnim_UpdateStagedTurn(u8 *arg0) {
         remaining = 16384 - *(s16 *)(arg0 + 1540);
         fraction = (131072.0 - remaining) / 131072.0;
         if (fraction >= 1.0f) fraction -= 1.0f;
-        step = (s16)(*(s16 *)(arg0 + 1534) * fraction * 0.8);
+        step = (s16)(*(s16 *)(arg0 + 1534) * fraction * D_84189C68);
         if (step < 3640) step = 3640;
         *(s8 *)(arg0 + 1572) = func_841211CC(arg0, step, (s16)(func_8411E1D4((s32)arg0) * 16384));
         if (*(s8 *)(arg0 + 1572) != 0) {
@@ -828,7 +716,7 @@ void func_8412142C(u8 *arg0) {
     M2C_FIELD(arg0, s8 *, 0x624) = 0;
     M2C_FIELD(arg0, s16 *, 0x604) = (s16) M2C_FIELD(arg0, s16 *, 0x20);
     temp_a0 = arg0 + 0x5E4;
-    M2C_FIELD(temp_a0, f32 *, 0x28) = (f32) (M2C_FIELD(arg0, f32 *, 0x34) * 1.3f);
+    M2C_FIELD(temp_a0, f32 *, 0x28) = (f32) (M2C_FIELD(arg0, f32 *, 0x34) * D_84189C70);
     Vec3f_SetComponentsDuplicate(temp_a0, 0.0f, 0.0f, 0.0f);
     Vec3f_SetComponentsDuplicate(arg0 + 0x5F0, 0.0f, 0.0f, 0.0f);
     BattleAnim_InitSwayOffset(arg0, 1.0f, 0x4000);
@@ -955,15 +843,18 @@ void func_84121AB8(void *arg0) {
 
 void func_84122990(u8 *arg0) {}
 
+extern f64 D_84189CA8;
+extern f32 D_84189CB0;
+extern f32 D_84189CB4;
 extern f32 Math_StepToF(f32, f32, f32, f32);
 void func_84122998(void *arg0) {
     f32 rate;
     f32 result;
-    if (0.8 == *(f32 *)((u8 *)arg0 + 0x34)) {
+    if (D_84189CA8 == *(f32 *)((u8 *)arg0 + 0x34)) {
         return;
     }
-    rate = 0.01f;
-    result = Math_StepToF(*(f32 *)((u8 *)arg0 + 0x30), 0.8f, rate, rate);
+    rate = D_84189CB0;
+    result = Math_StepToF(*(f32 *)((u8 *)arg0 + 0x30), D_84189CB4, rate, rate);
     *(f32 *)((u8 *)arg0 + 0x30) = result;
     *(f32 *)((u8 *)arg0 + 0x34) = result;
     *(f32 *)((u8 *)arg0 + 0x38) = result;
@@ -980,9 +871,10 @@ void BattleAnim_UpdateTerrainPose(u8 *arg0) {
     *(s16 *)(arg0 + 30) = (s16)slope * 182;
 }
 
+extern f32 D_84189CB8;
 void func_84122A78(void *arg0) {
     (*(s16 *)((u8 *)arg0 + 0x5FC)) = 0x16C; (*(s16 *)((u8 *)arg0 + 0x5FE)) = 0; (*(s16 *)((u8 *)arg0 + 0x600)) = 0;
-    (*(f32 *)((u8 *)arg0 + 0x60C)) = 0.4f;
+    (*(f32 *)((u8 *)arg0 + 0x60C)) = D_84189CB8;
     (*(f32 *)((u8 *)arg0 + 0x5F0)) = *(f32 *)((u8 *)arg0 + 0x30);
     (*(f32 *)((u8 *)arg0 + 0x5E4)) = *(f32 *)((u8 *)arg0 + 0x30);
     (*(f32 *)((u8 *)arg0 + 0x5F4)) = *(f32 *)((u8 *)arg0 + 0x34);
@@ -991,6 +883,8 @@ void func_84122A78(void *arg0) {
 }
 
 /* mkdraft:func_84122AB8 begin */
+extern f32 D_84189CBC;
+extern f32 D_84189CC0;
 extern f32 D_80087E50[];
 
 
@@ -1023,12 +917,12 @@ void func_84122AB8(u8 *arg0) {
         // FAKE: one read of D_84189CBC into a local makes IDO fold %lo into the load
         // (`lui at,%hi` + `lwc1 %lo(at)`) and reuse the value in both comparisons;
         // reading the global in both comparisons scores 1255.
-        limit = 0.01f;
+        limit = D_84189CBC;
         *(s16 *)(arg0 + 0x5FE) += *(s16 *)(arg0 + 0x600);
         distance = *(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4];
         if (distance <= limit) {
             *(s16 *)(arg0 + 0x600) += 0x444;
-            *(f32 *)(arg0 + 0x60C) *= 0.8f;
+            *(f32 *)(arg0 + 0x60C) *= D_84189CC0;
         }
         base = *(f32 *)(arg0 + 0x5E4);
         *(f32 *)(arg0 + 0x30) = base - (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]);
@@ -1044,6 +938,7 @@ void func_84122AB8(u8 *arg0) {
 }
 /* mkdraft:func_84122AB8 end */
 
+extern f32 D_84189CC4;
 
 void func_84122C94(void *arg0) {
     f32 temp_fv0;
@@ -1051,13 +946,15 @@ void func_84122C94(void *arg0) {
     (*(s16 *)((u8 *)(arg0) + (0x5FE))) = 0;
     (*(s16 *)((u8 *)(arg0) + (0x600))) = 0xAAA;
     temp_fv0 = (*(f32 *)((u8 *)(arg0) + (0x30)));
-    (*(f32 *)((u8 *)(arg0) + (0x60C))) = (f32) 0.2f;
+    (*(f32 *)((u8 *)(arg0) + (0x60C))) = (f32) D_84189CC4;
     (*(f32 *)((u8 *)(arg0) + (0x5F0))) = temp_fv0;
     (*(f32 *)((u8 *)(arg0) + (0x5E4))) = temp_fv0;
     (*(f32 *)((u8 *)(arg0) + (0x5F4))) = (f32) (*(f32 *)((u8 *)(arg0) + (0x34)));
     (*(f32 *)((u8 *)(arg0) + (0x5F8))) = (f32) (*(f32 *)((u8 *)(arg0) + (0x38)));
 }
 
+extern f32 D_84189CC8;
+extern f32 D_84189CCC;
 extern f32 D_80087E50[];
 void func_84122CCC(void *arg0)
 {
@@ -1066,9 +963,9 @@ void func_84122CCC(void *arg0)
   f32 amplitude;
   s16 velocity;
   velocity = *((s16 *) (((u8 *) arg0) + 0x600));
-  do { *((s16 *) (((u8 *) arg0) + 0x5FE)) += velocity; *((s16 *) (((u8 *) arg0) + 0x600)) = velocity + 0x4FA; sample = &D_80087E50[((u16) (*((s16 *) (((u8 *) arg0) + 0x5FE)))) >> 4]; *((f32 *) (((u8 *) arg0) + 0x60C)) *= 0.85f; amplitude = *((f32 *) (((u8 *) arg0) + 0x60C)); base = *((f32 *) (((u8 *) arg0) + 0x5E4)); *((f32 *) (((u8 *) arg0) + 0x30)) = base - ((*sample) * amplitude); *((f32 *) (((u8 *) arg0) + 0x34)) = ((*sample) * amplitude) + base; } while (0);
+  do { *((s16 *) (((u8 *) arg0) + 0x5FE)) += velocity; *((s16 *) (((u8 *) arg0) + 0x600)) = velocity + 0x4FA; sample = &D_80087E50[((u16) (*((s16 *) (((u8 *) arg0) + 0x5FE)))) >> 4]; *((f32 *) (((u8 *) arg0) + 0x60C)) *= D_84189CC8; amplitude = *((f32 *) (((u8 *) arg0) + 0x60C)); base = *((f32 *) (((u8 *) arg0) + 0x5E4)); *((f32 *) (((u8 *) arg0) + 0x30)) = base - ((*sample) * amplitude); *((f32 *) (((u8 *) arg0) + 0x34)) = ((*sample) * amplitude) + base; } while (0);
   *((f32 *) (((u8 *) arg0) + 0x38)) = base - ((*sample) * amplitude);
-  if (amplitude <= 0.01f)
+  if (amplitude <= D_84189CCC)
   {
     *((f32 *) (((u8 *) arg0) + 0x30)) = base;
     *((f32 *) (((u8 *) arg0) + 0x34)) = base;
@@ -1129,6 +1026,10 @@ extern f32 D_84193F90;
 extern f32 D_84193F94;
 extern f32 D_84193F98;
 extern f32 D_84193F9C;
+extern f32 D_84189CD0;
+extern f32 D_84189CD4;
+extern f32 D_84189CD8;
+extern f32 D_84189CDC;
 extern void MtxF_SetRotationTranslationF(void *, void *, void *);
 extern s32 func_8411E1D4(s32);
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
@@ -1137,9 +1038,9 @@ void BattleAnim_InitSignedRotatedMotion(u8 *arg0) {
     S1_Vec3f translation = D_84183D00;
     ActorMotionRotation rotation = D_84183D0C;
     S1_Vec3f position;
-    D_84193F90 = 0.4f;
+    D_84193F90 = D_84189CD0;
     D_84193F94 = 29.5f;
-    D_84193F98 = 0.95f;
+    D_84193F98 = D_84189CD4;
     D_84193F9C = 0.75f;
     rotation.y = *(s16 *)(arg0 + 32);
     position.x = 0.0f;
@@ -1183,8 +1084,8 @@ void BattleAnim_InitRotatedMotion(u8 *arg0) {
     S1_Vec3f position;
     D_84193F90 = 0.5f;
     D_84193F94 = 50.0f;
-    D_84193F98 = 0.98f;
-    D_84193F9C = 0.8f;
+    D_84193F98 = D_84189CD8;
+    D_84193F9C = D_84189CDC;
     rotation.y = *(s16 *)(arg0 + 32);
     position.z = -D_84193F94;
     position.x = 0.0f;
@@ -1201,6 +1102,12 @@ void BattleAnim_InitRotatedMotion(u8 *arg0) {
 
 
 extern f32 Math_StepToF(f32, f32, f32, f32);
+extern f32 D_84189CE0;
+extern f32 D_84189CE4;
+extern f32 D_84189CE8;
+extern f32 D_84189CEC;
+extern f32 D_84189CF0;
+extern f32 D_84189CF4;
 extern f32 D_84193F90;
 extern f32 D_84193F98;
 extern f32 D_84193F9C;
@@ -1227,14 +1134,14 @@ void BattleAnim_UpdateRotatedMotion(u8 *arg0) {
     *(f32 *)(arg0 + 44) += *(f32 *)(arg0 + 1528);
     *(f32 *)(arg0 + 1512) = -3.0f;
     if (*(s8 *)(arg0 + 1571) >= 5) {
-        step = 0.06f;
-        result = Math_StepToF(*(f32 *)(arg0 + 48), 0.01f, step, step);
-        step = 0.06f;
+        step = D_84189CE0;
+        result = Math_StepToF(*(f32 *)(arg0 + 48), D_84189CE4, step, step);
+        step = D_84189CE8;
         *(f32 *)(arg0 + 48) = result;
-        result = Math_StepToF(*(f32 *)(arg0 + 52), 0.01f, step, step);
-        step = 0.06f;
+        result = Math_StepToF(*(f32 *)(arg0 + 52), D_84189CEC, step, step);
+        step = D_84189CF0;
         *(f32 *)(arg0 + 52) = result;
-        result = Math_StepToF(*(f32 *)(arg0 + 56), 0.01f, step, step);
+        result = Math_StepToF(*(f32 *)(arg0 + 56), D_84189CF4, step, step);
         *(f32 *)(arg0 + 56) = result;
     }
 }
@@ -1242,6 +1149,11 @@ void BattleAnim_UpdateRotatedMotion(u8 *arg0) {
 
 extern S1_Vec3f D_84183D28;
 extern ActorMotionRotation D_84183D34;
+extern f32 D_84189CF8;
+extern f32 D_84189CFC;
+extern f32 D_84189D00;
+extern f32 D_84189D04;
+extern f32 D_84189D08;
 extern void MtxF_SetRotationTranslationF(void *, void *, void *);
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern s32 func_8411E1D4(s32);
@@ -1256,9 +1168,9 @@ void BattleAnim_InitAuxiliaryGravityMotion(u8 *arg0) {
     ActorMotionRotation rotation = D_84183D34;
     S1_Vec3f position;
     D_84193F90 = 0.5f;
-    D_84193F94 = 1.1f;
-    D_84193F98 = 0.94f;
-    D_84193F9C = 0.99f;
+    D_84193F94 = D_84189CF8;
+    D_84193F98 = D_84189CFC;
+    D_84193F9C = D_84189D00;
     rotation.y *= func_8411E1D4((s32)arg0);
     position.x = 0.0f;
     position.y = 0.0f;
@@ -1267,9 +1179,9 @@ void BattleAnim_InitAuxiliaryGravityMotion(u8 *arg0) {
     Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 1520), 0.0f, 0.0f, 0.0f);
     Vec3s_SetComponents((s16 *)(arg0 + 1694), 0, (s16)(func_8411E1D4((s32)arg0) * 16384), 0);
     if ((s32)arg0 == D_84191208) {
-        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 1700), (f32)func_8411E1D4((s32)arg0) * -7.1e+02f, 20.0f, 0.0f);
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 1700), (f32)func_8411E1D4((s32)arg0) * D_84189D04, 20.0f, 0.0f);
     } else {
-        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 1700), (f32)func_8411E1D4((s32)arg0) * -7.1e+02f, 20.0f, 0.0f);
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 1700), (f32)func_8411E1D4((s32)arg0) * D_84189D08, 20.0f, 0.0f);
     }
     ModelAnim_SetFrame(arg0 + 1664, 0);
     MtxF_SetRotationTranslationF(&matrix, &translation, &rotation);
@@ -1313,22 +1225,24 @@ void BattleAnim_UpdateAuxiliaryGravityMotion(u8 *arg0) {
     }
 }
 
+extern f32 D_84189D0C;
 
 void func_84123828(void *arg0) {
     (*(s16 *)((u8 *)(arg0) + (0x600))) = 0x71C;
-    (*(f32 *)((u8 *)(arg0) + (0x60C))) = (f32) 0.4f;
+    (*(f32 *)((u8 *)(arg0) + (0x60C))) = (f32) D_84189D0C;
     (*(f32 *)((u8 *)(arg0) + (0x5F0))) = (f32) (*(f32 *)((u8 *)(arg0) + (0x30)));
     (*(f32 *)((u8 *)(arg0) + (0x5F4))) = (f32) (*(f32 *)((u8 *)(arg0) + (0x34)));
     (*(f32 *)((u8 *)(arg0) + (0x5F8))) = (f32) (*(f32 *)((u8 *)(arg0) + (0x38)));
 }
 
 /* mkdraft:func_84123858 begin */
+extern f32 D_84189D10;
 
 void func_84123858(void *arg0) {
     s16 angle;
     f32 rate;
 
-    rate = 0.02f;
+    rate = D_84189D10;
     *(s16 *)((u8 *)arg0 + 0x600) += 0xCCC;
     angle = *(s16 *)((u8 *)arg0 + 0x600);
     *(f32 *)((u8 *)arg0 + 0x60C) = Math_StepToF(*(f32 *)((u8 *)arg0 + 0x60C), 0.0f, rate, rate);
@@ -1346,31 +1260,34 @@ void func_84123914(u8 *arg0) {}
 extern f32 Math_StepToF(f32, f32, f32, f32);
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 void func_8412391C(void *arg0) {
+    extern f32 D_84189D14, D_84189D18, D_84189D1C, D_84189D28;
+    extern f64 D_84189D20;
     f32 step;
     f32 result;
-    step = 0.05f;
+    step = D_84189D14;
     result = Math_StepToF(*(f32 *)((u8 *)arg0 + 0x30), 0.0f, step, step);
-    step = 0.05f;
+    step = D_84189D18;
     *(f32 *)((u8 *)arg0 + 0x30) = result;
     result = Math_StepToF(*(f32 *)((u8 *)arg0 + 0x34), 0.0f, step, step);
-    step = 0.05f;
+    step = D_84189D1C;
     *(f32 *)((u8 *)arg0 + 0x34) = result;
     result = Math_StepToF(*(f32 *)((u8 *)arg0 + 0x38), 0.0f, step, step);
     *(f32 *)((u8 *)arg0 + 0x38) = result;
-    if (*(f32 *)((u8 *)arg0 + 0x34) <= 0.1) {
-        Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x30), 0.001f, 0.001f, 0.001f);
+    if (*(f32 *)((u8 *)arg0 + 0x34) <= D_84189D20) {
+        Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x30), D_84189D28, D_84189D28, D_84189D28);
     }
 }
 
 void func_841239E0(u8 *arg0) {}
 
 extern f32 func_8415BCD8(void);
+extern f32 D_84189D2C;
 extern void func_841203B4(f32 *arg0, f32 arg1, f32 arg2);
 void func_841239E8(void *arg0)
 {
   f32 sp1C;
   int new_var;
-  sp1C = (1.0f - func_8415BCD8()) * 0.6f;
+  sp1C = (1.0f - func_8415BCD8()) * D_84189D2C;
   func_841203B4((f32 *) (((u8 *) arg0) + 0x30), 1.0f - sp1C, 0.5f);
   func_841203B4((f32 *) (((u8 *) arg0) + 0x34), 1.0f + sp1C, 0.5f);
   new_var = 0x38;
@@ -1402,6 +1319,7 @@ void func_84123A90(void *arg0) {
 /* mkdraft:func_84123B08 begin */
 extern f32 D_80087E50[];
 extern f32 D_80088E50[0x1000];
+extern f32 D_84189D30;
 extern u8 *D_841911E0;
 extern void func_80037120(u8 *, u8 *, f32 *, s16 *, s16 *);
 extern void func_8411F1AC(u8 *, f32 *);
@@ -1432,7 +1350,7 @@ void func_84123B08(u8 *arg0) {
             temp_fv0 = D_80087E50[((u16)*(s16 *)(arg0 + 0x602)) >> 4] * 12.0f;
             *(f32 *)(arg0 + 0x24) = sp44[0] + D_80087E50[((u16)(sp2C + 0x4000)) >> 4] * temp_fv0;
             *(f32 *)(arg0 + 0x2C) = sp44[2] + D_80088E50[((u16)(sp2C + 0x4000)) >> 4] * temp_fv0;
-            func_841204BC(arg0, 0x3F71EB85, 0x3CCCCCCD, 0x4000, 0.90000004f);
+            func_841204BC(arg0, 0x3F71EB85, 0x3CCCCCCD, 0x4000, D_84189D30);
             sp2E = (s16)(s32)(D_80087E50[((u16)*(s16 *)(arg0 + 0x602)) >> 4] * 12.0f * 262.0f);
             temp_fv0_2 = *(f32 *)(arg0 + 0x650) + 2.0f;
             if (*(f32 *)(arg0 + 0x28) < temp_fv0_2) {
@@ -1483,16 +1401,19 @@ void BattleAnim_UpdateTimedOscillation(u8 *arg0) {
 
 }
 
-void func_84123E74(u8 *arg0) { f32 v = *(f32 *)(arg0 + 0x34); f32 s = 0.3f; *(f32 *)(arg0 + 0x5E8) = v + v; *(f32 *)(arg0 + 0x5EC) = *(f32 *)(arg0 + 0x38) * s;*(f32 *)(arg0 + 0x5E4) = *(f32 *)(arg0 + 0x30) * s;*(u8 *)(arg0 + 0x623) = 0; *(f32 *)(arg0 + 0x60C) = 0.0f; }
+extern f32 D_84189D34;
+void func_84123E74(u8 *arg0) { f32 v = *(f32 *)(arg0 + 0x34); f32 s = D_84189D34; *(f32 *)(arg0 + 0x5E8) = v + v; *(f32 *)(arg0 + 0x5EC) = *(f32 *)(arg0 + 0x38) * s;*(f32 *)(arg0 + 0x5E4) = *(f32 *)(arg0 + 0x30) * s;*(u8 *)(arg0 + 0x623) = 0; *(f32 *)(arg0 + 0x60C) = 0.0f; }
 
 extern f32 Math_StepToF(f32, f32, f32, f32);
+extern f32 D_84189D38;
+extern f32 D_84189D3C;
 void func_84123EB0(u8 *arg0) {
     *(s8 *)(arg0 + 0x623) = *(s8 *)(arg0 + 0x623) + 1;
     if (*(s8 *)(arg0 + 0x623) >= 0xF) {
-        f32 limit = 0.0017f;
-        f32 step = 0.2f;
-
-        *(f32 *)(arg0 + 0x60C) = Math_StepToF(*(f32 *)(arg0 + 0x60C), step, limit, limit);
+        f32 limit = D_84189D38;
+        f32 step = D_84189D3C;
+        f32 current = *(f32 *)(arg0 + 0x60C);
+        *(f32 *)(arg0 + 0x60C) = Math_StepToF(current, step, limit, limit);
         *(f32 *)(arg0 + 0x34) = Math_StepToF(
             *(f32 *)(arg0 + 0x34), *(f32 *)(arg0 + 0x5E8),
             *(f32 *)(arg0 + 0x60C), *(f32 *)(arg0 + 0x60C));
