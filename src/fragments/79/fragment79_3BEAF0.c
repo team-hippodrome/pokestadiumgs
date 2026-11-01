@@ -201,7 +201,50 @@ void func_8414F6D0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BEAF0/func_8414F748.s")
+/* mkdraft:func_8414F748 begin */
+extern u8 *D_841951F8[];
+extern u8 *D_84195208[];
+extern u8 func_84154B24(void);
+extern s32 func_84126440(u8 arg0);
+extern u8 *func_8414C960(u8 arg0);
+
+// Averages the s32 fields at +0x1C and +0x20 of each qualifying move's D_8419D7C0
+// record (func_8414C960) over the party record at D_84195208[side], then adds that
+// average to the s32 accumulator at +0x18 of arg0. Move slots run from +5 to +8;
+// a zero slot ends the scan, and slot +0x25 holds a move that is skipped.
+
+
+void func_8414F748(void *arg0) {
+    u8 move;
+    u8 side;
+    s32 record_base;
+    s32 total;
+    s32 i;
+    u8 *record;
+
+    side = func_84154B24();
+    total = 0;
+    record_base = D_841951F8[side][0xA] * 4;
+    for (i = 0; i != 4; i++) {
+        move = D_84195208[side][i + 5];
+        if (move == 0) {
+            break;
+        }
+        if (func_84126440(move) == 0 && move != 0xD6 && move != D_84195208[side][0x25]) {
+            record = func_8414C960(record_base + i);
+            total += *(s32 *)(record + 0x1C);
+            total += *(s32 *)(record + 0x20);
+        }
+    }
+    if (i >= 2) {
+        total = total / i;
+    }
+    if (total < 0) {
+        total = 1;
+    }
+    *(s32 *)((u8 *)arg0 + 0x18) += total;
+}
+/* mkdraft:func_8414F748 end */
 #endif
 
 #ifdef VERSION_US
