@@ -1209,7 +1209,50 @@ void func_869054D4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86905630.s")
+/* mkdraft:func_86905630 begin */
+extern f32 D_80088E50[];
+extern f32 D_8690EB4C[];
+extern f32 D_8690EB3C;
+extern f32 D_8690EB40;
+extern f32 D_8690EB44;
+extern f32 D_8690EB48;
+extern u8 *D_8691AD58;
+extern u8 D_8691A2A0[];
+extern void func_80021ED8(s32);
+
+
+
+void func_86905630(void) {
+    s32 frame;
+    f32 fadeIn;
+    f32 fadeOut;
+    f32 angle;
+    s32 step;
+
+    frame = *(s32 *)(D_8691A2A0 + 0x4C);
+    *(s32 *)(D_8691A2A0 + 0x4C) = *(s32 *)(D_8691A2A0 + 0x4C) + 1;
+    angle = (f32)frame / 135.0f * 180.0f * 182.0416718f;
+    if (angle >= 0.0f) {
+        step = (s32)(angle + 0.5f);
+    } else {
+        step = (s32)(angle - 0.5f);
+    }
+    fadeIn = (1.0 - D_80088E50[(step & 0xFFFF) >> 4]) * 0.5;
+    fadeOut = 1.0 - fadeIn;
+    if (frame == 0x19) {
+        func_80021ED8(0x1D);
+        *(s32 *)(D_8691A2A0 + 0x18C) = 1;
+    }
+    D_8690EB3C = (D_8690EB4C[4] * fadeIn) + (D_8690EB4C[0] * fadeOut);
+    D_8690EB40 = (D_8690EB4C[5] * fadeIn) + (D_8690EB4C[1] * fadeOut);
+    D_8690EB44 = (D_8690EB4C[6] * fadeIn) + (D_8690EB4C[2] * fadeOut);
+    D_8690EB48 = (D_8690EB4C[7] * fadeIn) + (D_8690EB4C[3] * fadeOut);
+    if (frame >= 0x87) {
+        *(s32 *)(D_8691A2A0 + 0x4C) = 0;
+        *(s32 *)D_8691AD58 = 5;
+    }
+}
+/* mkdraft:func_86905630 end */
 #endif
 
 void func_86905804(void) {
