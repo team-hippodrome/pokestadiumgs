@@ -390,7 +390,8 @@
     - [0xA6270, .rodata, 69F70] # jtbl_800A5670
     - [0xA62B0, .rodata, 6AA80] # jtbl_800A56B0 (+2 more)
     - [0xA64E0, .rodata, 6DEC0] # jtbl_800A58E0
-    - [0xA6500, rodata]
+    - [0xA6500, .rodata, 6E850] # Strings, jump tables, float literals, double literals.
+    - [0xA6600, rodata]
     - [0xA6750, .rodata, 74020] # jtbl_800A5B50
     - [0xA6860, lib, libultra, setintmask, .rodata]
     - [0xA68E0, lib, libultra, sinf, .rodata]
