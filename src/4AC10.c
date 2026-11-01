@@ -269,7 +269,48 @@ void Ui_DrawAnimatedTextureMarker(s16 arg0, s16 arg1)
   D_800950D0 = phase;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4AC10/func_8004B09C.s")
+/* mkdraft:func_8004B09C begin */
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 func_8004D1FC(u8 *arg0);
+extern f32 D_80087E50[];
+extern Gfx D_800950D8[];
+
+// Draws the four 0x10x0xF textured corners of the arg0/arg1/arg2/arg3 rectangle.
+// arg4 points at a u16 angle; the corner inset follows that angle's sine
+// (D_80087E50 is the 512-entry sine table indexed by angle >> 4) and advances
+// by 0x2000 per frame when arg8 is nonzero.
+
+
+s32 func_8004B09C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 *arg4, u8 arg5, u8 arg6, u8 arg7, s32 arg8) {
+    s32 sp6C;
+    s16 temp_s0;
+    s16 inset;
+    s32 temp_v0;
+    s32 pad[6]; // FAKE: 0x18 unused bytes; without them the frame is 0x58 instead of 0x70 (score 466).
+
+    sp6C = 0;
+    temp_v0 = func_8004C990(0x1B, 0);
+    if (temp_v0 != 0) {
+        sp6C = 1;
+        temp_s0 = D_80087E50[(s32) *arg4 >> 4] * 2;
+        // FAKE: copy of the sine offset into a second s16 local before any use.
+        // Without it IDO spills the two x coordinate temporaries to 0x40 and
+        // 0x38 instead of 0x38 and 0x40, leaving four words different (score 32).
+        inset = temp_s0;
+        gSPDisplayList(D_800D0510++, D_800950D8);
+        gDPSetEnvColor(D_800D0510++, arg5, arg6, arg7, 0xFF);
+        func_8004D1FC((u8 *) temp_v0);
+        GfxRect_DrawTextured(inset + arg0, inset + arg1, 0x10, 0xF, 0, 0, 0x400, 0x400, 0);
+        GfxRect_DrawTextured(((arg0 + arg2) - inset) - 0x10, inset + arg1, 0x10, 0xF, 0x200, 0, 0x400, 0x400, 0);
+        GfxRect_DrawTextured(inset + arg0, ((arg1 + arg3) - inset) - 0xF, 0x10, 0xF, 0x400, 0, 0x400, 0x400, 0);
+        GfxRect_DrawTextured(((arg0 + arg2) - inset) - 0x10, ((arg1 + arg3) - inset) - 0xF, 0x10, 0xF, 0x600, 0, 0x400, 0x400, 0);
+        if (arg8 != 0) {
+            *arg4 = (s16) *arg4 + 0x2000;
+        }
+    }
+    return sp6C;
+}
+/* mkdraft:func_8004B09C end */
 
 extern u8 D_80095110[];
 extern s32 func_8004B09C(s32, s32, s32, s32, u16 *, u8, u8, u8, s32);
