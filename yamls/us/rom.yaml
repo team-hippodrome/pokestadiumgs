@@ -1178,7 +1178,7 @@
     - [0x217140, rodata]
     - [0x217300, .rodata, fragments/44/fragment44_1F5F20] # labels in this range are referenced only by this file
     - [0x217360, rodata]
-    - [0x217840, .rodata, fragments/44/fragment44_1FD260]
+    - [0x2177B0, .rodata, fragments/44/fragment44_1FD260] # Strings, jump tables.
     - [0x217930, rodata,  fragments/44/fragment44_rodata_tail]
     - [0x217A40, .rodata, fragments/44/fragment44_2030B0] # Jump tables.
     - [0x217AF0, rodata]
