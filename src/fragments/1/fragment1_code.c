@@ -93,7 +93,63 @@ void func_8350026C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83500300.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83500708.s")
+/* mkdraft:func_83500708 begin */
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_83503AEC;
+extern s32 D_83503AD4;
+extern f32 D_83503BE8;
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+
+// Each packet assigns both words on one source line. With the pair on one line
+// IDO 7.1 emits retail's store order here: the w1 store precedes the w0 store
+// for every packet except E200001C. Writing each assignment on its own line
+// emits w0 before w1 throughout and does not match.
+
+
+void func_83500708(void) {
+    UNUSED s32 pad; // FAKE: unused slots; they place y at sp+0x88 and texture at sp+0x80 (score 18 without pad/pad2)
+    s32 y;
+    UNUSED s32 pad2;
+    s32 texture;
+    s32 i;
+    u8 *image;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    texture = func_8004C990(0x44, 2);
+    y = (s32) ((233.0f - 24.0f * D_83503BE8) + ((233.0f > 24.0f * D_83503BE8) ? 0.5f : -0.5f));
+    for (i = 0; i != 0x5A00; i += 0xF00) {
+        image = func_8004CA60((u8 *) texture);
+        gDPPipeSync(D_800D0510++);
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xE200001C; _g->words.w1 = 0x504240; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFA000000; _g->words.w1 = -1U; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFCFFFFFF; _g->words.w1 = 0xFFFCF67B; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) &image[i]; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF5100000; _g->words.w1 = 0x07000000; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xE6000000; _g->words.w1 = 0; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF3000000; _g->words.w1 = 0x0777F000; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xE7000000; _g->words.w1 = 0; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF5107800; _g->words.w1 = 0; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF2000000; _g->words.w1 = 0x3BC01C; }
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFA000000; _g->words.w1 = -0xB0U; }
+        GfxRect_DrawTextured(D_83503AEC + D_83503AD4, (s16) (s32) ROUND_MAX((f32) y),
+                             (s16) (s32) ROUND_MAX(240.0f * D_83503BE8),
+                             (s16) (s32) ROUND_MAX(8.0f * D_83503BE8), 0, 0,
+                             (s16) (s32) ROUND_MAX(1024.0f / D_83503BE8),
+                             (s16) (s32) ROUND_MAX(1024.0f / D_83503BE8), 0);
+        { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFA000000; _g->words.w1 = -1U; }
+        GfxRect_DrawTextured(*(s16 *) ((u8 *) &D_83503AD4 + 2), (s16) (s32) ROUND_MAX((f32) y),
+                             (s16) (s32) ROUND_MAX(240.0f * D_83503BE8),
+                             (s16) (s32) ROUND_MAX(8.0f * D_83503BE8), 0, 0,
+                             (s16) (s32) ROUND_MAX(1024.0f / D_83503BE8),
+                             (s16) (s32) ROUND_MAX(1024.0f / D_83503BE8), 0);
+        y = (s32) ((f32) y + 8.0f * D_83503BE8);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_83500708 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83500C14.s")
 
