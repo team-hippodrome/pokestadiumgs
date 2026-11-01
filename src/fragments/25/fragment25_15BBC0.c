@@ -62,71 +62,7 @@ void func_82101CB4(f32 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5) 
         *(f32 *)((u8 *)var_s1 + 8) = (__cosf(temp_fs0) * arg3) + arg2;
     }
 }
-/* mkdraft:func_82101D88 begin */
-extern f32 D_8210411C;
-
-// Walks the three 0x2C-byte elements chained from arg0: for element i it calls
-// func_82101CB4(element, arg1, arg2, arg3, *(f32 *)(arg0 + 0x94), i * tau / 3.0f)
-// with tau = D_8210411C, then stores that element at ((u8 *)arg0 + 0x84)[i].
-
-
-void func_82101D88(void *arg0, f32 arg1, f32 arg2, f32 arg3) {
-    u8 *var_s3;
-    u8 *var_s1;
-    u8 *var_s2;
-    s32 var_s0;
-    f32 fi;
-    f32 ang;
-    f32 step;
-    f32 tau;
-
-    // FAKE: the four `if`s in this function are empty dead compares; IDO deletes all
-    // of them from the object. This one is the first statement of the body, which is
-    // what gives the hoisted 3.0f literal a body `.loc` group: as1 then places
-    // `mtc1 $at,$fs4` at .text slot 6, after the three float saves, instead of slot
-    // 3 directly after `lui $at,0x4040`. Without it, score 4. `if (0) {}` and
-    // compares that mention arg1 or arg2 work as well; a compare against arg3
-    // reorders the float register walk (score 15).
-    if ((s32)arg0 == 7) {
-    }
-
-    tau = D_8210411C;
-
-    // The pointer copies are separate statements rather than the `for` init: with
-    // them in the init, the loop bound's `li $s5,3` is emitted at slot 19 (before
-    // `sw $ra`) instead of slot 25 after the four `or`s (score 23).
-    var_s0 = 0;
-    var_s1 = arg0;
-    var_s2 = arg0;
-    var_s3 = arg0;
-
-    // FAKE: dead compare; removing this pair moves the three float argument webs
-    // from fs0/fs1/fs2 to higher registers (score 15 for either member).
-    if (arg1 == arg2 + arg3 + 3.0f) {
-    }
-
-    // FAKE: dead compare; see above (score 15 without it).
-    if (3.0f == arg1 + arg2 + arg3) {
-    }
-
-    // FAKE: dead compare, and the one that sets the integer register colours: it
-    // leaves arg0 in $s4 and the loop bound in $s5. Spelling the bound as a pointer
-    // or unsigned constant (`(void *)3`, `(u32)arg0 == 3u`) swaps them to $s5/$s4
-    // (score 4); removing the compare entirely scores 19. It has to follow the four
-    // pointer copies, see above.
-    if ((s32)arg0 == 3) {
-    }
-
-    for (; var_s0 != 3; var_s0++, var_s1 += 0x2C, var_s2 += 4, var_s3 += 0x2C) {
-        ;
-        fi = var_s0;
-        ang = fi * tau;
-        step = ang / 3.0f;
-        func_82101CB4((f32 *)(u32)var_s1, arg1, arg2, arg3, (*(f32 *)((u8 *)arg0 + 0x94)), step);
-        *(f32 **)(var_s2 + 0x84) = (f32 *)(u32)var_s3;
-    }
-}
-/* mkdraft:func_82101D88 end */
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82101D88.s")
 
 /* mkdraft:func_82101E70 begin */
 f32 *func_82101E70(void *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4,
