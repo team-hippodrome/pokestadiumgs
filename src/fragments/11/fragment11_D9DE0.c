@@ -416,7 +416,7 @@ s32 func_81603404(s32 arg0, s32 arg1)
 
 extern s32 func_8004CA10(void *);
 extern s32 func_8004CA24(void *);
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern void func_8004D1FC(void *);
 extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
 extern u32 D_800D0510;
@@ -471,7 +471,7 @@ void func_81603598(s32 x, s32 y, s32 imageIndex, s32 iconIndex, f32 alpha) {
 }
 
 extern void *D_8160BDB8;
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 void func_81603984(s32 arg0, s32 arg1) {
     func_8004D19C(arg0, arg1, D_8160BDB8, 0, 0);
 }
@@ -644,7 +644,23 @@ void func_8160551C(void) {
 }
 /* mkdraft:func_8160551C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81605598.s")
+/* mkdraft:func_81605598 begin */
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+
+
+
+void func_81605598(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x119623, 0xFF2FFFFF);
+    gDPSetColor((*(Gfx **)&D_800D0510)++, G_SETPRIMCOLOR, (_SHIFTL(((u8 *)arg4)[1], 16, 8) | _SHIFTL(((u8 *)arg4)[2], 8, 8) | _SHIFTL(((u8 *)arg4)[3], 0, 8) | _SHIFTL(((u8 *)arg4)[0], 24, 8)));
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 * 4, arg1 * 4, (arg0 + arg2) * 4, (arg1 + arg3) * 4,
+        G_TX_RENDERTILE, 0, 0x400, (s32)(32768.0f / ((f32)arg2 * 0.5f)),
+        -(s32)(32768.0f / ((f32)arg3 * 0.5f)));
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+}
+/* mkdraft:func_81605598 end */
 
 extern void func_8160551C(void);
 extern void func_81605598(s32, s32, s32, s32, s32);
@@ -660,7 +676,39 @@ void func_81605950(void) {
         1, 0, 1, 1, 4, 4, 0, 0
     );
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816059CC.s")
+/* mkdraft:func_816059CC begin */
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+
+// Draws the panel border as nine func_81602240 quads: four 16x16 corners, two 16-wide
+// vertical edges of height arg3 - 0x20, two 16-high horizontal edges of width
+// arg2 - 0x20, and the centre quad arg2 - 0x20 by arg3 - 0x20. UVs are 0 or 0x10 and
+// s/t are 1, -1 or 0 for each piece.
+//
+// The prim-color bytes are OR'd in the order arg4[1], arg4[2], arg4[3], arg4[0].
+// Ascending order 0,1,2,3 builds a different `or` tree: 62 instructions differ, same value.
+
+
+void func_816059CC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x119623, 0xFF2FFFFF);
+    gDPSetColor((*(Gfx **)&D_800D0510)++, G_SETPRIMCOLOR,
+                _SHIFTL(((u8 *)arg4)[1], 16, 8) | _SHIFTL(((u8 *)arg4)[2], 8, 8) |
+                    _SHIFTL(((u8 *)arg4)[3], 0, 8) | _SHIFTL(((u8 *)arg4)[0], 24, 8));
+    func_81602240(arg0, arg1, 16.0f, 16.0f, 0, 0x10, 1.0f, -1.0f);
+    func_81602240((arg0 + arg2) - 0x10, arg1, 16.0f, 16.0f, 0x10, 0x10, -1.0f, -1.0f);
+    func_81602240(arg0, (arg1 + arg3) - 0x10, 16.0f, 16.0f, 0, 0, 1.0f, 1.0f);
+    func_81602240((arg0 + arg2) - 0x10, (arg1 + arg3) - 0x10, 16.0f, 16.0f, 0x10, 0, -1.0f, 1.0f);
+    func_81602240(arg0, arg1 + 0x10, 16.0f, arg3 - 0x20, 0, 0, 1.0f, 0.0f);
+    func_81602240(arg0 + 0x10, arg1, arg2 - 0x20, 16.0f, 0x10, 0x10, 0.0f, -1.0f);
+    func_81602240((arg0 + arg2) - 0x10, arg1 + 0x10, 16.0f, arg3 - 0x20, 0x10, 0, -1.0f, 0.0f);
+    func_81602240(arg0 + 0x10, (arg1 + arg3) - 0x10, arg2 - 0x20, 16.0f, 0x10, 0, 0.0f, 1.0f);
+    func_81602240(arg0 + 0x10, arg1 + 0x10, arg2 - 0x20, arg3 - 0x20, 0x10, 0, 0.0f, 0.0f);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+}
+/* mkdraft:func_816059CC end */
 
 extern void func_81605950(void);
 extern void func_816059CC(s32, s32, s32, s32, s32);
@@ -707,13 +755,62 @@ void func_81605F94(s32 arg0, s32 arg1, s32 arg2, u8 *arg3, f32 arg4) {
     gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_8160615C.s")
+const char D_8160C0C0[] = "%d";
+
+/* mkdraft:func_8160615C begin */
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(u8, u8, u8, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
+extern void func_800495BC();
+extern const char D_8160C0C0[];
+
+
+
+void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 255, 255, 255, 255.0f * arg3);
+    func_8004D19C(arg0 + 0x11, arg1 - 0x13, (void *)func_8004C990(0x11B, 0), 0, 0);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    func_800498C4();
+    func_800496A4(8, -4);
+    func_8004972C(0xFF, 0xFF, 0xFF, (s32)(255.0f * arg3));
+    func_800495BC(arg0 - 6, arg1 - 0x11, D_8160C0C0, arg2);
+    func_800499EC();
+}
+/* mkdraft:func_8160615C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606304.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606694.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606800.s")
+/* mkdraft:func_81606800 begin */
+extern s32 D_8160BE5C;
+
+// FAKE: IDO emits the `arg1 != 0 || arg0 != D_8160BE5C` test as `beq $a0,$t6`, while retail
+// has the same pair commuted (`beq $t6,$a0`, the loaded global in $rs). Rewriting only the
+// two register fields leaves every other word, the scheduling and both relocations intact;
+// without it this body scores 10.
+#pragma REWRITE_FUNCTION_WORD(func_81606800, 0xC, 0x108E002A, 0x11C4002A)
+// Colour state for the panel frame: D_8160BE5C caches arg0 so the display-list update is
+// emitted only when arg0 changes or arg1 forces it.
+
+
+void func_81606800(s32 arg0, s32 arg1) {
+    if (arg1 != 0 || arg0 != D_8160BE5C) {
+        D_8160BE5C = arg0;
+        gDPPipeSync((*(Gfx **)&D_800D0510)++);
+        if (arg0 != 0) {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0, 0, 0, 0xFF);
+            gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+        } else {
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0xFF, 0xFF);
+            gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+        }
+    }
+}
+/* mkdraft:func_81606800 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816068C0.s")
 
@@ -763,7 +860,7 @@ extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern void *D_8160BD94;
 extern void *D_8160BD90;
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 void func_8160710C(s32 arg0, s32 arg1) {
     gSPDisplayList(GFX_DL++, D_80094E38);
     gDPSetRenderMode(GFX_DL++, 0x0F0A7008, 0);
@@ -771,7 +868,7 @@ void func_8160710C(s32 arg0, s32 arg1) {
     gSPDisplayList(GFX_DL++, D_80094F50);
 }
 
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 void func_816071AC(s32 arg0, s32 arg1) {
     gSPDisplayList(GFX_DL++, D_80094E38);
     gDPSetRenderMode(GFX_DL++, 0x0F0A7008, 0);
@@ -811,7 +908,44 @@ void func_81607408(void) {
     Fragment11_SetClippedScissor(&D_800D0510, 0, 0, 640, 480);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607440.s")
+/* mkdraft:func_81607440 begin */
+extern void func_816054D8(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void Fragment11_SetClippedScissor(void *, s16, s16, s16, s16);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_8160BDA4;
+extern s32 D_8160BDA8;
+extern void func_8004D1FC(void *);
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+extern void func_81607408(void);
+
+
+void func_81607440(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
+    Gfx *gfx;
+    Gfx *gfx2;
+
+    func_816054D8(arg0, arg1, arg2, arg3);
+    Fragment11_SetClippedScissor(&D_800D0510, (s16)arg0, (s16)arg1, (s16)arg2, arg3);
+    arg1 = (s32)((f32)(arg1 + 13) + ((f32)(arg3 - 26) * arg4));
+    gSPDisplayList(GFX_DL++, D_80094E38);
+    gDPSetCombine(GFX_DL++, 0x119623, 0xFF2FFFFF);
+    gDPSetRenderMode(GFX_DL++, 0x0F0A7008, 0);
+    gfx2 = GFX_DL++;
+    gfx2->words.w1 = -1;
+    gfx2->words.w0 = 0xFA00FFFF;
+    gfx = GFX_DL++;
+    gfx->words.w1 = 0xFFFF00FF;
+    gfx->words.w0 = 0xFA00FFFF;
+    arg0 += 3;
+    func_8004D1FC((void *)(u32)D_8160BDA4);
+    func_81602240((f32)arg0, (f32)(arg1 - 10), 16.0f, 10.0f, 0, 0, 1.0f, 1.0f);
+    func_8004D1FC((void *)(u32)D_8160BDA8);
+    func_81602240((f32)arg0, (f32)arg1, 16.0f, 10.0f, 0, 0, 1.0f, 1.0f);
+    gSPDisplayList(GFX_DL++, D_80094F50);
+    func_81607408();
+}
+/* mkdraft:func_81607440 end */
 
 f32 func_8160762C(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3) {
     f32 result;
@@ -887,7 +1021,26 @@ void func_81607834(u16 arg0, u16 arg1, u16 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607DB0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81608044.s")
+/* mkdraft:func_81608044 begin */
+void func_81608044(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, s32 *arg5) {
+    Gfx *gfx;
+    f32 alpha;
+    f32 t;
+    t = 1.0f - arg4;
+    if (!t) {} // karodo: diff score 380 without this empty block.
+    alpha = t * t * t;
+    if ((arg3 >= 0) && (arg2 >= 0)) {
+        gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_2CYCLE);
+        gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+        gfx = (*(Gfx **)&D_800D0510)++;
+        gfx->words.w0 = 0xFB000000;
+        gfx->words.w1 = _SHIFTL((u32)((f32)(u32)((u8 *)arg5)[1] * alpha), 16, 8) | _SHIFTL((u32)((f32)(u32)((u8 *)arg5)[2] * alpha), 8, 8) | _SHIFTL((u32)((f32)(u32)((u8 *)arg5)[0] * alpha), 24, 8) | 0xFF;
+        gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x71FFFF, 0xFFFEFC38);
+        gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x0F0A4000, 0);
+        func_81602240(arg0, arg1, arg2, arg3, 0, 0, 1.0f, 1.0f);
+    }
+}
+/* mkdraft:func_81608044 end */
 
 extern s32 func_8000731C(void);
 extern void *Gfx_AllocDisplayList(s32);
@@ -1073,7 +1226,38 @@ void func_81608A38(s32 arg0, s32 arg1, u8 arg2, f32 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81609170.s")
+/* mkdraft:func_81609170 begin */
+extern s32 func_800472E0(s32);
+extern s32 func_80049148(s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_81607B1C(s32, s32, s32, s32, f32, u8 *, u8 *);
+extern u8 D_8160BE84;
+extern u8 D_8160BE87;
+
+
+
+void func_81609170(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, f32 arg7, s32 arg8) {
+    s32 temp_t0;
+    s32 temp_v0;
+    s32 temp_v1;
+
+    temp_t0 = func_80049148(arg2, arg3, arg8) + (arg5 * 2);
+    temp_v0 = func_800472E0(arg8);
+    temp_v1 = (arg6 * 2) + (arg4 * temp_v0);
+    func_81607B1C((s32) ((f32) arg0 - ((f32) (temp_t0 / 2) * arg7)), (s32) ((f32) arg1 + ((f32) (temp_v1 / 2) * arg7)), (s32) ((f32) temp_t0 * arg7), (s32) ((f32) temp_v1 * arg7), 1.0f - arg7, &D_8160BE84, &D_8160BE87);
+    if (0.1f < arg7) {
+        func_800498C4();
+        func_800496A4(arg2, arg3);
+        func_8004989C(arg4);
+        func_800495F8(arg0, arg1 + arg6, 1, arg8);
+        func_800499EC();
+    }
+}
+/* mkdraft:func_81609170 end */
 
 s32 func_80001FF0();
 s32 func_80008970();
@@ -1107,7 +1291,7 @@ void *func_81609530(s32 arg0) {
 struct Color098 { u8 r, g, b; };
 extern s32 func_8004CA10(void *);
 extern s32 func_8004CA24(void *);
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 void func_816098B0(void *arg0, struct Color098 *arg1) {
@@ -1126,7 +1310,7 @@ void func_816098B0(void *arg0, struct Color098 *arg1) {
 
 static const u16 D_8160C188[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 extern s32 func_8004C990(s32, s32);
-extern void func_8004D19C(s32, s32, void *, s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern void func_8004D1FC(void *);
 void func_816099E0(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
     void *temp;
