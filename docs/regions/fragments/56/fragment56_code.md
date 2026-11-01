@@ -444,3 +444,40 @@ The hybrid indexed source resolves this through ordinary induction-variable
 formation. Explicit cursors, record views, complete array extents and a stock
 compiler-version switch did not resolve that parent. These negative results do
 not apply to other owners. `func_86806180` remains the separate motion requeue.
+
+## 2026-11-01 — ballistic model update accepted
+
+`Fragment56_UpdateBallisticModels` (formerly `func_86801160`, 864 bytes)
+updates twenty active model records in one group. It advances elapsed time,
+rotates the X/Z components, projects horizontal motion with sine/cosine, and
+computes a double-precision parabola before storing the vertical float. In
+mode14, a model below the group threshold is reset and copied into the
+forty-slot effect pool; the sound plays once per invocation and the pool cursor
+wraps at40. The name describes those operations rather than assigning a
+minigame-specific role to the models.
+
+The global views establish four groups of twenty 24-byte trajectory records,
+four 292-byte group records, and separate twenty- and forty-model pools with
+360-byte records. `Fragment56_InitStateRecords` establishes the trajectory and
+group bounds; `Fragment56_InitModelGroups` establishes both model-pool bounds.
+The model transform offsets agree with `func_8003F114` and the display-object
+layout in `include/229E0.h`. Unknown occupied ranges remain opaque. Native size
+assertions and normal/+20-line controls preserved all existing module bytes,
+function extents, and relocations before the new C owner was installed.
+
+The matching source fully indexes the records and both model pools. After the
+rotation updates, it reads elapsed time, apex time, then angle. That order
+reproduces the original floating-point allocation and scheduler dependencies;
+explicit record/model cursors did not. The sound flag is assigned after the
+sound call, and the group cursor uses a direct increment. The existing
+one-pointer `func_8003F1DC` contract is retained; the assembly draft inferred
+extra floating-point arguments that the actual callee does not take.
+
+Candidate4 of `fragment56-point-final-read-order8` passed the canonical runner,
+normal host syntax check, and full US ROM gate on `fa124e86`, retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming, local-variable cleanup, and formatting
+preserve every module section, function extent, and semantic relocation in
+normal and +20-leading-line controls. The original function name remains a
+linker alias. The new function uses no padding, unused locals, instruction
+rewrites, forced registers, or source-line directives. Private diagnostics and
+coverage are excluded from the change.
