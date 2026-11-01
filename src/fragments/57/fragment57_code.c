@@ -101,7 +101,38 @@ void func_833018E8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302088.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302180.s")
+/* mkdraft:func_83302180 begin */
+extern f32 D_833091EC;
+
+
+
+void func_83302180(void *arg0) {
+    f32 *D_833091EC_ptr = &D_833091EC;
+    f32 temp_fv0;
+    f32 ratio;
+    s32 temp_v0;
+
+    if (*(s32 *)((u8 *)arg0 + 0x1C) == -1) {
+        *(s32 *)((u8 *)arg0 + 0x1C) = 0;
+        temp_fv0 = (f32)(*(s32 *)((u8 *)arg0 + 0x10) / 2);
+        (*D_833091EC_ptr) = temp_fv0;
+    }
+    temp_fv0 = (*D_833091EC_ptr);
+    if (1) {} // karodo: the empty if gives uopt a statement boundary here; without it the D_833091EC load is scheduled after the 10.0f and 16.0f materializations (diff score 530).
+    temp_fv0 = temp_fv0 - 16.0f;
+    if (temp_fv0 < 10.0f) {
+        *(s32 *)((u8 *)arg0 + 0x18) = 0;
+        (*D_833091EC_ptr) = 10.0f;
+        return;
+    }
+    temp_v0 = *(s32 *)((u8 *)arg0 + 0x10);
+    ratio = (f32)*(s32 *)((u8 *)arg0 + 0x14) / (f32)temp_v0;
+    *(s32 *)((u8 *)arg0 + 8) = (s32)((f32)*(s32 *)((u8 *)arg0 + 0) - temp_fv0);
+    *(s32 *)((u8 *)arg0 + 0xC) = (s32)((f32)*(s32 *)((u8 *)arg0 + 4) - temp_fv0 * ratio);
+    *(f32 *)((u8 *)arg0 + 0x2C) = (f32)(*(s32 *)((u8 *)arg0 + 0) - *(s32 *)((u8 *)arg0 + 8)) / (f32)(temp_v0 / 2);
+    (*D_833091EC_ptr) = temp_fv0;
+}
+/* mkdraft:func_83302180 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302290.s")
 
@@ -162,7 +193,7 @@ s32 func_8004C874(s32, s32);
 s8 *func_8004C8A0(s32 *, s32, s32, s32);
 s32 func_8330084C(s32 *);
 s32 func_83302088(s32 *);
-s32 func_83302180(s32 *);
+void func_83302180(void *);
 extern s32 D_83308E38[];
 extern s32 D_8330A2B8;
 extern s32 D_8330AC08;
