@@ -1109,7 +1109,37 @@ void func_8240504C(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_824050A8.s")
+/* mkdraft:func_824050A8 begin */
+f32 func_82403F10(void);
+
+
+void func_824050A8(void *arg0, f32 arg1)
+{
+  u8 *clock = arg0;
+  int hours_carry;
+  s32 carry;
+  f32 seconds_accum;
+  s32 seconds_byte;
+  s32 hours_byte;
+  *((f32 *) clock) += func_82403F10() * arg1;
+  seconds_accum = *((f32 *) clock);
+  carry = ((s32) seconds_accum) / 60;
+  *((f32 *) clock) = seconds_accum - ((f32) (carry * 60));
+  clock[8] = clock[8] + carry;
+  seconds_byte = clock[8];
+  carry = seconds_byte / 60;
+  clock[8] = seconds_byte - carry * 60;
+  clock[7] = clock[7] + carry;
+  hours_carry = clock[7] / 60;
+  clock[7] -= hours_carry * 60;
+  clock[6] = clock[6] + hours_carry;
+  hours_byte = clock[6];
+  carry = hours_byte / 24;
+  clock[6] = hours_byte - carry * 24;
+  *((u16 *) (clock + 4)) += carry;
+  *((u16 *) (clock + 4)) %= 7;
+}
+/* mkdraft:func_824050A8 end */
 
 void Fragment13_LerpRgb(void *arg0, void *arg1, void *arg2, f32 arg3) {
     u8 *dst = arg0;
