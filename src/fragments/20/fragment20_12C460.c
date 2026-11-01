@@ -3586,5 +3586,91 @@ void func_82614F40(u16 *arg0, u16 *arg1, u16 arg2, s32 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826150A4.s")
+/* mkdraft:func_826150A4 begin */
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+extern s32 func_8004C54C(s32, s32);
+
+// FAKE: arg5 is int rather than the s32 (long) used elsewhere in this file; the comparison
+// against arg4 + 1 then colors its result v1/a1/a2 as the target does instead of t1/t2/v1.
+// Diff score 460 with s32. Callers pass the sign-extended `lh` of a s16 field
+// (func_826063AC, func_8260EA60), so the value is int-width either way.
+
+
+void func_826150A4(s8 *arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, int arg5) {
+    // FAKE: unused; the extra 2-byte home slot puts index at 0xAC with the target's hole at
+    // 0xAE. Diff score 12 without it (index lands at 0xAE).
+    s16 pad;
+    s16 index;
+    s8 *text;
+    s8 *sub;
+    char buf[0x80];
+
+    index = -1;
+    switch (arg2 & 0xFF00) {
+    case 0:
+        switch (arg3) {
+        case 1:
+            index = 0x5A;
+            break;
+        case 2:
+            index = 0x5B;
+            break;
+        case 3:
+            index = 0x5C;
+            break;
+        case 4:
+            index = 0x5D;
+            break;
+        }
+        text = (s8 *)func_8004C874(0x12, index);
+        if (arg5 == arg4 + 1) {
+            sub = (s8 *)func_8004C874(0x12, 0x57);
+        } else if (arg5 == arg4 + 2) {
+            sub = (s8 *)func_8004C874(0x12, 0x58);
+        } else {
+            func_8004C594(1, arg4 + 1);
+            sub = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4B);
+        }
+        if ((text != 0) && (sub != 0)) {
+            func_8004C54C(0xA, text);
+            func_8004C54C(0xB, sub);
+            func_8004C8A0(arg0, arg1, 0x12, 0x38);
+        } else if (text != 0) {
+            HAL_Strcpy(arg0, text);
+        } else if (sub != 0) {
+            HAL_Strcpy(arg0, sub);
+        }
+        return;
+    case 0x300:
+        switch (arg3) {
+        case 15:
+            text = (s8 *)func_8004C874(0x12, 0x50);
+            break;
+        case 11:
+            func_8004C594(1, arg4 + 1);
+            text = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4B);
+            break;
+        case 14:
+            func_8004C594(1, arg4 + 1);
+            text = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4E);
+            break;
+        case 24:
+            text = (s8 *)func_8004C874(0x12, 0x51);
+            break;
+        default:
+            if (arg5 == arg4 + 1) {
+                text = (s8 *)func_8004C874(0x12, 0x4D);
+            } else {
+                func_8004C594(1, arg4 + 1);
+                text = (s8 *)func_8004C8A0(buf, 0x80, 0x12, 0x4C);
+            }
+            break;
+        }
+        if (text != 0) {
+            HAL_Strcpy(arg0, text);
+        }
+        break;
+    }
+}
+/* mkdraft:func_826150A4 end */
 #endif
