@@ -905,7 +905,107 @@ s32 func_822085EC(void) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82208678.s")
+/* mkdraft:func_82208678 begin */
+extern u32 func_800060E8(void);
+extern void func_800226C0(s32);
+extern s32 func_8220AC64(void);
+extern void *D_80087200;
+extern void *D_8220DA08;
+extern s32 D_8220EC38;
+
+// Selection update for the two modes of this fragment's menu, dispatched on D_8220EC38.
+// Mode 1 clamps the s16 cursor at node + 0x2, mode 2 the one at node + 0x4, where "node" is
+// the object at D_8220DA08 + 0x20. Every test reads the input halfword at D_80087200 + 8
+// afresh; the pointer itself is re-materialized after each func_800226C0 call. flags[] holds
+// whether
+// bit 0 and bit 1 of func_800060E8's low byte are set, i.e. whether cursor entry 0 or 1 may
+// be confirmed. Confirming cursor 0 in mode 1 switches to mode 2 (D_8220EC38 = 2) with that
+// mode's cursor set to 1; bit 0x4000 in mode 2 switches back to mode 1. Returns 1 when a
+// confirmation was accepted (func_8220AC64 is then called for its switch side effects) and
+// -1 when bit 0x4000 was seen in mode 1.
+
+
+
+
+s32 func_82208678(void) {
+    s32 old_cursor;
+    s32 result = 0;
+    s32 i;
+    u8 *node;
+    s32 flags[2];
+    u8 mask;
+
+    node = *(u8 **)((u8 *)D_8220DA08 + 0x20);
+    mask = func_800060E8();
+    for (i = 0; i < 2; i++) {
+        flags[i] = (mask & (1 << i)) != 0;
+    }
+    switch (D_8220EC38) {
+    case 1:
+        old_cursor = *(s16 *)(node + 2);
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x200) {
+            *(s16 *)(node + 2) = *(s16 *)(node + 2) - 1;
+            if (*(s16 *)(node + 2) < 0) {
+                *(s16 *)(node + 2) = 0;
+            }
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x100) {
+            *(s16 *)(node + 2) = *(s16 *)(node + 2) + 1;
+            if (*(s16 *)(node + 2) >= 2) {
+                *(s16 *)(node + 2) = 1;
+            }
+        }
+        if (old_cursor != *(s16 *)(node + 2)) {
+            func_800226C0(1);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+            if (flags[*(s16 *)(node + 2)] != 0) {
+                if (*(s16 *)(node + 2) == 0) {
+                    D_8220EC38 = 2;
+                    *(s16 *)(node + 4) = 1;
+                    func_800226C0(144);
+                } else {
+                    result = 1;
+                }
+            } else {
+                func_800226C0(5);
+            }
+        } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+            result = -1;
+            func_800226C0(3);
+        }
+        break;
+    case 2:
+        old_cursor = *(s16 *)(node + 4);
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x200) {
+            *(s16 *)(node + 4) = *(s16 *)(node + 4) - 1;
+            if (*(s16 *)(node + 4) < 0) {
+                *(s16 *)(node + 4) = 0;
+            }
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x100) {
+            *(s16 *)(node + 4) = *(s16 *)(node + 4) + 1;
+            if (*(s16 *)(node + 4) >= 3) {
+                *(s16 *)(node + 4) = 2;
+            }
+        }
+        if (old_cursor != *(s16 *)(node + 4)) {
+            func_800226C0(1);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+            result = 1;
+        } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+            D_8220EC38 = 1;
+            func_800226C0(3);
+        }
+        break;
+    }
+    if (result == 1) {
+        func_8220AC64();
+    }
+    return result;
+}
+/* mkdraft:func_82208678 end */
 
 extern s32 func_8220D670(void);
 extern void *D_8220DA08;
