@@ -2546,9 +2546,9 @@ gate on `6aa30b4f`, retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming
 preserved complete-module sections, function extents, and relocations in normal
 and +20-line controls. The original function address remains a linker alias.
 
-#### HP-loss animation follow-up: requeue (2026-11-01)
+#### HP-loss animation follow-up (2026-11-01; resolved below)
 
-`func_841334D8` remains assembly. The best current candidate is 576 bytes
+At this checkpoint, `func_841334D8` remained assembly. The best candidate was 576 bytes
 versus 572, normalized similarity 0.8958 and raw similarity 0.7986. Its byte
 parameter is allocated to S0, while the original reads its stack byte. This
 follow-up adds 32 rejected candidates covering unsigned indexing and signed
@@ -2610,3 +2610,28 @@ remain useful independently. Private evidence: `battle-slot-copy-control8`,
 `battle-slot-copy-permute-review.json`. All new probe batches passed unchanged
 module controls normally and with twenty leading blank lines; no ROM acceptance
 is implied by those controls.
+
+#### HP-loss feedback accepted (2026-11-01)
+
+`Battle_QueueHpLossFeedback` (formerly `func_841334D8`, 572 bytes) compares
+opponent HP saved at snapshot offset 72 with current HP at runtime offset 38,
+then divides the signed difference times 100 by maximum HP at offset 40.
+The 0/30/70 thresholds select animation/message pairs. Fainting paths can
+override the pair or queue the opposing animation before the shared message
+and record-slot footer. `Battle_ResolveOpponentFaint` and `func_84133ACC` call
+this function; `Battle_QueueSwitchInHpMessage` writes the saved-HP field.
+
+The matching source spells the opposing-side checks as explicit guards to a
+shared footer and computes a real signed `opponent_side` used by both HP reads
+and subsequent calls. Together these produce the original stack-byte parameter
+loads. Declare the percentage, animation, message, and opponent index in that
+order to reproduce the 64-byte frame and halfword homes at offsets 58/56.
+All locals contribute to the calculation or command arguments.
+
+Canonical `battle-faint-animation-guard-local-order8` candidate 0 accepted on
+`6641a40a`: normal host syntax check and complete native US ROM comparison
+passed, retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming, readable guards,
+and declaration cleanup preserve complete-module sections, function extents,
+and semantic relocations in normal and twenty-leading-blank-line controls.
+The original function address remains a linker alias. This resolves the
+HP-loss-animation requeue above; the move-slot-copy requeue is still open.

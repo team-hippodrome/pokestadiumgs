@@ -1516,3 +1516,5 @@ func_86800D5C = Fragment56_InitStateRecords;
 func_86801160 = Fragment56_UpdateBallisticModels;
 
 func_86806180 = Fragment56_UpdateMovingModels;
+
+func_841334D8 = Battle_QueueHpLossFeedback;
