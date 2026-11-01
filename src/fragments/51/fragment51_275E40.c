@@ -140,7 +140,39 @@ void Fragment51_UpdateScores(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863003DC.s")
+/* mkdraft:func_863003DC begin */
+extern f32 D_86307190[][2];
+extern u8 D_863071F0[];
+extern void *D_863075D8;
+
+
+void func_863003DC(void *arg0)
+{
+  f32 offset_x;
+  f32 offset_y;
+  u8 *entry_indices;
+  f32 *src;
+  f32 *dst;
+  int i;
+
+  // Both tables hold four 8-byte entries of two floats (asm/us/data/fragments/51/
+  // fragment51_data.data.s: D_86307190 and D_863071F0); the byte offsets 0x10/0x14 are
+  // scaled by the context field at 0x8F24 and the products are kept for the loop.
+  offset_x = *(f32 *) ((u8 *) D_863075D8 + 0x8F24) * *(f32 *) ((u8 *) arg0 + 0x10);
+  offset_y = *(f32 *) ((u8 *) D_863075D8 + 0x8F24) * *(f32 *) ((u8 *) arg0 + 0x14);
+  *(f32 *) ((u8 *) arg0 + 0x48) = offset_x;
+  *(f32 *) ((u8 *) arg0 + 0x4C) = offset_y;
+  entry_indices = *(u8 **) ((u8 *) arg0 + 0x20);
+  for (i = 0; i < 3; i++)
+  {
+    // D_863071F0 is declared u8[] by this file, so index its 8-byte entries through a cast.
+    dst = ((f32 (*)[2]) D_863071F0)[entry_indices[i]];
+    src = D_86307190[entry_indices[i]];
+    dst[0] = src[0] + offset_x;
+    dst[1] = src[1] + offset_y;
+  }
+}
+/* mkdraft:func_863003DC end */
 #endif
 
 #ifdef VERSION_US
