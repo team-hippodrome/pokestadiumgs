@@ -137,7 +137,76 @@ void func_82508268(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_147D10/func_825082C8.s")
+/* mkdraft:func_825082C8 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094DE0[];
+extern u8 D_80094E38[];
+
+// Walks the 160-by-120 two-bit cell mask that starts 8 bytes into the transition
+// state and emits one gDPFillRectangle per horizontal run of set (or unset) cells,
+// depending on bit 0 of the state word at +4: set cells draw the inverse mask.
+// The display list is built through D_800D0510, which is read and written back for
+// every command so the store order stays visible to the compiler.
+
+
+void func_825082C8(s16 *arg0) {
+    u8 *cells;
+    s32 row;
+    s32 col;
+    s32 run;
+    s32 start;
+    s32 i;
+    s32 x;
+
+    cells = (u8 *)arg0 + 8;
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    gDPSetFillColor(D_800D0510++, 0x00010001);
+    i = 0;
+    for (row = 0; row < 120; row++) {
+        // karodo: empty branch; its dead 160 compare is the uopt walk-order node that puts the
+        // loop-bound constant in s2, the fill-rect constant in s3 and the cell pointer in a3
+        if (i == 160) { }
+        run = 0;
+        start = 0;
+        for (col = 0; col < 160; col++, i++) {
+            if (((u16 *)arg0)[2] & 1) {
+                if ((u8)((cells[i >> 2] >> ((i & 3) * 2)) & 3) != 0) {
+                    x = start * 4;
+                    if (run != 0) {
+                        goto draw;
+                    }
+                } else {
+                    if (run == 0) {
+                        start = col;
+                    }
+                    run++;
+                }
+            } else {
+                if ((u8)((cells[i >> 2] >> ((i & 3) * 2)) & 3) == 0) {
+                    x = start * 4;
+                    if (run != 0) {
+                        goto draw;
+                    }
+                } else {
+                    if (run == 0) {
+                        start = col;
+                    }
+                    run++;
+                }
+            }
+            continue;
+        draw:
+            gDPFillRectangle(D_800D0510++, x, row * 4, run * 4 + x - 1, row * 4 + 3);
+            run = 0;
+        }
+        x = start * 4;
+        if (run > 0) {
+            gDPFillRectangle(D_800D0510++, x, row * 4, run * 4 + x - 1, row * 4 + 3);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+}
+/* mkdraft:func_825082C8 end */
 
 extern Gfx *D_800D0510;
 extern void GfxImage_FillRectangle(Gfx **, s32, s32, s32, s32, u16);
