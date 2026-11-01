@@ -93,7 +93,87 @@ s32 func_8FB00F78(void *arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB00FE8.s")
+/* mkdraft:func_8FB00FE8 begin */
+extern s32 D_80087200;
+
+
+
+s32 func_8FB00FE8(void *arg0)
+{
+  s32 result;
+  s16 mode;
+  mode = *((u16 *) (((u8 *) D_80087200) + 0xC));
+  result = 0;
+  if (mode != 0)
+  {
+    func_800226C0(1, arg0);
+    switch (mode)
+    {
+      case 512:
+        ((s16 *) arg0)[4] -= *((u16 *) (((u8 *) arg0) + 12));
+        if (((s16 *) arg0)[4] < 0)
+      {
+        ((s16 *) arg0)[4] = 0;
+      }
+        ((s16 *) arg0)[5] -= *((u16 *) (((u8 *) arg0) + 12));
+        if (((s16 *) arg0)[5] < 0)
+      {
+        ((s16 *) arg0)[5] = 0;
+      }
+        break;
+
+      case 256:
+        ((s16 *) arg0)[4] += *((u16 *) (((u8 *) arg0) + 12));
+        if ((*((u16 *) (((u8 *) arg0) + 14))) < ((s16 *) arg0)[4])
+      {
+        ((s16 *) arg0)[4] = *((u16 *) (((u8 *) arg0) + 14));
+      }
+        ((s16 *) arg0)[5] += *((u16 *) (((u8 *) arg0) + 12));
+        if ((((*((u16 *) (((u8 *) arg0) + 14))) - (*((u16 *) (((u8 *) arg0) + 12)))) + 1) < ((s16 *) arg0)[5])
+      {
+        ((s16 *) arg0)[5] = ((*((u16 *) (((u8 *) arg0) + 14))) - (*((u16 *) (((u8 *) arg0) + 12)))) + 1;
+      }
+        break;
+
+      case 2048:
+        ((s16 *) arg0)[4]--;
+        if (((s16 *) arg0)[4] < 0)
+      {
+        ((s16 *) arg0)[4] = 0;
+      }
+        if (((s16 *) arg0)[4] < ((s16 *) arg0)[5])
+      {
+        ((s16 *) arg0)[5] = ((s16 *) arg0)[4];
+      }
+        break;
+
+      case 1024:
+        ((s16 *) arg0)[4]++;
+        if ((*((u16 *) (((u8 *) arg0) + 14))) < ((s16 *) arg0)[4])
+      {
+        ((s16 *) arg0)[4] = *((u16 *) (((u8 *) arg0) + 14));
+      }
+        if ((((s16 *) arg0)[5] + (*((u16 *) (((u8 *) arg0) + 12)))) <= ((s16 *) arg0)[4])
+      {
+        ((s16 *) arg0)[5] = (((s16 *) arg0)[4] - (*((u16 *) (((u8 *) arg0) + 12)))) + 1;
+      }
+        break;
+
+    }
+
+  }
+  if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x8000)
+  {
+    result = 1;
+  }
+  else
+    if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x4000)
+  {
+    result = 2;
+  }
+  return result;
+}
+/* mkdraft:func_8FB00FE8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB011DC.s")
 
