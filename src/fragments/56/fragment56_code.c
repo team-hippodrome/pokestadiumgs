@@ -10,7 +10,33 @@ s32 func_86800020(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868000AC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800298.s")
+extern s32 D_86808644;
+extern s32 D_86808640;
+extern s32 D_8682F2B4;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+extern Gfx * D_800D0510;
+void Fragment56_AnimatedTextureCallback(s32 event, void *node) {
+    s32 asset;
+    static s32 frame_counter;
+    if (event == 0) {
+        D_86808644 = func_8004C990(227, 0);
+    }
+    if (event == 5) {
+        if (D_8682F2B4 == 0) {
+            frame_counter++;
+        }
+        if (frame_counter >= 21) frame_counter = 0;
+        asset = func_8004C990(227, frame_counter / 4);
+        D_86808644 = asset;
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        gSPSegment(D_800D0510++, 15, func_8004CA60((u8 *)D_86808644));
+        gSPDisplayList(D_800D0510++, D_86808640);
+        func_8003CD84();
+    }
+}
 
 extern f32 D_86807CB0;
 extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
@@ -526,7 +552,42 @@ void func_868066B8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86806E94.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86807120.s")
+extern s32 func_86806E94(s32);
+extern void *D_86808590;
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F210(void *, s32);
+extern void func_86800A7C(void);
+extern void func_86803ED8(void);
+extern u8 D_868086C8[];
+extern u8 D_86808C68[];
+extern u8 D_8681E388[];
+extern s32 D_8682CD00[];
+extern u8 D_8682EE18[];
+extern s32 D_8682F2A8;
+void Fragment56_RunSceneLoop(void) {
+    s32 i;
+    if (*((u8 *)D_86808590 + 0x2180) == 4) {
+        func_86800A7C();
+        i = 0;
+        do {
+            func_8003F1DC(&D_86808C68[i * 0x168]);
+            func_8003F1DC(&D_8681E388[i * 0x168]);
+            func_8003F114(&D_868086C8[i * 0x168], 0, -1, (void *)D_8682CD00[i]);
+            *(s32 *)(&D_8682EE18[i * 0x124] + 0x10) = 1;
+            func_8003F210(&D_868086C8[i * 0x168], 1);
+            ModelAnim_SetFrame(&D_868086C8[i * 0x168], (s16)(guRandom() % 10));
+            i++;
+        } while (i != 4);
+    }
+    func_800086A4(2);
+    StageFade_StartFromOpaque(10);
+    do {
+        func_80064D28();
+        func_86803ED8();
+    } while (func_86806E94(D_8682F2A8) != 13);
+}
 
 extern s32 func_80001FF0(void);
 extern void func_80027EE0(u16);
@@ -544,7 +605,7 @@ extern void func_87F00030(void);
 extern void func_87F01F34(void *);
 extern void func_86802740(void);
 extern void func_80008514(s32);
-extern void func_86807120(void);
+extern void Fragment56_RunSceneLoop(void);
 extern void func_80008574(void);
 extern void func_80047610(void);
 extern void func_8004C398(void);
@@ -582,7 +643,7 @@ s32 func_8680729C(s32 arg0, void *arg1) {
     func_87F06EAC(0x6E, &D_86808558, D_86808590);
     func_80047588((D_86808560 | 5) | D_86808510, 0);
     Asset_LoadToSegment((((u32)&D_1000000 & 0x0F000000) >> 24), &D_446E30, D_447D00, 0);
-    func_87F00030(); func_87F01F34(D_86808590); func_86802740(); func_80008514(sp24); func_86807120();
+    func_87F00030(); func_87F01F34(D_86808590); func_86802740(); func_80008514(sp24); Fragment56_RunSceneLoop();
     func_80008574(); func_80047610(); func_8004C398(); Gfx_FreeDisplayListBuffers();
     main_pool_pop_state(0x4D523034); func_87F0F480(D_86808590); func_80027EE0(0xFFE);
     return D_8682F2B0;

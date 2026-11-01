@@ -21,3 +21,50 @@ bytes at 0x2B95B0, just before this object's `.rodata`. That is consistent
 with a function-local `static s32` in this file, which would need the data
 blob split to give `fragment56_code` that `.data` word (see the
 per-access-`lui` note for `func_8F100020`).
+
+## 2026-11-01 — animated texture callback accepted
+
+`Fragment56_AnimatedTextureCallback` (formerly `func_86800298`, 332 bytes)
+selects archive227 entry0 at event0. At event5 it advances a counter unless
+`D_8682F2B4` is set, wraps at21, selects entry counter/4, installs the texture
+at graphics segment15, submits `D_86808640`, and calls `func_8003CD84`.
+The one-argument texture-data getter and two-argument archive getter are
+verified in `src/4CC20.c`; the assembly-only draft inferred extra arguments.
+
+A function-local static counter restores the original scalar accesses.
+Direct counter clamping and a live asset-return temporary reproduce the
+original40-byte frame and segment-command spill at24. There are no dummy
+locals, source-line directives, instruction rewriting, or changed compiler flags.
+The static is pinned by `datamig_bss.ld` at its original word86807CFC.
+Its object has a16-byte NOBITS section containing the four-byte static and
+compiler alignment tail. The loaded data blob retains the original zero word
+and following data, so the overlay preserves retail initialization. Only this
+counter is assigned to that overlay; future bss additions need separate review.
+
+A private opt-in verifier checks the source/function, sole static at section
+zero, NOBITS size16, exact linker pin, and loaded zero backing. It real-links
+the entire candidate text and rodata at game addresses with the bss overlay,
+then compares every linked byte. Ten positive/negative controls pass. This
+proof only enables a sequential canonical ROM gate; it does not install C.
+`fragment56-pinned-counter8` candidate0 passed the normal host syntax check
+and full US ROM gate on `d39a2204`, retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The assembly baseline also passed with
+that overlay before candidate admission. Naming preserves all module bytes,
+function extents, and normalized relocations normally and with20 leading blank
+lines. The old function address remains a linker alias. Diagnostic tools and
+receipts stay private; the production source and linker pin are reproducible.
+
+## 2026-11-01 — scene loop accepted
+
+`Fragment56_RunSceneLoop` (formerly `func_86807120`, 380 bytes) initializes
+four model groups when the scene mode byte at offset0x2180 equals4, selects
+random starting animation frames, starts a fade, and renders/updates until
+state13. Its indexed model initialization reuses the accepted source shape
+from `func_8680649C`, with the target's call order and state writes.
+
+`fragment56-setup8` candidate0 passed the canonical host syntax check and
+full retail ROM gate on `582d79e4`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming preserves all module sections,
+function extents, and relocations in normal and +20-line controls. The original
+address is retained as a linker alias. No additional bss or linker changes
+were required by this function.

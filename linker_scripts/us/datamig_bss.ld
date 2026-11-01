@@ -9,6 +9,14 @@
 
 SECTIONS
 {
+    /* Texture callback's four-byte frame counter. The loaded data blob keeps
+     * the retail zero initializer; compiler section alignment contributes only
+     * NOLOAD tail space. This word overlays the fragment's loaded image. */
+    .fragment56_texture_counter_bss 0x86807CFC (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/56/fragment56_code.o(.bss)
+    }
+
     /* Spline trio (func_8290E040/E0FC/E1D8) function statics: retail stores
      * reach them at 0x8291BC14-0x8291BC38 (lui 0x8291 + sw 0xBC1C/18/14);
      * 0x30 bytes. */
