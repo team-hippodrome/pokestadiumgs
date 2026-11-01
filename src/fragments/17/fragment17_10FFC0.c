@@ -829,7 +829,50 @@ s32 func_822031D0(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82203210.s")
+/* mkdraft:func_82203210 begin */
+extern s16 D_8220D788;
+extern s16 D_8220E378;
+extern u8 D_8220E311[];
+extern s16 D_8220EB70[];
+
+
+
+s32 func_82203210(s32 arg0, u8 *arg1) {
+    s32 index = *(s32 *)(arg1 + 0x20);
+    u8 *p = (u8 *)&D_8220E378 + index * 0x3C;
+    s32 flag = 0;
+
+    switch (arg0) {
+        case 0: {
+            s16 *q = (s16 *)((u8 *)D_8220EB70 + index * 4);
+            q[0] = *(s16 *)(arg1 + 8) - *(s16 *)(p + 0x10);
+            q[1] = *(s16 *)(arg1 + 0xA) - *(s16 *)(p + 0x12);
+            break;
+        }
+
+        case 1: {
+            s16 *q = (s16 *)((u8 *)D_8220EB70 + index * 4);
+            switch (D_8220E311[index * 0x14]) {
+            case 1: case 2: case 3: case 4: flag = 1; break;
+            }
+            if (flag != 0) {
+                if (D_8220D788 < *(s16 *)(p + 0x36)) {
+                    *(u16 *)(arg1 + 2) |= 2;
+                    *(s16 *)(arg1 + 8) = *(s16 *)(p + 0x34) + *(s16 *)(p + 0x1C) + q[0];
+                    *(s16 *)(arg1 + 0xA) = *(s16 *)(p + 0x36) + *(s16 *)(p + 0x1E) + q[1];
+                } else {
+                    *(u16 *)(arg1 + 2) &= ~2;
+                }
+            } else {
+                *(u16 *)(arg1 + 2) &= ~2;
+            }
+            break;
+        }
+    }
+
+    return 0;
+}
+/* mkdraft:func_82203210 end */
 
 extern Gfx *D_800D0510;
 s32 func_8220336C(s32 arg0, s32 arg1) { gDPPipeSync(D_800D0510++); gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0, 0xFF); return 0; }
