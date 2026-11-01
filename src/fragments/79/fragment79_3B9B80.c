@@ -484,7 +484,7 @@ void func_8414C4AC(void) {
                 func_84156730(side, 1);
             }
         } else if (func_8414A3C0(side, 0x200U) != 0) {
-            // karodo: empty if; keeps best_index_flag10 live across the 0x200
+            // FAKE: empty if; keeps best_index_flag10 live across the 0x200
             // check so IDO assigns it $s5 and the -1 constant to $s4 (score 68
             // without it).
             if (best_index_flag10) {
@@ -576,7 +576,7 @@ u8 *func_8414C98C(u8 *record) {
     slot += record[1] * 0x40;
     slot += 0x28;
     record[1]++;
-    if (0) {} // karodo: diff score 200 without it.
+    if (0) {} // FAKE: diff score 200 without it.
     return slot;
 }
 

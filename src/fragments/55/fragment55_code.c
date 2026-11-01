@@ -601,7 +601,7 @@ void func_86706B88(void) {
     s32 index;
     s32 tier;
 
-    // karodo: empty body. The comparison's mention of D_87F119DC is load-bearing: uopt
+    // FAKE: empty body. The comparison's mention of D_87F119DC is load-bearing: uopt
     // colors the pointer web at the end of its walk with the guard present (v0, matching
     // retail) and one slot later without it (v1, diff 60). It emits no instructions.
     if (D_87F119DC == NULL) {

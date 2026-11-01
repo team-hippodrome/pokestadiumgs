@@ -163,7 +163,7 @@ void func_825082C8(s16 *arg0) {
     gDPSetFillColor(D_800D0510++, 0x00010001);
     i = 0;
     for (row = 0; row < 120; row++) {
-        // karodo: empty branch; its dead 160 compare is the uopt walk-order node that puts the
+        // FAKE: empty branch; its dead 160 compare is the uopt walk-order node that puts the
         // loop-bound constant in s2, the fill-rect constant in s3 and the cell pointer in a3
         if (i == 160) { }
         run = 0;
