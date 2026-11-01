@@ -1546,7 +1546,61 @@ s32 func_80054E10(u16 *arg0)
   return new_var;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80054E48.s")
+/* mkdraft:func_80054E48 begin */
+extern s32 func_80003E84(s32, s32, s32, s32);
+extern s32 func_80003F54(s32);
+extern u8 D_801281C0;
+extern s32 D_800972B0[];
+extern void _bcopy(void *, void *, s32);
+
+
+s32 func_80054E48(s32 arg0) {
+    struct Func80050CACEntry *entry;
+    s32 result;
+    s32 temp;
+    s32 count;
+    s32 offset;
+    entry = (struct Func80050CACEntry *)((u8 *)&D_801281C0 + arg0 * 0xC);
+    temp = (u32)D_800972B0[arg0] >> 7;
+    result = 0;
+    if ((entry->unk0 & 1) && (entry->unk0 & 2)) {
+        result = 1;
+        _bcopy((void *)entry->unk4, (void *)entry->unk8, (u32)D_800972B0[arg0]);
+        count = 0;
+        while (func_80003F54(arg0) == -1) {
+            count++;
+            if (count == 4) {
+                return -1;
+            }
+        }
+        count = 0;
+        offset = arg0 << 7;
+        while (func_80003E84(entry->unk4, offset, temp, 1) == -1) {
+            count++;
+            if (count == 4) {
+                return -1;
+            }
+        }
+        count = 0;
+        while (func_80003F54(arg0 + 4) == -1) {
+            count++;
+            if (count == 4) {
+                return -1;
+            }
+        }
+        count = 0;
+        offset += 0x200;
+        while (func_80003E84(entry->unk8, offset, temp, 1) == -1) {
+            count++;
+            if (count == 4) {
+                return -1;
+            }
+        }
+        entry->unk0 &= ~2;
+    }
+    return result;
+}
+/* mkdraft:func_80054E48 end */
 
 extern s32 func_80054E48(s32);
 
