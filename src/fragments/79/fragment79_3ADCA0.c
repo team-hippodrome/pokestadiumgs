@@ -950,7 +950,79 @@ void func_841410A0(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141538.s")
+/* mkdraft:func_84141538 begin */
+extern u8 *D_841951F8;
+extern u8 D_84186F68[];
+extern u8 D_84186F6C[];
+extern u8 D_84186F70[];
+extern s16 D_84186D4C;
+extern s16 D_84186D50;
+extern void ParticleGfx_SetPrimColor_fragment79(u8 r, u8 g, u8 b, u8 a);
+extern void func_8413F6C0(s16 arg0, s16 arg1, u16 arg3);
+
+
+
+void func_84141538(u8 *arg0) {
+    u32 sprite;
+    UNUSED u8 pad0; // FAKE: byte stack home only; without pad0+pad1 the color byte spills to 0x23 instead of 0x21 (diff score 20)
+    UNUSED u8 pad1; // FAKE: see pad0
+    u8 color;
+    u8 slot;
+    u8 *state;
+
+    slot = arg0[1];
+    if (!(arg0[8] & 2)) {
+        state = (&D_841951F8)[slot];
+        if ((state[2] == 1) && (state[8] >= 4)) {
+            switch (*(u32 *)(arg0 + 4)) {
+            case 0:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F6C[0], D_84186F6C[1], D_84186F6C[2], 0xFF);
+                color = 1;
+                break;
+            case 1:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 3;
+                break;
+            case 2:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 5;
+                break;
+            case 3:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F68[0], D_84186F68[1], D_84186F68[2], 0xFF);
+                color = 0;
+                break;
+            case 4:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 2;
+                break;
+            case 5:
+                ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+                color = 4;
+                break;
+            }
+        } else {
+            if (arg0[2] == 0) {
+                sprite = *(u32 *)(arg0 + 4);
+            } else {
+                sprite = *(u32 *)(arg0 + 4) - state[3];
+            }
+            ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+            switch (sprite) {
+            case 0:
+                color = 3;
+                break;
+            case 1:
+                color = 5;
+                break;
+            case 2:
+                color = 4;
+                break;
+            }
+        }
+        func_8413F6C0((s16) (*(s16 *)(arg0 + 0xA) + D_84186D4C), (s16) (*(s16 *)(arg0 + 0xC) + D_84186D50), color);
+    }
+}
+/* mkdraft:func_84141538 end */
 #endif
 
 #ifdef VERSION_US
