@@ -7,7 +7,32 @@ const char D_8418AD80[] = "SendFightThread\n";
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84124410.s")
+typedef struct AccuracyStageRatio {
+    u8 numerator;
+    u8 denominator;
+} AccuracyStageRatio;
+extern AccuracyStageRatio D_8418542C[];
+// Apply accuracy and inverse evasion stages, flooring each result at one.
+// The u16 working value preserves the retail product and quotient truncations.
+void Battle_ApplyAccuracyEvasionStages(u8 *accuracy, u8 accuracy_stage, u8 evasion_stage) {
+    u16 scaled_accuracy;
+
+    scaled_accuracy = *accuracy;
+    scaled_accuracy *= D_8418542C[(u8)(accuracy_stage - 1)].numerator;
+    scaled_accuracy /= D_8418542C[(u8)(accuracy_stage - 1)].denominator;
+    if (scaled_accuracy == 0) {
+        scaled_accuracy = 1;
+    }
+    scaled_accuracy *= D_8418542C[(u8)(13 - evasion_stage)].numerator;
+    scaled_accuracy /= D_8418542C[(u8)(13 - evasion_stage)].denominator;
+    if (scaled_accuracy == 0) {
+        scaled_accuracy = 1;
+    }
+    if (scaled_accuracy >= 256) {
+        scaled_accuracy = 255;
+    }
+    *accuracy = scaled_accuracy;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1897,7 +1922,6 @@ s32 func_841283FC(void) {
 #endif
 
 #ifdef VERSION_US
-extern void func_84124410();
 extern u8 D_841951BC;
 extern u8 D_841951BD;
 extern u8 D_841951C4;
@@ -1906,7 +1930,7 @@ void func_84128438(void) {
     u8 *temp_v0;
     temp_v0 = D_84195208[D_841951BD];
     if (!(temp_v0[0xD] & 8)) {
-        func_84124410(&D_841951C4, D_84195208[D_841951BC][0x23], temp_v0[0x24]);
+        Battle_ApplyAccuracyEvasionStages(&D_841951C4, D_84195208[D_841951BC][0x23], temp_v0[0x24]);
     }
 }
 #endif
