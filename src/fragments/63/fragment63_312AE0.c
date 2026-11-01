@@ -35,7 +35,91 @@ void func_87E0F288(void *arg0, s32 arg1) {
     *(s32 *)((u8 *)state + 0x1C) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E0F33C.s")
+/* mkdraft:func_87E0F33C begin */
+extern void *D_87F119DC;
+extern f32 D_80088E50[];
+extern void func_87E0F288(void *, s32);
+
+
+
+void func_87E0F33C(void) {
+    s32 rounded;
+    f32 angle;
+    f32 level;
+
+    // Bit 30 of the flags word, shifted into the sign bit as func_87E0F288 above tests
+    // bits 28..30. An `& 0x40000000` test instead shares that constant with the
+    // 0x40000000 call argument below, which loads a1 in the entry block rather than at
+    // 87E0F4B8.
+    if ((*(s32 *)((u8 *)D_87F119DC + 0xC) << 1) < 0) {
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 5) {
+            *(s16 *)((u8 *)D_87F119DC + 0x46) = 0;
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= ~0x40000000;
+            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        } else {
+            angle = ((f32)*(s32 *)((u8 *)D_87F119DC + 0x1C) / 4) * 90.0f * 182.04167f;
+            if (angle >= 0.0f) {
+                rounded = (s32)(angle + 0.5f);
+            } else {
+                rounded = (s32)(angle - 0.5f);
+            }
+            // The table entry is bound to a local so both scaled terms read it from a
+            // register: the retail object loads it at 87E0F434, then multiplies
+            // (mul.s at 87E0F438). Inlined, the two mul.s results swap registers.
+            {
+                f32 cos_value = D_80088E50[(rounded & 0xFFFF) >> 4];
+                angle = 90.0f * cos_value * 182.04167f;
+            }
+            if (angle >= 0.0f) {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle + 0.5f);
+            } else {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle - 0.5f);
+            }
+        }
+    }
+    if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x20000000) {
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 5) {
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= ~0x20000000;
+            func_87E0F288(D_87F119DC, 0x40000000);
+        } else {
+            angle = ((f32)*(s32 *)((u8 *)D_87F119DC + 0x1C) / 4) * 90.0f * 182.04167f;
+            if (angle >= 0.0f) {
+                rounded = (s32)(angle + 0.5f);
+            } else {
+                rounded = (s32)(angle - 0.5f);
+            }
+            // The table entry is bound to a local so the subtraction from 1.0f starts
+            // the scaled expression: the retail object loads the entry at 87E0F55C and
+            // materializes 1.0f at 87E0F560.
+            {
+                f32 cos_value = D_80088E50[(rounded & 0xFFFF) >> 4];
+                angle = ((f32)1 - cos_value) * 90.0f * 182.04167f;
+            }
+            if (angle >= 0.0f) {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle + 0.5f);
+            } else {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle - 0.5f);
+            }
+        }
+    }
+    if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x10000000) {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) += 0.25f;
+    } else {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) -= 0.25f;
+    }
+    level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
+    if (level > 1.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) = 1.0f;
+        level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
+    }
+    if (level < 0.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) = 0.0f;
+        level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
+    }
+    *(f32 *)((u8 *)D_87F119DC + 0x58) = level;
+    *(f32 *)((u8 *)D_87F119DC + 0x54) = level;
+}
+/* mkdraft:func_87E0F33C end */
 
 extern void *D_8009491C;
 extern Gfx *D_800D0510;
