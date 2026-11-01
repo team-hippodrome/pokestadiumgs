@@ -520,7 +520,75 @@ void func_8AB01454(s16 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB0148C.s")
+/* mkdraft:func_8AB0148C begin */
+extern u8 D_8AB12CBC[];
+extern f32 D_80088E50[];
+extern f32 D_8AB11654;
+extern f32 D_8AB11658;
+extern f32 D_8AB1165C;
+
+
+
+void func_8AB0148C(s16 arg0) {
+    u8 *state;
+    u8 *obj;
+    s16 step;
+    s32 shift;
+
+    state = (arg0 * 0x90) + &D_8AB16548;
+    obj = *(u8 **)state;
+    switch (*(s16 *)(state + 8)) {
+    default:
+        if (D_8AB1269C == 0) {
+            shift = 0;
+        } else if (D_8AB1269C < 4) {
+            shift = (D_8AB1268C << 13) & 0xFFFF;
+        } else {
+            shift = (D_8AB1268C << 12) & 0xFFFF;
+        }
+        if (*(s32 *)(D_8AB12CBC + arg0 * 0x94) != 0) {
+            *(f32 *)(state + 4) = 1.0f;
+        } else {
+            *(f32 *)(state + 4) = (D_80088E50[shift >> 4] * D_8AB11654) + D_8AB11658;
+        }
+        break;
+    case 1:
+        shift = (D_8AB1268C << 13) & 0xFFFF;
+        step = *(s16 *)(state + 0x14);
+        *(f32 *)(state + 4) = (D_80088E50[shift >> 4] * D_8AB1165C) + 0.95f;
+        *(s16 *)(state + 0x10) = *(s16 *)(state + 0x10) + step;
+        *(s16 *)(state + 0x14) = step + 3;
+        if (*(s16 *)(state + 0x10) >= *(s16 *)(state + 0xC)) {
+            *(s16 *)(state + 0x10) = *(s16 *)(state + 0xC);
+            *(s16 *)(state + 0x14) = *(s16 *)(state + 0x14) / 2;
+            if (*(s16 *)(state + 0x14) < 5) {
+                *(s16 *)(state + 8) = 0;
+            } else {
+                *(s16 *)(state + 0x14) = -*(s16 *)(state + 0x14);
+            }
+        }
+        *(s16 *)(obj + 0xA) = *(s16 *)(state + 0x10);
+        break;
+    case 2:
+        *(f32 *)(state + 4) = 0.8f;
+        shift = (D_8AB1268C * 0x6000) & 0xFFFF;
+        *(s16 *)(obj + 8) = (s16)(s32)((f32)*(s16 *)(state + 0xA) +
+                                       ((f32)*(s16 *)(state + 0x16) * D_80088E50[shift >> 4]) / 3.0f);
+        *(s16 *)(state + 0x16) = *(s16 *)(state + 0x16) - 1;
+        if (*(s16 *)(state + 0x16) > 0) {
+            obj = state + 0x18;
+            goto update;
+        }
+        *(s16 *)(state + 8) = 0;
+        *(s16 *)(obj + 8) = *(s16 *)(state + 0xA);
+        break;
+    }
+    obj = state + 0x18;
+    goto update;
+update:
+    *(f32 *)(obj + 0x40) = (*(f32 *)(state + 4) - *(f32 *)(obj + 0x40)) / 3.0f + *(f32 *)(obj + 0x40);
+}
+/* mkdraft:func_8AB0148C end */
 #endif
 
 #ifdef VERSION_US

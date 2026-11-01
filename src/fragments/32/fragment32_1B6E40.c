@@ -25,7 +25,142 @@ void func_88305B30(State_88305B30 *arg0, s16 arg1, s16 arg2, u16 arg3, u16 arg4)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_88305B84.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_88305CA8.s")
+/* mkdraft:func_88305CA8 begin */
+extern u8 D_88308E38;
+extern s32 D_88308930;
+extern u16 D_88308DF8;
+extern u8 D_88308E09;
+extern u8 D_88308E0B;
+extern u8 D_88308E0C;
+extern u8 D_88308E0D;
+extern u8 D_88308E0E;
+extern u8 D_88308E10;
+extern s8 D_88308E30;
+extern u8 *D_8860189C;
+extern void func_800226C0(s32);
+extern void func_80026068(u32);
+extern void func_8830058C(u8);
+extern void func_88307FB0(void *);
+
+// One 0x18-byte element of D_88308E38, the array traversed by func_8830602C,
+// func_8830609C, func_8830639C and func_88306404. Those functions only reach the
+// 0x0 state word and the 0x4 byte; this one also uses the 0x5 progress byte and
+// the two boxes that func_8830639C reads at 0x6 and func_88305B30 fills at 0x6
+// and 0xE. The fields span 4 + 1 + 1 + 8 + 8 = 22 bytes, padded to the 0x18
+// stride.
+typedef struct {
+    s32 state;
+    u8 unk_04;
+    s8 progress;
+    Bounds_88305B30 current;
+    Bounds_88305B30 initial;
+} unk_func_88305CA8;
+
+
+
+void func_88305CA8(void) {
+    Bounds_88305B30 *cur;
+    Bounds_88305B30 *init;
+    f32 ratio;
+    s32 half;
+    s32 node_index;
+    unk_func_88305CA8 *node;
+
+    for (node_index = 0, node = (unk_func_88305CA8 *) &D_88308E38; node_index != 4;
+            node_index++, node++) {
+        switch (node->state) {
+        case 0:
+            // Wind up: advance progress until it reaches D_88308E30, then restart
+            // this node's animation from its initial box.
+            node->progress++;
+            if (node->progress != D_88308E30) {
+                break;
+            }
+
+            node->state = 1;
+            node->current = node->initial;
+            node->unk_04 = 2;
+
+            if (node_index == 1) {
+                // The second node synchronizes the shared banner bytes with the
+                // current D_88308930 mode.
+                D_88308E0C = 2;
+                D_88308E0E = 2;
+                D_88308E10 = 2;
+                D_88308E09 = 2;
+
+                switch (D_88308930) {
+                case 0:
+                case 1:
+                case 2:
+                    D_88308E0B = 2;
+                    break;
+                }
+
+                switch (D_88308930) {
+                case 0:
+                case 2:
+                case 3:
+                    func_800226C0(74);
+                    D_88308E0D = 2;
+                    if (D_88308930 == 0) {
+                        func_88307FB0(D_8860189C);
+                    }
+                    break;
+                case 1:
+                    func_8830058C(2);
+                    func_80026068((D_88308DF8 >= 254) ? 201 : D_88308DF8);
+                    break;
+                }
+            }
+            continue;
+        case 2:
+            // Wind down: run progress back to -1 and release the node.
+            node->progress--;
+            if (node->progress == -1) {
+                node->state = 0;
+            }
+            break;
+        case 1:
+            // Hold: count unk_04 down to zero.
+            if (node->unk_04 != 0) {
+                node->unk_04--;
+            }
+            continue;
+        }
+
+        // Progress rises 0..D_88308E30/2 while the node grows, then folds back
+        // below the half point while it shrinks.
+        half = D_88308E30 >> 1;
+        if (half >= node->progress) {
+            ratio = (f32) node->progress / (f32) half;
+        } else {
+            ratio = (f32) (node->progress - half) / (f32) half;
+        }
+
+        cur = &node->current;
+        init = &node->initial;
+        if (node->progress < 0) {
+            // Collapsed: fixed 0x10 by 0x20 box.
+            cur->width = 0x10;
+            cur->height = 0x20;
+        } else if (half >= node->progress) {
+            // Growing: interpolate the width, hold the height.
+            cur->width = (s32) ((f32) (init->width - 0x10) * ratio
+                    + (((f32) (init->width - 0x10) * ratio) > 0.0f ? 0.5f : -0.5f)) + 0x10;
+            cur->height = 0x10;
+        } else {
+            // Shrinking: hold the width, interpolate the height.
+            cur->width = init->width;
+            cur->height = (s32) ((f32) (init->height - 0x10) * ratio
+                    + (((f32) (init->height - 0x10) * ratio) > 0.0f ? 0.5f : -0.5f)) + 0x10;
+        }
+
+        cur->x = init->x + (init->width >> 1) - (cur->width >> 1);
+        cur->y = init->y + (init->height >> 1) - (cur->height >> 1);
+    }
+}
+/* mkdraft:func_88305CA8 end */
 
 typedef struct unk_D_88308E38 {
     s32 unk_00;
@@ -59,7 +194,29 @@ s32 func_8830609C(void) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_8830610C.s")
+/* mkdraft:func_8830610C begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Draws the 8-pixel border of the width x height box at (x, y) from one texture.
+// The four 8x8 corner tiles are drawn at full texture scale; each edge repeats the
+// adjacent corner's first row or column (dsdx or dtdy 0). The interior is not drawn.
+// Nothing is drawn for boxes narrower or shorter than 0x10 pixels.
+
+
+void func_8830610C(s16 x, s16 y, u16 width, u16 height) {
+    if ((width < 0x10) || (height < 0x10)) {
+        return;
+    }
+    GfxRect_DrawTextured(x, y, 8, 8, -0x10, 0xF0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + width - 8, y, 8, 8, 0xF0, 0xF0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x, y + height - 8, 8, 8, -0x10, -0x10, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x + width - 8, y + height - 8, 8, 8, 0xF0, -0x10, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(x, y + 8, 8, height - 0x10, -0x10, -0x10, 0x400, 0, 0);
+    GfxRect_DrawTextured(x + width - 8, y + 8, 8, height - 0x10, 0xF0, -0x10, 0x400, 0, 0);
+    GfxRect_DrawTextured(x + 8, y, width - 0x10, 8, 0xD0, 0xF0, 0, 0x400, 0);
+    GfxRect_DrawTextured(x + 8, y + height - 8, width - 0x10, 8, 0xD0, -0x10, 0, 0x400, 0);
+}
+/* mkdraft:func_8830610C end */
 
 extern void func_8830610C(s16, s16, u16, u16);
 extern u8 D_88308E38;

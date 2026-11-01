@@ -264,7 +264,135 @@ void func_869020CC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86902134.s")
+/* mkdraft:func_86902134 begin */
+extern u8 *D_8691AD58;
+extern u8 D_8691AD60[];
+extern u8 D_8690F9E8;
+extern u8 D_8690FA20[];
+extern s32 D_8690F9F0;
+extern s32 D_8690FA40;
+extern s32 D_8690FAE0[];
+extern s32 D_8690FAD0[];
+extern u8 D_800CE060[];
+extern u8 D_800CE100[];
+extern s32 D_1000000;
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+
+extern s32 main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern void func_80027EE0(s32);
+extern void Gfx_InitDisplayListBuffers(s32, s32);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern void func_8004C09C(s32);
+extern void func_87F06EAC(s32, void *, void *);
+extern void func_87F09EBC(void *, void *);
+extern void func_8004DDF4(s32);
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(s32, s32 *);
+extern void func_80047588(s32, s32);
+extern void Asset_LoadToSegment(s32, void *, void *, s32);
+extern void func_80006148(void *);
+extern void func_8690073C(void);
+extern void func_80008514(s32);
+extern void func_869020CC(void);
+extern void func_80008574(void);
+extern void func_80006158(void);
+extern void func_80047610(void);
+extern void func_8004C398(void);
+extern void Gfx_FreeDisplayListBuffers(void);
+extern void func_87F0F480(void *);
+
+// main_pool_push_state is declared with its definition's s32 return type; a void
+// prototype in this translation unit puts the D_8691AD58 address in $2 instead of $3.
+
+
+s32 func_86902134(s32 arg0, s32 arg1) {
+    s32 stage;
+    s32 pad; // FAKE: unused stack slot; the frame layout shifts without it (score 78).
+    s32 flags;
+    u8 *var_s0;
+    s32 temp_v0;
+
+    main_pool_push_state(0x4B414D45);
+    D_8691AD58 = D_8691AD60;
+    *(void **)(D_8691AD58 + 0xC) = (void *)arg1;
+    if (*(u8 *)(*(u8 **)(D_8691AD58 + 0xC) + 0x2180) == 4) {
+        func_80027EE0(0xFFF);
+    }
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    stage = func_800082E0(0, 0, 2, 1, 2, 1);
+    func_8004C09C(303);
+    func_87F06EAC(103, &D_8690F9E8, *(void **)(D_8691AD58 + 0xC));
+    func_87F09EBC(D_8690FA20, *(void **)(D_8691AD58 + 0xC));
+    func_8004DDF4(117);
+    func_8004DDF4(116);
+    func_8004DDF4(118);
+    func_8004DDF4(80);
+    func_8004DDF4(100);
+    func_8004DDF4(101);
+    func_8004DDF4(102);
+    temp_v0 = func_8004DC6C(126);
+    D_8690FAE0[0] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAE0[0], &flags);
+    }
+    temp_v0 = func_8004DC6C(129);
+    D_8690FAE0[1] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAE0[1], &flags);
+    }
+    temp_v0 = func_8004DC6C(127);
+    D_8690FAE0[2] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAE0[2], &flags);
+    }
+    temp_v0 = func_8004DC6C(128);
+    D_8690FAE0[3] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAE0[3], &flags);
+    }
+    temp_v0 = func_8004DC6C(130);
+    D_8690FAD0[0] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAD0[0], &flags);
+    }
+    temp_v0 = func_8004DC6C(131);
+    D_8690FAD0[1] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAD0[1], &flags);
+    }
+    temp_v0 = func_8004DC6C(125);
+    D_8690FAD0[2] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAD0[2], &flags);
+    }
+    temp_v0 = func_8004DC6C(133);
+    D_8690FAD0[3] = temp_v0;
+    if (temp_v0 != 0) {
+        func_8004DCFC(D_8690FAD0[3], &flags);
+    }
+    func_80047588(D_8690F9F0 | 0x29 | D_8690FA40 | flags, 0);
+    Asset_LoadToSegment((u32)((s32)&D_1000000 & 0x0F000000) >> 24, D_446E30, D_447D00, 0);
+    var_s0 = D_800CE060;
+    do {
+        func_80006148(var_s0);
+        var_s0 += 0x28;
+    } while (var_s0 != D_800CE100);
+    func_8690073C();
+    func_80008514(stage);
+    func_869020CC();
+    func_80008574();
+    func_80006158();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4B414D45);
+    func_87F0F480(*(void **)(D_8691AD58 + 0xC));
+    func_80027EE0(0xFFE);
+    return *(s32 *)(D_8691AD58 + 0x10);
+}
+/* mkdraft:func_86902134 end */
 #endif
 
 #ifdef VERSION_US
@@ -1209,7 +1337,50 @@ void func_869054D4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86905630.s")
+/* mkdraft:func_86905630 begin */
+extern f32 D_80088E50[];
+extern f32 D_8690EB4C[];
+extern f32 D_8690EB3C;
+extern f32 D_8690EB40;
+extern f32 D_8690EB44;
+extern f32 D_8690EB48;
+extern u8 *D_8691AD58;
+extern u8 D_8691A2A0[];
+extern void func_80021ED8(s32);
+
+
+
+void func_86905630(void) {
+    s32 frame;
+    f32 fadeIn;
+    f32 fadeOut;
+    f32 angle;
+    s32 step;
+
+    frame = *(s32 *)(D_8691A2A0 + 0x4C);
+    *(s32 *)(D_8691A2A0 + 0x4C) = *(s32 *)(D_8691A2A0 + 0x4C) + 1;
+    angle = (f32)frame / 135.0f * 180.0f * 182.0416718f;
+    if (angle >= 0.0f) {
+        step = (s32)(angle + 0.5f);
+    } else {
+        step = (s32)(angle - 0.5f);
+    }
+    fadeIn = (1.0 - D_80088E50[(step & 0xFFFF) >> 4]) * 0.5;
+    fadeOut = 1.0 - fadeIn;
+    if (frame == 0x19) {
+        func_80021ED8(0x1D);
+        *(s32 *)(D_8691A2A0 + 0x18C) = 1;
+    }
+    D_8690EB3C = (D_8690EB4C[4] * fadeIn) + (D_8690EB4C[0] * fadeOut);
+    D_8690EB40 = (D_8690EB4C[5] * fadeIn) + (D_8690EB4C[1] * fadeOut);
+    D_8690EB44 = (D_8690EB4C[6] * fadeIn) + (D_8690EB4C[2] * fadeOut);
+    D_8690EB48 = (D_8690EB4C[7] * fadeIn) + (D_8690EB4C[3] * fadeOut);
+    if (frame >= 0x87) {
+        *(s32 *)(D_8691A2A0 + 0x4C) = 0;
+        *(s32 *)D_8691AD58 = 5;
+    }
+}
+/* mkdraft:func_86905630 end */
 #endif
 
 void func_86905804(void) {

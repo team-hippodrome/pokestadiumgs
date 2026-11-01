@@ -469,7 +469,90 @@ s32 func_8AF0D29C(s16 id) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0D398.s")
+/* mkdraft:func_8AF0D398 begin */
+extern void *func_8004C874(s32, s32);
+extern u8 func_80062F68(u8);
+extern u8 func_80063014(u8);
+extern s32 func_80063CC4(u8, u8);
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern s32 func_80063BF4(u8, u8);
+extern s32 Pokemon_CanLearnGen1Machine(u8, u8);
+extern s16 func_8AF01530(s16);
+
+extern s16 D_8AF2E8A0;
+extern s16 D_8AF2ED00;
+extern s16 D_8AF2ED02;
+
+// Builds the 200-entry learnset table at D_8AF2D8E8 (func_8AF0D29C scans it in
+// 0x14-byte records) from the three sources a Pokemon can learn a move by:
+// level-up (func_80063014), TM/HM (func_80063014), and Gen 1 transfer
+// (func_80062F68).  arg0 is the species ID: the caller loads it with `lh`, and
+// the function truncates it to the 8-bit ID used by the lookup helpers.
+
+
+void func_8AF0D398(s16 arg0) {
+    s16 i;
+    s16 learnset;
+    u8 type;
+    u8 move;
+    u8 id;
+
+    id = arg0;
+    D_8AF2ED00 = func_8006397C(id);
+    D_8AF2ED02 = func_800639C0(id);
+    _bzero((s32 *)D_8AF2D8E8, 0xFA0);
+    D_8AF2E8A0 = 0;
+    for (i = 1; i < 0x3A; i++) {
+        if (func_80063CC4(id, i) != 0) {
+            move = func_80063014(i);
+            type = func_80062D98(move);
+            learnset = func_8AF0D29C(move);
+            D_8AF2E888[0] = move;
+            D_8AF2E888[5] = func_8AF01530(func_80062D98(move));
+            *(s32 *)(D_8AF2E888 + 0xC) = func_8004C874(6, move - 1);
+            if (func_8AF0BB40(move) != 0 && (type == D_8AF2ED00 || type == D_8AF2ED02)) {
+                D_8AF2E888[0xA] = 1;
+            }
+            D_8AF2E888[6] = i;
+            if (learnset == 0) {
+                D_8AF2E8A0++;
+            }
+        }
+        if (Pokemon_CanLearnGen1Machine(id, i) != 0) {
+            move = func_80063014(i);
+            type = func_80062D98(move);
+            learnset = func_8AF0D29C(move);
+            D_8AF2E888[0] = move;
+            D_8AF2E888[5] = func_8AF01530(func_80062D98(move));
+            *(s32 *)(D_8AF2E888 + 0xC) = func_8004C874(6, move - 1);
+            if (func_8AF0BB40(move) != 0 && (type == D_8AF2ED00 || type == D_8AF2ED02)) {
+                D_8AF2E888[0xA] = 1;
+            }
+            D_8AF2E888[7] = i;
+            if (learnset == 0) {
+                D_8AF2E8A0++;
+            }
+        }
+        if (func_80063BF4(id, i) != 0) {
+            move = func_80062F68(i);
+            type = func_80062D98(move);
+            learnset = func_8AF0D29C(move);
+            D_8AF2E888[0] = move;
+            D_8AF2E888[5] = func_8AF01530(func_80062D98(move));
+            *(s32 *)(D_8AF2E888 + 0xC) = func_8004C874(6, move - 1);
+            if (func_8AF0BB40(move) != 0 && (type == D_8AF2ED00 || type == D_8AF2ED02)) {
+                D_8AF2E888[0xA] = 1;
+            }
+            D_8AF2E888[8] = i;
+            D_8AF2E888[9] = i;
+            if (learnset == 0) {
+                D_8AF2E8A0++;
+            }
+        }
+    }
+}
+/* mkdraft:func_8AF0D398 end */
 
 extern s16 D_8AF2ECF8;
 extern u8 *D_8AF2E8DC;

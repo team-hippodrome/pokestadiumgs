@@ -544,7 +544,64 @@ void func_87E0736C(void *arg0) {
 }
 /* mkdraft:func_87E0736C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E074BC.s")
+/* mkdraft:func_87E074BC begin */
+extern u8 D_87E19B7C[];
+
+
+u16 func_87E074BC(u8 *arg0) {
+    u8 *record;
+    u16 result;
+    s32 indices[4];
+    s32 i;
+    s32 smallest;
+    s32 smallest_index;
+
+    record = D_87E19B7C + *(s32 *)(arg0 + 8) * 4;
+    result = 0;
+    if (*(s32 *)(arg0 + 0xC) == *(s32 *)(arg0 + 8)) {
+        if (*(u32 *)arg0 >= 31) {
+            result = 0x8000;
+        }
+    } else if (*(u32 *)arg0 >= 16) {
+        *(u32 *)arg0 = 0;
+        if ((f32)(*(s32 *)(arg0 + 0xC) - record[0]) > 0.0f) {
+            indices[0] = *(s32 *)(arg0 + 0xC) - record[0];
+        } else {
+            indices[0] = -(*(s32 *)(arg0 + 0xC) - record[0]);
+        }
+        if ((f32)(*(s32 *)(arg0 + 0xC) - record[1]) > 0.0f) {
+            indices[1] = *(s32 *)(arg0 + 0xC) - record[1];
+        } else {
+            indices[1] = -(*(s32 *)(arg0 + 0xC) - record[1]);
+        }
+        if ((f32)(*(s32 *)(arg0 + 0xC) - record[2]) > 0.0f) {
+            indices[2] = *(s32 *)(arg0 + 0xC) - record[2];
+        } else {
+            indices[2] = -(*(s32 *)(arg0 + 0xC) - record[2]);
+        }
+        if ((f32)(*(s32 *)(arg0 + 0xC) - record[3]) > 0.0f) {
+            indices[3] = *(s32 *)(arg0 + 0xC) - record[3];
+        } else {
+            indices[3] = -(*(s32 *)(arg0 + 0xC) - record[3]);
+        }
+        smallest = indices[0];
+        smallest_index = 0;
+        for (i = 1; i != 4; i++) {
+            if ((indices[i] < smallest) || ((smallest == indices[i]) && (func_8003570C() % 100 < 49))) {
+                smallest = indices[i];
+                smallest_index = i;
+            }
+        }
+        switch (smallest_index) {
+        case 0: result = 0x800; break;
+        case 1: result = 0x400; break;
+        case 2: result = 0x200; break;
+        case 3: result = 0x100; break;
+        }
+    }
+    return result;
+}
+/* mkdraft:func_87E074BC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E076E0.s")
 

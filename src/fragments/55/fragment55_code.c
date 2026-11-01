@@ -580,7 +580,57 @@ void func_86706AC8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86706B88.s")
+/* mkdraft:func_86706B88 begin */
+extern State86706A30 *D_87F119DC;
+extern State86703DF4 D_86728408[];
+extern Row86706A30 D_86710C20[];
+extern s32 D_8670BD38[];
+extern f32 D_8670B3C4;
+extern f32 D_8670C068;
+extern s32 D_8670C06C;
+
+
+
+void func_86706B88(void) {
+    f32 *camera_depth = &D_8670C068;
+    State86703DF4 *from_variant;
+    State86703DF4 *to_variant;
+    f32 variant_z;
+    f32 spawn_z;
+    s32 target_variant;
+    s32 index;
+    s32 tier;
+
+    // FAKE: empty body. The comparison's mention of D_87F119DC is load-bearing: uopt
+    // colors the pointer web at the end of its walk with the guard present (v0, matching
+    // retail) and one slot later without it (v1, diff 60). It emits no instructions.
+    if (D_87F119DC == NULL) {
+    }
+    index = D_87F119DC->index;
+    if ((u32) index < 3U) {
+        tier = 0;
+    } else if ((u32) index < 6U) {
+        tier = 1;
+    } else if ((u32) index < 9U) {
+        tier = 2;
+    } else {
+        tier = 3;
+    }
+    target_variant = D_8670BD38[index];
+    D_87F119DC->pad3C[5] = 0x8C;
+    from_variant = &D_86728408[target_variant];
+    D_87F119DC->out48 = *(f32 *)((u8 *)from_variant + 0x78) + ((-180.0f + (120 * (f32)tier)) * D_8670B3C4);
+    D_87F119DC->out4C = 120.0f;
+    *(s16 *)((u8 *)D_87F119DC + 0x42) = (s16)(D_8670C06C << 8);
+    variant_z = D_86710C20[tier].z;
+    to_variant = &D_86728408[tier];
+    D_87F119DC->out50 = (variant_z + (D_86710C20[target_variant].z - variant_z)) - ((((f32)(*(s32 *)((u8 *)to_variant + 0x24) << 5) + *(f32 *)((u8 *)to_variant + 0x28)) - (*(f32 *)((u8 *)from_variant + 0x28) + (f32)(*(s32 *)((u8 *)from_variant + 0x24) << 5))) / *camera_depth);
+    spawn_z = D_87F119DC->out50;
+    if ((spawn_z > 600.0f) || (spawn_z < -600.0f)) {
+        D_87F119DC->out50 = -5000.0f;
+    }
+}
+/* mkdraft:func_86706B88 end */
 #endif
 
 #ifdef VERSION_US
@@ -828,7 +878,189 @@ void func_86709128(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86709130.s")
+/* mkdraft:func_86709130 begin */
+extern u8 *D_80087200;
+extern s32 D_8670BB48;
+extern s32 D_8670B368;
+extern s32 D_8670B388;
+extern s32 D_8670B398;
+extern s32 D_8670B3C0;
+extern s32 D_8670B3D8;
+extern s32 D_8670B3DC;
+extern f32 D_8670BD98;
+
+
+void func_86709130(void) {
+    if (*(u16 *)(D_80087200 + 8) & 0x400) {
+        *(s32 *)((u8 *)&D_8670BB48 + 4) = *(s32 *)((u8 *)&D_8670BB48 + 4) + 1;
+        if (*(s32 *)((u8 *)&D_8670BB48 + 4) > 16) {
+            *(s32 *)((u8 *)&D_8670BB48 + 4) = 16;
+        }
+    } else if (*(u16 *)(D_80087200 + 8) & 0x800) {
+        *(s32 *)((u8 *)&D_8670BB48 + 4) = *(s32 *)((u8 *)&D_8670BB48 + 4) - 1;
+        if (*(s32 *)((u8 *)&D_8670BB48 + 4) <= 0) {
+            *(s32 *)((u8 *)&D_8670BB48 + 4) = 1;
+        }
+    } else if ((*(u16 *)(D_80087200 + 8) & 0x100) || (*(u16 *)(D_80087200 + 6) & 1)) {
+        switch (*(s32 *)((u8 *)&D_8670BB48 + 4)) {
+        case 1:
+            *(f32 *)((u8 *)&D_8670BB48 + 0x60) += 0.01;
+            break;
+        case 2:
+            D_8670B388 = 1;
+            break;
+        case 3:
+            D_8670BD9C += 0.01;
+            break;
+        case 4:
+            D_8670BD98 += 0.01;
+            break;
+        case 5:
+            D_8670B3D8 = 1;
+            break;
+        case 6:
+            D_8670B368 = D_8670B368 + 1;
+            if (D_8670B368 > 0) {
+                D_8670B368 = 1;
+            }
+            break;
+        case 7:
+            D_8670B3C8 += 0.1;
+            break;
+        case 8:
+            D_8670B3DC = 1;
+            break;
+        case 11:
+            D_8670B3C0 = 1;
+            break;
+        case 12:
+            *(s32 *)((u8 *)&D_8670B398 + 0) = *(s32 *)((u8 *)&D_8670B398 + 0) + 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 0) > 19) {
+                *(s32 *)((u8 *)&D_8670B398 + 0) = 19;
+            }
+            break;
+        case 13:
+            *(s32 *)((u8 *)&D_8670B398 + 4) = *(s32 *)((u8 *)&D_8670B398 + 4) + 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 4) > 19) {
+                *(s32 *)((u8 *)&D_8670B398 + 4) = 19;
+            }
+            break;
+        case 14:
+            *(s32 *)((u8 *)&D_8670B398 + 8) = *(s32 *)((u8 *)&D_8670B398 + 8) + 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 8) > 19) {
+                *(s32 *)((u8 *)&D_8670B398 + 8) = 19;
+            }
+            break;
+        case 15:
+            *(s32 *)((u8 *)&D_8670B398 + 0xC) = *(s32 *)((u8 *)&D_8670B398 + 0xC) + 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 0xC) > 19) {
+                *(s32 *)((u8 *)&D_8670B398 + 0xC) = 19;
+            }
+            break;
+        case 16:
+            *(s32 *)((u8 *)&D_8670B398 + 0x10) = *(s32 *)((u8 *)&D_8670B398 + 0x10) + 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 0x10) > 19) {
+                *(s32 *)((u8 *)&D_8670B398 + 0x10) = 19;
+            }
+            break;
+        }
+    } else if ((*(u16 *)(D_80087200 + 8) & 0x200) || (*(u16 *)(D_80087200 + 6) & 2)) {
+        switch (*(s32 *)((u8 *)&D_8670BB48 + 4)) {
+        case 1:
+            *(f32 *)((u8 *)&D_8670BB48 + 0x60) -= 0.01;
+            break;
+        case 2:
+            D_8670B388 = 0;
+            break;
+        case 3:
+            D_8670BD9C -= 0.01;
+            if (D_8670BD9C < 0.03) {
+                D_8670BD9C = 0.03f;
+            }
+            break;
+        case 4:
+            D_8670BD98 -= 0.01;
+            if (D_8670BD98 < 0.01) {
+                D_8670BD98 = 0.01f;
+            }
+            break;
+        case 5:
+            D_8670B3D8 = 0;
+            break;
+        case 6:
+            D_8670B368 = D_8670B368 - 1;
+            if (D_8670B368 <= 0) {
+                D_8670B368 = 0;
+            }
+            break;
+        case 7:
+            D_8670B3C8 -= 0.1;
+            if (D_8670B3C8 <= 0.0f) {
+                D_8670B3C8 = 0.0f;
+            }
+            break;
+        case 8:
+            D_8670B3DC = 0;
+            break;
+        case 11:
+            D_8670B3C0 = 0;
+            func_8670211C();
+            break;
+        case 12:
+            *(s32 *)((u8 *)&D_8670B398 + 0) = *(s32 *)((u8 *)&D_8670B398 + 0) - 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 0) < 0) {
+                *(s32 *)((u8 *)&D_8670B398 + 0) = 0;
+            }
+            break;
+        case 13:
+            *(s32 *)((u8 *)&D_8670B398 + 4) = *(s32 *)((u8 *)&D_8670B398 + 4) - 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 4) < 0) {
+                *(s32 *)((u8 *)&D_8670B398 + 4) = 0;
+            }
+            break;
+        case 14:
+            *(s32 *)((u8 *)&D_8670B398 + 8) = *(s32 *)((u8 *)&D_8670B398 + 8) - 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 8) < 0) {
+                *(s32 *)((u8 *)&D_8670B398 + 8) = 0;
+            }
+            break;
+        case 15:
+            *(s32 *)((u8 *)&D_8670B398 + 0xC) = *(s32 *)((u8 *)&D_8670B398 + 0xC) - 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 0xC) < 0) {
+                *(s32 *)((u8 *)&D_8670B398 + 0xC) = 0;
+            }
+            break;
+        case 16:
+            *(s32 *)((u8 *)&D_8670B398 + 0x10) = *(s32 *)((u8 *)&D_8670B398 + 0x10) - 1;
+            if (*(s32 *)((u8 *)&D_8670B398 + 0x10) < 0) {
+                *(s32 *)((u8 *)&D_8670B398 + 0x10) = 0;
+            }
+            break;
+        }
+    }
+    if (*(s32 *)((u8 *)&D_8670BB48 + 4) == 6) {
+        if ( *(u16 *)(D_80087200 + 6) & 8) {
+            *(f32 *)((u8 *)&D_8670BB48 + 0x24) -= 20.0f;
+        } else if (*(u16 *)(D_80087200 + 6) & 4) {
+            *(f32 *)((u8 *)&D_8670BB48 + 0x24) += 20.0f;
+        } else if (*(u16 *)(D_80087200 + 6) & 1) {
+            *(f32 *)((u8 *)&D_8670BB48 + 0x20) += 10.0f;
+        } else if (*(u16 *)(D_80087200 + 6) & 2) {
+            *(f32 *)((u8 *)&D_8670BB48 + 0x20) -= 10.0f;
+        } else if (*(u16 *)(D_80087200 + 6) & 0x8000) {
+            *(f32 *)((u8 *)&D_8670BB48 + 0x1C) -= 40.0f;
+        } else if (*(u16 *)(D_80087200 + 6) & 0x4000) {
+            *(f32 *)((u8 *)&D_8670BB48 + 0x1C) += 40.0f;
+        } else if (*(u16 *)(D_80087200 + 6) & 0x2000) {
+            osSyncPrintf("cameray =%f cameraz=%f objectx =%f objecty=%f \n",
+                         *(f32 *)((u8 *)&D_8670BB48 + 0x18),
+                         *(f32 *)((u8 *)&D_8670BB48 + 0x1C),
+                         *(f32 *)((u8 *)&D_8670BB48 + 0x20),
+                         *(f32 *)((u8 *)&D_8670BB48 + 0x24));
+        }
+    }
+}
+/* mkdraft:func_86709130 end */
 #endif
 
 #ifdef VERSION_US

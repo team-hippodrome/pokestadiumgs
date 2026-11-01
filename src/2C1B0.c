@@ -1891,7 +1891,88 @@ u8 GbAudio_GetRegisterValue(u16 arg0)
   return D_800D2AD8[arg0 & 0xFF];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_80031A6C.s")
+/* mkdraft:func_80031A6C begin */
+extern u8 *D_800D2B24;
+extern u8 *D_800D2B28;
+extern u8 D_800D2B30[];
+extern u8 D_800D27A0[];
+extern u16 D_800D27C6;
+extern f32 D_800D2B1C;
+extern u8 D_800D26B0[];
+extern u8 D_800D2710[];
+extern u8 D_800D2730[];
+
+
+
+void func_80031A6C(s32 arg0, void *arg1)
+{
+  u32 i;
+  if (arg1 == 0)
+  {
+    return;
+  }
+  D_800D2B24 = arg1;
+  D_800D2B28 = ((u8 *) arg1) + 0x100;
+  func_80035068(((u32) D_154F190) + 8, D_800D2B30, 8);
+  *((u32 *) (&D_800D2B30[4])) += (u32) D_154F190;
+  func_80035068(*((u32 *) (&D_800D2B30[4])), D_800D2B24, 0x100);
+  for (i = 0; ((i - 1) + 1) <= (0x100 - 1); i += 8)
+  {
+    *((u32 *) (D_800D2B24 + i)) += *((u32 *) (&D_800D2B30[4]));
+  }
+
+  D_800D275C = ((u32) arg0) >> 1;
+  D_800D2B1C = 1048576.0f / ((f32) D_800D275C);
+  for (i = 0; i < 48; i++)
+  {
+    ((u8 *) (&D_800D2760))[(i * 2) + 1] = 1;
+  }
+
+  ((u8 *) (&D_800D2760))[0 * 2] = 8;
+  ((u8 *) (&D_800D2760))[1 * 2] = 0;
+  ((u8 *) (&D_800D2760))[2 * 2] = 0;
+  ((u8 *) (&D_800D2760))[3 * 2] = 0;
+  ((u8 *) (&D_800D2760))[4 * 2] = 0x40;
+  ((u8 *) (&D_800D2760))[6 * 2] = 0;
+  ((u8 *) (&D_800D2760))[7 * 2] = 0;
+  ((u8 *) (&D_800D2760))[8 * 2] = 0;
+  ((u8 *) (&D_800D2760))[9 * 2] = 0x40;
+  ((u8 *) (&D_800D2760))[10 * 2] = 0;
+  ((u8 *) (&D_800D2760))[11 * 2] = 0;
+  ((u8 *) (&D_800D2760))[12 * 2] = 0;
+  ((u8 *) (&D_800D2760))[13 * 2] = 0;
+  ((u8 *) (&D_800D2760))[14 * 2] = 0x40;
+  ((u8 *) (&D_800D2760))[16 * 2] = 0;
+  ((u8 *) (&D_800D2760))[17 * 2] = 0;
+  ((u8 *) (&D_800D2760))[18 * 2] = 0;
+  ((u8 *) (&D_800D2760))[19 * 2] = 0x40;
+  ((u8 *) (&D_800D2760))[20 * 2] = 0;
+  ((u8 *) (&D_800D2760))[21 * 2] = 0;
+  ((u8 *) (&D_800D2760))[22 * 2] = 0;
+  // FAKE: empty condition, emits nothing; only splits the block so the D_800D275C
+  // address web is assigned v1 rather than a0.  Without it the score is 34.
+  if (i && i)
+  {
+  }
+  for (i = 0; i < 16; i++)
+  {
+    ((u8 *) D_800D27A0)[i * 2] = 0;
+  }
+
+  D_800D2AE4 = 0;
+  D_800D27C6 = 0;
+  D_800D2AE0 = 0;
+  *((u32 *) D_800D26B0) = 0;
+  D_800D26B0[0x30] = 0;
+  D_800D26E8.unk0 = 0;
+  D_800D26E8.unk24 = 0;
+  *((u32 *) D_800D2710) = 0;
+  D_800D2710[0x1C] = 0;
+  *((u32 *) D_800D2730) = 0;
+  D_800D2730[0x28] = 0;
+  D_800D2730[4] = 0xFF;
+}
+/* mkdraft:func_80031A6C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_80031C84.s")
 

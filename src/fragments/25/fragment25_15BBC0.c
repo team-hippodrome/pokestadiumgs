@@ -89,7 +89,45 @@ f32 *func_82101E70(void *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4,
 }
 /* mkdraft:func_82101E70 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82101FB4.s")
+/* mkdraft:func_82101FB4 begin */
+extern void func_82102C54(f32 *, f32 *, u8 *);
+extern f32 func_82102C98(f32 *);
+// The definition in fragment25_15CBC0.c is void; the value this caller reads is
+// func_821028E0's f32 return value, which that body leaves in $fv0.
+//@src/fragments/25/fragment25_15CBC0.c
+extern f32 func_82102D10(f32 *);
+extern void func_82102B94(u8 *, f32, f32);
+extern void func_82102BE8(u8 *, u8 *);
+
+
+
+void func_82101FB4(u8 *arg0, f32 *arg1, f32 arg2) {
+    f32 temp_ft5; // FAKE: unused stack slot at 0x3C; diff score 102 without it.
+    f32 sp38;
+    s32 sp34;
+    f32 sp2C[2];
+
+    func_82102C54(sp2C, arg1, func_82101B80(arg0));
+    if (func_82102C98(sp2C) > 0.0f) {
+        // FAKE: the negation sits on the loaded value and the call result is added to it.
+        // Written naturally as func_82102D10(sp2C) - *(f32 *)(arg0 + 0) the same sub.s is
+        // emitted, but the pointer spill lands at 0x20(sp) instead of 0x24(sp).
+        sp38 = -*(f32 *)(arg0 + 0) + func_82102D10(sp2C);
+        func_82102D34(&sp38);
+        sp38 *= *(f32 *)(arg0 + 0x28);
+        *(f32 *)(arg0 + 0) += sp38;
+        func_82102D34((f32 *)arg0);
+    }
+    if (*(s32 *)(arg0 + 0x24) + 1 == 4) {
+        sp34 = 0;
+    } else {
+        sp34 = *(s32 *)(arg0 + 0x24) + 1;
+    }
+    func_82102B94((u8 *)((u32)arg0 + sp34 * 8 + 4), arg2, *(f32 *)(arg0 + 0));
+    func_82102BE8((u8 *)((u32)arg0 + sp34 * 8 + 4), func_82101B80(arg0));
+    *(s32 *)(arg0 + 0x24) = sp34;
+}
+/* mkdraft:func_82101FB4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_821020B0.s")
 

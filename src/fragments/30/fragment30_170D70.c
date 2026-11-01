@@ -51,7 +51,75 @@ typedef struct {
 
 extern unk_D_88104EA0 *D_88104EA0;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_881038A0.s")
+/* mkdraft:func_881038A0 begin */
+extern u8 D_88104E50;
+extern u8 D_88104E51;
+extern u8 D_88104E52;
+extern u8 D_88104E53;
+extern u8 D_88104E54;
+extern u8 D_88104E55;
+extern u8 D_88104E56;
+extern u8 D_88104E57;
+extern u8 D_88104E80[];
+extern void func_80035700(u32);
+extern u32 func_8003570C(void);
+extern void *func_8004B7A4(s32);
+extern void *func_8004C874(s32, s32);
+extern u8 *func_80060D70(u8 *, u8 *);
+extern void func_800619E8(u8 *);
+extern s32 func_80061B88(s32, u16);
+extern void func_80061F44(u8 *);
+extern u8 func_80062E10(u8);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+
+
+void func_881038A0(void) {
+    u8 *mon;
+    s32 i;
+
+    // The file's own `extern unk_D_88104EA0 *D_88104EA0` sits below this function, so the
+    // state pointer is loaded through the byte array that precedes it: 0x88104EA0 is the
+    // word at D_88104E80 + 0x20. IDO folds the addend into the %lo relocation, giving the
+    // same lui/lw pair the target has.
+    mon = *(u8 **)(D_88104E80 + 0x20);
+    mon += (*(u8 **)(D_88104E80 + 0x20))[0xA2] * 0x60 + 0xAC;
+    _bzero(mon, 0x58);
+    if ((*(u8 **)(D_88104E80 + 0x20))[0xA3] == 0x53) {
+        mon[2] = D_88104E50;
+        mon[3] = D_88104E51;
+        mon[4] = D_88104E52;
+        mon[5] = D_88104E53;
+        mon[1] = 0xAE;
+    } else {
+        mon[2] = D_88104E54;
+        mon[3] = D_88104E55;
+        mon[4] = D_88104E56;
+        mon[5] = D_88104E57;
+        mon[1] = 0x96;
+    }
+    for (i = 0; i < 4; i++) {
+        // FAKE: the mask emits no instruction (the destination is a byte), but its temporary
+        // advances the function's temp-register counter by one, which is what the target's
+        // tail needs (li t3,0x7d0 ... lbu t6,0x1d ... li t7,0x7f); without it every tail
+        // temporary shifts down one register (diff score 90).
+        mon[i + 0x18] = func_80062E10(mon[i + 2]) & 0xFF;
+    }
+    func_80035700(guRandom() + osGetCount());
+    *(u16 *)(mon + 0x16) = func_8003570C();
+    mon[0] = (*(u8 **)(D_88104E80 + 0x20))[0xA3];
+    *(u16 *)(mon + 6) = 0x7D0;
+    mon[0x1D] = 5;
+    mon[0x1C] = 0x46;
+    *(u32 *)(mon + 8) = func_80061B88(mon[0], mon[0x1D]);
+    mon[0x21] = mon[0x1D];
+    mon[0x22] = 0x7F;
+    HAL_Strcpy((s8 *)(mon + 0x34), func_8004B7A4(mon[0]));
+    HAL_Strcpy((s8 *)(mon + 0x40), func_8004C874(0x1E, 0x1A));
+    func_80060D70(mon + 0x4C, mon + 0x40);
+    func_800619E8(mon);
+    func_80061F44(mon);
+}
+/* mkdraft:func_881038A0 end */
 
 /* mkdraft:func_88103A64 begin */
 // Transfer Pak check for the GB Tower screen. While the session flag unk_168 is set it reruns the

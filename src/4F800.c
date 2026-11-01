@@ -184,7 +184,39 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004F2D0.s")
+/* mkdraft:func_8004F2D0 begin */
+void func_8004F2D0(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *tex) {
+    s32 right;
+    s32 bottom;
+    s32 flip_s;
+    s32 flip_t;
+
+    if (tex != NULL) {
+        func_800459AC(func_8004CA60(tex), tex->format, tex->size, tex->width, tex->height, 1, 0, 2, 2, 0, 0, 0, 0);
+        flip_t = (tex->height - 1) << 5;
+        GfxRect_DrawTextured(x, y, tex->width, tex->height, 0, flip_t, 0x400, -0x400, 0);
+        flip_s = (tex->width - 1) << 5;
+        flip_t = (tex->height - 1) << 5;
+        GfxRect_DrawTextured(tex->width + x, y, width - tex->width * 2, tex->height, flip_s, flip_t, 0, -0x400, 0);
+        right = x + width;
+        flip_s = (tex->width - 1) << 5;
+        flip_t = (tex->height - 1) << 5;
+        GfxRect_DrawTextured(right - tex->width, y, tex->width, tex->height, flip_s, flip_t, -0x400, -0x400, 0);
+        GfxRect_DrawTextured(x, tex->height + y, tex->width, height - tex->height * 2, 0, 0, 0x400, 0, 0);
+        bottom = y + height;
+        GfxRect_DrawTextured(x, bottom - tex->height, tex->width, tex->height, 0, 0, 0x400, 0x400, 0);
+        flip_s = (tex->width - 1) << 5;
+        GfxRect_DrawTextured(tex->width + x, bottom - tex->height, width - tex->width * 2, tex->height, flip_s, 0, 0,
+                             0x400, 0);
+        flip_s = (tex->width - 1) << 5;
+        GfxRect_DrawTextured(right - tex->width, tex->height + y, tex->width, height - tex->height * 2, flip_s, 0,
+                             -0x400, 0, 0);
+        flip_s = (tex->width - 1) << 5;
+        GfxRect_DrawTextured(right - tex->width, bottom - tex->height, tex->width, tex->height, flip_s, 0, -0x400,
+                             0x400, 0);
+    }
+}
+/* mkdraft:func_8004F2D0 end */
 #endif
 
 #ifdef VERSION_US

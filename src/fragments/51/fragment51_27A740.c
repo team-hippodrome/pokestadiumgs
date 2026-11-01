@@ -2,7 +2,40 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27A740/func_86304920.s")
+/* mkdraft:func_86304920 begin */
+// Point-in-convex-quad test on the XZ plane for the quad point-first-second-third-fourth;
+// ab, bc, cd, da are the 2D cross products of consecutive edge vectors, and the point is
+// inside when all four share a sign. The only caller passes the diamond
+// (0,180), (-180,0), (0,-180), (180,0).
+//@src/fragments/51/fragment51_27B9E0.c
+
+
+s32 func_86304920(f32 point_x, f32 point_z, f32 first_x, f32 first_z,
+                  f32 second_x, f32 second_z, f32 third_x, f32 third_z,
+                  f32 fourth_x, f32 fourth_z) {
+    f32 ax, az, bx, bz, cx, cz, dx, dz;
+    f32 ab, bc, cd, da;
+    s32 result = 0;
+
+    ax = first_x - point_x;
+    az = first_z - point_z;
+    bx = second_x - point_x;
+    bz = second_z - point_z;
+    cx = third_x - point_x;
+    cz = third_z - point_z;
+    dx = fourth_x - point_x;
+    dz = fourth_z - point_z;
+    ab = ax * bz - bx * az;
+    bc = bx * cz - cx * bz;
+    cd = cx * dz - dx * cz;
+    da = dx * az - ax * dz;
+    if ((ax * bz >= bx * az && bc >= 0.0f && cd >= 0.0f && da >= 0.0f) ||
+        (ab <= 0.0f && bc <= 0.0f && cd <= 0.0f && da <= 0.0f)) {
+        result = 1;
+    }
+    return result;
+}
+/* mkdraft:func_86304920 end */
 
 typedef struct unk_func_86304ACC {
     f32 x;

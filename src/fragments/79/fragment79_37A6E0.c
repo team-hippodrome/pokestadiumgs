@@ -766,7 +766,203 @@ void BattleAnim_AdjustCameraDistance(u8 *arg0, f32 distance, s16 pitch, s16 angl
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410DFC4.s")
+/* mkdraft:func_8410DFC4 begin */
+extern u8 *func_8410B330(u8 *);
+extern u8 *D_841911E8;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern void func_841203B4(u8 *, f32, f32);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern u8 *D_84193DD0;
+extern s32 func_8411E1F8(void *);
+extern void func_8411E0A4(void *, void *, void *);
+// Camera placement for the model behind arg0 (D_841911E8 = func_8410B330(arg0)) during
+// a move (arg1). Four early returns skip frames where the table entry selected by
+// func_8411E1F8(arg1) out of D_84193DD0 has 0x4 set at +0x12 or 0x20 at +0x10, where
+// arg1->unk7F4 has 0x10 set, or where the arg1->unk34 timer is at or below 0.1.
+//
+// pos is filled by func_8411E0A4 on the first frame (arg1->unk7EA != 1) and from
+// D_841911E8->unk50/54/58 on later frames; arg1->unk7EA is then set to 1. Beyond
+// unk80 of the model the target is arg0->unkB4 and func_80037120 measures pos against
+// it; otherwise the target is unk5C, func_80037120 measures unk50 against it, and
+// func_800371B4 pulls target 0.9 of the way toward unk50. Both paths copy the target
+// back into D_841911E8->unk5C/unk64 and arg0->unkB4/unkBC.
+//
+// `height` is D_841911E8->unk54 for move 0xE8 and in the near path, and the previous
+// pos[1] otherwise. One of the BattleAnim_AdjustCameraDistance variants is picked from
+// the |height - unk60| error against the unk80 distance bands, and
+// func_841203B4(D_841911E8 + 0x60, height, rate) moves unk60 by that fraction.
+//
+// The arg1->unk1A move table: 0xE8, 0x24 and 0xE2 use AdjustCameraDistanceLowerBands,
+// 0x57, 0x9C, 0x49 and 0x71 use AdjustCameraDistanceStrong, 0x9B uses
+// AdjustCameraDistance (and the 1.2f/1.1f rate pair), everything else
+// AdjustCameraDistanceMild.
+
+
+
+void func_8410DFC4(u8 *arg0, void *arg1)
+{
+  f32 pos[3];
+  f32 target[3];
+  f32 height;
+  f32 distance;
+  s16 angle0;
+  s16 angle1;
+  f32 var_fv0;
+  D_841911E8 = func_8410B330(arg0);
+  if ((*((u16 *) (((u8 *) ((u8 (*)[0x10]) D_84193DD0)[func_8411E1F8(arg1)]) + 0x12))) & 4)
+  {
+    return;
+  }
+  if ((*((u16 *) (((u8 *) arg1) + 0x7F4))) & 0x10)
+  {
+    return;
+  }
+  if ((*((u16 *) (((u8 *) ((u8 (*)[0x10]) D_84193DD0)[func_8411E1F8(arg1)]) + 0x10))) == 0x20)
+  {
+    return;
+  }
+  if ((*((f32 *) (((u8 *) arg1) + 0x34))) <= 0.1f)
+  {
+    return;
+  }
+  {
+    if ((*((s16 *) (((u8 *) arg1) + 0x7EA))) == 1)
+    {
+      func_8411E0A4(arg1, pos, D_841911E8);
+    }
+    else
+    {
+      Vec3f_SetComponentsDuplicate(pos, *((f32 *) (((u8 *) D_841911E8) + 0x50)), *((f32 *) (((u8 *) D_841911E8) + 0x54)), *((f32 *) (((u8 *) D_841911E8) + 0x58)));
+    }
+    *((s16 *) (((u8 *) arg1) + 0x7EA)) = 1;
+    func_80037120(pos, D_841911E8 + 0x50, &distance, &angle0, &angle1);
+    if ((*((f32 *) (((u8 *) D_841911E8) + 0x80))) < distance)
+    {
+      func_80037120(pos, arg0 + 0xB4, &distance, &angle0, &angle1);
+      if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0xE8)
+      {
+        var_fv0 = *((f32 *) (((u8 *) D_841911E8) + 0x54));
+        height = var_fv0;
+      }
+      else
+      {
+        height = pos[1];
+        var_fv0 = *((f32 *) (((u8 *) D_841911E8) + 0x54));
+      }
+      pos[1] = var_fv0;
+      Vec3f_SetComponentsDuplicate(target, *((f32 *) (((u8 *) D_841911E8) + 0x5C)), pos[1], *((f32 *) (((u8 *) D_841911E8) + 0x64)));
+      if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0xE8)
+      {
+        BattleAnim_AdjustCameraDistanceLowerBands(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x24)
+      {
+        BattleAnim_AdjustCameraDistanceLowerBands(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x57)
+      {
+        BattleAnim_AdjustCameraDistanceStrong(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x9C)
+      {
+        BattleAnim_AdjustCameraDistanceStrong(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x49)
+      {
+        BattleAnim_AdjustCameraDistanceStrong(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0xE2)
+      {
+        BattleAnim_AdjustCameraDistanceLowerBands(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x9B)
+      {
+        BattleAnim_AdjustCameraDistance(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+        if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x71)
+      {
+        BattleAnim_AdjustCameraDistanceStrong(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      else
+      {
+        BattleAnim_AdjustCameraDistanceMild(D_841911E8, distance, angle0, angle1, (u8 *) pos, (u8 *) target);
+      }
+      *((f32 *) (((u8 *) D_841911E8) + 0x5C)) = target[0];
+      *((f32 *) (((u8 *) arg0) + 0xB4)) = *((f32 *) (((u8 *) D_841911E8) + 0x5C));
+      *((f32 *) (((u8 *) D_841911E8) + 0x64)) = target[2];
+      *((f32 *) (((u8 *) arg0) + 0xBC)) = *((f32 *) (((u8 *) D_841911E8) + 0x64));
+      distance = height - (*((f32 *) (((u8 *) D_841911E8) + 0x60)));
+      if (distance < 0.0f)
+      {
+        distance *= -1.0f;
+      }
+      if ((*((s16 *) (((u8 *) arg1) + 0x1A))) == 0x9B)
+      {
+        if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 1.2f) < distance)
+        {
+          func_841203B4(D_841911E8 + 0x60, height, 0.05f);
+        }
+        else
+          if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 1.1f) < distance)
+        {
+          func_841203B4(D_841911E8 + 0x60, height, 0.04f);
+        }
+      }
+      else
+        if ((*((f32 *) (((u8 *) D_841911E8) + 0x80))) < distance)
+      {
+        func_841203B4(D_841911E8 + 0x60, height, 0.18f);
+      }
+      else
+        if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 0.9f) < distance)
+      {
+        func_841203B4(D_841911E8 + 0x60, height, 0.15f);
+      }
+      else
+        if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 0.8f) < distance)
+      {
+        func_841203B4(D_841911E8 + 0x60, height, 0.13f);
+      }
+      else
+        if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 0.7f) < distance)
+      {
+        func_841203B4(D_841911E8 + 0x60, height, 0.1f);
+      }
+      else
+        if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 0.6f) < distance)
+      {
+        func_841203B4(D_841911E8 + 0x60, height, 0.08f);
+      }
+      else
+        if (((*((f32 *) (((u8 *) D_841911E8) + 0x80))) * 0.5f) < distance)
+      {
+        func_841203B4(D_841911E8 + 0x60, height, 0.06f);
+      }
+      *((f32 *) (((u8 *) arg0) + 0xB8)) = *((f32 *) (((u8 *) D_841911E8) + 0x60));
+      return;
+    }
+    func_80037120(D_841911E8 + 0x50, D_841911E8 + 0x5C, &distance, &angle0, &angle1);
+    var_fv0 = *((f32 *) (((u8 *) D_841911E8) + 0x54));
+    height = *((f32 *) (((u8 *) D_841911E8) + 0x54));
+    Vec3f_SetComponentsDuplicate(target, *((f32 *) (((u8 *) D_841911E8) + 0x5C)), var_fv0, *((f32 *) (((u8 *) D_841911E8) + 0x64)));
+    func_800371B4(D_841911E8 + 0x50, (u8 *) target, distance * 0.9f, angle0, angle1);
+    *((f32 *) (((u8 *) D_841911E8) + 0x5C)) = target[0];
+    *((f32 *) (((u8 *) arg0) + 0xB4)) = *((f32 *) (((u8 *) D_841911E8) + 0x5C));
+    *((f32 *) (((u8 *) D_841911E8) + 0x64)) = target[2];
+    *((f32 *) (((u8 *) arg0) + 0xBC)) = *((f32 *) (((u8 *) D_841911E8) + 0x64));
+    func_841203B4(D_841911E8 + 0x60, height, 0.15f);
+    *((f32 *) (((u8 *) arg0) + 0xB8)) = *((f32 *) (((u8 *) D_841911E8) + 0x60));
+  }
+}
+/* mkdraft:func_8410DFC4 end */
 #endif
 
 #ifdef VERSION_US

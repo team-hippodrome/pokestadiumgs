@@ -514,7 +514,45 @@ s32 Fragment46_RefreshSavedSelection(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE017A4.s")
+/* mkdraft:func_8AE017A4 begin */
+extern s16 D_8AE08888[], D_8AE0889C;
+extern s32 func_8AE015C4(s16, s16);
+extern void * func_8AE01564(s16 arg0, s16 arg1);
+
+// Fills the ten per-variant count entries at D_8AE08888 (the table ends at
+// D_8AE0889C) for selection arg0 and returns the variant with a positive count
+// whose record appears earliest in the record list, or -1 when none does.
+// func_8AE01564 returns NULL past the end of the record list; that variant and
+// every later one stay -1.
+
+
+s16 func_8AE017A4(s16 arg0) {
+    s16 best_index;
+    s32 i;
+    void *record;
+    void *best_record;
+
+    for (i = 0; i < 10; i++) {
+        D_8AE08888[i] = -1;
+    }
+
+    best_index = -1;
+    best_record = (void *)-1;
+    for (i = 0; i < 10; i++) {
+        record = func_8AE01564(arg0, i);
+        if (record == NULL) {
+            D_8AE08888[i] = -1;
+            break;
+        }
+        D_8AE08888[i] = func_8AE015C4(arg0, i);
+        if (D_8AE08888[i] > 0 && (u32)record < (u32)best_record) {
+            best_record = record;
+            best_index = i;
+        }
+    }
+    return best_index;
+}
+/* mkdraft:func_8AE017A4 end */
 #endif
 
 #ifdef VERSION_US

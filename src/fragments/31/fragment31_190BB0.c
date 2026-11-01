@@ -398,7 +398,64 @@ void func_8821EC10(void) {
     D_880068B8 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821EC34.s")
+/* mkdraft:func_8821EC34 begin */
+extern s32 D_882346F4;
+extern s32 *func_800635E0(u8 arg0);
+extern void func_88202FA0(void *a0, u8 *a1);
+extern void func_882142DC(void);
+extern void func_88214330(void);
+extern void func_882206A0(s32);
+extern void func_88220E08(s32);
+extern void func_88221034(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern s32 func_88230B64();
+extern s32 func_80063754(s32);
+
+// Dispatches on the record list's mode (D_882347F0->unk_0), then frees the list.
+// The trailing mode check (5, 6, 7) only runs when no mode handled above matched.
+
+
+void func_8821EC34(void) {
+    s32 result = 0;
+    s32 state;
+
+    state = *(s32 *)((u8 *)D_882347F0);
+    if (state == 3 && *(s32 *)((u8 *)D_882347F0 + 0x49C) != 0) {
+        result = 1;
+    } else if (state == 5 && *(s32 *)((u8 *)D_882347F0 + 0x49C) != 0) {
+        func_882142DC();
+        func_88001900();
+        D_880068B4 = 1;
+    } else if (state == 4 && *(s32 *)((u8 *)D_882347F0 + 0x49C) != 0) {
+        if (((u8 *)D_882345F4)[9] != 0) {
+            func_88230B64();
+        } else {
+            func_88214330();
+        }
+    } else if (state == 2 && *(s32 *)((u8 *)D_882347F0 + 0x49C) != 0) {
+        if (func_80063754(*(u8 *)D_88234620) != 0) {
+            func_88220E08(0);
+        } else {
+            func_88221034(0x17C, 0x11F,
+                          (s32)(((u8 *)D_882345F4) + 0x3C),
+                          func_800635E0(*(u8 *)D_88234620));
+            func_88202FA0((void *)D_882345F4, D_88234620);
+        }
+    } else {
+        Input_SetRepeatController(D_80087200);
+        func_88001900();
+        if (*(s32 *)((u8 *)D_882347F0 + 4) != 5 &&
+            *(s32 *)((u8 *)D_882347F0 + 4) != 6 &&
+            *(s32 *)((u8 *)D_882347F0 + 4) != 7) {
+            D_880068B4 = 1;
+        }
+        D_882346F4 = 0;
+    }
+    Util_Free((void *)D_882347F0);
+    if (result != 0) {
+        func_882206A0(4);
+    }
+}
+/* mkdraft:func_8821EC34 end */
 
 /* mkdraft:func_8821EE00 begin */
 extern s32 func_880020CC();

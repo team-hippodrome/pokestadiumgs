@@ -266,7 +266,57 @@ void func_88A016F0(s32 arg0, Fragment39Entry *arg1, s16 index) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A017B4.s")
+/* mkdraft:func_88A017B4 begin */
+extern s32 func_8800005C(void);
+extern u8 func_8006378C(u8);
+extern s32 func_88A00FD4(u8);
+extern s32 func_88A01018(u8);
+extern void func_88A016F0(s32 arg0, Fragment39Entry *arg1, s16 index);
+
+// Adds the two-byte entry {arg0, 1} to the list selected by arg1, unless the
+// list already holds an entry whose first byte is arg0 and whose second byte is
+// below 99: that entry only has its second byte raised. The party list
+// (arg1 == 0) is ordered rather than appended: the species group comes from
+// func_88A00FD4(func_8006378C(arg0)), group 2 finds its slot by scanning with
+// func_88A01018, and the other groups insert after the counters at
+// D_88A01C64 + group + 1 and D_88A01C64 + group + 5. Lists 1-3, and the party
+// list while func_8800005C() is nonzero, append at the end. The write flag at
+// D_88A01C64 + arg1 * 4 + 0x104 is set for func_88A01990.
+
+
+void func_88A017B4(u8 arg0, s32 arg1) {
+    s32 slot;
+    u8 count;
+    u8 *p;
+    Fragment39Entry entry;
+    s16 index;
+    u32 i;
+
+    count = func_88A007BC(arg1);
+    p = func_88A00710(arg1, 0);
+    *(s32 *)(D_88A01C64 + (arg1 << 2) + 0x104) = 1;
+    for (i = 0; i < count; i++) {
+        if (p[0] == arg0 && p[1] != 0x63) {
+            p[1]++;
+            return;
+        }
+        p += 2;
+    }
+    entry.unk_00 = arg0;
+    entry.unk_01 = 1;
+    if (func_8800005C() == 0 && arg1 == 0) {
+        slot = func_88A00FD4(func_8006378C(arg0));
+        if (slot == 2) {
+            index = func_88A01018(arg0);
+        } else {
+            index = *(D_88A01C64 + slot + 5) + *(D_88A01C64 + slot + 1);
+        }
+    } else {
+        index = count;
+    }
+    func_88A016F0(arg1, &entry, index);
+}
+/* mkdraft:func_88A017B4 end */
 
 extern s8 D_88006868;
 extern u8 *func_8006218C(s32, s32, s32, s32);

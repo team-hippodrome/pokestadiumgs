@@ -1786,7 +1786,85 @@ void func_8260E4A8(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260EA60.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260ED40.s")
+/* mkdraft:func_8260ED40 begin */
+extern s32 func_8006CEE8(u16);
+extern s32 func_8006CF70(s16);
+void func_8006D068(void *, s32, u16, s16, s32, s32);
+extern s16 D_8261552C;
+extern s16 D_8261A4AE;
+
+// Draw the panel anchored at (arg0->0x14 + arg0->0x10, arg0->0x16 + arg0->0x12) from the
+// sub-block at D_8261A5A0 + 0x900: three fixed labels (string ids 0x33/0x34/0x37 of group
+// 0x12), a two-row list (0x35/0x36 via D_8261552C, highlighted row D_8261A4AE), the block's
+// two status strings, and the 0x80-byte text built by func_8006D068.
+
+
+void func_8260ED40(void *arg0, s32 arg1) {
+    struct Vec2s {
+        s16 x;
+        s16 y;
+    };
+    // FAKE: arg0's block holds s16 coordinate pairs. Reading the pair at 0x24 through this
+    // struct type changes uopt's temp-register numbering for the /2 below; the equivalent
+    // (s16 *)((u8 *)arg0 + 0x24) read scores 65 (13 register penalties over 11 lines).
+    struct UnkArg0 {
+        u8 unk_00[0x24];
+        struct Vec2s unk_24;
+    };
+    // FAKE: the ROM frame (0xE0) leaves its top 8 bytes unused. This pad sets the frame size;
+    // without it the frame is 0xD8 and the frame alloc/free and the arg1 home slot score 18.
+    s32 padD8[2];
+    void *spD4;
+    s16 spD2;
+    s16 spD0;
+    u8 *bufp;
+    u8 buf[0x80];
+    s32 sp38;
+
+    spD4 = (u8 *)D_8261A5A0 + 0x900;
+    spD0 = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    spD2 = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    if (*((u8 *)spD4 + 4) != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        func_8004D19C(spD0 + 0x43, spD2 + 0x28, func_8004C990(0x11D, 0), 0, 0);
+    }
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_800496A4(8, 0);
+    func_8004989C(0x18);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(spD0 + 0x36, spD2 + 0xA, 0, func_8004C874(0x12, 0x33));
+    func_800495F8(spD0 + 0x36, spD2 + 0x92, 0, func_8004C874(0x12, 0x34));
+    func_800495F8(spD0 + ((struct UnkArg0 *)arg0)->unk_24.x / 2, spD2 + 0x105, 1,
+                  func_8004C874(0x12, 0x37));
+    sp38 = spD0 + 0x66;
+    for (arg1 = 0; arg1 != 2; arg1++) {
+        if (arg1 == D_8261A4AE) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_800495F8(sp38, spD2 + 0xBC + arg1 * 0x1F, 0,
+                      func_8004C874(0x12, *(&D_8261552C + arg1)));
+    }
+    func_8004972C(0xD2, 0, 0, 0xFF);
+    func_800495F8(spD0 + 0x5C, spD2 + 0x2A, 0,
+                  func_8004C874(0x12, func_8006CEE8(*(u16 *)((u8 *)spD4 + 0))));
+    func_800495F8(spD0 + 0x5C, spD2 + 0x40, 0,
+                  func_8004C874(0x12, func_8006CF70(*(s16 *)((u8 *)spD4 + 2))));
+    bufp = buf;
+    func_8006D068(bufp, 0x80, *(u16 *)((u8 *)spD4 + 0), *(s16 *)((u8 *)spD4 + 2),
+                  *(u8 *)((u8 *)spD4 + 5), *(u8 *)((u8 *)spD4 + 7));
+    func_800495F8(spD0 + 0x5C, spD2 + 0x56, 0, (s32)bufp);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    if (!(*(u16 *)((u8 *)spD4 + 0) & 0xFF00)) {
+        func_8004C594(1, *(u8 *)((u8 *)spD4 + 6));
+        func_8004C8A0(bufp, 0x80, 0x12, 0x32);
+        func_800495F8(spD0 + 0x139, spD2 + 0x6C, 2, (s32)bufp);
+    }
+    func_800499EC();
+}
+/* mkdraft:func_8260ED40 end */
 
 void func_8260F084(void *arg0, s32 arg1) {
     struct Vec2s {

@@ -1468,7 +1468,63 @@ void func_8002AAD0(u8 arg0) {
 
 void func_8002B1A0(void) { func_8002A25C(); func_80024180(0, 0); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_8002B1CC.s")
+/* mkdraft:func_8002B1CC begin */
+extern s32 D_80090B94;
+extern s32 D_80090B98;
+extern u16 D_80091900[];
+extern u8 D_80091A14;
+extern s32 func_800265B0();
+extern void func_800314D4(s32);
+extern void func_80031530(u16);
+
+
+
+void func_8002B1CC(void) {
+    s32 index;
+    s32 sel;
+
+    D_80091A14 = 1;
+    if (D_80090B98 == 0x28) {
+        func_800314D4(0x3117);
+        return;
+    }
+    index = D_80090B94;
+    if ((index < 0xA) || (index >= 0x10)) {
+        if (D_80090B98 == 0xA) {
+            func_800314D4(0x310C);
+            func_80031530(6);
+            index = D_80090B94;
+        } else if (D_80090B98 == 0xB) {
+            func_800314D4(0x3116);
+            func_80031530(6);
+            index = D_80090B94;
+        }
+        if (index == 0x10) {
+            func_800314D4(0x3115);
+            return;
+        }
+        if (index == 0x11) {
+            func_800314D4(0x3114);
+            return;
+        }
+    }
+    // FAKE: empty block; it ends the outer if's basic block. Without it the tail
+    // D_80090B98 load is `lui a1; lw a1,(a1)` instead of `lui v0; lw a1,(v0)`; diff score 10.
+    if (1) {
+    }
+    sel = D_80090B98;
+    if ((sel == 0xB) && ((index < 0xA) || (index >= 0x10))) {
+        sel = 0xA;
+    }
+    // FAKE: ^ 0 is a no-op. Without it IDO keeps index in a2 rather than v1 for the rest of
+    // the tail; diff score 95.
+    index = func_800265B0(index ^ 0, sel);
+    if (index < 0) {
+        index = 0;
+    }
+    func_800314D4(D_80091900[index]);
+}
+/* mkdraft:func_8002B1CC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_8002B2FC.s")
 

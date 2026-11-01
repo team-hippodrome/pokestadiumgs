@@ -78,7 +78,49 @@ void func_87C02F74(u8 *arg0, s32 mode) {
 void func_87C02F74_padding(void) {
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C02FEC.s")
+/* mkdraft:func_87C02FEC begin */
+extern f64 D_87C03ED8[];
+extern u8 D_87C04088[];
+extern void *func_87C00120(void *arg0, f64 arg1, f64 arg2, f64 arg3);
+extern void *func_87C002A8(void *arg0, void *arg1, f64 arg2);
+extern void func_87C021FC(void *arg0, void *arg1, void *arg2, f64 arg4, f64 arg6, f64 arg8);
+
+
+void func_87C02FEC(void *arg0, void *arg1, f64 arg2) {
+    typedef struct {
+        u8 pad[0x388];
+        f32 scale;
+    } ScaleSource;
+
+    s32 i;
+    s32 j;
+    s32 k;
+    f64 *p;
+    f64 matrix[3];
+
+    // IDO 7.1 materialises the sentinel address D_87C04088 before D_87C03ED8 only while
+    // `do` shares this source line with the assignment. With `do` on its own line the two
+    // %lo addiu instructions swap and the object differs by two instructions (diff score 30).
+    p = D_87C03ED8; do {
+        func_87C002A8(matrix, p, (f64)((ScaleSource *)arg0)->scale);
+        func_87C021FC((u8 *)arg0 + 0x2D0, matrix, arg1,
+                      *(f64 *)((u8 *)arg1 + 0x20), *(f64 *)((u8 *)arg1 + 0x28), arg2);
+        p += 3;
+    } while (p != (f64 *)D_87C04088);
+
+    // Scale a unit rotation by +-scale in each axis and apply it at arg0 + 0x2D0.
+    for (k = -1; k != 3; k += 2) {
+        for (j = -1; j != 3; j += 2) {
+            for (i = -1; i != 3; i += 2) {
+                f64 vec[3];
+                func_87C00120(vec, (f32)k * ((ScaleSource *)arg0)->scale, (f32)j * ((ScaleSource *)arg0)->scale, (f32)i * ((ScaleSource *)arg0)->scale);
+                func_87C021FC((u8 *)arg0 + 0x2D0, vec, arg1,
+                              *(f64 *)((u8 *)arg1 + 0x20), *(f64 *)((u8 *)arg1 + 0x28), arg2);
+            }
+        }
+    }
+}
+/* mkdraft:func_87C02FEC end */
 
 extern Gfx *D_800D0510;
 extern Gfx D_87C03CD0[];

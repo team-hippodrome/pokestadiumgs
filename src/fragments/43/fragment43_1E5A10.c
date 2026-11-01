@@ -5,6 +5,46 @@ void fragment43_main(void) {
 }
 
 #ifdef VERSION_US
+// Debug format strings of this file's late-rodata pool. They are not
+// referenced by any code (only their block heads D_8AC07E50,
+// D_8AC07F28 and D_8AC07FBC are, as sprintf/strcmp arguments); the
+// const definitions reproduce the retail bytes at the head of the
+// object's .rodata, one definition per 4-byte-padded string.
+// Debug strings of the 8AC07E50 block; each padded to 4 bytes as in retail.
+const char D_8AC07E50[] = "%02d";
+const char D_8AC07E58[] = "LinkFreeZone  [%3d] size = %7d ";
+const char D_8AC07E78[] = "=>";
+const char D_8AC07E7C[] = "'%s'\n";
+const char D_8AC07E84[] = "'ogUnlinkFreeZone [%s]\n";
+const char D_8AC07E9C[] = "UnlinkFreeZone[%3d] size = %7d ";
+const char D_8AC07EBC[] = "<=";
+const char D_8AC07EC0[] = "'%s'";
+const char D_8AC07EC8[] = "========== ERROR !!! UNLINK FREE SIZE ==========\n";
+const char D_8AC07EFC[] = "\n";
+const char D_8AC07F00[] = "ogUnlinkFreeZone %d og_link_depth = %d\n";
+
+// Debug strings of the 8AC07F28 block; each padded to 4 bytes as in retail.
+const s8 D_8AC07F28[] = "end";
+const s8 D_8AC07F2C[] = "og_act_sub_SCB_ACT_IA() NULL Texture ! in [%s].\n";
+const s8 D_8AC07F60[] = "ogCallBackScrClampU() texture = 0x%08x\n";
+const s8 D_8AC07F88[] = "ogCallBackScrClampD() [%d , %d]  texture = 0x%08x \n";
+
+// Debug strings of the 8AC07FBC block; each padded to 4 bytes as in retail.
+const char D_8AC07FBC[] = "<COL1,PUSH,%d,%d,%d,255><COL2,PUSH,%d,%d,%d,255>";
+const char D_8AC07FF0[] = "ogInitScrollWorkVer2() all_num %d  disp_rl_max %d disp_line_max %d  all_line %d \n";
+const char D_8AC08044[] = " ";
+const char D_8AC08048[] = "[%s]\n";
+const char D_8AC08050[] = "[    ]\n";
+const char D_8AC08058[] = "----- Tag List Start -----\n";
+const char D_8AC08074[] = "----- Tag List End -----\n\n";
+const char D_8AC08090[] = "%08x : ";
+const char D_8AC08098[] = "%02x ";
+const char D_8AC080A0[] = "\n";
+const char D_8AC080A4[] = "\n";
+const char D_8AC080A8[] = "///// dump_screen //////////\n";
+const char D_8AC080C8[] = "////////// Chousa start !!! ////////// line(%d)\n";
+const char D_8AC080FC[] = "///// found Error! Chousa line [%d] /////\n";
+
 extern u8 D_8AC07BA0[];
 extern u8 D_8AC081B0[];
 void Fragment43_CopyMenuColors(void) {
@@ -315,7 +355,6 @@ void func_8AC00DE8(void) {
 
 #ifdef VERSION_US
 extern s32 func_8005049C(s32, s32);
-extern char D_8AC07E50[];
 extern void *D_8AC08528;
 
 // Looks up the nodes tagged "WP00" to "WP99" under arg0 (D_8AC07E50 is the format "%02d"),
@@ -451,7 +490,6 @@ typedef struct unk_func_8AC01354 {
 extern void *func_8004C874(s32, s32);
 extern s32 func_80049148(s32, s32, const char *, ...);
 extern s32 HAL_Strcmp(const s8 *, const s8 *);
-extern s8 D_8AC07F28[];
 s16 func_8AC01354(unk_func_8AC01354 *arg0, s32 arg1) {
     s16 count;
     s32 i;
@@ -1512,7 +1550,6 @@ s32 func_8AC0456C(s32 arg0, void *arg1) {
 extern s16 D_8AC08508[];
 extern f32 D_80087E50[];
 extern char D_8AC08208[];
-extern char D_8AC07FBC[];
 extern s32 func_8004C54C(s32, s32);
 s32 func_8AC04604(s32 arg0, void *arg1) { s32 red; s16 index; s16 *entry; char *buffer; f32 value; f32 inverse; index=*(s16 *)((u8 *)arg1+0x22); switch(arg0) { case 0: D_8AC08508[index]=0; break; case 1: entry=&D_8AC08508[index]; value=D_80087E50[(u16)*entry>>4]*0.5f+0.5f; inverse=1.0f-value; buffer=D_8AC08208+(index<<7); red=(s32)(240.0f*value+255.0f*inverse); sprintf(buffer,D_8AC07FBC,red,(s32)(155.0f*value+150.0f*inverse),(s32)(100.0f*value+255.0f*inverse),red,(s32)(155.0f*value+150.0f*inverse),(s32)(100.0f*value+255.0f*inverse)); func_8004C54C(0x47,(s32)buffer); *entry+=0x790; } return 0; }
 #endif
@@ -1741,7 +1778,6 @@ void func_8AC06328(Fragment43Motion602C *arg0, u16 arg1) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8AC08190;
 extern f32 D_80088E50[];
 void func_8AC063AC(Fragment43Motion602C *arg0, u16 arg1) {
     f32 *temp_v0;
@@ -1749,7 +1785,7 @@ void func_8AC063AC(Fragment43Motion602C *arg0, u16 arg1) {
 
     arg1 <<= 12;
     temp_v0 = &D_80088E50[arg1 >> 4];
-    temp_fv0 = D_8AC08190;
+    temp_fv0 = 0.2f;
     if (arg0) {
     }
     arg0->unk40 = (*temp_v0 * temp_fv0) + 1.0f;

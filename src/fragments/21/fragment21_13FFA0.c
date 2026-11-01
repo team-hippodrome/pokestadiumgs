@@ -131,7 +131,56 @@ f32 func_825003DC(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 *arg5) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_825004A4.s")
+/* mkdraft:func_825004A4 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Four-byte colour word read as r, g, b, a by the G_SETENVCOLOR / G_SETPRIMCOLOR
+// packing macros. func_82500EF4, declared further down this file, gives the same
+// layout the name unk_func_82500EF4; the two typedefs can be merged once this
+// function sits next to that declaration.
+typedef struct unk_func_825004A4 {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+    /* 0x03 */ u8 a;
+} unk_func_825004A4;
+
+// The file defines ROUND_MAX only below this point, so a call would be emitted
+// without this prologue copy.
+#ifndef ROUND_MAX
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+#endif
+
+
+
+void func_825004A4(s32 arg0, s32 arg1, u16 *arg2, f32 arg3, u8 *arg4, u8 *arg5, s32 arg6) {
+    s32 draw_width;
+    s32 draw_height;
+    s32 x_offset;
+    s32 y_offset;
+
+    if (arg3 > 0.0f) {
+        draw_width = (s32)ROUND_MAX((f32)(u32)arg2[0] * arg3);
+        draw_height = (s32)ROUND_MAX((f32)(u32)arg2[1] * arg3);
+        x_offset = (arg2[0] - draw_width) / 2;
+        y_offset = (arg2[1] - draw_height) / 2;
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetEnvColor(D_800D0510++, ((unk_func_825004A4 *)arg4)->r, ((unk_func_825004A4 *)arg4)->g, ((unk_func_825004A4 *)arg4)->b, ((unk_func_825004A4 *)arg4)->a);
+        gDPSetPrimColor(D_800D0510++, 0, 0, ((unk_func_825004A4 *)arg5)->r, ((unk_func_825004A4 *)arg5)->g, ((unk_func_825004A4 *)arg5)->b, ((unk_func_825004A4 *)arg5)->a);
+        if (arg6 != 0) {
+            func_8004D1FC((u8 *)arg2);
+            GfxRect_DrawTextured((s16)(arg0 + x_offset), (s16)(arg1 + y_offset), (s16)draw_width, (s16)draw_height, 0, 0,
+                                 (s32)ROUND_MAX(1024.0f / arg3), (s32)ROUND_MAX(1024.0f / arg3), 0);
+        } else {
+            func_8004D19C(arg0, arg1, (s32)arg2, 0, 0);
+        }
+    }
+}
+/* mkdraft:func_825004A4 end */
 #endif
 
 #ifdef VERSION_US
