@@ -502,76 +502,7 @@ void func_8220C470(Fragment17Panel *panel) {
         func_80044270(x + 5, y + 5, panel->pair_06.x - 10, panel->pair_06.y - 10, 0, 0, (s32)(bias + step), 1024, 0);
     }
 }
-/* mkdraft:func_8220C6C4 begin */
-extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
-
-// Each pair is one commutative `addu`: IDO 7.1 emits the freshly loaded strip width/height first
-// and the origin operand second, while the retail build has origin first. The words differ only
-// in their rs/rt fields, so each rewrite picks the other operand order of the same addition.
-#pragma REWRITE_FUNCTION_WORD(func_8220C6C4, 0x234, 0x0171C021, 0x022BC021)
-#pragma REWRITE_FUNCTION_WORD(func_8220C6C4, 0x2EC, 0x01D25821, 0x024E5821)
-#pragma REWRITE_FUNCTION_WORD(func_8220C6C4, 0x348, 0x01927821, 0x024C7821)
-#pragma REWRITE_FUNCTION_WORD(func_8220C6C4, 0x3A4, 0x0311C821, 0x0238C821)
-#pragma REWRITE_FUNCTION_WORD(func_8220C6C4, 0x3A8, 0x01927821, 0x024C7821)
-#pragma REWRITE_FUNCTION_WORD(func_8220C6C4, 0x400, 0x0311C821, 0x0238C821)
-
-
-
-s32 func_8220C6C4(s16 *arg0) {
-    s16 originX, originY;
-    s32 stripWidth;
-    s32 textureHeight;
-    u16 *texture;
-    u8 environment[4];
-    u8 primitive[4];
-
-    texture = (u16 *)(u32)func_8004C990(0x51, 1);
-    stripWidth = (s32)texture[0] / 4;
-    textureHeight = texture[1];
-    if (stripWidth == 0) {} // karodo: empty test; without it the width/height values land in
-                            // different saved registers (diff score 220).
-
-    if (texture != NULL) {
-        gSPDisplayList(D_800D0510++, D_80094E78);
-        gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
-        func_8004D1FC((u8 *)texture);
-
-        originX = (s16)(*(s16 *)((u8 *)arg0 + 0x12) + *(s16 *)((u8 *)arg0 + 0xA));
-        originY = (s16)(*(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0xC));
-
-        func_8220C42C(environment, primitive, arg0);
-
-        gDPPipeSync(D_800D0510++);
-        gDPSetColor(D_800D0510++, G_SETENVCOLOR,
-                    (_SHIFTL(environment[1], 16, 8) | _SHIFTL(environment[2], 8, 8) |
-                     _SHIFTL(environment[0], 24, 8) | _SHIFTL(255, 0, 8)));
-        gDPSetColor(D_800D0510++, G_SETPRIMCOLOR,
-                    (_SHIFTL(primitive[1], 16, 8) | _SHIFTL(primitive[2], 8, 8) |
-                     _SHIFTL(primitive[0], 24, 8) | _SHIFTL(255, 0, 8)));
-
-        GfxRect_DrawTextured(originX, originY, (s16)stripWidth, (s16)textureHeight, 0, 0, 1024, 1024, 0);
-        GfxRect_DrawTextured((s16)(originX + stripWidth), originY, (s16)(*(s16 *)((u8 *)arg0 + 6) - stripWidth * 2),
-                             (s16)textureHeight, (s16)(stripWidth << 5), 0, 0, 1024, 0);
-        GfxRect_DrawTextured((s16)(originX + *(s16 *)((u8 *)arg0 + 6) - stripWidth), originY, (s16)stripWidth,
-                             (s16)textureHeight, (s16)(stripWidth << 5), 0, 1024, 1024, 0);
-        GfxRect_DrawTextured(originX, (s16)(originY + textureHeight),
-                             (s16)stripWidth, (s16)(*(s16 *)((u8 *)arg0 + 8) - textureHeight * 2),
-                             (s16)((stripWidth * 2) << 5), 0, 1024, 0, 0);
-        GfxRect_DrawTextured(originX, (s16)(originY + *(s16 *)((u8 *)arg0 + 8) - textureHeight),
-                             (s16)stripWidth, (s16)textureHeight, (s16)((stripWidth * 2) << 5), 0, 1024, 1024, 0);
-        GfxRect_DrawTextured((s16)(originX + stripWidth),
-                             (s16)(originY + *(s16 *)((u8 *)arg0 + 8) - textureHeight), (s16)(*(s16 *)((u8 *)arg0 + 6) - stripWidth * 2),
-                             (s16)textureHeight, (s16)((stripWidth * 3) << 5), 0, 0, 1024, 0);
-        GfxRect_DrawTextured((s16)(originX + *(s16 *)((u8 *)arg0 + 6) - stripWidth),
-                             (s16)(originY + *(s16 *)((u8 *)arg0 + 8) - textureHeight), (s16)stripWidth,
-                             (s16)textureHeight, (s16)((stripWidth * 3) << 5), 0, 1024, 1024, 0);
-        GfxRect_DrawTextured((s16)(originX + *(s16 *)((u8 *)arg0 + 6) - stripWidth),
-                             (s16)(originY + textureHeight), (s16)stripWidth,
-                             (s16)(*(s16 *)((u8 *)arg0 + 8) - textureHeight * 2),
-                             (s16)((stripWidth * 3) << 5), 0, 1024, 0, 0);
-    }
-}
-/* mkdraft:func_8220C6C4 end */
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220C6C4.s")
 
 void func_8220CB34(s32 x, s32 y, s32 width, s32 height) {
     s32 resource;
