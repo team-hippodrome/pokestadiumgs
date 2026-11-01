@@ -1154,7 +1154,124 @@ void func_841420A4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_841427DC.s")
+/* mkdraft:func_841427DC begin */
+// The two-entry party pointer table. The fragment-wide declaration above types
+// the symbol as one pointer, so the table entries are read through a cast.
+extern u8 *D_841951F8;
+extern u8 D_84195218[];
+extern s16 D_84186BD8;
+extern s16 D_84186BDC;
+extern s16 D_84186CF8;
+extern s16 D_84186CFC;
+extern s16 D_84186D60;
+extern s16 D_84186D64;
+extern s32 func_80064650(u16, u8);
+extern u8 func_8413FD04(u8, u8, u8);
+extern void func_8413F5F4(s16, s16, s32);
+
+// One 24-byte battle-snapshot display record per side. name (0x0) and value
+// (0x4) agree with struct BattleSnapshotDisplayState in the fragment 79
+// snapshot file; that file stores a u16 status at 0xA, whereas this function
+// passes the status byte at 0xB to func_80064650.
+//@{src/fragments/79/fragment79_3A4030.c}
+typedef struct {
+    u32 name;
+    f32 value;
+    u16 maximum;
+    u8 unk_0A;
+    u8 status;
+    u16 dvs;
+    u8 level;
+    u8 species;
+    u8 unk_10[8];
+} BattleSnapshotDisplay;
+
+// Party member (0x58 bytes), reached from offset 0x18 of the party record.
+// status (0x24) and hp (0x26) are the two arguments func_80064650 turns into
+// an icon; the hp/status offsets match BattlePanelPokemon further down this file.
+typedef struct {
+    u8 unk_00[0x24];
+    u8 status;
+    u8 unk_25;
+    u16 hp;
+    u8 unk_28[0x30];
+} PartyMon;
+
+// Party record: member count at 0x8, members from 0x18, as in the
+// BattlePanelParty view declared further down this file.
+typedef struct {
+    u8 unk_00[8];
+    u8 count;
+    u8 unk_09[15];
+    PartyMon mons[6];
+} Party;
+
+// Draw the battle-snapshot readouts for one side: the stat change (case 1), the
+// three resolved party-list slots (case 11), the party grid (case 12) and a
+// single changed party member (case 13). state[8] gates all four cases; state[0]
+// selects the case and state[1] the side.
+
+
+void func_841427DC(u8 *state) {
+    // Declaration order matters for the match: IDO assigns stack slots by live
+    // range, so reordering these declarations changes where the case-12 index
+    // spills (0x44 in the retail frame, 0x40 for most other orders).
+    u8 side;
+    u16 column_offset;
+    u16 row_offset;
+    u8 value;
+    s32 i;
+    PartyMon *pokemon;
+
+    column_offset = 0;
+    row_offset = 0;
+    if (!(state[8] & 1) && !(state[8] & 2) && !(state[8] & 0x10)) {
+        side = state[1];
+        switch (state[0]) {
+        case 1:
+            func_8413F5F4(*(s16 *)(state + 0xA) + D_84186BD8,
+                          *(s16 *)(state + 0xC) + D_84186BDC,
+                          func_80064650((u16)((BattleSnapshotDisplay *)D_84195218)[side].value,
+                                        ((BattleSnapshotDisplay *)D_84195218)[side].status));
+            break;
+        case 11:
+            // At most three slots are listed; 0xFF ends the list early.
+            for (i = 0; i != 3; i++) {
+                value = func_8413FD04(side, state[2], i);
+                if (value == 0xFF) break;
+                pokemon = &((Party *)((u8 **)&D_841951F8)[side])->mons[(s32)value];
+                func_8413F5F4(*(s16 *)(state + 0x12) + D_84186CF8 + column_offset,
+                              *(s16 *)(state + 0x14) + D_84186CFC,
+                              func_80064650(pokemon->hp, pokemon->status));
+                column_offset += 67;
+            }
+            break;
+        case 12:
+            // Three slots per row; the fourth member wraps to the next row.
+            for (i = 0; i < ((Party *)((u8 **)&D_841951F8)[side])->count; i++) {
+                pokemon = &((Party *)((u8 **)&D_841951F8)[side])->mons[i];
+                func_8413F5F4(*(s16 *)(state + 0x12) + D_84186CF8 + column_offset,
+                              *(s16 *)(state + 0x14) + D_84186CFC + row_offset,
+                              func_80064650(pokemon->hp, pokemon->status));
+                column_offset += 67;
+                if (i == 2) {
+                    column_offset = 0;
+                    row_offset = 46;
+                }
+            }
+            break;
+        case 13:
+            pokemon = &((Party *)((u8 **)&D_841951F8)[side])->mons[*(s32 *)(state + 4)];
+            func_8413F5F4(*(s16 *)(state + 0xA) + D_84186D60,
+                          *(s16 *)(state + 0xC) + D_84186D64,
+                          func_80064650(pokemon->hp, pokemon->status));
+            break;
+        default:
+            break;
+        }
+    }
+}
+/* mkdraft:func_841427DC end */
 #endif
 
 #ifdef VERSION_US
