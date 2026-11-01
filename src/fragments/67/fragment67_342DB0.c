@@ -94,5 +94,46 @@ void func_82906748(void *arg0) {
 }
 /* mkdraft:func_82906748 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_342DB0/func_82906808.s")
+/* mkdraft:func_82906808 begin */
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_829000CC(void);
+extern void func_829000F8(u8, u8, u8, u8);
+extern void func_829001E4(u8, u8, u8, u8);
+extern void func_829062B0(s32);
+extern Gfx *D_800D0510;
+extern u8 D_82919DE0[];
+
+
+
+void func_82906808(void) {
+    u8 *texture;
+    u8 *entry;
+    s32 i;
+
+    texture = func_8004CA60(func_8004C990(0x93, 0));
+    func_829000CC();
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTextureImage(D_800D0510++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, texture);
+    gDPSetTile(D_800D0510++, G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_NOMIRROR, 0, 0,
+               G_TX_MIRROR, 0, 0);
+    gDPLoadSync(D_800D0510++);
+    gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 511, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetTile(D_800D0510++, G_IM_FMT_IA, G_IM_SIZ_8b, 4, 0, G_TX_RENDERTILE, 0, G_TX_NOMIRROR, 0, 0,
+               G_TX_MIRROR, 0, 0);
+    gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 0x7C, 0x7C);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_2CYCLE);
+    gDPSetRenderMode(D_800D0510++, 0x0C184240, 0);
+    gDPSetCombine(D_800D0510++, 0x3097FF, 0x5FFEFE38);
+    func_829000F8(0xFF, 0xFF, 0xFF, 0xFF);
+
+    entry = D_82919DE0;
+    for (i = 0; i != 40; i++, entry += 0x24) {
+        func_829001E4(0xFF, entry[0x21], 0, 0xFF);
+        func_829062B0(i);
+    }
+}
+/* mkdraft:func_82906808 end */
 #endif

@@ -59,7 +59,52 @@ s32 func_82905830(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_3422F0/func_82905A88.s")
+/* mkdraft:func_82905A88 begin */
+
+extern s32 D_82919D24;
+extern u8 D_82919DD0[];
+extern u8 D_829120C0[];
+extern void *D_80094908;
+extern void func_80037120(void *, void *, s16 *, s16 *, s16 *);
+
+// Second color of D_829120C0's 12-byte row for D_82919D24, scaled by the second tint in
+// D_82919DD0 unless that tint is white, then writes the second anchored screen point.
+
+
+s32 func_82905A88(s32 arg0, u8 *arg1) {
+    // FAKE: the three pads are unused. Together with the three temporaries below they make the
+    // 12-byte s16 block IDO places at 0x2C..0x37, which puts sp30/sp2E/sp2C at 0x30/0x2E/0x2C.
+    // Diff score 27 without them (only the three stack offsets differ).
+    s16 pad0;
+    s16 pad1;
+    s16 pad2;
+    s16 sp30;
+    s16 sp2E;
+    s16 sp2C;
+
+    if (arg0 == 0) {
+        arg1[0x18] = D_829120C0[D_82919D24 * 12 + 4];
+        arg1[0x19] = D_829120C0[D_82919D24 * 12 + 5];
+        arg1[0x1A] = D_829120C0[D_82919D24 * 12 + 6];
+    }
+    if (arg0 == 2) {
+        if ((((Fragment67Color *)(D_82919DD0 + 4))->r & ((Fragment67Color *)(D_82919DD0 + 4))->g &
+             ((Fragment67Color *)(D_82919DD0 + 4))->b) == 0xFF) {
+            arg1[0x18] = D_829120C0[D_82919D24 * 12 + 4];
+            arg1[0x19] = D_829120C0[D_82919D24 * 12 + 5];
+            arg1[0x1A] = D_829120C0[D_82919D24 * 12 + 6];
+        } else {
+            arg1[0x18] = (((Fragment67Color *)(D_82919DD0 + 4))->r * D_829120C0[D_82919D24 * 12 + 4]) / 255;
+            arg1[0x19] = (((Fragment67Color *)(D_82919DD0 + 4))->g * D_829120C0[D_82919D24 * 12 + 5]) / 255;
+            arg1[0x1A] = (((Fragment67Color *)(D_82919DD0 + 4))->b * D_829120C0[D_82919D24 * 12 + 6]) / 255;
+        }
+        func_80037120((u8 *)D_80094908 + 0xB4, (u8 *)D_80094908 + 0xA8, &sp30, &sp2E, &sp2C);
+        *(s16 *)(arg1 + 0x1C) = -0x2000 - sp2E;
+        *(s16 *)(arg1 + 0x1E) = sp2C + 0x6000;
+    }
+    return 0;
+}
+/* mkdraft:func_82905A88 end */
 
 // func_82905830's color step for the row's third color and the third tint.
 s32 func_82905CE4(s32 arg0, u8 *arg1) {

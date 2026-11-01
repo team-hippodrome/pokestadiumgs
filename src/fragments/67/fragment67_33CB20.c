@@ -63,7 +63,40 @@ void func_829001E4(u8 arg0, u8 arg1, u8 arg2, u8 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33CB20/func_82900254.s")
+/* mkdraft:func_82900254 begin */
+extern Gfx D_80094DE0[];
+extern Gfx *D_800D0510;
+extern void func_82900168(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
+
+// Paints the window (arg4, arg5, arg4+arg6, arg5+arg7) minus the box
+// (arg0, arg1, arg0+arg2, arg1+arg3) as eight clamped fill rectangles: the
+// corner and side strips around the box, split so each piece stays axis-aligned.
+// The caller func_82901554 supplies both rectangles' bounds: the box from its
+// arguments and the window from D_829188B0 (corner at [3]/[4], size at [1]/[2]).
+//@src/fragments/67/fragment67_33D6A0.c
+// func_8413FDB0 draws the same ring against the fixed screen bounds
+// (0, 0, 0x140, 0xF0); its top strip starts at y = 0 while this one's starts at
+// the literal 30, so the top strip ignores arg5.
+//@src/fragments/79/fragment79_3ADCA0.c
+
+
+void func_82900254(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s16 arg4, s16 arg5, s16 arg6, s16 arg7) {
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_82900168(0, 0, 0, 1);
+    if (arg4 < arg0) {
+        if (arg5 < arg1) gDPScisFillRectangle(D_800D0510++, arg4, arg5, arg0, arg1);
+        if (arg1 + arg3 < arg5 + arg7) gDPScisFillRectangle(D_800D0510++, arg4, arg1 + arg3, arg0, arg5 + arg7);
+        gDPScisFillRectangle(D_800D0510++, arg4, arg1, arg0, arg1 + arg3);
+    }
+    if (arg0 + arg2 < arg4 + arg6) {
+        if (arg5 < arg1) gDPScisFillRectangle(D_800D0510++, arg0 + arg2, arg5, arg4 + arg6, arg1);
+        if (arg1 + arg3 < arg5 + arg7) gDPScisFillRectangle(D_800D0510++, arg0 + arg2, arg1 + arg3, arg4 + arg6, arg5 + arg7);
+        gDPScisFillRectangle(D_800D0510++, arg0 + arg2, arg1, arg4 + arg6, arg1 + arg3);
+    }
+    if (arg5 < arg1) gDPScisFillRectangle(D_800D0510++, arg0, 30, arg0 + arg2, arg1);
+    if (arg1 + arg3 < arg5 + arg7) gDPScisFillRectangle(D_800D0510++, arg0, arg1 + arg3, arg0 + arg2, arg5 + arg7);
+}
+/* mkdraft:func_82900254 end */
 #endif
 
 #ifdef VERSION_US
