@@ -1223,5 +1223,145 @@ void func_86B0BA28(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0CB1C.s")
+/* mkdraft:func_86B0CB1C begin */
+extern s32 D_86B0E0A0;
+extern u8 D_86B17A78[];
+extern u8 *D_86B181C0;
+
+
+
+void func_86B0CB1C(s32 arg0) {
+    // FAKE: the four unreferenced slots below are what makes IDO reserve the
+    // retail function's 0x68-byte frame, spill the `j` loop counter at 0x60, and
+    // keep the four `limit` spills at 0x50/0x4c/0x48/0x44.  Without them the frame
+    // is 0x58 bytes and `j` spills at 0x54 (diff score 70).
+    s32 pad0;
+    s32 j;
+    s32 pad1[3];
+    s32 limit0;
+    s32 limit1;
+    s32 limit2;
+    s32 limit3;
+    s32 i;
+    s32 k;
+    s32 rnd;
+
+    if (D_86B0E0A0 != 0) {
+        limit0 = 0x20;
+        limit1 = 0x18;
+        limit2 = 0x12;
+        limit3 = 0xE;
+    } else {
+        limit0 = 0x1B;
+        limit1 = 0x14;
+        limit2 = 0xF;
+        limit3 = 0xC;
+    }
+    if (*(s32 *)(D_86B17A78 + 0x70) != 0) {
+        for (i = 0; i != 4; i++) {
+            switch (i) {
+            case 0:
+                if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 &&
+                    (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 1)) {
+                    continue;
+                }
+                break;
+            case 1:
+                if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 &&
+                    (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 2)) {
+                    continue;
+                }
+                break;
+            case 2:
+                if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 &&
+                    (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 4)) {
+                    continue;
+                }
+                break;
+            case 3:
+                if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 &&
+                    (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 8)) {
+                    continue;
+                }
+                break;
+            }
+            for (j = 0; j != 4; j++) {
+                if (i == j) {
+                    continue;
+                }
+                if (arg0 == *(s32 *)(D_86B17A78 + j * 4 + 0x384)) {
+                    rnd = guRandom() % 100;
+                    // `k == count - 1` keeps the counter in s2 as in retail;
+                    // `k + 1 == count` makes IDO carry `k + 1` in a register of
+                    // its own and colors `k` into s0 (diff score 212).
+                    for (k = 0; k < *(s32 *)(D_86B17A78 + 0x70); k++) {
+                        switch (*(s32 *)(D_86B17A78 + 0x68)) {
+                        case 0:
+                            if (k == *(s32 *)(D_86B17A78 + 0x70) - 1) {
+                                if (rnd < 0x50) {
+                                    if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                        *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit0 >= arg0) {
+                                        *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 13 + arg0 + 0x1A;
+                                    }
+                                }
+                            } else if (rnd < 0x14) {
+                                if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                    *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit0 >= arg0) {
+                                    *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 13 + arg0 + 0x1A;
+                                }
+                            }
+                            break;
+                        case 1:
+                            if (k == *(s32 *)(D_86B17A78 + 0x70) - 1) {
+                                if (rnd < 0x3C) {
+                                    if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                        *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit1 >= arg0) {
+                                        *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 11 + arg0 + 0x15;
+                                    }
+                                }
+                            } else if (rnd < 0xF) {
+                                if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                    *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit1 >= arg0) {
+                                    *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 11 + arg0 + 0x15;
+                                }
+                            }
+                            break;
+                        case 2:
+                            if (k == *(s32 *)(D_86B17A78 + 0x70) - 1) {
+                                if (rnd < 0x28) {
+                                    if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                        *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit2 >= arg0) {
+                                        *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 9 + arg0 + 0xE;
+                                    }
+                                }
+                            } else if (rnd < 0xA) {
+                                if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                    *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit2 >= arg0) {
+                                    *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 9 + arg0 + 0xE;
+                                }
+                            }
+                            break;
+                        case 3:
+                            if (k == *(s32 *)(D_86B17A78 + 0x70) - 1) {
+                                if (rnd < 0x14) {
+                                    if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                        *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit3 >= arg0) {
+                                        *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 7 + arg0 + 0xB;
+                                    }
+                                }
+                            } else if (rnd < 5) {
+                                if (arg0 >= *(s32 *)(D_86B17A78 + k * 4 + 0x84) &&
+                                    *(s32 *)(D_86B17A78 + k * 4 + 0x84) + limit3 >= arg0) {
+                                    *(s32 *)(D_86B17A78 + i * 0x28 + 0x2AC) = guRandom() % 7 + arg0 + 0xB;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_86B0CB1C end */
 #endif
