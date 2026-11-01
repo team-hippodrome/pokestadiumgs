@@ -490,19 +490,19 @@ void func_8FB029B4(void *arg0) {
 
 /* func_8FB02A10 is still GLOBAL_ASM, but its .s is hand-maintained (not the
  * splat-generated asm/us/nonmatchings/.../func_8FB02A10.s) so it can also
- * carry jtbl_8FB03D2C's last entry (4 bytes, the tail of its own switch's
- * jump table) in a .late_rodata block ahead of its .text. That word has to
- * land immediately before func_8FB03164's own compiler-generated jump
- * table (jtbl_8FB03DC4) to satisfy this fragment's SUBALIGN(16); a plain C
+ * carry jtbl_8FB03D2C, its own 38-entry switch table, in a .late_rodata
+ * block ahead of its .text. The table's bytes are inside this file's
+ * [0xD4170, .rodata] range, but splat lists no user for them (this
+ * hand-maintained .s is not among the files it regenerates), so nothing
+ * but this block emits them. asm-processor places the block at this
+ * pragma's position in the .rodata stream: right after func_8FB02878's
+ * two tables and immediately before func_8FB03164's own
+ * compiler-generated jtbl_8FB03DC4, the exact retail order. A plain C
  * global here would instead be emitted by IDO ahead of ALL switch-table
  * "late" rodata in this compilation (before jtbl_8FB03DC4, which is right
  * where we want it) -- but ahead of the file's other regular named rodata
  * too, changing its order and thus its address, since IDO groups named
- * rodata together in emission order across the whole file. Placing it in a
- * GLOBAL_ASM .late_rodata block instead makes asm-processor position it
- * exactly where retail has it: as the last word before jtbl_8FB03DC4,
- * with nothing else in between. jtbl_8FB03D2C's other 37 entries keep
- * coming from the unmodified data blob at their real retail addresses. */
+ * rodata together in emission order across the whole file. */
 #pragma GLOBAL_ASM("hand_asm/fragments/9/func_8FB02A10_manual.s")
 
 extern void func_8FB009C0(void *arg0);
