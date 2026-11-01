@@ -498,7 +498,75 @@ void func_8FB02698(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02878.s")
+/* mkdraft:func_8FB02878 begin */
+extern s32 func_8FB005E4(void *);
+extern s32 func_8FB00FE8(void *);
+extern s32 func_8FB01CF8(void *, void *, s32);
+extern void func_8FB00E40(void *, void *);
+extern void func_8FB01634(void *, void *);
+/* func_8FB001C0 (s32 (u8 *, u8 *)) and func_8FB02108 (void (unk_func_8FB02108 *))
+ * are defined earlier in this file; the calls below compile to the same
+ * $a0/$a1 setups under those signatures as under the void * spellings the
+ * candidate was verified with. */
+
+// Mode 1 of func_8FB029B4. Runs the page selected by the u16 at offset 2 of the record at
+// arg0 + 0x44 on the page state at arg0 + 0x158C (func_8FB03164 draws the same pages) and
+// acts on its result: 0 keeps mode 1; 1 calls func_8FB01634, func_8FB001C0 or func_8FB00E40
+// for the page, calls func_8FB02108 when the record's first u16 is 1, and returns to mode 0;
+// 2 (also the result for page 4) returns to mode 0.
+void func_8FB02878(void *arg0) {
+    s32 result = 2;
+
+    switch (*(u16 *)(*(u8 **)((u8 *)arg0 + 0x44) + 2)) {
+        case 0:
+            result = func_8FB01CF8((u8 *)arg0 + 0x158C, arg0, 10);
+            break;
+        case 1:
+            result = func_8FB01CF8((u8 *)arg0 + 0x158C, arg0, 16);
+            break;
+        case 2:
+            result = func_8FB005E4((u8 *)arg0 + 0x158C);
+            break;
+        case 3:
+            result = func_8FB00FE8((u8 *)arg0 + 0x158C);
+            break;
+        case 4:
+            break;
+    }
+
+    switch (result) {
+        case 0:
+            break;
+        case 1:
+            // FAKE: result is reused to hold the record pointer at arg0 + 0x44; diff score 30 without it.
+            result = *(s32 *)((u8 *)arg0 + 0x44);
+            switch (((u16 *)result)[1]) {
+                case 0:
+                case 1:
+                    func_8FB01634((u8 *)arg0 + 0x158C, arg0);
+                    break;
+                case 2:
+                    func_8FB001C0((u8 *)arg0 + 0x158C, arg0);
+                    break;
+                case 3:
+                    func_8FB00E40((u8 *)arg0 + 0x158C, arg0);
+                    break;
+                case 4:
+                    break;
+            }
+            result = *(s32 *)((u8 *)arg0 + 0x44);
+            if (*(u16 *)result == 1) {
+                func_8FB02108(arg0);
+            }
+            // Retail stores 0 to the mode here and again in case 2's body.
+            *(s32 *)((u8 *)arg0 + 0x40) = 0;
+            // fallthrough
+        case 2:
+            *(s32 *)((u8 *)arg0 + 0x40) = 0;
+            break;
+    }
+}
+/* mkdraft:func_8FB02878 end */
 
 extern void Fragment9_UpdateSelectionPointers(void *);
 extern void func_8FB02698(void *);
