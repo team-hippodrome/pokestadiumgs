@@ -411,3 +411,36 @@ Then resume the direct592-byte parent with observed permuter logging and a
 materially different evaluation/lifetime hypothesis. Keep the exact collision
 branch and the original calling contracts. This remains a source-shape search,
 not proof that compiler-faithful C is impossible.
+
+## 2026-11-01 — state-record initialization accepted
+
+`Fragment56_InitStateRecords` replaces `func_86800D5C` (768 bytes). Its caller
+`Fragment56_InitModelGroups` sets up the model groups before invoking this
+initializer. It resets four 292-byte group state records, including their
+40-word arrays, initializes each group's twenty 24-byte records and forty 40-byte pool entries,
+and resets the shared scene counters/settings. `Fragment56_UpdatePoolCompletion`
+reads the two pools' active/sentinel fields. These producer/consumer operations
+support the initialization name; unresolved fields retain their address views.
+
+The winning source combines an advancing group-header cursor with indexed
+clearing, point and pool accesses. Direct indexing removes the address locals
+that enlarged the frame. A separate word counter and an ordinary `while` loop
+reproduce the retail clearing-loop instruction order. IDO performs both four-way
+unrolls; the C contains no manual unroll, stack padding or register bindings.
+
+The compiler expresses the outer loop's end as `D_8682CD18 + 6400`; the assembly
+uses `D_8682E618`. The game linker map places both at 0x8682E618. The isolated
+probe therefore reports relocation drift, and its sequential full-ROM gate is
+the acceptance evidence. On baseline `e39d0cea`, the normal host syntax check
+and full US retail ROM comparison pass, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Naming and removing redundant declarations preserve complete module sections,
+bytes, function extents and semantic relocations, normally and with twenty
+leading blank lines. The original function symbol remains a linker alias.
+
+The address-allocation investigation explains an earlier false plateau: two
+explicit cursors initialized from the same address made UOPT assign that
+address to register 2 (adjusted saving 1), shifting later temporary allocation.
+The hybrid indexed source resolves this through ordinary induction-variable
+formation. Explicit cursors, record views, complete array extents and a stock
+compiler-version switch did not resolve that parent. These negative results do
+not apply to other owners. `func_86806180` remains the separate motion requeue.
