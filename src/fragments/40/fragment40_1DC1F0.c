@@ -126,7 +126,67 @@ void MathUtil_BuildTransformMtx_fragment40(Mtx* arg0, f32 arg1, f32 arg2, f32 ar
     guMtxF2L(sp20.mf, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B010A0.s")
+/* mkdraft:func_88B010A0 begin */
+extern Gfx *D_800D0510;
+extern s32 func_8000731C(void);
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern Vtx D_88B05AF0[];
+extern f32 D_88B05E74;
+extern f32 D_88B05E78;
+
+
+
+void func_88B010A0(f32 arg0, s32 arg1) {
+    s16 *dims;
+    Mtx *mtx0;
+    Mtx *mtx1;
+    Vp *viewport;
+    s32 mode;
+
+    dims = (s16 *)func_8000731C();
+    mtx0 = Gfx_AllocDisplayList(0x40);
+    mtx1 = Gfx_AllocDisplayList(0x40);
+    viewport = Gfx_AllocDisplayList(0x10);
+    Gfx_SetViewportDimensions(viewport, dims[2], dims[3]);
+    gSPViewport(D_800D0510++, (u32)viewport & 0x1FFFFFFF);
+    guOrtho(mtx0, -320.0f, 320.0f, -240.0f, 240.0f, -2.0f, 2.0f, 1.0f);
+    MathUtil_BuildTransformMtx_fragment40(mtx1, 1.0f, 1.0f, 1.0f, arg0, 0.0f, 0.0f, 1.0f, D_88B05E74, D_88B05E78, 0.0f);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    if (arg1 == 2) {
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    } else {
+        gDPSetCombine(D_800D0510++, 0x30FE61, 0x55FEF379);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0x0F, 0x17, 0x64, 0xFF);
+    }
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gSPSetGeometryMode(D_800D0510++, G_SHADE | G_SHADING_SMOOTH);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, 0, 1);
+    gDPSetTexturePersp(D_800D0510++, G_TP_PERSP);
+    switch (arg1) {
+    case 0:
+        mode = 1;
+        break;
+    case 1:
+        mode = 2;
+        break;
+    case 2:
+        mode = 3;
+        break;
+    }
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    func_8004D1FC(func_8004C990(0x1C1, mode));
+    gSPMatrix(D_800D0510++, (u32)mtx0 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)mtx1 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPVertex(D_800D0510++, (u32)D_88B05AF0 & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_88B010A0 end */
 
 extern Gfx *D_800D0510;
 extern s32 func_8000731C(void);
@@ -180,7 +240,30 @@ void func_88B01438(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4, u8 *arg5) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01824.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01A60.s")
+/* mkdraft:func_88B01A60 begin */
+extern u8 D_88B05B30[];
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern Gfx * D_800D0510;
+
+
+
+void func_88B01A60(u8 *tex, s32 left, s32 top, s32 width, s32 height) {
+    s32 x;
+    s32 y;
+
+    gSPDisplayList(D_800D0510++, D_88B05B30);
+    for (y = 0; y != 480; y += 32) {
+        for (x = 0; x != 640; x += 32, tex += 0x200) {
+            if (x + 31 >= left && x < left + width && y + 31 >= top && y < top + height) {
+                gDPLoadTextureBlock(D_800D0510++, tex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP,
+                                    G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                GfxRect_DrawTextured(x, y, 32, 32, 0, 0, 0x200, 0x200, 0);
+            }
+        }
+    }
+}
+/* mkdraft:func_88B01A60 end */
 
 extern u8 D_88B05B60[];
 extern s32 func_80001FF0(void);
