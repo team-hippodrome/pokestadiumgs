@@ -773,7 +773,33 @@ s32 func_82301B2C(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301C80.s")
+/* mkdraft:func_82301C80 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern f32 D_82305EE0;
+extern void func_82302D2C(s32 x, s32 y, s32 width, s32 height);
+
+
+s32 func_82301C80(s32 arg0, u8 *arg1) {
+    s32 height;
+    s32 trim;
+    float scaled;
+    if ((arg0 != 0) && (arg0 == 1)) {
+        // FAKE: re-evaluates the product the sum below uses. The duplicate expression makes
+        // the comparison read $f0 and the sum read $f2; one product shared by both scores 35.
+        scaled = (f32) *((s16 *) (arg1 + 0xE)) * D_82305EE0;
+        height = (s32)(((f32) *((s16 *) (arg1 + 0xE)) * D_82305EE0) + ((scaled > 0.0f) ? 0.5f : -0.5f));
+        // Assigned before the display-list writes so IDO gives the quotient $t2 and puts
+        // `addu at,t2,zero` in the bgez delay slot; the division written inside the call
+        // scores 2227.
+        trim = (*((s16 *) (arg1 + 0xE)) - height) / 2;
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+        func_82302D2C(*((s16 *) (arg1 + 8)), *((s16 *) (arg1 + 0xA)) + trim, *((s16 *) (arg1 + 0xC)), height);
+    }
+    return 0;
+}
+/* mkdraft:func_82301C80 end */
 
 extern s32 D_82305EA4;
 s32 func_82301D78(s32 arg0, s32 arg1) {
