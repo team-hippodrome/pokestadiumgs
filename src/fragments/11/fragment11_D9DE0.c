@@ -1033,7 +1033,41 @@ void func_81607834(u16 arg0, u16 arg1, u16 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816078C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607B1C.s")
+/* mkdraft:func_81607B1C begin */
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern void func_816083A4(void);
+extern u32 D_800D0510;
+
+// Draws a screen-space gradient quad of four vertices: allocates the vertices,
+// writes the two corners' positions and the two per-corner colors, then emits
+// the 1-cycle prim-color pipeline plus the two-triangle display list that
+// references them. A negative width or height aborts after the allocation.
+
+
+void func_81607B1C(s32 x, s32 y, s32 width, s32 height, f32 alpha, u8 *color1, u8 *color2) {
+    Vtx *vertex;
+    s32 pad; // FAKE: unused; IDO reserves a stack home for every declared local, which moves the three corner temporaries from 0x38/0x3c/0x40 to 0x3c/0x40/0x44 and the frame from 0x68 to 0x70 bytes; diff score 170 without it.
+
+    vertex = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    if ((height < 0) || (width < 0)) {
+        return;
+    }
+    func_816083A4();
+    Gfx_SetVertexAttributes(&vertex[0], (s16)x, (s16)y, -1, 0, 0, color1[0], color1[1], color1[2], 255);
+    Gfx_SetVertexAttributes(&vertex[1], (s16)(x + width), (s16)y, -1, 0, 0, color1[0], color1[1], color1[2], 255);
+    Gfx_SetVertexAttributes(&vertex[2], (s16)x, (s16)(y + height), -1, 0, 0, color2[0], color2[1], color2[2], 255);
+    Gfx_SetVertexAttributes(&vertex[3], (s16)(x + width), (s16)(y + height), -1, 0, 0, color2[0], color2[1], color2[2], 255);
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_1CYCLE);
+    gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+    gSPClearGeometryMode((*(Gfx **)&D_800D0510)++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x71FEE3, 0x44FE793C);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x0F0A4000, 0);
+    gSPVertex((*(Gfx **)&D_800D0510)++, (u32)vertex & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles((*(Gfx **)&D_800D0510)++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_81607B1C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607DB0.s")
 
