@@ -682,7 +682,56 @@ void func_82301DA0(s32 x, s32 y, s32 width, s32 height) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301EF0.s")
+/* mkdraft:func_82301EF0 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094E78[];
+extern void func_82302D2C(s32 x, s32 y, s32 width, s32 height);
+extern f32 D_82305EE0;
+extern s32 D_82305EA4;
+
+typedef struct {
+    u8 r, g, b, a;
+} C4;
+
+typedef struct {
+    u8 pad[0x28];
+    C4 env;
+    C4 prim;
+} Node19;
+
+
+
+s32 func_82301EF0(s32 arg0, s16 *arg1) {
+    s32 pad0; // FAKE: with pad1, enlarges the stack frame to 0x30; score 10 without them.
+    s32 pad1;
+    s32 height;
+    s32 trim;
+    Node19 *color;
+    float scaled;
+    s32 *state;
+
+    if ((arg0 != 0) && (arg0 == 1)) {
+        // FAKE: separate product for the rounding test; without it IDO swaps $f0/$f2 (score 35).
+        scaled = (f32)arg1[7] * D_82305EE0;
+        height = (s32)(((f32)arg1[7] * D_82305EE0) + ((scaled > 0.0f) ? 0.5f : -0.5f));
+        trim = (arg1[7] - height) / 2;
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetCombine(D_800D0510++, 0xFC50FEA1, 0x33FDFAFD);
+        state = &D_82305EA4;
+        if (*state != 0) {
+            color = (Node19 *)*state;
+            gDPSetEnvColor(D_800D0510++, color->env.r, color->env.g, color->env.b, color->env.a);
+            gDPSetPrimColor(D_800D0510++, 0, 0, color->prim.r, color->prim.g, color->prim.b, 0xFF);
+        }
+        func_82301DA0(arg1[4], arg1[5] + trim, arg1[6], height);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+        func_82302D2C(arg1[4], arg1[5] + trim, arg1[6], height);
+    }
+    return 0;
+}
+/* mkdraft:func_82301EF0 end */
 
 extern u8 D_82305A74[];
 extern u8 D_82305D70[];
