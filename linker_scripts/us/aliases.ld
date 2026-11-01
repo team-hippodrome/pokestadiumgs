@@ -1514,3 +1514,5 @@ func_86805DB8 = Fragment56_ResetMovingModels;
 func_86800D5C = Fragment56_InitStateRecords;
 
 func_86801160 = Fragment56_UpdateBallisticModels;
+
+func_86806180 = Fragment56_UpdateMovingModels;
