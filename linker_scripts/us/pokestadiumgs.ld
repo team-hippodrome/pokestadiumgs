@@ -2529,7 +2529,7 @@ SECTIONS
         build/src/fragments/31/fragment31_19D160.o(.rodata);
         build/src/fragments/31/fragment31_19DCA0.o(.rodata);
         build/src/fragments/31/fragment31_19DFC0.o(.rodata);
-        build/asm/us/data/1A76A0.rodata.o(.rodata);
+        build/asm/us/data/1A7770.rodata.o(.rodata);
         build/src/fragments/31/fragment31_19E800.o(.rodata);
         build/src/fragments/31/fragment31_19F570.o(.rodata);
         build/src/fragments/31/fragment31_1A03C0.o(.rodata);

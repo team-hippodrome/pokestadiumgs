@@ -42,15 +42,13 @@ void func_8822AE04(void) {
 // RGB text colors; the format strings push them as <COL1,PUSH,r,g,b,255>.
 typedef struct { u8 r, g, b; } unk_D_88233700;
 extern unk_D_88233700 D_88233700[];
-extern char D_88234420[]; // "<COL1,PUSH,%d,%d,%d,255>%s<COL1,POP>"
-extern char D_88234448[]; // "<COL1,PUSH,%d,%d,%d,255>%s %d<COL1,POP>"
 char *func_8822AE2C(char *arg0, u8 arg1, u8 arg2) {
     unk_D_88233700 *color = &D_88233700[arg1];
 
     if (arg1 == 0) {
-        sprintf(arg0, D_88234420, color->r, color->g, color->b, func_8004C874(37, 9));
+        sprintf(arg0, "<COL1,PUSH,%d,%d,%d,255>%s<COL1,POP>", color->r, color->g, color->b, func_8004C874(37, 9));
     } else {
-        sprintf(arg0, D_88234448, color->r, color->g, color->b, func_8004C874(37, arg1 + 9), arg2 + 1);
+        sprintf(arg0, "<COL1,PUSH,%d,%d,%d,255>%s %d<COL1,POP>", color->r, color->g, color->b, func_8004C874(37, arg1 + 9), arg2 + 1);
     }
     return arg0;
 }

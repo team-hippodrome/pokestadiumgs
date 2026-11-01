@@ -974,7 +974,8 @@
     - [0x1A7620, .rodata, fragments/31/fragment31_1965A0] # labels in this range are referenced only by this file
     - [0x1A7630, .rodata, fragments/31/fragment31_197640] # labels in this range are referenced only by this file
     - [0x1A7660, .rodata, fragments/31/fragment31_19C390] # labels in this range are referenced only by this file
-    - [0x1A76A0, rodata]
+    - [0x1A76A0, .rodata, fragments/31/fragment31_19DFC0] # Strings, jump tables.
+    - [0x1A7770, rodata]
     - [0x1A7780, .rodata, fragments/31/fragment31_19E800] # labels in this range are referenced only by this file
     - [0x1A77B0, .rodata, fragments/31/fragment31_19F570] # labels in this range are referenced only by this file
     - [0x1A77C0, rodata]
