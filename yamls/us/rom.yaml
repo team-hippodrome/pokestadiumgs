@@ -1193,6 +1193,8 @@
     - [0x217930, rodata,  fragments/44/fragment44_rodata_tail]
     - [0x217A40, .rodata, fragments/44/fragment44_2030B0] # Jump tables.
     - [0x217AF0, rodata]
+    - [0x217DA0, .rodata, fragments/44/fragment44_205C30] # Jump tables, float literals.
+    - [0x217E20, rodata]
     - [0x2180D0, .rodata, fragments/44/fragment44_20A610] # Jump tables, float literals.
     - [0x218230, .rodata, fragments/44/fragment44_20D3A0] # Jump tables.
     - [0x218360, .rodata, fragments/44/fragment44_20F140] # Strings, jump tables, float literals.

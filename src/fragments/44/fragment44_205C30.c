@@ -2,6 +2,12 @@
 
 
 #ifdef VERSION_US
+// The 0.01f step limit at the head of this file's .rodata. It is defined as a
+// const array (IDO places const scalars in .data, arrays in .rodata) because
+// spelling it as a literal in func_8AF18190 changes that function's register
+// scheduling; the array read compiles to the same lwc1 from 0x8AF29B30.
+const f32 D_8AF29B30[1] = {0.01f};
+
 /* mkdraft:func_8AF179C0 begin */
 extern void func_800504BC(s16 *);
 extern void func_8AC015B0(s16, s16, s32, s32, s16);
@@ -183,11 +189,10 @@ void func_8AF1812C(void) {
 extern u8 *D_8AF34F78;
 extern u8 *D_8AF34F7C;
 extern f32 D_8AF29B2C;
-extern f32 D_8AF29B30;
 
 void func_8AF18190(void) {
     f32 first = D_8AF29B2C;
-    f32 second = D_8AF29B30;
+    f32 second = D_8AF29B30[0];
     *(f32 *)(D_8AF34F78 + 0x40) = first;
     *(f32 *)(D_8AF34F78 + 0x44) = first;
     *(f32 *)(D_8AF34F7C + 0x40) = second;
