@@ -124,7 +124,43 @@ s32 func_87F0D96C(s32 arg0, unk_func_87F0D96C *arg1) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0DA08.s")
+/* mkdraft:func_87F0DA08 begin */
+extern Gfx *D_800D0510;
+extern unk_func_87F0D96C *D_8009491C;
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+// Color byte view of unk_3C, whose four bytes gDPSetEnvColor takes as separate
+// r/g/b/a arguments.
+// FAKE: the named-member struct cast; diff score 1080 with the union's rgba[] array.
+typedef struct { u8 r, g, b, a; } Color87F0DA08;
+
+// Emits the RDP combine and env-color packets, segment 0xF from the main-pool object at
+// 0x174, and the display list at node->unk_08 + 0x24, then calls func_8003CD84. Runs
+// only when arg0 is 5 and bit 13 of the word at node->unk_08 + node->unk_00 * 0x18
+// + 0x21A4 is set.
+
+
+void func_87F0DA08(s32 arg0, s32 arg1) {
+    unk_func_87F0D96C *state;
+    unk_func_87F0D96C_014 *node;
+
+    state = D_8009491C;
+    if (arg0 != 5) {
+        return;
+    }
+    node = state->unk_14;
+    // FAKE: the shift pair is how the bit 13 test keeps the block's temporaries in the
+    // target's registers; diff score 260 with `<< 18 < 0`.
+    if (((*(s32 *)(*(u8 **)node->unk_08 + node->unk_00 * 0x18 + 0x21A4) << 18) >> 31) != 0) {
+        gDPSetCombine(D_800D0510++, 0xFCFF9BFF, 0xFFFEFE38);
+        gDPSetEnvColor(D_800D0510++, ((Color87F0DA08 *)&state->unk_3C)->r, ((Color87F0DA08 *)&state->unk_3C)->g, ((Color87F0DA08 *)&state->unk_3C)->b, ((Color87F0DA08 *)&state->unk_3C)->a);
+        gSPSegment(D_800D0510++, 0xF, func_8004CA60((u8 *)func_8004C990(0x174, 0)));
+        gSPDisplayList(D_800D0510++, *(void **)(node->unk_08 + 0x24));
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_87F0DA08 end */
 
 extern void *func_87F025B8(void *, void *);
 extern void func_8003F1DC(void *);

@@ -112,5 +112,64 @@ u8 *func_87F03F38(u8 *arg0, s32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, s3
     }
     return obj;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326820/func_87F04018.s")
+/* mkdraft:func_87F04018 begin */
+typedef struct unk_func_87F04018_color {
+    u8 r, g, b, a;
+} unk_func_87F04018_color;
+
+typedef struct unk_func_87F04018 {
+    f32 unk_00;
+    s32 unk_04;
+    void *unk_08;
+    u8 unk_0C;
+    u8 unk_0D;
+    u16 unk_0E;
+    unk_func_87F04018_color environment;
+    f32 unk_14;
+    f32 unk_18;
+    u16 unk_1C;
+    u8 unk_1E[2];
+} unk_func_87F04018;
+
+extern void *D_8009491C;
+extern Gfx *D_800D0510;
+extern u8 D_87F0F670[];
+extern Gfx D_87F0FA40[];
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+
+
+void func_87F04018(s32 arg0, s32 arg1) {
+    // Declaration order fixes IDO's stack slots: scale spills to 0x18(sp) and state to 0x24(sp).
+    void *context;
+    void *node;
+    unk_func_87F04018 *state;
+    s32 index;
+    u8 *pixels;
+    f32 scale;
+
+    if (arg0 == 5) {
+        context = D_8009491C;
+        node = *(void **)((u8 *)context + 20);
+        state = *(unk_func_87F04018 **)((u8 *)node + 32);
+        scale = 2.0f * (1.0f - (f32)(*(s32 *)((u8 *)node + 28)) / (f32)state->unk_04);
+        if (scale > 1.0f) {
+            scale = 1.0f;
+        }
+        // High byte of the u16 at state+0x1C selects the byte D_87F0F670 passes to func_8004C990.
+        index = (state->unk_1C >> 8) % 8;
+        pixels = func_8004CA60((u8 *)func_8004C990(159, D_87F0F670[index]));
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, state->environment.r, state->environment.g,
+                       state->environment.b, (u32)((f32)state->environment.a * scale));
+        gDPSetPrimColor(D_800D0510++, 0, 0, state->environment.r, state->environment.g,
+                        state->environment.b, 0xFF);
+        gSPSegment(D_800D0510++, 0xF, pixels);
+        gSPDisplayList(D_800D0510++, D_87F0FA40);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_87F04018 end */
 #endif

@@ -2,7 +2,22 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06430.s")
+/* mkdraft:func_87F06430 begin */
+extern f32 D_80087E50[];
+extern f32 D_80088E50[0x1000];
+
+// Writes a three-component vector to arg0; callers copy the components in order into
+// consecutive f64 fields of a position. x varies with the row index arg1, y is constant
+// and z is zero. Both x and y are scaled by the sine/cosine ratio (a tangent) at table
+// element 113, byte offset 0x1C4.
+
+
+void func_87F06430(f32 *arg0, s32 arg1) {
+    arg0[0] = D_80087E50[113] / D_80088E50[113] * 1000.0f * 1.3333334f * (2.0f * ((46.5f + (f32) arg1 * 39.0f) / 320.0f) - 1.0f);
+    arg0[1] = D_80087E50[113] / D_80088E50[113] * 1000.0f * 0.45416665f;
+    arg0[2] = 0.0f;
+}
+/* mkdraft:func_87F06430 end */
 
 s32 func_87F064DC(s32 arg0, s32 arg1) {
     return 1;
@@ -161,7 +176,42 @@ void func_87F06734(s32 a0, u8 *out_base, u8 *src_base)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F0785C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F07FE8.s")
+/* mkdraft:func_87F07FE8 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094DE0[];
+extern u8 *D_87F15B88;
+extern void func_8000766C(void **, s32, s32, s32, s32);
+extern void func_800503A4(s32);
+extern void func_8003C6B8(s32);
+extern void func_87F0785C(void *);
+
+
+
+void func_87F07FE8(u8 *arg0) {
+    D_87F15B88 = arg0;
+    *(s32 *)(D_87F15B88 + 0x28) = *(s32 *)(D_87F15B88 + 0x28) + 1;
+    func_8000766C((void **)&D_800D0510, 0, 0, 0x140, 0xF0);
+    func_800503A4(*(s32 *)(arg0 + 4));
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0x00010001);
+    gDPFillRectangle(D_800D0510++, 21, 15, 298, 15);
+    gDPFillRectangle(D_800D0510++, 21, 222, 298, 222);
+    gDPFillRectangle(D_800D0510++, 21, 15, 21, 222);
+    gDPFillRectangle(D_800D0510++, 298, 15, 298, 222);
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0x9CE79CE7);
+    // The two top-border fills share one source line. IDO's as1 breaks scheduling
+    // ties by .loc line: on separate lines the shared 0xF64A4374 lui (also stored
+    // by the 297,16 rectangle below) is emitted before the 0x58374 lui; one line
+    // reproduces retail's order.
+    gDPFillRectangle(D_800D0510++, 22, 16, 297, 16); gDPFillRectangle(D_800D0510++, 22, 221, 297, 221);
+    gDPFillRectangle(D_800D0510++, 22, 16, 22, 221);
+    gDPFillRectangle(D_800D0510++, 297, 16, 297, 221);
+    func_8003C6B8(*(s32 *)(arg0 + 0xC));
+    func_87F0785C(arg0);
+}
+/* mkdraft:func_87F07FE8 end */
 
 s32 func_87F08208(u8 *arg0) {
     s32 result = 0;
