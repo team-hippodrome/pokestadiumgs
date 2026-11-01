@@ -188,7 +188,32 @@ void func_88504EB8(void) {
     Util_Free(D_885229A0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88504EE8.s")
+/* mkdraft:func_88504EE8 begin */
+extern u8 D_88000E4C;
+extern void func_880048D4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, s32 arg8, void (*arg9)(void), void (*arg10)(void), void *arg11, void (*arg12)(void), s32 arg13, s32 arg14, s32 arg15);
+
+extern void *D_885229A0;
+extern u8 D_8800ED9C[];
+extern u8 D_8800EDE8[];
+
+// Create the two secondary trade-machine panels in func_880048D4 node slots 1 and 2, then give
+// their rects their retail sizes: slot 1 is 0x1C7 x 0xA7 at (0x5E, 0xDA) and slot 2 is
+// 0x1CC x 0x31 at (0x5B, 0x18F). D_885229A0[slot] holds the 0x4C-byte node; its width and
+// height sit at +0x10/+0x12 (F29Rect at node + 4 in fragment29).
+//@src/fragments/29/fragment29_168330.c
+
+
+void func_88504EE8(void) {
+    func_880048D4(0, 3, 0x5E, 0xDA, 0, 1, 0xE6, 0xFF, 0xF0, (void (*)(void)) ((u32) &D_88000E4C), (void (*)(void)) ((u32) &D_88000E4C), func_88504EAC, (void (*)(void)) ((u32) &D_88000E4C), 0, 0, 1); // FAKE: keeping the node callback address as a u32 expression makes IDO spill it at 0x4C; spelling it as a plain address rematerializes the constant (diff 2001).
+    *(void **)((u8 *)D_885229A0 + 4) = &D_8800ED9C;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 4) + 0x10) = 0x1C7;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 4) + 0x12) = 0xA7;
+    func_880048D4(0, 3, 0x5B, 0x18F, 0, 1, 0xE6, 0xFF, 0xF0, (void (*)(void)) ((u32) &D_88000E4C), (void (*)(void)) ((u32) &D_88000E4C), (void *) ((u32) &D_88000E4C), (void (*)(void)) ((u32) &D_88000E4C), 0, 0, 2);
+    *(void **)((u8 *)D_885229A0 + 8) = &D_8800EDE8;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 8) + 0x10) = 0x1CC;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 8) + 0x12) = 0x31;
+}
+/* mkdraft:func_88504EE8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88505038.s")
 
