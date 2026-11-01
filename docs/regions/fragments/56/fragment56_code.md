@@ -171,3 +171,27 @@ syntax check and full US retail ROM gate on `505f5bc3`, MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Function naming preserves all module
 sections, function extents, and relocations in normal and +20-leading-line
 controls. The original function name remains a linker alias.
+
+## 2026-11-01 — model-group initializer accepted
+
+`Fragment56_InitModelGroups` (formerly `func_86805AA4`, 484 bytes) resets
+three model pools per group (40, 40, and20 entries), resets the corresponding
+base model, initializes a model with its asset and animation0, chooses a random
+starting frame modulo24, and initializes the group's position vector. It sets
+all three scale components to0.045f and the vertical position to56.0f before
+clearing the shared model context and calling `func_86800D5C`.
+
+Direct indexed model accesses allow the compiler to update induction pointers
+before the final transform stores, reproducing the original negative offsets.
+A separate model-pointer local introduced an extra register copy and delayed
+those stores. Live `scale` and `height` locals reproduce the original136-byte
+frame and spill homes while supplying the values written to each model; no
+unused locals or padding are required. The three loop comparisons preserve
+the original inequality/equality forms.
+
+Candidate4 of `fragment56-model-group-values8` passed the canonical normal
+host syntax check and full US retail ROM gate on `dbb8e9a3`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Readable index names, address expressions,
+and function naming preserve all module sections, function extents, and
+relocations in normal and +20-leading-line controls. The old function name
+remains a linker alias.

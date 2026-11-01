@@ -432,7 +432,49 @@ s32 func_868040EC(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868058C0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86805AA4.s")
+extern u8 D_8681EBF8[];
+extern u8 D_86809208[];
+extern u8 D_86817308[];
+extern u8 D_86808C8C[];
+extern void *D_8682F308;
+extern void func_87F06430(f32 *, s32);
+extern void func_819006A0(void *);
+extern void func_86800D5C(void);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F210(void *, s32);
+extern u8 D_868086C8[];
+extern u8 D_86808C68[];
+extern s32 D_8682CD00[];
+void Fragment56_InitModelGroups(void) {
+    s32 group_index;
+    s32 model_index;
+    f32 scale = 0.045f;
+    f32 height = 56.0f;
+    for (group_index = 0; group_index < 4; group_index++) {
+        for (model_index = 0; model_index != 40; model_index++) {
+            func_8003F1DC(D_8681EBF8 + group_index * 0x3840 + model_index * 0x168);
+        }
+        for (model_index = 0; model_index < 40; model_index++) {
+            func_8003F1DC(D_86809208 + group_index * 0x3840 + model_index * 0x168);
+        }
+        for (model_index = 0; model_index != 20; model_index++) {
+            func_8003F1DC(D_86817308 + group_index * 0x1C20 + model_index * 0x168);
+        }
+        func_8003F1DC(D_868086C8 + group_index * 0x168);
+        func_8003F114(D_86808C68 + group_index * 0x168, 0, -1, (void *)D_8682CD00[group_index]);
+        func_8003F210(D_86808C68 + group_index * 0x168, 0);
+        ModelAnim_SetFrame(D_86808C68 + group_index * 0x168, (s16)(guRandom() % 24));
+        func_87F06430((f32 *)(D_86808C8C + group_index * 0x168), group_index);
+        *(f32 *)(D_86808C68 + group_index * 0x168 + 0x38) = scale;
+        *(f32 *)(D_86808C68 + group_index * 0x168 + 0x34) = scale;
+        *(f32 *)(D_86808C68 + group_index * 0x168 + 0x30) = scale;
+        *(f32 *)(D_86808C68 + group_index * 0x168 + 0x28) = height;
+    }
+    func_819006A0(D_8682F308);
+    func_86800D5C();
+}
 
 extern s32 D_8682F2A8;
 extern s32 func_87F02104(void);
