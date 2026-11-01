@@ -349,7 +349,65 @@ void func_83302D8C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_8330309C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83303220.s")
+/* mkdraft:func_83303220 begin */
+extern void *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094EC0[];
+extern u8 D_80094F50[];
+extern s32 D_833091F8;
+extern s32 D_833091FC;
+extern s32 D_83309200;
+extern u8 *func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_80045DB4(s32, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+// Emits the translucent full-screen pass for the "whited out" fade: two sprite
+// images (0x137, tiles 1 and 0), a fixed pstate, then two gDPSetTileSize commands
+// whose width/height follow D_833091F8. The second image's height argument re-reads
+// D_833091FC through a second spelling so the load is not CSE'd across the two
+// func_80045DB4 calls (retail reloads it for call 1's last two variadic slots).
+// D_800D0510 holds the display-list cursor as `void *` in this fragment, so every
+// gSP/gDP command advances it through the (Gfx **) cast.
+//
+// karodo: `if (D_83309200) {}` is a dead empty conditional. The compare never reaches
+// the object (the linked body is 209 instructions either way); it only refills uopt's
+// expression-temp free list before the `pos` block, which moves `pos` from v0 to t4
+// and `-pos` from a2 to a1. Without that line the tail's 8 instructions still differ
+// in register names only and the file scores 55.
+
+
+void func_83303220(void) {
+    s32 sp6C;
+    s32 sp68;
+
+    sp6C = (s32) func_8004CA60(func_8004C990(0x137, 1));
+    sp68 = (s32) func_8004CA60(func_8004C990(0x137, 0));
+
+    gSPDisplayList((*(Gfx **) &D_800D0510)++, D_80094E38);
+    gSPDisplayList((*(Gfx **) &D_800D0510)++, D_80094EC0);
+    gDPPipeSync((*(Gfx **) &D_800D0510)++);
+    gDPSetTextureFilter((*(Gfx **) &D_800D0510)++, G_TF_BILERP);
+    gDPSetRenderMode((*(Gfx **) &D_800D0510)++, G_RM_PASS, G_RM_AA_XLU_SURF2);
+    gDPSetEnvColor((*(Gfx **) &D_800D0510)++, 0x64, 0xFF, 0x64, 0x96);
+    gDPSetPrimColor((*(Gfx **) &D_800D0510)++, 0, 0xC8, 0xFF, 0x37, 0x96, 0xFF);
+    gDPSetCombine((*(Gfx **) &D_800D0510)++, 0x772C60, 0x3514E37F);
+
+    D_833091F8++;
+
+    func_80045DB4(sp6C, 0, 0, 4, 0, 0x40, 0x40, 1, 0, 0, 0, 6, 6, D_833091FC, *(u32 *) &D_833091FC);
+    func_80045DB4(sp68, 0x100, 1, 4, 0, 0x40, 0x40, 1, 0, 0, 0, 6, 6, D_83309200, D_83309200);
+
+    {
+        s32 pos = D_833091F8;
+        if (D_83309200) {} // karodo: the compare never reaches the object; the D_83309200 reference only shifts uopt's register walk
+        gDPTileSync((*(Gfx **) &D_800D0510)++);
+        gDPSetTileSize((*(Gfx **) &D_800D0510)++, 0, pos * 2, -pos, 0xFD, 0xF9);
+        gDPSetTileSize((*(Gfx **) &D_800D0510)++, 1, pos * -2, -pos, 0xFB, 0xF9);
+    }
+    gSPTextureRectangle((*(Gfx **) &D_800D0510)++, 0, 0, 0x500, 0x3C0, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+    gSPDisplayList((*(Gfx **) &D_800D0510)++, D_80094F50);
+}
+/* mkdraft:func_83303220 end */
 
 extern void *D_800D0510;
 extern s32 D_833090AC;
