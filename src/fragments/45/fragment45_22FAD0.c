@@ -2,8 +2,6 @@
 
 
 #ifdef VERSION_US
-// Pointed to by D_8AB112BC in .data; it opens this file's .rodata.
-const char D_8AB11A80[] = "\n";
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0A950.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0B24C.s")

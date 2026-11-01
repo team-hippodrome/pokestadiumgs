@@ -323,11 +323,3 @@ D_8AF29EB4 = 0x8AF29EB4; // type:f32 size:0x10C force_migration:true
 // (asm), so the migration must leave it as C named data instead of moving
 // its bytes into func_8310065C.s.
 D_831038E0 = 0x831038E0; // type:u8 size:0x28 force_not_migration:true
-// Labels whose last asm referencer became C in the night fleet's matches
-// (fragment45 and fragment79 regions): the extraction only auto-labels
-// addresses that .s files reference, so these need explicit entries or
-// they vanish from the data segments and fail at link.
-D_8AB11A00 = 0x8AB11A00; // size:0x8
-D_8AB11A04 = 0x8AB11A04; // size:0x4
-D_84189C30 = 0x84189C30; // size:0x10
-D_84189C38 = 0x84189C38; // size:0x4
