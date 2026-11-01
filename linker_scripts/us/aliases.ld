@@ -1524,3 +1524,5 @@ func_80050878 = GbTower_LoadPartyIcons;
 func_8004FC58 = UiImageNode_DrawUnscaled;
 
 func_8004FA6C = UiImageNode_SetRenderState;
+
+func_8004FE00 = UiImageNode_DrawTiled;
