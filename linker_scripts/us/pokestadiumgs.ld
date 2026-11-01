@@ -3305,6 +3305,7 @@ SECTIONS
         build/asm/us/data/217360.rodata.o(.rodata);
         build/src/fragments/44/fragment44_1FD260.o(.rodata);
         build/src/fragments/44/fragment44_201DA0.o(.rodata);
+        build/asm/us/data/fragments/44/fragment44_rodata_tail.rodata.o(.rodata);
         build/src/fragments/44/fragment44_2030B0.o(.rodata);
         build/src/fragments/44/fragment44_204950.o(.rodata);
         build/src/fragments/44/fragment44_205C30.o(.rodata);
@@ -3314,10 +3315,10 @@ SECTIONS
         build/src/fragments/44/fragment44_20BDB0.o(.rodata);
         build/src/fragments/44/fragment44_20C560.o(.rodata);
         build/src/fragments/44/fragment44_20CBF0.o(.rodata);
+        build/asm/us/data/217AF0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20D3A0.o(.rodata);
         build/src/fragments/44/fragment44_20EBC0.o(.rodata);
         build/src/fragments/44/fragment44_20F140.o(.rodata);
-        build/asm/us/data/fragments/44/fragment44_rodata_tail.rodata.o(.rodata);
         build/src/fragments/44/fragment44_212740.o(.rodata);
         build/asm/us/data/218800.rodata.o(.rodata);
         fragment44_RODATA_END = .;
