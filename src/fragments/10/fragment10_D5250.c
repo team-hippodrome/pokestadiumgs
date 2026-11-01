@@ -188,7 +188,34 @@ s32 func_828016BC(u8 *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801718.s")
+/* mkdraft:func_82801718 begin */
+
+
+s32 func_82801718(u8 *arg0, s32 arg1, s32 arg2) {
+    s32 result;
+    s32 index;
+
+    result = arg1;
+    index = arg1;
+    if (*(s32 *)(arg0 + 0x88) != 0) {
+        do {
+            index += arg2;
+            if (index < 0) {
+                break;
+            }
+            if (index >= 4) {
+                break;
+            }
+            if (*(u8 *)((u8 *)arg0 + index + 0x18) == 0) {
+                break;
+            }
+        } while (1);
+    } else {
+        index = arg1 + arg2;
+    }
+    return (index >= 0 && index < 4) ? index : result;
+}
+/* mkdraft:func_82801718 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801774.s")
 
