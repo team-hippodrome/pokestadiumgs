@@ -45,7 +45,55 @@ void func_88001C6C(void *arg0, u16 arg1, u8 arg2, s16 arg3, u8 arg4, s16 arg5, s
     func_88001C24(arg0, arg1, arg2);
     func_88001900();
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_167940/func_88001D0C.s")
+/* mkdraft:func_88001D0C begin */
+
+
+void func_88001D0C(void *arg0) {
+    f32 temp_fv0;
+    f32 var_fv1;
+    s16 temp_a2;
+    s16 temp_a2_2;
+    s16 pos;
+
+    if (*(s16 *)((u8 *)arg0 + 0x22) < 0) {
+        do {
+            *(s16 *)((u8 *)arg0 + 0x22) = *(u8 *)((u8 *)arg0 + 0xF) + *(s16 *)((u8 *)arg0 + 0x22);
+            *(s16 *)((u8 *)arg0 + 0xA) = *(s16 *)((u8 *)arg0 + 0xA) - 1;
+        } while (*(s16 *)((u8 *)arg0 + 0x22) < 0);
+    }
+    if (*(s16 *)((u8 *)arg0 + 0xA) < 0) {
+        *(s16 *)((u8 *)arg0 + 0x10) = *(s16 *)((u8 *)arg0 + 0x22) + (*(s16 *)((u8 *)arg0 + 0x10) - (*(u8 *)((u8 *)arg0 + 0xF) * -*(s16 *)((u8 *)arg0 + 0xA)));
+        *(s16 *)((u8 *)arg0 + 0xA) = 0;
+        *(s16 *)((u8 *)arg0 + 0x22) = 0;
+    }
+    while (*(s16 *)((u8 *)arg0 + 0x22) >= *(u8 *)((u8 *)arg0 + 0xF)) {
+        *(s16 *)((u8 *)arg0 + 0x22) = *(s16 *)((u8 *)arg0 + 0x22) - *(u8 *)((u8 *)arg0 + 0xF);
+        *(s16 *)((u8 *)arg0 + 0xA) = *(s16 *)((u8 *)arg0 + 0xA) + 1;
+    }
+    temp_a2 = (s16) (*(u8 *)((u8 *)arg0 + 0xE) + (*(s16 *)((u8 *)arg0 + 0xA) - *(u16 *)((u8 *)arg0 + 0xC)));
+    if (temp_a2 >= 0) {
+        *(s16 *)((u8 *)arg0 + 0x10) = *(s16 *)((u8 *)arg0 + 0x22) + (temp_a2 * *(u8 *)((u8 *)arg0 + 0xF) + *(s16 *)((u8 *)arg0 + 0x10));
+        *(s16 *)((u8 *)arg0 + 0xA) = *(u16 *)((u8 *)arg0 + 0xC) - *(u8 *)((u8 *)arg0 + 0xE);
+        *(s16 *)((u8 *)arg0 + 0x22) = 0;
+    }
+    if (*(s16 *)((u8 *)arg0 + 0x10) < *(s16 *)((u8 *)arg0 + 0x12)) {
+        *(s16 *)((u8 *)arg0 + 0x10) = *(s16 *)((u8 *)arg0 + 0x12);
+    } else {
+        temp_a2_2 = (s16) (*(u8 *)((u8 *)arg0 + 0xF) * (*(u8 *)((u8 *)arg0 + 0xE) - 1) + *(s16 *)((u8 *)arg0 + 0x12));
+        if (temp_a2_2 < *(s16 *)((u8 *)arg0 + 0x10)) {
+            *(s16 *)((u8 *)arg0 + 0x10) = temp_a2_2;
+        }
+    }
+    temp_fv0 = (f32) ((*(s16 *)((u8 *)arg0 + 0x10) - *(s16 *)((u8 *)arg0 + 0x12)) + *(s16 *)((u8 *)arg0 + 0x22)) / (f32) *(u8 *)((u8 *)arg0 + 0xF);
+    if (temp_fv0 > 0.0f) {
+        var_fv1 = 0.5f;
+    } else {
+        var_fv1 = -0.5f;
+    }
+    pos = *(s16 *)((u8 *)arg0 + 0xA);
+    *(s16 *)((u8 *)arg0 + 0x8) = (s16) ((s32) (var_fv1 + temp_fv0) + pos);
+}
+/* mkdraft:func_88001D0C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_167940/func_88001EBC.s")
 
