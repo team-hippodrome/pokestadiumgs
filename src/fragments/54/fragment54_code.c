@@ -99,7 +99,61 @@ void func_86600C70(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86600CC4.s")
+/* mkdraft:func_86600CC4 begin */
+extern s32 func_86600298();
+extern u8 D_8660A990[];
+extern s32 D_866066F4[];
+extern s32 D_86606724;
+extern s32 D_86606744;
+extern s32 D_8660674C;
+extern u8 D_86606788;
+extern s32 D_86606798;
+extern s32 D_86606ADC;
+extern s32 D_8660722C;
+
+
+
+void func_86600CC4(void)
+{
+  s32 i;
+  s32 value;
+  D_86606744 = 1;
+  value = guRandom() % 30;
+  value += 40;
+  if ((value / 2) == 0)
+  {
+    D_86606798 = D_8660722C + value;
+  }
+  else
+  {
+    D_86606798 = D_8660722C - (value / 5);
+  }
+  if ((*((s32 *) (((u8 *) (&D_86606788)) + 0x14))) < 10)
+  {
+    // FAKE: the unused 0 operand orders the D_86606724 load after the 0x94 load and before
+    // the addu, which is what the target does; without it the 0x10 load comes first and the
+    // loop's temporaries change; diff score 85.
+    D_8660674C = ((*((s32 *) (((u8 *) (&D_86606ADC)) + ((*((s32 *) (((u8 *) (&D_86606788)) + 0x94))) << 2)))) + (*((s32 *) (((u8 *) (&D_86606788)) + 0x10)))) - ((0, D_86606724));
+  }
+  else
+  {
+    D_8660674C = ((*((s32 *) (((u8 *) (&D_86606788)) + 0x10))) - D_86606724) - 5;
+  }
+  *((s32 *) (((u8 *) (&D_86606788)) + 0)) = 0;
+  for (i = 0; i != 4; i++)
+  {
+    if (D_866066F4[i] == 0)
+    {
+      continue;
+    }
+      *((s32 *) ((((u8 *) (&D_8660A990)) + (i * 0x58)) + 4)) = 0;
+      *((s32 *) ((((u8 *) (&D_8660A990)) + (i * 0x58)) + 0x14)) = 0;
+  }
+
+
+  func_86600298();
+}
+/* mkdraft:func_86600CC4 end */
 #endif
 
 #ifdef VERSION_US
