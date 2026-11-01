@@ -388,7 +388,93 @@ void func_82801F88(u8 *arg0, s32 arg1) {
 }
 /* mkdraft:func_82801F88 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_828020C4.s")
+/* mkdraft:func_828020C4 begin */
+extern f32 D_82802854;
+extern f32 D_82802858;
+extern f32 __sinf(f32);
+extern Gfx *D_800D0510;
+extern f32 func_816092FC(void);
+extern void func_82800620(s32, s32, f32);
+extern void func_82800984(s32, f32);
+extern void func_82800AE0(u8 *);
+
+// Per-frame animation tick for the four-slot record block in arg0.
+//
+// D_82802858 is a shared frame counter in units of D_82802854 (60.0f): it is
+// advanced by one tick (func_816092FC returns the frame delta) and wrapped back
+// by one period when it reaches the period boundary, then written back. The
+// phase is converted to an angle (2*pi * frame / 60.0f) and to a 0..1 value
+// (sin(angle) * 0.5f + 0.5f) before the per-slot dispatch, so the four slots
+// share one rounded sine.
+//
+// The slot type byte at arg0[0x18 + i] selects an animation mode through
+// jtbl_8280296C (asm/us/nonmatchings/fragments/10/fragment10_D5250/
+// func_828020C4.s: types 0..10 are in range; only 0, 4, 7, 8, 9 and 10 have a
+// case body). Type 0 passes mode 0 to func_82800620, the other five pass mode
+// 1; both then hand the slot's f32 at arg0[0x98 + i*4] to func_82800984 with
+// the slot index. func_82800AE0(record) runs after the fourth iteration.
+//
+// Two spellings below are load-bearing for IDO 7.1's register allocation, both
+// measured with the ROM gate, not chosen for style:
+//   * The frame write goes through `pf`, a separate pointer object, so the
+//     driver load at D_82802858 and this store each get their own `lui $at`
+//     address temp; the direct `D_82802858 = frame;` CSEs into one $v0 base.
+//   * The `do { } while (0);` after type 0's func_82800984 call (see FAKE).
+
+
+void func_828020C4(u8 *arg0)
+{
+  s32 i;
+  f32 frame;
+  f32 amplitude;
+  f32 sine;
+  u8 *record;
+  f32 new_var2;
+  f32 *pf = &D_82802858;
+  amplitude = func_816092FC();
+  frame = D_82802858;
+  frame += amplitude;
+  if (frame >= D_82802854)
+  {
+    frame -= D_82802854;
+  }
+  new_var2 = (6.2831855f * frame) / D_82802854;
+  *pf = frame;
+  sine = (__sinf(new_var2) * 0.5f) + 0.5f;
+  record = arg0;
+  gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT);
+  for (i = 0; i < 4; i++)
+  {
+    switch ((*((u8 *) (((u8 *) arg0) + (i + 0x18)))))
+    {
+      case 0:
+        func_82800620(i, 0, sine);
+        func_82800984(i, (*((f32 *) (((u8 *) arg0) + (i * 4) + 0x98))));
+        // FAKE: empty loop after the type-0 calls; see the report. Without it the
+        // block scores 80 with $s0/$s1 swapped in the loop body (14 lines).
+        do { } while (0);
+        break;
+
+      case 4:
+
+      case 7:
+
+      case 8:
+
+      case 9:
+
+      case 10:
+        func_82800620(i, 1, sine);
+        func_82800984(i, (*((f32 *) (((u8 *) arg0) + (i * 4) + 0x98))));
+        break;
+
+    }
+
+  }
+
+  func_82800AE0(record);
+}
+/* mkdraft:func_828020C4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82802224.s")
 
