@@ -1021,7 +1021,26 @@ void func_81607834(u16 arg0, u16 arg1, u16 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607DB0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81608044.s")
+/* mkdraft:func_81608044 begin */
+void func_81608044(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, s32 *arg5) {
+    Gfx *gfx;
+    f32 alpha;
+    f32 t;
+    t = 1.0f - arg4;
+    if (!t) {} // karodo: diff score 380 without this empty block.
+    alpha = t * t * t;
+    if ((arg3 >= 0) && (arg2 >= 0)) {
+        gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_2CYCLE);
+        gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+        gfx = (*(Gfx **)&D_800D0510)++;
+        gfx->words.w0 = 0xFB000000;
+        gfx->words.w1 = _SHIFTL((u32)((f32)(u32)((u8 *)arg5)[1] * alpha), 16, 8) | _SHIFTL((u32)((f32)(u32)((u8 *)arg5)[2] * alpha), 8, 8) | _SHIFTL((u32)((f32)(u32)((u8 *)arg5)[0] * alpha), 24, 8) | 0xFF;
+        gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x71FFFF, 0xFFFEFC38);
+        gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x0F0A4000, 0);
+        func_81602240(arg0, arg1, arg2, arg3, 0, 0, 1.0f, 1.0f);
+    }
+}
+/* mkdraft:func_81608044 end */
 
 extern s32 func_8000731C(void);
 extern void *Gfx_AllocDisplayList(s32);
