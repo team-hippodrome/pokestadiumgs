@@ -26,6 +26,17 @@ const s16 D_81407A1C[4][2] = { 339, 31, 339, 31, 221, 339, 221, 339 };
 const s16 D_81407A2C[4][2] = { 418, 31, 418, 31, 98, 371, 98, 371 };
 const s16 D_81407A3C[16] = { 82, -193, 640, 31, -261, 229, 300, 480, 640, 31, 640, 31, -261, 229, -261, 229 };
 const s16 D_81407A5C[8] = { 82, 31, 339, 31, 43, 229, 300, 229 };
+// Label-draw format strings that func_814057CC passes to func_800495BC/func_800495F8. Its
+// nonmatchings .s carried these bytes in its .rodata section; the definitions keep the
+// object's .rodata byte-identical now that the function is C.
+const char D_81407A6C[4] = "%d";
+const char D_81407A70[4] = "%d";
+const char D_81407A74[4] = "%d";
+const char D_81407A78[4] = "%d";
+const char D_81407A7C[4] = "%d";
+const char D_81407A80[4] = "%d";
+const char D_81407A84[4] = "%d";
+const char D_81407A88[8] = "%s%d";
 
 #ifdef VERSION_US
 f32 MathUtil_Random_ZeroOne();
@@ -1097,7 +1108,98 @@ void func_814054CC(u8 *arg0, void *arg1)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81405514.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814057CC.s")
+/* mkdraft:func_814057CC begin */
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void func_800495BC(s32 arg0, s32 arg1, const char *arg2, ...);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern void func_8004D998(s32 arg0, s32 arg1, u8 *arg2, s32 arg3, s32 arg4);
+extern void *func_80062CE0(u8 arg0);
+extern u8 func_80062D98(u8 arg0);
+extern s32 func_80063270(u8 arg0);
+extern u8 func_8006397C(u8 arg0);
+extern u8 func_800639C0(u8 arg0);
+extern void func_81602DA4(s32 arg0);
+extern void func_81603C84(s32 arg0, s32 arg1, s32 arg2);
+extern void func_8160877C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4);
+extern void func_81608890(s32 arg0, s32 arg1, u8 *arg2);
+
+extern const char D_81407A6C[4];
+extern const char D_81407A70[4];
+extern const char D_81407A74[4];
+extern const char D_81407A78[4];
+extern const char D_81407A7C[4];
+extern const char D_81407A80[4];
+extern const char D_81407A84[4];
+extern const char D_81407A88[8];
+
+// The y-coordinate sums put the constant before the index (`arg1 + 0x6A + i * 0x14`):
+// that add order emits `addu base,index`; with the index first, IDO commutes the
+// operands to `addu index,base`.
+
+
+void func_814057CC(s32 arg0, s32 arg1, u8 *arg2, u8 *arg3) {
+    s32 i;
+
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_800495F8(arg0 + 0xA, arg1 + 8, 0, (const char *)(arg2 + 0x34));
+    func_800496A4(4, 1);
+    func_800495BC(arg0 + 0x89, arg1 + 8, func_8004C874(0xD, 3));
+    func_800495BC(arg0 + 0x89, arg1 + 0x1B, func_8004C874(0xD, 4));
+    func_800495BC(arg0 + 0x89, arg1 + 0x2E, func_8004C874(0xD, 6));
+    func_800495BC(arg0 + 0x89, arg1 + 0x41, func_8004C874(0xD, 7));
+    func_800495BC(arg0 + 0x89, arg1 + 0x54, func_8004C874(0xD, 5));
+    func_800495F8(arg0 + 0xF7, arg1 + 8, 2, D_81407A6C, *(u16 *)(arg2 + 0x2A));
+    func_800495F8(arg0 + 0xF7, arg1 + 0x1B, 2, D_81407A70, *(u16 *)(arg2 + 0x2C));
+    func_800495F8(arg0 + 0xF7, arg1 + 0x2E, 2, D_81407A74, *(u16 *)(arg2 + 0x30));
+    func_800495F8(arg0 + 0xF7, arg1 + 0x41, 2, D_81407A78, *(u16 *)(arg2 + 0x32));
+    func_800495F8(arg0 + 0xF7, arg1 + 0x54, 2, D_81407A7C, *(u16 *)(arg2 + 0x2E));
+
+    i = 0;
+    for (; i < 4; i++) {
+        if (arg2[i + 2] <= 0)
+            break;
+        func_81602DA4(func_80062D98(arg2[i + 2]));
+        func_800495BC(arg0 + 0x6B, arg1 + 0x6A + i * 0x14, func_80062CE0(arg2[i + 2]));
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        func_800495F8(arg0 + 0xF7, arg1 + 0x6A + i * 0x14, 2, D_81407A80, arg2[i + 0x18] & 0x3F);
+    }
+    func_800495BC(arg0 + 0xA, arg1 + 0x68, func_8004C874(0xD, 0x12));
+    func_81602DA4(func_8006397C(arg2[0]));
+    func_800495BC(arg0 + 0x14, arg1 + 0x7C, func_80063270(func_8006397C(arg2[0])));
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    if (func_8006397C(arg2[0]) != func_800639C0(arg2[0])) {
+        func_800495BC(arg0 + 0xA, arg1 + 0x90, func_8004C874(0xD, 0x13));
+        func_81602DA4(func_800639C0(arg2[0]));
+        func_800495BC(arg0 + 0x14, arg1 + 0xA4, func_80063270(func_800639C0(arg2[0])));
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    if (arg2[1] > 0) {
+        func_8004972C(0xFF, 0xBE, 0, 0xFF);
+        func_800495BC(arg0 + 0xA, arg1 + 0x54, func_8004C874(8, arg2[1] - 1));
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    func_800495BC(arg0 + 0x34, arg1 + 0x34, func_8004C874(0xD, 2));
+    func_800495BC(arg0 + 0x54, arg1 + 0x34, D_81407A84, *(u16 *)(arg2 + 0x28));
+    func_800495BC(arg0 + 0x34, arg1 + 0x20, D_81407A88, func_8004C874(0xD, 0x15), arg2[0x1D]);
+    func_81608890(arg0 + 0x6E, arg1 + 0xC, arg2);
+    func_800499EC();
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (i = 0; i != 4; i++) {
+        if (arg2[i + 2] > 0)
+            func_81603C84(arg0 + 0x55, arg1 + 0x68 + i * 0x14, func_80062D98(arg2[i + 2]));
+    }
+    func_8004D998(arg0 + 0xA, arg1 + 0x1E, arg3, 0, 1);
+    func_8160877C(arg0 + 0xA, arg1 + 0x43, arg2[1], 1, 1.0f);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_814057CC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81405CC4.s")
 
