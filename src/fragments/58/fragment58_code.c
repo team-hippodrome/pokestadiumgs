@@ -112,7 +112,62 @@ s32 func_83400AFC(s32 arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400EA4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_8340135C.s")
+/* mkdraft:func_8340135C begin */
+extern f32 D_83403F18;
+
+// Moves the state's 0x08/0x0C position inward by the shared offset in D_83403F18: x by
+// the offset, the other axis by the offset scaled by unk14/unk10, with the applied
+// fraction of the half span in unk38. unk1C caches the offset's progress: -1 unstarted
+// (reset to 0 here), 0 in progress, 1 once the offset has clamped to half of unk10.
+// func_8340156C, the only caller, passes &D_83404888, so arg0 is a Fragment58State
+// (typedef earlier in src/fragments/58/fragment58_code.c); unk38 holds a float although
+// that struct declares its word s32.
+// D_83403F18 is initialised to .float 32 in asm/us/data/fragments/58/fragment58_data.data.s
+
+
+void func_8340135C(Fragment58State *arg0) {
+    f32 *offset_accum = &D_83403F18;
+    f32 half_span;
+    f32 offset;
+    s32 new_x;
+    s32 x;
+    s32 span;
+    f32 ratio;
+    s32 state;
+    s32 stateClamped;
+
+    stateClamped = 1;
+    state = arg0->unk1C;
+    if (state == -1) {
+        // FAKE: the four writes must share one statement expression; as separate
+        // statements the reset schedules differently (diff score 60).
+        arg0->unk1C = state = 0, offset = 8.0f, *offset_accum = offset;
+        // FAKE: empty test that emits nothing; its extra use of offset in uopt's FPR
+        // walk is what keeps the accumulator in f0 (diff score 190 without it).
+        if (offset) {
+        }
+    }
+    offset = *offset_accum;
+    if (stateClamped != state) {
+        // int 8, not 8.0f: the reset's 0x41000000 and this one stay separate constant
+        // webs only when the two expressions have different types (8.0f here: score 885).
+        offset = offset + 8;
+        span = arg0->unk10;
+        half_span = (f32) (span / 2);
+        if (half_span < offset) {
+            offset = half_span;
+            arg0->unk1C = stateClamped;
+        }
+        x = arg0->unk00;
+        new_x = (s32) ((f32) x - offset);
+        ratio = (f32) arg0->unk14 / (f32) span;
+        arg0->unk08 = new_x;
+        arg0->unk0C = (s32) ((f32) arg0->unk04 - offset * ratio);
+        *(f32 *)&arg0->unk38 = (f32) (x - new_x) / half_span;
+        *offset_accum = offset;
+    }
+}
+/* mkdraft:func_8340135C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83401454.s")
 
