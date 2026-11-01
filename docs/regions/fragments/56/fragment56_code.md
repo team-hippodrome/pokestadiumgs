@@ -68,3 +68,61 @@ full retail ROM gate on `582d79e4`, MD5
 function extents, and relocations in normal and +20-line controls. The original
 address is retained as a linker alias. No additional bss or linker changes
 were required by this function.
+
+## 2026-11-01 — model-grid transforms accepted
+
+`Fragment56_UpdateModelGridTransforms` (formerly `func_8680671C`, 336 bytes)
+sets the scale and horizontal spacing of four parent models, applies the same
+scale to twenty child models per parent, and updates two vertical positions.
+The placement factor is the product of two scale ratios against 0.17f; the
+shared height calculation uses double precision before storing a float.
+
+Assigning the local height after that shared-height calculation reproduces the
+original floating-point allocation and scheduling. The indexed child loop is
+unrolled by the stock compiler; no manual unroll or source-line controls are
+needed. Candidate4 of `fragment56-model-evaluation8` passed the canonical
+normal host syntax check and full US retail ROM gate on `c90635d5`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Readable local names and function naming
+preserve every module section, function extent, and relocation in normal and
++20-leading-line controls. The old function name remains a linker alias.
+
+## 2026-11-01 — animation-state update requeue
+
+`func_86806CD8` remains assembly (**requeue**, **register-tie**). Forty
+canonical source variants reproduced the target's 444-byte size and 64-byte
+frame; the best normalized score was 0.9910 and raw score 0.8468. The state
+pointer uses S4 instead of S3, while the inner byte bound uses S3 instead of
+S4, changing save order and dependent instructions. Typed/byte state access,
+pointer/index effect cursors, initialization order, block scope, index widths,
+and loop-bound spelling did not close the residual.
+
+A 120-second single-worker permuter run reproduced the canonical candidate's
+444 instruction bytes exactly before searching. It found no zero. The best
+score, 85, moved the node-byte write outside the mode14 guard and was rejected
+on semantic review; other retained mutations moved a tick write outside its
+guard or replaced advancing pointers with first-element addresses. No searched
+body was installed. Next: inspect the allocator webs for the state pointer and
+inner bound, rather than repeating width/cursor grids. The assembly masks the
+sound call's second argument to a byte; model-frame calls take signed halfwords.
+
+## 2026-11-01 — texture-fade callback accepted
+
+`Fragment56_TextureFadeCallback` (formerly `func_868000AC`, 492 bytes) loads
+archive152 at event0. At event5 it clamps the node's unsigned frame word at
+0x14 to11, selects one of twelve table entries, computes primitive alpha with
+`func_86800020`, and emits texture segment15 and `D_8680863C`. Scene-state
+words then control frame increment/decrement. The sound-independent frame
+word remains unsigned so decrement wrap agrees with the original instructions.
+
+Direct field clamping removes a duplicated constant-load instruction. Loading
+a live texture-index temporary after clamping reproduces the original stack
+homes (asset at56, node at48) and segment-command spill at32 within the
+64-byte frame. Frame values after helper calls are reloaded from the node;
+reusing the pre-call index there would change behavior. No dummy locals,
+manual padding, source-line directives, or instruction rewriting are used.
+
+Candidate0 of `fragment56-fade-live-index8` passed link-shape verification,
+normal host syntax checks, and the canonical full US retail ROM gate on
+`d568dad6`, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming preserves all
+module sections, function extents, and relocations in normal and +20-line
+controls. The original function name remains a linker alias.

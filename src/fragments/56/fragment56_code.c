@@ -8,7 +8,49 @@ s32 func_86800020(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     return (s32)(((f32)arg4 * temp_fv0) + (f32)(arg1 - (s32)((f32)arg0 * temp_fv0)));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868000AC.s")
+extern u8 *D_8009491C;
+extern s32 D_86807CCC[];
+extern s32 D_8680863C;
+extern s32 D_8682F2A8;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+extern Gfx *D_800D0510;
+extern s32 func_86800020(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void Fragment56_TextureFadeCallback(s32 event, void *arg1) {
+    s32 alpha;
+    s32 asset;
+    u32 texture_frame;
+    u8 *node;
+    if (event == 0) {
+        func_8004C990(152, D_86807CCC[0]);
+    }
+    if (event == 5) {
+        node = D_8009491C;
+        if (*(u32 *)(node + 0x14) >= 12U) {
+            *(u32 *)(node + 0x14) = 11;
+        }
+        texture_frame = *(u32 *)(node + 0x14);
+        asset = func_8004C990(152, D_86807CCC[texture_frame]);
+        if (*(u32 *)(node + 0x14) < 8U) {
+            alpha = func_86800020(0, 255, 6, 185, *(u32 *)(node + 0x14));
+        } else {
+            alpha = func_86800020(6, 185, 11, 0, *(u32 *)(node + 0x14));
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, alpha);
+        gDPSetCombine(D_800D0510++, 0xFF97FF, 0xFFFCFE38);
+        gSPSegment(D_800D0510++, 15, func_8004CA60((u8 *)asset));
+        gSPDisplayList(D_800D0510++, D_8680863C);
+        func_8003CD84();
+        if (*(s32 *)((u8 *)&D_8682F2A8 + 0xC) == 0 && D_8682F2A8 < 9) {
+            (*(u32 *)(node + 0x14))++;
+        }
+        if (D_8682F2A8 == 8) {
+            (*(u32 *)(node + 0x14))--;
+        }
+    }
+}
 
 extern s32 D_86808644;
 extern s32 D_86808640;
@@ -544,7 +586,39 @@ void func_868066B8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680671C.s")
+extern s32 D_86807C4C;
+extern f32 D_86807C50;
+extern f32 D_86807C54;
+extern s32 D_86807C78;
+extern f32 D_8682F2FC;
+extern f32 D_8682F304;
+extern u8 D_86817308[];
+extern u8 D_8681E928[];
+extern void func_86800508(void);
+extern u8 D_868086C8[];
+void Fragment56_UpdateModelGridTransforms(void) {
+    s32 row;
+    s32 column;
+    u8 *model;
+    u8 *grid_model;
+    f32 height;
+    D_8682F2FC = (D_86807C54 / 0.17f) * (D_86807C50 / 0.17f);
+    D_8682F304 = D_8682F2FC * 7.0 + D_86807C4C;
+    height = D_86807C4C;
+    for (row = 0; row < 4; row++) {
+        model = D_868086C8 + row * 0x168;
+        *(f32 *)(model + 0x30) = *(f32 *)(model + 0x34) = *(f32 *)(model + 0x38) = D_86807C50;
+        *(f32 *)(model + 0x28) = height;
+        *(f32 *)(model + 0x24) = (row * 16 - 24) * D_8682F2FC;
+        for (column = 0; column < 20; column++) {
+            grid_model = D_86817308 + row * 0x1C20 + column * 0x168;
+            *(f32 *)(grid_model + 0x30) = *(f32 *)(grid_model + 0x34) = *(f32 *)(grid_model + 0x38) = D_86807C50;
+        }
+    }
+    *(f32 *)(D_8681E928 + 0x28) = D_8682F304;
+    *(f32 *)(D_8681E928 + 0x190) = D_8682F304 - D_86807C78;
+    func_86800508();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680686C.s")
 

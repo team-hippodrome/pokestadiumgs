@@ -1496,3 +1496,7 @@ func_84133F10 = Battle_ResolveSideAfterCommands;
 func_86800298 = Fragment56_AnimatedTextureCallback;
 
 func_86807120 = Fragment56_RunSceneLoop;
+
+func_8680671C = Fragment56_UpdateModelGridTransforms;
+
+func_868000AC = Fragment56_TextureFadeCallback;
