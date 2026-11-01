@@ -1237,7 +1237,62 @@ void func_841430D0(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414327C.s")
+/* mkdraft:func_8414327C begin */
+extern s16 D_84186CA0;
+extern s16 D_84186CA4;
+extern s16 D_84186CA8;
+extern s16 D_84186CAC;
+extern s16 D_84186CB0;
+extern s16 D_84186CB4;
+extern u8 D_84186F94[];
+extern u8 *D_84195208[];
+extern u8 func_80062D5C(u8);
+extern u8 func_80062DD4(u8);
+extern u8 func_80062EB0(u8, u8);
+extern void ParticleGfx_SetPrimColor_fragment79(u8, u8, u8, u8);
+extern void func_8413F32C(s16, s16, u8);
+extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F498(s16, s16, s16, u16);
+extern s32 func_8413E840(f32);
+
+
+typedef struct Unk8414327C {
+    /* 0x00 */ u8 unk0;
+    /* 0x01 */ u8 index;
+    /* 0x02 */ u16 unk2;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+} Unk8414327C;
+
+
+
+void func_8414327C(u8 *arg0) {
+u8 move; u8 pp; u16 x; u16 y; u16 power; u8 index;
+    index = ((Unk8414327C *)arg0)->index;
+    move = D_84195208[index][((Unk8414327C *)arg0)->unk4 + 5];
+    pp = D_84195208[index][((Unk8414327C *)arg0)->unk4 + 9];
+
+    y = ((Unk8414327C *)arg0)->unkC + D_84186CA0;
+    ParticleGfx_SetPrimColor_fragment79(D_84186F94[0], D_84186F94[1], D_84186F94[2], 0xFF);
+    func_8413F498(((Unk8414327C *)arg0)->unkA + D_84186CA4, y, 0, pp & 0x3F);
+    func_8413F32C(((Unk8414327C *)arg0)->unkA + D_84186CA8, y, 10);
+    func_8413F390(((Unk8414327C *)arg0)->unkA + D_84186CAC, y, 0, func_80062EB0(move, pp) & 0x3F);
+    ParticleGfx_SetPrimColor_fragment79(0xFF, 0xFF, 0xFF, 0xFF);
+    x = ((Unk8414327C *)arg0)->unkA + D_84186CB0;
+    power = func_80062D5C(move);
+    if (power < 2) {
+        func_8413F32C(x - 18, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 12);
+        func_8413F32C(x - 12, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 12);
+        func_8413F32C(x - 6, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 12);
+    } else {
+        func_8413F498(x, ((Unk8414327C *)arg0)->unkC + D_84186CB4, 0, power);
+    }
+    func_8413F498((s16)x, y, 0, func_8413E840((f32)func_80062DD4(move) * 100.0f / 255.0f));
+}
+/* mkdraft:func_8414327C end */
 #endif
 
 #ifdef VERSION_US
