@@ -3292,11 +3292,12 @@ SECTIONS
         build/asm/us/data/fragments/44/fragment44_header.o(.rodata);
         build/src/fragments/44/fragment44_1EE290.o(.rodata);
         build/src/fragments/44/fragment44_1F0680.o(.rodata);
+        build/asm/us/data/216BB0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_1F1850.o(.rodata);
         build/src/fragments/44/fragment44_1F53D0.o(.rodata);
         build/src/fragments/44/fragment44_1F5480.o(.rodata);
         build/src/fragments/44/fragment44_1F5BD0.o(.rodata);
-        build/asm/us/data/216BB0.rodata.o(.rodata);
+        build/asm/us/data/217140.rodata.o(.rodata);
         build/src/fragments/44/fragment44_1F5F20.o(.rodata);
         build/src/fragments/44/fragment44_1F6BF0.o(.rodata);
         build/src/fragments/44/fragment44_1F7DD0.o(.rodata);
