@@ -224,7 +224,55 @@ s32 func_8414BF94(u8 side, u8 slot) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C048.s")
+/* mkdraft:func_8414C048 begin */
+extern u8 * D_8419520C[];
+
+// Selectability test for one party slot of side arg0. Returns 0 when the side is
+// in state 2, when arg1 is outside the party (bound test against party[8]), when
+// the slot's u16 at 0x3E is zero, or when byte 0x1A + arg2 of its 0x58-byte
+// record is zero. Unless the side is in state 5, the choice is also rejected by
+// slot 1 of the D_8419520C record table carrying flag 0x80 in byte 0x11, by
+// D_84195208[arg0][27] being nonzero, and by func_8414A3C0(arg0, 2) being
+// nonzero.
+
+
+s32 func_8414C048(u8 arg0, u8 arg1, u8 arg2) {
+    // FAKE: u32 copy of arg1 that only steers codegen. The bound test below is
+    // signed (slt), and the two record-stride products keep separate types
+    // (mulu through slot, mul through arg1), so uopt emits retail's two shift
+    // chains and leaves masked arg0 in $a0. Without the copy uopt promotes
+    // arg1 into a fresh register, evicts arg0 to $a3 and the closest signed
+    // spelling scores 76 differences; the closest copy-free source, an unsigned
+    // bound test, scores 2 (sltu for slt).
+    u32 slot = arg1;
+
+    if (D_84195256[(u32)arg0 * 24] == 2) {
+        return 0;
+    }
+    if ((s32)slot >= ((u8 *)D_841951F8[arg0])[8]) {
+        return 0;
+    }
+    if (*(u16 *)(((u8 *)D_841951F8[arg0]) + slot * 88 + 62) == 0) {
+        return 0;
+    }
+    if (((u8 *)D_841951F8[arg0])[arg1 * 88 + 26 + arg2] == 0) {
+        return 0;
+    }
+    if (D_84195256[(u32)arg0 * 24] != 5) {
+        /* D_8419520C names slot 1 of the two-pointer record table. */
+        if ((*(u8 **)((u8 *)D_8419520C + -((s32)arg0 * (s32)sizeof(D_8419520C[0]))))[17] & 0x80) {
+            return 0;
+        }
+        if (D_84195208[arg0][27] > 0) {
+            return 0;
+        }
+        if (func_8414A3C0(arg0, 2) != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+/* mkdraft:func_8414C048 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C18C.s")
 
