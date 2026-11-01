@@ -553,7 +553,95 @@ s32 func_8AB1075C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB10AD0.s")
+/* mkdraft:func_8AB10AD0 begin */
+extern s32 func_80001FF0(void);
+extern void func_8AB00BA4(s32, s32, s32);
+extern s32 func_8AB10D30(s32);
+extern void func_8AC002D8(s16 arg0, s16 arg1, u8 arg2);
+extern void TextHighlight_AnimateScales(void);
+extern s32 Fragment43_TryGrantCompletionReward(s16 arg0);
+extern u8 *D_8AB11D0C;
+extern u8 D_8AB12CB0[];
+extern u8 D_8AB12F00[];
+extern s16 D_8AB1744C;
+
+
+s32 func_8AB10AD0(s32 arg0) {
+    s16 *counter = &D_8AB1744C;
+    s32 result = 0x44;
+    s32 i;
+    s32 j;
+    void *obj;
+
+    switch (arg0) {
+    case 0:
+        *counter = 0;
+        i = 0;
+        do {
+            obj = *(void **)(D_8AB12CB0 + i * 0x94 + 0x14);
+            i++;
+            if (obj != 0) {
+                *(u16 *)((u8 *)obj + 2) |= 1;
+            }
+        } while ((u32)(D_8AB12CB0 + i * 0x94) < (u32)D_8AB12F00);
+        if (*(s16 *)(D_8AB12CB0 + 4) == 1) {
+            *(s32 *)(D_8AB12CB0 + 0x84) = 0xFF500080;
+            *(s16 *)(D_8AB12CB0 + 0x3E) = 0;
+            func_8AC002D8(D_8AB11D0C[3], (s16)(*(s8 *)(D_8AB11D0C + 0x15) - 1), 1);
+            *(u8 *)(D_8AB11D0C + 0x1A) = 0;
+            if (Fragment43_TryGrantCompletionReward(D_8AB11D0C[3]) != 0) {
+                *(u8 *)(D_8AB11D0C + 0x1A) = 1;
+            }
+            if (*(s8 *)(D_8AB11D0C + 0x16) == D_8AB11D0C[3]) {
+                // FAKE: the pointer copy and its reload after the first store reproduce
+                // retail 0x235D70 (`or v0,a3,zero`) and 0x235D80 (`lw v0,0(t0)`); each
+                // byte-clear test reads the same byte through either base.
+                u8 *p;
+
+                p = D_8AB11D0C;
+                if (*(s8 *)(D_8AB11D0C + 0x15) == *(s8 *)(p + 4)) {
+                    *(u8 *)(p + 4) = 0;
+                }
+                p = D_8AB11D0C;
+                if (*(s8 *)(D_8AB11D0C + 0x15) == *(s8 *)(p + 5)) {
+                    *(u8 *)(p + 5) = 0;
+                }
+                for (j = 2; j != 0xA; j += 4) {
+                    if (*(s8 *)(D_8AB11D0C + 0x15) == *(s8 *)(D_8AB11D0C + j + 4)) {
+                        *(u8 *)(D_8AB11D0C + j + 4) = 0;
+                    }
+                    if (*(s8 *)(D_8AB11D0C + 0x15) == *(s8 *)(D_8AB11D0C + j + 5)) {
+                        *(u8 *)(D_8AB11D0C + j + 5) = 0;
+                    }
+                    if (*(s8 *)(D_8AB11D0C + 0x15) == *(s8 *)(D_8AB11D0C + j + 6)) {
+                        *(u8 *)(D_8AB11D0C + j + 6) = 0;
+                    }
+                    if (*(s8 *)(D_8AB11D0C + 0x15) == *(s8 *)(D_8AB11D0C + j + 7)) {
+                        *(u8 *)(D_8AB11D0C + j + 7) = 0;
+                    }
+                }
+            }
+        } else {
+            *(s32 *)(D_8AB12CB0 + 0x84) = 0x1E82FF80;
+            *(u16 *)(D_8AB12CB0 + 0x3E) = 1;
+        }
+        break;
+    case 1:
+        *counter += 1;
+        TextHighlight_AnimateScales();
+        if (*counter == func_80001FF0() / 4) {
+            func_8AB00BA4(0x66, 0, 0);
+        }
+        if (*counter >= 0x1F) {
+            result = func_8AB10D30(0);
+        }
+        break;
+    case 2:
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB10AD0 end */
 #endif
 
 #ifdef VERSION_US
