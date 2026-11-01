@@ -156,7 +156,46 @@ void func_8830700C(void) {
         break;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8010/func_88307294.s")
+/* mkdraft:func_88307294 begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern s32 func_8004D1FC(u8 *);
+extern Gfx *D_800D0510;
+extern f32 D_80088E50[];
+extern f32 D_80087E50[];
+extern u8 *D_88308EA4;
+extern s16 D_88308EB4;
+extern s16 D_88308EC0;
+
+// Draws four copies of the texture at D_88308EA4 on a circle of radius 12
+// centred at (336, D_88308EB4), the first at angle D_88308EC0 and each later
+// one another 0x4000 further round (90 degrees: the sin/cos tables cover
+// 0x10000 units in 4096 entries). D_80087E50 is sin, D_80088E50 is cos, both
+// indexed by (u16)angle >> 4; the texture's first two u16s are its width and
+// height, which centre each rectangle on its point of the circle.
+//@src/340C0.c
+
+
+void func_88307294(void) {
+    s16 angle;
+    s32 i;
+    s32 index;
+    u16 *texture;
+
+    angle = D_88308EC0;
+    gDPPipeSync(D_800D0510++);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(D_800D0510++, 0x9B, 0x9B, 0, 0xFF);
+    func_8004D1FC(D_88308EA4);
+    for (i = 0; i != 4; angle -= 0x4000, i++) {
+        index = (u16) angle >> 4;
+        texture = (u16 *) D_88308EA4;
+        GfxRect_DrawTextured(
+            (s16) (s32) (((D_80088E50[index] * 12.0f) + 336.0f) - (f32) ((s32) texture[0] >> 1)),
+            (s16) (s32) (((D_80087E50[index] * 12.0f) + (f32) D_88308EB4) - (f32) ((s32) texture[1] >> 1)),
+            (s16) texture[0], (s16) texture[1], -0x10, -0x10, 0x400, 0x400, 0);
+    }
+}
+/* mkdraft:func_88307294 end */
 
 extern Gfx *D_800D0510;
 extern u8 *D_88308EA8;
