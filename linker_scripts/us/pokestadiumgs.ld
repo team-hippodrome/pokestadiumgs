@@ -634,7 +634,7 @@ SECTIONS
         build/src/728D0.o(.rodata);
         build/src/72C30.o(.rodata);
         build/src/73C80.o(.rodata);
-        build/asm/us/data/A6500.rodata.o(.rodata);
+        build/asm/us/data/A6600.rodata.o(.rodata);
         build/src/74020.o(.rodata);
         build/lib/libultra.a:setintmask.o(.rodata);
         build/lib/libultra.a:sinf.o(.rodata);
@@ -1032,6 +1032,7 @@ SECTIONS
         fragment6_RODATA_START = .;
         build/asm/us/data/fragments/6/fragment6_header.o(.rodata);
         build/src/fragments/6/fragment6_code.o(.rodata);
+        build/asm/us/data/B9750.rodata.o(.rodata);
         fragment6_RODATA_END = .;
         fragment6_RODATA_SIZE = ABSOLUTE(fragment6_RODATA_END - fragment6_RODATA_START);
     }
@@ -1538,15 +1539,16 @@ SECTIONS
         build/asm/us/data/fragments/16/fragment16_header.o(.data);
         fragments_16_fragment16_data_data = .;
         build/asm/us/data/fragments/16/fragment16_data.data.o(.data);
-        fragments_16_fragment16_code = .;
-        build/src/fragments/16/fragment16_code.o(.data);
-        _10F320_data = .;
-        build/asm/us/data/10F320.data.o(.data);
         fragment16_DATA_END = .;
         fragment16_DATA_SIZE = ABSOLUTE(fragment16_DATA_END - fragment16_DATA_START);
         fragment16_RODATA_START = .;
-        build/asm/us/data/fragments/16/fragment16_header.o(.rodata);
         build/src/fragments/16/fragment16_code.o(.rodata);
+        build/asm/us/data/10F1C0.rodata.o(.rodata);
+        build/asm/us/data/fragments/16/fragment16_header.o(.rodata);
+        fragments_16_fragment16_code = .;
+        build/src/fragments/16/fragment16_code.o(.data);
+        fragments_16_fragment16_tail_data = .;
+        build/asm/us/data/fragments/16/fragment16_tail.data.o(.data);
         fragment16_RODATA_END = .;
         fragment16_RODATA_SIZE = ABSOLUTE(fragment16_RODATA_END - fragment16_RODATA_START);
     }
@@ -2662,6 +2664,7 @@ SECTIONS
         build/src/fragments/32/fragment32_1B92C0.o(.rodata);
         build/src/fragments/32/fragment32_1B9390.o(.rodata);
         build/src/fragments/32/fragment32_1B9840.o(.rodata);
+        build/asm/us/data/1B9C30.rodata.o(.rodata);
         fragment32_RODATA_END = .;
         fragment32_RODATA_SIZE = ABSOLUTE(fragment32_RODATA_END - fragment32_RODATA_START);
     }
@@ -3292,11 +3295,12 @@ SECTIONS
         build/asm/us/data/fragments/44/fragment44_header.o(.rodata);
         build/src/fragments/44/fragment44_1EE290.o(.rodata);
         build/src/fragments/44/fragment44_1F0680.o(.rodata);
+        build/asm/us/data/216BB0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_1F1850.o(.rodata);
         build/src/fragments/44/fragment44_1F53D0.o(.rodata);
         build/src/fragments/44/fragment44_1F5480.o(.rodata);
         build/src/fragments/44/fragment44_1F5BD0.o(.rodata);
-        build/asm/us/data/216BB0.rodata.o(.rodata);
+        build/asm/us/data/217140.rodata.o(.rodata);
         build/src/fragments/44/fragment44_1F5F20.o(.rodata);
         build/src/fragments/44/fragment44_1F6BF0.o(.rodata);
         build/src/fragments/44/fragment44_1F7DD0.o(.rodata);
@@ -3308,14 +3312,15 @@ SECTIONS
         build/asm/us/data/fragments/44/fragment44_rodata_tail.rodata.o(.rodata);
         build/src/fragments/44/fragment44_2030B0.o(.rodata);
         build/src/fragments/44/fragment44_204950.o(.rodata);
+        build/asm/us/data/217AF0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_205C30.o(.rodata);
         build/src/fragments/44/fragment44_207AF0.o(.rodata);
         build/src/fragments/44/fragment44_209BD0.o(.rodata);
+        build/asm/us/data/217E20.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20A610.o(.rodata);
         build/src/fragments/44/fragment44_20BDB0.o(.rodata);
         build/src/fragments/44/fragment44_20C560.o(.rodata);
         build/src/fragments/44/fragment44_20CBF0.o(.rodata);
-        build/asm/us/data/217AF0.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20D3A0.o(.rodata);
         build/src/fragments/44/fragment44_20EBC0.o(.rodata);
         build/src/fragments/44/fragment44_20F140.o(.rodata);
@@ -3399,8 +3404,8 @@ SECTIONS
         fragment45_RODATA_START = .;
         build/asm/us/data/fragments/45/fragment45_header.o(.rodata);
         build/src/fragments/45/fragment45_2251A0.o(.rodata);
-        build/src/fragments/45/fragment45_22AB80.o(.rodata);
         build/asm/us/data/236990.rodata.o(.rodata);
+        build/src/fragments/45/fragment45_22AB80.o(.rodata);
         build/src/fragments/45/fragment45_22FAD0.o(.rodata);
         build/src/fragments/45/fragment45_2324B0.o(.rodata);
         build/src/fragments/45/fragment45_2348E0.o(.rodata);
@@ -3880,7 +3885,7 @@ SECTIONS
         fragment53_RODATA_START = .;
         build/asm/us/data/fragments/53/fragment53_header.o(.rodata);
         build/src/fragments/53/fragment53_code.o(.rodata);
-        build/asm/us/data/296D70.rodata.o(.rodata);
+        build/asm/us/data/296E50.rodata.o(.rodata);
         fragment53_RODATA_END = .;
         fragment53_RODATA_SIZE = ABSOLUTE(fragment53_RODATA_END - fragment53_RODATA_START);
     }
@@ -5372,7 +5377,6 @@ SECTIONS
         build/src/fragments/79/fragment79_38D510.o(.rodata);
         build/src/fragments/79/fragment79_38EBD0.o(.rodata);
         build/src/fragments/79/fragment79_38EFA0.o(.rodata);
-        build/asm/us/data/3F90B0.rodata.o(.rodata);
         build/src/fragments/79/fragment79_38EFE0.o(.rodata);
         build/src/fragments/79/fragment79_393B40.o(.rodata);
         build/src/fragments/79/fragment79_393BF0.o(.rodata);

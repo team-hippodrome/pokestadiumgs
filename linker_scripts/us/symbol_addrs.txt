@@ -317,3 +317,9 @@ D_87F11494 = 0x87F11494; // size:0x4 force_migration:true
 D_87F11498 = 0x87F11498; // size:0x4 force_migration:true
 D_87F1149C = 0x87F1149C; // size:0x4 force_migration:true
 D_87F114A0 = 0x87F114A0; // size:0x4 force_migration:true
+D_8AF29EB4 = 0x8AF29EB4; // type:f32 size:0x10C force_migration:true
+// fragment6's C-owned .rodata head [0xB9680, 0xB9750): the const u8 table
+// D_831038E0 is read by func_831000FC/func_83100FA4 (C) and func_8310065C
+// (asm), so the migration must leave it as C named data instead of moving
+// its bytes into func_8310065C.s.
+D_831038E0 = 0x831038E0; // type:u8 size:0x28 force_not_migration:true

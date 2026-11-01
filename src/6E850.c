@@ -2,6 +2,14 @@
 
 
 #ifdef VERSION_US
+// Not referenced by code or data (debug format strings); they open this file's .rodata.
+const char D_800A5900[] = "og_monster_eff_init() err!  og_init_kemuri_eff_all = NULL\n";
+const char D_800A593C[] = "0x%08x ";
+const char D_800A5944[] = "\n";
+const char D_800A5948[] = "\n";
+const char D_800A594C[] = "%10.4f  ";
+const char D_800A5958[] = "\n";
+const char D_800A595C[] = "\n";
 s32 func_8006DC50(s32 arg0) {
     s32 sp4;
     return ((((u8 *)&sp4) + (arg0 * 0x50)) - ((u8 *)&sp4)) + 0x40;
@@ -125,7 +133,6 @@ typedef struct unk_func_8006E1C8 {
 extern u32 Memmap_GetSegmentVaddr(u32);
 extern VertexNormalCounter *D_80128C70;
 extern Mtx D_80129038;
-extern const f32 D_800A5960;
 extern void func_8006DEBC(void *, void *, void *);
 extern void func_8006F23C(void *);
 void func_8006E1C8(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4) {
@@ -138,7 +145,7 @@ void func_8006E1C8(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4) {
     if (arg4 != NULL) {
         arg4 = (void *)Memmap_GetSegmentVaddr((u32)arg4);
     }
-    scale = D_800A5960;
+    scale = 0.1f;
     D_80128C70 = arg1;
     *(unk_func_8006E1C8 *)((u8 *)arg0 + 8) = *(unk_func_8006E1C8 *)arg3;
     *(s16 *)arg0 = 1;
@@ -437,30 +444,26 @@ void func_8006EB14_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-extern f32 D_800A5990;
-extern f32 D_800A5994;
-extern f32 D_800A5998;
 f32 func_8006EF04(f32 *arg0, f32 *arg1) {
     f32 x = arg0[3] - arg1[3];
     f32 y = arg0[4] - arg1[4];
     f32 z = arg0[5] - arg1[5];
 
-    if (Math_FAbs(x) < D_800A5990) x = 0.0f;
-    if (Math_FAbs(y) < D_800A5994) y = 0.0f;
-    if (Math_FAbs(z) < D_800A5998) z = 0.0f;
+    if (Math_FAbs(x) < 0.0001f) x = 0.0f;
+    if (Math_FAbs(y) < 0.0001f) y = 0.0f;
+    if (Math_FAbs(z) < 0.0001f) z = 0.0f;
     return sqrtf((x * x) + (y * y) + (z * z));
 }
 #endif
 
 #ifdef VERSION_US
-extern f32 D_800A599C;
 void func_8006EFF0(f32 *src, f32 *dst, f32 totalTime, f32 elapsed, f32 stiffness) {
     f32 dx;
     f32 dy;
     f32 dz;
     s32 pad;
 
-    if (elapsed < D_800A599C) {
+    if (elapsed < 0.0001f) {
         return;
     }
 
@@ -480,27 +483,23 @@ void func_8006EFF0(f32 *src, f32 *dst, f32 totalTime, f32 elapsed, f32 stiffness
 #endif
 
 #ifdef VERSION_US
-extern f32 D_800A59A0;
-extern f32 D_800A59A4;
-extern f32 D_800A59A8;
-extern f32 D_800A59AC;
 void func_8006F0A8(f32 *src, f32 *dst, f32 totalTime, f32 elapsed, f32 stiffness) {
     f32 dx;
     f32 dy;
     f32 dz;
     s32 pad;
 
-    if (elapsed < D_800A59A0) {
+    if (elapsed < 0.0001f) {
         return;
     }
 
-    if (Math_FAbs(dst[3]) < D_800A59A4) {
+    if (Math_FAbs(dst[3]) < 0.0001f) {
         dst[3] = 0.0f;
     }
-    if (Math_FAbs(dst[4]) < D_800A59A8) {
+    if (Math_FAbs(dst[4]) < 0.0001f) {
         dst[4] = 0.0f;
     }
-    if (Math_FAbs(dst[5]) < D_800A59AC) {
+    if (Math_FAbs(dst[5]) < 0.0001f) {
         dst[5] = 0.0f;
     }
 
@@ -873,8 +872,6 @@ void func_8006F83C(u8 *arg0, u8 *arg1, f32 arg2, BlendWeight1F arg3)
 #endif
 
 #ifdef VERSION_US
-extern f32 D_800A59B0;
-extern f32 D_800A59B4;
 // Close to Pokemon Stadium's Model_IntegrateVertexOffsets; GS vertices are 0x50
 // bytes with the blend block at 0x14, and the vertex count is read once before the loop.
 // D_800A59B0 is the near-zero cutoff (1e-4f) and D_800A59B4 the per-frame offset decay
@@ -898,8 +895,8 @@ void func_8006F9B0(ModelSegmentAnimDesc *segment, ModelAnimVertex *vertices) {
 
     i = 0;
     if (count > 0) {
-        cutoff = D_800A59B0;
-        decay = D_800A59B4;
+        cutoff = 0.0001f;
+        decay = 0.3f;
         do {
             blend = &vertex->position;
             if ((Model_GetVertexClass(classes, i) != 0) && (i == *remap)) {
@@ -1119,8 +1116,6 @@ extern s16 MathUtil_Atan2s(f32, f32);
 extern void guTranslate(Mtx *, f32, f32, f32);
 extern void guMtxCatL(Mtx *, Mtx *, Mtx *);
 extern void func_8007DCD4(Mtx *, f32, f32, f32, f32);
-extern f64 D_800A59F0;
-extern f64 D_800A59F8;
 extern f64 D_800A5A00;
 extern f64 D_800A5A08;
 // Writes to mtx a translation to (arg1, arg2, arg3) followed by rotations that aim along the
@@ -1138,7 +1133,7 @@ void func_80070C68(Mtx *mtx, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f
 
     direction.x = arg4 - arg1;
     direction.z = arg6 - arg3;
-    sp108 = (f32) (((f64) (f32) MathUtil_Atan2s(-direction.z, direction.x) * D_800A59F0) / D_800A59F8);
+    sp108 = (f32) (((f64) (f32) MathUtil_Atan2s(-direction.z, direction.x) * 360.0) / 65535.0);
     direction.y = arg5 - arg2;
     sp10C = (f32) (((f64) (f32) MathUtil_Atan2s(-direction.y, sqrtf((direction.x * direction.x) + (direction.z * direction.z))) * D_800A5A00) / D_800A5A08);
     guTranslate(&spB8, arg1, arg2, arg3);

@@ -407,7 +407,37 @@ void func_8FB02560(unk_D_8FB03DF8 *state) {
     func_8FB02108((unk_func_8FB02108 *)state);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02608.s")
+/* mkdraft:func_8FB02608 begin */
+extern s32 func_8FB00170(void *, void *);
+extern s32 func_8FB01C14(void *, void *, s32);
+extern s32 func_8FB00F78(void *, void *);
+
+// Mode 0 of func_8FB029B4. Runs the page selected by the u16 at offset 2 of
+// the record at arg0 + 0x44 on the page state at arg0 + 0x158C (10 units per
+// scroll for list pages, 16 for grid pages) and returns its result.
+s32 func_8FB02608(void *arg0) {
+    s32 var_v1;
+
+    var_v1 = 0;
+    switch (*(u16 *)((u8 *)*(void **)((u8 *)arg0 + 0x44) + 2)) {
+        case 0:
+            var_v1 = func_8FB01C14((u8 *)arg0 + 0x158C, arg0, 0xA);
+            break;
+        case 1:
+            var_v1 = func_8FB01C14((u8 *)arg0 + 0x158C, arg0, 0x10);
+            break;
+        case 2:
+            var_v1 = func_8FB00170((u8 *)arg0 + 0x158C, arg0);
+            break;
+        case 4:
+            break;
+        case 3:
+            var_v1 = func_8FB00F78((u8 *)arg0 + 0x158C, arg0);
+            break;
+    }
+    return var_v1;
+}
+/* mkdraft:func_8FB02608 end */
 
 extern s32 D_80087200;
 extern u8 D_8FB034AE;
@@ -468,7 +498,75 @@ void func_8FB02698(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02878.s")
+/* mkdraft:func_8FB02878 begin */
+extern s32 func_8FB005E4(void *);
+extern s32 func_8FB00FE8(void *);
+extern s32 func_8FB01CF8(void *, void *, s32);
+extern void func_8FB00E40(void *, void *);
+extern void func_8FB01634(void *, void *);
+/* func_8FB001C0 (s32 (u8 *, u8 *)) and func_8FB02108 (void (unk_func_8FB02108 *))
+ * are defined earlier in this file; the calls below compile to the same
+ * $a0/$a1 setups under those signatures as under the void * spellings the
+ * candidate was verified with. */
+
+// Mode 1 of func_8FB029B4. Runs the page selected by the u16 at offset 2 of the record at
+// arg0 + 0x44 on the page state at arg0 + 0x158C (func_8FB03164 draws the same pages) and
+// acts on its result: 0 keeps mode 1; 1 calls func_8FB01634, func_8FB001C0 or func_8FB00E40
+// for the page, calls func_8FB02108 when the record's first u16 is 1, and returns to mode 0;
+// 2 (also the result for page 4) returns to mode 0.
+void func_8FB02878(void *arg0) {
+    s32 result = 2;
+
+    switch (*(u16 *)(*(u8 **)((u8 *)arg0 + 0x44) + 2)) {
+        case 0:
+            result = func_8FB01CF8((u8 *)arg0 + 0x158C, arg0, 10);
+            break;
+        case 1:
+            result = func_8FB01CF8((u8 *)arg0 + 0x158C, arg0, 16);
+            break;
+        case 2:
+            result = func_8FB005E4((u8 *)arg0 + 0x158C);
+            break;
+        case 3:
+            result = func_8FB00FE8((u8 *)arg0 + 0x158C);
+            break;
+        case 4:
+            break;
+    }
+
+    switch (result) {
+        case 0:
+            break;
+        case 1:
+            // FAKE: result is reused to hold the record pointer at arg0 + 0x44; diff score 30 without it.
+            result = *(s32 *)((u8 *)arg0 + 0x44);
+            switch (((u16 *)result)[1]) {
+                case 0:
+                case 1:
+                    func_8FB01634((u8 *)arg0 + 0x158C, arg0);
+                    break;
+                case 2:
+                    func_8FB001C0((u8 *)arg0 + 0x158C, arg0);
+                    break;
+                case 3:
+                    func_8FB00E40((u8 *)arg0 + 0x158C, arg0);
+                    break;
+                case 4:
+                    break;
+            }
+            result = *(s32 *)((u8 *)arg0 + 0x44);
+            if (*(u16 *)result == 1) {
+                func_8FB02108(arg0);
+            }
+            // Retail stores 0 to the mode here and again in case 2's body.
+            *(s32 *)((u8 *)arg0 + 0x40) = 0;
+            // fallthrough
+        case 2:
+            *(s32 *)((u8 *)arg0 + 0x40) = 0;
+            break;
+    }
+}
+/* mkdraft:func_8FB02878 end */
 
 extern void Fragment9_UpdateSelectionPointers(void *);
 extern void func_8FB02698(void *);
@@ -490,19 +588,19 @@ void func_8FB029B4(void *arg0) {
 
 /* func_8FB02A10 is still GLOBAL_ASM, but its .s is hand-maintained (not the
  * splat-generated asm/us/nonmatchings/.../func_8FB02A10.s) so it can also
- * carry jtbl_8FB03D2C's last entry (4 bytes, the tail of its own switch's
- * jump table) in a .late_rodata block ahead of its .text. That word has to
- * land immediately before func_8FB03164's own compiler-generated jump
- * table (jtbl_8FB03DC4) to satisfy this fragment's SUBALIGN(16); a plain C
+ * carry jtbl_8FB03D2C, its own 38-entry switch table, in a .late_rodata
+ * block ahead of its .text. The table's bytes are inside this file's
+ * [0xD4170, .rodata] range, but splat lists no user for them (this
+ * hand-maintained .s is not among the files it regenerates), so nothing
+ * but this block emits them. asm-processor places the block at this
+ * pragma's position in the .rodata stream: right after func_8FB02878's
+ * two tables and immediately before func_8FB03164's own
+ * compiler-generated jtbl_8FB03DC4, the exact retail order. A plain C
  * global here would instead be emitted by IDO ahead of ALL switch-table
  * "late" rodata in this compilation (before jtbl_8FB03DC4, which is right
  * where we want it) -- but ahead of the file's other regular named rodata
  * too, changing its order and thus its address, since IDO groups named
- * rodata together in emission order across the whole file. Placing it in a
- * GLOBAL_ASM .late_rodata block instead makes asm-processor position it
- * exactly where retail has it: as the last word before jtbl_8FB03DC4,
- * with nothing else in between. jtbl_8FB03D2C's other 37 entries keep
- * coming from the unmodified data blob at their real retail addresses. */
+ * rodata together in emission order across the whole file. */
 #pragma GLOBAL_ASM("hand_asm/fragments/9/func_8FB02A10_manual.s")
 
 extern void func_8FB009C0(void *arg0);

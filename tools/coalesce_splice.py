@@ -309,6 +309,28 @@ def replace_function_bytes(
         if sym.name and (sym.info & 0xF) != STT_SECTION
     }
 
+    # A fold can also keep a relocation against a *section* symbol rather
+    # than a named one. IDO references a floating-point literal in the
+    # function's own constant pool with an R_MIPS_HI16/R_MIPS_LO16 pair
+    # against `.rodata`'s section symbol, the literal's offset baked into
+    # the instruction fields (no separate addend field in a MIPS REL
+    # object). Those section symbols carry real names, but they are
+    # excluded from `outer_name_to_index` above because several can share
+    # the name "" (or, for .text, the same name), so they are resolved
+    # here by section name instead. Only non-.text sections are eligible:
+    # `.rodata` and `.data` do not move when this splice resizes `.text`,
+    # so the packed offset still names the same byte. A `.text`-relative
+    # reference is left out deliberately; that is the in-function
+    # jump-table shape `_shift_section_relative_addends` refuses to guess.
+    outer_section_name_to_symbol = {}
+    for i, sym in enumerate(outer_symbols):
+        if (sym.info & 0xF) != STT_SECTION or not sym.name:
+            continue
+        sym_section = outer.section_index(sym.name)
+        if sym_section is None or sym_section == text_index:
+            continue
+        outer_section_name_to_symbol[sym.name] = i
+
     translated = []
     for func_offset, target_name, rel_type in named_relocations:
         if not (0 <= func_offset < new_size):
@@ -317,6 +339,8 @@ def replace_function_bytes(
                 "falls outside the function's own new byte range"
             )
         outer_index = outer_name_to_index.get(target_name)
+        if outer_index is None:
+            outer_index = outer_section_name_to_symbol.get(target_name)
         if outer_index is None:
             raise SpliceError(
                 f"{function_name}: folded relocation references {target_name!r}, "
