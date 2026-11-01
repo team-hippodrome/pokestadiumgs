@@ -503,7 +503,7 @@ extern u8 *D_84195200[];
 extern u8 *D_84195208[];
 extern void *D_841951F8[];
 extern void func_84125650(u8 *, u8);
-extern void func_841334D8(u8);
+extern void Battle_QueueHpLossFeedback(u8);
 extern void Battle_RefreshSideAfterSwitch(u8);
 void func_84125734(u8 arg0) {
     func_84125650(D_84195208[arg0], D_84195200[arg0][0x24]);
@@ -6548,7 +6548,64 @@ void func_84133440(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_841334D8.s")
+extern void func_84135C78(u8 arg0, s16 arg1, u16 arg2, u16 arg3);
+// Selects a message and animation from opponent HP loss, with fainting overrides.
+void Battle_QueueHpLossFeedback(u8 side) {
+    s32 hp_loss_percent;
+    u16 animation;
+    u16 message;
+    s32 opponent_side;
+
+    BattleRecord_AdvanceWriteSlot();
+    func_84133304(side);
+    func_84136678(side, -1);
+    func_8004C54C(25, func_8004B7A4(D_84195208[(unsigned int)side][0]));
+    func_8004C54C(26, (s32)(D_84195200[(unsigned int)side] + 52));
+    opponent_side = 1 - side;
+    hp_loss_percent =
+        (*(u16 *)(D_84195208[opponent_side] + 72) -
+         *(u16 *)(D_84195200[opponent_side] + 38)) *
+        100 / *(u16 *)(D_84195200[opponent_side] + 40);
+    if (hp_loss_percent <= 0) {
+        animation = 8;
+        message = 20;
+    } else if (hp_loss_percent < 30) {
+        animation = 9;
+        message = 19;
+    } else if (hp_loss_percent < 70) {
+        animation = 10;
+        message = 17;
+    } else {
+        animation = 11;
+        message = 21;
+    }
+    if (func_84127140(side)) {
+        if (*(u16 *)(D_84195200[(unsigned int)side] + 38) == 0) {
+            animation = 20;
+            message = 21;
+        }
+        if (func_841360C0(side, -1, 60, 1, 0) == 0) {
+            func_84135C78(side, -1, 60, animation);
+        }
+        goto finish;
+    }
+    if (!func_84127140(opponent_side)) {
+        goto finish;
+    }
+    if (*(u16 *)(D_84195200[(unsigned int)side] + 38) != 0) {
+        goto finish;
+    }
+    if (func_84126320(side) > 0) {
+        goto finish;
+    }
+    func_84124E44(opponent_side);
+    func_84135C78(opponent_side, -1, 60, 19);
+    func_84124E44(side);
+finish:
+    func_84135B00(message);
+    func_84124C10(side);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
@@ -6660,7 +6717,7 @@ void Battle_RefreshSideAfterSwitch(u8 side) {
 #ifdef VERSION_US
 void func_84133ACC(u8 arg0) {
     ((u8 *) D_841951F8[arg0])[0x10] = 1;
-    func_841334D8(arg0);
+    Battle_QueueHpLossFeedback(arg0);
     Battle_RefreshSideAfterSwitch(arg0);
 }
 #endif
@@ -6705,7 +6762,7 @@ extern void func_84124E44(u8 arg0);
 extern s32 func_84126320(u8 arg0);
 extern void func_84126994(u8 arg0);
 extern s32 func_841270D8(u8 arg0, u8 arg1);
-extern void func_841334D8(u8);
+extern void Battle_QueueHpLossFeedback(u8);
 extern void func_84134CBC(u8, u8);
 extern void func_84135B00(u16);
 extern s32 func_841360C0(u8, s16, u16, u8, u8);
@@ -6730,7 +6787,7 @@ void Battle_ResolveOpponentFaint(u8 side) {
     func_84135B00(111);
     func_84134CBC(peer, 28);
     BattleRecord_AdvanceWriteSlot();
-    func_841334D8(peer);
+    Battle_QueueHpLossFeedback(peer);
     remaining[peer] = func_84126320(peer) > 0;
     if (*(u16 *)(D_84195200[side] + 0x26) == 0) {
         D_84195208[peer][0xF] &= 0xFFFB;
@@ -6743,7 +6800,7 @@ void Battle_ResolveOpponentFaint(u8 side) {
         func_84135B00(111);
         func_84134CBC(side, 28);
         BattleRecord_AdvanceWriteSlot();
-        func_841334D8(side);
+        Battle_QueueHpLossFeedback(side);
         func_84137DB8();
         remaining[side] = func_84126320(side) > 0;
         if (remaining[0] == 0 && remaining[1] == 0) {
