@@ -644,7 +644,23 @@ void func_8160551C(void) {
 }
 /* mkdraft:func_8160551C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81605598.s")
+/* mkdraft:func_81605598 begin */
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+
+
+
+void func_81605598(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x119623, 0xFF2FFFFF);
+    gDPSetColor((*(Gfx **)&D_800D0510)++, G_SETPRIMCOLOR, (_SHIFTL(((u8 *)arg4)[1], 16, 8) | _SHIFTL(((u8 *)arg4)[2], 8, 8) | _SHIFTL(((u8 *)arg4)[3], 0, 8) | _SHIFTL(((u8 *)arg4)[0], 24, 8)));
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 * 4, arg1 * 4, (arg0 + arg2) * 4, (arg1 + arg3) * 4,
+        G_TX_RENDERTILE, 0, 0x400, (s32)(32768.0f / ((f32)arg2 * 0.5f)),
+        -(s32)(32768.0f / ((f32)arg3 * 0.5f)));
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+}
+/* mkdraft:func_81605598 end */
 
 extern void func_8160551C(void);
 extern void func_81605598(s32, s32, s32, s32, s32);
