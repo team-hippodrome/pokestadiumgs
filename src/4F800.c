@@ -187,13 +187,55 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004FA6C.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80097250[];
+typedef struct UiImageStateColor {
+    u8 r, g, b, a;
+} UiImageStateColor;
+// Selects the image combiner and render mode, then loads primary and environment colors.
+void UiImageNode_SetRenderState(u8 *node) {
+    s32 enabled;
+    UiImageStateColor *primary;
+    UiImageStateColor *environment;
+
+    primary = (UiImageStateColor *)(node + 44);
+    environment = (UiImageStateColor *)(node + 48);
+    enabled = 1;
+    switch (node[40] & 0xF) {
+    case 1:
+        gSPDisplayList(D_800D0510++, D_80097250);
+        gDPSetCombineMode(D_800D0510++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        break;
+    case 2:
+        gSPDisplayList(D_800D0510++, D_80097250);
+        gDPSetCombineLERP(D_800D0510++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
+                          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
+        break;
+    default:
+        enabled = 0;
+        break;
+    }
+    if (enabled) {
+        switch (node[40] & 0xF0) {
+        default:
+            gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            break;
+        case 0x10:
+            gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+            break;
+        case 0x20:
+            gDPSetRenderMode(D_800D0510++, G_RM_TEX_EDGE, G_RM_TEX_EDGE2);
+            break;
+        }
+        gDPSetPrimColor(D_800D0510++, 0, 0, primary->r, primary->g, primary->b, primary->a);
+        gDPSetEnvColor(D_800D0510++, environment->r, environment->g, environment->b, environment->a);
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern s32 func_80050640(u8 *);
 extern s32 func_8004C990(s32, s32);
-extern void func_8004FA6C(u8 *);
 extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
 extern Gfx *D_800D0510;
 extern Gfx D_80094F50[];
@@ -234,7 +276,7 @@ void UiImageNode_DrawUnscaled(u8 *node, s32 x, s32 y) {
         flags |= 0x100;
     }
     if (image_address != 0 && func_8004EC7C((s16)x, (s16)y) != 0) {
-        func_8004FA6C(node);
+        UiImageNode_SetRenderState(node);
         if (((u8 *)image_address)[4] == G_IM_FMT_CI) {
             setup_packet = D_800D0510++;
             gDPSetTextureLUT(setup_packet, G_TT_RGBA16);
