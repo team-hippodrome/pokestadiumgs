@@ -1536,3 +1536,5 @@ func_800505A4 = UiAnimationCursor_NextFrame;
 func_80050640 = UiAnimationCursor_Step;
 
 func_841252D0 = Battle_LoadMoveCommandStream;
+
+func_8004F2D0 = Ui_DrawMirroredTextureBorder;
