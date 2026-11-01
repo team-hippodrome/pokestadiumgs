@@ -825,7 +825,46 @@ void func_8640377C(void *arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86403B3C.s")
+/* mkdraft:func_86403B3C begin */
+
+
+
+f32 func_86403B3C(u8 *arg0, void *arg1, f32 arg2, f32 *arg3, void *arg4) {
+    f32 current;
+    f32 result;
+    f32 near[2];
+    f32 far[2];
+    f32 second;
+    f32 first;
+    void *tag;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)D_86416C00 + 0x7C8);
+    result = 0.0f;
+    while (node != NULL) {
+        tag = *(void **)(node + 0x20);
+        if (arg1 != tag) {
+            near[0] = *(f32 *)(arg0 + 0x48);
+            near[1] = *(f32 *)(arg0 + 0x50);
+            far[0] = *(f32 *)(node + 0x48);
+            far[1] = *(f32 *)(node + 0x50);
+            if (func_87D00670(near, arg3, &second, far, arg4, &first) != 0) {
+                if (arg2 < second) {
+                    current = second - arg2;
+                } else {
+                    current = second - arg2;
+                    current = -current;
+                }
+                if (current < 46.4f && first > 0.0f && result < first) {
+                    result = first;
+                }
+            }
+        }
+        node = *(u8 **)(node + 4);
+    }
+    return result;
+}
+/* mkdraft:func_86403B3C end */
 #endif
 
 #ifdef VERSION_US
