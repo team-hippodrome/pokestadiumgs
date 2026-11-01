@@ -52,7 +52,44 @@ void func_87E0B834(void *arg0) {
     MainPool_FinalizeAllocation(temp);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0B884.s")
+/* mkdraft:func_87E0B884 begin */
+extern f32 D_87E1A3B4[];
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern void func_87E0C6CC();
+extern void func_87F0ADE0(void *, u32);
+extern u8 *func_87F0AEC0(void *, void *, s32, s32, s32, void *, u8 *);
+extern s32 func_87F0AFD0(u8 *, f32 *, f32 *, s16 *);
+extern s32 main_pool_alloc(s32, s32);
+
+
+
+void func_87E0B884(void *arg0) {
+    u8 *base;
+    u8 *node;
+    s32 i;
+
+    base = (u8 *)main_pool_alloc(936, 0);
+    func_87F0ADE0((u8 *)arg0 + 0xC, 6);
+    for (i = 0; i < 6; i++) {
+        node = func_87F0AEC0((u8 *)arg0 + 0xC, func_87E0B700, 0x0F000000, 124, 28,
+                             func_87E0C6CC, base + i * 0x9C);
+        if (node != NULL) {
+            func_8003F1DC(node + 0x24);
+            func_8003F114(node + 0x24, 0, -1, *(void **)((u8 *)arg0 + 8));
+            /* D_87E1A3B4 holds six rows of three floats; the file-wide f32[]
+               declaration is flat because func_87E0C390 walks it by stride 3. */
+            *(f32 *)(node + 0x48) = ((f32 (*)[3])D_87E1A3B4)[i][0];
+            *(f32 *)(node + 0x4C) = ((f32 (*)[3])D_87E1A3B4)[i][1];
+            *(f32 *)(node + 0x50) = ((f32 (*)[3])D_87E1A3B4)[i][2];
+            *(s16 *)(node + 0x44) = (i < 3) ? -0x4000 : 0x4000;
+            func_87F0AFD0(base + i * 0x9C + 0x14, (f32 *)(node + 0x48),
+                          (f32 *)(node + 0x54), (s16 *)(node + 0x42));
+            node[0x25] &= ~1;
+        }
+    }
+}
+/* mkdraft:func_87E0B884 end */
 
 extern s32 func_8004C990(s32, s32);
 
