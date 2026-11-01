@@ -544,7 +544,39 @@ void func_868066B8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680671C.s")
+extern s32 D_86807C4C;
+extern f32 D_86807C50;
+extern f32 D_86807C54;
+extern s32 D_86807C78;
+extern f32 D_8682F2FC;
+extern f32 D_8682F304;
+extern u8 D_86817308[];
+extern u8 D_8681E928[];
+extern void func_86800508(void);
+extern u8 D_868086C8[];
+void Fragment56_UpdateModelGridTransforms(void) {
+    s32 row;
+    s32 column;
+    u8 *model;
+    u8 *grid_model;
+    f32 height;
+    D_8682F2FC = (D_86807C54 / 0.17f) * (D_86807C50 / 0.17f);
+    D_8682F304 = D_8682F2FC * 7.0 + D_86807C4C;
+    height = D_86807C4C;
+    for (row = 0; row < 4; row++) {
+        model = D_868086C8 + row * 0x168;
+        *(f32 *)(model + 0x30) = *(f32 *)(model + 0x34) = *(f32 *)(model + 0x38) = D_86807C50;
+        *(f32 *)(model + 0x28) = height;
+        *(f32 *)(model + 0x24) = (row * 16 - 24) * D_8682F2FC;
+        for (column = 0; column < 20; column++) {
+            grid_model = D_86817308 + row * 0x1C20 + column * 0x168;
+            *(f32 *)(grid_model + 0x30) = *(f32 *)(grid_model + 0x34) = *(f32 *)(grid_model + 0x38) = D_86807C50;
+        }
+    }
+    *(f32 *)(D_8681E928 + 0x28) = D_8682F304;
+    *(f32 *)(D_8681E928 + 0x190) = D_8682F304 - D_86807C78;
+    func_86800508();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_8680686C.s")
 
