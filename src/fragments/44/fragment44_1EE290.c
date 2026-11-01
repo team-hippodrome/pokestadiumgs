@@ -697,7 +697,53 @@ void func_8AF01020(s16 arg0, s16 arg1) {
 }
 /* mkdraft:func_8AF01020 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF0118C.s")
+/* mkdraft:func_8AF0118C begin */
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004CA24(u16 *);
+extern s32 func_8004D1FC(u8 *);
+extern Gfx *D_800D0510;
+extern f32 D_80087E50[];
+extern s32 D_8AF2BDC4;
+
+#define FIELD(expr, type, offset) (*(type)((u8 *)(expr) + (offset)))
+
+
+
+void func_8AF0118C(s16 arg0, s16 arg1, void *arg2) {
+    s16 temp_s1;
+    s16 sp2C;
+    s16 sp2A;
+    s32 sp24;
+    s32 sp20;
+
+    // arg0 scales by 4 and the table value contributes 40.0f * D_80087E50[index]; the
+    // compound store narrows the float sum back to s16 in $s1.
+    temp_s1 = arg0 * 4;
+    // FAKE: ((D_8AF2BDC4 << 6) << 6) folds to << 0xC; the unfolded pair claims one extra
+    // temp-walk slot, which puts the index chain's integer temps in retail order
+    // (t6, t7, t8, t9, t2, t3). Diff score 670 with a single << 0xC.
+    temp_s1 += 40.0f * D_80087E50[(((D_8AF2BDC4 << 6) << 6) & 0xFFFF) >> 4];
+    sp20 = (FIELD(arg2, u8 *, 1) & 1) != 0;
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    sp24 = func_8004C990((s32) FIELD(arg2, u16 *, 0x24), (s32) FIELD(arg2, u16 *, 0x26));
+    sp2C = func_8004CA10((u16 *) sp24);
+    sp2A = func_8004CA24((u16 *) sp24);
+    func_8004D1FC((u8 *) sp24);
+    // One gSPTextureRectangle per branch: the macro emits the E4 destination rectangle,
+    // the E1 texture-coordinate word, and the F1 tile-size word, matching retail's three
+    // consecutive 8-byte stores. The if-branch's E1 word is the object's s16 at +0xC
+    // shifted left 5, which the macro's _SHIFTL(s,16,16) folds into retail's sll ...,21.
+    if (sp20 != 0) {
+        gSPTextureRectangle(D_800D0510++, temp_s1, arg1 * 4, temp_s1 + sp2C * 4, (arg1 + sp2A) * 4, G_TX_RENDERTILE, FIELD(arg2, s16 *, 0xC) << 5, 0, 0xFC00, 0x400);
+    } else {
+        gSPTextureRectangle(D_800D0510++, temp_s1, arg1 * 4, temp_s1 + sp2C * 4, (arg1 + sp2A) * 4, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_8AF0118C end */
 
 extern void func_800504BC(s16 *);
 extern void func_8AF0118C(s16, s16, void *);
