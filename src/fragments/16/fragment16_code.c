@@ -602,7 +602,98 @@ s32 func_8200180C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_8200182C.s")
+/* mkdraft:func_8200182C begin */
+// Dispatches the fragment16 sequence: mode 0/1 run the intro handlers
+// (func_82000098/func_8200180C, entering mode 2 on completion), mode 2 runs
+// the list/selection input handlers (case 4's body sits before case 3's in the
+// source because IDO lays case bodies out in source order and retail has
+// func_82001590's body at 0x8200193C, before func_82001590-of-D_82001EA0's
+// check at 0x82001988), and modes 3/5 finish the sequence through the fade.
+// Case numbers are the jump-table targets of jtbl_82001D30.
+// func_820016EC / func_82001590 are the linker aliases of
+// Fragment16_HandleListInput / Fragment16_HandleSelectionInput
+// (linker_scripts/us/aliases.ld); the alias spelling is used because the
+// retail relocation symbols carry those names.
+extern u8 D_82001C38[];
+extern s32 D_82001EAC;
+extern s32 func_820016EC();
+extern s32 func_82001590();
+
+s32 func_8200182C(s32 arg0) {
+    s32 var_s0;
+    u8 *temp_v0_3;
+    s32 temp_v0;
+
+    var_s0 = arg0;
+    switch (arg0) {
+        case 0:
+            if (!StageContext_GetFadeMode()) {
+                if (func_82000098()) {
+                    var_s0 = 1;
+                } else {
+                    var_s0 = 2;
+                    func_82000CB0();
+                }
+            }
+            break;
+        case 1:
+            if (func_8200180C()) {
+                var_s0 = 2;
+                func_82000CB0();
+            }
+            break;
+        case 2:
+            switch (func_820016EC()) {
+                case 1:
+                    temp_v0_3 = (u8 *)(&D_82001C38) + (D_82001EAC << 3);
+                    var_s0 = (*(s32 *)((u8 *)(temp_v0_3) + (4)));
+                    switch (var_s0) {
+                        case 5:
+                            var_s0 = 3;
+                            func_82000CE0();
+                            break;
+                        case 4:
+                            D_82001EC8 = 1;
+                            break;
+                    }
+                    break;
+                case -1:
+                    var_s0 = 5;
+                    StageContext_SetClearColor(1);
+                    StageFade_StartFromTransparent(5);
+                    func_80035424(15);
+                    break;
+            }
+            break;
+        case 4:
+            temp_v0 = func_82001590();
+            if (temp_v0 == 1) {
+                var_s0 = 5;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(5);
+                func_80035424(15);
+            } else if (temp_v0 == -1) {
+                var_s0 = 2;
+                D_82001EC8 = 0;
+            }
+            break;
+        case 3:
+            if (D_82001EA0 == 5) {
+                var_s0 = 5;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(5);
+                func_80035424(15);
+            }
+            break;
+        case 5:
+            if (StageContext_GetFadeMode() == 1) {
+                var_s0 = 6;
+            }
+            break;
+    }
+    return var_s0;
+}
+/* mkdraft:func_8200182C end */
 #endif
 
 #ifdef VERSION_US
