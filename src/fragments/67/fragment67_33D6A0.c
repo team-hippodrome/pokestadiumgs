@@ -198,7 +198,38 @@ void func_829011D0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33D6A0/func_829012E4.s")
+/* mkdraft:func_829012E4 begin */
+/* mkdraft:func_829012E4 begin */
+extern u8 D_82918868[];
+extern s16 D_829188B0[];
+extern f32 D_829188D0;
+extern u8 D_829188E0[];
+
+// FAKE: falls off the end without returning a value. The m2c block below declares
+// func_829012E4 as M2C_UNK (s32), but the original body stops after the six stores
+// and the caller (func_82901C98) discards the result. The undefined return value
+// is what keeps D_82918868's address in $v0 instead of $v1, which selects the
+// target store order (0, 0x18, 8, 4, 0x20, 0x1C) and the delay-slot store at 0x1C.
+// Writing `return (s32) D_82918868;` scores 66; wrapping the body in do/while (0)
+// with that return scores 36.
+
+
+s32 func_829012E4(void) {
+    s16 x;
+    s16 z;
+
+    x = (s16) (D_829188B0[3] + D_829188B0[1] / 2);
+    z = (s16) (D_829188B0[4] + D_829188B0[2] / 2);
+    Vec3f_SetComponentsDuplicate(&D_829188D0, (f32) x, 0.0f, (f32) z);
+    func_800371B4(&D_829188D0, D_829188E0, *(f32 *) (D_82918868 + 0x2C), *(s16 *) (D_82918868 + 0x24), *(s16 *) (D_82918868 + 0x26));
+    *(f32 *) (D_82918868 + 0) = *(f32 *) (D_829188E0 + 0);
+    *(f32 *) (D_82918868 + 0x18) = ((f32) x - *(f32 *) (D_829188E0 + 0)) * 2;
+    *(f32 *) (D_82918868 + 8) = *(f32 *) (D_829188E0 + 8);
+    *(f32 *) (D_82918868 + 4) = 0.0f;
+    *(f32 *) (D_82918868 + 0x20) = ((f32) z - *(f32 *) (D_829188E0 + 8)) * 2;
+    *(f32 *) (D_82918868 + 0x1C) = 0.0f;
+}
+/* mkdraft:func_829012E4 end */
 #endif
 
 #ifdef VERSION_US
