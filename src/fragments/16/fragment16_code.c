@@ -38,7 +38,99 @@ s32 func_82000098(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_82000100.s")
+/* mkdraft:func_82000100 begin */
+extern s16 D_82001D58;
+extern s16 D_82001D5A;
+extern s16 D_82001D6C;
+extern s16 D_82001D5C;
+extern s16 D_82001D5E;
+extern u8 D_82001E70[];
+extern u8 D_82001ED0[];
+extern u8 D_82001ED6;
+extern void func_800548C4(void *, s32, s32, s32);
+
+// FAKE: REWRITE_FUNCTION_HEX installs the retail 60-instruction text and
+// REWRITE_FUNCTION_RELOC_TARGET the retail relocation topology; the C body
+// below compiles to 64 instructions that differ from retail in 22 positions
+// (func_82000100.report.md). Two IDO scheduling choices in this tree differ
+// from the retail object: the final call's constants 33, 5 and 20 are
+// rematerialized instead of reusing the loop registers a1/a2/a3, and
+// D_82001D5A gets its own `lui $at` because the scheduled D_82001D5E load sits
+// between the two zero stores, outside COALESCE_AT_LUI's foldable gap.
+#pragma REWRITE_FUNCTION_HEX(func_82000100, 8b8ec34eb2c80ab87cfac36e68982f50b164cb8eabc05a04bc02c62dcb32e88c, 3c0e000085ce000027bdffe82401000115c10033afbf00143c0f000085ef0000240900012408000e29e1012c102000043c0a000025f800013c010000a4380000254a000024070014240600052405002100002025254200163c1900008739000000a4582301686023032c082a1420000624840001804300002861000510200002246d0001a04d0000804e000010ce000200000000000048251487ffef244200012508ffff0501ffea254affec1120000c3c010000a4200000a42000003c020000844200003c0100003c040000a02200003c010000248400000c000000a42200008fbf001427bd001803e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x0, 5, D_82001D58)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x4, 6, D_82001D58)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x18, 5, D_82001D6C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x1C, 6, D_82001D6C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x30, 5, D_82001E70)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x38, 5, D_82001D6C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x3C, 6, D_82001D6C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x40, 6, D_82001E70)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x58, 5, D_82001D6C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0x5C, 6, D_82001D6C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xB0, 5, D_82001D58)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xB4, 6, D_82001D58)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xB8, 6, D_82001D5A)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xBC, 5, D_82001D5E)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xC0, 6, D_82001D5E)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xC4, 5, D_82001ED6)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xC8, 5, D_82001ED0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xCC, 6, D_82001ED6)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xD0, 5, D_82001D5C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xD4, 6, D_82001ED0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xD8, 4, func_800548C4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82000100, 0xDC, 6, D_82001D5C)
+
+// Scans the 15-row by 20-column byte grid at D_82001E70 + 0x16 while counting
+// a per-cell fill toward 5: cell (row level, column index) is filled when
+// D_82001D6C reaches 33 - index - level, and the walk only succeeds if every
+// visited cell holds 5 afterwards. On success the trigger at D_82001D58 is
+// cleared, D_82001D5E is copied to D_82001ED6 and D_82001D5C, and
+// func_800548C4 re-runs the grid walk with width 33, limit 5 and stride 20.
+
+
+void func_82000100(void) {
+    s32 found;
+    s32 index;
+    s32 level;
+    s8 *base;
+    s8 *p;
+    s16 *sel;
+    s16 *flag;
+
+    flag = &D_82001D58;
+    if (*flag == 1) {
+        found = 1;
+        sel = &D_82001D6C;
+        if (*sel < 300) {
+            *sel = *sel + 1;
+        }
+        base = (s8 *)D_82001E70;
+        for (level = 14; level >= 0; level--) {
+            index = 0;
+            p = base + 0x16;
+            for (; index < 20; index++, p++) {
+                if (*sel >= 33 - index - level) {
+                    if (*p < 5) {
+                        (*p)++;
+                    }
+                }
+                if (*p != 5) {
+                    found = 0;
+                }
+            }
+            base -= 0x14;
+        }
+        if (found != 0) {
+            *flag = 0;
+            D_82001D5A = 0;
+            D_82001ED6 = D_82001D5E;
+            D_82001D5C = D_82001D5E;
+            func_800548C4(D_82001ED0, 33, 5, 20);
+        }
+    }
+}
+/* mkdraft:func_82000100 end */
 #endif
 
 #ifdef VERSION_US
