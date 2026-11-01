@@ -39,14 +39,8 @@ typedef struct TextureSelectionState {
 extern TextureSelectionState D_80128080;
 extern u8 fragment26_ROM_START[];
 extern u8 fragment27_ROM_START[];
-typedef union ResourceInitFlags {
-    u32 raw;
-    struct {
-        /* 0x00 */ u16 upper;
-        /* 0x02 */ u16 bits;
-    } half;
-} ResourceInitFlags;
-s32 func_8004C09C(ResourceInitFlags flags) {
+
+s32 func_8004C09C(u16 flags) {
     s32 cachedState;
     s32 state;
     s32 i;
@@ -55,7 +49,7 @@ s32 func_8004C09C(ResourceInitFlags flags) {
     if (cachedState == 0) {
         if ((state = main_pool_alloc(0x22C, 0)) != 0) {
             main_pool_set_func((u8*)(u32)state, 0, (s32)func_8004C088);
-            if ((*(u16*)(u32)state = flags.half.bits) & 1) {
+            if ((*(u16*)(u32)state = flags) & 1) {
                 *(s32 *)((u8 *)(u32)state + 4) = BinArchive_Open(func_800356CC(1), 0, 1, 0);
             } else {
                 *(s32 *)((u8 *)(u32)state + 4) = 0;

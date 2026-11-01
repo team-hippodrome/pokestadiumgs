@@ -1049,8 +1049,8 @@ s32 GbSave_LoadRequestedBuffers(s32 port, u8 flags) {
 #endif
 
 #ifdef VERSION_US
-void func_8005A014(s32 arg0) {
-    GbSave_LoadRequestedBuffers(arg0, 1);
+s32 func_8005A014(s32 arg0) {
+    return GbSave_LoadRequestedBuffers(arg0, 1);
 }
 #endif
 
