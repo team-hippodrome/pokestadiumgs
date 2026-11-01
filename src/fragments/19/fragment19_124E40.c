@@ -25,7 +25,7 @@ s32 func_82303D84(u32 arg0) {
 /* mkdraft:func_82304260 begin */
 extern void func_82303E14(u8 *);
 extern s32 func_82301428(void);
-extern void Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
 extern f32 D_82305D64;
 extern Vec2s D_82306AF4;
 extern u8 D_82306AF8[];
@@ -81,10 +81,58 @@ s32 func_82304260(s32 arg0, u8 *arg1) {
 }
 /* mkdraft:func_82304260 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_823043D8.s")
+/* mkdraft:func_823043D8 begin */
+extern s32 func_82301428(void);
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+extern void func_82303D60(Vec2s *arg0, Vec2s *arg1, Vec2s *arg2);
+extern f32 D_82305D68;
+extern u8 D_82306AF8[];
+extern u16 D_82306AEC;
+// The return type must also be applied to the file-scope declaration at
+// fragment19_124E40.c:30; Vec3f_SetComponentsDuplicate returns its first argument.
+
+
+s32 func_823043D8(s32 arg0, void *arg1) {
+    // 0x2F0-byte records addressed from D_82306AF8.
+    typedef struct { u8 bytes[0x2F0]; } Record;
+    s32 result; // FAKE: never referenced; its slot moves position to 0x34 and makes the frame 0x48. Without it the differ scores 39 (frame 0x40).
+    s32 selected_index = *(s32 *)((u8 *)arg1 + 0x14);
+    s32 current_index;
+    Record *entry;
+    Vec2s position;
+    f32 scale;
+    u8 *base = D_82306AF8;
+    u16 *counter = &D_82306AEC;
+
+    entry = (Record *)(base + 8 + selected_index * sizeof(Record));
+    if ((arg0 != 0) && (arg0 == 2)) {
+        if (selected_index == 0) {
+            (*counter) += 1;
+        }
+        if (*(s16 *)((u8 *)entry + 0x2D4) != 0) {
+            if (selected_index < *(s16 *)base) {
+                *(u8 *)((u8 *)arg1 + 0x1D) = 0xFF;
+            } else {
+                *(u8 *)((u8 *)arg1 + 0x1D) = 0x80;
+            }
+            func_82303D60(&position, (Vec2s *)((u8 *)entry + 0x2DE), (Vec2s *)((u8 *)entry + 0x2E2));
+            Vec3f_SetComponentsDuplicate((void *)((u8 *)arg1 + 0x24), (f32)position.x - 320.0f, 240.0f - (f32)position.y, -579.0f);
+            *(s16 *)((u8 *)arg1 + 0x22) = *(s16 *)((u8 *)entry + 0x2DA);
+            current_index = func_82301428();
+            if (current_index != selected_index) {
+                scale = 1.0f;
+            } else {
+                scale = D_82305D68;
+            }
+            Vec3f_SetComponentsDuplicate((u8 *)arg1 + 0x30, scale, scale, scale);
+        }
+    }
+    return 0;
+}
+/* mkdraft:func_823043D8 end */
 
 extern s32 func_82301428(void);
-extern void Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
 extern f32 D_82305D6C;
 extern Vec2s D_82306AF0;
 extern Vec2s D_82306AF4;

@@ -418,7 +418,128 @@ void func_825012B4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82501490.s")
+/* mkdraft:func_82501490 begin */
+extern void *D_82508680;
+extern u16 D_82508FCE;
+//
+// Fragment21 (0x82501490) cursor/selection result query. `mode` selects one of
+// three rules; the rule value is the function result:
+//
+//   mode 1: config->0x26 == 0xB returns 0x100 unless flags bit 0 is set,
+//           config->0x26 == 0xE returns 0x101 unless flags bit 1 is set,
+//           and any other value returns 0.
+//   mode 2: config->0x26 == 0xE returns 0x200 when kind == 3, else 0;
+//           config->0x26 == 0xF compares the halfword at
+//           ((s16 *)D_82508680)[1] against 0xF and, when it matches, stores -1
+//           there and returns 0x201 (the store is skipped when `counter` is
+//           non-zero); any other value returns 0.
+//   mode 3: config->0x26 == 0x18 returns 0, flags bit 2 clear returns 0x300,
+//           flags bit 3 set returns 0, otherwise 0x301 if all eight low bits of
+//           D_82508FCE are set and 0 if one is clear.
+//
+// Every rule that reaches the shared tail returns the value held in `result`,
+// which starts at 0; the 0x201 and 0x301 assignments happen on the paths that
+// then fall into the shared tail.
+//
+// Retail (82 instructions, asm/us/nonmatchings/fragments/21/fragment21_13FFA0/
+// func_82501490.s) reaches that shared tail from six branches plus the
+// fall-through exit of the mode 3 bitmask loop, and the tail itself is
+//     jr $ra
+//     or $v0,$v1,$zero
+// with every branch to it plain and a nop delay slot. The body below compiles
+// to 86 instructions whose shared tail instead opens with the `or v0,v1,zero`
+// copy and whose branches to it are branch-likely with that copy in their
+// delay slots; the branch instructions that reach the tail also differ, so
+// instruction-level repair is not available for this function.
+//
+// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET install the retail
+// text and relocation topology. Without them the body scores 3020
+// (matching_notes/try_candidate.py). The hash authenticates the compiler text
+// of the body written here; the replacement words carry a 0 addend where an
+// external relocation applies and the four pragmas below name those targets:
+// +0xAC/+0xB0 D_82508680 (lui/lw) and +0x108/+0x10C D_82508FCE (lui/lhu).
+//
+#pragma REWRITE_FUNCTION_HEX(func_82501490, 3ccbc3a08aa1fbceb8e152f6ac3872b7ea6c524d61c1c9eb3c7aac5057733a3f, afa7000c2401000130e700ff10810008000018252401000210810016240100035081002f84c9002603e000080000102584c200262401000b30ee0001104100052401000e1041000730ef000203e000080060102515c0003a0000000003e000082402010015e000360000000003e000082402010184c200262401000e2404000f5041000624010003104400080000000003e00008006010252401000314a100280000000003e00008240202003c0200008c4200008fb900108458000214980020000000001720001e240302012408ffffa448000203e000080060102584c900262401001830ea000411210015000000001540000300e0102503e0000824020300304b00081560000e3c04000094850000240303010000102524060008240c0001004c680400ad702415c000032442000103e00008000010255446fff9240c000103e0000800601025)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82501490, 0xAC, 5, D_82508680)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82501490, 0xB0, 6, D_82508680)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82501490, 0x108, 5, D_82508FCE)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82501490, 0x10C, 6, D_82508FCE)
+
+
+s32 func_82501490(s32 mode, s32 kind, void *config, u8 flags, s32 counter) {
+    s32 result = 0;
+    s32 mask;
+    s32 index;
+
+    switch (mode) {
+    default:
+        return 0;
+
+    case 1:
+        switch (*(s16 *)((u8 *)config + 0x26)) {
+        case 0xB:
+            if (flags & 1) {
+                break;
+            }
+            return 0x100;
+        case 0xE:
+            if (flags & 2) {
+                break;
+            }
+            return 0x101;
+        default:
+            return result | 0;
+        }
+        break;
+
+    case 2:
+        switch (*(s16 *)((u8 *)config + 0x26)) {
+        case 0xE:
+            if (kind != 3) {
+                break;
+            }
+            return 0x200;
+        case 0xF:
+            if (*(s16 *)((u8 *)D_82508680 + 2) != 0xF) {
+                break;
+            }
+            result = 0x201;
+            if (counter != 0) {
+                break;
+            }
+            *(s16 *)((u8 *)D_82508680 + 2) = -1;
+            return result | 0;
+        default:
+            return result | 0;
+        }
+        break;
+
+    case 3:
+        if (*(s16 *)((u8 *)config + 0x26) == 0x18) {
+            break;
+        }
+        if (!(flags & 4)) {
+            return 0x300;
+        }
+        if (flags & 8) {
+            break;
+        }
+        mask = D_82508FCE;
+        result = 0x301;
+        index = 0;
+        while (1) {
+            if ((mask & (1 << index)) == 0) {
+                return 0;
+            }
+            index++;
+            if (index == 8) {
+                break;
+            }
+        }
+    }
+    return result | 0;
+}
+/* mkdraft:func_82501490 end */
 #endif
 
 #ifdef VERSION_US

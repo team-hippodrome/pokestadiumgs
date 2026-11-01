@@ -685,7 +685,7 @@ void func_861023D4(void) {
 s32 func_86101F60(f32 *, f32 *, s32);
 void func_861021A8(f32 *, f32 *);
 void func_861023D4(void);
-void func_86102C08(void *, s32);
+s32 func_86102C08(void *, s32);
 extern void func_86101558(f32 *arg0, f32 *arg1);
 extern void func_86101E04(f32 arg0, f32 arg1, s32 arg2);
 extern void * D_87F119DC;
@@ -764,7 +764,61 @@ void func_86102B64(void *arg0, f32 *arg1, f32 *arg2) {
     *arg2 = (*(f32 *)((u8 *)(arg0) + (0x1C))) - temp_fv0_2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86102C08.s")
+/* mkdraft:func_86102C08 begin */
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern void func_86104B2C();
+
+// Moves the actor by one frame. With arg1 set, the controller delta from func_86101F60 is
+// used and func_86102B64 (clamped delta toward the target position at +0x18/+0x1C) only when
+// the controller reports no movement; with arg1 clear the clamped delta is always used. The
+// delta is applied by func_86101E04 and clamped by func_861023D4. When the target sits within
+// 700 * 0.04 * D_8610AD20[0x9768] of the camera position (+0x48/+0x4C) on both axes,
+// func_86104B2C picks a new random target and the function returns 1, else 0.
+
+
+s32 func_86102C08(void *arg0, s32 arg1) {
+    f32 x_delta;
+    f32 y_delta;
+    s32 moved;
+    f32 limit;
+    f32 temp_fv0;
+    f32 temp_fv1;
+    f32 temp_fv1_2;
+    f32 dx;
+    f32 dy;
+
+    moved = 0;
+    y_delta = 0.0f;
+    x_delta = 0.0f;
+    if (arg1 != 0) {
+        if (func_86101F60(&x_delta, &y_delta, 0) == 0) {
+            func_86102B64(arg0, &x_delta, &y_delta);
+        }
+    } else {
+        func_86102B64(arg0, &x_delta, &y_delta);
+    }
+    temp_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    temp_fv1 = *(f32 *)((u8 *)arg0 + 0x18);
+    dx = (temp_fv0 < temp_fv1) ? temp_fv1 - temp_fv0 : -(temp_fv1 - temp_fv0);
+    // FAKE: the comma expression schedules the 0.04f rodata load before the
+    // D_8610AD20 + 0x9768 address chain and keeps 700.0f an immediate; diff score 295
+    // without it. The same expression appears in func_86105204 in this file.
+    limit = (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f);
+    if (dx < limit) {
+        temp_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x4C);
+        temp_fv1_2 = *(f32 *)((u8 *)arg0 + 0x1C);
+        dy = (temp_fv0 < temp_fv1_2) ? temp_fv1_2 - temp_fv0 : -(temp_fv1_2 - temp_fv0);
+        if (dy < limit) {
+            func_86104B2C(arg0);
+            moved = 1;
+        }
+    }
+    func_86101E04(x_delta, y_delta, 0);
+    func_861023D4();
+    return moved;
+}
+/* mkdraft:func_86102C08 end */
 
 extern s32 func_86101964(f32, s32, f32, f32, f32, f32);
 extern f32 func_86101AEC(s32, f32 *, f32 *);
@@ -829,7 +883,7 @@ void func_86102D50(void *arg0) {
 
 extern void func_86102720(void *, void *, f32);
 extern void func_86102908(void *, void *);
-extern void func_86102C08(void *, s32);
+extern s32 func_86102C08(void *, s32);
 extern void func_86102D50(void *);
 extern void * D_87F119DC;
 u16 func_86102E8C(void *arg0) {
@@ -1607,9 +1661,98 @@ void func_86106710(void) {
 
 extern void func_86106688();
 extern s32 func_86106504();
-void func_86106C28(void) { func_86106688(); func_86106504(D_87F119DC); }
+// Retail passes func_86106504's return through in v0 (jal, result not consumed;
+// epilogue restores ra and returns without touching v0), so the wrapper is
+// s32. The local keeps IDO from turning `return f();` into a tail-call j.
+s32 func_86106C28(void) {
+    s32 ret;
+    func_86106688();
+    ret = func_86106504(D_87F119DC);
+    return ret;
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86106C54.s")
+/* mkdraft:func_86106C54 begin */
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+extern s32 func_86106784(void);
+// Per-frame update of the D_87F119DC actor while it plays a scale-wobble
+// sequence: the counter at +0x1C fixes the angle, the sin/cos pair writes the
+// wobble to the x/y scale fields (+0x54/+0x58) and the flags word +0xC selects
+// the stage. Field roles (position +0x48/+0x4C/+0x50, velocity
+// +0x10/+0x14/+0x18, scale +0x54/+0x58/+0x5C) are as documented for the same
+// node in fragment 52.
+//@{src/fragments/52/fragment52_27E4E0.c}
+
+
+void func_86106C54(void) {
+    // Flags word +0xC; its four high bits select the stage.
+    s32 flags;
+    // Nonzero when the stage's sub-sequence call engaged a target.
+    s32 ret;
+    // Set when the sequence ends and the actor has to be handed back through
+    // func_87F026E8: the 0x40000000 stage ran for six frames, or the actor fell
+    // below -464.8497925f.
+    s32 flag;
+    f32 angle;
+
+    flag = 0;
+    // 0.174532935f is 10 degrees in radians: the wobble advances 10 degrees per
+    // counter step.
+    angle = (f32) * (s32 *)((u8 *)D_87F119DC + 0x1C) * 0.174532935f;
+    ret = 0;
+    // Wobble between 0.8 and 1.2 times the scale, the two axes 90 degrees apart.
+    *(f32 *)((u8 *)D_87F119DC + 0x54) = __sinf(angle) * 0.200000003f + 1.0f;
+    *(f32 *)((u8 *)D_87F119DC + 0x58) = __cosf(angle) * 0.200000003f + 1.0f;
+    flags = *(s32 *)((u8 *)D_87F119DC + 0xC);
+    if (flags & 0x40000000) {
+        // Grow the wobble by 1.399999976f every frame for six frames, then end
+        // the sequence.
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 6) {
+            flag = 1;
+        } else {
+            // One load of 1.399999976f feeds both axes.
+            f32 scale = 1.399999976f;
+
+            *(f32 *)((u8 *)D_87F119DC + 0x54) *= scale;
+            *(f32 *)((u8 *)D_87F119DC + 0x58) *= scale;
+        }
+    } else if (flags & 0x20000000) {
+        // func_86106710 decays the wobble; func_86106C28 clamps the +0x4C
+        // field (func_86106688) and returns func_86106504's result.
+        func_86106710();
+        ret = func_86106C28();
+    } else if (flags & 0x10000000) {
+        func_86106710();
+        ret = func_86106504(D_87F119DC);
+    } else if (flags & 0x80000000) {
+        // func_86106784 ends by returning func_86106504's result for its own
+        // target search.
+        ret = func_86106784();
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) < 15) {
+            // Ramp from half size at counter 0 to full size at 15; one factor
+            // feeds both axes.
+            f32 scale = (f32) * (s32 *)((u8 *)D_87F119DC + 0x1C) * 0.5f / 15.0f + 0.5f;
+
+            *(f32 *)((u8 *)D_87F119DC + 0x54) *= scale;
+            *(f32 *)((u8 *)D_87F119DC + 0x58) *= scale;
+        }
+    }
+    if (*(f32 *)((u8 *)D_87F119DC + 0x48) < -464.8497925f) {
+        flag = 1;
+    }
+    if (ret != 0) {
+        // A target was engaged: enter the growth stage and drop the counter
+        // and the x/y velocity.
+        *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x40000000;
+        *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        *(f32 *)((u8 *)D_87F119DC + 0x14) = 0.0f;
+        *(f32 *)((u8 *)D_87F119DC + 0x10) = *(f32 *)((u8 *)D_87F119DC + 0x14);
+    }
+    if (flag != 0) {
+        func_87F026E8((s32)D_87F119D8, (s32)D_87F119DC);
+    }
+}
+/* mkdraft:func_86106C54 end */
 
 extern u8 D_8610A890[];
 extern void GeoRender_ApplyMaterialState(void);

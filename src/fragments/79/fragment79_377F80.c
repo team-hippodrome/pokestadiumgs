@@ -160,7 +160,66 @@ void func_84108A10(s32 arg0)
 }
 /* mkdraft:func_84108A10 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377F80/func_84108AF8.s")
+/* mkdraft:func_84108AF8 begin */
+extern s32 func_8411E1F8(s32);
+
+extern u8 *D_8418C950;
+
+
+
+void func_84108AF8(u8 *arg0) {
+    s32 index;
+    u8 *entry;
+    u8 *child;
+    u8 *object;
+    u8 result;
+
+    entry = D_8418C950;
+    for (index = 0; index < 300; index++, entry += 156) {
+        if ((*(s8 *)(entry + 152) != 0) && (func_84100054(entry, 0x10000) != 0) &&
+            (*(u8 **)(entry + 8) == arg0)) {
+            result = 0;
+            // Both locals read entry+0x10. IDO folds the second read into a copy of
+            // the first, which keeps the pointer live in a second callee-saved
+            // register across the func_8411E1F8 calls: `object` serves the 0x20 and
+            // 4-mask checks, `child` serves the 7-mask check.
+            object = *(u8 **)(entry + 16);
+            child = *(u8 **)(entry + 16);
+            // D_84193DD0 + 16 is an array of 16-byte species records; element 0 is
+            // the flag word tested here.
+            if (((((u16 (*)[8])((D_84193DD0 + 16)))[func_8411E1F8((s32)arg0)][0] & 7) != 0) &&
+                (child != NULL) && (*(u8 **)(child + 20) != NULL)) {
+                // Species 18 in the 7-mask case.
+                if (*(s16 *)(*(u8 **)(child + 20)) == 18) {
+                    result = 1;
+                }
+            }
+            if (((((u16 (*)[8])((D_84193DD0 + 16)))[func_8411E1F8((s32)arg0)][0] == 0x20) &&
+                 (object != NULL) && (*(u8 **)(object + 20) != NULL)) &&
+                (*(s16 *)(*(u8 **)(object + 20)) == 317)) {
+                result = 1;
+            }
+            if (((((u16 (*)[8])((D_84193DD0 + 18)))[func_8411E1F8((s32)arg0)][0] & 4) != 0) &&
+                (object != NULL) && (*(u8 **)(object + 20) != NULL)) {
+                // Species 211 in the 4-mask case.
+                if (*(s16 *)(*(u8 **)(object + 20)) == 211) {
+                    result = 1;
+                }
+            }
+            if (result == 0) {
+                func_84100030(entry, 0x10080);
+                if (func_84100054(entry, 0x8000) != 0) {
+                    func_84100348(entry);
+                    if (1) { } // karodo
+                    if (*(u8 **)(entry + 12) != NULL) {
+                        *(u8 *)(*(u8 **)(entry + 12) + 1) &= ~1;
+                    }
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_84108AF8 end */
 
 /* mkdraft:func_84108CE8 begin */
 extern u8 *D_8418C950;
@@ -596,7 +655,7 @@ void func_841098C0(s32 arg0) {
 /* mkdraft:func_841098FC begin */
 extern s32 func_8003C9B8(u8 *, s16, ParticleVec3f *);
 extern f32 func_8411E1BC(u8 *);
-extern s32 func_8411E1F8(u8 *);
+extern s32 func_8411E1F8(s32);
 
 
 

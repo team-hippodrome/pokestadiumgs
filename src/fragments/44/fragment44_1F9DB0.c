@@ -273,7 +273,49 @@ s16 func_8AF0C758(void) {
     total += temp;
     return total;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0C7C8.s")
+/* mkdraft:func_8AF0C7C8 begin */
+
+
+s32 func_8AF0C7C8(u8 *arg0, u8 *arg1) {
+    s16 count;
+    u8 *base;
+    u8 value;
+
+    base = arg1;
+    count = 0;
+    for (;;) {
+        if (arg0[0] == 0) break;
+        arg1 = base;
+        do {
+            value = arg1[0];
+            if (!value) break;
+            if (arg0[0] == value) {
+                count++;
+                if (arg0[1] == 0) arg0[1] = arg1[1];
+                if (arg0[2] == 0) arg0[2] = arg1[2];
+                if (arg0[3] == 0) arg0[3] = arg1[3];
+                if (arg0[4] == 0) arg0[4] = arg1[4];
+                if (arg0[6] == 0) arg0[6] = arg1[6];
+                if (arg0[7] == 0) arg0[7] = arg1[7];
+                if (arg0[8] == 0) arg0[8] = arg1[8];
+                if (arg0[9] == 0) arg0[9] = arg1[9];
+                if (arg1[5] == 0) arg1[5] = arg0[5];
+                if (arg1[1] == 0) arg1[1] = arg0[1];
+                if (arg1[2] == 0) arg1[2] = arg0[2];
+                if (arg1[3] == 0) arg1[3] = arg0[3];
+                if (arg1[4] == 0) arg1[4] = arg0[4];
+                if (arg1[6] == 0) arg1[6] = arg0[6];
+                if (arg1[7] == 0) arg1[7] = arg0[7];
+                if (arg1[8] == 0) arg1[8] = arg0[8];
+                if (arg1[9] == 0) arg1[9] = arg0[9];
+            }
+            arg1 += 0x14;
+        } while (1);
+        arg0 += 0x14;
+    }
+    return count;
+}
+/* mkdraft:func_8AF0C7C8 end */
 
 u8 func_8AF0C96C(u8 *arg0) {
     volatile u8 pad; // FAKE: never accessed; without it the function does not match (diff score 40)
