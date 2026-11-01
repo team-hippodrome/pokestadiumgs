@@ -1173,7 +1173,66 @@ void func_826090F4(u8 *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260933C.s")
+/* mkdraft:func_8260933C begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern s16 D_826156A8[];
+extern s16 D_8261DA4C;
+extern s16 D_8261DA4E;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+
+
+
+void func_8260933C(u8 *arg0, s32 arg1) {
+    s32 i;
+    u8 *border;
+    s32 k;
+    s32 tex;
+    s32 x;
+    s32 y;
+    s16 cx;
+    s16 cy;
+
+    border = arg0 + 0x30;
+    cx = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    cy = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+    }
+    for (i = 0; i < *(s16 *)border; i++) {
+        k = *(s16 *)(arg0 + 2) * 4 + i;
+        tex = func_8004C990(0x56, D_826156A8[k]);
+        gDPPipeSync(D_800D0510++);
+        switch (D_8261DA4C) {
+        case 6:
+            gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            x = cx + i * 135 + 35;
+            y = cy + 36;
+            break;
+        case 5:
+            x = cx + i * 135 + 35;
+            y = cy + 36;
+            if (i != *(s16 *)(border + 2)) {
+                gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            } else {
+                gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255 - D_8261DA4E);
+            }
+            break;
+        default:
+            if (i != *(s16 *)(border + 2)) {
+                x = cx + i * 135 + 35;
+                y = cy + 36;
+            } else {
+                continue;
+            }
+            break;
+        }
+        func_8004D19C(x, y, tex, 0, 0);
+    }
+}
+/* mkdraft:func_8260933C end */
 
 typedef struct unk_func_82609584_rgb {
     /* 0x00 */ u8 r;
