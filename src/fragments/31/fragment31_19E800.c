@@ -176,7 +176,7 @@ void func_8822B9EC(void) {
 }
 
 /* mkdraft:func_8822BAF8 begin */
-extern s32 func_80063754(s32 arg0);
+extern s32 func_80063754(u8 arg0);
 extern s32 func_8800005C(void);
 
 
@@ -223,7 +223,64 @@ void func_8822BAF8(void) {
 }
 /* mkdraft:func_8822BAF8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822BC58.s")
+/* mkdraft:func_8822BC58 begin */
+extern u32 D_88234910;
+extern u8 D_88234630[];
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern void func_88002BA0(u8, u8, u8);
+extern s32 func_8004D334(s32, s32);
+extern void func_8004D40C(s32);
+extern s32 func_8800005C(void);
+extern s32 func_80049290(s32, s32, const char *);
+extern s32 func_80063754(u8);
+extern void func_8004D5B8(s32, s32, s32, const char *, ...);
+extern void func_8821D930(s32);
+
+// Storage list header, laid out like fragment31_1A5E10's LabPCStorageList. The
+// two D_88234630 counters this function prints are at list 1 and list 3.
+//@src/fragments/31/fragment31_1A5E10.c
+typedef struct StorageList19E800 {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} StorageList19E800;
+
+// Draws the box and prints a storage list's count/capacity six pixels past its
+// label's measured width: list 1 on names[0]'s row, list 3 on names[1]'s row.
+// menu+0/menu+2 is the box origin and menu+8 points at the two label strings.
+// When func_8800005C selects a fragment29 mode, only list 3's counts are
+// printed, on names[0]'s row; otherwise a Pokemon in func_80063754's set
+// (species 0x9E or 0xB5-0xBD) also gets list 1's counts above it. The second
+// row's offset is the s16 at menu+0x16 plus 26.
+
+
+void func_8822BC58(void) {
+    u8 *menu = (u8 *)(D_88234910 + 0x24);
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_88002BA0(255, 255, 255);
+    func_8004D334(239, 0);
+    func_8004D40C(1);
+    if (func_8800005C() != 0) {
+        func_8004D5B8(*(s16 *)(menu + 0) + func_80049290(8, 1, *(char **)(*(u8 **)(menu + 8))) + 6,
+                     *(s16 *)(menu + 2) + 6, 0, "%d/%d",
+                     ((StorageList19E800 *)D_88234630)[3].count,
+                     ((StorageList19E800 *)D_88234630)[3].capacity);
+    } else if (func_80063754(*(u8 *)(D_88234910 + 0x189)) != 0) {
+        func_8004D5B8(*(s16 *)(menu + 0) + func_80049290(8, 1, *(char **)(*(u8 **)(menu + 8))) + 6,
+                     *(s16 *)(menu + 2) + 6, 0, "%d/%d",
+                     ((StorageList19E800 *)D_88234630)[1].count,
+                     ((StorageList19E800 *)D_88234630)[1].capacity);
+        func_8004D5B8(*(s16 *)(menu + 0) + func_80049290(8, 1, *(char **)(*(u8 **)(menu + 8) + 4)) + 6,
+                     *(s16 *)(menu + 0x16) + *(s16 *)(menu + 2) + 26, 0, "%d/%d",
+                     ((StorageList19E800 *)D_88234630)[3].count,
+                     ((StorageList19E800 *)D_88234630)[3].capacity);
+    }
+    func_8821D930(D_88234910 + 8);
+}
+/* mkdraft:func_8822BC58 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19E800/func_8822BE00.s")
 #endif
