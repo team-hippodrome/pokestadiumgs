@@ -195,7 +195,139 @@ void func_8680105C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86802740.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86802EE8.s")
+/* mkdraft:func_86802EE8 begin */
+extern void Font_DisableTwoCycleTexturing(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0,s32 a1,s32 a2,s32 a3);
+extern void func_800497E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_87F09040(void);
+extern s32 D_86807C4C;
+extern f32 D_86807C54;
+extern f32 D_86807C60;
+extern s32 D_86807C6C;
+extern s32 D_86807C70;
+extern s32 D_86807C78;
+extern s32 D_86807C80;
+extern s32 D_86807C88;
+extern f32 D_86807C98;
+extern s32 D_86807CA8;
+extern f32 D_86807CB0;
+extern s32 D_86807CB8;
+extern s32 D_86807CBC;
+extern s32 D_86807E18[];
+extern s32 D_86807E28[];
+extern s32 D_86807E3C;
+extern s32 D_8682F2BC;
+
+
+
+
+
+void func_86802EE8(void) {
+    s32 var_v0;
+    func_87F09040();
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    // One local carries the counter through the increment below and through
+    // all thirteen pager tests; reading it through var_v0 keeps the value in
+    // $v0 across the body as retail does.
+    //
+    // FAKE: the increment's store and the reset store name D_86807E3C through
+    // the page labels D_86807E28 (+0x14) and D_86807E18 (+0x24), which resolve
+    // to 0x86807E3C, so each access is its own uopt address constant. Retail
+    // materialises that address three times (lui v0 for the load, lui at for
+    // each store); with D_86807E3C on all three accesses uopt keeps the address
+    // in $v1, the block is one instruction shorter, and the score is 735.
+    var_v0 = D_86807E3C + 1;
+    D_86807E28[5] = var_v0;
+    if (var_v0 >= 21) {
+        D_86807E18[9] = 0;
+    }
+    func_800495F8(120, 50, 0, "R:もどる");
+    func_800495F8(120, 70, 0, "カメラZ:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 1)) {
+        func_800495F8(230, 70, 0, "%0.1f", (f64) D_86807CB0);
+    }
+    func_800495F8(120, 80, 0, "らっかかそくど");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 2)) {
+        func_800495F8(230, 80, 0, "%0.2f", (f64) D_86807C60);
+    }
+    func_800495F8(120, 90, 0, "びりりけしりつ:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 3)) {
+        func_800495F8(230, 90, 0, "%d", D_86807C6C);
+    }
+    func_800495F8(120, 100, 0, "きほんかんかく:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 4)) {
+        func_800495F8(230, 100, 0, "%0.1f", (f64) D_86807C54);
+    }
+    func_800495F8(120, 110, 0, "ビリリかいひりつ:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 5)) {
+        func_800495F8(230, 110, 0, "%d", D_86807C70);
+    }
+    func_800495F8(120, 120, 0, "しぶきいち:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 6)) {
+        func_800495F8(230, 120, 0, "%d", D_86807CB8);
+    }
+    func_800495F8(120, 130, 0, "しぶきいち（ミス）:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 7)) {
+        func_800495F8(230, 130, 0, "%d", D_86807CBC);
+    }
+    func_800495F8(120, 140, 0, "キャッチはんい:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 8)) {
+        func_800495F8(230, 140, 0, "%d", D_86807C78);
+    }
+    func_800495F8(120, 150, 0, "ほかんアニメーション:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 9)) {
+        if (D_86807C80 == 0) {
+            func_800495F8(230, 150, 0, "なし");
+        } else {
+            func_800495F8(230, 150, 0, "あり");
+        }
+    }
+    func_800495F8(120, 160, 0, "らっかパターン:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 10)) {
+        if (D_86807C88 == 0) {
+            func_800495F8(230, 160, 0, "ぜんもうら");
+        } else {
+            func_800495F8(230, 160, 0, "ランダム");
+        }
+    }
+    func_800495F8(120, 170, 0, "らっかかんかく:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 11)) {
+        func_800495F8(230, 170, 0, "%0.2f", (f64) D_86807C98);
+    }
+    func_800495F8(120, 180, 0, "いち:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 12)) {
+        func_800495F8(230, 180, 0, "%d", D_86807C4C);
+    }
+    func_800495F8(120, 190, 0, "ぱたーんかんかく:");
+    var_v0 = D_86807E3C;
+    if ((var_v0 >= 10) || (D_8682F2BC != 13)) {
+        func_800495F8(230, 190, 0, "%d", D_86807CA8);
+    }
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+/* mkdraft:func_86802EE8 end */
 
 extern s32 D_868074C0;
 extern s32 D_868074C4;
