@@ -136,7 +136,68 @@ void MathUtil_BuildTransformMtx_fragment41(Mtx* arg0, f32 arg1, f32 arg2, f32 ar
     guMtxF2L(sp20.mf, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00CE4.s")
+/* mkdraft:func_88C00CE4 begin */
+extern s32 func_8000731C(void);
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void MathUtil_BuildTransformMtx_fragment41(Mtx *, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32);
+extern char D_88C01850[];
+extern f32 D_88C01A48;
+extern f32 D_88C01A4C;
+
+
+
+void func_88C00CE4(f32 arg0, s32 arg1) {
+    s32 pad;
+    s32 sp50;
+    s32 sp4C;
+    s32 sp48;
+    s32 sp44;
+    s16 *dims;
+
+    dims = (s16 *)func_8000731C();
+    sp50 = Gfx_AllocDisplayList(0x40);
+    sp4C = Gfx_AllocDisplayList(0x40);
+    sp48 = Gfx_AllocDisplayList(0x10);
+    Gfx_SetViewportDimensions((void *)sp48, dims[2], dims[3]);
+    gSPViewport(D_800D0510++, (u32)sp48 & 0x1FFFFFFF);
+    guOrtho((Mtx *)sp50, -320.0f, 320.0f, -240.0f, 240.0f, -2.0f, 2.0f, 1.0f);
+    MathUtil_BuildTransformMtx_fragment41((Mtx *)sp4C, 1.0f, 1.0f, 1.0f, arg0, 0.0f, 0.0f, 1.0f, D_88C01A48, D_88C01A4C, 0.0f);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    if (arg1 == 2) {
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    } else {
+        gDPSetCombine(D_800D0510++, 0x30FE61, 0x55FEF379);
+        gDPSetColor(D_800D0510++, G_SETPRIMCOLOR, 0xFFFFFFFF);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR, 0x0F1764FF);
+    }
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gSPSetGeometryMode(D_800D0510++, G_SHADE | G_SHADING_SMOOTH);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTexturePersp(D_800D0510++, G_TP_PERSP);
+    switch (arg1) {
+    case 0:
+        sp44 = 1;
+        break;
+    case 1:
+        sp44 = 2;
+        break;
+    case 2:
+        sp44 = 3;
+        break;
+    }
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    func_8004D1FC(func_8004C990(0x1C1, sp44));
+    gSPMatrix(D_800D0510++, (u32)sp50 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)sp4C & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPVertex(D_800D0510++, (u32)D_88C01850 & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_88C00CE4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C0107C.s")
 
