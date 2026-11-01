@@ -307,7 +307,156 @@ void func_88700C34(void) {
     *output = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/36/fragment36_code/func_88700CE4.s")
+/* mkdraft:func_88700CE4 begin */
+extern Fragment36NameEntry *D_88701E00;
+extern void *D_80087200;
+
+
+
+void func_88700CE4(void) {
+    s16 previous_position[2];
+    s16 old_cursor;
+    s32 next_cursor;
+    s32 mode;
+    s32 pressed;
+    s32 repeat;
+    u32 callback;
+
+    // D_80087200 points at a ControllerState record; its 0x08 field is buttonsPressed and its
+    // 0x0C field is buttonsRepeat. Both are read raw because only those two words of the record
+    // are used here.
+    //@include/controller.h
+    pressed = *(u16 *) ((u8 *) D_80087200 + 8);
+    if (pressed & 0x8000) {
+        if (D_88701E00->keyboard_row == D_88701E00->keyboard_rows) {
+            if (D_88701E00->keyboard_column < 5) {
+                if (D_88701E00->characters[0] == 0) {
+                    func_800226C0(D_88701E00->delete_sound);
+                } else {
+                    func_800226C0(D_88701E00->confirm_sound);
+                }
+                func_88700C34();
+                callback = D_88701E00->unk_08;
+                if (callback != 0) {
+                    ((void (*)(void)) callback)();
+                }
+            } else {
+                func_88700B58();
+            }
+        } else {
+            func_88700A10(D_88701E00->keyboard[D_88701E00->keyboard_column + D_88701E00->keyboard_row * 15]);
+        }
+    } else {
+        if (pressed & 0x1000) {
+            func_800226C0(D_88701E00->insert_sound);
+            func_887009F0();
+            return;
+        }
+        if (pressed & 0x4000) {
+            if (D_88701E00->characters[0] == 0) {
+                mode = D_88701E00->mode;
+                if ((mode == 0) || (mode == 1)) {
+                    func_800226C0(D_88701E00->invalid_sound);
+                    return;
+                }
+                func_800226C0(D_88701E00->delete_sound);
+                func_88700C34();
+                callback = D_88701E00->unk_08;
+                if (callback != 0) {
+                    ((void (*)(void)) callback)();
+                }
+            } else {
+                func_88700B58();
+            }
+        } else {
+            repeat = *(u16 *) ((u8 *) D_80087200 + 0xC);
+            if (repeat & 2) {
+                old_cursor = D_88701E00->cursor;
+                if (old_cursor != 0) {
+                    D_88701E00->cursor = old_cursor - 1;
+                    func_800226C0(0x42);
+                }
+            } else if (repeat & 1) {
+                if (D_88701E00->cursor != D_88701E00->capacity) {
+                    D_88701E00->cursor = D_88701E00->cursor + 1;
+                    func_800226C0(0x42);
+                }
+            } else if (repeat & 8) {
+                mode = D_88701E00->mode;
+                if ((mode == 0) || (mode == 1)) {
+                    if ((D_88701E00->cursor != D_88701E00->capacity) && ((D_88701E00->cursor / 16) != 0)) {
+                        D_88701E00->cursor = D_88701E00->cursor - 0x10;
+                        func_800226C0(0x42);
+                    }
+                }
+            } else if (repeat & 4) {
+                mode = D_88701E00->mode;
+                if ((mode == 0) || (mode == 1)) {
+                    next_cursor = D_88701E00->cursor + 0x10;
+                    if (next_cursor < (s32) D_88701E00->capacity) {
+                        D_88701E00->cursor = next_cursor;
+                        func_800226C0(0x42);
+                    }
+                }
+            } else {
+                // Two s16 slots: index 0 is the keyboard column, index 1 the keyboard row. They
+                // hold the position from before this frame's D-pad handling so the move sound
+                // plays only when the keyboard position actually changed.
+                previous_position[0] = D_88701E00->keyboard_column;
+                previous_position[1] = D_88701E00->keyboard_row;
+                repeat = *(u16 *) ((u8 *) D_80087200 + 0xC);
+                if (repeat & 0x200) {
+                    if (D_88701E00->keyboard_row == D_88701E00->keyboard_rows) {
+                        if (D_88701E00->keyboard_column >= 5) {
+                            D_88701E00->keyboard_column = 4;
+                        }
+                    } else {
+                        D_88701E00->keyboard_column--;
+                        if (D_88701E00->keyboard_column < 0) {
+                            D_88701E00->keyboard_column = 14;
+                        }
+                    }
+                } else if (repeat & 0x100) {
+                    if (D_88701E00->keyboard_row == D_88701E00->keyboard_rows) {
+                        if (D_88701E00->keyboard_column < 5) {
+                            D_88701E00->keyboard_column = 5;
+                        }
+                    } else {
+                        D_88701E00->keyboard_column++;
+                        if (D_88701E00->keyboard_column >= 15) {
+                            D_88701E00->keyboard_column = 0;
+                        }
+                    }
+                }
+                repeat = *(u16 *) ((u8 *) D_80087200 + 0xC);
+                if (repeat & 0x800) {
+                    D_88701E00->keyboard_row--;
+                    if (D_88701E00->keyboard_row < 0) {
+                        if (D_88701E00->keyboard_column < 13) {
+                            D_88701E00->keyboard_row = D_88701E00->keyboard_rows;
+                        } else {
+                            D_88701E00->keyboard_row = D_88701E00->keyboard_rows - 1;
+                        }
+                    }
+                } else if (repeat & 0x400) {
+                    D_88701E00->keyboard_row++;
+                    {
+                        s32 rows = (s32) D_88701E00->keyboard_rows;
+                        if ((D_88701E00->keyboard_row >= rows) &&
+                           ((D_88701E00->keyboard_column >= 13) || (D_88701E00->keyboard_row > rows))) {
+                            D_88701E00->keyboard_row = 0;
+                        }
+                    }
+                }
+                if ((previous_position[0] != *(s16 *) ((u8 *) D_88701E00 + 0x58)) ||
+                   (previous_position[1] != *(s16 *) ((u8 *) D_88701E00 + 0x5A))) {
+                    func_800226C0(D_88701E00->unk_78);
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_88700CE4 end */
 
 s16 func_8870118C(s16 arg0) {
     return (s16) ((*(s16 *)((u8 *)(D_88701E00) + (0xC))) + (arg0 * 0x16) + ((arg0 / 13) * 0xC) + 0x17);
