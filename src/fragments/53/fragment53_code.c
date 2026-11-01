@@ -1255,7 +1255,6 @@ void Fragment53_RunSceneTransition(void) {
 #endif
 
 #ifdef VERSION_US
-extern f32 D_8650D99C;
 extern s32 D_8650DB18;
 extern u32 D_8650DAE0;
 extern u32 D_8650DA90;
@@ -1292,7 +1291,7 @@ s32 Fragment53_RunScene(s32 arg0, void *context) {
     if (func_80001FF0() == 60) {
         D_8650C508 = 1.0f;
     } else {
-        D_8650C508 = D_8650D99C;
+        D_8650C508 = 1.2f;
     }
     D_8650DB10 = context;
     if (*(u8 *)((u8 *)D_8650DB10 + 0x2180) == 4) {
