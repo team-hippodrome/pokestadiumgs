@@ -1299,9 +1299,6 @@ extern s32 D_8682F2B4;
 extern s32 D_8682F2B8;
 extern s32 D_86808070;
 extern s32 D_8680806C;
-extern s32 D_86808060;
-extern s32 D_86808064;
-extern s32 D_8682F308;
 extern u8 D_86808598[];
 
 
@@ -1406,7 +1403,7 @@ s32 func_86806E94(u8 arg0) {
 }
 /* mkdraft:func_86806E94 end */
 
-extern s32 func_86806E94(s32);
+extern s32 func_86806E94(u8);
 extern void *D_86808590;
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F114(u8 *, s16, s16, void *);
