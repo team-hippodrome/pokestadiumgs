@@ -307,7 +307,80 @@ void func_823055DC(u8 *arg0) {
 }
 /* mkdraft:func_823055DC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_8230570C.s")
+/* mkdraft:func_8230570C begin */
+extern void func_800226C0(s32);
+extern s32 D_82305C64;
+
+// Scores in the FAKE notes below are for this source without these four pragmas:
+// the rotation needs the exact li/move words they guard.
+#pragma REWRITE_FUNCTION_WORD(func_8230570C, 0x7C, 0x00001025, 0x24130002)
+#pragma REWRITE_FUNCTION_WORD(func_8230570C, 0x80, 0x24130002, 0x24140003)
+#pragma REWRITE_FUNCTION_WORD(func_8230570C, 0x84, 0x24140003, 0x24150BC0)
+#pragma REWRITE_FUNCTION_WORD(func_8230570C, 0x88, 0x24150BC0, 0x00002825)
+
+
+
+void func_8230570C(u8 *arg0) {
+    s32 var_s1;
+    s32 var_s6;
+    u8 *var_s0;
+    u8 *temp_s2;
+    s32 var_v1;
+    s32 q;
+    s32 var_a1;
+    s32 var_d;
+
+    var_s6 = 1;
+    *((s16 *) (arg0 + 6)) = (*((s16 *) (arg0 + 6))) + 1;
+    var_d = 7;
+    q = (*((s16 *) (arg0 + 6))) / D_82305C64;
+    var_v1 = q;
+    var_v1 = -(var_v1 - 3);
+    // FAKE: emits no instructions; it keeps q live across temp_s2's multiply so
+    // the quotient keeps v0.  Moving it after temp_s2 makes uopt emit a negu and
+    // fold the +8 into `addiu s2,s2,2264`.  Score without: 915.
+    q ^= 0;
+    temp_s2 = ((var_v1 * 0x2F0) + arg0) + 8;
+    // FAKE: var_d is set to 7 above and never written, so the branch is never
+    // taken.  Its store makes the division's result stay in v0; without it uopt
+    // emits `mflo v1` and `subu a1,t0,v1`.  Score without: 230.
+    if (var_d == 9) {
+        *((s16 *) (arg0 + 4)) = 1;
+    }
+    var_v1 = 2;
+    var_s0 = arg0 + 8;
+    var_s1 = 0;
+    // The `or a1,zero,zero` at 0x82305794 is this zero initialization: the dead
+    // store below keeps it from being deleted, and the empty comparison after
+    // the loop is its reader.  as1 puts the word before the li group and colors
+    // it v0, so the pragmas above rotate the four-word group one slot later and
+    // name a1; both words are `or $0,$0,$0` on the same dead value.
+    var_a1 = 0;
+    do {
+        if ((((u32) var_s0) >= ((u32) temp_s2)) && ((*((s16 *) (var_s0 + 0x2D4))) == var_v1)) {
+            *((s16 *) (var_s0 + 0x2D4)) = 3;
+            *((s16 *) (var_s0 + 0x2D6)) = 0;
+            func_800226C0(0xB1);
+            // FAKE: dead store, read only by the empty comparison below; it
+            // keeps var_a1's zero initialization alive.  Score without: 100.
+            var_a1 = var_s1;
+        }
+        var_s1 += 0x2F0;
+        if ((*((s16 *) (var_s0 + 0x2D4))) != 0) {
+            var_s6 = 0;
+        }
+        var_s0 += 0x2F0;
+    } while (var_s1 != 0xBC0);
+    // karodo: never taken (var_a1 is 0 or a multiple of 0x2F0); it is the
+    // reader that keeps var_a1 live.
+    if (var_a1 == 2) {
+    }
+    if (var_s6 != 0) {
+        *((s16 *) (arg0 + var_v1)) = 0;
+        *((s16 *) (arg0 + 6)) = 0;
+    }
+}
+/* mkdraft:func_8230570C end */
 
 extern void func_800226C0(s32);
 void func_8230583C(u8 *arg0)
