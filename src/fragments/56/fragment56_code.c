@@ -231,20 +231,20 @@ void Fragment56_UpdateScaledParameters(void) {
 extern u32 func_8003570C(void);
 extern u8 D_868086C8[];
 extern u8 D_868085C0[];
-extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u8 *func_87F03884(u8 *, s32, void *, f32, f32, f32, s16, f32, s32);
 void func_8680105C(s32 arg0) {
-    volatile s32 pad[8];
+    volatile s32 pad[8]; // FAKE: unused stack space; original live locals remain unrecovered.
     u32 rand1;
     u32 rand0;
     u8 *ptr;
-    f32 temp;
+    u32 scale_multiplier = 4;
     f32 zero;
     rand0 = func_8003570C();
     rand1 = func_8003570C();
     func_8003570C();
     ptr = D_868086C8 + arg0 * 0x168;
     zero = 0.0f;
-    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)(4 | (rand0 & 0)), 1);
+    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)scale_multiplier, 1);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86801160.s")
@@ -589,8 +589,26 @@ void func_86805D50(void) {
     }
 }
 
-extern u8 D_8682ED98[];
-extern u8 D_8681E388[];
+typedef struct Fragment56MotionRecord {
+    s32 state;
+    s32 variant;
+    s32 ticks;
+    f32 horizontal_divisor;
+    f32 vertical_multiplier;
+    f32 initial_x;
+    f32 initial_y;
+    f32 horizontal_offset;
+} Fragment56MotionRecord;
+
+typedef struct Fragment56MovingModel {
+    u8 unk_000[36];
+    f32 position[3];
+    f32 scale[3];
+    u8 unk_03C[300];
+} Fragment56MovingModel;
+
+extern Fragment56MotionRecord D_8682ED98[4];
+extern Fragment56MovingModel D_8681E388[4];
 extern f32 D_86808050[4];
 extern f32 D_8682F300;
 extern void *D_8682CCFC;
@@ -605,34 +623,34 @@ void Fragment56_ResetMovingModels(void) {
     s32 group_index;
     f32 position_scale;
     f32 travel_distance;
-    for (group_index = 0, moving_model = D_8681E388; group_index < 4; group_index++) {
+    for (group_index = 0, moving_model = ((u8 *)D_8681E388); group_index < 4; group_index++) {
         variant_offset = 0;
         random_value = func_8003570C() % 101;
         sign = random_value % 2 ? 1 : -1;
-        *(s32 *)(D_8682ED98 + group_index * 32 + 8) = 0;
+        *(s32 *)(((u8 *)D_8682ED98) + group_index * 32 + 8) = 0;
         *(f32 *)(moving_model + 0x2C) = 1000.0f;
-        *(f32 *)(D_8682ED98 + group_index * 32 + 0x1C) = (f32)(sign * random_value * 2);
-        *(f32 *)(D_8682ED98 + group_index * 32 + 0x18) = (f32)((sign * random_value) / 4);
-        *(f32 *)(moving_model + 0x28) = *(f32 *)(D_8682ED98 + group_index * 32 + 0x18);
-        *(f32 *)(D_8682ED98 + group_index * 32 + 0x14) = (f32)(-sign * random_value * 5);
-        *(f32 *)(moving_model + 0x24) = *(f32 *)(D_8682ED98 + group_index * 32 + 0x14);
+        *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x1C) = (f32)(sign * random_value * 2);
+        *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x18) = (f32)((sign * random_value) / 4);
+        *(f32 *)(moving_model + 0x28) = *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x18);
+        *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x14) = (f32)(-sign * random_value * 5);
+        *(f32 *)(moving_model + 0x24) = *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x14);
         random_value = func_8003570C() % 51;
         if (random_value < 10) {
-            *(s32 *)(D_8682ED98 + group_index * 32) = 1;
-            *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 1;
+            *(s32 *)(((u8 *)D_8682ED98) + group_index * 32) = 1;
+            *(s32 *)(((u8 *)D_8682ED98) + group_index * 32 + 4) = 1;
             func_8003F114(moving_model, 0, -1, D_8682CCFC);
             *(f32 *)(moving_model + 0x38) = 1.1f;
             *(f32 *)(moving_model + 0x34) = 1.1f;
             *(f32 *)(moving_model + 0x30) = 1.1f;
         } else {
-            *(s32 *)(D_8682ED98 + group_index * 32) = 0;
-            *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 1;
+            *(s32 *)(((u8 *)D_8682ED98) + group_index * 32) = 0;
+            *(s32 *)(((u8 *)D_8682ED98) + group_index * 32 + 4) = 1;
             if (random_value >= 21) {
-                *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 3;
+                *(s32 *)(((u8 *)D_8682ED98) + group_index * 32 + 4) = 3;
                 variant_offset = -5;
             }
             if (random_value >= 36) {
-                *(s32 *)(D_8682ED98 + group_index * 32 + 4) = 2;
+                *(s32 *)(((u8 *)D_8682ED98) + group_index * 32 + 4) = 2;
                 variant_offset = 5;
             }
             func_8003F114(moving_model, 0, -1, D_8682CD10);
@@ -641,10 +659,10 @@ void Fragment56_ResetMovingModels(void) {
             *(f32 *)(moving_model + 0x30) = 0.05f;
         }
         travel_distance = 1000.0f;
-        travel_distance += *(f32 *)(D_8682ED98 + group_index * 32 + 0x1C);
+        travel_distance += *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x1C);
         position_scale = D_8682F300;
-        *(f32 *)(D_8682ED98 + group_index * 32 + 0xC) = travel_distance / (D_86808050[group_index] + (f32)variant_offset * position_scale);
-        *(f32 *)(D_8682ED98 + group_index * 32 + 0x10) = -((56.0f + 7.0f * position_scale) - *(f32 *)(D_8682ED98 + group_index * 32 + 0x18)) / travel_distance;
+        *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0xC) = travel_distance / (D_86808050[group_index] + (f32)variant_offset * position_scale);
+        *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x10) = -((56.0f + 7.0f * position_scale) - *(f32 *)(((u8 *)D_8682ED98) + group_index * 32 + 0x18)) / travel_distance;
         moving_model += 360;
     }
 }
@@ -654,7 +672,7 @@ extern u8 D_86808C68[];
 extern f32 D_8682F30C;
 extern s32 D_8682F310;
 extern u32 func_8003570C(void);
-extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u8 *func_87F03884(u8 *, s32, void *, f32, f32, f32, s16, f32, s32);
 void func_86806044(s32 arg0) {
     volatile s32 pad[3]; // FAKE: unused stack space; original live locals remain unrecovered.
     u32 rand1;
@@ -716,7 +734,6 @@ extern void func_86800A7C(void);
 extern void func_86806180(void);
 extern u8 D_868086C8[];
 extern u8 D_86808C68[];
-extern u8 D_8681E388[];
 extern s32 D_8682CD00[];
 extern u8 D_8682EE18[];
 extern s32 D_8682F2A8;
@@ -735,7 +752,7 @@ void func_8680649C(void) {
         i = 0;
         do {
             func_8003F1DC(&D_86808C68[i * 0x168]);
-            func_8003F1DC(&D_8681E388[i * 0x168]);
+            func_8003F1DC(&((u8 *)D_8681E388)[i * 0x168]);
             func_8003F114(&D_868086C8[i * 0x168], 0, -1, D_8682CD00[i]);
             D_868086C8[i * 0x168 + 0xA0] = 0xFF;
             D_868086C8[i * 0x168 + 0xA1] = 0;
@@ -905,7 +922,6 @@ extern void func_86800A7C(void);
 extern void func_86803ED8(void);
 extern u8 D_868086C8[];
 extern u8 D_86808C68[];
-extern u8 D_8681E388[];
 extern s32 D_8682CD00[];
 extern u8 D_8682EE18[];
 extern s32 D_8682F2A8;
@@ -916,7 +932,7 @@ void Fragment56_RunSceneLoop(void) {
         i = 0;
         do {
             func_8003F1DC(&D_86808C68[i * 0x168]);
-            func_8003F1DC(&D_8681E388[i * 0x168]);
+            func_8003F1DC(&((u8 *)D_8681E388)[i * 0x168]);
             func_8003F114(&D_868086C8[i * 0x168], 0, -1, (void *)D_8682CD00[i]);
             *(s32 *)(&D_8682EE18[i * 0x124] + 0x10) = 1;
             func_8003F210(&D_868086C8[i * 0x168], 1);
