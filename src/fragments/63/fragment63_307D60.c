@@ -231,7 +231,106 @@ void func_87E04D2C(void *arg0) {
 }
 /* mkdraft:func_87E04D2C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04ED4.s")
+/* mkdraft:func_87E04ED4 begin */
+extern void func_800226C0(s32);
+extern s32 func_800279C4(s32);
+extern void func_87E0168C(s32 arg0, u8 arg1, s32 arg2);
+extern u8 *func_87E016C8(void);
+extern void func_87E04AFC(void *arg0);
+extern void func_87E04D2C(void *arg0);
+extern void func_87E134E8(void);
+extern s32 func_87E13688(void);
+extern s32 func_87E1369C(void);
+extern void func_87F0277C(void *arg0);
+extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
+extern u8 *D_87E1EB80;
+
+
+
+s32 func_87E04ED4(u8 *arg0) {
+    s32 sp3C;
+    s32 var_a0;
+    // FAKE: unused local. Its 0x34 home is never read or written; it only pads
+    // the frame to 0x40. Without it the frame is 0x38 (score 114), because the
+    // other three locals then shift down by 8.
+    s32 sp38;
+    u16 sp32;
+
+    sp3C = 5;
+    D_87E1EB80 = arg0;
+    sp32 = func_87F0E610(func_87E016C8(), (u8 *)-1);
+    switch (*(s32 *)arg0) {
+    case 0:
+        if (func_87E04AC4((u32) arg0) != 0) {
+            *(s32 *)arg0 = 1;
+        }
+        break;
+    case 1:
+        if (func_87E043F0(arg0) != 0) {
+            var_a0 = 0;
+        } else {
+            var_a0 = 1;
+        }
+        if ((func_87E1369C() != 0) && !(sp32 & 0x8000) && !(sp32 & 0x4000)) {
+            *(s32 *)(arg0 + 4) = (*(s32 *)(arg0 + 4) + ((sp32 & 0x400) > 0)) - ((sp32 & 0x800) > 0);
+            if (*(s32 *)(arg0 + 4) < var_a0) {
+                *(s32 *)(arg0 + 4) = 3;
+            }
+            if (*(s32 *)(arg0 + 4) >= 4) {
+                *(s32 *)(arg0 + 4) = var_a0;
+            }
+            if (sp32 & 0xC00) {
+                func_800279C4(0xCF01);
+            }
+        }
+        var_a0 = sp32 & 0x4000;
+        if (sp32 & 0x8000) {
+            func_87E04AFC(arg0);
+            *(s32 *)arg0 = 2;
+            func_87E134E8();
+            func_800279C4(0xCF02);
+            func_87E0168C(3, 0x8CU, 9);
+        }
+        if ((var_a0 != 0) && (func_87E13688() != 0)) {
+            func_87E04D2C(arg0);
+            *(s32 *)arg0 = 3;
+            func_800226C0(3);
+            func_87E0168C(3, 0x8CU, 0xE);
+        }
+        break;
+    case 2:
+        if (func_87E04AC4((u32) arg0) != 0) {
+            switch (*(s32 *)(arg0 + 4)) {
+            case 0:
+                sp3C = 0;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 3;
+                break;
+            case 1:
+                sp3C = 1;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 2;
+                break;
+            case 2:
+                sp3C = 2;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 1;
+                break;
+            case 3:
+                sp3C = 3;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 0;
+                break;
+            }
+        }
+        break;
+    case 3:
+        if (func_87E04AC4((u32) arg0) != 0) {
+            sp3C = 4;
+        }
+        break;
+    }
+    func_87F0277C(arg0 + 8);
+    func_87E04400(arg0);
+    return sp3C;
+}
+/* mkdraft:func_87E04ED4 end */
 
 extern void func_8004C8C0(s32);
 void func_87E05128(void) {
