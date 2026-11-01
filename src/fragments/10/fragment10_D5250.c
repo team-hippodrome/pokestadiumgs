@@ -217,7 +217,80 @@ s32 func_82801718(u8 *arg0, s32 arg1, s32 arg2) {
 }
 /* mkdraft:func_82801718 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801774.s")
+/* mkdraft:func_82801774 begin */
+extern s32 func_82800B94(u8 *);
+extern s32 func_82801718(u8 *, s32, s32);
+extern void func_800226C0(s32);
+extern void func_80057908(u8);
+extern u8 D_800CE060[];
+
+// The selected slot is the s32 at +0x10 (-1 when nothing is selected) and the four bytes at
+// +0x18 are per-slot enable flags; func_82801718 walks those flags from a start index in steps
+// of +1/-1 and returns the index it reached.
+// D_800CE060 holds four 0x28-byte controller records; +0x8 is the pressed-button mask.
+//@include/controller.h
+
+
+s32 func_82801774(u8 *arg0) {
+    s32 next;
+    u8 *record;
+    s32 index;
+
+    record = D_800CE060 + arg0[0xD] * 40;
+    *(f32 *)(arg0 + 4) = 12.0f;
+    if (func_82800B94(arg0) != 0 && arg0[0x90] == 0) {
+        if (*(u16 *)(record + 8) & 0x200) {
+            next = func_82801718(arg0, *(s32 *)(arg0 + 0x10), -1);
+            if (next < *(s32 *)(arg0 + 0x10)) {
+                func_800226C0(1);
+                *(s32 *)(arg0 + 0x10) = next;
+                return 1;
+            }
+        }
+        if (*(u16 *)(record + 8) & 0x100) {
+            next = func_82801718(arg0, *(s32 *)(arg0 + 0x10), 1);
+            if (*(s32 *)(arg0 + 0x10) < next) {
+                func_800226C0(1);
+                *(s32 *)(arg0 + 0x10) = next;
+                return 1;
+            }
+        }
+    }
+    // The +0x18 flags are read through an array subscript because that is the ROM's
+    // addressing form: it puts the base in the first addu operand, where a pointer sum
+    // puts the index there.
+    if (*(u16 *)(record + 8) & 0x4000) {
+        func_800226C0(3);
+        *(s32 *)(arg0 + 0x10) = -1;
+        arg0[0xC] = 3;
+    } else if (*(u16 *)(record + 8) & 0x8000) {
+        if (arg0[0x90] != 0) {
+            // FAKE: the enclosing `else if` already tested this bit; the ROM repeats the
+            // test (diff score 380 without the repetition).
+            if (*(u16 *)(record + 8) & 0x8000) {
+                func_800226C0(2);
+                arg0[0x90] = 0;
+            }
+        } else if ((*(u8 (*)[4])(arg0 + 0x18))[*(s32 *)(arg0 + 0x10)] == 0) {
+            func_800226C0(0xF);
+            index = *(s32 *)(arg0 + 0x10);
+            arg0[0xC] = 3;
+            if (index >= 0 && index < 4 && *(u8 *)(arg0 + 0x18 + index) == 0) {
+                func_80057908(index);
+            }
+        } else if (*(s32 *)(arg0 + 0x8C) != 0 && (*(s32 *)(arg0) & 0x20000000)) {
+            func_800226C0(0xF);
+            arg0[0xC] = 3;
+        } else {
+            func_800226C0(5);
+        }
+    } else if (func_82800B94(arg0) != 0 && (*(u16 *)(record + 8) & 1) && (*(s32 *)(arg0) & 0x20000)) {
+        *(s32 *)(arg0 + 0x84) = !*(s32 *)(arg0 + 0x84);
+        func_800226C0(0x12);
+    }
+    return 1;
+}
+/* mkdraft:func_82801774 end */
 
 s32 func_828019B4(u8 *arg0) {
     f32 step = func_816092FC();
