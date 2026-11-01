@@ -106,7 +106,50 @@ s32 TrailEffect_Initialize(void) {
     return (((u16 *)D_826163E0)[0] & 1) != 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12BB60/func_82604170.s")
+/* mkdraft:func_82604170 begin */
+extern f32 D_80087E50[];
+extern RecordTrailPoint D_826153B0;
+extern RecordTrailPoint D_826153B8;
+extern RecordTrail D_8261A488;
+
+// Advances all eight trail records by the step count in D_826163E0[2]. While the effect is
+// enabled, the first frame after enabling (flag bit 0 of D_826163E0[4] clear) also starts a
+// new trail in the first free slot, with a randomized vertical start point. Returns the
+// enable flag.
+
+
+s32 func_82604170(void) {
+    s32 result;
+    RecordTrail *trail;
+    RecordTrailPoint velocity;
+    RecordTrailPoint point;
+
+    result = (*(u16 *)D_826163E0 & 1) != 0;
+    if (result != 0) {
+        result = (*(u16 *)(D_826163E0 + 4) & 1) == 0;
+        (*(u16 *)(D_826163E0 + 4))++;
+        if (result != 0) {
+            trail = (RecordTrail *)func_82603A9C((s16 *)D_826163E8, 8);
+            velocity = D_826153B0;
+            point = D_826153B8;
+            if (trail != NULL) {
+                // The 16-bit mask is redundant after the cast; it puts the index temporaries
+                // one register above the point-copy ones (t5-t7, not t4-t6).
+                point.y = D_80087E50[((u16)guRandom() & 0xFFFF) >> 4] * 240.0f + 240.0f;
+                func_82603AD8(trail, 0.5f, &velocity, &point);
+            }
+        }
+        // Init and loop head share a line: as1 orders the two address loads by source line
+        // here, and writing them on separate lines reverses the addiu pair.
+        trail = D_826163E8; do {
+            TrailEffect_Advance(trail, *(s16 *)(D_826163E0 + 2));
+            trail++;
+        } while (trail != &D_8261A488);
+    }
+    result = (*(u16 *)D_826163E0 & 1) != 0;
+    return result;
+}
+/* mkdraft:func_82604170 end */
 
 s32 TrailEffect_DrawAll(void) {
     u16 *texture;
