@@ -344,7 +344,49 @@ void func_82801BE8(u8 *arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801D7C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801F88.s")
+/* mkdraft:func_82801F88 begin */
+extern u8 D_8280284C[][3];
+extern s32 func_800472E0(s32);
+extern void func_81607408(void);
+
+// Draws the box behind the annotation text of entry arg1: 122 pixels wide,
+// (line count * 20) + 14 tall, at the position func_8280105C computes for the entry,
+// filled with D_8280284C[flag] where flag is the entry's byte at 0x18. The entry's
+// font string is drawn into it once the scale factor (entry + 4 over 12) passes 0.99.
+// func_8004C874 returns a pointer to that font string; this file's prototypes carry
+// these strings as s32 (see the func_800495BC declaration above), and the s32 text
+// local follows them.
+//@src/47580.c
+
+
+void func_82801F88(u8 *arg0, s32 arg1) {
+    s32 text;
+    s32 lines;
+    s32 height;
+    f32 ratio;
+    s16 position[2];
+
+    if (*(s32 *)((u8 *)arg0 + arg1 * 4 + 0x74) >= 0) {
+        // FAKE: the (u8 *) casts on this u8 * argument are redundant but set IDO's
+        // temp-register coloring; spelled without them the differ scores 35.
+        text = func_8004C874(0x19, *(s32 *)((u8 *)arg0 + arg1 * 4 + 0x74));
+        lines = func_800472E0(text);
+        height = (lines * 20) + 14;
+        ratio = D_8160BD08(*(f32 *)(arg0 + 4) / 12.0f);
+        func_8280105C(arg0, position, arg1);
+        Fragment11_DrawBorderedPanelFill(position[0], position[1], 122, height, 1,
+            D_8280284C[*(u8 *)(arg0 + arg1 + 0x18) == 0]);
+        if (ratio > 0.99f) {
+            func_800498C4();
+            func_800496A4(4, 1);
+            func_8004989C(20);
+            func_800495BC(position[0] + 7, position[1] + 7, text);
+            func_800499EC();
+        }
+        func_81607408();
+    }
+}
+/* mkdraft:func_82801F88 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_828020C4.s")
 
