@@ -407,7 +407,58 @@ loop:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_80050878.s")
+extern s32 main_pool_alloc(s32, s32);
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern s32 func_80064C88(void);
+extern s32 func_8005A014(s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 func_80062304(u8 *);
+
+extern s32 func_8004C09C(u16);
+extern u8 *func_8004D878(u8 *, s32, u8 *);
+extern void func_8004C398(void);
+extern void _bzero(void *, s32);
+// Builds six 40-by-40 RGBA16 party-icon slots for the GB Tower state at +0x2204.
+// Deck_ReadEntries supplies the party records; func_8004D878 renders each icon.
+//@src/615D0.c
+//@src/4CC20.c
+u8 *GbTower_LoadPartyIcons(void) {
+    u8 *result;
+    u8 *allocated;
+    s32 port;
+    u8 party[6][88];
+    u8 *handle;
+    s32 count;
+    s32 i;
+    u8 *cursor;
+
+    allocated = (u8 *)main_pool_alloc(19200, 0);
+    result = NULL;
+    if (allocated != NULL) {
+        port = func_80064C88();
+        _bzero(allocated, 19200);
+        if (port != -1) {
+            main_pool_push_state(0x6769636E);
+            if (func_8005A014(port) != 0) {
+                handle = func_8006218C(32, port, 0, 0);
+                count = Deck_ReadEntries(party[0], 6, handle);
+                func_80062304(handle);
+                func_8004C09C(8);
+                cursor = allocated;
+                for (i = 0; i < count; i++) {
+                    func_8004D878(cursor, 0, party[i]);
+                    cursor += 3200;
+                }
+                func_8004C398();
+                result = allocated;
+            }
+            main_pool_pop_state(0x6769636E);
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -420,14 +471,14 @@ extern s32 main_pool_alloc(s32, s32);
 extern void Fragment_Load(s32, void *, void *);
 extern s32 func_80047524(void);
 extern s32 func_80047558(s32, s32);
-extern s32 func_80050878(void);
+extern u8 *GbTower_LoadPartyIcons(void);
 extern u8 GbTower_SetPollMask(u8);
 typedef struct Copy8_80050994 { u8 bytes[8]; } Copy8_80050994;
 
 // Same code as Pokemon Stadium's GbTower_Start (src/gb_tower_audio.c): allocates the
 // emulator state (D_801281B0) and audio thread (D_801281B4), loads the fragment at
 // 0x81500000, and starts both threads. GS takes both fonts from the archive returned
-// by func_80047524, stores func_80050878's result at 0x2204, and keeps the poll mask
+// by func_80047524, stores GbTower_LoadPartyIcons's result at 0x2204, and keeps the poll mask
 // in D_801281B8.
 void func_80050994(void *arg0) {
     s32 archive;
@@ -439,7 +490,7 @@ void func_80050994(void *arg0) {
     archive = func_80047524();
     *(s32 *)((u8 *)D_801281B0 + 0x21FC) = func_80047558(archive, 1);
     *(s32 *)((u8 *)D_801281B0 + 0x2200) = func_80047558(archive, 2);
-    *(s32 *)((u8 *)D_801281B0 + 0x2204) = func_80050878();
+    *(u8 **)((u8 *)D_801281B0 + 0x2204) = GbTower_LoadPartyIcons();
     *(Copy8_80050994 *)((u8 *)D_801281B0 + 0x2208) = *(Copy8_80050994 *)arg0;
     osCreateMesgQueue((OSMesgQueue *)((u8 *)D_801281B0 + 0x21E4), (OSMesg *)((u8 *)D_801281B0 + 0x21E0), 1);
     osCreateThread((OSThread *)D_801281B4, 10, GbTower_AudioThread, NULL, (u8 *)D_801281B4 + 0x21E0, 17);

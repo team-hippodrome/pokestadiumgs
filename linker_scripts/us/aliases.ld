@@ -1518,3 +1518,5 @@ func_86801160 = Fragment56_UpdateBallisticModels;
 func_86806180 = Fragment56_UpdateMovingModels;
 
 func_841334D8 = Battle_QueueHpLossFeedback;
+
+func_80050878 = GbTower_LoadPartyIcons;
