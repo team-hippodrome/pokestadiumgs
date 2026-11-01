@@ -40,7 +40,32 @@ u8 func_80064A7C(u8 arg0)
   return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_80064AC8.s")
+typedef struct unk_func_80064AC8 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 unk_02;
+    /* 0x03 */ u8 unk_03;
+} unk_func_80064AC8; // size = 4
+
+void func_80064AC8(void) {
+    s32 last_index = 31;
+    s32 index;
+    unk_func_80064AC8 temporary;
+
+    while (((unk_func_80064AC8 *)&D_80128B58)[last_index].unk_00 == 0 && last_index != 0) {
+        last_index--;
+    }
+    for (; last_index > 0; last_index--) {
+        for (index = 0; index < last_index; index++) {
+            if (((unk_func_80064AC8 *)&D_80128B58)[last_index].unk_02 <
+                ((unk_func_80064AC8 *)&D_80128B58)[index].unk_02) {
+                temporary = ((unk_func_80064AC8 *)&D_80128B58)[index];
+                ((unk_func_80064AC8 *)&D_80128B58)[index] = ((unk_func_80064AC8 *)&D_80128B58)[last_index];
+                ((unk_func_80064AC8 *)&D_80128B58)[last_index] = temporary;
+            }
+        }
+    }
+}
 
 void func_80064B84(u8 arg0) {
     u8 sum = 0;
