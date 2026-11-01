@@ -238,7 +238,101 @@ void func_88206668(void) {
     gSPDisplayList(D_800D0510++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_179030/func_88206714.s")
+/* mkdraft:func_88206714 begin */
+extern void Gfx_SetScissorRect(Gfx **, s16, s16, s16, s16);
+extern s32 func_8004CA10(u16 *);
+extern void func_8004D1FC(u8 *);
+extern void func_88002C2C(u8, u8, u8);
+extern void func_88002CB8(s16, s16, u16, u16);
+extern u8 *D_8800ECC4;
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+
+
+
+void func_88206714(s32 **arg0, u8 arg1) {
+    s32 x;
+    s32 y;
+    u32 i;
+    s32 offset;
+    s32 **entry;
+
+    // func_80006F70 in the ROM.
+    //@linker_scripts/us/aliases.ld
+    Gfx_SetScissorRect(&D_800D0510, 0x2C, 0x48, 0x229, 0x17F);
+    func_882001E8();
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D1FC(D_8800ECC4);
+    func_8004D27C(D_8800ECC0, 0x80, 1);
+    func_88002C2C(220, 220, 180);
+    // 16-bit field at D_8800ECC4 + 0, scaled by 1024 / width into a texture offset.
+    offset = func_8004CA10((u16 *)D_8800ECC4);
+    GfxRect_DrawTextured((s16)(*(s16 *)((u8 *)D_882346F8 + 2) + 5),
+                         (s16)(*(s16 *)((u8 *)D_882346F8 + 4) + 5),
+                         (s16)(*(s16 *)((u8 *)D_882346F8 + 6) - 13),
+                         (s16)(*(s16 *)((u8 *)D_882346F8 + 8) - 13), 0, 0,
+                         (s32)(1024.0f * (f32)offset / (f32)(*(s16 *)((u8 *)D_882346F8 + 6) - 13) + ((((f32)func_8004CA10((u16 *)D_8800ECC4) * 1024.0f / (f32)(*(s16 *)((u8 *)D_882346F8 + 6) - 13)) > 0.0f) ? 0.5f : -0.5f)), 0, 0);
+    i = 0;
+    y = *(s16 *)((u8 *)D_882346F8 + 0x4C);
+    if (*(u8 *)D_882346F8 != 0) {
+        do {
+            offset = func_8004CA10((u16 *)D_8800ECC4);
+            GfxRect_DrawTextured((s16)(*(s16 *)((u8 *)D_882346F8 + 0x4A) + 5), (s16)(y + 5),
+                                 (s16)(*(s16 *)((u8 *)D_882346F8 + 0x4E) - 13),
+                                 (s16)(*(s16 *)((u8 *)D_882346F8 + 0x50) - 13), 0, 0,
+                         (s32)(1024.0f * (f32)offset / (f32)(*(s16 *)((u8 *)D_882346F8 + 0x4E) - 13) + ((((f32)func_8004CA10((u16 *)D_8800ECC4) * 1024.0f / (f32)(*(s16 *)((u8 *)D_882346F8 + 0x4E) - 13)) > 0.0f) ? 0.5f : -0.5f)), 0, 0);
+            i++;
+            y += *(u8 *)((u8 *)D_882346F8 + 1);
+        } while (i < *(u8 *)D_882346F8);
+        i = 0;
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    // Bands 1 and 2 use opposite arg1 polarities for the 220,220,180 tint.
+    if (arg1 == 0) {
+        gDPSetEnvColor(D_800D0510++, 220, 220, 180, 255);
+    } else {
+        gDPSetEnvColor(D_800D0510++, 150, 150, 130, 255);
+    }
+    func_88200180(2);
+    gDPPipeSync(D_800D0510++);
+    if (arg1) {
+        gDPSetEnvColor(D_800D0510++, 220, 220, 180, 255);
+    } else {
+        gDPSetEnvColor(D_800D0510++, 150, 150, 130, 255);
+    }
+    func_88200180(3);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 220, 220, 180, 255);
+    func_88002CB8(*(s16 *)((u8 *)D_882346F8 + 2), *(s16 *)((u8 *)D_882346F8 + 4),
+                  *(u16 *)((u8 *)D_882346F8 + 6), *(u16 *)((u8 *)D_882346F8 + 8));
+    y = *(s16 *)((u8 *)D_882346F8 + 0x4C);
+    if (*(u8 *)D_882346F8 != 0) {
+        do {
+            func_88002CB8(*(s16 *)((u8 *)D_882346F8 + 0x4A), y, *(u16 *)((u8 *)D_882346F8 + 0x4E),
+                          *(u16 *)((u8 *)D_882346F8 + 0x50));
+            i++;
+            y += *(u8 *)((u8 *)D_882346F8 + 1);
+        } while (i < *(u8 *)D_882346F8);
+        i = 0;
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x00504240, 0);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+    x = 77;
+    i = 0;
+    // entry is only read by the loop below, so it is initialized inside the guard.
+    if (*(u8 *)D_882346F8 != 0) {
+        entry = arg0;
+        do {
+            func_8820659C(295, x, **entry, arg1);
+            i++;
+            x += *(u8 *)((u8 *)D_882346F8 + 1);
+            entry++;
+        } while (i < *(u8 *)D_882346F8);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_88206714 end */
 
 extern s32 D_882346F0;
 
