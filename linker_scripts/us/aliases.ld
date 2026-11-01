@@ -1488,3 +1488,51 @@ func_8412ADF8 = BattleEffect_ApplySecondaryConfusion;
 func_84128EC0 = BattleEffect_ApplySleep;
 
 func_84124F40 = Battle_SeedRandomByteBuffer;
+
+func_84133C10 = Battle_ResolveOpponentFaint;
+
+func_84133F10 = Battle_ResolveSideAfterCommands;
+
+func_86800298 = Fragment56_AnimatedTextureCallback;
+
+func_86807120 = Fragment56_RunSceneLoop;
+
+func_8680671C = Fragment56_UpdateModelGridTransforms;
+
+func_868000AC = Fragment56_TextureFadeCallback;
+
+func_86806CD8 = Fragment56_UpdateModelAnimations;
+
+func_86800B98 = Fragment56_UpdateScaledParameters;
+
+func_86805AA4 = Fragment56_InitModelGroups;
+
+func_868058C0 = Fragment56_UpdatePoolCompletion;
+
+func_86805DB8 = Fragment56_ResetMovingModels;
+
+func_86800D5C = Fragment56_InitStateRecords;
+
+func_86801160 = Fragment56_UpdateBallisticModels;
+
+func_86806180 = Fragment56_UpdateMovingModels;
+
+func_841334D8 = Battle_QueueHpLossFeedback;
+
+func_80050878 = GbTower_LoadPartyIcons;
+
+func_8004FC58 = UiImageNode_DrawUnscaled;
+
+func_8004FA6C = UiImageNode_SetRenderState;
+
+func_8004FE00 = UiImageNode_DrawTiled;
+
+func_80050218 = UiTextNode_Draw;
+
+func_8004F64C = UiPanelNode_Draw;
+
+func_800505A4 = UiAnimationCursor_NextFrame;
+
+func_80050640 = UiAnimationCursor_Step;
+
+func_841252D0 = Battle_LoadMoveCommandStream;
