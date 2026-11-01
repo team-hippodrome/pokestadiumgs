@@ -16,6 +16,7 @@ name: Rebuild CI baseline image
 # Docker, so a routine yaml-touching merge rebuilds in a couple of minutes,
 # not the ~30 minutes a from-scratch in-Docker compile used to take.
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
