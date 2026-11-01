@@ -1765,7 +1765,62 @@ void func_82B062F8(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B072DC.s")
+/* mkdraft:func_82B072DC begin */
+extern s16 D_82B1246C;
+
+extern void *D_80087200;
+
+// Compares the D_82B1246C value from before the func_82B02870() gate with the
+// value left by the two 0xC-button clamps, reports a change with
+// func_800226C0(1), then dispatches the 0x8 word's 0x8000/0x4000 buttons.
+// The address local and the compare read straight from memory are what give the
+// target's frame (0x20 bytes, ra at 0x14, the saved value at 0x18): a named
+// compare temporary scores 195, named clamp temporaries 250, and reading the
+// extern directly instead of through the local scores 4588
+// (matching_notes/try_candidate.py, IDO 7.1).
+// Needs `extern void func_800226C0();` at file scope: the three calls pass
+// arguments and the retail file declares that extern old-style.
+
+
+void func_82B072DC(void) {
+    s16 *D_82B1246C_ptr = &D_82B1246C;
+    s32 sp18;
+    s32 input;
+
+    sp18 = (s32) (*D_82B1246C_ptr);
+    if (func_82B02870() != 0) {
+        if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x800) {
+            (*D_82B1246C_ptr) = (*D_82B1246C_ptr) - 1;
+            if ((*D_82B1246C_ptr) < 0) {
+                (*D_82B1246C_ptr) = 0;
+            }
+        }
+        if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x400) {
+            (*D_82B1246C_ptr) = (*D_82B1246C_ptr) + 1;
+            if ((*D_82B1246C_ptr) >= 4) {
+                (*D_82B1246C_ptr) = 3;
+            }
+        }
+        if (sp18 != (*D_82B1246C_ptr)) {
+            func_800226C0(1);
+        }
+        input = *(u16 *)((u8 *)D_80087200 + 8);
+        if (input & 0x8000) {
+            func_82B02A34(func_82B02800(1, 3), 1);
+            func_82B02A34(func_82B02800(6, 0), 0);
+            func_82B06360(1);
+            func_800226C0(0x8D);
+            return;
+        }
+        if (input & 0x4000) {
+            func_82B029B8(func_82B02800(1, 3), -1);
+            func_82B02A34(func_82B02800(6, 0), 1);
+            func_82B060A0(1);
+            func_800226C0(3);
+        }
+    }
+}
+/* mkdraft:func_82B072DC end */
 #endif
 
 #ifdef VERSION_US
