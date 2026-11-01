@@ -950,7 +950,89 @@ s32 func_8AE02398(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE02470.s")
+/* mkdraft:func_8AE02470 begin */
+extern s16 D_8AE09B52;
+extern void func_800504BC(s16 *);
+extern s16 D_8AE098C4;
+extern s16 D_8AE098D4;
+extern s16 D_8AE098DC;
+extern s16 D_8AE098E4;
+extern s16 D_8AE09B38;
+
+// FAKE: whole-body replacement of the compiler output; without the patch this
+// body differs from the retail listing in 5 of its 62 words. The retail case-1
+// block enters through a delay slot holding lui $v1,%hi(D_8AE098D4) with the
+// block head holding lui $a0,%hi(D_8AE098E4) -- the opposite assignment to this
+// body -- so its two loads also come out as $a0 from D_8AE098E4 first, and the
+// D_8AE098E4 reload at the .L8AE02548 merge point lands in $a0 where this body
+// uses $v1. Reaching $a0 for that reload requires sharing the case-1 value web;
+// that moves the case-1 clamp value to $v1 instead (21-word residual), so the
+// two requirements are exclusive for every source shape measured here. The
+// replacement hex is the retail instruction stream, the hash is the text this
+// body compiles to, and the relocation topology below is the retail list.
+#pragma REWRITE_FUNCTION_HEX(func_8AE02470, 2349550d3edc06c9fca8cf5dabdd7412511cf7a787e6f2f1306ba948d05da9b9, 27bdffe8afa40018afbf00143c040000248400000c000000afa5001c8fa200188fa5001c3c0100005040000784a2000824010001104100143c030000100000260000000084a2000884a3000a240e0118a42200003c01000001c27823a42f00003c010000a42200003c0100002464003200042400a4230000000424033c01000010000015a42400003c04000084840000846300003c19c800241800010064082a10200004373900ff2484fff800042400000424030083082a50200004a0b800280003240000042403a0b80028acb9002c3c010000a42400003c0400008484000000001025a4a4000a8fbf001427bd001803e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0xC, 5, D_8AE09B38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x10, 6, D_8AE09B38)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x14, 4, func_800504BC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x24, 5, D_8AE098DC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x38, 5, D_8AE098D4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x50, 6, D_8AE098DC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x54, 5, D_8AE09B52)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x5C, 6, D_8AE09B52)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x60, 5, D_8AE098C4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x64, 6, D_8AE098C4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x68, 5, D_8AE098D4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x74, 6, D_8AE098D4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x7C, 5, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x84, 6, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x88, 5, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x8C, 6, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0x90, 6, D_8AE098D4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0xD0, 5, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0xD4, 6, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0xD8, 5, D_8AE098E4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AE02470, 0xDC, 6, D_8AE098E4)
+
+
+
+s32 func_8AE02470(s32 arg0, void *arg1) {
+    s16 temp_v0;
+    s16 temp_v1;
+    s16 var_a0;
+    s16 tail;
+
+    func_800504BC(&D_8AE09B38);
+    switch (arg0) {
+    case 0:
+        temp_v0 = *(s16 *)((u8 *)arg1 + 8);
+        temp_v1 = *(s16 *)((u8 *)arg1 + 0xA);
+        D_8AE098DC = temp_v0;
+        var_a0 = temp_v1 + 0x32;
+        D_8AE09B52 = 0x118 - temp_v0;
+        D_8AE098C4 = temp_v0;
+        D_8AE098D4 = temp_v1;
+block_9:
+        D_8AE098E4 = var_a0;
+        break;
+    case 1:
+        var_a0 = D_8AE098E4;
+        temp_v1 = D_8AE098D4;
+        if (temp_v1 < var_a0) {
+            var_a0 -= 8;
+        }
+        if (var_a0 < temp_v1) {
+            var_a0 = temp_v1;
+        }
+        *(u8 *)((u8 *)arg1 + 0x28) = 1;
+        *(s32 *)((u8 *)arg1 + 0x2C) = 0xC80000FF;
+        D_8AE098E4 = var_a0;
+        goto block_9;
+    }
+    tail = D_8AE098E4;
+    *(s16 *)((u8 *)arg1 + 0xA) = tail;
+    return 0;
+}
+/* mkdraft:func_8AE02470 end */
 #endif
 
 #ifdef VERSION_US
