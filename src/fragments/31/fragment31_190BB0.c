@@ -400,7 +400,103 @@ void func_8821EC10(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821EC34.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821EE00.s")
+/* mkdraft:func_8821EE00 begin */
+extern s32 func_880020CC();
+extern void func_88214394(void);
+
+typedef struct {
+    s16 unk_00;
+    s32 unk_04;
+    s16 unk_08;
+    u8 unk_0A[0x18];
+    s16 unk_22;
+} unk_func_8821EE00_selection;
+
+typedef struct {
+    void **unk_00;
+    s16 unk_04;
+} unk_func_8821EE00_list;
+
+typedef struct {
+    s32 unk_00;
+    s32 unk_04;
+    void *unk_08;
+    unk_func_8821EE00_list *unk_0C;
+    unk_func_8821EE00_selection *unk_10;
+} unk_func_8821EE00_state;
+
+// `pressed` is set in both branches of the guard: IDO 7.1 then leaves the
+// redundant `b` plus `addiu v0,1` after the test, matching the target.
+//
+// FAKE: `selected` is a second name for the same selection pointer and carries
+// no state of its own. It only changes IDO's register choice for that pointer;
+// reading through `selection` alone gives the same instructions with the
+// pointer in $a1 and its loaded unk_00 in $a0, which scores 65.
+
+
+void func_8821EE00(void) {
+    s32 pressed;
+    unk_func_8821EE00_state *state;
+    unk_func_8821EE00_selection *selection;
+    unk_func_8821EE00_selection *selected;
+
+    if (*(u8 *)&D_889041B8 != 0) {
+        return;
+    }
+    state = (unk_func_8821EE00_state *)D_882347F0;
+    selection = state->unk_10;
+    selected = selection;
+    if (selected->unk_00 == 0 && selected->unk_04 == 0 && selected->unk_22 == 0) {
+        pressed = 1;
+    } else {
+        pressed = 0;
+    }
+    if (pressed && (D_80087200->buttonsPressed & B_BUTTON)) {
+        func_800226C0(0x48);
+        func_8821E1E4();
+        return;
+    }
+    if (selected->unk_00 == 0 && selected->unk_04 == 0 && selected->unk_22 == 0) {
+        pressed = 1;
+    } else {
+        pressed = 0;
+    }
+    if (pressed && (D_80087200->buttonsPressed & A_BUTTON)) {
+        if (state->unk_0C->unk_04 == 0 ||
+            *(u8 *)((u8 *)state + selected->unk_08 + 0x9C) == 1) {
+            func_800226C0(0x49);
+            return;
+        }
+        if (state->unk_00 == 4 &&
+            *(u8 *)((u8 *)state->unk_0C->unk_00[selected->unk_08] + 9) == 0) {
+            func_88214394();
+        } else {
+            func_800226C0(0x47);
+        }
+        if (*(s32 *)((u8 *)D_882347F0 + 4) == 1) {
+            func_8821E0BC();
+            return;
+        }
+        func_8821E1E4();
+        *(s32 *)((u8 *)D_882347F0 + 0x49C) = 1;
+        state = (unk_func_8821EE00_state *)D_882347F0;
+        switch (state->unk_00) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                D_88234620 = state->unk_0C->unk_00[state->unk_10->unk_08];
+                break;
+            case 4:
+            case 5:
+                D_882345F4 = state->unk_0C->unk_00[state->unk_10->unk_08];
+                break;
+        }
+    } else {
+        func_880020CC();
+    }
+}
+/* mkdraft:func_8821EE00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821F01C.s")
 
