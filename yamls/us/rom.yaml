@@ -1785,8 +1785,7 @@
     - [0x3F8830, .rodata, fragments/79/fragment79_380210]
     - [0x3F8850, .rodata, fragments/79/fragment79_380A00]
     - [0x3F8CE0, .rodata, fragments/79/fragment79_38D510] # Jump tables, float literals.
-    - [0x3F90B0, rodata]
-    - [0x3F95D0, .rodata, fragments/79/fragment79_38EFE0] # Movement setup/update dispatch tables, 192 bytes.
+    - [0x3F90B0, .rodata, fragments/79/fragment79_38EFE0] # Movement setup/update dispatch tables, 192 bytes. Extended to 0x3F90B0-0x3F9690: strings, jump tables, float literals, double literals.
     - [0x3F9690, rodata]
     - [0x3FA610, .rodata, fragments/79/fragment79_393CA0] # Existing SendFightThread literal, then AD94/ADAC/ADCC/AECC tables.
     - [0x3FA770, rodata]
