@@ -530,7 +530,55 @@ void func_862025E0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_862028F0.s")
+/* mkdraft:func_862028F0 begin */
+extern u8 D_86208F28[];
+extern void func_862026C8(void);
+
+// Initializes the four 24-byte slots at D_8620E198 + 0x73BBC. The word at slot +0x0 is
+// 0x10000000 when the slot's bit is set in the byte at +0x2182 of the object whose pointer
+// sits at D_8620E198 + 0xF4, and 0x20000000 otherwise; func_862026C8 counts the slots that
+// carry the 0x20000000 bit. The signed halfword at slot +0x10 is copied from
+// D_86208F28 + 0x3C, and the byte at slot +0x16 starts as the slot's own index; the first
+// and last of those bytes are then exchanged, and when the byte at +0x60 is nonzero they
+// are exchanged up to 40 more times in pairs picked by func_8003570C.
+
+
+void func_862028F0(void) {
+    s32 slot;
+    s32 swap_count;
+    s32 first_slot;
+    s32 second_slot;
+    u8 *first_record;
+    u8 *second_record;
+    u8 swap_value;
+
+    for (slot = 0; slot < 4; slot++) {
+        *((s32 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BBC)) = (((*(u8 *)((u8 *)(*(void **)(((u8 *)D_8620E198) + 0xF4)) + 0x2182))) & (1 << slot)) != 0 ? 0x10000000 : 0x20000000;
+        *((s32 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BC0)) = 0;
+        *((s32 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BC4)) = 0;
+        *((s16 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BCC)) = (*((s16 *)(((u8 *)&D_86208F28) + 0x3C)));
+        *((u8 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BCF)) = 0;
+        *((s16 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BD0)) = 0;
+        *((u8 *)(((u8 *)D_8620E198) + (slot * 24) + 0x73BD2)) = slot;
+    }
+    func_862026C8();
+    *((u8 *)(((u8 *)D_8620E198) + 0x73BD2)) = 3;
+    *((u8 *)(((u8 *)D_8620E198) + 0x73C1A)) = 0;
+    if ((*((u8 *)(((u8 *)D_8620E198) + 0x60))) != 0) {
+        swap_count = func_8003570C() % 41;
+        for (slot = 0; slot < swap_count; slot++) {
+            func_8003570C();
+            first_slot = func_8003570C() & 3;
+            second_slot = func_8003570C() & 3;
+            first_record = ((u8 *)D_8620E198) + (first_slot * 24) + 0x73BBC;
+            second_record = ((u8 *)D_8620E198) + (second_slot * 24) + 0x73BBC;
+            swap_value = first_record[0x16];
+            first_record[0x16] = second_record[0x16];
+            second_record[0x16] = swap_value;
+        }
+    }
+}
+/* mkdraft:func_862028F0 end */
 #endif
 
 #ifdef VERSION_US
