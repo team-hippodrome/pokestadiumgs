@@ -1492,3 +1492,5 @@ func_84124F40 = Battle_SeedRandomByteBuffer;
 func_84133C10 = Battle_ResolveOpponentFaint;
 
 func_84133F10 = Battle_ResolveSideAfterCommands;
+
+func_86800298 = Fragment56_AnimatedTextureCallback;

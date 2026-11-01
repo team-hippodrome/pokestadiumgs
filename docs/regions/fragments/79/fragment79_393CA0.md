@@ -2545,3 +2545,68 @@ halfword HP checks; it passed the canonical host syntax check and full US ROM
 gate on `6aa30b4f`, retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming
 preserved complete-module sections, function extents, and relocations in normal
 and +20-line controls. The original function address remains a linker alias.
+
+#### HP-loss animation follow-up: requeue (2026-11-01)
+
+`func_841334D8` remains assembly. The best current candidate is 576 bytes
+versus 572, normalized similarity 0.8958 and raw similarity 0.7986. Its byte
+parameter is allocated to S0, while the original reads its stack byte. This
+follow-up adds 32 rejected candidates covering unsigned indexing and signed
+HP-delta staging, conditional-path nesting/inversion, old-style byte parameters,
+and typed HP record fields. None improves the best result.
+
+Calibrated native compiler captures preserve complete-module bytes, extents,
+and relocations normally and with twenty leading blank lines. The optimizer
+input has 18 parameter-memory reads; output has none and reserves register16.
+The accepted `Battle_QueueSwitchInHpMessage` witness retains nine of its 17
+parameter-memory reads. Original optimizer debug output identifies parameter
+live range0 and its register assignment. A diagnostic host formatting bridge
+permits complete allocation listings while preserving emitted UCODE and symbol
+files; the production compiler is unchanged. The candidate's adjusted saving
+is 1.11111116. A logging-only observer, calibrated off/on for both functions,
+finds one matching eleven-unit fingerprint: ten loads, all block frequencies1,
+numerator10 and divisor9. Attribution of its raw pointer is by that fingerprint.
+This is cost evidence, not proof that another C spelling cannot match.
+
+Stock IDO5.3 emits the same candidate function bytes as7.1. The accepted witness
+differs across versions, so no cross-version matching claim follows. Stadium1
+`func_8436FA80` in `battle_engine_359F90.c` is a semantic HP-loss-message witness
+with 30/70 percent thresholds, but uses battler pointers and different division
+arithmetic; it is not a transplant. Keep GS signed100/maxHP arithmetic.
+
+Next: seek a genuine source live-range partition or parameter eligibility
+explanation using the measured allocation costs. Do not replay the tested width,
+branch-nesting, field-type, or old-style declaration grids. No artificial address
+escape, ABI alteration, or forced compiler decision is justified by these results.
+Private receipts: `battle-faint-animation-stock-passes`,
+`battle-faint-animation-costs`, `battle-faint-cost-observer-controls`, and
+`battle-faint-animation-stock53`. This note does not claim ROM acceptance.
+
+#### Move-slot scan and byte copy: requeue (2026-11-01)
+
+`func_841252D0` remains assembly. Forty new probes covered explicit scan exits,
+signed narrow counters, signed source-byte reads, reused sentinel variables,
+and fresh m2c backward-label loops. None accepted. The word-counter parent
+retains 152 exact prefix bytes but UOPT changes SLTI4/BNEZ to LI4/BNE. Narrow
+counters retain 176 prefix bytes but add byte/halfword truncation. Copy loops
+with unsigned loads eliminate the retail ANDI; signed-source variants either
+retain LB+ANDI or fold to LBU without ANDI. No tested spelling resolves both.
+
+A calibrated one-worker120-second permuter search found no exact output. Its
+starting stripped compile matched the canonical candidate bytes. All three
+retained proposals were semantically invalid: two hoisted `dst[-1]` before the
+postincrement and tested the previous byte; one changed index-1 to unsigned255.
+These proposals and their scores are rejected, and no body was installed.
+Assembly-only m2c also inferred a spurious second argument to `func_80062D98`;
+its accepted definition in `src/638E0.c` takes one byte argument.
+
+Next: resume from the independent scan/copy diagnostics, using an actual
+induction-eligibility explanation or a source hypothesis that preserves both
+loops. Avoid replaying the measured counter-width, signed-source, sentinel-reuse,
+and backward-label families. Fresh32-bit scan parent and narrow prefix evidence
+remain useful independently. Private evidence: `battle-slot-copy-control8`,
+`battle-slot-copy-counter8`, `battle-slot-copy-signed-source8`,
+`battle-slot-copy-sentinel-reuse8`, `battle-slot-copy-labels8`, and
+`battle-slot-copy-permute-review.json`. All new probe batches passed unchanged
+module controls normally and with twenty leading blank lines; no ROM acceptance
+is implied by those controls.

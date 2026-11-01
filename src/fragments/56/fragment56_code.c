@@ -10,7 +10,33 @@ s32 func_86800020(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868000AC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86800298.s")
+extern s32 D_86808644;
+extern s32 D_86808640;
+extern s32 D_8682F2B4;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+extern Gfx * D_800D0510;
+void Fragment56_AnimatedTextureCallback(s32 event, void *node) {
+    s32 asset;
+    static s32 frame_counter;
+    if (event == 0) {
+        D_86808644 = func_8004C990(227, 0);
+    }
+    if (event == 5) {
+        if (D_8682F2B4 == 0) {
+            frame_counter++;
+        }
+        if (frame_counter >= 21) frame_counter = 0;
+        asset = func_8004C990(227, frame_counter / 4);
+        D_86808644 = asset;
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        gSPSegment(D_800D0510++, 15, func_8004CA60((u8 *)D_86808644));
+        gSPDisplayList(D_800D0510++, D_86808640);
+        func_8003CD84();
+    }
+}
 
 extern f32 D_86807CB0;
 extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
