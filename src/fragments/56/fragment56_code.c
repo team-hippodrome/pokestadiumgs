@@ -231,20 +231,20 @@ void Fragment56_UpdateScaledParameters(void) {
 extern u32 func_8003570C(void);
 extern u8 D_868086C8[];
 extern u8 D_868085C0[];
-extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u8 *func_87F03884(u8 *, s32, void *, f32, f32, f32, s16, f32, s32);
 void func_8680105C(s32 arg0) {
-    volatile s32 pad[8];
+    volatile s32 pad[8]; // FAKE: unused stack space; original live locals remain unrecovered.
     u32 rand1;
     u32 rand0;
     u8 *ptr;
-    f32 temp;
+    u32 scale_multiplier = 4;
     f32 zero;
     rand0 = func_8003570C();
     rand1 = func_8003570C();
     func_8003570C();
     ptr = D_868086C8 + arg0 * 0x168;
     zero = 0.0f;
-    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)(4 | (rand0 & 0)), 1);
+    func_87F03884(D_868085C0, 0, ptr, 20.0f, *(f32 *)(ptr + 0xB0) - *(f32 *)(ptr + 0x28) + 30.0f, zero, (rand0 % 31) * 0x200, ((f32)rand1 / 4294967296.0f) * 1.8f * (f32)scale_multiplier, 1);
 }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86801160.s")
@@ -601,10 +601,10 @@ typedef struct Fragment56MotionRecord {
 } Fragment56MotionRecord;
 
 typedef struct Fragment56MovingModel {
-    u8 unk_000[0x24];
+    u8 unk_000[36];
     f32 position[3];
     f32 scale[3];
-    u8 unk_03C[0x12C];
+    u8 unk_03C[300];
 } Fragment56MovingModel;
 
 extern Fragment56MotionRecord D_8682ED98[4];
@@ -672,7 +672,7 @@ extern u8 D_86808C68[];
 extern f32 D_8682F30C;
 extern s32 D_8682F310;
 extern u32 func_8003570C(void);
-extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u8 *func_87F03884(u8 *, s32, void *, f32, f32, f32, s16, f32, s32);
 void func_86806044(s32 arg0) {
     volatile s32 pad[3]; // FAKE: unused stack space; original live locals remain unrecovered.
     u32 rand1;

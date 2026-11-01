@@ -241,7 +241,7 @@ The remaining difference is floating-point load/operation scheduling and a
 latency NOP in the position calculation. Parameter snapshots and final XYZ
 temporaries can reach588 bytes but change FP allocation/order.
 
-There are126 runner attempts, including two rejected generated declaration
+There are182 runner attempts, including two rejected generated declaration
 errors corrected in later variants. Tried pointer scope/type, array versus
 pointer address spelling, opaque/typed record views, pointer initialization,
 time temporaries/compound assignment, index signedness, parameter snapshots,
@@ -350,3 +350,64 @@ the opaque motion view preserve the592-byte residual rather than admitting C.
 Next: use the now-verified global record types for the moving-model candidate
 and inspect whether its load/store alias dependencies change. Do not infer
 acceptance from the improved type information alone.
+
+## 2026-11-01 — particle declaration and scale cleanup
+
+The two `func_87F03884` declarations in this file now agree with its existing
+C definition in `src/fragments/64/fragment64_326160.c`: it returns the
+allocated object pointer and takes an s16 angle. The caller's random angle
+is bounded by30 times512, so its narrowing preserves the represented value.
+Complete module bytes, section shapes, function extents, and relocations are
+unchanged in normal and +20-line controls after the declaration correction.
+
+`func_8680105C` now uses the live integer input `scale_multiplier = 4` in
+its scale calculation. It replaces both the unused float declaration and the
+arithmetic no-op `rand0 & 0`. Keeping the multiplier as an integer preserves
+the target's integer-to-float conversion; replacing the expression directly
+with a float literal produced256 bytes instead of260. This cleanup passes
+both whole-module controls and the normal full retail ROM gate on the
+`e8e69732` baseline, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+The existing unused stack array in this caller is now labeled FAKE. It and
+the previously labeled array in `func_86806044` still need genuine source
+lifetime recovery; the declaration/scale cleanup does not resolve those slots.
+
+## 2026-11-01 — moving-model follow-up controls and requeue
+
+`func_86806180` remains assembly (**requeue**). Ordinary typed global accesses,
+read-only trajectory views, and tentative C array definitions retain the
+592-byte direct-store residual. Private internal-storage probes using the
+byte-view body also retain592 bytes; their altered backing storage makes
+them diagnostic controls, never installable candidates. The interaction of
+internal storage with fully typed motion accesses remains untested.
+
+Stock IDO5.3 and7.1 produce identical592-byte direct-store function bytes,
+while all three accepted control functions match under both drivers. Thus
+this particular residual is not improved by the tested stock-driver change.
+Aggregate input snapshots move parameters into FP12/FP14. Component copies
+through a local position struct reach588 bytes and reproduce the prefix
+through instruction109, but their output values occupy FP12/FP14 instead of
+the target temporary sequence (normalized0.9796, raw0.932). Array copies and
+vector-assignment macros do not admit the owner either.
+
+A180-second, single-worker permuter run from that588-byte component-copy
+parent reports base690, best575, with the last logged iteration1981 and59
+compile errors. Both retained improvements are rejected: one introduces an
+unused variable assigned7, and the other leaves a dead component store while
+moving the model-X store. No mutation was installed. Source-line grouping
+mutations and register-forcing mutations were disabled.
+
+The called `__inline` setter experiment exposes a separate **tooling-blocked**
+path: CFE reorders placeholder functions, and asm-processor's source-order
+walk reports `Wrongly computed size for section .text (diff 2964)`. Removing
+a redundant inline prototype does not fix it. Raw AS1 captures show decreasing
+placeholder locations; the raw C owner is588 bytes but still has13 positional
+instruction differences, so fixing placeholder bookkeeping alone would not
+admit it. No inline helper or vector macro was installed.
+
+Next: first test the internal-storage/fully-typed-access interaction as a
+private noninstallable control before considering any data-layout migration.
+Then resume the direct592-byte parent with observed permuter logging and a
+materially different evaluation/lifetime hypothesis. Keep the exact collision
+branch and the original calling contracts. This remains a source-shape search,
+not proof that compiler-faithful C is impossible.
