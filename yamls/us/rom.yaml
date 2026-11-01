@@ -1233,7 +1233,7 @@
     - [0x253A70, data,    fragments/47/fragment47_data_tail]
     - [0x253C70, .rodata, fragments/47/fragment47_246640] # callback/motion literals and state-update jump tables
     - [0x253D40, rodata,  fragments/47/fragment47_data_tail_rodata]
-    - [0x253F30, .rodata, fragments/47/fragment47_24AE60] # jtbl_8600D910 (func_86006F20, still GLOBAL_ASM) + jtbl_8600D92C (func_86007648), widened to 16-byte boundary
+    - [0x253EF0, .rodata, fragments/47/fragment47_24AE60] # jtbl_8600D910 (func_86006F20, still GLOBAL_ASM) + jtbl_8600D92C (func_86007648), widened to 16-byte boundary. Extended to 0x253EF0-0x253F70: jump tables, double literals.
     - [0x253F70, .rodata, fragments/47/fragment47_24E0A0] # four double constants at D_8600D950..D_8600D968
     - [0x253F90, rodata]
     - [0x253FB0, .rodata, fragments/47/fragment47_2507E0] # image positions, texture indices, fixed-point bias and draw scales
