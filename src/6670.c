@@ -38,7 +38,95 @@ void func_80005CA4(ControllerState *arg0) {
 extern void Cont_BlockEepromQueue(void); extern OSMesgQueue D_800CE100;
 void Cont_StartReadInputs(void) { Cont_BlockEepromQueue(); osContStartReadData(&D_800CE100); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6670/func_80005F0C.s")
+/* mkdraft:func_80005F0C begin */
+extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+extern void Cont_NoBlockEepromQueue(void);
+extern s32 GbPak_PollConnection();
+extern s32 func_80077424(s32 *);
+extern s32 D_800CE130;
+extern OSMesgQueue D_800CE100;
+
+// Reads the four controller slots once per call: latches the raw pad buttons,
+// converts the stick through func_80005B88, folds stick directions into the
+// d-pad bits (0x100/0x200/0x400/0x800) when the normalized stick passes +/-32,
+// clears an opposed d-pad axis pair, then derives pressed/released from the
+// previous held state before func_80005CA4 handles repeat.
+// FAKE: the first clear block carries a copy pair, `var_v0 = var_s0;` followed by
+// `var_v0 = var_s0 ^ 0;`, and the second clear block repeats `var_v0 = var_s0;`
+// twice. All three are no-ops that uopt drops, but they change which value it
+// keeps live in $v0 across the branch (`or v0,s0` placement at the join). Without
+// the first block's pair this file scores 3; without the second block's duplicate
+// copy it scores 7; with neither the source is the plain two-copy form and scores
+// 10 (standalone object diff against expected/build/src/6670.o).
+
+
+void func_80005F0C(void) {
+    ControllerState *var_s1;
+    OSContPad *temp_v0;
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    s32 temp_a1;
+    s32 var_s2;
+    s32 temp_v1;
+    s32 var_s0;
+    s32 var_v0;
+
+    var_s1 = D_800CE060;
+    osRecvMesg(&D_800CE100, NULL, 1);
+    func_80077424(&D_800CE130);
+    Cont_NoBlockEepromQueue();
+    var_s2 = 0;
+    do {
+        if (var_s1->portNumber != 0) {
+            temp_v0 = var_s1->pad;
+            var_s0 = temp_v0->button;
+            var_s1->stickX = (s16) temp_v0->stick_x;
+            var_s1->stickY = (s16) temp_v0->stick_y;
+            func_80005B88(var_s1);
+            if (var_s1->flags & 1) {
+                temp_fv0 = var_s1->stickXNorm;
+                if (temp_fv0 <= -32.0f) {
+                    var_s0 = (var_s0 | 0x200) & 0xFFFF;
+                }
+                if (temp_fv0 >= 32.0f) {
+                    var_s0 = (var_s0 | 0x100) & 0xFFFF;
+                }
+                temp_fv0_2 = var_s1->stickYNorm;
+                if (temp_fv0_2 <= -32.0f) {
+                    var_s0 = (var_s0 | 0x400) & 0xFFFF;
+                }
+                if (temp_fv0_2 >= 32.0f) {
+                    var_s0 = (var_s0 | 0x800) & 0xFFFF;
+                }
+            }
+            var_v0 = var_s0;
+            if ((var_s0 & 0xC00) == 0xC00) {
+                var_s0 = (var_v0 & 0xFFFFF3FF) & 0xFFFF;
+                var_v0 = var_s0; /* FAKE: see function comment */
+                var_v0 = var_s0 ^ 0; /* FAKE: see function comment */
+            }
+            if ((var_v0 & 0x300) == 0x300) {
+                var_s0 = (var_v0 & 0xFFFFFCFF) & 0xFFFF;
+                var_v0 = var_s0; /* FAKE: duplicated copy; see function comment */
+                var_v0 = var_s0; /* FAKE: see function comment */
+            }
+            temp_v1 = var_s1->buttonsHeld;
+            var_s1->buttonsHeld = var_s0;
+            temp_a1 = var_v0 ^ temp_v1;
+            var_s1->buttonsPressed = var_v0 & temp_a1;
+            var_s1->buttonsReleased = temp_v1 & temp_a1;
+            func_80005CA4(var_s1);
+        } else {
+            var_s1->buttonsPressed = 0;
+            var_s1->buttonsReleased = 0;
+            var_s1->buttonsHeld = 0;
+        }
+        var_s2 += 1;
+        var_s1++;
+    } while (var_s2 != 4);
+    GbPak_PollConnection();
+}
+/* mkdraft:func_80005F0C end */
 
 extern u8 D_800CE118; u8 func_800060E8(void) { return D_800CE118; }
 
