@@ -498,7 +498,55 @@ void func_8290430C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_829043B4.s")
+/* mkdraft:func_829043B4 begin */
+extern u8 D_82919C88[];
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern f32 Math_StepToF(f32, f32, f32, f32);
+
+// Per-frame update of the D_82919C38 record. Captures 0xAC with a 6.0 floor into
+// speed[0], writes Math_StepToF(0x44, 0x4C, 0x48, 0x48) back to 0x44, fills `eye`
+// from the 0x3C/0x3E rotation, copies the pointee's 0xA8 vector into `position`,
+// calls func_80037120 to obtain the distance/rotation pair for eye vs position,
+// then calls func_800371B4 again with &position, pointee+0xA8 and the scale
+// distance * 0x44 * 0.7f. The trailing blocks decay 0xAC 0.85 of the way back to
+// 6.0 from the captured speed[0], the second one only while 6.0 < 0xAC <= 7.0.
+
+
+
+void func_829043B4(u8 *arg0) {
+    typedef struct { f32 x; f32 y; f32 z; } V3;
+    V3 eye;
+    V3 position;
+    f32 distance[1]; // FAKE: one-element array read as distance[0]; diff score 20 without it.
+    s16 rotation[2];
+    f32 speed[2];
+    f32 padding[2]; // FAKE: unused, reserves retail's 0x68-byte frame; diff score 114 without it.
+
+    func_8290430C(arg0);
+    if (*(f32 *)((u8 *)D_82919C38 + 0xAC) >= 6.0f) {
+        speed[0] = *(f32 *)((u8 *)D_82919C38 + 0xAC);
+    } else {
+        speed[0] = 6.0f;
+    }
+    func_829042A4((f32 *)((u8 *)D_82919C38 + 0x2C), *(f32 *)((u8 *)&D_82919C38 + 0x88), 0.02f);
+    *(f32 *)((u8 *)&D_82919C38 + 0x44) =
+        Math_StepToF(*(f32 *)((u8 *)&D_82919C38 + 0x44), *(f32 *)((u8 *)&D_82919C38 + 0x4C),
+                     *(f32 *)((u8 *)&D_82919C38 + 0x48), *(f32 *)((u8 *)&D_82919C38 + 0x48));
+    func_800371B4(D_82919C88, &eye, *(f32 *)((u8 *)&D_82919C38 + 0x40),
+                  *(s16 *)((u8 *)&D_82919C38 + 0x3C), *(s16 *)((u8 *)&D_82919C38 + 0x3E));
+    Vec3f_SetComponentsDuplicate(&position, *(f32 *)((u8 *)D_82919C38 + 0xA8),
+                                 *(f32 *)((u8 *)D_82919C38 + 0xAC), *(f32 *)((u8 *)D_82919C38 + 0xB0));
+    func_80037120(&position, &eye, distance, &rotation[0], &rotation[1]);
+    func_800371B4(&position, (u8 *)D_82919C38 + 0xA8,
+                  *(f32 *)((u8 *)&D_82919C38 + 0x44) * distance[0] * 0.7f, rotation[0], rotation[1]);
+    if (*(f32 *)((u8 *)D_82919C38 + 0xAC) <= 6.0f) {
+        *(f32 *)((u8 *)D_82919C38 + 0xAC) = (speed[0] - 6.0f) * 0.85f + 6.0f;
+    }
+    if (*(f32 *)((u8 *)D_82919C38 + 0xAC) <= 7.0f && *(f32 *)((u8 *)D_82919C38 + 0xAC) > 6.0f) {
+        *(f32 *)((u8 *)D_82919C38 + 0xAC) = (speed[0] - 6.0f) * 0.85f + 6.0f;
+    }
+}
+/* mkdraft:func_829043B4 end */
 #endif
 
 void func_82904554(void) {
