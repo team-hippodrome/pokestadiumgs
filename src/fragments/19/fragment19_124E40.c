@@ -296,7 +296,7 @@ void func_823055DC(u8 *arg0) {
         }
         var_s0 += 0x2F0;
     } while (var_s1 != 0xBC0);
-    // karodo: never taken (var_v0 is 0 or a multiple of 0x2F0); it is the
+    // FAKE: never taken (var_v0 is 0 or a multiple of 0x2F0); it is the
     // reader that keeps var_v0 live.
     if (var_v0 == 2) {
     }

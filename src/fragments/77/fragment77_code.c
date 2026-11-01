@@ -81,7 +81,7 @@ extern void func_800495F8(s32, s32, s32, const char*, ...);
 
 void func_8F8000D0(void *arg0, s32 arg1) {
     u8 value;
-    // karodo: never read or written. The declaration alone keeps `result` in the 0x28
+    // FAKE: never read or written. The declaration alone keeps `result` in the 0x28
     // slot; dropping it moves `result` to 0x2C and scores 8.
     u8 *text;
     s32 slot;

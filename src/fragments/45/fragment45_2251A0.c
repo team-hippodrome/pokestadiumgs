@@ -537,7 +537,7 @@ void func_8AB016E4(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-s32 func_80026098();
+s32 func_80026098(void);
 extern void func_8AB016E4(u8);
 extern s16 D_8AB14678;
 extern s16 D_8AB16788;

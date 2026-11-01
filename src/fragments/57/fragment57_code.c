@@ -131,7 +131,7 @@ void func_83302088(void *arg0) {
         // sw zero,0x1C moves ahead of the lui $at,%hi(D_833091E4) that the
         // final store shares (diff score 60).
         *(s32 *)((u8 *)arg0 + 0x1C) = state = 0, offset = 4.0f, *offset_accum = offset;
-        // karodo: empty test, emits nothing. Its use of offset is what keeps the
+        // FAKE: empty test, emits nothing. Its use of offset is what keeps the
         // reset's 4.0f constant in $f0; without it, or with if (1), the mtc1
         // targets $f4 and every later FPR shifts (diff score 190).
         if (offset) {
@@ -174,7 +174,7 @@ void func_83302180(void *arg0) {
         (*D_833091EC_ptr) = temp_fv0;
     }
     temp_fv0 = (*D_833091EC_ptr);
-    if (1) {} // karodo: the empty if gives uopt a statement boundary here; without it the D_833091EC load is scheduled after the 10.0f and 16.0f materializations (diff score 530).
+    if (1) {} // FAKE: the empty if gives uopt a statement boundary here; without it the D_833091EC load is scheduled after the 10.0f and 16.0f materializations (diff score 530).
     temp_fv0 = temp_fv0 - 16.0f;
     if (temp_fv0 < 10.0f) {
         *(s32 *)((u8 *)arg0 + 0x18) = 0;
@@ -369,7 +369,7 @@ extern void func_80045DB4(s32, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32,
 // D_800D0510 holds the display-list cursor as `void *` in this fragment, so every
 // gSP/gDP command advances it through the (Gfx **) cast.
 //
-// karodo: `if (D_83309200) {}` is a dead empty conditional. The compare never reaches
+// FAKE: `if (D_83309200) {}` is a dead empty conditional. The compare never reaches
 // the object (the linked body is 209 instructions either way); it only refills uopt's
 // expression-temp free list before the `pos` block, which moves `pos` from v0 to t4
 // and `-pos` from a2 to a1. Without that line the tail's 8 instructions still differ
@@ -399,7 +399,7 @@ void func_83303220(void) {
 
     {
         s32 pos = D_833091F8;
-        if (D_83309200) {} // karodo: the compare never reaches the object; the D_83309200 reference only shifts uopt's register walk
+        if (D_83309200) {} // FAKE: the compare never reaches the object; the D_83309200 reference only shifts uopt's register walk
         gDPTileSync((*(Gfx **) &D_800D0510)++);
         gDPSetTileSize((*(Gfx **) &D_800D0510)++, 0, pos * 2, -pos, 0xFD, 0xF9);
         gDPSetTileSize((*(Gfx **) &D_800D0510)++, 1, pos * -2, -pos, 0xFB, 0xF9);

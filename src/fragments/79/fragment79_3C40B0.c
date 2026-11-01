@@ -215,7 +215,7 @@ void func_841551D4(u8 *arg0, u8 arg1, u8 arg2) {
     arg0[5] = sp1C[2];
     arg0[6] = sp1C[3];
     arg0[7] = sp1C[4];
-    if (!sp1C && !sp1C && !sp1C) {} // karodo
+    if (!sp1C && !sp1C && !sp1C) {} // FAKE: empty test retained for code generation.
     arg0[8] = temp_v1[9];
     arg0[9] = temp_v1[0xA];
     arg0[0xA] = temp_v1[0xB];

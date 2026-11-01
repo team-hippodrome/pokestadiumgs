@@ -78,23 +78,9 @@ extern void *func_8004C990(s32, s32);
 extern void *func_8004CA60(void *);
 extern void func_8003CD84(void);
 extern u8 D_864095D0[];
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0xEC, 0x032E7825, 0x01D97825)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0xF8, 0x3C19FB00, 0x3C0EFB00)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x104, 0xAC790000, 0xAC6E0000)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x10C, 0x908E0001, 0x90990001)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x114, 0x000E7C00, 0x00197C00)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x118, 0x030FC825, 0x030F7025)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x128, 0x032F7025, 0x01CFC825)
-#pragma REWRITE_FUNCTION_WORD(func_86408F84, 0x12C, 0x9199001D, 0x918E001D)
 
-// The body below compiles to the target instruction-for-instruction except for one
-// register rotation: IDO 5.3 emits the prim block's last `or` with its operands
-// commuted (`or t7,t9,t6` where the target has `or t7,t6,t9`), which swaps t6/t9
-// through the env block. The rewrites below rename registers only; opcodes,
-// immediates and operand values are unchanged.
-
-
-
+// NON_MATCHING: The color-packet OR operands and temporary register allocation still differ.
+#ifdef NON_MATCHING
 void func_86408F84(s32 arg0, s32 arg1) {
     u8 *context;
     u8 *state;
@@ -125,6 +111,9 @@ void func_86408F84(s32 arg0, s32 arg1) {
         }
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_2871C0/func_86408F84.s")
+#endif
 /* mkdraft:func_86408F84 end */
 
 extern s32 func_80037E3C(void *, void *, void *);

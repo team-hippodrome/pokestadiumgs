@@ -1603,21 +1603,9 @@ extern s16 D_82B12464[4];
 extern s16 D_82B12468;
 extern s16 D_82B1246A;
 extern void func_82B0556C(void);
-#pragma COALESCE_AT_LUI(func_82B055A0)
-#pragma REWRITE_FUNCTION_HEX(func_82B055A0, 03f5aab9cdb9cde6062e38fcd33cd259bb3fe8bc2923e35ca4d7e30ed0e9b53d, 3c030000246300008c62025427bdffe8afbf0014a460000c844e00043c01000024190001a46e000e844f00062408000124090001a46f001084580008240a0001a4780012a4280000a43900003c010000a42900000c000000a42a00008fbf001427bd001803e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x0, 5, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x4, 6, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x1C, 5, D_82B12466)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x44, 6, D_82B12466)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x48, 6, D_82B12464)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x4C, 5, D_82B12468)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x50, 6, D_82B12468)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x54, 4, func_82B0556C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x58, 6, D_82B1246A)
 
-
-
-
+// NON_MATCHING: Register allocation and instruction scheduling still differ from retail.
+#ifdef NON_MATCHING
 void func_82B055A0(void) {
     u8 *temp_v0;
     s32 i;
@@ -1632,6 +1620,9 @@ void func_82B055A0(void) {
     D_82B1246A = 1;
     func_82B0556C();
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B055A0.s")
+#endif
 /* mkdraft:func_82B055A0 end */
 #endif
 
@@ -1906,75 +1897,25 @@ extern void *D_80087200;
 extern s32 func_82B02870(void);
 extern void func_82B02A34(void *, s32);
 extern void func_82B060A0(s32);
-//
 // Fragment24 handler: when func_82B02870 reports nonzero, it services the
 // halfword flags at D_82B12450 and, if bit 0x4000 of the word D_80087200
 // points at is set, dispatches on the s16 at D_82B13008.
-//
 //   case 0  D_82B12450 (s16 at +0x0) = 9
 //           D_82B12456 (s16 at +0x6) = 0
 //           D_82B1245A (s16 at +0xA) = -1
 //   case 1  if D_82B126A0 (s16 at +0x250) > 0, call
 //           func_82B02A34(*(void **)(entry + 0xB18), 0) for each of
 //           D_82B126A0 entries walking 4 bytes at a time, then func_82B060A0(1)
-//
 // Both cases fall through to func_800226C0(3). Before the switch, a zero
 // D_82B12456 is raised to 1 with func_800226C0(5).
-//
-// Retail is 63 instructions (252 bytes), and its two case-0 stores share one
-// page base:
-//
 //   82B079C8  lui  $at,%hi(D_82B12450)      <- loaded before the dispatch
 //   82B079CC  beqz $v0,.L82B079E8
 //   82B079E8  sh   $t1,%lo(D_82B12450)($at)
 //   82B079EC  sh   $zero,%lo(D_82B12456)($at)   <- reuses that $at
 //   82B079F0  lui  $at,%hi(D_82B1245A)
-//
-// IDO 7.1 emits one `lui $at` per store macro, so the body below compiles to
-// 64 instructions with an extra `lui $at,%hi(D_82B12456)` between the two
-// `sh`. `COALESCE_AT_LUI` cannot fold that pair: coalesce_object.plan_runs
-// caps a fold at _MAX_SCHEDULED_GAP = 4 instructions, and this pair is
-// separated by the whole switch dispatch (`beqz`, `li $t2,-1`, `li $at,1`,
-// `beq`, `lui $t3`, `b`, `nop`), whose `li $at,1` also clobbers `$at`.
-//
-// The body leaves the flag read as `*(s16 *)((u8 *)&D_82B12454 + 2)`; the
-// direct `D_82B12456` spelling lets IDO CSE the address into `$s0`, which
-// costs more than the inserted `lui`. `s32 i = 0;` needs its initializer on
-// the declaration to reproduce retail's loop allocation (counter `$s0`,
-// entry pointer `$s1`).
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; diff score 110
-// without it (one inserted `lui $at,%hi(D_82B12456)` between the two case-0
-// halfword stores). Writing the flag read as `D_82B12456 == 0` instead scores
-// 760: IDO materializes the page base in `$s0`, so the store block and the
-// dispatch lose their `$at`-relative form.
-#pragma REWRITE_FUNCTION_HEX(func_82B07960, 249f8d0554777b1f103e9a6cd5a3e38e4032e9b5edebd418c8bd568758635087, 27bdffd8afb20020afbf00243c120000afb1001cafb000180c00000026520000104000303c0e000085ce0000240f00013c01000015c00003240400050c000000a42f00003c1800008f1800003c0200009719000833284000510000238fbf002484420000240900093c01000010400006240affff24010001104100083c0b00001000001600000000a4290000a42000003c01000010000011a42a0000856b00003c110000263100001960000a000080258e240b180c00000000002825864c02502610000126310004020c082a5420fff98e240b180c000000240400010c000000240400038fbf00248fb000188fb1001c8fb2002003e0000827bd0028)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xC, 5, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x18, 4, func_82B02870)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x1C, 6, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x24, 5, D_82B12456)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x28, 6, D_82B12456)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x30, 5, D_82B12456)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x3C, 4, func_800226C0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x40, 6, D_82B12456)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x44, 5, D_80087200)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x48, 6, D_80087200)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x4C, 5, D_82B13008)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x60, 6, D_82B13008)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x68, 5, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x7C, 5, D_82B126A0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x88, 6, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x8C, 6, D_82B12456)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x90, 5, D_82B1245A)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x98, 6, D_82B1245A)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0x9C, 6, D_82B126A0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xA0, 5, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xA4, 6, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xB4, 4, func_82B02A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xD4, 4, func_82B060A0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B07960, 0xDC, 4, func_800226C0)
 
-
+// NON_MATCHING: Register allocation and instruction scheduling still differ from retail.
+#ifdef NON_MATCHING
 void func_82B07960(void) {
     u8 *base = (u8 *)&D_82B12450;
     u8 *entry;
@@ -2009,6 +1950,9 @@ void func_82B07960(void) {
         }
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B07960.s")
+#endif
 /* mkdraft:func_82B07960 end */
 #endif
 

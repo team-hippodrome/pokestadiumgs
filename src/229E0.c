@@ -589,7 +589,11 @@ void func_80026068(u32 arg0) {
     }
 }
 
- void func_80026098(void) { GbAudio_GetActiveChannelMask(); }
+// Forward the active GB audio-channel mask; callers test the result for silence.
+//@src/340C0.c
+s32 func_80026098(void) {
+    return GbAudio_GetActiveChannelMask();
+}
 
 #pragma C_FUNCTION_PADDING(8)
 
@@ -1257,51 +1261,19 @@ extern u32 D_800D1AE0;
 extern u32 D_800D1AE4;
 extern u32 D_800D1B34;
 
-#pragma REWRITE_FUNCTION_HEX(func_800289B0, c676df704119bb8d4b1459b24334091be665eeee3ac0ed81312a3fe18d6701ea, 3c0e00008dce00003c0100003c0f0000ac2e00008def00003c180000afa40000ac2f00008f1800003c0100003c0300003c0200003084ffff2442000024630000ac3800008c6800088c69000c8c6a00108c79000424630010ac68fff4ac69fff8ac6afffc1462fff7ac79fff03c01000003e00008ac240000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x0, 5, D_800D1ADC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x4, 6, D_800D1ADC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x8, 5, D_800D1AD8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x10, 6, D_800D1AD8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0xC, 5, D_800D1AE0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x14, 6, D_800D1AE0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x20, 6, D_800D1ADC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x18, 5, D_800D1AE4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x24, 6, D_800D1AE4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x30, 5, D_800D1B34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x38, 6, D_800D1B34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x2C, 5, D_800D1AE4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x3C, 6, D_800D1AE4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x28, 5, D_800D1AE0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x40, 6, D_800D1AE0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x6C, 5, D_800D1B34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_800289B0, 0x74, 6, D_800D1B34)
-
-// FAKE: 230 without the pragmas above and the dead alias block below. IDO 7.1
-// materializes an extern array's address per store (`lui $at,%hi(SYM)` then
-// `sw %lo(SYM+off)($at)`) after uopt, so the three peeled head stores cannot
-// share $at and the compiler output is 31 words. A file-scope definition makes
-// the address section-relative and produces retail's 30-word stream, where the
-// second and third head stores share one $at materialization, but a definition
-// here would place this array in 229E0.o's .bss and move the gAudioQueuedState
-// run owned by 2C1B0.o. REWRITE_FUNCTION_HEX substitutes the hash-guarded
-// 30-word stream (IDO's output for the defined-array form of this loop) and
-// REWRITE_FUNCTION_RELOC_TARGET restores the element alias each store records.
-
-
+// NON_MATCHING: Extern-array stores still materialize one more page base than retail.
+#ifdef NON_MATCHING
 void func_800289B0(u16 arg0) {
     s32 i;
 
-    if (0) {
-        // karodo: keeps the three element aliases in the object so the
-        // relocation topology above can name them; emits no code.
-        D_800D1ADC = D_800D1AE0;
-        D_800D1AE4 = D_800D1ADC;
-    }
     for (i = 0; i < 23; i++) {
         D_800D1AD8[i] = D_800D1AD8[i + 1];
     }
     D_800D1B34 = arg0;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_800289B0.s")
+#endif
 /* mkdraft:func_800289B0 end */
 
 void Audio_RemoveRecentSoundAt(u16 arg0) {

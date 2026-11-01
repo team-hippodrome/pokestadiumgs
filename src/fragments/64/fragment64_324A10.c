@@ -151,40 +151,8 @@ extern u8 D_800CE060[];
 extern u16 D_800CE070;
 extern u8 D_800CE088[];
 
-// FAKE: the REWRITE_FUNCTION_HEX pragma below and its 13 RELOC_TARGET lines
-// substitute the retail 123-word body for the 123 words IDO builds from the C
-// (same size, so no following symbol moves). Three residuals are kept:
-//   (a) retail holds the D_800CE088+0x50 base in $s0 across `jal func_800279C4`
-//       while IDO 7.1 uses $v0: in this body the last store precedes the call, so
-//       the pointer is dead at the call. Moving that store after the call makes
-//       the pointer call-live ($s0) but then as1 fills the jal delay slot from the
-//       *second* store and puts the store's value temp in $s1 (diff 18/50).
-//   (b) two adjacent scheduler pairs: `sh v0,0x2a(sp)`/`lw v1,0(s2)` and
-//       `ori at,at,0xFFFF`/`lw a0,0x10(v1)` are reversed; as1 breaks these ties
-//       by .loc line and every probed .loc/line layout keeps IDO's order.
-//   (c) `addiu s0,s0,%lo(D_800CE060)` is hoisted above `bgez`; retail sinks it
-//       after `sw t7,0x10(v1)`, and both words carry relocations, so
-//       SWAP_FUNCTION_WORDS refuses the move.
-// Scored without this block the body is diff 340 (20 normalized lines); the hex
-// pragma alone, without the RELOC_TARGET lines, scores 65.
-// See func_87F02104.report.md.
-#pragma REWRITE_FUNCTION_HEX(func_87F02104, 3fa4862f41b7c7d17af766cee515eedc59069ca4e3120453a2afc3d72a2dcf3b, 27bdffc8afbf0024afb30020afb2001cafb10018afb000140c000000afa000343c120000265200008e440000000228400c000000248400148e430000a7a2002a3c01efff8c6400103421ffff3c100000000470c005c1001b00817824ac6f00102610000000008825241300088e5900009618001002002025033140210c000000a5180020263100021633fff8261000288e430000240b0001240c00028c690018912a218251400004ac6c000c10000002ac6b000cac6c000c8e4d0000a1a000288e43000097a4002a308e800011c0001d308f04008c62000c2401000114410006afa200348c6f00103c01100001e1c825ac7900108e430000947800203c0100003c100000a43800008e4800002610000026100050950900223404cf02a609ffc08e4a0000954b0024a60bffe88e4c0000958d00260c000000a60d00101000001b8e4300008c6e000c000fc82a308808000008482a01d9c02103095023ac6a000c8e430000240b0003240c00018c62000c308d0c005c40000528410004ac6b000c8e4300008c62000c284100041420000200000000ac6c000c51a000048e4300000c0000003404cf018e430000240e00b490620028284100a010200003244f001410000002a06f0028a06e00288fbf00248fa200348fb000148fb100188fb2001c8fb3002003e0000827bd0038)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x18, 4, func_80001FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x20, 5, D_87F11980)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x24, 6, D_87F11980)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x30, 4, func_87F0E610)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x4C, 5, D_800CE060)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x60, 6, D_800CE060)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x7C, 4, func_80006148)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0xFC, 5, D_800CE070)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x100, 5, D_800CE088)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x104, 6, D_800CE070)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x10C, 6, D_800CE088)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x134, 4, func_800279C4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_87F02104, 0x1A0, 4, func_800279C4)
-
-
-
+// NON_MATCHING: Pointer liveness, independent instruction order, and address-load placement differ.
+#ifdef NON_MATCHING
 s32 func_87F02104(void) {
     s32 result;
     u8 *p;
@@ -245,6 +213,9 @@ s32 func_87F02104(void) {
     }
     return result;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324A10/func_87F02104.s")
+#endif
 /* mkdraft:func_87F02104 end */
 
 extern u8 *D_87F11980; extern void func_87F08FA0(u8); extern void func_800503A4(void *); void func_87F022F0(void) { func_87F08FA0(D_87F11980[0x28]); func_800503A4(*(void **)(D_87F11980 + 4)); }

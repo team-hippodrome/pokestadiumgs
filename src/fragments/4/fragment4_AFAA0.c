@@ -827,7 +827,7 @@ void func_818042E4(void *arg0, u8 *arg1, void *arg2, f32 arg3, s32 arg4) {
         func_800498C4();
         func_8004972C(0xFF, 0xFF, 0xFF, (s32) (255.0f * arg3));
         if (var_s1_2) {
-            // karodo
+            // FAKE: empty test retained for code generation.
         }
         if ((s32) *(u8 *)((u8 *)(arg0) + 4) > 0) {
             var_s1_2 = 0x18;

@@ -197,7 +197,6 @@ extern s32 D_8AF2BACC;
 extern u8 D_8AF2BF1C;
 extern s32 D_8AF2BF18;
 extern s32 func_8AC00DF4();
-//
 // Entry creation for the fragment-44 state table. func_8AF0017C(arg0) is the
 // lookup: a non-NULL result means an entry for arg0 already exists, so this
 // returns NULL; otherwise func_8AF0017C(0) supplies the entry slot to fill.
@@ -208,59 +207,15 @@ extern s32 func_8AC00DF4();
 // func_8004DC6C(arg0) produces the state handle stored at entry+8 by
 // func_8004EB58, and the u16 flags at record+2 get bits 1 and 2 set. When
 // D_8AF2BACC is non-zero the record is forwarded to func_8AC00DF4.
-//
-// Retail text is 284 bytes (asm/us/nonmatchings/fragments/44/
-// fragment44_1EE290/func_8AF00504.s). The block around the func_8AC00FFC call
-// is
-//
 //   lw   $t0,0x24($sp)                 reload of the func_8AF00360 result
 //   lui  $at,%hi(D_8AF2BF1C)
 //   sb   $zero,%lo(D_8AF2BF1C)($at)
 //   lh   $a0,0x42($sp)
 //   jal  func_8004DC6C
 //   sw   $t0,%lo(D_8AF2BF18)($at)      same $at page base
-//
-// The body below compiles to 288 bytes: as1 places the D_8AF2BF1C store's
-// `lui $at` ahead of the independent `lw`, and emits a second `lui $at` for
-// the D_8AF2BF18 store even though both symbols share the 0x8AF2 page. No
-// built object in this tree has one `lui $at` serving two different %lo
-// symbols, and COALESCE_AT_LUI only merges adjacent `lui $at` pairs, so the
-// `lh` between this function's two stores keeps them out of one run.
-// SWAP_FUNCTION_WORDS refuses pairs whose members carry relocations, and the
-// moved `lui` carries an R_MIPS_HI16, so no word-level pragma reaches the
-// retail order either. The pragmas install the retail text and relocation
-// topology instead, authenticated by the sha256 of the compiler's 288-byte
-// output for the body written here.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py 165 (one inserted `lui $at,%hi(D_8AF2BF18)` before the `lh`, and the
-// retail order's `lw`/`lui` swap). The source body is the semantic
-// decompilation; only the emitted text is replaced.
-//
-// The dead s32 local claims the slot at 0x28 that IDO otherwise leaves out of
-// the 0x40 frame. As a plain C candidate the same body without it has a 0x38
-// frame and scores 263; a second dead local changes no instruction.
-#pragma REWRITE_FUNCTION_HEX(func_8AF00504, c27a1a2db2f148a97357a349d065de64f4c4ec020f3f2023dd77a8fe68055abc, 27bdffc0afbf001cafa40040afb000180c00000087a40042104000030000000010000039000010250c00000000002025144000030040802510000033000010253c020000244200008c4e000025cf0001ac4f0000a60f000087b90042a6000004a61900020c00000090440003afa200240c000000004020258fa800243c010000a020000087a400420c000000ac280000afa20030004020250c000000000028250c00000000000000004020250c00000000002825afa20034004020250c0000008fa50030ae020008afa2002c0c0000008fa400348fa5002c3c0d000094a90002352b0001356c0002a4ab0002a4ac00028dad000051a00004020010250c00000000a02025020010258fbf001c8fb0001827bd004003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x10, 4, func_8AF0017C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x28, 4, func_8AF0017C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x40, 5, D_8AF2BF10)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x44, 6, D_8AF2BF10)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x64, 4, func_8AF00360)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x70, 4, func_8AC00FFC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x7c, 5, D_8AF2BF1C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x80, 6, D_8AF2BF1C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x88, 4, func_8004DC6C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x8c, 6, D_8AF2BF18)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0x98, 4, func_8004DCFC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xa0, 4, main_pool_get_available)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xac, 4, MainPool_AllocState)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xbc, 4, func_8004EB58)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xcc, 4, MainPool_FinalizeAllocation)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xd8, 5, D_8AF2BACC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xf0, 6, D_8AF2BACC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF00504, 0xfc, 4, func_8AC00DF4)
 
-
+// NON_MATCHING: Register allocation and instruction scheduling still differ from retail.
+#ifdef NON_MATCHING
 u8 *func_8AF00504(s16 arg0) {
     u8 *found;
     u8 *entry;
@@ -299,6 +254,9 @@ u8 *func_8AF00504(s16 arg0) {
     }
     return entry;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF00504.s")
+#endif
 /* mkdraft:func_8AF00504 end */
 
 extern void func_800503A4(s32);

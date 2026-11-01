@@ -327,9 +327,9 @@ void func_83503324(void) {
     f32 var_fv0;
 
     var_fa1 = D_83503E40;
-    // karodo: weights the D_83503DA8 web; diff score 70 without it.
+    // FAKE: weights the D_83503DA8 web; diff score 70 without it.
     if (D_83503DA8_ptr && D_83503DA8_ptr) {}
-    // karodo: rotates the FPR free list so da8/tgt land in f16/f18; diff score 120 without
+    // FAKE: rotates the FPR free list so da8/tgt land in f16/f18; diff score 120 without
     // these six empty statements (and 200 without both this and the dead if above).
     if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
     var_fv0 = 32.0f * D_83503BE8;

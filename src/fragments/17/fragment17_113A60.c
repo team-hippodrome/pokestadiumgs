@@ -150,17 +150,8 @@ extern s32 D_82210628[];
 extern s32 func_8220AD10(void);
 extern s32 D_8220EB90;
 
-// IDO's as1 schedules the three independent prologue words as
-// [lw v1,0x20(a1)] [sw a1,0x24(sp)] [sw a0,0x20(sp)] (the arg0/arg1 home
-// saves last); the ROM has the arg0 save first.  Rotate the three
-// relocation-free words into ROM order.  Semantics are unchanged: the words
-// touch disjoint state (v1 <- a1 memory; spill a1; spill a0).
-#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x08, 0x8CA30020, 0xAFA40020)
-#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x0C, 0xAFA50024, 0x8CA30020)
-#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x10, 0xAFA40020, 0xAFA50024)
-
-
-
+// NON_MATCHING: The argument spills and initial field load are scheduled in a different order.
+#ifdef NON_MATCHING
 s32 func_82205B00(s32 arg0, void *arg1) {
     s32 *D_82210610_ptr = D_82210610;
     typedef struct { s32 value; } Record;
@@ -200,6 +191,9 @@ s32 func_82205B00(s32 arg0, void *arg1) {
     }
     return 0;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205B00.s")
+#endif
 /* mkdraft:func_82205B00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205C14.s")
@@ -479,31 +473,8 @@ extern s16 D_8220EC44;
 extern s16 D_8220EC46;
 extern s16 D_8220EC48;
 
-#pragma COALESCE_AT_LUI(func_822068E0, D_8220EC44, D_8220EC46)
-// FAKE: the REWRITE_FUNCTION_HEX pragma below and its 15 RELOC_TARGET lines
-// substitute the retail 28-word body for the 29 words IDO builds from the C.
-// The two residuals are `li t8,5` before `sh t7,%lo(D_8220EC44)(at)` (IDO
-// emits the reverse order) and one extra `lui at,%hi(D_8220EC46)` opening the
-// else branch (retail reuses the $at loaded in the `bnez` delay slot). Scored
-// without this block the body is diff 165; see func_822068E0.report.md.
-#pragma REWRITE_FUNCTION_HEX(func_822068E0, 167ae449b172e70a890d26ac2e2e2c073fd2c82a828f4dc695bec4b1db86053d, 27bdffe8afbf00143c040000248400000c000000240506500c000000240400073c010000ac2200003c010000240effff0c000000a42e0000144000073c010000240f00ff3c01000024180005a42f000010000003a4380000a4200000a42000008fbf001427bd001803e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x8, 5, D_8220EC40)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0xC, 6, D_8220EC40)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x10, 4, _bzero)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x18, 4, func_8004D690)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x20, 5, D_8220EC40)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x24, 6, D_8220EC40)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x28, 5, D_8220EC48)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x30, 4, StageContext_GetFadeMode)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x34, 6, D_8220EC48)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x3C, 5, D_8220EC44)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x44, 5, D_8220EC44)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x4C, 6, D_8220EC44)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x54, 6, D_8220EC46)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x58, 6, D_8220EC44)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x5C, 6, D_8220EC46)
-
-
+// NON_MATCHING: The constant/store order and reuse of the store page base still differ.
+#ifdef NON_MATCHING
 void func_822068E0(void) {
     _bzero((u8 *)&D_8220EC40, 0x650);
     D_8220EC40 = func_8004D690(7);
@@ -516,6 +487,9 @@ void func_822068E0(void) {
         D_8220EC46 = 0;
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822068E0.s")
+#endif
 /* mkdraft:func_822068E0 end */
 
 extern s16 D_8220EC44;
