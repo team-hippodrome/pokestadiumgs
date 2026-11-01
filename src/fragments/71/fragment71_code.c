@@ -36,7 +36,151 @@ void func_8F300020(void) {
 }
 void func_8F300020_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/71/fragment71_code/func_8F3000E8.s")
+/* mkdraft:func_8F3000E8 begin */
+extern void Font_DisableTwoCycleTexturing(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800497E4(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+
+extern s8 D_8F300E3C;
+extern s8 D_8F300E44;
+extern s8 D_8F300E4C;
+extern s8 D_8F300E54;
+extern s8 D_8F300E5C;
+extern s8 D_8F300E64;
+extern s8 D_8F300E6C;
+extern s8 D_8F300E74;
+extern s8 D_8F300E7C;
+extern s8 D_8F300E84;
+extern s8 D_8F300E8C;
+extern s8 D_8F300E94;
+extern s8 D_8F300E9C;
+extern s8 D_8F300EA4;
+// Two-element halfword table at 0x8F300EAC (0x4E, 0x4F), indexed by the record
+// selector D_8F300E14; provides string id 0x4E or 0x4F for the header line.
+//@asm/us/data/fragments/71/fragment71_data.data.s
+extern s16 D_8F300EAC[];
+// Bytes 1-2 of the D_8F300F28 statistics block: the two per-record counters that
+// rows 0 and 1 print. D_8F300F28 itself is declared as u8[] at the top of this file.
+extern u8 D_8F300F29;
+// Second halfword of the D_8F300F30 pair; bit 2 is the row-13 flag.
+extern u16 D_8F300F32;
+
+// Draws the 14-row statistics page: header strings, then one line per row at
+// x = 320, y = 120 + 20 * row, each with a right-aligned label (format string
+// D_8F300E3C and friends) and a value at the same position. The row selected by
+// D_8F300E10 is drawn in yellow, the rest in white. Values come from the two
+// counters at D_8F300F28, flag bit 2 of D_8F300F40 / D_8F300F32, and the 24-byte
+// record at D_8F300F48 picked by D_8F300E14.
+//@src/fragments/71/fragment71_code.c
+
+
+void func_8F3000E8(void) {
+    s32 i;
+    s32 y;
+    u8 *record;
+
+    func_800498C4();
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0, 0, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800496A4(8, 0);
+    func_800495F8(0x140, 0x28, 1, func_8004C874(0x42, 0x4B));
+    func_800495F8(0x3C, 0x3C, 0, func_8004C874(0x42, 0x5C));
+    Font_DisableTwoCycleTexturing();
+    func_800496A4(4, 0);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(0x140, 0x64, 0, func_8004C874(0x42, D_8F300EAC[*(s32 *)D_8F300E14]));
+    i = 0;
+    do {
+        record = D_8F300F48 + *(s32 *)D_8F300E14 * 0x18;
+        if (i == *(s32 *)D_8F300E10) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        switch (i) {
+        case 0:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x4C));
+            func_800495F8(0x140, y, 0, &D_8F300E3C, D_8F300F28[0]);
+            break;
+        case 1:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x4D));
+            func_800495F8(0x140, y, 0, &D_8F300E44, D_8F300F29);
+            break;
+        case 2:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x5B));
+            func_800495F8(0x140, y, 0, &D_8F300E4C, (*(u16 *)D_8F300F40 & 4) != 0);
+            break;
+        case 3:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x50));
+            func_800495F8(0x140, y, 0, &D_8F300E54, record[0xB]);
+            break;
+        case 4:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x51));
+            func_800495F8(0x140, y, 0, &D_8F300E5C, record[0xA]);
+            break;
+        case 5:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x52));
+            func_800495F8(0x140, y, 0, &D_8F300E64, record[6]);
+            break;
+        case 6:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x53));
+            func_800495F8(0x140, y, 0, &D_8F300E6C, record[7]);
+            break;
+        case 7:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x54));
+            func_800495F8(0x140, y, 0, &D_8F300E74, record[8]);
+            break;
+        case 8:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x55));
+            func_800495F8(0x140, y, 0, &D_8F300E7C, record[9]);
+            break;
+        case 9:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x56));
+            func_800495F8(0x140, y, 0, &D_8F300E84, *(u16 *)record);
+            break;
+        case 10:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x57));
+            func_800495F8(0x140, y, 0, &D_8F300E8C, *(u16 *)(record + 2));
+            break;
+        case 11:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x58));
+            func_800495F8(0x140, y, 0, &D_8F300E94, *(u16 *)(record + 4));
+            break;
+        case 12:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x59));
+            func_800495F8(0x140, y, 0, &D_8F300E9C, record[0xC]);
+            break;
+        case 13:
+            y = (i * 0x14) + 0x78;
+            func_800495F8(0x140, y, 2, func_8004C874(0x42, 0x5A));
+            func_800495F8(0x140, y, 0, &D_8F300EA4, (D_8F300F32 & 4) != 0);
+            break;
+        }
+        i += 1;
+    } while (i != 0xE);
+    func_800499EC();
+}
+/* mkdraft:func_8F3000E8 end */
 
 extern void GfxImage_FillCurrent(s32 *, s32);
 extern void func_80008648();
