@@ -234,7 +234,81 @@ s32 func_8006A600(u16 code, s32 arg1, s32 arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006A73C.s")
+/* mkdraft:func_8006A73C begin */
+
+
+s32 func_8006A73C(u16 arg0, s32 arg1, s32 arg2) {
+ u16 high; s32 value; s32 low; s32 result; u16 *home=&arg0;
+ /* arg0's address is taken only to reproduce the 0(sp) store IDO emits in the prologue;
+    no statement reads through home. Same declaration shape as func_8006CEE8. */
+ high=arg0;
+ value=high;
+ result=-1;
+ high&=0xFF00;
+ switch(high){
+ case 0:
+  low=(u16)value; low&=0xFF;
+  switch(low){
+   case 0: if(arg2!=0){result=38;}else{result=11;} break;
+   case 2:
+    switch(arg1){
+     case 1: if(arg2!=0){result=65;}else{result=61;} break;
+     case 2: if(arg2!=0){result=66;}else{result=62;} break;
+     case 3: if(arg2!=0){result=67;}else{result=63;} break;
+     case 4: if(arg2!=0){result=68;}else{result=64;} break;
+    }
+    break;
+   case 1:
+    switch(arg1){
+     case 1: if(arg2!=0){result=34;}else{result=7;} break;
+     case 2: if(arg2!=0){result=35;}else{result=8;} break;
+     case 3: if(arg2!=0){result=36;}else{result=9;} break;
+     case 4: if(arg2!=0){result=37;}else{result=10;} break;
+    }
+    break;
+   case 3: if(arg2!=0){result=39;}else{result=12;} break;
+  }
+  break;
+ case 0x300:
+  switch(arg1){
+   case 5: if(arg2!=0){result=40;}else{result=13;} break;
+   case 6: if(arg2!=0){result=41;}else{result=14;} break;
+   case 7: if(arg2!=0){result=42;}else{result=15;} break;
+   case 8: if(arg2!=0){result=43;}else{result=16;} break;
+   case 9: if(arg2!=0){result=44;}else{result=17;} break;
+   case 10: if(arg2!=0){result=45;}else{result=18;} break;
+   case 11: if(arg2!=0){result=46;}else{result=19;} break;
+   case 12: if(arg2!=0){result=47;}else{result=20;} break;
+   case 13: if(arg2!=0){result=48;}else{result=21;} break;
+   case 14: if(arg2!=0){result=49;}else{result=22;} break;
+   case 15: if(arg2!=0){result=50;}else{result=23;} break;
+   case 16: if(arg2!=0){result=51;}else{result=24;} break;
+   case 17: if(arg2!=0){result=52;}else{result=25;} break;
+   case 18: if(arg2!=0){result=53;}else{result=26;} break;
+   case 19: if(arg2!=0){result=54;}else{result=27;} break;
+   case 20: if(arg2!=0){result=55;}else{result=28;} break;
+   case 21: if(arg2!=0){result=56;}else{result=29;} break;
+   case 22: if(arg2!=0){result=57;}else{result=30;} break;
+   case 23: if(arg2!=0){result=58;}else{result=31;} break;
+   case 24: if(arg2!=0){result=59;}else{result=32;} break;
+  }
+  break;
+ case 0x600: if(arg2!=0){result=60;}else{result=33;} break;
+ case 0x400:
+  switch(arg1){
+   case 25: result=69; break;
+   case 26: result=70; break;
+   case 27: result=71; break;
+  }
+  break;
+ case 0x200:
+ case 0x500:
+  if(arg2!=0){result=6;}else{result=5;}
+  break;
+ }
+ return result;
+}
+/* mkdraft:func_8006A73C end */
 
 extern s32 func_8006A73C(u16, s32, s32);
 void func_8006AB68(s32 arg0, s32 arg1, s32 arg2) { s32 *p = &arg0; func_8006A73C(arg0 & 0xFFFF, arg1, arg2); }
