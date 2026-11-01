@@ -256,7 +256,7 @@ void *func_87C008DC(void *arg0, f64 arg1, f64 arg2, f64 arg3, f64 arg4) {
     return arg0;
 }
 
-extern void func_87C01278(void *, void *);
+extern void *func_87C01278(void *, void *);
 void func_87C00908(void *arg0, f64 arg1, f64 arg2, f64 arg3) {
     f64 local[3];
     local[0] = arg1;
@@ -455,9 +455,62 @@ f64 func_87C01100(void *arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C01140.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C01278.s")
+/* mkdraft:func_87C01278 begin */
+void *func_87C01278(void *arg0, void *arg1) {
+    f64 cos_x = __cosf((f32)(*(f64 *)((u8 *)arg1 + 0x0) * 0.5));
+    f64 cos_y = __cosf((f32)(*(f64 *)((u8 *)arg1 + 0x8) * 0.5));
+    f64 cos_z = __cosf((f32)(*(f64 *)((u8 *)arg1 + 0x10) * 0.5));
+    f64 sin_x = __sinf((f32)(*(f64 *)((u8 *)arg1 + 0x0) * 0.5));
+    f64 sin_y = __sinf((f32)(*(f64 *)((u8 *)arg1 + 0x8) * 0.5));
+    f64 sin_z = __sinf((f32)(*(f64 *)((u8 *)arg1 + 0x10) * 0.5));
+    f64 cos_yz = cos_y * cos_z;
+    f64 sin_yz = sin_y * sin_z;
+    f64 *out = arg0;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C013CC.s")
+    out[0] = cos_x * cos_yz + sin_x * sin_yz;
+    out[1] = sin_x * cos_yz - cos_x * sin_yz;
+    out[2] = cos_x * sin_y * cos_z + sin_x * cos_y * sin_z;
+    out[3] = cos_x * cos_y * sin_z - sin_x * sin_y * cos_z;
+    return arg0;
+}
+/* mkdraft:func_87C01278 end */
+
+/* mkdraft:func_87C013CC begin */
+
+
+void func_87C013CC(void *arg0, void *arg1) {
+    typedef struct { f64 x; f64 y; f64 z; f64 w; } V;
+    // Quaternion (x, y, z, w) to a column-major 4x4 rotation matrix; zz is
+    // 2*z*z and so on. The 2 stays an integer literal: IDO compiles `z * 2` to
+    // a multiply by a materialized 2.0 but rewrites `z * 2.0` as `z + z`.
+    f64 zz = ((V *)arg0)->z * 2 * ((V *)arg0)->z;
+    f64 ww = ((V *)arg0)->w * 2 * ((V *)arg0)->w;
+    f64 yy = ((V *)arg0)->y * 2 * ((V *)arg0)->y;
+    f64 yz = ((V *)arg0)->y * 2 * ((V *)arg0)->z;
+    f64 yw = ((V *)arg0)->y * 2 * ((V *)arg0)->w;
+    f64 zw = ((V *)arg0)->z * 2 * ((V *)arg0)->w;
+    f64 xw = ((V *)arg0)->x * 2 * ((V *)arg0)->w;
+    f64 xy = ((V *)arg0)->x * 2 * ((V *)arg0)->y;
+    f64 xz = ((V *)arg0)->x * 2 * ((V *)arg0)->z;
+    f32 *m = arg1;
+    m[0]  = (f32)((1.0 - zz) - ww);
+    m[4]  = (f32)(yz - xw);
+    m[8]  = (f32)(yw + xz);
+    m[12] = 0.0f;
+    m[1]  = (f32)(yz + xw);
+    m[5]  = (f32)((1.0 - yy) - ww);
+    m[9]  = (f32)(zw - xy);
+    m[13] = 0.0f;
+    m[2]  = (f32)(yw - xz);
+    m[6]  = (f32)(zw + xy);
+    m[10] = (f32)((1.0 - yy) - zz);
+    m[14] = 0.0f;
+    m[3] = 0.0f;
+    m[7] = 0.0f;
+    m[11] = 0.0f;
+    m[15] = 1.0f;
+}
+/* mkdraft:func_87C013CC end */
 
 void func_87C01540(void *arg0, void *arg1) {
     typedef struct { f64 x; f64 y; f64 z; f64 w; } V;
