@@ -99,7 +99,80 @@ void func_88C006B8(void) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00AB0.s")
+/* mkdraft:func_88C00AB0 begin */
+extern u32 D_800CDA34;
+extern s32 func_80001FF0(void);
+extern void func_800226C0(s32);
+
+// View of D_88C01A60 as a wall clock: func_88C00AB0 advances unk0C by the frame
+// count elapsed since the unk08 timestamp, then cascades unk04/unk03/unk02/unk00
+// through 60 seconds, 60 minutes, 24 hours and a day count that wraps at unk2E.
+typedef struct {
+    u16 unk00;
+    u8 unk02;
+    u8 unk03;
+    u8 unk04;
+    u8 pad05[3];
+    u32 unk08;
+    u16 unk0C;
+    u8 pad0E[0x12];
+    u16 unk20;
+    u8 unk22;
+    u8 unk23;
+    u8 unk24;
+    s16 unk26;
+    s32 unk28;
+    u16 unk2C;
+    u16 unk2E;
+} Frag41_Clock;
+
+
+
+void func_88C00AB0(s32 arg0) {
+    Frag41_Clock *clk = (Frag41_Clock *)D_88C01A60;
+    // The frame counter at D_800CDA34 + 0x20 has no symbol of its own.
+    u32 now = *(u32 *)((u8 *)&D_800CDA34 + 0x20);
+    s32 period;
+
+    // The two arms compute the same value because the late timestamp is handled by
+    // the wrap-around form in the second arm; the ROM keeps the two tests separate.
+    if (clk->unk08 < now) {
+        clk->unk0C = (u16)((clk->unk0C + now) - clk->unk08);
+    } else if (now < clk->unk08) {
+        // FAKE: 330 without it. Adding 2^32 to now is discarded by the u16 store; the
+        // 64-bit type is what makes IDO copy the sum to a new temporary before the
+        // subtraction, which sets the register coloring for the rest of the function.
+        // Time deltas elsewhere in the engine use this same wrap-around idiom, so the
+        // 64-bit add may be original source rather than match-only padding.
+        clk->unk0C = (u16)((clk->unk0C + (now + 0xFFFFFFFFLL + 1)) - clk->unk08);
+    }
+    clk->unk08 = now;
+
+    // func_80001FF0 returns the frame rate, so unk0C accumulates the frames since
+    // the last whole second and a full period of them advances the seconds counter.
+    period = func_80001FF0();
+    if (clk->unk0C < period) {
+        return;
+    }
+    if (arg0 == 1) {
+        func_800226C0(0x155);
+    }
+    clk->unk0C = (u16)(clk->unk0C - func_80001FF0());
+
+    if (++clk->unk04 >= 0x3C) {
+        clk->unk04 -= 0x3C;
+        if (++clk->unk03 >= 0x3C) {
+            clk->unk03 -= 0x3C;
+            if (++clk->unk02 >= 0x18) {
+                clk->unk02 -= 0x18;
+                if (++clk->unk00 > D_88C01A60->unk2E) {
+                    clk->unk00 = 0;
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_88C00AB0 end */
 
 typedef float Frag41_MtxF_t[4][4];
 typedef union {
@@ -136,7 +209,68 @@ void MathUtil_BuildTransformMtx_fragment41(Mtx* arg0, f32 arg1, f32 arg2, f32 ar
     guMtxF2L(sp20.mf, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00CE4.s")
+/* mkdraft:func_88C00CE4 begin */
+extern s32 func_8000731C(void);
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void MathUtil_BuildTransformMtx_fragment41(Mtx *, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32);
+extern char D_88C01850[];
+extern f32 D_88C01A48;
+extern f32 D_88C01A4C;
+
+
+
+void func_88C00CE4(f32 arg0, s32 arg1) {
+    s32 pad;
+    s32 sp50;
+    s32 sp4C;
+    s32 sp48;
+    s32 sp44;
+    s16 *dims;
+
+    dims = (s16 *)func_8000731C();
+    sp50 = Gfx_AllocDisplayList(0x40);
+    sp4C = Gfx_AllocDisplayList(0x40);
+    sp48 = Gfx_AllocDisplayList(0x10);
+    Gfx_SetViewportDimensions((void *)sp48, dims[2], dims[3]);
+    gSPViewport(D_800D0510++, (u32)sp48 & 0x1FFFFFFF);
+    guOrtho((Mtx *)sp50, -320.0f, 320.0f, -240.0f, 240.0f, -2.0f, 2.0f, 1.0f);
+    MathUtil_BuildTransformMtx_fragment41((Mtx *)sp4C, 1.0f, 1.0f, 1.0f, arg0, 0.0f, 0.0f, 1.0f, D_88C01A48, D_88C01A4C, 0.0f);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    if (arg1 == 2) {
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    } else {
+        gDPSetCombine(D_800D0510++, 0x30FE61, 0x55FEF379);
+        gDPSetColor(D_800D0510++, G_SETPRIMCOLOR, 0xFFFFFFFF);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR, 0x0F1764FF);
+    }
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gSPSetGeometryMode(D_800D0510++, G_SHADE | G_SHADING_SMOOTH);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTexturePersp(D_800D0510++, G_TP_PERSP);
+    switch (arg1) {
+    case 0:
+        sp44 = 1;
+        break;
+    case 1:
+        sp44 = 2;
+        break;
+    case 2:
+        sp44 = 3;
+        break;
+    }
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    func_8004D1FC(func_8004C990(0x1C1, sp44));
+    gSPMatrix(D_800D0510++, (u32)sp50 & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)sp4C & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPVertex(D_800D0510++, (u32)D_88C01850 & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_88C00CE4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C0107C.s")
 
@@ -191,7 +325,94 @@ void func_88C014D8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C015DC.s")
+/* mkdraft:func_88C015DC begin */
+extern void func_8004C8C0(s32);
+extern void func_80057908(s32);
+extern void func_8005A014(s32);
+extern void func_8005A034(s32);
+extern s32 func_8005D92C(s32);
+extern s32 GbSave_ReadRtcTimeWithSavedOffset(u8, u16 *, u8 *, u8 *, u8 *);
+extern s32 func_8005F3B0(s32, s32, s32, s32, s32);
+extern void *Util_Malloc(s32);
+extern u32 D_800CDA34;
+
+// Fields func_88C015DC writes into the 0x30-byte block D_88C01A60 points at.
+// Frag41_State (above) names the 0x20-0x2E words for func_88C00020 and
+// func_88C006B8; this view adds the RTC fields at 0x00-0x04 and 0x10-0x14 and
+// the 0x08/0x0C timestamp.
+typedef struct {
+    u16 unk00;      // days, as reported by GbSave_ReadRtcTimeWithSavedOffset
+    u8 unk02;       // hours
+    u8 unk03;       // minutes
+    u8 unk04;       // seconds
+    u8 pad05[3];
+    s32 unk08;      // D_800CDA34 plus 0x20
+    s16 unk0C;
+    s16 pad0E;
+    u16 unk10;      // days, as reported by func_8005F3B0
+    u8 unk12;       // hours
+    u8 unk13;       // minutes
+    u8 unk14;       // seconds
+    u8 pad15[0x13];
+    s32 unk28;      // 2 when the saved RTC time could not be read, 1 when the
+                    // time source is busy, 0 when a time was read
+    s16 unk2C;      // days elapsed since the saved time, or 0
+    u16 unk2E;      // 0x1FF plus the elapsed days; the day text's printf value
+} Frag41_SaveState;
+
+// FAKE: func_8005F3B0 is void in src/585D0.c. Declaring the s32 return type here
+// is what reproduces the target's argument staging; with void it scores 255.
+
+
+void func_88C015DC(void) {
+    Frag41_SaveState *state;
+    s32 day_delta;
+    s32 rtc_status;
+    s32 status;
+
+    func_80057908(0);
+    func_8005A014(0);
+    func_8005A034(0);
+    D_88C01A60 = Util_Malloc(0x30);
+    func_8004C8C0(0x1C3);
+    func_8004C8C0(0x1C1);
+    func_8004C8C0(0x1C5);
+    D_88C01A60->unk28 = 0;
+    // The block is cached here, but the stores at 0x10-0x14 and the two 0x28
+    // reads below reload D_88C01A60 from the global.
+    state = (Frag41_SaveState *) D_88C01A60;
+    rtc_status = func_8005D92C(0);
+    if ((rtc_status == 1) || (rtc_status == 2) || (rtc_status == 3) || (rtc_status == 4)) {
+        D_88C01A60->unk28 = 1;
+        status = D_88C01A60->unk28;
+    } else {
+        if (GbSave_ReadRtcTimeWithSavedOffset(0, &state->unk00, &state->unk02, &state->unk03, &state->unk04) != 0) {
+            D_88C01A60->unk28 = 2;
+        }
+        ((Frag41_SaveState *) D_88C01A60)->unk2C = 0;
+        D_88C01A60->unk2E = 0x1FF;
+        status = D_88C01A60->unk28;
+        if (D_88C01A60->unk28 != 2) {
+            func_8005F3B0(0, (s32) &((Frag41_SaveState *) D_88C01A60)->unk10, (s32) &((Frag41_SaveState *) D_88C01A60)->unk12,
+                          (s32) &((Frag41_SaveState *) D_88C01A60)->unk13, (s32) &((Frag41_SaveState *) D_88C01A60)->unk14);
+            day_delta = (state->unk00 - ((Frag41_SaveState *) D_88C01A60)->unk10) & 0xFF;
+            ((Frag41_SaveState *) D_88C01A60)->unk2C = day_delta;
+            D_88C01A60->unk2E = day_delta + 0x1FF;
+            status = D_88C01A60->unk28;
+        }
+    }
+    if (status != 0) {
+        // No usable time: display day 1, 00:00.
+        state->unk00 = 1;
+        state->unk02 = 1;
+        state->unk03 = 0;
+        state->unk04 = 0;
+    }
+    state->unk08 = *(u32 *) ((u8 *) &D_800CDA34 + 0x20);
+    state->unk0C = 0;
+    func_88C00020((Frag41_Input *) state);
+}
+/* mkdraft:func_88C015DC end */
 
 extern void Gfx_InitDisplayListBuffers(s32, s32);
 s32 StageContext_Allocate(s32, s32, s32, s32, s32, s32);
