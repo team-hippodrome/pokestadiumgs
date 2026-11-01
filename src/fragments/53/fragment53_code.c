@@ -260,7 +260,55 @@ void Fragment53_UpdateTrajectoryPosition(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86502524.s")
+/* mkdraft:func_86502524 begin */
+extern s32 D_8650C474;
+extern f32 D_8650C4F4;
+extern f32 D_86510040;
+extern f32 D_86510044;
+extern f32 D_86510048;
+extern f32 D_865101A8;
+extern f32 D_865101AC;
+extern f32 D_865101B0;
+extern f32 D_86510310;
+extern f32 D_86510314;
+extern f32 D_86510318;
+extern f32 D_86510478;
+extern f32 D_8651047C;
+extern f32 D_86510480;
+extern s32 func_865020D8();
+extern float sqrtf(float value);
+// FAKE: IDO gives every extern store its own lui $at. Retail shares one %hi
+// page between the second and third store of each three-float group; this
+// pragma drops the second pair's lui and folds its offset into the store.
+// Without it the diff score is 460.
+#pragma COALESCE_AT_LUI(func_86502524, D_86510044, D_86510040, D_865101AC, D_865101A8, D_86510314, D_86510310, D_8651047C, D_86510478)
+// FAKE: the fold above leaves the last swc1 before the frame teardown; retail
+// schedules addiu $sp,sp,0x18 first. The swap moves each instruction's own
+// %lo relocation with it. Without it the diff score is 80.
+#pragma SWAP_FUNCTION_WORDS(func_86502524, 0xEC, 0xE4200000, 0x27BD0018)
+void func_86502524(void) {
+    f32 temp_fa0;
+    u8 *temp_v0;
+
+    D_8650C498 = D_8650C474 + 0x5C;
+    D_8650C4B4 = (D_8650C498 - D_8650C4CC) - 0xA;
+    temp_fa0 = sqrtf((f64)(D_8650C4AC - D_8650C498) / 4.9);
+    D_8650D9D4 = (s32)((temp_fa0 / D_8650C4B8) + 1.0f - 2.0f);
+    func_865020D8();
+    D_86510048 = D_8650C4F4;
+    D_86510044 = D_8650C4F4;
+    D_86510040 = D_8650C4F4;
+    D_865101B0 = D_8650C4F4;
+    D_865101AC = D_8650C4F4;
+    D_865101A8 = D_8650C4F4;
+    D_86510318 = D_8650C4F4;
+    D_86510314 = D_8650C4F4;
+    D_86510310 = D_8650C4F4;
+    D_86510480 = D_8650C4F4;
+    D_8651047C = D_8650C4F4;
+    D_86510478 = D_8650C4F4;
+}
+/* mkdraft:func_86502524 end */
 #endif
 
 #ifdef VERSION_US
