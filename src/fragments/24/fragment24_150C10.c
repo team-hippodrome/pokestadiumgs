@@ -1824,7 +1824,69 @@ void func_82B072DC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B07454.s")
+/* mkdraft:func_82B07454 begin */
+extern s16 D_82B1246E;
+extern s16 D_82B12470;
+extern void *D_80087200;
+extern void *func_82B02800(s32, s32);
+extern void func_82B02A34(void *, s32);
+extern void func_82B029B8(u8 *, s32);
+extern void func_82B06360(s32);
+extern void func_82B060A0(s32);
+extern s32 func_82B02870(void);
+
+// Moves the cup cursor D_82B1246E with the pad word at D_80087200+0xC: bit 0x800 decrements
+// it (clamped at 0), bit 0x400 increments it (clamped at D_82B12470-1). A changed cursor
+// reports func_800226C0(1). The pad word at D_80087200+0x8 then selects the confirm path
+// (bit 0x8000: func_82B06360(1), then func_800226C0(0x8D) when the cursor is below
+// D_82B12470, else func_800226C0(5)) or the cancel path (bit 0x4000:
+// func_82B029B8(..., -1), func_82B02A34(..., 1), func_82B060A0(1), func_800226C0(3)).
+
+
+void func_82B07454(void) {
+    s16 *D_82B1246E_ptr = &D_82B1246E;
+    s32 sp18;
+    s32 temp_v0_2;
+    s16 *D_82B12470_ptr = &D_82B12470;
+
+    sp18 = (*D_82B1246E_ptr);
+    if (func_82B02870() != 0) {
+        if ((*D_82B12470_ptr) > 0) {
+            if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x800) {
+                if (--(*D_82B1246E_ptr) < 0) {
+                    (*D_82B1246E_ptr) = 0;
+                }
+            }
+            if ((*(u16 *)((u8 *)D_80087200 + 0xC)) & 0x400) {
+                if (++(*D_82B1246E_ptr) > (*D_82B12470_ptr) - 1) {
+                    (*D_82B1246E_ptr) = (*D_82B12470_ptr) - 1;
+                }
+            }
+        }
+        if (sp18 != (*D_82B1246E_ptr)) {
+            func_800226C0(1);
+        }
+        temp_v0_2 = (*(u16 *)((u8 *)D_80087200 + 0x8));
+        if (temp_v0_2 & 0x8000) {
+            if ((*D_82B1246E_ptr) < (*D_82B12470_ptr)) {
+                func_82B02A34(func_82B02800(1, 4), 1);
+                func_82B02A34(func_82B02800(7, 0), 0);
+                func_82B06360(1);
+                func_800226C0(0x8D);
+                return;
+            }
+            func_800226C0(5);
+            return;
+        }
+        if (temp_v0_2 & 0x4000) {
+            func_82B029B8(func_82B02800(1, 4), -1);
+            func_82B02A34(func_82B02800(7, 0), 1);
+            func_82B060A0(1);
+            func_800226C0(3);
+        }
+    }
+}
+/* mkdraft:func_82B07454 end */
 #endif
 
 #ifdef VERSION_US
