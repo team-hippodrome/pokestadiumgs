@@ -1069,7 +1069,44 @@ void func_81607B1C(s32 x, s32 y, s32 width, s32 height, f32 alpha, u8 *color1, u
 }
 /* mkdraft:func_81607B1C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607DB0.s")
+/* mkdraft:func_81607DB0 begin */
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern void func_816083A4(void);
+
+// Draws a translucent width x height quad at (x, y), shading from color1 on the top edge to
+// color2 on the bottom edge. The fifth argument slot carries a float from the callers, which
+// places the two color pointers in the sixth and seventh slots; this body does not read it.
+
+
+void func_81607DB0(s32 x, s32 y, s32 width, s32 height, f32 unused, u8 *color1, u8 *color2) {
+    Vtx *vertex;
+    // FAKE: unused; IDO reserves a stack home for each declared local, which shifts the corner
+    // temporaries to 0x3C/0x40/0x44 and the frame from 0x68 to 0x70 bytes; score 170 without it.
+    s32 pad;
+
+    vertex = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    if ((height < 0) || (width < 0)) {
+        return;
+    }
+
+    func_816083A4();
+
+    Gfx_SetVertexAttributes(&vertex[0], x, y, -1, 0, 0, color1[0], color1[1], color1[2], color1[3]);
+    Gfx_SetVertexAttributes(&vertex[1], x + width, y, -1, 0, 0, color1[0], color1[1], color1[2], color1[3]);
+    Gfx_SetVertexAttributes(&vertex[2], x, y + height, -1, 0, 0, color2[0], color2[1], color2[2], color2[3]);
+    Gfx_SetVertexAttributes(&vertex[3], x + width, y + height, -1, 0, 0, color2[0], color2[1], color2[2], color2[3]);
+
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_1CYCLE);
+    gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0xFF, 0xFF, 0, 0, 0, 0xFF);
+    gSPClearGeometryMode((*(Gfx **)&D_800D0510)++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x71FEE3, 0x44FE793C);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0x00504240, 0);
+    gSPVertex((*(Gfx **)&D_800D0510)++, (u32)vertex & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles((*(Gfx **)&D_800D0510)++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_81607DB0 end */
 
 /* mkdraft:func_81608044 begin */
 void func_81608044(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, s32 *arg5) {
