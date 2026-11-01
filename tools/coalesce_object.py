@@ -197,6 +197,15 @@ def _is_control_transfer(word: int) -> bool:
     return False
 
 
+def _is_stack_pointer_adjustment(word: int) -> bool:
+    """``addiu $sp,$sp,imm``: a frame adjustment that never touches $at."""
+    return (
+        (word >> 26) == 0x09
+        and ((word >> 21) & 31) == 29
+        and ((word >> 16) & 31) == 29
+    )
+
+
 def _is_safe_register_gap(word: int) -> bool:
     """Non-trapping moves/immediate shifts/constant loads, never touching $at."""
     if word == 0:
@@ -325,6 +334,18 @@ def _macro_pairs(words, by_offset):
                 # the hoisted ``lui`` into the fall-through store
                 # (``func_8220D630``).
                 candidates.append(index + 3)
+        if (
+            _is_stack_pointer_adjustment(words[index + 1])
+            and index + 2 < len(words)
+            and _is_control_transfer(words[index + 2])
+        ):
+            # The return's stack teardown can also sit between a hoisted
+            # ``lui`` and a store in the delay slot of the following ``jr``:
+            # ``func_86502524`` ends ``lui $at / addiu $sp,$sp,0x18 / jr $ra
+            # / swc1 %lo(...)($at)``.  The teardown neither reads nor writes
+            # ``$at`` and cannot trap, and a delay-slot store executes before
+            # the return, so the ``lui``'s value is still live at the store.
+            candidates.append(index + 3)
         if entry_targets is not None and not (
             index and _is_control_transfer(words[index - 1])
         ):
