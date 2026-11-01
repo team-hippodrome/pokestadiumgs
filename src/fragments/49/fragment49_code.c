@@ -107,7 +107,22 @@ void func_86100728(void) {
     func_87F0277C(D_8610AD20 + 0x7C);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86100790.s")
+/* mkdraft:func_86100790 begin */
+extern s32 D_8610AD20;
+extern s32 StageContext_GetFadeMode(void);
+extern void func_87F0277C(s32);
+
+
+
+void func_86100790(void) {
+    if (StageContext_GetFadeMode() == 0) {
+        (void)(D_8610AD20 ? 1 : 2); // FAKE: dead statement; without it score 100 (branch gone)
+        (void)(D_8610AD20 ? 3 : 4); // FAKE: dead statement; without it score 100
+    }
+    func_87F0277C(D_8610AD20 + 0x6E8);
+    func_87F0277C(D_8610AD20 + 0x8914);
+}
+/* mkdraft:func_86100790 end */
 
 extern s32 func_87F0C930(s32);
 extern s32 func_87F0A098(void *, void *, s32, u32, u32, u32, u32);
@@ -670,7 +685,7 @@ void func_861023D4(void) {
 s32 func_86101F60(f32 *, f32 *, s32);
 void func_861021A8(f32 *, f32 *);
 void func_861023D4(void);
-void func_86102C08(void *, s32);
+s32 func_86102C08(void *, s32);
 extern void func_86101558(f32 *arg0, f32 *arg1);
 extern void func_86101E04(f32 arg0, f32 arg1, s32 arg2);
 extern void * D_87F119DC;
@@ -749,7 +764,61 @@ void func_86102B64(void *arg0, f32 *arg1, f32 *arg2) {
     *arg2 = (*(f32 *)((u8 *)(arg0) + (0x1C))) - temp_fv0_2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86102C08.s")
+/* mkdraft:func_86102C08 begin */
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern void func_86104B2C();
+
+// Moves the actor by one frame. With arg1 set, the controller delta from func_86101F60 is
+// used and func_86102B64 (clamped delta toward the target position at +0x18/+0x1C) only when
+// the controller reports no movement; with arg1 clear the clamped delta is always used. The
+// delta is applied by func_86101E04 and clamped by func_861023D4. When the target sits within
+// 700 * 0.04 * D_8610AD20[0x9768] of the camera position (+0x48/+0x4C) on both axes,
+// func_86104B2C picks a new random target and the function returns 1, else 0.
+
+
+s32 func_86102C08(void *arg0, s32 arg1) {
+    f32 x_delta;
+    f32 y_delta;
+    s32 moved;
+    f32 limit;
+    f32 temp_fv0;
+    f32 temp_fv1;
+    f32 temp_fv1_2;
+    f32 dx;
+    f32 dy;
+
+    moved = 0;
+    y_delta = 0.0f;
+    x_delta = 0.0f;
+    if (arg1 != 0) {
+        if (func_86101F60(&x_delta, &y_delta, 0) == 0) {
+            func_86102B64(arg0, &x_delta, &y_delta);
+        }
+    } else {
+        func_86102B64(arg0, &x_delta, &y_delta);
+    }
+    temp_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    temp_fv1 = *(f32 *)((u8 *)arg0 + 0x18);
+    dx = (temp_fv0 < temp_fv1) ? temp_fv1 - temp_fv0 : -(temp_fv1 - temp_fv0);
+    // FAKE: the comma expression schedules the 0.04f rodata load before the
+    // D_8610AD20 + 0x9768 address chain and keeps 700.0f an immediate; diff score 295
+    // without it. The same expression appears in func_86105204 in this file.
+    limit = (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f);
+    if (dx < limit) {
+        temp_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x4C);
+        temp_fv1_2 = *(f32 *)((u8 *)arg0 + 0x1C);
+        dy = (temp_fv0 < temp_fv1_2) ? temp_fv1_2 - temp_fv0 : -(temp_fv1_2 - temp_fv0);
+        if (dy < limit) {
+            func_86104B2C(arg0);
+            moved = 1;
+        }
+    }
+    func_86101E04(x_delta, y_delta, 0);
+    func_861023D4();
+    return moved;
+}
+/* mkdraft:func_86102C08 end */
 
 extern s32 func_86101964(f32, s32, f32, f32, f32, f32);
 extern f32 func_86101AEC(s32, f32 *, f32 *);
@@ -814,7 +883,7 @@ void func_86102D50(void *arg0) {
 
 extern void func_86102720(void *, void *, f32);
 extern void func_86102908(void *, void *);
-extern void func_86102C08(void *, s32);
+extern s32 func_86102C08(void *, s32);
 extern void func_86102D50(void *);
 extern void * D_87F119DC;
 u16 func_86102E8C(void *arg0) {
@@ -1031,7 +1100,63 @@ void func_86103B74(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86103C48.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861044EC.s")
+/* mkdraft:func_861044EC begin */
+extern s32 D_8610AD20;
+extern void * D_87F119DC;
+s16 MathUtil_Atan2s(f32 y, f32 x);
+
+
+
+s32 func_861044EC(void *arg0) {
+    f32 x_delta;
+    f32 y_delta;
+    s32 result;
+    f32 delta;
+    f32 limit;
+    f32 angle;
+    f32 scaled;
+
+    result = 0;
+    delta = (*(f32 *)((u8 *)arg0 + 0x18) > *(f32 *)((u8 *)D_87F119DC + 0x48)) ? (*(f32 *)((u8 *)arg0 + 0x18) - *(f32 *)((u8 *)D_87F119DC + 0x48)) : -(*(f32 *)((u8 *)arg0 + 0x18) - *(f32 *)((u8 *)D_87F119DC + 0x48));
+    // FAKE: `(0, 700.0f)` is the comma operator: it evaluates to 700.0f and emits nothing, but
+    // it forces IDO to compute the 0.04f*D[0x9768] product first and pass it to mul.s as the
+    // multiplier (without it: differ 565 / 184).
+    limit = (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f);
+    if ((delta < limit)
+        && (((*(f32 *)((u8 *)arg0 + 0x1C) > *(f32 *)((u8 *)D_87F119DC + 0x4C)) ? (*(f32 *)((u8 *)arg0 + 0x1C) - *(f32 *)((u8 *)D_87F119DC + 0x4C)) : -(*(f32 *)((u8 *)arg0 + 0x1C) - *(f32 *)((u8 *)D_87F119DC + 0x4C))) < limit)
+        && (((*(f32 *)((u8 *)D_87F119DC + 0x18) > 0.0f) ? *(f32 *)((u8 *)D_87F119DC + 0x18) : -*(f32 *)((u8 *)D_87F119DC + 0x18)) < (limit * 0.25f))) {
+        *(f32 *)((u8 *)D_87F119DC + 0x18) = 0.0f;
+        *(f32 *)((u8 *)D_87F119DC + 0x50) = 0.0f;
+        func_86102B30(arg0, &x_delta, &y_delta);
+        func_86101E04(x_delta, y_delta, 0);
+        func_861023D4();
+        func_86103B74();
+        angle = (f32)*(s16 *)((u8 *)D_87F119DC + 0x44) * 0.005493248f;
+        if (((angle > 90.0f) ? (angle - 90.0f) : -(angle - 90.0f)) < 5.0f) {
+            result = 1;
+            *(s16 *)((u8 *)D_87F119DC + 0x44) = 0x3FFF;
+        } else {
+            delta = ((angle >= 0.0f) && (angle <= 280.0f)) ? (90.0f - angle) : (450.0f - angle);
+            angle += delta * 0.075f;
+            scaled = angle * 182.04167f;
+            if (scaled >= 0.0f) {
+                *(s16 *)((u8 *)D_87F119DC + 0x44) = (s16)(scaled + 0.5f);
+            } else {
+                *(s16 *)((u8 *)D_87F119DC + 0x44) = (s16)(scaled - 0.5f);
+            }
+        }
+    } else {
+        func_86102B30(arg0, &x_delta, &y_delta);
+        *(s16 *)((u8 *)D_87F119DC + 0x44) = MathUtil_Atan2s(*(f32 *)((u8 *)D_87F119DC + 0x18), *(f32 *)((u8 *)D_87F119DC + 0x10));
+        func_86101E04(x_delta, y_delta, 0);
+        func_861023D4();
+        *(f32 *)((u8 *)D_87F119DC + 0x18) = (*(f32 *)((u8 *)arg0 + 0x20) - *(f32 *)((u8 *)D_87F119DC + 0x50)) * 0.05f;
+        func_86103B74();
+    }
+    func_86102FF0();
+    return result;
+}
+/* mkdraft:func_861044EC end */
 
 extern f32 D_8610ABE4;
 extern f32 D_8610ABE8;
@@ -1358,7 +1483,98 @@ void func_86105C30(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86105CD8.s")
+/* mkdraft:func_86105CD8 begin */
+extern u8 D_8610A10C;
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern s32 func_80001FF0(void);
+extern void func_800279C4(s32);
+extern void func_861072AC(f32);
+
+
+void func_86105CD8(void) {
+    struct StageContext {
+        u8 pad0[0x708];
+        s32 flag708;
+        u8 gap708[0x188];
+        s32 flag894;
+        u8 gap894[0x188];
+        s32 flagA20;
+        u8 gapA20[0x188];
+        s32 flagBAC;
+        u8 gapBAC[0x8368];
+        s32 unk8F18;
+        u8 gap8F18[0x858];
+        f32 unk9774;
+        u8 gap9774[0x3C];
+        s32 unk97B4;
+        u8 gap97B4[0x21];
+        u8 unk97D9;
+    };
+    // One of four 0x18C-byte entries starting at D_8610AD20 + 0x6FC; the field at +0xC
+    // is the flag word cleared below.
+    struct Rec {
+        u8 pad[0xC];
+        s32 flag;
+        u8 rest[0x17C];
+    };
+    s32 *state;
+    f32 limit;
+    f32 pos;
+    // FAKE: unused word keeps the five-slot frame (0x30) and period at 0x1C.
+    s32 unused0;
+    s32 period;
+    s32 i;
+    struct Rec *rec;
+    limit = 864.0f;
+    state = *(s32 **)((u8 *)D_87F119DC + 0x20);
+    if (*state == *(u8 *)((u8 *)&D_8610A10C + 2)) {
+        pos = *(f32 *)((u8 *)D_87F119DC + 0x48);
+        if (pos < limit * 0.95f) {
+            *(u8 *)((u8 *)(u32)D_8610AD20 + 0x97D9) &= 0xFF7F;
+            pos = *(f32 *)((u8 *)D_87F119DC + 0x48);
+        }
+        if (pos < 10.0f) {
+            ((struct StageContext *)(u32)D_8610AD20)->unk9774 = 0.0f;
+        }
+        if (*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774) != 0.0f) {
+            period = (s32)((10.0f - *(f32 *)((u8 *)D_87F119DC + 0x48)) /
+                           (*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774) * 0.5f)) * 2;
+            if (func_80001FF0() == period || period == func_80001FF0() * 2 ||
+                period == func_80001FF0() * 3) {
+                func_800279C4(0xCF00);
+            }
+            // FAKE: the dead D_8610AD20 * 0 operand steers IDO's colouring of the
+            // address web; `period == 0` scores 135 instead of 0.
+            if (period == (u32)D_8610AD20 * 0) {
+                func_800279C4(0xCF06);
+            }
+        }
+    }
+    *(f32 *)((u8 *)D_87F119DC + 0x48) +=
+        *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774) * 0.5f;
+    pos = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    if (pos < -limit) {
+        // FAKE: the leading (0, pos) comma expression steers IDO's temp colouring;
+        // plain `pos + (limit + limit)` scores 10 instead of 0.
+        *(f32 *)((u8 *)D_87F119DC + 0x48) = (0, pos) + (limit + limit);
+        if (*(s32 *)((u8 *)(u32)D_8610AD20 + 0x97B4) < 0) {
+            if (*(s32 *)((u8 *)(u32)D_8610AD20 + 0x8F18) == 0) {
+                *state = *(u8 *)((u8 *)&D_8610A10C + 1);
+                ((struct StageContext *)(u32)D_8610AD20)->unk8F18 = 1;
+            } else {
+                *state = *(u8 *)((u8 *)&D_8610A10C + 2);
+                func_861072AC(limit * 1.35f);
+                rec = (struct Rec *)((u8 *)(u32)D_8610AD20 + 0x6FC);
+                for (i = 0; i < 4; i++) {
+                    rec->flag &= 0xFFFEFFFF;
+                    rec++;
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_86105CD8 end */
 
 extern Gfx *D_800D0510;
 extern void *D_8009491C;
@@ -1407,7 +1623,40 @@ void func_86106044(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861060F8.s")
+/* mkdraft:func_861060F8 begin */
+extern s32 D_8610AD20;
+
+// Retail builds this threshold as `0.04f * D_8610AD20[0x9768] * 700.0f + 30.0f`; the 0.04f
+// factor is the float word the retail disassembly labels D_8610AC68.
+
+
+s32 func_861060F8(void *arg0, void *arg1) {
+    f32 temp_fa0;
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    f32 temp_fv1;
+    f32 temp_fv1_2;
+    f32 temp_fa1;
+    f32 var_fa0;
+    f32 var_fa1;
+
+    temp_fv0 = *(f32 *)((u8 *)arg1 + 0x48);
+    temp_fv1 = *(f32 *)((u8 *)arg0 + 0x48);
+    var_fa0 = (temp_fv0 < temp_fv1) ? (temp_fv1 - temp_fv0) : -(temp_fv1 - temp_fv0);
+    // FAKE: the `(0, 700.0f)` comma forces 700.0f to be materialized after the 0.04f load;
+    // written plainly the score is 455.
+    temp_fv0_2 = ((0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f)) + 30.0f;
+    // FAKE: `&&` inside `? 1 : 0`, with the inner loads and absolute value in a comma
+    // expression, is what makes IDO share one `or v1,zero,zero` false value and one
+    // `jr ra; or v0,v1,zero` exit. The natural form (if (outer) { ... if (inner) return 1; }
+    // return 0;) scores 300.
+    return ((var_fa0 < temp_fv0_2) && (
+        temp_fv1_2 = *(f32 *)((u8 *)arg1 + 0x4C),
+        temp_fa1 = *(f32 *)((u8 *)arg0 + 0x4C),
+        var_fa1 = (temp_fv1_2 < temp_fa1) ? (temp_fa1 - temp_fv1_2) : -(temp_fa1 - temp_fv1_2),
+        var_fa1 < temp_fv0_2)) ? 1 : 0;
+}
+/* mkdraft:func_861060F8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861061B0.s")
 
@@ -1503,9 +1752,98 @@ void func_86106710(void) {
 
 extern void func_86106688();
 extern s32 func_86106504();
-void func_86106C28(void) { func_86106688(); func_86106504(D_87F119DC); }
+// Retail passes func_86106504's return through in v0 (jal, result not consumed;
+// epilogue restores ra and returns without touching v0), so the wrapper is
+// s32. The local keeps IDO from turning `return f();` into a tail-call j.
+s32 func_86106C28(void) {
+    s32 ret;
+    func_86106688();
+    ret = func_86106504(D_87F119DC);
+    return ret;
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86106C54.s")
+/* mkdraft:func_86106C54 begin */
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+extern s32 func_86106784(void);
+// Per-frame update of the D_87F119DC actor while it plays a scale-wobble
+// sequence: the counter at +0x1C fixes the angle, the sin/cos pair writes the
+// wobble to the x/y scale fields (+0x54/+0x58) and the flags word +0xC selects
+// the stage. Field roles (position +0x48/+0x4C/+0x50, velocity
+// +0x10/+0x14/+0x18, scale +0x54/+0x58/+0x5C) are as documented for the same
+// node in fragment 52.
+//@{src/fragments/52/fragment52_27E4E0.c}
+
+
+void func_86106C54(void) {
+    // Flags word +0xC; its four high bits select the stage.
+    s32 flags;
+    // Nonzero when the stage's sub-sequence call engaged a target.
+    s32 ret;
+    // Set when the sequence ends and the actor has to be handed back through
+    // func_87F026E8: the 0x40000000 stage ran for six frames, or the actor fell
+    // below -464.8497925f.
+    s32 flag;
+    f32 angle;
+
+    flag = 0;
+    // 0.174532935f is 10 degrees in radians: the wobble advances 10 degrees per
+    // counter step.
+    angle = (f32) * (s32 *)((u8 *)D_87F119DC + 0x1C) * 0.174532935f;
+    ret = 0;
+    // Wobble between 0.8 and 1.2 times the scale, the two axes 90 degrees apart.
+    *(f32 *)((u8 *)D_87F119DC + 0x54) = __sinf(angle) * 0.200000003f + 1.0f;
+    *(f32 *)((u8 *)D_87F119DC + 0x58) = __cosf(angle) * 0.200000003f + 1.0f;
+    flags = *(s32 *)((u8 *)D_87F119DC + 0xC);
+    if (flags & 0x40000000) {
+        // Grow the wobble by 1.399999976f every frame for six frames, then end
+        // the sequence.
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 6) {
+            flag = 1;
+        } else {
+            // One load of 1.399999976f feeds both axes.
+            f32 scale = 1.399999976f;
+
+            *(f32 *)((u8 *)D_87F119DC + 0x54) *= scale;
+            *(f32 *)((u8 *)D_87F119DC + 0x58) *= scale;
+        }
+    } else if (flags & 0x20000000) {
+        // func_86106710 decays the wobble; func_86106C28 clamps the +0x4C
+        // field (func_86106688) and returns func_86106504's result.
+        func_86106710();
+        ret = func_86106C28();
+    } else if (flags & 0x10000000) {
+        func_86106710();
+        ret = func_86106504(D_87F119DC);
+    } else if (flags & 0x80000000) {
+        // func_86106784 ends by returning func_86106504's result for its own
+        // target search.
+        ret = func_86106784();
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) < 15) {
+            // Ramp from half size at counter 0 to full size at 15; one factor
+            // feeds both axes.
+            f32 scale = (f32) * (s32 *)((u8 *)D_87F119DC + 0x1C) * 0.5f / 15.0f + 0.5f;
+
+            *(f32 *)((u8 *)D_87F119DC + 0x54) *= scale;
+            *(f32 *)((u8 *)D_87F119DC + 0x58) *= scale;
+        }
+    }
+    if (*(f32 *)((u8 *)D_87F119DC + 0x48) < -464.8497925f) {
+        flag = 1;
+    }
+    if (ret != 0) {
+        // A target was engaged: enter the growth stage and drop the counter
+        // and the x/y velocity.
+        *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x40000000;
+        *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        *(f32 *)((u8 *)D_87F119DC + 0x14) = 0.0f;
+        *(f32 *)((u8 *)D_87F119DC + 0x10) = *(f32 *)((u8 *)D_87F119DC + 0x14);
+    }
+    if (flag != 0) {
+        func_87F026E8((s32)D_87F119D8, (s32)D_87F119DC);
+    }
+}
+/* mkdraft:func_86106C54 end */
 
 extern u8 D_8610A890[];
 extern void GeoRender_ApplyMaterialState(void);
@@ -1642,7 +1980,80 @@ void func_861072AC(f32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86107360.s")
+/* mkdraft:func_86107360 begin */
+extern s32 D_8610AD20;
+typedef struct {
+    u8 pad0000[0x9768];
+    f32 f9768;
+    f32 f976C;
+    f32 f9770;
+    f32 f9774;
+    f32 f9778;
+    f32 f977C;
+    s8 s9780;
+    s8 s9781;
+    s8 s9782;
+    s8 s9783;
+    f32 f9784;
+    f32 f9788;
+    f32 f978C;
+    f32 f9790;
+    f32 f9794;
+    f32 f9798;
+    f32 f979C;
+    f32 f97A0;
+    f32 f97A4;
+    f32 f97A8;
+    f32 f97AC;
+    f32 f97B0;
+    s32 f97B4;
+    s32 f97B8;
+    s32 f97BC;
+    f32 f97C0;
+    f32 f97C4;
+    f32 f97C8;
+    f32 f97CC;
+    f32 f97D0;
+    f32 f97D4;
+    s8 s97D8;
+} Context86107360;
+
+
+void func_86107360(void) {
+    ((Context86107360 *)(u32)D_8610AD20)->s97D8 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->f9768 = 1.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f976C = (f32) 0.1f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9770 = 10.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9774 = -8.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9778 = -50.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f977C = 50.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->s9780 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->s9781 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->s9782 = 1;
+    ((Context86107360 *)(u32)D_8610AD20)->f9784 = 9.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9788 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f978C = (f32) (((Context86107360 *)(u32)D_8610AD20)->f9784 * 100.0f);
+    ((Context86107360 *)(u32)D_8610AD20)->f9790 = (f32) 0.023f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9794 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f9798 = 1.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97A8 = 20.5f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97AC = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97B0 = 99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f979C = (f32) 0.6f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97A0 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97A4 = 99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97B4 = 0x4B0;
+    ((Context86107360 *)(u32)D_8610AD20)->f97B8 = 0;
+    ((Context86107360 *)(u32)D_8610AD20)->f97BC = 0x1A5E0;
+    ((Context86107360 *)(u32)D_8610AD20)->f97CC = (f32) (-0.58f);
+    ((Context86107360 *)(u32)D_8610AD20)->f97D0 = -99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97D4 = 99.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97C0 = 0.5f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97C4 = 0.0f;
+    ((Context86107360 *)(u32)D_8610AD20)->f97C8 = 1.0f;
+
+}
+/* mkdraft:func_86107360 end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
