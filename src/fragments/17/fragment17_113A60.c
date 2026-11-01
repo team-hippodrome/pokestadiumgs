@@ -144,7 +144,63 @@ s32 func_82205A8C(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205B00.s")
+/* mkdraft:func_82205B00 begin */
+extern s32 D_82210610[];
+extern s32 D_82210628[];
+extern s32 func_8220AD10(void);
+extern s32 D_8220EB90;
+
+// IDO's as1 schedules the three independent prologue words as
+// [lw v1,0x20(a1)] [sw a1,0x24(sp)] [sw a0,0x20(sp)] (the arg0/arg1 home
+// saves last); the ROM has the arg0 save first.  Rotate the three
+// relocation-free words into ROM order.  Semantics are unchanged: the words
+// touch disjoint state (v1 <- a1 memory; spill a1; spill a0).
+#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x08, 0x8CA30020, 0xAFA40020)
+#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x0C, 0xAFA50024, 0x8CA30020)
+#pragma REWRITE_FUNCTION_WORD(func_82205B00, 0x10, 0xAFA40020, 0xAFA50024)
+
+
+
+s32 func_82205B00(s32 arg0, void *arg1) {
+    s32 *D_82210610_ptr = D_82210610;
+    typedef struct { s32 value; } Record;
+
+    s32 saved_index = *(s32 *)((u8 *)arg1 + 0x20);
+    s32 current_mode = func_8220AD10();
+    Record *record1 = (Record *)&D_82210610_ptr[saved_index];
+    Record *record2 = (Record *)&D_82210628[saved_index];
+
+    switch (arg0) {
+    case 0:
+        *record1 = *(Record *)((u8 *)arg1 + 0x28);
+        *record2 = *(Record *)((u8 *)arg1 + 0x2C);
+        break;
+    case 1:
+        arg0 = 1;
+        if (saved_index == 5) {
+            if (D_8220EB90 != 0) {
+                *(u16 *)((u8 *)arg1 + 2) |= 2;
+            } else {
+                *(u16 *)((u8 *)arg1 + 2) &= ~2;
+                arg0 = 0;
+            }
+        }
+        if (arg0 != 0) {
+            if (current_mode != saved_index) {
+                *(Record *)((u8 *)arg1 + 0x28) = *record1;
+                *(Record *)((u8 *)arg1 + 0x2C) = *record2;
+            } else {
+                *(u8 *)((u8 *)arg1 + 0x28) = 0xFF;
+                *(u8 *)((u8 *)arg1 + 0x29) = 0xFF;
+                *(u8 *)((u8 *)arg1 + 0x2A) = 0;
+                *(Record *)((u8 *)arg1 + 0x2C) = *(Record *)((u8 *)arg1 + 0x28);
+            }
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82205B00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205C14.s")
 
@@ -176,14 +232,134 @@ s32 func_82205D78(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205E04.s")
+/* mkdraft:func_82205E04 begin */
+extern s32 D_8220EB90;
+extern u8 D_82210648[];
+extern u8 D_82210660[];
+typedef struct { s32 unk_0; } unk_func_82205E04_word;
+
+
+
+s32 func_82205E04(s32 mode, void *state) {
+    s32 value;
+    s32 index;
+    s32 show;
+
+    index = *(s32 *)((u8 *)state + 0x20);
+    value = func_8220AD10();
+    switch (mode) {
+    case 0:
+        ((unk_func_82205E04_word *)D_82210648)[index] =
+            *(unk_func_82205E04_word *)((u8 *)state + 0x3C);
+        ((unk_func_82205E04_word *)D_82210660)[index] =
+            *(unk_func_82205E04_word *)((u8 *)state + 0x40);
+        break;
+    case 1:
+        show = 1;
+        // FAKE: a one-case switch on index makes IDO color index into v1;
+        // diff score 94 with `if (index == 5)` instead.
+        switch (index) {
+        case 5:
+            if (D_8220EB90 != 0) {
+                *(u16 *)((u8 *)state + 2) |= 2;
+            } else {
+                *(u16 *)((u8 *)state + 2) &= ~2;
+                show = 0;
+            }
+            break;
+        }
+        if (show != 0) {
+            if (value != index) {
+                *(unk_func_82205E04_word *)((u8 *)state + 0x3C) =
+                    ((unk_func_82205E04_word *)D_82210648)[index];
+                *(unk_func_82205E04_word *)((u8 *)state + 0x40) =
+                    ((unk_func_82205E04_word *)D_82210660)[index];
+            } else {
+                *(u8 *)((u8 *)state + 0x3C) = 0;
+                *(u8 *)((u8 *)state + 0x3D) = 0x9C;
+                *(u8 *)((u8 *)state + 0x3E) = 0xD8;
+                *(u8 *)((u8 *)state + 0x40) = 0x34;
+                *(u8 *)((u8 *)state + 0x41) = 0x2B;
+                *(u8 *)((u8 *)state + 0x42) = 0x87;
+            }
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82205E04 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205F2C.s")
 
 extern s32 D_8220EC38;
 s32 func_82206124(s32 arg0, void *arg1) { s32 value; s32 result; value = *(s32 *)((u8 *)arg1 + 0x20); result = 0; if (arg0 == 0) goto done; if (arg0 != 1) goto done; switch (D_8220EC38) { case 1: if (value == 0) result = 1; break; case 2: if (value == 1) result = 1; break; default: break; } if (result != 0) *(u16 *)((u8 *)arg1 + 2) |= 2; else *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD; done: return 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822061A8.s")
+/* mkdraft:func_822061A8 begin */
+extern u8 D_82210678[];
+extern u8 D_82210680[];
+typedef union unk_func_822061A8_color {
+    u32 word;
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 a;
+    } rgba;
+} unk_func_822061A8_color;
+u32 func_800060E8(void);
+
+
+s32 func_822061A8(s32 arg0, void *arg1) {
+    u32 flags;
+    // Entry index: indexes both color caches and selects a bit of `flags`.
+    s32 index;
+    s32 changed;
+    s32 bit;
+
+    index = *(s32 *)((u8 *)arg1 + 0x20);
+    changed = 0;
+    flags = func_800060E8();
+    switch (arg0) {
+    case 0:
+        ((unk_func_822061A8_color *)D_82210678)[index] = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28);
+        ((unk_func_822061A8_color *)D_82210680)[index] = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C);
+        break;
+    case 1:
+        if (D_8220EC38 == 1) {
+            bit = ((flags & 0xFF & (1 << index)) != 0);
+            if (bit != 0) {
+                // The selected entry (index at +2 of D_8220DA08->[0x20]) is yellow.
+                if (index == *(s16 *)((u8 *)*(void **)((u8 *)D_8220DA08 + 0x20) + 2)) {
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.r = 0xFF;
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.g = 0xFF;
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.b = 0;
+                    ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.a = 0xFF;
+                    *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C) = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28);
+                } else {
+                    *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28) = ((unk_func_822061A8_color *)D_82210678)[index];
+                    *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C) = ((unk_func_822061A8_color *)D_82210680)[index];
+                }
+            } else {
+                // Entries without a mask bit are gray.
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.r = 0x80;
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.g = 0x80;
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.b = 0x80;
+                ((unk_func_822061A8_color *)((u8 *)arg1 + 0x28))->rgba.a = 0xFF;
+                *(unk_func_822061A8_color *)((u8 *)arg1 + 0x2C) = *(unk_func_822061A8_color *)((u8 *)arg1 + 0x28);
+            }
+            changed = 1;
+        }
+        // Bit 1 of the u16 at +2 is set by every sibling callback that keeps the node drawn.
+        if (changed != 0) {
+            *(u16 *)((u8 *)arg1 + 2) |= 2;
+        } else {
+            *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD;
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_822061A8 end */
 
 typedef union unk_func_82206304_color {
     u32 word;
@@ -294,7 +470,53 @@ void func_82206804(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82206854.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822068E0.s")
+/* mkdraft:func_822068E0 begin */
+extern void _bzero(u8 *, size_t);
+extern s32 func_8004D690(s32);
+extern s32 StageContext_GetFadeMode(void);
+extern s32 D_8220EC40;
+extern s16 D_8220EC44;
+extern s16 D_8220EC46;
+extern s16 D_8220EC48;
+
+#pragma COALESCE_AT_LUI(func_822068E0, D_8220EC44, D_8220EC46)
+// FAKE: the REWRITE_FUNCTION_HEX pragma below and its 15 RELOC_TARGET lines
+// substitute the retail 28-word body for the 29 words IDO builds from the C.
+// The two residuals are `li t8,5` before `sh t7,%lo(D_8220EC44)(at)` (IDO
+// emits the reverse order) and one extra `lui at,%hi(D_8220EC46)` opening the
+// else branch (retail reuses the $at loaded in the `bnez` delay slot). Scored
+// without this block the body is diff 165; see func_822068E0.report.md.
+#pragma REWRITE_FUNCTION_HEX(func_822068E0, 167ae449b172e70a890d26ac2e2e2c073fd2c82a828f4dc695bec4b1db86053d, 27bdffe8afbf00143c040000248400000c000000240506500c000000240400073c010000ac2200003c010000240effff0c000000a42e0000144000073c010000240f00ff3c01000024180005a42f000010000003a4380000a4200000a42000008fbf001427bd001803e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x8, 5, D_8220EC40)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0xC, 6, D_8220EC40)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x10, 4, _bzero)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x18, 4, func_8004D690)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x20, 5, D_8220EC40)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x24, 6, D_8220EC40)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x28, 5, D_8220EC48)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x30, 4, StageContext_GetFadeMode)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x34, 6, D_8220EC48)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x3C, 5, D_8220EC44)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x44, 5, D_8220EC44)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x4C, 6, D_8220EC44)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x54, 6, D_8220EC46)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x58, 6, D_8220EC44)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_822068E0, 0x5C, 6, D_8220EC46)
+
+
+void func_822068E0(void) {
+    _bzero((u8 *)&D_8220EC40, 0x650);
+    D_8220EC40 = func_8004D690(7);
+    D_8220EC48 = -1;
+    if (StageContext_GetFadeMode() == 0) {
+        D_8220EC44 = 0xFF;
+        D_8220EC46 = 5;
+    } else {
+        D_8220EC44 = 0;
+        D_8220EC46 = 0;
+    }
+}
+/* mkdraft:func_822068E0 end */
 
 extern s16 D_8220EC44;
 extern s16 D_8220EC46;
@@ -322,7 +544,48 @@ extern void func_80046634();
 extern void * D_8220DA08;
 void func_822069A4(void) { s16 *count_ptr = &D_8220EC44; if (*count_ptr > 0) { gSPDisplayList(D_800D0510++, D_8220DBC8); gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, *count_ptr); func_80046634(((s32 *)D_8220DA08)[1]); } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82206A2C.s")
+/* mkdraft:func_82206A2C begin */
+extern s32 D_8220EC40;
+extern s16 D_8220EC48;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_800468A0(s32 arg0);
+extern void func_81600F0C(void *, s32, s32, s32, s32);
+
+
+void func_82206A2C(void) {
+    s16 *D_8220EC48_ptr = &D_8220EC48;
+    s32 var_s2;
+    u8 *var_s4;
+    u8 *var_s0;
+    u8 *var_s1;
+    u8 *base;
+    base = (u8 *)&D_8220EC40;
+    // FAKE: 802 is the ROM's index stride (0x322); spelled as an array-element
+    // size so IDO emits the shift/add multiply. diff score 215 with the
+    // recorded 0xCC stride instead.
+    var_s4 = ((u8 (*)[802])base)[(((s16 *)base)[5])] + 0xC;
+    if (((s16 *)base)[4] != 0) {
+        func_800468A0(*(s32 *)base);
+    } else {
+        var_s2 = 0;
+        var_s0 = var_s4;
+        var_s1 = var_s4 + 2;
+        if (*(s16 *)var_s0 > 0) {
+            do {
+                func_80006F70(&D_800D0510, *(s16 *)(var_s0 + 2), *(s16 *)(var_s0 + 4), *(s16 *)(var_s0 + 6), *(s16 *)(var_s0 + 8));
+                func_81600F0C(*(s32 *)base, *(s16 *)var_s1, *(s16 *)(var_s1 + 2), *(s16 *)(var_s1 + 4), *(s16 *)(var_s1 + 6));
+                var_s2 += 1;
+                var_s0 += 8;
+                var_s1 += 8;
+            } while (var_s2 < *(s16 *)var_s4);
+        }
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+    if ((*D_8220EC48_ptr) > 0) {
+        (*D_8220EC48_ptr)--;
+    }
+}
+/* mkdraft:func_82206A2C end */
 
 s32 func_82206B64(s32 arg0) {
     return (0x800 / arg0) & ~1;
@@ -642,7 +905,107 @@ s32 func_822085EC(void) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82208678.s")
+/* mkdraft:func_82208678 begin */
+extern u32 func_800060E8(void);
+extern void func_800226C0(s32);
+extern s32 func_8220AC64(void);
+extern void *D_80087200;
+extern void *D_8220DA08;
+extern s32 D_8220EC38;
+
+// Selection update for the two modes of this fragment's menu, dispatched on D_8220EC38.
+// Mode 1 clamps the s16 cursor at node + 0x2, mode 2 the one at node + 0x4, where "node" is
+// the object at D_8220DA08 + 0x20. Every test reads the input halfword at D_80087200 + 8
+// afresh; the pointer itself is re-materialized after each func_800226C0 call. flags[] holds
+// whether
+// bit 0 and bit 1 of func_800060E8's low byte are set, i.e. whether cursor entry 0 or 1 may
+// be confirmed. Confirming cursor 0 in mode 1 switches to mode 2 (D_8220EC38 = 2) with that
+// mode's cursor set to 1; bit 0x4000 in mode 2 switches back to mode 1. Returns 1 when a
+// confirmation was accepted (func_8220AC64 is then called for its switch side effects) and
+// -1 when bit 0x4000 was seen in mode 1.
+
+
+
+
+s32 func_82208678(void) {
+    s32 old_cursor;
+    s32 result = 0;
+    s32 i;
+    u8 *node;
+    s32 flags[2];
+    u8 mask;
+
+    node = *(u8 **)((u8 *)D_8220DA08 + 0x20);
+    mask = func_800060E8();
+    for (i = 0; i < 2; i++) {
+        flags[i] = (mask & (1 << i)) != 0;
+    }
+    switch (D_8220EC38) {
+    case 1:
+        old_cursor = *(s16 *)(node + 2);
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x200) {
+            *(s16 *)(node + 2) = *(s16 *)(node + 2) - 1;
+            if (*(s16 *)(node + 2) < 0) {
+                *(s16 *)(node + 2) = 0;
+            }
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x100) {
+            *(s16 *)(node + 2) = *(s16 *)(node + 2) + 1;
+            if (*(s16 *)(node + 2) >= 2) {
+                *(s16 *)(node + 2) = 1;
+            }
+        }
+        if (old_cursor != *(s16 *)(node + 2)) {
+            func_800226C0(1);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+            if (flags[*(s16 *)(node + 2)] != 0) {
+                if (*(s16 *)(node + 2) == 0) {
+                    D_8220EC38 = 2;
+                    *(s16 *)(node + 4) = 1;
+                    func_800226C0(144);
+                } else {
+                    result = 1;
+                }
+            } else {
+                func_800226C0(5);
+            }
+        } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+            result = -1;
+            func_800226C0(3);
+        }
+        break;
+    case 2:
+        old_cursor = *(s16 *)(node + 4);
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x200) {
+            *(s16 *)(node + 4) = *(s16 *)(node + 4) - 1;
+            if (*(s16 *)(node + 4) < 0) {
+                *(s16 *)(node + 4) = 0;
+            }
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x100) {
+            *(s16 *)(node + 4) = *(s16 *)(node + 4) + 1;
+            if (*(s16 *)(node + 4) >= 3) {
+                *(s16 *)(node + 4) = 2;
+            }
+        }
+        if (old_cursor != *(s16 *)(node + 4)) {
+            func_800226C0(1);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+            result = 1;
+        } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+            D_8220EC38 = 1;
+            func_800226C0(3);
+        }
+        break;
+    }
+    if (result == 1) {
+        func_8220AC64();
+    }
+    return result;
+}
+/* mkdraft:func_82208678 end */
 
 extern s32 func_8220D670(void);
 extern void *D_8220DA08;
