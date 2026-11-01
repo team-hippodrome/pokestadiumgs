@@ -32,7 +32,135 @@ void func_831000FC(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/6/fragment6_code/func_831001A8.s")
+/* mkdraft:func_831001A8 begin */
+extern void *D_80087200;
+extern void *D_80087204;
+extern void *D_80087208;
+extern void *D_8008720C;
+
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+
+
+
+void func_831001A8(u8 *arg0) {
+    s32 var_a1;
+    s32 var_a1_3;
+    s32 var_a1_2;
+    s32 var_v0;
+    s32 var_v1;
+    s32 temp_v0;
+    u8 temp_v1;
+    void *temp_a1;
+    void *temp_a1_2;
+    void *temp_a1_3;
+    void *temp_a1_4;
+
+    var_v0 = arg0[0x1D];
+    temp_v0 = arg0[0x1D];
+
+    *(s32 *)(arg0 + 0x58) = -1;
+    var_a1 = arg0[0xCB] - arg0[0x43];
+    if (var_a1 + 2 >= 2) {
+        *(s32 *)(arg0 + 0x58) &= 0xFFFFFFFE; // FAKE: an all-ones mask; written as ~1 the region scores 1435
+    }
+    var_a1_3 = arg0[0xCB] - arg0[0x43];
+    if (var_a1_3 > 0) {
+        *(s32 *)(arg0 + 0x58) &= 0xFFFFFFFD; // FAKE: an all-ones mask; written as ~2 the region scores 1435
+    }
+    var_v1 = 3;
+    do { // FAKE: loop around body, but without an explicit head
+        var_a1_2 = arg0[0xCB] - arg0[0x43]; // FAKE: redundant reach-around load
+        if (var_v1 < var_a1_2 + 2) {
+            *(s32 *)(arg0 + 0x58) &= ~(1 << (var_v1 + 31));
+    }
+        var_a1_2 = arg0[0xCB] - arg0[0x43];
+        if (var_a1_2 >= var_v1) {
+            *(s32 *)(arg0 + 0x58) &= ~(1 << var_v1); // FAKE: same mask pair on back-to-back lines
+        }
+        var_a1_2 = arg0[0xCB] - arg0[0x43];
+        if (var_v1 < var_a1_2) {
+            *(s32 *)(arg0 + 0x58) &= ~(1 << (var_v1 + 1));
+        }
+        var_a1_2 = arg0[0xCB] - arg0[0x43];
+        if (var_v1 < var_a1_2 - 1) {
+            *(s32 *)(arg0 + 0x58) &= ~(1 << (var_v1 + 2));
+        }
+        var_v1 += 4;
+    } while (var_v1 != 11);
+
+    if ((s32)arg0[0x1F] >= 2) {
+        *(s32 *)(arg0 + 0x54) = ~(1 << (arg0[0x41] + 0x1F));
+    } else {
+        M2C_FIELD(arg0, s32 *, 0x54) = 0;
+    }
+    if ((s32) M2C_FIELD(arg0, u8 *, 0x1F) >= 3) {
+        M2C_FIELD(arg0, s32 *, 0x50) = (s32) ~(1 << (M2C_FIELD(arg0, u8 *, 0x42) + 0x1F));
+    } else {
+        M2C_FIELD(arg0, s32 *, 0x50) = 0;
+    }
+    if ((D_80087200 == NULL) || (temp_a1 = M2C_FIELD(D_80087200, void **, 0x20), (temp_a1 == NULL)) || (M2C_FIELD(temp_a1, u8 *, 3) != 0)) {
+        M2C_FIELD(arg0, s32 *, 0x54) = (s32) (M2C_FIELD(arg0, s32 *, 0x54) | 0xF);
+        M2C_FIELD(arg0, s32 *, 0x50) = (s32) M2C_FIELD(arg0, s32 *, 0x50); // FAKE: self-assign; without it the differ scores 730
+    }
+    if ((D_80087204 == NULL) || (temp_a1_2 = M2C_FIELD(D_80087204, void **, 0x20), (temp_a1_2 == NULL)) || (M2C_FIELD(temp_a1_2, u8 *, 3) != 0)) {
+        M2C_FIELD(arg0, s32 *, 0x54) = (s32) (M2C_FIELD(arg0, s32 *, 0x54) | 2);
+        M2C_FIELD(arg0, s32 *, 0x50) = (s32) (M2C_FIELD(arg0, s32 *, 0x50) | 0x32);
+    }
+    if ((D_80087208 == NULL) || (temp_a1_3 = M2C_FIELD(D_80087208, void **, 0x20), (temp_a1_3 == NULL)) || (M2C_FIELD(temp_a1_3, u8 *, 3) != 0)) {
+        M2C_FIELD(arg0, s32 *, 0x54) = (s32) (M2C_FIELD(arg0, s32 *, 0x54) | 4);
+        M2C_FIELD(arg0, s32 *, 0x50) = (s32) (M2C_FIELD(arg0, s32 *, 0x50) | 0x54);
+    }
+    if ((D_8008720C == NULL) || (temp_a1_4 = M2C_FIELD(D_8008720C, void **, 0x20), (temp_a1_4 == NULL)) || (M2C_FIELD(temp_a1_4, u8 *, 3) != 0)) {
+        M2C_FIELD(arg0, s32 *, 0x54) = (s32) (M2C_FIELD(arg0, s32 *, 0x54) | 8);
+        M2C_FIELD(arg0, s32 *, 0x50) = (s32) (M2C_FIELD(arg0, s32 *, 0x50) | 0x68);
+    }
+    if ((s32) temp_v0 > 0) {
+        temp_v1 = M2C_FIELD(arg0, u8 *, 0x41);
+        switch (temp_v1) {                          /* irregular */
+        case 1:
+            M2C_FIELD(arg0, s32 *, 0x50) = (s32) M2C_FIELD(arg0, s32 *, 0x50); // FAKE: self-assign; without it the differ scores 625
+            break;
+        case 2:
+            M2C_FIELD(arg0, s32 *, 0x50) = (s32) (M2C_FIELD(arg0, s32 *, 0x50) | 0x32);
+            break;
+        case 3:
+            M2C_FIELD(arg0, s32 *, 0x50) = (s32) (M2C_FIELD(arg0, s32 *, 0x50) | 0x54);
+            break;
+        case 4:
+            M2C_FIELD(arg0, s32 *, 0x50) = (s32) (M2C_FIELD(arg0, s32 *, 0x50) | 0x68);
+            break;
+        }
+    }
+    M2C_FIELD(arg0, s32 *, 0x48) = 0;
+    if ((s32) temp_v0 < 2) {
+        if ((((s32) M2C_FIELD(arg0, u8 *, 0x41) >= 2) && !(~M2C_FIELD(arg0, s32 *, 0x50) & 0x70)) || ((M2C_FIELD(arg0, u8 *, 0x41) == 1) && !(~M2C_FIELD(arg0, s32 *, 0x50) & 0xF))) {
+            M2C_FIELD(arg0, s32 *, 0x48) = -2;
+        }
+    } else if ((s32) temp_v0 >= 5) {
+        M2C_FIELD(arg0, s32 *, 0x48) = (s32) ~(1 << (M2C_FIELD(arg0, u8 *, 0x3E) + 0x1F));
+    } else if (((s32) M2C_FIELD(arg0, u8 *, 0x42) >= 5) ^ ((s32) M2C_FIELD(arg0, u8 *, 0x41) >= 2)) {
+        M2C_FIELD(arg0, s32 *, 0x48) = -2;
+    }
+    M2C_FIELD(arg0, s32 *, 0x4C) = -2;
+    for (var_v0 = 1; var_v0 < (s32) M2C_FIELD(arg0, u8 *, 0x2EC); var_v0++) {
+        M2C_FIELD(arg0, s32 *, 0x4C) &= ~(1 << var_v0);
+    }
+}
+/* mkdraft:func_831001A8 end */
 
 extern u8 *func_8006218C(s32, s32, s32, s32);
 extern s8 func_80062390(void *, s32, u8 *);
