@@ -1652,7 +1652,76 @@ void func_84144514(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144634.s")
+/* mkdraft:func_84144634 begin */
+extern u8 *D_841951F8;
+extern u8 *D_84195208[];
+extern void *D_8419A0B0;
+extern s16 D_84186D98;
+extern s16 D_84186D9C;
+extern s16 D_84186DA0;
+extern s16 D_84186DA4;
+extern s16 D_84186DA8;
+extern s16 D_84186DAC;
+extern s16 D_84186DB0;
+extern s16 D_84186DB4;
+extern void func_800495F8(s32, s32, s32, void *, ...);
+extern void func_80048E30(void *, s32, s32, s32, s32);
+extern s32 func_80062CE0(u8);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern s32 *func_800635E0(u8);
+extern s32 func_800647C8(u8);
+
+// Draws the selected party Pokemon panel: the text blob at pokemon+0x34, one
+// row per move slot, then the name label and image at +1,+1 in dark gray and
+// again at the origin in white. Move ids come from D_84195208 when the selected
+// slot is the active battler, and from the party record otherwise.
+
+
+void func_84144634(u8 *state) {
+    u8 side;
+    u16 row;
+    s32 i;
+    u8 move;
+    u8 name;
+    s32 *image;
+    // FAKE: declared after `image` only to land its stack home at 0x54; the natural
+    // order (before `image`) compiles the same body but spills it at 0x58 (diff 24).
+    BattlePanelPokemon *pokemon;
+
+    side = state[1];
+    pokemon = &((BattlePanelParty *)((u8 **)&D_841951F8)[side])->mons[*(s32 *)(state + 4)];
+    row = 0;
+    func_800495F8(*(s16 *)(state + 10) + D_84186D98, *(s16 *)(state + 12) + D_84186D9C, 1, (void *)((char *)pokemon + 0x34));
+    for (i = 0; i != 4; i++) {
+        if (*(s32 *)(state + 4) == ((u8 **)&D_841951F8)[side][0xA]) {
+            move = D_84195208[side][i + 5];
+        } else {
+            move = pokemon->moves[i];
+        }
+        func_80048E30(D_8419A0B0, *(s16 *)(state + 10) + D_84186DA8, *(s16 *)(state + 12) + D_84186DAC + row, func_80062CE0(move), 1);
+        row = row + 23;
+    }
+    func_800496A4(1, 0);
+    if (*(s32 *)(state + 4) == ((u8 **)&D_841951F8)[side][0xA]) {
+        name = D_84195208[side][0];
+    } else {
+        name = pokemon->unk_00[0];
+    }
+    image = func_800635E0(pokemon->unk_00[1]);
+    func_8004972C(20, 20, 20, 255);
+    BattleUi_DrawNameLabel((*(s16 *)(state + 10) + D_84186DA0 + 1) & 0xFFFF,
+                           (*(s16 *)(state + 12) + D_84186DA4 + 1) & 0xFFFF,
+                           pokemon->unk_00[0], *(u16 *)((u8 *)pokemon + 0x16), (char *)func_800647C8(name));
+    func_800495F8(*(s16 *)(state + 10) + D_84186DB0 + 1, *(s16 *)(state + 12) + D_84186DB4 + 1, 1, (void *)image);
+    func_8004972C(255, 255, 255, 255);
+    BattleUi_DrawNameLabel((*(s16 *)(state + 10) + D_84186DA0) & 0xFFFF,
+                           (*(s16 *)(state + 12) + D_84186DA4) & 0xFFFF,
+                           pokemon->unk_00[0], *(u16 *)((u8 *)pokemon + 0x16), (char *)func_800647C8(name));
+    func_800495F8(*(s16 *)(state + 10) + D_84186DB0, *(s16 *)(state + 12) + D_84186DB4, 1, (void *)image);
+    func_800496A4(2, -1);
+}
+/* mkdraft:func_84144634 end */
 #endif
 
 #ifdef VERSION_US
