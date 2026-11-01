@@ -209,7 +209,26 @@ void func_88307468(void) {
     func_8004D27C(D_88308EAC, 0x100, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B8010/func_883074E4.s")
+/* mkdraft:func_883074E4 begin */
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
+
+
+
+void func_883074E4(s32 arg0, s16 arg1, s16 arg2, u16 arg3) {
+    u16 sp40;
+    s16 sp44;
+    sp44 = arg1;
+    if (arg0 != 0) { sp40 = 1; } else { sp40 = 0; }
+    func_80044424(arg1, arg2, ((u16 *) D_88308EA8)[0], ((s16 *) D_88308EA8)[1], -0x10, -0x10, 0x400, 0x400, 0, sp40);
+    arg1 = (s16) ((arg1 + arg3) - ((u16 *) D_88308EA8)[0]);
+    func_80044424(arg1, arg2, (s16) ((u16 *) D_88308EA8)[0], ((s16 *) D_88308EA8)[1], (s16) ((((u16 *) D_88308EA8)[0] << 5) - 0x10), -0x10, -0x400, 0x400, 0, sp40);
+    // Split assignment: with both addends in named variables IDO emits
+    // addu s0,t8,v1 (sp44 in rs); the single-expression form reverses the operands.
+    arg1 = ((u16 *) D_88308EA8)[0];
+    arg1 = sp44 + arg1;
+    func_80044424(arg1, arg2, (s16) (arg3 - (((u16 *) D_88308EA8)[0] * 2)), ((s16 *) D_88308EA8)[1], (s16) ((((u16 *) D_88308EA8)[0] << 5) - 0x10), -0x10, 0, 0x400, 0, sp40);
+}
+/* mkdraft:func_883074E4 end */
 
 /* mkdraft:func_8830765C begin */
 extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
