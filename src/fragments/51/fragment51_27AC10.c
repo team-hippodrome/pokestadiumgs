@@ -33,7 +33,7 @@ void func_86304DF0(f32 *arg0, f32 *arg1, f32 *arg2, u8 *arg3, u8 *arg4) {
         var_fv1 = D_86307464[0];
     }
     scale = D_86307560;
-    if (arg0) { } // karodo: empty block; its line boundary attributes the 60.0f materialization here instead of uopt's entry constant pool, so as1 fills the multiply latency slot with it. Without it: 495.
+    if (arg0) { } // FAKE: empty block; its line boundary attributes the 60.0f materialization here instead of uopt's entry constant pool, so as1 fills the multiply latency slot with it. Without it: 495.
     arg0[0] = (*(f32 *)(arg4 + 0x20) * var_fv1 * scale) + *(f32 *)(arg3 + 0x48);
     arg0[1] = (*(f32 *)(arg4 + 0x24) * var_fv1 * scale) + *(f32 *)(arg3 + 0x4C);
 

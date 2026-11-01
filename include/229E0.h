@@ -153,7 +153,7 @@ extern void func_80034E5C(s32, s32);
 
 void func_80026068(u32 arg0) ;
 
-extern u8 GbAudio_GetActiveChannelMask(void); void func_80026098(void) ;
+extern u8 GbAudio_GetActiveChannelMask(void); s32 func_80026098(void) ;
 
 s32 func_80018ACC();
 extern u8 D_80090B64;

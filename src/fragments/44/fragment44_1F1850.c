@@ -235,7 +235,7 @@ extern s32 D_8AF2C2F0;
 extern s32 D_8AF2C324;
 extern s32 D_8AF2C574;
 extern s32 D_8AF2C578;
-extern s32 func_80026098(); /* FAKE: void in src/229E0.c; s32 here so the caller's `bnez v0` test exists (score without the s32 typing: 1085) */
+extern s32 func_80026098(void);
 extern s32 func_8004C594(s32, s32);
 extern s32 func_8AF03B38(void);
 extern void func_8AF00130(s32);
@@ -512,7 +512,7 @@ s32 func_8AF04A54(s32 arg0, u8 *arg1) {
         *(Func8AF04A54RGBA *)(arg1 + 0x2C) = c;
         *(Func8AF04A54RGBA *)(arg1 + 0x30) = c;
         break;
-    case 1: // karodo: empty arm; without it the switch compiles as an if
+    case 1: // FAKE: empty arm; without it the switch compiles as an if
         break;
     }
     return 0;

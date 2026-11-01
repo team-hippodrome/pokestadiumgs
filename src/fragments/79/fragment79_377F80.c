@@ -210,7 +210,7 @@ void func_84108AF8(u8 *arg0) {
                 func_84100030(entry, 0x10080);
                 if (func_84100054(entry, 0x8000) != 0) {
                     func_84100348(entry);
-                    if (1) { } // karodo
+                    if (1) { } // FAKE: empty test retained for code generation.
                     if (*(u8 **)(entry + 12) != NULL) {
                         *(u8 *)(*(u8 **)(entry + 12) + 1) &= ~1;
                     }
@@ -239,7 +239,7 @@ void func_84108CE8(s32 arg0) {
             func_84100030(var_s0, 0x10080);
             if (func_84100054(var_s0, 0x8000) != 0) {
                 func_84100348(var_s0);
-                if (0) { } // karodo: empty block after the call; without it IDO colors the 0xC pointer v1 instead of v0
+                if (0) { } // FAKE: empty block after the call; without it IDO colors the 0xC pointer v1 instead of v0
                 temp_v0_2 = *((void **) (((u8 *) var_s0) + 0xC));
                 if (temp_v0_2 != NULL) {
                     *((u8 *) (((u8 *) temp_v0_2) + 1)) = (u8) ((*((u8 *) (((u8 *) temp_v0_2) + 1))) & (~1));

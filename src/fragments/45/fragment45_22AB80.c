@@ -522,48 +522,9 @@ extern void func_8AC06400(void *, void *);
 extern void func_8AC063AC(void *, u16);
 extern void func_8AB00B78(s32);
 extern void func_80021ED8(s32);
-// FAKE: case-1 const-reset register is not reproducible from C with IDO 7.1: retail keeps
-// 0x1E in $v1, IDO always assigns a t-pool register ($24/$25) to this single-use constant.
-// The pragmas below replace func_8AB07C34's text with the retail words (relocations
-// re-attached explicitly). Score of the C body alone: 60/205 (fast/diff.py full score).
-#pragma REWRITE_FUNCTION_HEX(func_8AB07C34, 64f5616247f1fbedeca5aacc8be70ac8ff15c215766d3717dbfca42f9663dfbd, 27bdffe0240e000fafbf001410800006afae001c24010001108100333c030000100000578fbf00143c010000a42000000c000000240400022401000114410008000000000c00000024040005240100011441000300000000100000152407000e0c000000240400052401000114410003000000001000000e2407000d0c0000002404000124010001544100092407000b0c0000002404000424010001544100042407000b100000022407000c2407000b3c04000024840000240501000c000000240600393c0400003c0500008ca500000c000000248400000c00000024040007100000278fbf0014846300003c0100003c0200002463000100031c0000031c03a42300002861001f1420001c2403001e8c4200003c0400003c050000944f00023c0100002484000035f80001a4580002a42300000c00000094a500003c1900008f3900003c02000097280008310980005120000b8fbf00148c42000000002025944a0002314bfffe0c000000a44b0002afa2001c0c000000240400c28fbf00148fa2001c27bd002003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x1C, 5, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x28, 5, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x2C, 6, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x30, 4, func_8005453C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x44, 4, func_8005453C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x60, 4, func_8005453C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x7C, 4, func_8005453C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x90, 4, func_8005453C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xB0, 5, D_8AB126A8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xB4, 6, D_8AB126A8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xBC, 4, func_8004C8A0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xC4, 5, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xC8, 5, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xCC, 6, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xD0, 4, func_8AC06400)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xD4, 6, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xD8, 4, func_80021ED8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xE8, 6, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xEC, 5, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0xF0, 5, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x100, 6, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x110, 6, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x114, 5, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x118, 5, D_8AB1268E)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x120, 5, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x124, 6, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x130, 6, D_8AB16A34)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x134, 4, func_8AC063AC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x138, 6, D_8AB1268E)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x13C, 5, D_80087200)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x140, 6, D_80087200)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x144, 5, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x158, 6, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x168, 4, func_8AB066B4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07C34, 0x174, 4, func_8AB00B78)
 
-
+// NON_MATCHING: The state-reset constant still uses a different register.
+#ifdef NON_MATCHING
 s32 func_8AB07C34(s32 arg0)
 {
   s32 sp1C;
@@ -598,10 +559,6 @@ s32 func_8AB07C34(s32 arg0)
       var_a3 = 0xB;
     }
       func_8004C8A0(D_8AB126A8, 0x100, 0x39, var_a3);
-      /* inline */
-      if (temp_v1)
-    {
-    }
       func_8AC06400(D_8AB168D8, D_8AB168D0);
       func_80021ED8(7);
       break;
@@ -629,6 +586,9 @@ s32 func_8AB07C34(s32 arg0)
 
   return sp1C;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07C34.s")
+#endif
 /* mkdraft:func_8AB07C34 end */
 
 extern s16 D_8AB16A36;
@@ -675,48 +635,9 @@ extern void func_80021ED8(s32);
 extern s16 D_8AB16A38;
 
 s32 func_8AB066B4(s32 arg0);
-// FAKE: the C body below is a true reconstruction (right calls, stores, constants,
-// right instruction multiset) but IDO 7.1's as1 schedules the two `lui`s of each
-// `%hi` group in the opposite order from retail: retail puts the `la`'s `lui a0`
-// before the store's `lui at` (case 0 at 0x22D014/0x22D018) and puts
-// `lui a0`/`lui a1` before `lui at` in case 1 (0x22D0F4/0x22D0FC/0x22D100).
-// Honest C body score: 40 (diff.py full score, 4 differing words, same multiset).
-// REWRITE_FUNCTION_HEX replaces the text with the retail words and re-attaches the
-// retail relocation topology; see func_8AB07E6C.report.md.
-#pragma REWRITE_FUNCTION_HEX(func_8AB07E6C, 3c20a7891d5e9e0d603820c71111e9f64bbdccda136f54c51ba7ee98bf24fabe, 27bdffe0240e0011afbf001410800006afae001c24010001108100143c030000100000388fbf00143c0400003c010000a42000002484000024050100240600390c000000240700063c0400003c0500008ca500000c000000248400000c00000024040007100000278fbf0014846300003c0100003c0200002463000100031c0000031c03a42300002861001f1420001c2403001e8c4200003c0400003c050000944f00023c0100002484000035f80001a4580002a42300000c00000094a500003c1900008f3900003c02000097280008310980005120000b8fbf00148c42000000002025944a0002314bfffe0c000000a44b0002afa2001c0c000000240400c28fbf00148fa2001c27bd002003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x1C, 5, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x28, 5, D_8AB126A8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x2C, 5, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x30, 6, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x34, 6, D_8AB126A8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x40, 4, func_8004C8A0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x48, 5, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x4C, 5, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x50, 6, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x54, 4, func_8AC06400)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x58, 6, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x5C, 4, func_80021ED8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x6C, 6, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x70, 5, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x74, 5, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x84, 6, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x94, 6, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x98, 5, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0x9C, 5, D_8AB1268E)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xA4, 5, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xA8, 6, D_8AB168D8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xB4, 6, D_8AB16A38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xB8, 4, func_8AC063AC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xBC, 6, D_8AB1268E)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xC0, 5, D_80087200)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xC4, 6, D_80087200)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xC8, 5, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xDC, 6, D_8AB168D0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xEC, 4, func_8AB066B4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AB07E6C, 0xF8, 4, func_8AB00B78)
 
-
-
+// NON_MATCHING: The argument and store page-base loads are scheduled in a different order.
+#ifdef NON_MATCHING
 s32 func_8AB07E6C(s32 arg0)
 {
   s32 sp1C;
@@ -742,15 +663,15 @@ s32 func_8AB07E6C(s32 arg0)
     {
       d_8ab168d0_val = D_8AB168D0;
       *((u16 *) (((u8 *) d_8ab168d0_val) + 2)) |= 1;
-      if (temp_v1 == 0x1F) // karodo
+      if (temp_v1 == 0x1F) // FAKE: empty construct retained for code generation.
       {
       }
       *p = 0x1E;
-      if (D_8AB16A38 == 0x1E) // karodo
+      if (D_8AB16A38 == 0x1E) // FAKE: empty construct retained for code generation.
       {
       }
       new_var = D_8AB1268E;
-      if (D_8AB16A38 == 0x1E) // karodo
+      if (D_8AB16A38 == 0x1E) // FAKE: empty construct retained for code generation.
       {
       }
       func_8AC063AC(D_8AB168D8, new_var);
@@ -768,6 +689,9 @@ s32 func_8AB07E6C(s32 arg0)
 
   return sp1C;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07E6C.s")
+#endif
 /* mkdraft:func_8AB07E6C end */
 
 /* mkdraft:func_8AB07F80 begin */
@@ -1531,17 +1455,8 @@ extern s32 func_8AB0A8D4(s32);
 extern void func_8AB04AE4(void);
 extern void TextHighlight_AnimateScales(void);
 
-// Retail names the D_8AB16C20[0] pointer with $v0.  This body keeps the
-// discarded func_8AB007E0() result in $v0 for the rest of the element
-// clears, so IDO 7.1 allocates $v1 there.  The three rewritten words differ
-// only in that register field and carry no relocation.
-
-#pragma REWRITE_FUNCTION_WORD(func_8AB0A720, 0x114, 0x8CE30000, 0x8CE20000)
-#pragma REWRITE_FUNCTION_WORD(func_8AB0A720, 0x118, 0x946A0002, 0x944A0002)
-#pragma REWRITE_FUNCTION_WORD(func_8AB0A720, 0x120, 0xA46E0002, 0xA44E0002)
-
-
-
+// NON_MATCHING: Register allocation and instruction scheduling still differ from retail.
+#ifdef NON_MATCHING
 s32 func_8AB0A720(s32 arg0) {
     s32 result = 0x20;
     s16 *counter = &D_8AB16CE4;
@@ -1561,7 +1476,7 @@ s32 func_8AB0A720(s32 arg0) {
         *((u16 *)((u8 *)(*p_ca4) + 2)) = (u16)(*((u16 *)((u8 *)(*p_ca4) + 2)) & 0xFFFD);
         func_8004C54C(0xF, (s32)&D_8AB11A04);
         func_8004C8A0(D_8AB126A8, 0x100, 0x39, D_8AB16CAC + 0x224);
-        { void *d; d = D_8AB11D00; if (d == 0) {} } // karodo
+        { void *d; d = D_8AB11D00; if (d == 0) {} } // FAKE: empty construct retained for code generation.
         *(u16 *)((u8 *)D_8AB11D00 + 2) = (u16)(*(u16 *)((u8 *)D_8AB11D00 + 2) | 1);
         D_8AB16CC0 = 1;
         func_80021ED8(0x37);
@@ -1585,6 +1500,9 @@ s32 func_8AB0A720(s32 arg0) {
     }
     return result;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB0A720.s")
+#endif
 /* mkdraft:func_8AB0A720 end */
 
 extern s16 D_8AB16CE6;

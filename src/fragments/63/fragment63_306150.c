@@ -418,10 +418,6 @@ extern s32 func_87E1369C(void);
 extern void func_87E027E0(void *arg0);
 extern void func_87F0277C(void *arg0);
 extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
-// Retail's call site sets only $a0: func_87E04030's second parameter in this file is
-// a scratch local, so the call takes one argument. IDO needs a no-prototype declaration
-// in scope to accept it; gcc's CC_CHECK rejects that call, so the host-check build gets
-// the two-argument spelling instead.
 #ifdef CC_CHECK
 #define CALL_87E04030(arg0) func_87E04030((arg0), 0)
 #else
@@ -430,27 +426,8 @@ extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
 extern u8 D_800CE060[];
 extern u8 *D_87E1EB78;
 
-// FAKE: register allocation (score 70 without these lines). IDO 7.1 materialises
-// the clamp's `v = 1` into a fresh temp for the following store, while retail
-// reuses the register that already holds v ($v0); every other instruction is
-// identical. The 13 rewrites below change only register fields, at the offsets
-// where the allocator's extra temp shifts the temp numbers.
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x184, 0x97AA0028, 0x97AB0028)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x1F4, 0x24080001, 0x24020001)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x1F8, 0xAE480004, 0xAE420004)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x204, 0x32090C00, 0x320A0C00)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x20C, 0x51200004, 0x51400004)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x210, 0x97AA0028, 0x97AB0028)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x21C, 0x97AA0028, 0x97AB0028)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x220, 0x314B4000, 0x316D4000)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x224, 0x1160001C, 0x11A0001C)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x244, 0x240D0003, 0x240C0003)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x248, 0xAE4D0000, 0xAE4C0000)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x290, 0x240C0001, 0x240E0001)
-#pragma REWRITE_FUNCTION_WORD(func_87E04114, 0x294, 0xAFAC002C, 0xAFAE002C)
-
-
-
+// NON_MATCHING: The clamp constant still changes the following temporary register allocation.
+#ifdef NON_MATCHING
 s32 func_87E04114(u8 *arg0)
 {
   extern s32 func_87E04030();
@@ -588,5 +565,8 @@ s32 func_87E04114(u8 *arg0)
   func_87E027E0(arg0);
   return result;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E04114.s")
+#endif
 /* mkdraft:func_87E04114 end */
 #endif

@@ -1904,7 +1904,7 @@ void func_84144514(void *arg0) {
 
     var_s3 = 0;
     var_s4 = 0;
-    // karodo: empty if on the arg0 byte re-walks uopt's GPR pool -- the extra dead
+    // FAKE: empty if on the arg0 byte re-walks uopt's GPR pool -- the extra dead
     // value web (lbu arg0+1) is colored ahead of the table-base computation, so the
     // entry webs land on v0/t6/t7 and the loop-body webs shift one slot (ring
     // rotation). 135 -> 0, no code emitted (condition CSEs into the real load).

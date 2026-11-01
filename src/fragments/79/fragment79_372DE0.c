@@ -113,7 +113,7 @@ void func_8410373C(void) {
         BattleAnim_RegisterAssetTable(new_var);
         table++;
         index++;
-        if (index) { } // karodo
+        if (index) { } // FAKE: empty test retained for code generation.
     }
 }
 /* mkdraft:func_8410373C end */

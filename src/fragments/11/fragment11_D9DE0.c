@@ -788,15 +788,8 @@ void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
 /* mkdraft:func_81606800 begin */
 extern s32 D_8160BE5C;
 
-// FAKE: IDO emits the `arg1 != 0 || arg0 != D_8160BE5C` test as `beq $a0,$t6`, while retail
-// has the same pair commuted (`beq $t6,$a0`, the loaded global in $rs). Rewriting only the
-// two register fields leaves every other word, the scheduling and both relocations intact;
-// without it this body scores 10.
-#pragma REWRITE_FUNCTION_WORD(func_81606800, 0xC, 0x108E002A, 0x11C4002A)
-// Colour state for the panel frame: D_8160BE5C caches arg0 so the display-list update is
-// emitted only when arg0 changes or arg1 forces it.
-
-
+// NON_MATCHING: The equality branch compares the same registers in the opposite operand order.
+#ifdef NON_MATCHING
 void func_81606800(s32 arg0, s32 arg1) {
     if (arg1 != 0 || arg0 != D_8160BE5C) {
         D_8160BE5C = arg0;
@@ -810,6 +803,9 @@ void func_81606800(s32 arg0, s32 arg1) {
         }
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606800.s")
+#endif
 /* mkdraft:func_81606800 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816068C0.s")
@@ -1027,7 +1023,7 @@ void func_81608044(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, s32 *arg5) 
     f32 alpha;
     f32 t;
     t = 1.0f - arg4;
-    if (!t) {} // karodo: diff score 380 without this empty block.
+    if (!t) {} // FAKE: diff score 380 without this empty block.
     alpha = t * t * t;
     if ((arg3 >= 0) && (arg2 >= 0)) {
         gDPSetCycleType((*(Gfx **)&D_800D0510)++, G_CYC_2CYCLE);

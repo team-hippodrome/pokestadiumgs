@@ -123,81 +123,15 @@ extern f32 D_86607718;
 extern f32 D_86607878;
 extern f32 D_8660787C;
 extern f32 D_86607880;
-//
 // Fragment54 per-frame timer refresh; takes no arguments and returns nothing.
 // The frame counter at D_86606720 is converted to seconds and kept in
 // D_8660673C (divide by 60.0f). Each of the four state words D_8660A9E0,
 // D_8660AA38, D_8660AA90 and D_8660AAE8 selects one timer slot: when its
 // value is 201 (0xC9) the current seconds value at D_86606750 is copied into
 // that slot's three floats, stored from the highest address down.
-//
-// Retail is 59 instructions / 0xEC bytes (asm/us/nonmatchings/fragments/54/
-// fragment54_code/func_86600E00.s). It loads the D_86606750 page base with
-// `lui $v1` at 0x24, hoists the page halves of three state words into
-// $t8/$t9/$t0 at 0x28/0x2C/0x30, stores and reloads the converted counter at
-// 0x34/0x38, and places `addiu $v1,$v1,%lo(D_86606750)` between that reload
-// and the div.s at 0x40.
-// The C body below compiles to the same 59 instructions, except that as1
-// emits `addiu $v1,$v1,%lo(D_86606750)` in the slot right after the `lui` at
-// 0x24 and then the three hoisted lui, a four-word rotation across
-// 0x28/0x2C/0x30/0x3C. The seconds conversion has to be its own basic block
-// for the rest of the stream to settle: wrapping exactly those two statements
-// (do/while(0) or if (1) { }) or closing the block with a label reaches the
-// rotation-only residual, while leaving the statements bare or wrapping a
-// different statement schedules the prologue differently as well. The two
-// pragmas below install the authenticated retail text and relocation
-// topology; the hash is the sha256 of the compiler text for this body after
-// COALESCE_AT_LUI has folded the page bases, so a different body refuses the
-// replacement instead of silently emitting the rotated form. All four
-// rotated words carry relocations, so SWAP_FUNCTION_WORDS and
-// REWRITE_FUNCTION_WORD cannot express the repair.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py 270 (the four-word rotation above, which fd.sh --reloc reports as
-// two relocated-field mismatches at 0xE0C and 0xE10).
-// clang-format off
-#pragma COALESCE_AT_LUI(func_86600E00, D_86607444, D_86607440, D_866075AC, D_866075A8, D_86607714, D_86607710, D_8660787C, D_86607878)
-#pragma REWRITE_FUNCTION_HEX(func_86600E00, 5fad3d6b5cb0d3d5ea9863dff5f9a586ab5874e9506087ecee6e5bd5abc4e76d, 3c0e00008dce00003c02000024420000448e20003c01427044815000468021a03c0f00003c0300003c1800003c1900003c080000e4460000c448000024630000460a4403e45000008def0000240200c9144f000700000000c46000003c010000e42000003c010000e4200000e42000008f1800003c030000246300001458000700000000c46000003c010000e42000003c010000e4200000e42000008f3900001459000700000000c46000003c010000e42000003c010000e4200000e42000008d0800001448000700000000c46000003c010000e42000003c010000e4200000e420000003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x0, 5, D_86606720)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x4, 6, D_86606720)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x8, 5, D_8660673C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xC, 6, D_8660673C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x20, 5, D_8660A9E0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x24, 5, D_86606750)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x28, 5, D_8660AA38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x2C, 5, D_8660AA90)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x30, 5, D_8660AAE8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x3C, 6, D_86606750)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x48, 6, D_8660A9E0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x5C, 5, D_86607448)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x60, 6, D_86607448)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x64, 5, D_86607444)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x68, 6, D_86607444)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x6C, 6, D_86607440)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x70, 6, D_8660AA38)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x74, 5, D_86606750)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x78, 6, D_86606750)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x88, 5, D_866075B0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x8C, 6, D_866075B0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x90, 5, D_866075AC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x94, 6, D_866075AC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x98, 6, D_866075A8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0x9C, 6, D_8660AA90)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xAC, 5, D_86607718)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xB0, 6, D_86607718)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xB4, 5, D_86607714)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xB8, 6, D_86607714)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xBC, 6, D_86607710)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xC0, 6, D_8660AAE8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xD0, 5, D_86607880)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xD4, 6, D_86607880)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xD8, 5, D_8660787C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xDC, 6, D_8660787C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_86600E00, 0xE0, 6, D_86607878)
-// clang-format on
 
-
-
+// NON_MATCHING: The timer address loads still have a four-instruction scheduling rotation.
+#ifdef NON_MATCHING
 void func_86600E00(void) {
     // Frame counter -> seconds, kept in D_8660673C for the four timers below.
     do { // FAKE: block boundary; without it diff.py 655.
@@ -230,6 +164,9 @@ void func_86600E00(void) {
         D_86607878 = D_86606750;
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86600E00.s")
+#endif
 /* mkdraft:func_86600E00 end */
 #endif
 

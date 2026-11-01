@@ -108,30 +108,11 @@ s32 func_825085E4(void) {
 /* mkdraft:func_82508620 begin */
 // func_82508620: if the transition state word is 3, set it to 1, set the
 // red-fill flag in D_82509684, and report the transition happened.
-//
-// Both objects live in fragment21's data section, so they are extern here.
-// IDO emits a fresh `lui $at` for each extern-symbolic memory operand and
-// schedules the second halfword store off a different base register; retail
-// (compiled where the storage was defined in the same translation unit)
-// reuses one $at page base and needs only three `lui`s. The C body below is
-// the natural 64-byte form; the pragmas install the 60-byte retail text and
-// its relocation topology. The hash argument is the sha256 of that 64-byte
-// IDO output and identifies the body the pragmas are allowed to replace.
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// the text is 64 bytes with an extra `lui at` (diff.py 320, rscore 335).
 extern s16 D_82509680;
 extern u16 D_82509684;
 
-#pragma REWRITE_FUNCTION_HEX(func_82508620, 329989841a239d73ef1c636dc66dfed3a35b6966a54dcd8ecb9123e7d493dd6b, 3c0e000085ce0000240100030000182515c10008240f00013c010000a42f00003c180000971800002403000137190001a439000003e0000800601025)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x0, 5, D_82509680)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x4, 6, D_82509680)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x18, 5, D_82509680)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x1C, 6, D_82509680)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x20, 5, D_82509684)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x24, 6, D_82509684)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82508620, 0x30, 6, D_82509684)
-
-
+// NON_MATCHING: The state and red-fill stores still use different page-base allocation.
+#ifdef NON_MATCHING
 s32 func_82508620(void) {
     struct {
         s16 unk_00;
@@ -147,6 +128,9 @@ s32 func_82508620(void) {
     }
     return result;
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_147D10/func_82508620.s")
+#endif
 /* mkdraft:func_82508620 end */
 
 

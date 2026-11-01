@@ -155,7 +155,7 @@ s32 func_8600CFDC(s32 arg0, void *arg1) {
     main_pool_pop_state(0x4D474B50);
     func_87F0F480(arg1);
     func_80027EE0(0xFFE);
-    // FAKE (karodo): empty if, emits no instructions. Its branch node rotates uopt's
+    // FAKE: empty if, emits no instructions. Its branch node rotates uopt's
     // register pool; without it the stage read and the 0x75C0 load swap registers
     // (diff score 35, 7 lines).
     if (1) {

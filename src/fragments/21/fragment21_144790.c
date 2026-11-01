@@ -261,7 +261,7 @@ void func_82504FB4(void *arg0, void *arg1) {
     f32 cos_ratio;
 
     *(s16 *)((u8 *)arg1 + 0xC) += 1;
-    if (1) { } if (1) { } // karodo: two empty statements; they retime uopt's colour walk so max takes $v1 and the reloaded timer takes $v0. One or none leaves the two registers swapped (score 40)
+    if (1) { } if (1) { } // FAKE: two empty statements; they retime uopt's colour walk so max takes $v1 and the reloaded timer takes $v0. One or none leaves the two registers swapped (score 40)
     if (*(s16 *)((u8 *)arg1 + 0xC) < max) {
         ratio = (f32)*(s16 *)((u8 *)arg1 + 0xC) / (f32)max;
         cos_ratio = D_8160BD18(ratio);
@@ -850,15 +850,10 @@ extern s16 D_82508FF2;
 extern s16 D_82508FF4;
 extern s16 D_82509004;
 extern s16 D_82509006;
-//
 // Fragment21 state-2 -> state-3 handoff. When the state halfword at
 // D_82508FF0 is 2, it is set to 3, the two halfwords at D_82508FF2 and
 // D_82508FF4 are zeroed, and the two s16 call arguments are stored to
 // D_82509004 and D_82509006.
-//
-// Retail is 80 bytes (asm/us/nonmatchings/fragments/21/fragment21_144790/
-// func_82507B6C.s): 20 instructions in which the store block is
-//
 //   lui  $at,%hi(D_82508FF0)   addiu $t7,$zero,3
 //   sh   $t7,%lo(D_82508FF0)($at)
 //   sh   $zero,%lo(D_82508FF2)($at)      <- same $at page base
@@ -866,35 +861,9 @@ extern s16 D_82509006;
 //   lui  $at,%hi(D_82509004)
 //   sh   $a0,%lo(D_82509004)($at)
 //   sh   $a1,%lo(D_82509006)($at)        <- reuses the D_82509004 page base
-//
-// i.e. two `lui $at` groups and the li *after* the page base is loaded.
-// The body here compiles to 84 bytes: as1 emits `li $t7,3` before the
-// `lui $at` and a third `lui $at` for D_82509006, because every store macro
-// expands to li-then-lui and the $at reuse happens only while as1 coalesces
-// (diff 170, see func_82507B6C.honest170.c). The pragmas below install the
-// authenticated retail text and relocation topology instead.
-//
-// The hash is the sha256 of the compiler's 84-byte text for the body written
-// here (after COALESCE_AT_LUI has run); any different body or compiler refuses
-// rather than silently emitting the unfolded form. `new_state` keeps IDO on
-// the `$at`-macro lowering, so the hashed text is the 84-byte form.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py 170 (one inserted `li $t7,3` before the `lui $at`, and the
-// D_82508FF2/D_82508FF4 stores spelled against the D_82508FF0 page base).
-#pragma COALESCE_AT_LUI(func_82507B6C, D_82508FF0, D_82508FF2, D_82508FF4)
-#pragma REWRITE_FUNCTION_HEX(func_82507B6C, d7b38946ab9bb35d99dcde14f5d94215644d255d790f40e56c3bbaf6588ff405, 3c0e000085ce0000afa40000afa5000400052c0000042400240100020004240315c1000900052c033c010000240f0003a42f0000a4200000a42000003c010000a4240000a425000003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x0, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x4, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x28, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x30, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x34, 6, D_82508FF2)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x38, 6, D_82508FF4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x3C, 5, D_82509004)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x40, 6, D_82509004)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x44, 6, D_82509006)
 
-
+// NON_MATCHING: The state constant and store page bases are scheduled differently.
+#ifdef NON_MATCHING
 void func_82507B6C(s16 arg0, s16 arg1) {
     int new_state = 3;
 
@@ -906,6 +875,9 @@ void func_82507B6C(s16 arg0, s16 arg1) {
         D_82509006 = arg1;
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507B6C.s")
+#endif
 /* mkdraft:func_82507B6C end */
 
 
@@ -935,53 +907,9 @@ void func_82507BD0(void) {
 extern u16 D_82508FF6;
 extern s16 D_82508FF4;
 extern s16 D_82508FF8;
-//
-// Fragment21 context restart. States 2 and 4 are rewritten to 6 (the state
-// Fragment21_UpdateCloseTransition processes), the halfwords at D_82508FF4
-// and D_82508FF8 are zeroed, and bit 3 (0x8) of D_82508FF6 is cleared -- the
-// close-request flag that Fragment21_RequestClose sets.
-//@src/fragments/21/fragment21_144790.c
-//
-// Retail is 76 bytes (asm/us/nonmatchings/fragments/21/fragment21_144790/
-// func_82507BFC.s): 19 instructions in which the D_82508FF4 store reuses the
-// $at page base loaded for the D_82508FF0 store, the D_82508FF8 store loads
-// its own base, and the D_82508FF6 load is scheduled after the D_82508FF8
-// store. IDO gives every extern-symbolic memory operand its own `lui $at`,
-// so the body below compiles to 80 bytes: a fourth `lui $at` before the
-// D_82508FF4 store, and the D_82508FF6 `lhu` scheduled into that same gap.
-//
-// COALESCE_AT_LUI cannot close it: coalesce_object.plan_runs joins only macro
-// pairs whose gap holds no load, and the `lhu` sits inside the D_82508FF4
-// pair's gap. Deleting that `lui` alone would also leave the `lhu` before the
-// D_82508FF4 store, so the folded text still would not be retail's
-// instruction order. The pragmas install the retail text and its relocation
-// topology instead. The hash is the sha256 of the compiler's 80-byte text for
-// the body written here; a different body or compiler refuses rather than
-// silently emitting the unfolded form.
-//
-// The `new_state`/`mask` locals are not required by the pragmas (they replace
-// the text); they keep the body on IDO's `$at`-macro lowering, so the text
-// the hash authenticates is the 80-byte form. Written with literal constants
-// the same statements materialize the address of D_82508FF0 in a register
-// instead and compile to a larger, differently shaped body.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py 160, rscore 165 (.text 4 bytes long, one extra `lui $at`, and the
-// D_82508FF6 load two instructions early).
-#pragma REWRITE_FUNCTION_HEX(func_82507BFC, 993e5b856fc392bf9146ed006ec2c75326ab46b194ac5d718b05c4415e44d46d, 3c0200008442000024010002240e0006104100033c0f000024010004144100093c010000a42e0000a42000003c010000a420000095ef00003c01000031f8fff7a438000003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x0, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x4, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x14, 5, D_82508FF6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x20, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x24, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x28, 6, D_82508FF4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x2C, 5, D_82508FF8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x30, 6, D_82508FF8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x34, 6, D_82508FF6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x38, 5, D_82508FF6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507BFC, 0x40, 6, D_82508FF6)
 
-
+// NON_MATCHING: A flag load separates stores that share a page base in retail.
+#ifdef NON_MATCHING
 void func_82507BFC(void)
 {
     int new_state = 6;
@@ -994,55 +922,18 @@ void func_82507BFC(void)
         D_82508FF6 &= mask;
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507BFC.s")
+#endif
 /* mkdraft:func_82507BFC end */
 
 /* mkdraft:func_82507C48 begin */
 extern s16 D_82508FF8;
 extern u16 D_82508FF6;
 extern s16 D_82508FF4;
-//
-// Fragment21 start/restart. States 2 and 4 are rewritten to 6, the halfwords
-// at D_82508FF4 and D_82508FF8 are set to 0 and 1, and bit 3 (0x8) of the flag
-// halfword at D_82508FF6 is cleared -- the close-request bit that
-// Fragment21_RequestClose sets with `pool->flags | 8`.
-//
-// Retail is 80 bytes (asm/us/nonmatchings/fragments/21/fragment21_144790/
-// func_82507C48.s): 20 instructions in which the D_82508FF4 store reuses the
-// $at page base loaded for the D_82508FF0 store (one `lui $at` for the page
-// and no `lui` of its own), and the D_82508FF6 `lhu` is scheduled after the
-// D_82508FF8 store.
-//
-// This body compiles to 84 bytes: as1 emits a fresh `lui $at` for the
-// D_82508FF4 store (the missing $at CSE), which pushes the D_82508FF6
-// `lui`/`lhu` pair into the D_82508FF4 store's macro-pair latency gap
-// (diff 390). COALESCE_AT_LUI cannot close it: it refuses the fold because
-// that gap holds a load (`coalesce_cc: error: no fold applied ...`), and even
-// with a `volatile` flag access reshaping the pair the best it reaches is 190.
-// The pragmas below install the authenticated retail text and relocation
-// topology instead.
-//
-// The hash is the sha256 of the compiler's 84-byte text for the body written
-// here; any different body or compiler refuses rather than silently emitting
-// the unfolded form. `new_state`/`mask` keep IDO on the `$at`-macro lowering,
-// so the hashed text is the 84-byte form.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py 390 (rscore 390, .text 4 bytes long, one extra `lui $at` before the
-// D_82508FF4 store and the D_82508FF6 load scheduled into that gap).
-#pragma REWRITE_FUNCTION_HEX(func_82507C48, b25f24160917492325272c511413133de9059265dbaeaf7daf8642125272ace6, 3c0200008442000024010002240e000610410003240f0001240100041441000a3c010000a42e0000a42000003c010000a42f00003c180000971800003c0100003319fff7a439000003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x0, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x4, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x20, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x24, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x28, 6, D_82508FF4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x2c, 5, D_82508FF8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x30, 6, D_82508FF8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x34, 5, D_82508FF6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x38, 6, D_82508FF6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x3c, 5, D_82508FF6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507C48, 0x44, 6, D_82508FF6)
 
-
+// NON_MATCHING: A flag load separates stores that share a page base in retail.
+#ifdef NON_MATCHING
 void func_82507C48(void) {
     int new_state = 6;
     u16 mask = 0xFFF7;
@@ -1054,6 +945,9 @@ void func_82507C48(void) {
         D_82508FF6 &= mask;
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82507C48.s")
+#endif
 /* mkdraft:func_82507C48 end */
 
 void Fragment21_RequestClose(void) {

@@ -12,18 +12,12 @@ extern s16 D_8F600C02;
 extern s16 D_8F600C04;
 extern s16 D_8F600C06;
 extern void _bzero(void *, s32);
-//
 // Clears the 0x2020-byte region at D_8F600BF0, records the caller's pointer in
 // the first word of that region, sets four mode flags (BF4, BF8, BFE to 1;
 // C00, C02 to -1), clears C06, and copies the word at arg0+0xC into C04 as a
 // halfword.  arg0 is kept in a stack home slot because it must survive the
 // _bzero call; the copied word is read before the epilogue through a saved
 // local.
-//
-// Retail is 124 bytes (asm/us/nonmatchings/fragments/74/fragment74_code/
-// func_8F600020.s): 31 instructions with three `lui $at,0x8F60` page-base
-// loads, each shared by an interleaved group of stores:
-//
 //   lui $at,%hi(D_8F600BF4)  li $t9,1
 //   sh  $t9,%lo(D_8F600BF4)($at)
 //   sw  $t8,%lo(D_8F600BF0)($at)
@@ -36,41 +30,9 @@ extern void _bzero(void *, s32);
 //   lw  $t5,0xC($t4)
 //   sh  $zero,%lo(D_8F600C06)($at)
 //   sh  $t5,%lo(D_8F600C04)($at)
-//
-// The body here compiles to 144 bytes: as1 gives every store its own
-// `lui $at` because a store macro expands to li-then-lui and the reuse only
-// happens inside as1's coalescer, whose run rules require the stores to be
-// contiguous in emission order; the C00/C02/C06/C04 run is split by a `lw`
-// and a `lw $ra`.  The repository's COALESCE_AT_LUI pass has the same
-// contiguity limit (tools/coalesce_object.py::plan_runs), so no source
-// spelling reachable with this toolchain produces three interleaved shared
-// bases.  The pragmas below install the authenticated retail text and
-// relocation topology instead.
-//
-// The hash is the sha256 of the compiler's 144-byte text for the body written
-// here; any different body or compiler refuses rather than silently emitting
-// the unfolded form.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py scores 1199 (five extra `lui $at` and the matching schedule shifts,
-// 36 words versus the retail 31).
-#pragma REWRITE_FUNCTION_HEX(func_8F600020, 04bb655a2536f5fd90ec5cd1d381e915dd957d7a125c27479ed8610f4cab18a3, 27bdffe0afbf0014afa400208c8f00283c04000024840000240520200c000000afaf00188fb800203c01000024190001a4390000ac3800003c0100002408000124090001a4280000a42900008fac00183c010000240affff240bffff8fbf0014a42a0000a42b00008d8d000ca420000027bd002003e00008a42d0000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x10, 5, D_8F600BF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x14, 6, D_8F600BF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x1C, 4, _bzero)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x28, 5, D_8F600BF4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x30, 6, D_8F600BF4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x34, 6, D_8F600BF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x38, 5, D_8F600BF8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x44, 6, D_8F600BF8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x48, 6, D_8F600BFE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x50, 5, D_8F600C00)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x60, 6, D_8F600C00)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x64, 6, D_8F600C02)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x6C, 6, D_8F600C06)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F600020, 0x78, 6, D_8F600C04)
 
-
+// NON_MATCHING: Interleaved loads still prevent the retail sharing of five store page bases.
+#ifdef NON_MATCHING
 void func_8F600020(s32 arg0) {
     struct State { u8 pad[0x28]; s32 value; };
     s16 *flag;
@@ -99,6 +61,9 @@ void func_8F600020(s32 arg0) {
     *seventh_flag = 0;
     *sixth_flag = *(s32 *)((u8 *)(u32)saved_value + 0xC);
 }
+#else
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/74/fragment74_code/func_8F600020.s")
+#endif
 /* mkdraft:func_8F600020 end */
 
 extern s16 D_8F600BFE;

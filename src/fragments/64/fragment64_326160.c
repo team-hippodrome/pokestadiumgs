@@ -152,7 +152,7 @@ void func_87F039F0(s32 arg0, s32 arg1) {
     s32 index;
 
     if (arg0 == 5) {
-        // karodo: both reads below are dead, but each makes one pointer load of
+        // FAKE: both reads below are dead, but each makes one pointer load of
         // the entry chain a two-use web, so uopt colors the two heads $v0/$v1
         // instead of the single-use $t6/$t7; that shifts the tail's t-register
         // ring to start at $t9. Diff score 210 without the first line, 230

@@ -147,7 +147,7 @@ s32 func_882005F8(void) {
     group = (BoxGroup *)D_88A01C30;
     for (i = 0; i != 3; i++, group++) {
         box = group->boxes;
-        // karodo: both empty ifs emit no instructions. As a pair they move group from s8 to s7,
+        // FAKE: both empty ifs emit no instructions. As a pair they move group from s8 to s7,
         // leaving fp for j; dropping either one scores 123.
         if (group == 0) {}
         if (group && group) {}

@@ -532,7 +532,7 @@ void func_87E0736C(void *arg0) {
         if (*(u32 *)((u8 *)arg0 + 0x17C) >= 31U) {
             func_87E07330(arg0);
             func_800279C4(0xCF05);
-            if (1) { } // karodo: the empty block boundary keeps the tail increment's
+            if (1) { } // FAKE: the empty block boundary keeps the tail increment's
                        // temp in v0; without it uopt colors it v1 (diff score 40).
         }
         break;
