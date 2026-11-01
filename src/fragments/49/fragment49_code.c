@@ -685,7 +685,7 @@ void func_861023D4(void) {
 s32 func_86101F60(f32 *, f32 *, s32);
 void func_861021A8(f32 *, f32 *);
 void func_861023D4(void);
-void func_86102C08(void *, s32);
+s32 func_86102C08(void *, s32);
 extern void func_86101558(f32 *arg0, f32 *arg1);
 extern void func_86101E04(f32 arg0, f32 arg1, s32 arg2);
 extern void * D_87F119DC;
@@ -764,7 +764,61 @@ void func_86102B64(void *arg0, f32 *arg1, f32 *arg2) {
     *arg2 = (*(f32 *)((u8 *)(arg0) + (0x1C))) - temp_fv0_2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86102C08.s")
+/* mkdraft:func_86102C08 begin */
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern void func_86104B2C();
+
+// Moves the actor by one frame. With arg1 set, the controller delta from func_86101F60 is
+// used and func_86102B64 (clamped delta toward the target position at +0x18/+0x1C) only when
+// the controller reports no movement; with arg1 clear the clamped delta is always used. The
+// delta is applied by func_86101E04 and clamped by func_861023D4. When the target sits within
+// 700 * 0.04 * D_8610AD20[0x9768] of the camera position (+0x48/+0x4C) on both axes,
+// func_86104B2C picks a new random target and the function returns 1, else 0.
+
+
+s32 func_86102C08(void *arg0, s32 arg1) {
+    f32 x_delta;
+    f32 y_delta;
+    s32 moved;
+    f32 limit;
+    f32 temp_fv0;
+    f32 temp_fv1;
+    f32 temp_fv1_2;
+    f32 dx;
+    f32 dy;
+
+    moved = 0;
+    y_delta = 0.0f;
+    x_delta = 0.0f;
+    if (arg1 != 0) {
+        if (func_86101F60(&x_delta, &y_delta, 0) == 0) {
+            func_86102B64(arg0, &x_delta, &y_delta);
+        }
+    } else {
+        func_86102B64(arg0, &x_delta, &y_delta);
+    }
+    temp_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    temp_fv1 = *(f32 *)((u8 *)arg0 + 0x18);
+    dx = (temp_fv0 < temp_fv1) ? temp_fv1 - temp_fv0 : -(temp_fv1 - temp_fv0);
+    // FAKE: the comma expression schedules the 0.04f rodata load before the
+    // D_8610AD20 + 0x9768 address chain and keeps 700.0f an immediate; diff score 295
+    // without it. The same expression appears in func_86105204 in this file.
+    limit = (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f);
+    if (dx < limit) {
+        temp_fv0 = *(f32 *)((u8 *)D_87F119DC + 0x4C);
+        temp_fv1_2 = *(f32 *)((u8 *)arg0 + 0x1C);
+        dy = (temp_fv0 < temp_fv1_2) ? temp_fv1_2 - temp_fv0 : -(temp_fv1_2 - temp_fv0);
+        if (dy < limit) {
+            func_86104B2C(arg0);
+            moved = 1;
+        }
+    }
+    func_86101E04(x_delta, y_delta, 0);
+    func_861023D4();
+    return moved;
+}
+/* mkdraft:func_86102C08 end */
 
 extern s32 func_86101964(f32, s32, f32, f32, f32, f32);
 extern f32 func_86101AEC(s32, f32 *, f32 *);
@@ -829,7 +883,7 @@ void func_86102D50(void *arg0) {
 
 extern void func_86102720(void *, void *, f32);
 extern void func_86102908(void *, void *);
-extern void func_86102C08(void *, s32);
+extern s32 func_86102C08(void *, s32);
 extern void func_86102D50(void *);
 extern void * D_87F119DC;
 u16 func_86102E8C(void *arg0) {
