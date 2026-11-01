@@ -783,7 +783,23 @@ void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606304.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606694.s")
+/* mkdraft:func_81606694 begin */
+extern u32 D_800D0510;
+
+
+
+void func_81606694(s32 arg0, s32 arg1, s32 arg2) {
+    // FAKE: the u16 narrowing of s is invisible in the target code: _SHIFTL takes s - corr
+    // and masks it to 16 bits, so truncating s here changes no instruction. It decides only
+    // which registers IDO gives the last three Gfx words. Without it the function scores 80
+    // (thirteen register-name differences at 0x4524-0x45BC); any other 16-bit-narrowing node
+    // in the same place reaches score 0 as well ((u8)/(u16)/(u32) cast of arg2 before the
+    // shift, arg2 & 0xff, arg2 & 0xffff, or a u16 local holding arg2 << 8).
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 << 2, arg1 << 2,
+                            (arg0 + 8) << 2, (arg1 + 0xE) << 2,
+                            G_TX_RENDERTILE, (u16)(arg2 << 8), 0, 0x400, 0x400);
+}
+/* mkdraft:func_81606694 end */
 
 /* mkdraft:func_81606800 begin */
 extern s32 D_8160BE5C;
