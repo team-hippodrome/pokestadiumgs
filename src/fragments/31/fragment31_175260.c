@@ -75,7 +75,70 @@ s32 func_88202104(u8 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202158.s")
+/* mkdraft:func_88202158 begin */
+
+
+s32 func_88202158(u8 *arg0, s32 arg1) {
+    s32 var_v1;
+
+    var_v1 = func_88A008CC(arg0);
+    if ((arg1 & 1) && (((var_v1 == 1) && (func_88202098(*arg0) != 0)) || ((var_v1 == 0) && (func_88202104(*arg0) != 0)))) {
+        return 1;
+    }
+    if (arg1 & 2) {
+        if (func_88201FE0(arg0) != 0) {
+            return 1;
+        }
+    }
+    if ((arg1 & 4) && (var_v1 == 0)) {
+        if (func_88202104(*arg0) == 0) {
+            if ((*arg0 > 0) && (*arg0 < 251)) {
+                return 1;
+            }
+        }
+    }
+    if ((arg1 & 8) && (((var_v1 == 1) && (*arg0 == 40)) || ((var_v1 == 0) && (*arg0 == 32)))) {
+        return 1;
+    }
+    if ((arg1 & 0x10) && (((var_v1 == 1) && (*arg0 == 35)) || ((var_v1 == 0) && (*arg0 == 26)))) {
+        return 1;
+    }
+    if ((arg1 & 0x20) && (((var_v1 == 1) && (*arg0 == 36)) || ((var_v1 == 0) && (*arg0 == 27)))) {
+        return 1;
+    }
+    if ((arg1 & 0x40) && (((var_v1 == 1) && (*arg0 == 37)) || ((var_v1 == 0) && (*arg0 == 28)))) {
+        return 1;
+    }
+    if ((arg1 & 0x80) && (((var_v1 == 1) && (*arg0 == 38)) || ((var_v1 == 0) && (*arg0 == 29)))) {
+        return 1;
+    }
+    if ((arg1 & 0x100) && (((var_v1 == 1) && (*arg0 == 39)) || ((var_v1 == 0) && (*arg0 == 31)))) {
+        return 1;
+    }
+    if ((arg1 & 0x200) && (((var_v1 == 1) && (*arg0 == 79)) || ((var_v1 == 0) && (*arg0 == 62)))) {
+        return 1;
+    }
+    if ((arg1 & 0x400) && (((var_v1 == 1) && (*arg0 == 10)) || ((var_v1 == 0) && (*arg0 == 8)))) {
+        return 1;
+    }
+    if ((arg1 & 0x800) && (((var_v1 == 1) && (*arg0 == 32)) || ((var_v1 == 0) && (*arg0 == 22)))) {
+        return 1;
+    }
+    if ((arg1 & 0x1000) && (((var_v1 == 1) && (*arg0 == 33)) || ((var_v1 == 0) && (*arg0 == 23)))) {
+        return 1;
+    }
+    if ((arg1 & 0x2000) && (((var_v1 == 1) && (*arg0 == 34)) || ((var_v1 == 0) && (*arg0 == 24)))) {
+        return 1;
+    }
+    if ((arg1 & 0x4000) && (((var_v1 == 1) && (*arg0 == 47)) || ((var_v1 == 0) && (*arg0 == 34)))) {
+        return 1;
+    }
+    if ((arg1 & 0x8000) && (var_v1 == 0) && (*arg0 == 169)) {
+        return 1;
+    }
+    return 0;
+}
+/* mkdraft:func_88202158 end */
 
 // Same 12-byte layout as LabPCStorageList in
 //@src/fragments/31/fragment31_1736F0.c
