@@ -428,7 +428,79 @@ void func_83402D00(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83402DA8.s")
+/* mkdraft:func_83402DA8 begin */
+extern s32 D_834041B8;
+extern f32 D_83403D7C;
+extern f32 D_834041D4;
+extern f32 D_834046AC[3];
+extern u8 D_83404688;
+extern u8 D_83404250;
+extern s32 D_834047F0;
+extern void func_83401E64(void);
+extern void func_83400EA4(s32);
+extern void func_83402D00(void);
+extern void func_83402C80(void);
+extern void func_8003F1DC(void *);
+
+
+
+void func_83402DA8(void) {
+    // Three 32-bit words of a position; D_834046AC receives a copy of D_834041D4.
+    typedef struct { s32 x, y, z; } Fragment58PositionWords;
+
+    s32 value;
+    s32 var_a1;
+    f32 height;
+
+    if (*(s32 *)((u8 *)&D_83404188 + 0x1C) == 1) {
+        func_83401E64();
+        return;
+    }
+
+    // D_834041B8 is the same field as D_83404188 + 0x30 through a separate
+    // symbol, so the 0xCF path re-reads it after func_83402D00 may update it.
+    value = *(s32 *)((u8 *)&D_83404188 + 0x30);
+    if (value > 0) {
+        if (D_834047F0 == 0xCF) {
+            func_83402D00();
+            value = D_834041B8;
+        }
+    }
+    func_83400EA4(value);
+    func_83402C80();
+
+    *(Fragment58PositionWords *)((u8 *)&D_834046AC) =
+        *(Fragment58PositionWords *)((u8 *)&D_834041D4);
+
+    // height caches the 0x38 value the comparison reads. The increment branch
+    // re-reads it after the store; the call branch re-reads it after the call;
+    // the decrement branch keeps the cached value because 0x38 is unchanged.
+    if ((height = *(f32 *)((u8 *)&D_83404688 + 0x38)) < D_83403D7C) {
+        *(f32 *)((u8 *)&D_83404688 + 0x38) = height + 0.0085;
+        height = *(f32 *)((u8 *)&D_83404688 + 0x38);
+    } else if (*(u8 *)((u8 *)&D_83404688 + 0x1D) < 0x19) {
+        func_8003F1DC(&D_83404688);
+        height = *(f32 *)((u8 *)&D_83404688 + 0x38);
+    } else {
+        *(u8 *)((u8 *)&D_83404688 + 0x1D) -= 0x14;
+    }
+
+    var_a1 = 1;
+    if (*(u8 *)((u8 *)&D_83404688 + 0x1D) < 0x3C) {
+        var_a1 = 0;
+    }
+
+    *(f32 *)((u8 *)&D_83404688 + 0x34) = height;
+
+    *(u8 *)((u8 *)&D_83404250 + 0xA0) = 0xEE;
+    *(u8 *)((u8 *)&D_83404250 + 0xA1) = 0xFF;
+    *(u8 *)((u8 *)&D_83404250 + 0xA2) = 0xFF;
+    *(u8 *)((u8 *)&D_83404250 + 0xA3) =
+        var_a1 * (*(u8 *)((u8 *)&D_83404688 + 0x1D));
+
+    *(f32 *)((u8 *)&D_83404688 + 0x30) = *(f32 *)((u8 *)&D_83404688 + 0x34);
+}
+/* mkdraft:func_83402DA8 end */
 
 extern u8 D_83404250;
 extern s32 D_8340419C;
