@@ -2,7 +2,28 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF14E40.s")
+/* mkdraft:func_8AF14E40 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 D_8AF27140[];
+
+typedef struct {
+    u8 r, g, b, a;
+} Color;
+
+
+
+void func_8AF14E40(s16 arg0, s16 arg1, s16 arg2, s16 arg3, Color arg4) {
+    Color *color = &arg4; // FAKE: the alias makes the draw-list cursor spill at four packet sites instead of two; diff score 1466 without it.
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, color->r, color->g, color->b, color->a);
+    gDPLoadTextureBlock(D_800D0510++, D_8AF27140, G_IM_FMT_IA, G_IM_SIZ_16b, 4, 2, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+    gSPTextureRectangle(D_800D0510++, arg0 * 4, arg1 * 4,
+        (arg0 + arg2) * 4, (arg1 + arg3) * 4, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_8AF14E40 end */
 
 extern s16 D_8AF337E8[17][17];
 extern s16 Trade_GetSelectedBox(s16);
