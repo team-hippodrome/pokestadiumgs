@@ -319,7 +319,72 @@ void Trade_UpdateBoxSlotShrink(void *arg0)
   }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_885055A0.s")
+/* mkdraft:func_885055A0 begin */
+extern u8 D_88523008[];
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+// Per-slot animation step: dispatch on the slot's state word, then push the slot's animation
+// values into the display object embedded at offset 0x28 of the record. State 0 is the idle
+// state written by func_88505038, so it runs no step here but still syncs the object.
+// The embedded object's field layout (alpha at 0x1D, rotation at 0x1E, position at 0x24,
+// scale at 0x30) is S1_unk_D_86002F58_004_000's; //@include/229E0.h
+
+
+void func_885055A0(void) {
+    struct SlotModel {
+        u8 unk_000[0x1D];
+        u8 alpha;        /* 0x01D */
+        u8 unk_01E[4];   /* 0x01E rotation, x and y */
+        s16 rotationZ;   /* 0x022 */
+        f32 position[3]; /* 0x024 */
+        f32 scaleX;      /* 0x030 */
+        f32 scaleY;      /* 0x034 */
+    };
+    s32 i;
+    unk_D_885229B0 *p;
+
+    p = &D_885229B0[0];
+    i = 0;
+    if (*(s8 *)D_88523008 > 0) {
+        do {
+            switch (*(s32 *)p) {
+                case 0:
+                case 1:
+                    break;
+                case 2:
+                    func_885053E8(p);
+                    break;
+                case 3:
+                    func_88505440(p);
+                    break;
+                case 4:
+                    func_88505460(p);
+                    break;
+                case 5:
+                    func_88505514(p);
+                    break;
+                case 6:
+                    Trade_UpdateBoxSlotShrink(p);
+                    break;
+            }
+            if (*(s32 *)p != 0) {
+                struct SlotModel *model = (struct SlotModel *)((u8 *)p + 0x28);
+
+                Vec3f_SetComponentsDuplicate(model->position,
+                                             (f32)p->unk_00C - 320.0f,
+                                             240.0f - (f32)p->unk_00E,
+                                             -579.0f);
+                model->rotationZ = p->unk_018;
+                model->alpha = p->unk_01A;
+                model->scaleX = p->unk_020 * p->unk_01C;
+                model->scaleY = p->unk_024 * p->unk_01C;
+            }
+            i++;
+            p++;
+        } while (i < *(s8 *)D_88523008);
+    }
+}
+/* mkdraft:func_885055A0 end */
 
 extern void func_80057944(u8);
 void func_88505718(void) {
