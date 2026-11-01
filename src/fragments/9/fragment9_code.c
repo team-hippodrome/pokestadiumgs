@@ -407,7 +407,37 @@ void func_8FB02560(unk_D_8FB03DF8 *state) {
     func_8FB02108((unk_func_8FB02108 *)state);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02608.s")
+/* mkdraft:func_8FB02608 begin */
+extern s32 func_8FB00170(void *, void *);
+extern s32 func_8FB01C14(void *, void *, s32);
+extern s32 func_8FB00F78(void *, void *);
+
+// Mode 0 of func_8FB029B4. Runs the page selected by the u16 at offset 2 of
+// the record at arg0 + 0x44 on the page state at arg0 + 0x158C (10 units per
+// scroll for list pages, 16 for grid pages) and returns its result.
+s32 func_8FB02608(void *arg0) {
+    s32 var_v1;
+
+    var_v1 = 0;
+    switch (*(u16 *)((u8 *)*(void **)((u8 *)arg0 + 0x44) + 2)) {
+        case 0:
+            var_v1 = func_8FB01C14((u8 *)arg0 + 0x158C, arg0, 0xA);
+            break;
+        case 1:
+            var_v1 = func_8FB01C14((u8 *)arg0 + 0x158C, arg0, 0x10);
+            break;
+        case 2:
+            var_v1 = func_8FB00170((u8 *)arg0 + 0x158C, arg0);
+            break;
+        case 4:
+            break;
+        case 3:
+            var_v1 = func_8FB00F78((u8 *)arg0 + 0x158C, arg0);
+            break;
+    }
+    return var_v1;
+}
+/* mkdraft:func_8FB02608 end */
 
 extern s32 D_80087200;
 extern u8 D_8FB034AE;
