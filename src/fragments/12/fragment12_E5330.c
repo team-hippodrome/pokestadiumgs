@@ -314,9 +314,100 @@ void func_814005B0(void) {
     func_800476FC(&D_81420B20, 1);
     func_80047738(0, func_8004C990(0x31, 0), 0, 0);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81400884.s")
+extern Gfx *D_800D0510;
+void Fragment11_DrawThickPanelFrame(s32, s32, s32, s32);
+void func_81607B1C(s32, s32, s32, s32, f32, u8 *, u8 *);
+void func_81607DB0(s32, s32, s32, s32, f32, u8 *, u8 *);
+void func_81608918(s32, s32, f32 *);
+void func_80006F70(Gfx **, s16, s16, s16, s16);
+void func_800498C4(void);
+void func_800499EC(void);
+void func_800496A4(s32, s32);
+void func_800495BC(s32, s32, const char *, ...);
+void func_800495F8(s32, s32, s32, const char *, ...);
+void *func_8004C874(s32, s32);
+extern u8 D_8140782C[];
+extern u8 D_81407830[];
+extern u8 D_81407834[];
+extern u8 D_81407837[];
+extern u8 D_8140783C[];
+extern u8 D_81407840[];
+extern u8 D_81407844[];
+extern u8 D_81407847[];
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81400A50.s")
+// Draw two choice rows and their heading with the large font.
+// The caller supplies panel bounds and a transition fraction; the cursor updates its phase.
+//@src/fragments/12/fragment12_E7C00.c
+//@src/fragments/11/fragment11_D9DE0.c
+void Fragment12_DrawChoicePanel(s32 x, s32 y, s32 width, s32 height, f32 transition, s32 translucent, s32 selected_row, f32 *cursor_phase) {
+    const char *label_text;
+    s32 inner_x;
+    s32 inner_y;
+    s32 inner_width;
+    s32 inner_height;
+
+    Fragment11_DrawThickPanelFrame(x, y, width, height);
+    if (translucent != 0) {
+        func_81607DB0(inner_x = x + 8, inner_y = y + 8, inner_width = width - 19, inner_height = height - 19,
+                         transition, D_8140782C, D_81407830);
+    } else {
+        func_81607B1C(inner_x = x + 8, inner_y = y + 8, inner_width = width - 19, inner_height = height - 19,
+                         transition, D_81407834, D_81407837);
+    }
+    if (!(transition > 0.1f)) {
+        func_80006F70(&D_800D0510, (s16) inner_x, (s16) inner_y, (s16) inner_width, (s16) inner_height);
+        func_800498C4();
+        func_800496A4(16, 1);
+        label_text = func_8004C874(17, 5);
+        // The clipping bounds are no longer needed; reuse X for the label column.
+        inner_x = x + 81;
+        func_800495BC(inner_x, y + 48, label_text);
+        func_800495BC(inner_x, y + 78, func_8004C874(17, 6));
+        func_800495F8(x + 129, y + 16, 3, func_8004C874(17, 4));
+        func_800499EC();
+        // Reuse Y for the selected row offset before advancing the cursor phase.
+        inner_y = selected_row * 30;
+        func_81608918(x + 31, y + inner_y + 48, cursor_phase);
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+}
+
+// Draw two choice rows and their heading with the compact font.
+// The caller supplies panel bounds and a transition fraction; the cursor updates its phase.
+//@src/fragments/12/fragment12_E7C00.c
+//@src/fragments/11/fragment11_D9DE0.c
+void Fragment12_DrawCompactChoicePanel(s32 x, s32 y, s32 width, s32 height, f32 transition, s32 translucent, s32 selected_row, f32 *cursor_phase) {
+    const char *label_text;
+    s32 inner_x;
+    s32 inner_y;
+    s32 inner_width;
+    s32 inner_height;
+
+    Fragment11_DrawThickPanelFrame(x, y, width, height);
+    if (translucent != 0) {
+        func_81607DB0(inner_x = x + 8, inner_y = y + 8, inner_width = width - 19, inner_height = height - 19,
+                         transition, D_8140783C, D_81407840);
+    } else {
+        func_81607B1C(inner_x = x + 8, inner_y = y + 8, inner_width = width - 19, inner_height = height - 19,
+                         transition, D_81407844, D_81407847);
+    }
+    if (!(transition > 0.1f)) {
+        func_80006F70(&D_800D0510, (s16) inner_x, (s16) inner_y, (s16) inner_width, (s16) inner_height);
+        func_800498C4();
+        func_800496A4(8, 1);
+        label_text = func_8004C874(17, 5);
+        // The clipping bounds are no longer needed; reuse X for the label column.
+        inner_x = x + 81;
+        func_800495BC(inner_x, y + 40, label_text);
+        func_800495BC(inner_x, y + 66, func_8004C874(17, 6));
+        func_800495F8(x + 14, y + 14, 0, func_8004C874(17, 4));
+        func_800499EC();
+        // Reuse Y for the selected row offset before advancing the cursor phase.
+        inner_y = selected_row * 26;
+        func_81608918(x + 31, y + inner_y + 40, cursor_phase);
+        func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81400C24.s")
 
