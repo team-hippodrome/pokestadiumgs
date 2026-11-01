@@ -115,7 +115,99 @@ void func_86004F2C(void *arg0, void *arg1, Fragment47Vec3d *arg2)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004FDC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_8600520C.s")
+/* mkdraft:func_8600520C begin */
+extern void func_87F029B8(s32, u8);
+extern void func_87F02CB0(s32, s32);
+extern void func_86002470(s32, s32, s32);
+extern void func_86001A60(s32, s32);
+extern void func_8003F018(s32);
+extern s32 func_80071ADC(s32, s32);
+extern void func_8003F114(s32, s32, s32, s32);
+extern void func_86007648(s32, s32);
+
+// Model grid at +0x81D0: 2 sides x 4 x 4 entries of 0x168 bytes. This function
+// touches the flag byte at +1 of an entry; the remainder is untouched padding.
+typedef struct {
+    u8 pad_0000[1];
+    u8 flags;
+    u8 pad_0002[0x166];
+} Func8600520CNode;
+
+typedef struct {
+    u8 pad_0000[0x81D0];
+    Func8600520CNode nodes[2][4][4];
+} Func8600520CContext;
+
+// Rebuilds both sides' model and animation data, then every grid entry with
+// j < k, then dispatches on the byte at *(arg0 + 0x7580) + 0x2180: mode 2 when
+// that byte is 4, otherwise mode 0.
+//
+// Loop 1 runs until the running offset reaches 0xB60 (6 iterations of 0x2D8):
+// func_86002470 re-creates a side's model, submodel, effect and overlay graph
+// nodes from the resource file (+0x68A0) and the model array (+0x8128),
+// func_86001A60 initializes the animation block that starts at +0x75C8, and the
+// object advances 0x1998 per iteration.
+//
+// The do/while form and the statement order (offset, object, anim) are what put
+// the animation addiu in the branch delay slot.
+//
+// Loop 2 walks i < 2, j < 4, k < 4 and acts only on j < k. Each selected entry
+// is re-created by func_8003F018, the handle from func_80071ADC (0xC7 on side 0,
+// 0xC8 on side 1) is func_8003F114's fourth argument, and flag bit 0 is cleared.
+//
+// The entry address is spelled as a cast of arg0 at each use. With a node
+// pointer local the flag load shares the call argument's base (`lbu 1($s0)`);
+// retail derives the flag address from a second base, element + 0x8000 with
+// displacement 0x1D1, which also lets the ~1 mask live in $fp.
+//
+// The declaration order below is what produces the retail 0x60-byte frame with
+// resource_file at 0x40(sp) and the arg0 home at 0x60(sp): IDO homes a register
+// parameter at the frame size, so an order that changes the frame moves both.
+
+
+void func_8600520C(s32 arg0) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 offset;
+    s32 anim;
+    s32 object;
+    s32 *models;
+    s32 *resource_file;
+
+    func_87F029B8(arg0 + 0x74B0, *(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2182));
+    func_87F02CB0(arg0 + 0x74D0, 0x63);
+    object = arg0;
+    offset = 0;
+    resource_file = (s32 *)(arg0 + 0x68A0);
+    models = (s32 *)(arg0 + 0x8128);
+    anim = arg0 + 0x75C8;
+    do {
+        func_86002470(object, (s32)resource_file, (s32)models);
+        func_86001A60(anim, (s32)models);
+        offset += 0x2D8;
+        object += 0x1998;
+        anim += 0x2D8;
+    } while (offset != 0xB60);
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 4; j++) {
+            for (k = 0; k < 4; k++) {
+                if (j < k) {
+                    func_8003F018((s32)&((Func8600520CContext *)arg0)->nodes[i][j][k]);
+                    func_8003F114((s32)&((Func8600520CContext *)arg0)->nodes[i][j][k], 0, -1,
+                                  func_80071ADC((s32)resource_file, i > 0 ? 0xC8 : 0xC7));
+                    ((Func8600520CContext *)arg0)->nodes[i][j][k].flags &= ~1;
+                }
+            }
+        }
+    }
+    if (*(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2180) == 4) {
+        func_86007648(arg0, 2);
+        return;
+    }
+    func_86007648(arg0, 0);
+}
+/* mkdraft:func_8600520C end */
 
 typedef struct Func860053F8Record {
     u8 pad_0000[0x1814];
