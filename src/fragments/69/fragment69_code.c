@@ -462,7 +462,55 @@ void func_8F1008EC(Fragment69MenuState *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F100B54.s")
+/* mkdraft:func_8F100B54 begin */
+/* mkdraft:func_8F100B54 begin */
+// Two independent materialisations of D_8F1DF270 (loop cursor in s0, loop end
+// in s1) plus one of D_8F1DF282 (base in s5); the subtraction is a plain
+// pointer difference so IDO emits the /6 div-by-constant sequence.
+// FAKE: without REWRITE_FUNCTION_HEX the function is 3 words off (score 3).
+#pragma REWRITE_FUNCTION_HEX(func_8F100B54, 047c6ae38ad1829a067ad995ab26d744624f0781a4118c1895140dcaba906da3, 27bdffd0afb50028afb10018afb00014afb40024afb30020afb2001c3c1000003c1100003c150000afbf002c26b500002631000026100000241200062413000124140002860e000259c00026261000060c00000002002025860f00020211c02329e100085420001f261000060312001a0000101216400002000000000007000d2401ffff164100043c01800017010002000000000006000d104000070000000010530009000000001054000b000000001000000c261000060c0000000200202510000008261000060c0000000200202510000004261000060c00000002002025261000065615ffd8860e00028fbf002c8fb000148fb100188fb2001c8fb300208fb400248fb5002803e0000827bd0030)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x1C, 5, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x20, 5, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x24, 5, D_8F1DF282)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x2C, 6, D_8F1DF282)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x30, 6, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x34, 6, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x50, 4, func_8F10049C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0xB8, 4, func_8F1008EC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0xC8, 4, func_8F100594)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0xD8, 4, func_8F100740)
+#pragma REWRITE_FUNCTION_HEX(func_8F100B54, 047c6ae38ad1829a067ad995ab26d744624f0781a4118c1895140dcaba906da3, 27bdffd0afb50028afb10018afb00014afb40024afb30020afb2001c3c1000003c1100003c150000afbf002c26b500002631000026100000241200062413000124140002860e000259c00026261000060c00000002002025860f00020211c02329e100085420001f261000060312001a0000101216400002000000000007000d2401ffff164100043c01800017010002000000000006000d104000070000000010530009000000001054000b000000001000000c261000060c0000000200202510000008261000060c0000000200202510000004261000060c00000002002025261000065615ffd8860e00028fbf002c8fb000148fb100188fb2001c8fb300208fb400248fb5002803e0000827bd0030)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x1C, 5, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x20, 5, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x24, 5, D_8F1DF282)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x2C, 6, D_8F1DF282)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x30, 6, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x34, 6, D_8F1DF270)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0x50, 4, func_8F10049C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0xB8, 4, func_8F1008EC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0xC8, 4, func_8F100594)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8F100B54, 0xD8, 4, func_8F100740)
+
+
+void func_8F100B54(void) {
+    u8 *base = D_8F1DF282 - 18;
+    u8 *entry = D_8F1DF270;
+
+    do {
+        if (*(s16 *)(entry + 2) > 0) {
+            func_8F10049C((Fragment69MenuState *)entry);
+            if (*(s16 *)(entry + 2) >= 8) {
+                switch ((entry - base) / 6) {
+                    case 0: func_8F1008EC((Fragment69MenuState *)entry); break;
+                    case 1: func_8F100594((Fragment69MenuState *)entry); break;
+                    case 2: func_8F100740((Fragment69MenuState *)entry); break;
+                }
+            }
+        }
+        entry += 6;
+    } while (entry != D_8F1DF282);
+}
+/* mkdraft:func_8F100B54 end */
 #endif
 
 #ifdef VERSION_US
@@ -573,7 +621,67 @@ void func_8F101CDC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F101DA0.s")
+/* mkdraft:func_8F101DA0 begin */
+extern f32 D_8F1DEE4C;
+extern u8 D_8F1DEE50[];
+extern s32 D_8F1DECA0;
+extern u8 D_8F1DECA8;
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE2C;
+extern s32 D_8F1DEE38;
+extern s32 D_8F1DEE3C;
+extern s32 func_8003F2C4(s32, u8 *, s32);
+extern s32 func_8003F3BC(u8 *, s32);
+
+
+
+
+void func_8F101DA0(void) {
+    if (D_80087200->buttonsHeld & 4) {
+        D_8F1DEE4C -= 0.1f;
+        if (D_8F1DEE4C < 0.1f) {
+            D_8F1DEE4C = 0.1f;
+        }
+    }
+    if (D_80087200->buttonsHeld & 8) {
+        D_8F1DEE4C += 0.1f;
+        if (D_8F1DEE4C > 100.0f) {
+            D_8F1DEE4C = 100.0f;
+        }
+    }
+    if (D_80087200->stickXNorm != 0.0f) {
+        *(s16 *)((u8 *)D_8F1DEE50 + 2) -= (s16)(D_80087200->stickXNorm * 32.0f);
+    }
+    if (D_80087200->stickYNorm != 0.0f) {
+        *(s16 *)((u8 *)D_8F1DEE50 + 0) += (s16)(D_80087200->stickYNorm * 32.0f);
+        if (*(s16 *)((u8 *)D_8F1DEE50 + 0) > 0x3F00) {
+            *(s16 *)((u8 *)D_8F1DEE50 + 0) = 0x3F00;
+        }
+        if (*(s16 *)((u8 *)D_8F1DEE50 + 0) < -0x3F00) {
+            *(s16 *)((u8 *)D_8F1DEE50 + 0) = -0x3F00;
+        }
+    }
+    func_8F100C64(D_8F1DEE4C, D_8F1DEE50);
+    if (D_80087200->buttonsPressed & 0x20) {
+        D_8F1DEE28 = D_8F1DEE2C;
+        func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, -1);
+        func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+        D_8F1DEE38 = D_8F1DEE3C;
+        func_8003F3BC(&D_8F1DECA8, -1);
+        func_8003F3BC(&D_8F1DECA8, D_8F1DEE38);
+    }
+    if (D_80087200->buttonsPressed & 0x1000) {
+        if (D_8F103988 == -1) {
+            D_8F103988 = 0;
+        } else {
+            D_8F103988 = -1;
+        }
+    }
+    if ((D_8F103988 == 0) && (D_80087200->buttonsPressed & 0x8000)) {
+        D_8F103988 = D_8F103988 + 1;
+    }
+}
+/* mkdraft:func_8F101DA0 end */
 #endif
 
 #ifdef VERSION_US
