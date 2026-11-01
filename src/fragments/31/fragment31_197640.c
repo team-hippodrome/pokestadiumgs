@@ -142,7 +142,110 @@ s32 func_88224688(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_882246FC.s")
+/* mkdraft:func_882246FC begin */
+extern u8 D_88006020[];
+extern u8 D_88006880[];
+extern void func_88001900(void);
+extern void func_880020CC(void *);
+extern void func_8800225C(void *, s16, s16);
+extern void func_88002720(s16 *, u16, void *);
+extern void func_800226C0(s32);
+extern s32 func_8821B79C(void);
+extern void func_8821B980(u16, s32);
+extern void func_8821C0B0(void);
+extern void func_8821C2F4(void);
+extern void func_88224424(void);
+extern void func_882244F8(s32);
+extern s32 func_88224688(void);
+extern void *D_80087200;
+extern u8 D_88234758[];
+extern u32 D_88234860;
+
+
+
+void func_882246FC(void) {
+    u8 i;
+    s32 state_empty;
+    s32 buttons;
+
+    if (*(void **)((u8 *)D_88234860 + 0x30) != NULL) {
+        buttons = *(u16 *)((u8 *)D_80087200 + 8);
+        if (buttons & 0x4000) {
+            func_800226C0(72);
+            func_88224424();
+            return;
+        }
+        if (buttons & 0x8000) {
+            switch (*(s16 *)((u8 *)D_88234860 + 0x34)) {
+            case 4:
+                func_800226C0(92);
+                func_8821C2F4();
+                func_8821B980(2, func_88224688());
+                func_8821C0B0();
+                func_8800225C(D_88006880, 0, 0);
+                func_88224424();
+                return;
+            case 5:
+                func_800226C0(311);
+                func_8821C2F4();
+                for (i = 0; i < 4; i++) {
+                    *(u8 *)(D_88234758 + i + 9) = 0;
+                }
+                func_8821B980(2, 0);
+                func_8821C0B0();
+                func_8800225C(D_88006880, 0, 0);
+                func_88224424();
+                return;
+            default:
+                func_800226C0(71);
+                func_88001900();
+                func_882244F8(0);
+                return;
+            }
+        }
+        // Argument is the sub-record at +4: func_880020CC reads an s16 at its +0
+        // and a pointer at its +4, matching the pair stored at 0x4/0x8 of this state.
+        //@asm/us/nonmatchings/fragments/29/fragment29_167940/func_880020CC.s
+        func_880020CC((u8 *)(D_88234860) + 4);
+        if (func_8821B79C()) {
+            func_88002720((s16 *)((u8 *)D_88234860 + 0x34), 6, D_88006020);
+        } else {
+            func_88002720((s16 *)((u8 *)D_88234860 + 0x34), 5, D_88006020);
+        }
+    } else {
+        /* Empty-state test evaluated twice: when the 0x4000 button test below
+           falls through, it joins the second copy, which feeds the 0x8000 test. */
+        if (((*(s16 *)((u8 *)D_88234860 + 4) == 0) &&
+             (*(void **)((u8 *)D_88234860 + 8) == NULL) &&
+             (*(s16 *)((u8 *)D_88234860 + 0x26) == 0))) {
+            state_empty = 1;
+        } else {
+            state_empty = 0;
+        }
+        if (state_empty != 0) {
+            if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+                func_800226C0(72);
+                func_882244F8(1);
+                return;
+            }
+        }
+        if (((*(s16 *)((u8 *)D_88234860 + 4) == 0) &&
+             (*(void **)((u8 *)D_88234860 + 8) == NULL) &&
+             (*(s16 *)((u8 *)D_88234860 + 0x26) == 0))) {
+            state_empty = 1;
+        } else {
+            state_empty = 0;
+        }
+        if (state_empty != 0) {
+            if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+                func_88224554();
+                return;
+            }
+        }
+        func_880020CC((u8 *)(D_88234860) + 4);
+    }
+}
+/* mkdraft:func_882246FC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_8822497C.s")
 
