@@ -75,7 +75,7 @@ void func_82508014(s16 *arg0) {
 
     completed = 0;
     row = 0;
-    // karodo: dead read of D_82508828[0]. It puts D's address at the end of
+    // FAKE: dead read of D_82508828[0]. It puts D's address at the end of
     // uopt's register walk, so D takes fp and the 19200 constant takes s7, as
     // in the target. Without this line the score is 510.
     if (D_82508828[0] == 0) {}

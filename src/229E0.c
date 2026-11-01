@@ -1508,7 +1508,7 @@ void func_8002B1CC(void) {
             return;
         }
     }
-    // karodo: empty block; it ends the outer if's basic block. Without it the tail
+    // FAKE: empty block; it ends the outer if's basic block. Without it the tail
     // D_80090B98 load is `lui a1; lw a1,(a1)` instead of `lui v0; lw a1,(v0)`; diff score 10.
     if (1) {
     }
