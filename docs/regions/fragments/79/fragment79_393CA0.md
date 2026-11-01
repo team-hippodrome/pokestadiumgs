@@ -2505,3 +2505,43 @@ syntax check and full US retail ROM comparison, MD5
 Naming and formatting preserved whole-module bytes, symbol extents, and
 relocations in normal and +20-line controls. Earlier pointer-loop variants and
 their final scheduling residual are superseded by this indexed-loop result.
+
+#### Opponent faint resolution accepted (2026-10-31)
+
+`Battle_ResolveOpponentFaint` (formerly `func_84133C10`, 768 bytes) resolves
+the opposite side's fainting, also processes the supplied side if its HP is
+zero, chooses the battle result when neither side can continue, and refreshes
+the affected sides. `func_84133F10` supplies the surviving side when the
+opponent's halfword HP at offset 0x26 is zero. The two-element local array holds
+whether each side has remaining eligible Pokemon (`func_84126320(side) > 0`).
+
+The historical candidates reversed several side arguments, used an incorrect
+record-advance helper, and omitted portions of the double-faint path. Correcting
+those operations yielded 772 bytes. An explicit unsigned cast in the side
+predicate removed a separately saved signed promotion. Replacing the local
+record-pointer variable with direct table expressions recovered the 72-byte
+frame; reversing the final pointer comparison operands resolved the last word.
+
+`battle-faint-pointer-order8` candidate 0 passed the canonical host syntax and
+full US ROM gate on baseline `1c35d5bb`, retail MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The same transaction changed its stale
+forward declaration from s32 to u8, as supported by the incoming mask and
+callers. Naming preserves its original linker alias. Whole-module naming
+controls passed normally and with twenty leading blank lines. The earlier
+33F10 prototype prerequisite is resolved; its draft still needs independent
+acceptance. Compiler captures and helpers remain private diagnostic artifacts.
+
+#### Side command faint routing accepted (2026-11-01)
+
+`Battle_ResolveSideAfterCommands` (formerly `func_84133F10`, 264 bytes) clears
+transient flags, runs the side command sequence, and checks both sides' halfword
+HP fields at offset 0x26. It calls `Battle_ResolveOpponentFaint` with the
+opposite side of a fainted Pokemon and returns one when fainting is handled.
+Otherwise it applies residual status damage and returns zero if play continues.
+
+The previously blocked byte-callee transaction is now resolved by the accepted
+resolver. `battle-turn-faint8` candidate 0 uses byte side/peer indices and direct
+halfword HP checks; it passed the canonical host syntax check and full US ROM
+gate on `6aa30b4f`, retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Naming
+preserved complete-module sections, function extents, and relocations in normal
+and +20-line controls. The original function address remains a linker alias.
