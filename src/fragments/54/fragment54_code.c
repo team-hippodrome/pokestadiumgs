@@ -523,7 +523,98 @@ block_14:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866023F4.s")
+/* mkdraft:func_866023F4 begin */
+extern s32 D_86606714;
+extern s32 D_86606734;
+extern s32 D_86606740;
+extern u8 D_86606788;
+extern s32 D_8660678C;
+extern u8 D_866098A0[];
+extern s32 D_8660A9DC;
+extern s32 D_8660AA34;
+extern s32 D_8660AA8C;
+extern s32 D_8660AAE4;
+extern u8 D_8660AAF0[];
+extern void func_8003F210(void *, s32);
+extern void func_8003F3BC(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s32);
+extern void ModelAnim_SetFrame(void *, s32);
+extern void ModelAnim_SetSpeed(void *, s32);
+
+
+
+void func_866023F4(s32 mode, void *arg1) {
+    s32 idx;
+    s32 *state;
+    s32 i;
+
+    idx = *(s32 *)((u8 *)arg1 + 0x14);
+    switch (mode) {
+    case 0:
+        func_8003F210(arg1, 0);
+        ModelAnim_SetFrame(arg1, 8);
+        break;
+    case 2:
+        if (((s32 *)D_8660AAF0)[idx] != 0 && D_8660678C == 1 && D_86606714 != 1) {
+            ModelAnim_SetSpeed(arg1, 0x10000);
+            if (*(s32 *)((u8 *)arg1 + 0x48) >> 16 >= 4) {
+                // The four iterations are unrolled at -O2; retail's shared
+                // `lui $at` per record comes from reaching both members through
+                // D_866098A0 instead of their individual D_866098xxD4/D0 aliases.
+                for (i = 0; i < 4; i++) {
+                    *(f32 *)(D_866098A0 + i * 0x168 + 0x34) = 0.0f;
+                    *(f32 *)(D_866098A0 + i * 0x168 + 0x30) = 0.0f;
+                }
+            }
+            if (*(s32 *)((u8 *)arg1 + 0x48) >> 16 >= 5) {
+                D_8660A9DC = 0;
+                D_8660AA34 = 0;
+                D_8660AA8C = 0;
+                D_8660AAE4 = 0;
+            }
+            state = (s32 *)((u8 *)&D_86606788 + idx * 4);
+            switch (state[0x11]) {
+            case 0:
+                break;
+            case 1:
+                ModelAnim_SetFrame(arg1, 5);
+                func_8003F210(arg1, 0);
+                state[0xD]++;
+                if (state[0xD] >= 4) {
+                    state[0xD] = 0;
+                    state[0x11] = 0;
+                }
+                break;
+            case 2:
+                ModelAnim_SetFrame(arg1, 0);
+                func_8003F210(arg1, 0);
+                state[0xD]++;
+                if (state[0xD] >= 4) {
+                    state[0xD] = 0;
+                    state[0x11] = 3;
+                }
+                break;
+            case 3:
+                if (*(s32 *)((u8 *)arg1 + 0x48) >> 16 >= D_86606740) {
+                    ModelAnim_SetFrame(arg1, (s16)D_86606740);
+                }
+                if (D_86606734 == 0) {
+                    if (state[0x19] == 5) {
+                        func_8003F3BC(arg1, 0);
+                    } else {
+                        func_8003F3BC(arg1, 1);
+                    }
+                    if (*(s16 *)((u8 *)arg1 + 0x5C) >= 5) {
+                        ModelAnim_SetEventFrame(arg1, 0);
+                    }
+                }
+                break;
+            }
+        }
+        break;
+    }
+}
+/* mkdraft:func_866023F4 end */
 #endif
 
 #ifdef VERSION_US
