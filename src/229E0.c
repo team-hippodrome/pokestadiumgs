@@ -1288,7 +1288,44 @@ s32 func_80028CE8(void *arg0, s32 arg1) {
     return (s32)node;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_80028D9C.s")
+/* mkdraft:func_80028D9C begin */
+extern u32 func_800194A0(void);
+extern s32 func_80028CE8(void *arg0, s32 arg1);
+extern void func_80028CA8(const void *sound_candidates);
+
+
+
+void func_80028D9C(void *arg0) {
+    struct Node { u32 a; u32 b; struct Node *next; };
+    struct Root { u32 a; struct Node *next; };
+    u32 pad0;                        // FAKE: unused; holds frame word 0x2c above count; diff score 24 without it.
+    u32 count;
+    u32 pad1[3];                     // FAKE: unused; holds frame words 0x24-0x1c below count; diff score 66 without it.
+    struct Node *found;              // FAKE: second name for the matched node; keeps it in a stack home across the
+                                     // two calls so uopt emits one reload after func_80028CA8; diff score 100 without it.
+    struct Node *node;
+
+    node = ((struct Root *)arg0)->next;
+    count = 1;
+    if (node->a == 0) {
+loop:
+        if (node->next != 0) {
+            node = node->next;
+            count++;
+            if (node->a == 0) {
+                goto loop;
+            }
+        }
+    }
+    found = node;
+    func_80028CA8((const void *)((struct Node *)func_80028CE8(arg0, func_800194A0() % count))->b);
+    node = found;
+    ((struct Root *)arg0)->a++;
+    if (node->next != 0 && ((struct Root *)arg0)->a >= node->a) {
+        ((struct Root *)arg0)->next = node->next;
+    }
+}
+/* mkdraft:func_80028D9C end */
 
 s32 func_80028E60(u32 arg0)
 {
