@@ -28,26 +28,58 @@ fresh native IDO 7.1 extraction/build and retail-ROM comparison, plus all 232
 instruction words checked against original assembly at ROM 0xE5B94/0xE5D60.
 Compatibility aliases retain the original address symbols.
 
-## Remaining batch owners
+## 2026-11-02: all three message panels accepted
 
-- `func_81400C24`: requeue after 48 source cells. Best 452-byte parent is
-  `fragment12-panels-branch-owned-bounds40-v2` candidate 17, normalized
-  0.9823/raw 0.9735. The native differences concern the Y/width argument
-  reloads and the default-color address register, plus the expected float
-  relocation. Statement/argument assignment mixtures, ternary versus if,
-  and ordinary register hints have not closed it. Next inspect the original
-  pre-branch Y reload and default-path width reload at the UGEN/as1 boundary.
-- `func_81400DE8` and `func_81400FA4`: requeue after 40 source cells each.
-  Retail keeps all four inner bounds in S0-S3. Current parents spill them
-  while the 128-byte formatted-text buffer is live. Narrowed carriers,
-  consumed input snapshots, ordinary register hints, early-return flow,
-  buffer signedness/scope and common-bound initialization do not recover
-  the combined shape. The earlier highest normalized parents are 0.8559
-  and 0.8547, respectively, and are not register-only matches. Next inspect
-  whether the three narrowed scissor arguments are already partial-memory
-  loads before global allocation, and compare their range costs with the
-  accepted choice panels. Do not add padding, unused copies or a fabricated
-  scissor/formatter interface.
+| Owner | Behavior-backed name | Instructions / bytes | Frame |
+| --- | --- | ---: | ---: |
+| `func_81400C24` | `Fragment12_DrawMessagePanel` | 113 / 452 | 64 |
+| `func_81400DE8` | `Fragment12_DrawValueMessagePanel` | 111 / 444 | 200 |
+| `func_81400FA4` | `Fragment12_DrawCompactValueMessagePanel` | 117 / 468 | 200 |
+
+The message panel fetches text-table 17 entry 8 and lowers messages shorter
+than two lines by 15 pixels. The value panels set formatting slot 3 and
+render table 17 entry 7 through a real 128-byte text buffer. The caller
+`func_81404470` selects these routines for panel types 2/3/4.
+
+All three accept the first `repeated-bounds:explicit-all:earlyFalse` spelling
+in `fragment12-repeated-bounds24` (candidates 0/8/16), at base `bb29ff9c`.
+Each float relocation is explicitly masked only to permit its sequential
+full-ROM gate; none is credited as an object-only link-verified match.
+The final gate contains all five accepted panels and passes normal host
+syntax and the complete retail US ROM comparison.
+
+### Compiler mechanism
+
+Repeat `x + 8`, `y + 8`, `width - 19`, and `height - 19` in the background
+and scissor calls. These are the actual inner bounds; no synthetic operation
+or new storage is introduced. Letting UOPT cache those repeated expressions
+recovers the original code. Replacing them with explicit named bound locals
+had changed the optimizer's representation and the later assembler motion.
+
+For the message panel, the retained Binasm and calibrated assembler trace
+showed the named X-bound store before the Y load. Moving Y before the branch
+would cross that store; the assembler instead hoisted the default color's
+high-half address. Repeated expressions restore the retail Y/width reloads
+and color register. In the formatted-value routines, repeated expressions
+also recover all four bounds in S0-S3 across the formatter calls. The only
+C local needed there is the consumed text buffer. The background calls and
+narrowed scissor calls retain their inspected signatures.
+
+Named-local source investigations were bounded: 56 message-panel source
+cells and 40 cells per value panel preceded the successful family. A
+calibrated 60-second, single-worker search with stack differences enabled
+retained score 278 and produced no improved source. Its permitted mutations
+were statement/declaration order, commutation and compound assignments;
+dummy temporaries, type/interface changes and artificial masks were disabled.
+That scoped negative did not rule out the successful expression family.
+
+Naming, integer formatting, string-view casting and duplicate-prototype
+removal preserve complete-module sections, instruction bytes, function
+extents and semantic relocations under normal/+20-leading-blank builds.
+Fresh native IDO 7.1 extraction and a normal host/full-ROM build pass on
+merged base `25110a32`; all 341 final instruction words are independently
+checked against original assembly. Only C, names/aliases and these notes
+are published. Coverage and private tools are unchanged by these PRs.
 
 The repository-wide m2c context failed on an unrelated undeclared
 `PackedRecord`; its diagnostic was on stdout, so the draft wrapper's stderr
@@ -55,9 +87,10 @@ field appeared empty. A private context with inspected helper signatures
 produced all five drafts. The leading owner-local float literals and the
 existing per-file rodata subsegment were inspected directly; the file brief's
 path adaptation missed those local payloads. Neither tooling diagnostic counts
-as a source-shape rejection. The named-baseline follow-up stopped before any
-candidate because its old object retained the former symbol names; rebuild
-the named baseline before resuming it.
+as a source-shape rejection. An initial named-baseline follow-up stopped before any candidate because
+its old object retained former symbol names. After a normal named build,
+the eight call-layout cells ran and reproduced the same three-word residual;
+they are included in the 56-cell checkpoint above.
 
 Private receipts are under `scratch/fragment12-panel-preparation`, canonical
 batch directories `fragment12-panels-first40`, `fragment12-panels-bounds-lifetimes40`,
@@ -66,3 +99,11 @@ batch directories `fragment12-panels-first40`, `fragment12-panels-bounds-lifetim
 `fragment12-message-followup24`. Naming controls, the final native seal and
 original-word proof use the `fragment12-choice-panels-*` prefix. Private
 compiler inputs, scripts and build outputs are not published.
+
+The accepted message-family evidence is under `scratch/fragment12-repeated-bounds24`;
+normal/+20 naming and prototype controls use `fragment12-message-panels-naming`
+and `fragment12-message-panels-dedup`. The final native seal and 341-word
+proof use the `fragment12-message-panels-*` prefix. Calibrated pass evidence
+is retained in `fragment12-message-stock-passes` and
+`fragment12-message-as1-trace`; the bounded search receipt is
+`fragment12-message-call-layout8-named-observed-permute.json`.
