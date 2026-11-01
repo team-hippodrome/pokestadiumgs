@@ -846,7 +846,61 @@ void func_84122A78(void *arg0) {
     (*(u8 *)((u8 *)arg0 + 0x624)) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84122AB8.s")
+/* mkdraft:func_84122AB8 begin */
+extern f32 D_84189CBC;
+extern f32 D_84189CC0;
+extern f32 D_80087E50[];
+
+
+
+void func_84122AB8(u8 *arg0) {
+    f32 distance;
+    f32 base;
+    f32 limit;
+    switch (*(s8 *)(arg0 + 0x624)) {
+    case 0:
+        if ((*(s16 *)(arg0 + 0x5FC) >= 0) && (*(s16 *)(arg0 + 0x5FC) < 0x8001)) {
+            *(s16 *)(arg0 + 0x5FC) += 0x2D;
+        }
+        *(s16 *)(arg0 + 0x600) = D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FC)) >> 4] * 182.0f * 15.0f;
+        if ((*(s16 *)(arg0 + 0x5FE) >= 0) && (*(s16 *)(arg0 + 0x5FE) < 0x4001)) {
+            *(s16 *)(arg0 + 0x5FE) += *(s16 *)(arg0 + 0x600);
+        }
+        base = *(f32 *)(arg0 + 0x5E4);
+        *(f32 *)(arg0 + 0x30) = base - (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]);
+        *(f32 *)(arg0 + 0x34) = (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]) + base;
+        *(f32 *)(arg0 + 0x38) = base - (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]);
+        // FAKE: the repeated half-open test reproduces the target's two `slti v1,0x4000`
+        // guards; a single such test scores 320, `>= 0x4000 && < 0x8000` scores 500.
+        if ((*(s16 *)(arg0 + 0x5FE) >= 0x4000) && (*(s16 *)(arg0 + 0x5FE) >= 0x4000)) {
+            *(s16 *)(arg0 + 0x600) = 0x1554;
+            *(u8 *)(arg0 + 0x624) = 1;
+        }
+        return;
+    case 1:
+        // FAKE: one read of D_84189CBC into a local makes IDO fold %lo into the load
+        // (`lui at,%hi` + `lwc1 %lo(at)`) and reuse the value in both comparisons;
+        // reading the global in both comparisons scores 1255.
+        limit = D_84189CBC;
+        *(s16 *)(arg0 + 0x5FE) += *(s16 *)(arg0 + 0x600);
+        distance = *(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4];
+        if (distance <= limit) {
+            *(s16 *)(arg0 + 0x600) += 0x444;
+            *(f32 *)(arg0 + 0x60C) *= D_84189CC0;
+        }
+        base = *(f32 *)(arg0 + 0x5E4);
+        *(f32 *)(arg0 + 0x30) = base - (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]);
+        *(f32 *)(arg0 + 0x34) = (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]) + base;
+        *(f32 *)(arg0 + 0x38) = base - (*(f32 *)(arg0 + 0x60C) * D_80087E50[(u16)(*(s16 *)(arg0 + 0x5FE)) >> 4]);
+        if (*(f32 *)(arg0 + 0x60C) <= limit) {
+            *(f32 *)(arg0 + 0x30) = base;
+            *(f32 *)(arg0 + 0x34) = base;
+            *(f32 *)(arg0 + 0x38) = base;
+        }
+        break;
+    }
+}
+/* mkdraft:func_84122AB8 end */
 
 extern f32 D_84189CC4;
 
