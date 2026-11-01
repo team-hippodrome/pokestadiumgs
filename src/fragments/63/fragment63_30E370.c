@@ -192,7 +192,93 @@ void func_87E0AF44(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0B0EC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0B2CC.s")
+/* mkdraft:func_87E0B2CC begin */
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern void func_80007444(Gfx **, s32, s32, s32, s32, u16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_87F061F0(void);
+extern void func_87F06240(s32, s32, f32, f32, s32);
+extern f32 D_80087E50[];
+extern f32 D_87E1B690;
+
+
+
+void func_87E0B2CC(void *arg0) {
+    f32 temp_fs0;
+    f32 fv0;
+    s32 var_s0;
+    s32 var_s0_2;
+    s32 var_s0_3;
+    s32 var_s1;
+    s32 var_v0;
+    s32 var_v0_2;
+    s32 var_v1;
+    void *temp_v0;
+    void *temp_s2;
+
+    temp_v0 = *(void **)((u8 *)arg0 + 0xC);
+    temp_s2 = *(void **)((u8 *)temp_v0 + 0x88);
+    fv0 = (f32)((u32)(*(u32 *)((u8 *)temp_s2 + 0x38)) % 360U) * 20.0f * D_87E1B690;
+    if (fv0 >= 0.0f) {
+        var_v0 = (s32)(fv0 + 0.5f);
+    } else {
+        var_v0 = (s32)(fv0 - 0.5f);
+    }
+    temp_fs0 = D_80087E50[(s32)(var_v0 & 0xFFFF) >> 4];
+    func_80007444(&D_800D0510, 0, 0, 208, 86, 0xFFFEU);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetTextureFilter(D_800D0510++, G_TF_POINT);
+    gDPSetRenderMode(D_800D0510++, 0, 0x0F0A7008);
+    gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    func_8004D19C(0, 0, func_8004C990(425, 0), 0, 0);
+    var_v1 = *(*(s32 **)((u8 *)temp_s2 + 8));
+    if (var_v1 < *(s32 *)((u8 *)temp_s2 + 0x10)) {
+        if (temp_fs0 >= 0.0f) {
+            var_s0 = (s32)(temp_fs0 + 0.5f);
+        } else {
+            var_s0 = (s32)(temp_fs0 - 0.5f);
+        }
+        func_8004D19C(96, var_s0 + 6, func_8004C990(425, 2), 0, 0);
+        var_v1 = *(*(s32 **)((u8 *)temp_s2 + 8));
+    }
+    if (*(s32 *)((u8 *)temp_s2 + 0xC) < var_v1) {
+        fv0 = -1.0f * temp_fs0;
+        if (fv0 >= 0.0f) {
+            var_s0_2 = (s32)(fv0 + 0.5f);
+        } else {
+            var_s0_2 = (s32)(fv0 - 0.5f);
+        }
+        func_8004D19C(96, var_s0_2 + 51, func_8004C990(425, 1), 0, 0);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    fv0 = *(f32 *)((u8 *)temp_s2 + 0x14);
+    *(f32 *)((u8 *)temp_s2 + 0x14) += (((f32)(*(*(s32 **)((u8 *)temp_s2 + 8)) << 5)) - *(f32 *)((u8 *)temp_s2 + 0x14)) * 0.25f;
+    if (*(s32 *)((u8 *)temp_s2 + 4) == 0) {
+        func_87F061F0();
+        gDPSetScissor(D_800D0510++, G_SC_NON_INTERLACE, 92, 15, 116, 49);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 255, 230, 240, 255);
+        gDPSetEnvColor(D_800D0510++, 90, 0, 0, 255);
+        var_s0_3 = 1;
+        if ((*(s32 *)((u8 *)temp_s2 + 0x10) + 1) >= 2) {
+            var_s1 = 0x20;
+            do {
+                fv0 = *(f32 *)((u8 *)temp_s2 + 0x14);
+                if (fv0 >= 0.0f) {
+                    var_v0_2 = (s32)(fv0 + 0.5f);
+                } else {
+                    var_v0_2 = (s32)(fv0 - 0.5f);
+                }
+                func_87F06240(92, (var_v0_2 - var_s1) + 0x10, 1.0f, 1.0f, var_s0_3);
+                var_s0_3 += 1;
+                var_s1 += 0x20;
+            } while (*(s32 *)((u8 *)temp_s2 + 0x10) >= var_s0_3);
+        }
+    }
+}
+/* mkdraft:func_87E0B2CC end */
 
 extern void func_87F0AF4C(s32);
 void func_87E0B6D4(s32 arg0) {

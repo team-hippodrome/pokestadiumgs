@@ -88,7 +88,43 @@ void func_87E059F4(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E05AB0.s")
+/* mkdraft:func_87E05AB0 begin */
+extern s32 func_87E05458();
+extern void func_87F0B0FC(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4);
+extern void func_87F0B154();
+
+
+void func_87E05AB0(void) {
+    struct Position { f32 x; f32 y; f32 z; };
+    u8 *object;
+    struct Position saved_position;
+    u8 alpha;
+
+    object = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    func_87F0B4AC(object, (f32 *)((u8 *)D_87F119DC + 0x48), (f32 *)((u8 *)D_87F119DC + 0x54), (s16 *)((u8 *)D_87F119DC + 0x42));
+    if (*(s32 *)((u8 *)D_87E1EB90 + 8) == *(s8 *)(object + 0x98)) {
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 230) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) += 25;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 255;
+        }
+        func_87F0B0FC(object, 0, 15.0f, 5.0f, 6);
+        saved_position = *(struct Position *)((u8 *)D_87F119DC + 0x48);
+        (*(f32 *)((u8 *)D_87F119DC + 0x50)) += 15.0f;
+        func_87E05458(D_87F119DC);
+        *(struct Position *)((u8 *)D_87F119DC + 0x48) = saved_position;
+    } else {
+        *(u8 *)((u8 *)D_87F119DC + 0x60) -= 25;
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 200) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 200;
+        }
+        func_87F0B154();
+    }
+    alpha = *(u8 *)((u8 *)D_87F119DC + 0x60);
+    *(u8 *)((u8 *)D_87F119DC + 0x62) = alpha;
+    *(u8 *)((u8 *)D_87F119DC + 0x61) = alpha;
+}
+/* mkdraft:func_87E05AB0 end */
 
 /* mkdraft:func_87E05BF0 begin */
 extern Gfx *D_800D0510;
@@ -199,7 +235,54 @@ void func_87E06908(s32 arg0) {
     func_8004C8C0(0x1B2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E069A4.s")
+/* mkdraft:func_87E069A4 begin */
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 func_80040E80(s32, void *);
+extern u8 D_87E19AB0;
+extern s32 func_87F08E7C(u16, u16, u8, u8, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_87F0BD30(u8 *, u16, u16, s32);
+
+
+
+void func_87E069A4(u8 *arg0) {
+    s32 state;
+    s32 sp28;
+    s32 var_v1;
+    u8 *var_v0;
+
+    state = MainPool_AllocState(main_pool_get_available(), 0);
+    sp28 = state;
+    *(s32 *)((u8 *)arg0 + 0x160) = func_80040E80(state, &D_87E19AB0);
+    MainPool_FinalizeAllocation(sp28);
+    *(s32 *)((u8 *)arg0 + 0x58) = func_87F08E7C(0x102, 0x17, 0, 2, 0xF000000);
+    func_87F0BD30(arg0 + 0x148, 0x102, 0x17, 0xFFC85AFF);
+    var_v1 = 0;
+    var_v0 = arg0;
+    do {
+        var_v1 += 4;
+        *(u8 *)(var_v0 + 0xF4) = 0;
+        *(u8 *)(var_v0 + 0xFC) = 0;
+        *(u8 *)(var_v0 + 0x104) = 0;
+        var_v0 += 0x20;
+        *(u8 *)(var_v0 + 0xCC) = 0;
+    } while (var_v1 != 0xC);
+    *(s32 *)((u8 *)arg0 + 0xE8) = func_8004C990(0x18B, 0);
+    *(s32 *)((u8 *)arg0 + 0xF0) = func_8004C990(0x190, 0);
+    *(s32 *)((u8 *)arg0 + 0xF8) = func_8004C990(0x18C, 0);
+    *(s32 *)((u8 *)arg0 + 0x100) = func_8004C990(0x195, 0);
+    *(s32 *)((u8 *)arg0 + 0x108) = func_8004C990(0x176, 0);
+    *(s32 *)((u8 *)arg0 + 0x110) = func_8004C990(0x198, 0);
+    *(s32 *)((u8 *)arg0 + 0x118) = func_8004C990(0x17F, 0);
+    *(s32 *)((u8 *)arg0 + 0x120) = func_8004C990(0x19B, 0);
+    *(s32 *)((u8 *)arg0 + 0x128) = func_8004C990(0x1A1, 0);
+    *(s32 *)((u8 *)arg0 + 0x130) = func_8004C990(0x177, 0);
+    *(s32 *)((u8 *)arg0 + 0x138) = func_8004C990(0x193, 0);
+    *(s32 *)((u8 *)arg0 + 0x140) = func_8004C990(0x184, 0);
+}
+/* mkdraft:func_87E069A4 end */
 
 s32 func_800071A4(s32, s32, s32, s32, s32);
 
@@ -410,7 +493,56 @@ void func_87E07330(void *arg0) {
     func_87E0168C(0, 0x64, -1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E0736C.s")
+/* mkdraft:func_87E0736C begin */
+extern s32 func_800279C4(s32);
+extern void func_87E015F4(s32 arg0, s32 arg1);
+
+s32 func_87E07278(u8 *arg0);
+
+
+
+void func_87E0736C(void *arg0) {
+    u8 buffer[4];
+    u16 mask;
+
+    // 0x188 selects the running phase; 0x17C counts the frames spent in it.
+    switch (*(u32 *)((u8 *)arg0 + 0x188)) {
+    case 0:
+        if (*(u32 *)((u8 *)arg0 + 0x17C) >= 21U) {
+            func_87E015F4(*(u32 *)((u8 *)arg0 + 0x54) + 72, buffer);
+            func_8002781C(0xCF04, *(u8 *)((u8 *)arg0 + 0x17B), buffer);
+            (*(s32 *)((u8 *)arg0 + 8))++;
+            if (*(s32 *)((u8 *)arg0 + 8) >= 12) {
+                *(s32 *)((u8 *)arg0 + 8) = 0;
+            }
+            (*(s32 *)((u8 *)arg0 + 0x180))++;
+            if (*(s32 *)((u8 *)arg0 + 0x184) < *(s32 *)((u8 *)arg0 + 0x180)) {
+                mask = 1 << *(s32 *)((u8 *)arg0 + 8);
+                if ((*(u16 *)((u8 *)(*(void **)((u8 *)arg0 + 0x170)) + 0x21F4) & mask) == 0) {
+                    if ((func_8003570C() % (13 - func_87E07278(arg0))) == 0) {
+                        func_87E072FC(arg0, mask);
+                        *(u32 *)((u8 *)arg0 + 0x188) = 1;
+                        *(u32 *)((u8 *)arg0 + 0x17C) = 0;
+                    }
+                }
+            }
+        }
+        break;
+    case 1:
+        if (*(u32 *)((u8 *)arg0 + 0x17C) >= 31U) {
+            func_87E07330(arg0);
+            func_800279C4(0xCF05);
+            if (1) { } // karodo: the empty block boundary keeps the tail increment's
+                       // temp in v0; without it uopt colors it v1 (diff score 40).
+        }
+        break;
+    default:
+        break;
+    }
+
+    (*(u32 *)((u8 *)arg0 + 0x17C)) += 1;
+}
+/* mkdraft:func_87E0736C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E074BC.s")
 

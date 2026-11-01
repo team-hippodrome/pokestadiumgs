@@ -292,7 +292,47 @@ s32 func_87E0C664(s32 *arg0) {
     return sp18;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0C6CC.s")
+/* mkdraft:func_87E0C6CC begin */
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+
+
+
+void func_87E0C6CC(void *arg0) {
+    void *temp_s1;
+    s32 sp30;
+    s32 temp_s2;
+    s32 temp_v1;
+    s32 var_s0;
+
+    temp_s1 = *(void **)((u8 *)arg0 + 0xC);
+    func_80007444(&D_800D0510, 0, 0, 0x7C, 0x1C, 0xFFFE);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetTextureFilter(D_800D0510++, G_TF_POINT);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    func_8004D19C(0, 0, *(s32 *)((u8 *)temp_s1 + 4), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x00504340, 0);
+    func_8004D19C(5, 4, *(s32 *)((u8 *)temp_s1 + 8), 0, 0);
+    func_8004D19C(0x61, 2, *(s32 *)((u8 *)temp_s1 + 0x10), 0, 0);
+    if (*(s8 *)((u8 *)*(void **)temp_s1 + 1) == 0) {
+        sp30 = 0x2E;
+    } else {
+        sp30 = 0x40;
+        func_8004D19C(0x1E, 3, *(s32 *)((u8 *)temp_s1 + 0xC), 0, 0);
+    }
+    temp_s2 = func_8004C990(0x160, 0);
+    temp_v1 = *(s8 *)((u8 *)*(void **)temp_s1) - 1;
+    for (var_s0 = temp_v1; var_s0 >= 0; var_s0--) {
+        func_8004D19C(sp30 + var_s0 * 7, 4, temp_s2, 0, 0);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_87E0C6CC end */
 
 extern void func_87F0AF4C(s32);
 void func_87E0C8DC(s32 arg0) {

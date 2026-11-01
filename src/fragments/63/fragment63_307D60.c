@@ -122,11 +122,215 @@ s32 func_87E04AC4(u32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04AFC.s")
+/* mkdraft:func_87E04AFC begin */
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B24C(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern u32 func_8003570C(void);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04D2C.s")
+// Walks the list at arg0 + 0x14. Each node carries an object at offset 0x20;
+// the object's drawable at object + 0xC and the node's position floats at
+// 0x48..0x50 go to func_87F0B1A4. When the object's word at offset 0 matches
+// the owner's word at arg0 + 4 the drawable is placed at 0.0f/36.5f with the
+// height from +0x50 (priority 10), and func_87F0B24C scales it by 2.0f in all
+// three axes from the node's floats at +0x54. Otherwise the position floats
+// are used raw with the second shifted by -360 degrees (priority 15), and
+// func_87F0B2F4 sets the rotation from the halfword pair at +0x42 plus three
+// LCG draws at func_8003570C, each scaled from [0,1) over 4294967296.0f to
+// -45..45, -45..45 and -180..180 degrees.
+// The same call pair over the same list shape is in func_87E01F44 and
+// func_87E04D2C.
+//@src/fragments/63/fragment63_305090.c
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04ED4.s")
+
+void func_87E04AFC(void *arg0) {
+    f32 second_angle;
+    f32 third_angle;
+    u32 first_draw;
+    u32 second_draw;
+    u32 third_draw;
+    u8 *object;
+    u8 *state;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)arg0 + 0x14);
+    if (node != NULL) {
+        do {
+            object = *(u8 **)(node + 0x20);
+            state = object + 0xC;
+            if (*(s32 *)((u8 *)arg0 + 4) == *(s32 *)object) {
+                func_87F0B1A4(state, (f32 *)(node + 0x48), 0.0f, 36.5f,
+                    *(f32 *)(node + 0x50), 0xA, 0x2000);
+                func_87F0B24C(state, (f32 *)(node + 0x54), 2.0f, 2.0f, 2.0f,
+                    0xA, 0);
+            } else {
+                func_87F0B1A4(state, (f32 *)(node + 0x48), *(f32 *)(node + 0x48),
+                    *(f32 *)(node + 0x4C) + -360.0f, *(f32 *)(node + 0x50), 0xF,
+                    0x2000);
+                first_draw = func_8003570C();
+                second_draw = func_8003570C();
+                third_draw = func_8003570C();
+                second_angle = (f32)(u32)second_draw;
+                third_angle = (f32)(u32)third_draw;
+                func_87F0B2F4(state, (s16 *)(node + 0x42),
+                    (((f32)first_draw / 4294967296.0f) * 90.0f) - 45.0f,
+                    ((second_angle / 4294967296.0f) * 90.0f) - 45.0f,
+                    ((third_angle / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            }
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_87E04AFC end */
+
+/* mkdraft:func_87E04D2C begin */
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern u32 func_8003570C(void);
+
+// Walks the node list at arg0 + 0x14. Each node's state pointer (the word at
+// node + 0x20, plus 0xC) goes to func_87F0B1A4 with the node's position floats
+// at 0x48..0x50, the second shifted by -360 degrees, priority 15.
+// func_87F0B2F4 then receives the same state pointer with the node's halfword
+// pair at 0x42 and three angles built from func_8003570C draws, each scaled
+// from [0,1) over 4294967296.0f to -45..45 for the first two and -180..180 for
+// the third.
+// The same pair of calls runs over another node list in func_87E0AF44.
+//@src/fragments/63/fragment63_30E370.c
+
+
+void func_87E04D2C(void *arg0) {
+    f32 second_angle;
+    f32 third_angle;
+    u8 *state;
+    u32 first_draw;
+    u32 second_draw;
+    u32 third_draw;
+    u8 *object;
+    u8 *node;
+
+    node = *(u8 **)((u8 *)arg0 + 0x14);
+    if (node != NULL) {
+        do {
+            object = *(u8 **)(node + 0x20);
+            state = object + 0xC;
+            func_87F0B1A4(state, (f32 *)(node + 0x48), *(f32 *)(node + 0x48),
+                *(f32 *)(node + 0x4C) + -360.0f, *(f32 *)(node + 0x50), 0xF, 0x2000);
+            first_draw = func_8003570C();
+            second_draw = func_8003570C();
+            third_draw = func_8003570C();
+            second_angle = (f32)(u32)second_draw;
+            third_angle = (f32)(u32)third_draw;
+            func_87F0B2F4(state, (s16 *)(node + 0x42),
+                (((f32)first_draw / 4294967296.0f) * 90.0f) - 45.0f,
+                ((second_angle / 4294967296.0f) * 90.0f) - 45.0f,
+                ((third_angle / 4294967296.0f) * 360.0f) - 180.0f, 0xF, 0);
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_87E04D2C end */
+
+/* mkdraft:func_87E04ED4 begin */
+extern void func_800226C0(s32);
+extern s32 func_800279C4(s32);
+extern void func_87E0168C(s32 arg0, u8 arg1, s32 arg2);
+extern u8 *func_87E016C8(void);
+extern void func_87E04AFC(void *arg0);
+extern void func_87E04D2C(void *arg0);
+extern void func_87E134E8(void);
+extern s32 func_87E13688(void);
+extern s32 func_87E1369C(void);
+extern void func_87F0277C(void *arg0);
+extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
+extern u8 *D_87E1EB80;
+
+
+
+s32 func_87E04ED4(u8 *arg0) {
+    s32 sp3C;
+    s32 var_a0;
+    // FAKE: unused local. Its 0x34 home is never read or written; it only pads
+    // the frame to 0x40. Without it the frame is 0x38 (score 114), because the
+    // other three locals then shift down by 8.
+    s32 sp38;
+    u16 sp32;
+
+    sp3C = 5;
+    D_87E1EB80 = arg0;
+    sp32 = func_87F0E610(func_87E016C8(), (u8 *)-1);
+    switch (*(s32 *)arg0) {
+    case 0:
+        if (func_87E04AC4((u32) arg0) != 0) {
+            *(s32 *)arg0 = 1;
+        }
+        break;
+    case 1:
+        if (func_87E043F0(arg0) != 0) {
+            var_a0 = 0;
+        } else {
+            var_a0 = 1;
+        }
+        if ((func_87E1369C() != 0) && !(sp32 & 0x8000) && !(sp32 & 0x4000)) {
+            *(s32 *)(arg0 + 4) = (*(s32 *)(arg0 + 4) + ((sp32 & 0x400) > 0)) - ((sp32 & 0x800) > 0);
+            if (*(s32 *)(arg0 + 4) < var_a0) {
+                *(s32 *)(arg0 + 4) = 3;
+            }
+            if (*(s32 *)(arg0 + 4) >= 4) {
+                *(s32 *)(arg0 + 4) = var_a0;
+            }
+            if (sp32 & 0xC00) {
+                func_800279C4(0xCF01);
+            }
+        }
+        var_a0 = sp32 & 0x4000;
+        if (sp32 & 0x8000) {
+            func_87E04AFC(arg0);
+            *(s32 *)arg0 = 2;
+            func_87E134E8();
+            func_800279C4(0xCF02);
+            func_87E0168C(3, 0x8CU, 9);
+        }
+        if ((var_a0 != 0) && (func_87E13688() != 0)) {
+            func_87E04D2C(arg0);
+            *(s32 *)arg0 = 3;
+            func_800226C0(3);
+            func_87E0168C(3, 0x8CU, 0xE);
+        }
+        break;
+    case 2:
+        if (func_87E04AC4((u32) arg0) != 0) {
+            switch (*(s32 *)(arg0 + 4)) {
+            case 0:
+                sp3C = 0;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 3;
+                break;
+            case 1:
+                sp3C = 1;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 2;
+                break;
+            case 2:
+                sp3C = 2;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 1;
+                break;
+            case 3:
+                sp3C = 3;
+                *(s8 *)(*(u8 **)(arg0 + 0x270) + 0x2181) = 0;
+                break;
+            }
+        }
+        break;
+    case 3:
+        if (func_87E04AC4((u32) arg0) != 0) {
+            sp3C = 4;
+        }
+        break;
+    }
+    func_87F0277C(arg0 + 8);
+    func_87E04400(arg0);
+    return sp3C;
+}
+/* mkdraft:func_87E04ED4 end */
 
 extern void func_8004C8C0(s32);
 void func_87E05128(void) {

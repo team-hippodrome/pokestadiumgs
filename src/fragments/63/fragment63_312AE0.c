@@ -35,7 +35,91 @@ void func_87E0F288(void *arg0, s32 arg1) {
     *(s32 *)((u8 *)state + 0x1C) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E0F33C.s")
+/* mkdraft:func_87E0F33C begin */
+extern void *D_87F119DC;
+extern f32 D_80088E50[];
+extern void func_87E0F288(void *, s32);
+
+
+
+void func_87E0F33C(void) {
+    s32 rounded;
+    f32 angle;
+    f32 level;
+
+    // Bit 30 of the flags word, shifted into the sign bit as func_87E0F288 above tests
+    // bits 28..30. An `& 0x40000000` test instead shares that constant with the
+    // 0x40000000 call argument below, which loads a1 in the entry block rather than at
+    // 87E0F4B8.
+    if ((*(s32 *)((u8 *)D_87F119DC + 0xC) << 1) < 0) {
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 5) {
+            *(s16 *)((u8 *)D_87F119DC + 0x46) = 0;
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= ~0x40000000;
+            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+        } else {
+            angle = ((f32)*(s32 *)((u8 *)D_87F119DC + 0x1C) / 4) * 90.0f * 182.04167f;
+            if (angle >= 0.0f) {
+                rounded = (s32)(angle + 0.5f);
+            } else {
+                rounded = (s32)(angle - 0.5f);
+            }
+            // The table entry is bound to a local so both scaled terms read it from a
+            // register: the retail object loads it at 87E0F434, then multiplies
+            // (mul.s at 87E0F438). Inlined, the two mul.s results swap registers.
+            {
+                f32 cos_value = D_80088E50[(rounded & 0xFFFF) >> 4];
+                angle = 90.0f * cos_value * 182.04167f;
+            }
+            if (angle >= 0.0f) {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle + 0.5f);
+            } else {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle - 0.5f);
+            }
+        }
+    }
+    if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x20000000) {
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 5) {
+            *(s32 *)((u8 *)D_87F119DC + 0xC) &= ~0x20000000;
+            func_87E0F288(D_87F119DC, 0x40000000);
+        } else {
+            angle = ((f32)*(s32 *)((u8 *)D_87F119DC + 0x1C) / 4) * 90.0f * 182.04167f;
+            if (angle >= 0.0f) {
+                rounded = (s32)(angle + 0.5f);
+            } else {
+                rounded = (s32)(angle - 0.5f);
+            }
+            // The table entry is bound to a local so the subtraction from 1.0f starts
+            // the scaled expression: the retail object loads the entry at 87E0F55C and
+            // materializes 1.0f at 87E0F560.
+            {
+                f32 cos_value = D_80088E50[(rounded & 0xFFFF) >> 4];
+                angle = ((f32)1 - cos_value) * 90.0f * 182.04167f;
+            }
+            if (angle >= 0.0f) {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle + 0.5f);
+            } else {
+                *(s16 *)((u8 *)D_87F119DC + 0x46) = (s16)(s32)(angle - 0.5f);
+            }
+        }
+    }
+    if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x10000000) {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) += 0.25f;
+    } else {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) -= 0.25f;
+    }
+    level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
+    if (level > 1.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) = 1.0f;
+        level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
+    }
+    if (level < 0.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x5C) = 0.0f;
+        level = *(f32 *)((u8 *)D_87F119DC + 0x5C);
+    }
+    *(f32 *)((u8 *)D_87F119DC + 0x58) = level;
+    *(f32 *)((u8 *)D_87F119DC + 0x54) = level;
+}
+/* mkdraft:func_87E0F33C end */
 
 extern void *D_8009491C;
 extern Gfx *D_800D0510;
@@ -210,7 +294,40 @@ void func_87E10214(s32 arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E102D4.s")
+/* mkdraft:func_87E102D4 begin */
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+// Integer return type: the final gSPDisplayList keeps the display-list head in v0 and its
+// incremented value in t1. The body itself has no return statement, so no value is produced;
+// a void declaration colours the head v1 and its increment t9 instead.
+
+
+s32 func_87E102D4(s32 arg0, u8 *arg1) {
+    s16 sp58[4];
+    u16 *obj;
+    s32 sp50;
+
+    switch (arg0) {
+    case 0:
+        *(u16 *)(arg1 + 2) &= 0xFFFD;
+        return;
+    case 1:
+        if (((1 << *(s32 *)(arg1 + 0x20)) & *(u8 *)((u8 *)*(void **)((u8 *)(u32)D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) {
+            sp50 = *(s32 *)(arg1 + 0x20) + ((((1 << *(s32 *)(arg1 + 0x20)) & *(u8 *)((u8 *)*(void **)((u8 *)(u32)D_87E1EBB8 + 0x2C4) + 0x2182)) != 0) ? 6 : 2);
+            func_800504BC(sp58);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            obj = (u16 *)func_8004C990(*(u16 *)(arg1 + 0x24), sp50);
+            func_8004D1FC((u8 *)obj);
+            GfxRect_DrawTextured((s16) (*(s16 *)(arg1 + 8) + sp58[0]), (s16) (*(s16 *)(arg1 + 0xA) + sp58[1]),
+                                 (s16) (((f32) (u32)obj[0] * 0.6f >= 0.0f) ? (s32) ((f32) (u32)obj[0] * 0.6f + 0.5f) : (s32) ((f32) (u32)obj[0] * 0.6f - 0.5f)),
+                                 (s16) (((f32) (u32)obj[1] * 0.6f >= 0.0f) ? (s32) ((f32) (u32)obj[1] * 0.6f + 0.5f) : (s32) ((f32) (u32)obj[1] * 0.6f - 0.5f)),
+                                 0, 0, 0x6AB, 0x6AB, 0);
+            gSPDisplayList(D_800D0510++, D_80094F50);
+        }
+        return;
+    }
+}
+/* mkdraft:func_87E102D4 end */
 
 void func_87E10500(s32 arg0, u8 *arg1) { if ((arg0 != 0) && (arg0 == 1)) { *(s16 *)(arg1 + 0x26) = *(s8 *)((u8 *)(u32)D_87E1EBB8 + 0x938); } }
 
@@ -535,7 +652,72 @@ s32 func_87E11534(s32 count, s32 selected, u8 *entry, u8 inc, u8 dec) {
     return done;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E1162C.s")
+/* mkdraft:func_87E1162C begin */
+void func_87E0FBB4(s32 arg0, u8 *arg1, u32 arg2, u32 arg3);
+void func_87E0FC90(s32 arg0, u8 *arg1, void *arg2, u32 arg3, u32 arg4);
+s32 func_87E0FDB4(s32, u8 *, void *, u32, u32);
+extern s32 D_87E1A870[];
+extern s32 D_87E1A988[];
+extern s32 D_87E1AA10[];
+
+
+
+void func_87E1162C(s32 *arg0, s32 *arg1, s32 *arg2) {
+    s32 advance;
+    u8 *node;
+    s32 i;
+
+    // Func_87E11534 fades the selected entry of the two 8-byte entries at
+    // base+0x1C and returns 1 once it has reached 0xFF.
+    advance = 1;
+    if (func_87E11534(2, *(s32 *)((u8 *)(u32)D_87E1EBB8 + 8), (u8 *)(u32)D_87E1EBB8 + 0x1C, 0x20, 0x20) != 0) {
+        *arg0 = *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0xC);
+        *arg1 = *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x10);
+        *arg2 = *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x14);
+    } else {
+        *arg0 = -1;
+        *arg1 = -1;
+        *arg2 = -1;
+    }
+    switch (*arg0) {
+        case 6:
+            advance = 0;
+            break;
+        case 48:
+            advance = 0;
+            break;
+        default:
+            for (node = (u8 *)(u32)D_87E1EBB8 + 0x1C, i = 0; i != 2; i++) {
+                if ((node[4] < 0xFF) && (node[4] > 0)) {
+                    advance = 0;
+                }
+                node += 8;
+            }
+            break;
+    }
+    // A zero first argument makes the frame helpers below reset their frame
+    // instead of advancing it (//@{src/fragments/63/fragment63_312AE0.c}
+    // func_87E0FBB4, func_87E0FC90, func_87E0FDB4).
+    func_87E0FBB4(advance, (u8 *)(u32)D_87E1EBB8 + 0x1FC, 7, 3);
+    i = 2; // FAKE: reuses the loop counter so the 2 is shared with the calls below; passing the literal 2 instead scores 710
+    func_87E0FC90(advance, (u8 *)(u32)D_87E1EBB8 + 0x1FC, D_87E1A988, 3, 3);
+    func_87E0FBB4(advance, (u8 *)(u32)D_87E1EBB8 + 0x1E4, 7, i);
+    func_87E0FDB4((*(s32 *)((u8 *)(u32)D_87E1EBB8 + 8) == 0) && (advance != 0),
+                  (u8 *)(u32)D_87E1EBB8 + 0x1E4, D_87E1A870, 6, i);
+    func_87E0FBB4(advance, (u8 *)(u32)D_87E1EBB8 + 0x214, 7, i);
+    func_87E0FDB4((*(s32 *)((u8 *)(u32)D_87E1EBB8 + 8) == 1) && (advance != 0),
+                  (u8 *)(u32)D_87E1EBB8 + 0x214, D_87E1AA10, 6, i);
+    if (advance != 0) {
+        // 0x1EC indexes D_87E1A800 / D_87E1A81C in func_87E10094.
+        switch (*arg0) {
+            case 36:
+            case 41:
+                *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x1EC) = 2;
+                break;
+        }
+    }
+}
+/* mkdraft:func_87E1162C end */
 
 extern void *func_8005049C(void *, s32);
 extern s32 func_8004C874(s32, s32);

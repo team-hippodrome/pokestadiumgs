@@ -359,7 +359,51 @@ void func_87E00C70(s32 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E00D54.s")
+/* mkdraft:func_87E00D54 begin */
+extern u8 *D_87E1BA20;
+extern s32 func_8005D8C0(void);
+extern void func_87E10EA8(s32);
+extern void func_87E10F2C(s32);
+
+typedef struct unk_func_87E00D54_Record {
+    /* 0x000 */ u8 unk_000[0x6B8];
+    /* 0x6B8 */ u32 unk_6B8_31 : 1;
+                u32 unk_6B8_30 : 1;
+                u32 unk_6B8_00 : 30;
+    /* 0x6BC */ u8 unk_6BC[4];
+} unk_func_87E00D54_Record;
+// size = 0x6C0
+
+
+
+void func_87E00D54(void) {
+    s32 i;
+    s32 result;
+    s32 buttons;
+    unk_func_87E00D54_Record *record;
+    u8 *state;
+    u8 *base;
+
+    buttons = func_8005D8C0();
+    state = *(u8 **)((u8 *)D_87E1BA20 + 0);
+    base = state;
+    result = 0;
+    for (i = 0; i < 4; i++) {
+        record = (unk_func_87E00D54_Record *)(base + i * 0x6C0);
+        if (!record->unk_6B8_30 &&
+            (state[0x2182] & (1 << i)) != 0 &&
+            (buttons & (1 << i)) != 0) {
+            result = 1;
+        }
+    }
+    if (result != 0) {
+        func_87E10EA8(6);
+        func_87E10F2C(0);
+    }
+    *(s32 *)((u8 *)D_87E1BA20 + 0x24) = 2;
+    *(s32 *)((u8 *)D_87E1BA20 + 0x3114) = 0;
+}
+/* mkdraft:func_87E00D54 end */
 
 void func_87E00E04(s32 arg0) {
     *(s32 *)(D_87E1BA20 + 0x3114) += 1;
