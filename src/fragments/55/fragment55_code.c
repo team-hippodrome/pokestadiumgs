@@ -580,7 +580,57 @@ void func_86706AC8(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86706B88.s")
+/* mkdraft:func_86706B88 begin */
+extern State86706A30 *D_87F119DC;
+extern State86703DF4 D_86728408[];
+extern Row86706A30 D_86710C20[];
+extern s32 D_8670BD38[];
+extern f32 D_8670B3C4;
+extern f32 D_8670C068;
+extern s32 D_8670C06C;
+
+
+
+void func_86706B88(void) {
+    f32 *camera_depth = &D_8670C068;
+    State86703DF4 *from_variant;
+    State86703DF4 *to_variant;
+    f32 variant_z;
+    f32 spawn_z;
+    s32 target_variant;
+    s32 index;
+    s32 tier;
+
+    // karodo: empty body. The comparison's mention of D_87F119DC is load-bearing: uopt
+    // colors the pointer web at the end of its walk with the guard present (v0, matching
+    // retail) and one slot later without it (v1, diff 60). It emits no instructions.
+    if (D_87F119DC == NULL) {
+    }
+    index = D_87F119DC->index;
+    if ((u32) index < 3U) {
+        tier = 0;
+    } else if ((u32) index < 6U) {
+        tier = 1;
+    } else if ((u32) index < 9U) {
+        tier = 2;
+    } else {
+        tier = 3;
+    }
+    target_variant = D_8670BD38[index];
+    D_87F119DC->pad3C[5] = 0x8C;
+    from_variant = &D_86728408[target_variant];
+    D_87F119DC->out48 = *(f32 *)((u8 *)from_variant + 0x78) + ((-180.0f + (120 * (f32)tier)) * D_8670B3C4);
+    D_87F119DC->out4C = 120.0f;
+    *(s16 *)((u8 *)D_87F119DC + 0x42) = (s16)(D_8670C06C << 8);
+    variant_z = D_86710C20[tier].z;
+    to_variant = &D_86728408[tier];
+    D_87F119DC->out50 = (variant_z + (D_86710C20[target_variant].z - variant_z)) - ((((f32)(*(s32 *)((u8 *)to_variant + 0x24) << 5) + *(f32 *)((u8 *)to_variant + 0x28)) - (*(f32 *)((u8 *)from_variant + 0x28) + (f32)(*(s32 *)((u8 *)from_variant + 0x24) << 5))) / *camera_depth);
+    spawn_z = D_87F119DC->out50;
+    if ((spawn_z > 600.0f) || (spawn_z < -600.0f)) {
+        D_87F119DC->out50 = -5000.0f;
+    }
+}
+/* mkdraft:func_86706B88 end */
 #endif
 
 #ifdef VERSION_US
