@@ -20,7 +20,56 @@ s32 func_83300398(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833015C8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_8330173C.s")
+/* mkdraft:func_8330173C begin */
+extern void *D_80094908;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
+
+
+
+s32 func_8330173C(s32 arg0, u8 *arg1) {
+    typedef struct {
+        u8 unk_00[0xF8];
+        u8 unk_F8[8];
+    } Overlay;
+    s32 i;
+    u8 *dst = arg1;
+    s32 mode_flag;
+    f32 distance;
+    s16 angleX;
+    s16 angleY;
+
+    if (arg0 == 2) {
+        for (i = 0; i < 3; i++) {
+            dst[0x18 + i] = ((Overlay *)&D_8330A2B0)->unk_F8[i];
+        }
+        dst[0x1B] = *(u8 *)((u8 *)&D_8330A2B0 + 0xFB);
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x18) == 2 && *(s32 *)((u8 *)&D_8330A2B0 + 0x1C) == 1) {
+            if (D_80087200->stickX >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x10A) += 256;
+            }
+            if (D_80087200->stickX < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x10A) -= 256;
+            }
+            if (D_80087200->stickY >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x108) += 256;
+            }
+            if (D_80087200->stickY < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0x108) -= 256;
+            }
+        }
+        mode_flag = 1;
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x10) > 0 && *(s32 *)((u8 *)&D_8330A2B0 + 0x10) < 4) {
+            mode_flag = 0;
+        }
+        func_80037120((u8 *)D_80094908 + 0xB4, (u8 *)D_80094908 + 0xA8, &distance, &angleX, &angleY);
+        *(s16 *)(dst + 0x1C) = -0x2000 - (u32)(*(s16 *)((u8 *)&D_8330A2B0 + 0x108) + angleX);
+        *(s16 *)(dst + 0x1E) = (*(s16 *)((u8 *)&D_8330A2B0 + 0x10A) + 0x6000) * mode_flag + angleY;
+    }
+    return 0;
+}
+/* mkdraft:func_8330173C end */
 
 // Fields of D_8330A2B0 that func_83303AB0 writes and func_83302AC8 prints. D_8330A344 (+0x94) and D_8330A368 (+0xB8) are
 // three-float vectors inside this object; unk_98 and unk_C0 alias their second and third components.
