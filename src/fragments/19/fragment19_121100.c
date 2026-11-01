@@ -375,7 +375,37 @@ void *func_823010EC(s32 arg0, s32 arg1, s16 arg2) {
     return temp_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82301140.s")
+/* mkdraft:func_82301140 begin */
+extern Gfx *D_800D0510;
+// Filled textured rectangle from corner (arg0*4-offset, arg1*4-offset) to
+// (corner + 4*arg2, corner + 4*arg2), offset = arg2*2, with texel steps
+// 0x8000/arg2. The right-edge sums are named s32 locals whose addend is written
+// as `4 * arg2` rather than through a `size` local: a shared `size = arg2 * 4`
+// expression is commoned before `x` is computed, and x and size then swap
+// registers (diff score 50, 7 register lines, same instructions).
+// G_TEXRECT keeps 12-bit xl/yl/xh/yh and 16-bit dsdx/dtdy, so the four packet
+// corners and both texel steps are truncated to 16 bits here by the (s16) casts.
+//@{lib/ultralib/include/PR/gbi.h} gSPTextureRectangle
+
+
+void func_82301140(s32 arg0, s32 arg1, s16 arg2) {
+    s16 x;
+    s16 y;
+    s32 offset;
+    s32 xh;
+    s32 yh;
+    if (arg2 < 2) {
+        return;
+    }
+    offset = arg2 * 2;
+    x = arg0 * 4 - offset;
+    y = arg1 * 4 - offset;
+    xh = x + 4 * arg2;
+    yh = y + 4 * arg2;
+    gSPTextureRectangle(D_800D0510++, (s16)x, (s16)y, (s16)xh, (s16)yh, G_TX_RENDERTILE, 0, 0,
+                        (s16)(0x8000 / arg2), (s16)(0x8000 / arg2));
+}
+/* mkdraft:func_82301140 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230125C.s")
 
