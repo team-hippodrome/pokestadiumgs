@@ -1,4 +1,18 @@
+// include/229E0.h declares these four audio register wrappers with s32 formals
+// (a spelling that exists so the `s32 *p = &arg0;` masks in src/340C0.c compile).
+// The retail wrappers take u8: func_800333CC's switch passes a u8 local and the
+// targets mask with `andi a0,a1,0xFF` only under a u8 formal. Renaming the four
+// identifiers during the include keeps the header's s32 declarations out of
+// this TU; nothing else in this file calls them.
+#define func_8003364C func_8003364C_s32decl
+#define func_800337D8 func_800337D8_s32decl
+#define func_80033864 func_80033864_s32decl
+#define func_8003386C func_8003386C_s32decl
 #include "229E0.h"
+#undef func_8003364C
+#undef func_800337D8
+#undef func_80033864
+#undef func_8003386C
 
 #ifdef VERSION_US
 
@@ -2115,7 +2129,42 @@ void func_80033188(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_800331D4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_800333CC.s")
+/* mkdraft:func_800333CC begin */
+extern void func_80033488(u8 arg0);
+extern void func_800334C0(u8 arg0);
+extern void func_80033670(u8 arg0);
+extern void func_80033890(u8 arg0);
+extern void func_8003364C(u8 arg0);
+extern void func_800337D8(u8 arg0);
+extern void func_80033864(u8 arg0);
+extern void func_8003386C(u8 arg0);
+// No FAKE construct in this body. The u8 formals above are the real types: every
+// callee masks its own argument (andi a0,a0,0xff in its jal delay slot), and a
+// u8-parameter definition of the wrappers reproduces retail 9/9 (t36.py), while
+// the s32 spelling declared in include/229E0.h needs an "s32 *p = &arg0;" hack
+// to get there. The header types are the artifact, not this code.
+// TU consequence: include/229E0.h declares func_8003364C/337D8/33864/3386C with
+// s32, so these u8 externs conflict with it (hard cfe error) unless the TU hides
+// those four names with a #define/#undef pair around the #include -- which is
+// what src/2C1B0.c does. No other function in that file calls them.
+
+
+
+void func_800333CC(u8 arg0) {
+    u8 v;
+    v = arg0 & 7;
+    switch (v) {
+    case 0: func_80033488(v); break;
+    case 1: func_8003364C(v); break;
+    case 2: func_800337D8(v); break;
+    case 3: func_8003386C(v); break;
+    case 4: func_800334C0(v); break;
+    case 5: func_80033670(v); break;
+    case 6: func_80033864(v); break;
+    case 7: func_80033890(v); break;
+    }
+}
+/* mkdraft:func_800333CC end */
 
 void GbAudio_UpdateChannelIfEnabled(u8 channel) {
     if (!(D_800D2B58 & 0x80)) {
