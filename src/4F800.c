@@ -128,7 +128,7 @@ typedef struct TextureRenderHeader {
 } TextureRenderHeader;
 
 extern u8 *func_8004CA60(TextureRenderHeader *texture);
-extern void func_800459AC(u8 *image, u8 format, u8 size, u16 width, s32 height, s32 swapped, s32 palette, s32 cms,
+extern void func_800459AC(s32 image, s32 format, s32 size, u32 width, u32 height, s32 swapped, s32 palette, s32 cms,
                           s32 cmt, s32 masks, s32 maskt, s32 shifts, s32 shiftt);
 extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
 
@@ -146,14 +146,14 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 
     if ((topLeft != NULL) && (topRight != NULL) && (bottomLeft != NULL) && (bottomRight != NULL)) {
         image = func_8004CA60(topLeft);
-        func_800459AC(image, topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
+        func_800459AC((s32)image, topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
                       2, 0, 0, 0, 0);
         first_corner_width = topLeft->width;
         first_corner_height = topLeft->height;
         GfxRect_DrawTextured(x, y, first_corner_width, first_corner_height, 0, 0, 0x400, 0x400, 0);
 
         // Top edge, then the top-right corner.
-        func_800459AC(func_8004CA60(topRight), topRight->format, topRight->size, topRight->width, topRight->height, 1,
+        func_800459AC((s32)func_8004CA60(topRight), topRight->format, topRight->size, topRight->width, topRight->height, 1,
                       0, 2, 2, 0, 0, 0, 0);
         GfxRect_DrawTextured(topLeft->width + x, y, width - topLeft->width - topRight->width, topRight->height, 0, 0,
                              0, 0x400, 0);
@@ -161,7 +161,7 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
         GfxRect_DrawTextured(right - topRight->width, y, topRight->width, topRight->height, 0, 0, 0x400, 0x400, 0);
 
         // Left edge, then the bottom-left corner.
-        func_800459AC(func_8004CA60(bottomLeft), bottomLeft->format, bottomLeft->size, bottomLeft->width,
+        func_800459AC((s32)func_8004CA60(bottomLeft), bottomLeft->format, bottomLeft->size, bottomLeft->width,
                       bottomLeft->height, 1, 0, 2, 2, 0, 0, 0, 0);
         GfxRect_DrawTextured(x, topLeft->height + y, bottomLeft->width, height - topLeft->height - bottomLeft->height,
                              0, 0, 0x400, 0, 0);
@@ -170,7 +170,7 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
                              0);
 
         // Bottom edge, right edge, then the bottom-right corner.
-        func_800459AC(func_8004CA60(bottomRight), bottomRight->format, bottomRight->size, bottomRight->width,
+        func_800459AC((s32)func_8004CA60(bottomRight), bottomRight->format, bottomRight->size, bottomRight->width,
                       bottomRight->height, 1, 0, 2, 2, 0, 0, 0, 0);
         GfxRect_DrawTextured(bottomLeft->width + x, bottom - bottomLeft->height,
                              width - bottomLeft->width - bottomRight->width, bottomRight->height, 0, 0, 0, 0x400, 0);
@@ -184,14 +184,67 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_8004F2D0.s")
+// Draws eight border pieces from one corner texture, mirrored across the box.
+// The top row reverses T; the right column reverses S; edge interiors repeat one texel.
+//@src/44E70.c
+void Ui_DrawMirroredTextureBorder(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *texture) {
+    s32 texture_s;
+    s32 corner_width;
+    s32 right;
+    s32 vertical;
+
+    if (texture != NULL) {
+        func_800459AC((s32)func_8004CA60(texture), texture->format, texture->size,
+                      texture->width, texture->height, 1, 0, 2, 2, 0, 0, 0, 0);
+        vertical = (texture->height - 1) << 5;
+        GfxRect_DrawTextured(x, y, texture->width, texture->height,
+                             0, vertical, 1024, -1024, 0);
+        corner_width = texture->width;
+        texture_s = texture->width;
+        texture_s = (texture_s - 1) << 5;
+        vertical = (texture->height - 1) << 5;
+        GfxRect_DrawTextured(corner_width + x, y, width - corner_width * 2, texture->height,
+                             texture_s, vertical, 0, -1024, 0);
+        corner_width = texture->width;
+        texture_s = texture->width;
+        right = x + width;
+        texture_s = (texture_s - 1) << 5;
+        vertical = (texture->height - 1) << 5;
+        GfxRect_DrawTextured(right - corner_width, y, corner_width, texture->height,
+                             texture_s, vertical, -1024, -1024, 0);
+        // Left edge, followed by the bottom-left corner.
+        GfxRect_DrawTextured(x, y + texture->height, texture->width, height - texture->height * 2,
+                             0, 0, 1024, 0, 0);
+        // Reuse the top-row texture coordinate for the bottom screen edge.
+        vertical = y + height;
+        GfxRect_DrawTextured(x, vertical - texture->height, texture->width, texture->height,
+                             0, 0, 1024, 1024, 0);
+        corner_width = texture->width;
+        texture_s = texture->width;
+        texture_s = (texture_s - 1) << 5;
+        GfxRect_DrawTextured(corner_width + x, vertical - texture->height,
+                             width - corner_width * 2, texture->height,
+                             texture_s, 0, 0, 1024, 0);
+        corner_width = texture->width;
+        texture_s = texture->width;
+        texture_s = (texture_s - 1) << 5;
+        GfxRect_DrawTextured(right - corner_width, y + texture->height,
+                             corner_width, height - texture->height * 2,
+                             texture_s, 0, -1024, 0, 0);
+        corner_width = texture->width;
+        texture_s = texture->width;
+        texture_s = (texture_s - 1) << 5;
+        GfxRect_DrawTextured(right - corner_width, vertical - texture->height,
+                             corner_width, texture->height,
+                             texture_s, 0, -1024, 1024, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern s32 func_80008494(void);
 extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
 extern void Ui_DrawGradientQuad(s32, s32, s32, s32, u8 *, u8 *);
-extern void func_8004F2D0(s32, s32, s32, s32, TextureRenderHeader *);
 extern Gfx *D_800D0510;
 extern Gfx D_80094DB8[], D_80094DE0[], D_80097218[];
 extern u8 *D_800971F4;
@@ -296,7 +349,7 @@ void UiPanelNode_Draw(u8 *node, s32 x, s32 y) {
                               (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 52), *(u16 *)(node + 54)),
                               (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 56), *(u16 *)(node + 58)));
             } else {
-                func_8004F2D0(x, y, *(s16 *)(node + 12), *(s16 *)(node + 14),
+                Ui_DrawMirroredTextureBorder(x, y, *(s16 *)(node + 12), *(s16 *)(node + 14),
                               (TextureRenderHeader *)func_8004C990(*(u16 *)(node + 52), *(u16 *)(node + 54)));
             }
         }
