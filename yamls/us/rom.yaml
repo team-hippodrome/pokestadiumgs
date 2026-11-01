@@ -527,6 +527,8 @@
     - [0xB5DA0, textbin, fragments/6/fragment6_header]
     - [0xB5DC0, c,       fragments/6/fragment6_code]
     - [0xB8030, data,    fragments/6/fragment6_data]
+    - [0xB9680, .rodata, fragments/6/fragment6_code] # Jump tables.
+    - [0xB9750, rodata]
 
   # unk fragment
   - name: fragment7

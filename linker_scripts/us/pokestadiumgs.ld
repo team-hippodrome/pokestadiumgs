@@ -1032,6 +1032,7 @@ SECTIONS
         fragment6_RODATA_START = .;
         build/asm/us/data/fragments/6/fragment6_header.o(.rodata);
         build/src/fragments/6/fragment6_code.o(.rodata);
+        build/asm/us/data/B9750.rodata.o(.rodata);
         fragment6_RODATA_END = .;
         fragment6_RODATA_SIZE = ABSOLUTE(fragment6_RODATA_END - fragment6_RODATA_START);
     }
