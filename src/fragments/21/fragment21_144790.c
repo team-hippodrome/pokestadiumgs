@@ -248,7 +248,38 @@ void func_82504D94(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82504E38.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82504FB4.s")
+/* mkdraft:func_82504FB4 begin */
+extern f32 (*D_8160BD18)(f32);
+extern s32 D_82508804;
+extern void func_800226C0(s32);
+
+
+
+void func_82504FB4(void *arg0, void *arg1) {
+    f32 ratio;
+    s32 max = D_82508804;
+    f32 cos_ratio;
+
+    *(s16 *)((u8 *)arg1 + 0xC) += 1;
+    if (1) { } if (1) { } // karodo: two empty statements; they retime uopt's colour walk so max takes $v1 and the reloaded timer takes $v0. One or none leaves the two registers swapped (score 40)
+    if (*(s16 *)((u8 *)arg1 + 0xC) < max) {
+        ratio = (f32)*(s16 *)((u8 *)arg1 + 0xC) / (f32)max;
+        cos_ratio = D_8160BD18(ratio);
+        *(s16 *)((u8 *)arg1 + 0x24) = (s16)(s32)(((f32)*(s16 *)((u8 *)arg1 + 0x4C) + (f32)(*(s16 *)((u8 *)arg1 + 0x4E) - *(s16 *)((u8 *)arg1 + 0x4C)) * cos_ratio) + (0.0f < (f32)*(s16 *)((u8 *)arg1 + 0x4C) + (f32)(*(s16 *)((u8 *)arg1 + 0x4E) - *(s16 *)((u8 *)arg1 + 0x4C)) * D_8160BD18(ratio) ? 0.5f : -0.5f));
+        return;
+    }
+    *(s16 *)((u8 *)arg1 + 8) = 2;
+    *(s16 *)((u8 *)arg1 + 0xC) = 0;
+    *(s16 *)((u8 *)arg1 + 0x24) = *(s16 *)((u8 *)arg1 + 0x4E);
+    if (*(s16 *)((u8 *)arg1 + 0x4C) < *(s16 *)((u8 *)arg1 + 0x4E)) {
+        func_800226C0(0x110);
+        return;
+    }
+    if (*(s16 *)((u8 *)arg1 + 0x4E) < *(s16 *)((u8 *)arg1 + 0x4C)) {
+        func_800226C0(0x113);
+    }
+}
+/* mkdraft:func_82504FB4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825050EC.s")
 
