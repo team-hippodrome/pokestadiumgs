@@ -892,7 +892,44 @@ void func_81607408(void) {
     Fragment11_SetClippedScissor(&D_800D0510, 0, 0, 640, 480);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81607440.s")
+/* mkdraft:func_81607440 begin */
+extern void func_816054D8(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void Fragment11_SetClippedScissor(void *, s16, s16, s16, s16);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_8160BDA4;
+extern s32 D_8160BDA8;
+extern void func_8004D1FC(void *);
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+extern void func_81607408(void);
+
+
+void func_81607440(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
+    Gfx *gfx;
+    Gfx *gfx2;
+
+    func_816054D8(arg0, arg1, arg2, arg3);
+    Fragment11_SetClippedScissor(&D_800D0510, (s16)arg0, (s16)arg1, (s16)arg2, arg3);
+    arg1 = (s32)((f32)(arg1 + 13) + ((f32)(arg3 - 26) * arg4));
+    gSPDisplayList(GFX_DL++, D_80094E38);
+    gDPSetCombine(GFX_DL++, 0x119623, 0xFF2FFFFF);
+    gDPSetRenderMode(GFX_DL++, 0x0F0A7008, 0);
+    gfx2 = GFX_DL++;
+    gfx2->words.w1 = -1;
+    gfx2->words.w0 = 0xFA00FFFF;
+    gfx = GFX_DL++;
+    gfx->words.w1 = 0xFFFF00FF;
+    gfx->words.w0 = 0xFA00FFFF;
+    arg0 += 3;
+    func_8004D1FC((void *)(u32)D_8160BDA4);
+    func_81602240((f32)arg0, (f32)(arg1 - 10), 16.0f, 10.0f, 0, 0, 1.0f, 1.0f);
+    func_8004D1FC((void *)(u32)D_8160BDA8);
+    func_81602240((f32)arg0, (f32)arg1, 16.0f, 10.0f, 0, 0, 1.0f, 1.0f);
+    gSPDisplayList(GFX_DL++, D_80094F50);
+    func_81607408();
+}
+/* mkdraft:func_81607440 end */
 
 f32 func_8160762C(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3) {
     f32 result;
