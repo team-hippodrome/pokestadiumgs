@@ -88,7 +88,58 @@ void func_87F01E8C(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_324A10/func_87F01F34.s")
+/* mkdraft:func_87F01F34 begin */
+extern u8 *D_87F11980;
+extern u8 D_87F11988;
+extern s32 func_87F01DA0(s32, void *);
+extern void func_87F01E8C(s32, u8 *);
+extern void func_87F0E390(u8 *, s32);
+extern s32 func_8004DC6C(s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern s32 func_8004EB58(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern void func_8004DCFC(u8 *, s32 *);
+extern void func_87F0AB08(s32, s32, void (*)(s32, u8 *), s32);
+extern void func_87F0AA80(s32, s32, void *);
+extern u8 D_87F1121C;
+extern u8 D_87F11234;
+extern u8 D_87F11298;
+
+
+
+void func_87F01F34(s32 arg0) {
+    s32 state;
+    s32 pad[7]; // FAKE: fills the frame to 0x58 and puts state at 0x54; scores 98 without it.
+    void (*callback)(s32, u8 *); // FAKE: unreferenced; its home at 0x24 sets the frame to 0x58 and the saved-callback slot to 0x24; scores 50 without it.
+    s32 temp_v0;
+    s32 temp_v0_2;
+
+    D_87F11980 = &D_87F11988;
+    *(s32 *)(D_87F11980 + 0xC) = 1;
+    *(s32 *)(D_87F11980 + 0x10) |= 0x10000000;
+    D_87F11980[0x28] = 0;
+    func_87F0E390(D_87F11980 + 0x14, arg0);
+    temp_v0 = func_8004DC6C(0x75);
+    *(s32 *)D_87F11980 = temp_v0;
+    if (temp_v0 != 0) {
+        temp_v0_2 = MainPool_AllocState(main_pool_get_available(), 0);
+        state = temp_v0_2;
+        *(s32 *)(D_87F11980 + 4) = func_8004EB58(temp_v0_2, *(s32 *)D_87F11980);
+        MainPool_FinalizeAllocation(state);
+        func_8004DCFC(*(u8 **)D_87F11980, (s32 *)(D_87F11980 + 8));
+        func_87F0AB08(*(s32 *)(D_87F11980 + 4), 0x504E4331, func_87F01DA0, 0);
+        func_87F0AB08(*(s32 *)(D_87F11980 + 4), 0x504E4332, func_87F01DA0, 1);
+        func_87F0AB08(*(s32 *)(D_87F11980 + 4), 0x504E4333, func_87F01DA0, 2);
+        func_87F0AB08(*(s32 *)(D_87F11980 + 4), 0x504B4D33, func_87F01E8C, 0);
+        func_87F0AB08(*(s32 *)(D_87F11980 + 4), 0x504B4D34, func_87F01E8C, 1);
+        func_87F0AB08(*(s32 *)(D_87F11980 + 4), 0x504B4D32, func_87F01E8C, 2);
+        func_87F0AA80(*(s32 *)(D_87F11980 + 4), 0x504B4D33, &D_87F1121C);
+        func_87F0AA80(*(s32 *)(D_87F11980 + 4), 0x504B4D34, &D_87F11298);
+        func_87F0AA80(*(s32 *)(D_87F11980 + 4), 0x504B4D32, &D_87F11234);
+    }
+}
+/* mkdraft:func_87F01F34 end */
 
 /* mkdraft:func_87F02104 begin */
 extern s32 func_80001FF0(void);
