@@ -140,12 +140,17 @@ void func_8004EE9C(s32 x, s32 y, s32 width, s32 height, TextureRenderHeader *top
                    TextureRenderHeader *bottomLeft, TextureRenderHeader *bottomRight) {
     s32 right;
     s32 bottom;
-    s32 pad[2]; // FAKE: unused; enlarges the frame from 0x68 to 0x70 bytes; diff score 186 without it.
+    s16 first_corner_width;
+    s16 first_corner_height;
+    u8 *image;
 
     if ((topLeft != NULL) && (topRight != NULL) && (bottomLeft != NULL) && (bottomRight != NULL)) {
-        func_800459AC(func_8004CA60(topLeft), topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
+        image = func_8004CA60(topLeft);
+        func_800459AC(image, topLeft->format, topLeft->size, topLeft->width, topLeft->height, 1, 0, 2,
                       2, 0, 0, 0, 0);
-        GfxRect_DrawTextured(x, y, topLeft->width, topLeft->height, 0, 0, 0x400, 0x400, 0);
+        first_corner_width = topLeft->width;
+        first_corner_height = topLeft->height;
+        GfxRect_DrawTextured(x, y, first_corner_width, first_corner_height, 0, 0, 0x400, 0x400, 0);
 
         // Top edge, then the top-right corner.
         func_800459AC(func_8004CA60(topRight), topRight->format, topRight->size, topRight->width, topRight->height, 1,
