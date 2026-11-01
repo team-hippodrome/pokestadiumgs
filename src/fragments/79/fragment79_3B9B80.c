@@ -78,7 +78,74 @@ void func_8414A4E4(u8 *arg0, u8 arg1, u8 arg2, u8 arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414A59C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B574.s")
+/* mkdraft:func_8414B574 begin */
+extern u8 D_8419D7C0[];
+extern u8 *D_841951F8[];
+extern u8 *D_84195208[];
+extern u8 func_84154B24(void);
+extern void func_84149294(u8);
+extern void func_8414A440(u8 *, u8, u8);
+extern void func_8414A4E4(u8 *, u8, u8, u8);
+extern void func_8414EFD0(u8 *);
+extern void func_8414EFF0(u8 *);
+extern void func_8414A59C(u8 *, u8);
+extern s32 func_8414A3C0(u8, u32);
+extern s32 func_8414C924(u8, u8);
+
+// 0x58-byte record stride: the target indexes the same base with a
+// /4 quotient (record) and a %4 remainder (byte within the record).
+typedef struct { u8 unk00[0x58]; } TeamRecord;
+
+
+
+void func_8414B574(void)
+{
+  s32 temp_v0;
+  s32 var_s2;
+  u8 *var_s0;
+  u8 *temp_t0;
+  u8 **new_var;
+  temp_v0 = func_84154B24();
+  if (func_8414A3C0((u8) temp_v0, 4) == 0)
+  {
+    func_84149294(1 - temp_v0);
+  }
+  // Comma init/incr keeps both walkers in one for-clause; this is what lets the
+  // loop-invariant &D_841951F8 / &D_84195208 bases materialize before the
+  // var_s0 / var_s2 initializations in the target's prologue.
+  for (var_s0 = D_8419D7C0, var_s2 = 0; var_s2 != 0x18; var_s2++, var_s0 += 0xA8)
+  {
+    if ((*var_s0) & 1)
+    {
+      // FAKE: pointer-to-pointer alias retained only for codegen; the plain
+      // `temp_t0 = D_841951F8[temp_v0]` scores 320.
+      temp_t0 = *(new_var = &D_841951F8[temp_v0]);
+      if ((var_s2 / 4) == temp_t0[0xA])
+      {
+        if (((&D_84195208[temp_v0][var_s2 % 4])[9] & 0x3F) > 0)
+        {
+          func_8414A440(var_s0, temp_v0, (&D_84195208[temp_v0][var_s2 % 4])[5]);
+        }
+        else
+        {
+          func_8414A440(var_s0, temp_v0, 0xA5);
+        }
+        func_8414EFD0(var_s0);
+        func_8414A59C(var_s0, temp_v0);
+      }
+      else
+      {
+        func_8414A4E4(var_s0, temp_v0, var_s2 / 4, ((TeamRecord *) temp_t0)[var_s2 / 4].unk00[(var_s2 % 4) + 0x1A]);
+        if ((func_8414A3C0(temp_v0, 2) == 0) || (func_8414C924(var_s2, 4) != 0))
+        {
+          func_8414EFF0(var_s0);
+          func_8414A59C(var_s0, temp_v0);
+        }
+      }
+    }
+  }
+}
+/* mkdraft:func_8414B574 end */
 
 extern u8 D_8419D7C0[];
 // D_8419D7C0 holds 24 0xA8-byte records; func_8414BEE8 clears all 0xFC0 bytes.
