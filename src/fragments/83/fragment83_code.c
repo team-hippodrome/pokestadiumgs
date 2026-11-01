@@ -274,7 +274,53 @@ void func_82C00C78(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C019B4.s")
+/* mkdraft:func_82C019B4 begin */
+extern Gfx D_82C049A0[];
+extern u8 D_82C04900[];
+extern u8 D_82C0492C[];
+
+
+// Draws the mode-specific panel contents: a display list append followed by a color set and one
+// or two inset rectangles. Modes 1, 2 and 4 draw two fixed rectangles, mode 3 draws the selected
+// entry's rectangle (entries at 0x214, stride 0x1CC), and modes 5 and 7 offset the second
+// rectangle by 8 pixels per count stored in the s16 at D_82C04C38+8. Mode 6 and modes >= 8 draw
+// nothing.
+
+
+void func_82C019B4(void) {
+    unk_D_82C04C38_rect *rect;
+
+    func_82C002B8(D_82C04900);
+    switch (((unk_D_82C04C38 *)&D_82C04C38)->mode) {
+    case 1:
+    case 2:
+    case 4:
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + 7, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + 0x138, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        break;
+    case 3:
+        rect = &((unk_D_82C04C38 *)&D_82C04C38)->entries[((unk_D_82C04C38 *)&D_82C04C38)->row].rect;
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C009F8(rect->x + 7, rect->y + 7, (rect->width - 0x11) & 0xFFFF, 0x1E);
+        break;
+    case 5:
+    case 7:
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + 7, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        // The s16 at D_82C04C38+8 falls inside unk_003 of unk_D_82C04C38; it is read here as a
+        // signed count. An isolated struct (same pattern as func_82C01E24) keeps that read
+        // distinct from the byte region the rest of the file indexes.
+        func_82C009F8(D_82C04C44 + 7, D_82C04C46 + ((struct { s16 unk_000[4]; s16 unk_008; } *)&D_82C04C38)->unk_008 * 8 + 0x138, (D_82C04C48 - 0x11) & 0xFFFF, 0x22);
+        /* fallthrough */
+    default:
+        break;
+    }
+}
+/* mkdraft:func_82C019B4 end */
 #endif
 
 #ifdef VERSION_US
@@ -344,7 +390,94 @@ void func_82C01FE4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C02078.s")
+/* mkdraft:func_82C02078 begin */
+extern s32 D_82C04C54;
+extern s8 D_82C04C8C;
+extern u8 D_82C05E90;
+extern s8 * func_8004C874(s32, s32);
+extern void func_80049064(s32 arg0, s32 arg1, s32 arg2, s8 *text);
+extern void func_800496A4(s32 arg0, s32 arg1);
+extern void func_8004972C(u8 r, u8 g, u8 b, u8 a);
+extern void func_8004989C(s32 arg0);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+
+// Draws the current page of the menu at D_82C04C38: the panel at
+// D_82C04C44/D_82C04C46 plus one text row per entry. Modes 1, 2 and 4 print the
+// window whose strings are listed at D_82C04C54 and one row per record of
+// D_82C04C8C, with the palette of D_82C04928 for the selected row and
+// D_82C04924 for the others. Mode 3 prints the two strings of the selected
+// entry. Mode 5 prints the D_82C05E90 window while the menu byte at 0xA is
+// below 3. Other modes draw nothing.
+
+
+void func_82C02078(void) {
+    // FAKE: reading the panel fields through pointer locals keeps
+    // D_82C04C44/D_82C04C46 out of the saved registers s6/s7; addressing the
+    // globals directly costs a diff score of 2255.
+    s16 *panel_y = &D_82C04C46;
+    s16 *panel_x = &D_82C04C44;
+    s32 i;
+    unk_D_82C04C38_rect *rect;
+    u8 *text;
+    u8 *record;
+
+    // FAKE: the menu record is re-cast at every use; caching it in one local
+    // moves the base from s5 to a temp register and costs a diff score of 1414.
+    switch (((unk_D_82C04C38 *)&D_82C04C38)->mode) {
+    case 1:
+    case 2:
+    case 4:
+        func_800498C4();
+        func_800496A4(8, 1);
+        func_8004989C(0x1A);
+        func_80049064(((unk_D_82C04C38 *)&D_82C04C38)->panelRect.x + 0x14, ((unk_D_82C04C38 *)&D_82C04C38)->panelRect.y + 0xE, 0, (s8 *)&D_82C04C54);
+        func_80049064(*panel_x + 0x30, *panel_y + 0x13F, 0, func_8004C874(0x15, 0));
+        i = 0;
+        if (((unk_D_82C04C38 *)&D_82C04C38)->unk_003[0] > 0) {
+            do {
+                if (i == ((unk_D_82C04C38 *)&D_82C04C38)->row) {
+                    func_8004972C(D_82C04928[0], D_82C04928[1], D_82C04928[2], ((unk_D_82C04C38 *)&D_82C04C38)->unk_003[1]);
+                } else {
+                    func_8004972C(D_82C04924[0], D_82C04924[1], D_82C04924[2], ((unk_D_82C04C38 *)&D_82C04C38)->unk_003[1]);
+                }
+                func_80049064(*panel_x + 0x4E, *panel_y + i * 0x1A + 0x31, 0, &D_82C04C8C + i * 0x1CC);
+                i++;
+            } while (i < ((unk_D_82C04C38 *)&D_82C04C38)->unk_003[0]);
+        }
+        func_800499EC();
+        return;
+    case 3:
+        // The record base and the string block at 0x50 of it are addressed
+        // relative to D_82C04C38, 0x1CC bytes apart per row.
+        record = (u8 *)&D_82C04C38 + ((unk_D_82C04C38 *)&D_82C04C38)->row * 0x1CC;
+        rect = (unk_D_82C04C38_rect *)(record + 0x214);
+        text = record + 0x50;
+        // FAKE: dead store of the record base; without it the row base lands in
+        // a saved register instead of 0x214/0x50 offsets from it, diff score 670.
+        record = 0;
+        func_800498C4();
+        func_800496A4(4, 1);
+        func_80049064(rect->x + 0x14, rect->y + 0xE, 0, (s8 *)(text + 4));
+        func_800496A4(8, 0);
+        func_8004989C(0x1A);
+        func_80049064(rect->x + 0x14, rect->y + 0x2D, 0, (s8 *)(text + 0x54));
+        func_800499EC();
+        return;
+    case 5:
+        if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) < 3) {
+            func_800498C4();
+            func_800496A4(8, 1);
+            func_80049064(*panel_x + 0x14, *panel_y + 0xE, 0, func_8004C874(0x15, 3));
+            func_80049064(*panel_x + 0x1FE, *panel_y + 0xE, 2, (s8 *)&D_82C05E90);
+            func_800499EC();
+        }
+        /* fallthrough */
+    default:
+        return;
+    }
+}
+/* mkdraft:func_82C02078 end */
 #endif
 
 #ifdef VERSION_US
@@ -528,8 +661,8 @@ void func_82C02B30(void) {
 #ifdef VERSION_US
 extern u8 D_82C04A1C;
 extern u16 D_82C04C30;
-s32 func_82C03134(void) {
-    s32 result = 0;
+u16 func_82C03134(void) {
+    u16 result = 0;
     s8 *state = (s8 *)&D_82C04A1C;
 
     if (D_82C04C32 & 0x800) {
@@ -577,7 +710,71 @@ s32 func_82C03134(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C0329C.s")
+/* mkdraft:func_82C0329C begin */
+#include "global.h"
+extern u16 D_82C04C32;
+extern u8 D_82C04C38;
+extern u8 D_82C04A18;
+extern u8 D_82C05E82;
+extern u8 D_82C05E83;
+extern u8 D_82C05E84;
+extern u8 D_82C05E86;
+extern u8 D_82C05E88;
+extern u8 D_82C05E90;
+extern void func_800226C0(s32);
+extern void func_82C02834(s32);
+extern void func_82C02B84(void);
+extern u16 func_82C03134(void);
+
+
+
+void func_82C0329C(void) {
+    s16 value;
+    u16 mode;
+    s32 slot;
+
+    mode = func_82C03134();
+    if (mode & 0x800) {
+        value = *(s16 *)((u8 *)&D_82C05E86 + 0);
+        if (value != 0) {
+            value -= 0x3D;
+            *(s16 *)((u8 *)&D_82C05E88 - 2) = value;
+            if (value < 0) {
+                *(s16 *)((u8 *)&D_82C05E84 + 2) = 0;
+            }
+            *(u8 *)((u8 *)&D_82C05E84 - 4) = 4;
+            func_800226C0(1);
+        }
+    } else if (mode & 0x400) {
+        if ((value = *(s16 *)((u8 *)&D_82C05E82 + 4)) != 0x8D1u) {
+            value += 0x3D;
+            *(s16 *)((u8 *)&D_82C05E90 - 10) = value;
+            if (value >= 0x8D2) {
+                // FAKE: diff 14 without the (value & 0) fold; it keeps the clamp
+                // constant in the value register (v0) instead of a temp.
+                value = (value & 0) + 0x8D1;
+                *(s16 *)((u8 *)&D_82C05E86 + 0) = value;
+            }
+            *(u8 *)((u8 *)&D_82C05E84 - 4) = 4;
+            func_800226C0(1);
+        }
+    }
+    if (D_82C04C32 & 1) {
+        slot = (*(u8 *)((u8 *)&D_82C05E82 - 1) + 1) & 0xFF;
+        if (slot >= 3) {
+            slot = 0;
+        }
+        *(u8 *)((u8 *)&D_82C05E83 - 2) = slot;
+        func_82C02834(slot);
+        func_800226C0(0x12);
+    } else if (D_82C04C32 & 0x4000) {
+        *(s8 *)((u8 *)&D_82C04C38 + 1) = 7;
+        *(u8 *)((u8 *)&D_82C04C38 + 0xA) = D_82C04A18;
+        func_800226C0(3);
+    }
+    func_82C02B84();
+}
+/* mkdraft:func_82C0329C end */
 #endif
 
 #ifdef VERSION_US
@@ -1106,7 +1303,67 @@ void func_82C0423C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C04350.s")
+/* mkdraft:func_82C04350 begin */
+extern void _bzero(void *, s32);
+extern s32 func_82C0359C(s32 *, s32, u8 *);
+extern s32 func_82C03674(s32, s32, void *);
+extern s32 func_82C036E4(s32, s32, void *);
+extern s32 func_82C0383C(s32, s32, void *);
+extern s32 func_82C03904(s32, s32, void *);
+extern s32 func_82C03974(s32, s32, void *);
+extern s32 func_82C03CA8(s32, s32, void *);
+extern s32 func_82C03D50(s32, s32, s32);
+extern s32 func_82C03DC0(s32, s32, void *);
+extern s32 func_82C03EE0(s8 *, s32, s32);
+extern s32 func_82C03F40(s32, s32, void *);
+extern s32 func_82C03FB4(s32, s32, void *);
+extern s32 func_82C0405C(s32, s32, void *);
+extern s32 func_82C0412C(s32, s32, void *);
+extern s32 func_82C041CC(s32, s32, s32);
+extern u8 D_82C04C38;
+extern u8 D_82C04C88[];
+
+// Rebuilds the text records of the menu at D_82C04C38. The 0x11F8-byte record
+// area starts at D_82C04C88 (offset 0x50 of the menu state) and holds records of
+// 0x1CC bytes; D_82C04C88 itself is the record at index 0. Each of the 15 row
+// writers fills the two strings of one record and returns 1 when it printed the
+// record for the current page, 0 when it did not, so the running count is the
+// address of the next record. The count lands at byte 3 of the menu state, where
+// func_82C02078 reads it as the number of rows. The second argument of every
+// writer is the word at 0x14 of the menu state, whose bits 8..15 select message
+// variants; the third is the word at 0x18, which is the context pointer also
+// named D_82C04C50.
+
+
+void func_82C04350(void) {
+    s32 settings;
+    s32 context;
+    s32 count;
+    u8 *menu;
+
+    menu = &D_82C04C38;
+    settings = *(s32 *)(menu + 0x14);
+    context = *(s32 *)(menu + 0x18);
+    count = 0;
+    _bzero((s32 *)&D_82C04C88, 0x11F8);
+    count += func_82C0359C((s32 *)&D_82C04C88, settings, (u8 *)context);
+    count += func_82C03674((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C036E4((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C0383C((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03904((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03974((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03CA8((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03D50((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, context);
+    count += func_82C03DC0((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03EE0((s8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, context);
+    count += func_82C03F40((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C03FB4((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C0405C((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C0412C((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, (void *)context);
+    count += func_82C041CC((u8 *)&D_82C04C38 + count * 0x1CC + 0x50, settings, context);
+    ((u8 *)&D_82C04C38)[3] = count;
+}
+/* mkdraft:func_82C04350 end */
 #endif
 
 #ifdef VERSION_US
