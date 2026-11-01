@@ -239,8 +239,8 @@ extern u8 *D_8AB1266C;
 extern u8 *D_8AB12670;
 extern u8 *D_8AB12674;
 extern void *D_8AB16960;
-extern void *D_8AB16A0C;
-extern void *D_8AB16A10;
+extern u8 *D_8AB16A0C;
+extern u8 *D_8AB16A10;
 extern s32 D_8AB16A24;
 
 
@@ -342,7 +342,78 @@ s32 func_8AB06D78(s32 arg0) {
 }
 /* mkdraft:func_8AB06D78 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07128.s")
+/* mkdraft:func_8AB07128 begin */
+extern s16 D_8AB11210[][3];
+extern u8 D_8AB12CB0[];
+extern u8 *D_8AB12CC4;
+extern u8 *D_8AB12D58;
+extern u8 *D_8AB12DEC;
+extern u8 *D_8AB12E80;
+extern void *D_8AB16960;
+extern u8 *D_8AB16A0C;
+extern u8 *D_8AB16A10;
+extern s16 D_8AB16A28;
+extern s16 D_8AB12694;
+extern void func_8AB00BA4();
+extern s32 func_8AB072EC(s32 arg0);
+extern void TextHighlight_AnimateScales(void);
+
+
+s32 func_8AB07128(s32 arg0) {
+    s16 *counter = &D_8AB16A28;
+    s32 result = 9;
+    u8 **ptr;
+
+    switch (arg0) {
+    case 0:
+        *counter = 0;
+        ptr = &D_8AB12CC4;
+        if (*ptr != NULL) {
+            *(u16 *)(*ptr + 2) |= 1;
+        }
+        ptr = &D_8AB12D58;
+        if (*ptr != NULL) {
+            *(u16 *)(*ptr + 2) |= 1;
+        }
+        ptr = &D_8AB12DEC;
+        if (*ptr != NULL) {
+            *(u16 *)(*ptr + 2) |= 1;
+        }
+        ptr = &D_8AB12E80;
+        if (*ptr != NULL) {
+            *(u16 *)(*ptr + 2) |= 1;
+        }
+        if (*(s16 *)(D_8AB12CB0 + 4) == 1U) {
+            *(s32 *)(D_8AB12CB0 + 0x84) = 0xFF500080;
+            *(s16 *)(D_8AB12CB0 + 0x3E) = 0;
+        } else {
+            *(s32 *)(D_8AB12CB0 + 0x84) = 0x1E82FF80;
+            *(s16 *)(D_8AB12CB0 + 0x3E) = 1;
+        }
+        // 10-row history of 6-byte rows; each row's first field stores the mode read above.
+        D_8AB11210[D_8AB12694 % 10][0] = *(s16 *)(D_8AB12CB0 + 4);
+        *(u16 *)((u8 *)D_8AB16960 + 2) |= 2;
+        ptr = &D_8AB16A0C;
+        *(u16 *)(*ptr + 2) |= 2;
+        ptr = &D_8AB16A10;
+        *(u16 *)(*ptr + 2) |= 2;
+        break;
+    case 1:
+        *counter += 1;
+        TextHighlight_AnimateScales();
+        if (*counter == 15) {
+            func_8AB00BA4(102, 0, 0);
+        }
+        if (*counter >= 31) {
+            result = func_8AB072EC(0);
+        }
+        break;
+    case 2:
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB07128 end */
 
 s32 func_8AB072E4(void) {
     return 0xA;
@@ -701,8 +772,8 @@ s32 func_8AB07E6C(s32 arg0)
 
 /* mkdraft:func_8AB07F80 begin */
 extern void *D_8AB16960;
-extern void *D_8AB16A0C;
-extern void *D_8AB16A10;
+extern u8 *D_8AB16A0C;
+extern u8 *D_8AB16A10;
 extern s16 D_8AB16A3A;
 extern void func_8AB00BA4(s32, s32, s32);
 
