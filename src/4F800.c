@@ -28,7 +28,7 @@ extern s32 D_80128120; void func_8004EC5C(void) { if (D_80128120 > 0) { D_801281
 
 #ifdef VERSION_US
 // Returns 1 if (x, y) lies within x = -640..640 and y = -479..480, else 0.
-// Callers (func_8004F64C, UiImageNode_DrawUnscaled, func_80050218) branch past their following code when it returns 0.
+// Callers (func_8004F64C, UiImageNode_DrawUnscaled, UiTextNode_Draw) branch past their following code when it returns 0.
 s32 func_8004EC7C(s16 x, s16 y) {
     s32 in_bounds = 1;
 
@@ -368,7 +368,77 @@ void func_800501A0(u8 *arg0, s32 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4F800/func_80050218.s")
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern u8 func_80050518(u8);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800497E4(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern void func_800499EC(void);
+extern u8 *D_800971FC;
+// Loads and aligns resource text, applies font spacing and optional two-color rendering,
+// then traverses child nodes through func_8004ECD4.
+//@src/47580.c
+//@src/4CC20.c
+void UiTextNode_Draw(u8 *node, s32 x, s32 y) {
+    u16 *archive_key;
+    u8 *secondary_color;
+    u8 *primary_color;
+    char buffer[512];
+    u16 font_id;
+    s32 two_colors;
+    s32 draw_x;
+    s32 alignment;
+    const char *text;
+    s32 text_width;
+
+    archive_key = (u16 *)(node + 48);
+    two_colors = 0;
+    draw_x = x;
+    if (*(u16 *)(node + 2) & 2) {
+        text = func_8004C8A0(buffer, 512, archive_key[0], *(u16 *)(node + 50));
+        font_id = *(u16 *)(node + 36);
+        if (font_id != 0 && text != NULL) {
+            text_width = func_80049148(font_id, 0, text);
+            alignment = func_80050518(node[39]);
+            switch (alignment) {
+                case 0:
+                    draw_x = x - text_width / 2;
+                    break;
+                case 1:
+                    draw_x = x - text_width;
+                    break;
+            }
+            if (func_8004EC7C((s16)draw_x, (s16)y) != 0) {
+                func_800498C4();
+                secondary_color = node + 44;
+                func_800496A4(*(u16 *)(node + 36), 0);
+                func_8004989C(*(s8 *)(node + 38));
+                primary_color = node + 40;
+                func_8004972C(primary_color[0], primary_color[1], primary_color[2], primary_color[3]);
+                if (*(u32 *)secondary_color != *(u32 *)(node + 40)) {
+                    two_colors = 1;
+                    Font_EnableTwoCycleTexturing();
+                    func_800497E4(secondary_color[0], secondary_color[1],
+                                      secondary_color[2], secondary_color[3]);
+                }
+                func_800495BC(draw_x, y, text);
+                if (two_colors) {
+                    Font_DisableTwoCycleTexturing();
+                }
+                func_800499EC();
+            }
+        }
+    }
+    D_800971FC = node;
+    func_8004ECD4(node, x, y);
+    D_800971FC = NULL;
+}
 #endif
 
 #ifdef VERSION_US
