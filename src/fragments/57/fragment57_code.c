@@ -18,7 +18,56 @@ s32 func_83300398(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300CB0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833015C8.s")
+/* mkdraft:func_833015C8 begin */
+extern void *D_80094908;
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
+
+
+
+s32 func_833015C8(s32 arg0, u8 *arg1) {
+    typedef struct {
+        u8 unk_00[0xE4];
+        u8 unk_E4[8];
+    } Overlay;
+    s32 i;
+    u8 *dst = arg1;
+    s32 mode_flag;
+    f32 distance;
+    s16 angleX;
+    s16 angleY;
+
+    if (arg0 == 2) {
+        for (i = 0; i < 3; i++) {
+            dst[0x18 + i] = ((Overlay *)&D_8330A2B0)->unk_E4[i];
+        }
+        dst[0x1B] = *(u8 *)((u8 *)&D_8330A2B0 + 0xE7);
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x18) == 2 && *(s32 *)((u8 *)&D_8330A2B0 + 0x1C) == 0) {
+            if (D_80087200->stickX >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF6) += 256;
+            }
+            if (D_80087200->stickX < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF6) -= 256;
+            }
+            if (D_80087200->stickY >= 6) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF4) += 256;
+            }
+            if (D_80087200->stickY < -5) {
+                *(s16 *)((u8 *)&D_8330A2B0 + 0xF4) -= 256;
+            }
+        }
+        mode_flag = 1;
+        if (*(s32 *)((u8 *)&D_8330A2B0 + 0x10) > 0 && *(s32 *)((u8 *)&D_8330A2B0 + 0x10) < 4) {
+            mode_flag = 0;
+        }
+        func_80037120((u8 *)D_80094908 + 0xB4, (u8 *)D_80094908 + 0xA8, &distance, &angleX, &angleY);
+        *(s16 *)(dst + 0x1C) = (*(s16 *)((u8 *)&D_8330A2B0 + 0xF4) + angleX) + 0x2000;
+        *(s16 *)(dst + 0x1E) = angleY - ((*(s16 *)((u8 *)&D_8330A2B0 + 0xF6) + 0x2000) * mode_flag);
+    }
+    return 0;
+}
+/* mkdraft:func_833015C8 end */
 
 /* mkdraft:func_8330173C begin */
 extern void *D_80094908;
