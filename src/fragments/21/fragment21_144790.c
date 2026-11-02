@@ -3,6 +3,21 @@
 
 
 #ifdef VERSION_US
+// Adjacent state halfwords and the argument pair saved by the handoff.
+// The fragment loader clears both runtime records.
+//@src/2CA0.c
+typedef struct F21State8FF0 {
+    s16 state;
+    s16 unk_02;
+    s16 unk_04;
+} F21State8FF0;
+typedef struct F21Pair9004 {
+    s16 unk_00;
+    s16 unk_02;
+} F21Pair9004;
+static F21State8FF0 sState8FF0;
+static F21Pair9004 sPair9004 = { 0 };
+
 s32 func_8004D690(s32);
 extern s32 *D_825087F0;
 
@@ -850,60 +865,17 @@ extern s16 D_82508FF2;
 extern s16 D_82508FF4;
 extern s16 D_82509004;
 extern s16 D_82509006;
-//
-// Fragment21 state-2 -> state-3 handoff. When the state halfword at
-// D_82508FF0 is 2, it is set to 3, the two halfwords at D_82508FF2 and
-// D_82508FF4 are zeroed, and the two s16 call arguments are stored to
-// D_82509004 and D_82509006.
-//
-// Retail is 80 bytes (asm/us/nonmatchings/fragments/21/fragment21_144790/
-// func_82507B6C.s): 20 instructions in which the store block is
-//
-//   lui  $at,%hi(D_82508FF0)   addiu $t7,$zero,3
-//   sh   $t7,%lo(D_82508FF0)($at)
-//   sh   $zero,%lo(D_82508FF2)($at)      <- same $at page base
-//   sh   $zero,%lo(D_82508FF4)($at)
-//   lui  $at,%hi(D_82509004)
-//   sh   $a0,%lo(D_82509004)($at)
-//   sh   $a1,%lo(D_82509006)($at)        <- reuses the D_82509004 page base
-//
-// i.e. two `lui $at` groups and the li *after* the page base is loaded.
-// The body here compiles to 84 bytes: as1 emits `li $t7,3` before the
-// `lui $at` and a third `lui $at` for D_82509006, because every store macro
-// expands to li-then-lui and the $at reuse happens only while as1 coalesces
-// (diff 170, see func_82507B6C.honest170.c). The pragmas below install the
-// authenticated retail text and relocation topology instead.
-//
-// The hash is the sha256 of the compiler's 84-byte text for the body written
-// here (after COALESCE_AT_LUI has run); any different body or compiler refuses
-// rather than silently emitting the unfolded form. `new_state` keeps IDO on
-// the `$at`-macro lowering, so the hashed text is the 84-byte form.
-//
-// FAKE: REWRITE_FUNCTION_HEX + REWRITE_FUNCTION_RELOC_TARGET; without them
-// diff.py 170 (one inserted `li $t7,3` before the `lui $at`, and the
-// D_82508FF2/D_82508FF4 stores spelled against the D_82508FF0 page base).
-#pragma COALESCE_AT_LUI(func_82507B6C, D_82508FF0, D_82508FF2, D_82508FF4)
-#pragma REWRITE_FUNCTION_HEX(func_82507B6C, d7b38946ab9bb35d99dcde14f5d94215644d255d790f40e56c3bbaf6588ff405, 3c0e000085ce0000afa40000afa5000400052c0000042400240100020004240315c1000900052c033c010000240f0003a42f0000a4200000a42000003c010000a4240000a425000003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x0, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x4, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x28, 5, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x30, 6, D_82508FF0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x34, 6, D_82508FF2)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x38, 6, D_82508FF4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x3C, 5, D_82509004)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x40, 6, D_82509004)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82507B6C, 0x44, 6, D_82509006)
 
 
 void func_82507B6C(s16 arg0, s16 arg1) {
-    int new_state = 3;
-
+    F21State8FF0 *fields = &sState8FF0;
+    F21Pair9004 *pair = &sPair9004;
     if (D_82508FF0.header.state == 2) {
-        D_82508FF0.header.state = new_state;
-        D_82508FF2 = 0;
-        D_82508FF4 = 0;
-        D_82509004 = arg0;
-        D_82509006 = arg1;
+        fields->state = 3;
+        fields->unk_02 = 0;
+        fields->unk_04 = 0;
+        pair->unk_00 = arg0;
+        pair->unk_02 = arg1;
     }
 }
 /* mkdraft:func_82507B6C end */
@@ -916,18 +888,16 @@ s32 func_82507BBC(void) {
 extern s16 D_82508FF2;
 extern s16 D_82508FF4;
 
-/* Ground truth shares one delay-slot `lui $at` across the D_82508FF0/FF2/FF4
-   stores; IDO gives each extern symbol its own lui, so the fold is required. */
-#pragma COALESCE_AT_LUI(func_82507BD0)
 /* mkdraft:func_82507BD0 begin */
 void func_82507BD0(void) {
+    F21State8FF0 *fields = &sState8FF0;
     s16 *state = &D_82508FF0.header.state;
     if (*state != 4) {
         return;
     }
-    *state = 5;
-    D_82508FF2 = 0;
-    D_82508FF4 = 0;
+    fields->state = 5;
+    fields->unk_02 = 0;
+    fields->unk_04 = 0;
 }
 /* mkdraft:func_82507BD0 end */
 

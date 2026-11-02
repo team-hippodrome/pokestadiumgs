@@ -2,6 +2,16 @@
 
 
 #ifdef VERSION_US
+// Three adjacent halfwords used by the panel-state helpers.
+// The fragment loader clears their runtime storage.
+//@src/2CA0.c
+typedef struct F17State10C32 {
+    s16 state;
+    s16 unk_02;
+    s16 unk_04;
+} F17State10C32;
+static F17State10C32 sState10C32;
+
 typedef struct Fragment17Slot {
     s16 state;
     s16 counter;
@@ -253,37 +263,33 @@ extern s16 D_82210C38;
 extern s32 D_82210C40;
 extern u8 D_82210C44;
 
-#pragma COALESCE_AT_LUI(func_8220BF68, D_82210C32, D_82210C34, D_82210C36)
-#pragma REWRITE_FUNCTION_WORD(func_8220BF68, 0x20, 0x340FFFFF, 0x240FFFFF)
-#pragma SWAP_FUNCTION_WORDS(func_8220BF68, 0x68, 0x00008025, 0x24120002)
 
 
 void func_8220BF68(s32 arg0) {
-    u8 *var_s1;
-    s32 var_s0;
+    u8 *panel;
+    F17State10C32 *state = &sState10C32;
+    s32 index;
 
     if (func_80054E10() != 0) {
         D_82210C30 = 1;
     } else {
         D_82210C30 = 0;
     }
-    D_82210C32 = 0;
-    D_82210C34 = 0;
-    *(u16 *)&D_82210C36 = -1;
+    state->state = 0;
+    state->unk_02 = 0;
+    state->unk_04 = -1;
     D_82210C38 = -1;
     D_82210C40 = arg0;
-    var_s1 = &D_82210C44;
-    var_s0 = 0;
-    do {
-        func_8220BD00(var_s1, var_s0);
-        var_s0 += 1;
-        var_s1 += 0x16;
-    } while (var_s0 != 2);
-    func_8004C8C0(0x52);
-    func_8004C8C0(0x51);
-    func_8004C8C0(0x11D);
-    func_8004C8C0(0x79);
-    func_8004C4B0(0x12);
+    panel = &D_82210C44;
+    for (index = 0; index != 2; index++) {
+        func_8220BD00(panel, index);
+        panel += 22;
+    }
+    func_8004C8C0(82);
+    func_8004C8C0(81);
+    func_8004C8C0(285);
+    func_8004C8C0(121);
+    func_8004C4B0(18);
 }
 /* mkdraft:func_8220BF68 end */
 
@@ -640,25 +646,17 @@ extern s16 D_82210C32;
 extern s16 D_82210C34;
 extern s16 D_82210C38;
 
-#pragma COALESCE_AT_LUI(func_8220D630, D_82210C32, D_82210C34)
 
 
 
-s32 func_8220D630(void)
-{
-  // Storing a literal makes IDO address D_82210C32 through $v0
-  // (lui v0,%hi; addiu v0,%lo, reused by the load and store) and shifts the
-  // branch targets; storing a local reproduces retail's
-  // lui at,%hi; ...; sh t8,%lo(at) shape.
-  s32 one = 1;
-
-  if ((D_82210C30 != 0) && (D_82210C32 == 0))
-  {
-    D_82210C32 = one;
-    D_82210C34 = 0;
-    D_82210C38 = -1;
-  }
-  return 0;
+s32 func_8220D630(void) {
+    F17State10C32 *state = &sState10C32;
+    if ((D_82210C30 != 0) && (D_82210C32 == 0)) {
+        state->state = 1;
+        state->unk_02 = 0;
+        D_82210C38 = -1;
+    }
+    return 0;
 }
 /* mkdraft:func_8220D630 end */
 

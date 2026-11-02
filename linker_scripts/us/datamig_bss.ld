@@ -113,4 +113,21 @@ SECTIONS
     {
         build/src/fragments/16/fragment16_code.o(.bss)
     }
+    /* Adjacent state halfwords used by the fragment 17 panel helpers. */
+    .fragment17_state_10C32_bss 0x82210C32 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/17/fragment17_11B210.o(.bss)
+    }
+
+    /* Fragment 21's saved argument pair and three state halfwords. Both
+     * records are loader-cleared; compiler alignment has no load image. */
+    .fragment21_pair_9004_data 0x82509004 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/21/fragment21_144790.o(.data)
+    }
+
+    .fragment21_state_8FF0_bss 0x82508FF0 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/21/fragment21_144790.o(.bss)
+    }
 }
