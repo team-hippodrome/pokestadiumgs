@@ -432,3 +432,69 @@ legacy fragment 19/24 addresses remain exact. Retail ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
 `8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
 Coverage and compiler/tooling sources are unchanged.
+
+## 2026-11-03 — `func_82B055A0` parameter initializer: proper C match
+
+The 108-byte initializer now compiles directly through stock IDO 7.1.
+Its hex replacement, nine relocation-target patches and coalescing pragma
+are removed. It copies three halfwords from the active record's offsets
+4/6/8 into runtime offsets 0xE/0x10/0x12 and initializes the four halfwords
+at 0x14–0x1A to one before calling the original availability helper.
+`func_82B0560C` copies the same three fields back. The helper subsequently
+updates the flags at 0x16 and 0x18 from the active record.
+//@src/fragments/24/fragment24_150C10.c
+
+The existing eight-byte `F24State12450` prefix now extends to 28 bytes.
+It retains the proven state/flags/counter fields, the existing signed
+halfword views at +8/+0xA, the cleared halfword at +0xC, the three copied
+values and the four real enable flags. Internal unresolved fields retain
+unknown names. These are existing runtime fields, not gap arrays or extra
+allocation. The original initializer wrote the final flag twice through
+separate symbol views; the matching source initializes each flag once.
+
+The flag loop is ordinary C:
+
+```c
+i = 0;
+do {
+    sState12450.enabled[i++] = 1;
+} while (i < 4);
+```
+
+The post-increment assignment matters. A loop with a separate `i++`
+produces the correct size and apparent register shape but swaps the first
+two stores. Its private full-ROM link differs by four bytes and was
+rejected. A `for` loop preserves the store addresses but swaps the first
+two constant loads. The winning loop reproduces both instructions and
+store order; this is not acceptance based on normalized similarity.
+
+The existing NOLOAD BSS placement stays at 0x82B12450. Compiler input grows
+from 16 to 32 bytes, containing the 28-byte record and compiler alignment.
+The original fragment at ROM 0x14FE00 clears runtime storage from relocation
+offset 0x87C0 through RAM extent 0x13450, covering the expanded prefix.
+Loaded relocation metadata, fragment allocation and all legacy addresses
+remain unchanged. A linker assertion checks the 32-byte section footprint.
+No compiler changes, helper files, forced registers, volatile accesses,
+manual loop unrolling or instruction/relocation rewriting are introduced.
+//@src/2CA0.c
+//@linker_scripts/us/datamig_bss.ld
+
+Known/candidate normal and 20-leading-blank controls, final loop controls
+and host syntax pass. All non-owner instructions and relocation endpoints
+remain identical. The unchanged private baseline link passes; the corrected
+candidate private link and normal native
+`make -j1 COMPARE=1 RUN_CC_CHECK=1` pass with full-ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d` and SHA256
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All function extents and previous object addresses/sizes are preserved.
+The now-unused zero-size labels `D_82B12464` and `D_82B1246A` retain their
+addresses and size zero, changing inferred ELF type OBJECT to NOTYPE.
+Actual C object types remain unchanged. A native compile-time `sizeof`
+check proves the record's 28-byte layout without changing the complete
+module; the normal ECOFF conversion leaves its local ELF symbol size zero.
+
+Private evidence: `rewrite-cleanup-f24-parameter-controls`,
+`rewrite-cleanup-f24-final-controls`, `rewrite-cleanup-f24-final-link`, and
+`rewrite-cleanup-nineteenth-seal`. The earlier failed private link remains
+in `rewrite-cleanup-f24-parameter-link`; no failed candidate was installed.
+Coverage and compiler/tooling files are unchanged.

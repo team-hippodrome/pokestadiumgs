@@ -164,7 +164,15 @@ or reverting a function to assembly does not establish a proper C match.
   ROM gate pass with all function extents and legacy addresses preserved.
   See [the playback-state evidence](regions/fragments/72/fragment72_code.md).
 
-This leaves 644 directive occurrences and 38 affected functions. Coverage files and
+- `func_82B055A0`: extend the existing runtime prefix through its three
+  copied halfwords and four enable flags. An ordinary post-increment `do`
+  loop initializes each flag once and reproduces the retail store order.
+  All 108 bytes now match without a hex replacement, nine relocation patches
+  or coalescing. Module controls, host syntax, private ROM links and the
+  normal native full-ROM gate pass. See
+  [the parameter-initializer evidence](regions/fragments/24/fragment24_150C10.md).
+
+This leaves 633 directive occurrences and 37 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -202,7 +210,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82508620` | [src/fragments/21/fragment21_147D10.c](../src/fragments/21/fragment21_147D10.c) | 8 | Replaced with C |
 | `func_827000B8` | [src/fragments/22/fragment22_14A2E0.c](../src/fragments/22/fragment22_14A2E0.c) | 1 | Pending |
 | `func_82702220` | [src/fragments/22/fragment22_14B090.c](../src/fragments/22/fragment22_14B090.c) | 7 | Pending |
-| `func_82B055A0` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 11 | Pending |
+| `func_82B055A0` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 11 | Replaced with C |
 | `func_82B062BC` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_82B07960` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 25 | Pending |
 | `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |

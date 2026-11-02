@@ -174,3 +174,6 @@ ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
 
 ASSERT(SIZEOF(.fragment72_playback_resources_bss) == 16,
        "fragment72 playback resources must retain their compiler section footprint");
+
+ASSERT(SIZEOF(.fragment24_state_12450_bss) == 32,
+       "fragment24 state and parameter prefix must retain its compiler section footprint");

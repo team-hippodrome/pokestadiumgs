@@ -2,13 +2,18 @@
 
 
 #ifdef VERSION_US
-// State, flags and counter occupy the loader-cleared halfwords at this address.
+// State and selection parameters occupy this loader-cleared runtime prefix.
 //@src/2CA0.c
 typedef struct F24State12450 {
     s16 state;
     s16 unk_02;
     u16 flags;
     s16 counter;
+    s16 unk_08;
+    s16 unk_0a;
+    s16 unk_0c;
+    s16 copied_values[3];
+    s16 enabled[4];
 } F24State12450;
 static F24State12450 sState12450;
 
@@ -1613,33 +1618,22 @@ extern s16 D_82B12464[4];
 extern s16 D_82B12468;
 extern s16 D_82B1246A;
 extern void func_82B0556C(void);
-#pragma COALESCE_AT_LUI(func_82B055A0)
-#pragma REWRITE_FUNCTION_HEX(func_82B055A0, 03f5aab9cdb9cde6062e38fcd33cd259bb3fe8bc2923e35ca4d7e30ed0e9b53d, 3c030000246300008c62025427bdffe8afbf0014a460000c844e00043c01000024190001a46e000e844f00062408000124090001a46f001084580008240a0001a4780012a4280000a43900003c010000a42900000c000000a42a00008fbf001427bd001803e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x0, 5, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x4, 6, D_82B12450)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x1C, 5, D_82B12466)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x44, 6, D_82B12466)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x48, 6, D_82B12464)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x4C, 5, D_82B12468)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x50, 6, D_82B12468)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x54, 4, func_82B0556C)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B055A0, 0x58, 6, D_82B1246A)
 
 
 
 
 void func_82B055A0(void) {
-    u8 *temp_v0;
+    u8 *source;
     s32 i;
-    temp_v0 = (*(u8 **)((u8 *)(&D_82B12450) + 0x254));
-    (*(s16 *)((u8 *)(&D_82B12450) + 0xC)) = 0;
-    (*(s16 *)((u8 *)(&D_82B12450) + 0xE)) = (*((s16 *)(((u8 *)(temp_v0)) + 4)));
-    (*(s16 *)((u8 *)(&D_82B12450) + 0x10)) = (*((s16 *)(((u8 *)(temp_v0)) + 6)));
-    (*(s16 *)((u8 *)(&D_82B12450) + 0x12)) = (*((s16 *)(((u8 *)(temp_v0)) + 8)));
-    for (i = 0; i < 4; i++) {
-        D_82B12464[i] = 1;
-    }
-    D_82B1246A = 1;
+    source = *(u8 **)(D_82B12450 + 0x254);
+    *(s16 *)(D_82B12450 + 0xC) = 0;
+    *(s16 *)(D_82B12450 + 0xE) = *(s16 *)(source + 4);
+    *(s16 *)(D_82B12450 + 0x10) = *(s16 *)(source + 6);
+    *(s16 *)(D_82B12450 + 0x12) = *(s16 *)(source + 8);
+    i = 0;
+    do {
+        sState12450.enabled[i++] = 1;
+    } while (i < 4);
     func_82B0556C();
 }
 /* mkdraft:func_82B055A0 end */
