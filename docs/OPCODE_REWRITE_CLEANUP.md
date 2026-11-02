@@ -91,7 +91,15 @@ or reverting a function to assembly does not establish a proper C match.
   retail ROM gate with every function extent and legacy address preserved.
   See [the fragment 24 evidence](regions/fragments/24/fragment24_150C10.md).
 
-This leaves 767 directive occurrences and 51 affected functions, including
+- `func_82000098`: own the real trigger-state halfwords in C at their
+  loader-cleared address. Stock IDO emits all 104 retail bytes directly,
+  removing the whole-function hex replacement, eight relocation-target
+  directives and one coalescing directive. Complete-module normal/blank
+  controls, host syntax and a normal retail ROM gate pass; existing fade
+  data, function extents and legacy addresses remain exact. See
+  [the fragment 16 evidence](regions/fragments/16/fragment16_code.md).
+
+This leaves 757 directive occurrences and 50 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -108,7 +116,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_80071DD8` | [src/728D0.c](../src/728D0.c) | 5 | Pending |
 | `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Pending |
 | `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Replaced with C |
-| `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Pending |
+| `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Replaced with C |
 | `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |
 | `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |
 | `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |

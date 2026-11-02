@@ -107,4 +107,10 @@ SECTIONS
     {
         build/src/fragments/24/fragment24_150C10.o(.bss)
     }
+    /* Loader-cleared trigger state and adjacent halfword. The existing fade
+     * initializer remains in this source's normal loaded data section. */
+    .fragment16_state_1D58_bss 0x82001D58 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/16/fragment16_code.o(.bss)
+    }
 }
