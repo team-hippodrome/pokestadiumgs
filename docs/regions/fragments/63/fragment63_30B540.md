@@ -74,3 +74,29 @@ Tried for `$v1`, none of which help: a temp for the scrutinee, an if-chain, a
 ternary argument, calls split per case, and an `s32` scrutinee. The permuter
 can't build this owner yet: it injects the stale `void func_87E09BDC`
 prototype next to the companion-edited definition.
+
+## 2026-11-02 — `func_87E07DD0`: remove instruction rewriting
+
+Base revision: `7d0511c4829cce1912c2a5ced28734f343ebbc66`.
+The function scans four 24-byte records and returns the first index whose
+halfword at `arg0 + 0x21A6 + index * 24` has its high bit set, or -1. Adjacent
+`func_87E07E08` counts this same unsigned flag, and `func_87E07E38` uses it
+to filter its search. `func_87E088E0` stores the returned index as its
+selection. The flag's more specific game meaning remains unresolved.
+
+Decode that bit as `(u32)*(u16 *)address >> 15`, consistently with the
+neighboring helpers. Stock IDO emits the retail `lh t7`/`bgezl t7` sequence
+directly. This removes both `REWRITE_FUNCTION_WORD` directives at +0x10
+and +0x14. Reversing declarations, naming the loaded halfword, changing
+index forms and walking an explicit byte cursor did not repair this pair.
+The direct mask spelling adds instructions; the unsigned shift is exact.
+
+Four fresh known/candidate normal/+20-leading-blank controls reproduce
+the complete module's allocated bytes, section layout, defined extents
+and semantic relocations. The function remains 56 bytes; no local,
+prototype, compiler flag, padding or assembly owner is added. The normal
+host syntax check passes. Exhaustive enumeration of all 65536 halfword
+values confirms that the unsigned high-bit test equals the preceding
+signed-negative test. After final formatting, two further normal/blank
+complete-module controls, normal host syntax, and the full native stock
+IDO build pass. Retail ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.

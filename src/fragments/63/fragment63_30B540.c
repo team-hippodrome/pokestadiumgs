@@ -98,16 +98,15 @@ void func_87E07CD0(void) {
 /* mkdraft:func_87E07CD0 end */
 
 /* mkdraft:func_87E07DD0 begin */
-#pragma REWRITE_FUNCTION_WORD(func_87E07DD0, 0x10, 0x84AE21A6, 0x84AF21A6)
-#pragma REWRITE_FUNCTION_WORD(func_87E07DD0, 0x14, 0x05C30004, 0x05E30004)
-
+// Find the first of four entries with the high status bit set. The neighboring
+// count and search helpers decode the same flag from these 24-byte records.
 s32 func_87E07DD0(s32 arg0) {
     s32 i;
     s32 ret;
 
     ret = -1;
     for (i = 0; i != 4; i++) {
-        if (*(s16 *)((u8 *)arg0 + 0x21A6 + i * 0x18) < 0) {
+        if ((u32)*(u16 *)((u8 *)arg0 + 0x21A6 + i * 24) >> 15) {
             ret = i;
             break;
         }
