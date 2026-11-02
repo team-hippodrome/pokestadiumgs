@@ -273,6 +273,15 @@ jobs:
               pull_number: number,
               per_page: 100,
             });
+            const addsPython = files.some(({ filename, status }) =>
+              status === 'added' && filename.endsWith('.py'),
+            );
+            if (addsPython) {
+              core.info(`PR #${number} adds Python files; manual merge required.`);
+              core.setOutput('eligible', 'false');
+              return;
+            }
+
             const changesAutomation = files.some(({ filename }) =>
               filename === '.dockerignore' ||
               filename.startsWith('.github/') ||

@@ -1,0 +1,75 @@
+name: Require manual merge for new Python files
+
+# Run before the ROM gate completes so a later commit can disarm an
+# already-enabled auto-merge. Only GitHub API metadata is read; no PR code
+# is checked out or executed by this privileged workflow.
+on:
+  pull_request_target:
+    branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review, auto_merge_enabled]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: python-manual-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  disarm:
+    name: Disable auto-merge when Python files are added
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect the current PR and disable auto-merge if necessary
+        uses: actions/github-script@v7
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        with:
+          script: |
+            const number = Number(process.env.PR_NUMBER);
+            const { owner, repo } = context.repo;
+            const { data: pr } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: number,
+            });
+            if (pr.state !== 'open' || pr.base.ref !== 'master' || !pr.auto_merge) {
+              return;
+            }
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: number,
+              per_page: 100,
+            });
+            const addsPython = files.some(({ filename, status }) =>
+              status === 'added' && filename.endsWith('.py'),
+            );
+            if (!addsPython) {
+              return;
+            }
+
+            // A newer PR event will inspect any revision that changed while
+            // the file list was being fetched.
+            const { data: current } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: number,
+            });
+            if (current.state !== 'open' || current.base.ref !== 'master' ||
+                current.head.sha !== pr.head.sha || !current.auto_merge) {
+              return;
+            }
+
+            await github.graphql(
+              `mutation($pullRequestId: ID!) {
+                disablePullRequestAutoMerge(input: { pullRequestId: $pullRequestId }) {
+                  pullRequest { number }
+                }
+              }`,
+              { pullRequestId: current.node_id },
+            );
+            core.info(`PR #${number} adds Python files; auto-merge disabled and manual merge required.`);
