@@ -398,3 +398,37 @@ Semantic spelling clarification for earlier notes: tag0x43555030 is CUP0
 function or shared symbol was renamed by this worker.
 
 Parent integration: named the accepted entry point; normal/+20 blank-line complete-module controls preserve sections, instruction bytes, extents and relocations. Cup initializer cleanup removes the unused quotient/remainder union and unused SDK declarations. No coverage or tooling edits.
+
+## 2026-11-03 — state and counter helpers: ordinary C matches
+
+On base `ad4d54f82bf9adbdc24f12e3221fe923060833e7`, `func_82B062BC`
+(60 bytes) and `func_82B07A5C` (88 bytes) compile to retail instructions
+without their two `COALESCE_AT_LUI` directives. The former sets state two,
+clears the counter and invokes the original state helper when its predicate
+succeeds. The latter increments the counter when its predicate succeeds and,
+at count two or greater, sets state nine and clears the counter.
+
+The real eight-byte C record at `0x82B12450` contains state, the unresolved
+halfword at +2, flags at +4 and the counter at +6. The dispatcher
+`func_82B060A0` tests the flags and state. `func_82B07A5C` retains its original
+legacy counter address for the increment, then uses the owned record for the
+two terminal stores. These views refer to the same halfword at `0x82B12456`.
+Keeping the explicit counter address preserves the retail address calculation;
+a pointer to the owned member instead leaves a different load displacement.
+//@src/fragments/24/fragment24_150C10.c
+
+This file's BSS input section is 16 bytes including compiler alignment. The
+existing NOLOAD mechanism pins it to `0x82B12450`. The fragment loader clears
+runtime storage from `0x82B087C0` to `0x82B13450`; the record is inside that
+range. Loaded relocation metadata, fragment header and allocation are unchanged.
+//@src/2CA0.c
+//@linker_scripts/us/datamig_bss.ld
+
+Complete-module normal/20-leading-blank-line controls, host syntax and private
+known/candidate retail links pass. A normal native stock IDO 7.1 combined build
+with the two fragment 19 replacements passes
+`make -j1 COMPARE=1 RUN_CC_CHECK=1`. All linked function addresses/sizes and
+legacy fragment 19/24 addresses remain exact. Retail ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage and compiler/tooling sources are unchanged.

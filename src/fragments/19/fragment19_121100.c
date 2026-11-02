@@ -2,6 +2,20 @@
 
 
 #ifdef VERSION_US
+// The fragment loader clears these adjacent-halfword state records.
+//@src/2CA0.c
+typedef struct F19State5EE4 {
+    s16 state;
+    s16 unk_02;
+} F19State5EE4;
+typedef struct F19State5EC2 {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+} F19State5EC2;
+static F19State5EE4 sState5EE4;
+static F19State5EC2 sState5EC2 = { 0 };
+
 typedef struct unk_func_82302B8C {
     /* 0x00 */ u8 r;
     /* 0x01 */ u8 g;
@@ -41,11 +55,11 @@ extern s16 D_82305EE4;
 extern s16 D_82305EE6;
 extern s16 D_82305EE8;
 extern void func_82300020(s32);
-#pragma COALESCE_AT_LUI(func_8230009C, D_82305EE4, D_82305EE6)
 void func_8230009C(void) {
+    F19State5EE4 *state = &sState5EE4;
     if (D_82305A70[2] == 0) {
-        D_82305EE4 = 0;
-        D_82305EE6 = 0;
+        state->state = 0;
+        state->unk_02 = 0;
         D_82305EE8 = 0;
     } else {
         func_82300020(1);
@@ -244,17 +258,14 @@ extern s16 D_82305EC2;
 extern s16 D_82305EC4;
 extern s16 D_82305EC6;
 extern s16 D_82305EC8;
-/* Ground truth reuses one `lui $at` for the D_82305EC4/EC6/EC2 stores and
-   reloads $at for the equally same-page D_82305EC8, so the fold is narrowed
-   to those three symbols (AGENTS.md rule 12). */
-#pragma COALESCE_AT_LUI(func_82300A78, D_82305EC4, D_82305EC6, D_82305EC2)
 void func_82300A78(void) {
     s16 *state = &D_82305EB4;
+    F19State5EC2 *fields = &sState5EC2;
     if (*state != 2) return;
     *state = 3;
-    D_82305EC4 = 0;
-    D_82305EC6 = 0;
-    D_82305EC2 = 0;
+    fields->unk_02 = 0;
+    fields->unk_04 = 0;
+    fields->unk_00 = 0;
     D_82305EC8 = 0;
 }
 

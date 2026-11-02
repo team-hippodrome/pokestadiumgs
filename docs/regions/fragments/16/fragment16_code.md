@@ -232,3 +232,40 @@ of flag states, both byte selections and the -1 sentinel. The full native
 `make -j1 COMPARE=1 RUN_CC_CHECK=1` passes with retail ROM MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No helper, local storage, prototype,
 compiler flag, padding or assembly owner is added.
+
+## 2026-11-03 — trigger helper: ordinary C replaces hex text
+
+On `109cbc23922bdeebc59a72b17539735d948b80f0`, `func_82000098` compiles
+to all 104 retail bytes with its whole-function hex replacement, eight
+relocation-target rewrites and one coalescing directive removed. Its two
+state halfwords are a real four-byte C object at `0x82001D58`. A local
+pointer supplies the two stores; existing comparison reads, the selection
+reset to -1, sound 350 and the success result remain exact.
+
+This source's 16-byte BSS input section contains the real object and compiler
+alignment. The existing NOLOAD mechanism pins it to its original address.
+The fragment loader clears storage from `0x82001D50` to `0x82001EE0` after
+consuming relocation metadata. The existing fade-state initializer and tail
+remain in their normal loaded data section, byte-for-byte unchanged.
+//@src/2CA0.c
+//@linker_scripts/us/datamig_bss.ld
+
+Complete-module known/candidate controls, each normally and with 20 leading
+blank lines, preserve every relative function extent and all loaded data.
+Private full-ROM links preserve every function extent and legacy runtime
+address. The installed source passes normal host syntax and native stock IDO
+7.1 `make -j1 COMPARE=1 RUN_CC_CHECK=1`, including the four already verified
+fragment 19/24 replacements. ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage and compiler/tooling sources are unchanged.
+
+### Grid helper follow-up: requeue
+
+`requeue` `func_82000100`: retail is 240 bytes. Eight private variants using
+one owned state pair and shared width/limit/stride locals for the grid walk
+and final call all emit the same 524-byte result. Declaration-order and const
+variants therefore supply one compiler outcome, rather than eight independent
+near-misses. None is installed. Next: separate the owned terminal stores from
+the dimension-local hypothesis, then examine the resulting loop/control-flow
+residual before changing declaration order again.

@@ -977,3 +977,15 @@ preserve the complete module's sections, bytes, function extents and
 relocations, normally and with20 leading blank lines. No instruction
 rewriting, padding, extra storage or ABI change is used. Earlier header
 requeues are resolved.
+
+## 2026-11-03 — four-pointer clear rewrite: requeue
+
+`requeue` `func_84136D84`: retail clears four pointer words at
+`0x84186160..0x8418616C` in 24 bytes, sharing one `$at` high-address load.
+Private C ownership as a four-element array or a four-field pointer record
+emits 28 bytes: a `$v0` base and extra address addition. Four separate static
+pointer objects emit 36 bytes with separate high-address loads. Initializer,
+pointer/direct-access and declaration-order controls did not close this
+residual. No source, storage or linker change is installed for this owner.
+Next: inspect stock address materialization and the assembler's common-address
+handling before proposing another storage spelling.
