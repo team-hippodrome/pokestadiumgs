@@ -149,6 +149,12 @@ SECTIONS
     {
         build/src/fragments/79/fragment79_3A4030.o(.data)
     }
+    /* Four compacted nonzero values, cleared with the fragment's runtime
+     * block after relocation metadata has been consumed. */
+    .fragment31_collected_values_bss 0x88234761 (NOLOAD) : SUBALIGN(1)
+    {
+        build/src/fragments/31/fragment31_189760.o(.bss)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
@@ -156,3 +162,6 @@ ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
 
 ASSERT(SIZEOF(.fragment79_snapshot_pointers_data) == 16,
        "fragment79 snapshot pointers must occupy four original words");
+
+ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
+       "fragment31 collected values must retain their compiler section footprint");

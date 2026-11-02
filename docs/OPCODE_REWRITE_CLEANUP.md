@@ -139,7 +139,15 @@ or reverting a function to assembly does not establish a proper C match.
   pass; all function extents, legacy globals and previous C objects remain
   exact. See [the snapshot-pointer evidence](regions/fragments/79/fragment79_3A4030.md).
 
-This leaves 693 directive occurrences and 41 affected functions, including
+- `func_8821B3E0`: own the four-byte collected-value array and use one
+  loop for the two marker bytes, followed by another for the four cleared
+  values. The shared loop index replaces the artificial reset and repeated
+  base expression. Stock IDO emits all 88 retail bytes without coalescing.
+  Module controls, host syntax, both private ROM links and the normal native
+  full-ROM gate pass with all function extents and legacy addresses preserved.
+  See [the fragment 31 state evidence](regions/fragments/31/fragment31_189760.md).
+
+This leaves 692 directive occurrences and 40 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -183,7 +191,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82B07960` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 25 | Pending |
 | `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_88203A18` | [src/fragments/31/fragment31_1768F0.c](../src/fragments/31/fragment31_1768F0.c) | 6 | Pending |
-| `func_8821B3E0` | [src/fragments/31/fragment31_189760.c](../src/fragments/31/fragment31_189760.c) | 1 | Pending |
+| `func_8821B3E0` | [src/fragments/31/fragment31_189760.c](../src/fragments/31/fragment31_189760.c) | 1 | Replaced with C |
 | `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Pending |
 | `func_8830765C` | [src/fragments/32/fragment32_1B8010.c](../src/fragments/32/fragment32_1B8010.c) | 2 | Pending |
 | `func_88507370` | [src/fragments/34/fragment34_1C3FA0.c](../src/fragments/34/fragment34_1C3FA0.c) | 31 | Pending |
