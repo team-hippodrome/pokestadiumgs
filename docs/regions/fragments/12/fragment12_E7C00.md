@@ -456,3 +456,42 @@ outside the reordered prefix are equal; inside it, the relocation target
 multiset is equal. Next: establish the owning scheduler/IR ordering before
 another source family. No candidate was installed or ROM gate run for these
 rejections; source, linker layout and coverage remain unchanged.
+
+## 2026-11-02: image and label panel renderer accepted
+
+`Fragment12_DrawImageAndLabelPanels` (`func_814063A0`, 216 words / 864
+bytes, ROM 0xEB6B0) replaces its assembly owner through the canonical
+native runner and a host-syntax/full-retail-ROM gate on `5d468de0`.
+It draws the square image panel before the label for modes below two,
+and after the label for the remaining modes. The existing interpolators
+supply the rectangles; +0x4D50 holds the copied label and +0x4D5C the
+integer texture handle supplied by `func_81404A08`. A compatibility alias
+preserves the old address-keyed name for remaining assembly callers.
+
+The previous scheduling requeue is resolved. Explicit inline `(u32)`
+casts on the four display-list addresses retain the optimizer's shared
+address-word expressions. Unlike named address scalars, these casts add
+no frontend local homes. This reproduces the argument-copy placement,
+address setup, spill offsets and 104-byte frame using ordinary SDK
+`gSPDisplayList` calls. There are no cached-pointer arrays, manual command
+writes, added helpers, unused locals, artificial padding or output rewrite.
+`u32` is the SDK's unsigned-long type; the DMA macro's final address cast
+uses unsigned int. The measured spellings are not interchangeable here.
+
+Normal and +20-leading-blank whole-module allocated-byte, function-extent
+and semantic-relocation controls pass after naming, variable cleanup and
+removing duplicate declarations. The token-identical formatting probes
+also established that statement-line ties can change address scheduling
+under this compiler profile; they were diagnostic only and supplied no
+accepted source. Nested guards, early returns and pointer-typed variants
+did not resolve the residual. Coverage and private tooling are unchanged.
+
+Fresh validation on integrated source revision `a2792d92`, rebased onto
+master `368517eb`, passes native `make extract DISASSEMBLE_ALL=1` followed
+by `make -j1 COMPARE=1 RUN_CC_CHECK=1`. The complete retail ROM has MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All 216 final instruction words equal
+the saved original assembly at ROM 0xEB6B0, and the link map preserves
+VRAM 0x814063A0 and the 864-byte function size. Final integrated normal/+20
+whole-module controls pass as well. Only this verification note follows
+the sealed source revision; coverage and the pending fragment 79 notes
+are preserved.
