@@ -125,3 +125,28 @@ this change. The normal syntax-enabled forced source compilation and full
 `build/pokestadiumgs-us.z64: OK`. `cmp` confirms byte-for-byte equality
 with retail; MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`. The original
 32-byte frame is preserved without dummy storage or instruction rewrites.
+
+## 2026-11-03 — state-entry rewrite: real callee contract, requeue
+
+`requeue` **func_8AB0A720** at revision `4835fc02`. Its declaration of
+`func_8AB007E0` as returning `s32` conflicts with the actual `void`
+definition in `src/fragments/45/fragment45_2251A0.c`. The constructor copies
+its record, installs a texture, clears its counter and calls
+`func_8AB00618`; it returns no value. The old explanation of discarded-call
+occupancy is therefore insufficient as an ABI justification.
+
+Eight valid native controls corrected that declaration. Removing the dead
+`D_8AB11D00` pointer test preserves the 436-byte opcode shape but leaves
+register differences (normalized 1.0, raw 0.8532). Retaining that test was a
+causal control only: raw 0.8899, with the four final grid clears using
+`v0/v1/a0/a1` and base `a2` rather than retail's `v0/a0/a1/a2` and base `a3`.
+Neither spelling is installed. Direct array views, a consumed menu-flags
+pointer, result declaration/assignment forms, and the actual `s32` return of
+`func_8004C54C` did not close it. An earlier malformed extraction accidentally
+included sibling definitions; its eight compile failures are generator
+errors and do not count as source-shape hypotheses.
+
+Next: trace the real pointer/flag webs around the four clears after the
+constructor. Preserve the proven void callee contract and remove the dead
+pointer test in any accepted replacement; do not restore a false return type
+to reserve a register. Private valid family: `rewrite-cleanup-f45-real-callee-valid8`.

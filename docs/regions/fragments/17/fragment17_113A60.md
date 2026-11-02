@@ -772,3 +772,65 @@ After integration onto `d2961a7b` (PR #2183), the final source again passes
 both complete-module controls, host syntax, the normal full-ROM gate, and
 fragment 17 function-extent and legacy-runtime-address checks. The ROM hashes
 remain identical to those above.
+
+## 2026-11-03 — fade initializer native sequence found; storage prerequisite
+
+`layout-prerequisite` **func_822068E0**, against merged revision
+`4835fc0238b5448fa736af8a081c7f0b066479e2`. Stock native IDO 7.1 emits
+its 112-byte instruction sequence, registers, 24-byte frame and branch
+schedule when the adjacent alpha/timer halfwords have one C-owned record:
+
+```c
+typedef struct F17FadeParameters {
+    s16 alpha;
+    s16 timer;
+} F17FadeParameters;
+F17FadeParameters sFadeParameters;
+
+void func_822068E0(void) {
+    s16 *alpha = &sFadeParameters.alpha;
+    s16 *timer = &sFadeParameters.timer;
+    _bzero((u8 *)&D_8220EC40, 0x650);
+    D_8220EC40 = func_8004D690(7);
+    D_8220EC48 = -1;
+    if (StageContext_GetFadeMode() == 0) {
+        *alpha = 255;
+        *timer = 5;
+    } else {
+        *alpha = 0;
+        *timer = 0;
+    }
+}
+```
+
+Only the two timer-store low relocation addends differ in the raw owner
+bytes: record offset 2 at function offsets 0x54 and 0x5C. Normal and
+20-leading-blank whole-module controls agree separately for the original
+source and candidate; the original control also equals the current built
+object. Every defined function extent remains identical. This replaces the
+earlier claim that ordinary C cannot produce the interleaved store schedule.
+It does **not** establish an installable or full-ROM match.
+
+The new record occupies `.bss+0` and moves the already matched
+`sTransition105E8` from `.bss+0` to `.bss+4`. Their real addresses are
+0x8220EC44 and 0x822105E8, so the current single input-section pin cannot
+place both. `.data` already holds `sTransition106B2` at 0x822106B2.
+An external record view expands the initializer to 120 bytes. Tested native
+`data_seg`, `bss_seg`, `alloc_data` and `section_gp` controls did not create a
+separate input section; GNU section-attribute syntax failed. No compiler
+change, global-symbol override, artificial gap, source split or relocation
+rewrite is installed.
+
+Next: reconstruct the real runtime objects before changing placement.
+The 1616-byte clear range 0x8220EC40..0x8220F290 fits the 12-byte header used
+by `func_82206A2C` and two 802-byte clipping buffers. That consumer selects a
+buffer with header halfword 5, reads its halfword count, and visits four-
+halfword rectangles with stride 8. A count plus 100 rectangles per buffer
+fits those extents; that capacity is an inference, not a separately observed
+loop bound. `func_82207714` then initializes five texture records at
+0x8220F290 and four each at 0x8220F9D8 and 0x8220FFA8, followed by its root
+pointer at 0x82210578. Resolve intervening objects and alignment from their
+producers/consumers rather than inventing a byte array to bridge addresses.
+Retain the existing transition records and legacy views until a full-ROM
+candidate preserves them. Private proof: `rewrite-cleanup-f17-storage-finding`
+receipt; native compiler SHA256 begins `975142f2e9c4ceb7`.

@@ -989,3 +989,13 @@ pointer/direct-access and declaration-order controls did not close this
 residual. No source, storage or linker change is installed for this owner.
 Next: inspect stock address materialization and the assembler's common-address
 handling before proposing another storage spelling.
+
+### 2026-11-03 — prepared-field pointer control
+
+The later fragment 31/F74 pointer-lifetime finding was tested here too.
+Preparing one through four pointers to the real fields of a C-owned
+four-pointer record, with either BSS or explicit zero-data initialization,
+still produces the same 28-byte result. All eight variants are one compiler
+outcome; no new storage or source is installed. The stock address-
+materialization investigation above remains the next action. Private family:
+`rewrite-cleanup-f79-pointer-clear8`, based on `4835fc02`.
