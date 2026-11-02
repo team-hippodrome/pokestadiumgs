@@ -691,3 +691,49 @@ normal host syntax and `make -j1 COMPARE=1 RUN_CC_CHECK=1`. The normal link
 also verifies the initialized data is exactly sixteen zero bytes and the
 pre-existing BSS remains 32 bytes. Full retail ROM MD5:
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Coverage and compiler options are unchanged.
+
+
+## `func_8AC05F38`: return motion fields toward one
+
+This owner matches all 61 instructions (244 bytes), with no stack frame.
+Each of the existing `unk40` and `unk44` float fields approaches 1.0 by a
+0.05 step, clamping an overshoot to 1.0. Values already equal to 1.0 remain
+unchanged. The field names and existing `Fragment43Motion602C` layout are
+preserved. The type definition moves before the new function, and its two
+redundant declarations are removed.
+
+`func_8AC0602C` and `func_8AC060E4` call this owner when their third argument
+is zero. Their other path sets the same fields from the cosine table, and
+both then derive `unk4C` from `unk44` and the existing dimensions. The new
+implementation preserves these pointer and void interfaces.
+//@src/fragments/43/fragment43_1E5A10.c
+
+The earlier first-literal ownership prerequisite is resolved by the current
+YAML: this file already owns ROM `0x1ED840..0x1EDB90`. Its original object
+places `D_8AC0816C`, `D_8AC08170` and `D_8AC08174` in `.rodata` at offsets
+796, 800 and 804. Ordinary float literals now reproduce the retail register
+sequence on the first trial. The consumed `step` local shares the final
+literal between the two `unk44` branches. No new fake, padding, qualifier,
+data ownership, linker, YAML or compiler change is needed.
+//@yamls/us/rom.yaml
+
+Fresh verification targets master
+`519365e13d1690c66ca333d5d3c41addc0e93e29` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/43/fragment43_1E5A10.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled forced compile and complete US link report
+`build/pokestadiumgs-us.z64: OK`. Retail byte comparison and whitespace
+checks pass; both ROMs have MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All 28480 linked module text bytes and 848 rodata bytes equal retail. The
+16-byte initialized data and 32-byte BSS extent remain unchanged, as do all
+function starts and sizes. Three raw object low operands change from named
+literal references to equivalent `.rodata + 796/800/804` relocations; every
+other instruction byte matches the assembly-backed baseline. The owner
+occupies ROM `0x1EB928..0x1EBA1C` (end exclusive). No instruction rewrite,
+generated coverage/layout or CI change is included.
