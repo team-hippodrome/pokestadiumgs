@@ -2,6 +2,15 @@
 
 
 #ifdef VERSION_US
+// The fragment loader clears these two-halfword transition-control records.
+//@src/2CA0.c
+typedef struct F17TransitionState {
+    s16 state;
+    s16 unk_02;
+} F17TransitionState;
+static F17TransitionState sTransition106B2 = { 0 };
+static F17TransitionState sTransition105E8;
+
 typedef struct { s16 a; s16 b; } Pair16_b2;
 extern s16 D_822105F0;
 extern s16 D_822105F4;
@@ -66,13 +75,14 @@ void func_82204488(s16 *arg0) {
 extern s16 D_822105E8;
 extern u8 D_822105DC[];
 extern u8 D_822105EA[];
-#pragma COALESCE_AT_LUI(func_82204744, D_822105E8, D_822105EA)
 
 void func_82204744(void) {
-    if (*(s16 *)(D_822105DC + 0xC) == 0) {
-        D_822105E8 = 1;
-        *(s16 *)D_822105EA = 0;
-        func_800226C0(0x3E);
+    F17TransitionState *state = &sTransition105E8;
+
+    if (*(s16 *)(D_822105DC + 12) == 0) {
+        state->state = 1;
+        state->unk_02 = 0;
+        func_800226C0(62);
     }
 }
 /* mkdraft:func_82204744 end */
@@ -1268,13 +1278,13 @@ s32 func_8220AA08(s32 arg0, s32 arg1) {
 
 /* mkdraft:func_8220AC38 begin */
 extern u8 D_82210698[];
-#pragma COALESCE_AT_LUI(func_8220AC38, D_822106B2, D_822106B4)
 
 s32 func_8220AC38(void) {
+    F17TransitionState *state = &sTransition106B2;
     s32 ret = 0;
     if (*(s16 *)(D_82210698 + 0x1A) == 0) {
-        D_822106B2 = 1;
-        D_822106B4 = 0;
+        state->state = 1;
+        state->unk_02 = 0;
         ret = 1;
     }
     return ret;
@@ -1283,13 +1293,13 @@ s32 func_8220AC38(void) {
 
 typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
 extern s16 D_822106D4;
-#pragma COALESCE_AT_LUI(func_8220AC64, D_822106B2, D_822106B4)
 s32 func_8220AC64(void) {
+    F17TransitionState *state = &sTransition106B2;
     s32 result = 0;
 
     if (*(s16 *)(D_82210698 + 0x1A) == 3) {
-        D_822106B2 = 5;
-        D_822106B4 = 0;
+        state->state = 5;
+        state->unk_02 = 0;
         *(unk_func_8220AC64_pair *)&D_822106D4 = *(unk_func_8220AC64_pair *)&D_822106CC;
         D_822106C4 = 0.75f;
         D_822106C8 = 0.75f;
