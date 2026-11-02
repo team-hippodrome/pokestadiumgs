@@ -130,4 +130,10 @@ SECTIONS
     {
         build/src/fragments/21/fragment21_144790.o(.bss)
     }
+    /* Cellular transition state and flags. The remaining header and cell
+     * mask keep their legacy views in the same loader-cleared runtime block. */
+    .fragment21_transition_9680_bss 0x82509680 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/21/fragment21_147D10.o(.bss)
+    }
 }
