@@ -495,3 +495,90 @@ VRAM 0x814063A0 and the 864-byte function size. Final integrated normal/+20
 whole-module controls pass as well. Only this verification note follows
 the sealed source revision; coverage and the pending fragment 79 notes
 are preserved.
+
+
+## 2026-11-02: selection-grid renderer — requeue
+
+`func_81405CC4` draws six entries in three columns and two rows. The
+image, overlay and text passes use index `row * 3 + column`, column
+spacing 84 and row spacing 92. Image storage starts at state +64 with
+3200-byte records (40 by 40 RGBA16). Metadata starts at +0x4B40 with an
+88-byte stride: species +0, overlay argument +1, DVs +22, level +29 and
+name +52. `func_80064474` consumes the species and DVs; its result selects
+text-table 13 entries 29/30. These offsets are read from the original
+assembly; the helper's argument types also have a C definition in
+`src/641E0.c`. No additional interpretation of the gender labels is needed
+for this candidate.
+
+Native canonical probes on merged revision `8563b92e` have not accepted
+this owner. The retained best candidate uses ordinary nested `for` loops,
+inline index/address expressions, separate overlay/text coordinates and
+SDK texture macros. It has a 232-byte frame and 438 words / 1752 bytes,
+compared with the original 439 words / 1756 bytes. The normalized score
+0.9704 is not a one-word residual: the entry pointer, 84, 92 and load-sync
+constant have a cyclic global-register difference, and the index spill,
+command-head scheduling and later operations still differ. The candidate
+uses S5/S6/S7/FP for those four values; retail uses FP/S5/S6/S7.
+
+The retained manifest is `fragment12-summary-coordinate-phases6`,
+candidate 4 (both coordinates scoped to their active-entry blocks).
+Separate X or Y alone does not recover the correct frame. Earlier derived
+index/base expressions improved the 1712-byte candidate to 1732 bytes;
+changing all three inner loops together to `for` reached 1752 bytes.
+Individual loop changes did not produce that improvement.
+
+Compiler evidence isolates a real effect of the combined loop change:
+in the retained UGEN input, the do-loop version loads the E600 load-sync
+word with `Uldc` inside the loop; the for-loop versions use `Urldc` with
+physical register 30 before the loop. Eight normal/+20-leading-blank
+whole-module stock-pass controls passed. Eighteen stock/observer-off/on
+optimized-Ucode and UGEN-symbol-input controls passed, as did twelve
+stock-equivalent debug-listing controls. These read-only observations did
+not alter production compiler decisions. Internal allocator color numbers
+must not be treated as physical MIPS registers; the physical-register
+claim comes from UGEN. Observer commit rows whose expression pointer is
+zero cannot establish semantic root identities.
+
+The complete 63 remaining for/do combinations around the phase-coordinate
+candidate all rejected. Three further eight-candidate families also
+rejected: explicit per-cell indices/pointers/texture addresses; consumed
+image-coordinate scalars before texture setup or drawing; and correctly
+typed metadata/image/label accesses. Shared versus cell-scoped indices
+stay at 1752 bytes. Named X alone is effectively inert; naming both image
+coordinates yields 1772 bytes. Fully typed entry accesses change several
+other instructions rather than fixing the allocation cycle. These are
+bounded negative results, not evidence that other source shapes cannot
+match. The all-for baseline was excluded from the 63-cell batch rather
+than replayed as another hypothesis.
+
+The format string remains at module rodata offset 320 and the texture-step
+float at 572. Differences in later jump-table relocation addends follow
+changed text positions; no missing per-file rodata prerequisite was
+established. No candidate in these families reached a retail ROM gate or
+was installed. Next: follow the measured entry-index store and four-value
+global-allocation cycle from the phase-coordinate source; do not repeat
+the completed for/do or scalar-image-coordinate spaces. Preserve the
+original complete module as the stock control.
+
+## 2026-11-02: history renderer consumed-temporary controls — requeue
+
+`func_81403400` still retains the ordinary-for candidate from
+`fragment12-row-history-steps8`, candidate 4: 196 words / 784 bytes and a
+184-byte frame, with three real next-age stack-offset differences
+(0x168, 0x184 and 0x298: candidate 100(sp), original 112(sp)). The raw
+float relocation difference is separate from those instruction operands.
+
+Preloading the current position, changing direction carriers to float,
+explicit next-age variables with consumed slot-position/image temporaries,
+and typed/raw row-address variants did not close that residual. A further
+eight-candidate batch reused the expired slot-phase index, direction,
+loaded flag or Y coordinate as the branch-assigned next age, with both
+`< 128` and `!= 128` bounds. All rejected (788–800 bytes); their changes
+also disturb the previously exact slot-rendering prefix. Keep the original
+three-offset candidate as the control. The next useful experiment must
+explain the independent next-age and sample-offset spill order rather
+than add unused locals, force registers or pad the frame.
+
+All these probes used the native canonical runner with statistics enabled.
+No C, linker-layout or coverage change is installed. The pending fragment
+79 notes remain byte-identical to the preserved copy.
