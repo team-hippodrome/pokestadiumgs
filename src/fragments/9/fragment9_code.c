@@ -11,20 +11,6 @@ void func_8FB00020(s32 arg0, s32 arg1, s32 arg2) {
     gDPFillRectangle(D_800D0510++, arg0, arg1, arg0 + arg2, arg1 + 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB000D0.s")
-
-extern s32 func_8FB000D0(void*, void*);
-s32 func_8FB00170(void* arg0, void* arg1) {
-    *(u16*)((u8*)arg0 + 0) = 230;
-    *(u16*)((u8*)arg0 + 2) = 150;
-    *(u16*)((u8*)arg0 + 4) = 300;
-    *(u16*)((u8*)arg0 + 6) = 210;
-    *(u16*)((u8*)arg0 + 32) = *(u16*)((u8*)*(void**)((u8*)arg1 + 68) + 12);
-    *(s16*)((u8*)arg0 + 8) = 0;
-    *(s16*)((u8*)arg0 + 10) = 0;
-    return func_8FB000D0(arg0, arg1);
-}
-
 typedef struct {
     /* 0x00 */ u8 info[0xC];
     /* 0x0C */ s16 unk_0C;
@@ -42,6 +28,31 @@ typedef struct {
 } unk_func_8FB02108;
 
 extern void _bcopy(const void *, void *, s32);
+s32 func_8FB000D0(u8 *destination, u8 *context) {
+    switch (*(u16 *)*(void **)(context + 68)) {
+        case 34:
+            _bcopy(*(u8 **)(context + 72) + 52, destination + 14, 12);
+            *(s16 *)(destination + 12) = 0;
+            return 1;
+        case 6:
+            _bcopy(((unk_func_8FB02108 *)context)->rows[*(s32 *)(context + 56)].info, destination + 14, 12);
+            *(s16 *)(destination + 12) = 0;
+            return 1;
+    }
+    return 0;
+}
+
+s32 func_8FB00170(void* arg0, void* arg1) {
+    *(u16*)((u8*)arg0 + 0) = 230;
+    *(u16*)((u8*)arg0 + 2) = 150;
+    *(u16*)((u8*)arg0 + 4) = 300;
+    *(u16*)((u8*)arg0 + 6) = 210;
+    *(u16*)((u8*)arg0 + 32) = *(u16*)((u8*)*(void**)((u8*)arg1 + 68) + 12);
+    *(s16*)((u8*)arg0 + 8) = 0;
+    *(s16*)((u8*)arg0 + 10) = 0;
+    return func_8FB000D0(arg0, arg1);
+}
+
 extern s32 func_800647C8(u8);
 extern void *func_8004C874(s32, s32);
 extern s8 *HAL_Strcpy(s8 *, s8 *);
