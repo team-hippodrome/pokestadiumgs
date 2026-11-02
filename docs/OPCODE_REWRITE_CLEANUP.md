@@ -46,7 +46,13 @@ or reverting a function to assembly does not establish a proper C match.
   normal/blank controls, normal host syntax and full retail ROM comparison
   pass. See [the fragment 48 evidence](regions/fragments/48/fragment48_2597B0.md).
 
-This leaves 783 directive occurrences and 62 affected functions, including
+- `func_83F001A8`: define its real timestamp as C BSS and separate the
+  loader's relocation metadata from runtime storage. Stock IDO emits the
+  shared address load without `COALESCE_AT_LUI`. The metadata bytes and runtime
+  fixups are preserved; module controls, host syntax and the full retail ROM
+  comparison pass. See [the fragment 15 evidence](regions/fragments/15/fragment15_code.md).
+
+This leaves 782 directive occurrences and 61 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -62,7 +68,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_80039808` | [src/340C0.c](../src/340C0.c) | 1 | Pending |
 | `func_80071DD8` | [src/728D0.c](../src/728D0.c) | 5 | Pending |
 | `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Pending |
-| `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Pending |
+| `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Replaced with C |
 | `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Pending |
 | `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |
 | `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |

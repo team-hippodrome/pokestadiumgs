@@ -672,14 +672,21 @@
 
   - name: fragment15
     type: code
-    bss_size: 0x0
+    bss_size: 0x10
     start: 0x10CF70
     vram: 0x83F00000
     subsegments:
     - [0x10CF70, textbin, fragments/15/fragment15_header]
     - [0x10CF90, c,       fragments/15/fragment15_code]
     - [0x10D360, data,    fragments/15/fragment15_data]
-  
+    - {vram: 0x83F00400, type: .bss, name: fragments/15/fragment15_code}
+
+  # The loader consumes this table, then clears its first 16 bytes as BSS.
+  - name: fragment15_relocations
+    type: bin
+    start: 0x10D370
+    vram: 0x83F00400
+
   - name: fragment16
     type: code
     bss_size: 0x0
