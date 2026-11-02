@@ -394,7 +394,40 @@ void func_8AF21EE0(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF21FBC.s")
+extern u8 func_8005453C(s32);
+extern u8 *D_8AF3A098;
+void func_8AF21FBC(s16 arg0) {
+    s32 i;
+    s16 flags[6];
+    s16 *flag;
+
+    i = 0;
+    flag = flags;
+    do {
+        *flag = func_8005453C(i);
+        i++;
+        flag++;
+    } while (i != 6);
+    switch (arg0) {
+    case 1:
+        *(s16 *)(D_8AF3A090 + 50) = 226;
+        break;
+    case 2:
+        if ((flags[2] == 1) && (flags[5] == 1)) {
+            *(s16 *)(D_8AF3A090 + 50) = 230;
+        } else if (flags[2] == 1) {
+            *(s16 *)(D_8AF3A090 + 50) = 229;
+        } else if ((flags[1] == 1) && (flags[4] == 1)) {
+            *(s16 *)(D_8AF3A090 + 50) = 228;
+        } else if ((flags[0] == 1) && (flags[3] == 1)) {
+            *(s16 *)(D_8AF3A090 + 50) = 228;
+        } else {
+            *(s16 *)(D_8AF3A090 + 50) = 227;
+        }
+        break;
+    }
+    *(s16 *)(D_8AF3A098 + 50) = 242;
+}
 
 extern u8 *D_8AF2BDD8;
 extern u8 D_8AF279F0[];
@@ -566,7 +599,6 @@ s32 func_8AF223C8(void) {
 /* mkdraft:func_8AF223C8 end */
 
 extern void func_80051D64(s32, s32);
-s8 func_8005453C(u8);
 extern void func_800545B4(u8, s32);
 extern void func_80054E48(s32);
 s32 func_8AF223C8();

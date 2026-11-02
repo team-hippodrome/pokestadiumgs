@@ -126,3 +126,47 @@ All 13824 module text bytes and 912 rodata bytes equal the assembly-backed
 baseline, including the existing caller and callee. The owner matches ROM
 `0x20F268..0x20F36C` (end exclusive). No generated coverage, layout or CI
 changes are included.
+
+
+## `func_8AF21FBC`: status-dependent node field update
+
+This owner matches 75 instructions (300 bytes), retaining its 64-byte frame.
+It reads `func_8005453C(0..5)` into six signed halfwords. Selector 1 writes
+226 to node `D_8AF3A090` at offset 50. Selector 2 chooses 230 when entries 2
+and 5 equal 1, 229 when only the entry-2 test succeeds, 228 when either
+pair (1, 4) or (0, 3) equals 1, and 227 otherwise. Other selectors leave
+that field alone. Every path writes 242 at offset 50 of `D_8AF3A098`.
+
+The original `func_8AF22608` calls pass selectors 1 and 2 and ignore the
+result. `func_8AF233B4` obtains the two node pointers with tags `0x6D736732`
+and `0x656E6464` through `func_8AC06D8C`. Their address names and the field's
+broader meaning remain unchanged.
+//@src/fragments/44/fragment44_20F140.c
+
+The local declaration for `func_8005453C` now agrees with its definition:
+`u8 (s32)`. It reads a saved byte for an index below 9 when the record's
+flag is set, otherwise returning zero. The previous `s8 (u8)` declaration
+is removed; the existing `func_8AF22594` body remains byte-identical.
+//@src/517E0.c
+
+An explicit cursor preserves the store-before-advance loop schedule. The
+counter, six-entry array and cursor declaration order places the array at
+stack offset 48. All locals are used; no fake or padding is added.
+
+Fresh validation targets master
+`4d4dea19cb9d3ef8c26c6931b4bda157c40862c5` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/44/fragment44_20F140.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The syntax-enabled forced compile and full US link report
+`build/pokestadiumgs-us.z64: OK`. Retail byte comparison and whitespace
+checks pass; both ROMs have MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All 13824 module text bytes and 912 rodata bytes equal the assembly-backed
+baseline, including every prior C body. The owner occupies ROM
+`0x21022C..0x210358` (end exclusive). No data ownership, instruction rewrite,
+generated layout or CI change is included.
