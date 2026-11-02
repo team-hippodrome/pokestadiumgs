@@ -20,22 +20,22 @@
 <path d="M70 100H1070" stroke="#343b44"/>
 <text x="60" y="105" text-anchor="end" fill="#aeb6c1">9,000</text>
 <g>
-<title>0–99: 8,218 C upstream; 182 open; 8,400 total</title>
-<rect x="82" y="119.98" width="64" height="210.02" fill="#41a657"/>
-<rect x="82" y="115.33" width="64" height="4.65" fill="#f5a416"/>
+<title>0–99: 8,221 C upstream; 179 open; 8,400 total</title>
+<rect x="82" y="119.91" width="64" height="210.09" fill="#41a657"/>
+<rect x="82" y="115.33" width="64" height="4.57" fill="#f5a416"/>
 <text x="114" y="355" text-anchor="middle">0–99</text>
 <text x="114" y="388" text-anchor="middle" font-weight="bold">8,400</text>
-<text x="114" y="412" text-anchor="middle" fill="#73d18a">8,218 C</text>
-<text x="114" y="436" text-anchor="middle" fill="#ffc35c">182 open</text>
+<text x="114" y="412" text-anchor="middle" fill="#73d18a">8,221 C</text>
+<text x="114" y="436" text-anchor="middle" fill="#ffc35c">179 open</text>
 </g>
 <g>
-<title>100–199: 1,013 C upstream; 296 open; 1,309 total</title>
-<rect x="172" y="304.11" width="64" height="25.89" fill="#41a657"/>
-<rect x="172" y="296.55" width="64" height="7.56" fill="#f5a416"/>
+<title>100–199: 1,014 C upstream; 295 open; 1,309 total</title>
+<rect x="172" y="304.09" width="64" height="25.91" fill="#41a657"/>
+<rect x="172" y="296.55" width="64" height="7.54" fill="#f5a416"/>
 <text x="204" y="355" text-anchor="middle">100–199</text>
 <text x="204" y="388" text-anchor="middle" font-weight="bold">1,309</text>
-<text x="204" y="412" text-anchor="middle" fill="#73d18a">1,013 C</text>
-<text x="204" y="436" text-anchor="middle" fill="#ffc35c">296 open</text>
+<text x="204" y="412" text-anchor="middle" fill="#73d18a">1,014 C</text>
+<text x="204" y="436" text-anchor="middle" fill="#ffc35c">295 open</text>
 </g>
 <g>
 <title>200–299: 216 C upstream; 204 open; 420 total</title>
