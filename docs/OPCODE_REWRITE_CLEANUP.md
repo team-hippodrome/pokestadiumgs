@@ -52,7 +52,14 @@ or reverting a function to assembly does not establish a proper C match.
   fixups are preserved; module controls, host syntax and the full retail ROM
   comparison pass. See [the fragment 15 evidence](regions/fragments/15/fragment15_code.md).
 
-This leaves 782 directive occurrences and 61 affected functions, including
+- `func_81700B8C`: use the actual text-pointer/font-measurement contract
+  and the 36-byte entry layout. Unsigned address calculation precedes the
+  existing guards; entry accesses remain guarded. Stock IDO emits all 128
+  retail bytes without three word rewrites. Complete-module controls, host
+  syntax and the full retail ROM comparison pass. See
+  [the fragment 18 evidence](regions/fragments/18/fragment18_code.md).
+
+This leaves 779 directive occurrences and 60 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -79,7 +86,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_8220AC64` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
 | `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Pending |
 | `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Pending |
-| `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Pending |
+| `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Replaced with C |
 | `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Pending |
 | `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Pending |
 | `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Pending |

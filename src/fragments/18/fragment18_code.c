@@ -1,4 +1,11 @@
 #include "global.h"
+typedef struct unk_D_81700DB0 {
+    s16 unk_00, unk_02, unk_04, font;
+    const char *text;
+    u16 flags;
+    s16 unk_0E, unk_10, width, width_with_margin, unk_16, unk_18, unk_1A, unk_1C;
+    u8 unk_1E[6];
+} unk_D_81700DB0;
 
 
 #ifdef VERSION_US
@@ -141,22 +148,21 @@ extern u8 D_81700DBC[];
 s32 func_81700B58(s32 arg0) { s32 result = 0; if (arg0 < 4) result = (*(u16 *)((u8 *)D_81700DBC + arg0 * 36) & 2) != 0; return result; }
 
 /* mkdraft:func_81700B8C begin */
-extern s16 func_80049148(s32, s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
 extern u8 D_81700DB0[];
-#pragma REWRITE_FUNCTION_WORD(func_81700B8C, 0x44, 0x00002825, 0x84640006)
-#pragma REWRITE_FUNCTION_WORD(func_81700B8C, 0x48, 0x84640006, 0xAFA3001C)
-#pragma REWRITE_FUNCTION_WORD(func_81700B8C, 0x50, 0xAFA3001C, 0x00002825)
 
-s32 func_81700B8C(s32 arg0, s32 arg1) {
-    u8 *entry;
+s32 func_81700B8C(s32 arg0, const char *arg1) {
+    unk_D_81700DB0 *entry;
     s32 result = 0;
 
-    if (arg0 < 4 && arg1 != 0) {
-        entry = D_81700DB0 + arg0 * 0x24;
-        if (*(s32 *)(entry + 8) != arg1) {
-            *(s32 *)(entry + 8) = arg1;
-            *(s16 *)(entry + 0x12) = func_80049148(*(s16 *)(entry + 6), 0, arg1);
-            *(s16 *)(entry + 0x14) = *(s16 *)(entry + 0x12) + 0x4B;
+    // Unsigned address arithmetic remains defined for indices skipped below.
+    // Only the guarded path reads or writes the entry.
+    entry = (unk_D_81700DB0 *)((u32)D_81700DB0 + (u32)arg0 * 36U);
+    if (arg0 < 4 && arg1 != NULL) {
+        if (entry->text != arg1) {
+            entry->text = arg1;
+            entry->width = func_80049148(entry->font, 0, arg1);
+            entry->width_with_margin = entry->width + 75;
             result = 1;
         }
     }

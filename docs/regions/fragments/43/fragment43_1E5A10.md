@@ -639,3 +639,22 @@ at 0x8AC09798. The ROM is unchanged.
 - Note: a candidate that adds a `.bss` section the baseline object lacks is
   rejected as `section_layout_drift` before the gate. Land the statics first
   as a declaration-only change verified by `make COMPARE=1`.
+
+## 2026-11-03 — lookup failure state: layout-prerequisite
+
+`layout-prerequisite` `func_8AC06D8C`: individual defined globals still
+produce64 bytes versus retail60. A naturally aligned record with the word
+at+0 and byte at+4, defined in this C file and accessed through a local
+record pointer, produces the retail60-byte instruction topology. Only the
+relocatable field addends differ in the unlinked object. No source was
+installed and this is not a linked match yet.
+
+The actual helper `func_8005049C` in `src/4F800.c` looks up a node by ID;
+a miss clears the byte at0x8AC0878C and records the ID at0x8AC08788. The
+fragment header declares relocation offset0x81B0, ROM size0x8880 and runtime
+size0x9EA0. Both globals lie in the loader-cleared runtime BSS, overlaid by
+ROM relocation metadata. A faithful BSS split must handle the record's
+0x8788 start, the halfword counter at0x8790, the array at0x8798 and C's
+16-byte section padding. Reusing the timestamp layout mechanically would
+misplace this record. Next: resolve that real data ownership/alignment and
+compare the entire linked module before any normal ROM gate or acceptance.
