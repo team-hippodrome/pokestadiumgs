@@ -1,0 +1,113 @@
+# Opcode rewrite cleanup
+
+Baseline: `7d0511c4829cce1912c2a5ced28734f343ebbc66` (2026-11-02). The US source contains
+65 affected functions across 45 files, with 794 directives from the seven
+families below. One directive patches `.rodata` for `func_8F401C30` rather
+than naming a function directly.
+
+| Directive | Baseline occurrences |
+| --- | ---: |
+| `REWRITE_FUNCTION_HEX` | 27 |
+| `REWRITE_FUNCTION_RELOC_TARGET` | 558 |
+| `SWAP_FUNCTION_WORDS` | 4 |
+| `REWRITE_FUNCTION_WORD` | 159 |
+| `COALESCE_AT_LUI` | 21 |
+| `REWRITE_SECTION_WORD` | 1 |
+| `REWRITE_FUNCTION_RELOC` | 24 |
+
+The native baseline passes the normal host syntax checks and full-ROM
+comparison. Each source file was also compiled unchanged and with 20 leading
+blank lines, checking complete allocated bytes/layout, defined function
+extents and semantic relocations. Each function was then compiled with only
+its own listed directives removed. All 65 functions differed; the separate
+section-patch removal also differed. No baseline removal was installed.
+
+A replacement must preserve behavior and compile to the retail instructions
+through the stock build. Removing a directive, obtaining a normalized score,
+or reverting a function to assembly does not establish a proper C match.
+
+## Completed replacements
+
+- `func_87E07DD0`: decode the high status bit as an unsigned shift, matching
+  its neighboring count/search helpers. This removes two word rewrites while
+  preserving the complete module. Normal and leading-blank controls, the
+  normal host syntax check, and the full retail ROM comparison pass. See
+  [the fragment 63 evidence](regions/fragments/63/fragment63_30B540.md).
+
+This leaves 792 directive occurrences and 64 affected functions, including
+the function that also requires the `.rodata` repair. Coverage files and
+compiler/tooling sources are unchanged.
+
+## Function inventory
+
+Pending means the directive is still present; the unpatched diagnostic is
+an actual comparison attempt, not a completed replacement. Counts in this
+table are baseline function directives, excluding the separate section word.
+
+| Function | Source | Directives | State |
+| --- | --- | ---: | --- |
+| `func_800289B0` | [src/229E0.c](../src/229E0.c) | 18 | Pending |
+| `func_80039808` | [src/340C0.c](../src/340C0.c) | 1 | Pending |
+| `func_80071DD8` | [src/728D0.c](../src/728D0.c) | 5 | Pending |
+| `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Pending |
+| `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Pending |
+| `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Pending |
+| `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |
+| `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Pending |
+| `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
+| `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Pending |
+| `func_822068E0` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 17 | Pending |
+| `func_8220AC38` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
+| `func_8220AC64` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
+| `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Pending |
+| `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Pending |
+| `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Pending |
+| `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Pending |
+| `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Pending |
+| `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Pending |
+| `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Pending |
+| `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Pending |
+| `func_82507BD0` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 1 | Pending |
+| `func_82507BFC` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Pending |
+| `func_82507C48` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Pending |
+| `func_82508620` | [src/fragments/21/fragment21_147D10.c](../src/fragments/21/fragment21_147D10.c) | 8 | Pending |
+| `func_827000B8` | [src/fragments/22/fragment22_14A2E0.c](../src/fragments/22/fragment22_14A2E0.c) | 1 | Pending |
+| `func_82702220` | [src/fragments/22/fragment22_14B090.c](../src/fragments/22/fragment22_14B090.c) | 7 | Pending |
+| `func_82B055A0` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 11 | Pending |
+| `func_82B062BC` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Pending |
+| `func_82B07960` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 25 | Pending |
+| `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Pending |
+| `func_88203A18` | [src/fragments/31/fragment31_1768F0.c](../src/fragments/31/fragment31_1768F0.c) | 6 | Pending |
+| `func_8821B3E0` | [src/fragments/31/fragment31_189760.c](../src/fragments/31/fragment31_189760.c) | 1 | Pending |
+| `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Pending |
+| `func_8830765C` | [src/fragments/32/fragment32_1B8010.c](../src/fragments/32/fragment32_1B8010.c) | 2 | Pending |
+| `func_88507370` | [src/fragments/34/fragment34_1C3FA0.c](../src/fragments/34/fragment34_1C3FA0.c) | 31 | Pending |
+| `func_8AC06D8C` | [src/fragments/43/fragment43_1E5A10.c](../src/fragments/43/fragment43_1E5A10.c) | 1 | Pending |
+| `func_8AF00504` | [src/fragments/44/fragment44_1EE290.c](../src/fragments/44/fragment44_1EE290.c) | 19 | Pending |
+| `func_8AB07C34` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 36 | Pending |
+| `func_8AB07E6C` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 31 | Pending |
+| `func_8AB0A720` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 3 | Pending |
+| `func_8AE02398` | [src/fragments/46/fragment46_code.c](../src/fragments/46/fragment46_code.c) | 20 | Pending |
+| `func_8AE02470` | [src/fragments/46/fragment46_code.c](../src/fragments/46/fragment46_code.c) | 22 | Pending |
+| `func_87C03B10` | [src/fragments/48/fragment48_2597B0.c](../src/fragments/48/fragment48_2597B0.c) | 7 | Pending |
+| `func_864001E0` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 1 | Pending |
+| `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Pending |
+| `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Pending |
+| `func_86600E00` | [src/fragments/54/fragment54_code.c](../src/fragments/54/fragment54_code.c) | 38 | Pending |
+| `func_83302D8C` | [src/fragments/57/fragment57_code.c](../src/fragments/57/fragment57_code.c) | 1 | Pending |
+| `func_83402B10` | [src/fragments/58/fragment58_code.c](../src/fragments/58/fragment58_code.c) | 6 | Pending |
+| `func_87E04114` | [src/fragments/63/fragment63_306150.c](../src/fragments/63/fragment63_306150.c) | 13 | Pending |
+| `func_87E07A2C` | [src/fragments/63/fragment63_308D70.c](../src/fragments/63/fragment63_308D70.c) | 2 | Pending |
+| `func_87E07DD0` | [src/fragments/63/fragment63_30B540.c](../src/fragments/63/fragment63_30B540.c) | 2 | Replaced with C |
+| `func_87F02104` | [src/fragments/64/fragment64_324A10.c](../src/fragments/64/fragment64_324A10.c) | 14 | Pending |
+| `func_87F025B8` | [src/fragments/64/fragment64_324FB0.c](../src/fragments/64/fragment64_324FB0.c) | 4 | Pending |
+| `func_87F06240` | [src/fragments/64/fragment64_328E40.c](../src/fragments/64/fragment64_328E40.c) | 1 | Pending |
+| `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Pending |
+| `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Pending |
+| `func_82901AE0` | [src/fragments/67/fragment67_33D6A0.c](../src/fragments/67/fragment67_33D6A0.c) | 17 | Pending |
+| `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |
+| `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Pending |
+| `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Pending |
+| `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Pending |
+| `func_84136D84` | [src/fragments/79/fragment79_3A4030.c](../src/fragments/79/fragment79_3A4030.c) | 1 | Pending |
+| `func_84163380` | [src/fragments/79/fragment79_3D2C10.c](../src/fragments/79/fragment79_3D2C10.c) | 61 | Pending |
