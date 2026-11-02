@@ -112,7 +112,17 @@ or reverting a function to assembly does not establish a proper C match.
   normal retail ROM gate with all function extents and legacy addresses
   preserved. See [the fragment 21 evidence](regions/fragments/21/fragment21_144790.md).
 
-This leaves 741 directive occurrences and 46 affected functions, including
+- `func_82507BFC`, `func_82507C48` and `func_82508620`: use actual
+  owned state/flag records for their related accesses. Extending the existing
+  header prefix by its flags and next halfword preserves its 16-byte BSS
+  section; the cellular helper owns its six-byte prefix in another pinned
+  section. Stock IDO emits all 216 retail bytes without three whole-function
+  hex replacements or 29 relocation-target patches. Normal/blank controls,
+  host syntax and the full retail ROM gate pass with all function extents and
+  legacy addresses preserved. See [the restart evidence](regions/fragments/21/fragment21_144790.md)
+  and [the cellular-state evidence](regions/fragments/21/fragment21_147D10.md).
+
+This leaves 709 directive occurrences and 43 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -146,9 +156,9 @@ table are baseline function directives, excluding the separate section word.
 | `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Pending |
 | `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Replaced with C |
 | `func_82507BD0` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 1 | Replaced with C |
-| `func_82507BFC` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Pending |
-| `func_82507C48` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Pending |
-| `func_82508620` | [src/fragments/21/fragment21_147D10.c](../src/fragments/21/fragment21_147D10.c) | 8 | Pending |
+| `func_82507BFC` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Replaced with C |
+| `func_82507C48` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Replaced with C |
+| `func_82508620` | [src/fragments/21/fragment21_147D10.c](../src/fragments/21/fragment21_147D10.c) | 8 | Replaced with C |
 | `func_827000B8` | [src/fragments/22/fragment22_14A2E0.c](../src/fragments/22/fragment22_14A2E0.c) | 1 | Pending |
 | `func_82702220` | [src/fragments/22/fragment22_14B090.c](../src/fragments/22/fragment22_14B090.c) | 7 | Pending |
 | `func_82B055A0` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 11 | Pending |

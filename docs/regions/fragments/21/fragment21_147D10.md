@@ -118,3 +118,40 @@ The twin `func_825085E4` (state 0 -> 1, clear flag) matched with a CSE'd base
 pointer, while this owner has per-access `lui`. The two must have been written
 differently in a way not found yet. Status: requeue. Do not install the
 overlay bss for this owner alone; it costs `Draw`'s match.
+
+## 2026-11-03 — cellular state helper: ordinary C replaces hex text
+
+On base `2a5577d44b818edd39b0918029353af13163de02`, `func_82508620`
+compiles to all 60 retail bytes with its whole-function hex replacement and
+seven relocation-target patches removed. When the existing guard reads
+state three, the helper sets state one, sets flag bit zero and returns one;
+otherwise it returns zero.
+
+A real six-byte C prefix owns state at `0x82509680` and flags at
+`0x82509684`, with the unresolved halfword at +2 preserved in its layout.
+The existing guard and other cellular routines keep their legacy views.
+Reading and writing flags through the owned record prevents the early flag
+read observed when that read instead uses the separate extern symbol. The
+historical static-ownership/CSE attempts above did not test this combination.
+Every existing helper, including `CellularTransition_Draw`, retains its
+linked instructions and extent in the full retail comparison.
+
+The source's 16-byte BSS input section contains this real prefix and compiler
+alignment. The established NOLOAD mechanism pins it to `0x82509680`. The
+loader clears the surrounding `0x82508D00..0x8250A950` runtime range. The
+remaining header and cell mask, the original loaded relocation metadata,
+fragment header and allocation size are unchanged.
+//@src/2CA0.c
+//@linker_scripts/us/datamig_bss.ld
+
+Stock IDO emits section-relative references for this static and does not retain
+its source name as an object symbol. The linked section address and the BSS
+relocation addends zero and four verify the actual state/flags endpoints.
+Known/candidate normal/20-leading-blank-line module controls, host syntax and
+private full-ROM links pass. The final combined native stock IDO 7.1 build
+with the two restart replacements passes
+`make -j1 COMPARE=1 RUN_CC_CHECK=1`. All function addresses/sizes and legacy
+fragment 21 addresses remain exact. ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage and compiler/tooling sources are unchanged.
