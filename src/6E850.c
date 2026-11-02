@@ -1091,7 +1091,28 @@ Gfx *func_80070974(Gfx *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_80070A4C.s")
+extern Gfx D_8009F448[];
+Gfx *func_80070A4C(Gfx *gfx) {
+    u8 material_alpha;
+
+    material_alpha = *(u8 *)((u8 *)D_8009491C + 29);
+    gSPDisplayList(gfx++, D_8009F448);
+    switch (*(s16 *)((u8 *)D_8009491C + 26)) {
+        default:
+            gDPSetPrimColor(gfx++, 0, material_alpha, 255, 255, 255, 255);
+            gDPSetEnvColor(gfx++, 180 - (D_80094904[0] % 8) * 10, 32, 0, 0);
+            break;
+        case 146:
+            gDPSetPrimColor(gfx++, 0, material_alpha, 255, 255, 255, 200);
+            gDPSetEnvColor(gfx++, 255, 32, 0, 0);
+            break;
+        case 126:
+            gDPSetPrimColor(gfx++, 0, material_alpha, 255, 255, 5, 255);
+            gDPSetEnvColor(gfx++, 255, 32, 0, 0);
+            break;
+    }
+    return gfx;
+}
 #endif
 
 #ifdef VERSION_US
