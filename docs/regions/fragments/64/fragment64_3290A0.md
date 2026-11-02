@@ -93,3 +93,52 @@ including the owner's ROM interval `0x32958C..0x329718` (end exclusive).
 The two changed object operands are equivalent relocations from named
 float symbols to their section offsets. No generated layout, compiler,
 CI, padding, new storage, or instruction rewrite is introduced.
+
+## Two-color alpha callback
+
+`func_87F06AA8` matches as C: 159 instructions, 636 bytes, preserving its
+48-byte frame. Event zero clears bit 1 of the node flags at offset 2.
+Event one selects RGB `0xFFE600` when the node word at offset 32 is zero,
+or `0x8CDCFF` otherwise. Both paths derive the sine-table index from the
+unsigned frame counter modulo 360, multiplied by 5 and 182.0416718 and
+rounded by adding or subtracting 0.5 before truncation. The zero-data path
+uses `(sample + 1) * 0.5`; the other uses `(1 - sample) * 0.5`. The shared
+tail scales by 455, subtracts 100, rounds, clamps alpha to 0 through 255,
+and draws through `func_87F06804`. Other events do nothing.
+
+The original `func_87F06EAC` registers this callback for EVP1 through EVP8
+using `func_87F0AB08`, supplying zero callback data except for EVP8's one.
+`func_8004E308` stores that data at node offset 32 and invokes event zero;
+the registration interface takes a void callback. `func_87F07FE8` advances
+the frame counter before traversal. These inspected producers and callees
+establish the fields used here without assigning a broader meaning to them.
+//@src/fragments/64/fragment64_3290A0.c
+//@src/fragments/64/fragment64_32D260.c
+//@src/4EE50.c
+
+A local union exposes the packed argument and RGBA channels, allowing the
+alpha-byte update without a cached byte pointer. Its packed member uses the
+existing one-word aggregate; that type's `FAKE` annotation remains intact.
+The repeated phase expressions are also labeled `FAKE`, following the
+matched sibling's floating-point allocation. All locals have actual uses.
+The existing float slots and other C implementations retain their bytes.
+
+Fresh verification targets master
+`8563b92e9e4b909456990605743358d4baa92b1c` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/64/fragment64_3290A0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled forced compile and complete US link report
+`build/pokestadiumgs-us.z64: OK`. Retail byte comparison and whitespace
+checks pass; both ROMs have MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All 7760 linked module text bytes and 352 rodata bytes equal retail,
+including the owner's ROM interval `0x329718..0x329994` (end exclusive).
+Three object operands change from named float symbols to equivalent
+section offsets 136, 140, and 144; every other text byte and all rodata
+bytes equal the assembly-backed baseline. No generated layout, compiler,
+CI, padding, new storage, or instruction rewrite is introduced.
