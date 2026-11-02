@@ -83,3 +83,46 @@ link pass with `build/pokestadiumgs-us.z64: OK`. The full ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`; retail and whitespace checks pass.
 Independent original-word and raw retail comparisons verify all 188 bytes
 at `0x20FEC8..0x20FF84`. Existing C and both assembly callers remain unchanged.
+
+## `func_8AF20FF8`: initialize a window payload
+
+This owner matches as C: 65 instructions, 260 bytes, with the original
+1368-byte frame. It captures signed node coordinates at offsets 8 and 10,
+zeroes the existing 1284-byte packet type, and places the node's signed
+dimensions from offsets 12 and 14 into its first two halfwords. It fills
+the original word/halfword defaults, then passes the packet to the
+fourteen-argument `func_8AF20F64` with the original header values.
+
+`func_8AF20F64` copies the complete packet into destination offset 40.
+`func_8AF210FC` supplies the two node addresses and destinations at
+`D_8AF279B0` and `D_8AF279B0 + 1324`, ignores the result, and uses fields
+within the copied payload for the following setup calls. The C definition
+therefore uses `void` and retains the caller's word-sized node-address
+interface. The redundant old integer-return declaration is removed.
+Unknown packet fields keep the existing opaque representation.
+//@src/fragments/44/fragment44_20F140.c
+
+The node and settings pointers carry the actual source node and packet
+through the reads, zeroing, field stores and final call. These ordinary
+pointer locals recover the original register and stack allocation; every
+local is consumed. The packet retains its existing four-byte alignment
+and 1284-byte extent. No new fake, padding, storage, data ownership,
+compiler flag, or instruction rewrite is used.
+
+Fresh verification targets master
+`906a58fe8e8f5816c85d3d07763ccfcc5440b2a5` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/44/fragment44_20F140.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled forced compile and complete US link report
+`build/pokestadiumgs-us.z64: OK`. Retail byte comparison and whitespace
+checks pass; both ROMs have MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All 13824 module text bytes and 912 rodata bytes equal the assembly-backed
+baseline, including the existing caller and callee. The owner matches ROM
+`0x20F268..0x20F36C` (end exclusive). No generated coverage, layout or CI
+changes are included.
