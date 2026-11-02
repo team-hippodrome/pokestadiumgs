@@ -10,9 +10,16 @@ typedef struct Fragment12Row {
     /* 0x20C */ s32 unk_20C;
 } Fragment12Row; // size = 0x210
 
+typedef struct Fragment12Slot {
+    /* 0x00 */ f32 unk_00;
+    /* 0x04 */ f32 unk_04;
+    /* 0x08 */ s16 unk_08;
+} Fragment12Slot; // size = 0xC
+
 typedef struct Fragment12Rows {
     /* 0x000 */ Fragment12Row rows[6];
-    /* 0xC60 */ u8 unk_C60[0x4C];
+    /* 0xC60 */ Fragment12Slot slots[6];
+    /* 0xCA8 */ f32 unk_CA8;
     /* 0xCAC */ f32 unk_CAC;
     /* 0xCB0 */ s8 unk_CB0;
 } Fragment12Rows;
@@ -120,7 +127,6 @@ void func_81402CD8(void *arg0, f32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81402D08.s")
 
-extern void func_81402930(void *arg0, f32 arg1, s32 arg2, s32 arg3);
 void func_81403244(Fragment12Rows *arg0, s32 arg1, s32 arg2) {
     f32 max;
     s32 i;
@@ -139,7 +145,31 @@ void func_81403244(Fragment12Rows *arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81403304.s")
+// Transfer active row positions into animation slots, then reset the rows.
+void Fragment12_AssignActiveRowsToSlots(Fragment12Rows *state) {
+    Fragment12Row *row;
+    s32 row_index;
+    s32 candidate_index;
+    s32 threshold;
+    s32 slot_index;
+
+    for (row_index = 0; row_index < 6; row_index++) {
+        row = &state->rows[row_index];
+        if (row->unk_208 >= 0) {
+            slot_index = 0;
+            // Each improved slot value truncates the integral comparison threshold.
+            threshold = 1000;
+            for (candidate_index = 0; candidate_index < 6; candidate_index++) {
+                if (state->slots[candidate_index].unk_04 < (f32)threshold) {
+                    threshold = (s32)state->slots[candidate_index].unk_04;
+                    slot_index = candidate_index;
+                }
+            }
+            func_81402978(&state->slots[slot_index], row->values[state->unk_CB0], row->unk_208);
+            func_81402930(row, 0.0f, -1, 0);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81403400.s")
 
@@ -230,7 +260,6 @@ void func_81403918(s32 arg0, s32 arg1, s32 arg2) {
     func_81403244((Fragment12Rows *)(arg0 + 8), arg1, arg2);
 }
 
-extern s32 func_81403304(s32);
 s32 func_81403938(s32 arg0)
 {
     f64 alignmentPad;
@@ -255,7 +284,7 @@ s32 func_81403938(s32 arg0)
         scan += 0x210;
     }
     while (offset != j);
-    func_81403304(arg0 + 8);
+    Fragment12_AssignActiveRowsToSlots((Fragment12Rows *)(arg0 + 8));
     slotOffset = 0;
     slot = (s8 **) arg0;
     do
@@ -779,7 +808,7 @@ void *func_814049CC(void *arg0) {
     return NULL;
 }
 
-typedef struct Candidate81404A08Record { s32 words[22]; } Candidate81404A08Record;
+typedef struct Fragment12SelectionEntry { s32 words[22]; } Fragment12SelectionEntry;
 extern s32 func_814028F0(void);
 extern void func_814038D4(void *arg0, void *arg1);
 extern void func_81403FDC(void *arg0, s32 arg1, s32 arg2, s32 arg3);
@@ -787,10 +816,10 @@ void func_81404A08(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, void *arg5,
 {
     u8 *parentSlot;
     s32 i;
-    Candidate81404A08Record *dst;
+    Fragment12SelectionEntry *dst;
     u8 *guard;
     int timerOffset;
-    Candidate81404A08Record *src;
+    Fragment12SelectionEntry *src;
     u8 *timerSlot;
     s32 count = 0;
     s32 mode;
@@ -809,7 +838,7 @@ void func_81404A08(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, void *arg5,
     timerSlot = arg0 + timerOffset;
     guard = arg0;
     src = arg5;
-    dst = (Candidate81404A08Record *)(arg0 + 0x4B40);
+    dst = (Fragment12SelectionEntry *)(arg0 + 0x4B40);
     for (; i != 6; i++, guard += 0x58, dst++, src++) {
         *dst = *src;
         if (guard[0x4B40] > 0) {
@@ -1352,7 +1381,68 @@ void func_814057CC(s32 arg0, s32 arg1, u8 *arg2, u8 *arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814063A0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81406700.s")
+typedef struct Fragment12SelectionPayloads {
+    /* 0x0000 */ u8 header[0x40];
+    /* 0x0040 */ u8 assets[6][3200];
+    /* 0x4B40 */ Fragment12SelectionEntry entries[6];
+} Fragment12SelectionPayloads;
+extern void func_81604944(s32, s32, s32, s32, s32 *, s32 *);
+extern void func_81405CC4(void *, s32, s32);
+extern void func_814063A0(void *, void *);
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern u8 D_814078B8[];
+extern void Fragment12_GetInterpolatedPanelRect(void *state, s16 *rect, s32 remap_mode);
+// Draw selection panels and their content in the current animation/layer order.
+void Fragment12_DrawSelectionPanels(u8 *state, void *manager) {
+    s16 first[4];
+    s16 second[4];
+    s16 third[4];
+    s16 fourth[4];
+
+    if (func_81404700(state) != 0) {
+        if (((*(s8 *)(state + 9)) >= 2) && (func_81600DA8(manager, state + 1) != 0)) {
+            Fragment12_GetInterpolatedPanelRect(state, first, 1);
+            func_81604944((s32) first[0], (s32) first[1], (s32) first[2], (s32) first[3], (s32 *)func_81602D70((s32) (*(u8 *)(state + 7))), (s32 *)D_814078B8);
+
+            func_814057CC((s32) first[0], (s32) first[1], (u8 *)&((Fragment12SelectionPayloads *)state)->entries[*(s8 *)(state + 16)], ((Fragment12SelectionPayloads *)state)->assets[*(s8 *)(state + 16)]);
+        }
+        if (func_81600DA8(manager, state) != 0) {
+            Fragment12_GetInterpolatedPanelRect(state, second, 0);
+            func_81604944((s32) second[0], (s32) second[1], (s32) second[2], (s32) second[3], (s32 *)func_81602D70((s32) (*(u8 *)(state + 7))), (s32 *)D_814078B8);
+            func_81405CC4(state, (s32) second[0], (s32) second[1]);
+        }
+        if (((*(s8 *)(state + 9)) < 2) && (func_81600DA8(manager, state + 1) != 0)) {
+            Fragment12_GetInterpolatedPanelRect(state, third, 1);
+            func_81604944((s32) third[0], (s32) third[1], (s32) third[2], (s32) third[3], (s32 *)func_81602D70((s32) (*(u8 *)(state + 7))), (s32 *)D_814078B8);
+
+            func_814057CC((s32) third[0], (s32) third[1], (u8 *)&((Fragment12SelectionPayloads *)state)->entries[*(s8 *)(state + 16)], ((Fragment12SelectionPayloads *)state)->assets[*(s8 *)(state + 16)]);
+        }
+    } else {
+        if (((*(s8 *)(state + 9)) >= 2) && ((*(s32 *)(state + 20)) != 0)) {
+            func_81404470(state + 0x24, manager);
+        }
+        if ((*(s8 *)(state + 9)) >= 2) {
+            func_814063A0(state, manager);
+        }
+        if (func_81600DA8(manager, state) != 0) {
+            Fragment12_GetInterpolatedPanelRect(state, fourth, 0);
+            func_80006F70(&D_800D0510, 0, 0, 640, 480);
+            func_81604944((s32) fourth[0], (s32) fourth[1], (s32) fourth[2], (s32) fourth[3], (s32 *)func_81602D70((s32) (*(u8 *)(state + 7))), (s32 *)D_814078B8);
+
+            if ((*(s8 *)(state + 16)) >= 0) {
+                func_814057CC((s32) fourth[0], (s32) fourth[1], (u8 *)&((Fragment12SelectionPayloads *)state)->entries[*(s8 *)(state + 16)], ((Fragment12SelectionPayloads *)state)->assets[*(s8 *)(state + 16)]);
+            } else {
+                func_81405CC4(state, (s32) fourth[0], (s32) fourth[1]);
+            }
+        }
+        if ((*(s8 *)(state + 9)) < 2) {
+            func_814063A0(state, manager);
+        }
+        if (((*(s8 *)(state + 9)) < 2) || ((*(s32 *)(state + 20)) == 0)) {
+            func_81404470(state + 0x24, manager);
+        }
+    }
+}
 
 void func_81406A30(void *arg0) {
     switch (*(u8 *)((u8 *)arg0 + 6)) {
@@ -1443,14 +1533,13 @@ void func_81406F44(void *arg0, void *arg1) {
     func_81403B7C((u8 *)arg0 + 0xCC8, arg1);
 }
 
-extern void func_81406700(void *arg0, void *arg1);
 extern void func_81403CD0(void *arg0, void *arg1);
 void func_81407118(void *arg0, void *arg1) {
     s32 i;
 
     for (i = 0; i != 4; i++) {
         if (*(s32 *)((u8 *)arg0 + 0x18F48 + i * 4) != 0)
-            func_81406700((u8 *)arg0 + i * 0x4D68 + 0x1990, arg1);
+            Fragment12_DrawSelectionPanels((u8 *)arg0 + i * 0x4D68 + 0x1990, arg1);
     }
     func_81403CD0(arg0, arg1);
     func_81403CD0((u8 *)arg0 + 0xCC8, arg1);

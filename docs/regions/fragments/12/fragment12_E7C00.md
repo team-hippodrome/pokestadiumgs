@@ -146,3 +146,94 @@ ROM build pass after integration with master `609431a2`. All 454 final
 instruction words and 72 bytes of the retyped tables equal the original ROM.
 No padding, unused local, forced register, fabricated interface or private
 helper is included in the batch.
+
+## 2026-11-02: row transfers and selection panels accepted
+
+`Fragment12_AssignActiveRowsToSlots` (`func_81403304`, 63 instruction
+words / 252 bytes, frame 56, ROM 0xE8614) resolves the documented register
+tie. It transfers each active row's current position and image index to a
+slot and resets the row. The comparison threshold is an integer: each
+improved float slot value is truncated before the next comparison.
+Canonical `fragment12-nearest-slot-formal8` candidate 1 uses the typed state
+as the formal parameter and initializes the selected slot before the
+threshold. It passes object/link-shape verification, normal host syntax
+and the full retail US ROM gate without a fake lifetime extension.
+
+The measured `Fragment12Slot` has floats at 0/4 and a signed halfword at 8;
+natural alignment gives its 12-byte size. Six slots replace the opaque
+range at state+0xC60, followed by the existing word at 0xCA8. Consolidating
+this view into `Fragment12Rows` preserves every allocated module byte,
+function extent and semantic relocation in normal/+20-leading-blank
+controls. The callee's actual contract is pointer-taking and void;
+`func_81403938` now uses that prototype and passes an explicit pointer.
+
+`Fragment12_DrawSelectionPanels` (`func_81406700`, 204 words / 816 bytes,
+frame 80, ROM 0xEBA10) draws panel frames/content in the current animation
+and layer order. Canonical `fragment12-render-payloads8` candidate 0 is
+object/link-shape verified and accepted through normal host syntax and a
+full retail-ROM gate. The existing 64-byte header precedes six 3200-byte
+asset buffers and six 88-byte selection entries at 0x4B40. Typed payload
+array indexing restores retail's base-first address additions. Reading the
+selection field directly lets the compiler share the load without reserving
+extra scalar homes. The accepted function uses four real rectangle arrays.
+Earlier candidates used a 96-byte record stride or placed the final drawing
+phase outside its actual enclosing branch; both disagree with assembly.
+
+Post-acceptance naming, declaration cleanup, consolidation of the slot
+view, and the descriptive `Fragment12SelectionEntry` type name preserve
+the complete module in normal/+20 controls. Remaining assembly references
+resolve through compatibility aliases. A fresh normal native extraction/build on integrated revision
+`c52efdc3328ed6f0fecbb7538a1366eb3f6726cf` passes the complete retail-ROM
+comparison (MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`). All 267 original
+instruction words, function extents and linked addresses match. Decimal
+screen dimensions also pass both module controls. Coverage is unchanged.
+Private bodies, diagnostics and proofs are under `fragment12-nearest-slot*`,
+`fragment12-row-slots-consolidation`, `fragment12-render-*` and
+`fragment12-row-transfer-panels-*`.
+
+### 2026-11-02: panel update/controller lookup — requeue
+
+`func_81405514` remains assembly (174 words / 696 bytes, frame 88).
+The minimal verified-context draft reproduces its eight-way switch in
+source order 0,6,1,2,3,4,5,7. Direct typed controller-field forms in
+`fragment12-update-panels8-v2` and `fragment12-update-controller-state8`
+produce 692-byte bodies, normalized 0.9943, but fold the global controller
+address into the halfword load; retail materializes the full record address.
+The resulting temporary-register sequence also differs.
+
+`fragment12-update-optional-controller8` candidate 3 preserves the remaining
+body and its array homes, reaching raw 0.9492 / normalized 0.9718 at 708
+bytes: an optional record pointer adds initialization and a null test that
+retail lacks. Assigning that optional pointer inside the condition does not
+remove the extra instructions. Explicit 32-bit address arithmetic also folds
+back to the shorter direct form. None of these bodies is installed.
+
+The real view is `ControllerState[4]` in `include/controller.h`, with
+`buttonsPressed` at offset 8. Probe companions correct the old scalar
+`D_800CE060` declaration and its two record-address producers, plus the
+state-manager callback flag prototypes against `func_81600A34` in
+`src/fragments/11/fragment11_D7BC0.c`; these edits are part of the unaccepted
+transaction. Next action: combine the shared switch-result temporary with
+the typed controller view, or capture the stock UOPT address/color decisions
+for the direct and optional-pointer bodies. Do not add an empty lifetime use
+or retain unnecessary address casts. Full-module normal/+20 controls pass.
+
+### 2026-11-02: slot sprites and row histories — requeue
+
+`func_81403400` remains assembly (196 words / 784 bytes, frame 184,
+ROM 0xE8710). It first draws six slot sprites grouped by four image indices,
+using the slot scale divided by 400. It then visits 128 history samples,
+draws alternate ages, and suppresses non-current positions less than one
+unit from the current position. The history opacity uses the age/128 times
+0.2, with the current sample drawn at full opacity.
+
+Eight typed-loop candidates in `fragment12-row-draw8` do not match. The
+integer-divisor cells have 800 bytes, frame 176, normalized 0.91 / raw
+0.425; float-divisor cells have 804 bytes and normalized 0.9005. Changing
+slot-loop spelling or the distance conditional does not improve those
+objects. Next action: preserve the consumed next-age and sample-offset
+values visible in the original stack homes rather than relying on the
+current for-loop reconstruction, then compare complete loop/float shapes.
+Use the verified slot layout and actual `func_81401178`/`func_814011B4`
+contracts; do not introduce padding or volatile fields. The minimal-context
+m2c draft and original assembly are in `fragment12-row-render-preparation`.
