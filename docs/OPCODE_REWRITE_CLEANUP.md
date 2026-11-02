@@ -147,7 +147,16 @@ or reverting a function to assembly does not establish a proper C match.
   full-ROM gate pass with all function extents and legacy addresses preserved.
   See [the fragment 31 state evidence](regions/fragments/31/fragment31_189760.md).
 
-This leaves 692 directive occurrences and 40 affected functions, including
+- `func_86408F84`: compose the primitive/environment packed-color
+  expressions using the SDK's byte-field macros and standard display-list
+  commands. Their equivalent OR associations reproduce the retail operand
+  order and subsequent register lifetimes, removing eight word rewrites and
+  the old nested shifts. The complete module matches normally and with
+  leading blanks; host syntax and the normal native full-ROM gate pass.
+  No storage, linker, compiler or ABI change is needed. See
+  [the palette-rendering evidence](regions/fragments/52/fragment52_2871C0.md).
+
+This leaves 684 directive occurrences and 39 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -205,7 +214,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_87C03B10` | [src/fragments/48/fragment48_2597B0.c](../src/fragments/48/fragment48_2597B0.c) | 7 | Replaced with C |
 | `func_864001E0` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 1 | Pending |
 | `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Pending |
-| `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Pending |
+| `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Replaced with C |
 | `func_86600E00` | [src/fragments/54/fragment54_code.c](../src/fragments/54/fragment54_code.c) | 38 | Pending |
 | `func_83302D8C` | [src/fragments/57/fragment57_code.c](../src/fragments/57/fragment57_code.c) | 1 | Pending |
 | `func_83402B10` | [src/fragments/58/fragment58_code.c](../src/fragments/58/fragment58_code.c) | 6 | Pending |
