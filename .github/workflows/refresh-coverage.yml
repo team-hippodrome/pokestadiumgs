@@ -37,16 +37,71 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  refresh:
-    name: Regenerate coverage graph and reports
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+  generate:
+    name: Generate reports from original assembly
+    runs-on: [self-hosted, macOS, ARM64, gs-decomp-public]
+    timeout-minutes: 10
+    outputs:
+      revision: ${{ steps.revision.outputs.sha }}
     steps:
-      - name: Checkout master
+      - name: Mask self-hosted runner paths
+        shell: bash
+        run: |
+          echo "::add-mask::${HOME}"
+          echo "::add-mask::${GITHUB_WORKSPACE}"
+          echo "::add-mask::${RUNNER_TEMP}"
+
+      - name: Checkout master without publishing credentials
         uses: actions/checkout@v4
         with:
           ref: master
           persist-credentials: false
+          set-safe-directory: false
+
+      - name: Record the exact source revision
+        id: revision
+        shell: bash
+        run: echo "sha=$(git -c safe.directory="$GITHUB_WORKSPACE" rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Generate coverage graph and reports
+        shell: bash
+        run: bash ci/generate-coverage.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/coverage-reports"
+
+      - name: Upload only generated reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            ${{ runner.temp }}/coverage-reports/COVERAGE.md
+            ${{ runner.temp }}/coverage-reports/UNDOCUMENTED.md
+            ${{ runner.temp }}/coverage-reports/docs/coverage.svg
+          if-no-files-found: error
+          retention-days: 7
+
+  refresh:
+    name: Publish coverage graph and reports
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout the generated reports' source revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.generate.outputs.revision }}
+          persist-credentials: false
+
+      - name: Download generated reports
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports
+          path: generated-reports
+
+      - name: Install the three generated reports
+        run: |
+          cp generated-reports/COVERAGE.md COVERAGE.md
+          cp generated-reports/UNDOCUMENTED.md UNDOCUMENTED.md
+          mkdir -p docs
+          cp generated-reports/docs/coverage.svg docs/coverage.svg
 
       - name: Test coverage generation
         run: python3 -m unittest discover -s ci -p test_update_coverage.py
@@ -74,16 +129,12 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
-      - name: Regenerate COVERAGE.md and open/update its PR
+      - name: Open or update the reports PR
         shell: bash
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
-
-          python3 ci/update_coverage.py --repo-root .
-          python3 ci/update_coverage.py --repo-root . --check
-          python3 ci/update_undocumented.py --repo-root .
 
           if git diff --quiet -- COVERAGE.md docs/coverage.svg UNDOCUMENTED.md && [ -z "$(git ls-files --others --exclude-standard -- docs/coverage.svg UNDOCUMENTED.md)" ]; then
             echo 'refresh-coverage: coverage graph and reports are already current on master.'

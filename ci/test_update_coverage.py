@@ -6,49 +6,54 @@ from pathlib import Path
 from unittest.mock import patch
 
 import update_coverage as coverage
-from import_coverage_sizes import import_sizes
 
 
 class InstructionCoverageTests(unittest.TestCase):
-    def buckets(self, rows, owners=None, symbols=""):
-        with patch.object(coverage, "BASELINE_TOTAL", len(rows)):
-            return coverage.instruction_buckets(owners or {}, rows, symbols)
+    def write_function(self, root, name, count):
+        path = root / "test" / f"{name}.s"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("/* 0000 80000000 00000000 */ nop\n" * count)
 
-    def test_bucket_boundaries_unknown_and_totals(self):
+    def test_bucket_boundaries_and_totals(self):
         counts = [1, 99, 100, 199, 200, 299, 300, 399, 400, 499,
-                  500, 699, 700, 999, 1000, 1499, 1500, 1999, 2000, None]
-        rows = [["src/test.c", f"f{i}", count, i] for i, count in enumerate(counts)]
-        owners = {"src/test.c": {"f1", "f18", "f19"}}
-        buckets = self.buckets(rows, owners)
-        self.assertEqual(buckets[0], [1, 1])
-        self.assertEqual(buckets[9:], [[0, 1], [0, 1]])
-        self.assertEqual(sum(x[0] for x in buckets), len(rows) - 3)
-        self.assertEqual(sum(x[1] for x in buckets), 3)
-        self.assertTrue(all(pair == [2, 0] for pair in buckets[1:9]))
-
-    def test_renamed_owner_uses_original_address_and_size(self):
-        rows = [["src/old.c", "func_80001000", 125, 2147487744]]
-        buckets = self.buckets(rows, {"src/new.c": {"DrawPanel"}},
-                               "DrawPanel = 0x80001000; // type:func\n")
-        self.assertEqual(buckets[1], [0, 1])
-
-    def test_missing_owner_fails_instead_of_inventing_size(self):
-        with self.assertRaisesRegex(ValueError, "missing from instruction baseline"):
-            self.buckets([["src/test.c", "f", 5, 1]], {"src/test.c": {"unknown"}})
-
-    def test_disassembly_import_excludes_directives_and_rodata(self):
+                  500, 699, 700, 999, 1000, 1499, 1500, 1999, 2000]
+        totals = [3] * 11
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / "test").mkdir()
-            (root / "test/f.s").write_text(
-                ".section .rodata\n/* 0000 80000000 00000000 */ .word 0\n"
-                ".section .text\nglabel f\n"
-                "/* 0004 80000004 03E00008 */ jr $ra\n"
-                "/* 0008 80000008 00000000 */  nop\n")
-            manifest = {"functions": [["src/test.c", "f", None, 1],
-                                      ["src/test.c", "absent", None, 2]]}
-            result = import_sizes(manifest, root)
-            self.assertEqual([row[2] for row in result["functions"]], [2, None])
+            for i, count in enumerate(counts):
+                self.write_function(root, f"f{i}", count)
+            buckets = coverage.instruction_buckets(
+                {"src/test.c": {f"f{i}" for i in range(len(counts))}}, totals, root)
+        self.assertEqual(buckets[:9], [[1, 2]] * 9)
+        self.assertEqual(buckets[9:], [[2, 1], [3, 0]])
+        self.assertEqual(sum(sum(pair) for pair in buckets), sum(totals))
+
+    def test_baseline_totals_are_read_from_existing_table(self):
+        buckets = [[3, 2]] * 11
+        snapshot = coverage.CoverageSnapshot(33, 55, 60, {}, buckets)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "COVERAGE.md"
+            path.write_text(coverage.render(snapshot, {}), encoding="utf-8")
+            with patch.object(coverage, "BASELINE_TOTAL", 55):
+                self.assertEqual(coverage.baseline_bucket_totals(path), [5] * 11)
+            with self.assertRaisesRegex(ValueError, "baseline coverage table"):
+                coverage.baseline_bucket_totals(path)
+
+    def test_missing_assembly_fails_instead_of_inventing_size(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ValueError, "missing original assembly"):
+                coverage.instruction_buckets({"src/test.c": {"absent"}}, [1] * 11, Path(directory))
+
+    def test_directives_are_excluded_and_bucket_overflow_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_function(root, "f", 2)
+            with (root / "test/f.s").open("a") as output:
+                output.write("/* 0000 80000000 00000000 */ .word 0\n")
+            buckets = coverage.instruction_buckets({"src/test.c": {"f"}}, [1] * 11, root)
+            self.assertEqual(buckets[0], [0, 1])
+            with self.assertRaisesRegex(ValueError, "exceeds its baseline total"):
+                coverage.instruction_buckets({"src/test.c": {"f"}}, [0] * 11, root)
 
     def test_svg_is_valid_deterministic_and_contains_counts(self):
         buckets = [[100, 25]] + [[0, 0] for _ in range(10)]

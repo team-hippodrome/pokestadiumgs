@@ -6,7 +6,7 @@
 
 ## Functions by instruction count
 
-Original US instruction counts are retained in `ci/coverage_functions.json`; current `GLOBAL_ASM` owners determine which functions remain open. Missing original sizes are shown as Unknown. Counts describe functions, not executed instructions or runtime test coverage.
+US bucket totals are retained from this table; open function sizes are counted from regenerated original assembly. Counts describe functions, not executed instructions or runtime test coverage.
 
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |

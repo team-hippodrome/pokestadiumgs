@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """Render the public root-layout COVERAGE.md from tracked source pragmas.
 
-This is independent of the generated asm tree and the ROM. It can inspect
+The ownership summary is independent of the generated asm tree. It can inspect
 HEAD, a revision, or the staged index. The existing COVERAGE.md table supplies
 per-file baseline totals because the public repository does not contain the
-private repository's baseline commit. Original instruction counts are retained
-in ci/coverage_functions.json so the graph also needs no ROM or generated asm.
+private repository's baseline commit. The graph retains aggregate bucket totals
+from COVERAGE.md and counts open functions from a generated US disassembly.
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import math
 import re
 import subprocess
@@ -41,60 +40,42 @@ class CoverageSnapshot:
     instruction_buckets: list[list[int]] = field(default_factory=list)
 
 
-def git_text(repo_root: Path, revision: str, staged: bool, path: str) -> str:
-    """Read metadata from the same revision/index as the source pragmas."""
-    result = subprocess.run(
-        ["git", "-c", f"safe.directory={repo_root.resolve().as_posix()}",
-         "-C", str(repo_root), "show", f":{path}" if staged else f"{revision}:{path}"],
-        capture_output=True, text=True, check=True,
-    )
-    return result.stdout
+INSTRUCTION = re.compile(
+    r"^\s*/\*\s+[0-9A-Fa-f]+\s+[0-9A-Fa-f]{8}\s+[0-9A-Fa-f]{8}\s+\*/\s+[A-Za-z]",
+    re.MULTILINE,
+)
 
 
-def instruction_buckets(owners: dict[str, set[str]], functions: list,
-                        symbol_text: str) -> list[list[int]]:
-    """Count baseline functions by original size and current pragma ownership.
+def baseline_bucket_totals(path: Path) -> list[int]:
+    """Retain eleven aggregate totals from the trusted coverage table."""
+    totals = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        cells = [cell.strip() for cell in line.split("|")]
+        if len(cells) == 7 and cells[1] in BUCKET_LABELS:
+            totals[cells[1]] = int(cells[4].replace(",", ""))
+    if set(totals) != set(BUCKET_LABELS) or sum(totals.values()) != BASELINE_TOTAL:
+        raise ValueError("baseline coverage table must retain all instruction buckets totaling 10,532 functions")
+    return [totals[label] for label in BUCKET_LABELS]
 
-    Addresses identify renamed functions. An owner outside the original
-    baseline requires an explicit baseline update to keep the graph and
-    summary consistent.
-    """
-    if len(functions) != BASELINE_TOTAL:
-        raise ValueError(f"instruction baseline must contain {BASELINE_TOTAL} functions")
-    if len({row[1] for row in functions}) != len(functions):
-        raise ValueError("instruction baseline contains duplicate function names")
-    addresses = [row[3] for row in functions if row[3] is not None]
-    if len(set(addresses)) != len(addresses):
-        raise ValueError("instruction baseline contains duplicate function addresses")
-    symbols = {name: int(address, 16) for name, address in re.findall(
-        r"^\s*(\w+)\s*=\s*0x([\dA-Fa-f]+);", symbol_text, re.MULTILINE)}
-    by_name = {name: i for i, (_, name, _, _) in enumerate(functions)}
-    by_address = {address: i for i, (_, _, _, address) in enumerate(functions) if address is not None}
-    open_indices = set()
-    unmatched = []
-    for names in owners.values():
+
+def instruction_buckets(owners: dict[str, set[str]], totals: list[int],
+                        asm_root: Path) -> list[list[int]]:
+    """Subtract open assembly counts from the fixed aggregate US baseline."""
+    buckets = [[total, 0] for total in totals]
+    for source, names in owners.items():
+        relative = Path(source).relative_to("src").with_suffix("")
         for name in names:
-            index = by_name.get(name)
-            if index is None:
-                address = symbols.get(name)
-                if address is None and re.fullmatch(r"func_[\dA-Fa-f]{8}", name):
-                    address = int(name[5:], 16)
-                index = by_address.get(address)
-            if index is None:
-                unmatched.append(name)
-            elif index in open_indices:
-                raise ValueError(f"multiple open owners resolve to baseline function {name}")
-            else:
-                open_indices.add(index)
-    if unmatched:
-        raise ValueError("open owners missing from instruction baseline: " + ", ".join(sorted(unmatched)))
-    buckets = [[0, 0] for _ in BUCKET_LABELS]
-    for i, (_, _, count, _) in enumerate(functions):
-        if count is not None and (type(count) is not int or count <= 0):
-            raise ValueError("instruction counts must be positive integers or null")
-        bucket = (next((j for j, limit in enumerate(BUCKET_LIMITS) if count < limit), 9)
-                  if count is not None else 10)
-        buckets[bucket][int(i in open_indices)] += 1
+            path = asm_root / relative / f"{name}.s"
+            if not path.is_file():
+                raise ValueError(f"missing original assembly for {name}: regenerate the US split")
+            count = len(INSTRUCTION.findall(path.read_text(encoding="utf-8")))
+            if not count:
+                raise ValueError(f"no instructions in original assembly for {name}")
+            bucket = next((i for i, limit in enumerate(BUCKET_LIMITS) if count < limit), len(BUCKET_LIMITS))
+            buckets[bucket][0] -= 1
+            buckets[bucket][1] += 1
+    if any(covered < 0 for covered, _ in buckets):
+        raise ValueError("open instruction bucket exceeds its baseline total; inspect split or baseline changes")
     return buckets
 
 
@@ -142,7 +123,8 @@ def baseline_by_file(path: Path) -> dict[str, int]:
     return result
 
 
-def snapshot(repo_root: Path, revision: str, staged: bool) -> CoverageSnapshot:
+def snapshot(repo_root: Path, revision: str, staged: bool,
+             asm_root: Path, baseline: Path) -> CoverageSnapshot:
     owners = owners_by_file(repo_root, revision, staged)
     remaining_by_file = {path: len(names) for path, names in owners.items()}
     remaining = sum(remaining_by_file.values())
@@ -154,8 +136,7 @@ def snapshot(repo_root: Path, revision: str, staged: bool) -> CoverageSnapshot:
         remaining_by_file=remaining_by_file,
         instruction_buckets=instruction_buckets(
             owners,
-            json.loads((Path(__file__).parent / "coverage_functions.json").read_text(encoding="utf-8"))["functions"],
-            git_text(repo_root, revision, staged, "linker_scripts/us/symbol_addrs_code.txt"),
+            baseline_bucket_totals(baseline), asm_root,
         ),
     )
 
@@ -170,7 +151,7 @@ def render(snapshot_value: CoverageSnapshot, baseline: dict[str, int]) -> str:
         "",
         "## Functions by instruction count",
         "",
-        "Original US instruction counts are retained in `ci/coverage_functions.json`; current `GLOBAL_ASM` owners determine which functions remain open. Missing original sizes are shown as Unknown. Counts describe functions, not executed instructions or runtime test coverage.",
+        "US bucket totals are retained from this table; open function sizes are counted from regenerated original assembly. Counts describe functions, not executed instructions or runtime test coverage.",
         "",
         "| Original instructions | C upstream | Open | Total | Complete |",
         "| --- | ---: | ---: | ---: | ---: |",
@@ -246,6 +227,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--graph-output", type=Path, default=None)
     parser.add_argument("--baseline", type=Path, default=None)
+    parser.add_argument("--asm-root", type=Path, default=None, help="generated US nonmatchings directory for the selected source revision")
     parser.add_argument("--revision", default="HEAD")
     parser.add_argument("--staged", action="store_true")
     parser.add_argument("--check", action="store_true", help="fail if the output is not current")
@@ -253,8 +235,9 @@ def main() -> int:
 
     repo_root = (args.repo_root or Path(__file__).resolve().parent.parent).resolve()
     output = (args.output or repo_root / "COVERAGE.md").resolve()
-    baseline_path = (args.baseline or output).resolve()
-    snapshot_value = snapshot(repo_root, args.revision, args.staged)
+    baseline_path = (args.baseline or repo_root / "COVERAGE.md").resolve()
+    snapshot_value = snapshot(repo_root, args.revision, args.staged,
+                              args.asm_root or repo_root / "asm/us/nonmatchings", baseline_path)
     generated = render(snapshot_value, baseline_by_file(baseline_path))
     graph_output = args.graph_output or output.parent / "docs/coverage.svg"
     graph = render_graph(snapshot_value.instruction_buckets)
