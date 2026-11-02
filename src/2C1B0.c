@@ -1974,7 +1974,84 @@ void func_80031A6C(s32 arg0, void *arg1)
 }
 /* mkdraft:func_80031A6C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_80031C84.s")
+/* mkdraft:func_80031C84 begin */
+extern u8 D_800D2B18;
+extern s8 D_800D2B19;
+extern f32 D_800D2B1C;
+
+s16 func_80031F00();                                /* extern */
+s16 func_80032A28();                                /* extern */
+void func_80031E6C(u16);                            /* extern */
+
+
+
+s32 func_80031C84(s16 *arg0, s32 arg1) {
+    s32 pad[3];
+    s16 sp4C[4];
+    f32 var_fs0;
+    s16 temp_v0;
+    s16 var_a0;
+    u32 var_a1;
+    s32 var_a2;
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_v1;
+
+    var_fs0 = 0.0f;
+    var_s2 = 1;
+    if ((s8) D_80090B8C == 0) {
+        return 0;
+    }
+    if (arg0 == NULL) {
+        return 0;
+    }
+    var_s1 = 0;
+    if (arg1 != 0) {
+        do {
+            if (var_fs0 <= (f32) (u32) var_s1) {
+                func_80031E6C(var_s2);
+            }
+            if (D_800D2760.unk2C & 0x80) {
+                if (D_800D2760.unk29 != 0) {
+                    D_800D2760.unk29 = 0;
+                    D_800D2B18 = D_800D2760.unk28 & 7;
+                    D_800D2B19 = (s8) ((s32) (D_800D2760.unk28 & 0x70) >> 4);
+                }
+                sp4C[0] = func_80031F00();
+                sp4C[1] = GbAudio_RenderPulse2();
+                temp_v0 = func_80032A28();
+                sp4C[3] = temp_v0;
+                if (D_800D2760.unk2A & 2) {
+                    var_a1 = -1;
+                } else {
+                    var_a1 = 0;
+                }
+                if (D_800D2760.unk2A & 1) {
+                    var_a2 = -1;
+                } else {
+                    var_a2 = 0;
+                }
+                if (D_800D2760.unk2A & 8) {
+                    var_v1 = -1;
+                } else {
+                    var_v1 = 0;
+                }
+                // FAKE: the discarded 0 operand gives the shift count its own vreg; without it
+                // uopt emits the outer addu with the third masked term first.
+                var_a0 = ((u32) ((var_v1 & temp_v0) + (sp4C[0] & var_a2) + (sp4C[1] & var_a1)) >> ((0, 5))) * (D_800D2B18 + 1);
+            } else {
+                var_a0 = 0;
+            }
+            *arg0 = var_a0;
+            var_s1 += 1;
+            arg0 += 1;
+            var_s2 += 1;
+            var_fs0 += D_800D2B1C;
+        } while (var_s1 != arg1);
+    }
+    return arg1;
+}
+/* mkdraft:func_80031C84 end */
 
 void func_80031E6C(u16 arg0) {
     while (D_800D27C0[D_800D2AE0].limit >= arg0) {

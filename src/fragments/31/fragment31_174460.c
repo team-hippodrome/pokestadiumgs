@@ -169,7 +169,41 @@ void func_88201A74(u8 *a, u8 *b) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201B74.s")
+/* mkdraft:func_88201B74 begin */
+extern u8 func_882002F8(u8 *arg0, u8 *arg1);
+extern void func_8820172C(u8 *arg0, u8 **arg1, s8 arg2);
+
+
+
+void func_88201B74(void *arg0, void *arg1) {
+    u8 **listA;
+    u8 **listB;
+    u8 slotA;
+    u8 slotB;
+
+    listA = *(u8 ***)arg0;
+    listB = *(u8 ***)arg1;
+    slotA = (*listA)[8];
+    slotB = (*listB)[8];
+
+    if (func_80063754(((u8 *)arg0)[9]) && func_80063754(((u8 *)arg1)[9])) {
+        if (slotA == 2 && slotB == 2) {
+            return;
+        }
+        func_88200320(func_8820137C(arg0), func_8820137C(arg1));
+
+        *(s32 *)(D_88234630 + (u32)slotB * 12 + 8) = 1; // FAKE: the (u32) cast; diff score 689 without it.
+        *(s32 *)(D_88234630 + (u32)slotA * 12 + 8) = 1; // FAKE: the (u32) cast; diff score 689 without it.
+        if ((slotA == 2 && slotB == 0) || (slotA == 0 && slotB == 2)) {
+            func_882002F8((u8 *)arg0 + 0x27, (u8 *)arg1 + 0x27);
+        }
+    } else if (func_80063754(((u8 *)arg0)[9])) {
+        func_8820172C(arg0, listB, (s8)(s32)func_882012E4(arg1));
+    } else if (func_80063754(((u8 *)arg1)[9])) {
+        func_8820172C(arg1, listA, (s8)(s32)func_882012E4(arg0));
+    }
+}
+/* mkdraft:func_88201B74 end */
 
 extern void func_88201B74(void *, void *);
 extern u32 func_8820030C(u32 *, u32 *);

@@ -22,9 +22,73 @@ s32 LabPCList_CompareByPointer(S1_unk_func_88316128* arg0, S1_unk_func_88316128*
     return (arg0 == arg1) ? 0 : (arg0 < arg1) ? -1 : 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18F6D0/func_8821C47C.s")
+/* mkdraft:func_8821C47C begin */
+extern s32 D_882347D0;
 
-extern void func_8821C47C(s32, s32, s32);
+// Compares entries arg0 and arg1 by the field selected by arg2: 1 = the u8 at
+// 0x25, 2 = the u16 at 0x30, 3 = 0x32, 4 = 0x34, 5 = 0x38, 6 = 0x3A, 7 = 0x36,
+// 13 = the u8 at 0x24 divided by 50. A set bit 0 of 0x26, or the u8 at 8 being
+// 0xFC, gives a fixed rank instead. D_882347D0 is the sort direction set by
+// func_8821CCE8: when 0 the difference is negated, which reverses the order.
+
+
+s32 func_8821C47C(S1_unk_func_88316128 *arg0, S1_unk_func_88316128 *arg1, s32 arg2) {
+    s32 difference;
+    s32 result;
+    S1_unk_func_88316128 *entries[2];
+    s16 values[2];
+    u8 i;
+
+    entries[0] = arg0;
+    entries[1] = arg1;
+    for (i = 0; i < 2; i++) {
+        if (((u8 *)entries[i])[0x26] & 1) {
+            values[i] = (D_882347D0 == 0) ? -2 : 0x3E9;
+        } else if (arg2 != 0xD && ((u8 *)entries[i])[8] == 0xFC) {
+            values[i] = (D_882347D0 == 0) ? -1 : 0x3E8;
+        } else {
+            switch (arg2) {
+                case 1:
+                    values[i] = ((u8 *)entries[i])[0x25];
+                    break;
+                case 2:
+                    values[i] = *(u16 *)(((u8 *)entries[i]) + 0x30);
+                    break;
+                case 3:
+                    values[i] = *(u16 *)(((u8 *)entries[i]) + 0x32);
+                    break;
+                case 4:
+                    values[i] = *(u16 *)(((u8 *)entries[i]) + 0x34);
+                    break;
+                case 5:
+                    values[i] = *(u16 *)(((u8 *)entries[i]) + 0x38);
+                    break;
+                case 6:
+                    values[i] = *(u16 *)(((u8 *)entries[i]) + 0x3A);
+                    break;
+                case 7:
+                    values[i] = *(u16 *)(((u8 *)entries[i]) + 0x36);
+                    break;
+                case 13:
+                    values[i] = ((u8 *)entries[i])[0x24] / 50;
+                    break;
+            }
+        }
+    }
+    difference = values[0] - values[1];
+    if (D_882347D0 == 0) {
+        difference *= -1;
+    }
+    if (difference != 0) {
+        result = difference;
+    } else {
+        result = LabPCList_CompareByPointer(arg0, arg1);
+    }
+    return result;
+}
+/* mkdraft:func_8821C47C end */
+
+extern s32 func_8821C47C(S1_unk_func_88316128 *, S1_unk_func_88316128 *, s32);
 void func_8821C690(s32 arg0, s32 arg1) {
     func_8821C47C(arg0, arg1, 1);
 }

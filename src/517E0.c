@@ -1254,7 +1254,75 @@ void func_80053ECC(u8 *arg0, u8 *arg1) {
     func_80060D70(arg1 + 4, arg0 + 4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80053F04.s")
+/* mkdraft:func_80053F04 begin */
+struct pair { u8 a; u8 b; };
+
+// Copy arg3 into entry arg2 of the table selected by arg0 for owner arg1, when arg2 is
+// below that table's count, or equal to it and below its capacity. Only tables 0x10-0x13
+// and 0x16-0x1E have a case; 0x14 and 0x15 copy nothing.
+s32 func_80053F04(s32 arg0, s32 arg1, s32 arg2, u8 *arg3) {
+    s32 result = 0;
+    s32 capacity = func_80053230(arg0);
+    s32 count = func_8005370C(arg0, arg1);
+    u8 *entry;
+
+    if ((arg2 < count) || ((arg2 == count) && (arg2 < capacity))) {
+        switch (arg0) {
+        case 0x10:
+            func_80051864((s32)arg3, (s32)((u8 *)func_80050E88(0, D_800972C0, arg1) + arg2 * 0x3C + 0x10));
+            break;
+        case 0x11:
+            func_80051864((s32)arg3, (s32)((u8 *)func_80050F60(0, arg1) + arg2 * 0x3C + 0x20));
+            break;
+        case 0x12:
+            entry = (u8 *)func_80051028(0, arg1);
+            // A two-byte struct copy; the single struct assignment makes one source
+            // load per byte (lbu t4 / lbu t3), matching the retail register pair.
+            *(struct pair *)&entry[arg2 * 2 + 0x10] = *(struct pair *)arg3;
+            break;
+        case 0x13:
+            entry = (u8 *)func_800510CC(0);
+            entry[arg2 + 2] = arg3[0];
+            break;
+        case 0x16:
+            func_80053DDC((s32)arg3, (s32)((u8 *)func_80051208(0) + arg2 * 0x2F + 2));
+            break;
+        case 0x17:
+            func_80053DDC((s32)arg3, (s32)((u8 *)func_80051274(0) + arg2 * 0x2F + 2));
+            break;
+        case 0x18:
+            func_800519AC(arg3, (u8 *)func_800512E0(0) + arg2 * 0x48 + 4);
+            break;
+        case 0x19:
+            _bcopy(arg3, (u8 *)func_8005134C(0) + arg2 * 0x480 + 8, 0x480);
+            break;
+        case 0x1A:
+            _bcopy(arg3, (u8 *)func_800513B8(0) + arg2 * 0x480 + 8, 0x480);
+            break;
+        case 0x1B:
+            func_80053E08(arg3, (u8 *)func_80051424(0) + arg2 * 0x178 + 4);
+            break;
+        case 0x1C:
+            func_80053E8C(arg3, (u8 *)func_80051490(0) + arg2 * 0x14 + 2);
+            break;
+        case 0x1D:
+            func_80053ECC(arg3, (u8 *)func_800514FC(0) + arg2 * 0x10 + 2);
+            break;
+        case 0x1E:
+            entry = (u8 *)func_80051568(0);
+            entry[arg2 + 4] = arg3[0];
+            break;
+        }
+        if (arg2 == count) {
+            func_80053908(arg0, arg1);
+        } else {
+            func_80051BF0(arg0, (u8 *)arg1, 2);
+        }
+        result = 1;
+    }
+    return result;
+}
+/* mkdraft:func_80053F04 end */
 
 extern void *func_80051138(s32);
 
@@ -1288,7 +1356,7 @@ u8 func_800542B0(s32 arg0) {
     return sp1F;
 }
 
-extern void func_80053F04(s32, s32, s32, u8 *);
+extern s32 func_80053F04(s32, s32, s32, u8 *);
 
 void func_800542E4(s32 arg0, u8 arg1) {
     u8 sp1F;
@@ -1536,7 +1604,30 @@ void func_80054B7C(u8 *arg0, u8 *arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80054CC4.s")
+/* mkdraft:func_80054CC4 begin */
+extern s32 func_80050D20(s32 arg0, s32 arg1);
+extern s32 func_800511A4(s32 arg0);
+extern void func_80051830(void *arg0, void *arg1);
+extern u8 D_801281C0;
+
+
+s32 func_80054CC4(u8 *arg0, u8 *arg1) {
+    u8 *temp_v0;
+    s32 var_s1;
+    s16 result = 0;
+    if ((*(s32 *)((u8 *)&D_801281C0 + func_80050D20(0x15, -1) * 0xC) & 1) != 0) {
+        temp_v0 = (u8 *)func_800511A4(0);
+        *(Header54B7C *)arg0 = *(Header54B7C *)(temp_v0 + 2);
+        result = *(s16 *)(temp_v0 + 0x22);
+        if (arg1 != NULL) {
+            for (var_s1 = 0; var_s1 < result; var_s1++) {
+                func_80051830(arg1 + var_s1 * 0x58, temp_v0 + 0x24 + var_s1 * 0x3C);
+            }
+        }
+    }
+    return result;
+}
+/* mkdraft:func_80054CC4 end */
 
 s32 func_80054E10(u16 *arg0)
 {
@@ -2025,7 +2116,7 @@ u8 func_80055D44(s32 arg0)
 }
 
 extern void func_80053B38(s32, s32, s32, u8 *);
-extern void func_80053F04(s32, s32, s32, u8 *);
+extern s32 func_80053F04(s32, s32, s32, u8 *);
 
 typedef struct {
     u8 leading[3];
@@ -2046,7 +2137,7 @@ void func_80055DC4(s32 arg0, u8 arg1) {
 
 extern s32 func_80050D20(s32 arg0, s32 arg1);
 extern void func_80053B38(s32, s32, s32, u8 *);
-extern void func_80053F04(s32, s32, s32, u8 *);
+extern s32 func_80053F04(s32, s32, s32, u8 *);
 extern u8 D_801281C0;
 void func_80055E54(s32 arg0, u8 arg1)
 {

@@ -57,7 +57,91 @@ void func_86900138_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_869001AC.s")
+/* mkdraft:func_869001AC begin */
+extern u8 D_8690E990[];
+extern u8 D_8691A7D8[];
+extern u8 D_8691A2A0[];
+extern u8 D_86911448[];
+extern u8 D_86919D00[];
+extern u8 D_8690EBA0[];
+extern f32 D_8690EB4C[];
+extern s32 D_8691AB68[4];
+extern s32 D_8691AB78[];
+extern u8 *D_8691AD58;
+extern f32 D_8690EB3C;
+extern f32 D_8690EB40;
+extern f32 D_8690EB44;
+extern f32 D_8690EB48;
+extern void func_819006A0(void *);
+extern void func_87F02684(void *);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern void func_8003EF60(u8 *);
+extern void func_87F02328();
+struct unk_D_8691A448;
+extern struct unk_D_8691A448 D_8691A448;
+
+typedef struct unk_StateA448 {
+    u8 pad[0x384];
+    s32 unk_384;
+    s32 unk_388;
+} unk_StateA448;
+
+typedef struct unk_StateA2A0 {
+    u8 pad[0x184];
+    s32 unk_184;
+    u8 rest[0x10];
+} unk_StateA2A0;
+
+
+
+void func_869001AC(void) {
+    u8 *rec;
+    s32 i;
+
+    *(unk_StateA2A0 *)D_8691A2A0 = *(unk_StateA2A0 *)D_8690E990;
+    func_819006A0(*(void **)(D_8691A2A0 + 0x184));
+    func_87F02684(D_86911448);
+    *(unk_StateA448 *)&D_8691A448 = *(unk_StateA448 *)D_8691A7D8;
+    D_8690EB3C = D_8690EB4C[4];
+    D_8690EB40 = D_8690EB4C[5];
+    D_8690EB44 = D_8690EB4C[6];
+    D_8690EB48 = D_8690EB4C[7];
+    i = 0;
+    do {
+        rec = D_86919D00 + i * 0x168;
+        *(f32 *)(rec + 0x28) = 10.0f;
+        *(s16 *)(rec + 0x20) = 0;
+        ModelAnim_SetEventFrame(rec, *(s16 *)(D_8690EBA0 + i * 8 + 2));
+        func_8003EF60(rec);
+        // Store after i++ so the sw fills the bne delay slot; writing the
+        // comparison as D_8691AB78 != ... gives retail's bne s1,s3 operand order.
+        i++;
+        D_8691AB68[i - 1] = 0;
+    } while (D_8691AB78 != &D_8691AB68[i]);
+    switch ((*(s8 *)((*(u8 **)(D_8691AD58 + 0xC)) + 0x2181))) {
+        case 0:
+            *(s32 *)(D_8691A2A0 + 0x78) = 0;
+            break;
+        case 1:
+            *(s32 *)(D_8691A2A0 + 0x78) = 1;
+            break;
+        case 2:
+            *(s32 *)(D_8691A2A0 + 0x78) = 2;
+            break;
+        case 3:
+            *(s32 *)(D_8691A2A0 + 0x78) = 3;
+            break;
+    }
+    if (((*(u8 **)(D_8691AD58 + 0xC))[0x2182] & 1) && ((*(u8 **)(D_8691AD58 + 0xC))[0x2182] & 2) &&
+        ((*(u8 **)(D_8691AD58 + 0xC))[0x2182] & 4) && ((*(u8 **)(D_8691AD58 + 0xC))[0x2182] & 8)) {
+        *(s32 *)(D_8691A2A0 + 0x7C) = 1;
+        *(s32 *)(D_8691A2A0 + 0x78) = 1;
+    } else {
+        *(s32 *)(D_8691A2A0 + 0x7C) = 0;
+    }
+    func_87F02328();
+}
+/* mkdraft:func_869001AC end */
 #endif
 
 #ifdef VERSION_US
@@ -1506,7 +1590,93 @@ void func_8690B89C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690C20C.s")
+/* mkdraft:func_8690C20C begin */
+extern u8 *D_8691AD58;
+extern u32 D_8691A2E8;
+extern s32 D_8691A2C8[];
+extern s32 func_86904D48(void);
+extern u8 D_8690ECD8[];
+extern u8 D_8690EF78[];
+
+typedef struct { s32 unk_00[4][6][7]; } unk_D_8690ECD8_type;
+typedef struct { s32 unk_00[7]; } unk_D_8690EF78_type;
+
+// Picks the per-mode threshold row and returns the offset added to a
+// func_86904D48() roll, or 1 when that sum is not positive.
+//
+// `thresholds` copies all four mode rows of D_8690ECD8 (0x2A0 bytes); row 5
+// with the mode base is the fallback when the stage and D_8691A2C8
+// conditions hold, row `level` otherwise.  The first row whose entry exceeds
+// `random` supplies the candidate offset from the D_8690EF78 copy.
+//
+// `random` holds the modulo result: writing it as `guRandom() % 200` in the
+// assignment (instead of `guRandom()` plus `% 200` at each comparison) is
+// what makes uopt sink one div/mfhi into each loop preheader and order the
+// two spilled compiler temps as retail does (byte-offset counter at 0x20,
+// offsets-element pointer at 0x24).
+
+
+s32 func_8690C20C(s32 arg0)
+{
+  unk_D_8690ECD8_type thresholds;
+  unk_D_8690EF78_type offsets;
+  s32 i;
+  s32 mode;
+  s32 level;
+  s32 random;
+  thresholds = *((unk_D_8690ECD8_type *) D_8690ECD8);
+  offsets = *((unk_D_8690EF78_type *) D_8690EF78);
+  switch (*((s8 *) ((*((u8 **) (D_8691AD58 + 0xC))) + 0x2181)))
+  {
+    case 0:
+      mode = 0;
+      break;
+
+    case 1:
+      mode = 1;
+      break;
+
+    case 2:
+      mode = 2;
+      break;
+
+    case 3:
+      mode = 3;
+      break;
+
+  }
+
+  level = D_8691A2E8;
+  random = guRandom() % 200;
+
+  if ((level == 4) && (D_8691A2C8[arg0] == 60))
+  {
+  for (i = 0; i < 7; i++)
+  {
+    if (thresholds.unk_00[mode][5][i] > random)
+    {
+        if ((func_86904D48() + offsets.unk_00[i]) <= 0)
+        {
+          return 1;
+        }
+        return func_86904D48() + offsets.unk_00[i];
+    }
+  }
+  }
+  for (i = 0; i < 7; i++)
+  {
+    if (thresholds.unk_00[mode][level][i] > random)
+    {
+        if ((func_86904D48() + offsets.unk_00[i]) <= 0)
+        {
+          return 1;
+        }
+        return func_86904D48() + offsets.unk_00[i];
+    }
+  }
+
+}
+/* mkdraft:func_8690C20C end */
 #endif
 
 #ifdef VERSION_US

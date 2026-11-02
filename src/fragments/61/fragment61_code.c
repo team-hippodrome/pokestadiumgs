@@ -1052,13 +1052,58 @@ void func_86B09834(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0B500.s")
+/* mkdraft:func_86B0B500 begin */
+extern u8 D_86B17A78[];
+extern u8 D_86B17A88[];
+extern s32 D_86B17BF4;
+extern s32 D_86B17BF8;
+extern s32 D_86B17BFC;
+extern s32 D_86B17C00;
+extern s32 D_86B17CEC;
+extern s32 D_86B17CF0;
+extern s32 D_86B17CF4;
+extern s32 D_86B17CF8;
+
+
+void func_86B0B500(void) {
+    // FAKE: the pointer copies give D_86B17CF0/D_86B17CF8 their own store temps;
+    // diff score 460 without them.
+    s32 *D_86B17CF0_ptr = &D_86B17CF0;
+    s32 *D_86B17CF8_ptr = &D_86B17CF8;
+    s32 largest;
+    s32 i;
+
+    largest = -1;
+    i = 0;
+    do {
+        if (largest < *(s32 *)(D_86B17A78 + i * 4 + 0x17C)) largest = *(s32 *)(D_86B17A78 + i * 4 + 0x17C);
+        i++;
+    } while ((u8 *)D_86B17A88 > (u8 *)(D_86B17A78 + i * 4));
+    if (largest == D_86B17BF4) D_86B17CEC = 1;
+    if (largest == D_86B17BF8) (*D_86B17CF0_ptr) = 1;
+    if (largest == D_86B17BFC) D_86B17CF4 = 1;
+    if (largest == D_86B17C00) (*D_86B17CF8_ptr) = 1;
+    if (*(s32 *)(D_86B17A78 + 0x27C) * (*(s32 *)(D_86B17A78 + 0x278) * (*(s32 *)(D_86B17A78 + 0x274) * *(s32 *)(D_86B17A78 + 0x280))) != 0) {
+        *(s32 *)(D_86B17A78 + 0x274) = 0;
+        *(s32 *)(D_86B17A78 + 0x278) = 0;
+        *(s32 *)(D_86B17A78 + 0x27C) = 0;
+        *(s32 *)(D_86B17A78 + 0x280) = 0;
+    }
+}
+/* mkdraft:func_86B0B500 end */
 #endif
+
+// The retail func_86B0B500.s also holds the two-instruction glabel D_86B0B600
+// (a bare `jr ra; nop`), so the fragment keeps its size only with this definition
+// here. func_86B0B608 passes its address to func_87F025B8 as a callback.
+//@asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0B500.s
+void D_86B0B600(void) {
+}
 
 #ifdef VERSION_US
 extern void func_80037E3C(u8 *, void *, s32);
 extern s32 func_86B0355C(s32, u8 *);
-extern void D_86B0B600(s32, u8 *);
+extern void D_86B0B600();
 extern u8 D_86B17A78[];
 extern s32 D_86B0E7F0;
 extern void func_8003F114(u8 *, s32, s32, s32);

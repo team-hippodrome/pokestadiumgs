@@ -642,7 +642,61 @@ s32 func_8006B0B8(void) {
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006B428.s")
+/* mkdraft:func_8006B428 begin */
+extern s32 D_8009DF70;
+extern void func_8006AFE4(s8 *, s8 *);
+extern s32 func_8006B07C(s8 *);
+extern void _bcopy(void *, void *, s32);
+
+typedef struct unk_func_8006B428 {
+    u8 unk_00;
+    u8 unk_01;
+    u16 unk_02;
+    unk_D_8009DF70_0C unk_04;
+    unk_D_8009DF70_58 unk_10[6];
+} unk_func_8006B428;
+
+// D_8009DF70 holds the unk_D_8009DF70 base pointer; the pointer-typed test emits the
+// beq/bne pair the target uses, while the file's s32 declaration adds a copy for it.
+
+
+s32 func_8006B428(u8 *arg0, s32 arg1) {
+    s32 result = 0;
+    s32 free_slot;
+    s32 i;
+    s32 j;
+    s32 slot;
+    unk_func_8006B428 *src;
+
+    if ((unk_D_8009DF70 *)D_8009DF70 != NULL) {
+        result = 1;
+        func_8006AFE4(((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_900,
+                      ((unk_D_8009DF70 *)D_8009DF70)->unk_08);
+        free_slot = func_8006B07C(((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_900);
+        *(u8 *)((u8 *)(u32)((unk_D_8009DF70 *)D_8009DF70)->unk_24 + 0x955) = 0;
+        for (i = 0; i < 2; i++) {
+            src = (unk_func_8006B428 *)(arg0 + i * 0x220);
+            slot = ((unk_D_8009DF70 *)D_8009DF70)->unk_08[i];
+            if (slot == -1) {
+                slot = free_slot;
+            }
+            if (slot >= 0) {
+                if (src->unk_01 != 0) {
+                    *(u8 *)((u8 *)(u32)((unk_D_8009DF70 *)D_8009DF70)->unk_24 + 0x955) |= 1 << slot;
+                }
+                _bcopy(&src->unk_04, &((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_904[slot], 12);
+                *(u16 *)((u8 *)(u32)((unk_D_8009DF70 *)D_8009DF70)->unk_24 + 0x934 + slot * 2) = src->unk_02;
+                if (arg1 != 0) {
+                    for (j = 0; j < 6; j++) {
+                        ((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_000[slot][j].unk_00 = src->unk_10[j];
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+/* mkdraft:func_8006B428 end */
 
 s32 func_8006B790(s32 value) { s32 result = 0; if (D_8009DF70 != 0) { *(u8 *)((u8 *)(u32)D_8009DF70 + 0x1A) = value; result = 1; } return result; }
 
@@ -832,7 +886,46 @@ void *func_8006C664(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006C714.s")
+/* mkdraft:func_8006C714 begin */
+typedef struct unk_8006C714_result {
+    u8 unk_00[8];
+    unk_D_8009DF70_58 unk_08[6];
+} unk_8006C714_result;
+
+
+
+void *func_8006C714(void) {
+    unk_8006C714_result *result;
+    s32 i;
+
+    result = (unk_8006C714_result *)main_pool_alloc(0x218, 0);
+    if (result != NULL) {
+        _bzero(result, 0x218);
+        if (D_8009DF70 != 0) {
+            *((s32 *)((u8 *)(u32)D_8009DF70 + 0x38)) = (s32)result;
+            *((u16 *)((u8 *)result + 0x00)) = *((u16 *)((u8 *)(u32)D_8009DF70 + 0x00));
+            *((u16 *)((u8 *)result + 0x02)) = *((s16 *)((u8 *)(u32)D_8009DF70 + 0x02));
+            *((u16 *)((u8 *)result + 0x04)) = *((s16 *)((u8 *)(u32)D_8009DF70 + 0x14));
+            if ((*((u16 *)((u8 *)(u32)D_8009DF70 + 0x04)) & 1) != 0) {
+                *((u16 *)((u8 *)result + 0x06)) = 1;
+            } else {
+                *((u16 *)((u8 *)result + 0x06)) = 0;
+            }
+            for (i = 0; i < 6; i++) {
+                result->unk_08[i] = ((unk_D_8009DF70 *)D_8009DF70)->unk_24->unk_000[0][i].unk_00;
+            }
+        } else {
+            *((u16 *)((u8 *)result + 0x00)) = 3;
+            *((u16 *)((u8 *)result + 0x02)) = 4;
+            *((u16 *)((u8 *)result + 0x04)) = 8;
+            for (i = 0; i < 6; i++) {
+                *((u8 *)((u8 *)result + 8 + i * 0x58)) = i + 25;
+            }
+        }
+    }
+    return result;
+}
+/* mkdraft:func_8006C714 end */
 
 extern void main_pool_try_free(void);
 void func_8006C9C0(void) { main_pool_try_free(); if (D_8009DF70 != 0) *(s32 *)((u8 *)(u32)D_8009DF70 + 0x38) = 0; }

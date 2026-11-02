@@ -1222,7 +1222,55 @@ s32 GbTower_ValidatePortCartridge(s32 port) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005A468.s")
+/* mkdraft:func_8005A468 begin */
+extern u8 D_80128570[];
+extern s32 func_8005CF20(s32, s32, s32);
+// Record GS feature flags for one Transfer Pak port from its cached save data:
+// 0x200 when save_data[0x477] has bit 0x20, 0x400 when save_data[0x51D] has
+// bit 1, and 0x4000 when item 69 appears in either two-byte item list. The list
+// lengths come from func_8005CF20 commands 43 and 34; the lists start at
+// save_data + 0x4A and save_data + 0x267.
+//
+// The port state base (D_80128570 + port * 112) is written inline rather than
+// held in a local: IDO folds the repeated expression into one common
+// subexpression and spills it once for the whole body.
+
+
+void func_8005A468(s32 port) {
+    s32 item_index;
+    s32 item_count;
+    u8 item;
+    u8 *save_data;
+
+    save_data = *(u8 **)(D_80128570 + port * 112 + 0x60);
+    *(u8 *)(D_80128570 + port * 112 + 0x48) = func_8005CF20(32, port, 0);
+    if (*(s8 *)(save_data + 0x477) & 0x20) {
+        *(u32 *)(D_80128570 + port * 112) |= 0x200;
+    }
+    if (*(s8 *)(save_data + 0x51D) & 1) {
+        *(u32 *)(D_80128570 + port * 112) |= 0x400;
+    }
+    item_count = func_8005CF20(43, port, 0);
+    for (item_index = 0; item_index < item_count; item_index++) {
+        item = save_data[item_index * 2 + 0x4A];
+        if (item == 69) {
+            *(u32 *)(D_80128570 + port * 112) |= 0x4000;
+        }
+    }
+    item_count = func_8005CF20(34, port, 0);
+    for (item_index = 0; item_index < item_count; item_index++) {
+        item = save_data[item_index * 2 + 0x267];
+        if (item == 69) {
+            *(u32 *)(D_80128570 + port * 112) |= 0x4000;
+        }
+    }
+}
+/* mkdraft:func_8005A468 end */
+
+// Unreferenced `jr ra; nop` pair at 0x8005A5BC, immediately after func_8005A468 and
+// before func_8005A5C4.
+//@asm/us/nonmatchings/585D0/func_8005A468.s
+void func_8005A468_padding(void) {}
 #endif
 
 #ifdef VERSION_US

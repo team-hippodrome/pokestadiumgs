@@ -87,7 +87,51 @@ void func_87E0AC6C(s32 arg0) {
     func_87F02684((arg0 + 28));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0AC8C.s")
+/* mkdraft:func_87E0AC8C begin */
+extern void func_8003F114(u8 *node, s16 animation, s16 model, void *data);
+extern void func_8003F1DC(void *arg0);
+extern void func_87E0168C(s32 arg0, u8 arg1, s32 arg2);
+extern void func_87E0B2CC(void *arg0);
+extern void func_87E13480(u8 *arg0);
+extern void func_87E13490(void);
+extern void func_87E134C0(void);
+extern u8 *func_87F0AEC0(void *arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+extern s32 func_87F0AFD0(u8 *arg0, f32 *arg1, f32 *arg2, s16 *rotation);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern f32 D_87E1A234[];
+
+// Clears the state word at arg0 + 0x0, creates a render entry with
+// func_87F0AEC0 (resource group 0x0F000000, 0xD0 by 0x56 extent, entry callback
+// func_87E0AA8C), passes func_87E0B2CC and the 0x8C-byte pool at arg0 + 0x34 as
+// that entry's data words, and initializes the entry's geo state at obj + 0x24
+// with the position D_87E1A234 (0, 36.5, 0) and rotationY -0x4000.
+// func_87F0B2F4 then starts an animation with the 0x14000 flag word.
+// func_87E0168C and the three func_87E134xx calls run whether or not the entry
+// allocation succeeded.
+
+
+void func_87E0AC8C(u8 *arg0) {
+    u8 *obj;
+    u8 *parent;
+
+    *(s32 *)arg0 = 0;
+    parent = *(u8 **)(arg0 + 0x34);
+    obj = func_87F0AEC0(arg0 + 0x1C, func_87E0AA8C, 0x0F000000, 0xD0, 0x56, (s32)func_87E0B2CC, (s32)parent);
+    if (obj != NULL) {
+        func_8003F1DC(obj + 0x24);
+        func_8003F114(obj + 0x24, 0, -1, *(s32 *)(arg0 + 0x18));
+        *(f32 *)(obj + 0x48) = D_87E1A234[0];
+        *(f32 *)(obj + 0x4C) = D_87E1A234[1];
+        *(s16 *)(obj + 0x42) = -0x4000;
+        func_87F0AFD0(parent, obj + 0x48, obj + 0x54, obj + 0x42);
+        func_87F0B2F4(parent, obj + 0x42, 0.0f, 0.0f, 0.0f, 0xF, 0x14000);
+    }
+    func_87E0168C(3, 0x8C, 0xE);
+    func_87E134C0();
+    func_87E13490();
+    func_87E13480(0);
+}
+/* mkdraft:func_87E0AC8C end */
 
 extern void func_87E0AC0C(u8 *);
 extern void func_87E11C38(s32);

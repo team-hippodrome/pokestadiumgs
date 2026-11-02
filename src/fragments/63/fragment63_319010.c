@@ -303,7 +303,37 @@ s32 func_87E1733C(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E17484.s")
+/* mkdraft:func_87E17484 begin */
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+f32 sqrtf(f32);
+
+
+
+s32 func_87E17484(void *arg0) {
+    f32 *p;
+    s32 result;
+    s32 i;
+    f32 sum[3];
+
+    result = 0;
+    Vec3f_SetComponentsDuplicate(sum, 0.0f, 0.0f, 0.0f);
+    p = (f32 *)((u8 *)arg0 + 0x40);
+    for (i = 0; i < 8; i++) {
+        sum[0] += p[3];
+        sum[1] += p[4];
+        sum[2] += p[5];
+        p += 6;
+    }
+    sum[0] /= 8;
+    sum[1] /= 8;
+    sum[2] /= 8;
+    *(f32 *)((u8 *)arg0 + 0x100) = sqrtf(sum[2] * sum[2] + (sum[1] * sum[1] + sum[0] * sum[0]));
+    if (*(f32 *)((u8 *)arg0 + 0x100) < 0.025f && -0.025f < *(f32 *)((u8 *)arg0 + 0x100)) {
+        result = 1;
+    }
+    return result;
+}
+/* mkdraft:func_87E17484 end */
 
 extern void *D_87E1EC88;
 s32 func_87E176A0(s32 arg0, s32 arg1) {
@@ -424,7 +454,66 @@ void func_87E179F4(u8 *arg0, s32 arg1) {
     func_87E15A08(arg0 + 0x348);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E17B34.s")
+/* mkdraft:func_87E17B34 begin */
+extern u8 D_800CE060[];
+extern s32 func_87E17484(void *);
+extern void func_800279C4(s32);
+extern void func_87F0277C(void *);
+
+
+
+s32 func_87E17B34(void *arg0) {
+    s32 result;
+    s8 value;
+
+    result = 0;
+    D_87E1EC88 = arg0;
+    *(s32 *)((u8 *)arg0 + 4) += 1;
+    ((u8 *)D_87E1EC88)[3] = 0;
+    if (((s8 *)D_87E1EC88)[1] != 0) {
+        func_87E16FC4((u8 *)arg0 + 0x348);
+    }
+    switch (((s8 *)D_87E1EC88)[1]) {
+    case 1:
+        if ((1 << ((s8 *)arg0)[2]) & *(u8 *)(*(u8 **)((u8 *)arg0 + 8) + 0x2182)) {
+            if (*(u16 *)(D_800CE060 + ((s8 *)arg0)[2] * 40 + 8) & 0x8000) {
+                ((s8 *)D_87E1EC88)[1] = 2;
+            }
+        } else if (*(u32 *)((u8 *)D_87E1EC88 + 4) > ((func_8003570C() % 31u) + 15u)) {
+            ((s8 *)D_87E1EC88)[1] = 2;
+        }
+        if (((s8 *)D_87E1EC88)[1] == 2) {
+            *(u32 *)((u8 *)arg0 + 0x3C) |= 0x20000000;
+            ((u8 *)D_87E1EC88)[3] = 1;
+        }
+        break;
+    case 2:
+        ((s8 *)D_87E1EC88)[1] = 3;
+        break;
+    case 3:
+        if (func_87E17484((u8 *)arg0 + 0x348)) {
+            value = func_87E1733C((u8 *)arg0 + 0x348);
+            ((s8 *)D_87E1EC88)[0] = value;
+            if (value != -1) {
+                ((s8 *)D_87E1EC88)[1] = 4;
+                *(s32 *)((u8 *)D_87E1EC88 + 4) = 0;
+                func_800279C4(0xCF0A);
+            }
+        }
+        break;
+    case 4:
+        if (*(s32 *)((u8 *)D_87E1EC88 + 4) >= func_80001FF0() / 3) {
+            ((s8 *)D_87E1EC88)[1] = 5;
+        }
+        break;
+    case 5:
+        result = 1;
+        break;
+    }
+    func_87F0277C((u8 *)arg0 + 0x1C);
+    return result;
+}
+/* mkdraft:func_87E17B34 end */
 
 extern void GfxImage_ClearDepthRectangle(Gfx **, s32, s32, s32, s32);
 extern void Geo_RenderRootNode(s32);

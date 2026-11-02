@@ -21,7 +21,21 @@ void func_882041E0(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_177430/func_88205114.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_177430/func_88205200.s")
+/* mkdraft:func_88205200 begin */
+extern void func_80044424(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle, s32 tile);
+
+// Both parameters are s32: the target loads arg1 from its incoming-argument home
+// slot as a word (lw 0x3c(sp)) and narrows the result with sll/sra, and it also
+// reloads arg0 as a word (lw 0x38(sp)) for the last quad's x/width arithmetic.
+// Declaring either parameter s16 turns that reload into lh from the home word.
+
+
+void func_88205200(s32 arg0, s32 arg1) {
+    func_80044424((s16)arg0, 0, 5, (s16)(arg1 - 7), 0, 160, 1024, 0, 0, 1);
+    func_80044424((s16)arg0, (s16)(arg1 - 7), 5, 8, 512, 0, 1024, 1024, 0, 1);
+    func_80044424((s16)(arg0 + 5), (s16)(arg1 - 7), (s16)(0x27B - arg0), 8, 736, 0, 0, 1024, 0, 1);
+}
+/* mkdraft:func_88205200 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_177430/func_882052F8.s")
 

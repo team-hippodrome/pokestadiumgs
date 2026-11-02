@@ -95,11 +95,110 @@ void func_88001D0C(void *arg0) {
 }
 /* mkdraft:func_88001D0C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_167940/func_88001EBC.s")
+/* mkdraft:func_88001EBC begin */
+extern void func_88001D0C(void *);
+
+/* m2c field-access helper (see matching_notes/TECHNIQUES.md). */
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+
+// Tail of the 0x400/0x800 arm: temp_a1_2 is the 0x12 field plus the product of
+// the 0xE and 0xF bytes, truncated to s16 by the comparison below.  The product
+// is spelled 0xF * (0xE - 1) so the product compiles to `multu t9,t2`, and it is
+// accumulated with `+=` so cfe keeps temp_v1_2 as the add's left operand
+// (`addu a1,v1,t1`); written as one expression, cfe builds the mpy node first
+// and the sum comes out as `addu a1,t1,v1`.
+
+
+
+void func_88001EBC(void *arg0) {
+    s16 temp_a1;
+    s16 temp_a1_2;
+    s16 temp_a1_3;
+    s32 temp_v0_2;
+    s16 temp_v0_3;
+    s32 temp_v0_4;
+    s16 temp_v1;
+    s16 temp_v1_2;
+    s16 temp_v1_3;
+    s16 count;
+    s16 count_2;
+    s32 var_v0;
+    s32 var_v0_3;
+    s32 var_v0_2;
+    s32 var_v0_4;
+
+    var_v0 = M2C_FIELD(arg0, s16 *, 0);
+    if ((var_v0 != 4) && (var_v0 != 8) && (var_v0 != 0x100) && (var_v0 != 0x200)) {
+        if ((var_v0 == 0x400) || (var_v0 == 0x800)) {
+            temp_v1 = M2C_FIELD(arg0, s16 *, 0x14);
+            var_v0 = temp_v1;
+            M2C_FIELD(arg0, s16 *, 0x10) = (s16) (M2C_FIELD(arg0, s16 *, 0x10) + temp_v1);
+            var_v0 = (temp_v1 < 0) ? -temp_v1 : temp_v1;
+            temp_a1 = M2C_FIELD(arg0, s16 *, 0x20);
+            M2C_FIELD(arg0, s16 *, 0x1E) = (s16) (M2C_FIELD(arg0, s16 *, 0x1E) + var_v0);
+            count = M2C_FIELD(arg0, s16 *, 0x1E);
+            if (count >= temp_a1) {
+                do {
+                    if (M2C_FIELD(arg0, s32 *, 4) != 0) {
+                        temp_v0_2 = M2C_FIELD(arg0, s16 *, 0x14);
+                        M2C_FIELD(arg0, s16 *, 0x14) = 0;
+                        M2C_FIELD(arg0, s32 *, 4) = 0;
+                        M2C_FIELD(arg0, s16 *, 0) = 0;
+                        temp_v0_2 = temp_v0_2 < 0;
+                        var_v0_2 = temp_v0_2 ? -1 : 1;
+                        M2C_FIELD(arg0, s16 *, 0x1E) = 0;
+                        M2C_FIELD(arg0, s16 *, 0x10) = (s16) (M2C_FIELD(arg0, s16 *, 0x10) - (var_v0_2 * (count - temp_a1)));
+                    } else {
+                        M2C_FIELD(arg0, s16 *, 0x1E) = (s16) (count - temp_a1);
+                    }
+                    count = M2C_FIELD(arg0, s16 *, 0x1E);
+                } while (count >= temp_a1);
+            }
+            temp_v0_3 = M2C_FIELD(arg0, s16 *, 0x10);
+            temp_v1_2 = M2C_FIELD(arg0, s16 *, 0x12);
+            if (temp_v0_3 < temp_v1_2) {
+                M2C_FIELD(arg0, s16 *, 0x22) = (s16) ((M2C_FIELD(arg0, s16 *, 0x22) - temp_v1_2) + temp_v0_3);
+            } else {
+                temp_a1_2 = temp_v1_2;
+                temp_a1_2 += (M2C_FIELD(arg0, u8 *, 0xF) * (M2C_FIELD(arg0, u8 *, 0xE) - 1));
+                if (temp_a1_2 < temp_v0_3) {
+                    M2C_FIELD(arg0, s16 *, 0x22) = (s16) ((M2C_FIELD(arg0, s16 *, 0x22) + temp_v0_3) - temp_a1_2);
+                }
+            }
+        }
+    } else {
+        temp_v1_3 = M2C_FIELD(arg0, s16 *, 0x14);
+        var_v0 = temp_v1_3;
+        M2C_FIELD(arg0, s16 *, 0x22) = (s16) (M2C_FIELD(arg0, s16 *, 0x22) + temp_v1_3);
+        var_v0 = (temp_v1_3 < 0) ? -temp_v1_3 : temp_v1_3;
+        temp_a1_3 = M2C_FIELD(arg0, s16 *, 0x20);
+        M2C_FIELD(arg0, s16 *, 0x1E) = (s16) (M2C_FIELD(arg0, s16 *, 0x1E) + var_v0);
+        count_2 = M2C_FIELD(arg0, s16 *, 0x1E);
+        if (count_2 >= temp_a1_3) {
+            do {
+                if (M2C_FIELD(arg0, s32 *, 4) != 0) {
+                    temp_v0_4 = M2C_FIELD(arg0, s16 *, 0x14);
+                    M2C_FIELD(arg0, s16 *, 0x14) = 0;
+                    M2C_FIELD(arg0, s32 *, 4) = 0;
+                    M2C_FIELD(arg0, s16 *, 0) = 0;
+                    temp_v0_4 = temp_v0_4 < 0;
+                    var_v0_4 = temp_v0_4 ? -1 : 1;
+                    M2C_FIELD(arg0, s16 *, 0x1E) = 0;
+                    M2C_FIELD(arg0, s16 *, 0x22) = (s16) (M2C_FIELD(arg0, s16 *, 0x22) - (var_v0_4 * (count_2 - temp_a1_3)));
+                } else {
+                    M2C_FIELD(arg0, s16 *, 0x1E) = (s16) (count_2 - temp_a1_3);
+                }
+                count_2 = M2C_FIELD(arg0, s16 *, 0x1E);
+            } while (count_2 >= temp_a1_3);
+        }
+    }
+    func_88001D0C(arg0);
+}
+/* mkdraft:func_88001EBC end */
 
 /* mkdraft:func_880020CC begin */
 s16 func_8800191C();
-s32 func_88001EBC(void *);
+void func_88001EBC(void *);
 extern void *D_80087200;
 
 

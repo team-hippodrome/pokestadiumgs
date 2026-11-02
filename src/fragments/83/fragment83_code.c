@@ -324,7 +324,52 @@ void func_82C019B4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C01C38.s")
+/* mkdraft:func_82C01C38 begin */
+extern u8 D_82C04900[];
+extern Gfx D_82C04968[];
+
+// Draws the current menu mode's panel: every mode except 6 (and modes past the jump table)
+// runs display list D_82C04968, sets the prim color to opaque white and draws the panel
+// rectangle D_82C04C44..D_82C04C4A. Mode 3 draws the selected entry's rectangle instead,
+// modes 2 and 4 draw both, and mode 1 draws only after D_82C04C38+0xA becomes nonzero.
+// D_82C04C44..D_82C04C4A, D_82C04C38, D_800D0510 and the three callees are declared or
+// defined earlier in fragment83_code.c.
+
+
+void func_82C01C38(void) {
+    unk_D_82C04C38_rect *rect;
+
+    func_82C002B8(D_82C04900);
+    switch (((unk_D_82C04C38 *)&D_82C04C38)->mode) {
+        case 1:
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) == 0) {
+                break;
+            }
+            // fallthrough
+        case 0:
+        case 5:
+        case 7:
+            gSPDisplayList(D_800D0510++, D_82C04968);
+            ParticleGfx_SetPrimColor_fragment83(255, 255, 255, 255);
+            func_82C00444(D_82C04C44, D_82C04C46, D_82C04C48, D_82C04C4A);
+            break;
+        case 3:
+            rect = &((unk_D_82C04C38 *)&D_82C04C38)->entries[((unk_D_82C04C38 *)&D_82C04C38)->row].rect;
+            gSPDisplayList(D_800D0510++, D_82C04968);
+            ParticleGfx_SetPrimColor_fragment83(255, 255, 255, 255);
+            func_82C00444(rect->x, rect->y, rect->width, rect->height);
+            break;
+        case 2:
+        case 4:
+            gSPDisplayList(D_800D0510++, D_82C04968);
+            ParticleGfx_SetPrimColor_fragment83(255, 255, 255, 255);
+            func_82C00444(D_82C04C44, D_82C04C46, D_82C04C48, D_82C04C4A);
+            rect = &((unk_D_82C04C38 *)&D_82C04C38)->entries[((unk_D_82C04C38 *)&D_82C04C38)->row].rect;
+            func_82C00444(rect->x, rect->y, rect->width, rect->height);
+            break;
+    }
+}
+/* mkdraft:func_82C01C38 end */
 #endif
 
 #ifdef VERSION_US
@@ -562,7 +607,38 @@ s32 func_82C026D4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C0273C.s")
+/* mkdraft:func_82C0273C begin */
+extern u8 D_82C05FC8[];
+
+// Reads D_82C05E80 (file-scope `static Fragment83OrderState`, declared above this
+// function in src/fragments/83/fragment83_code.c; order[] is the u8[0xFC] at +0x4C).
+
+
+void func_82C0273C(void) {
+    // Six shuffle records of stride 0x4B28. For each, copies its six order ids
+    // (D_82C05E80.order, 6 bytes per record) into bytes +5..+0xA of the record,
+    // duplicates them into the record's u16 table at +0xC, and sets mask bit j
+    // at +0x4 when func_82C02664 returns nonzero for id j.
+    s32 i;
+    s32 j;
+    u8 *record;
+
+    for (i = 0; i < 6; i++) {
+        *(s32 *)((u8 *)&D_82C05E80 + 0x148 + i * 0x4B28) = 1;
+        record = D_82C05FC8 + i * 0x4B28;
+        for (j = 0; j < 6; j++) {
+            // Same address as `record`, but writing through the array base makes IDO
+            // form the byte-store induction pointer before the order-read pointer,
+            // matching the target's register setup.
+            (D_82C05FC8 + i * 0x4B28)[5 + j] = D_82C05E80.order[i * 6 + j];
+            *(u16 *)(record + 0xC + j * 2) = record[5 + j];
+            if (func_82C02664((u8 *)(*(s32 *)((u8 *)&D_82C04C38 + 0x18) + 0x14), record[5 + j]) != 0) {
+                record[4] |= 1 << j;
+            }
+        }
+    }
+}
+/* mkdraft:func_82C0273C end */
 #endif
 
 #ifdef VERSION_US

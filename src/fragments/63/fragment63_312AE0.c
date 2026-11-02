@@ -502,7 +502,110 @@ void func_87E109FC(s32 *arg0, s32 arg1) {
 
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E10B30.s")
+/* mkdraft:func_87E10B30 begin */
+extern s32 func_8004DC6C(s32);
+extern s32 main_pool_get_available(void);
+extern s32 func_8004EB58(s32, s32);
+extern s32 func_8004DCFC(u8 *, s32 *);
+extern void func_87F0A6C8(s32, s32, s32 *, s32 *);
+extern void func_87E1087C(s32 *, s32);
+extern s32 D_87E1A4DC[];
+extern s32 D_87E1A4E4[];
+extern s32 D_87E1A5AC[];
+extern s32 D_87E1A5BC[];
+extern u8 D_87E1A5C0;
+extern u8 D_87E1A5C4;
+extern u8 D_87E1A5C8;
+extern u8 D_87E1A5CC;
+extern u32 D_87E1EBB8;
+
+// FAKE: func_8004DCFC returns void; the s32 declaration leaves v0 reserved so uopt
+// colors the D_87E1EBB8 load temp v1. Measured diff score without it: 60.
+
+
+void func_87E10B30(void) {
+    u8 *slot;
+    s32 *ids;
+    s32 errors;
+    s32 resource;
+    void *pool;
+    s32 i;
+
+    *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) = 0;
+    slot = (u8 *)(u32)D_87E1EBB8 + 0x1C;
+    ids = D_87E1A4DC;
+    for (i = 0; i < 2; i++) {
+        resource = func_8004DC6C(*ids);
+        if (resource != 0) {
+            pool = MainPool_AllocState(main_pool_get_available(), 0);
+            *(s32 *)slot = func_8004EB58((s32)pool, resource);
+            MainPool_FinalizeAllocation(pool);
+            func_8004DCFC((u8 *)resource, &errors);
+            *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
+            slot[4] = 0;
+            func_87E105FC(*(void **)slot, slot[4]);
+            func_87E109FC((s32 *)slot, *ids);
+        }
+        slot += 8;
+        ids++;
+    }
+    slot = (u8 *)(u32)D_87E1EBB8 + 0x2C;
+    ids = D_87E1A4E4;
+    for (i = 0; i < 0x32; i++) {
+        resource = func_8004DC6C(*ids);
+        if (resource != 0) {
+            pool = MainPool_AllocState(main_pool_get_available(), 0);
+            *(s32 *)slot = func_8004EB58((s32)pool, resource);
+            MainPool_FinalizeAllocation(pool);
+            func_8004DCFC((u8 *)resource, &errors);
+            *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
+            slot[4] = 0;
+            func_87E105FC(*(void **)slot, slot[4]);
+            func_87E1087C((s32 *)slot, *ids);
+        }
+        slot += 8;
+        ids++;
+    }
+    slot = (u8 *)(u32)D_87E1EBB8 + 0x1BC;
+    ids = D_87E1A5AC;
+    for (i = 0; i < 4; i++) {
+        resource = func_8004DC6C(*ids);
+        if (resource != 0) {
+            pool = MainPool_AllocState(main_pool_get_available(), 0);
+            *(s32 *)slot = func_8004EB58((s32)pool, resource);
+            MainPool_FinalizeAllocation(pool);
+            func_8004DCFC((u8 *)resource, &errors);
+            *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
+            if (i < 3) {
+                func_87F0A6C8(*(s32 *)slot, 0x444D5F43, &D_87E1A5C0, &D_87E1A5C4);
+            } else {
+                func_87F0A6C8(*(s32 *)slot, 0x44465F43, &D_87E1A5C8, &D_87E1A5CC);
+            }
+            slot[4] = 0;
+            func_87E105FC(*(void **)slot, slot[4]);
+        }
+        slot += 8;
+        ids++;
+    }
+    slot = (u8 *)(u32)D_87E1EBB8 + 0x1DC;
+    ids = D_87E1A5BC;
+    for (i = 0; i != 1; i++) {
+        resource = func_8004DC6C(*ids);
+        if (resource != 0) {
+            pool = MainPool_AllocState(main_pool_get_available(), 0);
+            *(s32 *)slot = func_8004EB58((s32)pool, resource);
+            MainPool_FinalizeAllocation(pool);
+            func_8004DCFC((u8 *)resource, &errors);
+            *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
+            slot[4] = 0;
+            func_87E105FC(*(void **)slot, slot[4]);
+            func_87E1097C((s32 *)slot, *ids);
+        }
+        slot += 8;
+        ids++;
+    }
+}
+/* mkdraft:func_87E10B30 end */
 
 void func_87E10E64(s32 arg0) {
     if ((arg0 >= -1) && (arg0 < 2) && (arg0 != (*(s32 *)((u8 *)(D_87E1EBB8) + (8))))) {

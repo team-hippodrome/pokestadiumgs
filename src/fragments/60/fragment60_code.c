@@ -921,7 +921,273 @@ s32 ItemBounds_AnyContainsPoint(f32 point_x, f32 point_z) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A05DCC.s")
+/* mkdraft:func_86A05DCC begin */
+extern unk_D_86A443F0 D_86A443F0;
+extern s32 D_86A0D638[][4];
+extern void func_86A0638C(s32 arg0, f32 arg1, f32 arg2);
+extern void func_86A06474();
+extern void func_86A06740(s32 arg0, f32 arg1, f32 arg2);
+extern s32 func_86A06A1C();
+extern void func_86A06BDC(s32 arg0);
+extern void func_86A06C3C(void);
+extern void func_86A0B5CC(s32 arg0);
+extern s32 func_86A0BD34();
+
+
+
+
+
+void func_86A05DCC(void)
+{
+  s32 lead;
+  f32 x;
+  f32 y;
+  f32 distance;
+  s32 random;
+  u8 pad04[4];
+  s32 index;
+  s32 tmp;
+  s32 player;
+  f32 zero = 0.0f;
+  random = guRandom() % 24;
+  for (index = 0; index < 4; index++)
+  {
+    if (D_86A443F0.unk_0188[index] > 0)
+    {
+      if (((s16 *) D_86A443F0.unk_0E7C)[index] != 0)
+      {
+        ((s16 *) D_86A443F0.unk_0E74)[index] = (((s16 *) D_86A443F0.unk_0E64)[index] = (((s16 *) D_86A443F0.unk_0E6C)[index] = ((((((s16 *) D_86A443F0.unk_0E7C)[index] * 0xFFFF) / 64) * D_86A443F0.unk_0188[index]) + (((s16 *) D_86A443F0.unk_0E6C)[index] + (D_86A443F0.unk_0188[index] * 0xFFFF))) % 0xFFFF));
+      }
+      if (D_86A443F0.unk_0024[index] == 9)
+      {
+        func_86A0B5CC(index);
+      }
+      D_86A443F0.unk_0188[index]--;
+    }
+    if (D_86A443F0.unk_0188[index] == 0)
+    {
+      if (((s32 *) D_86A443F0.unk_0198)[index] > 0)
+      {
+        ((s32 *) D_86A443F0.unk_0198)[index]--;
+      }
+    }
+    if (D_86A443F0.unk_0188[index] == 0)
+    {
+      D_86A443F0.unk_0024[index] = 0;
+      x = zero;
+      y = zero;
+      if (D_86A443F0.unk_0000 > 0)
+      {
+        func_86A0BD34(index, &x, &y);
+      }
+      D_86A443F0.unk_0044[index][0] = x;
+      D_86A443F0.unk_0044[index][1] = y;
+      func_86A0638C(index, x, y);
+      if ((x == zero) && (y == zero))
+      {
+        D_86A443F0.unk_0024[index] = 0;
+        if (((s16 *) D_86A443F0.unk_0E74)[index] != ((s16 *) D_86A443F0.unk_0E64)[index])
+        {
+          D_86A443F0.unk_0024[index] = 3;
+        }
+      }
+      else
+      {
+        distance = sqrtf((x * x) + (y * y));
+        if (distance <= 3.0)
+        {
+          D_86A443F0.unk_0024[index] = 5;
+        }
+        else
+          if (distance <= 4.0f)
+        {
+          D_86A443F0.unk_0024[index] = 4;
+        }
+        else
+          if (distance <= 5.0f)
+        {
+          D_86A443F0.unk_0024[index] = 3;
+        }
+        else
+          if (distance <= 6.0f)
+        {
+          D_86A443F0.unk_0024[index] = 2;
+        }
+        else
+        {
+          D_86A443F0.unk_0024[index] = 1;
+        }
+      }
+    }
+  }
+
+  for (index = 0; index < 4; index++)
+  {
+    if (D_86A443F0.unk_0188[index] == 0)
+    {
+      ((s16 *) D_86A443F0.unk_0E7C)[index] = 0;
+    }
+    switch (D_86A443F0.unk_0024[index])
+    {
+      case 0:
+
+      case 1:
+
+      case 2:
+
+      case 3:
+
+      case 4:
+
+      case 5:
+
+      case 6:
+
+      case 7:
+        break;
+
+      case 8:
+
+      case 9:
+
+      case 10:
+        ((s16 *) D_86A443F0.unk_0E7C)[index] = 0;
+        break;
+
+    }
+
+    if ((D_86A443F0.unk_0024[index] == 10) && (D_86A443F0.unk_0188[index] < 21))
+    {
+      D_86A443F0.unk_0044[index][0] = zero;
+      D_86A443F0.unk_0044[index][1] = zero;
+    }
+    D_86A443F0.unk_0064[index] = 0;
+    D_86A443F0.unk_0074[index][0] = zero;
+    D_86A443F0.unk_0074[index][1] = zero;
+    D_86A443F0.unk_0094[index][0] = zero;
+    D_86A443F0.unk_0094[index][1] = zero;
+  }
+
+  for (index = 0; index < 4; index++)
+  {
+    player = D_86A0D638[random][index];
+    switch (D_86A443F0.unk_0024[player])
+    {
+      case 0:
+
+      case 1:
+
+      case 2:
+
+      case 3:
+
+      case 4:
+
+      case 5:
+        if (((s16 *) D_86A443F0.unk_0E7C)[player] == 0)
+      {
+        func_86A06A1C(player);
+      }
+        break;
+
+      case 6:
+
+      case 7:
+
+      case 8:
+
+      case 9:
+
+      case 10:
+        break;
+
+    }
+
+  }
+
+  for (index = 0; index < 4; index++)
+  {
+    player = D_86A0D638[random][index];
+    switch (D_86A443F0.unk_0024[player])
+    {
+      case 0:
+
+      case 1:
+
+      case 2:
+
+      case 3:
+
+      case 4:
+
+      case 5:
+        if (((s16 *) D_86A443F0.unk_0E7C)[player] == 0)
+      {
+        func_86A06BDC(player);
+      }
+        break;
+
+      case 6:
+
+      case 7:
+
+      case 8:
+
+      case 9:
+
+      case 10:
+        break;
+
+    }
+
+  }
+
+  for (index = 0; index < 4; index++)
+  {
+    player = D_86A0D638[random][index];
+    x = D_86A443F0.unk_0044[player][0];
+    y = D_86A443F0.unk_0044[player][1];
+    switch (D_86A443F0.unk_0024[player])
+    {
+      case 0:
+
+      case 1:
+
+      case 2:
+
+      case 3:
+
+      case 4:
+
+      case 5:
+        func_86A06740(player, x, y);
+        break;
+
+      case 10:
+        func_86A06740(player, x, y);
+        break;
+
+    }
+
+  }
+
+  for (index = 0; index < 4; index++)
+  {
+    D_86A443F0.unk_0E48[index][0] = (s32) ((D_86A443F0.position[index][0] * 64.0f) / 180.0f);
+    D_86A443F0.unk_0E48[index][1] = (s32) ((D_86A443F0.position[index][1] * 64.0f) / 180.0f);
+  }
+
+  for (index = 0; index < 4; index++)
+  {
+    if (((s16 *) D_86A443F0.unk_0E7C)[index] == 0)
+    {
+      func_86A06474(index);
+    }
+  }
+
+  func_86A06C3C();
+}
+/* mkdraft:func_86A05DCC end */
 #endif
 
 #ifdef VERSION_US
@@ -1299,7 +1565,50 @@ void func_86A07334(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A0B49C.s")
+/* mkdraft:func_86A0B49C begin */
+extern s32 D_86A44400;
+extern s32 D_86A444A4;
+extern s32 D_86A444A8;
+extern s32 D_86A444AC;
+extern s32 D_86A444B0;
+extern s32 D_86A44568;
+extern s32 D_86A4456C;
+extern s32 D_86A44570;
+extern s32 D_86A44574;
+
+// Scans the four player values at D_86A443F0.unk_00B4 (the same addresses as D_86A444A4..B0) for the
+// largest and stores one flag per player in D_86A44568..574. D_86A44400, the symbol after unk_00B4,
+// ends the scan. The unk_0178 weights are cleared when their product is nonzero.
+
+
+void func_86A0B49C(void) {
+    // FAKE: the flag stores read this variable instead of the literal 1. A literal makes IDO share
+    // one constant register across the four stores, which drops a word from the function.
+    s32 one = 1;
+    s32 max = -1;
+    s32 i = 0;
+
+    do {
+        if (max < *(s32 *)((u8 *)&D_86A443F0 + i * 4 + 0xB4)) {
+            max = *(s32 *)((u8 *)&D_86A443F0 + i * 4 + 0xB4);
+        }
+        i++;
+    } while ((u32)((u8 *)&D_86A443F0 + i * 4) < (u32)&D_86A44400);
+
+    // Each if/else stays on one line. With the braces split over lines IDO schedules the address lui
+    // after the constant load in the second block, and the function no longer matches.
+    if (max == D_86A444A4) { D_86A44568 = one; } else { D_86A44568 = 0; }
+    if (max == D_86A444A8) { D_86A4456C = one; } else { D_86A4456C = 0; }
+    if (max == D_86A444AC) { D_86A44570 = one; } else { D_86A44570 = 0; }
+    if (max == D_86A444B0) { D_86A44574 = one; } else { D_86A44574 = 0; }
+    if ((D_86A443F0.unk_0178[2] * (D_86A443F0.unk_0178[1] * (D_86A443F0.unk_0178[0] * D_86A443F0.unk_0178[3]))) != 0) {
+        D_86A443F0.unk_0178[0] = 0;
+        D_86A443F0.unk_0178[1] = 0;
+        D_86A443F0.unk_0178[2] = 0;
+        D_86A443F0.unk_0178[3] = 0;
+    }
+}
+/* mkdraft:func_86A0B49C end */
 #endif
 
 #ifdef VERSION_US

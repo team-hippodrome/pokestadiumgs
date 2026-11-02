@@ -50,7 +50,45 @@ void func_87E027E0(void *arg0)
   func_87E10EA8(*((s32 *) (((u8 *) sp1C) + 4)));
   func_87E10F2C(*((s32 *) (((u8 *) sp1C) + 8)));
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E028D8.s")
+/* mkdraft:func_87E028D8 begin */
+extern u8 D_87E198E4[];
+extern u8 D_87E1EB60[];
+extern void func_87F024CC(void);
+extern void func_87F024F4();
+extern void func_87F0252C();
+
+
+void func_87E028D8(void *arg0) {
+    void *pool;
+    u8 *sp28;
+    u8 *sp24;
+    u8 *temp_s1;
+    s32 i;
+
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    *(void **)(((u8 *)arg0) + 0x1F4) = func_80040E80(pool, &D_87E198E4);
+    sp28 = MainPool_AllocAligned(pool, 0x318, 4);
+    sp24 = MainPool_AllocAligned(pool, 0x630, 4);
+    temp_s1 = MainPool_AllocAligned(pool, 0x630, 4);
+    MainPool_FinalizeAllocation(pool);
+    func_80037E9C(0, D_87E1EB60);
+    // Pointer tables for three groups of 0x18C-byte records: 2 sources 0x98 apart,
+    // 4 sources 0x14 apart, 4 sources 0xC apart.
+    for (i = 0; i < 2; i++) {
+        *(u32 *)(sp28 + 0x20 + i * 0x18C) = (u32)(((u8 *)arg0) + 0x1C + i * 0x98);
+    }
+    for (i = 0; i < 4; i++) {
+        *(u32 *)(sp24 + 0x20 + i * 0x18C) = (u32)(((u8 *)arg0) + 0x160 + i * 0x14);
+    }
+    for (i = 0; i < 4; i++) {
+        *(u32 *)(temp_s1 + 0x20 + i * 0x18C) = (u32)(((u8 *)arg0) + 0x1C4 + i * 0xC);
+    }
+    func_87F024CC();
+    func_87F024F4(((u8 *)arg0) + 8, sp28, 2);
+    func_87F0252C(D_87E1EB60, ((u8 *)arg0) + 0x14C, sp24, 4);
+    func_87F0252C(D_87E1EB60, ((u8 *)arg0) + 0x1B0, temp_s1, 4);
+}
+/* mkdraft:func_87E028D8 end */
 
 extern void func_8004C8C0(s32);
 void func_87E02A28(void) { func_8004C8C0(0x1A8); func_8004C8C0(0x1B2); func_8004C8C0(0x1A3); func_8004C8C0(0x1A5); func_8004C8C0(0x1A6); func_8004C8C0(0x1A7); }
@@ -152,12 +190,85 @@ void func_87E030F0(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E031C0.s")
+/* mkdraft:func_87E031C0 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void func_80007328(Gfx **, s32);
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_8003C6B8(s32);
+// These three are defined void in fragment63_305090.c, but every retail call site
+// consumes their result from v0.
+//@src/fragments/63/fragment63_305090.c
+extern s32 func_87E01798(s32);
+extern s32 func_87E017CC(s32);
+extern s32 func_87E01834(s32);
+// The record pointer arrives in $a0 (retail `lw $s3, 0x14($a0)` at 0x306B5C and
+// `or $s4, $a0, $zero` at 0x306B64), so func_87E031C0 and its func_87E03448 caller below
+// take one argument. func_87E03448 forwards $a0 without writing it, so its bytes are
+// unchanged.
+void func_87E031C0(void *arg0) {
+    u8 *node;
+    u8 *sub;
+    s32 texture;
+    s32 frame;
 
-extern void func_87E031C0(void);
+    node = *(u8 **)((u8 *)arg0 + 0x14);
+    if (node != NULL) {
+        do {
+            sub = *(u8 **)(node + 0x20);
+            func_80007328(&D_800D0510, *(s32 *)(sub + 0xC));
+            func_80007444(&D_800D0510, 0, 0, 156, 51, 0xFFFE);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            gDPSetTextureFilter(D_800D0510++, G_TF_POINT);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+            switch (*(s32 *)(sub + 4)) {
+            case 0:
+                if (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x204) + 0x2180) == 3) {
+                    texture = func_8004C990(424, 8);
+                } else {
+                    texture = func_8004C990(424, 7);
+                }
+                func_8004D19C(0, 0, texture, 0, 0);
+                func_8003C6B8(*(s32 *)((u8 *)arg0 + 0x1F4));
+                break;
+            case 1:
+                switch (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x204) + 0x2180)) {
+                case 0:
+                    texture = func_8004C990(424, 2);
+                    frame = func_87E01798(*(s32 *)sub);
+                    break;
+                case 1:
+                    texture = func_8004C990(424, 3);
+                    frame = func_87E017CC(*(s32 *)sub);
+                    break;
+                case 3:
+                    texture = func_8004C990(424, 1);
+                    frame = func_87E01834(*(s32 *)sub);
+                    break;
+                default:
+                    texture = 0;
+                    frame = 0;
+                    break;
+                }
+                func_8004D19C(0, 0, texture, 0, 0);
+                func_8004D19C(102, 3, frame, 0, 0);
+                break;
+            }
+            gSPDisplayList(D_800D0510++, D_80094F50);
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_87E031C0 end */
+
+extern void func_87E031C0(void *);
 extern void BgStage_DrawFrame(void);
-void func_87E03448(void) {
-    func_87E031C0();
+void func_87E03448(u8 *arg0) {
+    func_87E031C0(arg0);
     BgStage_DrawFrame();
 }
 
@@ -245,7 +356,65 @@ void func_87E0375C(s32 arg0, s32 arg1) {
         GeoRender_ApplyMaterialState();
     }}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03850.s")
+/* mkdraft:func_87E03850 begin */
+extern f32 D_87E19800[];
+extern f32 D_87E19818[];
+extern void *func_87F025B8(void *, void *);
+extern s32 func_87E035E4();
+extern void func_87E0168C(s32, u8, s32);
+extern void func_87F02684(s32);
+extern s32 func_87F0AFD0(u8 *arg0, f32 *arg1, f32 *arg2, s16 *rotation);
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+
+
+
+void func_87E03850(void *arg0) {
+    s32 i;
+    u8 *entry;
+    u8 *node;
+    u8 *child;
+
+    func_87F02684((s32)((u8 *)arg0 + 8));
+    // Two entries are drawn from the node pool at arg0 + 8 with
+    // func_87E035E4 as callback. Each entry carries an object at offset
+    // 0x20 whose state (object + 0x10) and the entry's transforms at
+    // 0x42..0x56 are handed to the func_87F0B1A4/func_87F0B2F4 pair.
+    for (i = 0; i < 2; i++) {
+        entry = func_87F025B8((u8 *)arg0 + 8, func_87E035E4);
+        if (entry != NULL) {
+            node = entry + 36;
+            child = *(u8 **)(entry + 32);
+            func_8003F1DC(node);
+            func_8003F114(node, 0, -1, *(void **)((u8 *)arg0 + 504));
+            *(void **)(entry + 56) = entry;
+            // Per-entry position and scale triples; each array holds two
+            // triples at 0, 68, 0 and 0, 12, 0.
+            *(f32 *)(entry + 72) = D_87E19800[i * 3];
+            *(f32 *)(entry + 76) = D_87E19800[i * 3 + 1];
+            *(f32 *)(entry + 80) = D_87E19800[i * 3 + 2];
+            // Middle s16 of the rotation triple at entry + 0x42.
+            *(s16 *)(entry + 68) = -0x4000;
+            // The word at arg0 + 4 selects which of the two entries keeps the
+            // -1 tint at entry + 0x60; the other is set to 0xC8C8C8FF.
+            if (i == *(s32 *)((u8 *)arg0 + 4)) {
+                *(s32 *)(entry + 96) = -1;
+            } else {
+                *(s32 *)(entry + 96) = 0xC8C8C8FF;
+            }
+            func_87F0AFD0(child + 16, (f32 *)(entry + 72), (f32 *)(entry + 84),
+                          (s16 *)(entry + 66));
+            func_87F0B1A4(child + 16, (f32 *)(entry + 72), D_87E19818[i * 3],
+                          D_87E19818[i * 3 + 1], D_87E19818[i * 3 + 2], 10, 0x1000);
+            func_87F0B2F4(child + 16, (f32 *)(entry + 66), 0.0f, 0.0f, 0.0f,
+                          10, 0xC000);
+        }
+    }
+    func_87E0168C(3, 140, 9);
+}
+/* mkdraft:func_87E03850 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03A08.s")
 

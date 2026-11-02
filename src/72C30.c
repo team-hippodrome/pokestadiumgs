@@ -107,7 +107,69 @@ void Minigame_UpdatePlayerCounters(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/72C30/func_800723FC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/72C30/func_80072650.s")
+/* mkdraft:func_80072650 begin */
+typedef struct unk_D_8012B3E8 {
+    s16 unk_00;
+    s8 unk_02;
+    u8 pad_03[11];
+    u8 unk_0E;
+} unk_D_8012B3E8;
+
+extern unk_D_8012B3E8 D_8012B3E8;
+void Minigame_MapControllerButtons(u8 *arg0, u8 *arg1);
+
+
+
+void func_80072650(u8 *arg0) {
+    s32 var_v0;
+    u32 temp_v0;
+
+    temp_v0 = *(u32 *)(arg0 + 0x2184);
+    if (temp_v0 == 3U) {
+        goto block_3;
+    }
+    if (temp_v0 == 4U) {
+        goto block_4;
+    }
+    if (temp_v0 == 5U) {
+        goto block_3;
+    }
+    goto block_default;
+block_3:
+    D_8012B3E8.unk_00 = 6;
+    var_v0 = *(s32 *)(arg0 + 0x2200);
+    goto block_6;
+block_4:
+    D_8012B3E8.unk_00 = 4;
+    var_v0 = *(s32 *)(arg0 + 0x2204);
+    Minigame_MapControllerButtons(arg0, (u8 *)&D_8012B3E8);
+    goto block_6;
+block_default:
+    D_8012B3E8.unk_00 = 6;
+    var_v0 = *(s32 *)(arg0 + 0x2200);
+    Minigame_MapControllerButtons(arg0, (u8 *)&D_8012B3E8);
+block_6:
+    switch (var_v0) {
+    case 0:
+        D_8012B3E8.unk_02 = 1;
+        break;
+    case 1:
+        D_8012B3E8.unk_02 = 2;
+        break;
+    case 2:
+    case 3:
+        D_8012B3E8.unk_02 = 3;
+        break;
+    }
+}
+/* mkdraft:func_80072650 end */
+
+// Isolated `jr ra; nop` at 0x80072738 with no symbol_addrs entry. It restores neither
+// sp nor ra, so it cannot be an epilogue of func_80072650's 0x20-byte frame; IDO emits
+// exactly this pair for an empty void function, and the next function
+// (Minigame_ProcessInput) starts at 0x80072740.
+//@asm/us/nonmatchings/72C30/func_80072650.s
+void func_80072738_padding(void) {}
 
 s32 (*func_80003240(s32 *))(s32 *);
 extern u8 func_87F0EE0C;

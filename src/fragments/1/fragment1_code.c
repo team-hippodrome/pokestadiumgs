@@ -182,9 +182,162 @@ void func_83501D3C(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83501DC0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83502BFC.s")
+/* mkdraft:func_83502BFC begin */
+extern Gfx *D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_83503D34[4];
+extern s32 D_83503D44;
+extern s32 D_83503D48;
+extern s32 D_83503D4C;
+extern s32 D_83503BA8;
+extern char D_83503DB0[];
+extern char D_83503DB4[];
+extern char D_83503DB8[];
+typedef struct Table4 { s32 a; s32 b; s32 c; s32 d; } Table4;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83502EF0.s")
+
+
+
+void func_83502BFC(void)
+{
+  s32 timer;
+  s32 table[4];
+  *((Table4 *) table) = *((Table4 *) D_83503D34);
+  func_800498C4();
+  func_800496A4(0x10, 1);
+  Font_EnableTwoCycleTexturing();
+  *((s32 *) (((u8 *) (&D_83503BA8)) + 0x28)) += (*((s32 *) (((u8 *) (&D_83503BA8)) + 0x2C))) * 10;
+  if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x28))) < 0)
+  {
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x28)) = 0;
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x2C)) = 1;
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 4)) = (*((s32 *) (((u8 *) (&D_83503BA8)) + 4))) + 1;
+  }
+  if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x28))) >= 0x100)
+  {
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x28)) = 0xFF;
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x2C)) = 0;
+  }
+  func_8004972C(0xFF, 0xFF, 0xFF, *((s32 *) (((u8 *) (&D_83503BA8)) + 0x28)));
+  func_800497E4(0xFF, 0xFF, 0xFF, *((s32 *) (((u8 *) (&D_83503BA8)) + 0x28)));
+  if (0) { } // FAKE: diff score 570 without it; the switch scrutinee lands in v0, not retail v1.
+  switch (*((s32 *) (((u8 *) (&D_83503BA8)) + 4)))
+  {
+    case 0:
+      func_800495F8(0x140, 0x145, 1, D_83503DB0, func_8004C874(0x49, 0));
+      break;
+
+    case 1:
+      func_800495F8(0x140, 0x145, 1, D_83503DB4, func_8004C874(0x49, 1));
+      break;
+
+    case 2:
+      func_800495F8(0x140, 0x145, 1, D_83503DB8, func_8004C874(0x49, 2));
+      break;
+
+  }
+
+  Font_DisableTwoCycleTexturing();
+  func_800499EC();
+  if (0) { } // FAKE: diff score 30 without it; the 0xFF clamp constant lands in a0, not retail a1.
+  gSPDisplayList(D_800D0510++, D_80094E38);
+  gDPPipeSync(D_800D0510++);
+  if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x28))) == 0xFF)
+  {
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x30)) = (*((s32 *) (((u8 *) (&D_83503BA8)) + 0x30))) + 0x32;
+    if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x30))) >= 0x100)
+    {
+      *((s32 *) (((u8 *) (&D_83503BA8)) + 0x30)) = 0xFF;
+    }
+  }
+  if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x2C))) < 0)
+  {
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x30)) = (*((s32 *) (((u8 *) (&D_83503BA8)) + 0x30))) - 0x32;
+  }
+  if ((*((s32 *) (((u8 *) (&D_83503BA8)) + 0x30))) < 0)
+  {
+    *((s32 *) (((u8 *) (&D_83503BA8)) + 0x30)) = 0;
+  }
+  {
+    s32 val;
+    timer = D_83503D44 + 1;
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0xFF, *((s32 *) (((u8 *) (&D_83503BA8)) + 0x30)));
+    gDPSetCombine(D_800D0510++, 0xFFB3FF, 0xFF64FE7F);
+    if (timer >= 0x28)
+    {
+      timer = 0;
+    }
+    val = table[timer / 10];
+    // FAKE: D_83503D34[4] and the words after it are the counter block; 0x10 is the offset
+    // of D_83503D44, so this store targets D_83503D44. Naming that symbol directly lets IDO
+    // hoist the address into a3 ahead of the divide (diff score 795); this spelling leaves the
+    // lui in the func_8004C990 delay slot as retail does.
+    ((s32 *) (((u8 *) (&D_83503D34)) + 0x10))[0] = timer;
+    func_8004D19C(D_83503D48, D_83503D4C, func_8004C990(0x35, val), 1, 0);
+  }
+  gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_83502BFC end */
+
+/* mkdraft:func_83502EF0 begin */
+extern s32 D_83503BA8;
+extern s32 D_83503F50;
+extern u8 D_83503F58[];
+extern void GfxImage_FillCurrent(void *, u16);
+extern void func_8000766C(Gfx **, s32, s32, s32, s32);
+extern void func_80008648(void);
+extern void func_800088DC(void);
+extern void func_8003C6B8(u8 *);
+extern void func_800468A0(s32);
+extern void func_83501D3C(void);
+extern void func_83501DC0(void);
+extern void func_83502BFC(void);
+extern void func_87F0DFB4(void *);
+
+
+void func_83502EF0(void) {
+    func_800088DC();
+    if (D_83503F50 == 0) {
+        GfxImage_FillCurrent(&D_800D0510, 1);
+    } else {
+        func_8000766C(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        func_800468A0(D_83503F50);
+    }
+    /* Case labels are listed out of numeric order: ido emits the compare chain in
+       ascending order with case 3's body inline after the last compare, and the
+       remaining bodies in source order. */
+    switch (D_83503BA8) {
+        case 3:
+            switch (*(s32 *)((u8 *)&D_83503BA8 + 8)) {
+                case 0:
+                    func_83501D3C();
+                    break;
+                case 1:
+                    func_83501DC0();
+                    if ((*(s32 *)((u8 *)&D_83503BA8 + 0x14)) == 1) {
+                        func_83502BFC();
+                    }
+                    break;
+            }
+            break;
+        case 1:
+            func_83501DC0();
+            if ((*(s32 *)((u8 *)&D_83503BA8 + 0x14)) == 1) {
+                func_83502BFC();
+            }
+            break;
+        case 2:
+            func_83501D3C();
+            break;
+    }
+    GeoRender_AdvanceFrameCounter();
+    func_8003C6B8(D_83503F54);
+    func_87F0DFB4(&D_83503F58);
+    func_80008648();
+}
+/* mkdraft:func_83502EF0 end */
 
 /* mkdraft:func_83503048 begin */
 extern s32 D_83503BA8;

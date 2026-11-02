@@ -372,12 +372,47 @@ void func_87E0520C(void *arg0, s32 arg1) {
     func_87E049A4(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E05258.s")
+extern void func_80007328(Gfx **, s32);
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern s32 D_87E19A34[];
 
-extern void func_87E05258(void);
+// Draws one framed 100x26 panel per entry of the list at arg0 + 0x14, walking the
+// entries through their 0x04 link and taking the panel's resource from the entry
+// at +0x20. func_8004C990's second argument is selected from the four-element
+// D_87E19A34 table (4, 5, 3, 6) by the resource index at entry + 0x00.
+void func_87E05258(u8 *arg0) {
+    u8 *node;
+    u8 *child;
+    s32 handle;
+    s32 pad[4]; // FAKE: four unused homes; the frame is 0x80 with them and 0x70 without (diff score 10).
+
+    node = *(u8 **)(arg0 + 0x14);
+    while (node != NULL) {
+        child = *(u8 **)(node + 0x20);
+        func_80007328(&D_800D0510, *(s32 *)(child + 4));
+        func_80007444(&D_800D0510, 0, 0, 100, 26, 0xFFFE);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, G_RM_TEX_EDGE, G_RM_TEX_EDGE2);
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+        handle = func_8004C990(426, D_87E19A34[*(s32 *)child]);
+        func_8004D19C(0, 0, handle, 0, 0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        node = *(u8 **)(node + 4);
+    }
+}
+
+
+extern void func_87E05258(u8 *);
 extern void BgStage_DrawFrame(void);
-void func_87E053D0(void) {
-    func_87E05258();
+// arg0 already sits in $a0 when it reaches func_87E05258, so forwarding it adds
+// no instruction.
+void func_87E053D0(u8 *arg0) {
+    func_87E05258(arg0);
     BgStage_DrawFrame();
 }
 #pragma C_FUNCTION_PADDING(8)

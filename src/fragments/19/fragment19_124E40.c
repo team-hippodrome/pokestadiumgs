@@ -216,9 +216,146 @@ s32 func_823049A8(s32 arg0, s32 arg1) {
 }
 /* mkdraft:func_823049A8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304C88.s")
+/* mkdraft:func_82304C88 begin */
+extern u8 D_82305BCC[];
+extern u8 D_82305BF4[];
+extern u8 D_82305BD0[];
+extern u8 D_82305C08[];
+extern u8 D_82306DD0[];
+extern u16 D_82306AEC;
+extern s16 D_82306AFC;
+extern void *D_8009491C;
+extern s32 func_82301428(void);
+extern s32 func_82303D84(u32);
+extern void func_82304608(s32, s32, void *, u8 *, u8 *, s32);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304F5C.s")
+s32 func_82304C88(s32 arg0, s32 arg1) {
+    s32 sp4C;
+    // FAKE: never read or written; occupies the two 4-byte slots that move sp4C from 0x44 to 0x4C and grow the frame to 0x50. Score without both: 42.
+    s32 pad0;
+    s32 pad1;
+    s32 weight;
+    u8 *prim;
+    u8 *env;
+    s32 max;
+    u16 *coords;
+    u8 sp2C[4];
+    u8 sp28[4];
+
+    if ((arg0 != 0) && (arg0 == 5)) {
+        sp4C = *(s32 *)((u8 *)D_8009491C + 0x14);
+        if (func_82301428() != sp4C) {
+            weight = 0;
+        } else {
+            weight = func_82303D84(D_82306AEC);
+        }
+        if (D_82306AFC == 1) {
+            prim = D_82305BCC;
+            env = D_82305BD0;
+        } else {
+            prim = D_82305BF4;
+            env = D_82305C08;
+        }
+        max = 255;
+        coords = (u16 *)*(u32 *)(D_82306DD0 + (sp4C * 0x2F0));
+        sp2C[0] = prim[0] + (env[0] - prim[0]) * weight / max;
+        sp2C[1] = prim[1] + (env[1] - prim[1]) * weight / max;
+        sp2C[2] = prim[2] + (env[2] - prim[2]) * weight / max;
+        sp28[0] = env[3] * weight / max;
+        sp28[1] = env[4] * weight / max;
+        sp28[2] = env[5] * weight / max;
+        func_82304608(-((s32)coords[0] / 2), (s32)coords[1] / 2 - 7, coords, sp2C, sp28, *(u8 *)((u8 *)D_8009491C + 0x1D));
+        func_8003CD84();
+    }
+    return 0;
+}
+/* mkdraft:func_82304C88 end */
+
+/* mkdraft:func_82304F5C begin */
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern s32 func_80046540(s32, s32);
+extern s32 func_800464F8(s32, s32);
+extern void func_800459AC(u8 *, u8, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern Gfx *D_800D0510;
+extern Gfx D_82305C40[];
+
+// Texture data begins after this eight-byte header; same layout as TextureRenderHeader
+// in src/4CC20.c.
+//@src/4CC20.c
+typedef struct TextureRenderHeader {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u16 unk_06;
+} TextureRenderHeader;
+
+extern u8 *func_8004CA60(TextureRenderHeader *);
+
+// The retail words carry alpha in the low byte and pack the colour bytes as g, b, r;
+// PR/gbi.h's gDPSetPrimColor and gDPSetEnvColor use r, g, b, a instead.
+#define gDPSetPrimColor2(pkt, m, l, r, g, b, a) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = (_SHIFTL(G_SETPRIMCOLOR, 24, 8) | _SHIFTL(m, 8, 8) | _SHIFTL(l, 0, 8)); _g->words.w1 = (_SHIFTL(g, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(r, 24, 8) | _SHIFTL(a, 0, 8)); }
+#define gDPSetEnvColor2(pkt, r, g, b, a) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = _SHIFTL(G_SETENVCOLOR, 24, 8); _g->words.w1 = (unsigned int)(_SHIFTL(g, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(r, 24, 8) | _SHIFTL(a, 0, 8)); }
+
+// Draws a width x height texture at (x, y) as horizontal strips. func_80046540 returns
+// how many even rows of this width fit in one 0x1000-texel TMEM tile, and func_800464F8
+// rounds the height up to that strip size, so a tall texture is drawn as one four-vertex
+// quad per strip with that strip's pixels uploaded by func_800459AC.
+//
+// The parameters are void * to agree with this file's forward declaration of
+// func_82304F5C; the texture header is reached through casts rather than through a
+// typed local copy, because an extra local shifts the frame from 0xC8 to 0xCC bytes.
+
+void func_82304F5C(s32 x, s32 y, void *texture, void *colorTop, void *colorBottom, s32 alpha) {
+    s32 width;
+    Vtx *vertices;
+    s32 rows_per_chunk;
+    s32 chunk_count;
+    s32 remaining_height;
+    u8 *chunk;
+    s32 i;
+    s32 chunk_height;
+    s16 dy;
+    s32 right_edge;
+    u8 *base;
+
+    width = ((TextureRenderHeader *) texture)->width;
+    remaining_height = ((TextureRenderHeader *) texture)->height;
+    rows_per_chunk = func_80046540(width, 0x1000);
+    chunk_count = func_800464F8(remaining_height, rows_per_chunk);
+    vertices = Gfx_AllocDisplayList((chunk_count * 4) * (sizeof(Vtx)));
+    base = func_8004CA60(texture);
+    if (vertices != 0) {
+        gSPDisplayList(D_800D0510++, D_82305C40);
+        gDPSetPrimColor2(D_800D0510++, 0, 0, ((u8 *) colorTop)[0], ((u8 *) colorTop)[1], ((u8 *) colorTop)[2], 0xFF);
+        gDPSetEnvColor2(D_800D0510++, ((u8 *) colorBottom)[0], ((u8 *) colorBottom)[1], ((u8 *) colorBottom)[2],
+                        alpha);
+        for (i = 0; i < chunk_count; i++) {
+            chunk_height = (remaining_height < rows_per_chunk) ? (remaining_height) : (rows_per_chunk);
+            // Right edge of the strip quad. Kept as a named s32: writing x + width inline
+            // in the two vertex calls that use it changes the register allocation.
+            right_edge = x + width;
+            chunk = base + (i * (width * rows_per_chunk));
+            dy = y - chunk_height;
+            Gfx_SetVertexAttributes(vertices, (s16) x, (s16) y, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 1, (s16) x, (s16) dy, 0, 0, (s16) (chunk_height << 5), 0xFF, 0xFF,
+                                    0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 2, (s16) right_edge, (s16) dy, 0, (s16) (width << 5),
+                                    (s16) (chunk_height << 5), 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 3, (s16) right_edge, (s16) y, 0, (s16) (width << 5), 0, 0xFF, 0xFF,
+                                    0xFF, 0xFF);
+            func_800459AC(chunk, ((TextureRenderHeader *) texture)->format, ((TextureRenderHeader *) texture)->size,
+                          width, chunk_height, 1, 0, 2, 2, 0, 0, 0, 0);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            remaining_height = remaining_height - chunk_height;
+            y -= chunk_height;
+            vertices += 4;
+        }
+    }
+}
+/* mkdraft:func_82304F5C end */
 
 extern void GeoRender_ApplyMaterialState(void);
 extern s32 func_82303D84(u32);

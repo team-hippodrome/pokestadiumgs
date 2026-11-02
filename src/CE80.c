@@ -308,7 +308,104 @@ void func_8000C800(s32 arg0, s32 arg1, s32 arg2, OSMesgQueue *arg3)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000C85C.s")
+/* mkdraft:func_8000C85C begin */
+extern s32 D_8008FA44;
+
+
+
+s32 func_8000C85C(u8 *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 len;
+    s32 progress;
+    u16 *dst;
+    s32 offset;
+    GbApuChannelSlot *entry;
+    u8 *apu;
+
+    if (D_800D1220[0].apu == NULL) {
+        return 0;
+    }
+    if (arg2 == 1) {
+        /* D_8008FA44 holds the next channel index. Reaching it through dst makes
+         * IDO materialize its address separately at each of the three accesses
+         * (lui t9 for the increment, lui a2 for the bounds fix-up, lui at for
+         * the store); a direct D_8008FA44 lvalue shares one base instead. */
+        dst = (u16 *)&D_8008FA44;
+        offset = 0;
+        for (; offset < D_8008FA40; offset++) {
+            if (arg3 == D_800D1220[offset].unk_10) {
+                break;
+            }
+            if (D_800D1220[offset].active == 0) {
+                break;
+            }
+        }
+        if (offset == D_8008FA40) {
+            offset = ((s32 *)dst)[0];
+        }
+        ((s32 *)dst)[0] = (((s32 *)dst)[0] + 1) % D_8008FA40;
+        apu = D_800D1220[offset].apu;
+        entry = &D_800D1220[offset];
+        D_800D1220[offset].active = 1;
+        D_800D1220[offset].mode = 1;
+        D_800D1220[offset].unk_10 = arg3;
+        /* IDO hoists this constant into the loop preheader. as1 orders the
+         * preheader by .loc line, and only keeps the or in the blez delay slot
+         * when this assignment carries the highest line in the block, so it
+         * stays after the channel stores. */
+        progress = 0;
+    } else {
+        for (offset = 0; offset < D_8008FA40; offset++) {
+            if (arg3 == D_800D1220[offset].unk_10) {
+                break;
+            }
+        }
+        if (offset == D_8008FA40) {
+            return 0;
+        }
+        apu = D_800D1220[offset].apu;
+        entry = &D_800D1220[offset];
+        progress = *(s32 *)(apu + 0x25C8);
+    }
+
+    switch (D_800D1220[offset].mode) {
+    case 0:
+        break;
+    case 1:
+        AudioStream_OpenChannel(apu, *(s32 *)(arg0 + 4), (void *)func_8000C800);
+        func_8001FD50(apu);
+        func_8001FD50(apu);
+        func_8001FD50(apu);
+        func_8001FD50(apu);
+        entry->mode = 2;
+        *(s8 *)(apu + 0x25D1) = 2; /* s8: a u8 store emits a second li a0,2 */
+        break;
+    case 2:
+        if (*(s8 *)(apu + 0x25D1) == 2) {
+            func_80020018(apu);
+            D_800D1220[offset].mode = 3;
+        }
+        break;
+    case 3:
+        len = func_8001FFB0(apu, arg1);
+        if ((progress % 0xA00) + len >= 0xA00) {
+            dst = (u16 *)entry->unk_0C;
+            for (offset = 0; offset < len; offset++) {
+                dst[offset] = ((u16 *)entry->unk_14)[(progress + offset) % 0xA00];
+            }
+        } else {
+            dst = (u16 *)D_800D1220[offset].unk_14 + (progress % 0xA00);
+        }
+        func_80019580(dst, len * 2 + 0x10);
+        if (len != arg1) {
+            entry->mode = 0;
+            func_80020038(apu);
+            entry->active = 0;
+        }
+        return (s32)dst;
+    }
+    return 0;
+}
+/* mkdraft:func_8000C85C end */
 #endif
 
 #ifdef VERSION_US
@@ -927,7 +1024,79 @@ s32 func_8000E13C(s32 arg0, u8 *arg1, s16 arg2)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000F4E0.s")
+/* mkdraft:func_8000F4E0 begin */
+extern f32 D_8008F904[];
+
+// Views of the shared per-voice state structs (NoteSampleState and
+// NoteSynthesisState, defined further down this file) covering only the bytes
+// this function touches: the target envelope volumes, the surround effect
+// index, and the reverb and surround volumes.
+typedef struct {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ u16 targetVolLeft;
+    /* 0x0A */ u16 targetVolRight;
+    /* 0x0C */ u8 unk_0C[0xD];
+    /* 0x19 */ u8 surroundEffectIndex;
+} NoteSampleStateSurround;
+
+typedef struct {
+    /* 0x00 */ u8 unk_00[4];
+    /* 0x04 */ u8 curReverbVol;
+    /* 0x05 */ u8 unk_05[5];
+    /* 0x0A */ u16 surroundVolume;
+    /* 0x0C */ u8 unk_0C[4];
+    /* 0x10 */ void *unk_10;
+} NoteSynthesisStateSurround;
+
+// Same code as Majora's Mask AudioSynth_ApplySurroundEffect
+// (src/audio/lib/synthesis.c).
+
+
+
+Acmd *func_8000F4E0(Acmd *cmd, NoteSampleStateSurround *sample_state, NoteSynthesisStateSurround *synth_state,
+                    s32 size, s32 dmem_src, s32 flags)
+{
+    s32 wet_gain;
+    u16 dry_gain;
+    // DMEM address of the surround-effect work buffer, DMEM_SURROUND_TEMP in
+    // Majora's Mask. Declared s64: with s32 the address arithmetic around the
+    // save command differs from retail (differ score 3319).
+    s64 dmem = 0x4B0;
+    s32 count = size * 2;
+    f32 decay_gain;
+
+    func_8000D91C(cmd++, dmem_src, 0x5B0, count);
+    dry_gain = synth_state->surroundVolume;
+
+    if (flags == 1) {
+        AUDIO_CMD(cmd++, 0x020004B0, 0x100);
+        synth_state->surroundVolume = 0;
+    } else {
+        wet_gain = (dry_gain * synth_state->curReverbVol) >> 7;
+        aLoadBuffer_GS(cmd++, (u8 *)synth_state->unk_10 + 0xE0, dmem, 0x100);
+        aMix_GS(cmd++, count >> 4, dry_gain, dmem, 0x930);
+        aMix_GS(cmd++, count >> 4, dry_gain ^ 0xFFFF, dmem, 0xAD0);
+        aMix_GS(cmd++, count >> 4, wet_gain, dmem, 0xC70);
+        aMix_GS(cmd++, count >> 4, wet_gain ^ 0xFFFF, dmem, 0xE10);
+    }
+
+    // aSaveBuffer_GS packs the DMEM address into the low 16 bits of w0, which the
+    // outer cast provides. Narrowing count as well is what keeps IDO's temporary
+    // pool in retail order: without the inner cast the destination and the two
+    // lhu loads of the following block swap t8/t9 (differ score 55).
+    aSaveBuffer_GS(cmd++, (u16)(dmem + (u16)count), (u8 *)synth_state->unk_10 + 0xE0, 0x100);
+
+    decay_gain = (sample_state->targetVolLeft + sample_state->targetVolRight) * (1.0f / 8192.0f);
+    if (decay_gain > 1.0f) {
+        decay_gain = 1.0f;
+    }
+    decay_gain = decay_gain * D_8008F904[0 - sample_state->surroundEffectIndex];
+    synth_state->surroundVolume = (decay_gain * 32767.0f + synth_state->surroundVolume) / 2;
+
+    func_8000D91C(cmd++, 0x5B0, dmem_src, count);
+    return cmd;
+}
+/* mkdraft:func_8000F4E0 end */
 #endif
 
 #ifdef VERSION_US

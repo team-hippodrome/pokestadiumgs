@@ -141,7 +141,110 @@ void func_8AF08C90(void) {
     D_8AF2CB1C = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F6BF0/func_8AF08CB4.s")
+/* mkdraft:func_8AF08CB4 begin */
+extern void func_8AF00504(s16);
+extern s32 func_8AF003A8(s16);
+extern void func_8AC06E98(void *);
+extern void func_8AC05E40(s32, s32, s32);
+extern s32 func_8AC06D8C(s32, s32);
+extern void func_8004E308(s32, s32 *, s32 *);
+extern void func_8AC02C80(s32, s32, s32, void *);
+extern s16 func_8AC01354(void *, s32);
+extern void func_8AF08AC0(void);
+extern void func_8AF08B74(void);
+// This translation unit's rodata pool is supplied by asm/us/data/217360.rodata.s,
+// which starts with these two floats. Writing the literals here would emit a second
+// .rodata section into the object and shift the pool.
+extern f32 D_8AF290F0;
+extern f32 D_8AF290F4;
+extern u8 D_8AF2C9E8[];
+extern u8 D_8AF2CA60[];
+extern u8 D_8AF2CAF0[];
+extern void *D_8AF2CAD8;
+extern void *D_8AF2CADC;
+extern void *D_8AF2CAE4;
+extern void *D_8AF2CAE8;
+extern void *D_8AF2CB28;
+extern void *D_8AF2CB2C;
+extern void *D_8AF2CB30;
+extern void *D_8AF2CB34;
+extern void *D_8AF2CB48;
+extern void *D_8AF2CB4C;
+extern void *D_8AF2CB50;
+extern void *D_8AF2CB54;
+extern void *D_8AF2CB58;
+
+
+
+void func_8AF08CB4(void) {
+    s32 page;
+
+    func_8AF00504(0x4E);
+    func_8AF00504(0x35);
+    page = func_8AF003A8(0x4E);
+    func_8AC06E98((void *)page);
+    func_8AC05E40(page, 0x6E616D65, (s32)D_8AF2C9E8);
+    func_8AC05E40(page, 0x74797065, (s32)D_8AF2CA60);
+    D_8AF2CAD8 = D_8AF2C9E8;
+    D_8AF2CADC = D_8AF2CA60;
+    D_8AF2CB30 = (void *)func_8AC06D8C(page, 0x6E616D65);
+    D_8AF2CB34 = (void *)func_8AC06D8C(page, 0x74797065);
+    D_8AF2CB20 = (void *)func_8AC06D8C(page, 0x74655F31);
+    D_8AF2CB24 = (void *)func_8AC06D8C(page, 0x74655F32);
+    D_8AF2CB28 = (void *)func_8AC06D8C(page, 0x626F6F6B);
+    D_8AF2CB2C = (void *)func_8AC06D8C(page, 0x70616765);
+    D_8AF2CB38 = (void *)func_8AC06D8C(page, 0x6E5F7769);
+    D_8AF2CB40 = (void *)func_8AC06D8C(page, 0x6E5F3230);
+    D_8AF2CB3C = (void *)func_8AC06D8C(page, 0x745F7769);
+    D_8AF2CB44 = (void *)func_8AC06D8C(page, 0x745F3230);
+    D_8AF2CB48 = (void *)func_8AC06D8C(page, 0x6E6E6E6E);
+    D_8AF2CB4C = (void *)func_8AC06D8C(page, 0x6E5F6E5F);
+    *(u16 *)((u8 *)D_8AF2CB48 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AF2CB48 + 2) &= 0xFFFD;
+    D_8AF2CB50 = (void *)func_8AC06D8C(page, 0x74747474);
+    D_8AF2CB54 = (void *)func_8AC06D8C(page, 0x745F745F);
+    *(u16 *)((u8 *)D_8AF2CB50 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AF2CB50 + 2) &= 0xFFFD;
+    func_8004E308((s32)D_8AF2CB4C, (s32 *)func_8AF08980, NULL);
+    func_8004E308((s32)D_8AF2CB54, (s32 *)func_8AF08A1C, NULL);
+    page = func_8AF003A8(0x35);
+    func_8AC02C80(page, 0x74697431, 0x74697432, D_8AF2CAF0);
+    D_8AF2CB58 = (void *)func_8AC06D8C(page, 0x7469746C);
+    *(s16 *)((u8 *)D_8AF2CB58 + 0x30) = 0x36;
+    *(s16 *)((u8 *)D_8AF2CB58 + 0x32) = 0x10;
+    D_8AF265A0 = func_8AC01354(D_8AF265A8, 10);
+    D_8AF265A4 = func_8AC01354(D_8AF266E8, 0x12);
+    func_8AF08B74();
+    *(u16 *)((u8 *)D_8AF2CB2C + 2) &= 0xFFFD;
+    switch (D_8AF2CB74) {
+    case 1:
+        D_8AF2CAE4 = D_8AF2CAD8;
+        D_8AF2CAE8 = D_8AF2CADC;
+        func_8AF08AC0();
+        goto scale;
+    case 2:
+        D_8AF2CAE8 = D_8AF2CAD8;
+        D_8AF2CAE4 = D_8AF2CADC;
+        func_8AF08AC0();
+        goto scale;
+    case 0:
+    default:
+        break;
+    }
+scale:
+    if (D_8AF2CB74 != 0) {
+        f32 scale = D_8AF290F0;
+        f32 shrink = D_8AF290F4;
+
+        *(f32 *)((u8 *)D_8AF2CAE4 + 0x40) = scale;
+        *(f32 *)((u8 *)D_8AF2CAE4 + 0x44) = scale;
+        *(f32 *)((u8 *)D_8AF2CAE8 + 0x40) = shrink;
+        *(f32 *)((u8 *)D_8AF2CAE8 + 0x44) = shrink;
+        *(f32 *)((u8 *)D_8AF2CAE4 + 0x48) = 120.0f;
+        *(f32 *)((u8 *)D_8AF2CAE4 + 0x4C) = 180.0f;
+    }
+}
+/* mkdraft:func_8AF08CB4 end */
 
 void func_8AF090B0(f32 *arg0, f32 arg1, f32 arg2) {
     f32 value = *arg0;

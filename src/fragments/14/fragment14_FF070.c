@@ -302,7 +302,49 @@ void func_81308E3C(void *arg0)
   }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81308F54.s")
+/* mkdraft:func_81308F54 begin */
+extern void func_8130EB04(void *, s32, void *, s32, s32, s16 *, s16 *, s32);
+extern s32 func_8130456C(void *, void *);
+extern void func_800226C0(s32);
+extern void func_81304788(u8 *, s32 *, s32);
+extern void func_813049AC(u8 *, s16 *);
+extern s32 func_8160A920(u8 *);
+typedef struct unk_tail { u8 pad[0x137F5]; u8 state; } unk_tail;
+
+
+void func_81308F54(void *arg0) {
+    u8 *table;
+    s32 mode;
+    s32 flags[8];
+    s16 offset[4];
+    s16 rect[4];
+    s16 position[4];
+
+    table = func_81307204(*(u8 **)((u8 *)arg0 + 0x137A8), *(s16 *)((u8 *)arg0 + 0x137B6));
+    if (func_8130456C(
+            *(u8 **)((u8 *)arg0 + 0x137AC) + 0x15370,
+            ((u8 (*)[3304])table)[*(s16 *)((u8 *)arg0 + 0x137B4)]) != 0) {
+        func_81306F74(arg0, offset);
+        rect[0] = *(s16 *)((u8 *)arg0 + 0x137B4) * 128 + offset[0] + 31;
+        rect[1] = *(s16 *)((u8 *)arg0 + 0x137B6) * 47 + offset[1] + 11;
+        rect[2] = 117;
+        rect[3] = 40;
+        func_813049AC(*(u8 **)((u8 *)arg0 + 0x137AC) + 0x15370, position);
+        func_81304788(
+            *(u8 **)((u8 *)arg0 + 0x137AC) + 0x15370,
+            flags, func_8160A920(*(u8 **)((u8 *)arg0 + 0x137AC) + 0x15370));
+        mode = func_81302BB0(*(u8 **)((u8 *)arg0 + 0x137AC) + 0x15370) ? 0x98 : 0x92;
+        func_8130EB04(
+            *(u8 **)((u8 *)arg0 + 0x137AC),
+            *(u8 *)((u8 *)arg0 + 0x137F7),
+            ((u8 (*)[3304])table)[*(s16 *)((u8 *)arg0 + 0x137B4)], 0, flags, rect, position, mode);
+        func_800226C0(144);
+        ((struct unk_tail *)arg0)->state = 11;
+    } else {
+        func_800226C0(5);
+    }
+}
+/* mkdraft:func_81308F54 end */
 
 extern s32 func_8130437C(s32 arg0);
 extern void func_800226C0(s32);
@@ -342,9 +384,127 @@ void func_813091E0(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130924C.s")
+/* mkdraft:func_8130924C begin */
+extern void *func_81307204(void *arg0, s32 arg1);
+extern void func_800226C0(s32);
+extern void func_81307C94(void *);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81309394.s")
+typedef struct unk_8130924C_entry {
+    u8 pad0[8];
+    u8 flag;
+    u8 data;
+    u8 pad1[0xE];
+} unk_8130924C_entry;
+
+
+
+
+
+void func_8130924C(void *arg0) {
+    struct S {
+        u8 pad0[0x137A8];
+        void *resource;
+        u8 gap0[0x28];
+        s16 timer;
+        s16 state;
+        u8 gap1[4];
+        s32 active;
+        u8 gap2[0x14];
+        u8 index;
+        u8 flag;
+        u8 gap3[3];
+        u8 current;
+    };
+    s16 index;
+    s16 start;
+    // FAKE: unused slots. The retail frame is 0x38 bytes with the spilled entry pointer at
+    // 0x24(sp), the struct base at 0x28(sp) and start at 0x34(sp); these two declared-after
+    // locals hold 0x30(sp)/0x2C(sp). Without them start lands at 0x2C(sp) in a 0x30-byte frame.
+    UNUSED s32 pad0;
+    UNUSED s32 pad1;
+
+    index = ((struct S *)arg0)->index;
+    start = ((struct S *)arg0)->index;
+    do {
+        index = (index + 0x11) % 16;
+    } while (index != start && ((unk_8130924C_entry *)arg0)[index].flag == 0);
+
+    if (index != start) {
+        ((struct S *)arg0)->index = index;
+        ((struct S *)arg0)->resource = func_81307204(((struct S *)arg0)->resource, 3);
+        ((unk_8130924C_entry *)arg0)[start].data = ((struct S *)arg0)->current;
+        ((struct S *)arg0)->current = ((unk_8130924C_entry *)arg0)[index].data;
+        func_800226C0(10);
+        func_81307C94(arg0);
+        ((struct S *)arg0)->timer = 0;
+        ((struct S *)arg0)->state = 0x12;
+        ((struct S *)arg0)->flag = 7;
+        ((struct S *)arg0)->active = 1;
+    }
+}
+/* mkdraft:func_8130924C end */
+
+/* mkdraft:func_81309394 begin */
+extern void *func_81307204(void *arg0, s32 arg1);
+extern void func_800226C0(s32);
+extern void func_81307C94(void *);
+
+// Record table at the object base: 0x18-byte entries. Byte 8 is the scan flag the do-while
+// loop tests (a non-zero entry ends the search); byte 9 is copied to the object's 0x137F9 byte
+// and is also where that byte is stored back, into the entry the scan started from.
+typedef struct unk_81309394_entry {
+    u8 pad0[8];
+    u8 flag;
+    u8 data;
+    u8 pad1[0xE];
+} unk_81309394_entry;
+
+
+
+void func_81309394(void *arg0) {
+    struct S {
+        u8 pad0[0x137A8];
+        void *resource;
+        u8 gap0[0x28];
+        s16 timer;
+        s16 state;
+        u8 gap1[8];
+        s32 active;
+        u8 gap2[0x10];
+        u8 index;
+        u8 flag;
+        u8 gap3[3];
+        u8 current;
+    };
+    s16 next;
+    s16 start;
+    // FAKE: unused slots. The retail frame is 0x38 bytes with the spilled entry pointer at
+    // 0x24(sp), the struct base at 0x28(sp) and start at 0x34(sp); these two declared-after
+    // locals hold 0x30(sp)/0x2C(sp). Without them start lands at 0x2C(sp) in a 0x30-byte frame
+    // (diff score 26).
+    UNUSED s32 pad0;
+    UNUSED s32 pad1;
+
+    next = ((struct S *)arg0)->index;
+    start = ((struct S *)arg0)->index;
+    do {
+        next = (next + 0xF) % 16;
+    } while (next != start && ((unk_81309394_entry *)arg0)[next].flag == 0);
+
+    if (next != start) {
+        ((struct S *)arg0)->index = next;
+        func_800226C0(10);
+        ((struct S *)arg0)->resource = func_81307204(((struct S *)arg0)->resource, 3);
+        ((unk_81309394_entry *)arg0)[start].data = ((struct S *)arg0)->current;
+        ((struct S *)arg0)->current = ((unk_81309394_entry *)arg0)[next].data;
+        func_81307C94(arg0);
+        ((struct S *)arg0)->timer = 0;
+        ((struct S *)arg0)->state = -0x12;
+        ((struct S *)arg0)->flag = 7;
+        ((struct S *)arg0)->active = 1;
+    }
+}
+/* mkdraft:func_81309394 end */
 
 extern f32 func_816092FC(void);
 extern void func_800226C0(s32);
@@ -728,7 +888,33 @@ s32 func_8130A760(const u8 *arg0) {
     return ((arg0[0x137F5] ^ 2) == 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130A778.s")
+/* mkdraft:func_8130A778 begin */
+
+
+void func_8130A778(u8 *arg0, s32 arg1, u8 (*callback)(u8)) {
+    u8 buffer[0x100];
+    s32 i;
+    s32 j;
+    u8 value;
+    u8 tmp;
+
+    for (i = 0; i < arg0[0]; i++) {
+        buffer[i] = callback(((u8 **) (arg0 + 4))[0][i]);
+    }
+    for (i = 0; i < arg0[0]; i++) {
+        for (j = arg0[0] - 1; j > 0; j--) {
+            if (buffer[j] < buffer[j - 1]) {
+                tmp = buffer[j];
+                value = ((u8 **) (arg0 + 4))[arg1][j];
+                buffer[j] = buffer[j - 1];
+                ((u8 **) (arg0 + 4))[arg1][j] = ((u8 **) (arg0 + 4))[arg1][j - 1];
+                buffer[j - 1] = tmp;
+                ((u8 **) (arg0 + 4))[arg1][j - 1] = value;
+            }
+        }
+    }
+}
+/* mkdraft:func_8130A778 end */
 
 u8 func_8130A880(u8 arg0) {
     return arg0;
@@ -1558,7 +1744,86 @@ s32 func_8130C270(void *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130C334.s")
+/* mkdraft:func_8130C334 begin */
+extern s32 *func_81602D70(u8);
+extern s32 func_81602AEC(u8 *, s32 *);
+extern void func_81600A34(void *, u8 *, s32, s16, s16, s16, s16);
+extern s32 func_8160A50C(unk_D_8130B06C_node *);
+
+// Draws the grid state at 0xE912: the state handler's return value is the
+// "active" flag handed to the 0x1-stride panel, while the 0x0 panel is active
+// for the three states 2, 3 and 5. The 0x6910 selector indexes the roster
+// table at 0x1A144 of the object at 0xE8EC; a nonzero func_81602AEC comparison
+// forces the active flag on.
+
+
+void func_8130C334(u8 *arg0, void *arg1) {
+    s16 rect1[4];
+    s16 rect2[4];
+    s32 i;
+    s32 active;
+
+    active = 0;
+    switch (arg0[0xE912]) {
+    case 0:
+        active = func_8130B74C(arg0);
+        break;
+    case 1:
+        active = func_8130B770(arg0);
+        break;
+    case 2:
+        active = func_8130BADC(arg0);
+        break;
+    case 3:
+        active = func_8130BFF0(arg0);
+        break;
+    case 4:
+        active = func_8130C14C(arg0);
+        break;
+    case 11:
+        active = func_8130C0BC(arg0);
+        break;
+    case 5:
+        active = func_8130C270(arg0);
+        break;
+    case 12:
+        active = func_8130BD2C(arg0);
+        break;
+    case 6:
+        active = func_8130B7F8(arg0);
+        break;
+    case 8:
+        active = func_8130B88C(arg0);
+        break;
+    case 7:
+        active = func_8130BC44(arg0);
+        break;
+    case 10:
+        active = func_8130BDB8(arg0);
+        break;
+    case 9:
+        active = func_8130BF1C(arg0);
+        break;
+    case 13:
+        active = func_8130BFCC(arg0);
+        break;
+    }
+    if (func_81602AEC((u8 *)(*(s32 *)(arg0 + 0xE8EC)) + 0x1A144, func_81602D70(arg0[0xE910])) != 0) {
+        active = 1;
+    }
+    // The three unk_0008 nodes; IDO strength-reduces this to a pointer walked
+    // by 0x4DA0 and a byte counter compared against 0xE8E0 (3 * 0x4DA0).
+    for (i = 0; i < 3; i++) {
+        func_8160A50C(&((unk_func_8130B06C *)arg0)->unk_0008[i]);
+    }
+    func_8130B3B8(arg0, rect1);
+    func_81600A34(arg1, arg0,
+                  arg0[0xE912] == 5 || arg0[0xE912] == 2 || arg0[0xE912] == 3,
+                  rect1[0], rect1[1], rect1[2], rect1[3]);
+    func_8130B4E8(arg0, rect2);
+    func_81600A34(arg1, arg0 + 1, active, rect2[0], rect2[1], rect2[2], rect2[3]);
+}
+/* mkdraft:func_8130C334 end */
 
 /* mkdraft:func_8130C570 begin */
 extern f32 __sinf(f32);

@@ -584,7 +584,65 @@ f32 func_86101AEC(s32 arg0, f32 *arg1, f32 *arg2) {
     return distance;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86101BD8.s")
+/* mkdraft:func_86101BD8 begin */
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern void func_86101558(f32 *arg0, f32 *arg1);
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Delta86101BD8;
+
+// Every node of the D_8610AD20 + 0xD38 list is pulled toward the D_87F119DC actor
+// when its x/y distance stays under the actor's limit radius
+// (700 * 0.04 * scale + 19.2) * 0.65 * 1.7, where scale is the f32 at
+// D_8610AD20 + 0x9768. func_86101558 turns the delta into a unit direction and the
+// remaining distance inside the radius becomes the step added to *arg0/*arg1.
+// FAKE: the two pre-call comparisons wrap the 700.0f factor in a `(0, ...)` comma.
+// Without the comma IDO moves both literal factors to the right of the multiply
+// chain and assigns them the other way round (0.04f in $f24, 700.0f in $f26,
+// `mul.s (scale, 0.04f)` then `(product, 700.0f)`); with it the chain keeps
+// `mul.s (0.04f, scale)` then `(700.0f, product)` and 0.04f holds $f26, which is
+// what retail does. Score without the two commas is 440 (8 differing lines); the
+// same comma idiom matches func_86105204 earlier in this file.
+// The two conditions are spelled identically so the pre-call limit is computed
+// once and reused by the second test ($fv1 in retail); the emitted chain follows
+// the later occurrence, so a comma in the second comparison alone also scores 0
+// while one in the first comparison alone scores 440.
+
+
+void func_86101BD8(f32 *arg0, f32 *arg1) {
+    f32 distance;
+    f32 limit;
+    Delta86101BD8 delta;
+    void *node;
+
+    node = *(void **)((u8 *)D_8610AD20 + 0xD38);
+    *arg1 = 0.0f;
+    *arg0 = 0.0f;
+    if (node != NULL) {
+        do {
+            delta.x = *(f32 *)((u8 *)D_87F119DC + 0x48) - *(f32 *)((u8 *)node + 0x48);
+            delta.y = *(f32 *)((u8 *)D_87F119DC + 0x4C) - *(f32 *)((u8 *)node + 0x4C);
+            delta.z = 0.0f;
+            if ((delta.x > 0.0f ? delta.x : -delta.x) < (((0.04f * *(f32 *)((u8 *)D_8610AD20 + 0x9768)) * (0, 700.0f)) + 19.2f) * 0.65f * 1.7f) {
+                if ((delta.y > 0.0f ? delta.y : -delta.y) < (((0.04f * *(f32 *)((u8 *)D_8610AD20 + 0x9768)) * (0, 700.0f)) + 19.2f) * 0.65f * 1.7f) {
+                    distance = sqrtf((delta.x * delta.x) + (delta.y * delta.y));
+                    func_86101558(&delta.x, &delta.y);
+                    limit = ((*(f32 *)((u8 *)D_8610AD20 + 0x9768) * 0.04f * 700.0f) + 19.2f) * 0.65f * 1.7f;
+                    if (distance < limit) {
+                        *arg0 += delta.x * (limit - distance);
+                        *arg1 += delta.y * (limit - distance);
+                    }
+                }
+            }
+            node = *(void **)((u8 *)node + 4);
+        } while (node != NULL);
+    }
+}
+/* mkdraft:func_86101BD8 end */
 
 extern s32 D_8610AD20;
 extern void * D_87F119DC;

@@ -61,7 +61,42 @@ typedef struct unk_func_8130D45C {
     s16 unk_06;
 } unk_func_8130D45C;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130CEF0.s")
+/* mkdraft:func_8130CEF0 begin */
+extern f32 (*D_8160BD18)(f32);
+extern f32 (*D_8160BD1C)(f32);
+extern void func_816072FC(void *arg0);
+
+
+f32 func_8130CEF0(u8 *arg0, u8 *arg1) {
+    f32 scale;
+    f32 a;
+    f32 b;
+    u8 *ptr;
+
+    scale = 1.0f;
+    if (*(f32 *)(arg0 + 0x2C) < 1) {
+        if (arg0[0x34] == 3 && *(s8 *)(arg0 + 0x36) == 0) {
+            ptr = arg0 + 0x14;
+        } else {
+            ptr = arg0 + 0x1C;
+        }
+        scale = *(f32 *)(arg0 + 0x2C) / 1;
+        a = D_8160BD18(scale);
+        b = D_8160BD1C(scale);
+        *(s16 *)(arg1 + 0) = *(s16 *)ptr + (*(s16 *)(arg0 + 8) - *(s16 *)ptr) * a;
+        *(s16 *)(arg1 + 2) = *(s16 *)(ptr + 2) + (*(s16 *)(arg0 + 0xA) - *(s16 *)(ptr + 2)) * b;
+        *(s16 *)(arg1 + 4) = *(s16 *)(ptr + 4) + (0x224 - *(s16 *)(ptr + 4)) * a;
+        *(s16 *)(arg1 + 6) = *(s16 *)(ptr + 6) + (0xC7 - *(s16 *)(ptr + 6)) * b;
+    } else {
+        *(s16 *)(arg1 + 0) = *(s16 *)(arg0 + 8);
+        *(s16 *)(arg1 + 2) = *(s16 *)(arg0 + 0xA);
+        *(s16 *)(arg1 + 4) = 0x224;
+        *(s16 *)(arg1 + 6) = 0xC7;
+    }
+    func_816072FC(arg1);
+    return scale;
+}
+/* mkdraft:func_8130CEF0 end */
 
 f32 func_8130D098(u8 *arg0, unk_func_8130D45C *arg1) {
     f32 progress;
@@ -193,7 +228,87 @@ s32 D_813120D4 = 100;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D6A4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130DA04.s")
+/* mkdraft:func_8130DA04 begin */
+extern void func_816048E0(s32, s32, s32, s32, f32);
+
+void func_8130DA04(u8 *arg0, void *arg1) {
+    unk_func_8130D45C rectangle;
+    f32 fade;
+    s32 origin_x;
+    s32 origin_y;
+    // FAKE: never read. The extra stack slot moves the origin_y + lift temp that
+    // func_8004D19C and the last func_800495BC share to the retail sp+0x3C; without
+    // this declaration that temp is spilled at sp+0x40 (diff score 8).
+    s32 lower_y;
+    s32 index;
+    s32 lift;
+    void *label;
+
+    fade = 1.0f - func_8130D1FC(arg0, &rectangle);
+    origin_x = *(s16 *)(arg0 + 8) + 0x191;
+    origin_y = *(s16 *)(arg0 + 0xA);
+    if (func_81600DA8(arg1, arg0 + 1) != 0) {
+        func_816048E0(rectangle.unk_00, rectangle.unk_02, rectangle.unk_04, rectangle.unk_06, fade);
+        if (!(fade > 0.1f)) {
+            func_816073A0(&rectangle);
+            if (arg0[0x35] < 2) {
+                lift = 0;
+                if (arg0[0x34] >= 5) {
+                    fade = D_8160BD18(*(f32 *)(arg0 + 0x30) / 12.0f);
+                    lift = 28.0f * fade;
+                }
+                func_81608918(origin_x + 0x13, *(s8 *)(arg0 + 0x36) * 0x15 + origin_y + 0x26, (f32 *)(arg0 + 0x28));
+                gSPDisplayList(D_800D0510++, D_80094E38);
+                func_8004D19C(origin_x + 0xE, (origin_y + lift) + 0x6C, func_8004C990(0x33, 2), 0, 0);
+                func_8004D19C(origin_x + 0xE, origin_y + 0xA2, func_8004C990(0x33, 1), 0, 0);
+                gSPDisplayList(D_800D0510++, D_80094F50);
+                func_800498C4();
+                func_800496A4(4, 1);
+                label = func_8004C874(0xF, arg0[0x35] + 1);
+                func_800496A4(4, 1);
+                func_800495BC(origin_x - func_80049148(4, 1, label) / 2 + 0x49, origin_y + 0xE, label);
+                index = 0;
+                if (func_8130CEAC(arg0) > 0) {
+                    do {
+                        if (index == *(s8 *)(arg0 + 0x36)) {
+                            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+                        } else if (index == 0 && func_8130CE3C(arg0) != 0) {
+                            func_8004972C(0x80, 0x80, 0x80, 0xFF);
+                        } else {
+                            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                        }
+                        switch (index) {
+                        case 0:
+                            func_800495BC(origin_x + 0x45, origin_y + 0x26 + index * 0x15, func_8004C874(0xF, 4));
+                            break;
+                        case 1:
+                            func_800495BC(origin_x + 0x45, origin_y + 0x26 + index * 0x15, func_8004C874(0xF, 5));
+                            break;
+                        case 2:
+                            func_800495BC(origin_x + 0x45, origin_y + 0x26 + index * 0x15, func_8004C874(0xF, 6));
+                            break;
+                        }
+                        index++;
+                    } while (index < func_8130CEAC(arg0));
+                }
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                func_800495BC(origin_x + 0x27, (origin_y + lift) + 0x70, func_8004C874(0xF, 7));
+                func_800495BC(origin_x + 0x27, origin_y + 0xA6, func_8004C874(0xF, 8));
+                func_800499EC();
+            } else {
+                gSPDisplayList(D_800D0510++, D_80094E38);
+                func_8004D19C(origin_x + 0xE, origin_y + 0xB, func_8004C990(0x33, 2), 0, 0);
+                gSPDisplayList(D_800D0510++, D_80094F50);
+                func_800498C4();
+                func_800496A4(4, 1);
+                func_800495BC(origin_x + 0x27, origin_y + 0xF, func_8004C874(0xF, 7));
+                func_800499EC();
+            }
+            func_81607408();
+        }
+    }
+}
+/* mkdraft:func_8130DA04 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130DEB8.s")
 

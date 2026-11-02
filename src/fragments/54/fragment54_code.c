@@ -313,7 +313,76 @@ void func_86601398(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86601408.s")
+/* mkdraft:func_86601408 begin */
+extern u8 D_8660A990[];
+extern u8 D_86607410[];
+extern s32 D_86606B1C;
+extern s32 D_86606B20[];
+extern u8 D_86607260[];
+extern f32 D_80088E50[];
+extern f32 D_80087E50[];
+extern u32 func_8003570C(void);
+extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+
+
+
+void func_86601408(s32 arg0) {
+    s32 table_index;
+    u8 *player;
+    s32 i;
+    u16 angle;
+    s32 raw_angle;
+    u32 rand0;
+    u32 rand1;
+    // FAKE: `volatile` is what holds the frame at 0x98. The pointer is reloaded
+    // from 0x78(sp) either way, but a plain local leaves the frame at 0xA0.
+    u8 * volatile ptr;
+
+    player = D_8660A990 + arg0 * 0x58;
+
+    // Player-record field +0x50: 0xC9 forces the spawn scale to 8.
+    if (*(s32 *)(player + 0x50) == 0xC9) {
+        D_86606B1C = 8;
+    }
+    // The comma init is load-bearing: assigning ptr in its own statement makes
+    // IDO place the hoisted float constants one slot later in the preheader.
+    for (ptr = D_86607410 + arg0 * 0x168, i = 0; i != 2; i++) {
+        raw_angle = (u16)func_8003570C();
+        angle = raw_angle;
+        // Player-record field +0x28 selects which quarter turn biases the
+        // sampled angle: 1 and 3 turn it back (case 3 only above 0x4001),
+        // 2 and 4 turn it forward (case 4 only outside 0x4000..0xC000).
+        switch (*(s32 *)(player + 0x28)) {
+        case 1:
+            if ((u16)raw_angle >= 0x8001) { angle = (u16)raw_angle - 0x4000; }
+            break;
+        case 2:
+            if ((u16)raw_angle < 0x8000) { angle = (u16)raw_angle + 0x4000; }
+            break;
+        case 3:
+            if ((u16)raw_angle >= 0x4001 && (u16)raw_angle < 0xC000) { angle = (u16)raw_angle - 0x4000; }
+            break;
+        case 4:
+            if ((u16)raw_angle < 0x4000 || (u16)raw_angle >= 0xC001) { angle = (u16)raw_angle + 0x4000; }
+            break;
+        }
+        // Named so the D_86606B20 address takes $t0 and this index takes $t1;
+        // inlining `angle >> 4` swaps the two.
+        table_index = angle >> 4;
+        rand0 = func_8003570C();
+        rand1 = func_8003570C();
+
+        // D_86606B20 holds one s32 x/y pair per facing mode, at field +0x28 * 8;
+        // the -8 and -4 load offsets pick that pair's x and y.
+        func_87F03884(D_86607260, 1, (u8 *)ptr,
+            (f32)D_86606B1C * D_80088E50[table_index] + (f32)*(s32 *)((u8 *)D_86606B20 + *(s32 *)(player + 0x28) * 2 * 4 - 8),
+            (f32)D_86606B1C * D_80087E50[table_index] + (f32)*(s32 *)((u8 *)D_86606B20 + *(s32 *)(player + 0x28) * 2 * 4 - 4),
+            -260.0f, angle - 0x3FFF,
+            ((f32)rand0 / 4294967296.0f) * 0.7f * 6.0f,
+            (rand1 % 5) + 2);
+    }
+}
+/* mkdraft:func_86601408 end */
 #endif
 
 #ifdef VERSION_US

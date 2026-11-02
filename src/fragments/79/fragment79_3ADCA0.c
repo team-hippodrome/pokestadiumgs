@@ -655,7 +655,57 @@ void func_841402FC(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84140474.s")
+/* mkdraft:func_84140474 begin */
+// Screen-space box drawn by func_8413FDB0 and its callers: x at 0x0A, y at 0x0C,
+// width at 0x0E, height at 0x10.
+typedef struct unk_func_84140474 {
+    /* 0x00 */ s16 unk_00[5];
+    /* 0x0A */ s16 x;
+    /* 0x0C */ s16 y;
+    /* 0x0E */ s16 width;
+    /* 0x10 */ s16 height;
+} unk_func_84140474;
+
+// Emits two texture rectangles of texture (0x157, 1) for the box at arg0 + 0x0A.
+// Both span xl = 0 to xh = width - 1: the first covers rows y to y + 0x3F with
+// s = 0, the second rows y + height - 0x40 to y + height with s = 0x800. Box
+// coordinates are 10.2 fixed point, hence the << 2 on each one.
+
+void func_84140474(void *arg0) {
+    u8 *asset;
+    s32 width;
+    s32 height;
+    s32 format;
+    s32 size;
+    u8 *texture;
+
+    asset = func_8004C990(0x157, 1);
+    width = func_8004CA10((u16 *)asset);
+    height = func_8004CA24((u16 *)asset);
+    texture = func_8004CA60(asset);
+    format = func_8004CA38(asset);
+    size = func_8004CA4C(asset);
+    gSPDisplayList(D_800D0510++, D_841869E0);
+    ParticleGfx_SetPrimColor_fragment79(*(u8 *)((u8 *)arg0 + 0x22), *(u8 *)((u8 *)arg0 + 0x23),
+                                        *(u8 *)((u8 *)arg0 + 0x24), *(u8 *)((u8 *)arg0 + 0x25));
+    // FAKE: this TU has no prototype for func_800459AC, so the earlier call in
+    // func_841402FC leaves it implicitly declared as returning int and IDO keeps the
+    // unused result in $t2 to the end of the function. A discarded-test position drops
+    // that web; with a plain call the four hoisted rectangle constants move from
+    // $t2..$t5 to $t3,$t4,$t5,$ra (differ: 60 mismatched words).
+    if (func_800459AC(texture, format, size, width, height, 1, 0, 1, 1, 6, 6, 0, 0)) {
+    }
+    gSPTextureRectangleFlip(D_800D0510++, 0, ((unk_func_84140474 *)arg0)->y << 2,
+                            (((unk_func_84140474 *)arg0)->width - 1) << 2,
+                            (((unk_func_84140474 *)arg0)->y + 0x3F) << 2, 0, 0, 0, 0x400, 0);
+    gSPTextureRectangleFlip(D_800D0510++, 0,
+                            (((unk_func_84140474 *)arg0)->y + ((unk_func_84140474 *)arg0)->height - 0x40) << 2,
+                            (((unk_func_84140474 *)arg0)->width - 1) << 2,
+                            (((unk_func_84140474 *)arg0)->y + ((unk_func_84140474 *)arg0)->height) << 2, 0, 0x800, 0,
+                            0x400, 0);
+    func_8413FDB0(arg0);
+}
+/* mkdraft:func_84140474 end */
 #endif
 
 #ifdef VERSION_US
@@ -2435,7 +2485,197 @@ void func_84145B2C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84145BA0.s")
+/* mkdraft:func_84145BA0 begin */
+extern u8 D_84186150[];
+extern u8 D_84186154[];
+extern u8 D_84186158[];
+extern u8 D_8418615C[];
+extern u8 D_84186160[];
+extern u8 D_84186164[];
+extern u8 D_84186168[];
+extern u8 D_8418616C[];
+extern u8 D_84186170[];
+extern u8 D_84186174[];
+extern u8 D_84186188[];
+extern u8 D_841861D8[];
+extern u8 D_84186200[];
+extern u8 D_84186278[];
+extern u8 D_841862A0[];
+extern u8 D_84186728[];
+extern u8 D_84186868[];
+extern u8 D_841868B8[];
+extern u8 D_841868E0[];
+extern u8 D_84186908[];
+extern u8 D_841869A8[];
+extern u8 D_841869E0[];
+extern u8 D_84186A20[];
+extern u8 D_84186A60[];
+
+extern void func_84140690(void *);
+extern void func_84140CFC(void *);
+extern void func_84140D68(u8 *arg0);
+extern void func_84140F1C(void *);
+extern void func_84140F98(void *);
+extern void func_84141020(void *);
+extern void func_841410A0(void *);
+extern void func_84141F20(u8 *arg0);
+extern void func_84141768(void *);
+extern void func_8414216C(void *);
+extern void func_841420A4(void *);
+extern void func_841427DC(u8 *state);
+extern void func_84142B78(void *);
+extern void func_84142DCC(void *);
+extern void func_84142E44(void *);
+extern void func_84142EB0(void *);
+extern void func_84144C88(void *);
+extern void func_84145744(void *);
+extern void func_841457C4(void *);
+extern void func_84145B2C(void *);
+extern void func_8413EDCC(void);
+extern void func_8413F034(void);
+extern void func_8413F1F8(void);
+extern void func_8413F27C(void);
+extern void func_8413F300(void);
+extern void func_8413F82C(void);
+extern void func_8413FA34(void);
+extern void func_8413FAB8(void);
+extern void func_800496A4(s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+
+
+
+void func_84145BA0(u8 arg0) {
+    u8 *p;
+
+    func_84140690(D_84186868);
+    if (arg0) {
+        gSPDisplayList(D_800D0510++, D_84186A60);
+        func_84142EB0(D_841868E0);
+        func_800498C4();
+        func_800496A4(2, -1);
+        func_84144C88(D_84186908);
+        func_800499EC();
+        return;
+    }
+    gSPDisplayList(D_800D0510++, D_841869A8);
+    func_84140CFC(D_841861D8);
+    func_84140CFC(D_84186200);
+    gSPDisplayList(D_800D0510++, D_84186A20);
+    // Each loop below walks the same 52 entries: the 0x28-byte records from
+    // D_84186188 up to D_841869A8 (0x820 bytes), passing one record at a time to
+    // the loop's list-writing function.
+    //
+    // FAKE: the limits are spelled through 15 different symbols that all fold to
+    // 0x841869A8, the address of D_841869A8, rather than naming D_841869A8 directly.
+    // Given one shared spelling, uopt hoists the limit into $s1 once for the whole
+    // function and compares against that register; the retail routine instead rebuilds
+    // it in a scratch register after every call inside every loop, which this compiler
+    // emits only when the 16 limits are 16 distinct adcons. Both spellings link to the
+    // same word. Diff score 136 without these spellings.
+    p = D_84186188;
+    do {
+        func_84140F1C(p);
+        p += 0x28;
+    } while (p < D_84186150 + 0x858); // FAKE
+    gSPDisplayList(D_800D0510++, D_841869E0);
+    func_8413F034();
+    p = D_84186188;
+    do {
+        func_84140F98(p);
+        p += 0x28;
+    } while (p < D_84186154 + 0x854); // FAKE
+    func_8413EDCC();
+    p = D_84186188;
+    do {
+        func_84141020(p);
+        p += 0x28;
+    } while (p < D_84186158 + 0x850); // FAKE
+    func_8413F1F8();
+    p = D_84186188;
+    do {
+        func_841410A0(p);
+        p += 0x28;
+    } while (p < D_8418615C + 0x84C); // FAKE
+    func_8413F27C();
+    p = D_84186188;
+    do {
+        func_84141BE0(p);
+        p += 0x28;
+    } while (p < D_84186160 + 0x848); // FAKE
+    ParticleGfx_SetPrimColor_fragment79(0xFF, 0xFF, 0xFF, 0xFF);
+    p = D_84186188;
+    do {
+        func_84141F20(p);
+        p += 0x28;
+    } while (p < D_84186164 + 0x844); // FAKE
+    p = D_84186188;
+    do {
+        func_84141768(p);
+        p += 0x28;
+    } while (p < D_84186168 + 0x840); // FAKE
+    func_8413F82C();
+    p = D_84186188;
+    do {
+        func_8414216C(p);
+        p += 0x28;
+    } while (p < D_8418616C + 0x83C); // FAKE
+    func_8413FA34();
+    p = D_84186188;
+    do {
+        func_841420A4(p);
+        p += 0x28;
+    } while (p < D_84186170 + 0x838); // FAKE
+    p = D_84186188;
+    do {
+        func_841427DC(p);
+        p += 0x28;
+    } while (p < D_84186174 + 0x834); // FAKE
+    p = D_84186188;
+    do {
+        func_84142B78(p);
+        p += 0x28;
+    } while (p < D_841869E0 - 0x38); // FAKE
+    ParticleGfx_SetPrimColor_fragment79(0xFF, 0xFF, 0xFF, 0xFF);
+    func_8413FAB8();
+    p = D_84186188;
+    do {
+        func_84142DCC(p);
+        p += 0x28;
+    } while (p < D_84186A20 - 0x78); // FAKE
+    func_84142E44(D_841868B8);
+    func_8413F300();
+    p = D_84186188;
+    do {
+        func_84143D8C(p);
+        p += 0x28;
+    } while (p < D_84186188 + 0x820); // FAKE
+    func_8413E63C(0, 0, 0, 0);
+    p = D_84186188;
+    do {
+        func_84145B2C(p);
+        p += 0x28;
+    } while (p < D_841861D8 + 0x7D0); // FAKE
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    p = D_84186188;
+    do {
+        func_84145744(p);
+        p += 0x28;
+    } while (p < D_84186200 + 0x7A8); // FAKE
+    gSPDisplayList(D_800D0510++, D_84186A60);
+    func_84140D68(D_84186278);
+    func_84140D68(D_841862A0);
+    func_841457C4(D_84186728);
+    func_800498C4();
+    func_800496A4(2, -1);
+    p = D_84186188;
+    do {
+        func_84144C88(p);
+        p += 0x28;
+    } while (p != D_841869A8);
+    func_800499EC();
+}
+/* mkdraft:func_84145BA0 end */
 #endif
 
 #ifdef VERSION_US
@@ -3422,7 +3662,63 @@ void func_84147B20(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84147BA4.s")
+/* mkdraft:func_84147BA4 begin */
+extern u16 D_84186ED0;
+extern u16 D_84186ED4;
+extern u8 D_84187004[];
+
+// Sets the element's x and y (0xA and 0xC) from D_84186ED0 and D_84186ED4, fills the four s16
+// values at 0x12, 0x16, 0x1A and 0x1E, then clears bit 0 of the flags byte at 8. func_84147C9C
+// calls this for state 24.
+//
+// The four values come from the s16 table at D_84187004, which the function copies onto the
+// stack first. The lookup value is the step byte at offset 9 plus 0 (first pass) or 6 (second
+// pass): 22..31 and 19..28 select entry value - 22 and value - 19, values at or above 32 and 29
+// select entry 10, and values below 22 and 19 select entry 0. The copy holds ten entries (entry
+// 0 is 0, entries 1..9 rise from 0x3C to 0x13D), and the fields are written in the order 0x1E,
+// 0x1A, 0x16, 0x12: the loop's offset starts at 12 and drops by 8 while the index rises by 6,
+// so the second pass writes the lower pair.
+//!bug: the clamp value 10 is one s16 past the ten copied entries, so those writes read the
+// stack word above the copy instead of entry 10 of D_84187004 (which is 0 in the retail data).
+
+
+void func_84147BA4(u8 *arg0) {
+    union SavedTable {
+        s32 words[5];
+        s16 entries[10];
+    };
+    s32 offset;
+    s32 index;
+    union SavedTable saved_table = *(union SavedTable *)&D_84187004;
+    s32 value;
+    s32 entry;
+
+    *(u16 *)(arg0 + 0xA) = D_84186ED0;
+    *(u16 *)(arg0 + 0xC) = D_84186ED4;
+    for (offset = 12, index = 0; index != 12; index += 6, offset -= 8) {
+        value = arg0[9] + index;
+        if (value >= 32) {
+            entry = 10;
+        } else if (value >= 22) {
+            entry = value - 22;
+        } else {
+            entry = 0;
+        }
+        *(s16 *)(arg0 + offset + 0x12) = saved_table.entries[entry];
+        value = arg0[9] + index;
+        if (value >= 29) {
+            entry = 10;
+        } else if (value >= 19) {
+            entry = value - 19;
+        } else {
+            entry = 0;
+        }
+        *(s16 *)(arg0 + offset + 0xE) = saved_table.entries[entry];
+    }
+
+    arg0[8] &= ~1;
+}
+/* mkdraft:func_84147BA4 end */
 #endif
 
 #ifdef VERSION_US

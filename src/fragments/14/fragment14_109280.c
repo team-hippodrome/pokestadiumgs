@@ -127,9 +127,118 @@ s32 func_813110F0(Frag14State *arg0, Frag14Record *arg1, s32 arg2) {
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311368.s")
+/* mkdraft:func_81311368 begin */
+extern f32 (*D_8160BD18)(f32, u8 *);
+extern f32 (*D_8160BD1C)(f32);
+extern void func_816072FC(void *arg0);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_813114B8.s")
+
+
+f32 func_81311368(u8 *arg0, s16 *arg1) {
+    f32 scale;
+    u8 *p;
+    f32 h;
+    f32 w;
+    f32 base_w;
+    f32 prod;
+
+    scale = 0.0f;
+    p = arg0;
+    if ((*(s32 *)arg0 != 0) && (arg0[0x18] != 0)) {
+        if (*(f32 *)(arg0 + 4) > 0.0f) {
+            if (*(f32 *)(arg0 + 4) < 16) {
+                scale = *(f32 *)(arg0 + 4) / 16;
+            } else {
+                scale = 1.0f;
+            }
+        }
+    }
+    D_8160BD18(scale, arg1);
+    w = D_8160BD1C(scale);
+
+    h = (f32)*(s16 *)(p + 0x16);
+    // FAKE: prod's web starts at this copy so uopt walks it before base_w's; a
+    // single `prod = h * w` here gives the product $f12 and h $f2 and the swap
+    // cascades through mul.s/sub.s/div.s/trunc.w.s (diff score 1460).
+    prod = h;
+    // FAKE: block boundary; without it uopt reorders the loads below and the
+    // tail shortens by two instructions (diff score 970).
+    do {
+        base_w = (f32)*(s16 *)(p + 0x14);
+    } while (0);
+    prod = prod * w;
+    arg1[1] = (s16)(s32)((f32)*(s16 *)(p + 0x12) + ((h - prod) / 2));
+    // FAKE: empty block; without it the tail shifts and every long-lived
+    // temp is recoloured (diff score 765).
+    if (!prod) {
+    }
+    //!bug: the minuend is reloaded from the same address as base_w, so this
+    // term is always 0 and arg1[0] receives only the box origin.
+    arg1[0] = (s16)(s32)((((f32)*(s16 *)(p + 0x14) - base_w) / 2)
+                         + (f32)*(s16 *)(p + 0x10));
+    arg1[3] = (s16)(s32)(prod);
+
+    arg1[2] = (s16)(s32)base_w;
+    func_816072FC(arg1);
+    return scale;
+}
+/* mkdraft:func_81311368 end */
+
+/* mkdraft:func_813114B8 begin */
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+
+// Frag14Entry with offset 0x06 typed as a mode word. The draw path compares it with 0 and
+// passes it to func_800495F8 as its mode argument; func_813110F0 never reads offset 0x06.
+typedef struct {
+    u16 unk_00;
+    u8 pad02[2];
+    s16 value;
+    s16 unk_06;
+} Frag14EntryExt;
+
+// Draws one line of the record's text: fetches (or formats into buf) the string for entry
+// arg1, sets the highlight color and font, then emits the line either left-aligned at the box
+// edge or centered in it, depending on the entry's mode word.
+//@src/47580.c
+
+
+void func_813114B8(Frag14State *arg0, s16 arg1) {
+    // The three consecutive s16 at 0x10 in Frag14State: box[0] = box_x, box[1] = box_y,
+    // box[2] = box_width. The retail code keeps this one base pointer and addresses the
+    // fields at 0, 2 and 4 off it.
+    s16 *box;
+    Frag14Record *rec;
+    char buf[0x100];
+    void *str;
+
+    rec = arg0->owner;
+    box = &arg0->box_x;
+    if (arg0->unk_0C < 0) {
+        str = func_8004C874(rec->unk_1E, arg0->owner->entries[arg1].unk_00);
+    } else {
+        func_8004C594(3, arg0->unk_0C);
+        str = func_8004C8A0(buf, 0x100, rec->unk_1E, arg0->owner->entries[arg1].unk_00);
+    }
+    // White when the entry is the selected one, opaque black otherwise.
+    if (arg0->unk_1C != 0 && arg1 == arg0->index) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    func_800496A4(rec->font, rec->unk_17 + 2);
+    if (((Frag14EntryExt *)arg0->owner->entries)[arg1].unk_06 == 0) {
+        func_800495BC(box[0] + rec->unk_12,
+                      box[1] + rec->unk_10 + rec->line_height * arg1, str);
+        return;
+    }
+    func_800495F8(box[2] / 2 + box[0],
+                  box[1] + rec->unk_10 + rec->line_height * arg1,
+                  ((Frag14EntryExt *)arg0->owner->entries)[arg1].unk_06, str);
+}
+/* mkdraft:func_813114B8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311650.s")
 
@@ -212,7 +321,7 @@ void func_81311A9C(u8 *arg0) {
 }
 
 void func_81311894(u8 *);
-void func_81311368(u8 *, s16 *);
+f32 func_81311368(u8 *, s16 *);
 extern void func_81600A34(void *, u8 *, s32, s32, s32, s32, s32);
 extern void func_813119E4(u8 *arg0);
 extern void func_81311A3C(u8 *arg0);

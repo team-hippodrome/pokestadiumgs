@@ -503,7 +503,32 @@ u8 func_800347E8(u8 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_80034838.s")
+/* mkdraft:func_80034838 begin */
+extern u16 D_800925EC[];
+
+
+
+s32 func_80034838(u8 arg0, u8 arg1, u8 arg2)
+{
+  u8 shift;
+  u16 index;
+  u16 value;
+  u32 i;
+  u16 bit;
+  shift = ((u32) ((&D_800D2B94)[arg0 * 0x3C] & 0xFF)) >> 4;
+  shift = shift + arg2;
+  index = (&D_800D2B94)[arg0 * 0x3C] & 0xF;
+  index = index + arg1;
+  value = D_800925EC[index];
+  for (i = shift; i < 7U; i++)
+  {
+    bit = value;
+    bit = bit & 0x8000;
+    value = ((u32) value) >> 1;
+    value = value | bit;
+  }
+}
+/* mkdraft:func_80034838 end */
 
 void func_800348C4(u8 arg0, u8 arg1)
 {
@@ -2860,7 +2885,43 @@ void Geo_NodeUpdateLights(S1_GraphNode *root) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_8003B350.s")
+/* mkdraft:func_8003B350 begin */
+extern u8 D_1000D90[];
+extern void func_800390D8(Mtx *);
+extern void func_8003D888(s16, Mtx *);
+extern void func_8003A370(s32);
+
+
+
+void func_8003B350(u8 *arg0) {
+    s32 pad[2];
+    S1_MtxF *matrix;
+    Vec3f35784 position;
+    Vec3s35AA0 rotation;
+    s32 index;
+
+    matrix = &((SceneTransformPool *)&D_80124F68)->matrices[((SceneTransformPool *)&D_80124F68)->top];
+    if (((u8 *)D_8009491C)[2] & 2) {
+        Vec3f_SetComponentsDuplicate(&position, matrix->mf[3][0], 0.0f, matrix->mf[3][2]);
+        Vec3s_SetComponents(&rotation, 0, *(s16 *)((u8 *)D_8009491C + 0x20), 0);
+        MtxF_SetRotationTranslationF(((SceneTransformPool *)&D_80124F68)->matrices[((SceneTransformPool *)&D_80124F68)->top + 1].mf, &position, &rotation);
+        ((SceneTransformPool *)&D_80124F68)->top++;
+        func_800390D8(NULL);
+        func_8003D888(0, ((SceneTransformPool *)&D_80124F68)->stack[((SceneTransformPool *)&D_80124F68)->top]);
+        func_8003DA20((s32)D_1000D90, 1);
+        ((SceneTransformPool *)&D_80124F68)->top--;
+    }
+    // FAKE: alias write of D_80094920 (the word after D_8009491C); the named form
+    // folds the address into $s0 and costs an instruction. See func_8003B350.report.md.
+    ((u8 **)&D_8009491C)[1] = arg0;
+    for (index = 0; index < 128; index++) D_80124D68[index] = 0;
+    if (*(u16 *)(arg0 + 0x28) & 1) {
+        func_8003A370((s32)arg0);
+    }
+    func_8003A2C8(arg0);
+    D_80094920 = NULL;
+}
+/* mkdraft:func_8003B350 end */
 
 void Geo_NodeCullDistance(S1_GraphNode *root) {
     S1_unk_D_86002F34_alt3 *range = (S1_unk_D_86002F34_alt3 *)root;
@@ -4166,9 +4227,108 @@ void *func_8003F54C(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_8003F5AC.s")
+/* mkdraft:func_8003F5AC begin */
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern s16 func_8004B920(s32 arg0, s32 arg1);
+extern char *func_80060F68(char *arg0, char *arg1);
+extern s32 func_800625E0(s32 arg0, s32 arg1);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_8003F6E0.s")
+typedef union unk_func_8003F5AC {
+    struct {
+        /* 0x00 */ s16 unk_00;
+        /* 0x02 */ s8 unk_02;
+        /* 0x03 */ s8 unk_03;
+    };
+    u32 raw;
+} unk_func_8003F5AC;
+
+typedef struct unk_func_8003F5AC_arg1 {
+    /* 0x00 */ u8 species;
+    /* 0x01 */ u8 unk_01[5];
+    /* 0x06 */ u16 unk_06;
+    /* 0x08 */ u8 unk_08[0x2C];
+    /* 0x34 */ s8 unk_34[0xC];
+    /* 0x40 */ s8 unk_40[0x10];
+} unk_func_8003F5AC_arg1;
+
+
+
+unk_func_8003F5AC *func_8003F5AC(unk_func_8003F5AC *arg0, unk_func_8003F5AC_arg1 *arg1) {
+    char sp50[0x10];
+    char sp40[0x10];
+    unk_func_8003F5AC sp3C;
+    s16 sp3A;
+    s16 sp38;
+    u8 var_a0;
+    UNUSED s32 pad; // FAKE: 4-byte hole between var_a0 and var_v1 keeps the frame at 0x60; without it: 120.
+    s8 *var_v1;
+
+    sp3A = func_8004B920(arg1->species, 0);
+    sp38 = func_8004B920(arg1->species, 1);
+    sp3C.raw = 0;
+    func_800625E0((s32)sp50, arg1->species);
+    func_80060F68(sp40, (char *)arg1->unk_34);
+    if (arg1->species != 0xEB && HAL_Strcmp((const s8 *)sp40, (const s8 *)sp50) != 0) {
+        var_a0 = ((arg1->unk_06 >> 8) & 0xFF) + (arg1->unk_06 & 0xFF);
+        if (1) {} // FAKE: empty statement closes the sum before the pointers go live, which is what
+                  // keeps var_a0 in a0 and var_v1 in v1; without it the two swap registers: 110.
+
+        var_v1 = arg1->unk_34;
+        while (*var_v1) {
+            var_a0 += *var_v1++ & 0xFF;
+            var_a0 += 0; // FAKE: no-op add; places `andi a0,a0,0xFF` in the loop delay slot. Without it: 120.
+        }
+        var_v1 = arg1->unk_40;
+        while (*var_v1) {
+            var_a0 += *var_v1++ & 0xFF;
+            var_a0 += 0; // FAKE: same delay-slot filler for the second loop. Without both: 240.
+        }
+        sp3C.unk_00 = ((((sp38 - sp3A) << 6) * var_a0) / 255) + (sp3A << 6);
+    }
+    *arg0 = sp3C;
+    return arg0;
+}
+/* mkdraft:func_8003F5AC end */
+
+/* mkdraft:func_8003F6E0 begin */
+extern s16 func_8004B920(s32 arg0, s32 arg1);
+extern char *func_80060F68(char *arg0, char *arg1);
+extern s32 func_800625E0(s32 arg0, s32 arg1);
+extern s32 HAL_Strcmp(const s8 *a, const s8 *b);
+
+typedef union { struct { s16 value; s16 pad; }; u32 raw; } SizeResult;
+
+
+
+SizeResult func_8003F6E0(u8 *arg1, s32 arg2)
+{
+    char speciesName[16];
+    char nickname[16];
+    SizeResult result;
+    s16 low;
+    s16 high;
+    s8 *storedName;
+    s8 *p;
+    u8 sum;
+    low = func_8004B920(arg2, 0);
+    high = func_8004B920(arg2, 1);
+    result.raw = 0;
+    func_800625E0((s32)speciesName, arg1[0]);
+    storedName = (s8 *)(arg1 + 0x34);
+    func_80060F68(nickname, storedName);
+    if (arg1[0] != 0xEB && HAL_Strcmp(nickname, speciesName) != 0) {
+        sum = ((u8)*((u16 *)(arg1 + 6))) + ((u8)((*((u16 *)(arg1 + 6))) >> 8));
+        for (p = (s8 *)(arg1 + 0x34); *p; p++) {
+            sum += *p & 0xff;
+        }
+        for (p = (s8 *)(arg1 + 0x40); *p; p++) {
+            sum += *p & 0xff;
+        }
+        result.value = (s16)(((high - low) << 6) * sum / 255 + (low << 6));
+    }
+    return result;
+}
+/* mkdraft:func_8003F6E0 end */
 
 void func_8003F818(s32 *arg0, s32 arg1) {
     _bzero(arg0, 0x10);
@@ -4888,7 +5048,81 @@ void PokeIcon_LoadResourceList(SceneWorkerMessage *message) {
     message->size = pool->size + 0x10;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_8004186C.s")
+/* mkdraft:func_8004186C begin */
+extern s32 D_80126F1C;
+
+// Fragment structure reached through the offset in fragment[0]; its words at
+// +0xC..+0x18 are fragment-relative offsets that are converted to addresses
+// after func_80041430 returns the fragment.
+typedef struct unk_func_8004186C {
+    u32 unk_00;
+    u32 unk_04;
+    u32 unk_08;
+    u32 unk_0C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+} unk_func_8004186C;
+
+
+
+void func_8004186C(void *arg0)
+{
+    u8 *base;
+    u8 *table;
+    u8 *temp;
+    S1_MemoryBlock *pool;
+    u8 *record;
+    unk_func_8004186C *result;
+    u8 *aligned;
+    u8 *node;
+    s32 *fragment;
+    s32 count;
+    s32 size;
+    s32 used;
+    // func_80041A78 receives an OSMesg and passes it through this void*
+    // parameter; name the SceneWorkerMessage layout for the field accesses.
+    SceneWorkerMessage *message = (SceneWorkerMessage *)arg0;
+
+    base = (u8 *)D_80126F1C;
+    table = ((u8 (*)[0x10])base)[message->id] + 0x10;
+    pool = (S1_MemoryBlock *)MainPool_InitState(message->destination, message->size);
+    result = NULL;
+    temp = Util_Malloc(47);
+    if (temp != NULL) {
+        record = (u8 *)(*(s32 *)table + *(s32 *)(base + 4));
+        aligned = (u8 *)(((u32)temp + 0xF) & ~0xF);
+        func_80003F74(aligned, record, record + 0x20, 0);
+        count = *(s32 *)(aligned + 0xC);
+        Util_Free(temp);
+        size = count << 4;
+        node = MainPool_AllocAligned(pool, size + 0x10, 0x10);
+        if (node != NULL) {
+            func_80003F74(node, record, record + size + 0x10, 0);
+            *(u32 *)(node + 4) = (u32)record;
+            *(u16 *)(node + 0) |= 2;
+            *(u16 *)(node + 0) |= 4;
+            fragment = (s32 *)func_80041430((s32)pool, 0, (s32)node, message->buffer,
+                                            D_80126F2C, 0xF000);
+            if (fragment != NULL) {
+                result = (unk_func_8004186C *)((u8 *)fragment + fragment[0]);
+                result->unk_0C = (s32)fragment + result->unk_0C;
+                result->unk_10 = (s32)fragment + result->unk_10;
+                result->unk_14 = (s32)fragment + result->unk_14;
+                result->unk_18 = (s32)fragment + result->unk_18;
+            }
+        }
+    }
+    if (result != 0) {
+        message->data = result;
+    } else {
+        message->data = NULL;
+    }
+    used = pool->size;
+    message->size = (used + 1055) & ~0x3FF;
+    MainPool_FinalizeAllocation(pool);
+}
+/* mkdraft:func_8004186C end */
 
 void func_80041A18(void *arg0) {
     s32 temp_v0;
@@ -5026,7 +5260,72 @@ void func_80041FA0(s32 arg0, u16 arg1, Func80041FA0State arg2) {
     func_80041FD0(arg0, arg1, arg2, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_80041FD0.s")
+/* mkdraft:func_80041FD0 begin */
+extern s32 func_8004B98C(s32);
+typedef struct Result_8004B9E0 {
+    s32 value;
+} Result_8004B9E0;
+extern Result_8004B9E0 func_8004B9E0(s32);
+
+
+
+s32 func_80041FD0(s32 arg0, u16 arg1, Func80041FA0State arg2, s32 arg3) {
+    s32 result = 0;
+    SceneLoadResult *msg;
+    s32 slot;
+
+    if (((u8 *)arg0)[3] != 0 && arg1 != 0xFC && ((s32)arg1) != 0x118) {
+        return 0;
+    }
+    if ((((u8 *)arg0)[0] & 1) && !(((u8 *)arg0)[1] & 1)) {
+        msg = Util_Malloc(0x20);
+        if (msg != NULL) {
+            slot = ((u8 *)arg0)[2];
+            if (((u8 *)arg0)[0] & 4) {
+                slot ^= 1;
+            }
+            msg->kind = 1;
+            msg->id = ((s32)arg1);
+            msg->buffer = slot;
+            if (arg3 != 0) {
+                msg->variant = func_8004B98C(((s32)arg1));
+            } else {
+                msg->variant = 0;
+            }
+            msg->reply = (OSMesgQueue *)(arg0 + 0x50);
+            msg->data = NULL;
+            msg->source = 0;
+            msg->destination = (void *)(*(s32 *)(((u8 (*)[4])arg0)[slot] + 4));
+            msg->size = *(s32 *)((u8 *)arg0 + 0x20);
+            switch (msg->variant) {
+            case 1:
+                msg->adjustment.raw = 0;
+                break;
+            case 2:
+                *(Result_8004B9E0 *)&msg->adjustment = func_8004B9E0(((s32)arg1));
+                break;
+            default:
+                *(Func80041FA0State *)&msg->adjustment = arg2;
+                break;
+            }
+            if (*(u8 **)((u8 *)arg0 + 0x38) != NULL &&
+                *(u16 *)*(u8 **)((u8 *)arg0 + 0x38) == ((s32)arg1) &&
+                msg->adjustment.raw == *(s32 *)((u8 *)arg0 + 0x48) &&
+                msg->variant == *(s16 *)((u8 *)arg0 + 0x4C) &&
+                func_80041F60((s16 *)(u32)((s32)arg1)) == 0) {
+                osSendMesg(msg->reply, (OSMesg)msg, 1);
+            } else {
+                *(s32 *)(((u8 (*)[4])arg0)[slot] + 0x10) = 0;
+                *(s32 *)(((u8 (*)[4])arg0)[slot] + 0x24) = 0;
+                osSendMesg(&D_80126F00, (OSMesg)msg, 1);
+            }
+            ((u8 *)arg0)[1] |= 1;
+            result = 1;
+        }
+    }
+    return result;
+}
+/* mkdraft:func_80041FD0 end */
 
 s32 func_800421E0(u8 *arg0, s32 arg1, s32 arg2) {
     s32 result = 0;

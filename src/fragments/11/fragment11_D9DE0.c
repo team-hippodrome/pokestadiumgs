@@ -830,7 +830,83 @@ void func_81606800(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816068C0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606B5C.s")
+/* mkdraft:func_81606B5C begin */
+extern s32 D_8160BD88;
+extern s32 D_8160BD98;
+extern s32 D_8160BD9C;
+extern s32 D_8160BDA0;
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void func_816077B8(u16 arg0, u16 arg1, u16 arg2);
+extern void func_81606694(s32, s32, s32);
+extern void func_81606800(s32, s32);
+extern void func_8004D1FC(void *);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
+
+// Draws a 16-row panel block plus two side panels and fifteen coloured rows.
+// arg0 is the byte address of a 16-entry row array (stride 0x1C), arg1 the
+// screen y origin, arg2 the row mask and arg3 a value forwarded to
+// func_816077B8 for every row. Rows 0..15 are emitted through func_816077B8
+// and func_8004D19C, the two side panels at arg0 - 0xE and arg0 + 0x196 are
+// emitted after func_81606800(1, 1), rows 1..9 at arg0 + 0x26 through
+// func_81606800/func_81606694, and rows 10..14 at arg0 + 0x118 with two
+// func_81606694 calls each (offsets +5 and +0xE).
+
+void func_81606B5C(s32 arg0, s32 arg1, u16 arg2, u16 arg3)
+{
+  s32 i;
+  s32 x;
+  s32 y;
+  s32 y_offset;
+  s32 p;
+  s32 row;
+  gSPDisplayList((*((Gfx **) (&D_800D0510)))++, D_80094E38);
+  gDPSetRenderMode((*((Gfx **) (&D_800D0510)))++, 0x0F0A7008, 0);
+  gDPSetCombine((*((Gfx **) (&D_800D0510)))++, 0x30B261, 0x5566FF7F);
+  gDPSetEnvColor((*((Gfx **) (&D_800D0510)))++, 0, 0, 0, 255);
+  func_8004D1FC((void *) D_8160BD88);
+  for (i = 0, p = arg0; i < 16; i++)
+  {
+    func_816077B8(i, arg2, arg3);
+    func_8004D19C(p, arg1, (void *) D_8160BD88, 0, 0);
+    p += 0x1C;
+  }
+
+  func_81606800(1, 1);
+  func_8004D1FC((void *) D_8160BD9C);
+  func_8004D19C(arg0 - 0xE, arg1 + 5, (void *) D_8160BD9C, 0, 0);
+  func_8004D1FC((void *) D_8160BDA0);
+  func_8004D19C(arg0 + 0x196, arg1 + 5, (void *) D_8160BDA0, 0, 0);
+  func_8004D1FC((void *) D_8160BD98);
+  // FAKE: the named offset exists only to keep `y = arg1 + y_offset` in the
+  // loop-2 body; writing `y = arg1 + 6` at the use site scores 60.
+  y_offset = 6;
+  x = arg0 + 0x26;
+  for (i = 1; i < 10; i++)
+  {
+    y = arg1 + y_offset;
+    func_81606800(arg2 & (1 << i), 0);
+    func_81606694(x, y, i);
+    x += 0x1C;
+  }
+
+  // The 0-based counter makes the induction-variable base the row pointer
+  // itself, so the loop reloads arg0 straight into the row register; score 684
+  // with (arg0 + (i * 0x1C)) and 30 with (x + ((i - 10) * 0x1C)).
+  x = arg0 + 0x118;
+  row = 0;
+  for (i = 10; i != 15; i++)
+  {
+    func_81606800(arg2 & (1 << i), 0);
+    func_81606694((x + (row * 0x1C)) + 5, y, 1);
+    func_81606694((x + (row * 0x1C)) + 0xE, y, i % 10);
+    row++;
+  }
+
+  gSPDisplayList((*((Gfx **) (&D_800D0510)))++, D_80094F50);
+}
+/* mkdraft:func_81606B5C end */
 
 // [14..15] are D_8160C10C (aliases.ld), a zero word read by func_816078C4.
 const s16 D_8160C0F0[16] = { 0, 60, 88, 116, 144, 172, 200, 228, 256, 284, 312, 372, 432, 0, 0, 0 };
@@ -1373,7 +1449,50 @@ void *func_81609530(s32 arg0) {
     return (arg0 * 8) + D_8160C128;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_8160955C.s")
+/* mkdraft:func_8160955C begin */
+extern s32 D_8160BE8C;
+extern s32 D_8160BE90;
+extern const u8 D_8160C180[];
+extern f32 __sinf(f32);
+extern f32 func_816092FC(void);
+extern s32 func_8004C874(s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(u8, u8, u8, s32);
+extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800499EC(void);
+
+
+
+void func_8160955C(s32 arg0, s32 arg1, s32 arg2) {
+    u8 color[3];
+    s32 text;
+    f32 t;
+    s32 value;
+    s32 period;
+    s32 *elapsed;
+    s32 *pb;
+
+    elapsed = &D_8160BE8C;
+    pb = &D_8160BE90;
+    value = elapsed[0];
+    period = D_8160BE90;
+    t = (__sinf(((f32)value * 6.2831855f) / (f32)period) * 0.5f) + 0.5f;
+    color[0] = (u32)((f32)(D_8160C180[0] - D_8160C180[3]) * t + (f32)(u32)D_8160C180[3]);
+    color[1] = (u32)((f32)(D_8160C180[1] - D_8160C180[4]) * t + (f32)(u32)D_8160C180[4]);
+    color[2] = (u32)((f32)(D_8160C180[2] - D_8160C180[5]) * t + (f32)(u32)D_8160C180[5]);
+    elapsed[0] = (s32)(func_816092FC() + (f32)elapsed[0]);
+    if (elapsed[0] >= pb[0]) {
+        elapsed[0] -= pb[0];
+    }
+    text = func_8004C874(0xF, arg2 + 0x25);
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_8004972C(color[0], color[1], color[2], 0xFF);
+    func_800495F8(arg0, arg1 - 0xA, 1, text);
+    func_800499EC();
+}
+/* mkdraft:func_8160955C end */
 
 struct Color098 { u8 r, g, b; };
 extern s32 func_8004CA10(void *);

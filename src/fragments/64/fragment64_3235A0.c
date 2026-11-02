@@ -318,7 +318,119 @@ void func_87F019F0(void) {
     Audio_PlayDefaultSound(0xCF02);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F01A40.s")
+/* mkdraft:func_87F01A40 begin */
+extern u8 *D_87F0F610;
+extern s32 func_87F0E610(u8 *, u8 *);
+extern u8 StageContext_GetFadeMode(void);
+extern void func_87F01934(void);
+extern void func_87F019A4(void);
+extern void func_87F019F0(void);
+extern void func_800279C4(s32);
+extern void func_80028014(void);
+
+// FAKE: two no-op spellings that shift uopt's colour walk, both semantically
+// identical to the plain forms beside them. `>> 7` is the same test as
+// `(s8)D_87F0F610[0x3D] >= 0` (retail's `lb` + `bltzl`): uopt allocates a temp
+// for the shift, then folds the shift into the branch, so the temp claims a
+// colour and emits no instruction. `& 0xFF` is a no-op on the u8 lvalue read
+// by `|=`; its temp folds into the `ori` and claims the colour that the
+// `lbu`'s temp would otherwise take. Without the shift form the function
+// scores 390, without the mask 365.
+
+
+s32 func_87F01A40(void) {
+    s32 result;
+    u16 buttons;
+
+    buttons = func_87F0E610(D_87F0F610, (u8 *)-1);
+    if (StageContext_GetFadeMode() != 0) {
+        result = 2;
+        goto end;
+    }
+    if ((*(u8 **)(D_87F0F610 + 0xC))[0x2180] == 4) {
+        result = 0;
+        goto end;
+    }
+    if ((((u32)D_87F0F610[0x3D]) >> 7) == 0) {
+        if (buttons & 0x1000) {
+            func_87F01934();
+            result = 1;
+            D_87F0F610[0x3D] = (D_87F0F610[0x3D] & 0xFF) | 0x80;
+            switch ((*(u8 **)(D_87F0F610 + 0xC))[0x2180]) {
+            case 0:
+                *(s32 *)(D_87F0F610 + 0x10) = 0;
+                break;
+            case 1:
+                *(s32 *)(D_87F0F610 + 0x10) = 1;
+                break;
+            }
+            func_80028014();
+            goto end;
+        }
+        result = 0;
+        goto end;
+    }
+    result = 1;
+    switch (*(s32 *)(D_87F0F610 + 0x10)) {
+    case 0:
+        *(s32 *)(D_87F0F610 + 0x30) += ((buttons & 0x400) > 0) - ((buttons & 0x800) > 0);
+        if (*(s32 *)(D_87F0F610 + 0x30) < 2) {
+            *(s32 *)(D_87F0F610 + 0x30) = 4;
+        }
+        if (*(s32 *)(D_87F0F610 + 0x30) > 4) {
+            *(s32 *)(D_87F0F610 + 0x30) = 2;
+        }
+        break;
+    case 1:
+    case 2:
+        *(s32 *)(D_87F0F610 + 0x30) += (((buttons & 0x400) > 0) - ((buttons & 0x800) > 0)) * 2;
+        if (*(s32 *)(D_87F0F610 + 0x30) < 2) {
+            *(s32 *)(D_87F0F610 + 0x30) = 4;
+        }
+        if (*(s32 *)(D_87F0F610 + 0x30) > 4) {
+            *(s32 *)(D_87F0F610 + 0x30) = 2;
+        }
+        break;
+    }
+    if (buttons & 0xC00) {
+        func_800279C4(0xCF01);
+    }
+    if (D_87F0F610[0x3C] < 0xA0) {
+        D_87F0F610[0x3C] += 0x14;
+    } else {
+        D_87F0F610[0x3C] = 0xB4;
+    }
+    if (buttons & 0x9000) {
+        if (*(s32 *)(D_87F0F610 + 0x10) == 1) {
+            if (*(s32 *)(D_87F0F610 + 0x30) == 4) {
+                *(s32 *)(D_87F0F610 + 0x10) = 2;
+                *(s32 *)(D_87F0F610 + 0x30) = 2;
+                func_80028014();
+                goto end;
+            }
+            func_87F019A4();
+            result = *(s32 *)(D_87F0F610 + 0x30);
+            if (result == 2) {
+                D_87F0F610[0x3D] &= ~0x80;
+                D_87F0F610[0x3C] = 0;
+            }
+            func_87F019F0();
+            goto end;
+        } else {
+            func_87F019A4();
+            result = *(s32 *)(D_87F0F610 + 0x30);
+            if (result == 2) {
+                D_87F0F610[0x3D] &= ~0x80;
+                D_87F0F610[0x3C] = 0;
+            }
+            func_87F019F0();
+            goto end;
+        }
+    }
+end:
+    return result;
+}
+/* mkdraft:func_87F01A40 end */
 
 extern void func_87F08FA0(u8);
 extern void func_800503A4(s32);

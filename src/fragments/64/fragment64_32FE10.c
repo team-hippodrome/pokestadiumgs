@@ -6,7 +6,44 @@ u8 *func_87F0D1A0(u8 *arg0) {
     return arg0 + 8;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0D1A8.s")
+/* mkdraft:func_87F0D1A8 begin */
+
+
+void func_87F0D1A8(void *arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4) {
+    f32 frac;
+    f32 inv;
+    s32 idx;
+    s32 next;
+    f32 v;
+
+    frac = (f32)(arg3 % arg4) / (f32)arg4;
+    idx = (arg3 % (arg2 * arg4)) / arg4;
+    inv = 1.0f - frac;
+    next = idx + 1;
+    if (next >= arg2) {
+        next = next - arg2;
+    }
+    v = frac * *(u8 *)(next * 4 + (u8 *)arg1) + *(u8 *)(idx * 4 + (u8 *)arg1) * inv;
+    if (v >= 0.0f) {
+        ((u8 *)arg0)[0] = (u8)(s32)(v + 0.5f);
+    } else {
+        ((u8 *)arg0)[0] = (u8)(s32)(v - 0.5f);
+    }
+    v = frac * *(u8 *)(next * 4 + 1 + (u8 *)arg1) + *(u8 *)(idx * 4 + 1 + (u8 *)arg1) * inv;
+    if (v >= 0.0f) {
+        ((u8 *)arg0)[1] = (u8)(s32)(v + 0.5f);
+    } else {
+        ((u8 *)arg0)[1] = (u8)(s32)(v - 0.5f);
+    }
+    v = frac * *(u8 *)(next * 4 + 2 + (u8 *)arg1) + *(u8 *)(idx * 4 + 2 + (u8 *)arg1) * inv;
+    if (v >= 0.0f) {
+        ((u8 *)arg0)[2] = (u8)(s32)(v + 0.5f);
+    } else {
+        ((u8 *)arg0)[2] = (u8)(s32)(v - 0.5f);
+    }
+    ((u8 *)arg0)[3] = 0xFF;
+}
+/* mkdraft:func_87F0D1A8 end */
 
 typedef struct { u8 *value; } Func87F0D44CArg;
 extern u8 D_87F112F4[];extern void func_87F0D1A8(void *, void *, s32, s32, s32);
@@ -71,7 +108,76 @@ void func_87F0D5B8(u8 *arg0) {
     func_87F0D44C(arg0);
     func_87F0277C(arg0 + 0xC);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32FE10/func_87F0D600.s")
+/* mkdraft:func_87F0D600 begin */
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 func_8004C990(s32 arg0, s32 arg1);
+extern s32 func_8004D1FC(u8 *arg0);
+extern Gfx *D_800D0510;
+
+
+
+void func_87F0D600(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, f32 arg5) {
+    s32 sp6C;
+    u8 *sp68;
+    s32 pad[7];
+    f32 sp38;
+    f32 sp44;
+    f32 sp34;
+    s32 temp_v1_4;
+    f32 temp_ft2;
+    f32 temp_ft1;
+    f32 temp_ft4;
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    f32 temp_fv0_3;
+    f32 var_fa1;
+    f32 var_ft5;
+    f32 var_fv1;
+    s32 temp_v0_2;
+    s32 var_v0;
+    u8 *temp_v0;
+
+    if (((u32)*(s32 *)(*(u8 **)arg0 + (arg1 * 0x18) + 0x21A4) << 18) >> 31) {
+        temp_v0 = func_87F0D1A0(arg0);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x00504340, 0);
+        sp68 = temp_v0;
+        temp_v0_2 = func_8004C990(0x174, 0);
+        sp6C = temp_v0_2;
+        func_8004D1FC((u8 *) temp_v0_2);
+        gDPSetCombine(D_800D0510++, 0xFF9BFF, 0xFF36FF7F);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR, _SHIFTL(sp68[1], 16, 8) | _SHIFTL(sp68[2], 8, 8) | _SHIFTL(sp68[3], 0, 8) | _SHIFTL(sp68[0], 24, 8));
+        temp_fv0 = 6.0f * arg4;
+        if (temp_fv0 >= 0.0f) {
+            temp_v1_4 = (s32) (temp_fv0 + 0.5f);
+        } else {
+            temp_v1_4 = (s32) (temp_fv0 - 0.5f);
+        }
+        temp_fv0_2 = 4.0f * arg5;
+        if (temp_fv0_2 >= 0.0f) {
+            var_v0 = (s32) (temp_fv0_2 + 0.5f);
+        } else {
+            var_v0 = (s32) (temp_fv0_2 - 0.5f);
+        }
+        temp_ft2 = ((f32) (u32) (*(u16 *) sp6C)) * arg4;
+        sp38 = temp_ft2;
+        if (temp_ft2 > 0.0f) {
+            sp44 = 0.5f;
+        } else {
+            sp44 = -0.5f;
+        }
+        temp_ft1 = ((f32) (u32) (*(u16 *) (sp6C + 2))) * arg5;
+        sp34 = temp_ft1;
+        if (temp_ft1 > 0.0f) {
+            var_fa1 = 0.5f;
+        } else { var_fa1 = -0.5f; } temp_ft4 = 1024.0f / arg4; if (temp_ft4 > 0.0f) { var_ft5 = 0.5f; } else { var_ft5 = -0.5f; } temp_fv0_3 = 1024.0f / arg5; if (temp_fv0_3 > 0.0f) { var_fv1 = 0.5f; } else { var_fv1 = -0.5f; }
+        GfxRect_DrawTextured((s16) (arg2 - temp_v1_4), (s16) (arg3 - var_v0), (s16) (s32) (sp44 + sp38), (s16) (s32) (var_fa1 + sp34), 0, 0, (s16) (s32) (var_ft5 + temp_ft4), (s16) (s32) (var_fv1 + temp_fv0_3), 0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+}
+/* mkdraft:func_87F0D600 end */
 
 // Prefix views for the callback's model node and its three-word callback data.
 // GeoNode_CreateModelPart initializes the same vector and color field layouts.

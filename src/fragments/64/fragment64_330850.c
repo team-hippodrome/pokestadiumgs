@@ -31,7 +31,83 @@ void func_87F0DBFC(u8 *arg0, s32 arg1, u8 arg2, s32 arg3) {
 
 void func_87F0DC3C(u8 *arg0) { arg0[0x12] &= 0xFF7F; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_330850/func_87F0DC4C.s")
+/* mkdraft:func_87F0DC4C begin */
+extern f32 D_87F11740;
+extern f32 D_80088E50[];
+
+typedef struct State {
+  s32 value;
+  s32 unused;
+  s32 count;
+  s32 limit;
+  u8 index;
+  u8 mode;
+  u8 active : 1;
+  u8 other : 7;
+} State;
+
+
+
+void func_87F0DC4C(State *state)
+{
+  f32 progress;
+  f32 v;
+  s32 value;
+  if (state->active)
+  {
+    if ((++state->count) > state->limit)
+    {
+      state->count = state->limit;
+      value = state->value;
+      switch (value)
+      {
+        case 1:
+
+        case 3:
+          state->active = 0;
+          break;
+
+      }
+
+    }
+    progress = ((f32) state->count) / ((f32) state->limit);
+    value = state->value;
+    switch (value)
+    {
+      case 0:
+        state->index = state->mode;
+        break;
+
+      case 1:
+        v = (360.0f * progress) * D_87F11740;
+        if (v >= 0.0f)
+      {
+        value = (s32) (v + 0.5f);
+      }
+      else
+      {
+        value = (s32) (v - 0.5f);
+      }
+        state->index = (u32) (((f32) state->mode) * (1.0f - D_80088E50[((u16) value) >> 4]));
+        if (state->mode < state->index)
+        {
+          state->index = state->mode;
+        }
+        break;
+
+      case 2:
+        state->index = (u8) (((f32) state->mode) * progress);
+        break;
+
+      case 3:
+        state->index = (u8) (((f32) state->mode) * (1.0f - progress));
+        break;
+
+    }
+
+  }
+}
+/* mkdraft:func_87F0DC4C end */
 
 /* mkdraft:func_87F0DFB4 begin */
 extern Gfx *D_800D0510;

@@ -414,7 +414,68 @@ void func_885057BC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_885057F4.s")
+/* mkdraft:func_885057F4 begin */
+extern void func_800226C0(s32);
+extern void func_880002F4(u8 *arg0, s16 arg1);
+extern void func_88004990(u8 slot, u8 amount);
+extern void *D_80087200;
+extern unk_D_885229B0 D_885229B0[];
+extern void *D_885229A0;
+extern u8 D_885229A8;
+extern s8 D_88523009;
+extern s8 D_8852300A;
+extern s32 D_880068B8;
+// Menu handler for the trade-machine slot list: D_80087200 controller press word bits 0x8000
+// (confirm) and 0x4000 (confirm with reset of the selected slot) move D_8852300A to 1 and play
+// slot sound 3; bits 0x800/0x400 step D_8852300A down/up by one within 0..1. current keeps the
+// pre-step value so the change sound only plays when the selection actually moved.
+
+
+void func_885057F4(void) {
+    s32 pressed;
+    s8 current;
+    s32 mode;
+
+    mode = *((u16 *)((u8 *)D_80087200 + 8));
+    pressed = 0;
+    if (mode & 0x8000) {
+        func_88004990(3, 0);
+        pressed = 1;
+    } else if (mode & 0x4000) {
+        func_88004990(3, 0);
+        pressed = 1;
+        D_8852300A = 1;
+    } else {
+        current = D_8852300A;
+        if (mode & 0x800) {
+            if (D_8852300A > 0) {
+                D_8852300A -= 1;
+            }
+        } else if (mode & 0x400) {
+            if (D_8852300A <= 0) {
+                D_8852300A += 1;
+            }
+        }
+        if (current != D_8852300A) {
+            func_800226C0(1);
+        }
+    }
+    if (pressed) {
+        if (!D_8852300A) {
+            func_800226C0(15);
+            *(s32 *)&D_885229A8 = 0;
+            func_88505038(&D_885229B0[0], 0);
+            func_88505038(&D_885229B0[D_88523009 + 1], 0);
+            func_88004990(0, 0);
+            D_880068B8 = 1;
+        } else {
+            func_800226C0(3);
+            func_88505038(&D_885229B0[D_88523009 + 1], 5);
+            func_880002F4((u8 *)D_885229A0 + 0x10, 0);
+        }
+    }
+}
+/* mkdraft:func_885057F4 end */
 
 extern void func_800498C4(void);
 extern void func_800496A4(s32 arg0, s32 arg1);
@@ -461,7 +522,142 @@ void func_88505A7C(void) {
     *(s16 *)((u8 *)*(void **)((u8 *)D_885229A0 + 0x0C) + 0x12) = 0x79;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88505B58.s")
+/* mkdraft:func_88505B58 begin */
+extern void LabPC_OpenMessageDialog();
+extern void func_800226C0(s32);
+extern void func_80057908(u8 arg0);
+extern void func_88004990(u8 slot, u8 amount);
+extern u8 D_88523008[];
+extern void *D_80087200;
+extern u8 D_88522B49[];
+extern s8 D_88523009;
+extern unk_D_885229B0 D_885229B0[];
+extern u8 D_885229A8;
+extern s32 D_880068B8;
+extern s32 func_8004C874(s32, s32);
+extern void func_88505038(void*, s32);
+
+
+
+void func_88505B58(void)
+{
+  s32 index; // FAKE: never read; the declaration shifts temp numbering, diff score 20 when dropped.
+  s32 result;
+  s32 mode_index;
+  s16 temp_a0;
+  s32 flags;
+  u8 *p;
+  u8 *end;
+  unk_D_885229B0 *slot;
+  MathUtil_Random16();
+  flags = *((u16 *) (((u8 *) D_80087200) + 8));
+  if (flags & 0x8000)
+  {
+    if (D_88523009 != (-1))
+    {
+      slot = &D_885229B0[D_88523009];
+      if (((*((s32 *) (((u8 *) slot) + 0x19C))) == (-1)) || ((*((s16 *) (((u8 *) slot) + 0x198))) == (-1)))
+      {
+        func_800226C0(5);
+        return;
+      }
+      if ((*((s32 *) (((u8 *) slot) + 0x19C))) == 0)
+      {
+        func_800226C0(0x8F);
+        *((s32 *) (&D_885229A8)) = 2;
+        *((s16 *) (((u8 *) (&D_885229A8)) + 4)) = 8;
+        for (mode_index = 0; mode_index != 3; mode_index++)
+        {
+          p = (u8 *) (&D_885229B0[mode_index]);
+          if ((*((s16 *) (p + 0x198))) != (-1))
+          {
+            if (mode_index != D_88523009)
+            {
+              func_88505038(p + 0x194, 6);
+            }
+            else
+            {
+              func_88505038(p + 0x194, 4);
+              if (!p) // FAKE: empty block after func_88505038(p + 0x194, 4); diff score 80 without it.
+              {
+              }
+            }
+          }
+        }
+
+        func_88004990(1, 0);
+        func_88004990(2, 0);
+        D_880068B8 = 1;
+        func_80057908(*((u8 *) (((u8 *) (&D_88522B49)) + (D_88523009 * 0x194))));
+        return;
+      }
+      switch (*((s32 *) (((u8 *) slot) + 0x19C)))
+      {
+        case 1:
+          result = func_8004C874(0x34, 9);
+          break;
+
+        case 2:
+          result = func_8004C874(0x34, 0xA);
+          break;
+
+        case 3:
+          result = func_8004C874(0x34, 0xB);
+          break;
+
+        case 4:
+          result = func_8004C874(0x34, 0xC);
+          break;
+
+      }
+
+      LabPC_OpenMessageDialog(result, 0x141, 0x12D, 4, 0xFF, 0xAA, 0x8C, 0, 1, ((u8 *) D_885229A0) + 0x1C, ((u8 *) D_885229A0) + 0x20, &D_88000E4C, &D_88000E4C);
+      return;
+    }
+  }
+  if (flags & 0x4000)
+  {
+    func_800226C0(3);
+    *((s32 *) (&D_885229A8)) = 0;
+    p = (u8 *) (&D_885229B0[0]); end = (u8 *) (&D_88523000);
+    do
+    {
+      func_88505038(p, 0);
+      p += 0x194;
+    }
+    while (p != end);
+    func_88004990(0, 0);
+    func_88004990(1, 0);
+    func_88004990(2, 0);
+    D_880068B8 = 1;
+    return;
+  }
+  if (D_88523009 == (-1))
+  {
+    return;
+  }
+  temp_a0 = D_88523009;
+  if (flags & 0x200)
+  {
+    if (D_88523009 > 0)
+    {
+      D_88523009 = D_88523009 - 1;
+    }
+  }
+  else
+    if (flags & 0x100)
+  {
+    if (D_88523009 < (*(s8 *)D_88523008 - 2))
+    {
+      D_88523009 = D_88523009 + 1;
+    }
+  }
+  if (temp_a0 != D_88523009)
+  {
+    func_800226C0(1);
+  }
+}
+/* mkdraft:func_88505B58 end */
 
 extern void func_88505A7C();
 extern u8 D_885229A8;

@@ -585,7 +585,43 @@ void func_84120E7C(u8 *arg0) {
     } while (var_s1 != 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84120F5C.s")
+/* mkdraft:func_84120F5C begin */
+typedef struct AttachedModelDistanceRatio { f32 x, y, z; } AttachedModelDistanceRatio;
+typedef struct AttachedModelStepReduction { s16 x, y, z; } AttachedModelStepReduction;
+extern AttachedModelDistanceRatio D_84183C98;
+extern AttachedModelStepReduction D_84183CA4;
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_80037120(u8 *, u8 *, f32 *, s16 *, s16 *);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern void func_8003F2C4(u8 *, u8 *, s16);
+
+// Places each of the two attached objects on the line from arg0->unk_024 to its own
+// unk_024, at a fraction of that distance, and steps its unk_020 rotation toward
+// arg0->unk_020 by the caller's step minus that object's reduction.
+
+
+void func_84120F5C(u8 *arg0, s16 step) {
+    s32 i;
+    f32 distance;
+    s16 rotationX;
+    s16 rotationY;
+    UNUSED s32 pad;   // FAKE: unused 4-byte stack home; diff score 25 without it.
+    AttachedModelDistanceRatio ratio = D_84183C98;
+    AttachedModelStepReduction reduction = D_84183CA4;
+
+    for (i = 0; i < 2; i++) {
+        func_8003F2C4(*(u8 **)(arg0 + 0x5C0), arg0 + 0x2D8 + i * 368,
+                      *(s16 *)(arg0 + 0x40));
+        ModelAnim_SetFrame(arg0 + 0x2D8 + i * 368, (s16)(*(s32 *)(arg0 + 0x48) >> 16));
+        func_80037120(arg0 + 0x24, arg0 + 0x2FC + i * 368, &distance, &rotationX,
+                      &rotationY);
+        func_800371B4(arg0 + 0x24, arg0 + 0x2FC + i * 368, distance * ((f32 *)&ratio)[i],
+                      rotationX, rotationY);
+        BattleAnim_StepToS16((s16 *)(arg0 + 0x2F8 + i * 368), *(s16 *)(arg0 + 0x20),
+                             step - ((s16 *)&reduction)[i]);
+    }
+}
+/* mkdraft:func_84120F5C end */
 
 extern void BattleAnim_InitSwayOffset(void *, f32, s16);
 extern f32 D_84183C90;
@@ -795,7 +831,52 @@ void func_84121AB8(void *arg0) {
     (*(f32 *)((u8 *)(arg0) + (0x60C))) = 0.0f;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84121B18.s")
+/* mkdraft:func_84121B18 begin */
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern u8 *D_841911E0;
+extern f32 sqrtf(f32);
+#define COSS(x) D_80088E50[(u16)(x) >> 4]
+#define SINS(x) D_80087E50[(u16)(x) >> 4]
+
+// Rotates the camera up axis at 0xC0 by the facing angle at 0x600 about the axis
+// perpendicular to the eye(0xA8)->look-at(0xB4) view direction (func_84105A54 takes the
+// view yaw from the same 0xB4 - 0xA8 difference).
+
+
+void func_84121B18(u8 *arg0) {
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+    f32 dirX;
+    f32 dirY;
+    f32 dirZ;
+    f32 oneMinusCos;
+
+    BattleAnim_StepToS16((s16 *)(arg0 + 0x5FC), 0x5B0, 0x3C);
+    BattleAnim_StepToS16((s16 *)(arg0 + 0x600), -0x8000, *(s16 *)(arg0 + 0x5FC));
+
+    dx = *(f32 *)(*(u8 **)D_841911E0 + 0xB4) - *(f32 *)(*(u8 **)D_841911E0 + 0xA8);
+    dy = *(f32 *)(*(u8 **)D_841911E0 + 0xB8) - *(f32 *)(*(u8 **)D_841911E0 + 0xAC);
+    dz = *(f32 *)(*(u8 **)D_841911E0 + 0xBC) - *(f32 *)(*(u8 **)D_841911E0 + 0xB0);
+
+    distance = sqrtf(dx * dx + dy * dy + dz * dz);
+
+    dirX = dx / distance;
+    dirY = dy / distance;
+    dirZ = dz / distance;
+
+    oneMinusCos = 1.0 - COSS(*(u16 *)(arg0 + 0x600));
+
+    *(f32 *)(*(u8 **)D_841911E0 + 0xC0) = (oneMinusCos * dirX * dirY) - (SINS(*(u16 *)(arg0 + 0x600)) * dirZ);
+    *(f32 *)(*(u8 **)D_841911E0 + 0xC4) = COSS(*(u16 *)(arg0 + 0x600)) + ((oneMinusCos * dirY) * dirY);
+    *(f32 *)(*(u8 **)D_841911E0 + 0xC8) = (SINS(*(u16 *)(arg0 + 0x600)) * dirX) + ((oneMinusCos * dirY) * dirZ);
+    if (*(f32 *)(arg0 + 0x28) < 0.0f) {
+        *(f32 *)(arg0 + 0x28) = 0.0f;
+    }
+}
+/* mkdraft:func_84121B18 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84121CAC.s")
 

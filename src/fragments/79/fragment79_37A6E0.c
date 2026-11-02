@@ -335,7 +335,108 @@ void func_8410B8FC(f32 *arg0, f32 *arg1, s16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410B974.s")
+/* mkdraft:func_8410B974 begin */
+extern u8 *D_841911E8;
+extern u8 *D_84193DD0;
+extern u8 D_84183970;
+extern u8 *func_8410B330(u8 *);
+extern s32 func_8411DC80(u16, s32 *, s32);
+extern f32 func_8411E1CC(u8 *);
+extern void func_8410B8FC(f32 *, f32 *, s16);
+extern void func_8411E0A4(void *, void *, void *);
+extern s32 func_8411E1F8(void *);
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+
+// Sets the model target point at D_841911E8 + 0x5C and + 0x50 from position, which
+// func_8410B8FC fills from arg1 + 0x634 and the yaw tables at D_80087E50/D_80088E50.
+// Height is arg1 + 0x638 plus a 200 unit base with species offsets from arg1 + 0x1A.
+// The result is copied to the eye at arg0 + 0xB4. While the arg1 + 0x7EA flag is set,
+// func_8411E0A4 supplies an alternate position whose distance is compared against the
+// radius at D_841911E8 + 0x80 before the eye is refreshed.
+
+
+void func_8410B974(u8 *arg0, void *arg1, s16 arg2, s32 arg3, s32 arg4) {
+    f32 position[3];
+    s16 species;
+    f32 height;
+    f32 offset;
+    f32 distance;
+    s16 angle1;
+    s16 angle2;
+    s32 unused0; // FAKE: unused local preserves the original 0x58 byte stack frame; diff score 256 without it.
+
+    D_841911E8 = func_8410B330(arg0);
+    *(f32 *)(D_841911E8 + 0x84) = *(f32 *)((u8 *)arg1 + 0x644);
+    *(f32 *)(D_841911E8 + 0x80) = *(f32 *)((u8 *)arg1 + 0x640);
+    *(f32 *)(D_841911E8 + 0x7C) = *(f32 *)((u8 *)arg1 + 0x654);
+    *(f32 *)(D_841911E8 + 0x74) = *(f32 *)((u8 *)arg1 + 0x64C);
+    if (func_8411DC80((u16)arg3, (s32 *)&D_84183970, 24) != 0) {
+        if (*(s16 *)((u8 *)arg1 + 0x1A) == 95) {
+            *(f32 *)(D_841911E8 + 0x78) = func_8411E1CC((s32)arg1) * 0.2f;
+        } else {
+            *(f32 *)(D_841911E8 + 0x78) = func_8411E1CC((s32)arg1) * 0.6f;
+        }
+    } else {
+        *(f32 *)(D_841911E8 + 0x78) = 0.0f;
+    }
+    func_8410B8FC(position, (f32 *)((u8 *)arg1 + 0x634), arg2);
+    position[0] += *(f32 *)((u8 *)arg1 + 0x24);
+    position[2] += *(f32 *)((u8 *)arg1 + 0x2C);
+    position[0] += *(f32 *)(D_841911E8 + 0x78) * D_80087E50[(u16)arg2 >> 4];
+    position[2] += *(f32 *)(D_841911E8 + 0x78) * D_80088E50[(u16)arg2 >> 4];
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x5C), position[0], *(f32 *)((u8 *)arg1 + 0x638), position[2]);
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x50), position[0], *(f32 *)((u8 *)arg1 + 0x638), position[2]);
+    if (((*(u16 *)(((u8 (*)[16])(u8 *)D_84193DD0)[func_8411E1F8((s32)arg1)] + 0x12) & 2) != 0) ||
+        ((*(u16 *)((u8 *)arg1 + 0x7F4) & 8) != 0)) {
+        offset = 200.0f + *(f32 *)((u8 *)arg1 + 0x638);
+        height = offset;
+        species = *(s16 *)((u8 *)arg1 + 0x1A);
+        if (species == 163) {
+            height = offset + 30.0f;
+        }
+        if (species == 84) {
+            height = offset + 50.0f;
+        }
+        if (species == 85) {
+            height = offset + 50.0f;
+        }
+        Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x5C), position[0], height, position[2]);
+        Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x50), position[0], height, position[2]);
+    }
+    if ((*(u16 *)((u8 *)D_84193DD0 + 4) == 8) || (*(u16 *)((u8 *)D_84193DD0 + 4) == 4)) {
+        if ((*(u16 *)(((u8 (*)[16])(u8 *)D_84193DD0)[func_8411E1F8((s32)arg1)] + 0x12) & 4) != 0) {
+            *(f32 *)(D_841911E8 + 0x60) = 30.0f;
+            *(f32 *)(D_841911E8 + 0x54) = 30.0f;
+        }
+    } else {
+        if (((*(u16 *)(((u8 (*)[16])(u8 *)D_84193DD0)[func_8411E1F8((s32)arg1)] + 0x12) & 4) != 0) ||
+            ((*(u16 *)((u8 *)arg1 + 0x7F4) & 0x10) != 0)) {
+            *(f32 *)(D_841911E8 + 0x60) = 30.0f;
+            *(f32 *)(D_841911E8 + 0x54) = 30.0f;
+        }
+    }
+    if (*(u16 *)(((u8 (*)[16])(u8 *)D_84193DD0)[func_8411E1F8((s32)arg1)] + 0xE) == 0) {
+        if (arg4 == 1) {
+            *(f32 *)(D_841911E8 + 0x60) = 50.0f;
+            *(f32 *)(D_841911E8 + 0x54) = 50.0f;
+        }
+    }
+    Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), *(f32 *)(D_841911E8 + 0x5C), *(f32 *)(D_841911E8 + 0x60), *(f32 *)(D_841911E8 + 0x64));
+    if (*(s16 *)((u8 *)arg1 + 0x7EA) != 0) {
+        if (*(u16 *)(((u8 (*)[16])(u8 *)D_84193DD0)[func_8411E1F8((s32)arg1)] + 0x10) != 0x20) {
+            func_8411E0A4(arg1, position, D_841911E8);
+            func_80037120(position, (u8 *)D_841911E8 + 0x50, &distance, &angle1, &angle2);
+            if (*(f32 *)(D_841911E8 + 0x80) < distance) {
+                Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x5C), position[0], position[1], position[2]);
+                Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), *(f32 *)(D_841911E8 + 0x5C), *(f32 *)(D_841911E8 + 0x60), *(f32 *)(D_841911E8 + 0x64));
+            }
+        }
+    }
+}
+/* mkdraft:func_8410B974 end */
 #endif
 
 #ifdef VERSION_US

@@ -511,7 +511,97 @@ void Fragment14_ResetGrid(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, void *arg4) {
     *(s16 *)(arg0 + 0x80) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_81306C18.s")
+/* mkdraft:func_81306C18 begin */
+extern s32 func_816021E8(u8 *, u8);
+extern f32 func_8160762C(s32, s32, s32 *, s32 *);
+typedef struct Fragment14GridEntrySet {
+    s32 unk_00[8];
+} Fragment14GridEntrySet;
+
+
+
+void func_81306C18(u8 *arg0, s32 arg1, Fragment14GridEntrySet *arg2, s32 arg3) {
+    s32 i;
+    s32 value;
+    s32 count;
+    s32 out_b;
+    s32 out_a;
+    s32 over;
+
+    *(s32 *)arg0 = arg3;
+    if (arg2 != NULL) {
+        *(Fragment14GridEntrySet *)(arg0 + 0x54) = *arg2;
+    } else {
+        func_81601A38((s32 *)(arg0 + 0x54), 0);
+    }
+    if (arg1 == 0 || func_81601980((s32 *)(arg0 + 0x54), arg1) != 0) {
+        i = *(s16 *)(arg0 + 0x80);
+        for (;;) {
+            value = func_8130560C(arg0, i);
+            i++;
+            if (i >= *(u16 *)(arg0 + 0x50)) {
+                i = 1;
+            }
+            if (i == *(s16 *)(arg0 + 0x80)) {
+                value = 0;
+                break;
+            }
+            if (value <= 0) {
+                break;
+            }
+            if (func_81601980((s32 *)(arg0 + 0x54), value) == 0) {
+                break;
+            }
+        }
+        if (value > 0) {
+            arg1 = value;
+        }
+    }
+    count = func_816021E8(arg0 + 0x10, (u8)arg1);
+    if (count != 0) {
+        count++;
+    }
+    arg0[0x88] = arg1;
+    switch (arg0[0x87]) {
+    case 1:
+    case 2:
+    case 3:
+        arg0[0x87] = 1;
+        *(f32 *)(arg0 + 0x78) = 4.0f;
+        break;
+    case 0:
+        arg0[0x87] = 4;
+        *(f32 *)(arg0 + 0x78) = 0.0f;
+        break;
+    case 4:
+    case 5:
+        arg0[0x87] = 4;
+        break;
+    }
+    if (*(f32 *)(arg0 + 0x78) < 0.0f) {
+        *(f32 *)(arg0 + 0x78) = 0.0f;
+    }
+    arg0[0x82] = 0;
+    arg0[0x83] = 0;
+    *(s16 *)(arg0 + 0x7C) = count / 2;
+    *(s16 *)(arg0 + 0x08) = count % 2;
+    arg0[0x84] = (*(u16 *)(arg0 + 0x50) + 2) / 2;
+    over = *(s16 *)(arg0 + 0x7C) - arg0[0x84] + 4;
+    *(s16 *)(arg0 + 0x0A) = 0;
+    if (over > 0) {
+        *(s16 *)(arg0 + 0x7C) -= over;
+        *(s16 *)(arg0 + 0x0A) = over;
+    }
+    arg0[0x8A] = *(s16 *)(arg0 + 0x7C);
+    *(unk_D_813064E8 *)(arg0 + 0xC) = *(unk_D_813064E8 *)(arg0 + 8);
+    *(f32 *)(arg0 + 0x74) = func_8160762C(*(s16 *)(arg0 + 0x7C), arg0[0x84] - 3, &out_a, &out_b);
+    arg0[0x85] = 4;
+    arg0[0x86] = 2;
+    if (arg0[0x84] < 4) {
+        arg0[0x84] = 4;
+    }
+}
+/* mkdraft:func_81306C18 end */
 
 void Fragment14_BeginGridClose(u8 *arg0) {
     switch (arg0[0x87]) {

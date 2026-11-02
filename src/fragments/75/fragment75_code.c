@@ -142,7 +142,7 @@ void func_8FA00AC0(void) {
 
 #ifdef VERSION_US
 /* mkdraft:func_8FA00F4C begin */
-extern void *D_80087200;
+extern u8 *D_80087200;
 extern f32 D_8FA02044[1];
 extern s16 D_8FA02048[2];
 extern void func_8FA005A0(f32, void *);
@@ -202,7 +202,7 @@ void func_8FA00F4C(void)
 #endif
 
 #ifdef VERSION_US
-s32 func_800542B0(s16);
+u8 func_800542B0(s32);
 extern void func_800542E4(s16, s32);
 void func_8FA010B0(s16 arg0, s16 arg1, u8 arg2) {
     s32 temp_a0;
@@ -220,11 +220,196 @@ void func_8FA010B0(s16 arg0, s16 arg1, u8 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA01110.s")
+/* mkdraft:func_8FA01110 begin */
+extern u8 func_800542B0(s32);
+extern s32 func_800545B4(s32, u8);
+
+// Store 1 in saved-block byte 6 + arg0 when bit arg0 of every progress byte
+// returned by func_800542B0(i) is set, otherwise store 0. Mode 0 covers 20
+// progress bytes; modes 1 and 2 cover 11.
+//!bug: an arg0 outside 0..2 uses the uninitialized count.
+//@src/517E0.c
+
+
+void func_8FA01110(s16 arg0) {
+    s32 i;
+    u8 all;
+    s16 count;
+
+    switch (arg0) {
+    case 0: count = 20; break;
+    case 1: count = 11; break;
+    case 2: count = 11; break;
+    }
+    all = 1;
+    for (i = 0; i < count; i++) {
+        all &= (u8)((func_800542B0(i) >> arg0) & 1);
+    }
+    if (all == 1) {
+        switch (arg0) {
+        case 0: func_800545B4(6, 1); break;
+        case 1: func_800545B4(7, 1); break;
+        case 2: func_800545B4(8, 1); break;
+        }
+    } else {
+        switch (arg0) {
+        case 0: func_800545B4(6, 0); break;
+        case 1: func_800545B4(7, 0); break;
+        case 2: func_800545B4(8, 0); break;
+        }
+    }
+}
+/* mkdraft:func_8FA01110 end */
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA0125C.s")
+/* mkdraft:func_8FA0125C begin */
+extern u8 func_8005431C(void);
+extern s32 func_8005437C(u8 arg0);
+extern s32 func_80054488(s32 arg0, u8 arg1);
+extern u8 func_8005453C(s32 arg0);
+extern s32 func_800545B4(s32 arg0, u8 arg1);
+extern void func_8FA00380(void);
+extern void func_8FA01110(s16 arg0);
+extern u8 *D_80087200;
+extern s16 D_8FA01984;
+extern u16 D_8FA02050[];
+extern u8 D_8FA02020[];
+extern u8 D_8FA02021[];
+extern u8 D_8FA02022[];
+
+
+s32 func_8FA0125C(void) {
+    s32 i;
+    s32 pressed = 0;
+    // FAKE: unreferenced byte of local storage; it reserves 0x27(sp), which puts the only
+    // stored u8 flag (flag3) at 0x24(sp) as in the target. With the three flags alone,
+    // flag3 lands at 0x25(sp). diff score 2 without it.
+    u8 unused;
+    u8 flag1;
+    u8 flag2;
+    u8 flag3;
+    u8 *input = D_80087200;
+
+    if ((*(u16 *)(input + 8) & 0x4000) != 0) {
+        pressed = 1;
+    }
+
+    if ((*(u16 *)(input + 12) & 0x800) != 0) {
+        if (D_8FA01984 > 0) {
+            D_8FA01984 -= 1;
+        }
+    }
+
+    if ((*(u16 *)(input + 12) & 0x400) != 0) {
+        if (D_8FA01984 < 6) {
+            D_8FA01984 += 1;
+        }
+    }
+
+    if ((*(u16 *)(input + 8) & 0x8000) != 0) {
+        switch (D_8FA01984) {
+        case 0:
+            if (!func_8005431C()) {
+                func_8005437C(0xFF);
+            } else {
+                func_8005437C(0);
+            }
+            break;
+        case 1:
+            D_8FA02050[0] = (D_8FA02050[0] << 1) | 1;
+            if (D_8FA02050[0] == 0xFF) {
+                D_8FA02050[0] = 0;
+            }
+            for (i = 0; i < 7; i++) {
+                func_80054488(i, (D_8FA02050[0] >> i) & 1);
+            }
+            if (D_8FA02050[0] == 0x7F) {
+                func_800545B4(0, 1);
+            } else {
+                func_800545B4(0, 0);
+            }
+            func_8FA00380();
+            break;
+        case 2:
+            D_8FA02050[1] = (D_8FA02050[1] << 1) | 1;
+            if (D_8FA02050[1] == 0x3F) {
+                D_8FA02050[1] = 0;
+            }
+            for (i = 0; i < 5; i++) {
+                func_80054488(i + 7, (D_8FA02050[1] >> i) & 1);
+            }
+            if (D_8FA02050[1] == 0x1F) {
+                func_800545B4(1, 1);
+            } else {
+                func_800545B4(1, 0);
+            }
+            func_8FA00380();
+            break;
+        case 3:
+            D_8FA02050[2] = (D_8FA02050[2] << 1) | 1;
+            if (D_8FA02050[2] == 0x1F) {
+                D_8FA02050[2] = 0;
+            }
+            for (i = 0; i < 4; i++) {
+                func_80054488(i + 12, (D_8FA02050[2] >> i) & 1);
+            }
+            if (D_8FA02050[2] == 0xF) {
+                func_800545B4(2, 1);
+            } else {
+                func_800545B4(2, 0);
+            }
+            func_8FA00380();
+            break;
+        case 4:
+            break;
+        case 5:
+            flag1 = func_8005453C(3);
+            flag2 = func_8005453C(4);
+            flag3 = func_8005453C(5);
+            if (flag1 == 0 && flag2 == 0 && flag3 == 0) {
+                flag1 = 1;
+            } else if (flag1 == 1 && flag2 == 0 && flag3 == 0) {
+                flag2 = 1;
+            } else if (flag1 == 1 && flag2 == 1 && flag3 == 0) {
+                flag3 = 1;
+            } else {
+                flag1 = 0;
+                flag2 = 0;
+                flag3 = 0;
+            }
+            func_800545B4(3, flag1);
+            func_800545B4(4, flag2);
+            func_800545B4(5, flag3);
+            func_8FA00380();
+            break;
+        case 6:
+            if (D_8FA02020[0] == 0 && D_8FA02021[0] == 0 && D_8FA02022[0] == 0) {
+                D_8FA02020[0] = 1;
+            } else if (D_8FA02020[0] == 1 && D_8FA02021[0] == 0 && D_8FA02022[0] == 0) {
+                D_8FA02021[0] = 1;
+            } else if (D_8FA02020[0] == 1 && D_8FA02021[0] == 1 && D_8FA02022[0] == 0) {
+                D_8FA02022[0] = 1;
+            } else {
+                D_8FA02020[0] = 0;
+                D_8FA02021[0] = 0;
+                D_8FA02022[0] = 0;
+            }
+            for (i = 0; i < 20; i++) {
+                func_8FA010B0(0, i, D_8FA02020[0]);
+                func_8FA010B0(1, i, D_8FA02021[0]);
+                func_8FA010B0(2, i, D_8FA02022[0]);
+            }
+            for (i = 0; i < 3; i++) {
+                func_8FA01110(i);
+            }
+            func_8FA00380();
+            break;
+        }
+    }
+    return pressed;
+}
+/* mkdraft:func_8FA0125C end */
 #endif
 
 #ifdef VERSION_US

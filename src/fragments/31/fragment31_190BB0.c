@@ -300,7 +300,60 @@ void func_8821E710(void) {
     func_889033FC((*(void **)((u8 *)(D_882347F0) + (0x14))), D_882347F0 + 0x18);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821E73C.s")
+/* mkdraft:func_8821E73C begin */
+extern void LabPC_InitTwoChoiceDialog(void *);
+extern s32 func_880007B0(u8 *);
+extern s32 func_88004804(s32,s32,s16,s16,s32,s32,s32,s32,s32, void (*)(void),void (*)(void),void (*)(void), void (*)(void),s32,s32);
+extern u8 func_88201FE0(u8 *);
+extern void func_8821E21C(u8, s32);
+extern void func_8821E4B4(void);
+extern u8 D_8800ED50[];
+extern s32 D_882345F4;
+
+
+s32 func_8821E73C(s32 arg0) {
+    s32 result;
+    s16 y;
+    u8 button;
+
+    *(s32 *)((u8 *)(D_882347F0) + 4) = arg0;
+    LabPC_InitTwoChoiceDialog((u8 *)(D_882347F0) + 0x14);
+    if (arg0 == 5) {
+        y = 0x83;
+    } else {
+        y = 0x162;
+    }
+    result = func_88004804(
+        (s32)((u8 *)(D_882347F0) + 0x18),
+        0,
+        0x24D,
+        y,
+        2,
+        1,
+        0xDC,
+        0xDC,
+        0xB4,
+        func_8821E5F8,
+        func_8821E710,
+        func_8821E490,
+        func_8821E4B4,
+        0,
+        3
+    );
+    *(void **)((u8 *)(D_882347F0) + 0x14) =
+        (void *)((result * 0x4C) + (s32)D_8800ED50);
+    *(s32 *)((u8 *)(*(void **)((u8 *)(D_882347F0) + 8)) + 0x2C) = 0;
+    if (arg0 == 5 || arg0 == 6) {
+        button = func_88201FE0(D_88234620);
+        if (*(u8 *)(*(s32 *)(*(s32 *)D_882345F4) + 8) != 2) goto done;
+        if (!func_880007B0((u8 *)D_882345F4 + 8)) goto done;
+        if (button < 0xA6) goto done;
+        func_8821E21C(button, arg0 == 5 ? 2 : 3);
+    }
+done:
+    ;
+}
+/* mkdraft:func_8821E73C end */
 
 void func_8821E8C8(void) {
     Input_SetRepeatController(D_80087200);
@@ -571,7 +624,97 @@ s32 func_8821FFB4(u8 *arg0, u8 *arg1) {
     return (difference != 0) ? difference : (arg0 == arg1) ? 0 : (arg0 < arg1) ? -1 : 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_88220050.s")
+/* mkdraft:func_88220050 begin */
+extern s32 func_8800005C(void);
+extern s32 func_80063754(s32);
+extern u8 *func_88A00710(s32, s32);
+extern u32 func_88A007BC(s32);
+extern s32 func_88202158(u8 *, s32);
+extern s32 func_8821FFB4(u8 *, u8 *);
+extern void func_88004B60(u8 *, s16, s32 (*)(u8 *, u8 *));
+extern s32 func_800735A0(u8);
+extern s32 func_80073600(u8);
+extern u32 D_882347F0;
+
+
+
+void func_88220050(s32 arg0, u8 *arg1) {
+    u32 pass;
+    s32 pad[4];
+    volatile u16 sp42;
+    s16 temp_a1;
+    s32 ret;
+    u8 **dst;
+    s32 ok;
+    u32 i;
+    u8 *entry;
+    u32 count;
+
+    *(s16 *)(arg1 + 4) = 0;
+    dst = *(u8 ***)arg1;
+    pass = 0;
+    ok = sp42;
+    do {
+        if (func_8800005C() != 0) {
+            switch (arg0) {
+            case 0:
+            case 1:
+                if (pass == 2) {
+                    goto next;
+                }
+                break;
+            case 2:
+                if (pass != 2) {
+                    goto next;
+                }
+                break;
+            }
+        } else if (pass == 3) {
+            goto next;
+        }
+        entry = func_88A00710(pass, 0);
+        i = 0;
+        count = func_88A007BC(pass);
+        if (count != 0) {
+            do {
+                switch (arg0) {
+                case 0:
+                case 1:
+                    ret = func_88202158(entry, 0xFFFA);
+                    ok = ret & 0xFFFF;
+                    break;
+                case 2:
+                    ret = func_88202158(entry, 4);
+                    ok = ret & 0xFFFF;
+                    break;
+                case 3:
+                    ret = func_80063754((s32) *entry);
+                    ok = ret & 0xFFFF;
+                    break;
+                }
+                i += 1;
+                if (ok != 0) {
+                    *dst++ = entry;
+                    *(s16 *)(arg1 + 4) = (s16) (*(s16 *)(arg1 + 4) + 1);
+                }
+                entry += 2;
+            } while (i < count);
+        }
+next:
+        pass += 1;
+    } while (pass != 4);
+    sp42 = ok;
+    if ((func_8800005C() != 0) && ((arg0 == 0) || (arg0 == 1))) {
+        *(s32 *)((u8 *)D_882347F0 + 0x4A4) = (s32)&func_80073600;
+    } else {
+        *(s32 *)((u8 *)D_882347F0 + 0x4A4) = (s32)&func_800735A0;
+    }
+    temp_a1 = *(s16 *)(arg1 + 4);
+    if (temp_a1 >= 2) {
+        func_88004B60(*(u8 **)arg1, temp_a1, func_8821FFB4);
+    }
+}
+/* mkdraft:func_88220050 end */
 
 extern s32 func_8800005C(void);
 extern s32 func_80063754(s32);

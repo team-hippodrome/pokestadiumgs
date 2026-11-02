@@ -31,7 +31,64 @@ void func_87E01834(s32 arg0) {
     func_87E01720(arg0, 3, 8, 0x1A5, D_87E19734);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E01868.s")
+/* mkdraft:func_87E01868 begin */
+extern void *D_87E1EB50;
+extern void *D_87F119DC;
+extern void func_87F0B154(void *);
+extern void func_87F0B0FC(void *, f32, f32, f32, s32);
+extern void func_87E13558(void *, f32, f32, f32, s32);
+extern void func_87F0B4AC(void *, void *, void *, void *);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+} Func87E01868Vec;
+
+
+
+void func_87E01868(void) {
+    u8 *obj;
+    Func87E01868Vec saved;
+    u8 alpha;
+
+    obj = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    if ((*(s32 *)D_87E1EB50 == 2) &&
+        (*(s32 *)((u8 *)D_87E1EB50 + 4) == *(s32 *)(obj + 4)) &&
+        (*(s32 *)(obj + 0x94) == 0)) {
+        func_87F0B2F4(obj + 0x10, (u8 *)D_87F119DC + 0x42, 0.0f, 90.0f, 0.0f,
+                      0xA, 0x8000);
+    }
+    func_87F0B4AC(obj + 0x10, (u8 *)D_87F119DC + 0x48, (u8 *)D_87F119DC + 0x54,
+                  (u8 *)D_87F119DC + 0x42);
+    if (*(s32 *)((u8 *)D_87E1EB50 + 4) == *(s32 *)(obj + 4)) {
+        if ((s32)((u8 *)D_87F119DC)[0x60] < 245) {
+            ((u8 *)D_87F119DC)[0x60] = ((u8 *)D_87F119DC)[0x60] + 0xA;
+        } else {
+            ((u8 *)D_87F119DC)[0x60] = 0xFF;
+        }
+        *(s32 *)obj += 1;
+        saved = *(Func87E01868Vec *)((u8 *)D_87F119DC + 0x48);
+        *(f32 *)((u8 *)D_87F119DC + 0x50) += 30.0f;
+        func_87E13558(D_87F119DC, -56.0f, 26.0f, 0.0f, 6);
+        *(Func87E01868Vec *)((u8 *)D_87F119DC + 0x48) = saved;
+        if (*(s32 *)D_87E1EB50 != 2) {
+            func_87F0B0FC(obj + 0x10, -50.0f, 30.0f, 10.0f, 6);
+        }
+    } else {
+        ((u8 *)D_87F119DC)[0x60] = ((u8 *)D_87F119DC)[0x60] - 0xA;
+        if ((s32)((u8 *)D_87F119DC)[0x60] < 200) {
+            ((u8 *)D_87F119DC)[0x60] = 200;
+        }
+        *(s32 *)obj = 0;
+        func_87F0B154(obj + 0x10);
+    }
+    alpha = ((u8 *)D_87F119DC)[0x60];
+    ((u8 *)D_87F119DC)[0x62] = alpha;
+    ((u8 *)D_87F119DC)[0x61] = alpha;
+}
+/* mkdraft:func_87E01868 end */
 
 /* mkdraft:func_87E01A5C begin */
 extern Gfx *D_800D0510;
@@ -204,7 +261,7 @@ extern s32 func_87E1369C(void);
 extern void func_87F0277C(void *);
 extern s32 func_87F0E610(u8 *, u8 *);
 
-extern u32 D_87E1EB50;
+extern void *D_87E1EB50;
 
 
 

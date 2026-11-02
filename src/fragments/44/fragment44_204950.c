@@ -153,7 +153,106 @@ s32 func_8AF16EB0(u8 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF16EF0.s")
+/* mkdraft:func_8AF16EF0 begin */
+extern void *func_8004C874(s32, s32);
+extern void func_8004C54C(s32, s32);
+extern void _bzero(s32 *, s32);
+extern s16 D_8AF263C4[];
+extern char D_8AF345F0[];
+extern char D_8AF29910[];
+extern u8 D_8AF34818[][3];
+extern u8 D_8AF34C38[250];
+extern s16 D_8AF34D64;
+extern s16 D_8AF34D66;
+extern u8 func_80062D98(u8);
+extern s16 func_8AF01530(s16);
+extern void func_8AF16E60(void);
+extern s32 func_8AF16EB0(u8);
+
+
+
+void func_8AF16EF0(s16 arg0) {
+    u8 *destination;
+    s32 index;
+    s16 count;
+    s16 category;
+    s16 mapped;
+    s16 id;
+    s16 pad;
+
+    category = (s16)arg0;
+    sprintf(D_8AF345F0, D_8AF29910, func_8004C874(0xC, D_8AF263C4[category]));
+    func_8AF16E60();
+    _bzero((s32 *)D_8AF34818, 0x2EE);
+    count = 0;
+    destination = (u8 *)D_8AF34818;
+    for (index = 0; index < 250; index++) {
+        id = D_8AF34C38[index];
+        mapped = func_8AF01530(func_80062D98(id));
+        if (id == 0xA5) {
+            continue;
+        }
+        if (mapped != category) {
+            continue;
+        }
+        if (func_8AF16EB0(id) != 0) {
+            continue;
+        }
+        // FAKE: decomp slop, empty body. It compiles to nothing, but naming `id`
+        // here makes the allocator put the strength-reduced source pointer in $s3
+        // and the copy of `id` stored as the first output byte in $s4.
+        if (id == 0xA5) {
+        }
+        destination[0] = id;
+        destination[1] = mapped;
+        destination[2] = 0;
+        destination += 3;
+        count++;
+    }
+    pad = 4 - count % 4;
+    if (pad < 4) {
+        pad += 4;
+    }
+    for (index = 0; index < pad; index++) {
+        destination[0] = 0xFF;
+        destination[1] = 0;
+        destination[2] = 0;
+        destination += 3;
+    }
+    destination[0] = 0xFE;
+    destination += 3;
+    for (index = 0; index < 7; index++) {
+        destination[0] = 0xFF;
+        destination[1] = 0;
+        destination[2] = 0;
+        destination += 3;
+    }
+    D_8AF34D66 = 0;
+    for (index = 0; index != 250; index++) {
+        id = D_8AF34C38[index];
+        mapped = func_8AF01530(func_80062D98(id));
+        if (id == 0xA5) {
+            continue;
+        }
+        if (mapped != category) {
+            continue;
+        }
+        if (func_8AF16EB0(id) == 0) {
+            continue;
+        }
+        // FAKE: decomp slop, empty body; see the identical device in the first loop.
+        if (id == 0xA5) {
+        }
+        destination[0] = id;
+        destination[1] = mapped;
+        destination[2] = 1;
+        destination += 3;
+        D_8AF34D66++;
+    }
+    func_8004C54C(0x3E, (s32)func_8004C874(0xC, D_8AF263C4[category]));
+    D_8AF34D64 = category;
+}
+/* mkdraft:func_8AF16EF0 end */
 
 extern void func_8004C594(s32, s16);
 extern void *D_8AF342E0;

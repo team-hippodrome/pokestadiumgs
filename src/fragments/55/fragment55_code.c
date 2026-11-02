@@ -137,7 +137,55 @@ void func_86700318(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86700418.s")
+/* mkdraft:func_86700418 begin */
+extern Gfx *D_800D0510;
+extern void *D_8009491C;
+extern s32 D_8670BBA4;
+extern s32 D_8670BD38[];
+extern s32 D_8670AB90[];
+extern State86703DF4 D_86728408[];
+extern s32 D_8670C968;
+extern void *D_8670C964;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+/* function: func_86700418 */
+
+
+void func_86700418(s32 arg0, s32 arg1) {
+    void *context;
+    s32 index;
+    s32 spare; // FAKE: declared-only local; its home slot makes the frame 0x38 bytes and
+               // moves the context spill to 0x34(sp). Without it the frame is 0x30 bytes
+               // and the diff score is 52.
+
+    if (arg0 == 5) {
+        context = D_8009491C;
+        index = *(s32 *)((u8 *)context + 0x14);
+        // FAKE: the 3-way read of context makes IDO place the context spill after the
+        // li a0,0x1B2. Without the statement the spill moves earlier and the reloc-aware
+        // diff score is 240.
+        if ((context && context) && context) {
+        }
+        // D_86728458[i] is the word at &D_86728408[i] + 0x50. This file declares
+        // D_86728458 itself (as Stage55VariantIndex[]) only after this function, and a
+        // second declaration of it here conflicts with that one.
+        D_8670C968 = func_8004C990(0x1B2,
+                                   D_8670AB90[*(s32 *)((u8 *)&D_86728408[D_8670BD38[index]] + 0x50)]);
+        if (D_8670BBA4 == 1) {
+            gDPPipeSync(D_800D0510++);
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 100);
+            gDPSetCombine(D_800D0510++, 0xFCFF97FF, 0xFFFCFE38);
+            gSPSegment(D_800D0510++, 0xF, func_8004CA60((u8 *)D_8670C968));
+            gSPDisplayList(D_800D0510++, D_8670C964);
+            func_8003CD84();
+        } else {
+            *(f32 *)((u8 *)context + 0x2C) = -5000.0f;
+        }
+    }
+}
+/* mkdraft:func_86700418 end */
 #endif
 
 #ifdef VERSION_US

@@ -591,7 +591,155 @@ s32 func_826058CC(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605908.s")
+/* mkdraft:func_82605908 begin */
+extern s16 D_82615504[];
+extern s16 D_82615598[];
+extern s16 D_826155A4[];
+extern s32 func_8004C874(s32, s32);
+extern void _bzero(void *, s32);
+extern s32 func_826058CC(s32);
+typedef struct { u8 b[4]; } B4;                        /* 4-byte copy source/destination */
+typedef struct { u8 pad[0x1C]; u8 q[4][0x16]; } QT;    /* state + 0x1C, 4 x 0x16 */
+typedef struct { u8 pad[0xB0]; u8 r[4][0x428]; } RT;   /* root + 0xB0, 4 x 0x428 */
+typedef struct { u8 pad[4]; u8 e[8][0x98]; } VT;       /* tbl + 4, 8 x 0x98 */
+typedef struct { u8 pad[0x18]; s16 v[8]; } NT;         /* root + 0x18, 8 x s16 */
+typedef struct { u8 pad[0x74]; s8 f[4]; } ST;          /* state + 0x74, 4 x s8 */
+typedef struct { s8 f[4]; } ZT;                        /* state + 0, 4 x s8 */
+typedef struct { u8 pad[0x8D0]; u8 m[4][12]; } MT;     /* state + 0x8D0, 4 x 12 */
+
+// Builds the selection descriptor at arg1 (0x00..0x26) and the 0x1E0-byte block
+// at arg1 + 0x30 from the team root at *(u8 **)(arg0 + 0x110).
+
+
+void func_82605908(void *arg0, void *arg1) {
+    /* FAKE: duplicate base. The two 0x220 loop bounds are read through a second
+       arg1 + 0x30 pointer, which IDO keeps in $a2 (target: addiu $a2, $a1, 0x30). */
+    u8 *d2 = (u8 *)arg1 + 0x30;
+    u8 *state;
+    u8 *root;
+    s32 group;
+    u8 *tbl;
+    u8 *value;
+    s16 tmp;
+    u8 *queue;
+    u8 *rows;
+    s32 count;
+    s32 i;
+    u8 *d = (u8 *)arg1 + 0x30;
+
+    value = 0;
+    root = *(u8 **)((u8 *)arg0 + 0x110);
+    state = *(u8 **)root;
+    count = *(s16 *)(state + 0x88);
+    group = *(u8 *)(state + 7);
+    tbl = *(u8 **)(root + 0xC);
+    queue = (u8 *)((QT *)state)->q[*(s16 *)(((u8 *)arg1) + 2)];
+    rows = (u8 *)((RT *)root)->r[*(s16 *)(((u8 *)arg1) + 2)];
+    if (tbl != 0) {
+        value = (u8 *)((VT *)tbl)->e[((NT *)root)->v[count]];
+    }
+    *(s16 *)(((u8 *)arg1) + 0x10) = 0;
+    *(s16 *)(((u8 *)arg1) + 0x14) = 44;
+    if (*(s16 *)(((u8 *)arg1) + 2) == 0) {
+        *(s16 *)(((u8 *)arg1) + 0x12) = -480;
+        *(s16 *)(((u8 *)arg1) + 0x16) = 41;
+    } else {
+        *(s16 *)(((u8 *)arg1) + 0x12) = 480;
+        *(s16 *)(((u8 *)arg1) + 0x16) = 242;
+    }
+    /* FAKE: the 4-byte copy goes through a byte array so IDO emits
+       lwl/lwr/swl/swr; two halfword copies score worse. */
+    *(B4 *)(((u8 *)arg1) + 0x18) = *(B4 *)(((u8 *)arg1) + 0x10);
+    *(s16 *)(((u8 *)arg1) + 0x24) = 554;
+    *(s16 *)(((u8 *)arg1) + 0x26) = D_82615504[*(s16 *)(((u8 *)arg1) + 0)];
+    if (((ST *)state)->f[*(s16 *)(((u8 *)arg1) + 2)] == -1) {
+        if (*(s8 *)(rows + 2) >= 0) {
+            *(s32 *)(d + 0) = ((s32 *)((u8 *)arg0 + 0xC8))[*(s16 *)(((u8 *)arg1) + 2)];
+        } else {
+            *(s32 *)(d + 0) = ((s32 *)((u8 *)arg0 + 0xD0))[count];
+        }
+    } else {
+        *(s32 *)(d + 0) = ((s32 *)((u8 *)arg0 + 0xC8))[*(s16 *)(((u8 *)arg1) + 2)];
+    }
+    if (*(s16 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0x12) != 0) {
+        *(s16 *)(d + 4) = 1;
+    } else {
+        *(s16 *)(d + 4) = 0;
+    }
+    *(s16 *)(d + 0xA) = 0;
+    i = 0;
+    while (i < 2) {
+        *(s16 *)(d + 0xA) += *(s8 *)(rows + 4 + i);
+        i++;
+    }
+    if (*(s16 *)(d + 4) != 0) {
+        *(s16 *)(d + 6) = 6;
+    } else {
+        *(s16 *)(d + 6) = 3;
+    }
+    *(s16 *)(d + 8) = *(s16 *)(((u8 *)arg1) + 2) * *(s16 *)(d + 6);
+    *(s16 *)(d + 0xC) = func_826058CC(group);
+    *(s16 *)(d + 0xE) = 0;
+    *(s16 *)(d + 0x10) = 0;
+    *(s16 *)(d + 0x12) = 0;
+    *(s16 *)(d + 0x14) = 0;
+    if (*(s16 *)(((u8 *)arg1) + 2) == 0 && *(u16 *)((u8 *)arg0 + 4) & 2) {
+        *(s16 *)(d + 0x16) = 1;
+    } else {
+        *(s16 *)(d + 0x16) = 0;
+    }
+    *(s16 *)(d + 0x18) = 0;
+    *(s16 *)(d + 0x1A) = 0;
+    *(s16 *)(d + 0x1C) = 0;
+    *(s16 *)(d + 0x1E) = 0;
+    _bzero(d + 0x20, 0x1E0);
+    if (*(s8 *)queue == 0) {
+        if ((*(u16 *)((u8 *)arg0 + 4) & 0x400) == 0) {
+            if (((ZT *)state)->f[*(s16 *)(((u8 *)arg1) + 2)] >= 0) {
+                *(s32 *)(d + 0x200) = func_8004C874(72, 41);
+            } else if (value != 0) {
+                *(s32 *)(d + 0x200) = func_8004C874(72, *(u8 *)value - 1);
+            } else {
+                *(s32 *)(d + 0x200) = func_8004C874(72, 41);
+            }
+        } else {
+            *(s32 *)(d + 0x200) = 0;
+        }
+    } else {
+        *(u8 **)(d + 0x200) = (u8 *)((QT *)state)->q[*(s16 *)(((u8 *)arg1) + 2)];
+    }
+    *(u8 **)(d + 0x204) = (u8 *)((MT *)state)->m[*(s16 *)(((u8 *)arg1) + 2)];
+    for (i = 0; i < *(s16 *)(d + 6); i++) {
+        *(s16 *)(d + 0x208 + i * 2) = 0xFF;
+        *(s16 *)(d + 0x214 + i * 2) = -1;
+        *(s16 *)(d + 0x22C + i * 2) = 0;
+    }
+    if (*(s16 *)(d + 6) == 6) {
+        for (i = 0; i < *(s16 *)(d2 + 6); i++) {
+            if (*(s16 *)(((u8 *)arg1) + 2) == 0) {
+                *(s16 *)(d + 0x220 + i * 2) = D_82615598[i];
+            } else {
+                *(s16 *)(d + 0x220 + i * 2) = D_826155A4[i];
+            }
+        }
+    } else {
+        for (i = 0; i < *(s16 *)(d2 + 6); i++) {
+            if (*(s16 *)(((u8 *)arg1) + 2) == 0) {
+                *(s16 *)(d + 0x220 + i * 2) = i;
+            } else {
+                *(s16 *)(d + 0x220 + i * 2) = *(s16 *)(d + 6) - i - 1;
+            }
+        }
+    }
+    for (i = 0; i < *(s16 *)(d + 6); i++) {
+        *(s16 *)(d + 0x238 + i * 2) = *(u16 *)(rows + 0x2E + i * 0x58);
+        tmp = *(s16 *)(rows + 0x30 + i * 0x58);
+        *(s16 *)(d + 0x25C + i * 2) = 0;
+        *(s16 *)(d + 0x250 + i * 2) = tmp;
+        *(s16 *)(d + 0x244 + i * 2) = tmp;
+    }
+}
+/* mkdraft:func_82605908 end */
 
 extern s16 D_82615504[];
 void func_82605E04(void *arg0, void *arg1) {
@@ -1087,7 +1235,64 @@ void func_826082C0(u8 *arg0, u8 *arg1, s32 arg2, s32 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260850C.s")
+/* mkdraft:func_8260850C begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+extern s32 func_8004D1FC(u8 *);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern s32 func_8004C990(s32, s32);
+
+typedef struct unk_func_8260850C {
+    /* 0x00 */ u8 unk_00[0x24];
+    /* 0x24 */ s16 unk_24;
+    /* 0x26 */ s16 unk_26;
+} unk_func_8260850C;
+
+void func_8260850C(u8 *arg0, s32 arg1) {
+    s16 origin_x, origin_y;
+    s32 strip_width;
+    s32 texture_height;
+    u8 *texture;
+    struct Color { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+
+    texture = (u8 *)func_8004C990(0x51, 1);
+    strip_width = (s32)(*(u16 *)texture) / 4;
+    texture_height = *(u16 *)(texture + 2);
+    if (texture != NULL) {
+        if (arg1 != 0) {
+            gSPDisplayList(D_800D0510++, D_80094E78);
+            gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+            func_8004D1FC(texture);
+        }
+        origin_x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+        origin_y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+        func_82607BF4(*(s16 *)arg0, (u8 *)&prim, (u8 *)&env, *(s16 *)(arg0 + 0xC), (*(u16 *)(arg0 + 4) & 8) != 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+        gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+        GfxRect_DrawTextured((s16)origin_x, (s16)origin_y, (s16)strip_width, (s16)texture_height, 0, 0, 1024, 1024, 0);
+        /* Retail loads 0x24/0x26 into a temp and adds it as the second operand, e.g.
+           lh t6,0x24(s0); addu t4,s1,t6, with the un-narrowed origin sum in rs. The
+           member-access spelling gives that order; writing *(s16 *)(arg0 + 0x24)
+           puts the loaded field in rs and reverses all six such addu. */
+        GfxRect_DrawTextured((s16)(origin_x + strip_width), (s16)origin_y, (s16)(((unk_func_8260850C *)arg0)->unk_24 - strip_width * 2), (s16)texture_height, (s16)(strip_width << 5), 0, 0, 1024, 0);
+        GfxRect_DrawTextured((s16)(origin_x + ((unk_func_8260850C *)arg0)->unk_24 - strip_width), (s16)origin_y, (s16)strip_width, (s16)texture_height, (s16)(strip_width << 5), 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)origin_x, (s16)(origin_y + texture_height), (s16)strip_width, (s16)(((unk_func_8260850C *)arg0)->unk_26 - texture_height * 2), (s16)((strip_width * 2) << 5), 0, 1024, 0, 0);
+        GfxRect_DrawTextured((s16)origin_x, (s16)(origin_y + ((unk_func_8260850C *)arg0)->unk_26 - texture_height), (s16)strip_width, (s16)texture_height, (s16)((strip_width * 2) << 5), 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)(origin_x + strip_width), (s16)(origin_y + ((unk_func_8260850C *)arg0)->unk_26 - texture_height), (s16)(((unk_func_8260850C *)arg0)->unk_24 - strip_width * 2), (s16)texture_height, (s16)((strip_width * 3) << 5), 0, 0, 1024, 0);
+        GfxRect_DrawTextured((s16)(origin_x + ((unk_func_8260850C *)arg0)->unk_24 - strip_width), (s16)(origin_y + ((unk_func_8260850C *)arg0)->unk_26 - texture_height), (s16)strip_width, (s16)texture_height, (s16)((strip_width * 3) << 5), 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)(origin_x + ((unk_func_8260850C *)arg0)->unk_24 - strip_width), (s16)(origin_y + texture_height), (s16)strip_width, (s16)(((unk_func_8260850C *)arg0)->unk_26 - texture_height * 2), (s16)((strip_width * 3) << 5), 0, 1024, 0, 0);
+        if ((s16)strip_width == 0x1234) { // FAKE: empty if, emits no instructions; dropping it rescales the diff to 115
+        }
+        if ((s16)strip_width == 0x1234) { // FAKE: second empty if; dropping it alone also rescales the diff to 115
+        }
+        if ((s16)texture_height == 0x1234) { // FAKE: empty if; dropping it alone rescales the diff to 160
+        }
+    }
+}
+/* mkdraft:func_8260850C end */
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E78[];
@@ -1452,7 +1657,92 @@ void func_8260BE24(u8 *arg0, s32 arg1) {
     Gfx_FillRectRgb(temp_t1 + 0x3A, temp_t0 + 0xB0, 0x124, 0x4A, 0, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260BEF4.s")
+/* mkdraft:func_8260BEF4 begin */
+s32 func_80064590(s32, s32);                        /* extern */
+extern s16 D_826156E8[];
+extern s16 D_826156EC[];
+typedef struct GfxColor { u8 r, g, b, a; } GfxColor;
+extern GfxColor D_826156F0;
+extern GfxColor D_826156F4;
+extern GfxColor D_826156F8;
+
+
+
+void func_8260BEF4(u8 *arg0, s32 arg1) {
+    s32 pad0;   // FAKE: holds the frame at 0x90 so sp88/sp8A sit at 0x88/0x8A
+    s16 sp8A;
+    s16 sp88;
+    s32 pad1[2];    // FAKE: keeps sp7C at 0x7C and the words above it filled
+    s16 *sp7C;
+    s16 sp7A;
+    s32 pad3[2];    // FAKE: keeps sp6C at 0x6C; only 0x7A and 0x7C hold live values
+    s32 sp6C;
+    GfxColor *var_s0;
+    s32 temp_fp;
+    s32 temp_v0_3;
+    s32 var_s2;
+    s32 var_s3;
+    u8 *temp_s0;
+    u8 *var_s1;
+
+    temp_s0 = arg0 + 0x30;
+    temp_fp = func_8004C990(0x52, 0);
+    if (*(s16 *)(temp_s0 + 4) != 0) {
+        sp7C = D_826156EC;
+        sp7A = 0x4F;
+        sp6C = 0x5B;
+    } else {
+        sp7C = D_826156E8;
+        sp7A = 0xB0;
+        sp6C = 0;
+    }
+    sp88 = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    sp8A = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+        func_800459AC(func_8004CA60((u8 *) temp_fp), *(u8 *)(temp_fp + 4), *(u8 *)(temp_fp + 5), *(u16 *)(temp_fp + 0), (s32) *(u16 *)(temp_fp + 2), 1, 0, 0, 0, 3, 3, 0, 0);
+    }
+    var_s3 = 0;
+    if (*(s16 *)(temp_s0 + 6) > 0) {
+        var_s1 = temp_s0;
+        do {
+            var_s0 = NULL;
+            if (*(s16 *)(var_s1 + 0x250) != 0) {
+                var_s2 = (s32) (*(s16 *)(var_s1 + 0x244) * 0x74) / *(s16 *)(var_s1 + 0x250);
+            } else {
+                var_s2 = 0;
+            }
+            if (*(s16 *)(var_s1 + 0x244) == 0) {
+
+            } else {
+                if ((*(s16 *)(var_s1 + 0x244) == *(s16 *)(var_s1 + 0x250)) || (*(s16 *)(var_s1 + 0x244) == *(s16 *)(var_s1 + 0x238))) {
+                    var_s2 = (var_s2 / 4) * 4;
+                }
+                temp_v0_3 = func_80064590(*(s16 *)(var_s1 + 0x244) & 0xFFFF, *(s16 *)(var_s1 + 0x250) & 0xFFFF) & 0xFFFFFFFF;
+                switch (temp_v0_3) {                /* irregular */
+                case 0:
+                    var_s0 = &D_826156F0;
+                    break;
+                case 1:
+                    var_s0 = &D_826156F4;
+                    break;
+                case 2:
+                    var_s0 = &D_826156F8;
+                    break;
+                }
+                if (var_s0 != NULL) {
+                    gDPPipeSync(D_800D0510++);
+                    gDPSetEnvColor(D_800D0510++, var_s0->r, var_s0->g, var_s0->b, 0xFF);
+                }
+                GfxRect_DrawTextured((s16) (sp7C[*(s16 *)(arg0 + 2)] + sp88 + ((var_s3 % 3) * 0x87)), (s16) (sp8A + sp7A + (sp6C * (var_s3 / 3))), (s16) var_s2, (s16) *(u16 *)(temp_fp + 2), 0, 0, 0x400, 0x400, 0);
+            }
+            var_s3 += 1;
+            var_s1 += 2;
+        } while (var_s3 < *(s16 *)(temp_s0 + 6));
+    }
+}
+/* mkdraft:func_8260BEF4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260C2B0.s")
 
