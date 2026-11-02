@@ -2219,16 +2219,22 @@ void func_8AC06D70(void *arg0, s32 arg1, s32 arg2, u16 arg3) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_8AC0878C;
-extern s32 D_8AC08788;
-#pragma COALESCE_AT_LUI(func_8AC06D8C, D_8AC0878C, D_8AC08788)
+// Failed node lookups retain the missing ID and clear the adjacent byte.
+// The fragment loader zeroes this runtime area after consuming relocation data.
+//@src/2CA0.c
+typedef struct F43LookupFailure {
+    s32 id;
+    u8 unk_04;
+} F43LookupFailure;
+static F43LookupFailure sLookupFailure = { 0 };
 s32 func_8AC06D8C(s32 arg0, s32 arg1) {
     s32 result;
+    F43LookupFailure *state = &sLookupFailure;
 
     result = func_8005049C(arg0, arg1);
     if (result == 0) {
-        D_8AC0878C = 0;
-        D_8AC08788 = arg1;
+        state->unk_04 = 0;
+        state->id = arg1;
     }
     return result;
 }

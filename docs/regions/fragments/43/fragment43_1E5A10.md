@@ -658,3 +658,36 @@ ROM relocation metadata. A faithful BSS split must handle the record's
 16-byte section padding. Reusing the timestamp layout mechanically would
 misplace this record. Next: resolve that real data ownership/alignment and
 compare the entire linked module before any normal ROM gate or acceptance.
+
+## 2026-11-03 — lookup-failure record genuinely matched
+
+`func_8AC06D8C` now emits all 60 retail bytes through stock IDO 7.1,
+removing `COALESCE_AT_LUI`. The word at 0x8AC08788 records the missing ID
+when `func_8005049C` returns no node; the adjacent byte at +4 is cleared.
+They are represented by the actual eight-byte `F43LookupFailure` record,
+owned by this C file. The byte's broader meaning remains unknown. A real
+local record pointer lets IDO share the page address for both stores.
+The helper and public function signatures and return behavior are unchanged.
+
+The all-zero initializer matches `Memmap_RelocateFragment`'s existing clear
+of runtime offsets 0x81B0..0x9EA0 after it consumes relocation metadata. The
+existing `datamig_bss.ld` mechanism places this file's sole initialized data
+object NOLOAD at 0x8AC08788. Its input section contains sixteen zero bytes
+including compiler alignment; the meaningful record occupies eight bytes.
+Those alignment bytes have no load image. The original relocation table,
+fragment header, runtime allocation and loaded ROM bytes are preserved.
+
+This resolves the preceding placement prerequisite without moving this file's
+existing six pool-mark statics from their original 0x8AC09798..0x8AC097AF
+locations. The whole-runtime-storage and separate uninitialized-record trials
+were private diagnostics. The accepted change owns just the actual lookup
+record through the project's existing placement mechanism.
+
+Fresh unchanged/candidate normal/+20 controls verify the complete module under
+each ownership model. Known/candidate complete native links preserve every
+function address/extent, all six pool marks and all legacy runtime-global
+addresses. The final installed source passes two more module controls,
+normal host syntax and `make -j1 COMPARE=1 RUN_CC_CHECK=1`. The normal link
+also verifies the initialized data is exactly sixteen zero bytes and the
+pre-existing BSS remains 32 bytes. Full retail ROM MD5:
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Coverage and compiler options are unchanged.

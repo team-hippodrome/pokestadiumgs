@@ -65,7 +65,14 @@ or reverting a function to assembly does not establish a proper C match.
   rewrites. Complete-module controls, host syntax and the full retail ROM
   comparison pass. See [the fragment 64 evidence](regions/fragments/64/fragment64_324FB0.md).
 
-This leaves 775 directive occurrences and 59 affected functions, including
+- `func_8AC06D8C`: own its actual lookup-failure record in C and use the
+  existing NOLOAD data-placement mechanism at its original runtime address.
+  Stock IDO shares the address load without `COALESCE_AT_LUI`. Normal module
+  controls, host syntax and the full retail ROM gate pass; existing pool
+  statics and legacy addresses remain exact. See
+  [the fragment 43 evidence](regions/fragments/43/fragment43_1E5A10.md).
+
+This leaves 774 directive occurrences and 58 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -113,7 +120,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Pending |
 | `func_8830765C` | [src/fragments/32/fragment32_1B8010.c](../src/fragments/32/fragment32_1B8010.c) | 2 | Pending |
 | `func_88507370` | [src/fragments/34/fragment34_1C3FA0.c](../src/fragments/34/fragment34_1C3FA0.c) | 31 | Pending |
-| `func_8AC06D8C` | [src/fragments/43/fragment43_1E5A10.c](../src/fragments/43/fragment43_1E5A10.c) | 1 | Pending |
+| `func_8AC06D8C` | [src/fragments/43/fragment43_1E5A10.c](../src/fragments/43/fragment43_1E5A10.c) | 1 | Replaced with C |
 | `func_8AF00504` | [src/fragments/44/fragment44_1EE290.c](../src/fragments/44/fragment44_1EE290.c) | 19 | Pending |
 | `func_8AB07C34` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 36 | Pending |
 | `func_8AB07E6C` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 31 | Pending |

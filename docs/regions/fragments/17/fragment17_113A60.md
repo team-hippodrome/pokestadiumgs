@@ -711,3 +711,22 @@ The complete US link prints `build/pokestadiumgs-us.z64: OK`; ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Full retail comparison and whitespace
 checks pass. Independent original-assembly and raw-retail comparisons
 verify all 252 bytes at ROM `0x115CC4..0x115DC0`.
+
+## 2026-11-03 — colour-state callback rewrite removal: requeue
+
+`requeue` `func_82205B00`: 276 bytes/frame 32. Removing the three word
+rewrites leaves only the prologue rotation at +0x08/+0x0C/+0x10: retail
+spills arg0, reads the selected index, then spills arg1. The clean control
+reads the index, spills arg1, then spills arg0. Typed entry views, direct
+table addressing, split declarations and old-style parameter declaration
+orders/const pointer spellings did not close it. All public argument and
+callee contracts were retained in these diagnostics; no source was installed.
+
+A one-worker 60-second statement/expression mutation search completed 1274
+mutations with 28 compile errors and no better output. Its candidate byte
+control, AST-regenerated score-zero control and semantic relocation endpoint
+controls passed. The standalone target retains the actual in-file getter
+`func_8220AD10`; treating its original section-relative call as `.text+0`
+is an invalid oracle and the earlier such fixture is excluded from owner
+exhaustion evidence. Next: observe parameter homing and as1 ready-set/source
+ownership for those three words before repeating a spelling grid.

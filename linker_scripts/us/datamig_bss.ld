@@ -47,6 +47,15 @@ SECTIONS
         build/src/fragments/54/fragment54_code.o(.bss)
     }
 
+    /* Lookup-failure ID and adjacent byte at 0x8AC08788. The fragment loader
+     * clears this runtime area after consuming its relocation table. Only the
+     * all-zero lookup record belongs in this input section; compiler alignment
+     * contributes no loaded bytes. */
+    .fragment43_lookup_failure_data 0x8AC08788 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/43/fragment43_1E5A10.o(.data)
+    }
+
     /* fragment43_1E5A10's main-pool push/pop marks (function-local statics
      * in func_8AC00FFC/func_8AC01064), 0x8AC09798-0x8AC097B0. */
     .fragment43_1E5A10_bss 0x8AC09798 (NOLOAD) : SUBALIGN(4)
