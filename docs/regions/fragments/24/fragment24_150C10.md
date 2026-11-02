@@ -498,3 +498,30 @@ Private evidence: `rewrite-cleanup-f24-parameter-controls`,
 `rewrite-cleanup-nineteenth-seal`. The earlier failed private link remains
 in `rewrite-cleanup-f24-parameter-link`; no failed candidate was installed.
 Coverage and compiler/tooling files are unchanged.
+
+## 2026-11-03 — `func_82B07960` confirmation handler: proper C match
+
+The neighboring 252-byte confirmation handler also uses the owned state
+prefix. A prepared `F24State12450 *state` now reads/raises its actual counter
+for the initial guard and clears state/counter in case zero. This removes
+both the old `D_82B12454 + 2` alias-based guard and the extra address load
+between the terminal halfword stores. The original conditions, calls,
+entry loop, halfword at +0xA and external root view retain their behavior.
+All 252 retail bytes now compile directly without the hex replacement or
+its 24 relocation-target patches. The 28-byte prefix and linker layout
+from the initializer match need no further storage change.
+
+Normal and 20-leading-blank complete-module controls and host syntax pass;
+all other instructions and relocations, including the now-matching 108-byte
+parameter initializer, are preserved. The baseline from the previous
+successful private candidate link is reused and verified rather than
+rebuilt. The new private link and a fresh normal native
+`make -j1 COMPARE=1 RUN_CC_CHECK=1` pass with the same retail MD5/SHA256
+listed above. All function extents, legacy addresses and previous object
+addresses/sizes remain exact. Private evidence:
+`rewrite-cleanup-f24-transition-controls`,
+`rewrite-cleanup-f24-transition-link`, and `rewrite-cleanup-twentieth-seal`.
+
+Together the two functions compile 360 retail bytes from ordinary C and
+remove 36 directives. No requested rewrite/coalescing pragma remains in
+this source file. Compiler, helper and coverage files remain unchanged.
