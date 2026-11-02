@@ -196,7 +196,44 @@ void func_87F06804(u8 *node, struct unk_func_87F06804 color) {
     gSPDisplayList(D_800D0510++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F0691C.s")
+extern u8 *D_87F15B88;
+
+void func_87F0691C(s32 kind, u8 *node) {
+    s32 value;
+    struct unk_func_87F06804 color;
+    f32 scale;
+    f32 wave;
+
+    switch (kind) {
+        case 0:
+            *(u16 *)(node + 2) &= ~2;
+            break;
+        case 1:
+            // FAKE: repeating the phase expression preserves the retail FP
+            // register allocation; a cached phase changes the rounding registers.
+            if ((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) >= 0.0f) {
+                value = (s32)((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) + 0.5f);
+            } else {
+                value = (s32)((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) - 0.5f);
+            }
+            wave = (D_80087E50[(u16)value >> 4] + 1.0f) * 0.5f;
+            scale = 455.0f * wave;
+            if (scale >= 100.0f) {
+                value = (s32)((scale - 100.0f) + 0.5f);
+            } else {
+                value = (s32)((scale - 100.0f) - 0.5f);
+            }
+            if (value < 0) {
+                value = 0;
+            }
+            if (value >= 256) {
+                value = 255;
+            }
+            color.unk_0 = 0xFFE60000 | value;
+            func_87F06804(node, color);
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06AA8.s")
 
