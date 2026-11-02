@@ -833,3 +833,126 @@ Next: test a source-level change to the measured index/image live ranges
 or their block costs, preserving the exact suffix control. Do not rerun
 these branch, division-hoisting or loop-form families without a distinct
 mechanism. No new owner was accepted, installed or ROM-gated.
+
+### 2026-11-02 initializer bounded follow-up (requeue)
+
+Source base: `edc01bfe51346d683fc7b4e8e49be64bf8865322`.
+Three further eight-candidate families tested derived one-based/countdown
+indices, inactive-panel control flow, and per-iteration image destinations.
+The derived-index forms shorten the owner to 1008 or 1012 bytes and do not
+match. Inactive-panel continue/goto forms enlarge the residual; a valid-panel
+continue converges to the existing controls. Destination-local reuse does not
+improve their measured residuals. Keep the 20-word complete-owner control and
+the 27-word control with its exact final 88 instructions. Neither is accepted.
+
+### 2026-11-02 selected-team export reconstruction (requeue)
+
+Source base: `edc01bfe51346d683fc7b4e8e49be64bf8865322`;
+owner `func_81407310`, called by `fragment12_main` in
+`src/fragments/12/fragment12_E5330.c` after the scene returns result 1.
+The function exports both sides' selected entries, appends the remaining
+nonempty entries, clears unused output records, and saves selection order.
+This behavior supports a future `Fragment12_ExportSelectedTeams` name.
+The owner remains assembly: no candidate is accepted or installed.
+
+The scene's setup pointer is at +0x14F30. Setup contains output +0x840,
+rules +0x844, source +0x88C and mode +0x890. Row-state records have a
+3272-byte stride and begin with two panel pointers. Panels contain six
+88-byte entries at +0x4B40, selected indices at +0xA, a signed selected
+count at +0x12, and a name at +0x4D50. Output sides have a 1248-byte stride,
+twelve 88-byte entries at +24, and a name at +0x48C. Source sides have a
+476-byte stride; their saved indices start at +0x1D4.
+
+Mode 1 prefills the first panel's indices from that source. Each output
+records active panels, controller IDs, the selected-entry count and the
+first panel's selected count. The current row ID at row-state +0x210
+identifies the boundary saved in output +0xA. Unselected nonempty entries
+follow the selected entries; only the first byte of each unused record is
+cleared. Mode 0 calls `func_842033EC` before exporting, `func_84203360`
+once per side, and `func_800730BC` afterward when source is present.
+Inspected implementations in `src/fragments/80/fragment80_41AC50.c`,
+`src/73C80.c`, and `src/C180.c` establish the real helper contracts:
+the first two return void, `func_800730BC` takes two pointer arguments,
+and `HAL_Strcpy` returns an `s8 *`.
+
+The accepted panel constructor `func_81404A08` calls `HAL_Strcpy` without
+a preceding declaration. Appending its real pointer-returning declaration
+for the export candidate conflicts with that earlier implicit-int call.
+A canonical companion edit declares `extern s8 *HAL_Strcpy(s8 *, s8 *);`
+inside the constructor before its existing declarations. All 484 constructor
+bytes remain identical. The initial eight compile failures concern this
+declaration transaction, not the export's instruction comparison.
+
+Typed source and destination entry arrays recover two distinct compiler
+88-byte stride roots. Retain `array-index8`, candidate 3: 1160 body bytes
+and the retail 136-byte frame, with aligned similarity 0.9281/raw 0.476.
+Also retain `prefill-cursor8`, candidate 4: 1160 body bytes, a 144-byte
+frame, and aligned similarity 0.9384/raw 0.4247. The retail owner is 1168
+bytes including eight alignment bytes. Those metrics describe comparison
+rejections and do not establish an instruction-exact body.
+
+Six stock normal/+20-leading-blank complete-module controls pass for the
+known module and both candidates. All allocated bytes outside the owner,
+section layout, other defined function extents, and decoded semantic
+relocations outside the owner remain equal to the matching module. All five
+ordered external call targets agree. The final physical alignment bytes
+also agree, although the candidate function-symbol extent differs by eight.
+
+Captured UOPT input identifies the export as procedure 84: its Uent/Ucomm
+header names `func_81407310`. Procedure 82 is `func_814071C4`; earlier
+four-panel activation traces selecting 82 are excluded from export evidence.
+Rediscover the ordinal from the captured procedure headers after source
+changes. Twelve stock/observer-off/observer-on controls preserve optimized
+Ucode and both symbol outputs. Normal and blank runs reproduce 39 color/cost
+events for the 136-byte-frame control and 38 for the 144-byte-frame control.
+The observer is read-only; the production compiler is unchanged.
+
+A calibrated one-worker 60-second restricted permuter run made 999 mutations
+with no compile errors. Its best weighted score, 3622 versus baseline 3827,
+is invalid: the proposal leaves the row pointer uninitialized outside mode 0.
+Two other proposals move the clearing-loop start ahead of appended entries
+and would erase valid output. They were rejected before canonical probing.
+The safe proposal chains the prefill panel/cursor pointer assignments.
+Canonical `reviewed-chains8`, candidate 3, changes three real instruction
+words at +0x90, +0x9C and +0xAC despite unchanged aligned metrics. It remains
+a 1160-byte, 136-byte-frame rejection. Equal scores do not prove byte inertia.
+
+The signed-16-bit column-counter component (`counter-capacity8`, candidate 6)
+assigns the column and unsigned stride to the retail S3/S4 roles, but emits
+extra sign-extension instructions and remains rejected at 1164 body bytes.
+Six further stock normal/+20 module controls and twelve read-only optimizer
+controls pass for this component and the safe chain. The short counter's
+measured benefit is 163.75, ahead of the unsigned stride's approximately
+153.846; the original 32-bit counter's benefit is 151.25. On the safe
+unsigned-offset chain it falls to 126.25. These measured sources explain
+the priority change; narrowing the counter does not solve the function.
+
+Initializing the six-entry bound at the main-loop entry (`capacity-lifetime8`,
+candidate 0, built on the safe chain) preserves 1160 body bytes and the
+136-byte frame. It restores the six-entry bound/signed-stride S6/S7 pair;
+the column/unsigned-stride S4/S3 exchange and early extra address cache
+remain. All surrounding allocated bytes, section layout, other extents,
+decoded relocations and ordered call targets remain equal. Its aligned
+similarity is 0.9247/raw 0.6849, not a match.
+
+Typed row views on the earlier prefill controls, standard `register`
+qualifiers, and pointer-advance spellings were checked byte-for-byte and
+converge to their respective parents. Fully indexed scene traversal worsens
+the owner and frame. Integer-address signedness was diagnostic only, with
+automatic gating disabled; all eight variants reject. Moving the saved row
+pointer earlier changes scheduling but leaves the extra address cache.
+Reusing consumed rules/output cursors keeps the 144-byte frame. Reusing
+slot/value/scan/found locals for the final clearing loop does not repair
+the column/stride allocation. Eight typed row-parameter/cursor variants on
+the capacity controls are byte-identical to their respective parents. The
+capacity variant derived from the 144-byte-frame control has a 152-byte
+frame; the 136-byte-frame capacity control remains the useful component.
+No function in this block reached a ROM gate.
+
+Next: preserve both frame controls and the independently useful capacity
+and prefill-chain components. Test a genuine typed access or source lifetime
+that removes the duplicate early address cache while preserving the four
+retail spill homes. For the column/stride exchange, require a measured change
+in the 32-bit counter's range or cost without the short counter's added
+instructions. Do not promote narrow-counter or integer-address diagnostics
+solely because a register assignment improves.
