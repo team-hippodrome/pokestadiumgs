@@ -18,14 +18,14 @@ typedef struct Fragment12Rows {
 } Fragment12Rows;
 
 
-// This file's .rodata tables, in retail order (D_81407954 is an alias for D_81407950[1]).
-const s32 D_81407950[6] = { 0, 220, 497, 480, 230, -17 };
+// This file's .rodata tables, in retail order (D_81407954 is an alias for D_81407950[0][1]).
+const s32 D_81407950[2][3] = { { 0, 220, 497 }, { 480, 230, -17 } };
 const s16 D_81407968[2][5][4][2] = { 339, 31, 339, 31, 43, 301, 43, 301, 339, 110, 339, 110, 82, 240, 82, 240, 339, 110, 339, 110, 130, 254, 130, 254, 339, 31, 339, 31, 43, 301, 43, 301, 339, 110, 339, 110, 82, 240, 82, 240, 82, 67, 339, 67, 43, 265, 300, 265, 82, 67, 339, 67, 43, 265, 300, 265, 125, 83, 382, 83, 86, 281, 343, 281, 82, 67, 339, 67, 43, 265, 300, 265, 82, 67, 339, 67, 43, 265, 300, 265 };
 const s16 D_81407A08[5][2] = { 261, 121, 222, 103, 174, 89, 261, 121, 222, 103 };
 const s16 D_81407A1C[4][2] = { 339, 31, 339, 31, 221, 339, 221, 339 };
 const s16 D_81407A2C[4][2] = { 418, 31, 418, 31, 98, 371, 98, 371 };
-const s16 D_81407A3C[16] = { 82, -193, 640, 31, -261, 229, 300, 480, 640, 31, 640, 31, -261, 229, -261, 229 };
-const s16 D_81407A5C[8] = { 82, 31, 339, 31, 43, 229, 300, 229 };
+const s16 D_81407A3C[2][4][2] = { { { 82, -193 }, { 640, 31 }, { -261, 229 }, { 300, 480 } }, { { 640, 31 }, { 640, 31 }, { -261, 229 }, { -261, 229 } } };
+const s16 D_81407A5C[4][2] = { { 82, 31 }, { 339, 31 }, { 43, 229 }, { 300, 229 } };
 // Label-draw format strings that func_814057CC passes to func_800495BC/func_800495F8. Its
 // nonmatchings .s carried these bytes in its .rodata section; the definitions keep the
 // object's .rodata byte-identical now that the function is C.
@@ -79,7 +79,38 @@ void func_814029AC(void *arg0, f32 arg1) {
         var_s2 += 12;
     } while (var_s0 != 132);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81402A64.s")
+// Rank active rows by one position sample; terminate the seven-entry output with NULL.
+void Fragment12_RankActiveRows(Fragment12Row **output, Fragment12Row *rows, s32 sample_index) {
+    s32 used_rows = 0;
+    s32 rank;
+    s32 row;
+    s32 selected_row;
+    f32 best_y;
+
+    for (rank = 0; rank < 6; rank++) {
+        best_y = 10000.0f;
+        selected_row = -1;
+        for (row = 0; row < 6; row++) {
+            if ((used_rows & (1 << row)) == 0) {
+                if (rows[row].unk_208 >= 0) {
+                    if (rows[row].values[sample_index] < best_y) {
+                        best_y = rows[row].values[sample_index];
+                        selected_row = row;
+                    }
+                }
+            }
+        }
+        if (selected_row >= 0) {
+            output[rank] = &rows[selected_row];
+            used_rows |= 1 << selected_row;
+        } else {
+            output[rank] = NULL;
+        }
+    }
+    for (; rank < 7; rank++) {
+        output[rank] = NULL;
+    }
+}
 
 void func_81402CD8(void *arg0, f32 arg1) {
     arg1 *= 100.0f;
@@ -129,13 +160,33 @@ s32 func_81403710(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81403758.s")
+extern const s32 D_81407954[][3];
+// Return panel Y for its orientation, phase, and 16-step transition.
+s32 Fragment12_GetInterpolatedPanelY(void *state) {
+    f32 fraction;
+    s32 orientation;
 
-s16 func_81403758();
+    fraction = *(f32 *)((u8 *)state + 0xCBC) / 16;
+    if (*(s32 *)((u8 *)state + 0xCC4) != 0) {
+        orientation = 1;
+    } else {
+        orientation = 0;
+    }
+    switch (*(u8 *)((u8 *)state + 0xCC0)) {
+        case 0:
+            return D_81407950[orientation][0];
+        case 1:
+        case 3:
+            return (f32)(D_81407950[orientation][1] - D_81407950[orientation][0]) * fraction + (f32)D_81407950[orientation][0];
+        default:
+            return D_81407954[orientation][0];
+    }
+}
+
 void func_81403828(void *arg0, void *arg1) {
-    s16 temp_v0;
+    s32 temp_v0;
 
-    temp_v0 = func_81403758();
+    temp_v0 = Fragment12_GetInterpolatedPanelY(arg0);
     (*(s16 *)((u8 *)(arg1) + (4))) = 0x20;
     if ((*(s32 *)((u8 *)(arg0) + (0xCC4))) != 0) {
         (*(s16 *)((u8 *)(arg1) + (0))) = 0x233;
@@ -321,7 +372,6 @@ extern void Fragment12_DrawLowerAnimatedPanel(s32, s32, u8, u8 *, u8 *, s32);
 extern void func_81403400(void *, s32, s32, s32);
 extern Gfx *D_800D0510;
 extern s32 func_81403710(void *arg0);
-extern s16 func_81403758();
 extern void func_81403828(void *arg0, void *arg1);
 void func_81403CD0(void *arg0, void *arg1) {
     u8 bits;
@@ -353,7 +403,7 @@ void func_81403CD0(void *arg0, void *arg1) {
         } else {
             Fragment12_DrawUpperAnimatedPanel(rect[0], rect[3] + rect[1], bits, (u8 *)first, (u8 *)second, *(u8 *)((u8 *)arg0 + 0xCC2));
         }
-        func_81403400((u8 *)arg0 + 8, rect[2] / 2 + rect[0], func_81403758(arg0), *(s32 *)((u8 *)arg0 + 0xCC4));
+        func_81403400((u8 *)arg0 + 8, rect[2] / 2 + rect[0], Fragment12_GetInterpolatedPanelY(arg0), *(s32 *)((u8 *)arg0 + 0xCC4));
         func_81607408();
     }
 }
@@ -693,7 +743,30 @@ void func_814047C0(void *arg0, void *arg1)
   out[3] = 51.0f * t;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_8140487C.s")
+extern f32 (*D_8160BD08)(f32);
+// Ease a 261-by-193 panel rectangle toward its target, with optional mode remapping.
+//@src/fragments/11/fragment11_D7BC0.c
+void Fragment12_GetInterpolatedPanelRect(void *state, s16 *rect, s32 remap_mode) {
+    s32 mode;
+    f32 factor;
+
+    mode = *(s8 *)((u8 *)state + 9);
+    factor = D_8160BD08(*(f32 *)state / 16);
+    if (remap_mode != 0) {
+        switch (mode) {
+        case 0: mode = 1; break;
+        case 1: mode = 0; break;
+        case 2: mode = 2; break;
+        case 3: mode = 2; break;
+        }
+    }
+    rect[0] = (s16)((f32)(D_81407A5C[mode][0] - D_81407A3C[*(s32 *)((u8 *)state + 0x14)][mode][0]) * factor +
+        (f32)D_81407A3C[*(s32 *)((u8 *)state + 0x14)][mode][0]);
+    rect[1] = (s16)((f32)(D_81407A5C[mode][1] - D_81407A3C[*(s32 *)((u8 *)state + 0x14)][mode][1]) * factor +
+        (f32)D_81407A3C[*(s32 *)((u8 *)state + 0x14)][mode][1]);
+    rect[2] = 261;
+    rect[3] = 193;
+}
 
 
 void *func_814049CC(void *arg0) {
@@ -899,7 +972,81 @@ s32 func_81404DE4(u16 arg0) {
 void func_81404DE4_padding(void) {
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81404E68.s")
+// Handle button input or timed automatic entries and report selection/state changes.
+s32 Fragment12_HandleSelectionInput(void *state) {
+    s32 changed;
+    s32 previous_selection;
+    s32 previous_mode;
+    u16 *controller;
+
+    changed = 0;
+    previous_selection = *(s8 *)((u8 *)state + 0x10);
+    previous_mode = *(s32 *)((u8 *)state + 0x18);
+    controller = func_814049CC(state);
+    func_814046C4((u8 *)state + 0x24);
+    *(s8 *)((u8 *)state + 0x32) = -1;
+    *(s32 *)((u8 *)state + 0x18) = 0;
+    *(s8 *)((u8 *)state + 0x10) = -1;
+    if (controller != NULL) {
+        s32 count;
+        s32 pressed;
+        s32 held;
+
+        count = func_81404D00(state);
+        pressed = func_81404DE4(controller[4]);
+        held = func_81404DE4(controller[3]);
+        if (controller[3] & 0x10) {
+            if (held >= 0) {
+                if (*((u8 *)state + held * 88 + 0x4B40) == 0) {
+                    if (held == pressed) {
+                        func_800226C0(5);
+                    }
+                } else {
+                    *(s8 *)((u8 *)state + 0x10) = held;
+                }
+            } else {
+                *(s32 *)((u8 *)state + 0x18) = 1;
+            }
+        } else if (controller[4] & 0x20) {
+            func_81403938(*(s32 *)((u8 *)state + 0x3C));
+        } else if (pressed >= 0) {
+            if ((func_81404DA0(state, pressed) != 0) || (*((u8 *)state + pressed * 88 + 0x4B40) == 0)) {
+                func_800226C0(5);
+            } else {
+                func_800226C0(160);
+                *((s8 *)state + count + 0xA) = pressed;
+                func_81403918(*(s32 *)((u8 *)state + 0x3C), *((u8 *)state + 7), pressed);
+            }
+        }
+    } else {
+        (*(s8 *)((u8 *)state + 0x11))--;
+        if (*(s8 *)((u8 *)state + 0x11) <= 0) {
+            s32 destination_slot;
+            s32 selected_entry;
+
+            destination_slot = func_81404D00(state);
+            selected_entry = destination_slot;
+            *(s8 *)((u8 *)state + 0x11) = func_814028F0();
+            *((s8 *)state + destination_slot + 0xA) = selected_entry;
+            func_81403918(*(s32 *)((u8 *)state + 0x3C), *((u8 *)state + 7), selected_entry);
+            func_800226C0(2);
+        }
+    }
+    if (func_81404D00(state) >= *(s8 *)((u8 *)state + 0x12)) {
+        *((u8 *)state + 6) = 3;
+        if ((controller != NULL) && (*(u16 *)((u8 *)state + 4) < func_81404D44(state))) {
+            *((u8 *)state + 6) = 4;
+        }
+        changed = 1;
+    }
+    if ((previous_selection != *(s8 *)((u8 *)state + 0x10)) || (previous_mode != *(s32 *)((u8 *)state + 0x18))) {
+        changed = 1;
+    }
+    if ((*(s8 *)((u8 *)state + 0x10) >= 0) && (previous_selection != *(s8 *)((u8 *)state + 0x10))) {
+        func_800226C0(8);
+    }
+    return changed;
+}
 
 extern s32 func_81403938(s32 arg0);
 extern s32 func_8140463C(void *arg0, s32 arg1, s32 arg2);
