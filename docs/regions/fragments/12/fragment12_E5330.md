@@ -263,3 +263,39 @@ The upper renderer `func_814018F4` remains assembly. Next action: apply the
 measured local-static/phase-index source shape to that sibling, first
 migrating its first counter's real data range and proving the still-assembly
 ROM layout. Preserve the original upper opacity range of 50 through 255.
+
+## 2026-11-02: upper animated panel accepted
+
+`Fragment12_DrawUpperAnimatedPanel` (`func_814018F4`, 303 instruction
+words / 1212 bytes, frame 192, ROM 0xE6C04) completes this file's remaining
+assembly owners. Its selector is the other orientation of `func_81403CD0`
+in `src/fragments/12/fragment12_E7C00.c`. The fill extends from the screen
+top to the textured edge; the type image is placed above that edge and the
+ornaments use `y - func_814028A0(i)`. Their opacity ranges from 50 to 255.
+
+The measured lower-panel spelling transfers directly: initialized local
+statics, compound counter updates, a consumed cycle position read after the
+75-unit wrap, the environment-color channel tree 1,2,0, and a named modulo
+phase index. Canonical `fragment12-upper-lower-transfer8`, candidate 0,
+is accepted through a relocation-masked sequential gate with normal host
+syntax and a byte-identical retail US ROM. No padding, unused local,
+forced register, altered return contract or instruction rewrite is added.
+
+The C data subsegment starts 16 bytes earlier, at ROM 0xECB80, and owns
+48 original bytes. Its leading four-byte payload stays at `D_81407870`.
+The two adjacent RGB triples are one six-byte payload at `D_81407874`;
+`D_81407877 = D_81407874 + 3` preserves the second view. Separate global
+three-byte arrays insert word alignment between them and fail the measured
+data bytes. Natural alignment after the six bytes reproduces the two
+original bytes before the upper counter. No explicit padding is introduced.
+The expanded data window passes the full retail ROM gate with the upper
+owner still assembly before any C candidate is tested.
+
+Naming, formatting, duplicate declarations and the selector's pointer/byte
+prototype are checked against the accepted objects for both source files,
+including normal/+20-leading-blank complete-module allocated bytes, function
+extents and semantic relocations. Private evidence is under
+`fragment12-upper-data-*`, `fragment12-upper-lower-transfer8` and
+`fragment12-upper-panel-*`. Final native extraction and the normal host-checked
+ROM build pass; all 303 final instruction words equal the original assembly
+and the 48-byte data window remains identical.

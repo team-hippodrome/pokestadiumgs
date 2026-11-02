@@ -615,7 +615,7 @@
     - [0xE5330, c,       fragments/12/fragment12_E5330]
     - [0xE7C00, c,       fragments/12/fragment12_E7C00]
     - [0xECAB0, data,    fragments/12/fragment12_data]
-    - [0xECB90, .data,   fragments/12/fragment12_E5330] # Animation counters, footer state, and the following initialized word.
+    - [0xECB80, .data,   fragments/12/fragment12_E5330] # Animation counters, footer state, and the following initialized word.
     - [0xECBB0, data,    fragments/12/fragment12_data_tail]
     - [0xECBE0, .rodata, fragments/12/fragment12_E5330] # Strings, jump tables, float literals.
     - [0xECC60, .rodata, fragments/12/fragment12_E7C00] # all of this object's tables, strings-free: C const tables, asm-owned tables, then late rodata (jump tables, D_81407B8C, jtbl_81407B94)
