@@ -376,3 +376,83 @@ unreachable from C. Separately, appending `return ret` to `func_81404700`
 produces 40 bytes instead of 36 and fails complete-module equality. Neither
 helper experiment is installed. The dispatcher remains a requeue at its
 previous direct/optional-controller diagnostics.
+
+### Native spill observer and source-shape follow-up (2026-11-02)
+
+`func_81403400` remains `requeue`; `row-history-steps8` candidate 4 remains
+its strongest source. A native UOPT observer reproduced stock optimized
+Ucode and UGEN symbol-table input byte for byte with tracing disabled and
+enabled, for both normal and 20-leading-blank source controls. It changes
+no compiler decisions. The measured frontend reservation is 72 bytes.
+Eight PRE spill assignments use seven unique slots: direction conversion
+at -76; first-pass address and current-index load sharing -80; next age
+at -84; sample byte offset at -88; then three unused-in-emitted-code
+address/load homes at -92, -96 and -100. Only -84 and -88 reach emitted
+Ucode; final frame size remains 184. Retail needs the next-age home at
+-72 while retaining the sample-offset home at -88. Declaration placement
+alone does not explain the required separation.
+
+Fresh canonical native batches retained statistics and passed normal/+20
+whole-module controls. Moving the distance filter before Y computation
+changes scheduling and allocation. Grouping the four drawing flags/signs
+as word-sized struct fields preserves the three-offset residual; byte-sized
+fields preserve the instruction sequence but shrink the frame to 176.
+Early current-sample address/index locals and explicit next-age locals
+also reject. None was installed. The next source hypothesis must account
+for PRE spill ordering rather than merely moving scalar declarations.
+Private evidence: `scratch/fragment12-row-spill-observation-v2/receipt.json`
+and the `row-local-state8`, `row-current-address8`, `row-next-age8` results.
+
+`func_81402D08` preliminary assembly inspection exposes a separate source
+reconstruction issue. `$s4` is initialized at owner offset 0x9C, set on a
+boundary collision at 0x15C/0x184 and updated by a collision-pair OR at
+0x24C. Its only reads feed that OR; it has no output store, branch use or
+return transfer. The epilogue restores the caller's `$s4`. The m2c draft
+omits this discarded mask. No candidate was submitted for this owner;
+reconstructing its useful row/slot physics alone would omit retail words.
+
+### Inset-panel renderer: pointer homes resolved, setup order remains
+
+`func_814063A0` is now a measured `requeue` at 864 bytes and a 104-byte
+frame. It draws the square image panel before or after the rectangular
+label panel according to the signed mode byte at +9, with manager checks
+for channels state+1/state+2. The label comes from the string copied to
++0x4D50 by `func_81404A08`; the image handle is stored at +0x4D5C by that
+initializer. Actual contracts are `func_8004D19C(s32,s32,s32,s32,s32)`
+(`src/4CC20.c`) and `func_816073A0(void *)` (fragment 11). Pointer-typed
+texture prototypes found in other callers are insufficient evidence for
+changing this integer-handle contract.
+
+Separate scoped `s16[4]` rectangles and `/ 16` reproduce the rectangle
+homes and floating instructions. Writing width/2 before X in the centered
+label expression restores the temporary-register order. Plain local
+setup/restore pointer scalars rematerialize their addresses, yielding 848
+rather than 864 bytes. A two-pointer local array assigned through separate
+statements retains the required stores and loads. Braced initialization
+adds a constant-data copy and fails section layout; do not adopt it.
+
+The best current source uses separate setup/restore `Gfx *` command locals,
+both consumed by ordinary display-list writes. An array ordered restore,
+setup, assigned setup first, reproduces retail's pointer homes and address
+registers. It introduces no padding, unused fields or machine-code rewrite.
+`scratch/fragment12-inset-separate-commands8.json` candidate 1 (also 5)
+retains all 216 instructions. Its real residual is six instruction words
+in the setup-call prefix (owner offsets 0x24C, 0x250, 0x254, 0x25C, 0x260,
+0x264): the argument copy occurs after pointer initialization instead of
+in the preceding branch delay slot. The 0x1C8 raw float-relocation spelling
+resolves to the same `.rodata + 576` target on both sides. The reported scalar raw score is not a count
+of differing object words.
+
+Before that final source refinement, stock CFE/UOPT/UGEN/AS1 inputs were
+captured for known assembly, a shared command cursor and a first-command
+SDK macro, each normal/+20. All six complete-module identity controls
+passed. Both partial forms reserve 52 frontend bytes and 56 optimized
+bytes. The cursor's pointer array occupies Mmt -52/-48; the SDK form's
+occupies -48/-44. The separate-command source composes those independently
+observed pointer-home and register-web mechanisms. Its stock pass boundaries also reproduce the canonical object
+under four known/candidate normal/+20 complete-module controls, with the
+same 52/56-byte frontend/optimized reservations. Semantic relocations
+outside the reordered prefix are equal; inside it, the relocation target
+multiset is equal. Next: establish the owning scheduler/IR ordering before
+another source family. No candidate was installed or ROM gate run for these
+rejections; source, linker layout and coverage remain unchanged.
