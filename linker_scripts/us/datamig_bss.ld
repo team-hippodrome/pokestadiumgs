@@ -173,6 +173,16 @@ SECTIONS
     {
         build/src/fragments/57/fragment57_code.o(.bss)
     }
+    /* Two six-word output bounds records in loader-cleared runtime memory. */
+    .fragment66_output_bounds_bss 0x82E05938 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/66/fragment66_code.o(.bss)
+    }
+    /* Two dimensions, including the compiler's native input alignment. */
+    .fragment66_extra_dimensions_data 0x82E06150 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/66/fragment66_code.o(.data)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
@@ -195,3 +205,8 @@ ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
 
 ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 48,
        "fragment57 dialog context must retain its original 48-byte footprint");
+
+ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 48,
+       "fragment66 output bounds must retain their original 48-byte footprint");
+ASSERT(SIZEOF(.fragment66_extra_dimensions_data) == 16,
+       "fragment66 dimensions must retain their native aligned input footprint");
