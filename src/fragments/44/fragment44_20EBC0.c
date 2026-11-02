@@ -57,7 +57,37 @@ void func_8AF209E4(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4,
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20EBC0/func_8AF20A78.s")
+extern void _bzero(void *, s32);
+void func_8AF20A78(void *arg0, u8 *destination) {
+    unk_func_8AF209E4 packet;
+    u8 *node;
+    unk_func_8AF209E4 *settings;
+    s32 x;
+    s32 y;
+
+    node = (u8 *)arg0;
+    settings = &packet;
+    x = *(s16 *)(node + 8);
+    y = *(s16 *)(node + 10);
+    _bzero(settings, sizeof(packet));
+    ((s16 *)settings)[0] = *(s16 *)(node + 12);
+    ((s16 *)settings)[1] = *(s16 *)(node + 14);
+    ((s16 *)settings)[10] = 13;
+    settings->unk_00[9] = 85;
+    settings->unk_00[10] = 65;
+    settings->unk_00[11] = 6;
+    ((s16 *)settings)[30] = 3;
+    settings->unk_00[1] = 0;
+    settings->unk_00[2] = 0;
+    ((s16 *)settings)[6] = 0;
+    ((s16 *)settings)[7] = 0;
+    ((s16 *)settings)[9] = 0;
+    ((s16 *)settings)[31] = 1;
+    settings->unk_00[13] = 5;
+    settings->unk_00[14] = 0;
+    ((s16 *)settings)[37] = 65;
+    func_8AF209E4(destination, 10, x, y, 8, 0, 0, 0, 100, 100, 100, 4, 11, settings);
+}
 
 /* mkdraft:func_8AF20B7C begin */
 extern u8 *D_8AF279A0;
@@ -86,7 +116,6 @@ extern void func_8AF00504(s32);
 extern u8 func_8AF01654(u8);
 extern void func_8AF02C28(u8 *, s32 *, s32 *, s32);
 extern void func_8AF1E32C(s16 *, u8);
-extern void func_8AF20A78(void *, u8 *);
 
 
 
