@@ -99,7 +99,20 @@ or reverting a function to assembly does not establish a proper C match.
   data, function extents and legacy addresses remain exact. See
   [the fragment 16 evidence](regions/fragments/16/fragment16_code.md).
 
-This leaves 757 directive occurrences and 50 affected functions, including
+- `func_8220BF68` and `func_8220D630`: own their three adjacent state
+  halfwords. Signed stores and a normal two-iteration `for` loop remove two
+  coalescing directives, a word rewrite and an instruction swap. All 264
+  retail bytes match. See [the fragment 17 panel evidence](regions/fragments/17/fragment17_11B210.md).
+
+- `func_82507B6C` and `func_82507BD0`: own their three-halfword state
+  record and saved argument pair, retaining the original guarded reads and
+  narrow call contract. All 124 retail bytes match without a whole-function
+  hex replacement, nine relocation-target patches and two coalescing
+  directives. Both files pass normal/blank controls, host syntax and the
+  normal retail ROM gate with all function extents and legacy addresses
+  preserved. See [the fragment 21 evidence](regions/fragments/21/fragment21_144790.md).
+
+This leaves 741 directive occurrences and 46 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -124,15 +137,15 @@ table are baseline function directives, excluding the separate section word.
 | `func_822068E0` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 17 | Pending |
 | `func_8220AC38` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
 | `func_8220AC64` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
-| `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Pending |
-| `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Pending |
+| `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Replaced with C |
+| `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Replaced with C |
 | `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Replaced with C |
 | `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
 | `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Pending |
 | `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
 | `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Pending |
-| `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Pending |
-| `func_82507BD0` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 1 | Pending |
+| `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Replaced with C |
+| `func_82507BD0` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 1 | Replaced with C |
 | `func_82507BFC` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Pending |
 | `func_82507C48` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Pending |
 | `func_82508620` | [src/fragments/21/fragment21_147D10.c](../src/fragments/21/fragment21_147D10.c) | 8 | Pending |

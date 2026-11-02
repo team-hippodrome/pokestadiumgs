@@ -337,3 +337,35 @@ in that snapshot does not make these owners fresh.
 ## 2026-10-28 — `func_8220D630`: requeue
 
 requeue. Shape: `if (D_82210C30 != 0 && D_82210C32 == 0) { D_82210C32 = 1; D_82210C34 = 0; D_82210C38 = -1; } return 0;`. Best score 0.9412 / raw 0.7647 (nested and `&&` spellings tie), `operand_or_scheduling_drift`. Retail loads `D_82210C32` through its own `lui $t7`, hoisted above the first `beqz`, then stores through a separate `lui $at`, shared with `D_82210C34`. IDO instead CSEs `&D_82210C32` into `$v0` for both the load and the stores, which also leaves `COALESCE_AT_LUI` nothing to fold ("no fold applied"). Tried without success: re-reading through `((s16 *)&D_82210C30)[1]` (IDO then CSEs `&D_82210C30`), and `volatile` casts on the load, the store, or every access. Next: a load spelling that cannot share a base with the stores (a different symbol on the same page, or an accessor helper), then the coalesce pragma on `D_82210C32`/`D_82210C34`.
+
+## 2026-11-03 — panel state helpers: ordinary C matches
+
+On base `4cbfc5232390ec6cd309bff84f269f6a5e12ae2b`, `func_8220BF68`
+(200 bytes) and `func_8220D630` (64 bytes) compile to retail instructions
+without their two coalescing directives, one word rewrite and instruction
+swap. Both use a real six-byte C record at `0x82210C32`. The signed third
+halfword stores -1 directly. The state helper retains its existing guards,
+sets state one, clears the next halfword and retains the separate -1 store.
+
+The initializer retains all original state updates and calls. A normal
+`for` loop initializes the two 22-byte panel records with indices zero and
+one. Its index and byte-pointer updates are independent local operations;
+placing the index update in the loop increment produces the retail setup
+order without swapping compiled instructions. No extra local or argument is
+introduced.
+
+The record occupies this source's BSS input section, 16 bytes with compiler
+alignment. `linker_scripts/us/datamig_bss.ld` pins it NOLOAD at its original
+address. The fragment loader clears `0x8220E2D0..0x82210C70` after consuming
+metadata. Original loaded metadata and header/allocation sizes are preserved.
+//@src/2CA0.c
+//@linker_scripts/us/datamig_bss.ld
+
+Complete-module normal/20-leading-blank-line controls, host syntax and private
+known/candidate full-ROM links pass. The final combined native stock IDO 7.1
+build with the two fragment 21 replacements passes
+`make -j1 COMPARE=1 RUN_CC_CHECK=1`. Every linked function address/size and
+all legacy fragment 17/21 addresses remain exact. ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage and compiler/tooling sources are unchanged.
