@@ -47,3 +47,49 @@ bytes equal the assembly-backed baseline, including prior C bodies. The
 owner preserves its 64-byte frame and original extent. No new fake, padding,
 storage, compiler flag, or instruction rewrite is used. Behavior follows
 from source and disassembly inspection.
+
+## Frame-driven alpha callback
+
+`func_87F0691C` matches as C: 99 instructions, 396 bytes, with its original
+48-byte frame. Event zero clears bit 1 of the node's unsigned halfword at
+offset 2. Event one draws through `func_87F06804` with RGB `0xFFE600` and a
+clamped alpha; other events do nothing. The unsigned frame counter at
+`D_87F15B88 + 40` is reduced modulo 360, multiplied by 5 and
+182.0416718, and rounded by adding or subtracting 0.5 before truncation.
+The low 16 bits shifted right by 4 index the existing sine table. The
+sample is mapped through `(sample + 1) * 0.5`, multiplied by 455, offset
+by -100, rounded again, and clamped to 0 through 255.
+
+`func_87F07FE8` increments that counter before traversal. The original
+`func_87F06EAC` registers this callback for DBP1/DBP2 through
+`func_87F0AB08`; that registration interface takes a void callback.
+The draw helper consumes the packed color by value. These inspected
+interfaces establish the event and draw roles without renaming the owner.
+//@src/fragments/64/fragment64_3290A0.c
+//@src/fragments/64/fragment64_32D260.c
+
+The repeated phase expression is labeled `FAKE`: caching it in a local
+changes the floating-point register allocation. The real normalized-wave
+and scaled-wave locals preserve the original rounding registers. The
+existing aggregate color type and its `FAKE` annotation remain intact.
+The float literals occupy the original `D_87F115C0`/`D_87F115C4` slots;
+data ownership, section sizes, and previous C implementations are unchanged.
+
+Fresh verification targets master
+`149f6559ed4d51b884e6ebea43b7f717b3ecd500` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/64/fragment64_3290A0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled forced compile and complete US link report
+`build/pokestadiumgs-us.z64: OK`. Retail byte comparison and whitespace
+checks pass; both ROMs have MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All 7760 linked module text bytes and 352 rodata bytes equal retail,
+including the owner's ROM interval `0x32958C..0x329718` (end exclusive).
+The two changed object operands are equivalent relocations from named
+float symbols to their section offsets. No generated layout, compiler,
+CI, padding, new storage, or instruction rewrite is introduced.
