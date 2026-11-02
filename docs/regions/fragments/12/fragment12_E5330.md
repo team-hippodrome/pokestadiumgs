@@ -107,3 +107,93 @@ proof use the `fragment12-message-panels-*` prefix. Calibrated pass evidence
 is retained in `fragment12-message-stock-passes` and
 `fragment12-message-as1-trace`; the bounded search receipt is
 `fragment12-message-call-layout8-named-observed-permute.json`.
+
+## 2026-11-02: scrolling footer accepted
+
+`Fragment12_DrawScrollingFooter` (`func_814025E8`) replaces 174 instruction
+words / 696 bytes at ROM 0xE78F8 and retains the retail 72-byte frame.
+It advances a signed scroll position by two pixels, measures table 17 entry
+0/1 plus optional suffix 9, and wraps by that width (plus 286 for the single
+copy mode). It draws the bottom frames, icons and labels, clips the moving
+text to `(261, 425, 286, 20)`, then restores the full-screen clip. The caller
+`func_81400098` supplies both flags.
+
+### Storage and interface mechanism
+
+The scroll word is a function-local static. IDO treats this differently
+from a file-scope static or an extern: it emits retail's separate LUI/LW
+loads and LUI/store accesses instead of caching the counter address.
+The same mechanism is documented in
+`docs/regions/fragments/69/fragment69_code.md` for `func_8F100020`.
+Check that history before searching ordinary update spellings for this
+per-access-LUI pattern. The footer color is also a local static RGBA array,
+initialized to `{0, 0, 0, 120}`.
+
+The frame helper `func_816059CC` reads its final argument as four indexed
+bytes. Giving that parameter its actual `u8 *` view closes the remaining
+color-address spill and restores the frame with ordinary SDK display-list
+macros. Its C definition, local forward declaration, and word-interface
+wrapper cast are corrected in fragment 11. That module's code, section
+bytes, function extents and semantic relocations remain identical under
+normal and +20-leading-blank controls. No call argument or return category
+is invented.
+
+`rom.yaml` assigns this file the existing data window ROM
+`0xECB90..0xECBB0` (VRAM `0x81407880..0x814078A0`). The upper renderer's
+30-step state and the lower renderer's two counters retain their global
+views while those functions remain in assembly. The footer owns its scroll
+and color statics; the existing initialized word 1000 after them is retained
+with unknown semantics. All 32 bytes, including natural section alignment,
+match retail. No dummy local, manual padding or output rewriting is used.
+The original 44-byte readonly footer payload includes an unused
+`<LENGTH>%d\n` format; those real bytes are preserved.
+
+The data-only migration first passes the complete retail ROM check with
+all three assembly owners retained. Canonical `fragment12-footer-data-promotion4-v2`,
+candidate 0, then accepts the SDK-macro/local-static/pointer-argument body
+with its paired data-definition edits. Relocation masking permits the
+mandatory sequential ROM gate; it is not credited as object-only link
+verification. Normal host syntax and the full retail US ROM comparison pass.
+
+The local runner's sequential and combined installation paths interpreted
+backslashes in C strings as regex replacement escapes. Literal callback
+replacement fixes all three paths; a regression covers exact preservation
+and restoration after failure. The defect affected installation of the
+existing debug-format payload, not the isolated compiler result. Private
+scripts, captures and runner changes are not published with this source PR.
+Final naming and formatting have whole-module controls for both source files;
+the final native seal and original-word proof use private
+`fragment12-footer-*` artifacts.
+
+## 2026-11-02: upper and lower animated panels — requeue
+
+`func_814018F4` (303 words / 1212 bytes, frame 192, ROM 0xE6C04) and
+`func_81401DB0` (299 / 1196, frame 184, ROM 0xE70C0) draw upper and lower
+animated colored panels. `func_81403CD0` in
+`src/fragments/12/fragment12_E7C00.c` chooses their orientation and supplies
+the rectangle, type byte, two color addresses and ornament count. The
+ornaments use a 75-unit sine phase with 65-unit spacing; opacity spans
+50–255 above and 0–255 below. A separate 30-unit state is also advanced.
+
+Function-local static counters reproduce retail's per-access global loads
+and stores. A `u8` type parameter restores the initial argument stores and
+mask. A consumed explicit phase induction variable restores both frames.
+Compound updates of both statics give the best retained spellings in
+`fragment12-animated-local-updates8-v2`, candidates 3 and 7: upper 1212
+bytes, normalized 0.9868 / raw 0.8383; lower 1196 bytes, normalized 0.9866 /
+raw 0.8361. These are layout diagnostics, not accepted C definitions.
+The readonly 2-pi literal and actual eight-byte `TextureRenderHeader` are
+preserved. The render mode is `G_RM_OPA_SURF | AA_EN | CVG_X_ALPHA |
+ALPHA_CVG_SEL`, combined with `G_RM_OPA_SURF2`.
+
+Next action: retain local statics, the byte parameter, compound updates,
+and explicit phase induction. Resolve the remaining expression/packet
+scheduling differences with complete opcode and relocation views. The
+lower renderer's two data words now have C definitions immediately before
+its pragma, so paired data companion edits can replace their global views
+with the local statics in one canonical transaction. The upper renderer's
+first counter is still in the preceding assembly data window; its eventual
+migration must preserve a real aligned data range. Do not add padding to a
+near-match. Calibration and captured candidates are under private
+`fragment12-animated-renderers-*`, `fragment12-animated-local-*`, and
+`fragment12-function-static8` paths.

@@ -1311,12 +1311,14 @@ SECTIONS
         fragment12_DATA_START = .;
         fragments_12_fragment12_header = .;
         build/asm/us/data/fragments/12/fragment12_header.o(.data);
+        fragments_12_fragment12_data_data = .;
+        build/asm/us/data/fragments/12/fragment12_data.data.o(.data);
         fragments_12_fragment12_E5330 = .;
         build/src/fragments/12/fragment12_E5330.o(.data);
         fragments_12_fragment12_E7C00 = .;
         build/src/fragments/12/fragment12_E7C00.o(.data);
-        fragments_12_fragment12_data_data = .;
-        build/asm/us/data/fragments/12/fragment12_data.data.o(.data);
+        fragments_12_fragment12_data_tail_data = .;
+        build/asm/us/data/fragments/12/fragment12_data_tail.data.o(.data);
         fragment12_DATA_END = .;
         fragment12_DATA_SIZE = ABSOLUTE(fragment12_DATA_END - fragment12_DATA_START);
         fragment12_RODATA_START = .;

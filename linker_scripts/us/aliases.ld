@@ -1550,3 +1550,5 @@ func_81400C24 = Fragment12_DrawMessagePanel;
 func_81400DE8 = Fragment12_DrawValueMessagePanel;
 
 func_81400FA4 = Fragment12_DrawCompactValueMessagePanel;
+
+func_814025E8 = Fragment12_DrawScrollingFooter;

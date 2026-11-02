@@ -12,14 +12,14 @@ void func_81400020(s32 arg0) {
 extern u8 *D_814077AC;
 extern s32 func_81600DA8(void *, void *);
 extern void func_81600F0C(void *, s32, s32, s32, s32);
-extern void func_814025E8(s32, s32);
+extern void Fragment12_DrawScrollingFooter(s32, s32);
 void func_81400098(s32 arg0) {
     if (func_81600DA8((void *)arg0, D_81407BB0) != 0) {
         func_81600F0C(D_81407BB0, 0, 0, 0x280, 0x1E0);
     } else {
         func_81600F0C(D_81407BB0, 0, 0x1A1, 0x230, 0x3F);
     }
-    func_814025E8(
+    Fragment12_DrawScrollingFooter(
         ((u32)*(s32 *)(*(u8 **)((u8 *)(u32)D_814077AC + 0x844) + 0x40)) >> 31,
         *(s32 *)((u8 *)(u32)D_814077AC + 0x888)
     );
@@ -621,7 +621,14 @@ void func_814014C8(void *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
 }
 /* mkdraft:func_814014C8 end */
 
+// Upper renderer's 30-step counter.
+s32 D_81407880 = 0;
+
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814018F4.s")
+
+// Lower renderer's 75-step ornament phase and 30-step counter.
+s32 D_81407884 = 0;
+s32 D_81407888 = 0;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81401DB0.s")
 
@@ -676,7 +683,62 @@ void func_814024B4(s32 x, s32 y, s32 index) {
     gSPDisplayList(D_800D0510++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814025E8.s")
+s32 func_80049148(s32, s32, const char *, ...);
+s32 func_8004D19C(s32, s32, s32, s32, s32);
+void func_81605950(void);
+void func_816059CC(s32, s32, s32, s32, u8 *);
+// Original footer format payloads, including the unused measurement debug string.
+const char D_814078D0[4] = "";
+const char D_814078D4[20] = "%s%s\0\0\0\0<LENGTH>%d\n";
+const char D_814078E8[8] = "%s%s";
+const char D_814078F0[12] = "%s%s%s%s";
+// Scroll table 17 entries 0/1 and optional suffix 9 through the 286-pixel footer clip.
+//@src/fragments/11/fragment11_D9DE0.c
+void Fragment12_DrawScrollingFooter(s32 single_copy, s32 include_suffix) {
+    static s32 scroll_position = 0;
+    static u8 frame_color[4] = { 0, 0, 0, 120 };
+    s32 cycle_width;
+    const char *main_text;
+    const char *suffix;
+    main_text = func_8004C874(17, single_copy ? 1 : 0);
+    if (include_suffix) {
+        suffix = func_8004C874(17, 9);
+    } else {
+        suffix = D_814078D0;
+    }
+    scroll_position += 2;
+    cycle_width = func_80049148(8, 1, D_814078D4, main_text, suffix);
+    if (single_copy) {
+        cycle_width += 286;
+    }
+    if (cycle_width < scroll_position) {
+        scroll_position -= cycle_width;
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_81605950();
+    func_816059CC(38, 417, 219, 36, frame_color);
+    func_816059CC(253, 417, 302, 36, frame_color);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D19C(54, 423, (s32)D_814077E0, 0, 0);
+    func_8004D19C(146, 423, (s32)D_814077E4, 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_800495BC(80, 425, func_8004C874(17, 2));
+    func_800495BC(172, 425, func_8004C874(17, 3));
+    func_80006F70(&D_800D0510, 261, 425, 286, 20);
+    if (single_copy) {
+        func_800495BC(547 - scroll_position, 425, D_814078E8, main_text, suffix);
+    } else {
+        func_800495BC(261 - scroll_position, 425, D_814078F0, main_text, suffix, main_text, suffix);
+    }
+    func_800499EC();
+    func_80006F70(&D_800D0510, 0, 0, 640, 480);
+}
+
+// Existing initialized word after the footer state; its consumer is unknown.
+s32 D_81407894 = 1000;
 
 s32 func_814028A0(s32 arg0) {
     return (s32) (((((f32) arg0 + 0.5f) * 22.0f) + 17.0f) - 6.0f);
