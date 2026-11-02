@@ -788,3 +788,48 @@ four measured scalar homes,
 the typed main-loop addresses, the actual pointer-returning image-loader
 contract and the constructor's integer image handle. No ROM gate has run
 for these rejected candidates; no C or layout is installed.
+
+
+### 2026-11-02 initializer interference evidence (requeue)
+
+Source base: `5ebbca4daa1d44b859459aeb3cbe1a3f9da92f9b`.
+The 20-word `branch-count8` candidate remains the closest complete owner.
+A second useful control is `named-bound8`, candidate 1: reuse the main index
+as the single-mode byte bound, while reusing the main predicate/count for
+the single-mode entry count. Its final 88 instructions, starting at owner
+offset 0x29C, are byte-identical. The complete owner still differs in 27
+words: the main index and 4-entry bound exchange S1/S2, while the image
+cursor and byte bound also exchange S1/S2. The earlier mode-branch scheduling
+residual remains. This alternate must be retained despite its larger count.
+
+Four fresh normal/+20 known/candidate controls reproduce this alternate's
+1020-byte owner, 168-byte frame, complete surrounding allocated bytes,
+section layout, defined extents and decoded relocation targets/addends.
+A private read-only observer now also records each selected range's
+forbidden-color mask and interfering neighbors. Six stock/off/on output
+controls pass independently for the 20-word and tail-matched sources.
+The 20-word source reproduces all 47 mask/neighbor-category snapshots after
+20 leading blank lines. The production compiler is unchanged.
+
+In the 20-word source, the generated image cursor receives internal color
+15 before the 16400-byte bound; their interference makes color 15 unavailable
+to that bound, which receives 16. Retained object instructions identify
+these source roles as physical S1 and S2. In the tail-matched source, the
+image cursor's computed benefit is 20 (divisor 2), ahead of the reused
+index/bound local at 130/7 (about 18.571). That local interferes with the
+image cursor and receives color 16. These are measured decisions for these
+sources, not a general color-to-register table or an impossibility result.
+
+Mode-branch inversion and early-return/goto spellings produce larger
+residuals or the existing code. Indexing images while independently walking
+the ID records recovers the image-byte induction but raises the frame to
+192 bytes. Hoisting the group division converges to each control's existing
+code; routing it through the first-index local worsens the residual. Main
+post-test/condition-update loops add scheduling differences; a less-than
+bound converges to the existing code. Skipping cursor updates after the
+last panel removes one instruction and does not match.
+
+Next: test a source-level change to the measured index/image live ranges
+or their block costs, preserving the exact suffix control. Do not rerun
+these branch, division-hoisting or loop-form families without a distinct
+mechanism. No new owner was accepted, installed or ROM-gated.
