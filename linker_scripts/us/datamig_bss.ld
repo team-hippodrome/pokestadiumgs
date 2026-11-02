@@ -161,6 +161,12 @@ SECTIONS
     {
         build/src/fragments/72/fragment72_code.o(.bss)
     }
+    /* Four player model records, cleared after consuming the fragment
+     * relocation metadata; the original loaded table bytes stay intact. */
+    .fragment54_player_models_data 0x86607410 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/54/fragment54_code.o(.data)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
@@ -177,3 +183,6 @@ ASSERT(SIZEOF(.fragment72_playback_resources_bss) == 16,
 
 ASSERT(SIZEOF(.fragment24_state_12450_bss) == 32,
        "fragment24 state and parameter prefix must retain its compiler section footprint");
+
+ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
+       "fragment54 player models must occupy their original runtime footprint");
