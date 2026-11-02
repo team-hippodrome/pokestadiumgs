@@ -66,7 +66,37 @@ void func_8AF20F64(u8* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5, u8
     *(unk_func_8AF20F64*)(arg0 + 40) = *arg13;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF20FF8.s")
+extern void _bzero(void *, s32);
+void func_8AF20FF8(s32 arg0, u8 *destination) {
+    unk_func_8AF20F64 packet;
+    u8 *node;
+    unk_func_8AF20F64 *settings;
+    s32 x;
+    s32 y;
+
+    node = (u8 *)arg0;
+    settings = &packet;
+    x = *(s16 *)(node + 8);
+    y = *(s16 *)(node + 10);
+    _bzero(settings, sizeof(packet));
+    ((s16 *)settings)[0] = *(s16 *)(node + 12);
+    ((s16 *)settings)[1] = *(s16 *)(node + 14);
+    ((s16 *)settings)[10] = 13;
+    settings->unk_00[9] = 85;
+    settings->unk_00[10] = 65;
+    settings->unk_00[11] = 3;
+    ((s16 *)settings)[30] = 2;
+    settings->unk_00[1] = 0;
+    settings->unk_00[2] = 0;
+    ((s16 *)settings)[6] = 0;
+    ((s16 *)settings)[7] = 0;
+    ((s16 *)settings)[9] = 0;
+    ((s16 *)settings)[31] = 1;
+    settings->unk_00[13] = 5;
+    settings->unk_00[14] = 0;
+    ((s16 *)settings)[37] = 65;
+    func_8AF20F64(destination, 10, x, y, 8, 0, 0, 0, 100, 100, 100, 4, 11, settings);
+}
 
 /* mkdraft:func_8AF210FC begin */
 extern u8 *D_8AF279B0;
@@ -75,7 +105,6 @@ extern s32 D_8AF3A004;
 extern s16 D_8AF3A008;
 extern void func_8AC06570(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5);
 extern s32 func_8AF02C28();
-extern s32 func_8AF20FF8();
 
 
 
