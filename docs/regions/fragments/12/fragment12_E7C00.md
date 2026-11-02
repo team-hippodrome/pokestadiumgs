@@ -736,3 +736,55 @@ update placement and initializer ordering before replaying type or address
 families. Preserve the four fixed homes and the typed main-loop addresses.
 No candidate reached a ROM gate or was installed. C, linker layout, coverage
 and the pending fragment 79 notes remain unchanged.
+
+
+### 2026-11-02 initializer lifetime follow-up (requeue)
+
+Source base: `b1e9f1806a76fb4080b594c581ad28dfb24307a0`;
+owner `func_81406AAC`. Initializing the main loop in index/input/active
+order reduces the preceding 29-word positional residual to 27 words.
+Incrementing the image byte offset before the ID cursor reduces it to 26.
+The latter change came from a calibrated 60-second restricted permuter run
+(1027 mutations); its other proposed timer-pointer reread was unnecessary.
+Equal aligned similarity scores concealed this one-word improvement, so
+compare the actual retained instruction bytes before calling a change inert.
+
+The closest candidate is now `branch-count8`, candidate 6: the main loop
+index also carries the single-mode 3/6-entry count. It has 20 differing
+instruction words at the same 1020-byte extent and 168-byte frame. It restores
+the rules pointer's retail register. The remaining differences are the
+mode-branch scheduling, image cursor/bound assignment, and the exchanged
+single-mode count and active-pointer registers. This is a comparison
+rejection, not an installed function or a full-ROM match.
+
+Fresh known/candidate normal/+20-leading-blank controls pass for both the
+26-word and 20-word candidates. Every allocated byte outside the owner,
+allocated section layout, defined function extent and decoded semantic
+relocation target/addend is unchanged. Read-only optimizer tracing also
+passes six stock/observer-off/observer-on controls per candidate, preserving
+optimized Ucode, UGEN symbol input and secondary symbol output. Normal and
+blank runs reproduce all 48 color/cost events for the 26-word candidate and
+47 for the 20-word candidate. Procedure ordinal 76 applies to these captures.
+Internal compiler colors must be mapped independently to physical registers.
+
+Grouped integer offsets do not improve the residual; `for` traversal adds
+an instruction. Typed image-record traversal chooses a 4-byte ID induction
+instead of retail's 8200-byte image induction. A pointer-controlled image
+loop reduces the frame to 144 bytes; an explicit image pointer alongside
+the byte counter removes eight bytes of code. Search-local reuse reduces
+the frame to 160 bytes. Relocating the already-consumed rules-pointer
+declaration restores 168 bytes, but the best such candidate has 24 differing
+words, including four new search-register differences. These families do
+not supersede the 20-word control.
+
+Separating the main predicate from its numeric entry count, with either a
+shared or separate numeric local and early/late assignment, preserves size
+and frame but leaves 96–120 differing words across eight rejected variants.
+
+Next: compare the image cursor/bound interference and the remaining count
+lifetimes in the 20-word control against the measured optimizer ranges.
+Use those ranges to select a new source-lifetime hypothesis. Preserve the
+four measured scalar homes,
+the typed main-loop addresses, the actual pointer-returning image-loader
+contract and the constructor's integer image handle. No ROM gate has run
+for these rejected candidates; no C or layout is installed.
