@@ -2,9 +2,29 @@
 
 # Decompilation coverage
 
+![Function counts by original MIPS instruction count: C upstream versus open](docs/coverage.svg)
+
+## Functions by instruction count
+
+US bucket totals are retained from this table; open function sizes are counted from regenerated original assembly. Counts describe functions, not executed instructions or runtime test coverage.
+
+| Original instructions | C upstream | Open | Total | Complete |
+| --- | ---: | ---: | ---: | ---: |
+| 0–99 | 8,168 | 232 | 8,400 | 97.2% |
+| 100–199 | 940 | 369 | 1,309 | 71.8% |
+| 200–299 | 192 | 228 | 420 | 45.7% |
+| 300–399 | 63 | 115 | 178 | 35.4% |
+| 400–499 | 25 | 54 | 79 | 31.6% |
+| 500–699 | 6 | 77 | 83 | 7.2% |
+| 700–999 | 6 | 27 | 33 | 18.2% |
+| 1000–1499 | 1 | 15 | 16 | 6.2% |
+| 1500–1999 | 0 | 6 | 6 | 0.0% |
+| 2000+ | 4 | 4 | 8 | 50.0% |
+| Unknown | 0 | 0 | 0 | — |
+
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **9,399 / 10,532 (89.2%)**
-- Remaining `GLOBAL_ASM` owners: **1,133**
+- US functions with C implementations: **9,405 / 10,532 (89.3%)**
+- Remaining `GLOBAL_ASM` owners: **1,127**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -35,7 +55,7 @@
 | `src/fragments/11/fragment11_D9520.c` | 1 | 97 | 99.0% |
 | `src/fragments/11/fragment11_D9DE0.c` | 10 | 26 | 61.5% |
 | `src/fragments/11/fragment11_E1E10.c` | 6 | 30 | 80.0% |
-| `src/fragments/12/fragment12_E7C00.c` | 9 | 72 | 87.5% |
+| `src/fragments/12/fragment12_E7C00.c` | 6 | 72 | 91.7% |
 | `src/fragments/13/fragment13_EE0A0.c` | 1 | 6 | 83.3% |
 | `src/fragments/13/fragment13_EEC50.c` | 4 | 79 | 94.9% |
 | `src/fragments/14/fragment14_104FC0.c` | 5 | 26 | 80.8% |
@@ -209,7 +229,7 @@
 | `src/fragments/64/fragment64_322C90.c` | 1 | 10 | 90.0% |
 | `src/fragments/64/fragment64_3235A0.c` | 2 | 11 | 81.8% |
 | `src/fragments/64/fragment64_326ED0.c` | 6 | 17 | 64.7% |
-| `src/fragments/64/fragment64_3290A0.c` | 5 | 13 | 61.5% |
+| `src/fragments/64/fragment64_3290A0.c` | 2 | 13 | 84.6% |
 | `src/fragments/64/fragment64_32AEF0.c` | 1 | 11 | 90.9% |
 | `src/fragments/64/fragment64_32D7D0.c` | 1 | 8 | 87.5% |
 | `src/fragments/64/fragment64_32DC40.c` | 2 | 11 | 81.8% |

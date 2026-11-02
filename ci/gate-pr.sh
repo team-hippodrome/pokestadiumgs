@@ -220,6 +220,7 @@ fi
 if [ -d /out ]; then
     python3 /src/ci/update_coverage.py \
         --repo-root /src \
+        --asm-root /work/asm/us/nonmatchings \
         --baseline /src/COVERAGE.md \
         --output /out/COVERAGE.md
 fi

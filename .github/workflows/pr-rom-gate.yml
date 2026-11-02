@@ -61,13 +61,14 @@ jobs:
       - name: Detect a coverage-only diff
         id: coverage-only
         # refresh-coverage.yml opens/updates a PR (ci/refresh-coverage) whose
-        # entire diff is always exactly COVERAGE.md, regenerated
+        # entire diff contains only generated coverage/documentation reports,
+        # including docs/coverage.svg, regenerated
         # deterministically from master's own already-trusted source. That
         # PR still needs a real "Validate ROM against master" status to
         # satisfy branch protection, but there is nothing in it that could
         # ever affect the ROM, so compare the PR's whole base...head diff
         # (not just this push) and skip the build whenever it is exactly
-        # that one file -- for any pull_request action, not just
+        # those report files -- for any pull_request action, not just
         # synchronize, since a freshly opened PR needs this just as much.
         # The job still runs and reports a real status either way, so a
         # required-status-check on this workflow is never left pending.
@@ -77,9 +78,9 @@ jobs:
           set -euo pipefail
           git fetch --quiet --depth=1 origin "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
           changed="$(git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}")"
-          if [ "$changed" = "COVERAGE.md" ]; then
+          if [ -n "$changed" ] && ! printf '%s\n' "$changed" | grep -qvxE 'COVERAGE\.md|docs/coverage\.svg|UNDOCUMENTED\.md'; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "pr-rom-gate: PR diff touches only COVERAGE.md; skipping the full rebuild" >&2
+            echo "pr-rom-gate: PR diff touches only generated reports; skipping the full rebuild" >&2
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi

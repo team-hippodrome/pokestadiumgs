@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """Render the public root-layout COVERAGE.md from tracked source pragmas.
 
-This is independent of the generated asm tree and the ROM. It can inspect
+The ownership summary is independent of the generated asm tree. It can inspect
 HEAD, a revision, or the staged index. The existing COVERAGE.md table supplies
 per-file baseline totals because the public repository does not contain the
-private repository's baseline commit.
+private repository's baseline commit. The graph retains aggregate bucket totals
+from COVERAGE.md and counts open functions from a generated US disassembly.
 """
 
 from __future__ import annotations
 
 import argparse
+import math
 import re
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -24,6 +26,9 @@ PRAGMA_PATTERN = r'GLOBAL_ASM\("asm/us/nonmatchings/[^" ]+/[^"/]+\.s"\)'
 PRAGMA_RE = re.compile(r'GLOBAL_ASM\("asm/us/nonmatchings/[^" ]+/([^"/]+)\.s"\)')
 DATA_OWNER_RE = re.compile(r"(?:D|jtbl)_[0-9A-Fa-f]{8}\Z")
 TABLE_RE = re.compile(r"^\| `([^`]+)` \| [0-9,]+ \| ([0-9,]+) \|")
+BUCKET_LIMITS = (100, 200, 300, 400, 500, 700, 1000, 1500, 2000)
+BUCKET_LABELS = ("0–99", "100–199", "200–299", "300–399", "400–499",
+                 "500–699", "700–999", "1000–1499", "1500–1999", "2000+", "Unknown")
 
 
 @dataclass(frozen=True)
@@ -32,6 +37,46 @@ class CoverageSnapshot:
     total: int
     percentage: float
     remaining_by_file: dict[str, int]
+    instruction_buckets: list[list[int]] = field(default_factory=list)
+
+
+INSTRUCTION = re.compile(
+    r"^\s*/\*\s+[0-9A-Fa-f]+\s+[0-9A-Fa-f]{8}\s+[0-9A-Fa-f]{8}\s+\*/\s+[A-Za-z]",
+    re.MULTILINE,
+)
+
+
+def baseline_bucket_totals(path: Path) -> list[int]:
+    """Retain eleven aggregate totals from the trusted coverage table."""
+    totals = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        cells = [cell.strip() for cell in line.split("|")]
+        if len(cells) == 7 and cells[1] in BUCKET_LABELS:
+            totals[cells[1]] = int(cells[4].replace(",", ""))
+    if set(totals) != set(BUCKET_LABELS) or sum(totals.values()) != BASELINE_TOTAL:
+        raise ValueError("baseline coverage table must retain all instruction buckets totaling 10,532 functions")
+    return [totals[label] for label in BUCKET_LABELS]
+
+
+def instruction_buckets(owners: dict[str, set[str]], totals: list[int],
+                        asm_root: Path) -> list[list[int]]:
+    """Subtract open assembly counts from the fixed aggregate US baseline."""
+    buckets = [[total, 0] for total in totals]
+    for source, names in owners.items():
+        relative = Path(source).relative_to("src").with_suffix("")
+        for name in names:
+            path = asm_root / relative / f"{name}.s"
+            if not path.is_file():
+                raise ValueError(f"missing original assembly for {name}: regenerate the US split")
+            count = len(INSTRUCTION.findall(path.read_text(encoding="utf-8")))
+            if not count:
+                raise ValueError(f"no instructions in original assembly for {name}")
+            bucket = next((i for i, limit in enumerate(BUCKET_LIMITS) if count < limit), len(BUCKET_LIMITS))
+            buckets[bucket][0] -= 1
+            buckets[bucket][1] += 1
+    if any(covered < 0 for covered, _ in buckets):
+        raise ValueError("open instruction bucket exceeds its baseline total; inspect split or baseline changes")
+    return buckets
 
 
 def git_grep(repo_root: Path, revision: str, staged: bool) -> str:
@@ -78,7 +123,8 @@ def baseline_by_file(path: Path) -> dict[str, int]:
     return result
 
 
-def snapshot(repo_root: Path, revision: str, staged: bool) -> CoverageSnapshot:
+def snapshot(repo_root: Path, revision: str, staged: bool,
+             asm_root: Path, baseline: Path) -> CoverageSnapshot:
     owners = owners_by_file(repo_root, revision, staged)
     remaining_by_file = {path: len(names) for path, names in owners.items()}
     remaining = sum(remaining_by_file.values())
@@ -88,6 +134,10 @@ def snapshot(repo_root: Path, revision: str, staged: bool) -> CoverageSnapshot:
         total=BASELINE_TOTAL,
         percentage=covered / BASELINE_TOTAL * 100.0,
         remaining_by_file=remaining_by_file,
+        instruction_buckets=instruction_buckets(
+            owners,
+            baseline_bucket_totals(baseline), asm_root,
+        ),
     )
 
 
@@ -96,6 +146,18 @@ def render(snapshot_value: CoverageSnapshot, baseline: dict[str, int]) -> str:
         GENERATED_HEADER,
         "",
         "# Decompilation coverage",
+        "",
+        "![Function counts by original MIPS instruction count: C upstream versus open](docs/coverage.svg)",
+        "",
+        "## Functions by instruction count",
+        "",
+        "US bucket totals are retained from this table; open function sizes are counted from regenerated original assembly. Counts describe functions, not executed instructions or runtime test coverage.",
+        "",
+        "| Original instructions | C upstream | Open | Total | Complete |",
+        "| --- | ---: | ---: | ---: | ---: |",
+        *[f"| {label} | {covered:,} | {remaining:,} | {covered + remaining:,} | {covered / (covered + remaining) * 100:.1f}% |"
+          if covered + remaining else f"| {label} | 0 | 0 | 0 | — |"
+          for label, (covered, remaining) in zip(BUCKET_LABELS, snapshot_value.instruction_buckets)],
         "",
         START_MARKER,
         f"- US functions with C implementations: **{snapshot_value.covered:,} / {snapshot_value.total:,} ({snapshot_value.percentage:.1f}%)**",
@@ -118,11 +180,54 @@ def render(snapshot_value: CoverageSnapshot, baseline: dict[str, int]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_graph(buckets: list[list[int]]) -> str:
+    """Standalone SVG with a linear function-count axis and embedded values."""
+    maximum = max((sum(pair) for pair in buckets), default=0)
+    step = max(1, 10 ** max(0, len(str(maximum)) - 1))
+    ceiling = max(step, math.ceil(maximum / step) * step)
+    parts = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-labelledby="title description">',
+        '<title id="title">Instruction count: C upstream vs open</title>',
+        '<desc id="description">Stacked function counts by original MIPS instruction count. Green is C upstream; orange is open. Exact counts appear below each bar and in COVERAGE.md.</desc>',
+        '<rect width="1100" height="520" fill="#181c20" rx="8"/>',
+        '<g font-family="sans-serif" font-size="13" fill="#e5e7eb">',
+        '<text x="24" y="32" font-size="18" font-weight="bold">Instruction count: C upstream vs open</text>',
+        '<rect x="400" y="48" width="14" height="14" fill="#41a657"/><text x="422" y="60">C upstream</text>',
+        '<rect x="535" y="48" width="14" height="14" fill="#f5a416"/><text x="557" y="60">Open</text>',
+        '<text x="24" y="87" fill="#aeb6c1">Functions</text>',
+    ]
+    for i in range(6):
+        value = ceiling * i / 5
+        y = 330 - i * 46
+        parts += [f'<path d="M70 {y}H1070" stroke="#343b44"/>',
+                  f'<text x="60" y="{y + 5}" text-anchor="end" fill="#aeb6c1">{value:,.0f}</text>']
+    for i, (label, (covered, remaining)) in enumerate(zip(BUCKET_LABELS, buckets)):
+        x = 82 + i * 90
+        green, orange = covered / ceiling * 230, remaining / ceiling * 230
+        parts += [
+            '<g>',
+            f'<title>{label}: {covered:,} C upstream; {remaining:,} open; {covered + remaining:,} total</title>',
+            f'<rect x="{x}" y="{330 - green:.2f}" width="64" height="{green:.2f}" fill="#41a657"/>',
+            f'<rect x="{x}" y="{330 - green - orange:.2f}" width="64" height="{orange:.2f}" fill="#f5a416"/>',
+            f'<text x="{x + 32}" y="355" text-anchor="middle">{label}</text>',
+            f'<text x="{x + 32}" y="388" text-anchor="middle" font-weight="bold">{covered + remaining:,}</text>',
+            f'<text x="{x + 32}" y="412" text-anchor="middle" fill="#73d18a">{covered:,} C</text>',
+            f'<text x="{x + 32}" y="436" text-anchor="middle" fill="#ffc35c">{remaining:,} open</text>',
+            '</g>',
+        ]
+    parts += ['<text x="550" y="478" text-anchor="middle" fill="#aeb6c1">Original MIPS instructions per function</text>',
+              '<text x="550" y="502" text-anchor="middle" fill="#aeb6c1">Unknown: original instruction count unavailable</text>',
+              '</g></svg>']
+    return "\n".join(parts) + "\n"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=None)
     parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument("--graph-output", type=Path, default=None)
     parser.add_argument("--baseline", type=Path, default=None)
+    parser.add_argument("--asm-root", type=Path, default=None, help="generated US nonmatchings directory for the selected source revision")
     parser.add_argument("--revision", default="HEAD")
     parser.add_argument("--staged", action="store_true")
     parser.add_argument("--check", action="store_true", help="fail if the output is not current")
@@ -130,17 +235,23 @@ def main() -> int:
 
     repo_root = (args.repo_root or Path(__file__).resolve().parent.parent).resolve()
     output = (args.output or repo_root / "COVERAGE.md").resolve()
-    baseline_path = (args.baseline or output).resolve()
-    generated = render(snapshot(repo_root, args.revision, args.staged), baseline_by_file(baseline_path))
+    baseline_path = (args.baseline or repo_root / "COVERAGE.md").resolve()
+    snapshot_value = snapshot(repo_root, args.revision, args.staged,
+                              args.asm_root or repo_root / "asm/us/nonmatchings", baseline_path)
+    generated = render(snapshot_value, baseline_by_file(baseline_path))
+    graph_output = args.graph_output or output.parent / "docs/coverage.svg"
+    graph = render_graph(snapshot_value.instruction_buckets)
     existing = output.read_text(encoding="utf-8") if output.exists() else None
 
     if args.check:
-        if existing == generated:
+        if existing == generated and graph_output.exists() and graph_output.read_text(encoding="utf-8") == graph:
             print(f"coverage: current ({output})")
             return 0
         print(f"coverage: stale ({output})")
         return 1
 
+    graph_output.parent.mkdir(parents=True, exist_ok=True)
+    graph_output.write_text(graph, encoding="utf-8")
     if existing != generated:
         output.write_text(generated, encoding="utf-8")
         print(f"coverage: updated {output}")
