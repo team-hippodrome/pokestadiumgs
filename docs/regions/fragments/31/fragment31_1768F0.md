@@ -27,3 +27,23 @@ transaction (companion edit, no code change for `func_88204050`).
   `entry` at `entries[count]`, increment `count`, set `changed`, then call
   `func_88203A58(entry)`. The 0x76-byte entry type needs 2-byte alignment
   (the copy ends with `lhu`/`sh`), and `count++` must precede `changed = 1`.
+
+
+## 2026-11-02 — `func_88203A18`: rewrite cleanup requeue
+
+Base: `4d4dea19cb9d3ef8c26c6931b4bda157c40862c5`. Six word rewrites still
+exchange the capacity and cursor registers. The function searches the
+allocated 118-byte entry range, using `LabPCStorageList.capacity` at +1
+and `entries` at +4, and returns the matching index or capacity. The
+assembly caller `func_88203A58` passes the original entry address and a
+12-byte `D_88234630` list descriptor, then uses the index to update storage.
+
+Reading capacity directly in the guard and bound recovers its retail V0
+load. The candidate is 68 bytes instead of 64: it moves the incoming address
+from A0 to A2 and keeps the cursor in A0, reversing retail's roles. Cached
+count widths, raw/typed header views, byte/record cursors, numeric/pointer
+address views and a byte result do not close this residual. Standard C
+`register` hints are byte-inert on both the cached and direct-field controls.
+The existing function and ABI remain unchanged. Next: test loop entry/exit
+and cursor lifetime forms against the capacity-root control, keeping the
+caller-proven pointer/index behavior. No replacement was installed or gated.

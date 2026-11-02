@@ -728,23 +728,19 @@ void func_820019EC(void) {
 extern s32 D_82001EAC;
 extern s32 D_82001EB0;
 extern s32 D_82001EC4;
-#pragma REWRITE_FUNCTION_WORD(func_82001A78, 0x48, 0x00001025, 0x00001825)
-#pragma REWRITE_FUNCTION_WORD(func_82001A78, 0x60, 0x00000000, 0x00601025)
-
 s32 func_82001A78(void) {
-    s32 ret;
+    s32 result;
 
     if (D_82001EC4 != 0) {
-        ret = (D_82001EAC & 0xFF) << 8;
-        ret |= 2;
-        ret |= (D_82001EB0 & 0xFF) << 0x10;
-        return ret;
+        result = (D_82001EAC & 0xFF) << 8;
+        result |= 2;
+        result |= (D_82001EB0 & 0xFF) << 16;
+    } else if (D_82001EAC == -1) {
+        result = 1;
+    } else {
+        result = 0;
     }
-    ret = 0;
-    if (D_82001EAC == -1) {
-        return 1;
-    }
-    return ret;
+    return result;
 }
 /* mkdraft:func_82001A78 end */
 #endif
