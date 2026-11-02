@@ -2,6 +2,15 @@
 #include "controller.h"
 #include "color_adjustment.h"
 
+// Dialog geometry, transition state, counters and applied fraction.
+// Copied as a 48-byte record by func_83306D0C.
+typedef struct Fragment57DialogContext {
+    s32 x, y, draw_x, draw_y, width, height;
+    s32 state, phase, frame, limit, counting;
+    f32 fraction;
+} Fragment57DialogContext;
+static Fragment57DialogContext sDialog;
+
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300020.s")
@@ -341,102 +350,72 @@ void func_83302AC8(void) {
 extern s32 D_833090AC;
 extern s32 D_8330ABD8;
 
-s32 func_8004989C(s32);
+void func_8004989C(s32);
 s32 func_8004C54C(s32, s32);
-s32 func_8004C874(s32, s32);
-s8 *func_8004C8A0(s32 *, s32, s32, s32);
+void *func_8004C874(s32, s32);
+void *func_8004C8A0(void *, s32, s32, s32);
 s32 func_8330084C(s32 *);
 void func_83302088(void *);
 void func_83302180(void *);
 extern s32 D_83308E38[];
 extern s32 D_8330A2B8;
 extern s32 D_8330AC08;
-extern s32 D_8330AC10;
-extern s32 D_8330AC14;
-extern s32 D_8330AC20;
-extern s32 D_8330AC24;
-extern s32 D_8330AC28;
-extern s32 D_8330AC2C;
-extern s32 D_8330AC30;
 extern const char D_833094D4[];
 extern const char D_833094D8[];
 
-// FAKE: the two format strings are named .rodata symbols rather than literals
-// because COALESCE_AT_LUI translates each relocation it keeps by symbol name
-// when it splices the folded body back into this object, and a literal
-// relocates against the anonymous .rodata section symbol, which the fold
-// refuses (score 574660). The definitions go through a macro only because
-// matching_notes/try_candidate.py rejects a prologue line holding `=`.
-#define TEXT_FORMAT_CONST(name, literal) const char name[] = literal
-TEXT_FORMAT_CONST(D_833094D4, "%s");
-TEXT_FORMAT_CONST(D_833094D8, "(%d)");
-
-// FAKE: retail shares one `lui $at` between the two stores of -1 below
-// (0x8330AC20 and 0x8330AC24 are in the same page), but IDO expands each store
-// with its own `lui $at`; the object fold deletes the second (diff score 105
-// without this pragma).
-#pragma COALESCE_AT_LUI(func_83302D8C, D_8330AC20, D_8330AC24)
-
+const char D_833094D4[] = "%s";
+const char D_833094D8[] = "(%d)";
 
 void func_83302D8C(void) {
-    // FAKE: pointer alias; with the address inline the fold above refuses,
-    // and without the fold direct access scores 2235.
-    s32 *D_8330AC20_ptr = &D_8330AC20;
-    s32 sp90;           // status-line y, live across func_8004989C
-    // FAKE: unused slots; together they place sp2C at sp+0x2C (diff score 455
-    // without stack_pad, 465 without both, 15 without sp2C_pad).
-    s32 stack_pad[22];
-    s16 sp2C_pad;
-    // FAKE: pointer alias; direct access of D_8330AC08 scores 915 without
-    // the fold.
-    s32 *D_8330AC08_ptr = &D_8330AC08;
-    s32 sp2C;
-    s32 temp_a1;
+    Fragment57DialogContext *dialog = &sDialog;
+    s32 line_y;
+    char text[100];
+    s32 text_id;
 
-    if (*(s32 *)((u8 *)D_8330AC08_ptr + 0x18) != 0) {
-        if ((*D_8330AC20_ptr) == 1) {
-            func_83302088(D_8330AC08_ptr);
-            if (D_8330AC2C < D_8330AC28) {
-                D_8330AC20_ptr[0] = -1;
-                D_8330AC20_ptr[1] = -1;
+    if (dialog->state != 0) {
+        if (dialog->state == 1) {
+            func_83302088(dialog);
+            if (dialog->limit < dialog->frame) {
+                dialog->state = -1;
+                dialog->phase = -1;
             }
         }
-        if ((*D_8330AC20_ptr) == -1) {
-            func_83302180(D_8330AC08_ptr);
+        if (dialog->state == -1) {
+            func_83302180(dialog);
         }
-        if ((*D_8330AC20_ptr) != 0) {
-            func_8330084C(D_8330AC08_ptr);
+        if (dialog->state != 0) {
+            func_8330084C((s32 *)dialog);
         }
         func_800498C4();
         func_800496A4(2, 1);
         Font_EnableTwoCycleTexturing();
         func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
         func_800497E4(0xFF, 0xFF, 0xFF, 0xC8);
-        sp90 = D_8330AC14 + 0xE;
+        line_y = dialog->draw_y + 0xE;
         func_8004989C(0xE);
-        if (D_8330AC24 == 1) {
-            if (D_8330AC30 == 1) {
-                D_8330AC28 = D_8330AC28 + 1;
+        if (dialog->phase == 1) {
+            if (dialog->counting == 1) {
+                dialog->frame = dialog->frame + 1;
             }
-            temp_a1 = D_83308E38[D_8330A2B8];
-            switch (temp_a1) {
+            text_id = D_83308E38[D_8330A2B8];
+            switch (text_id) {
             case 11:
             case 14:
-                func_8004C54C(0x19, func_8004C874(0, D_8330ABD8 - 1));
-                func_8004C54C(0x41, func_8004C874(6, D_8330ABDC - 1));
-                func_800495F8(D_8330AC10 + 0xE, sp90, 0, func_8004C8A0(&sp2C, 0x64, 0x49, D_83308E38[D_8330A2B8]));
+                func_8004C54C(0x19, (s32)func_8004C874(0, D_8330ABD8 - 1));
+                func_8004C54C(0x41, (s32)func_8004C874(6, D_8330ABDC - 1));
+                func_800495F8(dialog->draw_x + 0xE, line_y, 0, func_8004C8A0(text, sizeof(text), 0x49, D_83308E38[D_8330A2B8]));
                 break;
             case 16:
-                func_8004C54C(0x19, func_8004C874(0, D_8330ABD8 - 1));
-                func_8004C54C(0x42, func_8004C874(6, D_8330ABE0 - 1));
-                func_800495F8(D_8330AC10 + 0xE, sp90, 0, func_8004C8A0(&sp2C, 0x64, 0x49, D_83308E38[D_8330A2B8]));
+                func_8004C54C(0x19, (s32)func_8004C874(0, D_8330ABD8 - 1));
+                func_8004C54C(0x42, (s32)func_8004C874(6, D_8330ABE0 - 1));
+                func_800495F8(dialog->draw_x + 0xE, line_y, 0, func_8004C8A0(text, sizeof(text), 0x49, D_83308E38[D_8330A2B8]));
                 break;
             default:
-                func_800495F8(D_8330AC10 + 0xE, sp90, 0, D_833094D4, func_8004C874(0x49, temp_a1));
+                func_800495F8(dialog->draw_x + 0xE, line_y, 0, D_833094D4, func_8004C874(0x49, text_id));
                 break;
             }
             if (D_833090AC == 1) {
-                func_800495F8(*(s32 *)D_8330AC08_ptr, sp90 - 0x14, 1, D_833094D8, D_8330ABD8);
+                func_800495F8(dialog->x, line_y - 0x14, 1, D_833094D8, D_8330ABD8);
             }
         }
         Font_DisableTwoCycleTexturing();
