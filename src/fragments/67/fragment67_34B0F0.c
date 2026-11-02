@@ -364,5 +364,95 @@ void func_8290FB1C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290FB3C.s")
+/* mkdraft:func_8290FB3C begin */
+extern s32 Asset_LoadToSegment(u32, s32 *, s32 *, s32);
+extern s32 Fragment_LoadAndCall(s32, s32 *, s32 *, s32, s32);
+extern s32 Gfx_FreeDisplayListBuffers(void);
+extern s32 Gfx_InitDisplayListBuffers(s32, s32);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern s32 func_80008514(s32);
+extern s32 func_80008574(void);
+extern s32 func_80047588(s32, s32);
+extern s32 func_80047610(void);
+extern s32 func_8004C09C(s32);
+extern s32 func_8004C398(void);
+extern s32 func_8004C4B0(s32);
+extern s32 func_8004C8C0(s32);
+extern s32 func_8004D690(s32);
+extern s32 func_800718B8(s32);
+extern s32 main_pool_pop_state(s32);
+extern s32 main_pool_push_state(s32);
+extern s32 D_1000000;
+extern s32 D_446E30;
+extern s32 D_447D00;
+extern s32 D_8291BC48;
+extern s16 D_8291BC58;
+extern s32 D_82C00000;
+extern s32 fragment83_ROM_START;
+extern s32 fragment84_ROM_START;
+extern u8 *D_80087200;
+
+
+
+s32 func_8290FB3C(s32 arg0, s32 arg1) {
+    s16 var_s1;
+    s32 temp_s2;
+    s32 temp_s6;
+    s32 var_s0;
+
+    var_s0 = 1;
+    var_s1 = 0;
+    temp_s6 = func_800718B8(0xB);
+    main_pool_push_state(0x524149);
+    Gfx_InitDisplayListBuffers(0x10000, 0);
+    temp_s2 = func_800082E0(1, 0, 2, 0, 2, 1);
+    func_80047588(0x1C, 0);
+    func_8004C09C(7);
+    D_8291BC48 = func_8004D690(0x19);
+    func_8004C8C0(0x1C6);
+    func_8004C8C0(0x150);
+    func_8004C8C0(0x35);
+    func_8004C8C0(0x32);
+    func_8004C4B0(0x30);
+    func_8290FB1C();
+    Asset_LoadToSegment((u32) ((s32) &D_1000000 & 0x0F000000) >> 0x18, &D_446E30, &D_447D00, 0);
+    func_80008514(temp_s2);
+    func_8290FA30();
+    do {
+        main_pool_push_state(0x6C6F6F70);
+        switch (var_s0) {                           /* irregular */
+        case 1:
+            func_8290FA9C();
+            if (D_8291BC40 == 0) {
+                var_s0 = 0;
+            }
+            if ((D_8291BC58 == 4) && (*(u16 *) (D_80087200 + 8) & 0x10)) {
+                var_s0 = 2;
+                func_800226C0(0xD2);
+            }
+            if (var_s1 < 5) {
+                var_s1 += 1;
+                if (var_s1 == 2) {
+                    D_8291BC44 = 0;
+                }
+            }
+            break;
+        case 2:
+            Fragment_LoadAndCall(((u32) ((s32) &D_82C00000 & 0x0FF00000) >> 0x14) - 0x10, &fragment83_ROM_START, &fragment84_ROM_START, 0x600, temp_s6);
+            var_s0 = 1;
+            var_s1 = 0;
+            D_8291BC44 = 1;
+            break;
+        }
+        main_pool_pop_state(0x6C6F6F70);
+    } while (var_s0 != 0);
+    func_8290FACC();
+    func_80008574();
+    func_80047610();
+    Gfx_FreeDisplayListBuffers();
+    func_8004C398();
+    main_pool_pop_state(0x524149);
+    return 0;
+}
+/* mkdraft:func_8290FB3C end */
 #endif

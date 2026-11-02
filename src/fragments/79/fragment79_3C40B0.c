@@ -2,7 +2,42 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154820.s")
+/* mkdraft:func_84154820 begin */
+extern u8 D_8419E780[];
+extern u8 D_8419E84C[];
+extern s32 func_84154FC4(u8 *, u8, u8);
+
+// D_8419E780 is an array of 0xCC-byte side records (func_84154B30 returns
+// D_8419E780 + arg0 * 0xCC for the same array), so a record pointer makes an
+// entry index scale by 0xCC without a source-level multiply. D_8419E84C is the
+// next record (D_8419E780 + 0xCC), so 8 - arg0 * 0xCC below addresses record
+// 1 - arg0 at byte 0x1D. Writing that address as base + (8 - arg0 * 0xCC)
+// computes the product a second time; reusing the entry-block product instead
+// makes IDO keep the product in a word spill across the func_84154FC4 call,
+// while the target spills only the u8 parameter (sb/lbu of its home-slot byte
+// at 0x1B).
+//@src/fragments/79/fragment79_3C40B0.c
+struct unk_D_8419E780 {
+    u8 unk_00[0x15];
+    u8 unk_15;
+    u8 unk_16[0xCC - 0x16];
+};
+
+// func_84154FC4 reads a0, a1 and a2 (its asm masks a1 and a2 and stores all
+// three to their home slots), so it takes three arguments. Passing arg1 as the
+// third one keeps arg1's masked value in a2 up to the call, which leaves a3 for
+// the masked arg0 that survives the call.
+
+
+void func_84154820(u8 arg0, u8 arg1) {
+    u8 *p = (u8 *)((struct unk_D_8419E780 *)D_8419E780 + arg0);
+    if (p[0] != arg1) {
+        p[1] = arg1;
+        func_84154FC4(p + 8, arg0, arg1);
+        ((struct unk_D_8419E780 *)((u32)D_8419E84C + (8 - arg0 * 0xCC)))->unk_15 &= ~0x80;
+    }
+}
+/* mkdraft:func_84154820 end */
 
 extern u8 *D_841951F8[];
 extern u8 D_8419E780[];

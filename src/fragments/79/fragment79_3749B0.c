@@ -2,7 +2,61 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3749B0/func_84105120.s")
+/* mkdraft:func_84105120 begin */
+extern s32 D_84190078;
+extern s32 D_84190180;
+extern s32 D_84190184;
+extern s32 D_84190188;
+extern s32 D_84190190;
+extern s32 D_841901A8;
+extern s32 D_84190218;
+extern void func_84100134(void);
+extern void func_8410358C(void);
+extern void func_8410474C(void);
+extern void func_84105CA8(void);
+extern void func_84105D00(void);
+extern void func_841091CC(void);
+
+// as1 orders the independent instructions of one block by the .loc line of the
+// statement each came from, and statements on equal lines keep ugen order. ugen
+// emits the `sw $zero, D_841901A8` store before the 0xFF `li`, so the li takes
+// retail's position (after the byte pointer's address add, before that store)
+// only when its line is later than the pointer's and no later than the store's.
+// These directives pin those line numbers to this text instead of to the file
+// position, so the schedule does not change when the function moves; the first
+// anchors the body, the second is the line of the first 0xFF store.
+//@{matching_notes/IDO_TRICKS.md}
+#line 21
+
+void func_84105120(void) {
+    u8 *c = (u8 *) (&D_84190218);
+
+    D_84190180 = 0;
+    D_84190184 = 0;
+    D_84190190 = 0;
+    D_84190188 = 0;
+    *((f32 *) (((u8 *) (&D_84190078)) + 0x0)) = 1.0f;
+    *((f32 *) (((u8 *) (&D_84190078)) + 0x4)) = 1.0f;
+    *((f32 *) (((u8 *) (&D_84190078)) + 0x8)) = 1.0f;
+    D_841901A8 = 0;
+#line 26
+    c[0] = 0xFF;
+    c[1] = c[0]; // FAKE: nine literal 0xFF stores score diff 80
+    c[2] = c[1];
+    c[4] = c[2];
+    c[5] = c[4];
+    c[6] = c[5];
+    c[8] = c[6];
+    c[9] = c[8] & 0xFFFF; // FAKE: diff 50 without the truncation
+    c[10] = c[9] & 0xFFFF; // FAKE: diff 50 without the truncation
+    func_8410358C();
+    func_8410474C();
+    func_84105D00();
+    func_84100134();
+    func_841091CC();
+    func_84105CA8();
+}
+/* mkdraft:func_84105120 end */
 
 extern s32 D_841901AC;
 extern s32 func_84108654(u16, u16);

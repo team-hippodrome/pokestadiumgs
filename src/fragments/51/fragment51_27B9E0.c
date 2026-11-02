@@ -164,7 +164,102 @@ void func_863060CC(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_863060FC.s")
+/* mkdraft:func_863060FC begin */
+extern u8 *D_863075D8;
+extern void *D_87F119DC;
+extern f32 D_86307590;
+extern f32 D_86307594;
+extern f32 D_86307598;
+extern f32 D_8630759C;
+extern f32 D_863075A0;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[0x1000];
+extern void func_87C03B60(void *, void *, void *);
+extern void func_800277F0(u16, void *);
+
+// Per-frame update of the overlay state at D_87F119DC, gated on the mode word
+// *D_863075D8; only mode 4 runs either body.
+// The frame counter at +0x1C selects the body: while it is positive, the direction
+// vector at +0x10/+0x14 is rebuilt from the table entries at the angle
+// angle = *(s16 *)(p + 0x46) + 0x3FFF (a 2.14 table index, so the two tables are read
+// at index ((u16)angle) >> 4), the vector is scaled by D_86307590, the third component
+// at +0x18 is zeroed and fade bit 0x10000000 in +0xC is cleared before the overlay is
+// pushed through func_87C03B60. Once the counter reaches 0 the vector is zeroed
+// instead, and the angle-override/speed block that follows keeps the angle at +0x46 and
+// the speed at +0x54/+0x58/+0x5C progressing.
+
+
+void func_863060FC(void **arg0) {
+    s16 angle;
+    s8 position[2];
+    f32 ratio;
+    f32 speed_limit;
+    f32 v;
+
+    // FAKE: IDO spills the argument it never reads with `sw a0,0x30(sp)` -- the caller's
+    // argument home area, above this 0x30-byte frame -- and the retail function does not.
+    // Reading and discarding the pointer keeps the spill out. Diff score 100 without it.
+    //@src/fragments/13/fragment13_EE0A0.c
+    if (arg0) { }
+    if ((*(s32 *)((u8 *)(D_87F119DC) + (0x1C))) > 0) {
+        angle = (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) + 0x3FFF;
+        if ((*(s32 *)((u8 *)(D_863075D8))) == 4) {
+            ratio = D_86307590;
+            (*(f32 *)((u8 *)(D_87F119DC) + (0x10))) = D_80088E50[((u16)angle) >> 4];
+            (*(f32 *)((u8 *)(D_87F119DC) + (0x14))) = D_80087E50[((u16)angle) >> 4];
+            (*(f32 *)((u8 *)(D_87F119DC) + (0x18))) = 0.0f;
+            (*(f32 *)((u8 *)(D_87F119DC) + (0x10))) *= ratio;
+            (*(f32 *)((u8 *)(D_87F119DC) + (0x14))) *= ratio;
+            (*(s32 *)((u8 *)(D_87F119DC) + (0xC))) &= ~0x10000000;
+            func_87C03B60((u8 *)(D_863075D8) + 0x8F5C, (u8 *)(D_87F119DC) + 0x48, position);
+            func_800277F0(0x6F06, position);
+            return;
+        }
+        (*(f32 *)((u8 *)(D_87F119DC) + (0x18))) = 0.0f;
+        v = (*(f32 *)((u8 *)(D_87F119DC) + (0x18)));
+        (*(f32 *)((u8 *)(D_87F119DC) + (0x14))) = v;
+        (*(f32 *)((u8 *)(D_87F119DC) + (0x10))) = v;
+        return;
+    }
+    if ((*(s32 *)((u8 *)(D_863075D8))) == 4) {
+        v = (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) * D_86307594;
+        // Range tests for the angle override. IDO moves each test's second constant into
+        // the bc1fl delay slot of the preceding test, so the `lui $at` that loads 5.0, 95.0
+        // and -85.0 into the second compare is overwritten by the next test's lower bound
+        // and goes dead: the object compares against 85.0, -95.0 and 175.0 there, while
+        // the dead immediates still spell the C constants below. Only the fourth test keeps
+        // its pair (its delay slot is the `lh` of the angle).
+        if (v > (-5.0f) &&
+            v < 5.0f) {
+            (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) = 0x38E;
+        }
+        if (v > 85.0f && v < 95.0f) {
+            (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) = 0x438E;
+        }
+        if (v > (-95.0f) && v < (-85.0f)) {
+            (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) = -0x3C72;
+        }
+        //!bug: v > 175.0f && v < -175.0f cannot hold, so the -0x7C71 write never runs.
+        // The object compares 175.0 < v && v < -175.0, matching this source, so the
+        // dead range is in the retail code and not a reconstruction artifact.
+        if (v > 175.0f && v < -175.0f) {
+            (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) = -0x7C71;
+        }
+        speed_limit = D_86307598;
+        (*(s16 *)((u8 *)(D_87F119DC) + (0x46))) =
+              (s16)(((f32)((*(s16 *)((u8 *)(D_87F119DC) + (0x46))))) + D_8630759C);
+        (*(f32 *)((u8 *)(D_87F119DC) + (0x54))) += D_863075A0;
+        if (speed_limit < (*(f32 *)((u8 *)(D_87F119DC) + (0x54)))) {
+            (*(f32 *)((u8 *)(D_87F119DC) + (0x54))) = speed_limit;
+        }
+        // One load into v: the retail code stores the same register to +0x5C both in the
+        // clamp path and in the bc1fl delay slot, then to +0x58, instead of reloading +0x54.
+        v = (*(f32 *)((u8 *)(D_87F119DC) + (0x54)));
+        (*(f32 *)((u8 *)(D_87F119DC) + (0x5C))) = v;
+        (*(f32 *)((u8 *)(D_87F119DC) + (0x58))) = v;
+    }
+}
+/* mkdraft:func_863060FC end */
 
 extern void *D_87F119DC;
 

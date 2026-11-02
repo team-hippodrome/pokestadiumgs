@@ -355,5 +355,92 @@ void func_88202FA0(void *a0, u8 *a1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202FD4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_882033B0.s")
+/* mkdraft:func_882033B0 begin */
+extern u8 func_88201FE0(u8 *);
+extern s32 func_88202158(u8 *, s32);
+extern void func_88902BE0(u8 *, u8);
+extern s32 func_80061B88(s32, u16);
+extern u8 func_80062E4C(u8);
+extern s32 func_8800005C(void);
+extern void func_88202F0C(u8 *);
+extern s8 D_889041A0;
+
+
+
+void func_882033B0(u8 *arg0, u8 *arg1) {
+    u16 value;
+    /* Unused locals: retail addresses `type` at 0x22(sp), and this 3-byte
+       pair ahead of it in declaration order reserves that slot. */
+    u16 result;
+    u8 max;
+    u8 type = 0;
+    u8 move = func_88201FE0(arg1);
+
+    if (move != 0) {
+        func_88902BE0(arg0 + 8, move);
+        if (func_88202158(arg1, 1) == 0) {
+            type = 1;
+        }
+    } else if (func_88202158(arg1, 8)) {
+        arg0[0x25] += 1;
+        *(s32 *)(arg0 + 0x10) = func_80061B88(arg0[8], arg0[0x25]);
+        type = 2;
+    } else if (func_88202158(arg1, 0x10)) {
+        if ((*(u16 *)(arg0 + 0x14) += 0xA00) >= 0x6401) {
+            *(u16 *)(arg0 + 0x14) = 0x6400;
+        }
+        type = 3;
+    } else if (func_88202158(arg1, 0x20)) {
+        if ((*(u16 *)(arg0 + 0x16) += 0xA00) >= 0x6401) {
+            *(u16 *)(arg0 + 0x16) = 0x6400;
+        }
+        type = 3;
+    } else if (func_88202158(arg1, 0x40)) {
+        if ((*(u16 *)(arg0 + 0x18) += 0xA00) >= 0x6401) {
+            *(u16 *)(arg0 + 0x18) = 0x6400;
+        }
+        type = 3;
+    } else if (func_88202158(arg1, 0x80)) {
+        if ((*(u16 *)(arg0 + 0x1A) += 0xA00) >= 0x6401) {
+            *(u16 *)(arg0 + 0x1A) = 0x6400;
+        }
+        type = 3;
+    } else if (func_88202158(arg1, 0x100)) {
+        if ((*(u16 *)(arg0 + 0x1C) += 0xA00) >= 0x6401) {
+            *(u16 *)(arg0 + 0x1C) = 0x6400;
+        }
+        type = 3;
+    } else if (func_88202158(arg1, 0x200)) {
+        *(u8 *)((u8 *)arg0 + D_889041A0 + 0x20) = func_80062E4C(*(u8 *)((u8 *)arg0 + D_889041A0 + 0xA)) + *(u8 *)((u8 *)arg0 + D_889041A0 + 0x20) + 0x40;
+    }
+
+    if (func_8800005C() == 0 && type) {
+        value = arg0[0x24];
+        switch (type) {
+        case 1:
+            if (value < 0xC8) {
+                value++;
+            }
+            break;
+        case 2:
+        case 3:
+            if (value < 0x64) {
+                value = value + 5;
+            } else if (value < 0xC8) {
+                value = value + 3;
+            } else {
+                value = value + 2;
+            }
+            break;
+        }
+        if (value >= 0x100) {
+            value = 0xFF;
+        }
+        arg0[0x24] = value;
+    }
+
+    *(s32 *)(*(u8 **)arg0 + 0xC) = 1;
+    func_88202F0C(arg1);
+}
+/* mkdraft:func_882033B0 end */
 #endif

@@ -208,5 +208,74 @@ void func_87F0BD30(u8 *arg0, u16 arg1, u16 arg2, s32 arg3) {
     *(s32 *)(arg0 + 4) = arg3;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0BD48.s")
+/* mkdraft:func_87F0BD48 begin */
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Layout of arg0 as passed by ListSlots_DrawPanel, which declares the same
+// types locally: a 16-bit panel width and height, then an RGBA word.
+typedef union SlotPanelColor {
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 a;
+    } channels;
+    u32 packed;
+} SlotPanelColor;
+
+typedef struct SlotPanelBackground {
+    u16 width;
+    u16 height;
+    SlotPanelColor color;
+} SlotPanelBackground;
+
+// Draws the four-corner panel background. Texture 0x1BF supplies four frames;
+// frame 0/1/2/3 fills the top-left, top-right, bottom-left and bottom-right
+// region. Each region is inset by the frame's own texel size (texture[0] and
+// texture[1]), so the quadrants stretch over the middle of the panel, and each
+// is drawn as one full-texture rectangle (0..0x400 in both axes).
+
+
+void func_87F0BD48(SlotPanelBackground *arg0) {
+    u16 *texture;
+    u8 r, g, b;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    gDPSetCombine(D_800D0510++, 0x50FEA1, 0xFFFFF3F9);
+    // gDPSetEnvColor packs the same word for any assignment order. g, r, b
+    // here with alpha read inline reproduces retail's three lbu offsets
+    // 0x5/0x4/0x6 from arg0 and keeps alpha in its own temp.
+    g = arg0->color.channels.g;
+    r = arg0->color.channels.r;
+    b = arg0->color.channels.b;
+    gDPSetEnvColor(D_800D0510++, r, g, b, arg0->color.channels.a);
+
+    texture = (u16 *)func_8004C990(0x1BF, 0);
+    func_8004D1FC((u8 *)texture);
+    GfxRect_DrawTextured(0, 0, arg0->width - texture[0], arg0->height - texture[1], 0, 0, 0x400, 0x400, 0);
+
+    texture = (u16 *)func_8004C990(0x1BF, 1);
+    func_8004D1FC((u8 *)texture);
+    GfxRect_DrawTextured(arg0->width - texture[0], 0, texture[0], arg0->height - texture[1], 0, 0, 0x400, 0x400,
+                         0);
+
+    texture = (u16 *)func_8004C990(0x1BF, 2);
+    func_8004D1FC((u8 *)texture);
+    GfxRect_DrawTextured(0, arg0->height - texture[1], arg0->width - texture[0], texture[1], 0, 0, 0x400, 0x400,
+                         0);
+
+    texture = (u16 *)func_8004C990(0x1BF, 3);
+    func_8004D1FC((u8 *)texture);
+    GfxRect_DrawTextured(arg0->width - texture[0], arg0->height - texture[1], texture[0], texture[1], 0, 0, 0x400,
+                         0x400, 0);
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_87F0BD48 end */
 #endif

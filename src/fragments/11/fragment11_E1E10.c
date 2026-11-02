@@ -199,11 +199,95 @@ s32 func_8160A9CC(void) {
 #endif
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A9F0.s")
+/* mkdraft:func_8160A9F0 begin */
+
+
+s32 func_8160A9F0(u8 *arg0) {
+    typedef struct { u8 bytes[0xCE8]; } Record;
+    s32 limit = func_8160A8DC(arg0);
+    s32 best_sum = 0x258;
+    s32 i, j, k;
+
+    for (i = 0; i < limit; i++) {
+        for (j = i + 1; j < limit; j++) {
+            for (k = j + 1; k < limit; k++) {
+                s32 sum = ((Record *)arg0)[i].bytes[0x3D] +
+                          ((Record *)arg0)[j].bytes[0x3D] +
+                          ((Record *)arg0)[k].bytes[0x3D];
+                if (best_sum >= sum) {
+                    best_sum = sum;
+                }
+            }
+        }
+    }
+    return best_sum;
+}
+/* mkdraft:func_8160A9F0 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160ABF0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160B128.s")
+/* mkdraft:func_8160B128 begin */
+extern void func_81607360(s32);
+extern void func_81607408();
+extern void func_81605D24(s32, s32, s32, s32, u8 *);
+extern void func_8160615C(s32, s32, s32, f32);
+extern void func_81605F94(s32, s32, s32, u8 *, f32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_800499EC(void);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 D_8160BF20[3];
+extern u8 D_8160BF24[][3];
+extern char D_8160C2F8[];
+
+
+
+void func_8160B128(s32 x, s32 y, s32 arg2, s32 arg3, s32 arg4, s8 *arg5, u16 arg6, s32 arg7, f32 scale, s32 rect) {
+    s32 valid;
+    s32 cond;
+
+    cond = arg7 > 0 && arg7 < 6;
+    if (rect != 0) {
+        func_81607360(rect);
+    }
+    valid = arg2 >= 0;
+    func_81605D24(x - 6, y - 9, (cond ? 0xB1 : 0) + 0x121, 0x28, D_8160BF24[valid ? 4 : arg4]);
+    if (valid) {
+        func_8160615C(x, y, arg2 + 1, 1.0f);
+    } else {
+        func_81605F94(x - 1, y - 0x12, arg3, D_8160BF20, 1.0f);
+    }
+    if (cond) {
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+        gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0xFF, 0x6E, 0x3C, 0xFF);
+        func_8004D19C(x + 0x12E, y - 0x11, func_8004C990(0x30, 0), 0, 0);
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    }
+    func_800498C4();
+    func_8004972C(0xFF, 0xFF, 0xFF, (s32)(255.0f * scale));
+    if (arg5[0] != 0) {
+        func_800496A4(8, 1);
+        func_800495BC(x + 0x34, y - 0x11, (char *)arg5);
+        func_800496A4(4, 0);
+        func_800495BC(x + 0x9F, y - 0xD, D_8160C2F8, func_8004C874(0xD, 9), arg6);
+    }
+    if (cond) {
+        func_800496A4(4, 0);
+        func_800495BC(x + 0x142, y - 0xF, func_8004C874(0xF, arg7 + 0x3A));
+    }
+    func_800499EC();
+    if (rect != 0) {
+        func_81607408();
+    }
+}
+/* mkdraft:func_8160B128 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160B3E0.s")
 

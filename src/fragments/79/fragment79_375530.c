@@ -359,7 +359,105 @@ void func_84107170(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_841072BC.s")
+/* mkdraft:func_841072BC begin */
+extern s32 ParticleMath_LacksBits(void *arg0, s32 arg1);
+extern s32 func_84100020(u8 *arg0, s32 arg1);
+extern u8 *func_84100328(void);
+extern void func_84100350(u8 *arg0);
+extern void func_84104A00(u8 *arg0);
+extern s32 func_84104D28(u8 *arg0, u8 *arg1, s32 arg2);
+extern void func_8410668C(u8 *arg0);
+extern void func_8410679C(u8 *arg0, u8 *arg1, s32 arg2, f32 arg3);
+extern void func_84106AC4(u8 *arg0, u8 *arg1, s32 arg2, f32 arg3);
+extern void func_84106F34(u8 *arg0, u8 *arg1);
+extern void func_84107170(u8 *arg0, u8 *arg1);
+extern u32 func_8411E358(s32 arg0, s32 arg1);
+extern s32 func_8411E46C(s32 arg0, s32 arg1);
+extern s32 func_8411E580(s32 arg0, s32 arg1);
+extern s32 func_8411ED40(s32 arg0, s32 arg1);
+extern u32 func_8411EE54(u8 *arg0);
+extern s32 func_8411EE5C(u8 *arg0);
+extern s32 func_8411EE64(u8 *arg0);
+extern s32 func_8411EE6C(u8 *arg0);
+
+
+
+void func_841072BC(u8 *root, s32 mode, s32 updateFlag) {
+    u8 *child;
+    u8 *node;
+    ParticleVec3f offset;
+    ParticleVec3f rotated;
+    s32 index;
+    f32 scale;
+
+    child = *(u8 **)root;
+    if (child != NULL) {
+        for (index = 0; index < child[3]; index++) {
+            node = func_84100328();
+            if (node == NULL) {
+                break;
+            }
+            func_84107170(root, node);
+            node[0x7E] = mode;
+            if (updateFlag) {
+                func_84100020(node, 2);
+            }
+            *(s16 *)(node + 0x6C) = *(s16 *)((u8 *)D_84190194 + 0x20);
+            if (*(u32 *)(child + 4) & 0x80) {
+                scale = 1.0f;
+            } else if (*(u32 *)(child + 4) & 8) {
+                scale = (f32)func_8411E358(D_84190194, *(u16 *)(root + 0xA)) * 0.01f;
+            } else {
+                scale = (f32)func_8411EE54((u8 *)D_84190194) * 0.01f;
+            }
+            if (ParticleMath_LacksBits(child + 4, 0x800020)) {
+                if (ParticleMath_LacksBits(child + 4, 8)) {
+                    offset.x = (f32)(s8)func_8411EE5C((u8 *)D_84190194);
+                    offset.y = (f32)(s8)func_8411EE64((u8 *)D_84190194);
+                    offset.z = (f32)(s8)func_8411EE6C((u8 *)D_84190194);
+                } else {
+                    offset.x = (f32)(s8)func_8411E46C(D_84190194, *(u16 *)(root + 0xA));
+                    offset.y = (f32)(s8)func_8411E580(D_84190194, *(u16 *)(root + 0xA));
+                    offset.z = (f32)(s8)func_8411ED40(D_84190194, *(u16 *)(root + 0xA));
+                }
+                ParticleMath_RotateVec3fY(&rotated, offset,
+                    *(ParticleVec3s *)((u8 *)D_84190194 + 0x1E));
+                *(f32 *)(node + 0x2C) += rotated.x;
+                *(f32 *)(node + 0x30) += rotated.y;
+                *(f32 *)(node + 0x34) += rotated.z;
+            }
+            func_8410679C(node, root, index, scale);
+            func_84106AC4(node, child, index, scale);
+            *(f32 *)(node + 0x18) = *(f32 *)(node + 0x1C) * scale;
+            func_84106F34(node, child);
+            if (*(u32 *)(child + 0x14) != 0) {
+                if (*(u8 *)(root + 9) == 0) {
+                    if (*(s16 *)(*(u32 *)(child + 0x14)) != 0) {
+                        if (ParticleMath_HasBits(child + 4, 1)) {
+                            func_84104D28(root, node, 0xFF);
+                        } else if (!func_84104D28(root, node, mode)) {
+                            func_84100350(node);
+                        }
+                        if (func_84100054(node, 0x800)) {
+                            *(u8 *)(*(u8 **)(node + 0xC) + 1) &= ~1;
+                            if (*(s16 *)(*(u32 *)(child + 0x14) + 2) != 0) {
+                                *(u8 *)(*(u8 **)(node + 0xC) + 2) &= ~0x20;
+                            }
+                        }
+                    }
+                } else {
+                    func_84100020(node, 0x1000);
+                    if (ParticleMath_LacksBits(child + 4, 0x800000)) {
+                        func_84104A00(node);
+                    } else {
+                        func_8410668C(node);
+                    }
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_841072BC end */
 #endif
 
 #ifdef VERSION_US

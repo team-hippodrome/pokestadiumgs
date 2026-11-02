@@ -140,7 +140,43 @@ void func_82200184(s32 *arg0, s32 arg1) {
 }
 /* mkdraft:func_82200184 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10F9E0/func_82200374.s")
+/* mkdraft:func_82200374 begin */
+extern s32 D_8220E2D0;
+
+// Selects one of eight codes from the slide state's selector word (offset 0x0)
+// and, for selector 1, the flag at offset 0x24.
+
+
+s32 func_82200374(void) {
+    s32 result = 0;
+
+    switch (D_8220E2D0) {
+    case 0:
+        result = 1;
+        break;
+    case 1:
+        if (*(s16 *)((u8 *)&D_8220E2D0 + 0x24) != 0) {
+            result = 7;
+        } else {
+            result = 2;
+        }
+        break;
+    case 2:
+        result = 3;
+        break;
+    case 3:
+        result = 4;
+        break;
+    case 4:
+        result = 5;
+        break;
+    case 5:
+        result = 6;
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_82200374 end */
 
 extern s32 main_pool_push_state(s32);
 extern s32 main_pool_pop_state(s32);
@@ -157,7 +193,7 @@ extern void func_80008574(void);
 extern void func_80047610(void);
 extern void func_8004C398(void);
 extern void func_82200184(s32 *, s32);
-extern void func_82200374(void);
+extern s32 func_82200374(void);
 extern void func_822033BC(s32 *);
 extern void func_8220402C(void);
 extern void func_8220792C(s32 *, s32);

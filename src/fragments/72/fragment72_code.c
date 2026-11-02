@@ -238,7 +238,40 @@ void func_8F401750(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F401828.s")
+/* mkdraft:func_8F401828 begin */
+extern s32 D_8F402048;
+extern s32 D_8F40204C;
+extern s32 D_8F4020D0;
+extern s16 D_8F402102;
+extern u8 D_80094E38[];
+extern void Gfx_DrawTextureRgba16(s16, s16, s16, s16, u8 *, s16, s32);
+#define GFX_DL (*(Gfx **)&D_800D0510)
+
+// Draw the 40x40 preview thumbnail of grid cell D_8F402102: column (*index % 16) and
+// row ((*index / 16) % 10), offset from D_8F402048/D_8F40204C.
+
+
+void func_8F401828(void) {
+    s32 handle;
+    s16 *index;
+    s32 x;
+    s32 y;
+
+    handle = D_8F4020D0;
+    // FAKE: the cell index is read through an address local because that is the only
+    // spelling found that makes uopt keep it in t6 for the whole body; direct reads of
+    // D_8F402102 put it in t0 and move every later temporary register down one;
+    // diff score 535 without it.
+    index = &D_8F402102;
+    if ((handle != 0) && (*index >= 0)) {
+        x = *index % 16;
+        y = (*index / 16) % 10;
+        gSPDisplayList(GFX_DL++, D_80094E38);
+        Gfx_DrawTextureRgba16((x * 40) + D_8F402048, (y * 40) + D_8F40204C, 40, 40,
+                              *(u8 **)((u8 *)D_8F4020D4 + 8), 40, 0);
+    }
+}
+/* mkdraft:func_8F401828 end */
 
 extern void GfxImage_FillCurrent(void *, u16);
 extern s32 func_80008648(void);

@@ -17,7 +17,84 @@ void fragment3_main(void *arg0) {
     func_8004C4B0(0x27);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/3/fragment3_code/func_81A00074.s")
+/* mkdraft:func_81A00074 begin */
+extern s32 func_8005A228(s32);
+extern void func_800226C0(s32);
+extern s32 func_8005B120(s32);
+extern s32 GbTower_CheckPakRemoved(s32, u8);
+
+// Per-frame update of the Transfer Pak save handshake behind the fragment's message box, the same
+// state machine as func_88103DC8: field 0 is the state, 4 its countdown, 8 the result index,
+// 0xC the port copy of arg1 and 0x14 the message box visibility that func_81A0022C reads.
+// Field 0x10 gates the whole body until its counter reaches 3, and 0x14 stays set only while no
+// transfer completed this frame. State 0 starts a save flush with func_8005B120: a set result
+// means the flush finished without a pak (sound 0x11, result -1), otherwise state 1 waits on
+// func_8005A228 to pick the result index. State 2 counts field 4 down, sounding 0x14A at 1 and
+// returning to state 0 at or below 0. GbTower_CheckPakRemoved runs once the state is 0 again, and
+// func_8005A228 is re-read after a started flush to refine the index it reported.
+//@{src/fragments/30/fragment30_170D70.c}
+
+
+s32 func_81A00074(void *arg0, s32 arg1) {
+    s32 result = 0;
+    s32 status;
+
+    *(s32 *)((u8 *)arg0 + 0x14) = 1;
+    if ((*(s32 *)((u8 *)arg0 + 0x10))++ < 3) {
+        return 0;
+    }
+    if (*(s32 *)((u8 *)arg0 + 0) == 1) {
+        status = func_8005A228(arg1);
+        switch (status) {
+        case 1:
+            *(s32 *)((u8 *)arg0 + 8) = 1;
+            break;
+        case 3:
+            *(s32 *)((u8 *)arg0 + 8) = 3;
+            break;
+        case 2:
+            *(s32 *)((u8 *)arg0 + 0) = 2;
+            *(s32 *)((u8 *)arg0 + 4) = 3;
+            *(s32 *)((u8 *)arg0 + 8) = 0;
+            break;
+        }
+    }
+    if (*(s32 *)((u8 *)arg0 + 0) == 2) {
+        if (--(*(s32 *)((u8 *)arg0 + 4)) == 1) {
+            func_800226C0(0x14A);
+        } else if (*(s32 *)((u8 *)arg0 + 4) <= 0) {
+            *(s32 *)((u8 *)arg0 + 0) = 0;
+            *(s32 *)((u8 *)arg0 + 4) = 0;
+        }
+    }
+    if (*(s32 *)((u8 *)arg0 + 0) == 0) {
+        result = func_8005B120(arg1);
+        if (result != 0) {
+            func_800226C0(0x11);
+            *(s32 *)((u8 *)arg0 + 8) = -1;
+        } else {
+            func_800226C0(5);
+            *(s32 *)((u8 *)arg0 + 0) = 1;
+            *(s32 *)((u8 *)arg0 + 8) = 2;
+            status = func_8005A228(arg1);
+            switch (status) {
+            case 1:
+                *(s32 *)((u8 *)arg0 + 8) = 1;
+                break;
+            case 3:
+                *(s32 *)((u8 *)arg0 + 8) = 3;
+                break;
+            }
+        }
+        GbTower_CheckPakRemoved(arg1, 0);
+    }
+    *(s32 *)((u8 *)arg0 + 0xC) = arg1;
+    if (result != 0) {
+        *(s32 *)((u8 *)arg0 + 0x14) = 0;
+    }
+    return result;
+}
+/* mkdraft:func_81A00074 end */
 
 extern Gfx *D_800D0510;
 extern Gfx D_80094E38[];

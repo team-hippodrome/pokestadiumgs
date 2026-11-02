@@ -195,7 +195,27 @@ void func_8FC0082C(u8 *item) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC009C4.s")
+/* mkdraft:func_8FC009C4 begin */
+extern u16 D_8FC02448[];
+extern u8 D_8FC02859[];
+extern u32 D_8FC0C2D8;
+extern u8 D_8FC0C2D9;
+extern u8 D_8FC0C6FB;
+extern void func_80049064(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+
+
+
+void func_8FC009C4(void) {
+    s32 j;
+    u8 *records;
+    u16 *ids;
+    u8 *names;
+
+    // FAKE: the preheader assignments and the loop must share one source line; with the loop on separate lines IDO emits the "%d" address addiu last instead of first, moving four prologue addiu instructions (diff score 55)
+    if (D_8FC0C6FB > 0) { records = (u8 *)&D_8FC0C2D8; ids = D_8FC02448; names = D_8FC02859; do { func_80049064(*ids + 0x1E, 0x136, 0, (s32)names); for (j = 0; j < 3; j++) { func_800495BC(*ids + *(u8 *)(records + 0x1D4 + j) * 0x26 + 0x19, 0x17C, "%d", j + 1); } records += 0x1DC; ids++; names += 0x4D40; } while (names != &D_8FC0C2D9); }
+}
+/* mkdraft:func_8FC009C4 end */
 #endif
 
 #ifdef VERSION_US
@@ -368,7 +388,75 @@ void func_8FC01068(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC0117C.s")
+/* mkdraft:func_8FC0117C begin */
+extern u32 D_8FC0C2D8;
+extern u8 D_8FC02858;
+extern u8 D_8FC02859[];
+extern u8 D_8FC0C2D9;
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern u8 *func_8004D878(u8 *, s32, u8 *);
+extern void func_80051830(void *, void *);
+extern void func_80060E48(void *, void *);
+
+
+
+void func_8FC0117C(void) {
+    s32 pad[6];
+    u8 *sp44;
+    u8 *temp_v0;
+    s32 var_s3;
+    s8 temp_v0_2;
+    u8 *var_fp;
+    u8 *var_s5;
+    u8 *var_s0;
+    u8 *var_s1;
+    u8 *var_s2;
+    u8 *var_s4;
+    u8 *var_s7;
+
+    sp44 = D_8FC02859;
+    // FAKE: the two la macros share this line, so they get one .loc. as1 then
+    // keeps the lui pair in statement order (D_8FC02858 first) but issues the
+    // addiu pair in use order (var_fp first), as retail does. Split onto
+    // separate lines, as1 keeps both pairs in statement order: var_s7 first
+    // swaps the addiu pair, var_fp first swaps the lui pair.
+    var_s7 = &D_8FC02858, var_fp = (u8 *) &D_8FC0C2D8;
+    do {
+        func_80060E48(sp44, var_fp);
+        var_s3 = 0;
+        var_s0 = var_s7;
+        var_s4 = var_s7 + 0x30;
+        var_s2 = var_s7;
+        var_s1 = var_s7 + 0x4B30;
+        var_s5 = var_fp + 0x28;
+loop_2:
+        func_80051830(var_s1, var_s5);
+        var_s0[0x23] = var_s2[0x4B30];
+        temp_v0_2 = Pokemon_GetDisplaySpecies(var_s1);
+        var_s0[0x29] = temp_v0_2;
+        func_8004D878(var_s4, temp_v0_2 & 0xFF, NULL);
+        var_s3 += 0xC80;
+        var_s0 += 1;
+        var_s4 += 0xC80;
+        var_s2 += 0x58;
+        var_s1 += 0x58;
+        var_s5 += 0x3C;
+        if (var_s3 != 0x4B00) {
+            goto loop_2;
+        }
+        temp_v0 = sp44 + 0x4D40;
+        sp44 = temp_v0;
+        var_fp += 0x1DC;
+        var_s7 += 0x4D40;
+        // FAKE: dead read of the copy cursor at the outer loop tail. It emits
+        // no instruction and has no runtime effect; the read only makes the
+        // copy web live here, which colours the copy cursor s2 and the counter
+        // s3 as retail does. Without it they are s4 and s2.
+        if (var_s2 == 0) {
+        }
+    } while (temp_v0 != &D_8FC0C2D9);
+}
+/* mkdraft:func_8FC0117C end */
 #endif
 
 #ifdef VERSION_US

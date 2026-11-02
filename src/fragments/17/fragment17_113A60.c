@@ -842,7 +842,65 @@ void func_82207714(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_8220792C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822083C4.s")
+/* mkdraft:func_822083C4 begin */
+extern void *func_8004C874(s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800497E4(s32, s32, s32, s32);
+extern u8 func_80050518(u8);
+extern void func_800495BC(s32, s32, const char *);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern void func_800499EC(void);
+
+void func_822083C4(void) {
+    u8 *obj = D_8220EB88;
+    u8 *position;
+    u8 *first_rect;
+    u8 *second_rect;
+    void *result;
+    s32 same;
+    // FAKE: unused; its stack home is the unreferenced 0x2C slot that the
+    // retail frame (0x48) reserves. Removing it shrinks the frame and
+    // shifts the 0x30/0x34 slots (score 16).
+    s32 junk;
+    first_rect = obj + 0x28;
+    result = func_8004C874(*(u16 *)(obj + 0x30), *(u16 *)(obj + 0x32));
+    position = first_rect;
+    second_rect = obj + 0x2C;
+    same = 0;
+    func_800498C4();
+    func_800496A4(*(u16 *)(obj + 0x24), 0);
+    func_8004972C(position[0], position[1], position[2], position[3]);
+    if (*(u32 *)second_rect != *(u32 *)position) {
+        same = 1;
+        Font_EnableTwoCycleTexturing();
+        func_800497E4(second_rect[0], second_rect[1], second_rect[2], second_rect[3]);
+    }
+
+    if (result) {
+        switch (func_80050518(obj[0x27])) {
+            case 2:
+                func_800495BC(*(s16 *)(obj + 8), *(s16 *)(obj + 0xA), result);
+                break;
+            case 0:
+                func_800495F8(*(s16 *)(obj + 8), *(s16 *)(obj + 0xA), 1, result);
+                break;
+            case 1:
+                func_800495F8(*(s16 *)(obj + 8), *(s16 *)(obj + 0xA), 2, result);
+                break;
+        }
+    }
+    if (same) {
+        Font_DisableTwoCycleTexturing();
+    }
+    func_800496A4(8, 0);
+    func_8004972C(0, 0xFF, 0xFF, 0xFF);
+    func_800499EC();
+}
+/* mkdraft:func_822083C4 end */
 
 extern void func_80008648();
 extern void BgStage_DrawFrame();

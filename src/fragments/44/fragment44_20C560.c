@@ -99,7 +99,103 @@ void func_8AF1E4B8(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4,
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20C560/func_8AF1E54C.s")
+/* mkdraft:func_8AF1E54C begin */
+extern void *func_8AF00504(s16);
+extern s32 func_8AF003A8(s16);
+extern void func_8AC06E98(void *);
+extern s32 func_8AC06D8C(s32, s32);
+extern void func_8004E308(s32, s32 *, s32 *);
+extern s32 func_8AC03C28(s32, void *);
+extern void func_8AC02C80(s32, s32, s32, void *);
+extern void func_8AC05ED4(s32, s32, s32);
+extern void _bzero(void *, s32);
+extern s16 D_8AF27954;
+extern u8 D_8AF27944[];
+extern s16 D_8AF3779C;
+extern s32 D_8AF38738;
+extern s32 D_8AF387B0;
+extern s32 D_8AF38828;
+extern u8 D_8AF37FD8[];
+extern u8 D_8AF38008[];
+extern void func_8AF02DA4(void *, void *);
+extern s32 func_8004C874(s32, s32);
+extern s32 func_8004C54C(s32, s32);
+// Returns 1 on success. The return type also decides the register of the last
+// reload: declaring it void selects v0 instead of v1. //@{src/4CC20.c}
+extern s32 func_8004C594(s32, s32);
+extern void func_8AC0651C(void *, s16, s16, s16, s16);
+
+
+
+void func_8AF1E54C(void) {
+    s32 pad0;  // FAKE: two spare slots raise the frame from 0x580 to 0x588;
+    s32 pad1;  // FAKE: diff score 10 without both.
+    u8 *state;  // FAKE: unused; diff score 118 without it.
+    s32 height;
+    Payload_8AF1E4B8 payload;
+    s32 visible;
+    s32 idx;
+    s32 w1;
+    s32 slif;
+    s32 title;
+    s32 page;
+    u8 *sprite;  // FAKE: unused; diff score 8 without it.
+    s32 pic0;
+    s32 pic1;
+
+    func_8AF00504(0x92);
+    page = func_8AF003A8(0x92);
+    func_8AC06E98((void *)page);
+    pic0 = func_8AC06D8C(page, 0x70696330);
+    pic1 = func_8AC06D8C(page, 0x70696363);
+    *(u16 *)((u8 *)pic0 + 2) |= 1;
+    func_8004E308(pic0, (s32 *)func_8AC03C28, (s32 *)pic1);
+    w1 = func_8AC06D8C(page, 0x77695F31);
+    title = func_8AC06D8C(page, 0x7469746C);
+    *(s16 *)((u8 *)title + 0x30) = 0x3B;
+    slif = func_8AC06D8C(page, 0x736C6966);
+    *(s16 *)((u8 *)slif + 0x30) = 0x3B;
+    *(s16 *)((u8 *)slif + 0x32) = 0x1C;
+    *(u16 *)((u8 *)slif + 2) &= ~2;
+    func_8AC02C80(page, 0x725F6C5F, 0x725F725F, D_8AF37FD8);
+    func_8AC05ED4(page, 0x79613175, (s32)&D_8AF38738);
+    func_8AC05ED4(page, 0x79613173, (s32)&D_8AF387B0);
+    visible = *(s16 *)((u8 *)w1 + 8);
+    height = *(s16 *)((u8 *)w1 + 0xA);
+    _bzero(&payload, 0x504);
+    *(s16 *)((u8 *)&payload + 0x0) = *(s16 *)((u8 *)w1 + 0xC);
+    *(s16 *)((u8 *)&payload + 0x2) = *(s16 *)((u8 *)w1 + 0xE);
+    *(s32 *)((u8 *)&payload + 0x4) = 0;
+    *(s32 *)((u8 *)&payload + 0x8) = 0;
+    *(s16 *)((u8 *)&payload + 0xC) = 0;
+    *(s16 *)((u8 *)&payload + 0xE) = 0;
+    *(s16 *)((u8 *)&payload + 0x12) = 0;
+    *(s16 *)((u8 *)&payload + 0x14) = 0xD;
+    *(s32 *)((u8 *)&payload + 0x24) = 0x55;
+    *(s32 *)((u8 *)&payload + 0x28) = 0x41;
+    *(s32 *)((u8 *)&payload + 0x2C) = 6;
+    *(s16 *)((u8 *)&payload + 0x3C) = 3;
+    *(s16 *)((u8 *)&payload + 0x3E) = 1;
+    *(s32 *)((u8 *)&payload + 0x34) = 5;
+    *(s32 *)((u8 *)&payload + 0x38) = 0;
+    *(s16 *)((u8 *)&payload + 0x4A) = 0x41;
+    func_8AF1E4B8((u8 *)D_8AF27940, 0xA, visible, height, 8, 0, 0, 0, 0x64, 0x64, 0x64, 4, 0xB, &payload);
+    if (D_8AF27954 == 1) {
+        func_8AF1E45C();
+    }
+    idx = D_8AF27944[D_8AF3779C];
+    func_8004C54C(0x45, func_8004C874(0x3B, idx + 0xEB));
+    *(s16 *)((u8 *)title + 0x32) = 0xFD;
+    func_8AF1E32C((s16 *)D_8AF38008, idx);
+    func_8AF02DA4(D_8AF27940, D_8AF38008);
+    page = (s32)D_8AF27940;
+    *(s16 *)((u8 *)page + 0x40) = 1;
+    page += 0x28;  // same dword as +0x48 above, now at +0x20
+    func_8AC0651C(&D_8AF38828, (s16)((*(s32 *)((u8 *)page + 0x20) - 1) / 6), 0x3C, 3, 0xA);
+    func_8004C594(2, *(s32 *)((u8 *)page + 0x20));
+    *(u16 *)((u8 *)slif + 2) |= 2;
+}
+/* mkdraft:func_8AF1E54C end */
 #endif
 
 #ifdef VERSION_US

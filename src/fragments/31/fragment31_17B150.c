@@ -32,7 +32,40 @@ void func_88207ED0(void) {
     D_88234560 = 5;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88207F18.s")
+extern u8 *func_88201ED0(u8, u8);
+
+// Table of entries belonging to the record func_88201ED0 returns: the pointer at
+// +0x10 is the array base and the switch below picks its halfword index.
+// The same entry layout is spelled out in func_88201F0C (pad[0x10]; void **entries;
+// count at 0x15). //@src/fragments/31/fragment31_174460.c
+s32 func_88207F18(s32 kind, u8 slot) {
+    s16 index;
+    void **entries;
+
+    // Header bytes of the slot pair: the two bytes func_88208010 also hands to
+    // func_88201ED0. //@src/fragments/31/fragment31_17B150.c
+    entries = *(void ***)((u8 *)func_88201ED0(((u8 *)D_88234700)[slot * 2 + 0xA],
+                                                ((u8 *)D_88234700)[slot * 2 + 0xB]) + 0x10);
+    // Only kinds 0..3 assign index; retail has no default arm, so any other kind
+    // indexes the table with the uninitialized halfword. //!bug
+    switch (kind) {
+    case 0:
+        // unk_12 of the slot's record; func_88208FF0 forms delta = unk_10 - unk_12.
+        index = D_88234700->records[slot].unk_12;
+        break;
+    case 1:
+        index = D_88234700->records[slot].unk_10;
+        break;
+    case 2:
+        index = 0;
+        break;
+    case 3:
+        // Halfword at 0x74 of D_88234700, independent of slot.
+        index = *(s16 *)((u8 *)D_88234700 + 0x74);
+        break;
+    }
+    return (s32)entries[index];
+}
 
 extern u8 *func_88201ED0(u8, u8);
 extern s32 func_80001FF0(void);
@@ -67,7 +100,7 @@ typedef struct {
 
 extern void *Util_Malloc(s32);
 extern void func_800226C0(s32);
-extern s32 func_88207F18(s32, s32);
+extern s32 func_88207F18(s32, u8);
 extern void func_882322B8(void);
 extern void *D_8800EF54;
 void func_88208FF0(void) {
@@ -84,7 +117,7 @@ void func_88208FF0(void) {
 
 /* mkdraft:func_8820908C begin */
 extern u8 *func_88201ED0(u8, u8);
-extern s32 func_88207F18(s32, s32);
+extern s32 func_88207F18(s32, u8);
 extern void func_800226C0(s32);
 extern void func_88001900(void);
 extern void func_88001C24(u8 *, u8, s32);

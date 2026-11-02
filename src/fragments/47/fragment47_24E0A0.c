@@ -217,7 +217,37 @@ f64 func_86008224(Fragment47MotionPrefix *first, Fragment47MotionPrefix *second,
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_8600853C.s")
+/* mkdraft:func_8600853C begin */
+extern f64 func_87C00664(void *);
+extern void *func_87C00308(void *, void *, void *, f64);
+extern f64 D_8600E0A8;
+
+
+
+f64 func_8600853C(u8 *arg0, u8 *arg1, f64 arg2, f64 arg3, s32 arg4) {
+    f64 result;
+    f64 total;
+    u8 sp120[0x18];
+    u8 sp108[0x18];
+    u8 spD8[0x30];
+    // FAKE: unreferenced; fills 0x48-0xD7 of the 0x148-byte frame.
+    u8 pad[0x90];
+
+    total = *(f64 *)(arg1 + 0xC8) + *(f64 *)(arg0 + 0xC8) + 1.0;
+    func_87C00160(sp120, arg0, arg1);
+    if (total * total < func_87C00664(sp120)) {
+        return 0.0;
+    }
+    func_87C00718(sp108, sp120, 1.0);
+    func_87C00308(arg4, arg0, arg1, *(f64 *)(arg0 + 0xC8) / (*(f64 *)(arg1 + 0xC8) + *(f64 *)(arg0 + 0xC8)));
+    result = func_86008038(arg0, arg1, sp108, arg4, arg2, arg3, D_8600E0A8);
+    func_87C00198(arg0, arg4, func_87C002A8(spD8, sp108, *(f64 *)(arg0 + 0xC8)));
+    func_87C00198(arg1, arg4, func_87C002A8(spD8, sp108, -*(f64 *)(arg1 + 0xC8)));
+    func_86007EB4(arg0);
+    func_86007EB4(arg1);
+    return result;
+}
+/* mkdraft:func_8600853C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_860086A4.s")
 
@@ -326,7 +356,48 @@ f64 func_86008BB4(Fragment47MotionPrefix *object, s32 flag, u8 *point, void *nor
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_86008D2C.s")
+/* mkdraft:func_86008D2C begin */
+extern f64 func_87C007DC(const f64 *, const f64 *);
+extern void func_87C00814(void *, void *, f64 *);
+extern void *func_87C002A8(void *, void *, f64);
+extern void *func_87C00160(u8 *, s32, u8 *);
+extern f64 func_86008BB4(Fragment47MotionPrefix *, s32, u8 *, void *, f64, f64, f64);
+extern void func_86007EB4(void *);
+
+// Fragment47MotionPrefix and Fragment47Point are declared at the top of
+// src/fragments/47/fragment47_24E0A0.c. The caller func_86009260 declared this
+// function `extern void func_86008D2C(void *, s32, void *, void *, f64, void *)`
+// while it was still a GLOBAL_ASM stub; that prototype is retyped to this
+// definition. The retype leaves func_86009260's object code unchanged.
+
+
+f64 func_86008D2C(Fragment47MotionPrefix *object, s32 flag, f64 *point, Fragment47Point *normal, f64 divisor, void *contact) {
+    f64 unused0[3]; // FAKE: unreferenced locals pin retail's frame layout; diff score 1060 without all four
+    f64 scratch[3];
+    f64 unused1[6]; // FAKE: frame slot, as above; diff score 1060
+    Fragment47Point copy;
+    f64 unused2[6]; // FAKE: frame slot, as above; diff score 1060
+    f64 result;
+    f64 unused3; // FAKE: frame slot, as above; diff score 1060
+    f64 distance;
+
+    distance = func_87C007DC((f64 *)normal, point);
+    if (flag) {
+        distance -= object->radius;
+    }
+    if (0.0 < distance) {
+        return 0.0;
+    }
+    func_87C00814(normal, point, contact);
+    copy = *normal;
+    result = func_86008BB4(object, flag, (u8 *)contact, &copy, divisor,
+                           flag ? *(f64 *)((u8 *)normal + 0x20) : *(f64 *)((u8 *)normal + 0x28),
+                           flag ? *(f64 *)((u8 *)normal + 0x30) : *(f64 *)((u8 *)normal + 0x38));
+    func_87C00160((u8 *)object, (s32)object, func_87C002A8(scratch, normal, distance));
+    func_86007EB4(object);
+    return result;
+}
+/* mkdraft:func_86008D2C end */
 
 extern f64 func_87C007DC(const f64 *, const f64 *);
 extern void func_87C00814(void *, void *, f64 *);
@@ -396,7 +467,7 @@ f64 func_860091F4(Fragment47MotionPrefix *arg0, f64 arg1, Fragment47CurvePrefix 
     return 0.0;
 }
 
-extern void func_86008D2C(void *, s32, void *, void *, f64, void *);
+extern f64 func_86008D2C(Fragment47MotionPrefix *, s32, f64 *, Fragment47Point *, f64, void *);
 void func_86009260(void *arg0, f64 arg1, void *arg2, s32 arg3, void *arg4) {
     s32 i;
 

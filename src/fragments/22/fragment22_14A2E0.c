@@ -149,7 +149,69 @@ void func_827000B8(void)
 }
 /* mkdraft:func_827000B8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14A2E0/func_8270030C.s")
+/* mkdraft:func_8270030C begin */
+extern void func_800459AC(s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern Gfx *D_800D0510;
+
+u32 Gfx_AllocDisplayList(s32);                  /* extern */
+void Gfx_SetVertexAttributes(Gfx *, s32, s16, s32, s32, s32, s32, s32, s32, s32); /* extern */
+extern Gfx D_82703250;
+
+
+
+void func_8270030C(s32 arg0)
+{
+  s32 pad[15];
+  s32 sp70;
+  s32 sp6C;
+  s32 temp_s2;
+  unsigned int temp_s3;
+  s16 temp_s4;
+  s32 temp_s5;
+  s32 temp_s6;
+  s32 var_s6;
+  s32 var_s0;
+  s32 var_s7;
+  u32 temp_v0;
+  u32 var_s1;
+  temp_v0 = Gfx_AllocDisplayList(0x200);
+  var_s1 = temp_v0;
+  var_s7 = 0x80;
+  var_s6 = 0x40;
+  if (temp_v0 != 0)
+  {
+    gSPDisplayList(D_800D0510++, &D_82703250);
+    sp6C = arg0;
+    sp70 = 0;
+    do
+    {
+      do
+      {
+        if (var_s7 < 0x10)
+        {
+          var_s0 = var_s7;
+        }
+        else
+        {
+          var_s0 = 0x10;
+        }
+        temp_s2 = var_s6;
+        temp_s3 = temp_s2;
+        Gfx_SetVertexAttributes((Gfx *) var_s1, -0x40, temp_s3, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+        temp_s2 = temp_s2 - var_s0;
+        temp_s5 = temp_s2;
+        temp_s4 = var_s0 << 5;
+        temp_s6 = temp_s4;
+        Gfx_SetVertexAttributes((Gfx *) (var_s1 + 0x10), -0x40, temp_s5, 0, 0, temp_s6, 0xFF, 0xFF, 0xFF, 0xFF);
+        Gfx_SetVertexAttributes((Gfx *) (var_s1 + 0x20), 0x40, temp_s5, 0, 0x1000, temp_s6, 0xFF, 0xFF, 0xFF, 0xFF);
+        Gfx_SetVertexAttributes((Gfx *) (var_s1 + 0x30), 0x40, temp_s3, 0, 0x1000, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+        func_800459AC(sp6C, 0, 2, 0x80, var_s0, 0, 0, 2, 2, 0, 0, 0, 0);
+        gSPVertex(D_800D0510++, var_s1, 4, 0);
+        gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+        sp6C += 0x1000;
+ sp70 += 0x1000; var_s1 += 0x40; var_s6 = temp_s2; var_s7 -= var_s0; } while (sp70 != 0x8000); } while (0); }
+}
+/* mkdraft:func_8270030C end */
 
 extern s32 D_827031C8;
 s32 func_82700598(s32 arg0, s32 arg1) {
@@ -393,5 +455,74 @@ void func_82700AF4(void) {
     StageLoader_WaitForRetrace();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14A2E0/func_82700B84.s")
+/* mkdraft:func_82700B84 begin */
+extern s32 D_1000000, D_446E30, D_447D00, D_82D00000, D_88700000;
+extern s32 fragment36_ROM_START, fragment37_ROM_START, fragment82_ROM_START, fragment83_ROM_START;
+extern s32 D_827031B0, D_827031B4, D_827031BC;
+extern u32 D_827031B8;
+extern u8 D_82703340[], D_82703350[];
+extern s32 Asset_LoadToSegment(u32, s32 *, s32 *, s32);
+extern s32 Fragment_Load(s32, s32 *, s32 *);
+extern s32 Fragment_LoadAndCall(s32, s32 *, s32 *, s32, s32);
+extern s32 Gfx_FreeDisplayListBuffers();
+extern void Gfx_InitDisplayListBuffers(s32, s32);
+extern s32 func_800082E0(s32, s32, s32, s32, s32, s32);
+extern s32 func_80008514(s32);
+extern s32 func_80008574();
+extern s32 func_80047588(s32, s32);
+extern s32 func_80047610();
+extern s32 func_8004C398();
+extern s32 func_8005487C(u8 *);
+extern s32 func_80055028();
+extern s32 func_80055A34();
+extern s32 main_pool_pop_state(s32);
+extern s32 main_pool_push_state(s32);
+
+
+
+u32 func_82700B84(s32 arg0, s32 arg1) {
+    s32 temp_s0;
+    s32 var_s3;
+
+    D_827031B8 = 0;
+    D_827031BC = 0;
+    main_pool_push_state(0x4F50544E);
+    Gfx_InitDisplayListBuffers(0x10000, 0);
+    temp_s0 = func_800082E0(1, 0, 2, 0, 2, 1);
+    func_80047588(0x1C, 0);
+    Asset_LoadToSegment((u32) ((s32) &D_1000000 & 0x0F000000) >> 0x18, &D_446E30, &D_447D00, 0);
+    func_80055A34();
+    func_8005487C(D_82703340);
+    func_827005E4((u16 *) D_82703350, D_82703340);
+    func_80008514(temp_s0);
+    D_827031B0 = 0;
+    D_827031B4 = 0;
+    var_s3 = 1;
+    do {
+        main_pool_push_state(0x6F70746E);
+        switch (D_827031B0) {
+        case 0:
+            func_82700AF4();
+            break;
+        case 1:
+            Fragment_Load(((u32) ((s32) &D_88700000 & 0x0FF00000) >> 0x14) - 0x10, &fragment36_ROM_START, &fragment37_ROM_START);
+            if (Fragment_LoadAndCall(((u32) ((s32) &D_82D00000 & 0x0FF00000) >> 0x14) - 0x10, &fragment82_ROM_START, &fragment83_ROM_START, 0, 0) != 0) {
+                *(u16 *) D_82703350 = var_s3;
+            }
+            D_827031B0 = 0;
+            break;
+        }
+        main_pool_pop_state(0x6F70746E);
+    } while (D_827031B0 >= 0);
+    func_80008574();
+    if (D_827031BC != 0) {
+        func_80055028();
+    }
+    func_8004C398();
+    func_80047610();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x4F50544E);
+    return D_827031B8;
+}
+/* mkdraft:func_82700B84 end */
 #endif

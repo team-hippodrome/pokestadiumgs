@@ -2,7 +2,44 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_279D70/func_86303F50.s")
+/* mkdraft:func_86303F50 begin */
+extern Gfx *D_800D0510;
+extern u8 *D_8009491C;
+extern u8 *D_863075D8;
+extern s32 func_8004C990(s32, s32, Gfx **, u8 *);
+extern s32 func_8004CA60(s32);
+extern void func_8003CD84(void);
+
+
+
+void func_86303F50(s32 arg0, s32 arg1) {
+    u8 *context;
+
+    if (arg0 == 5) {
+        context = D_8009491C;
+        // src/4CC20.c defines func_8004C990 as s32 (s32, s32); the four-parameter
+        // declaration shared with func_863040C4 is what the call uses. $a2/$a3
+        // already hold the Gfx cursor and the node at this point, so the two extra
+        // arguments add no instructions.
+        gSPSegment(D_800D0510++, 0xF, func_8004CA60(func_8004C990(0x97, 0, &D_800D0510, context)));
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0x309BFF, 0x5FFEFE38);
+        /* G_SETPRIMCOLOR, m = l = context[0x1D], RGBA = context[0xA0..0xA3].
+           IDO emits the terms of a left-associative | chain starting with the last
+           one listed, so the terms are written rotated by one (g, b, a, r) and the
+           stored word still packs as ((r << 24) | (g << 16) | (b << 8)) | a. */
+        { Gfx *_g = (Gfx *)(D_800D0510++);
+          _g->words.w0 = _SHIFTL(0xFA, 24, 8) | _SHIFTL(context[0x1D], 0, 8) | _SHIFTL(context[0x1D], 8, 8);
+          _g->words.w1 = _SHIFTL(context[0xA1], 16, 8) | _SHIFTL(context[0xA2], 8, 8) | _SHIFTL(context[0xA3], 0, 8) | _SHIFTL(context[0xA0], 24, 8); }
+        /* G_SETENVCOLOR, RGBA = 0x3C..0x3E and 0x1D; operand order as above. */
+        { Gfx *_g = (Gfx *)(D_800D0510++);
+          _g->words.w0 = _SHIFTL(0xFB, 24, 8);
+          _g->words.w1 = _SHIFTL(context[0x3D], 16, 8) | _SHIFTL(context[0x3E], 8, 8) | _SHIFTL(context[0x1D], 0, 8) | _SHIFTL(context[0x3C], 24, 8); }
+        gSPDisplayList(D_800D0510++, *(s32 *)(D_863075D8 + 0x8F20));
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_86303F50 end */
 
 /* mkdraft:func_863040C4 begin */
 extern Gfx *D_800D0510;

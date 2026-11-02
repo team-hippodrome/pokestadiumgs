@@ -15,7 +15,47 @@ s32 func_87E05400(u32 arg0) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E05458.s")
+/* mkdraft:func_87E05458 begin */
+extern void func_87F0B1A4(s32, void *, f32, f32, f32, s32, s32);
+typedef struct { f32 x, y, z; } Func87E05458Vec3;
+
+// Positions the camera's view node once per new camera object. When the
+// state has no current camera (its word at 0x8 is null), the node at
+// state + 0x4 receives the camera's position (0x48..0x50) with x shifted
+// by -10.0 and y by 28.0. Whenever the camera object changes, the state
+// records it and func_87F0B1A4 starts an interpolation toward that shifted
+// position with priority 7. Finally the byte at 0x25 of both the view node
+// and the object at state + 0xA0 has bit 0 set or cleared depending on
+// whether the state's word at 0x174 equals 1.
+
+
+void func_87E05458(void *arg0) {
+    u8 *root;
+
+    root = *(u8 **)((u8 *)D_87E1EB90 + 0x158);
+    if (*(u8 **)(root + 8) == NULL) {
+        *(Func87E05458Vec3 *)(*(u8 **)(root + 4) + 0x48) = *(Func87E05458Vec3 *)((u8 *)arg0 + 0x48);
+        *(f32 *)(*(u8 **)(root + 4) + 0x48) += -10.0f;
+        *(f32 *)(*(u8 **)(root + 4) + 0x4C) += 28.0f;
+    }
+    if (*(u8 **)(root + 8) != arg0) {
+        *(u8 **)(root + 8) = arg0;
+        func_87F0B1A4((s32)(root + 0x14),
+                      *(u8 **)(root + 4) + 0x48,
+                      *(f32 *)((u8 *)arg0 + 0x48) + -10.0f,
+                      *(f32 *)((u8 *)arg0 + 0x4C) + 28.0f,
+                      *(f32 *)((u8 *)arg0 + 0x50),
+                      7, 0);
+    }
+    if (*(s32 *)((u8 *)D_87E1EB90 + 0x174) == 1) {
+        *(u8 *)(*(u8 **)(*(u8 **)((u8 *)D_87E1EB90 + 0x158) + 4) + 0x25) |= 1;
+        *(u8 *)(*(u8 **)(*(u8 **)((u8 *)D_87E1EB90 + 0x158) + 0xA0) + 0x25) |= 1;
+    } else {
+        *(u8 *)(*(u8 **)(*(u8 **)((u8 *)D_87E1EB90 + 0x158) + 4) + 0x25) &= ~1;
+        *(u8 *)(*(u8 **)(*(u8 **)((u8 *)D_87E1EB90 + 0x158) + 0xA0) + 0x25) &= ~1;
+    }
+}
+/* mkdraft:func_87E05458 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E055B0.s")
 
@@ -89,7 +129,7 @@ void func_87E059F4(s32 arg0, s32 arg1) {
 }
 
 /* mkdraft:func_87E05AB0 begin */
-extern s32 func_87E05458();
+extern void func_87E05458();
 extern void func_87F0B0FC(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4);
 extern void func_87F0B154();
 

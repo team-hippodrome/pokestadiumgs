@@ -39,7 +39,78 @@ void func_87F0C094(void *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, s16 arg5,
     (*(s32 *)((u8 *)(arg0) + (0x28))) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32EC70/func_87F0C0FC.s")
+/* mkdraft:func_87F0C0FC begin */
+#include "controller.h"
+
+// Aim-point record: three f32 components at 0x00/0x04/0x08 are the base position func_87F0C000
+// offsets from, three more at 0x0C/0x10/0x14 hold the aim direction/position it accumulates,
+// 0x18 is a scale factor, and 0x1C/0x1E are angles. func_87F0C358 reads 0x1C/0x1E with lh and
+// scales them by D_87F11714, so the pair is s16.
+//@src/fragments/64/fragment64_32EC70.c
+typedef struct unk_87F0C0FC {
+    f32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+    f32 unk_0C;
+    f32 unk_10;
+    f32 unk_14;
+    f32 unk_18;
+    s16 unk_1C;
+    s16 unk_1E;
+} unk_87F0C0FC;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3f_87F0C0FC;
+
+extern void func_80035A10(Vec3f_87F0C0FC *arg0);
+extern f32 D_87F11710;
+
+
+
+void func_87F0C0FC(unk_87F0C0FC *arg0) {
+    Vec3f_87F0C0FC dir;
+    Vec3f_87F0C0FC lateral;
+    Vec3f_87F0C0FC up;
+
+    up.x = 0.0f;
+    up.y = 1.0f;
+    up.z = 0.0f;
+
+    dir.x = arg0->unk_0C - arg0->unk_00;
+    dir.y = arg0->unk_10 - arg0->unk_04;
+    dir.z = arg0->unk_14 - arg0->unk_08;
+    func_80035A10(&dir);
+    lateral.x = up.y * dir.z - up.z * dir.y;
+    lateral.y = up.z * dir.x - up.x * dir.z;
+    lateral.z = up.x * dir.y - up.y * dir.x;
+    func_80035A10(&lateral);
+    up.x = dir.y * lateral.z - dir.z * lateral.y;
+    up.y = dir.z * lateral.x - dir.x * lateral.z;
+    up.z = dir.x * lateral.y - dir.y * lateral.x;
+    func_80035A10(&up);
+
+    if ((D_80087200->buttonsHeld & 0x8000) != 0) {
+        f32 limit = D_87F11710;
+
+        arg0->unk_18 -= D_80087200->stickYNorm;
+        if (arg0->unk_18 < limit) {
+            arg0->unk_18 = limit;
+        }
+    } else if ((D_80087200->buttonsHeld & 0x4000) != 0) {
+        arg0->unk_0C += -lateral.x * D_80087200->stickXNorm + up.x * D_80087200->stickYNorm;
+        arg0->unk_10 += -lateral.y * D_80087200->stickXNorm + up.y * D_80087200->stickYNorm;
+        arg0->unk_14 += -lateral.z * D_80087200->stickXNorm + up.z * D_80087200->stickYNorm;
+    } else {
+        arg0->unk_1C -= D_80087200->stickYNorm * 5.0f;
+        arg0->unk_1E += D_80087200->stickXNorm * 5.0f;
+    }
+
+    func_87F0C000(arg0);
+}
+/* mkdraft:func_87F0C0FC end */
 
 typedef struct {
     f32 x;

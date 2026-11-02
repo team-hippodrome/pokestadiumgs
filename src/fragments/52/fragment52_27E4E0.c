@@ -886,19 +886,114 @@ void func_86403550(u8 *arg0) {
 
 #ifdef VERSION_US
 extern f32 func_87D0059C(f32 *, f32 *);
-void func_8640377C(void *arg0, void *arg1) {
+f32 func_8640377C(void *arg0, void *arg1) {
     f32 values[2];
     f32 *first = &values[0];
     f32 *second = &values[1];
 
     *first = *(f32 *)((u8 *)arg0 + 0x48) - *(f32 *)((u8 *)arg1 + 0);
     *second = *(f32 *)((u8 *)arg0 + 0x50) - *(f32 *)((u8 *)arg1 + 4);
-    func_87D0059C(first, second);
+    return func_87D0059C(first, second);
 }
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864037C0.s")
+extern u8 *D_86416C00;
+extern s32 func_87D00670(void *, void *, f32 *, void *, void *, f32 *);
+extern float sqrtf(float value);
+
+s32 func_864037C0(void *arg0, u8 *arg1, f32 arg2, f32 *arg3, f32 *arg4, void *arg5, f32 arg6) {
+    f32 far;
+    f32 offset;
+    f32 delta;
+    // Entry-time position, at 0x98(sp) and 0x94(sp). Two scalars, not f32[2]:
+    // with the array IDO reuses the comparison's previous[0] load in the
+    // distance term and emits three loads instead of the retail tail's four.
+    // Scalars take home slots in declaration order (first = highest), so the
+    // y slot is declared before the x slot.
+    f32 previous_y;
+    f32 previous_x;
+    f32 p3;
+    f32 node_position[2];
+    f32 second;
+    f32 first;
+    f32 p4;
+    f32 near;
+    f32 current_x;
+    f32 current_y;
+    u8 *node;
+    u8 *state;
+    s32 result;
+
+    node = *(u8 **)(D_86416C00 + 0xE0C);
+    current_x = arg3[0];
+    previous_x = current_x;
+    current_y = arg3[1];
+    previous_y = current_y;
+    result = 0;
+    if (node != 0) {
+        do {
+            state = *(u8 **)(node + 0x20);
+            if (*(s32 *)arg1 != *(u8 *)(state + 4) &&
+                (*(u32 *)(node + 0xC) & 0x30000000) != 0 &&
+                *(s32 *)(arg1 + 0x50) < *(s32 *)(node + 0x1C)) {
+                node_position[0] = *(f32 *)(node + 0x48);
+                node_position[1] = *(f32 *)(node + 0x50);
+                if (func_87D00670(arg3, arg4, &second, node_position, arg5, &first) != 0) {
+                    if (arg2 < second) {
+                        delta = second - arg2;
+                    } else {
+                        delta = -(second - arg2);
+                    }
+                    if (delta < 30.0f && first < 30.0f) {
+                        result = 1;
+                    }
+                    if (first < 30.0f && -(arg6 + 30.0f) < first) {
+                        near = second - 30.0f;
+                        far = second + 30.0f;
+                        if (first > 0.0f) {
+                            offset = first;
+                        } else {
+                            offset = -first;
+                        }
+                        if (offset < 30.0f) {
+                            if (0.0f < far && far < arg2) {
+                                arg3[0] += arg4[0] * far;
+                                arg3[1] += arg4[1] * far;
+                                arg2 = func_8640377C(arg0, arg3);
+                            }
+                            if (near < arg2 && arg2 < far) {
+                                if ((arg2 - near) < (far - arg2)) {
+                                    offset = near;
+                                } else {
+                                    offset = far;
+                                }
+                                arg3[0] += arg4[0] * offset;
+                                arg3[1] += arg4[1] * offset;
+                                arg2 = func_8640377C(arg0, arg3);
+                            }
+                        } else if (near < 0.0f && 0.0f < far) {
+                            arg3[0] += arg4[0] * far;
+                            arg3[1] += arg4[1] * far;
+                            arg2 = func_8640377C(arg0, arg3);
+                        }
+                    }
+                }
+            }
+            node = *(u8 **)(node + 4);
+        } while (node != 0);
+        current_x = arg3[0];
+        current_y = arg3[1];
+    }
+    if (previous_x != current_x || previous_y != current_y) {
+        if (138.6f < sqrtf((previous_x - current_x) * (previous_x - current_x) +
+                           (previous_y - current_y) * (previous_y - current_y))) {
+            arg3[0] = previous_x;
+            arg3[1] = previous_y;
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1018,7 +1113,79 @@ void func_86404824(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86404A0C.s")
+/* mkdraft:func_86404A0C begin */
+extern void func_8003F210(u8 *, s16);
+
+
+
+void func_86404A0C(u8 *arg0) {
+    u8 *child;
+    s32 mode;
+
+    mode = *(s32 *)(D_86416C00 + 0x10);
+    child = *(u8 **)(arg0 + 0x20);
+    switch (mode) {
+    case 4:
+        if (*(s32 *)(arg0 + 0xC) & 0x40000) {
+            if (*(s32 *)(arg0 + 0x30) != ((s32 *)(D_86416C00 + 0x788))[*(s32 *)child]) {
+                func_8003F1DC(arg0 + 0x24);
+                func_8003F114(arg0 + 0x24, 0, -1, ((s32 *)(D_86416C00 + 0x788))[*(s32 *)child]);
+            }
+            func_8003F210(arg0 + 0x24, 0);
+        } else if (*(s32 *)(child + 0x20) > 0) {
+            if (*(s32 *)(arg0 + 0x30) != ((s32 *)(D_86416C00 + 0x798))[*(s32 *)child]) {
+                func_8003F1DC(arg0 + 0x24);
+                func_8003F114(arg0 + 0x24, 0, -1, ((s32 *)(D_86416C00 + 0x798))[*(s32 *)child]);
+            }
+            func_8003F210(arg0 + 0x24, 4);
+            func_8002781C(0x5001, *(u8 *)(child + 3), child + 0x58);
+        } else {
+            if (*(s32 *)(arg0 + 0x30) != ((s32 *)(D_86416C00 + 0x788))[*(s32 *)child]) {
+                func_8003F1DC(arg0 + 0x24);
+                func_8003F114(arg0 + 0x24, 0, -1, ((s32 *)(D_86416C00 + 0x788))[*(s32 *)child]);
+                ModelAnim_SetFrame(arg0 + 0x24, (s16)(func_8003570C() % 7));
+            }
+            func_8003F210(arg0 + 0x24, 1);
+            if (ModelAnim_HasCrossedFrame(arg0 + 0x24, 1) != 0) {
+                func_8002781C(0x5F00, *(u8 *)(child + 3), child + 0x58);
+            }
+            if (*(s32 *)(arg0 + 0xC) & 0x20000000) {
+                ModelAnim_SetSpeed(arg0 + 0x24, 0x20000);
+            } else {
+                ModelAnim_SetSpeed(arg0 + 0x24, 0x10000);
+            }
+        }
+        break;
+    case 5:
+        if (*(s32 *)(arg0 + 0x30) != ((s32 *)(D_86416C00 + 0x788))[*(s32 *)child]) {
+            func_8003F1DC(arg0 + 0x24);
+            func_8003F114(arg0 + 0x24, 0, -1, ((s32 *)(D_86416C00 + 0x788))[*(s32 *)child]);
+        }
+        if (*(s32 *)(arg0 + 0xC) & 0x20000) {
+            if (*(s32 *)(arg0 + 0xC) & 0x10000) {
+                func_8003F210(arg0 + 0x24, 2);
+                if (*(u8 *)(child + 0x5A) < 2) {
+                    if (ModelAnim_HasCrossedFrame(arg0 + 0x24, 4) != 0) {
+                        func_8002781C(0x5F06, *(u8 *)(child + 3), child + 0x58);
+                        *(u8 *)(child + 0x5A) += 1;
+                    }
+                }
+            } else {
+                if (*(s16 *)(arg0 + 0x64) != 3) {
+                    func_8003F210(arg0 + 0x24, 3);
+                    *(s16 *)(*(s32 *)(arg0 + 0x68) + 6) = 0x32;
+                }
+                if (ModelAnim_HasCrossedFrame(arg0 + 0x24, 0xF) != 0) {
+                    func_8002781C(0x5F05, *(u8 *)(child + 3), child + 0x58);
+                }
+            }
+        } else {
+            func_8003F210(arg0 + 0x24, 0);
+        }
+        break;
+    }
+}
+/* mkdraft:func_86404A0C end */
 #endif
 
 #ifdef VERSION_US

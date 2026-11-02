@@ -107,7 +107,45 @@ void func_8822FA30(void) {
     D_880068B4 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A1BD0/func_8822FA58.s")
+/* mkdraft:func_8822FA58 begin */
+extern u8 D_8800ED50[];
+extern u8 **D_88234970;
+extern s32 D_880068B4;
+extern s32 func_8822EB78;
+extern s32 func_8822EDA8;
+extern s32 func_80001FF0(void);
+extern u8 *func_8004D878(u8 *destination, s32 id, u8 *mon);
+extern s32 func_88004804(void *, s32, s16, s16, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
+extern void func_88000288(void *arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5, u8 arg6, u8 arg7);
+
+#define RAND_OFFSET(k) ((f32)(k) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(k) / 60.0f > 0.0f) ? 0.5f : -0.5f))
+
+
+
+void func_8822FA58(void *arg0) {
+    u32 i;
+    u8 **src;
+    u8 *node;
+
+    src = *(u8 ***)((u8 *)arg0 + 0x10);
+    node = D_8800ED50 + func_88004804(0, 3, 0x33, 0x49, 0, 2, 0xDC, 0xDC, 0xB4, &func_8822EB78, &func_8822EDA8, (s32 *)func_8822FA0C, (s32 *)func_8822FA30, 0, 0) * 0x4C;
+    *(void **)((u8 *)D_88234970 + 0) = node;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_88234970 + 0) + 0x10) = 0x21C;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_88234970 + 0) + 0x12) = 0x17E;
+    *(void **)((u8 *)D_88234970 + 8) = arg0;
+    *(s16 *)((u8 *)D_88234970 + 6) = 0;
+    *(s16 *)((u8 *)D_88234970 + 4) = *(s16 *)((u8 *)D_88234970 + 6);
+    node = *(u8 **)((u8 *)D_88234970 + 0xC);
+    for (i = 0; i < *(u8 *)((u8 *)arg0 + 0x15); i++) {
+        u8 *obj = *src;
+        func_8004D878(node, obj[8], obj + 8);
+        node += 0xC80;
+        src++;
+    }
+    func_88000288((u8 *)D_88234970 + 0x1E, (s16)((s32)RAND_OFFSET(5) + (s32)RAND_OFFSET(8) + (s32)RAND_OFFSET(30)), 0xFF, 0, (s32)RAND_OFFSET(5), (s32)RAND_OFFSET(8), (s32)RAND_OFFSET(30), (s32)RAND_OFFSET(8));
+    D_880068B4 = 0;
+}
+/* mkdraft:func_8822FA58 end */
 
 extern void Input_SetRepeatController(s32);
 

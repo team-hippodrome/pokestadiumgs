@@ -281,7 +281,61 @@ void func_88000A5C(s16 x, s16 y, u32 kind) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000C2C.s")
+/* mkdraft:func_88000C2C begin */
+extern s32 D_80128C60;
+
+// Draws four textured rectangles through func_88000A5C, setting an environment
+// color before the first, between the second and third, and after the first and
+// the third. arg0 and arg5 pick the light gray (220) over the dark gray (100)
+// for the first and the third rectangle; the remaining eight arguments are the
+// (x, y) pairs, drawn in kind order 2, 0, 1, 3. The two sequences that follow
+// the first and the third rectangle and the light gray of the third rectangle
+// are drawn only while the fragment state D_80128C60 is 0.
+//
+// arg0 and arg5 reload from their home slots with lhu and the other eight with
+// lh, which is where their signedness comes from.
+
+
+void func_88000C2C(u16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, u16 arg5, s16 arg6, s16 arg7, s16 arg8, s16 arg9) {
+    gDPPipeSync(D_800D0510++);
+    if (arg0) {
+        gDPSetEnvColor(D_800D0510++, 220, 220, 220, 255);
+    } else {
+        gDPSetEnvColor(D_800D0510++, 100, 100, 100, 255);
+    }
+    func_88000A5C(arg1, arg2, 2);
+    if (D_80128C60 == 0 && arg0) {
+        gDPPipeSync(D_800D0510++);
+        // 0xFFFF00FF: the blue channel is 0, as encoded in the retail ROM.
+        gDPSetEnvColor(D_800D0510++, 255, 255, 0, 255);
+    }
+    func_88000A5C(arg3, arg4, 0);
+    gDPPipeSync(D_800D0510++);
+    if (arg5) {
+        if (D_80128C60 == 0) {
+            gDPSetEnvColor(D_800D0510++, 255, 255, 0, 255);
+        } else {
+            gDPSetEnvColor(D_800D0510++, 220, 220, 220, 255);
+        }
+    } else {
+        gDPSetEnvColor(D_800D0510++, 100, 100, 100, 255);
+    }
+    func_88000A5C(arg6, arg7, 1);
+    if (D_80128C60 == 0 && arg5) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 220, 220, 220, 255);
+    }
+    func_88000A5C(arg8, arg9, 3);
+}
+/* mkdraft:func_88000C2C end */
+
+// Empty callback whose address sits between func_88000C2C and Credits_RandomRange.
+// Fragment 31 passes it to func_882000AC as the do-nothing handler, so the retail
+// `jr ra; nop` at 0x88000E4C is an empty function body, and it belongs to the same
+// extracted .s file as func_88000C2C.
+//@src/fragments/31/fragment31_179030.c
+void D_88000E4C(void) {
+}
 
 u32 Credits_RandomRange(u32 arg0) {
     s32 sp1C;

@@ -699,7 +699,28 @@ void func_82E02A9C(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E02AA4.s")
+/* mkdraft:func_82E02AA4 begin */
+void func_82E02AA4(s32 arg0) {
+    s32 i;
+    s32 j;
+    s32 width = 320;
+    s32 height = 240;
+    s32 yl;
+    s32 yh;
+
+    for (i = 0; i < height; i += 16) {
+        yh = (i + 16) << 2;
+        for (j = 0; j < width; j += 16) {
+            gDPLoadTextureBlock(D_800D0510++, (u8 *)arg0, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            yl = i << 2;
+            arg0 += 0x200;
+            gSPTextureRectangle(D_800D0510++, j << 2, yl, (j + 16) << 2, yh,
+                                G_TX_RENDERTILE, 0, 0, 1024, 1024);
+        }
+    }
+}
+/* mkdraft:func_82E02AA4 end */
 #endif
 
 #ifdef VERSION_US
@@ -859,7 +880,67 @@ s32 func_82E04AE4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E04B28.s")
+/* mkdraft:func_82E04B28 begin */
+extern Gfx *D_800D0510;
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern u8 D_82E05578[];
+extern u8 D_82E0567D;
+extern u8 D_82E057E5;
+
+
+
+void func_82E04B28(s32 arg0) {
+    Vtx *vertices;
+    s32 image;
+    s32 y;
+    s32 height; // Counts 0xF0 down in step with y and is never read; the empty `if` at the end of the function keeps it live in $fp.
+    s32 offset;
+    s16 top;
+    s16 bottom;
+    s32 alpha;
+
+    vertices = Gfx_AllocDisplayList(0xA00);
+    height = 0xF0;
+    y = 0x78;
+    if (vertices != 0) {
+        gSPDisplayList(D_800D0510++, D_82E05578);
+        alpha = D_82E057E5;
+        if (D_82E0567D < alpha) {
+            alpha = D_82E0567D;
+        }
+        gDPSetEnvColor(D_800D0510++, 0xF0, 0xC8, 0x7D, alpha);
+        offset = 0;
+        image = arg0;
+        for (; offset < 0x25800; offset += 0xF00) {
+            top = y;
+            Gfx_SetVertexAttributes(vertices, -0xA0, top, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+            // The unsigned 6 keeps this subtraction a distinct expression from the loop update `y += -6`, so the
+            // untruncated difference gets a register of its own instead of being reused from the loop tail; the
+            // assignment keeps the low halfword. With a signed 6, uopt CSEs the two and diff score is 2230.
+            bottom = y - 6U;
+            Gfx_SetVertexAttributes(vertices + 1, -0xA0, bottom, 0, 0, 0xC0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 2, 0xA0, bottom, 0, 0x2800, 0xC0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 3, 0xA0, top, 0, 0x2800, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+            gDPSetTextureImage(D_800D0510++, G_IM_FMT_IA, G_IM_SIZ_16b, 320, image);
+            gDPSetTile(D_800D0510++, G_IM_FMT_IA, G_IM_SIZ_16b, 0x50, 0, G_TX_LOADTILE, 0, G_TX_CLAMP, 0, 0, G_TX_CLAMP, 0, 0);
+            gDPLoadSync(D_800D0510++);
+            gDPLoadTile(D_800D0510++, G_TX_LOADTILE, 0, 0, 0x13F << 2, 5 << 2);
+            gDPPipeSync(D_800D0510++);
+            gDPSetTile(D_800D0510++, G_IM_FMT_IA, G_IM_SIZ_16b, 0x50, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 0, 0, G_TX_CLAMP, 0, 0);
+            gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 0x13F << 2, 5 << 2);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            image += 0xF00;
+            vertices += 4;
+            y += -6;
+            height += -6;
+        }
+    }
+    if (height) { // FAKE: empty; keeps the write-only height counter in $fp. Without it that callee-saved register holds the hoisted 0xFD70013F instead and diff score is 2390.
+    }
+}
+/* mkdraft:func_82E04B28 end */
 #endif
 
 #ifdef VERSION_US

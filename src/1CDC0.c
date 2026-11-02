@@ -2211,7 +2211,54 @@ void func_8001F9B0(void *arg0) {
     func_8001F7F0(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001FA80.s")
+/* mkdraft:func_8001FA80 begin */
+extern u8 D_8011F2FC[];
+extern u8 D_801220A4[];
+extern u8 D_8008F988[];
+// Initialize the sequence player pool: clear the 64 layer records at
+// D_8011BE90 + 0x3B4C, hand the five players at D_8011F2FC to
+// func_8001F9B0, then reset the extra player at D_80121F44 and its channel
+// at D_801220A4. The layer bound is D_8011E290 (D_8011BE90 + 0x2400) and the
+// player bound is D_8011BEA4 (D_8011BE90 + 0x14).
+
+
+void func_8001FA80(void) {
+    SequencePlayer *player;
+    SequenceChannel *channel;
+    s32 i;
+    s32 j;
+
+    AudioLayerPool_Init();
+    for (i = 0; i < 64; i++) {
+        *(u8 **)(D_8011BE90 + i * 0x90 + 0x3B4C + 0x60) = NULL;
+        *(u8 *)(D_8011BE90 + i * 0x90 + 0x3B4C) &= 0xFF7F;
+    }
+    for (i = 0, player = (SequencePlayer *)D_8011F2FC; i < 5; i++) {
+        *(u8 **)(D_8011BE90 + i * 4 + 0x604C) = (u8 *)player;
+        func_8001F9B0(player);
+        player = (SequencePlayer *)((u8 *)player + 0x160);
+    }
+    player = (SequencePlayer *)D_80121F44;
+    func_8001F9B0(player);
+    channel = (SequenceChannel *)D_801220A4;
+    channel->seqPlayer = player;
+    D_8011BE90[0x6214] &= 0xFF7F;
+    for (j = 0; j < 6; j++) {
+        channel->layers[j] = NULL;
+    }
+    func_8001C404((s32)channel);
+    player->enabled = 1;
+    player->finished = 0;
+    player->channels[0] = channel;
+    player->seqId = 0xFF;
+    player->defaultFont = 0xFF;
+    player->seqData = D_8008F988;
+    player->scriptState.pc = D_8008F988;
+    player->scriptState.depth = 0;
+    player->delay = 0;
+    player->skipTicks = 0;
+}
+/* mkdraft:func_8001FA80 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001FBE0.s")
 #endif

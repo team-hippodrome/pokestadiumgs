@@ -39,7 +39,101 @@ void func_88B00288(Func88B00288Rect *arg0, Func88B00288Rect *arg1, s32 arg2) {
     arg0->y = arg1->y + (arg1->h >> 1) - (arg0->h >> 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B003B0.s")
+/* mkdraft:func_88B003B0 begin */
+extern u32 D_800CDA34;
+extern s32 func_80025D44(s32, s32);
+extern s32 func_80001FF0(void);
+extern void func_80021ED8(s32);
+extern void func_800226C0(s32);
+
+// Clock view of D_88B05F60 + 0x1C used by func_88B003B0. unkC accumulates the frames
+// elapsed since the unk8 timestamp; every whole period of them advances unk5, which
+// carries into unk4 at 0x3C, unk3 at 0x3C and unk2 at 0x18, with unk2 wrapping at 7.
+// func_88C00AB0, whose asm is at asm/us/nonmatchings/fragments/41/fragment41_code/
+// func_88C00AB0.s, runs the same cascade on the clock at D_88C01A60.
+// unkC (a u16 at 0x28) is also read by func_88B01C54 in this file for its alpha ramp.
+typedef struct {
+    u8 unk0[2];
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u16 pad06;
+    u32 unk8;
+    u16 unkC;
+} Func88B003B0State;
+
+
+
+void func_88B003B0(s32 arg0) {
+    Func88B003B0State *state;
+    u32 now;
+    s32 ret;
+
+    state = (Func88B003B0State *)((u8 *)D_88B05F60 + 0x1C);
+    // The frame counter at D_800CDA34 + 0x20 has no symbol of its own.
+    now = *(u32 *)((u8 *)&D_800CDA34 + 0x20);
+    ret = func_80025D44(arg0, now);
+
+    // Each arm adds the frames elapsed since the stored unk8 timestamp. now is read
+    // as monotonic, so the second arm covers a stored timestamp newer than now.
+    if (state->unk8 < now) {
+        state->unkC = (u16)((state->unkC + now) - state->unk8);
+    } else if (now < state->unk8) {
+        // FAKE: adding 2^32 is discarded by the u16 store. The 64-bit sum is what
+        // makes IDO copy its low word to a new temporary before the subtraction,
+        // which sets the register coloring for the rest of the function.
+        state->unkC = (u16)((state->unkC + (now + 0xFFFFFFFFLL + 1)) - state->unk8);
+    }
+    state->unk8 = now;
+
+    // 0x458 == 0x32 marks a countdown that ticks 0x45C down by one each frame and
+    // switches 0x458 to 0x44 when it reaches 0. A countdown that has not started
+    // (0x45C == -1) is sized from two thirds of a frame period when 0x454 is
+    // nonzero and func_80025D44 returned 0 this frame.
+    if (*(s32 *)((u8 *)D_88B05F60 + 0x458) == 0x32) {
+        if (*(s32 *)((u8 *)D_88B05F60 + 0x454) != 0 && ret == 0 &&
+            *(s16 *)((u8 *)D_88B05F60 + 0x45C) == -1) {
+            *(s16 *)((u8 *)D_88B05F60 + 0x45C) =
+                (s16)(u32)(((f32)func_80001FF0() * 2.0f) / 3.0f);
+        } else if (*(s16 *)((u8 *)D_88B05F60 + 0x45C) > 0) {
+            if (--*(s16 *)((u8 *)D_88B05F60 + 0x45C) == 0) {
+                func_80021ED8(0x44);
+                *(s32 *)((u8 *)D_88B05F60 + 0x458) = 0x44;
+            }
+        }
+    }
+
+    if (state->unkC >= func_80001FF0()) {
+        // func_800226C0(0x155) fires once per whole second when 0x458 is not the
+        // running-countdown value and arg0 is 1. func_80001FF0 returns the frame
+        // rate, so a whole period of unkC is one second.
+        if ((*(s32 *)((u8 *)D_88B05F60 + 0x458) != 0x32 || ret == 0) && arg0 == 1) {
+            func_800226C0(0x155);
+        }
+        while (state->unkC >= func_80001FF0()) {
+            state->unkC = state->unkC - func_80001FF0();
+            state->unk5++;
+        }
+        if (state->unk5 >= 0x3C) {
+            state->unk5 = state->unk5 - 0x3C;
+            state->unk4++;
+            if (state->unk4 >= 0x3C) {
+                state->unk4 = state->unk4 - 0x3C;
+                state->unk3++;
+                if (state->unk3 >= 0x18) {
+                    state->unk3 = state->unk3 - 0x18;
+                    state->unk2++;
+                    if (state->unk2 >= 7) {
+                        state->unk2 = state->unk2 - 7;
+                    }
+                }
+            }
+        }
+    }
+    *(s32 *)((u8 *)D_88B05F60 + 0x454) = ret;
+}
+/* mkdraft:func_88B003B0 end */
 
 
 void func_88B00690(s16 *arg0) {
@@ -238,7 +332,36 @@ void func_88B01438(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4, u8 *arg5) {
     gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01824.s")
+/* mkdraft:func_88B01824 begin */
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Draws a 24-pixel frame around the rectangle at (x, y) with the given width and height:
+// a 24x24 corner from tile 0, then left, top, right and bottom strips from tiles 1-3.
+// func_8004D27C uploads archive 336's entries 0-3 as those tiles; the left strip's t and
+// the top and bottom strips' s start at 1536 minus 32 per pixel of height or width.
+
+
+void func_88B01824(s32 x, s32 y, s32 width, s32 height) {
+    func_8004D1FC(func_8004C990(336, 1));
+    func_8004D27C(func_8004C990(336, 0), 128, 1);
+    func_8004D27C(func_8004C990(336, 3), 256, 2);
+    func_8004D27C(func_8004C990(336, 2), 384, 3);
+    GfxRect_DrawTextured((s16)x, (s16)y, 24, 24, 0, 0, 0x400, 0x400, 0);
+    func_80044424(x, (s16)(y + 24), 24, (s16)(height - 24), 0,
+                  (-height << 5) + 1536, 0x400, 0x400, 0, 1);
+    func_80044424((s16)(x + 24), (s16)y, (s16)(width - 24), 24,
+                  (s16)((-width << 5) + 1536), 0, 0x400, 0x400, 0, 2);
+    func_80044424((s16)(x + width - 24), (s16)(y + 24), 24,
+                  (s16)(height - 48), 0, 0, 0x400, 0, 0, 3);
+    func_80044424((s16)(x + 24), (s16)(y + height - 24),
+                  (s16)(width - 24), 24,
+                  (s16)((-width << 5) + 1536), 0, 0x400, 0x400, 0, 3);
+}
+/* mkdraft:func_88B01824 end */
 
 /* mkdraft:func_88B01A60 begin */
 extern u8 D_88B05B30[];
@@ -427,5 +550,54 @@ void func_88B04170(void *arg0, s8 *arg1, s32 arg2) {
     *(s32 *)((u8 *)arg0 + 0x210) = arg2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B041C4.s")
+/* mkdraft:func_88B041C4 begin */
+#include "controller.h"
+
+extern s32 func_8003514C(void);
+extern void func_800226C0(s32);
+
+
+
+s32 func_88B041C4(u8 *arg0) {
+    s32 result;
+    u8 value;
+    u32 i;
+
+    result = 0;
+    i = 0;
+    if (*(u8 **)arg0 == NULL || *(s32 *)(arg0 + 0x20C) != 0) return 0;
+    if (D_80087200->buttonsPressed & 0x8000) {
+        *(u8 *)(arg0 + 0x208) = 6;
+    }
+    if (arg0 == NULL) { } // FAKE: demotes arg0 in uopt's save-register walk; without it the diff score is 190
+    while (1) {
+        value = *(u8 *)(*(s16 *)(arg0 + 0x204) + *(u8 **)arg0);
+        *(u8 *)(arg0 + *(s16 *)(arg0 + 0x204) + 4) = value;
+        *(s16 *)(arg0 + 0x204) += 1;
+        if (value >= 0x80 && func_8003514C() == 0) {
+            *(s8 *)(arg0 + *(s16 *)(arg0 + 0x204) + 4) = *(s8 *)(*(s16 *)(arg0 + 0x204) + *(u8 **)arg0);
+            *(s16 *)(arg0 + 0x204) += 1;
+        } else if (value == 0x3C) {
+            do {
+                value = *(u8 *)(*(s16 *)(arg0 + 0x204) + *(u8 **)arg0);
+                *(u8 *)(arg0 + *(s16 *)(arg0 + 0x204) + 4) = value;
+                *(s16 *)(arg0 + 0x204) += 1;
+            } while (value != 0x3E);
+        }
+        if (value == 0 || *(s16 *)(arg0 + 0x204) >= *(s16 *)(arg0 + 0x206)) {
+            if (*(s32 *)(arg0 + 0x210) == 0) func_800226C0(0x157);
+            *(s32 *)(arg0 + 0x20C) = 1;
+            result = 1;
+            break;
+        }
+        i++;
+        if (i < *(u8 *)(arg0 + 0x208)) continue;
+        break;
+    }
+    *(s8 *)(arg0 + *(s16 *)(arg0 + 0x204) + 4) = 0;
+    if (*(s32 *)(arg0 + 0x210) != 0) func_800226C0(0x127);
+    else func_800226C0(0x156);
+    return result;
+}
+/* mkdraft:func_88B041C4 end */
 #endif

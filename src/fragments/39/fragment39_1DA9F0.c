@@ -99,7 +99,7 @@ extern s32 GbSave_GetRecordCapacity(s32);
 extern s32 _bcopy(u8 *, u8 *, s32);
 extern u16 func_80053230(s32);
 extern s32 func_88A00978(u8 *, u8 *);
-extern s32 func_88A015A0(s32);
+extern void func_88A015A0(s32);
 extern u8 *mem_pool_alloc(s32, s32);
 extern u8 *D_88A01C60;
 extern u8 *D_88A01C64;
@@ -234,7 +234,45 @@ void func_88A014C8(s32 arg0, u8 arg1, s8 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A015A0.s")
+/* mkdraft:func_88A015A0 begin */
+extern u8 *func_88A00710(s32 arg0, s16 arg1);
+extern u8 func_88A007BC(s32 arg0);
+extern void func_88A014C8(s32 arg0, u8 arg1, s8 arg2);
+
+
+
+void func_88A015A0(s32 arg0) {
+    // Two-byte list entry; same layout as Fragment39Entry, which the file
+    // declares after this function.
+    typedef struct {
+        u8 unk_00;
+        u8 unk_01;
+    } ListEntry;
+    ListEntry *p;
+    u16 count;
+    u32 i;
+    u32 j;
+    s32 retry;
+
+    do {
+        retry = 0;
+        p = (ListEntry *)func_88A00710(arg0, 0);
+        i = 0;
+        count = func_88A007BC(arg0);
+        for (; i < count; i++, p++) {
+            if (p->unk_01 == 0) {
+                func_88A014C8(arg0, p->unk_00, -1);
+                for (j = i; j < count - 1; j++) {
+                    *p = *(p + 1);
+                    p++;
+                }
+                retry = 1;
+                break;
+            }
+        }
+    } while (retry != 0);
+}
+/* mkdraft:func_88A015A0 end */
 
 // A two-byte list entry; func_88A016F0 inserts one and shifts the rest up.
 typedef struct Fragment39Entry {

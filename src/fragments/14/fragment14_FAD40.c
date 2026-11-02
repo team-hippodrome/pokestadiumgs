@@ -166,7 +166,58 @@ void func_81302E58(void *arg0, s32 arg1) {
     *(f32 *)((u8 *)arg0 + 0x4DA4) = sp24;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81302EE4.s")
+/* mkdraft:func_81302EE4 begin */
+extern s8 *HAL_Strcpy(s8 *arg0, s8 *arg1);
+extern s32 func_813002D0(void *);
+extern void func_8160A994(u8 *arg0);
+extern void func_8160B8A8(u8 *arg0, s32 arg1, s32 arg2);
+extern u8 *func_8004D878(u8 *arg0, s32 arg1, u8 *arg2);
+
+
+
+void func_81302EE4(unk_func_81303648 *arg0, u8 *arg1, const u8 *arg2, s32 arg3, unk_D_81302EE4_party *arg4, s32 arg5) {
+    unk_D_81303648_slot *slot;
+    unk_D_81302EE4_party *party;
+    typedef struct { s32 word; } MonWord;
+
+    arg0->unk_4DA0 = (unk_D_81303648_owner *)arg1;
+    func_8160A994((u8 *)arg0);
+    func_8160B8A8((u8 *)arg0, func_813002D0(arg1), arg5);
+    HAL_Strcpy(arg0->slots[0].unk_011, (s8 *)arg2);
+    arg0->unk_4D90 = arg3;
+    arg3 = 0;
+    if (arg4 != 0) {
+        party = arg4;
+        slot = arg0->slots;
+        do {
+            if (party->mon.species != 0) {
+                slot->mon = party->mon;
+                // FAKE: a one-word struct assignment moves the same word as
+                // `slot->unk_078 = party->unk_58`, but it claims one extra t-register
+                // between the 0x58-byte `mon` copy above and this load. The extra
+                // claim is what colours the load $t3 and the following li's
+                // $t4/$t5/$t6; the plain word assignment scores 40 (load in $t2).
+                *(MonWord *)&slot->unk_078 = *(MonWord *)&party->unk_58;
+                func_8004D878(slot->unk_080, 0, (u8 *)&slot->mon);
+            } else {
+                slot->mon.species = 0;
+            }
+            arg3 += 0xCE8;
+            party++;
+            slot++;
+        } while (arg3 != 0x4D70);
+    }
+    arg0->unk_4DB0 = 0;
+    arg0->unk_4DBC = -1;
+    if (func_81302C40((const u8 *)arg0) != 0) {
+        arg0->unk_4DBD = 1;
+        arg0->unk_4DA4 = 0.0f;
+    } else {
+        arg0->unk_4DBD = 4;
+        arg0->unk_4DA4 = 16.0f;
+    }
+}
+/* mkdraft:func_81302EE4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_8130302C.s")
 

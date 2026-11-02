@@ -2,7 +2,60 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BD630/func_88500020.s")
+/* mkdraft:func_88500020 begin */
+extern u8 *func_88500CF0(u8);
+extern s8 D_8850D6D8[];
+extern u8 D_8850D678[];
+
+typedef struct Item88500020 {
+    s32 words[0x16];
+} Item88500020;
+
+typedef union CopyRecord88500020 {
+    s32 words[0x320];
+    f64 align;
+} CopyRecord88500020;
+
+extern CopyRecord88500020 D_8850D6E0;
+extern CopyRecord88500020 D_88518040;
+
+
+
+void func_88500020(void) {
+    u32 i;
+    Item88500020 t;
+    CopyRecord88500020 tmp;
+    u8 *items[2];
+    s32 flags;
+    s32 kind;
+    s32 ok;
+
+    for (i = 0; i < 2; i++) {
+        items[i] = func_88500CF0(i);
+    }
+    t = *(Item88500020 *)items[0];
+    *(Item88500020 *)items[0] = *(Item88500020 *)items[1];
+    *(Item88500020 *)items[1] = t;
+    tmp = D_8850D6E0;
+    D_8850D6E0 = D_88518040;
+    D_88518040 = tmp;
+    for (i = 0; i < 2; i++) {
+        ok = 1;
+        flags = items[i][0x1E];
+        if (flags & 2) {
+            kind = D_8850D678[D_8850D6D8[i * 0xA960] * 20 + 1];
+            if (kind == 4 || kind == 5 || kind == 6 || kind == 7) {
+                ok = 0;
+            }
+        } else if (flags & 1) {
+            ok = 0;
+        }
+        if (ok) {
+            items[i][0x1C] = 0x46;
+        }
+    }
+}
+/* mkdraft:func_88500020 end */
 
 extern s32 D_8850D670;
 extern void func_8850A0EC(s32);

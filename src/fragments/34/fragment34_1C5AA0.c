@@ -957,7 +957,45 @@ void func_8850AEA8(void) {
     func_8850998C();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850AFDC.s")
+/* mkdraft:func_8850AFDC begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern s32 func_8004D1FC(u8 *arg0);
+
+
+
+void func_8850AFDC(u8 *arg0, s16 arg1, s16 arg2, f32 arg3, s16 arg4, s16 arg5, s16 arg6) {
+    s16 width;
+    s16 height;
+    f32 stepF;
+    s32 step;
+    s16 off4;
+    s16 off5;
+    s16 off6;
+    f32 negBias;
+    // FAKE: each (0.0f, negBias) below is a comma identity that computes negBias unchanged. It
+    // makes cfe emit add.s with the bias in the rs field and the product in rt, matching the
+    // target; a plain `+ negBias` swaps those operands and raises the differ score to 50.
+    negBias = (f32)*(u16 *)arg0 * arg3 > 0.0f ? 0.5f : -0.5f;
+    width = (s16)((f32)*(u16 *)arg0 * arg3 + (0.0f, negBias)); // FAKE: comma identity; score 50 without it
+    negBias = (f32)*(u16 *)(arg0 + 2) * arg3 > 0.0f ? 0.5f : -0.5f;
+    height = (s16)((f32)*(u16 *)(arg0 + 2) * arg3 + (0.0f, negBias)); // FAKE: comma identity; score 50 without it
+    negBias = (f32)arg4 * arg3 > 0.0f ? 0.5f : -0.5f;
+    off4 = (s16)((f32)arg4 * arg3 + (0.0f, negBias)); // FAKE: comma identity; score 50 without it
+    negBias = (f32)arg5 * arg3 > 0.0f ? 0.5f : -0.5f;
+    off5 = (s16)((f32)arg5 * arg3 + (0.0f, negBias)); // FAKE: comma identity; score 50 without it
+    negBias = (f32)arg6 * arg3 > 0.0f ? 0.5f : -0.5f;
+    off6 = (s16)((f32)arg6 * arg3 + (0.0f, negBias)); // FAKE: comma identity; score 50 without it
+    stepF = 1024.0f / arg3;
+    negBias = stepF > 0.0f ? 0.5f : -0.5f;
+    step = (s32)(negBias + stepF);
+    stepF = -1024.0f / arg3;
+    negBias = stepF > 0.0f ? 0.5f : -0.5f;
+    func_8004D1FC(arg0);
+    GfxRect_DrawTextured((s16)(arg1 + off4), (s16)(arg2 + off6), width, height, 0, 0, (s16)step, (s16)step, 0);
+    GfxRect_DrawTextured((s16)(arg1 + off5), (s16)(arg2 + off6), width, height, (*(u16 *)arg0 - 1) << 5, 0,
+                         (s32)(negBias + stepF), (s16)step, 0);
+}
+/* mkdraft:func_8850AFDC end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850B2DC.s")
 
@@ -1025,7 +1063,7 @@ extern void func_8850BDE8(void);
 // func_88509A38 is still GLOBAL_ASM earlier in this file, so its prototype has to be here;
 // an implicit declaration makes IDO color the later D_8850D674 load as v1, not v0.
 extern void func_88509A38(void);
-extern void func_8850AFDC(s32, s16, s16, f32, s16, s16, s16);
+extern void func_8850AFDC(u8 *, s16, s16, f32, s16, s16, s16);
 extern void func_8850BACC(s16, s16, f32, s16, s16, s16);
 extern void func_8850C514(s16, s16, f32, s16, s16, s16);
 

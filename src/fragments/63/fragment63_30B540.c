@@ -713,7 +713,190 @@ s32 func_87E08E8C(u8 *state, s32 port, u32 threshold) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E08EF0.s")
+/* mkdraft:func_87E08EF0 begin */
+extern s32 func_80001FF0(void);
+extern void func_800279C4(s32);
+extern s32 func_87E0C664(s32 *);
+extern s32 ListSlots_UpdateState(u8 *);
+extern u8 *func_87E016C8(void);
+extern s32 func_87F0E610(u8 *, u8 *);
+extern void func_87E17B34(u8 *);
+extern void func_87E0C3F8(void *);
+extern void func_87E0D500(u8 *);
+extern void func_87E17DAC(u8 *, s32);
+extern s32 func_87E17EC8(u8 *);
+extern void func_87E17EB8(u8 *);
+extern s32 func_87E17EA8(u8 *);
+extern void func_87E0C590(u8 *, s32);
+extern void func_87E081A0(void *arg0);
+extern void func_87E0D43C(u8 *);
+extern s32 func_87E0F144(u8 *, s32);
+extern void func_87E12AA0(u8 *, s32, s32);
+extern void WidgetTree_RunMessagePanelSilent_fragment63(s32, s32);
+extern void func_87E0C608(u8 *, s32);
+extern void func_87E0D73C(u8 *);
+extern void func_87E12CB8(s32);
+extern void func_87E12B34(s32);
+extern void func_87E06D8C(u8 *, s32);
+extern void func_87E07AC4(u8 *, s32);
+extern void func_87E00030(void);
+
+
+
+
+void func_87E08EF0(void *arg0) {
+    s32 mode;
+    s32 selected;
+    u16 pressed;
+    s32 row;
+
+    pressed = func_87F0E610(func_87E016C8(), (u8 *)-1);
+    mode = func_87E0C664((s32 *)((u8 *)arg0 + 0x60));
+    selected = ListSlots_UpdateState((u8 *)arg0 + 0x8C);
+    func_87E17B34((u8 *)arg0 + 0x7BC);
+    if (mode == 0) {
+        switch (*(u32 *)((u8 *)arg0 + 8)) {
+        case 0:
+            if (*(u32 *)((u8 *)arg0 + 0x7B8) >= 31) {
+                if (pressed & 0x8000) {
+                    func_800279C4(0xCF02);
+                    func_87E0D8EC((u8 *)arg0 + 0x8C);
+                    *(s32 *)((u8 *)arg0 + 8) = 1;
+                }
+            } else {
+                func_87E10EA8(0x2A);
+                func_87E10F2C(0);
+            }
+            break;
+        case 1:
+            if (selected == 0) {
+                *(s32 *)((u8 *)arg0 + 8) = 2;
+                *(s32 *)((u8 *)arg0 + 0x18) = (s32)(D_800CE060 + *(s8 *)((u8 *)arg0 + 0x494) * 40);
+                func_87E0C3F8((u8 *)arg0 + 0x60);
+                func_87E0D500((u8 *)arg0 + 0x8C);
+                *(u32 *)((u8 *)arg0 + 0x7B8) = 0;
+                func_87E10F50(-1);
+                func_87E10EA8(-1);
+                func_87E10F2C(-1);
+                func_87E0168C(3, 0x8C, 0x14);
+            } else {
+                func_87E10EA8(0xA);
+                func_87E10F2C(0);
+                func_87E11B30(*(s8 *)((u8 *)arg0 + 0x494));
+            }
+            break;
+        case 2:
+            func_87E10EA8(*(s32 *)((u8 *)arg0 + 0x88));
+            func_87E10F2C(0);
+            if (*(u32 *)((u8 *)arg0 + 0x7B8) >= 16) {
+                // Rounds func_80001FF0() to the nearest integer, halves away from
+                // zero. The test and both arms each call func_80001FF0() again, so
+                // one rounded value costs three calls.
+                // FAKE: multiplying by (f32)1 is an identity; IDO emits it as mul.s.
+                if (func_87E08E8C((u8 *)arg0, *(s8 *)((u8 *)arg0 + 0x494),
+                        (((f32)func_80001FF0() * (f32)1) >= 0.0f)
+                            ? (s32)(((f32)func_80001FF0() * (f32)1) + 0.5f)
+                            : (s32)(((f32)func_80001FF0() * (f32)1) - 0.5f)) != 0) {
+                    *(s32 *)((u8 *)arg0 + 8) = 3;
+                    *(u32 *)((u8 *)arg0 + 0x7B8) = 0;
+                    func_87E10F50(-1);
+                    func_87E10EA8(-1);
+                    func_87E10F2C(-1);
+                    func_800279C4(0xCF02);
+                }
+                if (*(s32 *)((u8 *)arg0 + 8) == 3) {
+                    func_87E17DAC((u8 *)arg0 + 0x7BC, *(s8 *)((u8 *)arg0 + 0x494));
+                    func_87E00020();
+                } else {
+                    func_87E10F50(0);
+                }
+            }
+            break;
+        case 3:
+            if (func_87E17EC8((u8 *)arg0 + 0x7BC) == 1) {
+                if (*(u32 *)((u8 *)arg0 + 0x7B8) == 10) {
+                    func_87E10F50(0);
+                }
+            } else {
+                func_87E10F50(-1);
+            }
+            func_87E17EB8((u8 *)arg0 + 0x7BC);
+            if (func_87E17EA8((u8 *)arg0 + 0x7BC) != 0) {
+                *(s32 *)((u8 *)arg0 + 8) = 4;
+                *(u32 *)((u8 *)arg0 + 0x7B8) = 0;
+                *(s32 *)((u8 *)arg0 + 0x1C) = *(s8 *)((u8 *)arg0 + 0x7BC);
+                func_87E0C590((u8 *)arg0 + 0x60, *(s8 *)((u8 *)arg0 + 0x7BC));
+                func_87E08D70(arg0);
+                func_87E081A0(*(s32 *)((u8 *)arg0 + 0x20));
+                switch (*(s8 *)((u8 *)*(u8 **)((u8 *)arg0 + 0x20) + 0x218E)) {
+                case 0:
+                    func_87E10EA8(*(s8 *)((u8 *)*(u8 **)((u8 *)arg0 + 0x20) + 0x218D) + 0x10);
+                    break;
+                case 1:
+                    func_87E10EA8(*(s8 *)((u8 *)*(u8 **)((u8 *)arg0 + 0x20) + 0x218D) + 0x13);
+                    break;
+                case 2:
+                    func_87E10EA8(*(s8 *)((u8 *)*(u8 **)((u8 *)arg0 + 0x20) + 0x218D) + 0x16);
+                    break;
+                }
+                func_87E10F2C(2);
+                func_87E0168C(1, 0x8C, 0x14);
+            }
+            break;
+        case 4:
+            if (*(u32 *)((u8 *)arg0 + 0x7B8) >= 21) {
+                *(s32 *)((u8 *)arg0 + 8) = 5;
+                WidgetTree_RunMessagePanelSilent_fragment63((s32)((u8 *)arg0 + 0x60), *(s32 *)((u8 *)arg0 + 0x1C));
+                func_87E0D41C((u8 *)arg0 + 0x8C);
+            }
+            break;
+        case 5:
+            if (selected == 0) {
+                func_87E0D43C((u8 *)arg0 + 0x8C);
+                for (row = 0; row < 4; row++) {
+                    // Bit 13 of the flag word at entry+0x1C (entries start at 0x2188,
+                    // stride 0x18); func_87E07E38 tests bit 14 of the same word.
+                    if (((u32)*(s32 *)(*(u8 **)((u8 *)arg0 + 0x20) + 0x21A4 + row * 24) << 18) >> 31) {
+                        func_87E12AA0((u8 *)arg0 + 0x628, row, func_87E0F144((u8 *)arg0 + 0x8C, row));
+                    }
+                }
+                *(s32 *)((u8 *)arg0 + 8) = 6;
+                *(u32 *)((u8 *)arg0 + 0x7B8) = 0;
+                func_87E0168C(3, 0x8C, 0xA);
+            }
+            break;
+        case 6:
+            if ((selected == 0) && (*(u32 *)((u8 *)arg0 + 0x7B8) >= 46)) {
+                func_87E10F50(0);
+                // FAKE: (f32)1 is an identity multiplier; IDO emits it as mul.s.
+                if (func_87E08E8C((u8 *)arg0, *(s8 *)((u8 *)arg0 + 0x494),
+                        (((f32)func_80001FF0() * (f32)1) >= 0.0f)
+                            ? (s32)(((f32)func_80001FF0() * (f32)1) + 0.5f)
+                            : (s32)(((f32)func_80001FF0() * (f32)1) - 0.5f)) != 0) {
+                    func_87E0C608((u8 *)arg0 + 0x60, *(s32 *)((u8 *)arg0 + 0x1C));
+                    func_87E0D73C((u8 *)arg0 + 0x8C);
+                    func_87E12CB8((s32)((u8 *)arg0 + 0x628));
+                    func_87E12B34((s32)((u8 *)arg0 + 0x628));
+                    *(s32 *)((u8 *)arg0 + 8) = 7;
+                    func_87E10F50(-1);
+                    func_87E10EA8(-1);
+                    func_87E10F2C(-1);
+                    func_800279C4(0xCF02);
+                    func_87E0168C(3, 0x8C, 0xA);
+                }
+            }
+            break;
+        case 7:
+            func_87E08B90((s32)arg0);
+            *(s32 *)((u8 *)arg0 + 4) = 2;
+            func_87E06D8C((u8 *)arg0 + 0x498, *(s32 *)((u8 *)arg0 + 0x20));
+            func_87E07AC4((u8 *)arg0 + 0x498, *(s8 *)((u8 *)arg0 + 0x494));
+            func_87E00030();
+            break;
+        }
+    }
+}
+/* mkdraft:func_87E08EF0 end */
 
 extern s32 func_87E078DC(void *);
 void func_87E094C0(void *arg0) {
@@ -778,7 +961,163 @@ void func_87E09514(F63_088E0_Owner *arg0) {
 }
 /* mkdraft:func_87E09514 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E09654.s")
+/* mkdraft:func_87E09654 begin */
+extern s32 func_80001FF0(void);
+extern void func_800279C4(s32);
+extern s32 func_87E0C664(s32 *);
+extern s32 ListSlots_UpdateState(u8 *);
+extern void func_87E0168C(s32, s32, s32);
+extern void func_87E07F98(void *);
+extern void func_87E08844(s32, s32);
+extern s32 func_87E08E8C(u8 *, s32, u32);
+extern void func_87E09514(F63_088E0_Owner *arg0);
+extern void func_87E0C4B4(u8 *);
+extern void func_87E0D3C0(void *);
+extern void func_87E0D3F4(void *);
+extern void func_87E0D75C(void *);
+extern s32 func_87E0D7D8(void *);
+extern void func_87E10EA8(s32);
+extern void func_87E10F2C(s32);
+extern void func_87E10F50(s32);
+extern void func_87E11B30(s32);
+extern void func_87E12C1C(s32);
+extern void func_87E12C50(s32);
+extern void func_87E12C84(s32);
+
+
+
+void func_87E09654(u8 *arg0) {
+    s32 sp44;
+    s32 var_a2;
+    s32 sp3C;
+    s32 var_v1;
+    s32 sp34;
+    s32 temp_v0;
+    s32 two = 2; // FAKE: IDO 7.1 emits the target's `bne a1,v0` operand order for the two state
+                 //       compares only when the 2 sits in an initializer-declared variable; comparing
+                 //       against the literal 2 emits `bne v0,a1`; diff score 10.
+
+    sp3C = *(u32 *)(arg0 + 0x1998);
+    sp44 = func_87E0C664((s32 *)(arg0 + 0x60));
+    temp_v0 = ListSlots_UpdateState(arg0 + 0x8C);
+    if (sp44 == 0) {
+        switch (*(u32 *)(arg0 + 0xC)) {
+        case 4:
+            if (((f32) func_80001FF0() * 0.33333334f) >= 0.0f) {
+                sp34 = (s32) (((f32) func_80001FF0() * 0.33333334f) + 0.5f);
+            } else {
+                sp34 = (s32) (((f32) func_80001FF0() * 0.33333334f) - 0.5f);
+            }
+            if (((f32) func_80001FF0() * 0.16666667f) >= 0.0f) {
+                var_a2 = (s32) (((f32) func_80001FF0() * 0.16666667f) + 0.5f);
+            } else {
+                var_a2 = (s32) (((f32) func_80001FF0() * 0.16666667f) - 0.5f);
+            }
+            if ((u32) (var_a2 + sp34) < *(u32 *)(arg0 + 0x7B8)) {
+                if (((f32) func_80001FF0() * 1.65f) >= 0.0f) {
+                    var_a2 = (s32) (((f32) func_80001FF0() * 1.65f) + 0.5f);
+                } else {
+                    var_a2 = (s32) (((f32) func_80001FF0() * 1.65f) - 0.5f);
+                }
+                if (func_87E08E8C(arg0, sp3C, (u32) var_a2) != 0) {
+                    goto block_18;
+                }
+            }
+            // FAKE: multiplying by the int literal 1 is an arithmetic nop that makes IDO emit the
+            // target's mul.s by 1.0f; diff score 995 without the three `* 1` factors.
+            if (((f32) func_80001FF0() * 1) >= 0.0f) {
+                var_v1 = (s32) (((f32) func_80001FF0() * 1) + 0.5f);
+            } else {
+                var_v1 = (s32) (((f32) func_80001FF0() * 1) - 0.5f);
+            }
+            if ((u32) var_v1 < *(u32 *)(arg0 + 0x7B8)) {
+block_18:
+                *(u32 *)(arg0 + 0x7B8) = 0;
+                func_87E12C1C((s32)(arg0 + 0x628));
+                func_87E12C84((s32)(arg0 + 0x628));
+                func_87E12C50((s32)(arg0 + 0x628));
+                temp_v0 = *(u32 *)(arg0 + 0x10);
+                *(u32 *)(arg0 + 0xC) = temp_v0;
+                var_a2 = temp_v0;
+                if (two == temp_v0) {
+                    if (*(u8 *)(*(u8 **)(arg0 + 0x20) + 0x21F6) < 0xFF) {
+                        *(u8 *)(*(u8 **)(arg0 + 0x20) + 0x21F6) += 1;
+                    }
+                } else {
+                    *(u8 *)(*(u8 **)(arg0 + 0x20) + 0x21F6) = 0;
+                }
+                temp_v0 = *(u32 *)(arg0 + 0x10);
+                var_a2 = temp_v0;
+                if (temp_v0 != 0) {
+                    if (temp_v0 != two) {
+                        temp_v0 = 3;
+                        if (var_a2 == temp_v0) {
+                            *(u32 *)(arg0 + 0xC) = temp_v0;
+                            func_87E0D3C0(arg0 + 0x8C);
+                        }
+                    } else {
+                        func_87E0D3F4(arg0 + 0x8C);
+                    }
+                } else if (func_87E0D7D8(arg0 + 0x8C) != 0) {
+                    func_87E10EA8(0x23);
+                    func_87E10F2C(2);
+                } else {
+                    func_87E0D75C(arg0 + 0x8C);
+                    *(u32 *)(arg0 + 0xC) = 1;
+                }
+                func_87E0168C(3, 0xC8, 0x14);
+            }
+            break;
+        case 0:
+            if (temp_v0 == 0) {
+                func_87E0D75C(arg0 + 0x8C);
+                *(u32 *)(arg0 + 0xC) = 1;
+            }
+            break;
+        case 2:
+            if (((f32) func_80001FF0() * 0.5f) >= 0.0f) {
+                var_a2 = (s32) (((f32) func_80001FF0() * 0.5f) + 0.5f);
+            } else {
+                var_a2 = (s32) (((f32) func_80001FF0() * 0.5f) - 0.5f);
+            }
+            if (func_87E08E8C(arg0, sp3C, (u32) var_a2) != 0) {
+                func_87E0C4B4(arg0 + 0x60);
+                func_87E10EA8(-1);
+                func_87E10F2C(-1);
+                *(u32 *)(arg0 + 0xC) = 5;
+                func_800279C4(0xCF02);
+            } else {
+                func_87E11B30(sp3C);
+                func_87E10F50(0);
+            }
+            break;
+        case 1:
+            if (temp_v0 == 0) {
+                func_87E09514(arg0);
+            } else {
+                *(u32 *)(arg0 + 0x7B8) = 0;
+            }
+            break;
+        case 3:
+            if (temp_v0 == 0) {
+                func_87E09514(arg0);
+            } else {
+                *(u32 *)(arg0 + 0x7B8) = 0;
+            }
+            break;
+        case 5:
+            if (temp_v0 == 0) {
+                func_87E08844((s32) arg0, 1);
+                func_87E07F98(*(void **)(arg0 + 0x20));
+            }
+            break;
+        }
+    } else {
+        *(u32 *)(arg0 + 0x7B8) = 0;
+    }
+    func_87E07F98(*(void **)(arg0 + 0x20));
+}
+/* mkdraft:func_87E09654 end */
 
 s32 func_87E07ED8(s32);
 extern s32 func_87E08E8C(u8 *, s32, u32);

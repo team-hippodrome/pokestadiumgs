@@ -45,7 +45,177 @@ void func_88506AA8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C3FA0/func_88506B2C.s")
+/* mkdraft:func_88506B2C begin */
+extern s32 D_88523010;
+extern u8 D_8850D6D8;
+extern u8 D_8850D678[];
+extern s8 D_88518CC1;
+
+extern u8 *func_88500CF0(u8);
+extern s32 fragment29_main(u8);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_WriteEntries(u8 *, s32, u8 *);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 func_80062304(u8 *);
+extern void _bzero(void *, s32);
+extern s32 func_80063754(s32);
+extern s32 func_80058FD0(s32);
+extern s32 func_80059468(s32);
+extern s32 func_8005B078(s32);
+extern s32 func_8005B058(s32);
+extern void GbSave_RequirePakPresent(s32);
+extern void func_8005ADD8(s32);
+extern void func_8005B140(s32);
+extern void GbSave_SetSeenOwnedBits(s32, s32, u16, s32);
+
+
+
+s32 func_88506B2C(void) {
+    /* 0x76-byte deck record (halfword aligned) */
+    typedef struct {
+        u16 data[0x3B];
+    } DeckRecord;
+
+    typedef struct {
+        u8 count;
+        u8 pad0C8D[3];
+        u8 data[0xA70];
+    } Row;
+    typedef struct {
+        u8 pad0000[0xC88];
+        s8 itemIndex;
+        s8 rowIndex;
+        u8 pad0C8A[2];
+        Row rows[2];
+    } State;
+
+    s32 i;
+    s32 result;
+    /* Unused; declaring it keeps the frame at 0x770 and the local slots' offsets. */
+    u8 *base;
+    u8 *handle;
+    u8 *ptr;
+    u8 *entries[2];
+    s32 ctx[2];
+    DeckRecord deckbuf[2][6];
+    DeckRecord *selected[2];
+    DeckRecord empty[2];
+    DeckRecord tmp;
+
+    result = 0;
+    if (*(s32 *)((u8 *)D_88523010 + 0x20) != 0) {
+        *(s32 *)((u8 *)D_88523010 + 0x20) = 0;
+        for (i = 0; i < 2; i++) {
+            entries[i] = func_88500CF0(i);
+            ctx[i] = fragment29_main(
+                D_8850D678[*(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960) * 20 + 1]);
+            if (*(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960 + 0xC89) == 0) {
+                handle = func_8006218C(
+                    0x20, *(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960), 0, 1);
+            } else {
+                handle = func_8006218C(
+                    0x21, *(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960),
+                    *(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960 + 0xC89) - 1, 1);
+            }
+            if ((entries[i][0x1E] & 1) == 0) {
+                GbSave_SetSeenOwnedBits(
+                    *(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960), entries[i][0],
+                    *(u16 *)(entries[i] + 0x16), 3);
+                GbSave_SetSeenOwnedBits(
+                    *(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960),
+                    *(u8 *)((u8 *)&D_8850D6D8 + i * 0xA960 + 0xA958),
+                    *(u16 *)(entries[i] + 0x16), 3);
+            }
+            Deck_WriteEntries(
+                ((State *)((u8 *)&D_8850D6D8 + i * 0xA960))
+                    ->rows[((State *)((u8 *)&D_8850D6D8 + i * 0xA960))->rowIndex].data,
+                ((State *)((u8 *)&D_8850D6D8 + i * 0xA960))
+                    ->rows[((State *)((u8 *)&D_8850D6D8 + i * 0xA960))->rowIndex].count,
+                handle);
+            func_80062304(handle);
+        }
+        if ((ctx[0] == 0 || ctx[1] == 0) &&
+            (*(s8 *)((u8 *)&D_8850D6D8 + 0xC89) == 0 || !D_88518CC1) &&
+            (func_80063754(entries[0][1]) != 0 ||
+             func_80063754(entries[1][1]) != 0)) {
+            for (i = 0; i < 2; i++) {
+                _bzero(&empty[i], 0x76);
+                if (ctx[i] == 0) {
+                    handle = func_8006218C(
+                        0x25, ((s8 *)&D_8850D6D8)[i * 0xA960], 0, 0);
+                    if (handle != 0) {
+                        Deck_ReadEntries((u8 *)deckbuf[i], 6, handle);
+                        func_80062304(handle);
+                    }
+                }
+                if (ctx[i] == 0 &&
+                    *(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960 + 0xC89) == 0) {
+                    selected[i] =
+                        &deckbuf[i][*(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960 + 0xC88)];
+                } else {
+                    selected[i] = &empty[i];
+                }
+            }
+            tmp = *selected[0];
+            *selected[0] = *selected[1];
+            *selected[1] = tmp;
+            for (i = 0; i != 2; i++) {
+                if (ctx[i] == 0) {
+                    handle = func_8006218C(
+                        0x25, ((s8 *)&D_8850D6D8)[i * 0xA960], 0, 1);
+                    if (handle != 0) {
+                        Deck_WriteEntries((u8 *)deckbuf[i], 6, handle);
+                        func_80062304(handle);
+                    }
+                }
+            }
+        }
+        for (i = 0; i != 2; i++) {
+            func_8005B140(((s8 *)&D_8850D6D8)[i * 0xA960]);
+        }
+    }
+    if (*(s16 *)((u8 *)D_88523010 + 0x24) < 2) {
+        for (i = 0; i != 2; i++) {
+            if (i < *(s16 *)((u8 *)D_88523010 + 0x24)) {
+                continue;
+            }
+            if (func_80058FD0(((s8 *)&D_8850D6D8)[i * 0xA960]) != 0) {
+                *(s16 *)((u8 *)D_88523010 + 0x24) += 1;
+            } else {
+                break;
+            }
+        }
+    }
+    if (*(s16 *)((u8 *)D_88523010 + 0x24) < 2) {
+        return 0;
+    }
+    for (i = 0; i != 2; i++) {
+        if (i < *(s16 *)((u8 *)D_88523010 + 0x26)) {
+            continue;
+        }
+        handle = (u8 *)(s32)(((s8 *)&D_8850D6D8)[i * 0xA960]);
+        ptr = (u8 *)func_80059468((s32)handle);
+        if (ptr != 0) {
+            ptr = (u8 *)func_8005B078((s32)handle);
+            if (ptr != 0) {
+                ptr = (u8 *)func_8005B058((s32)handle);
+            }
+        }
+        if (ptr != 0) {
+            *(s16 *)((u8 *)D_88523010 + 0x26) += 1;
+            GbSave_RequirePakPresent(
+                ((s8 *)&D_8850D6D8)[i * 0xA960]);
+            func_8005ADD8(((s8 *)&D_8850D6D8)[i * 0xA960]);
+        } else {
+            break;
+        }
+    }
+    if (*(s16 *)((u8 *)D_88523010 + 0x26) == 2) {
+        result = 1;
+    }
+    return result;
+}
+/* mkdraft:func_88506B2C end */
 
 /* mkdraft:func_8850716C begin */
 extern s32 D_88523018;

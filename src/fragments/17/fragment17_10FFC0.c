@@ -314,7 +314,53 @@ void func_822017B0(u8* arg0) {
     *(s16*)(arg0 + 0x22) = *(s16*)(arg0 + 0x1E) + var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82201834.s")
+/* mkdraft:func_82201834 begin */
+extern s32 D_8220D778[];
+extern f32 D_8220D77C;
+extern f32 D_8220D780;
+extern s16 D_8220E378;
+
+typedef struct {
+    u8 b[4];
+} B4;
+
+
+
+s32 func_82201834(s16 *arg0) {
+    u8 *p = (u8 *)arg0;
+    f32 scale;
+    s32 index;
+    s32 v;
+
+    if (*(s16 *)(p + 0) == 0) {
+        // Store order is the schedule IDO 7.1 produces for this block: the
+        // state flag and the 0x20 -> 0x28 copy are written before the four
+        // s16 deltas, and the 0x2C/0x2E accumulations close the block.
+        *(s16 *)(p + 0) = 1;
+        *(B4 *)(p + 0x28) = *(B4 *)(p + 0x20);
+        *(s16 *)(p + 0x2C) = *(s16 *)(p + 0x14) - *(s16 *)(p + 0x10);
+        *(s16 *)(p + 0x2E) = *(s16 *)(p + 0x16) - *(s16 *)(p + 0x12);
+        *(s16 *)(p + 4) = 0;
+        *(s16 *)(p + 0x2C) += *(s16 *)(p + 0x1C);
+        *(s16 *)(p + 0x2E) += *(s16 *)(p + 0x1E);
+        // D_8220E378 heads the array of 0x3C-byte entries this record belongs
+        // to (Fragment17_ResetAnimationEntries walks it with the same stride).
+        index = (s32)(p - (u8 *)&D_8220E378) / 0x3C;
+        // The first two entries travel in one direction, the rest in the other.
+        if (index >= 2) {
+            scale = 0.0f - D_8220D77C;
+        } else {
+            scale = D_8220D77C;
+        }
+        // D_8220D778[0] is the count whose square is the denominator below.
+        // The second expression reads it again rather than reusing v: the
+        // f32 store between the two expressions makes retail reload it.
+        v = D_8220D778[0];
+        *(f32 *)(p + 8) = ((f32)(*(s16 *)(p + 0x2C) - *(s16 *)(p + 0x28)) - (f32)v * scale) / (f32)(v * v);
+        *(f32 *)(p + 0xC) = ((f32)(*(s16 *)(p + 0x2E) - *(s16 *)(p + 0x2A)) - (f32)D_8220D778[0] * D_8220D780) / (f32)(v * v);
+    }
+}
+/* mkdraft:func_82201834 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82201960.s")
 
@@ -724,7 +770,88 @@ s32 func_82202B80(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82202BE4.s")
+/* mkdraft:func_82202BE4 begin */
+extern s32 D_8220D794;
+extern s32 D_8220D797;
+extern u32 D_8220D840;
+extern u32 D_8220D844;
+s32 func_82201D30(u8 *);
+
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+
+
+
+s32 func_82202BE4(s32 arg0, F82201C70_Input *arg1) {
+    M2C_UNK *var_t0;
+    M2C_UNK *var_t1;
+    s32 temp_t2;
+    s32 var_a3;
+    u32 temp_hi;
+    u32 temp_v1;
+    u32 var_a2;
+    void *temp_a0_2;
+
+    temp_t2 = M2C_FIELD(arg1, s32 *, 0x20);
+    switch (arg0) {
+    case 0:
+        func_82201C70((temp_t2 * 0x28) + D_8220E468, arg1);
+        break;
+    case 1:
+        if (temp_t2 == 0) {
+            /* Dead read of temp_v1 keeps the counter web out of $v0, so the
+               counter gets $v1 and the remainder gets $v0. */
+            if (temp_v1 == 15) {}
+            temp_v1 = *(u32 *) ((u8 *) &D_8220D844 - 4) + 1;
+            temp_hi = temp_v1 % 45U;
+            /* One source line for both statements: ugen emits one .loc per
+               line, and as1 schedules the counter store before mfhi only when
+               no .loc separates them. */
+            var_a2 = temp_hi - 0x1E; D_8220D840 = temp_v1;
+            var_a3 = 0xF;
+            if ((s32) temp_hi < 0x1E) {
+                var_a2 = temp_hi;
+                var_a3 = 0x1E;
+                var_t0 = &D_8220D794;
+                var_t1 = &D_8220D797;
+            } else {
+                var_t0 = &D_8220D797;
+                var_t1 = &D_8220D794;
+            }
+            M2C_FIELD(arg1, s8 *, 0x44) = (s8) (M2C_FIELD(var_t0, u8 *, 0) + ((s32) ((M2C_FIELD(var_t1, u8 *, 0) - M2C_FIELD(var_t0, u8 *, 0)) * var_a2) / var_a3));
+            M2C_FIELD(arg1, s8 *, 0x45) = (s8) (M2C_FIELD(var_t0, u8 *, 1) + ((s32) ((M2C_FIELD(var_t1, u8 *, 1) - M2C_FIELD(var_t0, u8 *, 1)) * var_a2) / var_a3));
+            M2C_FIELD(arg1, s8 *, 0x46) = (s8) (M2C_FIELD(var_t0, u8 *, 2) + ((s32) ((M2C_FIELD(var_t1, u8 *, 2) - M2C_FIELD(var_t0, u8 *, 2)) * var_a2) / var_a3));
+        }
+        temp_a0_2 = (temp_t2 * 0x28) + D_8220E468;
+        if (func_82201D30(temp_a0_2) != 0) {
+            M2C_FIELD(arg1, u16 *, 2) = (u16) (M2C_FIELD(arg1, u16 *, 2) | 2);
+            M2C_FIELD(arg1, s16 *, 8) = M2C_FIELD(temp_a0_2, s16 *, 4);
+            M2C_FIELD(arg1, s16 *, 0xA) = M2C_FIELD(temp_a0_2, s16 *, 6);
+            M2C_FIELD(arg1, s16 *, 0xC) = M2C_FIELD(temp_a0_2, s16 *, 8);
+            M2C_FIELD(arg1, s16 *, 0xE) = M2C_FIELD(temp_a0_2, s16 *, 0xA);
+            M2C_FIELD(arg1, s16 *, 0x28) = M2C_FIELD(temp_a0_2, s16 *, 0x1C);
+            M2C_FIELD(arg1, s16 *, 0x2A) = M2C_FIELD(temp_a0_2, s16 *, 0x1E);
+        } else {
+            M2C_FIELD(arg1, u16 *, 2) = (u16) (M2C_FIELD(arg1, u16 *, 2) & 0xFFFD);
+        }
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82202BE4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82202E0C.s")
 

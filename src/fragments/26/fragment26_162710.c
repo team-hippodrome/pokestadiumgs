@@ -592,5 +592,88 @@ void func_81005628(u8 *arg0) {
 }
 /* mkdraft:func_81005628 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/26/fragment26_162710/func_81005758.s")
+/* mkdraft:func_81005758 begin */
+extern ParticleEffectModel26 *D_8009491C;
+extern Func81003ECCHeaderRetry *D_8100678C;
+extern Func81003E60StateRetry *D_81006780;
+extern f32 D_8100611C[];
+extern void *func_8003F54C(void *);
+
+
+
+void func_81005758(ParticleEffectModel26 *model, u8 *data) {
+    Func81003E60State *slot;
+    f32 scale;
+    u16 temp_x;
+    u16 temp_y;
+    u16 temp_z;
+    s16 x;
+    s16 y;
+    s16 z;
+    u8 misc;
+    u8 flag;
+    s32 i;
+
+    D_8100678C = func_8003F54C(D_8009491C);
+    if (D_8100678C != NULL) {
+        D_81006780 = (Func81003E60StateRetry *) D_8100678C->pool;
+        if (D_81006780 != NULL) {
+            for (i = 0; i < 10; i++) {
+                slot = (Func81003E60State *) D_81006780;
+                flag = *data & 0x80;
+                misc = *data++ & 0x7F;
+                if (!flag) {
+                    slot->active = 0;
+                    x = 0;
+                    y = 0;
+                    z = 0;
+                    data += 6;
+                } else {
+                    slot->active = 1;
+                    temp_x = *data++;
+                    temp_x |= *data++ << 8;
+                    temp_y = *data++;
+                    temp_y |= *data++ << 8;
+                    temp_z = *data++;
+                    temp_z |= *data++ << 8;
+                    x = temp_x;
+                    y = temp_y;
+                    z = temp_z;
+                }
+                slot->misc = misc;
+                switch (model->model_id) {
+                case 146:
+                    scale = (f32) slot->misc * 0.005f + 0.1f;
+                    break;
+                case 77:
+                case 78:
+                    scale = (f32) slot->misc * 0.005f + 0.002f;
+                    break;
+                case 134:
+                case 144:
+                    scale = D_8100611C[slot->misc % 12];
+                    break;
+                case 109:
+                case 110:
+                    scale = (f32) slot->misc * 0.1f + 1.0f;
+                    break;
+                case 92:
+                    scale = 20.0f;
+                    break;
+                default:
+                    scale = 1.0f;
+                    break;
+                }
+                slot->scale.x = scale;
+                slot->scale.y = scale;
+                slot->scale.z = scale;
+                slot->position.x = (f32) x / 10.0f;
+                slot->position.y = (f32) y / 10.0f;
+                slot->position.z = (f32) z / 10.0f;
+                D_81006780++;
+            }
+        }
+    }
+}
+/* mkdraft:func_81005758 end */
 #endif

@@ -703,7 +703,36 @@ void func_87E0E2C8(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E32C.s")
+/* mkdraft:func_87E0E32C begin */
+extern void func_8002781C(s32, u8, void *);
+extern s32 func_800279C4(s32);
+extern void func_87E015F4(s32 arg0, s32 arg1);
+
+
+
+void func_87E0E32C(void) {
+    u8 *node;
+    u8 *model;
+    u8 buf[4];
+
+    node = *(u8 **)((u8 *)D_87F119DC + 0x38);
+    // FAKE: the repeated load is uopt's copy-propagation block for model; with a
+    // single load, model's uses fold into a compiler temp at 0x28(sp) instead of
+    // model's own slot at 0x30(sp) (diff score 16). The load is CSE'd, so it
+    // emits no instruction.
+    model = *(u8 **)((u8 *)D_87F119DC + 0x38) + 4;
+    func_87F0B4AC(model, (f32 *)((u8 *)D_87F119DC + 0x48), (f32 *)((u8 *)D_87F119DC + 0x54), (s16 *)((u8 *)D_87F119DC + 0x42));
+    if (*(s32 *)(model + 0x84) != 0) {
+        func_87E015F4((s32)((u8 *)D_87F119DC + 0x48), (s32)buf);
+        func_8002781C(0xCE0E, node[3], buf);
+    }
+    if (*(s32 *)(*(u8 **)((u8 *)D_87F119DC + 0x38) + 0x88) == 0) {
+        func_87E0E2C8(D_87F119DC);
+        func_87F026E8(D_87F119D8, D_87F119DC);
+        func_800279C4(0xCF0C);
+    }
+}
+/* mkdraft:func_87E0E32C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E3EC.s")
 

@@ -291,7 +291,7 @@ void func_882114EC(void) {
 
 // Layout of the D_88234720 state, as in fragment31_186690's State18690.
 //@src/fragments/31/fragment31_186690.c
-typedef struct { u8 pad[8]; s16 position; s16 start; u8 pad2[0x20]; } Scroll183700;
+typedef struct { u8 pad[8]; s16 position; s16 start; u16 count; u8 pad2[0x14]; s16 residual; u8 pad3[8]; } Scroll183700;
 typedef struct { u8 slot; u8 reserved[0xB]; Scroll183700 records[2]; } State183700;
 extern s32 D_882346F4;
 
@@ -370,7 +370,89 @@ void func_88212A3C(s16 arg0, s16 arg1, u8 arg2) {
     func_800495F8(arg0 + 0xD3, arg1 + 4, 2, "%d", (s32) arg2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88212A94.s")
+/* mkdraft:func_88212A94 begin */
+extern s32 D_882346F0;
+extern s32 D_88234720;
+extern s32 D_88A01C30;
+extern s8 **D_8823466C[];
+extern s32 func_88005CC0(s32, void *);
+extern s32 func_88210ECC(void *);
+extern s32 func_88210D48(void *);
+extern void func_88000488(s32, s32);
+extern void func_882129DC(s16, s16, s32);
+extern void func_88212A3C(s16, s16, u8);
+extern s32 func_8800005C(void);
+
+// Color filled by Color_SetRGB for a row that is drawn in the gray 150/150/150.
+typedef struct {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color183700;
+
+// Entry of the table at unk_D_88A01C30_20.unk_00, one per row of a scroll window:
+// unk_00 is a pointer, unk_04 and unk_15 are the bytes this function reads. The
+// remaining fields are not identified.
+typedef struct {
+    u8 *unk_00;
+    u8 unk_04;
+    u8 unk_05[0x10];
+    u8 unk_15;
+} unk_func_88212A94;
+
+extern Color183700 D_88005FA0;
+extern void func_880006E0(Color183700 *);
+extern Color183700 *Color_SetRGB(Color183700 *, s32, s32, s32);
+
+// Draw the rows of one column's scroll window that are visible in the list: each row is
+// 27 pixels tall, the first row sits at y = 128 above the window's residual offset, and
+// only limit rows are drawn.
+void func_88212A94(u8 column, u8 limit) {
+    s16 x;
+    s16 y;
+    u32 row;
+    Color183700 gray;
+    unk_func_88212A94 **entry;
+
+    entry = (unk_func_88212A94 **)(((unk_D_88A01C30_20 *)(D_88A01C30 + 0x20))[column].unk_00 +
+                                   ((State183700 *)D_88234720)->records[column].start);
+    x = column == 0 ? 58 : 369;
+    limit = limit < ((State183700 *)D_88234720)->records[column].count
+                ? limit
+                : ((State183700 *)D_88234720)->records[column].count;
+    row = 0;
+    y = 128 - ((State183700 *)D_88234720)->records[column].residual;
+    for (; row != limit; entry++, row++, y += 27) {
+        if (D_882346F0 == 1 || D_882346F0 == 3 || column == *(u8 *)D_88234720) {
+            if ((func_88210ECC(*entry) != 0 && column == ((State183700 *)D_88234720)->slot) ||
+                (*(s32 *)(D_88234720 + 4) == 0 &&
+                 ((*(s16 *)(D_88234720 + 8) == 0 && (*entry)->unk_15 == 0) ||
+                  (*(s16 *)(D_88234720 + 8) == 1 && (*entry)->unk_15 == 0 && D_882346F0 == 0) ||
+                  (D_882346F0 == 1 && column == ((State183700 *)D_88234720)->slot && (*entry)->unk_15 != 0) ||
+                  (*(s16 *)(D_88234720 + 8) == 2 && (*entry)->unk_15 == 0 && D_882346F0 == 0) ||
+                  (*(s16 *)(D_88234720 + 8) == 3 && (*entry)->unk_15 == 0) ||
+                  (*(s16 *)(D_88234720 + 8) == 4 && func_8800005C() != 0 && *(u8 *)D_88234720 == 0)))) {
+                func_880006E0(Color_SetRGB(&gray, 150, 150, 150));
+            } else {
+                func_880006E0(&D_88005FA0);
+            }
+        } else {
+            func_880006E0(Color_SetRGB(&gray, 150, 150, 150));
+        }
+        if (func_88005CC0(11, *entry) == 0 &&
+            func_88005CC0(12, *entry) == 0 &&
+            func_88005CC0(10, *entry) == 0 &&
+            func_88005CC0(13, *entry) == 0) {
+            if (func_88210D48(*entry) != 0) {
+                func_88000488(D_88234720 + 0x74, 1);
+            }
+            func_882129DC(x, y, (s32)D_8823466C[(*entry)->unk_00[8]][(*entry)->unk_04]);
+            func_88000488(D_88234720 + 0x74, 0);
+            func_88212A3C(x, y, (*entry)->unk_15);
+        }
+    }
+}
+/* mkdraft:func_88212A94 end */
 
 extern s16 D_8800EF58;
 extern s32 func_8004C874(s32, s32);

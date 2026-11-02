@@ -225,7 +225,53 @@ void Fragment14_ConfigureControllerSelection(void *arg0, s32 arg1, s32 arg2, s32
     func_81304178((u8 *)arg0 + 0x15370, arg2, arg5, arg6);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_81300570.s")
+/* mkdraft:func_81300570 begin */
+extern u8 D_81311D30[];
+extern u8 D_81311D3C[];
+extern void func_817000A4();
+extern void func_81700974(s32, s32, s32, s32, s32, void *, void *, s32);
+extern s32 func_81700C0C(s32 arg0);
+
+// Draw the setup panel's name and description rows, then keep the description
+// as the panel title. The 0x200/0x300 values in the 0xFF00-masked mode word at
+// data+0x950 pick row `index` in D_81311D30/D_81311D3C, which hold one 3-byte
+// entry per row.
+
+
+void func_81300570(Fragment14SetupState *arg0) {
+    s32 index = 0;
+    u8 *name;
+    u8 *text;
+
+    func_817000A4(arg0);
+    if ((*(u16 *)(arg0->data + 0x950) & 0xFF00) == 0x200) {
+        name = func_8004C874(0xF, 0x30);
+        if (*(s16 *)(*(u8 **)(arg0->data + 0x940) + 0x3E) >= 0) {
+            text = func_8004C874(0xF, *(s16 *)(*(u8 **)(arg0->data + 0x940) + 0x3E));
+        } else {
+            text = *(u8 **)(arg0->data + 0x940);
+        }
+        index = 1;
+    } else {
+        text = func_8004C874(0xF, 0x2B);
+        if (*(s16 *)(*(u8 **)(arg0->data + 0x940) + 0x3E) >= 0) {
+            name = func_8004C874(0xF, *(s16 *)(*(u8 **)(arg0->data + 0x940) + 0x3E));
+        } else {
+            name = *(u8 **)(arg0->data + 0x940);
+        }
+        if ((*(u16 *)(arg0->data + 0x950) & 0xFF00) == 0x300) {
+            index = 2;
+        }
+    }
+    func_81700974(0, 0, 0x30, 0x10, name, D_81311D30 + index * 3, D_81311D3C + index * 3,
+                  *(void **)(arg0->data + 0x94C));
+    func_81700974(1, 0x280, 0x30, 8, text, D_81311D30 + index * 3,
+                  D_81311D3C + index * 3, NULL);
+    func_81700C0C(0);
+    func_81700C0C(1);
+    arg0->title = text;
+}
+/* mkdraft:func_81300570 end */
 
 extern void func_813000BC(void *arg0, s32 arg1);
 extern s32 func_81300314(void *arg0, s32 arg1, s32 arg2);

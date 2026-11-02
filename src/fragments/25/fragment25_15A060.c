@@ -2,7 +2,60 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82100020.s")
+/* mkdraft:func_82100020 begin */
+extern Gfx *D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+// Both color arguments point at RGBA quads. The quad behind `env` becomes the texture
+// environment color and the quad behind `prim` the primitive color; func_8260899C passes its
+// `prim` quad to gDPSetEnvColor and its `env` quad to gDPSetPrimColor in the same order, so the
+// pairing here is not a transcription error.
+//@src/fragments/20/fragment20_12C460.c
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} Color;
+
+// Draws the texture fetched by func_8004C990 at (x + 8, y + 8) with extent width - 0x10 by
+// height - 0x10, horizontally scaled so the texture's width covers that span. The texture's
+// first u16 is its width; the vertical step stays 1024.
+
+
+void func_82100020(s32 x, s32 y, s32 width, s32 height, u8 *prim, u8 *env) {
+    u8 *tex;
+    f32 step;
+    f32 pad; // FAKE: occupies a float spill slot so `scale` is stored at 0x30 instead of 0x34;
+             // diff score 8 without it.
+    s32 w;
+    s32 h;
+    f32 scale;
+
+    tex = (u8 *)func_8004C990(44, 0);
+    if (tex == NULL) {
+        return;
+    }
+    w = width - 0x10;
+    h = height - 0x10;
+    scale = (f32)w / (f32)(u32)*(u16 *)tex;
+    if (scale > 0.0f && w > 0 && h > 0) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, ((Color *)env)->r, ((Color *)env)->g, ((Color *)env)->b,
+                       ((Color *)env)->a);
+        gDPSetPrimColor(D_800D0510++, 0, 0, ((Color *)prim)->r, ((Color *)prim)->g,
+                        ((Color *)prim)->b, ((Color *)prim)->a);
+        func_8004D1FC(tex);
+        step = 1024.0f / scale;
+        // FAKE: the unsigned 16U keeps IDO from reusing w and h across the call (diff score
+        // 1434 without it).
+        GfxRect_DrawTextured(x + 8, y + 8, width - 16U, height - 16U, 0, 0,
+                             (s32)(((step > 0.0f) ? 0.5f : -0.5f) + step), 1024, 0);
+    }
+}
+/* mkdraft:func_82100020 end */
 
 extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D1FC(u8 *);
@@ -46,7 +99,7 @@ extern Gfx *D_800D0510;
 extern Gfx D_80094E38[];
 extern Gfx D_80094E78[];
 extern u8 D_82103DE0[];
-extern void func_82100020(s16, s16, s16, s16, u8 *, u8 *);
+extern void func_82100020(s32, s32, s32, s32, u8 *, u8 *);
 
 // arg1[4]-arg1[7] are passed as the x, y, width and height parameters of func_82100214;
 // func_82100020 receives the same rectangle.
@@ -343,7 +396,145 @@ void func_82101040(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82101094.s")
+/* mkdraft:func_82101094 begin */
+extern void main_pool_push_state(s32);
+extern s32 func_8004C09C(s32);
+extern s32 func_8004D690(s32);
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(void *, s32 *);
+extern s32 func_8004C8C0(s32);
+extern s32 func_8004C4B0(s32);
+extern void func_800476A0(void *, s32);
+extern s32 func_800476FC(s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_80047738(s32, s32, s32, s32);
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern s32 func_8004EB58(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *func_8005049C(void *, s32);
+extern s32 func_82101728(void *, s32, void *, s32, s32);
+extern s32 func_82100AEC(s32, void *);
+extern s32 func_82100B2C(s32, void *);
+extern s32 func_82100B6C(s32, void *);
+extern s32 func_82100C14(s32, void *);
+extern u8 D_82103D70[];
+extern u8 D_82104210[];
+extern f32 func_82101AB4();
+extern f32 func_82101AFC();
+extern f32 func_82101B44();
+extern void func_82101D88(void *, f32, f32, f32);
+
+
+
+void func_82101094(void *arg0, s32 arg1, s32 arg2) {
+    void *state;
+    s32 *entry;
+    s32 *obj;
+    s32 *name;
+    s32 *n_wi;
+    // FAKE: never assigned. IDO 7.1 gives every declared local a stack home, top-down from
+    // -4 of the frame; the retail frame (0x58) with the state/entry spills at 0x50/0x54 and
+    // the float temps at 0x28/0x2C needs eight declared locals. Without these three the same
+    // body scores 114 in matching_notes/try_candidate.py.
+    s32 padding0;
+    s32 padding1;
+    s32 padding2;
+
+    main_pool_push_state(0x50535253);
+    func_8004C09C(0x107);
+    *(s32 *)((u8 *)arg0 + 4) = 0;
+    *(f32 *)((u8 *)arg0 + 8) = 1.0f;
+    *(s32 *)((u8 *)arg0 + 0xC) =
+        func_8004D690(*(s32 *)((u8 *)arg0 + 0x34) != 0 ? 0x15 : 2);
+    *(s32 *)((u8 *)arg0 + 0x10) =
+        func_8004DC6C(*(s32 *)((u8 *)arg0 + 0x34) != 0 ? 0x98 : 0x12);
+    func_8004DCFC(*(u8 **)((u8 *)arg0 + 0x10), 0);
+    func_8004C8C0(0x126);
+    func_8004C8C0(0x128);
+    func_8004C8C0(0x127);
+    func_8004C8C0(0x12C);
+    func_8004C8C0(0x12D);
+    func_8004C8C0(0x46);
+    func_8004C8C0(0x02);
+    func_8004C8C0(0x12F);
+    func_8004C8C0(0x130);
+    func_8004C8C0(0x2C);
+    func_8004C8C0(0x4B);
+    func_8004C8C0(0x11C);
+    func_8004C8C0(0x12E);
+    func_8004C8C0(0x130);
+    func_8004C4B0(0x1C);
+    func_800476A0(D_82104210, 1);
+    func_800476FC((s32)D_82104210, 1);
+    func_80047738(0, func_8004C990(0x11C, 0), 0, 0);
+    state = MainPool_AllocState(main_pool_get_available(), 0);
+    entry = (s32 *)*(s32 *)(D_82103D70 +
+                            ((*(s32 *)((u8 *)arg0 + 0x34) << 3) +
+                             (*(s32 *)((u8 *)arg0 + 0x2C) << 2) +
+                             (*(s32 *)((u8 *)arg0 + 0x28) << 4)));
+    if (*(s32 *)((u8 *)arg0 + 0x34) == 0) {
+        switch (*(u8 *)((u8 *)arg0 + 0x70)) {
+            case 1:
+                *(s16 *)((u8 *)entry + 0x4C) = 0x126;
+                *(s16 *)((u8 *)entry + 0x4E) = 0;
+                *(s32 *)((u8 *)entry + 0x44) = 0x16;
+                break;
+            case 2:
+                *(s16 *)((u8 *)entry + 0x4C) = 0x128;
+                *(s16 *)((u8 *)entry + 0x4E) = 0;
+                *(s32 *)((u8 *)entry + 0x44) = 0x17;
+                break;
+        }
+    }
+    *(s32 *)((u8 *)arg0 + 0x14) = func_8004EB58((s32)state, *(s32 *)((u8 *)arg0 + 0x10));
+    *(s32 *)((u8 *)arg0 + 0x1C) =
+        func_82101728(state, arg1, entry, *(s32 *)((u8 *)arg0 + 0x14), 0);
+    obj = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x736C6966);
+    if (obj != 0) {
+        *(void **)((u8 *)obj + 0x1C) = func_82100AEC;
+    }
+    *(void **)((u8 *)arg0 + 0x18) = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x77695F63);
+    name = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x6E616D65);
+    if (name != 0) {
+        *(void **)((u8 *)name + 0x1C) = func_82100B2C;
+        *(s32 *)((u8 *)name + 0x20) = 0;
+        n_wi = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x6E5F7769);
+        if (n_wi != 0) {
+            *(s32 *)((u8 *)n_wi + 0x20) =
+                *(s16 *)((u8 *)n_wi + 8) - *(s16 *)((u8 *)name + 8);
+        }
+    }
+    n_wi = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x6E5F7769);
+    if (n_wi != 0) {
+        *(void **)((u8 *)n_wi + 0x1C) = func_82100B6C;
+    }
+    n_wi = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x735F7769);
+    if (n_wi != 0) {
+        *(void **)((u8 *)n_wi + 0x1C) = func_82100C14;
+    }
+    func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x5249564C);
+    if (*(s32 *)((u8 *)arg0 + 0x34) == 0) {
+        switch (*(u8 *)((u8 *)arg0 + 0x70)) {
+            case 1:
+            case 2:
+                obj = func_8005049C(*(void **)((u8 *)arg0 + 0x14), 0x47425F42);
+                if (obj != 0) {
+                    *(s16 *)((u8 *)obj + 8) = 0x13D;
+                    *(s16 *)((u8 *)obj + 0xA) = 0xEF;
+                }
+                break;
+        }
+    }
+    MainPool_FinalizeAllocation(state);
+    if (arg2 != 0) {
+        func_82101D88(*(void **)arg0,
+                      func_82101AB4(*(void **)((u8 *)*(void **)((u8 *)arg0 + 0x1C) + 4)),
+                      func_82101AFC(*(void **)((u8 *)*(void **)((u8 *)arg0 + 0x1C) + 4)),
+                      func_82101B44(*(void **)((u8 *)*(void **)((u8 *)arg0 + 0x1C) + 4)));
+    }
+}
+/* mkdraft:func_82101094 end */
 
 extern void func_8004C398();
 extern void main_pool_pop_state(s32);

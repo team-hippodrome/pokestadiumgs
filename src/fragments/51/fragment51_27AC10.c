@@ -200,7 +200,45 @@ void func_863057A0(u8 *arg0, u8 *arg1, u8 *arg2, u8 *arg3, f32 arg4, f32 arg5) {
 }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305840.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305A04.s")
+/* mkdraft:func_86305A04 begin */
+struct unk_func_86305B44;
+extern u8 *D_863075D8;
+extern void func_86304DF0(f32 *arg0, f32 *arg1, f32 *arg2, u8 *arg3, u8 *arg4);
+extern s32 func_86305448();
+extern s32 func_86305694(u8 *arg0);
+extern void func_86305840();
+
+// unk_func_86305B44 is defined further down this file; the forward declaration
+// keeps this definition's parameter type identical to the func_86305A04
+// prototype below, which takes unk_func_86305B44 *.
+
+
+void func_86305A04(struct unk_func_86305B44 *arg0) {
+    func_86304DF0((u8 *)arg0 + 0x18, (u8 *)arg0 + 0x20, (u8 *)arg0 + 0x68,
+                  *(void **)((u8 *)arg0 + 4), *(s32 *)((u8 *)arg0 + 8));
+    *(f32 *)((u8 *)arg0 + 0x40) = *(f32 *)((u8 *)arg0 + 0x28) - *(f32 *)((u8 *)arg0 + 0x20);
+    *(f32 *)((u8 *)arg0 + 0x44) = *(f32 *)((u8 *)arg0 + 0x2C) - *(f32 *)((u8 *)arg0 + 0x24);
+    func_863057A0((u8 *)arg0 + 0x50, (u8 *)arg0 + 0x60, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x20,
+                  -*(f32 *)((u8 *)arg0 + 0x40), -*(f32 *)((u8 *)arg0 + 0x44));
+    func_863057A0((u8 *)arg0 + 0x48, (u8 *)arg0 + 0x58, (u8 *)arg0 + 0x28, (u8 *)arg0 + 0x38,
+                  *(f32 *)((u8 *)arg0 + 0x40), *(f32 *)((u8 *)arg0 + 0x44));
+    *(f32 *)((u8 *)arg0 + 0x88) =
+        *(f32 *)(*(u8 **)((u8 *)arg0 + 8) + 0x24) * *(f32 *)((u8 *)arg0 + 0x6C) +
+        *(f32 *)((u8 *)arg0 + 0x68) * *(f32 *)(*(u8 **)((u8 *)arg0 + 8) + 0x20);
+    *(u8 **)((u8 *)arg0 + 0xC) = *(u8 **)(D_863075D8 + 0xDC0);
+    while (*(u8 **)((u8 *)arg0 + 0xC) != NULL) {
+        *(f32 *)((u8 *)arg0 + 0x10) = *(f32 *)(*(u8 **)((u8 *)arg0 + 0xC) + 0x48);
+        *(f32 *)((u8 *)arg0 + 0x14) = *(f32 *)(*(u8 **)((u8 *)arg0 + 0xC) + 0x4C);
+        if (func_86305448((u8 *)arg0)) {
+            func_86305694((u8 *)arg0);
+        }
+        func_86305840((u8 *)arg0);
+        *(u8 **)((u8 *)arg0 + 0xC) = *(u8 **)(*(u8 **)((u8 *)arg0 + 0xC) + 4);
+    }
+    *(f32 *)(*(u8 **)((u8 *)arg0 + 8) + 0x44) = *(f32 *)((u8 *)arg0 + 0x18);
+    *(f32 *)(*(u8 **)((u8 *)arg0 + 8) + 0x48) = *(f32 *)((u8 *)arg0 + 0x1C);
+}
+/* mkdraft:func_86305A04 end */
 
 typedef struct unk_func_86305B44 {
     s32 index;

@@ -74,7 +74,54 @@ void func_8822B284(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19DFC0/func_8822B2D8.s")
+/* mkdraft:func_8822B2D8 begin */
+extern Gfx *D_800D0510;
+extern Gfx D_80094DE0[];
+extern u8 *D_8800687C;
+extern char D_882344F0[];
+extern void func_880008B0(s16, s16, s16);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+// FAKE: int return, not the callee's real void *. func_8822AE2C calls
+// func_8004C874 before any declaration, creating an implicit int() prototype in
+// this file; a pointer-returning declaration here conflicts with it. Only the
+// value is forwarded to func_80048E30, so the return type does not affect
+// codegen. Without this line the build fails on "conflicting types".
+extern int func_8004C874(s32, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+extern void func_80049668(s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_8004989C(s32);
+extern void func_80047634(s32);
+extern void func_80049064(s32, s32, s32, s32);
+extern void func_80047650(s32);
+
+// Storage entry at D_88234900+4: byte 0x66 is the entry's name, halfword 0x72 its
+// value. Header + first two rows are drawn unconditionally; the name value row,
+// the count row and the textured panel only when the entry has a name.
+
+
+void func_8822B2D8(void) {
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_880008B0(210, 257, 332);
+    func_800498C4();
+    func_800496A4(4, 1);
+    func_80048E30(D_8800687C, 210, 235, (const char *)(D_88234900 + 8), 1);
+    if (*(s8 *)(*(u8 **)(D_88234900 + 4) + 0x66) != 0) {
+        func_80048E30(D_8800687C, 280, 321,
+                      (const char *)(*(u8 **)(D_88234900 + 4) + 0x66), 1);
+        func_80048E30(D_8800687C, 365, 321, (const char *)func_8004C874(13, 9), 1);
+        func_80049668(0);
+        func_800495F8(400, 321, 0, D_882344F0,
+                      *(u16 *)(*(u8 **)(D_88234900 + 4) + 0x72));
+        func_800496A4(8, 1);
+        func_8004989C(26);
+        func_80047634(1);
+        func_80049064(376, 267, 1, (s32)*(u8 **)(D_88234900 + 4));
+        func_80047650(1);
+    }
+}
+/* mkdraft:func_8822B2D8 end */
 
 void func_8822B240(void);
 void func_8822B24C(void);

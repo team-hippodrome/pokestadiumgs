@@ -670,7 +670,112 @@ void func_81310A14(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_81310BF8.s")
+/* mkdraft:func_81310BF8 begin */
+extern f32 func_8130F7B8(u8 *arg0, s16 *arg1);
+extern s32 func_8130F970(void *arg0, s32 arg1);
+extern void func_816048E0(s16, s16, s16, s16, f32);
+extern void func_816073A0(s16 *);
+extern void func_81603598(s16, s16, s32, s32, f32);
+extern void func_81608918(s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_8004989C(s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void *func_8004C874(s32, s32);
+extern void func_8004C594(s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_800499EC(void);
+extern const s16 D_81312898[70];
+#define R143 ((const s16 (*)[10])D_81312898)
+
+
+
+void func_81310BF8(s32 arg0) {
+    s16 rect[4];
+    f32 scale;
+    f32 alpha;
+    s16 a, b;
+    s32 value;
+    s32 x, y;
+    u8 pad[0x08]; // FAKE: no source local; sizes the block above buffer[0x100] so
+                  // rect/scale/alpha land at 0x180/0x17c/0x178 in a 0x188 frame.
+                  // Without it the frame is 0x180 and they move to 0x178/0x174/0x170
+                  // (diff 111).
+    u8 buffer[0x100];
+    s32 i;
+
+    scale = func_8130F7B8((u8 *)arg0, rect);
+    if (scale > 0.9f) {
+        alpha = (scale - 0.9f) * 10.0f;
+    } else {
+        alpha = 0.0f;
+    }
+    func_816048E0(rect[0], rect[1], rect[2], rect[3], 0.0f);
+    func_816073A0(rect);
+    for (i = 0; i < 7; i++) {
+        if (func_8130F970((u8 *)arg0, i) != 0) {
+            a = R143[i][0];
+            b = R143[i][1];
+            value = (R143[i][2] >= 0) ? R143[i][2] : *(s32 *)((u8 *)arg0 + i * 4 + 0x90);
+            func_81603598(a, b, value, i, alpha);
+        }
+    }
+    func_800498C4();
+    if (((u8 *)arg0)[0x38] == 5) {
+        if (*(s32 *)((u8 *)arg0 + 0x48) < 4 && *(s32 *)((u8 *)arg0 + 0x48) >= 0) {
+            func_800496A4(16, 1);
+            func_800495F8(0x140, 0x169, 1, func_8004C874(15, 0x5E));
+        }
+    }
+    func_8004989C(0x18);
+    func_800496A4(8, 1);
+    func_8004972C(0xFF, 0xFF, 0xFF, (s32)(255.0f * alpha));
+    for (i = 0; i != 7; i++) {
+        // Slot label coordinates; they shadow the cursor x/y used after the loop.
+        s16 number = R143[i][3];
+        s16 x = R143[i][4];
+        s16 y = R143[i][5];
+        if (func_8130F970((u8 *)arg0, i) != 0) {
+            if (number >= 0) {
+                if (number == 0x37 && *(s32 *)((u8 *)arg0 + 0x3C) != 0) {
+                    number = 0x38;
+                }
+                func_800496A4(8, 1);
+                func_800495F8(x, y, 3, func_8004C874(15, number));
+            } else if (i < 4) {
+                if (((u8 *)arg0)[i + 0x8C] == 0) {
+                    func_800496A4(8, 1);
+                    func_800495F8(x, y, 1, (u8 *)arg0 + i * 12 + 0x54);
+                    func_800496A4(4, 0);
+                    func_800495F8(x, y + 0x18, 1, "%s %05d", func_8004C874(13, 9),
+                                  *(u16 *)((u8 *)arg0 + i * 2 + 0x84));
+                } else if (((u8 *)arg0)[i + 0x8C] == 6) {
+                    func_800496A4(8, 1);
+                    func_800495F8(x, y, 1, func_8004C874(23, 0x40));
+                    func_800496A4(4, 0);
+                    func_800495F8(x, y + 0x18, 1, "%s %s", func_8004C874(13, 9),
+                                  func_8004C874(23, 0x41));
+                }
+            }
+        }
+    }
+    if (func_8130F970((u8 *)arg0, 4) != 0) {
+        func_8004C594(4, *(s32 *)((u8 *)arg0 + 0xA0));
+        func_800496A4(4, 0);
+        func_800495F8(0xDD, 0x16D, 2, func_8004C8A0(buffer, 0x100, 15, 0x5C));
+    }
+    func_800499EC();
+    if (scale > 0.98f && *(s32 *)((u8 *)arg0 + 0xA8) != 0) {
+        if (*(s32 *)((u8 *)arg0 + 0x48) >= 0 && *(s32 *)((u8 *)arg0 + 0x48) < 7) {
+            x = rect[0] + R143[*(s32 *)((u8 *)arg0 + 0x48)][0];
+            y = rect[1] + R143[*(s32 *)((u8 *)arg0 + 0x48)][1];
+
+            func_81608918(x - 0x4E, y - 0x87, (u8 *)arg0 + 0x34, x);
+        }
+    }
+}
+/* mkdraft:func_81310BF8 end */
 #endif
 
 #ifdef VERSION_US

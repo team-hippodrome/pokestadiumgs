@@ -370,7 +370,44 @@ void func_81802690(u8 *arg0, f32 arg1) {
     func_80049828(0, arg0[4], arg0[5], arg0[6], (s32)((f32)arg0[7] * arg1));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AFAA0/func_81802754.s")
+/* mkdraft:func_81802754 begin */
+extern f32 func_818014A8(void);
+extern void func_81802208(s32, f32);
+extern void func_81802308(s32);
+extern void func_80049770(s32, s32, s32, s32, s32);
+extern void func_80049828(s32, s32, s32, s32, s32);
+
+// Blend eight bytes of arg0 and arg1 using the weight from func_818014A8, then
+// pass the result in two runs of four to the color writers, alpha scaled by arg2.
+
+
+void func_81802754(void *arg0, void *arg1, f32 arg2) {
+    u8 *src0;
+    f32 scale;
+    f32 weight;
+    u8 dest[8];
+    u8 *dst;
+    u8 *src1;
+    u8 *end;
+
+    scale = func_818014A8();
+    weight = 1.0f - scale;
+    func_81802208((s32)arg0, arg2);
+    func_81802308((s32)arg0);
+    dst = dest;
+    src1 = arg1;
+    src0 = arg0;
+    end = dest + 8;
+    for (; dst != end; dst += 4, src0 += 4, src1 += 4) {
+        dst[0] = (u8)((f32)src0[0] * scale + (f32)src1[0] * weight);
+        dst[1] = (u8)((f32)src0[1] * scale + (f32)src1[1] * weight);
+        dst[2] = (u8)((f32)src0[2] * scale + (f32)src1[2] * weight);
+        dst[3] = (u8)((f32)src0[3] * scale + (f32)src1[3] * weight);
+    }
+    func_80049770(0, dest[0], dest[1], dest[2], (s32)((f32)dest[3] * arg2));
+    func_80049828(0, dest[4], dest[5], dest[6], (s32)((f32)dest[7] * arg2));
+}
+/* mkdraft:func_81802754 end */
 
 extern void func_81802438(s32);
 extern void func_81802208(s32, f32);
@@ -755,7 +792,100 @@ f32 WidgetSelection_AngleDifference(f32 from, f32 to) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AFAA0/func_81803D80.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AFAA0/func_81804088.s")
+/* mkdraft:func_81804088 begin */
+// Named bits in the selection script's flag word at offset 16.
+typedef struct {
+    unsigned int : 1;
+    unsigned int reset_selection : 1;
+    unsigned int hide_masked_selection : 1;
+    unsigned int : 29;
+} Fragment4SelectionFlags;
+
+typedef void (*Fragment4SelectionCallback)(u8 *, s32);
+
+extern s32 func_81804A20(u8 *);
+// Returns the selection value reached by moving from the entry arg2 toward the
+// direction picked by arg1 (0-3, an index into the four angles at D_81805D48).
+// When bit 29 of the flag word at offset 16 is set, entries whose bit in the
+// arg3 mask is set are skipped and a masked landing entry keeps arg2.
+extern s32 func_81803D80(void *, s32, s32, s32);
+extern void func_800226C0(s32);
+
+
+
+s32 func_81804088(void *arg0, u8 *arg1) {
+    s32 current_value;
+    u16 buttons;
+    u8 *volatile entry;
+    s32 mask;
+    s32 selection;
+    u8 *value;
+    s32 result;
+    s32 index;
+
+    buttons = *(u16 *)(arg1 + 0x16);
+    mask = WidgetSelection_GetMask(arg0, arg1);
+    if (!func_81804A20(arg1)) {
+        return 0;
+    }
+    selection = -1;
+    if (*(void **)arg0 != NULL) {
+        value = WidgetSelection_GetValuePointer(arg0, arg1);
+        if (*value == 0 || *(u8 *)((u8 *)arg0 + 4) < *value) {
+            *value = *(u8 *)((u8 *)arg0 + 5);
+        }
+        if (((Fragment4SelectionFlags *)((u8 *)arg0 + 16))->hide_masked_selection) {
+            if (*value < 0x20 && (mask & (1 << (*value + 0x1F)))) {
+                *value = *(u8 *)((u8 *)arg0 + 5);
+            }
+        }
+        // Selected entry. No statement in this function reads the pointer.
+        entry = *(u8 **)arg0 + *value * 24 - 24;
+        switch (func_81803AE4(buttons)) {
+        case 1:
+            if (*(void **)((u8 *)arg0 + 0x14) != NULL) {
+                if (mask & (1 << (*value + 0x1F))) {
+                    func_800226C0(5);
+                } else {
+                    ((Fragment4SelectionCallback) * (void **)((u8 *)arg0 + 0x14))(arg1, *value);
+                }
+            }
+            return *value;
+        case -1:
+            if (*(void **)((u8 *)arg0 + 0x14) != NULL) {
+                ((Fragment4SelectionCallback) * (void **)((u8 *)arg0 + 0x14))(arg1, -1);
+            }
+            return -1;
+        }
+        current_value = *value;
+        if (buttons & 0x800) {
+            selection = 0;
+        } else if (buttons & 0x400) {
+            selection = 1;
+        } else if (buttons & 0x200) {
+            selection = 2;
+        } else if (buttons & 0x100) {
+            selection = 3;
+        }
+        if (selection >= 0) {
+            result = func_81803D80(arg0, current_value, selection, mask);
+            if (result != *value) {
+                func_800226C0(1);
+                *value = result;
+            }
+        }
+        return 0;
+    } else {
+        index = func_81803AE4(buttons);
+        if (index != 0) {
+            if (*(void **)((u8 *)arg0 + 0x14) != NULL) {
+                ((Fragment4SelectionCallback) * (void **)((u8 *)arg0 + 0x14))(arg1, index);
+            }
+        }
+        return index;
+    }
+}
+/* mkdraft:func_81804088 end */
 
 /* mkdraft:func_818042E4 begin */
 extern s32 func_8004972C(s32, s32, s32, s32);

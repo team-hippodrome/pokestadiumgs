@@ -314,7 +314,61 @@ u8 *func_8AE00F84(u8 *arg0, u8 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE00FC4.s")
+/* mkdraft:func_8AE00FC4 begin */
+extern s16 D_8AE0A15C;
+
+
+
+s32 func_8AE00FC4(u8 *arg0, s32 arg1) {
+    typedef struct { u8 b[5]; } Copy5;
+    u8 *entry;
+    s32 result = 0;
+
+    if (arg1 == 0) return 0;
+    // FAKE: empty block boundary separating the pre-loop initialization from
+    // the record loop; it is what puts the cases' shared 1 in s1 and result in s2.
+    if (0) { }
+    do {
+        entry = func_8AE00F84((u8 *)arg1, ((u8 *)&D_8AE0A15C)[1]);
+        if (entry == NULL) return result;
+        // entry[0] selects which 5-byte slot of arg0 the record fills: 1, 2, 4
+        // and 8 are slots at 0x2, 0x7, 0xC and 0x11; 7 fills the first three.
+        switch (entry[0]) {
+        case 1:
+            *(s16 *)arg0 = 1;
+            *(Copy5 *)(arg0 + 2) = *(Copy5 *)entry;
+            result = 1;
+            break;
+        case 2:
+            *(s16 *)arg0 = 1;
+            *(Copy5 *)(arg0 + 7) = *(Copy5 *)entry;
+            result = 1;
+            break;
+        case 4:
+            *(s16 *)arg0 = 1;
+            *(Copy5 *)(arg0 + 0xC) = *(Copy5 *)entry;
+            result = 1;
+            break;
+        case 8:
+            *(s16 *)arg0 = 1;
+            *(Copy5 *)(arg0 + 0x11) = *(Copy5 *)entry;
+            result = 1;
+            break;
+        case 7:
+            *(s16 *)arg0 = 1;
+            *(Copy5 *)(arg0 + 2) = *(Copy5 *)entry;
+            *(Copy5 *)(arg0 + 7) = *(Copy5 *)entry;
+            *(Copy5 *)(arg0 + 0xC) = *(Copy5 *)entry;
+            result = 1;
+            break;
+        default:
+            *(s16 *)arg0 = 0;
+            break;
+        }
+        arg1 = (s32)(entry + 5);
+    } while (1);
+}
+/* mkdraft:func_8AE00FC4 end */
 #endif
 
 #ifdef VERSION_US
@@ -2371,5 +2425,164 @@ void *func_8AE06198(s32 arg0, s32 arg1, u16 arg2) { void *base; void *result; u8
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE0626C.s")
+/* mkdraft:func_8AE0626C begin */
+extern s16 D_8AE0849C;
+extern s32 D_8AE098D8;
+extern s32 D_8AE098E0;
+extern s32 D_8AE098E8;
+extern s32 D_8AE098EC;
+extern s32 D_8AE098F0;
+extern s32 D_8AE09900;
+extern s32 D_8AE09908;
+extern s32 D_8AE09910;
+extern s32 D_8AE09914;
+extern s32 D_8AE09918;
+extern s32 D_8AE09928;
+extern s32 D_8AE09930;
+extern s32 D_8AE09938;
+extern s32 D_8AE09940;
+extern s32 D_8AE09944;
+extern u8 D_48B920[];
+extern u8 D_49B780[];
+extern u8 D_1000000[];
+extern u8 D_446E30[];
+extern u8 D_447D00[];
+extern u8 D_81000000[];
+extern u8 fragment26_ROM_START[];
+extern u8 fragment27_ROM_START[];
+
+
+
+s32 func_8AE0626C(s32 arg0, s32 arg1) {
+    s32 sp24;
+
+    D_8AE0A15C = arg1;
+    switch (arg0) {
+    case 1:
+        D_8AE09E68 = 2;
+        break;
+    case 2:
+        D_8AE09E68 = 3;
+        break;
+    case 3:
+        D_8AE09E68 = 4;
+        break;
+    case 4:
+        D_8AE09E68 = 5;
+        break;
+    case 5:
+        D_8AE09E68 = 1;
+        break;
+    case 6:
+        D_8AE09E68 = 0;
+        break;
+    case 7:
+        D_8AE09E68 = 6;
+        break;
+    default:
+        D_8AE09E68 = 0;
+        break;
+    }
+    switch (arg0) {
+    case 5:
+    case 6:
+    case 7:
+        D_8AE07924 = 0;
+        if (func_8005ED78(func_80064C88()) >= 100) {
+            D_8AE07924 = 1;
+        }
+        break;
+    default:
+        D_8AE07924 = 1;
+        break;
+    }
+    D_8AE0849C = 0;
+    D_8AE0A15E = D_8AE0A15C;
+    if (D_8AE0A15C >= 0xFE) {
+        D_8AE0A15C = 0xC9;
+    }
+    main_pool_push_state(0x424D4150);
+    Gfx_InitDisplayListBuffers(0x10000, 0);
+    sp24 = func_800082E0(0, 1, 2, 1, 2, 1);
+    func_8004C09C(0x10B);
+    func_8004C8C0(0x1B);
+    func_8004C8C0(0x2E);
+    func_8004C8C0(0x2A);
+    func_8004C8C0(0x38);
+    func_8004C8C0(0x2B);
+    func_8004C8C0(0x2C);
+    func_8004C8C0(0x2D);
+    D_8AE098D8 = func_8004C990(0x2E, 0);
+    D_8AE098E0 = func_8004C990(0x2E, 1);
+    D_8AE098E8 = func_8004C990(0x2E, 2);
+    D_8AE098EC = func_8004C990(0x2A, 0x13);
+    D_8AE098F0 = func_8004C990(0x2A, 0x14);
+    D_8AE09900 = func_8004C990(0x2A, 0x10);
+    D_8AE09908 = func_8004C990(0x2A, 0xF);
+    D_8AE09910 = func_8004C990(0x2A, 0x12);
+    D_8AE09914 = func_8004C990(0x2A, 0x11);
+    D_8AE09920 = func_8004C990(0x2A, 0xA);
+    D_8AE09928 = func_8004C990(0x2A, 1);
+    D_8AE09930 = func_8004C990(0x2A, 0);
+    D_8AE09938 = func_8004C990(0x2A, 0xE);
+    D_8AE09940 = func_8004C990(0x2A, 0xC);
+    D_8AE09944 = func_8004C990(0x2B, 0);
+    D_8AE09918 = func_8004C990(0x2C, 0);
+    switch (D_8AE09E68) {
+    case 2:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 5);
+        break;
+    case 3:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 4);
+        break;
+    case 4:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 1);
+        break;
+    case 5:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 7);
+        break;
+    case 6:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 2);
+        break;
+    case 0:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 6);
+        break;
+    case 1:
+        D_8AE0993C = (u8 *)func_8004C990(0x38, 3);
+        break;
+    }
+    func_8004C4B0(0x2B);
+    {
+        void *sp20;
+
+        sp20 = BinArchive_Open(&D_48B920, &D_49B780, 1, 1);
+        switch (D_8AE09E68) {
+        case 0:
+        case 1:
+        case 6:
+            D_8AE098A4 = func_8AE06198((s32)sp20, (u32)D_8AE09E68, 0);
+            D_8AE098A8 = func_8AE06198((s32)sp20, (u32)D_8AE09E68, 1);
+            D_8AE098AC = func_8AE06198((s32)sp20, 0, 0);
+            break;
+        default:
+            D_8AE098A4 = func_8AE06198((s32)sp20, 0, 0);
+            D_8AE098A8 = func_8AE06198((s32)sp20, 0, 1);
+            D_8AE098AC = func_8AE06198((s32)sp20, D_8AE09E68, 0);
+            break;
+        }
+    }
+    func_80047588(1, 0);
+    Asset_LoadToSegment((((u32)D_1000000 & 0x0F000000) >> 24), D_446E30, D_447D00, 0);
+    Fragment_Load(((((u32)D_81000000 & 0x0FF00000) >> 20) - 0x10), fragment26_ROM_START, fragment27_ROM_START);
+    func_8AE029D0();
+    func_80008514(sp24);
+    func_8AE06118();
+    func_80008574();
+    func_80047610();
+    func_8004C398();
+    Gfx_FreeDisplayListBuffers();
+    main_pool_pop_state(0x424D4150);
+    return 0;
+}
+/* mkdraft:func_8AE0626C end */
 #endif

@@ -408,7 +408,110 @@ u8 *func_841009D8(u8 *out, Func84100688Table **anim, s32 time) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100C68.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100DE4.s")
+/* mkdraft:func_84100DE4 begin */
+extern void func_84100020(u8 *arg0, s32 arg1);
+extern void func_84100094(u8 *arg0);
+extern u8 *func_84100710(u8 *out, Func84100688Table **anim, s32 time);
+extern u8 D_84190218[];
+
+// Copies the first three bytes of each active layer's colour entry into
+// D_84190218: layer 0 into bytes 0-2, layer 1 into bytes 4-6, layer 2 into
+// bytes 8-10. The entry is looked up by the frame time against the layer's
+// count and mode byte, and a layer whose count is already exhausted uses its
+// last entry and leaves `ended` set.
+
+
+void func_84100DE4(u8 *arg0) {
+    u16 end_time;
+    // Declared second so the retail stack slots line up: end_time 0x5C,
+    // index 0x58, ended 0x54, time 0x50, type 0x4C, layer0 0x48, ...,
+    // color2 0x28. Only end_time, index and type stay in registers.
+    s32 index;
+    s32 ended;
+    u32 time;
+    s32 type;
+    u8 *layer0;
+    u8 *layer1;
+    u8 *layer2;
+    u8 buf0[4];
+    u8 *color0;
+    u8 buf1[4];
+    u8 *color1;
+    u8 buf2[4];
+    u8 *color2;
+
+    ended = 1;
+    time = arg0[0x7F];
+    layer0 = *(u8 **)(*(u8 **)(arg0 + 0x10) + 4);
+    layer1 = *(u8 **)(*(u8 **)(arg0 + 0x10) + 8);
+    layer2 = *(u8 **)(*(u8 **)(arg0 + 0x10) + 0xC);
+    end_time = *(u16 *)(*(u8 **)(arg0 + 0x10) + 2);
+    if (end_time != 0 && time == end_time) {
+        func_84100020(arg0, 0x280);
+    }
+
+    if (layer0 != NULL) {
+        type = (*(u8 **)(layer0 + 0))[0];
+        if (time > (*(u8 **)(layer0 + 0))[2] - 1) {
+            index = (*(u8 **)(layer0 + 0))[2] - 1;
+        } else {
+            index = time % (*(u8 **)(layer0 + 0))[2];
+            ended = 0;
+        }
+        if (*(u8 **)(layer0 + 4) != NULL) {
+            if (type == 0) {
+                color0 = *(u8 **)(layer0 + 4) + index * 4;
+            } else if ((*(u8 **)(layer0 + 0))[0] == 1) {
+                color0 = func_84100710(buf0, (Func84100688Table **)layer0, index);
+            }
+            D_84190218[0] = color0[0];
+            D_84190218[1] = color0[1];
+            D_84190218[2] = color0[2];
+        }
+    }
+    if (layer1 != NULL) {
+        type = (*(u8 **)(layer1 + 0))[0];
+        if (time > (*(u8 **)(layer1 + 0))[2] - 1) {
+            index = (*(u8 **)(layer1 + 0))[2] - 1;
+        } else {
+            index = time % (*(u8 **)(layer1 + 0))[2];
+            ended = 0;
+        }
+        if (*(u8 **)(layer1 + 4) != NULL) {
+            if (type == 0) {
+                color1 = *(u8 **)(layer1 + 4) + index * 4;
+            } else if ((*(u8 **)(layer1 + 0))[0] == 1) {
+                color1 = func_84100710(buf1, (Func84100688Table **)layer1, index);
+            }
+            D_84190218[4] = color1[0];
+            D_84190218[5] = color1[1];
+            D_84190218[6] = color1[2];
+        }
+    }
+    if (layer2 != NULL) {
+        type = (*(u8 **)(layer2 + 0))[0];
+        if (time > (*(u8 **)(layer2 + 0))[2] - 1) {
+            index = (*(u8 **)(layer2 + 0))[2] - 1;
+        } else {
+            index = time % (*(u8 **)(layer2 + 0))[2];
+            ended = 0;
+        }
+        if (*(u8 **)(layer2 + 4) != NULL) {
+            if (type == 0) {
+                color2 = *(u8 **)(layer2 + 4) + index * 4;
+            } else if ((*(u8 **)(layer2 + 0))[0] == 1) {
+                color2 = func_84100710(buf2, (Func84100688Table **)layer2, index);
+            }
+            D_84190218[8] = color2[0];
+            D_84190218[9] = color2[1];
+            D_84190218[10] = color2[2];
+        }
+    }
+    if (ended != 0) {
+        func_84100094(arg0);
+    }
+}
+/* mkdraft:func_84100DE4 end */
 
 extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
 void func_84101084(Func84100688Table **arg0, u8 *arg1) {
@@ -540,7 +643,50 @@ void func_84101AF4(u8 *arg0, u8 *arg1) {
     *(f32 *)(arg0 + 0x18) = *(f32 *)(arg0 + 0x1C) * scale;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101C00.s")
+/* mkdraft:func_84101C00 begin */
+extern s16 func_841005E0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
+extern void func_84101AF4(u8 *arg0, u8 *arg1);
+
+// Samples the animation table pair at *arg1 and writes the record's size at 0x1C, which
+// func_84100174 initializes to 1.0f and func_84101AF4 multiplies into the scale at 0x18.
+// A NULL arg1 leaves 0x1C untouched. func_84100688 maps the phase byte 0x7F to a keyframe
+// interval of the table; on the last interval (index + 1 == count) the value is the anim
+// sample anim[1][index], otherwise func_841005E0 interpolates between the table's keyframe
+// times (the s16 * values at offset 4) and the anim samples, sampling at the phase. The
+// phase is 0x7F, or 0x7F % table->divisor while table->mode is 0 - the same modulo
+// func_84100688 applies internally; it is only passed to func_841005E0 and is not written
+// back to 0x7F. The sampled value is then scaled by the record's u16 at 0x62 and by the
+// 0.001f factor twice (retail folds both uses into one load of .late_rodata float
+// D_84188B94). func_84101084 performs the same sampling into s16 0x66 with no scaling.
+
+
+void func_84101C00(u8 *arg0, Func84100688Table **arg1, u8 *arg2) {
+    Func84100688Table *table;
+    s16 index;
+    s16 *frames;
+    s32 phase;
+
+    if (arg1 != NULL) {
+        index = func_84100688(arg1[0], arg0[0x7F]);
+        table = arg1[0];
+        frames = table->values;
+        if (table->mode == 0) {
+            phase = arg0[0x7F] % table->divisor;
+        } else {
+            phase = arg0[0x7F];
+        }
+        if (index + 1 == table->count) {
+            *(f32 *)(arg0 + 0x1C) = (f32)((s16 *)((u8 **)arg1)[1])[index];
+        } else {
+            *(f32 *)(arg0 + 0x1C) = (f32)func_841005E0(*(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                                                       ((s16 **)arg1)[1][index], ((s16 **)arg1)[1][index + 1],
+                                                       phase);
+        }
+        *(f32 *)(arg0 + 0x1C) *= (f32)*(u16 *)(arg0 + 0x62) * 0.001f * 0.001f;
+        func_84101AF4(arg0, arg2);
+    }
+}
+/* mkdraft:func_84101C00 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101D54.s")
 
@@ -762,13 +908,77 @@ void func_84102B3C(u8 *record, void *matrix, s32 type) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102D38.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102E84.s")
+/* mkdraft:func_84102E84 begin */
+extern Gfx *D_800D0510;
+Gfx *func_84102D38(Gfx *, Gfx **);
+
+
+
+void func_84102E84(u16 arg0, u8 *arg1) {
+    u16 flags = arg0;
+
+    switch (flags & 0x3F) {
+    case 0x3F:
+        D_800D0510 = func_84102D38(D_800D0510, (Gfx **)arg1);
+        return;
+    case 1:
+        switch (((flags & 0x40) >> 6) + ((flags & 0x80) >> 6)) {
+        case 0:
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            break;
+        case 1:
+            gDPSetRenderMode(D_800D0510++, 0x0C192048, 0);
+            break;
+        case 2:
+            gDPSetRenderMode(D_800D0510++, 0x0C192230, 0);
+            break;
+        case 3:
+            gDPSetRenderMode(D_800D0510++, 0x0C192078, 0);
+            break;
+        }
+        return;
+    case 6:
+        switch (((flags & 0x40) >> 6) + ((flags & 0x80) >> 6)) {
+        case 0:
+            gDPSetRenderMode(D_800D0510++, 0x0C184240, 0);
+            break;
+        case 1:
+            gDPSetRenderMode(D_800D0510++, 0x0C1841C8, 0);
+            break;
+        case 2:
+            gDPSetRenderMode(D_800D0510++, 0x0C184A50, 0);
+            break;
+        case 3:
+            gDPSetRenderMode(D_800D0510++, 0x0C1849D8, 0);
+            break;
+        }
+        return;
+    case 4:
+        switch (((flags & 0x40) >> 6) + ((flags & 0x80) >> 6)) {
+        case 0:
+            gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            break;
+        case 1:
+            gDPSetRenderMode(D_800D0510++, 0x0C193048, 0);
+            break;
+        case 2:
+            gDPSetRenderMode(D_800D0510++, 0x0C193078, 0);
+            break;
+        case 3:
+            gDPSetRenderMode(D_800D0510++, 0x0C193078, 0);
+            break;
+        }
+        return;
+    }
+    gDPSetRenderMode(D_800D0510++, 0x0C184240, 0);
+}
+/* mkdraft:func_84102E84 end */
 
 extern Gfx *D_800D0510;
 extern u8 *D_8418CA20[];
 extern void *func_80003240();
 extern void func_8100348C();
-extern void func_84102E84(s32, u8 *);
+extern void func_84102E84(u16, u8 *);
 void func_841031F4(u8 *record, void *arg1, s32 matrix) {
     s16 *id;
     u8 *entry;
@@ -798,7 +1008,7 @@ extern Gfx *D_800D0510;
 extern u8 *D_8418CB88;
 extern void *func_80003240();
 extern void func_8100348C();
-extern void func_84102E84(s32, u8 *);
+extern void func_84102E84(u16, u8 *);
 void func_841032F0(u8 *record, s32 matrix) {
     s32 pad[2]; // FAKE
     u8 *model;

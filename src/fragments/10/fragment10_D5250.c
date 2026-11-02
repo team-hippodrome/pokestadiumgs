@@ -83,7 +83,87 @@ s32 func_82800BB4(u8 *arg0) {
     return (*(u32 *)(arg0 + 0) & 0x100000) != 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800BC8.s")
+/* mkdraft:func_82800BC8 begin */
+extern Gfx *D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004C874(s32, s32);
+extern s32 func_80049148(s32, s32, s32);
+extern s32 func_8004CA10(s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, s32 *);
+extern void func_800499EC(void);
+extern void Fragment11_DrawBorderedPanelFill(s32, s32, s32, s32, s32, void *);
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 D_82802834;
+
+// Draws the selectable-entry panel: a bordered fill with the entry texture on
+// its left and two stacked label rows on its right. arg0 selects which row is
+// highlighted; arg1 scales the panel horizontally (0..1) as it slides in.
+
+
+void func_82800BC8(s32 arg0, f32 arg1) {
+    s32 texture;
+    s32 label_a;
+    s32 label_b;
+    s32 label_c;
+    s32 width_a;
+    s32 width_b;
+    s32 width_c;
+    s32 total_width;
+    s32 cursor;
+    s32 max_width;
+
+    texture = func_8004C990(0x33, 5);
+    label_a = func_8004C874(0x19, 9);
+    label_b = func_8004C874(0x19, 0xA);
+    label_c = func_8004C874(0x19, 0xB);
+    width_a = func_80049148(8, 1, label_a);
+    width_b = func_80049148(8, 1, label_b);
+    width_c = func_80049148(8, 1, label_c);
+    // Retail issues these two measurement calls and discards the results.
+    func_80049148(4, 1, label_b);
+    func_80049148(4, 1, label_c);
+    // The label block is as wide as its widest column.
+    max_width = (width_c < width_b) ? width_b : width_c;
+    // Panel interior width: entry texture plus the leading label column plus
+    // the widest optional column.
+    total_width = func_8004CA10(texture) + width_a + max_width;
+    // Text cursor sits 19 px inside the panel's left edge; the panel fill below
+    // receives that edge (cursor - 19), while later text calls use the cursor.
+    cursor = (s32)((f32)((0x231 - total_width) / 2 - 0x280) * arg1 + 640.0f) + 0x13;
+    Fragment11_DrawBorderedPanelFill(cursor - 0x13, 0x14E, total_width + 0x4F, 0x40, 1, &D_82802834);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D19C(cursor, 0x160, texture, 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    // Advance past the entry texture plus 6 px of spacing. The compound
+    // assignment keeps the accumulator as the left operand of the addu.
+    cursor += func_8004CA10(texture) + 6;
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495BC(cursor, 0x162, label_a);
+    cursor = cursor + width_a + 0x1E;
+    // The selected row is drawn white first; the other row is dimmed to 0xAA.
+    if (arg0 != 0) {
+        func_800496A4(8, 1);
+        func_800495BC(cursor, 0x157, label_b);
+        func_8004972C(0xAA, 0xAA, 0xAA, 0xAA);
+        func_800496A4(4, 1);
+        func_800495BC(cursor, 0x171, label_c);
+    } else {
+        func_800496A4(8, 1);
+        func_800495BC(cursor, 0x16D, label_c);
+        func_8004972C(0xAA, 0xAA, 0xAA, 0xAA);
+        func_800496A4(4, 1);
+        func_800495BC(cursor, 0x157, label_b);
+    }
+    func_800499EC();
+}
+/* mkdraft:func_82800BC8 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800E94.s")
 
@@ -170,7 +250,72 @@ loop:
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801510.s")
+/* mkdraft:func_82801510 begin */
+extern void _bzero(void *, s32);
+extern s32 func_8004C8C0(u16);
+extern void func_80054210(void *);
+extern s32 func_80055948(s32);
+extern void func_80057908(u8);
+extern void func_80057944(u8);
+extern s32 func_82801278();
+
+// Mode bits of the word at arg0+0x0: 0x20000 gates the func_80055948/func_80054210
+// setup, 0x20000000 gates the func_828014AC slot scan, and 0x200000 suppresses the
+// func_80057908 branch for the slot named by arg2. func_82800020 passes state+0xC
+// as arg0 and a word read from the sprite parameter block as arg3.
+//@{src/fragments/10/fragment10_D4C50.c}
+
+
+void func_82801510(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    s32 i;
+
+    _bzero(arg0, 168);
+    func_8004C8C0(54);
+    arg0[0xD] = (u8)arg1;
+    *(s32 *)(arg0 + 0x00) = arg3;
+    *(s32 *)(arg0 + 0x14) = arg4;
+    arg0[0xC] = 1;
+    *(s32 *)(arg0 + 0x10) = 0;
+    *(s32 *)(arg0 + 0x88) = 1;
+    *(s32 *)(arg0 + 0x8C) = 0;
+    *(f32 *)(arg0 + 0x04) = 0.0f;
+    *(f32 *)(arg0 + 0x08) = 0.0f;
+    func_82801278(arg0, 1);
+
+    // FAKE: the do-while(0) keeps the 0x18 byte walk in $v0; a bare loop lets IDO
+    // color it $v1 and the walk pointer at arg0+0x18 diverges.
+    do {
+        for (i = 0; i < 4; i++) {
+            if (arg0[i + 0x18] == 0) {
+                *(f32 *)(arg0 + i * 4 + 0x98) = 0.0f;
+                *(s32 *)(arg0 + 0x10) = i;
+                break;
+            }
+        }
+    } while (0);
+    // FAKE: the u8* cast on the base orders the address add as addu $t2,$s1,$s4;
+    // indexing the already-u8* arg0 emits the operands reversed.
+    if ((arg2 >= 0) && (((u8 *)arg0)[arg2 + 0x18] == 0)) {
+        *(s32 *)(arg0 + 0x10) = arg2;
+    }
+    if (*(s32 *)arg0 & 0x20000) {
+        func_80055948(3);
+        func_80054210(arg0 + 0x4C);
+        *(s32 *)(arg0 + 0x84) = (arg0[0x4E] & 1) != 0;
+    }
+    if (*(s32 *)arg0 & 0x20000000) {
+        arg0[0x90] = func_828014AC();
+    }
+    for (i = 0; i < 4; i++) {
+        if ((i == arg2) && !(*(s32 *)arg0 & 0x200000)) {
+            func_80057908(i);
+        } else {
+            func_80057944(i);
+        }
+    }
+    *(f32 *)(arg0 + 0x94) = (f32)*(s32 *)(arg0 + 0x10);
+}
+/* mkdraft:func_82801510 end */
 
 s32 func_828016AC(u8 *arg0) {
     *(f32 *)(arg0 + 4) = 0.0f;

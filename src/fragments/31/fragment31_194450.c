@@ -134,5 +134,103 @@ void func_8822157C(void) {
     func_889033FC(*(void **)D_88234820, (u8 *)D_88234820 + 4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_194450/func_882215A8.s")
+/* mkdraft:func_882215A8 begin */
+extern void *Util_Malloc(s32 arg0);
+extern void _bzero(void *, s32);
+extern void *func_8004B7A4(s32 arg0);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern s32 func_80063754(s32 arg0);
+extern u8 func_8006397C(u8 arg0);
+extern u8 func_800639C0(u8 arg0);
+extern s32 func_88002AA8(void *, s32, void *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s16, void *);
+extern s32 func_88004804(void *, s32, s16, s16, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
+extern s32 func_8821B7E4(u8 arg0);
+extern s32 func_8821B81C(s8 arg0, s8 arg1);
+typedef struct {
+    s32 enabled;
+    u8 *flags;
+} F31TextMask;
+extern F31TextMask D_88006020;
+extern u8 D_8800ED50[];
+
+
+
+void func_882215A8(volatile u8 arg0, s16 arg1) {
+    s32 a3;
+    u8 col;
+    s32 i;
+    F31TextMask state = D_88006020;
+    D_88234820 = Util_Malloc(0x134);
+    if ((D_882345F4[0x26] & 1) != 0) {
+        arg0 = 0xFD;
+    }
+    func_8004C54C(0x19, func_8004B7A4(arg0));
+    if (D_882345F4[8] == 0xFC) {
+        a3 = 0x19;
+    } else {
+        *((s32 *)(((u8 *)D_88234820) + 0x128)) = 1 - func_8821B7E4(arg0);
+        if (*((s32 *)(((u8 *)D_88234820) + 0x128)) == 0) {
+            a3 = 0x1A;
+        } else {
+            a3 = 0x19;
+        }
+    }
+    *((s32 *)(((u8 *)D_88234820) + 0x38)) = func_8004C8A0(((u8 *)D_88234820) + 0x65, 0x40, 0x25, a3);
+
+    if (((D_882345F4[0x26] & 1) != 0) || (D_882345F4[8] == 0xFC)) {
+        a3 = 0x1B;
+    } else {
+        col = func_8006397C(arg0);
+        *((s32 *)(((u8 *)D_88234820) + 0x12C)) = 1 - func_8821B81C(col, func_800639C0(arg0));
+        if (*((s32 *)(((u8 *)D_88234820) + 0x12C)) == 0) {
+            a3 = 0x1C;
+        } else {
+            a3 = 0x1B;
+        }
+    }
+    *((s32 *)(((u8 *)D_88234820) + 0x3C)) = func_8004C874(0x25, a3);
+
+    for (i = 2; i < 9; i++) {
+        *((s32 *)((((u8 *)D_88234820) + 0x38) + (i * 4))) = func_8004C874(0x25, i + 0x1B);
+    }
+
+    state.flags = ((u8 *)D_88234820) + 0x5C;
+    _bzero(state.flags, 9);
+    if (D_882345F4[8] == 0xFC) {
+        state.enabled = 1;
+        state.flags[5] = 1;
+        // FAKE: the read-back is the 1 just stored; copying it through col is what makes the
+        // four stores share one materialized constant (1120 with a direct 1 in each store).
+        col = state.flags[5];
+        state.flags[4] = col;
+        state.flags[1] = col;
+        state.flags[0] = col;
+        if (D_882345F4[9] == 0) {
+            state.flags[7] = 1;
+            state.flags[6] = state.flags[7];
+        }
+    } else if ((D_882345F4[9] == 0) || (D_882345F4[0x26] & 1)) {
+        state.enabled = 1;
+        state.flags[7] = 1;
+        state.flags[6] = state.flags[7];
+        if (D_882345F4[0x26] & 1) {
+            state.flags[5] = 1;
+            // FAKE: the inner assignment holds both stores in one register; two separate
+            // statements abandon the match (465).
+            a3 = (state.flags[4] = state.flags[5]);
+            state.flags[1] = a3;
+        }
+    }
+    if (func_80063754(D_882345F4[9]) == 0) {
+        state.enabled = 1;
+        state.flags[8] = 1;
+    }
+    func_88002AA8(((u8 *)D_88234820) + 4, 0, ((u8 *)D_88234820) + 0x38, 9, 8, 1, 6, 15, 16, 13, 16, 2, D_88234748,
+                  &state);
+    *((void **)D_88234820) = (void *)((func_88004804(((u8 *)D_88234820) + 4, 0, 0xA8, arg1, 0, 1, 0xDC, 0xDC, 0xB4,
+                                                    &func_8822128C, &func_8822157C, &func_882211D0, &func_882211F8, 0,
+                                                    0) * 0x4C) + D_8800ED50);
+    D_880068B4 = 0;
+}
+/* mkdraft:func_882215A8 end */
 #endif

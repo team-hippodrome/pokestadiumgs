@@ -708,7 +708,43 @@ s32 TextLabel_DrawCallback(s32 phase, void *record) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB019B8.s")
+/* mkdraft:func_8AB019B8 begin */
+extern f32 D_80087E50[];
+extern Gfx D_80094F50[];
+
+
+
+void func_8AB019B8(s16 arg0, s16 arg1, void *arg2) {
+    s16 x;
+    s16 width;
+    s16 height;
+    u8 *image;
+    s32 flip;
+
+    // arg0 * 4 narrowed to s16, plus 40.0f times one sine-table sample. D_8AB1268C is
+    // declared unsigned in this file, so the (s32) cast keeps the table-index shift
+    // arithmetic (retail sra).
+    x = arg0 * 4;
+    // FAKE: ((D_8AB1268C << 6) << 6) folds to << 0xC; the unfolded pair claims one extra
+    // temp-walk slot, which puts the index chain's integer temps in retail order
+    // (t6, t7, t8, t9, t0, t2, t1). Diff score 670 with a single << 0xC.
+    x += 40.0f * D_80087E50[(((s32)(D_8AB1268C << 6) << 6) & 0xFFFF) >> 4];
+    flip = (*(u8 *)((u8 *)arg2 + 1) & 1) != 0;
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    image = (u8 *)func_8004C990(*(u16 *)((u8 *)arg2 + 0x24), *(u16 *)((u8 *)arg2 + 0x26));
+    width = func_8004CA10((u16 *)image);
+    height = func_8004CA24((u16 *)image);
+    func_8004D1FC(image);
+    if (flip) {
+        gSPTextureRectangle(D_800D0510++, x, arg1 * 4, x + width * 4, (arg1 + height) * 4,
+                            G_TX_RENDERTILE, *(s16 *)((u8 *)arg2 + 0xC) << 5, 0, -0x400, 0x400);
+    } else {
+        gSPTextureRectangle(D_800D0510++, x, arg1 * 4, x + width * 4, (arg1 + height) * 4,
+                            G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_8AB019B8 end */
 #endif
 
 #ifdef VERSION_US

@@ -1658,7 +1658,7 @@ void func_82B0560C(void) {
 
 #ifdef VERSION_US
 extern void func_82B06360(s32);
-extern void func_82B060A0(s32);
+extern s32 func_82B060A0(s32);
 void func_82B05E3C(s32 arg0) {
     switch (arg0) {                                 /* irregular */
     case 2:
@@ -1716,7 +1716,107 @@ void func_82B05EF0(s32 arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B060A0.s")
+/* mkdraft:func_82B060A0 begin */
+extern u8 D_82B12450[0xFF8];
+extern s16 D_82B12458;
+extern s32 func_82B010BC(void);
+extern void func_82B05F60(void);
+extern void *func_82B02800(s32, s32);
+extern s32 func_82B0173C(s32, s32);
+extern s32 func_81700B8C(s32, s32);
+extern s32 func_81700CDC(s32);
+extern void func_82B02924(void *, s32);
+
+s32 func_82B060A0(s32 arg0) {
+    s32 state;
+    /* Spilled to 0x30(sp) on purpose: the 0x38 frame only results when
+       `result` is declared ahead of `mode`. */
+    s32 result;
+    s32 i;
+    u8 *base;
+    u8 *entry;
+    s32 mode;
+    /* Compared twice below; the local is what keeps the retail operand order
+       ($v0 == 1 first, then $v0 == 2). */
+    s16 es;
+
+    /* Reads bit 0 of the halfword at D_82B12450+4, dispatches on the halfword
+       at D_82B12450 through jtbl_82B08750 (cases 0-7), and when the selected
+       case requested it, feeds the spawn path.  Returns the case's request
+       flag: 1 when the spawn path ran, 0 when the enable bit is clear or the
+       switch chose no action.  The single caller, func_82B05E3C, ignores the
+       result. */
+
+    /* Every field access goes through this pointer, so IDO rematerializes the
+       address from %hi/%lo at each use ($s1 walks the entries in the final
+       loop). */
+    base = (u8 *)&D_82B12450;
+    result = 0;
+    /* Enable bit: D_82B12450+4 bit 0. */
+    if (*(u16 *)(base + 4) & 1) {
+        state = *(s16 *)base;
+        switch (state) {
+        case 0:
+            if (func_82B010BC() != 0) {
+                func_82B05F60();
+            } else {
+                result = 1;
+            }
+            break;
+        case 1:
+        case 2:
+            break;
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+            result = 1;
+            break;
+        }
+
+        if (result != 0) {
+            /* Writes 1 and immediately reads it back as func_82B0173C's first
+               argument; IDO forwards the stored constant, so the store value
+               and the argument share $a0. */
+            *(s16 *)base = 1;
+            /* base+8 is 0x82B12458 (the address of D_82B12458 in
+               build/pokestadiumgs-us.map).  Naming both this load and the
+               store above against D_82B12450 is what makes IDO place the load
+               before the store (lh, lui at, sh) as retail does. */
+            if (func_81700B8C(1, func_82B0173C(*(s16 *)base, *(s16 *)(base + 8))) != 0) {
+                func_81700CDC(1);
+            }
+            result = 1;
+
+            /* base+0x250 is 0x82B126A0, the spawn-entry counter. */
+            *(s16 *)(base + 0x250) = 0;
+            /* Five type-1 entries, then one entry each of type 2 and type 3. */
+            for (i = 0; i < 5; i++) {
+                ((u8 **)(base + 0xB18))[(*(s16 *)(base + 0x250))] = func_82B02800(1, i);
+                (*(s16 *)(base + 0x250))++;
+            }
+            ((u8 **)(base + 0xB18))[(*(s16 *)(base + 0x250))] = func_82B02800(2, 0);
+            (*(s16 *)(base + 0x250))++;
+            ((u8 **)(base + 0xB18))[(*(s16 *)(base + 0x250))] = func_82B02800(3, 0);
+            (*(s16 *)(base + 0x250))++;
+
+            /* The bound is re-read from the counter; entries whose type is 1
+               or 2 receive arg0, the rest receive 0. */
+            for (i = 0; i < (*(s16 *)(base + 0x250)); i++) {
+                entry = ((u8 **)(base + 0xB18))[i];
+                mode = 0;
+                es = *(s16 *)entry;
+                if (es == 1 || es == 2) {
+                    mode = arg0;
+                }
+                func_82B02924(entry, mode);
+            }
+        }
+    }
+    return result;
+}
+/* mkdraft:func_82B060A0 end */
 #endif
 
 #ifdef VERSION_US
@@ -1832,7 +1932,7 @@ extern void *func_82B02800(s32, s32);
 extern void func_82B02A34(void *, s32);
 extern void func_82B029B8(u8 *, s32);
 extern void func_82B06360(s32);
-extern void func_82B060A0(s32);
+extern s32 func_82B060A0(s32);
 extern s32 func_82B02870(void);
 
 // Moves the cup cursor D_82B1246E with the pad word at D_80087200+0xC: bit 0x800 decrements
@@ -1905,7 +2005,7 @@ extern void func_800226C0();
 extern void *D_80087200;
 extern s32 func_82B02870(void);
 extern void func_82B02A34(void *, s32);
-extern void func_82B060A0(s32);
+extern s32 func_82B060A0(s32);
 //
 // Fragment24 handler: when func_82B02870 reports nonzero, it services the
 // halfword flags at D_82B12450 and, if bit 0x4000 of the word D_80087200

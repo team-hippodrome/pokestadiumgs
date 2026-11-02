@@ -85,7 +85,44 @@ void func_862002A4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86200344.s")
+/* mkdraft:func_86200344 begin */
+extern Gfx *D_800D0510;
+extern void *D_8620E198;
+extern u8 D_8620DF60[];
+extern s32 D_8620DF90;
+extern void func_8003CD84(void);
+
+
+
+void func_86200344(s32 arg0, s32 arg1) {
+    s32 i;
+    s32 j;
+    s32 n;
+    s32 vtx;
+
+    i = 0;
+    if (D_8620DF90 > 0) {
+        do {
+            vtx = *(s32 *)((u8 *)D_8620E198 + i * 4 + 0x72254);
+            n = *(s32 *)(D_8620DF60 + i * 12 + 8);
+            if (arg0 == 5) {
+                gDPPipeSync(D_800D0510++);
+                gSPSetGeometryMode(D_800D0510++, 0x400);
+                gDPSetCombine(D_800D0510++, 0x5259FF, 0xFFFFFE38);
+                gDPSetEnvColor(D_800D0510++, 0x78, 0xC8, 0x78, 0xFF);
+                gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+                for (j = 0; j < n * 3; j += 3) {
+                    gSPVertex(D_800D0510++, vtx, 4, 0);
+                    gSP1Triangle(D_800D0510++, 0, 1, 2, 0);
+                    vtx += 0x30;
+                }
+                func_8003CD84();
+            }
+            i += 1;
+        } while (i < D_8620DF90);
+    }
+}
+/* mkdraft:func_86200344 end */
 #endif
 
 #ifdef VERSION_US
@@ -448,7 +485,56 @@ s32 SceneMotion_IsCrossXZNonnegative(f32 start_x, f32 start_z, f32 end_x, f32 en
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_862017F8.s")
+/* mkdraft:func_862017F8 begin */
+extern void *D_8620E198;
+extern void *D_87F119DC;
+extern s32 SceneMotion_IsCrossXZNonnegative(f32, f32, f32, f32);
+extern void func_80027A28(u16, u8);
+
+
+
+void func_862017F8(void *arg0) {
+    s32 index;
+    s32 i;
+    u8 *entry;
+
+    index = -1;
+    entry = NULL;
+    if (*(s32 *)((u8 *)D_8620E198 + 0x73BAC) > 0) {
+        if ((*(s32 *)((u8 *)D_87F119DC + 0xC) << 3) < 0) return;
+        if (*(f32 *)((u8 *)D_87F119DC + 0x48) <= 0.0f &&
+            *(f32 *)((u8 *)D_87F119DC + 0x50) < 0.0f &&
+            SceneMotion_IsCrossXZNonnegative(0.0f, -1200.0f, -1200.0f, 0.0f)) {
+            index = 0;
+        }
+        if (0.0f < *(f32 *)((u8 *)D_87F119DC + 0x48) &&
+            *(f32 *)((u8 *)D_87F119DC + 0x50) <= 0.0f &&
+            SceneMotion_IsCrossXZNonnegative(1200.0f, 0.0f, 0.0f, -1200.0f)) {
+            index = 1;
+        }
+        if (*(f32 *)((u8 *)D_87F119DC + 0x48) < 0.0f &&
+            0.0f <= *(f32 *)((u8 *)D_87F119DC + 0x50) &&
+            SceneMotion_IsCrossXZNonnegative(-1200.0f, 0.0f, 0.0f, 1200.0f)) {
+            index = 2;
+        }
+        if (0.0f <= *(f32 *)((u8 *)D_87F119DC + 0x48) &&
+            0.0f < *(f32 *)((u8 *)D_87F119DC + 0x50) &&
+            SceneMotion_IsCrossXZNonnegative(0.0f, 1200.0f, 1200.0f, 0.0f)) {
+            index = 3;
+        }
+        if (index != -1) {
+            for (i = 0; i != 4; i++) {
+                if (index == *(u8 *)((u8 *)D_8620E198 + i * 0x18 + 0x73BD2)) {
+                    entry = (u8 *)D_8620E198 + i * 0x18 + 0x73BC0;
+                    func_80027A28(0xBF02, (u8)i);
+                }
+            }
+            *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x10000000;
+            *(s32 *)entry += *(s32 *)((u8 *)arg0 + 0x30);
+        }
+    }
+}
+/* mkdraft:func_862017F8 end */
 #endif
 
 #ifdef VERSION_US
@@ -470,7 +556,99 @@ void func_86201DE4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86201E70.s")
+/* mkdraft:func_86201E70 begin */
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8620169C(void);
+extern void func_86201A58(void);
+extern void *D_8620E198;
+typedef struct E86201E70Vec { f32 x, y, z; } E86201E70Vec;
+
+
+void func_86201E70(s32 arg0) {
+    void *data;
+    s32 value;
+    u8 *child;
+
+    if (*(s32 *)((u8 *)D_8620E198 + 0x178) < *(s32 *)((u8 *)D_8620E198 + 0x48)) {
+        data = func_87F025B8((u8 *)D_8620E198 + 0x174, (void *)func_86201A58);
+        if (data != NULL) {
+            child = *(u8 **)((u8 *)data + 0x20);
+            *(void **)((u8 *)data + 0x38) = data;
+            switch (arg0) {
+            case 1:
+                value = *(s32 *)((u8 *)D_8620E198 + 0x12C);
+                *(f32 *)(child + 0x34) = 1.0f;
+                break;
+            case 2:
+                value = *(s32 *)((u8 *)D_8620E198 + 0x130);
+                *(f32 *)(child + 0x34) = 1.5f;
+                break;
+            case 3:
+                value = *(s32 *)((u8 *)D_8620E198 + 0x134);
+                *(f32 *)(child + 0x34) = 2.0f;
+                break;
+            case 5:
+                value = *(s32 *)((u8 *)D_8620E198 + 0x138);
+                *(f32 *)(child + 0x34) = 2.5f;
+                break;
+            default:
+                value = *(s32 *)((u8 *)D_8620E198 + 0x12C);
+                *(f32 *)(child + 0x34) = 1.0f;
+                arg0 = 1;
+                break;
+            }
+            switch (((unk_func_8620169C *)D_8620E198)->order[((unk_func_8620169C *)D_8620E198)->unk73BB8]) {
+            case 0:
+                *(f32 *)((u8 *)data + 0x48) = 950.0f;
+                *(f32 *)((u8 *)data + 0x50) = 0.0f;
+                *(f32 *)((u8 *)data + 0x4C) = 700.0f;
+                break;
+            case 1:
+                *(f32 *)((u8 *)data + 0x48) = -950.0f;
+                *(f32 *)((u8 *)data + 0x50) = 0.0f;
+                *(f32 *)((u8 *)data + 0x4C) = 700.0f;
+                break;
+            case 2:
+                *(f32 *)((u8 *)data + 0x48) = 0.0f;
+                *(f32 *)((u8 *)data + 0x4C) = 700.0f;
+                *(f32 *)((u8 *)data + 0x50) = 950.0f;
+                break;
+            case 3:
+                *(f32 *)((u8 *)data + 0x48) = 0.0f;
+                *(f32 *)((u8 *)data + 0x4C) = 700.0f;
+                *(f32 *)((u8 *)data + 0x50) = -950.0f;
+                break;
+            }
+            ((unk_func_8620169C *)D_8620E198)->unk73BB8++;
+            if (((unk_func_8620169C *)D_8620E198)->unk73BB8 >= 4) {
+                func_8620169C();
+            }
+            *(f32 *)((u8 *)data + 0x54) =
+            *(f32 *)((u8 *)data + 0x58) =
+            *(f32 *)((u8 *)data + 0x5C) =
+              *(f32 *)(child + 0x34) * (*(f32 *)((u8 *)D_8620E198 + 0x64) * 0.75f);
+            *(E86201E70Vec *)(child + 0x0) = *(E86201E70Vec *)((u8 *)data + 0x48);
+            *(f32 *)(child + 0x0C) = 0.0f;
+            *(f32 *)(child + 0x10) = 0.0f;
+            *(f32 *)(child + 0x14) = 0.0f;
+            *(f32 *)(child + 0x18) = 0.0f;
+            *(f32 *)(child + 0x1C) = 0.0f;
+            *(f32 *)(child + 0x20) = 0.0f;
+            *(f32 *)(child + 0x24) = 0.0f;
+            *(f32 *)(child + 0x28) = 0.0f;
+            *(f32 *)(child + 0x2C) = 0.0f;
+            *(s32 *)(child + 0x30) = arg0;
+            *(f32 *)(child + 0x48) = 0.0f;
+            *(E86201E70Vec *)(child + 0x3C) = *(E86201E70Vec *)((u8 *)data + 0x48);
+            func_8003F1DC((u8 *)data + 0x24);
+            func_8003F114((u8 *)data + 0x24, 0, -1, value);
+            *(u8 *)((u8 *)data + 0x26) |= 0x10;
+        }
+    }
+}
+/* mkdraft:func_86201E70 end */
 #endif
 
 #ifdef VERSION_US
@@ -973,7 +1151,95 @@ void func_86204A00(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86204A9C.s")
+/* mkdraft:func_86204A9C begin */
+extern void *D_8620E198;
+extern u32 func_8003570C(void);
+extern void func_86201E70(s32);
+extern s32 func_80001FF0(void);
+extern void func_862070B0(void);
+extern void SceneMotion_RunSubsteps(void);
+extern void func_86201620(void);
+extern s32 func_8620392C(void);
+extern void func_87F0C930(void *);
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+extern void func_80028118(s32);
+extern void func_800279C4(s32);
+
+typedef struct {
+    /* 0x00000 */ u8 pad0[0x73BA8];
+    /* 0x73BA8 */ s32 unk73BA8;
+    /* 0x73BAC */ s32 unk73BAC;
+    /* 0x73BB0 */ s32 unk73BB0;
+} unk_func_86204A9C;
+
+
+
+void func_86204A9C(void) {
+    s32 value;
+    s32 amount;
+    s32 first;
+
+    ((unk_func_86204A9C *)D_8620E198)->unk73BB0 = ((unk_func_86204A9C *)D_8620E198)->unk73BB0 + 1;
+    if (((unk_func_86204A9C *)D_8620E198)->unk73BB0 >= 11) {
+        ((unk_func_86204A9C *)D_8620E198)->unk73BB0 = 0;
+        if (*(s32 *)((u8 *)D_8620E198 + 0x178) < *(s32 *)((u8 *)D_8620E198 + 0x48) &&
+            ((unk_func_86204A9C *)D_8620E198)->unk73BAC > 0) {
+            value = *(s32 *)((u8 *)D_8620E198 + 0x48) * (func_8003570C() % 34);
+            if (value >= 81) {
+                func_86201E70(5);
+            } else if (value >= 61) {
+                func_86201E70(3);
+            } else if (value >= 41) {
+                func_86201E70(2);
+            } else {
+                func_86201E70(1);
+            }
+        }
+    }
+    if (*(s32 *)((u8 *)D_8620E198 + 0x54) != 3) {
+        first = func_80001FF0();
+        if ((s32)(*(u32 *)((u8 *)D_8620E198 + 0x48) * ((func_80001FF0() >> 1) * 60 / 3)) < (first >> 1) * 60 - ((unk_func_86204A9C *)D_8620E198)->unk73BAC) {
+            *(u32 *)((u8 *)D_8620E198 + 0x48) = *(u32 *)((u8 *)D_8620E198 + 0x48) + 1;
+        }
+    }
+    func_862070B0();
+    SceneMotion_RunSubsteps();
+    if (((unk_func_86204A9C *)D_8620E198)->unk73BAC > 0) {
+        func_86201620();
+    }
+    ((unk_func_86204A9C *)D_8620E198)->unk73BAC = ((unk_func_86204A9C *)D_8620E198)->unk73BAC - 1;
+    if (((unk_func_86204A9C *)D_8620E198)->unk73BAC < 0) {
+        ((unk_func_86204A9C *)D_8620E198)->unk73BAC = 0;
+        if (func_8620392C() != 0) {
+            if (*(u8 *)((u8 *)*(void **)((u8 *)D_8620E198 + 0xF4) + 0x2180) == 4) {
+                func_87F0C930((u8 *)D_8620E198 + 0x120);
+            } else {
+                *(s32 *)((u8 *)D_8620E198 + 0xE8) = 5;
+                ((unk_func_86204A9C *)D_8620E198)->unk73BA8 = 0;
+                Fragment64_StartPlayerPanel((u8 *)D_8620E198 + 0x73C54,
+                                            *(void **)((u8 *)D_8620E198 + 0xF4),
+                                            3,
+                                            *(s32 *)((u8 *)D_8620E198 + 0x73BBC) & 0x40000000,
+                                            *(s32 *)((u8 *)D_8620E198 + 0x73BD4) & 0x40000000,
+                                            *(s32 *)((u8 *)D_8620E198 + 0x73BEC) & 0x40000000,
+                                            *(s32 *)((u8 *)D_8620E198 + 0x73C04) & 0x40000000);
+            }
+        }
+    }
+    if (((unk_func_86204A9C *)D_8620E198)->unk73BAC < (func_80001FF0() >> 1) * 30) {
+        func_80028118(11);
+    }
+    first = func_80001FF0();
+    amount = (((unk_func_86204A9C *)D_8620E198)->unk73BAC + (first >> 1) - 1) / (func_80001FF0() >> 1);
+    if (((unk_func_86204A9C *)D_8620E198)->unk73BAC % (func_80001FF0() >> 1) == 0 && amount < 4) {
+        if (amount == 0) {
+            func_800279C4(0xCF06);
+        } else {
+            func_800279C4(0xCF00);
+        }
+    }
+}
+/* mkdraft:func_86204A9C end */
 #endif
 
 #ifdef VERSION_US

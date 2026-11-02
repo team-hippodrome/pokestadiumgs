@@ -238,7 +238,68 @@ s32 func_8FB01C14(void *arg0, void *arg1, s32 arg2) {
     }
     return 0;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB01CF8.s")
+/* mkdraft:func_8FB01CF8 begin */
+extern s32 D_80087200;
+
+
+
+s32 func_8FB01CF8(u8 *arg0, s32 arg1, s32 arg2) {
+    struct { u16 x; u16 y; u16 w; u16 h; s16 offset; u16 count; } *state = (void *)arg0;
+    s32 mode = 0;
+    s16 input;
+    u32 value;
+    s32 index;
+    u8 *record;
+
+    input = *(u16 *)((u8 *)D_80087200 + 0xC);
+    if (input != 0) {
+        func_800226C0(1);
+        switch (input) {
+            case 0x200:
+                state->offset += 1;
+                if (state->count < state->offset) {
+                    state->offset = state->count;
+                }
+                break;
+            case 0x100:
+                state->offset -= 1;
+                if (state->offset < 0) {
+                    state->offset = 0;
+                }
+                break;
+            case 0x800:
+                *(s8 *)((u8 *)state + state->offset + 0xC) += 1;
+                if (*(s8 *)((u8 *)state + state->offset + 0xC) >= 10) {
+                    *(s8 *)((u8 *)state + state->offset + 0xC) = 0;
+                }
+                break;
+            case 0x400:
+                *(s8 *)((u8 *)state + state->offset + 0xC) -= 1;
+                if (*(s8 *)((u8 *)state + state->offset + 0xC) < 0) {
+                    *(s8 *)((u8 *)state + state->offset + 0xC) = 9;
+                }
+                break;
+        }
+    }
+    if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x8000) {
+        value = 0;
+        index = *(u16 *)(arg0 + 0xA);
+        record = arg0 + index;
+        mode = 1;
+        if (index >= 0) {
+            do {
+                value = value * arg2 + *(s8 *)(record + 0xC);
+                index -= 1;
+                record -= 1;
+            } while (index >= 0);
+        }
+        *(u32 *)(arg0 + 0x14) = value;
+    } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x4000) {
+        mode = 2;
+    }
+    return mode;
+}
+/* mkdraft:func_8FB01CF8 end */
 
 extern u8 D_8FB03490[];
 extern u8 D_8FB03494[];
@@ -512,7 +573,7 @@ void func_8FB02698(void *arg0) {
 /* mkdraft:func_8FB02878 begin */
 extern s32 func_8FB005E4(void *);
 extern s32 func_8FB00FE8(void *);
-extern s32 func_8FB01CF8(void *, void *, s32);
+extern s32 func_8FB01CF8(u8 *, s32, s32);
 extern void func_8FB00E40(void *, void *);
 extern void func_8FB01634(void *, void *);
 /* func_8FB001C0 (s32 (u8 *, u8 *)) and func_8FB02108 (void (unk_func_8FB02108 *))
