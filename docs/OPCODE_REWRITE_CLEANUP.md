@@ -40,7 +40,13 @@ or reverting a function to assembly does not establish a proper C match.
   host syntax and full retail ROM comparison pass. See
   [the fragment 16 evidence](regions/fragments/16/fragment16_code.md).
 
-This leaves 790 directive occurrences and 63 affected functions, including
+- `func_87C03B10`: keep the float dot product in a double denominator and
+  divide the float numerator by that value. Stock IDO now emits all 80 retail
+  bytes without six word rewrites or the instruction swap. Complete-module
+  normal/blank controls, normal host syntax and full retail ROM comparison
+  pass. See [the fragment 48 evidence](regions/fragments/48/fragment48_2597B0.md).
+
+This leaves 783 directive occurrences and 62 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -95,7 +101,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_8AB0A720` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 3 | Pending |
 | `func_8AE02398` | [src/fragments/46/fragment46_code.c](../src/fragments/46/fragment46_code.c) | 20 | Pending |
 | `func_8AE02470` | [src/fragments/46/fragment46_code.c](../src/fragments/46/fragment46_code.c) | 22 | Pending |
-| `func_87C03B10` | [src/fragments/48/fragment48_2597B0.c](../src/fragments/48/fragment48_2597B0.c) | 7 | Pending |
+| `func_87C03B10` | [src/fragments/48/fragment48_2597B0.c](../src/fragments/48/fragment48_2597B0.c) | 7 | Replaced with C |
 | `func_864001E0` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 1 | Pending |
 | `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Pending |
 | `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Pending |
