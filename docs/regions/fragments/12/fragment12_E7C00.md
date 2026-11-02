@@ -582,3 +582,47 @@ than add unused locals, force registers or pad the frame.
 All these probes used the native canonical runner with statistics enabled.
 No C, linker-layout or coverage change is installed. The pending fragment
 79 notes remain byte-identical to the preserved copy.
+
+
+### 2026-11-02: history counter with the target stack homes — requeue
+
+A separate source-level witness now reproduces both retail stack homes
+without adding a coordinate temporary or padding. Starting with the
+branch-assigned named-next-age candidate, moving the existing `history_y`
+declaration before `next_age` gives the user counter Mmt -72. The optimized
+sample-byte offset remains Mmt -88. Actual ELF inspection confirms 784
+bytes and a 184-byte frame, hence counter 112(sp) and sample offset 96(sp),
+as in retail. The frontend reserves 76 bytes and UOPT reserves 88. The
+coordinate remains assigned before every use; no new local was added.
+
+The witness is `fragment12-row-named-age-coordinate-homes8`, candidate 1:
+history Y first in function scope, slot Y scoped to the image loop, and a
+`!= 128` loop bound. Four fresh known/candidate normal/+20-leading-blank
+controls reproduce each reference's complete module, including allocated
+bytes, function extents and semantic relocations. Stock frontend and UGEN
+captures independently confirm Mmt -72/-88 in both candidate builds.
+
+This is not a function match or a closer overall instruction candidate.
+The normalized 0.9949 score hides changed temporary registers and a
+changed increment topology: retail computes the alpha-path age+1 before
+the branch and duplicates it on the constant-alpha path; the named
+counter places those calculations differently. Keep the ordinary-for
+three-offset source as the closest instruction control, and this named
+counter as the independently measured stack-layout control.
+
+Seven eight-candidate native canonical families completed on revision
+`08150777`: paired position carriers; one-based ages with equivalent
+sample/alpha/parity calculations; inline base/sign and shared-factor
+combinations on the closest source; coordinate declaration placement;
+assignment-expression/order variants; split copy/increment and branch
+orientation; and ordinary C `register` hints. None accepted. The hints
+are byte-inert for the witness. One-based parity equivalence was checked
+for all 128 iterations. Inlining the base float or sharing scale/alpha
+retains opcode shape in some candidates but changes both stack homes;
+reusing position carriers changes too much of the float data flow.
+
+Next: preserve the demonstrated stack-home mechanism while recovering the
+retail common/duplicated increment expression topology. Do not infer that
+the layout requires a compiler patch, unused local or artificial frame
+size. No candidate reached a ROM gate, and C, linker layout and coverage
+remain unchanged; the pending fragment 79 notes are preserved.
