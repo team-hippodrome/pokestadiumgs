@@ -205,3 +205,30 @@ that this batch completes the file or the repository.
 ## 2026-10-28 — `func_8200070C`: requeue
 
 requeue. Fade-state init: `bzero(&sFadeState, 12)`, then `mode`, `counter`, `alpha` = 0, `unk_08 = 320`, `unk_0A = func_8003514C() ? 321 : 376`, and `flags |= 1` when `func_800061EC()`. `sFadeState` is already this file's static (data at 0x82001EA0), and the retail stores share one `lui $at`, consistent with that. But once `&sFadeState` is passed to `bzero`, IDO keeps the address in `$s0` for the field stores (0.7647), while retail re-forms it. Using the static needs its typedef hoisted plus a forward `static Fragment16FadeState sFadeState;` before this function (byte-identical). Next: pass the address through a different expression (e.g. `&sFadeState.mode`), or test whether retail's `bzero` is a macro around `_bzero`.
+
+
+## 2026-11-02 — `func_82001A78`: remove instruction rewriting
+
+Base: `4d4dea19cb9d3ef8c26c6931b4bda157c40862c5`.
+When `D_82001EC4` is nonzero, this function returns 2 with the low bytes of
+`D_82001EAC` and `D_82001EB0` packed into bits 8–15 and 16–23. Otherwise
+it returns 1 when `D_82001EAC` is -1, and 0 for the other values. The input
+handlers in this file update those two selection indices; `fragment16_main`
+returns the resulting word.
+
+Assign a single result in all three branches and return it once. The
+explicit final `else { result = 0; }` keeps the zero in retail's V1 and
+emits the final V1-to-V0 return copy. This removes both
+`REWRITE_FUNCTION_WORD` directives at +0x48 and +0x60. An entry default
+or an early default within a nested else does not match; the explicit
+three-way assignment does. The existing signed result type is preserved.
+
+Stock IDO reproduces all 100 function bytes and the complete containing
+module: allocated section bytes/layout, defined extents and semantic
+relocations agree. Four fresh known/candidate normal/+20-leading-blank
+controls pass, followed by two final-source normal/blank controls. Normal
+host syntax passes. Control-flow equivalence checks cover 197376 combinations
+of flag states, both byte selections and the -1 sentinel. The full native
+`make -j1 COMPARE=1 RUN_CC_CHECK=1` passes with retail ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. No helper, local storage, prototype,
+compiler flag, padding or assembly owner is added.

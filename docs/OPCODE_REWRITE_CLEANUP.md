@@ -34,7 +34,13 @@ or reverting a function to assembly does not establish a proper C match.
   normal host syntax check, and the full retail ROM comparison pass. See
   [the fragment 63 evidence](regions/fragments/63/fragment63_30B540.md).
 
-This leaves 792 directive occurrences and 64 affected functions, including
+- `func_82001A78`: assign the packed status or fallback value in all three
+  branches and use one return. Stock IDO now emits the original zero-result
+  flow, removing two more word rewrites. Complete-module controls, normal
+  host syntax and full retail ROM comparison pass. See
+  [the fragment 16 evidence](regions/fragments/16/fragment16_code.md).
+
+This leaves 790 directive occurrences and 63 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -53,7 +59,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Pending |
 | `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Pending |
 | `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |
-| `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Pending |
+| `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |
 | `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
 | `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Pending |
 | `func_822068E0` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 17 | Pending |
