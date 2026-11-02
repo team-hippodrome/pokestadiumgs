@@ -1566,3 +1566,7 @@ func_81403758 = Fragment12_GetInterpolatedPanelY;
 func_8140487C = Fragment12_GetInterpolatedPanelRect;
 
 func_81404E68 = Fragment12_HandleSelectionInput;
+
+func_81403304 = Fragment12_AssignActiveRowsToSlots;
+
+func_81406700 = Fragment12_DrawSelectionPanels;
