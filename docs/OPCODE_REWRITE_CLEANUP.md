@@ -180,7 +180,16 @@ or reverting a function to assembly does not establish a proper C match.
   rewrite/coalescing directives. See
   [the confirmation evidence](regions/fragments/24/fragment24_150C10.md).
 
-This leaves 608 directive occurrences and 36 affected functions. Coverage files and
+- `func_86600E00`: own the four existing model records and refresh their
+  scale fields in an ordinary four-player `for` loop. Stock IDO emits all
+  236 retail bytes, removing a hex replacement, 36 relocation patches,
+  coalescing and the artificial one-iteration block. The loaded words in this
+  range are relocation metadata consumed before the loader clears runtime
+  storage. Module controls, host syntax, private links and the normal native
+  full-ROM gate pass. See
+  [the model-scale evidence](regions/fragments/54/fragment54_code.md).
+
+This leaves 570 directive occurrences and 35 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -238,7 +247,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_864001E0` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 1 | Pending |
 | `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Pending |
 | `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Replaced with C |
-| `func_86600E00` | [src/fragments/54/fragment54_code.c](../src/fragments/54/fragment54_code.c) | 38 | Pending |
+| `func_86600E00` | [src/fragments/54/fragment54_code.c](../src/fragments/54/fragment54_code.c) | 38 | Replaced with C |
 | `func_83302D8C` | [src/fragments/57/fragment57_code.c](../src/fragments/57/fragment57_code.c) | 1 | Pending |
 | `func_83402B10` | [src/fragments/58/fragment58_code.c](../src/fragments/58/fragment58_code.c) | 6 | Pending |
 | `func_87E04114` | [src/fragments/63/fragment63_306150.c](../src/fragments/63/fragment63_306150.c) | 13 | Pending |
