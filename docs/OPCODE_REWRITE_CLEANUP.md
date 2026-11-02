@@ -79,7 +79,19 @@ or reverting a function to assembly does not establish a proper C match.
   full retail ROM gate pass; all function extents and legacy runtime addresses
   are preserved. See [the fragment 17 evidence](regions/fragments/17/fragment17_113A60.md).
 
-This leaves 771 directive occurrences and 55 affected functions, including
+- `func_8230009C` and `func_82300A78`: own the two- and three-halfword
+  records they clear, keeping their original runtime addresses through NOLOAD
+  placement. Stock IDO emits all 136 retail bytes without two coalescing
+  directives. See [the fragment 19 evidence](regions/fragments/19/fragment19_121100.md).
+
+- `func_82B062BC` and `func_82B07A5C`: own the initial state/flags/counter
+  record and retain the counter's original address in its increment path.
+  Stock IDO emits all 148 retail bytes without two coalescing directives.
+  Both files pass normal/blank module controls, host syntax and a combined
+  retail ROM gate with every function extent and legacy address preserved.
+  See [the fragment 24 evidence](regions/fragments/24/fragment24_150C10.md).
+
+This leaves 767 directive occurrences and 51 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -107,9 +119,9 @@ table are baseline function directives, excluding the separate section word.
 | `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Pending |
 | `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Pending |
 | `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Replaced with C |
-| `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Pending |
+| `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
 | `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Pending |
-| `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Pending |
+| `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
 | `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Pending |
 | `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Pending |
 | `func_82507BD0` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 1 | Pending |
@@ -119,9 +131,9 @@ table are baseline function directives, excluding the separate section word.
 | `func_827000B8` | [src/fragments/22/fragment22_14A2E0.c](../src/fragments/22/fragment22_14A2E0.c) | 1 | Pending |
 | `func_82702220` | [src/fragments/22/fragment22_14B090.c](../src/fragments/22/fragment22_14B090.c) | 7 | Pending |
 | `func_82B055A0` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 11 | Pending |
-| `func_82B062BC` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Pending |
+| `func_82B062BC` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_82B07960` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 25 | Pending |
-| `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Pending |
+| `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_88203A18` | [src/fragments/31/fragment31_1768F0.c](../src/fragments/31/fragment31_1768F0.c) | 6 | Pending |
 | `func_8821B3E0` | [src/fragments/31/fragment31_189760.c](../src/fragments/31/fragment31_189760.c) | 1 | Pending |
 | `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Pending |
