@@ -453,7 +453,27 @@ f64 func_87C01100(void *arg0, void *arg1) {
     return (a->y * b->y) + (a->z * b->z) + (a->w * b->w) + (a->x * b->x);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C01140.s")
+void *func_87C01140(void *arg0, void *arg1, void *arg2, f64 weight) {
+    typedef struct { f64 x; f64 y; f64 z; f64 w; } unk_func_87C01140;
+    unk_func_87C01140 value;
+    unk_func_87C01140 *a = arg1;
+    unk_func_87C01140 *b = arg2;
+    f64 complement;
+    f64 dot;
+
+    dot = func_87C01100(arg1, arg2);
+    if (dot < 0.0) {
+        func_87C010D8(&value, arg2);
+    } else {
+        value = *b;
+    }
+    complement = 1.0 - weight;
+    return func_87C008DC(arg0,
+        a->x * complement + weight * value.x,
+        a->y * complement + weight * value.y,
+        a->z * complement + weight * value.z,
+        a->w * complement + weight * value.w);
+}
 
 /* mkdraft:func_87C01278 begin */
 void *func_87C01278(void *arg0, void *arg1) {
