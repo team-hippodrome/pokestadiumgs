@@ -164,22 +164,46 @@ void func_87F06734(s32 a0, u8 *out_base, u8 *src_base)
 }
 /* mkdraft:func_87F06734 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06804.s")
+// FAKE: this aggregate preserves the packed color's stack home in
+// func_87F06D24; a plain u32 keeps that caller's color in a register.
+struct unk_func_87F06804 {
+    u32 unk_0;
+};
+
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern void func_800504BC(s16 *);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+
+void func_87F06804(u8 *node, struct unk_func_87F06804 color) {
+    s32 x;
+    s16 origin[2];
+    s32 y;
+    s32 texture;
+
+    func_800504BC(origin);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetCombine(D_800D0510++, 0x50D2A1, 0xFFA7FFFF);
+    gDPSetColor(D_800D0510++, G_SETENVCOLOR,
+        _SHIFTL(((u8 *)&color)[1], 16, 8) | _SHIFTL(((u8 *)&color)[2], 8, 8) |
+        _SHIFTL(((u8 *)&color)[3], 0, 8) | _SHIFTL(((u8 *)&color)[0], 24, 8));
+    texture = func_8004C990(*(u16 *)(node + 36), *(u16 *)(node + 38));
+    x = *(s16 *)(node + 8) + origin[0];
+    y = *(s16 *)(node + 10) + origin[1];
+    func_8004D19C(x, y, texture, 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F0691C.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06AA8.s")
 
 /* mkdraft:func_87F06D24 begin */
-// FAKE: one-word aggregate so `s` is passed by value in $a1 and spilled at sp+0x30;
-// as a plain u32 argument it stays in a register (diff score 9).
-struct unk_func_87F06804 {
-    u32 unk_0;
-};
 
 extern u8 *D_87F15B88;
 extern f32 D_80087E50[];
-extern s32 func_87F06804(u8 *node, struct unk_func_87F06804 s);
 
 // The literals 182.0416718f and 455.0f land at .rodata +0x94/+0x98, the slots the
 // replaced pragma filled with D_87F115D4 and D_87F115D8.
