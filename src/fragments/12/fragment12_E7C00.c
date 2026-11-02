@@ -317,7 +317,7 @@ extern void Gfx_SetScissorRect(Gfx **, s32, s32, s32, s32);
 extern void func_81607360(void *);
 extern void func_81607408(void);
 extern void func_814018F4(s32, s32, s32, s32, s32, s32);
-extern void func_81401DB0(s32, s32, s32, s32, s32, s32);
+extern void Fragment12_DrawLowerAnimatedPanel(s32, s32, u8, u8 *, u8 *, s32);
 extern void func_81403400(void *, s32, s32, s32);
 extern Gfx *D_800D0510;
 extern s32 func_81403710(void *arg0);
@@ -349,7 +349,7 @@ void func_81403CD0(void *arg0, void *arg1) {
         func_81403828(arg0, rect);
         func_81607360(rect);
         if (*(s32 *)((u8 *)arg0 + 0xCC4) != 0) {
-            func_81401DB0(rect[0], rect[1], bits, first, second, *(u8 *)((u8 *)arg0 + 0xCC2));
+            Fragment12_DrawLowerAnimatedPanel(rect[0], rect[1], bits, (u8 *)first, (u8 *)second, *(u8 *)((u8 *)arg0 + 0xCC2));
         } else {
             func_814018F4(rect[0], rect[3] + rect[1], bits, first, second, *(u8 *)((u8 *)arg0 + 0xCC2));
         }

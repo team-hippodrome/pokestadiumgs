@@ -197,3 +197,69 @@ migration must preserve a real aligned data range. Do not add padding to a
 near-match. Calibration and captured candidates are under private
 `fragment12-animated-renderers-*`, `fragment12-animated-local-*`, and
 `fragment12-function-static8` paths.
+
+### Lower-panel coordinate and color follow-up
+
+requeue on merged footer base `e2929a8d`. Compute the actual ornament Y
+(`func_814028A0(i) + y`) before constructing opacity, then pass that local
+to `func_81401404`. Packing the environment color through `gDPSetColor`
+with source channel order 1,2,0 (then alpha 255) recovers retail's byte-load
+and shift tree. These changes improve the retained lower candidate to
+1196 bytes, normalized 1.0 / raw 0.9365 (`fragment12-lower-env-color8`,
+candidate 0). The function is not accepted: the cached restore-list pointer
+uses stack offset 124 instead of 120; loop index, phase and packet pointer
+have different S-register assignments, and the loop-entry schedule differs.
+The differing local-data and float relocation addends are also present in
+the raw object score and require resolved comparison.
+
+Eight derived-phase cells (`i * 65` versus `65 * i`, guarded loop versus
+for, coordinate declaration order) retain the instruction count but reduce
+the frame to 176 instead of 184. Eight consumed restore-list-local cells
+reduce it to 120 and do not match. Eight named primitive-color packet cells
+also do not improve the retained best; splitting the cursor increment loses
+one instruction. Keep the ordinary SDK candidate. Next action: calibrate a
+bounded stack-sensitive source-order/allocator search against its canonical
+object, preserving the data context and real consumed locals. Normalized
+similarity 1.0 is not a word or register match.
+
+## 2026-11-02: lower animated panel accepted
+
+`Fragment12_DrawLowerAnimatedPanel` (`func_81401DB0`, 299 instruction
+words / 1196 bytes, frame 184, ROM 0xE70C0) supersedes the lower-panel
+requeue above. `func_81403CD0` in `src/fragments/12/fragment12_E7C00.c`
+selects it for the lower orientation and supplies the rectangle, type byte,
+two RGB addresses and ornament count. The renderer draws the edge and
+colored fill to the bottom of the 480-pixel screen, the type image at
+Y + 143, and ornaments with a 75-unit sine phase and 65-unit spacing.
+The separate 30-unit counter is advanced and wrapped; this body does not
+otherwise consume it.
+
+Keep both counters as function-local initialized statics in their existing
+C data window. Ordinary SDK packets, the environment-color channel tree
+1,2,0, and the absolute ornament Y calculated before the primitive-color
+packet reproduce the retail instruction shape. Deriving the phase from
+`i * 65` and reading the updated 30-unit counter into a consumed local
+after wrapping the 75-unit counter restores the saved-register roles
+without an extra move. A named, consumed `phase_index` for the modulo
+result restores the cached restore-list pointer's stack home from 124 to
+120. No padding, dead local, fabricated signature or instruction rewrite
+is involved.
+
+Canonical `fragment12-lower-geometry-temporaries8`, candidate 4, is accepted
+on merged base `e2929a8d`. Relocation masking requires the sequential
+full-ROM gate: normal host syntax and the byte-identical retail US ROM
+comparison pass. Earlier width/half-width intermediates do not match.
+The private logging-only optimizer observer is calibrated against stock
+normal/+20-leading-blank complete modules before interpreting its spill
+trace; it changes no compiler decision. After descriptive naming,
+formatting, duplicate-declaration cleanup and the caller's pointer/byte
+prototype correction, normal/+20 complete-module allocated bytes,
+function extents and semantic relocation targets remain identical for
+both changed source files. Fresh native extraction and the normal host-checked
+ROM build pass; all 299 final instruction words equal the original assembly
+and the original 32-byte C data window remains identical.
+
+The upper renderer `func_814018F4` remains assembly. Next action: apply the
+measured local-static/phase-index source shape to that sibling, first
+migrating its first counter's real data range and proving the still-assembly
+ROM layout. Preserve the original upper opacity range of 50 through 255.
