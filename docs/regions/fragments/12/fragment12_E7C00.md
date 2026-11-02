@@ -87,3 +87,62 @@ Same day: `func_81404040`, `func_8140463C`, `func_8140438C` and
   `arg0`'s lifetime. Not used.
 - Next: find a real later use of `arg0` (the original may have had one),
   or a loop form that keeps `arg0` live.
+
+## 2026-11-02: four row, layout and selection functions accepted
+
+The native solo batch reconstructs these owners on the tree published in
+PR #2154 (`2c9fad2e`, identical to its merge `fc603d87`):
+
+- `Fragment12_RankActiveRows` (`func_81402A64`, 157 words / 628 bytes,
+  ROM 0xE7D74) repeatedly selects the lowest sampled position among six
+  unused active rows, then terminates the seven-entry output with NULL.
+  Existing `Fragment12Row` fields give the actual 528-byte stride and
+  fixed signed activity field at 0x208. Ordinary nested loops reproduce
+  retail's compiler unrolling; no hand-unrolled body is needed.
+- `Fragment12_GetInterpolatedPanelY` (`func_81403758`, 52 / 208,
+  ROM 0xE8A68) selects one three-word row by orientation and interpolates
+  its first two words for phases 1 and 3. The third word is preserved;
+  its meaning is unresolved here. `D_81407950` is `s32[2][3]` and its
+  existing +4 alias `D_81407954` is viewed with the same three-word
+  stride. `func_81403828` now explicitly passes its state pointer and
+  uses the helper's actual 32-bit result, preserving its generated code.
+- `Fragment12_GetInterpolatedPanelRect` (`func_8140487C`, 84 / 336,
+  ROM 0xE9B8C) produces X/Y and the fixed 261-by-193 extent through the
+  callback at `D_8160BD08`. The initial callback is the float-returning
+  `func_8160006C` in `src/fragments/11/fragment11_D7BC0.c`. A nonzero
+  remap argument maps modes 0,1,2,3 to 1,0,2,2; otherwise the mode is
+  unchanged. The existing coordinate data is typed as `[2][4][2]` and
+  `[4][2]`, without changing its bytes.
+- `Fragment12_HandleSelectionInput` (`func_81404E68`, 161 / 644,
+  ROM 0xEA178) handles controller-selected entries or timed automatic
+  entries, reports selection/state changes and emits the existing sounds.
+  Human-path count/button indices and automatic-path destination/selected
+  indices have separate scopes. Every local is consumed. These scopes
+  reproduce the 72-byte frame; handling unavailable entries before the
+  available-entry assignment restores the remaining branch order.
+
+The two interpolators need `/ 16`, not `/ 16.0f`, to retain retail's
+`div.s`. Explicit integer-to-float conversions and writing delta times
+factor before the start term restore the observed floating-register
+allocation. The typed table rows/pairs supply the address-scaling shape.
+Earlier rectangle probes also changed the remap's false/default behavior;
+that candidate behavior is inconsistent with the original assembly.
+
+Canonical accepts are `fragment12-row-sort8` candidate 4,
+`fragment12-layout-position-float-webs8` candidate 2,
+`fragment12-rect-coordinate-pairs8` candidate 6 and
+`fragment12-selection-entry-guard8` candidate 0. Every acceptance has normal
+host syntax and a full retail US ROM comparison. The row sort uses a
+relocation-masked sequential gate; the other three are object/link-shape
+verified before the ROM gate. Probe statistics remain enabled.
+
+Post-acceptance naming preserves all allocated module bytes and function
+extents. Remaining assembly callers still use the original names, so their
+call relocations resolve through the explicit compatibility aliases to the
+same defined functions and offsets. This alias resolution is included in
+the normal/+20-leading-blank semantic-relocation controls; it is not an
+instruction rewrite. Fresh normal native extraction and the host-checked
+ROM build pass after integration with master `609431a2`. All 454 final
+instruction words and 72 bytes of the retyped tables equal the original ROM.
+No padding, unused local, forced register, fabricated interface or private
+helper is included in the batch.

@@ -1558,3 +1558,11 @@ func_81401DB0 = Fragment12_DrawLowerAnimatedPanel;
 D_81407877 = D_81407874 + 3;
 
 func_814018F4 = Fragment12_DrawUpperAnimatedPanel;
+
+func_81402A64 = Fragment12_RankActiveRows;
+
+func_81403758 = Fragment12_GetInterpolatedPanelY;
+
+func_8140487C = Fragment12_GetInterpolatedPanelRect;
+
+func_81404E68 = Fragment12_HandleSelectionInput;
