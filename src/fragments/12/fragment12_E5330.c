@@ -626,11 +626,63 @@ s32 D_81407880 = 0;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_814018F4.s")
 
-// Lower renderer's 75-step ornament phase and 30-step counter.
-s32 D_81407884 = 0;
-s32 D_81407888 = 0;
+f32 func_816092FC(void);
+f32 __sinf(f32);
+s32 func_814028A0(s32);
+extern void func_8140225C(s32 x, s32 y, s32 mode, u8 type);
+extern u8 D_80094F50[];
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E5330/func_81401DB0.s")
+// Draw the lower panel to the screen bottom, its type image, and sine-faded ornaments.
+//@src/fragments/12/fragment12_E7C00.c
+void Fragment12_DrawLowerAnimatedPanel(s32 x, s32 y, u8 type_index, u8 *edge_color, u8 *fill_color, s32 ornament_count) {
+    static s32 ornament_phase = 0;
+    static s32 cycle_counter = 0;
+    f32 fill_height;
+    s32 cycle_position;
+    s32 i;
+    s32 center_x;
+    s32 ornament_y;
+    s32 phase_index;
+
+    fill_height = (f32)(-y - ((TextureRenderHeader *)D_814077C8)->height + 480);
+    ornament_phase += func_816092FC();
+    cycle_counter += func_816092FC();
+    if (ornament_phase >= 75) {
+        ornament_phase -= 75;
+    }
+    cycle_position = cycle_counter;
+    if (cycle_position >= 30) {
+        cycle_counter = cycle_position - 30;
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF | AA_EN | CVG_X_ALPHA | ALPHA_CVG_SEL, G_RM_OPA_SURF2);
+    func_8004D1FC(D_814077CC);
+    gDPSetColor(D_800D0510++, G_SETENVCOLOR,
+        _SHIFTL(edge_color[1], 16, 8) | _SHIFTL(edge_color[2], 8, 8) |
+        _SHIFTL(edge_color[0], 24, 8) | 255);
+    func_81602240((f32)x, (f32)y, (f32)((TextureRenderHeader *)D_814077C4)->width,
+                 (f32)((TextureRenderHeader *)D_814077C8)->height, 0, 0, 1.0f, 1.0f);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_8004D1FC(D_814077C4);
+    func_814014C8(D_814077C4, x, ((TextureRenderHeader *)D_814077C8)->height + y, ((TextureRenderHeader *)D_814077C4)->width,
+                 (s32)fill_height, 0, edge_color, fill_color);
+    func_8140225C(x, y + 143, 1, type_index);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_81401394();
+    i = 0;
+    if (ornament_count > 0) {
+        do {
+            center_x = ((TextureRenderHeader *)D_814077C4)->width / 2 + x;
+            ornament_y = func_814028A0(i) + y;
+            phase_index = (i * 65 + ornament_phase) % 75;
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255,
+                (u32)((__sinf((f32)phase_index * 6.2831855f / 75.0f) * 0.5f + 0.5f) * 255.0f));
+            func_81401404(center_x, ornament_y, 1.0f);
+            i++;
+        } while (i != ornament_count);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 extern u8 D_80094F50[];
 void func_8140225C(s32 x, s32 y, s32 mode, u8 type) {
