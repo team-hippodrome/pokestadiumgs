@@ -40,3 +40,22 @@ Species list renderer: a title from `D_8F103A5C`/`D_8F103A64` indexed by mode `D
 ## 2026-10-28 — `func_8F101FF4` matched
 
 D-pad list scroll: L/R repeat (`0x200`/`0x100`) moves `D_8F1DEE24` within 0..0x118, written directly on the global. When it changes, `D_8F1DEE44`/`D_8F1DEE5C` are cleared and `func_80041FD0(D_8F1DECA0, index, *(Fragment69PackedState *)&D_8F1DEE44, 0)` reloads the list. A local `value` copy of the index scores 0.84; only `old` is a local. `Fragment69PackedState` is now declared above this function.
+
+## 2026-11-03 — three-entry traversal rewrite: requeue
+
+`requeue` **func_8F100B54**, retail 272 bytes, revision `4835fc02`.
+The unpatched spelling `base = D_8F1DF282 - 18` differs not only in its three
+address-addition words but also in their relocation endpoints: retail has
+two materializations of `D_8F1DF270` and one of the end label. Merely matching
+three raw operand words would not prove its linked address flow.
+
+Sixteen native controls used the actual three-entry base, the existing
+six-byte `Fragment69MenuState`, inline/loop-bound base expressions, and
+integer-address or halfword-pointer views. Equivalent initializations and
+base views collapse to one 268-byte outcome: IDO CSEs the two equal base
+addresses into one `lui/addiu` and a move. A leading-test loop and relational
+end comparison alter additional control flow. No source is installed.
+Next: inspect address-hoisting/source-lineage evidence for retail's two
+independent base materializations; do not re-run declaration-order variants
+that produced the same CSE result. Private families:
+`rewrite-cleanup-f69-menu-cursor8` and `rewrite-cleanup-f69-base-topology8`.

@@ -131,7 +131,15 @@ or reverting a function to assembly does not establish a proper C match.
   a linker assertion enforces the original RAM footprint. See
   [the fragment 74 evidence](regions/fragments/74/fragment74_code.md).
 
-This leaves 694 directive occurrences and 42 affected functions, including
+- `func_84136D84`: own the four snapshot destination pointers as a
+  zero-initialized C array at their original loaded addresses. An ordinary
+  four-iteration `do` loop emits the six retail instructions, including store
+  order and the return delay slot, without coalescing. Normal/blank module
+  controls, host syntax, private ROM links and the normal native full-ROM gate
+  pass; all function extents, legacy globals and previous C objects remain
+  exact. See [the snapshot-pointer evidence](regions/fragments/79/fragment79_3A4030.md).
+
+This leaves 693 directive occurrences and 41 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -206,5 +214,5 @@ table are baseline function directives, excluding the separate section word.
 | `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Pending |
 | `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Pending |
 | `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Replaced with C |
-| `func_84136D84` | [src/fragments/79/fragment79_3A4030.c](../src/fragments/79/fragment79_3A4030.c) | 1 | Pending |
+| `func_84136D84` | [src/fragments/79/fragment79_3A4030.c](../src/fragments/79/fragment79_3A4030.c) | 1 | Replaced with C |
 | `func_84163380` | [src/fragments/79/fragment79_3D2C10.c](../src/fragments/79/fragment79_3D2C10.c) | 61 | Pending |

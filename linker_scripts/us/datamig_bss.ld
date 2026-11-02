@@ -143,7 +143,16 @@ SECTIONS
     {
         build/src/fragments/74/fragment74_code.o(.bss)
     }
+    /* Four snapshot destination pointers; their original loaded zero words
+     * remain in the data blob at these same runtime addresses. */
+    .fragment79_snapshot_pointers_data 0x84186160 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/79/fragment79_3A4030.o(.data)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
        "fragment74 runtime state must fit its original cleared RAM block");
+
+ASSERT(SIZEOF(.fragment79_snapshot_pointers_data) == 16,
+       "fragment79 snapshot pointers must occupy four original words");
