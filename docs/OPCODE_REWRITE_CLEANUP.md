@@ -59,7 +59,13 @@ or reverting a function to assembly does not establish a proper C match.
   syntax and the full retail ROM comparison pass. See
   [the fragment 18 evidence](regions/fragments/18/fragment18_code.md).
 
-This leaves 779 directive occurrences and 60 affected functions, including
+- `func_87F025B8`: assign the previous link directly before clearing the
+  next link when appending a newly allocated pool item. Removing the tail
+  temporary lets stock IDO emit all 204 retail bytes without four word
+  rewrites. Complete-module controls, host syntax and the full retail ROM
+  comparison pass. See [the fragment 64 evidence](regions/fragments/64/fragment64_324FB0.md).
+
+This leaves 775 directive occurrences and 59 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -125,7 +131,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_87E07A2C` | [src/fragments/63/fragment63_308D70.c](../src/fragments/63/fragment63_308D70.c) | 2 | Pending |
 | `func_87E07DD0` | [src/fragments/63/fragment63_30B540.c](../src/fragments/63/fragment63_30B540.c) | 2 | Replaced with C |
 | `func_87F02104` | [src/fragments/64/fragment64_324A10.c](../src/fragments/64/fragment64_324A10.c) | 14 | Pending |
-| `func_87F025B8` | [src/fragments/64/fragment64_324FB0.c](../src/fragments/64/fragment64_324FB0.c) | 4 | Pending |
+| `func_87F025B8` | [src/fragments/64/fragment64_324FB0.c](../src/fragments/64/fragment64_324FB0.c) | 4 | Replaced with C |
 | `func_87F06240` | [src/fragments/64/fragment64_328E40.c](../src/fragments/64/fragment64_328E40.c) | 1 | Pending |
 | `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Pending |
 | `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Pending |
