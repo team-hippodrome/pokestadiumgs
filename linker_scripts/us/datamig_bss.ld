@@ -155,6 +155,12 @@ SECTIONS
     {
         build/src/fragments/31/fragment31_189760.o(.bss)
     }
+    /* Playback handle and model pointer, cleared with the fragment runtime
+     * state after relocation metadata has been consumed. */
+    .fragment72_playback_resources_bss 0x8F4020D0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/72/fragment72_code.o(.bss)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
@@ -165,3 +171,6 @@ ASSERT(SIZEOF(.fragment79_snapshot_pointers_data) == 16,
 
 ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
        "fragment31 collected values must retain their compiler section footprint");
+
+ASSERT(SIZEOF(.fragment72_playback_resources_bss) == 16,
+       "fragment72 playback resources must retain their compiler section footprint");
