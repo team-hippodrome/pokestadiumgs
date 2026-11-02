@@ -1674,13 +1674,39 @@ void func_8AC05F00(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC05F38.s")
+typedef struct Fragment43Motion602C { u8 pad00[0x40]; f32 unk40; f32 unk44; f32 unk48; f32 unk4C; f32 unk50; f32 unk54; s16 unk58; s16 unk5A; } Fragment43Motion602C;
+
+void func_8AC05F38(Fragment43Motion602C *arg0) {
+    f32 step;
+
+    if (1.0f < arg0->unk40) {
+        arg0->unk40 -= 0.05f;
+        if (arg0->unk40 < 1.0f) {
+            arg0->unk40 = 1.0f;
+        }
+    } else if (arg0->unk40 < 1.0f) {
+        arg0->unk40 += 0.05f;
+        if (1.0f < arg0->unk40) {
+            arg0->unk40 = 1.0f;
+        }
+    }
+    step = 0.05f;
+    if (1.0f < arg0->unk44) {
+        arg0->unk44 -= step;
+        if (arg0->unk44 < 1.0f) {
+            arg0->unk44 = 1.0f;
+        }
+    } else if (arg0->unk44 < 1.0f) {
+        arg0->unk44 += step;
+        if (1.0f < arg0->unk44) {
+            arg0->unk44 = 1.0f;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-typedef struct Fragment43Motion602C { u8 pad00[0x40]; f32 unk40; f32 unk44; f32 unk48; f32 unk4C; f32 unk50; f32 unk54; s16 unk58; s16 unk5A; } Fragment43Motion602C;
 extern f32 D_80088E50[];
-extern void func_8AC05F38(Fragment43Motion602C *);
 void func_8AC0602C(Fragment43Motion602C *arg0, u16 arg1, s32 arg2) {
     f32 *temp_v0;
     f32 temp_fv0;
@@ -1701,7 +1727,6 @@ void func_8AC0602C(Fragment43Motion602C *arg0, u16 arg1, s32 arg2) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8AC05F38(Fragment43Motion602C *);
 void func_8AC060E4(Fragment43Motion602C *arg0, u16 arg1, s32 arg2) {
     f32 *temp_v0;
     f32 temp_fv0;
