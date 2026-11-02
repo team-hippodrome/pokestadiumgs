@@ -92,3 +92,32 @@ MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`. Complete retail comparison and
 whitespace checks pass. Independent original-assembly and raw-retail
 comparisons verify all 708 bytes at ROM `0x32565C..0x325920`, including the
 four natural alignment bytes.
+
+## 2026-11-03 — pool allocation append matches without word rewrites
+
+`func_87F025B8` now emits all 204 retail bytes through stock IDO 7.1,
+removing its four `REWRITE_FUNCTION_WORD` directives. It keeps the existing
+free-item search, callback registration, item initialization, count increment,
+head/tail updates and returned item. Public and helper signatures are unchanged.
+
+After initializing the item and incrementing the count, the append now stores
+`item->prev = pool->tail` directly, then clears `item->next`. Previously it
+sampled that same tail into a temporary, cleared the next link and assigned
+the temporary to the previous link. The two link stores touch separate words
+at offsets 0 and 4; the tail is read before either store in both versions,
+and all following list reads see the same final values. No call occurs
+between the stores. This removes the temporary without changing the list's
+meaning or relying on new alias assumptions.
+
+Inlining the tail read first removed the register differences but left a
+four-instruction schedule rotation. Restoring this source order makes IDO
+schedule the tail load before the count increment and reproduce the retail
+registers and instruction order. Typed node/pool variants and head/tail
+caches were diagnostic only and were not installed. There are no new types,
+extra locals, forced registers or compiler changes in the accepted code.
+
+Fresh unchanged/candidate normal/+20 controls preserve all allocated module
+bytes/layout, function extents and semantic relocations. Two installed-source
+controls, normal host syntax and the native
+`make -j1 COMPARE=1 RUN_CC_CHECK=1` full retail ROM gate pass. ROM MD5:
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Coverage is unchanged.

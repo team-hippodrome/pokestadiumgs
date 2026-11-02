@@ -118,10 +118,6 @@ void func_87F0252C(void *arg0, F2684State *arg1, u8 *arg2, s32 arg3) {
 }
 
 /* mkdraft:func_87F025B8 begin */
-#pragma REWRITE_FUNCTION_WORD(func_87F025B8, 0x80, 0x8CC20010, 0x8CCA0010)
-#pragma REWRITE_FUNCTION_WORD(func_87F025B8, 0x90, 0xAC620000, 0xAC6A0000)
-#pragma REWRITE_FUNCTION_WORD(func_87F025B8, 0x94, 0x8CCA000C, 0x8CCB000C)
-#pragma REWRITE_FUNCTION_WORD(func_87F025B8, 0x98, 0x55400003, 0x55600003)
 extern void func_87F0242C(void *);
 
 void *func_87F025B8(void *arg0, void *arg1) {
@@ -146,12 +142,8 @@ void *func_87F025B8(void *arg0, void *arg1) {
         *(f32 *)((u8 *)var_v1 + 0x10) = 0.0f;
         func_87F0242C((u8 *)var_v1 + 0x24);
         *(s32 *)((u8 *)arg0 + 4) += 1;
-        {
-            void *temp;
-            temp = *(void **)((u8 *)arg0 + 0x10);
-            *(s32 *)((u8 *)var_v1 + 4) = 0;
-            *(void **)((u8 *)var_v1 + 0) = temp;
-        }
+        *(void **)((u8 *)var_v1 + 0) = *(void **)((u8 *)arg0 + 0x10);
+        *(s32 *)((u8 *)var_v1 + 4) = 0;
         if (*(void **)((u8 *)arg0 + 0xC) == NULL) {
             *(void **)((u8 *)arg0 + 0xC) = var_v1;
         }
