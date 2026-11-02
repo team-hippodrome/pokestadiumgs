@@ -89,4 +89,22 @@ SECTIONS
     {
         build/src/fragments/17/fragment17_113A60.o(.bss)
     }
+    /* Loader-cleared halfword records used by fragment 19's state helpers.
+     * The input sections contain the real objects and compiler alignment;
+     * the loaded relocation metadata retains its original bytes. */
+    .fragment19_state_5EC2_data 0x82305EC2 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/19/fragment19_121100.o(.data)
+    }
+
+    .fragment19_state_5EE4_bss 0x82305EE4 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/19/fragment19_121100.o(.bss)
+    }
+    /* State, flags and counter at the start of fragment 24's runtime state.
+     * The loader clears this area; input-section alignment is NOLOAD. */
+    .fragment24_state_12450_bss 0x82B12450 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/24/fragment24_150C10.o(.bss)
+    }
 }

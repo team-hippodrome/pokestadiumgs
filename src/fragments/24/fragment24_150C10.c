@@ -2,6 +2,16 @@
 
 
 #ifdef VERSION_US
+// State, flags and counter occupy the loader-cleared halfwords at this address.
+//@src/2CA0.c
+typedef struct F24State12450 {
+    s16 state;
+    s16 unk_02;
+    u16 flags;
+    s16 counter;
+} F24State12450;
+static F24State12450 sState12450;
+
 /* mkdraft:func_82B00E10 begin */
 extern u8 D_82B12450[0xFF8];
 
@@ -1822,12 +1832,12 @@ s32 func_82B060A0(s32 arg0) {
 #ifdef VERSION_US
 extern s16 D_82B12456;
 
-#pragma COALESCE_AT_LUI(func_82B062BC, D_82B12450, D_82B12456)
 
 void func_82B062BC(void) {
+    F24State12450 *state = &sState12450;
     if (func_82B02870() != 0) {
-        *(s16 *)D_82B12450 = 2;
-        D_82B12456 = 0;
+        state->state = 2;
+        state->counter = 0;
         func_82B01054(2);
     }
 }
@@ -2117,16 +2127,14 @@ extern u8 D_82B12450[0xFF8];
 extern s16 D_82B12456;
 extern s32 func_82B028CC(void);
 
-/* Ground truth shares the D_82B12450 store's delay-slot `lui $at` with the
-   D_82B12456 clear; IDO gives each extern its own lui, so the fold is required. */
-#pragma COALESCE_AT_LUI(func_82B07A5C)
 /* mkdraft:func_82B07A5C begin */
 void func_82B07A5C(void) {
+    F24State12450 *state = &sState12450;
     s16 *counter = &D_82B12456;
     if (func_82B028CC() != 0) {
         if (++*counter >= 2) {
-            *(s16 *)D_82B12450 = 9;
-            *counter = 0;
+            state->state = 9;
+            state->counter = 0;
         }
     }
 }
