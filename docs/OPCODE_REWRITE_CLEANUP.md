@@ -122,7 +122,16 @@ or reverting a function to assembly does not establish a proper C match.
   legacy addresses preserved. See [the restart evidence](regions/fragments/21/fragment21_144790.md)
   and [the cellular-state evidence](regions/fragments/21/fragment21_147D10.md).
 
-This leaves 709 directive occurrences and 43 affected functions, including
+- `func_8F600020`: own the complete runtime block cleared by the
+  initializer and fragment loader, including its image view. Preparing real
+  field pointers before clearing that block and copying the source value
+  before clearing the adjacent halfword lets stock IDO emit all 124 retail
+  bytes directly. This removes the hex replacement and 14 relocation-target
+  patches. Module controls, host syntax and the normal full-ROM gate pass;
+  a linker assertion enforces the original RAM footprint. See
+  [the fragment 74 evidence](regions/fragments/74/fragment74_code.md).
+
+This leaves 694 directive occurrences and 42 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -196,6 +205,6 @@ table are baseline function directives, excluding the separate section word.
 | `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |
 | `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Pending |
 | `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Pending |
-| `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Pending |
+| `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Replaced with C |
 | `func_84136D84` | [src/fragments/79/fragment79_3A4030.c](../src/fragments/79/fragment79_3A4030.c) | 1 | Pending |
 | `func_84163380` | [src/fragments/79/fragment79_3D2C10.c](../src/fragments/79/fragment79_3D2C10.c) | 61 | Pending |

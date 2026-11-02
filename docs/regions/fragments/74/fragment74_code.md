@@ -184,3 +184,51 @@ with the initializer and texture-update sites above, these are the three
 remaining assembly owners. The existing contiguous-only coalescer does not
 cover these measured sites. Their source/alias or tooling prerequisites are
 not resolved here; no impossibility claim or tool change is made.
+
+## 2026-11-03 — runtime initializer: ordinary C replaces hex text
+
+On base `efa688e0e32ab8fa0d1f991f316ca3970a9120c7`, `func_8F600020`
+compiles to all 124 retail bytes with its whole-function hex replacement and
+14 relocation-target rewrites removed. This resolves the shared-address
+prerequisite recorded above through actual C storage ownership.
+
+The fragment header places relocation metadata at `0x8F600BF0`, ends the
+loaded image at `0x8F600F70`, and reserves RAM through `0x8F602C10`.
+After consuming metadata, the loader clears exactly 8224 bytes from
+`0x8F600BF0`; the initializer clears that same block. `F74RuntimeState`
+owns those exact bytes. Its first 24 bytes contain the context word and
+observed halfword fields; the 8200-byte image view begins at `0x8F600C08`.
+`func_8F6001FC` passes that address to `func_8F6000EC` as its image.
+`func_8004CA60` supplies the pixel view eight bytes into the image, and the
+renderer advances that pointer in two 4096-byte strips. Unknown halfword
+roles remain address-based fields and array views.
+//@src/2CA0.c
+//@src/4CC20.c
+//@src/fragments/74/fragment74_code.c
+
+The initializer preserves its real word argument and stack homes. It captures
+the word at input offset 40 before clearing state, then reads a word at that
+saved address plus 12 for the halfword at runtime offset 20. The final source
+copies that value before clearing the adjacent halfword at offset 22; stock
+as1 schedules the copy store into the return delay slot, as in retail. Its
+seven field pointers are all initialized and consumed. No unused local,
+stack padding, volatile access, extra argument, forced register or instruction
+transformation is introduced.
+
+This source's BSS input section is exactly 8224 bytes, with no extra tail
+allocation. The established NOLOAD mechanism places it at `0x8F600BF0`, and
+a linker size assertion enforces the original endpoint `0x8F602C10`. Loaded
+relocation metadata, the fragment header and RAM allocation are unchanged.
+All legacy runtime names still resolve to their original addresses.
+//@linker_scripts/us/datamig_bss.ld
+
+Validation first rebuilds the unchanged native US baseline from freshly
+extracted ROM data, then reproduces the prior full-module oracle normally and
+with 20 leading blank lines. Final known/candidate controls, final source-name
+controls, host syntax and private full-ROM links pass. The installed source
+passes stock native IDO 7.1 `make -j1 COMPARE=1 RUN_CC_CHECK=1`, followed by
+a normal link with the RAM-size assertion enabled. Every function address/size
+and all legacy fragment 74 addresses remain exact. Retail ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage and compiler/tooling sources are unchanged.
