@@ -32,7 +32,8 @@ void func_83F0002C(void) {
     func_80008648();
 }
 
-extern OSTime D_83F00400;
+// The loader clears the relocation-table prefix for this runtime timestamp.
+OSTime D_83F00400;
 
 s32 func_83F0012C(void) {
     s32 var_v0;
@@ -49,8 +50,6 @@ extern void func_8002596C(s32);
 extern void func_80064F54(void);
 extern void StageContext_SetClearColor(s32);
 extern s32 StageFade_StartFromTransparent(s32);
-// osGetTime()'s two result words share one $at in the original (D_83F00400, D_83F00400 + 4).
-#pragma COALESCE_AT_LUI(func_83F001A8, D_83F00400)
 s32 func_83F001A8(s32 arg0) {
     s32 state = arg0;
 

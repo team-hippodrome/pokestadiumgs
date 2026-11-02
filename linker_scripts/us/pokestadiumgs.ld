@@ -1526,6 +1526,21 @@ SECTIONS
     __romPos = ALIGN(__romPos, 16);
     . = ALIGN(., 16);
 
+    fragment15_relocations_ROM_START = __romPos;
+    fragment15_relocations_VRAM = ADDR(.fragment15_relocations);
+    .fragment15_relocations 0x83F00400 : AT(fragment15_relocations_ROM_START) SUBALIGN(16)
+    {
+        FILL(0x00000000);
+        fragment15_relocations_DATA_START = .;
+        fragment15_relocations = .;
+        build/assets/us/fragment15_relocations.o(.data);
+        fragment15_relocations_DATA_END = .;
+        fragment15_relocations_DATA_SIZE = ABSOLUTE(fragment15_relocations_DATA_END - fragment15_relocations_DATA_START);
+    }
+    __romPos += SIZEOF(.fragment15_relocations);
+    fragment15_relocations_ROM_END = __romPos;
+    fragment15_relocations_VRAM_END = .;
+
     fragment16_ROM_START = __romPos;
     fragment16_VRAM = ADDR(.fragment16);
     .fragment16 0x82000000 : AT(fragment16_ROM_START) SUBALIGN(16)
