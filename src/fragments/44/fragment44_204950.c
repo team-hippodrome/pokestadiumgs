@@ -60,7 +60,30 @@ void func_8AF16774(u8 arg0) {
     D_8AF341BF = arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF16878.s")
+void func_8AF16878(u8 arg0, u8 arg1) {
+    s16 *entry = D_8AF33DC0;
+    s32 i;
+    s16 species;
+    u8 type1;
+    u8 type2;
+
+    D_8AF340BC = 0;
+    for (i = 1; i < 252; i++) {
+        species = func_80063804(i);
+        type1 = func_8AF01530(func_8006397C(species));
+        type2 = func_8AF01530(func_800639C0(species));
+        if (((type1 == arg0) && (type2 == arg1)) ||
+            ((type1 == arg1) && (type2 == arg0))) {
+            func_8004B7A4(species);
+            *entry = species;
+            entry++;
+            D_8AF340BC++;
+        }
+    }
+    *entry = -1;
+    D_8AF341BE = arg0;
+    D_8AF341BF = arg1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF169A4.s")
 
