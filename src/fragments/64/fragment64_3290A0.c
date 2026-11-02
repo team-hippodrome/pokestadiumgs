@@ -235,7 +235,56 @@ void func_87F0691C(s32 kind, u8 *node) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06AA8.s")
+void func_87F06AA8(s32 kind, u8 *node) {
+    s32 value;
+    union {
+        struct unk_func_87F06804 packed;
+        struct { u8 r, g, b, a; } channels;
+    } color;
+    f32 scale;
+    f32 wave;
+
+    switch (kind) {
+        case 0:
+            *(u16 *)(node + 2) &= ~2;
+            break;
+        case 1:
+            // FAKE: the repeated phase expressions preserve the retail FP
+            // register allocation, as in func_87F0691C.
+            if (*(s32 *)(node + 32) == 0) {
+                if ((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) >= 0.0f) {
+                    value = (s32)((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) + 0.5f);
+                } else {
+                    value = (s32)((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) - 0.5f);
+                }
+                wave = (D_80087E50[(u16)value >> 4] + 1.0f) * 0.5f;
+                color.packed.unk_0 = 0xFFE600FF;
+            } else {
+                if ((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) >= 0.0f) {
+                    value = (s32)((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) + 0.5f);
+                } else {
+                    value = (s32)((((f32)(*(u32 *)(D_87F15B88 + 40) % 360) * 5.0f) * 182.0416718f) - 0.5f);
+                }
+                wave = (1.0f - D_80087E50[(u16)value >> 4]) * 0.5f;
+                color.packed.unk_0 = 0x8CDCFFFF;
+            }
+            scale = 455.0f * wave;
+            if (scale >= 100.0f) {
+                value = (s32)((scale - 100.0f) + 0.5f);
+            } else {
+                value = (s32)((scale - 100.0f) - 0.5f);
+            }
+            if (value < 0) {
+                value = 0;
+            }
+            if (value >= 256) {
+                value = 255;
+            }
+            color.channels.a = value;
+            func_87F06804(node, color.packed);
+            break;
+    }
+}
 
 /* mkdraft:func_87F06D24 begin */
 
