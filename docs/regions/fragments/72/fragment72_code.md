@@ -169,3 +169,57 @@ fragments 46, 58, 72, 75 and 78").
   object's `.rodata`. They are probably this object's own definitions
   (statics), which would let the original assembler share `%hi`.
 - Revisit once the object's `.data`/`.bss` ownership is understood.
+
+## 2026-11-03 — `func_8F401C30` proper C match
+
+The 344-byte state machine now compiles directly through stock IDO 7.1.
+Its whole-function hex replacement, 38 relocation-target patches and
+`.rodata` switch-table word repair are removed. There are no remaining
+requested rewrite/coalescing directives in this file.
+
+The adjacent words at 0x8F4020D0 and 0x8F4020D4 are a playback handle and
+model pointer. `func_8F400C58` passes the handle to animation helpers and
+reads the model's image pointer at offset 8; case 3 of this state machine
+clears both after releasing the preview pool. An actual eight-byte
+`Fragment72PlaybackResources` owns that pair. Preparing its pointer before
+the switch lets IDO share the original address load for the two stores.
+An inline record view instead materializes a general-purpose base register;
+two separately owned scalars retain two address loads. Neither is a match.
+
+The existing NOLOAD BSS mechanism pins the record to 0x8F4020D0. IDO emits
+16 bytes of input section, including its own alignment; there is no C
+padding or new runtime allocation. The original fragment header has
+relocation offset 0x20C0 and RAM extent 0x2110. `Memmap_RelocateFragment`
+clears that range after consuming its relocation table, so it covers both
+the record and compiler alignment. The original loaded words at ROM
+0x361D60/0x361D64 are relocation metadata, not initial field values. Their
+bytes and all runtime relocation behavior remain unchanged. The existing
+initializer also clears the complete 0x48-byte state at 0x8F4020C0.
+//@src/2CA0.c
+//@asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400DE8.s
+
+A linker assertion checks the original compiler section footprint. Other
+fields keep their existing external views and addresses; no global-symbol
+overrides, fabricated gap arrays, extra source files, forced registers,
+volatile accesses or compiler changes are introduced. This resolves the
+state machine's older layout prerequisite without a speculative source-file
+split. The separate assembly initializer is not claimed as decompiled.
+
+The first prepared-record probes reached the retail-size code and exposed
+the obsolete section repair: its expected old table word 0x1D40 was already
+0x1D3C. Those are patch preflight failures, not C compiler failures or
+rejected source hypotheses. Removing that repair with the function patches
+produces the correct switch table directly.
+
+Known/candidate normal and 20-leading-blank controls preserve complete
+module layout, all non-owner instructions and relocations. Final formatting
+and the real model-pointer type reproduce the tested module exactly. Host
+syntax passes. Both private full-ROM links and normal native
+`make -j1 COMPARE=1 RUN_CC_CHECK=1` pass with MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d` and SHA256
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Every function extent, legacy address and preexisting object address/size
+is preserved. Private receipts: `rewrite-cleanup-f72-playback-controls`,
+`rewrite-cleanup-f72-playback-final-controls`,
+`rewrite-cleanup-f72-playback-link`, and `rewrite-cleanup-eighteenth-seal`.
+Coverage and compiler/tooling files are unchanged.

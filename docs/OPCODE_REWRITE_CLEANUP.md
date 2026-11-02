@@ -156,8 +156,15 @@ or reverting a function to assembly does not establish a proper C match.
   No storage, linker, compiler or ABI change is needed. See
   [the palette-rendering evidence](regions/fragments/52/fragment52_2871C0.md).
 
-This leaves 684 directive occurrences and 39 affected functions, including
-the function that also requires the `.rodata` repair. Coverage files and
+- `func_8F401C30`: own the playback handle and model pointer cleared after
+  releasing the preview pool. Preparing their real record lets stock IDO emit
+  all 344 retail bytes directly. This removes the whole-function replacement,
+  38 relocation-target patches and the switch-table word repair. Complete
+  module controls, host syntax, both private ROM links and the normal native
+  ROM gate pass with all function extents and legacy addresses preserved.
+  See [the playback-state evidence](regions/fragments/72/fragment72_code.md).
+
+This leaves 644 directive occurrences and 38 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -229,7 +236,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82901AE0` | [src/fragments/67/fragment67_33D6A0.c](../src/fragments/67/fragment67_33D6A0.c) | 17 | Pending |
 | `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |
 | `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Pending |
-| `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Pending |
+| `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Replaced with C |
 | `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Replaced with C |
 | `func_84136D84` | [src/fragments/79/fragment79_3A4030.c](../src/fragments/79/fragment79_3A4030.c) | 1 | Replaced with C |
 | `func_84163380` | [src/fragments/79/fragment79_3D2C10.c](../src/fragments/79/fragment79_3D2C10.c) | 61 | Pending |
