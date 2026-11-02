@@ -626,3 +626,113 @@ retail common/duplicated increment expression topology. Do not infer that
 the layout requires a compiler patch, unused local or artificial frame
 size. No candidate reached a ROM gate, and C, linker layout and coverage
 remain unchanged; the pending fragment 79 notes are preserved.
+
+
+### 2026-11-02: history expression-versus-local allocation — requeue
+
+Thirty-two further canonical candidates on `57fbd886` rejected: independent
+alpha expressions with reordered next-age assignments; coupled current/next
+counters; a record containing both consumed counters; and compact flags
+with equivalent row/sample address forms. None installed or ran a ROM gate.
+The closest instruction and target-stack-home controls remain separate.
+
+Read-only allocator traces distinguish them more precisely. The ordinary
+loop's `age + 1` expression has uncolored ranges with savings -571.4286
+(divisor 7) and -1495 (divisor 2). In the named-counter source, the user
+local at Mmt -72 is also uncolored, with savings -570/-1500; a separate
+`age + 1` expression in the alpha block has savings 30 (divisor 1) and is
+assigned internal color 1. UGEN independently shows the latter value in
+physical register 2. Internal color 1 must not be called MIPS register 1.
+The changed expression lifetime explains why reproducing the user local's
+home alone does not recover the closest candidate's instruction stream.
+
+The private observer's old commit-site lookup could lose expressions
+because it used a stale table index. Reading the semantic root from the
+live range and logging bounded expression children recovers those records.
+Twelve stock/observer-off/on optimized-Ucode and symbol-input controls
+passed for both candidate sources, normal and +20-leading-blank; secondary
+symbol outputs also match. Valid table lookups and range roots agree, and
+normal/blank decision signatures agree. Production compilers are unchanged.
+Equal memory offsets in different sources do not identify the same local:
+the -72 next-age role applies only to the named-counter source.
+
+Next: recover the ordinary loop's expression lifetime while obtaining the
+retail spill order through real declarations and address expressions. The
+completed named-counter assignment/coupled-counter spaces are not fresh
+work. Resume from the retained two controls; do not add dead locals,
+artificial padding or output rewrites.
+
+
+## 2026-11-02: selection-scene initializer — requeue
+
+`func_81406AAC` initializes the two row-state buffers, constructs selection
+panels, loads two image buffers and saves the setup pointer. Its original
+span is 255 words / 1020 bytes at ROM 0xEBDBC, with a 168-byte frame.
+The source baseline is merged revision `8563b92e`; these native experiments
+run on documentation revision `57fbd886` without changing tracked C.
+
+The setup has four 528-byte entry sets, four signed IDs at +0x84C, four
+12-byte names at +0x850 and two signed-halfword image-ID pairs at +0x880.
+The constructor copies six 88-byte `Fragment12SelectionEntry` records
+from each entry set. The initializer searches IDs 0 through 3 for the
+first missing ID and uses it as a fallback. For setup mode +0x848, it
+constructs up to four panels; an even slot whose following ID is below -1
+requests a six-entry limit. Otherwise it constructs panels 0 and 3 and
+requests a three- or six-entry limit from the rules word high bit at +0x40.
+The rule halfword at +0x38 becomes the constructor's timer argument.
+
+Scene strides are 3272 bytes for the two row-state records, 19816 bytes
+for each of four panels and 8200 bytes for each of two image buffers.
+The scene stores its setup at +0x14F30, has image buffers at +0x14F38,
+active flags at +0x18F48, finished at +0x18F58 and activated at +0x18F5C.
+The loader's inspected signature is `u8 *func_8004E0F0(u8 *, s32, s32)`;
+the existing panel constructor's argument 11 is an integer image handle.
+These contracts are preserved in every valid comparison candidate.
+
+The retained candidate is `fragment12-scene-initializer-texture-layout8`,
+candidate 0. It has the exact 1020-byte extent, 168-byte frame and measured
+homes: setting Mmt -20, flag +0x890 Mmt -24, draw ID Mmt -36 and image-loop
+byte offset Mmt -60. These become 148(sp), 144(sp), 132(sp) and 108(sp).
+No local or padding was added to produce those homes: existing declarations
+were reordered. Separate search variables avoid carrying search lifetimes
+into the panel loop. A separate single-mode entry count restores the main
+loop index/predicate registers; initializing the input cursor before the
+active cursor restores their saved-register assignments. Record-member
+addresses reproduce the base/index operand order. A direct byte-offset
+image loop avoids caching the first image's address across the later call.
+
+This remains unaccepted. Direct comparison of complete-module owner bytes
+finds 29 differing instruction words, including mode-branch scheduling,
+loop-initializer ordering and single-mode saved-register choices. The first
+50 words, all 94 words from owner offset 0xEC through 0x264, and the final
+18 words are byte-identical to the matching module object. An aligned
+similarity metric must not be substituted for that positional word count.
+
+Four fresh known/candidate normal/+20-leading-blank controls reproduce
+complete-module allocated bytes, defined function extents and semantic
+relocations against each respective reference. Relative to the matching
+module, every byte outside this owner is equal, allocated section layout
+is equal, all defined function extents are equal and semantic relocations
+are equal. Earlier six stock-pass controls establish that moving only the
+setting declarations changes their homes but leaves UOPT's 44-byte local
+reservation unchanged; positioning the live counter correctly raises that
+reservation to the target 60 bytes. Captures identify this owner as procedure
+76 in this source snapshot; rediscover the ordinal after source changes.
+
+The canonical ledger contains 135 comparison rejections and seven generator
+compile failures. Two stale source-slice failures in the initial wide m2c
+variants were superseded by the direct reconstruction. Five member-name
+rewrite failures were repaired and the corrected candidates also rejected.
+These failures are generator evidence, not owner mismatch evidence. Integer
+handle spellings, bounded local widths and typed parameter/rules layouts
+are byte-inert on the retained source. For/do search spellings converge;
+ordinary structured search and a ternary fallback improve the earlier raw
+m2c graph. Fully indexed image loops recover opcode shape but enlarge the
+frame to 200 bytes, so the 168-byte byte-offset loop remains the control.
+
+Next: follow the single-mode generated image cursor versus bound allocation
+and the mode-branch scheduling in the captured stock passes. Test post-test
+update placement and initializer ordering before replaying type or address
+families. Preserve the four fixed homes and the typed main-loop addresses.
+No candidate reached a ROM gate or was installed. C, linker layout, coverage
+and the pending fragment 79 notes remain unchanged.
