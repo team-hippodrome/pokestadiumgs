@@ -1570,3 +1570,5 @@ func_81404E68 = Fragment12_HandleSelectionInput;
 func_81403304 = Fragment12_AssignActiveRowsToSlots;
 
 func_81406700 = Fragment12_DrawSelectionPanels;
+
+func_814063A0 = Fragment12_DrawImageAndLabelPanels;

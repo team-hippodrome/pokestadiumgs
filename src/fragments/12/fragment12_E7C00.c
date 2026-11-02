@@ -1379,7 +1379,54 @@ void func_814057CC(s32 arg0, s32 arg1, u8 *arg2, u8 *arg3) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81405CC4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_814063A0.s")
+extern void Fragment11_DrawThickPanelFrame(s32, s32, s32, s32);
+extern void func_81607B1C(s32, s32, s32, s32, f32, u8 *, u8 *);
+extern void func_816073A0(void *);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern u8 D_814078B0[];
+// Draw the animated image and label panels in mode-dependent layer order.
+void Fragment12_DrawImageAndLabelPanels(void *state, void *manager) {
+    if (*(s32 *)((u8 *)state + 20) != 0) {
+        if ((*(s8 *)((u8 *)state + 9) < 2) && (func_81600DA8(manager, (u8 *)state + 1) != 0)) {
+            s16 image_before_label[4];
+            func_81404724(state, image_before_label);
+            Fragment11_DrawThickPanelFrame(image_before_label[0], image_before_label[1], image_before_label[2], image_before_label[3]);
+
+            func_81607B1C(image_before_label[0] + 8, image_before_label[1] + 8, image_before_label[2] - 19, image_before_label[3] - 19, 1.0f - (*(f32 *)state / 16), D_814078B0, D_814078B0);
+            func_816073A0(image_before_label);
+            gSPDisplayList(D_800D0510++, (u32)D_80094E38);
+            func_8004D19C(image_before_label[0] + 8, image_before_label[1] + 8, *(s32 *)((u8 *)state + 0x4D5C), 0, 0);
+            gSPDisplayList(D_800D0510++, (u32)D_80094F50);
+            func_81607408();
+        }
+        if (func_81600DA8(manager, (u8 *)state + 2) != 0) {
+            s16 label_rect[4];
+            f32 alpha;
+            alpha = 1.0f - (*(f32 *)state / 16);
+            func_814047C0(state, label_rect);
+            Fragment11_DrawThickPanelFrame(label_rect[0], label_rect[1], label_rect[2], label_rect[3]);
+            func_81607B1C(label_rect[0] + 8, label_rect[1] + 8, label_rect[2] - 19, label_rect[3] - 19, alpha, D_814078B0, D_814078B0 + 3);
+            if (alpha < 0.1f) {
+                func_800498C4();
+                func_800496A4(8, 1);
+                func_800495F8(label_rect[2] / 2 + label_rect[0], label_rect[1] + 14, 3, (const char *)state + 0x4D50);
+                func_800499EC();
+            }
+        }
+        if ((*(s8 *)((u8 *)state + 9) >= 2) && (func_81600DA8(manager, (u8 *)state + 1) != 0)) {
+            s16 image_after_label[4];
+            func_81404724(state, image_after_label);
+            Fragment11_DrawThickPanelFrame(image_after_label[0], image_after_label[1], image_after_label[2], image_after_label[3]);
+
+            func_81607B1C(image_after_label[0] + 8, image_after_label[1] + 8, image_after_label[2] - 19, image_after_label[3] - 19, 1.0f - (*(f32 *)state / 16), D_814078B0, D_814078B0);
+            func_816073A0(image_after_label);
+            gSPDisplayList(D_800D0510++, (u32)D_80094E38);
+            func_8004D19C(image_after_label[0] + 8, image_after_label[1] + 8, *(s32 *)((u8 *)state + 0x4D5C), 0, 0);
+            gSPDisplayList(D_800D0510++, (u32)D_80094F50);
+            func_81607408();
+        }
+    }
+}
 
 typedef struct Fragment12SelectionPayloads {
     /* 0x0000 */ u8 header[0x40];
@@ -1388,7 +1435,6 @@ typedef struct Fragment12SelectionPayloads {
 } Fragment12SelectionPayloads;
 extern void func_81604944(s32, s32, s32, s32, s32 *, s32 *);
 extern void func_81405CC4(void *, s32, s32);
-extern void func_814063A0(void *, void *);
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
 extern u8 D_814078B8[];
 extern void Fragment12_GetInterpolatedPanelRect(void *state, s16 *rect, s32 remap_mode);
@@ -1422,7 +1468,7 @@ void Fragment12_DrawSelectionPanels(u8 *state, void *manager) {
             func_81404470(state + 0x24, manager);
         }
         if ((*(s8 *)(state + 9)) >= 2) {
-            func_814063A0(state, manager);
+            Fragment12_DrawImageAndLabelPanels(state, manager);
         }
         if (func_81600DA8(manager, state) != 0) {
             Fragment12_GetInterpolatedPanelRect(state, fourth, 0);
@@ -1436,7 +1482,7 @@ void Fragment12_DrawSelectionPanels(u8 *state, void *manager) {
             }
         }
         if ((*(s8 *)(state + 9)) < 2) {
-            func_814063A0(state, manager);
+            Fragment12_DrawImageAndLabelPanels(state, manager);
         }
         if (((*(s8 *)(state + 9)) < 2) || ((*(s32 *)(state + 20)) == 0)) {
             func_81404470(state + 0x24, manager);

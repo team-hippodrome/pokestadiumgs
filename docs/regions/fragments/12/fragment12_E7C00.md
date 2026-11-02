@@ -237,3 +237,261 @@ current for-loop reconstruction, then compare complete loop/float shapes.
 Use the verified slot layout and actual `func_81401178`/`func_814011B4`
 contracts; do not introduce padding or volatile fields. The minimal-context
 m2c draft and original assembly are in `fragment12-row-render-preparation`.
+
+### 2026-11-02: dispatcher source/lifetime controls — requeue
+
+After PR #2159, `func_81405514` remains assembly. Three eight-candidate
+families tested the shared switch-result temporary with the real controller
+layout, controller-address assignment before the CPU guard, and a typed
+state-field view. The shared-result family reaches 696 bytes but changes the
+frame to 96 and the switch joins; the other two families still emit 692 bytes
+versus retail's 696. They do not improve the earlier optional-pointer leader.
+The rejected bodies and companion declaration transactions remain private.
+A companion preflight failure on a prototype-removal transaction was corrected
+before compilation and is not a source-hypothesis result.
+
+Unchanged stock IDO 7.1 pass captures compare the direct and optional-pointer
+forms against fresh reference objects, each with normal/+20 whole-module
+controls. In the direct form, UOPT passes the global address and scaled index
+straight into the halfword load (`Ulda`, `Uixa`, `Uilod`); the local controller
+pointer has no surviving register value. The optional form emits a pointer
+store/load in register 2 but retains the extra initialization and null branch.
+Native UOPT debug-6 listings preserve the captured optimized Ucode and symbol
+outputs byte-for-byte; the platform's later `wrapper_ecvt` abort limits the
+listing, rather than invalidating those already-compared outputs. These are
+source/lifetime measurements, not evidence that the retail shape is
+unreachable. Private captures are `fragment12-panel-update-stock-passes` and
+`fragment12-panel-update-uopt-graphs`.
+
+Next action: investigate the genuine pointer-return helper's inlining and
+conditional lifetime, using the direct/optional optimized inputs as controls.
+A normal helper call was already measured to emit a call; do not repeat it or
+add a null check merely to reserve a pointer register. Preserve the actual
+controller and callback contracts, and keep the full ROM gate mandatory.
+
+### 2026-11-02: history renderer loop/lifetime controls — requeue
+
+`func_81403400` remains assembly. Five eight-candidate families tested consumed
+next-age/sample-offset carriers, independent variables for the two drawing
+phases, a distinct consumed age increment, the typed draft's control-flow
+graph, and float-value lifetimes. None passed the object probe. Candidate
+replay preflight was resolved before the phase-variable family compiled and
+does not count as an attempted source hypothesis.
+
+The original indexed body remains the strongest normalized leader (0.91,
+800 bytes, frame 176 versus retail's 784 bytes/frame 184). A byte-offset
+carrier can produce frame 184 but still has normalized 0.8636 and different
+allocation/loop structure. The draft control-flow forms produce 792–800 bytes
+and frame 216; splitting more phase variables grows the frame to 192–208.
+Sharing the consumed float calculation variable reaches normalized 0.895 /
+raw 0.38, 800 bytes, frame 168. Matching a frame alone does not close the
+function. Integer and float divisors remain distinct measured cells.
+
+Fresh stock pass captures of the indexed body and shared-factor candidate 4
+pass normal/+20 whole-module controls. Their frontend local reservations
+are 60 and 68 bytes; UOPT produces an 80-byte local reservation in both, and
+both final functions have frame 176 with the same saved-register set. Their
+register assignments and instruction order still differ. Candidate 6, which
+also inlines the base-Y conversion, is the separate frame-168 result. These
+measurements separate frontend storage counts from the final optimized frame.
+The initial diagnostic capture lacked the runner-synthesized display-list
+pointer declaration; its corrected capture uses that real declaration and
+preserves the tracked source. Captures/decoded rows and frame diagnostics are
+in `fragment12-row-history-stock-passes-v2`.
+
+Next action: compare the optimized loop/float webs and actual spill homes of
+the frame-184 byte-offset body with this controlled 80-byte-reservation pair.
+The source formal, slot/row layouts and drawing helper contracts are verified;
+keep them fixed. Do not add unused storage to obtain the 184-byte frame.
+Private manifests/results use `fragment12-row-history-carriers8`,
+`fragment12-row-phase-webs8-v2`, `fragment12-row-next-value8`,
+`fragment12-row-draft-graph8` and `fragment12-row-float-lifetimes8`.
+
+### 2026-11-02: history renderer stack-home residual — requeue
+
+`func_81403400` remains assembly. The strongest canonical candidate is
+`fragment12-row-history-steps8` candidate 4: 196 words / 784 bytes, frame 184,
+normalized similarity 1.0 and raw object similarity 0.9796. At owner offsets
+0x168, 0x184 and 0x298 it stores/loads the next history age at `sp + 100`;
+retail uses `sp + 112`. The fourth raw word difference is the float literal's
+relocation addend. Link-shape and full-ROM acceptance have not been reached.
+No candidate from this box is installed.
+
+The key source mechanism is to read sample values directly from the row
+storage. A named float-position local becomes a saved float register across
+the texture-selection call and delays the integer Y conversion; direct
+sample reads produce retail's integer-Y lifetime and float register sequence.
+Use separate scoped slot/history Y locals, inline the current-sample read,
+and keep the ordinary `for (age = 0; age < 128; age++)` loop. The byte-offset
+history traversal needs its counter initialized before the row pointer, and
+its row-pointer step before the counter step. Those changes close the
+register cycle and scheduling differences that a single aggregate score
+obscures. The row/state-array cells in `fragment12-row-direct-samples8`
+retain an unread sample cursor and are diagnostic-only; later candidates
+remove it.
+
+Fresh unchanged-stock pass captures in `fragment12-row-stack-only-stock`
+reproduce this canonical candidate's complete allocated module in normal/+20
+controls. The frontend reserves 72 local bytes; UOPT reserves 88 and assigns
+the next-age temporary memory offset -84, giving `184 - 84 = 100`. The sample
+offset uses -88 and already lands at retail's `sp + 96`. Moving the source
+`age` declaration through eight positions does not move the generated slot.
+The remaining problem is optimizer-generated temporary storage, rather than
+the scalar's source declaration position.
+
+Two single-worker permuter boxes are calibrated against canonical objects
+and an AST-regenerated self-target scoring zero; SDK display-list blocks are
+preserved. The 60-second restricted box stays at score 136, and the improved
+90-second expression/lifetime box stays at score 36. Their sources and logs
+are private under `fragment12-row-indexed-history8-observed-permute.json`
+and `fragment12-row-history-steps8-observed-permute.json`. Source variants
+cover slot/history scopes, scalar lifetimes, history step order, explicit
+next-age variables, graphics cursors, bounded counters, shared phase
+variables and natural indexed arrays. Natural array traversal grows the body
+to 800 bytes; explicit next-age forms shorten it to 776. Keep the stack-only
+leader as the control instead of restarting from those weaker bodies.
+
+Next action: trace creation of UOPT's -84/-88 temporaries and the reservation
+between the 72-byte frontend area and those homes, using the captured
+frontend and optimized inputs. Then test a source lifetime or induction
+change that moves the next-age home while preserving the 184-byte frame. No padding, unused local, fixed register or
+object rewrite is an admissible resolution. Any text hit still requires the
+canonical link/host/retail-ROM gates and post-cleanup module controls.
+
+### 2026-11-02: compiler/helper controls for the remaining owners
+
+Stock IDO 5.3 and 7.1 comparisons each include normal/+20 controls and six
+accepted fragment-12 witnesses. Neither the history body nor the dispatcher
+matches under 5.3, and the complete known module differs. Explicit `-g0`
+reproduces the production candidate; `-g3` changes the known module and does
+not match the candidate. Production compiler/flags remain unchanged. Private
+receipts are `fragment12-rows-panels-stock-frontends` and
+`fragment12-row-debug-profile`.
+
+Marking the existing `func_814049CC` definition `__inline` fails canonical
+asm processing in both normal/+20 controls with `Wrongly computed size for
+section .text (diff 2680)`; ordinary controls pass. This is a terminal result
+for that inline-qualification transaction, not proof that the dispatcher is
+unreachable from C. Separately, appending `return ret` to `func_81404700`
+produces 40 bytes instead of 36 and fails complete-module equality. Neither
+helper experiment is installed. The dispatcher remains a requeue at its
+previous direct/optional-controller diagnostics.
+
+### Native spill observer and source-shape follow-up (2026-11-02)
+
+`func_81403400` remains `requeue`; `row-history-steps8` candidate 4 remains
+its strongest source. A native UOPT observer reproduced stock optimized
+Ucode and UGEN symbol-table input byte for byte with tracing disabled and
+enabled, for both normal and 20-leading-blank source controls. It changes
+no compiler decisions. The measured frontend reservation is 72 bytes.
+Eight PRE spill assignments use seven unique slots: direction conversion
+at -76; first-pass address and current-index load sharing -80; next age
+at -84; sample byte offset at -88; then three unused-in-emitted-code
+address/load homes at -92, -96 and -100. Only -84 and -88 reach emitted
+Ucode; final frame size remains 184. Retail needs the next-age home at
+-72 while retaining the sample-offset home at -88. Declaration placement
+alone does not explain the required separation.
+
+Fresh canonical native batches retained statistics and passed normal/+20
+whole-module controls. Moving the distance filter before Y computation
+changes scheduling and allocation. Grouping the four drawing flags/signs
+as word-sized struct fields preserves the three-offset residual; byte-sized
+fields preserve the instruction sequence but shrink the frame to 176.
+Early current-sample address/index locals and explicit next-age locals
+also reject. None was installed. The next source hypothesis must account
+for PRE spill ordering rather than merely moving scalar declarations.
+Private evidence: `scratch/fragment12-row-spill-observation-v2/receipt.json`
+and the `row-local-state8`, `row-current-address8`, `row-next-age8` results.
+
+`func_81402D08` preliminary assembly inspection exposes a separate source
+reconstruction issue. `$s4` is initialized at owner offset 0x9C, set on a
+boundary collision at 0x15C/0x184 and updated by a collision-pair OR at
+0x24C. Its only reads feed that OR; it has no output store, branch use or
+return transfer. The epilogue restores the caller's `$s4`. The m2c draft
+omits this discarded mask. No candidate was submitted for this owner;
+reconstructing its useful row/slot physics alone would omit retail words.
+
+### Inset-panel renderer: pointer homes resolved, setup order remains
+
+`func_814063A0` is now a measured `requeue` at 864 bytes and a 104-byte
+frame. It draws the square image panel before or after the rectangular
+label panel according to the signed mode byte at +9, with manager checks
+for channels state+1/state+2. The label comes from the string copied to
++0x4D50 by `func_81404A08`; the image handle is stored at +0x4D5C by that
+initializer. Actual contracts are `func_8004D19C(s32,s32,s32,s32,s32)`
+(`src/4CC20.c`) and `func_816073A0(void *)` (fragment 11). Pointer-typed
+texture prototypes found in other callers are insufficient evidence for
+changing this integer-handle contract.
+
+Separate scoped `s16[4]` rectangles and `/ 16` reproduce the rectangle
+homes and floating instructions. Writing width/2 before X in the centered
+label expression restores the temporary-register order. Plain local
+setup/restore pointer scalars rematerialize their addresses, yielding 848
+rather than 864 bytes. A two-pointer local array assigned through separate
+statements retains the required stores and loads. Braced initialization
+adds a constant-data copy and fails section layout; do not adopt it.
+
+The best current source uses separate setup/restore `Gfx *` command locals,
+both consumed by ordinary display-list writes. An array ordered restore,
+setup, assigned setup first, reproduces retail's pointer homes and address
+registers. It introduces no padding, unused fields or machine-code rewrite.
+`scratch/fragment12-inset-separate-commands8.json` candidate 1 (also 5)
+retains all 216 instructions. Its real residual is six instruction words
+in the setup-call prefix (owner offsets 0x24C, 0x250, 0x254, 0x25C, 0x260,
+0x264): the argument copy occurs after pointer initialization instead of
+in the preceding branch delay slot. The 0x1C8 raw float-relocation spelling
+resolves to the same `.rodata + 576` target on both sides. The reported scalar raw score is not a count
+of differing object words.
+
+Before that final source refinement, stock CFE/UOPT/UGEN/AS1 inputs were
+captured for known assembly, a shared command cursor and a first-command
+SDK macro, each normal/+20. All six complete-module identity controls
+passed. Both partial forms reserve 52 frontend bytes and 56 optimized
+bytes. The cursor's pointer array occupies Mmt -52/-48; the SDK form's
+occupies -48/-44. The separate-command source composes those independently
+observed pointer-home and register-web mechanisms. Its stock pass boundaries also reproduce the canonical object
+under four known/candidate normal/+20 complete-module controls, with the
+same 52/56-byte frontend/optimized reservations. Semantic relocations
+outside the reordered prefix are equal; inside it, the relocation target
+multiset is equal. Next: establish the owning scheduler/IR ordering before
+another source family. No candidate was installed or ROM gate run for these
+rejections; source, linker layout and coverage remain unchanged.
+
+## 2026-11-02: image and label panel renderer accepted
+
+`Fragment12_DrawImageAndLabelPanels` (`func_814063A0`, 216 words / 864
+bytes, ROM 0xEB6B0) replaces its assembly owner through the canonical
+native runner and a host-syntax/full-retail-ROM gate on `5d468de0`.
+It draws the square image panel before the label for modes below two,
+and after the label for the remaining modes. The existing interpolators
+supply the rectangles; +0x4D50 holds the copied label and +0x4D5C the
+integer texture handle supplied by `func_81404A08`. A compatibility alias
+preserves the old address-keyed name for remaining assembly callers.
+
+The previous scheduling requeue is resolved. Explicit inline `(u32)`
+casts on the four display-list addresses retain the optimizer's shared
+address-word expressions. Unlike named address scalars, these casts add
+no frontend local homes. This reproduces the argument-copy placement,
+address setup, spill offsets and 104-byte frame using ordinary SDK
+`gSPDisplayList` calls. There are no cached-pointer arrays, manual command
+writes, added helpers, unused locals, artificial padding or output rewrite.
+`u32` is the SDK's unsigned-long type; the DMA macro's final address cast
+uses unsigned int. The measured spellings are not interchangeable here.
+
+Normal and +20-leading-blank whole-module allocated-byte, function-extent
+and semantic-relocation controls pass after naming, variable cleanup and
+removing duplicate declarations. The token-identical formatting probes
+also established that statement-line ties can change address scheduling
+under this compiler profile; they were diagnostic only and supplied no
+accepted source. Nested guards, early returns and pointer-typed variants
+did not resolve the residual. Coverage and private tooling are unchanged.
+
+Fresh validation on integrated source revision `a2792d92`, rebased onto
+master `368517eb`, passes native `make extract DISASSEMBLE_ALL=1` followed
+by `make -j1 COMPARE=1 RUN_CC_CHECK=1`. The complete retail ROM has MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All 216 final instruction words equal
+the saved original assembly at ROM 0xEB6B0, and the link map preserves
+VRAM 0x814063A0 and the 864-byte function size. Final integrated normal/+20
+whole-module controls pass as well. Only this verification note follows
+the sealed source revision; coverage and the pending fragment 79 notes
+are preserved.
