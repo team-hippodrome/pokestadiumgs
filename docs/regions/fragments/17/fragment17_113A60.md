@@ -730,3 +730,45 @@ controls passed. The standalone target retains the actual in-file getter
 is an invalid oracle and the earlier such fixture is excluded from owner
 exhaustion evidence. Next: observe parameter homing and as1 ready-set/source
 ownership for those three words before repeating a spelling grid.
+
+## 2026-11-03 — three transition helpers: ordinary C matches
+
+On base `519365e13d1690c66ca333d5d3c41addc0e93e29`, `func_82204744`
+(60 bytes), `func_8220AC38` (44 bytes) and `func_8220AC64` (144 bytes)
+compile to their retail instructions with their three `COALESCE_AT_LUI`
+directives removed. Each helper writes a state halfword and clears the next
+halfword. The first helper changes state zero to one and plays sound 62;
+the second changes state zero to one and reports success; the third changes
+state three to five, retains its four-byte copy, scale assignments, selection
+reset and sound 57, and reports success.
+
+The two real four-byte `F17TransitionState` objects occupy `0x822105E8` and
+`0x822106B2`. A local pointer to each owned record lets stock IDO share its
+address load naturally. Existing guard reads through legacy array views
+remain unchanged. The second halfword's meaning beyond being cleared is
+unresolved and its field remains `unk_02`.
+
+The fragment loader in `src/2CA0.c` applies relocation metadata and clears
+runtime storage from `0x8220E2D0` to `0x82210C70`. Both records lie inside
+that range. `linker_scripts/us/datamig_bss.ld` uses the existing NOLOAD
+placement mechanism to consume this file's data and BSS input sections at
+those addresses. Each input section contains the four-byte object and normal
+compiler alignment, totaling 16 bytes; the data initializer is entirely zero.
+Loaded metadata, fragment header sizes and runtime allocation remain exact.
+//@src/2CA0.c
+//@linker_scripts/us/datamig_bss.ld
+
+Validation compiles the complete translation unit normally and with 20 leading
+blank lines, checks allocated bytes/layout and semantic relocations, and runs
+the normal host syntax check. The installed source passes the native stock
+IDO 7.1 build with `make -j1 COMPARE=1 RUN_CC_CHECK=1`. All function addresses
+and sizes and all legacy fragment 17 runtime addresses match the original
+linked ELF. Full retail ROM comparison passes with MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d` and SHA-256
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage and compiler/tooling sources are unchanged.
+
+After integration onto `d2961a7b` (PR #2183), the final source again passes
+both complete-module controls, host syntax, the normal full-ROM gate, and
+fragment 17 function-extent and legacy-runtime-address checks. The ROM hashes
+remain identical to those above.

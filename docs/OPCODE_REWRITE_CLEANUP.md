@@ -72,7 +72,14 @@ or reverting a function to assembly does not establish a proper C match.
   statics and legacy addresses remain exact. See
   [the fragment 43 evidence](regions/fragments/43/fragment43_1E5A10.md).
 
-This leaves 774 directive occurrences and 58 affected functions, including
+- `func_82204744`, `func_8220AC38` and `func_8220AC64`: own their two
+  transition-control records as C objects at the original loader-cleared
+  runtime addresses. Stock IDO emits their 248 retail bytes without three
+  `COALESCE_AT_LUI` directives. Complete-module controls, host syntax and the
+  full retail ROM gate pass; all function extents and legacy runtime addresses
+  are preserved. See [the fragment 17 evidence](regions/fragments/17/fragment17_113A60.md).
+
+This leaves 771 directive occurrences and 55 affected functions, including
 the function that also requires the `.rodata` repair. Coverage files and
 compiler/tooling sources are unchanged.
 
@@ -92,11 +99,11 @@ table are baseline function directives, excluding the separate section word.
 | `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Pending |
 | `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |
 | `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |
-| `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
+| `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
 | `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Pending |
 | `func_822068E0` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 17 | Pending |
-| `func_8220AC38` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
-| `func_8220AC64` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Pending |
+| `func_8220AC38` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
+| `func_8220AC64` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
 | `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Pending |
 | `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Pending |
 | `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Replaced with C |

@@ -76,4 +76,17 @@ SECTIONS
     {
         build/src/fragments/83/fragment83_code.o(.bss)
     }
+    /* Transition-control halfwords cleared by the fragment loader. The two
+     * real records use this source's data and bss input sections so each can
+     * retain its original address. Only zero initialization and compiler
+     * alignment belong here; there are no loaded initializer bytes. */
+    .fragment17_state_106B2_data 0x822106B2 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/17/fragment17_113A60.o(.data)
+    }
+
+    .fragment17_state_105E8_bss 0x822105E8 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/17/fragment17_113A60.o(.bss)
+    }
 }
