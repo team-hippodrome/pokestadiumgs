@@ -196,7 +196,15 @@ or reverting a function to assembly does not establish a proper C match.
   host syntax, private links and the final normal full-ROM gate pass. See
   [the dialog-renderer evidence](regions/fragments/57/fragment57_code.md).
 
-This leaves 569 directive occurrences and 34 affected functions. Coverage files and
+- `func_82E00868`: own the two six-word bounds records and the two extra
+  dimensions at their existing loader-cleared addresses. Stock IDO emits all
+  1,524 retail bytes with ordinary byte-pair expressions, removing a hex
+  replacement and 53 relocation patches. Native module controls, sizeof
+  assertions, host syntax, private ROM links and the final normal full-ROM
+  gate pass. See
+  [the event-bounds evidence](regions/fragments/66/fragment66_code.md).
+
+This leaves 515 directive occurrences and 33 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -263,7 +271,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_87F02104` | [src/fragments/64/fragment64_324A10.c](../src/fragments/64/fragment64_324A10.c) | 14 | Pending |
 | `func_87F025B8` | [src/fragments/64/fragment64_324FB0.c](../src/fragments/64/fragment64_324FB0.c) | 4 | Replaced with C |
 | `func_87F06240` | [src/fragments/64/fragment64_328E40.c](../src/fragments/64/fragment64_328E40.c) | 1 | Pending |
-| `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Pending |
+| `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Replaced with C |
 | `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Pending |
 | `func_82901AE0` | [src/fragments/67/fragment67_33D6A0.c](../src/fragments/67/fragment67_33D6A0.c) | 17 | Pending |
 | `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |

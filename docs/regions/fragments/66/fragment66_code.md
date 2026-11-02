@@ -221,3 +221,68 @@ siblings, including the unchanged1256-byte binding setup. Both new linked
 retail spans and the entire moved rodata interval match. Normal accepted
 probe-stat provenance and git diff --check pass. Overall decompilation is
 unfinished; the remaining owners are not counted as accepted.
+
+
+## 2026-11-03 — event bounds callback: real records, no text replacement
+
+`func_82E00868` now matches all 381 instructions / 1,524 retail bytes from
+ordinary C. Removed its hex replacement, all 53 relocation-target patches,
+the obsolete fake/process comments and two unused locals. The remaining
+`func_82E01A00` patches are not removed by this acceptance.
+
+The callback's selector chooses two contiguous six-word bounds records at
+`0x82E05938` and `0x82E05950`: left, right, top, bottom, width and height.
+The original `func_82E00E5C` and `func_82E0393C` consume the second record
+through its base, including offsets `0x10` and `0x14`; the former also writes
+its top and bottom through offsets `8` and `0xC`. Two additional dimensions
+occupy `0x82E06150` and `0x82E06154`. These are real runtime objects rather
+than independent scalar globals requiring instruction substitution.
+
+Owning the two bounds records restores retail's shared address loads and
+reduces native output from 1,552 to 1,524 bytes. At that point five byte-pair
+expressions still had different register identities. Changing the operand
+order for the bottom-bound expressions and the unscaled first extra
+dimension closes those differences. Reversing the scaled top-bound
+expressions is worse. Keep the signed numerator/denominator arithmetic and
+its existing truncation order; they are not interchangeable formulas.
+
+Native sizeof assertions prove a 24-byte bounds record, 48 bytes for both
+records and 8 bytes for the dimensions. Compiler input footprints are 48
+bytes of BSS and 16 bytes of explicitly initialized data, including native
+alignment. The existing NOLOAD mechanism pins these at `0x82E05938` and
+`0x82E06150`, with size assertions. The original fragment header has relocation
+offset `0x5650`, loaded extent `0x6510` and RAM extent `0x8AB0`. The loader
+consumes the relocation metadata and clears both runtime ranges before use;
+the words initially loaded there are metadata, not preserved initial values.
+No global-symbol override, invented storage gap or padding object is added.
+
+Known/candidate native compilations, normal/+20 controls, the final cleanup
+controls, native sizeof assertions and host syntax all pass. Every other
+function's text, relocation endpoints and extent stay unchanged. Separate
+baseline/candidate complete ROM links and the final normal native gate pass:
+
+```sh
+make -j1 COMPARE=1 RUN_CC_CHECK=1 PYTHON=<native-venv-python>
+```
+
+The final complete ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All function extents, legacy addresses and previous object addresses/sizes
+are unchanged. All actual C object types remain intact. Five unused
+zero-size legacy labels (`D_82E05938`, `D_82E0593C`, `D_82E05940`,
+`D_82E05944`, `D_82E0595C`) lose inferred OBJECT metadata while keeping
+their original addresses and size zero. Coverage and compiler/tooling
+sources are unchanged.
+
+
+`func_82E01A00` remains **requeue**, not accepted: 32 new native probes test
+owned bounds/dimensions, prepared bounds and view pointers, both byte-pair
+orders, typed canonical struct/array views, and existing scalar subobject
+views. Direct owned records shrink it from 744 to 728 bytes; preparing both
+pointers restores 744 bytes but changes address materialization and scheduling.
+Typed canonical views do not close it. No second-callback source is installed.
+Next action: capture normal/+20 stock UOPT and UGEN passes for the 744-byte
+prepared-pointer control versus the original body. Identify why the original
+materializes the bounds base before its first store while keeping neighboring
+field stores absolute; retain the first callback's accepted layout. Do not
+restore the old integer-address casts merely to influence allocation.
