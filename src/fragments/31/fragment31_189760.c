@@ -264,22 +264,23 @@ extern u8 D_88234762;
 extern u8 D_88234763;
 extern u8 D_88234764;
 extern u16 D_88234758;
-#pragma COALESCE_AT_LUI(func_8821B3E0, D_88234762, D_88234763, D_88234764, D_88234761)
-void func_8821B3E0(void) {
-    unk_D_88234758 *s = (unk_D_88234758 *)&D_88234758;
-    s32 i;
+// Nonzero bytes collected by func_88224688 from its four input slots.
+//@src/fragments/31/fragment31_197640.c
+static u8 sCollectedValues[4];
 
-    s->unk_00 = 0;
-    s->unk_02 = 1;
-    s->unk_03 = 100;
-    for (i = 0; i < 2; i++) {
-        ((unk_D_88234758 *)&D_88234758)->unk_07[i] = -1; // FAKE: re-forms the base address
+void func_8821B3E0(void) {
+    unk_D_88234758 *state = (unk_D_88234758 *)&D_88234758;
+    s32 index;
+
+    state->unk_00 = 0;
+    state->unk_02 = 1;
+    state->unk_03 = 100;
+    for (index = 0; index < 2; index++) {
+        state->unk_07[index] = -1;
     }
-    i = 0; // FAKE
-    D_88234762 = 0;
-    D_88234763 = i;
-    D_88234764 = 0;
-    D_88234761 = 0;
+    for (index = 0; index < 4; index++) {
+        sCollectedValues[index] = 0;
+    }
 }
 
 extern void func_8821B3E0(void);
