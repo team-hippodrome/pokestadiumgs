@@ -136,4 +136,14 @@ SECTIONS
     {
         build/src/fragments/21/fragment21_147D10.o(.bss)
     }
+    /* Complete fragment 74 runtime state: 24-byte context/state prefix and
+     * 8200-byte image view. This is exactly the original loader/initializer
+     * clear range, 0x8F600BF0-0x8F602C10; its relocation metadata stays loaded. */
+    .fragment74_runtime_state_bss 0x8F600BF0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/74/fragment74_code.o(.bss)
+    }
 }
+
+ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
+       "fragment74 runtime state must fit its original cleared RAM block");
