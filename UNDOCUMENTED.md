@@ -3,11 +3,11 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **62 / 9,410 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **62 / 9,412 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 6,724 (3.7%)** (6,476 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Variables with a real name: **248 / 6,725 (3.7%)** (6,477 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,114**
-- Functions with generic `arg0`, `arg1`, ... parameters: **5,648 / 9,410 (60.0%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **5,648 / 9,412 (60.0%)**
 - Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,121 / 2,006**
 - Struct fields with a real name: **5,734 / 9,239 (62.1%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **11,340**
@@ -97,8 +97,8 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/47/fragment47_24E0A0.c` | 39 | 39 | 66 | 11 | 2 | 29 | 65 |
 | `src/fragments/57/fragment57_code.c` | 18 | 18 | 74 | 61 | 4 | 9 | 45 |
 | `src/fragments/79/fragment79_36F8B0.c` | 33 | 33 | 59 | 9 | 5 | 23 | 80 |
+| `src/6E850.c` | 53 | 53 | 53 | 34 | 3 | 37 | 26 |
 | `src/fragments/22/fragment22_14B090.c` | 35 | 35 | 59 | 23 | 7 | 18 | 64 |
-| `src/6E850.c` | 52 | 52 | 53 | 33 | 3 | 37 | 26 |
 | `src/fragments/14/fragment14_1077C0.c` | 28 | 26 | 56 | 19 | 1 | 26 | 76 |
 | `src/fragments/77/fragment77_code.c` | 26 | 26 | 81 | 69 | 0 | 4 | 19 |
 | `src/fragments/48/fragment48_256020.c` | 49 | 47 | 49 | 12 | 1 | 48 | 40 |
@@ -116,8 +116,8 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/12/fragment12_E5330.c` | 25 | 25 | 71 | 64 | 6 | 10 | 3 |
 | `src/1A360.c` | 30 | 29 | 28 | 16 | 1 | 20 | 84 |
 | `src/fragments/14/fragment14_FD770.c` | 29 | 29 | 43 | 6 | 4 | 28 | 67 |
+| `src/fragments/9/fragment9_code.c` | 25 | 25 | 63 | 16 | 9 | 21 | 43 |
 | `src/fragments/44/fragment44_20F140.c` | 18 | 18 | 52 | 54 | 3 | 4 | 45 |
-| `src/fragments/9/fragment9_code.c` | 24 | 24 | 63 | 16 | 9 | 21 | 43 |
 | `src/fragments/25/fragment25_15A060.c` | 25 | 25 | 63 | 19 | 5 | 22 | 41 |
 | `src/fragments/8/fragment8_code.c` | 27 | 27 | 72 | 9 | 1 | 26 | 40 |
 | `src/fragments/84/fragment84_code.c` | 44 | 44 | 72 | 32 | 5 | 8 | 13 |
