@@ -189,7 +189,14 @@ or reverting a function to assembly does not establish a proper C match.
   full-ROM gate pass. See
   [the model-scale evidence](regions/fragments/54/fragment54_code.md).
 
-This leaves 570 directive occurrences and 35 affected functions. Coverage files and
+- `func_83302D8C`: own the producer-proven 48-byte dialog context and use
+  the formatter's actual 100-byte text buffer. Stock IDO emits all 784 retail
+  bytes, including the original 152-byte frame, without coalescing, unused
+  stack padding or false text-helper prototypes. Native module controls,
+  host syntax, private links and the final normal full-ROM gate pass. See
+  [the dialog-renderer evidence](regions/fragments/57/fragment57_code.md).
+
+This leaves 569 directive occurrences and 34 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -248,7 +255,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Pending |
 | `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Replaced with C |
 | `func_86600E00` | [src/fragments/54/fragment54_code.c](../src/fragments/54/fragment54_code.c) | 38 | Replaced with C |
-| `func_83302D8C` | [src/fragments/57/fragment57_code.c](../src/fragments/57/fragment57_code.c) | 1 | Pending |
+| `func_83302D8C` | [src/fragments/57/fragment57_code.c](../src/fragments/57/fragment57_code.c) | 1 | Replaced with C |
 | `func_83402B10` | [src/fragments/58/fragment58_code.c](../src/fragments/58/fragment58_code.c) | 6 | Pending |
 | `func_87E04114` | [src/fragments/63/fragment63_306150.c](../src/fragments/63/fragment63_306150.c) | 13 | Pending |
 | `func_87E07A2C` | [src/fragments/63/fragment63_308D70.c](../src/fragments/63/fragment63_308D70.c) | 2 | Pending |

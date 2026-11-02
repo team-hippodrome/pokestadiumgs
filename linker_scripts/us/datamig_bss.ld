@@ -167,6 +167,12 @@ SECTIONS
     {
         build/src/fragments/54/fragment54_code.o(.data)
     }
+    /* Dialog geometry, transition state, counters and fraction; the
+     * fragment loader clears this complete 48-byte runtime record. */
+    .fragment57_dialog_context_bss 0x8330AC08 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/57/fragment57_code.o(.bss)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
@@ -186,3 +192,6 @@ ASSERT(SIZEOF(.fragment24_state_12450_bss) == 32,
 
 ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
        "fragment54 player models must occupy their original runtime footprint");
+
+ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 48,
+       "fragment57 dialog context must retain its original 48-byte footprint");

@@ -83,3 +83,51 @@ retail keeping `x1C` in a local after the reset.
 `.data` must be split out and defined in C before the owner can land.
 fragment58's `func_8340135C` (`D_83403F18`) is the same function with the
 same blocker.
+
+
+## 2026-11-03 — dialog renderer: genuine context and text buffer
+
+`func_83302D8C` now matches all 784 retail bytes using ordinary C. Removed
+`COALESCE_AT_LUI`, the unused 22-word stack array and halfword, separate
+root/state pointer aliases, and the macro used only to accommodate the old
+patching tool. The two named format strings remain ordinary const arrays.
+
+`func_83306D0C` copies a complete 48-byte record to `D_8330AC08`.
+`func_83302088`, `func_83302180` and the original drawing helper
+`func_8330084C` establish its geometry, transition state, counters and
+floating-point fraction. Owning this complete context, rather than only its
+two state words, lets a single prepared context pointer reproduce retail's
+loads and adjacent stores naturally. Pair-only ownership and buffer-scope
+variants retained a larger frame; changing ownership was the useful lever.
+
+The renderer has a real `char text[100]`: `func_8004C8A0` forwards the capacity
+to the bounded formatter in `src/4CC20.c`. Shrinking it to fit a desired frame
+would be incorrect. Native output has the original 152-byte frame, text at
+`sp + 44`, and the live line coordinate at `sp + 144`. No dummy locals or
+artificial padding remain. Declarations of `func_8004989C`, `func_8004C874`
+and `func_8004C8A0` now agree with their actual definitions. Pointer values
+passed to `func_8004C54C` use explicit casts to its real word-slot interface.
+
+The existing NOLOAD placement mechanism pins the actual 48-byte context at
+`0x8330AC08`, with a linker size assertion. The fragment header's relocation
+offset `0xA240`, loaded extent `0xCBE0` and RAM extent `0xAD00` prove that the
+loader clears this runtime range after consuming relocation metadata.
+Loaded ROM bytes and all previous storage addresses remain unchanged.
+
+Normal and `+20` native object controls preserve the complete module;
+separate native sizeof assertions prove context size 48 and text size 100.
+Host syntax, baseline/candidate complete ROM links and fresh normal native
+Makefile gates before and after source cleanup all pass. Final command:
+
+```sh
+make -j1 COMPARE=1 RUN_CC_CHECK=1 PYTHON=<native-venv-python>
+```
+
+The final full ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d` and SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All function extents, legacy addresses and previous object addresses/sizes
+are unchanged. Seven unused zero-size scalar labels (`D_8330AC10`,
+`D_8330AC14`, `D_8330AC20`, `D_8330AC24`, `D_8330AC28`, `D_8330AC2C`,
+`D_8330AC30`) lose inferred OBJECT metadata when their declarations are
+removed; their addresses and size zero remain intact. All actual C object
+types remain OBJECT. Coverage and compiler/tooling sources are unchanged.
