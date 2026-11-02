@@ -999,3 +999,48 @@ still produces the same 28-byte result. All eight variants are one compiler
 outcome; no new storage or source is installed. The stock address-
 materialization investigation above remains the next action. Private family:
 `rewrite-cleanup-f79-pointer-clear8`, based on `4835fc02`.
+
+## 2026-11-03 — four snapshot pointer clear matched; requeue resolved
+
+The earlier `func_84136D84` requeues above are resolved. The real object is
+four pointer words at 0x84186160..0x84186170. `func_84136D40` selects a
+640-byte snapshot record into an indexed slot; `func_84134D80` and the other
+indexed writers read that slot before initializing/appending snapshot data.
+The loaded data blob contains exactly four zero words at ROM 0x3F59F0.
+
+The C-owned `sSnapshotPointers[4] = { 0 }` uses the existing fixed-address
+NOLOAD data-placement mechanism. The original blob supplies its identical
+loaded initializer; this table precedes the relocation area, so it is **not**
+loader-cleared BSS. No extra runtime storage or change to the fragment header
+is needed. A linker assertion enforces the 16-byte input section.
+
+A normal signed-index `do` loop clears all four slots. IDO unrolls it to the
+six retail instructions: one `lui $at`, three stores in increasing address
+order, `jr $ra`, and the fourth store in its delay slot. A `for` loop over
+the same zero-data array also emits six instructions but rotates the first
+store into that delay slot; BSS and pointer-loop controls produce different
+code. No manual unrolling, artificial branch, padding, forced register,
+volatile access, compiler change or opcode/relocation patch is used.
+
+Initial controls use `4835fc0238b5448fa736af8a081c7f0b066479e2`.
+Known/candidate normal and 20-leading-blank whole-module controls pass. All other text bytes/relocations and function
+extents agree; only the real 16-byte data owner and the clear function's
+relocation endpoints change. Host syntax passes. Both private links and the
+normal native `make -j1 COMPARE=1 RUN_CC_CHECK=1` pass with ROM MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d` and SHA256
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All legacy addresses and pre-existing C objects are unchanged. The initial
+control script incorrectly assumed this was loader-cleared memory; all four
+compiles and the host check had already passed when that header assertion
+failed. Reading the original header/blob corrected the classification, then
+the saved controls and both ROM links verified the actual loaded-zero case.
+Private receipts: `rewrite-cleanup-f79-loop-link` and
+`rewrite-cleanup-fifteenth-seal`. Coverage remains unchanged.
+
+After integration onto `9129556710d346d71a684c27279f79a607eb4d7f`,
+including the separate vertex-transform match, the normal native full-ROM
+gate passes again. The source/linker bytes and the complete owner module are
+unchanged from the accepted controls; all function extents and legacy
+addresses remain exact. Coverage changes in that base came from upstream
+automation; this cleanup changes no generated coverage file. Private final
+receipt: `rewrite-cleanup-fifteenth-integrated-seal`.

@@ -1109,13 +1109,17 @@ void func_84136D40(u8 arg0) {
 #ifdef VERSION_US
 extern u8 *D_84186164, *D_84186168, *D_8418616C;
 extern u8 * D_84186160[];
-#pragma COALESCE_AT_LUI(func_84136D84)
+// Snapshot destinations selected by func_84136D40 and read by the per-side writers.
+static u8 *sSnapshotPointers[4] = { 0 };
+
 void func_84136D84(void) {
-    extern u8 *D_84186160[];
-    D_84186160[0] = 0;
-    D_84186164 = 0;
-    D_84186168 = 0;
-    D_8418616C = 0;
+    s32 index;
+
+    index = 0;
+    do {
+        sSnapshotPointers[index] = 0;
+        index++;
+    } while (index < 4);
 }
 #endif
 
