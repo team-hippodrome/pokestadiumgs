@@ -105,3 +105,43 @@ address-keyed entry remains available as a linker alias. No replacement
 word patch, forced register, artificial storage, compiler flag change or
 new helper function is introduced. This cleans an existing C owner rather
 than increasing the new-owner count.
+
+## `func_8FB000D0`: load an editable name
+
+This owner matches as C: 40 instructions, 160 bytes, with its original
+24-byte frame. It reads the descriptor's first unsigned halfword through
+context offset 68. Value 34 selects the pointed record at context offset
+72, plus 52 bytes. Value 6 selects the signed row index at context offset
+56 in the existing 544-byte rows beginning at offset 76. Both paths copy
+12 bytes to destination offset 14, clear its signed halfword at offset 12,
+and return one. Other descriptor values return zero without copying.
+
+`func_8FB00170` prepares the destination geometry and propagates this
+helper's result. `func_8FB001C0` writes the edited name back to the same
+record/row locations, establishing the name-copy role. The existing
+`unk_func_8FB02108` and row declarations move before this definition so it
+can reuse `rows[].info`; their fields and all other C bodies are unchanged.
+The existing `_bcopy` prototype also moves before its new first caller,
+and the redundant old helper declaration is removed.
+//@src/fragments/9/fragment9_code.c
+
+The indexed row view closes the final address-addition operand mismatch
+from the byte-pointer candidate. It introduces no allocation, fake,
+padding, compiler flag, data-layout change, or instruction rewrite.
+
+Fresh verification targets master
+`7e2bc65068fe58bc4b16ca6dbcd668d1482eda44` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/9/fragment9_code.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled forced compilation and complete US ROM link
+report `build/pokestadiumgs-us.z64: OK`. Retail byte comparison and
+whitespace checks pass; both ROMs have MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All 13424 module text bytes and 240
+rodata bytes equal the assembly-backed baseline, including previous C.
+The owner independently matches ROM `0xD0550..0xD05F0` (end exclusive).
