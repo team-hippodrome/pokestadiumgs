@@ -46,7 +46,7 @@ extern void func_80026938(u16);
 extern void func_800355E4(s32);
 extern s32 func_800718B8(s32);
 extern u32 func_8006C714(void);
-extern void Game_SetState(s32);
+extern s32 Game_SetState(s32);
 
 
 
@@ -180,10 +180,10 @@ extern s32 Fragment_LoadAndCall(s32, void *, void *, u32, u32);
 extern u8 D_82000000;
 extern u8 fragment16_ROM_START;
 extern u8 fragment17_ROM_START;
-void func_800657B0(void) {
+s32 func_800657B0(void) {
     func_800354B4(1, 0, 0);
     func_800355E4(0x24);
-    Fragment_LoadAndCall(((u32)((s32)&D_82000000 & 0x0FF00000) >> 20) - 0x10,
+    return Fragment_LoadAndCall(((u32)((s32)&D_82000000 & 0x0FF00000) >> 20) - 0x10,
         &fragment16_ROM_START, &fragment17_ROM_START, 0, 0);
 }
 
@@ -213,9 +213,40 @@ void func_80065974(u32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/65E20/func_80065A18.s")
+extern s32 Game_GetState(void);
+extern s32 D_8009DEA0;
 
-extern void Game_SetState(s32);
+void func_80065A18(void) {
+    u16 iteration = 0;
+    u32 command;
+    u32 high_byte;
+    u32 middle_byte;
+    u32 low_byte;
+
+    while (Game_GetState() == 1) {
+        command = func_800657B0();
+        low_byte = command & 0xFF;
+        middle_byte = (command >> 8) & 0xFF;
+        high_byte = (command >> 16) & 0xFF;
+        D_8009DEA0 = high_byte;
+        main_pool_push_state('loop');
+        switch (low_byte) {
+        case 2:
+            func_80065220(middle_byte, high_byte);
+            Audio_ResetRequestId();
+            break;
+        case 1:
+            func_80065974(iteration);
+            iteration++;
+            break;
+        default:
+            Game_SetState(2);
+            break;
+        }
+        main_pool_pop_state('loop');
+    }
+}
+
 extern u8 D_83F00000;
 extern u8 D_82900000;
 extern u8 fragment15_ROM_START;
