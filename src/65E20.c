@@ -34,7 +34,8 @@ extern u8 fragment67_ROM_START;
 extern u8 fragment68_ROM_START;
 extern u8 fragment79_ROM_START[];
 extern u8 fragment80_ROM_START[];
-extern s32 Fragment_Load(s32, void *, void *);
+typedef void (*SceneFragmentEntry)(void);
+extern SceneFragmentEntry Fragment_Load(s32, u8 *, u8 *);
 extern s32 Fragment_LoadAndCall(s32, void *, void *, u32, u32);
 extern s32 main_pool_alloc(s32, s32);
 extern s32 main_pool_push_state(s32);
@@ -187,9 +188,39 @@ s32 func_800657B0(void) {
         &fragment16_ROM_START, &fragment17_ROM_START, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/65E20/func_80065814.s")
+typedef struct unk_D_8009DEA4 {
+    s8 values[6];
+} unk_D_8009DEA4;
+extern unk_D_8009DEA4 D_8009DEA4;
+extern u8 D_84400000[];
+extern u8 fragment86_ROM_START[];
+extern u8 fragment87_ROM_START[];
 
-extern void func_80065814(s32);
+void func_80065814(u32 arg0) {
+    u8 *record;
+    u8 *buffer;
+    s32 selection;
+    unk_D_8009DEA4 choices = D_8009DEA4;
+
+    buffer = (u8 *)(u32)main_pool_alloc(1168, 0);
+    _bzero(buffer, 1168);
+    record = (u8 *)(u32)main_pool_alloc(2524, 0);
+    _bzero(record, 2524);
+    record[2499] = 1;
+    *(u8 **)(record + 2520) = buffer + 952;
+    *(s32 *)(record + 2516) = func_800718B8(12);
+    selection = choices.values[arg0 % 6U];
+    func_80026938(selection);
+    Audio_SetModeBlocking(8, 19, 0);
+    func_800355E4(90);
+    Fragment_Load(((u32)((s32)D_81100000 & 0x0FF00000) >> 20) - 16,
+        fragment27_ROM_START, fragment28_ROM_START);
+    Fragment_Load(((u32)((s32)D_84400000 & 0x0FF00000) >> 20) - 16,
+        fragment86_ROM_START, fragment87_ROM_START);
+    Fragment_LoadAndCall(((u32)((s32)D_84100000 & 0x0FF00000) >> 20) - 16,
+        fragment79_ROM_START, fragment80_ROM_START, selection, (u32)record);
+}
+
 extern void Audio_ResetRequestId(void);
 extern void func_800727D4(s32);
 extern void Game_State17_Boot(void);
