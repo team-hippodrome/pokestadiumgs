@@ -84,3 +84,46 @@ Matching needs scalar externs for those addresses. They can't share the
 `D_827034E0` name in this TU, so the next step is a scalar/alias split
 agreed with the file's other users (`func_82702658` reads the struct
 through `&D_827034E0`).
+
+
+## 2026-11-03 — row completion: genuine for-loop and menu/row types
+
+`func_82702220` now matches all 81 instructions / 324 retail bytes directly.
+Removed seven `REWRITE_FUNCTION_WORD` directives and the unused three-word
+`pad_frame` array. The real `Fragment22Menu` and 40-byte
+`Fragment22RowEntry` types describe the existing offsets, and the stale
+`void *` prototype now agrees with the typed menu definition. All callers
+remain byte-identical; the machine calling convention is unchanged.
+
+The routine derives menu alpha from row `(2,4)`, starts one of the three
+option rows on each fourth nonnegative counter tick, then transitions to
+state 10 once every existing option row is in state 2. Missing optional
+rows preserve the original completion behavior. The lookup's final argument
+16 is table capacity; its actual record stride is 40 bytes.
+
+Removing padding and typing the data gives the correct frame and instruction
+sequence but swaps the saved table/count registers `$s2` and `$s3`. Count
+widths, declaration order, table pointer forms and cached/direct field use
+do not close it. A literal loop bound gets the right registers but moves
+the bound materialization from `+0x44` to `+0xC0`. The natural `for` loop
+with its consumed three-option bound reproduces retail's allocation and
+instruction order. Its increment follows the readiness test in C; the
+compiler safely schedules it earlier because the local index is unobservable
+on the early-break path. No dummy tests, unused locals, padding, false ABI
+or register declarations are needed.
+
+Final descriptive local names, known/candidate normal/+20 native controls,
+and host syntax all pass. The entire module's text, allocated section bytes,
+function/object symbols and relocation endpoints remain exact. A fresh normal
+native full-ROM gate passes:
+
+```sh
+make -j1 COMPARE=1 RUN_CC_CHECK=1 PYTHON=<native-venv-python>
+```
+
+Full ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All function extents, legacy addresses/sizes/types and previous C storage/types
+are unchanged. No linker, coverage, compiler/tooling, helper function or
+private artifact changes are included. The separate preview-state owner in
+`fragment22_14A2E0.c` is not resolved by this acceptance.

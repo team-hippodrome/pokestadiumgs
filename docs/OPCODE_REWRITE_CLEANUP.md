@@ -220,7 +220,15 @@ or reverting a function to assembly does not establish a proper C match.
   native full-ROM gate pass without layout changes. See
   [the button-predicate evidence](regions/fragments/21/fragment21_13FFA0.md).
 
-This leaves 477 directive occurrences and 31 affected functions. Coverage files and
+- `func_82702220`: use the verified menu/row types and a natural three-option
+  `for` loop. Stock IDO emits all 324 retail bytes directly, removing seven
+  word patches and the unused frame-padding array. The matching prototype
+  and readable locals preserve all callers and the complete module.
+  Normal/+20 controls, host syntax and the final native full-ROM gate pass,
+  with no layout changes. See
+  [the completion-routine evidence](regions/fragments/22/fragment22_14B090.md).
+
+This leaves 470 directive occurrences and 30 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -257,7 +265,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82507C48` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Replaced with C |
 | `func_82508620` | [src/fragments/21/fragment21_147D10.c](../src/fragments/21/fragment21_147D10.c) | 8 | Replaced with C |
 | `func_827000B8` | [src/fragments/22/fragment22_14A2E0.c](../src/fragments/22/fragment22_14A2E0.c) | 1 | Pending |
-| `func_82702220` | [src/fragments/22/fragment22_14B090.c](../src/fragments/22/fragment22_14B090.c) | 7 | Pending |
+| `func_82702220` | [src/fragments/22/fragment22_14B090.c](../src/fragments/22/fragment22_14B090.c) | 7 | Replaced with C |
 | `func_82B055A0` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 11 | Replaced with C |
 | `func_82B062BC` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_82B07960` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 25 | Replaced with C |

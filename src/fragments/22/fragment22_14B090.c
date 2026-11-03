@@ -697,59 +697,49 @@ void func_8270216C(void *arg0) {
 /* mkdraft:func_82702220 begin */
 extern void *func_82700E70(s32 arg0, s32 arg1, void *arg2, s32 arg3);
 extern s32 func_827015A4(s32 arg0, s32 arg1);
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0x0C, 0xAFB20020, 0xAFB30024)
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0x14, 0x26920034, 0x26930034)
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0x18, 0xAFB30024, 0xAFB20020)
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0x24, 0x02403025, 0x02603025)
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0x44, 0x24130003, 0x24120003)
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0xD0, 0x02403025, 0x02603025)
-#pragma REWRITE_FUNCTION_WORD(func_82702220, 0xF8, 0x5613FFF4, 0x5612FFF4)
 
-void func_82702220(void *arg0) {
-    s32 pad_frame[3];
-    s32 sp30;
-    s32 temp_a1;
-    s32 var_s0;
-    s32 count;
-    void *temp_s2;
-    void *temp_v0;
-    void *temp_v0_2;
+void func_82702220(Fragment22Menu *menu) {
+    s32 activationIndex;
+    s32 rowIndex;
+    s32 optionCount;
+    s32 allComplete;
+    Fragment22RowEntry *rows;
+    Fragment22RowEntry *fadeRow;
+    Fragment22RowEntry *row;
 
-    temp_s2 = (u8 *)arg0 + 0x34;
-    temp_v0 = func_82700E70(2, 4, temp_s2, 0x10);
-    count = 3;
-    sp30 = 1;
-    if (*(s16 *)((u8 *)temp_v0 + 6) != 0) {
-        *(s16 *)((u8 *)arg0 + 0x14) = (s16)(0xFF - *(s16 *)((u8 *)temp_v0 + 0xC));
+    rows = menu->rows;
+    fadeRow = func_82700E70(2, 4, rows, 0x10);
+    optionCount = 3;
+    allComplete = 1;
+    if (fadeRow->state != 0) {
+        menu->alpha = (s16)(0xFF - fadeRow->alpha);
     } else {
-        *(s16 *)((u8 *)arg0 + 0x14) = 0xFF;
+        menu->alpha = 0xFF;
     }
-    if (*(s16 *)((u8 *)arg0 + 0xE) >= 0) {
-        if ((*(s16 *)((u8 *)arg0 + 0xE) & 3) == 0) {
-            temp_a1 = *(s16 *)((u8 *)arg0 + 0xE) / 4;
-            if (temp_a1 < 3) {
-                func_827015A4(4, temp_a1);
+    if (menu->row_counter >= 0) {
+        if ((menu->row_counter & 3) == 0) {
+            activationIndex = menu->row_counter / 4;
+            if (activationIndex < 3) {
+                func_827015A4(4, activationIndex);
             } else {
-                *(s16 *)((u8 *)arg0 + 0xE) = -1;
+                menu->row_counter = -1;
             }
         }
-        if (*(s16 *)((u8 *)arg0 + 0xE) >= 0) {
-            *(s16 *)((u8 *)arg0 + 0xE) = *(s16 *)((u8 *)arg0 + 0xE) + 1;
+        if (menu->row_counter >= 0) {
+            menu->row_counter = menu->row_counter + 1;
         }
     }
-    var_s0 = 0;
-    do {
-        temp_v0_2 = func_82700E70(4, var_s0, temp_s2, 0x10);
-        var_s0 += 1;
-        if ((temp_v0_2 != NULL) && (*(s16 *)((u8 *)temp_v0_2 + 6) != 2)) {
-            sp30 = 0;
+    for (rowIndex = 0; rowIndex != optionCount; rowIndex++) {
+        row = func_82700E70(4, rowIndex, rows, 0x10);
+        if ((row != NULL) && (row->state != 2)) {
+            allComplete = 0;
             break;
         }
-    } while (var_s0 != count);
-    if (sp30 != 0) {
-        *(s16 *)((u8 *)arg0 + 2) = 0xA;
-        *(s16 *)((u8 *)arg0 + 8) = 0;
-        *(u16 *)((u8 *)arg0 + 0xC) |= 2;
+    }
+    if (allComplete != 0) {
+        menu->state = 0xA;
+        menu->unk_08 = 0;
+        menu->flags |= 2;
     }
 }
 /* mkdraft:func_82702220 end */
@@ -856,7 +846,7 @@ void func_827025F0(void *arg0) {
 extern Fragment22Menu D_827034E0;
 extern s16 D_827034E2;
 extern void func_8270160C(void *);
-extern void func_82702220(void *);
+extern void func_82702220(Fragment22Menu *);
 extern void func_827010F0(void *);
 extern void func_82701188(void *);
 extern void func_82701278(void *);
