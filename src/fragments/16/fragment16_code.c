@@ -3,15 +3,36 @@
 
 
 #ifdef VERSION_US
-// The fragment loader clears the state and adjacent halfword.
+// The initializer clears this 0x144-byte state: a 22-byte header,
+// a 15-by-20 signed-byte grid, and natural trailing alignment.
 //@src/2CA0.c
 typedef struct F16State1D58 {
     s16 state;
     s16 unk_02;
+    s16 current_selection;
+    s16 target_selection;
+    s32 resources[3];
+    s16 fill_counter;
+    s8 cells[15][20];
 } F16State1D58;
 static F16State1D58 sState1D58;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_82000020.s")
+extern s32 func_8005633C(void);
+extern s32 func_8004D690(s32);
+extern u8 D_82001ED6;
+extern void _bzero(void *, s32);
+void Fragment16_InitGridState(void) {
+    F16State1D58 *state = &sState1D58;
+
+    _bzero(&sState1D58, sizeof(sState1D58));
+    state->state = 0;
+    state->unk_02 = 0;
+    state->current_selection = D_82001ED6;
+    state->target_selection = func_8005633C();
+    state->resources[0] = func_8004D690(0);
+    state->resources[1] = func_8004D690(1);
+    state->resources[2] = func_8004D690(28);
+}
 #endif
 
 #ifdef VERSION_US
@@ -42,7 +63,6 @@ extern s16 D_82001D5C;
 extern s16 D_82001D5E;
 extern u8 D_82001E70[];
 extern u8 D_82001ED0[];
-extern u8 D_82001ED6;
 extern void func_800548C4(void *, s32, s32, s32);
 
 // FAKE: REWRITE_FUNCTION_HEX installs the retail 60-instruction text and
@@ -357,7 +377,7 @@ extern s32 func_8004DCFC(s32, s32);
 extern s32 func_8004E308(s32, s32 (*)(s32, u8 *), s32);
 extern void *func_8004EB58(s32, s32);
 extern s32 func_8005049C(void *, s32);
-extern s32 func_82000020(void);
+extern void Fragment16_InitGridState(void);
 extern s32 func_8200070C(void);
 extern s32 main_pool_get_available(void);
 
@@ -375,7 +395,7 @@ void func_82000DE8(void) {
     s32 sp1C;
     s32 temp_v0_2;
 
-    func_82000020();
+    Fragment16_InitGridState();
     D_82001CD4 = 0;
     func_82000DE0();
     D_82001EC4 = 0;

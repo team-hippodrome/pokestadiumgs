@@ -121,8 +121,9 @@ SECTIONS
     {
         build/src/fragments/24/fragment24_150C10.o(.bss)
     }
-    /* Loader-cleared trigger state and adjacent halfword. The existing fade
-     * initializer remains in this source's normal loaded data section. */
+    /* Complete 0x144-byte grid state, cleared by its initializer. Native
+     * BSS adds 12 alignment bytes; those bytes are not C fields. The fade
+     * initializer remains in the normal loaded data section. */
     .fragment16_state_1D58_bss 0x82001D58 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/16/fragment16_code.o(.bss)
@@ -265,3 +266,7 @@ ASSERT(gAudioRecentSoundHistory == 0x800D1AD8 && gAudioHistorySelection == 0x800
        "audio history or selection moved");
 ASSERT(D_800D1B40 == 0x800D1B40 && D_800D262E + 2 == 0x800D2630,
        "remaining audio object endpoints moved");
+
+ASSERT(ADDR(.fragment16_state_1D58_bss) == 0x82001D58 &&
+       SIZEOF(.fragment16_state_1D58_bss) == 336,
+       "fragment 16 grid state input footprint changed");
