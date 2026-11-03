@@ -295,7 +295,16 @@ or reverting a function to assembly does not establish a proper C match.
   extents, legacy addresses and fragment boundaries are preserved. See
   [the loader evidence](regions/fragments/44/fragment44_1EE290.md).
 
-This leaves 331 directive occurrences and 23 affected functions. Coverage files and
+- `func_88223418`: use the actual four-byte selection-state tail and a
+  byte-sized loop index with an ordinary increment. An index-first comparison
+  gives the retail branch operand order without either word rewrite. The
+  selected value and cleared flag share a two-field local record, replacing
+  the unused padding local. All 316 retail bytes, complete-module controls,
+  host syntax and the native full-ROM comparison pass. Existing addresses,
+  function/storage extents and fragment boundaries are unchanged. See
+  [the selection-handler evidence](regions/fragments/31/fragment31_1965A0.md).
+
+This leaves 329 directive occurrences and 22 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -340,7 +349,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_88203A18` | [src/fragments/31/fragment31_1768F0.c](../src/fragments/31/fragment31_1768F0.c) | 6 | Replaced with C |
 | `func_8821B3E0` | [src/fragments/31/fragment31_189760.c](../src/fragments/31/fragment31_189760.c) | 1 | Replaced with C |
-| `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Pending |
+| `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Replaced with C |
 | `func_8830765C` | [src/fragments/32/fragment32_1B8010.c](../src/fragments/32/fragment32_1B8010.c) | 2 | Pending |
 | `func_88507370` | [src/fragments/34/fragment34_1C3FA0.c](../src/fragments/34/fragment34_1C3FA0.c) | 31 | Pending |
 | `func_8AC06D8C` | [src/fragments/43/fragment43_1E5A10.c](../src/fragments/43/fragment43_1E5A10.c) | 1 | Replaced with C |
