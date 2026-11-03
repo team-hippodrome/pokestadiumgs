@@ -23,7 +23,68 @@ static s16 D_8220D76C = 0;
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10F9E0/func_82200020.s")
+/* mkdraft:func_82200020 begin */
+extern s16 D_8220E2F6;
+
+
+
+s32 func_82200020(s32 arg0, void *arg1) {
+    s16 pos;
+    s16 lim;
+
+    switch (arg0) {
+    default:
+        break;
+    case 0:
+        *(s8 *)((u8 *)arg1 + 0x28) = 0x21;
+        // FAKE: &D_8220D758 + 0x14 and &D_8220D750 + 0x18 resolve to this TU's statics
+        // D_8220D76C (0x8220D76C) and D_8220D768 (0x8220D768); they are spelled as an
+        // offset from a preceding extern object on purpose. Naming the statics directly
+        // keeps one address base live in a register across case 1 and rematerializes the
+        // seven global accesses differently: plain diff 1310.
+        *(s16 *)((u8 *)&D_8220D758 + 0x14) = *(s16 *)((u8 *)arg1 + 8);
+        // FAKE: as1 fills the case-0 branch delay slot with the statement whose .loc line
+        // is later. The target ends case 0 with or v0,zero,zero / jr ra / sh zero, so this
+        // store's line has to sort after the shared return's. In source order it sits
+        // before that return (line 68), so #line 100 moves its .loc past it; #line 38
+        // resumes the file's numbering at the break, still below 100. Without both
+        // directives: plain diff 265.
+#line 100
+        *(s16 *)((u8 *)&D_8220D750 + 0x18) = 0;
+#line 38
+        break;
+    case 1:
+        if (D_8220E2F6 != 0) {
+            pos = *(s16 *)((u8 *)&D_8220D708 + 0x60);
+            if (pos < 0x280) {
+                pos += 0x40;
+                *(s16 *)((u8 *)&D_8220D720 + 0x48) = pos;
+                // FAKE: reading the clamp bound from a local keeps uopt from propagating
+                // 0x280 into the store below, so the constant gets its own register
+                // (addiu v0,zero,0x280, the register pos already holds) instead of v1.
+                // The lim = 0 after the clamp is dead and emits no instruction; it exists
+                // only to stop the propagation. Without this local: plain diff 155.
+                lim = 0x280;
+                if (pos > lim) {
+                    pos = lim;
+                    lim = 0;
+                    *(s16 *)((u8 *)&D_8220D728 + 0x40) = pos;
+                }
+            }
+        }
+        pos = *(s16 *)((u8 *)&D_8220D738 + 0x30);
+        if (pos >= 0x280) {
+            *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD;
+        } else {
+            *(u16 *)((u8 *)arg1 + 2) |= 2;
+        }
+        *(s16 *)((u8 *)arg1 + 8) = pos + D_8220D76C;
+        *(s16 *)((u8 *)&D_8220D700 + 0x68) = pos;
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82200020 end */
 
 /* mkdraft:func_822000F0 begin */
 extern s32 func_800506A4(void *);
@@ -67,7 +128,7 @@ extern void *main_pool_get_available(void);
 extern void *MainPool_AllocState(s32 arg0, s32 arg1);
 extern void MainPool_FinalizeAllocation(void *arg0);
 extern u8 D_8220E2F8;
-extern s32 func_82200020;
+s32 func_82200020(s32 arg0, void *arg1);
 
 // Slide state kept between this fragment's geo callbacks; func_822003EC passes
 // the address of D_8220E2D0 to func_82200184. Fields 0x8-0x18 hold the cursors
