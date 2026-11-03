@@ -204,7 +204,15 @@ or reverting a function to assembly does not establish a proper C match.
   gate pass. See
   [the event-bounds evidence](regions/fragments/66/fragment66_code.md).
 
-This leaves 515 directive occurrences and 33 affected functions. Coverage files and
+- `func_82E01A00`: represent the width/height pair as a real bounds subobject
+  and use its typed pointer, alongside the existing view-state prefix and
+  its two dimensions. All 744 retail bytes now compile directly; the earlier
+  1,524-byte callback remains exact. This removes the last 33 directives from
+  fragment 66. Native module/sizeof/host controls, complete private ROM links
+  and the normal native full-ROM gate pass. See
+  [the alternate-bounds evidence](regions/fragments/66/fragment66_code.md).
+
+This leaves 482 directive occurrences and 32 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -272,7 +280,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_87F025B8` | [src/fragments/64/fragment64_324FB0.c](../src/fragments/64/fragment64_324FB0.c) | 4 | Replaced with C |
 | `func_87F06240` | [src/fragments/64/fragment64_328E40.c](../src/fragments/64/fragment64_328E40.c) | 1 | Pending |
 | `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Replaced with C |
-| `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Pending |
+| `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Replaced with C |
 | `func_82901AE0` | [src/fragments/67/fragment67_33D6A0.c](../src/fragments/67/fragment67_33D6A0.c) | 17 | Pending |
 | `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |
 | `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Pending |

@@ -275,7 +275,8 @@ their original addresses and size zero. Coverage and compiler/tooling
 sources are unchanged.
 
 
-`func_82E01A00` remains **requeue**, not accepted: 32 new native probes test
+Initial follow-up, superseded by the acceptance below: `func_82E01A00` was
+**requeue**, not accepted. Thirty-two native probes tested
 owned bounds/dimensions, prepared bounds and view pointers, both byte-pair
 orders, typed canonical struct/array views, and existing scalar subobject
 views. Direct owned records shrink it from 744 to 728 bytes; preparing both
@@ -286,3 +287,59 @@ prepared-pointer control versus the original body. Identify why the original
 materializes the bounds base before its first store while keeping neighboring
 field stores absolute; retain the first callback's accepted layout. Do not
 restore the old integer-address casts merely to influence allocation.
+
+
+## 2026-11-03 — alternate bounds callback: accepted real dimension subobject
+
+`func_82E01A00` now emits all 186 instructions / 744 retail bytes directly.
+The hex replacement and all 32 relocation-target patches are removed, along
+with their obsolete comments and the integer-address casts. Fragment 66 now
+contains none of the requested rewrite/coalescing directives.
+
+Model each existing 24-byte bounds record with four edge words and a real
+8-byte width/height subobject. The callback uses a typed pointer to that
+subobject for the four dimension stores; its left and bottom stores use the
+owned record, and the right and top stores retain their existing canonical
+word views. All these views keep their original addresses. No pointer ABI is
+falsified, and no unused locals, dummy arithmetic or instruction rewriting
+is needed.
+
+The additional dimensions at `0x82E06150/54` extend the existing six-word
+`F66ViewState` at `0x82E06138` to a 32-byte owned prefix. The pre-existing
+view type and original consumers establish the first 24 bytes. The bounds
+records remain at `0x82E05938` and `0x82E05950`, together occupying the same
+48 bytes as the previous array. The dimension words retain exactly their
+previous addresses, now at offset 24 within the owned view prefix. Native
+sizeof assertions prove record size 24, dimension-subobject size 8 and
+view-prefix size 32. Linker size assertions protect both runtime inputs.
+The existing loader clear range `0x82E05650..0x82E08AB0` covers them; loaded
+relocation metadata remains byte-identical.
+
+The earlier 740-byte near-match incorrectly reused the bounds base for the
+width/height stores. The actual nested dimension subobject and its consumed
+pointer restore retail's separate address load. Splitting dimensions into
+independent scalars gives 748 bytes; standalone pair objects, linkage changes,
+unsigned field variants, typed callback-node layouts and a calibrated bounded
+native permuter did not close it. These rejected families are not substitutes
+for the accepted spelling.
+
+Normal/+20 native controls cover both complete callbacks and the rest of the
+module. Other function bytes, relocation endpoints and all function extents
+remain exact; the accepted 1,524-byte callback changes only relocation addends
+for the dimension words, which still resolve to the same retail addresses.
+Native sizeof assertions and host syntax pass. Separate baseline/candidate
+complete ROM links and a fresh final normal native gate pass:
+
+```sh
+make -j1 COMPARE=1 RUN_CC_CHECK=1 PYTHON=<native-venv-python>
+```
+
+Full ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256:
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All legacy addresses and unrelated C storage/types remain intact. The previous
+owned bounds array is represented by two records in the same range, and the
+previous dimension pair becomes a member of the verified view prefix. Five
+unused zero-size labels (`D_82E05950`, `D_82E05960`, `D_82E05964`,
+`D_82E06150`, `D_82E06154`) lose inferred OBJECT metadata; their addresses
+and size zero stay unchanged. Coverage and compiler/tooling sources are
+unchanged. No private experiment artifacts or helper functions are included.
