@@ -1471,7 +1471,595 @@ void func_86905804(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690580C.s")
+extern s32 D_8690F9E4;
+extern u32 D_8691A2E8;
+
+extern s32 func_800279C4(s32);
+extern s32 func_80043A0C(s32, s32, s32);
+extern s32 func_8004418C(s32, s32, s32, s32);
+
+
+
+void func_8690580C(void) {
+    s32 counter;
+
+    // The cues below fire on the value read here; the field keeps the
+    // incremented value.
+    counter = (*(s32 *)(D_8691A2A0 + 0x4C))++;
+    if ((*(s32 *)(D_8691A2A0 + 0x48) == 0) && (counter == 0) && (*(s32 *)(D_8691A2A0 + 0x190) == 0)) {
+        func_80021ED8(0x1E);
+    }
+    if (counter == 0) {
+        if (*(s32 *)(D_8691A2A0 + 0x48) != 4) {
+            func_800279C4(0x3F07);
+        } else {
+            func_800279C4(0x3F0B);
+        }
+    }
+    if (counter == 0x24) {
+        func_800279C4(0x3F03);
+    }
+    if (counter == 0) {
+        func_86902640();
+        if (D_8691A448.unk_388 != 0) {
+            switch (D_8691A2E8) {
+            case 4:
+                break;
+            case 0:
+                switch (D_8691A448.unk_32C) {
+                case 0:
+                    func_80043A0C(D_8690F9E0, 0, 0xAC);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                    break;
+                case 1:
+                    func_80043A0C(D_8690F9E0, 0, 0xAF);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    break;
+                case 2:
+                    func_80043A0C(D_8690F9E0, 0, 0x19);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                    break;
+                case 3:
+                    func_80043A0C(D_8690F9E0, 0, 0x8A);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x8A);
+                    break;
+                case 4:
+                    func_80043A0C(D_8690F9E0, 0, 0x19);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                    break;
+                case 5:
+                    func_80043A0C(D_8690F9E0, 0, 0x36);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                    break;
+                case 6:
+                    func_80043A0C(D_8690F9E0, 0, 0xDB);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDB);
+                    break;
+                case 7:
+                    func_80043A0C(D_8690F9E0, 0, 0x51);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                    break;
+                case 8:
+                    func_80043A0C(D_8690F9E0, 0, 0xAF);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    break;
+                case 9:
+                    func_80043A0C(D_8690F9E0, 0, 0xDA);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                    break;
+                }
+                break;
+            case 1:
+                switch (D_8691A448.unk_32C) {
+                case 0:
+                    func_80043A0C(D_8690F9E0, 0, 0xAC);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                    break;
+                case 1:
+                    func_80043A0C(D_8690F9E0, 0, 0xAF);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    break;
+                case 2:
+                    func_80043A0C(D_8690F9E0, 0, 0x64);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                    break;
+                case 3:
+                    func_80043A0C(D_8690F9E0, 0, 0x52);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x52);
+                    break;
+                case 4:
+                    func_80043A0C(D_8690F9E0, 0, 0x19);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                    break;
+                case 5:
+                    func_80043A0C(D_8690F9E0, 0, 0x8A);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x8A);
+                    break;
+                case 6:
+                    func_80043A0C(D_8690F9E0, 0, 0x19);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                    break;
+                case 7:
+                    func_80043A0C(D_8690F9E0, 0, 0x65);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x65);
+                    break;
+                case 8:
+                    func_80043A0C(D_8690F9E0, 0, 0x55);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x55);
+                    break;
+                case 9:
+                    func_80043A0C(D_8690F9E0, 0, 0x36);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                    break;
+                case 10:
+                    func_80043A0C(D_8690F9E0, 0, 0xDB);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDB);
+                    break;
+                case 11:
+                    func_80043A0C(D_8690F9E0, 0, 0x51);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                    break;
+                case 12:
+                    func_80043A0C(D_8690F9E0, 0, 0xAF);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    break;
+                case 13:
+                    func_80043A0C(D_8690F9E0, 0, 0x54);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                    break;
+                case 14:
+                    func_80043A0C(D_8690F9E0, 0, 0xDA);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                    break;
+                }
+                break;
+            case 2:
+                switch (D_8691A448.unk_32C) {       /* switch 4; irregular */
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 5; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0xAC);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0xAF);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0xAC);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                        func_80043A0C(D_8690F9E0, 1, 0xAF);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0xAF);
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (D_8691A448.unk_330) {   /* switch 6; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x64);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x52);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x52);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x64);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                        func_80043A0C(D_8690F9E0, 1, 0x52);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x52);
+                        break;
+                    }
+                    break;
+                case 2:
+                    switch (D_8691A448.unk_330) {   /* switch 7; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x19);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x8A);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x8A);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x19);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                        func_80043A0C(D_8690F9E0, 1, 0x8A);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x8A);
+                        break;
+                    }
+                    break;
+                }
+                break;
+            case 3:
+                switch (D_8691A448.unk_32C) {       /* switch 8; irregular */
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 9; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x19);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x65);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x65);
+                        break;
+                    case 3:
+                        func_80043A0C(D_8690F9E0, 0, 0x55);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x55);
+                        break;
+                    case 6:
+                        func_80043A0C(D_8690F9E0, 0, 0x19);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                        func_80043A0C(D_8690F9E0, 1, 0x65);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x65);
+                        func_80043A0C(D_8690F9E0, 2, 0x55);
+                        func_8004418C(D_8690F9E0, 2, D_8690F9E4, 0x55);
+                        break;
+                    }
+                    break;
+                case 1:
+                    switch (D_8691A448.unk_330) {   /* switch 10; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x36);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0xDB);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDB);
+                        break;
+                    case 3:
+                        func_80043A0C(D_8690F9E0, 0, 0x51);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                        break;
+                    case 6:
+                        func_80043A0C(D_8690F9E0, 0, 0x36);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                        func_80043A0C(D_8690F9E0, 1, 0xDB);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0xDB);
+                        func_80043A0C(D_8690F9E0, 2, 0x51);
+                        func_8004418C(D_8690F9E0, 2, D_8690F9E4, 0x51);
+                        break;
+                    }
+                    break;
+                case 2:
+                    switch (D_8691A448.unk_330) {   /* switch 11; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0xAF);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x54);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                        break;
+                    case 3:
+                        func_80043A0C(D_8690F9E0, 0, 0xDA);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                        break;
+                    case 6:
+                        func_80043A0C(D_8690F9E0, 0, 0xAF);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                        func_80043A0C(D_8690F9E0, 1, 0x54);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x54);
+                        func_80043A0C(D_8690F9E0, 2, 0xDA);
+                        func_8004418C(D_8690F9E0, 2, D_8690F9E4, 0xDA);
+                        break;
+                    }
+                    break;
+                }
+                break;
+            }
+        } else {
+            switch (D_8691A2E8) {
+            case 4:
+                break;
+            case 0:
+                switch (D_8690E8CC[D_8691A448.unk_32C]) {
+                case 0:
+                    func_80043A0C(D_8690F9E0, 0, 0x19);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                    break;
+                case 1:
+                    func_80043A0C(D_8690F9E0, 0, 0xAC);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                    break;
+                case 2:
+                    func_80043A0C(D_8690F9E0, 0, 0x36);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                    break;
+                case 10:
+                    func_80043A0C(D_8690F9E0, 0, 0xDA);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                    break;
+                case 11:
+                    func_80043A0C(D_8690F9E0, 0, 0xDB);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDB);
+                    break;
+                case 12:
+                    func_80043A0C(D_8690F9E0, 0, 0x8A);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x8A);
+                    break;
+                case 13:
+                    func_80043A0C(D_8690F9E0, 0, 0xAF);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    break;
+                case 15:
+                    func_80043A0C(D_8690F9E0, 0, 0x51);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                    break;
+                }
+                break;
+            case 1:
+                switch (D_8690E8EC[D_8691A448.unk_32C]) {
+                case 0:
+                    func_80043A0C(D_8690F9E0, 0, 0x19);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                    break;
+                case 1:
+                    func_80043A0C(D_8690F9E0, 0, 0xAC);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                    break;
+                case 2:
+                    func_80043A0C(D_8690F9E0, 0, 0x36);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                    break;
+                case 3:
+                    func_80043A0C(D_8690F9E0, 0, 0x32);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x32);
+                    break;
+                case 4:
+                    func_80043A0C(D_8690F9E0, 0, 0x33);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x33);
+                    break;
+                case 5:
+                    func_80043A0C(D_8690F9E0, 0, 0x64);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                    break;
+                case 6:
+                    func_80043A0C(D_8690F9E0, 0, 0x65);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x65);
+                    break;
+                case 8:
+                    func_80043A0C(D_8690F9E0, 0, 0x54);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                    break;
+                case 9:
+                    func_80043A0C(D_8690F9E0, 0, 0x55);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x55);
+                    break;
+                case 10:
+                    func_80043A0C(D_8690F9E0, 0, 0xDA);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                    break;
+                case 11:
+                    func_80043A0C(D_8690F9E0, 0, 0xDB);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDB);
+                    break;
+                case 12:
+                    func_80043A0C(D_8690F9E0, 0, 0x8A);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x8A);
+                    break;
+                case 13:
+                    func_80043A0C(D_8690F9E0, 0, 0xAF);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    break;
+                case 15:
+                    func_80043A0C(D_8690F9E0, 0, 0x51);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                    break;
+                case 16:
+                    func_80043A0C(D_8690F9E0, 0, 0x52);
+                    func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x52);
+                    break;
+                }
+                break;
+            case 2:
+                switch (D_8690E928[D_8691A448.unk_32C]) {
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 16; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x19);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0xAC);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0xAC);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                        func_80043A0C(D_8690F9E0, 1, 0x19);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x19);
+                        break;
+                    }
+                    break;
+                case 3:
+                    switch (D_8691A448.unk_330) {   /* switch 17; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x32);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x32);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x33);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x33);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x32);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x32);
+                        func_80043A0C(D_8690F9E0, 1, 0x33);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x33);
+                        break;
+                    }
+                    break;
+                case 5:
+                    switch (D_8691A448.unk_330) {   /* switch 18; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x64);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x65);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x65);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x64);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                        func_80043A0C(D_8690F9E0, 1, 0x65);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x65);
+                        break;
+                    }
+                    break;
+                case 8:
+                    switch (D_8691A448.unk_330) {   /* switch 19; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x54);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x55);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x55);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x54);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                        func_80043A0C(D_8690F9E0, 1, 0x55);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x55);
+                        break;
+                    }
+                    break;
+                case 10:
+                    switch (D_8691A448.unk_330) {   /* switch 20; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0xDA);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0xDB);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDB);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0xDA);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xDA);
+                        func_80043A0C(D_8690F9E0, 1, 0xDB);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0xDB);
+                        break;
+                    }
+                    break;
+                case 13:
+                    if (D_8691A448.unk_330 == 0) {
+                        func_80043A0C(D_8690F9E0, 0, 0xAF);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAF);
+                    }
+                    break;
+                case 15:
+                    switch (D_8691A448.unk_330) {   /* switch 21; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x51);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x52);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x52);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x51);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x51);
+                        func_80043A0C(D_8690F9E0, 1, 0x52);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x52);
+                        break;
+                    }
+                    break;
+                }
+                break;
+            case 3:
+                switch (D_8690E944[D_8691A448.unk_32C]) { /* switch 22; irregular */
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 23; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x19);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x19);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0xAC);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                        break;
+                    case 3:
+                        func_80043A0C(D_8690F9E0, 0, 0x36);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x36);
+                        break;
+                    case 6:
+                        func_80043A0C(D_8690F9E0, 0, 0xAC);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0xAC);
+                        func_80043A0C(D_8690F9E0, 1, 0x19);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x19);
+                        func_80043A0C(D_8690F9E0, 2, 0x36);
+                        func_8004418C(D_8690F9E0, 2, D_8690F9E4, 0x36);
+                        break;
+                    }
+                    break;
+                case 3:
+                    switch (D_8691A448.unk_330) {   /* switch 24; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x32);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x32);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x33);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x33);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x32);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x32);
+                        func_80043A0C(D_8690F9E0, 1, 0x33);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x33);
+                        break;
+                    }
+                    break;
+                case 5:
+                    switch (D_8691A448.unk_330) {   /* switch 25; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x64);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x65);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x65);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x64);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x64);
+                        func_80043A0C(D_8690F9E0, 1, 0x65);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x65);
+                        break;
+                    }
+                    break;
+                case 8:
+                    switch (D_8691A448.unk_330) {   /* switch 26; irregular */
+                    case 0:
+                        func_80043A0C(D_8690F9E0, 0, 0x54);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                        break;
+                    case 1:
+                        func_80043A0C(D_8690F9E0, 0, 0x55);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x55);
+                        break;
+                    case 2:
+                        func_80043A0C(D_8690F9E0, 0, 0x54);
+                        func_8004418C(D_8690F9E0, 0, D_8690F9E4, 0x54);
+                        func_80043A0C(D_8690F9E0, 1, 0x55);
+                        func_8004418C(D_8690F9E0, 1, D_8690F9E4, 0x55);
+                        break;
+                    }
+                    break;
+                }
+                break;
+            }
+        }
+    }
+    if (counter >= 0x54) {
+        *(s32 *)(D_8691A2A0 + 0x4C) = 0;
+        *(s32 *)D_8691AD58 = 6;
+    }
+}
 #endif
 
 #ifdef VERSION_US
