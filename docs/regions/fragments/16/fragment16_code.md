@@ -269,3 +269,57 @@ variants therefore supply one compiler outcome, rather than eight independent
 near-misses. None is installed. Next: separate the owned terminal stores from
 the dimension-local hypothesis, then examine the resulting loop/control-flow
 residual before changing declaration order again.
+
+## 2026-11-03 — grid state initializer and complete runtime record
+
+`func_82000020`, now `Fragment16_InitGridState`, is ordinary matching C
+(120 bytes). Its old name remains a compatibility alias. The caller ignores
+the result, so its stale generated `s32` declaration is corrected to `void`.
+The actual callees return `s32`; no extra arguments, instruction rewriting,
+forced registers, volatile accesses or helper functions are introduced.
+
+The initializer's original `_bzero(..., 0x144)` and the renderer
+`func_820001F0` establish this complete runtime representation at
+`0x82001D58`:
+
+| Offset | C field | Evidence |
+| --- | --- | --- |
+| `0x00`, `0x02` | state and adjacent halfword | Explicit initializer/trigger stores |
+| `0x04`, `0x06` | current and target selection | Initialization, resource indexing and grid commit |
+| `0x08` | three `s32` resource handles | Three constructor results; indexed renderer loads |
+| `0x14` | `s16` fill counter | Grid helper's increment and threshold comparison |
+| `0x16` | `s8 cells[15][20]` | Signed renderer loads and 20-byte grid row stride |
+
+The header and grid occupy 322 bytes; normal four-byte struct alignment gives
+324 bytes, exactly the original clear length. Native compile-time size/offset
+checks verify every field and all 300 grid bytes without changing the compiled
+module. This is an evidence-backed representation; the original source's type
+name and exact grouping are not known.
+
+The existing fixed-address NOLOAD section is reused. Its native input footprint
+is now 336 bytes: 324 bytes of real C state plus 12 compiler alignment bytes.
+The C object ends at `0x82001E9C`; the linker assertion guards the input address
+and footprint. No new RAM reservation, gap field, absolute symbol override or
+loaded data is added. IDO leaves this static's ELF `st_size` at zero; that
+metadata is preserved, with bounds established by the native size/offset
+checks and original clear instead of patched symbol metadata.
+
+Known/candidate whole-module controls, normally and with 20 leading blank
+lines, preserve all other function bytes and every relative function extent.
+The six differing object words are only the real field-relative relocation
+addends; both private full-ROM links reproduce retail. The installed native
+`make -j1 COMPARE=1 RUN_CC_CHECK=1` also passes with MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d` and SHA-256
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+The renamed initializer's linked bytes, compatibility address, all other
+function extents, existing C object symbols, legacy runtime addresses and
+fragment loader boundaries remain exact. Coverage is not updated.
+
+`requeue` `func_82000100`: this initializer completes its layout prerequisite,
+not the grid helper itself. Its 23 directives remain. The best clean grid
+candidate still has the retail 240-byte extent and exact first `0xAC` bytes;
+the terminal selection load is scheduled before the two state clears.
+Native AS1 trace gives the load path greater height (7 versus 5), so changing
+source line order alone is not a solution. Whole-record grid spellings and
+saved-payload views also reject; none is installed. Resume from this measured
+memory/address dependency rather than repeating declaration-order grids.

@@ -1572,3 +1572,4 @@ func_81403304 = Fragment12_AssignActiveRowsToSlots;
 func_81406700 = Fragment12_DrawSelectionPanels;
 
 func_814063A0 = Fragment12_DrawImageAndLabelPanels;
+func_82000020 = Fragment16_InitGridState;
