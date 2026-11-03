@@ -2,7 +2,81 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B00020.s")
+/* mkdraft:func_88B00020 begin */
+extern u8 D_88B05810[];
+extern void *D_88B05F60;
+extern s32 func_80023110();
+extern s32 func_8004C54C(s32 index, s32 value);
+extern void *func_8004C874(s32 arg0, s32 arg1);
+extern void *func_8004C8A0(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_88B04170(void *arg0, s8 *arg1, s32 arg2);
+
+
+
+
+void func_88B00020(s16 arg0) {
+
+    *(u8 *)((u8 *)D_88B05F60 + 0x24C) = 0;
+    *(u8 *)((u8 *)D_88B05F60 + 9) = 1;
+    *(s8 *)((u8 *)D_88B05F60 + 8) = -1;
+    *(void **)((u8 *)D_88B05F60 + 0x450) = D_88B05810;
+    while (1) {
+        if (*(s16 *)*(void **)((u8 *)D_88B05F60 + 0x450) == -1) {
+            *(void **)((u8 *)D_88B05F60 + 0x450) = D_88B05810;
+            break;
+        }
+        if (*(s16 *)*(void **)((u8 *)D_88B05F60 + 0x450) == arg0) {
+            break;
+        }
+        *(void **)((u8 *)D_88B05F60 + 0x450) = (u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 0x10;
+    }
+    if (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 0xC) == 0) {
+        *(u8 *)((u8 *)D_88B05F60 + 0xB) = 0;
+    } else if (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 0xC) == 1) {
+        switch (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 4)) {
+        case 1:
+        case 4:
+            *(u8 *)((u8 *)D_88B05F60 + 0xB) = 0;
+            break;
+        default:
+            *(u8 *)((u8 *)D_88B05F60 + 0xB) = 1;
+            break;
+        }
+    }
+    *(s32 *)((u8 *)D_88B05F60 + 4) = 0;
+    if (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 4) != 3 &&
+        *(u8 *)((u8 *)D_88B05F60 + 2) == 3) {
+        *(u8 *)((u8 *)D_88B05F60 + 2) = 0;
+    } else if (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 4) != 4 &&
+               *(u8 *)((u8 *)D_88B05F60 + 2) == 4) {
+        *(u8 *)((u8 *)D_88B05F60 + 2) = 2;
+    } else if (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 4) == 4 &&
+               *(u8 *)((u8 *)D_88B05F60 + 2) == 2) {
+        *(u8 *)((u8 *)D_88B05F60 + 2) = 0;
+    }
+    switch (*(u8 *)((u8 *)D_88B05F60 + 2)) {
+    case 2:
+    case 4:
+        *(s32 *)((u8 *)D_88B05F60 + 4) = 1;
+        *(u8 *)((u8 *)D_88B05F60 + 0xB) =
+            *(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 0xC);
+        break;
+    }
+    switch (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 4)) {
+    case 1: case 3: case 4:
+        *(u8 *)((u8 *)D_88B05F60 + 3) = 2;
+        break;
+    }
+    if (arg0 == 0x37) {
+        func_8004C54C(0x4F, func_8004C874(0x3D, (*(u16 *)((u8 *)D_88B05F60 + 0x1C) % 7) + 0xB));
+        ;
+    }
+    func_88B04170(((u8 *)D_88B05F60 + 0x2C),
+                  func_8004C8A0(((u8 *)D_88B05F60 + 0x24D), 0x200, 0x3D, arg0),
+                  (*(s32 *)((u8 *)*(void **)((u8 *)D_88B05F60 + 0x450) + 8) == 2) ? 1 : 0);
+    func_80023110(0x154, arg0, 0);
+}
+/* mkdraft:func_88B00020 end */
 
 extern void *D_88B05F60;
 typedef struct {
