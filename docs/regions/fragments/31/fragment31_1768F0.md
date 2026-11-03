@@ -47,3 +47,40 @@ address views and a byte result do not close this residual. Standard C
 The existing function and ABI remain unchanged. Next: test loop entry/exit
 and cursor lifetime forms against the capacity-root control, keeping the
 caller-proven pointer/index behavior. No replacement was installed or gated.
+
+
+## 2026-11-03 — `func_88203A18`: genuine indexed-search acceptance
+
+Accepted: remove all six `REWRITE_FUNCTION_WORD` directives. The missing
+source shape is indexed addressing, not another explicit cursor spelling:
+
+```c
+index = 0;
+if (list->capacity != 0) {
+    do {
+        if (entry == (void *)((u8 *)list->entries + index * 0x76)) {
+            return index & 0xFF;
+        }
+        index++;
+    } while (index < list->capacity);
+}
+return index & 0xFF;
+```
+
+Stock IDO 7.1 creates the cursor induction variable, hoists the list fields,
+and allocates capacity to V0 and the cursor to A2. All 16 retail instructions
+(64 bytes, including the return tail) match directly. The incoming entry and
+12-byte list descriptor use their actual pointer types; the result retains
+its existing byte mask and signed-word return contract. No explicit cursor,
+new parameter, unused local, padding or register hint is needed.
+
+This supersedes the earlier explicit-cursor requeue. Returning capacity on
+exhaustion, a separate default-result carrier and a narrowed byte return did
+not resolve the residual; byte-addressed indexed comparison with direct
+capacity reads matched on its first probe. Keep the signed-word interface.
+
+Verification: unchanged and candidate native modules each reproduce with
+20 leading blank lines, and both equal the built module in all allocated
+bytes/layout, function/object extents and semantic relocations. Normal host
+syntax and `make -j1 COMPARE=1 RUN_CC_CHECK=1` pass; retail ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. No compiler, linker, coverage or tool changes.
