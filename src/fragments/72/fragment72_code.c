@@ -481,7 +481,65 @@ s32 func_8F401C30(s32 arg0) {
 }
 /* mkdraft:func_8F401C30 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F401D88.s")
+/* mkdraft:func_8F401D88 begin */
+extern s32 D_8F4020E4;
+extern s16 D_8F4020C2;
+extern s32 D_8F4020CC;
+extern s32 D_8F4020D8;
+extern s16 D_8F4020F8;
+extern void ModelAnim_SetFrame(u8 *arg0, s16 value);
+extern s32 StageFade_StartFromOpaque(s32 duration);
+extern void func_800086A4(s32 frames);
+extern s32 func_80043064();
+extern s32 func_80043678(s32 arg0);
+extern s32 func_8004B7E0(s16 arg0, u8 *arg1);
+extern f32 func_8004B888(s16 arg0);
+extern s32 func_8004BA34(s16 arg0);
+extern f32 func_8004BAE8(s32 arg0, s16 arg1);
+extern s16 func_8004BB58(s32 arg0, s16 arg1);
+extern void func_8004BBA8(s32 arg0, s16 arg1, u8 *arg2);
+extern s32 func_8004BC6C(s32 arg0, s16 arg1);
+extern void func_80064D28(void);
+extern void func_8F401918(s32 arg0);
+extern s32 func_8F401C30(s32 arg0);
+
+
+void func_8F401D88(void) {
+    s32 *pcc = &D_8F4020CC;
+    s32 *pe4 = &D_8F4020E4;
+    s16 *pc2 = &D_8F4020C2;
+    s32 *pd8 = &D_8F4020D8;
+    s16 *pf8 = &D_8F4020F8;
+    s32 var_s0;
+
+    var_s0 = 0;
+    func_800086A4(2);
+    StageFade_StartFromOpaque(5);
+    do {
+        func_80064D28();
+        if (*pcc != 0) {
+            if (func_80043064(*pcc) != 0) {
+                *(s16 *)(*(u8 **)(*pcc + 0x1C) + 0x1E) = 0;
+            }
+            if (*pe4 != 0) {
+                *(f32 *)(*pcc + 0x10) = func_8004BAE8(*pe4, *pc2);
+                *(s16 *)(*(u8 **)(*pcc + 0x1C) + 0x20) = func_8004BB58(*pe4, *pc2);
+                func_8004BBA8(*pe4, *pc2, *(u8 **)(*pcc + 0x1C) + 0x24);
+                ModelAnim_SetFrame(*(u8 **)(*pcc + 0x1C), (s16)func_8004BC6C(*pe4, *pc2));
+            } else {
+                *(f32 *)(*pcc + 0x10) = func_8004B888(*pc2);
+                func_8004B7E0(*pc2, *(u8 **)(*pcc + 0x1C) + 0x24);
+                if (*pf8 != 0) {
+                    ModelAnim_SetFrame(*(u8 **)(*pcc + 0x1C), (s16)func_8004BA34(*pc2));
+                }
+            }
+            *pd8 = func_80043678(*pcc);
+        }
+        func_8F401918(var_s0);
+        var_s0 = func_8F401C30(var_s0);
+    } while (var_s0 != 5);
+}
+/* mkdraft:func_8F401D88 end */
 
 extern void Dma_CopyChunks(s32, s32, s32);
 extern s32 func_800356CC(s32);
