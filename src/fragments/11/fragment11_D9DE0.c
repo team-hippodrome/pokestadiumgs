@@ -802,20 +802,12 @@ void func_81606694(s32 arg0, s32 arg1, s32 arg2) {
 /* mkdraft:func_81606694 end */
 
 /* mkdraft:func_81606800 begin */
-extern s32 D_8160BE5C;
-
-// FAKE: IDO emits the `arg1 != 0 || arg0 != D_8160BE5C` test as `beq $a0,$t6`, while retail
-// has the same pair commuted (`beq $t6,$a0`, the loaded global in $rs). Rewriting only the
-// two register fields leaves every other word, the scheduling and both relocations intact;
-// without it this body scores 10.
-#pragma REWRITE_FUNCTION_WORD(func_81606800, 0xC, 0x108E002A, 0x11C4002A)
-// Colour state for the panel frame: D_8160BE5C caches arg0 so the display-list update is
-// emitted only when arg0 changes or arg1 forces it.
-
-
+// Cache the panel frame's color mode; arg1 forces a display-list update.
 void func_81606800(s32 arg0, s32 arg1) {
-    if (arg1 != 0 || arg0 != D_8160BE5C) {
-        D_8160BE5C = arg0;
+    static s32 sPanelColor;
+
+    if (arg1 != 0 || sPanelColor != arg0) {
+        sPanelColor = arg0;
         gDPPipeSync((*(Gfx **)&D_800D0510)++);
         if (arg0 != 0) {
             gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0, 0, 0, 0xFF);

@@ -9,6 +9,13 @@
 
 SECTIONS
 {
+    /* Four-byte panel color cache. Its original loaded zero word stays in
+     * the fragment data image; compiler BSS alignment has no load image. */
+    .fragment11_panel_color_cache_bss 0x8160BE5C (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/11/fragment11_D9DE0.o(.bss)
+    }
+
     /* Pool-drain counter, explicitly initialized to zero. Its retail zero
      * word remains in the loaded data blob. Only this scalar belongs here;
      * compiler alignment bytes have no load image. */
@@ -215,3 +222,6 @@ ASSERT(SIZEOF(.fragment19_state_5EE4_data) == 16,
        "fragment19 secondary state must retain its native aligned input footprint");
 ASSERT(SIZEOF(.fragment19_transition_5EB0_bss) == 48,
        "fragment19 transition records must retain their native aligned input footprint");
+
+ASSERT(SIZEOF(.fragment11_panel_color_cache_bss) == 16,
+       "fragment11 panel color cache must retain its native aligned input footprint");
