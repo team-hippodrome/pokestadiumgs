@@ -154,7 +154,35 @@ void func_821006AC(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82100764.s")
+/* mkdraft:func_82100764 begin */
+extern u8 D_80094F50[];
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+
+// Emits the E38 display list, an env colour and a prim colour that share the
+// 255*arg0 alpha, runs func_8004D19C on resource 0x12E, then emits the F50
+// list.  The two cursor locals alternate because the retail object keeps the
+// four post-incremented packet cursors in v1/a2/v1/v1; handing `D_800D0510++`
+// straight to each macro colours them v0/v1/v0/v0 (diff score 80).
+
+
+s32 func_82100764(f32 arg0) {
+    u8 alpha;
+    Gfx *pkt0;
+    Gfx *pkt1;
+
+    if (!D_80094F50 && !D_80094F50) {  } // FAKE: dead guard on an array whose address is never null; diff score 80 without it.
+    alpha = 255.0f * arg0;
+    pkt0 = D_800D0510++;
+    gSPDisplayList(pkt0, D_80094E38);
+    pkt1 = D_800D0510++;
+    gDPSetEnvColor(pkt1, 0, 255, 255, alpha);
+    pkt0 = D_800D0510++;
+    gDPSetPrimColor(pkt0, 0, 0, 255, 255, 255, alpha);
+    func_8004D19C(0x191, 0x11D, func_8004C990(0x12E, 0), 0, 0);
+    pkt1 = D_800D0510++;
+    gSPDisplayList(pkt1, D_80094F50);
+}
+/* mkdraft:func_82100764 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_821008BC.s")
 
@@ -413,7 +441,7 @@ extern void *MainPool_AllocState(s32, s32);
 extern s32 func_8004EB58(s32, s32);
 extern void MainPool_FinalizeAllocation(void *);
 extern void *func_8005049C(void *, s32);
-extern s32 func_82101728(void *, s32, void *, s32, s32);
+void *func_82101728(void *arg0, s32 arg1, u8 *arg2, void *arg3, s32 arg4);
 extern s32 func_82100AEC(s32, void *);
 extern s32 func_82100B2C(s32, void *);
 extern s32 func_82100B6C(s32, void *);
@@ -647,7 +675,123 @@ s32 func_821016F0(void *arg0) {
     return (p - (u8 *)arg0) / 52;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_82101728.s")
+#include "global.h"
+typedef struct {
+    u8 bytes[0x34];
+} Rec;
+
+extern s32 func_821016F0(void *);
+extern void *func_8005049C(void *, s32);
+extern void *MainPool_AllocAligned(void *, s32, s32);
+
+
+
+void *func_82101728(void *arg0, s32 arg1, u8 *arg2, void *arg3, s32 arg4) {
+    u8 *table;
+    s32 count;
+    s32 i;
+    s32 offset;
+    u8 *node;
+    unsigned int bytes;
+    u8 *p;
+    s32 j;
+    s32 k;
+    u8 *entry;
+    void *found;
+    s32 pad;
+    u8 *result;
+    s32 size;
+
+    count = func_821016F0(arg2);
+    table = MainPool_AllocAligned(arg0, count << 5, 4);
+    _bzero(table, count << 7);
+    i = 0;
+    if (count > 0) {
+        size = count << 5;
+        offset = 0;
+        node = arg2;
+        bytes = 0;
+        p = table;
+        do {
+            if (arg4 == *(s32 *)node) {
+                found = NULL;
+            } else {
+                found = func_8005049C(arg3, *(s32 *)node);
+            }
+            if (found != NULL && *(u8 *)found == 3) {
+                *(void **)p = found;
+                *(u16 *)(p + 0x1C) = *(u16 *)((u8 *)found + 0x26);
+                *(s32 *)(p + 8) = (s32)(offset + arg2);
+                *((u8 *)found + 0x28) = 0x11;
+            } else {
+                *(void **)p = NULL;
+            }
+            found = func_8005049C(arg3, *(s32 *)(node + 4));
+            offset += 0x34;
+            if (found != NULL && *(u8 *)found == 4) {
+                *(void **)(p + 4) = found;
+            } else {
+                *(void **)(p + 4) = NULL;
+            }
+            bytes += 0x20;
+            node += 0x34;
+            p += 0x20;
+                i++;
+            } while (bytes != size);
+            i = 0;
+    }
+    if (count > 0) {
+        p = table;
+        do {
+            for (j = 0; j != 0x10; j += 4) {
+                *(s32 *)(p + j + 0xC) = 0;
+                if (*(s32 *)p != 0) {
+                    k = 0;
+                    if (count > 0) {
+                        entry = arg2;
+                        if (entry == arg2) {} // FAKE: empty if; without it uopt colors k/entry/value in a rotated order (score 75)
+                        do {
+                            if (arg4 != *(s32 *)entry &&
+                                *(s32 *)&((Rec *)arg2)[i].bytes[j + 0x1C] == *(s32 *)entry &&
+                                *(s32 *)&((u8 *)table)[k * 0x20] != 0) {
+                                *(s32 *)(table + i * 0x20 + j + 0xC) =
+                                    k * 0x20 + (s32)table;
+                                break;
+                            }
+                            k++;
+                            entry += 0x34;
+                        } while (k != count);
+                    }
+                }
+            }
+            i++;
+            p += 0x20;
+        } while (i != count);
+    }
+    result = MainPool_AllocAligned(arg0, 0xC, 4);
+    *(u8 **)result = table;
+    *(s32 *)(result + 8) = count;
+    *(u8 **)(result + 4) = table;
+    if (arg1 != 0) {
+        bytes = 0;
+        if (count > 0) {
+            p = table;
+            do {
+                found = *(void **)(p + 8);
+                if (found == NULL) goto inc;
+                if (arg4 != *(s32 *)found &&
+                    arg1 == *(s32 *)((u8 *)found + 8)) {
+                    *(u8 **)(result + 4) = bytes + table;
+                    break;
+                }
+            inc:;
+                bytes += 0x20;
+                p += 0x20;
+            } while (bytes != (count << 5));
+        }
+    }
+    return result;
+}
 
 extern u16 D_82104104[];
 extern void func_800226C0(s32);
