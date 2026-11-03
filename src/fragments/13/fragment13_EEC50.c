@@ -1553,9 +1553,175 @@ void func_82406060(void *arg0) {
 }
 /* mkdraft:func_82406060 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_8240641C.s")
+/* mkdraft:func_8240641C begin */
+void func_8240641C(void *arg0) {
+    struct Fragment13GroupState *state = arg0;
+    u16 *buttons = &D_800CE060[0].buttonsRepeat;
+    s32 updated;
+    s32 group;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82406560.s")
+    updated = 0;
+    if (*buttons & 0x4000) {
+        state->state = 0;
+        func_80006158();
+        func_82405C0C(arg0);
+        func_800226C0(3);
+        updated = 1;
+    } else if (*buttons & 0x8000) {
+        group = state->group;
+        if (state->list.counts[group] > 0) {
+            state->state = 2;
+            state->end = state->start = state->current[group];
+            state->selected = state->current[group];
+            func_800226C0(2);
+            updated = 1;
+        } else {
+            func_800226C0(5);
+            updated = 1;
+        }
+    }
+    if (state->previousGroup == state->group) {
+        state->timer = 0.0f;
+        if (updated == 0) {
+            if (*buttons & 0x100) {
+                group = state->group;
+                if (group < 7) {
+                    state->group = group + 1;
+                    func_800226C0(1);
+                }
+            }
+            if (*buttons & 0x200) {
+                group = state->group;
+                if (group > 0) {
+                    state->group = group - 1;
+                    func_800226C0(1);
+                }
+            }
+        }
+    }
+    func_82404E50(arg0);
+}
+/* mkdraft:func_8240641C end */
+
+extern void func_800226C0(s32 arg0, ...);
+extern f32 func_82403F10(void);
+extern s32 func_824048A0(void *arg0, s32 arg1);
+extern s32 MathUtil_Random16(void);
+
+
+
+void func_82406560(void *arg0)
+{
+  u8 *state = arg0;
+  s32 page;
+  s32 current;
+  s32 value;
+  s32 changed = 0;
+  // Pad entry 0 as a byte pointer; the u16 at +0xC is buttonsRepeat. Reading it
+  // through this local keeps the load base and the value in a3; testing
+  // D_800CE060[0].buttonsRepeat inline instead scores 65.
+  u8 *controller = (u8 *) D_800CE060;
+  if ((*((s32 *) (state + 0x1D4))) < 0)
+  {
+    *((s32 *) (state + 0x1D4)) = *((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154));
+  }
+  if ((*(u16 *) (controller + 0xC)) & 0x4000)
+  {
+    *((s32 *) ((state + ((*((s32 *) (state + 0x1DC))) * 4)) + 0x194)) = *((s32 *) (state + 0x1F0));
+    *((s32 *) (state + 0x1E4)) = 1;
+    func_80006148(D_80087200);
+    func_800226C0(3);
+    return;
+  }
+  if ((*((s32 *) (state + 0x1D4))) != (*((s32 *) (state + 0x1D8))))
+  {
+    *((f32 *) (state + 0x208)) = func_82403F10() + (*((f32 *) (state + 0x208)));
+    if ((*((f32 *) (state + 0x208))) >= 6.0f)
+    {
+      *((f32 *) (state + 0x208)) = 0.0f;
+      *((s32 *) (state + 0x1D8)) = *((s32 *) (state + 0x1D4));
+    }
+  }
+  else
+  {
+    page = (*((s32 *) (state + 0x1D4))) / 5;
+    value = ((*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))) + 5) / 5;
+    current = *((s32 *) (state + 0x1D4));
+    if (((*((s32 *) (state + 0x1D4))) > 0) && ((*(u16 *) (controller + 0xC)) & 0x200))
+    {
+      current--;
+      // FAKE: empty statement present only for register allocation; without it the
+      // candidate scores 210.
+      if (!state)
+      {
+      }
+      if (current > ((*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))) - 1))
+      {
+        current = (*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))) - 1;
+      }
+    }
+    else
+      if (((*((s32 *) (state + 0x1D4))) < ((value * 5) - 1)) && ((*(u16 *) (controller + 0xC)) & 0x100))
+    {
+      current = *((s32 *) (state + 0x1D4));
+      current = current + 1;
+      if (current > (*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))))
+      {
+        current = *((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154));
+      }
+      changed = 1;
+    }
+    else
+      if ((page > 0) && ((*(u16 *) (controller + 0xC)) & 0x800))
+    {
+      current = *((s32 *) (state + 0x1D4));
+      current = current - 5;
+      changed = 1;
+    }
+    else
+      if ((page < (value - 1)) && ((*(u16 *) (controller + 0xC)) & 0x400))
+    {
+      current += 5;
+      changed = 1;
+    }
+    if (current > (*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))))
+    {
+      current = *((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154));
+    }
+    if (current != (*((s32 *) (state + 0x1D4))))
+    {
+      *((s32 *) (state + 0x1D8)) = *((s32 *) (state + 0x1D4));
+      *((s32 *) (state + 0x1D4)) = current;
+      *((f32 *) (state + 0x208)) = 0.0f;
+      func_800226C0(1);
+    }
+    else
+      if (((*(u16 *) (controller + 0xC)) & 0x8000) && (!changed))
+    {
+      if ((func_824048A0(state, (*((s32 *) (state + 0x1D4)))) != 0) || ((*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))) < (*((s32 *) (state + 0x1D4)))))
+      {
+        func_800226C0(5);
+      }
+      else
+        if ((*((s32 *) (state + 0x1D4))) == (*((s16 *) (((u8 (*)[2]) ((u8 *) state))[*((s32 *) (state + 0x1DC))] + 0x154))))
+      {
+        func_800226C0(0xB5);
+        *((s32 *) (state + 0x1E4)) = 1;
+        *((s32 *) ((state + ((*((s32 *) (state + 0x1DC))) * 4)) + 0x194)) = -1;
+        func_80006148(D_80087200);
+      }
+      else
+      {
+        func_800226C0(0xB4);
+        *((s32 *) (state + 0x1E4)) = 1;
+        *((s32 *) ((state + ((*((s32 *) (state + 0x1DC))) * 4)) + 0x194)) = *((s32 *) (state + 0x1D4));
+        *((s32 *) (state + 0x1F4)) = MathUtil_Random16() % 4;
+        func_80006148(D_80087200);
+      }
+    }
+  }
+  func_82404E50(state);
+}
 
 extern void Fragment13_DrawScrollIndicatorPanel(void *, void *, f32, s16, f32, s32, s32, s32);
 extern void Fragment13_DrawPageIndicatorPanel(void *, s32, f32, s32, s32, f32);
