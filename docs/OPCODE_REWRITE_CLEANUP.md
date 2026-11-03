@@ -273,7 +273,18 @@ or reverting a function to assembly does not establish a proper C match.
   gate pass with function/object extents and legacy addresses preserved.
   See [the menu traversal evidence](regions/fragments/69/fragment69_code.md).
 
-This leaves 351 directive occurrences and 25 affected functions. Coverage files and
+- `func_81606800`: own its four-byte panel color-mode cache as a
+  function-local static, and compare the cache before the incoming mode.
+  Stock IDO emits all 192 retail bytes without the word rewrite. The existing
+  fixed-address NOLOAD mechanism places the cache at `0x8160BE5C`; its
+  original loaded zero initializer stays in the data image. Native module
+  controls, independent linked comparison, host syntax and the full-ROM gate
+  pass. Function/storage extents, legacy addresses and fragment boundaries
+  are preserved; the legacy cache label becomes `NOTYPE` while the new C
+  static owns the same word. See
+  [the panel-cache evidence](regions/fragments/11/fragment11_D9DE0.md).
+
+This leaves 350 directive occurrences and 24 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -288,7 +299,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_800289B0` | [src/229E0.c](../src/229E0.c) | 18 | Pending |
 | `func_80039808` | [src/340C0.c](../src/340C0.c) | 1 | Pending |
 | `func_80071DD8` | [src/728D0.c](../src/728D0.c) | 5 | Pending |
-| `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Pending |
+| `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Replaced with C |
 | `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Replaced with C |
 | `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Replaced with C |
 | `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |

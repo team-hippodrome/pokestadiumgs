@@ -38,3 +38,38 @@ Matched:
   definition, because the existing caller `func_81602DA4` calls it with no
   arguments, plus a `CC_CHECK`-only argument at that call so the host clang
   check accepts it.
+
+
+## 2026-11-03 — `func_81606800`: genuine function-local cache match
+
+Accepted: remove the `REWRITE_FUNCTION_WORD` at +0x0C. Stock native IDO 7.1
+emits all 48 retail instructions (192 bytes) when the panel color-mode
+cache is a function-local `static s32 sPanelColor`, with the condition
+`arg1 != 0 || sPanelColor != arg0`. The function still caches the complete
+incoming mode, forces an update for nonzero `arg1`, and emits the same
+RDP environment/primitive colors for zero and nonzero modes. This replaces
+the earlier one-word requeue; a file-scope static did not produce this order.
+
+The cache's initial value is the original loaded zero word at ROM offset
+`0xE39FC`, runtime `0x8160BE5C` (`fragment11_data.data.s`). It is inside the
+fragment's loaded image, rather than its zero-sized trailing BSS range.
+`datamig_bss.ld` consumes this source file's new `.bss` input at the original
+cache address before the generated group linker script. This is the existing
+NOLOAD placement mechanism: the four-byte C scalar shares the original
+loaded word, and the native input section's 12 alignment bytes add no load
+image or runtime clearing. `SUBALIGN(4)` preserves the scalar's actual word
+alignment; an assertion records the 16-byte native input-section footprint.
+
+Verification: unchanged and candidate modules each reproduce with 20 leading
+blank lines. All text bytes and other allocated sections equal the baseline;
+only the cache's four relocation endpoints move from the legacy external
+label to the new C object's `.bss`. Independently linked unchanged/candidate
+controls both reproduce all 192 retail bytes with the cache at `0x8160BE5C`.
+Host syntax and normal `make -j1 COMPARE=1 RUN_CC_CHECK=1` pass. Full-ROM MD5:
+`1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+Every function/storage extent, legacy address and fragment boundary is
+preserved. The zero-sized legacy cache label's ELF type changes from `OBJECT`
+to `NOTYPE`; the local C cache is the typed object at the same address. The
+original data blob is unchanged. No opcode substitution, unused local,
+artificial condition, compiler option or coverage update is involved.
