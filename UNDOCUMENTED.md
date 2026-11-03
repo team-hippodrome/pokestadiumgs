@@ -3,13 +3,13 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **65 / 9,579 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **65 / 9,580 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 6,899 (3.6%)** (6,651 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
-- Functions still using m2c `temp_*` / `var_*` locals: **1,127**
-- Functions with generic `arg0`, `arg1`, ... parameters: **5,764 / 9,579 (60.2%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,173 / 2,094**
-- Struct fields with a real name: **5,894 / 9,524 (61.9%)**
+- Variables with a real name: **248 / 6,894 (3.6%)** (6,646 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Functions still using m2c `temp_*` / `var_*` locals: **1,126**
+- Functions with generic `arg0`, `arg1`, ... parameters: **5,765 / 9,580 (60.2%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,175 / 2,097**
+- Struct fields with a real name: **5,900 / 9,538 (61.9%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **12,180**
 <!-- AUTO_UNDOCUMENTED:END -->
 
@@ -82,9 +82,9 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/21C0.c` | 1 | 1 | 252 | 0 | 0 | 0 | 0 |
 | `src/fragments/51/fragment51_275E40.c` | 36 | 36 | 105 | 29 | 2 | 13 | 65 |
 | `src/4CC20.c` | 59 | 59 | 81 | 10 | 14 | 41 | 44 |
-| `src/fragments/19/fragment19_121100.c` | 47 | 47 | 83 | 64 | 4 | 20 | 31 |
 | `src/fragments/6/fragment6_code.c` | 38 | 38 | 83 | 36 | 11 | 32 | 45 |
 | `src/fragments/63/fragment63_303990.c` | 39 | 39 | 120 | 14 | 5 | 17 | 50 |
+| `src/fragments/19/fragment19_121100.c` | 47 | 47 | 83 | 59 | 3 | 20 | 31 |
 | `src/6AA80.c` | 60 | 59 | 80 | 6 | 4 | 29 | 64 |
 | `src/47580.c` | 74 | 73 | 82 | 23 | 5 | 41 | 13 |
 | `src/fragments/63/fragment63_319010.c` | 39 | 39 | 75 | 17 | 4 | 35 | 66 |
@@ -103,7 +103,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/6E850.c` | 54 | 54 | 53 | 36 | 3 | 37 | 26 |
 | `src/1CDC0.c` | 35 | 35 | 47 | 23 | 4 | 18 | 76 |
 | `src/fragments/57/fragment57_code.c` | 18 | 18 | 74 | 54 | 3 | 9 | 44 |
-| `src/fragments/48/fragment48_256020.c` | 50 | 48 | 49 | 12 | 1 | 49 | 40 |
+| `src/fragments/48/fragment48_256020.c` | 51 | 49 | 49 | 12 | 1 | 50 | 40 |
 | `src/fragments/77/fragment77_code.c` | 26 | 26 | 81 | 69 | 0 | 4 | 19 |
 | `src/fragments/14/fragment14_FD770.c` | 30 | 30 | 45 | 6 | 4 | 29 | 84 |
 | `src/fragments/21/fragment21_144790.c` | 37 | 36 | 55 | 28 | 7 | 17 | 51 |
