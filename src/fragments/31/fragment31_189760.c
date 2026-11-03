@@ -459,9 +459,96 @@ u16 StorageList_FilterPointers(u16 filter, u16 count) {
     return count;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_189760/func_8821C0B0.s")
+extern u16 StorageList_FilterPointers(u16, u16);
+extern u32 func_8821B9EC(s32);
+extern void StorageList_BuildPointers(s32);
+extern void func_8821B714(s32, s32);
+extern void func_88001C24(void *, u16, u8);
+extern void func_88001D0C(void *);
+extern u8 D_88234780[];
+extern u8 D_88006880[];
+extern u8 *D_882345F4;
+extern u16 D_88234744;
+extern u16 D_882347BC;
+extern u16 D_88234758;
+extern s32 D_88234778;
+extern s32 D_8823477C;
+extern s32 D_882347B0;
 
-extern s32 D_88234778; extern void func_8821C0B0(void); void func_8821C298(void) { if (D_88234778 == 0x10) func_8821C0B0(); }
+
+
+s32 func_8821C0B0(void) {
+    s32 sp44;
+    s32 pad;     // frame layout: 0x44 result, 0x3C saved call result, then 8 bytes of padding
+    u32 sp3C;
+    s32 var_s1;
+    s32 var_v0;
+    u32 temp_v0;
+    u32 var_v1;
+    s32 var_s0;
+    s32 lim;     // 0x800 limit: a variable, not a literal, so the loop test keeps it in s4 as rs
+
+    sp44 = 1;
+    sp3C = func_8821B9EC((s32)D_882345F4);
+    D_882347BC = 0;
+    StorageList_BuildPointers(0);
+    if (func_8821B9EC((s32)D_882345F4) == -1U) {
+        D_882347BC = 0x800;
+    }
+    var_s1 = 0;
+    var_v0 = 1;
+    lim = 0x800;
+    if (D_88234758 != 0) {
+        do {
+            var_s0 = var_v0;
+            if (D_88234758 & var_v0) {
+                var_s0 = var_v0;
+                D_88234744 = StorageList_FilterPointers(var_v0, D_88234744);
+                if (D_882347BC == 0) {
+                    var_v0 = func_8821B9EC((s32)D_882345F4);
+                    if (1) {
+                    }    // FAKE: without it the mask lands in v1 (score 30)
+                    if (var_v0 == -1U) {
+                        D_882347BC = var_s0;
+                    }
+                }
+                if (D_88234744 == 0) {
+                    break;
+                }
+            }
+            var_s1 += 1;
+            var_v0 = var_s1;    // FAKE: folding into `1 << var_s1` puts the mask in v1 (score 30)
+            var_v0 = 1 << var_v0;
+            do {
+            } while (0);        // FAKE: without it the mask lands in v1 (score 143)
+        } while (lim != var_v0);
+    }
+    func_8821B714(D_88234778, D_8823477C);
+    func_88001C24(D_88006880, D_88234744, 0xE);
+    if (D_88234744 == 0) {
+        if ((s32)sp3C >= 0) {
+            sp44 = 0;
+        }
+    } else if (D_882347B0 != 0) {
+        *(s16 *)(D_88006880 + 8) = *(s16 *)(D_88234780 + 0x28);
+        *(s16 *)(D_88006880 + 0xA) = *(s16 *)(D_88234780 + 0x2A);
+        *(s16 *)(D_88006880 + 0x10) = *(s16 *)(D_88234780 + 0x2C);
+    } else {
+        temp_v0 = func_8821B9EC((s32)D_882345F4);
+        var_v1 = temp_v0;
+        if (temp_v0 == -1U) {
+            var_v1 = sp3C;
+            if ((s32)var_v1 >= 0) {
+                sp44 = 0;
+            }
+        }
+        *(s16 *)(D_88006880 + 0xA) = *(s16 *)(D_88006880 + 0xA) + (var_v1 - *(s16 *)(D_88006880 + 8));
+        func_88001D0C(D_88006880);
+    }
+    return sp44;
+}
+
+extern s32 D_88234778;s32 func_8821C0B0(void); void func_8821C298(void) { if (D_88234778 == 0x10) func_8821C0B0(); }
 
 extern u32 D_882347B4; extern u8 D_8823474D; void func_8821C2C8(s32 arg0) { if (D_882347B4 != arg0) { D_882347B4 = arg0; D_8823474D = 2; } }
 
