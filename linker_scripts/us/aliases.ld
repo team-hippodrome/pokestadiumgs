@@ -1574,3 +1574,4 @@ func_81406700 = Fragment12_DrawSelectionPanels;
 func_814063A0 = Fragment12_DrawImageAndLabelPanels;
 func_82000020 = Fragment16_InitGridState;
 func_82000100 = Fragment16_UpdateGridFill;
+func_822068E0 = Fragment17_InitFadeState;

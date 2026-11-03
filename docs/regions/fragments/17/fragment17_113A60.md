@@ -834,3 +834,19 @@ producers/consumers rather than inventing a byte array to bridge addresses.
 Retain the existing transition records and legacy views until a full-ROM
 candidate preserves them. Private proof: `rewrite-cleanup-f17-storage-finding`
 receipt; native compiler SHA256 begins `975142f2e9c4ceb7`.
+
+
+## 2026-11-04 — scene region separated; fade storage prerequisite resolved
+
+The complete scene region beginning at `func_822068E0` now lives in
+`fragment17_1162A0.c`, with all of its read-only data. Widget callbacks and
+their transition record at 0x822105E8 remain here. The scene transition record
+at 0x822106B2 moves with its users. This preserves every original function
+extent, legacy runtime address and fragment boundary.
+
+`Fragment17_InitFadeState` owns the real 1616-byte fade/clipping state and
+matches all 112 retail bytes without its 17 rewrite/coalescing directives.
+The previous storage prerequisite above is resolved. The new file boundary
+is a reconstruction choice, not a recovered-original-file claim. See
+[the scene evidence](fragment17_1162A0.md) for the constructor-confirmed
+layout, placement and native full-ROM validation.

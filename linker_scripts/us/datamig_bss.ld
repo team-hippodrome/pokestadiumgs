@@ -90,13 +90,19 @@ SECTIONS
     {
         build/src/fragments/83/fragment83_code.o(.bss)
     }
-    /* Transition-control halfwords cleared by the fragment loader. The two
-     * real records use this source's data and bss input sections so each can
-     * retain its original address. Only zero initialization and compiler
-     * alignment belong here; there are no loaded initializer bytes. */
+    /* Scene resource, fade controls and two 100-rectangle clipping buffers.
+     * This is the real 0x650-byte range cleared by Fragment17_InitFadeState. */
+    .fragment17_scene_fade_bss 0x8220EC40 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/17/fragment17_1162A0.o(.bss)
+    }
+
+    /* The scene and widget transition records keep their original loader-
+     * cleared addresses. Their input sections contain only the real four-byte
+     * records and normal compiler alignment, with no loaded initializer bytes. */
     .fragment17_state_106B2_data 0x822106B2 (NOLOAD) : SUBALIGN(2)
     {
-        build/src/fragments/17/fragment17_113A60.o(.data)
+        build/src/fragments/17/fragment17_1162A0.o(.data)
     }
 
     .fragment17_state_105E8_bss 0x822105E8 (NOLOAD) : SUBALIGN(2)
