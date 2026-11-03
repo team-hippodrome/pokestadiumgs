@@ -162,14 +162,33 @@ void func_87C00438(void *arg0, void *arg1, void *arg2, void *arg3) {
     out->z = a->z - mid->z;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_256020/func_87C004C4.s")
+void *func_87C004C4(void *arg0, void *arg1, void *arg2) {
+    typedef struct { f64 x; f64 y; f64 z; } Vector3d;
+    typedef struct { f64 unk_00; f64 unk_08; f64 unk_10; f64 unk_18; } unk_func_87C004C4;
+    Vector3d *out = arg0;
+    Vector3d *a = arg1;
+    unk_func_87C004C4 *b = arg2;
+    f64 first;
+    f64 second;
+    f64 third;
+    f64 fourth;
+
+    first = b->unk_10 * a->z - b->unk_18 * a->y + b->unk_00 * a->x;
+    second = -b->unk_08 * a->z + b->unk_18 * a->x + b->unk_00 * a->y;
+    third = b->unk_08 * a->y - b->unk_10 * a->x + b->unk_00 * a->z;
+    fourth = -b->unk_08 * a->x - b->unk_10 * a->y - b->unk_18 * a->z;
+    out->x = b->unk_00 * first + second * -b->unk_18 - third * -b->unk_10 + fourth * -b->unk_08;
+    out->y = -first * -b->unk_18 + second * b->unk_00 + third * -b->unk_08 + fourth * -b->unk_10;
+    out->z = -b->unk_10 * first - second * -b->unk_08 + third * b->unk_00 + fourth * -b->unk_18;
+    return arg0;
+}
 
 extern void func_87C00BC8();
-extern void func_87C004C4();
+extern void *func_87C004C4(void *, void *, void *);
 void func_87C00628(s32 arg0, s32 arg1, s32 arg2) {
     s32 sp18[8];
     func_87C00BC8(sp18, arg2);
-    func_87C004C4(arg0, arg1, sp18);
+    func_87C004C4((void *)arg0, (void *)arg1, sp18);
 }
 
 f64 func_87C00664(void *arg0) {
