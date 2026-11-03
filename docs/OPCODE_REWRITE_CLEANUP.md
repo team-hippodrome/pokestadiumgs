@@ -330,7 +330,18 @@ or reverting a function to assembly does not establish a proper C match.
   module controls, host syntax and full-ROM comparison pass. See
   [the audio-history evidence](regions/229E0.md).
 
-This leaves 294 directive occurrences and 19 affected functions. Coverage files and
+- `func_82000100` (`Fragment16_UpdateGridFill`): use the real four-halfword
+  control header and a signed selection snapshot for the completion stores.
+  The persistence helper takes its actual single 16-byte-record pointer;
+  the old four-argument declaration is corrected. Stock IDO emits all 240
+  retail bytes without the hex replacement or 22 relocation patches.
+  Complete-module controls, native field-layout checks, host syntax and the
+  full-ROM comparison pass with function/storage extents, legacy object
+  symbols and loader boundaries preserved. No storage or linker placement
+  changes are needed beyond the already verified initializer prerequisite.
+  See [the grid evidence](regions/fragments/16/fragment16_code.md).
+
+This leaves 271 directive occurrences and 18 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -348,7 +359,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Replaced with C |
 | `func_83F001A8` | [src/fragments/15/fragment15_code.c](../src/fragments/15/fragment15_code.c) | 1 | Replaced with C |
 | `func_82000098` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 10 | Replaced with C |
-| `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Pending |
+| `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Replaced with C |
 | `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |
 | `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
 | `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Pending |
