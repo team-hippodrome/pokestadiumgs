@@ -323,3 +323,39 @@ Native AS1 trace gives the load path greater height (7 versus 5), so changing
 source line order alone is not a solution. Whole-record grid spellings and
 saved-payload views also reject; none is installed. Resume from this measured
 memory/address dependency rather than repeating declaration-order grids.
+
+## 2026-11-03 — grid fill: 23 rewrite directives removed
+
+`func_82000100`, now `Fragment16_UpdateGridFill`, compiles to all 240 retail
+bytes without its whole-function hex replacement and 22 relocation-target
+patches. The old function name remains a compatibility alias.
+
+The existing header's four actual halfwords are represented as `controls[4]`:
+state, adjacent control halfword, current selection and target selection. The initializer
+and trigger use the same offsets as before. This view retains the original
+324-byte state and 336-byte native BSS input; the renderer, grid, resources
+and all placement rules remain unchanged.
+
+The completion path clears the first two controls, reads the target into a
+signed halfword snapshot, and uses that value for the saved byte and current
+selection. The existing `D_82001D5C` view is used for the latter real store,
+retaining its original object-symbol metadata. These are the actual required
+writes; no dummy operations, extra reads, forced registers or volatile
+qualifiers are added. The row initialization follows the real counter update.
+`func_800548C4` receives only its actual pointer to a four-word record, matching
+its definition in `src/517E0.c`; the loop's 33/5/20 constants are not fabricated
+call arguments. The obsolete patch commentary and unused declarations are
+removed.
+
+Known/candidate whole-module normal/+20-line controls preserve every other
+function byte and all relative function extents. The initial candidate's three
+raw differences were real field-relative addends; the final legacy current
+view uses its original relocation endpoint. Native compile-time checks verify
+all header offsets, the 300-byte grid and `sizeof == 0x144` without changing
+the module. Host syntax and normal native `make -j1 COMPARE=1 RUN_CC_CHECK=1`
+pass. The linked grid helper is exactly 240 retail bytes; all other function
+extents, pre-existing C object symbols, legacy runtime addresses and fragment
+loader boundaries remain exact. ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+Coverage, compiler sources and linker placement are unchanged.
