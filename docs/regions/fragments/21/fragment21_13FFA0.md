@@ -113,3 +113,46 @@ Remaining:
   and `0 < x`.
 - Halfword temps are allocated differently (retail keeps `D_825087DC` in
   `$a0` and `from` in `$v0`).
+
+
+## 2026-11-03 — button predicate accepted without instruction substitution
+
+`func_82501490` now matches all 82 instructions / 328 retail bytes from
+ordinary C. Removed the hex replacement, four relocation-target patches,
+obsolete patching comments and dummy `result | 0` expressions. A common
+result and exit handle the existing nested mode/kind rules. Unnecessary
+compound blocks and the redundant default assignment are also removed;
+cleanup controls preserve the complete module exactly.
+
+The remaining discriminator was the mask scan. A scalar snapshot chooses
+mask `$v0`, index `$a0` and bound `$a1`. Moving index initialization earlier
+changes those identities but reorders instructions and reuses the mask-base
+register for the bound. Both remain rejected. The accepted source assigns
+`maskBits = &D_82508FCE` and consumes `*maskBits` inside the eight-iteration
+loop. Native UOPT hoists one mask load while retaining the real pointer/value
+lifetimes: retail's base `$a0`, mask `$a1`, index `$v0` and bound `$a2` emerge
+without register declarations, false interfaces, unused locals or padding.
+The shared return retains the original `$v1` result and zero-byte frame.
+
+Known/proper/index-initialization stock CFE/UOPT/UGEN/AS1 captures are
+calibrated with normal/+20 whole-module controls; UOPT diagnostic output and
+assembled UGEN listings preserve the native outputs. A bounded one-worker
+native permuter did not close the scalar snapshot. Result widths, index
+signedness, mask-header views, early snapshots and alternate loop spellings
+do not replace the accepted pointer usage.
+
+The final cleaned source and its +20 control preserve every allocated
+section, all module text, function/object symbols and relocation endpoints
+against the current retail-matching object. Host syntax passes. A fresh normal
+native full-ROM gate also passes:
+
+```sh
+make -j1 COMPARE=1 RUN_CC_CHECK=1 PYTHON=<native-venv-python>
+```
+
+Full ROM MD5 is `1561c75d11cedf356a8ddb1a4a5f9d5d`; SHA-256 is
+`8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`.
+All function extents, legacy symbol addresses/sizes/types and previous C
+storage/types are unchanged. No linker, coverage, compiler/tooling, helper
+function or private artifact changes are included. This acceptance supersedes
+the earlier `func_82501490` requeue.
