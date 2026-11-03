@@ -430,5 +430,102 @@ u16 func_880014A4(s32 arg0, u16 arg1) {
     return 2048 / arg1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_880015F4.s")
+/* mkdraft:func_880015F4 begin */
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern void func_800459AC(s32 *, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80046204(s32, s32, s32, u32, u32, u32, u32, u32, u32, s32, s32, s32, s32, s32, s32, s32);
+extern s32 func_88001234(s32, u16, s32);
+
+
+void func_880015F4(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s16 *arg4, s32 arg5, s32 arg6, s32 arg7)
+{
+  s32 end_x;
+  s32 start_x;
+  s32 text_width;
+  s32 row_y;
+  s32 index;
+  s32 gap;
+  u16 h;
+  s32 column_width;
+  s32 flags;
+  h = arg2;
+  gap = 0;
+  if ((arg5 == 0) && (arg6 == 2))
+  {
+    flags = 0x200000;
+  }
+  else
+  {
+    flags = 0;
+  }
+  column_width = func_88001234(arg6, h, arg7) * 1;
+  if (column_width > 0)
+  {
+    if (arg7 != 0)
+    {
+      column_width &= 0xFFFE;
+    }
+  }
+  else
+  {
+    gap = 1;
+    column_width = func_880014A4(arg6, h ^ 0);
+  }
+  start_x = arg3 / column_width;
+  text_width = arg3 % column_width;
+  if (text_width)
+  {
+    start_x++;
+  }
+  else
+  {
+    text_width = column_width;
+  }
+  index = 0;
+  row_y = arg1;
+  if (start_x)
+  {
+    end_x = start_x - 1;
+    do
+    {
+      if (index == end_x)
+      {
+        column_width = text_width;
+      }
+      if (gap)
+      {
+        func_80046204(arg4, arg5, arg6, arg2, column_width, 0, 0, arg2 - 1, column_width - 1, 0, 2, 2, 0, 0, 0, 0);
+      }
+      else
+      {
+        func_800459AC(arg4, arg5, arg6, arg2, column_width, arg7, 0, 2, 2, 0, 0, 0, 0);
+      }
+      GfxRect_DrawTextured(arg0, row_y, arg2, column_width, 0, 0, 0x400, 0x400, flags);
+      switch (arg6)
+      {
+        case 0:
+          arg4 += (arg2 * column_width) >> 2;
+          break;
+
+        case 1:
+          arg4 += (arg2 * column_width) >> 1;
+          break;
+
+        case 2:
+          arg4 += arg2 * column_width;
+          break;
+
+        case 3:
+          arg4 += ((arg2 * column_width) * 2) ^ 0;
+          break;
+
+      }
+
+      index++;
+      row_y += column_width;
+    }
+    while (index != start_x);
+  }
+}
+/* mkdraft:func_880015F4 end */
 #endif
