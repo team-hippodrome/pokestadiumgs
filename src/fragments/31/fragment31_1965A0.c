@@ -39,38 +39,45 @@ void func_882233BC(s32 arg0) {
 /* mkdraft:func_88223418 begin */
 extern void func_800226C0(s32);
 extern s8 D_882338E0[];
-#pragma REWRITE_FUNCTION_WORD(func_88223418, 0x48, 0x0304C821, 0x0098C821)
-#pragma REWRITE_FUNCTION_WORD(func_88223418, 0xC4, 0x504F0005, 0x51E20005)
+
+// The current slot and two choices occupy the last four bytes of menu state.
+// func_882241B8 allocates 56 bytes and initializes this tail at offset 0x34.
+//@src/fragments/31/fragment31_1965A0.c
+typedef struct F31SelectionTail {
+    s16 current;
+    s8 choices[2];
+} F31SelectionTail;
 
 void func_88223418(void) {
-    s8 selected;
-    UNUSED s8 pad;
-    u8 sp25;
-    s32 index;
+    struct {
+        s8 selected;
+        u8 cleared;
+    } change;
+    u8 index;
 
-    selected = D_882338E0[*(s16 *)((s8 *)(u32)D_88234850 + 0xC)];
-    sp25 = 0;
+    change.selected = D_882338E0[*(s16 *)((s8 *)(u32)D_88234850 + 0xC)];
+    change.cleared = 0;
     Input_SetRepeatController(D_80087200);
     func_882233BC(1);
-    if (selected != *(s8 *)((s8 *)(u32)D_88234850 + *(s16 *)((s8 *)(u32)D_88234850 + 0x34) + 0x36)) {
-        func_800226C0(0x47);
-        ((s8 *)(u32)D_88234850)[*(s16 *)((s8 *)(u32)D_88234850 + 0x34) + 0x36] = selected;
+    if (change.selected != ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current]) {
+        func_800226C0(71);
+        ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current] = change.selected;
     } else {
-        func_800226C0(0x48);
-        ((s8 *)(u32)D_88234850)[*(s16 *)((s8 *)(u32)D_88234850 + 0x34) + 0x36] = -1;
-        sp25 = 1;
+        func_800226C0(72);
+        ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current] = -1;
+        change.cleared = 1;
     }
-    for (index = 0; index < 2; index = (index + 1) & 0xFF) {
-        if (selected == ((s8 *)(u32)D_88234850)[index + 0x36] && *(s16 *)((s8 *)(u32)D_88234850 + 0x34) != index) {
-            ((s8 *)(u32)D_88234850)[index + 0x36] = -1;
+    for (index = 0; index < 2; index++) {
+        if (change.selected == ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[index] && index != ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current) {
+            ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[index] = -1;
         }
     }
-    if (((s8 *)(u32)D_88234850)[0x36] != -1 && ((s8 *)(u32)D_88234850)[0x37] != -1) {
-        *(s16 *)((s8 *)(u32)D_88234850 + 0x34) = 2;
+    if (((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[0] != -1 && ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->choices[1] != -1) {
+        ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current = 2;
         return;
     }
-    if (sp25 == 0) {
-        *(s16 *)((s8 *)(u32)D_88234850 + 0x34) = (s16)(*(s16 *)((s8 *)(u32)D_88234850 + 0x34) + 1);
+    if (change.cleared == 0) {
+        ((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current = (s16)(((F31SelectionTail *)((u8 *)D_88234850 + 0x34))->current + 1);
     }
 }
 /* mkdraft:func_88223418 end */
