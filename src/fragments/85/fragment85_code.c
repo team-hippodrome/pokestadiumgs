@@ -107,7 +107,28 @@ void func_8FD00654(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD00680.s")
+/* mkdraft:func_8FD00680 begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+
+
+
+void func_8FD00680(s16 arg0, s16 arg1, u16 arg2, u16 arg3) {
+    s16 left_height;
+    s16 right_edge;
+    s32 right;
+
+    left_height = arg3 - 2;
+    GfxRect_DrawTextured((s16)(arg0 - 2), (s16)(arg1 - 2), 4, left_height, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured((s16)(arg0 - 1), (s16)(arg1 + arg3 - 4), 4, 4, 0x100, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured((s16)(arg0 + 3), (s16)(arg1 + arg3 - 4), (s16)(arg2 - 7), 4, 0x160, 0, 0, 0x400, 0);
+    right = arg0 + arg2;
+    right_edge = right - 4;
+    GfxRect_DrawTextured(right_edge, (s16)(arg1 + arg3 - 4), 4, 4, 0x180, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(right_edge, (s16)(arg1 + 2), 4, (s16)(arg3 - 6), 0x180, 0, 0x400, 0, 0);
+    GfxRect_DrawTextured((s16)(right - 5), (s16)(arg1 - 2), 4, 4, 0x80, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured((s16)(arg0 + 2), (s16)(arg1 - 2), (s16)(arg2 - 7), 4, 0x80, 0, 0, 0x400, 0);
+}
+/* mkdraft:func_8FD00680 end */
 #endif
 
 #ifdef VERSION_US
