@@ -341,7 +341,16 @@ or reverting a function to assembly does not establish a proper C match.
   changes are needed beyond the already verified initializer prerequisite.
   See [the grid evidence](regions/fragments/16/fragment16_code.md).
 
-This leaves 271 directive occurrences and 18 affected functions. Coverage files and
+- `func_822068E0` (`Fragment17_InitFadeState`): own the actual 1616-byte
+  resource/fade/clipping state, including the two constructor-confirmed
+  100-rectangle buffers. Partition the complete scene region from the widget
+  callbacks so the three disjoint runtime objects retain their addresses.
+  Stock IDO emits all 112 retail bytes without 17 rewrite/coalescing directives.
+  Both module controls, host syntax, full-ROM comparison, all former-module
+  function extents and legacy addresses, and YAML/linker generation checks
+  pass. See [the scene evidence](regions/fragments/17/fragment17_1162A0.md).
+
+This leaves 254 directive occurrences and 17 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -363,9 +372,9 @@ table are baseline function directives, excluding the separate section word.
 | `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |
 | `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
 | `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Pending |
-| `func_822068E0` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 17 | Pending |
-| `func_8220AC38` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
-| `func_8220AC64` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
+| `func_822068E0` | [src/fragments/17/fragment17_1162A0.c](../src/fragments/17/fragment17_1162A0.c) | 17 | Replaced with C |
+| `func_8220AC38` | [src/fragments/17/fragment17_1162A0.c](../src/fragments/17/fragment17_1162A0.c) | 1 | Replaced with C |
+| `func_8220AC64` | [src/fragments/17/fragment17_1162A0.c](../src/fragments/17/fragment17_1162A0.c) | 1 | Replaced with C |
 | `func_8220BF68` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 3 | Replaced with C |
 | `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Replaced with C |
 | `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Replaced with C |
