@@ -340,5 +340,169 @@ void Fragment44_AlignAndStepScrollDown(void *arg0) {
     func_8AF00130(0xC4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF0326C.s")
+/* mkdraft:func_8AF0326C begin */
+extern void func_8AC007FC(void);
+extern void func_8AF00130(s32);
+extern void *D_8AF263C0;
+extern void Fragment44_CullScrollRecordsAbove(void *);
+extern void Fragment44_CullScrollRecordsBelow(void *);
+extern void Fragment44_ShiftActiveScrollRecords(void *, s16);
+extern void Fragment44_StepScrollUp(void *);
+extern void Fragment44_StepScrollDown(void *);
+extern void Fragment44_AlignAndStepScrollUp(void *);
+extern void Fragment44_AlignAndStepScrollDown(void *);
+
+struct ScrollInput {
+    u8 header[6];
+    u16 held;
+    u16 pressed;
+    u16 unknown;
+    u16 repeat;
+};
+
+
+
+s32 func_8AF0326C(s32 *arg0)
+{
+  u8 *state;
+  u8 *config;
+  s32 was_scrolling;
+  was_scrolling = 0;
+  state = ((u8 *) arg0) + 0x28;
+  switch (arg0[0])
+  {
+    case 4:
+      config = ((u8 *) arg0) + 0x44;
+      func_8AC007FC();
+      if ((*((s16 *) (state + 0x12))) == 1)
+    {
+      s32 previous;
+      if ((*((s32 *) (state + 8))) < (*((s32 *) (state + 4))))
+      {
+        previous = *((s32 *) (state + 4));
+        *((s32 *) (state + 4)) = (*((s32 *) (state + 4))) - (*((s16 *) (state + 0x14)));
+        if ((*((s32 *) (state + 8))) >= (*((s32 *) (state + 4))))
+        {
+          (*((s16 *) (config + 0x28)))++;
+          *((s16 *) (state + 0x12)) = 0;
+          *((s32 *) (state + 4)) = *((s32 *) (state + 8));
+          was_scrolling = 1;
+          Fragment44_CullScrollRecordsAbove(arg0);
+        }
+        Fragment44_ShiftActiveScrollRecords(arg0, (s16) ((*((s32 *) (state + 4))) - previous));
+      }
+      else
+        if ((*((s32 *) (state + 4))) < (*((s32 *) (state + 8))))
+      {
+        s32 previous;
+        previous = *((s32 *) (state + 4));
+        *((s32 *) (state + 4)) = (*((s16 *) (state + 0x14))) + (*((s32 *) (state + 4)));
+        if ((*((s32 *) (state + 4))) >= (*((s32 *) (state + 8))))
+        {
+          (*((s16 *) (config + 0x28)))--;
+          *((s16 *) (state + 0x12)) = 0;
+          *((s32 *) (state + 4)) = *((s32 *) (state + 8));
+          was_scrolling = 1;
+          Fragment44_CullScrollRecordsBelow(arg0);
+        }
+        Fragment44_ShiftActiveScrollRecords(arg0, (s16) ((*((s32 *) (state + 4))) - previous));
+      }
+    }
+      if ((*((s16 *) (state + 0x12))) == 0)
+    {
+      if ((*((s16 *) (state + 0x18))) == 0)
+      {
+        if (((struct ScrollInput *) D_8AF263C0)->repeat & 0x800)
+        {
+          Fragment44_StepScrollUp(arg0);
+          return -1;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->repeat & 0x400)
+        {
+          Fragment44_StepScrollDown(arg0);
+          return -1;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->repeat & 0x200)
+        {
+          if ((*((s16 *) (state + 0xC))) > 0)
+          {
+            func_8AF00130(1);
+            (*((s16 *) (state + 0xC)))--;
+          }
+          return -1;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->repeat & 0x100)
+        {
+          if ((*((s16 *) (state + 0xC))) < ((*((s32 *) (((u8 *) arg0) + 0x54))) - 1))
+          {
+            func_8AF00130(1);
+            (*((s16 *) (state + 0xC)))++;
+          }
+          return -1;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->held & 0x800)
+        {
+          if (was_scrolling == 1)
+          {
+            Fragment44_StepScrollUp(arg0);
+            return -1;
+          }
+          break;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->held & 0x400)
+        {
+          if (was_scrolling == 1)
+          {
+            Fragment44_StepScrollDown(arg0);
+            return -1;
+          }
+          break;
+        }
+        if ((!(((struct ScrollInput *) D_8AF263C0)->held & 0x200)) && (((struct ScrollInput *) D_8AF263C0)->held & 0x100))
+        {
+          // FAKE: empty guard left in the retail build; it only consumes the
+          // held-mask result and has no body.
+        }
+        break;
+      }
+      if ((*((s16 *) (state + 0x18))) == 1)
+      {
+        if (((struct ScrollInput *) D_8AF263C0)->held & 0x800)
+        {
+          Fragment44_AlignAndStepScrollUp(arg0);
+          return -1;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->held & 0x400)
+        {
+          Fragment44_AlignAndStepScrollDown(arg0);
+          return -1;
+        }
+        break;
+      }
+      if ((*((s16 *) (state + 0x18))) == 2)
+      {
+        if (((struct ScrollInput *) D_8AF263C0)->held & 0x8)
+        {
+          Fragment44_AlignAndStepScrollUp(arg0);
+          return -1;
+        }
+        if (((struct ScrollInput *) D_8AF263C0)->held & 0x4)
+        {
+          Fragment44_AlignAndStepScrollDown(arg0);
+          return -1;
+        }
+        break;
+      }
+      break;
+    }
+      break;
+
+    case 6:
+      break;
+
+  }
+
+  return 0;
+}
+/* mkdraft:func_8AF0326C end */
 #endif

@@ -251,7 +251,83 @@ void func_867006C4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867007B4.s")
+/* mkdraft:func_867007B4 begin */
+typedef struct {
+    u8 unk00[0x24];
+    s32 count;
+    f32 offset;
+    u8 unk2C[0x80];
+} Stage55ScrollState;
+
+extern State86703DF4 D_86728408[];
+extern Vtx D_8670B850[];
+extern f32 D_8670B810[];
+extern u8 D_8670B950[];
+extern s32 D_8670B35C;
+extern f32 D_8670B360;
+extern Gfx *Gfx_AllocDisplayList(s32);
+
+
+
+void func_867007B4(s32 arg0, u8 *arg1) {
+    s32 index = *(s32 *)(arg1 + 0x14);
+    s32 i;
+
+    if (arg0 == 5) {
+        Stage55ScrollState *state = (Stage55ScrollState *)&D_86728408[index];
+        Vtx *vtx = (Vtx *)Gfx_AllocDisplayList(16 * sizeof(Vtx));
+        u8 *texture;
+
+        gSPDisplayList(D_800D0510++, D_8670B950);
+        gDPPipeSync(D_800D0510++);
+        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+        gSPSegment(D_800D0510++, 0xF, func_8004CA60((u8 *)func_8004C990(0xE2, 0)));
+        texture = func_8004CA60((u8 *)func_8004C990(0xE2, 0));
+
+        if (state->offset >= 32.0f) {
+            state->offset = state->offset - (f32)32;
+            state->count++;
+            if (state->count >= D_8670B35C && state->offset >= D_8670B360) {
+                state->offset = D_8670B360 + 1.0f;
+            }
+            if (state->count >= 62) {
+                state->count = 0;
+            }
+        }
+
+        for (i = 0; i < 16; i++) {
+            vtx[i] = D_8670B850[i];
+            // FAKE: the byte-cast offset read is what makes IDO load the scroll offset before
+            // the table entry, and keeps the table in f16 as the add destination.
+            *(s16 *)((u8 *)vtx + i * 0x10 + 0xA) =
+                (s16)((D_8670B810[i] + *(f32 *)((u8 *)state + 0x28)) * 32.0f);
+        }
+
+        gDPLoadTextureBlockS(D_800D0510++, texture + state->count * 0x800, G_IM_FMT_RGBA,
+                             G_IM_SIZ_16b, 32, 64, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+        gSPVertex(D_800D0510++, vtx, 16, 0);
+        gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+        gDPLoadTextureBlockS(D_800D0510++, texture + state->count * 0x800 + 0x800, G_IM_FMT_RGBA,
+                             G_IM_SIZ_16b, 32, 64, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+        gSP2Triangles(D_800D0510++, 4, 5, 6, 0, 4, 6, 7, 0);
+        gDPLoadTextureBlockS(D_800D0510++, texture + state->count * 0x800 + 0x1000, G_IM_FMT_RGBA,
+                             G_IM_SIZ_16b, 32, 64, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+        gSP2Triangles(D_800D0510++, 8, 9, 10, 0, 8, 10, 11, 0);
+        gDPLoadTextureBlockS(D_800D0510++, texture + state->count * 0x800 + 0x1800, G_IM_FMT_RGBA,
+                             G_IM_SIZ_16b, 32, 64, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+        gSP2Triangles(D_800D0510++, 12, 13, 14, 0, 12, 14, 15, 0);
+        func_8003CD84();
+    }
+}
+/* mkdraft:func_867007B4 end */
 #endif
 
 #ifdef VERSION_US

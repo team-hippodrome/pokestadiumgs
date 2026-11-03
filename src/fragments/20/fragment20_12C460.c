@@ -463,7 +463,195 @@ s32 func_82604CF0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82604D40.s")
+/* mkdraft:func_82604D40 begin */
+typedef struct Func82604D40Pair {
+    s16 unk_00;
+    s16 unk_02;
+} Func82604D40Pair;
+
+typedef struct Func82604D40Desc {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ u16 unk_04;
+    /* 0x06 */ u8 unk_06[0xA];
+    /* 0x10 */ Func82604D40Pair unk_10;
+    /* 0x14 */ s16 unk_14;
+    /* 0x16 */ s16 unk_16;
+    /* 0x18 */ Func82604D40Pair unk_18;
+    /* 0x1C */ u8 unk_1C[8];
+    /* 0x24 */ s16 unk_24;
+    /* 0x26 */ s16 unk_26;
+    /* 0x28 */ u8 unk_28[8];
+    /* 0x30 */ s16 unk_30[2];
+} Func82604D40Desc;
+
+extern u8 D_826153E0[];
+extern s16 D_82615504[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_82604CF0(s32, s32, s32, s32);
+
+
+
+
+
+void func_82604D40(void *arg0, void *arg1)
+{
+  s16 *range;
+  Func82604D40Desc *desc = arg1;
+  u8 *state;
+  s16 count;
+  s32 quotient;
+  s32 remainder;
+  s32 is_first;
+  s32 i;
+  s32 j;
+  s32 column;
+  s16 offset;
+  Func82604D40Desc *new_var2;
+  u8 *new_var;
+  range = desc->unk_30;
+  state = *(*((u8 ***) (((u8 *) arg0) + 0x110)));
+  count = *((s16 *) (state + 0x88));
+  quotient = (*((s16 *) (state + 0x88))) / 4;
+  offset = *((s16 *) (((u8 *) arg0) + 0x16));
+  is_first = (*((s16 *) arg0)) == 1;
+  remainder = count % 4;
+  desc->unk_10.unk_00 = 0;
+  if (!(desc->unk_02 & 1))
+  {
+    desc->unk_10.unk_02 = -0x1E0;
+  }
+  else
+  {
+    desc->unk_10.unk_02 = 0x1E0;
+  }
+  desc->unk_18 = desc->unk_10;
+  if (is_first)
+  {
+    range[0] = 0;
+  }
+  else
+  {
+    range[0] = 1;
+  }
+  new_var2 = desc;
+  if (quotient == desc->unk_02)
+  {
+    range[1] = remainder;
+  }
+  else
+  {
+    range[1] = -1;
+  }
+  range[2] = (*((s16 *) ((*((u8 **) (((u8 *) arg0) + 0x110))) + 0x14))) - (desc->unk_02 * 4);
+  if (range[2] < 0)
+  {
+    range[2] = 0;
+  }
+  else
+    if (range[2] >= 5)
+  {
+    range[2] = 4;
+  }
+  desc->unk_24 = (range[2] * 134) + 18;
+  new_var = (u8 *) arg0;
+  desc->unk_26 = D_82615504[desc->unk_00];
+  desc->unk_14 = ((0x22A - desc->unk_24) / 2) + 0x2C;
+  if (is_first)
+  {
+    new_var2->unk_16 = 0xF0 - (((*((s16 *) (((u8 *) arg0) + 0x12))) * ((s16 *) desc)[0x13]) / 2);
+  }
+  else
+  {
+    new_var2->unk_16 = func_82604CF0((s32) (((u8 *) arg0) + 0x3544), *((s16 *) (((u8 *) arg0) + 0x14)), new_var2->unk_00, new_var2->unk_02) + offset;
+  }
+  if ((*((u16 *) (new_var + 4))) & 0x80)
+  {
+    range[4] = 1;
+    if (new_var2->unk_02 < quotient)
+    {
+      range[3] = range[2];
+    }
+    else
+      if (quotient < new_var2->unk_02)
+    {
+      range[3] = 0;
+    }
+    else
+    {
+      range[3] = range[1] + 1;
+    }
+  }
+  else
+  {
+    range[4] = 0;
+    range[3] = range[2];
+  }
+  for (i = 0; i < range[2]; i++)
+  {
+    column = (new_var2->unk_02 * 4) + i;
+    // FAKE: `* 0` gives the zero the comparison needs while keeping this row load and
+    // its multu in the loop body; as `range[4] != 0` the function scores 1980.
+    if (range[4] != (((s16) (*((s32 *) (D_826153E0 + (column * 8))))) * 0))
+    {
+      range[5 + i] = 0xFF;
+    }
+    else
+    {
+      range[5 + i] = 0;
+    }
+    j = 1;
+    if (range[j] != (-1))
+    {
+      if (i < range[1])
+      {
+        range[9 + i] = 0;
+      }
+      else
+      {
+        range[9 + i] = 1;
+      }
+    }
+    else
+    {
+      // FAKE: `* 0` gives the zero this branch stores while keeping the row load in
+      // the branch; as `range[9 + i] = 0;` the function scores 35.
+      range[9 + i] = ((s16) (*((s32 *) (D_826153E0 + (column * 8))))) * 0;
+    }
+    *((u32 *) ((((u8 *) range) + 0x24) + (i * 4))) = (column < (*((s16 *) ((*((u8 **) (((u8 *) arg0) + 0x110))) + 0x14)))) ? (*((u32 *) ((((u8 *) arg0) + 0xD0) + (column * 4)))) : (0);
+    range[13 + i] = (s16) (*((s32 *) (D_826153E0 + (column * 8))));
+    for (j = 0; j < 2; j++)
+    {
+      *((u32 *) (((((u8 *) range) + 0x34) + (i * 8)) + (j * 4))) = func_8004C990(0x66, *((s16 *) (((D_826153E0 + (column * 8)) + 4) + (j * 2))));
+    }
+
+    if (is_first)
+    {
+      quotient = i;
+      if (range[1] != (-1))
+      {
+        if (quotient < range[1])
+        {
+          range[42 + quotient] = 1;
+        }
+        else
+        {
+          range[42 + quotient] = 0;
+        }
+      }
+      else
+      {
+        range[42 + i] = 0;
+      }
+    }
+    else
+    {
+      range[42 + i] = 0;
+    }
+  }
+
+}
+/* mkdraft:func_82604D40 end */
 
 typedef struct unk_func_82605110_pair {
     /* 0x00 */ s16 unk_00;
@@ -568,7 +756,130 @@ void func_82605218(void *arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826053A4.s")
+/* mkdraft:func_826053A4 begin */
+extern s16 D_82615504[];
+extern s16 D_82615550[];
+extern s16 D_8261555C[];
+extern s16 D_82615568[];
+extern s16 D_82615580[];
+extern s32 func_8004C874(s32, s32);
+
+
+
+void func_826053A4(void *arg0, void *arg1) {
+    // Declared first: IDO lays named-local home slots top-down in declaration
+    // order, and the target spills this function's entry copy to 0x3C(sp).
+    u8 *entry;
+    u8 *state;
+    u8 *desc;
+    u8 *rec;
+    u8 *data;
+    u8 *sub;
+    s16 other;
+    s32 i;
+
+    desc = arg1;
+    state = *(u8 **)*(u8 **)((u8 *)arg0 + 0x110);
+    entry = (u8 *)arg1 + 0x30;
+    sub = 0;
+    // Record views into the state block. The address needs the deref-then-
+    // subscript form: uopt lowers a genuine array subscript as addu rd,base,index,
+    // while "base + index * stride" puts the scaled index in rs.
+    //@matching_notes/spool/func_8000AA2C.meta
+    data = (u8 *)&(*(u8 (*)[1][0x16])state)[*(s16 *)((u8 *)arg1 + 2)] + 0x1C;
+    rec = *(s16 *)((u8 *)arg1 + 2) * 0x428 + *(u8 **)((u8 *)arg0 + 0x110) + 0xB0;
+    other = *(s16 *)(state + 0x88);
+    if (*(u8 **)(*(u8 **)((u8 *)arg0 + 0x110) + 0xC) != 0) {
+        sub = *(s16 *)((u8 *)&(*(s16 (*)[1])*(u8 **)((u8 *)arg0 + 0x110))[other] + 0x18) * 0x98 + *(u8 **)(*(u8 **)((u8 *)arg0 + 0x110) + 0xC) + 4;
+    }
+    *(s16 *)(desc + 0x10) = 0;
+    *(s16 *)(desc + 0x14) = 44;
+    if (*(s16 *)(desc + 2) == 0) {
+        *(s16 *)(desc + 0x12) = -480;
+        *(s16 *)(desc + 0x16) = 41;
+    } else {
+        *(s16 *)(desc + 0x12) = 480;
+        *(s16 *)(desc + 0x16) = 242;
+    }
+    *(unk_func_82605110_pair *)(desc + 0x18) = *(unk_func_82605110_pair *)(desc + 0x10);
+    *(s16 *)(desc + 0x24) = 554;
+    *(s16 *)(desc + 0x26) = D_82615504[*(s16 *)desc];
+    if (*(s8 *)((u8 *)&(*(u8 (*)[1])state)[*(s16 *)(desc + 2)] + 0x74) == -1) {
+        if (*(s8 *)(rec + 2) >= 0) {
+            *(s32 *)entry = *(s32 *)((u8 *)&(*(s32 (*)[1])(u8 *)arg0)[*(s16 *)(desc + 2)] + 0xC8);
+        } else {
+            *(s32 *)entry = *(s32 *)((u8 *)&(*(s32 (*)[1])(u8 *)arg0)[other] + 0xD0);
+        }
+    } else {
+        *(s32 *)entry = *(s32 *)((u8 *)&(*(s32 (*)[1])(u8 *)arg0)[*(s16 *)(desc + 2)] + 0xC8);
+    }
+    if (*(s16 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0x12) != 0) {
+        *(s16 *)(entry + 4) = 1;
+    } else {
+        *(s16 *)(entry + 4) = 0;
+    }
+    if (*(s16 *)(entry + 4) != 0) {
+        *(s16 *)(entry + 6) = 12;
+    } else {
+        *(s16 *)(entry + 6) = 6;
+    }
+    *(s16 *)(entry + 8) = (u32)*(s16 *)(desc + 2) * *(s16 *)(entry + 6);
+    if (*(s8 *)data == 0) {
+        if (!(*(u16 *)((u8 *)arg0 + 4) & 0x400)) {
+            if (*(s8 *)&(*(u8 (*)[1])state)[*(s16 *)(desc + 2)] >= 0) {
+                *(s32 *)(entry + 0xC) = func_8004C874(72, 41);
+            } else if (sub != 0) {
+                *(s32 *)(entry + 0xC) = func_8004C874(72, *(u8 *)sub - 1);
+            } else {
+                *(s32 *)(entry + 0xC) = func_8004C874(72, 41);
+            }
+        } else {
+            *(s32 *)(entry + 0xC) = 0;
+        }
+    } else {
+        *(s32 *)(entry + 0xC) = (u8 *)&(*(u8 (*)[1][0x16])state)[*(s16 *)(desc + 2)] + 0x1C;
+    }
+    *(s32 *)(entry + 0x10) = (u8 *)&(*(u8 (*)[1][0xC])state)[*(s16 *)(desc + 2)] + 0x8D0;
+    i = 0;
+    do {
+        i += 1;
+        *(s16 *)(entry + 0x12 + i * 2) = 0xFF;
+    } while (i < 12);
+    if (*(s16 *)(entry + 6) == 6) {
+        i = 0;
+        if (*(s16 *)(entry + 6) > 0) {
+            do {
+                if (*(s16 *)(desc + 2) == 0) {
+                    *(s16 *)(entry + 0x2C + i * 2) = D_82615550[i];
+                } else {
+                    *(s16 *)(entry + 0x2C + i * 2) = D_8261555C[i];
+                }
+                i += 1;
+            } while (i < *(s16 *)(entry + 6));
+        }
+    } else if (*(s16 *)(entry + 6) == 12) {
+        i = 0;
+        if (*(s16 *)(entry + 6) > 0) {
+            do {
+                if (*(s16 *)(desc + 2) == 0) {
+                    *(s16 *)(entry + 0x2C + i * 2) = D_82615568[i];
+                } else {
+                    *(s16 *)(entry + 0x2C + i * 2) = D_82615580[i];
+                }
+                i += 1;
+            } while (i < *(s16 *)(entry + 6));
+        }
+    } else {
+        i = 0;
+        if (*(s16 *)(entry + 6) > 0) {
+            do {
+                *(s16 *)(entry + 0x2C + i * 2) = i;
+                i += 1;
+            } while (i < *(s16 *)(entry + 6));
+        }
+    }
+}
+/* mkdraft:func_826053A4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826057A8.s")
 
@@ -779,9 +1090,236 @@ void func_82605E04(void *arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605EF4.s")
+/* mkdraft:func_82605EF4 begin */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82605FE4.s")
+
+void func_82605EF4(void *arg0, void *arg1) {
+    typedef struct { s16 x; s16 y; } Vec2;
+    s16 *d;
+    u8 *pool;
+    u8 *p;
+    s32 i;
+    s32 j;
+
+    d = (s16 *)((u8 *)arg1 + 0x30);
+    pool = *(u8 **)(*(u8 **)((u8 *)arg0 + 0x110));
+    *(s16 *)((u8 *)arg1 + 0x10) = 0;
+    *(u16 *)((u8 *)arg1 + 4) &= 0xFFFE;
+    *(s16 *)((u8 *)arg1 + 0x14) = 0xA9;
+    *(s16 *)((u8 *)arg1 + 0x12) = -0x1E0;
+    *(s16 *)((u8 *)arg1 + 0x16) = 0x5C;
+    *(Vec2 *)((u8 *)arg1 + 0x18) = *(Vec2 *)((u8 *)arg1 + 0x10);
+    *(s16 *)((u8 *)arg1 + 0x24) = 0x131;
+    *(s16 *)((u8 *)arg1 + 0x26) = D_82615504[*(s16 *)((u8 *)arg1 + 0)];
+    for (i = 0; i < 2; i++) {
+        p = *(u8 **)((u8 *)arg0 + 0x110) + i * 0x428 + 0xB0;
+        d[i] = *(s16 *)p;
+        for (j = 0; j < 2; j++) {
+            d[2 * i + 2 + j] = *(s8 *)(p + 2 + j);
+        }
+    }
+    for (i = 0; i < 2; i++) {
+        d[6 + i] = *(s16 *)(pool + 0x900 + i * 2);
+    }
+}
+/* mkdraft:func_82605EF4 end */
+
+/* mkdraft:func_82605FE4 begin */
+extern u8 D_82615420[];
+extern u8 D_82615444[];
+extern u8 D_8261545C[];
+extern u8 D_8261548C[];
+extern u8 D_826154B0[];
+extern u8 D_826154C8[];
+extern u8 D_826154E0[];
+extern s32 func_826058CC(s32 arg0);
+typedef struct {
+  s16 unk_00;
+  s16 unk_02;
+} Pair16_5FE4;
+typedef struct {
+  s16 unk_00;
+  s16 unk_02;
+  s16 unk_04;
+  s16 unk_06;
+  s16 unk_08;
+  s16 unk_0A;
+} Entry5FE4;
+typedef struct {
+  u16 unk_00;
+  s16 unk_02;
+  s16 unk_04;
+  s16 unk_06;
+  Entry5FE4 *unk_08;
+} Head5FE4;
+
+
+void func_82605FE4(void *arg0, void *arg1)
+{
+  s32 three;
+  Head5FE4 *head;
+  u8 *state;
+  int new_var;
+  int two;
+  s32 type;
+  new_var = 1; // FAKE: constants 1, 2 and 3 stay in named locals; literals score 158-210 diffs
+  state = *(*((u8 ***) (((u8 *) arg0) + 0x110)));
+  two = 2;
+  type = *((u8 *) (state + 7));
+  head = (Head5FE4 *) (((u8 *) arg1) + 0x30);
+  *((u16 *) (((u8 *) arg1) + 4)) &= ~new_var;
+  three = 3; // also the loop index below; the switch reads it as the 0x300 value
+  switch ((*((u16 *) (state + 8))) & 0xFF00)
+  {
+    case 0:
+      if (func_826058CC(type) == 0)
+    {
+      head->unk_00 = new_var;
+    }
+    else
+      if (((*((u16 *) (state + 8))) & 0xFF) == two)
+    {
+      head->unk_00 = three;
+    }
+    else
+    {
+      head->unk_00 = two;
+    }
+      break;
+
+    case 0x100:
+      head->unk_00 = new_var;
+      break;
+
+    case 0x200:
+      head->unk_00 = 0;
+      break;
+
+    case 0x300:
+      if (func_826058CC(type) == 0)
+    {
+      head->unk_00 = 4;
+    }
+    else
+    {
+      head->unk_00 = 5;
+    }
+      break;
+
+    // 0x600 is listed before 0x500 so uopt loads 7 into t6 and 6 into t5;
+    // ascending order scores 2 diffs.
+    case 0x600:
+      head->unk_00 = 6;
+      break;
+
+    case 0x500:
+      head->unk_00 = 7;
+      break;
+
+    default:
+      head->unk_00 = new_var;
+      break;
+
+  }
+
+  *((s16 *) (((u8 *) arg1) + 0x10)) = 0;
+  *((s16 *) (0x12 + ((u8 *) arg1))) = 0x1E0;
+  *((Pair16_5FE4 *) (((u8 *) arg1) + 0x18)) = *((Pair16_5FE4 *) (((u8 *) arg1) + 0x10));
+  *((s16 *) (((u8 *) arg1) + 0x14)) = 0xA9;
+  *((s16 *) (((u8 *) arg1) + 0x24)) = 0x131;
+  switch (head->unk_00)
+  {
+    case 0:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0x12F;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x58;
+      head->unk_04 = 3;
+      head->unk_06 = 0;
+      head->unk_08 = (Entry5FE4 *) D_82615420;
+      break;
+
+    case 1:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0xE8;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x81;
+      head->unk_04 = two;
+      head->unk_06 = new_var;
+      head->unk_08 = (Entry5FE4 *) D_82615444;
+      break;
+
+    case 2:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0xE8;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x95;
+      head->unk_04 = 4;
+      head->unk_06 = new_var;
+      head->unk_08 = (Entry5FE4 *) D_8261545C;
+      break;
+
+    case 3:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0xE8;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x81;
+      head->unk_04 = three;
+      head->unk_06 = new_var;
+      head->unk_08 = (Entry5FE4 *) D_8261548C;
+      break;
+
+    case 4:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0xE8;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x70;
+      head->unk_04 = two;
+      head->unk_06 = 0;
+      head->unk_08 = (Entry5FE4 *) D_82615444;
+      break;
+
+    case 5:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0xE8;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x5C;
+      head->unk_04 = two;
+      head->unk_06 = 0;
+      head->unk_08 = (Entry5FE4 *) D_826154B0;
+      break;
+
+    case 6:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0x12F;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x44;
+      head->unk_04 = two;
+      head->unk_06 = 0;
+      head->unk_08 = (Entry5FE4 *) D_826154C8;
+      break;
+
+    case 7:
+      *((s16 *) (((u8 *) arg1) + 0x16)) = 0x12F;
+      *((s16 *) (((u8 *) arg1) + 0x26)) = 0x58;
+      head->unk_04 = three;
+      head->unk_06 = 0;
+      head->unk_08 = (Entry5FE4 *) D_826154E0;
+      break;
+
+  }
+
+  for (three = 0; three < head->unk_04; three++)
+  {
+    two = (int) &head->unk_08[three];
+    ((Entry5FE4 *) two)->unk_00 = new_var;
+    if ((((Entry5FE4 *) two)->unk_02 != 0) && (((*((s16 *) (state + 0x8C))) - 1) < 0))
+    {
+      ((Entry5FE4 *) two)->unk_00 = 0;
+    }
+  }
+
+  head->unk_02 = 0;
+  for (three = 0; three < head->unk_04; three++)
+  {
+    // The element address lives in two so the second loop walks it in a0;
+    // indexing head->unk_08[three] directly scores 4 diffs.
+    two = (int) &head->unk_08[three];
+    if (((Entry5FE4 *) two)->unk_00 != 0)
+    {
+      head->unk_02 = three;
+      break;
+    }
+  }
+
+}
+/* mkdraft:func_82605FE4 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826063AC.s")
 
@@ -1343,7 +1881,53 @@ void func_8260899C(u8 *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82608C1C.s")
+/* mkdraft:func_82608C1C begin */
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+void func_82608C1C(u8 *arg0, s32 arg1) {
+    s32 pad[2]; // FAKE: unused. Keeps the frame at 0xC8 so a0 has a home slot at
+                // old_sp+0 and the color structs land at 0xA8/0xAC as in retail;
+                // without it the frame is 0xC0 and the same source scores 34.
+    s32 xpos;
+    s16 ypos;
+    s32 x;
+    s16 y;
+    struct Color1 { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+    u8 *image;
+    s32 i;
+    f32 scale;
+    f32 tex_scale;
+    image = (u8 *)func_8004C990(0x52, 1);
+    if (image != NULL) {
+        scale = 120.0f / (f32)(*(u16 *)image);
+        if (scale > 0.0f) {
+            if (arg1 != 0) {
+                gSPDisplayList(D_800D0510++, D_80094E78);
+                gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+                func_8004D1FC(image);
+            }
+            if (arg0) {} // FAKE: empty test before the coordinate loads. The branch
+                         // on arg0 leaves the pointer with a 0xC8(sp) home that the
+                         // loop reloads each iteration, as retail does; without it IDO
+                         // copies a0 into s4 at entry and the same source scores 1847.
+            x = (s16)(*(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10));
+            y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+            ypos = y + 0x96;
+            tex_scale = 1024.0f / scale;
+            for (i = 0, xpos = x + 0xF; i < 4; i++) {
+                func_82608270(&prim, &env, (*(s16 *)(arg0 + 2) << 2) + i);
+                gDPPipeSync(D_800D0510++);
+                gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 0xFF);
+                gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 0xFF);
+                GfxRect_DrawTextured((s16)xpos, (s16)ypos, 120, 36, 0, 0, (s32)(tex_scale + (tex_scale > 0.0f ? 0.5f : -0.5f)), 0x400, 0);
+                xpos += 135;
+            }
+        }
+    }
+}
+/* mkdraft:func_82608C1C end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82608EC4.s")
 
@@ -1548,7 +2132,64 @@ void func_82609938(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82609A88.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82609D84.s")
+/* mkdraft:func_82609D84 begin */
+extern s32 func_8004410C();
+extern s16 D_826156D0[];
+extern s16 D_826156D4[];
+
+
+
+void func_82609D84(void *arg0, s32 arg1) {
+    s32 pad; // FAKE: unused slot above the locals; diff score 76 without it.
+    u8 *base;
+    s32 tilew;
+    s16 offset_y;
+    u8 *image;
+    s16 *tbl;
+    s16 mode;
+    s32 cols;
+    s32 rows;
+    s32 rowoff;
+    s16 offset_x;
+    s32 index;
+
+    base = (u8 *)arg0 + 0x30;
+    image = *(u8 **)(*(u8 **)((u8 *)&D_8261A490 + 0x110) + 4);
+    if (*(s16 *)((u8 *)arg0 + 0x34) != 0) {
+        tbl = D_826156D4;
+        mode = 0x10;
+        rowoff = 0x5B;
+    } else {
+        tbl = D_826156D0;
+        mode = 0x11;
+        rowoff = 0;
+    }
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+    }
+    tilew = 0x87;
+    cols = 3;
+    rows = 3;
+    offset_x = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    offset_y = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    for (index = 0; index < *(s16 *)(base + 6); index++) {
+        if (*(s16 *)(base + 0x208 + index * 2) < 0xFF) {
+            if (*(s16 *)(base + 4) != 0) {
+                func_82609938(tbl[*(s16 *)((u8 *)arg0 + 2)] + offset_x + tilew * (index % cols),
+                              offset_y + mode + rowoff * (index / rows),
+                              func_8004410C(image, ((s16 *)((u8 *)&D_8261A490 + 0x38))[*(s16 *)(base + 8) + index]),
+                              0x76, 0x4E, 0x10);
+            } else {
+                func_82609938(tbl[*(s16 *)((u8 *)arg0 + 2)] + offset_x + tilew * (index % cols),
+                              offset_y + mode + rowoff * (index / rows),
+                              func_8004410C(image, ((s16 *)((u8 *)&D_8261A490 + 0x38))[*(s16 *)(base + 8) + index]),
+                              0x76, 0x90, 0x10);
+            }
+        }
+    }
+}
+/* mkdraft:func_82609D84 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260A0B8.s")
 
@@ -1763,7 +2404,48 @@ void func_8260C7D4(void *arg0, s32 arg1) {
     } while (index < *(s16 *)((u8 *)base + 4));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260C988.s")
+/* mkdraft:func_8260C988 begin */
+extern void func_8004D150(s32, s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern u8 D_80094E78[];
+extern Gfx * D_800D0510;
+extern s16 D_82615708[];
+extern s16 D_8261570C[];
+
+
+void func_8260C988(void *arg0, s32 arg1) {
+    s32 pad1; // FAKE: keeps the 0x70 frame; differ score 38 without it
+    s32 px; s32 yoff; volatile s16 y; s16 x; s32 result;
+    u8 *base; s32 index; s16 *table; s32 row; s32 cols; s32 step = 0x87;
+    base = (u8 *)arg0 + 0x30;
+    if (*(s16 *)((u8 *)arg0 + 0x34) != 0) {
+        result = func_8004C990(0x58, 0);
+        table = D_8261570C;
+        yoff = 0x12;
+        row = 0x5B;
+    } else {
+        result = func_8004C990(0x58, 1);
+        table = D_82615708;
+        yoff = 0x2C;
+        row = 0;
+    }
+    x = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    y = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    if (arg1 != 0) { gSPDisplayList(D_800D0510++, D_80094E78); gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0); }
+    gDPPipeSync(D_800D0510++); gDPSetEnvColor(D_800D0510++, 255,255,255,255); gDPSetPrimColor(D_800D0510++,0,0,0x32,0,0,255);
+    cols = 3;
+    index = 0;
+    if (*(s16 *)(base + 6) > 0) do {
+        px = x + table[*(s16 *)((u8 *)arg0 + 2)] + step * (index % cols);
+        if (*(s16 *)(base + index * 2 + 0x25C) == 0) goto next;
+        if (*(s16 *)(base + index * 2 + 0x208) < 0xFF) {
+            func_8004D150(px, y + yoff + row * (index / cols), result, 0, 0x100, 0);
+        }
+    next:
+        index++;
+    } while (index < *(s16 *)(base + 6));
+}
+/* mkdraft:func_8260C988 end */
 
 extern u8 *func_8004CA60(u8 *);
 extern void func_800459AC();
@@ -1828,11 +2510,241 @@ s32 func_8260D3F4(s32 arg0, s32 arg1, s32 arg2) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260D440.s")
+/* mkdraft:func_8260D440 begin */
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_8004D1C4(s32, s32, s32, s32, s32, s32, s32);
+extern void *func_80008494(void);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
+extern u8 D_80094E78[];
+extern Gfx * D_800D0510;
+extern s16 D_82615718[];
+extern s16 D_8261571C[];
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260D820.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260DB98.s")
+void func_8260D440(void *arg0, s32 arg1) {
+    u8 *base;
+    s32 unused; /* FAKE: reserves 0xB8; 192 without it */
+    s16 *img;
+    s32 flag;
+    struct { s16 x, y; } pos;
+    struct { u8 r, g, b, a; } prim;
+    struct { u8 r, g, b, a; } env;
+    s16 *tbl;
+    s16 yofs;
+    s32 cells;
+    u16 unused16; /* FAKE: reserves 0xB2; 288 without it */
+    s32 dy;
+    s16 *tex;
+    s32 i;
+    s32 xpos;
+    s32 ypos;
+    u8 *walker;
+    s32 sub;
+    u8 *state;
+
+    base = (u8 *)arg0 + 0x30;
+    state = (u8 *)arg0 + 0x30;
+    img = func_80008494();
+    flag = 0;
+    if (*(s16 *)(state + 4) != 0) {
+        tbl = D_8261571C;
+        yofs = 0x10;
+        dy = 0x5B;
+    } else {
+        tbl = D_82615718;
+        yofs = 0x11;
+        dy = 0;
+    }
+    pos.x = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    pos.y = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+    }
+    func_82607BF4(*(s16 *)arg0, (u8 *)&prim, (u8 *)&env, *(s16 *)((u8 *)arg0 + 0xC), (*(u16 *)((u8 *)arg0 + 4) & 8) != 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+    i = 0;
+    if (*(s16 *)(state + 6) > 0) {
+        walker = state;
+        do {
+            tex = (s16 *)func_8260D3F4(*(s16 *)(state + 4), *(s16 *)(state + 0xE), i);
+            cells = (s32)((u32)*(u16 *)((u8 *)tex + 2) * (u32)*(s16 *)(walker + 0x208)) / 255;
+            sub = *(u16 *)((u8 *)tex + 2) - cells;
+            xpos = tbl[*(s16 *)((u8 *)arg0 + 2)] + pos.x + (i % 3) * 0x87;
+            if (*(s16 *)(walker + 0x208) > 0) {
+                if (*(s16 *)(walker + 0x208) < 0xFF) {
+                    flag = 1;
+                    ypos = pos.y + yofs + dy * (i / 3);
+                    func_80006F70(&D_800D0510, xpos, ypos, tex[0], *(u16 *)((u8 *)tex + 2));
+                } else {
+                    flag = 0;
+                    func_80006F70(&D_800D0510, 0, 0, img[0], img[1]);
+                    ypos = pos.y + yofs + dy * (i / 3);
+                }
+                func_8004D1C4(xpos, ypos - sub, 0xA, 0, (s32)tex, 0, 0);
+            }
+            i++;
+            walker += 2;
+        } while (i < *(s16 *)(base + 6));
+    }
+    if (flag != 0) {
+        func_80006F70(&D_800D0510, 0, 0, img[0], img[1]);
+    }
+}
+/* mkdraft:func_8260D440 end */
+
+/* mkdraft:func_8260D820 begin */
+extern s32 func_8004C990(s32, s32);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
+extern u8 D_80094E78[];
+extern Gfx *D_800D0510;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void *func_80008494();
+
+
+
+void func_8260D820(u8 *arg0, s32 arg1) {
+    u8 *base;
+    u8 *tex;
+    s32 sum;
+    s32 xpos;
+    u8 *screen;
+    s32 flag;
+    s16 y;
+    s16 x;
+    struct Color { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+    s32 shade;
+    s32 clipped;
+    s32 i;
+    s32 j;
+    u32 p;
+    u32 elem;
+    base = arg0 + 0x30;
+    tex = (u8 *)func_8004C990(0x51, 2);
+    screen = (u8 *)func_80008494();
+    flag = 0;
+    x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+    }
+    func_82607BF4(*(s16 *)arg0, (u8 *)&prim, (u8 *)&env, *(s16 *)(arg0 + 0xC),
+                  (*(u16 *)(arg0 + 4) & 8) != 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+    i = 0;
+    if (*(s16 *)(base + 4) > 0) do {
+        shade = (*(u16 *)(tex + 2) * *(s16 *)(base + 0xA + i * 2)) / 255;
+        clipped = *(u16 *)(tex + 2) - shade;
+        sum = 0;
+        for (j = 0; j < *(s16 *)(base + 0x1A + i * 2); j++) {
+            p = *(u32 *)(base + 0x34 + i * 8 + j * 4);
+            sum += *(u16 *)p;
+        }
+        xpos = x + i * 0x86 + (0x80 - sum) / 2 + 0xB;
+        if (*(s16 *)(base + 0xA + i * 2) > 0) {
+            if (*(s16 *)(base + 0xA + i * 2) < 0xFF) {
+                flag = 1;
+                func_80006F70(&D_800D0510, (s16)(x + i * 0x86 + 0xB), (s16)(y + 9), 0x80, 0x80);
+            } else {
+                flag = 0;
+                func_80006F70(&D_800D0510, 0, 0, *(s16 *)screen, *(s16 *)(screen + 2));
+            }
+            {
+                for (j = 0; j < *(s16 *)(base + 0x1A + i * 2); j++) {
+                    elem = *(u32 *)(base + 0x34 + i * 8 + j * 4);
+                    func_8004D19C(xpos, y - clipped + 0x67, elem, 0, 0);
+                    xpos += *(u16 *)elem;
+                }
+            }
+        }
+        i++;
+    } while (i < *(s16 *)(base + 4));
+    flag != 0 && (func_80006F70(&D_800D0510, 0, 0, *(s16 *)screen, *(s16 *)(screen + 2)), 1);
+}
+/* mkdraft:func_8260D820 end */
+
+/* mkdraft:func_8260DB98 begin */
+extern u8 D_82615720[];
+extern u8 D_82615724[];
+extern u8 D_82615728[];
+extern u8 D_8261572C[];
+extern u8 D_82615730[];
+extern u8 D_82615734[];
+extern u8 D_80094E78[];
+extern Gfx * D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+typedef struct unk_func_8260DB98 {
+    /* 0x00 */ u8 unk_00[0x04];
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ u8 unk_06[0x06];
+    /* 0x0C */ s16 unk_0C;
+    /* 0x0E */ u8 unk_0E[0x06];
+    /* 0x14 */ s16 unk_14;
+} unk_func_8260DB98;
+typedef struct Color {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+    /* 0x03 */ u8 a;
+} Color;
+
+
+void func_8260DB98(u8 *arg0, s32 arg1) {
+    s32 tex;
+    Color *env;
+    Color *prim;
+    s16 x;
+    s16 y;
+    s16 *tbl;
+    s32 yoff;
+    unk_func_8260DB98 *sub;
+    s16 *p3c;
+
+    tex = 0;
+    env = 0;
+    prim = 0;
+    sub = (unk_func_8260DB98 *)(arg0 + 0x30);
+    p3c = (s16 *)(arg0 + 0x3C);
+    if (*(s16 *)(arg0 + 0x3C) != -1) {
+        if (*(s16 *)(arg0 + 2) == *p3c) {
+            tex = func_8004C990(0x61, 0);
+            env = (Color *)&D_82615720;
+            prim = (Color *)&D_82615724;
+        } else {
+            tex = func_8004C990(0x61, 1);
+            env = (Color *)&D_82615728;
+            prim = (Color *)&D_8261572C;
+        }
+    }
+    x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+    }
+    gDPPipeSync(D_800D0510++);
+    if (env != 0 && prim != 0) {
+        gDPSetEnvColor(D_800D0510++, env->r, env->g, env->b, sub->unk_14);
+        gDPSetPrimColor(D_800D0510++, 0, 0, prim->r, prim->g, prim->b, 255);
+    }
+    if (tex != 0) {
+        if (sub->unk_04 != 0) {
+            tbl = (s16 *)D_82615734;
+            yoff = 0x1F;
+        } else {
+            tbl = (s16 *)D_82615730;
+            yoff = 0x11;
+        }
+        func_8004D19C(tbl[*(s16 *)(arg0 + 2)] + x, y + yoff, tex, 0, 0);
+    }
+}
+/* mkdraft:func_8260DB98 end */
 
 typedef struct unk_func_8260DD84_entry {
     /* 0x00 */ s16 unk_00;
@@ -2672,7 +3584,121 @@ void func_826122A4(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826123B0.s")
+/* mkdraft:func_826123B0 begin */
+extern s32 D_82615794;
+extern s32 D_82615798;
+extern s32 D_8261579C;
+extern void func_82602708(void *arg0);
+
+
+void func_826123B0(void *arg0) {
+    u8 *records;
+    s32 seg1;
+    s32 seg2;
+    s32 seg3;
+    s32 mid;
+    s32 total;
+    s32 pos;
+    s32 diff;
+    s32 half;
+    s32 i;
+    s32 prev;
+    s32 hold;
+    u8 *cursor;
+
+    seg1 = D_82615794; seg2 = D_82615798; // FAKE: one source line gives both loads the same .loc, which fixes the lui/lw interleaving; diff score 30 without it.
+    seg3 = D_8261579C;
+    (*(s16 *)((u8 *)arg0 + 6))++;
+    pos = *(s16 *)((u8 *)arg0 + 6);
+    mid = seg1 + seg2;
+    total = mid + seg3;
+    diff = pos;
+    pos = pos | 0; // FAKE: the OR disappears during optimization, but assigning to pos stops the copy of pos into diff from folding into the clamp compare; diff score 5 without it.
+    if (diff < 0) {
+        diff = 0;
+    } else if (diff > total) {
+        diff = total;
+    }
+    if (diff < seg1) {
+        *(s16 *)((u8 *)arg0 + 0xE) = 0xFF;
+        *(s16 *)((u8 *)arg0 + 0x10) = (diff * 0xFF) / seg1;
+    } else if (diff < mid) {
+        pos = diff - seg1;
+        prev = *(s16 *)((u8 *)arg0 + 0xE);
+        half = seg2 / 2;
+        if (pos < half) {
+            *(s16 *)((u8 *)arg0 + 0xE) = 0xFF - (pos * 0xFF) / half;
+        } else {
+            *(s16 *)((u8 *)arg0 + 0xE) = ((pos - half) * 0xFF) / half;
+        }
+        *(s16 *)((u8 *)arg0 + 0x10) = 0xFF;
+        if (prev == 0xFF && *(s16 *)((u8 *)arg0 + 0xE) < prev) {
+            func_800226C0(0x76);
+        }
+    } else {
+        if (diff == mid) {
+            hold = 0;
+            if (*(u16 *)((u8 *)arg0 + 4) & 0x20) {
+                if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+                    hold = 1;
+                }
+            } else {
+                hold = 1;
+            }
+            if (!hold) {
+                *(s16 *)((u8 *)arg0 + 6) = pos - 1;
+            }
+        }
+        *(s16 *)((u8 *)arg0 + 0xE) = 0xFF;
+        *(s16 *)((u8 *)arg0 + 0x10) = 0xFF - ((diff - seg1 - seg2) * 0xFF) / seg3;
+    }
+    seg1 = 0;
+    if (*(s16 *)((u8 *)arg0 + 6) >= total) {
+        records = (u8 *)arg0 + 0x114;
+        if ((*(s32 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0xC) != 0) && !(*(u16 *)((u8 *)arg0 + 4) & 0x800)) {
+            *(s16 *)((u8 *)arg0 + 2) = 9;
+            *(s16 *)((u8 *)arg0 + 6) = 0;
+            *(s16 *)((u8 *)arg0 + 0x18) = 0;
+            ((u8 **)((u8 *)arg0 + 0x34F4))[*(s16 *)((u8 *)arg0 + 0x18)] = func_82604C40(6, 0, records, 0x14);
+            (*(s16 *)((u8 *)arg0 + 0x18))++;
+            i = 0;
+            cursor = (u8 *)arg0;
+            if (*(s16 *)((u8 *)arg0 + 0x18) > 0) {
+                do {
+                    func_826078B4(*(void **)(cursor + 0x34F4));
+                    i++;
+                    cursor += 4;
+                } while (i < *(s16 *)((u8 *)arg0 + 0x18));
+            }
+        } else {
+            if (*(u16 *)((u8 *)arg0 + 4) & 0x10) {
+                *(s16 *)((u8 *)arg0 + 2) = 0xE;
+            } else {
+                *(s16 *)((u8 *)arg0 + 2) = 0x13;
+            }
+            *(s16 *)((u8 *)arg0 + 6) = 0;
+            *(s16 *)((u8 *)arg0 + 0x18) = 0;
+            ((u8 **)((u8 *)arg0 + 0x34F4))[*(s16 *)((u8 *)arg0 + 0x18)] = func_82604C40(6, 0, records, 0x14);
+            (*(s16 *)((u8 *)arg0 + 0x18))++;
+            ((u8 **)((u8 *)arg0 + 0x34F4))[*(s16 *)((u8 *)arg0 + 0x18)] = func_82604C40(6, 1, records, 0x14);
+            (*(s16 *)((u8 *)arg0 + 0x18))++;
+            i = 0;
+            cursor = (u8 *)arg0;
+            if (*(s16 *)((u8 *)arg0 + 0x18) > 0) {
+                do {
+                    func_826078B4(*(void **)(cursor + 0x34F4));
+                    i++;
+                    cursor += 4;
+                } while (i < *(s16 *)((u8 *)arg0 + 0x18));
+            }
+        }
+        func_800226C0(0x69);
+    }
+    if (*(s16 *)((u8 *)arg0 + 2) != 0xA) {
+        func_82602708(*(u8 **)((u8 *)arg0 + 0x110));
+    }
+}
+/* mkdraft:func_826123B0 end */
 
 extern s32 D_826153C4;
 extern void *D_80087200;
@@ -2850,7 +3876,117 @@ void func_82612BD0(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82612E1C.s")
+#include "global.h"
+
+extern void *D_80087200;
+extern void func_800226C0(s32);
+extern s32 func_82604390(s32);
+extern s32 func_82610D14(void);
+extern s32 func_80054E10(void *);
+extern void func_8006CC18(s32, s32);
+
+
+
+void func_82612E1C(u8 *arg0) {
+    u8 *first;
+    u8 *second;
+    u8 *third;
+    u8 *sub;
+    u8 *player;
+    s32 flag;
+    s32 prev;
+    s32 ready;
+    s32 i;
+
+    first = func_82604C40(8, 0, arg0 + 0x114, 0x14);
+    second = func_82604C40(9, 0, arg0 + 0x114, 0x14);
+    third = func_82604C40(10, 0, arg0 + 0x114, 0x14);
+    player = **(u8 ***)(arg0 + 0x110);
+    flag = 0;
+    if (func_82610D14() != 0) {
+        sub = second + 0x30;
+        switch (*(s16 *)(second + 6)) {
+        case 0:
+            if (*(u16 *)(arg0 + 4) & 8) {
+                func_8260675C(first);
+            }
+            if (*(u16 *)(arg0 + 4) & 0x40) {
+                func_8260675C(third);
+            }
+            func_8260675C(second);
+            break;
+        case 2: {
+            u8 *elem;
+
+            prev = *(s16 *)(sub + 2);
+            if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+                (*(s16 *)(sub + 2))--;
+                if (*(s16 *)(sub + 2) < 0) {
+                    *(s16 *)(sub + 2) = 0;
+                }
+            }
+            if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+                (*(s16 *)(sub + 2))++;
+                if (*(s16 *)(sub + 4) - 1 < *(s16 *)(sub + 2)) {
+                    *(s16 *)(sub + 2) = *(s16 *)(sub + 4) - 1;
+                }
+            }
+            elem = *(s16 *)(sub + 2) * 12 + *(u8 **)(sub + 8);
+            if (*(s16 *)elem == 0) {
+                *(s16 *)(sub + 2) = prev;
+                elem = *(s16 *)(sub + 2) * 12 + *(u8 **)(sub + 8);
+            }
+            if (prev != *(s16 *)(sub + 2)) {
+                func_800226C0(1);
+            }
+            if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+                flag = 1;
+                *(s16 *)(arg0 + 6) = 0;
+                *(s32 *)(*(u8 **)(arg0 + 0x110) + 0x9C) = func_82604390(*(u16 *)(elem + 6));
+                if (*(s32 *)(*(u8 **)(arg0 + 0x110) + 0x9C) == 7) {
+                    if (func_80054E10(*(u8 **)(arg0 + 0x110) + 0x900) == 0) {
+                        if (*(s16 *)(elem + 2) != 0) {
+                            if (*(s16 *)(player + 0x8C) > 0) {
+                                (*(s16 *)(player + 0x8C))--;
+                            }
+                        }
+                        if (func_826058CC(player[7]) == 0) {
+                            ready = 1;
+                        } else {
+                            ready = 0;
+                        }
+                        func_8006CC18(ready, *(s16 *)(player + 0x8C));
+                    }
+                } else {
+                    if (*(s16 *)(elem + 2) != 0) {
+                        if (*(s16 *)(player + 0x8C) > 0) {
+                            (*(s16 *)(player + 0x8C))--;
+                        }
+                    }
+                }
+                func_800226C0(*(s32 *)(elem + 8));
+            }
+            break;
+        }
+        }
+        if (flag != 0) {
+            *(s16 *)(arg0 + 2) = 0xF;
+            *(s16 *)(arg0 + 6) = 0;
+            *(s16 *)(arg0 + 0x18) = 0;
+            ((void **)(arg0 + 0x34F4))[*(s16 *)(arg0 + 0x18)] = func_82604C40(8, 0, arg0 + 0x114, 0x14);
+            (*(s16 *)(arg0 + 0x18))++;
+            ((void **)(arg0 + 0x34F4))[*(s16 *)(arg0 + 0x18)] = func_82604C40(10, 0, arg0 + 0x114, 0x14);
+            (*(s16 *)(arg0 + 0x18))++;
+            ((void **)(arg0 + 0x34F4))[*(s16 *)(arg0 + 0x18)] = func_82604C40(9, 0, arg0 + 0x114, 0x14);
+            (*(s16 *)(arg0 + 0x18))++;
+            for (i = 0; i < *(s16 *)(arg0 + 0x18); i++) {
+                if (((void **)(arg0 + 0x34F4))[i] != NULL) {
+                    *(u16 *)(((u8 **)(arg0 + 0x34F4))[i] + 4) |= 1;
+                }
+            }
+        }
+    }
+}
 
 extern s16 D_826157B0;
 void func_826131A4(u8 *arg0) {
@@ -3069,7 +4205,7 @@ extern void func_826123B0(void *);
 extern void func_826127A4(void *);
 extern void func_826129AC(void *);
 extern void func_82612BD0(void *);
-extern void func_82612E1C(void *);
+void func_82612E1C(u8 *arg0);
 extern void func_826134DC(void *);
 extern void func_826132D8(void *);
 s32 func_82613814(void) {

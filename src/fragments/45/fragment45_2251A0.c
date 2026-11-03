@@ -1414,7 +1414,41 @@ void TextRow_SetOrangeState(s16 row_index) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB03DFC.s")
+/* mkdraft:func_8AB03DFC begin */
+extern u8 D_8AB14268[];
+extern u8 D_8AB14278[];
+extern u8 D_8AB12CB0[];
+extern s16 D_8AB12690;
+extern void func_8AB00BA4(s32, s32, s32);
+
+
+
+void func_8AB03DFC(s16 arg0, s16 arg1)
+{
+    u8 *row;
+    u8 *panel;
+    u8 *highlight;
+    u8 *secondary;
+    panel = ((u8 **)D_8AB14268)[arg1];
+    func_8AB00BA4(2, arg0, D_8AB12690);
+    row = D_8AB12CB0;
+    if (1) // FAKE: block boundary only; it keeps the panel store ahead of the highlight math. Diff score 2000 without it.
+    {
+        row += arg0 * 148;
+        highlight = D_8AB14278 + (arg1 * 120);
+    }
+    *(u16 *)(panel + 2) |= 1;
+    *(u32 *)(highlight + 108) = 0x1E82FF80;
+    *(s16 *)(highlight + 38) = 1;
+    secondary = *(u8 **)(row + 20);
+    if (secondary != NULL) {
+        *(u16 *)(secondary + 2) |= 1;
+        *(u32 *)(row + 132) = 0x1E82FF80;
+        *(s16 *)(row + 62) = 1;
+    }
+    *(s16 *)(row + 4) = 2;
+}
+/* mkdraft:func_8AB03DFC end */
 #endif
 
 #ifdef VERSION_US

@@ -721,7 +721,60 @@ void func_8412142C(u8 *arg0) {
     Vec3f_SetComponentsDuplicate(arg0 + 0x5F0, 0.0f, 0.0f, 0.0f);
     BattleAnim_InitSwayOffset(arg0, 1.0f, 0x4000);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_841214C0.s")
+/* mkdraft:func_841214C0 begin */
+extern s32 func_8411E1D4(s32);
+extern s32 func_841211CC(void *, s16, s16);
+extern void func_841204BC(void *, s32, s32, s32, f32);
+extern void func_841203B4(f32 *, f32, f32);
+extern f64 D_84189C78;
+extern f32 D_84189C74;
+extern f32 D_84189C80;
+extern s32 D_84191208;
+
+
+void func_841214C0(u8 *arg0) {
+    f32 remaining;
+    f32 fraction;
+    s16 step;
+    if (*(s8 *)(arg0 + 0x623) >= 4) {
+        func_841204BC(arg0, 0x3F9EB852, 0x3C1374BC, 0x4000, 18.0f);
+        if (*(f32 *)(arg0 + 0x650) > *(f32 *)(arg0 + 0x28)) {
+            *(f32 *)(arg0 + 0x28) = *(f32 *)(arg0 + 0x650);
+        }
+    }
+    if (*(s8 *)(arg0 + 0x623) < 13) {
+        if (*(s8 *)(arg0 + 0x623) >= 4) {
+            func_841203B4((f32 *)(arg0 + 0x34), *(f32 *)(arg0 + 0x60C), 0.2f);
+        }
+        *(s16 *)(arg0 + 0x5FE) = Math_StepToS32(*(s16 *)(arg0 + 0x5FE), 0x3A4C, 0x2D8, 0x2D8);
+        if (func_841211CC(arg0, -(s16)*(s16 *)(arg0 + 0x5FE), (s16)(func_8411E1D4((s32)arg0) << 14)) != 0) {
+            *(s8 *)(arg0 + 0x623) += 1;
+        }
+    }
+    if (*(s8 *)(arg0 + 0x623) >= 13 && *(s8 *)(arg0 + 0x624) == 0) {
+        func_841203B4((f32 *)(arg0 + 0x34), *(f32 *)(arg0 + 0x60C) / D_84189C74, 0.2f);
+        remaining = 16384 - *(s16 *)(arg0 + 0x604);
+        fraction = (131072.0 - remaining) / 131072.0;
+        if (fraction >= 1.0f) {
+            fraction -= 1.0f;
+        }
+        step = (s16)(*(s16 *)(arg0 + 0x5FE) * fraction * D_84189C78);
+        if (step < 0x1554) {
+            step = 0x1554;
+        }
+        *(s8 *)(arg0 + 0x624) = func_841211CC(arg0, -step, (s16)(func_8411E1D4((s32)arg0) << 14));
+        if (*(s8 *)(arg0 + 0x624) != 0) {
+            if ((s32)arg0 == D_84191208) {
+                *(s16 *)(arg0 + 0x604) = 0x4000;
+            } else {
+                *(s16 *)(arg0 + 0x604) = -0x4000;
+            }
+            *(f32 *)(arg0 + 0x34) = *(f32 *)(arg0 + 0x60C) / D_84189C80;
+        }
+    }
+    *(s16 *)(arg0 + 0x20) = *(s16 *)(arg0 + 0x604);
+}
+/* mkdraft:func_841214C0 end */
 
 void func_84121708(u8 *arg0) {
     *(s16 *)(arg0 + 0x5FE) = 0;
@@ -878,13 +931,104 @@ void func_84121B18(u8 *arg0) {
 }
 /* mkdraft:func_84121B18 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84121CAC.s")
+typedef struct ActorOscillationStep {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+} ActorOscillationStep;
+extern ActorOscillationStep D_84183CB8;
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void ModelAnim_SetFrame(u8 *, s16);
+
+
+
+
+void func_84121CAC(u8 *arg0) {
+    s32 i;
+    ActorOscillationStep angles = D_84183CB8;
+    for (i = 0; i < 2; i++) {
+        u8 *node = arg0 + i * 0x170;
+        *(s16 *)(node + 0x444) = 0;
+        *(s16 *)(node + 0x442) = ((s16 *)(&angles))[i];
+        node[0x2F5] = 0;
+        node[0x2D9] |= 1;
+        func_841202D0((f32 *)(arg0 + 0x2FC + i * 0x170), (f32 *)(arg0 + 0x24));
+        func_841202F0((s16 *)(arg0 + 0x2F6 + i * 0x170), (s16 *)(arg0 + 0x1E));
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0x308 + i * 0x170), 1.0f, 1.0f, 1.0f);
+        ModelAnim_SetFrame((u8 *)(arg0 + 0x2D8 + i * 0x170), (s16)((*(s32 *)(arg0 + 0x48)) >> 16));
+        func_8003F2C4(*(s32 *)(arg0 + 0x5C0), (s32)(arg0 + 0x2D8 + i * 0x170), *(s16 *)(arg0 + 0x40));
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84121DE8.s")
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_8412230C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84122448.s")
+extern f32 D_84183CF0[];
+extern f32 D_84183CE4[];
+extern f32 D_84189C94;
+extern f32 D_84189C98;
+extern f32 D_84189C9C;
+extern f32 D_84189CA0;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern void BattleAnim_Vec3fSetPolarXZ(void *, f32, s16);
+extern void ModelAnim_SetFrame(u8 *, s16);
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} BA_Vec3f;
+
+typedef struct {
+    f32 v[4];
+} BA_Vec4;
+
+
+
+void func_84122448(u8 *arg0) {
+    s32 i;
+    f32 tmp;
+    BA_Vec3f sp64;
+    f32 sp54[4];
+    s16 angle;
+    s16 fangle;
+
+    *(BA_Vec3f *)&sp64 = *(BA_Vec3f *)D_84183CE4;
+    *(BA_Vec4 *)sp54 = *(BA_Vec4 *)D_84183CF0;
+    for (i = 0; i < 2; i++) {
+        *(u8 *)(arg0 + i * 0x170 + 0x2F5) = Math_StepToS32(*(u8 *)(arg0 + i * 0x170 + 0x2F5), 0x80, 0xF, 0xF);
+        *(s16 *)(arg0 + i * 0x170 + 0x444) = Math_StepToS32(*(s16 *)(arg0 + i * 0x170 + 0x444), 0x222, 0x64, 0x64);
+        *(s16 *)(arg0 + i * 0x170 + 0x442) = *(s16 *)(arg0 + i * 0x170 + 0x444) + *(s16 *)(arg0 + i * 0x170 + 0x442);
+        angle = *(s16 *)(arg0 + i * 0x170 + 0x442);
+        if (angle >= 0x4000) {
+            *(s16 *)(arg0 + i * 0x170 + 0x442) = 0x3F46;
+            angle = *(s16 *)(arg0 + i * 0x170 + 0x442);
+        }
+        tmp = (D_80087E50[(u16)angle >> 4] * *(f32 *)(arg0 + 0x64C) / 4) * sp54[i];
+        BattleAnim_Vec3fSetPolarXZ(&sp64, tmp, *(s16 *)(arg0 + 0x20));
+        *(f32 *)(arg0 + i * 0x170 + 0x2FC) = *(f32 *)(arg0 + 0x24) + sp64.x;
+        *(f32 *)(arg0 + i * 0x170 + 0x300) = *(f32 *)(arg0 + 0x28) + sp64.y;
+        *(f32 *)(arg0 + i * 0x170 + 0x304) = *(f32 *)(arg0 + 0x2C) + sp64.z;
+        ModelAnim_SetFrame(arg0 + i * 0x170 + 0x2D8, *(s32 *)(arg0 + 0x48) >> 0x10);
+        func_8003F2C4(*(void **)(arg0 + 0x5C0), arg0 + i * 0x170 + 0x2D8, *(s16 *)(arg0 + 0x40));
+    }
+
+    fangle = *(s16 *)(arg0 + 0x442);
+    if (fangle >= 0 && fangle < 0x4000) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80088E50[(u16)fangle >> 4] * D_84189C94 + 1.0f) * 255.0f);
+    } else if (fangle >= 0x4000 && fangle < 0x8000) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80088E50[(u16)(fangle + 0x8000) >> 4] * D_84189C98 + 1.0f) * 255.0f);
+    } else if (fangle >= -0x8000 && fangle < -0x4000) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80087E50[(u16)fangle >> 4] * D_84189C9C + 1.0f) * 255.0f);
+    } else if (fangle >= -0x4000 && fangle < 0) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80087E50[(u16)fangle >> 4] * D_84189CA0 + 1.0f) * 255.0f);
+    }
+    if (*(u8 *)(arg0 + 0x1D) < 0x81) {
+        *(u8 *)(arg0 + 0x1D) = 0x80;
+    }
+}
 
 void func_84122990(u8 *arg0) {}
 

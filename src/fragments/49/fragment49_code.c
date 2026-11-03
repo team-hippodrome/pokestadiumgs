@@ -790,7 +790,46 @@ s32 *func_86102630(s32 arg0) {
     return (s32 *)result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86102720.s")
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern s32 func_86101F60(f32 *, f32 *, s32);
+extern void func_86101558(f32 *, f32 *);
+extern void func_861023D4(void);
+
+
+
+void func_86102720(void *arg0, void *arg1, f32 arg2) {
+    s32 *handle;
+    f32 velX;
+    f32 velY;
+
+    handle = func_86102630(arg0);
+    if (handle != 0) {
+        f32 dy;
+        f32 dx;
+        velY = 0.0f;
+        velX = 0.0f;
+        if (func_86101F60(&velX, &velY, 0) == 0) {
+            dx = *(f32 *)((u8 *)handle[0] + 0x48) - *(f32 *)((u8 *)*(s32 *)arg0 + 0x48);
+            dy = *(f32 *)((u8 *)handle[0] + 0x4C) - *(f32 *)((u8 *)*(s32 *)arg0 + 0x4C);
+            func_86101558(&dx, &dy);
+            velX += (*(f32 *)((u8 *)handle[0] + 0x48) +
+                     dx * (700.0f * (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768))) * arg2) -
+                    *(f32 *)((u8 *)*(s32 *)arg0 + 0x48);
+            velY += (*(f32 *)((u8 *)handle[0] + 0x4C) +
+                     dy * (700.0f * (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768))) * arg2) -
+                    *(f32 *)((u8 *)*(s32 *)arg0 + 0x4C);
+            velX = (64.0f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9790)) * (velX > 0.0f ? 1.0f : -1.0f);
+            *(f32 *)((u8 *)D_87F119DC + 0x10) += velX;
+            if (velY > 0.0f) {
+                *(f32 *)((u8 *)D_87F119DC + 0x14) += *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9784);
+            }
+            func_861023D4();
+        }
+    } else {
+        ((void (*)(void *))arg1)(arg0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86102908.s")
 

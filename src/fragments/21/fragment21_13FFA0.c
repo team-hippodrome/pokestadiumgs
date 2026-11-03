@@ -99,7 +99,91 @@ s32 func_825001B4(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_825001F8.s")
+/* mkdraft:func_825001F8 begin */
+extern u8 *D_82508F84;
+extern u8 D_82508D12[];
+extern s16 D_82508F6A;
+extern s16 D_82508F74;
+extern Gfx D_82508760[];
+extern Gfx *D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_82502120(void *, void *, s32, s32, s32);
+
+typedef struct { u8 r, g, b, a; } Func825001F8RGBA;
+
+// Emits one color pair for the entry selected by *(s32 *)(arg1 + 0x20): a display
+// list from D_82508760, then gDPSetPrimColor/gDPSetEnvColor built from the two RGBA
+// quadruples that func_82502120 writes to prim/env. The two colors are read from the
+// 0x30-byte entry table at *(u8 **)(D_82508F84 + 0x1C) when *(s16 *)(D_82508F84 + 0x12)
+// is set, and from arg1 + 0x24/0x26 otherwise; a negative second component falls back
+// to the 0x20/0x28 pair of the table. func_8004C990 packs the pair, and func_8004D19C
+// receives the packed color with the halfwords at arg1 + 8/0xA and two zero arguments.
+
+
+s32 func_825001F8(s32 arg0, void *arg1)
+{
+  s32 index;
+  s32 var_v0;
+  u8 *temp_v1;
+  s32 var_s0;
+  s32 packed;
+  s32 pad0; // FAKE: dummy local; without it prim/env move to sp+0x3C/sp+0x38 and the diff score is 64.
+  s16 color[2];
+  s32 pad1; // FAKE: dummy local; without it prim/env move to sp+0x3C/sp+0x38 and the diff score is 84.
+  s32 pad2; // FAKE: dummy local; without it prim/env move to sp+0x3C/sp+0x38 and the diff score is 84.
+  Func825001F8RGBA prim;
+  Func825001F8RGBA env;
+  // FAKE: address of the global pointer, used only for the five reads after the
+  // D_82508D12 test. Reading D_82508F84 directly instead makes IDO keep one loaded
+  // pointer and the function shrinks from 121 to 114 instructions (diff score 2995).
+  u8 **new_var = &D_82508F84;
+  index = *((s32 *) (((u8 *) arg1) + 0x20));
+  if ((arg0 != 0) && (arg0 == 1))
+  {
+    *((u16 *) (((u8 *) arg1) + 2)) &= 0xFFFD;
+    temp_v1 = (*((u8 **) (D_82508F84 + 0x1C))) + (index * 0x30);
+    if ((*((s16 *) (D_82508D12 + (index * 0x3C)))) == 0)
+    {
+      var_v0 = 0;
+    }
+    else
+    {
+      var_v0 = 1;
+    }
+    if ((*((s16 *) ((*new_var) + 0x12))) != 0)
+    {
+      if (var_v0 != 0)
+      {
+        color[1] = *((s16 *) ((*new_var) + 0x22));
+        var_s0 = *((s16 *) (temp_v1 + 0x2A));
+      }
+      else
+      {
+        color[1] = *((s16 *) ((*new_var) + 0x20));
+        var_s0 = *((s16 *) (temp_v1 + 0x28));
+      }
+      if (var_s0 < 0)
+      {
+        color[1] = *((s16 *) ((*new_var) + 0x20));
+        var_s0 = *((s16 *) (temp_v1 + 0x28));
+      }
+    }
+    else
+    {
+      color[1] = *((u16 *) (((u8 *) arg1) + 0x24));
+      var_s0 = *((s16 *) (((u8 *) arg1) + 0x26));
+    }
+    func_82502120(&prim, &env, D_82508F6A, D_82508F74, *((s16 *) ((*new_var) + 0x1A)));
+    packed = func_8004C990(color[1], var_s0);
+    gSPDisplayList(D_800D0510++, D_82508760);
+    gDPSetPrimColor(D_800D0510++, 0, 0xFF, prim.r, prim.g, prim.b, 0xFF);
+    gDPSetEnvColor(D_800D0510++, env.r, env.g, env.b, 0xFF);
+    func_8004D19C(*((s16 *) (((u8 *) arg1) + 8)), *((s16 *) (((u8 *) arg1) + 0xA)), packed, 0, 0);
+  }
+  return 0;
+}
+/* mkdraft:func_825001F8 end */
 #endif
 
 #ifdef VERSION_US

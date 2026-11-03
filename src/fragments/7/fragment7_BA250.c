@@ -24,7 +24,186 @@ void func_8300021C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_83000274.s")
+/* mkdraft:func_83000274 begin */
+// Team validation. Fills the 8 bytes at arg0: +0 the arg1 pointer, +4 a status
+// byte, +5 a seen mask, +6 a same-species conflict mask, +7 an out-of-range
+// level mask. arg1 carries a flags word at +0x40 (bit31 makes the level sum
+// stand in for func_83000058, bit29 enables the same-species scan, bit30 the
+// duplicate scan), the accepted level window at +0x36/+0x37, a u16 level cap at
+// +0x38, and the species bit array at +0x14 read by func_80071CD0. arg2 is the
+// six-record team, stride 0x58: +0 species, +1 item, +0x1D level, +0x1E flags
+// bit0.
+//
+// Byte-identical to the retail object: try_candidate scores 0 and the full ROM
+// gate prints "pokestadiumgs-us.z64: OK".
+//
+// The flags word is read as a shift followed by a sign test, not as a mask. That
+// is the spelling func_800714E8 in the sibling team-rules file uses for the same
+// word: (flags << 1) >> 31 gates its duplicate scan and (flags << 2) >> 31 its
+// item scan, with func_80071210/func_80071230 as the two accessors. The mask
+// forms ((flags & 0x20000000) == 0, (flags & 0x40000000) == 0) reach the same
+// branch but let IDO reuse a temp, and the t0..t9 round-robin then runs one step
+// behind the retail allocation for every later instruction.
+//@{src/71E10.c}
+
+
+s32 func_83000274(void *arg0, void *arg1, void *arg2)
+{
+  struct
+  {
+    s32 total;  // level sum of the non-empty records, read as st.total
+    s32 a;      // never read: the three reserve words size this slot so total
+    s32 b;      // lands at 0x40(sp), the accumulator address the retail object
+    s32 c;      // uses
+  } st;
+  s32 n;
+  s32 i;
+  s32 j;
+  s32 conflict;
+  s32 duplicate;
+  s32 best;
+  u32 *new_var;
+  u8 *record;
+  u8 *other;
+  st.total = 0;
+  _bzero(arg0, 8);
+  *((void **) arg0) = arg1;
+  record = arg2;
+  n = 0;
+  while (n < 6)
+  {
+    if ((*((u8 *) record)) == 0)
+    {
+      break;
+    }
+    st.total += *((u8 *) (record + 0x1D));
+    record += 0x58;
+    n++;
+  }
+
+  if (n == 0)
+  {
+    *((u8 *) (((u8 *) arg0) + 4)) = 1;
+    return 0;
+  }
+  if ((((*((u32 *) (((u8 *) arg1) + 0x40))) >> 31) == 0) && (n < 6))
+  {
+    *((u8 *) (((u8 *) arg0) + 4)) = 2;
+    return 0;
+  }
+  // bit29 gates the same-species scan.
+  if ((((*((u32 *) (((u8 *) arg1) + 0x40))) << 2) >> 31) == 0)
+  {
+    conflict = 0;
+    for (i = 0; i < n; i++)
+    {
+      record = ((u8 *) arg2) + (i * 0x58);
+      if ((*((u8 *) (record + 1))) == 0)
+      {
+        continue;
+      }
+      if (func_81601EAC(*((u8 *) (record + 1)), *((u8 *) record)) == 0)
+      {
+        continue;
+      }
+      for (j = i + 1; j < n; j++)
+      {
+        other = ((u8 *) arg2) + (j * 0x58);
+        if ((*((u8 *) (other + 1))) == 0)
+        {
+          continue;
+        }
+        if (func_81601EAC(*((u8 *) (other + 1)), *((u8 *) other)) == 0)
+        {
+          continue;
+        }
+        if ((*((u8 *) (record + 1))) == (*((u8 *) (other + 1))))
+        {
+          *((u8 *) (((u8 *) arg0) + 6)) |= (1 << i) | (1 << j);
+          conflict = 1;
+        }
+      }
+
+    }
+
+    if (conflict)
+    {
+      *((u8 *) (((u8 *) arg0) + 4)) = 7;
+    }
+  }
+  // bit30 gates the duplicate-species scan.
+  if ((((*((u32 *) (((u8 *) arg1) + 0x40))) << 1) >> 31) == 0)
+  {
+    duplicate = 0;
+    for (i = 0; i < n; i++)
+    {
+      for (j = i + 1; j < n; j++)
+      {
+        if ((*(((u8 *) arg2) + (i * 0x58))) == (*((u8 *) (((u8 *) arg2) + (j * 0x58)))))
+        {
+          *((u8 *) (((u8 *) arg0) + 5)) |= (1 << i) | (1 << j);
+          duplicate = 1;
+        }
+      }
+
+    }
+
+    if (duplicate)
+    {
+      *((u8 *) (((u8 *) arg0) + 4)) = 6;
+    }
+  }
+  for (i = 0; i < n; i++)
+  {
+    if (((*((u8 *) ((((u8 *) arg2) + (i * 0x58)) + 0x1D))) < (*((u8 *) (((u8 *) arg1) + 0x36)))) || ((*((u8 *) (((u8 *) arg1) + 0x37))) < (*((u8 *) ((((u8 *) arg2) + (i * 0x58)) + 0x1D)))))
+    {
+      *((u8 *) (((u8 *) arg0) + 4)) = 3;
+      *((u8 *) (((u8 *) arg0) + 7)) |= 1 << i;
+    }
+  }
+
+  for (i = 0; i < n; i++)
+  {
+    if (func_80071CD0((s32) (((u8 *) arg1) + 0x14), (*((u8 *) (((u8 *) arg2) + (i * 0x58)))) - 1) == 0)
+    {
+      *((u8 *) (((u8 *) arg0) + 4)) = 4;
+      *((u8 *) (((u8 *) arg0) + 5)) |= 1 << i;
+    }
+  }
+
+  for (i = 0; i < n; i++)
+  {
+    record = ((u8 *) arg2) + (i * 0x58);
+    if ((((*((u8 *) (record + 0x1E))) & 1) != 0) || ((*((u8 *) record)) >= 0xFC))
+    {
+      *((u8 *) (((u8 *) arg0) + 4)) = 4;
+      *((u8 *) (((u8 *) arg0) + 5)) |= 1 << i;
+    }
+  }
+
+  // The same flags word, re-read for its bit31.
+  new_var = (u32 *) (((u8 *) arg1) + 0x40);
+  if ((*((u8 *) (((u8 *) arg0) + 4))) != 0)
+  {
+    return 0;
+  }
+  if (((*new_var) >> 31) != 0)
+  {
+    best = st.total;
+  }
+  else
+  {
+    best = func_83000058(arg2);
+  }
+  if ((*((u16 *) (((u8 *) arg1) + 0x38))) < best)
+  {
+    *((u8 *) (((u8 *) arg0) + 7)) |= 0x3F;
+    *((u8 *) (((u8 *) arg0) + 4)) = 5;
+    return 0;
+  }
+  return (*((u8 *) (((u8 *) arg0) + 4))) == 0;
+}
+/* mkdraft:func_83000274 end */
 #endif
 
 #ifdef VERSION_US

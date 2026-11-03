@@ -287,7 +287,107 @@ void func_8AF1F898(void) {
     }
     *var_s4 = -1;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F978.s")
+/* mkdraft:func_8AF1F978 begin */
+extern void func_8AC00FFC(s32);
+extern void _bzero(s32 *, s32);
+extern u8 *D_8AF3946C;
+extern u8 *D_8AF27970;
+void func_8AF1F378(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u8 arg9, u8 arg10, s32 arg11, s32 arg12, const unk_func_8AF1F378 *arg13);
+extern void func_8AF1F7B8(void);
+extern void func_8AF1F5F0(void);
+extern s16 D_8AF39430;
+extern u8 *D_8AF39488;
+extern u8 *D_8AF3948C;
+extern u8 *D_8AF39490;
+extern u8 *D_8AF39494;
+extern void func_8AF02C28(u8 *, s16 *, s32 *, s32);
+extern void func_8AC0651C(void *, s16, s16, s16, s16);
+extern s32 func_8004C594(s32, s32);
+extern s32 D_8AF2BE28;
+extern s32 D_8AF39588;
+extern s16 D_8AF39230[];
+
+
+
+s32 func_8AF1F978(void) {
+    s32 x;
+    s32 y;
+    // Filled below, then copied whole into D_8AF27970 + 0x28 by func_8AF1F378, whose
+    // last statement is *(unk_func_8AF1F378 *)(arg0 + 0x28) = *arg13 (0x504 bytes).
+    u8 area[0x504];
+    // Set to D_8AF27970 + 0x28 after the func_8AF02C28 call; its +0x18 and +0x20
+    // fields are read below.
+    u8 *node;
+    // FAKE: buf is the address of area for the whole body. The extra stack slot sets the
+    // frame to 0x560 and the stores through this pointer let IDO reload D_8AF3946C for
+    // the +0xE read (lui/addiu then lw t8,(v0); lw t0,(v0)). Stores through area directly
+    // give a 0x558 frame and one shared load, scoring 1056.
+    u8 *buf;
+
+    func_8AC00FFC(0x4649434E);
+    x = *(s16 *)(D_8AF3946C + 8);
+    y = *(s16 *)(D_8AF3946C + 0xA);
+    buf = area;
+    _bzero((s32 *)buf, 0x504);
+    *(s16 *)(buf + 0x0) = *(s16 *)(D_8AF3946C + 0xC);
+    *(s16 *)(buf + 0x2) = *(s16 *)(D_8AF3946C + 0xE);
+    *(s16 *)(buf + 0x14) = 0xD;
+    *(s32 *)(buf + 0x24) = 0x55;
+    *(s32 *)(buf + 0x28) = 0x41;
+    *(s32 *)(buf + 0x2C) = 3;
+    *(s16 *)(buf + 0x3C) = 3;
+    *(s32 *)(buf + 0x4) = 0;
+    *(s32 *)(buf + 0x8) = 0;
+    *(s16 *)(buf + 0xC) = 0;
+    *(s16 *)(buf + 0xE) = 0;
+    *(s16 *)(buf + 0x12) = 0;
+    *(s16 *)(buf + 0x3E) = 1;
+    *(s32 *)(buf + 0x34) = 5;
+    *(s32 *)(buf + 0x38) = 0;
+    *(s16 *)(buf + 0x4A) = 0x41;
+    func_8AF1F378(D_8AF27970, 0xA, x, y, 8, 0, 0, 0, 0x64, 0x64, 0x64, 4, 0xB, (const unk_func_8AF1F378 *)buf);
+    // D_8AF39430 is the mode. Each of the four objects D_8AF39488/8C/90/94 has a
+    // 16-bit field at +0x2: bit 1 of the 88/8C pair and bit 0 of the 90/94 pair
+    // are assigned here, and mode 3 leaves the 90/94 bit-0 bits clear.
+    if (D_8AF39430 == 3) {
+        func_8AF1F7B8();
+        *(u16 *)(D_8AF39488 + 2) &= ~2;
+        *(u16 *)(D_8AF3948C + 2) |= 2;
+        *(u16 *)(D_8AF39490 + 2) &= ~1;
+        *(u16 *)(D_8AF39494 + 2) &= ~1;
+    } else if (D_8AF39430 == 0) {
+        switch (D_8AF39228) {
+        case 0:
+            func_8AF1F7B8();
+            *(u16 *)(D_8AF39488 + 2) |= 2;
+            *(u16 *)(D_8AF3948C + 2) &= ~2;
+            *(u16 *)(D_8AF39490 + 2) &= ~1;
+            *(u16 *)(D_8AF39494 + 2) |= 1;
+            break;
+        case 1:
+            func_8AF1F5F0();
+            *(u16 *)(D_8AF39488 + 2) &= ~2;
+            *(u16 *)(D_8AF3948C + 2) |= 2;
+            *(u16 *)(D_8AF39490 + 2) |= 1;
+            *(u16 *)(D_8AF39494 + 2) &= ~1;
+            break;
+        default:
+            func_8AF1F5F0();
+            break;
+        }
+    } else {
+        func_8AF1F5F0();
+    }
+    func_8AF02C28(D_8AF27970, D_8AF39230, &D_8AF2BE28, 0x45474931);
+    node = D_8AF27970 + 0x28;
+    *(s16 *)(node + 0x18) = 2;
+    func_8AC0651C(&D_8AF39588, (*(s32 *)(node + 0x20) - 1) / 3, 0x3C, 3, 0xA);
+    // Callers in this fragment declare the function M2C_UNK (s32); the result of
+    // func_8004C594 is the only value the body produces.
+    return func_8004C594(2, *(s32 *)(node + 0x20));
+
+}
+/* mkdraft:func_8AF1F978 end */
 
 extern void func_8AC01064(s32);
 void func_8AF1FC80(void) {

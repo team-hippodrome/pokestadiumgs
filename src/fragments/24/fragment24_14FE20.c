@@ -25,7 +25,101 @@ s32 func_82B00020(u8 *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B00098.s")
+/* mkdraft:func_82B00098 begin */
+typedef struct F82B00098_Entry {
+    /* 0x0000 */ u8 unk_00; /* func_8005D8CC(port) */
+    /* 0x0001 */ u8 unk_01; /* func_8005D92C(port) */
+    /* 0x0002 */ u8 unk_02; /* func_8005D948(port); count of the 0x58-byte entries at 0x1C */
+    /* 0x0003 */ u8 unk_03; /* func_8005DDD4(port) */
+    /* 0x0004 */ u8 connected; /* bit `port` of func_800060E8's controller bits */
+    /* 0x0005 */ u8 status; /* func_82B00020(entry) */
+    /* 0x0006 */ u8 unk_06; /* func_800606F4(port) */
+    /* 0x0007 */ u8 unk_07; /* never written by this function */
+    /* 0x0008 */ u16 unk_08; /* first halfword of func_8005D9E0's buffer */
+    /* 0x000A */ s8 name[0x12]; /* name string after that halfword, or a status message */
+    /* 0x001C */ u8 unk_1C[0x214]; /* deck entries, 0x58 bytes each, filled by Deck_ReadEntries */
+    /* 0x0230 */ u8 unk_230[0x4B00]; /* per-deck copies, 0xC80 bytes each, filled by func_8004D878 */
+} F82B00098_Entry;
+extern F82B00098_Entry D_82B087C0[];
+extern s8 D_82B087CA[]; /* name field of port 0's record */
+extern u8 func_800060E8(void);
+extern void func_80057908(u8);
+extern void func_8005D9E0(s32, void *);
+extern u8 func_8005D8CC(s32);
+extern u8 func_8005D92C(s32);
+extern u8 func_8005D948(s32);
+extern s32 func_8005DDD4(s32);
+extern u8 func_800606F4(s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern void func_80061F44(u8 *);
+extern s32 func_80062304(u8 *);
+extern u8 *func_8004D878(u8 *, s32, u8 *);
+extern void *func_8004C874(s32, s32);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+
+// Refreshes both controller-port records (0x4D30 bytes each) at D_82B087C0, then
+// loads each present Transfer Pak's deck list and copies the decks it selects.
+
+
+void func_82B00098(void) {
+    struct {
+        u16 id;
+        s8 name[0x1E];
+    } buffer;
+    F82B00098_Entry *entry;
+    u8 controller_bits;
+    u8 *handle;
+    s32 i;
+    s32 j;
+    s32 k;
+
+    controller_bits = func_800060E8();
+    for (i = 0; i < 2; i++) {
+        func_80057908(i);
+    }
+    for (i = 0; i < 2; i++) {
+        // FAKE: `j` only moves the connectivity bit ahead of the entry pointer,
+        // which fixes the loop prologue's register order; inline, this scores 90.
+        j = (controller_bits & (1 << i)) != 0;
+        entry = &D_82B087C0[i];
+        func_8005D9E0(i, &buffer);
+        entry->unk_00 = func_8005D8CC(i);
+        entry->unk_01 = func_8005D92C(i);
+        entry->unk_02 = func_8005D948(i);
+        entry->unk_03 = func_8005DDD4(i);
+        entry->connected = j;
+        entry->unk_08 = buffer.id;
+        HAL_Strcpy(D_82B087CA + i * 0x4D30, buffer.name);
+        entry->status = func_82B00020((u8 *)entry);
+        entry->unk_06 = func_800606F4(i);
+    }
+    for (i = 0; i < 2; i++) {
+        entry = &D_82B087C0[i];
+        if (entry->status == 0) {
+            handle = func_8006218C(0x20, i, 0, 0);
+            Deck_ReadEntries(entry->unk_1C, entry->unk_02, handle);
+            for (j = 0; j < entry->unk_02; j++) {
+                func_80061F44(entry->unk_1C + j * 0x58);
+            }
+            func_80062304(handle);
+            for (k = 0; k < entry->unk_02; k++) {
+                func_8004D878(entry->unk_230 + k * 0xC80, 0,
+                              entry->unk_1C + k * 0x58);
+            }
+        }
+        switch (entry->status) {
+        case 0:
+        case 5:
+            break;
+        default:
+            handle = (u8 *)func_8004C874(0x2A, i + 0x54);
+            HAL_Strcpy(entry->name, (s8 *)handle);
+            break;
+        }
+    }
+}
+/* mkdraft:func_82B00098 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B002B8.s")
 

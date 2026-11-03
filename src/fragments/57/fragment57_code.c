@@ -1732,7 +1732,489 @@ void func_83303AB0(s32 arg0) {
 
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83305C1C.s")
+/* mkdraft:func_83305C1C begin */
+
+
+void func_83305C1C(s32 arg0) {
+    switch (arg0) {
+    case 0x1:
+    case 0x3:
+    case 0x5:
+        D_8330A2B0.unk_98 = 50.0f;
+        return;
+    case 0x2:
+        D_8330A2B0.unk_98 = 25.0f;
+        return;
+    case 0x4:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_64 = 0.02f;
+        D_8330A2B0.unk_98 = 70.0f;
+        return;
+    case 0x6:
+        D_8330A2B0.unk_98 = 70.0f;
+        return;
+    case 0x7:
+        D_8330A2B0.unk_60 = 0.15f;
+        D_8330A2B0.unk_64 = 0.15f;
+        D_8330A2B0.unk_68 = 135.0f;
+        D_8330A2B0.unk_6C = 45.0f;
+        return;
+    case 0x9:
+        D_8330A2B0.unk_98 = 120.0f;
+        return;
+    case 0xA:
+        D_8330A2B0.unk_98 = 40.0f;
+        return;
+    case 0xE:
+        D_8330A2B0.unk_60 = 0.07f;
+        D_8330A2B0.unk_64 = 0.1f;
+        D_8330A2B0.unk_6C = 600.0f;
+        D_8330A2B0.unk_68 = 500.0f;
+        return;
+    case 0xF:
+        D_8330A2B0.unk_98 = 30.0f;
+        return;
+    case 0x10:
+    case 0x11:
+    case 0x12:
+        D_8330A2B0.unk_6C = 50.0f;
+        D_8330A2B0.unk_60 = 0.15f;
+        D_8330A2B0.unk_64 = 0.15f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x14:
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_64 = 0.12f;
+        D_8330A2B0.unk_68 = 300.0f;
+        return;
+    case 0x15:
+    case 0x16:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_64 = 0.02f;
+        D_8330A2B0.unk_6C = 400.0f;
+        return;
+    case 0x17:
+        D_8330A2B0.unk_68 = 700.0f;
+        D_8330A2B0.unk_74 = -200.0f;
+        return;
+    case 0x19:
+        D_8330A2B0.unk_6C = 50.0f;
+        D_8330A2B0.unk_60 = 0.4f;
+        D_8330A2B0.unk_64 = 0.4f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x1A:
+        D_8330A2B0.unk_60 = 0.22f;
+        D_8330A2B0.unk_64 = 0.22f;
+        D_8330A2B0.unk_68 = 125.0f;
+        D_8330A2B0.unk_6C = 45.0f;
+        return;
+    case 0x1D:
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_64 = 0.05f;
+        return;
+    case 0x20:
+        D_8330A2B0.unk_60 = 0.03f;
+        D_8330A2B0.unk_6C = 300.0f;
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0x22:
+        D_8330A2B0.unk_60 = 0.15f;
+        D_8330A2B0.unk_64 = 0.3f;
+        D_8330A2B0.unk_6C = 50.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x27:
+        D_8330A2B0.unk_60 = 0.06f;
+        D_8330A2B0.unk_68 = 335.0f;
+        D_8330A2B0.unk_6C = 305.0f;
+        return;
+    case 0x28:
+        D_8330A2B0.unk_6C = 200.0f;
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_64 = 0.05f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x29:
+        D_8330A2B0.unk_6C = 50.0f;
+        D_8330A2B0.unk_60 = 0.2f;
+        D_8330A2B0.unk_64 = 0.2f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x2A:
+        D_8330A2B0.unk_6C = 400.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x2B:
+        D_8330A2B0.unk_68 = 330.0f;
+        D_8330A2B0.unk_6C = 370.0f;
+        return;
+    case 0x2C:
+        D_8330A2B0.unk_68 = 70.0f;
+        D_8330A2B0.unk_6C = 80.0f;
+        D_8330A2B0.unk_60 = 0.35f;
+        D_8330A2B0.unk_64 = 0.25f;
+        return;
+    case 0x2D:
+        D_8330A2B0.unk_6C = 30.0f;
+        D_8330A2B0.unk_60 = 0.2f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        D_8330A2B0.unk_64 = 0.25f;
+        return;
+    case 0x30:
+        D_8330A2B0.unk_68 = 300.0f;
+        D_8330A2B0.unk_6C = 500.0f;
+        return;
+    case 0x34:
+        D_8330A2B0.unk_64 = 0.1f;
+        D_8330A2B0.unk_68 = 170.0f;
+        D_8330A2B0.unk_6C = 220.0f;
+        return;
+    case 0x38:
+        D_8330A2B0.unk_60 = 0.2f;
+        D_8330A2B0.unk_68 = 0.0f;
+        D_8330A2B0.unk_6C = 0.0f;
+        D_8330A2B0.unk_64 = 0.12f;
+        return;
+    case 0x39:
+        D_8330A2B0.unk_68 = 300.0f;
+        D_8330A2B0.unk_6C = 500.0f;
+        D_8330A2B0.unk_60 = 0.12f;
+        D_8330A2B0.unk_64 = 0.04f;
+        return;
+    case 0x3B:
+        D_8330A2B0.unk_C0 = 100.0f;
+        return;
+    case 0x3C:
+        D_8330A2B0.unk_64 = 0.2f;
+        D_8330A2B0.unk_68 = 300.0f;
+        D_8330A2B0.unk_6C = 300.0f;
+        D_8330A2B0.unk_60 = 0.05f;
+        return;
+    case 0x3F:
+        D_8330A2B0.unk_60 = 0.1f;
+        D_8330A2B0.unk_64 = 0.2f;
+        D_8330A2B0.unk_68 = 200.0f;
+        D_8330A2B0.unk_6C = 400.0f;
+        D_8330A2B0.unk_74 = -180.0f;
+        return;
+    case 0x40:
+        D_8330A2B0.unk_64 = 0.1f;
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_68 = 100.0f;
+        D_8330A2B0.unk_6C = 400.0f;
+        return;
+    case 0x41:
+        D_8330A2B0.unk_C0 = 150.0f;
+        D_8330A2B0.unk_74 = -250.0f;
+        return;
+    case 0x45:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_6C = 300.0f;
+        D_8330A2B0.unk_98 = 50.0f;
+        D_8330A2B0.unk_68 = 150.0f;
+        return;
+    case 0x46:
+        D_8330A2B0.unk_68 = 600.0f;
+        D_8330A2B0.unk_98 = -50.0f;
+        D_8330A2B0.unk_74 = -350.0f;
+        return;
+    case 0x47:
+        D_8330A2B0.unk_C0 = 300.0f;
+        return;
+    case 0x48:
+        D_8330A2B0.unk_98 = -60.0f;
+        return;
+    case 0x4A:
+        D_8330A2B0.unk_68 = 500.0f;
+        return;
+    case 0x4B:
+        D_8330A2B0.unk_64 = 0.05f;
+        D_8330A2B0.unk_60 = D_8330A2B0.unk_64;
+        return;
+    case 0x4D:
+        D_8330A2B0.unk_74 = -170.0f;
+        return;
+    case 0x50:
+        D_8330A2B0.unk_60 = 0.15f;
+        D_8330A2B0.unk_68 = 200.0f;
+        D_8330A2B0.unk_6C = 500.0f;
+        return;
+    case 0x57:
+        D_8330A2B0.unk_68 = 500.0f;
+        return;
+    case 0x58:
+    case 0x5D:
+        D_8330A2B0.unk_68 = 600.0f;
+        return;
+    case 0x59:
+    case 0x5A:
+    case 0x5B:
+        D_8330A2B0.unk_68 = 700.0f;
+        return;
+    case 0x5F:
+        D_8330A2B0.unk_68 = 600.0f;
+        D_8330A2B0.unk_74 = -200.0f;
+        return;
+    case 0x64:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_68 = 450.0f;
+        D_8330A2B0.unk_6C = 400.0f;
+        return;
+    case 0x65:
+        D_8330A2B0.unk_6C = 400.0f;
+        return;
+    case 0x66:
+        D_8330A2B0.unk_68 = 180.0f;
+        D_8330A2B0.unk_6C = 5.0f;
+        D_8330A2B0.unk_C0 = 200.0f;
+        D_8330A2B0.unk_74 = -200.0f;
+        return;
+    case 0x6A:
+        D_8330A2B0.unk_68 = 400.0f;
+        D_8330A2B0.unk_74 = -180.0f;
+        return;
+    case 0x70:
+        D_8330A2B0.unk_64 = 0.05f;
+        D_8330A2B0.unk_60 = D_8330A2B0.unk_64;
+        D_8330A2B0.unk_68 = 90.0f;
+        D_8330A2B0.unk_6C = 160.0f;
+        return;
+    case 0x71:
+        D_8330A2B0.unk_68 = 10.0f;
+        D_8330A2B0.unk_6C = 10.0f;
+        D_8330A2B0.unk_74 = -180.0f;
+        return;
+    case 0x73:
+        D_8330A2B0.unk_C0 = 100.0f;
+        D_8330A2B0.unk_74 = -200.0f;
+        return;
+    case 0x79:
+        D_8330A2B0.unk_60 = 0.13f;
+        D_8330A2B0.unk_64 = 0.13f;
+        D_8330A2B0.unk_68 = 410.0f;
+        D_8330A2B0.unk_6C = 410.0f;
+        return;
+    case 0x7E:
+        D_8330A2B0.unk_60 = 0.03f;
+        D_8330A2B0.unk_64 = 0.03f;
+        D_8330A2B0.unk_68 = 185.0f;
+        return;
+    case 0x81:
+        D_8330A2B0.unk_64 = 0.1f;
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_68 = 500.0f;
+        return;
+    case 0x85:
+        D_8330A2B0.unk_68 = 500.0f;
+        D_8330A2B0.unk_6C = 700.0f;
+        return;
+    case 0x89:
+        D_8330A2B0.unk_68 = 600.0f;
+        return;
+    case 0x8A:
+        D_8330A2B0.unk_60 = 0.08f;
+        D_8330A2B0.unk_64 = 0.15f;
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0x8B:
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0x8D:
+        D_8330A2B0.unk_6C = 500.0f;
+        return;
+    case 0x8E:
+        D_8330A2B0.unk_60 = 0.1f;
+        D_8330A2B0.unk_64 = 0.1f;
+        D_8330A2B0.unk_68 = 400.0f;
+        return;
+    case 0x91:
+        D_8330A2B0.unk_60 = 0.1f;
+        D_8330A2B0.unk_64 = 0.1f;
+        D_8330A2B0.unk_68 = 300.0f;
+        D_8330A2B0.unk_6C = 250.0f;
+        return;
+    case 0x93:
+        D_8330A2B0.unk_6C = 600.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x98:
+        D_8330A2B0.unk_74 = -150.0f;
+        D_8330A2B0.unk_6C = 600.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0x9B:
+        D_8330A2B0.unk_68 = 300.0f;
+        D_8330A2B0.unk_6C = 540.0f;
+        return;
+    case 0xA1:
+        D_8330A2B0.unk_60 = 0.03f;
+        D_8330A2B0.unk_64 = 0.03f;
+        D_8330A2B0.unk_68 = 500.0f;
+        D_8330A2B0.unk_6C = 400.0f;
+        return;
+    case 0xA2:
+        D_8330A2B0.unk_60 = 0.06f;
+        D_8330A2B0.unk_64 = 0.08f;
+        return;
+    case 0xA5:
+        D_8330A2B0.unk_6C = 500.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0xA6:
+        D_8330A2B0.unk_64 = 0.2f;
+        D_8330A2B0.unk_68 = 310.0f;
+        D_8330A2B0.unk_6C = 550.0f;
+        return;
+    case 0xAA:
+        D_8330A2B0.unk_74 = -450.0f;
+        return;
+    case 0xAB:
+        D_8330A2B0.unk_6C = 500.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        D_8330A2B0.unk_74 = -500.0f;
+        D_8330A2B0.unk_5C = -100.0f;
+        return;
+    case 0xAE:
+        D_8330A2B0.unk_60 = 0.08f;
+        D_8330A2B0.unk_64 = 0.08f;
+        D_8330A2B0.unk_68 = 350.0f;
+        return;
+    case 0xB0:
+        D_8330A2B0.unk_74 = -200.0f;
+        return;
+    case 0xB1:
+        D_8330A2B0.unk_68 = 350.0f;
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_64 = 0.05f;
+        return;
+    case 0xB6:
+        D_8330A2B0.unk_6C = 500.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        return;
+    case 0xB7:
+        D_8330A2B0.unk_6C = 800.0f;
+        D_8330A2B0.unk_68 = D_8330A2B0.unk_6C;
+        D_8330A2B0.unk_74 = -180.0f;
+        return;
+    case 0xB8:
+        D_8330A2B0.unk_68 = 600.0f;
+        D_8330A2B0.unk_6C = 600.0f;
+        return;
+    case 0xBB:
+        D_8330A2B0.unk_60 = 0.13f;
+        D_8330A2B0.unk_68 = 100.0f;
+        D_8330A2B0.unk_6C = 50.0f;
+        return;
+    case 0xBC:
+        D_8330A2B0.unk_68 = 350.0f;
+        D_8330A2B0.unk_6C = 350.0f;
+        return;
+    case 0xBE:
+        D_8330A2B0.unk_68 = 265.0f;
+        D_8330A2B0.unk_60 = 0.1f;
+        D_8330A2B0.unk_64 = 0.3f;
+        return;
+    case 0xBF:
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_64 = 0.05f;
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0xC1:
+        D_8330A2B0.unk_74 = -600.0f;
+        D_8330A2B0.unk_C0 = 500.0f;
+        return;
+    case 0xC8:
+        D_8330A2B0.unk_C0 = 200.0f;
+        D_8330A2B0.unk_68 = 800.0f;
+        return;
+    case 0xCB:
+        D_8330A2B0.unk_C0 = 200.0f;
+        D_8330A2B0.unk_68 = 460.0f;
+        D_8330A2B0.unk_6C = 400.0f;
+        return;
+    case 0xD0:
+    case 0xDF:
+        D_8330A2B0.unk_68 = 800.0f;
+        return;
+    case 0xD4:
+        D_8330A2B0.unk_C0 = 300.0f;
+        D_8330A2B0.unk_68 = 500.0f;
+        return;
+    case 0xD6:
+        D_8330A2B0.unk_C0 = 150.0f;
+        return;
+    case 0xD7:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_68 = 270.0f;
+        D_8330A2B0.unk_64 = 0.3f;
+        return;
+    case 0xE2:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_64 = 0.02f;
+        return;
+    case 0xED:
+        D_8330A2B0.unk_60 = 0.03f;
+        D_8330A2B0.unk_68 = 315.0f;
+        D_8330A2B0.unk_6C = 385.0f;
+        return;
+    case 0xEF:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_64 = 0.2f;
+        D_8330A2B0.unk_68 = 285.0f;
+        D_8330A2B0.unk_6C = 415.0f;
+        return;
+    case 0xF1:
+        D_8330A2B0.unk_60 = 0.02f;
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0xF6:
+    case 0xFB:
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0xF5:
+    case 0x100:
+    case 0x103:
+        D_8330A2B0.unk_68 = 500.0f;
+        return;
+    case 0x104:
+        D_8330A2B0.unk_60 = 0.2f;
+        D_8330A2B0.unk_68 = 200.0f;
+        return;
+    case 0xFA:
+        D_8330A2B0.unk_60 = 0.03f;
+        D_8330A2B0.unk_64 = 0.06f;
+        D_8330A2B0.unk_6C = 350.0f;
+        D_8330A2B0.unk_68 = 300.0f;
+        return;
+    case 0xF7:
+        D_8330A2B0.unk_68 = 300.0f;
+        D_8330A2B0.unk_60 = 0.05f;
+        return;
+    case 0xF9:
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_68 = 100.0f;
+        return;
+    case 0xFC:
+        D_8330A2B0.unk_68 = 700.0f;
+        return;
+    case 0x10F:
+    case 0x110:
+        D_8330A2B0.unk_60 = 0.05f;
+        D_8330A2B0.unk_64 = 0.05f;
+        return;
+    case 0x111:
+        D_8330A2B0.unk_60 = 0.03f;
+        D_8330A2B0.unk_64 = 0.03f;
+        return;
+    case 0x116:
+        D_8330A2B0.unk_74 = -230.0f;
+        /* fallthrough */
+    default:
+        return;
+    }
+}
+/* mkdraft:func_83305C1C end */
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
@@ -1892,7 +2374,404 @@ void func_83306D0C(void) {
 void func_83306D0C_padding(void) {}
 /* mkdraft:func_83306D0C_padding end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307088.s")
+/* mkdraft:func_83307088 begin */
+/* mkdraft:func_83307088 begin */
+// Controller-driven value adjuster for the D_8330A2B0 state. The word at
+// +0x10 selects the branch: below 4, the cursor at +0x18 (clamped to 0xA,
+// floor 0) selects one of ten targets -- the position floats at +0xDC and
+// +0xE0, the 0/1 switch at +0x1C, the +0xE4..+0xE7 bytes of the record
+// indexed by +0x1C (stride 0x14), or the +0x10C..+0x10E bytes. From 4 up,
+// the cursor at +0x2C (clamped to 0xD, floor 0) selects one of fourteen
+// floats. The three floats at the end copy +0x70/+0x74/+0x78 into D_8330A4D0.
+// In cases 3-6 of both branches the +0x1C record pointer is computed a second
+// time after the byte store; retail reloads +0x1C and remultiplies by 0x14
+// there (0x833071C4, 0x833073F0), so those recomputations are marked // FAKE:.
+extern ControllerState *D_80087200;
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
+extern s32 D_8330A4D0;
+
+
+void func_83307088(void)
+{
+  s32 temp_a1;
+  s32 temp_a1_2;
+  s32 var_a0;
+  s32 var_a2;
+  s32 var_v1;
+  u8 *temp_v1;
+  ControllerState *ctrl;
+  if ((*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x10))) < 4)
+  {
+    ctrl = D_80087200;
+    if (ctrl->buttonsPressed & 0x400)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18)) = (s32) ((*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18))) + 1);
+    }
+    if (ctrl->buttonsPressed & 0x800)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18)) = (s32) ((*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18))) - 1);
+    }
+    var_a0 = *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18));
+    if (var_a0 >= 0xA)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18)) = 0xA;
+    }
+    if ((*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18))) < 0)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18)) = 0;
+    }
+    temp_a1 = ctrl->buttonsPressed & 0x100;
+    if ((temp_a1 != 0) || (ctrl->buttonsHeld & 1))
+    {
+      // Step applied by the switch below: 1 when 0x100 was pressed this
+      // frame, 5 when the branch is entered through held bit 0 instead.
+      var_a2 = 1;
+      if (temp_a1 == 0)
+      {
+        var_a2 = 5;
+      }
+      switch (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18)))
+      {
+        case 0:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xDC)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xDC))) + ((f32) var_a2));
+          break;
+
+        case 1:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xE0)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xE0))) + ((f32) var_a2));
+          break;
+
+        case 2:
+          *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C)) = 1;
+          break;
+
+        case 3:
+          // FAKE: the +0x1C record pointer is computed twice because retail
+          // reloads +0x1C and remultiplies by 0x14 after the store
+          // (0x833071C4); cases 4-6 here and cases 3-6 below repeat this.
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE4)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE4))) + var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE4)))) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE4)) = 0xFFU;
+        }
+          break;
+
+        case 4:
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE5)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE5))) + var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE5)))) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE5)) = 0xFFU;
+        }
+          break;
+
+        case 5:
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE6)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE6))) + var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE6)))) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE6)) = 0xFFU;
+        }
+          break;
+
+        case 6:
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE7)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE7))) + var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE7)))) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE7)) = 0xFFU;
+        }
+          break;
+
+        case 7:
+          if (((u8) (*((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10C)) += var_a2)) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10C)) = 0xFFU;
+        }
+          break;
+
+        case 8:
+          if (((u8) (*((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10D)) += var_a2)) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10D)) = 0xFFU;
+        }
+          break;
+
+        case 9:
+          if (((u8) (*((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10E)) += var_a2)) >= 0xFF)
+        {
+          *((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10E)) = 0xFFU;
+        }
+          break;
+
+      }
+
+    }
+    temp_a1_2 = ctrl->buttonsPressed & 0x200;
+    if ((temp_a1_2 != 0) || (ctrl->buttonsHeld & 2))
+    {
+      var_a2 = 1;
+      if (temp_a1_2 == 0)
+      {
+        var_a2 = 5;
+      }
+      switch (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x18)))
+      {
+        case 0:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xDC)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xDC))) - ((f32) var_a2));
+          break;
+
+        case 1:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xE0)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xE0))) - ((f32) var_a2));
+          break;
+
+        case 2:
+          *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C)) = 0;
+          break;
+
+        case 3:
+          // FAKE: second computation of the record pointer after the store,
+          // as in case 3 above (0x833073F0).
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE4)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE4))) - var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE4)))) <= 0)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE4)) = 0U;
+        }
+          break;
+
+        case 4:
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE5)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE5))) - var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE5)))) <= 0)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE5)) = 0U;
+        }
+          break;
+
+        case 5:
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE6)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE6))) - var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE6)))) <= 0)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE6)) = 0U;
+        }
+          break;
+
+        case 6:
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          *((u8 *) (((u8 *) temp_v1) + 0xE7)) = (u8) ((*((u8 *) (((u8 *) temp_v1) + 0xE7))) - var_a2);
+          temp_v1 = (u8 *) (&D_8330A2B0);
+          temp_v1 += (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x1C))) * 0x14;
+          //!bug dead clamp: the +0xE7 byte is loaded zero-extended, so the
+          // sign test can never be true (0x833074C4 is lbu followed by bgez).
+          if (((s32) (*((u8 *) (((u8 *) temp_v1) + 0xE7)))) < 0)
+        {
+          *((u8 *) (((u8 *) temp_v1) + 0xE7)) = 0U;
+        }
+          break;
+
+        case 7:
+          if (((u8) (*((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10C)) -= var_a2)) <= 0)
+        {
+          *((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10C)) = 0U;
+        }
+          break;
+
+        case 8:
+          if (((u8) (*((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10D)) -= var_a2)) <= 0)
+        {
+          *((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10D)) = 0U;
+        }
+          break;
+
+        case 9:
+          if (((u8) (*((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10E)) -= var_a2)) <= 0)
+        {
+          *((u8 *) (((u8 *) (&D_8330A2B0)) + 0x10E)) = 0U;
+        }
+          break;
+
+      }
+
+    }
+  }
+  else
+  {
+    ctrl = D_80087200;
+    if (ctrl->buttonsPressed & 0x400)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C)) = (s32) ((*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C))) + 1);
+    }
+    if (ctrl->buttonsPressed & 0x800)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C)) = (s32) ((*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C))) - 1);
+    }
+    var_v1 = *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C));
+    if (var_v1 >= 0xD)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C)) = 0xD;
+      var_v1 = *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C));
+    }
+    if (var_v1 < 0)
+    {
+      *((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C)) = 0;
+    }
+    if ((ctrl->buttonsHeld & 1) || (ctrl->buttonsPressed & 0x100))
+    {
+      switch (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C)))
+      {
+        case 0:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0x94)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x94))) + 1.0f);
+          break;
+
+        case 1:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x98))) += 1.0f;
+          break;
+
+        case 2:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0x9C)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x9C))) + 1.0f);
+          break;
+
+        case 3:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xB8)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xB8))) + 1.0f);
+          break;
+
+        case 4:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xBC)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xBC))) + 1.0f);
+          break;
+
+        case 5:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xC0))) += 1.0f;
+          break;
+
+        case 6:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x60))) = (f32) (((f64) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x60)))) + 0.01);
+          break;
+
+        case 7:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x64))) = (f32) (((f64) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x64)))) + 0.01);
+          break;
+
+        case 8:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x68))) += 5.0f;
+          break;
+
+        case 9:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x6C))) += 5.0f;
+          break;
+
+        case 10:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x70))) += 1.0f;
+          break;
+
+        case 11:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x74))) += 1.0f;
+          break;
+
+        case 12:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x78))) += 1.0f;
+          break;
+
+        case 13:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x5C))) += 1.0f;
+          break;
+
+      }
+
+    }
+    if ((ctrl->buttonsHeld & 2) || (ctrl->buttonsPressed & 0x200))
+    {
+      switch (*((s32 *) (((u8 *) (&D_8330A2B0)) + 0x2C)))
+      {
+        case 0:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0x94)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x94))) - 1.0f);
+          break;
+
+        case 1:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x98))) -= 1.0f;
+          break;
+
+        case 2:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0x9C)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x9C))) - 1.0f);
+          break;
+
+        case 3:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xB8)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xB8))) - 1.0f);
+          break;
+
+        case 4:
+          *((f32 *) (((u8 *) (&D_8330A2B0)) + 0xBC)) = (f32) ((*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xBC))) - 1.0f);
+          break;
+
+        case 5:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0xC0))) -= 1.0f;
+          break;
+
+        case 6:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x60))) = (f32) (((f64) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x60)))) - 0.01);
+          break;
+
+        case 7:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x64))) = (f32) (((f64) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x64)))) - 0.01);
+          break;
+
+        case 8:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x68))) -= 5.0f;
+          break;
+
+        case 9:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x6C))) -= 5.0f;
+          break;
+
+        case 10:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x70))) -= 1.0f;
+          break;
+
+        case 11:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x74))) -= 1.0f;
+          break;
+
+        case 12:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x78))) -= 1.0f;
+          break;
+
+        case 13:
+          (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x5C))) -= 1.0f;
+          break;
+
+      }
+
+    }
+  }
+  *((f32 *) (((u8 *) (&D_8330A4D0)) + 0x24)) = (f32) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x70)));
+  *((f32 *) (((u8 *) (&D_8330A4D0)) + 0x28)) = (f32) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x74)));
+  *((f32 *) (((u8 *) (&D_8330A4D0)) + 0x2C)) = (f32) (*((f32 *) (((u8 *) (&D_8330A2B0)) + 0x78)));
+}
+/* mkdraft:func_83307088 end */
 
 extern void Audio_SetPreset(s32);
 extern s32 D_8330A2C0;

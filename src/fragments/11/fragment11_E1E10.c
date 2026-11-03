@@ -56,9 +56,72 @@ void func_8160A384(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_80051D64(0x10, arg2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A438.s")
+/* mkdraft:func_8160A438 begin */
+extern void func_8004D878(s32, s32, s32);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160A50C.s")
+
+
+s32 func_8160A438(u8 *arg0, s32 arg1, s32 arg2) {
+    u8 pad[4];
+    u8 buffer[0x180];
+    u8 *src;
+    u8 *dst;
+    u8 *zero_dst;
+
+    _bzero(buffer, 0x180);
+    func_80055A74(arg1);
+    func_80055A9C(buffer, arg2);
+    *(u16 *)(arg0 + 0x4D90) = func_800533A4(0x10, arg2);
+    func_80053440(0x10, arg2, arg0 + 0x11);
+    zero_dst = arg0;
+    src = arg0 + 0x20;
+    arg0 = buffer + 0x178;
+    dst = buffer + 0x10;
+    while (dst != arg0) {
+        func_80051830(src, dst);
+        if (*(u8 *)(zero_dst + 0x20) > 0) {
+            func_8004D878((s32)(zero_dst + 0x80), 0, (s32)src);
+        }
+        dst += 0x3C;
+        zero_dst += 0xCE8;
+        src += 0xCE8;
+        *(s32 *)(zero_dst - 0xC70) = 0;
+    }
+    return buffer[0x178];
+}
+/* mkdraft:func_8160A438 end */
+
+/* mkdraft:func_8160A50C begin */
+extern f32 func_816092FC();
+
+// Advances each nonzero byte of the six-byte group at 0x0B-0x10 of arg0 by
+// (s32)(func_816092FC() * 8.0f); a byte whose sum reaches 0x100 stores 0 instead.
+// Returns 1 when at least one byte of the group was nonzero. func_8160A6AC clears
+// the same group.
+
+
+s32 func_8160A50C(void *arg0) {
+    f32 scale;
+    s32 result;
+    s32 value;
+    s32 i;
+
+    scale = func_816092FC();
+    result = 0;
+    for (i = 0; i < 6; i++) {
+        if (((u8 *)arg0)[i + 0xB] == 0) {
+            continue;
+        }
+        result = 1;
+        value = ((u8 *)arg0)[i + 0xB] + (s32)(scale * 8.0f);
+        if (value >= 0x100) {
+            value = 0;
+        }
+        ((u8 *)arg0)[i + 0xB] = value;
+    }
+    return result;
+}
+/* mkdraft:func_8160A50C end */
 
 // Clears bytes 0x0B-0x10 of arg0.
 void func_8160A6AC(void *arg0) {
@@ -289,7 +352,39 @@ void func_8160B128(s32 x, s32 y, s32 arg2, s32 arg3, s32 arg4, s8 *arg5, u16 arg
 }
 /* mkdraft:func_8160B128 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_E1E10/func_8160B3E0.s")
+extern void func_8004B2CC(s32, s32, s16, s16, s32, s32, s32, s32);
+extern void func_8004B314(s32, s32, s16, s16);
+extern void func_8160ABF0(s32, s32, void *, void *, s32, s32, f32, s32, s32, s32);
+extern s32 func_8160A8DC(u8 *);
+extern void func_8160B5BC(u8 *, u8 *);
+
+
+
+void func_8160B3E0(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, f32 arg6, s32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13) {
+    s16 rect[4];
+    s32 var_v1;
+
+    if (arg3 < 0) {
+        var_v1 = *(s32 *)arg0;
+    } else {
+        var_v1 = 0;
+    }
+    func_8160ABF0(arg1, arg2, arg0 + 0x20, arg0 + 0xB, var_v1, arg7, arg6, arg8, arg13, arg12);
+    if (arg9 != 0) {
+        var_v1 = func_8160A8DC(arg0);
+    } else {
+        var_v1 = 0;
+    }
+    func_8160B128(arg1, arg2, arg3, arg4, arg5, arg0 + 0x11, *(u16 *)(arg0 + 0x4D90), var_v1, arg6, arg8);
+    if (arg10 != 0) {
+        func_8160B5BC(arg0, (u8 *)rect);
+        if (arg11 != 0) {
+            func_8004B314(rect[0] + arg1, rect[1] + arg2, rect[2], rect[3]);
+            return;
+        }
+        func_8004B2CC(rect[0] + arg1, rect[1] + arg2, rect[2], rect[3], 0x96, 0x96, 0x5A, 0);
+    }
+}
 
 extern void func_81604944(s32, s32, s32, s32, s32 *, s32 *);
 extern void func_81607360(s32);

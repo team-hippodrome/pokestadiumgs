@@ -143,9 +143,67 @@ s32 func_81302CA4(u8 *arg0) {
     return arg0[0x4DBD] == 0x11;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_81302CB4.s")
+extern f32 (*D_8160BD08)(f32);
 
-extern void func_81302CB4(u8 *, s16 *);
+// Writes the panel rect of screen object arg0 to arg1 as (x, y, width, height), the four
+// arguments func_81600A34 takes after its redraw flag.
+//@src/fragments/11/fragment11_D7BC0.c
+// func_81302E58 samples the rect twice, at +0x4DA4 = 0 and 16, and blends them with
+// D_8160BD08, the progress-to-ratio curve this file shares; the scale-1 result
+// (85, 91, 473, 143) is entry 3 of D_81312924 in the sibling file.
+//@src/fragments/14/fragment14_1077C0.c
+
+
+f32 func_81302CB4(u8 *arg0, s16 *arg1) {
+    f32 scale = 1.0f;
+    // One read of +0x4DA8 shared by the two compares and the two branches below; retail
+    // keeps it in a single register. Its declaration also gives `limit` the 0x18 slot:
+    // without it the spill lands at 0x1c.
+    f32 v;
+    f32 value;
+    f32 limit;
+
+    arg1[2] = 473;
+    arg1[3] = 143;
+    if (arg0[0x4DBD] == 0xF) {
+        // State 15 slides the panel off the right edge and back in from the left: x is 85
+        // at v = 0 and v = 1, and passes through 640 (then -473) as v crosses 0.5.
+        v = *(f32 *)(arg0 + 0x4DA8);
+        if (v > 0.5f) {
+            value = (v - 0.5f) * 2.0f;
+        } else {
+            value = (v - 0.5f) * -2.0f;
+        }
+        limit = v > 0.5f ? -473.0f : 640.0f;
+        value = D_8160BD08(value);
+        arg1[0] = (s16)((85.0f - limit) * value + limit);
+        arg1[1] = 91;
+        return 1.0f;
+    } else {
+        // The other states blend y from -143 to 91 and leave x at 85. These four
+        // declarations are local to the else block: moving them to the top of the
+        // function widens the frame from 0x28 to 0x30.
+        s16 offset;
+        s16 x0;
+        s16 delta;
+        s16 y0;
+
+        offset = 0;
+        x0 = 85;
+        delta = 234;
+        y0 = -143;
+        if (*(s32 *)(arg0 + 0x4DB0) != 0 && arg0[0x20] != 0) {
+            if (arg0[0x4DBD] == 0 || arg0[0x4DBD] == 3) {
+                scale = D_8160BD08(*(f32 *)(arg0 + 0x4DA4) / 16);
+            }
+        }
+        arg1[0] = (s16)(offset * scale + x0);
+        arg1[1] = (s16)(delta * scale + y0);
+    }
+    return scale;
+}
+
+f32 func_81302CB4(u8 *arg0, s16 *arg1);
 extern void func_81609A90(u8 *, u8 *);
 extern void func_8160A928(u8 *, s32);
 void func_81302E58(void *arg0, s32 arg1) {
@@ -219,7 +277,42 @@ void func_81302EE4(unk_func_81303648 *arg0, u8 *arg1, const u8 *arg2, s32 arg3, 
 }
 /* mkdraft:func_81302EE4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_8130302C.s")
+/* mkdraft:func_8130302C begin */
+extern s32 func_8160A8DC(u8 *);
+extern s32 func_81600DA8(void *, void *);
+extern void func_8160955C(s32, s32, s32);
+extern void func_8160B5BC(void *, s16 *);
+extern void func_8160B3E0(u8 *, s32, s32, s32, s32, s32, f32, s32, s32, s32, s32, s32, s32, u8 *);
+
+
+
+void func_8130302C(unk_func_81303648 *arg0, s32 arg1) {
+    s16 rect[4];
+    s32 x;
+    f32 scale;
+    s32 y;
+    s16 inner[4];
+
+    if (arg0->unk_4DA0->unk_1A148->unk_940->unk_40_31 != 0) {
+        func_8160A8DC((u8 *)arg0);
+    }
+    func_81302CB4((u8 *)arg0, rect);
+    scale = arg0->unk_4DA4 / 16;
+    if (func_81600DA8((void *)arg1, arg0) != 0) {
+        func_8160B3E0((u8 *)arg0, rect[0], rect[1], arg0->unk_4DBC,
+            arg0->unk_4DA0->unk_1A148->unk_900[arg0->unk_4DA0->unk_1A142],
+            arg0->unk_4DA0->unk_1A142, scale, arg0->unk_4DA0->unk_1A150, 0,
+            arg0->unk_4DA0->unk_1A148->unk_940->unk_40_31,
+            func_81302C64((u8 *)arg0), func_81302CA4((u8 *)arg0), 0,
+            func_81302BB0((u8 *)arg0) ? arg0->unk_4DA0->unk_00098 : 0);
+    }
+    if (func_81302BC0((u8 *)arg0) && func_81600DA8((void *)arg1, (u8 *)arg0 + 1)) {
+        func_8160B5BC(arg0, inner);
+        func_8160955C(inner[0] + (inner[2] / 2 + rect[0]),
+            inner[1] + (inner[3] / 2 + rect[1]), arg0->slots[0].unk_008);
+    }
+}
+/* mkdraft:func_8130302C end */
 
 extern s32 func_8160B9A0(u8 *, s32, s32);
 void func_813031D8(u8 *arg0) {
@@ -614,7 +707,7 @@ extern s32 func_81602AEC(void *, s32 *);
 extern void func_81600A34(void *, void *, s32, s32, s32, s32, s32);
 extern void func_8160B5BC(void *arg0, s16 *arg1);
 extern s32 func_81302BC0(u8 *arg0);
-extern void func_81302CB4(u8 *, s16 *);
+f32 func_81302CB4(u8 *arg0, s16 *arg1);
 extern void func_81303228(u8 *arg0);
 extern void func_81303230(u8 *arg0);
 extern void func_81303240(u8 *arg0);
@@ -931,7 +1024,7 @@ void func_81304788(u8 *arg0, s32 *arg1, s32 arg2) {
 extern s32 func_80071230(u8 *arg0);
 s32 func_81304884(u8 *arg0, s32 arg1) { u8 *record; s32 count; record = arg0 + 0x20; if (func_80071230(*(u8 **)(*(u8 **)((u8 *)(u32)(*(s32 *)(arg0 + 0x4DA0) + 0x20000) - 0x5EB8) + 0x940)) != 0) return 0; count = 6; do { if (record[0] != 0 && record[1] == arg1) return 1; record += 0xCE8; count--; } while (count != 0); return 0; }
 
-extern void func_81302CB4(u8 *arg0, s16 *arg1);
+f32 func_81302CB4(u8 *arg0, s16 *arg1);
 extern void func_8160B5BC(void *arg0, s16 *arg1);
 void func_813049AC(u8 *arg0, s16 *arg1) {
     s16 *output = arg1;

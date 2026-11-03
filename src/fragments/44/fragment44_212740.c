@@ -250,7 +250,7 @@ extern s16 D_8AF3A662;
 extern s32 D_8AF3A668;
 extern u16 D_8AF2BDC6;
 extern void func_8AC007FC(void);
-extern s16 func_8AF25A84(s32);
+s16 func_8AF25A84(s16 arg0);
 extern void func_8AF25DF0(void);
 extern void func_8AF25EA0(void);
 extern void func_8AF2610C(void);
@@ -303,7 +303,136 @@ s16 func_8AF25974(void) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF25A84.s")
+extern void *D_8AF263C0;
+extern u8 *D_8AF2BDD8;
+extern s16 D_8AF3A3C8;
+extern s16 D_8AF3A3CA;
+extern s16 D_8AF3A3CC;
+extern s16 D_8AF3A3CE;
+extern s16 D_8AF279E0;
+extern void func_8AF00130(s32);
+extern s32 func_8AC004E0(s16);
+extern void func_8AF07A90(void);
+extern void func_8AF24AE0(void);
+extern s32 D_8AF2BA68;
+extern s32 D_8AF2C65C;
+
+typedef struct {
+    /* 0x0 */ u16 a : 16;
+    /* 0x2 */ u8 b : 8;
+    /* 0x3 */ u8 c : 8;
+} unk_func_8AF25A84;
+
+
+
+s16 func_8AF25A84(s16 arg0) {
+    s16 old_state;
+    s16 old_col;
+    s32 pressed;
+    unk_func_8AF25A84 *e;
+
+    old_state = D_8AF3A3C8;
+    old_col = D_8AF3A3CA;
+    switch (D_8AF3A3C8) {
+        case 0:
+            if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x100) {
+                D_8AF3A3C8 = 1;
+            }
+            break;
+        case 1:
+            if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x200) {
+                D_8AF3A3C8 = 0;
+            }
+            if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x100) {
+                D_8AF3A3C8 = 2;
+            }
+            break;
+        case 2:
+            if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x200) {
+                D_8AF3A3C8 = 1;
+            }
+            if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x100) {
+                D_8AF3A3C8 = 3;
+            }
+            break;
+        case 3:
+            if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x200) {
+                D_8AF3A3C8 = 2;
+            }
+            break;
+    }
+    if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x800) {
+        if (D_8AF3A3CA > 0) {
+            D_8AF3A3CA--;
+        }
+    } else if (*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x400) {
+        if (D_8AF3A3CA < 2 && func_8AC004E0((s32)D_8AF3A3CA) != 0) {
+            D_8AF3A3CA++;
+        }
+    }
+    if (old_state != D_8AF3A3C8 || old_col != D_8AF3A3CA) {
+        func_8AF00130(1);
+    }
+    pressed = *(u16 *)((u8 *)D_8AF263C0 + 8);
+    if (pressed & 0x8000) {
+        D_8AF3A3CC = D_8AF3A3C8;
+        D_8AF3A3CE = D_8AF3A3CA;
+        D_8AF279E0 = 1;
+        switch (D_8AF3A3C8) {
+            case 0:
+                func_8AF07A90();
+                func_8AF00130(0xBF);
+                switch (D_8AF3A3CA) {
+                    case 0:
+                        arg0 = 3;
+                        break;
+                    case 1:
+                        arg0 = 4;
+                        break;
+                    case 2:
+                        arg0 = 5;
+                        break;
+                }
+                break;
+            case 2:
+                func_8AF00130(0xBF);
+                *D_8AF2BDD8 = D_8AF3A3CA;
+                arg0 = 0x1F;
+                break;
+            case 1:
+                func_8AF00130(0xBF);
+                e = *(unk_func_8AF25A84 **)(D_8AF2BDD8 + 8);
+                switch (D_8AF3A3CA) {
+                    case 0:
+                        e->a = 1;
+                        e->b = 1;
+                        e->c = 0;
+                        break;
+                    case 1:
+                        e->a = 2;
+                        e->b = 2;
+                        e->c = 1;
+                        break;
+                    case 2:
+                        e->a = 3;
+                        e->b = 3;
+                        e->c = 2;
+                        break;
+                    default:
+                        e->a = 0;
+                        break;
+                }
+                D_8AF2BA68 = 3;
+                break;
+        }
+    } else if (pressed & 0x4000) {
+        func_8AF00130(3);
+        D_8AF2C65C = 0;
+        arg0 = 1;
+    }
+    func_8AF24AE0();
+    return arg0;
+}
 
 extern void *D_8AF3A3C0;
 extern void *D_8AF3A664;

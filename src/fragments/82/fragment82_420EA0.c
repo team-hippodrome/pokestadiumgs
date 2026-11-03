@@ -425,7 +425,79 @@ void func_82D019D8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D01AAC.s")
+/* mkdraft:func_82D01AAC begin */
+s32 func_82D00158(u8 *arg0);
+extern void func_800226C0(s32);
+extern s8 *HAL_Strcpy(s8 *, s8 *);
+extern u8 D_82D23938;
+extern u8 D_82D23904[];
+extern void func_82D06B34(u8, u8, s32);
+void DeckEntry_InitDefaults_fragment82(Fragment82DeckEntry *entry);
+extern s8 D_82D238F0[];
+extern u8 D_82D23830;
+extern u8 D_82D23D84;
+extern s8 D_82D07421;
+extern u8 D_82D23828;
+s32 func_8004C594(s32, s32);
+s32 func_8004C8A0(void *, s32, s32, s32);
+
+
+void func_82D01AAC(void) {
+    switch (D_82D07421) {
+        case 0:
+            func_82D06B34(7, 2, 0);
+            func_82D06B34(2, 2, 0);
+            func_82D06B34(8, 3, 0);
+            ((Fragment82NameState *) &D_82D23830)->name_index = ((Fragment82NameState *) &D_82D23830)->selection;
+            ((Fragment82NameState *) &D_82D23830)->name_count = ((Fragment82NameState *) &D_82D23830)->name_count + 1;
+            ((Fragment82NameState *) &D_82D23830)->selection = 0;
+            ((Fragment82NameState *) &D_82D23830)->kind = 4;
+            D_82D23938 += 1;
+            D_82D23D84 = 2;
+            DeckEntry_InitDefaults_fragment82((Fragment82DeckEntry *) D_82D238F0);
+            func_8004C594(1, ((Fragment82NameState *) &D_82D23830)->name_index + 1);
+            func_8004C8A0(((Fragment82NameState *) &D_82D23830)->names[((Fragment82NameState *) &D_82D23830)->name_index], 20, 67, 36);
+            HAL_Strcpy(D_82D238F0, ((Fragment82NameState *) &D_82D23830)->names[((Fragment82NameState *) &D_82D23830)->name_index]);
+            // 0xBC is the byte after Fragment82NameState names[9][20]; that field has no decoded name.
+            ((u8 *) &D_82D23830)[0xBC] = func_82D00158(&D_82D23904);
+            func_800226C0(144);
+            return;
+
+        case 1:
+            func_82D06B34(7, 2, 0);
+            func_82D06B34(3, 2, 0);
+            func_82D06B34(8, 3, 0);
+            ((Fragment82NameState *) &D_82D23830)->name_index = ((Fragment82NameState *) &D_82D23830)->selection;
+            ((Fragment82NameState *) &D_82D23830)->selection = 0;
+            ((Fragment82NameState *) &D_82D23830)->kind = 4;
+            D_82D23D84 = 2;
+            *((Fragment82StoredDeck *) D_82D238F0) = ((Fragment82StoredDecks *) (&D_82D23938))->entries[((Fragment82NameState *) &D_82D23830)->name_index];
+            ((u8 *) &D_82D23830)[0xBC] = func_82D00158(&D_82D23904);
+            func_800226C0(144);
+            return;
+
+        case 2:
+            D_82D23D84 = 8;
+            ((Fragment82NameState *) &D_82D23830)->kind = 3;
+            ((u8 *) &D_82D23828)[0] = 1;
+            ((u8 *) &D_82D23828)[1] = 1;
+            ((u8 *) &D_82D23828)[3] = 30;
+            func_800226C0(144);
+            return;
+
+        case 3:
+            D_82D23D84 = 9;
+            ((Fragment82NameState *) &D_82D23830)->kind = 2;
+            ((u8 *) &D_82D23828)[2] = 0x1F;
+            ((Fragment82NameState *) &D_82D23830)->secondary_selection = ((Fragment82NameState *) &D_82D23830)->selection + 1;
+            if (((Fragment82NameState *) &D_82D23830)->secondary_selection >= ((Fragment82NameState *) &D_82D23830)->name_count) {
+                ((Fragment82NameState *) &D_82D23830)->secondary_selection = 0;
+            }
+            func_800226C0(2);
+            return;
+    }
+}
+/* mkdraft:func_82D01AAC end */
 
 extern void func_82D06B34(u8, u8, s32);
 void func_82D01D68(void) {
@@ -474,7 +546,24 @@ void func_82D01E4C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D01EB8.s")
+/* mkdraft:func_82D01EB8 begin */
+extern void _bzero(void *, s32);
+
+
+
+void func_82D01EB8(void) {
+    s32 i;
+
+    for (i = ((Fragment82NameState *)&D_82D23830)->selection; i < ((Fragment82NameState *)&D_82D23830)->name_count - 1; i++) {
+        ((Fragment82StoredDecks *)&D_82D23938)->entries[i] = ((Fragment82StoredDecks *)&D_82D23938)->entries[i + 1];
+        HAL_Strcpy(((Fragment82NameState *)&D_82D23830)->names[i], ((Fragment82NameState *)&D_82D23830)->names[i + 1]);
+    }
+    ((Fragment82NameState *)&D_82D23830)->name_count--;
+    ((Fragment82StoredDecks *)&D_82D23938)->count--;
+    _bzero(&((Fragment82StoredDecks *)&D_82D23938)->entries[((Fragment82StoredDecks *)&D_82D23938)->count], 0x44);
+    _bzero(((Fragment82NameState *)&D_82D23830)->names[((Fragment82StoredDecks *)&D_82D23938)->count], 0x14);
+}
+/* mkdraft:func_82D01EB8 end */
 
 extern u8 D_82D23828;
 extern void func_82D01EB8(void);

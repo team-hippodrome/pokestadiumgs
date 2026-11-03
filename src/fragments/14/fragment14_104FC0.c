@@ -641,7 +641,92 @@ void func_8130F270(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130F2C4.s")
+extern void func_81600A34(u8 *arg0, void *id, s32 arg2, s32 x, s32 y, s32 width, s32 height);
+extern void func_8130EC9C(u8 *arg0);
+extern s32 ModelAnim_SetSpeed(u8 *arg0, s32 arg1);
+// FAKE: func_80042F94 is void at its definition (src/43700.c); an int return reserves v0
+// across this call, and the countdown local read from arg0+0x70 then takes v1.
+// Declaring the real void return gives diff score 35.
+extern s32 func_80042F94();
+extern s32 func_80043678(u8 *arg0);
+extern f32 func_816092FC(void);
+
+
+
+void func_8130F2C4(u8 *arg0, u8 *arg1) {
+    s32 timer;
+    s32 flag = 0;
+    unk_func_8130D45C sp58;
+    unk_func_8130D45C sp50;
+    unk_func_8130D45C sp48;
+    unk_func_8130D45C sp40;
+    unk_func_8130D45C sp38;
+
+    switch (arg0[0x34]) {
+        case 0:
+            func_8130EC94(arg0);
+            return;
+        case 1:
+            func_8130EC9C(arg0);
+            break;
+        case 2:
+            func_8130F09C(arg0);
+            break;
+        case 3:
+            func_8130F184(arg0);
+            break;
+        case 4:
+            func_8130F0FC(arg0);
+            break;
+        case 5:
+            func_8130F218(arg0);
+            break;
+        case 7:
+            func_8130F270(arg0);
+            break;
+        case 6:
+            func_8130EF88(arg0);
+            break;
+    }
+    if (*(s32 *)arg0 != 0) {
+        flag = 1;
+        *(s32 *)arg0 = 0;
+    }
+    func_8130CEF0(arg0, &sp58);
+    func_81600A34(arg1, arg0, flag, sp58.unk_00, sp58.unk_02, sp58.unk_04, sp58.unk_06);
+    func_8130D45C(arg0, &sp40, &sp58);
+    func_81600A34(arg1, arg0 + 4, *(s8 *)(arg0 + 0x38) >= 0, sp40.unk_00, sp40.unk_02, sp40.unk_04, sp40.unk_06);
+    func_8130D098(arg0, &sp48);
+    func_81600A34(arg1, arg0 + 3, 1, sp48.unk_00, sp48.unk_02, sp48.unk_04, sp48.unk_06);
+    func_8130D1FC(arg0, &sp50);
+    func_81600A34(arg1, arg0 + 1, arg0[0x34] == 1, sp50.unk_00, sp50.unk_02, sp50.unk_04, sp50.unk_06);
+    if (arg0[0x34] >= 5) {
+        func_8130D340(arg0, &sp38);
+        func_81600A34(arg1, arg0 + 2, 1, sp38.unk_00, sp38.unk_02, sp38.unk_04, sp38.unk_06);
+    }
+    timer = *(s32 *)(arg0 + 0x70);
+    if (timer != 0) {
+        *(s32 *)(arg0 + 0x70) -= 1;
+        if (*(s32 *)(arg0 + 0x70) == 0) {
+            func_80042F94(*(void **)(arg0 + 0x68), *(void **)(arg0 + 0x6C));
+        }
+        timer = *(s32 *)(arg0 + 0x70);
+    }
+    if (*(s32 *)(arg0 + 0x70) == 0) {
+        switch (arg0[0x34]) {
+            case 1:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                if (*(u8 **)(arg0 + 0x68) != NULL) {
+                    ModelAnim_SetSpeed(*(u8 **)(*(u8 **)(arg0 + 0x68) + 0x1C), func_816092FC() * 32768.0f);
+                    *(s32 *)(arg0 + 0x60) = func_80043678(*(u8 **)(arg0 + 0x68));
+                }
+                break;
+        }
+    }
+}
 
 s16 func_8130F578(u8 *arg0, s32 *arg1) {
     s16 result = 0;

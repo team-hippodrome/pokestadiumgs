@@ -304,7 +304,108 @@ void Fragment14_AdvanceSelectionSlot(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_81300830.s")
+extern u8 D_8009F860[];
+extern void func_80041E2C(void);
+extern s32 func_80041C98(s32);
+extern s32 ModelPreview_Create(s32, s32, s32);
+extern s32 func_8004D878(u8 *, s32, u8 *);
+extern void func_800060F4(s16, s16);
+extern s32 func_80055948(s32);
+extern s32 func_80055A74(s32);
+extern void func_80055BF8(void);
+extern u8 func_8005D8CC(s32);
+extern void *func_81609530(s32);
+extern void func_8130E99C(u8 *, s32, s32, u8 *);
+extern void func_81300730(void *, s32);
+extern void func_81311CFC(void *);
+
+
+
+void func_81300830(void *arg0, void *arg1, void *arg2, s32 arg3) {
+    typedef struct {
+        u8 pad00000[0x1A138];
+        s32 mode;
+        s32 unk1A13C;
+        s8 active;
+        s8 requested;
+        s8 slot;
+        u8 pad1A143[1];
+        u8 unk1A144;
+        u8 unk1A145;
+        u8 unk1A146;
+        u8 pad1A147[1];
+        u8 *data;
+        u8 *unk1A14C;
+        s32 unk1A150;
+        u8 pad1A154[8];
+        u8 pad1A15C[8];
+        s32 unk1A164;
+        s32 unk1A168;
+        s32 pending;
+    } State;
+    s32 resource;
+    void *model;
+    s32 i;
+    Fragment14Position position;
+    s8 value;
+
+    _bzero(arg0, 0x1A170);
+    if (D_8009F860[0] >= 4) {
+        D_8009F860[0] = 1;
+    } else if (D_8009F860[0] <= 0) {
+        D_8009F860[0] = 1;
+    }
+    func_80041E2C();
+    resource = func_80041C98(1);
+    model = (void *)ModelPreview_Create(resource, 0x38, 0x38);
+    func_8004D878((u8 *)arg0 + 0x98, 0x84, NULL);
+    ((State *)arg0)->data = (u8 *)arg2;
+    *(u8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + 0x955) = 0;
+    func_800060F4(8, 2);
+    if (*(s8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + 0x944) >= 0) {
+        func_80055948(0);
+        func_80055948(1);
+        func_80055A74(*(s8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + 0x944));
+        func_80055BF8();
+    }
+    ((State *)arg0)->unk1A13C = 0;
+    ((State *)arg0)->mode = 0;
+    position = *(Fragment14Position *)func_81609530(7);
+    *(Fragment14Position *)((u8 *)arg0 + 0x1A15C) = position;
+    *(Fragment14Position *)((u8 *)arg0 + 0x1A154) = *(Fragment14Position *)&position;
+    ((State *)arg0)->active = -1;
+    ((State *)arg0)->requested = -1;
+    ((State *)arg0)->unk1A150 = arg3;
+    ((State *)arg0)->unk1A144 = 0xFF;
+    ((State *)arg0)->unk1A145 = 0xFF;
+    ((State *)arg0)->unk1A146 = 0xFF;
+    ((State *)arg0)->unk1A14C = (u8 *)arg1;
+    ((State *)arg0)->pending = 0;
+    func_8130E99C(arg0,
+                  ((((u32)*(u32 *)(*(u8 **)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + 0x940) + 0x40) << 5) >> 0x1F) != 0)
+                      ? (s32)((u8 *)arg0 + 0xD18)
+                      : 0,
+                  resource, (u8 *)model);
+    i = 3;
+    do {
+        value = *(s8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + i + 0x93C);
+        if ((value >= 0) && (value < 4) && (func_8005D8CC(value) != 0)) {
+            *(s8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + i + 0x93C) = -1;
+        }
+        if (*(s8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + i + 0x93C) < 0) {
+            _bzero(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + i * 0x240, 0x240);
+        }
+        if (*(s8 *)(*(u8 **)(((u8 *)arg0 + 0x18000) + 0x2148) + i + 0x900) >= -1) {
+            ((State *)arg0)->slot = i;
+        }
+        i--;
+    } while (i >= 0);
+    ((State *)arg0)->slot = -1;
+    func_81300730(arg0, 1);
+    func_81311CFC((u8 *)arg0 + 0x74);
+    func_81300570(arg0);
+    main_pool_push_state(0x50504354);
+}
 
 void func_81300B48(u8 *arg0) {}
 

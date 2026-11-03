@@ -198,7 +198,64 @@ void func_87E0FC90(s32 arg0, u8 *arg1, void *arg2, u32 arg3, u32 arg4) {
 
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E0FDB4.s")
+extern s32 func_87E0F1C4();
+
+// arg1: 0x00 frame counter, 0x0C state index, 0x10 current frame data,
+// 0x14 flags (bit 1 set while a frame sequence is running).
+
+
+void func_87E0FDB4(s32 arg0, u32 *arg1, u8 *arg2, s32 arg3, u32 arg4) {
+    if (arg0 != 0) {
+        if (arg1[5] & 2) {
+            // Eight-byte entries in arg2: frame data pointer and frame count.
+            typedef struct { u32 *data; u32 count; } State;
+            u32 index;
+            State *state;
+
+            state = (State *)(arg2 + arg1[3] * 8);
+            index = ++arg1[0] % (arg4 * state->count) / arg4;
+            arg1[4] = state->data[index];
+            if (state->count == index + 1) {
+                arg1[5] &= ~2;
+            }
+        } else {
+            s32 value;
+            s32 sel;
+
+            arg1[4] = -1;
+            // func_87E0F1C4 returns 0 when no sequence should start, otherwise
+            // the selector that picks the state index.
+            value = func_87E0F1C4();
+            // Separate selector: retail tests the call result and dispatches on a copy of it.
+            sel = value | 0;
+            if (sel != 0) {
+                arg1[0] = 0;
+                arg1[5] |= 2;
+                switch (sel) {
+                case 0xA:
+                case 0x20:
+                case 0xA1A1:
+                    arg1[3] = 0;
+                    break;
+                case 0x21:
+                case 0x2E:
+                case 0x3F:
+                case 0xA1A3:
+                case 0xA1A9:
+                case 0xA1AA:
+                    arg1[3] = 1;
+                    break;
+                default:
+                    arg1[3] = sel % (arg3 - 2) + 2;
+                    break;
+                }
+            }
+        }
+    } else {
+        arg1[4] = -1;
+        arg1[5] &= ~2;
+    }
+}
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
@@ -784,7 +841,7 @@ s32 func_87E11534(s32 count, s32 selected, u8 *entry, u8 inc, u8 dec) {
 /* mkdraft:func_87E1162C begin */
 void func_87E0FBB4(s32 arg0, u8 *arg1, u32 arg2, u32 arg3);
 void func_87E0FC90(s32 arg0, u8 *arg1, void *arg2, u32 arg3, u32 arg4);
-s32 func_87E0FDB4(s32, u8 *, void *, u32, u32);
+void func_87E0FDB4(s32 arg0, u32 *arg1, u8 *arg2, s32 arg3, u32 arg4);
 extern s32 D_87E1A870[];
 extern s32 D_87E1A988[];
 extern s32 D_87E1AA10[];

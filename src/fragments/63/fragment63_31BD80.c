@@ -229,7 +229,109 @@ s32 func_87E18ECC(void *arg0)
   return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18F08.s")
+extern u8 *func_87E016C8(void);
+extern s32 func_87F0E610(u8 *, u8 *);
+extern s32 func_87E18ECC(void *);
+extern s32 func_87E1369C(void);
+extern void func_800279C4(s32);
+extern void func_87E11BA4(s32);
+extern s8 func_87F0E650(u8 *);
+extern void Minigame_SetPlayerMask(s8);
+extern void func_87E134E8(void);
+extern void func_87E0168C(s32, u8, s32);
+extern s32 func_87E13688(void);
+extern void func_800226C0(s32);
+extern void func_87F0277C(s32);
+
+
+
+s32 func_87E18F08(u8 *arg0) {
+    s32 result;
+    u16 buttons;
+    // Player mask from func_87F0E650, consumed by Minigame_SetPlayerMask. Routing the
+    // call result through a named s8 local spills the two button-mask booleans at
+    // 0x24/0x28 as retail; passing the call straight to Minigame_SetPlayerMask spills
+    // them at 0x20/0x24.
+    s8 mask;
+
+    result = 0;
+    D_87E1EC90 = arg0;
+    buttons = func_87F0E610(func_87E016C8(), (u8 *)-1);
+    switch (*(s32 *)(arg0 + 4)) {
+    case 0:
+        if (func_87E18ECC(arg0)) {
+            *(s32 *)(arg0 + 4) = 1;
+        }
+        break;
+    case 1:
+        if (func_87E1369C() && !(buttons & 0x8000) && !(buttons & 0x4000)) {
+            *(s32 *)arg0 = *(s32 *)arg0 + ((s32)(buttons & 0x400) > 0) - ((s32)(buttons & 0x800) > 0);
+            if (*(s32 *)arg0 < 0) {
+                *(s32 *)arg0 = 2;
+            }
+            if (*(s32 *)arg0 >= 3) {
+                *(s32 *)arg0 = 0;
+            }
+            if (buttons & 0xC00) {
+                func_800279C4(0xCF01);
+            }
+        }
+        func_87E10EA8(*(s32 *)(arg0 + 0x28));
+        func_87E10F2C(3);
+        if (*(s32 *)(arg0 + 0x28) == 0x2C) {
+            switch (*(s32 *)arg0) {
+            case 2:
+                func_87E11BA4(0);
+                break;
+            case 1:
+                func_87E11BA4(1);
+                break;
+            case 0:
+                func_87E11BA4(2);
+                break;
+            }
+        }
+        if (buttons & 0x8000) {
+            mask = func_87F0E650(func_87E016C8());
+            Minigame_SetPlayerMask(mask);
+            func_87E18B0C(arg0);
+            func_87E134E8();
+            func_800279C4(0xCF02);
+            *(s32 *)(arg0 + 4) = 2;
+            switch (*(s32 *)arg0) {
+            case 2:
+                *(s32 *)(arg0 + 8) = 1;
+                break;
+            case 1:
+                *(s32 *)(arg0 + 8) = 2;
+                break;
+            case 0:
+                *(s32 *)(arg0 + 8) = 3;
+                break;
+            }
+            func_87E0168C(3, 0x8C, 9);
+        }
+        if (buttons & 0x4000) {
+            if (func_87E13688()) {
+                func_87E18D20(arg0);
+                func_800226C0(3);
+                *(s32 *)(arg0 + 4) = 2;
+                *(s32 *)(arg0 + 8) = 4;
+                func_87E0168C(3, 0x8C, 0xE);
+            }
+        }
+        break;
+    case 2:
+        if (func_87E18ECC(arg0)) {
+            result = *(s32 *)(arg0 + 8);
+        }
+        func_87E10EA8(-1);
+        func_87E10F2C(-1);
+        break;
+    }
+    func_87F0277C((s32)(arg0 + 0xC));
+    return result;
+}
 
 extern void func_87F0AF4C(s32);
 void func_87E1918C(s32 arg0) {

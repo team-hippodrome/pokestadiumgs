@@ -616,7 +616,26 @@ void func_816049BC(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_81604024(0, arg0 + 5, arg1 + 5, arg2 - 0xD, arg3 - 0xD, (s32 *)&D_8160BDC4, (s32 *)&D_8160BDC8);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81604A44.s")
+/* mkdraft:func_81604A44 begin */
+void func_81604A44(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    if (arg3 < 4) {
+        return;
+    }
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+    func_8004D1FC((void *)D_8160BD60);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0, 0x0F0A7008);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 << 2, arg1 << 2, (arg0 + 3) << 2, (arg1 + 2) << 2, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, (arg0 + arg2 - 3) << 2, arg1 << 2, (arg0 + arg2) << 2, (arg1 + 2) << 2, G_TX_RENDERTILE, 0x60, 0, 0x400, 0x400);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 << 2, (arg1 + arg3 - 2) << 2, (arg0 + 3) << 2, (arg1 + arg3) << 2, G_TX_RENDERTILE, 0xC0, 0, 0x400, 0x400);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, (arg0 + arg2 - 3) << 2, (arg1 + arg3 - 2) << 2, (arg0 + arg2) << 2, (arg1 + arg3) << 2, G_TX_RENDERTILE, 0x120, 0, 0x400, 0x400);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, arg0 << 2, (arg1 + 3) << 2, (arg0 + 3) << 2, (arg1 + arg3 - 3) << 2, G_TX_RENDERTILE, 0, 0x40, 0x400, 0);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, (arg0 + 3) << 2, arg1 << 2, (arg0 + arg2 - 3) << 2, (arg1 + 3) << 2, G_TX_RENDERTILE, 0x60, 0, 0, 0x400);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, (arg0 + arg2 - 3) << 2, (arg1 + 3) << 2, (arg0 + arg2) << 2, (arg1 + arg3 - 3) << 2, G_TX_RENDERTILE, 0x120, 0, 0x400, 0);
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, (arg0 + 3) << 2, (arg1 + arg3 - 3) << 2, (arg0 + arg2 - 3) << 2, (arg1 + arg3) << 2, G_TX_RENDERTILE, 0x120, 0, 0, 0x400);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    func_81604024(arg4, arg0 + 3, arg1 + 3, arg2 - 6, arg3 - 6, (s32 *)&D_8160BDC4, (s32 *)&D_8160BDC8);
+}
+/* mkdraft:func_81604A44 end */
 
 extern void func_81604A44(s32, s32, s32, s32, s32);
 void func_816054D8(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {

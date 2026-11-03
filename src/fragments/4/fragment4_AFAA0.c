@@ -790,7 +790,111 @@ f32 WidgetSelection_AngleDifference(f32 from, f32 to) {
     return WidgetSelection_WrapAngle(WidgetSelection_WrapAngle(to) - WidgetSelection_WrapAngle(from));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AFAA0/func_81803D80.s")
+/* mkdraft:func_81803D80 begin */
+extern f32 func_8180181C(void *arg0);
+extern void func_81801878(u8 *arg0, u8 *arg1, u8 *arg2);
+extern void func_81801EC0(u8 *arg0, u8 *arg1);
+typedef struct { f32 angles[4]; } WidgetSelection_DirectionAngles;
+typedef struct { s16 x; s16 y; } WidgetSelection_Point;
+extern WidgetSelection_DirectionAngles D_81805D48;
+extern f32 D_81805F78;
+extern f32 D_81805F7C;
+extern f32 D_81805F80;
+
+
+
+
+
+s32 func_81803D80(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 wrap;
+    s32 mask;
+    WidgetSelection_Point origin;
+    s32 next;
+    s32 best;
+    WidgetSelection_Point delta;
+    WidgetSelection_Point center;
+    s32 index;
+    s32 i;
+    f32 angle;
+    WidgetSelection_DirectionAngles angles;
+    f32 best_angle;
+    f32 distance;
+    f32 best_distance;
+    u8 *node;
+    s32 pad0; // FAKE: unreferenced; together with pad1 it sets the 0xB0 frame and the
+    s32 pad1; // FAKE: spill offsets of the locals above.
+
+    // Bit 29 of the selected-node word: set when the menu grants free cursor movement.
+    wrap = (*(u32 *)((u8 *)arg0 + 16) << 2) >> 31;
+    mask = arg3;
+    index = arg1;
+    if (!wrap) {
+        mask = 0;
+    }
+    while (1) {
+        node = *(u8 **)arg0 + index * 24 - 24;
+        next = *(u8 *)(node + arg2 + 1);
+        if (next <= 0) {
+            break;
+        }
+        index = next;
+        if (!(mask & (1 << (next + 0x1F)))) {
+            break;
+        }
+    }
+
+    if (wrap && ((mask & (1 << (index + 0x1F))) || (arg1 == index))) {
+        func_81801EC0(*(u8 **)arg0 + arg1 * 24 - 18, (u8 *)&origin);
+        best_angle = 100.0f;
+        best = arg1;
+        best_distance = D_81805F78;
+        for (i = 1; i <= *(u8 *)((u8 *)arg0 + 4); i++) {
+            angles = D_81805D48;
+            node = *(u8 **)arg0 + i * 24 - 24;
+            if ((i != arg1) && (!(mask & (1 << (i + 0x1F))))) {
+                func_81801EC0(node + 6, (u8 *)&center);
+                func_81801878((u8 *)&delta, (u8 *)&center, (u8 *)&origin);
+                angle = WidgetSelection_AngleDifference(angles.angles[arg2], func_81801748(&delta));
+                if (angle > 0.0f) {
+                    angle = WidgetSelection_AngleDifference(angles.angles[arg2], func_81801748(&delta));
+                } else {
+                    angle = -WidgetSelection_AngleDifference(angles.angles[arg2], func_81801748(&delta));
+                }
+                // Distance measured from the currently best angle.
+                if (angle > best_angle) {
+                    distance = angle - best_angle;
+                } else {
+                    distance = -(angle - best_angle);
+                }
+                if (distance < D_81805F7C) {
+                    distance = func_8180181C(&delta);
+                    if (distance < best_distance) {
+                        best_distance = distance;
+                        best_angle = angle;
+                        best = i;
+                    }
+                } else {
+                    if (index) { // FAKE
+                    }
+                    if (angle < best_angle) {
+                        best_angle = angle;
+                        best = i;
+                        best_distance = func_8180181C(&delta);
+                    }
+                }
+            }
+        }
+        // 100.0f sentinel: no node passed the angle test.
+        if (best_angle < D_81805F80) {
+            index = best;
+        }
+    }
+    // Bit 29 of the flags word: (word << 2) >> 31 is 0 or -1, and != 0 makes the
+    // test a boolean. Splitting the shift from the sign comparison (rather than
+    // comparing `word << 2` directly) yields the load in $t7 and the shift in $t9.
+    return ((*(s32 *)((u8 *)arg0 + 16) << 2) >> 31) != 0 && (mask & (1 << (index + 0x1F))) ? arg1 : index;
+}
+/* mkdraft:func_81803D80 end */
 
 /* mkdraft:func_81804088 begin */
 // Named bits in the selection script's flag word at offset 16.
