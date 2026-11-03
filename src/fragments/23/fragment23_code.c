@@ -2,7 +2,72 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A00020.s")
+/* mkdraft:func_82A00020 begin */
+extern u8 D_82A019C8[];
+extern u8 D_82A01990[];
+extern f32 D_80087E50[];
+extern s16 D_82A018A8;
+extern s16 D_82A018AC;
+extern u32 D_82A018B0;
+
+
+
+void func_82A00020(void)
+{
+    struct unk_D_82A019C8
+    {
+        s16 unk_00;
+        s16 unk_02;
+        s16 unk_04;
+        s16 unk_06;
+        s16 unk_08;
+        s16 unk_0A;
+        u8 unk_0C[4];
+    };
+
+    struct unk_D_82A019C8 *node;
+    s32 index;
+    s16 angle;
+    s16 *pa;
+    s32 count;
+    u8 *p90;
+    u32 *pb;
+
+    pa = &D_82A018A8;
+    p90 = D_82A01990;
+    pb = &D_82A018B0;
+
+    for (node = (struct unk_D_82A019C8 *)D_82A019C8, angle = *pa, index = 0, count = 4; index != count; index++, node++)
+    {
+        s32 sin_index = ((u16)angle) >> 4;
+
+        if (index != *(s32 *)p90)
+        {
+            node->unk_08 = 0;
+            node->unk_00 += 0x400;
+            node->unk_0A = (s16)(D_80087E50[((u16)node->unk_00) >> 4] * 10.0f);
+        }
+        else
+        {
+            node->unk_00 += 0x200;
+            node->unk_08 = (s16)(D_80087E50[sin_index] * 10.0f);
+            node->unk_0A = (s16)(D_80087E50[((u16)node->unk_00) >> 4] * 10.0f);
+        }
+    }
+
+    (*pb)++;
+
+    if (!(*pb % 60))
+    {
+        s16 rnd = (guRandom() % 513) + 512;
+
+        angle = *pa, D_82A018AC = rnd;
+    }
+
+    angle += D_82A018AC;
+    D_82A018A8 = angle;
+}
+/* mkdraft:func_82A00020 end */
 
 extern s32 func_800506A4(u8 *);
 extern void func_80050578(u8 *, s32);
