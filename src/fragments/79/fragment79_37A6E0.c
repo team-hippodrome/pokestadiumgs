@@ -776,7 +776,66 @@ void func_8410D088(u8 *arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410D174.s")
+/* mkdraft:func_8410D174 begin */
+extern u8 *func_8410B330(u8 *);
+extern void func_8411E0A4(void *, void *, void *);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern s32 func_8411DC80(u16, s32 *, s32);
+extern void func_800371B4(u8 *, u8 *, f32, s16, s16);
+extern u8 D_84183988;
+extern u8 *D_841911E8;
+
+
+
+void func_8410D174(u8 *arg0, void *arg1) {
+    f32 target[3];
+    f32 pos[3]; // FAKE: unused; restores the original 0x58-byte frame.
+    f32 distance;
+    f32 offset;
+    s16 angle0;
+    s16 angle1;
+
+    offset = 0.0f;
+    D_841911E8 = func_8410B330(arg0);
+    if (*(s16 *)((u8 *)arg1 + 0x7EA) == 1) {
+        func_8411E0A4(arg1, target, D_841911E8);
+    } else {
+        Vec3f_SetComponentsDuplicate(target, *(f32 *)(D_841911E8 + 0x50), *(f32 *)(D_841911E8 + 0x54), *(f32 *)(D_841911E8 + 0x58));
+    }
+    *(s16 *)((u8 *)arg1 + 0x7EA) = 1;
+    func_80037120(target, arg0 + 0xB4, &distance, &angle0, &angle1);
+    if (func_8411DC80(*(u16 *)((u8 *)arg1 + 0x1A), (s32 *)&D_84183988, 0x38) != 0) {
+        return;
+    }
+    if (*(s16 *)((u8 *)arg1 + 0x1A) == 0xA1) {
+        offset = 2.0f;
+    }
+    if (distance > *(f32 *)(D_841911E8 + 0x80)) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.2f + offset, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.9f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.3f + offset, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.8f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.4f + offset, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.7f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.5f + offset, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.6f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.6f + offset, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.5f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.7f + offset, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.4f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.8f, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.3f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.9f, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.2f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.9f, angle0, angle1);
+    } else if (distance > *(f32 *)(D_841911E8 + 0x80) * 0.1f) {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.9f, angle0, angle1);
+    } else {
+        func_800371B4((u8 *)target, arg0 + 0xB4, distance * 0.9f, angle0, angle1);
+    }
+}
+/* mkdraft:func_8410D174 end */
 #endif
 
 #ifdef VERSION_US
@@ -1213,7 +1272,98 @@ void BattleAnim_ModelDispatch_072(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_37A6E0/func_8410ED98.s")
+extern u8 *D_841911E8;
+extern u8 *D_84193DD0;
+extern void func_8410B8FC(f32 *, f32 *, s16);
+extern u8 *func_8411E164(u8 *);
+extern f32 *Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+
+// Aims the battle camera arg0 at the model obj = func_8411E164(arg1) of the
+// actor arg1. arg0 is a S1_unk_D_86002F34_00C camera: 0xA8 is unk_60.eye and
+// 0xB4 is unk_60.at (0x60 + 0x48/0x54), while 0x2C is unk_24.fovy, here set to
+// 35 through D_841911E8 + 0x88, the fov target that func_841203B4 steps 0x2C
+// toward.
+//@include/229E0.h
+// The eye is arg1's offset 0x634 rotated about Y by arg1's 0x20
+// (func_8410B8FC), with x replaced by func_8411E1D4(arg1) * -160, z cleared,
+// and y taken from arg1's height offset 0x638. The at point reuses that
+// rotation with obj's 0x20 and adds obj's 0x24/0x2C. Its height depends on
+// dist = (arg1 0x28 + 0x638) - (obj 0x28 + 0x638), where obj's height is 0 when
+// the D_84193DD0 record's +0x12 bit 4 is set:
+//   dist <= -20: arg1 0x28 - 0x638 clamped to 10 is written to arg0 + 0xB4, and
+//                the camera height is obj 0x28 + 0x638 - 0x650 plus 10% of 0x638;
+//   dist >=  20: arg1 0x28 + 150% of 0x638 goes to arg0 + 0xB4, and the camera
+//                height is obj 0x28 + 0x638 - 0x650 minus 10% of 0x638, plus 70%
+//                of 0x638 when arg1's 0x1A is 0xD0;
+//   otherwise:   obj 0x28 + 0x638 - 0x650 supplies both; func_84121130 bounds
+//                0x28 against 0x650, which is obj's base height.
+//@src/fragments/79/fragment79_38EFE0.c
+// A set bit 4 forces the camera height to 10. The final point is copied to the
+// camera state at D_841911E8 + 0x50, and func_80037120 writes its distance and
+// two rotation angles from the eye into that state at 0x40, 0x3C and 0x3E.
+
+
+void func_8410ED98(u8 *arg0, s32 arg1, s32 arg2) {
+    f32 vec[3];
+    u8 *obj;
+    f32 y1;
+    f32 pad_48; // FAKE: unused local; the three pad_* declarations give retail's slots vec 0x54, y1 0x4C, y2 0x40; diff score 369 without this one.
+    f32 pad_44; // FAKE: unused local; diff score 369 without it.
+    f32 y2;
+    f32 dist;
+    s32 index;
+    f32 pad_34; // FAKE: unused local; diff score 377 without it.
+
+    obj = func_8411E164(arg1);
+    D_841911E8 = func_8410B330(arg0);
+    *(f32 *)(D_841911E8 + 0x88) = 35.0f;
+    *(f32 *)(arg0 + 0x2C) = *(f32 *)(D_841911E8 + 0x88);
+    *(f32 *)(D_841911E8 + 0x44) = 0.0f;
+    func_8410B8FC(vec, (f32 *)(arg1 + 0x634), *(s16 *)(arg1 + 0x20));
+    vec[0] = func_8411E1D4(arg1) * -160.0f;
+    vec[2] = 0.0f;
+    Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xA8), vec[0], *(f32 *)(arg1 + 0x638), 0.0f);
+    func_8410B8FC(vec, (f32 *)(arg1 + 0x634), *(s16 *)(obj + 0x20));
+    vec[0] += *(f32 *)(obj + 0x24);
+    vec[2] += *(f32 *)(obj + 0x2C);
+    y1 = *(f32 *)(arg1 + 0x28) + *(f32 *)(arg1 + 0x638);
+    y2 = *(f32 *)(obj + 0x28) + *(f32 *)(obj + 0x638);
+    index = func_8411E1F8(obj);
+    if ((*(u16 *)((u8 *)D_84193DD0 + (index << 4) + 0x12) & 4) != 0) {
+        y2 = 0.0f;
+    }
+    dist = y1 - y2;
+    if (dist <= -20.0f) {
+        vec[1] = *(f32 *)(arg1 + 0x28) - *(f32 *)(arg1 + 0x638);
+        if (vec[1] < 10.0f) {
+            vec[1] = 10.0f;
+        }
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), vec[0], vec[1], vec[2]);
+        // FAKE: the multiplied height offset is written first; diff score 10 with the sum first.
+        vec[1] = *(f32 *)(obj + 0x638) * 0.1f + (*(f32 *)(obj + 0x638) + *(f32 *)(obj + 0x28));
+        vec[1] = vec[1] - *(f32 *)(obj + 0x650);
+    } else if (dist >= 20.0f) {
+        vec[1] = *(f32 *)(arg1 + 0x638) * 1.5f + *(f32 *)(arg1 + 0x28);
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), vec[0], vec[1], vec[2]);
+        vec[1] = (*(f32 *)(obj + 0x28) + *(f32 *)(obj + 0x638)) - *(f32 *)(obj + 0x638) * 0.1f - *(f32 *)(obj + 0x650);
+        if (*(s16 *)(arg1 + 0x1A) == 0xD0) {
+            vec[1] = vec[1] + *(f32 *)(obj + 0x638) * 0.7f;
+        }
+    } else {
+        // FAKE: obj's height offset is added before its height; diff score 15 the other way around.
+        vec[1] = *(f32 *)(obj + 0x638) + *(f32 *)(obj + 0x28);
+        vec[1] = vec[1] - *(f32 *)(obj + 0x650);
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + 0xB4), vec[0], vec[1], vec[2]);
+    }
+    index = func_8411E1F8(obj);
+    if ((*(u16 *)((u8 *)D_84193DD0 + (index << 4) + 0x12) & 4) != 0) {
+        vec[1] = 10.0f;
+    }
+    Vec3f_SetComponentsDuplicate((f32 *)(D_841911E8 + 0x50), vec[0], vec[1], vec[2]);
+    func_80037120(arg0 + 0xA8, vec, (f32 *)(D_841911E8 + 0x40), (s16 *)(D_841911E8 + 0x3C),
+                  (s16 *)(D_841911E8 + 0x3E));
+}
 #endif
 
 #ifdef VERSION_US
