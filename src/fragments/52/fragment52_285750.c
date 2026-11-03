@@ -72,7 +72,44 @@ void func_86407330(f32 a, f32 b, u32 c, u32 d, f32 e, f32 g) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_864073B0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_86407610.s")
+/* mkdraft:func_86407610 begin */
+extern u8 D_864097F0[];
+extern u8 D_864097F4[];
+extern u8 D_864097F8[];
+extern u8 D_864097FC[];
+extern u8 D_86409BD0[];
+extern u8 D_86409BDC[];
+extern u8 D_86409BE8[];
+extern u8 D_86409BF4[];
+extern u8 D_86409C00[];
+extern u8 D_86409C0C[];
+extern u8 D_86409C18[];
+extern u8 D_86409C24[];
+extern u8 D_86409C30[];
+extern f32 D_86409C38;
+extern s32 func_80001FF0(void);
+extern void func_87F04314(s32, s32, s32, void *, s32, s32, s32, s32, s32, void *, void *, void *);
+extern void func_87F0455C(void);
+
+
+
+void func_86407610(void) {
+    ((u8 *)D_86416C00)[0xC] &= 0xFF7F;
+    *(f32 *)((u8 *)D_86416C00 + 0) = D_86409C38 / (f32)func_80001FF0();
+    *(f32 *)((u8 *)D_86416C00 + 4) = 51.0f / (f32)func_80001FF0();
+    *(s32 *)((u8 *)D_86416C00 + 8) = 9;
+    func_87F0455C();
+    func_87F04314(0, 0, 0, D_86409BD0, 12, 0, 10, 5, 3, (u8 *)D_86416C00 + 0x14, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 1, D_86409BDC, 12, 1, 10, 5, 3, (u8 *)D_86416C00 + 0x18, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 2, D_86409BE8, 12, 2, 10, 5, 3, (u8 *)D_86416C00 + 0x1C, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 3, D_86409BF4, 12, 3, 10, 5, 3, (u8 *)D_86416C00 + 0x20, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 4, D_86409C00, 12, 4, 10, 5, 3, (u8 *)D_86416C00 + 0x24, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 5, D_86409C0C, 12, 5, 10, 5, 3, (u8 *)D_86416C00 + 0x28, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 6, D_86409C18, 12, 6, 10, 5, 3, D_86416C00, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 7, D_86409C24, 12, 7, 10, 5, 3, (u8 *)D_86416C00 + 4, D_864097F0, D_864097F4);
+    func_87F04314(0, 0, 8, D_86409C30, 12, 8, 6, 5, 0, (u8 *)D_86416C00 + 8, D_864097F8, D_864097FC);
+}
+/* mkdraft:func_86407610 end */
 
 typedef struct unk_func_864079AC {
     u8 unk_00[0xC];
