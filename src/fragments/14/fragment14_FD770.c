@@ -149,7 +149,122 @@ void func_81305BA8(void *arg0, s32 *arg1, s32 *arg2) {
 }
 /* mkdraft:func_81305BA8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FD770/func_81305C54.s")
+/* mkdraft:func_81305C54 begin */
+extern void func_816048E0(s32, s32, s32, s32, f32);
+extern void func_816073A0(void *);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern s32 func_800635E0(u8);
+extern void func_800499EC(void);
+extern void func_81607408(void);
+extern void func_8160732C(void *, void *);
+extern void func_8160724C(s16 *, s16 *);
+extern void func_81607360(s32);
+extern void func_81607440(s16, s16, s16, s16, f32, s32, s32);
+extern s32 func_81601980(s32 *, s32);
+extern s32 func_81601FA0(u8);
+extern u8 *func_81602108(u8);
+extern f32 func_8160762C(s32, s32, s32 *, s32 *);
+extern void func_81305BA8(void *, s32 *, s32 *);
+extern void Fragment14_ComputeGridCursorPosition(u8 *, s16 *);
+
+
+
+void func_81305C54(void *arg0, void *arg1, f32 arg2) {
+    // Declared first, the two counters take the home slots at the top of the local
+    // block (0xA8..0xAF). Both stay in registers, so nothing addresses those slots
+    // and the block below them starts at 0x78, matching retail.
+    u32 i;
+    s32 j;
+    s32 index;
+    s32 offsetY;
+    struct Fragment14GridRectangle rect2;
+    struct Fragment14GridRectangle workrect;
+    struct Fragment14GridRectangle rect1;
+    s16 cursor[2];
+    s32 stepX;
+    s32 stepY;
+    f32 scale;
+    s32 value;
+    s32 flags;
+    s32 valid;
+    s32 text;
+    u8 *color;
+
+    scale = func_8160762C(*(s16 *)((u8 *)arg0 + 0x7C),
+                         *(u8 *)((u8 *)arg0 + 0x84) - 3, &stepX, &stepY);
+    func_81305BA8(arg0, &index, &offsetY);
+    *(f32 *)((u8 *)arg0 + 0x74) =
+        *(f32 *)((u8 *)arg0 + 0x74) +
+        (scale - *(f32 *)((u8 *)arg0 + 0x74)) * 0.35f;
+
+    if (*(s16 *)((u8 *)arg1 + 6) < 0x10) {
+        return;
+    }
+    func_816048E0(*(s16 *)((u8 *)arg1 + 0), *(s16 *)((u8 *)arg1 + 2),
+                 *(s16 *)((u8 *)arg1 + 4), *(s16 *)((u8 *)arg1 + 6), arg2);
+    if (0.1f < arg2) {
+        return;
+    }
+
+    func_8160732C(&workrect, arg1);
+    rect1.x = *(s16 *)((u8 *)arg1 + 0) + 7;
+    rect1.y = *(s16 *)((u8 *)arg1 + 2) + 7;
+    rect1.width = 0x13;
+    rect1.height = 0x7E;
+    func_8160724C((s16 *)&rect1, (s16 *)&workrect);
+    func_816073A0(arg1);
+    func_81607440(rect1.x, rect1.y, rect1.width, rect1.height,
+                 *(f32 *)((u8 *)arg0 + 0x74), stepX, stepY);
+
+    rect2.x = *(s16 *)((u8 *)arg1 + 0) + 0x26;
+    rect2.y = *(s16 *)((u8 *)arg1 + 2) + 0x12;
+    rect2.width = 0x158;
+    rect2.height = 0x70;
+    func_8160724C((s16 *)&rect2, (s16 *)&workrect);
+    func_81607360((s32)&rect2);
+    func_800498C4();
+    func_800496A4(8, 0);
+
+    for (i = 0; i != 2; ++i) {
+        for (j = -1; j != 5; ++j) {
+            value = func_813055E0((s32)arg0, index, i, j);
+            if (value < 0) {
+                continue;
+            }
+            if (value >= *(u16 *)((u8 *)arg0 + 0x50)) {
+                continue;
+            }
+            value = *(u8 *)((u8 *)arg0 + value + 0x10);
+            text = func_800635E0(value);
+            flags = func_81601FA0(value);
+            valid = func_81601980((s32 *)((u8 *)arg0 + 0x54), value);
+            if (value == 0) {
+                if (i == 0) {
+                    text = func_8004C874(0xF, 9);
+                } else {
+                    text = (s32)D_813124D0;
+                }
+            }
+            if (valid != 0) {
+                func_8004972C(0x80, 0x80, 0x80, 0xFF);
+            } else {
+                color = func_81602108(flags);
+                func_8004972C(color[0], color[1], color[2], 0xFF);
+            }
+            func_800495BC(*(s16 *)((u8 *)arg1 + 0) + i * 172 + 0x26,
+                          *(s16 *)((u8 *)arg1 + 2) + j * 28 + offsetY + 0x12,
+                          text);
+        }
+    }
+    func_800499EC();
+    func_816073A0(arg1);
+    Fragment14_ComputeGridCursorPosition(arg0, cursor);
+    func_8004B314(cursor[0] + *(s16 *)((u8 *)arg1 + 0) - 5,
+                  cursor[1] + *(s16 *)((u8 *)arg1 + 2) - 5, 0x9D, 0x24);
+    func_81607408();
+}
+/* mkdraft:func_81305C54 end */
 
 extern s32 func_81305634(void *);
 extern Gfx *D_800D0510;

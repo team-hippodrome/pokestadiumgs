@@ -96,7 +96,55 @@ void *func_81307204(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81307228.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130728C.s")
+/* mkdraft:func_8130728C begin */
+extern s32 func_81307228(void *);
+extern void func_81600F0C(s32, s32, s32, s32, s32);
+extern s32 func_81600DA8(void *, void *);
+extern void func_816078C4(s32, s32, s32, s32, s32, s32);
+extern void func_81606B5C(s32, s32, s32, s32);
+extern void func_816068C0(s32, s32, s32, s32);
+extern s32 func_81306F20(void *);
+extern void func_8160710C(s32, s32, s32);
+extern void func_816071AC(s32, s32, s32);
+
+// FAKE: arg4 is an unused 5th formal. Retail callers pass 4 arguments
+// (func_8130881C sets only a0-a3) and the retail prologue homes only a1/a2/a3,
+// never a 5th incoming argument. The formal exists so IDO 7.1 keeps the
+// selector in an expression temporary (spilled at 0x30(sp) across the
+// func_81306F20 call) instead of a declared local's home slot at 0x34(sp).
+// It is assigned but never read, so it is harmless at the ABI level.
+// See func_8130728C.report.md.
+
+
+void func_8130728C(void *arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4)
+{
+  struct S { u8 pad[0x137C0]; f32 x; u8 pad4[4]; f32 y; };
+  if ((func_81307228(arg0) != 0) && (func_81600DA8(arg1, (void *) 0x54455854) != 0))
+  {
+    func_81600F0C(*((s32 *) (((u8 *) (*((s32 *) (((u8 *) arg0) + 0x137AC)))) + 0x1A150)), (s16) (arg2 - 0x2F), (s16) (arg3 - 0x37), 0x280, 0x10);
+    func_816078C4(arg2 + 0x111, arg3 - 0x37, (*((u8 *) (((u8 *) arg0) + 0x137F5))) != 0xB, func_81306EE0(arg0, *((u8 *) (((u8 *) arg0) + 0x137F4))), *((u8 *) (((u8 *) arg0) + 0x137F4)), *((u8 *) (((u8 *) arg0) + 0x137FB)));
+  }
+  if (func_81600DA8(arg1, (void *) 0x424F5853) != 0)
+  {
+    if ((*((s32 *) (((u8 *) arg0) + 0x137E8))) != 0)
+    {
+      func_81606B5C(arg2 + 0x30, arg3 - 0x20, *((u16 *) (((u8 *) arg0) + 0x137D8)), *((u8 *) (((u8 *) arg0) + 0x137FB)));
+    }
+    else
+    {
+      func_816068C0(arg2 + 0x57, (func_81306F20(arg0) + arg3) - 0x20, *((u16 *) (((u8 *) arg0) + 0x137D8)), *((u8 *) (((u8 *) arg0) + 0x137FB)));
+    }
+  }
+  if (func_81600DA8(arg1, (void *) 0x4C5F4254) != 0)
+  {
+    func_8160710C((s32) (((f32) (arg2 + (arg4 = ((*((s32 *) (((u8 *) arg0) + 0x137E8)) != 0) ? 7 : 46)))) - (((struct S *) arg0)->x)), (func_81306F20(arg0) + arg3) - 0x23, arg4);
+  }
+  if (func_81600DA8(arg1, (void *) 0x525F4254) != 0)
+  {
+    func_816071AC((s32) (((f32) (arg2 + (arg4 = ((*((s32 *) (((u8 *) arg0) + 0x137E8)) != 0) ? 0x1F9 : 0x1D4)))) + (((struct S *) arg0)->y)), (func_81306F20(arg0) + arg3) - 0x23, arg4);
+  }
+}
+/* mkdraft:func_8130728C end */
 
 extern s32 func_81600DA8(void *, void *);
 void func_813074E4(void *arg0, void *arg1, s32 arg2, s32 arg3)
@@ -125,11 +173,110 @@ void func_81307570(void *arg0, void *arg1, s32 arg2, s32 arg3) {
     func_81606FE0(arg2, arg3, *(s32 *)((u8 *)arg0 + 0x137BC), *(s32 *)((u8 *)arg0 + 0x137E8));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81307600.s")
+/* mkdraft:func_81307600 begin */
+
+
+s32 func_81307600(void *arg0p, s32 arg1)
+{
+  typedef struct unk_81307600_record
+  {
+    u8 unk_00;
+    u8 unk_01;
+    u8 unk_02[2];
+    u8 *unk_04[5];
+  } unk_81307600_record;
+  typedef struct unk_81307600_state
+  {
+    u8 unk_00000[8];
+    unk_81307600_record records[16];
+    u8 unk_00188[0x37AC - 0x188];
+    u8 *unk_137AC;
+    u8 *unk_137B0;
+    u8 unk_137B4[0x37F8 - 0x37B4];
+    s8 unk_137F8;
+    u8 unk_137F9[0x137FB - 0x137F9];
+    u8 unk_137FB;
+  } unk_81307600_state;
+  extern s32 Deck_ReadEntries(u8 *buffer, s32 remaining, u8 *handle);
+  extern s32 func_8005CB38(s32 arg0, s32 arg1);
+  extern u8 *func_8006218C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+  extern s32 func_80062304(u8 *arg0);
+  extern s32 func_8007126C(s32 arg0, s32 arg1, s32 arg2);
+  extern void func_8130A88C(u8 *arg0);
+  u8 buffer[0x58];
+  u8 *deck;
+  s32 j;
+  s32 mode;
+  s32 handle;
+  s32 total;
+  s32 i;
+  s32 k;
+  unk_81307600_record *record;
+
+  i = 0;
+  record = &((unk_81307600_state *) arg0p)->records[arg1];
+  record->unk_00 = (record->unk_01 = 0);
+  total = ((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137FB;
+  if (arg1 < total)
+  {
+    if (arg1 == 0)
+    {
+      mode = 0x20;
+    }
+    else
+    {
+      mode = 0x21;
+    }
+    if (arg1 > 0)
+    {
+      handle = arg1 - 1;
+    }
+    else
+    {
+      handle = 0;
+    }
+    if ((((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137F8 < 4) && (((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137F8 >= 0) && (func_8005CB38(((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137F8, 0x21) >= arg1))
+    {
+      deck = func_8006218C(mode, ((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137F8, handle, 0);
+      if (deck != 0)
+      {
+        while (Deck_ReadEntries(buffer, 1, deck) != 0)
+        {
+            if ((!(buffer[0x1E] & 1)) && (func_8007126C(*((s32 *) ((*((u8 **) (((u8 *) ((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137AC) + 0x1A148))) + 0x940)), buffer[0] - 1, buffer[0x1D]) != 0))
+            {
+              record->unk_04[0][record->unk_00] = buffer[0];
+              for (k = 1; k < 5; k++)
+              {
+                record->unk_04[k][record->unk_00] = i;
+              }
+              record->unk_00++;
+            }
+          i++;
+        }
+        func_80062304(deck);
+      }
+    }
+  }
+  else if ((arg1 == total) && (((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137B0 != 0))
+  {
+    record->unk_00 = ((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137B0[0];
+    for (j = 0; j < record->unk_00; j++)
+    {
+      record->unk_04[0][j] = ((unk_81307600_state *) (((u8 *) arg0p) + 0x10000))->unk_137B0[(j * 0x18) + 5];
+      for (k = 1; k < 5; k++)
+      {
+        record->unk_04[k][j] = j;
+      }
+    }
+  }
+  func_8130A88C((u8 *) record);
+  return record->unk_00;
+}
+/* mkdraft:func_81307600 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130785C.s")
 
-extern void func_8130785C(void *, void *, s32);
+extern s32 func_8130785C(void *, void *, s32);
 void func_81307C94(void *arg0) {
     s32 var_s0;
     void *var_s1;
@@ -539,9 +686,46 @@ void func_81309550(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_813095C4.s")
+extern void func_800226C0(s32);
 
-extern void func_813095C4(void *, s32, s32);
+// Shared fragment-unit state. arg0 is the unit; the record chain head is at
+// 0x137A8, and each record links to the next through its +0x33A4 pointer
+// (func_81307C94 walks the same records through +0x33A0). The small
+// counter/value/flag block at 0x137D4..0x137F9 is also written by
+// func_813094E0 and func_81309550.
+
+
+void func_813095C4(void *arg0, u16 arg1, s32 arg2) {
+    typedef struct {
+        u8 pad0[0x137A8];
+        u8 *data;
+        u8 pad1[0x137D4 - 0x137AC];
+        s16 value;
+        s16 flag;
+        u8 pad2[0x137F5 - 0x137D8];
+        u8 mode;
+        u8 pad3[0x137F9 - 0x137F6];
+        u8 count;
+    } State;
+    State *s = arg0;
+
+    if (s->count > 0) {
+        if (func_8130785C(arg0, *(void **)(s->data + 0x33A4), s->count - 1)) {
+            func_800226C0(1);
+            s->count--;
+            s->data = *(void **)(s->data + 0x33A4);
+            if (arg2 != 0) {
+                s->value += arg1;
+            } else {
+                s->value = 0;
+            }
+            s->flag = -arg1;
+            s->mode = 8;
+        }
+    }
+}
+
+void func_813095C4(void *arg0, u16 arg1, s32 arg2);
 extern void func_800226C0(s32);
 void func_813096B4(void *arg0) {
     struct S { u8 pad0[0x137B6]; s16 count; u8 gap0[0x1C]; s16 x; s16 y; u8 gap1[0x1D]; u8 state; };
@@ -560,7 +744,35 @@ void func_813096B4(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81309740.s")
+/* mkdraft:func_81309740 begin */
+extern s32 func_8130785C(void *, void *, s32);
+extern void func_800226C0(s32);
+
+
+
+void func_81309740(void *arg0, s32 arg1, s32 arg2) {
+    typedef struct {
+        u8 pad[0x137A8];
+        void *value;
+        u8 gap0[0x28];
+        s16 timer;
+        s16 delay;
+        u8 gap1[0x1D];
+        u8 flag;
+        u8 gap2[3];
+        u8 count;
+    } State;
+    State *state = (State *)((u8 *)arg0);
+    if (func_8130785C(((u8 *)arg0), func_81307204(state->value, 3), (s32)(state->count + 3)) != 0) {
+        func_800226C0(1);
+        state->count++;
+        state->value = *(void **)((u8 *)state->value + 0x33A0);
+        state->timer = (arg2 != 0) ? (state->timer - (u16)arg1) : 0;
+        state->delay = (u16)arg1;
+        state->flag = 8;
+    }
+}
+/* mkdraft:func_81309740 end */
 
 extern void func_81309740(void *, s32, s32);
 void func_81309820(void *arg0) {
@@ -613,7 +825,7 @@ extern void func_8130911C(void *arg0);
 extern void func_813091E0(void *arg0);
 extern void func_813094E0(void *arg0);
 extern void func_81309550(void *arg0);
-extern void func_813095C4(void *, s32, s32);
+void func_813095C4(void *arg0, u16 arg1, s32 arg2);
 extern void func_813096B4(void *arg0);
 extern void func_813098B0(void *arg0);
 extern u8 D_800CE060[];
@@ -647,7 +859,7 @@ void func_81309ACC(u8 *arg0) {
 
 extern void func_8130924C(void *);
 extern void func_81309394(void *);
-extern void func_813095C4(void *, s32, s32);
+void func_813095C4(void *arg0, u16 arg1, s32 arg2);
 extern void func_81309740(void *, s32, s32);
 extern f32 func_816092FC(void);
 extern u8 D_800CE060[];
