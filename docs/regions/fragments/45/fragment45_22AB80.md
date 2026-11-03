@@ -150,3 +150,22 @@ Next: trace the real pointer/flag webs around the four clears after the
 constructor. Preserve the proven void callee contract and remove the dead
 pointer test in any accepted replacement; do not restore a false return type
 to reserve a register. Private valid family: `rewrite-cleanup-f45-real-callee-valid8`.
+
+### 2026-11-04: byte-query declaration consistency
+
+The declaration of `func_8005453C` now returns `u8`, matching its existing
+definition in `src/517E0.c`. That definition returns a byte from the save-data
+record, or zero. This file calls it only from `func_8AB07C34`; the argument
+remains `s32`.
+
+The declaration change preserves the complete compiled module, including
+allocated section bytes, function/object symbols, and relocations. Both the
+original and corrected declaration were checked with normal source layout
+and twenty leading blank lines. Native host syntax and full-ROM comparison
+also pass.
+
+This is a supporting type correction, not a newly matched owner. The timer
+functions remain `requeue`; their rewrite directives and the campaign's
+remaining-function count are unchanged. Use the consistent byte return type
+in subsequent candidates rather than treating the former `s32` declaration
+as an allocation lever.
