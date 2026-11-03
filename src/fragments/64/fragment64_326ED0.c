@@ -18,7 +18,88 @@ s32 func_87F042D0(s32 arg0, s32 arg1) {
     return (arg1 * 0x26) + arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F04314.s")
+/* mkdraft:func_87F04314 begin */
+extern u8 D_87F11A00[];
+extern u8 D_87F13BD8[];
+
+typedef struct {
+    s8 unk0;
+    s8 unk1;
+    u8 unk2[2];
+    s32 unk4;
+    s8 unk8;
+    s8 unk9;
+    s8 unkA;
+    s8 unkB;
+    s8 unkC;
+    u8 unkD[3];
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+} Entry;
+
+
+
+s32 func_87F04314(s16 arg0, s8 arg1, s8 arg2, s32 arg3, s8 arg4, s8 arg5, s8 arg6, s8 arg7, s8 arg8,
+                  s32 arg9, s32 arg10, s32 arg11) {
+    Entry *entry;
+    s32 start;
+    s32 end;
+    s32 i;
+    s32 idx;
+
+    if (arg0 < 0 || arg0 >= 3) {
+        return -4;
+    }
+    if (arg6 != 1) {
+        if (arg8 > 0) {
+            end = arg4 + arg8 + 1;
+        } else {
+            end = arg4 + arg8;
+        }
+        for (; end >= arg4 - arg7 + 1; end--) {
+            idx = func_87F042D0(end, arg5);
+            if (idx < 0) {
+                return -1;
+            }
+            if (*(s32 *)(D_87F11A00 + arg0 * 0xB48 + idx * 4) >= 0) {
+                return -2;
+            }
+        }
+    }
+    entry = (Entry *)(D_87F13BD8 + arg0 * 0xA80);
+    for (i = 0; i < 0x60; i++) {
+        if (entry->unkA == 0) {
+            break;
+        }
+        entry++;
+    }
+    if (i >= 0x60) {
+        return -3;
+    }
+    if (arg8 > 0) {
+        end = arg4 + arg8 + 1;
+    } else {
+        end = arg4 + arg8;
+    }
+    for (; end >= arg4 - arg7 + 1; end--) {
+        idx = func_87F042D0(end, arg5);
+        *(s32 *)(D_87F11A00 + arg0 * 0xB48 + idx * 4) = i;
+    }
+    entry->unk0 = arg1;
+    entry->unk1 = arg2;
+    entry->unk4 = arg3;
+    entry->unk8 = arg4;
+    entry->unk9 = arg5;
+    entry->unkA = arg6;
+    entry->unkB = arg7;
+    entry->unkC = arg8;
+    entry->unk10 = arg9;
+    entry->unk14 = arg10;
+    entry->unk18 = arg11;
+    return 0;
+}
+/* mkdraft:func_87F04314 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F0455C.s")
 
@@ -101,7 +182,48 @@ void func_87F05930(Gfx **arg0) {
     *arg0 = gfx;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F05954.s")
+/* mkdraft:func_87F05954 begin */
+
+
+void func_87F05954(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 count;
+    s32 x;
+    s8 c;
+    Gfx *state;
+
+    c = *(s8 *)arg3;
+    x = arg1;
+    state = *(Gfx **)arg0;
+    if (c != 0) {
+        do {
+            if (c >= 0x30 && c < 0x3A) {
+                count = c - 0x30;
+            } else if (c >= 0x41 && c < 0x5B) {
+                count = c - 0x37;
+            } else {
+                switch (c) {
+                    case 0x2B: count = 0x24; break;
+                    case 0x2D: count = 0x25; break;
+                    case 0x3A: count = 0x26; break;
+                    case 0x5D: count = 0x27; break;
+                    case 0x2E: count = 0x28; break;
+                    case 0x5E: count = 0x29; break;
+                    default: count = -1; break;
+                }
+            }
+            if (count >= 0) {
+                gSPTextureRectangle(state++, x << 2, arg2 << 2, (x + 5) << 2, (arg2 + 7) << 2,
+                                    G_TX_RENDERTILE, ((count % 21) * 6) << 5,
+                                    ((count / 21) * 8) << 5, 0x1000, 0x400);
+            }
+            arg3++;
+            x += 7;
+            c = *(s8 *)arg3;
+        } while (c != 0);
+    }
+    *(Gfx **)arg0 = state;
+}
+/* mkdraft:func_87F05954 end */
 
 extern void func_87F05954(s32, s32, s32, s32);
 
