@@ -1003,7 +1003,109 @@ void func_86604370(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866044F0.s")
+extern s32 StageContext_GetFadeMode(void);
+extern s32 D_8660672C;
+extern s32 D_8660678C;
+extern u8 D_86606788;
+extern u8 D_866067A0;
+extern u8 D_86606884[];
+extern u8 D_866073E8[];
+extern u8 D_86607410[];
+extern u8 D_866079B0[];
+extern u8 D_8660A990[];
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F3BC(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s32);
+extern void ModelAnim_SetFrame(void *, s32);
+extern void ModelAnim_SetSpeed(void *, s32);
+extern void func_80027A28(u16, u8);
+extern void func_866016D0(s32);
+extern void StageFade_StartFromOpaque(s32);
+void func_87F00688(void);
+
+
+void func_866044F0(void) {
+    s32 i;
+    u8 *p;
+    u8 *q;
+    u8 *e;
+    u8 *anim;
+    u8 *obj;
+
+    if (StageContext_GetFadeMode() == 1) {
+        p = &D_86606788, q = D_86606884 + D_8660672C * 0x18, e = (u8 *)&D_866067A0;
+        do {
+            *(f32 *)(p + 0x1C) = *(f32 *)q;
+            p += 4;
+            q += 4;
+        } while (p < e);
+
+        for (i = 0; i < 4; i++) {
+            anim = D_866079B0 + i * 0x168;
+            obj = D_86607410 + i * 0x168;
+            func_8003F1DC(anim);
+            func_8003F114(obj, 0, -1, *(s32 *)(D_866073E8 + i * 4));
+            ModelAnim_SetEventFrame(obj, 0);
+            func_8003F3BC(obj, 0);
+            func_8003F210(obj, 0);
+            ModelAnim_SetFrame(obj, (s16)(guRandom() % 25));
+            *(s32 *)(D_8660A990 + i * 0x58 + 0x28) = 0;
+        }
+
+        StageFade_StartFromOpaque(20);
+        func_87F00688();
+        D_8660678C = 10;
+        return;
+    }
+    for (i = 0; i < 4; i++) {
+        switch (*(s32 *)(D_8660A990 + i * 0x58 + 0x28)) {
+        case 0:
+            anim = D_866079B0 + i * 0x168;
+            if ((*(s32 *)(anim + 0x48) >> 16) >= 4) {
+                switch (i) {
+                case 0:
+                    *(s32 *)(D_8660A990 + i * 0x58 + 0x28) = 4;
+                    func_8003F3BC(anim, 2);
+                    func_8003F210(anim, 2);
+                    break;
+                case 1:
+                    *(s32 *)(D_8660A990 + i * 0x58 + 0x28) = 1;
+                    func_8003F3BC(anim, 3);
+                    func_8003F210(anim, 3);
+                    break;
+                case 2:
+                    *(s32 *)(D_8660A990 + i * 0x58 + 0x28) = 2;
+                    func_8003F3BC(anim, 4);
+                    func_8003F210(anim, 4);
+                    break;
+                case 3:
+                    *(s32 *)(D_8660A990 + i * 0x58 + 0x28) = 3;
+                    func_8003F3BC(anim, 1);
+                    func_8003F210(anim, 1);
+                    break;
+                }
+                ModelAnim_SetEventFrame(anim, 0);
+                ModelAnim_SetFrame(anim, 0);
+                ModelAnim_SetSpeed(anim, 0x20000);
+                func_80027A28((u16)(i + 0x2F04), (u8)i);
+            }
+            break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            anim = D_866079B0 + i * 0x168;
+            func_80027A28((u16)(i << 8 | 0x200B), (u8)i);
+            if ((*(s32 *)(anim + 0x48) >> 16) >= 12) {
+                ModelAnim_SetFrame(anim, 0xB);
+                ModelAnim_SetEventFrame(anim, 0xB);
+                func_866016D0(i);
+            }
+            break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1445,7 +1547,7 @@ s32 func_86605F04(s32 arg0) {
 #ifdef VERSION_US
 /* mkdraft:func_866061E0 begin */
 extern s32 D_8660672C;
-extern u8 D_866067A0[];
+extern u8 D_866067A0;
 extern u8 D_86606884[];
 extern u8 D_8660AAF0[];
 extern void func_8003F210(void *, s32);
