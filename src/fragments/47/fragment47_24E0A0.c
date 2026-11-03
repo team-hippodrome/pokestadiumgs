@@ -533,7 +533,7 @@ void* func_860095DC(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
 }
 
 extern Fragment47Point D_8600D3D0;
-extern void func_87C004C4(void *, void *, void *);
+extern void *func_87C004C4(void *, void *, void *);
 extern void func_87C00628(s32 arg0, s32 arg1, s32 arg2);
 extern void * func_87C00C80(void *arg0, void *arg1);
 void func_86009674(Fragment47MotionPrefix *object, void *vector, f64 step) {
