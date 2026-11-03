@@ -320,7 +320,17 @@ or reverting a function to assembly does not establish a proper C match.
   function/storage extents, legacy addresses and fragment boundaries are
   unchanged. See [the particle evidence](regions/fragments/67/fragment67_342DB0.md).
 
-This leaves 312 directive occurrences and 20 affected functions. Coverage files and
+- `func_800289B0`: own the actual 24-word recent-sound history and use its
+  normal shift-and-append loop. The command/event queue prefix stays in
+  `2C1B0.c`; the existing aggregate is split into its header, history and
+  selection bytes at the same addresses. Fixed NOLOAD placement preserves the
+  loader-cleared RAM span. All 120 retail bytes match without the hex
+  replacement, 17 relocation patches or dead alias block. The three queue
+  routines affected by the earlier ownership transfer remain exact. Native
+  module controls, host syntax and full-ROM comparison pass. See
+  [the audio-history evidence](regions/229E0.md).
+
+This leaves 294 directive occurrences and 19 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -332,7 +342,7 @@ table are baseline function directives, excluding the separate section word.
 
 | Function | Source | Directives | State |
 | --- | --- | ---: | --- |
-| `func_800289B0` | [src/229E0.c](../src/229E0.c) | 18 | Pending |
+| `func_800289B0` | [src/229E0.c](../src/229E0.c) | 18 | Replaced with C |
 | `func_80039808` | [src/340C0.c](../src/340C0.c) | 1 | Pending |
 | `func_80071DD8` | [src/728D0.c](../src/728D0.c) | 5 | Pending |
 | `func_81606800` | [src/fragments/11/fragment11_D9DE0.c](../src/fragments/11/fragment11_D9DE0.c) | 1 | Replaced with C |

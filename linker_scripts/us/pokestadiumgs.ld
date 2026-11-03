@@ -704,7 +704,11 @@ SECTIONS
         build/src/226C0.o(.bss);
         build/src/229E0.o(.bss);
         build/asm/us/data/unk_bss3.bss.o(.bss);
-        build/src/2C1B0.o(.bss);
+        /* datamig_bss.ld places the real C audio objects separately. Keep
+         * their original 0x800D1A90..0x800D2630 loader-cleared RAM span here. */
+        audio_storage_RAM_START = ABSOLUTE(.);
+        . += 0xBA0;
+        audio_storage_RAM_END = ABSOLUTE(.);
         build/asm/us/data/unk_bss4.bss.o(.bss);
         build/src/340C0.o(.bss);
         build/src/43700.o(.bss);

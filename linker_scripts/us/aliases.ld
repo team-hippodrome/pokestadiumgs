@@ -1063,8 +1063,8 @@ D_8600D9B8 = D_8600D9B0 + 8;
 /* Audio context (Ocarina of Time / Majora's Mask gAudioContext); src/14640.c reads it typed. */
 gAudioContext = D_8011BE90;
 
-// Interior labels of the command queue and queued-audio BSS state (src/2C1B0.c);
-// gAudioQueuedState offsets follow AudioQueuedState.
+// Interior labels of the command/event queues and selection state (src/2C1B0.c)
+// and the recent-sound history (src/229E0.c), at their original runtime addresses.
 D_800D1A90 = gAudioCommandQueue;
 D_800D1A94 = gAudioCommandQueue + 4;
 D_800D1A98 = gAudioCommandQueue + 8;
@@ -1076,14 +1076,14 @@ D_800D1ACE = gAudioQueuedState + 22;
 D_800D1AD0 = gAudioQueuedState + 24;
 D_800D1AD2 = gAudioQueuedState + 26;
 D_800D1AD4 = gAudioQueuedState + 28;
-D_800D1AD8 = gAudioQueuedState + 32;
-D_800D1ADC = gAudioQueuedState + 36;
-D_800D1AE0 = gAudioQueuedState + 40;
-D_800D1AE4 = gAudioQueuedState + 44;
-D_800D1B34 = gAudioQueuedState + 124;
-D_800D1B38 = gAudioQueuedState + 128;
-D_800D1B3A = gAudioQueuedState + 130;
-D_800D1B3B = gAudioQueuedState + 131;
+D_800D1AD8 = gAudioRecentSoundHistory;
+D_800D1ADC = gAudioRecentSoundHistory + 4;
+D_800D1AE0 = gAudioRecentSoundHistory + 8;
+D_800D1AE4 = gAudioRecentSoundHistory + 12;
+D_800D1B34 = gAudioRecentSoundHistory + 92;
+D_800D1B38 = gAudioHistorySelection;
+D_800D1B3A = gAudioHistorySelection + 2;
+D_800D1B3B = gAudioHistorySelection + 3;
 
 // Labels inside the BSS spans that src/2C1B0.c defines as D_800D1B40, D_800D1B64,
 // D_800D1B68, D_800D2610, D_800D2618 and D_800D2620.
