@@ -238,8 +238,17 @@ or reverting a function to assembly does not establish a proper C match.
   with all function extents and legacy addresses preserved. See
   [the transition initializer evidence](regions/fragments/19/fragment19_121100.md).
 
-This leaves 423 directive occurrences and 29 affected functions. Coverage files and
+- `func_86401DBC`: keep the first random draw inside the probability
+  expression, multiply the existing width with a compound assignment, and
+  pass the actual float field from both callers. Stock IDO emits all 420
+  retail bytes without 30 word rewrites or the bit-reinterpretation call
+  macro. Complete-module normal/blank controls, host syntax and the normal
+  native retail ROM gate pass with all function/object symbols preserved.
+  See [the emission evidence](regions/fragments/52/fragment52_27E4E0.md).
+
+This leaves 393 directive occurrences and 28 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
+
 
 ## Function inventory
 
@@ -294,7 +303,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_8AE02470` | [src/fragments/46/fragment46_code.c](../src/fragments/46/fragment46_code.c) | 22 | Pending |
 | `func_87C03B10` | [src/fragments/48/fragment48_2597B0.c](../src/fragments/48/fragment48_2597B0.c) | 7 | Replaced with C |
 | `func_864001E0` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 1 | Pending |
-| `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Pending |
+| `func_86401DBC` | [src/fragments/52/fragment52_27E4E0.c](../src/fragments/52/fragment52_27E4E0.c) | 30 | Replaced with C |
 | `func_86408F84` | [src/fragments/52/fragment52_2871C0.c](../src/fragments/52/fragment52_2871C0.c) | 8 | Replaced with C |
 | `func_86600E00` | [src/fragments/54/fragment54_code.c](../src/fragments/54/fragment54_code.c) | 38 | Replaced with C |
 | `func_83302D8C` | [src/fragments/57/fragment57_code.c](../src/fragments/57/fragment57_code.c) | 1 | Replaced with C |
