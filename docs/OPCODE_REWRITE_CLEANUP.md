@@ -350,7 +350,16 @@ or reverting a function to assembly does not establish a proper C match.
   function extents and legacy addresses, and YAML/linker generation checks
   pass. See [the scene evidence](regions/fragments/17/fragment17_1162A0.md).
 
-This leaves 254 directive occurrences and 17 affected functions. Coverage files and
+- `func_82205B00` (`Fragment17_OptionColorCallback`): keep the event
+  immutable and use a real index dispatch for entry five's visibility updates,
+  with direct packed-color cache copies following its matched neighbor.
+  Stock IDO emits all 276 retail bytes without the three prologue-word
+  rewrites. Whole-module normal/blank controls, host syntax, full-ROM and
+  independent retail-byte comparisons pass; function/object extents, legacy
+  addresses and loader bounds remain exact. See
+  [the widget callback evidence](regions/fragments/17/fragment17_113A60.md).
+
+This leaves 251 directive occurrences and 16 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -371,7 +380,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82000100` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 23 | Replaced with C |
 | `func_82001A78` | [src/fragments/16/fragment16_code.c](../src/fragments/16/fragment16_code.c) | 2 | Replaced with C |
 | `func_82204744` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 1 | Replaced with C |
-| `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Pending |
+| `func_82205B00` | [src/fragments/17/fragment17_113A60.c](../src/fragments/17/fragment17_113A60.c) | 3 | Replaced with C |
 | `func_822068E0` | [src/fragments/17/fragment17_1162A0.c](../src/fragments/17/fragment17_1162A0.c) | 17 | Replaced with C |
 | `func_8220AC38` | [src/fragments/17/fragment17_1162A0.c](../src/fragments/17/fragment17_1162A0.c) | 1 | Replaced with C |
 | `func_8220AC64` | [src/fragments/17/fragment17_1162A0.c](../src/fragments/17/fragment17_1162A0.c) | 1 | Replaced with C |

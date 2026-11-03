@@ -850,3 +850,45 @@ The previous storage prerequisite above is resolved. The new file boundary
 is a reconstruction choice, not a recovered-original-file claim. See
 [the scene evidence](fragment17_1162A0.md) for the constructor-confirmed
 layout, placement and native full-ROM validation.
+
+
+## 2026-11-04 — option color callback: ordinary C match
+
+`func_82205B00`, now `Fragment17_OptionColorCallback`, compiles to all 276
+retail bytes with its three prologue-word rewrites removed. The old name is
+retained as a compatibility alias; the `s32 (s32, void *)` interface is unchanged.
+
+Mode zero caches the two aligned four-byte color words at node offsets
+0x28/0x2C. Mode one applies the selected yellow RGB highlight while preserving
+the primary fourth byte and copying the complete primary word to the secondary
+word, or restores both cached words when unselected. Entry five follows the
+real menu visibility state and updates flag bit 2. Other indices retain that
+flag. Every path returns zero and calls the selection getter exactly once.
+
+The matching spelling follows the adjacent accepted `func_82205E04`: keep the
+callback event immutable, carry visibility in a separate local, dispatch the
+special entry through `switch (index)`, and index the packed aggregate caches
+directly. The index case performs the actual visibility updates; all fields
+and values participate in the callback's behavior. This combination retains
+the index in V1 and visibility in A0 and produces the retail early parameter
+save. Pointer-cursor forms and replacing the index switch with an `if` did
+not reproduce the same allocation. There are no discarded expressions,
+unused locals, qualifiers, physical-register bindings or output rewrites.
+
+The native stock IDO 7.1 normal and 20-leading-blank complete modules equal
+the former module after canonicalizing the new function name, including all
+allocated bytes, object/function extents and semantic relocations. The linked
+276-byte callback equals its original linked reference. All function and
+object extents, 19,515 legacy address symbols and 1,510 fragment/loader boundary
+symbols retain their values. The native Makefile host syntax check and full-ROM
+comparison pass; an independent byte comparison against the retail input also
+returns zero.
+
+- MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`
+- SHA-256: `8160abe7d4b9734317000c44e9f882efefe4cc6359eacded98be62f2811e40a9`
+
+No runtime storage, linker placement, compiler flags, tooling or coverage
+changes are needed. This module now has no directives from the seven requested
+rewrite/coalescing families. Private controls: `rewrite-cleanup-f17-option-color-controls`,
+`rewrite-cleanup-f17-option-color-native-gate`, and `rewrite-cleanup-f17-option-color-seal`.
+The earlier callback `requeue` entries are resolved.
