@@ -130,7 +130,60 @@ void func_82000100(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_820001F0.s")
+/* mkdraft:func_820001F0 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern void func_8004657C(void);
+
+
+
+void func_820001F0(s16 *arg0) {
+    s32 x;
+    s32 y;
+    s32 width;
+    s32 height;
+    s32 index;
+    s32 alpha;
+    s32 step;
+
+    func_8004657C();
+    width = 640;
+    height = 480;
+    step = 32;
+    for (y = 0; y < height; y += step) {
+        for (x = 0; x < width; x += step) {
+            s32 texture;
+
+            index = (y / step) * 20 + (x / step);
+            texture = ((s32 *)((u8 *)arg0 + 8))[arg0[3]] + index * 0x200;
+            if (((s8 *)arg0)[index + 0x16] == 5) {
+                gDPLoadTextureBlock(D_800D0510++, (u8 *)(texture), G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                    G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + step) << 2, (y + step) << 2, G_TX_RENDERTILE,
+                                    0, 0, 0x200, 0x200);
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (y = 0; y < height; y += step) {
+        for (x = 0; x < width; x += step) {
+            s32 texture;
+
+            index = (y / step) * 20 + (x / step);
+            texture = ((s32 *)((u8 *)arg0 + 8))[arg0[3]] + index * 0x200;
+            alpha = ((s8 *)arg0)[index + 0x16] * 255 / 5;
+            if (alpha > 0 && alpha < 255) {
+                gDPPipeSync(D_800D0510++);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, alpha);
+                gDPLoadTextureBlock(D_800D0510++, (u8 *)(texture), G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                                    G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + step) << 2, (y + step) << 2, G_TX_RENDERTILE,
+                                    0, 0, 0x200, 0x200);
+            }
+        }
+    }
+}
+/* mkdraft:func_820001F0 end */
 #endif
 
 #ifdef VERSION_US
