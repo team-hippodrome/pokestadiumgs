@@ -211,7 +211,63 @@ void func_8F8000D0(void *arg0, s32 arg1) {
 }
 /* mkdraft:func_8F8000D0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/77/fragment77_code/func_8F8006B0.s")
+/* mkdraft:func_8F8006B0 begin */
+extern F77EditorState D_8F809FC0;
+extern u16 D_8F809FC2;
+extern s16 D_8F809FC8;
+extern s16 D_8F809FCA;
+extern s16 D_8F809FCC;
+extern s8 D_8F809FCE;
+extern s32 D_8F803470, D_8F803474;
+extern u8 D_8F8037DC[];
+extern u8 D_8F803845[];
+extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
+extern void func_80049628(s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_8F800020(s32, s32, s32);
+
+
+
+s32 func_8F8006B0(void) {
+    F77EditorState* state = &D_8F809FC0;
+    s32 x;
+    s32 y;
+    s32 i;
+    s32 j;
+    u8* row;
+    u8* end;
+
+    Ui_DrawGradientPanel(state->numeric.geometry[0] - 0x28, state->numeric.geometry[1] - 0xA,
+                         state->numeric.geometry[2] + 0x1E, state->numeric.geometry[3] + 0x14,
+                         (s32)&D_8F803470, (s32)&D_8F803474);
+    func_800498C4();
+    func_800496A4(8, 0);
+    x = 0;
+    for (i = 0; state->text.buffer[i] != 0; ) {
+        func_80049628(state->numeric.geometry[0] + x, state->numeric.geometry[1],
+                      state->text.buffer[i]);
+        x += 11;
+        i++;
+    }
+    func_800496A4(4, 0);
+    row = D_8F8037DC, end = D_8F803845, y = 0;
+    do {
+        for (j = 0; j < 15; j++) {
+            func_80049628(state->numeric.geometry[0] + j * 12 + (j / 5) * 5 - 0x1E,
+                          state->numeric.geometry[1] + y * 20 + 0x1E, row[j]);
+        }
+        row += 15;
+        y++;
+    } while (row != end);
+    func_800499EC();
+    func_8F800020(state->numeric.geometry[0] + D_8F809FCC * 11, state->numeric.geometry[1] + 0x14,
+                  0xA);
+    func_8F800020(state->numeric.geometry[0] + D_8F809FC8 * 12 + (D_8F809FC8 / 5) * 5 - 0x1E,
+                  state->numeric.geometry[1] + D_8F809FCA * 20 + 0x2E, 8);
+}
+/* mkdraft:func_8F8006B0 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/77/fragment77_code/func_8F800924.s")
 
