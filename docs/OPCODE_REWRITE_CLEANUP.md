@@ -212,7 +212,15 @@ or reverting a function to assembly does not establish a proper C match.
   and the normal native full-ROM gate pass. See
   [the alternate-bounds evidence](regions/fragments/66/fragment66_code.md).
 
-This leaves 482 directive occurrences and 32 affected functions. Coverage files and
+- `func_82501490`: use one real return result and a bitset pointer consumed
+  by the eight-bit scan. Stock IDO hoists the mask load while retaining the
+  required pointer/value lifetimes, matching all 328 retail bytes. This
+  removes a hex replacement, four relocation patches and dummy `result | 0`
+  expressions. Whole-module normal/+20 controls, host syntax and the final
+  native full-ROM gate pass without layout changes. See
+  [the button-predicate evidence](regions/fragments/21/fragment21_13FFA0.md).
+
+This leaves 477 directive occurrences and 31 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -242,7 +250,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
 | `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Pending |
 | `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
-| `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Pending |
+| `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Replaced with C |
 | `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Replaced with C |
 | `func_82507BD0` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 1 | Replaced with C |
 | `func_82507BFC` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 12 | Replaced with C |
