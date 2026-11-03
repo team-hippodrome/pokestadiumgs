@@ -65,7 +65,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/14/fragment14_FF070.c` | 8 | 91 | 91.2% |
 | `src/fragments/16/fragment16_code.c` | 3 | 29 | 89.7% |
 | `src/fragments/17/fragment17_10FFC0.c` | 6 | 56 | 89.3% |
-| `src/fragments/17/fragment17_113A60.c` | 23 | 82 | 72.0% |
+| `src/fragments/17/fragment17_113A60.c` | 8 | 82 | 90.2% |
+| `src/fragments/17/fragment17_1162A0.c` | 15 | 15 | 0.0% |
 | `src/fragments/17/fragment17_11A7F0.c` | 2 | 5 | 60.0% |
 | `src/fragments/17/fragment17_11B210.c` | 2 | 28 | 92.9% |
 | `src/fragments/18/fragment18_code.c` | 1 | 17 | 94.1% |
