@@ -284,7 +284,18 @@ or reverting a function to assembly does not establish a proper C match.
   static owns the same word. See
   [the panel-cache evidence](regions/fragments/11/fragment11_D9DE0.md).
 
-This leaves 350 directive occurrences and 24 affected functions. Coverage files and
+- `func_8AF00504`: keep the loader's actual work values in a local record,
+  including its byte-sized tag key, and own the adjacent tag/flag pair as a
+  function-local static. Stock IDO emits all 284 retail bytes without the hex
+  replacement or its 18 relocation patches, and the dead stack local is gone.
+  The existing fixed-address NOLOAD mechanism places the eight-byte state at
+  `0x8AF2BF18`, inside the fragment loader's cleared range. Original relocation
+  metadata remains in the load image. Native module controls, independent
+  linked comparison, host syntax and the full-ROM gate pass. Existing storage
+  extents, legacy addresses and fragment boundaries are preserved. See
+  [the loader evidence](regions/fragments/44/fragment44_1EE290.md).
+
+This leaves 331 directive occurrences and 23 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -333,7 +344,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_8830765C` | [src/fragments/32/fragment32_1B8010.c](../src/fragments/32/fragment32_1B8010.c) | 2 | Pending |
 | `func_88507370` | [src/fragments/34/fragment34_1C3FA0.c](../src/fragments/34/fragment34_1C3FA0.c) | 31 | Pending |
 | `func_8AC06D8C` | [src/fragments/43/fragment43_1E5A10.c](../src/fragments/43/fragment43_1E5A10.c) | 1 | Replaced with C |
-| `func_8AF00504` | [src/fragments/44/fragment44_1EE290.c](../src/fragments/44/fragment44_1EE290.c) | 19 | Pending |
+| `func_8AF00504` | [src/fragments/44/fragment44_1EE290.c](../src/fragments/44/fragment44_1EE290.c) | 19 | Replaced with C |
 | `func_8AB07C34` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 36 | Pending |
 | `func_8AB07E6C` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 31 | Pending |
 | `func_8AB0A720` | [src/fragments/45/fragment45_22AB80.c](../src/fragments/45/fragment45_22AB80.c) | 3 | Pending |
