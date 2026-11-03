@@ -48,3 +48,38 @@ Open problems:
   (alpha, period and the r/g/b declarations were all varied). The extra slots
   likely come from the gbi-macro block temporaries.
 - The head loads `D_8009491C` into `$t6` instead of `$v0`.
+
+
+## func_86401DBC: randomized emission, genuine match
+
+The handler first requires the parent's Y position at offset `0x4C` to be
+nonpositive. It compares the rate at `D_86416C00` times a normalized unsigned
+random draw against its third float argument. An accepted draw selects the
+existing effect flags and a base width of 1, 1.5 or 0.75, then multiplies that
+width by a second normalized draw plus 0.5. `func_86400804` receives the
+parent position, that width, the two scaled horizontal velocity components,
+vertical velocity 5, and the selected flags.
+
+The matching spelling keeps the first draw directly in the rate-times-draw
+expression. For the second draw, it assigns the sample to the existing float
+local and uses `scale *= normalized_sample + 0.5f`. Separating that second
+calculation fixes the argument-evaluation schedule; the compound assignment
+and inlined first draw reproduce the two multiply operand orders and the
+subsequent floating-point temporary allocation. Every declared local is used.
+The unused `Record` typedef is removed.
+
+Both callers already update the child field at offset `0x18` with float
+arithmetic. They now pass that field as `f32` directly, replacing the old
+integer view and function-like bit-reinterpretation macro. Both callers retain
+their complete retail instructions.
+//@src/fragments/52/fragment52_27E4E0.c
+
+Stock native IDO 7.1 reproduces all 105 instructions (420 bytes, 48-byte
+frame) without any of this owner's 30 `REWRITE_FUNCTION_WORD` directives.
+Independent normal and 20-leading-blank compiles preserve the complete
+module: allocated sections, every function, symbol layout and semantic
+relocations. The normal host check and syntax-enabled native full-ROM build
+pass with retail MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`. Final linked function
+and object addresses and extents remain unchanged. No compiler option,
+linker layout, artificial padding, dead local or opcode postprocessing is
+introduced. The separate `func_864001E0` word rewrite remains unresolved.
