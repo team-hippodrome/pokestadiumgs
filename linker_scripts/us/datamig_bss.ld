@@ -197,6 +197,21 @@ SECTIONS
     {
         build/src/fragments/66/fragment66_code.o(.data)
     }
+    /* Real command/event queue prefix: explicit all-zero C data, loader cleared. */
+    .audio_queue_prefix_bss 0x800D1A90 (NOLOAD) : SUBALIGN(8)
+    {
+        build/src/2C1B0.o(.data)
+    }
+    /* Twenty-four recent sound IDs, shifted by func_800289B0. */
+    .audio_history_bss 0x800D1AD8 (NOLOAD) : SUBALIGN(8)
+    {
+        build/src/229E0.o(.bss)
+    }
+    /* Two active slots, following bytes, and all unchanged remaining audio objects. */
+    .audio_remaining_bss 0x800D1B38 (NOLOAD) : SUBALIGN(8)
+    {
+        build/src/2C1B0.o(.bss)
+    }
 }
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
@@ -235,3 +250,18 @@ ASSERT(SIZEOF(.fragment11_panel_color_cache_bss) == 16,
 
 ASSERT(SIZEOF(.fragment44_load_state_bss) == 16,
        "fragment44 loader state must retain its native aligned input footprint");
+
+ASSERT(audio_storage_RAM_START == 0x800D1A90 && audio_storage_RAM_END == 0x800D2630,
+       "audio RAM reservation endpoints moved");
+ASSERT(SIZEOF(.audio_queue_prefix_bss) == 80,
+       "audio queue prefix must retain its native aligned input footprint");
+ASSERT(SIZEOF(.audio_history_bss) == 96,
+       "recent sound history must contain exactly 24 words");
+ASSERT(SIZEOF(.audio_remaining_bss) == 2816,
+       "remaining audio input BSS footprint changed");
+ASSERT(gAudioCommandQueue == 0x800D1A90 && gAudioQueuedState == 0x800D1AB8,
+       "audio queue prefix moved");
+ASSERT(gAudioRecentSoundHistory == 0x800D1AD8 && gAudioHistorySelection == 0x800D1B38,
+       "audio history or selection moved");
+ASSERT(D_800D1B40 == 0x800D1B40 && D_800D262E + 2 == 0x800D2630,
+       "remaining audio object endpoints moved");

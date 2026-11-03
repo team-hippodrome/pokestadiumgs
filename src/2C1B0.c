@@ -16,8 +16,20 @@
 
 #ifdef VERSION_US
 
-s32 gAudioCommandQueue[10];
-AudioQueuedState gAudioQueuedState;
+typedef struct AudioHistorySelection {
+    u8 active_slot[2];
+    u8 unk_02;
+    u8 unk_03;
+} AudioHistorySelection;
+
+// Spell out initializers to retain the correct ELF object sizes in IDO.
+// NOLOAD places these zero-initialized queues at their loader-cleared addresses.
+s32 gAudioCommandQueue[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+AudioQueuedState gAudioQueuedState = {
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0}, {0, 0}, {0, 0}, 0, 0
+};
+AudioHistorySelection gAudioHistorySelection;
 
 typedef struct {
     u32 words[21];
@@ -33,7 +45,10 @@ extern u32 D_800D2638;
 extern u8 *D_800D2608[];
 extern u8 D_80091F08[], D_80091F18[], D_80091F20[], D_80091F28[], D_80091F30[], D_80091F38[], D_80091F40[];
 extern u8 D_80091F48[], D_80091F50[], D_80091F58[], D_80091F6C[];
-// This file defines the BSS run 0x800D1A90..0x800D2630. func_8002C2E0 shares one `lui`
+// This file owns the queue prefix at 0x800D1A90..0x800D1AD8 and selection/
+// remaining state at 0x800D1B38..0x800D2630. The intervening 24-word history
+// is owned by src/229E0.c. datamig_bss.ld retains all runtime addresses.
+// func_8002C2E0 shares one `lui`
 // between constant-index accesses to D_800D1B64 ([0] and [1]), D_800D2610 ([0] and [1])
 // and D_800D2620 ([0][0], [0][1] and [1][0]); IDO emits that only for symbols defined in
 // the same file. The other arrays below cover the bytes between them, so the individual

@@ -373,10 +373,6 @@ typedef struct {
     u8 unk_18[2];
     u8 result_code;
     s32 hp_delta;
-    u32 history[24];
-    u8 active_slot[2];
-    u8 unk_82;
-    u8 unk_83;
 } AudioQueuedState;
 extern AudioQueuedState gAudioQueuedState;
 void Audio_ClearCommandQueue(void);
