@@ -228,7 +228,17 @@ or reverting a function to assembly does not establish a proper C match.
   with no layout changes. See
   [the completion-routine evidence](regions/fragments/22/fragment22_14B090.md).
 
-This leaves 470 directive occurrences and 30 affected functions. Coverage files and
+- `func_8230099C`: initialize its four transition rows with an indexed loop,
+  owning the preceding fallback color and state halfwords as an eight-byte
+  header and the actual row columns as a 34-byte record. Stock IDO emits all
+  220 retail bytes directly, removing the whole-function hex replacement and
+  46 relocation-target patches. The existing color callbacks consume the
+  owned color, and the source reads use their real 36-byte entry layout.
+  Normal/blank controls, host syntax and the normal native full-ROM gate pass
+  with all function extents and legacy addresses preserved. See
+  [the transition initializer evidence](regions/fragments/19/fragment19_121100.md).
+
+This leaves 423 directive occurrences and 29 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 ## Function inventory
@@ -256,7 +266,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_8220D630` | [src/fragments/17/fragment17_11B210.c](../src/fragments/17/fragment17_11B210.c) | 1 | Replaced with C |
 | `func_81700B8C` | [src/fragments/18/fragment18_code.c](../src/fragments/18/fragment18_code.c) | 3 | Replaced with C |
 | `func_8230009C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
-| `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Pending |
+| `func_8230099C` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 47 | Replaced with C |
 | `func_82300A78` | [src/fragments/19/fragment19_121100.c](../src/fragments/19/fragment19_121100.c) | 1 | Replaced with C |
 | `func_82501490` | [src/fragments/21/fragment21_13FFA0.c](../src/fragments/21/fragment21_13FFA0.c) | 5 | Replaced with C |
 | `func_82507B6C` | [src/fragments/21/fragment21_144790.c](../src/fragments/21/fragment21_144790.c) | 11 | Replaced with C |

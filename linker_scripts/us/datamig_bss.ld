@@ -89,15 +89,15 @@ SECTIONS
     {
         build/src/fragments/17/fragment17_113A60.o(.bss)
     }
-    /* Loader-cleared halfword records used by fragment 19's state helpers.
+    /* Loader-cleared color/state header and transition rows for fragment 19.
      * The input sections contain the real objects and compiler alignment;
      * the loaded relocation metadata retains its original bytes. */
-    .fragment19_state_5EC2_data 0x82305EC2 (NOLOAD) : SUBALIGN(2)
+    .fragment19_state_5EE4_data 0x82305EE4 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/19/fragment19_121100.o(.data)
     }
 
-    .fragment19_state_5EE4_bss 0x82305EE4 (NOLOAD) : SUBALIGN(2)
+    .fragment19_transition_5EB0_bss 0x82305EB0 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
     }
@@ -210,3 +210,8 @@ ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 48,
        "fragment66 output bounds must retain their original 48-byte footprint");
 ASSERT(SIZEOF(.fragment66_view_prefix_data) == 32,
        "fragment66 view prefix must retain its original 32-byte footprint");
+
+ASSERT(SIZEOF(.fragment19_state_5EE4_data) == 16,
+       "fragment19 secondary state must retain its native aligned input footprint");
+ASSERT(SIZEOF(.fragment19_transition_5EB0_bss) == 48,
+       "fragment19 transition records must retain their native aligned input footprint");

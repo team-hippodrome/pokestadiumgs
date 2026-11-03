@@ -1,20 +1,44 @@
 #include "global.h"
 
-
 #ifdef VERSION_US
+
+typedef struct unk_D_82305EB0 {
+    /* 0x00 */ u32 unk_00;
+} unk_D_82305EB0; // size = 0x4
+// The fallback color word precedes the transition state and its next halfword.
+// func_823016B4 and func_82301814 copy this color into their node channels.
+typedef struct F19TransitionHeader {
+    unk_D_82305EB0 color;
+    s16 state;
+    s16 unk_06;
+} F19TransitionHeader;
+static F19TransitionHeader sTransitionHeader;
+typedef struct F19TransitionRows {
+    s16 unk_00;
+    s16 x_offsets[4];
+    s16 unk_0A[4];
+    s16 unk_12[4];
+    s16 unk_1A[4];
+} F19TransitionRows;
+static F19TransitionRows sTransitionRows;
+typedef struct unk_D_82305A74 {
+    /* 0x00 */ u8 unk_00[0xE];
+    /* 0x0E */ s16 unk_0E;
+    /* 0x10 */ u8 unk_10[8];
+    /* 0x18 */ s16 unk_18;
+    /* 0x1A */ s16 unk_1A;
+    /* 0x1C */ s16 unk_1C[4];
+} unk_D_82305A74; // size = 0x24
+extern u8 D_82305A74[];
+
 // The fragment loader clears these adjacent-halfword state records.
 //@src/2CA0.c
 typedef struct F19State5EE4 {
     s16 state;
     s16 unk_02;
 } F19State5EE4;
-typedef struct F19State5EC2 {
-    s16 unk_00;
-    s16 unk_02;
-    s16 unk_04;
-} F19State5EC2;
-static F19State5EE4 sState5EE4;
-static F19State5EC2 sState5EC2 = { 0 };
+
+static F19State5EE4 sState5EE4 = { 0 };
 
 typedef struct unk_func_82302B8C {
     /* 0x00 */ u8 r;
@@ -71,7 +95,6 @@ extern s16 D_82305EE4;
 s32 func_823000E8(void) {
     return D_82305EE4 == 0;
 }
-
 
 s32 func_823000F8(void) {
     return D_82305EE4 == 2;
@@ -167,89 +190,20 @@ extern s16 D_82305ED2;
 extern s16 D_82305ED4;
 extern s16 D_82305ED6;
 extern s16 D_82305ED8;
-extern s16 D_82305A82;
-extern s16 D_82305AA6;
-extern s16 D_82305ACA;
-extern s16 D_82305AEE;
-// This body compiles to 57 words; retail is 55 because IDO scheduled the
-// D_82305A82 load ahead of the D_82305EB4/EB6 stores and reused one $at for
-// EB4/EB6 and for EB8/EBA. The object folds run after scheduling and can only
-// drop duplicate lui instructions, so the compiled text is replaced with the
-// retail encoding; the hash covers the compiled body that follows.
-
-#pragma REWRITE_FUNCTION_HEX(func_8230099C, 575bab6c8c565b814c62330ddfb7c1a760e6e436a9ec737c50d95f2511cb0299, 3c0e000085ce0000240f00013c01000015c000302418ffff3c19000087390000a42f0000a43800003c010000a4200000a43900003c0100002408ffffa42800003c0100003c090000a4200000852900003c010000a42000003c010000a42900003c010000240affffa42a00003c010000a42000003c0b0000856b00003c010000a42000003c010000a42b00003c010000240cffffa42c00003c010000a42000003c0d000085ad00003c010000a42000003c010000a42d00003c010000240effffa42e00003c010000a42000003c010000a420000003e0000800000000)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x0, 5, D_82305EB4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x4, 6, D_82305EB4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xC, 5, D_82305EB4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x18, 5, D_82305A82)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x1C, 6, D_82305A82)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x20, 6, D_82305EB4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x24, 6, D_82305EB6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x28, 5, D_82305EB8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x2C, 6, D_82305EB8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x30, 6, D_82305EBA)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x34, 5, D_82305EC2)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x3C, 6, D_82305EC2)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x40, 5, D_82305ECA)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x44, 5, D_82305AA6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x48, 6, D_82305ECA)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x4C, 6, D_82305AA6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x50, 5, D_82305ED2)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x54, 6, D_82305ED2)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x58, 5, D_82305EBC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x5C, 6, D_82305EBC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x60, 5, D_82305EC4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x68, 6, D_82305EC4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x6C, 5, D_82305ECC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x70, 6, D_82305ECC)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x74, 5, D_82305ACA)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x78, 6, D_82305ACA)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x7C, 5, D_82305ED4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x80, 6, D_82305ED4)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x84, 5, D_82305EBE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x88, 6, D_82305EBE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x8C, 5, D_82305EC6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x94, 6, D_82305EC6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x98, 5, D_82305ECE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0x9C, 6, D_82305ECE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xA0, 5, D_82305AEE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xA4, 6, D_82305AEE)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xA8, 5, D_82305ED6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xAC, 6, D_82305ED6)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xB0, 5, D_82305EC0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xB4, 6, D_82305EC0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xB8, 5, D_82305EC8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xC0, 6, D_82305EC8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xC4, 5, D_82305ED0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xC8, 6, D_82305ED0)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xCC, 5, D_82305ED8)
-#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8230099C, 0xD0, 6, D_82305ED8)
-
 
 void func_8230099C(void) {
-    s32 var_t7;
-
-    var_t7 = 1;
-    if (D_82305EB4 != 0) return;
-    D_82305EB4 = var_t7;
-    D_82305EB6 = -var_t7;
-    D_82305EB8 = 0;
-    D_82305EBA = D_82305A82;
-    D_82305EC2 = -var_t7;
-    D_82305ECA = 0;
-    D_82305ED2 = 0;
-    D_82305EBC = D_82305AA6;
-    D_82305EC4 = -var_t7;
-    D_82305ECC = 0;
-    D_82305ED4 = 0;
-    D_82305EBE = D_82305ACA;
-    D_82305EC6 = -var_t7;
-    D_82305ECE = 0;
-    D_82305ED6 = 0;
-    D_82305EC0 = D_82305AEE;
-    D_82305EC8 = -var_t7;
-    D_82305ED0 = 0;
-    D_82305ED8 = 0;
+    s32 i;
+    const s32 enabled = 1;
+    if (sTransitionHeader.state != 0) return;
+    sTransitionHeader.state = enabled;
+    sTransitionHeader.unk_06 = -enabled;
+    sTransitionRows.unk_00 = 0;
+    for (i = 0; i < 4; i++) {
+        sTransitionRows.x_offsets[i] = ((unk_D_82305A74 *)D_82305A74)[i].unk_0E;
+        sTransitionRows.unk_0A[i] = -1;
+        sTransitionRows.unk_12[i] = 0;
+        sTransitionRows.unk_1A[i] = 0;
+    }
 }
 /* mkdraft:func_8230099C end */
 
@@ -260,12 +214,12 @@ extern s16 D_82305EC6;
 extern s16 D_82305EC8;
 void func_82300A78(void) {
     s16 *state = &D_82305EB4;
-    F19State5EC2 *fields = &sState5EC2;
+    s16 *fields = sTransitionRows.unk_0A;
     if (*state != 2) return;
     *state = 3;
-    fields->unk_02 = 0;
-    fields->unk_04 = 0;
-    fields->unk_00 = 0;
+    fields[1] = 0;
+    fields[2] = 0;
+    fields[0] = 0;
     D_82305EC8 = 0;
 }
 
@@ -286,12 +240,10 @@ s32 func_82300AD4(void) {
 extern s16 D_82305E68[];
 void func_82300F00(void) { D_82305E68[0x74 / 2] = 0; D_82305E68[0x76 / 2] = 0; (*(f32 *)((u8 *)D_82305E68 + 0x78)) = 0.0f; }
 
-
 void func_82300F1C(void) {
     D_82305E68[0x74 / 2] = 1;
     D_82305E68[0x76 / 2] = 0;
 }
-
 
 void func_82300F34(void) {
     D_82305E68[0x74 / 2] = 3;
@@ -311,8 +263,6 @@ extern s32 D_82305B98;
 extern s16 D_82305EDC;
 extern s16 D_82305EDE;
 extern f32 D_82305EE0;
-
-
 
 void func_82300F6C(void) {
     s16 *counter;
@@ -397,7 +347,6 @@ extern Gfx *D_800D0510;
 // G_TEXRECT keeps 12-bit xl/yl/xh/yh and 16-bit dsdx/dtdy, so the four packet
 // corners and both texel steps are truncated to 16 bits here by the (s16) casts.
 //@{lib/ultralib/include/PR/gbi.h} gSPTextureRectangle
-
 
 void func_82301140(s32 arg0, s32 arg1, s16 arg2) {
     s16 x;
@@ -552,12 +501,8 @@ s32 func_82301638(s32 arg0, u8 *arg1)
   return 0;
 }
 
-typedef struct unk_D_82305EB0 {
-    /* 0x00 */ u32 unk_00;
-} unk_D_82305EB0; // size = 0x4
 extern s16 D_82305E68[];
 extern s16 D_82305E6A;
-extern unk_D_82305EB0 D_82305EB0;
 extern s16 D_82306910[][2];
 extern unk_D_82305EB0 D_823068F0[];
 extern unk_D_82305EB0 D_82306900[];
@@ -589,7 +534,7 @@ s32 func_823016B4(s32 arg0, u8 *arg1) {
                 *(unk_D_82305EB0 *)(arg1 + 0x28) = D_823068F0[slot];
                 *(unk_D_82305EB0 *)(arg1 + 0x2C) = D_82306900[slot];
             } else {
-                *(unk_D_82305EB0 *)(arg1 + 0x28) = *(unk_D_82305EB0 *)(arg1 + 0x2C) = D_82305EB0;
+                *(unk_D_82305EB0 *)(arg1 + 0x28) = *(unk_D_82305EB0 *)(arg1 + 0x2C) = sTransitionHeader.color;
             }
             arg1[0x2B] = arg1[0x2F] = rec[0x63];
             break;
@@ -601,7 +546,6 @@ s32 func_823016B4(s32 arg0, u8 *arg1) {
 
 extern s16 D_82305E68[];
 extern s16 D_82305E6A;
-extern unk_D_82305EB0 D_82305EB0;
 extern s16 D_82306950[][2];
 extern unk_D_82305EB0 D_82306930[];
 extern unk_D_82305EB0 D_82306940[];
@@ -629,7 +573,7 @@ s32 func_82301814(s32 arg0, u8 *arg1) {
                 *(unk_D_82305EB0 *)(arg1 + 0x28) = D_82306930[slot];
                 *(unk_D_82305EB0 *)(arg1 + 0x2C) = D_82306940[slot];
             } else {
-                *(unk_D_82305EB0 *)(arg1 + 0x28) = *(unk_D_82305EB0 *)(arg1 + 0x2C) = D_82305EB0;
+                *(unk_D_82305EB0 *)(arg1 + 0x28) = *(unk_D_82305EB0 *)(arg1 + 0x2C) = sTransitionHeader.color;
             }
             arg1[0x2B] = arg1[0x2F] = rec[0x63];
             break;
@@ -730,13 +674,6 @@ typedef struct unk_func_82301B2C {
     /* 0x0C */ s16 *unk_0C;
 } unk_func_82301B2C;
 
-typedef struct unk_D_82305A74 {
-    /* 0x00 */ u8 unk_00[0x18];
-    /* 0x18 */ s16 unk_18;
-    /* 0x1A */ s16 unk_1A;
-    /* 0x1C */ s16 unk_1C[4];
-} unk_D_82305A74; // size = 0x24
-
 s32 func_82301B2C(s32 arg0, u8 *arg1) {
     s32 one;
     unk_func_82301B2C *sub;
@@ -789,7 +726,6 @@ extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
 extern f32 D_82305EE0;
 extern void func_82302D2C(s32 x, s32 y, s32 width, s32 height);
-
 
 s32 func_82301C80(s32 arg0, u8 *arg1) {
     s32 height;
@@ -870,8 +806,6 @@ typedef struct {
     C4 env;
     C4 prim;
 } Node19;
-
-
 
 s32 func_82301EF0(s32 arg0, s16 *arg1) {
     s32 pad0; // FAKE: with pad1, enlarges the stack frame to 0x30; score 10 without them.
@@ -1087,7 +1021,6 @@ s32 func_800226C0(s32);
 // func_800226C0(1) is called. The 0x8000/0x4000 flags latch D_82305E70 from the
 // counter (or -1) and return 1; otherwise the function returns 0.
 
-
 s32 func_82303308(void)
 {
     s32 result;
@@ -1287,8 +1220,6 @@ extern u8 D_447D00;
 extern u8 D_82C00000;
 extern u8 fragment83_ROM_START;
 extern u8 fragment84_ROM_START;
-
-
 
 void func_82303B94(s32 arg0, s8 *arg1) {
     // FAKE: alias so uopt loads D_82305EA8 as lui/lw (direct global read hoists its address into an s-register); 1085 without
