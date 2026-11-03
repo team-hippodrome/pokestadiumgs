@@ -623,7 +623,63 @@ void func_8680349C(s32 arg0) {
     func_8004D19C(D_86807F04, 0x1A, func_8004C990(0x194, (&D_868074C0)[arg0]), 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86803618.s")
+/* mkdraft:func_86803618 begin */
+extern void *D_86808590;
+extern s32 D_8682EE2C[];
+extern s32 D_86807EB0[];
+extern s32 D_86807EC0[3][3];
+extern s32 D_868074C0;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+#define TEX_SCALED_WIDTH(tex, scale) ((f32)(u32)((u16 *)(tex))[0] * (scale) + (((f32)(u32)((u16 *)(tex))[0] * (scale) > 0.0f) ? 0.5f : -0.5f))
+#define TEX_SCALED_HEIGHT(tex, scale) ((f32)(u32)((u16 *)(tex))[1] * (scale) + (((f32)(u32)((u16 *)(tex))[1] * (scale) > 0.0f) ? 0.5f : -0.5f))
+
+
+
+void func_86803618(s32 arg0) {
+    s32 temp_lo;
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_s3;
+    s32 var_s6;
+    u8 *temp_v0;
+
+    var_s2 = -1;
+    if (*(u8 *)((u8 *)D_86808590 + 0x2180) != 4) {
+        var_s3 = 0x64;
+        var_s6 = *(s32 *)((u8 *)D_8682EE2C + arg0 * 0x124);
+        for (var_s1 = 0; var_s1 != 3; var_s1++) {
+            if (var_s6 >= var_s3) {
+                if (var_s2 == -1) {
+                    var_s2 = var_s1;
+                }
+                temp_lo = var_s6 / var_s3;
+                var_s6 -= temp_lo * var_s3;
+                var_s3 /= 10;
+                temp_v0 = func_8004C990(0x1AD, (&D_868074C0)[temp_lo]);
+                func_8004D1FC(temp_v0);
+                GfxRect_DrawTextured((s16) (D_86807EB0[arg0] + D_86807EC0[var_s2][var_s1]), 0xCE,
+                                     TEX_SCALED_WIDTH(temp_v0, 0.57f),
+                                     TEX_SCALED_HEIGHT(temp_v0, 0.57f), 0, 0, 0x704, 0x704, 0);
+            } else {
+                var_s3 /= 10;
+                if ((var_s2 != -1) || (var_s1 == 2)) {
+                    if ((var_s1 == 2) && (var_s2 == -1)) {
+                        var_s2 = 2;
+                    }
+                    temp_v0 = func_8004C990(0x1AD, D_868074C0);
+                    func_8004D1FC(temp_v0);
+                    GfxRect_DrawTextured((s16) (D_86807EB0[arg0] + D_86807EC0[var_s2][var_s1]), 0xCE,
+                                         TEX_SCALED_WIDTH(temp_v0, 0.57f),
+                                         TEX_SCALED_HEIGHT(temp_v0, 0.57f), 0, 0, 0x704, 0x704, 0);
+                }
+            }
+        }
+    }
+}
+/* mkdraft:func_86803618 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868039F8.s")
 
