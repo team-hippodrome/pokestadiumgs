@@ -34,7 +34,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | --- | ---: | ---: | ---: |
 | `src/14640.c` | 2 | 117 | 98.3% |
 | `src/1CDC0.c` | 2 | 37 | 94.6% |
-| `src/229E0.c` | 21 | 571 | 96.3% |
+| `src/23D10.c` | 20 | 20 | 0.0% |
 | `src/2C1B0.c` | 4 | 15 | 73.3% |
 | `src/340C0.c` | 1 | 11 | 90.9% |
 | `src/4AC10.c` | 1 | 16 | 93.8% |
@@ -48,6 +48,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/72C30.c` | 3 | 16 | 81.2% |
 | `src/74020.c` | 1 | 13 | 92.3% |
 | `src/CE80.c` | 2 | 48 | 95.8% |
+| `src/audio_cue_dispatch.c` | 1 | 1 | 0.0% |
 | `src/fragments/1/fragment1_code.c` | 5 | 24 | 79.2% |
 | `src/fragments/10/fragment10_D5250.c` | 5 | 27 | 81.5% |
 | `src/fragments/11/fragment11_D7BC0.c` | 2 | 39 | 94.9% |
