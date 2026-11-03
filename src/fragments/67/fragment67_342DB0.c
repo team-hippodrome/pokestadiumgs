@@ -18,21 +18,6 @@ extern f32 MathUtil_Random_ZeroOne(void);
 extern f32 D_829174D8;
 extern f32 D_829174DC;
 extern u8 D_82919DE0[];
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0xE4, 0x244802D8, 0x244A02D8)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0xE8, 0x2409C000, 0x240BC000)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0xEC, 0xA6080010, 0xA60A0010)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0xF4, 0xA6090014, 0xA60B0014)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x128, 0x244A0063, 0x244C0063)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x12C, 0xA20A0021, 0xA20C0021)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x138, 0x00025880, 0x00026880)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x13C, 0x01625823, 0x01A26823)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x140, 0x000B58C0, 0x000D68C0)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x144, 0x01625823, 0x01A26823)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x148, 0x000B5880, 0x000D6880)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x14C, 0x01625823, 0x01A26823)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x150, 0x000B5840, 0x000D6840)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x154, 0x256C02D8, 0x25AE02D8)
-#pragma REWRITE_FUNCTION_WORD(func_829064D0, 0x158, 0xA60C0018, 0xA60E0018)
 
 void func_829064D0(s32 arg0, void *arg1) {
     f32 sp24;
@@ -45,7 +30,7 @@ void func_829064D0(s32 arg0, void *arg1) {
     *(f32 *)(temp_s0 + 8) = *(f32 *)((u8 *)arg1 + 8) + sp24;
     *(f32 *)(temp_s0 + 4) = (f32)temp_ft1 + 60.0f + *(f32 *)((u8 *)arg1 + 4);
     *(f32 *)(temp_s0 + 0) = *(f32 *)((u8 *)arg1 + 0) + (-MathUtil_Random_ZeroOne() * 50.0f - 50.0f);
-    *(s16 *)(temp_s0 + 0x10) = func_829063EC(546) + 728;
+    *(s16 *)(temp_s0 + 0x10) = (s16)func_829063EC(546) + 728;
     *(s16 *)(temp_s0 + 0x12) = 0;
     *(s16 *)(temp_s0 + 0x14) = -0x4000;
     *(f32 *)(temp_s0 + 0x1C) = (f32)(u32)func_829063EC(2);
