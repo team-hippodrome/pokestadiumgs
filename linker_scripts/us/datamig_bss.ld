@@ -178,8 +178,8 @@ SECTIONS
     {
         build/src/fragments/66/fragment66_code.o(.bss)
     }
-    /* Two dimensions, including the compiler's native input alignment. */
-    .fragment66_extra_dimensions_data 0x82E06150 (NOLOAD) : SUBALIGN(4)
+    /* Existing view-state prefix and its two dimensions, cleared by the loader. */
+    .fragment66_view_prefix_data 0x82E06138 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/66/fragment66_code.o(.data)
     }
@@ -208,5 +208,5 @@ ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 48,
 
 ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 48,
        "fragment66 output bounds must retain their original 48-byte footprint");
-ASSERT(SIZEOF(.fragment66_extra_dimensions_data) == 16,
-       "fragment66 dimensions must retain their native aligned input footprint");
+ASSERT(SIZEOF(.fragment66_view_prefix_data) == 32,
+       "fragment66 view prefix must retain its original 32-byte footprint");
