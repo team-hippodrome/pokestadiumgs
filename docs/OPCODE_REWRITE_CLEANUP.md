@@ -246,7 +246,17 @@ or reverting a function to assembly does not establish a proper C match.
   native retail ROM gate pass with all function/object symbols preserved.
   See [the emission evidence](regions/fragments/52/fragment52_27E4E0.md).
 
-This leaves 393 directive occurrences and 28 affected functions. Coverage files and
+- `func_87F02104`: save and restore the four controllers' real `flags`
+  fields with ordinary loops, using the existing controller header and a
+  signed input-result temporary before narrowing to button bits. Stock IDO
+  emits all 492 retail bytes after linking without the whole-function hex
+  replacement or 13 relocation-target directives. Normal/blank controls,
+  host syntax and the native full-ROM comparison pass. Function/storage
+  extents and legacy addresses are unchanged; the unused `D_800CE088` alias
+  retains its address with ELF type `NOTYPE` instead of `OBJECT`. See
+  [the controller-loop evidence](regions/fragments/64/fragment64_324A10.md).
+
+This leaves 379 directive occurrences and 27 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -311,7 +321,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_87E04114` | [src/fragments/63/fragment63_306150.c](../src/fragments/63/fragment63_306150.c) | 13 | Pending |
 | `func_87E07A2C` | [src/fragments/63/fragment63_308D70.c](../src/fragments/63/fragment63_308D70.c) | 2 | Pending |
 | `func_87E07DD0` | [src/fragments/63/fragment63_30B540.c](../src/fragments/63/fragment63_30B540.c) | 2 | Replaced with C |
-| `func_87F02104` | [src/fragments/64/fragment64_324A10.c](../src/fragments/64/fragment64_324A10.c) | 14 | Pending |
+| `func_87F02104` | [src/fragments/64/fragment64_324A10.c](../src/fragments/64/fragment64_324A10.c) | 14 | Replaced with C |
 | `func_87F025B8` | [src/fragments/64/fragment64_324FB0.c](../src/fragments/64/fragment64_324FB0.c) | 4 | Replaced with C |
 | `func_87F06240` | [src/fragments/64/fragment64_328E40.c](../src/fragments/64/fragment64_328E40.c) | 1 | Pending |
 | `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Replaced with C |
