@@ -171,7 +171,89 @@ void Fragment12_AssignActiveRowsToSlots(Fragment12Rows *state) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81403400.s")
+/* mkdraft:func_81403400 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void func_81401178(s32 arg0);
+extern s32 func_814011B4(s32 arg0, s32 arg1, f32 arg2, f32 arg3);
+
+
+
+void func_81403400(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s32 i;
+    s32 j;
+    s32 row;
+    s32 firstCol;
+    s32 value;
+    s32 idx;
+    s32 sgn;
+    s32 value2;
+    s32 firstCol2;
+    f32 scale;
+    // FAKE: unused. Removing it keeps the frame at 0xB8 but moves the compiler
+    // spill slots at 0x60 (idx * 4) and 0x70 (i) to 0x64 and 0x74.
+    f32 cur;
+    f32 old;
+    f32 diff;
+    // FAKE: unused. A two-word array raises the frame from 0xB0 to 0xB8 while the
+    // spill slots stay at 0x60 (idx * 4) and 0x70 (i); a single s32 local places
+    // them at 0x64 and 0x74.
+    s32 pad2[2];
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+
+    for (row = 0; row != 4; row++) {
+        firstCol = 0;
+        for (i = 0; i != 6; i++) {
+            sgn = arg3 ? 1 : -1;
+            value = *(f32 *)((u8 *)arg0 + i * 12 + 0xC60) * sgn + arg2;
+            scale = *(f32 *)((u8 *)arg0 + i * 12 + 0xC64) / 400.0f;
+            if (*(s16 *)((u8 *)arg0 + i * 12 + 0xC68) == row) {
+                if (!firstCol) {
+                    firstCol = 1;
+                    func_81401178(row);
+                }
+                func_814011B4(arg1, value, scale, 1.0f);
+            }
+        }
+    }
+
+    for (i = 0; i != 0x80; i++) {
+        idx = (((Fragment12Rows *)arg0)->unk_CB0 + i + 1) % 0x80;
+        if (idx == ((Fragment12Rows *)arg0)->unk_CB0) {
+            scale = 1.0f;
+        } else {
+            scale = (f32)(i + 1) / 128 * 0.2f;
+        }
+        if ((0x80 - i) % 2 == 1) {
+            for (row = 0; row != 4; row++) {
+                firstCol2 = 0;
+                for (j = 0; j != 0x210 * 6; j += 0x210) {
+                    sgn = arg3 ? 1 : -1;
+                    value2 = *(f32 *)((u8 *)arg0 + j + idx * 4) * sgn + arg2;
+                    if (*(s16 *)((u8 *)arg0 + j + 0x208) == row) {
+                        if (idx != ((Fragment12Rows *)arg0)->unk_CB0) {
+                            old = *(f32 *)((u8 *)arg0 + j + ((Fragment12Rows *)arg0)->unk_CB0 * 4);
+                            diff = (old < *(f32 *)((u8 *)arg0 + j + idx * 4)) ? (*(f32 *)((u8 *)arg0 + j + idx * 4) - old) : -(*(f32 *)((u8 *)arg0 + j + idx * 4) - old);
+                            if (diff < 1.0f) {
+                                continue;
+                            }
+                        }
+                        if (!firstCol2) {
+                            firstCol2 = 1;
+                            func_81401178(row);
+                        }
+                        func_814011B4(arg1, value2, 1.0f, scale);
+                    }
+                }
+            }
+        }
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+/* mkdraft:func_81403400 end */
 
 s32 func_81403710(void *arg0) {
     s8 *entry;
@@ -1282,7 +1364,76 @@ void func_814054CC(u8 *arg0, void *arg1)
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81405514.s")
+/* mkdraft:func_81405514 begin */
+extern s32 func_81404E68(void *arg0);
+extern void func_8140487C(void *arg0, void *arg1, s32 arg2);
+extern void func_81600A34(void *arg0, void *arg1, void *arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+
+
+
+void func_81405514(void *arg0, void *arg1) {
+    s32 result;
+    u8 *record;
+    s16 first[4];
+    s16 second[4];
+    s16 third[4];
+
+    if (*(s32 *)((u8 *)arg0 + 0x1C) != 0 && *(s8 *)((u8 *)arg0 + 8) >= 0 && *(s32 *)((u8 *)arg0 + 0x4D60) == 0) {
+        record = (u8 *)&D_800CE060 + *(s8 *)((u8 *)arg0 + 8) * 0x28;
+        if ((*(u16 *)(record + 8) & 0x1000) != 0)
+            *(s32 *)((u8 *)arg0 + 0x20) = 1;
+    }
+    switch (*(u8 *)((u8 *)arg0 + 6)) {
+        case 0:
+            result = func_81404C2C(arg0);
+            break;
+        case 6:
+            result = func_81404C3C(arg0);
+            break;
+        case 1:
+            result = func_81404CA4(arg0);
+            break;
+        case 2:
+            result = func_81404E68(arg0);
+            break;
+        case 3:
+            result = func_814050EC(arg0);
+            break;
+        case 4:
+            result = func_814052F4(arg0);
+            break;
+        case 5:
+            result = func_81405208(arg0);
+            break;
+        case 7:
+            result = func_81404C94(arg0);
+            break;
+    }
+    if (func_81404700(arg0) != 0) {
+        func_8140487C(arg0, first, 0);
+        func_8140487C(arg0, second, 1);
+        if (*(s8 *)((u8 *)arg0 + 9) >= 2)
+            func_81600A34(arg1, (u8 *)arg0 + 1, 0, second[0], second[1], second[2], second[3]);
+        func_81600A34(arg1, arg0, (void *)result, first[0], first[1], first[2], first[3]);
+        if (*(s8 *)((u8 *)arg0 + 9) < 2)
+            func_81600A34(arg1, (u8 *)arg0 + 1, 0, second[0], second[1], second[2], second[3]);
+    } else {
+        if (*(s8 *)((u8 *)arg0 + 9) >= 2 && *(s32 *)((u8 *)arg0 + 0x14) != 0)
+            func_814054CC(arg0, arg1);
+        if (*(u8 *)((u8 *)arg0 + 6) != 0) {
+            if (*(s8 *)((u8 *)arg0 + 9) >= 2)
+                func_814053E4(arg0, arg1, (void *)result);
+            func_8140487C(arg0, third, 0);
+            func_81600A34(arg1, arg0, (void *)result, third[0], third[1], third[2], third[3]);
+            if (*(s8 *)((u8 *)arg0 + 9) < 2)
+                func_814053E4(arg0, arg1, (void *)result);
+        }
+        if (*(s8 *)((u8 *)arg0 + 9) >= 2 && *(s32 *)((u8 *)arg0 + 0x14) != 0)
+            return;
+        func_814054CC(arg0, arg1);
+    }
+}
+/* mkdraft:func_81405514 end */
 
 /* mkdraft:func_814057CC begin */
 extern u8 D_80094E38[];
