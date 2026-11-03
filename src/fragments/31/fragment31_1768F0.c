@@ -68,31 +68,20 @@ s32 func_8820390C(u8 *arg0) {
 /* mkdraft:func_8820390C end */
 
 /* mkdraft:func_88203A18 begin */
-#pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x00, 0x90A60001, 0x90A20001)
-#pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x08, 0x50C0000B, 0x5040000B)
-#pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x10, 0x8CA20004, 0x8CA60004)
-#pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x14, 0x54820004, 0x54860004)
-#pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x28, 0x0066082B, 0x0062082B)
-#pragma REWRITE_FUNCTION_WORD(func_88203A18, 0x30, 0x24420076, 0x24C60076)
 
-s32 func_88203A18(s32 arg0, void *arg1) {
-    u32 var_v1;
-    u8 temp_v0;
-    s32 var_a2;
+s32 func_88203A18(void *entry, LabPCStorageList *list) {
+    u32 index;
 
-    temp_v0 = *(u8 *)((u8 *)arg1 + 1);
-    var_v1 = 0;
-    if (temp_v0 != 0) {
-        var_a2 = *(s32 *)((u8 *)arg1 + 4);
+    index = 0;
+    if (list->capacity != 0) {
         do {
-            if (arg0 == var_a2) {
-                return var_v1 & 0xFF;
+            if (entry == (void *)((u8 *)list->entries + index * 0x76)) {
+                return index & 0xFF;
             }
-            var_v1 += 1;
-            var_a2 += 0x76;
-        } while (var_v1 < temp_v0);
+            index++;
+        } while (index < list->capacity);
     }
-    return var_v1 & 0xFF;
+    return index & 0xFF;
 }
 /* mkdraft:func_88203A18 end */
 

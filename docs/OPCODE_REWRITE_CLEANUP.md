@@ -256,7 +256,15 @@ or reverting a function to assembly does not establish a proper C match.
   retains its address with ELF type `NOTYPE` instead of `OBJECT`. See
   [the controller-loop evidence](regions/fragments/64/fragment64_324A10.md).
 
-This leaves 379 directive occurrences and 27 affected functions. Coverage files and
+- `func_88203A18`: search the entries array by index rather than maintaining
+  an explicit cursor local. Stock IDO generates the cursor induction itself,
+  keeping capacity in V0 and the cursor in A2, and emits all 64 retail bytes
+  without six word rewrites. Complete-module normal/blank controls, host
+  syntax and the native full-ROM gate pass with function/object extents and
+  legacy addresses preserved. See
+  [the storage-search evidence](regions/fragments/31/fragment31_1768F0.md).
+
+This leaves 373 directive occurrences and 26 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -299,7 +307,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82B062BC` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
 | `func_82B07960` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 25 | Replaced with C |
 | `func_82B07A5C` | [src/fragments/24/fragment24_150C10.c](../src/fragments/24/fragment24_150C10.c) | 1 | Replaced with C |
-| `func_88203A18` | [src/fragments/31/fragment31_1768F0.c](../src/fragments/31/fragment31_1768F0.c) | 6 | Pending |
+| `func_88203A18` | [src/fragments/31/fragment31_1768F0.c](../src/fragments/31/fragment31_1768F0.c) | 6 | Replaced with C |
 | `func_8821B3E0` | [src/fragments/31/fragment31_189760.c](../src/fragments/31/fragment31_189760.c) | 1 | Replaced with C |
 | `func_88223418` | [src/fragments/31/fragment31_1965A0.c](../src/fragments/31/fragment31_1965A0.c) | 2 | Pending |
 | `func_8830765C` | [src/fragments/32/fragment32_1B8010.c](../src/fragments/32/fragment32_1B8010.c) | 2 | Pending |
