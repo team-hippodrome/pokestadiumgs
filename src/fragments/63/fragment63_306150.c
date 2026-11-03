@@ -539,14 +539,15 @@ s32 func_87E03FF0(void *arg0) {
     }
 }
 
-s32 func_87E04030(void *arg0, void *arg1) {
+s32 func_87E04030(void *arg0) {
     struct Item { u8 pad[0x94]; s32 value; };
     struct Sub { u8 pad[0x20]; struct Item *item; };
     struct State { u8 pad[0x18C]; struct Sub sub; };
     struct Root { u8 pad[0x10]; struct State *state; };
+    void* item;
     struct Sub *sub = &((struct Root *)arg0)->state->sub;
-    arg1 = sub->item;
-    return ((struct Item *)arg1)->value == 0;
+    item = sub->item;
+    return ((struct Item *)item)->value == 0;
 }
 
 typedef struct {
@@ -587,15 +588,7 @@ extern s32 func_87E1369C(void);
 extern void func_87E027E0(void *arg0);
 extern void func_87F0277C(void *arg0);
 extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
-// Retail's call site sets only $a0: func_87E04030's second parameter in this file is
-// a scratch local, so the call takes one argument. IDO needs a no-prototype declaration
-// in scope to accept it; gcc's CC_CHECK rejects that call, so the host-check build gets
-// the two-argument spelling instead.
-#ifdef CC_CHECK
-#define CALL_87E04030(arg0) func_87E04030((arg0), 0)
-#else
-#define CALL_87E04030(arg0) func_87E04030(arg0)
-#endif
+
 extern u8 D_800CE060[];
 extern u8 *D_87E1EB78;
 
@@ -622,7 +615,6 @@ extern u8 *D_87E1EB78;
 
 s32 func_87E04114(u8 *arg0)
 {
-  extern s32 func_87E04030();
   s32 padA;
   s32 padB;
   s32 result;
@@ -703,7 +695,7 @@ s32 func_87E04114(u8 *arg0)
           flags &= 0xF3FF;
           v = 1;
         }
-        if (CALL_87E04030(arg0) == 0)
+        if (func_87E04030(arg0) == 0)
         {
           flags &= 0xF3FF;
         }
