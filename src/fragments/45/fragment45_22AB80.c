@@ -506,7 +506,72 @@ s32 func_8AB073F4(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07538.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07A34.s")
+/* mkdraft:func_8AB07A34 begin */
+extern u8 D_8AB11268[];
+extern u8 D_8AB1126C[];
+extern s16 D_8AB16A32;
+extern u8 D_8AB126A8[];
+extern int func_8AB023EC();
+extern void func_80021ED8(s32);
+extern void func_800226C0(s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_800545B4(s32, s32);
+extern s32 func_8AB07C34(s32);
+extern s32 func_8AC07AF4(s32, s32, u8 *, u8 *);
+extern void func_8AC075A8(void);
+
+
+
+s32 func_8AB07A34(s32 arg0) {
+    s32 result = 0xE;
+    s16 x;
+    s16 value;
+    s16 *counter = &D_8AB16A32;
+    u8 color[3];
+    s32 count = 3;
+    typedef struct { u8 a, b, c; } Color;
+
+    switch (arg0) {
+    case 0:
+        func_8004C8A0(D_8AB126A8, (*(volatile s16 *)counter = 0) + 0x100, 0x39, 9); // FAKE: volatile store-in-argument reproduces retail's lui a0 / lui at / sh / addiu a0 order
+        func_80021ED8(0x4A);
+        switch (*(u16 *)D_8AB11D0C) {
+        case 1:
+            func_800545B4(3, 1);
+            break;
+        case 2:
+            func_800545B4(4, 1);
+            break;
+        case 3:
+            func_800545B4(5, 1);
+            break;
+        }
+        break;
+    case 1:
+        value = *counter + 1;
+        *counter = value;
+        if (value >= 0x97) {
+            result = func_8AB07C34(0);
+        }
+        value = *counter;
+        if (value % 5 == 0) {
+            *counter = value;
+            if (value < 0x78) {
+                *(Color *)color = *(Color *)(D_8AB1126C + (guRandom() % count) * count);
+                x = func_8AB023EC(0x50) - 0x28;
+                if (func_8AC07AF4(x + 0x122, (s16)(func_8AB023EC(0x3C) - 0x1E) + 0xD2, D_8AB11268, color) != 0) {
+                    func_800226C0(0xCF);
+                }
+            }
+        }
+        break;
+    case 2:
+        func_8AC075A8();
+        break;
+    }
+    return result;
+}
+/* mkdraft:func_8AB07A34 end */
 
 /* mkdraft:func_8AB07C34 begin */
 s32 func_8AB066B4(s32 arg0);
@@ -1012,7 +1077,141 @@ void func_8AB09418(u8 *arg0) {
     *(s16 *)(arg0 + 0x10) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB09428.s")
+extern u8 D_8AB12CB0[];
+extern u16 *D_8AB16C20[];
+extern u8 *D_8AB16C98[];
+extern s16 D_8AB16CD0;
+extern s16 D_8AB16CD2;
+extern s16 D_8AB1269A;
+extern void *D_80087204;
+extern void *D_80087208;
+extern void *D_8008720C;
+extern u8 *D_8AB1266C;
+extern u8 *D_8AB12670;
+extern u8 *D_8AB12674;
+extern void TextRow_SetOrangeState(s16);
+extern void func_8AB01414(s16);
+extern void func_8AB01454(s16);
+extern void func_8AB03DFC(s16, s16);
+extern void func_8AB04038(void);
+extern void func_8AB00B98(u8 *, u32);
+
+
+
+void func_8AB09428(void) {
+    u32 row_address;
+    s32 i;
+    u16 buttons;
+    s32 player;
+    s32 animation;
+    u16 **player_slot;
+
+    D_8AB16CD0 = 0;
+    D_8AB16CD2 = 0;
+    for (i = 0; i < 4; i++) {
+        player = (i + D_8AB1268C) & 3;
+        row_address = (u32)(D_8AB12CB0 + player * 148);
+        animation = player + 6;
+        if (*(s16 *)(row_address + 4) == 0 && *(s32 *)(row_address + 12) == 0 && *(s16 *)row_address != 0) {
+            D_8AB16CD2++;
+            player_slot = &D_8AB16C20[player];
+            switch (player) {
+            case 0:
+                buttons = *(u16 *)((u8 *)D_80087200 + 8);
+                break;
+            case 1:
+                buttons = *(u16 *)((u8 *)D_80087204 + 8);
+                break;
+            case 2:
+                buttons = *(u16 *)((u8 *)D_80087208 + 8);
+                break;
+            case 3:
+                buttons = *(u16 *)((u8 *)D_8008720C + 8);
+                break;
+            }
+            if ((*(u16 *)(D_8AB16C98[0] + 2) & 2) == 0 && (buttons & 8)) {
+                if (D_8AB1269A == 0) {
+                    TextRow_SetOrangeState(player);
+                    func_8AB01414(player);
+                    D_8AB16CD0 = 1;
+                } else {
+                    func_8AB03DFC(player, 0);
+                    func_8AB01454(player);
+                    func_8AB09418((u8 *)row_address);
+                    *(u16 *)((u8 *)*player_slot + 2) |= 2;
+                    *(s16 *)((u8 *)*player_slot + 38) = 6;
+                }
+                *(s16 *)(row_address + 6) = 8;
+                *(u16 *)(D_8AB16C98[0] + 2) |= 2;
+                *(s16 *)(D_8AB16C98[0] + 38) = animation;
+                func_8AB00B98(D_8AB12668[0], 0xFFFF00FF);
+            } else if ((*(u16 *)(D_8AB16C98[1] + 2) & 2) == 0 && (buttons & 1)) {
+                if (D_8AB1269A == 1) {
+                    TextRow_SetOrangeState(player);
+                    func_8AB01414(player);
+                    D_8AB16CD0 = 1;
+                } else {
+                    func_8AB03DFC(player, 1);
+                    func_8AB01454(player);
+                    func_8AB09418((u8 *)row_address);
+                    *(u16 *)((u8 *)*player_slot + 2) |= 2;
+                    *(s16 *)((u8 *)*player_slot + 38) = 6;
+                }
+                *(s16 *)(row_address + 6) = 1;
+                *(u16 *)(D_8AB16C98[1] + 2) |= 2;
+                *(s16 *)(D_8AB16C98[1] + 38) = animation;
+                func_8AB00B98(D_8AB1266C, 0xFFFF00FF);
+            } else if ((*(u16 *)(D_8AB16C98[2] + 2) & 2) == 0 && (buttons & 4)) {
+                if (D_8AB1269A == 2) {
+                    TextRow_SetOrangeState(player);
+                    func_8AB01414(player);
+                    D_8AB16CD0 = 1;
+                } else {
+                    func_8AB03DFC(player, 2);
+                    func_8AB01454(player);
+                    func_8AB09418((u8 *)row_address);
+                    *(u16 *)((u8 *)*player_slot + 2) |= 2;
+                    *(s16 *)((u8 *)*player_slot + 38) = 6;
+                }
+                *(s16 *)(row_address + 6) = 4;
+                *(u16 *)(D_8AB16C98[2] + 2) |= 2;
+                *(s16 *)(D_8AB16C98[2] + 38) = animation;
+                func_8AB00B98(D_8AB12670, 0xFFFF00FF);
+            } else if ((*(u16 *)(D_8AB16C98[3] + 2) & 2) == 0 && (buttons & 2)) {
+                if (D_8AB1269A == 3) {
+                    TextRow_SetOrangeState(player);
+                    func_8AB01414(player);
+                    D_8AB16CD0 = 1;
+                } else {
+                    func_8AB03DFC(player, 3);
+                    func_8AB01454(player);
+                    func_8AB09418((u8 *)row_address);
+                    *(u16 *)((u8 *)*player_slot + 2) |= 2;
+                    *(s16 *)((u8 *)*player_slot + 38) = 6;
+                }
+                *(s16 *)(row_address + 6) = 2;
+                *(u16 *)(D_8AB16C98[3] + 2) |= 2;
+                *(s16 *)(D_8AB16C98[3] + 38) = animation;
+                func_8AB00B98(D_8AB12674, 0xFFFF00FF);
+            }
+            if (*(s32 *)(row_address + 12) == 0 && *(s16 *)(row_address + 2) >= 9) {
+                player_slot = &D_8AB16C20[player];
+                if (D_8AB11280 == 0) {
+                    func_80021ED8(0x68);
+                    D_8AB11280 = 1;
+                }
+                if (*(s32 *)(row_address + 8) == 0) {
+                    func_8AB00BA4(65554, 0, 0);
+                }
+                *(s32 *)(row_address + 8) = 1;
+                *(u16 *)((u8 *)*player_slot + 2) |= 2;
+                *(s16 *)((u8 *)*player_slot + 38) = 5;
+            }
+        }
+    }
+    TextHighlight_AnimateScales();
+    func_8AB04038();
+}
 
 extern u8 D_8AB12CB0[];
 extern s16 D_8AB16CAC;
@@ -1371,7 +1570,7 @@ extern void *D_8AB16B8C;
 extern void *D_8AB16C24;
 extern void *D_8AB16C28;
 extern void *D_8AB16C2C;
-extern void *D_8AB16C98;
+extern u8 *D_8AB16C98[];
 extern void *D_8AB16C9C;
 extern void *D_8AB16CA0;
 extern void *D_8AB16CA4;
@@ -1512,7 +1711,7 @@ s32 func_8AB0A2D8(s32 arg0) {
 extern s32 D_8AB11A04;
 extern void *D_8AB11D00;
 extern void *D_8AB16A58;
-extern void *D_8AB16C98;
+extern u8 *D_8AB16C98[];
 extern void *D_8AB16C9C;
 extern void *D_8AB16CA0;
 extern void *D_8AB16CA4;
