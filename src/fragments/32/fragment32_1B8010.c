@@ -233,22 +233,25 @@ void func_883074E4(s32 arg0, s16 arg1, s16 arg2, u16 arg3) {
 /* mkdraft:func_8830765C begin */
 extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
-#pragma REWRITE_FUNCTION_WORD(func_8830765C, 0x84, 0x004C2021, 0x01822021)
-#pragma REWRITE_FUNCTION_WORD(func_8830765C, 0x148, 0x00492021, 0x01222021)
 
 
+
+typedef struct F32TextureSize {
+    u16 width;
+    u16 height;
+} F32TextureSize;
 
 void func_8830765C(u16 *arg0, u16 *arg1, s16 arg2, s16 arg3, u16 arg4) {
-    GfxRect_DrawTextured(arg2, arg3, (s16)*arg0, (s16)(arg4 - *(arg1 + 1)),
+    GfxRect_DrawTextured(arg2, arg3, (s16)((F32TextureSize *)arg0)->width, (s16)(arg4 - ((F32TextureSize *)arg1)->height),
                          -0x10, -0x10, 0x400, 0x400, 0);
-    GfxRect_DrawTextured((s16)(arg2 + *arg0), arg3, *arg0,
-                         (s16)(arg4 - *(arg1 + 1)),
-                         (s16)((*arg0 << 5) - 0x10), -0x10, -0x400, 0x400, 0);
-    func_80044424(arg2, (s16)(arg3 + arg4 - *(arg1 + 1)), (s16)*arg1,
-                  (s16)*(arg1 + 1), -0x10, -0x10, 0x400, 0x400, 0, 1);
-    func_80044424((s16)(arg2 + *arg1), (s16)(arg3 + arg4 - *(arg1 + 1)),
-                  *arg1, (s16)*(arg1 + 1),
-                  (s16)((*arg1 << 5) - 0x10), -0x10, -0x400, 0x400, 0, 1);
+    GfxRect_DrawTextured((s16)(arg2 + ((F32TextureSize *)arg0)->width), arg3, ((F32TextureSize *)arg0)->width,
+                         (s16)(arg4 - ((F32TextureSize *)arg1)->height),
+                         (s16)((((F32TextureSize *)arg0)->width << 5) - 0x10), -0x10, -0x400, 0x400, 0);
+    func_80044424(arg2, (s16)(arg3 + arg4 - ((F32TextureSize *)arg1)->height), (s16)((F32TextureSize *)arg1)->width,
+                  (s16)((F32TextureSize *)arg1)->height, -0x10, -0x10, 0x400, 0x400, 0, 1);
+    func_80044424((s16)(arg2 + ((F32TextureSize *)arg1)->width), (s16)(arg3 + arg4 - ((F32TextureSize *)arg1)->height),
+                  ((F32TextureSize *)arg1)->width, (s16)((F32TextureSize *)arg1)->height,
+                  (s16)((((F32TextureSize *)arg1)->width << 5) - 0x10), -0x10, -0x400, 0x400, 0, 1);
 }
 /* mkdraft:func_8830765C end */
 
