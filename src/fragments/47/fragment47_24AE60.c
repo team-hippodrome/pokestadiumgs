@@ -110,7 +110,70 @@ void func_860049B8(Func860049B8Context *arg0, f64 arg1) {
 void func_86004BC4(void) {}
 void func_86004BC4_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004BD4.s")
+typedef struct {
+    u32 words[0x50 / 4];
+} Fragment47ModelBlock;
+extern f64 D_8600D860;
+extern f64 D_8600D868;
+extern f64 D_8600D870;
+extern f64 D_8600D878;
+extern f64 D_8600D880;
+extern f64 D_8600D888;
+extern f64 D_8600D890;
+extern void func_86009D7C(void *, f64, f64, f64, s32);
+extern void func_86009E54(void *, void *, f64, f64, s32);
+extern f64 func_8600A0C8(void *);
+extern f64 func_8600A144(void *);
+
+
+void func_86004BD4(u8 *arg0)
+{
+    f64 scale;
+    f64 d888;
+    f64 d890;
+    f64 distance;
+    u8 *second;
+    u8 *first;
+    first = arg0 + 0x6668;
+    second = arg0 + 0x66B8;
+    scale = D_8600D860;
+    // FAKE: the self-subtraction makes IDO put the held scale in $fs0 and the loaded
+    // angle in $ft; written as a plain product the two mul.d operand slots come out
+    // swapped. The extra terms emit no code and x - x is +0.0 for the finite angles
+    // in this table, so the right operand is still scale.
+    func_86009D7C(first, 0.0, D_8600D868, ((*((f64 *) (D_8600DE30 + 0x100))) * ((*((f64 *) (D_8600DE30 + 0x100))) - (*((f64 *) (D_8600DE30 + 0x100))) + scale)) / D_8600D870, 0);
+    func_86009E54(second, first, D_8600D878 * (*((f64 *) (D_8600DE30 + 0x110))), ((*((f64 *) (D_8600DE30 + 0x108))) * ((*((f64 *) (D_8600DE30 + 0x108))) - (*((f64 *) (D_8600DE30 + 0x108))) + scale)) / D_8600D880, (*((u32 *) (D_8600DE30 + 0x218))) != 0);
+    d888 = D_8600D888;
+    d890 = D_8600D890;
+    *((f64 *) (arg0 + 0x66E0)) = *((f64 *) (D_8600DE30 + 0x150));
+    *((f64 *) (arg0 + 0x66F0)) = *((f64 *) (D_8600DE30 + 0x140));
+    *((f64 *) (arg0 + 0x6690)) = *((f64 *) (D_8600DE30 + 0x158));
+    *((f64 *) (arg0 + 0x66A0)) = *((f64 *) (D_8600DE30 + 0x148));
+    *((Fragment47ModelBlock *) (arg0 + 0x6708)) = *((Fragment47ModelBlock *) first);
+    *((Fragment47ModelBlock *) (arg0 + 0x6758)) = *((Fragment47ModelBlock *) second);
+    *((f64 *) (arg0 + 0x6730)) = *((f64 *) (D_8600DE30 + 0x138));
+    *((f64 *) (arg0 + 0x6780)) = *((f64 *) (D_8600DE30 + 0x130));
+    *((f64 *) (arg0 + 0x6740)) = *((f64 *) (D_8600DE30 + 0x128));
+    *((f64 *) (arg0 + 0x6790)) = *((f64 *) (D_8600DE30 + 0x120));
+    *((Fragment47ModelBlock *) (arg0 + 0x67A8)) = *((Fragment47ModelBlock *) first);
+    *((Fragment47ModelBlock *) (arg0 + 0x67F8)) = *((Fragment47ModelBlock *) second);
+    *((f64 *) (arg0 + 0x67D0)) = d888;
+    *((f64 *) (arg0 + 0x6820)) = d888;
+    *((f64 *) (arg0 + 0x67E0)) = d890;
+    *((f64 *) (arg0 + 0x6830)) = d890;
+    *((f64 *) (D_8600DE30 + 0x188)) = *((f64 *) (arg0 + 0x66D0));
+    distance = func_8600A144(second) - func_8600A0C8(second);
+    *((f64 *) (D_8600DE30 + 0x180)) = distance;
+    *((f64 *) (D_8600DE30 + 0x178)) = *((f64 *) (arg0 + 0x66B8));
+    *((f64 *) (D_8600DE30 + 0x1A0)) = *((f64 *) (arg0 + 0x6680));
+    distance = func_8600A144(first) - func_8600A144(second);
+    *((f64 *) (D_8600DE30 + 0x198)) = distance;
+    *((f64 *) (D_8600DE30 + 0x190)) = *((f64 *) (arg0 + 0x6668));
+    *((f64 *) (arg0 + 0x6868)) = *((f64 *) (D_8600DE30 + 0x238));
+    *((f64 *) (arg0 + 0x6878)) = *((f64 *) (D_8600DE30 + 0x260));
+    *((f64 *) (arg0 + 0x6870)) = *((f64 *) (D_8600DE30 + 0x230));
+    *((f64 *) (arg0 + 0x6880)) = *((f64 *) (D_8600DE30 + 0x270));
+}
 
 typedef struct {
     u8 pad[0x7518];
@@ -665,7 +728,7 @@ void func_8600734C(s32 arg0) {
 
 /* mkdraft:func_86007428 begin */
 extern void func_87F00688();
-extern void func_86004BD4(s32);
+void func_86004BD4(u8 *arg0);
 extern void func_86004968();
 extern void func_860021C4(s32, s32, f32, void *, s32);
 extern void func_86003EFC(s32, s32);
@@ -767,5 +830,45 @@ void func_86007648(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_860076EC.s")
+/* mkdraft:func_860076EC begin */
+extern u8 D_8600D2CC[4][4][16];
+extern s32 D_8600D800[];
+
+// D_8600D2CC holds 16-byte records, four per row. The double subscript scales
+// the row by 0x40 and the record by 0x10 and adds each to the table address
+// separately, which keeps the table address in rs of the first add; a flat
+// byte table produces the same sums with the operands commuted. The
+// 0x8600D2CC..0x8600D3CC extent (0x100 bytes) is 4 * 4 * 16.
+//@{asm/us/data/fragments/47/fragment47_data.data.s}
+
+
+void func_860076EC(s32 arg0) {
+    u8 *ptr;
+    s32 n;
+    s32 i;
+    u8 *list[4];
+    s32 j;
+    u8 *t;
+
+    n = 0;
+    for (j = 0; j < 4; j++) {
+        ptr = (u8 *)arg0;
+        ptr += ((*(s8 *)((u8 *)arg0 + 0x75C1) + j) % 4) * 0x1998;
+        if (*(s32 *)(ptr + 0x1824) != 0) { list[n++] = ptr; }
+    }
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = n - 1; j > i; j--) {
+            if (*(s32 *)(list[j - 1] + 0x1814) < *(s32 *)(list[j] + 0x1814)) {
+                t = list[j];
+                list[j] = list[j - 1];
+                list[j - 1] = t;
+            }
+        }
+    }
+    for (j = 0; j < n; j++) {
+        *(void **)(list[j] + 0x1894) = (void *)&D_8600D2CC[*(s8 *)(*(u8 **)((u8 *)arg0 + 0x7580) + 0x2181)][*(s32 *)((u8 *)D_8600D800 + (n - 1) * 16 + j * 4)];
+    }
+}
+/* mkdraft:func_860076EC end */
 #endif
