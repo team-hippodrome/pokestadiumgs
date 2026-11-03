@@ -312,7 +312,7 @@ void func_8410668C(u8 *arg0) {
 #define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
 #endif
 
-M2C_UNK func_84100020(u8 *, M2C_UNK);             /* extern */
+void func_84100020(u8 *, s32);             /* extern */
 extern s32 D_84190194;
 extern s32 D_841901A4;
 
@@ -361,7 +361,7 @@ void func_84107170(u8 *arg0, u8 *arg1) {
 #ifdef VERSION_US
 /* mkdraft:func_841072BC begin */
 extern s32 ParticleMath_LacksBits(void *arg0, s32 arg1);
-extern s32 func_84100020(u8 *arg0, s32 arg1);
+extern void func_84100020(u8 *arg0, s32 arg1);
 extern u8 *func_84100328(void);
 extern void func_84100350(u8 *arg0);
 extern void func_84104A00(u8 *arg0);
@@ -461,7 +461,31 @@ void func_841072BC(u8 *root, s32 mode, s32 updateFlag) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_841076B8.s")
+void func_841076B8(u8 *root) {
+    u8 *child;
+    u8 *node;
+    s32 index;
+
+    child = *(u8 **)root;
+    if (child != NULL) {
+        for (index = 0; index < child[3]; index++) {
+            node = func_84100328();
+            if (node == NULL) {
+                break;
+            }
+            func_84107170(root, node);
+            func_84100020(node, 0x3000);
+            func_8410679C(node, root, index, 1.0f);
+            func_84106AC4(node, child, index, 1.0f);
+            *(f32 *)(node + 0x44) = 160.0f;
+            *(f32 *)(node + 0x18) = *(f32 *)(node + 0x1C);
+            *(f32 *)(node + 0x48) = 120.0f;
+            *(f32 *)(node + 0x20) += *(f32 *)(node + 0x2C) + 160.0f;
+            *(f32 *)(node + 0x24) += *(f32 *)(node + 0x30) + 120.0f;
+            func_84106F34(node, child);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
