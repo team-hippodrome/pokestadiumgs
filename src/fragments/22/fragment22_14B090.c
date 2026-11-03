@@ -258,7 +258,44 @@ void func_82701278(void* arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82701300.s")
+/* mkdraft:func_82701300 begin */
+
+
+void func_82701300(void *arg0, u8 *arg1, s32 arg2) {
+    s32 index;
+    void *entry;
+    u8 *table;
+    u32 one = 1;
+
+    index = 0;
+    table = (u8 *)arg0 + 0x34;
+    do {
+        entry = func_82700E70(2, index, table, 0x10);
+        switch (index) {
+            case 0:
+                *(s16 *)((u8 *)entry + 0x20) = arg1[0];
+                if (arg2 != 0) {
+                    func_80025C50((u32)func_80035160(arg1[0]));
+                }
+                break;
+            case 1:
+                if (arg1[1] & 1) {
+                    *(s16 *)((u8 *)entry + 0x20) = 0;
+                    if (arg2 != 0) {
+                        func_8002A7E8(one);
+                    }
+                } else {
+                    *(s16 *)((u8 *)entry + 0x20) = 1;
+                    if (arg2 != 0) {
+                        func_8002A7E8(0);
+                    }
+                }
+                break;
+        }
+        index++;
+    } while (index != 5);
+}
+/* mkdraft:func_82701300 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_827013F0.s")
 
@@ -974,7 +1011,50 @@ void func_82702954(void *record, s32 selected) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_82702A2C.s")
+/* mkdraft:func_82702A2C begin */
+
+
+void func_82702A2C(void *arg0, s32 arg1) {
+    struct Panel {
+        s16 index;
+        s16 unk_02;
+        void *data;
+    } *panel;
+    volatile s32 reserve[4];
+    extern struct IDs5 { s16 a, b, c, d, e; } D_827032D8;
+    struct IDs5 sp38;
+    u8 *sp34;
+    s32 sp30;
+
+    sp38 = D_827032D8;
+    sp30 = (*(s16 *)((u8 *)arg0 + 0xC) * 0xFF) / 255;
+    if (arg1 == 0) {
+        sp34 = D_827032D0;
+    } else {
+        sp34 = D_827032D4;
+    }
+    panel = (struct Panel *)((u8 *)arg0 + 0x20);
+    func_800498C4();
+    func_8004972C(sp34[0], sp34[1], sp34[2], sp30);
+    if (((s16 *)&sp38)[*(s16 *)((u8 *)arg0 + 2)] >= 0) {
+        func_800496A4(0x10, 0);
+        func_800495F8(
+            *(s16 *)((u8 *)arg0 + 0x12) + 0x40,
+            *(s16 *)((u8 *)arg0 + 0x14) + 4,
+            0,
+            func_8004C874(0x1A, ((s16 *)&sp38)[*(s16 *)((u8 *)arg0 + 2)]));
+    }
+    if (panel->data != 0 && ((s16 *)panel->data)[panel->index] >= 0) {
+        func_800496A4(0x10, 0);
+        func_800495F8(
+            *(s16 *)((u8 *)arg0 + 0x12) + 0x126,
+            *(s16 *)((u8 *)arg0 + 0x14) + 4,
+            2,
+            func_8004C874(0x1A, ((s16 *)panel->data)[panel->index]));
+    }
+    func_800499EC();
+}
+/* mkdraft:func_82702A2C end */
 
 extern s32 D_827032E4;
 

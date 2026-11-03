@@ -517,7 +517,7 @@ s32 func_82201D30(u8 *arg0) {
     return 1;
 }
 
-extern void func_8004C990(u16, u16, u8 *);
+s32 func_8004C990();
 extern s16 D_8220D788;
 extern u8 D_8220E368[];
 s32 func_82201EB4(s32 arg0, u8 *arg1) {
@@ -555,7 +555,63 @@ s32 func_82201EB4(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82201FBC.s")
+extern void *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern Gfx *D_800D0510;
+extern u8 D_80094F50[];
+extern Mtx D_80094890;
+extern s32 func_8000731C(void);
+extern void Gfx_SetViewportDimensions(void *, s16, s16);
+extern s32 func_8004D1FC(u8 *);
+
+// Draws a textured band from (x0, y0) to (x1, y1) in an orthographic screen projection: a
+// quad whose top edge spans x0 - 3 .. x0 + 4 at row y0 and bottom edge x1 - 3 .. x1 + 4 at
+// row y1 (texture s 0..224, t 2048..0), white vertices, decal RGBA combine and translucent
+// surface mode, textured with the image func_8004C990(14, 1) returns. The projection setup
+// and vertex order follow func_88100C80's gradient quad.
+//@src/fragments/30/fragment30_16D4F0.c
+
+
+
+void func_82201FBC(s32 x0, s32 y0, s32 x1, s32 y1) {
+    // func_8000731C returns the screen dimensions; only the width at +4 and height at +6
+    // are read here, as s16.
+    void *dims;
+    Vtx *vertices;
+    Mtx *matrix;
+    Vp *viewport;
+
+    dims = func_8000731C();
+    vertices = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    matrix = Gfx_AllocDisplayList(sizeof(Mtx) * 1);
+    viewport = Gfx_AllocDisplayList(sizeof(Vp) * 1);
+
+    Gfx_SetViewportDimensions(viewport, ((s16 *)dims)[2], ((s16 *)dims)[3]);
+
+    gSPViewport(D_800D0510++, (u32)viewport & 0x1FFFFFFF);
+
+    guOrtho(matrix, 0.5f, (u16)((s16 *)dims)[2] - 0.5f, (u16)((s16 *)dims)[3] - 0.5f, 0.5f, -2.0f,
+            2.0f, 1.0f);
+    Gfx_SetVertexAttributes(&vertices[0], x0 - 3, (s16)y0, -1, 0, 2048, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[1], x1 - 3, (s16)y1, -1, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[2], x0 + 4, (s16)y0, -1, 224, 2048, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[3], x1 + 4, (s16)y1, -1, 224, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    gDPSetRenderMode(D_800D0510++, 0x00504240, 0);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gSPPerspNormalize(D_800D0510++, 0xFFFF);
+    gSPMatrix(D_800D0510++, (u32)matrix & 0x1FFFFFFF, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(D_800D0510++, (u32)&D_80094890 & 0x1FFFFFFF,
+              G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    func_8004D1FC((u8 *)func_8004C990(14, 1));
+    gSPVertex(D_800D0510++, (u32)vertices & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
 
 extern u8 D_8220E310[];
 extern u8 D_8220E338[];
@@ -720,7 +776,146 @@ s32 func_8220268C(s32 arg0, s32 arg1) {
     return sp1C;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82202718.s")
+extern u8 D_8220E310[];
+extern u8 D_8220E311[];
+extern u8 D_8220E338[];
+extern s16 D_8220E378;
+extern s32 D_8220E4E0;
+extern u8 D_8220E7F8[];
+extern Gfx *D_800D0510;
+extern s32 D_8220D784;
+extern Gfx D_8220D808[];
+extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
+extern s32 func_82200E04(Func82201460Record *, s16, s16, u8, s32);
+
+
+
+
+
+
+
+s32 func_82202718(s32 arg0, u8 *arg1)
+{
+  typedef struct
+  {
+    s16 x;
+    s16 y;
+  } Pair;
+  s32 flags;
+  s32 index;
+  s32 var_a1;
+  u8 *p;
+  u8 *entry;
+  s32 var_a2;
+  s32 var_t0;
+  Func82201460Record *rec;
+  s32 result;
+  s32 ret;
+
+  var_a2 = 0;
+  if ((*((s32 *) (arg1 + 0x20))) & 0x80)
+  {
+    var_a2 = 1;
+  }
+  index = *((s32 *) (arg1 + 0x20)) & 0xF;
+  if (index < 2)
+  {
+    var_a1 = 1;
+  }
+  else
+  {
+    var_a1 = 0;
+  }
+  switch (arg0)
+  {
+    case 0:
+    {
+      // First source appearance of index * 0x3C; IDO assigns compiler-temp slots in
+      // first-appearance order, and this places the `rec` spill at 0x28(sp) as retail has it.
+      s32 keep = index * 0x3C;
+      *((u16 *) (arg1 + 0x26)) = func_8220268C(D_8220E311[index * 0x14], var_a1);
+      p = ((u8 *) (&D_8220E378)) + keep;
+      if (var_a2 != 0)
+      {
+        *((s16 *) (p + 0x18)) = *((s16 *) (arg1 + 8));
+        *((s16 *) (p + 0x1A)) = *((s16 *) (arg1 + 0xA));
+        *((Pair *) (p + 0x20)) = *((Pair *) (p + 0x18));
+      }
+      else
+      {
+        *((s16 *) (p + 0x14)) = *((s16 *) (arg1 + 8));
+        *((s16 *) (p + 0x16)) = *((s16 *) (arg1 + 0xA));
+      }
+      *((s16 *) (p + 0x38)) = 0;
+      *((s16 *) (p + 0x3A)) = 0;
+      break;
+    }
+
+    case 1:
+    {
+      entry = D_8220E310 + (index * 0x14);
+      if (func_8220158C(entry) != 0)
+      {
+        p = ((u8 *) (&D_8220E378)) + (index * 0x3C);
+        result = func_8004C990(*((u16 *) (arg1 + 0x24)), *((u16 *) (arg1 + 0x26)), (u8 *) var_a2);
+        *((s16 *) (arg1 + 8)) = (*((s16 *) (p + 0x20))) + (*((s16 *) (p + 0x38)));
+        *((s16 *) (arg1 + 0xA)) = (*((s16 *) (p + 0x22))) + (*((s16 *) (p + 0x3A)));
+        if (var_a2 != 0)
+        {
+          if ((*((s16 *) (p + 6))) != 0)
+          {
+            *((u16 *) (arg1 + 2)) &= 0xFFFD;
+          }
+          else
+          {
+            *((u16 *) (arg1 + 2)) |= 2;
+          }
+        }
+        else
+        {
+          if ((*((s16 *) (p + 6))) == 0)
+          {
+            *((u16 *) (arg1 + 2)) &= 0xFFFD;
+          }
+          else
+          {
+            *((u16 *) (arg1 + 2)) |= 2;
+          }
+        }
+        if (D_8220D784 != 0)
+        {
+          func_82200D8C(((u8 *) (&D_8220E4E0)) + (index * 0x18C), entry[1]);
+        }
+        if ((*((u16 *) (arg1 + 2))) & 2)
+        {
+          rec = (Func82201460Record *) (((u8 *) (&D_8220E4E0)) + (index * 0x18C));
+          ret = func_82200E04(rec, *((s16 *) (arg1 + 8)), *((s16 *) (arg1 + 0xA)), entry[1], result);
+          func_82201460(rec);
+          if (ret >= 0)
+          {
+            *((u16 *) (arg1 + 2)) &= 0xFFFD;
+            gSPDisplayList(D_800D0510++, D_8220D808);
+            gDPSetPrimColor(D_800D0510++, 0, ret, 0, 0, 0, 0xFF);
+            var_t0 = 0;
+            if (rec >= (Func82201460Record *) D_8220E7F8)
+            {
+              var_t0 = 1;
+            }
+            func_8004D150(*((s16 *) (arg1 + 8)), *((s16 *) (arg1 + 0xA)), result, 0, var_t0, 0);
+          }
+        }
+      }
+      else
+      {
+        *((u16 *) (arg1 + 2)) &= 0xFFFD;
+        func_82200C3C(((u8 *) (&D_8220E4E0)) + (index * 0x18C));
+      }
+      break;
+    }
+  }
+
+  return 0;
+}
 
 extern void func_800504BC(s16 *arg0);
 extern u8 D_8220E315[];

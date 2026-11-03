@@ -325,7 +325,100 @@ void func_80043C14(PokeIconList44300 *arg0, s32 arg1) {
 }
 /* mkdraft:func_80043C14 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/44300/func_80043E70.s")
+typedef union { s32 word; s8 bytes[4]; } Adj44300;
+
+extern u16 func_80037B08(u16, Adj44300);
+extern u16 Pokemon_GetDisplaySpecies(u8 *);
+extern s32 func_8006456C(s32);
+extern s32 func_800427B8(s32);
+extern s32 func_800428F8(s32);
+extern s32 func_80041FD0(s32, u16, Adj44300, s32);
+extern Adj44300 func_8003F5AC(u8 *);
+extern s16 D_80094D80;
+
+
+
+s32 func_80043E70(u8 *arg0, s32 arg1) {
+    s32 result = -1;
+
+    if (*(s16 *)(arg0 + 6) > 0) {
+        *(s16 *)(arg0 + 6) = *(s16 *)(arg0 + 6) - 1;
+        if (*(s16 *)(arg0 + 6) == 0) {
+            u8 *slot = *(s16 *)(arg0 + 4) * 0x24 + *(u8 **)(arg0 + 0xC);
+            Adj44300 adjustment;
+
+            result = *(s16 *)(arg0 + 4);
+            *(u16 *)slot &= ~1;
+            (*(s16 *)(arg0 + 4))++;
+            if (*(s16 *)(arg0 + 4) >= *(s16 *)(arg0 + 2)) {
+                *(s16 *)(arg0 + 4) = 0;
+            }
+            if (*(u16 *)arg0 & 2) {
+                if (*(u16 *)slot & 2) {
+                    adjustment = func_8003F5AC(*(u8 **)(slot + 0x1C));
+                } else {
+                    adjustment.word = 0;
+                }
+                if (adjustment.word != 0) {
+                    u8 *image = *(u8 **)(slot + 0x18);
+                    s32 total = *(u16 *)(image + 6) * *(u16 *)(image + 4);
+                    s32 i = 0;
+                    u16 *pixels = *(u16 **)(image + 8);
+
+                    for (i = 0; i < total; i++, pixels++) {
+                        *pixels = func_80037B08(*pixels, adjustment);
+                    }
+                }
+            }
+        }
+    } else if (*(u16 *)arg0 & 1) {
+        if ((arg1 != 0) ? func_800428F8(*(s32 *)(arg0 + 8))
+                        : func_800427B8(*(s32 *)(arg0 + 8))) {
+            *(u16 *)arg0 &= ~1;
+            func_80043C14(arg0, *(s16 *)(arg0 + 4));
+            *(s16 *)(arg0 + 6) = D_80094D80;
+        }
+    } else {
+        s32 i;
+        u8 *slot;
+
+        for (i = 0; i < *(s16 *)(arg0 + 2); i++) {
+            slot = *(u8 **)(arg0 + 0xC) + i * 0x24;
+            if (*(u16 *)slot & 1) {
+                s32 species;
+                Adj44300 adjustment2;
+                s32 variant = 0;
+                u16 monId;
+
+                *(u16 *)arg0 |= 1;
+                if (*(u16 *)slot & 2) {
+                    u8 *mon = *(u8 **)(slot + 0x1C);
+
+                    species = Pokemon_GetDisplaySpecies(mon);
+                    if (*(u16 *)arg0 & 2) {
+                        adjustment2.word = 0;
+                    } else if (*(u16 *)arg0 & 4) {
+                        adjustment2.word = 0;
+                    } else {
+                        adjustment2 = func_8003F5AC(mon);
+                    }
+                    monId = *(u16 *)(mon + 0x16);
+                    variant = func_8006456C(monId);
+                } else {
+                    species = *(s32 *)(slot + 0x1C);
+                    adjustment2.word = 0;
+                }
+                if (*(u16 *)arg0 & 0x100) {
+                    variant = 1;
+                }
+                func_80041FD0(*(s32 *)(arg0 + 8), (u16)species, adjustment2, variant);
+                *(s16 *)(arg0 + 4) = i;
+                break;
+            }
+        }
+    }
+    return result;
+}
 
 typedef struct B4410Value B4410Value; typedef struct B4410Entry B4410Entry; typedef struct B4410State B4410State; struct B4410Value { u8 pad[8]; s32 value; }; struct B4410Entry { u8 pad[0x18]; B4410Value *value; u8 tail[8]; }; struct B4410State { u8 pad0[2]; s16 count; u8 pad4[8]; B4410Entry *entries; };
 s32 func_8004410C(B4410State *arg0, s32 arg1) { s32 result = 0; if (arg1 < arg0->count) { result = arg0->entries[arg1].value->value; } return result; }

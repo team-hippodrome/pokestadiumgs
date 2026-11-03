@@ -877,7 +877,147 @@ void func_86302634(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_8630271C.s")
+/* mkdraft:func_8630271C begin */
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 D_86307334[];
+extern s32 D_86307380;
+extern s32 D_863073CC;
+extern s32 D_86307418;
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *arg0);
+extern s32 func_80001FF0(void);
+extern void func_87F061F0(void);
+extern void func_87F06240(s32, s32, f32, f32, s32);
+extern void func_87F0D600(void *, s32, s32, s32, f32, f32);
+
+
+
+void func_8630271C(void) {
+    u16 *p;
+    f32 scale;
+    f32 xa;
+    s32 amount;
+    f32 ya;
+    f32 bx;
+    f32 by;
+    s32 second;
+    // FAKE: ten unused words reserve the 0x90-byte frame; without them the
+    // differ scores 490 (the spill slots of p, amount and first shift down).
+    s32 pad[10];
+    s32 first;
+
+    if ((*(u8 *)((u8 *)*(void **)((u8 *)D_863075D8 + 0xC) + 0x2180)) != 4) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+
+        /* Four 0x6F-byte tiles from the box index stored at D_863075D8+0x8FDC. */
+        p = (u16 *)func_8004C990(0x1B2, *(u8 *)((u8 *)D_863075D8 + 0x8FDC));
+        func_8004D1FC((u8 *)p);
+        scale = 0.8f;
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) {
+            bx = 0.5f;
+        } else {
+            bx = -0.5f;
+        }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) {
+            by = 0.5f;
+        } else {
+            by = -0.5f;
+        }
+        GfxRect_DrawTextured(0x1C, 0x10, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+
+        p = (u16 *)func_8004C990(0x1B2, *(u8 *)((u8 *)D_863075D8 + 0x8FDD));
+        func_8004D1FC((u8 *)p);
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) {
+            bx = 0.5f;
+        } else {
+            bx = -0.5f;
+        }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) {
+            by = 0.5f;
+        } else {
+            by = -0.5f;
+        }
+        GfxRect_DrawTextured(0x108, 0x10, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+
+        p = (u16 *)func_8004C990(0x1B2, *(u8 *)((u8 *)D_863075D8 + 0x8FDE));
+        func_8004D1FC((u8 *)p);
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) {
+            bx = 0.5f;
+        } else {
+            bx = -0.5f;
+        }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) {
+            by = 0.5f;
+        } else {
+            by = -0.5f;
+        }
+        GfxRect_DrawTextured(0x1C, 0xCB, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+
+        p = (u16 *)func_8004C990(0x1B2, *(u8 *)((u8 *)D_863075D8 + 0x8FDF));
+        func_8004D1FC((u8 *)p);
+        xa = (f32)p[0] * scale;
+        if (xa > 0.0f) {
+            bx = 0.5f;
+        } else {
+            bx = -0.5f;
+        }
+        ya = (f32)p[1] * scale;
+        if (ya > 0.0f) {
+            by = 0.5f;
+        } else {
+            by = -0.5f;
+        }
+        GfxRect_DrawTextured(0x108, 0xCB, (s16)(s32)(bx + xa), (s16)(s32)(by + ya), 0, 0, 0x500, 0x500, 0);
+
+        func_87F0D600((u8 *)D_863075D8 + 0x10, 0, 0x1C, 0x10, scale, scale);
+        func_87F0D600((u8 *)D_863075D8 + 0x10, 1, 0x108, 0x10, scale, scale);
+        func_87F0D600((u8 *)D_863075D8 + 0x10, 2, 0x1C, 0xCB, scale, scale);
+        func_87F0D600((u8 *)D_863075D8 + 0x10, 3, 0x108, 0xCB, scale, scale);
+
+        /* Number of columns of the tile grid that fit: (total + half a period - 1)
+           over half a period, where both periods come from func_80001FF0. */
+        first = func_80001FF0();
+        second = func_80001FF0();
+        amount = (*(s32 *)((u8 *)D_863075D8 + 0x8F30) + (first >> 1) - 1) / (second >> 1);
+        func_87F061F0();
+
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0x37, 0xA0, 0xFF, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+        if (amount < 10) {
+            func_87F06240(0x10D, 0x6C, 0.78f, 0.78f, amount % 10);
+        } else {
+            func_87F06240(0x104, 0x6C, 0.78f, 0.78f, amount / 10);
+            func_87F06240(0x115, 0x6C, 0.78f, 0.78f, amount % 10);
+        }
+
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        func_87F061F0();
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0x9B, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0xAA, 0xF5, 0xFF, 0xFF);
+        func_86302634(*(s32 *)D_86307334, 0x1C, 0x10, 0x22, 2, 0x1C, 2);
+
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0x64, 0, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0xC8, 0xFF, 0x9B, 0xFF);
+        func_86302634(D_86307380, 0x108, 0x10, -0x13, 2, -0xD, 2);
+
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0x78, 0, 0, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xA0, 0xBE, 0xFF);
+        func_86302634(D_863073CC, 0x1C, 0xCB, 0x22, 2, 0x1C, 2);
+
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0xD2, 0x5A, 0, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0x8C, 0xFF);
+        func_86302634(D_86307418, 0x108, 0xCB, -0x13, 2, -0xD, 2);
+    }
+}
+/* mkdraft:func_8630271C end */
 #endif
 
 #ifdef VERSION_US

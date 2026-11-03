@@ -131,7 +131,80 @@ s32 func_81700908(void)
  do { temp_v1 = D_81700DA0; if (temp_v1 != 0) { var_s0 = D_81700DB0; do { if ((*((s16 *) (var_s0 + 4))) != 0) { func_8170031C(var_s0); } var_s0 += 0x24; } while (var_s0 != D_81700E40); temp_v1 = D_81700DA0; } return temp_v1; } while (0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/18/fragment18_code/func_81700974.s")
+/* mkdraft:func_81700974 begin */
+extern u8 D_81700DB0[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+
+// Fills in the 0x24-byte move record D_81700DB0[arg0] and returns 1, or returns 0
+// when arg0 >= 4 or the record's s16 at +4 is already non-zero. Stores, in order:
+// +0x00 arg1, +0x02 arg2, +0x06 arg3, +0x1C 0xFF (all s16), +0x08 arg4 (s32),
+// then the three bytes of *arg5 at +0x1E and the three bytes of *arg6 at +0x21,
+// each copied as a 3-byte struct (IDO emits the copy byte by byte and reuses the
+// first byte register for the third, which is what the retail code does; six
+// separate u8 stores give the same instructions but a different allocation).
+// The s16 at +0x18 is 0 when arg7 == 0, else 2 for arg3 == 0x10 and 1 otherwise;
+// the two non-zero arms call func_8004C990(0x11C, 1 or 0) and keep its result as a
+// u16 pointer. When arg4 != 0, +0x12 is func_80049148(arg3, 0, arg4) and +0x14 is
+// that value plus 0x4B, plus *lookup + 2 when lookup is non-NULL; when arg4 == 0,
+// +0x14 is 0. Bit 0 of the u16 at +0x0C is always set, and bit 1 of it as well
+// when arg0 is odd.
+//
+// Both the struct copy and the un-named *((s16 *) (entry + 4)) test are needed:
+// naming that test in a local reserves a register for it and shifts the whole
+// temporary allocation by one, and expanding the copies to six u8 stores loses
+// the byte-register reuse.
+
+
+s32 func_81700974(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u8 *arg5,
+                  u8 *arg6, s32 arg7) {
+    s32 result = 0;
+    u16 *lookup = 0;
+    u8 *new_var;
+    u8 *entry;
+    typedef struct { u8 a, b, c; } Color;
+
+    if (arg0 < 4) {
+        entry = D_81700DB0 + arg0 * 36;
+        if (*((s16 *) (entry + 4)) == 0) {
+            new_var = entry;
+            result = 1;
+            *((s16 *) (new_var + 0x00)) = arg1;
+            *((s16 *) (new_var + 0x02)) = arg2;
+            *((s32 *) (entry + 0x08)) = arg4;
+            *((s16 *) (new_var + 0x06)) = arg3;
+            *((s16 *) (new_var + 0x1C)) = 0xFF;
+            *(Color *) (entry + 0x1E) = *(Color *) arg5;
+            *(Color *) (entry + 0x21) = *(Color *) arg6;
+            if (arg7 != 0) {
+                if (arg3 == 0x10) {
+                    *((s16 *) (new_var + 0x18)) = 2;
+                    lookup = (u16 *) func_8004C990(0x11C, 1);
+                } else {
+                    *((s16 *) (new_var + 0x18)) = 1;
+                    lookup = (u16 *) func_8004C990(0x11C, 0);
+                }
+            } else {
+                *((s16 *) (entry + 0x18)) = 0;
+            }
+            if (arg4 != 0) {
+                *((s16 *) (new_var + 0x12)) = func_80049148(arg3, 0, arg4);
+                *((s16 *) (entry + 0x14)) = (*((s16 *) (entry + 0x12))) + 0x4B;
+                if (lookup != 0) {
+                    *((s16 *) (entry + 0x14)) += (*lookup) + 2;
+                }
+            } else {
+                *((s16 *) (new_var + 0x14)) = 0;
+            }
+            *((u16 *) (new_var + 0x0C)) |= 1;
+            if (arg0 & 1) {
+                *((u16 *) (entry + 0x0C)) |= 2;
+            }
+        }
+    }
+    return result;
+}
+/* mkdraft:func_81700974 end */
 
 s32 func_81700AF4(s32 arg0, void *arg1) {
     typedef struct { u8 bytes[4]; } Copy4;

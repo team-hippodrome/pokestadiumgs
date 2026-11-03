@@ -1793,7 +1793,51 @@ void func_8AE04478(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE04BFC.s")
+extern Gfx *D_800D0510;
+extern u8 D_8AE07228[];
+extern u8 *D_8AE09928;
+extern u8 *D_8AE09930;
+extern s32 D_8AE09E64;
+extern s32 func_8004D1FC(u8 *);
+
+
+
+void func_8AE04BFC(s32 arg0, s32 arg1, u16 arg2)
+{
+    s32 size = 0x40;
+
+    arg0 *= 4;
+    arg1 *= 4;
+    if (D_8AE09E64 < 4)
+    {
+        return;
+    }
+    gSPDisplayList(D_800D0510++, D_8AE07228);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 0, 255);
+    func_8004D1FC(D_8AE09928);
+    gSPTextureRectangle(D_800D0510++, arg0, arg1, arg0 + size, arg1 + size, 0, 0, 0, 0x400, 0x400);
+    func_8004D1FC(D_8AE09930);
+    switch (arg2)
+    {
+        case 8:
+            gSPTextureRectangleFlip(D_800D0510++, arg0, arg1, arg0 + size, arg1 + size, 0, 0x200, 0, -0x400, 0x400);
+            break;
+
+        case 4:
+            gSPTextureRectangleFlip(D_800D0510++, arg0, arg1, arg0 + size, arg1 + size, 0, 0, 0, 0x400, 0x400);
+            break;
+
+        case 2:
+            gSPTextureRectangle(D_800D0510++, arg0, arg1, arg0 + size, arg1 + size, 0, 0x200, 0, -0x400, 0x400);
+            break;
+
+        case 1:
+            gSPTextureRectangle(D_800D0510++, arg0, arg1, arg0 + size, arg1 + size, 0, 0, 0, 0x400, 0x400);
+            break;
+
+    }
+
+}
 #endif
 
 #ifdef VERSION_US
@@ -2437,8 +2481,8 @@ extern s32 D_8AE09908;
 extern s32 D_8AE09910;
 extern s32 D_8AE09914;
 extern s32 D_8AE09918;
-extern s32 D_8AE09928;
-extern s32 D_8AE09930;
+extern u8 *D_8AE09928;
+extern u8 *D_8AE09930;
 extern s32 D_8AE09938;
 extern s32 D_8AE09940;
 extern s32 D_8AE09944;

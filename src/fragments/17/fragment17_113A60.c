@@ -299,7 +299,72 @@ s32 func_82205E04(s32 mode, void *state) {
 }
 /* mkdraft:func_82205E04 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82205F2C.s")
+/* mkdraft:func_82205F2C begin */
+extern void *D_8220DA08;
+extern u16 D_8220EB82;
+extern u8 D_8220D8D0[];
+extern s16 D_8220EB98;
+
+extern void func_800504BC(s16 *);
+extern void func_8220510C(void *, s32, s16, s16);
+extern void func_822056C0(void *, s32, s16, s16, s32);
+extern s32 func_8220AD10(void);
+extern s32 func_8220D6AC(void);
+
+
+
+s32 func_82205F2C(s32 arg0, u8 *arg1) {
+    s32 idx;
+    u8 *record;
+    s32 pad1[3]; // FAKE: unused; growing the frame from 0x48 to 0x58 bytes also moves counter, flag and
+                 //       coords from 0x2C/0x34/0x38 to 0x30/0x38/0x3C; diff score 71 without it.
+    s16 *counter;
+    s16 coords[2];
+    s32 flag;
+
+    idx = *(s32 *)(arg1 + 0x20);
+    counter = (s16 *)((u8 *)&D_8220EB98 + idx * 24);
+    switch (arg0) {
+    case 0:
+        *counter = 10;
+        *(u8 *)(arg1 + 0x28) = 0x21;
+        record = (u8 *)(idx * 52 + 0x30 + (s32)D_8220D8D0);
+        *(u8 *)(arg1 + 0x2C) = record[0];
+        *(u8 *)(arg1 + 0x2D) = record[1];
+        *(u8 *)(arg1 + 0x2E) = record[2];
+        *(u16 *)(arg1 + 2) &= 0xFFFD;
+        break;
+    case 1:
+        if (D_8220EB82 & 1) {
+            if (func_8220AD10() != idx) {
+                if (*counter < 10) {
+                    *counter = *counter + 1;
+                }
+            } else {
+                if (*counter > 0) {
+                    *counter = *counter - 1;
+                }
+            }
+        }
+        func_800504BC(coords);
+        coords[0] += *(s16 *)(arg1 + 8);
+        coords[1] += *(s16 *)(arg1 + 0xA);
+        if (func_8220D6AC() == 0 && *counter < 10) {
+            func_8220510C(arg1, idx, coords[0], coords[1]);
+        }
+        if (*counter <= 0) {
+            break;
+        }
+        flag = *(s16 *)((u8 *)*(void **)((u8 *)D_8220DA08 + 0x20)) != 0;
+        if (func_8220D6AC() != 0 && idx == 1) {
+            break;
+        }
+        func_822056C0(arg1, idx, coords[0], coords[1], flag);
+        break;
+    }
+    return 0;
+}
+/* mkdraft:func_82205F2C end */
 
 extern s32 D_8220EC38;
 s32 func_82206124(s32 arg0, void *arg1) { s32 value; s32 result; value = *(s32 *)((u8 *)arg1 + 0x20); result = 0; if (arg0 == 0) goto done; if (arg0 != 1) goto done; switch (D_8220EC38) { case 1: if (value == 0) result = 1; break; case 2: if (value == 1) result = 1; break; default: break; } if (result != 0) *(u16 *)((u8 *)arg1 + 2) |= 2; else *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD; done: return 0; }

@@ -740,7 +740,57 @@ void func_80025D64(u8 arg0) {
 
 #pragma C_FUNCTION_PADDING(8)
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_80025DB0.s")
+/* mkdraft:func_80025DB0 begin */
+#include "global.h"
+extern u8 D_800D1930[];
+extern u8 D_800D1940[];
+extern u8 D_800D1980[];
+extern u8 D_800D1910;
+
+// Bitfield view of the packed state word at D_800D1930. Big-endian bit order
+// puts top at bit 31, mode at bits 28..30, clr at 26..27, en0 at 25, en1 at 24
+// and low at bits 0..23.
+typedef struct {
+    u32 top : 1;
+    u32 mode : 3;
+    u32 clr : 2;
+    u32 en0 : 1;
+    u32 en1 : 1;
+    u32 low : 24;
+} unk_D_800D1930;
+
+
+
+void func_80025DB0(void)
+{
+    /* The four bitfield stores fold into one read-modify-write chain over
+       byte 0: mode=4 clears bits 28..30 and sets bit 30, clr=0 clears bits
+       26..27, en0=1 sets bit 25, en1=1 sets bit 24.  low=0x200 is lowered
+       to a whole-word store that keeps bits 24..31 and forces bit 9. */
+    *(s16 *)(&D_800D1980[0]) = 1;
+    *(s16 *)(&D_800D1980[2]) = 32000;
+    *(s16 *)(&D_800D1980[6]) = 0;
+    *(s16 *)(&D_800D1980[4]) = -1;
+    *(u8 *)((u8 *)(&D_800D1910) + 0) = 1;
+    *(u8 *)((u8 *)(&D_800D1910) + 1) = 0;
+    *(u8 *)((u8 *)(&D_800D1910) + 2) = 127;
+    *(u8 *)((u8 *)(&D_800D1910) + 3) = 240;
+    *(void **)((u8 *)(&D_800D1910) + 4) = (&D_800D1980);
+    *(void **)((u8 *)(&D_800D1910) + 0x10) = (&D_800D1930);
+    *(u32 *)(&D_800D1940[4]) = 0x10000;
+    ((unk_D_800D1930 *)D_800D1930)->mode = 4;
+    ((unk_D_800D1930 *)D_800D1930)->clr = 0;
+    ((unk_D_800D1930 *)D_800D1930)->en0 = 1;
+    *(f32 *)((u8 *)(&D_800D1910) + 0x14) = 0.5f;
+    ((unk_D_800D1930 *)D_800D1930)->en1 = 1;
+    *(u32 *)(&D_800D1940[0]) = 0;
+    *(u32 *)(&D_800D1940[8]) = 1;
+    ((unk_D_800D1930 *)D_800D1930)->low = 0x200;
+    *(u32 *)(&D_800D1930[4]) = 0;
+    *(void **)(&D_800D1930[8]) = (&D_800D1940);
+    *(u32 *)(&D_800D1930[0xC]) = 0;
+}
+/* mkdraft:func_80025DB0 end */
 
 void func_80025E7C(void) {
     func_80025DB0();
@@ -1287,7 +1337,50 @@ void Audio_BuildAndDispatchSoundEvent(u16 encoded, s32 offset, ResourceContext_8
     if (event->count) Audio_ProcessChannelEvent(event, offset);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/229E0/func_80027E30.s")
+/* mkdraft:func_80027E30 begin */
+// func_80027E30 -- MATCHED (byte-identical, full ROM check passes)
+//
+// Start the fade, then dispatch command 0x1002xx00 with i in bits 8-15 and a
+// pointer to record i of D_80090BB8 for i = 0..15; finish with command
+// 0xE4000000 carrying the func_800275E8 callback.
+//
+// The loop index is s32 and is masked in the increment (`i = (i + 1) & 0xFF`):
+// that spelling produces the target's preheader `sll t9,s0,2`, body `andi
+// t7,s0,0xff` and latch `addiu s0,s0,1; andi s0,s0,0xff; slti at,s0,0x10;
+// bnel at,zero,L; sll t9,s0,2`.
+//
+// The key is the (u32) cast on the address. `func_80018728` is varargs, so the
+// address is already converted to an integer there; writing it explicitly moves
+// the address expression out of the "pointer argument" path and makes IDO/uopt
+// expand the x12 struct scale in place in a single pseudo (t9):
+//     sll t9,s0,2 ; subu t9,t9,s0 ; sll t9,t9,2
+// and software-pipeline its first shift into the preheader / branch delay slot.
+// Without the cast, `&D_80090BB8[i]` as the *second* argument takes the
+// `li s3,12; multu s0,s3; mflo` path (and the loop is not rotated), and the
+// hand-written `(i * 4 - i) * 4` form gives the right chain but in three
+// rotating temps (t9 -> t0 -> t1, a 3-word residual). Only the cast yields a
+// single register and a 0 diff.
+//
+// Verified with:
+//   .venv/bin/python3 matching_notes/try_candidate.py src/229E0.c \
+//       func_80027E30 <this file>   -> score 0
+//   PATH="$PWD/.venv/bin:$PATH" make -j4 rom PYTHON=.venv/bin/python3
+//       -> build/pokestadiumgs-us.z64: OK
+
+
+void func_80027E30(void) {
+    s32 i;
+
+    func_80027F7C();
+    D_80090BB0 = 1;
+    func_80018728(0x82020900, 0);
+    func_80018704(0x41020000, 0.648f);
+    for (i = 0; i < 16; i = (i + 1) & 0xFF) {
+        func_80018728(((u8)i << 8) | 0x10020000, (u32)&D_80090BB8[i]);
+    }
+    func_80018728(0xE4000000, func_800275E8);
+}
+/* mkdraft:func_80027E30 end */
 
 void func_80027EE0(u16 arg0) {
     switch (arg0) {

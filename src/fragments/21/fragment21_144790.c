@@ -300,9 +300,103 @@ void func_82504FB4(void *arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825050EC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825052A0.s")
+/* mkdraft:func_825052A0 begin */
+extern f32 (*D_8160BD18)(f32);
+extern f32 (*D_8160BD1C)(f32);
+extern s32 D_8250880C;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82505420.s")
+typedef struct {
+    u8 bytes[4];
+} Fragment21UnalignedWord;
+
+
+
+void func_825052A0(void *arg0, void *arg1) {
+    f32 temp_fs0;
+    s16 temp_v0;
+    f32 sp2C;
+    s32 limit;
+
+    limit = D_8250880C;
+    *(s16 *)((u8 *)arg1 + 0xC) = *(s16 *)((u8 *)arg1 + 0xC) + 1;
+    temp_v0 = *(s16 *)((u8 *)arg1 + 0xC);
+    if (temp_v0 < limit) {
+        temp_fs0 = (f32)temp_v0 / (f32)limit;
+        sp2C = D_8160BD18(temp_fs0);
+        *(s16 *)((u8 *)arg1 + 0x10) = (s16)(s32)((f32)*(s16 *)((u8 *)arg1 + 0x14) * sp2C + (((f32)*(s16 *)((u8 *)arg1 + 0x14) * D_8160BD18(temp_fs0)) > 0.0f ? 0.5f : -0.5f));
+        sp2C = D_8160BD1C(temp_fs0);
+        *(s16 *)((u8 *)arg1 + 0x12) = (s16)(s32)((f32)*(s16 *)((u8 *)arg1 + 0x16) * sp2C + (((f32)*(s16 *)((u8 *)arg1 + 0x16) * D_8160BD1C(temp_fs0)) > 0.0f ? 0.5f : -0.5f));
+    } else {
+        *(s16 *)((u8 *)arg1 + 8) = 0;
+        // temp_v0 * 0 folds to $zero, so this stores zero as retail does. The extra use of
+        // temp_v0 also keeps the counter in $v0 and the limit in $v1; plain 0 swaps them.
+        *(s16 *)((u8 *)arg1 + 0xC) = temp_v0 * 0;
+        *(Fragment21UnalignedWord *)((u8 *)arg1 + 0x10) = *(Fragment21UnalignedWord *)((u8 *)arg1 + 0x14);
+    }
+}
+/* mkdraft:func_825052A0 end */
+
+/* mkdraft:func_82505420 begin */
+extern f32 (*D_8160BD18)(f32);
+extern f32 (*D_8160BD1C)(f32);
+extern s32 D_82508810;
+typedef struct { u32 rgba; } Fragment21Rgba;
+
+
+void func_82505420(void *arg0)
+{
+  u8 *node = (u8 *) arg0;
+  f32 ratio;
+  f32 first;
+  f32 second;
+  f32 deltaf;
+  int new_var2;
+  u8 base;
+  float new_var;
+  s32 limit;
+  s16 frame;
+  frame = *((s16 *) (node + 0xE));
+  limit = D_82508810;
+  (*((s16 *) (node + 0xE)))++;
+  if ((*((s16 *) (node + 0xE))) < limit)
+  {
+    ratio = (*((s16 *) (node + 0xE))) / ((f32) limit);
+    if ((*((u32 *) (node + 0x54))) != (*((u32 *) (node + 0x48))))
+    {
+      first = D_8160BD18(ratio);
+      second = D_8160BD18(ratio);
+      base = *((u8 *) (node + 0x50));
+      deltaf = (f32) (((s32) (*((u8 *) (node + 0x54)))) - base);
+      *((u8 *) (node + 0x48)) = (s32) ((((f32) base) + (deltaf * first)) + ((((second * deltaf) + ((f32) base)) > 0.0f) ? (0.5f) : (-0.5f)));
+      first = D_8160BD18(ratio);
+      second = D_8160BD18(ratio);
+      base = *((u8 *) (node + 0x51));
+      deltaf = (f32) (((s32) (*((u8 *) (node + 0x55)))) - base);
+      new_var = (((f32) base) + (deltaf * first)) + ((((second * deltaf) + ((f32) base)) > 0.0f) ? (0.5f) : (-0.5f));
+      *((u8 *) (node + 0x49)) = (s32) new_var;
+      first = D_8160BD18(ratio);
+      second = D_8160BD18(ratio);
+      base = (new_var2 = *((u8 *) (node + 0x52)));
+      deltaf = (f32) (((s32) (*((u8 *) (node + 0x56)))) - base);
+      *((u8 *) (node + 0x4A)) = (s32) ((((f32) base) + (deltaf * first)) + ((((second * deltaf) + ((f32) base)) > 0.0f) ? (0.5f) : (-0.5f)));
+      *((u8 *) (node + 0x4B)) = 0xFF;
+    }
+    first = D_8160BD1C(ratio);
+    second = D_8160BD1C(ratio);
+    *((s16 *) (node + 0x28)) = (s16) ((s32) ((((second * 255.0f) < 255.0f) ? (0.5f) : (-0.5f)) + (255.0f - (255.0f * first))));
+  }
+  else
+  {
+    *(Fragment21Rgba *) (node + 0x48) = *(Fragment21Rgba *) (node + 0x54);
+    *((s16 *) (node + 0x2A)) = *((s16 *) (node + 0x58));
+    *((s16 *) (node + 0x2C)) = *((s16 *) (node + 0x5A));
+    *((s16 *) (node + 0x2E)) = *((s16 *) (node + 0x5C));
+    *((s32 *) (node + 0x34)) = *((s32 *) (node + 0x60));
+    *((s16 *) (node + 0x28)) = 0xFF;
+    *((s16 *) (node + 0xE)) = -1;
+  }
+}
+/* mkdraft:func_82505420 end */
 
 // Texture-header prefix; func_8004D1FC consumes the following format metadata.
 //@src/4CC20.c
@@ -527,7 +621,88 @@ void Fragment21_CreateType1Record(s32 arg0, Fragment21Color *arg1, s16 arg2, s16
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82506BEC.s")
+/* mkdraft:func_82506BEC begin */
+extern s16 D_82508FFC;
+extern s16 D_82509002;
+
+
+void func_82506BEC(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s32 arg4) {
+    // FAKE: unused word. It moves the two record pointers from 0x20/0x1C to
+    // 0x1C/0x18, the spill slots the retail prologue uses.
+    u32 d0;
+    // FAKE: 16-bit step for the D_82508FFC update. A 32-bit local makes the
+    // compiler materialise the counter's address (lui/addiu/lh/addiu/sh)
+    // instead of the lui/lh/addiu/sh sequence retail emits.
+    u16 step = 1;
+    u8 *node;
+    u8 *source;
+    Fragment21Color *value;
+    f32 delta;
+    f32 scaled;
+    f32 bias;
+    s32 result;
+    f32 diff;
+
+    node = Fragment21_FindFreeRecord();
+    source = Fragment21_FindRecord(1, 0);
+    if (node != 0) {
+        _bzero((s16 *)node, 100);
+
+        *(s16 *)(node + 2) = arg0;
+        *(s16 *)(node + 0) = 2;
+        *(s16 *)(node + 4) = 0;
+        *(s16 *)(node + 8) = 0;
+        *(s16 *)(node + 10) = *(s16 *)(node + 2) + 1;
+        *(s16 *)(node + 14) = -1;
+        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&D_82509008;
+        *(s16 *)(node + 36) = D_82509002;
+        *(s16 *)(node + 38) = D_82509000;
+        *(s16 *)(node + 40) = 0xFF;
+        *(s16 *)(node + 42) = 41;
+        *(s16 *)(node + 44) = arg2;
+        *(s16 *)(node + 46) = arg3;
+        *(s16 *)(node + 48) = arg2;
+        value = (Fragment21Color *)(node + 72);
+        *(s32 *)(node + 52) = arg4;
+        *(s32 *)(node + 68) = 0;
+        *(s32 *)(node + 64) = 0;
+        *(s32 *)(node + 60) = 0;
+        *(s32 *)(node + 56) = 0;
+        *value = *(Fragment21Color *)(source + 72);
+
+        diff = (f32)(arg1 - arg0);
+        delta = 25.0f * diff;
+
+        scaled = (f32)node[72] + delta;
+        if (scaled > 255.0f) {
+            scaled = 255.0f;
+        }
+        bias = (scaled > 0.0f) ? 0.5f : -0.5f;
+        result = (s32)(bias + scaled);
+        node[72] = result;
+
+        scaled = (f32)node[73] + delta;
+        if (scaled > 255.0f) {
+            scaled = 255.0f;
+        }
+        bias = (scaled > 0.0f) ? 0.5f : -0.5f;
+        result = (s32)(bias + scaled);
+        node[73] = result;
+
+        scaled = (f32)node[74] + delta;
+        if (scaled > 255.0f) {
+            scaled = 255.0f;
+        }
+        bias = (scaled > 0.0f) ? 0.5f : -0.5f;
+        result = (s32)(bias + scaled);
+        node[74] = result;
+
+        *(Fragment21Color *)(node + 80) = *value;
+        *(Fragment21Color *)(node + 84) = *value;
+        D_82508FFC += step;
+    }
+}
+/* mkdraft:func_82506BEC end */
 
 extern s16 D_82509020;
 extern s16 D_82509022;

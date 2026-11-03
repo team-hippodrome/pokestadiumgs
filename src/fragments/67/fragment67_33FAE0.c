@@ -200,7 +200,99 @@ void func_829035C4(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_8290367C.s")
+/* mkdraft:func_8290367C begin */
+typedef struct unk_D_82919A88 {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ s16 unk_06;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ f32 unk_0C;
+    /* 0x10 */ f32 unk_10;
+    /* 0x14 */ f32 unk_14;
+    /* 0x18 */ u8 unk_18;
+    /* 0x19 */ u8 unk_19;
+    /* 0x1A */ u8 unk_1A;
+    /* 0x1B */ u8 unk_1B;
+} unk_D_82919A88;
+
+extern u8 D_82911FE0[];
+extern s32 D_829120A4;
+extern s32 D_82919C10;
+extern u8 D_82919A88[];
+extern u8 D_82919AF8[];
+extern u8 D_82919BF0;
+
+
+
+void func_8290367C(void) {
+    unk_D_82919A88 *rec;
+    s32 color;
+    u8 *channel;
+    u8 value;
+    s32 row;
+
+    // FAKE: false at run time. uopt walks its register pool in definition order, and
+    // these four dead reads push value, rec, channel and row to the end of the walk in
+    // that order, which is what gives the retail colors v0, v1, a0 and a1. Without the
+    // block the score is 300.
+    if (value == 0) {}
+    if (rec == 0) {}
+    if (channel == 0) {}
+    if (row == 0) {}
+    color = D_829120A4;
+    // FAKE: the four statements below share one source line on purpose. as1 orders the
+    // hoisted preheader instructions by .loc line, and ugen already emits them in the
+    // retail order; on separate lines as1 re-sorts them (score 125). One line keeps
+    // ugen's order and scores 0.
+    row = *(s8 *)((u8 *)D_82911FE0 + D_82919C10 * 0x14); rec = (unk_D_82919A88 *)D_82919A88; channel = (u8 *)&color; for (;;) {
+        value = *channel;
+        value = *channel;
+        rec->unk_18 = 0;
+        rec->unk_0C = -120.0f;
+        rec->unk_14 = 0.0f;
+        rec->unk_10 = 0.0f;
+        rec->unk_00 = 0xFF;
+        rec->unk_02 = 0xFF;
+        rec->unk_04 = 0xFF;
+        rec->unk_06 = 0;
+        rec->unk_08 = 100;
+        rec->unk_0A = 0xFF;
+        rec[4].unk_18 = 0;
+        rec[4].unk_0C = 570.0f;
+        rec[4].unk_14 = 0.0f;
+        rec[4].unk_10 = 0.0f;
+        rec[4].unk_00 = 0xFF;
+        rec[4].unk_02 = 0xFF;
+        rec[4].unk_04 = 0xFF;
+        rec[4].unk_06 = 0;
+        rec[4].unk_08 = 100;
+        rec[4].unk_0A = 0xFF;
+        rec[8].unk_18 = 0;
+        rec->unk_19 = value;
+        rec[4].unk_19 = value;
+        if (row < 0) {
+            rec[8].unk_0C = 540.0f;
+        } else {
+            rec[8].unk_0C = -220.0f;
+        }
+        rec++;
+        channel++;
+        rec[7].unk_14 = 0.0f;
+        rec[7].unk_10 = 0.0f;
+        rec[7].unk_19 = value;
+        rec[7].unk_00 = 0xFF;
+        rec[7].unk_02 = 0xFF;
+        rec[7].unk_04 = 0xFF;
+        rec[7].unk_06 = 0;
+        rec[7].unk_08 = 100;
+        rec[7].unk_0A = 0xFF;
+        if (rec == (unk_D_82919A88 *)D_82919AF8) break;
+    }
+    D_82919BF0 = 0;
+}
+/* mkdraft:func_8290367C end */
 #endif
 
 #ifdef VERSION_US

@@ -422,7 +422,202 @@ void func_86B04870(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B04970.s")
+extern u8 *func_87F025B8(u8 *, void (*)(void));
+extern void func_8003F114(u8 *, s32, s32, s32);
+extern void func_8003F1DC(u8 *);
+extern void func_8003F210(void *, s32);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern u8 D_86B0EE60;
+extern u8 D_86B17A78[];
+extern s32 D_86B0E188;
+extern s32 D_86B0E18C;
+extern s32 D_86B0E194;
+extern s32 D_86B0E198;
+extern void func_86B04870(void);
+
+
+
+void func_86B04970(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4,
+                   f32 arg5, f32 arg6) {
+    f64 pad; // FAKE: never referenced; IDO still reserves 8 bytes, giving the
+              // 0x30 frame the target uses (score without it: 154)
+    u8 *ptr;
+    u8 *anim;
+
+    ptr = func_87F025B8(&D_86B0EE60, func_86B04870);
+    if (ptr != NULL) {
+        *(f32 *)(ptr + 0x48) = arg4;
+        *(f32 *)(ptr + 0x4C) = arg5;
+        *(f32 *)(ptr + 0x50) = arg6;
+        *(f32 *)(ptr + 0x10) = 0.0f;
+        *(f32 *)(ptr + 0x18) = 0.0f;
+        *(u8 *)(ptr + 0x41) = 0xFF;
+        *(f32 *)(ptr + 0x14) = 12.0f;
+        if (arg2 != 1 && arg2 != 2 && arg2 != 4 && arg2 != 8) {
+            // one expression so IDO keeps the 0x1C store before the 0x20 store
+            *(s32 *)(ptr + 0x20) = 81, *(s32 *)(ptr + 0x1C) = 13;
+            *(f32 *)(ptr + 0x14) = 24.0f;
+        } else {
+            switch (guRandom() % 3) {
+                case 0:
+                    *(f32 *)(ptr + 0x14) = 12.0f;
+                    *(s32 *)(ptr + 0x20) = 35;
+                    break;
+                case 1:
+                    *(f32 *)(ptr + 0x14) = 13.0f;
+                    *(s32 *)(ptr + 0x20) = 35;
+                    break;
+                case 2:
+                    *(f32 *)(ptr + 0x14) = 12.5f;
+                    *(s32 *)(ptr + 0x20) = 35;
+                    break;
+            }
+            *(s32 *)(ptr + 0x1C) = 0;
+        }
+        switch (arg2) {
+            case 1:
+                switch (arg0) {
+                    case 0:
+                        if (arg3 != 1) {
+                            *(f32 *)(ptr + 0x10) = *(f32 *)(D_86B17A78 + 0x14) / 25.0f;
+                            *(f32 *)(ptr + 0x18) = *(f32 *)(D_86B17A78 + 0x18) / 25.0f;
+                        }
+                        break;
+                    case 1:
+                        *(f32 *)(ptr + 0x10) = (*(f32 *)(D_86B17A78 + 0x14) - arg4) / 25.0f;
+                        *(f32 *)(ptr + 0x18) = (*(f32 *)(D_86B17A78 + 0x18) - arg6) / 25.0f;
+                        break;
+                }
+                break;
+            case 2:
+                switch (arg0) {
+                    case 0:
+                        if (arg3 != 1) {
+                            *(f32 *)(ptr + 0x10) = *(f32 *)(D_86B17A78 + 0x1C) / 25.0f;
+                            *(f32 *)(ptr + 0x18) = *(f32 *)(D_86B17A78 + 0x20) / 25.0f;
+                        }
+                        break;
+                    case 1:
+                        *(f32 *)(ptr + 0x10) = (*(f32 *)(D_86B17A78 + 0x1C) - arg4) / 25.0f;
+                        *(f32 *)(ptr + 0x18) = (*(f32 *)(D_86B17A78 + 0x20) - arg6) / 25.0f;
+                        break;
+                }
+                break;
+            case 4:
+                switch (arg0) {
+                    case 0:
+                        if (arg3 != 1) {
+                            *(f32 *)(ptr + 0x10) = *(f32 *)(D_86B17A78 + 0x24) / 25.0f;
+                            *(f32 *)(ptr + 0x18) = *(f32 *)(D_86B17A78 + 0x28) / 25.0f;
+                        }
+                        break;
+                    case 1:
+                        *(f32 *)(ptr + 0x10) = (*(f32 *)(D_86B17A78 + 0x24) - arg4) / 25.0f;
+                        *(f32 *)(ptr + 0x18) = (*(f32 *)(D_86B17A78 + 0x28) - arg6) / 25.0f;
+                        break;
+                }
+                break;
+            case 8:
+                switch (arg0) {
+                    case 0:
+                        if (arg3 != 1) {
+                            *(f32 *)(ptr + 0x10) = *(f32 *)(D_86B17A78 + 0x2C) / 25.0f;
+                            *(f32 *)(ptr + 0x18) = *(f32 *)(D_86B17A78 + 0x30) / 25.0f;
+                        }
+                        break;
+                    case 1:
+                        *(f32 *)(ptr + 0x10) = (*(f32 *)(D_86B17A78 + 0x2C) - arg4) / 25.0f;
+                        *(f32 *)(ptr + 0x18) = (*(f32 *)(D_86B17A78 + 0x30) - arg6) / 25.0f;
+                        break;
+                }
+                break;
+            case 3:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x14) + *(f32 *)(D_86B17A78 + 0x1C)) * -3.0f) / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x18) + *(f32 *)(D_86B17A78 + 0x20)) * -3.0f) / 25.0f;
+                break;
+            case 5:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x14) + *(f32 *)(D_86B17A78 + 0x24)) * -3.0f) / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x18) + *(f32 *)(D_86B17A78 + 0x28)) * -3.0f) / 25.0f;
+                break;
+            case 9:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x14) + *(f32 *)(D_86B17A78 + 0x2C)) * -3.0f) / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x18) + *(f32 *)(D_86B17A78 + 0x30)) * -3.0f) / 25.0f;
+                break;
+            case 6:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x1C) + *(f32 *)(D_86B17A78 + 0x24)) * -3.0f) / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x20) + *(f32 *)(D_86B17A78 + 0x28)) * -3.0f) / 25.0f;
+                break;
+            case 10:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x1C) + *(f32 *)(D_86B17A78 + 0x2C)) * -3.0f) / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x20) + *(f32 *)(D_86B17A78 + 0x30)) * -3.0f) / 25.0f;
+                break;
+            case 12:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x24) + *(f32 *)(D_86B17A78 + 0x2C)) * -3.0f) / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x28) + *(f32 *)(D_86B17A78 + 0x30)) * -3.0f) / 25.0f;
+                break;
+            case 7:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x14) + *(f32 *)(D_86B17A78 + 0x1C)) + *(f32 *)(D_86B17A78 + 0x24)) * -3.0f / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x18) + *(f32 *)(D_86B17A78 + 0x20)) + *(f32 *)(D_86B17A78 + 0x28)) * -3.0f / 25.0f;
+                break;
+            case 11:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x14) + *(f32 *)(D_86B17A78 + 0x1C)) + *(f32 *)(D_86B17A78 + 0x2C)) * -3.0f / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x18) + *(f32 *)(D_86B17A78 + 0x20)) + *(f32 *)(D_86B17A78 + 0x30)) * -3.0f / 25.0f;
+                break;
+            case 13:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x14) + *(f32 *)(D_86B17A78 + 0x24)) + *(f32 *)(D_86B17A78 + 0x2C)) * -3.0f / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x18) + *(f32 *)(D_86B17A78 + 0x28)) + *(f32 *)(D_86B17A78 + 0x30)) * -3.0f / 25.0f;
+                break;
+            case 14:
+                *(f32 *)(ptr + 0x10) = ((*(f32 *)(D_86B17A78 + 0x1C) + *(f32 *)(D_86B17A78 + 0x24)) + *(f32 *)(D_86B17A78 + 0x2C)) * -3.0f / 25.0f;
+                *(f32 *)(ptr + 0x18) = ((*(f32 *)(D_86B17A78 + 0x20) + *(f32 *)(D_86B17A78 + 0x28)) + *(f32 *)(D_86B17A78 + 0x30)) * -3.0f / 25.0f;
+                break;
+            case 15:
+                break;
+        }
+        *(f32 *)(ptr + 0x5C) = 0.35555556f;
+        *(f32 *)(ptr + 0x58) = 0.35555556f;
+        *(f32 *)(ptr + 0x54) = 0.35555556f;
+        anim = ptr + 0x24;
+        func_8003F1DC(anim);
+        switch (arg0) {
+            case 0:
+                switch (arg1) {
+                    case 0:
+                        func_8003F114(anim, 0, -1, D_86B0E194);
+                        break;
+                    case 1:
+                        func_8003F114(anim, 0, -1, D_86B0E198);
+                        break;
+                }
+                func_8003F210(anim, 1);
+                ModelAnim_SetSpeed(anim, 0);
+                break;
+            case 1:
+                *(f32 *)(ptr + 0x5C) = 0.24888889f;
+                *(f32 *)(ptr + 0x58) = 0.24888889f;
+                *(f32 *)(ptr + 0x54) = 0.24888889f;
+                switch (arg1) {
+                    case 0:
+                        func_8003F114(anim, 0, -1, D_86B0E18C);
+                        break;
+                    case 1:
+                        func_8003F114(anim, 0, -1, D_86B0E18C);
+                        break;
+                }
+                func_8003F210(anim, 1);
+                ModelAnim_SetSpeed(anim, 0);
+                break;
+            case 2:
+                *(f32 *)(ptr + 0x5C) = 0.5f;
+                *(f32 *)(ptr + 0x58) = 0.5f;
+                *(f32 *)(ptr + 0x54) = 0.5f;
+                func_8003F114(anim, 0, -1, D_86B0E188);
+                func_8003F210(anim, 2);
+                ModelAnim_SetSpeed(anim, 0);
+                break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1264,7 +1459,371 @@ void func_86B0BA28(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0BF2C.s")
+/* mkdraft:func_86B0BF2C begin */
+typedef struct {
+    s32 x[10];
+} Rec40;
+extern u8 D_86B17A78[];
+extern s32 D_86B0E0A0;
+
+
+s32 func_86B0BF2C(u8 *arg0)
+{
+  s32 rnd;
+  s32 out[10];
+  s32 b[4];
+  s32 a[4];
+  int new_var;
+  s32 i;
+  for (i = 0; i < 4; i++)
+  {
+    switch (*((s32 *) (D_86B17A78 + 0x68)))
+    {
+      case 0:
+        if (D_86B0E0A0 != 0)
+      {
+        b[i] = (guRandom() % 11) + 0x17;
+        a[i] = (guRandom() % 11) + 0x17;
+      }
+      else
+      {
+        b[i] = (guRandom() % 11) + 0x12;
+        a[i] = (guRandom() % 11) + 0x12;
+      }
+        break;
+
+      case 1:
+        if (D_86B0E0A0 != 0)
+      {
+        b[i] = (guRandom() % 11) + 0x11;
+        a[i] = (guRandom() % 11) + 0x11;
+      }
+      else
+      {
+        b[i] = (guRandom() % 11) + 0xD;
+        a[i] = (guRandom() % 11) + 0xD;
+      }
+        break;
+
+      case 2:
+        if (D_86B0E0A0 != 0)
+      {
+        b[i] = (guRandom() % 9) + 0xE;
+        a[i] = (guRandom() % 9) + 0xE;
+      }
+      else
+      {
+        b[i] = (guRandom() % 9) + 0xB;
+        a[i] = (guRandom() % 9) + 0xB;
+      }
+        break;
+
+      case 3:
+        if (D_86B0E0A0 != 0)
+      {
+        b[i] = (guRandom() % 7) + 0xD;
+        a[i] = (guRandom() % 7) + 0xD;
+      }
+      else
+      {
+        b[i] = (guRandom() % 7) + 0xA;
+        a[i] = (guRandom() % 7) + 0xA;
+      }
+        break;
+
+    }
+
+    out[i] = -1;
+    out[i + 4] = -1;
+  }
+
+  out[8] = -1;
+  out[9] = -1;
+  rnd = guRandom();
+  new_var = rnd % 100;
+  if ((*((s32 *) (D_86B17A78 + 0x70))) != 0)
+  {
+    for (i = 0; i < (*((s32 *) (D_86B17A78 + 0x70))); i++)
+    {
+      switch (*((s32 *) (D_86B17A78 + 0x68)))
+      {
+        case 0:
+          if (i == ((*((s32 *) (D_86B17A78 + 0x70))) - 1))
+        {
+          if (new_var < 40)
+          {
+            out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+            if ((rnd % 100) < 60)
+          {
+            out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+          {
+            out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[i];
+          }
+        }
+        else
+          if (new_var < 10)
+        {
+          out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+        else
+          if ((rnd % 100) < 30)
+        {
+          out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+          break;
+
+        case 1:
+          if (i == ((*((s32 *) (D_86B17A78 + 0x70))) - 1))
+        {
+          if (new_var < 30)
+          {
+            out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+            if (new_var < 60)
+          {
+            out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+          {
+            out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[i];
+          }
+        }
+        else
+          if (new_var < 7)
+        {
+          out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+        else
+          if ((rnd % 100) < 37)
+        {
+          out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+          break;
+
+        case 2:
+          if (i == ((*((s32 *) (D_86B17A78 + 0x70))) - 1))
+        {
+          if ((rnd % 100) < 20)
+          {
+            out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+            if (new_var < 60)
+          {
+            out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+          {
+            out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[i];
+          }
+        }
+        else
+          if (new_var < 5)
+        {
+          out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+        else
+          if (new_var < 45)
+        {
+          out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+          break;
+
+        case 3:
+          if (i == ((*((s32 *) (D_86B17A78 + 0x70))) - 1))
+        {
+          if (new_var < 10)
+          {
+            out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+            if ((rnd % 100) < 60)
+          {
+            out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+          }
+          else
+          {
+            out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[i];
+          }
+        }
+        else
+          if (new_var < 2)
+        {
+          out[i] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+        else
+          if ((rnd % 100) < 52)
+        {
+          out[i + 4] = (*((s32 *) ((D_86B17A78 + 0x84) + (i * 4)))) + a[i];
+        }
+          break;
+
+      }
+
+    }
+
+  }
+  if ((*((s32 *) (D_86B17A78 + 0x70))) == 0)
+  {
+    switch (*((s32 *) (D_86B17A78 + 0x68)))
+    {
+      case 0:
+        if ((*((s32 *) (D_86B17A78 + 0xC))) != 2)
+      {
+
+        if (new_var < 20)
+        {
+          out[7] = (*((s32 *) (D_86B17A78 + 0x288))) + a[3];
+        }
+        else
+        {
+          out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+        }
+
+      }
+      else
+        if ((rnd % 100) < 40)
+      {
+        out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+      }
+      else
+        if ((rnd % 100) < 60)
+      {
+        out[7] = (*((s32 *) (D_86B17A78 + 0x288))) + a[3];
+      }
+      else
+      {
+        out[3] = -1;
+      }
+        break;
+
+      case 1:
+        if ((*((s32 *) (D_86B17A78 + 0xC))) != 2)
+      {
+
+        if (new_var < 10)
+        {
+          out[7] = (*((s32 *) (D_86B17A78 + 0x288))) + a[3];
+        }
+        else
+        {
+          out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+        }
+
+      }
+      else
+        if (new_var < 30)
+      {
+        out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+      }
+      else
+        if (new_var < 40)
+      {
+        out[7] = (*((s32 *) (D_86B17A78 + 0x288))) + a[3];
+      }
+      else
+      {
+        out[3] = -1;
+      }
+        break;
+
+      case 2:
+        if ((*((s32 *) (D_86B17A78 + 0xC))) != 2)
+      {
+        out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+      }
+      else
+        if ((rnd % 100) < 20)
+      {
+        out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+      }
+      else
+      {
+        out[3] = -1;
+      }
+        break;
+
+      case 3:
+        if ((*((s32 *) (D_86B17A78 + 0xC))) != 2)
+      {
+        out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+      }
+      else
+        if (new_var < 10)
+      {
+        out[3] = (*((s32 *) (D_86B17A78 + 0x288))) + b[3];
+      }
+      else
+      {
+        out[3] = -1;
+      }
+        break;
+
+    }
+
+  }
+  if ((*((s32 *) (D_86B17A78 + 0xC))) != 2)
+  {
+    if (D_86B0E0A0 != 0)
+    {
+      switch (*((s32 *) (D_86B17A78 + 0x68)))
+      {
+        case 0:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x22;
+          break;
+
+        case 1:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x1C;
+          break;
+
+        case 2:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x17;
+          break;
+
+        case 3:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x14;
+          break;
+
+      }
+
+    }
+    else
+    {
+      switch (*((s32 *) (D_86B17A78 + 0x68)))
+      {
+        case 0:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x1D;
+          break;
+
+        case 1:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x18;
+          break;
+
+        case 2:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x14;
+          break;
+
+        case 3:
+          out[9] = ((*((s32 *) (D_86B17A78 + 0x288))) + (guRandom() % 4)) + 0x11;
+          break;
+
+      }
+
+    }
+  }
+  else
+  {
+    out[9] = -1;
+  }
+  *((Rec40 *) arg0) = *((Rec40 *) out);
+  return arg0;
+}
+/* mkdraft:func_86B0BF2C end */
 #endif
 
 #ifdef VERSION_US
