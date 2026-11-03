@@ -68,3 +68,42 @@ re-tests it right after the body and before `i++`/`i != 10`, keeping
 `&D_8AF2BF10` in `$s0`, the node in `$s1` and i in `$s2`. Best 0.74
 (`for (i = 0; i < 10; i++) { if (count <= 0) break; ... }`). `do`/`while` and
 early-return shapes are worse. A 240-second permuter: 1135 -> 1020.
+
+
+## 2026-11-03 — `func_8AF00504`: rewrite-free loader match
+
+The 284-byte owner now compiles directly with stock IDO 7.1. This removes
+one `REWRITE_FUNCTION_HEX`, 18 `REWRITE_FUNCTION_RELOC_TARGET` directives,
+and the unused `pad0` local. The work record contains only values used by the
+loader. Its byte-sized tag key reproduces the retail low-byte counter load;
+the input halfwords retain their actual widths. Existing call signatures
+remain unchanged.
+
+The adjacent tag and flag are one eight-byte C state record, scoped to the
+function. Their actual addresses remain `0x8AF2BF18` and `0x8AF2BF1C`.
+Function-local ownership lets the stock compiler share the address load.
+`datamig_bss.ld` places its 16-byte aligned input BSS footprint there through
+the existing fixed-address NOLOAD mechanism with four-byte subalignment.
+Only eight bytes are state; the remaining bytes are compiler alignment.
+There are no fabricated members or explicit padding fields.
+
+The fragment header specifies relocation offset `0x2A590` and RAM size
+`0x3A710`. `Memmap_RelocateFragment` clears that whole range after processing
+relocations. This includes both state fields, supplying their initial zero
+values. The original loaded relocation bytes remain intact; they are not
+claimed to be zero initializers. Normal fragment boundaries do not move.
+
+Unchanged and candidate source each reproduce their complete module with
+and without 20 leading blank lines. Other allocated sections and existing
+function/object extents match. The only raw text difference is the flag
+store's legitimate offset 4 within the new record; its three relocation
+endpoints describe the same actual addresses. Independent GNU links of both
+positive control and candidate reproduce all 284 retail bytes. The normal
+host syntax check and native `make -j1 COMPARE=1 RUN_CC_CHECK=1` pass, producing
+retail ROM MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+All existing function/storage extents, legacy addresses and fragment
+boundaries are preserved. The two old zero-sized tag/flag labels become
+`NOTYPE` aliases at the same addresses; the new local C symbol owns the
+state. No compiler/flag changes, instruction rewriting, forced registers,
+unused locals or coverage updates are involved.

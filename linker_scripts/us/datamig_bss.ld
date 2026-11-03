@@ -9,6 +9,13 @@
 
 SECTIONS
 {
+    /* Eight-byte loader state, cleared by Memmap_RelocateFragment.
+     * Original relocation metadata remains in the loaded image. */
+    .fragment44_load_state_bss 0x8AF2BF18 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_1EE290.o(.bss)
+    }
+
     /* Four-byte panel color cache. Its original loaded zero word stays in
      * the fragment data image; compiler BSS alignment has no load image. */
     .fragment11_panel_color_cache_bss 0x8160BE5C (NOLOAD) : SUBALIGN(4)
@@ -225,3 +232,6 @@ ASSERT(SIZEOF(.fragment19_transition_5EB0_bss) == 48,
 
 ASSERT(SIZEOF(.fragment11_panel_color_cache_bss) == 16,
        "fragment11 panel color cache must retain its native aligned input footprint");
+
+ASSERT(SIZEOF(.fragment44_load_state_bss) == 16,
+       "fragment44 loader state must retain its native aligned input footprint");
