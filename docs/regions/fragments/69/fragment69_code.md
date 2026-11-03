@@ -59,3 +59,36 @@ Next: inspect address-hoisting/source-lineage evidence for retail's two
 independent base materializations; do not re-run declaration-order variants
 that produced the same CSE result. Private families:
 `rewrite-cleanup-f69-menu-cursor8` and `rewrite-cleanup-f69-base-topology8`.
+
+
+## 2026-11-03 — `func_8F100B54`: genuine indexed traversal acceptance
+
+Accepted: remove both duplicated `REWRITE_FUNCTION_HEX` directives and all
+20 associated `REWRITE_FUNCTION_RELOC_TARGET` directives. Stock native
+IDO 7.1 emits all 68 retail instructions (272 bytes, 48-byte frame) directly.
+
+Traverse the actual `Fragment69MenuState` records with an index. Each record
+has `state`, `timer` and `selected` halfwords, size six. Compute the entry as
+`(Fragment69MenuState *)D_8F1DF270 + index`, use `entry->timer`, and select the
+renderer with `entry - (Fragment69MenuState *)D_8F1DF270`. The loop continues
+while the typed end label differs from the next indexed entry, with the end
+on the left of the comparison. This order produces the retail `bnel s0,s5`.
+
+The compiler introduces the cursor induction itself, preserving separate
+S0 cursor and S1 base materializations of the actual `D_8F1DF270` address;
+S5 holds `D_8F1DF282`. This removes the false `D_8F1DF282 - 18` base and
+supersedes the explicit-cursor CSE requeue. Byte-offset induction expands
+to 288 bytes. Record-index induction first matched every word except the
+commuted loop-branch operands; reversing the source comparison resolved
+that word. Four cleanups using typed timer, callback arguments, pointer
+difference and end comparison all preserve the complete module. The same
+indexed-cursor hypothesis also matched `func_88203A18` in a different file;
+this is a candidate-ordering hint, not a substitute for compilation.
+
+Verification: unchanged and final candidate modules each reproduce with
+20 leading blank lines; all allocated bytes/layout, symbol extents and
+semantic relocations equal the original built module. Host syntax and
+normal `make -j1 COMPARE=1 RUN_CC_CHECK=1` pass. Retail ROM MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; every function/object extent and legacy
+address is preserved. No source padding, extra formal, compiler option,
+linker, coverage or tool changes.
