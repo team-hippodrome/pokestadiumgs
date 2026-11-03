@@ -83,7 +83,80 @@ s32 func_8FB001C0(u8 *arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB005E4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB009C0.s")
+/* mkdraft:func_8FB009C0 begin */
+extern u8 D_8FB03490[];
+extern u8 D_8FB03494[];
+extern u8 D_8FB038D8[];
+extern u8 D_8FB039E6[];
+extern s32 D_8FB03DF0;
+extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_80048E30(s32, s32, s32, u8 *, s32);
+extern void func_80049628(s32, s32, s32);
+extern void func_800499EC(void);
+extern void func_8FB00020(s32, s32, s32);
+
+
+
+void func_8FB009C0(void *arg0) {
+    struct {
+        u16 x;
+        u16 y;
+        u16 w;
+        u16 h;
+        s16 unk_8;
+        s16 unk_A;
+        s16 text_size;
+    } *state = arg0;
+    u16 *row;
+    u16 *last;
+    u8 *p;
+    u8 *end;
+    s32 i;
+    s32 n;
+    s32 y;
+
+    Ui_DrawGradientPanel(state->x - 70, state->y - 10, state->w + 30, state->h + 20,
+                         (s32)&D_8FB03490, (s32)&D_8FB03494);
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_80048E30(D_8FB03DF0, state->x, state->y, (u8 *)arg0 + 14, 1);
+    // FAKE: the do/while(0) block changes IDO's saved-register allocation.
+    // Removing the block compiles the same statements to 150 instructions with
+    // state in s4 and the row step in s5; that variant scores 170 in the differ.
+    do {
+        func_800496A4(4, 0);
+        row = (u16 *)D_8FB038D8; last = (u16 *)D_8FB039E6;
+        y = 0;
+        do {
+            for (i = 0; i != 15; i++) {
+                func_80049628(state->x + i * 20 + i / 5 * 5 - 60,
+                              state->y + y * 20 + 30, row[i]);
+            }
+            row += 15;
+            y += 1;
+        } while (row < last);
+        func_800499EC();
+        n = 0;
+    } while (0);
+    p = (u8 *)arg0;
+    if (state->text_size != 0) {
+        end = state->text_size + (u8 *)arg0;
+        do {
+            if (*(s8 *)(p + 14) & 0x80) {
+                p += 2;
+            } else {
+                p += 1;
+            }
+            n += 1;
+        } while (p != end);
+    }
+    func_8FB00020(state->x + n * 18, state->y + 20, 20);
+    func_8FB00020(state->x + state->unk_8 * 20 + state->unk_8 / 5 * 5 - 60,
+                  state->y + state->unk_A * 20 + 46, 16);
+}
+/* mkdraft:func_8FB009C0 end */
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB00C1C.s")
 
