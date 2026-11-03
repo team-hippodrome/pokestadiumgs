@@ -312,7 +312,15 @@ or reverting a function to assembly does not establish a proper C match.
   extents, legacy addresses and fragment boundaries preserved. See
   [the panel-edge evidence](regions/fragments/32/fragment32_1B8010.md).
 
-This leaves 327 directive occurrences and 21 affected functions. Coverage files and
+- `func_829064D0`: convert the bounded random speed to the destination's
+  signed halfword type before adding its base speed. Stock IDO emits all
+  432 retail bytes without the 15 register-word rewrites. The random helper's
+  interface, call order and field writes are preserved. Complete-module
+  normal/blank controls, host syntax and the native full-ROM comparison pass;
+  function/storage extents, legacy addresses and fragment boundaries are
+  unchanged. See [the particle evidence](regions/fragments/67/fragment67_342DB0.md).
+
+This leaves 312 directive occurrences and 20 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -383,7 +391,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82E00868` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 54 | Replaced with C |
 | `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Replaced with C |
 | `func_82901AE0` | [src/fragments/67/fragment67_33D6A0.c](../src/fragments/67/fragment67_33D6A0.c) | 17 | Pending |
-| `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |
+| `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Replaced with C |
 | `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Replaced with C |
 | `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Replaced with C |
 | `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Replaced with C |
