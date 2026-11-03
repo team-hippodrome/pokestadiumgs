@@ -57,6 +57,8 @@
     - [0x220C0, hasm, ../../src/unk_220C0]
     - [0x226C0, c]
     - [0x229E0, c]
+    - [0x232C0, c, audio_cue_dispatch]
+    - [0x23D10, c]
     - [0x2C1B0, c]
     - [0x340C0, c]
     - [0x43700, c]
@@ -345,24 +347,8 @@
     - [0xA2B80, .rodata, 1C2D0] # jtbl_800A1F80 (+1 more)
     - [0xA2BD0, .rodata, 1CDC0] # jtbl_800A1FD0 (+2 more)
     - [0xA3260, rodata]
-    - [0xA3270, .rodata, 229E0] # jtbl_800A2FD0 + jtbl_800A2FEC + jtbl_800A3108 +
-                                # jtbl_800A312C + jtbl_800A3150 + jtbl_800A3174 +
-                                # jtbl_800A3198 (all still-GLOBAL_ASM func_80023A3C's own
-                                # jump tables; the whole run is included here, starting at a
-                                # 16-byte-aligned ROM address, because splat can only
-                                # correctly auto-embed a function's own late_rodata into its
-                                # own .s file when the WHOLE table it references falls inside
-                                # this file's owned subsegment -- a partial table produced an
-                                # ld error referencing undefined local labels), then
-                                # jtbl_800A31C4 + jtbl_800A31E0 (func_80024180's own), then
-                                # jtbl_800A3280 (func_80024E8C's own), then a gap of
-                                # still-GLOBAL_ASM siblings' own rodata, then jtbl_800A3724
-                                # (func_8002596C's own, splat auto-embeds all 10 entries
-                                # including what used to be a hand-carved tail) +
-                                # jtbl_800A374C + jtbl_800A376C. Combined into one subsegment
-                                # (not split) because ld can only consume an object's .rodata
-                                # section once.
-                                # start moved down from 0xA3BD0 to cover jtbl_800A2670, jtbl_800A2B38, jtbl_800A2B64 (func_800226C0's switch tables; jtbl_datamig.py)
+    - [0xA3270, .rodata, audio_cue_dispatch] # three cue-dispatch tables, then alignment
+    - [0xA37C0, .rodata, 23D10] # remaining audio tables and constants
     - [0xA4590, rodata]
     - [0xA49F0, .rodata, 2C1B0] # queued-event tables and adjacent audio constants
     - [0xA4EA0, rodata]
