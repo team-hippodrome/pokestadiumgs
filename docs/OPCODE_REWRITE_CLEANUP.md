@@ -264,7 +264,16 @@ or reverting a function to assembly does not establish a proper C match.
   legacy addresses preserved. See
   [the storage-search evidence](regions/fragments/31/fragment31_1768F0.md).
 
-This leaves 373 directive occurrences and 26 affected functions. Coverage files and
+- `func_8F100B54`: traverse the existing six-byte menu records by index,
+  read their typed timer field and dispatch using a typed record difference.
+  Compiler-generated cursor induction preserves the two real base address
+  loads; an end-first comparison matches the retail branch order. All 272
+  bytes match without the duplicated two hex replacements and 20 relocation
+  patches. Complete-module controls, host syntax and the native full-ROM
+  gate pass with function/object extents and legacy addresses preserved.
+  See [the menu traversal evidence](regions/fragments/69/fragment69_code.md).
+
+This leaves 351 directive occurrences and 25 affected functions. Coverage files and
 compiler/tooling sources are unchanged.
 
 
@@ -336,7 +345,7 @@ table are baseline function directives, excluding the separate section word.
 | `func_82E01A00` | [src/fragments/66/fragment66_code.c](../src/fragments/66/fragment66_code.c) | 33 | Replaced with C |
 | `func_82901AE0` | [src/fragments/67/fragment67_33D6A0.c](../src/fragments/67/fragment67_33D6A0.c) | 17 | Pending |
 | `func_829064D0` | [src/fragments/67/fragment67_342DB0.c](../src/fragments/67/fragment67_342DB0.c) | 15 | Pending |
-| `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Pending |
+| `func_8F100B54` | [src/fragments/69/fragment69_code.c](../src/fragments/69/fragment69_code.c) | 22 | Replaced with C |
 | `func_8F401C30` | [src/fragments/72/fragment72_code.c](../src/fragments/72/fragment72_code.c) | 39 | Replaced with C |
 | `func_8F600020` | [src/fragments/74/fragment74_code.c](../src/fragments/74/fragment74_code.c) | 15 | Replaced with C |
 | `func_84136D84` | [src/fragments/79/fragment79_3A4030.c](../src/fragments/79/fragment79_3A4030.c) | 1 | Replaced with C |
