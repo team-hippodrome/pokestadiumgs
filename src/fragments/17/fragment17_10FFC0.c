@@ -1199,7 +1199,72 @@ s32 func_82203210(s32 arg0, u8 *arg1) {
 extern Gfx *D_800D0510;
 s32 func_8220336C(s32 arg0, s32 arg1) { gDPPipeSync(D_800D0510++); gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0, 0xFF); return 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822033BC.s")
+extern void *D_8220E360;
+extern u8 *D_8220E364;
+extern u8 D_8220E490[];
+extern u8 D_8220EB50;
+extern u8 D_8220D800;
+extern void func_82200CB4(void);
+extern void func_82200D28(void *, s32);
+extern void func_822014D8(void);
+extern void Fragment17_ResetAnimationEntries(s32);
+extern void *func_8004EB58(s32, s32);
+extern s32 func_8005049C(void *, s32);
+extern s32 func_8004E308(s32, s32 (*)(s32, u8 *), s32);
+extern void func_8005053C(void *, u8 *);
+extern void func_80050578(void *, s32);
+extern void func_800476A0(u8 *, s32);
+extern s32 func_800476FC(s32, s32);
+extern s32 func_80047738(s32, s32, s32, s32);
+extern s32 func_82201EB4(s32, u8 *);
+extern s32 func_82202B80(s32, u8 *);
+extern s32 func_822023D8(s32, u8 *);
+extern s32 func_82202534(s32, u8 *);
+extern s32 func_82202A84(s32, u8 *);
+extern s32 func_82202718(s32, u8 *);
+extern s32 func_82202E0C(s32, u8 *);
+extern s32 func_82202FC8(s32, u8 *);
+extern s32 func_822030BC(s32, u8 *);
+extern s32 func_822031D0(s32, u8 *);
+extern s32 func_82203210(s32, u8 *);
+extern s32 func_8220336C(s32, s32);
+
+
+
+void func_822033BC(void *arg0)
+{
+  u8 *state; // FAKE: unused pad local, reserves a stack word; diff score 28 without it.
+  struct S1_MemoryBlock *pool;
+  void *node;
+  s32 count;
+  s32 index;
+  u8 *entry; // FAKE: unused pad local, reserves a stack word; diff score 28 without it.
+  D_8220E360 = arg0;
+  count = func_822015B4();
+  func_82200CB4();
+  for (index = 0; index < 4; index++)
+  {
+    func_82200D28((u8 *) (&D_8220E4E0) + index * 0x18C, D_8220E310[index * 0x14 + 1]);
+  }
+  pool = (struct S1_MemoryBlock *) MainPool_AllocState(main_pool_get_available(), 0);
+  D_8220E364 = func_8004EB58((s32) pool, *((s32 *) (((u8 *) D_8220E360) + 0xC)));
+  MainPool_FinalizeAllocation(pool);
+  *((s32 *) D_8220E360) = -1;
+  _bzero(D_8220E468, 0x28);
+  _bzero(D_8220E490, 0x28);
+  Fragment17_ResetAnimationEntries(count);
+  D_8220E4C0 = 0;
+  D_8220E4C0 |= 1;
+  D_8220E4C0 |= 2;
+  D_8220E4C0 |= 8;
+  func_8004E308(func_8005049C(D_8220E364, 0x4E36344C), func_82201EB4, 0);
+  func_8004E308(func_8005049C(D_8220E364, 0x4E363452), func_82201EB4, (s32) 1);
+  node = func_8005049C(D_8220E364, 0x4142544E);
+  func_8004E308((s32) node, func_82202B80, 0);
+ func_8005053C(node, &D_8220EB50); func_80050578(node, (s32) (&D_8220D800)); index = 0; do { func_8004E308(func_8005049C(D_8220E364, index + 0x504C4731), func_82202A84, index); func_8004E308(func_8005049C(D_8220E364, index + 0x47425531), func_82202718, index); func_8004E308(func_8005049C(D_8220E364, index + 0x47424431), func_82202718, index + 0x80); func_8004E308(func_8005049C(D_8220E364, index + 0x434E5431), func_822023D8, index); func_8004E308(func_8005049C(D_8220E364, index + 0x53445731), func_82202534, index); index++; } while (index < 4); func_8004E308(func_8005049C(D_8220E364, 0x57494E31), func_82202BE4, (s32) 1); func_8004E308(func_8005049C(D_8220E364, 0x4D534730), func_82202E0C, 0); func_8004E308(func_8005049C(D_8220E364, 0x4D534731), func_82202E0C, (s32) 1); index = 0; do { func_8004E308(func_8005049C(D_8220E364, index + 0x4E414D30), func_82202FC8, index); func_8004E308(func_8005049C(D_8220E364, index + 0x49443030), func_822030BC, index); func_8004E308(func_8005049C(D_8220E364, index + 0x45525230), func_822031D0, index); func_8004E308(func_8005049C(D_8220E364, index + 0x57415030), func_82203210, index); index++; } while (index != 4); func_822014D8(); func_8004C8C0(0x142); func_800476A0(&D_8220EB10, 4);
+  func_800476FC((s32) (&D_8220EB10), 4);
+  func_80047738(0, func_8004C990(0x142, 1), (s32) func_8220336C, 0);
+}
 
 /* mkdraft:func_822037E4 begin */
 extern void Font_EnableTwoCycleTexturing();
