@@ -1187,8 +1187,11 @@ s32 func_8F102F58(void) {
 
 #ifdef VERSION_US
 extern s32 func_8F100220(s32 arg0);
-void func_8F102F94(void) {
-    func_8F100220(2);
+// Returns the callee's value: the photo sub-screen result that state 7 of
+// func_8F103478 switches on (-2/-1/0/1). func_8F100220 already leaves it in
+// v0, so returning it emits the same instruction stream the void wrapper had.
+s32 func_8F102F94(void) {
+    return func_8F100220(2);
 }
 #endif
 
@@ -1201,7 +1204,141 @@ void func_8F102F94(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F103478.s")
+/* mkdraft:func_8F103478 begin */
+extern u8 StageContext_GetFadeMode(void);
+extern void StageFade_StartFromTransparent(s32);
+extern s32 func_8F102BC8(void);
+extern s32 func_8F10018C(s32);
+extern void func_8F100274(s32);
+extern s32 func_8F1001D0(s32);
+extern s32 func_8F102D98(void);
+extern s32 func_8F102F58(void);
+extern s32 func_8F102F94(void);
+extern s32 func_8F103194(void);
+extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE44;
+extern s32 D_8F1DEE58;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DECA0;
+extern s32 D_8F1039A4;
+extern s32 D_8F1039A8;
+extern s32 D_8F1039AC;
+extern s32 D_8F1039B0;
+extern s32 D_8F1039B4;
+extern s32 D_8F1039B8;
+extern s32 D_8F1039BC;
+extern s32 D_8F1039C0;
+// One step of the main-menu state machine: returns the state to run next, and the
+// caller loops until it reports 8 (the state that leaves the menu). States 0 and 6
+// wait for the stage fade, 1 handles a menu input result, 5 arms a fixed camera
+// position, and 3, 4 and 7 wait on the sub-screens before falling back to state 1.
+//@src/fragments/69/fragment69_code.c
+
+
+s32 func_8F103478(s32 arg0) {
+    s32 result = arg0;
+    s32 temp_v0;
+
+    switch (arg0) {
+        case 0:
+            if (StageContext_GetFadeMode() == 0) {
+                result = 1;
+            }
+            break;
+        case 1:
+            switch (func_8F102BC8()) {
+                case 1:
+                    if (func_8F10018C(2) != 0) {
+                        result = 7;
+                        func_8F100274(2);
+                    }
+                    break;
+                case 2:
+                    switch (D_8F1DEE58) {
+                        case 0:
+                            if (func_8F10018C(0) != 0) {
+                                result = 3;
+                            }
+                            break;
+                        case 3:
+                            // Clears the pending camera/anim state before showing the
+                            // fixed-position view; the 5 is the state that arms it.
+                            D_8F1DEE24 = 0;
+                            D_8F1DEE28 = 0;
+                            D_8F1039A4 = 0;
+                            D_8F1039B4 = 0;
+                            D_8F1039B8 = 0;
+                            D_8F1039A8 = 0;
+                            D_8F1039AC = 0;
+                            D_8F1039B0 = 0;
+                            D_8F1039BC = 0;
+                            result = 5;
+                            D_8F1039C0 = 0;
+                            break;
+                    }
+                    break;
+                case 3:
+                    if (func_8F10018C(1) != 0) {
+                        result = 4;
+                    }
+                    break;
+            }
+            break;
+        case 3:
+            if (func_8F102D98() != -2) {
+                if (func_8F1001D0(0) != 0) {
+                    result = 1;
+                }
+            }
+            break;
+        case 4:
+            if (func_8F102F58() != -2) {
+                if (func_8F1001D0(1) != 0) {
+                    result = 1;
+                }
+            }
+            break;
+        case 5:
+            if (func_8F103194() != 0) {
+                result = 1;
+                D_8F1DEE24 = 0x97;
+                D_8F1DEE44 = 0;
+                D_8F1DEE5C = 0;
+                // FAKE: argument 2 is the u16 D_8F1DEE26 (0x8F1DEE26), but it is
+                // reached off the D_8F1DEE24 base so the address folds into the
+                // base register the 0x97 store already loaded; naming D_8F1DEE26
+                // scores 1130.
+                func_80041FD0(D_8F1DECA0, *(u16 *)((u8 *)&D_8F1DEE24 + 2), *(Fragment69PackedState *)&D_8F1DEE44, 0);
+            }
+            break;
+        case 7:
+            temp_v0 = func_8F102F94();
+            if (temp_v0 != -2) {
+                switch (temp_v0) {
+                    case 1:
+                        result = 6;
+                        StageFade_StartFromTransparent(5);
+                        break;
+                    case -1:
+                    case 0:
+                        if (func_8F1001D0(2) != 0) {
+                            result = 1;
+                        }
+                        break;
+                }
+            }
+            break;
+        case 6:
+            if (StageContext_GetFadeMode() == 1) {
+                result = 8;
+            }
+            break;
+    }
+    return result;
+}
+/* mkdraft:func_8F103478 end */
 #endif
 
 #ifdef VERSION_US
