@@ -86,7 +86,50 @@ void func_88A00938(u8 *arg0) {
     func_800635E0(*arg0, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A00978.s")
+extern void _bcopy(u8 *, u8 *, s32);
+extern u8 D_88A01B80[];
+void func_88A00978(u8 *arg0, u8 *arg1) {
+    u32 i;
+    u8 *entry;
+    u8 *source;
+
+    arg1[5] = 0;
+    arg1[1] = arg0[57];
+    _bcopy(arg0 + 58, arg1 + 9, arg1[1] * 2);
+    if (func_8800005C() != 0) {
+        for (i = 1; i < 4; i++) {
+            arg1[i + 5] = arg1[1];
+            arg1[i + 1] = 0;
+        }
+    } else {
+        arg1[6] = arg1[1];
+        arg1[2] = arg0[126];
+        _bcopy(arg0 + 127, ((u8 (*)[2])(arg1 + 9))[arg1[6]], arg1[2] * 2);
+        arg1[7] = arg1[6] + arg1[2];
+        entry = ((u8 (*)[2])(arg1 + 9))[arg1[7]];
+        arg1[3] = 0;
+        for (i = 0; i < 57; i++) {
+            if (arg0[i] != 0) {
+                arg1[3]++;
+                entry[0] = D_88A01B80[i];
+                entry[1] = arg0[i];
+                entry += 2;
+            }
+        }
+        arg1[8] = arg1[7] + arg1[3];
+        arg1[4] = arg0[99];
+        entry = ((u8 (*)[2])(arg1 + 9))[arg1[8]];
+        for (i = 0, source = arg0 + 100; i < arg1[4]; i++, source++) {
+            entry[0] = *source;
+            entry[1] = 1;
+            entry += 2;
+        }
+    }
+    arg1[0] = 0;
+    for (i = 0; i < 4; i++) {
+        arg1[0] += arg1[i + 1];
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A00B44.s")
 
@@ -96,9 +139,9 @@ extern u8 *func_8006218C(s32, s32, s32, s32);
 extern s32 func_8006229C(u8 *);
 extern u8 Deck_ReadEntries(u8 *, s32, u8 *);
 extern s32 GbSave_GetRecordCapacity(s32);
-extern s32 _bcopy(u8 *, u8 *, s32);
+extern void _bcopy(u8 *, u8 *, s32);
 extern u16 func_80053230(s32);
-extern s32 func_88A00978(u8 *, u8 *);
+extern void func_88A00978(u8 *, u8 *);
 extern void func_88A015A0(s32);
 extern u8 *mem_pool_alloc(s32, s32);
 extern u8 *D_88A01C60;
