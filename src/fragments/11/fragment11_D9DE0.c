@@ -2,7 +2,60 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81602240.s")
+extern u32 D_800D0510;
+
+// 640x480 sprite rectangle clipper: clips the caller's logical rectangle to the
+// screen, converts it to N64 quarter-pixel coordinates and emits one texture
+// rectangle through the display list head at D_800D0510.
+//
+// The entry guard compares x and y against the integer literals 640 and 480.
+// IDO emits the first of those as a separate constant load at 0D9E0C (lui
+// $at,0x4420) and the second at 0D9E64; the far clip at 0D9F7C reuses the second
+// load. Spelling the same guard tests with f32 literals (640.0f <= x) merges the
+// constants and shifts register allocation across the whole function, which is
+// visible as an object score of 4325 against this source's 0.
+//
+// The six entry tests sit in two statements: four in the first, two in the
+// second. That keeps width and height reloaded from their 0x60 and 0x64 argument
+
+// homes after the first statement (0D9E34 and 0D9E4C), which is where the target
+// reads them.
+//
+// Requires the seven file-scope func_81602240 prototypes in
+// src/fragments/11/fragment11_D9DE0.c to declare the s and t parameters as s16;
+// the target narrows both to halfwords (sh 0x6A/0x6E, lh 0x6A/0x6E). With s32
+// there the spliced definition fails to build (conflicting types).
+// See func_81602240.report.md.
+
+
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale) {
+    if (width <= 0 || height <= 0 || 640 <= x || 480 <= y) {
+        return;
+    }
+    if (x + width <= 0 || y + height <= 0) {
+        return;
+    }
+    if (x < 0) {
+        s -= x * hscale;
+        width += x;
+        x = 0;
+    }
+    if (y < 0) {
+        t -= y * vscale;
+        height += y;
+        y = 0;
+    }
+    if (640.0f <= x + width) {
+        width = 640.0f - x;
+    }
+    if (480.0f <= y + height) {
+        height = 480.0f - y;
+    }
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, x * 4.0f, y * 4.0f, (x + width) * 4.0f, (y + height) * 4.0f,
+                            G_TX_RENDERTILE, s << 5, t << 5,
+                            (s16)((hscale * 1024.0f) + ((hscale * 1024.0f > 0.0f) ? 0.5f : -0.5f)),
+                            (s16)((vscale * 1024.0f) + ((vscale * 1024.0f > 0.0f) ? 0.5f : -0.5f)));
+}
 
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
 
@@ -418,7 +471,7 @@ extern s32 func_8004CA10(void *);
 extern s32 func_8004CA24(void *);
 extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 extern void func_8004D1FC(void *);
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern u32 D_800D0510;
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
@@ -476,7 +529,7 @@ void func_81603984(s32 arg0, s32 arg1) {
     func_8004D19C(arg0, arg1, D_8160BDB8, 0, 0);
 }
 
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern void func_8004D1FC(void *);
 extern u32 D_800D0510;
 extern u8 D_80094E38[];
@@ -511,7 +564,7 @@ void func_81603C84(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 /* mkdraft:Fragment11_DrawTexturedPanelBorder begin */
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern void func_8004D1FC(void *);
 extern u32 D_800D0510;
 extern u8 D_80094E38[];
@@ -547,7 +600,7 @@ void func_81604024(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 *arg5, 
 }
 
 /* mkdraft:Fragment11_DrawBorderedPanelFill begin */
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern void func_81609344(s32, s32, s32, s32, s32);
 extern void func_81607408(void);
 extern void func_8004D1FC(void *);
@@ -696,7 +749,7 @@ void func_81605950(void) {
     );
 }
 /* mkdraft:func_816059CC begin */
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern u32 D_800D0510;
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
@@ -734,7 +787,7 @@ extern void func_816059CC(s32, s32, s32, s32, u8 *);
 void func_81605CDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) { func_81605950(); func_816059CC(arg0, arg1, arg2, arg3, (u8 *)arg4); }
 
 extern void *D_8160BD6C;
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern u32 D_800D0510;
@@ -757,7 +810,7 @@ void func_81605D24(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4) {
 }
 
 extern void *D_8160BD78[];
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern void func_8004D1FC(void *);
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
@@ -821,6 +874,8 @@ void func_81606694(s32 arg0, s32 arg1, s32 arg2) {
 /* mkdraft:func_81606694 end */
 
 /* mkdraft:func_81606800 begin */
+extern s32 D_8160BE5C;
+
 // Cache the panel frame's color mode; arg1 forces a display-list update.
 void func_81606800(s32 arg0, s32 arg1) {
     static s32 sPanelColor;
@@ -1020,7 +1075,7 @@ extern u8 D_80094F50[];
 extern s32 D_8160BDA4;
 extern s32 D_8160BDA8;
 extern void func_8004D1FC(void *);
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern void func_81607408(void);
 
 
@@ -1241,7 +1296,7 @@ void func_8160852C(void) {
     func_8004D1FC(D_8160BDB4);
 }
 
-extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+void func_81602240(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale);
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern u32 D_800D0510;
