@@ -888,7 +888,84 @@ void func_82904824(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_829048A0.s")
+
+/* mkdraft:func_829048A0 begin */
+#include "global.h"
+typedef struct {
+    f32 unk_00[4];
+} Vec4;
+
+extern u8 D_82919A88[];
+extern Vec4 D_829120A8;
+extern f32 D_82911FD0[];
+extern s32 D_82919C10;
+extern void *D_82919C14;
+extern void func_800226C0(s32);
+
+
+
+void func_829048A0(void *arg0) {
+    u8 *p;
+    Vec4 sp28;
+    s8 unk10;
+    u8 unk0C;
+    f32 v;
+    s32 i;
+
+    if (1) {
+        sp28 = D_829120A8;
+    }
+    if (1) {
+        p = (u8 *)D_82911FD0 + D_82919C10 * 20;
+    }
+    unk10 = *(s8 *)(p + 0x10);
+    unk0C = *(u8 *)(p + 0x0C);    for (i = 0; i < 4; i++) {
+
+        p = &D_82919A88[i * 0x1C];
+        v = sp28.unk_00[i];
+
+        *(f32 *)(p + 0x14) += v;
+        *(u8 *)(p + 0x18) |= 1;
+        *(f32 *)(p + 0x10) = v;
+        *(f32 *)(p + 0x0C) += *(f32 *)(p + 0x14);
+        if (*(f32 *)(p + 0x0C) >= 160.0) {
+            *(f32 *)(p + 0x0C) = 160.0f;
+        }
+
+        *(f32 *)(p + 0x80) = -v;
+        *(f32 *)(p + 0x84) += -v;
+        *(u8 *)(p + 0x88) |= unk0C;
+        *(f32 *)(p + 0x7C) += *(f32 *)(p + 0x84);
+        if (*(f32 *)(p + 0x7C) <= 160.0) {
+            *(f32 *)(p + 0x7C) = 160.0f;
+        }
+
+        *(f32 *)(p + 0xF0) = (f32)unk10 * v;
+        *(f32 *)(p + 0xF4) += (f32)unk10 * v;
+        *(u8 *)(p + 0xF8) |= 1;
+        *(f32 *)(p + 0xEC) += *(f32 *)(p + 0xF4);
+        if (unk10 < 0) {
+            if (*(f32 *)(p + 0xEC) <= 160.0) {
+                *(f32 *)(p + 0xEC) = 160.0f;
+            }
+        } else {
+            if (*(f32 *)(p + 0xEC) >= 160.0) {
+                if (1) {} // FAKE: empty block; see func_829048A0.report.md (a-pool walk order)
+                *(f32 *)(p + 0xEC) = 160.0f;
+            }
+        }
+    }
+
+    if (*(f32 *)(D_82919A88 + 0x60) == 160.0f && *(f32 *)(D_82919A88 + 0xD0) == 160.0f &&
+        *(f32 *)(D_82919A88 + 0x140) == 160.0f) {
+        if (*(s16 *)((u8 *)D_82919C14 + 6) != 0) {
+            D_82919A88[0x168] |= 1;
+        }
+        *(s16 *)((u8 *)arg0 + 0x1068) = 9;
+        func_800226C0(0x7C);
+    }
+}
+/* mkdraft:func_829048A0 end */
 #endif
 
 #ifdef VERSION_US
