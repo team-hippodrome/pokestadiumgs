@@ -291,6 +291,9 @@ build/src/C890.o: CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC_OLD) -- $(AS) $(ASFLA
 # andi/move pairs) that never matches the target .s.
 build/src/C380.o: CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC_OLD) -- $(AS) $(ASFLAGS) --
 
+# Fragment58 uses IDO's two-iteration loop-unrolling profile.
+build/src/fragments/58/fragment58_code.o: OPTFLAGS += -Wo,-loopunroll,2
+
 rom: $(ROM)
 	@$(PRINT) "$(RED)Building ROM...\n$(NO_COL)"
 ifneq ($(COMPARE),0)
