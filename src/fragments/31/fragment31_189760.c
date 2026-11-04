@@ -31,7 +31,154 @@ void func_88216520(void) {
     func_88200134(0, 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_189760/func_88216544.s")
+
+/* mkdraft:func_88216544 begin */
+extern u8 *D_88234740;
+extern u8 D_88006880[];
+extern u16 D_88234744;
+extern s32 D_889041B4;
+extern s32 D_882345CC;
+extern s32 D_882345D0;
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+extern u8 D_889041B8;
+extern s8 D_88234746;
+extern u8 D_8823474C;
+extern u8 D_8823474D;
+extern u8 D_8823474E;
+extern u8 D_8823474F;
+extern s16 D_88234748;
+extern s16 D_8823474A;
+extern u16 D_8800EF42;
+extern u16 D_8800EF44;
+extern void D_88000E4C(void);
+extern void *D_80087200;
+extern s32 main_pool_push_state(s32);
+extern s32 mem_pool_try_init(s32, s32);
+struct MemPool3A00;
+extern void *mem_pool_alloc(struct MemPool3A00 *, s32);
+extern s32 func_8004C4B0(s32);
+extern s32 func_8004C8C0(u16);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_80049290(s32, s32, const char *);
+extern s32 func_80001FF0(void);
+extern void func_882011E0(void *);
+extern void StorageList_Initialize(struct MemPool3A00 *);
+extern void func_88A00D0C(void *);
+extern void func_88203744(void *);
+extern void func_8821DAC0(void *, void *, void *);
+extern void Input_SetRepeatController(void *);
+extern void func_88200020(u8);
+extern void func_882000AC(u8, s16, s16, u16, u16, s32, s32, u8);
+extern s32 func_88227224();
+extern void func_882164E0(void);
+extern void func_88001C6C(void *, u16, u8, s16, u8, s16, s16, s16, s16, s16, s32);
+extern void func_88000288(void *, s32, s32, s32, s32, s32, s32, s32);
+extern void func_88005B60(s32, void (*)(void), void (*)(void), void (*)(void));
+
+
+
+void func_88216544(void) {
+    s32 i;
+    struct MemPool3A00 *pool;
+
+    main_pool_push_state(0x4C495354);
+    pool = (struct MemPool3A00 *)(u32)mem_pool_try_init(0x20000, 0);
+    D_88234740 = mem_pool_alloc(pool, 0x130);
+    func_8004C8C0(0xC0);
+    func_8004C8C0(0xF3);
+    *(s32 *)((u8 *)D_88234740 + 0x9C) = func_8004C990(0xBF, 1);
+    *(s32 *)((u8 *)D_88234740 + 0xA0) = func_8004C990(0xC0, 0);
+    *(s32 *)((u8 *)D_88234740 + 0xA4) = func_8004C990(0xBF, 0);
+    *(s32 *)((u8 *)D_88234740 + 0xA8) = func_8004C990(0xF3, 0);
+    func_8004C8C0(0x1C);
+    D_882345CC = func_8004C990(0x1C, 1);
+    D_882345D0 = func_8004C990(0x1C, 0);
+    func_8004C4B0(0x25);
+    *(s32 *)((u8 *)D_88234740 + 0x24) = (s32)func_8004C874(0xD, 0x18);
+    *(s32 *)((u8 *)D_88234740 + 0x28) = (s32)func_8004C874(0xD, 0x19);
+    *(s32 *)((u8 *)D_88234740 + 0x2C) = (s32)func_8004C874(0x25, 4);
+    *(s32 *)((u8 *)D_88234740 + 0x30) = (s32)func_8004C874(0xD, 0x12);
+    *(s32 *)((u8 *)D_88234740 + 0x34) = (s32)func_8004C874(0xD, 0x13);
+    *(s32 *)((u8 *)D_88234740 + 0x40) = (s32)func_8004C874(0xD, 0x1A);
+    *(s32 *)((u8 *)D_88234740 + 0x44) = (s32)func_8004C874(0xD, 2);
+    *(s32 *)((u8 *)D_88234740 + 0x48) = (s32)func_8004C874(0xD, 3);
+    *(s32 *)((u8 *)D_88234740 + 0x4C) = (s32)func_8004C874(0xD, 4);
+    *(s32 *)((u8 *)D_88234740 + 0x50) = (s32)func_8004C874(0xD, 6);
+    *(s32 *)((u8 *)D_88234740 + 0x54) = (s32)func_8004C874(0xD, 7);
+    *(s32 *)((u8 *)D_88234740 + 0x58) = (s32)func_8004C874(0xD, 5);
+    for (i = 0; i != 4; i++) {
+        *(s32 *)((u8 *)D_88234740 + i * 4 + 0x5C) = (s32)func_8004C874(0x25, i + 5);
+    }
+    *(s32 *)((u8 *)D_88234740 + 0x78) = (s32)func_8004C874(0xD, 9);
+    *(s32 *)((u8 *)D_88234740 + 0x7C) = (s32)func_8004C874(0xD, 0xA);
+    *(s32 *)((u8 *)D_88234740 + 0x80) = (s32)func_8004C874(0xD, 0x1B);
+    *(s32 *)((u8 *)D_88234740 + 0x84) = (s32)func_8004C874(0xD, 8);
+    *(s32 *)((u8 *)D_88234740 + 0x88) = (s32)func_8004C874(0x25, 0x28);
+    func_8004C4B0(9);
+    func_8004C4B0(0xB);
+    func_8004C4B0(0x45);
+    func_882011E0(pool);
+    StorageList_Initialize(pool);
+    func_88A00D0C(pool);
+    func_88203744(pool);
+    func_8821DAC0(pool, D_88234740 + 0xC4, D_88234740 + 0xF8);
+    Input_SetRepeatController(D_80087200);
+    func_88200020(1);
+    func_882000AC(0, 0x28, 0x48, 0x233, 0x17F, (s32)func_88227224, (s32)func_882164E0, 0);
+    D_889041B4 = 0;
+    D_88234746 = 0;
+    *(s32 *)((u8 *)D_88234740 + 0x0) = 1;
+    *(s8 *)(D_88234740 + 0x4) = 1;
+    *(s8 *)(D_88234740 + 0x5) = 0x68;
+    *(s8 *)(D_88234740 + 0x6) = 0x40;
+    *(s8 *)(D_88234740 + 0x7) = 0x40;
+    *(s8 *)(D_88234740 + 0x8) = 0x60;
+    *(s8 *)(D_88234740 + 0x9) = 0x60;
+    *(s8 *)(D_88234740 + 0xC) = 0x30;
+    *(s8 *)(D_88234740 + 0xD) = 0x38;
+    *(s8 *)(D_88234740 + 0xE) = 0x40;
+    *(s8 *)(D_88234740 + 0xF) = 0x40;
+    *(s8 *)(D_88234740 + 0x10) = 0x40;
+    *(s8 *)(D_88234740 + 0x11) = 0x40;
+    *(s8 *)(D_88234740 + 0x12) = 0x40;
+    *(s8 *)(D_88234740 + 0x13) = 0x6A;
+    *(s8 *)(D_88234740 + 0x14) = 0x6A;
+    *(s8 *)(D_88234740 + 0x15) = 0x6A;
+    *(s8 *)(D_88234740 + 0x16) = 0x6A;
+    *(s8 *)(D_88234740 + 0x1A) = 0x34;
+    *(s8 *)(D_88234740 + 0x1B) = 0x58;
+    *(s8 *)(D_88234740 + 0x1C) = 0x68;
+    *(s8 *)(D_88234740 + 0x1D) = 0x78;
+    *(s8 *)(D_88234740 + 0x1E) = 0x3C;
+    D_8823474A = 0;
+    D_88234748 = D_8823474A;
+    D_880068B4 = D_880068B8 = 1;
+    D_8823474C = 2;
+    D_8823474D = 0;
+    D_889041B8 = 0;
+    D_8823474E = 0;
+    D_8823474F = 0;
+    *(s8 *)(D_88234740 + 0x94) = func_80049290(4, 1, "9");
+    *(s8 *)(D_88234740 + 0x95) = func_80049290(4, 1, "99");
+    *(s8 *)(D_88234740 + 0x96) = func_80049290(4, 1, "999");
+    *(s8 *)(D_88234740 + 0x12C) = 0;
+    func_88001C6C(D_88006880, D_88234744, 0xE, 0x93, 0x14, 0xA,
+                  (s32)(480.0f / (f32)func_80001FF0() + ((480.0f / (f32)func_80001FF0() > 0.0f) ? 0.5f : -0.5f)),
+                  0x38, 0x38, 0xF0C, 0x46);
+    func_88000288((u8 *)D_88234740 + 0xAC, 0, 0xFF, 0x64, 0,
+                  (s32)((f32)10 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)10 / 60.0f > 0.0f) ? 0.5f : -0.5f)),
+                  0,
+                  (s32)((f32)10 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)10 / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    func_88000288((u8 *)D_88234740 + 0xB8, 0, 0xFF, 0, 0,
+                  (s32)((f32)10 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)10 / 60.0f > 0.0f) ? 0.5f : -0.5f)),
+                  0,
+                  (s32)((f32)10 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)10 / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    D_8800EF42 = 0x17C;
+    D_8800EF44 = 0x11F;
+    func_88005B60(0, D_88000E4C, D_88000E4C, D_88000E4C);
+}
+/* mkdraft:func_88216544 end */
 
 extern u8 *D_88234740;
 u8 *func_88216D54(s32 arg0) { switch (arg0) { case 0: case 1: return D_88234740 + 0xC4; case 2: return D_88234740 + 0xF8; } }

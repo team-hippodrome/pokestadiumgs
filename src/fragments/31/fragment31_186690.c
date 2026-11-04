@@ -174,7 +174,109 @@ void func_88213BE4(s32 mode, s32 sound) {
     func_88232E30(mode);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213E9C.s")
+extern u8 *D_882345F4;
+extern unk_D_8823463C D_88234630[];
+extern u8 D_88234648;
+extern s32 D_882346F0;
+extern s32 D_882346F4;
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+extern u8 func_88903B00[];
+extern void D_88000E4C(void);
+extern void *D_80087200;
+extern void func_88001900(void);
+extern void func_882064B4(s32, s32 *, void *, void *);
+extern void func_88221034(s16, s16, s32, s32);
+extern void func_88203A58(u8 *);
+extern void func_88203BE4(u8 *, void *, s8);
+extern s32 func_88204050(void);
+extern u8 *func_8820137C(u8 *);
+extern s32 func_800635E0(u8);
+extern s32 func_80063754(u8);
+extern s8 *func_8004C8A0(void *, s32, s32, s32);
+extern void Input_SetRepeatController(void *);
+extern void LabPC_OpenMessageDialog(s8 *, s16, s16, s32, u8, u8, u8, u8, u8, s32 *, s32 *, s32 *, void (*)(void));
+typedef struct {
+    u8 unk_00[0x15];
+    s8 unk_15;
+    u8 unk_16[0x16];
+} LabPCScrollRec186690;
+typedef struct {
+    u8 pad[12];
+    StorageListScrollRecord rec[2];
+} LabPCScrollBlock186690;
+typedef struct {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList186690;
+
+
+
+void func_88213E9C(void) {
+    u8 text[0x80];
+    u8 *entry;
+
+    func_800226C0(0x5E);
+    func_88001900();
+    D_882346F0 = 0;
+    D_882346F4 = 0;
+    switch (*(s16 *)(D_88234730 + 8)) {
+    case 0:
+    case 5:
+    case 6:
+        if (*(s16 *)(D_88234730 + 8) == 0) {
+            func_88203BE4(StorageList_GetEntry(1, 1 - *D_88234730),
+                          &D_88234630[*D_88234730 * 2] + 1,
+                          ((LabPCScrollRec186690 *)(D_88234730))[(u32)*D_88234730].unk_15);
+            ((s32 *)(D_88234730 + 104))[*D_88234730] = 0;
+            *D_88234730 ^= 1;
+        } else if (*(s16 *)(D_88234730 + 8) == 5) {
+            entry = StorageList_GetEntry(1, *D_88234730);
+            D_88234730[0x64] = 2;
+            func_88221034(0x140, 0xF0, D_882345F4 + 0x3C, func_800635E0(entry[0x75]));
+            D_882345F4[9] = entry[0x75];
+            *(s32 *)(*(u8 **)D_882345F4 + 0xC) = 1;
+            switch ((**(u8 ***)D_882345F4)[8]) {
+            case 0:
+                D_882345F4[0x27] = 0;
+                func_88203BE4(entry, D_88234630, *(s8 *)(D_882345F4 + 4));
+                break;
+            case 2:
+                D_882345F4[0x27] = func_88204050() + 1;
+                func_88203BE4(entry, &D_88234648, (s8)(D_882345F4[0x27] - 1));
+                break;
+            }
+        } else {
+            D_88234730[0x64] = 2;
+            LabPC_OpenMessageDialog(func_8004C8A0(text, 0x80, 0x23, 0x18), 0x140, 0xF0, 4, 0xDB, 0xDC, 0xB4,
+                                    2, 0, &D_880068B4, &D_880068B8, (s32 *)func_88903B00, D_88000E4C);
+            func_88203A58(StorageList_GetEntry(1, *D_88234730));
+        }
+        func_88001C24(&((LabPCScrollBlock186690 *)(D_88234730))->rec[*D_88234730],
+                      D_8823463C[*D_88234730 * 2].unk_00, 6);
+        func_88001D0C(&((LabPCScrollBlock186690 *)(D_88234730))->rec[*D_88234730]);
+        return;
+    case 2:
+        *D_88234730 ^= 1;
+        break;
+    case 4:
+        entry = func_8820137C(D_882345F4);
+        if (func_80063754(entry[0x75]) == 0) {
+            entry[0x75] = D_882345F4[9];
+        }
+        func_88203BE4(entry, &D_88234630[*D_88234730 * 2] + 1,
+                      ((LabPCScrollRec186690 *)(D_88234730))[(u32)*D_88234730].unk_15);
+        ((s32 *)(D_88234730 + 104))[*D_88234730] = 0;
+        D_882345F4[0x27] = 0;
+        D_882345F4[9] = D_882345F4[0x27];
+        *(s32 *)(*(u8 **)D_882345F4 + 0xC) = 1;
+        func_882064B4(1, (s32 *)(D_88234730 + 4), D_88234730 + 0xC, D_88234730 + 0x38);
+        Input_SetRepeatController(D_80087200);
+        break;
+    }
+}
 
 extern void func_882064B4(s32, s32 *, void *, void *);
 extern void StorageList_UpdateScrollCount(u8, s32);
@@ -273,7 +375,7 @@ done:
 /* mkdraft:func_882152F4 end */
 
 /* mkdraft:func_88215420 begin */
-extern u8 D_88234630[];
+extern unk_D_8823463C D_88234630[];
 extern Gfx *D_800D0510;
 
 // Storage list header; same layout as StorageList186690, which is declared
@@ -436,7 +538,7 @@ typedef struct StorageList186690 {
     void *entries;
     s32 changed;
 } StorageList186690;
-extern u8 D_88234630[];
+extern unk_D_8823463C D_88234630[];
 extern void func_8004D5B8(s32, s32, s32, const char *, ...);
 
 // Prints "count/capacity" of the second storage list of each of the two
@@ -476,7 +578,231 @@ extern void func_80049064(s32, s32, s32, s32);
 extern void *func_8004C874(s32, s32);
 void func_88215D4C(void) { u8 *p; p = StorageList_GetEntry(1, *D_88234730); if (((s8 *)p)[0x66] != 0) { func_8004989C(0x20); func_800496A4(0x10, 2); func_80047634(1); func_80049064(0x13F, 0x154, 1, (s32)p); func_80047650(1); func_800496A4(8, 1); func_80048E30((u8 *)D_8800687C, 0xD5, 0x196, (const char *)(p + 0x66), 1); func_800496A4(4, 1); func_80048E30((u8 *)D_8800687C, 0x13E, 0x19A, (const char *)func_8004C874(0xD, 9), 1); func_80049668(0); func_800495F8(0x161, 0x19A, 0, "%05d", *(u16 *)(p + 0x72)); } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88215E54.s")
+/* mkdraft:func_88215E54 begin */
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s32 s, s32 t, s32 dsdx, s32 dtdy, s32 cycle);
+extern s32 func_8004D1FC(u8 *arg0);
+extern Gfx *D_800D0510;
+extern u8 *StorageList_GetEntry(s32 mode, u8 column);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_882160F8.s")
+extern u8 D_88233838[];
+extern u8 D_88233844[];
+extern s32 D_88234644[];
+extern u8 *D_88234730;
+
+
+
+void func_88215E54(void)
+{
+  s16 var_s1;
+  s32 var_s2;
+  s32 var_s3;
+  u16 temp_v0_6;
+  u32 var_a0;
+  s32 var_s6;
+  u8 *temp_s0;
+  u8 *temp_v0;
+  u8 *var_v1;
+  u8 temp_a1;
+  u8 *temp_v1;
+  u32 found;
+  var_s6 = 0;
+  temp_v0 = StorageList_GetEntry(1, *D_88234730);
+  var_v1 = D_88233838;
+  var_a0 = 0;
+  temp_a1 = temp_v0[0x75];
+  // FAKE: `^ 0` on the loop-compare result; the plain `var_a0 < 10` form scores 600.
+  // Score without: 600.
+  for (; (var_a0 <= (10 - 1)) ^ 0; var_a0++)
+  {
+    if (temp_a1 == (*var_v1))
+    {
+      var_s6 = var_a0;
+      break;
+    }
+    var_v1++;
+  }
+
+  found = (var_a0 == 0xA);
+  if (found)
+  {
+    temp_v0[0x75] = 0xBA;
+    *((s32 *) ((u8 *) D_88234644 + ((*D_88234730) << 1) * 12)) = 1;
+    var_s6 = 6;
+  }
+  // FAKE: second read of `found`; removal scores 965. Score without: 965.
+  if (found)
+  {
+  }
+  gDPPipeSync(D_800D0510++);
+  gDPSetCombine(D_800D0510++, 0x309661, 0x552EFF7F);
+  temp_v1 = (var_s6 * 6) + D_88233844;
+  gDPSetPrimColor(D_800D0510++, 0, 0, temp_v1[0], temp_v1[1], temp_v1[2], 0xFF);
+  var_s2 = 0;
+  gDPSetEnvColor(D_800D0510++, temp_v1[3], temp_v1[4], temp_v1[5], 0xFF);
+  do
+  {
+    // FAKE: multiply by one, keeps the var_s6 web live across the loop; removal scores 365.
+    // Score without: 365.
+    var_s6 = var_s6 * 1;
+    temp_s0 = *((u8 **) (((D_88234730 + 0x74) + (var_s6 * 8)) + var_s2));
+    // FAKE: empty `if (1)` wrapper; removal scores 50. Score without: 50.
+    if (1)
+    {
+      if (var_s2 == 0)
+      {
+        var_s1 = 0x154;
+        // FAKE: u16-to-s16 truncation of the width difference; removal scores 460.
+        // Score without: 460.
+        var_s3 = (s16) (0x23C - (*((u16 *) temp_s0)));
+        // FAKE: goto to the immediately following label; removal scores 50.
+        // Score without: 50.
+        goto dummy_label_320532;
+        dummy_label_320532:
+        ;
+      }
+      else
+      {
+        var_s1 = 0x194;
+        var_s3 = (s16) (0x23C - (*((u16 *) temp_s0)));
+      }
+    }
+    func_8004D1FC(temp_s0);
+    GfxRect_DrawTextured(0x42, (s16) var_s1, *((s16 *) temp_s0), *((s16 *) (temp_s0 + 2)), -0x10, -0x10, 0x400, 0x400, 0);
+    temp_v0_6 = *((u16 *) temp_s0);
+    // FAKE: empty `if (1)` wrapper; removal scores 50. Score without: 50.
+    if (1)
+    {
+    }
+    GfxRect_DrawTextured((s16) var_s3, (s16) var_s1, temp_v0_6, *((s16 *) (temp_s0 + 2)), (temp_v0_6 << 5) - 0x10, -0x10, -0x400, 0x400, 0);
+    // FAKE: empty `if` on the loop counter; it moves constant 8 one step later in the
+    // callee-saved register walk, landing it in $s5 after the 0x23C constant in $s4.
+    // Removal scores 45. Score without: 45.
+    if (var_s2 == 8) {}
+    var_s2 += 4;
+  }
+  while (var_s2 != 8);
+}
+/* mkdraft:func_88215E54 end */
+
+/* mkdraft:func_882160F8 begin */
+extern u8 D_80094DE0[];
+extern u8 D_80094E00[];
+extern u8 D_80094F50[];
+extern Gfx *D_800D0510;
+extern s32 D_880068B8;
+extern u8 D_8800686C;
+extern u8 *D_88234564;
+extern u8 *D_88234730;
+extern u8 D_88233880[];
+extern s32 D_882345C8;
+extern s32 D_882346F0;
+extern s16 D_8800EF58;
+extern void func_88206668(void);
+extern void func_88206714(u8 *, u8);
+extern void func_88207D14(u8 *);
+extern void func_88207D80(u8, s32, s16, u8 *, u8 *, s32);
+extern s32 func_88215CE0(void);
+extern void func_88215C4C(void);
+extern void func_88215D4C(void);
+extern void func_88215E54(void);
+extern void func_88215420(u8, u8);
+extern void func_88206CC0(u8 *, u8, s32, s16, u8 *, u8 *, void *);
+extern void StorageList_DrawRows(u8, u8);
+extern void func_88215BCC(void);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_800496A4(s32, s32);
+extern void func_80049064(s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_88000808(u8, s32, s32, s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_880006BC(Color88217F70 *);
+extern void func_88005C7C(void);
+extern void func_88005F08(void);
+extern s32 func_880032C4(void);
+extern void func_80006F70(Gfx **, s32, s32, s32, s32);
+
+
+void func_882160F8(void) {
+    s32 padA[2]; // FAKE: frame pad; without it the frame is 0x58 and the diff score is 10.
+    s32 modes[2];
+    Gfx *gfx;
+    s32 alternate_mode;
+    s32 i;
+    s32 padC[4]; // FAKE: frame pad; without it the frame is 0x50 and the diff score is 132.
+
+    if (D_880068B8 == 0) {
+        return;
+    }
+
+    if (*(s32 *)(D_88234564 + 0x1C) != 2) {
+        func_88206668();
+        return;
+    }
+
+    if (*(s32 *)(D_88234564 + 0xA4) != 2) {
+        func_88206714(D_88233880, D_88234730[0]);
+        func_800498C4();
+        func_88215C4C();
+        func_800499EC();
+        return;
+    }
+
+    alternate_mode = func_88215CE0();
+    func_88207D14(D_88234730 + 0x64);
+
+    for (i = 0; i < 2; i++) {
+        if (((StorageListScrollRecord *)(D_88234730 + 12))[i].residual == 0) {
+            modes[i] = 6;
+        } else {
+            modes[i] = 7;
+        }
+    }
+
+    gfx = D_800D0510++; gfx->words.w0 = 0xDE000000; gfx->words.w1 = (u32)D_80094DE0;
+    func_88215420(0, modes[0]);
+    func_88215420(1, modes[1]);
+    func_88005C7C();
+    func_88206CC0(D_88233880, D_88234730[0], *(s32 *)(D_88234730 + 4),
+                  *(s16 *)(D_88234730 + 8), D_88234730 + 0xC, D_88234730 + 0x38,
+                  func_88215BCC);
+
+    if (alternate_mode != 0) {
+        func_88215E54();
+    }
+
+    gfx = D_800D0510++; gfx->words.w0 = 0xDE000000; gfx->words.w1 = (u32)D_80094E00;
+    func_88000808(D_8800686C, 0x46, 0x50, 1, 0x200000);
+    func_8004D19C(0x238, 0x50, D_882345C8, 1, 0x200000);
+    gfx = D_800D0510++; gfx->words.w0 = 0xDE000000; gfx->words.w1 = (u32)D_80094F50; if ((!modes) && (!modes)) { } // FAKE: emits no code; the test only shifts ugen temp allocation so this group's &D_800D0510 address lands in $a1 (without it: $a0, diff score 25).
+    func_800498C4();
+    func_880006BC(&D_88005FA0);
+    func_800496A4(4, 1);
+    func_80049064(0xA9, 0x53, 1, func_8004C874(0x23, 8));
+    func_80049064(0x1D5, 0x53, 1, func_8004C874(0x23, 9));
+    func_80006F70(&D_800D0510, 0x34, 0x7D, 0xDF, 0xA1);
+    StorageList_DrawRows(0, modes[0]);
+    func_80006F70(&D_800D0510, 0x16B, 0x7D, 0xDF, 0xA1);
+    StorageList_DrawRows(1, modes[1]);
+    func_80006F70(&D_800D0510, 0x2C, 0x48, 0x229, 0x17F);
+    func_880006E0(&D_88005FA0);
+
+    if (*(s32 *)(D_88234730 + 4) != 0) {
+        func_88215C4C();
+    } else if (alternate_mode != 0) {
+        func_88215D4C();
+    } else if (D_882346F0 == 4 && D_8800EF58 == 0) {
+        func_800496A4(4, 2);
+        func_80049064(0x140, 0x198, 1, func_8004C874(0x23, 7));
+        func_800496A4(0x10, 2);
+        func_80049064(0x140, 0x15F, 1, func_8004C874(0x23, 0x19));
+    }
+
+    func_88005F08();
+    func_800499EC();
+    func_88207D80(D_88234730[0], *(s32 *)(D_88234730 + 4),
+                  *(s16 *)(D_88234730 + 8), D_88234730 + 0xC,
+                  D_88234730 + 0x38, func_880032C4() == 0);
+}
+/* mkdraft:func_882160F8 end */
 #endif
