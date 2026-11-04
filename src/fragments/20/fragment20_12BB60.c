@@ -84,7 +84,74 @@ void TrailEffect_Advance(RecordTrail *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12BB60/func_82603D70.s")
+
+/* mkdraft:func_82603D70 begin */
+extern Gfx *D_800D0510;
+
+
+
+void func_82603D70(RecordTrail *arg0, s32 arg1, s32 arg2)
+{
+  s32 i;
+  s32 pos;
+  s32 start;
+  s32 depth;
+  s32 alpha;
+  s32 width;
+  s32 height;
+  RecordTrailPoint *point;
+  s32 x;
+  s32 y;
+  s32 dsdx;
+  s32 dtdy;
+  f32 scale;
+  f32 px;
+  f32 py;
+  float new_var;
+  if (arg0->index == (-1))
+  {
+    return;
+  }
+  start = (arg0->index - arg0->count) + 1;
+  if (start < 0)
+  {
+    start += 0x100;
+  }
+  i = 0;
+  if (arg0->count > 0)
+  {
+  pos = start; do {
+      depth = (arg0->index - (pos % 256)) + 1;
+      if (depth <= 0)
+      {
+        depth = depth + 0x100;
+      }
+      alpha = 0xFF - ((s32) (((((f32) depth) * 255.0f) / ((f32) arg0->count)) + ((((((f32) depth) * 255.0f) / ((f32) arg0->count)) > 0.0f) ? (0.5f) : (-0.5f))));
+      scale = 1.0f - ((((f32) depth) * 0.5f) / ((f32) arg0->count));
+      if (alpha > 0)
+      {
+        width = (s32) ((((f32) arg1) * scale) + (((((f32) arg1) * scale) > 0.0f) ? (0.5f) : (-0.5f)));
+        height = (s32) ((((f32) arg2) * scale) + (((((f32) arg2) * scale) > 0.0f) ? (0.5f) : (-0.5f)));
+        point = arg0->points;
+        point += pos % 256;
+        px = point->x;
+        new_var = px + ((px > 0.0f) ? (0.5f) : (-0.5f));
+        py = point->y;
+        x = ((s32) new_var) - (width / 2);
+        y = ((s32) (py + ((py > 0.0f) ? (0.5f) : (-0.5f)))) - (height / 2);
+        dsdx = (s32) ((1024.0f / (((f32) width) / ((f32) arg1))) + (((1024.0f / (((f32) width) / ((f32) arg1))) > 0.0f) ? (0.5f) : (-0.5f)));
+        dtdy = (s32) ((1024.0f / (((f32) height) / ((f32) arg2))) + (((1024.0f / (((f32) height) / ((f32) arg2))) > 0.0f) ? (0.5f) : (-0.5f)));
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, alpha);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0xFF, 0xFF);
+        GfxRect_DrawTextured((s16) x, (s16) y, (s16) width, (s16) height, 0, 0, dsdx, dtdy, 0);
+      }
+      i++;
+      pos++;
+    }
+    while (i < arg0->count);
+  }
+}
+/* mkdraft:func_82603D70 end */
 
 extern u8 D_826163E0[];
 extern RecordTrail D_826163E8[8];
