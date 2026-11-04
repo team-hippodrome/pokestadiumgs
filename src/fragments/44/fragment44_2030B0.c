@@ -94,7 +94,33 @@ void func_8AF152A8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15384.s")
+extern s32 D_8AF33DAC;
+extern s32 D_8AF33DB0;
+extern s32 D_8AF33DB4;
+extern s32 func_8004D1FC(u8 *);
+void func_8AF15384(u8 arg0) {
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, 0xF0A7008, 0);
+    switch (arg0) {
+        case 0:
+        case 2:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0, 200, 200, 255);
+            gDPSetEnvColor(D_800D0510++, 0, 200, 200, 255);
+            func_8004D1FC((u8 *)D_8AF33DAC);
+            break;
+        case 5:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 200, 200, 0, 255);
+            gDPSetEnvColor(D_800D0510++, 200, 200, 0, 255);
+            func_8004D1FC((u8 *)D_8AF33DB4);
+            break;
+        case 20:
+        case 40:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 200, 0, 0, 255);
+            gDPSetEnvColor(D_800D0510++, 200, 0, 0, 255);
+            func_8004D1FC((u8 *)D_8AF33DB0);
+            break;
+    }
+}
 
 extern Gfx *D_800D0510;
 
@@ -109,7 +135,7 @@ void func_8AF15584(s16 arg0, s16 arg1, s16 arg2) {
     s32 row;
     s32 col;
 
-    func_8AF15384(arg0 & 0xFF);
+    func_8AF15384((u8)arg0);
     for (row = 0; row < 17; row++) {
         for (col = 0; col < 17; col++) {
             if (arg0 == D_8AF337E8[row][col]) {
@@ -135,7 +161,7 @@ void func_8AF15954(s16 value, s16 x, s16 y) {
     u8 first;
     u8 second;
 
-    func_8AF15384(value & 0xFF);
+    func_8AF15384((u8)value);
     for (row = 0; row < 17; row++) {
         for (col = 0; col < D_8AF33C80; col++) {
             first = D_8AF33770[D_8AF33C72 + col][0];
