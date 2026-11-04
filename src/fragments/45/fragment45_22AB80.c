@@ -678,7 +678,7 @@ s32 func_8AB07A34(s32 arg0) {
 
 /* mkdraft:func_8AB07C34 begin */
 s32 func_8AB066B4(s32 arg0);
-s32 func_8005453C(s32);
+u8 func_8005453C(s32);
 extern s16 D_8AB16A34;
 extern u8 D_8AB126A8[];
 extern void *D_8AB168D0;
