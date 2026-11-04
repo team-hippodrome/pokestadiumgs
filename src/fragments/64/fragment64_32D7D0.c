@@ -13,9 +13,53 @@ s32 func_87F0AB60(s32 arg0, s32 arg1, s32 arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32D7D0/func_87F0ABA4.s")
+extern s16 func_8004B920(s32 arg0, s32 arg1);
+extern ColorAdjustment func_8003F5AC(u8 *arg0);
+extern s32 func_8006456C(s32 arg0);
+extern s32 func_8004B98C(s32 arg0);
+extern ColorAdjustment func_8004B9E0(s32 arg0);
 
-extern ColorAdjustment func_87F0ABA4(s32, s32);
+
+
+ColorAdjustment func_87F0ABA4(u8 *arg0, s32 mode) {
+    u8 *entry;
+    ColorAdjustment result;
+    u32 step;
+
+    result.raw = 0;
+    entry = arg0 + 4;
+    if (*(s8 *)arg0 == 0) {
+        //!bug Modes outside 0..3 leave step uninitialized; it is still read below.
+        switch (mode) {
+        case 0:
+            step = 0;
+            break;
+        case 1:
+            step = 2;
+            break;
+        case 2:
+            step = 1;
+            break;
+        case 3:
+            step = 3;
+            break;
+        }
+        // The original calls func_8004B920(entry[0], 0) separately for each of its
+        // two uses below instead of reusing the first result.
+        result.unk_00 = (((func_8004B920(*(u8 *)entry, 1) - func_8004B920(*(u8 *)entry, 0)) / 3 * step) +
+                         func_8004B920(*(u8 *)entry, 0)) << 6;
+    } else {
+        result = func_8003F5AC(entry);
+        if (func_8006456C(*(u16 *)(entry + 0x16)) != 0) {
+            if (func_8004B98C(*(u8 *)entry) == 2) {
+                result = func_8004B9E0(*(u8 *)entry);
+            }
+        }
+    }
+    return result;
+}
+
+ColorAdjustment func_87F0ABA4(u8 *arg0, s32 mode);
 
 void func_87F0ACDC(void *arg0, s32 arg1, void *arg2, s32 arg3) {
     u8 *entry;
@@ -29,7 +73,7 @@ void func_87F0ACDC(void *arg0, s32 arg1, void *arg2, s32 arg3) {
 }
 
 s32 func_87F0AB60(s32, s32, s32);
-extern ColorAdjustment func_87F0ABA4(s32, s32);
+ColorAdjustment func_87F0ABA4(u8 *arg0, s32 mode);
 
 ColorAdjustment func_87F0AD50(s32 arg0, s32 arg1, s32 arg2) {
     return func_87F0ABA4(func_87F0AB60(arg0, arg1, arg2), arg2);

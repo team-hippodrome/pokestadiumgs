@@ -342,7 +342,113 @@ void func_87F06D24(s32 kind, u8 *node) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06EAC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F0785C.s")
+extern Gfx *D_800D0510;
+extern f32 D_80087E50[];
+extern s32 func_8004C990(s32, s32);
+extern void func_8004D1FC(void *);
+extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+
+void func_87F0785C(u8 *arg0) {
+    f32 alpha;
+    f32 value;
+    s32 angle;
+    s32 i;
+    s16 *tex;
+    s32 y;
+    u8 *entry;
+    u8 *node;
+
+    value = (f32) (*(u32 *) (arg0 + 0x28) % 360U) * 5.0f * 182.0416718f;
+    if (value >= 0.0f) {
+        angle = (s32) (value + 0.5f);
+    } else {
+        angle = (s32) (value - 0.5f);
+    }
+    value = D_80087E50[(u16) angle >> 4] + 0.5f;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetCombine(D_800D0510++, 0xFC30FE61, 0x55FEF379);
+    gDPSetEnvColor(D_800D0510++, 0, 0, 0, 0xFF);
+    func_8004D1FC((void *) func_8004C990(0x1AB, 0));
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0x2F, 0x2F, 0xC3, 0xFF);
+    GfxRect_DrawTextured(0xBB, 0x27, 0x62, 0xC, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(0x11D, 0x27, 8, 0xC, 0xE0, 0, -0x400, 0x400, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0x2D, 0x79, 0x08, 0xFF);
+    GfxRect_DrawTextured(0xBB, 0x35, 0x62, 0xC, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(0x11D, 0x35, 8, 0xC, 0xE0, 0, -0x400, 0x400, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0xD1, 0x1C, 0x1C, 0xFF);
+    GfxRect_DrawTextured(0xBB, 0x43, 0x62, 0xC, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(0x11D, 0x43, 8, 0xC, 0xE0, 0, -0x400, 0x400, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0xDD, 0x82, 0x00, 0xFF);
+    GfxRect_DrawTextured(0xBB, 0x51, 0x62, 0xC, 0, 0, 0x400, 0x400, 0);
+    GfxRect_DrawTextured(0x11D, 0x51, 8, 0xC, 0xE0, 0, -0x400, 0x400, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0xFCFFD3FF, 0xFFA4FE7F);
+
+    alpha = value * 255.0f;
+    if (alpha < 0.0f) {
+        alpha = 0.0f;
+    }
+    if (alpha > 255.0f) {
+        alpha = 255.0f;
+    }
+    gDPSetEnvColor(D_800D0510++, 0, 0, 0, (u32) alpha);
+    tex = (s16 *) func_8004C990(0x1AC, 0);
+    func_8004D1FC(tex);
+    for (i = 0, entry = arg0; i < 4; i++) {
+        if (*(s8 *) (entry + 0x24) != 0) {
+            GfxRect_DrawTextured(0xC0, (s16) (i * 0xE + 0x28), tex[0], tex[1], 0, 0, 0x400, 0x400, 0);
+        }
+        entry++;
+    }
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0xFCFFD3FF, 0xFFA4FE7F);
+    alpha = (1.0f - value) * 255.0f;
+    if (alpha < 0.0f) {
+        alpha = 0.0f;
+    }
+    if (alpha > 255.0f) {
+        alpha = 255.0f;
+    }
+    for (i = 0, entry = arg0, y = 0x29; i < 4; i++) {
+        if (*(s8 *) (entry + 0x24) != 0) {
+            gDPSetEnvColor(D_800D0510++, 0, 0, 0, (u32) alpha);
+        } else {
+            gDPSetEnvColor(D_800D0510++, 0, 0, 0, 0xFF);
+        }
+        if (*(u8 *) (arg0 + 0x10) & (1 << i)) {
+            tex = (s16 *) func_8004C990(0x1AB, i + 2);
+        } else {
+            tex = (s16 *) func_8004C990(0x1AB, 1);
+        }
+        func_8004D1FC(tex);
+        GfxRect_DrawTextured(0xBD, (s16) y, tex[0], tex[1], 0, 0, 0x400, 0x400, 0);
+        entry++;
+        y += 0xE;
+    }
+
+    func_800498C4();
+    func_800496A4(1, 0);
+    for (i = 0, node = arg0; i < 4; i++) {
+        if (*(s32 *) (node + 0x14) != 0) {
+            y = i * 0xE + 0x28;
+            func_8004972C(0, 0, 0, 0xAA);
+            func_800495F8(0xF9, y, 1, *(s32 *) (node + 0x14));
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            func_800495F8(0xF8, y, 1, *(s32 *) (node + 0x14));
+        }
+        node += 4;
+    }
+    func_800499EC();
+}
 
 /* mkdraft:func_87F07FE8 begin */
 extern Gfx *D_800D0510;
@@ -351,7 +457,7 @@ extern u8 *D_87F15B88;
 extern void func_8000766C(void **, s32, s32, s32, s32);
 extern void func_800503A4(s32);
 extern void func_8003C6B8(s32);
-extern void func_87F0785C(void *);
+void func_87F0785C(u8 *arg0);
 
 
 
