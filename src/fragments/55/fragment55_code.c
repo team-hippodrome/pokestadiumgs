@@ -402,7 +402,144 @@ void func_8670211C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86702434.s")
+
+/* mkdraft:func_86702434 begin */
+#ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+extern s32 D_8670BB48;
+
+extern s32 D_8670B374;
+extern M2C_UNK D_8670BDC8;
+extern f64 D_8670C358;
+extern f64 D_8670C360;
+extern f64 D_8670C368;
+extern f32 D_8670C370;
+extern M2C_UNK D_86728328;
+
+
+void func_86702434(void)
+{
+  f32 temp_ft1;
+  f32 temp_ft3;
+  f32 temp_ft3_2;
+  f32 temp_ft4;
+  f32 var_ft0;
+  f32 var_ft1;
+  f32 var_ft1_2;
+  f32 var_ft1_3;
+  f32 var_ft1_4;
+  f32 var_ft2;
+  f32 var_ft5;
+  f32 var_ft5_2;
+  f32 var_ft5_3;
+  s32 *var_s4;
+  s32 temp_v0;
+  s32 temp_v0_2;
+  s32 temp_v0_3;
+  s32 temp_v0_4;
+  s32 temp_v0_5;
+  s32 var_s3;
+  u32 temp_v0_6;
+  u32 temp_v0_7;
+  u32 temp_v0_8;
+  u32 temp_v0_9;
+  void *temp_s0;
+  for (var_s3 = 0, var_s4 = &D_8670B374; var_s3 != 4; var_s3++, var_s4++)
+  {
+    if ((*var_s4) != 0)
+    {
+      temp_s0 = ((u8 *) (&D_86728328)) + (var_s3 * 0x38);
+      *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x30)) = (s32) (guRandom() % 4);
+      *((s32 *) (((u8 *) (&D_8670BB48)) + 0x58)) += 1;
+      if (*((s32 *) (((u8 *) (&D_8670BB48)) + 0x58)) >= 3)
+      {
+        *((s32 *) (((u8 *) (&D_8670BB48)) + 0x58)) = 0;
+      }
+      temp_v0_5 = func_8003570C();
+      *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x2C)) = 0;
+      *((s32 *) (((u8 *) temp_s0) + 0x14)) = 1;
+      if ((((s32) temp_v0_5) & 3) < 3)
+      {
+        *((s32 *) (((u8 *) temp_s0) + 0x14)) = 0;
+      }
+      temp_v0 = *var_s4;
+      switch (temp_v0)
+      {
+        case 1:
+          *((f32 *) (((u8 *) temp_s0) + 0)) = (f32) ((guRandom() % 50) + 0xFA);
+          temp_ft3 = (f32) (0x19 - (guRandom() % 10));
+          *((f32 *) (((u8 *) temp_s0) + 4)) = temp_ft3;
+          *((s32 *) (((u8 *) temp_s0) + (0x10 & 0xFFFFFFFF))) = 4;
+          *((f32 *) (((u8 *) temp_s0) + 8)) = (f32) (((f64) (((((f32) func_8003570C()) / 4294967296.0f) * 0.3f) * ((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) temp_s0) + 0x30)))))))) + 1.5);
+          *((f32 *) (((u8 *) temp_s0) + 0xC)) = (f32) (((f64) (((((f32) func_8003570C()) / 4294967296.0f) * 0.5f) * ((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) temp_s0) + 0x30)))))))) + 4.0);
+
+          break;
+
+        case 2:
+          *((f32 *) (((u8 *) temp_s0) + 0)) = (f32) ((guRandom() % 50) + 0xC8);
+          temp_ft4 = (f32) (0x19 - (guRandom() % 10));
+          *((f32 *) (((u8 *) temp_s0) + 4)) = temp_ft4;
+          *((s32 *) (((u8 *) temp_s0) + 0x10)) = 3;
+          *((f32 *) (((u8 *) temp_s0) + 8)) = (f32) (((f64) (((((f32) func_8003570C()) / 4294967296.0f) * 0.2f * ((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) temp_s0) + 0x30))))))))) + 1.3);
+          *((f32 *) (((u8 *) temp_s0) + 0xC)) = (f32) (((f64) (((((f32) func_8003570C()) / 4294967296.0f) * 0.2f * ((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) temp_s0) + 0x30))))))))) + 3.5);
+          break;
+
+        case 3:
+          *((f32 *) (((u8 *) temp_s0) + 0)) = (f32) (((guRandom() % 10) * 5) + 0x96);
+          temp_ft3_2 = (f32) (0x1E - (guRandom() % 10));
+          *((f32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 4)) = temp_ft3_2;
+          *((s32 *) (((u8 *) temp_s0) + 0x10)) = 2;
+          temp_v0_6 = func_8003570C();
+          var_ft1_4 = (f32) ((u32) temp_v0_6);
+          *((f32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 8)) = (f32) (((f64) (((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x30)))))) * ((var_ft1_4 / 4294967296.0f) * 0.15f))) + 1.15);
+          temp_v0_7 = func_8003570C();
+          var_ft2 = (f32) ((u32) temp_v0_7);
+          *((f32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0xC)) = (f32) (((f64) (((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x30)))))) * ((var_ft2 / 4294967296.0f) * 0.15f))) + 2.8);
+          break;
+
+        case 4:
+          *((f32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0)) = (f32) (((guRandom() % 10) * 5) + 0x78);
+          temp_ft1 = (f32) (0x1E - (guRandom() % 10));
+          *((f32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 4)) = temp_ft1;
+          *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x10)) = 1;
+          temp_v0_8 = func_8003570C();
+          var_ft5_3 = (f32) ((u32) temp_v0_8);
+          *((f32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 8)) = (f32) (((f64) (((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x30)))))) * ((var_ft5_3 / 4294967296.0f) * 0.15f))) + 1.0);
+          temp_v0_9 = func_8003570C();
+          var_ft0 = (f32) ((u32) temp_v0_9);
+          *((f32 *) (((u8 *) temp_s0) + 0xC)) = (f32) (((f64) (((f32) (*((&D_8670BDC8) + (*((s32 *) (((u8 *) temp_s0) + 0x30)))))) * ((var_ft0 / 4294967296.0f) * 0.15f))) + 2.2);
+
+      }
+
+      *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x20)) = 0;
+      if ((guRandom() % 100) >= 0x33)
+      {
+        *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x34)) = 1;
+      }
+      else
+      {
+        *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x34)) = -1;
+      }
+      *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x1C)) = 0;
+      *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x24)) = 0;
+      *((s32 *) (((u8 *) (((u8 *) (&D_86728328)) + (var_s3 * 0x38))) + 0x28)) = 0;
+    }
+  }
+}
+/* mkdraft:func_86702434 end */
 #endif
 
 #ifdef VERSION_US
