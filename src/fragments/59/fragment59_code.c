@@ -2126,7 +2126,23 @@ void func_86909EAC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690B700.s")
+// Swap adjacent records when the current table-adjusted Y is smaller.
+void func_8690B700(void) {
+    unk_D_8691A448_entry temp;
+    s32 i;
+    s32 j;
+
+    for (i = 1; i < D_8691A448.unk_320; i++) {
+        for (j = i; j > 0; j--) {
+            if (D_8690E7BC[D_8691A448.entries[j].unk_0C].unk_08 * 3.0f + D_8691A448.entries[j].y <
+                D_8690E7BC[D_8691A448.entries[j - 1].unk_0C].unk_08 * 3.0f + D_8691A448.entries[j - 1].y) {
+                temp = D_8691A448.entries[j];
+                D_8691A448.entries[j] = D_8691A448.entries[j - 1];
+                D_8691A448.entries[j - 1] = temp;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
