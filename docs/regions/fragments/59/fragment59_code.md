@@ -30,3 +30,41 @@ after each inner switch and hoists `v0 = 0` into the `bgez` delay slot;
 retail has neither. Tried: inner `if` chains, a `result` variable with breaks,
 an inner `default: return 0`, and the permuter (300 s, 700 → 480 by moving the
 last `return 0` inside the outer switch, which still isn't exact).
+
+## `func_8690B700`: adjacent-record ordering
+
+The 82-instruction / 328-byte leaf scans the active prefix of the existing
+20-byte records. For each index from 1 onward, it visits every preceding
+adjacent pair and swaps the complete records when the current key is smaller.
+The key is `D_8690E7BC[entry.unk_0C].unk_08 * 3.0f + entry.y`; equal keys
+retain their order. The loop keeps scanning after a comparison that does
+not swap. The broader table and field meanings remain unresolved.
+
+`func_86902640` invokes this owner before `func_8690B848` processes the
+ordered entries. The existing state view supplies the record layout and
+count field at offset 800. `D_8691A768` aliases that count: it is
+`D_8691A448 + 800`. Reading `D_8691A448.unk_320` preserves the original
+count reload after the inner loop; treating the alias as an independent C
+object lets the compiler cache it. No declaration or storage changes.
+//@src/fragments/59/fragment59_code.c
+
+Validated against master `41a710733596fea373e3faf9ec1d5ccaf66c09b2`
+plus this replacement for `VERSION=us`:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/59/fragment59_code.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check HEAD^
+```
+
+The forced normal syntax-enabled full US build reports exactly
+`build/pokestadiumgs-us.z64: OK`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`; retail comparison and whitespace checks
+pass. The owner keeps its 32-byte frame and ROM extent `0x2D8AB0..0x2D8BF8`.
+All 57,488 linked module text bytes and 2,384 rodata bytes equal retail.
+Defined symbol extents and all 3,753 text plus 542 rodata relocation targets
+agree after resolving the count alias. The two count-load relocation pairs
+use the state base plus 800 instead of the scalar alias; all other raw
+module bytes agree with the assembly-backed baseline. Previously matched
+C remains exact. No fake, padding or instruction rewrite is introduced.
