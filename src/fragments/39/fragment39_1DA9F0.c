@@ -131,7 +131,49 @@ void func_88A00978(u8 *arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A00B44.s")
+void func_88A00B44(u8 *arg0, u8 *arg1) {
+    u32 i;
+    u32 j;
+    u8 *entry;
+    u8 *destination;
+
+    arg1[57] = arg0[1];
+    _bcopy(((u8 (*)[2])(arg0 + 9))[arg0[5]], arg1 + 58, arg0[1] * 2);
+    ((u8 (*)[2])(arg1 + 58))[arg1[57]][0] = 0xFF;
+    if (func_8800005C() != 0) {
+        arg1[126] = 0;
+        arg1[127] = 0xFF;
+        arg1[0] = 0;
+        for (i = 1; i < 57; i++) {
+            arg1[i] = 0;
+        }
+        arg1[99] = 0;
+        arg1[100] = 0xFF;
+    } else {
+        arg1[126] = arg0[2];
+        _bcopy(((u8 (*)[2])(arg0 + 9))[arg0[6]], arg1 + 127, arg0[2] * 2);
+        ((u8 (*)[2])(arg1 + 127))[arg1[126]][0] = 0xFF;
+        entry = ((u8 (*)[2])(arg0 + 9))[arg0[7]];
+        for (j = 0, i = 0; i < 57; i++) {
+            if (j == arg0[3]) {
+                arg1[i] = 0;
+            } else if (entry[0] == D_88A01B80[i]) {
+                arg1[i] = entry[1];
+                entry += 2;
+                j++;
+            } else {
+                arg1[i] = 0;
+            }
+        }
+        arg1[99] = arg0[4];
+        entry = ((u8 (*)[2])(arg0 + 9))[arg0[8]];
+        for (i = 0, destination = arg1 + 100; i < arg0[4]; i++, destination++) {
+            *destination = entry[0];
+            entry += 2;
+        }
+        arg1[arg1[99] + 100] = 0xFF;
+    }
+}
 
 /* mkdraft:func_88A00D0C begin */
 extern s8 D_88006868;
