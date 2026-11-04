@@ -70,42 +70,41 @@ s32 func_86400114(void *arg0, f32 arg1, void *arg2, void *arg3, void *arg4, f32 
 
 #ifdef VERSION_US
 /* mkdraft:func_864001E0 begin */
-#pragma REWRITE_FUNCTION_WORD(func_864001E0, 0xA0, 0x46024282, 0x46081282)
-
 s32 func_864001E0(f32 *arg0, f32 arg1, f32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5) {
-    f32 temp_fa0;
-    f32 temp_fa0_2;
-    f32 temp_fv0;
-    f32 temp_fv1;
-    f32 temp_fv1_2;
-    s32 var_v1;
+    f32 normal_x;
+    f32 normal_y;
+    f32 delta_y;
+    f32 distance;
+    f32 delta_x;
+    s32 within_radius;
 
-    var_v1 = 0;
+    within_radius = 0;
     arg4[0] = arg0[0] - arg2[0];
-    temp_fv1 = arg4[0];
+    delta_x = arg4[0];
     arg4[1] = arg0[1] - arg2[1];
-    temp_fa0 = arg4[1];
-    temp_fv0 = sqrtf((temp_fv1 * temp_fv1) + (temp_fa0 * temp_fa0));
-    if (temp_fv0 < arg1) {
-        if (temp_fv0 == 0.0f) {
+    delta_y = arg4[1];
+    distance = sqrtf((delta_x * delta_x) + (delta_y * delta_y));
+    if (distance < arg1) {
+        if (distance == 0.0f) {
             arg4[0] = arg3[0];
             arg4[1] = arg3[1];
         } else {
-            arg4[0] = temp_fv1 / temp_fv0;
-            arg4[1] = temp_fa0 / temp_fv0;
+            arg4[0] = delta_x / distance;
+            arg4[1] = delta_y / distance;
         }
-        temp_fv1_2 = arg4[0];
-        temp_fa0_2 = arg4[1];
-        if (((temp_fa0_2 * arg3[1]) + (temp_fv1_2 * arg3[0])) >= 0.0f) {
-            *arg5 = arg1 - temp_fv0;
+        normal_y = arg4[1];
+        if (((normal_y * arg3[1]) + (arg3[0] * arg4[0])) >= 0.0f) {
+            *arg5 = arg1 - distance;
         } else {
-            arg4[0] = temp_fv1_2;
-            arg4[1] = temp_fa0_2;
-            *arg5 = arg1 + temp_fv0;
+            // The retail routine writes the normal back unchanged on this path.
+            normal_x = arg4[0];
+            arg4[0] = normal_x;
+            arg4[1] = normal_y;
+            *arg5 = arg1 + distance;
         }
-        var_v1 = 1;
+        within_radius = 1;
     }
-    return var_v1;
+    return within_radius;
 }
 /* mkdraft:func_864001E0 end */
 #endif
