@@ -15,7 +15,64 @@ void func_83200028(void *arg0, void *arg1, void *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/5/fragment5_code/func_83200078.s")
+
+/* mkdraft:func_83200078 begin */
+extern Gfx *D_800D0510;
+extern void *Gfx_AllocDisplayList(s32 arg0);
+extern s32 func_8004CA10(void *arg0);
+extern s32 func_8004CA24(void *arg0);
+extern s32 func_8004D1FC(void *arg0);
+extern void func_81801810(u8 *arg0, s32 arg1, s32 arg2);
+extern void func_8180189C(u8 *arg0, void *arg1, f32 arg2);
+extern void Gfx_SetVertexAttributes(Vtx *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, u8 arg6, u8 arg7, u8 arg8, u8 arg9);
+
+
+
+void func_83200078(void *arg0, s32 arg1, s32 arg2, f32 arg3, s32 arg4) {
+    Vtx *vertices;
+    s32 i;
+    s32 height;
+    s32 width;
+    s16 corners[4][2];
+
+    vertices = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+    height = func_8004CA24(arg0);
+    width = func_8004CA10(arg0);
+    func_81801810((u8 *)&corners[0], (s32)(-width * 0.5), -height);
+    func_81801810((u8 *)&corners[1], (s32)(width * 0.5), -height);
+    func_81801810((u8 *)&corners[2], (s32)(-width * 0.5), 0);
+    func_81801810((u8 *)&corners[3], (s32)(width * 0.5), 0);
+
+    for (i = 0; i < 4; i++) {
+        func_8180189C((u8 *)&corners[i], &corners[i], arg3);
+        corners[i][0] += arg1;
+        corners[i][1] += arg2;
+    }
+
+    Gfx_SetVertexAttributes(&vertices[0], corners[0][0], corners[0][1], -1, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[1], corners[1][0], corners[1][1], -1, width << 5, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[2], corners[2][0], corners[2][1], -1, 0, height << 5, 0xFF, 0xFF, 0xFF, 0xFF);
+    Gfx_SetVertexAttributes(&vertices[3], corners[3][0], corners[3][1], -1, width << 5, height << 5, 0xFF, 0xFF,
+                            0xFF, 0xFF);
+
+    gDPPipeSync(D_800D0510++);
+    gSPTexture(D_800D0510++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    func_8004D1FC(arg0);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    if (arg4 != 0) {
+        gDPSetPrimColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0x0F, 0x17, 0x64, 0x00);
+    } else {
+        gDPSetPrimColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+        gDPSetEnvColor(D_800D0510++, 0x00, 0x00, 0x00, 0x00);
+    }
+    gSPClearGeometryMode(D_800D0510++, G_ZBUFFER | G_LIGHTING);
+    gDPSetCombineMode(D_800D0510++, G_CC_BLENDPEDECALA, G_CC_BLENDPEDECALA);
+    gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gSPVertex(D_800D0510++, (u32)vertices & 0x1FFFFFFF, 4, 0);
+    gSP2Triangles(D_800D0510++, 0, 2, 3, 0, 0, 3, 1, 0);
+}
+/* mkdraft:func_83200078 end */
 #endif
 
 #ifdef VERSION_US
