@@ -78,8 +78,10 @@ s32 func_83400A64(s32 arg0, u8 *arg1) {
     s16 angleY;
 
     if (arg0 == 2) {
-        for (i = 0; i < 3; i++) {
+        i = 0;
+        for (;;) {
             dst[0x18 + i] = D_83404188.colorA[i];
+            if (++i == 3) break;
         }
         dst[0x1B] = D_83404188.colorA[3];
         func_80037120(D_80094908 + 0xB4, D_80094908 + 0xA8, &distance, &angleX, &angleY);
@@ -97,8 +99,10 @@ s32 func_83400AFC(s32 arg0, u8 *arg1) {
     s16 angleY;
 
     if (arg0 == 2) {
-        for (i = 0; i < 3; i++) {
+        i = 0;
+        for (;;) {
             dst[0x18 + i] = D_83404188.colorB[i];
+            if (++i == 3) break;
         }
         dst[0x1B] = D_83404188.colorB[3];
         func_80037120(D_80094908 + 0xB4, D_80094908 + 0xA8, &distance, &angleX, &angleY);
@@ -350,21 +354,10 @@ extern s32 D_834047F0;
 extern s16 D_834047F2;
 extern s32 D_83404800;
 
-/* uopt colors the 300.0f constant before the 0x24/0x28 read-backs; the retail
- * allocation rotates the three fpu temps {f4, f6, f8} by one slot (300.0f in
- * f6, 0x28 read in f8, 0x24 read in f4). The six words below only rewrite the
- * ft register fields; the tail's f4/f6 reuse and the 0x53 block (f10/f16/f18)
- * already match. */
-#pragma REWRITE_FUNCTION_WORD(func_83402B10, 0x90, 0x44812000, 0x44813000)
-#pragma REWRITE_FUNCTION_WORD(func_83402B10, 0x9C, 0xE6040028, 0xE6060028)
-#pragma REWRITE_FUNCTION_WORD(func_83402B10, 0xA0, 0xC6060028, 0xC6080028)
-#pragma REWRITE_FUNCTION_WORD(func_83402B10, 0xA8, 0xC6080024, 0xC6040024)
-#pragma REWRITE_FUNCTION_WORD(func_83402B10, 0xC0, 0xE6260028, 0xE6280028)
-#pragma REWRITE_FUNCTION_WORD(func_83402B10, 0xC4, 0xE6280024, 0xE6240024)
-
-/* mkdraft:func_83402B10 begin */
 void func_83402B10(void) {
-    f32 temp_fv0;
+    f32 model_scale;
+    s32 model_index;
+    u8 *model;
 
     D_834041B0 = 0;
     func_8003F1DC(&D_83404250);
@@ -372,20 +365,23 @@ void func_83402B10(void) {
                   **(s32 **)((u8 *)*(void **)((u8 *)D_8340424C + 0x38) + 8));
     func_8003F114(&D_83404688, 0, -1, (void *)D_83404800);
     *(u8 *)(&D_83404688 + 0x1D) = 0xFF;
-    temp_fv0 = func_8004B888(*(s16 *)((u8 *)D_83404164 + 0x658));
+    model_scale = func_8004B888(*(s16 *)((u8 *)D_83404164 + 0x658));
     *(f32 *)(&D_83404688 + 0x2C) = 0.0f;
-    *(f32 *)(&D_83404688 + 0x28) = 300.0f;
     *(f32 *)(&D_83404688 + 0x24) = *(f32 *)(&D_83404688 + 0x2C);
-    *(f32 *)(&D_83404250 + 0x38) = temp_fv0;
-    *(f32 *)(&D_83404250 + 0x34) = temp_fv0;
-    *(f32 *)(&D_83404250 + 0x30) = temp_fv0;
+    *(f32 *)(&D_83404250 + 0x24) = *(f32 *)(&D_83404688 + 0x24);
+    *(f32 *)(&D_83404688 + 0x28) = 300.0f;
+    *(f32 *)(&D_83404250 + 0x38) = model_scale;
+    *(f32 *)(&D_83404250 + 0x34) = model_scale;
+    *(f32 *)(&D_83404250 + 0x30) = model_scale;
     *(f32 *)(&D_83404250 + 0x2C) = *(f32 *)(&D_83404688 + 0x2C);
     *(f32 *)(&D_83404250 + 0x28) = *(f32 *)(&D_83404688 + 0x28);
-    *(f32 *)(&D_83404250 + 0x24) = *(f32 *)(&D_83404688 + 0x24);
-    if (D_834047F0 != 0x53) {
-        *(volatile f32 *)(&D_83404688 + 0x28) = 150.0f;
-        *(f32 *)(&D_83404688 + 0x28) = -150.0f;
-        *(f32 *)(&D_83404250 + 0x28) = *(f32 *)(&D_83404688 + 0x28);
+    if (D_834047F0 != 83) {
+        *(f32 *)(&D_83404688 + 0x28) = 150.0f;
+        // Update the effect model first, then copy its height to the primary model.
+        for (model_index = 0; model_index < 2; model_index++) {
+            model = model_index == 0 ? &D_83404688 : &D_83404250;
+            *(f32 *)(model + 0x28) = model_index == 0 ? -150.0f : *(f32 *)(&D_83404688 + 0x28);
+        }
     }
     *(f32 *)(&D_83404688 + 0x38) = 0.0f;
     *(f32 *)(&D_83404688 + 0x34) = *(f32 *)(&D_83404688 + 0x38);
