@@ -30,3 +30,40 @@
   Retail keeps extra register copies of `time` and `mode`, and spills the
   remainder (`sp+0x28`) and `color` (`sp+0x38`). A sweep of
   `time`/`mode`/`frame` widths only reaches 0.63 (72 vs 75 instructions).
+
+## `func_84102D38`: color-buffer texture commands
+
+The 83-instruction / 332-byte owner obtains a color-buffer descriptor through
+`func_8411EF64(func_8411E164(record[2]))`. The first helper selects the other
+player context; the second selects `D_84190414` or `D_84190418`. Their producer
+`func_8410AA18` allocates RGBA16 images with `func_800071A4`; the local
+`GfxImage` view follows the 16-byte descriptor initialized by
+`GfxImage_Initialize` (width/height at 4/6, image pointer at 8).
+//@src/fragments/79/fragment79_38D510.c
+//@src/fragments/79/fragment79_379E90.c
+//@src/7A50.c
+
+It appends a primitive-color modulation command and a clamped RGBA16 tile
+load to its incoming display list, appends render mode `0x0C184A50` through
+`D_800D0510`, and returns the advanced incoming pointer. `func_84102E84`
+selects this path when the low six flag bits equal `0x3F`. Unsigned dimension
+locals reproduce the tile-stride arithmetic; no new fake or storage is used.
+
+Validated against master `c91ff625e11148ab7d5268c8cab228595655e6ba`
+plus this replacement for `VERSION=us`:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/79/fragment79_36F8B0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check HEAD^
+```
+
+The normal syntax-enabled full build reports exactly
+`build/pokestadiumgs-us.z64: OK`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail comparison and whitespace checks
+pass. All 13,616 module text bytes, 160 rodata bytes, defined symbol extents,
+and 289 text plus 25 rodata semantic relocations equal the assembly-backed
+baseline. The new helper prototypes change their undefined ELF symbols from
+NOTYPE to FUNC. The owner retains its 24-byte frame and ROM extent
+`0x3725C8..0x372714`; all previously matched C bytes remain exact.
