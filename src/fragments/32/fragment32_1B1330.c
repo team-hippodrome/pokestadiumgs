@@ -12,7 +12,63 @@ extern u8 D_88308E09[];
 extern s8 D_88308E04;
 void func_88300020(s32 arg0, s32 arg1) { func_8004300C(arg0); func_88600020(arg1); func_88600074(arg0); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_88300054.s")
+extern u8 *D_8860189C;
+extern s32 D_88601898;
+extern u8 *D_88308DE8;
+extern u16 D_88308DF8[];
+extern u16 D_88308DFA;
+extern u8 D_88308DFD;
+extern u8 D_88308DFE;
+extern u8 D_88308E0B;
+extern u8 D_88308E0C;
+extern u8 D_88308E0E;
+extern u8 D_88308E11;
+extern void func_88001D0C(void *);
+extern void func_88307FB0(void *);
+extern void *func_8004B7A4(s32);
+extern s32 func_80042FBC(void *, s32);
+extern void func_88600C38(u16, s32);
+extern u8 func_883083C8(u8 *);
+extern u8 func_88308464(const u8 *);
+void func_88300054(s16 arg0, u8 arg1, u8 arg2) {
+    s32 previous;
+    s32 next;
+
+    if (arg1 != 0) {
+        previous = 1;
+    } else {
+        previous = 0;
+    }
+    if (arg2 != 0) {
+        next = 1;
+    } else {
+        next = 0;
+    }
+    if (arg0 == 0x800) {
+        *(s16 *)(D_8860189C + 10) -= arg1;
+    } else if (arg0 == 0x400) {
+        *(s16 *)(D_8860189C + 10) += arg2;
+    }
+    func_88001D0C(D_8860189C);
+    func_88307FB0(D_8860189C);
+    D_88308DF8[0] = *((u16 **)(u32)D_88601898)[*(s16 *)(D_8860189C + 8)];
+    func_8004B7A4(D_88308DF8[0]);
+    func_80042FBC(D_88308DE8, D_88308DF8[0]);
+    func_8004B7A4(D_88308DF8[0]);
+    D_88308DFA = D_88308DF8[0];
+    func_8004B7A4(D_88308DF8[0]);
+    func_88600C38(D_88308DFA, 0);
+    func_8004B7A4(D_88308DF8[0]);
+    D_88308E11 = 3;
+    D_88308E0B = 2;
+    D_88308E0C = 2;
+    D_88308E09[0] = 2;
+    D_88308DFD = func_883083C8(D_8860189C);
+    D_88308DFE = func_88308464(D_8860189C);
+    if ((D_88308DFD ? 1 : 0) != previous || (D_88308DFE ? 1 : 0) != next) {
+        D_88308E0E = 2;
+    }
+}
 
 extern void *D_88308DF0;
 extern u16 D_88308DFA;
