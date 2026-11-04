@@ -881,7 +881,83 @@ void func_826053A4(void *arg0, void *arg1) {
 }
 /* mkdraft:func_826053A4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826057A8.s")
+
+/* mkdraft:func_826057A8 begin */
+extern s32 func_8004C874(s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern s32 func_800472E0(u8 *);
+
+typedef struct { s16 unk_00; s16 unk_02; } unk_pair_826057A8;
+typedef struct {
+    s16 unk_00;
+    s16 unk_02;
+    u16 unk_04;
+    u8 unk_06[0xA];
+    unk_pair_826057A8 unk_10;
+    s16 unk_14;
+    s16 unk_16;
+    unk_pair_826057A8 unk_18;
+    u8 unk_1C[8];
+    s16 unk_24;
+    s16 unk_26;
+    s16 unk_28;
+    s16 unk_2A;
+    s16 unk_2C;
+    s16 unk_2E;
+    s16 unk_30[2];
+} unk_desc_826057A8;
+typedef struct {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+    s16 unk_06;
+    u8 *unk_08;
+} unk_out_826057A8;
+typedef struct {
+    u8 *unk_00;
+    u8 unk_04[8];
+    u8 *unk_0C;
+    u8 unk_10[8];
+    s16 unk_18[0x10];
+    s16 unk_38[0x10];
+} unk_res_826057A8;
+
+
+
+void func_826057A8(void *arg0, void *arg1) {
+    unk_desc_826057A8 *desc = arg1;
+    unk_out_826057A8 *out = (unk_out_826057A8 *)((u8 *)arg1 + 0x30);
+    unk_res_826057A8 *res;
+    u8 *state;
+    u8 *entry;
+    u8 *tbl;
+    s16 idx;
+    s16 var;
+
+    res = *(unk_res_826057A8 **)((u8 *)arg0 + 0x110);
+    state = res->unk_00;
+    idx = *(s16 *)(state + 0x88);
+    var = res->unk_38[idx];
+    tbl = *(u8 **)((u8 *)res + 0xC);
+    entry = res->unk_18[idx] * 0x98 + (0, tbl) + 4;
+    desc->unk_04 &= ~1;
+    desc->unk_30[0] = 0x10;
+    desc->unk_30[1] = 0x18;
+    out->unk_08 = (u8 *)func_8004C874(0x4C + entry[3], var);
+    desc->unk_10.unk_00 = 0;
+    desc->unk_10.unk_02 = 0;
+    desc->unk_18 = desc->unk_10;
+    desc->unk_14 = 0;
+    desc->unk_16 = 0;
+    desc->unk_24 = func_80049148(8, 0, (const char *)out->unk_08) + out->unk_00 * 2;
+    desc->unk_26 = func_800472E0(out->unk_08) * 0x14 + out->unk_02 * 2;
+    desc->unk_28 = 0x80;
+    desc->unk_2C = 0x10;
+    desc->unk_2A = desc->unk_24;
+    desc->unk_2C = 0x10;
+    desc->unk_2E = desc->unk_26;
+}
+/* mkdraft:func_826057A8 end */
 
 s32 func_826058CC(s32 arg0) {
     s32 result;

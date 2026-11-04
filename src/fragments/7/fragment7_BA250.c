@@ -3017,7 +3017,99 @@ void func_8300A208(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_8300A2CC.s")
+
+/* mkdraft:func_8300A2CC begin */
+typedef struct {
+    u8 pad_00[0x1C];
+    u8 unk_1C;
+    u8 unk_1D;
+    u8 unk_1E;
+    u8 pad_1F[0x19];
+    u8 *unk_38;
+} Fragment7WidgetState;
+
+typedef struct {
+    u8 pad_0000[0xE040];
+    s32 unk_E040;
+    u8 pad_E044[8];
+    s32 unk_E04C;
+} Fragment7StageArena;
+
+extern Fragment7StageArena D_8304FD00;
+extern u8 D_8304FBCD;
+extern s32 D_8304FC2C;
+extern void func_80064D28(void);
+extern void func_816018CC(s32);
+extern void func_80025CBC(s32);
+extern s32 func_8180132C(s32);
+extern s32 func_81801388(s32, s32);
+extern void WidgetState_Update(void *);
+
+// State machine for the fragment 7 widget panel: bytes 0x1C/0x1D select the
+// transition and 0x1E receives the new id, then D_8304FC2C (set by the transition
+// into 8) decides whether func_83009EC4 re-syncs the panel this frame.
+// D_8300FD00 is declared `extern u8` earlier in this file, so the state table is
+// reached through a cast of its address. unk_38 is a byte pointer: the target
+// reads *(s32 *)(unk_38 + 0x10), a 16-byte offset into the structure it points at.
+
+
+s32 func_8300A2CC(s32 arg0) {
+    int var_v1;
+    int var_v2;
+    if (D_8304FD00.unk_E04C == -1) {
+        func_80064D28();
+    }
+    func_816018CC(1);
+    var_v1 = ((Fragment7WidgetState *) (&D_8300FD00))->unk_1D;
+    var_v2 = ((Fragment7WidgetState *) (&D_8300FD00))->unk_1C;
+    if (var_v1 == var_v2) {
+        switch (var_v2) {
+        case 17:
+            ((Fragment7WidgetState *) (&D_8300FD00))->unk_1E = 18;
+            break;
+        case 8:
+            D_8304FC2C = 1;
+            ((Fragment7WidgetState *) (&D_8300FD00))->unk_1E = 1;
+            break;
+        case 27:
+            ((Fragment7WidgetState *) (&D_8300FD00))->unk_1E = 26;
+            D_8304FD00.unk_E040 = 0;
+            break;
+        case 34:
+            ((Fragment7WidgetState *) (&D_8300FD00))->unk_1E = 33;
+            D_8304FD00.unk_E040 = 0;
+            break;
+        case 42:
+            ((Fragment7WidgetState *) (&D_8300FD00))->unk_1E = 41;
+            D_8304FD00.unk_E040 = 0;
+            break;
+        }
+    }
+    // The state bytes are re-read only when func_83009EC4 runs: it can rewrite the
+    // panel, so a load made before the call does not describe the state afterwards.
+    if (D_8304FC2C != 0) {
+        func_83009EC4((void *)&D_8300FD00);
+        var_v1 = ((Fragment7WidgetState *) (&D_8300FD00))->unk_1D;
+        var_v2 = ((Fragment7WidgetState *) (&D_8300FD00))->unk_1C;
+    }
+    if ((var_v1 == var_v2) && ((s32)D_8304FBCD > 0)) {
+        if (*(s32 *)(((Fragment7WidgetState *) (&D_8300FD00))->unk_38 + 0x10) != 0) {
+            if (func_81801388(0xF, 1) != 0) {
+                arg0 = 1;
+                func_80025CBC(3);
+            }
+        } else {
+            arg0 = 1;
+        }
+    } else {
+        func_8180132C(5);
+        if (D_8304FC2C == 0) {
+            WidgetState_Update((void *)&D_8300FD00);
+        }
+    }
+    return arg0;
+}
+/* mkdraft:func_8300A2CC end */
 #endif
 
 #ifdef VERSION_US

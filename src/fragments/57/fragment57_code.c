@@ -2869,7 +2869,35 @@ s32 func_83307C2C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307C7C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833084B0.s")
+
+/* mkdraft:func_833084B0 begin */
+extern void StageContext_SetClearColor(u16 arg0);
+extern s32 StageFade_StartFromOpaque(s32 duration);
+extern s32 func_800086A4(s32);
+extern void func_80064D28(void);
+extern s32 func_83307C7C();
+
+
+
+s32 func_833084B0(void) {
+    s32 value;
+    s32 var_s0;
+
+    var_s0 = 1;
+    func_800086A4(2);
+    StageContext_SetClearColor(1);
+    StageFade_StartFromOpaque(0xA);
+    do {
+        // FAKE: the 64-bit round trip only steers register allocation (t6 instead of v0).
+        value = (s64)*(s32 *)(D_8330A288 + 8);
+        if (value == -1) {
+            func_80064D28();
+        }
+        func_83303564();
+        var_s0 = func_83307C7C(var_s0);
+    } while (var_s0 != 0xE);
+}
+/* mkdraft:func_833084B0 end */
 
 s32 Asset_LoadToSegment(u32, s32 *, s32 *, s32); /* extern */
 s32 Gfx_FreeDisplayListBuffers();               /* extern */

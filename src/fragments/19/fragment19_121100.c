@@ -367,7 +367,79 @@ void func_82301140(s32 arg0, s32 arg1, s16 arg2) {
 }
 /* mkdraft:func_82301140 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230125C.s")
+extern u32 D_82305D88;
+extern s16 D_82305E68[];
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+extern f32 D_80088E50[];
+extern u16 D_82305E72;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern s32 MathUtil_Random16(void);
+
+typedef struct unk_D_82305D88_entry {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ u16 state;
+    /* 0x04 */ s16 x;
+    /* 0x06 */ s16 y;
+    /* 0x08 */ s16 size;
+    /* 0x0A */ s16 phase;
+    /* 0x0C */ s16 timer;
+} unk_D_82305D88_entry;
+
+// Walks the 16 entries of 0x0E bytes that span &D_82305D88 up to &D_82305E68.
+// The termination test stays at the bottom in `if (++entry == ...) break;` form
+// instead of a do-while condition: written as the for-init, the entry address joins
+// uopt's loop-invariant hoist group, so the preheader at 0x823012E8 emits `lui %hi`
+// for D_82305D88, D_80088E50 and D_82305E68 in that order and the three matching
+// `addiu %lo` in reverse. A do-while that assigns `entry` in a plain preheader
+// statement puts the D_82305D88 `addiu` first and leaves three words wrong.
+
+
+
+
+void func_8230125C(void) {
+    unk_D_82305D88_entry *entry;
+    u16 *fl;
+
+    gSPDisplayList(D_800D0510++, D_80094E78);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0, 0xFF);
+    func_8004D1FC((u8 *)func_8004C990(147, 0));
+    // Address of the per-frame "disable" flag word. Reached through this pointer so
+    // uopt rematerializes it as `lui %hi` plus a folded `lhu %lo` at each of the three
+    // reads; reading D_82305E72 directly hoists the address into a ninth saved
+    // register and the frame grows from 0x40 to 0x48.
+    fl = &D_82305E72;
+    for (entry = (unk_D_82305D88_entry *)&D_82305D88;;) {
+        if (entry->unk_00 != 0) {
+            switch (entry->state) {
+                case 1:
+                    entry->size = (s32)(D_80088E50[(u16)entry->phase >> 4] * 16.0f) + 0x10;
+                    func_82301140(entry->x, entry->y, entry->size);
+                    if (!(*fl & 4)) {
+                        entry->phase += 0x1000;
+                    }
+                    if ((u16)entry->phase == 0x8000) {
+                        entry->state = 2;
+                        entry->timer = (MathUtil_Random16() & 7) + 20;
+                    }
+                    break;
+
+                case 2:
+                    if (!(*fl & 4)) {
+                        entry->timer--;
+                        if (entry->timer == 0) {
+                            entry->state = 1;
+                        }
+                    }
+                    break;
+            }
+        }
+        if (++entry == (unk_D_82305D88_entry *)D_82305E68) {
+            break;
+        }
+    }
+}
 
 extern s16 D_82305E6E;
 s32 func_82301428(void) {

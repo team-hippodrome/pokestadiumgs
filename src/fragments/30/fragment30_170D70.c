@@ -495,5 +495,159 @@ void func_88104214(void)
 }
 /* mkdraft:func_88104214 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170D70/func_88104730.s")
+
+extern void *Util_Malloc(s32);
+extern s32 func_8005CB38(s32, s32);
+extern s32 func_8005EE88(s32, s32, void *);
+extern s32 func_800532C4(s32);
+extern s32 func_80053524(s32, void *);
+extern s32 func_8800005C(void);
+extern void *func_8004C874(s32, s32);
+extern s32 func_8004C54C(s32, s32);
+extern s32 func_88004804(void *, s32, s32, s32, s32, s32, s32, s32, s32, void *, void *, void *, void *, s32, s32);
+extern void func_88103DC8(void);
+extern void func_88104214(void);
+extern s32 D_880068B4;
+extern u8 D_88000E4C[];
+typedef struct {
+    u8 unk_00[0x4C];
+} unk_D_8800ED50;
+extern unk_D_8800ED50 D_8800ED50[];
+
+
+
+s32 func_88104730(u8 arg0) {
+    u32 i;
+    u32 j;
+    u32 off;
+    u8 *list;
+    u8 *entry;
+
+    D_88104EA0 = Util_Malloc(0x170);
+    if (arg0 == 0x53) {
+        ((u8 *)D_88104EA0)[0xA2] = 0;
+    } else {
+        ((u8 *)D_88104EA0)[0xA2] = 1;
+    }
+    ((u8 *)D_88104EA0)[0xA3] = arg0;
+    *(s32 *)((u8 *)D_88104EA0 + 0x8) = 0;
+    *(s32 *)((u8 *)D_88104EA0 + 0x2C) = 4;
+    *(s16 *)((u8 *)D_88104EA0 + 0x30) = 1;
+    *(s16 *)((u8 *)D_88104EA0 + 0x32) = 4;
+    entry = D_88A01C30->unk_10 * 0x18 + (u8 *)D_88A01C34;
+    for (i = 0; i < 2; i++) {
+        j = 0;
+        if (i == 0) {
+            list = (u8 *)D_88104EA0 + 0xC;
+            *(u16 *)(list + 4) = func_8005CB38(D_88006868, 0x21);
+            *(void **)((u8 *)D_88104EA0 + 0x38) = Util_Malloc(*(u16 *)(list + 4) * 4);
+            if (*(u16 *)(list + 4) != 0) {
+                off = 0;
+                do {
+                    *(void **)((u8 *)*(void **)((u8 *)D_88104EA0 + 0x38) + off) = Util_Malloc(9);
+                    func_8005EE88(D_88006868, j, *(void **)((u8 *)*(void **)((u8 *)D_88104EA0 + 0x38) + off));
+                    j++;
+                    off += 4;
+                } while (j < *(u16 *)(list + 4));
+                j = 0;
+            }
+            *(void **)list = *(void **)((u8 *)D_88104EA0 + 0x38);
+        } else {
+            list = (u8 *)D_88104EA0 + 0x1C;
+            *(u16 *)(list + 4) = func_800532C4(0x11);
+            *(void **)((u8 *)D_88104EA0 + 0x3C) = Util_Malloc(*(u16 *)(list + 4) * 4);
+            if (*(u16 *)(list + 4) != 0) {
+                off = 0;
+                do {
+                    *(void **)((u8 *)*(void **)((u8 *)D_88104EA0 + 0x3C) + off) = Util_Malloc(0x12);
+                    func_80053524(j, *(void **)((u8 *)*(void **)((u8 *)D_88104EA0 + 0x3C) + off));
+                    j++;
+                    off += 4;
+                } while (j < *(u16 *)(list + 4));
+                j = 0;
+            }
+            *(void **)list = *(void **)((u8 *)D_88104EA0 + 0x3C);
+        }
+        *(s16 *)(list + 6) = 0;
+        *(s32 *)(list + 8) = 0;
+        *(void **)(list + 0xC) = Util_Malloc(*(u16 *)(list + 4));
+        if (*(u16 *)(list + 4) != 0) {
+            do {
+                if (*(u8 *)(entry + 0x14) == *(u8 *)(entry + 0x15)) {
+                    *(s32 *)(list + 8) = 1;
+                    ((u8 *)*(void **)(list + 0xC))[j] = 1;
+                    if (j == *(s16 *)(list + 6)) {
+                        *(s16 *)(list + 6) = *(s16 *)(list + 6) + 1;
+                    }
+                } else {
+                    ((u8 *)*(void **)(list + 0xC))[j] = 0;
+                }
+                j++;
+                entry += 0x18;
+            } while (j < *(u16 *)(list + 4));
+        }
+    }
+    *(s32 *)((u8 *)D_88104EA0 + 0x40) = 1;
+    *(s16 *)((u8 *)D_88104EA0 + 0x44) = 0;
+    _bzero((u8 *)D_88104EA0 + 0x50, 3);
+    *(s32 *)((u8 *)D_88104EA0 + 0x48) = 0;
+    *(u8 **)((u8 *)D_88104EA0 + 0x4C) = (u8 *)D_88104EA0 + 0x50;
+    if (func_8800005C() != 0 || D_88A01C34->unk_14 == D_88A01C34->count) {
+        *(s32 *)((u8 *)D_88104EA0 + 0x48) = 1;
+        *(u8 *)((u8 *)D_88104EA0 + 0x50) = 1;
+        *(s16 *)((u8 *)D_88104EA0 + 0x44) = 1;
+    }
+    if (func_8800005C() != 0 || *(u16 *)((u8 *)D_88104EA0 + 0x10) == *(s16 *)((u8 *)D_88104EA0 + 0x12)) {
+        *(s32 *)((u8 *)D_88104EA0 + 0x48) = 1;
+        *(u8 *)((u8 *)D_88104EA0 + 0x51) = 1;
+        if (*(s16 *)((u8 *)D_88104EA0 + 0x44) == 1) {
+            *(s16 *)((u8 *)D_88104EA0 + 0x44) = 2;
+        }
+    }
+    if (*(u16 *)((u8 *)D_88104EA0 + 0x20) == *(s16 *)((u8 *)D_88104EA0 + 0x22)) {
+        *(s32 *)((u8 *)D_88104EA0 + 0x48) = 1;
+        *(u8 *)((u8 *)D_88104EA0 + 0x52) = 1;
+        if (*(s16 *)((u8 *)D_88104EA0 + 0x44) == 2) {
+            func_88103BB8();
+            return 0;
+        }
+    }
+    /* FAKE: dead copy of the func_88004804 result into the scratch local `off`;
+       the copy is coalesced away, but its uop numbering makes IDO place the
+       D_8800ED50 lui one slot before the index subu. Score without: 60. */
+    off = func_88004804(NULL, 3, 0x35, 0x70, 0, 3, 0xFF, 0xFF, 0xFF, func_88103DC8, func_88104214, func_88103B90, func_88103CAC, 0, 0);
+    *(void **)((u8 *)D_88104EA0 + 0) = &D_8800ED50[off];
+    *(s16 *)((u8 *)*(void **)((u8 *)D_88104EA0) + 0x10) = 0xE9;
+    *(s16 *)((u8 *)*(void **)((u8 *)D_88104EA0) + 0x12) = 0xB6;
+    *(void **)((u8 *)D_88104EA0 + 4) = &D_8800ED50[func_88004804((u8 *)D_88104EA0 + 8, 1, 0x11E, 0x70, 0, 3, 0xFF, 0xFF, 0xFF, D_88000E4C, D_88000E4C, D_88000E4C, D_88000E4C, 0, 0)];
+    D_880068B4 = 0;
+    func_8004C54C(0x19, func_8004B7A4(arg0));
+    func_8004C8A0((u8 *)D_88104EA0 + 0x62, 0x40, 0x1E, 0x15);
+    j = 0;
+    for (; j < 3; j++) {
+        *(s32 *)((u8 *)D_88104EA0 + 0x54 + j * 4) = func_8004C874(0x1E, j + 0x16);
+    }
+    if (func_8800005C() != 0) {
+        *(u16 *)((u8 *)D_88104EA0 + 0x60) = func_80049290(8, 1, *(void **)((u8 *)D_88104EA0 + 0x5C));
+    } else {
+        *(u16 *)((u8 *)D_88104EA0 + 0x60) = func_80049290(8, 1, *(void **)((u8 *)D_88104EA0 + 0x54)) + 0x22;
+        j = 0;
+        /* FAKE: keeps the max-loop counter web on s0/s1 (score without: 40). */
+        off = j;
+        do {
+            *(u16 *)((u8 *)D_88104EA0 + 0x60) =
+                (func_80049290(8, 1, *(void **)((u8 *)D_88104EA0 + 0x58 + off)) < *(u16 *)((u8 *)D_88104EA0 + 0x60))
+                    ? *(u16 *)((u8 *)D_88104EA0 + 0x60)
+                    : func_80049290(8, 1, *(void **)((u8 *)D_88104EA0 + 0x58 + off));
+            off += 4;
+        } while (off != 8);
+    }
+    *(s32 *)((u8 *)D_88104EA0 + 0x164) = 0;
+    *(s32 *)((u8 *)D_88104EA0 + 0x168) = 1;
+    *(u8 *)((u8 *)D_88104EA0 + 0x16C) = 0;
+    *(u8 *)((u8 *)D_88104EA0 + 0x16D) = 0;
+    *(u8 *)((u8 *)D_88104EA0 + 0x16E) = 0;
+    *(s8 *)((u8 *)D_88104EA0 + 0x16F) = -1;
+    return 1;
+}
 #endif

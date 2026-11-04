@@ -25,7 +25,83 @@ void func_81601A38(s32 *arg0, s32 arg1) {
 
 void func_81601A78(s32 arg0, s32 arg1) { func_816019C0(arg0, 0xAD, arg1); func_816019C0(arg0, 0x4F, arg1); func_816019C0(arg0, 0x4E, arg1); func_816019C0(arg0, 0x50, arg1); func_816019C0(arg0, 0x54, arg1); func_816019C0(arg0, 0x53, arg1); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9520/func_81601B00.s")
+
+/* mkdraft:func_81601B00 begin */
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 GbSave_GetPortAvailability(s32);
+extern s32 func_8005CB38(s32, s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 func_80062304(u8 *);
+
+typedef struct { u8 unk_00[0x01]; u8 unk_01; u8 unk_02[0x5E]; } GbBoxEntry;
+typedef struct { u8 data[0x90]; } GbPartyRecord;
+typedef struct { u8 data[0x10]; } GbPairRecord;
+
+
+
+void func_81601B00(s32 arg0, s32 arg1, s32 arg2) {
+    GbBoxEntry box;
+    u8 *handle;
+    s32 port;
+    s32 deck;
+    s32 slot;
+    u8 *handle2;
+    s32 index;
+    GbPartyRecord party;
+    GbPairRecord pair;
+    u8 *mon;
+
+    if (arg1 < 0 || arg1 >= 4 || GbSave_GetPortAvailability(arg1)) {
+        return;
+    }
+    port = 0;
+    if (func_8005CB38(arg1, 0x21) >= 0) {
+        do {
+            deck = (port == 0) ? 0x20 : 0x21;
+            slot = (port > 0) ? port - 1 : 0;
+            if (arg1 >= 0 && arg1 < 4) {
+                handle = func_8006218C(deck, arg1, slot, 0);
+                if (handle != 0) {
+                    if (Deck_ReadEntries((u8 *)&box, 1, handle) != 0) {
+                        do {
+                            if (box.unk_01) {
+                                func_816019C0(arg0, box.unk_01, arg2);
+                            }
+                        } while (Deck_ReadEntries((u8 *)&box, 1, handle) != 0);
+                    }
+                    func_80062304(handle);
+                }
+            }
+            port++;
+        } while (func_8005CB38(arg1, 0x21) >= port);
+    }
+    if (arg1 >= 0 && arg1 < 4) {
+        handle2 = func_8006218C(0x23, arg1, 0, 0);
+        if (handle2 != 0) {
+            if (Deck_ReadEntries((u8 *)&party, 1, handle2) != 0) {
+                for (index = 0; index < party.data[0x39]; index++) {
+                    mon = party.data + 0x3A + index * 2;
+                    if (mon[0] > 0 && mon[1] > 0) {
+                        func_816019C0(arg0, mon[0], arg2);
+                    }
+                }
+                func_80062304(handle2);
+            }
+        }
+    }
+    if (arg1 >= 0 && arg1 < 4) {
+        handle = func_8006218C(0x22, arg1, 0, 0);
+        if (handle != 0) {
+            if (Deck_ReadEntries((u8 *)&pair, 1, handle) != 0) {
+                if (pair.data[0] > 0 && pair.data[1] > 0) {
+                    func_816019C0(arg0, pair.data[0], arg2);
+                }
+            }
+            func_80062304(handle);
+        }
+    }
+}
+/* mkdraft:func_81601B00 end */
 
 void func_81601D24(s32 arg0, s32 arg1) {
     if (arg1 != 0x19) func_816019C0(arg0, 0xA3, 1);

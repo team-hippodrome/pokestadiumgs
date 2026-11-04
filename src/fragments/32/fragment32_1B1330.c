@@ -344,7 +344,59 @@ void func_88304F5C(void) {
         } while (D_88006860 == 1);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_88305020.s")
+
+extern u8 D_88308E38[];
+extern u8 D_88308E98[];
+extern u8 *D_88308DE8;
+extern void *D_88308DF0;
+extern s32 D_88006860;
+extern s32 D_886017AC;
+
+extern s32 func_80001FF0(void);
+extern f32 D_88308924;
+extern void func_80064D28(void);
+extern void func_88301C00(s32);
+extern void func_88300AC4(u16);
+extern void StageFade_StartFromTransparent(s32);
+extern void func_88600020();
+
+
+
+void func_88305020(void) {
+    u8 *ptr;
+    u8 *end;
+    s32 delay_frames;
+    s32 i;
+
+    delay_frames = (u16)((f32)func_80001FF0() * D_88308924 / 2);
+    D_886017AC = 0;
+    *(u16 *)((u8 *)D_88308DF0 + 0) &= ~4;
+    *(u16 *)((u8 *)D_88308DE8 + 0) &= ~4;
+    *(u16 *)((u8 *)D_88308DE8 + 0) &= ~2;
+    *((s32 *)(*(u8 **)((u8 *)D_88308DF0 + 0x1C) + 0x4C)) = 0;
+    *((s32 *)(*(u8 **)((u8 *)D_88308DE8 + 0x1C) + 0x4C)) = 0;
+    func_88300AC4((D_88006860 ^ 7) == 0);
+    // Same source line on purpose: as1 breaks scheduling ties by .loc line, so
+    // the loop preheader emits its two address chains in target order only while
+    // both pointer initializations are tied.
+    ptr = (u8 *)D_88308E38; end = (u8 *)D_88308E98;
+    do {
+        ptr[4] = 1;
+        ptr += 0x18;
+    } while (ptr < end);
+    StageFade_StartFromTransparent(delay_frames);
+    if (delay_frames != 0) {
+        i = 0;
+        do {
+            func_80064D28();
+            func_88301C00(2);
+            i++;
+        } while (i != delay_frames);
+    }
+    if (D_88006860 == 2 || D_88006860 == 3) {
+        func_88600020(D_88308DE8);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_883051E4.s")
 
@@ -377,7 +429,7 @@ M2C_UNK func_80047610();                            /* extern */
 M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 void func_88304F5C(void);
-M2C_UNK func_88305020();                            /* extern */
+void func_88305020(void);                            /* extern */
 M2C_UNK func_883051E4(s32, s32);                    /* extern */
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */

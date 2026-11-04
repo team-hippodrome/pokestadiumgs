@@ -428,7 +428,65 @@ void Fragment21_DrawTexturedBorder(s32 x, s32 y, s32 width, s32 height) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82505A64.s")
+
+/* mkdraft:func_82505A64 begin */
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+#ifndef ROUND_MAX
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+#endif
+
+
+void func_82505A64(void *arg0, s32 arg1, s32 arg2)
+{
+  s16 y;
+  s16 x;
+  s32 pad[3];
+  f32 scale_x;
+  f32 scale_y;
+  Fragment21TextureHeader *texture;
+  texture = (Fragment21TextureHeader *) func_8004C990(0x85, 0);
+  scale_x = ((f32) arg1) / ((f32) ((u32) texture->width));
+  if (arg2) // FAKE: empty branch; without it the score is 2312
+  {
+  }
+  scale_y = ((f32) arg2) / ((f32) ((u32) texture->height));
+  x = (*((s16 *) (((u8 *) arg0) + 0x18))) + (*((s16 *) (((u8 *) arg0) + 0x10)));
+  y = (*((s16 *) (((u8 *) arg0) + 0x1A))) + (*((s16 *) (((u8 *) arg0) + 0x12)));
+  if (scale_y) // FAKE: empty branch; without it the score is 300
+  {
+  }
+  if ((scale_x > 0.0f) && (scale_y > 0.0f))
+  {
+    s32 xs = x + 8;
+    s32 ys = y + 8;
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    if (arg1) // FAKE: empty branch; without it the score is 870
+    {
+    }
+    gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    ;
+    // env colour straight from arg0 bytes 0x48..0x4B. Not written as
+    // gDPSetEnvColor(pkt, r, g, b, a): the retail code evaluates the
+    // OR chain in g,b,a,r order, so the macro spelling stops matching.
+    {
+      Gfx *_g = (Gfx *) (D_800D0510++);
+      _g->words.w0 = (unsigned int) ((((unsigned int) 0xfb) & ((0x01 << 8) - 1)) << 24);
+      _g->words.w1 = (unsigned int) (((unsigned int) (((((unsigned int) (((((unsigned int) ((u8 *) arg0)[0x49])) & ((0x01 << 8) - 1))))) << 16))) | ((unsigned int) (((((unsigned int) (((((unsigned int) ((u8 *) arg0)[0x4A])) & ((0x01 << 8) - 1))))) << 8))) | ((unsigned int) (((((unsigned int) (((((unsigned int) ((u8 *) arg0)[0x4B])) & ((0x01 << 8) - 1))))) << 0))) | ((unsigned int) (((((unsigned int) (((((unsigned int) ((u8 *) arg0)[0x48])) & ((0x01 << 8) - 1))))) << 24))));
+    }
+    ;
+    func_8004D1FC((u8 *) texture);
+    gSPScisTextureRectangle(D_800D0510++, xs << 2, ys << 2, (xs + arg1 - 1) << 2, (ys + arg2 - 1) << 2, 0, 0, 0, (s32) ROUND_MAX(1024.0f / scale_x), (s32) ROUND_MAX(1024.0f / scale_y));
+    ;
+    gDPPipeSync(D_800D0510++);
+    {
+      gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    ;
+    Fragment21_DrawTexturedBorder(x, y, *((s16 *) (((u8 *) arg0) + 0x24)), *((s16 *) (((u8 *) arg0) + (0x26))));
+  }
+}
+/* mkdraft:func_82505A64 end */
 
 typedef struct {
     s16 state;

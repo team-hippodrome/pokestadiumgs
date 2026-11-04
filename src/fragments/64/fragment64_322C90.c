@@ -38,7 +38,81 @@ void func_87F00030(void) {
     func_87F0252C(D_87F11750, (u8 *)D_87F11768 + 32, (u8 *)D_87F11768 + 52, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_322C90/func_87F00138.s")
+extern void func_87F026E8(void *, void *);
+extern u8 **D_87F11768;
+extern void *D_87F119DC;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 D_87F11438;
+extern f32 D_87F1143C;
+extern f32 D_87F11440;
+extern f32 D_87F11444;
+extern f32 D_87F11448;
+extern f32 D_87F1144C;
+extern f32 D_87F11450;
+
+
+
+
+void func_87F00138(void) {
+    f32 temp_fa0;
+    f32 sp18;
+    f32 temp_fa0_2;
+    f32 temp_fa1;
+    f32 temp_ft5;
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    f32 temp_fv0_3;
+    f32 temp_fv1;
+    f32 var_fv0;
+    s32 var_v0;
+    s32 var_v0_2;
+    s32 var_v0_3;
+
+    if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x10000000) {
+        *(f32 *)((u8 *)D_87F119DC + 0x54) = (f32)(D_87F11438 * *(f32 *)((u8 *)D_87F119DC + 0x54) + *(f32 *)((u8 *)D_87F119DC + 0x54));
+        *(f32 *)((u8 *)D_87F119DC + 0x58) = (f32)(*(f32 *)((u8 *)D_87F119DC + 0x58) + D_87F1143C);
+        if (*(f32 *)((u8 *)D_87F119DC + 0x54) < D_87F11440) {
+            func_87F026E8((u8 *)D_87F11768 + 0x20, (u8 *)D_87F11768 + 0x34);
+        }
+    } else {
+        var_fv0 = (1.0f - *(f32 *)((u8 *)D_87F11768 + 0x14)) * 560.0f;
+        if (var_fv0 > 90.0f) {
+            var_fv0 = 90.0f;
+        }
+        temp_fv1 = var_fv0 * D_87F11444;
+        // FAKE: scores 60 when these statements are spread over separate lines.
+        // IDO 7.1 orders the table base load (lui/addiu) against the index shift
+        // (sra) differently depending on which source line the statements share;
+        // one shared line is the layout that puts sra first, as the target does.
+        // The rounding and the sine-table read are one step of the same angle.
+        { if (temp_fv1 >= 0.0f) { var_v0 = (s32)(temp_fv1 + 0.5f); } else { var_v0 = (s32)(temp_fv1 - 0.5f); } temp_ft5 = D_80087E50[((s32)(var_v0 & 0xFFFF)) >> 4]; }
+        temp_fa0 = (1.0f - *(f32 *)((u8 *)D_87F11768 + 0x14)) * 1080.0f;
+        temp_fv0_2 = (1.0f - *(f32 *)((u8 *)D_87F11768 + 0x14)) * 90.0f * D_87F11448;
+        if (temp_fv0_2 >= 0.0f) {
+            var_v0_2 = (s32)(temp_fv0_2 + 0.5f);
+        } else {
+            var_v0_2 = (s32)(temp_fv0_2 - 0.5f);
+        }
+        sp18 = 1.0f - D_80087E50[((s32)(var_v0_2 & 0xFFFF)) >> 4];
+        temp_fa0_2 = temp_fa0 * D_87F1144C;
+        if (temp_fa0_2 >= 0.0f) {
+            var_v0_3 = (s32)(temp_fa0_2 + 0.5f);
+        } else {
+            var_v0_3 = (s32)(temp_fa0_2 - 0.5f);
+        }
+        temp_fa1 = temp_ft5 * D_87F11450;
+        temp_fv0_3 = 2.0f * ((D_80087E50[((s32)(var_v0_3 & 0xFFFF)) >> 4] * temp_fa1 * sp18) + temp_ft5);
+        *(f32 *)((u8 *)D_87F119DC + 0x58) = temp_fv0_3;
+        *(f32 *)((u8 *)D_87F119DC + 0x54) = temp_fv0_3;
+        if (temp_fa0_2 >= 0.0f) {
+            var_v0_3 = (s32)(temp_fa0_2 + 0.5f);
+        } else {
+            var_v0_3 = (s32)(temp_fa0_2 - 0.5f);
+        }
+        *(f32 *)((u8 *)D_87F119DC + 0x58) = (f32)(2.0f * ((D_80088E50[((s32)(var_v0_3 & 0xFFFF)) >> 4] * temp_fa1 * sp18) + temp_ft5));
+    }
+}
 
 /* mkdraft:func_87F003F8 begin */
 extern Gfx *D_800D0510;
@@ -74,7 +148,7 @@ void func_87F003F8(s32 arg0, s32 arg1) {
 }
 /* mkdraft:func_87F003F8 end */
 
-extern s32 func_87F00138();
+void func_87F00138(void);
 extern void func_87F026E8(void *, void *);
 extern u8 *func_87F025B8(void *, void *);
 extern void func_80037E3C(void *, void *, void *);

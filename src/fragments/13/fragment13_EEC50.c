@@ -1174,7 +1174,69 @@ void func_824054E4(u8 *arg0, u8 *arg1, u8 *arg2, f32 arg3) {
     arg0[0x2F] = (u32)((f32)(u32)arg1[0x2F] + (f32)((s32)arg2[0x2F] - (s32)arg1[0x2F]) * arg3);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82405718.s")
+
+/* mkdraft:func_82405718 begin */
+typedef struct {
+    u32 words[12];
+} Fragment13KeyframeColor;
+
+typedef struct {
+    Fragment13KeyframeColor color;
+    s32 start;
+    s32 end;
+} Fragment13ColorKeyframe;
+
+extern Fragment13ColorKeyframe D_82408F40[];
+extern Fragment13ColorKeyframe D_82408F78[];
+extern u8 jtbl_82409058[];
+
+
+
+void func_82405718(void *dst, void *state) {
+    Fragment13KeyframeColor *arg0 = dst;
+    f32 frame_counter;
+    s32 phase;
+    s32 index;
+    s32 blink;
+    f32 total;
+    Fragment13ColorKeyframe *node;
+    Fragment13ColorKeyframe *base;
+    Fragment13ColorKeyframe *end;
+    f32 ratio;
+
+    phase = ((u8 *) state)[6];
+    frame_counter = *((f32 *) ((u8 *) state));
+    total = (((((f32) ((u8 *) state)[8]) + (frame_counter / 60.0f)) / 60.0f) + ((f32) ((u8 *) state)[7])) / 60.0f;
+    if (phase >= 22) {
+        phase -= 24;
+    }
+    if ((((phase == D_82408F40[4].start) || (phase == D_82408F40[0].start)) && (((u8 *) state)[7] == 0)) && (((u8 *) state)[8] == 0)) {
+        blink = (((s32) frame_counter) / 20) % 2;
+        if (blink) {
+            index = (phase == D_82408F40[4].start) ? 3 : 4;
+            *arg0 = D_82408F40[index].color;
+            return;
+        }
+    }
+    // FAKE: these initializations share a line with `do` so that all three `la`
+    // pseudo-ops carry one .loc line number. IDO's assembler reverses the addiu
+    // halves of a run of `la` only while that number stays the same, and retail
+    // emits base's addiu after node's and end's. node starts one 56-byte
+    // keyframe before base, at D_82408F40.
+    base = D_82408F78; node = (Fragment13ColorKeyframe *) ((u8 *) D_82408F78 - sizeof(Fragment13ColorKeyframe)); end = (Fragment13ColorKeyframe *) jtbl_82409058; do {
+        if ((phase >= node->start) && (phase < node->end)) {
+            *arg0 = node->color;
+            return;
+        }
+        if ((node >= base) && (phase < node->start)) {
+            ratio = (((((f32) phase) + total) - ((f32) (node - 1)->end))) / (((f32) (node->start - (node - 1)->end)));
+            func_824054E4((u8 *) arg0, (u8 *) (node - 1), (u8 *) node, ratio);
+            return;
+        }
+        node++;
+    } while (node != end);
+}
+/* mkdraft:func_82405718 end */
 
 extern void *Vec3s_FromVec3f(void *, void *);
 extern void func_80038390(void *, void *, u8, u8, u8);

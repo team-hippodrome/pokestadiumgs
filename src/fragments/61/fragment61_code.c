@@ -1015,7 +1015,51 @@ void func_86B081B4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B08214.s")
+
+/* mkdraft:func_86B08214 begin */
+extern u8 D_80094E78[];
+extern u8 D_80094F50[];
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 func_8004D1FC(u8 *arg0);
+extern u16 D_80094904;
+extern Gfx *D_800D0510;
+extern u8 D_86B0DA94[];
+extern s32 D_86B17D00;
+extern u8 *D_86B1817C;
+extern u8 *D_86B18180[];
+extern u16 D_86B18210;
+extern u8 D_86B17A78[];
+
+
+
+void func_86B08214(void)
+{
+  Gfx *temp_v0_5;
+  f32 glyph_w0;
+  f32 glyph_w1;
+  f32 glyph_w2;
+  f32 glyph_w3;
+  f32 glyph_h0;
+  f32 glyph_h1;
+  f32 glyph_h2;
+  f32 glyph_h3;
+  f32 round_w;
+  f32 round_h;
+  s16 temp_s2;
+  s32 temp_s3;
+  s32 temp_s4;
+  s32 temp_v0;
+  u8 *new_var;
+  s32 var_s7;
+  void *temp_t1;
+  void *temp_v0_10;
+  void *temp_v0_8;
+  void *temp_v1;
+ for (var_s7 = 0; var_s7 != 4; var_s7++) { new_var = (u8 *) (D_86B17A78 + (var_s7 * 4)); if ((((*((s32 *) (new_var + 0x374))) - D_86B17D00) - 5) >= 0) { temp_v0 = *((s32 *) (new_var + 0x394)); if (temp_v0 != 0) { temp_t1 = (var_s7 * 0xC) + D_86B17A78; temp_v1 = D_86B0DA94 + (var_s7 * 0x18); if (D_86B18210 != D_80094904) { *((s32 *) (((u8 *) (D_86B17A78 + (var_s7 * 4))) + 0x394)) = (s32) (temp_v0 - 1); } temp_s4 = (s32) ((*((f32 *) (((u8 *) temp_t1) + 0x468))) - 36.0f);
+          temp_s3 = (s32) (*((f32 *) (((u8 *) temp_t1) + 0x46C))); { Gfx *_g = (Gfx *) (D_800D0510++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xde) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_80094E78; } ; gDPSetPrimColor(D_800D0510++, 0, 0, *((s32 *) (((u8 *) temp_v1) + 0)), *((s32 *) (((u8 *) temp_v1) + 4)), *((s32 *) (((u8 *) temp_v1) + 8)), 0xFF); gDPSetEnvColor(D_800D0510++, *((s32 *) (((u8 *) temp_v1) + 0xC)), *((s32 *) (((u8 *) temp_v1) + 0x10)), *((s32 *) (((u8 *) temp_v1) + 0x14)), 0xFF); { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFC30B261; _g->words.w1 = 0x5566FF7F; } func_8004D1FC(D_86B1817C); glyph_w0 = (f32) ((u32) (*((u16 *) (((u8 *) D_86B1817C) + 0)))); if (glyph_w0 > 0.0f) { round_w = 0.5f; } else { round_w = -0.5f; } glyph_h1 = (f32) ((u32) (*((u16 *) (((u8 *) D_86B1817C) + 2)))); if (glyph_h1 > 0.0f) { round_h = 0.5f; } else { round_h = -0.5f; } GfxRect_DrawTextured((s16) temp_s4, (s16) temp_s3, (s16) ((s32) (round_w + glyph_w0)), (s16) ((s32) (round_h + glyph_h1)), 0, 0, 0x400, 0x400, 0); { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFB000000; _g->words.w1 = -1U; } { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFC61FEC3; _g->words.w1 = -0xC07U; } func_8004D1FC(D_86B18180[((s32) (*((s32 *) (new_var + 0x3A4)))) / 100]); temp_v0_8 = D_86B18180[((s32) (*((s32 *) (((u8 *) (D_86B17A78 + (var_s7 * 4))) + 0x3A4)))) / 100]; temp_s2 = temp_s3 + 3; glyph_w1 = (f32) (*((u16 *) (((u8 *) temp_v0_8) + 0))); if (glyph_w1 > 0.0f) { round_w = 0.5f; } else { round_w = -0.5f; } glyph_h0 = (f32) ((u32) (*((u16 *) (((u8 *) temp_v0_8) + 2)))); if (glyph_h0 > 0.0f) { round_h = 0.5f; } else { round_h = -0.5f; } GfxRect_DrawTextured((s16) (temp_s4 + 8), temp_s2, (s16) ((s32) (round_w + glyph_w1)), (s16) ((s32) (round_h + glyph_h0)), 0, 0, 0x400, 0x400, 0); func_8004D1FC(D_86B18180[(((s32) (*((s32 *) (new_var + 0x3A4)))) / 10) % 10]); temp_v0_10 = D_86B18180[(((s32) (*((s32 *) (new_var + 0x3A4)))) / 10) % 10]; glyph_w2 = (f32) ((u32) (*((u16 *) (((u8 *) temp_v0_10) + 0)))); if (glyph_w2 > 0.0f) { round_w = 0.5f; } else { round_w = -0.5f; } glyph_h2 = (f32) ((u32) (*((u16 *) (((u8 *) temp_v0_10) + 2)))); if (glyph_h2 > 0.0f) { round_h = 0.5f; } else { round_h = -0.5f; } GfxRect_DrawTextured((s16) (temp_s4 + 0x14), temp_s2, (s16) ((s32) (round_w + glyph_w2)), (s16) ((s32) (round_h + glyph_h2)), 0, 0, 0x400, 0x400, 0); func_8004D1FC(D_86B18180[((s32) (*((s32 *) (((u8 *) (D_86B17A78 + (var_s7 * 4))) + 0x3A4)))) % 10]); temp_v0_10 = D_86B18180[((s32) (*((s32 *) (new_var + 0x3A4)))) % 10]; glyph_w3 = (f32) ((u32) (*((u16 *) (((u8 *) temp_v0_10) + 0)))); if (glyph_w3 > 0.0f) { round_w = 0.5f; } else { round_w = -0.5f; } glyph_h3 = (f32) ((u32) (*((u16 *) (((u8 *) temp_v0_10) + 2)))); if (glyph_h3 > 0.0f) { round_h = 0.5f; } else { round_h = -0.5f; } GfxRect_DrawTextured((s16) (temp_s4 + 0x1C), temp_s2, (s16) ((s32) (round_w + glyph_w3)), (s16) ((s32) (round_h + glyph_h3)), 0, 0, 0x400, 0x400, 0); { Gfx *_g = (Gfx *) (D_800D0510++); _g->words.w0 = ((unsigned int) ((((unsigned int) 0xde) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16)); _g->words.w1 = (unsigned int) D_80094F50; } ; } } } 
+  D_86B18210 = D_80094904;
+}
+/* mkdraft:func_86B08214 end */
 #endif
 
 #ifdef VERSION_US

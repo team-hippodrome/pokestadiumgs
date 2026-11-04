@@ -163,7 +163,58 @@ void func_80033ACC(u8 arg0) {
     D_800D2B44 += *(s16 *)((u8 *)&D_800D2BA8 + (arg0 * 0x3C));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/340C0/func_80033B04.s")
+
+/* mkdraft:func_80033B04 begin */
+extern u8 D_800D2B78;
+extern u16 D_800D2B44;
+
+
+
+void func_80033B04(u8 arg0) {
+    u8 period;
+    s32 step;
+    u8 sweep;
+    s32 limit;
+    u8 direction;
+
+    if ((&D_800D2B78 + arg0 * 0x3C)[0x26] != 0) {
+        (&D_800D2B78 + arg0 * 0x3C)[0x26]--;
+        return;
+    }
+    step = (&D_800D2B78 + arg0 * 0x3C)[0x28];
+    if (step == 0) {
+        return;
+    }
+    sweep = (&D_800D2B78 + arg0 * 0x3C)[0x29];
+    period = sweep >> 4;
+    if ((sweep & 0xF) != 0) {
+        (&D_800D2B78 + arg0 * 0x3C)[0x29]--;
+        return;
+    }
+    (&D_800D2B78 + arg0 * 0x3C)[0x29] = period | sweep;
+    limit = (s32)((u8 *)&D_800D2B44)[1];
+    direction = (&D_800D2B78 + arg0 * 0x3C)[5];
+    if ((&D_800D2B78 + arg0 * 0x3C)[5] & 1) {
+        (&D_800D2B78 + arg0 * 0x3C)[5] = direction & (~1);
+        step = (u8)(step & 0xF);
+        if (step < limit) {
+            limit = (limit - step) & 0xFF;
+        } else {
+            limit = 0;
+        }
+    } else {
+        (&D_800D2B78 + arg0 * 0x3C)[5] = direction | 1;
+        step = (((u32)((step & 0xF0) & 0xFF)) >> 4) & 0xFF;
+        if (step >= 0x100) {
+            limit = 0xFF;
+        } else {
+            limit = step & 0xFF;
+        }
+    }
+    D_800D2B44 = limit;
+    (&D_800D2B78 + arg0 * 0x3C)[0x14] |= 0x40;
+}
+/* mkdraft:func_80033B04 end */
 
 void func_80033BF4(u8 index) {
     if ((&D_800D2B78 + index * 0x3C)[4] & 2) {

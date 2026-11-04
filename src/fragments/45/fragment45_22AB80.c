@@ -203,7 +203,110 @@ s32 func_8AB0699C(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB06AE8.s")
+extern s16 D_8AB16A1E;
+extern s16 D_8AB16A20;
+extern u8 D_8AB167B0[];
+extern void *D_8AB16968;
+extern u8 *D_8AB12678[];
+extern void *D_8AB167AC;
+extern void *D_8AB11D00;
+extern s16 D_8AB12694;
+extern u32 D_8AB1268C;
+extern s8 *D_8AB11264;
+extern void *D_8AB16960;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+extern void TextChoice_ShuffleAndRefresh(void);
+extern void _bzero(void *, s32);
+extern void func_8004C594(s32, s32);
+extern void func_8AB03394(void);
+extern void func_8AB04AE4(void);
+extern void func_8AB00BA4(s32, s32, s32);
+extern s32 func_8AB06D78(s32);
+
+// The walker's register colour depends on this fragment file's
+// `extern void *func_8004C8A0(void *, s32, s32, s32);` declaration at line 86.
+// With a void return type, func_8004C8A0's result temp does not occupy v0 and
+// the case 1 walker's cursor and byte registers swap (13 rows).
+// The return type is int, not s32, to agree with the implicit int prototype the
+// caller func_8AB0699C uses at line 199 of the fragment file.
+
+
+int func_8AB06AE8(s32 arg0) {
+    s32 result = 7;
+    s32 i;
+    u8 *cursor;
+    u8 *last;
+    s16 *counter;
+    s16 t;
+
+    counter = &D_8AB16A1E;
+    switch (arg0) {
+    case 0:
+        func_8AB03394();
+        TextChoice_ShuffleAndRefresh();
+        D_8AB16A20 = 0;
+        // Line count reset: retail stores it as `addiu a2,zero,1` + `sh a2,%lo(D_8AB16A1E)`.
+        // The value goes through the same s16 local as the case 1 loop bound, so one
+        // register (a2) holds the count in both cases.
+        t = D_8AB16A20 + 1;
+        // The store sits in the argument list: as a separate statement IDO emits the
+        // `sh` after `addiu a0,%lo(D_8AB167B0)`, the reverse of retail's order.
+        _bzero(&D_8AB167B0, (D_8AB16A1E = t, 0x100));
+        *(u16 *)((u8 *)D_8AB16968 + 2) |= 2;
+        // D_8AB1267C/680/684 are the four consecutive slot pointers starting at
+        // D_8AB12678; the loop keeps them in one ring in ugen.
+        for (i = 0; i < 4; i++) {
+            *(u16 *)(D_8AB12678[i] + 2) |= 1;
+        }
+        *(u16 *)((u8 *)D_8AB167AC + 2) |= 1;
+        *(u16 *)((u8 *)D_8AB11D00 + 2) &= ~1;
+        func_8AB04AE4();
+        *(u16 *)((u8 *)D_8AB16960 + 2) |= 2;
+        *(u16 *)((u8 *)D_8AB16A0C + 2) |= 2;
+        *(u16 *)((u8 *)D_8AB16A10 + 2) |= 2;
+        func_8004C594(2, D_8AB12694 + 1);
+        break;
+    case 1:
+        func_8004C8A0(D_8AB167B0, 256, *(u16 *)((u8 *)D_8AB11D00 + 48), *(u16 *)((u8 *)D_8AB11D00 + 50));
+        cursor = D_8AB167B0;
+        t = D_8AB16A1E;
+        for (i = 0; i < t; i++) {
+            last = cursor;
+            if (*cursor == 0) {
+                D_8AB16A20 = 1;
+                break;
+            }
+            if (*cursor == 10) {
+                cursor++;
+            } else if ((*cursor & 0x80) == 0) {
+                cursor++;
+            } else {
+                cursor += 2;
+            }
+        }
+        *cursor = 0;
+        if ((D_8AB1268C & 1) == 0) {
+            if (HAL_Strcmp((s8 *)last, D_8AB11264) == 0) {
+                func_8AB00BA4(0x1000D, 0, 0);
+            } else {
+                func_8AB00BA4(0x1000C, 0, 0);
+            }
+            // Through the s16 local so the store keeps retail's `sll a2,a2,16` /
+            // `sra a2,a2,16` truncation pair.
+            t = *counter + 1;
+            *counter = t;
+        }
+        if (D_8AB16A20 == 1) {
+            result = func_8AB06D78(0);
+        }
+        break;
+    case 2:
+        break;
+    }
+    return result;
+}
 
 /* mkdraft:func_8AB06D78 begin */
 #ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
@@ -239,8 +342,8 @@ extern u8 *D_8AB1266C;
 extern u8 *D_8AB12670;
 extern u8 *D_8AB12674;
 extern void *D_8AB16960;
-extern u8 *D_8AB16A0C;
-extern u8 *D_8AB16A10;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
 extern s32 D_8AB16A24;
 
 
@@ -350,8 +453,8 @@ extern u8 *D_8AB12D58;
 extern u8 *D_8AB12DEC;
 extern u8 *D_8AB12E80;
 extern void *D_8AB16960;
-extern u8 *D_8AB16A0C;
-extern u8 *D_8AB16A10;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
 extern s16 D_8AB16A28;
 extern s16 D_8AB12694;
 extern void func_8AB00BA4();
@@ -575,7 +678,7 @@ s32 func_8AB07A34(s32 arg0) {
 
 /* mkdraft:func_8AB07C34 begin */
 s32 func_8AB066B4(s32 arg0);
-u8 func_8005453C(s32);
+s32 func_8005453C(s32);
 extern s16 D_8AB16A34;
 extern u8 D_8AB126A8[];
 extern void *D_8AB168D0;
@@ -837,8 +940,8 @@ s32 func_8AB07E6C(s32 arg0)
 
 /* mkdraft:func_8AB07F80 begin */
 extern void *D_8AB16960;
-extern u8 *D_8AB16A0C;
-extern u8 *D_8AB16A10;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
 extern s16 D_8AB16A3A;
 extern void func_8AB00BA4(s32, s32, s32);
 
