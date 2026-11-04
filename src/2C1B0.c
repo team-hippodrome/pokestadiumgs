@@ -16,6 +16,9 @@
 
 #ifdef VERSION_US
 
+s32 gAudioCommandQueue[10];
+AudioQueuedState gAudioQueuedState;
+
 typedef struct AudioHistorySelection {
     u8 active_slot[2];
     u8 unk_02;
@@ -45,6 +48,8 @@ extern u32 D_800D2638;
 extern u8 *D_800D2608[];
 extern u8 D_80091F08[], D_80091F18[], D_80091F20[], D_80091F28[], D_80091F30[], D_80091F38[], D_80091F40[];
 extern u8 D_80091F48[], D_80091F50[], D_80091F58[], D_80091F6C[];
+// This file defines the BSS run 0x800D1A90..0x800D2630. func_8002C2E0 shares one `lui`
+
 // This file owns the queue prefix at 0x800D1A90..0x800D1AD8 and selection/
 // remaining state at 0x800D1B38..0x800D2630. The intervening 24-word history
 // is owned by src/229E0.c. datamig_bss.ld retains all runtime addresses.
@@ -1570,7 +1575,166 @@ tail:
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_80030420.s")
+
+/* mkdraft:func_80030420 begin */
+extern u8 D_80091A3C, D_80091AAC, D_80091AB0, D_80091AE4, D_80091AEC, D_80091AE0;
+extern u8 D_80091B00, D_80091AF0, D_80091A40, D_80091AFC, D_80091A4C;
+extern s16 D_80091B10;
+extern s32 D_800D1AD4;
+extern u8 D_800D1AD2;
+extern u8 D_80091DB4[], D_80091EA0[], D_80091E90[], D_80091DFC[];
+extern u8 D_80091E98[], D_80091DD0[], D_80091E04[], D_80092010[], D_80091F90[];
+extern void func_80030AD4(u8 arg0, u32 arg1, u32 arg2);
+u8 func_80062D20(u8 arg0);
+
+
+
+void func_80030420(u8 arg0, s32 arg1, u32 arg2, u32 arg3) {
+    u32 lim = 0x12C;
+    unk_D_800D1B88 **slot;
+    s32 percent;
+    s32 ret;
+    f32 padf[2]; // FAKE: never read or written; holds open the 0x20..0x40 stack hole so slot/percent land on 0x1C/0x34
+
+    if ((arg2 >= 0xFE) && (arg2 < 0x117)) {
+        arg2 = 0xC9;
+    }
+    if ((arg2 == lim) || (arg2 == 0x117)) {
+        arg2 = 0x19;
+    }
+    if ((arg2 != 0) && (arg2 < 0xFC) && (arg1 != lim)) {
+        switch (arg3) {
+        case 1:
+        case 11:
+            if (D_80091AF0 != 0) {
+                D_80091AF0 = 0;
+                return;
+            }
+            slot = &D_800D1B88[arg0];
+            D_80091AAC = arg1;
+            if ((*slot)->unk28 != 0) {
+                percent = D_800D1AD4 * 0x64 / (*slot)->unk28;
+                if ((percent == 0) && (D_800D1AD4 > 0)) {
+                    percent = 1;
+                }
+            } else {
+                percent = 0x64;
+            }
+            ret = func_80062D20(arg1);
+            if ((ret != 0x1D) && (ret != 0x2C) && (ret != 0x4D) && (ret != 0x68) && (ret != 0x9A)) {
+                D_80091A3C = 0;
+            } else {
+                if (0) { } // FAKE: no-op block; IDO only hoists the D_80091A4C/0xA setup below when this block is non-empty
+                D_80091A3C = 1;
+            }
+            if (D_80091A3C != 0) {
+                if (D_80091A4C == 0) {
+                    Audio_ClearCommandQueue();
+                    func_80031530(0x19);
+                }
+            } else {
+                func_80031530(0xA);
+            }
+            if (D_80091A4C == 0) {
+                if (D_800D1AD2 == 0xF) {
+                    if ((*slot)->unk26 != 0) {
+                        func_80028CA8(D_80091E90);
+                    } else {
+                        if (arg1 == 0xD9) {
+                            func_80031530(0x3F);
+                        }
+                        func_80028CA8(D_80091DFC);
+                    }
+                    func_80023A3C(2, 0, 0);
+                } else if (percent >= 0x47) {
+                    if (arg1 == 0xD9) {
+                        func_80031530(0x3F);
+                    }
+                    func_80028CA8(D_80091DB4);
+                    D_80091AE4 = 1;
+                    if ((f32)(u32)(*slot)->unk26 / (f32)(u32)(*slot)->unk28 < 0.05f &&
+                        (*slot)->unk26 != 0 && D_800D1B78[arg0][1] != 0xCB) {
+                        func_80031530(0xD);
+                        func_80028CA8(D_80091E98);
+                    }
+                    func_80023A3C(2, 0, 0);
+                } else if (percent >= 0x1F) {
+                    if (arg1 == 0xD9) {
+                        func_80031530(0x3F);
+                    }
+                    func_80028CA8(D_80091DC4);
+                    if ((f32)(u32)(*slot)->unk26 / (f32)(u32)(*slot)->unk28 < 0.05f &&
+                        (*slot)->unk26 != 0 && D_800D1B78[arg0][1] != 0xCB) {
+                        func_80031530(0xD);
+                        func_80028CA8(D_80091E98);
+                    }
+                    if ((*slot)->unk26 == 0) {
+                        func_80023A3C(2, 0, 0);
+                    }
+                } else if (percent > 0) {
+                    if (arg1 == 0xD9) {
+                        func_80031530(0x3F);
+                    }
+                    if ((*slot)->unk26 != 0) {
+                        func_80028CA8(D_80091DD0);
+                        if ((f32)(u32)(*slot)->unk26 / (f32)(u32)(*slot)->unk28 < 0.05f &&
+                            (*slot)->unk26 != 0 && D_800D1B78[arg0][1] != 0xCB) {
+                            func_80031530(0xD);
+                            func_80028CA8(D_80091E98);
+                        }
+                    } else {
+                        func_80028CA8(D_80091E04);
+                        func_80023A3C(2, 0, 0);
+                    }
+                    D_80091AE0 = 1;
+                } else if ((percent == 0) && (D_800D1B78[arg0 ^ 1][1] == 0xCE)) {
+                    func_80028CA8(D_80091EA0);
+                }
+            }
+            switch (arg1) {
+            case 0xAE:
+                if (D_80091B00 != arg0) {
+                    func_800314D4(0x21D6);
+                }
+                break;
+            case 0x2E:
+                func_80028CA8(D_80092010);
+                func_80023A3C(2, 0, 0);
+                D_80091AEC = 1;
+                break;
+            case 0x12:
+                func_80028CA8(D_80091F90);
+                func_80023A3C(2, 0, 0);
+                D_80091AEC = 1;
+                break;
+            }
+            D_80091A4C = 0;
+            return;
+        case 0:
+        case 2:
+            D_80091B10 = arg1;
+            if (D_80091AB0 == 0) {
+                func_80030AD4(arg0, arg1, arg2);
+                D_80091AB0 = 1;
+                return;
+            }
+            D_80091AB0 = 0;
+            return;
+        case 3:
+            D_80091A40 = arg0;
+            D_80091AFC = arg0;
+            D_800D26A4[arg0] = 0;
+            Audio_ClearCommandQueue();
+            return;
+        case 4:
+            D_80091A40 = arg0;
+            D_80091AFC = arg0;
+            D_800D26A4[arg0] = 0;
+            break;
+        }
+    }
+}
+/* mkdraft:func_80030420 end */
 
 extern u8 D_80091A40, D_80091AFC, D_80091A4C, D_80091AF0, D_80091A80, D_80091A7C, D_80091A48, D_800D1AD2;
 extern s32 D_80091AA8, D_800D1AD4;
