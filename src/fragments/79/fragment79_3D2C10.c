@@ -69,7 +69,9 @@ typedef struct { f32 x; f32 y; f32 z; } Func841Vec3f;
 #define SQ(x) ((x) * (x))
 extern Gfx D_84187940[];
 extern Vtx D_841879D0[];
-extern void *Gfx_AllocDisplayList(s32);
+// Returns a graphics-buffer address, or zero when space is exhausted.
+//@src/78D0.c
+extern u32 Gfx_AllocDisplayList(s32);
 extern void Vec3f_CrossProductComponents(f32, f32, f32, f32, f32, f32, f32 *, f32 *, f32 *);
 extern void func_80070C14(f32 *, f32 *, f32 *);
 Gfx* func_84163380(Gfx* arg0, Func841Vec3f* arg1, Func841Vec3f* arg2, Func841Vec3f* arg3, f32 arg4, u8 arg5, u8 arg6, u8 arg7, u8 arg8) {
@@ -103,8 +105,8 @@ Gfx* func_84163380(Gfx* arg0, Func841Vec3f* arg1, Func841Vec3f* arg2, Func841Vec
     f32 tmp2;
     f32 tmp3;
 
-    sp1DC = Gfx_AllocDisplayList(sizeof(Mtx) * 1);
-    sp1E8 = Gfx_AllocDisplayList(sizeof(Vtx) * 10);
+    sp1DC = (Mtx *)Gfx_AllocDisplayList(sizeof(Mtx) * 1);
+    sp1E8 = (Vtx *)Gfx_AllocDisplayList(sizeof(Vtx) * 10);
 
     temp_v1 = sp1E8;
     var_a1 = &D_841879D0[0];

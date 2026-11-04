@@ -1,15 +1,30 @@
 #include "global.h"
 #include "controller.h"
 
-
 #ifdef VERSION_US
+/* Runtime menu allocated by func_88507FA8 (48 bytes). */
+typedef struct F34ConfirmMenu {
+    void *windows[6];
+    s32 mode;
+    s8 selection;
+    s16 timer;
+    s32 transition;
+    s16 values[5];
+} F34ConfirmMenu;
+
+typedef struct MenuResult {
+    s32 state;
+    s32 unk_04;
+    s32 unk_08;
+} MenuResult;
+
 extern void Util_Free(s32);
 extern s32 D_880068B4;
-extern s32 D_88523010;
+extern F34ConfirmMenu *D_88523010;
 
 void func_88506990(void) {
     D_880068B4 = 1;
-    Util_Free(D_88523010);
+    Util_Free((s32)D_88523010);
 }
 
 extern void func_800226C0(s32);
@@ -46,7 +61,7 @@ void func_88506AA8(void) {
 }
 
 /* mkdraft:func_88506B2C begin */
-extern s32 D_88523010;
+extern F34ConfirmMenu *D_88523010;
 extern u8 D_8850D6D8;
 extern u8 D_8850D678[];
 extern s8 D_88518CC1;
@@ -218,7 +233,7 @@ s32 func_88506B2C(void) {
 /* mkdraft:func_88506B2C end */
 
 /* mkdraft:func_8850716C begin */
-extern s32 D_88523018;
+extern MenuResult D_88523018;
 
 s32 func_8005A228(s8);
 s32 func_88506B2C();
@@ -262,7 +277,7 @@ void func_8850716C(void) {
         }
         if (*(s16 *)((u8 *)(D_88523010) + (0x28)) == 0) {
             if (func_88506B2C() != 0) {
-                D_88523018 = 0;
+                D_88523018.state = 0;
                 func_88506A20();
                 *(s16 *)((u8 *)(D_88523010) + (0x2C)) = -1;
                 func_800226C0(0x11);
@@ -285,7 +300,7 @@ void func_8850716C(void) {
 /* mkdraft:func_8850716C end */
 
 /* mkdraft:func_88507370 begin */
-extern s32 D_88523018;
+extern MenuResult D_88523018;
 #ifndef M2C_FIELD /* mkdraft: m2c --valid-syntax helpers */
 #define M2C_UNK s32
 #define M2C_UNK8 s8
@@ -425,12 +440,14 @@ void func_88507370(void) {
 
 extern s32 func_8004C874(s32, s32);
 extern s32 func_88002958(s32 *, s32, s32, s32);
-extern u16 *func_8004C990(s32, s32);
-extern void func_880048D4(s32, s32, s16, s32, s32, s32, s32, s32, s32,
-                           s32 *, s32 *, s32 *, s32 *, s32, s32, s32);
-extern s32 D_88000E4C;
+// Returns the selected resource address as a 32-bit word.
+//@src/4CC20.c
+extern s32 func_8004C990(s32, s32);
+extern void func_880048D4(s32, s32, s16, s16, s32, s32, u8, u8, u8,
+                           s32 *, s32 *, s32 *, s32 *, u8, u8, s32);
+extern void D_88000E4C(void);
 extern s32 D_8800EDE8;
-extern s32 D_88523018;
+extern MenuResult D_88523018;
 void func_885075A8(void) {
     s8 pad;
     s32 sp68[3];
@@ -450,11 +467,11 @@ void func_885075A8(void) {
         var_s1 = func_88002958(sp68, 3, 8, 1) & 0xFFFF;
         var_s0 = ((s32)*(u16 *)((u8 *)func_8004C990(0x79, 0)) + var_s1 + 0x35) & 0xFFFF;
         func_880048D4(0, 3, 0x13F - (var_s0 >> 1), 0x11F, 0, 1, 0xE6, 0xFF, 0xF0,
-                      &D_88000E4C, &D_88000E4C, &D_88000E4C, &D_88000E4C, 0, 0, 2);
+                      (s32 *)D_88000E4C, (s32 *)D_88000E4C, (s32 *)D_88000E4C, (s32 *)D_88000E4C, 0, 0, 2);
         *(s32 *)((u8 *)D_88523010 + 8) = (s32)&D_8800EDE8;
         *(s16 *)((u8 *)(*(s32 *)((u8 *)D_88523010 + 8)) + 0x10) = (s16)var_s0;
         *(s16 *)((u8 *)(*(s32 *)((u8 *)D_88523010 + 8)) + 0x12) = 0x65;
-        D_88523018 = 1;
+        D_88523018.state = 1;
     }
 }
 
@@ -462,9 +479,9 @@ extern void func_88506AA8();
 extern void func_8850716C();
 extern void func_88507370();
 extern void func_885075A8();
-extern s32 D_88523018;
+extern MenuResult D_88523018;
 void func_88507724(void) {
-    switch (D_88523018) {                           /* irregular */
+    switch (D_88523018.state) {                           /* irregular */
     case 0:
         break;
     case 1:
