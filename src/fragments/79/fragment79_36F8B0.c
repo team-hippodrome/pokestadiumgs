@@ -906,7 +906,38 @@ void func_84102B3C(u8 *record, void *matrix, s32 type) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84102D38.s")
+typedef struct GfxImage {
+    u16 fmt;
+    u16 size;
+    u16 width;
+    u16 height;
+    u8 *img_p;
+    void *depth_p;
+} GfxImage;
+
+extern s32 func_8411E164(s32);
+extern s32 func_8411EF64(s32);
+extern Gfx *D_800D0510;
+
+// Load the other player's color buffer as an RGBA16 texture.
+//@src/fragments/79/fragment79_38D510.c
+//@src/7A50.c
+Gfx *func_84102D38(Gfx *arg0, Gfx **arg1) {
+    GfxImage *image;
+    u32 width;
+    u32 height;
+
+    image = (GfxImage *)func_8411EF64(func_8411E164((s32)arg1[2]));
+    width = image->width;
+    height = image->height;
+    gDPSetCombineMode(arg0++, G_CC_MODULATEI_PRIM, G_CC_PASS2);
+    gDPLoadTextureTile(arg0++, image->img_p, G_IM_FMT_RGBA, G_IM_SIZ_16b,
+                      width, height, 0, 0, width - 1, height - 1, 0,
+                      G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                      G_TX_NOLOD, G_TX_NOLOD);
+    gDPSetRenderMode(D_800D0510++, 0x0C184A50, 0);
+    return arg0;
+}
 
 /* mkdraft:func_84102E84 begin */
 extern Gfx *D_800D0510;
