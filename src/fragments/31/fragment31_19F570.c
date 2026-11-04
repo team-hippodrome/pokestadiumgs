@@ -145,7 +145,51 @@ void func_8822C6AC(void) {
     func_889033FC(*D_88234920, (u8 *)D_88234920 + 0x18);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19F570/func_8822C6D8.s")
+extern void *Util_Malloc(s32);
+extern void _bzero(void *, s32);
+extern u8 *func_88002AA8(u8 *, s32, u8 **, u16, s32, s16, s16, s16, s16, s16, s16, s32, s16, void *);
+extern u8 func_88004804(s32, s32, s16, s16, s32, s32, u8, u8, u8, s32 *, s32 *, s32 *, s32 *, u8, u8);
+extern u8 D_8800ED50[];
+void func_8822C6D8(u8 arg0, s32 *arg1, u8 *arg2) {
+    s32 i;
+    s32 x;
+    s32 text_id;
+    u8 slot;
+    struct {
+        s32 enabled;
+        u8 *flags;
+    } mask;
+
+    D_88234920 = Util_Malloc(80);
+    if (func_8800005C() != 0) {
+        text_id = 17;
+    } else {
+        text_id = 18;
+    }
+    D_88234920[2] = func_8004C874(33, text_id);
+    D_88234920[3] = arg2;
+    D_88234920[4] = func_8004C874(33, 20);
+    D_88234920[5] = func_8004C874(33, 21);
+    mask.enabled = 1;
+    mask.flags = (u8 *)D_88234920 + 76;
+    _bzero((u8 *)D_88234920 + 76, 4);
+    for (i = 0; i < 2; i++, arg1++) {
+        ((u8 *)D_88234920)[*arg1 + 76] = 1;
+    }
+    func_88002AA8((u8 *)D_88234920 + 24, 0, D_88234920 + 2, 4,
+                  8, 1, 6, 15, 16, 13, 16, 0, 0, &mask);
+    ((u8 *)D_88234920)[4] = arg0;
+    if (arg0 == 0) {
+        x = 163;
+    } else {
+        x = 474;
+    }
+    slot = func_88004804((s32)((u8 *)D_88234920 + 24), 0, (s16)x, 104, 1, 1,
+                         220, 220, 180, (s32 *)func_8822C5EC, (s32 *)func_8822C6AC,
+                         (s32 *)func_8822C53C, (s32 *)func_8822C570, 0, 0);
+    *D_88234920 = D_8800ED50 + slot * 76;
+    D_880068B4 = 0;
+}
 
 extern void * D_80087200;
 void func_8822C8E0(void) {
