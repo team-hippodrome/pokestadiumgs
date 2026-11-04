@@ -87,7 +87,41 @@ void func_88208010(u8 arg0, u8 arg1, u8 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208174.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_882089E4.s")
+extern void func_88001C24(void *, u16, u8);
+extern void func_88001D0C(void *);
+
+// Apply a changed slot state to its existing scroll control.
+void func_882089E4(u8 arg0, s32 arg1) {
+    u8 *control;
+    u32 slot = arg0;
+
+    if (arg1 != *(s32 *)((u8 *)D_88234700 + slot * 4 + 108)) {
+        control = (u8 *)D_88234700 + slot * 44 + 16;
+        *(s32 *)((u8 *)D_88234700 + slot * 4 + 108) = arg1;
+        if (arg1 != 0) {
+            if (func_88201ED0(((u8 *)D_88234700)[slot * 2 + 10],
+                              ((u8 *)D_88234700)[slot * 2 + 11])[21] != 0) {
+                func_88001C24(control, *(u16 *)(control + 12) + 1, 6);
+                if (*(s16 *)(control + 8) - *(s16 *)(control + 10) == 5) {
+                    (*(s16 *)(control + 10))++;
+                } else {
+                    *(s16 *)(control + 16) += control[15];
+                }
+            }
+        } else {
+            if (func_88201ED0(((u8 *)D_88234700)[slot * 2 + 10],
+                              ((u8 *)D_88234700)[slot * 2 + 11])[21] != 0) {
+                func_88001C24(control, *(u16 *)(control + 12) - 1, 6);
+                if (*(s16 *)(control + 8) - *(s16 *)(control + 10) == 5) {
+                    (*(s16 *)(control + 10))--;
+                } else {
+                    *(s16 *)(control + 16) -= control[15];
+                }
+            }
+        }
+        func_88001D0C(control);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88208B38.s")
 
@@ -120,8 +154,6 @@ extern u8 *func_88201ED0(u8, u8);
 extern s32 func_88207F18(s32, u8);
 extern void func_800226C0(s32);
 extern void func_88001900(void);
-extern void func_88001C24(u8 *, u8, s32);
-extern void func_88001D0C(u8 *);
 extern void func_88201608(s32);
 extern void func_882017F8(s32, u8 *, s8);
 extern void func_88220AD0(s32, s32);
