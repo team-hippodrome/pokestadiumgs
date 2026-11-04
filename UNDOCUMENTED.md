@@ -50,7 +50,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/50/fragment50_266A60.c` | 47 | 47 | 118 | 17 | 6 | 15 | 189 |
 | `src/fragments/17/fragment17_10FFC0.c` | 48 | 47 | 86 | 55 | 12 | 31 | 148 |
 | `src/fragments/45/fragment45_2251A0.c` | 73 | 73 | 125 | 88 | 9 | 29 | 49 |
-| `src/229E0.c` | 100 | 99 | 112 | 104 | 3 | 48 | 3 |
 | `src/fragments/63/fragment63_312AE0.c` | 54 | 54 | 88 | 39 | 8 | 41 | 138 |
 | `src/fragments/54/fragment54_code.c` | 32 | 32 | 104 | 89 | 1 | 15 | 121 |
 | `src/fragments/63/fragment63_30B540.c` | 47 | 45 | 150 | 8 | 8 | 41 | 106 |
@@ -59,6 +58,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/53/fragment53_code.c` | 32 | 31 | 99 | 119 | 4 | 13 | 84 |
 | `src/fragments/57/fragment57_code.c` | 20 | 20 | 74 | 54 | 4 | 10 | 181 |
 | `src/2C1B0.c` | 27 | 27 | 44 | 256 | 1 | 14 | 0 |
+| `src/23D10.c` | 94 | 93 | 106 | 93 | 3 | 43 | 3 |
 | `src/fragments/11/fragment11_D9DE0.c` | 75 | 73 | 116 | 90 | 2 | 58 | 2 |
 | `src/fragments/56/fragment56_code.c` | 34 | 34 | 102 | 99 | 7 | 12 | 78 |
 | `src/615D0.c` | 67 | 67 | 78 | 8 | 4 | 47 | 122 |
@@ -324,6 +324,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/11/fragment11_D9520.c` | 12 | 11 | 15 | 1 | 1 | 12 | 2 |
 | `src/fragments/3/fragment3_code.c` | 5 | 5 | 22 | 3 | 0 | 4 | 8 |
 | `src/fragments/31/fragment31_1736F0.c` | 7 | 7 | 22 | 8 | 1 | 3 | 0 |
+| `src/229E0.c` | 6 | 6 | 15 | 14 | 0 | 5 | 0 |
 | `src/65E20.c` | 6 | 6 | 11 | 16 | 2 | 3 | 2 |
 | `src/fragments/26/fragment26_162710.c` | 10 | 10 | 8 | 18 | 1 | 3 | 0 |
 | `src/fragments/31/fragment31_19DCA0.c` | 5 | 5 | 19 | 10 | 0 | 2 | 4 |
@@ -463,6 +464,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/20860.c` | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
 | `src/674C0.c` | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | `src/C2C0.c` | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| `src/audio_cue_dispatch.c` | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
 
 ## Structs with generic fields (top 40)
 
