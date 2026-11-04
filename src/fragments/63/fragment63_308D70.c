@@ -704,48 +704,30 @@ void func_87E079FC(s32 arg0) {
 }
 
 /* mkdraft:func_87E07A2C begin */
-#pragma REWRITE_FUNCTION_WORD(func_87E07A2C, 0x6C, 0x00994024, 0x00991024)
-#pragma REWRITE_FUNCTION_WORD(func_87E07A2C, 0x70, 0x5500FFF9, 0x5440FFF9)
 
-s32 func_87E07A2C(u8 *arg0)
-{
-  s32 sp1C[2];
-  s32 var_a1;
-  u32 temp_a0;
-  s32 var_v1;
-  void *temp_a1;
-  sp1C[1] = 0;
-  temp_a0 = func_8003570C() % 145U;
-  temp_a1 = *((void **) (((u8 *) arg0) + 0x170));
-  var_v1 = sp1C[1];
-  if ((*((u16 *) (((u8 *) temp_a1) + 0x21F4))) == 0xFFF)
-  {
-    *((u16 *) (((u8 *) temp_a1) + 0x21F4)) = 0U;
-  }
-  var_a1 = 0;
-  if (((s32) temp_a0) > ((var_a1 != temp_a0) * 0))
-  {
-    do
-    {
-      loop_4:
-      var_v1 += 1;
+s32 func_87E07A2C(u8 *state) {
+    s32 selection;
+    s32 used_bit;
+    s32 remaining;
+    s32 step;
+    u8 *data;
 
-      if (var_v1 >= 0xC)
-      {
-        var_v1 = 0;
-        if (temp_a0 && temp_a0)
-        {
-        }
-      }
-      if ((*((u16 *) (((u8 *) (*((void **) (((u8 *) arg0) + 0x170)))) + 0x21F4))) & (1 << var_v1))
-      {
-        goto loop_4;
-      }
-      var_a1 += 1;
+    selection = 0;
+    remaining = func_8003570C() % 145U;
+    data = *(u8 **)(state + 0x170);
+    if (*(u16 *)(data + 0x21F4) == 0xFFF) {
+        *(u16 *)(data + 0x21F4) = 0;
     }
-    while (var_a1 != temp_a0);
-  }
-  return var_v1;
+    for (step = 0; step < (s32)remaining; step++) {
+        do {
+            selection++;
+            if (selection >= 12) {
+                selection = 0;
+            }
+            used_bit = *(u16 *)(*(u8 **)(state + 0x170) + 0x21F4) & ((u32)(1 << selection));
+        } while (used_bit);
+    }
+    return selection;
 }
 /* mkdraft:func_87E07A2C end */
 extern void func_87E06290(u8 *);
