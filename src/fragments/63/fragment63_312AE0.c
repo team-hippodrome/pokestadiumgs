@@ -522,12 +522,30 @@ void func_87E107B4(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x314) = (s32)sp20;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E1087C.s")
+typedef struct TreeNode_80050428 TreeNode_80050428;
+void *func_87F0AB08(TreeNode_80050428 *, s32, void (*)(s32, u8 *), void *);
+extern void func_87E0F74C(s32, u8 *);
+
+void func_87E1087C(s32 *arg0, s32 arg1) {
+    if (arg1 == 168) {
+        // FAKE: the existing func_87E102D4 reconstruction has an s32 return;
+        // registration uses the helper's void callback interface.
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475031, (void (*)(s32, u8 *))func_87E102D4, (void *)0); // 'DGP1'
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475032, (void (*)(s32, u8 *))func_87E102D4, (void *)1); // 'DGP2'
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475033, (void (*)(s32, u8 *))func_87E102D4, (void *)2); // 'DGP3'
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475034, (void (*)(s32, u8 *))func_87E102D4, (void *)3); // 'DGP4'
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475F31, func_87E0F74C, (void *)0); // 'DG_1'
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475F32, func_87E0F74C, (void *)1); // 'DG_2'
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475F33, func_87E0F74C, (void *)2); // 'DG_3'
+        // FAKE: the empty block keeps the callback in s0 and arg0 in s1.
+        if (1) {
+        }
+        func_87F0AB08((TreeNode_80050428 *)*arg0, 0x44475F34, func_87E0F74C, (void *)3); // 'DG_4'
+    }
+}
 
 extern void func_87F0A6C8(s32, s32, s32 *, s32 *);
 extern void func_87F0AA80(s32, s32, s32 *);
-typedef struct TreeNode_80050428 TreeNode_80050428;
-void *func_87F0AB08(TreeNode_80050428 *, s32, void (*)(s32, u8 *), void *);
 extern u8 D_87E1A5D0;
 extern u8 D_87E1A5D4;
 extern u8 D_87E1A5E4;
