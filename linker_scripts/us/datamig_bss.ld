@@ -9,10 +9,11 @@
 
 SECTIONS
 {
-    /* func_8AB07C34's two-byte function-static timer. The fragment loader
-     * clears this address after relocation; compiler BSS alignment has no
-     * load image and does not add fields to the timer. */
-    .fragment45_message_timer_bss 0x8AB16A34 (NOLOAD) : SUBALIGN(2)
+    /* Three adjacent two-byte function-static timers for func_8AB07C34,
+     * func_8AB07DC4 and func_8AB07E6C, at 0x8AB16A34/36/38. The fragment
+     * loader clears these addresses after relocation; compiler BSS alignment
+     * has no load image and does not add fields to the timers. */
+    .fragment45_message_timers_bss 0x8AB16A34 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/45/fragment45_22AB80.o(.bss)
     }
