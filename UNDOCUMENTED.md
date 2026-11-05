@@ -3,13 +3,13 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **69 / 9,724 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **69 / 9,725 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
 - Variables with a real name: **248 / 7,103 (3.5%)** (6,855 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,135**
-- Functions with generic `arg0`, `arg1`, ... parameters: **5,866 / 9,724 (60.3%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,216 / 2,191**
-- Struct fields with a real name: **6,071 / 9,917 (61.2%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **5,867 / 9,725 (60.3%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,216 / 2,192**
+- Struct fields with a real name: **6,073 / 9,919 (61.2%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **13,596**
 <!-- AUTO_UNDOCUMENTED:END -->
 
@@ -185,6 +185,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/63/fragment63_315A90.c` | 19 | 19 | 30 | 6 | 8 | 18 | 18 |
 | `src/fragments/38/fragment38_1D5610.c` | 19 | 19 | 42 | 9 | 0 | 1 | 26 |
 | `src/fragments/44/fragment44_1F5F20.c` | 13 | 13 | 33 | 27 | 5 | 7 | 12 |
+| `src/fragments/30/fragment30_170430.c` | 7 | 7 | 34 | 12 | 0 | 1 | 41 |
 | `src/fragments/44/fragment44_20C560.c` | 8 | 8 | 35 | 13 | 0 | 3 | 36 |
 | `src/fragments/76/fragment76_code.c` | 23 | 23 | 38 | 25 | 4 | 5 | 0 |
 | `src/fragments/64/fragment64_3235A0.c` | 10 | 9 | 24 | 6 | 1 | 4 | 50 |
@@ -206,7 +207,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/33/fragment33_code.c` | 11 | 11 | 37 | 9 | 4 | 6 | 21 |
 | `src/fragments/71/fragment71_code.c` | 8 | 8 | 39 | 29 | 2 | 2 | 8 |
 | `src/fragments/29/fragment29_166060.c` | 24 | 24 | 31 | 12 | 1 | 19 | 0 |
-| `src/fragments/30/fragment30_170430.c` | 6 | 6 | 31 | 9 | 0 | 0 | 41 |
 | `src/4C2E0.c` | 25 | 25 | 29 | 8 | 4 | 20 | 0 |
 | `src/56F90.c` | 31 | 31 | 15 | 17 | 2 | 21 | 0 |
 | `src/67F00.c` | 10 | 10 | 44 | 16 | 2 | 9 | 5 |
