@@ -339,5 +339,55 @@ void func_8822C93C(void)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19F570/func_8822CC50.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19F570/func_8822CED0.s")
+extern s32 func_80049290(s32, s32, const char *);
+extern void func_88003480(s32, u16, u16, s16 *, s16 *);
+extern void func_8822CC50(void);
+
+u8 *func_8822CED0(u8 arg0, s16 arg1, u8 arg2, void (*arg3)(void)) {
+    s32 i;
+    s32 position;
+    s32 width;
+    s16 x;
+    s16 y;
+    s32 text_width;
+    u8 digit_width;
+    u8 label_width;
+    u8 slot;
+
+    digit_width = func_80049290(8, 1, "9");
+    label_width = func_80049290(8, 1, func_8004C874(33, 30));
+    D_88234930 = (s32)Util_Malloc(24);
+    text_width = label_width;
+    text_width += digit_width * 2;
+    x = 255 - text_width;
+    if (arg0 != 0) {
+        x += 311;
+    }
+    width = text_width + 31;
+    if (arg1 >= 261) {
+        y = arg1 - 2;
+        func_88003480(6, width, 61, &x, &y);
+    } else {
+        y = arg1 + 27;
+    }
+    *(s16 *)((u8 *)D_88234930 + 8) = x + 13;
+    position = *(s16 *)((u8 *)D_88234930 + 8) + label_width + 1;
+    for (i = 1; i >= 0; position += digit_width + 1, i--) {
+        ((s16 *)((u8 *)D_88234930 + 10))[i] = position;
+    }
+    *(s16 *)((u8 *)D_88234930 + 14) = 1;
+    *(s16 *)((u8 *)D_88234930 + 4) = arg2;
+    *((u8 *)D_88234930 + 6) = arg2;
+    *(s16 *)((u8 *)D_88234930 + 16) = 0;
+    *(void (**)(void))((u8 *)D_88234930 + 20) = arg3;
+    slot = func_88004804(0, 3, x, y, 0, 1, 220, 220, 180,
+                         (s32 *)func_8822C93C, (s32 *)func_8822CC50,
+                         (s32 *)func_8822C8E0, (s32 *)func_8822C904, 2, 0);
+    *(u8 **)D_88234930 = D_8800ED50 + slot * 76;
+    *(s16 *)(*(u8 **)D_88234930 + 16) = width;
+    *(s16 *)(*(u8 **)D_88234930 + 18) = 61;
+    D_880068B4 = 0;
+    D_88234718 = 1;
+    return *(u8 **)D_88234930;
+}
 #endif
