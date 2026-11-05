@@ -454,7 +454,7 @@ void func_87E105FC(void *arg0, u8 arg1) {
     func_87E10524(arg0, func_87E10598, arg1);
 }
 
-extern void func_8004C8C0(s32);
+extern s32 func_8004C8C0(u16);
 void func_87E10628(void) { func_8004C8C0(0x164); func_8004C8C0(0x165); func_8004C8C0(0x171); func_8004C8C0(0x170); func_8004C8C0(0x1B5); func_8004C8C0(0x1B8); }
 
 extern void *func_87F025B8(void *, void *);
@@ -492,9 +492,10 @@ void func_87E1078C(void) {
 extern s32 D_87E1AA4C;
 extern u8 D_87E1EBA0;
 extern s32 main_pool_get_available(void);
-extern s32 MainPool_AllocState(s32, s32);
-extern void MainPool_FinalizeAllocation(s32);
-extern s32 process_geo_layout(s32, s32 *);
+typedef struct S1_MemoryBlock S1_MemoryBlock;
+extern u8 *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(S1_MemoryBlock *);
+extern void *process_geo_layout(S1_MemoryBlock *, void *);
 extern s32 func_8004C990(s32, s32);
 extern s32 func_87F08DF8(void *, f32, f32, s32);
 extern void func_87F0252C(void *, void *, void *, s32);
@@ -502,9 +503,9 @@ void func_87E107B4(void *arg0) {
     void *sp20;
     s32 sp28;
 
-    sp28 = MainPool_AllocState(main_pool_get_available(), 0);
-    *(s32 *)((u8 *)arg0 + 0x90c) = process_geo_layout(sp28, &D_87E1AA4C);
-    MainPool_FinalizeAllocation(sp28);
+    sp28 = (s32)MainPool_AllocState(main_pool_get_available(), 0);
+    *(s32 *)((u8 *)arg0 + 0x90c) = (s32)process_geo_layout((S1_MemoryBlock *)sp28, &D_87E1AA4C);
+    MainPool_FinalizeAllocation((S1_MemoryBlock *)sp28);
     *(s32 *)((u8 *)arg0 + 0x910) = func_87F08DF8((void *)func_8004C990(0x170, 0), 0.0f, 25.0f, 0x0f000000);
     sp20 = (u8 *)arg0 + 0x2c8;
     func_87F0252C(&D_87E1EBA0, sp20, (u8 *)arg0 + 0x2dc, 4);
@@ -614,7 +615,7 @@ void func_87E10B30(void) {
         if (resource != 0) {
             pool = MainPool_AllocState(main_pool_get_available(), 0);
             *(s32 *)slot = func_8004EB58((s32)pool, resource);
-            MainPool_FinalizeAllocation(pool);
+            MainPool_FinalizeAllocation((S1_MemoryBlock *)pool);
             func_8004DCFC((u8 *)resource, &errors);
             *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
             slot[4] = 0;
@@ -631,7 +632,7 @@ void func_87E10B30(void) {
         if (resource != 0) {
             pool = MainPool_AllocState(main_pool_get_available(), 0);
             *(s32 *)slot = func_8004EB58((s32)pool, resource);
-            MainPool_FinalizeAllocation(pool);
+            MainPool_FinalizeAllocation((S1_MemoryBlock *)pool);
             func_8004DCFC((u8 *)resource, &errors);
             *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
             slot[4] = 0;
@@ -648,7 +649,7 @@ void func_87E10B30(void) {
         if (resource != 0) {
             pool = MainPool_AllocState(main_pool_get_available(), 0);
             *(s32 *)slot = func_8004EB58((s32)pool, resource);
-            MainPool_FinalizeAllocation(pool);
+            MainPool_FinalizeAllocation((S1_MemoryBlock *)pool);
             func_8004DCFC((u8 *)resource, &errors);
             *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
             if (i < 3) {
@@ -669,7 +670,7 @@ void func_87E10B30(void) {
         if (resource != 0) {
             pool = MainPool_AllocState(main_pool_get_available(), 0);
             *(s32 *)slot = func_8004EB58((s32)pool, resource);
-            MainPool_FinalizeAllocation(pool);
+            MainPool_FinalizeAllocation((S1_MemoryBlock *)pool);
             func_8004DCFC((u8 *)resource, &errors);
             *(s32 *)((u8 *)(u32)D_87E1EBB8 + 0x2BC) |= errors;
             slot[4] = 0;
@@ -769,7 +770,6 @@ void func_87E11248(u8 *arg0) {
     func_80047738(8, func_8004C990(440, 2), func_87E11148, 2);
 }
 
-s32 process_geo_layout(s32, s32 *);
 extern u8 D_87E1AA80;
 extern u8 D_87E1EBA0;
 void func_87E113C8(void) {
@@ -779,8 +779,8 @@ void func_87E113C8(void) {
     GeoNode_CreateContainer(0, &D_87E1EBA0);
     temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
     sp1C = temp_v0;
-    (*(s32 *)((u8 *)(D_87E1EBB8) + (0x934))) = process_geo_layout(temp_v0, &D_87E1AA80);
-    MainPool_FinalizeAllocation(sp1C);
+    (*(s32 *)((u8 *)(D_87E1EBB8) + (0x934))) = (s32)process_geo_layout((S1_MemoryBlock *)temp_v0, &D_87E1AA80);
+    MainPool_FinalizeAllocation((S1_MemoryBlock *)sp1C);
 }
 
 extern void func_8004C4B0(s32);
@@ -1121,7 +1121,52 @@ void func_87E11E18(s32 arg0, s32 arg1) {
     func_87E11E48(&D_80126420, arg0, arg1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E11E48.s")
+typedef struct unk_func_87E11E48_record {
+    s32 unk_00;
+    u8 unk_04[136];
+    s32 unk_8C;
+    u8 *unk_90;
+    s32 unk_94;
+} unk_func_87E11E48_record;
+typedef struct unk_func_87E11E48_item {
+    u8 unk_00[56];
+    unk_func_87E11E48_record *unk_38;
+    u8 unk_3C[336];
+} unk_func_87E11E48_item;
+extern s32 D_87E1AAE0[];
+// Allocator state layout and interface.
+//@src/3A00.c
+typedef struct {
+    s32 freeSpace;
+    s32 listHeadL;
+    s32 listHeadR;
+    s32 prev;
+} MainPoolState;
+extern s32 MainPool_AllocAligned(MainPoolState *, s32, s32);
+extern s32 func_87F08E3C(void *, s32);
+
+void func_87E11E48(s32 *arg0, s32 arg1, s32 arg2) {
+    unk_func_87E11E48_item *items;
+    unk_func_87E11E48_record *records;
+    u8 *pool;
+    s32 i;
+
+    func_8004C8C0(352);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    items = (unk_func_87E11E48_item *)MainPool_AllocAligned((MainPoolState *)pool, arg2 * sizeof(unk_func_87E11E48_item), 4);
+    records = (unk_func_87E11E48_record *)MainPool_AllocAligned((MainPoolState *)pool, arg2 * sizeof(unk_func_87E11E48_record), 4);
+    *(s32 *)((u8 *)arg1 + 0x18) = (s32)process_geo_layout((S1_MemoryBlock *)pool, D_87E1AAE0);
+    MainPool_FinalizeAllocation((S1_MemoryBlock *)pool);
+    *(s32 *)((u8 *)arg1 + 0x14) = func_87F08E3C((void *)func_8004C990(352, D_87E1AB14[0]), 0x0F000000);
+    func_87F0252C(arg0, (void *)arg1, items, arg2);
+    for (i = 0; i < arg2; i++) {
+        items[i].unk_38 = &records[i];
+        records[i].unk_8C = 0;
+        records[i].unk_90 = (u8 *)arg1;
+        records[i].unk_94 = 0;
+        records[i].unk_00 = 0;
+    }
+}
 
 extern void *func_87F025B8(void *, void *);
 extern void func_8003F1DC(void *);
