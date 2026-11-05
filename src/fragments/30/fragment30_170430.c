@@ -166,14 +166,14 @@ extern void *D_88104E90;
 extern s32 D_8800687C;
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
-extern s32 func_8004C874(s32, s32);
+extern void *func_8004C874(s32, s32);
 extern void func_80049064(s32, s32, s32, s32);
 extern void func_800499EC(void);
 extern s32 func_800472E0(s32);
 extern void func_8004989C(s32);
-extern s32 func_800635E0(u8);
-extern void func_8004C54C(s32, s32);
-extern s32 func_8004C8A0(void *, s32, s32, s32);
+extern s32 *func_800635E0(u8);
+extern s32 func_8004C54C(s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
 extern s32 func_80048E30(s32, s32, s32, void *, s32);
 extern void func_88002820(s32, s32, s32, s32, s32, s32, void *);
 extern void Ui_DrawAnimatedTextureMarker(s32, s16);
@@ -195,17 +195,17 @@ void func_881033FC(void) {
     func_800498C4();
     func_800496A4(8, 1);
     if (((State *)D_88104E90)->d0 != 0) {
-        func_80049064(0x13F, 0xCB, 1, func_8004C874(0x1E, 0x1B));
+        func_80049064(0x13F, 0xCB, 1, (s32)func_8004C874(0x1E, 0x1B));
         func_800499EC();
         return;
     }
     if (((State *)D_88104E90)->c8 != 0) {
-        sp34 = (func_800472E0(func_8004C874(0x1E, 0x14)) * 0x1A) - 6;
+        sp34 = (func_800472E0((s32)func_8004C874(0x1E, 0x14)) * 0x1A) - 6;
         func_8004989C(0x1A);
-        func_8004C54C(0x2A, func_800635E0(*(u8 *)((u8 *)D_88104E90 + 0xC7)));
+        func_8004C54C(0x2A, (s32)func_800635E0(*(u8 *)((u8 *)D_88104E90 + 0xC7)));
         func_8004C54C(0x4A, ((TableState *)D_88104E90)->entries[*(s16 *)((u8 *)D_88104E90 + 0x2C)]);
         func_80049064(0x13F, 0xD5 - (sp34 >> 1), 1,
-                       func_8004C8A0(sp38.data, 0x100, 0x1E, 0x14));
+                       (s32)func_8004C8A0(sp38.data, 0x100, 0x1E, 0x14));
         func_800499EC();
         return;
     }
@@ -220,5 +220,64 @@ void func_881033FC(void) {
                    (s16)(*(s16 *)((u8 *)D_88104E90 + 0x2C) * 0x1A + 0xC5));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_170430/func_881035C0.s")
+typedef struct {
+    s32 enabled;
+    u8 *flags;
+} unk_func_881035C0;
+extern unk_func_881035C0 D_88006020;
+extern u8 D_8800686D[];
+extern u8 D_8800ED50[];
+extern void *Util_Malloc(s32);
+extern void _bzero(void *, s32);
+extern u8 func_88A01074(u8, u8, s32);
+extern u8 *func_88002AA8(u8 *, s32, u8 **, u16, s32, s16, s16, s16, s16, s16, s16, s32, s16, void *);
+extern u8 func_88004804(s32, s32, s16, s16, s32, s32, u8, u8, u8, s32 *, s32 *, s32 *, s32 *, u8, u8);
+
+s32 func_881035C0(u8 arg0) {
+    u32 i;
+    s16 selected = 0;
+    u8 slot;
+    unk_func_881035C0 mask = D_88006020;
+    u8 *node;
+
+    D_88104E90 = Util_Malloc(212);
+    *((u8 *)D_88104E90 + 199) = arg0;
+    func_8004C54C(42, (s32)func_800635E0(arg0));
+    func_8004C8A0((u8 *)D_88104E90 + 56, 64, 30, 16);
+    *(void **)((u8 *)D_88104E90 + 184) = func_8004C874(30, 17);
+    func_8004C54C(21, (s32)D_8800686D);
+    *(void **)((u8 *)D_88104E90 + 188) = func_8004C8A0((u8 *)D_88104E90 + 120, 64, 30, 18);
+    *(void **)((u8 *)D_88104E90 + 192) = func_8004C874(30, 19);
+    mask.flags = (u8 *)D_88104E90 + 196;
+    _bzero(mask.flags, 3);
+    for (i = 0; i < 3; i++) {
+        if (func_88A01074(arg0, 1, i) == 0) {
+            mask.enabled = 1;
+            mask.flags[i] = 1;
+            if (i == selected) {
+                selected++;
+                if (selected == 3) {
+                    return 0;
+                }
+            }
+        }
+    }
+    func_88002AA8((u8 *)D_88104E90 + 4, 0, (u8 **)((u8 *)D_88104E90 + 184), 3,
+                  8, 1, 6, 0, 0, 0, 0, 0, selected, &mask);
+    slot = func_88004804(0, 3, 80, 140, 0, 3, 255, 255, 255,
+                         (s32 *)func_881030F4, (s32 *)func_881033FC,
+                         (s32 *)func_88103058, (s32 *)func_88103080, 0, 0);
+    node = D_8800ED50 + slot * 76;
+    *(u8 **)D_88104E90 = node;
+    *(s16 *)(*(u8 **)D_88104E90 + 16) = 479;
+    *(s16 *)(*(u8 **)D_88104E90 + 18) = 146;
+    D_880068B4 = 0;
+    *(s32 *)((u8 *)D_88104E90 + 200) = 0;
+    *(s32 *)((u8 *)D_88104E90 + 204) = 1;
+    *((u8 *)D_88104E90 + 208) = 0;
+    *((s8 *)D_88104E90 + 209) = 0;
+    *((s8 *)D_88104E90 + 210) = 0;
+    *((s8 *)D_88104E90 + 211) = -1;
+    return 1;
+}
 #endif
