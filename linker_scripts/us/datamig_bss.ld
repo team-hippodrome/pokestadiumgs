@@ -9,6 +9,14 @@
 
 SECTIONS
 {
+    /* func_8AB07C34's two-byte function-static timer. The fragment loader
+     * clears this address after relocation; compiler BSS alignment has no
+     * load image and does not add fields to the timer. */
+    .fragment45_message_timer_bss 0x8AB16A34 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/45/fragment45_22AB80.o(.bss)
+    }
+
     /* Eight-byte loader state, cleared by Memmap_RelocateFragment.
      * Original relocation metadata remains in the loaded image. */
     .fragment44_load_state_bss 0x8AF2BF18 (NOLOAD) : SUBALIGN(4)
