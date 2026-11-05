@@ -10,8 +10,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
-| 0–99 | 8,253 | 147 | 8,400 | 98.2% |
-| 100–199 | 1,069 | 240 | 1,309 | 81.7% |
+| 0–99 | 8,254 | 146 | 8,400 | 98.3% |
+| 100–199 | 1,071 | 238 | 1,309 | 81.8% |
 | 200–299 | 246 | 174 | 420 | 58.6% |
 | 300–399 | 79 | 99 | 178 | 44.4% |
 | 400–499 | 37 | 42 | 79 | 46.8% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **9,712 / 10,532 (92.2%)**
-- Remaining `GLOBAL_ASM` owners: **820**
+- US functions with C implementations: **9,715 / 10,532 (92.2%)**
+- Remaining `GLOBAL_ASM` owners: **817**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -112,7 +112,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/31/fragment31_19D160.c` | 2 | 6 | 66.7% |
 | `src/fragments/31/fragment31_19DFC0.c` | 1 | 11 | 90.9% |
 | `src/fragments/31/fragment31_19E800.c` | 1 | 13 | 92.3% |
-| `src/fragments/31/fragment31_19F570.c` | 2 | 16 | 87.5% |
+| `src/fragments/31/fragment31_19F570.c` | 1 | 16 | 93.8% |
 | `src/fragments/31/fragment31_1A03C0.c` | 1 | 17 | 94.1% |
 | `src/fragments/31/fragment31_1A1BD0.c` | 2 | 17 | 88.2% |
 | `src/fragments/32/fragment32_1B1330.c` | 3 | 22 | 86.4% |
@@ -200,7 +200,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/63/fragment63_30E370.c` | 1 | 15 | 93.3% |
 | `src/fragments/63/fragment63_30F070.c` | 3 | 25 | 88.0% |
 | `src/fragments/63/fragment63_310270.c` | 2 | 43 | 95.3% |
-| `src/fragments/63/fragment63_312AE0.c` | 4 | 58 | 93.1% |
+| `src/fragments/63/fragment63_312AE0.c` | 2 | 58 | 96.6% |
 | `src/fragments/63/fragment63_315A90.c` | 2 | 39 | 94.9% |
 | `src/fragments/63/fragment63_3166F0.c` | 1 | 1 | 0.0% |
 | `src/fragments/63/fragment63_317060.c` | 2 | 74 | 97.3% |
