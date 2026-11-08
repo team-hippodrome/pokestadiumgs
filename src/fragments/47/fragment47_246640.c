@@ -606,7 +606,30 @@ void func_86001B1C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86001BFC.s")
+extern f32 MathUtil_Random_ZeroOne(void);
+extern void func_87C01E30(void *, void *, s32);
+extern void func_87C00120(void *, f64, f64, f64);
+extern u8 D_8600D61C[];
+extern f32 D_8600D648;
+
+/* asm/us/data/10ABD0.rodata.s refers to D_8600D650 + 0x4, so the 750.0 double is a
+   global symbol: a const aggregate becomes an 8-byte R symbol at .rodata offset 0,
+   while a scalar const f64 would land in .data. The member access also keeps the two
+   float temporaries in the target's registers (an array-element spelling swaps them). */
+const struct { f64 x; } D_8600D650 = { 750.0 };
+
+
+
+void func_86001BFC(u8 *arg0) {
+    *(s32 *)(arg0 + 0x194) = 1;
+    *(s32 *)(arg0 + 0x184) = 0;
+    func_87C01E30(arg0 + 0x16C, D_8600D61C, 0);
+    func_87C00120(arg0 + 0x2B8,
+        *(f64 *)(arg0 + 0x198) + MathUtil_Random_ZeroOne() * D_8600D648 - D_8600D650.x,
+        *(f64 *)(arg0 + 0x1A0),
+        *(f64 *)(arg0 + 0x1A8) + MathUtil_Random_ZeroOne() * 10.0f - 5.0);
+    *(s32 *)(arg0 + 0x2D0) = MathUtil_Random_ZeroOne() < 0.5f;
+}
 #endif
 
 #ifdef VERSION_US
