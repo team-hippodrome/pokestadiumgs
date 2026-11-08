@@ -219,7 +219,99 @@ void func_831005F0(void *arg0, void *arg1) {
     func_800226C0(0xD2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/6/fragment6_code/func_8310065C.s")
+/* The two "(0, x)" comma expressions are operand-order controls: without
+ * them two addu operands come out swapped. */
+
+extern s32 func_800718B8(s32);
+typedef struct Copy8310065C { u32 words[17]; } Copy8310065C;
+typedef struct S9_8310065C { u8 x[9]; } S9_8310065C;
+typedef struct Hdr8310065C {
+    u8 pad0[0xC];
+    u8 f0C;
+    u8 pad1[0x54 - 0xD];
+    u8 f54;
+    s8 f55;
+    s8 f56;
+    s8 f57;
+    u8 b2:5;
+    u8 b1:2;
+    u8 b0:1;
+    u8 c7:1;
+    u8 c0:7;
+} Hdr8310065C;
+
+
+
+void func_8310065C(void *arg0, s32 arg1) {
+    u8 *base;
+    s32 flag;
+    Hdr8310065C *h;
+
+    base = arg0;
+    h = *((Hdr8310065C **)(base + 0x38));
+    h->b0 = arg1;
+    flag = base[0x41] >= 2;
+    if (!flag) {
+        flag = base[0x42] >= 5;
+    }
+    h = *((Hdr8310065C **)(base + 0x38));
+    h->c7 = flag;
+    (*((Hdr8310065C **)(base + 0x38)))->f54 = 0;
+    if (base[0x41] == 1) {
+        (*((Hdr8310065C **)(base + 0x38)))->f55 = -2;
+    } else {
+        (*((Hdr8310065C **)(base + 0x38)))->f55 = base[0x41] - 1;
+    }
+    if (base[0x42] == 1) {
+        (*((Hdr8310065C **)(base + 0x38)))->f56 = -1;
+        (*((Hdr8310065C **)(base + 0x38)))->f57 = -2;
+    } else if (base[0x42] < 5) {
+        (*((Hdr8310065C **)(base + 0x38)))->f56 = base[0x42] - 1;
+        (*((Hdr8310065C **)(base + 0x38)))->f57 = -2;
+    } else if (base[0x42] == 5) {
+        (*((Hdr8310065C **)(base + 0x38)))->f56 = 1;
+        (*((Hdr8310065C **)(base + 0x38)))->f57 = 2;
+    } else if (base[0x42] == 6) {
+        (*((Hdr8310065C **)(base + 0x38)))->f56 = 1;
+        (*((Hdr8310065C **)(base + 0x38)))->f57 = 3;
+    } else if (base[0x42] == 7) {
+        (*((Hdr8310065C **)(base + 0x38)))->f56 = 2;
+        (*((Hdr8310065C **)(base + 0x38)))->f57 = 3;
+    }
+    switch (base[0x3E]) {
+        case 1:
+            *((Copy8310065C *)((*((u8 **)(base + 0x38))) + 0x10)) = *((Copy8310065C *)((u32)func_800718B8(5)));
+            break;
+        case 2:
+            *((Copy8310065C *)((*((u8 **)(base + 0x38))) + 0x10)) = *((Copy8310065C *)((u32)func_800718B8(0xC)));
+            break;
+        case 3:
+            *((Copy8310065C *)((*((u8 **)(base + 0x38))) + 0x10)) = *((Copy8310065C *)((u32)func_800718B8(7)));
+            break;
+        case 4:
+            *((Copy8310065C *)((*((u8 **)(base + 0x38))) + 0x10)) = *((Copy8310065C *)((u32)func_800718B8(0)));
+            break;
+        case 5:
+            *((Copy8310065C *)((*((u8 **)(base + 0x38))) + 0x10)) = *((Copy8310065C *)((u32)func_800718B8(base[0x3D])));
+            break;
+        case 6:
+            /* FAKE: the (0, 0x88) comma fixes addu operand order; score 620 without it. */
+            *((Copy8310065C *)((*((u8 **)(base + 0x38))) + 0x10)) = *((Copy8310065C *)((base + ((base[0x3F] * 34) * 2)) + (0, 0x88)));
+            break;
+    }
+    h = *((Hdr8310065C **)(base + 0x38));
+    h->b1 = 3 - base[0x3C];
+    h = *((Hdr8310065C **)(base + 0x38));
+    /* FAKE: the (0, 0xAA) comma fixes addu operand order; score 620 without it. */
+    h->b2 = D_831038E0[*((s8 *)(base + base[0x43] + base[0x40] + (0, 0xAA)))];
+    *((S9_8310065C *)((*((u8 **)(base + 0x38))) + 4)) = *((S9_8310065C *)(base + 0x3C));
+    if (base[0x1E] == 8) {
+        (*((Hdr8310065C **)(base + 0x38)))->f0C = 7;
+    } else {
+        (*((Hdr8310065C **)(base + 0x38)))->f0C = base[0x1E];
+    }
+    *((s32 *)(base + 0x2F0)) = 1;
+}
 
 extern void func_81600F0C(void *, s32, s32, s32, s32);
 extern void func_818057D0(void *, void *, void *);
