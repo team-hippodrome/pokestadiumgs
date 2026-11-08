@@ -323,5 +323,58 @@ void func_8004B314(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_8004B09C(arg0, arg1, arg2, arg3, D_80095114, 0xF0, 0xD4, 0x68, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/4AC10/func_8004B35C.s")
+extern u8 *func_8004CA60(void *texture);
+extern void func_800459AC(u8 *image, u8 format, u8 size, u16 width, s32 height, s32 swapped, s32 palette, s32 cms, s32 cmt, s32 masks, s32 maskt, s32 shifts, s32 shiftt);
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+// Draws a nine-slice frame from the single texture in arg4. The four corners are drawn at the texture's own size and
+// the four edges are stretched between them; an edge passes 0 for the texture coordinate of the axis it stretches,
+// together with dsdx or dtdy 0, which repeats the corner's first column or row across the edge. The nine-slice
+// center is not drawn. tex_s and tex_t are the texture coordinates of the last texel.
+
+
+void func_8004B35C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *arg4) {
+    s16 x;
+    s16 y;
+    s32 tex_s;
+    s32 tex_t;
+    s32 pad; // FAKE: unused; the fourth local slot moves x and y from 0x5C/0x58 to 0x58/0x54. Diff score 48 without it.
+
+    if (arg4 == NULL) {
+        return;
+    }
+    func_800459AC(func_8004CA60(arg4), arg4[4], arg4[5], *(u16 *)(arg4 + 0), *(u16 *)(arg4 + 2), 1, 0, 2, 2, 0, 0,
+                  0, 0);
+    x = arg0;
+    y = arg1;
+    tex_t = (*(u16 *)(arg4 + 2) - 1) << 5;
+    GfxRect_DrawTextured(x, y, *(u16 *)(arg4 + 0), *(u16 *)(arg4 + 2), 0, tex_t, 0x400, -0x400, 0);
+
+    // Top edge, then the top-right corner.
+    tex_s = (*(u16 *)(arg4 + 0) - 1) << 5;
+    tex_t = (*(u16 *)(arg4 + 2) - 1) << 5;
+    GfxRect_DrawTextured(arg0 + *(u16 *)(arg4 + 0), y, arg2 - *(u16 *)(arg4 + 0) * 2, *(u16 *)(arg4 + 2), tex_s,
+                         tex_t, 0, -0x400, 0);
+    tex_s = (*(u16 *)(arg4 + 0) - 1) << 5;
+    tex_t = (*(u16 *)(arg4 + 2) - 1) << 5;
+    GfxRect_DrawTextured(arg0 + arg2 - *(u16 *)(arg4 + 0), y, *(u16 *)(arg4 + 0), *(u16 *)(arg4 + 2), tex_s, tex_t,
+                         -0x400, -0x400, 0);
+
+    // Left edge, then the bottom-left corner.
+    GfxRect_DrawTextured(x, arg1 + *(u16 *)(arg4 + 2), *(u16 *)(arg4 + 0), arg3 - *(u16 *)(arg4 + 2) * 2, 0, 0, 0x400,
+                         0, 0);
+    GfxRect_DrawTextured(x, arg1 + arg3 - *(u16 *)(arg4 + 2), *(u16 *)(arg4 + 0), *(u16 *)(arg4 + 2), 0, 0, 0x400,
+                         0x400, 0);
+
+    // Bottom edge, right edge, then the bottom-right corner.
+    tex_s = (*(u16 *)(arg4 + 0) - 1) << 5;
+    GfxRect_DrawTextured(arg0 + *(u16 *)(arg4 + 0), arg1 + arg3 - *(u16 *)(arg4 + 2),
+                         arg2 - *(u16 *)(arg4 + 0) * 2, *(u16 *)(arg4 + 2), tex_s, 0, 0, 0x400, 0);
+    tex_s = (*(u16 *)(arg4 + 0) - 1) << 5;
+    GfxRect_DrawTextured(arg0 + arg2 - *(u16 *)(arg4 + 0), arg1 + *(u16 *)(arg4 + 2), *(u16 *)(arg4 + 0),
+                         arg3 - *(u16 *)(arg4 + 2) * 2, tex_s, 0, -0x400, 0, 0);
+    tex_s = (*(u16 *)(arg4 + 0) - 1) << 5;
+    GfxRect_DrawTextured(arg0 + arg2 - *(u16 *)(arg4 + 0), arg1 + arg3 - *(u16 *)(arg4 + 2), *(u16 *)(arg4 + 0),
+                         *(u16 *)(arg4 + 2), tex_s, 0, -0x400, 0x400, 0);
+}
 #endif
