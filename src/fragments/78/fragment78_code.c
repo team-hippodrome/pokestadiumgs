@@ -58,7 +58,7 @@ void func_8F9000D0(void) {
 }
 
 extern void func_8004972C(s32, s32, s32, s32);
-extern void func_800495BC(s32, s32, s32 *);
+void func_800495BC();
 void func_8F900200(u8 *arg0, s32 arg1) {
     s32 temp_v0;
 
@@ -73,7 +73,60 @@ void func_8F900200(u8 *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/78/fragment78_code/func_8F900284.s")
+extern s32 D_8F901530;
+extern u16 D_8F901534[][17];
+extern u8 D_8F901630;
+extern s32 D_8F911630;
+extern s32 D_8F911634;
+extern s32 D_8F911638;
+extern s32 D_8F91163C;
+extern s32 D_8F911644;
+extern s32 D_8F911648;
+extern void GfxImage_FillCurrent(void *arg0, u16 arg1);
+extern void func_800088DC(void);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern u8 func_80060AAC(u8 arg0);
+
+/* The five format strings are function-local static arrays. Block-scope statics emit
+   into .rodata at this point of the translation unit, before func_8F901078's switch
+   table, which is retail's order: these strings at 0x00..0x28, the table at 0x28..0x68. */
+
+
+
+void func_8F900284(void)
+{
+  static const char D_8F9015B0[12] = "SRAM Editor";
+  static const char D_8F9015BC[8] = "0x%04X";
+  static const char D_8F9015C4[4] = "+%d";
+  static const char D_8F9015C8[8] = "0x%04X";
+  static const char D_8F9015D0[8] = "%02X";
+  s32 temp_s0;
+  s32 temp_s3;
+  u8 var_fp;
+  s32 var_s0;
+  u32 var_v0;
+  s32 col;
+  u8 n;
+  u16 (*walk)[0x11];
+  u8 *cell;
+  s32 *fmt;
+  func_800088DC();
+ GfxImage_FillCurrent(&D_800D0510, 1U); func_800498C4(); func_800496A4(0x10, 0); func_800495F8(0x140, 0x1E, 1, &D_8F9015B0); func_800496A4(4, 0); walk = D_8F901534; var_s0 = 0; do { func_8F900200((u8 *) walk, var_s0 == D_8F911644); var_s0 += 1; walk += 1; } while (var_s0 != 3); func_8004972C(0xFF, 0xFF, 0xFF, 0xFF); func_800495BC(0x46, 0x4B, &D_8F9015BC, D_8F91163C); fmt = &D_8F9015C4; n = 0; col = 0; do { func_800495BC((col * 0x22) + 0xB4, 0x4B, fmt, col); n++; col = n; } while (n < 8); var_fp = 0; var_v0 = 0; do { temp_s0 = (var_v0 * 8) + D_8F911638;
+    temp_s3 = (var_v0 * 0x16) + 0x69; func_800495BC(0x46, temp_s3, &D_8F9015C8, temp_s0); cell = &D_8F901630 + temp_s0; n = 0; col = 0; do { func_800495BC((col * 0x22) + 0xB4, temp_s3, &D_8F9015D0, (s32) cell[col]); if (D_8F901530 != 0) { func_80049628((col * 0x10) + 0x1CC, temp_s3, func_80060AAC(cell[col])); } else { func_80049628((col * 0x10) + 0x1CC, temp_s3, (s32) cell[col]); } n++; col = n; } while (n < 8); if (col) { } //karodo
+    var_fp++;
+    var_v0 = var_fp;
+  }
+  while (var_fp < 0x10);
+  func_800499EC();
+  if (D_8F911648 != 0)
+  {
+    if (D_8F911648 == 1)
+    {
+      func_8F900020((D_8F911630 * 0x22) + 0xB4, (D_8F911634 * 0x16) + 0x7B, 0x1C);
+    }
+    func_8F900020((D_8F911630 * 0x10) + 0x1CC, (D_8F911634 * 0x16) + 0x7B, 0xE);
+  }
+}
 
 extern u8 D_8F901630;
 extern s32 D_8F91163C;
