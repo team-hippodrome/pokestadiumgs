@@ -24,7 +24,63 @@ void func_87E18410(u8 *arg0) {
 }
 /* mkdraft:func_87E18410 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18504.s")
+typedef struct {
+    f32 x, y, z;
+} Vec3f_87E18504;
+
+extern void *D_87F119DC;
+extern u32 *D_87E1EC90;
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern void func_87E13558(void *, f32, f32, f32, s32);
+extern void func_87F0B0FC(void *, f32, f32, f32, s32);
+extern void func_87F0B154(void *);
+extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
+
+
+
+void func_87E18504(void) {
+    u8 *node;
+    Vec3f_87E18504 pos;
+    u8 *child;
+
+    node = *(u8 **)(*(u8 **)((u8 *)D_87F119DC + 0x38) + 0xC);
+    if ((*(s32 *)((u8 *)D_87E1EC90 + 4) == 2) && (*(s32 *)D_87E1EC90 == *(s32 *)node)) {
+        child = node + 8;
+        if (*(s32 *)(node + 0x8C) == 0) {
+            func_87F0B1A4(child, (f32 *)((u8 *)D_87F119DC + 0x48), *(f32 *)((u8 *)D_87F119DC + 0x48),
+                          *(f32 *)((u8 *)D_87F119DC + 0x4C) - -360.0f,
+                          *(f32 *)((u8 *)D_87F119DC + 0x50), 0xA, 0x2000);
+            func_87F0B2F4(child, (s16 *)((u8 *)D_87F119DC + 0x42), 180.0f, 0.0f, 0.0f, 0xA, 0x8000);
+        }
+    }
+    child = node + 8;
+    if (*(s32 *)D_87E1EC90 == *(s32 *)node) {
+        pos = *(Vec3f_87E18504 *)((u8 *)D_87F119DC + 0x48);
+        *(f32 *)((u8 *)D_87F119DC + 0x50) = *(f32 *)((u8 *)D_87F119DC + 0x50) + 30.0f;
+        func_87E13558(D_87F119DC, -50.0f, (f32)0, (f32)0, 6);
+        *(Vec3f_87E18504 *)((u8 *)D_87F119DC + 0x48) = pos;
+        if (*(s32 *)((u8 *)D_87E1EC90 + 4) != 2) {
+            func_87F0B0FC(child, 0, 30.0f, 10.0f, 6);
+        }
+        if ((s32)*(u8 *)((u8 *)D_87F119DC + 0x60) < 0xF5) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = *(u8 *)((u8 *)D_87F119DC + 0x60) + 0xA;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 0xFF;
+        }
+        *(s32 *)(node + 4) = *(s32 *)(node + 4) + 1;
+    } else {
+        if (*(s32 *)((u8 *)D_87E1EC90 + 4) != 2) {
+            func_87F0B154(child);
+        }
+        *(u8 *)((u8 *)D_87F119DC + 0x60) = *(u8 *)((u8 *)D_87F119DC + 0x60) - 0xA;
+        if ((s32)*(u8 *)((u8 *)D_87F119DC + 0x60) < 0xC8) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 0xC8;
+        }
+        *(s32 *)(node + 4) = 0;
+    }
+    func_87F0B4AC(child, (f32 *)((u8 *)D_87F119DC + 0x48), (f32 *)((u8 *)D_87F119DC + 0x54), (s16 *)((u8 *)D_87F119DC + 0x42));
+}
 
 extern u8 *D_8009491C;
 extern void func_8003CD84(void);
@@ -53,7 +109,62 @@ void func_87E18738(s32 arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_31BD80/func_87E18828.s")
+extern void func_87E0168C(s32, s32, s32);
+extern void func_87F0ADE0(u8 *, u32);
+extern u8 *func_87F0AEC0(void *, void *, s32, s32, s32, s32, s32);
+extern s32 func_87F0AFD0(u8 *, f32 *, f32 *, s16 *);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern void func_87E18504(void);
+extern u8 *main_pool_alloc(s32, s32);
+
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+} UnkVec3s;
+
+extern UnkVec3s D_87E1B444[3];
+
+/*
+Sets up three 0x90-byte link slots carved from one main-pool block and creates one
+scene node per slot through func_87F0AEC0.
+
+The slot/link addresses are written as `node + i * 0x90` index expressions rather
+than incremented pointers. uopt strength-reduces them into the two `+= 0x90`
+pointer updates at the bottom of the loop (s4 = slots, s5 = link) and hoists the
+indexed `+ 8` address of the two animation calls to the top of the if-block, where
+node + 0x24 is still live; the hoisted address takes s3 and node + 0x42 at the
+call sites takes s2. Pointer increments produce the same operations in a
+different register assignment and score 27 word diffs.
+*/
+
+
+void func_87E18828(u8 *arg0) {
+    u8 *node;
+    s32 i;
+    u8 *slots;
+    u8 *link;
+
+    node = (u8 *)main_pool_alloc(0x1B0, 0);
+    func_87F0ADE0(arg0 + 0xC, 3);
+    for (i = 0, slots = node, link = node; i < 3; i++) {
+        *(s32 *)(slots + i * 0x90) = i;
+        *(s32 *)(slots + i * 0x90 + 4) = 0;
+        node = func_87F0AEC0(arg0 + 0xC, func_87E18504, 0x0F000000, 0x64, 0x1A, func_87E18410, link + i * 0x90);
+        if (node != NULL) {
+            func_8003F1DC(node + 0x24);
+            func_8003F114(node + 0x24, 0, -1, *(void **)(arg0 + 0x24));
+            *(f32 *)(node + 0x5C) = 1.0f;
+            *(f32 *)(node + 0x58) = 1.0f;
+            *(f32 *)(node + 0x54) = 1.0f;
+            *(UnkVec3s *)(node + 0x48) = D_87E1B444[i];
+            *(s16 *)(node + 0x44) = -0x4000;
+            func_87F0AFD0(link + i * 0x90 + 8, node + 0x48, node + 0x54, (s16 *)(node + 0x42));
+            func_87F0B2F4(link + i * 0x90 + 8, (s16 *)(node + 0x42), 0.0f, 0.0f, 0.0f, 0xA, 0xC000);
+        }
+    }
+    func_87E0168C(3, 0x8C, 9);
+}
 
 extern void func_87E01628();
 extern void main_pool_pop_state(s32);
@@ -89,7 +200,7 @@ M2C_UNK func_87E10F2C(M2C_UNK);                     /* extern */
 M2C_UNK func_87E13480(M2C_UNK);                     /* extern */
 M2C_UNK func_87E13490();                            /* extern */
 M2C_UNK func_87E134C0();                            /* extern */
-M2C_UNK func_87E18828(u8 *);                      /* extern */
+void func_87E18828(u8 *arg0);                      /* extern */
 s32 main_pool_get_available();                      /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
 extern M2C_UNK D_87E1B410;
@@ -238,7 +349,7 @@ extern void func_87E11BA4(s32);
 extern s8 func_87F0E650(u8 *);
 extern void Minigame_SetPlayerMask(s8);
 extern void func_87E134E8(void);
-extern void func_87E0168C(s32, u8, s32);
+extern void func_87E0168C(s32, s32, s32);
 extern s32 func_87E13688(void);
 extern void func_800226C0(s32);
 extern void func_87F0277C(s32);

@@ -38,7 +38,65 @@ void func_87E04400(void *arg0) {
     func_87E10EA8(var_v0->unk_04);
     func_87E10F2C(var_v0->unk_08);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E044B8.s")
+extern u8 *D_87F119DC;
+extern void *D_87E1EB80;
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F0B4AC(void *, void *, void *, void *);
+extern void func_87F0B0FC(void *, f32, f32, f32, s32);
+extern void func_87F0B154(void *);
+extern void func_87E13558(void *, f32, f32, f32, s32);
+
+typedef struct unk_87E044B8_pos {
+    s32 x;
+    s32 y;
+    s32 z;
+} unk_87E044B8_pos;
+
+
+
+void func_87E044B8(void) {
+    u8 *node;
+    s32 pos[3];
+    u8 level;
+    u8 level2;
+
+    node = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    if ((*(s32 *)D_87E1EB80 == 2) &&
+        (*(s32 *)((u8 *)D_87E1EB80 + 4) == *(s32 *)node) &&
+        (*(s32 *)(node + 0x90) == 0)) {
+        func_87F0B2F4(node + 0xC, (u8 *)D_87F119DC + 0x42, 100.0f, 0.0f, 0.0f, 10,
+                      0x10000);
+    }
+    func_87F0B4AC(node + 0xC, (u8 *)D_87F119DC + 0x48, (u8 *)D_87F119DC + 0x54,
+                  (u8 *)D_87F119DC + 0x42);
+    if (*(s32 *)((u8 *)D_87E1EB80 + 4) == *(s32 *)node) {
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 0xE6) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = *(u8 *)((u8 *)D_87F119DC + 0x60) + 0x19;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 0xFF;
+        }
+        *(unk_87E044B8_pos *)pos = *(unk_87E044B8_pos *)((u8 *)D_87F119DC + 0x48);
+        *(f32 *)((u8 *)D_87F119DC + 0x50) = *(f32 *)((u8 *)D_87F119DC + 0x50) + 30.0f;
+        func_87E13558(D_87F119DC, -63.0f, -2.0f, 0.0f, 6);
+        *(unk_87E044B8_pos *)((u8 *)D_87F119DC + 0x48) = *(unk_87E044B8_pos *)pos;
+        if (*(s32 *)D_87E1EB80 != 2) {
+            func_87F0B0FC(node + 0xC, 0.0f, 30.0f, 10.0f, 6);
+        }
+    } else {
+        *(u8 *)((u8 *)D_87F119DC + 0x60) = *(u8 *)((u8 *)D_87F119DC + 0x60) - 0x19;
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 0xC8) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 0xC8;
+        }
+        func_87F0B154(node + 0xC);
+    }
+    /* FAKE: level and level2 make IDO reserve the spare 0x38 and 0x3c stack
+       slots, which place pos and node at 0x40 and 0x4c in the retail frame.
+       Both stores copy the single byte loaded from 0x60. */
+    level = *(u8 *)((u8 *)D_87F119DC + 0x60);
+    *(u8 *)((u8 *)D_87F119DC + 0x62) = level;
+    level2 = level;
+    *(u8 *)((u8 *)D_87F119DC + 0x61) = level2;
+}
 
 /* mkdraft:func_87E0469C begin */
 extern Gfx *D_800D0510;
@@ -65,7 +123,90 @@ void func_87E0469C(s32 arg0, s32 arg1) {
     }}
 /* mkdraft:func_87E0469C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_307D60/func_87E04790.s")
+extern void func_87E044B8(void);
+extern u8 D_87E199A4[];
+extern u8 D_87E199D4[];
+extern u8 *func_87F025B8(u8 *, void (*)(void));
+extern void func_87F02684(s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_87F0AFD0(u8 *, f32 *, f32 *, s16 *);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+extern void func_87E0168C(s32, u8, s32);
+
+
+
+void func_87E04790(u8 *arg0) {
+    // FAKE: never read; five dead words make the frame 0x78 with the callback at
+    // 0x5C, as retail, instead of 0x60/0x58 (diff score 22 without it).
+    s32 pad[5];
+    u8 *fp;
+    void (*callback)(void);
+    void (**pcb)(void);
+    u8 *node;
+    u8 *sub;
+    u8 *state;
+    u8 *work;
+    u8 *rot;
+    f32 *vec;
+    f32 zero;
+    s32 index;
+    s32 var;
+    s32 i;
+
+    fp = arg0 + 8;
+    func_87F02684((s32)fp);
+    callback = func_87E044B8;
+    // FAKE: address-taking keeps the callback in the 0x5C stack slot and
+    // reloads it before every func_87F025B8 call (diff score 10 without it).
+    pcb = &callback;
+    zero = 0.0f;
+    for (i = 0; i < 4; i++) {
+        node = func_87F025B8(fp, *pcb);
+        if (node == NULL) {
+            continue;
+        }
+        vec = (f32 *)D_87E199A4 + i * 3;
+        var = i * 5 + 5;
+        sub = *(u8 **)(node + 0x20);
+        work = node + 0x24;
+        func_8003F1DC(work);
+        func_8003F114(work, 0, -1, *(void **)(arg0 + 0x26C));
+        state = sub + 0xC;
+        work = node + 0x48;
+        rot = node + 0x42;
+        *(u8 **)(node + 0x38) = node;
+        *(f32 *)(node + 0x48) = vec[0];
+        *(f32 *)(node + 0x4C) = vec[1];
+        *(f32 *)(node + 0x50) = vec[2];
+        if (i % 2) {
+            *(s16 *)(node + 0x46) = 0x4000;
+        } else {
+            *(s16 *)(node + 0x46) = -0x4000;
+        }
+        if (i == *(s32 *)(arg0 + 4)) {
+            *(u32 *)(node + 0x60) = 0xFFFFFFFF;
+        } else {
+            *(u32 *)(node + 0x60) = 0xC8C8C8FF;
+        }
+        func_87F0AFD0(state, work, node + 0x54, rot);
+        if (func_87E043F0(arg0) != 0) {
+            index = i;
+        } else {
+            index = i + 4;
+            if (i == 0) {
+                *(u8 *)(node + 0x25) &= 0xFFFE;
+            }
+        }
+        vec = (f32 *)D_87E199D4 + index * 3;
+        func_87F0B1A4(state, (f32 *)work, *(f32 *)vec,
+                      *(f32 *)((u8 *)vec + 4), *(f32 *)((u8 *)vec + 8), var,
+                      0x5000);
+        func_87F0B2F4(state, rot, zero, zero, zero, var, 0);
+    }
+    func_87E0168C(3, 0x8C, 0x13);
+}
 
 extern s32 main_pool_alloc(s32, s32);
 extern void func_87F024CC(void);
@@ -125,7 +266,7 @@ s32 func_87E04AC4(u32 arg0) {
 /* mkdraft:func_87E04AFC begin */
 extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
 extern void func_87F0B24C(u8 *, f32 *, f32, f32, f32, s32, s32);
-extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
 extern u32 func_8003570C(void);
 
 // Walks the list at arg0 + 0x14. Each node carries an object at offset 0x20;
@@ -185,7 +326,7 @@ void func_87E04AFC(void *arg0) {
 
 /* mkdraft:func_87E04D2C begin */
 extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
-extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
 extern u32 func_8003570C(void);
 
 // Walks the node list at arg0 + 0x14. Each node's state pointer (the word at
@@ -243,7 +384,7 @@ extern s32 func_87E13688(void);
 extern s32 func_87E1369C(void);
 extern void func_87F0277C(void *arg0);
 extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
-extern u8 *D_87E1EB80;
+extern void *D_87E1EB80;
 
 
 

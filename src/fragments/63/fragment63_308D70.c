@@ -224,7 +224,70 @@ void func_87E06068(s32 arg0) {
     func_87F0252C(&D_87E1B9D8, arg0 + 0x40, main_pool_alloc(0x318, 0), 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E06100.s")
+extern void func_87E055B0(void);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void *func_87F025B8(void *, void *);
+extern void func_87F0AFD0(void *, void *, void *, void *);
+extern s32 func_8004C990(s32, s32);
+extern f32 D_87E1B570;
+
+
+
+void func_87E06100(void *arg0) {
+    f32 temp_fs0;
+    s32 temp_v0_2;
+    s32 var_a1;
+    s32 temp_a1;
+    s32 var_s3;
+    s32 var_s5;
+    void *temp_s1;
+    u8 *temp_s2;
+    u8 *temp_v0;
+    void *temp_v0_3;
+    void *var_s6;
+
+    var_s6 = NULL;
+    for (var_s3 = 0, var_s5 = 0, temp_fs0 = D_87E1B570; var_s3 != 2; var_s3++, var_s5 += 0x9C) {
+        temp_s2 = *(u8 **)((u8 *)arg0 + 0x158) + var_s5;
+        temp_v0 = func_87F025B8((u8 *)arg0 + 0x40, (void *)func_87E055B0);
+        if (temp_v0 != NULL) {
+            temp_s1 = temp_v0 + 0x24;
+            *(void **)((u8 *)arg0 + 0x54) = temp_v0;
+            func_8003F1DC(temp_s1);
+            func_8003F114(temp_s1, 0, -1, *(s32 *)((u8 *)arg0 + 0x168));
+            *(u8 **)(temp_v0 + 0x38) = temp_s2;
+            *(void **)(temp_s2 + 4) = temp_v0;
+            switch (var_s3) {
+            case 0:
+                *(void **)(temp_s2 + 8) = NULL;
+                *(f32 *)(temp_v0 + 0x54) = temp_fs0;
+                *(f32 *)(temp_v0 + 0x58) = temp_fs0;
+                *(f32 *)(temp_v0 + 0x5C) = temp_fs0;
+                temp_v0_2 = *(s32 *)((u8 *)arg0 + 0x178);
+                var_s6 = temp_v0;
+                if ((temp_v0_2 >= 0) && (temp_v0_2 < 4)) {
+                    if (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x170) + 0x2182) & (1 << temp_v0_2)) {
+                        temp_a1 = 6;
+                    } else {
+                        temp_a1 = 2;
+                    }
+                    var_a1 = temp_a1 + temp_v0_2;
+                } else {
+                    var_a1 = 1;
+                }
+                *(s32 *)(temp_s2 + 0xC) = func_8004C990(0x1B2, var_a1);
+                break;
+            case 1:
+                *(void **)(temp_s2 + 8) = var_s6;
+                break;
+            }
+            func_87F0AFD0(temp_s2 + 0x14, temp_v0 + 0x48, temp_v0 + 0x54, temp_v0 + 0x42);
+            temp_v0_3 = *(void **)(temp_s2 + 4);
+            *(u8 *)((u8 *)temp_v0_3 + 0x25) &= ~1;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E06290.s")
 
@@ -486,7 +549,63 @@ s32 func_87E06E48(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E06EC0.s")
+extern u8 D_87E1A0E4[];
+extern void func_87F0B1A4(s32, void *, f32, f32, f32, s32, s32);
+
+typedef struct {
+    f32 x, y, z;
+} Vec3;
+
+// Sends the flagged entries of the two object lists at arg0+0x24 and arg0+0x38
+// to func_87F0B1A4 with node+0x48 as the position pointer. A flagged entry of
+// the first list passes the entry's object with the three floats of the 12-byte
+// D_87E1A0E4 vector selected by the object's signed byte at 0x98. A flagged
+// entry of the second list passes the object 8 bytes in, with floats copied
+// from the entry's position, Y lowered by 20 and Z advanced by 150.
+// Old-style (K&R) definition: its only caller, func_87E07330, passes no
+// arguments in retail, so the call keeps that form for the IDO build.
+
+
+void func_87E06EC0(arg0)
+void *arg0;
+{
+    u8 *node;
+    u8 *object;
+    u8 *state;
+    Vec3 pos;
+    u32 index; // FAKE: never read; this unused local grows the frame from 0x68 to 0x70 as in retail. Diff score 87 without it.
+    node = *(u8 **)((u8 *)arg0 + 0x24);
+    if (node != NULL) {
+        do {
+            object = NULL;
+            if (*(s32 *)(node + 0xC) & 0x20000000) {
+                object = *(u8 **)(node + 0x20);
+                state = &D_87E1A0E4[*(s8 *)(object + 0x98) * 12];
+            }
+            if (object != NULL) {
+                func_87F0B1A4(object, node + 0x48, *(f32 *)(state + 0), *(f32 *)(state + 4), *(f32 *)(state + 8), 0xF, 0x2000);
+            }
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+    node = *(u8 **)((u8 *)arg0 + 0x38);
+    if (node != NULL) {
+        do {
+            object = NULL;
+            if (*(s32 *)(node + 0xC) & 0x40000000) {
+                object = *(u8 **)(node + 0x20) + 8;
+                state = (u8 *)&pos;
+                pos = *(Vec3 *)(node + 0x48);
+                pos.y = pos.y - 20.0f;
+                pos.z = pos.z + 150.0f;
+            }
+            if (object != NULL) {
+                func_87F0B1A4(object, node + 0x48, *(f32 *)(state + 0), *(f32 *)(state + 4), *(f32 *)(state + 8), 0xF, 0x2000);
+            }
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
 
 extern void func_87F0B1A4(s32, void *, f32, f32, f32, s32, s32);
 extern void func_87F0B2F4(s32, void *, f32, f32, f32, s32, s32);
@@ -558,13 +677,17 @@ extern void func_87E0168C(s32, s32, s32);
 extern void func_87E06EC0();
 
 void func_87E07330(void *arg0) {
+#ifdef CC_CHECK
+    func_87E06EC0(0);
+#else
     func_87E06EC0();
+#endif
     (*(s32 *)((u8 *)(arg0) + (4))) = 2;
     func_87E0168C(0, 0x64, -1);
 }
 
 /* mkdraft:func_87E0736C begin */
-extern s32 func_800279C4(s32);
+s32 func_800279C4();
 extern void func_87E015F4(s32 arg0, s32 arg1);
 
 s32 func_87E07278(u8 *arg0);
@@ -673,7 +796,68 @@ u16 func_87E074BC(u8 *arg0) {
 }
 /* mkdraft:func_87E074BC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E076E0.s")
+extern s32 func_87E05400(u32);
+extern void func_87E072FC(void *, u16);
+extern void func_87E07330(void *);
+extern void func_87E07194(void *);
+extern void func_800226C0(s32);
+extern u8 D_800CE060[];
+extern u8 D_87E19B7C[];
+
+
+
+void func_87E076E0(void *arg0) {
+    u8 *table;
+    u16 buttons;
+    s8 result[4]; // FAKE: 4-byte size reproduces the target's 12-byte named-local region
+
+    table = D_87E19B7C + *(s32 *)((u8 *)arg0 + 8) * 4;
+    if ((1 << *(s32 *)((u8 *)arg0 + 0x178)) & *(u8 *)(*(u8 **)((u8 *)arg0 + 0x170) + 0x2182)) {
+        buttons = *(u16 *)(D_800CE060 + *(s32 *)((u8 *)arg0 + 0x178) * 0x28 + 8);
+    } else {
+        buttons = func_87E074BC(arg0);
+    }
+    if ((*(u32 *)((u8 *)arg0 + 0x18C) >> 31) != 0) {
+        if (func_87E05400(1) != 0) {
+            if (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x170) + 0x2180) == 1) {
+                func_87E072FC(arg0, (1 << *(s32 *)((u8 *)arg0 + 8)) & 0xFFFF);
+            }
+            func_87E07330(arg0);
+        }
+    } else {
+        if (buttons & 0x8000) {
+            func_800279C4(0xCF05, buttons);
+            // FAKE: redundant & 0xFF on a u8 read; deleting it moves the tail's
+            // t-registers one slot behind the target starting at this load.
+            *(u8 *)((u8 *)arg0 + 0x18C) = (*(u8 *)((u8 *)arg0 + 0x18C) & 0xFF) | 0x80;
+        }
+        if (buttons & 0x4000) {
+            if ((func_87E05400(1) != 0) && (*(u8 *)(*(u8 **)((u8 *)arg0 + 0x170) + 0x2180) == 0)) {
+                func_87E07194(arg0);
+                *(s32 *)((u8 *)arg0 + 4) = 3;
+                func_800226C0(3);
+            }
+        }
+        if ((func_87E05400(2) != 0) && ((buttons & 0x8000) == 0) && ((buttons & 0x4000) == 0)) {
+            if (buttons & 0x800) {
+                *(s32 *)((u8 *)arg0 + 8) = table[0];
+            }
+            if (buttons & 0x400) {
+                *(s32 *)((u8 *)arg0 + 8) = table[1];
+            }
+            if (buttons & 0x200) {
+                *(s32 *)((u8 *)arg0 + 8) = table[2];
+            }
+            if (buttons & 0x100) {
+                *(s32 *)((u8 *)arg0 + 8) = table[3];
+            }
+            if (buttons & 0xF00) {
+                func_87E015F4(*(s32 *)((u8 *)arg0 + 0x54) + 0x48, result);
+                func_8002781C(0xCF04, *(u8 *)((u8 *)arg0 + 0x17B), result);
+            }
+        }
+    }
+}
 
 extern s32 func_87E06E48(void *);
 extern void func_87E0736C(void *);

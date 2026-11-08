@@ -370,7 +370,64 @@ s32 func_87E0835C(void *arg0, s32 arg1) {
     return sp1C;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E083CC.s")
+
+extern s32 func_87E016D8(void *);
+extern void func_87E155E8(void *, s32, s32, void *, s32, s32);
+
+
+s32 func_87E083CC(void *arg0, s32 arg1)
+{
+  u8 *rec;
+  u8 *ctx;
+  u8 *ptr;
+  u8 *state;
+  u8 *p;
+  s32 result;
+  s32 i;
+  s32 changed;
+  s32 active;
+  result = 0;
+  p = ((u8 *) (*((void **) (((u8 *) arg0) + 0x20)))) + (arg1 * 0x18);
+  ptr = p + 0x2190;
+  rec = ((u8 *) (*((void **) (((u8 *) arg0) + 0x20)))) + ((18 * arg1) * 96);
+  ctx = rec + 0x30;
+  state = ((u8 *) arg0) + 0x644;
+  for (i = 0; i < 18; i++)
+  {
+    changed = 0;
+    if ((ptr[4] > 0) && ((*((s8 *) (rec + 0x30))) != 0))
+    {
+      if (rec[0x50] < 0xC8)
+      {
+        if ((*((s32 *) (((u8 *) (*((void **) (((u8 *) arg0) + 0x20)))) + 0x2188))) >= 7)
+        {
+          rec[0x50]++;
+          result = 1;
+          changed = 1;
+          arg1 = arg1;
+        }
+      }
+      else
+      {
+        if (((func_87E016D8(*((void **) (((u8 *) arg0) + 0x20))) == 1) && ((*((s8 *) (((u8 *) (*((void **) (((u8 *) arg0) + 0x20)))) + 0x2181))) == 3)) && ((*((s32 *) (((u8 *) (*((void **) (((u8 *) arg0) + 0x20)))) + 0x2188))) == 9))
+        {
+if (rec[0x50] < 0xFF) { rec[0x50]++; result = 1; changed = 1; } goto after;
+        }
+        if (1)
+        {
+        }
+      }
+    }
+    after:
+    ;
+    func_87E155E8(state, arg1, i, ctx, changed, (ptr[4] - 1) >= 0);
+    ptr++;
+    rec += 0x5C;
+    ctx += 0x5C;
+  }
+
+  return result;
+}
 
 extern s32 GbSave_GetPortAvailability(s32);
 extern u8 func_8005D92C(s32);

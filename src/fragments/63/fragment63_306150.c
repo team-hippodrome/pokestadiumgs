@@ -327,7 +327,56 @@ void func_87E03594(void *arg0, s32 arg1) {
     func_87E028D8(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E035E4.s")
+extern void *D_87E1EB78;
+extern void *D_87F119DC;
+extern void func_87E13558(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4);
+extern void func_87F0B0FC(void *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4);
+extern void func_87F0B154(void *arg0);
+extern void func_87F0B4AC(void *arg0, void *arg1, void *arg2, void *arg3);
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3F_87E035E4;
+
+/* D_87F119DC is the scene/camera context: +0x20 holds the object node, +0x42
+   a matrix/anim field, +0x48..0x50 the position, +0x54 another vector, and
+   +0x60/+0x61/+0x62 the primary/secondary color components. */
+
+
+void func_87E035E4(void) {
+    u8 *obj;
+    Vec3F_87E035E4 saved;
+    u8 alpha;
+
+    obj = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    func_87F0B4AC(obj + 0x10, (u8 *)D_87F119DC + 0x48,
+                  (u8 *)D_87F119DC + 0x54, (u8 *)D_87F119DC + 0x42);
+    if (*(s32 *)((u8 *)D_87E1EB78 + 4) == *(s32 *)(obj + 4)) {
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 230) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) += 25;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 255;
+        }
+        (*(s32 *)obj)++;
+        saved = *(Vec3F_87E035E4 *)((u8 *)D_87F119DC + 0x48);
+        *(f32 *)((u8 *)D_87F119DC + 0x50) += 30.0f;
+        func_87E13558((u8 *)D_87F119DC, -90.0f, -2.0f, 0.0f, 6);
+        *(Vec3F_87E035E4 *)((u8 *)D_87F119DC + 0x48) = saved;
+        func_87F0B0FC(obj + 0x10, 0.0f, 30.0f, 10.0f, 6);
+    } else {
+        *(u8 *)((u8 *)D_87F119DC + 0x60) -= 25;
+        if (*(u8 *)((u8 *)D_87F119DC + 0x60) < 200) {
+            *(u8 *)((u8 *)D_87F119DC + 0x60) = 200;
+        }
+        *(s32 *)obj = 0;
+        func_87F0B154(obj + 0x10);
+    }
+    alpha = *(u8 *)((u8 *)D_87F119DC + 0x60);
+    *(u8 *)((u8 *)D_87F119DC + 0x62) = alpha;
+    *(u8 *)((u8 *)D_87F119DC + 0x61) = alpha;
+}
 
 extern Gfx *D_800D0510;
 extern void *D_8009491C;
@@ -360,7 +409,7 @@ void func_87E0375C(s32 arg0, s32 arg1) {
 extern f32 D_87E19800[];
 extern f32 D_87E19818[];
 extern void *func_87F025B8(void *, void *);
-extern s32 func_87E035E4();
+void func_87E035E4(void);
 extern void func_87E0168C(s32, u8, s32);
 extern void func_87F02684(s32);
 extern s32 func_87F0AFD0(u8 *arg0, f32 *arg1, f32 *arg2, s16 *rotation);
@@ -418,7 +467,61 @@ void func_87E03850(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03A08.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03B70.s")
+extern void D_87E03018(void);
+extern void func_8003F1DC(void *arg0);
+extern void *func_87F025B8(void *arg0, void *arg1);
+extern void func_87F02684(s32);
+extern f64 D_87E1B558;
+
+
+
+
+void func_87E03B70(void *arg0) {
+    s32 var_s2;
+    u8 *var_v0;
+    u8 *temp_s1;
+    u8 *base;
+    f64 var_f4;
+    f32 var_f0;
+
+    base = (u8 *)arg0 + 0x1B0;
+    func_87F02684((s32)base);
+    if (((*(u8 **)((u8 *)arg0 + 0x204))[0x2180] == 0) ||
+        ((*(u8 **)((u8 *)arg0 + 0x204))[0x2180] == 1)) {
+        var_f0 = -10.0f;
+        // FAKE: the empty self-compare ends the block that holds -10.0f, so
+        // uopt's FPR walk reaches it before the loop-invariant constants;
+        // diff score 530 without it.
+        if (var_f0 == var_f0) {
+        }
+        var_f4 = D_87E1B558;
+        // FAKE: both empty pointer self-compares are needed to end the block that
+        // holds D_87E1B558 before the loop-invariant 18.0/40.0/0.625 signs enter
+        // it. The split gives the global the second slot of uopt's FPR walk (f26)
+        // instead of the fourth (f22); keeping one of the two scores 40, keeping
+        // neither 705.
+        if (arg0 == arg0) {
+        }
+        if (base == base) {
+        }
+        for (var_s2 = 0; var_s2 < 4; var_s2++) {
+            var_v0 = func_87F025B8((s32)base, &D_87E03018);
+            if (var_v0 != NULL) {
+                temp_s1 = var_v0 + 0x24;
+                func_8003F1DC(temp_s1);
+                func_8003F114(temp_s1, 0, -1,
+                              *((void **)((u8 *)arg0 + 0x200)));
+                *(u32 *)(var_v0 + 0x38) = (u32)var_v0;
+                *(f32 *)(var_v0 + 0x4C) = var_f0;
+                *(f32 *)(var_v0 + 0x48) =
+                    var_s2 * 40.0 + 18.0 + var_f4;
+                *(f32 *)(var_v0 + 0x5C) = 0.625f;
+                *(f32 *)(var_v0 + 0x58) = 0.625f;
+                *(f32 *)(var_v0 + 0x54) = 0.625f;
+            }
+        }
+    }
+}
 
 extern void func_87E03850(void *);
 extern void func_87E03A08(void *);
@@ -590,7 +693,7 @@ extern void func_87F0277C(void *arg0);
 extern s32 func_87F0E610(u8 *arg0, u8 *arg1);
 
 extern u8 D_800CE060[];
-extern u8 *D_87E1EB78;
+extern void *D_87E1EB78;
 
 s32 func_87E04114(u8 *arg0) {
 

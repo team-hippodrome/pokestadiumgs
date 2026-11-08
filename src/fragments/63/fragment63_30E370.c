@@ -234,7 +234,73 @@ void func_87E0AF44(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30E370/func_87E0B0EC.s")
+extern u8 *func_87E016C8(void);
+extern s32 func_87F0E610(u8 *, u8 *);
+extern s32 func_87F0E630(u8 *, u8 *);
+extern s32 func_800279C4(s32);
+extern void func_800226C0(s32);
+extern void func_87E134E8(void);
+extern void func_87F0277C(s32);
+
+
+
+s32 func_87E0B0EC(u8 *arg0) {
+    s32 result = 2;
+    s32 first_value;
+    u16 flags;
+    u16 held;
+
+    *(s32 *)(arg0 + 0x38) += 1;
+    flags = func_87F0E610(func_87E016C8(), -1);
+    held = func_87F0E630(func_87E016C8(), -1);
+    switch (*(s32 *)arg0) {
+    case 0:
+        if (func_87E0AE28(arg0) != 0) {
+            *(s32 *)arg0 = 1;
+        }
+        break;
+    case 1:
+        first_value = *(s32 *)((u8 *)*(void **)(arg0 + 8) + 0);
+        *(s32 *)((u8 *)*(void **)(arg0 + 8) + 0) +=
+            ((held & 0x800) > 0) - ((held & 0x400) > 0);
+        if (*(s32 *)((u8 *)*(void **)(arg0 + 8) + 0) < *(s32 *)(arg0 + 0xC)) {
+            *(s32 *)((u8 *)*(void **)(arg0 + 8) + 0) = *(s32 *)(arg0 + 0xC);
+        }
+        if (*(s32 *)(arg0 + 0x10) < *(s32 *)((u8 *)*(void **)(arg0 + 8) + 0)) {
+            *(s32 *)((u8 *)*(void **)(arg0 + 8) + 0) = *(s32 *)(arg0 + 0x10);
+        }
+        if (first_value != *(s32 *)((u8 *)*(void **)(arg0 + 8) + 0)) {
+            func_800279C4(0xCF03);
+        }
+        if (flags & 0x8000) {
+            func_87E0AE64(arg0);
+            *(s32 *)arg0 = 2;
+            func_87E134E8();
+            func_800279C4(0xCF02);
+            func_87E0168C(3, 0x8C, 0xE);
+        } else if (flags & 0x4000) {
+            func_87E0AF44(arg0);
+            *(s32 *)arg0 = 3;
+            func_800226C0(3);
+            func_87E0168C(3, 0x8C, 0xE);
+        }
+        func_87E11C38(*(s32 *)((u8 *)*(void **)(arg0 + 8) + 0));
+        break;
+    case 2:
+        if (func_87E0AE28(arg0) != 0) {
+            result = 1;
+        }
+        break;
+    case 3:
+        if (func_87E0AE28(arg0) != 0) {
+            result = 0;
+        }
+        break;
+    }
+    func_87F0277C((s32)(arg0 + 0x1C));
+    func_87E0AA00(arg0);
+    return result;
+}
 
 /* mkdraft:func_87E0B2CC begin */
 extern Gfx *D_800D0510;

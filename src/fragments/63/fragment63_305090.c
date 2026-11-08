@@ -115,7 +115,72 @@ void func_87E01A5C(s32 arg0, s32 arg1) {
     }}
 /* mkdraft:func_87E01A5C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E01B50.s")
+extern s32 D_87E1973C[];
+extern f32 D_87E1976C[];
+extern void func_87E01868(void);
+extern void func_87F02684(u8 *);
+extern u8 *func_87F025B8(u8 *, void *);
+extern void func_8003F1DC(u8 *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern s32 func_87F0AFD0(u8 *, f32 *, f32 *, s16 *);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B24C(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, u8 *, f32, f32, f32, s32, s32);
+
+typedef struct {
+  s32 unk_0;
+  s32 unk_4;
+  s32 unk_8;
+} unk_D_87E1973C;
+
+
+
+void func_87E01B50(void *arg0)
+{
+  u8 *node;
+  u8 *base;
+  u8 *ptr;
+  s32 i;
+  s32 phase;
+  func_87F02684(((u8 *) arg0) + 8);
+  for (i = 0; i < 4; i++)
+  {
+    node = func_87F025B8(((u8 *) arg0) + 8, func_87E01868);
+    if (node != NULL)
+    {
+      base = *((u8 **) (node + 0x20));
+      ptr = node + 0x24;
+      func_8003F1DC(ptr);
+      func_8003F114(ptr, 0, -1, *((void **) (((u8 *) arg0) + 0x27C)));
+      *((u8 **) (node + 0x38)) = node;
+      *((unk_D_87E1973C *) (node + 0x48)) = *((unk_D_87E1973C *) (&D_87E1973C[(i * 3) + 0]));
+      *((f32 *) (node + 0x54)) = 2.0f;
+      *((f32 *) (node + 0x58)) = 2.0f;
+      *((f32 *) (node + 0x5C)) = 2.0f;
+      if (i == (*((s32 *) (((u8 *) arg0) + 4))))
+      {
+        *((s32 *) (node + 0x60)) = -1;
+      }
+      else
+      {
+        *((s32 *) (node + 0x60)) = 0xC8C8C8FF;
+      }
+      func_87F0AFD0(base + 0x10, (f32 *) (node + 0x48), (f32 *) (node + 0x54), (s16 *) (node + 0x42));
+      phase = (i % 2) ? (0x19) : (0x14);
+      func_87F0B1A4(base + 0x10, (f32 *) (node + 0x48), D_87E1976C[(i * 3) + 0], D_87E1976C[(i * 3) + 1], D_87E1976C[(i * 3) + 2], phase, 0xC000);
+      func_87F0B24C(base + 0x10, (f32 *) (node + 0x54), 1.0f, 1.0f, 1.0f, phase, 0);
+      if (i < 2)
+      {
+        func_87F0B2F4(base + 0x10, node + 0x42, 0.0f, 0.0f, -360.0f, phase, 0x8000);
+      }
+      else
+      {
+        func_87F0B2F4(base + 0x10, node + 0x42, 0.0f, 0.0f, 360.0f, phase, 0x8000);
+      }
+    }
+  }
+
+}
 
 extern s32 main_pool_alloc(s32, s32);
 extern void func_87F024CC(void);
