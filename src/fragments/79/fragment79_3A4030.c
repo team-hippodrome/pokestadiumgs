@@ -1702,7 +1702,54 @@ s32 func_8413860C(u8 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_84138658.s")
+
+
+void func_84138658(void) {
+    extern u8 D_84195218[];
+    extern void *D_841951F8[];
+    extern s32 func_800643CC(s32, s32, s32);
+    s32 side;
+    s32 i;
+    s32 j;
+    u8 half;
+    u8 bit;
+    u8 *mask_byte;
+
+    for (side = 0; side < 2; side = (side + 1) & 0xFF) {
+        u8 *flag = D_84195218 + side * 24;
+        // FAKE: `side | 0` blocks common-subexpression merging with `flag`,
+        // whose address arithmetic is identical. Without it the function
+        // scores 2939.
+        u8 *mask = D_84195218 + (side | 0) * 24;
+
+        flag[16] = 0;
+        for (i = 0; i < 6; i = (i + 1) & 0xFF) {
+            mask_byte = mask + i;
+            mask_byte[17] = 0;
+        }
+        for (i = 0; i < ((u8 *)D_841951F8[side])[7]; i = (i + 1) & 0xFF) {
+            for (j = 0; j < 4; j = (j + 1) & 0xFF) {
+                u8 *row = (u8 *)D_841951F8[side] + i * 88 + 24;
+                if (*(row + j + 2) == 0)
+                    break;
+                if (func_800643CC(row[0], *(row + j + 2), row[29]) == 0) {
+                    // FAKE: `i << 0` is an arithmetic nop that keeps a separate
+                    // copy of i for the divide and modulo pair. Without it the
+                    // function scores 148.
+                    s32 k = i << 0;
+                    half = k / 2;
+                    bit = (k % 2) * 4;
+                    *(mask + 17 + half) |= 1 << (bit + j);
+                }
+            }
+        }
+        for (i = 0; i < 6; i = (i + 1) & 0xFF) {
+            mask_byte = mask + i;
+            if (mask_byte[17] != 0)
+                flag[16] = 1;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

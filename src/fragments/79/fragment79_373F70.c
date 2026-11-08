@@ -109,7 +109,100 @@ void func_841049B4(u8* arg0) {
 
 s32 BattleAnim_IsModelAnimComplete(u8 *arg0) { s32 result = 0; if (*(s32 *)(arg0 + 0x48) == 0) { result = 1; } return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_373F70/func_84104A00.s")
+extern u8 D_8418C958[];
+extern s32 ParticleMath_HasBits(s32 *arg0, s32 arg1);
+extern s32 func_8003C9B8();
+extern void func_8411DCCC(u8 *arg0, f32 *arg1);
+extern f32 func_8411E1BC(u8 *arg0);
+extern s32 func_8411E1D4(s32 arg0);
+extern f32 func_8411EF90(u8 *arg0);
+extern s32 func_8411E1F8(u8 *arg0);
+extern u8 *D_84193DD0;
+
+
+
+void func_84104A00(u8 *arg0) {
+    u8 *obj;
+    s32 var;
+    s32 index;
+
+    // The vector at arg0+0x38 is written and also passed by address; giving it a
+    // named f32* local costs one more stack slot and grows the frame.
+    obj = *(u8 **)(arg0 + 0x10);
+    if (*(u8 **)(obj + 0x10) != NULL && *(u8 **)(*(u8 **)(obj + 0x10) + 0x10) != NULL && *(s16 *)(*(u8 **)(*(u8 **)(obj + 0x10) + 0x10) + 0) == 1) {
+        // Three-float offsets from D_8418C958, indexed by the s16 at +2 of the
+        // object reached through obj+0x10 -> +0x10.
+        *(f32 *)(arg0 + 0x38) = ((f32 (*)[3])D_8418C958)[*(s16 *)(*(u8 **)(*(u8 **)(obj + 0x10) + 0x10) + 2)][0];
+        *(f32 *)(arg0 + 0x3C) = ((f32 (*)[3])D_8418C958)[*(s16 *)(*(u8 **)(*(u8 **)(obj + 0x10) + 0x10) + 2)][1];
+        *(f32 *)(arg0 + 0x40) = ((f32 (*)[3])D_8418C958)[*(s16 *)(*(u8 **)(*(u8 **)(obj + 0x10) + 0x10) + 2)][2];
+    } else {
+        // obj+4 selects this branch chain; obj+8 carries the flags tested
+        // further down.
+        if (ParticleMath_HasBits((s32 *)(obj + 4), 0x1000000)) {
+            *(f32 *)(arg0 + 0x38) = 0.0f;
+            *(f32 *)(arg0 + 0x3C) = 0.0f;
+            *(f32 *)(arg0 + 0x40) = 0.0f;
+        } else if (ParticleMath_HasBits((s32 *)(obj + 4), 0x4000000)) {
+            *(f32 *)(arg0 + 0x38) = func_8411E1D4(*(s32 *)(arg0 + 8)) * -150.0f;
+            *(f32 *)(arg0 + 0x3C) = 0.0f;
+            *(f32 *)(arg0 + 0x40) = 0.0f;
+        } else if (ParticleMath_HasBits((s32 *)(obj + 4), 0x100000)) {
+            func_8411DCCC(*(u8 **)(arg0 + 8), (f32 *)(arg0 + 0x38));
+            if (obj != NULL) {
+                if (ParticleMath_HasBits((s32 *)(obj + 4), 0x40000)) {
+                    *(f32 *)(arg0 + 0x3C) = 0.0f;
+                } else if (ParticleMath_HasBits((s32 *)(obj + 4), 0x80000)) {
+                    *(f32 *)(arg0 + 0x3C) = func_8411EF90(*(u8 **)(arg0 + 8));
+                }
+            }
+        } else {
+            if (ParticleMath_HasBits((s32 *)(obj + 4), 0x200000)) {
+                var = 100;
+            } else {
+                var = *(u8 *)(arg0 + 0x7E);
+            }
+            // The vector at arg0+0x38 is the third argument (a2) of
+            // func_8003C9B8; func_8411DCCC rewrites it when the call returns 0.
+            if (!func_8003C9B8(*(u8 **)(arg0 + 8), (s16)var, (f32 *)(arg0 + 0x38))) {
+                func_8411DCCC(*(u8 **)(arg0 + 8), (f32 *)(arg0 + 0x38));
+            }
+            if (obj != NULL) {
+                if (ParticleMath_HasBits((s32 *)(obj + 4), 0x40000)) {
+                    *(f32 *)(arg0 + 0x3C) = 0.0f;
+                } else if (ParticleMath_HasBits((s32 *)(obj + 4), 0x80000)) {
+                    *(f32 *)(arg0 + 0x3C) = func_8411EF90(*(u8 **)(arg0 + 8));
+                }
+            }
+        }
+        // D_84193DD0 holds 16-byte records; bit 2 of the halfword at +0x12
+        // enables the block below, which rebuilds the vector from the floats at
+        // +0x24, +0x28 and +0x2C of the object at arg0+8.
+        index = func_8411E1F8(*(u8 **)(arg0 + 8));
+        if ((*(u16 *)((u8 *)(u32)D_84193DD0 + (index << 4) + 0x12) & 4) != 0) {
+            if (!ParticleMath_HasBits((s32 *)(obj + 8), 8)) {
+                if (!ParticleMath_HasBits((s32 *)(obj + 4), 0x40000)) {
+                    *(f32 *)(arg0 + 0x38) = *(f32 *)(*(u8 **)(arg0 + 8) + 0x24);
+                    *(f32 *)(arg0 + 0x40) = *(f32 *)(*(u8 **)(arg0 + 8) + 0x2C);
+                    *(f32 *)(arg0 + 0x3C) = *(f32 *)(*(u8 **)(arg0 + 8) + 0x28) + func_8411E1BC(*(u8 **)(arg0 + 8));
+                    if (*(f32 *)(arg0 + 0x3C) >= 30.0f) {
+                        *(f32 *)(arg0 + 0x3C) = 30.0f;
+                    }
+                    if (ParticleMath_HasBits((s32 *)(obj + 4), 0x80000)) {
+                        *(f32 *)(arg0 + 0x3C) = 0.0f;
+                    }
+                }
+            }
+        }
+        if (ParticleMath_HasBits((s32 *)(obj + 8), 0x20)) {
+            *(f32 *)(arg0 + 0x2C) = 0.0f;
+            *(f32 *)(arg0 + 0x30) = 0.0f;
+            *(f32 *)(arg0 + 0x34) = 0.0f;
+            *(f32 *)(arg0 + 0x38) = *(f32 *)(D_84190020 + 0);
+            *(f32 *)(arg0 + 0x3C) = *(f32 *)(D_84190020 + 4);
+            *(f32 *)(arg0 + 0x40) = *(f32 *)(D_84190020 + 8);
+        }
+    }
+}
 
 /* mkdraft:func_84104D28 begin */
 // func_84104D28 - matched in src/fragments/79/fragment79_373F70.c
@@ -135,9 +228,9 @@ typedef struct unk_func_84104D28_Vec3f {
     /* 0x8 */ f32 z;
 } unk_func_84104D28_Vec3f;
 
-extern s32 ParticleMath_HasBits(void *, s32);
+extern s32 ParticleMath_HasBits(s32 *arg0, s32 arg1);
 extern void func_84102750(u8 *, void *);
-extern s32 func_84104A00(u8 *);
+void func_84104A00(u8 *arg0);
 extern void BattleAnim_GetPointAlongCameraRay(u8 *, f32);
 
 // Allocates an effect object with func_841047AC (an entry of D_8418D2A0),

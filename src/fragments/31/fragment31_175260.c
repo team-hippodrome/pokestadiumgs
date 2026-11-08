@@ -353,7 +353,105 @@ void func_88202FA0(void *a0, u8 *a1) {
     func_88202F0C(a1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202FD4.s")
+extern u8 D_8800686C;
+extern u8 LabPC_FindFireStoneEvolution(u8 species);
+extern u8 LabPC_FindLeafStoneEvolution(u8 species);
+extern u8 LabPC_FindWaterStoneEvolution(u8 species);
+// FAKE: src/641E0.c defines these as void with a wider second parameter.
+// They are declared s32 here because the target tail-returns their v0, and
+// the second parameter must be u8 for the target's register allocation
+// (declaring it s32 scores 505).
+extern s32 func_80063C90(u8 arg0, u8 arg1);
+extern s32 func_80063EE4(u8 arg0, u8 arg1);
+extern s32 func_80063F18(u8 arg0, u8 arg1);
+extern s32 func_88202158(u8 *, s32);
+extern s32 func_88902BA0(void *arg0, u8 arg1);
+extern u8 func_88903084(u8 arg0);
+extern u8 func_8890311C(u8 arg0);
+extern u8 func_889031EC(u8 arg0);
+
+
+
+s32 func_88202FD4(u8 *arg0, u8 *arg1) {
+    s32 i;
+    u8 value;
+    s32 result;
+    u8 *p;
+    u8 *q;
+
+    p = arg0;
+
+    if ((p[0x26] & 1) != 0 || p[8] == 0xFC) {
+        return 0;
+    }
+
+    value = func_88201FE0(arg1);
+    if (value != 0) {
+        if (func_88902BA0(p + 8, value) != 0) {
+            return 0;
+        }
+        switch (D_8800686C) {
+        case 1:
+        case 2:
+        case 3:
+            return func_80063EE4(p[8], value);
+        case 4:
+            return func_80063F18(p[8], value);
+        default:
+            return func_80063C90(p[8], value);
+        }
+    }
+
+    result = 0;
+    if (func_88202158(arg1, 8) != 0) {
+        if (p[0x25] < 0x64) {
+            result = 1;
+        }
+    } else if (func_88202158(arg1, 0x10) != 0) {
+        if (*(u16 *)(p + 0x14) < 0x6400) {
+            result = 1;
+        }
+    } else if (func_88202158(arg1, 0x20) != 0) {
+        if (*(u16 *)(p + 0x16) < 0x6400) {
+            result = 1;
+        }
+    } else if (func_88202158(arg1, 0x40) != 0) {
+        if (*(u16 *)(p + 0x18) < 0x6400) {
+            result = 1;
+        }
+    } else if (func_88202158(arg1, 0x80) != 0) {
+        if (*(u16 *)(p + 0x1A) < 0x6400) {
+            result = 1;
+        }
+    } else if (func_88202158(arg1, 0x100) != 0) {
+        if (*(u16 *)(p + 0x1C) < 0x6400) {
+            result = 1;
+        }
+    } else if (func_88202158(arg1, 0x200) != 0) {
+        q = p;
+        for (i = 0; i != 4u; i++, q++) {
+            if (q[0xA] != 0 && q[0xA] != 0xFC &&
+                q[0xA] != 0xA6 &&
+                ((q[0x20] & 0xC0) >> 6) != 3) {
+                result = 1;
+                break;
+            }
+        }
+    } else if (func_88202158(arg1, 0x400) != 0) {
+        result = func_88903084(p[8]);
+    } else if (func_88202158(arg1, 0x800) != 0) {
+        result = LabPC_FindFireStoneEvolution(p[8]);
+    } else if (func_88202158(arg1, 0x1000) != 0) {
+        result = func_8890311C(p[8]);
+    } else if (func_88202158(arg1, 0x2000) != 0) {
+        result = LabPC_FindWaterStoneEvolution(p[8]);
+    } else if (func_88202158(arg1, 0x4000) != 0) {
+        result = LabPC_FindLeafStoneEvolution(p[8]);
+    } else if (func_88202158(arg1, 0x8000) != 0) {
+        result = func_889031EC(p[8]);
+    }
+    return result;
+}
 
 /* mkdraft:func_882033B0 begin */
 extern u8 func_88201FE0(u8 *);

@@ -734,7 +734,56 @@ void func_87E0E32C(void) {
 }
 /* mkdraft:func_87E0E32C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0E3EC.s")
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern void *func_87E12070(void *, s32, s32);
+extern void func_87E0E32C(void);
+extern s32 func_80001FF0(void);
+
+typedef struct { f32 x, y, z; } Vec3t;
+typedef struct { s32 count; u32 pad_04[4]; u32 pad14:16; s32 marked:1; u32 rest:15; } SlotRecord;
+
+
+
+void func_87E0E3EC(u8 *arg0) {
+    SlotRecord *record = (SlotRecord *)(*(u8 **)(arg0 + 4) + 0x2190);
+    u8 *entry;
+    u8 *node;
+    s32 i;
+    s32 frame;
+    s32 offset;
+
+    for (i = 0; i != 4; i++, record++) {
+        if (record->marked) {
+            entry = *(u8 **)(arg0 + 0x18) + i * 0x18C;
+            if (record->count < *(s32 *)(*(u8 **)(arg0 + 4) + 0x2188)) {
+                node = func_87E12070(arg0 + 0x3D8, (s32)func_87E0E32C, i);
+                if (node != NULL) {
+                    *(u8 **)(node + 0x20) = arg0;
+                    *(Vec3t *)(node + 0x48) = *(Vec3t *)(entry + 0x48);
+                    *(f32 *)(node + 0x48) += 160.0f;
+                    *(Vec3t *)(node + 0x54) = *(Vec3t *)(entry + 0x54);
+                    *(f32 *)(node + 0x54) = *(f32 *)(node + 0x54);
+                    *(f32 *)(node + 0x58) = *(f32 *)(node + 0x58);
+                    *(f32 *)(node + 0x5C) = *(f32 *)(node + 0x5C);
+                    func_87F0AFD0(*(u8 **)(node + 0x38) + 4, (f32 *)(node + 0x48), (f32 *)(node + 0x54), (s16 *)(node + 0x42));
+                    if ((((f32)func_80001FF0() / 60.0f) * 20.0f) >= 0.0f) {
+                        frame = (s32)((((f32)func_80001FF0() / 60.0f) * 20.0f) + 0.5f);
+                    } else {
+                        frame = (s32)((((f32)func_80001FF0() / 60.0f) * 20.0f) - 0.5f);
+                    }
+                    if ((((f32)func_80001FF0() / 60.0f) * (f32)(i * 2)) >= 0.0f) {
+                        offset = (s32)((((f32)func_80001FF0() / 60.0f) * (f32)(i * 2)) + 0.5f);
+                    } else {
+                        offset = (s32)((((f32)func_80001FF0() / 60.0f) * (f32)(i * 2)) - 0.5f);
+                    }
+                    func_87F0B1A4(*(u8 **)(node + 0x38) + 4, (f32 *)(node + 0x48),
+                        (((-160.0f + (f32)(record->count * 0x1B + 0x2B)) + 12.0f) * *(f32 *)(entry + 0x54)) + *(f32 *)(entry + 0x48),
+                        *(f32 *)(node + 0x4C), *(f32 *)(node + 0x50), frame - offset, 0);
+                }
+            }
+        }
+    }
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
@@ -752,7 +801,7 @@ void func_87E0E32C(void) {
 #define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
 #endif
 
-M2C_UNK func_87E0E3EC(u8 *);                      /* extern */
+void func_87E0E3EC(u8 *arg0);                      /* extern */
 
 s32 func_87E0E714(u8 *arg0) {
     s32 sp24;

@@ -54,7 +54,40 @@ void Fragment44_RenderScrollRecord(u8 *buffer, void *record, s16 code, s16 index
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF02584.s")
+
+
+s32 func_8AF02584(u8 *arg0, u8 *arg1, s16 arg2, s16 arg3, s16 arg4) {
+    s32 status_flag;
+    s32 status_index;
+    s32 has_active_status;
+    u8 *status_base;
+    u8 *status_entry;
+
+    status_flag = *(s16 *)(arg1 + 0x4E);
+    if (arg2 <= 0 || arg2 >= 252) {
+        return 0;
+    }
+    status_base = arg1 + 0x74;
+    status_entry = status_base;
+    for (status_index = 0; status_index < 36; status_index++, status_entry += 16) {
+        if (*(s16 *)status_entry == 1 && *(s16 *)(status_entry + 8) == arg2) {
+            return 0;
+        }
+    }
+    has_active_status = 0;
+    status_entry = status_base;
+    for (status_index = 0; status_index < 36; status_index++, status_entry += 16) {
+        if (*(s16 *)status_entry == 0) {
+            has_active_status = 1;
+            break;
+        }
+    }
+    if (has_active_status == 0) {
+        return has_active_status * 0; // FAKE: keeps the flag live across the branch ($a0, plain bnez); without it, score 440
+    }
+    Fragment44_RenderScrollRecord(arg0, status_entry, arg2, arg3, *(s32 *)(arg1 + 0x5C) + *(s32 *)(arg1 + 8) + arg3 * status_flag, arg4);
+    return 1;
+}
 
 void Fragment44_CullScrollRecordsAbove(void *arg0) {
     s32 i;

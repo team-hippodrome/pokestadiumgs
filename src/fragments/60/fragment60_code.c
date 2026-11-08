@@ -927,7 +927,7 @@ extern s32 D_86A0D638[][4];
 extern void func_86A0638C(s32 arg0, f32 arg1, f32 arg2);
 extern void func_86A06474();
 extern void func_86A06740(s32 arg0, f32 arg1, f32 arg2);
-extern s32 func_86A06A1C();
+void func_86A06A1C(s32 arg0);
 extern void func_86A06BDC(s32 arg0);
 extern void func_86A06C3C(void);
 extern void func_86A0B5CC(s32 arg0);
@@ -1209,7 +1209,54 @@ void func_86A06400(s32 arg0, f32 arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A06474.s")
+extern s32 func_86A06650(s16 arg0, s16 arg1, s16 arg2);
+extern s32 func_86A066F4(s16 arg0, s16 arg1);
+
+// Eases two 16-bit per-player heading slots toward each other. Slot 0xE6C moves
+// toward slot 0xE64 in steps that shrink as func_86A066F4's angular distance
+// falls through 16383.75, 8191.875 and 4095.9375. Slot 0xE64 then moves toward
+// slot 0xE74 in a step of 1638 * the player's horizontal speed, where the speed
+// is the length of the x and z components at 0x44 clamped to [2.0, 3.5]. The
+// three slots share one base pointer, D_86A443F0 + arg0 * 2, with an s16 index,
+// so they are addressed through byte-offset casts rather than struct members.
+
+
+void func_86A06474(s32 arg0) {
+    s16 field_e64;
+    s16 field_e6c;
+    s16 step;
+    s16 field_e64_copy;
+    s16 field_e74;
+    f64 diff;
+    f32 length;
+
+    field_e6c = ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE6C / 2];
+    field_e64_copy = ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE64 / 2];
+    // FAKE: re-reading 0xE64 keeps one copy in a callee-saved register and the
+    // other in its stack slot; a single variable is promoted and scores 839.
+    field_e64 = ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE64 / 2];
+    field_e74 = ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE74 / 2];
+    diff = (f64)func_86A066F4(field_e6c, field_e64_copy);
+    if (diff > 16383.75) {
+        ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE6C / 2] = func_86A06650(field_e64, field_e6c, 0x1332);
+    } else if (diff > 8191.875) {
+        ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE6C / 2] = func_86A06650(field_e64, field_e6c, 0xCCC);
+    } else if (diff > 4095.9375) {
+        ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE6C / 2] = func_86A06650(field_e64, field_e6c, 0x666);
+    } else {
+        ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE6C / 2] = func_86A06650(field_e64, field_e6c, 0x199);
+    }
+    length = sqrtf((D_86A443F0.unk_0044[arg0][1] * D_86A443F0.unk_0044[arg0][1]) +
+                   (D_86A443F0.unk_0044[arg0][0] * D_86A443F0.unk_0044[arg0][0]));
+    if (length > 3.5) {
+        length = 3.5f;
+    }
+    if (length < 2.0) {
+        length = 2.0f;
+    }
+    step = (s16)(s32)(1638.0f * length);
+    ((s16 *)((u8 *)&D_86A443F0 + arg0 * 2))[0xE64 / 2] = func_86A06650(field_e74, field_e64_copy, step);
+}
 #endif
 
 #ifdef VERSION_US
@@ -1256,7 +1303,51 @@ s32 func_86A066F4(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A06A1C.s")
+
+
+void func_86A06A1C(s32 arg0)
+{
+  s32 i;
+  f32 dx;
+  f32 dz;
+  f32 dist;
+  f32 scale;
+  f32 len;
+  f32 nx;
+  f32 nz;
+  f32 pen;
+  for (i = 0; i < 4; i++)
+  {
+    if (arg0 == i)
+    {
+      continue;
+    }
+    dx = D_86A443F0.position[i][0] - D_86A443F0.position[arg0][0];
+    dz = D_86A443F0.position[i][1] - D_86A443F0.position[arg0][1];
+    if (((((D_86A443F0.position[i][0] - (sqrtf(2.0f) * 31.199999f)) < D_86A443F0.position[arg0][0]) && (D_86A443F0.position[arg0][0] < (D_86A443F0.position[i][0] + (sqrtf(2.0f) * 31.199999f)))) && ((D_86A443F0.position[i][1] - (sqrtf(2.0f) * 31.199999f)) < D_86A443F0.position[arg0][1])) && (D_86A443F0.position[arg0][1] < (D_86A443F0.position[i][1] + (sqrtf(2.0f) * 31.199999f))))
+    {
+      dist = sqrtf((dx * dx) + (dz * dz));
+      if (0.01 > dist)
+      {
+        scale = 11.0f;
+      }
+      else
+      {
+        scale = 0.11f / dist;
+      }
+      nx = dx * scale;
+      nz = dz * scale;
+      scale = (D_86A443F0.unk_0044[i][0] * D_86A443F0.unk_0044[i][0]) + (D_86A443F0.unk_0044[i][1] * D_86A443F0.unk_0044[i][1]);
+      len = sqrtf(scale);
+      D_86A443F0.unk_0064[arg0] = 1;
+      D_86A443F0.unk_0074[arg0][0] -= nx * len;
+      D_86A443F0.unk_0074[arg0][1] -= nz * len;
+      pen = 62.399997f - dist;
+      D_86A443F0.unk_0094[arg0][0] -= nx * pen;
+      D_86A443F0.unk_0094[arg0][1] -= nz * pen;
+    }
+  }
+}
 #endif
 
 #ifdef VERSION_US

@@ -208,7 +208,133 @@ void func_8AF24A7C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF24AE0.s")
+extern void func_8AF24A7C(void);
+extern void *D_8AF3A3C0;
+extern void *D_8AF3A3DC;
+extern void *D_8AF3A3E0;
+extern void *D_8AF3A3E4;
+extern void *D_8AF3A3E8;
+extern void *D_8AF3A3EC;
+extern void *D_8AF3A3F0;
+extern void *D_8AF3A3F4;
+extern void *D_8AF3A3F8;
+extern void *D_8AF3A3FC;
+extern void *D_8AF3A400;
+extern void *D_8AF3A404;
+extern void *D_8AF3A5F4;
+extern void *D_8AF3A5F8;
+extern void *D_8AF3A5FC;
+extern s16 D_8AF3A3C8;
+extern s16 D_8AF3A3CA;
+extern s32 D_8AF3A63C;
+extern s32 D_8AF3A640;
+extern s32 D_8AF3A644;
+extern s32 D_8AF3A648;
+extern s32 D_8AF3A64C;
+extern s32 D_8AF3A650;
+extern s32 D_8AF3A654;
+extern s32 D_8AF3A658;
+extern s32 D_8AF3A65C;
+
+
+
+void func_8AF24AE0(void) {
+    // FAKE: occupies 0x1C(sp) so that v is placed at 0x18(sp).
+    s32 pad;
+    s32 v;
+
+    func_8AF24A7C();
+    (*(s32 *)((u8 *)(D_8AF3A5F4) + (0x2C))) = 0xBE8C28FF;
+    (*(s32 *)((u8 *)(D_8AF3A5F8) + (0x2C))) = 0xBE8C28FF;
+    (*(s32 *)((u8 *)(D_8AF3A5FC) + (0x2C))) = 0xBE8C28FF;
+    (*(s32 *)((u8 *)(D_8AF3A600) + (0x2C))) = 0x3CB45AFF;
+    (*(s32 *)((u8 *)(D_8AF3A604) + (0x2C))) = 0x3CB45AFF;
+    (*(s32 *)((u8 *)(D_8AF3A608) + (0x2C))) = 0x3CB45AFF;
+    (*(s32 *)((u8 *)(D_8AF3A60C) + (0x2C))) = 0x3C78B4FF;
+    (*(s32 *)((u8 *)(D_8AF3A610) + (0x2C))) = 0x3C78B4FF;
+    (*(s32 *)((u8 *)(D_8AF3A614) + (0x2C))) = 0x3C78B4FF;
+    // Each arm selects its 16-bit index with a conditional expression placed after the
+    // arm's stores: IDO 7.1 hoists the false constant above those stores and moves the
+    // true constant into the delay slot of the branch to the switch exit. A plain if
+    // statement emits beqz/nop/li instead, which is four bytes shorter per arm and
+    // colors the result to v1 rather than v0.
+    switch (D_8AF3A3C8) {
+        case 0:
+            switch (D_8AF3A3CA) {
+                case 0:
+                    D_8AF3A3D8[0]->flags |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A5F4) + (0x2C))) = 0xF0E66EFF;
+                    v = D_8AF3A654 ? 61 : 49;
+                    break;
+                case 1:
+                    (*(u16 *)((u8 *)(D_8AF3A3E4) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A600) + (0x2C))) = 0x8CFF8CFF;
+                    v = D_8AF3A658 ? 62 : 50;
+                    break;
+                case 2:
+                    (*(u16 *)((u8 *)(D_8AF3A3F0) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A60C) + (0x2C))) = 0x1EFFFFFF;
+                    v = D_8AF3A65C ? 63 : 51;
+                    break;
+            }
+            break;
+        case 1:
+            switch (D_8AF3A3CA) {
+                case 0:
+                    (*(u16 *)((u8 *)(D_8AF3A3DC) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A5F8) + (0x2C))) = 0xF0E66EFF;
+                    v = D_8AF3A648 ? 64 : 52;
+                    break;
+                case 1:
+                    (*(u16 *)((u8 *)(D_8AF3A3E8) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A604) + (0x2C))) = 0x8CFF8CFF;
+                    v = D_8AF3A64C ? 65 : 53;
+                    break;
+                case 2:
+                    (*(u16 *)((u8 *)(D_8AF3A3F4) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A610) + (0x2C))) = 0x1EFFFFFF;
+                    v = D_8AF3A650 ? 66 : 54;
+                    break;
+            }
+            break;
+        case 2:
+            switch (D_8AF3A3CA) {
+                case 0:
+                    (*(u16 *)((u8 *)(D_8AF3A3E0) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A5FC) + (0x2C))) = 0xF0E66EFF;
+                    v = D_8AF3A63C ? 67 : 55;
+                    break;
+                case 1:
+                    (*(u16 *)((u8 *)(D_8AF3A3EC) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A608) + (0x2C))) = 0x8CFF8CFF;
+                    v = D_8AF3A640 ? 68 : 56;
+                    break;
+                case 2:
+                    (*(u16 *)((u8 *)(D_8AF3A3F8) + (0x2))) |= 1;
+                    (*(s32 *)((u8 *)(D_8AF3A614) + (0x2C))) = 0x1EFFFFFF;
+                    v = D_8AF3A644 ? 69 : 57;
+                    break;
+            }
+            break;
+        case 3:
+            switch (D_8AF3A3CA) {
+                case 0:
+                    (*(u16 *)((u8 *)(D_8AF3A3FC) + (0x2))) |= 1;
+                    v = (D_8AF3A648 && D_8AF3A63C && D_8AF3A654) ? 83 : 80;
+                    break;
+                case 1:
+                    (*(u16 *)((u8 *)(D_8AF3A400) + (0x2))) |= 1;
+                    v = (D_8AF3A64C && D_8AF3A640 && D_8AF3A658) ? 84 : 81;
+                    break;
+                case 2:
+                    (*(u16 *)((u8 *)(D_8AF3A404) + (0x2))) |= 1;
+                    v = (D_8AF3A650 && D_8AF3A644 && D_8AF3A65C) ? 85 : 82;
+                    break;
+            }
+            break;
+    }
+    (*(s16 *)((u8 *)(D_8AF3A3C0) + (50))) = (s16)v;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF25028.s")
 

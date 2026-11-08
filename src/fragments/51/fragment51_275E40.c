@@ -492,7 +492,190 @@ void Fragment51_UpdateResultAnimations(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_863013C8.s")
+extern void *D_87F119DC;
+extern void *D_863075D8;
+extern ControllerState D_800CE060[];
+extern void Fragment51_ComputeActorInput(s32 *, s32 *);
+extern void Fragment51_UpdatePlayerAnimations(void *);
+extern void Fragment51_UpdateResultAnimations(void *);
+extern void func_80027A28(u16, u8);
+extern s32 func_8003F210(void *, s32);
+extern void func_86300EF8(u8 *);
+
+
+
+void func_863013C8(void)
+{
+  u8 *actor;
+  f32 temp_fv0;
+  s32 stick_x;
+  f32 diff;
+  s32 stick_y;
+  ControllerState *ctrl;
+  s32 kind;
+  s32 rounded;
+  s32 magnitude;
+  /* Dead store kept on purpose: holding the 3 in a variable (instead of the
+     literal 3 in the kind test below) is what makes IDO emit the comparison
+     as "bnel t0,a0" (constant in t0 first). A literal there gives
+     "bnel a0,t0" and scores 19. */
+  magnitude = 3;
+  actor = *((u8 **) (((u8 *) D_87F119DC) + 0x20));
+  ctrl = &D_800CE060[*((s32 *) actor)];
+
+  switch (*((s32 *) ((u8 *) D_863075D8)))
+  {
+    case 3:
+      Fragment51_UpdatePlayerAnimations(actor);
+      break;
+
+    case 5:
+
+    case 6:
+      Fragment51_UpdateResultAnimations(actor);
+      break;
+
+    case 4:
+      if (((*((u8 *) ((*((u8 **) (((u8 *) D_863075D8) + 0xC))) + 0x2180))) != 4) && ((*((s32 *) (((u8 *) D_87F119DC) + 0xC))) & 0x10000000))
+    {
+      temp_fv0 = ctrl->stickXNorm;
+      if (temp_fv0 >= 0.0f)
+      {
+        rounded = (s32) (temp_fv0 + 0.5f);
+      }
+      else
+      {
+        rounded = (s32) (temp_fv0 - 0.5f);
+      }
+      stick_x = (s32) (((f32) rounded) + (((f32) ((((ctrl->buttonsHeld & 0x100) > 0) - ((ctrl->buttonsHeld & 0x200) > 0)) << 6)) * 0.75f));
+      kind = *((s32 *) actor);
+      if ((kind == 0) || (magnitude == kind))
+      {
+        temp_fv0 = ctrl->stickYNorm;
+        if (temp_fv0 >= 0.0f)
+        {
+          rounded = (s32) (temp_fv0 + 0.5f);
+        }
+        else
+        {
+          rounded = (s32) (temp_fv0 - 0.5f);
+        }
+        kind = (rounded & 0xFFFFFFFFu) + ((((ctrl->buttonsHeld & 0x800) > 0) - ((ctrl->buttonsHeld & 0x400) > 0)) << 6);
+      }
+      else
+      {
+        temp_fv0 = ctrl->stickYNorm;
+        if (temp_fv0 >= 0.0f)
+        {
+          rounded = (s32) (temp_fv0 + 0.5f);
+        }
+        else
+        {
+          rounded = (s32) (temp_fv0 - 0.5f);
+        }
+        kind = ((((ctrl->buttonsHeld & 0x400) > 0) - ((ctrl->buttonsHeld & 0x800) > 0)) << 6) - rounded;
+      }
+      if (((f32) stick_x) > 0.0f)
+      {
+        magnitude = stick_x;
+      }
+      else
+      {
+        magnitude = -stick_x;
+      }
+      if (((f32) kind) > 0.0f)
+      {
+        rounded = kind;
+      }
+      else
+      {
+        rounded = -kind;
+      }
+      if (magnitude < rounded)
+      {
+        stick_x = kind;
+      }
+      stick_y = ctrl->buttonsPressed;
+    }
+    else
+    {
+      Fragment51_ComputeActorInput(&stick_x, &stick_y);
+    }
+      if (stick_x > 0x40)
+    {
+      stick_x = 0x40;
+    }
+      if (stick_x < (-0x40))
+    {
+      stick_x = -0x40;
+    }
+      *((f32 *) (actor + 0x28)) = *((f32 *) (((u8 *) D_87F119DC) + 0x48));
+      *((f32 *) (actor + 0x2C)) = *((f32 *) (((u8 *) D_87F119DC) + 0x4C));
+      *((f32 *) (((u8 *) D_87F119DC) + 0x48)) = (*((f32 *) (((u8 *) D_87F119DC) + 0x48))) + (((f32) stick_x) * 0.09f);
+      temp_fv0 = *((f32 *) (((u8 *) D_87F119DC) + 0x48));
+      if (temp_fv0 < *((f32 *) (actor + 0x10)))
+    {
+      *((f32 *) (((u8 *) D_87F119DC) + 0x48)) = *((f32 *) (actor + 0x10));
+      temp_fv0 = *((f32 *) (((u8 *) D_87F119DC) + 0x48));
+    }
+      if (*((f32 *) (actor + 0x14)) < temp_fv0)
+    {
+      *((f32 *) (((u8 *) D_87F119DC) + 0x48)) = *((f32 *) (actor + 0x14));
+      temp_fv0 = *((f32 *) (((u8 *) D_87F119DC) + 0x48));
+    }
+      *((f32 *) (((u8 *) D_87F119DC) + 0x4C)) = (*((f32 *) (actor + 0xC))) + ((*((f32 *) (actor + 8))) * temp_fv0);
+      temp_fv0 = *((f32 *) (((u8 *) D_87F119DC) + 0x48));
+      /* Absolute difference spelled as the ternary the retail code uses;
+         the literal 0.0f later reuses $f12 from the neg.s here. */
+      diff = (*((f32 *) (actor + 0x28)) < temp_fv0) ? (temp_fv0 - *((f32 *) (actor + 0x28))) : -(temp_fv0 - *((f32 *) (actor + 0x28)));
+      if (diff > 4.032f)
+    {
+      if (!((*((s32 *) (((u8 *) D_87F119DC) + 0xC))) & 0x01000000))
+      {
+        func_80027A28(0x6F01, actor[3]);
+        // FAKE: unreachable self-test; needed to keep the retail store
+        // address register assignment.
+        if ((!D_863075D8) && (!D_863075D8))
+        {
+        }
+        *((s32 *) (((u8 *) D_87F119DC) + 0xC)) |= 0x01000000;
+      }
+    }
+    else
+    {
+      *((s32 *) (((u8 *) D_87F119DC) + 0xC)) &= 0xFEFFFFFF;
+    }
+      if ((*((s32 *) (((u8 *) D_87F119DC) + 0xC))) & 0x40000000)
+    {
+      rounded = *((s32 *) (((u8 *) D_87F119DC) + 0x1C));
+      if (rounded >= 0x1F)
+      {
+        *((s32 *) (((u8 *) D_87F119DC) + 0xC)) &= 0xBFFFFFFF;
+        *((s8 *) (((u8 *) D_87F119DC) + 0xC7)) = 0;
+        rounded = *((s32 *) (((u8 *) D_87F119DC) + 0x1C));
+      }
+      if (rounded >= 0x19)
+      {
+        func_8003F210(((u8 *) D_87F119DC) + 0x24, 0);
+        func_8003F210((*((s32 *) (((u8 *) actor) + 0x40))) + 0x24, 2);
+      }
+    }
+    else
+      if (stick_y & 0x8000)
+    {
+      *((s32 *) (((u8 *) D_87F119DC) + 0x1C)) = 0;
+      *((s32 *) (((u8 *) D_87F119DC) + 0xC)) |= 0x40000000;
+      func_8003F210(((u8 *) D_87F119DC) + 0x24, 1);
+      func_8003F210((*((s32 *) (((u8 *) actor) + 0x40))) + 0x24, 0);
+      func_80027A28(0x6F00, actor[3]);
+    }
+      break;
+
+  }
+
+
+  func_86300EF8(D_87F119DC);
+}
 #endif
 
 #ifdef VERSION_US

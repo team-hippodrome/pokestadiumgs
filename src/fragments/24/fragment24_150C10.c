@@ -1238,7 +1238,52 @@ void func_82B02EDC(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B02F78.s")
+extern u8 D_80094E38[];
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 func_8004D1FC(u8 *arg0);
+extern s32 func_8004C990(s32, s32);
+
+
+void func_82B02F78(u8 *arg0) {
+    u8 *texture1;
+    u8 *texture2;
+    s16 position[2];
+    f32 ratio;
+    s16 screenX;
+    s32 pad[12];
+
+    texture1 = (u8 *)func_8004C990(0x41, 0);
+    texture2 = (u8 *)func_8004C990(0x42, 0);
+    func_82B0284C(arg0, (u8 *)position);
+    if (texture1 != NULL && texture2 != NULL) {
+        ratio = (f32)*(s16 *)(arg0 + 0x48) / (f32)(u32)*(u16 *)texture1;
+        if (ratio > 0.0f) {
+            if (arg0[0x4C] == 0 && arg0[0x4D] == 0 && arg0[0x4E] == 0) {
+                func_82B02EDC(arg0);
+            }
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            /* env colour = RGBA(arg0[0x4C], arg0[0x4D], arg0[0x4E], 255) */
+            gDPSetColor(D_800D0510++, G_SETENVCOLOR,
+                        _SHIFTL(arg0[0x4D], 16, 8) | _SHIFTL(arg0[0x4E], 8, 8) |
+                            _SHIFTL(arg0[0x4C], 24, 8) | _SHIFTL(0xFF, 0, 8));
+            func_8004D1FC(texture1);
+            screenX = (s32)((1024.0f / ratio) + ((1024.0f / ratio) > 0.0f ? 0.5f : -0.5f));
+            GfxRect_DrawTextured(position[0], position[1], *(s16 *)(arg0 + 0x48), *(s16 *)(arg0 + 0x4A), 0, 0, screenX, 0x400, 0);
+            gDPPipeSync(D_800D0510++);
+            gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+            func_8004D1FC(texture2);
+            GfxRect_DrawTextured(position[0], position[1], 8, 8, 0, 0, 0x400, 0x400, 0);
+            GfxRect_DrawTextured(position[0] + 8, position[1], *(s16 *)(arg0 + 0x48) - 12, 8, 0, 0x100, 0, 0x400, 0);
+            GfxRect_DrawTextured(*(s16 *)(arg0 + 0x48) + position[0] - 4, position[1], 8, 8, 0, 0x100, 0x400, 0x400, 0);
+            GfxRect_DrawTextured(position[0], position[1] + 8, 8, *(s16 *)(arg0 + 0x4A) - 12, 0, 0x200, 0x400, 0, 0);
+            GfxRect_DrawTextured(position[0], *(s16 *)(arg0 + 0x4A) + position[1] - 4, 8, 8, 0, 0x200, 0x400, 0x400, 0);
+            GfxRect_DrawTextured(position[0] + 8, *(s16 *)(arg0 + 0x4A) + position[1] - 4, *(s16 *)(arg0 + 0x48) - 12, 8, 0, 0x300, 0, 0x400, 0);
+            GfxRect_DrawTextured(*(s16 *)(arg0 + 0x48) + position[0] - 4, *(s16 *)(arg0 + 0x4A) + position[1] - 4, 8, 8, 0, 0x300, 0x400, 0x400, 0);
+            GfxRect_DrawTextured(*(s16 *)(arg0 + 0x48) + position[0] - 4, position[1] + 8, 8, *(s16 *)(arg0 + 0x4A) - 12, 0, 0x300, 0x400, 0, 0);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1716,7 +1761,31 @@ void func_82B05EF0(s32 arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B05F60.s")
+extern s32 func_81700B8C(s32 arg0, s32 arg1);
+extern void func_81700CDC(s32 arg0);
+
+
+
+void func_82B05F60(void) {
+    u8 *entry = (u8 *)&D_82B12450;
+    s32 index;
+
+    *(s16 *)(entry + 0) = 7;
+    *(s16 *)(entry + 6) = 0;
+    if (func_81700B8C(1, func_82B0173C(*(s16 *)(entry + 0), *(s16 *)(entry + 8))) != 0) {
+        func_81700CDC(1);
+    }
+    for (index = 0; index < *(s16 *)(entry + 0x252); index++) {
+        func_82B02A34(*(void **)(entry + 0xB68 + index * 4), 0);
+    }
+    func_82B02A34(func_82B02800(3, 0), 0);
+    *(s16 *)(entry + 0x250) = 0;
+    *(void **)(entry + (*(s16 *)(entry + 0x250) * 4) + 0xB18) = func_82B02800(10, 0);
+    *(s16 *)(entry + 0x250) = *(s16 *)(entry + 0x250) + 1;
+    for (index = 0; index < *(s16 *)(entry + 0x250); index++) {
+        func_82B02924(*(void **)(entry + 0xB18 + index * 4), 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1728,7 +1797,7 @@ extern void func_82B05F60(void);
 extern void *func_82B02800(s32, s32);
 extern s32 func_82B0173C(s32, s32);
 extern s32 func_81700B8C(s32, s32);
-extern s32 func_81700CDC(s32);
+extern void func_81700CDC(s32 arg0);
 extern void func_82B02924(void *, s32);
 
 s32 func_82B060A0(s32 arg0) {

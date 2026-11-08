@@ -20,7 +20,29 @@ u8 *func_8821DA70(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821DAC0.s")
+extern s32 GbSave_GetRecordCapacity(s32);
+extern s32 func_80053230(s32);
+extern void *mem_pool_alloc(void *, s32);
+extern s32 func_80001FF0(void);
+extern void func_88001C6C(void *, u16, u8, s16, u8, s16, s16, s16, s16, s16, s32);
+
+
+void func_8821DAC0(void *pool, u8 **arg1, u8 **arg2) {
+    s16 count;
+    u8 **p;
+    s32 i;
+
+    count = GbSave_GetRecordCapacity(0x22) + func_80053230(0x12) * 2 + 0x72;
+    *arg1 = mem_pool_alloc(pool, count * 4);
+    *arg2 = mem_pool_alloc(pool, count * 4);
+    p = arg1;
+    for (i = 0; i < 2; i++) {
+        func_88001C6C(p + 2, 1, 7, 0xD2, 23, 12,
+                      (s32)(540.0f / func_80001FF0() + ((540.0f / func_80001FF0() > 0.0f) ? 0.5f : -0.5f)),
+                      32, 32, 0xF0C, 70);
+        p = arg2;
+    }
+}
 
 extern u16 D_882345F0;
 extern s32 GbSave_GetRecordCapacity(s32);

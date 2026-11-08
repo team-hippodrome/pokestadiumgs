@@ -136,7 +136,77 @@ void func_87E0B9F0(void *arg0) {
         var_s3 += 3;
     } while (var_s1 != 6);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0BB5C.s")
+extern s32 func_87E07F4C(void *);
+extern void func_87E0B9F0(void *);
+extern u8 D_87E1A2F4[];
+extern u8 D_87E1A308[];
+extern u8 D_87E1A31C[];
+extern u8 D_87E1A330[];
+extern u8 D_87E1A344[];
+extern u8 D_87E1A358[];
+extern f32 D_87E1B6A0;
+extern f32 D_87E1B6A4;
+extern f32 D_87E1B6A8;
+
+
+
+void func_87E0BB5C(arg0)
+void *arg0;
+{
+    f32 ratio;
+    s32 i;
+    s32 arr[4];
+    s32 j;
+    s32 tmp;
+    s32 count;
+
+    for (i = 0; i < 4; i++) {
+        arr[i] = *(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2190 + i * 0x18);
+    }
+
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 3 - i; j++) {
+            if (arr[j] < arr[j + 1]) {
+                tmp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+            }
+        }
+    }
+
+    for (i = 0; i < 4; i++) {
+    }
+
+    if (*(u8 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x21F6) >= 2) {
+        *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A358;
+        *(s32 *)((u8 *)arg0 + 0x28) = 0x10;
+    } else if ((ratio = (f32)(arr[0] - arr[1]) / (f32)*(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2188)) >= D_87E1B6A0) {
+        *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A330;
+        *(s32 *)((u8 *)arg0 + 0x28) = 0xE;
+    } else {
+        count = 0;
+        tmp = func_87E07F4C(*(void **)((u8 *)arg0 + 4));
+        for (i = 0; i < 4; i++) {
+            if (arr[i] == tmp) {
+                count++;
+            }
+        }
+        if (tmp > 0 && count >= 3) {
+            *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A344;
+            *(s32 *)((u8 *)arg0 + 0x28) = 0xF;
+        } else if ((ratio = (f32)arr[0] / (f32)*(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2188)) <= D_87E1B6A4) {
+            *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A2F4;
+            *(s32 *)((u8 *)arg0 + 0x28) = 0xB;
+        } else if (ratio <= D_87E1B6A8) {
+            *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A308;
+            *(s32 *)((u8 *)arg0 + 0x28) = 0xC;
+        } else {
+            *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A31C;
+            *(s32 *)((u8 *)arg0 + 0x28) = 0xD;
+        }
+    }
+    func_87E0B9F0(arg0);
+}
 
 extern void func_87F02684(s32);
 void func_87E0BE28(s32 arg0) {
@@ -178,7 +248,31 @@ s32 func_87E0BE78(void *arg0)
   return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0BEB4.s")
+extern f32 D_87E1A36C[][3];
+extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
+extern void func_87F0B24C(u8 *, u8 *, f32, f32, f32, s32, s32);
+
+// Animate each of the six layout nodes along its entry in D_87E1A36C:
+// translate to the stored position, zero its rotation, and set its scale to
+// 1.0, staggering the tween duration by five frames every third node.
+
+
+void func_87E0BEB4(arg0) {
+    u8 *node;
+    u8 *object;
+    s32 i;
+    s32 duration;
+
+    i = 0;
+    for (node = *(u8 **)((u8 *)arg0 + 0x18); node != 0; node = *(u8 **)(node + 4), i++) {
+        object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
+        duration = (i % 3) * 5 + 5;
+        func_87F0B1A4(object + 0x14, node + 0x48, D_87E1A36C[i][0], *(s32 *)&D_87E1A36C[i][1], D_87E1A36C[i][2], duration, 0x5000);
+        func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, 0.0f, 0.0f, duration, 0);
+        func_87F0B24C(object + 0x14, node + 0x54, 1.0f, 1.0f, 1.0f, duration, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0BFFC.s")
 
@@ -219,7 +313,11 @@ void func_87E0C390(void *arg0) {
             var_v0 = *(void **)((u8 *)var_v0 + 4);
         } while (var_v0 != 0);
     }
+#ifdef CC_CHECK
+    func_87E0BB5C(0);
+#else
     func_87E0BB5C();
+#endif
 }
 
 extern void func_87E0BEB4();
@@ -238,7 +336,11 @@ void func_87E0C3F8(void *arg0) {
             var_v0 = *(void **)((u8 *)var_v0 + 4);
         } while (var_v0 != 0);
     }
+#ifdef CC_CHECK
+    func_87E0BEB4(0);
+#else
     func_87E0BEB4();
+#endif
 }
 
 extern void func_87E0BFFC(s32, s32, s32);
@@ -282,7 +384,11 @@ void func_87E0C4B4(void *arg0) {
 }
 
 extern void func_87E0BB5C(); extern void func_87E0BFFC(s32, s32, s32);
+#ifdef CC_CHECK
+void func_87E0C590(s32 arg0, s32 arg1) { func_87E0BB5C(0); func_87E0BFFC(arg0, arg1, 1); }
+#else
 void func_87E0C590(s32 arg0, s32 arg1) { func_87E0BB5C(); func_87E0BFFC(arg0, arg1, 1); }
+#endif
 
 void WidgetTree_RunMessagePanelSilent_fragment63(s32 arg0, s32 arg1) {
     func_87E0BFFC(arg0, arg1, 0);

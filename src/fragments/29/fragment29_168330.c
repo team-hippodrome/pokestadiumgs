@@ -577,7 +577,139 @@ void func_880040D4(void) {
     } while (i != 6);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_168330/func_88004180.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern u8 *D_8800ECC0;
+extern u8 *D_8800ECC4;
+extern u8 D_88006028[];
+extern u8 D_8800602C[];
+extern s32 D_80128C60;
+extern u8 D_8800ED50[];
+
+extern void Ui_DrawGradientQuad(s32, s32, s32, s32, u8 *, u8 *);
+extern void func_8004B35C(s16, s16, u16, u16, s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_88005740(void);
+
+
+
+void func_88004180(void)
+{
+  u8 *node;
+  u8 *child;
+  u32 i;
+  s32 n;
+  s32 drawn;
+  s32 drawn2;
+  s32 state;
+  s32 value;
+  if (func_880032C4() != 0)
+  {
+    n = 0;
+    do
+    {
+      if (func_88003430(n) != 0)
+      {
+        if (D_80128C60 == 7)
+        {
+          node = D_8800ED50;
+          i = 0;
+          do
+          {
+            if (n == node[1])
+            {
+              child = node + 4;
+              if ((((*((s32 *) (node + 0x20))) != 0) && ((*((s32 *) (child + 0x30))) != 0)) && ((*((s32 *) (child + 0x14))) == 3))
+              {
+                Ui_DrawGradientQuad((*((s16 *) child)) + 6, (*((s16 *) (child + 2))) + 6, (*((u16 *) (child + 4))) - 12, (*((u16 *) (child + 6))) - 12, D_88006028, D_8800602C);
+              }
+            }
+            i += 1;
+            node += 0x4C;
+          }
+          while (i != 6);
+        }
+ { Gfx *_g = (Gfx *) (D_800D0510++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xde) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_80094E38; ; _g = (Gfx *) (D_800D0510++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xe2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((32 - 0) - 2)) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) (2 - 1)) & ((0x01 << 8) - 1)) << 0)); _g->words.w1 = (unsigned int) (0 << 0); } ; drawn = 0; drawn2 = 0; if (D_80128C60 == 7) { i = 0; node = D_8800ED50; do { if (n == node[1]) { child = node + 4; if ((((*((s32 *) (node + 0x20))) != 0) && ((*((s32 *) (child + 0x30))) != 0)) && ((*((s32 *) (child + 0x14))) == 3)) { func_8004B35C(*((s16 *) child), *((s16 *) (child + 2)), *((u16 *) (child + 4)), *((u16 *) (child + 6)), func_8004C990(0x14E, 1)); } } i += 1; node += 0x4C; } while (i != 6); } node = D_8800ED50; i = 0; do { if (n == node[1]) { child = node + 4; if ((((*((s32 *) (node + 0x20))) == 2) && ((*((s32 *) (child + 0x14))) == 1)) && ((*((s32 *) (child + 0x30))) != 0)) { if (drawn == 0) { func_8004D1FC(D_8800ECC4); drawn = 1; func_88002C2C(*((u8 *) (child + 0x18)), *((u8 *) (child + 0x19)), *((u8 *) (child + 0x1A))); } else { { Gfx *_g = (Gfx *) (D_800D0510++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; ; _g = (Gfx *) (D_800D0510++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xfb) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = (unsigned int) ((((unsigned int) ((((unsigned int) (*((u8 *) (child + 0x19)))) & ((0x01 << 8) - 1)) << 16)) | ((unsigned int) ((((unsigned int) (*((u8 *) (child + 0x1A)))) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) (*((u8 *) (child + 0x18)))) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 255) & ((0x01 << 8) - 1)) << 0))); } ; } value = func_8004CA10((u16 *) D_8800ECC4); GfxRect_DrawTextured((*((s16 *) child)) + 5, (*((s16 *) (child + 2))) + 5, (*((u16 *) (child + 4))) - 13, (*((u16 *) (child + 6))) - 13, 0, 0, (s32) (((1024.0f * ((f32) value)) / ((f32) ((*((u16 *) (child + 4))) - 13))) + (((((f32) func_8004CA10((u16 *) D_8800ECC4)) * 1024.0f) / ((f32) ((*((u16 *) (child + 4))) - 13))) > 0.0f ? 0.5f : -0.5f)), 0, 0); } } i += 1; node += 0x4C; } while (i < 6); node = D_8800ED50; i = 0;
+        do
+        {
+          if (n == node[1])
+          {
+            child = node + 4;
+            if (((*((s32 *) (node + 0x20))) != 0) && ((*((s32 *) (child + 0x30))) != 0))
+            {
+              if ((*((s32 *) (child + 0x14)) == 1) || (*((s32 *) (child + 0x14)) == 2))
+              {
+                if (drawn2 == 0)
+                {
+                  func_8004D27C(D_8800ECC0, 128, 1);
+                  drawn2 = 1;
+                  func_88002BA0(*((u8 *) (child + 0x18)), *((u8 *) (child + 0x19)), *((u8 *) (child + 0x1A)));
+                }
+                else
+                {
+                  {
+                    Gfx *_g = (Gfx *) (D_800D0510++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24);
+                  }
+                  ;
+                  {
+                    Gfx *_g = (Gfx *) (D_800D0510++);
+                    _g->words.w0 = (unsigned int) ((((unsigned int) 0xfb) & ((0x01 << 8) - 1)) << 24);
+                    _g->words.w1 = (unsigned int) ((((unsigned int) ((((unsigned int) (*((u8 *) (child + 0x19)))) & ((0x01 << 8) - 1)) << 16)) | ((unsigned int) ((((unsigned int) (*((u8 *) (child + 0x1A)))) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) (*((u8 *) (child + 0x18)))) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 255) & ((0x01 << 8) - 1)) << 0)));
+                  }
+                  ;
+                }
+                func_88003FBC(child);
+                func_88002CB8(*((s16 *) child), *((s16 *) (child + 2)), *((u16 *) (child + 4)), *((u16 *) (child + 6)));
+              }
+            }
+          }
+          i += 1;
+          node += 0x4C;
+        }
+        while (i < 6);
+        {
+          Gfx *_g = (Gfx *) (D_800D0510++);
+          _g->words.w0 = (((unsigned int) ((((unsigned int) 0xde) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0));
+          _g->words.w1 = (unsigned int) D_80094F50;
+        }
+        ;
+        node = D_8800ED50;
+        i = 0;
+        do
+        {
+          if (n == node[1])
+          {
+            child = node + 4;
+            if (((*((s32 *) (node + 0x20))) == 2) && ((*((s32 *) (child + 0x2C))) != 0))
+            {
+              if ((*((void (**)(void)) (child + 0x38))) != 0)
+              {
+                (*((void (**)(void)) (child + 0x38)))();
+              }
+            }
+            n = n;
+          }
+          i += 1;
+          node += 0x4C;
+        }
+        while (i != 6);
+      }
+      n += 1;
+    }
+    while (n != 4);
+  }
+  if (D_8800EF40 != (-1))
+  {
+    func_88005740();
+  }
+}
 
 void func_880046EC(s32 payload, s32 mode, s16 x, s16 y, s32 a, s32 b,
                    u8 r, u8 g, u8 blue, s32 *p0, s32 *p1, s32 *p2, s32 *p3,

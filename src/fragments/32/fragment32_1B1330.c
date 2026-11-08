@@ -454,7 +454,205 @@ void func_88305020(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B1330/func_883051E4.s")
+extern M2C_UNK main_pool_push_state(M2C_UNK);
+#ifndef M2C_FIELD /* m2c --valid-syntax helpers */
+#define M2C_UNK s32
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+#define M2C_BITWISE(type, expr) ((type)(expr))
+#define M2C_ERROR(desc) 0
+#define M2C_TRAP_IF(cond) ((void)0)
+#define M2C_BREAK() ((void)0)
+#define M2C_SYNC() ((void)0)
+#define M2C_CARRY 0
+#define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
+#endif
+
+M2C_UNK Audio_InitializeBufferMemory(M2C_UNK *);    /* extern */
+u8 *ModelPreview_Create(s32, M2C_UNK, M2C_UNK);     /* extern */
+s32 Util_Malloc(M2C_UNK);                           /* extern */
+M2C_UNK _bcopy(u8 *, M2C_UNK *, M2C_UNK);           /* extern */
+M2C_UNK func_80042D74(void *, M2C_UNK *);           /* extern */
+M2C_UNK func_80042FE4(u8 *, u16);                   /* extern */
+M2C_UNK func_8004C948(M2C_UNK);                     /* extern */
+s32 func_8004D690(M2C_UNK);                         /* extern */
+s32 func_8800005C();                                /* extern */
+void func_88000288(void *, s32, s32, s32, s32, s32, s32, s32); /* extern */
+s16 func_88002958(M2C_UNK *, M2C_UNK, M2C_UNK, M2C_UNK); /* extern */
+M2C_UNK func_88004EB0();                            /* extern */
+M2C_UNK func_88005048();                            /* extern */
+M2C_UNK func_88305B84();                            /* extern */
+void func_88306B24(void);                           /* extern */
+M2C_UNK func_88307C2C();                            /* extern */
+M2C_UNK func_88308080();                            /* extern */
+M2C_UNK func_88600270();                            /* extern */
+M2C_UNK func_88600CC8(u16);                         /* extern */
+extern s32 D_80128C64;
+extern u8 D_8800686C;
+extern s32 D_880068AC;
+extern M2C_UNK D_880068C0;
+extern s32 D_8800ECCC;
+extern s32 D_8800ECD0;
+extern s32 D_8800ECFC;
+extern s32 D_8800ED04;
+extern s32 D_88308930;
+extern s32 D_8830893C;
+extern s32 D_88308940;
+extern s32 D_88308948[5];
+extern s32 D_8830895C;
+extern s32 D_88308960;
+extern s32 D_88308964;
+extern M2C_UNK D_88308968;
+extern s8 D_88308DFC;
+extern s16 D_88308E02;
+extern s8 D_88308E05;
+extern s8 D_88308E12;
+extern s8 D_88308E13;
+extern s32 D_88308EA4;
+extern s32 D_88308EA8;
+extern s32 D_88308EAC;
+extern M2C_UNK func_88005714;
+extern M2C_UNK func_886014D8;
+
+
+
+
+
+void func_883051E4(s32 arg0, s32 arg1) {
+    u32 i;
+    s32 sp58[5];
+
+    D_88006860 = 1;
+    if (arg0 == 0) {
+        D_88601890 = Util_Malloc(0x394);
+        Audio_InitializeBufferMemory(&D_880068C0);
+        if (func_8800005C() != 0) {
+            M2C_FIELD(D_88601890, s32 *, 0) = 1;
+            *D_88308DF8 = 1;
+        } else {
+            M2C_FIELD(D_88601890, s32 *, 0) = 0;
+            *D_88308DF8 = 0x98;
+        }
+        func_88308080();
+    } else {
+        *D_88308DF8 = (u16) arg1;
+    }
+    func_8004C8C0(0x14E);
+    D_88308938 = func_8004C990(0x14E, 2);
+    func_8004C8C0(0x14F);
+    D_8830893C = func_8004C990(0x14F, 0);
+    D_88308940 = func_8004C990(0x14F, 1);
+    func_8004C8C0(0x1C7);
+    D_88308EA8 = func_8004C990(0x1C7, 0);
+    D_88308EAC = func_8004C990(0x1C7, 1);
+    func_8004C8C0(0xC4);
+    D_88308EA4 = func_8004C990(0xC4, 1);
+    func_8004C8C0(0x32);
+    D_8800ECD0 = func_8004C990(0x32, 1);
+    D_8800ECCC = func_8004C990(0x32, 0);
+    func_8004C8C0(0x33);
+    _bcopy(func_8004CA60(func_8004C990(0x33, 0)), &D_88308968, 0x480);
+    func_8004C948(0x33);
+    func_8004C8C0(0x125);
+    D_8800ECFC = func_8004C990(0x125, 0);
+    D_8800ED04 = func_8004C990(0x125, 1);
+    func_8004C8C0(0x108);
+    func_8004C8C0(0x10A);
+    func_8004C8C0(0x10B);
+    func_8004C8C0(0x7B);
+    func_8004C8C0(0x124);
+    for (i = 0; (u32) i < 5U; i++) {
+        D_88308948[i] = func_8004C990(0x124, i);
+    }
+    D_8830895C = func_8004C990(0x124, 5);
+    func_8004C8C0(0xEE);
+    D_88308960 = func_8004C990(0xEE, 0);
+    func_8004C8C0(0x91);
+    D_88308964 = func_8004C990(0x91, 0);
+    func_88600270();
+    func_8004C4B0(0x28);
+    func_8004C4B0(0xD);
+    func_8004C4B0(0xC);
+    switch (D_8800686C) {
+    case 3:
+    case 4:
+    case 5:
+        D_88308934 = 5;
+        break;
+    default:
+        D_88308934 = 4;
+        break;
+    }
+    D_880068AC = func_8004D690(5);
+    func_88005048();
+    D_88308DF0 = ModelPreview_Create(D_80128C64, 0x64, 0x64);
+    D_88308DE8 = ModelPreview_Create(D_80128C64, 0x108, 0xD2);
+    *(u16 *)D_88308DF0 &= ~4;
+    *(u16 *)D_88308DE8 &= ~4;
+    *(u16 *)D_88308DF0 &= ~2;
+    *(u16 *)D_88308DE8 &= ~2;
+    *(u16 *)D_88308DE8 |= 1;
+    D_886017AC = 0;
+    if (arg0 == 0) {
+        func_88306B24();
+        func_88600C38(*D_88308DF8, 0);
+    } else {
+        func_88600CC8(*D_88308DF8);
+    }
+    func_80042D74(D_88308DF0, &func_886014D8);
+    func_80042D74(D_88308DE8, &func_88005714);
+    if (arg0 == 0) {
+        func_80042FBC(D_88308DF0, (s32) *D_88308DF8);
+        M2C_FIELD(M2C_FIELD(D_88308DF0, void **, 0x1C), s32 *, 0x4C) = 0;
+    } else {
+        func_80042FE4(D_88308DE8, *D_88308DF8);
+        func_88600074(D_88308DE8);
+        M2C_FIELD(M2C_FIELD(D_88308DE8, void **, 0x1C), s32 *, 0x4C) = 0;
+    }
+    M2C_FIELD(D_88308DF0, u16 *, 0) = (u16) (M2C_FIELD(D_88308DF0, u16 *, 0) & 0xFEFF);
+    if (arg0 == 0) {
+        D_88308930 = 0;
+        for (i = 0; i != 5; i++) {
+            sp58[i] = func_8004C874(0x28, i + 0xB);
+        }
+        M2C_FIELD(D_88601890, s16 *, 0x390) = func_88002958(&sp58, 5, 4, 1);
+    } else {
+        D_88308930 = 1;
+        switch (arg0) {                             /* irregular */
+        case 1:
+            D_88308DFC = 1;
+            break;
+        case 2:
+            D_88308DFC = 0;
+            break;
+        }
+        D_88308DFD = func_883083C8(D_8860189C);
+        D_88308DFE = func_88308464(D_8860189C);
+        func_88004EB0();
+    }
+    D_88308DFA = *D_88308DF8;
+    func_88307FB0(D_8860189C);
+    func_88300AC4(arg0 == 0);
+    D_88308DFF = 0;
+    D_88308E00 = 0;
+    D_88308E02 = 0;
+    D_88308E05 = 0;
+    D_88308E11 = 0;
+    D_88308E12 = 0;
+    D_88308E13 = 0;
+    func_88000288(&D_88308E18, 0, 0xFF, 0, (s32) ((f32) 15 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32) 15 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32) ((f32) 15 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32) 15 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32) ((f32) 5 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32) 5 / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32) ((f32) 5 * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32) 5 / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    func_88307C2C();
+    func_88305B84();
+    main_pool_push_state(0x70617274);
+    if (arg0 == 0) {
+        func_88300304();
+        return;
+    }
+    func_883002B8();
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
@@ -486,7 +684,7 @@ M2C_UNK func_8004C09C(M2C_UNK);                     /* extern */
 M2C_UNK func_8004C398();                            /* extern */
 void func_88304F5C(void);
 void func_88305020(void);                            /* extern */
-M2C_UNK func_883051E4(s32, s32);                    /* extern */
+void func_883051E4(s32 arg0, s32 arg1);                    /* extern */
 M2C_UNK main_pool_pop_state(M2C_UNK);               /* extern */
 M2C_UNK main_pool_push_state(M2C_UNK);              /* extern */
 extern s32 D_80128C60;

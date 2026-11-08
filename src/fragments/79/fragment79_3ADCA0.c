@@ -1106,7 +1106,89 @@ void func_84141538(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141768.s")
+extern s16 D_84186C10;
+extern s16 D_84186C14;
+extern s16 D_84186C18;
+extern s16 D_84186C1C;
+extern s16 D_84186C54;
+extern s16 D_84186C56;
+extern s16 D_84186C58;
+extern s16 D_84186C5A;
+extern s16 D_84186C5C;
+extern s16 D_84186C5E;
+extern s16 D_84186C60;
+extern s16 D_84186C62;
+extern s16 D_84186CC4;
+extern s16 D_84186CC8;
+extern u8 D_84186F70[];
+extern void ParticleGfx_SetPrimColor_fragment79(u8 r, u8 g, u8 b, u8 a);
+extern void func_84141278(void *);
+
+
+void func_84141768(void *arg0) {
+    u8 *p = arg0;
+    u32 flags = p[8];
+    if (flags & 1) {
+        return;
+    }
+    switch (p[0]) {
+    case 4:
+        ParticleGfx_SetPrimColor_fragment79(p[0x22], p[0x23], p[0x24], p[0x25]);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186C10), (s16)(*(s16 *)(p + 0xC) + D_84186C14), 0);
+        return;
+    case 5:
+        ParticleGfx_SetPrimColor_fragment79(p[0x22], p[0x23], p[0x24], p[0x25]);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186C10), (s16)(*(s16 *)(p + 0xC) + D_84186C14), 1);
+        return;
+    case 6:
+        ParticleGfx_SetPrimColor_fragment79(p[0x22], p[0x23], p[0x24], p[0x25]);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186C10), (s16)(*(s16 *)(p + 0xC) + D_84186C14), 8);
+        return;
+    case 7:
+        ParticleGfx_SetPrimColor_fragment79(p[0x22], p[0x23], p[0x24], p[0x25]);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186C18), (s16)(*(s16 *)(p + 0xC) + D_84186C1C), 6);
+        return;
+    case 8:
+        ParticleGfx_SetPrimColor_fragment79(p[0x22], p[0x23], p[0x24], p[0x25]);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186C18), (s16)(*(s16 *)(p + 0xC) + D_84186C1C), 7);
+        return;
+    case 9:
+        ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + *(s16 *)&D_84186C54), (s16)(*(s16 *)(p + 0xC) + *(s16 *)&D_84186C5C), 5);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + *(s16 *)&D_84186C56), (s16)(*(s16 *)(p + 0xC) + *(s16 *)&D_84186C5E), 4);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + *(s16 *)&D_84186C58), (s16)(*(s16 *)(p + 0xC) + *(s16 *)&D_84186C60), 2);
+        func_8413F6C0((s16)(*(s16 *)(p + 0xA) + *(s16 *)&D_84186C5A), (s16)(*(s16 *)(p + 0xC) + *(s16 *)&D_84186C62), 3);
+        return;
+    case 10:
+        if (!(flags & 2)) {
+            ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+            switch (*(s32 *)(p + 4)) {
+            case 0:
+                func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186CC8), (s16)(*(s16 *)(p + 0xC) + D_84186CC4), 5);
+                return;
+            case 1:
+                func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186CC8), (s16)(*(s16 *)(p + 0xC) + D_84186CC4), 4);
+                return;
+            case 2:
+                func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186CC8), (s16)(*(s16 *)(p + 0xC) + D_84186CC4), 2);
+                return;
+            case 3:
+                func_8413F6C0((s16)(*(s16 *)(p + 0xA) + D_84186CC8), (s16)(*(s16 *)(p + 0xC) + D_84186CC4), 3);
+                return;
+            }
+        }
+        return;
+    case 11:
+        func_8414111C(p);
+        return;
+    case 12:
+        func_84141278(p);
+        return;
+    case 13:
+        func_84141538(p);
+        return;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1955,7 +2037,44 @@ void func_841440B4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84144118.s")
+extern s16 D_84186C7C[];
+extern s16 D_84186C84[];
+extern u8 *D_84195208[];
+extern u8 *D_841951F8;
+extern u8 D_84186F90[];
+extern s32 func_80062CE0(u8);
+extern u8 *func_8413D29C(u8);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, void *, ...);
+
+
+
+void func_84144118(u8 *arg0) {
+    s32 i;
+    u8 index;
+    u8 move_id;
+    u8 bit_byte;
+    u8 bit_offset;
+    u8 *slot;
+
+    index = *(u8 *)((u8 *)arg0 + 1);
+    slot = func_8413D29C(index);
+    for (i = 0; i != 4; i++) {
+        move_id = D_84195208[index][i + 5];
+        if (move_id == 0) {
+            break;
+        }
+        bit_byte = (u8)((s32)(*(u8 *)(((u8 **)&D_841951F8)[index] + 0xA)) / 2);
+        bit_offset = (u8)(((s32)(*(u8 *)(((u8 **)&D_841951F8)[index] + 0xA)) % 2) * 4);
+        if ((*(u8 *)((slot + 0x11) + bit_byte)) & (1 << (bit_offset + i))) {
+            func_8004972C(D_84186F90[0], D_84186F90[1], D_84186F90[2], 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_800495F8(*(s16 *)(arg0 + 0xA) + D_84186C7C[i], *(s16 *)(arg0 + 0xC) + D_84186C84[i], 1, func_80062CE0(move_id));
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+}
 #endif
 
 #ifdef VERSION_US
@@ -2436,7 +2555,29 @@ void func_841457C4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84145830.s")
+extern Gfx *D_800D0510;
+
+
+
+void func_84145830(arg0) void *arg0; {
+    Gfx *temp_v1;
+    Gfx *temp_v2;
+    Gfx *temp_v3;
+    struct { s16 pad0[5]; s16 x; s16 y; s16 w; s16 h; } *state;
+    state = arg0;
+    temp_v1 = D_800D0510++;
+    temp_v1->words.w0 = ((((state->x + state->w) & 0x3FF) << 14) | 0xF6000000) | ((state->y & 0x3FF) << 2);
+    temp_v1->words.w1 = (((state->x - 2) & 0x3FF) << 14) | (((state->y - 1) & 0x3FF) << 2);
+    temp_v2 = D_800D0510++;
+    temp_v2->words.w0 = ((((state->x) & 0x3FF) << 14) | 0xF6000000) | (((state->y + state->h) & 0x3FF) << 2);
+    temp_v2->words.w1 = (((state->x - 2) & 0x3FF) << 14) | (((state->y - 1) & 0x3FF) << 2);
+    temp_v3 = D_800D0510++;
+    temp_v3->words.w0 = ((((state->x + state->w) & 0x3FF) << 14) | 0xF6000000) | (((state->y + state->h + 4) & 0x3FF) << 2);
+    temp_v3->words.w1 = (((state->x - 2) & 0x3FF) << 14) | (((state->y + state->h + 2) & 0x3FF) << 2);
+    temp_v1 = D_800D0510++;
+    temp_v1->words.w0 = ((((state->x + state->w + 4) & 0x3FF) << 14) | 0xF6000000) | (((state->y + state->h + 4) & 0x3FF) << 2);
+    temp_v1->words.w1 = (((state->x + state->w) & 0x3FF) << 14) | (((state->y - 1) & 0x3FF) << 2);
+}
 #endif
 
 #ifdef VERSION_US

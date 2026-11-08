@@ -83,7 +83,47 @@ void func_8414CB10(void *arg0, u8 arg1, u8 arg2) {
     *(u16 *)(selected + 0x1E) = *(u16 *)(mon + 0x28);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414CB74.s")
+extern void func_84149D54(void *, u8, u8);
+extern void func_84149D0C(void *);
+
+
+
+
+
+void func_8414CB74(u8 *arg0, u8 arg1, u8 arg2) {
+    s32 hp;
+    s32 step;
+    s32 amount;
+    s32 i;
+    Fragment79DamageCalculation calculation;
+    Fragment79EffectView *view;
+
+    func_84149D54(&calculation, arg1, arg2);
+    func_84149D0C(&calculation);
+    if (*(u8 *)((u8 *)&calculation + 2) == 0xFF) {} // FAKE: empty compare; without it uopt copies the switch's selector load ($5 -> $2) and the function scores 20, with it 0
+
+    amount = calculation.amount;
+    hp = *(u16 *)(calculation.opponent + 0x42);
+    view = (Fragment79EffectView *)((u8 *)arg0 + 4);
+    switch (*(u8 *)((u8 *)&calculation + 2)) {
+    case 0x1D:
+        step = 3;
+        *(u8 *)view |= 1;
+        break;
+    case 0x2C:
+    case 0x4D:
+        step = 2;
+        break;
+    }
+    for (i = 0; i < step; i++) {
+        if (hp > 0) {
+            view->amount_16[arg1] += hp;
+            hp -= amount;
+        } else {
+            view->amount_0A[arg1] += amount;
+        }
+    }
+}
 
 void func_8414CD18(void *state, u8 side, u8 move) {
     s32 hp;
@@ -192,7 +232,7 @@ void func_8414CF74(s32 arg0, u8 arg1, u8 arg2) {
 
 /* mkdraft:func_8414D198 begin */
 extern u8 func_80062D20(u8 arg0);
-extern void func_8414CB74(s32 arg0, u8 arg1, u8 arg2);
+void func_8414CB74(u8 *arg0, u8 arg1, u8 arg2);
 extern void func_8414D008(s32 arg0, u8 arg1, u8 arg2);
 extern u8 *func_84154B0C(void);
 
@@ -535,9 +575,126 @@ void BattleEffects_AddMoveTypeResponse(Fragment79EffectView *view, u8 side) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414DC58.s")
+extern u8 *func_84154B64(u8);
+extern u8 func_84154B24(void);
+extern u8 func_80062D20(u8);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414DD94.s")
+
+extern void BattleEffects_AddMoveTypeResponse(Fragment79EffectView *, u8);
+
+
+
+void func_8414DC58(s32 arg0, u8 arg1) {
+    u8 other;
+    u8 *mon;
+    u8 *opponent;
+    Fragment79EffectView *view;
+
+    other = (1 - arg1) & 0xFF;
+    mon = func_84154B64(arg1);
+    opponent = func_84154B64(other);
+    view = (Fragment79EffectView *) (((u8 *) ((u32) (arg0 & 0xFFFFFFFFu))) + 4);
+
+    if ((*((u16 *) (mon + 0x28))) >= (*((u16 *) ((((u8 *) ((u32) arg0)) + (other * 2)) + 0xE)))) {
+        switch (func_80062D20(view->moves[other])) {
+            case 0x27:
+            case 0x4B:
+            case 0x91:
+            case 0x97:
+                if ((arg1 != func_84154B24()) || (opponent[0x17] & 0x10)) {
+                    BattleEffects_AddMoveTypeResponse(view, arg1);
+                }
+                break;
+            case 0x50:
+                if (!(opponent[0x18] & 0x20)) {
+                    BattleEffects_AddMoveTypeResponse(view, arg1);
+                }
+                break;
+            case 0x59:
+            case 0x90:
+                break;
+            default:
+                BattleEffects_AddMoveTypeResponse(view, arg1);
+                break;
+        }
+    }
+}
+
+extern u8 func_84154B24(void);
+extern u8 *func_84154B64(u8);
+extern u8 func_80062D20(u8);
+
+
+
+
+void func_8414DD94(void *state) {
+    u8 side;
+    u8 other;
+    s32 result;
+    const u8 *mon;
+    Fragment79EffectView *view;
+
+    side = func_84154B24();
+    other = 1 - side;
+    func_84154B64(side);
+    mon = func_84154B64(other);
+    view = (Fragment79EffectView *)((u8 *)state + 4);
+
+    if (view->selected_side == side) {
+        result = func_80062D20(view->moves[other]);
+        switch (result) {
+        case 0x92:
+        case 0x95:
+        case 0x98:
+            if (view->moves[side] == 0x5B) {
+                view->amount_0A[other] = 0;
+            } else {
+                view->amount_0A[other] *= 2;
+            }
+            break;
+        case 0x7E:
+        case 0x93:
+            if (view->moves[side] == 0x13) {
+                view->amount_0A[other] = (u32)((f64)view->amount_0A[other] * 0.5);
+            } else {
+                view->amount_0A[other] *= 3;
+            }
+            break;
+        case 0x26:
+            if (view->moves[other] != 0x5A || view->moves[side] == 0x5B) {
+                view->amount_0A[other] = 0;
+            }
+            break;
+        case 0x9B:
+            if (mon[0x17] & 0x10) {
+                view->amount_0A[other] = (u32)((f64)view->amount_0A[other] * 0.5);
+            }
+            break;
+        }
+    } else {
+        result = func_80062D20(view->moves[other]);
+        switch (result) {
+        case 0x92:
+        case 0x95:
+        case 0x98:
+            if (view->moves[side] != 0x5B) {
+                view->amount_0A[other] *= 2;
+            }
+            break;
+        case 0x7E:
+        case 0x93:
+            if (view->moves[side] != 0x13) {
+                view->amount_0A[other] *= 3;
+            }
+            break;
+        case 0x9B:
+            if (!(mon[0x17] & 0x10)) {
+                view->amount_0A[other] = (u32)((f64)view->amount_0A[other] * 0.5);
+            }
+            break;
+        }
+    }
+}
 
 void BattleEffects_SetOpposingAmountFromHP(void *state) {
     u8 side;
@@ -559,7 +716,73 @@ void BattleEffects_SetOpposingAmountFromHP(void *state) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414E2A8.s")
+extern u8 *func_84154B64(u8);
+extern u8 *func_84154B30(u8);
+extern s32 func_84156618(u8, u8, u8);
+extern s32 func_800630C0(u8);
+extern u8 func_84149424(void);
+
+
+
+void func_8414E2A8(u8 *arg0, u8 arg1, s32 arg2) {
+    u8 other_index;
+    u32 record_index;
+    u8 *base;
+    u8 *opponent;
+
+    other_index = 1 - arg1;
+    record_index = arg1;
+    func_84154B64(record_index);
+    opponent = func_84154B64(other_index);
+    base = arg0 + 4;
+    if ((u32)other_index == arg0[5]) {
+        // FAKE: this (u8 *)(u32) round trip puts the pointer in the first ADDU source
+        // slot; with plain arg0 + record_index * 2 the function scores 10.
+        if (*(u16 *)(opponent + 0x28) < *(u16 *)((u8 *)(u32)arg0 + record_index * 2 + 0xE)) {
+            return;
+        }
+    }
+    if (opponent[0x19] & 0x10) {
+        return;
+    }
+    // FAKE: the (u8 *)(u32) round trips on base below put the pointer in the first
+    // ADDU source slot; as plain base[...] accesses the function scores 165.
+    if (func_800630C0(*(u8 *)((u8 *)(u32)base + record_index + 2))) {
+        if (func_84149424() < 0x80 || arg2 != 0 || (arg0[1] & 2)) {
+            if (func_84156618(other_index, func_84154B30(other_index)[1], 4)) {
+                if (*(u8 *)((u8 *)(u32)base + other_index + 6) *
+                        *(u16 *)((u8 *)(u32)base + other_index * 2 + 0xA) <
+                    *(u8 *)((u8 *)(u32)base + record_index + 6) *
+                        *(u16 *)((u8 *)(u32)base + record_index * 2 + 0xA)) {
+                    base[1] = record_index;
+                    *(u8 *)((u8 *)(u32)base + other_index + 2) = 0x44;
+                    *(u8 *)((u8 *)(u32)base + other_index + 8) = 0;
+                }
+            }
+        } else if (*(u8 *)((u8 *)(u32)base + other_index + 2) == 0x44) {
+            base[1] = record_index;
+            *(u8 *)((u8 *)(u32)base + other_index + 2) = 0xF3;
+            *(u8 *)((u8 *)(u32)base + other_index + 8) = 0;
+        }
+    } else {
+        if (func_84149424() >= 0x80 || arg2 != 0 || (arg0[1] & 2)) {
+            if (func_84156618(other_index, func_84154B30(other_index)[1], 8)) {
+                if (*(u8 *)((u8 *)(u32)base + other_index + 6) *
+                        *(u16 *)((u8 *)(u32)base + other_index * 2 + 0xA) <
+                    *(u8 *)((u8 *)(u32)base + record_index + 6) *
+                        *(u16 *)((u8 *)(u32)base + record_index * 2 + 0xA)) {
+                    base[1] = record_index;
+                    *(u8 *)((u8 *)(u32)base + other_index + 2) = 0xF3;
+                    *(u8 *)((u8 *)(u32)base + other_index + 8) = 0;
+                }
+            }
+        } else if (*(u8 *)((u8 *)(u32)base + other_index + 2) == 0xF3) {
+            base[1] = record_index;
+            *(u8 *)((u8 *)(u32)base + other_index + 2) = 0x44;
+            *(u8 *)((u8 *)(u32)base + other_index + 8) = 0;
+        }
+    }
+}
 
 void BattleEffects_ClearInsufficientAmount(void *state) {
     u8 side;
@@ -674,8 +897,8 @@ void BattleEffects_DoubleScaleForIncomingAmount(void *state) {
 extern u8 func_84154B24(void);
 extern u8 *func_84154B64(u8);
 extern u8 func_80062D20(u8);
-extern void func_8414DD94(s32);
-extern void func_8414E2A8(s32, u8, s32);
+void func_8414DD94(void *state);
+void func_8414E2A8(u8 *arg0, u8 arg1, s32 arg2);
 extern void func_8414DC58(s32, u8);
 
 

@@ -249,7 +249,44 @@ f64 func_8600853C(u8 *arg0, u8 *arg1, f64 arg2, f64 arg3, s32 arg4) {
 }
 /* mkdraft:func_8600853C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24E0A0/func_860086A4.s")
+extern f64 func_87C00664(void *);
+extern f64 D_8600E0A8;
+extern void *func_87C00308(void *, void *, void *, f64);
+
+
+
+f64 func_860086A4(u8 *arg0, u8 *arg1, f64 arg2, f64 arg3, s32 arg4, s32 arg5, s32 arg6) {
+    f64 result;
+    f64 threshold;
+    u8 difference[0x18];
+    u8 normal[0x18];
+    u8 unused[0x18]; // FAKE: unreferenced local pinning retail's frame layout
+    u8 scratch[0x18];
+    f64 unused2[3]; // FAKE: unreferenced locals pin retail's frame layout
+    f64 unused3[6]; // FAKE
+    f64 unused4[8]; // FAKE
+    f64 distance_squared;
+
+    threshold = *(f64 *)(arg1 + 0xC8) + *(f64 *)(arg0 + 0xC8) + 1.0;
+    func_87C00160(difference, (s32)arg0, arg1);
+    distance_squared = func_87C00664(difference);
+    if (distance_squared > threshold * threshold) {
+        return 0.0;
+    }
+    func_87C00718(normal, difference, 1.0);
+    func_87C00308((void *)arg4, arg0, arg1,
+                  *(f64 *)(arg0 + 0xC8) / (*(f64 *)(arg1 + 0xC8) + *(f64 *)(arg0 + 0xC8)));
+    result = func_86008038(arg0, arg1, normal, arg4, arg2, arg3, D_8600E0A8);
+    if (arg5 != 0) {
+        func_87C00198(arg0, arg4, func_87C002A8(scratch, normal, *(f64 *)(arg0 + 0xC8)));
+        func_86007EB4(arg0);
+    }
+    if (arg6 != 0) {
+        func_87C00198(arg1, arg4, func_87C002A8(scratch, normal, -*(f64 *)(arg1 + 0xC8)));
+        func_86007EB4(arg1);
+    }
+    return result;
+}
 
 extern f64 func_87C00664(void *);
 

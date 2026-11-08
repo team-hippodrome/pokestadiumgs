@@ -404,9 +404,111 @@ u8 *func_841009D8(u8 *out, Func84100688Table **anim, s32 time) {
     return out;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100B3C.s")
+extern void func_84100094(u8 *arg0);
+extern u8 *func_84100710(u8 *out, Func84100688Table **anim, s32 time);
+extern void Audio_SetChannelGroupCounts(u8, u8, u8, u8);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84100C68.s")
+typedef struct {
+    Func84100688Table *table;
+    u8 *frames;
+} Anim84100B3C;
+
+
+
+void func_84100B3C(u8 *arg0) {
+    u32 mode;
+    u8 *result;
+    u8 buffer[4];
+    Anim84100B3C *anim_set;
+    u32 count;
+    u32 frame;
+    Func84100688Table *table;
+
+    count = arg0[0x7F];
+    result = NULL;
+    if (*(Anim84100B3C **)(*(u8 **)(arg0 + 0x10) + 4) != NULL) {
+        anim_set = *(Anim84100B3C **)(*(u8 **)(arg0 + 0x10) + 4);
+        table = anim_set->table;
+        if (table != NULL) {
+            mode = table->pad_00[0];
+            frame = count % table->divisor;
+            if (table->divisor == arg0[0x7F]) {
+                func_84100094(arg0);
+            } else if (anim_set->frames != NULL) {
+                if (mode == 0) {
+                    result = anim_set->frames + frame * 4;
+                } else if (table->pad_00[0] == 1) {
+                    result = func_84100710(buffer, (Func84100688Table **)anim_set, frame);
+                }
+            }
+        } else {
+            result = anim_set->frames;
+        }
+        if (result != NULL) {
+            if (arg0[0x7C] == 2) {
+                Audio_SetChannelGroupCounts(result[0], result[1], result[2], result[3]);
+            } else {
+                arg0[0x8B] = result[0];
+                arg0[0x8C] = result[1];
+                arg0[0x8D] = result[2];
+                arg0[0x8E] = result[3];
+            }
+        }
+    }
+}
+
+extern s32 D_84190194;
+
+
+
+void func_84100C68(u8 *arg0) {
+    u32 frame;
+    u8 *state;
+    Func84100688Table **anim;
+    Func84100688Table *table;
+    u32 index;
+    s32 mode;
+    u8 primBuf[4];
+    u8 *prim;
+    u8 envBuf[4];
+    u8 *env;
+    u8 *primTrack;
+    u8 *envTrack;
+
+    frame = arg0[0x7F];
+    state = *(u8 **)(arg0 + 0x10);
+    if (*(Func84100688Table ***)(state + 4) != NULL) {
+        anim = *(Func84100688Table ***)(state + 4);
+        if (*(u16 *)(state + 2) != 0 && frame == *(u16 *)(state + 2)) {
+            func_84100020(arg0, 0x280);
+        }
+        table = anim[0];
+        if (frame == table->divisor) {
+            func_84100094(arg0);
+            return;
+        }
+        index = frame % table->divisor;
+        mode = table->pad_00[0];
+        primTrack = (u8 *)anim[1];
+        if (primTrack != NULL) {
+            if (mode == 0) {
+                prim = (u8 *)((u32)primTrack + index * 4);
+            } else if (table->pad_00[0] == 1) {
+                prim = func_84100874(primBuf, anim, index);
+            }
+            func_8003F454(D_84190194, prim[0], prim[1], prim[2], prim[3]);
+        }
+        envTrack = (u8 *)anim[2];
+        if (envTrack != NULL) {
+            if (mode == 0) {
+                env = (u8 *)((u32)envTrack + index * 4);
+            } else if (anim[0]->pad_00[0] == 1) {
+                env = func_841009D8(envBuf, anim, index);
+            }
+            func_8003F4DC(D_84190194, env[3]);
+        }
+    }
+}
 
 /* mkdraft:func_84100DE4 begin */
 extern void func_84100020(u8 *arg0, s32 arg1);
@@ -539,7 +641,66 @@ void func_84101084(Func84100688Table **arg0, u8 *arg1) {
                                           ((s16 **)arg0)[1][index], ((s16 **)arg0)[1][index + 1], arg1[0x7F]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_8410119C.s")
+extern s32 ParticleMath_RandomRange(s32 arg0);
+
+// Advances the scalar at arg0 + 0x5C from one of two descriptors hanging off arg1.
+// arg1 + 4: six s16 fields; +0x00 selects the block (0), +0x02 is the frame at which
+// it starts (arg0[0x7F]), +0x04 sets the base value, +0x0A jitters it, and +0x06/+0x08
+// are the target and step of the move toward the target. arg1 + 8: a
+// { Func84100688Table *, s16 * } pair whose index comes from arg0[0x7F]; the value is
+// either the table entry itself or a func_841005E0 interpolation of the s16 pair, then
+// scaled by arg0[0x64]. All 0.01f factors convert hundredths to a fraction.
+
+
+void func_8410119C(u8 *arg0, u8 *arg1) {
+    s16 index;
+    Func84100688Table *table;
+    s16 *frames;
+
+    if (arg1 == NULL) {
+        return;
+    }
+    if (*(u32 *)(arg1 + 4) != NULL) {
+        if (*(s16 *)(*(u32 *)(arg1 + 4) + 0) == 0 && *(s16 *)(*(u32 *)(arg1 + 4) + 2) == arg0[127]) {
+            *(f32 *)(arg0 + 0x5C) = *(s16 *)(*(u32 *)(arg1 + 4) + 4) * 0.01f;
+            if (*(s16 *)(*(u32 *)(arg1 + 4) + 0xA) != 0) {
+                s32 range = *(s16 *)(*(u32 *)(arg1 + 4) + 0xA);
+                *(f32 *)(arg0 + 0x5C) += 0.01f * (u32)ParticleMath_RandomRange(range);
+            }
+        }
+        if (*(s16 *)(*(u32 *)(arg1 + 4) + 2) < arg0[127] && *(s16 *)(*(u32 *)(arg1 + 4) + 8) != 0) {
+            f32 target = *(s16 *)(*(u32 *)(arg1 + 4) + 6) * 0.01f;
+            f32 step = *(s16 *)(*(u32 *)(arg1 + 4) + 8) * 0.01f;
+            if (*(f32 *)(arg0 + 0x5C) < target) {
+                *(f32 *)(arg0 + 0x5C) += step;
+                if (target < *(f32 *)(arg0 + 0x5C)) {
+                    *(f32 *)(arg0 + 0x5C) = target;
+                }
+            } else {
+                *(f32 *)(arg0 + 0x5C) -= step;
+                if (*(f32 *)(arg0 + 0x5C) < target) {
+                    *(f32 *)(arg0 + 0x5C) = target;
+                }
+            }
+        }
+        return;
+    }
+    if (*(u32 *)(arg1 + 8) != NULL) {
+        index = func_84100688(*(Func84100688Table **)(*(u32 *)(arg1 + 8)), arg0[127]);
+        table = *(Func84100688Table **)(*(u32 *)(arg1 + 8));
+        frames = table->values;
+        if (index + 1 == table->count) {
+            *(f32 *)(arg0 + 0x5C) = *(s16 *)(*(u32 *)(*(u32 *)(arg1 + 8) + 4) + index * 2) * 0.01f;
+        } else {
+            *(f32 *)(arg0 + 0x5C) = func_841005E0(
+                *(s16 *)(index * 2 + (u8 *)frames), *(s16 *)(index * 2 + (u8 *)frames + 2),
+                *(s16 *)(*(u32 *)(*(u32 *)(arg1 + 8) + 4) + index * 2),
+                *(s16 *)(*(u32 *)(*(u32 *)(arg1 + 8) + 4) + index * 2 + 2),
+                arg0[127]) * 0.01f;
+        }
+        *(f32 *)(arg0 + 0x5C) *= *(u16 *)(arg0 + 0x64) * 0.01f;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841013F4.s")
 

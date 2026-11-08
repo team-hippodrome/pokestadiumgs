@@ -341,7 +341,79 @@ s32 func_8414C048(u8 arg0, u8 arg1, u8 arg2) {
 }
 /* mkdraft:func_8414C048 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414C18C.s")
+extern u8 func_84154B24(void);
+extern u8 *D_841951F8[];
+extern u8 D_8419D7C0[];
+extern s32 func_8414BF94(u8, u8);
+extern s32 func_8414BF10(u8, u8);
+extern s32 func_8414C048(u8, u8, u8);
+extern u8 D_84195248[];
+
+
+void func_8414C18C(void)
+{
+    unsigned char pad2;  // FAKE: unused
+    unsigned char pad1;  // FAKE: unused
+    int pad3;  // FAKE: unused
+  // FAKE: unused stack slot; the target frame is 0x58 and sp48/sp44 land at 0x48/0x44.
+  // The pad word sizes the frame:
+  // IDO steps it 16-byte periodically, and pad[3] overshoots to
+  // 0x60; one word lands exactly on 0x58.
+  s32 pad0[1];
+  s32 sp48;
+  s32 sp44;
+  s32 i;
+  s32 flag;
+  s32 idx;
+  u8 *p;
+  sp48 = func_84154B24();
+  sp44 = 1 - sp48;
+  flag = 1;
+  for (i = 0; i < 0x18; i++) {
+    p = D_8419D7C0 + i * 0xA8;
+    *p = 0;
+    idx = i / 4;
+    if (idx == D_841951F8[sp48][0xA])
+    {
+      if (func_8414BF94(sp48, i % 4) && func_8414BF10(sp48, i % 4))
+      {
+        flag = 0;
+        *p |= 1;
+      }
+    }
+    else
+      if (func_8414C048(sp48, idx, i % 4))
+    {
+      flag = 0;
+      *p |= 3;
+      if (D_84195248[(sp48 * 24) + 0xE] == 5)
+      {
+        *p |= 4;
+        if (D_84195248[(sp44 * 24) + 0xE] == 5)
+        {
+          *p |= 8;
+        }
+      }
+    }
+  }
+
+  // FAKE: dead load of D_84195248[0]. It is not in the target body, but it changes
+  // the register pressure the uopt allocator sees for the second loop: without it
+  // the constants 5 and 0x18 swap registers (s5 <-> s4).
+  if (*D_84195248 == 0) {}
+  if (flag != 0)
+  {
+    for (i = 0; i != 0x18; i++)
+    {
+      idx = i / 4;
+      if ((idx == D_841951F8[sp48][0xA]) && func_8414BF94(sp48, i % 4))
+      {
+        p = D_8419D7C0 + i * 0xA8;
+        *p |= 1;
+      }
+    }
+  }
+}
 
 /* mkdraft:func_8414C3BC begin */
 extern u32 func_8003570C(void);

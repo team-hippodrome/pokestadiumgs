@@ -494,7 +494,34 @@ void func_88226100(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_882261CC.s")
+// func_80044424 truncates dsdx/dtdy to s16 internally, but this call site passes
+// the full 32-bit rounded ratios: the target stores the mfc1 results straight
+// into the 0x18/0x1C stack arguments with no sll/sra pair.
+//@src/44E70.c
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s32, s32, s32, s32);
+
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+
+
+
+void func_882261CC(s16 arg0, s16 arg1, u16 arg2, u16 arg3, u8 arg4, s8 arg5) {
+    f32 ratio_x;
+    f32 ratio_y;
+    s32 growth;
+    u16 base_x;
+    u16 base_y;
+
+    growth = arg5 * 2;
+    base_x = arg2;
+    base_y = arg3;
+    arg2 = (arg2 + growth) & 0xFFFF;
+    arg3 = (arg3 + growth) & 0xFFFF;
+    // Base-to-grown extent ratio in Q10, passed as the texture-coordinate gradients.
+    ratio_x = (f32) base_x * 1024.0f / (f32) arg2;
+    ratio_y = (f32) base_y * 1024.0f / (f32) arg3;
+    func_80044424((s16) (arg0 - arg5), (s16) (arg1 - arg5), (s16) arg2, (s16) arg3,
+        0, 0, (s32) ROUND_MAX(ratio_x), (s32) ROUND_MAX(ratio_y), 0, arg4);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88226378.s")
 

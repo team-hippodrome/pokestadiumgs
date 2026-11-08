@@ -160,7 +160,66 @@ void func_84105F10(ParticleVec3f *pos, ParticleVec3f velocity, f32 scale) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84105FC8.s")
+typedef struct {
+    u16 x;
+    u16 y;
+    u16 z;
+} ParticleEulerRange;
+
+extern s32 ParticleMath_RandomRange(s32 arg0);
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+
+// Writes a three-component velocity to arg0. Modes 0 and 1 store
+// func_84105E9C offsets drawn from range.x, range.y and range.z. Modes 2, 3 and
+// 5 scale the unit direction of the Euler angles at arg4 + 0x6A/0x6C/0x6E by
+// ParticleMath_RandomRange(range.x) + range.y; modes 2 and 3 rotate about all
+// three axes (D_80087E50 holds sine, D_80088E50 cosine of angle >> 4), while
+// mode 5 uses the x angle only.
+
+
+void func_84105FC8(f32 *arg0, s16 arg1, ParticleEulerRange range, u8 *arg4) {
+    f32 temp;
+
+    if (arg1 == 0) {
+        arg0[0] = func_84105E9C(0, range.x);
+        arg0[1] = func_84105E9C(0, range.y);
+        arg0[2] = func_84105E9C(0, range.z);
+        return;
+    }
+    if (arg1 == 1) {
+        arg0[0] = func_84105E9C(1, range.x);
+        arg0[1] = func_84105E9C(1, range.y);
+        arg0[2] = func_84105E9C(1, range.z);
+        return;
+    }
+    if (arg1 == 2) {
+        temp = (f32)(u32)(ParticleMath_RandomRange(range.x) + range.y);
+        arg0[0] = (D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80088E50[*(u16 *)(arg4 + 0x6C) >> 4] *
+                       D_80087E50[*(u16 *)(arg4 + 0x6E) >> 4] +
+                   D_80088E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80087E50[*(u16 *)(arg4 + 0x6C) >> 4]) * temp;
+        arg0[1] = (-temp * D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4]) * D_80088E50[*(u16 *)(arg4 + 0x6E) >> 4];
+        arg0[2] = (D_80088E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80088E50[*(u16 *)(arg4 + 0x6C) >> 4] -
+                   (D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80087E50[*(u16 *)(arg4 + 0x6C) >> 4]) * D_80087E50[*(u16 *)(arg4 + 0x6E) >> 4]) * temp;
+        return;
+    }
+    if (arg1 == 3) {
+        temp = (f32)(u32)(ParticleMath_RandomRange(range.x) + range.y);
+        arg0[0] = (D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80088E50[*(u16 *)(arg4 + 0x6C) >> 4] *
+                       D_80087E50[*(u16 *)(arg4 + 0x6E) >> 4] +
+                   D_80088E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80087E50[*(u16 *)(arg4 + 0x6C) >> 4]) * temp;
+        arg0[1] = (-temp * D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4]) * D_80088E50[*(u16 *)(arg4 + 0x6E) >> 4];
+        arg0[2] = (D_80088E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80088E50[*(u16 *)(arg4 + 0x6C) >> 4] -
+                   (D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4] * D_80087E50[*(u16 *)(arg4 + 0x6C) >> 4]) * D_80087E50[*(u16 *)(arg4 + 0x6E) >> 4]) * temp;
+        return;
+    }
+    if (arg1 == 5) {
+        temp = (f32)(u32)(ParticleMath_RandomRange(range.x) + range.y);
+        arg0[0] = D_80087E50[*(u16 *)(arg4 + 0x6A) >> 4] * temp;
+        arg0[1] = D_80088E50[*(u16 *)(arg4 + 0x6A) >> 4] * temp;
+        arg0[2] = 0.0f;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -284,7 +343,95 @@ void func_8410668C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_8410679C.s")
+s32 ParticleMath_LacksBits();
+void func_84105F10(ParticleVec3f *pos, ParticleVec3f velocity, f32 scale);
+s16 func_84106540(void *arg0, void *arg1, u16 arg2, unsigned long arg3);
+extern void fragment27_main(u32 *, u32);
+typedef struct ParticleVec3s_ { s16 x; s16 y; s16 z; } ParticleVec3s_;
+
+
+
+void func_8410679C(u8 *arg0, u8 *arg1, u32 arg2, f32 arg3)
+{
+  u8 *root;
+  u16 index;
+  u16 scale;
+  ParticleVec3f vel;
+  ParticleVec3f padA;
+  u8 *c0;
+  u8 *c1;
+  u8 *c2;
+  u8 *c3;
+  root = *((u8 **) arg1);
+  if ((*((u8 **) (root + 0xC))) == NULL)
+  {
+    return;
+  }
+
+  c0 = *((u8 **) ((*((u8 **) (root + 0xC))) + 4));
+  if ((*((u8 **) ((*((u8 **) (root + 0xC))) + 4))) != NULL)
+  {
+    index = (*((u16 *) (*((u8 **) (root + 0xC))))) & 0xF;
+    scale = func_84106540(arg1, root, index, arg2);
+    *((u8 *) (arg0 + 0x7D)) = scale;
+ do { } while (0);
+    c0 += ((u8) scale) * 8;
+    *((s8 *) (arg0 + 0x80)) = *((s16 *) (c0 + 6));
+    *((f32 *) (arg0 + 0x1C)) = ((f32) (*((s16 *) c0))) * 0.001f;
+  }
+
+  c1 = *((u8 **) ((*((u8 **) (root + 0xC))) + 8));
+  if ((*((u8 **) ((*((u8 **) (root + 0xC))) + 8))) != NULL)
+  {
+    index = ((*((u16 *) (*((u8 **) (root + 0xC))))) >> 4) & 0xF;
+    scale = func_84106540(arg1, root, index, arg2);
+    if ((index == 4) || (index == 5))
+    {
+      *((s16 *) (arg0 + 0x6A)) += (*((s16 *) c1)) * scale;
+      *((s16 *) (arg0 + 0x6C)) += (*((s16 *) (c1 + 2))) * scale;
+      *((s16 *) (arg0 + 0x6E)) += (*((s16 *) (c1 + 4))) * scale;
+    }
+    else
+    {
+      c1 += scale * 6;
+      *((s16 *) (arg0 + 0x6A)) += *((s16 *) c1);
+      *((s16 *) (arg0 + 0x6C)) += *((s16 *) (c1 + 2));
+      *((s16 *) (arg0 + 0x6E)) += *((s16 *) (c1 + 4));
+    }
+  }
+  c2 = *((u8 **) ((*((u8 **) (root + 0xC))) + 0xC));
+  if ((*((u8 **) ((*((u8 **) (root + 0xC))) + 0xC))) != NULL)
+  {
+    if (((*((u32 *) (root + 4))) & 1) == 0)
+    {
+      index = ((*((u16 *) (*((u8 **) (root + 0xC))))) >> 8) & 0xF;
+      c2 += func_84106540(arg1, root, index, arg2) * 6;
+      if (func_84100074(arg0, 0x2000))
+      {
+        vel.x = ((ParticleVec3s_ *) c2)->x;
+        vel.y = ((ParticleVec3s_ *) c2)->y;
+        vel.z = ((ParticleVec3s_ *) c2)->z;
+        func_84105F10((ParticleVec3f *) (arg0 + 0x2C), vel, arg3);
+      }
+      else
+      {
+        *((f32 *) (arg0 + 0x2C)) += (f32) ((ParticleVec3s_ *) c2)->x;
+        *((f32 *) (arg0 + 0x30)) += (f32) ((ParticleVec3s_ *) c2)->y;
+      }
+    }
+  }
+  c3 = *((u8 **) ((*((u8 **) (root + 0xC))) + 0x10));
+  if ((*((u8 **) ((*((u8 **) (root + 0xC))) + 0x10))) != NULL)
+  {
+    index = ((*((u16 *) (*((u8 **) (root + 0xC))))) >> 12) & 0xF;
+    c3 += func_84106540(arg1, root, index, arg2) * 2;
+    *((u8 *) (arg0 + 0x87)) = *((s16 *) c3);
+    if (ParticleMath_LacksBits((u32 *) (root + 4), 0x200) || ParticleMath_HasBits((u32 *) (root + 4), 0x800))
+    {
+      fragment27_main((u32 *) (arg0 + 0x14), 0x10);
+    }
+  }
+}
 #endif
 
 #ifdef VERSION_US
@@ -292,7 +439,53 @@ void func_8410668C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84106F34.s")
+extern void fragment27_main(u32 *, u32);
+
+
+
+void func_84106F34(u8 *arg0, u8 *arg1) {
+    if (*(u8 **)(arg1 + 0x14) != NULL) {
+        if (*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) != NULL) {
+            if (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 4) != NULL) {
+                (arg0 + 0x14)[0x70] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 4))[0];
+                (arg0 + 0x14)[0x71] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 4))[1];
+                (arg0 + 0x14)[0x72] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 4))[2];
+                (arg0 + 0x14)[0x73] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 4))[3];
+                fragment27_main((u32 *)(arg0 + 0x14), 4);
+                if (ParticleMath_LacksBits((u32 *)(arg1 + 4), 0x200) || ParticleMath_HasBits((s32 *)(arg1 + 4), 0x800)) {
+                    fragment27_main((u32 *)(arg0 + 0x14), 0x10);
+                }
+            }
+            if (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 8) != NULL) {
+                arg0[0x8B] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 8))[0];
+                arg0[0x8C] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 8))[1];
+                arg0[0x8D] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 8))[2];
+                arg0[0x8E] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 8) + 8))[3];
+                fragment27_main((u32 *)(arg0 + 0x14), 0x28);
+            }
+        }
+        if (*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC) == NULL) {
+            return;
+        }
+        if (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)) == NULL) {
+            return;
+        }
+        arg0[0x87] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[0];
+        arg0[0x88] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[1];
+        arg0[0x89] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[2];
+        arg0[0x8A] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[3];
+        if (ParticleMath_LacksBits((u32 *)(arg1 + 4), 0x200) || ParticleMath_HasBits((s32 *)(arg1 + 4), 0x800)) {
+            fragment27_main((u32 *)(arg0 + 0x14), 0x10);
+        }
+        if (ParticleMath_HasBits((s32 *)(arg1 + 4), 0x1000)) {
+            arg0[0x8E] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[0];
+            arg0[0x8F] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[1];
+            arg0[0x90] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[2];
+            arg0[0x91] = (*(u8 **)(*(u8 **)(*(u8 **)(arg1 + 0x14) + 0xC)))[3];
+            fragment27_main((u32 *)(arg0 + 0x14), 0x20);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -367,7 +560,7 @@ extern void func_84100350(u8 *arg0);
 extern void func_84104A00(u8 *arg0);
 extern s32 func_84104D28(u8 *arg0, u8 *arg1, s32 arg2);
 extern void func_8410668C(u8 *arg0);
-extern void func_8410679C(u8 *arg0, u8 *arg1, s32 arg2, f32 arg3);
+void func_8410679C(u8 *arg0, u8 *arg1, u32 arg2, f32 arg3);
 extern void func_84106AC4(u8 *arg0, u8 *arg1, s32 arg2, f32 arg3);
 extern void func_84106F34(u8 *arg0, u8 *arg1);
 extern void func_84107170(u8 *arg0, u8 *arg1);
@@ -565,7 +758,79 @@ s32 func_84107948(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84107998.s")
+extern s32 D_84190178;
+extern s32 D_84190194;
+extern void func_841072BC();
+extern s32 func_8411E21C(u8 *arg0);
+extern s32 func_8411E224(u8 *arg0);
+extern s32 func_8411E244(u8 *arg0, s32 arg1);
+
+// Queries an id for arg0 and dispatches it through func_841072BC. The record
+// behind arg0 selects the query: bit 0 of record+8 gates the id lookups, bit 3
+// of record+4 selects the second lookup path, and bit 25 of record+4 chooses
+// between the two single-lookup paths. When bit 0 is clear, the ids live in the
+// 0x10-byte elements at D_84190194+0xA8, counted by the byte at
+// D_84190194+0xA7; ids 0xFF and 0x64 are skipped.
+
+
+// Retail returns without a value on this path; clang requires one for an s32 function.
+#ifdef CC_CHECK
+#define RETURN_NO_VALUE return 0
+#else
+#define RETURN_NO_VALUE return
+#endif
+s32 func_84107998(u8 *arg0) {
+    u8 *record;
+    s32 id;
+    s32 i;
+    s16 count;
+
+    record = *((u8 **) arg0);
+    if (ParticleMath_LacksBits((u32 *) (record + 8), 1)) {
+        if (ParticleMath_LacksBits((u32 *) (record + 4), 8)) {
+            if (D_84190178 == 0) {
+                id = func_8411E21C((u8 *) D_84190194);
+                if ((id ^ 0) != 0xFF) {
+                    func_841072BC(arg0, id, 0);
+                }
+                id = func_8411E224((u8 *) D_84190194);
+                if ((id ^ 0) != 0xFF) {
+                    func_841072BC(arg0, id, 1);
+                }
+            } else if (ParticleMath_LacksBits((u32 *) (record + 4), 0x2000000)) {
+                id = func_8411E21C((u8 *) D_84190194);
+                if ((id ^ 0) != 0xFF) {
+                    func_841072BC(arg0, id, 0);
+                }
+            } else {
+                id = func_8411E224((u8 *) D_84190194);
+                if ((id ^ 0) != 0xFF) {
+                    func_841072BC(arg0, id, 1);
+                }
+            }
+        } else {
+            id = func_8411E244((u8 *) D_84190194, *((u16 *) (arg0 + 0xA)));
+            if ((id ^ 0) != 0xFF) {
+                func_841072BC(arg0, id, 0);
+            }
+        }
+    } else {
+        count = *((u8 *) (((u8 *) D_84190194) + 0xA7));
+        if (count == 0) {
+            RETURN_NO_VALUE;
+        }
+        i = 0;
+        if (count > 0) {
+            do {
+                id = *((u16 *) ((((u8 *) D_84190194) + 0xA8) + i * 0x10));
+                if ((id != 0xFF) && (id != 0x64)) {
+                    func_841072BC(arg0, id, 0);
+                }
+                i++;
+            } while ((s32) i != (s32) count);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

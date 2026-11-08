@@ -46,10 +46,120 @@ u8 func_80073600(u8 arg0) {
 }
 void func_80073600_padding(void) {}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/74020/func_80073638.s")
+extern u8 D_800A0068[];
+extern u8 D_800A006C[];
+extern u8 D_800A0070[];
+extern u8 D_800A0074[];
+extern u8 D_800A0078[];
+
+// FAKE: the `& 0xFF` chains below are u8-to-u8 masks that uopt folds away, so none
+// of them change the emitted instructions; each one only reserves expression-temp
+// slots, and the number of slots before a statement decides which of t6..t9 the
+// surrounding loads and results get. Retail's build shows the same four-register
+// rotation, so the masks are reproduced to place each temp on retail's register.
+// Removing all of them scores 49 differing instructions of 124; per group (differ
+// score with that group alone reverted): the three `| 1` stores 47, the 0xDC store
+// 26, the twelve double-glyph loads 16, the lowercase `& 0xFFu` 56.
+
+
+s32 func_80073638(u8 *arg0, u8 *arg1, s32 arg2)
+{
+  s32 i = 0;
+  s8 value = arg0[0];
+  while ((value != 0) && (i < arg2))
+  {
+    if ((value >= 0x61) && (value < 0x7B))
+    {
+      arg1[i * 2] = value - 0x20;
+      // FAKE: one masked-away slot; reverting this line alone scores 56.
+      arg1[(i * 2) + 1] = (arg1[(i * 2) + 1] & 0xFF01) & 0xFFu;
+      arg1[(i * 2) + 1] |= 1;
+      i++;
+    }
+    else
+    {
+      switch (value)
+      {
+        case 0xE4:
+          // FAKE: one masked-away slot. Reverting the three `| 1` stores of cases
+          // 0xE4, 0xF6 and 0xFC to plain `|= 1` scores 47.
+          arg1[(i * 2) + 1] = (arg1[(i * 2) + 1] & 0xFF) | 1;
+
+        case 0xC4:
+          arg1[i * 2] = 0x41;
+          arg1[(i * 2) + 1] = (arg1[(i * 2) + 1] & 0xFF01) | 0xA;
+          i++;
+          break;
+
+        case 0xF6:
+          // FAKE: one masked-away slot, as in case 0xE4.
+          arg1[(i * 2) + 1] = (arg1[(i * 2) + 1] & 0xFF) | 1;
+
+        case 0xD6:
+          arg1[i * 2] = 0x4F;
+          arg1[(i * 2) + 1] = (arg1[(i * 2) + 1] & 0xFF01) | 0xA;
+          i++;
+          break;
+
+        case 0xFC:
+          // FAKE: one masked-away slot, as in case 0xE4.
+          arg1[(i * 2) + 1] = (arg1[(i * 2) + 1] & 0xFF) | 1;
+
+        case 0xDC:
+          arg1[i * 2] = 0x55;
+          // FAKE: three masked-away slots; reverting them scores 26. Their count is
+          // what puts the first double-glyph load of case 0xDF on retail's t9.
+          arg1[(i * 2) + 1] = ((arg1[(i * 2) + 1] & 0xFF01) | 0xA) & 0xFF & 0xFF & 0xFF;
+          i++;
+          break;
+          // FAKE: unreachable (after the break) but kept because uopt allocates its
+          // temp slot before the following cases; without it the score is 2.
+          return i;
+
+        case 0xDF:
+          // FAKE: two masked-away slots per store. Each store then advances the temp
+          // pool by three, which is why the four stores read t9,t8,t7,t6 instead of
+          // counting upwards. Reverting the twelve double-glyph stores of cases 0xDF,
+          // 0xBC and 0xBD scores 16.
+          arg1[i * 2] = D_800A0078[0] & 0xFF & 0xFF;
+          arg1[(i * 2) + 1] = D_800A0078[1] & 0xFF & 0xFF;
+          arg1[(i * 2) + 2] = D_800A0078[0] & 0xFF & 0xFF;
+          arg1[(i * 2) + 3] = D_800A0078[1] & 0xFF & 0xFF;
+          i += 2;
+          break;
+
+        case 0xBC:
+          arg1[i * 2] = D_800A0068[0] & 0xFF & 0xFF;
+          arg1[(i * 2) + 1] = D_800A0068[1] & 0xFF & 0xFF;
+          arg1[(i * 2) + 2] = D_800A006C[0] & 0xFF & 0xFF;
+          arg1[(i * 2) + 3] = D_800A006C[1] & 0xFF & 0xFF;
+          i += 2;
+          break;
+
+        case 0xBD:
+          arg1[i * 2] = D_800A0070[0] & 0xFF & 0xFF;
+          arg1[(i * 2) + 1] = D_800A0070[1] & 0xFF & 0xFF;
+          arg1[(i * 2) + 2] = D_800A0074[0] & 0xFF & 0xFF;
+          arg1[(i * 2) + 3] = D_800A0074[1] & 0xFF & 0xFF;
+          i += 2;
+          break;
+
+        default:
+          arg1[i * 2] = value;
+          i++;
+          break;
+
+      }
+
+    }
+    value = arg0[1];
+    arg0++;
+  }
+
+}
 
 extern void _bzero(void *dst, s32 size);
-extern int func_80073638(s8 *src, u8 *dst, int maxLen);
+s32 func_80073638(u8 *arg0, u8 *arg1, s32 arg2);
 
 s32 func_80073828(s8 *str1, s8 *str2) {
     s32 i;

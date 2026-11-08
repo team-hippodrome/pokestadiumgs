@@ -723,7 +723,108 @@ void func_8AF04F38(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF0501C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF05C10.s")
+extern s32 D_8AF2BE80;
+extern s32 D_8AF2BE84;
+extern s32 D_8AF2BF40;
+extern s32 D_8AF2BF74;
+extern s16 D_8AF2C094;
+extern s32 D_8AF2C2F0;
+extern void func_8AC00FFC(s32);
+extern s32 func_8004C4B0(s32);
+extern void func_8AC006F4(void);
+extern u8 *func_8AF04D68(void);
+extern void func_8AF0501C(void *, s16, s32);
+
+typedef struct {
+    u8 unk_000[0x4B0];
+    s32 unk_4B0;
+    s32 unk_4B4;
+    u8 unk_4B8[4];
+    s8 unk_4BC;
+} unk_func_8AF05C10;
+
+// Resets the per-mode id buffer at arg0 + 0x28, then replays the id list
+// returned by func_8AF04D68 through func_8AF0501C.
+//
+// func_8AF0501C reads the entry counter at arg0 + 0x4D8 (sub->unk_4B0) and
+// returns without recording the id once the counter reaches 100, so the
+// counter is incremented here after every call.
+
+
+void func_8AF05C10(void *arg0) {
+    s32 var_a2;
+    s16 temp_a1;
+    s16 *var_s0;
+    unk_func_8AF05C10 *sub;
+
+    sub = (unk_func_8AF05C10 *)((u8 *)arg0 + 0x28);
+    D_8AF2C2F0 = 0;
+    if (D_8AF2BE80 == 0) {
+        func_8AC00FFC(0x4F475343);
+    }
+    D_8AF2BE80 = 1;
+    D_8AF2BF40 = 0;
+    func_8004C4B0(0x37);
+    func_8AC006F4();
+    sub->unk_4BC = 0;
+    sub->unk_4B0 = 0;
+    D_8AF2BF74 = 0;
+    D_8AF2C094 = 0;
+    var_s0 = (s16 *)func_8AF04D68();
+    // func_8AF04D68 returns a -1-terminated list of ids (possibly NULL, empty).
+    for (;;) {
+        temp_a1 = *var_s0;
+        if (temp_a1 == -1) {
+            break;
+        }
+        // Selection flag: func_8AF0501C sets bits 0 and 1 of the record's
+        // u16 status word when var_a2 is non-zero, and clears them when it is
+        // zero. The mode's own id (D_8AF2BE84 2, 3 or 4) is selected, as are
+        // 4, 0x31 and 0x58 in every mode.
+        var_a2 = 0;
+        switch (temp_a1) {
+        case 0x59:
+            if (D_8AF2BE84 == 2) {
+                var_a2 = 1;
+            }
+            break;
+        case 0x42:
+            if (D_8AF2BE84 == 3) {
+                var_a2 = 1;
+            }
+            break;
+        case 0x4D:
+            if (D_8AF2BE84 == 4) {
+                var_a2 = 1;
+            }
+            break;
+        case 4:
+        case 0x31:
+        case 0x58:
+            var_a2 = 1;
+            break;
+        default:
+            break;
+        }
+        func_8AF0501C(arg0, temp_a1, var_a2);
+        var_s0++;
+        sub->unk_4B0 += 1;
+    }
+    // Store the id of the mode's table set. func_8AF05E14 reads it back from
+    // arg0 + 0x4DC (sub->unk_4B4) and picks D_8AF27E30, D_8AF28274 or
+    // D_8AF284E4 from it.
+    switch (D_8AF2BE84) {
+    case 2:
+        sub->unk_4B4 = 0x59;
+        break;
+    case 3:
+        sub->unk_4B4 = 0x42;
+        break;
+    case 4:
+        sub->unk_4B4 = 0x4D;
+        break;
+    }
+}
 
 void *func_8AF05DC8(void *arg0) {
     u8 *node;
@@ -896,7 +997,9 @@ void func_8AF06450(void *arg0, s32 arg1) {
 extern void func_800503A4(s32);
 s32 *func_8AF04E2C();
 
-void func_8AF06E74(void) {
+// Old-style empty parameter list: func_8AF06EA4 calls this with two arguments
+// that the body never reads, and a prototype with parameters would home them.
+void func_8AF06E74() {
     s32 *temp_v0;
 
 #ifdef CC_CHECK
@@ -909,7 +1012,72 @@ void func_8AF06E74(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF06EA4.s")
+extern u8 D_8AF2BDCC[];
+extern u8 D_8AF2BFC0[];
+extern u8 D_8AF2BFF0[];
+extern u8 D_8AF2C028[];
+extern u8 D_8AF2C058[];
+extern s16 D_8AF2C08A;
+extern s16 D_8AF2C08C;
+extern s32 D_8AF2BF6C;
+extern s32 D_8AF2BF70;
+extern void func_8AC05F00(void *);
+extern void func_8AC0695C();
+extern void func_8AC06A2C();
+extern u8 *func_8AF04D68();
+extern void func_8AF06E74();
+
+// State machine for the mode stored in D_8AF2BA6C: func_8AF04D68 picks the
+// -1-terminated s16 list of mode ids; for the "options" entry (0x31) it
+// (re)builds the two option panels through func_8AC0695C/func_8AC06A2C, then
+// func_8AF06E74 pushes the entry's object. On the first entry of the mode
+// (D_8AF2C2F0 clear) it also raises a notification panel per visible option.
+// FAKE: `volatile` holds the parameter in its 0x60(sp) home slot and reloads it
+// for each func_8AF06E74 call; retail keeps that reload and spends the
+// callee-saved registers on the loop-invariant panel addresses instead.
+// Score without it: 1153.
+
+
+void func_8AF06EA4(void *volatile arg0) {
+    u8 *state = func_8AF04D68();
+    s16 value;
+
+    while (1) {
+        value = *(s16 *)state;
+        if (value == -1) {
+            break;
+        }
+        if (value == 49) {
+            func_8AC0695C((void *)&D_8AF2BFF0, (void *)&D_8AF2BFC0, 0, 0, 8, 0, 0, 15, *(u32 *)&D_8AF2BFB8, *(u32 *)&D_8AF2BFB8, *(u32 *)&D_8AF2BDCC);
+            func_8AC06A2C((void *)&D_8AF2C058, (void *)&D_8AF2C028, 0, 0, 8, 0, 0, 15, *(u32 *)&D_8AF2BFB4, *(u32 *)&D_8AF2BFB4, *(u32 *)&D_8AF2BDCC);
+        }
+        func_8AF06E74(arg0, value);
+        state += 2;
+    }
+
+    if (D_8AF2C2F0 != 0) {
+        switch (D_8AF2C094) {
+        case 0:
+            if (D_8AF2BF6C == 0) {
+                func_8AC05F00(&D_8AF2C188);
+            }
+            if (D_8AF2BF70 == 0) {
+                func_8AC05F00(&D_8AF2C200);
+            }
+            break;
+        case 1:
+        case 2:
+            if (D_8AF2C08A >= 2) {
+                func_8AC05F00(&D_8AF2C098);
+            }
+            if (D_8AF2C08A < D_8AF2C08C) {
+                func_8AC05F00(&D_8AF2C110);
+            }
+            break;
+        }
+    }
+    D_8AF2C2F0 = 1;
+}
 
 s32 main_pool_alloc(s32, s32);
 extern void func_80025F84(s32);

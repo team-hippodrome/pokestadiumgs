@@ -486,7 +486,65 @@ void func_864018B0(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86401920.s")
+extern u32 func_8003570C(void);
+extern f32 sqrtf(f32);
+extern f32 func_87D005E8(f32 *, f32 *, f32 *);
+extern void func_864018B0(u8 *, u8 *);
+extern u8 *D_86416C00;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+
+
+void func_86401920(void *arg0, void *arg1) {
+    Vec3 v;
+    f32 dist;
+    f32 diff;
+    u8 *pa;
+    u8 *pb;
+
+    v.x = *(f32 *)((u8 *)arg1 + 0x48) - *(f32 *)((u8 *)arg0 + 0x48);
+    v.y = *(f32 *)((u8 *)arg1 + 0x4C) - *(f32 *)((u8 *)arg0 + 0x4C);
+    v.z = *(f32 *)((u8 *)arg1 + 0x50) - *(f32 *)((u8 *)arg0 + 0x50);
+    dist = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+    if (dist < 46.4f) {
+        diff = 46.4f - dist;
+        pa = *(u8 **)((u8 *)arg0 + 0x20);
+        pb = *(u8 **)((u8 *)arg1 + 0x20);
+        if (dist > 0.0f) {
+            v.x = v.x / dist;
+            v.y = v.y / dist;
+            v.z = v.z / dist;
+        } else {
+            v.x = 2.0f * ((f32)func_8003570C() / 4294967296.0f) - 1.0f;
+            v.y = 2.0f * ((f32)func_8003570C() / 4294967296.0f) - 1.0f;
+            v.z = 2.0f * ((f32)func_8003570C() / 4294967296.0f) - 1.0f;
+            func_87D005E8(&v.x, &v.y, &v.z);
+        }
+        *(f32 *)(pa + 0x2C) = *(f32 *)(pa + 0x2C) + (-v.x * diff * 0.5f);
+        *(f32 *)(pa + 0x30) = *(f32 *)(pa + 0x30) + (-v.y * diff * 0.5f);
+        *(f32 *)(pa + 0x34) = *(f32 *)(pa + 0x34) + (-v.z * diff * 0.5f);
+        *(f32 *)(pb + 0x2C) = *(f32 *)(pb + 0x2C) + (v.x * diff * 0.5f);
+        *(f32 *)(pb + 0x30) = *(f32 *)(pb + 0x30) + (v.y * diff * 0.5f);
+        *(f32 *)(pb + 0x34) = *(f32 *)(pb + 0x34) + (v.z * (46.4f - dist) * 0.5f);
+        if ((*(f32 *)D_86416C00 * 0.9f * 0.5f < *(f32 *)(pa + 0x1C)) && ((*(f32 *)((u8 *)arg0 + 0x18) * v.y) + (*(f32 *)((u8 *)arg0 + 0x10) * v.x) >= 0.0f) && (*(f32 *)(pb + 0x1C) < (*(f32 *)D_86416C00 * 0.9f * 0.5f))) {
+            func_864018B0(arg1, pb);
+        }
+        if ((*(f32 *)D_86416C00 * 0.9f * 0.5f < *(f32 *)(pb + 0x1C)) && ((*(f32 *)((u8 *)arg1 + 0x18) * -v.y) + (*(f32 *)((u8 *)arg1 + 0x10) * -v.x) >= 0.0f) && (*(f32 *)(pa + 0x1C) < (*(f32 *)D_86416C00 * 0.9f * 0.5f))) {
+            func_864018B0(arg0, pa);
+        }
+        if ((*(s32 *)((u8 *)arg0 + 0xC) & 0x80000000) && !(*(s32 *)((u8 *)arg1 + 0xC) & 0x80000000)) {
+            *(f32 *)((u8 *)arg0 + 0x14) = 34.800003f;
+        }
+        if ((*(s32 *)((u8 *)arg1 + 0xC) & 0x80000000) && !(*(s32 *)((u8 *)arg0 + 0xC) & 0x80000000)) {
+            *(f32 *)((u8 *)arg1 + 0x14) = 34.800003f;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1923,7 +1981,64 @@ void func_86405BEC(void) { u8 *obj; f32 value; obj = D_86416C00 + 0xC8BC; func_8
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86405CB4.s")
+extern u8 *D_86416C00;
+extern void func_80035700(u32);
+extern s32 func_87F026E8(s32, void *);
+extern void func_86407B54(void);
+extern void func_86409240(s32);
+extern void func_8640708C(void);
+extern void func_86407330(f32, f32, f32, f32, f32, f32);
+extern void func_864080A0(void);
+extern void func_86408BE0(void);
+extern void func_87F0CB58(void);
+
+// Field accesses (not `*(s32 *)(D_86416C00 + n)`) make IDO split each displacement
+// at 0x7FFF (`addiu at, base, 0x7FFF`); the pointer-arithmetic spelling instead
+// materializes 0x8000 and adds it.
+struct Func86405CB4State {
+    u8 pad0[0xCDFC];
+    s32 unk_CDFC;
+    u8 pad1[0xCEAC - 0xCE00];
+    s32 unk_CEAC;
+};
+
+// Each loop attaches a run of 0x18C-byte entries to the list head 0x14 bytes
+// before the run's first entry: 4 entries at 0x7D0, 24 at 0xE14, 80 at 0x3348.
+// The first two loops count with `i < n` (slti); the 80-entry loop counts with
+// `i != 80` (bne against a register holding 0x50), so the source compares differ.
+// unk_CDFC receives a pointer to D_86416C00 + 0xCB8C, unk_CEAC is cleared.
+// func_86407330 takes six f32 parameters and stores them at D_86416C00+0x14..0x28
+// //@asm/us/nonmatchings/fragments/52/fragment52_285750/func_86407330.s
+
+
+void func_86405CB4(void) {
+    s32 i;
+    u8 *entry;
+
+    func_80035700(osGetTime());
+    entry = D_86416C00 + 0x7D0;
+    for (i = 0; i < 4; i++, entry += 0x18C) {
+        func_87F026E8((s32)(D_86416C00 + 0x7BC), entry);
+    }
+    entry = D_86416C00 + 0xE14;
+    for (i = 0; i < 24; i++, entry += 0x18C) {
+        func_87F026E8((s32)(D_86416C00 + 0xE00), entry);
+    }
+    entry = D_86416C00 + 0x3348;
+    for (i = 0; i != 80; i++, entry += 0x18C) {
+        func_87F026E8((s32)(D_86416C00 + 0x3334), entry);
+    }
+    func_86407B54();
+    func_86409240((s32)(D_86416C00 + 0xB554));
+    func_8640708C();
+    ((struct Func86405CB4State *)D_86416C00)->unk_CDFC =
+        (s32)(D_86416C00 + 0xCB8C);
+    ((struct Func86405CB4State *)D_86416C00)->unk_CEAC = 0;
+    func_86407330(120.0f, 430.0f, 40.0f, 120.0f, 0.0f, -210.0f);
+    func_864080A0();
+    func_86408BE0();
+    func_87F0CB58();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1981,7 +2096,171 @@ void func_86405EA4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86405F28.s")
+extern u8 *D_86416C00;
+extern u8 D_86409720;
+extern u8 D_86409734[];
+extern s32 D_864097EC;
+extern u8 D_86409928[];
+extern u8 D_8640995C[];
+extern u8 D_86409C70[];
+extern u8 D_86409C88[];
+extern u8 D_86409CA0[];
+extern u8 D_87F15B70[];
+// include/color_adjustment.h declares this union; it is flattened to one line here because this
+// file does not include that header.
+// The tag and members are the header's.
+typedef union S1_arg1_func_80010CA8 { struct { s16 unk_00; s8 unk_02; s8 unk_03; }; u32 raw; } ColorAdjustment;
+extern void func_87F0C650(void *);
+extern void func_87F0C694(void *, s32);
+extern s32 func_8004DDF4(s32);
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern u8 *func_8004DF38(s32, s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern ColorAdjustment func_87F0AD50(s32, s32, s32);
+extern s32 func_8004E018(s32, s32, s32, ColorAdjustment);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_87F08E3C(void *, s32);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_87F024CC(void);
+extern s32 func_86407610(void);
+extern void *func_80037E9C(void *, void *);
+extern void func_87F01870(void *);
+extern void func_87F01F34(void *);
+extern void func_87F00030(void);
+extern void func_87F0C980(void);
+extern void func_87F024F4(void *, void *, s32);
+extern void func_87F0252C(void *, void *, void *, s32);
+extern void func_86407AA0(void);
+extern void func_86409280(void *, void *);
+extern void func_86405BEC(void);
+extern void func_87F029B8(s32, u8);
+extern void func_87F0D48C(void *, void *, s32);
+extern void func_87F02CB0(s32, s32);
+extern void func_86400028(void);
+extern void func_86405CB4(void);
+extern void func_86407034(void);
+extern void func_864057E0(void);
+extern void func_87F00688(void);
+
+// Scene-entry rebuild of the renderer state block D_86416C00: registers the four indexed
+// colour adjustments (tint func_87F0AD50(*(u8 **)(obj + 0x70), 6, i) stored to +0x788/+0x798 +
+// 4*i), an 0x0F000000-flagged alloc at +0xB550, and three func_80037E9C table registrations,
+// then fills two pointer tables: four pointers at +0x7F0 + 0x18C*k, each obj + 0x5C*k +
+// 0xCB8C, and over six steps of 0x630 the pointers obj + 0x20*n + 0xCCFC/0xCD04/0xCD0C/0xCD14
+// to +0xE34/0xFC0/0x114C/0x12D8 + 0x630*n. When byte 0x2180 of the struct at
+// *(u8 **)(obj + 0x70) reads 4 the tail also runs func_87F0C694(obj + 0x9C, 0x14) up front
+// and, at the end, stores 3 to obj + 0x10 and runs three setup calls.
+
+
+void func_86405F28(void)
+{
+  u8 *pool;
+  s32 i;
+  volatile s32 spare;
+  ColorAdjustment tint;
+  s32 dof;
+  s32 j;
+  spare = D_864097EC;
+  func_87F0C650(D_86416C00 + 0x9C);
+  if ((*((u8 *) ((*((u8 **) (D_86416C00 + 0x70))) + 0x2180))) == 4)
+  {
+    func_87F0C694(D_86416C00 + 0x9C, 0x14);
+  }
+  func_8004DDF4(0x71);
+  pool = MainPool_AllocState(main_pool_get_available(), 0);
+  *((s32 *) (D_86416C00 + 0x6C)) = func_80040E80((s32) pool, D_86409734);
+  *((u8 **) (D_86416C00 + 0x7A8)) = func_8004DF38((s32) pool, 0x71, 0);
+  *((u8 **) (D_86416C00 + 0x7AC)) = func_8004DF38((s32) pool, 0x71, 1);
+  *((s32 *) (D_86416C00 + 0x7B4)) = func_80040E80((s32) pool, D_86409928);
+  *((s32 *) (D_86416C00 + 0x7B8)) = func_80040E80((s32) pool, D_8640995C);
+  MainPool_FinalizeAllocation(pool);
+  // FAKE: emits no instructions; the comparison is the tint loop counter's first use, and
+  // uopt's allocation of that counter's web (s1 vs s2 across the loop body) depends on it.
+  // Removing it scores 140 (24 rows).
+  if (i == 4)
+  {
+  }
+  for (i = 0; i < 4; i++)
+  {
+    func_8004DDF4(0x6C);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    tint = func_87F0AD50((s32) (*((u8 **) (D_86416C00 + 0x70))), 6, i);
+    *((s32 *) ((D_86416C00 + (i * 4)) + 0x788)) = func_8004E018((s32) pool, 0x6C, 0, tint);
+    *((s32 *) ((D_86416C00 + (i * 4)) + 0x798)) = func_8004E018((s32) pool, 0x6C, 1, tint);
+    MainPool_FinalizeAllocation(pool);
+  }
+
+  // FAKE: `i ^= 0` stores `i` back unchanged and emits no instructions; it gives `i` a web
+  // after the tint loop, which is what makes that loop end `slti at,s2,4; bnez` instead of
+  // `li at,4; bne s2,at`. Removing it scores 440 (8 rows).
+  i ^= 0;
+  *((s32 *) (D_86416C00 + 0xB550)) = func_87F08E3C((void *) func_8004C990(0x96, D_86409720), 0x0F000000);
+  ModelRenderer_InitDisplayRoots();
+  func_87F024CC();
+  func_86407610();
+  func_80037E9C((void *) 0, D_86409C70);
+  func_80037E9C((void *) 0, D_86409C88);
+  func_80037E9C((void *) 0, D_86409CA0);
+  func_87F01870(*((u8 **) (D_86416C00 + 0x70)));
+  func_87F01F34(*((u8 **) (D_86416C00 + 0x70)));
+  func_87F00030();
+  func_87F0C980();
+  func_87F024F4(D_86416C00 + 0x7BC, D_86416C00 + 0x7D0, 4);
+  // FAKE: emits no instructions. uopt's colour walk demotes BOTH values that a fully dead
+  // `if (v == k) {}` mentions to the end of the walk (in mention order), so this dead
+  // compare is what puts the loop-1 counter in $a0 and the 0xCB8C constant in $a1,
+  // leaving dof in $v0 and the loop's base load in $v1. Removing it scores 56 (rows).
+  if (j == 0xCB8C)
+  {
+  }
+  // Init order and the value's spelling are load-bearing:
+  // - `dof = 0, j = 0` (this order) makes as1 emit the two zero moves as the retail
+  //   `move v0,zero; move a0,zero`; `j = 0, dof = 0` emits them the other way (2 rows).
+  // - the value must be the plain `(base + j) + 0xCB8C`: a `(j * 1)` copy leaves a dead
+  //   preheader move and pushes the counter back to $a1 (6 rows).
+  for (dof = 0, j = 0; j < 0x170; j += 0x5C, dof += 0x18C)
+  {
+    *((u8 **) ((D_86416C00 + dof) + 0x7F0)) = (D_86416C00 + j) + 0xCB8C;
+  }
+  func_87F0252C(D_86409C88, D_86416C00 + 0xE00, D_86416C00 + 0xE14, 0x18);
+  dof = 0;
+  j = 0;
+  l2:
+  *((u8 **) ((D_86416C00 + dof) + 0xE34)) = (D_86416C00 + j) + 0xCCFC;
+
+  *((u8 **) ((D_86416C00 + dof) + 0xFC0)) = (D_86416C00 + j) + 0xCD04;
+  *((u8 **) ((D_86416C00 + dof) + 0x114C)) = (D_86416C00 + j) + 0xCD0C;
+  *((u8 **) ((D_86416C00 + dof) + 0x12D8)) = (D_86416C00 + j) + 0xCD14;
+  j += 0x20;
+  dof += 0x630;
+  if (j != 0xC0)
+  {
+    goto l2;
+  }
+  func_87F024F4(D_86416C00 + 0x3334, D_86416C00 + 0x3348, 0x50);
+  func_86407AA0();
+  func_86409280(D_86416C00 + 0xB554, D_86409CA0);
+  func_87F0252C(D_87F15B70, D_86416C00 + 0xE0, D_86416C00 + 0xF4, 4);
+  func_86405BEC();
+  func_87F029B8((s32) (D_86416C00 + 0xCDBC), *((u8 *) ((*((u8 **) (D_86416C00 + 0x70))) + 0x2182)));
+  func_87F0D48C(D_86416C00 + 0x74, *((u8 **) (D_86416C00 + 0x70)), 0);
+  func_87F02CB0((s32) (D_86416C00 + 0xCDDC), 0x1E);
+  func_86400028();
+  *((s32 *) ((u8 *) ((s32) D_86416C00 + 0xCEB0))) = 0;
+  func_86405CB4();
+  // Tail of the same obj + 0x2180 == 4 branch as the entry guard: the two per-scene
+  // registrations func_86407034/func_864057E0, the store of render mode 3 to obj + 0x10,
+  // and the final setup call func_87F00688.
+  if ((*((u8 *) ((*((u8 **) (D_86416C00 + 0x70))) + 0x2180))) == 4)
+  {
+    func_86407034();
+    func_864057E0();
+    *((s32 *) (D_86416C00 + 0x10)) = 3;
+    func_87F00688();
+  }
+}
 #endif
 
 #ifdef VERSION_US

@@ -273,7 +273,164 @@ void func_83401904(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83401AAC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83401E64.s")
+typedef struct {
+    u8 color[4];
+    u8 unk_04[0x10];
+} unk_83401E64_Palette;
+
+typedef struct {
+    u8 unk_00[0x20];
+    s32 select;
+    s32 palette;
+    u8 unk_28[0x48];
+    f32 unk_70;
+    f32 unk_74;
+    unk_83401E64_Palette palettes[3];
+} unk_83401E64_State;
+
+#define STATE ((unk_83401E64_State *)&D_83404188)
+
+// D_83404188 (Fragment58State188) and D_80087200 (ControllerState *) are
+// already declared by fragment58_code.c.
+
+
+
+
+void func_83401E64(void) {
+    s32 step;
+
+    if (D_80087200->buttonsPressed & 0x400) {
+        STATE->select++;
+    }
+    if (D_80087200->buttonsPressed & 0x800) {
+        STATE->select--;
+    }
+    if (STATE->select >= 0xA) {
+        STATE->select = 0xA;
+    }
+    if (STATE->select < 0) {
+        STATE->select = 0;
+    }
+    if ((D_80087200->buttonsPressed & 0x100) || (D_80087200->buttonsHeld & 1)) {
+        step = 1;
+        if (!(D_80087200->buttonsPressed & 0x100)) {
+            step = 5;
+        }
+        switch (STATE->select) {
+        case 0:
+            STATE->unk_70 += step;
+            break;
+        case 1:
+            STATE->unk_74 += step;
+            break;
+        case 2:
+            STATE->palette = 1;
+            break;
+        case 3:
+            STATE->palettes[STATE->palette].color[0] += step;
+            if (STATE->palettes[STATE->palette].color[0] >= 0xFF) {
+                STATE->palettes[STATE->palette].color[0] = 0xFF;
+            }
+            break;
+        case 4:
+            STATE->palettes[STATE->palette].color[1] += step;
+            if (STATE->palettes[STATE->palette].color[1] >= 0xFF) {
+                STATE->palettes[STATE->palette].color[1] = 0xFF;
+            }
+            break;
+        case 5:
+            STATE->palettes[STATE->palette].color[2] += step;
+            if (STATE->palettes[STATE->palette].color[2] >= 0xFF) {
+                STATE->palettes[STATE->palette].color[2] = 0xFF;
+            }
+            break;
+        case 6:
+            STATE->palettes[STATE->palette].color[3] += step;
+            if (STATE->palettes[STATE->palette].color[3] >= 0xFF) {
+                STATE->palettes[STATE->palette].color[3] = 0xFF;
+            }
+            break;
+        case 7:
+            if ((STATE->palettes[2].color[0] += step) >= 0xFF) {
+                STATE->palettes[2].color[0] = 0xFF;
+            }
+            break;
+        case 8:
+            if ((STATE->palettes[2].color[1] += step) >= 0xFF) {
+                STATE->palettes[2].color[1] = 0xFF;
+            }
+            break;
+        case 9:
+            if ((STATE->palettes[2].color[2] += step) >= 0xFF) {
+                STATE->palettes[2].color[2] = 0xFF;
+            }
+            break;
+        }
+    }
+    if ((D_80087200->buttonsPressed & 0x200) || (D_80087200->buttonsHeld & 2)) {
+        step = 1;
+        if (!(D_80087200->buttonsPressed & 0x200)) {
+            step = 5;
+        }
+        switch (STATE->select) {
+        case 0:
+            STATE->unk_70 -= step;
+            return;
+        case 1:
+            STATE->unk_74 -= step;
+            return;
+        case 2:
+            STATE->palette = 0;
+            return;
+        case 3:
+            STATE->palettes[STATE->palette].color[0] -= step;
+            if (STATE->palettes[STATE->palette].color[0] <= 0) {
+                STATE->palettes[STATE->palette].color[0] = 0;
+                return;
+            }
+            break;
+        case 4:
+            STATE->palettes[STATE->palette].color[1] -= step;
+            if (STATE->palettes[STATE->palette].color[1] <= 0) {
+                STATE->palettes[STATE->palette].color[1] = 0;
+                return;
+            }
+            break;
+        case 5:
+            STATE->palettes[STATE->palette].color[2] -= step;
+            if (STATE->palettes[STATE->palette].color[2] <= 0) {
+                STATE->palettes[STATE->palette].color[2] = 0;
+                return;
+            }
+            break;
+        case 6:
+            STATE->palettes[STATE->palette].color[3] -= step;
+            if (STATE->palettes[STATE->palette].color[3] < 0) {
+                STATE->palettes[STATE->palette].color[3] = 0;
+                return;
+            }
+            break;
+        case 7:
+            if ((STATE->palettes[2].color[0] -= step) <= 0) {
+                STATE->palettes[2].color[0] = 0;
+                return;
+            }
+            break;
+        case 8:
+            if ((STATE->palettes[2].color[1] -= step) <= 0) {
+                STATE->palettes[2].color[1] = 0;
+                return;
+            }
+            break;
+        case 9:
+            if ((STATE->palettes[2].color[2] -= step) <= 0) {
+                STATE->palettes[2].color[2] = 0;
+                return;
+            }
+            break;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834022F8.s")
 

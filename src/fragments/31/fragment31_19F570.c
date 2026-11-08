@@ -337,7 +337,69 @@ void func_8822C93C(void)
 }
 /* mkdraft:func_8822C93C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19F570/func_8822CC50.s")
+extern f32 D_80087E50[];
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern Gfx *D_800D0510;
+extern void *D_8800687C;
+extern s32 D_88234718;
+extern s32 D_882345D0;
+extern s32 D_88234930;
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void *func_8004C874(s32, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+extern void func_88000EC0(s8 *, s16, s32);
+extern void func_80049628(s32, s32, s32);
+extern void func_800499EC(void);
+extern s32 func_8004D1FC(u8 *);
+extern void func_88002BA0(u8, u8, u8);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+
+void func_8822CC50(void) {
+    s32 x;
+    s32 i;
+    s8 digits[3];
+    s8 shade;
+    s32 y;
+    u16 height;
+    s8 *digit;
+
+    shade = (s8)(D_80087E50[(*(u16 *)((u8 *)D_88234930 + 0x10)) >> 4] * 2);
+    y = *(s16 *)(*(u8 **)((u8 *)D_88234930) + 0xE);
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_80048E30(D_8800687C, *(s16 *)((u8 *)D_88234930 + 8), y + 19,
+                  func_8004C874(33, 30), 1);
+    func_88000EC0(digits, *(s16 *)((u8 *)D_88234930 + 4), 1);
+    i = 2;
+    digit = &digits[1];
+    do {
+        func_80049628(*(s16 *)((u8 *)D_88234930 + 0xA + i), y + 19, *digit + 48);
+        digit -= 1;
+        i -= 2;
+    } while ((u32)digit >= (u32)digits);
+    func_800499EC();
+    { Gfx *_g = (Gfx *)(D_800D0510++); _g->words.w0 = 0xDE000000; _g->words.w1 = (u32)D_80094E38; }
+    switch (D_88234718) {
+    case 1:
+        func_88002BA0(0xFF, 0xFF, 0);
+    default:
+        func_8004D1FC((u8 *)D_882345D0);
+        x = ((s16 *)((u8 *)D_88234930 + 0xC))[0 - ((*(s16 *)((u8 *)D_88234930 + 0xE)))] + 1;
+        GfxRect_DrawTextured(x, (y + 9) + shade, *(s16 *)((u8 *)D_882345D0),
+                             *(s16 *)((u8 *)D_882345D0 + 2), 0, 0, 0x400, 0x400, 0);
+        height = *(u16 *)((u8 *)D_882345D0 + 2);
+        GfxRect_DrawTextured(x, (y - shade) + 40, *(s16 *)((u8 *)D_882345D0),
+                             height, 0, (height - 1) << 5, 0x400, -0x400, 0);
+    { Gfx *_g = (Gfx *)(D_800D0510++); _g->words.w0 = 0xDE000000; _g->words.w1 = (u32)D_80094F50; }
+        break;
+    case 2:
+        break;
+    }
+}
 
 extern s32 func_80049290(s32, s32, const char *);
 extern void func_88003480(s32, u16, u16, s16 *, s16 *);

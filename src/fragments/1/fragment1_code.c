@@ -153,7 +153,62 @@ void func_83500708(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83500C14.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_835012C8.s")
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern s32 D_83503AE8;
+extern s32 D_83503AF4;
+extern f32 D_83503BE8;
+
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+
+// Draws eight 0xB00-byte pages of the texture strip from asset (68, 3): for
+// each page it loads the data with func_8004CA60(func_8004C990(68, 3)),
+// uploads it into G_TX_LOADTILE, describes a 176x8 tile at G_TX_RENDERTILE,
+// and draws it twice through GfxRect_DrawTextured (prim alpha 80, then 255).
+// D_83503AE8 supplies the first row's y (minus 2); D_83503BE8 scales the
+// rectangle sizes, the per-row y step and the two texture scales. Byte
+// identical to asm/us/nonmatchings/fragments/1/fragment1_code/func_835012C8.s
+// and to the retail ROM.
+
+
+void func_835012C8(void) {
+    s32 archive;
+    s32 y;
+    s32 i;
+    u8 *tex;
+    u8 *texBase;
+    s32 pad;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    archive = func_8004C990(68, 3);
+    y = D_83503AE8 - 2;
+    texBase = func_8004CA60((u8 *)archive);
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetCombine(D_800D0510++, 0xFCFFFFFF, 0xFFFCF67B);
+    for (i = 0, tex = texBase; i != 0x5800; i += 0xB00) {
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, tex);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 1407, 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 44, 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 175 << 2, 7 << 2);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 80);
+        GfxRect_DrawTextured(ROUND_MAX(320.0f - 88.0f * D_83503BE8), (u16)((s32)ROUND_MAX((f32)y) + *(s32 *)&D_83503AF4),
+                             ROUND_MAX(176.0f * D_83503BE8), ROUND_MAX(8.0f * D_83503BE8), 0, 0,
+                             ROUND_MAX(1024.0f / D_83503BE8), ROUND_MAX(1024.0f / D_83503BE8), 0);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+        GfxRect_DrawTextured(ROUND_MAX(320.0f - 88.0f * D_83503BE8), ROUND_MAX((f32)y),
+                             ROUND_MAX(176.0f * D_83503BE8), ROUND_MAX(8.0f * D_83503BE8), 0, 0,
+                             ROUND_MAX(1024.0f / D_83503BE8), ROUND_MAX(1024.0f / D_83503BE8), 0);
+        tex += 0xB00;
+        y = y + 8.0f * D_83503BE8;
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_8350182C.s")
 

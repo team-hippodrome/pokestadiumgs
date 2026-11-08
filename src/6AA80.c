@@ -23,14 +23,134 @@ void func_80069E80(void) {
     Game_SetState(2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_80069F20.s")
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern void *main_pool_alloc(s32, s32);
+extern void _bzero(void *, s32);
+extern void func_8005487C(void *);
+extern void func_80054CC4(s32, s32);
+extern s32 func_80054E48(s32);
+extern void func_80055948(s32);
+extern void Save_ResetAndCommitTypedRecord(s32, s32);
+extern s16 D_8009DF74;
+extern s32 D_8009DF70;
+extern s32 D_8009DF10;
+extern s32 D_8009DF20;
+extern s32 D_8009DF30;
+extern s32 D_8009DF40;
+
+
+
+void *func_80069F20(arg0, arg1, arg2)
+s32 arg0;
+s32 arg1;
+s32 arg2;
+{
+  s32 spare;
+  s32 local[4];
+  s32 flag;
+  u8 *obj;
+  flag = 0;
+  if ((arg0 != 0) || (arg1 != 0))
+  {
+    main_pool_push_state(0x5F62746C);
+    func_80055948(3);
+    if (arg0 != 0)
+    {
+      func_8005487C(local);
+      if ((*((u16 *) (((u8 *) local) + 2))) & 1)
+      {
+        flag = 1;
+      }
+    }
+    if (arg1 != 0)
+    {
+      func_80054CC4(arg1, arg2);
+      if (D_8009DF74 != 0)
+      {
+        Save_ResetAndCommitTypedRecord(0x15, 0);
+        func_80054E48(3);
+      }
+    }
+    main_pool_pop_state(0x5F62746C);
+  }
+  obj = main_pool_alloc(0x80, 0);
+  if (obj != NULL)
+  {
+    _bzero(obj, 0x80);
+    *((u16 *) (obj + 0x0)) = 0xFFFF;
+    *((u16 *) (obj + 0x2)) = 0;
+    *((u16 *) (obj + 0x4)) = 0;
+    if (flag != 0)
+    {
+      *((u16 *) (obj + 0x4)) |= 1;
+    }
+    if (D_8009DF74 != 0)
+    {
+      D_8009DF74 = 0;
+      *((u16 *) (obj + 0x4)) |= 4;
+    }
+    *((s16 *) (obj + 0x6)) = -1;
+    if (obj) {}
+    *((s8 *) (obj + 0x8)) = -2;
+    *((s8 *) (obj + 0x9)) = -2;
+    if ((D_8009DF74 && D_8009DF74) && D_8009DF74)
+    {
+    }
+    *((s8 *) (obj + 0xA)) = -2;
+    *((s8 *) (obj + 0xB)) = -2;
+    *((u32 *) (obj + 0xC)) = 0;
+    *((s16 *) (obj + 0x10)) = -1;
+    *((u16 *) (obj + 0x12)) = 0;
+    *((s16 *) (obj + 0x14)) = -1;
+    *((u8 *) (obj + 0x1A)) = 0;
+    *((u8 **) (obj + 0x1C)) = main_pool_alloc(0x9DC, 0);
+    if ((*((u8 **) (obj + 0x1C))) != NULL)
+    {
+      _bzero(*((u8 **) (obj + 0x1C)), 0x9DC);
+      *((u8 **) (obj + 0x20)) = main_pool_alloc(0x490, 0);
+      if ((*((u8 **) (obj + 0x20))) != NULL)
+      {
+        _bzero(*((u8 **) (obj + 0x20)), 0x490);
+      }
+    }
+    *((u8 **) (obj + 0x24)) = main_pool_alloc(0x958, 0);
+    if ((*((u8 **) (obj + 0x24))) != NULL)
+    {
+      _bzero(*((u8 **) (obj + 0x24)), 0x958);
+      *((s8 *) ((*((u8 **) (obj + 0x24))) + 0x93C)) = -1;
+      if ((((D_8009DF10 & D_8009DF20) + (D_8009DF10 | D_8009DF20)) + ((D_8009DF30 & D_8009DF40) + (D_8009DF30 | D_8009DF40)))) { }
+      *((s8 *) ((*((u8 **) (obj + 0x24))) + 0x93D)) = -1;
+      *((s8 *) ((*((u8 **) (obj + 0x24))) + 0x93E)) = -1;
+      *((s8 *) ((*((u8 **) (obj + 0x24))) + 0x93F)) = -1;
+    }
+    *((u8 **) (obj + 0x28)) = main_pool_alloc(0x8A0, 0);
+    if ((*((u8 **) (obj + 0x28))) != NULL)
+    {
+      _bzero(*((u8 **) (obj + 0x28)), 0x8A0);
+    }
+    *((u8 **) (obj + 0x2C)) = main_pool_alloc(0x904, 0);
+    if ((*((u8 **) (obj + 0x2C))) != NULL)
+    {
+      _bzero(*((u8 **) (obj + 0x2C)), 0x904);
+    }
+    *((u32 *) (obj + 0x30)) = 0;
+    *((u32 *) (obj + 0x34)) = 0;
+    D_8009DF70 = (s32) obj;
+  }
+  return obj;
+}
 
 extern void *func_80069F20();
 void *BattleScene_ResetParticipantModelFlags(s32 arg0) {
     return func_80069F20(arg0, 0, 0);
 }
 
-extern void *func_80069F20(void); void func_8006A160(void) { func_80069F20(); }
+#ifdef CC_CHECK
+extern void *func_80069F20(); void func_8006A160(void) { func_80069F20(0, 0, 0); }
+#else
+extern void *func_80069F20(); void func_8006A160(void) { func_80069F20(); }
+#endif
 
 extern s32 D_8009DF70;
 extern void _bzero(void *, s32);

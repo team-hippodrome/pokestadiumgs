@@ -252,7 +252,57 @@ void func_862007FC_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86200870.s")
+extern u8 D_8620DF60[];
+extern s32 Geometry_IsPointInTriangleXZ(f32, f32, f32, f32, f32, f32, f32, f32);
+
+
+
+s32 func_86200870(void *arg0) {
+    s32 index;
+    s32 i;
+    s32 *entry;
+    s32 result;
+    u8 *record;
+    u8 *p0;
+    u8 *p1;
+    u8 *p2;
+    f32 c0 = 0.70710677f;
+    f32 c1 = -0.70710677f;
+    f32 a;
+    f32 b;
+
+    result = 0;
+    index = 0;
+    a = *(f32 *)((u8 *)arg0 + 0x50) * c1 + *(f32 *)((u8 *)arg0 + 0x48) * c0;
+    b = *(f32 *)((u8 *)arg0 + 0x50) * c0 + -(*(f32 *)((u8 *)arg0 + 0x48)) * c1;
+    if (a > 0.0f) {
+        index = 1;
+    }
+    if (b > 0.0f) {
+        index += 2;
+    }
+    entry = (s32 *)((u8 *)D_8620DF60 + index * 12);
+    record = (u8 *)entry[1];
+    for (i = 0; i < entry[2]; i++) {
+        p0 = (u8 *)entry[0] + record[0x10] * 12u;
+        p1 = (u8 *)entry[0] + record[0x11] * 12u;
+        p2 = (u8 *)entry[0] + record[0x12] * 12u;
+        if (Geometry_IsPointInTriangleXZ(
+                *(f32 *)((u8 *)arg0 + 0x48),
+                *(f32 *)((u8 *)arg0 + 0x50),
+                *(f32 *)p0,
+                *(f32 *)(p0 + 8),
+                *(f32 *)p1,
+                *(f32 *)(p1 + 8),
+                *(f32 *)p2,
+                *(f32 *)(p2 + 8))) {
+            result = (s32)record;
+            break;
+        }
+        record += 20;
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
@@ -760,7 +810,57 @@ void func_862028F0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86202AC4.s")
+extern void func_80035700(u32);
+extern OSTime osGetTime(void);
+extern void func_8620169C(void);
+extern void func_862028F0(void);
+extern s32 func_80001FF0(void);
+extern void func_87F026E8(void *, void *);
+extern void func_87F0C094(void *, f32, f32, f32, f32, s16, s16);
+extern void SceneModels_CreatePairs(void);
+extern void func_86206304(void);
+extern void func_8620736C(void);
+extern void *D_8620E198;
+// The 0x73BAC field is accessed through this padded struct rather than a raw
+// (u8 *)D_8620E198 + 0x73BAC sum: that keeps the 0x70000 part of the offset in
+// $at for each store instead of $s0 kept live across the calls (diff 215 without it).
+typedef struct {
+    u8 pad0[0x73BAC];
+    s32 unk73BAC;
+} unk_func_86202AC4;
+
+// Feeds the stage geometry lists into the renderer (0x80 models from +0x188,
+// 0x400 from +0xED9C, both stride 0x18C), then sets the scene's per-frame
+// timing (refresh rate based) and the camera pivot. 2708.0f is the named
+// rodata float D_8620E088; it must stay a literal here - a const global lands
+// in .data and an extern has no definition left once this .s is dropped.
+
+
+void func_86202AC4(void) {
+    s32 i;
+    u8 *ptr;
+
+    func_80035700(osGetTime());
+    ptr = (u8 *)D_8620E198 + 0x188;
+    for (i = 0; i < 0x80; i++) {
+        func_87F026E8((u8 *)D_8620E198 + 0x174, ptr);
+        ptr += 0x18C;
+    }
+    ptr = (u8 *)D_8620E198 + 0xED9C;
+    for (i = 0; i < 0x400; i++) {
+        func_87F026E8((u8 *)D_8620E198 + 0xED88, ptr);
+        ptr += 0x18C;
+    }
+    func_86206304();
+    func_8620736C();
+    SceneModels_CreatePairs();
+    *(s32 *)((u8 *)D_8620E198 + 0x48) = 1;
+    *(s32 *)((u8 *)D_8620E198 + 0x73BB0) = 0;
+    func_8620169C();
+    ((unk_func_86202AC4 *)D_8620E198)->unk73BAC = (func_80001FF0() >> 1) * 60;
+    func_862028F0();
+    func_87F0C094((u8 *)D_8620E198 + 0x70, 56.0f, 47.0f, 56.0f, 2708.0f, -0x23E1, 0x2000);
+}
 #endif
 
 #ifdef VERSION_US
@@ -822,7 +922,64 @@ void func_86202C14(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_8620392C.s")
+extern void *D_8620E198;
+
+extern void func_800225C4(s32);
+extern void func_87F0C358(void *, s32, f32, f32, f32, f32, f32, f32);
+
+// Entry in the array at D+0x728BC; the flag word sits at +0xC and consecutive
+// entries are 0x18C apart.
+typedef struct {
+    u8 pad[0xC];
+    s32 flags;
+    u8 pad2[0x17C];
+} Entry18C;
+
+
+
+s32 func_8620392C(void) {
+    s32 i;
+    s32 highest;
+    s32 count;
+    u8 *record;
+    Entry18C *e0, *e1, *e2, *e3;
+
+    // Four counter records at D+0x73BBC, 0x18 apart: flag word at +0x0, count at +0x4.
+    highest = *(s32 *)((u8 *)D_8620E198 + 0x73BC0);
+    record = (u8 *)D_8620E198 + 0x73BBC;
+    for (i = 0; i < 4; i++, record += 0x18) {
+        if (highest < *(s32 *)(record + 4)) {
+            highest = *(s32 *)(record + 4);
+        }
+    }
+    record = (u8 *)D_8620E198 + 0x73BBC;
+    for (i = 0, count = 0; i < 4; i++, record += 0x18) {
+        if (highest == *(s32 *)(record + 4)) {
+            *(s32 *)record |= 0x40000000;
+            count++;
+        }
+    }
+    if (count == 4) {
+        record = (u8 *)D_8620E198 + 0x73BBC;
+        for (i = 0; i < 4; i++, record += 0x18) {
+            *(s32 *)record &= ~0x40000000;
+        }
+    }
+    func_800225C4(0x28);
+    func_87F0C358((u8 *)D_8620E198 + 0x70, 0x3C, -282.8427124f, 0.0f, -282.8427124f,
+                  1400.0f, -45.0f,
+                  *(s16 *)((u8 *)D_8620E198 + 0x8E) * 0.005493247882f);
+    // Set bit 0x10000000 in the flag word of four entries 0x18C apart.
+    e0 = (Entry18C *)((u8 *)*(void **)((u8 *)D_8620E198 + 0x728BC) + 0x0);
+    e0->flags |= 0x10000000;
+    e1 = (Entry18C *)((u8 *)*(void **)((u8 *)D_8620E198 + 0x728BC) + 0x18C);
+    e1->flags |= 0x10000000;
+    e2 = (Entry18C *)((u8 *)*(void **)((u8 *)D_8620E198 + 0x728BC) + 0x318);
+    e2->flags |= 0x10000000;
+    e3 = (Entry18C *)((u8 *)*(void **)((u8 *)D_8620E198 + 0x728BC) + 0x4A4);
+    e3->flags |= 0x10000000;
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US

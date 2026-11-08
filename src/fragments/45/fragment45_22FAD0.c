@@ -2,11 +2,146 @@
 
 
 #ifdef VERSION_US
+// Pointed to by D_8AB112BC in .data; it opens this file's .rodata.
+const char D_8AB11A80[] = "\n";
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0A950.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0B24C.s")
+extern void *D_8AB13F28;
+extern void func_8AB0148C(s16);
+extern s32 func_8AB0B67C(s32);
+extern s32 func_8AB0B74C(s32);
+extern s32 func_8AB0B6E0(s32);
+extern s32 func_8AB0B7CC(s32);
+extern s32 func_8AB0B96C(s32);
+extern s32 func_8AB0BACC(s32);
+extern s32 func_8AB0C414(s32);
+extern s32 func_8AB0C5CC(s32);
+extern s32 func_8AB0C7FC(s32);
+extern s32 func_8AB0C9B8(s32);
+// FAKE: the file also defines `s32 func_8AB0C9B0(void)`, so a `(s32)` prototype
+// conflicts; retail still passes 1 in a0, which a `(void)` prototype cannot express
+// (relocation score 1790 without this line's empty parameter list, 1590 with it).
+extern s32 func_8AB0C9B0();
+extern s32 func_8AB0CA58(s32);
+extern s32 func_8AB0CD00(s32);
+extern s32 func_8AB0D08C(s32);
+extern s32 func_8AB0D20C(s32);
+extern s32 func_800279C4(s32);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0B3F4.s")
+
+
+s32 func_8AB0B24C(s32 arg0) {
+    s32 index;
+
+    switch (arg0) {
+    case 46: arg0 = func_8AB0B67C(1); break;
+    case 47: arg0 = func_8AB0B74C(1); break;
+    case 48: arg0 = func_8AB0B6E0(1); break;
+    case 49: arg0 = func_8AB0B7CC(1); break;
+    case 50: arg0 = func_8AB0B96C(1); break;
+    case 51: arg0 = func_8AB0BACC(1); break;
+    case 52: arg0 = func_8AB0C414(1); break;
+    case 53: arg0 = func_8AB0C5CC(1); break;
+    case 54: arg0 = func_8AB0C7FC(1); break;
+    case 56: arg0 = func_8AB0C9B8(1); break;
+    case 55: arg0 = func_8AB0C9B0(1); break;
+    case 57: arg0 = func_8AB0CA58(1); break;
+    case 58: arg0 = func_8AB0CD00(1); break;
+    case 59: arg0 = func_8AB0D08C(1); break;
+    case 60: arg0 = func_8AB0D20C(1); break;
+    }
+    if (arg0 != 46) {
+        if ((arg0 == 51) || (arg0 == 52) || (arg0 == 53)) {
+            if (((*(u16 *)((u8 *)D_8AB13F28 + 8)) & 0x1000) != 0) {
+                func_800279C4(0xCF07);
+                arg0 = func_8AB0CD00(0);
+            }
+        }
+    }
+    for (index = 0; index < 4; index++) {
+        func_8AB0148C(index);
+    }
+    return arg0;
+}
+
+extern void *D_8AB16CF0;
+extern s32 func_8AB0B67C(s32);
+extern s32 func_8AB0B74C(s32);
+extern s32 func_8AB0B6E0(s32);
+extern s32 func_8AB0B7CC(s32);
+extern s32 func_8AB0B96C(s32);
+extern s32 func_8AB0BACC(s32);
+extern s32 func_8AB0C414(s32);
+extern s32 func_8AB0C5CC(s32);
+extern s32 func_8AB0C7FC(s32);
+extern s32 func_8AB0C9B8(s32);
+// Unprototyped on purpose: retail's call site passes 2 to a callee that ignores it.
+// The definition further down this file (matched, untouchable) is s32 func_8AB0C9B0(void).
+// A (s32) prototype here fails the host check with "conflicting types"; the old-style ()
+// declaration is compatible with both and emits the li a0,2 delay slot. Diff score
+// without it (call spelled func_8AB0C9B0()): 1700.
+extern s32 func_8AB0C9B0();
+extern s32 func_8AB0CA58(s32);
+extern s32 func_8AB0CD00(s32);
+extern s32 func_8AB0D08C(s32);
+extern s32 func_8AB0D20C(s32);
+
+
+
+void func_8AB0B3F4(s32 arg0) {
+    func_800503A4((s32) D_8AB16CF0);
+    switch (arg0) {
+    case 46:
+        func_8AB0B67C(2);
+        return;
+    case 47:
+        func_8AB0B74C(2);
+        return;
+    case 48:
+        func_8AB0B6E0(2);
+        return;
+    case 49:
+        func_8AB0B7CC(2);
+        return;
+    case 50:
+        func_8AB0B96C(2);
+        return;
+    case 51:
+        func_8AB0BACC(2);
+        return;
+    case 52:
+        func_8AB0C414(2);
+        return;
+    case 53:
+        func_8AB0C5CC(2);
+        return;
+    case 54:
+        func_8AB0C7FC(2);
+        return;
+    // Cases 56 and 55 are deliberately out of order: retail's jump table
+    // (jtbl_8AB11AC0) has idx 9 (case 55) -> 0x8AB0B4D4 (func_8AB0C9B0) and
+    // idx 10 (case 56) -> 0x8AB0B4C4 (func_8AB0C9B8). IDO emits case bodies in
+    // source order, so case 56 must be written first or the two table slots swap.
+    case 56:
+        func_8AB0C9B8(2);
+        return;
+    case 55:
+        func_8AB0C9B0(2);
+        return;
+    case 57:
+        func_8AB0CA58(2);
+        return;
+    case 58:
+        func_8AB0CD00(2);
+        return;
+    case 59:
+        func_8AB0D08C(2);
+        return;
+    case 60:
+        func_8AB0D20C(2);
+        return;
+    }
+}
 
 extern s32 func_8AB0B67C(s32);
 s32 func_8AB0B52C(void) {
@@ -275,7 +410,133 @@ void func_8AB0BF70(u8 *arg0) {
     *(s16 *)(arg0 + 0x10) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0BF80.s")
+extern u8 D_8AB12CB0[];
+extern s16 D_8AB1269A;
+extern void *D_8AB16F48[];
+extern u8 *D_8AB12668[];
+extern s16 D_8AB16F86;
+extern s16 D_8AB16F88;
+extern s32 D_8AB112A0;
+extern void *D_80087200;
+extern void *D_80087204;
+extern void *D_80087208;
+extern void *D_8008720C;
+extern void TextRow_SetOrangeState(s16);
+extern void func_8AB01414(s16);
+extern void func_8AB01454(s16);
+extern void func_8AB03DFC(s16, s16);
+extern void func_8AB0BF70(u8 *);
+extern void func_8AB00B98(u8 *, u32);
+extern void TextHighlight_AnimateScales(void);
+extern void func_8AB04038(void);
+
+
+
+void func_8AB0BF80(void) {
+    s32 i;
+    u16 buttons;
+    u8 *row;
+    u8 *panel;
+
+    D_8AB16F86 = 0;
+    D_8AB16F88 = 0;
+    for (i = 0, row = D_8AB12CB0; i < 4; i++) {
+        if (*(s16 *)(row + 4) == 0 && *(s32 *)(row + 12) == 0 && *(s16 *)row != 0) {
+            D_8AB16F88++;
+            switch (i) {
+            case 0:
+                buttons = *(u16 *)((u8 *)D_80087200 + 8);
+                break;
+            case 1:
+                buttons = *(u16 *)((u8 *)D_80087204 + 8);
+                break;
+            case 2:
+                buttons = *(u16 *)((u8 *)D_80087208 + 8);
+                break;
+            case 3:
+                buttons = *(u16 *)((u8 *)D_8008720C + 8);
+                break;
+            }
+            if ((*(u16 *)((u8 *)D_8AB16F48[0] + 2) & 2) == 0 && (buttons & 8)) {
+                if (D_8AB1269A == 0) {
+                    TextRow_SetOrangeState(i);
+                    func_8AB01414(i);
+                } else {
+                    func_8AB03DFC(i, 0);
+                    func_8AB01454(i);
+                    func_8AB0BF70(row);
+                }
+                panel = (u8 *)D_8AB16F48[0];
+                D_8AB16F86 = 1;
+                // Each mask store below records a source line far beneath the
+                // D_8AB16F86 store that precedes it; as1 then hoists the mask's
+                // `li` above the flag store, which is retail's addiu/sh/sh order.
+#line 314
+                *(s16 *)(row + 6) = 8;
+#line 316
+                *(u16 *)(panel + 2) |= 2;
+                *(s16 *)((u8 *)D_8AB16F48[0] + 0x26) = i + 6;
+                func_8AB00B98(D_8AB12668[0], 0xFFFF00FFU);
+            } else if ((*(u16 *)((u8 *)D_8AB16F48[1] + 2) & 2) == 0 && (buttons & 1)) {
+                if (D_8AB1269A == 1) {
+                    TextRow_SetOrangeState(i);
+                    func_8AB01414(i);
+                } else {
+                    func_8AB03DFC(i, 1);
+                    func_8AB01454(i);
+                    func_8AB0BF70(row);
+                }
+                panel = (u8 *)D_8AB16F48[1];
+                D_8AB16F86 = 1;
+                *(s16 *)(row + 6) = 1;
+                *(u16 *)(panel + 2) |= 2;
+                *(s16 *)((u8 *)D_8AB16F48[1] + 0x26) = i + 6;
+                func_8AB00B98(D_8AB12668[1], 0xFFFF00FFU);
+            } else if ((*(u16 *)((u8 *)D_8AB16F48[2] + 2) & 2) == 0 && (buttons & 4)) {
+                if (D_8AB1269A == 2) {
+                    TextRow_SetOrangeState(i);
+                    func_8AB01414(i);
+                } else {
+                    func_8AB03DFC(i, 2);
+                    func_8AB01454(i);
+                    func_8AB0BF70(row);
+                }
+                panel = (u8 *)D_8AB16F48[2];
+                D_8AB16F86 = 1;
+#line 100
+                *(s16 *)(row + 6) = 4;
+#line 350
+                *(u16 *)(panel + 2) |= 2;
+                *(s16 *)((u8 *)D_8AB16F48[2] + 0x26) = i + 6;
+                func_8AB00B98(D_8AB12668[2], 0xFFFF00FFU);
+            } else if ((*(u16 *)((u8 *)D_8AB16F48[3] + 2) & 2) == 0 && (buttons & 2)) {
+                if (D_8AB1269A == 3) {
+                    TextRow_SetOrangeState(i);
+                    func_8AB01414(i);
+                } else {
+                    func_8AB03DFC(i, 3);
+                    func_8AB01454(i);
+                    func_8AB0BF70(row);
+                }
+                panel = (u8 *)D_8AB16F48[3];
+                D_8AB16F86 = 1;
+#line 100
+                *(s16 *)(row + 6) = 2;
+#line 367
+                *(u16 *)(panel + 2) |= 2;
+                *(s16 *)((u8 *)D_8AB16F48[3] + 0x26) = i + 6;
+                func_8AB00B98(D_8AB12668[3], 0xFFFF00FFU);
+            }
+            if (*(s32 *)(row + 12) == 0 && *(s16 *)(row + 2) >= 0x8D) {
+                D_8AB112A0 = 1;
+                *(s32 *)(row + 8) = 1;
+            }
+        }
+        row += 148;
+    }
+    TextHighlight_AnimateScales();
+    func_8AB04038();
+}
 
 extern void func_8AB03394(void);
 extern void TextChoice_ShuffleAndRefresh(void);
@@ -524,7 +785,7 @@ s32 func_8AB0C9B8(s32 arg0) {
 }
 
 /* mkdraft:func_8AB0CA58 begin */
-extern void *D_8AB16F48;
+extern void *D_8AB16F48[];
 extern void *D_8AB16F58;
 extern void *D_8AB1267C;
 extern void *D_8AB12680;
@@ -645,7 +906,7 @@ extern s16 D_8AB12E70;
 extern s32 D_8AB12E74;
 extern s16 D_8AB12E7C;
 extern void *D_8AB16E3C;
-extern void *D_8AB16F48;
+extern void *D_8AB16F48[];
 extern void *D_8AB16F4C;
 extern void *D_8AB16F50;
 extern void *D_8AB16F54;

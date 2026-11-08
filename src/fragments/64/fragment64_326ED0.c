@@ -260,5 +260,54 @@ void func_87F05CE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_87F05954(arg0, arg1 - (result * 7) + 7, arg2, (s32)temp);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F05D34.s")
+extern u8 D_87F11530[];
+extern u8 D_87F11534[];
+
+// Draws arg3 as decimal text with arg4 fractional digits. The fraction is
+// reduced to one integer remainder, written right to left into buffer, then
+// func_87F056E0 overwrites it with the integer part and returns that part's
+// character count; each character occupies seven pixels left of arg1.
+// buffer is passed to the drawer through buffer_ptr and the two digit walks
+// keep separate counters so the buffer address is rematerialized per call and
+// each walk gets its own induction register.
+
+
+void func_87F05D34(s32 arg0, s32 arg1, s32 arg2, f32 arg3, s32 arg4) {
+    u8 *buffer_ptr;
+    s32 digits;
+    s32 exponent;
+    s32 index;
+    s32 count;
+    s32 remainder;
+    s32 sign;
+    u8 buffer[64];
+
+    sign = 0;
+    if (arg3 < 0.0f) {
+        arg3 = -arg3;
+        sign = 1;
+    } else {
+        sign = 0;
+    }
+    exponent = 1;
+    for (digits = arg4; digits > 0; digits--) {
+        exponent *= 10;
+    }
+    buffer_ptr = buffer;
+    if (arg4 > 0) {
+        remainder = (s32)(exponent * arg3) % exponent;
+        for (index = arg4 - 1; index >= 0; index--) {
+            buffer[index] = remainder % 10 + '0';
+            remainder /= 10;
+        }
+        buffer[arg4] = 0;
+        func_87F05954(arg0, arg1 + 14, arg2, (s32)buffer_ptr);
+        func_87F05954(arg0, arg1 + 7, arg2, (s32)D_87F11530);
+    }
+    count = func_87F056E0(buffer_ptr, (s32)(exponent * arg3) / exponent);
+    func_87F05954(arg0, arg1 - count * 7 + 7, arg2, (s32)buffer_ptr);
+    if (sign != 0) {
+        func_87F05954(arg0, arg1 - count * 7, arg2, (s32)D_87F11534);
+    }
+}
 #endif

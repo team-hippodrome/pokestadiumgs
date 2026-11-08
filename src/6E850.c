@@ -115,7 +115,113 @@ s16 func_8006DE9C(s16 *arg0, s32 arg1)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006DEBC.s")
+extern u32 Memmap_GetSegmentVaddr(u32);
+extern void func_8006EA18(u8 *model, u8 *transforms, u8 *out);
+extern s16 func_8006DDE8(s16 *arg0, s32 arg1);
+extern void guMtxXFMF(f32 (*arg0)[4], f32, f32, f32, f32 *, f32 *, f32 *);
+
+
+
+void func_8006DEBC(u8 *arg0, u8 *arg1, f32 (*arg2)[4]) {
+    s16 *temp_s2_2;
+    u8 *temp_s6;
+    u8 *temp_v0;
+    u8 *var_s1;
+    u8 *var_v1;
+    s32 var_s0;
+    s16 sp7A;
+    s16 temp_v0_2;
+    s16 var_a1;
+    u16 temp_s4;
+    s32 var_s3;
+    s32 var_s3_2;
+    u8 *temp_s0;
+    u8 *temp_s2;
+    f32 sp64;
+    f32 sp60;
+    f32 sp5C;
+    u8 *temp_p;
+
+    temp_v0 = (u8 *)Memmap_GetSegmentVaddr(*(u32 *)(arg0 + 4));
+    temp_s6 = arg0 + 0x40;
+    var_s1 = temp_s6;
+    var_v1 = (u8 *)Memmap_GetSegmentVaddr(*(u32 *)(temp_v0 + 0x18));
+    temp_s4 = *(u16 *)(temp_v0 + 4);
+    var_s3 = 0;
+    if ((s32) temp_s4 > 0) {
+        do {
+            temp_s2 = var_s1 + 0x14;
+            temp_s0 = temp_s2;
+            sp64 = (f32) *(s16 *)(var_v1 + 0);
+            sp60 = (f32) *(s16 *)(var_v1 + 2);
+            sp5C = (f32) *(s16 *)(var_v1 + 4);
+            if (arg2 != 0) {
+                guMtxXFMF(arg2, sp64, sp60, sp5C, &sp64, &sp60, &sp5C);
+            }
+            var_s3 += 1;
+            var_s1 += 0x50;
+            *(f32 *)(temp_s0 + 0) = sp64;
+            var_v1 += 0x10;
+            *(f32 *)(temp_s0 + 4) = sp60;
+            *(f32 *)(temp_s0 + 8) = sp5C;
+            *(f32 *)(temp_s0 + 0x24) = (f32) *(s8 *)(var_v1 - 4);
+            *(f32 *)(temp_s0 + 0x28) = (f32) *(s8 *)(var_v1 - 3);
+            *(f32 *)(temp_s0 + 0x2C) = (f32) *(s8 *)(var_v1 - 2);
+            *(s16 *)(temp_s0 + 0x30) = *(s16 *)(var_v1 - 8);
+            *(s16 *)(temp_s0 + 0x32) = *(s16 *)(var_v1 - 6);
+            *(u8 *)(temp_s0 + 0x34) = *(u8 *)(var_v1 - 1);
+            *(f32 *)(temp_s0 + 0x18) = 0.0f;
+            *(f32 *)(temp_s0 + 0x1C) = 0.0f;
+            *(f32 *)(temp_s2 + 0x20) = 0.0f;
+            *(s16 *)(temp_s2 + 0x36) = 0;
+            *(s16 *)(temp_s2 + 0x38) = 0;
+        } while (var_s3 != temp_s4);
+        var_s1 = temp_s6;
+    }
+    func_8006EA18(temp_v0, arg1, temp_s6);
+    var_s3_2 = 0;
+    var_s0 = 0;
+    do {
+        temp_s2_2 = (s16 *)Memmap_GetSegmentVaddr(*(u32 *)(temp_v0 + 0x10));
+        if ((s32) temp_s4 > 0) {
+            do {
+                if (var_s3_2 == (func_8006DDE8(temp_s2_2, var_s0) & 0xFFFF)) {
+                    *(s16 *)var_s1 = var_s0;
+                    var_s1 += 0x50;
+                }
+                var_s0 += 1;
+            } while (var_s0 != temp_s4);
+            var_s0 = 0;
+        }
+        var_s3_2 += 1;
+    } while (var_s3_2 != 0x10);
+    var_s1 = temp_s6;
+    sp7A = 0;
+    var_a1 = sp7A;
+    var_v1 = (u8 *)Memmap_GetSegmentVaddr(*(u32 *)(temp_v0 + 0xC));
+    if ((s32) temp_s4 > 0) {
+        do {
+            *(s16 *)(var_s1 + 4) = var_a1;
+loop_16:
+            temp_v0_2 = *(s16 *)var_v1;
+            var_v1 += 2;
+            var_a1 += 1;
+            if (temp_v0_2 != -1) {
+                goto loop_16;
+            }
+            var_s0 += 1;
+            var_s1 += 0x50;
+        } while (var_s0 != temp_s4);
+        var_s1 = temp_s6;
+        var_s0 = 0;
+    }
+    var_s1 = temp_s6;
+    for (var_s0 = 0; var_s0 < (s32) temp_s4; var_s0++) {
+        temp_p = (u8 *)((*(s16 *)var_s1 * 0x50) + temp_s6);
+        *(s16 *)(var_s1 + 2) = *(s16 *)(temp_p + 4);
+        var_s1 += 0x50;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -133,7 +239,7 @@ typedef struct unk_func_8006E1C8 {
 extern u32 Memmap_GetSegmentVaddr(u32);
 extern VertexNormalCounter *D_80128C70;
 extern Mtx D_80129038;
-extern void func_8006DEBC(void *, void *, void *);
+void func_8006DEBC(u8 *arg0, u8 *arg1, f32 (*arg2)[4]);
 extern void func_8006F23C(void *);
 void func_8006E1C8(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4) {
     f32 scale;

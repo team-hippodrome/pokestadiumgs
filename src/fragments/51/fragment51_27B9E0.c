@@ -88,7 +88,63 @@ void func_86305E20(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86305E70.s")
+extern void *D_87F119DC;
+extern u8 D_863071F0[];
+extern s32 D_863072B4;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    u8 unk08;
+    u8 unk09;
+    char unk0A[2];
+} Unk_86307254;
+
+extern Unk_86307254 D_86307254[];
+extern s32 func_86304CA8(void *, void *, void *, void *, void *, void *, void *);
+
+
+
+s32 func_86305E70(arg0)
+u8 *arg0;
+{
+    s32 pad0; // FAKE: never referenced; reserves the 1-word slot at 0x9C (frame 0xA0); diff score 100 without both pads.
+    f32 rel[2];
+    Unk_86307254 *entry;
+    u8 *enemy;
+    u8 *p1;
+    u8 *p2;
+    s32 i;
+    s32 result;
+    f32 dir[2];
+    f32 pad1[5]; // FAKE: never referenced; reserves the 5-word slot at 0x60..0x70 between dir and out.
+    f32 out[2];
+
+    enemy = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    rel[0] = *(f32 *)((u8 *)D_87F119DC + 0x48) - *(f32 *)enemy;
+    rel[1] = *(f32 *)((u8 *)D_87F119DC + 0x4C) - *(f32 *)(enemy + 4);
+    result = 1;
+    entry = D_86307254;
+    i = 0;
+    if (D_863072B4 > 0) {
+        do {
+            p1 = D_863071F0 + entry->unk08 * 8;
+            p2 = D_863071F0 + entry->unk09 * 8;
+            dir[0] = *(f32 *)p2 - *(f32 *)p1;
+            dir[1] = *(f32 *)(p2 + 4) - *(f32 *)(p1 + 4);
+            if (func_86304CA8(arg0, rel, p1, dir, entry, &out[0], &out[1]) != 0) {
+                func_86305C48(arg0, entry, out[1]);
+                result = 0;
+                func_86305C78(arg0, entry);
+                func_86305D88(arg0);
+                func_86305E20(arg0);
+            }
+            i++;
+            entry = (Unk_86307254 *)((u8 *)entry + 0xC);
+        } while (i < D_863072B4);
+    }
+    return result;
+}
 
 /* mkdraft:func_86305FD8 begin */
 typedef struct unk_func_86304ACC {
@@ -159,7 +215,11 @@ s32 func_86305E70();
 extern void func_86305FD8(s32);
 
 void func_863060CC(s32 arg0) {
+#ifdef CC_CHECK
+    if (func_86305E70(0) != 0) {
+#else
     if (func_86305E70() != 0) {
+#endif
         func_86305FD8(arg0);
     }
 }
@@ -342,7 +402,61 @@ void func_86306690(u8 *arg0, s8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86306710.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86306AC0.s")
+extern u8 *D_863075D8;
+extern f32 D_863075AC;
+extern f32 D_863075B0;
+extern f32 D_863075B4;
+extern void func_87D0059C(void *, void *);
+
+
+
+void func_86306AC0(void **arg0) {
+    f32 k;
+    f32 dy;
+    f32 dx;
+    f32 scale;
+    f32 kb;
+    u8 *object;
+
+    if (arg0) {
+    }
+    object = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    func_86306638(object);
+    // FAKE: dead empty if on `scale` before its definition; emits no code but makes
+    // IDO colour the scale copy f16 and k f18 (score without: 40).
+    if (scale > 0.0f) {
+    }
+    k = D_863075AC;
+    // FAKE: dead reload, folded into the load of object+0x18 below; emits no code but
+    // colours the dx reload temp f0 and kb f2 (score without: 30).
+    dx = *(f32 *)((u8 *)object + 0x18);
+    scale = sqrtf(*(f32 *)((u8 *)D_87F119DC + 0x14) * *(f32 *)((u8 *)D_87F119DC + 0x14) +
+                 *(f32 *)((u8 *)D_87F119DC + 0x10) * *(f32 *)((u8 *)D_87F119DC + 0x10)) * k;
+    if (scale > 0.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x10) /= scale;
+        *(f32 *)((u8 *)D_87F119DC + 0x14) /= scale;
+    }
+    kb = D_863075B0;
+    *(f32 *)(object + 0x18) *= *(f32 *)(D_863075D8 + 0x8F38) * k;
+    dx = *(f32 *)((u8 *)object + 0x18) * *(f32 *)((u8 *)D_87F119DC + 0x10);
+    dy = *(f32 *)((u8 *)object + 0x18) * *(f32 *)((u8 *)D_87F119DC + 0x14);
+    *(f32 *)(object + 0x10) *= kb;
+    *(f32 *)(object + 0x14) *= kb;
+    *(f32 *)((u8 *)D_87F119DC + 0x10) += *(f32 *)((u8 *)object + 0x10);
+    *(f32 *)((u8 *)D_87F119DC + 0x14) += *(f32 *)((u8 *)object + 0x14);
+    func_87D0059C((u8 *)D_87F119DC + 0x10, (u8 *)D_87F119DC + 0x14);
+    *(f32 *)((u8 *)D_87F119DC + 0x10) *= scale;
+    *(f32 *)((u8 *)D_87F119DC + 0x14) *= scale;
+    *(s16 *)((u8 *)D_87F119DC + 0x46) +=
+        (*(f32 *)((u8 *)D_87F119DC + 0x10) * *(f32 *)((u8 *)object + 0x14) -
+         *(f32 *)((u8 *)object + 0x10) * *(f32 *)((u8 *)D_87F119DC + 0x14)) *
+        D_863075B4;
+    *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u8 *)D_87F119DC + 0x10) + dx;
+    *(f32 *)((u8 *)D_87F119DC + 0x4C) += *(f32 *)((u8 *)D_87F119DC + 0x14) + dy;
+    func_863060CC((s32)D_87F119DC);
+    func_863063C0(object);
+    func_8630665C(object);
+}
 
 extern void func_863060FC(void **);
 extern void func_86306710(void **);

@@ -96,7 +96,55 @@ void Minigame_MapControllerButtons(u8 *arg0, u8 *arg1) {
     if (arg0[0x2182] & 8) arg1[0xE] |= 8;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/72C30/func_80072264.s")
+
+
+void func_80072264(u8 *arg0, u8 *arg1, s32 arg2) {
+    s32 mode;
+    s32 i;
+
+    *(s16 *)(arg1 + 0) = 8;
+    if (((u32)*(u16 *)(arg0 + 0x21A6) >> 15) != 0 &&
+        ((u32)*(u16 *)(arg0 + 0x21BE) >> 15) != 0 &&
+        ((u32)*(u16 *)(arg0 + 0x21D6) >> 15) != 0 &&
+        ((u32)*(u16 *)(arg0 + 0x21EE) >> 15) != 0) {
+        arg1[2] = 2;
+    } else {
+        mode = *(s8 *)(arg0 + 0x2181);
+        switch (mode) {
+            case 0:
+                arg1[2] = 1;
+                break;
+            case 1:
+                arg1[2] = 2;
+                break;
+            case 2:
+            case 3:
+                arg1[2] = 3;
+                break;
+        }
+    }
+    arg1[0xE] = 0;
+    i = 0;
+    do {
+        mode = 1 << (i + 4);
+        if (((u32)*(u16 *)((arg0 + 0x21A6) + (24 * i)) >> 15) != 0 || arg2 == 0) {
+            if (arg0[0x2182] & (1 << i)) {
+                arg1[0xE] |= 1 << i;
+            } else {
+                arg1[0xE] |= mode;
+            }
+        }
+        if (((u32)*(u16 *)((arg0 + 0x21BE) + (24 * i)) >> 15) != 0 || arg2 == 0) {
+            if (arg0[0x2182] & (1 << (i + 1))) {
+                arg1[0xE] |= 1 << (i + 1);
+            } else {
+                arg1[0xE] |= 1 << (i + 5);
+            }
+        }
+        i += 2;
+    } while (i != 4);
+    arg1[0x14] = *(s8 *)(arg0 + 0x2183);
+}
 
 extern u8 func_87F097B0;
 extern u8 D_801291E0;

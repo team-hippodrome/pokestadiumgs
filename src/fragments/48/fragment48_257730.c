@@ -131,7 +131,64 @@ s32 func_87C019DC(void *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_257730/func_87C01A90.s")
+extern s32 func_87C01FE0(void **arg0, s32 arg1);
+extern s32 func_87C02010(void **arg0, s32 arg1);
+extern s32 func_87C02040(void **arg0, s32 arg1);
+
+
+void func_87C01A90(u8 *arg0) {
+    s32 value;
+    s32 frames;
+    u8 *entry;
+    f32 step;
+    f32 limit;
+
+    entry = arg0;
+    if (*(s16 *)(entry + 0x14) < 0) {
+        *(s32 *)(entry + 0x1C) = 1;
+        return;
+    }
+    if (*(s32 *)(entry + 0x1C) == 0) {
+        step = func_87C018C8();
+        *(f32 *)(entry + 8) += *(f32 *)(entry + 0xC) * step * 0.5f;
+    }
+    if (*(s32 *)(entry + 0x20) != 0) {
+        frames = func_87C02010((void **)entry, (*(unk_func_87C01910 **)(entry + 0x24))[*(s16 *)(entry + 0x14)].unk_00);
+        if (*(s32 *)(entry + 0x1C) == 0) {
+            step = func_87C018C8();
+            *(f32 *)(entry + 0x10) += *(f32 *)(entry + 0xC) * step * 0.5f;
+        }
+        limit = *(f32 *)(entry + 0x10);
+        if ((f32)frames <= limit) {
+            *(f32 *)(entry + 0x10) = limit - (f32)frames;
+            func_87C01910(entry);
+        }
+    }
+    *(s32 *)(entry + 0x1C) = 0;
+    value = func_87C01FE0((void **)entry, *(s16 *)(entry + 0x14));
+    if ((f32)value <= *(f32 *)(entry + 8)) {
+        *(s32 *)(entry + 0x18) = 1;
+        if (func_87C02040((void **)entry, *(s16 *)(entry + 0x14)) != 0) {
+            if (*(s32 *)(entry + 4) != 0) {
+                if (func_87C019DC(entry) == 1) {
+                    *(f32 *)(entry + 8) -= (f32)value;
+                    func_87C019B0(entry, *(s16 *)(entry + 0x14));
+                }
+            } else {
+                *(f32 *)(entry + 8) -= (f32)value;
+                func_87C019B0(entry, *(s16 *)(entry + 0x14));
+            }
+        } else if (*(s32 *)(entry + 4) != 0) {
+            if (func_87C019DC(entry) == 0) {
+                *(f32 *)(entry + 8) = (f32)(func_87C01FE0((void **)entry, *(s16 *)(entry + 0x14)) - 1);
+                *(s32 *)(entry + 0x1C) = 1;
+            }
+        } else {
+            *(f32 *)(entry + 8) = (f32)(func_87C01FE0((void **)entry, *(s16 *)(entry + 0x14)) - 1);
+            *(s32 *)(entry + 0x1C) = 1;
+        }
+    }
+}
 
 /* mkdraft:func_87C01CBC begin */
 extern void func_8003F210(void *, s32); /* alias of ModelAnim_SetAnimation */

@@ -60,7 +60,37 @@ void func_8290E2A8(void)
   *((s16 *) (((u8 *) (&D_8291BC10)) + 2)) = 0xE;
   *((f32 *) (((u8 *) (&D_8291BC08)) + 4)) = 0.0f;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34AB40/func_8290E2FC.s")
+// One table entry: the x, y, z of a single control point. func_8290E2FC blends four
+// consecutive entries, so the 12-byte size is what scales the arg2 index.
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} SplineControlPoint;
+
+extern SplineControlPoint D_829168AC[];
+extern SplineControlPoint D_829169A8[];
+
+// Blends four consecutive control points of the table chosen by arg3 with the basis
+// weights arg0 that func_8290E438 filled from func_8290E040 / func_8290E0FC /
+// func_8290E1D8, writing the x, y, z of the evaluated spline point to arg1. Then
+// advances the segment phase D_8291BC08[arg3] by one frame of the segment duration
+// held in the halfword array D_8291BC00.
+
+
+void func_8290E2FC(f32 *arg0, SplineControlPoint *arg1, s16 arg2, s32 arg3) {
+    SplineControlPoint *table;
+
+    if (arg3 == 0) {
+        table = D_829168AC;
+    } else {
+        table = D_829169A8;
+    }
+    arg1->x = arg0[0] * table[arg2].x + arg0[1] * table[arg2 + 1].x + arg0[2] * table[arg2 + 2].x + arg0[3] * table[arg2 + 3].x;
+    arg1->y = arg0[0] * table[arg2].y + arg0[1] * table[arg2 + 1].y + arg0[2] * table[arg2 + 2].y + arg0[3] * table[arg2 + 3].y;
+    arg1->z = arg0[0] * table[arg2].z + arg0[1] * table[arg2 + 1].z + arg0[2] * table[arg2 + 2].z + arg0[3] * table[arg2 + 3].z;
+    D_8291BC08[arg3] = D_8291BC08[arg3] + 1.0f / (f32) ((s16 *) &D_8291BC00)[arg3];
+}
 
 s32 func_8290E438(s32 arg0, s32 arg1) {
     f32 weights[4]; // Cubic B-spline basis weights filled by func_8290E0FC, func_8290E1D8 or func_8290E040.

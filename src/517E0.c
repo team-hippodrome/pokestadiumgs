@@ -1220,7 +1220,118 @@ void func_80053AC8(u16 *a0,u16 *a1){a0[0]=a1[0];a0[1]=a1[1];a0[2]=a1[2];func_800
 
 void func_80053B04(u16 *a0,u16 *a1){a0[0]=a1[0];a0[1]=a1[1];func_80060C08((s8 *)(a0+2),(u8 *)(a1+2));}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/517E0/func_80053B38.s")
+s32 func_80050E88(s32 arg0, s32 arg1, s32 arg2);
+void *func_80051028(s32 arg0, s32 arg1);
+void *func_800510CC(s32 arg0);
+void *func_80051208(s32 arg0);
+void *func_80051274(s32 arg0);
+void *func_800512E0(s32 arg0);
+void *func_8005134C(s32 arg0);
+void *func_800513B8(s32 arg0);
+void *func_80051424(s32 arg0);
+void *func_80051490(s32 arg0);
+void *func_800514FC(s32 arg0);
+void *func_80051568(s32 arg0);
+extern void _bcopy(void *, void *, s32);
+void func_80051830(void *arg0, void *arg1);
+void func_80051890(u8 *arg0, u8 *arg1);
+extern s32 D_800972C0;
+u8 func_8005370C(s32 arg0, s32 arg1);
+void func_80053A50(u8 *arg0, u8 *arg1);
+void func_80053AC8(u16 *a0, u16 *a1);
+void func_80053B04(u16 *a0, u16 *a1);
+
+// One slot of the 0x20C-byte save record (func_80050DE4(0x12)) that func_80051028
+// returns: the slot array starts at record+0x10 and case 18 copies slot arg2 (stride 2)
+// into arg3. func_80053F04 writes a slot back with two separate `sb`, so the slot is a
+// byte pair rather than a u16.
+typedef struct {
+    u8 unk_0;
+    u8 unk_1;
+} unk_func_80051028_Entry;
+
+
+
+s32 func_80053B38(s32 arg0, s32 arg1, s32 arg2, u8 *arg3)
+{
+#ifndef CC_CHECK
+  // func_80053A30 is defined above as `void func_80053A30(void)`; cases 22 and 23 pass
+  // it two arguments that its body ignores. IDO accepts the extra arguments through
+  // this unprototyped declaration, but the GCC-based cc-check keeps the prototype
+  // from the definition, so its branch below calls through a cast instead.
+  void func_80053A30();
+#endif
+  s32 result = 0;
+  if (arg2 < func_8005370C(arg0, arg1))
+  {
+    switch ((u32) arg0)
+    {
+      case 16:
+        func_80051830(arg3, (((u8 *) func_80050E88(0, D_800972C0, arg1)) + (arg2 * 0x3C)) + 0x10);
+        break;
+
+      case 17:
+        func_80051830(arg3, (((u8 *) func_80050F60(0, arg1)) + (arg2 * 0x3C)) + 0x20);
+        break;
+
+      case 18:
+        *(unk_func_80051028_Entry *) arg3 = *(unk_func_80051028_Entry *) (((u8 *) func_80051028(0, arg1)) + (arg2 * 2) + 0x10);
+        break;
+
+      case 19:
+        *((u8 *) arg3) = *((((u8 *) func_800510CC(0)) + arg2) + 2);
+        break;
+
+      case 22:
+#ifdef CC_CHECK
+        ((void (*)()) func_80053A30)(arg3, (((u8 *) func_80051208(0)) + (arg2 * 0x2F)) + 2);
+#else
+        func_80053A30(arg3, (((u8 *) func_80051208(0)) + (arg2 * 0x2F)) + 2);
+#endif
+        break;
+
+      case 23:
+#ifdef CC_CHECK
+        ((void (*)()) func_80053A30)(arg3, (((u8 *) func_80051274(0)) + (arg2 * 0x2F)) + 2);
+#else
+        func_80053A30(arg3, (((u8 *) func_80051274(0)) + (arg2 * 0x2F)) + 2);
+#endif
+        break;
+
+      case 24:
+        func_80051890(arg3, (((u8 *) func_800512E0(0)) + (arg2 * 0x48)) + 4);
+        break;
+
+      case 25:
+        _bcopy((((u8 *) func_8005134C(0)) + (arg2 * 0x480)) + 8, arg3, 0x480);
+        break;
+
+      case 26:
+        _bcopy((((u8 *) func_800513B8(0)) + (arg2 * 0x480)) + 8, arg3, 0x480);
+        break;
+
+      case 27:
+        func_80053A50(arg3, (((u8 *) func_80051424(0)) + (arg2 * 0x178)) + 4);
+        break;
+
+      case 28:
+        func_80053AC8(arg3, (u16 *) ((((u8 *) func_80051490(0)) + (arg2 * 0x14)) + 2));
+        break;
+
+      case 29:
+        func_80053B04(arg3, (u16 *) ((((u8 *) func_800514FC(0)) + (arg2 * 0x10)) + 2));
+        break;
+
+      case 30:
+        *((u8 *) arg3) = *((((u8 *) func_80051568(0)) + arg2) + 4);
+        break;
+
+    }
+
+    result = 1;
+  }
+  return result;
+}
 
 extern void func_8006276C(s32,s32); void func_80053DDC(s32 a0,s32 a1){func_8006276C(a1,a0);}
 
@@ -1346,7 +1457,7 @@ void func_80054248(Func80054248Pair *arg0) {
     }
 }
 
-extern void func_80053B38(s32, s32, s32, u8 *);
+s32 func_80053B38(s32 arg0, s32 arg1, s32 arg2, u8 *arg3);
 
 u8 func_800542B0(s32 arg0) {
     u8 sp1F;
@@ -2085,7 +2196,7 @@ Save_ResetAndCommitTypedRecord(0x10, 9);
 }
 }
 
-extern void func_80053B38(s32, s32, s32, u8 *);
+s32 func_80053B38(s32 arg0, s32 arg1, s32 arg2, u8 *arg3);
 u8 func_80055CCC(s32 arg0) {
     u8 result;
     u8 padding[8];
@@ -2099,7 +2210,7 @@ u8 func_80055CCC(s32 arg0) {
 }
 
 extern s32 func_80050D20(s32 arg0, s32 arg1);
-extern void func_80053B38(s32, s32, s32, u8 *);
+s32 func_80053B38(s32 arg0, s32 arg1, s32 arg2, u8 *arg3);
 extern u8 D_801281C0;
 u8 func_80055D44(s32 arg0)
 {
@@ -2115,7 +2226,7 @@ u8 func_80055D44(s32 arg0)
     return result;
 }
 
-extern void func_80053B38(s32, s32, s32, u8 *);
+s32 func_80053B38(s32 arg0, s32 arg1, s32 arg2, u8 *arg3);
 extern s32 func_80053F04(s32, s32, s32, u8 *);
 
 typedef struct {
@@ -2136,7 +2247,7 @@ void func_80055DC4(s32 arg0, u8 arg1) {
 }
 
 extern s32 func_80050D20(s32 arg0, s32 arg1);
-extern void func_80053B38(s32, s32, s32, u8 *);
+s32 func_80053B38(s32 arg0, s32 arg1, s32 arg2, u8 *arg3);
 extern s32 func_80053F04(s32, s32, s32, u8 *);
 extern u8 D_801281C0;
 void func_80055E54(s32 arg0, u8 arg1)

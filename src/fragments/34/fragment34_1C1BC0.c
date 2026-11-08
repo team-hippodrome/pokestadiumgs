@@ -2,7 +2,57 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_885045B0.s")
+extern void func_8003CD84(void);
+struct TextureRenderHeader;
+extern struct TextureRenderHeader *func_8004C990(s32, s32);
+extern u16 *func_8004CA60(struct TextureRenderHeader *);
+// Slot records indexed from 0 (index - 1 is compared with D_88523009); field offsets are
+// Stadium 1 TradeSlotInfo + 6, from the accesses in func_88505264.
+typedef struct {
+    /* 0x000 */ u8 unk_000[4];
+    /* 0x004 */ s16 unk_004;
+    /* 0x006 */ u8 unk_006[6];
+    /* 0x00C */ s16 unk_00C;
+    /* 0x00E */ s16 unk_00E;
+    /* 0x010 */ s16 unk_010;
+    /* 0x012 */ s16 unk_012;
+    /* 0x014 */ s16 unk_014;
+    /* 0x016 */ s16 unk_016;
+    /* 0x018 */ s16 unk_018;
+    /* 0x01A */ s16 unk_01A;
+    /* 0x01C */ f32 unk_01C;
+    /* 0x020 */ f32 unk_020;
+    /* 0x024 */ f32 unk_024;
+    /* 0x028 */ u8 unk_028[0x194 - 0x28];
+} unk_D_885229B0;
+extern unk_D_885229B0 D_885229B0[];
+
+// Draw callback listed in the fragment34 table entry at 0x8850D24C; mode 5 appends the trade
+// slot's two texture segments and the caller's display list (arg1 + 0x14) to D_800D0510, calls
+// func_8003CD84 and returns 0. D_8009491C is the scene node being rendered (src/340C0.c); its
+// word at 0x14 selects the D_885229B0 slot and its byte at 0x1D is the alpha of the black env
+// color. Segment 0xF loads entry slot + 0x190 from texture group 0x39 and segment 0xE loads the
+// slot's unk_004 from group 0x104, both through func_8004C990. A slot whose unk_004 is -1 gets
+// only the pipe sync and env color before func_8003CD84.
+s32 func_885045B0(s32 mode, void *arg1) {
+    extern Gfx *D_800D0510;
+    extern void *D_8009491C;
+    s32 index;
+
+    if (mode == 5) {
+        index = *(s32 *)((u8 *)D_8009491C + 0x14);
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 0, 0, 0, ((u8 *)D_8009491C)[0x1D]);
+        if (D_885229B0[index].unk_004 != -1) {
+            gSPSegment(D_800D0510++, 0xF,
+                       func_8004CA60(func_8004C990(0x39, *(u16 *)((u8 *)&D_885229B0[index] + 0x190))));
+            gSPSegment(D_800D0510++, 0xE, func_8004CA60(func_8004C990(0x104, D_885229B0[index].unk_004)));
+            gSPDisplayList(D_800D0510++, *(void **)((u8 *)arg1 + 0x14));
+        }
+        func_8003CD84();
+    }
+    return 0;
+}
 
 extern u8 D_8850D678[];
 void func_88504704(void) {
@@ -215,28 +265,93 @@ void func_88504EE8(void) {
 }
 /* mkdraft:func_88504EE8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88505038.s")
-
-// Slot records indexed from 0 (index - 1 is compared with D_88523009); field offsets are
-// Stadium 1 TradeSlotInfo + 6, from the accesses in func_88505264.
-typedef struct {
-    /* 0x000 */ u8 unk_000[4];
-    /* 0x004 */ s16 unk_004;
-    /* 0x006 */ u8 unk_006[6];
-    /* 0x00C */ s16 unk_00C;
-    /* 0x00E */ s16 unk_00E;
-    /* 0x010 */ s16 unk_010;
-    /* 0x012 */ s16 unk_012;
-    /* 0x014 */ s16 unk_014;
-    /* 0x016 */ s16 unk_016;
-    /* 0x018 */ s16 unk_018;
-    /* 0x01A */ s16 unk_01A;
-    /* 0x01C */ f32 unk_01C;
-    /* 0x020 */ f32 unk_020;
-    /* 0x024 */ f32 unk_024;
-    /* 0x028 */ u8 unk_028[0x194 - 0x28];
-} unk_D_885229B0;
+// Slot record at D_885229B0[index]; offsets are Stadium 1 TradeSlotInfo + 6, from the
+// accesses in func_88505264. The 0x194-byte stride backs the signed slot-index division.
 extern unk_D_885229B0 D_885229B0[];
+
+// Per-slot animation setup for the box slots in D_885229B0. State 0 clears the enable bit
+// at +0x29, states 1 and 2 reset the scale fields and place the slot at x = slot index *
+// 0x8E + 0x24 (0x165 for state 2), state 3 picks the rock phase from slot parity, state 4
+// places the slot without touching the scale, and states 5 and 6 only restart the timer at
+// +0x16. The index is `slot - D_885229B0` (signed division by the 0x194-byte stride).
+
+
+void func_88505038(void *arg0, s32 arg1) {
+    unk_D_885229B0 *slot = (unk_D_885229B0 *)arg0;
+    u8 *entry = (u8 *)arg0 + 0x28;
+
+    *(s32 *)arg0 = arg1;
+    switch (arg1) {
+    case 0:
+        entry[1] &= 0xFFFE;
+        break;
+    case 1:
+        if (slot - &D_885229B0[0] == 0) {
+            slot->unk_00C = 0xF6;
+            slot->unk_00E = 0xB2;
+        }
+        slot->unk_016 = 0;
+        slot->unk_012 = 0;
+        slot->unk_014 = 0;
+        slot->unk_018 = 0;
+        if (*(s32 *)((u8 *)arg0 + 8) != 0) {
+            slot->unk_01A = 0x80;
+        } else {
+            slot->unk_01A = 0xFF;
+        }
+        slot->unk_01C = 1.0f;
+        slot->unk_020 = 1.0f;
+        slot->unk_024 = 1.0f;
+        entry[1] |= 1;
+        break;
+    case 2:
+        slot->unk_00C = (slot - &D_885229B0[0]) * 0x8E + 0x24;
+        slot->unk_00E = 0x165;
+        slot->unk_010 = slot->unk_00C;
+        slot->unk_016 = 8;
+        slot->unk_012 = 0;
+        slot->unk_014 = 0;
+        slot->unk_018 = 0;
+        if (*(s32 *)((u8 *)arg0 + 8) != 0) {
+            slot->unk_01A = 0x80;
+        } else {
+            slot->unk_01A = 0xFF;
+        }
+        slot->unk_020 = 1.0f;
+        slot->unk_024 = 1.0f;
+        slot->unk_01C = 0.0f;
+        entry[1] |= 1;
+        break;
+    case 3:
+        slot->unk_016 = 0;
+        slot->unk_010 = slot->unk_00C;
+        if ((slot - &D_885229B0[0]) & 1) {
+            slot->unk_012 = -0x8000;
+        } else {
+            slot->unk_012 = 0;
+        }
+        slot->unk_014 = slot->unk_012;
+        slot->unk_01C = 1.0f;
+        break;
+    case 4:
+        slot->unk_00C = (slot - &D_885229B0[0]) * 0x8E + 0x24;
+        slot->unk_00E = 0x165;
+        slot->unk_016 = 8;
+        slot->unk_012 = 0;
+        slot->unk_014 = 0;
+        slot->unk_018 = 0;
+        slot->unk_020 = 1.0f;
+        slot->unk_024 = 1.0f;
+        break;
+    case 5:
+        slot->unk_016 = 8;
+        break;
+    case 6:
+        slot->unk_016 = 8;
+        break;
+    }
+}
+
 extern s16 D_8850D2C2[];
 extern f32 D_80088E50[];
 extern s32 MathUtil_Random16(void);

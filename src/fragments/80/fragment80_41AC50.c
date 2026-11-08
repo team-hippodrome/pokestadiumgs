@@ -495,7 +495,85 @@ done:
     ;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/80/fragment80_41AC50/func_84202BD0.s")
+extern u16 D_842034C0;
+extern u16 D_842034C4;
+extern u16 D_842034C8;
+extern u8 func_80062D20(u8);
+extern u32 func_8003570C(void);
+extern F84202744Entry D_84203A88[];
+extern F842029A8Record *D_84203B54;
+
+
+
+void func_84202BD0(F84202744State *state) {
+    s32 i;
+    s32 best_score = -1;
+    u8 move;
+    s32 best_hp = -1;
+    s32 max_score = -2147483647 - 1;
+    s32 max_hp = 0;
+    F84202744Entry *entry;
+    Fragment80BattleRecord *member;
+    s32 j;
+    u8 *cursor;
+
+    i = 0;
+    if (state->count > 0) {
+    cursor = (u8 *)state;
+    do {
+        member = &((Fragment80BattleTeam *)D_84203B54)[state->unk01].members[cursor[3]];
+        entry = &D_84203A88[cursor[3]];
+        if (max_score < entry->score) {
+            best_score = i;
+            max_score = entry->score;
+        } else if (max_score == entry->score) {
+            if (best_score == -1 || (func_8003570C() & 1)) {
+                best_score = i;
+                max_score = entry->score;
+            }
+        }
+        if (max_hp < *(u16 *)((u8 *)member + 0x2E)) {
+            best_hp = i;
+            max_hp = *(u16 *)((u8 *)member + 0x2E);
+        } else if (max_hp == *(u16 *)((u8 *)member + 0x2E)) {
+            if (max_hp == -1 || (func_8003570C() & 1)) {
+                best_hp = i;
+                max_hp = *(u16 *)((u8 *)member + 0x2E);
+            }
+        }
+        i++;
+        cursor++;
+    } while (i < state->count);
+    }
+    i = 0;
+    if (state->count > 0) {
+    cursor = (u8 *)state; do {
+        member = &((Fragment80BattleTeam *)D_84203B54)[state->unk01].members[cursor[3]];
+        entry = &D_84203A88[cursor[3]];
+        entry->unk04 = 0;
+        for (j = 0; j < 4; j++) {
+            move = member->moves[j];
+            if (move == 0) break;
+            if (func_80062D20(move) == 0x7F) {
+                entry->unk04 += D_842034C8 * D_84203A40.move_weight / 128;
+            }
+        }
+        if (i == best_score) {
+            u16 bonus = D_842034C0;
+            if (D_84203A40.flags & 0x20) {
+                entry->unk04 -= bonus;
+            } else {
+                entry->unk04 += bonus;
+            }
+        }
+        if (i == best_hp) {
+            entry->unk04 += D_842034C4;
+        }
+        i++;
+        cursor++;
+    } while (i < state->count);
+    }
+}
 
 u8 TeamCandidate_SelectLead_fragment80(F84202744State *state) {
     s32 i;

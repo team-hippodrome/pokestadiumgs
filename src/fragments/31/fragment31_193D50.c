@@ -38,7 +38,83 @@ void func_88220BB8(void) {
     D_880068B8 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_193D50/func_88220BDC.s")
+extern u8 **D_88234800;
+extern s32 D_882345F4;
+extern u8 *D_88234620;
+extern u8 D_88234630[];
+extern u16 D_8800686A;
+extern s8 D_8800686D[];
+extern u8 D_88A01C3F[];
+extern s32 D_88234660;
+extern s32 *func_800635E0(u8 arg0);
+extern s8 *HAL_Strcpy(s8 *arg0, s8 *arg1);
+extern void func_80060D70(void *arg0, void *arg1);
+extern void func_80062C30(void *arg0);
+extern s32 func_8003514C(void);
+extern void func_88202FA0(void *a0, u8 *a1);
+extern s32 func_88204050(void);
+extern void func_88221034(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern void func_887009A0(void);
+extern void _bcopy(void *, void *, s32);
+void Util_Free(s32 arg0);
+
+
+void func_88220BDC(void) {
+    s32 src;
+    s16 width;
+    s16 height;
+    s32 sprite;
+    u8 **entry_list;
+
+    switch (*(s32 *)((u8 *)D_88234800 + 0x7C)) {
+    case 0:
+        width = 380;
+        height = 287;
+        break;
+    case 1:
+        width = 320;
+        height = 240;
+        break;
+    }
+
+    sprite = func_800635E0(*(u8 *)D_88234620);
+    func_88221034(width, height, (s32)((u8 *)D_882345F4 + 0x3C), sprite);
+
+    HAL_Strcpy((s8 *)((u8 *)D_88234800 + 0x6A), D_8800686D);
+
+    *(u16 *)((u8 *)D_88234800 + 0x76) = *(u16 *)&D_8800686A;
+    *(u8 *)((u8 *)D_88234800 + 0x78) = *((u8 *)D_882345F4 + 8);
+    *(u8 *)((u8 *)D_88234800 + 0x79) = *(u8 *)D_88234620;
+
+    func_80060D70((u8 *)D_88234800 + 0x48, (u8 *)D_88234800 + 4);
+
+    if (func_8003514C() != 0) {
+        func_80062C30((u8 *)D_88234800 + 4);
+    }
+
+    func_88202FA0((void *)D_882345F4, D_88234620);
+
+    switch (*(u8 *)(*(u8 **)*(u8 **)D_882345F4 + 8)) {
+    case 0:
+        *((u8 *)D_882345F4 + 0x27) = 0;
+        src = (s32)(*(s8 *)((u8 *)D_882345F4 + 4) * 0x76 +
+                    *(u8 **)(D_88234630 + 4));
+        *(s32 *)(D_88234630 + 8) = 1;
+        break;
+    case 2:
+        *((u8 *)D_882345F4 + 0x27) = func_88204050() + 1;
+        D_88A01C3F[*((u8 *)D_882345F4 + 0x27)] = 1;
+        D_88234660 = 1;
+        src = (s32)(*((u8 *)D_882345F4 + 0x27) * 0x76 +
+                    *(u8 **)(D_88234630 + 0x1C) - 0x76);
+        *(s32 *)(D_88234630 + 0x20) = 1;
+        break;
+    }
+
+    _bcopy((u8 *)D_88234800 + 4, (void *)src, 0x76);
+    func_887009A0();
+    Util_Free((s32)D_88234800);
+}
 
 extern void *Util_Malloc(s32);
 extern void _bzero(void *, s32);

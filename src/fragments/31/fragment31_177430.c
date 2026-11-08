@@ -19,7 +19,15 @@ void func_882041E0(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_177430/func_88204400.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_177430/func_88205114.s")
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
+
+
+
+void func_88205114(s32 arg0, s32 arg1) {
+    func_80044424((s16)(arg0 - 7), 0, 8, (s16)(arg1 - 7), 0x100, 0xA0, 0x400, 0, 0, 1);
+    func_80044424((s16)(arg0 - 7), (s16)(arg1 - 7), 8, 8, 0x300, 0, 0x400, 0x400, 0, 1);
+    func_80044424(0, (s16)(arg1 - 7), (s16)(arg0 - 7), 8, 0x2E0, 0, 0, 0x400, 0, 1);
+}
 
 /* mkdraft:func_88205200 begin */
 extern void func_80044424(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle, s32 tile);

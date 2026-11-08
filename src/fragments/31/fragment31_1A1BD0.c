@@ -88,7 +88,80 @@ void func_8822EB10(s32 arg0) {
     (*(s32 *)((u8 *)(*D_88234970) + (0x2C))) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A1BD0/func_8822EB78.s")
+extern s32 D_880068B8;
+extern s32 D_882345F4;
+extern void func_800226C0(s32);
+extern void func_88004990(u8, s32);
+
+typedef struct GridData {
+    /* 0x00 */ u8 unk00[0x10];
+    /* 0x10 */ s32 *unk10;
+    /* 0x14 */ u8 unk14;
+    /* 0x15 */ u8 unk15;
+} GridData;
+
+typedef struct Grid {
+    /* 0x00 */ u32 unk0;
+    /* 0x04 */ s16 x;
+    /* 0x06 */ s16 y;
+    /* 0x08 */ GridData *unk8;
+} Grid;
+
+
+
+void func_8822EB78(void) {
+    u8 index;
+    s16 start[2];
+
+    if (D_80087200->buttonsPressed & 0x4000) {
+        func_800226C0(0x48);
+        D_880068B8 = 1;
+        func_88004990(**(u8 **)D_88234970, 0);
+        return;
+    }
+    if (D_80087200->buttonsPressed & 0x8000) {
+        index = ((Grid *)D_88234970)->x + ((Grid *)D_88234970)->y * 6;
+        if (index >= ((Grid *)D_88234970)->unk8->unk15) {
+            func_800226C0(0x49);
+            return;
+        }
+        func_800226C0(0x47);
+        D_882345F4 = ((Grid *)D_88234970)->unk8->unk10[index];
+        func_8822EB10(D_882345F4 + 8);
+        return;
+    }
+    start[0] = ((Grid *)D_88234970)->x;
+    start[1] = ((Grid *)D_88234970)->y;
+    if (D_80087200->buttonsRepeat & 0x800) {
+        ((Grid *)D_88234970)->y--;
+        if (((Grid *)D_88234970)->y < 0) {
+            ((Grid *)D_88234970)->y = 4;
+        }
+    } else if (D_80087200->buttonsRepeat & 0x400) {
+        ((Grid *)D_88234970)->y++;
+        if (((Grid *)D_88234970)->y >= 5) {
+            ((Grid *)D_88234970)->y = 0;
+        }
+    }
+    if (D_80087200->buttonsRepeat & 0x200) {
+        ((Grid *)D_88234970)->x--;
+        if (((Grid *)D_88234970)->x < 0) {
+            ((Grid *)D_88234970)->x = 5;
+        }
+    } else if (D_80087200->buttonsRepeat & 0x100) {
+        ((Grid *)D_88234970)->x++;
+        if (((Grid *)D_88234970)->x >= 6) {
+            ((Grid *)D_88234970)->x = 0;
+        }
+    }
+    // FAKE: these are the same x/y reads as the Grid fields above; written as byte
+    // offsets because only this form makes IDO load start[] before the grid fields
+    // in each compare (t3=start[0], t4=grid->x, t5=start[1], t6=grid->y). The typed
+    // `((Grid *)D_88234970)->x/y` form scores 60.
+    if (start[0] != (*(s16 *)((u8 *)D_88234970 + 4)) || start[1] != (*(s16 *)((u8 *)D_88234970 + 6))) {
+        func_800226C0(0x46);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A1BD0/func_8822EDA8.s")
 
@@ -111,7 +184,7 @@ void func_8822FA30(void) {
 extern u8 D_8800ED50[];
 extern u8 **D_88234970;
 extern s32 D_880068B4;
-extern s32 func_8822EB78;
+void func_8822EB78(void);
 extern s32 func_8822EDA8;
 extern s32 func_80001FF0(void);
 extern u8 *func_8004D878(u8 *destination, s32 id, u8 *mon);

@@ -69,5 +69,55 @@ void func_88229C88(void) {
     func_8821D930((D_882348C0 + 4));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19CD60/func_88229CB0.s")
+extern void *Util_Malloc(s32);
+extern s32 func_8004C874(s32, s32);
+extern s32 func_88002AA8(void *, s32, void *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, void *);
+extern s32 func_88004804(void *, s32, s16, s16, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
+extern s32 func_8821B924(u8);
+extern u8 D_8800ED50[];
+extern s32 D_880068B4;
+extern u32 D_882348C0;
+void func_88229AE0(void);
+void func_88229B08(void);
+void func_88229B44(void);
+void func_88229C88(void);
+
+/* Menu state at D_882348C0: four label ids at 0x54, the menu at 0x20, and the
+ * three-entry selection mask at 0x64 that func_88002AA8 receives as its {1, data}
+ * option pair. func_8821B924(i) is 1 when selection i equals the value held in
+ * D_88234758; 0x67 is set when no selection matches.
+ *@src/fragments/31/fragment31_19C000.c
+ *@src/fragments/31/fragment31_189760.c
+ */
+
+
+void func_88229CB0(void) {
+    u32 i;
+    s32 index;
+    struct { s32 count; u8 *data; } options;
+
+    D_882348C0 = (u32)Util_Malloc(0x68);
+    for (i = 0; i < 4U; i++) {
+        ((s32 *)((u8 *)D_882348C0 + 0x54))[i] = func_8004C874(0x25, i + 0x3B);
+    }
+    for (i = 0; i < 3; i++) {
+        ((u8 *)D_882348C0)[i + 0x64] = func_8821B924((u8)i) ? 1 : 0;
+    }
+    if (((u8 *)D_882348C0)[0x64] + ((u8 *)D_882348C0)[0x65] + ((u8 *)D_882348C0)[0x66] == 0) {
+        ((u8 *)D_882348C0)[0x67] = 1;
+    } else {
+        ((u8 *)D_882348C0)[0x67] = 0;
+    }
+    options.count = 1;
+    options.data = (u8 *)D_882348C0 + 0x64;
+    func_88002AA8((u8 *)D_882348C0 + 0x20, 0, (u8 *)D_882348C0 + 0x54, 4, 8, 1, 6, 0, 0, 0, 0, 0, 0, &options);
+    *(s32 *)((u8 *)D_882348C0 + 0xC) = func_8004C874(0x25, 0x3A);
+    *(s32 *)((u8 *)D_882348C0 + 8) = 0;
+    *(s32 *)((u8 *)D_882348C0 + 0x10) = 4;
+    *(s16 *)((u8 *)D_882348C0 + 0x14) = 1;
+    *(s16 *)((u8 *)D_882348C0 + 0x16) = 4;
+    index = func_88004804((u8 *)D_882348C0 + 4, 2, 0x4E, 0x93, 0, 1, 0xDC, 0xDC, 0xB4, (s32 *)func_88229B44, (s32 *)func_88229C88, (s32 *)func_88229AE0, (s32 *)func_88229B08, 2, 0);
+    *(void **)((u8 *)D_882348C0) = (void *)(index * 0x4C + (s32)D_8800ED50);
+    D_880068B4 = 0;
+}
 #endif

@@ -110,7 +110,98 @@ s32 func_88223554(void) {
 }
 /* mkdraft:func_88223554 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1965A0/func_882235CC.s")
+extern u8 D_88006020[];
+extern u8 D_88006880[];
+extern void func_88001900(void);
+extern s32 func_880020CC();
+extern void func_8800225C(void *arg0, s16 arg1, s16 arg2);
+extern void func_88002720(void *arg0, u16 arg1, void *arg2);
+extern s32 func_8821B7C0(void);
+extern void func_8821B980(u16 arg0, s32 arg1);
+extern s32 func_8821C0B0(void);
+extern void func_8821C2F4(void);
+// FAKE: the state block is read through a pointer-typed load of D_88234850
+// (`*(u8 **)&D_88234850`). This file declares the global as s32, so the plain
+// (u8 *)D_88234850 cast leaves an extra int-to-pointer copy in a1: diff 130.
+
+
+void func_882235CC(void) {
+    s32 index;
+
+    if (*(s32 *)((*(u8 **)&D_88234850) + 0x30) != 0) {
+        if ((*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) != 0) {
+            func_800226C0(0x48);
+            func_88223384();
+            return;
+        }
+        if ((*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) != 0) {
+            switch (*(s16 *)((*(u8 **)&D_88234850) + 0x34)) {
+            case 2:
+                func_800226C0(0x5C);
+                func_8821C2F4();
+                func_8821B980(4, func_88223554());
+                func_8821C0B0();
+                func_8800225C(D_88006880, 0, 0);
+                func_88223384();
+                return;
+            case 3:
+                func_800226C0(0x137);
+                func_8821C2F4();
+                for (index = 0; index < 2; index = (index + 1) & 0xFF) {
+                    D_88234758[index + 7] = -1;
+                }
+                func_8821B980(4, 0);
+                func_8821C0B0();
+                func_8800225C(D_88006880, 0, 0);
+                func_88223384();
+                return;
+            default:
+                func_800226C0(0x47);
+                func_88001900();
+                func_882233BC(0);
+                return;
+            }
+        } else {
+            func_880020CC(*(u8 **)&D_88234850 + 4);
+            if (func_8821B7C0() != 0) {
+                func_88002720((*(u8 **)&D_88234850) + 0x34, 4, D_88006020);
+            } else {
+                func_88002720((*(u8 **)&D_88234850) + 0x34, 3, D_88006020);
+            }
+        }
+    } else {
+        // `index` doubles as the loop counter in case 3; the two uses never
+        // overlap, and a second local adds a stack home (diff 595).
+        if ((*(s16 *)((*(u8 **)&D_88234850) + 4) == 0) &&
+            (*(s32 *)((*(u8 **)&D_88234850) + 8) == 0) &&
+            (*(s16 *)((*(u8 **)&D_88234850) + 0x26) == 0)) {
+            index = 1;
+        } else {
+            index = 0;
+        }
+        if (index != 0) {
+            if ((*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) != 0) {
+                func_800226C0(0x48);
+                func_882233BC(1);
+                return;
+            }
+        }
+        if ((*(s16 *)((*(u8 **)&D_88234850) + 4) == 0) &&
+            (*(s32 *)((*(u8 **)&D_88234850) + 8) == 0) &&
+            (*(s16 *)((*(u8 **)&D_88234850) + 0x26) == 0)) {
+            index = 1;
+        } else {
+            index = 0;
+        }
+        if (index != 0) {
+            if ((*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) != 0) {
+                func_88223418();
+                return;
+            }
+        }
+        func_880020CC(*(u8 **)&D_88234850 + 4);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1965A0/func_88223850.s")
 

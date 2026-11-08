@@ -228,7 +228,37 @@ void func_87E06068(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E06290.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E0664C.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void func_80007328(Gfx **, void *);
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+extern void func_87F0BD48(u8 *);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+
+// FAKE: K&R implicit-int parameter; the natural ANSI form fails to build because the already-matched caller func_87E079FC calls it with no arguments.
+
+
+void func_87E0664C(arg0) {
+    s32 i;
+    u8 *var_s0;
+    u8 *state;
+
+    func_80007328(&D_800D0510, *(void **)((u8 *)arg0 + 0x5C));
+    state = *(u8 **)((u8 *)arg0 + 0x5C);
+    func_80007444(&D_800D0510, 0, 0, *(u16 *)(state + 4), *(u16 *)(state + 6), 0);
+    func_87F0BD48((u8 *)arg0 + 0x148);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, 0x00504340, 0);
+    gDPSetCombine(D_800D0510++, 0x30D261, 0x55A6FF7F);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 240, 200, 255);
+    for (i = 0, var_s0 = (u8 *)arg0 + 0xE8; i != 0xC; i++, var_s0 += 8) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 100, 60, 0, *(u8 *)(var_s0 + 4));
+        func_8004D19C(9, 3, *(s32 *)var_s0, 0, 0);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 u32 func_87E067F0(s32 arg0, s32 arg1) {
     extern u32 D_87E19B4C[];
@@ -698,7 +728,11 @@ extern void func_87E0664C();
 extern void func_87E06808(s32);
 
 void func_87E079FC(s32 arg0) {
+#ifdef CC_CHECK
+    func_87E0664C(0);
+#else
     func_87E0664C();
+#endif
     func_87E06808(arg0);
     BgStage_DrawFrame();
 }

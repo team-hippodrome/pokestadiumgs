@@ -24,7 +24,77 @@ typedef struct F66OwnedViewPrefix {
 static F66OwnedViewPrefix sOwnedView = {0};
 extern F66ViewState D_82E06138;
 extern s32 D_82E0713C;
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E00020.s")
+extern s32 D_82E05650;
+extern s32 D_82E07130;
+extern s32 D_82E07620[];
+extern s32 D_82E077B0[];
+extern s32 D_82E07940[];
+extern s32 D_82E07AD0[];
+
+typedef struct F66RecView {
+    s32 state;
+    s32 x;
+    s32 adjusted;
+    s32 old;
+    s32 source;
+} F66RecView;
+
+typedef struct F66Timer {
+    s32 unk0;
+    void *owner;
+    s32 time;
+} F66Timer;
+
+#ifndef CC_CHECK
+struct F66Record;
+extern struct F66Record D_82E05968[100];
+#define F66_RECS ((F66RecView *)D_82E05968)
+#else
+#define F66_RECS ((F66RecView *)0)
+#endif
+#define F66_TIMERS ((F66Timer *)&D_82E07130)
+
+
+
+s32 func_82E00020(s32 arg0, u8 *arg1) {
+    s32 numerator = 5;
+    s32 denominator = 6;
+    s32 diff;
+
+    switch (arg0) {
+    case 0:
+        D_82E07620[*(u32 *)(arg1 + 0x20)] = *(s16 *)(arg1 + 8);
+        D_82E077B0[*(u32 *)(arg1 + 0x20)] = *(s16 *)(arg1 + 0xA);
+        D_82E07940[*(u32 *)(arg1 + 0x20)] = *(u8 *)(arg1 + 0x28) - 0x80;
+        D_82E07AD0[*(u32 *)(arg1 + 0x20)] = 0x80 - *(u8 *)(arg1 + 0x29);
+        F66_TIMERS[*(u32 *)(arg1 + 0x20)].time = *(u8 *)(arg1 + 0x2B) + (*(u8 *)(arg1 + 0x2A) << 8);
+        F66_RECS[*(u32 *)(arg1 + 0x20)].source = ((*(u8 *)(arg1 + 0x2E) << 8) + *(u8 *)(arg1 + 0x2F))
+            - (*(u8 *)(arg1 + 0x2A) << 8) - *(u8 *)(arg1 + 0x2B);
+        F66_TIMERS[*(u32 *)(arg1 + 0x20)].owner = arg1;
+        if (D_82E05650 == 0) {
+            F66_TIMERS[*(u32 *)(arg1 + 0x20)].time = (F66_TIMERS[*(u32 *)(arg1 + 0x20)].time * numerator) / denominator;
+            F66_RECS[*(u32 *)(arg1 + 0x20)].source = (F66_RECS[*(u32 *)(arg1 + 0x20)].source * numerator) / denominator;
+        }
+        *(u16 *)(arg1 + 2) &= 0xFFFE;
+        break;
+    case 1:
+        diff = D_82E07130 - F66_TIMERS[*(u32 *)(arg1 + 0x20)].time;
+        if (diff < F66_RECS[*(u32 *)(arg1 + 0x20)].old) {
+            if (D_82E05650 != 0) {
+                *(s16 *)(arg1 + 8) = D_82E07620[*(u32 *)(arg1 + 0x20)] + (D_82E07940[*(u32 *)(arg1 + 0x20)] * diff) / 10;
+                do { *(s16 *)(arg1 + 0xA) = D_82E077B0[*(u32 *)(arg1 + 0x20)] + (D_82E07AD0[*(u32 *)(arg1 + 0x20)] * diff) / 10; } while (0);
+                break;
+            }
+            *(s16 *)(arg1 + 8) = D_82E07620[*(u32 *)(arg1 + 0x20)] + ((D_82E07940[*(u32 *)(arg1 + 0x20)] * diff * denominator) / numerator) / 10;
+            do { } while (0);
+            *(s16 *)(arg1 + 0xA) = D_82E077B0[*(u32 *)(arg1 + 0x20)] + ((D_82E07AD0[*(u32 *)(arg1 + 0x20)] * diff * denominator) / numerator) / 10;
+            break;
+        }
+        *(u16 *)(arg1 + 2) &= 0xFFFE;
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

@@ -1024,7 +1024,42 @@ void func_8850B9F4(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5, s
     func_8850B2DC(local[0], func_8004C990(0x148, 1), arg0, arg1, arg2, arg3, arg4, arg5, 0x64, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850BACC.s")
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+
+// Draws the 0x14A image twice at arg0/arg1 scaled by arg2: the whole texture at arg3 and
+// its horizontal mirror at arg4, both offset by arg5 vertically. The image header's first
+// two u16 fields are the source width and height, which are scaled the same way; the
+// texture-coordinate increment is 1024/arg2, so the mirrored rect uses its negation.
+// arg5's offset and the unmirrored increment are shared by both GfxRect_DrawTextured calls.
+//@src/44E70.c
+
+
+void func_8850BACC(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    u16 *texture;
+    s16 width;
+    s16 height;
+    s32 mirror_step;
+    s32 step;
+    s16 offset_x;
+    s16 mirror_offset_x;
+    s16 offset_y;
+
+    texture = (u16 *)func_8004C990(0x14A, 0);
+    width = (s16)(((f32)(u32)texture[0] * arg2) + (((f32)(u32)texture[0] * arg2 > 0.0f) ? 0.5f : -0.5f));
+    height = (s16)(((f32)(u32)texture[1] * arg2) + (((f32)(u32)texture[1] * arg2 > 0.0f) ? 0.5f : -0.5f));
+    offset_x = (s16)((((f32)arg3 * arg2 > 0.0f) ? 0.5f : -0.5f) + ((f32)arg3 * arg2));
+    mirror_offset_x = (s16)((((f32)arg4 * arg2 > 0.0f) ? 0.5f : -0.5f) + ((f32)arg4 * arg2));
+    offset_y = (s16)((((f32)arg5 * arg2 > 0.0f) ? 0.5f : -0.5f) + ((f32)arg5 * arg2));
+    step = (s32)(((1024.0f / arg2 > 0.0f) ? 0.5f : -0.5f) + (1024.0f / arg2));
+    mirror_step = (s32)(((-1024.0f / arg2 > 0.0f) ? 0.5f : -0.5f) + (-1024.0f / arg2));
+    func_8004D1FC((u8 *)texture);
+    GfxRect_DrawTextured((s16)(arg0 + offset_x), (s16)(arg1 + offset_y), width, height, 0, 0, (s16)step, (s16)step,
+                         0);
+    GfxRect_DrawTextured((s16)(arg0 + mirror_offset_x), (s16)(arg1 + offset_y), width, height, (*texture - 1) << 5,
+                         0, (s32)mirror_step, (s16)step, 0);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850BDE8.s")
 

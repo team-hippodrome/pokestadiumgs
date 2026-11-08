@@ -40,7 +40,81 @@ void func_8FD00124(s16 arg0, s16 arg1, u16 arg2, u16 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/85/fragment85_code/func_8FD00170.s")
+extern void func_800459AC(s32, s32, s32, u16, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+
+void func_8FD00170(s32 arg0, s16 arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u8 *arg6, s32 arg7, s32 arg8, s32 arg9) {
+    s32 y;
+    s32 last_row; // FAKE: unused; the 16th declared local is what keeps the frame at 0xD8 and lands the spilled locals in the retail stack slots; dropping it scores 190.
+    s32 height;
+    s32 texture_step;
+    s32 remaining;
+    s32 count;
+    s32 i;
+    s32 step_rows;
+    s32 step;
+    s32 w;
+    u8 *start;
+    s32 h;
+    s32 width;
+    f32 ratio;
+    f32 row_ratio;
+    s32 d0;
+
+    if (arg6 != NULL && arg2 != 0 && arg3 != 0) {
+        width = arg2;
+        w = func_8FD00020((f32)arg4 / arg2);
+        h = func_8FD00020((f32)arg5 / arg3);
+        y = arg1;
+        //!bug: no default case; texture_step is left uninitialized when arg8 > 3.
+        ratio = (f32)arg3 / arg5;
+        switch (arg8) {
+        case 0:
+            texture_step = 0;
+            break;
+        case 1:
+            texture_step = 1;
+            break;
+        case 2:
+            texture_step = 2;
+            break;
+        case 3:
+            texture_step = 4;
+            break;
+        }
+        i = 0;
+        if (texture_step != 0) {
+            step = 0x1000 / texture_step;
+        } else {
+            step = 0x2000;
+        }
+        row_ratio = 0.0f;
+        step_rows = (step / arg4) & ~1;
+        for (; i < arg5; i += step_rows) {
+            remaining = arg5 - i;
+            count = remaining < step_rows ? remaining : step_rows;
+            if (texture_step != 0) {
+                start = &arg6[arg4 * i * texture_step];
+            } else {
+                start = &arg6[arg4 * i / 2];
+            }
+            height = count * ratio;
+            row_ratio += count * ratio - height;
+            if (row_ratio >= 1.0) {
+                height++;
+                row_ratio -= 1.0;
+            }
+            d0 = arg0; // FAKE: coalesced copy that costs no code but moves arg0 later in IDO's callee-saved order; without it arg0 keeps $s3.
+            if (y + height > 0 && y < 0x140) {
+                func_800459AC(start, arg7, arg8, arg4, count, arg9, 0, 2, 2, 0, 0, 0, 0);
+                GfxRect_DrawTextured(d0, y, width, height, -16, -16, w, h, 0);
+            }
+            y = y + height;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -49,7 +123,7 @@ extern s32 func_8004CA24(u16 *);
 extern u8 *func_8004CA60(u8 *);
 extern s32 func_8004CA38(u8 *);
 extern s32 func_8004CA4C(u8 *);
-extern void func_8FD00170(s16, s16, u16, u16, s32, s32, u8 *, s32, s32, s32);
+void func_8FD00170(s32 arg0, s16 arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u8 *arg6, s32 arg7, s32 arg8, s32 arg9);
 void func_8FD00514(s16 arg0, s16 arg1, u16 arg2, u16 arg3, u16 *arg4) {
     s32 sp44;
     s32 sp40;
@@ -108,7 +182,7 @@ void func_8FD00654(void) {
 
 #ifdef VERSION_US
 /* mkdraft:func_8FD00680 begin */
-extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 
 
 

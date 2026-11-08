@@ -143,7 +143,7 @@ extern void func_82900E98();
 extern void func_8290299C(u8);
 extern u8 D_82918859;
 extern void func_82900C40(s32);
-extern s32 D_8291889C;
+extern u8 *D_8291889C;
 void func_82900FDC(void) {
     func_82900C40(D_8291889C);
     func_82900D78();
@@ -155,7 +155,38 @@ void func_82900FDC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33D6A0/func_8290102C.s")
+extern u8 D_82911C60[];
+extern u8 D_82911C68[];
+extern u8 D_82911C6A[];
+extern u8 D_82911C6B[];
+extern s16 D_82918858;
+extern s32 D_829188C8;
+extern void ModelAnim_SetFrame(s32, s32);
+extern void func_8003F2C4(s32, s32, s32);
+extern void func_8003F3BC(s32, s32);
+
+
+void func_8290102C(void) {
+    s32 frame;
+
+    if (D_8291889C[0x1A2] != 0) {
+        return;
+    }
+    if (D_829188C8 == 0) {
+        frame = *(u16 *)(*(u8 **)(D_8291889C + 0x48) + 0xA);
+        ModelAnim_SetFrame((s32)(D_8291889C + 4),
+                           (s16)((D_82911C6A[D_82918858 * 0x14] / frame + 1) * frame - D_82911C6A[D_82918858 * 0x14]));
+    }
+    if (D_829188C8 == D_82911C60[D_82918858 * 0x14 + 0xA]) {
+        func_8003F2C4(*(s32 *)D_8291889C, (s32)(D_8291889C + 4), D_82911C60[D_82918858 * 0x14 + 9]);
+        ModelAnim_SetFrame((s32)(D_8291889C + 4), D_82911C6B[D_82918858 * 0x14]);
+        func_8003F3BC((s32)(D_8291889C + 4), D_82911C68[D_82918858 * 0x14]);
+        D_829188C8 = D_82911C6B[D_82918858 * 0x14];
+        D_8291889C[0x1A2] = 1;
+    } else {
+        D_829188C8 = D_829188C8 + 1;
+    }
+}
 #endif
 
 #ifdef VERSION_US

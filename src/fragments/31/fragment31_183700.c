@@ -55,7 +55,183 @@ void *func_882104DC(s32 mode, u8 slot) {
     return table[index];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_882105B0.s")
+extern s32 D_88234720;
+void func_88210480(void);
+extern s32 D_88A01C30;
+extern s32 D_882346F0;
+extern s32 D_882346F4;
+extern s32 D_88234724;
+void Input_SetRepeatController(s32);
+s32 Util_Malloc(s32);
+s32 func_80001FF0();
+s32 func_8004C4B0(s32);
+void func_88000288(void *, s32, s32, s32, s32, s32, s32, s32);
+s32 func_88001C6C(s32, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+s32 func_88005B60(s32, s32 *, s32 *, s32 *);
+s32 func_882011E0(s32);
+s32 func_88204080(s32);
+s32 func_88205EB0(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, void (*)());
+s32 func_8822E950();
+s32 func_88800020();
+s32 main_pool_push_state(s32);
+s32 mem_pool_try_init(s32, s32);
+extern s32 D_80087200;
+extern s32 D_88000E4C;
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+
+
+
+void func_882105B0(void)
+{
+  s32 temp_v0;
+  s32 var_s0;
+  s32 var_s1;
+  s32 temp_s2;
+  f32 sp1A4;
+  s32 temp_s0;
+  f32 sp19C;
+  s32 temp_s1;
+  f32 sp194;
+  s32 sp190;
+  f32 sp18C;
+  s32 sp188;
+  s32 sp184;
+  f32 sp180;
+  s32 sp17C;
+  f32 sp178;
+  f32 var_fv0;
+  f32 var_fv0_2;
+  f32 t18C;
+  f32 t178;
+  f32 t19C;
+  f32 t1A4;
+  f32 tfv0;
+  f32 var_fv1;
+  // FAKE: separate int->float conversion temps. Converting in its own statement makes IDO emit
+  // FAKE: mul.s (const, value) as retail emits it; inline casts change the operand order.
+  f32 c188;
+  f32 c184;
+  f32 c17C;
+  f32 c190;
+  f32 cS1;
+  f32 cS0;
+  f32 cS2;
+  main_pool_push_state(0x41525242);
+  func_88800020();
+  func_8822E950();
+  D_88234720 = Util_Malloc(0x78);
+  func_88205EB0(0x2C, 0x191, 0x229, 0x30, 0x2C, 0x48, 0xF2, 0x143, 0x31, 0x69, 0xE5, 0x11A, 0x163, 0x48, 0xF2, 0x143, 0x168, 0x69, 0xE5, 0x11A, 0x34, 0x6C, 0xDF, 0x11, 0x34, 0x16F, 0xDF, 0x11, 0x16B, 0x6C, 0xDF, 0x11, 0x16B, 0x16F, 0xDF, 0x11, 0x121, 0x48, 0x3F, 0x26, 0x34, 0x7D, 0xDF, 0x1A, 0x16B, 0x7D, 0xDF, 0x1A, 0xFB, 0x4F, 0x16B, 0x4F, -1, -1, -1, -1, -1, -1, -1, -1, 0x88, 0x70, 0x9A, 0x70, 0x9A, 0x173, 0xAE, 0x173, 0x1BF, 0x70, 0x1D1, 0x70, 0x1D1, 0x173, 0x1E5, 0x173, 5, 0x22, func_88210480);
+  func_8004C4B0(0x22);
+  temp_v0 = mem_pool_try_init(0x10000, 0);
+  func_882011E0(temp_v0);
+  func_88204080(temp_v0);
+  *((s8 *) (((u8 *) D_88234720) + 0)) = 0;
+  *((s32 *) (((u8 *) D_88234720) + 4)) = 1;
+  *((s16 *) (((u8 *) D_88234720) + 8)) = 0;
+  var_s1 = 0;
+  var_s0 = 0;
+  *((s8 *) (((u8 *) D_88234720) + 0x64)) = 0;
+  do
+  {
+    temp_s2 = func_80001FF0();
+    if ((600.0f / ((f32) func_80001FF0())) > 0.0f)
+    {
+      var_fv0 = 0.5f;
+    }
+    else
+    {
+      var_fv0 = -0.5f;
+    }
+    var_fv1 = 600.0f / ((f32) temp_s2);
+    func_88001C6C((D_88234720 + var_s1) + 0xC, *((u8 *) (((u8 *) (D_88A01C30 + var_s0)) + 0x25)), 9, 0x7D, 0x1B, 0xE, (s32) (var_fv0 + var_fv1), 0x30, 0x30, 0xC, 0x46);
+    var_s0 += 0x14;
+    var_s1 = var_s1 + 0x2C;
+  }
+  while (var_s0 != 0x28);
+  Input_SetRepeatController(D_80087200);
+  D_882346F0 = 0;
+  D_880068B4 = (D_880068B8 = 1);
+  D_88234724 = 0;
+  D_882346F4 = 0;
+  if (((((f32) func_80001FF0()) * 8.0f) / 60.0f) > 0.0f)
+  {
+    sp178 = 0.5f;
+  }
+  else
+  {
+    sp178 = -0.5f;
+  }
+  sp17C = func_80001FF0();
+  if (((((f32) func_80001FF0()) * 5.0f) / 60.0f) > 0.0f)
+  {
+    sp180 = 0.5f;
+  }
+  else
+  {
+    sp180 = -0.5f;
+  }
+  sp184 = func_80001FF0();
+  sp188 = func_80001FF0();
+  if (((((f32) func_80001FF0()) * 30.0f) / 60.0f) > 0.0f)
+  {
+    sp18C = 0.5f;
+  }
+  else
+  {
+    sp18C = -0.5f;
+  }
+  sp190 = func_80001FF0();
+  if (((((f32) func_80001FF0()) * 5.0f) / 60.0f) > 0.0f)
+  {
+    sp194 = 0.5f;
+  }
+  else
+  {
+    sp194 = -0.5f;
+  }
+  temp_s1 = func_80001FF0();
+  if (((((f32) func_80001FF0()) * 8.0f) / 60.0f) > 0.0f)
+  {
+    sp19C = 0.5f;
+  }
+  else
+  {
+    sp19C = -0.5f;
+  }
+  temp_s0 = func_80001FF0();
+  if (((((f32) func_80001FF0()) * 30.0f) / 60.0f) > 0.0f)
+  {
+    sp1A4 = 0.5f;
+  }
+  else
+  {
+    sp1A4 = -0.5f;
+  }
+  temp_s2 = func_80001FF0();
+  if (((((f32) func_80001FF0()) * 8.0f) / 60.0f) > 0.0f)
+  {
+    var_fv0_2 = 0.5f;
+  }
+  else
+  {
+    var_fv0_2 = -0.5f;
+  }
+  c188 = (f32) sp188;
+  c184 = (f32) sp184;
+  c17C = (f32) sp17C;
+  c190 = (f32) sp190;
+  cS1 = (f32) temp_s1;
+  cS0 = (f32) temp_s0;
+  cS2 = (f32) temp_s2;
+  t18C = (30.0f * c188) / 60.0f;
+  t19C = (8.0f * cS1) / 60.0f;
+  t1A4 = (30.0f * cS0) / 60.0f;
+  tfv0 = (8.0f * cS2) / 60.0f;
+  // FAKE: the (0, sp194) comma expression keeps sp194's reload order; a plain sp194 reloads it at a different point.
+  func_88000288(D_88234720 + 0x68, (s16) ((((s32) (sp18C + t18C)) + ((s32) (((5.0f * c184) / 60.0f) + sp180))) + ((s32) (((8.0f * c17C) / 60.0f) + sp178))), 0xFF, 0, (s32) (((0, sp194)) + ((5.0f * c190) / 60.0f)), (s32) (sp19C + t19C), (s32) (sp1A4 + t1A4), (s32) (var_fv0_2 + tfv0));
+  func_88005B60(0, &D_88000E4C, &D_88000E4C, &D_88000E4C);
+}
 
 extern s32 func_880007B0(u8 *);
 extern s32 func_80063754(s32);
@@ -192,7 +368,7 @@ typedef struct LabPCListExchangeMotion {
 extern s32 D_88234720;
 extern void *D_8800EF54;
 extern s8 **D_8823466C[];
-extern void *Util_Malloc(s32);
+s32 Util_Malloc(s32);
 extern void func_800226C0(s32);
 extern void func_88232820(s32);
 

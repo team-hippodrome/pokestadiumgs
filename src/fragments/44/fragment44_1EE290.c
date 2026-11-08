@@ -114,7 +114,33 @@ void func_8AF00304(s16 arg0, s32 arg1)
   }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1EE290/func_8AF00360.s")
+extern int sprintf(char *s, const char *fmt, ...);
+/* The explicit sizes reproduce the retail .rodata layout: the two strings sit
+ * back to back at 0x8AF28760 and 0x8AF28768, so "%02d" takes 5 bytes plus 3
+ * zero bytes and the error string takes 38 plus 2. src/fragments/12/
+ * fragment12_E5330.c:792-795 uses the same sized-array form for strings whose
+ * retail addresses must not move.
+ * //@src/fragments/12/fragment12_E5330.c
+ */
+const char D_8AF28760[8] = "%02d";
+/* The .s emits this string after the format string without a label of its own,
+ * so no C or asm reference names it; it still occupies the 0x28 bytes up to
+ * 0x8AF28790, and omitting it would shift the fragment's remaining .rodata. */
+const char D_8AF28768[40] = "RscScrLoadRscDataInList() load err!!\n";
+
+s32 func_8AF00360(s32 arg0)
+{
+  char buffer[4];
+  s32 result;
+  s32 packed;
+  int masked;
+  packed = 0xFFFF;
+  sprintf(buffer, D_8AF28760, ((u8 *) (&arg0))[3]);
+  result = (((s8) buffer[0]) << 8) | ((s8) buffer[1]);
+  masked = result & packed;
+  packed = masked;
+  return packed | 0x234C0000;
+}
 
 typedef struct Lookup_8AF003A8 {
     s16 unused;
@@ -780,7 +806,6 @@ u8 func_8AF01654(u8 arg0) {
     return result;
 }
 
-extern u8 D_8AF28760[];
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
 extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
