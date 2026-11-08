@@ -1397,7 +1397,75 @@ void func_82605FE4(void *arg0, void *arg1)
 }
 /* mkdraft:func_82605FE4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826063AC.s")
+extern void _bzero(void *, s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_80049148(s32, s32, const char *, ...);
+extern s32 func_8004C874(s32, s32);
+extern void func_82614F40(u16 *, u16 *, u16, s32);
+extern void func_826150A4(s8 *, s32, u16, s32, s32, int);
+extern s16 D_82615504[];
+typedef struct { s16 w; s16 h; } Extent063AC;
+
+
+
+void func_826063AC(void *arg0, void *arg1) {
+    u8 *state;
+    char *text;
+    s16 x;
+    s16 y;
+    // FAKE: never read; it only claims a stack slot so the frame is 0xD0.
+    // Diff score 28 without it (frame 0xCC).
+    s32 unused;
+    s32 maxWidth;
+    s32 width2;
+    s32 buffer[32];
+    u8 *asset;
+
+    maxWidth = 0;
+    state = *(u8 **)*(u8 **)((u8 *)arg0 + 0x110);
+    asset = (u8 *)func_8004C990(0x11C, 0);
+
+    *(u16 *)((u8 *)arg1 + 4) &= ~1;
+    *(s16 *)((u8 *)arg1 + 0x10) = 0;
+    *(s16 *)((u8 *)arg1 + 0x12) = -0x1E0;
+    *(Extent063AC *)((u8 *)arg1 + 0x18) = *(Extent063AC *)((u8 *)arg1 + 0x10);
+    *(s16 *)((u8 *)arg1 + 0x14) = 0;
+    *(s16 *)((u8 *)arg1 + 0x16) = 0;
+
+    func_82614F40((u16 *)&x, (u16 *)&y, *(u16 *)(state + 8), *(s16 *)(state + 0xA));
+
+    text = (char *)func_8004C874(x, y);
+    if (text != NULL) {
+        maxWidth = func_80049148(8, 0, text);
+        if (*(s8 *)(state + 0xF) != 0) {
+            maxWidth += *(u16 *)asset + 4;
+        }
+    }
+
+    _bzero(buffer, 0x80);
+
+    func_826150A4((s8 *)buffer, 0x80, *(u16 *)(state + 8), *(s16 *)(state + 0xA),
+                  *(s16 *)(state + 0x88),
+                  *(s16 *)(*(u8 **)((u8 *)arg0 + 0x110) + 0x14));
+
+    width2 = func_80049148(8, 0, (const char *)buffer);
+    if (maxWidth < width2) {
+        maxWidth = width2;
+    }
+
+    *(s16 *)((u8 *)arg1 + 0x24) = maxWidth + 0x50;
+    *(s16 *)((u8 *)arg1 + 0x26) = D_82615504[*(s16 *)((u8 *)arg1 + 0)];
+    *(s16 *)((u8 *)arg1 + 0x14) = (0x280 - *(s16 *)((u8 *)arg1 + 0x24)) / 2;
+
+    switch (*(u16 *)(state + 8) & 0xFF00) {
+    case 0:
+        *(s16 *)((u8 *)arg1 + 0x16) = 0x81;
+        break;
+    case 0x300:
+        *(s16 *)((u8 *)arg1 + 0x16) = 0x81;
+        break;
+    }
+}
 
 typedef struct { s16 a; s16 b; } Pair16_6548;
 extern s16 D_82615504[];
@@ -2206,7 +2274,97 @@ void func_82609938(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82609A88.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern s32 D_8261A5A0;
+extern s16 D_8261A4C8[];
+extern u8 D_826156C8[];
+extern u8 D_826156CC[];
+extern s32 func_8004410C();
+
+
+void func_82609A88(void *arg0, s32 arg1)
+{
+    s32 index;
+    u8 *base;
+    s32 s1;
+    s16 coordinates[2];
+    s32 *entries;
+    s16 *ptr;
+    s16 spacing;
+    s32 s2;
+    s32 width;
+    s32 height;
+    s32 offset_x;
+    s32 offset_y;
+    s32 selected_row;
+    s32 n;
+    s32 ret;
+    s32 idx;
+    s32 ybase;
+    u8 *self;
+    self = arg0;
+    base = self + 0x30;
+    entries = *((s32 **) (D_8261A5A0 + 4));
+    if ((*((s16 *) (self + 0x34))) != 0)
+    {
+        ptr = (s16 *) D_826156CC;
+        spacing = 0xD;
+        n = 4;
+        width = 0x66;
+        height = 0x3E;
+        offset_x = 0x59;
+        offset_y = 0x31;
+        selected_row = 0x14;
+    }
+    else
+    {
+        ptr = (s16 *) D_826156C8;
+        n = 3;
+        spacing = 0x10;
+        width = 0x87;
+        height = 0x5B;
+        offset_x = 0x76;
+        offset_y = 0x4E;
+        selected_row = 0x10;
+    }
+    if (arg1 != 0)
+    {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+    }
+    // FAKE: base is arg0 + 0x30 and the body is empty, so this emits no code. The
+    // three short-circuit tests split the flow graph between the gSP block above and
+    // the coordinate reads below; that split is what keeps uopt from spilling self at
+    // function entry. Without this block the function scores 1958: self is stored to
+    // 0x80(sp) on entry and reloaded into t6, which rotates every t register in the
+    // constant block by one.
+    if (((!base) && (!base)) && (!base))
+    {
+    }
+    coordinates[0] = (*((s16 *) (self + 0x14))) + (*((s16 *) (self + 0x10)));
+    coordinates[1] = (*((s16 *) (self + 0x16))) + (*((s16 *) (self + 0x12)));
+    for (index = 0; index < (*((s16 *) (base + 6))); index++)
+    {
+        if ((*((s16 *) (base + 4))) != 0)
+        {
+            s1 = ((index / 6) * 2) + (index % 2);
+            s2 = (index % 6) / 2;
+        }
+        else
+        {
+            s1 = index % n;
+            s2 = index / n;
+        }
+        if ((*((s16 *) ((base + (index * 2)) + 0x14))) < 0xFF)
+        {
+            idx = D_8261A4C8[(*((s16 *) (base + 8))) + index];
+            ybase = coordinates[1] + spacing;
+            ret = func_8004410C(entries, idx);
+            func_82609938((coordinates[0] + ptr[*((s16 *) (self + 2))]) + (width * s1), ybase + ((height * s2) & 0xFFFFFFFF), ret, offset_x, offset_y, selected_row);
+        }
+    }
+}
 
 /* mkdraft:func_82609D84 begin */
 extern s32 func_8004410C();
@@ -2650,7 +2808,125 @@ void func_8260CC24(u8 *arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260CF84.s")
+extern s16 D_82615710[];
+extern s16 D_82615714[];
+extern void func_80006F70(Gfx **, s16, s16, s16, s32);
+extern s32 func_80008494(void);
+extern void func_8004D1C4(s32, s32, s32, s32, u8 *, s32, s32);
+
+
+
+void func_8260CF84(u8 *arg0, s32 arg1)
+{
+  u8 *base;
+  s32 i;
+  s32 col;
+  s32 ctx;
+  s32 flag;
+  s16 y;
+  s16 x;
+  struct Color
+  {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+  } env;
+  struct Color2
+  {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+  } prim;
+  s32 v; // FAKE: unused; keeps the stack frame at 0xC8 (removal shifts every sp offset)
+  s16 *tbl;
+  s16 yoff;
+  s32 cols;
+  s32 xstride;
+  s32 ystride;
+  s32 row;
+  u8 *tex;
+  s32 h; // FAKE: unused; keeps the stack frame at 0xC8 (removal shifts every sp offset)
+  s32 ypos;
+  s32 xpos;
+  s32 dy;
+  base = arg0 + 0x30;
+  ctx = func_80008494();
+  flag = 0;
+  if ((*((s16 *) (base + 4))) != 0)
+  {
+    tex = (u8 *) func_8004C990(0x6D, 2);
+    tbl = D_82615714;
+    yoff = 0xD;
+    cols = 4;
+    xstride = 0x66;
+    ystride = 0x3E;
+  }
+  else
+  {
+    tex = (u8 *) func_8004C990(0x6D, 1);
+    tbl = D_82615710;
+    yoff = 0x10;
+    cols = 3;
+    xstride = 0x87;
+    ystride = 0x5B;
+  }
+  func_8004CA60(tex);
+  x = (*((s16 *) (arg0 + 0x14))) + (*((s16 *) (arg0 + 0x10)));
+  y = (*((s16 *) (arg0 + 0x16))) + (*((s16 *) (arg0 + 0x12)));
+  if (arg1 != 0)
+  {
+    gSPDisplayList(D_800D0510++, D_80094E78);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+  }
+  func_82607BF4(*((s16 *) arg0), (u8 *) (&env), (u8 *) (&prim), *((s16 *) (arg0 + 0xC)), ((*((u16 *) (arg0 + 4))) & 8) != 0);
+  gDPPipeSync(D_800D0510++);
+  gDPSetEnvColor(D_800D0510++, env.r, env.g, env.b, 255);
+  gDPSetPrimColor(D_800D0510++, 0, 0, prim.r, prim.g, prim.b, 255);
+  i = 0;
+  if ((*((s16 *) (base + 6))) > 0)
+  {
+    do
+    {
+      if ((*((s16 *) (base + 4))) != 0)
+      {
+        col = ((i / 6) * 2) + (i % 2);
+        row = (i % 6) / 2;
+      }
+      else
+      {
+        col = i % cols;
+        row = i / cols;
+      }
+      dy = (*((u16 *) (tex + 2))) - (((*((u16 *) (tex + 2))) * (*((s16 *) ((base + 0x14) + (i * 2))))) / 255);
+      xpos = (x + tbl[*((s16 *) (arg0 + 2))]) + (xstride * col);
+      // FAKE: the "* 0" nudge is a no-op; it forces IDO/uopt to reuse the dy quotient and compare v directly (removing it ripples, score 420).
+      if ((*((s16 *) ((base + 0x14) + (i * 2)))) > ((((*((s16 *) ((base + 0x14) + (i * 2)))) * (*((u16 *) (tex + 2)))) / 255) * 0))
+      {
+        if ((*((s16 *) ((base + 0x14) + (i * 2)))) < 0xFF)
+        {
+          flag = 1;
+          ypos = (y + yoff) + (ystride * row);
+          func_80006F70(&D_800D0510, xpos, ypos, *((s16 *) tex), *((u16 *) (tex + 2)));
+        }
+        else
+        {
+          flag = 0;
+          func_80006F70(&D_800D0510, 0, 0, *((s16 *) (ctx + 0)), *((s16 *) (ctx + 2)));
+          ypos = (y + yoff) + (ystride * row);
+        }
+        func_8004D1C4(xpos, ypos - dy, 0xA, 0, tex, 0, 0);
+      }
+      i++;
+    }
+    while (i < (*((s16 *) (base + 6))));
+  }
+  if (flag != 0)
+  {
+    func_80006F70(&D_800D0510, 0, 0, *((s16 *) (ctx + 0)), *((s16 *) (ctx + 2)));
+  }
+}
 
 s32 func_8004C990(s32, s32);
 
@@ -2666,9 +2942,9 @@ s32 func_8260D3F4(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 /* mkdraft:func_8260D440 begin */
-extern void func_80006F70(Gfx **, s16, s16, s16, s16);
-extern void func_8004D1C4(s32, s32, s32, s32, s32, s32, s32);
-extern void *func_80008494(void);
+extern void func_80006F70(Gfx **, s16, s16, s16, s32);
+extern void func_8004D1C4(s32, s32, s32, s32, u8 *, s32, s32);
+extern s32 func_80008494(void);
 extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
 extern u8 D_80094E78[];
 extern Gfx * D_800D0510;
@@ -2755,9 +3031,9 @@ extern s32 func_8004C990(s32, s32);
 extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
 extern u8 D_80094E78[];
 extern Gfx *D_800D0510;
-extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_80006F70(Gfx **, s16, s16, s16, s32);
 extern s32 func_8004D19C(s32, s32, s32, s32, s32);
-extern void *func_80008494();
+extern s32 func_80008494(void);
 
 
 
@@ -3361,7 +3637,66 @@ s32 func_8260F7C4(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260F7FC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260FFE8.s")
+
+
+void func_8260FFE8(void *arg0, u32 arg1)
+{
+  u8 *state;
+  s32 count;
+  u8 *table;
+  u8 *p;
+  s32 used[12];
+  s32 i;
+  s32 slot;
+  u8 b;
+  u8 c;
+  u8 d;
+  count = *((s16 *) ((*((u8 **) ((*((u8 **) (((u8 *) arg0) + 0x110))) + 4))) + 2));
+  state = *((u8 **) (((u8 *) arg0) + 0x110));
+  table = *((u8 **) state);
+  i = 0;
+  if (i < count)
+  {
+    do
+    {
+      used[i] = 0;
+      i++;
+    }
+    while (i < count);
+  }
+  slot = 0;
+  // FAKE: reads uninitialized b; without it the score is 55 (keeps b in v1 across the prologue)
+  if (b) {
+  }
+  p = table;
+  for (i = 0; i < 12; i++, p++)
+  {
+    b = p[0x10];
+    if (b != 0xFF)
+    {
+      c = ((b >> 4) & 0xF);
+      d = (b & 0xF);
+      ((u16 *) (((u8 *) arg0) + 0x20))[slot] = (c * arg1) + d;
+      used[(c * arg1) + d] = 1;
+      slot++;
+    }
+    else
+    {
+      i = 0;
+      break;
+    }
+  }
+
+  i = 0;
+  ((u16 *) (((u8 *) arg0) + 0x1C))[0] = slot;
+  for (; i < count; i++)
+  {
+    if (used[i] == 0)
+    {
+      ((u16 *) (((u8 *) arg0) + 0x20))[slot++] = i;
+    }
+  }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826101B4.s")
 

@@ -2,8 +2,6 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_1280F0/func_82600020.s")
-
 typedef struct {
     u8 unk_00[0x74];
     s8 sides[4];
@@ -11,6 +9,90 @@ typedef struct {
     s16 pairs[2][2];
     s16 selection;
 } Func826002BCState;
+extern Func826002BCState *D_82615324;
+extern s32 func_800356CC(s32 arg0);
+extern s32 BinArchive_Open(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void _bzero(void *arg0, s32 arg1);
+extern void *func_80004B4C(s32 arg0, s32 arg1);
+extern s32 func_8006AFB4(s32 arg0);
+extern void func_80054CC4(u8 *arg0, s32 arg1);
+extern s32 TrailEffect_Initialize(void);
+
+
+
+void func_82600020(u8 *arg0) {
+    s32 archive;
+    u8 *desc;
+    s32 flag;
+    s32 i;
+
+    archive = BinArchive_Open(func_800356CC(0xB), 0, 1, 0);
+    flag = 0;
+    _bzero(arg0, 0x920);
+    {
+        s16 n = *(s16 *)((u8 *)D_82615324 + 4);
+        if (n >= 0) {
+            *(void **)(arg0 + 0xC) = func_80004B4C(archive, n);
+        } else {
+            *(u32 *)(arg0 + 0xC) = 0;
+        }
+    }
+    *(u32 *)(arg0 + 0xAC) = 0;
+    if ((*(u16 *)((u8 *)D_82615324 + 8) & 0xFF00) == 0x700 &&
+        *(u8 *)((u8 *)D_82615324 + 0x7C) == 3) {
+        flag = 1;
+    }
+    if (flag != 0) {
+        *(void **)(arg0 + 0xAC) = func_80004B4C(archive, 5);
+    }
+    *(void **)arg0 = D_82615324;
+    *(s16 *)(arg0 + 0x16) = *(s16 *)((u8 *)D_82615324 + 0x88);
+    if (*(void **)(arg0 + 0xC) != 0) {
+        if (func_8006AFB4(*(s16 *)((u8 *)D_82615324 + 4)) == 1) {
+            *(s16 *)(arg0 + 0x14) = (*(u8 **)(arg0 + 0xC))[0] / 2;
+            for (i = 0; i < *(s16 *)(arg0 + 0x14); i++) {
+                *(s16 *)(arg0 + 0x18 + i * 2) = i * 2 + 1;
+            }
+        } else {
+            *(s16 *)(arg0 + 0x14) = (*(u8 **)(arg0 + 0xC))[0];
+            for (i = 0; i < *(s16 *)(arg0 + 0x14); i++) {
+                *(s16 *)(arg0 + 0x18 + i * 2) = i;
+            }
+        }
+    }
+    *(u32 *)(arg0 + 0x9C) = 0;
+    for (i = 0, desc = arg0 + 0xB0; i < 2; i++) {
+        s32 off;
+        s32 j;
+        if (*(s8 *)((u8 *)D_82615324 + 6) != 0) {
+            off = i * 2;
+            if (*(s8 *)((u8 *)D_82615324 + off + 1) != -2) {
+                *(s16 *)desc = 2;
+            } else {
+                *(s16 *)desc = 1;
+            }
+        } else {
+            off = i;
+            *(s16 *)desc = 1;
+        }
+        j = 0;
+        while (j < 2) {
+            *(s8 *)(desc + 2 + j) = -2;
+            j++;
+        }
+        for (j = 0; j < *(s16 *)desc; j++) {
+            *(s8 *)(desc + 2 + j) = *(s8 *)((u8 *)D_82615324 + off + j);
+        }
+        if (*(s16 *)desc == 1) {
+            *(u8 *)(desc + 6) =
+                (*(u8 *)((u8 *)D_82615324 + 0x7E) & (1 << off)) != 0;
+        }
+        desc += 0x428;
+    }
+    func_80054CC4(arg0 + 0x900, 0);
+    TrailEffect_Initialize();
+}
+
 typedef struct {
     s16 count;
     s8 owners[2];

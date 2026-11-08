@@ -635,7 +635,245 @@ void RecordText_SelectAndMeasure(void *context, u8 records[][152]) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_826020C0.s")
+extern void *func_80041C98(u32);
+extern void func_80041E2C(void);
+typedef struct { u8 pad_00[4]; void *unk_04; } Func82615340StateX;
+extern Func82615340StateX *D_82615340;
+typedef struct PokeIconList44300 PokeIconList44300Extern;
+extern PokeIconList44300Extern *func_800437B4(void *, s32, s32, s32);
+extern u8 *func_8004BA70(s32);
+extern s32 func_8004C4B0(s32);
+extern void func_80055EF0(void *, s32);
+extern s32 func_82610C84(s32, s32);
+typedef struct { s16 width; s16 height; } RecordSelectionTextSize;
+
+
+
+void func_826020C0(u8 *context)
+{
+  void *load_context;
+  u8 *pad1;
+  u8 *pad2;
+  u8 *pad3;
+  u8 *state;
+  RecordSelectionWorkingGrid *grid;
+  u8 *table;
+  u16 mode;
+  u16 sub;
+  PokeIconList44300Extern *list;
+  s16 selection;
+  s32 side;
+  s32 member;
+  s32 scan_record;
+  s32 clear_record;
+  s32 used;
+  s32 icon_count;
+  s32 icon_x;
+  s32 icon_height;
+  s32 update_history;
+  RecordSelectionPartyDescriptor *descriptor;
+  s8 *member_cursor;
+  u8 *row;
+  load_context = func_80041C98(1);
+  grid = (RecordSelectionWorkingGrid *) (*((u8 **) context));
+  state = *((u8 **) context);
+  table = *((u8 **) (context + 12));
+  mode = (*((u16 *) (state + 8))) & 0xFF00;
+  sub = (*((u16 *) (state + 8))) & 0xFF;
+  D_82615340 = (Func82615340StateX *) context;
+  if (((s8 *) state)[15])
+  {
+    D_82615344 = 1;
+  }
+  else
+  {
+    D_82615344 = 0;
+  }
+  func_80055EF0(D_826163A0, (0, D_82615344));
+  switch ((*((u16 *) (state + 8))) & 0xFF00)
+  {
+    case 0x400:
+
+    case 0x600:
+      *((s16 *) (context + 20)) = 1;
+      selection = *((s16 *) (state + 136));
+      if (selection != 0)
+    {
+      *((s16 *) (context + 24)) = ((s16 *) (context + 24))[selection];
+      *((s16 *) (context + 56)) = ((s16 *) (context + 56))[*((s16 *) (state + 136))];
+      *((RecordSelectionTextSize *) (context + 88)) = ((RecordSelectionTextSize *) (context + 88))[*((s16 *) (state + 136))];
+      *((s16 *) (state + 136)) = 0;
+    }
+      break;
+
+    case 0x500:
+      *((s16 *) (context + 20)) = 1;
+      if ((*((s16 *) (state + 136))) != 0)
+    {
+      *((s16 *) (context + 24)) = ((s16 *) (context + 28))[*((s16 *) ((*((u8 **) context)) + 12))];
+      *((s16 *) (context + 56)) = ((s16 *) (context + 60))[*((s16 *) ((*((u8 **) context)) + 12))];
+      *((RecordSelectionTextSize *) (context + 88)) = ((RecordSelectionTextSize *) (context + 96))[*((s16 *) ((*((u8 **) context)) + 12))];
+      *((s16 *) (state + 136)) = 0;
+    }
+      break;
+
+    case 0x200:
+      *((s16 *) (context + 20)) = 1;
+      *((s16 *) (context + 24)) = ((s16 *) (context + 28))[*((s16 *) ((*((u8 **) context)) + 12))];
+      *((s16 *) (context + 56)) = ((s16 *) (context + 60))[*((s16 *) ((*((u8 **) context)) + 12))];
+      *((RecordSelectionTextSize *) (context + 88)) = ((RecordSelectionTextSize *) (context + 96))[*((s16 *) ((*((u8 **) context)) + 12))];
+      *((s16 *) (state + 136)) = 0;
+      break;
+
+  }
+
+  *((s16 *) (state + 138)) = *((s16 *) (context + 20));
+  side = 0;
+  for (; side < (*((s16 *) (context + 20))); side++)
+  {
+    row = table;
+    row += ((s16 *) (context + 24))[side] * 152;
+    row += 4;
+    func_8004C4B0(row[3] + 76);
+  }
+
+  switch (mode)
+  {
+    case 0x500:
+      RecordSelection_PrepareTwoParties(context, (*((s8 *) (state + 14))) == 0);
+      RecordNames_LoadTwoSlots(context);
+      break;
+
+    case 0x700:
+      if ((*((u8 *) (state + 0x7C))) == 3)
+    {
+      func_82601824(context);
+    }
+      RecordSelection_LoadSelectedParties(context, 1);
+      RecordNames_LoadFourSlots(context, 0);
+      break;
+
+    case 0x400:
+      RecordSelection_LoadSelectedParties(context, 1);
+      RecordNames_LoadSelectedOrDefaultSlots(context);
+      break;
+
+    case 0x300:
+      RecordSelection_LoadLevelMatchedParties(context);
+      RecordNames_LoadFourSlots(context, 0);
+      break;
+
+    case 0x200:
+      func_826018BC(context);
+      RecordSelection_LoadSelectedParties(context, 0);
+      RecordNames_FormatTwoSlots(context);
+      if (sub == 2)
+    {
+      /* FAKE: the (0, ...) comma is load-bearing; without it the differ scores 130. */
+      RecordSelection_InitializePartyRecords(context, (0, (*((s8 *) (state + 14))) == 0), 1, *((s16 *) ((*((u8 **) context)) + 12)), 0);
+    }
+      break;
+
+    default:
+      if (sub == 2)
+    {
+      switch (mode)
+      {
+        case 0:
+          RecordNames_LoadFourSlots(context, 1);
+
+        case 0x100:
+          if (mode == 0)
+        {
+          update_history = 1;
+        }
+        else
+        {
+          update_history = 0;
+        }
+          /* FAKE: without the (0, ...) comma here the differ scores 10. */
+          RecordSelection_LoadSelectedParties(context, (0, (*((s8 *) (state + 14))) == 0));
+          /* FAKE: without the (0, ...) comma here the differ scores 10. */
+          RecordSelection_InitializePartyRecords(context, (0, (*((s8 *) (state + 14))) == 0), 0, -1, update_history);
+          break;
+
+      }
+
+    }
+    else
+    {
+      RecordSelection_LoadSelectedParties(context, 1);
+      RecordNames_LoadFourSlots(context, 0);
+    }
+      break;
+
+  }
+
+  if ((*((u8 **) (context + 12))) != 0)
+  {
+    RecordText_CopyUnassignedEntries(context);
+    RecordText_SelectAndMeasure(context, *((u8 **) (context + 12)));
+  }
+  func_80041E2C();
+  side = 0;
+  do
+  {
+    used = 0;
+    member = 0;
+    descriptor = &((RecordSelectionPartyDescriptor *) (context + 176))[side];
+    member_cursor = (s8 *) descriptor;
+    do
+    {
+      member_cursor[4] = 0;
+      for (scan_record = 0; scan_record < 6; scan_record++)
+      {
+        if (((RecordSelectionWorkingEntry *) ((u8 *) state + 144 + (((side * 2) + member) * 528)))[scan_record].species != 0)
+        {
+          member_cursor[4]++;
+          descriptor->entries[used] = ((RecordSelectionWorkingEntry *) ((u8 *) state + 144 + (((side * 2) + member) * 528)))[scan_record];
+          used++;
+        }
+      }
+
+    }
+    while (((member_cursor++, ++member)) < 2);
+    for (clear_record = used; clear_record < 12; clear_record++)
+    {
+      _bzero(&descriptor->entries[clear_record], sizeof(RecordSelectionWorkingEntry));
+    }
+
+    side++;
+  }
+  while (side < 2);
+  *((s16 *) (context + 18)) = 0;
+  side = 0;
+  do
+  {
+    if ((*((s16 *) ((context + (side * 1064)) + 176))) >= 2)
+    {
+      *((s16 *) (context + 18)) = 1;
+    }
+    side++;
+  }
+  while (side != 2);
+  if ((*((s16 *) (context + 18))) != 0)
+  {
+    icon_count = 24;
+    icon_x = 89;
+    icon_height = 49;
+  }
+  else
+  {
+    icon_count = 12;
+    icon_x = 118;
+    icon_height = 78;
+  }
+  list = func_800437B4(load_context, icon_count, icon_x, icon_height);
+  *((PokeIconList44300Extern **) (context + 4)) = list;
+  *((u16 *) list) |= 0x4;
+  *((u8 **) (context + 8)) = func_8004BA70(0);
+  func_82610C84((s32) context, 0);
+}
 
 
 void func_826026E8(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
@@ -653,7 +891,6 @@ void func_82602708(u8 *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82602710.s")
 
 
-typedef struct { u8 pad_00[4]; void *unk_04; } Func82615340StateX;
 extern Func82615340StateX *D_82615340;
 extern void func_82602710(u8 *);
 extern void BgStage_DrawFrame(void);
