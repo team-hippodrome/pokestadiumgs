@@ -222,7 +222,58 @@ void func_87F0EEFC(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0EFA0.s")
+extern s32 func_8005A0B4(s32);
+extern s32 func_8005DED8(s32);
+extern void func_87F0E9D8(void *, void *, s32);
+extern void func_87F0EEFC(void *, s32);
+extern void func_87F0EDDC(void *, u8);
+extern u64 osGetTime(void);
+extern s32 main_pool_push_state(s32);
+extern s32 main_pool_pop_state(s32);
+
+typedef struct unk_func_87F0EFA0 {
+    /* 0x000 */ u8 unk_000[18][0x5C];
+    /* 0x678 */ u8 unk_678[0x40];
+    /* 0x6B8 */ u32 unk_6B8_7 : 1;
+                u32 unk_6B8_6 : 1;
+                u32 unk_6B8_29_0 : 30;
+    /* 0x6BC */ u8 unk_6BC[4];
+} unk_func_87F0EFA0; // size = 0x6C0
+
+
+
+void func_87F0EFA0(unk_func_87F0EFA0 *arg0, u8 arg1, s32 arg2) {
+    s32 i;
+    u8 *port;
+
+    osGetTime();
+    main_pool_push_state(0x6D47426D);
+    for (i = 0, port = (u8 *)arg0; i < 4; i++, port += 0x6C0) {
+        if (((unk_func_87F0EFA0 *)port)->unk_6B8_6) {
+            continue;
+        }
+        if (arg2 == 0) {
+            // FAKE: empty then-branch. Without it IDO colors arg2/arg0/arg1
+            // as s7/s5/s6 and puts the 0x6B8 loads in t5/t7 instead of t8.
+        } else if (((arg1 & (1 << i)) != 0) && func_8005A0B4(i)) {
+            ((unk_func_87F0EFA0 *)port)->unk_6B8_7 = 1;
+            ((unk_func_87F0EFA0 *)port)->unk_6B8_6 = 1;
+            func_8005DED8(i);
+        }
+        if (((unk_func_87F0EFA0 *)port)->unk_6B8_7 && (arg1 & (1 << i)) != 0 && arg2 != 0) {
+            s32 j;
+            u8 *entry;
+
+            for (j = 0, entry = (u8 *)arg0 + i * 0x6C0 + 0x30; j < 18; j++, entry += 0x5C) {
+                func_87F0E9D8(entry, (void *)i, j);
+            }
+        } else {
+            func_87F0EEFC(arg0, i);
+        }
+    }
+    func_87F0EDDC(arg0, arg1);
+    main_pool_pop_state(0x6D47426D);
+}
 
 extern void func_8005777C();
 
