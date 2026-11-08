@@ -924,7 +924,42 @@ s32 func_82502404(s16 *arg0, s16 *arg1, s32 arg2, u16 arg3, s32 arg4, s32 arg5, 
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82502528.s")
+extern u16 D_82508FCE;
+extern u8 D_82508D10[];
+extern u8 D_82508D12[];
+extern u8 D_82508F68[];
+extern u8 D_82508FCC[];
+extern u8 D_82508FD0[];
+extern u8 D_82508FD8[];
+extern u8 *D_82508F84;
+s32 func_82502404(s16 *arg0, s16 *arg1, s32 arg2, u16 arg3, s32 arg4, s32 arg5, s32 arg6);
+
+
+void func_82502528(void) {
+    u8 *state;
+    u16 flags;
+    s32 index;
+    s16 *p0;
+    u8 *rp;
+
+    state = D_82508F68;
+    switch (*(s16 *)state) {
+    case 2:
+        flags = *(u16 *)D_82508FD0;
+        break;
+    case 3:
+        flags = D_82508FCE;
+        break;
+    default:
+        flags = *(u16 *)D_82508FCC;
+        break;
+    }
+    for (index = 0; index < *(s16 *)(*(u8 **)(state + 0x1C) + 0x18); index++) {
+        p0 = (s16 *)(D_82508D10 + index * 0x3C);
+        rp = *(u8 **)(*(u8 **)(state + 0x1C) + 0x1C) + index * 0x30;
+        func_82502404(p0, (s16 *)(D_82508D12 + index * 0x3C), *(s16 *)state, flags, *(u8 *)(state + 0x70), index, *(s16 *)(rp + 0x26));
+    }
+}
 #endif
 
 #ifdef VERSION_US
