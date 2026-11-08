@@ -190,7 +190,63 @@ void func_86600E00(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86601188.s")
+extern s32 D_86606728;
+extern s32 D_866067FC;
+extern u8 D_86606AFC[];
+extern u8 D_86607260[];
+extern u8 D_86607410[];
+extern u8 D_8660A998[];
+extern void func_87F03884(void *, s32, void *, f32, f32, f32, s32, f32, s32);
+extern u32 func_8003570C(void);
+
+
+void func_86601188(s32 arg0, s32 arg1) {
+    // Stack filler: retail keeps the named locals at 0x30-0x4C and spills arg0
+    // at 0x58; dropping these two slots moves every local and breaks the frame.
+    volatile s32 pad[2];
+    s32 type;
+    s32 color;
+    s32 zscale;
+    s32 count;
+    s32 scale;
+    u32 rand2;
+    u32 rand1;
+    u32 rand0;
+
+    if (arg1 == 1) {
+        zscale = -260;
+        type = 45;
+        color = 0xC8;
+        count = 2;
+        scale = 12;
+        if (D_866067FC < D_86606728) {
+            type = 5;
+            color = 0x69;
+            count = 1;
+            scale = 8;
+        }
+        if (arg0 >= 2) {
+            color -= 18;
+        }
+        if (arg0 & 1) {
+            type += 28;
+        }
+    }
+    if (arg1 == 0) {
+        scale = 3;
+        count = 1;
+        type = *(s32 *)(D_86606AFC + *(s32 *)(D_8660A998 + arg0 * 88) * 8 - 8);
+        color = *(s32 *)(D_86606AFC + *(s32 *)(D_8660A998 + arg0 * 88) * 8 - 4);
+        zscale = 100;
+    }
+    rand0 = func_8003570C();
+    rand1 = func_8003570C();
+    rand2 = func_8003570C();
+    func_87F03884(D_86607260, 0, D_86607410 + arg0 * 360, (f32)type, (f32)color, (f32)zscale,
+                  (rand0 % 31) * 0x200,
+                  ((f32)rand1 / 4294967296.0f) * 1.5f * (f32)scale,
+                  rand2 % (count + 1) + 1);
+}
 #endif
 
 #ifdef VERSION_US
