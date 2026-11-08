@@ -1607,7 +1607,90 @@ void func_86509D8C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86509E54.s")
+extern u8 D_8650DA38[];
+extern s32 D_8650C638;
+extern s32 func_87F0C6F4(u8 *);
+extern s32 func_87F00930(void);
+extern void func_87F006BC(void);
+extern void func_81900214(s32);
+extern s32 Fragment64_UpdateBounceAndConfirm(u8 *);
+extern void func_87F02328(void);
+extern void func_87F0D5B8(u8 *);
+
+// Per-frame scene state dispatcher. Fragment53_RunScene passes the current state
+// (D_8650C5EC) as arg0, but the dispatch reads the global directly; the state left
+// in D_8650C5EC is returned to the caller.
+s32 func_86509E54(s32 arg0) {
+    // FAKE: returning through a u32 local reproduces the original's return-value registers.
+    u32 state;
+
+    if ((((u8 *)D_8650DB10)[0x2180] == 4) && (func_87F0C6F4(D_8650DA60) != 0)) {
+        D_8650C5EC = 3;
+        D_8650C638 = 3;
+    }
+    if ((func_87F00930() == 0) && (D_8650C5EC != 10)) {
+        func_87F006BC();
+    }
+    switch (D_8650C5EC) {
+        case 0:
+            func_86508ABC();
+            break;
+        case 4:
+            func_86508A14();
+            break;
+        case 5:
+            func_86508890();
+            break;
+        case 6:
+            func_86509480();
+            func_86508B20();
+            break;
+        case 9:
+            func_81900214(*(s32 *)D_865118F8);
+            func_86509318();
+            if (Fragment64_UpdateBounceAndConfirm(D_8650DA70) != 0) {
+                if (((u8 *)D_8650DB10)[0x2180] == 1) {
+                    StageContext_SetClearColor(0xFFFF);
+                    StageFade_StartFromTransparent(10);
+                    D_8650C638 = 2;
+                    D_8650C5EC = 2;
+                    D_8650C62C = 0;
+                } else {
+                    func_87F02328();
+                    D_8650C5EC = 8;
+                }
+            }
+            break;
+        case 1:
+            func_86509480();
+            func_8650952C();
+            break;
+        case 8:
+            func_86509D8C();
+            break;
+        case 12:
+            if (StageContext_GetFadeMode() == 1) {
+                func_86508484();
+                D_8650C5EC = 11;
+                StageFade_StartFromOpaque(10);
+            }
+            break;
+        case 11:
+            D_8650C5EC = 0;
+            break;
+        case 10:
+            func_86508C2C();
+            break;
+        case 2:
+            if (StageContext_GetFadeMode() == 1) {
+                D_8650C5EC = 3;
+            }
+            break;
+    }
+    func_87F0D5B8(D_8650DA38);
+    state = D_8650C5EC;
+    return state;
+}
 #endif
 
 #ifdef VERSION_US
