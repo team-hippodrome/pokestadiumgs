@@ -331,7 +331,66 @@ void func_867007B4(s32 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86700FD4.s")
+extern Stage55Slot D_8670C980[4][60];
+extern Row86706A30 D_86710C20[];
+extern Row86706A30 D_86711760[4][60];
+extern f32 D_8670C890;
+extern u8 D_86728348[];
+
+// Scans the 60 slots of row arg0 in groups of four and keeps the highest index whose z
+// is not above the running limit, not below the row z, and whose unk04[0] flag word is
+// not negative. arg1 != 0 uses a 1000.0f limit and returns the plain index; arg1 == 0
+// starts the limit 30.0f * D_8670C890 above the row z and returns D_86728348[arg0 * 0x38]
+// when no slot qualified (best_i still the 0x3E8 sentinel).
+s32 func_86700FD4(s32 arg0, s32 arg1) {
+    Row86706A30 *row;
+    f32 z0;
+    f32 z1;
+    f32 z2;
+    f32 z3;
+    f32 limit;
+    s32 i;
+    s32 best_i;
+    s32 result;
+
+    limit = 1000.0f;
+    best_i = 0x3E8;
+    if (arg1 == 0) {
+        limit = D_86710C20[arg0].z + (30.0f * D_8670C890);
+    }
+    for (i = 0, row = D_86711760[arg0]; i != 0x3C; i += 4, row += 4) {
+        z0 = row->z;
+        if (((row->z) <= limit) && (D_86710C20[arg0].z <= z0) && (D_8670C980[arg0][i].unk04[0] >= 0)) {
+            best_i = i;
+            limit = z0;
+        }
+        z1 = row[1].z;
+        if ((z1 <= limit) && (D_86710C20[arg0].z <= z1) && (D_8670C980[arg0][i + 1].unk04[0] >= 0)) {
+            best_i = i + 1;
+            limit = z1;
+        }
+        z2 = row[2].z;
+        if ((z2 <= limit) && (D_86710C20[arg0].z <= z2) && (D_8670C980[arg0][i + 2].unk04[0] >= 0)) {
+            best_i = i + 2;
+            limit = z2;
+        }
+        z3 = row[3].z;
+        if ((z3 <= limit) && (D_86710C20[arg0].z <= z3) && (D_8670C980[arg0][i + 3].unk04[0] >= 0)) {
+            best_i = i + 3;
+            limit = z3;
+        }
+    }
+    if ((arg1 == 0) && (best_i == 0x3E8)) {
+        result = *(s32 *)((u8 *)D_86728348 + arg0 * 0x38);
+        return result;
+    }
+    return best_i;
+}
+
+// Bytes at the retail stub address between the two functions: an
+// unreferenced empty function compiles to the retail jr ra/nop pair
+// there and keeps the fragment layout.
+void func_86701224_padding(void) {}
 #endif
 
 #ifdef VERSION_US
@@ -586,7 +645,27 @@ void func_867035A8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867036B4.s")
+extern Stage55Slot D_8670C980[4][60];
+extern Row86706A30 D_86711760[4][60];
+extern void func_8003F1DC(void *);
+
+
+
+
+void func_867036B4(s32 arg0) {
+    s32 i;
+    Row86706A30 *row;
+
+    for (i = 0, row = D_86711760[arg0]; i < 60; i++, row++) {
+        if (row->z < -600.0f) {
+            func_8003F1DC(row);
+            D_8670C980[arg0][i].resource_index = -1;
+            D_8670C980[arg0][i].unk04[0] = -1;
+            row->z = 3000.0f;
+            row->y = 90.0f;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -743,7 +822,45 @@ void Stage55_UpdateModelFade(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670675C.s")
+extern f32 D_8670BE7C;
+extern s16 D_8670BE80;
+extern s16 D_8670BE84;
+extern s16 D_8670BE88;
+extern f32 D_8670C8A8;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
+extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, s32);
+
+
+
+s32 func_8670675C(s32 arg0, s32 arg1) {
+    s16 shift;
+    f32 d;
+    f32 t;
+    f32 s;
+
+    shift = 4;
+
+    d = sqrtf(*(f32 *)((u8 *)&D_8670BB48 + 0x18) * *(f32 *)((u8 *)&D_8670BB48 + 0x18) + *(f32 *)((u8 *)&D_8670BB48 + 0x1C) * *(f32 *)((u8 *)&D_8670BB48 + 0x1C));
+    // FAKE: this unused ternary is load-bearing. Without it the sqrt result stays an
+    // expression temp in f14, as in retail; without it the result lands in f0 and the
+    // register walk after the call shifts by one slot. It emits no code.
+    s = d ? d : d;
+    D_8670C8A8 = d; GeoCamera_SetPerspective(arg1, D_8670BE7C, 100.0f, 12800.0f);
+    d = D_8670C8A8;
+    t = d;
+    t *= D_80088E50[(u16)D_8670BE84 >> shift];
+    func_80038E14(arg1,
+        D_80088E50[(u16)D_8670BE80 >> 4] * t + 1.0f,
+        D_80087E50[(u16)D_8670BE84 >> shift] * d,
+        D_80087E50[(u16)D_8670BE80 >> 4] * t,
+        *(f32 *)((u8 *)&D_8670BB48 + 0x20),
+        *(f32 *)((u8 *)&D_8670BB48 + 0x24),
+        *(f32 *)((u8 *)&D_8670BB48 + 0x28),
+        D_8670BE88);
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
