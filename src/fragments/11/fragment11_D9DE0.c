@@ -1227,7 +1227,77 @@ void func_81607834(u16 arg0, u16 arg1, u16 arg2) {
     gDPSetEnvColor((*(Gfx **)&D_800D0510)++, color->r, color->g, color->b, 255);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_816078C4.s")
+extern s32 func_80049148();
+extern void func_800495F8();
+extern void func_800496A4();
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern s32 func_8004C54C();
+extern s32 func_8004C874();
+extern void *func_8004C8A0();
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
+extern u32 D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 D_8160C10C[];
+
+// Draws one string row of a HUD element: formats the text with font 15, measures
+// it (func_80049148 with the "%s%s" format at D_8160C110), and when arg2 is set
+// appends a display-list pair for the row before the text is drawn. The two
+// "%s%s" objects are block-scope statics because the function's own rodata must
+// sit right after D_8160C0F0: that is where the assembly stub carried them
+// (0x8160C110 and 0x8160C118). The externs above use empty parameter lists so
+// their types stay compatible with the prototyped declarations these same
+// callees carry further down this file (func_80049148 is variadic in use).
+
+
+void func_816078C4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    static const char D_8160C110[8] = "%s%s";
+    static const char D_8160C118[8] = "%s%s";
+    s32 format;
+    s32 text;
+    char buf[0x80];
+    s32 id;
+    s32 width;
+    s32 offset;
+
+    format = func_8004C874(0xF, (arg4 == arg5) ? 0x19 : arg4 + 0xA);
+    text = (s32)D_8160C10C;
+    id = -1;
+    switch (arg3) {
+    case 1:
+        id = 0x5A;
+        break;
+    case 2:
+        id = 0x57;
+        break;
+    case 3:
+        id = 0x58;
+        break;
+    case 4:
+        id = 0x59;
+        break;
+    }
+    if (id >= 0) {
+        text = func_8004C874(0xF, id);
+    }
+    func_8004C54C(0x14, text);
+    func_8004C8A0(buf, 0x80, 0xF, 0x5B);
+    width = func_80049148(4, 1, D_8160C110, format, buf);
+    offset = -(((arg2 != 0) ? 0x10 : 0) + width) / 2;
+    if (arg2 != 0) {
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+        gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 255, 255, 0, 255);
+        func_8004D19C(arg0 + offset + width, arg1, (void *)func_8004C990(0x2F, 1), 0, 0);
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    }
+    func_800498C4();
+    func_800496A4(4, 1);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++, 0, 0x0F0A7008);
+    func_800495F8(arg0 + offset, arg1, 0, D_8160C118, format, buf);
+    func_800499EC();
+}
 
 /* mkdraft:func_81607B1C begin */
 extern void *Gfx_AllocDisplayList(s32);
