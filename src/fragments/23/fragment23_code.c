@@ -376,7 +376,67 @@ void func_82A01098(void) {
         row_y += 32;
     } while (row != 4);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A011E4.s")
+extern u32 D_82A01900;
+extern u8 D_82A01904[];
+extern u8 D_82A0190C[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+void func_82A011E4(s32 arg0, s16 arg1, s32 arg2) {
+#define PASTE(x, y) x##y
+#define func_82A011E4(a, b, c, d) func_82A011E4(PASTE(P_, a), PASTE(Q_, b), c)
+#define P_s16 s32
+#define P_D_82A01998 D_82A01998
+#define Q_s16 s16
+#define Q_D_82A0199A D_82A0199A
+
+    u8 *resource;
+    u8 *from;
+    u8 *to;
+    s32 elapsed;
+    s32 time;
+    s32 duration;
+    u8 *red;
+    u8 *green;
+    u8 *blue;
+    u8 *alpha;
+
+    resource = (u8 *)func_8004C990(0x74, 0);
+    alpha = (u8 *)&D_82A01900;
+    if (resource != NULL) {
+        if (arg2 != 0) {
+            func_8004D1FC(resource);
+            (*(u32 *)alpha)++;
+        }
+        elapsed = *(u32 *)alpha % 45;
+        if (elapsed < 30) {
+            time = elapsed;
+            duration = 30;
+            from = D_82A01904;
+            to = D_82A0190C;
+        } else {
+            time = elapsed - 30;
+            duration = 15;
+            from = D_82A0190C;
+            to = D_82A01904;
+        }
+        elapsed = arg1;
+        red = (u8 *)(from[0] + ((to[0] - from[0]) * time) / duration);
+        green = (u8 *)(from[1] + ((to[1] - from[1]) * time) / duration);
+        blue = (u8 *)(from[2] + ((to[2] - from[2]) * time) / duration);
+        gDPSetPrimColor(D_800D0510++, 0, 0, (s32)red, (s32)green, (s32)blue, 255);
+        red = (u8 *)(from[4] + ((to[4] - from[4]) * time) / duration);
+        green = (u8 *)(from[5] + ((to[5] - from[5]) * time) / duration);
+        blue = (u8 *)(from[6] + ((to[6] - from[6]) * time) / duration);
+        alpha = (u8 *)(from[7] + ((to[7] - from[7]) * time) / duration);
+        gDPSetEnvColor(D_800D0510++, (s32)red, (s32)green, (s32)blue, (s32)alpha);
+        GfxRect_DrawTextured(arg0, elapsed, *(s16 *)(resource + 0), *(s16 *)(resource + 2), 0, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)(*(u16 *)(resource + 0) + arg0), elapsed, *(u16 *)(resource + 0),
+                             *(s16 *)(resource + 2), (*(u16 *)(resource + 0) - 1) << 5, 0, -1024, 1024, 0);
+    }
+}
 
 extern void BgStage_DrawFrame(void);
 extern void func_82A01098(void);
