@@ -153,7 +153,133 @@ void Minigame_UpdatePlayerCounters(void) {
     ((void (*)(void *, s8))(void *)func_80003240(&func_87F097B0))(&D_801291E0, D_8012B363);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/72C30/func_800723FC.s")
+struct unk_D_8012B3E8;
+// The unk_D_8012B3E8 typedef later in this file completes this tag; the code
+// before it uses only D_8012B3E8's address.
+extern struct unk_D_8012B3E8 D_8012B3E8;
+extern s32 D_8012B364;
+extern unk_func_800720A8 D_8012B368;
+extern u8 D_8012B386;
+extern u8 D_8012B39E;
+extern u8 D_8012B3B6;
+extern u8 D_8012B3CE;
+extern u8 D_8AB00000[];
+extern u8 D_8AC00000[];
+extern u8 fragment43_ROM_START[];
+extern u8 fragment44_ROM_START[];
+extern u8 fragment45_ROM_START[];
+extern u8 fragment46_ROM_START[];
+extern void func_80072264(u8 *, u8 *, s32);
+extern void Fragment_Load(s32, u8 *, u8 *);
+extern void Fragment_LoadAndCall(s32, u8 *, u8 *, u32, u8 *);
+
+
+
+void func_800723FC(s32 arg0, s32 *arg1)
+{
+  s32 *p364 = &D_8012B364;
+  u8 *p386 = &D_8012B386;
+  u8 *p39e = &D_8012B39E;
+  u8 *p3b6 = &D_8012B3B6;
+  int new_var;
+  u8 *p3ce = &D_8012B3CE;
+  u8 *out = (u8 *) ((u32) (&D_8012B3E8));
+  if (((u8 *) (&D_801291E0))[0x2180] == 4)
+  {
+    *arg1 = 0xFF;
+    return;
+  }
+  switch (*p364)
+  {
+    case 1:
+      if (arg0 == 1)
+    {
+      *p364 = 0;
+    }
+      break;
+
+    case 2:
+      if (arg0 == 2)
+    {
+      arg0 = (((((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21A6)))) >> 15) != 0) + ((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21BE)))) >> 15) != 0)) + ((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21D6)))) >> 15) != 0)) + ((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21EE)))) >> 15) != 0));
+      if (arg0 != 1)
+      {
+        if (out)
+        {
+        }
+        func_80072264((u8 *) (&D_801291E0), out, ((((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21A6)))) >> 15) != 0) + ((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21BE)))) >> 15) != 0)) + ((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21D6)))) >> 15) != 0)) + ((((unsigned) (*((u16 *) (((u8 *) (&D_801291E0)) + 0x21EE)))) >> 15) != 0));
+        Fragment_Load(((((u32) D_8AC00000) & 0x0FF00000) >> 20) - 0x10, fragment43_ROM_START, fragment44_ROM_START);
+        Fragment_LoadAndCall(((((u32) D_8AB00000) & 0x0FF00000) >> 20) - 0x10, fragment45_ROM_START, fragment46_ROM_START, 0, out);
+
+// FAKE: the two #line directives only renumber these statements for as1, which
+// orders the pair of %hi bases hoisted before the first bnez, and the one in its
+// delay slot, by .loc line: lowest line first, highest line in the delay slot.
+// Retail schedules D_8012B39E's base first, so its assignment needs a line
+// number below D_8012B386's even though it is written after them.
+// diff score 3 without them.
+#line 200
+        if (out[0xF] == 0)
+        {
+          *p386 = (*p386 & 0xFF) | 0x80;
+        }
+        else
+        {
+          *p386 &= 0xFF7F;
+        }
+#line 96
+        if (out[0xF] == 1)
+        {
+          *p39e = (*p39e & 0xFF) | 0x80;
+        }
+        else
+        {
+          *p39e &= 0xFF7F;
+        }
+        if ((u32) out[0xF] == 2)
+        {
+          *p3b6 = (*p3b6 & 0xFF) | 0x80;
+        }
+        else
+        {
+          *p3b6 &= 0xFF7F;
+        }
+        if (out[0xF] == 3)
+        {
+          *p3ce = (*p3ce & 0xFF) | 0x80;
+        }
+        else
+        {
+          *p3ce &= 0xFF7F;
+        }
+
+      }
+      if (0)
+      {
+      }
+      Minigame_UpdatePlayerCounters();
+      if (out[0xF] == 9)
+      {
+      }
+      if (!out)
+      {
+      }
+    }
+    else
+    {
+      *p364 = 0;
+    }
+
+  }
+
+  // FAKE: the dead halfword product is load-bearing; it steers uopt's temp
+  // coloring.  With a plain `== 0` the call's s0 base is materialized
+  // before the bnel and the tail shifts.  diff score 27 without it.
+  if ((*p364) == ((*((u16 *) (((u8 *) (&D_801291E0)) + 0x21BE))) * 0))
+  {
+    func_800720A8(&D_8012B368);
+  }
+  *arg1 = -1;
+}
 
 /* mkdraft:func_80072650 begin */
 typedef struct unk_D_8012B3E8 {
