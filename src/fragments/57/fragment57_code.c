@@ -424,7 +424,48 @@ void func_83302D8C(void) {
 }
 /* mkdraft:func_83302D8C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_8330309C.s")
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 Deck_WriteEntries(u8 *, s32, u8 *);
+extern s32 func_80062304(u8 *);
+extern u8 func_80062E10(u8);
+
+
+
+void func_8330309C(s32 arg0) {
+    u8 buffer[30][0x58];
+    u8 *handle;
+    s32 deckType;
+    s32 slot;
+    s32 count;
+    s32 select;
+
+    select = D_83308E34[0x5D];
+    count = 0;
+    if (select == 0) {
+        deckType = 0x20;
+        slot = 0;
+    } else {
+        deckType = 0x21;
+        slot = select - 1;
+    }
+
+    handle = func_8006218C(deckType, arg0, slot, 0);
+    if (handle != 0) {
+        while (Deck_ReadEntries(buffer[count], 1, handle) != 0) {
+            count++;
+        }
+        func_80062304(handle);
+    }
+    buffer[D_83308E34[0x5E]][*(s32 *)((u8 *)&D_8330A2B0 + 0x50) + 2] = D_8330ABE0;
+    buffer[D_83308E34[0x5E]][*(s32 *)((u8 *)&D_8330A2B0 + 0x50) + 0x18] = func_80062E10(D_8330ABE0);
+
+    handle = func_8006218C(deckType, arg0, slot, 1);
+    if (handle != 0) {
+        Deck_WriteEntries(buffer[0], count, handle);
+        func_80062304(handle);
+    }
+}
 
 /* mkdraft:func_83303220 begin */
 extern void *D_800D0510;
