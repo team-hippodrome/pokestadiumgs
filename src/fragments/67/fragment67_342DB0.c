@@ -2,7 +2,61 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_342DB0/func_829062B0.s")
+typedef float MtxF_t[4][4];
+typedef struct { f32 x, y, z; } Vec3f;
+typedef struct { s16 x, y, z; } Vec3s;
+
+extern f32 D_80088E50[];
+extern u8 D_82919DE0[];
+extern s32 D_82912328;
+extern Gfx *D_800D0510;
+
+extern s32 Gfx_AllocDisplayList(s32);
+extern void MtxF_SetRotationTranslationF(MtxF_t *, Vec3f *, Vec3s *);
+extern void MtxF_ScaleRows(MtxF_t *, MtxF_t *, Vec3f *);
+extern void MtxF_ToFixed(s32, MtxF_t *);
+
+void func_829062B0(s32 arg0) {
+    Vec3f spBC;
+    Vec3s spB4;
+    MtxF_t sp74;
+    MtxF_t sp34;
+    s32 sp30;
+    f32 temp_fv0;
+    u8 *temp_a1;
+    Gfx *temp_v0_2;
+
+    sp30 = Gfx_AllocDisplayList(0x40);
+    temp_a1 = (arg0 * 0x24) + D_82919DE0;
+    spB4.y = -0x4000;
+    *(s16 *)(temp_a1 + 0x16) = *(s16 *)(temp_a1 + 0x18) + *(s16 *)(temp_a1 + 0x16);
+    spB4.z = *(s16 *)(temp_a1 + 0x16);
+    temp_fv0 = *(f32 *)(temp_a1 + 0xC) * D_80088E50[(s32)*(u16 *)(temp_a1 + 0x14) >> 4];
+    spB4.x = 0;
+    spBC.x = temp_fv0;
+    spBC.y = temp_fv0;
+    spBC.z = temp_fv0;
+    MtxF_SetRotationTranslationF(&sp74, (Vec3f *)temp_a1, &spB4);
+    MtxF_ScaleRows(&sp34, &sp74, &spBC);
+    MtxF_ToFixed(sp30, &sp34);
+    temp_v0_2 = D_800D0510;
+    D_800D0510 = temp_v0_2 + 1;
+    temp_v0_2->words.w0 = 0xDA380002;
+    temp_v0_2->words.w1 = sp30 & 0x1FFFFFFF;
+    temp_v0_2 = D_800D0510;
+    D_800D0510 = temp_v0_2 + 1;
+    gSPVertex(temp_v0_2, (u32)&D_82912328, 4, 0);
+    temp_v0_2 = D_800D0510;
+    D_800D0510 = temp_v0_2 + 1;
+    gSP2Triangles(temp_v0_2, 0, 1, 2, 0, 0, 2, 3, 0);
+}
+/* Retail has a second jr ra; nop at 0x829063E4, after this function's epilogue and
+ * before func_829063EC; no symbol in linker_scripts/us/symbol_addrs_code.txt covers
+ * that address. An unreferenced empty function compiles to those eight bytes and
+ * keeps the fragment's layout.
+ * //@{asm/us/nonmatchings/fragments/67/fragment67_342DB0/func_829062B0.s} */
+
+void func_829062B0_padding(void) {}
 
 /* mkdraft:func_829063EC begin */
 extern s32 MathUtil_Random16(void);

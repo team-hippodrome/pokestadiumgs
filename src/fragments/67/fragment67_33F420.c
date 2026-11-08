@@ -85,7 +85,75 @@ void func_8290299C(u8 arg0) {
     D_82918978 = record->unk_1C;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33F420/func_82902AC0.s")
+extern Gfx *D_800D0510;
+extern Gfx D_82911F70[];
+extern s32 D_82918984;
+extern s8 *D_82911E40[4];
+extern u8 *func_8004CA60(u8 *);
+extern void func_800459AC(s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80045DB4(s32, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+typedef struct Fragment67TextureHeader {
+    u16 width, height;
+    u8 format, size;
+    u16 unk_06;
+} Fragment67TextureHeader;
+typedef struct Fragment67Rgba {
+    u8 r, g, b, a;
+} Fragment67Rgba;
+
+
+
+
+
+void func_82902AC0(u8 arg0) {
+    s32 combine_mode;
+    u8 i;
+
+    gSPDisplayList(D_800D0510++, D_82911F70);
+    gDPSetRenderMode(D_800D0510++, G_RM_PASS, G_RM_CLD_SURF2);
+    combine_mode = *(s32 *)D_82911E50[arg0].unk_00;
+    switch (combine_mode) {
+    case 0:
+        gDPSetCombineLERP(D_800D0510++, TEXEL0, TEXEL1, PRIM_LOD_FRAC, TEXEL1, 1, 0, PRIMITIVE, 0,
+                          PRIMITIVE, ENVIRONMENT, COMBINED, ENVIRONMENT, 0, 0, 0, COMBINED);
+        break;
+    case 1:
+        gDPSetCombineLERP(D_800D0510++, NOISE, SHADE, PRIM_LOD_FRAC, TEXEL1, 1, 0, PRIMITIVE, 0,
+                          PRIMITIVE, ENVIRONMENT, COMBINED, ENVIRONMENT, 0, 0, 0, COMBINED);
+        break;
+    }
+    gDPSetPrimColor(D_800D0510++, 0, D_82918960, ((Fragment67Rgba *)&D_82918964)->r,
+                    ((Fragment67Rgba *)&D_82918964)->g, ((Fragment67Rgba *)&D_82918964)->b,
+                    ((Fragment67Rgba *)&D_82918964)->a);
+    gDPSetEnvColor(D_800D0510++, ((Fragment67Rgba *)&D_82918968)->r, ((Fragment67Rgba *)&D_82918968)->g,
+                   ((Fragment67Rgba *)&D_82918968)->b, ((Fragment67Rgba *)&D_82918968)->a);
+    D_829188F0 += D_8291896C;
+    D_829188F1 += D_8291896D;
+    D_829188F2 += D_8291896E;
+    D_829188F3 += D_8291896F;
+    for (i = 0; i < 4; i++) {
+        if (*D_82911E40[i] < 0) {
+            *D_82911E40[i] = *D_82911E40[i] + 128;
+        } else if (*D_82911E40[i] >= 128) {
+            *D_82911E40[i] = *D_82911E40[i] - 128;
+        }
+    }
+    func_800459AC((s32)func_8004CA60((u8 *)D_82918980.unk_00),
+                  ((Fragment67TextureHeader *)D_82918980.unk_00)->format,
+                  ((Fragment67TextureHeader *)D_82918980.unk_00)->size,
+                  ((Fragment67TextureHeader *)D_82918980.unk_00)->width,
+                  ((Fragment67TextureHeader *)D_82918980.unk_00)->height, 1, 0, 0, 0, 5, 5,
+                  D_82918970, D_82918971);
+    func_80045DB4((s32)func_8004CA60((u8 *)D_82918984), 256, 1,
+                  ((Fragment67TextureHeader *)D_82918984)->format,
+                  ((Fragment67TextureHeader *)D_82918984)->size,
+                  ((Fragment67TextureHeader *)D_82918984)->width,
+                  ((Fragment67TextureHeader *)D_82918984)->height, 1, 0, 0, 0, 5, 5, D_82918972,
+                  D_82918973);
+    gDPSetTileSize(D_800D0510++, 0, D_829188F0, D_829188F1, D_829188F0 + 124, D_829188F1 + 124);
+    gDPSetTileSize(D_800D0510++, 1, D_829188F2, D_829188F3, D_829188F2 + 124, D_829188F3 + 124);
+}
 
 /* mkdraft:func_82902EC0 begin */
 extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
