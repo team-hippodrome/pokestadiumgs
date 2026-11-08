@@ -139,7 +139,96 @@ s32 func_87C03178(s32 arg0, u8 *arg1) {
 
 extern void Geo_RenderRootNode(s32); void WidgetTree_OpenMessagePanel_fragment48(u8 *arg0) { Geo_RenderRootNode(*(s32 *)(arg0 + 0)); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C03574.s")
+extern u8 D_87C04168[];
+extern s32 MathUtil_Random16(void);
+extern s32 func_80001FF0(void);
+extern s32 func_80008970(void);
+extern void func_87C02ADC(u8 *arg0, u8 *arg1, f64 arg2);
+extern void func_87C02D1C(u8 *arg0, u8 *arg1);
+extern void func_87C037C0(void *, void *);
+// These seven empty tests have no effect on the computation. IDO 7.1 emits the
+// loop schedule below only with them present: each one pins an induction
+// variable to the register the retail code uses. Removing one at a time from
+// this file raises the differ score and leaves differing ROM bytes, so the ROM
+// byte comparison, not the score, is the check that they are still placed
+// correctly.
+//
+// FAKE: if (k == 240) { }        in the k loop, its body is empty        diff 30,  5 ROM bytes
+// FAKE: if (p == x) { }          after x = p + 0x2D0                     diff 148, 25 ROM bytes
+// FAKE: if (offset == 0x168) { } after model = p + j                     diff 148, 25 ROM bytes
+// FAKE: if (p) { }               before model[2] |= 0x10                 diff 215, 35 ROM bytes
+// FAKE: if (p == x) { }          after model[2] |= 0x10                  diff 215, 35 ROM bytes
+// FAKE: if (j == 200) { }        after the j loop                        diff 205, 29 ROM bytes
+// FAKE: do { x = p + 0x2D0; } while (0 != 0U);
+//                                the loop runs once; it only places x      diff 260, 16 ROM bytes
+//
+// The differ prints both `addu` and `or` as `move`, so a zero score does not
+// prove a byte match: instruction 0x2596E8 must encode as `or s0,s3,zero`
+// (02608025). The statement grouping is load-bearing as well; a reformatted
+// copy of this same body differs in 8 ROM bytes around 0x2596D4.
+
+
+void func_87C03574(u8 *arg0, s32 arg1)
+{
+  f64 step;
+  u8 *p;
+  u8 *x;
+  u8 *model;
+  s32 i;
+  s32 j;
+  s32 k;
+  s32 offset;
+  step = ((((f64) ((s32) func_80008970())) * 60.0) / ((f64) ((s32) func_80001FF0()))) / 10.0;
+  switch (arg1)
+  {
+    case 1:
+      *((s32 *) (arg0 + 0x548)) = (MathUtil_Random16() % 6) + 1;
+      break;
+
+    case 2:
+      *((s32 *) (arg0 + 0x548)) = -1;
+      break;
+
+  }
+
+  func_87C037C0(arg0 + 0x4C8, *((void **) (arg0 + 8)));
+  for (i = 0; i != 10; i++)
+  {
+    offset = 0;
+    do
+    {
+      k = 0;
+      do
+      {
+if (k == 240) { }         func_87C02FEC((arg0 + 0x48) + offset, (arg0 + 0x3D8) + k, step);
+        k += 0x30;
+      }
+      while (k != 240);
+      offset += 0x390;
+    }
+    while (offset < 0x390);
+    offset = 0;
+    do
+    {
+      func_87C02ADC((arg0 + 0x318) + offset, D_87C04168, step);
+      offset += 0x390;
+ } while (offset < 0x390); } p = arg0 + 0x48; do { x = p + 0x2D0; } while (0 != 0U); if (p == x) { } offset = 0; do { j = 0; do { model = p + j; if (offset == 0x168) { } if (p) { } model[2] |= 0x10; if (p == x) { } func_87C02D1C(x, model + 0x60); switch (j) { case 0x168: *((f32 *) (model + 0x64)) *= -1.0f; *((f32 *) (model + 0x74)) *= -1.0f;
+          *((f32 *) (model + 0x84)) *= -1.0f;
+          *((f32 *) (model + 0x94)) *= -1.0f;
+          model[0x1D] = 200;
+          break;
+
+      }
+
+      j += 0x168;
+    }
+    while (j != 0x2D0);
+    if (j == 200) { } p += 0x390;
+    x += 0x390;
+    offset += 0x390;
+  }
+  while (offset != 0x390);
+}
 
 s32 func_87C0379C(u8 *arg0) {
     return *(s32 *)(arg0 + 0x548);

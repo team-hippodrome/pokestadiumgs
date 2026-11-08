@@ -175,9 +175,71 @@ void* func_87C0288C(void* arg0, f64* arg1, f64* arg2, f64* arg3) {
                         (arg2[2] + (arg3[0] - arg3[1]) * arg1[0] * arg1[1]) / arg3[2]);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258080/func_87C02924.s")
+extern void *func_87C0288C(void *, f64 *, f64 *, f64 *);
+extern void *func_87C002A8(void *, void *, f64);
+extern void *func_87C00198(void *, void *, void *);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258080/func_87C02ADC.s")
+
+
+void func_87C02924(f64 *arg0, f64 *arg1, f64 *arg2, f64 *arg3, f64 arg4) {
+    f64 var_spA8[3];
+    f64 var_sp90[3];
+    f64 var_sp78[3];
+    f64 var_sp60[3];
+    f64 var_sp48[3];
+    f64 var_sp30[3];
+
+    func_87C002A8(var_sp78, func_87C0288C(var_sp90, arg1, arg2, arg3), arg4);
+    func_87C002A8(var_sp60,
+                  func_87C0288C(var_sp90,
+                                func_87C00198(var_sp90, func_87C002A8(var_spA8, var_sp78, 0.5), arg1),
+                                arg2, arg3),
+                  arg4);
+    func_87C002A8(var_sp48,
+                  func_87C0288C(var_sp90,
+                                func_87C00198(var_spA8, func_87C002A8(var_spA8, var_sp60, 0.5), arg1),
+                                arg2, arg3),
+                  arg4);
+    func_87C002A8(var_sp30,
+                  func_87C0288C(var_sp90, func_87C00198(var_spA8, var_sp48, arg1), arg2, arg3),
+                  arg4);
+    // FAKE
+    while (0) {}
+    // Weighted per-axis average of the four rotated vectors: 1*sp78 + 2*sp60 +
+    // 2*sp48 + 1*sp30, divided by 6. FAKE: the sum is spelled from sp30 down to
+    // sp60 so IDO emits the add.d chain 2*sp60, +sp78, +2*sp48, +sp30 with the
+    // accumulator in fs; the natural order 2*sp60 + sp78 + 2*sp48 + sp30 gives
+    // diff score 155 (the final add.d comes out commuted).
+    arg0[0] = (var_sp30[0] + ((var_sp48[0] + var_sp48[0]) + (var_sp78[0] + (var_sp60[0] + var_sp60[0])))) / 6.0;
+    arg0[1] = (var_sp30[1] + ((var_sp48[1] + var_sp48[1]) + (var_sp78[1] + (var_sp60[1] + var_sp60[1])))) / 6.0;
+    arg0[2] = (var_sp30[2] + ((var_sp48[2] + var_sp48[2]) + (var_sp78[2] + (var_sp60[2] + var_sp60[2])))) / 6.0;
+}
+
+extern void *func_87C00C80(void *, void *);
+extern void func_87C00628(s32, s32, s32);
+
+
+void func_87C02ADC(u8 *arg0, u8 *arg1, f64 arg2) {
+    f64 var_spC0[3];
+    f64 var_spA8[3];
+    f64 var_sp90[3];
+    f64 var_sp60[6];
+    f64 var_sp48[3];
+
+    func_87C02594(arg0, arg0 + 0xA0,
+                  (s32)func_87C002A8(var_spC0, arg1, *(f64 *)(*(void **)arg0)));
+    func_87C00198(arg0 + 0x20, arg0 + 0x20,
+                  func_87C002A8(var_spC0, arg0 + 0x70, arg2 / *(f64 *)(*(void **)arg0)));
+    func_87C00198(arg0 + 8, arg0 + 8, func_87C002A8(var_spC0, arg0 + 0x20, arg2));
+    func_87C00C80(arg0 + 0x38, func_87C002A8(var_spC0, arg0 + 0x58, arg2));
+    func_87C00628(var_sp90, arg0 + 0x58, arg0 + 0x38);
+    func_87C00628(var_spA8, arg0 + 0x88, arg0 + 0x38);
+    func_87C02924(var_sp60, var_sp90, var_spA8, *(u8 **)arg0 + 8, arg2);
+    func_87C004C4(var_sp48, var_sp60, arg0 + 0x38);
+    func_87C00198(arg0 + 0x58, arg0 + 0x58, var_sp48);
+    func_87C02508((s32)arg0);
+    func_87C02538(arg0);
+}
 
 extern void func_87C00628(s32, s32, s32);
 void func_87C02C30(u8 *arg0, void *arg1, void *arg2) {
