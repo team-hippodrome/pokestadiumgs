@@ -568,7 +568,84 @@ void func_82C02390(void *arg0, void *arg1, s8 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C02440.s")
+extern u8 D_82C04A18;
+extern u8 D_82C04900[];
+extern u8 D_82C04910[];
+typedef struct { s32 a; s32 b; } Blob8;
+
+
+
+void func_82C02440(void) {
+    u8 *entry;
+    s8 timer;
+    Blob8 *p;
+    Blob8 *q;
+
+    switch (*(u8 *)((u8 *)&D_82C04C38 + 1)) {
+        case 0:
+            func_82C02390(&D_82C04C44, (u8 *)D_82C04918 - 0x10, 1);
+            *(s8 *)((u8 *)&D_82C04C38 + 0xA) = *(s8 *)((u8 *)&D_82C04C38 + 0xA) - 1;
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) == 0) {
+                *(u8 *)((u8 *)&D_82C04C38 + 1) = 1;
+                *(s8 *)((u8 *)&D_82C04C38 + 0xA) = 2;
+            }
+            break;
+        case 1:
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) > 0) {
+                *(s8 *)((u8 *)&D_82C04C38 + 0xA) = *(s8 *)((u8 *)&D_82C04C38 + 0xA) - 1;
+            }
+            break;
+        case 2:
+            entry = (u8 *)&D_82C04C38;
+            entry += *(s8 *)((u8 *)&D_82C04C38 + 2) * 0x1CC;
+            entry += 0x50;
+            func_82C02390(entry + 0x1C4, entry + 0x1BC, 1);
+            *(s8 *)((u8 *)&D_82C04C38 + 0xA) = *(s8 *)((u8 *)&D_82C04C38 + 0xA) - 1;
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) == 0) {
+                *(u8 *)((u8 *)&D_82C04C38 + 1) = 3;
+            }
+            break;
+        case 4:
+            entry = (u8 *)&D_82C04C38;
+            entry += *(s8 *)((u8 *)&D_82C04C38 + 2) * 0x1CC;
+            entry += 0x50;
+            func_82C02390(entry + 0x1C4, entry + 0x1BC, -1);
+            *(s8 *)((u8 *)&D_82C04C38 + 0xA) = *(s8 *)((u8 *)&D_82C04C38 + 0xA) - 1;
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) == 0) {
+                *(u8 *)((u8 *)&D_82C04C38 + 1) = 1;
+                *(s8 *)((u8 *)&D_82C04C38 + 0xA) = 2;
+            }
+            break;
+        case 5:
+            timer = *(s8 *)((u8 *)&D_82C04C38 + 0xA);
+            *(s16 *)((u8 *)&D_82C04C38 + 6) = 1 - timer;
+            *(s16 *)((u8 *)&D_82C04C38 + 8) = D_82C04A18 - timer;
+            *(s8 *)((u8 *)&D_82C04C38 + 0xA) = timer - 1;
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) == 0) {
+                *(u8 *)((u8 *)&D_82C04C38 + 1) = 6;
+            }
+            break;
+        case 7:
+            p = (Blob8 *)((u8 *)D_82C04918 - 0x10);
+            q = (Blob8 *)(u8 *)D_82C04900;
+            *q = *p;
+            timer = *(s8 *)((u8 *)&D_82C04C38 + 0xA);
+            *(s16 *)((u8 *)&D_82C04C38 + 6) = timer - D_82C04A18;
+            *(s8 *)((u8 *)&D_82C04C38 + 0xA) = timer - 1;
+            *(s16 *)((u8 *)&D_82C04C38 + 8) = timer - 1;
+            if (*(s8 *)((u8 *)&D_82C04C38 + 0xA) == 0) {
+                *(u8 *)((u8 *)&D_82C04C38 + 1) = 1;
+            }
+            break;
+        case 6:
+            p = (Blob8 *)(u8 *)D_82C04910;
+            q = (Blob8 *)(u8 *)D_82C04900;
+            *q = *p;
+            break;
+        default:
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
