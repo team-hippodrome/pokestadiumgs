@@ -157,7 +157,61 @@ void func_864002CC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_864004B4.s")
+extern s32 func_80001FF0(void);
+void * func_8004C990();
+extern void *func_8004CA60(void *);
+extern void func_8003CD84(void);
+extern Gfx *D_800D0510;
+extern u8 D_86409718[];
+extern u8 D_864098C0[];
+extern void *D_8009491C;
+/* Draws one HUD-style quad: picks a palette entry from D_86409718 and a colour from the
+ * object's flags at 0xC, fades it out by the rounded 10Hz frame count, then queues
+ * pipe-sync / env-colour / segment / display-list into D_800D0510 and flushes. */
+
+
+void func_864004B4(s32 arg0, s32 arg1) {
+    u8 *link;
+    u8 *obj;
+    f32 alpha;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 idx;
+    if (arg0 != 5) {
+        return;
+    }
+    link = D_8009491C;
+    obj = *(u8 **)((u8 *)link + 0x14);
+    idx = D_86409718[(*((s32 *)(obj + 0x1C)) % 16) / 2];
+    alpha = 255.0f; alpha -= (255.0f * (f32)*((s32 *)(obj + 0x1C))) / (f32)((((f32)func_80001FF0() / 60.0f) * 6.0f) >= 0.0f ? (s32)((((f32)func_80001FF0() / 60.0f) * 6.0f) + 0.5f) : (s32)((((f32)func_80001FF0() / 60.0f) * 6.0f) - 0.5f));
+    if (*((s32 *)(obj + 0xC)) & 0x01000000) {
+        r = 0x8C;
+        g = 0x8C;
+        b = 0xC8;
+    } else if (*((s32 *)(obj + 0xC)) & 0x02000000) {
+        r = 0x8C;
+        g = 0xC8;
+        b = 0x8C;
+    } else if (*((s32 *)(obj + 0xC)) & 0x04000000) {
+        r = 0xDC;
+        g = 0x8C;
+        b = 0x8C;
+    } else if (*((s32 *)(obj + 0xC)) & 0x08000000) {
+        r = 0xDC;
+        g = 0x8C;
+        b = 0x8C;
+    } else {
+        r = 0xC8;
+        g = 0xAA;
+        b = 0x82;
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, r, g, b, alpha);
+    gSPSegment(D_800D0510++, 0xF, func_8004CA60((u8 *)func_8004C990(0x9F, idx)));
+    gSPDisplayList(D_800D0510++, D_864098C0);
+    func_8003CD84();
+}
 #endif
 
 #ifdef VERSION_US
@@ -298,7 +352,91 @@ void func_864009D4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86400DDC.s")
+extern u8 D_86409720;
+extern float sqrtf(float value);
+extern s32 func_80001FF0(void);
+extern u8 *D_86416C00;
+extern void func_8003CD84(void);
+extern u8 D_864095D0;
+
+
+
+void func_86400DDC(s32 arg0, s32 arg1)
+{
+  u8 level;
+  u8 *model;
+  u8 *child;
+  u8 alpha;
+  u8 *colors;
+  u8 *env_colors;
+  // Never read. Its presence alone moves the "segment" Gfx pointer from
+  // 0x1c(sp) to the retail 0x18(sp).
+  s32 random;
+  if (arg0 == 5)
+  {
+    arg0 = (s32) D_8009491C;
+    model = *((u8 **) (arg0 + 0x14));
+    child = *((u8 **) (model + 0x20));
+    alpha = (&D_86409720)[(*((s32 *) child)) & 0xF];
+    level = child[4];
+    colors = (&D_864095D0) + ((level << 2) << 1);
+    env_colors = colors + 4;
+    if ((*((s32 *) (model + 0xC))) & 0x10000000)
+    {
+      level = (u8) ((200.0f * ((f32) (*((s32 *) (model + 0x1C))))) / ((f32) (((((((f32) func_80001FF0()) / 60.0f) * 5.0f) >= 0.0f) ? (s32) (((((f32) func_80001FF0()) / 60.0f) * 5.0f) + 0.5f) : (s32) (((((f32) func_80001FF0()) / 60.0f) * 5.0f) - 0.5f)))));
+      // FAKE: empty loop, nothing reaches the ROM. Deleting it makes the differ
+      // score 295 instead of 0 (it only shifts IDO's statement numbering).
+      do
+      {
+      }
+      while (0);
+    }
+    else
+      if ((*((s32 *) (model + 0xC))) & 0x40000000)
+    {
+      level = (u8) (200.0f - ((200.0f * ((f32) (*((s32 *) (model + 0x1C))))) / ((f32) (((((((f32) func_80001FF0()) / 60.0f) * 10.0f) >= 0.0f) ? (s32) (((((f32) func_80001FF0()) / 60.0f) * 10.0f) + 0.5f) : (s32) (((((f32) func_80001FF0()) / 60.0f) * 10.0f) - 0.5f))))));
+    }
+    else
+    {
+      level = 200;
+    }
+    {
+      Gfx *_g = (Gfx *) ((*((Gfx **) (&D_800D0510)))++);
+      _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24);
+      _g->words.w1 = 0;
+    }
+    ;
+    {
+      Gfx *_g = (Gfx *) ((*((Gfx **) (&D_800D0510)))++);
+      _g->words.w0 = ((unsigned int) ((((unsigned int) 0xfc) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((((((unsigned int) ((((unsigned int) 3) & ((0x01 << 4) - 1)) << 20)) | ((unsigned int) ((((unsigned int) 1) & ((0x01 << 5) - 1)) << 15))) | ((unsigned int) ((((unsigned int) 5) & ((0x01 << 3) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 1) & ((0x01 << 3) - 1)) << 9))) | (((unsigned int) ((((unsigned int) 15) & ((0x01 << 4) - 1)) << 5)) | ((unsigned int) ((((unsigned int) 31) & ((0x01 << 5) - 1)) << 0))))) & ((0x01 << 24) - 1)) << 0)); _g->words.w1 = (unsigned int) ((((((unsigned int) ((((unsigned int) 5) & ((0x01 << 4) - 1)) << 28)) | ((unsigned int) ((float) ((((unsigned int) 5) & ((0x01 << 3) - 1)) << 15)))) | ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 9))) | (((((((unsigned int) ((((unsigned int) 15) & ((0x01 << 4) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 6))) | ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 3))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 0))));
+    }
+    ;
+    {
+      Gfx *_g = (Gfx *) ((*((Gfx **) (&D_800D0510)))++);
+      _g->words.w0 = (((unsigned int) ((((unsigned int) 0xfa) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 8) - 1)) << 0));
+      _g->words.w1 = ((((unsigned int) ((((unsigned int) colors[1]) & ((0x01 << 8) - 1)) << 16)) | ((unsigned int) ((((unsigned int) colors[2]) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) level) & ((0x01 << 8) - 1)) << 0))) | ((unsigned int) ((((unsigned int) colors[0]) & ((0x01 << 8) - 1)) << 24));
+    }
+    ;
+    {
+      Gfx *_g = (Gfx *) ((*((Gfx **) (&D_800D0510)))++);
+      _g->words.w0 = (unsigned int) ((((unsigned int) 0xfb) & ((0x01 << 8) - 1)) << 24);
+      _g->words.w1 = ((((unsigned int) ((((unsigned int) env_colors[1]) & ((0x01 << 8) - 1)) << 16)) | ((unsigned int) ((((unsigned int) env_colors[2]) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) level) & ((0x01 << 8) - 1)) << 0))) | ((unsigned int) ((((unsigned int) env_colors[0]) & ((0x01 << 8) - 1)) << 24));
+    }
+    ;
+    {
+      Gfx *segment = (*((Gfx **) (&D_800D0510)))++;
+      segment->words.w0 = 0xDB06003C;
+      segment->words.w1 = (u32) func_8004CA60(func_8004C990(0x96, alpha, &D_800D0510));
+    }
+    {
+      Gfx *_g = (Gfx *) ((*((Gfx **) (&D_800D0510)))++);
+      _g->words.w0 = (((unsigned int) ((((unsigned int) 0xde) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0));
+      _g->words.w1 = (unsigned int) (*((s32 *) (D_86416C00 + 0xB550)));
+    }
+    ;
+    func_8003CD84();
+  }
+}
 #endif
 
 #ifdef VERSION_US
@@ -2120,7 +2258,7 @@ extern u8 *func_8004DF38(s32, s32, s32);
 extern void MainPool_FinalizeAllocation(void *);
 extern ColorAdjustment func_87F0AD50(s32, s32, s32);
 extern s32 func_8004E018(s32, s32, s32, ColorAdjustment);
-extern s32 func_8004C990(s32, s32);
+void * func_8004C990();
 extern s32 func_87F08E3C(void *, s32);
 extern void ModelRenderer_InitDisplayRoots(void);
 extern void func_87F024CC(void);
@@ -2358,7 +2496,7 @@ extern void GfxImage_FillCurrent(void *, u16);
 extern void GfxImage_ClearDepthRectangle(void *, s32, s32, s32, s32);
 extern s32 func_87F00930(void);
 extern void GeoRender_AdvanceFrameCounter(void);
-extern u8 D_800D0510;
+extern Gfx *D_800D0510;
 extern u8 *D_86416C00;
 extern void Geo_RenderRootNode(s32);
 extern void func_864082A8(void);

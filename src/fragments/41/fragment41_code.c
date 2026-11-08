@@ -26,7 +26,163 @@ void func_88C00020(Frag41_Input *arg0) {
     Input_SetRepeatController(D_80087200);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C00084.s")
+extern void func_800226C0(s32);
+extern s32 GbSave_SetRelativeRtcTime(u8 port, u16 days, u8 hours, u8 minutes, u8 seconds);
+extern void func_8005F620(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
+extern s32 Input_GetRepeatedDPad(void);
+extern u32 D_800CDA34;
+
+// View of the play clock at the top of Frag41_State: days/hours/minutes/seconds at
+// 0x0-0x4, the last tick at 0x8, the sub-second frame counter at 0xC, and the edit
+// copies at 0x20 plus the day range at 0x2C/0x2E.
+typedef struct {
+    u16 unk00;
+    u8 unk02;
+    u8 unk03;
+    u8 unk04;
+    u8 pad05[3];
+    u32 unk08;
+    u16 unk0C;
+    u8 pad0E[0x12];
+    u16 unk20;
+    u8 unk22;
+    u8 unk23;
+    u8 unk24;
+    s16 unk26;
+    s32 unk28;
+    u16 unk2C;
+    u16 unk2E;
+} Frag41_Rtc;
+
+
+
+s32 func_88C00084(void) {
+    s32 result;
+    s32 input;
+
+    result = 0;
+    if (D_80087200->buttonsPressed & 0x4000) {
+        func_800226C0(3);
+        result = 1;
+    } else if (D_80087200->buttonsPressed & 0x8000) {
+        func_800226C0(2);
+        if (D_88C01A60->unk28 != 1) {
+            GbSave_SetRelativeRtcTime(0, D_88C01A60->unk20, D_88C01A60->unk22, D_88C01A60->unk23, D_88C01A60->unk24);
+        }
+        ((Frag41_Rtc *)D_88C01A60)->unk00 = D_88C01A60->unk20;
+        ((Frag41_Rtc *)D_88C01A60)->unk02 = D_88C01A60->unk22;
+        ((Frag41_Rtc *)D_88C01A60)->unk03 = D_88C01A60->unk23;
+        ((Frag41_Rtc *)D_88C01A60)->unk04 = D_88C01A60->unk24;
+        ((Frag41_Rtc *)D_88C01A60)->unk08 = *(u32 *)((u8 *)&D_800CDA34 + 0x20);
+        ((Frag41_Rtc *)D_88C01A60)->unk0C = 0;
+    } else if (D_80087200->buttonsPressed & 0x1000) {
+        func_800226C0(2);
+        D_88C01A60->unk20 = D_88C01A60->unk2E;
+    } else if (D_80087204->buttonsPressed & 0x1000) {
+        func_800226C0(2);
+        if (D_88C01A60->unk28 != 1) {
+            func_8005F620(0, 0x1FF, 23, 59, 59);
+        }
+        ((Frag41_Rtc *)D_88C01A60)->unk00 = D_88C01A60->unk20 = D_88C01A60->unk2E;
+        D_88C01A60->unk22 = 23;
+        ((Frag41_Rtc *)D_88C01A60)->unk02 = D_88C01A60->unk22;
+        D_88C01A60->unk23 = 59;
+        ((Frag41_Rtc *)D_88C01A60)->unk03 = D_88C01A60->unk23;
+        D_88C01A60->unk24 = 59;
+        ((Frag41_Rtc *)D_88C01A60)->unk04 = D_88C01A60->unk24;
+        ((Frag41_Rtc *)D_88C01A60)->unk08 = *(u32 *)((u8 *)&D_800CDA34 + 0x20);
+        ((Frag41_Rtc *)D_88C01A60)->unk0C = 0;
+    } else {
+        input = Input_GetRepeatedDPad();
+        switch (input) {
+        case 0x800:
+            func_800226C0(1);
+            D_88C01A60->unk26 -= 1;
+            if (D_88C01A60->unk26 < 0) {
+                D_88C01A60->unk26 = 3;
+            }
+            break;
+        case 0x400:
+            func_800226C0(1);
+            D_88C01A60->unk26 += 1;
+            if (D_88C01A60->unk26 >= 4) {
+                D_88C01A60->unk26 = 0;
+            }
+            break;
+        case 0x200:
+            switch (D_88C01A60->unk26) {
+            case 0:
+                if (D_88C01A60->unk20 != ((Frag41_Rtc *)D_88C01A60)->unk2C) {
+                    func_800226C0(1);
+                    D_88C01A60->unk20 -= 1;
+                }
+                break;
+            case 1:
+                if (D_88C01A60->unk22 != 0) {
+                    func_800226C0(1);
+                    D_88C01A60->unk22 -= 1;
+                }
+                break;
+            case 2:
+                if (D_88C01A60->unk23 != 0) {
+                    func_800226C0(1);
+                    D_88C01A60->unk23 -= 1;
+                }
+                break;
+            case 3:
+                if (D_88C01A60->unk24 != 0) {
+                    func_800226C0(1);
+                    D_88C01A60->unk24 -= 1;
+                }
+                break;
+            }
+            break;
+        case 0x100:
+            switch (D_88C01A60->unk26) {
+            case 0:
+                if (D_88C01A60->unk20 != D_88C01A60->unk2E) {
+                    func_800226C0(1);
+                    D_88C01A60->unk20 += 1;
+                }
+                break;
+            case 1:
+                if (D_88C01A60->unk22 != 23) {
+                    func_800226C0(1);
+                    D_88C01A60->unk22 += 1;
+                }
+                break;
+            case 2:
+                if (D_88C01A60->unk23 != 59) {
+                    func_800226C0(1);
+                    D_88C01A60->unk23 += 1;
+                }
+                break;
+            case 3:
+                if (D_88C01A60->unk24 != 59) {
+                    func_800226C0(1);
+                    D_88C01A60->unk24 += 1;
+                }
+                break;
+            }
+            break;
+        }
+    }
+    if (D_88C01A60->unk20 < ((Frag41_Rtc *)D_88C01A60)->unk2C) {
+        D_88C01A60->unk20 = ((Frag41_Rtc *)D_88C01A60)->unk2C;
+    } else if (D_88C01A60->unk20 > D_88C01A60->unk2E) {
+        D_88C01A60->unk20 = D_88C01A60->unk2E;
+    }
+    if (D_88C01A60->unk22 >= 24) {
+        D_88C01A60->unk22 = 23;
+    }
+    if (D_88C01A60->unk23 >= 60) {
+        D_88C01A60->unk23 = 59;
+    }
+    if (D_88C01A60->unk24 >= 60) {
+        D_88C01A60->unk24 = 59;
+    }
+    return result;
+}
 
 extern Gfx* D_800D0510;
 extern char D_88C01924[];
@@ -272,7 +428,46 @@ void func_88C00CE4(f32 arg0, s32 arg1) {
 }
 /* mkdraft:func_88C00CE4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/41/fragment41_code/func_88C0107C.s")
+extern u8 D_80094E38[];
+extern void GfxImage_FillCurrent(void *arg0, u16 arg1);
+extern s32 func_80008648(void);
+extern void func_800088DC(void);
+extern s32 func_8004C990(s32 arg0, s32 arg1);
+extern s32 func_8004D19C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+extern void func_88C006B8(void);
+extern void func_88C00CE4(f32 arg0, s32 arg1);
+
+typedef struct { u8 r; u8 g; u8 b; } Frag41_ColorRGB;
+extern Frag41_ColorRGB D_88C01890[7];
+extern Frag41_ColorRGB D_88C018A8[7];
+extern u16 D_88C018C0[7];
+
+
+
+void func_88C0107C(s32 arg0) {
+    Frag41_Input *state;
+    u8 index;
+
+    state = (Frag41_Input *)D_88C01A60;
+    index = state->unk00 % 7;
+    func_88C00AB0(arg0);
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 1);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D19C(0x1C3, 0x2D, func_8004C990(0x1C3, 0), 0, 0);
+    func_88C00CE4(((f32) state->unk02 + (f32) state->unk03 / 60.0f) * -360.0f / 12.0f, 0);
+    func_88C00CE4(((f32) state->unk03 + (f32) state->unk04 / 60.0f) * -360.0f / 60.0f, 1);
+    func_88C00CE4((f32) state->unk04 * -360.0f / 60.0f, 2);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D19C(0x203, 0x5C, func_8004C990(0x1C1, 0), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0xFC30FE61, 0x55FEF379);
+    gDPSetPrimColor(D_800D0510++, 0, 0, D_88C01890[index].r, D_88C01890[index].g, D_88C01890[index].b, 255);
+    gDPSetEnvColor(D_800D0510++, D_88C018A8[index].r, D_88C018A8[index].g, D_88C018A8[index].b, 255);
+    func_8004D19C(0x1DE, 0x9B, func_8004C990(0x1C5, D_88C018C0[index]), 0, 0);
+    func_88C006B8();
+    func_80008648();
+}
 
 extern s32 func_80001FF0(void);
 extern void StageFade_StartFromOpaque(s32);

@@ -637,7 +637,73 @@ void ListSlots_UpdateTransferAnimation(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_310270/func_87E0DE34.s")
+extern int ListSlots_FindSelectedRecord(void *);
+extern void ListSlots_UpdateTransferAnimation(void);
+extern void func_87F0B1A4(u8 *, f32 *, f32, f32, f32, s32, s32);
+extern s32 func_80001FF0(void);
+extern void *func_87E12070(void *, s32, s32);
+
+
+void func_87E0DE34(void *arg0)
+{
+  typedef struct 
+  {
+    s32 unk_00;
+    u8 unk_04[20];
+  } E2190;
+  typedef struct 
+  {
+    s32 x;
+    s32 y;
+    s32 z;
+  } V3;
+  s32 slot;
+  u8 *t0;
+  s32 selected;
+  u8 *other;
+  u8 *entry;
+  u8 *s2;
+  u8 *obj;
+  V3 *dst;
+  selected = ListSlots_FindSelectedRecord(arg0);
+  if (selected == (-1))
+  {
+    slot = *((s8 *) (((u8 *) arg0) + 0x408));
+    entry = (((u8 *) (*((u8 **) (((u8 *) arg0) + 4)))) + 0x2190) + (slot * 24);
+    other = entry;
+    selected = slot;
+  }
+  else
+  {
+    entry = (((u8 *) (*((u8 **) (((u8 *) arg0) + 4)))) + 0x2190) + (selected * 24);
+    slot = *((s8 *) (((u8 *) arg0) + 0x408));
+  }
+  other = (((u8 *) (*((u8 **) (((u8 *) arg0) + 4)))) + 0x2190) + (slot * 24);
+  t0 = (*((u8 **) (((u8 *) arg0) + 0x18))) + (slot * 0x18C);
+  s2 = (*((u8 **) (((u8 *) arg0) + 0x18))) + (selected * 0x18C);
+  obj = func_87E12070(((u8 *) arg0) + 0x3D8, (s32) ListSlots_UpdateTransferAnimation, 0);
+  if (obj != 0)
+  {
+    *((void **) (obj + 0x20)) = arg0;
+    dst = (V3 *) (obj + 0x48);
+    *dst = *((V3 *) (t0 + 0x48));
+    *((f32 *) (obj + 0x48)) += (((-160.0f) + ((f32) (((*((s32 *) other)) * 0x1B) + 0x10))) + 12.0f) * (*((f32 *) (t0 + 0x54)));
+    dst[1] = *((V3 *) (t0 + 0x54));
+    *((f32 *) (obj + 0x54)) = *((f32 *) (obj + 0x54));
+    *((f32 *) (obj + 0x58)) = *((f32 *) (obj + 0x58));
+    *((f32 *) (obj + 0x5C)) = *((f32 *) (obj + 0x5C));
+    func_87F0AFD0((*((u8 **) (obj + 0x38))) + 4, (f32 *) dst, (f32 *) (&dst[1]), (s16 *) (obj + 0x42));
+    if (((((f32) func_80001FF0()) / 60.0f) * 20.0f) >= 0.0f)
+    {
+      slot = (s32) (((((f32) func_80001FF0()) / 60.0f) * 20.0f) + 0.5f);
+    }
+    else
+    {
+      slot = (s32) (((((f32) func_80001FF0()) / 60.0f) * 20.0f) - 0.5f);
+    }
+    func_87F0B1A4((*((u8 **) (obj + 0x38))) + 4, (f32 *) dst, ((((-160.0f) + ((f32) (((*((s32 *) entry)) * 0x1B) + 0x2B))) + 12.0f) * (*((f32 *) (s2 + 0x54)))) + (*((f32 *) (s2 + 0x48))), *((f32 *) (s2 + 0x4C)), *((f32 *) (s2 + 0x50)), slot, 0);
+  }
+}
 
 extern s32 func_80001FF0(void);
 extern void func_87E0DE34(void *);

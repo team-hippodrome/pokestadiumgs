@@ -25,7 +25,63 @@ void func_87E12120(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E121AC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E123B8.s")
+extern u32 D_87E1AB64;
+extern s32 func_8004C990(s32, s32);
+extern void *func_87F025B8(void *, void (*)(void));
+extern s32 func_87F08E3C(s32, s32);
+extern void func_87F0AFD0(void *, void *, void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+
+
+
+void func_87E123B8(s32 arg0) {
+    struct Vector { s32 x, y, z; };
+
+    s32 i;
+    u8 *node;
+    u8 *child;
+    u8 *base;
+    u8 *src;
+
+    for (i = 0; i != 8; i++) {
+        node = func_87F025B8((u8 *)arg0 + 4, func_87E12120);
+        if (node != NULL) {
+            child = *(u8 **)(node + 0x38);
+            src = (i * 0xC) + (u8 *)&D_87E1AB64;
+            *(s32 *)(child + 0x0) = i;
+            switch (i) {
+            case 0:
+                *(s32 *)(child + 0x4) = func_8004C990(0x167, 0);
+                break;
+            case 1:
+                *(s32 *)(child + 0x4) = func_8004C990(0x1BB, 0);
+                break;
+            case 2:
+                *(s32 *)(child + 0x4) = func_8004C990(0x1BB, 1);
+                break;
+            case 3:
+                *(s32 *)(child + 0x4) = func_8004C990(0x1BB, 2);
+                break;
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                *(f32 *)(node + 0x54) = 0.9f;
+                *(f32 *)(node + 0x58) = 0.9f;
+                *(f32 *)(node + 0x5C) = 0.9f;
+                *(s32 *)(child + 0x4) = func_8004C990(0x175, 0);
+                break;
+            }
+            *(s32 *)(child + 0x8) = func_87F08E3C(*(s32 *)(child + 0x4), 0x0F000000);
+            base = node + 0x24;
+            func_8003F1DC(base);
+            func_8003F114(base, 0, -1, *(s32 *)((u8 *)arg0 + 0x18));
+            *(struct Vector *)(node + 0x48) = *(struct Vector *)(src);
+            func_87F0AFD0(child + 0xC, node + 0x48, node + 0x54, node + 0x42);
+        }
+    }
+}
 
 extern u8 D_87E1B9D8;
 extern u8 D_87E1AB30;

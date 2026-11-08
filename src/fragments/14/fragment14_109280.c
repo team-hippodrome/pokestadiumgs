@@ -240,7 +240,78 @@ void func_813114B8(Frag14State *arg0, s16 arg1) {
 }
 /* mkdraft:func_813114B8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_109280/func_81311650.s")
+extern s32 func_81600DA8(void *, void *);
+extern void Fragment11_DrawThickPanelFrame(s32, s32, s32, s32);
+extern void func_81608044(s32, s32, s32, s32, f32, s32 *);
+extern void func_816073A0(void *);
+extern void func_800498C4(void);
+extern void func_8004989C(s32);
+extern void func_800499EC(void);
+extern void func_81608918(s32, s32, f32 *);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004CA24(void *);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_81607408(void);
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 D_81312170[];
+
+// Draws the framed panel and its child object for one fragment record. The 0.1f
+// cutoff is written as a literal: IDO emits it as the function's first .rodata
+// word, which is where retail keeps D_81312A00, so no named definition is needed
+// (a `const f32` goes to .data and would shift the whole section).
+
+
+void func_81311650(Frag14State *arg0, void *arg1) {
+    Frag14Record *record;
+    s16 rect[4];
+    f32 alpha;
+    s16 i;
+
+    record = arg0->owner;
+    if (record == NULL) {
+        return;
+    }
+    if (arg0->status == 0) {
+        return;
+    }
+    if (func_81600DA8(arg1, arg0) == 0) {
+        return;
+    }
+    alpha = 1.0f - func_81311368((u8 *)arg0, rect);
+    Fragment11_DrawThickPanelFrame(rect[0], rect[1], rect[2], rect[3]);
+    func_81608044(rect[0] + 8, rect[1] + 8, rect[2] - 0x13, rect[3] - 0x13, alpha,
+                  (s32 *)(D_81312170 + *(s8 *)record * 3));
+    if (alpha > 0.1f) {
+        return;
+    }
+    func_816073A0(rect);
+    func_800498C4();
+    func_8004989C(record->line_height);
+    for (i = 0; i < record->entry_count; i++) {
+        func_813114B8(arg0, i);
+    }
+    func_800499EC();
+    if (arg0->index >= 0 && arg0->unk_1C != 0) {
+        // The position summands are written box_y + unk_10 + product: IDO flattens
+        // same-typed additions left to right, and only this order puts the two
+        // loads and the addu of the product last (any other order scores 205-360).
+        func_81608918(arg0->box_x + record->unk_12 - 42,
+                      arg0->box_y + record->unk_10 + record->line_height * arg0->index,
+                      (f32 *)((u8 *)arg0 + 8));
+    }
+    if (*(s32 *)((u8 *)record + 4) != 0) {
+        void *gfx;
+        gfx = (void *)func_8004C990(0x11B, 0);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        func_8004D19C(arg0->box_x + 17,
+                      arg0->box_y + arg0->box_height / 2 - func_8004CA24(gfx),
+                      (s32)gfx, 0, 0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+    func_81607408();
+}
 
 /* mkdraft:func_81311894 begin */
 extern void func_800226C0(s32);

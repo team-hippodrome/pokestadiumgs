@@ -138,7 +138,28 @@ s32 func_82905EE4(s32 arg0, u8 *arg1) {
 extern s16 D_829199F8;
 s32 func_82905F00(s32 arg0, u8 *arg1) { if (arg0 == 0) *(s16 *)(arg1 + 0x1A) = 0; if (arg0 == 2) { if (D_829199F8 >= 7) *(s16 *)(arg1 + 0x1A) = 1; else *(s16 *)(arg1 + 0x1A) = 0; } return 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_3422F0/func_82905F40.s")
+extern f32 D_80128C54[];
+extern u8 D_80128C5C[];
+
+
+s32 func_82905F40(s32 arg0) {
+    u8 alpha;
+    s32 r;
+    s32 g;
+    s32 b;
+    s32 *p = &arg0; // FAKE: forces the narrow-parameter home store sw a0,0(sp)
+    u16 v = arg0;
+    r = (v >> 11) & 0x1F;
+    g = (v >> 6) & 0x1F;
+    b = (v >> 1) & 0x1F;
+    alpha = ((Fragment67Color *)D_80128C5C)->a;
+    if (alpha) {
+        r = (((((r * 8) + (r >> 2)) * (0xFF - alpha)) + (((Fragment67Color *)D_80128C5C)->r * alpha)) / 255) >> 3;
+        g = (((((g * 8) + (g >> 2)) * (0xFF - alpha)) + (((Fragment67Color *)D_80128C5C)->g * alpha)) / 255) >> 3;
+        b = (((((b * 8) + (b >> 2)) * (0xFF - alpha)) + (((Fragment67Color *)D_80128C5C)->b * alpha)) / 255) >> 3;
+    }
+    return ((((r << 11) | (g << 6)) | (b << 1)) | 1) & 0xFFFF;
+}
 
 /* mkdraft:func_829060BC begin */
 extern s32 D_82919DC8;

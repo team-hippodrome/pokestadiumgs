@@ -946,7 +946,77 @@ void func_8411300C(u8 *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_380A00/func_84113014.s")
+extern u8 D_22E0;
+extern u8 D_5730;
+extern u8 D_8970;
+// Zero-valued absolute symbol in linker_scripts/us/pokegs.ld; the base built from
+// it assembles to `lui $t8, 0; addiu $t8, $t8, 0`.
+extern u8 _gp;
+extern u8 D_49B780[];
+extern u8 D_84193DF8[];
+extern u8 D_84193E38[];
+extern u8 D_84193E98[];
+extern u8 D_84193EAA[];
+extern u8 D_84193ED8[];
+extern s32 D_84191208;
+extern void func_80003F74(u8 *, u8 *, u8 *, s32);
+extern void func_84112FFC(u8 *, s32);
+extern void func_84113004(u8 *, s32);
+extern void func_8411300C(u8 *, s32);
+
+
+
+void func_84113014(u8 *arg0) {
+    u8 *p1;
+    u8 *e1;
+    u8 *p2;
+    u8 *e2;
+    u8 *p3;
+    u8 *e3;
+    u8 *p4;
+    // FAKE: e1..e4 are never read. IDO still reserves four bytes of frame for each
+    // declared-but-dead pointer local, which widens the frame from 0x38 to the ROM's
+    // 0x48; drop them and the frame and every spill slot shrink.
+    u8 *e4;
+
+    // p1..p4 are D_49B780 plus a 24-bit table offset: the ROM adds the data-section
+    // base (D_22E0, D_5730, _gp, D_8970) to the row offset, then keeps the low 24
+    // bits. Spelled as a subtraction of the negated offset because IDO preserves a
+    // subtraction's source order when it folds the negation away, which puts the
+    // base in the first addu source operand as the ROM does; `base + masked` emits
+    // the operands swapped.
+    p1 = (u8 *)((s32)&D_49B780 - (0 - (((s32)((*(s16 *)(arg0 + 0x658) * 0x30 - 0x30) + &D_22E0)) & 0xFFFFFF)));
+    p2 = (u8 *)((s32)&D_49B780 - (0 - (((s32)((*(s16 *)(arg0 + 0x658) * 0x20 - 0x20) + &D_5730)) & 0xFFFFFF)));
+    p3 = (u8 *)((s32)&D_49B780 - (0 - (((s32)((*(s16 *)(arg0 + 0x658) * 0x20 - 0x20) + &_gp)) & 0xFFFFFF)));
+    p4 = (u8 *)((s32)&D_49B780 - (0 - (((s32)((*(s16 *)(arg0 + 0x658) * 0x50 - 0x50) + &D_8970)) & 0xFFFFFF)));
+    if ((s32)arg0 == D_84191208) {
+        func_80003F74(D_84193ED8 + func_8411E1F8((s32)arg0) * 0x50, p4, p4 + 0x50, 0);
+        func_80003F74(D_84193DF8 + func_8411E1F8((s32)arg0) * 0x20, p3, p3 + 0x20, 0);
+        func_80003F74(D_84193E38 + func_8411E1F8((s32)arg0) * 0x30, p1, p1 + 0x30, 0);
+        if (*(s16 *)(arg0 + 0x658) != 0xFC) {
+            func_80003F74(D_84193E98 + func_8411E1F8((s32)arg0) * 0x20, p2, p2 + 0x20, 0);
+        }
+    } else {
+        func_80003F74(D_84193ED8 + func_8411E1F8((s32)arg0) * 0x50, p4, p4 + 0x50, 0);
+        func_80003F74(D_84193DF8 + func_8411E1F8((s32)arg0) * 0x20, p3, p3 + 0x20, 0);
+        func_80003F74(D_84193E38 + func_8411E1F8((s32)arg0) * 0x30, p1, p1 + 0x30, 0);
+        if (*(s16 *)(arg0 + 0x658) != 0xFC) {
+            func_80003F74(D_84193E98 + func_8411E1F8((s32)arg0) * 0x20, p2, p2 + 0x20, 0);
+            *(f32 *)(D_84193E98 + func_8411E1F8((s32)arg0) * 0x20 + 8) *= -1.0f;
+            *(s16 *)(D_84193E98 + func_8411E1F8((s32)arg0) * 0x20 + 2) *= -1;
+            if (*(s16 *)(D_84193EAA + func_8411E1F8((s32)arg0) * 0x20) != 0x200) {
+                p2 = (u8 *)((((s32)((*(s16 *)(D_84193EAA + func_8411E1F8((s32)arg0) * 0x20) * 0x20 - 0x40) + &D_5730)) & 0xFFFFFF) + (s32)&D_49B780);
+                func_80003F74(D_84193E98 + func_8411E1F8((s32)arg0) * 0x20, p2, p2 + 0x20, 0);
+            }
+        }
+    }
+    *(s32 *)(arg0 + 0x67C) = (s32)D_84193ED8 + func_8411E1F8((s32)arg0) * 0x50;
+    func_84112FFC(arg0, (s32)D_84193DF8 + func_8411E1F8((s32)arg0) * 0x20);
+    func_84113004(arg0, (s32)D_84193E38 + func_8411E1F8((s32)arg0) * 0x30);
+    if (*(s16 *)(arg0 + 0x658) != 0xFC) {
+        func_8411300C(arg0, (s32)D_84193E98 + func_8411E1F8((s32)arg0) * 0x20);
+    }
+}
 #endif
 
 #ifdef VERSION_US

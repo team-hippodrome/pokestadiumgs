@@ -92,7 +92,54 @@ void *func_8820137C(void *arg0) {
     return D_88234634[type].entries + index * 118;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201420.s")
+extern u8 D_88234630[];
+extern s32 D_88234638;
+
+// 0x76-byte Lab PC storage entry
+typedef struct unk_88201420_rec {
+    u16 unk_00[0x3B];
+} unk_88201420_rec;
+
+
+
+void func_88201420(s32 arg0, s32 arg1) {
+    u8 *state;
+    s32 value;
+    s32 i;
+    u8 *list0;
+    void **list;
+    u8 *dest;
+
+    state = *(u8 **)arg0;
+    if (arg1 != 0 && func_80063754(*(u8 *)(arg0 + 9)) != 0) {
+        func_88203A58(func_8820137C((void *)arg0));
+    }
+    state[0x15] = state[0x15] - 1;
+    *(s32 *)(state + 0xC) = 1;
+    value = func_882012E4((void *)arg0);
+    // The bound must go through a pointer local. Inlining list0[0] back into the
+    // for condition makes IDO reuse one address register for the preheader and
+    // the latch load (diff 235); through list0 it rematerialises the address in
+    // the preheader like the retail object.
+    list0 = D_88234630;
+    if ((*(u8 **)state)[8] == 0) {
+        // Keep this if/else on one line: splitting it changes IDO's scheduling of
+        // the copy loop (diff 295).
+        if (value == -1) { dest = state[0x15] * 118 + (u8 *)D_88234634[0].entries; } else { i = value; dest = value * 118 + (u8 *)D_88234634[0].entries; for (; i < (list0[0] - 1); i++) { *(unk_88201420_rec *)dest = *((unk_88201420_rec *)dest + 1); dest += 118; } }
+        _bzero(dest, 0x76);
+        D_88234638 = 1;
+    }
+    if (value != -1) {
+        i = value;
+        list = *(void ***)(state + 0x10);
+        list += value;
+        for (; i < state[0x15]; i++) {
+            list[0] = list[1];
+            ((s8 *)list[0])[4]--;
+            list++;
+        }
+    }
+}
 
 extern void func_88201420(s32, s32);
 void func_88201608(s32 arg0) {
@@ -183,7 +230,79 @@ void func_8820172C(u8 *arg0, u8 **arg1, s8 arg2) {
 }
 /* mkdraft:func_8820172C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_882017F8.s")
+extern void _bzero(void *, s32);
+extern s32 func_80063754();
+extern void func_88201420(s32, s32);
+extern u8 D_88234630[];
+
+// 0x76-byte Lab PC storage entry; the shift loop copies whole entries and
+// func_88203ED8 assigns the same-sized record into a storage list.
+//@src/fragments/31/fragment31_1768F0.c
+typedef struct unk_882017F8_rec {
+    u16 unk_00[0x3B];
+} unk_882017F8_rec;
+
+// 12-byte storage-list header (count, capacity, record pointer, dirty flag).
+// List 0 is D_88234630; func_88200DCC walks all four lists through this layout.
+//@src/fragments/31/fragment31_1736F0.c
+typedef struct LabPCStorageList {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList;
+
+// Moves slot arg0 to index arg2 of the list owned by slot arg1. When arg1 is a
+// newly created slot, the D_88234630 list shifts its entries up by one from
+// capacity-1, frees the vacated entry at arg2, and marks the list dirty. The
+// tail loop then walks the list from arg2, carrying the displaced entry forward
+// until the new count is reached.
+
+
+void func_882017F8(u8 *arg0, u8 *arg1, s8 arg2) {
+    unk_882017F8_rec *p;
+    void **list;
+    void *cur;
+    void *saved;
+    s32 i;
+
+    cur = arg0;
+    if ((((*(u8 **)*(void **)arg0)[8] == 2) && ((*(u8 **)arg1)[8] != 2)) ||
+        (((*(u8 **)*(void **)arg0)[8] != 2) && ((*(u8 **)arg1)[8] == 2))) {
+        if (((arg0[38] & 1) != 0) == 0) {
+            arg0[36] = 70;
+        }
+    }
+    if (((*(u8 **)arg1))[8] == 0) {
+        i = ((LabPCStorageList *)D_88234630)->capacity - 1;
+        p = (unk_882017F8_rec *)((LabPCStorageList *)D_88234630)->entries + i;
+        for (; i > arg2; i--) {
+            *p = *(p - 1);
+            p--;
+        }
+        _bzero(p, 0x76);
+        ((LabPCStorageList *)D_88234630)->changed = 1;
+    }
+    if (func_80063754(arg0[9]) != 0) {
+        func_8820172C(arg0, arg1, arg2);
+    }
+    arg1[0x15] = arg1[0x15] + 1;
+    *(s32 *)(arg1 + 0xC) = 1;
+    list = *(void ***)(arg1 + 0x10);
+    list += arg2;
+    for (; arg2 < arg1[0x15]; arg2++, list++) {
+        if (arg2 != arg1[0x15] - 1) {
+            saved = *list;
+        }
+        *list = cur;
+        if (arg2 != arg1[0x15] - 1) {
+            cur = saved;
+        }
+        ((u8 *)*list)[4] = arg2;
+    }
+    func_88201420((s32)arg0, 0);
+    *(void **)arg0 = arg1;
+}
 
 extern void func_88200320(void *, void *);
 extern void func_88201628(u8 *, u8 *);

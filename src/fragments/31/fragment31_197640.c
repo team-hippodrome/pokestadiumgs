@@ -249,7 +249,170 @@ void func_882246FC(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_8822497C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_882254B8.s")
+extern void *Util_Malloc(s32);
+extern s32 D_880068B4;
+extern u32 D_88234860;
+extern u8 D_88234758[];
+extern u8 D_8800ED50[];
+extern s32 func_80001FF0(void);
+extern u8 func_80073510(u8 arg0);
+extern s32 func_8800005C(void);
+extern void func_88000288(void *arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5, u8 arg6, u8 arg7);
+extern void func_88001C6C(void *arg0, u16 arg1, u8 arg2, s16 arg3, u8 arg4, s16 arg5, s16 arg6, s16 arg7, s16 arg8, s16 arg9, s32 arg10);
+extern s32 func_88004804(void *, s32, s16, s16, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
+extern void func_882243C0(void);
+extern void func_882243E8(void);
+extern s32 func_8822497C;
+
+
+
+void func_882254B8(void)
+{
+  // FAKE: unused stack words. The two words size the local area to the target
+  // frame of 0xA0; without the array the frame is 0x98 (5 differing rows), and
+  // pad[1] scores 28 rows.
+  s32 pad[2];
+  f32 var_fv0;
+  f32 var_fv1;
+  f32 h[3][2];
+  s32 sp74;
+  s32 sp70;
+  f32 sp6C;
+  s32 sp68;
+  f32 sp64;
+  f32 var_fv0_2;
+  f32 rat6;
+  f32 rat8;
+  s32 temp_s0;
+  s32 temp_s0_2;
+  s32 temp_s1;
+  s32 temp_s2;
+  s32 temp_s3;
+  u8 var_s0;
+  s32 var_s1;
+  u8 temp_a0;
+  u8 temp_t9;
+  u8 temp_v0;
+  void *temp_t0;
+  D_88234860 = Util_Malloc(0x144);
+    *((void **) (((u8 *) D_88234860) + 0)) = (void *) ((func_88004804(NULL, 3, 0xA7, 0x7C, 0, 1, 0xDC, 0xDC, 0xB4, &func_882246FC, &func_8822497C, (s32 *) func_882243C0, (s32 *) func_882243E8, 0, 0) * 0x4C) + D_8800ED50);
+    *((s16 *) (((u8 *) (*((void **) (((u8 *) D_88234860) + 0)))) + 0x10)) = 0x16F;
+      // FAKE: the stores below and the fill loop share one physical source
+      // line. Splitting them changes IDO's line-based grouping of statements and
+      // swaps addiu v0,v0,0 with move s1,zero (2 extra differing rows).
+ var_s1 = 0; *((s16 *) (((u8 *) (*((void **) (((u8 *) D_88234860) + 0)))) + 0x12)) = 0x146; D_880068B4 = 0; *((s32 *) (((u8 *) D_88234860) + 0x30)) = 1; *((s16 *) (((u8 *) D_88234860) + 0x34)) = 0; do { *((u8 *) (((u8 *) D_88234860) + var_s1) + 0x36) = *((u8 *) (((u8 *) (&D_88234758[var_s1])) + 9)); var_s1 = (var_s1 + 1) & 0xFF; } while (var_s1 < 4);
+      if (func_8800005C() != 0)
+      {
+        *((u8 *) (((u8 *) D_88234860) + 0x3A)) = 0xA4U;
+      }
+      else
+      {
+        *((u8 *) (((u8 *) D_88234860) + 0x3A)) = 0xFAU;
+      }
+      var_s0 = 0;
+      var_s1 = 0;
+      if (((s32) (*((u8 *) (((u8 *) D_88234860) + 0x3A)))) > 0)
+      {
+        do
+        {
+          // FAKE: both gotos retry the current iteration, matching the target's
+          // 0x12c8 back edge. Removing the label and the jumps scores 408 rows.
+          loop_7:
+          *((u8 *) (((u8 *) (D_88234860 + var_s1)) + 0x3B)) = func_80073510(var_s0 + 1);
+
+          if ((*((u8 *) (((u8 *) D_88234860) + 0x3A))) == 0xA4)
+          {
+            if ((*((u8 *) (((u8 *) (&((u8 *) D_88234860)[var_s1])) + 0x3B)) == 0xA5) || (((s32) *((u8 *) (((u8 *) (&((u8 *) D_88234860)[var_s1])) + 0x3B))) >= 0xA6))
+            {
+              var_s0++;
+              goto loop_7;
+            }
+          }
+          else
+            if ((*((u8 *) (((u8 *) (&((u8 *) D_88234860)[var_s1])) + 0x3B))) == 0xA5)
+          {
+            var_s0++;
+            goto loop_7;
+          }
+          var_s1 = (var_s1 + 1) & 0xFF;
+          var_s0++;
+        }
+        while (var_s1 < ((s32) (*((u8 *) (((u8 *) D_88234860) + 0x3A)))));
+      }
+      if (((((f32) func_80001FF0()) * 8.0f) / 60.0f) > 0.0f)
+      {
+        sp64 = 0.5f;
+      }
+      else
+      {
+        sp64 = -0.5f;
+      }
+      sp68 = func_80001FF0();
+      if (((((f32) func_80001FF0()) * 5.0f) / 60.0f) > 0.0f)
+      {
+        sp6C = 0.5f;
+      }
+      else
+      {
+        sp6C = -0.5f;
+      }
+      sp70 = func_80001FF0();
+      sp74 = func_80001FF0();
+      if (((((f32) func_80001FF0()) * 30.0f) / 60.0f) > 0.0f)
+      {
+        h[0][0] = 0.5f;
+      }
+      else
+      {
+        h[0][0] = -0.5f;
+      }
+      temp_s3 = func_80001FF0();
+      if (((((f32) func_80001FF0()) * 5.0f) / 60.0f) > 0.0f)
+      {
+        h[1][0] = 0.5f;
+      }
+      else
+      {
+        h[1][0] = -0.5f;
+      }
+      temp_s2 = func_80001FF0();
+      if (((((f32) func_80001FF0()) * 8.0f) / 60.0f) > 0.0f)
+      {
+        h[2][0] = 0.5f;
+      }
+      else
+      {
+        h[2][0] = -0.5f;
+      }
+      temp_s1 = func_80001FF0();
+      if (((((f32) func_80001FF0()) * 30.0f) / 60.0f) > 0.0f)
+      {
+        var_fv1 = 0.5f;
+      }
+      else
+      {
+        var_fv1 = -0.5f;
+      }
+      temp_s0 = func_80001FF0();
+      var_fv0 = (((((f32) func_80001FF0()) * 8.0f) / 60.0f) > 0.0f) ? (0.5f) : (-0.5f);
+      // FAKE: the (0, 30.0f) and (0, 8.0f) comma expressions are load-bearing.
+      // Hoisting the two ratios into plain f32 locals makes both operands of the
+      // following add.s plain loads, so the sign-first operand order of the two
+      // last arguments survives; plain 30.0f/8.0f literals score 80 rows.
+      rat6 = (((0, 30.0f)) * ((f32) temp_s1)) / 60.0f;
+      rat8 = (((0, 8.0f)) * ((f32) temp_s0)) / 60.0f;
+      func_88000288(D_88234860 + 0x136, (s16) ((((s32) (h[0][0] + ((30.0f * ((f32) sp74)) / 60.0f))) + ((s32) (((5.0f * ((f32) sp70)) / 60.0f) + sp6C))) + ((s32) (((8.0f * ((f32) sp68)) / 60.0f) + sp64))), 0xFF, 0, (u8) ((s32) (h[1][0] + ((5.0f * ((f32) temp_s3)) / 60.0f))), (u8) ((s32) (h[2][0] + ((8.0f * ((f32) temp_s2)) / 60.0f))), (u8) ((s32) (var_fv1 + rat6)), (u8) ((s32) (var_fv0 + rat8)));
+      temp_s0_2 = func_80001FF0();
+      if ((540.0f / ((f32) func_80001FF0())) > 0.0f)
+      {
+        var_fv0_2 = 0.5f;
+      }
+      else
+      {
+        var_fv0_2 = -0.5f;
+      }
+      func_88001C6C(((u8 *) D_88234860) + 4, (u16) (*((u8 *) (((u8 *) D_88234860) + 0x3A))), 0xAU, 0xBB, 0x17U, 0xC, (s16) ((s32) ((f32) var_fv0_2 + (540.0f / ((f32) temp_s0_2)))), 0x2E, 0x2E, 0xC, 0x46);
+}
 
 void func_88225B70(void) {
     D_880068B8 = 0;
@@ -527,7 +690,108 @@ void func_882261CC(s16 arg0, s16 arg1, u16 arg2, u16 arg3, u8 arg4, s8 arg5) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88226918.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88227224.s")
+extern u8 D_88000E4C[];
+extern s8 D_88006868;
+extern void *func_8004C874(s32, void *);
+extern void func_88226378(void);
+extern void func_88226918(void);
+extern void _bzero(void *, s32);
+extern s32 func_8003514C(void);
+extern void func_8004C8C0(s32);
+extern s32 func_8004C990(s32, s32);
+extern u16 func_800532C4(s32);
+extern void func_80053524(s32, void *);
+extern u16 func_8005CB38(s8, s32);
+extern void func_8005EE88(s8, u32, void *);
+extern void func_88002AA8(u8 *, s32, u8 *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, void *);
+extern s32 func_880032C4(void *);
+extern void main_pool_push_state(s32);
+
+#define M2C_FIELD(expr, type, offset) (*(type)((u8*)(expr) + (offset)))
+
+typedef struct Func88227224Pair {
+    s32 unk0;
+    s32 unk4;
+} Func88227224Pair;
+
+
+
+void func_88227224(void) {
+    s32 var_v0;
+    s32 var_s0;
+    s32 var_s1_2;
+    u32 var_s1;
+
+    main_pool_push_state(0x4C53424C);
+    D_88234870 = Util_Malloc(0xC0U);
+    func_8004C8C0(0x12);
+    M2C_FIELD(D_88234870, s32 *, 0xB0) = func_8004C990(0x12, 1);
+    M2C_FIELD(D_88234870, s32 *, 0xB4) = func_8004C990(0x12, 0);
+    M2C_FIELD(D_88234870, s32 *, 0xB8) = func_8004C990(0x12, 3);
+    M2C_FIELD(D_88234870, s32 *, 0xBC) = func_8004C990(0x12, 2);
+    if (func_8800005C() != 0) {
+        M2C_FIELD(D_88234870, u8 *, 0) = 3;
+    } else {
+        M2C_FIELD(D_88234870, u8 *, 0) = 2;
+    }
+    M2C_FIELD(D_88234870, s32 *, 0x10) = 1;
+    M2C_FIELD(D_88234870, u16 *, 0x18) = func_8005CB38(D_88006868, 0x21);
+    M2C_FIELD(D_88234870, u16 *, 0x28) = func_800532C4(0x11);
+    M2C_FIELD(D_88234870, u8 **, 0x78) = Util_Malloc(M2C_FIELD(D_88234870, u16 *, 0x18) * 4);
+    var_s1 = 0;
+    M2C_FIELD(D_88234870, u8 **, 0x7C) = Util_Malloc(M2C_FIELD(D_88234870, u16 *, 0x28) * 4);
+    var_s0 = 0;
+    for (var_s1 = 0; var_s1 < (u16) M2C_FIELD(D_88234870, u16 *, 0x18); var_s1++) {
+        *(void **)(*(u8 **)(D_88234870 + 0x78) + var_s1 * 4) = Util_Malloc(9U);
+        func_8005EE88(D_88006868, var_s1, *(void **)(*(u8 **)(D_88234870 + 0x78) + var_s1 * 4));
+    }
+    for (var_s1 = 0; var_s1 < (u16) M2C_FIELD(D_88234870, u16 *, 0x28); var_s1++) {
+        *(void **)(*(u8 **)(D_88234870 + 0x7C) + var_s1 * 4) = Util_Malloc(0x12U);
+        func_80053524(var_s1, *(void **)(*(u8 **)(D_88234870 + 0x7C) + var_s1 * 4));
+    }
+    M2C_FIELD(D_88234870, s32 *, 0x14) = (s32) M2C_FIELD(D_88234870, s32 *, 0x78);
+    M2C_FIELD(D_88234870, u8 **, 0x24) = (u8 *) M2C_FIELD(D_88234870, u8 **, 0x7C);
+    M2C_FIELD(D_88234870, s32 *, 0x34) = 4;
+    M2C_FIELD(D_88234870, s16 *, 0x38) = 1;
+    M2C_FIELD(D_88234870, s16 *, 0x3A) = 4;
+    M2C_FIELD(D_88234870, s16 *, 0x1A) = 0;
+    M2C_FIELD(D_88234870, s16 *, 0x2A) = 0;
+    *(Func88227224Pair *)(D_88234870 + 0x1C) = *(Func88227224Pair *)D_88006020;
+    *(Func88227224Pair *)(D_88234870 + 0x2C) = *(Func88227224Pair *)D_88006020;
+    if (func_880032C4(&D_88006020) == 0) {
+        var_s1_2 = 0;
+    } else {
+        var_s1_2 = 2;
+    }
+    M2C_FIELD(D_88234870, void **, 4) = (void *) ((func_88004804(NULL, 3, 0xA7, 0x92, 0, 1, 0xDC, 0xDC, 0xB4, &func_88226378, &func_88226918, func_88225C20, func_88225C48, var_s1_2, 0) * 0x4C) + D_8800ED50);
+    M2C_FIELD(M2C_FIELD(D_88234870, void **, 4), s16 *, 0x10) = 0xCA;
+    M2C_FIELD(M2C_FIELD(D_88234870, void **, 4), s16 *, 0x12) = 0xA7;
+    if (func_8003514C() == 0) {
+        var_v0 = 0x92;
+    } else {
+        var_v0 = 0x7E;
+    }
+    M2C_FIELD(D_88234870, void **, 8) = (void *) ((func_88004804(D_88234870 + 0x10, 1, 0x175, var_v0, 0, 1, 0x96, 0x96, 0x82, (s32) D_88000E4C, (s32) D_88000E4C, (void (*)()) (s32) D_88000E4C, (void (*)()) (s32) D_88000E4C, var_s1_2, 0) * 0x4C) + D_8800ED50);
+    if (M2C_FIELD(D_88234870, u8 *, 0) == 3) {
+        M2C_FIELD(D_88234870, void **, 0x74) = func_8004C874(0x25, (void *)0x36);
+        func_88002AA8(D_88234870 + 0x40, 0, D_88234870 + 0x74, 1, 8, 1, 6, 0xF, 0x12, 0xD, 0x10, 0, 0, &D_88006020);
+        M2C_FIELD(D_88234870, void **, 0xC) = (void *) ((func_88004804(D_88234870 + 0x40, 0, 0x170, 0x13D, 2, 1, 0x96, 0x96, 0x82, (s32) D_88000E4C, (s32) D_88000E4C, (void (*)()) (s32) D_88000E4C, (void (*)()) (s32) D_88000E4C, var_s1_2, 0) * 0x4C) + D_8800ED50);
+    }
+    D_880068B4 = 0;
+    M2C_FIELD(D_88234870, u8 **, 0x98) = Util_Malloc(M2C_FIELD(D_88234870, u16 *, 0x18));
+    M2C_FIELD(D_88234870, u8 **, 0x9C) = Util_Malloc(M2C_FIELD(D_88234870, u16 *, 0x28));
+    func_88225D80(0);
+    M2C_FIELD(D_88234870, s32 *, 0x80) = 1;
+    M2C_FIELD(D_88234870, s16 *, 0x84) = 3;
+    _bzero(D_88234870 + 0x90, 4);
+    M2C_FIELD(D_88234870, u8 **, 0x8C) = (u8 *) (D_88234870 + 0x90);
+    func_88225F38();
+    _bzero(D_88234870 + 0xA0, 6);
+    M2C_FIELD(D_88234870, u8 **, 0xA8) = Util_Malloc(M2C_FIELD(D_88234870, u16 *, 0x18) * 2);
+    _bzero(M2C_FIELD(D_88234870, u8 **, 0xA8), M2C_FIELD(D_88234870, u16 *, 0x18) * 2);
+    M2C_FIELD(D_88234870, u8 **, 0xAC) = Util_Malloc(M2C_FIELD(D_88234870, u16 *, 0x28) * 2);
+    _bzero(M2C_FIELD(D_88234870, u8 **, 0xAC), M2C_FIELD(D_88234870, u16 *, 0x28) * 2);
+}
 
 void func_882277D0(void) { Input_SetRepeatController(D_80087200); D_880068B8 = 0; }
 
@@ -607,7 +871,119 @@ void func_88227A04(void *arg0) {
     func_88227924();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88227A60.s")
+extern void func_800226C0(s32);
+extern s32 func_8800005C(void);
+extern s32 func_80063754(u8);
+extern s32 func_88201F7C(void *);
+extern void func_88227924(void);
+extern void func_88227974(void *);
+extern void func_88227A04(void *);
+extern void func_88002720(s16 *, u16, void *);
+extern s32 func_88203FB4(void);
+extern void *D_88234880;
+extern void *D_80087200;
+extern s32 D_882345F4;
+extern u8 *D_88A01C30;
+extern u8 *D_88A01C34;
+extern u8 D_889041B8;
+
+typedef struct {
+    u8 unk[0x18];
+} Unk88227A60Entry;
+
+
+
+void func_88227A60(void) {
+    u8 *list;
+    u8 *target;
+    s32 result;
+    u8 unk;
+    u16 pressed;
+
+    if (D_889041B8 != 0) {
+        return;
+    }
+    switch (*(s16 *)((u8 *)D_88234880 + 0x44)) {
+    case 1:
+        list = (u8 *)D_88234880 + 0xC;
+        target = (u8 *)((Unk88227A60Entry *)D_88A01C34 + *(s16 *)(list + 6) + D_88A01C30[0x10]);
+        break;
+    case 2:
+        list = (u8 *)D_88234880 + 0x1C;
+        target = (u8 *)((Unk88227A60Entry *)D_88A01C34 + D_88A01C30[0x10] +
+                        *(s16 *)(list + 6) + D_88A01C30[0x24]);
+        break;
+    }
+    if (*(s32 *)((u8 *)D_88234880 + 0x40) != 0) {
+        pressed = *(u16 *)((u8 *)D_80087200 + 8);
+        if (pressed & 0x4000) {
+            func_800226C0(0x48);
+            func_88227924();
+        } else if (pressed & 0x8000) {
+            result = func_88201F7C((void *)(D_882345F4 + 8));
+            unk = *(u8 *)(*(s32 *)(*(s32 *)D_882345F4) + 8);
+            if (*(s16 *)((u8 *)D_88234880 + 0x44) == 0) {
+                if (func_8800005C() != 0 && func_80063754(*(u8 *)(D_882345F4 + 9)) != 0) {
+                    func_800226C0(0x47);
+                    func_88227974((void *)0x10);
+                } else if (result == 0 && unk == 2) {
+                    func_800226C0(0x47);
+                    func_88227974((void *)0x12);
+                } else {
+                    func_88227A04(D_88A01C34);
+                }
+            } else {
+                func_800226C0(0x47);
+                if (func_8800005C() == 0 && func_80063754(*(u8 *)(D_882345F4 + 9)) != 0 &&
+                    *(s16 *)((u8 *)D_88234880 + 0x44) == 1) {
+                    func_88227974((void *)0xF);
+                } else if (func_8800005C() != 0 && func_80063754(*(u8 *)(D_882345F4 + 9)) != 0 &&
+                    *(s16 *)((u8 *)D_88234880 + 0x44) != 2) {
+                    func_88227974((void *)0x10);
+                } else if (result == 0 &&
+                    ((*(s16 *)((u8 *)D_88234880 + 0x44) == 2 && unk != 2) ||
+                     (*(s16 *)((u8 *)D_88234880 + 0x44) != 2 && unk == 2))) {
+                    func_88227974((void *)0x12);
+                } else if (func_8800005C() == 0 && func_80063754(*(u8 *)(D_882345F4 + 9)) != 0 &&
+                    *(s16 *)((u8 *)D_88234880 + 0x44) == 2 && unk != 2 && func_88203FB4() == 0) {
+                    func_88227974((void *)0x11);
+                } else {
+                    *(s32 *)((u8 *)D_88234880 + 0x40) = 0;
+                }
+            }
+        } else {
+            func_88002720((s16 *)((u8 *)D_88234880 + 0x44), 3, (u8 *)D_88234880 + 0x48);
+        }
+    } else {
+        pressed = *(u16 *)((u8 *)D_80087200 + 8);
+        if (pressed & 0x4000) {
+            func_800226C0(0x48);
+            *(s32 *)((u8 *)D_88234880 + 0x40) = 1;
+        } else if (pressed & 0x8000) {
+            func_88227A04(target);
+        } else {
+            switch (*(s16 *)((u8 *)D_88234880 + 0x44)) {
+            case 1:
+            case 2:
+                func_88002720((s16 *)(list + 6), *(u16 *)(list + 4), list + 8);
+                break;
+            }
+        }
+    }
+    switch (*(s16 *)((u8 *)D_88234880 + 0x44)) {
+    default:
+        ((u8 *)(*(s32 *)((u8 *)D_88234880 + 4)))[0x1C] = 0x96;
+        ((u8 *)(*(s32 *)((u8 *)D_88234880 + 4)))[0x1D] = 0x96;
+        ((u8 *)(*(s32 *)((u8 *)D_88234880 + 4)))[0x1E] = 0x82;
+        break;
+    case 1:
+    case 2:
+        ((u8 *)(*(s32 *)((u8 *)D_88234880 + 4)))[0x1C] = 0xDC;
+        ((u8 *)(*(s32 *)((u8 *)D_88234880 + 4)))[0x1D] = 0xDC;
+        ((u8 *)(*(s32 *)((u8 *)D_88234880 + 4)))[0x1E] = 0xB4;
+        break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88227EE8.s")
 

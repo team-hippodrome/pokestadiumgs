@@ -226,7 +226,50 @@ s32 D_813120CC = 100;
 s32 D_813120D0 = 100;
 s32 D_813120D4 = 100;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130D6A4.s")
+extern void Fragment11_DrawThickPanelFrame(s32, s32, s32, s32);
+extern void func_81607B1C(s32, s32, s32, s32, f32, u8 *, u8 *);
+extern void func_816073A0(void *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_81607408(void);
+
+
+
+void func_8130D6A4(u8 *arg0) {
+    f32 opacity;
+    unk_func_8130D45C rect;
+    s32 start_y;
+    s32 text_y;
+    s32 i;
+    s32 count;
+    s32 *stride;
+    start_y = *(s16 *)(arg0 + 8) + 0x1B;
+    text_y = *(s16 *)(arg0 + 0xA) + 0x25;
+    opacity = 1.0f - func_8130D098(arg0, &rect);
+    Fragment11_DrawThickPanelFrame(rect.unk_00, rect.unk_02, rect.unk_04, rect.unk_06);
+    func_81607B1C(rect.unk_00 + 8, rect.unk_02 + 8, rect.unk_04 - 0x13, rect.unk_06 - 0x13, opacity, D_813120B4,
+                  D_813120B4);
+    if (*(s32 *)(arg0 + 0x60) != 0 && opacity < 0.1f) {
+        func_816073A0(&rect);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetAlphaCompare(D_800D0510++, G_AC_NONE);
+        gDPSetRenderMode(D_800D0510++, 0, 0x0F0A7008);
+        /* Blit the 56-column texture at +0x60 one strip per step: strip i starts at
+         * row i (0x70 bytes per row) and covers MIN(0x37 - i, stride) rows, drawn
+         * 54 columns wide at (start_y + 8, text_y + i + 7). */
+        stride = D_813120B8;
+        for (i = 1; i < 0x37; i += stride[0]) {
+            count = MIN(0x37 - i, stride[0]);
+            gDPLoadTextureBlock(D_800D0510++, (u8 *)(*(u32 *)(arg0 + 0x60)) + (i * 0x70) + 2, G_IM_FMT_RGBA,
+                                G_IM_SIZ_16b, 56, count, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP,
+                                G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            GfxRect_DrawTextured((s16)(start_y + 8), (s16)(text_y + i + 7), 0x36, (s16)count, 0x20, 0, 0x400, 0x400,
+                                 0);
+        }
+
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        func_81607408();
+    }
+}
 
 /* mkdraft:func_8130DA04 begin */
 extern void func_816048E0(s32, s32, s32, s32, f32);

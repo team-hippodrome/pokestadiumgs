@@ -178,7 +178,92 @@ s32 func_82206EB8(s32 mode, void *node) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82206FBC.s")
+typedef struct Fragment17TextureHeader {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u8 unk_06[2];
+} Fragment17TextureHeader;
+typedef struct Fragment17TextureRecord {
+    u8 model[360];
+    void *layout;
+    Fragment17TextureHeader *texture;
+    s16 tile_count;
+    s16 tile_height;
+} Fragment17TextureRecord;
+extern s16 D_8220DA5A[];
+extern s16 D_8220DA80[];
+extern s16 D_8220DA40;
+extern f32 D_80087E50[];
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_82206BA4(s32, s32, s32, s32, u8 *, s32, s32, s32, s32, s32);
+extern void func_8003CD84(void);
+extern Fragment17TextureRecord D_8220F290[];
+
+s32 func_82206FBC(s32 mode, void *node)
+{
+  s32 index = *((s32 *) (((u8 *) node) + 20));
+  Fragment17TextureRecord *record = &D_8220F290[index];
+  s32 offset = index * 4;
+  s16 asset = ((s16 *) (((s32) D_8220DA5A) + offset))[0];
+  Fragment17TextureHeader *texture;
+  s16 y;
+  switch (mode)
+  {
+    case 0:
+      if (asset < 0)
+    {
+      record = &D_8220F290[index];
+      record->texture = (Fragment17TextureHeader *) func_8004C990(0, 0);
+      record->tile_height = 5;
+      record->tile_count = 1;
+    }
+    else
+    {
+      record = &D_8220F290[index];
+      record->texture = (Fragment17TextureHeader *) func_8004C990(1, asset);
+      record->tile_height = func_82206B64(record->texture->width);
+      record->tile_count = func_822047BC(record->texture->height, record->tile_height);
+    }
+      break;
+
+    case 5:
+      record = &D_8220F290[index];
+      // FAKE: two empty blocks with no effect on the result; they change how IDO
+      // schedules the record and texture loads that follow.
+      if (1) { } if (1) { }
+      texture = record->texture;
+      switch (index)
+    {
+      case 3:
+
+      case 4:
+      {
+        s16 amount = D_80087E50[((u16) D_8220DA40) >> 4] * 12.0f;
+        if (amount >= 3)
+        {
+          amount = 2;
+        }
+        y = ((s16 *) (((s32) D_8220DA80) + offset))[1] + amount;
+        break;
+      }
+
+      default:
+        y = ((s16 *) (((s32) D_8220DA80) + offset))[1];
+        break;
+
+    }
+
+      func_82206BA4(((s16 *) (((s32) D_8220DA80) + offset))[0], y, texture->width, texture->height, func_8004CA60((u8 *) texture), texture->format, texture->size, record->tile_height, record->tile_count, 1);
+      func_8003CD84();
+      break;
+
+  }
+
+  return 0;
+}
 
 extern u8 D_8220DAB8[];
 extern s16 D_8220DA94;
@@ -215,20 +300,6 @@ s32 func_822071E8(s32 arg0, void *arg1)
   return 0;
 }
 
-typedef struct Fragment17TextureHeader {
-    u16 width;
-    u16 height;
-    u8 format;
-    u8 size;
-    u8 unk_06[2];
-} Fragment17TextureHeader;
-typedef struct Fragment17TextureRecord {
-    u8 model[360];
-    void *layout;
-    Fragment17TextureHeader *texture;
-    s16 tile_count;
-    s16 tile_height;
-} Fragment17TextureRecord;
 extern Fragment17TextureRecord D_8220F9D8[];
 extern Fragment17TextureRecord D_8220FFA8[];
 extern s16 D_8220DAAA[];
@@ -393,7 +464,276 @@ void func_82207714(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_8220792C.s")
+extern s32 main_pool_get_available(void);
+extern void MainPool_FinalizeAllocation(struct S1_MemoryBlock *);
+extern s32 D_8220EC40;
+
+extern void func_8005487C(u8 *);
+extern void func_82206854(s32, s32, s32);
+extern s32 func_800562B8(s32);
+extern void func_822068E0(void);
+extern s32 func_800071A4(s32, s32, s32, s32, s32);
+extern u8 *MainPool_AllocState(s32, s32);
+extern s32 func_8004EB58(u8 *, s32);
+extern s32 func_8005049C(s32, s32);
+extern void func_8004E308(s32, s32 (*)(s32, void *), s32);
+extern void func_8005053C(s32, u8 *);
+extern void func_80050578(s32, void *);
+extern void func_8004C8C0(s32);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_82207714(s32);
+extern void func_8220AA54(s32, s32);
+extern void func_822040A0(s16 *);
+extern void func_8220AD38(s32, void *);
+extern void func_8220AD70(s32, void *);
+extern void func_8220ADA8(s32, void *);
+extern void func_8220B770(void);
+extern void func_8220B900(void);
+extern void func_8220BF68(s32);
+extern s32 func_82205A14(s32, void *);
+extern s32 func_82205A48(s32, void *);
+extern s32 func_82205A8C(s32, void *);
+extern s32 func_82205B00(s32, void *);
+extern s32 func_82205C14(s32, void *);
+extern s32 func_82205CE8(s32, void *);
+extern s32 func_82205D78(s32, void *);
+extern s32 func_82205E04(s32, void *);
+extern s32 func_822061A8(s32, void *);
+extern s32 func_82206304(s32, u8 *);
+extern s32 func_822064DC(s32, void *);
+extern void *D_8220DA08;
+extern s32 D_8220DA0C;
+extern s32 D_8220DA10;
+extern s32 D_8220DA14;
+extern s32 D_8220DA18;
+extern s32 D_8220DA1C;
+extern s32 D_8220EC38;
+extern u8 D_8220EC28[];
+extern s32 D_8220E120;
+extern u8 D_8220EBE0[];
+extern u8 D_8220F284[];
+extern u8 D_822105A0;
+extern u8 D_822105AC;
+extern u8 D_822105B8;
+extern u8 D_822105C4;
+extern u8 D_822105D0;
+extern u8 D_822105DC[];
+extern u8 D_8220DB8C;
+
+
+// Defined in src/fragments/17/fragment17_113A60.c.
+extern s16 D_8220EB98;
+extern s32 func_82205F2C(s32 arg0, u8 *arg1);
+extern s32 func_82206124(s32 arg0, void *arg1);
+extern s32 func_82206400(s32 arg0, void *arg1);
+extern void func_822067C4(s32 arg0, void *arg1);
+extern void func_82206804(s32 arg0);
+
+void func_8220792C(void *arg0, s32 arg1) {
+    s32 pad0;
+    s32 pad1;
+    s32 pad2;
+    s32 pad3;
+    s32 pad4;
+    s16 sp80[2];
+    u8 *temp_s0_2;
+    u8 *var_s2;
+    u8 *var_s2_2;
+    s32 node;
+    u32 tag;
+    s32 var_s1;
+    u8 *temp_v0;
+    void *temp_s0;
+    s8 sp5C[4];
+    u8 *temp_v1;
+    u8 *temp_v1_2;
+    u16 digits;
+
+    temp_s0 = (*(void **)((u8 *)(arg0) + 0x20));
+    D_8220DA08 = arg0;
+    func_8005487C(D_8220EC28);
+    func_82206854(arg1, 0, 0);
+    D_8220EC38 = 0;
+    D_8220DA10 = func_800562B8(0);
+    if ((*(u16 *)((u8 *)(D_8220EC28) + 2)) & 1) {
+        (*(s16 *)((u8 *)(temp_s0) + 0)) = 1;
+    } else {
+        (*(s16 *)((u8 *)(temp_s0) + 0)) = 0;
+    }
+    D_8220DA0C = (s32) (*(s16 *)((u8 *)(temp_s0) + 0));
+    (*(s16 *)((u8 *)(temp_s0) + 2)) = 0;
+    (*(s16 *)((u8 *)(temp_s0) + 4)) = 0;
+    (*(s32 *)((u8 *)(D_8220DA08) + 0)) = -1;
+    func_822068E0();
+    var_s2_2 = (u8 *)&D_8220EB98, var_s2 = D_8220EBE0;
+    do {
+        temp_s0_2 = var_s2_2;
+        (*(s32 *)((u8 *)(temp_s0_2) + 4)) = func_800071A4(0, 2, 0x20, 0x20, 1);
+        (*(f32 *)((u8 *)(temp_s0_2) + 0xC)) = 0.0f;
+        (*(f32 *)((u8 *)(temp_s0_2) + 8)) = 0.0f;
+        (*(f32 *)((u8 *)(temp_s0_2) + 0x14)) = 0.0f;
+        (*(f32 *)((u8 *)(temp_s0_2) + 0x10)) = 0.0f;
+        var_s2_2 += 0x18;
+    } while ((u32) var_s2_2 < (u32) var_s2);
+    temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8220DA14 = func_8004EB58(temp_v0, (*(s32 *)((u8 *)(D_8220DA08) + 0x10)));
+    D_8220DA18 = func_8004EB58(temp_v0, (*(s32 *)((u8 *)(D_8220DA08) + 0x14)));
+    D_8220DA1C = func_8004EB58(temp_v0, (*(s32 *)((u8 *)(D_8220DA08) + 0x18)));
+    MainPool_FinalizeAllocation((struct S1_MemoryBlock *) temp_v0);
+    for (var_s1 = 0; var_s1 < 3; var_s1++) {
+        func_8004E308(func_8005049C(D_8220DA14, var_s1 + 0x47544530), func_82205F2C, var_s1);
+    }
+    func_8004E308(func_8005049C(D_8220DA14, 0x6572616E), func_82205A14, 0);
+    func_8004E308(func_8005049C(D_8220DA14, 0x635F725F), func_82205A48, 0);
+    func_8004E308(func_8005049C(D_8220DA14, 0x73745F6D), func_82205A8C, 0);
+    func_8004E308(func_8005049C(D_8220DA14, 0x66757369), func_82205E04, 3);
+    func_8004E308(func_8005049C(D_8220DA14, 0x6F70746E), func_82205E04, 4);
+    func_8004E308(func_8005049C(D_8220DA14, 0x636F6D69), func_82205E04, 5);
+    func_8004E308(func_8005049C(D_8220DA14, 0x66755F6D), func_82205B00, 3);
+    func_8004E308(func_8005049C(D_8220DA14, 0x6F705F6D), func_82205B00, 4);
+    func_8004E308(func_8005049C(D_8220DA14, 0x636F5F6D), func_82205B00, 5);
+    func_8004E308(func_8005049C(D_8220DA14, 0x63617274), (s32 (*)(s32, void *)) func_822067C4, 0);
+    func_8004E308(func_8005049C(D_8220DA14, 0x6D6F5F6C), (s32 (*)(s32, void *)) func_82206804, 0);
+    func_8004E308(D_8220DA18, func_82205C14, 0);
+    func_8004E308(func_8005049C(D_8220DA18, 0x4D57494E), func_82205CE8, 0);
+    func_8004E308(func_8005049C(D_8220DA18, 0x4D534731), func_82205D78, 0);
+    for (var_s1 = 0; var_s1 != 2; var_s1++) {
+        func_8004E308(func_8005049C(D_8220DA1C, var_s1 + 0x736C6630), func_82206124, var_s1);
+    }
+    func_8004E308(func_8005049C(D_8220DA1C, 0x31703170), func_822061A8, 0);
+    func_8004E308(func_8005049C(D_8220DA1C, 0x32703270), func_822061A8, 1);
+    func_8004E308(func_8005049C(D_8220DA1C, 0x796F7761), func_82206304, 0);
+    func_8004E308(func_8005049C(D_8220DA1C, 0x66757475), func_82206304, 1);
+    func_8004E308(func_8005049C(D_8220DA1C, 0x7475796F), func_82206304, 2);
+    node = func_8005049C(D_8220DA1C, 0x31705F6D);
+    func_8004E308(node, func_82206400, 0);
+    func_8005053C(node, &D_822105A0);
+    func_80050578(node, &D_8220DB8C);
+    node = func_8005049C(D_8220DA1C, 0x3270306D);
+    func_8004E308(node, func_82206400, 1);
+    func_8005053C(node, &D_822105AC);
+    func_80050578(node, &D_8220DB8C);
+    node = func_8005049C(D_8220DA1C, 0x3270316D);
+    func_8004E308(node, func_82206400, 1);
+    func_8005053C(node, &D_822105B8);
+    func_80050578(node, &D_8220DB8C);
+    node = func_8005049C(D_8220DA1C, 0x6D615F30);
+    func_8004E308(node, func_822064DC, 0);
+    func_8005053C(node, &D_822105C4);
+    func_80050578(node, &D_8220DB8C);
+    node = func_8005049C(D_8220DA1C, 0x6D615F31);
+    func_8004E308(node, func_822064DC, 1);
+    func_8005053C(node, &D_822105D0);
+    func_80050578(node, &D_8220DB8C);
+    node = func_8005049C(D_8220DA1C, 0x6D615F32);
+    func_8004E308(node, func_822064DC, 2);
+    func_8005053C(node, D_822105DC);
+    // Layout is load-bearing for IDO 7.1 here: the head statements below stay on
+    // one source line, and the `do { ... } while (0)` keeps the row-pointer setup
+    // as one statement; splitting either changes the register allocation.
+    // The byte offset is added with `+=` on a pointer copy because
+    // `temp_v1 + off` emits `addu idx,base`, while the increment emits
+    // `addu base,idx`.
+    func_80050578(node, &D_8220DB8C); var_s2_2 = D_8220EC28 + 0x18; do { (*(s16 *)((u8 *)(var_s2_2) + 0xC)) = 0; var_s1 = 0; loop_11: if (var_s2_2 == (u8 *)&D_8220EC40) {
+            tag = 0x57503030;
+        } else {
+            tag = 0x43483030;
+        }
+        sprintf(sp5C, "%02d", var_s1);
+        digits = (sp5C[0] << 8) | sp5C[1];
+        tag = (tag & 0xFFFF0000) | (digits & 0xFFFF);
+        node = func_8005049C(D_8220DA14, tag);
+        var_s1 += 1;
+        if (node != 0) {
+            do { temp_v1 = var_s2_2 + 0xC; } while (0);
+            temp_v1_2 = temp_v1;
+            temp_v1_2 += (*(s16 *)((u8 *)(temp_v1) + 0)) * 8;
+            (*(s16 *)((u8 *)(temp_v1_2) + 2)) = (s16) (*(s16 *)((u8 *)(node) + 8));
+            temp_v1_2 += 2;
+            (*(s16 *)((u8 *)(temp_v1_2) + 2)) = (s16) (*(s16 *)((u8 *)(node) + 0xA));
+            (*(s16 *)((u8 *)(temp_v1_2) + 4)) = (s16) (*(s16 *)((u8 *)(node) + 0xC));
+            (*(s16 *)((u8 *)(temp_v1_2) + 6)) = (s16) (*(s16 *)((u8 *)(node) + 0xE));
+            (*(s16 *)((u8 *)(temp_v1) + 0)) = (s16) ((*(s16 *)((u8 *)(temp_v1) + 0)) + 1);
+        }
+        if (var_s1 != 0x64) {
+            goto loop_11;
+        }
+        var_s2_2 += 0x322;
+    } while (var_s2_2 != D_8220F284);
+    func_8004C8C0(1);
+    func_8004C8C0(0);
+    func_8004C8C0(8);
+    func_8004C8C0(9);
+    func_8004C8C0(2);
+    func_8004C8C0(3);
+    func_8004C8C0(0xC5);
+    func_8004C8C0(0xC6);
+    func_8004C8C0(0x93);
+    ModelRenderer_InitDisplayRoots();
+    func_82207714(arg1);
+    func_8220AA54(arg1, 0);
+    node = func_8005049C(D_8220DA14, 0x6B6E5F74);
+    if (node != 0) {
+        func_8220AD70(0, sp80);
+        sp80[0] = (*(s16 *)((u8 *)(node) + 8)) - sp80[0];
+        sp80[1] = (*(s16 *)((u8 *)(node) + 0xA)) - sp80[1];
+        func_8220ADA8(0, sp80);
+    }
+    node = func_8005049C(D_8220DA14, 0x6B6E5F77);
+    if (node != 0) {
+        func_8220AD70(1, sp80);
+        sp80[0] = (*(s16 *)((u8 *)(node) + 8)) - sp80[0];
+        sp80[1] = (*(s16 *)((u8 *)(node) + 0xA)) - sp80[1];
+        func_8220ADA8(1, sp80);
+    }
+    node = func_8005049C(D_8220DA14, 0x6B6E5F65);
+    if (node != 0) {
+        func_8220AD70(2, sp80);
+        sp80[0] = (*(s16 *)((u8 *)(node) + 8)) - sp80[0];
+        sp80[1] = (*(s16 *)((u8 *)(node) + 0xA)) - sp80[1];
+        func_8220ADA8(2, sp80);
+    }
+    node = func_8005049C(D_8220DA14, 0x6D745F66);
+    if (node != 0) {
+        sp80[0] = (*(s16 *)((u8 *)(node) + 8));
+        sp80[1] = (*(s16 *)((u8 *)(node) + 0xA));
+        func_8220AD38(3, sp80);
+        node = func_8005049C(D_8220DA14, 0x6B6E5F66);
+        if (node != 0) {
+            sp80[0] = (*(s16 *)((u8 *)(node) + 8)) - sp80[0];
+            sp80[1] = (*(s16 *)((u8 *)(node) + 0xA)) - sp80[1];
+            func_8220ADA8(3, sp80);
+        }
+    }
+    node = func_8005049C(D_8220DA14, 0x6D745F6F);
+    if (node != 0) {
+        sp80[0] = (*(s16 *)((u8 *)(node) + 8));
+        sp80[1] = (*(s16 *)((u8 *)(node) + 0xA));
+        func_8220AD38(4, sp80);
+        node = func_8005049C(D_8220DA14, 0x6B6E5F6F);
+        if (node != 0) {
+            sp80[0] = (*(s16 *)((u8 *)(node) + 8)) - sp80[0];
+            sp80[1] = (*(s16 *)((u8 *)(node) + 0xA)) - sp80[1];
+            func_8220ADA8(4, sp80);
+        }
+    }
+    node = func_8005049C(D_8220DA14, 0x6D745F63);
+    if (node != 0) {
+        sp80[0] = (*(s16 *)((u8 *)(node) + 8));
+        sp80[1] = (*(s16 *)((u8 *)(node) + 0xA));
+        func_8220AD38(5, sp80);
+        node = func_8005049C(D_8220DA14, 0x6B6E5F63);
+        if (node != 0) {
+            sp80[0] = (*(s16 *)((u8 *)(node) + 8)) - sp80[0];
+            sp80[1] = (*(s16 *)((u8 *)(node) + 0xA)) - sp80[1];
+            func_8220ADA8(5, sp80);
+        }
+    }
+    func_822040A0(func_8005049C(D_8220DA18, 0x4D57494E));
+    func_8220B770();
+    func_8220B900();
+    func_8220BF68((*(s32 *)((u8 *)(D_8220DA08) + 0x20)) + 8);
+}
 
 /* mkdraft:func_822083C4 begin */
 extern void *func_8004C874(s32, s32);

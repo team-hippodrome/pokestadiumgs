@@ -31,7 +31,101 @@ void func_88229F44(void) {
     D_880068B8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19D160/func_88229FB0.s")
+extern void func_800226C0(s32);
+extern void func_8821B980(u16, s32);
+extern void func_8821C0B0(void);
+extern void func_8821C2F4(void);
+extern void func_88229F44(void);
+extern void func_8800225C(void *, s16, s16);
+extern void func_88002720(s16 *, u16, void *);
+extern s32 D_882348D0;
+// The record cache declared as EntryCache186690 in fragment31_189760.c: three
+// reference handles, the deck-entry count at 0xC, then 0x44-byte entries. Here the
+// state at D_882348D0 + 0x50 selects a references[] handle and the cursor at
+// D_882348D0 + 0x9C selects an entry; the two bytes copied to D_88234758 + 0x1C and
+// +0x1D are at +0x36/+0x37 of either record.
+//@src/fragments/31/fragment31_189760.c
+typedef struct {
+    s32 references[3];
+    u8 count;
+    u8 unk_0D[3];
+    u8 entries[8][0x44];
+} EntryCache186690;
+extern u8 *D_882347C4;
+extern u8 D_88234758[];
+extern u8 D_88006880[];
+#define CACHE ((EntryCache186690 *)D_882347C4)
+#define FLAGS ((u8 *)D_88234758)
+
+
+
+s32 func_88229FB0(void) {
+    u8 *state;
+
+    state = (u8 *)D_882348D0 + 0x28;
+    if (D_80087200->buttonsPressed & 0x4000) {
+        func_800226C0(0x48);
+        if (*(s32 *)((u8 *)D_882348D0 + 0x98) != 0) {
+            *(s32 *)((u8 *)D_882348D0 + 0x98) = 0;
+            *(s32 *)(state + 0x24) = 1;
+        } else {
+            func_88229F44();
+        }
+    } else if (D_80087200->buttonsPressed & 0x8000) {
+        if (*(s32 *)((u8 *)D_882348D0 + 0x98) == 0 && *(s16 *)(state + 0x28) == 3) {
+            if (CACHE->count == 0 ||
+                (CACHE->count == 1 && (*(u16 *)D_88234758 & 0x20) &&
+                 *(s32 *)(FLAGS + 0x18) == 3)) {
+                func_800226C0(0x49);
+            } else {
+                func_800226C0(0x47);
+                *(s32 *)((u8 *)D_882348D0 + 0x98) = 1;
+                *(s32 *)(state + 0x24) = 2;
+            }
+        } else {
+            func_8821C2F4();
+            if (*(s16 *)(state + 0x28) == 4) {
+                func_800226C0(0x137);
+                func_8821B980(0x20, 0);
+            } else {
+                func_800226C0(0x5C);
+                if (*(s16 *)(state + 0x28) == 3) {
+                    *(s32 *)(FLAGS + 0x18) = *(s16 *)((u8 *)D_882348D0 + 0x9C) + 3;
+                    *(u8 *)(FLAGS + 0x1C) =
+                        CACHE->entries[*(s16 *)((u8 *)D_882348D0 + 0x9C)][0x36];
+                    *(u8 *)(FLAGS + 0x1D) =
+                        CACHE->entries[*(s16 *)((u8 *)D_882348D0 + 0x9C)][0x37];
+                } else {
+                    *(s32 *)(FLAGS + 0x18) = *(s16 *)(state + 0x28);
+                    *(u8 *)(FLAGS + 0x1C) =
+                        *(u8 *)(CACHE->references[*(s16 *)(state + 0x28)] + 0x36);
+                    *(u8 *)(FLAGS + 0x1D) =
+                        *(u8 *)(CACHE->references[*(s16 *)(state + 0x28)] + 0x37);
+                }
+                func_8821B980(0x20, 1);
+            }
+            func_8821C0B0();
+            func_8800225C(D_88006880, 0, 0);
+            func_88229F44();
+        }
+    } else {
+        if (*(s32 *)((u8 *)D_882348D0 + 0x98) != 0) {
+            func_88002720((s16 *)((u8 *)D_882348D0 + 0x9C), CACHE->count,
+                          (u8 *)D_882348D0 + 0xA0);
+        } else {
+            func_88002720((s16 *)(state + 0x28), *(u16 *)(state + 0xC), state + 0x2C);
+        }
+    }
+    if (*(s16 *)(state + 0x28) == 3) {
+        *(u8 *)(*(s32 *)((u8 *)D_882348D0 + 4) + 0x1C) = 0xDC;
+        *(u8 *)(*(s32 *)((u8 *)D_882348D0 + 4) + 0x1D) = 0xDC;
+        *(u8 *)(*(s32 *)((u8 *)D_882348D0 + 4) + 0x1E) = 0xB4;
+    } else {
+        *(u8 *)(*(s32 *)((u8 *)D_882348D0 + 4) + 0x1C) = 0x96;
+        *(u8 *)(*(s32 *)((u8 *)D_882348D0 + 4) + 0x1D) = 0x96;
+        *(u8 *)(*(s32 *)((u8 *)D_882348D0 + 4) + 0x1E) = 0x82;
+    }
+}
 
 /* mkdraft:func_8822A2B4 begin */
 extern void func_80048E30(u8 *, s32, s32, const char *, s32);

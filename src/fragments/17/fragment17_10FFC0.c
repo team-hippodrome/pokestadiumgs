@@ -165,8 +165,18 @@ void func_82200D8C(u8 *arg0, u8 arg1) { s32 result = func_82200CEC(arg1); *(u16 
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82200E04.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_822011AC.s")
+extern u8 D_80094E38[];
+extern s32 func_8004C990();
+extern Gfx *D_800D0510;
+extern u8 *func_8004CA60(u8 *);
+extern void func_800459AC(u8 *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
 
+/* 0x10 and 0x14 are typed f32 because those two words hold float bit
+   patterns: func_82200D28 stores 1.5f at 0x10 through a cast, and func_82200D8C
+   copies 0x14 from 0x10 as an f32. With f32 here, func_82201460 hands the 0x10
+   word to func_822011AC's f32 parameter without an int-to-float conversion, which
+   is the target's plain `lw a2,0x10(s0)`. */
 typedef struct Func82201460Record {
     s16 active;
     s16 unk02;
@@ -175,14 +185,50 @@ typedef struct Func82201460Record {
     s16 unk08;
     s16 unk0A;
     s32 unk0C;
-    s32 unk10;
-    s32 unk14;
+    f32 unk10;
+    f32 unk14;
     s16 x;
     s16 y;
     s16 dx;
     s16 dy;
 } Func82201460Record;
-extern void func_822011AC(s16, s16, s32, s16, s32);
+
+/* Image header returned by func_8004C990 for the 0x95 archive entry. */
+typedef struct Func822011ACSprite {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+} Func822011ACSprite;
+
+
+
+void func_822011AC(s32 arg0, s32 arg1, f32 arg2, s32 arg3, s32 arg4) {
+    Func822011ACSprite *sprite;
+    s32 width;
+    s32 height;
+    s32 dsdx;
+    s32 dtdy;
+    u8 color[3];
+
+    sprite = (Func822011ACSprite *)func_8004C990(0x95, 1);
+    dsdx = (s32)((1024.0f / arg2 > 0.0f ? 0.5f : -0.5f) + 1024.0f / arg2);
+    dtdy = dsdx;
+    if (func_82200600(color, (u16)arg4) != 0) {
+        width = (s32)(2.0f * sprite->width * arg2 + (2.0f * sprite->width * arg2 > 0.0f ? 0.5f : -0.5f));
+        height = (s32)(2.0f * sprite->height * arg2 + (2.0f * sprite->height * arg2 > 0.0f ? 0.5f : -0.5f));
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR,
+                    (_SHIFTL(color[1], 16, 8) | _SHIFTL(color[2], 8, 8) | _SHIFTL(color[0], 24, 8) |
+                     _SHIFTL(arg3, 0, 8)));
+        func_800459AC(func_8004CA60((u8 *)sprite), sprite->format, sprite->size, sprite->width,
+                      sprite->height, 1, 0, 1, 1, 5, 5, 0, 0);
+        GfxRect_DrawTextured((s16)(arg0 - width / 2), (s16)(arg1 - height / 2), (s16)width,
+                             (s16)height, 0, 0, dsdx, dtdy, 0);
+    }
+}
+
+void func_822011AC(s32 arg0, s32 arg1, f32 arg2, s32 arg3, s32 arg4);
 extern void func_82200918(void *, u16);
 void func_82201460(Func82201460Record *arg0) {
     s16 x;
@@ -362,7 +408,61 @@ s32 func_82201834(s16 *arg0) {
 }
 /* mkdraft:func_82201834 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82201960.s")
+extern s32 D_8220D778[];
+extern f32 D_8220D77C;
+extern f32 D_8220D780;
+extern s16 D_8220E378;
+
+// Alignment-1 four-byte blob: the copy from 0x2C to 0x20 is emitted as unaligned
+// lwl/lwr + swl/swr word moves, not a plain lw/sw pair.
+typedef struct { u8 pad[4]; } F82201960_Blob;
+
+// Runs on the four 0x3C-byte entries at D_8220E378 while an entry's state word (+0) is
+// 1; func_82201B70 dispatches on that word. The state 0 handler func_822017B0 and the
+// state 2 handler func_82201AE0 write the same coordinate halfwords at 0x20/0x22.
+
+
+void func_82201960(u8 *arg0) {
+    f32 elapsed;
+    f32 offset;
+    s32 entry_index;
+    f32 x_step;
+    f32 y_step;
+    f32 x;
+    f32 y;
+    f32 dead;
+
+    *(s16 *)(arg0 + 4) += 1;
+    if (*(s16 *)(arg0 + 4) < D_8220D778[0]) {
+        // The entry's index within the table picks the offset sign.
+        entry_index = (arg0 - (u8 *)&D_8220E378) / 0x3C;
+        if (entry_index >= 2) {
+            offset = 0.0f - D_8220D77C;
+        } else {
+            offset = D_8220D77C;
+        }
+        // FAKE: stores x_step into an unused local before x_step is assigned; the dead
+        // reference makes the optimizer color x_step ahead of elapsed, and without it
+        // diff.py scores 55 instead of 20 (35 from this function).
+        dead = x_step;
+        elapsed = *(s16 *)(arg0 + 4);
+        x_step = *(f32 *)(arg0 + 0x8) * elapsed + offset;
+        y_step = *(f32 *)(arg0 + 0xC) * elapsed + D_8220D780;
+        x = (f32)*(s16 *)(arg0 + 0x28) + x_step * elapsed;
+        y = (f32)*(s16 *)(arg0 + 0x2A) + y_step * elapsed;
+        *(s16 *)(arg0 + 0x20) = (s16)(x + (x > 0.0f ? 0.5f : -0.5f));
+        *(s16 *)(arg0 + 0x22) = (s16)(y + (y > 0.0f ? 0.5f : -0.5f));
+        if (*(s16 *)(arg0 + 4) >= D_8220D778[0] / 2) {
+            *(s16 *)(arg0 + 6) = 1;
+        }
+    } else {
+        // Lifetime expired: switch the entry to state 2 and copy the four bytes at
+        // 0x2C over the coordinates at 0x20.
+        *(s16 *)(arg0 + 0) = 2;
+        *(s16 *)(arg0 + 6) = 1;
+        *(F82201960_Blob *)(arg0 + 0x20) = *(F82201960_Blob *)(arg0 + 0x2C);
+    }
+}
 
 extern f32 D_80087E50[];
 void func_82201AE0(u8 *arg0) {

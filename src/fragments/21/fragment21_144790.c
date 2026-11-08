@@ -263,7 +263,32 @@ void func_82504D94(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_82504E38.s")
+extern f32 (*D_8160BD18)(f32);
+extern f32 (*D_8160BD1C)(f32);
+extern s32 D_82508800;
+
+
+
+void func_82504E38(void *arg0, void *arg1) {
+    f32 ratio;
+    s32 max = D_82508800;
+    f32 cos_ratio;
+
+    *(s16 *)((u8 *)arg1 + 0xC) += 1;
+    if (1) { } if (1) { } // FAKE: two empty statements; they retime uopt's colour walk so max takes $v1 and the reloaded timer takes $v0. One or none leaves the two registers swapped (score 50)
+    if (*(s16 *)((u8 *)arg1 + 0xC) < max) {
+        ratio = (f32)*(s16 *)((u8 *)arg1 + 0xC) / (f32)max;
+        cos_ratio = D_8160BD18(ratio);
+        *(s16 *)((u8 *)arg1 + 0x10) = (s16)(s32)(((f32)*(s16 *)((u8 *)arg1 + 0x14) - (f32)*(s16 *)((u8 *)arg1 + 0x14) * cos_ratio) + (D_8160BD18(ratio) * (f32)*(s16 *)((u8 *)arg1 + 0x14) < (f32)*(s16 *)((u8 *)arg1 + 0x14) ? 0.5f : -0.5f));
+        cos_ratio = D_8160BD1C(ratio);
+        *(s16 *)((u8 *)arg1 + 0x12) = (s16)(s32)(((f32)*(s16 *)((u8 *)arg1 + 0x16) - (f32)*(s16 *)((u8 *)arg1 + 0x16) * cos_ratio) + (D_8160BD1C(ratio) * (f32)*(s16 *)((u8 *)arg1 + 0x16) < (f32)*(s16 *)((u8 *)arg1 + 0x16) ? 0.5f : -0.5f));
+        return;
+    }
+    *(s16 *)((u8 *)arg1 + 8) = 2;
+    *(s16 *)((u8 *)arg1 + 0xC) = 0;
+    *(s16 *)((u8 *)arg1 + 0x10) = 0;
+    *(s16 *)((u8 *)arg1 + 0x12) = 0;
+}
 
 /* mkdraft:func_82504FB4 begin */
 extern f32 (*D_8160BD18)(f32);
@@ -298,7 +323,37 @@ void func_82504FB4(void *arg0, void *arg1) {
 }
 /* mkdraft:func_82504FB4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825050EC.s")
+extern f32 (*D_8160BD18)(f32);
+extern f32 (*D_8160BD1C)(f32);
+extern s32 D_82508808;
+
+typedef struct {
+    s16 x;
+    s16 y;
+} Func825050ECPair;
+
+
+
+void func_825050EC(void *arg0, void *arg1) {
+    f32 ratio;
+    s32 max = D_82508808;
+    f32 cos_ratio;
+
+    *(s16 *)((u8 *)arg1 + 0xC) += 1;
+    if (1) { } if (1) { } // FAKE: two empty statements; they retime uopt's colour walk so max takes $v1 and the reloaded timer takes $v0. One or none leaves the two registers swapped (score 1040)
+    if (*(s16 *)((u8 *)arg1 + 0xC) < max) {
+        ratio = (f32)*(s16 *)((u8 *)arg1 + 0xC) / (f32)max;
+        cos_ratio = D_8160BD18(ratio);
+        *(s16 *)((u8 *)arg1 + 0x18) = (s16)(s32)(((f32)*(s16 *)((u8 *)arg1 + 0x1C) + (f32)(*(s16 *)((u8 *)arg1 + 0x20) - *(s16 *)((u8 *)arg1 + 0x1C)) * cos_ratio) + (0.0f < (f32)*(s16 *)((u8 *)arg1 + 0x1C) + (f32)(*(s16 *)((u8 *)arg1 + 0x20) - *(s16 *)((u8 *)arg1 + 0x1C)) * D_8160BD18(ratio) ? 0.5f : -0.5f));
+        cos_ratio = D_8160BD1C(ratio);
+        *(s16 *)((u8 *)arg1 + 0x1A) = (s16)(s32)(((f32)*(s16 *)((u8 *)arg1 + 0x1E) + (f32)(*(s16 *)((u8 *)arg1 + 0x22) - *(s16 *)((u8 *)arg1 + 0x1E)) * cos_ratio) + (0.0f < (f32)*(s16 *)((u8 *)arg1 + 0x1E) + (f32)(*(s16 *)((u8 *)arg1 + 0x22) - *(s16 *)((u8 *)arg1 + 0x1E)) * D_8160BD1C(ratio) ? 0.5f : -0.5f));
+        return;
+    }
+    *(s16 *)((u8 *)arg1 + 8) = 2;
+    *(s16 *)((u8 *)arg1 + 0xC) = 0;
+    // pos = target; the copy must stay 4 bytes wide and unaligned (lwl/lwr/swl/swr, with the lwl in the beqzl delay slot). A *(u32 *) copy emits lw/sw and scores 805.
+    *(Func825050ECPair *)((u8 *)arg1 + 0x18) = *(Func825050ECPair *)((u8 *)arg1 + 0x20);
+}
 
 /* mkdraft:func_825052A0 begin */
 extern f32 (*D_8160BD18)(f32);
@@ -1065,7 +1120,95 @@ void Fragment21_UpdateContextAndRecords(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_8250771C.s")
+extern u16 D_82508FF6;
+extern s16 D_82509018;
+extern s16 D_8250901A;
+extern s16 D_8250901C;
+extern s16 D_8250901E;
+extern Gfx *D_800D0510;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_8250610C(Fragment21PoolNode *);
+extern void func_825064A4(Fragment21PoolNode *);
+
+
+
+void func_8250771C(void)
+{
+  Fragment21Context *pool;
+  Fragment21PoolNode *node;
+  Fragment21PoolNode *best;
+  Fragment21PoolNode *jnode;
+  s32 selected[16];
+  s32 draw;
+  s32 count;
+  s32 i;
+  s32 j;
+  s32 min;
+  s32 temp;
+  u16 *flagp;
+  flagp = &D_82508FF6;
+
+  pool = &D_82508FF0;
+  count = 0;
+  draw = 0;
+  for (i = 0; i < 16; i++)
+  {
+    if (pool->nodes[i].phase != 0)
+    {
+      selected[count] = i;
+      count++;
+    }
+  }
+
+  for (i = 0; i < (count - 1); i++)
+  {
+    min = i;
+    for (j = i + 1; j < count; j++)
+    {
+      best = &pool->nodes[selected[min]];
+      jnode = &pool->nodes[selected[j]];
+      if (jnode->unk_0A < best->unk_0A)
+      {
+        min = j;
+      }
+    }
+
+    temp = selected[min];
+    selected[min] = selected[i];
+    selected[i] = temp;
+  }
+
+  for (i = 0; i < count; i++)
+  {
+    node = &pool->nodes[selected[i]];
+    if (node->phase != 0)
+    {
+      if (((*flagp & 4) && (*flagp & 8)) && (node->kind == 1))
+      {
+        if (node->id == 1)
+        {
+          draw = 1;
+          func_80006F70(&D_800D0510, D_82509018, D_8250901A, D_8250901C, D_8250901E);
+        }
+      }
+      if (node->variant == 1)
+      {
+        func_82505A64(node, node->width - 0xE, node->height - 0x4E);
+        func_825064A4(node);
+      }
+      else
+      {
+        func_82505A64(node, node->width - 0xE, node->height - 0xE);
+        func_8250610C(node);
+      }
+    }
+  }
+
+  if (draw != 0)
+  {
+    func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+  }
+}
 
 void func_82507AF4(void)
 {

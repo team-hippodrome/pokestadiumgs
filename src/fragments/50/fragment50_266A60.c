@@ -754,7 +754,82 @@ void func_862025E0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_862026C8.s")
+extern void *D_8620E198;
+extern void *D_862090A8;
+extern void *D_862090AC;
+extern void *D_862090B0;
+extern void *D_862090B4;
+
+// Fills word +0xC of records that func_862028F0 marks with 0x20000000. That function
+// stores 0x10000000 in the first word of a record when the record's bit is set in the byte
+// at +0x2182 of the object at D_8620E198 + 0xF4, and 0x20000000 otherwise; this function
+// counts the four 24-byte records at D_8620E198 + 0x73BBC that carry 0x20000000, selects a
+// 16-byte table from D_862090A8..D_862090B4 by the byte at +0x2181 of the same object,
+// shuffles the table with 256 exchanges indexed by func_8003570C() % count, and then writes
+// table[count++] to word +0xC of each counted record in slot order.
+//!bug: the switch has no default. A selector outside 0..3 leaves src uninitialized, so the
+// 16-byte copy below reads whatever that frame slot holds.
+
+
+void func_862026C8(void) {
+    s32 i;
+    s32 count;
+    u32 table[4];
+    void * src;
+    u8 *p;
+    s32 a;
+    s32 b;
+    u32 t;
+    u32 u;
+    p = (u8 *)D_8620E198 + 0x73BBC;
+    count = 0;
+    i = 0;
+    do {
+        i++;
+        if (*(u32 *)p & 0x20000000) {
+            count++;
+        }
+        p += 24;
+    } while (i < 4);
+
+    switch (*(s8 *)(*(u8 **)((u8 *)D_8620E198 + 0xF4) + 0x2181)) {
+    case 0:
+        src = D_862090A8;
+        break;
+    case 1:
+        src = D_862090AC;
+        break;
+    case 2:
+        src = D_862090B0;
+        break;
+    case 3:
+        src = D_862090B4;
+        break;
+    }
+
+    for (i = 0; i < 4; i++) {
+        table[i] = ((u32 *)src)[i];
+    }
+
+    if (count > 0) {
+        for (i = 0; i != 0x100; i++) {
+            a = func_8003570C() % count;
+            b = func_8003570C() % count;
+            t = table[a];
+            table[a] = table[b];
+            table[b] = t;
+        }
+    }
+
+    p = (u8 *)D_8620E198 + 0x73BBC;
+    count = 0;
+    for (i = 0; i < 4; i++) {
+        if (*(u32 *)p & 0x20000000) {
+            *(u32 *)(p + 0xC) = table[count++];
+        }
+        p += 24;
+    }
+}
 #endif
 
 #ifdef VERSION_US

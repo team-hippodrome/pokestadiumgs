@@ -10,7 +10,76 @@ typedef struct Fragment72PlaybackResources {
 } Fragment72PlaybackResources;
 static Fragment72PlaybackResources sPlaybackResources;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400020.s")
+extern u8 D_8F4020C0;
+extern s16 D_8F4020C2;
+extern s32 D_8F4020C8;
+extern s32 D_8F4020D0;
+extern s32 D_8F4020DC;
+extern s32 D_8F4020E0;
+extern s32 D_8F4020E4;
+extern s16 D_8F4020E8;
+extern s16 D_8F4020F4;
+extern s16 D_8F4020F8;
+extern void *ModelPreview_Create();
+extern s32 func_80042D54(u8 *arg0, u16 arg1);
+extern s32 func_80042FBC(void *state, s32 species);
+
+// D_8F4020C0 is the base of an unnamed struct: an s16 at +0x2 and the
+// ModelPreview pointer at +0xC whose u16 flags the three masks below clear.
+// func_8F401918 in this file reads the same object through a u8 * base.
+
+
+void func_8F400020(void) {
+    s32 state_index;
+    s32 width;
+    s32 height;
+    u8 *state;
+
+    for (state_index = 0; state_index < 8; state_index += 4) {
+        *((s16 *)(&D_8F4020C0 + state_index * 2) + 22) = 1;
+        *((s16 *)(&D_8F4020C0 + state_index * 2) + 23) = 1;
+        *((s16 *)(&D_8F4020C0 + state_index * 2) + 24) = 1;
+        *((s16 *)(&D_8F4020C0 + state_index * 2) + 25) = 1;
+    }
+    switch (*((s16 *)&D_8F4020C0)) {
+    case 0:
+        width = 118;
+        height = 144;
+        D_8F4020E4 = D_8F4020DC;
+        break;
+    case 1:
+        width = 132;
+        height = 105;
+        D_8F4020E4 = 0;
+        D_8F4020F4 = 0;
+        D_8F4020F8 = 0;
+        break;
+    case 3:
+        width = 80;
+        height = 80;
+        D_8F4020E4 = D_8F4020E0;
+        break;
+    default:
+        width = 40;
+        height = 40;
+        D_8F4020E4 = 0;
+        D_8F4020F4 = 0;
+        break;
+    }
+    state = (u8 *)&D_8F4020C0;
+    D_8F4020D0 = 0;
+    *(void **)(state + 0xC) = ModelPreview_Create((void *)D_8F4020C8, width, height);
+    if (*(s16 *)state == 2) {
+        func_80042D54(*(u16 **)(state + 0xC), 0x7BDF);
+    }
+    *(*(u16 **)(state + 0xC)) &= 0xFFFD;
+    *(*(u16 **)(state + 0xC)) &= 0xFEFF;
+    if (*(s16 *)state != 1) {
+        *(*(u16 **)(state + 0xC)) &= 0xFFFB;
+    }
+    func_80042FBC(*(u16 **)(state + 0xC), *((s16 *)(state + 2)));
+    D_8F4020E8 = 0;
+}
 
 extern void Dma_CopyChunks(s32, s32, s32);
 s32 func_800356CC(s32);
@@ -431,7 +500,48 @@ void func_8F400C58(void) {
 }
 /* mkdraft:func_8F400C58 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400DE8.s")
+extern void _bzero(void *, s32);
+extern s32 func_80041C98(s32);
+extern u8 *func_8004BA70(s32);
+extern void func_80041E2C(void);
+
+/* The fragment's 0x48-byte runtime block starts 0x10 bytes below
+ * sPlaybackResources in the pinned .bss section (linker_scripts/us/datamig_bss.ld
+ * places this object's .bss at 0x8F4020D0 and the block was cleared from
+ * 0x8F4020C0). */
+typedef struct Fragment72RuntimeBlock {
+    u8 pad_00[2];
+    s16 unk_02;
+    s16 unk_04;
+    u8 pad_06[2];
+    s32 unk_08;
+    s32 unk_0C;
+    s32 unk_10;
+    s32 unk_14;
+    s32 unk_18;
+    s32 unk_1C;
+    s32 unk_20;
+    s32 unk_24;
+} Fragment72RuntimeBlock;
+
+
+
+void func_8F400DE8(void) {
+    Fragment72RuntimeBlock *block = (Fragment72RuntimeBlock *)((u8 *)&sPlaybackResources - 0x10);
+
+    _bzero(block, 0x48);
+    block->unk_02 = 0x98;
+    block->unk_04 = -1;
+    block->unk_08 = func_80041C98(5);
+    block->unk_0C = 0;
+    block->unk_10 = 0;
+    block->unk_14 = 0;
+    block->unk_18 = 0;
+    block->unk_1C = (s32)func_8004BA70(0);
+    block->unk_20 = (s32)func_8004BA70(1);
+    block->unk_24 = 0;
+    func_80041E2C();
+}
 
 void func_8F400E74(s32 arg0, s32 arg1, s32 arg2) {
     if (arg0 == arg1) {
@@ -776,7 +886,7 @@ extern s32 D_8F4020D4;
 extern s32 D_8F4020D8;
 extern u8 StageContext_GetFadeMode(void);
 extern s32 StageFade_StartFromTransparent(s32 duration);
-extern s32 func_8F400020();
+void func_8F400020(void);
 extern s32 func_8F4009A4();
 extern void main_pool_pop_state(s32);
 extern void main_pool_push_state(s32);

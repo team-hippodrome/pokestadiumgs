@@ -1883,7 +1883,109 @@ s32 func_861060F8(void *arg0, void *arg1) {
 }
 /* mkdraft:func_861060F8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861061B0.s")
+extern s32 D_8610AD20;
+extern void *D_87F119DC;
+extern u32 func_8003570C(void);
+extern void *func_87F0328C(u8 *, s32, f32, f32, f32, f32, s32);
+
+
+
+void func_861061B0(s32 arg0) {
+    /* Typed views of D_8610AD20 and D_87F119DC. Member access is load-bearing
+     * for codegen: the offset load becomes the second operand of the target's
+     * add.s, while the file's usual *(f32 *) pointer casts put it first. */
+    typedef struct {
+        u8 pad[0x9768];
+        f32 scale;
+        u8 unk_976C[8];
+        f32 unk_9774;
+    } Context861061B0;
+    typedef struct {
+        u8 pad[0x48];
+        f32 x;
+        f32 y;
+        f32 z;
+    } Object861061B0;
+    u32 rand0;
+    u32 rand1;
+    u32 rand2;
+    u32 rand3;
+    u8 *obj;
+    u8 *state;
+    u8 *color;
+    u8 *color2;
+    s32 i;
+
+    for (i = 0; i != 5; i++) {
+        rand0 = func_8003570C();
+        rand1 = func_8003570C();
+        rand2 = func_8003570C();
+        rand3 = func_8003570C();
+        obj = func_87F0328C((u8 *)(u32)D_8610AD20 + 0x8FF8, 0,
+                            ((2.0f * ((f32)rand0 / 4294967296.0f)) - 1.0f) * (700.0f * (0.04f * ((Context861061B0 *)(u32)D_8610AD20)->scale)) + ((Object861061B0 *)(u8 *)D_87F119DC)->x,
+                            ((2.0f * ((f32)rand1 / 4294967296.0f)) - 1.0f) * (700.0f * (0.04f * ((Context861061B0 *)(u32)D_8610AD20)->scale)) + ((Object861061B0 *)(u8 *)D_87F119DC)->y,
+                            *(f32 *)((u8 *)D_87F119DC + 0x50),
+                            ((f32)rand2 / 4294967296.0f) + 1.0f,
+                            (rand3 & 0xF) + 0xA);
+        if (obj != 0) {
+            state = *(u8 **)(obj + 0x20);
+            *(f32 *)(obj + 0x10) = ((2.0f * ((f32)func_8003570C() / 4294967296.0f)) - 1.0f) * 3.0f + ((Context861061B0 *)(u32)D_8610AD20)->unk_9774;
+            *(f32 *)(obj + 0x14) = (2.0f * ((f32)func_8003570C() / 4294967296.0f)) * 7.5f + 1.0f;
+            *(f32 *)(obj + 0x18) = 0.0f;
+            *(f32 *)(state + 0x18) = 1.0f;
+            color = *(u8 **)(obj + 0x20);
+            *(f32 *)(color + 0x20) = 0.0f;
+            *(f32 *)(color + 0x24) = -0.98f;
+            *(f32 *)(color + 0x28) = 0.0f;
+            switch (arg0) {
+            case 0:
+                color2 = *(u8 **)(obj + 0x20);
+                color2[0x10] = 0xC8;
+                color2[0x11] = 0xC8;
+                color2[0x12] = 0xFF;
+                color2[0x13] = 0xFF;
+                color2[0x14] = 0;
+                color2[0x15] = 0;
+                color2[0x16] = 0xFF;
+                color2[0x17] = 0xFF;
+                break;
+            case 1:
+                color2 = *(u8 **)(obj + 0x20);
+                color2[0x10] = 0xC8;
+                color2[0x11] = 0xFF;
+                color2[0x12] = 0xC8;
+                color2[0x13] = 0xFF;
+                color2[0x14] = 0;
+                color2[0x15] = 0xFF;
+                color2[0x16] = 0;
+                color2[0x17] = 0xFF;
+                break;
+            case 2:
+                color2 = *(u8 **)(obj + 0x20);
+                color2[0x10] = 0xFF;
+                color2[0x11] = 0xC8;
+                color2[0x12] = 0xC8;
+                color2[0x13] = 0xFF;
+                color2[0x14] = 0xFF;
+                color2[0x15] = 0;
+                color2[0x16] = 0;
+                color2[0x17] = 0xFF;
+                break;
+            case 3:
+                color2 = *(u8 **)(obj + 0x20);
+                color2[0x10] = 0xFF;
+                color2[0x11] = 0xFF;
+                color2[0x12] = 0xC8;
+                color2[0x13] = 0xFF;
+                color2[0x14] = 0xFF;
+                color2[0x15] = 0xFF;
+                color2[0x16] = 0;
+                color2[0x17] = 0xFF;
+                break;
+            }
+        }
+    }
+}
 
 extern s32 func_861060F8(void *, void *);
 extern void func_861061B0(s32);

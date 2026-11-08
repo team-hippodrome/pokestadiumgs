@@ -228,12 +228,55 @@ void func_8414CF74(s32 arg0, u8 arg1, u8 arg2) {
     *(u16 *)(value + 0x1A) = *(s32 *)(rec + 0xC) >> 2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414D008.s")
+extern void func_84149D54(void *, u8, u8);
+extern void func_84149D0C(void *);
+extern void func_84154FC4(void *, u8, u8);
+extern u8 *D_841951F8[];
+
+
+
+void func_8414D008(void *state, u8 side, u8 move) {
+    s32 hp;
+    u8 calc[0x28]; // damage-calculation record filled by func_84149D54, finalized by func_84149D0C
+    s32 amount;
+    u8 inner[0x48]; // mon record filled by func_84154FC4; calc+0x10 is pointed at it
+    s32 i;
+
+    func_84149D54(calc, side, move);
+    if (*(u16 *)(*(u8 **)(calc + 0x10) + 0x26) == 0) {
+        func_84149D0C(calc);
+        hp = *(s32 *)(calc + 0x24);
+        amount = *(s32 *)(calc + 0xC);
+        if (hp > 0) {
+            *(u16 *)((u8 *)((u32)state + side * 2 + 4) + 0x16) += hp;
+            hp -= amount;
+            *(s32 *)(calc + 0x24) = hp;
+        } else {
+            *(u16 *)((u8 *)((u32)state + side * 2 + 4) + 0xA) += amount;
+        }
+    }
+    hp = *(s32 *)(calc + 0x24);
+    for (i = (*(u8 **)(calc + 0x18))[0]; i >= 0; i--) {
+        if (i != (*(u8 **)(calc + 0x18))[1]
+            && *(u8 *)((u8 *)D_841951F8[side] + i * 0x58 + 0x3C) == 0) {
+            func_84154FC4(inner, side, i);
+            *(u8 **)(calc + 0x10) = inner;
+            func_84149D0C(calc);
+            amount = *(s32 *)(calc + 0xC);
+            if (hp > 0) {
+                *(u16 *)((u8 *)((u32)state + side * 2 + 4) + 0x16) += hp;
+                hp -= amount;
+            } else {
+                *(u16 *)((u8 *)((u32)state + side * 2 + 4) + 0xA) += amount;
+            }
+        }
+    }
+}
 
 /* mkdraft:func_8414D198 begin */
 extern u8 func_80062D20(u8 arg0);
 void func_8414CB74(u8 *arg0, u8 arg1, u8 arg2);
-extern void func_8414D008(s32 arg0, u8 arg1, u8 arg2);
+void func_8414D008(void *state, u8 side, u8 move);
 extern u8 *func_84154B0C(void);
 
 

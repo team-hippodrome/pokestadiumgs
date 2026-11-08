@@ -38,7 +38,52 @@ void func_82900C04(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33D6A0/func_82900C40.s")
+typedef union { s32 word; s8 bytes[4]; } Func80041FA0State;
+
+typedef struct {
+    /* 0x00 */ s32 temp;
+    /* 0x04 */ Func80041FA0State state;
+} Func82900C40Frame;
+
+extern s32 D_82911B94;
+extern s16 D_82911B98;
+extern u8 D_82911C60[];
+extern s32 D_82911E34;
+extern s16 D_82918858;
+extern s32 D_829188C8;
+extern void *Vec3s_SetComponents(void *arg0, s16 arg1, s16 arg2, s16 arg3);
+extern void func_8003F114();
+extern void func_8003F1DC();
+extern void func_80041FA0(s32, u16, Func80041FA0State);
+extern void func_800428F8(s32 arg0);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern void func_8003F2C4(s32, s32, s32);
+
+
+
+void func_82900C40(s32 arg0) {
+    Func82900C40Frame frame;
+
+    frame.state.word = D_82911E34;
+    frame.temp = (s32)((void *)arg0) + 4;
+    func_8003F1DC(frame.temp);
+    func_80041FA0(*(s32 *)((void *)arg0),
+                 *(u16 *)((u8 *)D_82911C60 + (D_82918858 * 0x14)), frame.state);
+    func_800428F8(*(s32 *)((void *)arg0));
+    func_8003F114(frame.temp, 0,
+                  *(s16 *)((u8 *)D_82911C60 + (D_82918858 * 0x14)),
+                  *(s32 *)((u8 *)*(s32 **)((u8 *)*(s32 **)((u8 *)*(void **)(void *)arg0 + 0x38) + 8)));
+    *(u8 *)((u8 *)((void *)arg0) + 6) &= 0xFFBF;
+    func_8003F2C4(*(s32 *)((void *)arg0), frame.temp, 0);
+    Vec3f_SetComponentsDuplicate(
+        (f32 *)((u8 *)((void *)arg0) + 0x28),
+        0.0f, *(f32 *)((u8 *)&D_82911B94 + (D_82918858 * 0x1C)), 0.0f);
+    Vec3s_SetComponents(
+        (s16 *)((u8 *)((void *)arg0) + 0x22),
+        0, *(s16 *)((u8 *)&D_82911B98 + (D_82918858 * 0x1C)), 0);
+    *(u8 *)((u8 *)((void *)arg0) + 0x1A2) = 0;
+    D_829188C8 = 0;
+}
 #endif
 
 #ifdef VERSION_US

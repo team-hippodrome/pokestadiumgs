@@ -394,7 +394,90 @@ void func_86701224_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670122C.s")
+extern u32 func_8003570C(void);
+extern State86703DF4 D_86728408[];
+extern Row86706A30 D_86710C20[];
+extern Row86706A30 D_86711760[4][60];
+extern s32 D_8670C984[4][60][4];
+extern s32 D_8670BD74[];
+extern s32 D_8670BD84[];
+extern s32 D_8670BB8C;
+extern s32 D_8670B374;
+extern s32 D_86728328;
+
+typedef struct {
+    f32 unk00;
+    u8 pad04[0x10];
+    s32 unk14;
+    u8 pad18[0x08];
+    s32 unk20;
+    u8 pad24[0x14];
+} Stage55RankCtx;
+
+
+
+s32 func_8670122C(s32 arg0) {
+    State86703DF4 *state;
+    Stage55RankCtx *ctx;
+    Row86706A30 *row;
+    Row86706A30 *cur;
+    s32 *flag_ptr;
+    s32 flag;
+    s32 slot_id;
+    s32 found;
+    s32 index;
+    s32 chance;
+    s32 st;
+    s32 one = 1;
+    f32 z;
+    f32 limit;
+
+    state = &D_86728408[arg0];
+    flag = 0;
+    if (one == *(s32 *) ((u8 *) state + 0x34)) {
+        flag = one;
+    }
+    ctx = (Stage55RankCtx *) ((u8 *) &D_86728328 + arg0 * 0x38);
+    cur = &D_86710C20[arg0];
+    limit = (ctx->unk00 + cur->z) - (f32) (flag * 0x96);
+    found = 0x3E8;
+    row = D_86711760[arg0];
+    for (index = 0; index < 0x3C; index++) {
+        z = row->z;
+        if (z <= limit) {
+            if (cur->z <= z) {
+                slot_id = D_8670C984[arg0][index][0];
+                if (slot_id >= 0) {
+                    flag_ptr = &D_8670B374 + arg0;
+                    if (*flag_ptr == 4) {
+                        return index;
+                    }
+                    if (slot_id == 0xA) {
+                        chance = func_8003570C() % 101;
+                        if ((ctx->unk14 != 0) && (*(f32 *) ((u8 *) state + 0x10)) > 50.0f) {
+                            chance = 0x64;
+                        }
+                        st = *(s32 *) ((u8 *) state + 0x34);
+                        if ((D_8670BD74[*flag_ptr] + D_8670BD84[st]) < chance
+                            || D_8670BB8C != 0) {
+                            found = index;
+                            limit = z;
+                        }
+                    } else {
+                        found = index;
+                        limit = z;
+                    }
+                }
+            }
+        }
+        if (one == index) {}
+        row++;
+    }
+    if (found == 0x3E8) {
+        found = ctx->unk20;
+    }
+    return found;
+}
 #endif
 
 #ifdef VERSION_US
@@ -602,7 +685,134 @@ void func_86702434(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86702B28.s")
+extern f32 D_8670B3C4;
+extern f32 D_8670B3C8;
+extern f32 D_8670B3CC;
+extern s32 D_8670B3D0;
+extern s32 D_8670B38C;
+extern s32 D_8670BB48;
+extern f32 D_8670BB80;
+extern f32 D_8670C890;
+extern f32 D_8670C894;
+extern f32 D_8670C89C;
+extern f32 D_8670C8A0;
+extern f32 D_8670BD9C;
+extern f32 D_86710C4C;
+extern Stage55Slot D_8670C980[4][60];
+extern Row86706A30 D_867100C8[];
+extern Row86706A30 D_86710C20[];
+extern Row86706A30 D_86711760[4][60];
+extern State86703DF4 D_86728408[];
+extern u32 D_86727CE8[];
+extern void func_8670211C(void);
+extern void func_86702434(void);
+extern void func_87F0CB58(void);
+extern int guRandom(void);
+
+
+
+void func_86702B28(void)
+{
+  u32 *fill;
+  u32 *base;
+  u32 *end;
+  s32 neg;
+  f32 scale;
+  f32 value;
+  s32 i;
+  s32 j;
+  func_8670211C();
+  func_86702434();
+  scale = D_8670B3C4;
+  D_8670C890 = 6.0f * scale;
+  D_8670C894 = D_8670C890 * 16.0f;
+  D_8670B3C8 = 18.0f;
+  D_8670C8A0 = D_8670B3C8 * 39.0f;
+  D_8670C89C = (f32)D_86710C4C + 5.0f * D_8670B3C8;
+  neg = -1;
+  base = D_86727CE8;
+  for (i = 0; i < 400; i++)
+  {
+    base[i] = neg;
+  }
+  value = D_8670BB80;
+  for (i = 0; i < 4; i++)
+  {
+    *((f32 *) (((u8 *) (&D_86710C20[i])) + 0x2C)) = -280.0f;
+    *((f32 *) (((u8 *) (&D_867100C8[i])) + 0x2C)) = -280.0f;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x1C)) = ((((f32) i) * 120.0f) + (-240.0f)) * scale;
+    *((s16 *) (((u8 *) (&D_86710C20[i])) + 0x20)) = 0;
+    *((f32 *) (((u8 *) (&D_86710C20[i])) + 0x38)) = value;
+    *((f32 *) (((u8 *) (&D_86710C20[i])) + 0x34)) = value;
+    *((f32 *) (((u8 *) (&D_86710C20[i])) + 0x30)) = value;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x00)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x08)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x04)) = 0;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x10)) = 0.0f;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x14)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x18)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x0C)) = D_8670B38C;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x20)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x24)) = 1;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x28)) = 2.0f;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x2C)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x30)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x34)) = i + 1;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x38)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x48)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x44)) = -1;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x54)) = 0;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x58)) = 0.0f;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x5C)) = 0.0f;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x60)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x64)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x68)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x7C)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x6C)) = 0;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x70)) = 0.0f;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x74)) = 0;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x78)) = 0.0f;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x84)) = 0.0f;
+    *((f32 *) (((u8 *) (&D_86728408[i])) + 0x80)) = 1.0f;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x88)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x8C)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x90)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x94)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0x9C)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0xA0)) = 0;
+    *((s32 *) (((u8 *) (&D_86728408[i])) + 0xA8)) = 0;
+    for (j = 0; j < 0x3C; j++)
+    {
+      D_8670C980[i][j].resource_index = -1;
+      D_8670C980[i][j].unk04[0] = -1;
+      *((s32 *) (((u8 *) (&D_86711760[i][j])) + 0x14)) = 0;
+    }
+
+  }
+
+  D_8670B3CC = 85.0f * value;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x10)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x30)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x34)) = 1;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x3C)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x08)) = -1;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x40)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x44)) = 0;
+  D_8670B3C8 = D_8670B3C8;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x48)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x4C)) = -1;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x50)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x54)) = 0;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x5C)) = 1;
+  *((f32 *) (((u8 *) (&D_8670BB48)) + 0x38)) = 0.75f;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x58)) = guRandom() % 4;
+  *((s32 *) (((u8 *) (&D_8670BB48)) + 0x64)) = 0;
+  if (D_8670B3D0 >= 2)
+  {
+    D_8670BD9C = 0.3f;
+  }
+  func_87F0CB58();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1156,11 +1366,154 @@ void func_86708720(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86708944.s")
+extern Row86706A30 D_86710C20[];
+extern Row86706A30 D_867111C0[];
+extern Row86706A30 D_867100C8[];
+extern Row86706A30 D_86711760[4][60];
+extern Row86706A30 D_867111E4[];
+extern u8 D_86727CB0[];
+extern s32 D_8670FEC8[];
+extern f32 D_8670B3C4;
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_8003F210(void *, s32);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern void func_87F03B8C(u8 *);
+extern void func_87F06430(void *, s32);
+
+
+
+void func_86708944(void) {
+    s32 i;
+    s32 j;
+    f32 scale;
+
+    func_87F03B8C(D_86727CB0);
+    scale = 0.3f;
+    for (i = 0; i < 4; i++) {
+        *(f32 *)((u8 *)&D_86710C20[i] + 0x24) = (((f32)i * 120.0f) + -180.0f) * D_8670B3C4;
+        func_8003F114((u8 *)&D_867111C0[i], 0, -1, (void *)D_8670FEC8[i]);
+        ModelAnim_SetSpeed((u8 *)&D_86710C20[i], 0x10000);
+        func_87F06430((u8 *)&D_867111E4[i], i);
+        *(f32 *)((u8 *)&D_867111C0[i] + 0x38) = scale;
+        *(f32 *)((u8 *)&D_867111C0[i] + 0x34) = scale;
+        *(f32 *)((u8 *)&D_867111C0[i] + 0x30) = scale;
+        *(f32 *)((u8 *)&D_867111C0[i] + 0x28) = 60.0f;
+        func_8003F210((u8 *)&D_867111C0[i], 0);
+        ModelAnim_SetFrame((u8 *)&D_867111C0[i], guRandom() % 25);
+        ModelAnim_SetEventFrame((u8 *)&D_867111C0[i], 0);
+        func_8003F1DC(&D_86710C20[i]);
+        func_8003F1DC(&D_867100C8[i]);
+        for (j = 0; j < 60; j++) {
+            func_8003F1DC(&D_86711760[i][j]);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86708B18.s")
+extern Row86706A30 D_867111C0[];
+extern Row86706A30 D_867100C8[];
+extern Row86706A30 D_86710C20[];
+extern State86703DF4 D_86728408[];
+extern u8 D_867286B8[];
+extern s32 D_8670FEC8[];
+extern s32 D_8670FF00;
+extern s32 D_8670BB48;
+extern f64 D_8670C550;
+extern f64 D_8670C558;
+extern s32 StageContext_GetFadeMode(void);
+extern s32 StageFade_StartFromOpaque(s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern s32 func_8003F210(void *, s32);
+extern s32 ModelAnim_IsFinished(void *);
+extern void func_80027A28(u16, u8);
+extern void func_87F00688(void);
+
+
+
+void func_86708B18(void)
+{
+  u8 *actor;
+  s32 i;
+  f32 val;
+  if (StageContext_GetFadeMode() == 1)
+  {
+    for (i = 0; i < 4; i++)
+    {
+      func_8003F1DC(&D_867111C0[i]);
+      func_8003F114((u8 *) (&D_86710C20[i]), 0, -1, (void *) D_8670FEC8[i]);
+      func_8003F114((u8 *) (&D_867100C8[i]), 0, -1, (void *) D_8670FF00);
+      *((f32 *) (((u8 *) (&D_867100C8[i])) + 0x38)) = 1.5f;
+      *((f32 *) (((u8 *) (&D_867100C8[i])) + 0x30)) = 1.5f;
+      ModelAnim_SetEventFrame((u8 *) (&D_86710C20[i]), 0);
+      func_8003F210((u8 *) (&D_86710C20[i]), 0);
+      ModelAnim_SetFrame((u8 *) (&D_86710C20[i]), guRandom() % 25);
+      D_86728408[i].unk2C = 0;
+    }
+
+    StageFade_StartFromOpaque(20);
+    func_87F00688();
+    D_8670BB48 = 13;
+    return;
+  }
+  for (i = 0; i < 4; i++)
+  {
+    actor = (u8 *) (&D_867111C0[i]);
+    if (D_86728408[i].unk2C == 0)
+    {
+      if (((*((s32 *) (((u32) ((u32) actor)) + 0x48))) >> 16) < 10)
+      {
+        *((s32 *) (((u8 *) (&D_86728408[i])) + 0x88)) = 0;
+        *((s32 *) (((u8 *) (&D_86728408[i])) + 0x8C)) = 0;
+      }
+      if ((((*((s32 *) (((u32) ((u32) actor)) + 0x48))) >> 16) >= 14) && ((*((s32 *) (((u8 *) (&D_86728408[i])) + 0x88))) == 0))
+      {
+        func_80027A28(0x9F03, i);
+        *((s32 *) (((u8 *) (&D_86728408[i])) + 0x88)) = 1;
+      }
+      if ((((*((s32 *) (((u32) ((u32) actor)) + 0x48))) >> 16) >= 32) && ((*((s32 *) (((u8 *) (&D_86728408[i])) + 0x8C))) == 0))
+      {
+        func_80027A28(0x9F03, i);
+        *((s32 *) (((u8 *) (&D_86728408[i])) + 0x8C)) = 1;
+      }
+      *((s32 *) (((u8 *) (&D_8670BB48)) + 0x34)) = (*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) + 1;
+      val = ((*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) * ((*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) * 0.1));
+      *((f32 *) (actor + 0x2C)) = val;
+      *((f32 *) (actor + 0x24)) = (2000.0f - val) / ((f32) (*((s32 *) (((u8 *) (&D_86728408[i])) + 0x3C))));
+      *((f32 *) (actor + 0x28)) = (val * (-0.13)) + 60.0;
+      if (((f32) (*((s32 *) (((u8 *) (&D_86728408[i])) + 0x40)))) < val)
+      {
+        func_8003F210(actor, 3);
+        D_86728408[i].unk2C = 2;
+      }
+    }
+    else
+      if ((D_86728408[i].unk2C == 2) && (((*((s32 *) ((((u8 *) D_867111C0) + (i * 0x168)) + 0x48))) >> 16) == 2))
+    {
+      func_80027A28(0x9F01, i);
+    }
+    if ((*((s32 *) (((u8 *) (&D_86728408[i])) + 0x98))) == 206)
+    {
+      *((s32 *) (((u8 *) (&D_8670BB48)) + 0x34)) = (*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) + 1;
+      val = ((*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) * ((*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) * 0.1));
+      actor = (u8 *) (&D_867111C0[i]);
+      *((f32 *) (actor + 0x2C)) = (*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) * ((*((s32 *) (((u8 *) (&D_8670BB48)) + 0x34))) * 0.1);
+      *((f32 *) (actor + 0x24)) = (2000.0f - val) / ((f32) (*((s32 *) (((u8 *) (&D_86728408[i])) + 0x3C))));
+      *((f32 *) (actor + 0x28)) = (val * (-0.13)) + 60.0;
+      if (ModelAnim_IsFinished(actor) == 1)
+      {
+        ModelAnim_SetFrame(actor, 0);
+      }
+    }
+  }
+
+}
 #endif
 
 #ifdef VERSION_US
@@ -1474,7 +1827,81 @@ void func_8670972C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867097D8.s")
+
+typedef struct { s32 v[4]; } Flags8670C0D8;
+extern Flags8670C0D8 D_8670C0D8;
+extern State86703DF4 D_86728408[];
+// D_8672843C is declared earlier in fragment55_code.c (anon struct with unk_00);
+// do NOT redeclare it here - a second anonymous struct definition is a different
+// type and the build fails with "conflicting types for D_8672843C".
+extern s32 D_867284B0;
+extern s32 D_867284E8;
+extern s32 D_8672855C;
+extern s32 D_86728594;
+extern s32 D_86728608;
+extern s32 D_86728640;
+extern s32 D_867286B4;
+
+// Ranks the four D_86728408 records by descending unk10: every pass takes the
+// highest unk10 among unranked records, gives the tied records the same rank
+// (written as rank + 1 at offset 0x34), then repeats until all four are ranked.
+// Afterwards four optional words are copied into the targets they feed.
+
+
+void func_867097D8(void) {
+    f32 max;
+    s32 total;
+    s32 rank;
+    s32 i;
+    s32 flags[4];
+
+    *((Flags8670C0D8 *) flags) = D_8670C0D8;
+    i = 0;
+    max = 0.0f;
+    total = 0;
+    if (i) { // FAKE: inert; required for the target uopt register coloring
+    }
+    // Assigning the chain directly to flags[3] makes it store 0x1C, 0x18, 0x14,
+    // 0x10 in that order. The chain must precede rank = 0: placed earlier, rank's
+    // web takes the lower live-range bit and lands in $a0 instead of $a1.
+    flags[3] = flags[2] = flags[1] = flags[0] = 0;
+    rank = 0;
+loop:
+    for (i = 0; i < 4; i++) {
+        if ((max <= (*((f32 *) ((((u8 *) D_86728408) + (i * 0xAC)) + 0x10)))) && (flags[i] == 0)) {
+            max = *((f32 *) ((((u8 *) D_86728408) + (i * 0xAC)) + 0x10));
+        }
+    }
+
+    for (i = 0; i < 4; i++) {
+        if (max == (*((f32 *) ((((u8 *) D_86728408) + (i * 0xAC)) + 0x10)))) {
+            flags[i] = 1;
+            total++;
+            *((s32 *) ((((u8 *) D_86728408) + (i * 0xAC)) + 0x34)) = rank + 1;
+        }
+    }
+
+    i++; // FAKE: discarded; without it the two loops unroll (112 instructions vs 88)
+    if (total < 4) {
+        if (1) { // FAKE: inert; prevents the float zero from being hoisted
+        }
+        max = 0.0f;
+        rank = total;
+        goto loop;
+    }
+    if (D_867284B0 != 0) {
+        D_8672843C[0].unk_00 = D_867284B0;
+    }
+    if (D_8672855C != 0) {
+        D_867284E8 = D_8672855C;
+    }
+    if (D_86728608 != 0) {
+        D_86728594 = D_86728608;
+    }
+    if (D_867286B4 != 0) {
+        D_86728640 = D_867286B4;
+    }
+}
 #endif
 
 #ifdef VERSION_US

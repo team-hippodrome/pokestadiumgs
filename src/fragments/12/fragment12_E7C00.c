@@ -1666,7 +1666,149 @@ s32 func_81406A9C(u8 *arg0) {
     return arg0[6] == 7;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81406AAC.s")
+extern u8 *func_8004E0F0(u8 *, s32, s32);
+void func_81403894(void *arg0, s32 arg1);
+void func_81404A08(u8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, void *arg5, void *arg6, s32 arg7, s32 arg8, s32 arg9, char *arg10, s32 arg11, s32 arg12);
+
+typedef struct {
+  u8 padding[0x18F58];
+  s32 finished;
+  s32 activated;
+} F81406AACStoreView;
+
+typedef struct {
+  u8 padding[0xF48];
+  s32 active[4];
+  s32 finished;
+  s32 activated;
+} F81406AACTailView;
+
+// Set up the four side banks of the store at arg0 from the configuration at arg1.
+// arg1->0x848 != 0 takes the per-side path, which walks the four entries of
+// arg1->0x84C/0x84D and their 0x210-byte parameter blocks; otherwise one wide
+// refill of eight 0x2008-byte blocks covers all sides.
+//
+// The wide-refill arm keeps a private cursor `cur`, which gives retail's
+// register assignment dst=$s2 / cursor=$s0 / bound=$s1; the per-side arm
+// walks arg1 through `row`=$s4. The empty tests marked FAKE below do not
+// change the result; they change IDO's register allocation.
+
+
+
+void func_81406AAC(void *arg0, void *arg1)
+{
+  s32 spare;
+  s32 candidate;
+  s32 index;
+  s32 found;
+  s32 sp94;
+  s32 sp90;
+  s32 side;
+  s32 state;
+  s32 slot;
+  s32 wide;
+  u8 *dst;
+  u8 *row;
+  u8 *tail;
+  u8 *cc8;
+  s32 off;
+  s32 arg2v;
+  u8 *cur;
+  sp94 = *((s32 *) (((u8 *) arg1) + 0x888));
+  sp90 = *((s32 *) (((u8 *) arg1) + 0x890));
+  spare = 0;
+  ((F81406AACStoreView *) arg0)->activated = 0;
+  for (candidate = 0; candidate < 4; candidate++)
+  {
+    found = 0;
+    for (index = 0; index != 4; index++)
+    {
+      if ((*((s8 *) ((((u8 *) arg1) + 0x84C) + index))) == candidate)
+      {
+        found = 1;
+        break;
+      }
+    }
+
+    if (!found)
+    {
+      spare = candidate;
+      break;
+    }
+  }
+
+  cc8 = ((u8 *) arg0) + 0xCC8;
+  func_81403894(arg0, 0);
+  func_81403894(cc8, 1);
+  if ((*((s32 *) (((u8 *) arg1) + 0x848))) != 0)
+  {
+    tail = ((u8 *) arg0) + 0x18000;
+    for (side = 0, row = (u8 *) arg1; side != 4; side++, row++, tail += 4)
+    {
+      state = *((s8 *) (row + 0x84C));
+      slot = (state >= 0) ? (state) : (spare);
+      wide = ((side & 1) == 0) && ((*((s8 *) (row + 0x84D))) < (-1));
+      if (wide)
+      {
+        func_8004E0F0((((u8 *) arg0) + 0x14F38) + ((side / 2) * 0x2008), *((s16 *) ((((u8 *) arg1) + 0x880) + ((side / 2) * 4))), *((s16 *) ((((u8 *) arg1) + 0x882) + ((side / 2) * 4))));
+      }
+      if (state >= (-1))
+      {
+        arg2v = side;
+        if (wide != 0)
+        {
+          arg2v = (side / 2) * 3;
+        }
+        func_81404A08((((u8 *) arg0) + 0x1990) + (side * 0x4D68), state, arg2v, slot, (wide) ? (6) : (3), ((u8 *) arg1) + (side * 0x210), ((u8 *) arg0) + ((side / 2) * 0xCC8), 0, sp94, *((u16 *) ((*((u8 **) (((u8 *) arg1) + 0x844))) + 0x38)), (char *) ((((u8 *) arg1) + 0x850) + (side * 12)), 0, sp90);
+        *((s32 *) (tail + 0xF48)) = 1;
+      }
+      else
+      {
+        *((s32 *) (tail + 0xF48)) = 0;
+      }
+    }
+
+  }
+  else
+  {
+    for (off = 0, dst = ((u8 *) arg0) + 0x14F38, cur = (u8 *) arg1, side = 0x4010; off != side; off += 0x2008)
+    {
+      // FAKE: empty test of the refill bound. It keeps `side` live across the
+      // refill loop, which is what produces the 0xA8 frame; without it the frame
+      // is 0x5C and the score is 1585.
+      if (!side)
+      {
+      }
+      func_8004E0F0(dst, *((s16 *) (cur + 0x880)), *((s16 *) (cur + 0x882)));
+      dst += 0x2008;
+      cur += 4;
+    }
+
+      // FAKE: empty test on the refill destination. With the private `cur`
+      // cursor it fixes dst=$s2 and bound=$s1; without it dst=$s1.
+      if (dst) {}
+    state = 0x14F38;
+    func_81404A08(((u8 *) arg0) + 0x1990, *((s8 *) (((u8 *) arg1) + 0x84C)), 0, 0, ((*((u32 *) ((*((u8 **) (((u8 *) arg1) + 0x844))) + 0x40))) >> 31) ? (6) : (3), arg1, arg0, 1, sp94, *((u16 *) ((*((u8 **) (0x844 + ((u8 *) arg1)))) + 0x38)), (char *) (((u8 *) arg1) + 0x850), (s32) (((u8 *) arg0) + state), sp90);
+    ((F81406AACTailView *) (((u8 *) arg0) + 0x18000))->active[0] = 1;
+    func_81404A08(((u8 *) arg0) + 0x101C8, *((s8 *) (((u8 *) arg1) + 0x84D)), 3, 1, ((*((u32 *) ((*((u8 **) (((u8 *) arg1) + 0x844))) + 0x40))) >> 31) ? (6) : (3), ((u8 *) arg1) + 0x210, cc8, 1, sp94, *((u16 *) ((*((u8 **) (((u8 *) arg1) + 0x844))) + 0x38)), (char *) (((u8 *) arg1) + 0x85C), (s32) (((u8 *) arg0) + 0x16F40), sp90);
+    ((F81406AACTailView *) (((u8 *) arg0) + 0x18000))->active[3] = 1;
+    ((F81406AACTailView *) (((u8 *) arg0) + 0x18000))->active[1] = 0;
+    ((F81406AACTailView *) (((u8 *) arg0) + 0x18000))->active[2] = 0;
+  }
+      // FAKE: empty test before the finished store. It moves the 4-constant of
+      // the spare search from $s3 to $s2; without it the score is 130.
+      if (spare == 0) {}
+  ((F81406AACStoreView *) arg0)->finished = 0;
+      // FAKE: empty test of the per-side cursor. It pins `row` to $s4 for both
+      // loops, which is where the target keeps it in the per-side arm; without it
+      // the score is 145.
+      if (row) {}
+      // FAKE: empty test of the per-side tail pointer. With the private refill
+      // cursor it restores tail=$s5 so `row` keeps $s4; without it row and tail
+      // are swapped ($s5/$s4) and seven per-side rows differ.
+      if (tail) {}
+  *((void **) (((u8 *) arg0) + 0x14F30)) = arg1;
+}
 
 extern void func_81404BEC(void *arg0);
 extern void func_800226C0(s32 arg0);

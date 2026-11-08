@@ -202,7 +202,163 @@ void func_8AF13B30(void *arg0) {
 }
 /* mkdraft:func_8AF13B30 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_201DA0/func_8AF141E8.s")
+extern u8 D_8AF31E40;
+extern u8 D_8AF31E48[];
+extern void *D_8AF32E10;
+extern void _bzero(void *, s32);
+extern s32 func_80064800(u8 arg0);
+extern u8 func_80062F68(u8 arg0);
+extern u8 func_80063014(u8 arg0);
+extern s32 func_80063BF4(u8 arg0, u8 arg1);
+extern s32 func_80063CC4(u8 arg0, u8 arg1);
+extern s32 func_8AF00020(void);
+extern s32 func_8AF0C5BC(s16 arg0, s16 arg1);
+extern s32 Pokemon_CanLearnGen1Machine(u8 arg0, u8 arg1);
+
+// arg0 selects one 14-byte record in D_8AF31E48; arg1 is an s16 key whose low byte
+// func_80064800 uses as a lookup index. The record is cleared, then filled from the
+// keyed entry list, then from three 58-value scans, and finally validated.
+
+
+s32 func_8AF141E8(s16 arg0, s16 arg1) {
+    s32 result;
+    s32 one;
+    s16 value;
+    u8 *entry;
+    u8 *table;
+    u8 entry0;
+    u8 entry2;
+
+    result = 0;
+    // FAKE: function-scope constant keeps the retail `li s7,1` and s7 colouring;
+    // with every use replaced by the literal 1 the function scores 7008.
+    one = 1;
+    table = D_8AF31E48 + arg0 * 14;
+    _bzero(table, 14);
+    entry = (u8 *)func_80064800((u8)arg1);
+    *(u16 *)((u8 *)D_8AF32E10 + 2) &= 0xFFFD;
+
+    // The entry list is tested at the top of the loop; with the test folded into
+    // the loop condition (`while (entry[1] != 0)`) the function scores 4155.
+    while (1) {
+        if (!entry[1]) break;
+        // Only entries whose byte 1 equals D_8AF31E40 fill slots.
+        if (D_8AF31E40 == entry[1]) {
+            entry0 = entry[0];
+            entry2 = entry[2];
+            // 235/166 are the arg1 and D_8AF31E40 values of one excluded entry
+            // class: byte values below 2 cannot set the high slots.
+            if (!((s16)arg1 == 235 && D_8AF31E40 == 166 && entry0 >= 2)) {
+                if (entry2 & 0x1) {
+                    table[0] = entry0;
+                    result = one;
+                }
+                if (entry2 & 0x2) {
+                    table[1] = entry0;
+                    result = one;
+                }
+                if (entry2 & 0x4) {
+                    table[2] = entry0;
+                    result = one;
+                }
+                if (entry2 & 0x40) {
+                    if (entry0 >= 2) {
+                        *(u16 *)(table + 8) = one;
+                        result = one;
+                    }
+                }
+                // Slots 3, 5 and 6 are filled only while func_8AF00020() is true.
+                if (func_8AF00020() != 0) {
+                    if (entry2 & 0x8) {
+                        table[3] = entry0;
+                        result = one;
+                    }
+                    if (entry2 & 0x20) {
+                        if (entry0 >= 2) {
+                            *(u16 *)(table + 10) = one;
+                            result = one;
+                        }
+                    }
+                    if (entry2 & 0x10) {
+                        if (entry0 > 0) {
+                            *(u16 *)(table + 12) = one;
+                            result = one;
+                        }
+                    }
+                }
+            }
+        }
+        entry += 3;
+    }
+
+    // Each scan takes the first value in 1..57 that two predicates accept and whose
+    // type (func_80063014) is D_8AF31E40; the value is stored in slot 4.
+    for (value = one; value < 58; value++) {
+        if (func_80063CC4((u8)arg1, (u8)value) != 0 &&
+            D_8AF31E40 == func_80063014((u8)value)) {
+            table[4] = value;
+            result = one;
+            break;
+        }
+    }
+
+    for (value = one; value < 58; value++) {
+        if (Pokemon_CanLearnGen1Machine((u8)arg1, (u8)value) != 0 &&
+            D_8AF31E40 == func_80063014((u8)value)) {
+            table[5] = value;
+            result = one;
+            break;
+        }
+    }
+
+    for (value = one; value < 58; value++) {
+        if (func_80063BF4((u8)arg1, (u8)value) != 0 &&
+            D_8AF31E40 == func_80062F68((u8)value)) {
+            table[6] = value;
+            table[7] = value;
+            result = one;
+            break;
+        }
+    }
+
+    // func_8AF00020() splits the validation in two. Slots 0..2 plus 4..6 are enough
+    // when it is false; slot 3 and slot 7 are additionally required when it is true.
+    if (func_8AF00020() == 0) {
+        if (*(s16 *)(table + 8) != one) {
+            goto done;
+        }
+        if (func_8AF0C5BC((s16)arg1, D_8AF31E40) != 0) {
+            goto done;
+        }
+        // FAKE: the chains are rotated left by one operand so IDO emits the byte
+        // loads in ascending address order (it otherwise emits the last operand's
+        // load first). Plain 0|1|2 order scores 70.
+        if ((table[1] | table[2] | table[0]) == 0 &&
+            (table[5] | table[6] | table[4]) == 0) {
+            return 0;
+        }
+        *(s16 *)(table + 8) = 0;
+        *(s16 *)(table + 10) = 0;
+    } else {
+        // Either high slot being set is enough to continue.
+        if (*(s16 *)(table + 8) != one && *(s16 *)(table + 10) != one) {
+            goto done;
+        }
+        if (func_8AF0C5BC((s16)arg1, D_8AF31E40) != 0) {
+            goto done;
+        }
+        // FAKE: same operand rotation as the branch above; natural order scores 70.
+        if ((table[1] | table[2] | table[3] | table[0]) == 0 &&
+            (table[5] | table[6] | table[7] | table[4]) == 0 &&
+            *(s16 *)(table + 12) == 0) {
+            return 0;
+        }
+        *(s16 *)(table + 8) = 0;
+        *(s16 *)(table + 10) = 0;
+    }
+done:
+    return result;
+}
 
 typedef struct {
     u32 unk_00[321];
@@ -382,7 +538,65 @@ void func_8AF14648(void) {
     *(u16 *)((u8 *)D_8AF32E14 + 2) = (u16) (*(u16 *)((u8 *)D_8AF32E14 + 2) | 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_201DA0/func_8AF14BE8.s")
+extern u8 *D_8AF27130;
+extern void *D_8AF263C0;
+extern u16 D_8AF2BDC6;
+extern u8 D_8AF31E41;
+extern u8 D_8AF31E48[];
+extern s16 D_8AF32C10;
+extern s16 D_8AF33624;
+extern u8 D_8AF33628[];
+extern u8 D_8AF336A0[];
+extern u8 D_8AF33718[];
+extern s16 D_8AF33760;
+extern s16 D_8AF33762;
+void func_8AC0619C(u8 *, u16);
+void func_8AC06220(u8 *, u16);
+void func_8AC0686C(u8 *, s16);
+void func_8AF00130(s32);
+s32 func_8AF0326C(u8 *);
+void func_8AF13B30(void *);
+
+
+
+s16 func_8AF14BE8(void)
+{
+  s16 sp36;
+  u8 *volatile sp30; // FAKE: keeps the state pointer in its 0x30(sp) slot so the join reloads it; diff score 1005 without it.
+  s32 pad[4]; // FAKE: unused stack padding; widens the frame from 0x28 to the target 0x38; diff score 106 without it.
+  u8 *t;
+  s16 var_a1;
+  s16 temp_v0;
+  sp36 = 15;
+  sp30 = D_8AF27130;
+  if ((func_8AF0326C(D_8AF27130) == 0) && ((*((u16 *) (((u8 *) D_8AF263C0) + 8))) & 0x4000))
+  {
+    func_8AF00130(3), sp36 = 14;
+  }
+  t = sp30;
+  temp_v0 = ((*((s16 *) (t + 0x38))) * 6) + (*((s16 *) (t + 0x34)));
+  t += 0x28;
+  if (temp_v0 >= D_8AF33624)
+  {
+    D_8AF31E41 = 0;
+  }
+  else
+  {
+    D_8AF31E41 = (&D_8AF32C10)[temp_v0];
+  }
+  // FAKE: the comma expression loads D_8AF33760 after the sprite's 0xC field; diff score 25 without it.
+  if (((*((s16 *) (t + 0xC))) != ((0, D_8AF33760))) || ((var_a1 = *((s16 *) (t + 0x10))), var_a1 != D_8AF33762))
+  {
+    func_8AF13B30((s16 *) D_8AF31E48 + (temp_v0 * 7));
+    var_a1 = *((s16 *) (t + 0x10));
+  }
+  func_8AC0686C(D_8AF33718, var_a1);
+  func_8AC0619C(D_8AF33628, D_8AF2BDC6);
+  func_8AC06220(D_8AF336A0, D_8AF2BDC6);
+  D_8AF33760 = *((s16 *) (t + 0xC));
+  D_8AF33762 = *((s16 *) (t + 0x10));
+  return sp36;
+}
 
 extern u8 *D_8AF27130;
 extern u8 D_8AF33628[];

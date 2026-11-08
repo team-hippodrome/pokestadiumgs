@@ -13,7 +13,54 @@ void func_87E0F170(void) {
 extern u32 D_87E1EBB8;
 void func_87E0F188(s32 arg0) { u8 *base = (u8 *)(u32)D_87E1EBB8; if ((*(s32 *)base != arg0) && ((*(s8 *)(base + 4) & 1) == 0)) { *(s32 *)base = arg0; *(s16 *)(base + 6) = 0; *(u8 *)(base + 4) = 1; } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E0F1C4.s")
+extern u32 D_87E1EBB8;
+
+
+
+s32 func_87E0F1C4(void)
+{
+    u8 *base = (u8 *)(u32)D_87E1EBB8;
+    s32 r = 0;
+    u32 p;
+    u8 *data;
+    u8 *ptr;
+    int idx;
+    s8 cur;
+
+    if (*(s8 *)(base + 4) & 1) {
+        p = *(u32 *)base;
+        if (p != 0) {
+            data = (u8 *)p;
+            idx = *(s16 *)(base + 6);
+            ptr = data + idx;
+            cur = *ptr;
+            if (cur & 0x80) {
+                r = (unsigned short)(data[idx + 1] | (((u16)cur) << 8));
+                *(s16 *)(base + 6) = idx + 1;
+                idx = *(s16 *)(base + 6);
+                cur = data[idx];
+            }
+            else if (cur == 0x3C) {
+                do {
+                    *(s16 *)(base + 6) = idx + 1;
+                    idx = *(s16 *)(base + 6);
+                    cur = data[idx];
+                } while ((u32)cur != 0x3E);
+                r = 0xA;
+            }
+            else {
+                r = (unsigned short)cur;
+            }
+            if (cur == 0) {
+                *(s8 *)(base + 4) &= 0xFFFE;
+            }
+            else {
+                *(s16 *)(base + 6) = idx + 1;
+            }
+        }
+    }
+    return r;
+}
 
 extern void Audio_PlayDefaultSound(s32);
 void func_87E0F288(void *arg0, s32 arg1) {
@@ -156,7 +203,139 @@ void func_87E0F740(u8 *arg0, s32 arg1) {
     *(s32 *)arg0 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_312AE0/func_87E0F74C.s")
+extern u32 D_87E1EBB8;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern Gfx *D_800D0510;
+extern void func_800504BC(s16 *);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern u32 func_8003570C(void);
+extern u8 D_800CE060[];
+extern u32 D_87E1A74C[];
+extern u32 D_87E1A76C[];
+extern u32 D_87E1A784[];
+extern u32 D_87E1A798[];
+extern void func_87E0F288(void *, s32);
+extern void func_87E0F740(u8 *, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+
+
+
+void func_87E0F74C(s32 arg0, void *arg1)
+{
+  s32 temp_v0;
+  s16 coords[2];
+  s32 sp5C;
+  s32 sp58;
+  s32 state;
+  u8 *controller;
+  u8 *p;
+  switch (arg0)
+  {
+    case 0:
+      *((u16 *) (((u8 *) arg1) + 2)) &= 0xFFFD;
+      break;
+
+    case 1:
+      if ((1 << (0, (*((s32 *) (((u8 *) arg1) + 0x20))))) & (*((u8 *) ((*((u32 *) (((u8 *) ((u32) D_87E1EBB8)) + 0x2C4))) + 0x2182))))
+    {
+      controller = ((u8 *) ((u32) D_800CE060)) + ((*((s32 *) (((u8 *) arg1) + 0x20))) * 0x28);
+      p = (((u8 *) ((u32) D_87E1EBB8)) + ((*((s32 *) (((u8 *) arg1) + 0x20))) * 8)) + ((0, 0x914));
+      state = *((u32 *) (p + 4));
+      (*((u32 *) p))++;
+      if (((state == 0) || (state == 1)) || (state == 2))
+      {
+        if (((*((f32 *) (controller + 0x18))) != 0.0f) || ((*((f32 *) (controller + 0x1C))) != 0.0f))
+        {
+          if ((*((u32 *) (p + 4))) == 0)
+          {
+            func_87E0F740(p, 1);
+          }
+        }
+        else
+        {
+          func_87E0F740(p, 0);
+        }
+        if (((*((u16 *) (controller + 6))) & 0x20) && ((*((u16 *) (controller + 6))) & 0x10))
+        {
+          func_87E0F288((((u8 *) ((u32) D_87E1EBB8)) + ((*((s32 *) (((u8 *) arg1) + 0x20))) * 0x18C)) + ((0, 0x2DC)), 0x10000000);
+        }
+        else
+          if ((*((u32 *) ((((u8 *) ((u32) D_87E1EBB8)) + ((*((s32 *) (((u8 *) arg1) + 0x20))) * 0x18C)) + 0x2E8))) & ((0, 0x10000000)))
+        {
+          *((u32 *) ((((u8 *) ((u32) D_87E1EBB8)) + ((*((s32 *) (((u8 *) arg1) + 0x20))) * 0x18C)) + 0x2E8)) &= 0xEFFFFFFF;
+          func_800279C4(0xCF01);
+ goto dummy_label_651682; dummy_label_651682: ; /* FAKE: empty statement keeps the two state-3 exits apart; diff score 65 without it */
+        }
+        if ((*((u16 *) (controller + 6))) == 0xB0)
+        {
+          func_87E0F740(p, 3);
+          func_87E0F288((((u8 *) ((u32) D_87E1EBB8)) + ((*((s32 *) (((u8 *) arg1) + 0x20))) * 0x18C)) + ((0, 0x2DC)), 0x20000000);
+        }
+        state = *((u32 *) (p + 4));
+      }
+      switch (*((u32 *) (p + 4)))
+      {
+        case 0:
+          sp58 = 0;
+          break;
+
+        case 1:
+          sp58 = D_87E1A74C[((*((u32 *) p)) & 0xF) >> 1];
+          if ((((*((u32 *) p)) & 0xF) >> 1) == 5)
+        {
+          if ((func_8003570C() % 101) < 20)
+          {
+            func_87E0F740(p, 2);
+          }
+        }
+          break;
+
+        case 2:
+          sp58 = D_87E1A76C[((*((u32 *) p)) % 12) >> 1];
+          if ((((*((u32 *) p)) % 12) >> 1) == 5)
+        {
+          func_87E0F740(p, 1);
+        }
+          break;
+
+        case 3:
+          sp58 = D_87E1A784[((*((u32 *) p)) % 10) >> 1];
+          if ((((*((u32 *) p)) % 10) >> 1) == 4)
+        {
+          func_87E0F740(p, 4);
+        }
+          break;
+
+        case 4:
+          sp58 = D_87E1A798[((*((u32 *) p)) % 18) >> 1];
+          if ((((*((u32 *) p)) % 18) >> 1) == 8)
+        {
+          func_87E0F740(p, 0);
+        }
+          break;
+
+      }
+
+      func_800504BC(coords);
+      gSPDisplayList(D_800D0510++, D_80094E38);
+      temp_v0 = func_8004C990(*((u16 *) (((u8 *) arg1) + 0x24)), sp58);
+      sp5C = temp_v0;
+      func_8004D1FC((u8 *) ((u32) temp_v0));
+      GfxRect_DrawTextured((s16) ((*((s16 *) (((u8 *) arg1) + 8))) + coords[0]), (s16) ((*((s16 *) (((u8 *) arg1) + 0xA))) + coords[1]), *((s16 *) ((u8 *) ((u32) sp5C))), *((s16 *) (((u8 *) ((u32) sp5C)) + 2)), 0, 0, 0x400, 0x400, 0);
+      {
+        sp58 = (s32) D_800D0510;
+        sp5C = (s32) D_800D0510;
+        D_800D0510 = (Gfx *) (sp58 + 8);
+        gSPDisplayList((Gfx *) sp5C, D_80094F50);
+      }
+    }
+      break;
+
+  }
+
+}
 
 extern u32 func_8003570C(void);
 void func_87E0FBB4(s32 arg0, u8 *arg1, u32 arg2, u32 arg3) {
@@ -367,7 +546,7 @@ void func_87E10214(s32 arg0, void *arg1) {
 }
 
 /* mkdraft:func_87E102D4 begin */
-extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
 
 // FAKE: s32 preserves register allocation for the final display-list append.
 // func_87E1087C registers this as a void callback with func_87F0AB08;
@@ -525,7 +704,7 @@ void func_87E107B4(void *arg0) {
 
 typedef struct TreeNode_80050428 TreeNode_80050428;
 void *func_87F0AB08(TreeNode_80050428 *, s32, void (*)(s32, u8 *), void *);
-extern void func_87E0F74C(s32, u8 *);
+extern void func_87E0F74C(s32, void *);
 
 void func_87E1087C(s32 *arg0, s32 arg1) {
     if (arg1 == 168) {

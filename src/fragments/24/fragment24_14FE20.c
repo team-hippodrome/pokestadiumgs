@@ -335,7 +335,111 @@ s32 func_82B006D8(s32 arg0, s32 arg1) {
 }
 /* mkdraft:func_82B006D8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B00914.s")
+extern s32 D_82B08520;
+extern void _bcopy(const void *, void *, s32);
+
+typedef struct StagePhotoBlob StagePhotoBlob;
+typedef struct StageUploadEntry StageUploadEntry;
+typedef struct StageUploadChunk StageUploadChunk;
+typedef struct StagePhotoFlags StagePhotoFlags;
+
+// One 0x58-byte photo record. unk_00 is a byte view because the upload clears
+// its second byte in place: the target writes sb $zero, 0x11(%v0) while %v0
+// runs from the entry base, landing on byte 1 of the current record.
+struct StagePhotoBlob {
+    u8 unk_00[4];
+    u32 unk_04[21];
+};
+
+// One upload destination: 0x10 of header then six records, for 0x220 bytes.
+// count is s8 because the target loads it with lb and guards the copy loop with
+// blezl, and because only one signed guard appears around the whole loop nest.
+struct StageUploadEntry {
+    s8 count;
+    u8 unk_01;
+    u16 unk_02;
+    u8 unk_04[12];
+    StagePhotoBlob photos[6];
+};
+
+// The 68-byte block that sub-mode 4 copies over the descriptor at D_82B08520,
+// from the table at ((u8 *) D_82B087C0) + 39528, indexed by D_82B08528.
+struct StageUploadChunk {
+    u32 data[17];
+};
+
+// Fade state consulted once per copied photo. unk_40_005 is the signed one-bit
+// field that IDO places at bit 26, which is what the target reads: lw of the
+// word at +0x40, sll by 5 to put that bit in the sign position, then bltzl.
+struct StagePhotoFlags {
+    u32 unk_00[16];
+    u32 unk_40_000 : 5;
+    s32 unk_40_005 : 1;
+    u32 unk_40_006 : 26;
+};
+
+// Waits out the stage fade, runs the photo-upload scheduler to state 5, then
+// copies both staged sets into the upload buffer. Returns the mode: 2 after a
+// copy, 1 when D_82B12222 suppresses it. The staged sets are F82B00098_Entry
+// records (0x4D30 each, photo block at 0x1C) and D_82B12448 is the u8 * the
+// surrounding file declares, so both are reused with casts rather than
+// redeclared.
+
+
+s32 func_82B00914(s32 arg0)
+{
+    s32 mode = 2;
+    // Re-read through the pointer so the load stays inside the photo loop.
+    StagePhotoFlags **pp = (StagePhotoFlags **) &D_82B12448;
+    s32 off;
+    s32 state = 0;
+    s32 i;
+    s32 j;
+    F82B00098_Entry *set;
+    u8 *header;
+    StageUploadEntry *entry;
+
+    // A fade already running is restarted from opaque over five steps.
+    if (StageContext_GetFadeMode() != 0) {
+        func_800086A4(2);
+        StageFade_StartFromOpaque(5);
+    }
+    do {
+        func_80064D28();
+        func_8170024C();
+        func_82B07ABC();
+        func_82B004FC(state);
+        state = func_82B006D8(state, arg0);
+    } while (state != 5);
+
+    if (D_82B12222 != 0) {
+        mode = 1;
+    }
+
+    // The two loops below carry their line breaks as the match requires: the for
+    // header shares a line with header's assignment (splitting it scores 152 of
+    // 153 instructions) and the photo copy keeps its body on one line (151).
+    if (mode == 2) {
+        i = 0;
+        set = D_82B087C0;
+        off = 0;
+        header = (u8 *) D_82B087CA; for (; i != 2; i++) {
+            entry = (StageUploadEntry *) ((*((u8 **) D_82B08520)) + off);
+            entry->unk_01 = set->unk_06;
+            _bcopy(header, entry->unk_04, 12);
+            entry->unk_02 = set->unk_08;
+            entry->count = set->unk_02;
+            for (j = 0; j < entry->count; j++) { entry->photos[j] = ((StagePhotoBlob *) D_82B087C0[i].unk_1C)[j]; if (((*pp) != 0) && (!(*pp)->unk_40_005)) { entry->photos[j].unk_00[1] = 0; } } set++; off += 544;
+            header += 19760;
+        }
+        // Sub-mode 4 also overwrites the descriptor's first 68 bytes.
+        if (D_82B08524 == 4) {
+            *((StageUploadChunk *) (D_82B08520 + 12)) = *((StageUploadChunk *) ((((u8 *) D_82B087C0) + 39528) + (D_82B08528 * 68)));
+        }
+    }
+
+    return mode;
+}
 
 extern s32 D_82B08524;
 extern s32 D_82B08528;

@@ -273,7 +273,116 @@ s32 func_828011F8(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801278.s")
+extern s32 func_81603404(s32, s32);
+extern s32 func_81603368(s32);
+extern void func_8005D9E0(s32, void *);
+// The final loop switches on func_8005D8CC's result. An s32 return type makes
+// uopt emit the comparison with the result as the first operand
+// (`beq $v0,$s6`); a u8 return type emits `beq $s6,$v0`, one differing word.
+extern s32 func_8005D8CC(s32);
+extern s32 func_8004C874(s32, s32);
+extern u8 D_82802914[];
+
+
+
+void func_82801278(u8 *arg0, volatile s32 arg1)
+{
+  u32 new_var;
+  u32 flags;
+  s32 i;
+  *((s32 *) (arg0 + 0x8C)) = 1;
+  flags = *((u32 *) arg0);
+  if (arg1 == 0)
+  {
+    flags &= 0xFFFF7F7F;
+  }
+  for (i = 0; i < 4; i++)
+  {
+    u8 *name;
+    if ((arg1 == 0) && (arg0[0x18 + i] == 1))
+    {
+      continue;
+    }
+    name = (arg0 + 0x1C) + (i * 12);
+    *((s32 *) ((arg0 + 0x64) + (i * 4))) = 7;
+    arg0[0x18 + i] = func_81603404(i, flags);
+    if (1)
+    {
+      // FAKE: an extra statement block around the store. The block changes the
+      // callee-saved register that holds `name` -- $s3 with it (target:
+      // `addu $s3,...` / `addiu $s3,...`) and $s2 without it -- which leaves
+      // 21 of 141 instructions different.
+      name[0] = *((volatile u8 *) D_82802914) & 0xFF;
+    }
+    *((s32 *) ((arg0 + 0x54) + (i * 4))) = -1;
+    *((s32 *) ((arg0 + 0x74) + (i * 4))) = func_828011F8(arg0[0x18 + i]);
+    switch (arg0[0x18 + i])
+    {
+      case 2:
+
+      case 3:
+        continue;
+
+    }
+
+    {
+      struct 
+      {
+        u16 id;
+        s8 name[6];
+      } entry;
+      *((s32 *) ((arg0 + 0x64) + (i * 4))) = func_81603368(i);
+      if (arg0[0x18 + i] == 6)
+      {
+        *((s32 *) ((arg0 + 0x54) + (i * 4))) = -2;
+        HAL_Strcpy((char *) name, (const char *) func_8004C874(0x17, 0x40));
+      }
+      else
+      {
+        func_8005D9E0(i, &entry);
+        HAL_Strcpy((char *) name, entry.name);
+        *((s32 *) ((arg0 + 0x54) + (i * 4))) = entry.id;
+        // The shift is evaluated here, not in the call's argument list below:
+        // uopt forwards a shift of a pure local into the call, which schedules
+        // the `srl` after the `or $a0,$s0,$zero` argument copy. `flags |= 0`
+        // emits no instruction but counts as a redefinition, so the shift is
+        // not forwarded; without it, instructions 79 and 80 swap.
+        new_var = flags >> 8;
+        flags |= 0;
+        if (arg0[0x18 + i] == 0)
+        {
+          *((s32 *) (arg0 + 0x8C)) = 0;
+          *((s32 *) ((arg0 + 0x74) + (i * 4))) = func_828011F8(func_81603404(i, new_var));
+        }
+      }
+    }
+  }
+
+  *((s32 *) (arg0 + 0x8C)) = 1;
+  for (i = 0; i < 4; i++)
+  {
+    if (arg0[0x18 + i] == 0)
+    {
+      *((s32 *) (arg0 + 0x8C)) = 0;
+    }
+  }
+
+  for (i = 0; i != 4; i++)
+  {
+    switch (func_8005D8CC(i))
+    {
+      case 3:
+
+      case 5:
+        *((s32 *) ((arg0 + 0x54) + (i * 4))) = -2;
+        HAL_Strcpy((char *) ((arg0 + 0x1C) + (i * 12)), (const char *) func_8004C874(0x17, 0x40));
+        break;
+
+    }
+
+  }
+
+}
 
 extern s32 func_800606E8(s32);
 
@@ -295,7 +404,7 @@ extern void func_80054210(void *);
 extern s32 func_80055948(s32);
 extern void func_80057908(u8);
 extern void func_80057944(u8);
-extern s32 func_82801278();
+void func_82801278(u8 *arg0, volatile s32 arg1);
 
 // Mode bits of the word at arg0+0x0: 0x20000 gates the func_80055948/func_80054210
 // setup, 0x20000000 gates the func_828014AC slot scan, and 0x200000 suppresses the

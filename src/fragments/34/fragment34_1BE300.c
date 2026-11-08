@@ -256,7 +256,164 @@ s32 func_88501380(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501570.s")
+extern u8 D_8850D679[];
+extern s32 D_88804054;
+extern u8 *D_8850D6D0;
+extern u8 D_8850D6D8;
+extern u8 *D_80087200;
+extern s8 D_8850E361;
+extern s32 fragment29_main(u8);
+extern s32 func_80063754(s32);
+extern void func_800226C0(s32, ...);
+extern void func_88500E80(void);
+extern s8 func_88500E4C(void);
+extern u8 *func_88500CF0(u8);
+extern s32 func_8850130C(u8 *, s32, s32);
+extern void func_885011EC(u8 *);
+extern void func_88501274(s16);
+extern void func_88500D60(s8);
+extern s32 func_88501380(void);
+extern void func_88002640(u8 *, u8 **);
+extern void func_880002F4(u8 *, s16);
+
+
+void func_88501570(void) {
+    s8 old30;
+    s16 old56;
+    u8 *state;
+    u8 id;
+    s32 ready;
+    s16 next;
+    s16 old[3];
+    // Row is 0x58-byte items at 0x0, State selects one with rowIndex/itemIndex at 0xC88/0xC89;
+    // same layout as the Item/Row/State typedefs in func_88500CF0.
+    typedef struct {
+        u8 data[0x58];
+    } Item;
+    typedef struct {
+        Item items[30];
+        u8 padA50[0x24];
+    } Row;
+    typedef struct {
+        u8 pad0000[0xC88];
+        s8 itemIndex;
+        s8 rowIndex;
+        u8 pad0C8A[6];
+        Row rows[1];
+    } State;
+    if ((D_8850D6D0[8] != 0) || (D_8850D6D0[9] != 0)) {
+        if (D_8850D6D0[8] != 0) {
+            D_8850D6D0[8] -= 1;
+            if (D_8850D6D0[8] == 0) {
+                *((s32 *) ((*((u8 **) (D_8850D6D0 + 4))) + 0x34)) = 0;
+            }
+        }
+        if (D_8850D6D0[9] != 0) {
+            D_8850D6D0[9] -= 1;
+            if (D_8850D6D0[9] == 0) {
+                *((s32 *) ((*((u8 **) (D_8850D6D0 + 0))) + 0x34)) = 0;
+            }
+        }
+    } else {
+        old30 = *((s8 *) (D_8850D6D0 + 0x30));
+        old56 = *((s16 *) (D_8850D6D0 + 0x56));
+        state = (D_8850D6D0[0xA] * 0xA960) + (&D_8850D6D8);
+        // FAKE: D_8850D6D0 tested against itself; no side effect, the dead branch only changes
+        // register allocation (diff score 60 without it).
+        if (D_8850D6D0 && D_8850D6D0) {
+        }
+        id = D_8850D679[(*((s8 *) state)) * 0x14];
+        ready = (D_88804054 == 0) && (fragment29_main(id) == 0);
+        if ((*((s16 *) (D_8850D6D0 + 0x56))) == 0) {
+            if ((*((u16 *) (D_80087200 + 8))) & 0x4000) {
+                func_800226C0(3, &D_80087200, &D_8850D6D0, state);
+                func_88500E80();
+            } else if ((*((u16 *) (D_80087200 + 8))) & 0x8000) {
+                *((s8 *) (state + 0xC88)) = ((*((s16 *) (D_8850D6D0 + 0xE))) * 6) + (*((s16 *) (D_8850D6D0 + 0xC)));
+                // FAKE: comma expression ((0, 0x31)) in place of the addend 0x31 (diff score 10
+                // without it).
+                *((s8 *) (state + 0xC89)) = *((s8 *) ((D_8850D6D0 + (*((s8 *) (D_8850D6D0 + 0x30)))) + ((0, 0x31))));
+                // FAKE: comma expression ((0, 0xC8C)) in place of the addend 0xC8C (diff score 10
+                // without it).
+                if ((*((s8 *) (state + 0xC88))) >= ((s32) (*((u8 *) ((state + ((*((s8 *) (state + 0xC89))) * 0xA74)) + ((0, 0xC8C))))))) {
+                    func_800226C0(5, &D_80087200, &D_8850D6D0, state);
+                } else {
+                    next = -1;
+                    if (func_8850130C(func_88500CF0(D_8850D6D0[0xA]), *((s8 *) (state + 0xC89)), id) != 0) {
+                        next = 0x1D;
+                    } else if ((((D_8850D6D0[0xA] == 1) && (ready != 0)) && (D_8850E361 != 0)) && (func_80063754(func_88500CF0(1)[1]) != 0)) {
+                        next = 0x1B;
+                    } else if ((D_8850D6D0[0xA] == 1) && (func_88501380() != 0)) {
+                        next = 0x1C;
+                    } else {
+                        func_800226C0(0x90);
+                        func_885011EC((u8 *) &((State *) state)->rows[(*((s8 *) (state + 0xC89)))].items[(*((s8 *) (state + 0xC88)))]);
+                    }
+                    if (next != (-1)) {
+                        func_88501274(next);
+                    }
+                }
+            } else {
+                old[0] = *((s16 *) (D_8850D6D0 + 0xC));
+                old[1] = *((s16 *) (D_8850D6D0 + 0xE));
+                if ((*((u16 *) (D_80087200 + 0xC))) & 0x800) {
+                    *((s16 *) (D_8850D6D0 + 0xE)) -= 1;
+                    if ((*((s16 *) (D_8850D6D0 + 0xE))) < 0) {
+                        *((s16 *) (D_8850D6D0 + 0xE)) = 4;
+                    }
+                } else if ((*((u16 *) (D_80087200 + 0xC))) & 0x400) {
+                    *((s16 *) (D_8850D6D0 + 0xE)) += 1;
+                    if ((*((s16 *) (D_8850D6D0 + 0xE))) >= 5) {
+                        *((s16 *) (D_8850D6D0 + 0xE)) = 0;
+                    }
+                }
+                if ((*((u16 *) (D_80087200 + 0xC))) & 0x200) {
+                    *((s16 *) (D_8850D6D0 + 0xC)) -= 1;
+                    if ((*((s16 *) (D_8850D6D0 + 0xC))) < 0) {
+                        *((s16 *) (D_8850D6D0 + 0xC)) = 5;
+                    }
+                } else if ((*((u16 *) (D_80087200 + 0xC))) & 0x100) {
+                    *((s16 *) (D_8850D6D0 + 0xC)) += 1;
+                    if ((*((s16 *) (D_8850D6D0 + 0xC))) >= 6) {
+                        *((s16 *) (D_8850D6D0 + 0xC)) = 0;
+                    }
+                }
+                if ((old[0] != (*((s16 *) (D_8850D6D0 + 0xC)))) || (old[1] != (*((s16 *) (D_8850D6D0 + 0xE))))) {
+                    func_800226C0(1, &D_80087200, &D_8850D6D0, state);
+                }
+            }
+        }
+        if (((*((s16 *) (D_8850D6D0 + 0x56))) != 0) || (!((*((u16 *) (D_80087200 + 8))) & 0xC000))) {
+            if (((*((u8 *) (D_8850D6D0 + 0x2F))) == 0) || ((*((s32 *) (D_8850D6D0 + 0x84))) == 0)) {
+                if ((*((u16 *) (D_80087200 + 8))) & 0x30) {
+                    func_800226C0(5, &D_80087200);
+                }
+            } else {
+                func_88002640(D_8850D6D0 + 0x40, &D_80087200);
+                if ((old56 == 0) && ((*((s16 *) (D_8850D6D0 + 0x56))) != 0)) {
+                    if ((*((s16 *) (D_8850D6D0 + 0x44))) != 0x10) {
+                        // FAKE: D_8850E361 tested twice in one condition; dead branch (diff score 15
+                        // without it).
+                        if ((!D_8850E361) && (!D_8850E361)) {
+                        }
+                        if ((*((s16 *) (D_8850D6D0 + 0x44))) == 0x20) {
+                            // FAKE: comma expression ((0, 0x31)) in place of the addend 0x31 (diff
+                            // score 10 without it).
+                            func_88500D60(*((s8 *) ((D_8850D6D0 + (*((s8 *) (D_8850D6D0 + 0x30)))) + ((0, 0x31)))));
+                        }
+                    } else {
+                        func_88500D60(func_88500E4C());
+                    }
+                } else if ((old56 != 0) && ((*((s16 *) (D_8850D6D0 + 0x56))) == 0)) {
+                    func_880002F4(D_8850D6D0 + 0x74, 0);
+                }
+                if (old30 != (*((s8 *) (D_8850D6D0 + 0x30)))) {
+                    D_8850D6D0[0x10] ^= 1;
+                }
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501AE8.s")
 

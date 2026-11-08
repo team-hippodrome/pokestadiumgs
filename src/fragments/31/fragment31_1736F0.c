@@ -186,9 +186,180 @@ s32 func_882005F8(void) {
 }
 /* mkdraft:func_882005F8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_882007B0.s")
+extern u8 D_88A01C60[];
+extern u8 D_88A01C64[];
+extern u8 *func_88A00710(s32, s16);
+extern s32 func_88A00978(u8 *, u8 *);
+extern s32 _bcmp(const void *, const void *, s32);
+extern void func_88200470(s32, u8);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_882009D4.s")
+// For each of the four slots marked changed, reloads the current byte/word and
+// the previous copy, compares them, and either marks the slot again (cur != prev)
+// or compares the payload two bytes at a time. Reports differences with
+// func_88200470(2, group). Returns the last slot flag it stored.
+
+
+s32 func_882007B0(void) {
+    s32 result = 0;
+    u8 *p;
+    s32 group;
+    u8 buf[0xF0];
+    u8 *data;
+    s32 i;
+    u16 cur;
+    u16 prev;
+
+    for (group = 0; group != 4; group++) {
+        if (*(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104) != 0) {
+            *(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104) = 0;
+            switch (group) {
+                case 0:
+                    func_88A00978(*(u8 **)(u32 *)D_88A01C60, buf);
+                    data = buf + 9;
+                    cur = buf[0];
+                    prev = *(u8 *)(u32 *)*(u32 *)D_88A01C64;
+                    break;
+                case 1:
+                    cur = *(u8 *)((u8 *)*(u32 *)D_88A01C60 + 0x98);
+                    prev = *(u8 *)((u8 *)*(u32 *)D_88A01C64 + 0xEF);
+                    data = *(u8 **)((u8 *)*(u32 *)D_88A01C60 + 0x9C);
+                    break;
+                case 2:
+                    cur = *(u8 *)((u8 *)*(u32 *)D_88A01C60 + 0xA0);
+                    prev = *(u8 *)((u8 *)*(u32 *)D_88A01C64 + 0xF4);
+                    data = *(u8 **)((u8 *)*(u32 *)D_88A01C60 + 0xA4);
+                    break;
+                case 3:
+                    cur = *(u8 *)((u8 *)*(u32 *)D_88A01C60 + 0xA8);
+                    prev = *(u8 *)((u8 *)*(u32 *)D_88A01C64 + 0xFC);
+                    data = *(u8 **)((u8 *)*(u32 *)D_88A01C60 + 0xAC);
+                    break;
+            }
+            if (cur != prev) {
+                *(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104) = 1;
+                result = *(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104);
+            } else {
+                p = func_88A00710(group, 0);
+                // FAKE: the xor-zero on the bound is an arithmetic no-op that makes
+                // IDO keep the bound in $s3 and copy it after the call; diff score
+                // 190 without it.
+                for (i = 0; i != (prev ^ 0); i++, p += 2, data += 2) {
+                    if (_bcmp(p, data, 2) != 0) {
+                        *(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104) = 1;
+                        result = *(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104);
+                        break;
+                    }
+                }
+            }
+            if (*(s32 *)((u8 *)(u32)*(u32 *)D_88A01C64 + group * 4 + 0x104) != 0) {
+                func_88200470(2, group);
+            }
+        }
+    }
+    return result;
+}
+
+typedef struct LabPCStorageList {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList;
+
+extern s8 D_88006868;
+extern s32 D_88233760[];
+extern LabPCStorageList D_88234630[];
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 Deck_WriteEntries(void *, s32, u8 *);
+extern s32 _bcmp(const void *, const void *, s32);
+extern void _bzero(void *, s32);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 func_8006229C(u8 *);
+extern s32 func_8800005C(void);
+extern void func_88200470(s32, u8);
+extern void func_88203670(s32, u8 *, u8);
+// Reloads each of the four D_88234630 lists that the deck reports as changed and
+// compares the deck's entries against memory. func_8006218C opens deck type
+// D_88233760[i] (lists 0/1 on port D_88006868, lists 2/3 on port 0),
+// Deck_ReadEntries reads list->capacity entries of 0x76 bytes into buf,
+// func_88203670 copies them into the list, and _bcmp reports per-entry edits.
+// Returns 1 when any list's count or contents differed. func_88200470 then marks
+// the list for the 4 lists it is given (4, i).
+//@src/615D0.c
+
+
+s32 func_882009D4(void) {
+    u8 *p;
+    u8 *entry;
+    s32 j;
+    s32 cnt;
+    // Largest region read or cleared is list->capacity * 0x76 (capacity <= 30,
+    // about 0xDD4 bytes); the declared 0x1710 is what reproduces retail's
+    // 0x1780-byte frame, and the tail past capacity * 0x76 is never touched.
+    u8 buf[0x1710];
+    u8 n;
+    s32 port;
+    u8 *handle;
+    s32 i;
+    LabPCStorageList *list;
+    s32 result = 0;
+
+    for (i = 0, list = &D_88234630[0]; i != 4; i++, list++) {
+        if (list->changed != 0) {
+            if (func_8800005C() != 0 && (i == 0 || i == 1)) {
+                // Store through a u32 lvalue: a plain `list->changed = 1` (or 0)
+                // folds the literals into one callee-saved register, which also
+                // drops port's 0x58 stack home and shifts the frame.
+                *(u32 *)&list->changed = 0;
+            } else {
+                *(u32 *)&list->changed = 0;
+                switch (i) {
+                    case 0:
+                    case 1:
+                        port = D_88006868;
+                        break;
+                    case 2:
+                    case 3:
+                        port = 0;
+                        break;
+                }
+                handle = func_8006218C(D_88233760[i], port, 0, 0);
+                _bzero(buf, list->capacity * 0x76);
+                if (handle != NULL) {
+                    n = Deck_ReadEntries(buf, list->capacity, handle);
+                    func_88203670(i, buf, n);
+                    func_8006229C(handle);
+                    if (n != list->count) {
+                        *(u32 *)&list->changed = 1;
+                        result = 1;
+                    } else {
+                        // These four statements decide the loop setup: p and entry
+                        // are hoisted above the count test, `j = 0` fills that
+                        // branch's delay slot, and `cnt = n` becomes the bound copy
+                        // in the entry block's zero-test delay slot.
+                        p = buf;
+                        entry = list->entries;
+                        j = 0;
+                        cnt = n;
+                        // `!=` (not `<`) keeps the unsigned-compare `sltu` out of the loop.
+                        for (; j != cnt; j++, p += 0x76, entry += 0x76) {
+                            if (_bcmp(p, entry, 0x76) == 0) {
+                                continue;
+                            }
+                            *(u32 *)&list->changed = 1;
+                            result = 1;
+                            break;
+                        }
+                    }
+                }
+                if (list->changed != 0) {
+                    func_88200470(4, i);
+                }
+            }
+        }
+    }
+    return result;
+}
 
 extern s8 D_88006868;
 extern s8 **D_88234670[];
@@ -268,12 +439,6 @@ s32 func_88200D04(u8 arg0) {
 
 // Same 12-byte layout as LabPCStorageList in
 //@src/fragments/31/fragment31_1A5E10.c
-typedef struct LabPCStorageList {
-    u8 count;
-    u8 capacity;
-    void *entries;
-    s32 changed;
-} LabPCStorageList;
 
 extern s8 D_88006868;
 extern s32 D_88233760[];

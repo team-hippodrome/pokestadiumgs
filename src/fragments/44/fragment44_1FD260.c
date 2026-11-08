@@ -672,17 +672,65 @@ u8 *func_8AF12410(u8 *pixels, s16 count) {
     return pixels;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1FD260/func_8AF124A8.s")
-
 extern s16 D_8AF31024;
 extern char D_8AF315A0[];
-extern char D_8AF296C8[];
+extern char D_8AF296C0[];
+extern char D_8AF296C4[];
+extern char D_8AF314A0[];
+extern s16 *D_8AF2BA94;
 struct MenuGridEntry {
     u8 kind;
     u8 palette;
     u8 unknown;
     u8 blink;
 };
+extern struct MenuGridEntry D_8AF316C8[];
+
+
+
+void func_8AF124A8(s16 category) {
+    u8 *destination;
+    s16 *entry;
+    s16 count;
+    s32 id;
+    s16 remaining;
+
+    count = 0;
+    D_8AF31024 = 0;
+    *(s16 *)&D_8AF31D42 = -1;
+    sprintf(D_8AF315A0, D_8AF296C0);
+    sprintf(D_8AF314A0, D_8AF296C4, func_8004C874(0x3B, category + 0x5D));
+    _bzero((s32 *)D_8AF316C8, 0x3E8);
+    entry = D_8AF2BA94;
+    remaining = (s16)category;
+    for (;;) {
+        if (remaining == 0) break;
+        if (*entry == -1) remaining -= 1;
+        // FAKE: empty statement. It gives the entry pointer ($s1) and the category
+        // parameter ($s0) their target registers; without it they swap (diff score 128).
+        if (0) { }
+        entry++;
+    }
+    destination = (u8 *)D_8AF316C8;
+    for (;;) {
+        id = *entry;
+        // FAKE: empty statement. Split from the one above it: this one is what keeps
+        // $s0/$s1 from swapping once the skip loop closes (diff score 206 without it).
+        do { } while (0);
+        if (id == -1) break;
+        destination[0] = id;
+        destination[1] = func_8AF01530(func_80062D98((u8)id));
+        entry++;
+        destination += 4;
+        count++;
+        count = (s16)count;
+    }
+    func_8AF12410(destination, count);
+}
+
+extern s16 D_8AF31024;
+extern char D_8AF315A0[];
+extern char D_8AF296C8[];
 extern struct MenuGridEntry D_8AF316C8[];
 
 u8 *func_8AF125D0(s16 category) {

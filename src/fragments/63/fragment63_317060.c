@@ -303,7 +303,59 @@ void func_87E14480(u8 *resource, Fragment63MonSlot *slot, u8 *model, s32 arg3, s
     model[0x1D] = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14578.s")
+extern u32 D_87E1ADC0[][13];
+
+
+s32 func_87E14578(u8 *arg0, s32 *arg1, s32 *arg2) {
+    u8 *base;
+    u8 *entry;
+    s32 old;
+    s32 index;
+    s32 i;
+
+    *(u8 **)(arg0 + 0xC) = NULL;
+    base = *(u8 **)(arg0 + 4);
+    old = *(s32 *)(arg0 + 8);
+    do {
+        *(s32 *)(arg0 + 8) += 1;
+        index = *(s32 *)(arg0 + 8);
+        // FAKE: the empty statement has no run-time effect. Its compare is the first use
+        // of 0x12 in the loop body, which makes IDO materialize 0x12 in $t1 ahead of the
+        // loop; without it the diff score is 79/89 (prologue, loop compare and epilogue).
+        if (index == 0x12) { }
+        if (index >= 0x12) {
+            *(s32 *)(arg0 + 8) = 0;
+            index = 0;
+        }
+        i = 0;
+        entry = (u8 *)((u32 (*)[3])(base + 0x88))[index] - 0x88;
+        for (; i < 0x12; i++) {
+            if (*(u8 **)(entry + 0x88) != NULL) {
+                if ((((u32)*(s32 *)(entry + 0x90) << 1) >> 31) != 0) {
+                    if (*(s32 *)((u8 *)D_87E1ADC0 + i * 0x34) == *(u8 *)(*(u8 **)(entry + 0x88) + 4)) {
+                        *(u8 **)(arg0 + 0xC) = (u8 *)D_87E1ADC0[i];
+                        break;
+                    }
+                }
+            } else {
+                *(u8 **)(arg0 + 0xC) = NULL;
+                break;
+            }
+        }
+    } while (*(u8 **)(arg0 + 0xC) == NULL);
+    if (*(u8 **)(arg0 + 0xC) == NULL) {
+        *(u8 **)(arg0 + 0xC) = (u8 *)D_87E1ADC0;
+        *arg1 = *(s32 *)((u8 *)D_87E1ADC0 + 4);
+        *arg2 = *(s32 *)(*(u8 **)(arg0 + 0xC) + 8);
+    } else if (*(u32 *)((u8 *)((u32 (*)[3])(base + 0x90))[*(s32 *)(arg0 + 8)]) >> 31) {
+        *arg1 = *(s32 *)(*(u8 **)(arg0 + 0xC) + 0x10);
+        *arg2 = *(s32 *)(*(u8 **)(arg0 + 0xC) + 0x14);
+    } else {
+        *arg1 = *(s32 *)(*(u8 **)(arg0 + 0xC) + 4);
+        *arg2 = *(s32 *)(*(u8 **)(arg0 + 0xC) + 8);
+    }
+    return old != *(s32 *)(arg0 + 8);
+}
 
 /* mkdraft:func_87E146DC begin */
 typedef struct { u16 unk_0, unk_2, unk_4; } Unk6;

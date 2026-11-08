@@ -53,7 +53,89 @@ char *func_8822AE2C(char *arg0, u8 arg1, u8 arg2) {
     return arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_19DFC0/func_8822AF00.s")
+extern u8 D_88006020[];
+extern s32 D_8800EF54;
+extern u32 D_882348F0;
+extern s32 D_882345F4;
+extern u8 D_8823475C;
+extern s32 D_8823476C;
+extern u16 D_882347BC;
+extern s32 D_880068B4;
+extern volatile unsigned char D_8800ED50;
+extern void *func_8004B7A4(s32 arg0);
+extern s32 func_8004C594(s32 index, s32 value);
+extern s32 func_88002AA8();
+s32 func_8004C54C(s32, s32);
+s32 func_8004C8A0(void *, s32, s32, s32);
+s32 func_88004804(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
+extern char *func_8822AE2C(char *, u8, u8);
+
+
+
+void func_8822AF00(s32 arg0) {
+    s32 pad; // FAKE: unused local, only forces retail's frame (0x160) so result lands at 0x158
+    s32 result;
+    u8 buf1[0x80];
+    u8 buf2[0x80];
+
+    if (D_882347BC != 0) {
+        D_882348F0 = (u32)Util_Malloc(0x23C);
+        func_8004C54C(0x1A, arg0);
+        switch (D_882347BC) {
+        case 0x800:
+            func_8004C54C(0x25, (s32)func_8822AE2C((char *)buf1, ((u8 *)D_8800EF54)[0], ((u8 *)D_8800EF54)[1]));
+            func_8004C54C(0x28, (s32)func_8822AE2C((char *)buf2,
+                                                      *(u8 *)(*(s32 *)*(s32 *)D_882345F4 + 8),
+                                                      *(u8 *)(*(s32 *)D_882345F4 + 4)));
+            result = 0x76;
+            break;
+        case 1:
+            func_8004C594(2, ((u8 *)D_882345F4)[0x25] - 1);
+            func_8004C594(3, ((u8 *)D_882345F4)[0x25]);
+            result = 0x77;
+            break;
+        case 2:
+            result = 0x78;
+            break;
+        case 4:
+        case 8:
+            result = 0x79;
+            break;
+        case 0x10:
+            func_8004C54C(0x1B, (s32)func_8004B7A4(((u8 *)D_882345F4)[8]));
+            func_8004C54C(0x1C, (s32)func_8004B7A4(D_8823475C));
+            result = 0x7A;
+            break;
+        case 0x20:
+            result = 0x7B;
+            break;
+        case 0x200:
+            switch (D_8823476C) {
+            case 0:
+                result = 0x7C;
+                break;
+            case 1:
+                result = ((u8 *)D_882345F4)[8] >= 0x98 ? 0x7D : 0x7E;
+                break;
+            case 2:
+                result = 0x7F;
+                break;
+            }
+            break;
+        case 0x400:
+            result = 0x80;
+            break;
+        default:
+            result = 0x81;
+            break;
+        }
+        *(s32 *)(D_882348F0 + 0x38) = func_8004C8A0((void *)(D_882348F0 + 0x3C), 0x200, 0x25, result);
+        func_88002AA8((void *)(D_882348F0 + 4), 0, (void *)(D_882348F0 + 0x38), 1, 8, 1, 6, 0xF, 0x12, 0xD, 0x10, 0, 0, &D_88006020);
+        *((void **)((u8 *)D_882348F0)) = (void *)((func_88004804((s32)(D_882348F0 + 4), 0, 0x17C, 0x11F, 4, 1, 0xFF, 0xAA, 0x8C, &func_8822ADB0, &func_8822AE04, &func_8822AD40, &func_8822AD4C, 0, 0) * 0x4C) + (&D_8800ED50));
+        D_880068B4 = 0;
+        D_882347BC = 0;
+    }
+}
 
 void func_8822B240(void) {
     D_880068B8 = 0;

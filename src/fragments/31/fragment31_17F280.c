@@ -891,7 +891,69 @@ void func_8820F74C(s16 arg0, s16 arg1, u8 *arg2, u8 arg3) {
     func_80048E30(D_8800687C, arg0, arg1, func_88A00938(arg2), 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17F280/func_8820F7EC.s")
+extern s32 func_88005CC0(s32, void*);
+
+
+
+void func_8820F7EC(u8 slot, u8 limit) {
+    u8* item;
+    s16 x;
+    s16 y;
+    u8 color[4];
+    u32 row;
+    u8 value;
+
+    if (func_88A007BC(((F31SelectionState*)D_88234710)->list[slot]) == 0) {
+        return;
+    }
+    item = func_8820C040(0, slot);
+    x = slot == 0 ? 58 : 369;
+    limit = limit < ((F31SelectionState*)D_88234710)->records[slot].count ? limit : ((F31SelectionState*)D_88234710)->records[slot].count;
+    row = 0;
+    y = 128 - *(s16*)((u8*)&((F31SelectionState*)D_88234710)->records[slot] + 0x22);
+    for (; row != limit; row++, y += 27) {
+        if ((((F31SelectionState*)D_88234710)->enabled[slot] == 0) || (((row == (((F31SelectionState*)D_88234710)->records[slot].position - ((F31SelectionState*)D_88234710)->records[slot].start)) ? 1 : 0) == 0)) {
+            if (func_8800005C() == 0 && ((F31SelectionState*)D_88234710)->list[slot] == 0) {
+                if (((F31SelectionState*)D_88234710)->slot == slot) {
+                    if (D_882346F0 == 1) {
+                        value = func_8006378C(*func_8820C040(1, (1 - *(u8*)D_88234710) & 0xFF));
+                        if ((u32)(((F31SelectionState*)D_88234710)->records[slot].start + row) >= (u32)*(s16*)((u8*)D_88234710 + 0xC0) && (u32)(((F31SelectionState*)D_88234710)->records[slot].start + row) <= (u32)*(s16*)((u8*)D_88234710 + 0xC2)) {
+                            if (((F31SelectionState*)D_88234710)->records[slot].position >= *(s16*)((u8*)D_88234710 + 0xC0) && ((F31SelectionState*)D_88234710)->records[slot].position <= *(s16*)((u8*)D_88234710 + 0xC2)) {
+                                func_880006E0(D_88005FA0);
+                            } else {
+                                func_8820ECE8(value, item);
+                            }
+                        } else {
+                            func_880006E0(Color_SetRGB(color, 0x96, 0x96, 0x96));
+                        }
+                    } else if (D_882346F0 == 2) {
+                        func_8820ECE8(func_8006378C(((u8 (*)[2])(D_88A01C64 + 9))[*(s16*)((u8*)D_88234710 + 0xB8)][0]), item);
+                    } else if (D_882346F0 == 3) {
+                        func_8820ECE8(func_8006378C(*func_8820C040(1, (1 - *(u8*)D_88234710) & 0xFF)), item);
+                    } else if (*(s32*)((u8*)D_88234710 + 4) == 0 && *(s16*)((u8*)D_88234710 + 8) == 2 && func_8006378C(*item) == 4) {
+                        func_880006E0(Color_SetRGB(color, 0x96, 0x96, 0x96));
+                    } else {
+                        func_880006E0(D_88005FA0);
+                    }
+                } else if (D_882346F0 == 1 || D_882346F0 == 3) {
+                    func_880006E0(D_88005FA0);
+                } else {
+                    func_880006E0(Color_SetRGB(color, 0x96, 0x96, 0x96));
+                }
+            } else if (((F31SelectionState*)D_88234710)->slot == slot && D_882346F0 == 3 && func_8800005C() == 0 && ((s32*)D_88234710)[4 - slot] == 0) {
+                func_8820ECE8(func_8006378C(*func_8820C040(1, (1 - slot) & 0xFF)), item);
+            } else if (D_882346F0 == 1 || D_882346F0 == 3 || ((F31SelectionState*)D_88234710)->slot == slot) {
+                func_880006E0(D_88005FA0);
+            } else {
+                func_880006E0(Color_SetRGB(color, 0x96, 0x96, 0x96));
+            }
+            if (func_88005CC0(3, item) == 0 && func_88005CC0(4, item) == 0 && func_88005CC0(5, item) == 0) {
+                func_8820F74C(x, y, item, item[1]);
+            }
+            item += 2;
+        }
+    }
+}
 
 extern s32 func_8005CAA4(s32);
 extern s32 func_80053230(s32);

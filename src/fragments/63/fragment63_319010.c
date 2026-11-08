@@ -196,7 +196,37 @@ void func_87E16488(void *arg0) {
     func_87E1643C(arg0, v4C, v40, v34);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E16738.s")
+extern void func_87E15874(f32 *, f32 *, f32 *);
+extern f32 D_87E1B344[8][3];
+
+
+void func_87E16738(void *arg0) {
+    f32 *p;
+    s32 i;
+    f32 vec[3];
+    f32 d0, d1, d2;
+
+    p = (f32 *)((u8 *)arg0 + 0x40);
+    for (i = 0; i < 8; i++, p += 6) {
+        p[3] *= *(f32 *)((u8 *)arg0 + 0xD84);
+        p[4] *= *(f32 *)((u8 *)arg0 + 0xD84);
+        p[5] *= *(f32 *)((u8 *)arg0 + 0xD84);
+        p[4] += *(f32 *)((u8 *)arg0 + 0xD80);
+        func_87E15874(vec, D_87E1B344[i], arg0);
+        d0 = vec[0] - p[0];
+        d1 = vec[1] - p[1];
+        d2 = vec[2] - p[2];
+        p[3] += d0 * *(f32 *)((u8 *)arg0 + 0xD88);
+        p[4] += d1 * *(f32 *)((u8 *)arg0 + 0xD88);
+        p[5] += d2 * *(f32 *)((u8 *)arg0 + 0xD88);
+        p[0] = vec[0];
+        p[1] = vec[1];
+        p[2] = vec[2];
+        p[0] += p[3];
+        p[1] += p[4];
+        p[2] += p[5];
+    }
+}
 
 extern void *D_87E1EC88;
 extern void func_87C037C0(void *, void *);
@@ -268,7 +298,94 @@ void func_87E16AA4(void *arg0) {
     func_87E1643C(arg0, v0, v1, v2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E16B50.s")
+extern void func_87D00354(void *arg0, f32 *arg1);
+extern void func_87E15874(f32 *arg0, f32 *arg1, f32 *arg2);
+extern void *D_87E1EC88;
+extern s32 D_87E1B404;
+extern s32 D_87E1B3F4[4];
+extern void func_87E16AA4(void *arg0);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+// The file declares D_800CE060 as u8[] further down (line ~544), so a typed
+// `extern ControllerState D_800CE060[4]` is a hard conflicting-types error at
+// that later declaration. The array-pointer cast below keeps the declaration
+// compatible while giving ugen the *array* subscript lowering (base web created
+// before the index-scale multiply) that the retail object shows.
+extern u8 D_800CE060[];
+
+typedef struct {
+    u8 pad0[6];
+    u16 buttonsHeld;
+    u8 pad1[0x10];
+    f32 stickXNorm;
+    f32 stickYNorm;
+    u8 pad2[8];
+} CtrlTemp;
+
+
+
+
+
+void func_87E16B50(void *arg0) {
+    f32 direction[3];
+    // FAKE: no source object. The 56 bytes leave frame bytes 0x4C-0x8B unreferenced
+    // as in the target and place direction at 0x8C with vec at 0x40.
+    u8 pad[56];
+    f32 *src;
+    f32 *dst;
+    f32 vec[3];
+    CtrlTemp *ctrl;
+
+    // Store through a different symbol label at the same address (D_87E1B3F4+0x10
+    // == D_87E1B404): uopt shares a symbol address across references, and the
+    // retail object has two folded lui/%lo references instead of a base register.
+    *(s32 *)((u8 *)D_87E1B3F4 + 0x10) = D_87E1B404 + 1;
+    if ((1 << (*(s8 *)((u8 *)D_87E1EC88 + 2))) & (*(u8 **)((u8 *)D_87E1EC88 + 8))[0x2182]) {
+        // Array-pointer cast, not ((CtrlTemp *)D_800CE060)[i]: the array
+        // subscript shares one base+index web with the two reads below and
+        // emits lui a2 / addiu a2 / addu a0,a2,t3 / move v1,a0 as retail.
+        ctrl = &(*(CtrlTemp (*)[4])D_800CE060)[(*(s8 *)((u8 *)D_87E1EC88 + 2))];
+        if (ctrl->stickXNorm != 0.0f || ctrl->stickYNorm != 0.0f) {
+            direction[0] = (*(CtrlTemp (*)[4])D_800CE060)[(*(s8 *)((u8 *)D_87E1EC88 + 2))].stickXNorm;
+            direction[2] = -(*(CtrlTemp (*)[4])D_800CE060)[(*(s8 *)((u8 *)D_87E1EC88 + 2))].stickYNorm;
+        } else {
+            // (x > 0) rather than (x != 0) selects the slt-zero compare the target uses.
+            direction[0] = (f32)(((ctrl->buttonsHeld & 0x100) > 0) - ((ctrl->buttonsHeld & 0x200) > 0)) * 64.0f;
+            direction[2] = (f32)(((ctrl->buttonsHeld & 0x400) > 0) - ((ctrl->buttonsHeld & 0x800) > 0)) * 64.0f;
+        }
+        direction[1] = 0.0f;
+        if (direction[0] != direction[1] * 0.0f || direction[1] != 0.0f || direction[2] != direction[1]) {
+            direction[2] = 0.0f;
+            direction[0] *= 0.0390625f;
+            func_87D00354(arg0, direction);
+        }
+    }
+    // Reached on both guard outcomes; the board writes and trail below are not guarded.
+    direction[0] = 0.8f;
+    // Integer 0 keeps this store off the guard's constant zero register: the target
+    // materializes a fresh zero (mtc1 $zero,$ft1) at .L87E16CD0.
+    direction[1] = 0;
+    direction[2] = -3.2f;
+    func_87D00354(arg0, direction);
+    func_87E16AA4(arg0);
+    *(f32 *)((u8 *)arg0 + 0x34) = 600.0f;
+    // Integer 0 in both zero stores. Written as 0.0f they merge with the guard's
+    // constant zero, which then occupies a callee-saved FP register and adds
+    // sdc1/bump of the frame to 0xA0.
+    *(f32 *)((u8 *)arg0 + 0x30) = 0;
+    *(f32 *)((u8 *)arg0 + 0x38) = 0;
+    *(f32 *)((u8 *)arg0 + 0x3C) = 1.0f;
+    // dst before src: the target emits addiu $s0,$s4,0x40 ahead of the two symbol bases.
+    dst = (f32 *)((u8 *)arg0 + 0x40);
+    src = (f32 *)D_87E1B344; do {
+        func_87E15874(vec, src, arg0);
+        dst[3] = vec[0] - dst[0];
+        dst[4] = vec[1] - dst[1];
+        dst[5] = vec[2] - dst[2];
+        Vec3f_SetComponentsDuplicate(dst, vec[0], vec[1], vec[2]);
+        src += 3;
+        dst += 6;
+    } while (src != (f32 *)D_87E1B3A4);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E16DC0.s")
 

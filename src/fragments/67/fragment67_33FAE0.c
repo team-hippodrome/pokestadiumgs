@@ -15,7 +15,63 @@ void func_82902FE0(f32 *arg0, f32 *arg1, s16 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33FAE0/func_82903058.s")
+extern u8 D_82919CE0;
+extern void *D_82919C38;
+extern f32 D_82919CF0[];
+extern u8 D_82919C94;
+extern u8 D_82919C88[];
+extern s16 D_82919CCA;
+
+// Record of the D_82912DB8 table, one entry per model slot (stride 0x1C). Same
+// layout as the Rec28_82912DB8 typedef already in the file.
+typedef struct Rec28_82912DB8 {
+    /* 0x00 */ char pad0[8];
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ f32 unk_0C;
+    /* 0x10 */ char pad10[4];
+    /* 0x14 */ f32 unk_14;
+    /* 0x18 */ f32 unk_18;
+} Rec28_82912DB8;
+extern Rec28_82912DB8 D_82912DB8[];
+
+extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+extern void func_82902FE0(f32 *, f32 *, s16);
+extern void func_800371B4(void *, void *, f32, s16, s32);
+
+// Publish the camera/floor state of the current stage into D_82919C38: the four
+// scale/offset floats from D_82919CE0, the position from func_82902FE0 offset by
+// the actor's 0x28/0x30 fields, then the per-slot record (D_82912DB8) height,
+// rotation and scale, and finally hand the result to func_800371B4.
+
+
+void func_82903058(u8 *arg0, s32 arg1) {
+    f32 recordScale;
+    f32 pos[3];
+    // FAKE: never read or written. IDO reserves the slot for recordScale anyway,
+    // so this pad only widens the frame to 0x40; without it every stack offset
+    // shifts down by 8 and the diff scores 71.
+    f32 pad28[2];
+
+    *(f32 *)((u8 *)&D_82919C38 + 0x84) = *(f32 *)((u8 *)&D_82919CE0 + 0x20);
+    *(f32 *)((u8 *)&D_82919C38 + 0x80) = *(f32 *)((u8 *)&D_82919CE0 + 0x1C);
+    *(f32 *)((u8 *)&D_82919C38 + 0x7C) = *(f32 *)((u8 *)&D_82919CE0 + 0x0C);
+    *(f32 *)((u8 *)&D_82919C38 + 0x74) = *(f32 *)((u8 *)&D_82919CE0 + 0x04);
+    *(f32 *)((u8 *)&D_82919C38 + 0x44) = 0.0f;
+    func_82902FE0(pos, D_82919CF0, -0x4000);
+    pos[0] = *(f32 *)(arg0 + 0x28) + pos[0];
+    pos[2] = *(f32 *)(arg0 + 0x30) + pos[2];
+    Vec3f_SetComponentsDuplicate(&D_82919C94, pos[0], *(f32 *)((u8 *)&D_82919CE0 + 0x14), pos[2]);
+    Vec3f_SetComponentsDuplicate(&D_82919C88, pos[0], *(f32 *)((u8 *)&D_82919CE0 + 0x14), pos[2]);
+    Vec3f_SetComponentsDuplicate((u8 *)*(void **)((u8 *)&D_82919C38) + 0xB4, *(f32 *)((u8 *)&D_82919C38 + 0x5C), *(f32 *)((u8 *)&D_82919C38 + 0x60), *(f32 *)((u8 *)&D_82919C38 + 0x64));
+    *(s16 *)((u8 *)&D_82919C38 + 0x90) = *(s16 *)((u8 *)&D_82912DB8[arg0[0x1070]] + 0x00);
+    *(s16 *)&D_82919CCA = *(s16 *)(arg0 + 0x24) + *(s16 *)((u8 *)&D_82912DB8[arg0[0x1070]] + 0x02) * -1;
+    *(f32 *)((u8 *)&D_82919C38 + 0x74) = *(f32 *)((u8 *)&D_82912DB8[arg0[0x1070]] + 0x04) * *(f32 *)((u8 *)&D_82919C38 + 0x74);
+    recordScale = *(f32 *)((u8 *)&D_82912DB8[arg0[0x1070]] + 0x10);
+    *(f32 *)((u8 *)*(void **)((u8 *)&D_82919C38) + 0x2C) = recordScale;
+    *(f32 *)((u8 *)&D_82919C38 + 0x88) = recordScale;
+    func_800371B4((u8 *)*(void **)((u8 *)&D_82919C38) + 0xB4, (u8 *)*(void **)((u8 *)&D_82919C38) + 0xA8, *(f32 *)((u8 *)&D_82919C38 + 0x74), *(s16 *)((u8 *)&D_82919C38 + 0x90), *(s16 *)((u8 *)&D_82919C38 + 0x92));
+}
 #endif
 
 #ifdef VERSION_US
@@ -153,7 +209,7 @@ extern u8 D_82918990[];
 extern void *D_82919C38;
 extern void *D_82919DC4;
 extern void func_829034B0(void *);
-extern void func_82903058(void *, s32);
+void func_82903058(u8 *arg0, s32 arg1);
 void func_829034D8(void) {
     D_82919C38 = *(void **)((u8 *)D_82919DC4 + 0xC);
     func_829034B0(D_82919C38);
@@ -565,15 +621,6 @@ void func_829042A4(f32 *arg0, f32 arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-typedef struct Rec28_82912DB8 {
-    /* 0x00 */ char pad0[8];
-    /* 0x08 */ s16 unk_08;
-    /* 0x0A */ s16 unk_0A;
-    /* 0x0C */ f32 unk_0C;
-    /* 0x10 */ char pad10[4];
-    /* 0x14 */ f32 unk_14;
-    /* 0x18 */ f32 unk_18;
-} Rec28_82912DB8;
 
 extern Rec28_82912DB8 D_82912DB8[];
 extern f32 D_82919CE4;

@@ -161,9 +161,146 @@ void func_87F0E9D8(void *arg0, void *arg1, s32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3312D0/func_87F0EA40.s")
+#define NULL ((void *)0)
 
-extern void func_87F0EA40(void *, u8);
+typedef struct {
+    void *unk_00[12];
+    struct {
+        u8 unk_00[0x5C];
+    } unk_30[18];
+    u8 unk_6A8[0x18];
+} Elem;
+
+extern u32 func_8003570C(void);
+extern s8 D_87F113E4[];
+extern u8 D_87F11408[];
+extern u8 D_87F1142C[];
+extern u8 D_800CE060[];
+
+
+
+void func_87F0EA40(Elem *arg0, u8 arg1)
+{
+  s32 i;
+  s32 row;
+  u8 *state;
+  s32 m;
+  s32 selected;
+  void *records[3];
+  s32 found;
+  s8 best0;
+  s8 best1;
+  state = D_800CE060;
+  for (i = 0; i < 4; i++)
+  {
+    for (row = 0; row < 12; row++)
+    {
+      for (m = 0; m < 3; m++)
+      {
+        if (arg1 & (1 << i))
+        {
+          if (D_87F113E4[(row * 3) + m] != (-1))
+          {
+            records[m] = (void *) (&arg0[i].unk_30[D_87F113E4[(row * 3) + m]].unk_00[0]);
+          }
+          else
+          {
+            records[m] = (void *) 0;
+          }
+        }
+        else
+          if (D_87F113E4[(row * 3) + m] != (-1))
+        {
+          records[m] = (void *) ((((u8 *) arg0) + (D_87F113E4[(row * 3) + m] * 0x5C)) + (0, 0x1B00)); // FAKE: diff score 20 without the comma; it flips the addu operand order.
+        }
+        else
+        {
+          records[m] = (void *) 0;
+        }
+      }
+
+      if ((arg1 & (1 << i)) && ((*((u16 *) (state + 6))) & 0xB))
+      {
+        if (1) // FAKE: diff score 555 without this wrapper; it isolates the selection diamond for the allocator.
+        {
+          if ((*((u16 *) (state + 6))) & 8)
+          {
+            selected = 2;
+          }
+          else
+            if ((*((u16 *) (state + 6))) & 2)
+          {
+            selected = 0;
+          }
+          else
+          {
+            selected = 1;
+          }
+        }
+      }
+      else
+      {
+        found = 1;
+        for (m = 0; m < 3; m++)
+        {
+          if ((records[m] != ((void *) 0)) && ((*((s8 *) records[m])) != 0))
+          {
+            found = 0;
+            break;
+          }
+        }
+
+        if (found)
+        {
+          selected = ((((f32) func_8003570C()) / 4294967296.0f) < 0.5f) ? (0) : (1);
+        }
+        else
+        {
+          for (m = 0; m < 3; m++)
+          {
+            if ((records[m] == ((void *) 0)) || ((*((s8 *) records[m])) == 0))
+            {
+              continue;
+            }
+            selected = m;
+            best0 = *((s8 *) records[m]);
+            best1 = *((s8 *) (((u8 *) records[m]) + 1));
+          }
+
+          for (m = 0; m < 3; m++)
+          {
+            if ((records[m] == ((void *) 0)) || ((*((s8 *) records[m])) == 0))
+            {
+              continue;
+            }
+            if (((*((s8 *) (((u8 *) records[m]) + 1))) < best1) || (((*((s8 *) (((u8 *) records[m]) + 1))) == best1) && ((*((s8 *) records[m])) < best0)))
+            {
+              selected = m;
+ if (0) { } // FAKE: diff score 1279 without it; it keeps retail s-register coloring in this loop.
+              best0 = *((s8 *) records[m]);
+              best1 = *((s8 *) (((u8 *) records[m]) + 1));
+            }
+          }
+
+        }
+      }
+      if (records[selected] == ((void *) 0))
+      {
+        selected = 0;
+      }
+      if ((D_87F11408[(row * 3) + selected] == 0) && ((*((s8 *) records[selected])) == 0))
+      {
+        selected = 0;
+      }
+      arg0[i].unk_00[row] = records[selected];
+    }
+
+    state += 0x28;
+  }
+
+}
+
+void func_87F0EA40(Elem *arg0, u8 arg1);
 extern void func_87F0E660(unk_func_87F0E660 *);
 void func_87F0EDDC(void *arg0, u8 arg1) {
     func_87F0EA40(arg0, arg1);

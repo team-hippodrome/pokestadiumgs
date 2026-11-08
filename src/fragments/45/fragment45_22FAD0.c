@@ -4,7 +4,249 @@
 #ifdef VERSION_US
 // Pointed to by D_8AB112BC in .data; it opens this file's .rodata.
 const char D_8AB11A80[] = "\n";
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0A950.s")
+extern s16 D_8AB12690;
+extern s16 D_8AB16F6C;
+extern s16 D_8AB16F60;
+extern s16 D_8AB16F74;
+extern s32 D_8AB16F68;
+extern u8 *D_8AB11D0C;
+extern void *D_8AB11D00;
+extern void *D_8AB12688;
+extern void *D_8AB16D08;
+extern void *D_8AB16E4C;
+extern void *D_8AB16F64;
+extern u8 *D_8AB16E40;
+extern u8 *D_8AB16E44;
+extern u8 *D_8AB16E48;
+extern s32 D_8AB16E50;
+extern s32 D_8AB12BA8;
+extern u8 D_8AB16D10[];
+extern u8 D_8AB126A8[];
+extern void _bzero(void *, s32);
+extern u8 D_8AB12CB0[];
+extern s16 D_8AB12CB2;
+extern s16 D_8AB12D46;
+extern s16 D_8AB12DDA;
+extern s16 D_8AB12E6E;
+extern u8 D_8AB16508;
+extern u8 D_8AB112A4;
+extern void *D_8AB16CF0;
+extern void *D_8AB16CF8[4];
+extern void *D_8AB16F48[];
+extern void *D_8AB16ED0[4];
+extern void *D_8AB16EE0;
+extern void *D_8AB16EE4;
+extern u8 D_8AB16EE8;
+extern u8 D_8AB16F18;
+extern void *D_8AB16E10;
+extern void *D_8AB16E14;
+extern void *D_8AB16E18;
+extern void *D_8AB16E1C;
+extern void *D_8AB16E20[4];
+extern void *D_8AB16E2C;
+extern void *D_8AB16E24;
+extern void *D_8AB16E28;
+extern void *D_8AB16E30;
+extern void *D_8AB16E34;
+extern void *D_8AB16E38;
+extern void *D_8AB16E3C;
+extern void *D_8AB16F58;
+extern void *D_8AB16F5C;
+extern s32 D_8AB16F70;
+extern s32 D_8AB16F78;
+
+extern s32 func_8004C8C0(s32);
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(s32, s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern void *func_8004EB58(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern void func_8AC06E98(void *);
+extern void *func_8AC06D8C();
+extern void func_8AB01378(s32, void *, s16);
+extern s32 func_8AB00548(void);
+extern void func_8004E308(void *, void *, void *);
+extern void func_8AC02C80(void *, s32, s32, void *);
+extern void func_8AC05E40(void *, s32, s32);
+extern void func_8AC06400(void *, void *);
+extern void func_8AC033B8();
+extern s32 TextLabel_DrawCallback(s32, void *);
+extern s32 TextNumber_DrawCallback(s32, void *);
+extern s32 func_8AB01C04(s32, void *);
+
+// func_8AB0A950: VS-mode player/options menu setup.
+//
+// Flow:
+// 1. Zero D_8AB12690 and set the countdown D_8AB16F6C = 100.
+// 2. For each of the four 0x94-byte slot records at D_8AB12CB0: bzero it, and
+//    when bit i of D_8AB11D0C[0xE] is set mark the record active (*(s16 *)slot
+//    = 1) and bump D_8AB12690.
+// 3. Allocate the menu object (D_8AB16CF0) from the main pool via
+//    func_8004EB58, stash func_80040E80's result in D_8AB16F78, and mark the
+//    object with bits 0x1/0x2 of its 16-bit header field at +2.
+// 4. Create the four per-player children ("pli1".."pli4",
+//    D_8AB16CF8[0..3]) and for each one clear header bit 0, set it back when
+//    the matching slot record is active, and register func_8AB01378 with the
+//    slot number.
+// 5. Create the remaining tagged children ("who1".."who4", "rea1".."rea4",
+//    "qwfi", "efct", "mond", "mess", "rule", "timw", "atim", "qwu1/qws1"
+//    groups, "pic1".."pic4", "fin1".."fin3", "qit1".."qit4", "nok1".."nok4",
+//    "gooo", "abu1"), clear header bit 1 on the display ones and attach their
+//    draw callbacks with func_8004E308.
+// 6. Reset the frame/pause counters (D_8AB16F70, D_8AB16F74, D_8AB16F68,
+//    D_8AB11D0C[0x10] = 0, D_8AB16F60 = -1) and return the menu object.
+//
+// Codegen notes that the match depends on (see func_8AB0A950.report.md):
+// - bit 0/1 clears are spelled `&= ~2` (constant folded once, so IDO keeps
+//   `andi` in the first block and hoists `li -3` for the later ones) except the
+//   nine sites that must stay literal `&= 0xFFFE`;
+// - the second slot loop indexes the globals directly (D_8AB16CF8[var_s1] and a
+//   `slot` pointer) and its increments live in the for-update list as
+//   `slot += 0x94, var_s1++`, which is what makes IDO emit
+//   `addiu s0(D_8AB16CF8) ; addiu s2(slot)` in the preheader and put the
+//   `addiu s0,s0,4` in the branch delay slot;
+// - D_8AB16F48[1]/[2] and D_8AB16ED0[1]/[2] masks go through the `node`/`node2`
+//   locals so the following four-argument func_8AC06D8C calls reuse a2/a3;
+// - `func_8004C8C0` returns s32, which puts both D_8AB12690 address temps in v1.
+
+
+
+void *func_8AB0A950(void) {
+    u8 *slot;
+    s32 temp_s0;
+    s32 temp_v0;
+    s32 temp_v0_2;
+    s32 var_s1;
+    void *node;
+    void *node2;
+
+    func_8004C8C0(0x99);
+    D_8AB12690 = 0;
+    D_8AB16F6C = 0x64;
+    slot = D_8AB12CB0;
+    for (var_s1 = 0; var_s1 < 4; var_s1++) {
+        temp_s0 = (D_8AB11D0C[14] >> var_s1) & 0xFF;
+        _bzero(slot, 0x94);
+        if (temp_s0 & 1) {
+            *(s16 *)slot = 1;
+            D_8AB12690 += 1;
+        }
+        slot += 0x94;
+    }
+    temp_v0 = func_8004DC6C(0xE1);
+    func_8004DCFC(temp_v0, 0);
+    temp_v0_2 = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8AB16CF0 = func_8004EB58(temp_v0_2, temp_v0);
+    D_8AB16F78 = func_80040E80(temp_v0_2, &D_8AB112A4);
+    MainPool_FinalizeAllocation(temp_v0_2);
+    func_8AC06E98(D_8AB16CF0);
+    *(u16 *)((u8 *)D_8AB16CF0 + 2) |= 1;
+    *(u16 *)((u8 *)D_8AB16CF0 + 2) |= 2;
+    D_8AB16CF8[0] = func_8AC06D8C(D_8AB16CF0, 0x706C6931);
+    D_8AB16CF8[1] = func_8AC06D8C(D_8AB16CF0, 0x706C6932);
+    D_8AB16CF8[2] = func_8AC06D8C(D_8AB16CF0, 0x706C6933);
+    D_8AB16CF8[3] = func_8AC06D8C(D_8AB16CF0, 0x706C6934);
+    for (var_s1 = 0, slot = D_8AB12CB0; var_s1 < 4; slot += 0x94, var_s1++) {
+        *(u16 *)((u8 *)D_8AB16CF8[var_s1] + 2) &= 0xFFFE;
+        if (*(s16 *)slot != 0) {
+            *(u16 *)((u8 *)D_8AB16CF8[var_s1] + 2) |= 1;
+        }
+        func_8AB01378((s32)D_8AB16CF0, D_8AB16CF8[var_s1], (s16)var_s1);
+    }
+    D_8AB16F48[0] = func_8AC06D8C(D_8AB16CF0, 0x77686F31);
+    D_8AB16F48[1] = func_8AC06D8C(D_8AB16CF0, 0x77686F32);
+    D_8AB16F48[2] = func_8AC06D8C(D_8AB16CF0, 0x77686F33);
+    D_8AB16F48[3] = func_8AC06D8C(D_8AB16CF0, 0x77686F34);
+    *(u16 *)((u8 *)D_8AB16F48[0] + 2) &= ~2;
+    node = D_8AB16F48[1];
+    *(u16 *)((u8 *)node + 2) &= ~2;
+    node2 = D_8AB16F48[2];
+    *(u16 *)((u8 *)node2 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16F48[3] + 2) &= ~2;
+    D_8AB16ED0[0] = func_8AC06D8C(D_8AB16CF0, 0x72656131, node, node2);
+    D_8AB16ED0[1] = func_8AC06D8C(D_8AB16CF0, 0x72656132);
+    D_8AB16ED0[2] = func_8AC06D8C(D_8AB16CF0, 0x72656133);
+    D_8AB16ED0[3] = func_8AC06D8C(D_8AB16CF0, 0x72656134);
+    *(u16 *)((u8 *)D_8AB16ED0[0] + 2) &= ~2;
+    node = D_8AB16ED0[1];
+    *(u16 *)((u8 *)node + 2) &= ~2;
+    node2 = D_8AB16ED0[2];
+    *(u16 *)((u8 *)node2 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16ED0[3] + 2) &= ~2;
+    D_8AB16EE0 = func_8AC06D8C(D_8AB16CF0, 0x71776669, node, node2);
+    *(u16 *)((u8 *)D_8AB16EE0 + 2) &= 0xFFFE;
+    D_8AB16EE4 = func_8AC06D8C(D_8AB16CF0, 0x65666374, &D_8AB16EE0);
+    func_8AB00548();
+    func_8004E308(D_8AB16EE4, func_8AC033B8, &D_8AB16508);
+    D_8AB16D08 = func_8AC06D8C(D_8AB16CF0, 0x6D6F6E64);
+    func_8004E308(D_8AB16D08, TextLabel_DrawCallback, D_8AB16D10);
+    D_8AB11D00 = func_8AC06D8C(D_8AB16CF0, 0x6D657373);
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= 0xFFFE;
+    func_8004E308(D_8AB11D00, TextLabel_DrawCallback, D_8AB126A8);
+    D_8AB12688 = func_8AC06D8C(D_8AB16CF0, 0x72756C65);
+    *(u16 *)((u8 *)D_8AB12688 + 2) &= 0xFFFE;
+    func_8004E308(D_8AB12688, TextLabel_DrawCallback, &D_8AB12BA8);
+    D_8AB16F58 = func_8AC06D8C(D_8AB16CF0, 0x74696D77);
+    *(u16 *)((u8 *)D_8AB16F58 + 2) |= 1;
+    D_8AB16F5C = func_8AC06D8C(D_8AB16CF0, 0x6174696D, &D_8AB16F58);
+    func_8004E308(D_8AB16F5C, TextNumber_DrawCallback, &D_8AB16F6C);
+    func_8AC02C80(D_8AB16CF0, 0x71777531, 0x71777532, &D_8AB16EE8);
+    func_8AC02C80(D_8AB16CF0, 0x71777331, 0x71777332, &D_8AB16F18);
+    D_8AB16E10 = func_8AC06D8C(D_8AB16CF0, 0x70696331);
+    D_8AB16E14 = func_8AC06D8C(D_8AB16CF0, 0x70696332);
+    D_8AB16E18 = func_8AC06D8C(D_8AB16CF0, 0x70696333);
+    D_8AB16E1C = func_8AC06D8C(D_8AB16CF0, 0x70696334);
+    D_8AB16E30 = func_8AC06D8C(D_8AB16CF0, 0x66696E31);
+    D_8AB16E34 = func_8AC06D8C(D_8AB16CF0, 0x66696E32);
+    D_8AB16E38 = func_8AC06D8C(D_8AB16CF0, 0x66696E33);
+    func_8004E308(D_8AB16E30, func_8AB01C04, NULL);
+    func_8004E308(D_8AB16E34, func_8AB01C04, NULL);
+    func_8004E308(D_8AB16E38, func_8AB01C04, NULL);
+    D_8AB16E3C = func_8AC06D8C(D_8AB16CF0, 0x71697431);
+    D_8AB16E40 = func_8AC06D8C(D_8AB16CF0, 0x71697432);
+    D_8AB16E44 = func_8AC06D8C(D_8AB16CF0, 0x71697433);
+    D_8AB16E48 = func_8AC06D8C(D_8AB16CF0, 0x71697434);
+    D_8AB16E20[0] = func_8AC06D8C(D_8AB16CF0, 0x6E6F6B31);
+    D_8AB16E24 = func_8AC06D8C(D_8AB16CF0, 0x6E6F6B32);
+    D_8AB16E28 = func_8AC06D8C(D_8AB16CF0, 0x6E6F6B33);
+    D_8AB16E20[3] = func_8AC06D8C(D_8AB16CF0, 0x6E6F6B34);
+    func_8004E308(D_8AB16E20[0], TextNumber_DrawCallback, &D_8AB12CB2);
+    func_8004E308(D_8AB16E24, TextNumber_DrawCallback, &D_8AB12D46);
+    func_8004E308(D_8AB16E28, TextNumber_DrawCallback, &D_8AB12DDA);
+    func_8004E308(D_8AB16E2C, TextNumber_DrawCallback, &D_8AB12E6E);
+    D_8AB16F64 = func_8AC06D8C(D_8AB16CF0, 0x676F6F6F);
+    D_8AB16E4C = func_8AC06D8C(D_8AB16CF0, 0x61627531);
+    func_8AC05E40(D_8AB16CF0, 0x61627531, &D_8AB16E50);
+    func_8AC06400(&D_8AB16E50, D_8AB16E4C);
+    *(u16 *)((u8 *)D_8AB16E10 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E14 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E18 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E1C + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E20[0] + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E24 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E28 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E2C + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E30 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AB16E34 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AB16E38 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AB16E3C + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16E40 + 2) &= ~2;
+    node = D_8AB16E44;
+    *(u16 *)((u8 *)D_8AB16E44 + 2) &= ~2;
+    node = D_8AB16E48;
+    *(u16 *)((u8 *)D_8AB16E48 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB16D08 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AB16D08 + 2) &= ~2;
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= 0xFFFE;
+    D_8AB16F70 = 0;
+    D_8AB16F74 = 0;
+    D_8AB16F68 = 0;
+    *(s32 *)(D_8AB11D0C + 0x10) = 0;
+    D_8AB16F60 = -1;
+    return D_8AB16CF0;
+}
 
 extern void *D_8AB13F28;
 extern void func_8AB0148C(s16);
@@ -363,7 +605,129 @@ s32 func_8AB0B96C(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22FAD0/func_8AB0BACC.s")
+extern void func_8AB00BA4();
+extern void func_8AB04AE4(void);
+extern void func_8AB00478(void);
+extern s32 func_8AB023EC(s32);
+extern s32 func_8AB0B54C(s32);
+extern s32 func_8AB0C414(s32);
+extern void func_8004C594(s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern u8 D_8AB126A8[];
+extern s16 D_8AB12CB2;
+extern void *D_8AB11D00;
+extern void *D_8AB16D08;
+extern void *D_8AB16F48[];
+extern void *D_8AB16F4C;
+extern void *D_8AB16F50;
+extern void *D_8AB16F54;
+extern s16 D_8AB12692;
+extern s16 D_8AB12694;
+extern s16 D_8AB12698;
+extern s16 D_8AB13F2C;
+extern s16 D_8AB16F6C;
+extern s32 D_8AB16F68;
+extern s32 D_8AB16F70;
+extern s16 D_8AB16F74;
+extern s16 D_8AB16F80;
+
+
+
+s32 func_8AB0BACC(s32 arg0) {
+    s16 *D_8AB16F80_ptr = &D_8AB16F80;
+    s32 sp18;
+    s16 temp_v0;
+    s32 var_v0;
+    void **D_8AB16F48_ptr = D_8AB16F48;
+    void **D_8AB16F4C_ptr = &D_8AB16F4C;
+    void **D_8AB16F54_ptr = &D_8AB16F54;
+    void **D_8AB16F50_ptr = &D_8AB16F50;
+
+    sp18 = 0x33;
+    switch (arg0) {
+    case 0:
+        func_8AB00BA4(0x10006, 0, 0);
+        (*D_8AB16F80_ptr) = 0;
+        if ((D_8AB12694 + D_8AB12698) > 0) {
+            *(u16 *)((u8 *)D_8AB11D00 + 2) = (u16)(*(u16 *)((u8 *)D_8AB11D00 + 2) | 1);
+            func_8004C594(2, D_8AB12692 + 1);
+            if (D_8AB16F68 != 0) {
+                func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x283);
+            } else {
+                /* D_8AB13F2C indexes a 148-byte record; the switch subject is
+                   the s16 at that record's offset 0.  The non-default cases are
+                   the values 5, 10, ... 50 selecting message ids 0x285..0x28B. */
+                switch (*(s16 *)((u8 *)&D_8AB12CB2 + D_8AB13F2C * 0x94)) {
+                case 5:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x285);
+                    break;
+                case 10:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x286);
+                    break;
+                case 15:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x287);
+                    break;
+                case 20:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x288);
+                    break;
+                case 30:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x289);
+                    break;
+                case 40:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x28A);
+                    break;
+                case 50:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x28B);
+                    break;
+                default:
+                    func_8004C8A0(D_8AB126A8, 0x100, 0x3A, func_8AB023EC(9) + 0x184);
+                    break;
+                }
+            }
+        } else {
+            *(u16 *)((u8 *)D_8AB11D00 + 2) = (u16)(*(u16 *)((u8 *)D_8AB11D00 + 2) & 0xFFFE);
+        }
+        func_8AB04AE4();
+        *(u16 *)((u8 *)D_8AB16D08 + 2) = (u16)(*(u16 *)((u8 *)D_8AB16D08 + 2) & 0xFFFE);
+        *(u16 *)((u8 *)(*D_8AB16F48_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB16F48_ptr) + 2) & 0xFFFD);
+        *(u16 *)((u8 *)(*D_8AB16F4C_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB16F4C_ptr) + 2) & 0xFFFD);
+        *(u16 *)((u8 *)(*D_8AB16F50_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB16F50_ptr) + 2) & 0xFFFD);
+        *(u16 *)((u8 *)(*D_8AB16F54_ptr) + 2) = (u16)(*(u16 *)((u8 *)(*D_8AB16F54_ptr) + 2) & 0xFFFD);
+        func_8AB00478();
+        break;
+    case 1:
+        temp_v0 = (*D_8AB16F80_ptr) + 1;
+        if (D_8AB16F68 != 0) {
+            if (temp_v0 >= 0x3C) {
+                (*D_8AB16F80_ptr) = temp_v0;
+                var_v0 = func_8AB0C414(0);
+                goto block_31;
+            }
+            (*D_8AB16F80_ptr) = temp_v0;
+            if ((temp_v0 >= 0x14) && (D_8AB16F70 != 0) && (D_8AB16F74 > 0)) {
+                D_8AB16F6C -= 1;
+                if (D_8AB16F6C < 0) {
+                    D_8AB16F6C = 0;
+                }
+                D_8AB16F74 -= 1;
+                if (D_8AB16F74 <= 0) {
+                    D_8AB16F70 = 0;
+                }
+                var_v0 = func_8AB0B54C(0x33);
+                goto block_31;
+            }
+        } else {
+            (*D_8AB16F80_ptr) = temp_v0;
+            if (temp_v0 >= 0x2D) {
+                var_v0 = func_8AB0C414(0);
+block_31:
+                sp18 = var_v0;
+            }
+        }
+        break;
+    }
+    return sp18;
+}
 
 extern u8 D_8AB16D10[];
 extern s16 D_8AB16F82;

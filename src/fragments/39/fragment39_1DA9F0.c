@@ -278,7 +278,115 @@ s32 func_88A01018(u8 arg0) {
     return index;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA9F0/func_88A01074.s")
+extern u8 *D_88A01C64;
+extern s32 func_8800005C(void);
+extern u8 func_8006378C(u8);
+extern s32 func_88A00FD4(u8);
+extern s32 GbSave_GetRecordCapacity(s32);
+
+
+
+s32 func_88A01074(u8 arg0, u8 arg1, s32 arg2) {
+    u8 *table;
+    u16 remaining;
+    u16 limit;
+    u8 flag;
+    u8 found;
+    u8 count;
+    s32 idx;
+    u32 i;
+
+    flag = 0;
+    remaining = arg1;
+    if (func_8800005C() == 0 && arg2 == 0) {
+        idx = func_88A00FD4(func_8006378C(arg0));
+        switch (idx) {
+        case 0:
+            limit = 20;
+            count = *(D_88A01C64 + idx + 1);
+            break;
+        case 1:
+            limit = 12;
+            count = *(D_88A01C64 + idx + 1);
+            break;
+        case 2:
+            count = *(D_88A01C64 + idx + 1);
+            flag = 1;
+            limit = count;
+            break;
+        case 3:
+            limit = 25;
+            count = *(D_88A01C64 + idx + 1);
+            break;
+        default:
+            count = *(D_88A01C64 + idx + 1);
+            break;
+        }
+        if (count >= limit) {
+            table = D_88A01C64;
+            remaining = 0;
+            table += D_88A01C64[idx + 5] * 2;
+            table += 9;
+        }
+    } else {
+        switch (arg2) {
+        case 0:
+            limit = 20;
+            if (D_88A01C64[0] >= limit) {
+                remaining = 0;
+                table = D_88A01C64 + 9;
+            }
+            break;
+        case 1:
+            limit = GbSave_GetRecordCapacity(0x22);
+            if (D_88A01C64[0xEF] >= limit) {
+                remaining = 0;
+                table = *(u8 **)(D_88A01C64 + 0xF0);
+            }
+            break;
+        case 2:
+            limit = func_80053230(0x12) & 0xFFFF;
+            if (D_88A01C64[0xF4] >= limit) {
+                remaining = 0;
+                table = *(u8 **)(D_88A01C64 + 0xF8);
+            }
+            break;
+        case 3:
+            limit = func_80053230(0x12) & 0xFFFF;
+            if (D_88A01C64[0xFC] >= limit) {
+                remaining = 0;
+                table = *(u8 **)(D_88A01C64 + 0x100);
+            }
+            break;
+        }
+    }
+    do {
+        if (remaining) {
+            break;
+        }
+        found = 0;
+        for (i = 0; i < limit; i++) {
+            if (arg0 == table[0]) {
+                found = 1;
+                remaining = (remaining - table[1] + 0x63) & 0xFFFF;
+            }
+            table += 2;
+        }
+        if (found == 0) {
+            if (flag != 0) {
+                remaining = arg1;
+            }
+        } else {
+            u32 keep = remaining;
+            if (arg1 < remaining) {
+                remaining = arg1;
+            } else {
+                remaining = keep;
+            }
+        }
+    } while (0);
+    return remaining & 0xFF;
+}
 
 // Adds arg1 to byte 0, byte arg0 + 1 and bytes arg0 + 6 through 8 of *D_88A01C64.
 void func_88A013E8(s32 arg0, s8 arg1) {

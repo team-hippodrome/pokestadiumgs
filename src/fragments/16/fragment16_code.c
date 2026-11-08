@@ -185,7 +185,38 @@ void func_820006B8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_8200070C.s")
+typedef struct {
+    /* 0x00 */ s16 mode;
+    /* 0x02 */ u16 flags;
+    /* 0x04 */ s16 counter;
+    /* 0x06 */ s16 alpha;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+} Fragment16FadeState;
+static Fragment16FadeState sFadeState;
+extern s16 D_82001EA0;
+extern s16 D_82001EA8;
+extern s16 D_82001EAA;
+extern s32 func_800061EC(void);
+
+
+s32 func_8200070C(void) {
+    Fragment16FadeState *fade = &sFadeState;
+
+    _bzero(&D_82001EA0, 0xC);
+    fade->mode = 0;
+    fade->counter = 0;
+    fade->alpha = 0;
+    D_82001EA8 = 0x140;
+    if (func_8003514C() == 0) {
+        D_82001EAA = 0x178;
+    } else {
+        D_82001EAA = 0x141;
+    }
+    if (func_800061EC()) {
+        fade->flags |= 1;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -222,14 +253,6 @@ void Fragment16_DrawFadingOverlay(void) {
 // dispatches on mode and steps counter each frame; Fragment16_DrawFadingOverlay draws
 // the overlay quad with alpha as the env-color alpha. The initializer is dead at
 // runtime: func_8200070C bzeroes 12 bytes at this address during fragment setup.
-typedef struct {
-    /* 0x00 */ s16 mode;    // sequence selector; func_8200182C tests for 5 (finished)
-    /* 0x02 */ u16 flags;   // bit 0 gates the fade starters; bit 1 set when mode 1 covers
-    /* 0x04 */ s16 counter; // stepped by func_82000794
-    /* 0x06 */ s16 alpha;   // overlay env-color alpha; 255 = fully covered
-    /* 0x08 */ s16 unk_08;  // overlay draw args for func_8004D19C; func_8200070C stores 320 and 321/376
-    /* 0x0A */ s16 unk_0A;
-} Fragment16FadeState;
 static Fragment16FadeState sFadeState = { 1536, 1920, 1280, 1940, 1536, 1952 };
 // IDO pads this object's .data section to 16 bytes, so the retail word at
 // 0x82001EAC (D_82001EAC, the old data-blob head) is carried here: the C-owned

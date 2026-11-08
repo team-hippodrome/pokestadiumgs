@@ -19,11 +19,120 @@ extern struct Fragment53Model D_8650E120[];
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500020.s")
+extern Gfx *D_800D0510;
+extern void *Gfx_AllocDisplayList(s32 arg0);
+extern void func_8003CD84(void);
+extern Vtx D_8650C160[];
+extern s32 D_8650C5E0;
+extern s32 D_8650C728[];
+extern s32 D_8650C744[];
+extern u8 D_8650C348[];
+
+
+
+void func_86500020(s32 arg0, void *arg1)
+{
+  Vtx *vtx;
+  s32 i;
+  s32 j;
+  if (arg0 == 5)
+  {
+    vtx = (Vtx *) Gfx_AllocDisplayList(0xE0);
+    for (i = 0; i < 14; i++)
+    {
+      vtx[i] = ((Vtx *) D_8650C160)[i];
+    }
+    for (j = 0; j < 7; j++)
+    {
+      *((s16 *) (((u8 *) (vtx + D_8650C728[j])) + 2)) = (*((s32 *) (((u8 *) (&D_8650C5E0)) + 0x40))) + 0x23;
+      *((s16 *) (((u8 *) (vtx + D_8650C744[j])) + 2)) = (*((s32 *) (((u8 *) (&D_8650C5E0)) + 0x40))) - 0x23;
+    }
+    gSPVertex(D_800D0510++, vtx, 14, 0);
+    gSPDisplayList(D_800D0510++, D_8650C348);
+    func_8003CD84();
+  }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500354.s")
+extern Gfx *D_800D0510;
+extern void func_8003CD84(void);
+extern Vtx D_8650BFC0;
+extern void *Gfx_AllocDisplayList(s32 arg0);
+extern Gfx D_8650C288[];
+extern s32 D_8650C5E4;
+extern s32 D_8650C814[];
+extern s32 D_8650C830[];
+
+
+
+void func_86500354(s32 arg0, void *arg1)
+{
+  Vtx *vtx;
+  s32 d1; // FAKE: unused; widens the frame to the target's 0x28. diff score 10 without it.
+  s32 sp1C;
+  s32 i;
+  s32 j;
+  struct Fragment53ActorState *st;
+  u32 v;
+  v = *((u32 *) (((u8 *) arg1) + 0x14));
+  if (v < 2)
+  {
+    sp1C = 0;
+  }
+  else
+    if (v < 4)
+  {
+    sp1C = 1;
+  }
+  else
+    if (v < 6)
+  {
+    sp1C = 2;
+  }
+  else
+    if (v < 8)
+  {
+    sp1C = 3;
+  }
+  //!bug: sp1C is read uninitialized when arg1->0x14 >= 8.
+  if (arg0 == 5)
+  {
+    vtx = (Vtx *) Gfx_AllocDisplayList(0xE0);
+    for (i = 0; i < 14; i++)
+    {
+      vtx[i] = (&D_8650BFC0)[i];
+    }
+
+    if (!((*((u32 *) (((u8 *) arg1) + 0x14))) & 1))
+    {
+      st = &D_86511698[sp1C];
+      for (j = 0; j < 7; j++)
+      {
+        *((s16 *) (((u8 *) (vtx + D_8650C830[j])) + 0xA)) = *((s32 *) (((u8 *) (&D_86511698[sp1C])) + 0x60));
+      }
+
+    }
+    else
+    {
+      st = &D_86511698[sp1C];
+      for (j = 0; j < 7; j++)
+      {
+        *((s16 *) (((u8 *) (vtx + D_8650C814[j])) + 0xA)) = *((s32 *) (((u8 *) st) + 0x60));
+      }
+
+    }
+    { Gfx *_g = D_800D0510++; _g->words.w0 = 0xE7000000; _g->words.w1 = 0; }
+    if ((((*((s32 *) (((u8 *) st) + 0x2C))) + 2) >= D_8650C5E4) && ((*((s32 *) (((u8 *) st) + 0x54))) == 3))
+    {
+      { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFB000000; _g->words.w1 = -1U; }
+      { Gfx *_g = D_800D0510++; _g->words.w0 = 0xFCFFFFFF; _g->words.w1 = 0xFFFEF238; }
+    }
+    { Gfx *_g = D_800D0510++; _g->words.w0 = 0x0100E01C; _g->words.w1 = (u32) vtx; }
+    { Gfx *_g = D_800D0510++; _g->words.w0 = 0xDE000000; _g->words.w1 = (u32) D_8650C288; }
+    func_8003CD84();
+  }
+}
 #endif
 
 #ifdef VERSION_US
@@ -39,7 +148,7 @@ extern Vtx D_8650BFD0;
 extern Vtx D_8650BFE0;
 extern Vtx D_8650BFF0;
 extern u8 D_8650DB80[];
-extern Gfx *Gfx_AllocDisplayList(s32);
+extern void *Gfx_AllocDisplayList(s32 arg0);
 extern void func_8003CD84(void);
 
 
@@ -1536,7 +1645,87 @@ s32 Fragment53_UpdateStartState(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86509318.s")
+extern s16 D_8650D3F8;
+extern f32 D_8650D3FC;
+extern s32 D_8650D404;
+extern s32 D_8650DB7C;
+
+
+void func_86509318(void)
+{
+  /* D_8650E120 is the 0x168-stride model array (fields named at 0x28/0xAC/0xB4);
+     D_8650EC60 is the matching node array (fields named at 0x24/0x28/0x2C and the
+     three 0.0f stores at 0x30/0x34/0x38). */
+  struct F53ModelF {
+    u8 pad00[0x28];
+    f32 h;
+    u8 pad2C[0x80];
+    f32 z;
+    u8 padB0[4];
+    f32 x;
+    u8 tail[0xB0];
+  };
+  struct F53NodeF {
+    u8 pad00[0x1D];
+    u8 u;
+    u8 pad1E[6];
+    f32 z;
+    f32 h;
+    f32 x;
+    f32 b30, b34, b38;
+    u8 tail[0x12C];
+  };
+  s32 temp_v0;
+  s32 var_s2;
+  u8 *var_s3;
+  struct F53ModelF *temp_s1;
+  struct F53NodeF *temp_s0;
+  f32 zero;
+  f32 dy;
+  f32 *sc;
+  sc = &D_8650D3FC;
+ zero = *sc; var_s2 = 0; var_s3 = (u8 *) D_86511698; do { if ((*((s32 *) (var_s3 + 0xC))) == 6) {
+      temp_s1 = (struct F53ModelF *)&D_8650E120[var_s2];
+      if (((*((s32 *) (((u8 *) temp_s1) + 0x48))) >> 0x10) >= 0x3C)
+      {
+        temp_s0 = (struct F53NodeF *)&D_8650EC60[var_s2 * 0x168];
+        if (((*((s32 *) (((u8 *) temp_s1) + 0x48))) >> 0x10) == 0x3C)
+        {
+          func_8003F114((u8 *) temp_s0, 0, -1, D_8650DB7C);
+          func_8003F210((u8 *) temp_s0, 0);
+          /* Same address as temp_s0, but written out again: uopt gives this
+             recomputed node pointer an alias class relative to temp_s1, so as1
+             can move the three model loads ahead of the three zero stores in the
+             block below. Reusing temp_s0 here leaves the pointer unclassified and
+             the loads stay under the stores. */
+          *((u8 *) (((u8 *) &D_8650EC60[var_s2 * 0x168]) + 0x1D)) = 0;
+          dy = *sc;
+          zero = dy;
+        }
+        dy = (f32) D_8650D404;
+        temp_v0 = temp_s0->u + 5;
+        if (temp_v0 < 0xFF)
+        {
+          temp_s0->u = temp_v0;
+        }
+        else
+        {
+          temp_s0->u = 0xFF;
+        }
+        temp_s0->b38 = zero;
+        temp_s0->b34 = zero;
+        temp_s0->b30 = zero;
+        temp_s0->x = temp_s1->x;
+        temp_s0->z = temp_s1->z;
+        temp_s0->h = temp_s1->h + dy;
+        *((s16 *) (((u8 *) temp_s0) + 0x1E)) = D_8650D3F8;
+      }
+    }
+    var_s2 += 1;
+    var_s3 += 0x98;
+  }
+  while (var_s2 != 4);
+}
 #endif
 
 #ifdef VERSION_US

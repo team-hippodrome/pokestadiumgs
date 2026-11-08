@@ -42,7 +42,178 @@ s32 func_8AB05A6C(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB05B88.s")
+extern void _bzero(void *, s32);
+extern void *D_8AB11D00;
+extern u8 *D_8AB11D0C;
+extern u8 D_8AB126A8[];
+extern u8 D_8AB12CB0[];
+extern void *D_8AB167A0;
+extern void *D_8AB167A4;
+extern void *D_8AB167A8;
+extern void *D_8AB167AC;
+extern u8 D_8AB167B0[];
+extern void *D_8AB168B0;
+extern void *D_8AB168B4;
+extern void *D_8AB168B8;
+extern void *D_8AB168BC;
+extern void *D_8AB168C0;
+extern void *D_8AB168C4;
+extern void *D_8AB168C8;
+extern void *D_8AB168CC;
+extern void *D_8AB168D0;
+extern u8 D_8AB168D8[];
+extern void *D_8AB16954;
+extern void *D_8AB1695C;
+extern void *D_8AB16960;
+extern void *D_8AB16964;
+extern void *D_8AB16968;
+extern void *D_8AB1696C;
+extern void *D_8AB16970;
+extern void *D_8AB16974;
+extern void *D_8AB16978;
+extern u8 D_8AB16980[];
+extern s32 D_8AB169EC;
+extern void *D_8AB169F8;
+extern void *D_8AB169FC;
+extern void *D_8AB16A00;
+extern void *D_8AB16A04;
+extern void *D_8AB16A08;
+extern void *D_8AB16A0C;
+extern void *D_8AB16A10;
+extern s32 D_8AB16A14;
+extern s16 D_8AB12690;
+extern u8 D_8AB1124C;
+
+extern void func_8AB00B98(u8 *, u32);
+extern void func_8AC06400(void *, void *);
+extern void func_8004E308(void *, s32 (*)(s32, u8 *), u8 *);
+extern void func_8AC05E40(void *, u32, u8 *);
+extern void func_8AC00DF4(void *);
+extern void func_8AC06E98(void *);
+extern void *func_8AC06D8C(void *, u32, ...);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 MainPool_AllocState(s32, s32);
+extern s32 main_pool_get_available();
+extern s32 func_8004DC6C(s32);
+extern s32 func_8004DCFC(s32, s32);
+extern void *func_8004EB58(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern s32 TextLabel_DrawCallback(s32, u8 *);
+extern s32 func_8AC00270(s32, u8 *);
+extern s32 func_8AC0444C(s32, u8 *);
+extern s32 func_8AC0456C(s32, u8 *);
+extern s32 func_8AB05A6C(s32, u8 *);
+extern s32 func_8AC03D24(s32, u8 *);
+
+
+
+void *func_8AB05B88(void) {
+    s32 temp_v0;
+    void **var_s0;
+    void *a2;
+    void *a3;
+    void **ap = &D_8AB167AC;
+    u8 *p;
+
+    _bzero(D_8AB12CB0, 0x250);
+    temp_v0 = func_8004DC6C(0xE0);
+    func_8004DCFC(temp_v0, 0);
+    var_s0 = (void **)MainPool_AllocState(main_pool_get_available(), 0);
+    D_8AB167A0 = func_8004EB58((s32)var_s0, temp_v0);
+    D_8AB16A14 = func_80040E80((s32)var_s0, &D_8AB1124C);
+    MainPool_FinalizeAllocation((s32)var_s0);
+    func_8AC06E98(D_8AB167A0);
+    *(u16 *)((u8 *)D_8AB167A0 + 2) |= 1;
+    *(u16 *)((u8 *)D_8AB167A0 + 2) |= 2;
+    D_8AB167A4 = func_8AC06D8C(D_8AB167A0, 0x6A6F6231);
+    D_8AB167A8 = func_8AC06D8C(D_8AB167A0, 0x6A6F6232);
+    func_8004E308(func_8AC06D8C(D_8AB167A0, 0x6579655F), func_8AC00270, NULL);
+    D_8AB167AC = func_8AC06D8C(D_8AB167A0, 0x6D6F6E64);
+    func_8004E308(D_8AB167AC, TextLabel_DrawCallback, &D_8AB167B0);
+    func_8AB00B98((u8 *)D_8AB167AC, -1U);
+    D_8AB11D00 = func_8AC06D8C(D_8AB167A0, 0x6D657373);
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= 0xFFFE;
+    func_8004E308(D_8AB11D00, TextLabel_DrawCallback, D_8AB126A8);
+    func_8AB00B98((u8 *)D_8AB11D00, -1U);
+    D_8AB168B0 = func_8AC06D8C(D_8AB167A0, 0x70696331);
+    D_8AB168B4 = func_8AC06D8C(D_8AB167A0, 0x70696332);
+    D_8AB168B8 = func_8AC06D8C(D_8AB167A0, 0x70696333);
+    D_8AB168BC = func_8AC06D8C(D_8AB167A0, 0x70696334);
+    D_8AB168C0 = func_8AC06D8C(D_8AB167A0, 0x70636E31);
+    D_8AB168C4 = func_8AC06D8C(D_8AB167A0, 0x70636E32);
+    D_8AB168C8 = func_8AC06D8C(D_8AB167A0, 0x70636E33);
+    D_8AB168CC = func_8AC06D8C(D_8AB167A0, 0x70636E34);
+    D_8AB16964 = func_8AC06D8C(D_8AB167A0, 0x676F6F6F);
+    D_8AB16954 = func_8AC06D8C(D_8AB167A0, 0x63646E62);
+    func_8004E308(D_8AB16954, func_8AB05A6C, NULL);
+    D_8AB1695C = func_8AC06D8C(D_8AB167A0, 0x666B6931);
+    *(u16 *)((u8 *)D_8AB1695C + 2) &= 0xFFFD;
+    D_8AB16960 = func_8AC06D8C(D_8AB167A0, 0x666B6932, &D_8AB1695C);
+    D_8AB16A08 = func_8AC06D8C(D_8AB167A0, 0x57503030);
+    D_8AB16A0C = func_8AC06D8C(D_8AB167A0, 0x57503031);
+    D_8AB16A10 = func_8AC06D8C(D_8AB167A0, 0x57503032);
+    *(u16 *)((u8 *)D_8AB16960 + 2) |= 2;
+    a2 = D_8AB16A0C;
+    *(u16 *)((u8 *)a2 + 2) |= 2;
+    a3 = D_8AB16A10;
+    *(u16 *)((u8 *)a3 + 2) |= 2;
+    D_8AB16968 = func_8AC06D8C(D_8AB167A0, 0x7175736E, a2, a3);
+    *(u16 *)((u8 *)D_8AB16968 + 2) &= 0xFFFD;
+    D_8AB169F8 = func_8AC06D8C(D_8AB167A0, 0x73656E31, &D_8AB16968);
+    func_8004E308(D_8AB169F8, func_8AC0444C, NULL);
+    D_8AB169FC = func_8AC06D8C(D_8AB167A0, 0x73656E32);
+    D_8AB16A00 = func_8AC06D8C(D_8AB167A0, 0x73656E33);
+    D_8AB16A04 = func_8AC06D8C(D_8AB167A0, 0x73656E34);
+    var_s0 = &D_8AB169FC; do {
+        func_8004E308(*var_s0, func_8AC0456C, NULL);
+        var_s0++;
+    } while (var_s0 != &D_8AB16A08);
+    D_8AB16970 = func_8AC06D8C(D_8AB167A0, 0x6D6F6A30);
+    *(s32 *)((u8 *)D_8AB16970 + 0x2C) = 0xFF;
+    *(s32 *)((u8 *)D_8AB16970 + 0x30) = 0xFF;
+    D_8AB16974 = func_8AC06D8C(D_8AB167A0, 0x6D6F6A31);
+    *(s32 *)((u8 *)D_8AB16974 + 0x2C) = 0xFF;
+    *(s32 *)((u8 *)D_8AB16974 + 0x30) = 0xFF;
+    switch ((u32)(*(u16 *)D_8AB11D0C)) {
+    case 1:
+        *(s16 *)((u8 *)D_8AB16974 + 0x26) = 1;
+        break;
+    case 2:
+        *(s16 *)((u8 *)D_8AB16974 + 0x26) = 2;
+        break;
+    case 3:
+        *(s16 *)((u8 *)D_8AB16974 + 0x26) = 3;
+        break;
+    }
+    D_8AB168D0 = func_8AC06D8C(D_8AB167A0, 0x61627531);
+    func_8AC05E40(D_8AB167A0, 0x61627531, D_8AB168D8);
+    func_8AC06400(D_8AB168D8, D_8AB168D0);
+    func_8AC00DF4(D_8AB167A0);
+    D_8AB1696C = func_8AC06D8C(D_8AB167A0, 0x70617070);
+    func_8004E308(D_8AB1696C, func_8AC03D24, NULL);
+    *(s32 *)((u8 *)D_8AB1696C + 0x2C) = -0x2301;
+    *(s32 *)((u8 *)D_8AB1696C + 0x30) = 0xFF;
+    D_8AB16978 = func_8AC06D8C(D_8AB167A0, 0x73636F72);
+    func_8AC05E40(D_8AB167A0, 0x73636F72, D_8AB16980);
+    func_8AC06400(D_8AB16980, D_8AB16978);
+    D_8AB169EC = 0xFF0000C8;
+    *(u16 *)((u8 *)D_8AB16978 + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AB168B0 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168B4 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168B8 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168BC + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168C0 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168C4 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168C8 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB168CC + 2) &= 0xFFFD;
+    p = (u8 *)*ap;
+    *(u16 *)(p + 2) &= 0xFFFE;
+    p = (u8 *)*ap;
+    *(u16 *)(p + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= 0xFFFE;
+    D_8AB12690 = 1;
+    return D_8AB167A0;
+}
 
 extern u8 D_80088E50[];
 extern f32 D_8AB11970;
@@ -852,7 +1023,203 @@ s32 func_8AB07F80(s32 arg0) {
 }
 /* mkdraft:func_8AB07F80 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB080A0.s")
+extern s32 func_8004C8C0(s32);
+extern void _bzero(void *, s32);
+extern s32 func_8004DC6C(s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void *func_8004EB58(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern void MainPool_FinalizeAllocation(s32);
+extern void func_8AC06E98(void *);
+extern void func_8AB01378(void *, u16 *, s16);
+extern s32 func_8AB00548(void);
+extern void func_8AC02C80(void *, s32, s32, void *);
+extern void func_8AC06400(void *, void *);
+extern void func_8AC00DF4(void *);
+extern void func_8AB01C04(void);
+extern s32 TextNumber_DrawCallback(void *);
+extern void func_8AC033B8(void);
+
+extern void *D_8AB16A40;
+extern u16 *D_8AB16A48[4];
+extern u8 *D_8AB16C98[];
+extern u16 *D_8AB16C20[];
+extern u16 *D_8AB16C30;
+extern void *D_8AB16CB8;
+extern void *D_8AB16A58;
+extern void *D_8AB11D00;
+extern void *D_8AB12688;
+extern void *D_8AB16CA8;
+extern u8 D_8AB16C38[];
+extern u8 D_8AB16C68[];
+extern u8 *D_8AB16B60;
+extern u8 *D_8AB16B64;
+extern u8 *D_8AB16B68;
+extern u8 *D_8AB16B6C;
+extern u8 *D_8AB16B70[4];
+extern u8 *D_8AB16B74;
+extern u8 *D_8AB16B78;
+extern u8 *D_8AB16B7C;
+extern void *D_8AB16B8C;
+extern u8 *D_8AB16CB0;
+extern void *D_8AB16B9C;
+extern s32 D_8AB16BA0;
+extern s16 D_8AB12690;
+extern s32 D_8AB16CB4;
+extern s32 D_8AB16CBC;
+extern s32 D_8AB16CC4;
+extern s16 D_8AB16CAC;
+extern u8 D_8AB11284[];
+extern u8 D_8AB16508[];
+extern u8 D_8AB12CB0[];
+extern u8 *D_8AB11D0C;
+extern s16 D_8AB12CB2;
+extern s16 D_8AB12D46;
+extern s16 D_8AB12DDA;
+extern s16 D_8AB12E6E;
+extern s32 D_8AB12BA8;
+extern u8 D_8AB126A8[];
+extern u8 D_8AB16A60[];
+extern u8 *D_8AB16B80;
+extern u8 *D_8AB16B84;
+extern u8 *D_8AB16B88;
+extern u8 *D_8AB16B90;
+extern u8 *D_8AB16B94;
+extern u8 *D_8AB16B98;
+
+
+
+void *func_8AB080A0(void) {
+    s32 i;
+    s32 bit;
+    s32 handle;
+    s32 pool;
+    u8 *temp;
+    u8 *p;
+    s32 m1 = ~1;
+    s32 m2 = ~2;
+
+    func_8004C8C0(0x99);
+    D_8AB16CBC = 0;
+    D_8AB12690 = 0;
+    for (i = 0; i < 4; i++) {
+        bit = (*(u8 *)(D_8AB11D0C + 0xE) >> i) & 0xFF;
+        _bzero(D_8AB12CB0 + i * 0x94, 0x94);
+        p = D_8AB12CB0 + i * 0x94;
+        if (bit & 1) {
+            *(s16 *)p = 1;
+            D_8AB12690 += 1;
+        }
+    }
+    handle = func_8004DC6C(0xE1);
+    func_8004DCFC(handle, 0);
+    i = main_pool_get_available();
+    pool = MainPool_AllocState(i, 0);
+    D_8AB16A40 = func_8004EB58(pool, handle);
+    D_8AB16CC4 = func_80040E80(pool, D_8AB11284);
+    MainPool_FinalizeAllocation(pool);
+    func_8AC06E98(D_8AB16A40);
+    *(u16 *)((u8 *)D_8AB16A40 + 2) |= 1;
+    *(u16 *)((u8 *)D_8AB16A40 + 2) |= 2;
+    D_8AB16A48[0] = func_8AC06D8C(D_8AB16A40, 0x706C6931);
+    D_8AB16A48[1] = func_8AC06D8C(D_8AB16A40, 0x706C6932);
+    D_8AB16A48[2] = func_8AC06D8C(D_8AB16A40, 0x706C6933);
+    D_8AB16A48[3] = func_8AC06D8C(D_8AB16A40, 0x706C6934);
+    for (i = 0; i != 4; i++) {
+        D_8AB16A48[i][1] &= m1;
+        if (*(s16 *)(D_8AB12CB0 + i * 0x94) != 0) {
+            D_8AB16A48[i][1] |= 1;
+        }
+        func_8AB01378(D_8AB16A40, D_8AB16A48[i], i);
+    }
+    D_8AB16C98[0] = func_8AC06D8C(D_8AB16A40, 0x77686F31);
+    D_8AB16C98[1] = func_8AC06D8C(D_8AB16A40, 0x77686F32);
+    D_8AB16C98[2] = func_8AC06D8C(D_8AB16A40, 0x77686F33);
+    D_8AB16C98[3] = func_8AC06D8C(D_8AB16A40, 0x77686F34);
+    *(u16 *)(D_8AB16C98[0] + 2) &= m2;
+    *(u16 *)(D_8AB16C98[1] + 2) &= m2;
+    *(u16 *)(D_8AB16C98[2] + 2) &= m2;
+    *(u16 *)(D_8AB16C98[3] + 2) &= m2;
+    D_8AB16C20[0] = func_8AC06D8C(D_8AB16A40, 0x72656131);
+    D_8AB16C20[1] = func_8AC06D8C(D_8AB16A40, 0x72656132);
+    D_8AB16C20[2] = func_8AC06D8C(D_8AB16A40, 0x72656133);
+    D_8AB16C20[3] = func_8AC06D8C(D_8AB16A40, 0x72656134);
+    D_8AB16C20[0][1] &= m2;
+    D_8AB16C20[1][1] &= m2;
+    D_8AB16C20[2][1] &= m2;
+    D_8AB16C20[3][1] &= m2;
+    D_8AB16C30 = func_8AC06D8C(D_8AB16A40, 0x71776669);
+    *(u16 *)((u8 *)D_8AB16C30 + 2) &= m1;
+    D_8AB16CB8 = func_8AC06D8C(D_8AB16A40, 0x65666374);
+    func_8AB00548();
+    func_8004E308(D_8AB16CB8, &func_8AC033B8, D_8AB16508);
+    temp = func_8AC06D8C(D_8AB16A40, 0x6D6F6E64);
+    D_8AB16A58 = temp;
+    func_8004E308(D_8AB16A58, &TextLabel_DrawCallback, D_8AB16A60);
+    temp = func_8AC06D8C(D_8AB16A40, 0x6D657373);
+    D_8AB11D00 = temp;
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= m1;
+    func_8004E308(D_8AB11D00, &TextLabel_DrawCallback, D_8AB126A8);
+    temp = func_8AC06D8C(D_8AB16A40, 0x72756C65);
+    D_8AB12688 = temp;
+    *(u16 *)((u8 *)D_8AB12688 + 2) &= m1;
+    func_8004E308(D_8AB12688, &TextLabel_DrawCallback, &D_8AB12BA8);
+    temp = func_8AC06D8C(D_8AB16A40, 0x74696D77);
+    D_8AB16CA8 = temp;
+    *(u16 *)((u8 *)D_8AB16CA8 + 2) &= m1;
+    func_8AC02C80(D_8AB16A40, 0x71777531, 0x71777532, &D_8AB16C38);
+    func_8AC02C80(D_8AB16A40, 0x71777331, 0x71777332, &D_8AB16C68);
+    D_8AB16B60 = func_8AC06D8C(D_8AB16A40, 0x70696331);
+    D_8AB16B64 = func_8AC06D8C(D_8AB16A40, 0x70696332);
+    D_8AB16B68 = func_8AC06D8C(D_8AB16A40, 0x70696333);
+    D_8AB16B6C = func_8AC06D8C(D_8AB16A40, 0x70696334);
+    D_8AB16B80 = func_8AC06D8C(D_8AB16A40, 0x66696E31);
+    D_8AB16B84 = func_8AC06D8C(D_8AB16A40, 0x66696E32);
+    D_8AB16B88 = func_8AC06D8C(D_8AB16A40, 0x66696E33);
+    func_8004E308(D_8AB16B80, &func_8AB01C04, NULL);
+    func_8004E308(D_8AB16B84, &func_8AB01C04, NULL);
+    func_8004E308(D_8AB16B88, &func_8AB01C04, NULL);
+    D_8AB16B8C = func_8AC06D8C(D_8AB16A40, 0x71697431);
+    D_8AB16B90 = func_8AC06D8C(D_8AB16A40, 0x71697432);
+    D_8AB16B94 = func_8AC06D8C(D_8AB16A40, 0x71697433);
+    D_8AB16B98 = func_8AC06D8C(D_8AB16A40, 0x71697434);
+    D_8AB16B70[0] = func_8AC06D8C(D_8AB16A40, 0x6E6F6B31);
+    D_8AB16B74 = func_8AC06D8C(D_8AB16A40, 0x6E6F6B32);
+    D_8AB16B78 = func_8AC06D8C(D_8AB16A40, 0x6E6F6B33);
+    D_8AB16B70[3] = func_8AC06D8C(D_8AB16A40, 0x6E6F6B34);
+    func_8004E308(D_8AB16B70[0], &TextNumber_DrawCallback, &D_8AB12CB2);
+    func_8004E308(D_8AB16B74, &TextNumber_DrawCallback, &D_8AB12D46);
+    func_8004E308(D_8AB16B78, &TextNumber_DrawCallback, &D_8AB12DDA);
+    func_8004E308(D_8AB16B7C, &TextNumber_DrawCallback, &D_8AB12E6E);
+    D_8AB16CB0 = func_8AC06D8C(D_8AB16A40, 0x676F6F6F);
+    D_8AB16B9C = func_8AC06D8C(D_8AB16A40, 0x61627531);
+    func_8AC05E40(D_8AB16A40, 0x61627531, &D_8AB16BA0);
+    func_8AC06400(&D_8AB16BA0, D_8AB16B9C);
+    func_8AC00DF4(D_8AB16A40);
+    *(u16 *)(D_8AB16B60 + 2) &= m2;
+    *(u16 *)(D_8AB16B64 + 2) &= m2;
+    *(u16 *)(D_8AB16B68 + 2) &= m2;
+    *(u16 *)(D_8AB16B6C + 2) &= m2;
+    *(u16 *)(D_8AB16B70[0] + 2) &= m2;
+    *(u16 *)(D_8AB16B74 + 2) &= m2;
+    *(u16 *)(D_8AB16B78 + 2) &= m2;
+    *(u16 *)(D_8AB16B7C + 2) &= m2;
+    *(u16 *)(D_8AB16B80 + 2) &= m1;
+    *(u16 *)(D_8AB16B84 + 2) &= m1;
+    *(u16 *)(D_8AB16B88 + 2) &= m1;
+    *(u16 *)((u8 *)D_8AB16B8C + 2) &= m2;
+    *(u16 *)(D_8AB16B90 + 2) &= m2;
+    *(u16 *)(D_8AB16B94 + 2) &= m2;
+    *(u16 *)(D_8AB16B98 + 2) &= m2;
+    *(u16 *)((u8 *)D_8AB16A58 + 2) &= m1;
+    *(u16 *)((u8 *)D_8AB16A58 + 2) &= m2;
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= m1;
+    D_8AB16CB4 = 0;
+    *(s32 *)(D_8AB11D0C + 0x10) = 0;
+    D_8AB16CAC = -1;
+    return D_8AB16A40;
+}
 
 
 
@@ -913,7 +1280,7 @@ s32 func_8AB0896C(s32 arg0) {
     return arg0;
 }
 
-extern s32 D_8AB16A40;
+extern void *D_8AB16A40;
 extern void func_800503A4(u8 *arg0);
 extern s32 func_8AB09A28(s32 arg0);
 // Unprototyped on purpose: the file's own matched definition is
@@ -952,7 +1319,7 @@ void func_8AB08B14(s32 arg0) {
     extern s32 func_8AB0A720(s32);
     extern s32 func_8AB0A8D4(s32);
 
-    func_800503A4(D_8AB16A40);
+    func_800503A4((s32)D_8AB16A40);
     switch (arg0) {
         case 19:
             func_8AB08C6C(2);
@@ -1153,7 +1520,80 @@ s32 func_8AB08F58(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB090B8.s")
+extern void func_8004C594(s32, s32);
+extern void func_8AB00478(void);
+extern void func_8AB04AE4(void);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_8AB00BA4();
+extern u8 D_8AB126A8[];
+extern void *D_8AB11D00;
+extern s16 D_8AB12694;
+extern s16 D_8AB12698;
+extern s32 D_8AB11280;
+extern s32 D_8AB16CC0;
+extern s16 D_8AB16CCA;
+extern s32 D_8AB16CB4;
+extern s32 D_8AB16CBC;
+extern void *D_8AB16A58;
+extern u8 *D_8AB16C98[];
+extern s32 func_8AB09A28(s32);
+
+
+
+s32 func_8AB090B8(s32 mode) {
+    s16 *timer = &D_8AB16CCA;
+    s32 delay = 24;
+    s16 elapsed;
+    s32 i;
+
+    switch (mode) {
+    case 0:
+        func_8AB00BA4(0x10006, 0, 0);
+        D_8AB16CC0 = 0;
+        *timer = 0;
+        if (D_8AB12694 + D_8AB12698 > 0) {
+            *(u16 *)((u8 *)D_8AB11D00 + 2) |= 1;
+            func_8004C594(2, D_8AB12694 + 1);
+            if (D_8AB16CB4 != 0) {
+                func_8004C8A0(D_8AB126A8, 256, 58, 398);
+            } else if (D_8AB11280 != 0) {
+                func_8004C8A0(D_8AB126A8, 256, 58, 397);
+            } else if (D_8AB16CBC != 0) {
+                func_8004C8A0(D_8AB126A8, 256, 57, 754);
+            } else {
+                func_8004C8A0(D_8AB126A8, 256, 58, func_8AB023EC(9) + 388);
+            }
+        } else {
+            *(u16 *)((u8 *)D_8AB11D00 + 2) &= ~1;
+        }
+        func_8AB04AE4();
+        *(u16 *)((u8 *)D_8AB16A58 + 2) &= ~1;
+        // D_8AB16C98 is the first of four consecutive pointer globals
+        // (0x8AB16C98..0x8AB16CA4). Indexing one array lets ugen unroll the loop
+        // into the four clears; func_8AB0A074 above uses the same array-loop form
+        // on D_8AB16C20.
+        for (i = 0; i < 4; i++) {
+            *(u16 *)(D_8AB16C98[i] + 2) &= ~2;
+        }
+        func_8AB00478();
+        break;
+    case 1:
+        elapsed = *timer + 1;
+        if (D_8AB16CB4 != 0) {
+            *timer = elapsed;
+            if (elapsed >= 60) {
+                delay = func_8AB09A28(0);
+            }
+        } else {
+            *timer = elapsed;
+            if (elapsed >= 45) {
+                delay = func_8AB09A28(0);
+            }
+        }
+        break;
+    }
+    return delay;
+}
 
 extern u8 D_8AB16A60[];
 extern s16 D_8AB16CCC;

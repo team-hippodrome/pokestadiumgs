@@ -1270,9 +1270,70 @@ void func_800277F0(u16 resource_id, void *context) {
     func_8002781C(resource_id, 0, context);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/23D10/func_8002781C.s")
+extern void func_80027BD4(u16, u8, ResourceContext_80027774 *); /* linker alias of Audio_BuildAndDispatchSoundEvent; u8 2nd param = in-place narrowing */
+extern void func_80027E30(void);
+extern void func_80027F4C(void);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/23D10/func_800278C0.s")
+/* include/229E0.h declares func_8002781C variadic so func_800277C4's
+ * two-argument call leaves a2 untouched (retail does the same). IDO accepts
+ * this fixed three-parameter definition under that variadic prototype; gcc
+ * does not, so the host syntax check sees the function under another name.
+ * Nothing in this file calls func_8002781C after this definition. */
+#ifdef CC_CHECK
+#define func_8002781C func_8002781C_cc_check
+#endif
+
+
+
+void func_8002781C(u16 arg0, u8 arg1, void *arg2) {
+    AudioChannelEvent event;
+
+    event.resource = arg2;
+    event.scale = 1.0f;
+    switch (arg0) {
+        case 0xFFF:
+            func_80027E30();
+            return;
+        case 0xFFE:
+            func_80027F4C();
+            return;
+        case 0xFFD:
+            func_80027F4C();
+            func_80027E30();
+            return;
+        default:
+            event.kind = 0;
+            if (arg1 >= 4) arg1 = 3;
+            func_80027BD4(arg0, arg1, &event);
+            return;
+    }
+}
+
+extern f64 D_800A3A00, D_800A3A08, D_800A3A10;
+extern void func_80027BD4(u16, u8, ResourceContext_80027774 *); /* linker alias of Audio_BuildAndDispatchSoundEvent */
+
+
+
+void func_800278C0(u16 channel, u8 type, void *resource, f32 pitch) {
+    ResourceContext_80027774 context;
+
+    context.resource = resource;
+    context.kind = 0;
+    context.scale = pitch;
+    if (channel == 0x4000) {
+        context.scale = (pitch * 0.5) + 0.25;
+        switch (type) {
+        case 0: context.scale -= D_800A3A00; break;
+        case 1: context.scale += D_800A3A08; break;
+        case 2: break;
+        case 3: context.scale -= D_800A3A10; break;
+        }
+    }
+    if (type >= 4) {
+        type = 3;
+    }
+    func_80027BD4(channel, type, &context);
+}
 
 void Audio_PlayDefaultSound(u16 id) {
     ResourceContext_80027774 context;

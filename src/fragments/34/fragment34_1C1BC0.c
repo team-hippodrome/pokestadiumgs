@@ -108,7 +108,103 @@ s16 func_885047B4(u8 *arg0) {
     return ret;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88504828.s")
+extern void func_8003F018(void *arg0);
+extern void func_8003F114(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern u8 D_88523008[];
+extern s8 D_8852300C[];
+extern s32 D_88523004;
+
+// Fills the four slot records in D_885229B0 (one per player-info entry at D_8850D678) with the
+// entry index and its func_885047B4 readiness code. The entry selected by D_8852300C[0] takes
+// slot 0; every other usable entry takes the next slot counted by the s8 counter D_88523008.
+// The inner switch maps the player's game-port byte (info[1]) to the savedata slot index at
+// +0x190 (Stadium 1 Trade_SetupBoxSlots, src/fragments/trade_machine/trade_machine_28ED00.c).
+// Finally each of the D_88523008 active records gets its graph node at +0x28 attached and
+// initialised through func_8003F018/func_8003F114 and stamped with its loop index.
+//
+// Preconditions outside this snippet (already above the GLOBAL_ASM pragma in
+// fragment34_1C1BC0.c): the unk_D_885229B0 typedef + `extern unk_D_885229B0 D_885229B0[];`,
+// `extern u8 D_8850D678[];` and the func_88504704 / func_885047B4 definitions.
+
+
+void func_88504828(void) {
+    unk_D_885229B0 *rec;
+    u8 *info;
+    u8 *node;
+    s32 i;
+    s32 readiness;
+
+    rec = D_885229B0;
+    for (i = 0; i < 4; i++, rec++) {
+        *(s32 *)((u8 *)rec + 0x0) = 0;
+        *(s16 *)((u8 *)rec + 0x4) = -1;
+        *(s32 *)((u8 *)rec + 0x8) = 0;
+    }
+
+    func_88504704();
+    // FAKE: byte store through the u8 array declaration instead of the s8 scalar the rest of the
+    // body reads through. Same store, but it keeps the constant 1 in its own scratch register;
+    // with `*(s8 *)D_88523008 = 1;` IDO shares that register with the case-3 constant and shifts
+    // the whole loop-2/loop-3 coloring (diff score 595, vs 0 with this spelling).
+    D_88523008[0] = 1;
+
+    for (i = 0, info = D_8850D678; i < 4; i++, info += 0x14) {
+        readiness = func_885047B4(info);
+        if (readiness != -1) {
+            if (i == *D_8852300C) {
+                rec = D_885229B0;
+            } else {
+                // The subscript form (not an explicit `count * 0x194` byte offset) fixes the
+                // temp-creation order: index temp t8 first, multiply chain after.
+                rec = &D_885229B0[((s8 *)D_88523008)[0]++];
+            }
+            *(s16 *)((u8 *)rec + 0x4) = i;
+            *(s32 *)((u8 *)rec + 0x8) = readiness;
+            switch (readiness) {
+                case 0:
+                case 2:
+                case 3:
+                case 4:
+                    switch (*(u8 *)(info + 1)) {
+                        case 1:
+                            *(s16 *)((u8 *)rec + 0x190) = 6;
+                            break;
+                        case 2:
+                            *(s16 *)((u8 *)rec + 0x190) = 5;
+                            break;
+                        case 3:
+                            *(s16 *)((u8 *)rec + 0x190) = 1;
+                            break;
+                        case 4:
+                            *(s16 *)((u8 *)rec + 0x190) = 8;
+                            break;
+                        case 5:
+                            *(s16 *)((u8 *)rec + 0x190) = 4;
+                            break;
+                        case 6:
+                            *(s16 *)((u8 *)rec + 0x190) = 7;
+                            break;
+                        default:
+                            *(s16 *)((u8 *)rec + 0x190) = 2;
+                            break;
+                    }
+                    break;
+                case 1:
+                    *(s16 *)((u8 *)rec + 0x190) = 3;
+                    break;
+            }
+        }
+    }
+
+    rec = D_885229B0;
+    for (i = 0; i < *(s8 *)D_88523008; i++, rec++) {
+        node = (u8 *)rec + 0x28;
+        func_8003F018(node);
+        func_8003F114(node, 0, -1, D_88523004);
+        *(s32 *)(node + 0x14) = i;
+        *(u8 *)(node + 1) &= ~1;
+    }
+}
 
 extern s32 main_pool_get_available(void);
 extern s32 MainPool_AllocState(s32 arg0, s32 arg1);

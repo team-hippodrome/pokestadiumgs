@@ -65,7 +65,73 @@ void func_82F00020(u32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F001CC.s")
+extern s32 func_80064800(u8 arg0);
+extern s32 Pokemon_GetMoveLearnLevelForVersion(u8 version, u8 species, u8 move, u8 level);
+
+
+
+void func_82F001CC(u8 *arg0, u8 *arg1, s32 arg2) {
+    s32 moveCount;
+    s32 i;
+    u8 *p;
+    s32 moves[14];
+    s32 level;
+    s32 tmpm;
+    short hasMove;
+    u8 version;
+    u8 tmp;
+    s32 j;
+    tmp += 0;
+    moveCount = 0;
+    if (arg1[0] > 0) {
+        p = (u8 *)func_80064800(arg1[0]);
+        if (p != 0) {
+            version = arg2;
+            i = 0;
+            for (; p[1] > 0 && i < 14; p += 3) {
+                hasMove = 0;
+                level = Pokemon_GetMoveLearnLevelForVersion(version, arg1[0], p[1], arg1[0x1D]);
+                if (level > 0) {
+                    for (j = 0; j < 4; j++) {
+                        if (p[1] == arg1[j + 2]) {
+                            hasMove = 1;
+                            break;
+                        }
+                    }
+                    if (hasMove == 0) {
+                        for (j = 0; j < i; j++) {
+                            if (p[1] == arg0[j]) {
+                                hasMove = 1;
+                                break;
+                            }
+                        }
+                        if (hasMove == 0) {
+                            moves[i] = (u8)level;
+                            arg0[i] = p[1];
+                            i++;
+                        }
+                    }
+                }
+            }
+            moveCount = i;
+            for (i = 0; i < moveCount; i++) {
+                for (j = i; j < moveCount; j++) {
+                    if (moves[i] > moves[j]) {
+                        tmpm = moves[i];
+                        tmp = arg0[i];
+                        arg0[i] = arg0[j];
+                        moves[i] = moves[j];
+                        arg0[j] = tmp;
+                        moves[j] = tmpm;
+                    }
+                }
+            }
+        }
+    }
+    for (i = moveCount; i < 14; i++) {
+        arg0[i] = 0;
+    }
+}
 
 /* mkdraft:func_82F00460 begin */
 s32 func_8004C54C(s32 index, s32 value);

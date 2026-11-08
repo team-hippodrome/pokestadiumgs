@@ -1128,7 +1128,63 @@ block_9:
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE02568.s")
+extern s32 D_8AE098E8;
+extern s32 D_8AE098EC;
+extern s32 D_8AE098F0;
+extern s16 D_8AE09B04;
+extern s16 D_8AE098F4;
+extern s16 D_8AE098FC;
+extern s16 D_8AE09904;
+extern s16 D_8AE0990C;
+
+
+
+s32 func_8AE02568(s32 arg0, void *arg1) {
+    s16 cur;
+    s16 target;
+    s16 v;
+
+    func_800504BC(&D_8AE09B38);
+    switch (arg0) {
+    case 0:
+        v = *(s16 *)((u8 *)arg1 + 0xA);
+        target = 0xFA - D_8AE09B04;
+        D_8AE0990C = v;
+        cur = target;
+        if (cur) { } // FAKE: empty use of cur before cur += 0x32; assigns v to $a0 and cur to $v1.
+        cur += 0x32;
+        D_8AE098F4 = target;
+        D_8AE09904 = cur;
+        D_8AE098FC = v;
+        break;
+    case 1:
+        cur = D_8AE09904;
+        target = 0xFA - D_8AE09B04;
+        if (target < cur) {
+            cur -= 8;
+            D_8AE098F4 = target;
+            if (cur < target) {
+                cur = target; ((s16 *)&D_8AE098E4)[8] = target; // FAKE: one line keeps sh before sra.
+            }
+        } else {
+            D_8AE098F4 = target;
+            if (cur < target) {
+                cur += 8;
+                ((s16 *)&D_8AE098E8)[6] = target;
+                if (target < cur) {
+                    cur = target; ((s16 *)&D_8AE098F0)[2] = target; // FAKE: as above.
+                }
+            }
+        }
+        *(u8 *)((u8 *)arg1 + 0x28) = 1;
+        *(s32 *)((u8 *)arg1 + 0x2C) = 0xC80000FF;
+        ((s16 *)&D_8AE098EC)[12] = cur;
+        break;
+    }
+    cur = D_8AE09904;
+    *(s16 *)((u8 *)arg1 + 8) = cur;
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1762,7 +1818,256 @@ void Fragment46_DrawRecordRange(s32 arg0, s32 arg1, u8 *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE03D94.s")
+extern s16 D_8AE084F8;
+extern s16 D_8AE084FA;
+extern s16 D_8AE084FC;
+extern s16 D_8AE084FE;
+// "ERR!" at 0x8AE0840C, selected by the switch default. The string was part of
+// func_8AE03D94.s's .rodata, so replacing the GLOBAL_ASM block requires defining
+// it here to keep the fragment rodata layout (0x8AE0840C..0x8AE08413).
+const u8 D_8AE0840C[8] = "ERR!";
+extern void func_800498C4(void);
+extern void func_80049668(s32);
+extern void func_800496A4(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *);
+extern s32 func_8004C874(s32, s32);
+extern void func_800499EC(void);
+extern void *func_8AE01564(s16, s16);
+extern void func_8AE035BC(s32, s32, u8 *);
+extern void Fragment46_DrawVariantDetails(s32, s32, u8 *, s32);
+extern void Fragment46_DrawCategoryDetails(s32, s32, u8 *);
+extern void Fragment46_DrawRecordRange(s32, s32, u8 *);
+extern u8 D_8AE09852;
+extern u8 D_8AE09857;
+extern u8 D_8AE0985C;
+extern u8 D_8AE09861;
+extern u8 D_8AE09866;
+extern u8 D_8AE0986A;
+extern u8 D_8AE0986C;
+extern u8 D_8AE09870;
+extern u8 D_8AE09872;
+extern u8 D_8AE09876;
+extern u8 D_8AE09878;
+extern u8 D_8AE0987C;
+extern u8 D_8AE0987E;
+extern u8 D_8AE09882;
+extern u8 D_8AE09884;
+extern u8 D_8AE09888;
+extern u8 D_8AE0988A;
+extern u8 D_8AE0988B;
+extern u8 D_8AE0988D;
+extern u8 D_8AE0988E;
+extern u8 D_8AE0989C;
+extern s32 D_8AE09B4C;
+extern s16 D_8AE09B50;
+extern s16 D_8AE09EB6;
+extern s16 D_8AE09F16;
+extern s16 D_8AE09B04;
+extern s16 D_8AE098B0;
+extern s16 D_8AE084E0;
+extern s16 D_8AE08504;
+extern s16 D_8AE08502;
+extern s16 D_8AE09E68;
+extern s16 D_8AE09E6A;
+extern s32 D_8AE084E8;
+extern s32 D_8AE09E64;
+extern s32 D_8AE09AFC;
+extern s32 D_8AE09B00;
+extern s32 D_8AE09B08;
+extern s32 D_8AE09B44;
+extern u8 D_8AE09850;
+extern void Fragment46_PlaySound(s32);
+
+
+
+void func_8AE03D94(void) {
+    s32 q[5]; // FAKE: never read. IDO reserves a home slot per declared local; q puts sp40 at 0x40 (score 204 without it).
+    s32 sp40;
+    s32 u; // FAKE: never read; keeps sp38 at 0x38 (score 134 without it).
+    s32 sp38;
+    s32 w[2]; // FAKE: never read; keeps the s16 frame slot at 0x2E (score 204 without it).
+    s16 sp2E;
+    s16 var_v1;
+    s32 var_s0_2;
+    s8 *var_s0;
+    u8 *var_v0;
+
+    func_800498C4();
+    func_80049668(0);
+    func_800496A4(1, 0);
+    func_800495F8((s32) (*(s16 *) ((u8 *) &D_8AE09E78 + 0xE) + D_8AE09EB6 + 0x10) / 2, *(s16 *) ((u8 *) &D_8AE09E78 + 0x10) + 5, 1, (const char *) D_8AE09950);
+    switch (D_8AE098B0) {
+    default:
+        var_s0 = (s8 *) &D_8AE0840C;
+        break;
+    case 0:
+        var_s0 = (s8 *) D_8AE09AFC;
+        break;
+    case 1:
+    case 2:
+        var_s0 = (s8 *) D_8AE09B00;
+        break;
+    }
+    D_8AE09B04 = func_80049148(1, 0, (const char *) var_s0);
+    func_800495F8((s32) (*(s16 *) ((u8 *) &D_8AE09ED8 + 0xE) + D_8AE09F16 + 0x10) / 2, *(s16 *) ((u8 *) &D_8AE09ED8 + 0x10) + 5, 1, (const char *) var_s0);
+    if (D_8AE08504 > 0) {
+        func_800495BC(*(s16 *) ((u8 *) &D_8AE09F98 + 0xE) + 0x1A, *(s16 *) ((u8 *) &D_8AE09F98 + 0x10) + 4, (const char *) D_8AE09B44);
+        var_v1 = D_8AE098B0;
+        switch (var_v1) {
+        case 0:
+            D_8AE09B4C = func_8004C874(0x2B, D_8AE084E0 + 0x4C);
+            var_v1 = D_8AE098B0;
+            break;
+        case 1:
+            D_8AE09B4C = func_8004C874(0x2B, D_8AE084E0 + 0x1C);
+            var_v1 = D_8AE098B0;
+            break;
+        case 2:
+            D_8AE09B4C = func_8004C874(0x2B, D_8AE084E0 + 0x79);
+            var_v1 = D_8AE098B0;
+            break;
+        }
+        if (var_v1 == 2) {
+            func_800495F8(*(s16 *) ((u8 *) &D_8AE09F38 + 0xE) + 0x30, *(s16 *) ((u8 *) &D_8AE09F38 + 0x10) + 7, 0, (const char *) D_8AE09B4C);
+        } else {
+            func_800495F8(*(s16 *) ((u8 *) &D_8AE09F38 + 0xE) + 0x38, *(s16 *) ((u8 *) &D_8AE09F38 + 0x10) + 7, 0, (const char *) D_8AE09B4C);
+        }
+        D_8AE09B50 = func_80049148(1, 0, (const char *) D_8AE09B4C);
+        if (D_8AE084F8 == 1) {
+            sp40 = D_8AE084FC + 0xA;
+            var_s0_2 = D_8AE084FE + 8;
+            sp38 = var_s0_2;
+            if (D_8AE084FA > 0) {
+                D_8AE084FA -= 1;
+                sp2E = 0;
+                if (D_8AE084FA == 0) {
+                    Fragment46_PlaySound(0x4A);
+                }
+            } else {
+                sp2E = 1;
+            }
+            if ((D_8AE084E8 != 0) && (func_8AE01564(D_8AE084E0, 1) != NULL)) {
+                if (D_8AE09E64 >= 4) {
+                    func_800495BC(D_8AE084FC + 8, D_8AE084FE + 8, (const char *) func_8004C874(0x2B, *(s32 *) ((u8 *) D_8AE084E8 + 0x24)));
+                }
+                var_s0_2 += 0xC;
+            }
+            // The call argument is spelled through D_8AE09850+2, not D_8AE09852:
+            // uopt folds a test and a call argument that name the same symbol into
+            // one address materialization, while retail materializes both.
+            if (D_8AE09852 & 1) {
+                if (sp2E == 1) {
+                    Fragment46_DrawVariantDetails(sp40, var_s0_2, &D_8AE09850 + 2, 1);
+                }
+                var_s0_2 += 0xC;
+            }
+            if (D_8AE098B0 != 2) {
+                if (D_8AE09857 & 2) {
+                    if (sp2E == 1) {
+                        Fragment46_DrawVariantDetails(sp40, var_s0_2, &D_8AE09850 + 7, 2);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE0985C & 4) {
+                    if (sp2E == 1) {
+                        Fragment46_DrawVariantDetails(sp40, var_s0_2, &D_8AE09850 + 0xC, 4);
+                    }
+                    var_s0_2 += 0xC;
+                }
+            }
+            if (D_8AE09861 & 8) {
+                if (sp2E == 1) {
+                    Fragment46_DrawVariantDetails(sp40, var_s0_2, &D_8AE09850 + 0x11, 8);
+                }
+                var_s0_2 += 0xC;
+            }
+            if (D_8AE09E68 == 6) {
+                if (D_8AE0988B != 0) {
+                    if (sp2E == 1) {
+                        func_8AE038DC(sp40, var_s0_2, &D_8AE0988A);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE0986A != 0) {
+                    if (sp2E == 1) {
+                        func_8AE035BC(sp40, var_s0_2, &D_8AE09866);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE09870 != 0) {
+                    if (sp2E == 1) {
+                        func_8AE035BC(sp40, var_s0_2, &D_8AE0986C);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE09876 != 0) {
+                    if (sp2E == 1) {
+                        func_8AE035BC(sp40, var_s0_2, &D_8AE09872);
+                    }
+                    var_s0_2 += 0xC;
+                    goto block_77;
+                }
+            } else {
+                if (D_8AE0988E != 0) {
+                    if (sp2E == 1) {
+                        func_8AE038DC(sp40, var_s0_2, &D_8AE0988D);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE0987C != 0) {
+                    if (sp2E == 1) {
+                        func_8AE035BC(sp40, var_s0_2, &D_8AE09878);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE09882 != 0) {
+                    if (sp2E == 1) {
+                        func_8AE035BC(sp40, var_s0_2, &D_8AE0987E);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                if (D_8AE09888 != 0) {
+                    if (sp2E == 1) {
+                        func_8AE035BC(sp40, var_s0_2, &D_8AE09884);
+                    }
+                    var_s0_2 += 0xC;
+                }
+block_77: ;
+            }
+            var_v0 = &D_8AE09850;
+            do {
+                if (*(u8 *) ((u8 *) var_v0 + 0x41) != 0) {
+                    if (sp2E == 1) {
+                        Fragment46_DrawCategoryDetails(sp40, var_s0_2, var_v0 + 0x40);
+                    }
+                    var_s0_2 += 0xC;
+                }
+                var_v0 += 4;
+            } while (var_v0 != &D_8AE0985C);
+            if (D_8AE0989C != 0) {
+                if (sp2E == 1) {
+                    Fragment46_DrawRecordRange(sp40, var_s0_2, &D_8AE09850 + 0x4C);
+                }
+                var_s0_2 += 0xC;
+            }
+            D_8AE08502 = (var_s0_2 - sp38) + 8;
+            D_8AE084FE = 0xBA - D_8AE08502;
+        }
+    } else if (D_8AE09E6A == 1) {
+        func_800495F8(0xA0, 0x64, 1, (const char *) D_8AE09B08);
+    }
+    func_800499EC();
+}
+
+// The retail func_8AE03D94 symbol runs to 0x8AE04477: 8 bytes past its epilogue
+// hold a bare `jr ra; nop` that nothing branches to. Emitting those bytes as a
+// function of their own keeps them at 0x8AE04470 and places func_8AE04478 at
+// its retail address.
+
+// Bytes at the retail stub address between the two functions: an
+// unreferenced empty function compiles to the retail jr ra/nop pair
+// there and keeps the fragment layout.
+void func_8AE04470_padding(void) {}
 #endif
 
 #ifdef VERSION_US

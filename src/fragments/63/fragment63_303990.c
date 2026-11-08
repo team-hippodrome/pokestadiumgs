@@ -241,7 +241,60 @@ void func_87E00648(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_303990/func_87E0072C.s")
+extern u8 *D_87E1BA20;
+extern Gfx *D_800D0510;
+extern void func_87E00648(s32);
+extern void func_87E005C0(void);
+extern void func_80046634(s32 image);
+
+
+
+void func_87E0072C(void) {
+    s32 i;
+    f32 ratio;
+
+    if (*(s32 *)(D_87E1BA20 + 0x18) == 9) {
+        func_87E00648(*(s32 *)(D_87E1BA20 + 0x10));
+    } else {
+        func_87E00648(*(s32 *)(D_87E1BA20 + 0x14));
+        ratio = (f32)(*(u32 *)(D_87E1BA20 + 0x18)) / 9.0f;
+
+        gDPPipeSync(D_800D0510++);
+        gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+        gDPSetTexturePersp(D_800D0510++, G_TP_NONE);
+        gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetCombine(D_800D0510++, 0xFFD3FF, 0xFFA4FE7F);
+
+        for (i = 0; i < 3; i++) {
+            if (i == *(s32 *)(D_87E1BA20 + 0x10)) {
+                gDPPipeSync(D_800D0510++);
+                {
+                    Gfx *g = D_800D0510++;
+                    g->words.w0 = 0xFB000000;
+                    g->words.w1 = (u8)(255.0f * ratio);
+                }
+
+                switch (*(s32 *)(D_87E1BA20 + 0x10)) {
+                    case 2:
+                        gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFEFB7D);
+                        gSPTextureRectangle(D_800D0510++, 0, 0, 320 << 2, 240 << 2, 0, 0, 0, 1024, 1024);
+                        break;
+                    case 0:
+                        func_80046634(((s32 *)D_87E1BA20)[*(s32 *)(D_87E1BA20 + 0x10) + 1]);
+                        break;
+                    case 1:
+                        func_87E005C0();
+                        break;
+                }
+            }
+        }
+    }
+
+    (*(u32 *)(D_87E1BA20 + 0x18))++;
+    if ((*(u32 *)(D_87E1BA20 + 0x18)) >= 10) {
+        (*(u32 *)(D_87E1BA20 + 0x18)) = 9;
+    }
+}
 
 extern void func_800088DC(void);
 extern void func_87E0072C(void);

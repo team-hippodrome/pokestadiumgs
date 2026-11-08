@@ -98,7 +98,54 @@ s32 func_82E00020(s32 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E0048C.s")
+extern s32 D_82E07130;
+extern f32 D_80087E50[];
+// Depends on the file's existing func_82E00020 declarations: F66RecView,
+// F66Timer, D_82E05968, F66_RECS and F66_TIMERS (fragment66_code.c).
+
+
+s32 func_82E0048C(s32 phase, u8 *memory) {
+    s32 diff;
+    s32 angle;
+    s32 value;
+    f32 ratio;
+
+    if (phase != 0 && phase == 1) {
+        diff = D_82E07130 - F66_TIMERS[*(u32 *)(memory + 0x20)].time;
+        if (diff < F66_RECS[*(u32 *)(memory + 0x20)].x) {
+            ratio = (180.0f * (f32)diff / (f32)(F66_RECS[*(u32 *)(memory + 0x20)].x - F66_RECS[*(u32 *)(memory + 0x20)].state) - 90.0f) * 182.0416718f;
+            if (ratio >= 0.0f) {
+                angle = (s32)(ratio + 0.5f);
+            } else {
+                angle = (s32)(ratio - 0.5f);
+            }
+            value = (s32)((D_80087E50[(angle & 0xFFFF) >> 4] * 0.5f + 0.5f) * 255.0f);
+        } else if (diff < F66_RECS[*(u32 *)(memory + 0x20)].adjusted) {
+            value = 0xFF;
+        } else if (diff < F66_RECS[*(u32 *)(memory + 0x20)].old) {
+            ratio = (180.0f * (f32)(diff - F66_RECS[*(u32 *)(memory + 0x20)].adjusted) / (f32)(F66_RECS[*(u32 *)(memory + 0x20)].old - F66_RECS[*(u32 *)(memory + 0x20)].adjusted) - 90.0f) * 182.0416718f;
+            if (ratio >= 0.0f) {
+                angle = (s32)(ratio + 0.5f);
+            } else {
+                angle = (s32)(ratio - 0.5f);
+            }
+            value = (s32)(255.0f - (D_80087E50[(angle & 0xFFFF) >> 4] * 0.5f + 0.5f) * 255.0f);
+        } else {
+            value = 0;
+            *(u16 *)(memory + 2) &= 0xFFFE;
+        }
+        switch (*(u8 *)memory) {
+        case 3:
+            *(s32 *)(memory + 0x2C) = value | 0xFFFFFF00;
+            break;
+        case 4:
+            *(u8 *)(memory + 0x2B) = value;
+            *(u8 *)(memory + 0x2F) = value;
+            break;
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -682,7 +729,16 @@ void func_82E02CA4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E02CCC.s")
+
+
+void func_82E02CCC(s32 arg0, s32 arg1, s32 arg2)
+{
+  s32 temp_t5;
+  s32 var_t4;
+  s32 height;
+  s32 c0;
+ do { c0 = arg0; height = 0xF0; for (var_t4 = arg1; var_t4 < (arg1 + height); var_t4 += 6) { temp_t5 = var_t4 + 6; { Gfx *_g = D_800D0510++; _g->words.w1 = (u32) arg2; _g->words.w0 = 0xFD10013F; } { Gfx *_g = D_800D0510++; _g->words.w1 = 0x07080200; _g->words.w0 = 0xF510A000; } arg2 += 0xF00; { Gfx *_g = D_800D0510++; _g->words.w1 = 0; _g->words.w0 = 0xE6000000; } { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF4000000; _g->words.w1 = 0x074FC014; } gDPPipeSync(D_800D0510++); { Gfx *_g = D_800D0510++; _g->words.w1 = 0x80200; _g->words.w0 = 0xF510A000; } { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF2000000; _g->words.w1 = 0x4FC014; } { Gfx *_g = D_800D0510++; _g->words.w0 = (((((c0 + 0x140) << 2) & 0xFFF) << 0xC) | 0xE4000000) | ((temp_t5 << 2) & 0xFFF); _g->words.w1 = (((c0 << 2) & 0xFFF) << 0xC) | ((var_t4 << 2) & 0xFFF); } { Gfx *_g = D_800D0510++; _g->words.w1 = 0; _g->words.w0 = 0xE1000000; } { Gfx *_g = D_800D0510++; _g->words.w0 = 0xF1000000; _g->words.w1 = 0x04000400; } } } while (0);
+}
 #endif
 
 #ifdef VERSION_US
@@ -811,7 +867,66 @@ void func_82E04734(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E047C4.s")
+extern Gfx *D_800D0510;
+extern Gfx D_82E05550[];
+extern u8 D_82E0567D;
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+
+
+
+void func_82E047C4(s32 arg0) {
+    Vtx *vertices;
+    s32 y;
+    s32 count;
+    s32 offset;
+    s32 image;
+    u8 alpha;
+
+    vertices = (Vtx *)Gfx_AllocDisplayList(0xA00);
+    count = 0xF0;
+    y = 0x78;
+    if (vertices != 0) {
+        alpha = D_82E0567D;
+        gSPDisplayList(D_800D0510++, D_82E05550);
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, alpha);
+        // 40 rows of 6 pixels: 0x25800 / 0xF00. `count` steps 6 per row
+        // like `y`, and its final value is never read.
+        for (offset = 0, image = arg0; offset != 0x25800;
+             offset += 0xF00, image += 0xF00) {
+            Gfx_SetVertexAttributes(vertices, -0xA0, y, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 1, -0xA0, y - 6, 0, 0, 0xC0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 2, 0xA0, y - 6, 0, 0x2800, 0xC0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 3, 0xA0, y, 0, 0x2800, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+            gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, image);
+            gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0x50, 0, G_TX_LOADTILE, 0,
+                       G_TX_CLAMP, 0, 0, G_TX_CLAMP, 0, 0);
+            gDPLoadSync(D_800D0510++);
+            gDPLoadTile(D_800D0510++, G_TX_LOADTILE, 0, 0, 0x4FC, 0x14);
+            gDPPipeSync(D_800D0510++);
+            gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0x50, 0, G_TX_RENDERTILE, 0,
+                       G_TX_CLAMP, 0, 0, G_TX_CLAMP, 0, 0);
+            gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 0x4FC, 0x14);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            vertices += 4;
+            // The unsigned 6 keeps this update distinct from the `y - 6`
+            // vertex arguments, so uopt does not reuse the truncated loop
+            // value there; `y` stays in $s4 and the tail is `addiu s4,s4,-6`.
+            y -= 6U;
+            count -= 6;
+        }
+        // FAKE: two dead compares. The first keeps the write-only counter
+        // alive for uopt's register walk; the second makes that walk reach
+        // the counter just before the shared 0xF510A000 tile-constant web,
+        // so they take the last two slots in order: $s7 and $fp. Without
+        // both the counter is deleted (198 instructions, score 2405); with
+        // either one alone the counter and tile constant swap registers
+        // (score 40).
+        if (count) { }
+        if (count == 0xF510A000) { }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -830,7 +945,7 @@ s32 func_82E04AE4(s32 arg0, s32 arg1) {
 #ifdef VERSION_US
 /* mkdraft:func_82E04B28 begin */
 extern Gfx *D_800D0510;
-extern void *Gfx_AllocDisplayList(s32);
+extern Gfx *Gfx_AllocDisplayList(s32);
 extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
 extern u8 D_82E05578[];
 extern u8 D_82E0567D;

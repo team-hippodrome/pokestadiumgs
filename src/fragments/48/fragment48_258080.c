@@ -53,7 +53,52 @@ f64 func_87C021FC(u8 *arg0, u8 *arg1, u8 *arg2, f64 arg4, f64 arg6, f64 arg8) {
     return 0.0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258080/func_87C022A0.s")
+extern void *func_87C00160(void *, void *, void *);
+extern void *func_87C00238(void *, void *, void *);
+extern void *func_87C002A8(void *, void *, f64);
+extern void *func_87C00718(void *, void *, f64);
+extern void func_87C00628(s32, s32, s32);
+extern void func_87C02C30(u8 *, void *, void *);
+// FAKE: func_87C00438 is defined as returning void in fragment48_256020.c; this
+// local prototype overrides it because the call site here consumes an f64 result.
+extern f64 func_87C00438(void *, void *, void *, void *);
+extern f64 D_87C03DF8;
+
+
+
+f64 func_87C022A0(void *arg0, void *arg1, void *arg2, f64 arg3, f64 arg4, f64 arg5, f64 arg6) {
+    f64 clip_distance;
+    f64 scale;
+    f64 projected[3];
+    f64 eye_position[3];
+    f64 eye_direction[3];
+    f64 clip_direction[3];
+    f64 clip_position[3];
+    f64 clip_normal[3];
+    f64 weight;
+    f64 eye_normal[3];
+    f64 temp[3];
+    func_87C00628((s32)clip_position, (s32)arg2, (s32)((u8 *)arg0 + 0x38));
+    func_87C00160(clip_direction, arg1, (u8 *)arg0 + 0xA0);
+    func_87C00628((s32)clip_direction, (s32)clip_direction, (s32)((u8 *)arg0 + 0x38));
+    func_87C021A4(arg0, (s32)arg1, projected);
+    clip_distance = func_87C00438(projected, arg2, eye_position, eye_direction);
+    if (clip_distance >= 0.0) {
+        return 0.0;
+    }
+    weight = 1.0 / **(f64 **)arg0;
+    func_87C00238(eye_normal, clip_direction, clip_position);
+    weight += (((eye_normal[0] * eye_normal[0]) / (*(f64 **)arg0)[1]) + ((eye_normal[1] * eye_normal[1]) / (*(f64 **)arg0)[2])) + ((eye_normal[2] * eye_normal[2]) / (*(f64 **)arg0)[3]);
+    scale = (1.0f + arg3) * (-clip_distance) / weight;
+    scale += (((**(f64 **)arg0) * arg5) * arg6) * D_87C03DF8;
+    func_87C002A8(clip_normal, arg2, scale);
+    func_87C02C30(arg0, arg1, clip_normal);
+    if (0.0 < arg4) {
+        func_87C00718(temp, eye_direction, (-scale) * arg4);
+        func_87C02C30(arg0, arg1, temp);
+    }
+    return scale;
+}
 
 typedef struct unk_func_87C02488 {
     f64 unk_00[3];

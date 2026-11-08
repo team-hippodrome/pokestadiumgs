@@ -269,7 +269,124 @@ s32 func_8F8006B0(void) {
 }
 /* mkdraft:func_8F8006B0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/77/fragment77_code/func_8F800924.s")
+extern F77EditorState D_8F809FC0;
+extern s32 D_8F803470, D_8F803474;
+extern u16 D_8F809FC2, D_8F809FC4;
+extern s16 D_8F809FC8, D_8F809FCA;
+extern s32 D_8F809F98, D_8F809FB4, D_8F809FEC;
+extern u8 *D_8F809FB0;
+extern u16 D_8F8034CC[][17];
+extern u8 D_8F803E08;
+extern char D_8F803930[], D_8F803938[], D_8F80393C[], D_8F803944[], D_8F80394C[];
+extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_800499EC(void);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern s32 func_80048E30(u8 *state, s32 x, s32 y, const char *text, s32 draw);
+extern void *func_8004B7A4(s32 arg0);
+extern s32 *func_80062CE0(u8);
+extern s32 *func_800635E0();
+extern s32 func_800643CC(s32, u8, s32);
+extern s32 func_80057A80(s32);
+extern u8 func_80073420(u8);
+extern u8 func_80073510(u8);
+extern u8 func_80073570(u8);
+extern void func_8F800020(s32, s32, s32);
+
+
+void func_8F800924(void) {
+    s32 index;
+    s32 value;
+    u8 key;
+    F77EditorState *state = &D_8F809FC0;
+
+    Ui_DrawGradientPanel(state->numeric.geometry[0] - 10, state->numeric.geometry[1] - 10,
+                         state->numeric.geometry[2] + 20, state->numeric.geometry[3] + 20,
+                         (s32)&D_8F803470, (s32)&D_8F803474);
+    func_800498C4();
+    func_800496A4(4, 0);
+    index = 0;
+    if (*(u16 *)&D_8F809FCC > 0) {  /* the file declares this global s16; the ROM reads it unsigned (lhu) */
+        do {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            if (*(s16 *)((u8 *)state + 0xA) + index == 0) {
+                if (D_8F8034CC[D_8F809FB4][0] == 1) {
+                    func_80048E30((u8 *)D_8F809FEC, state->numeric.geometry[0], state->numeric.geometry[1],
+                                  D_8F803930, 1);
+                } else {
+                    func_80048E30((u8 *)D_8F809FEC, state->numeric.geometry[0] + 0x50, state->numeric.geometry[1],
+                                  D_8F803938, 1);
+                }
+            } else {
+                switch (D_8F8034CC[D_8F809FB4][0]) {
+                case 1:
+                    func_80048E30((u8 *)D_8F809FEC, state->numeric.geometry[0], state->numeric.geometry[1] + index * 20,
+                                  (char *)&D_8F803E08 + (u32)*(s16 *)((u8 *)state + 0xA) * 0x6F8 + (u32)index * 0x6F8 - 0x14,
+                                  1);
+                    break;
+                case 2:
+                    break;
+                case 3: {
+                    s32 row = index * 20;
+                    value = func_80073420(*(s16 *)((u8 *)state + 0xA) + index);
+                    if (value >= 0x98 && func_80057A80(D_8F809F98) != 0) {
+                        func_8004972C(100, 100, 100, 0xFF);
+                    } else {
+                        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                    }
+                    func_800495F8(state->numeric.geometry[0] + 0x50, state->numeric.geometry[1] + row, 2,
+                                  D_8F80393C, value);
+                    func_80048E30((u8 *)D_8F809FEC, state->numeric.geometry[0] + 0x50, state->numeric.geometry[1] + row,
+                                  (const char *)func_8004B7A4(value), 1);
+                    break;
+                }
+                case 5:
+                case 6:
+                case 7:
+                case 8: {
+                    s32 row = index * 20;
+                    s32 pick = func_80073510(*(s16 *)((u8 *)state + 0xA) + index);
+                    if (func_80057A80(D_8F809F98) != 0 && pick >= 0xA6) {
+                        key = pick;
+                        func_8004972C(100, 100, 100, 0xFF);
+                    } else {
+                        key = pick;
+                        if (func_800643CC(D_8F809FB0[0], key, D_8F809FB0[0x1D]) != 0) {
+                            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                        } else if (func_800643CC(D_8F809FB0[0], key, 100) != 0) {
+                            func_8004972C(0xFF, 0xFF, 100, 0xFF);
+                        } else {
+                            func_8004972C(0xFF, 100, 100, 0xFF);
+                        }
+                    }
+                    func_800495F8(state->numeric.geometry[0] + 0x50, state->numeric.geometry[1] + row, 2,
+                                  D_8F803944, pick);
+                    func_80048E30((u8 *)D_8F809FEC, state->numeric.geometry[0] + 0x50, state->numeric.geometry[1] + row,
+                                  (const char *)func_80062CE0(key), 1);
+                    break;
+                }
+                case 4: {
+                    s32 row = index * 20;
+                    s32 sel;
+                    value = func_80073570(*(s16 *)((u8 *)state + 0xA) + index);
+                    func_800495F8(state->numeric.geometry[0] + 0x50, state->numeric.geometry[1] + row, 2,
+                                  D_8F80394C, value);
+                    sel = func_80073570(*(s16 *)((u8 *)state + 0xA) + index);  /* FAKE: the original passes the call straight into func_800635E0; see below */
+                    func_80048E30((u8 *)D_8F809FEC, state->numeric.geometry[0] + 0x50, state->numeric.geometry[1] + row,
+                                  (const char *)func_800635E0((u8)sel), 1);  /* FAKE: u8 conversion of an s32 temp reproduces the retail argument mask (andi a0,v0,0xFF); func_800635E0's K&R declaration in this file suppresses it. Score without: 330 */
+                    break;
+                }
+                }
+            }
+            index++;
+        } while (index < state->halfwords[6]);
+    }
+    func_800499EC();
+    func_8F800020(state->numeric.geometry[0],
+                  (D_8F809FC8 - *(s16 *)((u8 *)state + 0xA)) * 20 + 16 + state->numeric.geometry[1], D_8F809FC4);
+}
 
 extern F77EditorState D_8F809FC0;
 extern s32 D_8F803470, D_8F803474;

@@ -277,7 +277,128 @@ void DeckName_CommitEdit_fragment82(void) {
     func_82D06B34(8, 6, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D0087C.s")
+// Overlay of the fragment-82 menu state at D_82D23830 that reaches past
+// Fragment82NameState's names[9][20] to the settings word at 0x100.
+typedef struct Fragment82SettingsFlagsToggle {
+    u32 bits31_30 : 2;
+    u32 flag29 : 1;
+    u32 bits28_27 : 2;
+    u32 flag26 : 1;
+    u32 bits25_0 : 26;
+} Fragment82SettingsFlagsToggle;
+typedef struct Fragment82DeckMenuState {
+    u8 kind;
+    u8 selection;
+    s8 digit, secondary_selection;
+    u8 unk_04[2], name_index, name_count;
+    s8 names[9][20];
+    u8 unk_BC[4];
+    s8 edit_name[0x40];
+    Fragment82SettingsFlagsToggle settings;
+} Fragment82DeckMenuState;
+
+extern u8 D_82D23938;
+extern u8 D_82D07420[];
+extern void func_88700364(u32, u8 *, u32);
+extern void func_82D006B8(void);
+
+
+
+
+
+void func_82D0087C(void)
+{
+  int c;
+  switch (((Fragment82DeckMenuState *) (&D_82D23830))->selection)
+  {
+    case 0:
+      HAL_Strcpy(D_82D238D8, ((Fragment82DeckMenuState *) (&D_82D23830))->names[((Fragment82DeckMenuState *) (&D_82D23830))->name_index]);
+      func_88700364(3, (u8 *) D_82D238D8, (u32) DeckName_CommitEdit_fragment82);
+      func_82D06B34(8, 5, 0);
+      D_82D23D84 = 3;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->kind = 5;
+      func_800226C0(0xA3);
+      return;
+
+    case 1:
+      func_82D006B8();
+      D_82D23D84 = 4;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->kind = 6;
+      func_800226C0(0xA3);
+      return;
+
+    case 2:
+      D_82D23D84 = 5;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->kind = 7;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->digit = 2;
+      func_800226C0(0xA3);
+      return;
+
+    case 3:
+      D_82D23D84 = 6;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->kind = 8;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->digit = 2;
+      func_800226C0(0xA3);
+      return;
+
+    case 4:
+      ((Fragment82DeckMenuState *) (&D_82D23830))->settings.flag26 = (((Fragment82DeckMenuState *) (&D_82D23830))->settings.flag26 + 1) & 0x1;
+      func_800226C0(0x12);
+      return;
+
+    case 5:
+      ((Fragment82DeckMenuState *) (&D_82D23830))->settings.flag29 = (((Fragment82DeckMenuState *) (&D_82D23830))->settings.flag29 + 1) & 0x1;
+      func_800226C0(0x12);
+      return;
+
+    case 6:
+      func_82D06B34(8, 4, 0);
+      func_82D06B34(7, 1, 0);
+      ((Fragment82DeckMenuState *) (&D_82D23830))->kind = 1;
+      D_82D23D84 = 7;
+      ((Fragment82DeckMenuState *) (&D_82D23830))->selection = ((Fragment82DeckMenuState *) (&D_82D23830))->name_index;
+
+      ((Fragment82StoredDecks *) (&D_82D23938))->entries[((Fragment82DeckMenuState *) (&D_82D23830))->name_index] = *((Fragment82StoredDeck *) D_82D238F0);
+
+      switch (((s8 *) D_82D07420)[1])
+    {
+      case 0:
+        c = D_82D23938;
+        if (D_82D23938 < 8)
+      {
+        ((Fragment82DeckMenuState *) (&D_82D23830))->unk_04[0] = c;
+        ((Fragment82DeckMenuState *) (&D_82D23830))->unk_04[1] = c;
+        ((Fragment82DeckMenuState *) (&D_82D23830))->selection = c;
+        func_82D06B34(2, 1, 0);
+      }
+      else
+      {
+        D_82D23D84 = 1;
+        ((Fragment82DeckMenuState *) (&D_82D23830))->kind = 0;
+        D_82D07420[0] = 0;
+        func_82D06B34(2, 1, 0);
+        func_82D06B34(3, 1, 0);
+        func_82D06B34(4, 1, 0);
+        func_82D06B34(5, 1, 0);
+        func_82D06B34(6, 1, 0);
+      }
+        break;
+
+      case 1:
+        func_82D06B34(3, 1, 0);
+        break;
+
+    }
+
+      func_800226C0(0x11);
+      return;
+
+    default:
+      return;
+
+  }
+
+}
 
 extern void MenuSelection_StepSkipping_fragment82(s8 *selection, u8 first, u8 last, u8 skip);
 extern s8 D_82D23831;
@@ -438,7 +559,150 @@ s32 func_82D010F4(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D0125C.s")
+extern u8 D_82D07428[];
+extern u8 D_82D23904[];
+extern u8 D_82D238EC;
+extern u8 D_82D23830;
+extern u8 D_82D23D84;
+extern u16 D_82D23D88;
+extern u16 D_82D23D8A;
+extern void func_800226C0(s32);
+extern s32 func_82D010F4(void);
+extern void func_82D000A0(u8 *, u8);
+extern s32 func_82D00158(u8 *);
+extern void SpeciesMask_Invert_fragment82(u8 *);
+extern void func_82D00590(u8);
+extern void func_82D06B34(u8, u8, s32);
+extern void func_82D00C34(void);
+
+
+
+void func_82D0125C(void)
+{
+  s32 mask;
+  s32 pressed;
+  s32 position;
+  s32 scroll;
+
+  mask = func_82D010F4() ^ 0;
+  pressed = mask & 0x800;
+  if (pressed)
+  {
+    if ((*((s8 *) (D_82D07428 + 0xD))) != 0)
+    {
+      --(*((s8 *) (D_82D07428 + 0xD)));
+      func_800226C0(1);
+    }
+  }
+  else
+    if ((mask & 0x400) && ((*((s8 *) (D_82D07428 + 0xD))) < 0x29))
+  {
+    ++(*((s8 *) (D_82D07428 + 0xD)));
+    if ((*((s8 *) (D_82D07428 + 0xD))) == 0x29)
+    {
+      if ((*((s8 *) (D_82D07428 + 0xC))) == 5)
+      {
+        --(*((s8 *) (D_82D07428 + 0xC)));
+      }
+    }
+    func_800226C0(1);
+  }
+  if (D_82D23D8A & 0x200)
+  {
+    --(*((s8 *) (D_82D07428 + 0xC)));
+    if ((*((s8 *) (D_82D07428 + 0xC))) < 0)
+    {
+      *((s8 *) (D_82D07428 + 0xC)) = 5;
+      if ((*((s8 *) (D_82D07428 + 0xD))) != 0)
+      {
+        --(*((s8 *) (D_82D07428 + 0xD)));
+      }
+    }
+    func_800226C0(1);
+  }
+  else
+    if (D_82D23D8A & 0x100)
+  {
+    *((s8 *) (D_82D07428 + 0xC)) += 1;
+    if ((*((s8 *) (D_82D07428 + 0xC))) >= 6)
+    {
+      *((s8 *) (D_82D07428 + 0xC)) = 0;
+      if ((*((s8 *) (D_82D07428 + 0xD))) < 0x29)
+      {
+        ++(*((s8 *) (D_82D07428 + 0xD)));
+      }
+    }
+    if (((*((s8 *) (D_82D07428 + 0xC))) == 5) && ((*((s8 *) (D_82D07428 + 0xD))) == 0x29))
+    {
+      *((s8 *) (D_82D07428 + 0xC)) = 0;
+    }
+    func_800226C0(1);
+  }
+  if (D_82D23D88 & 0x8000)
+  {
+    func_82D000A0(D_82D23904, ((u8 (*)[6]) D_82D07428)[(*((s8 *) (D_82D07428 + 0xD)))][(*((s8 *) (D_82D07428 + 0xC))) + 0x11]);
+    D_82D238EC = func_82D00158(D_82D23904);
+    func_800226C0(0x12);
+  }
+  else
+    if (D_82D23D88 & 2)
+  {
+    SpeciesMask_Invert_fragment82(D_82D23904);
+    D_82D238EC = func_82D00158(D_82D23904);
+    func_800226C0(0x12);
+  }
+  else
+    if (D_82D23D88 & 1)
+  {
+    D_82D07428[0x10]++;
+    if (D_82D07428[0x10] >= 3)
+    {
+      D_82D07428[0x10] = 0;
+    }
+    func_82D00590(D_82D07428[0x10]);
+    func_800226C0(0x12);
+  }
+  else
+    if (D_82D23D88 & 0x4000)
+  {
+    if (D_82D238EC < 6)
+    {
+      D_82D23D84 = 0xB;
+      func_82D06B34(0xA, 1, 0);
+      func_800226C0(5);
+    }
+    else
+    {
+      func_82D06B34(9, 2, 0);
+      D_82D23D84 = 2;
+      D_82D23830 = 4;
+      func_800226C0(0x92);
+    }
+  }
+  position = (*((s8 *) (D_82D07428 + 0xD))) * 0x3D;
+  scroll = *((u16 *) (D_82D07428 + 2));
+  if (position < scroll)
+  {
+    *((u8 *) (D_82D07428 + 0xF)) = 4;
+    do
+    {
+      *((u16 *) (D_82D07428 + 2)) = scroll - 0x3D;
+      scroll = *((u16 *) (D_82D07428 + 2));
+    }
+    while (position < scroll);
+  }
+  if ((scroll + 0xF4) < position)
+  {
+    *((u8 *) (D_82D07428 + 0xF)) = 4;
+    do
+    {
+      *((u16 *) (D_82D07428 + 2)) = scroll + 0x3D;
+      scroll = *((u16 *) (D_82D07428 + 2));
+    }
+    while ((scroll + 0xF4) < position);
+  }
+  func_82D00C34();
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D01590.s")
 

@@ -62,7 +62,29 @@ void func_82101CB4(f32 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5) 
         *(f32 *)((u8 *)var_s1 + 8) = (__cosf(temp_fs0) * arg3) + arg2;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82101D88.s")
+/* The anonymous 6.2831855f literal in the loop is load-bearing for .rodata:
+ * as1 materializes it as the pool word D_8210411C (0x40C90FDB) at the front
+ * of this function's .rodata slice, because this function precedes
+ * func_82101E70 in the file. func_82101E70's own inline 6.2831855f supplies
+ * the following word, so the C in this file reproduces the whole
+ * [0x82104110, 0x82104120) slice without asm-processor .late_rodata dummies. */
+extern void func_82101CB4(f32 *, f32, f32, f32, f32, f32);
+
+
+void func_82101D88(void *arg0, f32 arg1, f32 arg2, f32 arg3) {
+    u8 *var_s1;
+    u8 *var_s2;
+    u8 *var_s3;
+    s32 var_s0;
+
+    for (var_s0 = 0, var_s1 = arg0, var_s2 = arg0, var_s3 = arg0; var_s0 != 3;
+         var_s0++, var_s1 += 0x2C, var_s2 += 4, var_s3 += 0x2C) {
+        func_82101CB4((f32 *)var_s1, arg1, arg2, arg3,
+                      *(f32 *)((u8 *)arg0 + 0x94),
+                      ((f32)var_s0 * 6.2831855f) / 3);
+        *(u8 **)(var_s2 + 0x84) = var_s3;
+    }
+}
 
 /* mkdraft:func_82101E70 begin */
 f32 *func_82101E70(void *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4,
@@ -129,7 +151,35 @@ void func_82101FB4(u8 *arg0, f32 *arg1, f32 arg2) {
 }
 /* mkdraft:func_82101FB4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_821020B0.s")
+extern f32 func_82102CE4(u8 *arg0, u8 *arg1);
+u8 *func_82101B80(u8 *arg0);
+extern f32 D_82103DB0;
+
+
+void func_821020B0(u8 **list, u8 *state) {
+    s32 index;
+    s32 other;
+    f32 values[3];
+    f32 limit;
+    u8 *ptr;
+    for (index = 0; index != 3; index++) {
+        ptr = func_82101B80(list[index]);
+        values[index] = func_82102CE4(state, ptr);
+    }
+    limit = D_82103DB0;
+    for (other = 0; other != 3; other++) {
+        for (index = 2; index != 0; index--) {
+            if (values[index - 1] > values[index] + limit) {
+                f32 temporary = values[index - 1];
+                ptr = list[index - 1];
+                values[index - 1] = values[index];
+                list[index - 1] = list[index];
+                values[index] = temporary;
+                list[index] = ptr;
+            }
+        }
+    }
+}
 
 extern f32 D_82103DB4;
 extern void func_82102B80(f32 *, f32, f32);
@@ -137,7 +187,7 @@ extern f32 func_82102C78(f32 *);
 extern f32 func_82102D10(f32 *);
 extern void func_82102D34(f32 *);
 extern void func_82101FB4(u8 *, f32 *, f32);
-extern void func_821020B0(u8 *, f32 *);
+void func_821020B0(u8 **list, u8 *state);
 
 
 
