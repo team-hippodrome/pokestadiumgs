@@ -115,7 +115,181 @@ void func_80024180(u32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/23D10/func_8002421C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/23D10/func_80024480.s")
+extern u8 D_8009065E[][4];
+extern u8 D_8009065F[][4];
+extern u16 D_80091B10;
+extern void Audio_QueueDeferredSound(s32 sound, s32 delay, u8 parameter);
+extern void func_80023A3C(s32, s32, s32);
+
+void func_80024480(s32 channel, s32 kind) {
+    u8 volume;
+    s32 flag;
+    u8 sv;
+    s32 delay;
+
+    delay = 0;
+    flag = 0;
+    if (kind != 10) {
+        if ((u32)channel >= 254 && (u32)channel < 279) {
+            channel = 201;
+        }
+    }
+    if (channel == 279) {
+        channel = 300;
+    }
+    if (channel == 300) {
+        flag = 1;
+    } else if (channel == 0 || (u32)channel >= 252) {
+        if (kind != 10) {
+            return;
+        }
+    }
+    switch (kind) {
+    case 0:
+        if (flag) {
+            channel = 257;
+        }
+        sv = 127;
+        break;
+    case 7:
+        if (flag) {
+            channel = 257;
+        }
+        sv = 48;
+        delay = 3;
+        break;
+    case 8:
+        if (flag) {
+            channel = 257;
+        }
+        sv = 80;
+        delay = 7;
+        break;
+    case 2:
+        if (flag) {
+            channel = 257;
+            delay = 20;
+        } else {
+            delay = D_8009065E[channel][0];
+        }
+        sv = 96;
+        break;
+    case 3:
+        if (flag) {
+            channel = 257;
+            delay = 20;
+        } else {
+            delay = D_8009065E[channel][0];
+        }
+        sv = 104;
+        func_80023A3C(1, 0, 0);
+        break;
+    case 4:
+        if (flag) {
+            channel = 256;
+            delay = 27;
+        } else {
+            delay = D_8009065E[channel][0];
+        }
+        sv = 127;
+        if (D_80090BA4 == 0) {
+            func_80023A3C(2, 0, 0);
+        }
+        break;
+    case 5:
+        if (!flag) {
+            return;
+        }
+        if (D_80091B10 == 46 || D_80091B10 == 18) {
+            return;
+        }
+        channel = 254;
+        delay = 3;
+        if ((u32)D_80090A80 < 2) {
+            return;
+        }
+        sv = 127;
+        break;
+    case 6:
+        if (!flag) {
+            return;
+        }
+        channel = 255;
+        delay = 3;
+        if ((u32)D_80090A80 < 2) {
+            return;
+        }
+        sv = 127;
+        break;
+    case 1:
+        if (flag) {
+            channel = 252;
+            delay = 3;
+            sv = 127;
+        } else {
+            sv = 112;
+            delay = D_8009065F[channel][0];
+        }
+        func_80023A3C(2, 0, 0);
+        break;
+    case 10:
+        sv = 127;
+        switch (channel) {
+        case 252:
+            delay = 12;
+            break;
+        case 253:
+            delay = 10;
+            break;
+        case 254:
+            delay = 17;
+            break;
+        case 255:
+            delay = 17;
+            break;
+        case 256:
+            delay = 19;
+            break;
+        case 257:
+            delay = 23;
+            break;
+        case 258:
+            break;
+        case 259:
+            delay = 10;
+            break;
+        case 260:
+            delay = 5;
+            break;
+        case 261:
+            delay = 3;
+            break;
+        case 262:
+            delay = 5;
+            break;
+        case 263:
+            delay = 26;
+            break;
+        case 264:
+            break;
+        case 265:
+            delay = 16;
+            break;
+        default:
+            delay = 10;
+            break;
+        }
+        break;
+    default:
+        if (flag) {
+            channel = 257;
+        }
+        sv = 112;
+        break;
+    }
+    sv = sv * 0.81f;
+    Audio_QueueDeferredSound(--channel, delay, sv);
+}
 
 s32 func_80024864(void) {
     extern s32 func_80019230(s32, s32, s32);
@@ -144,7 +318,7 @@ void func_800248EC(void *arg0) {
     *((u8 *)arg0 + 1) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/23D10/func_80024974.s")
+#pragma GLOBAL_ASM("hand_asm/23D10/func_80024974_manual.s")
 
 void func_80024D10(s32 arg0) {
     D_80090A54 = 0;
@@ -844,7 +1018,65 @@ void func_80026938(u16 arg0) {
 
 #pragma C_FUNCTION_PADDING(8)
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/23D10/func_80026990.s")
+extern u32 func_800194A0(void);
+
+typedef struct {
+    u8 unk_00;  /* upper limit of result: the loop stops once result passes it */
+    u8 unk_01;
+    u16 unk_02; /* scaled by the random draw to form the loop's sum target */
+} AudioTuneRecord_80026990;
+
+extern AudioTuneRecord_80026990 D_800918DC[];
+extern u16 D_80091814[];        /* per-index weights accumulated into sum */
+extern f32 D_800918BC[4][2];    /* per-column (arg0 & 3) scale bases, 8-byte stride */
+extern f32 D_800918C0[4][2];    /* second scale table read when the draw is >= 0x3FFF */
+
+/* Selects a weighted result for one of the audio columns in arg0's low two bits.
+   The fourth random draw picks which of the two scale tables is used, then the
+   result is mapped into [1.0, base] by dividing by the record's unk_00. */
+
+
+f32 func_80026990(u8 arg0) {
+    u16 value;
+    u16 result;
+    u16 sum;
+    u16 upper;
+    /* The four u16 locals above live at 0x38..0x3E; these two unused slots
+       keep the frame at 0x40, which in turn places index at 0x24 and the
+       incoming argument at 0x28. */
+    u32 pad1;
+    u32 pad2;
+    u8 index;
+    u8 col;
+
+    /* arg0 packs a column selector in its low two bits; the remaining bits
+       index the record table one-based, so index is upper - 1. */
+    upper = arg0 >> 2;
+    index = upper - 1;
+    if (index == 2) {
+        value = func_800194A0() & 0x7FFF;
+        result = (u16)((D_800918DC[index].unk_00 * value) / 32767);
+    } else {
+        result = 0;
+        sum = 0;
+        value = func_800194A0() & 0x7FFF;
+        upper = (u16)((D_800918DC[index].unk_02 * value) / 32767);
+        /* Add weights while their running total stays under the target. */
+        while (sum < upper) {
+            if (D_800918DC[index].unk_00 < result) {
+                break;
+            }
+            sum += D_80091814[result++];
+        }
+    }
+    value = func_800194A0() & 0x7FFF;
+    if (value < 0x3FFF) {
+        col = arg0 & 3;
+        return (f32)result * (D_800918BC[col][0] - 1.0f) / (f32)D_800918DC[index].unk_00 + 1.0f;
+    }
+    col = arg0 & 3;
+    return (f32)result * (D_800918C0[col][0] - 1.0f) / (f32)D_800918DC[index].unk_00 + 1.0f;
+}
 
 void Audio_DebugSampleHistogram(u8 mode) {
     s32 i;
