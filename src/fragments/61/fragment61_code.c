@@ -1244,7 +1244,55 @@ void func_86B0952C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B095B4.s")
+extern Gfx *D_800D0510;
+extern u8 D_86B17A78[];
+extern u8 *D_86B180E0[];
+extern Gfx *D_86B180D8;
+extern u8 *func_8004CA60(u8 *);
+extern void func_8003CD84(void);
+
+
+
+void func_86B095B4(s32 arg0, Gfx *arg1) {
+    u8 *tex;
+
+    if (arg0 == 5) {
+        // FAKE: the callback's unused second argument holds the display-list
+        // cursor. The plain macro form gDPPipeSync(D_800D0510++) scores 20
+        // (the temp lands in v1); a Gfx *gfx local gives v0 but grows the
+        // frame to 0x58 and scores 26.
+        arg1 = D_800D0510;
+        D_800D0510 = arg1 + 1;
+        gDPPipeSync(arg1);
+        switch (*(s32 *)(D_86B17A78 + 0x00)) {
+        case 0:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0x96, 0xE6, 0xFF, *(s32 *)(D_86B17A78 + 0x94));
+            gDPSetEnvColor(D_800D0510++, 0x28, 0x50, 0x7C, 0xFF);
+            break;
+        case 1:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0xDC, 0xDC, 0xDC, *(s32 *)(D_86B17A78 + 0x94));
+            gDPSetEnvColor(D_800D0510++, 0xBE, 0x82, 0x00, 0xFF);
+            break;
+        case 2:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0x78, *(s32 *)(D_86B17A78 + 0x94));
+            gDPSetEnvColor(D_800D0510++, 0xB4, 0x46, 0x00, 0xFF);
+            break;
+        case 3:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0xE1, 0xD7, 0xFF, *(s32 *)(D_86B17A78 + 0x94));
+            gDPSetEnvColor(D_800D0510++, 0x73, 0x4B, 0xA5, 0xFF);
+            break;
+        case 4:
+            gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xB4, 0x00, *(s32 *)(D_86B17A78 + 0x94));
+            gDPSetEnvColor(D_800D0510++, 0x00, 0x00, 0x00, 0xFF);
+            break;
+        }
+        gDPSetCombine(D_800D0510++, 0x30B3FF, 0x5FFEFE38);
+        tex = D_86B180E0[*(s32 *)(D_86B17A78 + 0x00)];
+        gSPSegment(D_800D0510++, 0xF, func_8004CA60(tex));
+        gSPDisplayList(D_800D0510++, D_86B180D8);
+        func_8003CD84();
+    }
+}
 #endif
 
 #ifdef VERSION_US
