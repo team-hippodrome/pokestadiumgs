@@ -2267,7 +2267,86 @@ void func_82609D84(void *arg0, s32 arg1) {
 }
 /* mkdraft:func_82609D84 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260A0B8.s")
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+extern s16 D_826156D8[];
+extern s16 D_826156DC[];
+
+
+
+void func_8260A0B8(void *arg0, s32 arg1) {
+    u8 *rows;
+    u16 *texture;
+    s32 stripWidth;
+    s32 textureHeight;
+    s32 pad1; // FAKE: unused; retail keeps an unread s32 at 0xE4 (score 328 without it)
+    s16 originY;
+    s16 originX;
+    struct Color { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+    s16 *offsets;
+    s32 yBase;
+    s32 cols;
+    s32 stepX;
+    s32 stepY;
+    s32 width;
+    s32 height;
+    s32 pad2; // FAKE: unused; retail frame 0xF8 needs 19 automatic slots (score 444 without it)
+    s32 x;
+    s32 y;
+    s32 i;
+
+    rows = ((u8 *) arg0) + 0x30;
+    texture = (u16 *) ((u32) func_8004C990(0x51, 0));
+    stripWidth = ((s32) texture[0]) / 4;
+    textureHeight = texture[1];
+    if (texture != 0) {
+        originX = (*((s16 *) (((u8 *) arg0) + 0x14))) + (*((s16 *) (((u8 *) arg0) + 0x10)));
+        originY = (*((s16 *) (((u8 *) arg0) + 0x16))) + (*((s16 *) (((u8 *) arg0) + 0x12)));
+        if ((*((s16 *) (rows + 4))) != 0) {
+            offsets = D_826156DC;
+            yBase = 0xA;
+            cols = 4;
+            stepX = 0x66;
+            stepY = 0x3E;
+            width = 0x61;
+            height = 0x39;
+        } else {
+            offsets = D_826156D8;
+            yBase = 0xC;
+            cols = 3;
+            stepX = 0x87;
+            stepY = 0x5B;
+            width = 0x7D;
+            height = 0x56;
+        }
+        if (arg1 != 0) {
+            gSPDisplayList(D_800D0510++, D_80094E78);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            func_8004D1FC((u8 *) texture);
+        }
+        func_82607BF4(*((s16 *) arg0), (u8 *) (&prim), (u8 *) (&env), *((s16 *) (((u8 *) arg0) + 0xC)), ((*((u16 *) (((u8 *) arg0) + 4))) & 8) != 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+        gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+        for (i = 0; i < (*((s16 *) (rows + 6))); i++) {
+            x = (originX + offsets[*((s16 *) (((u8 *) arg0) + 2))]) + (stepX * (i % cols));
+            y = (originY + yBase) + (stepY * (i / cols));
+            GfxRect_DrawTextured((s16) x, (s16) y, (s16) stripWidth, (s16) textureHeight, (s16) (stripWidth * 0), 0, 0x400, 0x400, 0);
+            GfxRect_DrawTextured((s16) (x + stripWidth), (s16) y, (s16) (width - (stripWidth * 2)), (s16) textureHeight, (s16) (stripWidth << 5), 0, 0, 0x400, 0);
+            GfxRect_DrawTextured((s16) ((x + width) - stripWidth), (s16) y, (s16) stripWidth, (s16) textureHeight, (s16) (stripWidth << 5), 0, 0x400, 0x400, 0);
+            GfxRect_DrawTextured((s16) x, (s16) (y + textureHeight), (s16) stripWidth, (s16) (height - (textureHeight * 2)), (s16) ((stripWidth * 2) << 5), 0, 0x400, 0, 0);
+            GfxRect_DrawTextured((s16) x, (s16) ((y + height) - textureHeight), (s16) stripWidth, (s16) textureHeight, (s16) ((stripWidth * 2) << 5), 0, 0x400, 0x400, 0);
+            GfxRect_DrawTextured((s16) (x + stripWidth), (s16) ((y + height) - textureHeight), (s16) (width - (stripWidth * 2)), (s16) textureHeight, (s16) ((stripWidth * 3) << 5), 0, 0, 0x400, 0);
+            GfxRect_DrawTextured((s16) ((x + width) - stripWidth), (s16) ((y + height) - textureHeight), (s16) stripWidth, (s16) textureHeight, (s16) ((stripWidth * 3) << 5), 0, 0x400, 0x400, 0);
+            GfxRect_DrawTextured((s16) ((x + width) - stripWidth), (s16) (y + textureHeight), (s16) stripWidth, (s16) (height - (textureHeight * 2)), (s16) ((stripWidth * 3) << 5), 0, 0x400, 0, 0);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260A6B4.s")
 
@@ -3611,7 +3690,184 @@ void func_826112CC(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826114DC.s")
+extern s32 D_826153C0;
+extern s32 D_8261576C;
+extern s32 D_82615770;
+extern s32 D_82615774;
+extern s32 D_82615778;
+extern void *D_80087200;
+extern void func_826078B4(void *arg0);
+extern void func_826026E8(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+extern void func_82602708(s32 arg0);
+extern void func_800226C0(s32 arg0);
+extern void *func_82604C40(s32 arg0, s32 arg1, void *arg2, s32 arg3);
+extern void func_8260675C(u8 *arg0);
+
+// Drives the fade/spawn timer of one arena entry. arg0+0xA is the current alpha,
+// arg0+0xC is the alpha step, arg0+6 counts frames since the entry started,
+// arg0+8 counts blocked frames, and arg0+0x18 is the entry count for the walk
+// over arg0+0x34F4 in the completed branch. D_8261576C is the start timestamp,
+// D_82615770/74/78 are the fade-in, fade-out and hold lengths.
+
+
+void func_826114DC(u8 *arg0) {
+    s32 i;
+    s32 flag;
+    u8 *entry;
+    u8 *base;
+    s32 ready;
+    s32 elapsed;
+    s32 p;
+    s32 q;
+    s16 old_alpha;
+    s32 k;
+    u8 *walk;
+    u8 *spot;
+    s16 raw;
+    s32 zero;
+    u8 *sub;
+
+    base = arg0 + 0x114;
+    ready = 1;
+    flag = 1;
+    entry = func_82604C40(5, 0, base, 0x14);
+    if (entry != 0 && *(s16 *)(entry + 6) != 0) {
+        return;
+    }
+    i = 0;
+    do {
+        entry = func_82604C40(4, i, base, 0x14);
+        func_8260675C(entry);
+        if (*(s16 *)(entry + 6) != 2) {
+            flag = 0;
+        }
+        i++;
+    } while (i != 2);
+    *(s16 *)(arg0 + 6) += 1;
+    elapsed = *(s16 *)(arg0 + 6) - D_8261576C;
+    if (elapsed < 0) {
+        // FAKE: p and q are re-read here and in the positive arm even though no
+        // call separates the two reads; the target contains both load pairs.
+        // The comma form with q first and the empty do/while are load-bearing:
+        // plain `p = ...; q = ...;` scores 105 here (uopt colors p into the
+        // wrong register and emits the two address lui in source order).
+        (q = D_82615774), (p = D_82615770);
+        do {
+        } while (0);
+        elapsed = 0;
+    } else {
+        p = D_82615770;
+        q = D_82615774;
+        if (p + q + D_82615778 < elapsed) {
+            elapsed = p + q + D_82615778;
+        }
+    }
+    if (elapsed < p) {
+        *(s16 *)(arg0 + 0xA) = 0xFF;
+        *(s16 *)(arg0 + 0xC) = (s32)(elapsed * 0xFF) / p;
+    } else if (elapsed < p + q) {
+        old_alpha = *(s16 *)(arg0 + 0xA);
+        if (elapsed - p < q / 2) {
+            *(s16 *)(arg0 + 0xA) = 0xFF - (s32)((elapsed - p) * 0xFF) / (q / 2);
+        } else {
+            *(s16 *)(arg0 + 0xA) = (s32)((elapsed - p - q / 2) * 0xFF) / (q / 2);
+        }
+        *(s16 *)(arg0 + 0xC) = 0xFF;
+        if (old_alpha == 0xFF) {
+            if (*(s16 *)(arg0 + 0xA) < old_alpha) {
+                func_800226C0(0x70);
+            }
+        }
+    } else {
+        if (elapsed == p + q) {
+            s32 blocked;
+            // FAKE: the 1/0 value is written through a second local so that the
+            // join keeps the flag in memory as the target does.
+            blocked = 0;
+            // D_80087200 is the port-1 ControllerState; +8 is buttonsPressed, so
+            // 0x8000 is the A button (include/controller.h). Holding it keeps the
+            // frame counter from being held back.
+            if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+                blocked = 1;
+            } else {
+                if (*(s16 *)(arg0 + 8) < D_826153C0) {
+                    *(s16 *)(arg0 + 8) += 1;
+                } else {
+                    blocked = 1;
+                }
+            }
+            if (blocked == 0) {
+                *(s16 *)(arg0 + 6) -= 1;
+            }
+        }
+        *(s16 *)(arg0 + 0xA) = 0xFF;
+        *(s16 *)(arg0 + 0xC) = 0xFF - (s32)((elapsed - p - q) * 0xFF) / D_82615778;
+    }
+    for (i = 0; i < 2; i++) {
+        entry = func_82604C40(4, i, base, 0x14);
+        walk = entry + 0x30;
+        // FAKE: zero is a second name for 0; k counts bytes and spot walks the
+        // same s16 records, both advancing by 2 per element.
+        zero = 0;
+        if (*(s16 *)(entry + 0x36) > 0) {
+            k = zero;
+            raw = *(s16 *)(walk + 6);
+            spot = walk;
+            do {
+                k += 2;
+                if (*(s16 *)(spot + 0x14) > 0) {
+                    ready = 0;
+                }
+                // FAKE: arithmetic nop; zero stays 0.
+                zero++;
+                zero--;
+                spot += 2;
+            } while (k < raw * 2);
+            // FAKE: arithmetic nop; walk is not read again.
+            walk++;
+            walk--;
+        }
+        if (ready == 0) {
+            break;
+        }
+    }
+    if (ready != 0 && *(s16 *)(arg0 + 0xC) == 0) {
+        *(s16 *)(arg0 + 2) = 0x13;
+        *(s16 *)(arg0 + 6) = 0;
+        *(s16 *)(arg0 + 0x18) = 0;
+        for (i = 0; i < 2; i++) {
+            entry = func_82604C40(4, i, base, 0x14);
+            *(u8 **)(arg0 + 0x34F4 + *(s16 *)(arg0 + 0x18) * 4) = entry;
+            *(s16 *)(arg0 + 0x18) += 1;
+        }
+        i = 0;
+        entry = arg0;
+        if (*(s16 *)(arg0 + 0x18) > 0) {
+            do {
+                sub = *(u8 **)(entry + 0x34F4);
+                if (*(s16 *)(sub + 6) == 2) {
+                    func_826078B4(sub);
+                    func_800226C0(0x69);
+                }
+                i++;
+                entry += 4;
+            } while (i < *(s16 *)(arg0 + 0x18));
+        }
+    }
+    if (flag != 0 && *(s16 *)(arg0 + 2) != 5) {
+        flag = 0;
+    }
+    if (flag != 0) {
+        entry = func_82604C40(4, 0, base, 0x14);
+        // Written reverse to field order: field order loads +0x14 into t5 and
+        // +0x10 into t6, while the target has t5 = +0x10 and t6 = +0x14.
+        func_826026E8(*(s32 *)(arg0 + 0x110), *(s16 *)(entry + 0x14) + *(s16 *)(entry + 0x10),
+                      *(s16 *)(entry + 0x16) + *(s16 *)(entry + 0x12), *(s16 *)(entry + 0x24),
+                      *(s16 *)(entry + 0x26) << 1);
+    } else {
+        func_82602708(*(s32 *)(arg0 + 0x110));
+    }
+}
 
 s32 func_826119A4(s32 arg0, s32 arg1, s16 *arg2) {
     s32 result;
@@ -3664,7 +3920,7 @@ void func_826122A4(u8 *arg0) {
 extern s32 D_82615794;
 extern s32 D_82615798;
 extern s32 D_8261579C;
-extern void func_82602708(void *arg0);
+extern void func_82602708(s32 arg0);
 
 
 void func_826123B0(void *arg0) {
@@ -4274,7 +4530,7 @@ extern s16 D_8261A492;
 extern u16 D_8261A494;
 extern s16 D_8261DA4C;
 extern void func_8260F108(void *);
-extern void func_826114DC(void *);
+void func_826114DC(u8 *arg0);
 extern void func_826119DC(void *);
 extern void func_82611D44(void *);
 extern void func_826123B0(void *);
@@ -4940,7 +5196,38 @@ void func_82614570(void *arg0) {
     } while (var_s2 != 0x33E0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82614630.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+extern s16 D_826157B8[];
+extern s32 func_8004C990(s32, s32);
+extern void func_826082C0(u8 *, u8 *, s32, s32);
+
+
+
+void func_82614630(void *arg0) {
+    struct State { u8 pad[2]; s16 alpha; };
+    s32 result;
+    struct Color { u8 r; u8 g; u8 b; } color1;
+    struct Color color2;
+    u16 flip;
+    s32 color_index;
+
+    if (((struct State *)arg0)->alpha > 0) {
+        // Upper halfword of the word at +0xC: indexes D_826157B8 and selects the
+        // 3-byte color row that func_826082C0 interpolates into color2.
+        color_index = *(u32 *)((u8 *)arg0 + 0xC) >> 16;
+        result = func_8004C990(0x55, D_826157B8[color_index]);
+        // Flip flags for func_8004D150: 2 sets the T-flip bit that func_8004CB7C
+        // applies to the texture rectangle.
+        flip = color_index >= 6 ? 2 : 0;
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        func_826082C0(&color1.r, &color2.r, *(s16 *)((u8 *)arg0 + 6), color_index);
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, color1.r, color1.g, color1.b, ((struct State *)arg0)->alpha);
+        gDPSetPrimColor(D_800D0510++, 0, 0, color2.r, color2.g, color2.b, 0xFF);
+        func_8004D150(*(s16 *)((u8 *)arg0 + 0x14), *(s16 *)((u8 *)arg0 + 0x16), result, 0, flip, 0);
+    }
+}
 
 extern s32 func_8004D19C(s32, s32, s32, s32, s32);
 extern void func_82607E40(u8 *, u8 *, u8 *, u8 *, s32);
