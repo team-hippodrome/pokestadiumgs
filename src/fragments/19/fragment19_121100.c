@@ -1075,7 +1075,102 @@ s32 func_823030A4(void) {
     return func_823000E8();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823030C4.s")
+extern s32 func_82300AD4(void);
+extern s32 func_82305A4C(void);
+extern void func_800226C0(s32 arg0);
+extern s32 func_8006A600(s32 arg0, s32 arg1, s32 arg2);
+extern s32 func_800718B8(s32 arg0);
+extern void *D_80087200;
+extern u8 D_82305A74[];
+extern s16 D_82305E6C;
+extern s32 D_82305EA8;
+
+// Movement-table walk for one entry of D_82305A74 (0x24 bytes per entry). The four
+// direction bits of the button word at D_80087200+8 select one neighbour index each
+// (0x10/0x12/0x14/0x16, negative = not a legal move); the walked index is compared
+// against the function-entry value to decide whether the menu position moved.
+// The index and the button-word base are read through pointer locals so they stay in
+// registers across the four checks instead of being reloaded at each use.
+
+
+s32 func_823030C4(void) {
+    s32 result;
+    s16 *index_ptr = &D_82305E6A;
+    void **pool_ptr = &D_80087200;
+    s32 start_index;
+    s16 next_a;
+    s16 next_b;
+    s16 next_c;
+    s16 next_d;
+    s32 call_result;
+    u32 buttons;
+    u32 buttons_final;
+    u8 *entry;
+
+    result = 0;
+    start_index = *index_ptr;
+    if (func_82300AD4() == 0) {
+        return 0;
+    }
+    if (func_82305A4C() == 0) {
+        return 0;
+    }
+    buttons = *(u16 *)((u8 *)(*pool_ptr) + 8);
+    if (buttons & 0x800) {
+        entry = &D_82305A74[(*index_ptr) * 36];
+        next_a = *(s16 *)(entry + 0x10);
+        if (next_a >= 0) {
+            (*index_ptr) = next_a;
+            buttons = *(u16 *)((u8 *)(*pool_ptr) + 8);
+        }
+    }
+    if (buttons & 0x400) {
+        entry = &D_82305A74[(*index_ptr) * 36];
+        next_b = *(s16 *)(entry + 0x12);
+        if (next_b >= 0) {
+            (*index_ptr) = next_b;
+            buttons = *(u16 *)((u8 *)(*pool_ptr) + 8);
+        }
+    }
+    if (buttons & 0x200) {
+        entry = &D_82305A74[(*index_ptr) * 36];
+        next_c = *(s16 *)(entry + 0x14);
+        if (next_c >= 0) {
+            (*index_ptr) = next_c;
+            buttons = *(u16 *)((u8 *)(*pool_ptr) + 8);
+        }
+    }
+    if (buttons & 0x100) {
+        entry = &D_82305A74[(*index_ptr) * 36];
+        next_d = *(s16 *)(entry + 0x16);
+        if (next_d >= 0) {
+            (*index_ptr) = next_d;
+        }
+    }
+    if (start_index != (*index_ptr)) {
+        func_800226C0(1);
+    }
+    {
+        entry = &D_82305A74[(*index_ptr) * 36];
+        buttons_final = *(u16 *)((u8 *)(*pool_ptr) + 8);
+        if (buttons_final & 0x8000) {
+            result = 1;
+            D_82305E6C = (*index_ptr);
+            func_800226C0(0x8C);
+        } else if (buttons_final & 0x4000) {
+            result = 1;
+            D_82305E6C = -1;
+            func_800226C0(3);
+        } else if (buttons_final & 0x10) {
+            call_result = func_8006A600(*(u16 *)entry, 1, (s32) * (s16 *)D_82305A70);
+            result = 1;
+            D_82305E6C = -2;
+            D_82305EA8 = func_800718B8(call_result);
+            func_800226C0(0xD2);
+        }
+    }
+    return result;
+}
 
 /* mkdraft:func_82303308 begin */
 extern s16 D_82305E68[];
@@ -1084,7 +1179,7 @@ extern s16 D_82305E70;
 extern void *D_80087200;
 s32 func_82300F4C(void);
 s32 func_82305A28();
-s32 func_800226C0(s32);
+extern void func_800226C0(s32 arg0);
 
 // Controller-driven counter: D_82305E6E is stepped down/up by the 0x200/0x100
 // flags at D_80087200+0x8 and clamped to [0, ceiling]. The ceiling is the u16
