@@ -165,7 +165,45 @@ void func_82800BC8(s32 arg0, f32 arg1) {
 }
 /* mkdraft:func_82800BC8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82800E94.s")
+extern f32 (*D_8160BD08)(f32);
+extern s32 func_82800BB4(u8 *arg0);
+
+typedef struct {
+    s16 x;
+    s16 y;
+} Point;
+
+typedef struct {
+    Point p[4];
+} PointRow;
+
+typedef struct {
+    PointRow row[2];
+} PointGrid;
+
+extern PointGrid D_828028D4;
+
+
+
+f32 func_82800E94(u8 *arg0, s16 *arg1, s32 arg2) {
+    PointGrid grid;
+    f32 ratio;
+
+    grid = D_828028D4;
+    ratio = D_8160BD08(*(f32 *)(arg0 + 4) / 12.0f);
+    if (func_82800BB4(arg0) != 0) {
+        arg1[2] = 0x7A;
+        arg1[3] = 0x3A;
+        arg1[0] = (s16)(((f32)(0x7A - arg1[2]) * 0.5f) + (f32)grid.row[0].p[arg2].x);
+        arg1[1] = (s16)(((f32)(0x3A - arg1[3]) * 0.5f) + (f32)grid.row[0].p[arg2].y);
+    } else {
+        arg1[0] = (s16)(((f32)(grid.row[0].p[arg2].x - grid.row[1].p[arg2].x) * ratio) + (f32)grid.row[1].p[arg2].x);
+        arg1[1] = (s16)(((f32)(grid.row[0].p[arg2].y - grid.row[1].p[arg2].y) * ratio) + (f32)grid.row[1].p[arg2].y);
+        arg1[2] = 0x7A;
+        arg1[3] = 0x3A;
+    }
+    return ratio;
+}
 
 extern f32 (*D_8160BD08)(f32);
 extern s16 D_828028F4[][4][2];
