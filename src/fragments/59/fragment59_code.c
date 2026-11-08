@@ -1611,7 +1611,59 @@ s32 func_86904D48(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_869053B4.s")
+extern u32 D_8691A2E8;
+extern s32 func_86904D48(void);
+
+
+
+s32 func_869053B4(s32 arg0) {
+    s32 temp;
+    s32 var_v1;
+
+    temp = arg0 - func_86904D48();
+    var_v1 = temp;
+    if (arg0 == 0) {
+        return 0;
+    }
+    if (temp < 0) {
+        var_v1 = -temp;
+    }
+    switch (D_8691A2E8) {
+    case 0:
+    case 1:
+        switch (var_v1) {
+        case 0:
+            return 0xA;
+        case 1:
+            return 5;
+        case 2:
+            return 1;
+        }
+        break;
+    case 2:
+    case 3:
+        switch (var_v1) {
+        case 0:
+            return 0x14;
+        case 1:
+            return 0xA;
+        case 2:
+            return 5;
+        }
+        break;
+    case 4:
+        switch (var_v1) {
+        case 0:
+            return 0x28;
+        case 1:
+            return 0x14;
+        case 2:
+            return 0xA;
+        }
+        break;
+    }
+    return 0;
+}
 #endif
 
 void func_869054CC(void) {
@@ -2338,7 +2390,50 @@ void func_86909EAC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690AA64.s")
+extern s32 D_8690FAB8;
+
+
+
+void func_8690AA64(void) {
+    s32 state;
+    s32 color1;
+    s32 color2;
+
+    state = *(s32 *)(D_8691A2A0 + 0x4C);
+    if (state < 120) {
+        *(s32 *)(D_8691A2A0 + 0x70) = 0;
+    } else if (state < 180) {
+        *(s32 *)(D_8691A2A0 + 0x70) = 1;
+        color1 = 0xFFB400FF;
+        color2 = 0x000096FF;
+        func_87F0A6C8(D_8690FAB8, 0x50503543, &color1, &color2);
+        func_800503A4(D_8690FAB8);
+        func_87F0A6C8(D_8690FABC, 0x50503643, &color1, &color2);
+        func_800503A4(D_8690FABC);
+    } else if (state < 210) {
+        *(s32 *)(D_8691A2A0 + 0x70) = 1;
+        color1 = 0xFFB400FF;
+        color2 = 0x000096FF;
+        func_87F0A6C8(D_8690FAB8, 0x50503543, &color1, &color2);
+        func_800503A4(D_8690FAB8);
+        func_87F0A6C8(D_8690FABC, 0x50503643, &color1, &color2);
+        func_800503A4(D_8690FABC);
+        func_8690CA50();
+    } else if (state < 290) {
+        *(s32 *)(D_8691A2A0 + 0x70) = 0;
+    } else {
+        // FAKE: gives the final arm a branch node, so the `b` at 0x8690AB9C
+        // carries the `sw $zero, 0x70($v0)` at 0x8690ABA0 in its delay slot.
+        // Without it the object is 0x164 bytes with 13 mismatched words.
+        if (state) {
+            if (state) {
+            }
+        }
+    }
+    if (state >= 341) {
+        func_87F0A5BC(D_8690FA20);
+    }
+}
 #endif
 
 #ifdef VERSION_US
