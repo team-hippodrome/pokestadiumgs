@@ -57,7 +57,64 @@ s32 func_88B0449C(void) {
     return i & 0xFF;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B044D0.s")
+extern u8 D_88B05BE0[];
+extern u8 D_88B05C68[];
+extern u16 D_88B05F6E;
+extern u32 D_88B05F64;
+extern u8 D_88B05F80[];
+extern s32 func_88B04468(void);
+extern s32 func_88B0449C(void);
+extern void *func_88B04420(u16 arg0);
+extern s32 func_8004C54C(s32 index, s32 value);
+extern u32 Credits_RandomRange(u32 arg0);
+typedef struct {
+    u16 unk_0;
+    u16 unk_2;
+} Unk4;
+
+
+
+s32 func_88B044D0(s32 arg0) {
+    u32 column;
+    u32 row;
+    u32 limit;
+    u16 output[66];
+    u8 *entry;
+    Unk4 *table;
+    s32 result = 0;
+
+    for (row = 0; row != 2; row++) {
+        switch (row) {
+        case 0:
+            limit = 0x22;
+            column = func_88B04468();
+            entry = D_88B05F80 + column + 0xA2C;
+            table = (Unk4 *)(D_88B05BE0 + column * 4);
+            break;
+        case 1:
+            limit = 0x24;
+            column = func_88B0449C();
+            entry = D_88B05F80 + column + 0xA4E;
+            table = (Unk4 *)(D_88B05C68 + column * 4);
+            break;
+        }
+        for (; column < limit; column++, entry++, table++) {
+            if (((arg0 != 0) && (*entry != 0) && (table->unk_2 != D_88B05F6E)) ||
+                ((arg0 == 0) && (*entry == 0) &&
+                 ((D_88B05F64 != 0) || (table->unk_2 != 0x122)))) {
+                output[result] = table->unk_2;
+                result++;
+                result &= 0xFF;
+            }
+        }
+    }
+
+    if (result != 0) {
+        func_8004C54C(70, func_88B04420(output[Credits_RandomRange(result)]));
+        return 1;
+    }
+    return 0;
+}
 
 extern u8 D_88B05868[];
 extern u16 D_88B05F6E;
@@ -387,7 +444,7 @@ void func_88B05494(u16 arg0) {
 }
 
 /* mkdraft:func_88B0552C begin */
-extern s32 D_88B05F64;
+extern u32 D_88B05F64;
 extern s32 D_88B05F68;
 extern u16 D_88B05F6C;
 extern u16 D_88B05F6E;
@@ -448,7 +505,7 @@ s32 func_88B0552C(u16 arg0, s32 arg1, s32 arg2, s32 arg3) {
 extern u16 D_88B05F6C;
 extern u16 D_88B05F6E;
 extern s32 D_88B069F4;
-extern s32 func_8004C54C(s32, void *);
+extern s32 func_8004C54C(s32 index, s32 value);
 extern void *func_88B04420(u16);
 extern s32 func_88B04698(void);
 
