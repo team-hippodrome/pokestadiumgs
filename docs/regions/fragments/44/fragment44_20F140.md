@@ -170,3 +170,56 @@ All 13824 module text bytes and 912 rodata bytes equal the assembly-backed
 baseline, including every prior C body. The owner occupies ROM
 `0x21022C..0x210358` (end exclusive). No data ownership, instruction rewrite,
 generated layout or CI change is included.
+
+## 2026-11-08 — `func_8AF233B4`: window 31 setup accepted
+
+`func_8AF233B4`, **481 instructions / 1924 bytes**, frame **0x48**. Full-ROM
+gate passes: `build/pokestadiumgs-us.z64: OK`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All 25 functions in
+`fragment44_20F140.o` match the assembly-backed baseline.
+
+The menu dispatcher in `fragment44_1EE290.c` calls it for case 31 after
+storing `func_8004D690(14)` in `D_8AF2BACC`. `func_8AF01FFC` documents when
+window 31 opens (menu kind 1 with object byte 0..2).
+//@src/fragments/44/fragment44_1EE290.c
+
+The function clears `D_8AF3A148`, then sets up file groups 147, 187 and 50
+and the three texture slots. It caches assets from the archive returned by
+`func_8AF220E8`, looking each up by four-character tag through
+`func_8AC06D8C`. The tags are written as multi-character constants (`'msg1'`,
+`'name'`, `'yes1'`, `'no01'`, `'Abtn'` ...); IDO folds them to the
+same big-endian words the original loads. The asset at `'msg1'` gets the
+halfword 56 at offset 0x30. Three of the assets (`'Abtn'`, `'AAAA'`,
+`'aaaa'`) and `'abtn'` are each also expanded into a local buffer through
+`func_8AC05E40` / `func_8AC06400`.
+
+Each of the `D_8AF3A19C` records at `D_8AF3A198` (stride 0x44) resolves
+the tags stored at +4, +8 and +0xC into +0x20, +0x24 and +0x28. It also
+resolves `'ff_1' + i` and `'fb_1' + i` into +0x2C and +0x30, registers
+`func_8AF219B4` with index `i` on the +0x28 asset, and caches
+`func_8004E0F0(0, id, 0..2)` in +0x34..+0x3C, where `id` is the record's
+leading halfword.
+
+The starting record `D_8AF3A082` comes from:
+
+- the caller object's byte 1 (kind 1, followed by `func_8AC0080C(8)`);
+- `D_8AF3A084` when `D_8AF26564` is set (followed by `func_8AC0080C(4)`
+  and the two refresh calls);
+- 0 otherwise.
+
+`D_8AF3A084` is then cleared. For kind 1 with a nonzero object byte 2, the
+kind is reset to 0. For kind 1, the byte at +0x9C6 of the object pointed to
+by the caller's +4 word selects between opening state 4 (values 0 and 4,
+with `D_8AF3A174`/`D_8AF3A176` chosen by `func_8AF2228C`/`func_8AF22384`)
+and state 6. The slot returned by `func_8AF21C04` is then passed to
+`func_80054410`. When that result is neither 1 nor 2 and `D_8AF3A174` is 1,
+`D_8AF3A148`/`D_8AF3A14C` record the slot.
+
+Matching notes: the declared locals (`archive`, `entry`, `i`, `slot`,
+`callback`, `result`) reproduce the 0x48 frame, and the callback's spill
+lands at sp+0x28. The switch reads the +0x9C6 byte directly; a named local
+moves it to another register. `func_80054488` takes `(s32, u8)`, so the
+`s16` slot passes through untruncated. The trailing `else if` repeats an
+already-taken test and is unreachable; it is kept and commented because the
+original tests and stores it. No `FAKE` and no permuter.
+//@src/fragments/44/fragment44_20F140.c
