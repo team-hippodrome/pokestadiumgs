@@ -556,7 +556,292 @@ void func_8F10128C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F101318.s")
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE2C;
+extern s32 D_8F1DEE38;
+extern s32 D_8F1DEE3C;
+extern s8 D_8F1DEE48[];
+extern s8 D_8F1DEE4A;
+extern s8 D_8F1DEE4B;
+extern s32 D_8F1DEE58;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DEE60;
+extern s8 D_8F1DED4E;
+extern u8 D_8F1DECC4;
+extern u8 D_8F1DECC5;
+extern u8 D_8F1DECE8[];
+extern s16 *D_8F1DECEC;
+extern u8 D_8F1DECFC[];
+extern void *D_8F1DECB4;
+
+typedef struct {
+    s16 unk00;
+    s8 unk02;
+    s8 unk03;
+} Unk8F101318_Mode;
+
+typedef struct Unk8F101318_AnimRec {
+    u8 unk00[0x20];
+    s32 unk20;
+    u8 unk24[8];
+    s32 unk2C;
+    u8 unk30[4];
+    s32 unk34;
+} Unk8F101318_AnimRec;
+
+extern s32 D_8F1DEE24;
+
+extern Unk8F101318_AnimRec *D_8F1DECA0;
+extern u16 D_80094904;
+extern void *D_80094BB0;
+
+extern u8 D_8F103CB0[];
+extern u8 D_8F103CBC[];
+extern u8 D_8F103CC8[];
+extern u8 D_8F103CD8[];
+extern u8 D_8F103CE4[];
+extern u8 D_8F103CF0[];
+extern u8 D_8F103D04[];
+extern u8 D_8F103D14[];
+extern u8 D_8F103D28[];
+extern u8 D_8F103D38[];
+extern u8 D_8F103D48[];
+extern u8 D_8F103D5C[];
+
+extern void func_8004989C(s32);
+extern s32 ModelAnim_AdvanceCurveFrame(void *, u16);
+extern s16 ModelAnim_AdvanceEventFrame(void *, u16);
+extern void *func_8004B7A4(s32);
+extern s16 func_8004B920(s32, s32);
+extern Unk8F101318_Mode func_8004B9E0(s32);
+
+
+
+void func_8F101318(void) {
+    s32 i;
+    u8 *text;
+    u32 total;
+    s16 hpCur;
+    s16 hpMax;
+    void *object;
+    void *icon;
+    Unk8F101318_Mode mode;
+
+    hpCur = func_8004B920(D_8F1DEE24, 0);
+    hpMax = func_8004B920(D_8F1DEE24, 1);
+    object = D_8F1DECB4;
+    icon = (*(void *(**)(s32, s32))((u8 *)object + 0x2C))(0, 0);
+    mode = func_8004B9E0(D_8F1DEE24);
+    func_800498C4();
+    func_8004989C(0xE);
+    func_800496A4(0x20, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0, 0, 0xFF, 0xFF);
+    if (func_8003514C() == 0) {
+        text = D_8F103A6C[D_8F1DEE58];
+    } else {
+        text = D_8F103A9C[D_8F1DEE58];
+    }
+    func_800495BC(0x1E, 0x1E, text);
+    Font_DisableTwoCycleTexturing();
+    switch (D_8F1DEE58) {
+    case 0:
+        text = func_8004B7A4(D_8F1DEE24);
+        if (text == NULL) {
+            text = D_8F10398C;
+        }
+        func_800495BC(0x1E, 0x32, D_8F103CB0, D_8F1DEE24, text);
+        break;
+    case 1:
+        if (D_8F1DEE28 != -1) {
+            func_800495BC(0x14, 0x32, D_8F103CBC, D_8F1DEE2C,
+                          ModelAnim_AdvanceCurveFrame(D_8F1DECE8, D_80094904) >> 0x10);
+            if ((D_8F1DECEC != NULL) && (*D_8F1DECEC & 8)) {
+                Font_EnableTwoCycleTexturing();
+                func_800497E4(0, 0xFF, 0xFF, 0xFF);
+                if (func_8003514C() == 0) {
+                    text = D_8F103CC8;
+                } else {
+                    text = D_8F103CD8;
+                }
+                func_800495BC(0x14, 0x40, text);
+                Font_DisableTwoCycleTexturing();
+            }
+        } else {
+            func_800495BC(0x14, 0x32, D_8F103CE4, D_8F1DEE2C);
+        }
+        if (D_8F103988 == -1) {
+            if (func_8003514C() == 0) {
+                text = D_8F103CF0;
+            } else {
+                text = D_8F103D04;
+            }
+            func_800495BC(0x14, 0x4E, text);
+            if (func_8003514C() == 0) {
+                text = D_8F103D14;
+            } else {
+                text = D_8F103D28;
+            }
+            func_800495BC(0x14, 0x5C, text);
+            if (func_8003514C() == 0) {
+                text = D_8F103D38;
+            } else {
+                text = D_8F103D48;
+            }
+            func_800495BC(0x14, 0x6A, text);
+            if (func_8003514C() == 0) {
+                text = D_8F103D5C;
+            } else {
+                text = "<TEX,8> With";
+            }
+            func_800495BC(0x14, 0x78, text);
+        } else {
+            if (func_8003514C() == 0) {
+                text = "<TEX,0> こまおくり";
+            } else {
+                text = "<TEX,0> Slow-Motion";
+            }
+            func_800495BC(0x14, 0x4E, text);
+        }
+        break;
+    case 2:
+        if ((D_8F1DEE38 != -1) && (((u8 *)icon)[5] > 0)) {
+            func_800495BC(0x14, 0x32, "%2d : %3d", D_8F1DEE3C,
+                          ModelAnim_AdvanceEventFrame(D_8F1DECFC, D_80094904));
+        } else {
+            func_800495BC(0x14, 0x32, "%2d : ---", D_8F1DEE3C);
+        }
+        break;
+    case 3:
+        text = func_8004B7A4(D_8F1039A4);
+        if (text == NULL) {
+            if (func_8003514C() == 0) {
+                text = D_8F10398C;
+            } else {
+                text = D_8F103998;
+            }
+        }
+        func_800495BC(0x14, 0x32, "Sum %d : %s : %dK", D_8F1039A4, text, (u32)(D_8F1039B0 + 0x3FF) >> 0xA);
+        text = func_8004B7A4(D_8F1039B4);
+        if (text == NULL) {
+            if (func_8003514C() == 0) {
+                text = D_8F10398C;
+            } else {
+                text = D_8F103998;
+            }
+        }
+        func_800495BC(0x14, 0x46, "Model %d : %s : %dK", D_8F1039B4, text, (u32)(D_8F1039BC + 0x3FF) >> 0xA);
+        text = func_8004B7A4(D_8F1039B8);
+        if (text == NULL) {
+            if (func_8003514C() == 0) {
+                text = D_8F10398C;
+            } else {
+                text = D_8F103998;
+            }
+        }
+        func_800495BC(0x14, 0x5A, "Anime %d : %s : %dK", D_8F1039B8, text, (u32)(D_8F1039C0 + 0x3FF) >> 0xA);
+        break;
+    case 4:
+        func_800495BC(0x14, 0x32, "%3d", *(s16 *)D_8F1DEE48 >> 6);
+        func_800495BC(0x14, 0x40, "MIN %3d", hpCur);
+        func_800495BC(0x14, 0x4E, "MAX %3d", hpMax);
+        if (func_8003514C() == 0) {
+            text = "<TEX,3>さいしょうちのセット";
+        } else {
+            text = "<TEX,3>Set MIN";
+        }
+        func_800495BC(0x14, 0x5C, text);
+        if (func_8003514C() == 0) {
+            text = "<TEX,5>さいだいちのセット";
+        } else {
+            text = "<TEX,5>Set MAX";
+        }
+        func_800495BC(0x14, 0x6A, text);
+        if (func_8003514C() == 0) {
+            text = "<TEX,0>レアポケモンのいろをセット";
+        } else {
+            text = "<TEX,0>Set Rare Pokemon Color";
+        }
+        func_800495BC(0x14, 0x78, text);
+        break;
+    case 5:
+        func_800495BC(0x14, 0x32, "%3d", D_8F1DEE4B);
+        break;
+    case 6:
+        func_800495BC(0x14, 0x32, "%3d", D_8F1DEE4A);
+        break;
+    case 7:
+        i = 0;
+        if (D_80094BB0 != NULL) {
+            do {
+                if (i == D_8F1DEE60) {
+                    func_8004972C(0xFF, 0xFF, 0, 0xFF);
+                } else {
+                    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                }
+                if (i == 0) {
+                    func_800495BC(0x1E, i * 7 * 2 + 0x32, "X %4d", *(s16 *)((u8 *)D_80094BB0 + 0x1A));
+                } else {
+                    func_800495BC(0x1E, 0x40, "Z %4d", *(s16 *)((u8 *)D_80094BB0 + 0x1C));
+                }
+                i++;
+            } while (i != 2);
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            if (func_8003514C() == 0) {
+                text = "<TEX,3>X-Zのきりかえ";
+            } else {
+                text = "<TEX,3>Change X-Z";
+            }
+            func_800495BC(0x1E, 0x4E, text);
+            if (func_8003514C() == 0) {
+                text = "<TEX,0>ぜんデータをロムにかきこむ";
+            } else {
+                text = "<TEX,0>Write All Data to ROM";
+            }
+            func_800495BC(0x1E, 0x5C, text);
+        } else {
+            if (func_8003514C() == 0) {
+                text = "ちょうせいできません";
+            } else {
+                text = "Can not Control";
+            }
+            func_800495BC(0x1E, 0x32, text);
+        }
+        break;
+    case 8:
+        func_800495BC(0x14, 0x32, "%3d", D_8F1DECC5);
+        break;
+    case 9:
+        func_800495BC(0x14, 0x32, "%d", D_8F1DECC4);
+        break;
+    case 10:
+        func_800495BC(0x14, 0x32, "%d", D_8F1DEE5C);
+        func_800495BC(0x14, 0x40, "H %3d", mode.unk00 >> 6);
+        func_800495BC(0x14, 0x4E, "L %3d", mode.unk03);
+        func_800495BC(0x14, 0x5C, "S %3d", mode.unk02);
+        break;
+    case 11:
+        func_800495BC(0x14, 0x32, "%d", D_8F1DED4E);
+        break;
+    }
+    total = D_8F1DECA0->unk2C + D_8F1DECA0->unk34;
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495BC(0x1E, 0xB4, "MODEL %3dK", (u32)(D_8F1DECA0->unk2C + 0x3FF) >> 0xA);
+    func_800495BC(0x1E, 0xC0, "ANIME %3dK", (u32)(D_8F1DECA0->unk34 + 0x3FF) >> 0xA);
+    if (total >= 0x26001) {
+        func_800495BC(0x1E, 0xCC, "<COL1,PUSH,255,0,0,255>Sum %3dK/%3dK<COL1,POP>", (u32)(total + 0x3FF) >> 0xA, 0x98);
+    } else {
+        func_800495BC(0x1E, 0xCC, "Sum %3dK/%3dK", (u32)(total + 0x3FF) >> 0xA, (u32)D_8F1DECA0->unk20 >> 0xA);
+    }
+    if (func_8003514C() == 0) {
+        text = "<TEX,7>メッセージのオンオフ";
+    } else {
+        text = "<TEX,7>Message ON/OFF";
+    }
+    func_800495BC(0x1E, 0xD8, text);
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -597,7 +882,7 @@ void func_8F101CDC(void) {
 /* mkdraft:func_8F101DA0 begin */
 extern f32 D_8F1DEE4C;
 extern u8 D_8F1DEE50[];
-extern s32 D_8F1DECA0;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern u8 D_8F1DECA8;
 extern s32 D_8F1DEE28;
 extern s32 D_8F1DEE2C;
@@ -669,7 +954,7 @@ typedef union {
 extern s32 D_8F1DEE24;
 extern s32 D_8F1DEE44;
 extern s32 D_8F1DEE5C;
-extern s32 D_8F1DECA0;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
 void func_8F101FF4(void) {
     s32 old = D_8F1DEE24;
@@ -695,7 +980,7 @@ void func_8F101FF4(void) {
 #endif
 
 #ifdef VERSION_US
-extern s32 D_8F1DECA0;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern u8 D_8F1DECA8;
 extern void *D_8F1DECB4;
 extern s32 D_8F1DEE28;
@@ -818,7 +1103,7 @@ extern s8 D_8F1DEE48[];
 extern s32 D_8F1DEE24;
 extern s32 D_8F1DEE44;
 extern s32 D_8F1DEE5C;
-extern s32 D_8F1DECA0;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
 extern void func_8004BDB0(s32 arg0, s32 arg1, s16 arg2);
 // The packed state reaches func_8004BE18 as a 4-byte value; the union parameter
@@ -864,7 +1149,7 @@ void func_8F102488(void) {
 
 #ifdef VERSION_US
 extern s8 D_8F1DEE48[];
-extern s32 D_8F1DECA0;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern s32 D_8F1DECF0;
 extern u16 D_8F1DEE26;
 extern s32 D_8F1DEE30;
@@ -1221,7 +1506,7 @@ extern s32 D_8F1DEE28;
 extern s32 D_8F1DEE44;
 extern s32 D_8F1DEE58;
 extern s32 D_8F1DEE5C;
-extern s32 D_8F1DECA0;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern s32 D_8F1039A4;
 extern s32 D_8F1039A8;
 extern s32 D_8F1039AC;
