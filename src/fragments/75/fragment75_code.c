@@ -137,7 +137,58 @@ void func_8FA00AC0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA00E2C.s")
+extern Gfx *D_800D0510;
+extern void GfxImage_FillCurrent(Gfx **, s32);
+extern void func_800088DC(void);
+extern void func_8006D2C0(void);
+extern s32 func_80008648(void);
+extern void func_8003C6B8(s32);
+extern void func_8003F2C4(s32, s32, s32);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern s32 ModelAnim_IsFinished(void *);
+extern void func_8FA00020(s32, s32, s32, s32);
+extern void func_8FA00AC8(void);
+
+extern s32 D_8FA01D30[];
+extern s32 D_8FA01D38;
+extern s32 D_8FA02010;
+extern s32 D_8FA02014;
+extern s32 D_8FA02024;
+extern s32 D_8FA02038;
+extern u8 D_8FA01D40[];
+
+
+
+void func_8FA00E2C(void) {
+    u8 *anim;
+    s32 *entry;
+    s32 *end;
+
+    entry = D_8FA01D30; // FAKE: dead store, re-initialised after the three calls. Without it IDO
+                        // gives entry s1 and anim s0 instead of entry s0 and anim s1 (score 70).
+    func_800088DC();
+    GfxImage_FillCurrent(&D_800D0510, 0x5295);
+    func_8006D2C0();
+    anim = D_8FA01D40; entry = D_8FA01D30; end = &D_8FA01D38; do {
+        D_8FA02014 = *entry;
+        D_8FA02010 = (s32)anim;
+        if ((D_8FA02038 >= 2) && (ModelAnim_IsFinished(anim) != 0)) {
+            D_8FA02038 = 0;
+            if (D_8FA02038 == 0) { } // FAKE: empty block. Needed together with the one below to
+                                     // color the three globals s2/s3/s4 (score 40 without this).
+            func_8003F2C4(D_8FA02014, D_8FA02010, 0);
+        }
+        if (D_8FA02010 == 0) { } // FAKE: empty block (score 60 without it; without both, 60).
+        entry++;
+        anim += 0x168;
+    } while (entry != end);
+    GeoRender_AdvanceFrameCounter();
+    func_8003C6B8(D_8FA01D38);
+    func_8FA00020(0xC8, 0x8C, 0x40, 0x40);
+    func_8FA00AC8();
+    func_80008648();
+    D_8FA02024 += 1;
+}
 #endif
 
 #ifdef VERSION_US
