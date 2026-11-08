@@ -60,7 +60,31 @@ u8 ByteList_ChooseRandom_fragment86(u8 *list) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/86/fragment86_code/func_844001E0.s")
+extern u32 func_8003570C(void);
+
+
+
+u8 func_844001E0(u8 *list) {
+    u32 count;
+    f32 fraction;
+    u8 index;
+    u8 value;
+    s32 i;
+
+    fraction = (f32)((f64)func_8003570C() / 4294967296.0);
+    // The index uses the list length in place; count is only taken for the guard.
+    index = (u32)((f32)(u32)list[0] * fraction) + 1;
+    count = list[0];
+    value = 0;
+    if ((s32)count > 0) {
+        value = list[index];
+        list[0]--;
+        for (i = index; i <= list[0]; i++) {
+            list[i] = list[i + 1];
+        }
+    }
+    return value;
+}
 #endif
 
 #ifdef VERSION_US
