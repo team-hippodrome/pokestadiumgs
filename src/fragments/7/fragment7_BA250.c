@@ -1052,7 +1052,72 @@ void Fragment7_DrawRecordSummary(void *definition, u8 *state, Fragment7DrawOrigi
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_83002ADC.s")
+extern u8 D_8300C314[];
+extern Rect02424 D_8300C45C;
+extern s32 D_8300F898;
+extern s32 func_8300B988(void *);
+
+
+
+void func_83002ADC(s32 arg0, void *arg1, Fragment7DrawOrigin *arg2) {
+    s32 pad9;
+    u8 *state = arg1;
+    s32 padA;
+    f32 scale;
+    s32 i;
+    Fragment7DrawOrigin rect2;
+    s32 padB;
+    Rect02424 rect;
+
+    scale = func_818055E0((void *)arg0, state);
+    WidgetResources_DrawRecords(arg0, (s32)state, (s32)arg2);
+    func_818017A8();
+    func_818006FC(arg2->x + 13, arg2->y + 37, 226, scale);
+    if (state[0x3EA5D] <= 0) {
+        return;
+    }
+    if (scale > 0.01f) {
+        func_800498C4();
+        func_8180351C(&D_8300F898);
+        func_8004972C(255, 255, 255, (s32)(255.0f * scale));
+        for (i = 0; i < state[0x3EA5D]; i++) {
+            func_800495F8(arg2->x + (i % 2) * 122 + 65, arg2->y + (i / 2) * 53 + 50,
+                D_8300F898, state + 0x3EA60 + i * 544);
+        }
+        func_800499EC();
+        for (i = 0; i < state[0x3EA5D]; i++) {
+            rect2 = *arg2;
+            rect2.x += (i % 2) * 122 + 34;
+            rect2.y += (i / 2) * 53 + 76;
+            WidgetTexture_DrawRecord(D_8300C43C, (u8 *)&rect2, scale, 0);
+            // FAKE: dead block. The doubled reference to one s16 load is what
+            // moves the spilled `state + 0x38000` temp from 0x54(sp) to the
+            // target's 0x50(sp); a single mention of a field, or two different
+            // fields, do not. Differ score without it: 16.
+            if ((!arg2->x) && (!arg2->x)) {
+            }
+        }
+        for (i = 0; i < state[0x3EA5D]; i++) {
+            func_81800C18((i % 2) * 122 + arg2->x + 53, (i / 2) * 53 + arg2->y + 76, 5,
+                *(u16 *)(state + 0x3EA6C + i * 544));
+        }
+    }
+    rect = D_8300C45C;
+    if (state[0x52] > 0) {
+        rect = *(Rect02424 *)(D_8300C314 + state[0x52] * 24 - ((0, 18)));
+    }
+    if (state[0x1F] == 33 && state[0x46] == 4) {
+        rect = *(Rect02424 *)(D_8300C314 + state[0x50] * 24 - ((0, 18)));
+    }
+    if (state[0x1F] == 33 && state[0x46] == 1 && func_8300B988(state + 0x3EA5C)) {
+        rect = *(Rect02424 *)(D_8300C314 + state[0x50] * 24 - ((0, 18)));
+    }
+    if (scale > 0.99f && rect.w > 0) {
+        func_81801854(&rect, &rect, arg2);
+        func_8004B2CC(rect.x, rect.y, rect.w, rect.h, 150, 150, 90, 0);
+    }
+    WidgetResources_DrawSelection(arg0, (s32)state, (s32)arg2);
+}
 #endif
 
 #ifdef VERSION_US
