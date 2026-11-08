@@ -99,7 +99,52 @@ void func_88201608(s32 arg0) {
     func_88201420(arg0, 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_174460/func_88201628.s")
+s32 func_88204050();
+extern void func_88203BE4(void *, void *, s8);
+extern s8 func_882012E4(void *);
+extern void *func_8820137C(void *);
+extern void *D_88234664;
+extern u8 D_88234630[];
+
+
+
+void func_88201628(u8 *arg0, u8 *arg1)
+{
+    struct
+    {
+        u8 unk_00;  // FAKE: occupies 0x24; without it the 3-byte struct lands at 0x24-0x26 instead of 0x25-0x27 (diff score 9).
+        s8 slot;  // battle slot number: written to arg1[0x27], returned by both arm calls, read signed at 0x25 for the final call.
+        u8 types[2];  // [0] destination list type from arg1, [1] source list type from arg0; each is byte +8 of *(*arg).
+    } ts;
+    u8 *entry;
+    ts.types[1] = ((u8 *)*(void **)*(void **)arg0)[8];
+    ts.types[0] = ((u8 *)*(void **)*(void **)arg1)[8];
+    entry = func_8820137C(arg0);
+    if (ts.types[0] == 2)
+    {
+        if (ts.types[1] == 2)
+        {
+            arg1[0x27] = arg0[0x27];
+            arg0[0x27] = 0;
+            return;
+        }
+        ts.slot = (s8)func_88204050();
+        if ((!ts.types) && (!ts.types))  // FAKE: always false (an array decays to a non-null pointer); the reference fixes the epilogue temporaries to t8/t0/t9/t2/t1 (diff score 110 without it).
+        {
+        }
+        arg1[0x27] = ts.slot + 1;
+    }
+    else
+    {
+        ts.slot = func_882012E4(arg1);
+        arg1[0x27] = 0;
+    } arg0[0x27] = 0;
+    if (entry == D_88234664)
+    {
+        ((u8 *)entry)[0x75] = arg0[9];
+    }
+    func_88203BE4(entry, (u8 *)D_88234630 + ts.types[0] * 12, ts.slot);
+}
 
 /* mkdraft:func_8820172C begin */
 extern s32 func_88204050(void);

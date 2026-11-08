@@ -190,7 +190,44 @@ s32 func_882005F8(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_882009D4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1736F0/func_88200BC4.s")
+extern s8 D_88006868;
+extern s8 **D_88234670[];
+extern s32 D_88A01C30;
+extern s32 HAL_Strcmp(const s8 *a, const s8 *b);
+extern s32 func_80053524(s32 arg0, u8 *arg1);
+extern void *func_8005EE88(s32 arg0, s32 arg1, void *arg2);
+extern void func_88200470(s32 arg0, u8 arg1);
+
+
+
+s32 func_88200BC4(void) {
+    s32 result = 0;
+    u8 **items;
+    u8 *entry;
+    s8 buffer[0x20];
+    u32 group;
+    u32 i;
+    u8 count;
+
+    for (group = 0; group != 2; group++) {
+        count = ((u8 *)D_88A01C30)[group * 0x14 + 0x25];
+        items = *(u8 ***)((u8 *)D_88A01C30 + group * 0x14 + 0x20);
+        for (i = 0; i != count; i++, items++) {
+            if (group == 0) {
+                func_8005EE88(D_88006868, i, buffer);
+            } else if (group == 1) {
+                func_80053524(i, (u8 *)buffer);
+            }
+            entry = *items;
+            if (HAL_Strcmp(D_88234670[(*(u8 **)entry)[8] - 1][entry[4]], buffer) != 0) {
+                func_88200470(8, (u8)(group + 1));
+                result = 1;
+                break;
+            }
+        }
+    }
+    return result;
+}
 
 /* mkdraft:func_88200D04 begin */
 extern s32 func_882005F8(void);
@@ -285,7 +322,7 @@ void func_88200DCC(void) {
 extern u8 D_882345E0;
 extern s8 D_88006868;
 extern s32 D_88A01C30;
-extern s32 D_88234670[];
+extern s8 **D_88234670[];
 extern void func_80053584(s32 slot, void *text);
 extern s32 GbSave_WriteGen2BoxName(s32 port, s32 box, void *text);
 

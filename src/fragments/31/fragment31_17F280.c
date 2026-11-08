@@ -589,7 +589,296 @@ void func_8820ECE8(u8 arg0, u8 *arg1) {
     func_880006E0(Color_SetRGB(sp1C, 0x96, 0x96, 0x96));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17F280/func_8820ED44.s")
+extern void func_8820EB14(u8 selected, u8 *record);
+
+
+// Draws the arg1 visible rows of the record list for `slot`: each row covers x..x+222
+// and is 25 pixels tall, plus a 1-pixel separator line drawn just below it.
+
+
+void func_8820ED44(u8 slot, u8 arg1)
+{
+  u8 *entries;
+  s16 x;
+  s16 y;
+  s16 top;
+  s16 bottom;
+  u32 row;
+  entries = func_8820C040(0, slot);
+  if (slot == 0)
+  {
+    x = 52;
+  }
+  else
+  {
+    x = 363;
+  }
+  y = 125 - (*((s16 *) (((u8 *) (&((F31SelectionState *) D_88234710)->records[slot])) - (-0x22))));
+  row = 0;
+  if (arg1 == 0u)
+  {
+    return;
+  }
+  // FAKE: x is 52 or 363, so this branch body never runs; the compare still decides
+  // register allocation (a0/v1 swap from 0x2D98 when removed).
+  if ((!x) && (!x))
+  {
+  }
+  do
+  {
+    do
+    {
+      bottom = y + 25;
+      top = y;
+      if (row == 0)
+      {
+        if (top < 125)
+        {
+          top = 125;
+        }
+      }
+      else
+        if (row == 8)
+      {
+        if (bottom >= 340)
+        {
+          bottom = 339;
+        }
+      }
+      gDPPipeSync(D_800D0510++);
+      if ((func_88A007BC(((F31SelectionState *) D_88234710)->list[slot]) == 0) || (row >= ((F31SelectionState *) D_88234710)->records[slot].count))
+      {
+        gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+      }
+      else
+        if (func_8820E450(slot, row) != 0)
+      {
+        if ((func_8800005C() == 0) && (((F31SelectionState *) D_88234710)->list[slot] == 0))
+        {
+          switch (func_8006378C(entries[0]))
+          {
+            case 1:
+              gDPSetFillColor(D_800D0510++, 0x2AFF2AFF);
+              break;
+
+            case 3:
+              gDPSetFillColor(D_800D0510++, 0x45A145A1);
+              break;
+
+            case 4:
+              gDPSetFillColor(D_800D0510++, 0xAC11AC11);
+              break;
+
+            case 2:
+              gDPSetFillColor(D_800D0510++, 0xD325D325);
+              break;
+
+          }
+
+        }
+        else
+          if (((D_882346F0 == 1) || (D_882346F0 == 3)) || (slot == (*((F31SelectionState *) D_88234710)).slot))
+        {
+          gDPSetFillColor(D_800D0510++, 0x2AFF2AFF);
+        }
+        else
+        {
+          gDPSetFillColor(D_800D0510++, 0x39D739D7);
+        }
+      }
+      else
+        if ((func_8800005C() == 0) && (((F31SelectionState *) D_88234710)->list[slot] == 0))
+      {
+        if (((F31SelectionState *) D_88234710)->slot == slot)
+        {
+          if (D_882346F0 == 1)
+          {
+            u8 type;
+            type = func_8006378C(*func_8820C040(1, (1 - ((F31SelectionState *) D_88234710)->slot) & 0xFF));
+            if (((((F31SelectionState *) D_88234710)->records[slot].position == (((F31SelectionState *) D_88234710)->records[slot].count - 1)) ? (1) : (0)) && ((((F31SelectionState *) D_88234710)->records[slot].start + row) == (((F31SelectionState *) D_88234710)->records[slot].count - 1)))
+            {
+              entries = entries - 2;
+            }
+            if ((((u32) (((F31SelectionState *) D_88234710)->records[slot].start + row)) >= ((u32) ((F31SelectionState *) D_88234710)->lower)) && (((u32) (((F31SelectionState *) D_88234710)->records[slot].start + row)) <= ((u32) ((F31SelectionState *) D_88234710)->upper)))
+            {
+              if ((((F31SelectionState *) D_88234710)->records[slot].position >= ((F31SelectionState *) D_88234710)->lower) && (((F31SelectionState *) D_88234710)->records[slot].position <= ((F31SelectionState *) D_88234710)->upper))
+              {
+                switch (type)
+                {
+                  case 1:
+                    gDPSetFillColor(D_800D0510++, 0x09A909A9);
+                    break;
+
+                  case 3:
+                    gDPSetFillColor(D_800D0510++, 0x03550355);
+                    break;
+
+                  case 4:
+                    gDPSetFillColor(D_800D0510++, 0x8AD18AD1);
+                    break;
+
+                  case 2:
+                    gDPSetFillColor(D_800D0510++, 0x91579157);
+                    break;
+
+                }
+
+              }
+              else
+              {
+                func_8820EB14(type, entries);
+              }
+            }
+            else
+            {
+              switch (func_8006378C(entries[0]))
+              {
+                case 1:
+                  gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+                  break;
+
+                case 3:
+                  gDPSetFillColor(D_800D0510++, 0x02950295);
+                  break;
+
+                case 4:
+                  gDPSetFillColor(D_800D0510++, 0x5A0D5A0D);
+                  break;
+
+                case 2:
+                  gDPSetFillColor(D_800D0510++, 0x618F618F);
+                  break;
+
+              }
+
+            }
+          }
+          else
+            if (D_882346F0 == 2)
+          {
+            // Entry (*(s16*)((u8*)D_88234710 + 0xB8)) of the 2-byte table at D_88A01C64+9;
+            // byte 0 of that entry is the type ID passed to func_8006378C.
+            func_8820EB14(func_8006378C(((u8 (*)[2]) (D_88A01C64 + 9))[(*((s16 *) (((u8 *) D_88234710) + 0xB8)))][0]), entries);
+          }
+          else
+            if (D_882346F0 == 3)
+          {
+            func_8820EB14(func_8006378C(*func_8820C040(1, (1 - ((F31SelectionState *) D_88234710)->slot) & 0xFF)), entries);
+          }
+          else
+          {
+            switch (func_8006378C(entries[0]))
+            {
+              case 1:
+                gDPSetFillColor(D_800D0510++, 0x09A909A9);
+                break;
+
+              case 3:
+                gDPSetFillColor(D_800D0510++, 0x03550355);
+                break;
+
+              case 4:
+                if (((*((s32 *) (((u8 *) D_88234710) + 4))) == 0) && ((*((s16 *) (((u8 *) D_88234710) + 8))) == 2))
+              {
+                gDPSetFillColor(D_800D0510++, 0x5A0D5A0D);
+              }
+              else
+              {
+                gDPSetFillColor(D_800D0510++, 0x8AD18AD1);
+              }
+                break;
+
+              case 2:
+                gDPSetFillColor(D_800D0510++, 0x91579157);
+                break;
+
+            }
+
+          }
+        }
+        else
+          if ((D_882346F0 == 1) || (D_882346F0 == 3))
+        {
+          switch (func_8006378C(entries[0]))
+          {
+            case 1:
+              gDPSetFillColor(D_800D0510++, 0x09A909A9);
+              break;
+
+            case 3:
+              gDPSetFillColor(D_800D0510++, 0x03550355);
+              break;
+
+            case 4:
+              gDPSetFillColor(D_800D0510++, 0x8AD18AD1);
+              break;
+
+            case 2:
+              gDPSetFillColor(D_800D0510++, 0x91579157);
+              break;
+
+          }
+
+        }
+        else
+        {
+          switch (func_8006378C(entries[0]))
+          {
+            case 1:
+              gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+              break;
+
+            case 3:
+              gDPSetFillColor(D_800D0510++, 0x02950295);
+              break;
+
+            case 4:
+              gDPSetFillColor(D_800D0510++, 0x5A0D5A0D);
+              break;
+
+            case 2:
+              gDPSetFillColor(D_800D0510++, 0x618F618F);
+              break;
+
+          }
+
+        }
+      }
+      else
+        if (((D_882346F0 == 1) || (D_882346F0 == 3)) || (((F31SelectionState *) D_88234710)->slot == slot))
+      {
+        gDPSetFillColor(D_800D0510++, 0x09A909A9);
+      }
+      else
+      {
+        gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+      }
+      gDPFillRectangle(D_800D0510++, x, top, x + 222, bottom);
+      bottom++;
+      if (bottom < 340)
+      {
+        gDPPipeSync(D_800D0510++);
+        if (((D_882346F0 == 1) || (D_882346F0 == 3)) || (((F31SelectionState *) D_88234710)->slot == slot))
+        {
+          gDPSetFillColor(D_800D0510++, 0x7D3F7D3F);
+        }
+        else
+        {
+          gDPSetFillColor(D_800D0510++, 0x63196319);
+        }
+        gDPFillRectangle(D_800D0510++, x, bottom, x + 222, bottom);
+      }
+      if ((((F31SelectionState *) D_88234710)->enabled[slot] == 0) || (((row == (((F31SelectionState *) D_88234710)->records[slot].position - ((F31SelectionState *) D_88234710)->records[slot].start)) ? (1) : (0)) == 0))
+      {
+        entries += 2;
+      }
+      row++;
+      y += 27;
+    }
+    while (row != arg1);
+  }
+  while (0);
+}
 
 extern void func_800495F8(s32, s32, s32, void *, s32);
 extern void *func_88A00938(u8 *);
