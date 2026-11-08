@@ -431,7 +431,75 @@ void Fragment53_InitActorStateAndOrder(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86502B88.s")
+extern s32 D_8650C600;
+extern s32 D_8650C5E0;
+extern void *D_8650DB10;
+extern u8 D_8650DA70[];
+extern u8 D_8650DA60[];
+extern u8 D_865118F8[];
+extern s32 D_8651171C;
+extern s32 D_865117B4;
+extern s32 D_8651184C;
+extern s32 D_865118E4;
+extern f32 D_8650D6DC;
+extern void func_87F0C930(void *);
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+extern void func_81900164(s32, s32, f32, f32, s32);
+
+
+void func_86502B88(void)
+{
+  u32 maximum;
+  s32 count;
+  s32 values[4];
+  s32 i;
+  s32 score;
+  count = 0;
+  for (i = 0, maximum = D_8650C600; i < 4; i++)
+  {
+    D_86511698[i].result = 1;
+    score = D_86511698[i].score;
+    values[i] = 0;
+    if (score >= (s32)maximum)
+    {
+      *((s32 *) (((u8 *) (&D_8650C5E0)) + 0x20)) = D_86511698[i].score;
+      maximum = D_86511698[i].score;
+    }
+  }
+
+  for (i = 0; i < 4; i++)
+  {
+    if (D_86511698[i].score == maximum)
+    {
+      values[i] = 1;
+      count++;
+      D_86511698[i].result = 2;
+    }
+  }
+
+  if (count == 4)
+  {
+    for (i = 0; i < 4; i++)
+    {
+      D_86511698[i].result = 1;
+    }
+
+  }
+  if ((*((u8 *) (((u8 *) D_8650DB10) + 0x2180))) == 4)
+  {
+    func_87F0C930(D_8650DA60);
+    return;
+  }
+  Fragment64_StartPlayerPanel(D_8650DA70, D_8650DB10, 2, values[0], values[1], values[2], values[3]);
+  for (i = 0; i != 4; i++)
+  {
+    if (D_86511698[i].score == 100)
+    {
+      func_81900164(*((s32 *) D_865118F8), *((s32 *) (((u8 *) (&D_8650E120[i])) + 0x24)), (*((f32 *) (((u8 *) (&D_8650E120[i])) + 0x28))) - 26.0f, 3.1f, i);
+    }
+  }
+
+}
 #endif
 
 #ifdef VERSION_US
@@ -534,7 +602,132 @@ void Fragment53_UpdatePrimaryAnimationState(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86503B98.s")
+extern s32 D_8650C494;
+extern s32 D_8650C4BC;
+extern s32 D_8650C5E4;
+extern s32 D_8650C5E8;
+extern s32 D_8650C5EC;
+extern s32 D_8650C610;
+extern s32 D_8650C45C[];
+struct Fragment53ControllerRecord {
+    u8 pad[8];
+    u16 buttonsPressed;
+    u8 rest[0x1E];
+};
+extern struct Fragment53ControllerRecord D_800CE060[];
+extern s32 D_8650DB50[];
+extern s32 D_8650DB74;
+extern s32 D_8650DB78;
+extern f32 D_86511690;
+extern u8 D_8650F200[];
+extern u8 D_865105B0[];
+extern u8 D_86510010[];
+extern u32 func_8003570C(void);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F210(void *, s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F3BC(void *, s32);
+extern void func_80027A28(u16, u8);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 ModelAnim_IsFinished(void *);
+extern void func_86503178(s32);
+extern void func_865038A8(s32);
+extern void func_86503938(s32);
+
+
+// Per-frame animation/controller update for actor slot arg1 (index read from arg1 + 0x14),
+// run only for the kind-2 actor while D_8650C494 is not 1. Advances the animation timers,
+// re-seeds the idle event frame, follows the model entry the current controller maps to
+// (D_8650C5E4), and hands finished animations to func_86503938.
+void func_86503B98(s32 arg0, u8 *arg1) {
+    s32 index;
+    s32 offset;
+    struct Fragment53ActorState *state;
+    u8 *entry;
+    // FAKE: two unused locals pad the frame to the target's 0x40; without them the frame
+    // is 0x38 and the saved arg1/index slots sit 8 bytes lower (diff score 162).
+    s32 pad0;
+    s32 pad1;
+
+    index = *(s32 *)(arg1 + 0x14);
+    if ((arg0 != 0) && (arg0 == 2) && (D_8650C494 != 1)) {
+        ModelAnim_SetSpeed(arg1, D_8650C4BC << 0x10);
+        state = &D_86511698[index];
+        *(s32 *)((u8 *)state + 0x28) += 1;
+        if ((*(s32 *)((u8 *)state + 0x24) < *(s32 *)((u8 *)state + 0x28)) && (*(s32 *)((u8 *)state + 0x28) >= 0x15)) {
+            ModelAnim_SetEventFrame(arg1, 0);
+            func_8003F3BC(&D_8650E120[index], 0);
+            *(s32 *)((u8 *)state + 0x28) = 0;
+            *(s32 *)((u8 *)state + 0x24) = func_8003570C() % 301;
+        }
+        offset = index * 0x168;
+        if (*(s32 *)((u8 *)state + 0x20) > 0) {
+            *(s32 *)((u8 *)state + 0) = 0;
+            if ((D_86511690 <= 92.0f) && (*(s32 *)((u8 *)state + 0x3C) == 1)) {
+                *(s32 *)((u8 *)state + 0x3C) = 2;
+            } else if (*(s32 *)((u8 *)state + 0x3C) != 2) {
+                *(s32 *)((u8 *)state + 0x20) += 1;
+            }
+            if ((*(s32 *)((u8 *)state + 0x20) >= 0x2E) || (D_8650C610 == 1)) {
+                *(s32 *)((u8 *)state + 0x20) = 0;
+                *(s32 *)((u8 *)state + 0x3C) = 0;
+                *(s32 *)((u8 *)state + 0) = -1;
+            }
+        }
+        if ((state->animation == 2) && (((s32)*(s32 *)(arg1 + 0x48) >> 16) == 0x21) && (state->kind == 0x37)) {
+            func_80027A28(0x1F04, (u8)index);
+        }
+        if ((state->animation == 5) && (((s32)*(s32 *)(arg1 + 0x48) >> 16) == 0x35 || ((s32)*(s32 *)(arg1 + 0x48) >> 16) == 0x3C) && (state->kind == 0x37)) {
+            func_80027A28(0x1F04, (u8)index);
+        }
+        if ((state->animation == 7) && (((s32)*(s32 *)(arg1 + 0x48) >> 16) == 0x10 || ((s32)*(s32 *)(arg1 + 0x48) >> 16) == 0x16) && (state->kind == 0x37)) {
+            func_80027A28(0x1F04, (u8)index);
+        }
+        if ((((D_800CE060[index].buttonsPressed & 0x8000) && (*(s32 *)((u8 *)state + 0) == -1) && (*(s32 *)((u8 *)state + 8) == 0) && (D_8650C45C[index] == 0)) || ((D_8650C5E4 == *(s32 *)((u8 *)state + 0x1C)) && (*(s32 *)((u8 *)state + 0x1C) != 0))) && (D_8650C5EC == 1) && (D_8650C5E8 != -2) && (D_8650C610 == 0)) {
+            *(s32 *)((u8 *)state + 0) = 2;
+            *(s32 *)((u8 *)state + 4) = 1;
+            func_86503178(index);
+            state->pending = 1;
+            if (*(s32 *)((u8 *)state + 8) == 0) {
+                *(s32 *)((u8 *)state + 0x20) += 1;
+            }
+        }
+        if (D_8650C5E4 == *(s32 *)((u8 *)state + 0x2C)) {
+            func_8003F114(D_865105B0 + index * 0x2D0, 0, -1, *(s32 *)(D_8650DB50 + index * 2));
+            func_8003F114(D_865105B0 + index * 0x2D0 + 0x168, 0, -1, *(s32 *)(D_8650DB50 + index * 2 + 1));
+            entry = D_86510010 + offset;
+            if (*(s32 *)((u8 *)state + 0x54) == 3) {
+                entry = D_86510010 + offset;
+                func_8003F114(entry, 0, -1, D_8650DB78);
+            } else {
+                func_8003F114(entry, 0, -1, D_8650DB74);
+            }
+            func_8003F210(entry, 0);
+            ModelAnim_SetSpeed(entry, 0x10000);
+        }
+        if (((s32)*(s32 *)(D_86510010 + offset + 0x48) >> 16) == 0xF) {
+            func_8003F1DC(D_86510010 + offset);
+        }
+        if (D_8650C5E4 == (*(s32 *)((u8 *)state + 0x2C) + 1)) {
+            func_8003F1DC(D_8650F200 + offset);
+        }
+        if (*(s32 *)((u8 *)state + 4) > 0) {
+            *(s32 *)((u8 *)state + 4) += 1;
+        }
+        func_865038A8(index);
+        if (ModelAnim_IsFinished(arg1) == 1) {
+            func_86503938(index);
+        }
+    }
+}
+
+// The 8-byte stub the retail build leaves after func_86503B98 (jr ra / nop).
+
+// Bytes at the retail stub address between the two functions: an
+// unreferenced empty function compiles to the retail jr ra/nop pair
+// there and keeps the fragment layout.
+void func_86503B98_padding(void) {}
 #endif
 
 #ifdef VERSION_US
@@ -597,7 +790,89 @@ s32 func_865046A8(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86504EB0.s")
+extern s32 D_8650C4F0;
+extern f32 D_8650C4FC;
+extern s32 D_8650C610;
+extern f32 D_8650F22C[];
+extern f32 D_865119A0[];
+extern f64 D_8650D800;
+extern s32 D_8650C494;
+extern f32 D_8650C508;
+extern u8 D_865105B0[];
+extern struct Fragment53ActorState D_86511698[];
+
+
+
+
+
+void func_86504EB0(s32 arg0, void *arg1) {
+    s32 pad[6]; // FAKE: unused; 24 bytes set the 0x20 stack frame. diff score 10 without it.
+    f32 *temp_a1;
+    f32 temp_ft2;
+    f32 temp_ft5;
+    f32 temp_fv0;
+    f32 temp_fv1;
+    f64 temp_fa0;
+    f32 temp_fa1;
+    f64 temp_ft4;
+    f64 temp_ft3;
+    f64 temp_ft0;
+    s32 temp_v0;
+    s32 temp_t5;
+    struct Fragment53ActorState *temp_a0;
+    u8 *temp_v1;
+
+    temp_v0 = *(s32 *)((u8 *)arg1 + 0x14);
+    switch (arg0) {
+    case 0:
+        temp_v1 = (u8 *)D_865105B0 + temp_v0 * 0x2D0;
+        *(s16 *)(temp_v1 + 0x18A) = 0;
+        *(s16 *)(temp_v1 + 0x186) = 0;
+        break;
+    case 2:
+        if (D_8650C494 == 0) {
+            temp_v1 = (u8 *)D_865105B0 + temp_v0 * 0x2D0;
+            temp_a0 = &D_86511698[temp_v0];
+            temp_fv0 = *(f32 *)((u8 *)temp_a0 + 0x70);
+            if (*(f32 *)(temp_v1 + 0x28) > -3000.0f) {
+                temp_a1 = (f32 *)((u8 *)D_865119A0 + temp_v0 * 4);
+                *temp_a1 = (f32)((f64)*temp_a1 + 0.6);
+            }
+            temp_t5 = D_8650C610;
+            if (temp_t5 == 0) {
+                temp_fv1 = *(f32 *)((u8 *)D_865119A0 + temp_v0 * 4);
+                temp_fa0 = (f64)temp_fv1;
+                temp_fa1 = D_8650C508;
+                temp_ft3 = (f64)temp_fa1;
+                temp_ft0 = 4.9 * temp_ft3 * temp_fa0;
+                temp_ft4 = temp_fa0 * temp_ft0;
+                temp_ft5 = temp_fv1 - temp_fv0;
+                *(f32 *)(temp_v1 + 0x28) = (f32)((f64)*(s32 *)((u8 *)temp_a0 + 0x30) - temp_ft4);
+                *(f32 *)(temp_v1 + 0x194) = (f32)((f64)*(f32 *)((u8 *)D_8650F22C + temp_v0 * 0x168) +
+                    (temp_ft4 / (f64)*(f32 *)((u8 *)temp_a0 + 0x74)));
+                *(f32 *)(temp_v1 + 0x190) = ((f32)*(s32 *)((u8 *)temp_a0 + 0x34) +
+                    (5.0f * temp_fv0 * temp_fv0)) - (temp_ft5 * (5.0f * temp_fa1 * temp_ft5));
+                temp_ft2 = 256.0f;
+                temp_ft2 *= *(f32 *)((u8 *)temp_a0 + 0x68);
+                *(s16 *)(temp_v1 + 0x186) = (s16)((f32)*(s16 *)(temp_v1 + 0x186) + (temp_ft2 / 2));
+                if (D_8650C4F0 == 1) {
+                    *(s16 *)(temp_v1 + 0x18A) = (s16)((temp_ft2 * (f32)*(s32 *)((u8 *)temp_a0 + 0x78) * D_8650C4FC) +
+                        (f32)*(s16 *)(temp_v1 + 0x18A));
+                } else {
+                    *(s16 *)(temp_v1 + 0x18A) = (s16)((temp_ft2 * (f32)*(s32 *)((u8 *)temp_a0 + 0x78)) +
+                        (f32)*(s16 *)(temp_v1 + 0x18A));
+                }
+            }
+        }
+        // FAKE (FAKE): empty body; keeps the case-2 literal live into a block
+        // where the state pointer holds $v1, so the dispatch compares $a2.
+        if (temp_v0 == 2) {
+        }
+        break;
+    case 5:
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -827,7 +1102,133 @@ void func_865064B0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86506E78.s")
+extern Gfx *D_800D0510;
+extern void *D_8650DB10;
+extern s32 D_8650C404[];
+extern s32 D_8650C408;
+extern s32 D_8650C42C;
+extern s32 D_8650D2EC[];
+extern s32 D_8650D2FC[];
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+typedef struct Fragment53FlashColor {
+    s32 prim_r;
+    s32 prim_g;
+    s32 prim_b;
+    s32 prim_a;
+    s32 env_r;
+    s32 env_g;
+    s32 env_b;
+} Fragment53FlashColor;
+extern Fragment53FlashColor D_8650C680[];
+
+#ifndef ROUND_MAX
+#define ROUND_MAX(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+#endif
+#define TEX_WIDTH(tex) ((s16)(s32)ROUND_MAX((f32)*(u16 *)((u8 *)(tex) + 0) * 0.57f))
+#define TEX_HEIGHT(tex) ((s16)(s32)ROUND_MAX((f32)*(u16 *)((u8 *)(tex) + 2) * 0.57f))
+
+
+
+void func_86506E78(s32 arg0, s32 arg1) {
+    struct Fragment53ActorState *state;
+    u8 *tex;
+    s32 value;
+    s32 divisor;
+    s32 first_digit;
+    s32 digit;
+    s32 digit_index;
+    s32 y;
+
+    first_digit = -1;
+    divisor = 100;
+    if (*(u8 *)((u8 *)D_8650DB10 + 0x2180) != 4) {
+        gDPSetPrimColor(D_800D0510++, 0, 0, D_8650C680[arg0].prim_r, D_8650C680[arg0].prim_g,
+                        D_8650C680[arg0].prim_b, D_8650C680[arg0].prim_a);
+        gDPSetEnvColor(D_800D0510++, D_8650C680[arg0].env_r, D_8650C680[arg0].env_g,
+                       D_8650C680[arg0].env_b, 0xFF);
+        digit_index = 0;
+        if (arg1 == 0) {
+            state = &D_86511698[arg0];
+            value = state->score;
+        } else {
+            state = &D_86511698[arg0];
+            value = *(s32 *)((u8 *)state + 8);
+        }
+        if ((*(s32 *)((u8 *)state + 0x80) < 0) && (arg1 == 1)) {
+            gDPSetPrimColor(D_800D0510++, 0, 0, D_8650C680[4].prim_r, D_8650C680[4].prim_g,
+                            D_8650C680[4].prim_b, D_8650C680[4].prim_a);
+            gDPSetEnvColor(D_800D0510++, D_8650C680[4].env_r, D_8650C680[4].env_g, D_8650C680[4].env_b,
+                           0xFF);
+            y = *(s32 *)((u8 *)state + 0x44);
+            if (*(s32 *)((u8 *)state + 0x80) < -5) {
+                tex = func_8004C990(0x1AD, D_8650C42C);
+                func_8004D1FC(tex);
+                GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + D_8650D2FC[0]), (s16)y, TEX_WIDTH(tex), TEX_HEIGHT(tex),
+                                     0, 0, 1796, 1796, 0);
+                tex = func_8004C990(0x1AD, D_8650C408);
+                func_8004D1FC(tex);
+                GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + D_8650D2FC[1]), (s16)y, TEX_WIDTH(tex), TEX_HEIGHT(tex),
+                                     0, 0, 1796, 1796, 0);
+                tex = func_8004C990(0x1AD, D_8650C404[0]);
+                func_8004D1FC(tex);
+                GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + D_8650D2FC[2]), (s16)y, TEX_WIDTH(tex), TEX_HEIGHT(tex),
+                                     0, 0, 1796, 1796, 0);
+                return;
+            }
+            tex = func_8004C990(0x1AD, D_8650C42C);
+            func_8004D1FC(tex);
+            GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + D_8650D2FC[4]), (s16)y, TEX_WIDTH(tex), TEX_HEIGHT(tex),
+                                 0, 0, 1796, 1796, 0);
+            tex = func_8004C990(0x1AD, D_8650C404[-*(s32 *)((u8 *)state + 0x80)]);
+            func_8004D1FC(tex);
+            GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + D_8650D2FC[5]), (s16)y, TEX_WIDTH(tex), TEX_HEIGHT(tex),
+                                 0, 0, 1796, 1796, 0);
+            return;
+        }
+        do {
+            if ((*(s32 *)((u8 *)state + 8) == 0x14) && (arg1 == 1)) {
+                gDPSetPrimColor(D_800D0510++, 0, 0, D_8650C680[5].prim_r, D_8650C680[5].prim_g,
+                                D_8650C680[5].prim_b, D_8650C680[5].prim_a);
+                gDPSetEnvColor(D_800D0510++, D_8650C680[5].env_r, D_8650C680[5].env_g,
+                               D_8650C680[5].env_b, 0xFF);
+            }
+            if (value >= divisor) {
+                if (first_digit == -1) {
+                    first_digit = digit_index;
+                }
+                digit = value / divisor;
+                value -= digit * divisor;
+                divisor /= 10;
+                y = 0xCC;
+                if (arg1 == 1) {
+                    y = *(s32 *)((u8 *)state + 0x44);
+                }
+                tex = func_8004C990(0x1AD, D_8650C404[digit]);
+                func_8004D1FC(tex);
+                GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + *(s32 *)((u8 *)D_8650D2FC + first_digit * 12 + digit_index * 4)),
+                                     (s16)y, TEX_WIDTH(tex), TEX_HEIGHT(tex), 0, 0, 1796, 1796, 0);
+            } else {
+                divisor /= 10;
+                if ((first_digit != -1) || (digit_index == 2)) {
+                    if ((digit_index == 2) && (first_digit == -1)) {
+                        first_digit = 2;
+                    }
+                    y = 0xCC;
+                    if (arg1 == 1) {
+                        y = *(s32 *)((u8 *)state + 0x44);
+                    }
+                    tex = func_8004C990(0x1AD, D_8650C404[0]);
+                    func_8004D1FC(tex);
+                    GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + *(s32 *)((u8 *)D_8650D2FC + first_digit * 12 + digit_index * 4)), (s16)y,
+                                         TEX_WIDTH(tex), TEX_HEIGHT(tex), 0, 0, 1796, 1796, 0);
+                }
+            }
+            digit_index++;
+        } while (digit_index != 3);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1210,7 +1611,89 @@ void func_86509D8C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_8650A074.s")
+extern s32 D_8650C4B0;
+extern s32 D_8650C46C;
+extern s32 D_8650C480[];
+extern s32 D_8650C494;
+extern s32 D_8650C504;
+extern f32 D_8650C508;
+extern s32 D_8650C5E0;
+extern u8 D_865118F8[];
+extern f32 D_8650D12C;
+extern s32 D_8650D428;
+extern s32 D_8650D42C;
+extern s32 D_8650D9E0[];
+extern u32 func_8003570C(void);
+
+
+void func_8650A074(void) {
+    s32 busy;
+    s32 mode;
+    s32 offset;
+    struct Fragment53ActorState *state;
+
+    s32 *p;
+    s32 *q;
+
+    p = &D_8650D42C;
+    q = &D_8650D428;
+
+    mode = *(s32 *)((u8 *)&D_8650C5E0 + 8);
+    // FAKE: no-op kept only to steer uopt's register assignment; without it mode/offset
+    // land in v1/v0 and the function scores 45 instead of 0 (80 without both no-ops).
+    if (mode) {}
+    if (mode == 0) {
+        *(s32 *)((u8 *)&D_8650C5E0 + 0x18) += 1;
+        if (*(s32 *)((u8 *)&D_8650C5E0 + 0x18) >= 21) {
+            *(s32 *)((u8 *)&D_8650C5E0 + 0x18) = 0;
+        }
+        if (*(s32 *)((u8 *)&D_8650C5E0 + 0) == 0) {
+            *q = 3;
+            *p = 0;
+        }
+    }
+    offset = D_8650D42C;
+    if (mode == -1 && D_8650C494 == 0 &&
+        *(s32 *)((u8 *)&D_8650C5E0 + 0xC) == 1) {
+        D_8650C46C += 1;
+    }
+    if (D_8650C504 == 1) {
+        *q = D_8650D9E0[*(s32 *)((u8 *)&D_8650C5E0 + 0)];
+        offset = 0;
+    }
+    *p = offset;
+    if ((f32)(D_8650C480[D_8650D428] + offset) < (f32)D_8650C46C * D_8650C508) {
+        if (D_8650C494 == 0) {
+            busy = 0;
+            state = D_86511698;
+            do {
+                if (state->animation != 1) {
+                    busy = 1;
+                }
+                state++;
+            } while (state != (struct Fragment53ActorState *)D_865118F8);
+            if (busy == 0) {
+                D_8650C46C = 0;
+                // FAKE: no-op kept only to steer uopt's register assignment; without it busy
+                // and the loop-end pointer land in v1/a0 and the function scores 35 instead of 0.
+                if (busy) {}
+                offset = func_8003570C() % 51;
+                *p = offset;
+                if (offset < 15) {
+                    *p = 0;
+                }
+                D_8650D12C = 0.0f;
+                *q = func_8003570C() % 5;
+                *(s32 *)((u8 *)&D_8650C5E0 + 8) = 1;
+                D_8650D12C = 0.0f;
+            }
+            if (D_8650C4B0 < *(s32 *)((u8 *)&D_8650C5E0 + 0)) {
+                *(s32 *)((u8 *)&D_8650C5E0 + 0xC) = 9;
+                D_8650C494 = 1;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
