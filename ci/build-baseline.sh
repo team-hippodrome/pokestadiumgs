@@ -84,6 +84,13 @@ marker="$ci_checkout/asm/.build-baseline-yamls-hash"
 if [ ! -d "$ci_checkout/asm" ] || [ ! -f "$marker" ] || [ "$(cat "$marker" 2>/dev/null)" != "$yamls_hash" ]; then
     echo "build-baseline.sh: yamls/ changed (or first build) -- re-extracting" >&2
     ( cd "$ci_checkout" && make extract )
+    # make extract regenerates the tracked linker_scripts/us/pokestadiumgs.ld
+    # without its hand-maintained audio_storage sections, and the link below then
+    # fails on the undefined audio_storage_RAM_START (the rebuilds after
+    # 455d01b64, 5e7664523, #2240 and #2262 failed this way). Keep the committed
+    # linker script, as gate-pr.sh does by re-syncing the PR's linker_scripts
+    # after its own extraction.
+    git -C "$ci_checkout" checkout --quiet -- linker_scripts/us/pokestadiumgs.ld
     mkdir -p "$ci_checkout/asm"
     echo "$yamls_hash" > "$marker"
 else
