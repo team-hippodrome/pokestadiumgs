@@ -208,7 +208,96 @@ void func_86B01720(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B01770.s")
+#include "PR/ultratypes.h"
+extern u8 D_86B17A78[];
+extern u8 *D_86B181C0;
+extern void func_86B057B0(void);
+extern void func_86B081B4(void);
+extern void func_86B0CB1C(s32);
+extern void func_86B04500(s32, s32, s32, s32);
+extern void func_800280C0(void);
+extern void func_800279C4(s32);
+extern void func_80021ED8(s32);
+
+// FAKE: `counter` is a parameter only to make this function have 3 automatic
+// locals instead of 4; the real function takes no arguments (the caller at
+// 0x86B01D48 does `jal func_86B01770` with a nop delay slot). All four names
+// are register-only, so the named-local count changes nothing except where
+// uopt places the temp slots: with 4 named locals the loop-cursor spill temp
+// lands at 0x20 instead of the target's 0x24 (differ score 8, all other 199
+// instructions identical). `counter` is the only variable assigned before any
+// call, so as a parameter its incoming register is dead at entry and no spill
+// code is added. Without the parameter the score is 8.
+
+
+void func_86B01770(s32 counter) {
+    s32 n;
+    u32 i;
+    s32 value;
+
+    counter = *(s32 *)(D_86B17A78 + 0x284);
+    *(s32 *)(D_86B17A78 + 0x284) = counter + 1;
+    if (*(s32 *)D_86B17A78 < 4) {
+        *(f32 *)(D_86B17A78 + 0xF8) = (f32)((f64)*(f32 *)(D_86B17A78 + 0xF8) - 0.016);
+    } else {
+        *(f32 *)(D_86B17A78 + 0xF8) = (f32)((f64)*(f32 *)(D_86B17A78 + 0xF8) - 0.01911111111111111);
+    }
+    if (*(f32 *)(D_86B17A78 + 0xF8) < 0.0f) {
+        *(f32 *)(D_86B17A78 + 0xF8) += 6.2831855f;
+    }
+    func_86B057B0();
+    func_86B0CB1C(counter);
+    n = *(s32 *)(D_86B17A78 + 0x70);
+    i = 0;
+    if (n > 0) {
+        do {
+            value = *(s32 *)(D_86B17A78 + (i * 4) + 0x84);
+            if (counter + 5 == value) {
+                func_800280C0();
+                n = *(s32 *)(D_86B17A78 + 0x70);
+                value = *(s32 *)(D_86B17A78 + (i * 4) + 0x84);
+            }
+            if (counter == value) {
+                *(s32 *)(D_86B17A78 + 0x44) = 3;
+            }
+            i += 1;
+        } while (i < n);
+    }
+    if (counter == *(s32 *)(D_86B17A78 + 0x288)) {
+        *(s32 *)(D_86B17A78 + 0x44) = 1;
+        *(s32 *)(D_86B17A78 + 0x344) = 0;
+        func_86B04500(0, *(s32 *)(D_86B17A78 + 0xC), *(s32 *)(D_86B17A78 + 0x10), 0);
+        n = *(s32 *)(D_86B17A78 + 0xC);
+        if (n == 1 && *(s32 *)(D_86B17A78 + 0x10) == 1) {
+            func_86B04500(1, n, *(s32 *)(D_86B17A78 + 0x10), 0);
+            func_86B04500(2, *(s32 *)(D_86B17A78 + 0xC), *(s32 *)(D_86B17A78 + 0x10), 0);
+        }
+    }
+    if (counter == *(s32 *)(D_86B17A78 + 0x288) + 4) {
+        *(s32 *)(D_86B17A78 + 0x33C) = 1;
+    }
+    func_86B081B4();
+    if (counter >= *(s32 *)(D_86B17A78 + 0x288) + 0x64 &&
+        (*(s32 *)(D_86B17A78 + 0x34) == 2 || *(s32 *)(D_86B17A78 + 0x34) == 0 || *(s32 *)(D_86B17A78 + 0x34) == 0x10 || *(s32 *)(D_86B17A78 + 0x34) == 0x11 || *(s32 *)(D_86B17A78 + 0x34) == 0x12) &&
+        (*(s32 *)(D_86B17A78 + 0x38) == 2 || *(s32 *)(D_86B17A78 + 0x38) == 0 || *(s32 *)(D_86B17A78 + 0x38) == 0x10 || *(s32 *)(D_86B17A78 + 0x38) == 0x11 || *(s32 *)(D_86B17A78 + 0x38) == 0x12) &&
+        (*(s32 *)(D_86B17A78 + 0x3C) == 2 || *(s32 *)(D_86B17A78 + 0x3C) == 0 || *(s32 *)(D_86B17A78 + 0x3C) == 0x10 || *(s32 *)(D_86B17A78 + 0x3C) == 0x11 || *(s32 *)(D_86B17A78 + 0x3C) == 0x12) &&
+        (*(s32 *)(D_86B17A78 + 0x40) == 2 || *(s32 *)(D_86B17A78 + 0x40) == 0 || *(s32 *)(D_86B17A78 + 0x40) == 0x10 || *(s32 *)(D_86B17A78 + 0x40) == 0x11 || *(s32 *)(D_86B17A78 + 0x40) == 0x12) &&
+        (*(s32 *)(D_86B17A78 + 0x344) == 0 || *(s32 *)(D_86B17A78 + 0x344) >= 0x8D)) {
+        *(s32 *)D_86B181C0 = 7;
+    }
+    if (*(s32 *)(D_86B17A78 + 0x34) == 0xD || *(s32 *)(D_86B17A78 + 0x38) == 0xD || *(s32 *)(D_86B17A78 + 0x3C) == 0xD || *(s32 *)(D_86B17A78 + 0x40) == 0xD) {
+        if ((*(s32 *)(D_86B17A78 + 0x498))++ < 0x19) {
+            func_800279C4(0xCA0F);
+        }
+    }
+    if (*(s32 *)(D_86B17A78 + 0x358) != 0) {
+        if (*(s32 *)(D_86B17A78 + 0x354) != 0) {
+            if (++(*(s32 *)(D_86B17A78 + 0x358)) == 0x46 && *(s32 *)D_86B17A78 < 4) {
+                func_80021ED8(0x35);
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1335,7 +1424,164 @@ void func_86B09834(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0B04C.s")
+extern u8 D_86B17A78[];
+extern u8 D_86B17A88[];
+extern u8 D_86B17D04[];
+extern u8 D_86B17DA4[];
+extern s32 func_86B0BF2C(u8 *);
+
+
+
+void func_86B0B04C(void) {
+    s32 i;
+    s32 j;
+    s32 flag;
+    s32 r;
+
+    flag = 1;
+    if (*(s32 *)(D_86B17A78 + 0) == 0) {
+        j = *(s32 *)(D_86B17A78 + 0x68);
+        if (j == 0 || j == 1) {
+            flag = 0;
+        }
+    }
+    switch (*(s32 *)(D_86B17A78 + 0)) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        do {
+            if (flag != 0) {
+                switch (guRandom() % 4) {
+                case 0:
+                case 1:
+                    *(s32 *)(D_86B17A78 + 0xC) = 0;
+                    break;
+                case 2:
+                    *(s32 *)(D_86B17A78 + 0xC) = 1;
+                    break;
+                case 3:
+                    *(s32 *)(D_86B17A78 + 0xC) = 2;
+                    break;
+                }
+            } else {
+                switch (guRandom() % 3) {
+                case 0:
+                case 1:
+                    *(s32 *)(D_86B17A78 + 0xC) = 0;
+                    break;
+                case 2:
+                    *(s32 *)(D_86B17A78 + 0xC) = 1;
+                    break;
+                }
+            }
+        } while (*(s32 *)(D_86B17A78 + 0xC) == *(s32 *)(D_86B17A78 + 4) &&
+                 *(s32 *)(D_86B17A78 + 0xC) == *(s32 *)(D_86B17A78 + 8));
+
+        *(s32 *)(D_86B17A78 + 4) = *(s32 *)(D_86B17A78 + 8);
+        *(s32 *)(D_86B17A78 + 8) = *(s32 *)(D_86B17A78 + 0xC);
+        switch (*(s32 *)(D_86B17A78 + 0xC)) {
+        case 0:
+            switch (guRandom() % 3) {
+            case 0:
+                *(s32 *)(D_86B17A78 + 0x10) = 0;
+                break;
+            case 1:
+            case 2:
+                *(s32 *)(D_86B17A78 + 0x10) = 1;
+                break;
+            }
+            break;
+        case 1:
+            *(s32 *)(D_86B17A78 + 0x10) = 0;
+            *(s32 *)(D_86B17A78 + 0x348) = 10;
+            break;
+        case 2:
+            break;
+        }
+        break;
+    case 4:
+        *(s32 *)(D_86B17A78 + 0xC) = 1;
+        *(s32 *)(D_86B17A78 + 0x10) = 1;
+        *(s32 *)(D_86B17A78 + 0x348) = 10;
+        *(s32 *)(D_86B17A78 + 0x34C) = 10;
+        *(s32 *)(D_86B17A78 + 0x350) = 10;
+        break;
+    }
+
+    switch (*(s32 *)(D_86B17A78 + 0x68)) {
+    case 0:
+    case 1:
+        *(s32 *)(D_86B17A78 + 0x288) = (guRandom() % 141) + 60;
+        break;
+    case 2:
+    case 3:
+        if ((guRandom() % 100) < 20) {
+            *(s32 *)(D_86B17A78 + 0x288) = (guRandom() % 21) + 30;
+        } else {
+            *(s32 *)(D_86B17A78 + 0x288) = (guRandom() % 141) + 60;
+        }
+        break;
+    }
+
+    i = 0;
+    do {
+        if (*(s32 *)(D_86B17A78 + i * 4 + 0x34) == 0x10 ||
+            *(s32 *)(D_86B17A78 + i * 4 + 0x34) == 0x11 ||
+            *(s32 *)(D_86B17A78 + i * 4 + 0x34) == 0x12 ||
+            *(s32 *)(D_86B17A78 + i * 4 + 0x34) == 0) {
+            *(s32 *)(D_86B17A78 + 0x288) = (guRandom() % 51) + 70;
+        }
+        i++;
+    } while ((u8 *)D_86B17A88 > (u8 *)(D_86B17A78 + i * 4));
+
+    if (*(s32 *)(D_86B17A78 + 0x288) >= 60) {
+        r = guRandom();
+        switch (*(s32 *)(D_86B17A78 + 0x68)) {
+        case 0:
+        case 1:
+            if (r % 100 < 0) {
+                *(s32 *)(D_86B17A78 + 0x70) = 3;
+            } else if (r % 100 < 5) {
+                *(s32 *)(D_86B17A78 + 0x70) = 2;
+            } else if (r % 100 < 30) {
+                *(s32 *)(D_86B17A78 + 0x70) = 1;
+            } else {
+                *(s32 *)(D_86B17A78 + 0x70) = 0;
+            }
+            break;
+        case 2:
+        case 3:
+            if (r % 100 < 5) {
+                *(s32 *)(D_86B17A78 + 0x70) = 3;
+            } else if (r % 100 < 15) {
+                *(s32 *)(D_86B17A78 + 0x70) = 2;
+            } else if (r % 100 < 40) {
+                *(s32 *)(D_86B17A78 + 0x70) = 1;
+            } else {
+                *(s32 *)(D_86B17A78 + 0x70) = 0;
+            }
+            break;
+        }
+
+    i = 0;
+    if (*(s32 *)(D_86B17A78 + 0x70) > 0) {
+        do {
+            *(s32 *)(D_86B17A78 + i * 4 + 0x84) =
+                10 + ((*(s32 *)(D_86B17A78 + 0x288) - 10) / *(s32 *)(D_86B17A78 + 0x70)) * i +
+                    (guRandom() % (((*(s32 *)(D_86B17A78 + 0x288) - 10) / *(s32 *)(D_86B17A78 + 0x70)) - 14));
+            i++;
+        } while (i < *(s32 *)(D_86B17A78 + 0x70));
+    }
+
+    }
+
+    i = 0;
+    do {
+        func_86B0BF2C(D_86B17D04 + i * 0x28);
+        i++;
+    } while (D_86B17DA4 != D_86B17D04 + i * 0x28);
+}
 #endif
 
 #ifdef VERSION_US
