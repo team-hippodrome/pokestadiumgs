@@ -155,7 +155,75 @@ s32 func_82304520(s32 arg0, s32 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82304608.s")
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern s32 func_80046540(s32, s32);
+extern s32 func_800464F8(s32, s32);
+extern void func_800459AC(u8 *, u8, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern Gfx *D_800D0510;
+extern Gfx D_82305C20[];
+
+typedef struct UnkStruct19 {
+    u16 width;
+    u16 height;
+    u8 format;
+    u8 size;
+    u16 unk_06;
+} UnkStruct19;
+
+extern u8 *func_8004CA60();
+
+#define gDPPrim2(pkt, m, l, r, g, b, a) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = (_SHIFTL(G_SETPRIMCOLOR, 24, 8) | _SHIFTL(m, 8, 8) | _SHIFTL(l, 0, 8)); _g->words.w1 = (_SHIFTL(g, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(r, 24, 8) | _SHIFTL(a, 0, 8)); }
+#define gDPEnv2(pkt, r, g, b, a) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = _SHIFTL(G_SETENVCOLOR, 24, 8); _g->words.w1 = (unsigned int)(_SHIFTL(g, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(r, 24, 8) | _SHIFTL(a, 0, 8)); }
+
+
+
+void func_82304608(s32 x, s32 y, void *texture, u8 *colorTop, u8 *colorBottom, s32 alpha) {
+    s32 width;
+    Vtx *vertices;
+    s32 rows_per_chunk;
+    s32 chunk_count;
+    s32 remaining_height;
+    u8 *chunk;
+    s32 i;
+    s32 chunk_height;
+    s16 dy;
+    s32 right_edge;
+    u8 *base;
+
+    width = ((UnkStruct19 *) texture)->width;
+    remaining_height = ((UnkStruct19 *) texture)->height;
+    rows_per_chunk = func_80046540(width, 0x1000);
+    chunk_count = func_800464F8(remaining_height, rows_per_chunk);
+    vertices = Gfx_AllocDisplayList((chunk_count * 4) * (sizeof(Vtx)));
+    base = func_8004CA60(texture);
+    if (vertices != 0) {
+        gSPDisplayList(D_800D0510++, D_82305C20);
+        gDPPrim2(D_800D0510++, 0, 0, ((u8 *) colorTop)[0], ((u8 *) colorTop)[1], ((u8 *) colorTop)[2], 0xFF);
+        gDPEnv2(D_800D0510++, ((u8 *) colorBottom)[0], ((u8 *) colorBottom)[1], ((u8 *) colorBottom)[2],
+                alpha);
+        for (i = 0; i < chunk_count; i++) {
+            chunk_height = (remaining_height < rows_per_chunk) ? (remaining_height) : (rows_per_chunk);
+            right_edge = x + width;
+            chunk = base + (i * (width * rows_per_chunk));
+            dy = y - chunk_height;
+            Gfx_SetVertexAttributes(vertices, (s16) x, (s16) y, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 1, (s16) x, (s16) dy, 0, 0, (s16) (chunk_height << 5), 0xFF, 0xFF,
+                                    0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 2, (s16) right_edge, (s16) dy, 0, (s16) (width << 5),
+                                    (s16) (chunk_height << 5), 0xFF, 0xFF, 0xFF, 0xFF);
+            Gfx_SetVertexAttributes(vertices + 3, (s16) right_edge, (s16) y, 0, (s16) (width << 5), 0, 0xFF, 0xFF,
+                                    0xFF, 0xFF);
+            func_800459AC(chunk, ((UnkStruct19 *) texture)->format, ((UnkStruct19 *) texture)->size,
+                          width, chunk_height, 1, 0, 2, 2, 0, 0, 0, 0);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            remaining_height = remaining_height - chunk_height;
+            y -= chunk_height;
+            vertices += 4;
+        }
+    }
+}
 
 /* mkdraft:func_823049A8 begin */
 extern void *D_8009491C;
