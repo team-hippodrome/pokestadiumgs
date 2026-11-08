@@ -132,7 +132,61 @@ void func_82B004FC(s32 arg0) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B0052C.s")
+extern s32 D_82B08524;
+extern s32 D_82B08528;
+extern s32 D_82B0852C;
+extern u16 D_82B08530[];
+extern s16 D_82B12222;
+extern u8 *D_82B12448;
+s32 func_8006A600(u16, s32, s32);
+void *func_800718B8(s32);
+s32 func_82B084D4(void);
+s32 func_82B084FC(void);
+s32 func_82B08508(void);
+s32 func_82B08514(void);
+
+
+
+s32 func_82B0052C(void) {
+    s32 result = 0;
+    s32 index;
+    u32 mode;
+    u16 id;
+
+    mode = func_82B084D4();
+    if (mode == -2) goto out;
+    if (mode == -1) {
+        result = -1;
+        D_82B08524 = result;
+        D_82B08528 = result;
+        D_82B12448 = NULL;
+        goto out;
+    }
+    index = mode & 0xF;
+    D_82B08524 = index;
+    switch (index) {
+    case 3: D_82B08528 = func_82B08508(); break;
+    case 4: D_82B08528 = func_82B08514(); break;
+    default: D_82B08528 = 0; break;
+    }
+    id = D_82B08530[index];
+    if (id != 0x110) {
+        D_82B12448 = func_800718B8(func_8006A600(id, 1, 0));
+    } else {
+        D_82B12448 = (u8 *)(D_82B08528 * 0x44 + 0x9A68 + (s32)&D_82B087C0);
+    }
+    if (mode & 0x100) {
+        D_82B0852C = func_82B084FC();
+        D_82B12222 = 1;
+        result = 2;
+    } else {
+        D_82B0852C = -1;
+        D_82B12222 = 0;
+        result = 1;
+    }
+out:
+    return result;
+}
 
 typedef struct Target82BState Target82BState;
 struct Target82BState { u8 pad_0000[0x1A60]; s16 value; };
@@ -341,7 +395,7 @@ extern u8 D_1000000[], D_446E30[], D_447D00[];
 extern u8 D_82C00000[], fragment83_ROM_START[], fragment84_ROM_START[];
 extern s32 D_82B08520;
 extern s32 D_82B0852C;
-extern s32 D_82B12448;
+extern u8 *D_82B12448;
 
 
 
