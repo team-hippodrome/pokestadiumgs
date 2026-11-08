@@ -94,7 +94,51 @@ void func_86305038(u8 *arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305144.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305448.s")
+extern s32 func_86304CA8(u8 *, f32 *, u8 *, u8 *, f32 *, u8 *, u8 *);
+extern void func_86305144(u8 *, s32);
+
+typedef struct {
+    f32 x;
+    f32 y;
+} Vec2_5448;
+
+
+
+s32 func_86305448(u8 *arg0) {
+    s32 result;
+    Vec2_5448 anchor;
+    f32 va;
+    f32 vb;
+    f32 vc;
+    f32 vd;
+    f32 *prev = *(f32 **)(*(u8 **)(arg0 + 0xC) + 0x20);
+    s32 flag;
+
+    result = 1;
+    va = *(f32 *)(arg0 + 0x20) - prev[0];
+    vb = *(f32 *)(arg0 + 0x24) - prev[1];
+    vc = *(f32 *)(arg0 + 0x28) - prev[0];
+    vd = *(f32 *)(arg0 + 0x2C) - prev[1];
+
+    if (va * vd >= vc * vb) {
+        anchor = *(Vec2_5448 *)(*(u8 **)(arg0 + 8) + 0x20);
+        flag = 0;
+    } else {
+        anchor.x = -*(f32 *)(*(u8 **)(arg0 + 8) + 0x20);
+        anchor.y = -*(f32 *)(*(u8 **)(arg0 + 8) + 0x24);
+        flag = 1;
+    }
+    if (func_86304CA8(*(u8 **)(arg0 + 0xC), prev + 2, arg0 + 0x20, arg0 + 0x40,
+                      (f32 *)&anchor, arg0 + 0x70, arg0 + 0x74) != 0) {
+        *(Vec2_5448 *)(arg0 + 0x80) = anchor;
+        *(u8 **)(arg0 + 0x78) = arg0 + 0x20;
+        *(u8 **)(arg0 + 0x7C) = arg0 + 0x40;
+        func_8630500C(arg0);
+        func_86305144(arg0, flag);
+        result = 0;
+    }
+    return result;
+}
 
 extern f32 func_87D0059C(f32 *, f32 *);
 s32 func_8630557C(u8 *arg0, u8 *arg1, f32 *arg2, f32 arg3, f32 arg4, s32 *arg5) {
@@ -198,7 +242,56 @@ void func_863057A0(u8 *arg0, u8 *arg1, u8 *arg2, u8 *arg3, f32 arg4, f32 arg5) {
     M2C_FIELD(arg1, f32 *, 0) = arg4;
     M2C_FIELD(arg1, f32 *, 4) = arg5;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305840.s")
+extern f32 func_87D0059C(f32 *, f32 *);
+extern s32 func_87D00670(f32 *, f32 *, f32 *, f32 *, void *, f32 *);
+
+typedef struct {
+    f32 x;
+    f32 y;
+} Vec2;
+
+
+
+void func_86305840(u8 *arg0) {
+    Vec2 vector;
+    Vec2 point;
+    Vec2 direction;
+    f32 lateral;
+    f32 progress;
+    f32 offset;
+    f32 radius;
+
+    point.x = *(f32 *)(arg0 + 0x18);
+    point.y = *(f32 *)(arg0 + 0x1C);
+    direction.x = -*(f32 *)(*(u8 **)(arg0 + 8) + 0x20);
+    direction.y = -*(f32 *)(*(u8 **)(arg0 + 8) + 0x24);
+    vector = *(Vec2 *)(arg0 + 0x40);
+    func_87D0059C(&vector.x, &vector.y);
+    if (func_87D00670((f32 *)(arg0 + 0x10), &vector.x, &lateral, &point.x,
+                      &direction, &progress) != 0 &&
+        progress > 21.0f && progress < 85.0f &&
+        lateral > -22.0f && lateral < 22.0f) {
+        /* written this way (infix sum, y term first) to reproduce the original
+           FP evaluation and free-list order; the two derefs of arg0 + 0xC are
+           deliberate, the second one must be re-read after the first store. */
+        radius = sqrtf(*(f32 *)(*(u8 **)(arg0 + 0xC) + 0x14) * *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x14) +
+                       *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x10) * *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x10));
+        if (lateral > 0.0f) {
+            offset = lateral - 22.0f;
+        } else {
+            /* - (-22.0f), not + 22.0f: IDO keeps the negated constant and emits
+               sub.s against 0xC1B00000, which is what the retail code does. */
+            offset = lateral - (-22.0f);
+        }
+        *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x48) = *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x48) + vector.x * offset;
+        *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x4C) = *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x4C) + vector.y * offset;
+        vector.x += direction.x * 2.0f;
+        vector.y += direction.y * 2.0f;
+        func_87D0059C(&vector.x, &vector.y);
+        *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x10) = vector.x * radius;
+        *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x14) = vector.y * radius;
+    }
+}
 
 /* mkdraft:func_86305A04 begin */
 struct unk_func_86305B44;
