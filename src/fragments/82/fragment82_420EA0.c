@@ -294,7 +294,98 @@ void DeckMenu_HandleSettingsInput_fragment82(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D00C34.s")
+extern u8 D_82D07428[];
+extern u8 D_82D23904[];
+extern s32 func_82D00030(u8 *, u8);
+
+
+
+void func_82D00C34(void) {
+    s16 delta;
+    s32 j;
+    s32 off;
+    s32 var_s6;
+    u8 value;
+    u8 *record;
+    u8 *base;
+
+    delta = 0;
+    if (*(u16 *)(D_82D07428 + 4) != *(u16 *)(D_82D07428 + 2)) {
+        if (*(s8 *)(D_82D07428 + 0xF) < 2) {
+            delta = *(u16 *)(D_82D07428 + 2) - *(u16 *)(D_82D07428 + 4);
+            *(u16 *)(D_82D07428 + 4) = *(u16 *)(D_82D07428 + 2);
+            *(s8 *)(D_82D07428 + 0xF) = 0;
+        } else {
+            delta = (*(u16 *)(D_82D07428 + 2) - *(u16 *)(D_82D07428 + 4)) / *(s8 *)(D_82D07428 + 0xF);
+            *(u16 *)(D_82D07428 + 4) = *(u16 *)(D_82D07428 + 4) + delta;
+            *(s8 *)(D_82D07428 + 0xF) = *(s8 *)(D_82D07428 + 0xF) - 1;
+        }
+    } else {
+        *(s8 *)(D_82D07428 + 0xF) = 0;
+        *(s16 *)(D_82D07428 + 0) = 0;
+    }
+    *(s16 *)(D_82D07428 + 0) = *(s16 *)(D_82D07428 + 0) - delta;
+
+    if (*(s16 *)(D_82D07428 + 0) > 0) {
+        do {
+            if (D_82D07428[0x10E] == 0) {
+                D_82D07428[0x10E] = 5;
+            } else {
+                D_82D07428[0x10E] = D_82D07428[0x10E] - 1;
+            }
+            D_82D07428[0xE] = *(s8 *)(D_82D07428 + 0xE) - 1;
+            record = &D_82D07428[D_82D07428[0x10E] * 0x4B28 + 0x110];
+            for (j = 0; j < 6; j++) {
+                off = *(s8 *)(D_82D07428 + 0xE) * 6 + j;
+                value = (off >= 0) ? D_82D07428[0x11 + off] : 0;
+                record[5 + j] = value;
+                *(u16 *)(record + 0xC + j * 2) = value;
+            }
+            *(s16 *)(D_82D07428 + 0) = *(s16 *)(D_82D07428 + 0) - 0x3D;
+        } while (*(s16 *)(D_82D07428 + 0) > 0);
+    }
+
+    if (*(s16 *)(D_82D07428 + 0) < -0x3C) {
+        do {
+            record = &D_82D07428[D_82D07428[0x10E] * 0x4B28 + 0x110];
+            for (j = 0; j < 6; j++) {
+                off = *(s8 *)(D_82D07428 + 0xE) * 6 + 0x24 + j;
+                value = (off < 0xFC) ? D_82D07428[0x11 + off] : 0;
+                record[5 + j] = value;
+                *(u16 *)(record + 0xC + j * 2) = value;
+            }
+            if (D_82D07428[0x10E] == 5) {
+                D_82D07428[0x10E] = 0;
+            } else {
+                D_82D07428[0x10E] = D_82D07428[0x10E] + 1;
+            }
+            D_82D07428[0xE] = *(s8 *)(D_82D07428 + 0xE) + 1;
+            *(s16 *)(D_82D07428 + 0) = *(s16 *)(D_82D07428 + 0) + 0x3D;
+        } while (*(s16 *)(D_82D07428 + 0) < -0x3C);
+    }
+
+    var_s6 = D_82D07428[0x10E];
+    j = 0;
+    do {
+        off = 0;
+        record = D_82D07428 + 0x110 + var_s6 * 0x4B28;
+        base = record;
+        do {
+            base = record + off;
+            if (func_82D00030(D_82D23904, base[5]) != 0) {
+                record[4] |= 1 << off;
+            } else {
+                record[4] &= ~(1 << off);
+            }
+            off += 1;
+        } while (off != 6);
+        var_s6 += 1;
+        j += 1;
+        if (var_s6 >= 6) {
+            var_s6 = 0;
+        }
+    } while (j != 6);
+}
 
 extern u16 D_82D23D86;
 extern s8 D_82D06F84;
