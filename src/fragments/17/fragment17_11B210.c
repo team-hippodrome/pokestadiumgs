@@ -508,7 +508,71 @@ void func_8220C470(Fragment17Panel *panel) {
         func_80044270(x + 5, y + 5, panel->pair_06.x - 10, panel->pair_06.y - 10, 0, 0, (s32)(bias + step), 1024, 0);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220C6C4.s")
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+// The panel parameter must be typed Fragment17Panel * (declared earlier in
+// fragment17_11B210.c): the struct-member forms panel->pair_06.x/.y and
+// panel->pair_0A/.pair_12 make IDO emit `addu origin, loaded-field` (the retail
+// operand order), while a `s16 *` parameter with *(s16 *)((u8 *)arg0 + n) forms
+// makes it emit `addu loaded-field, origin` (6 wrong words, diff 60).
+
+
+s32 func_8220C6C4(Fragment17Panel *panel) {
+    s16 originX, originY;
+    s32 stripWidth;
+    s32 textureHeight;
+    u16 *texture;
+    u8 environment[4];
+    u8 primitive[4];
+
+    texture = (u16 *)(u32)func_8004C990(0x51, 1);
+    stripWidth = (s32)texture[0] / 4;
+    textureHeight = texture[1];
+    if (stripWidth == 0) {} // FAKE: empty test; without it the raw/truncated
+                            // width and height values land in the wrong saved
+                            // registers (diff 160).
+
+    if (texture != NULL) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+        func_8004D1FC((u8 *)texture);
+
+        originX = panel->pair_0A.x + panel->pair_12.x;
+        originY = panel->pair_0A.y + panel->pair_12.y;
+
+        func_8220C42C(environment, primitive, (s16 *)panel);
+
+        gDPPipeSync(D_800D0510++);
+        gDPSetColor(D_800D0510++, G_SETENVCOLOR,
+                    (_SHIFTL(environment[1], 16, 8) | _SHIFTL(environment[2], 8, 8) |
+                     _SHIFTL(environment[0], 24, 8) | _SHIFTL(255, 0, 8)));
+        gDPSetColor(D_800D0510++, G_SETPRIMCOLOR,
+                    (_SHIFTL(primitive[1], 16, 8) | _SHIFTL(primitive[2], 8, 8) |
+                     _SHIFTL(primitive[0], 24, 8) | _SHIFTL(255, 0, 8)));
+
+        GfxRect_DrawTextured(originX, originY, (s16)stripWidth, (s16)textureHeight, 0, 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)(originX + stripWidth), originY, (s16)(panel->pair_06.x - stripWidth * 2),
+                             (s16)textureHeight, (s16)(stripWidth << 5), 0, 0, 1024, 0);
+        GfxRect_DrawTextured((s16)(originX + panel->pair_06.x - stripWidth), originY, (s16)stripWidth,
+                             (s16)textureHeight, (s16)(stripWidth << 5), 0, 1024, 1024, 0);
+        GfxRect_DrawTextured(originX, (s16)(originY + textureHeight),
+                             (s16)stripWidth, (s16)(panel->pair_06.y - textureHeight * 2),
+                             (s16)((stripWidth * 2) << 5), 0, 1024, 0, 0);
+        GfxRect_DrawTextured(originX, (s16)(originY + panel->pair_06.y - textureHeight),
+                             (s16)stripWidth, (s16)textureHeight, (s16)((stripWidth * 2) << 5), 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)(originX + stripWidth),
+                             (s16)(originY + panel->pair_06.y - textureHeight),
+                             (s16)(panel->pair_06.x - stripWidth * 2),
+                             (s16)textureHeight, (s16)((stripWidth * 3) << 5), 0, 0, 1024, 0);
+        GfxRect_DrawTextured((s16)(originX + panel->pair_06.x - stripWidth),
+                             (s16)(originY + panel->pair_06.y - textureHeight), (s16)stripWidth,
+                             (s16)textureHeight, (s16)((stripWidth * 3) << 5), 0, 1024, 1024, 0);
+        GfxRect_DrawTextured((s16)(originX + panel->pair_06.x - stripWidth),
+                             (s16)(originY + textureHeight), (s16)stripWidth,
+                             (s16)(panel->pair_06.y - textureHeight * 2),
+                             (s16)((stripWidth * 3) << 5), 0, 1024, 0, 0);
+    }
+}
 
 void func_8220CB34(s32 x, s32 y, s32 width, s32 height) {
     s32 resource;

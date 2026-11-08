@@ -613,7 +613,65 @@ s32 func_82206400(s32 arg0, void *arg1) {
 }
 /* mkdraft:func_82206400 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822064DC.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern f32 D_8220DBB8[];
+extern s32 D_8220EC38;
+extern void *D_8220DA08;
+extern s32 func_8004C990(s32, s32);
+extern s32 func_80050640(u8 *);
+extern s32 func_8004D1FC(u8 *);
+
+
+
+s32 func_822064DC(s32 arg0, void *arg1) {
+    s32 show;
+    s32 index;
+    u16 *texture;
+    f32 width;
+    f32 bias; // FAKE: unused stack slot; declaration order maps slot n to 0x54 - 4*n, so it takes sp+0x44 and keeps scale at sp+0x40. Diff score 11 without it.
+    f32 scale;
+    s32 draw_width;
+    s32 draw_height;
+    s32 x;
+    s32 y;
+    f32 step;
+
+    index = *(s32 *)((u8 *)arg1 + 0x20);
+    show = 0;
+    switch (arg0) {
+    case 0:
+        *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD;
+        break;
+    case 1:
+        if ((D_8220EC38 == 2) &&
+            (index == *(s16 *)((u8 *)*(u8 **)((u8 *)D_8220DA08 + 0x20) + 4))) {
+            show = 1;
+        }
+        if (show != 0) {
+            texture = (u16 *)func_8004C990(*(u16 *)((u8 *)arg1 + 0x24),
+                                           func_80050640(*(u8 **)((u8 *)arg1 + 0x34)));
+            scale = D_8220DBB8[index];
+            if ((texture != NULL) && (scale > 0.0f)) {
+                width = (f32)(u32)texture[0] * scale;
+                draw_width = (s32)(width + ((width > 0.0f) ? 0.5f : -0.5f));
+                draw_height = (s32)((f32)(u32)texture[1] * scale + (((f32)(u32)texture[1] * scale > 0.0f) ? 0.5f : -0.5f));
+                x = (s32)(texture[0] - draw_width) / 2;
+                y = (s32)(texture[1] - draw_height) / 2;
+                gSPDisplayList(D_800D0510++, D_80094E38);
+                func_8004D1FC((u8 *)texture);
+                step = 1024.0f / scale;
+                GfxRect_DrawTextured((s16)(*(s16 *)((u8 *)arg1 + 8) + x),
+                                     (s16)(*(s16 *)((u8 *)arg1 + 0xA) + y),
+                                     (s16)draw_width, (s16)draw_height, 0, 0,
+                                     (s32)(step + ((step > 0.0f) ? 0.5f : -0.5f)),
+                                     (s32)(step + ((step > 0.0f) ? 0.5f : -0.5f)), 0);
+            }
+        }
+        break;
+    }
+    return 0;
+}
 
 extern s32 D_8220EB90;
 
