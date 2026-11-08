@@ -321,7 +321,95 @@ void func_882027F0(u8 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s
 }
 /* mkdraft:func_882027F0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_175260/func_88202AA0.s")
+extern u8 *func_88A00710(s32 arg0, s16 arg1);
+extern u8 func_88A007BC(s32 arg0);
+extern void func_88A014C8(s32 arg0, u8 arg1, s8 arg2);
+extern void func_88A015A0(s32 arg0);
+
+typedef struct {
+    u8 unk_00;
+    u8 unk_01;
+} BagEntry;
+
+
+
+void func_88202AA0(u8 *arg0, s16 arg1) {
+    u32 i;
+    u16 total;
+    BagEntry *first;
+    BagEntry *second;
+    u8 value;
+    u32 count;
+    s32 flag;
+    u8 j;
+    s32 found;
+    BagEntry records[0x100];
+    u8 stacks;
+    u8 rem;
+    u32 stacksTotal; // FAKE: layout-only temp; diff score 8 without it
+
+    total = func_88A007BC((s32) arg0);
+    first = (BagEntry *) func_88A00710((s32) arg0, 0);
+    second = (BagEntry *) func_88A00710((s32) arg0, arg1);
+    count = second->unk_01;
+    value = second->unk_00;
+    flag = 0;
+    if (count != 0) {
+        for (i = 0; i < total; i++) {
+            if (first != second && first->unk_00 == second->unk_00) {
+                flag = 1;
+                count += first->unk_01;
+                first->unk_01 = 0;
+            }
+            first++;
+        }
+    }
+    func_88A015A0((s32) arg0);
+    if (flag == 0) {
+        return;
+    }
+    j = 0;
+    found = 0;
+    first = (BagEntry *) func_88A00710((s32) arg0, 0);
+    total = func_88A007BC((s32) arg0);
+    for (i = 0; i < total; i++) {
+        if (found != 0) {
+            records[j] = *first;
+            j++;
+        } else if (first->unk_00 == value) {
+            found = 1;
+            arg1 = i;
+        }
+        first++;
+    }
+    if (count < 100) {
+        first = (BagEntry *) func_88A00710((s32) arg0, arg1);
+        first->unk_01 = count;
+        return;
+    }
+    stacksTotal = count / 99;
+    stacks = stacksTotal;
+    rem = count % 99;
+    if (rem == 0) {
+        rem = 99;
+        stacks = stacks - 1;
+    }
+    first = (BagEntry *) func_88A00710((s32) arg0, arg1);
+    first->unk_01 = 99;
+    func_88A014C8((s32) arg0, first->unk_00, stacks);
+    first++;
+    for (i = 0; i < stacks; i++, first++) {
+        first->unk_00 = value;
+        if (i == stacks - 1) {
+            first->unk_01 = rem;
+        } else {
+            first->unk_01 = 99;
+        }
+    }
+    for (i = 0; i < j; i++, first++) {
+        *first = records[i];
+    }
+}
 
 extern s32 func_88202098(u8);
 extern s32 func_88A008CC(u8 *);

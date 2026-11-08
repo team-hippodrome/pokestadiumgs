@@ -587,7 +587,69 @@ void func_8820AAD0(s16 arg0, s16 arg1, u8 *arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_8820ACD0.s")
+
+
+
+extern unk_D_88234700 *D_88234700;
+extern u8 *func_88201ED0(u8, u8);
+extern s32 func_88208B38(u8 *);
+extern s32 func_88005CC0(s32, void *);
+extern s32 D_882346F0;
+
+typedef struct {
+    u8 red;
+    u8 green;
+    u8 blue;
+} Color8820ACD0;
+extern void func_880006E0(void *);
+extern void *Color_SetRGB(void *, s32, s32, s32);
+extern void func_8820AAD0(s16, s16, u8 *);
+extern u8 D_88005FA0[];
+
+
+
+void func_8820ACD0(u8 slot, u8 limit) {
+    s32 row;
+    s16 color;
+    s16 y;
+    u8 selected;
+
+    if (!(func_88201ED0(((u8 *)D_88234700)[((u32)slot) * 2 + 0xA], ((u8 *)D_88234700)[((u32)slot) * 2 + 0xB])[0x15] == 0)) {
+        {
+            Color8820ACD0 gray;
+            u8 **entry;
+
+            entry = (u8 **)(*(u32 *)(func_88201ED0(((u8 *)D_88234700)[((u32)slot) * 2 + 0xA], ((u8 *)D_88234700)[((u32)slot) * 2 + 0xB]) + 0x10) + D_88234700->records[slot].unk_12 * 4);
+            color = slot == 0 ? 0x4D : 0x176;
+            {
+                u16 available = *(u16 *)D_88234700->records[slot].unk_14;
+                limit = limit + 1 <= available ? limit : available;
+            }
+            for (row = 0, y = 0x80 - *(s16 *)(D_88234700->records[slot].unk_14 + 0x16); row != limit; row++, y += 0x1B) {
+                if (((s32 *)((u8 *)D_88234700 + 0x6C))[slot] != 0) {
+                    selected = row == (D_88234700->records[slot].unk_10 - D_88234700->records[slot].unk_12) ? 1 : 0;
+                    if (selected != 0) {
+                        continue;
+                    }
+                }
+                if (D_882346F0 == 1 || D_882346F0 == 3 || D_88234700->index == slot) {
+                    if (func_88208B38(*entry) != 0 && slot == D_88234700->index) {
+                        func_880006E0(Color_SetRGB(&gray, 150, 150, 150));
+                    } else {
+                        func_880006E0(D_88005FA0);
+                    }
+                } else {
+                    func_880006E0(Color_SetRGB(&gray, 150, 150, 150));
+                }
+                if (func_88005CC0(6, *entry) == 0 && func_88005CC0(7, *entry) == 0 &&
+                    func_88005CC0(8, *entry) == 0 && func_88005CC0(9, *entry) == 0) {
+                    func_8820AAD0(color, y, *entry + 8);
+                }
+                entry++;
+            }
+        }
+    }
+}
 
 extern u8 *func_88201ED0(u8, u8);
 extern void func_8004D5B8(s32, s32, s32, const char *, ...);

@@ -3,7 +3,37 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821D930.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80094DE0[];
+extern void func_880008B0(s16, s16, s16);
+extern void func_800498C4(void);
+extern void func_8004989C(s32);
+extern void func_800496A4(s32, s16);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_88002820(s16, s16, s8, u8 **, u16, s16, void *);
+extern void func_800499EC(void);
+extern void func_880009A8(s32, s16, s16, s16, s16, s16, s16);
+
+
+
+void func_8821D930(u8 *arg0) {
+    u8 *entry = arg0 + 0x1C;
+
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_880008B0(*(s16 *)(arg0 + 0x14), *(s16 *)(arg0 + 0x16), *(s16 *)(arg0 + 0x18));
+    func_800498C4();
+    func_8004989C(0x14);
+    func_800496A4(*(u32 *)(arg0 + 0xC), *(s16 *)(arg0 + 0x10));
+    func_800495F8(*(s16 *)arg0, *(s16 *)(arg0 + 2), *(u32 *)(arg0 + 4), (const char *)(*(u32 *)(arg0 + 8)));
+    func_800496A4(*(u32 *)(entry + 0x10), *(s16 *)(entry + 0x14));
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_88002820(*(s16 *)entry, *(s16 *)(entry + 2), *(s8 *)(entry + 7), *(u8 **)(entry + 8),
+                  *(u16 *)(entry + 0xC), *(s16 *)(entry + 0x16), entry + 0x2C);
+    func_800499EC();
+    func_880009A8(*(s32 *)(entry + 0x24) == 1, *(s16 *)entry,
+                  26 * *(s16 *)(entry + 0x28) + *(s16 *)(entry + 2), *(s16 *)(entry + 0xE), 0x14, 6, 6);
+}
 
 extern u8 *func_88216D54(s32);
 extern u8 *func_88213A3C(s32);
@@ -82,7 +112,60 @@ void func_8821DE04(void) {
     (*(s32 *)((u8 *)(*(void **)((u8 *)(D_882347F0) + 8)) + 0x2C)) = 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_190BB0/func_8821DE58.s")
+extern s32 D_882345F4;
+extern void *D_88234620;
+extern u32 D_882347F0;
+extern void D_88000E4C(void);
+extern void func_8821DE04(void);
+extern void func_8821EB00(void);
+extern s32 func_8821E73C();
+extern s32 func_88202158();
+extern void *func_8004C874(s32, s32);
+extern s32 func_8004C54C(s32, s32);
+extern void *func_8004C8A0(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void LabPC_OpenMessageDialog(s8 *title,s16 x,s16 y,s32 style,u8 red,u8 green,u8 blue,u8 delay,u8 kind,s32 *done,s32 *cancel,s32 *extra,void (*callback)(void));
+
+// Menu update for the LabPC screen holding the record at D_882345F4. Each test asks
+// func_88202158 for one action mask; a hit either stores a new mode (3 or 4) for
+// func_8821EB00 or opens a LabPC message dialog anchored at the s16 pair at D_882347F0 + 0x6C
+// and + 0x6E, whose two text buffers sit at +0x2C and +0x30 of the entry at D_882347F0 + 8.
+// No matching action falls through to func_8821E73C(5).
+
+
+void func_8821DE58(void) {
+    u8 buffer[0x80];
+
+    if (((*(u8 *)((u8 *)D_882345F4 + 0xA)) != 0) && ((*(u8 *)((u8 *)D_882345F4 + 0xB)) != 0) &&
+        ((*(u8 *)((u8 *)D_882345F4 + 0xC)) != 0) && ((*(u8 *)((u8 *)D_882345F4 + 0xD)) != 0) &&
+        (func_88202158(D_88234620, 2) != 0)) {
+        *(s32 *)((u8 *)D_882347F0 + 4) = 3;
+        func_8821EB00();
+        return;
+    }
+    if (func_88202158(D_88234620, 0x200) != 0) {
+        *(s32 *)((u8 *)D_882347F0 + 4) = 4;
+        func_8821EB00();
+        return;
+    }
+    if ((*(u8 *)((u8 *)D_882345F4 + 9) == 0x70) && (func_88202158(D_88234620, 0xFC00) != 0)) {
+        LabPC_OpenMessageDialog(
+            func_8004C874(0x25, 0x63), (s16)(*(s16 *)((u8 *)D_882347F0 + 0x6C) + 0xAB),
+            (s16)(*(s16 *)((u8 *)D_882347F0 + 0x6E) + 0xA3), 4, 0xFF, 0xAA, 0x8C, 2, 2,
+            (s32 *)((u8 *)*(s32 *)((u8 *)D_882347F0 + 8) + 0x2C),
+            (s32 *)((u8 *)*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *)D_88000E4C, func_8821DE04);
+        return;
+    }
+    if (((*(u8 *)((u8 *)D_882345F4 + 0x26) & 2) != 0) && (func_88202158(D_88234620, 0x1000) != 0)) {
+        func_8004C54C(0x1A, (s32)((u8 *)D_882345F4 + 0x3C));
+        LabPC_OpenMessageDialog(
+            func_8004C8A0(buffer, 0x80, 0x25, 0x65), (s16)(*(s16 *)((u8 *)D_882347F0 + 0x6C) + 0xAB),
+            (s16)(*(s16 *)((u8 *)D_882347F0 + 0x6E) + 0xA3), 4, 0xFF, 0xAA, 0x8C, 2, 2,
+            (s32 *)((u8 *)*(s32 *)((u8 *)D_882347F0 + 8) + 0x2C),
+            (s32 *)((u8 *)*(s32 *)((u8 *)D_882347F0 + 8) + 0x30), (s32 *)D_88000E4C, func_8821DE04);
+        return;
+    }
+    func_8821E73C(5);
+}
 
 typedef struct {
     u8 unk_00[44];

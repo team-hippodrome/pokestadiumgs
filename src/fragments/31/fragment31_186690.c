@@ -39,10 +39,6 @@ u8 *StorageList_GetEntry(s32 mode, u8 column) {
     return D_88234640[(u32)column * 2].entries + index * 118;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_88213530.s")
-
-u8 *func_88213A3C(s32 arg0) { switch (arg0) { case 3: return D_88234730 + 0xC4; case 4: return D_88234730 + 0xF8; case 5: return D_88234730 + 0x12C; } }
-
 typedef struct {
     u8 unk_00[8];
     s16 position;
@@ -55,13 +51,101 @@ typedef struct {
     s16 residual;
     u8 unk_24[8];
 } StorageListScrollRecord;
-extern void func_88001C24(void *, u16, u8);
-extern void func_88001D0C(void *);
+
+typedef struct {
+    u8 count;
+    u8 capacity;
+    void *entries;
+    s32 changed;
+} LabPCStorageList186690;
 
 typedef struct unk_D_8823463C {
     u8 unk_00;
     u8 unk_01[11];
 } unk_D_8823463C;
+
+extern void func_88213410(void);
+extern u8 *D_88234730;
+extern unk_D_8823463C D_88234630[];
+extern u8 D_88234660[];
+extern u8 D_88233820;
+extern u8 D_8823382C;
+extern u8 D_88233836;
+extern s32 D_882346F0;
+extern s32 D_882346F4;
+extern s32 D_880068B4;
+extern s32 D_880068B8;
+extern void D_88000E4C(void);
+extern void *D_80087200;
+extern void Input_SetRepeatController(void *);
+s32 func_80001FF0();
+s32 func_8004C4B0(s32);
+s32 func_8004C8C0(s32);
+s32 func_8004C990(s32, u8);
+s32 func_88001C6C(u8 *, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+s32 func_88005B60(s32, s32 *, s32 *, s32 *);
+void func_882011E0(s32);
+void func_88203744(s32);
+s32 func_8821DC48(s32, u8 *, u8 *, u8 *);
+void func_88A00D0C(s32);
+s32 main_pool_push_state(s32);
+u8 *mem_pool_alloc(s32, s32);
+s32 mem_pool_try_init(s32, s32);
+
+s32 func_88205EB0(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, void (*)());
+
+
+
+void func_88213530(void)
+{
+  s32 temp_v0;
+  s32 column;
+  s32 var_s0;
+  s32 var_s1_2;
+  s32 var_s2_2;
+  u8 *var_s0_2;
+  u8 *var_s1;
+  u8 *var_s5;
+  u8 *var_s2;
+  main_pool_push_state(0x4D41494C);
+  temp_v0 = mem_pool_try_init(0x20000, 0);
+  do
+  {
+    D_88234730 = mem_pool_alloc(temp_v0, 0x164);
+    func_8004C4B0(0x23);
+    func_8004C4B0(9);
+    func_8004C4B0(0xB);
+    func_8004C8C0(0xC3);
+ for (var_s2 = &D_88233820, var_s0 = 0, var_s1 = &D_88233820 + 12; var_s1 < &D_88233820 + 22; var_s2 += 1, var_s1 += 1, var_s0 += 8) {
+      *((s32 *) ((D_88234730 + var_s0) - (-0x74))) = func_8004C990(0xC3, *var_s2);
+      *((s32 *) ((D_88234730 + var_s0) + 0x78)) = func_8004C990(0xC3, *var_s1);
+    }
+    func_882011E0(temp_v0);
+    func_88A00D0C(temp_v0);
+    func_88203744(temp_v0);
+    func_8821DC48(temp_v0, D_88234730 + 0xC4, D_88234730 + 0xF8, D_88234730 + 0x12C);
+    *D_88234730 = 0;
+    *((s32 *) (D_88234730 + 4)) = 1;
+    *((s16 *) (D_88234730 - (-8))) = 0;
+    var_s1_2 = 0; } while (0); *((s8 *) (D_88234730 - -0x64)) = 0;
+  for (column = 0; column < 2; column++)
+  {
+    *((s32 *) ((D_88234730 + column * 4) + 0x68)) = 0;
+    func_88001C6C((u8 *) &(((StorageListScrollRecord *) (D_88234730 + 12))[column]), ((LabPCStorageList186690 *) D_88234630)[column * 2 + 1].count, 6, 0x7D, 0x1B, 0xE, (s32) ((600.0f / ((f32) func_80001FF0())) + ((600.0f / ((f32) func_80001FF0())) > 0.0f ? 0.5f : -0.5f)), 0x20, 0x20, 0xC, 0x46);
+  }
+  Input_SetRepeatController(D_80087200);
+  D_882346F0 = 0;
+  D_880068B4 = (D_880068B8 = 1);
+  D_882346F4 = 0;
+  func_88205EB0(0x2C, 0x13F, 0x229, 0x82, 0x2C, 0x48, 0xF2, 0xF2, (unsigned int) 0x31, 0x69, 0xE5, 0xC9, 0x163, 0x48, 0xF2, 0xF2, 0x168, 0x69, 0xE5, 0xC9, 0x34, 0x6C, 0xDF, 0x11, 0x34, 0x11E, 0xDF, 0x11, 0x16B, 0x6C, 0xDF, 0x11, 0x16B, 0x11E, 0xDF, 0x11, 0x121, 0x48, 0x3F, 0x26, 0x34, 0x7D, 0xDF, 0x1A, 0x16B, 0x7D, 0xDF, 0x1A, 0xFB, 0x4F, 0x16B, 0x4F, -(((1 & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu), -1, -1, -1, -1, -1, -1, -1, 0x88, 0x70, 0x9A, 0x70, 0x9A, 0x122, 0xAE, 0x122, 0x1BF, 0x70, 0x1D1, 0x70, 0x1D1, 0x122, 0x1E5, 0x122, 7, 0x22, func_88213410);
+  func_88005B60(0, (s32 *) &D_88000E4C, (s32 *) &D_88000E4C, (s32 *) &D_88000E4C);
+}
+
+u8 *func_88213A3C(s32 arg0) { switch (arg0) { case 3: return D_88234730 + 0xC4; case 4: return D_88234730 + 0xF8; case 5: return D_88234730 + 0x12C; } }
+
+extern void func_88001C24(void *, u16, u8);
+extern void func_88001D0C(void *);
+
 /* Storage-list pair metadata. */
 extern unk_D_8823463C D_8823463C[];
 // Update the optional row count and preserve the six-row scroll position.
@@ -205,12 +289,6 @@ typedef struct {
     u8 pad[12];
     StorageListScrollRecord rec[2];
 } LabPCScrollBlock186690;
-typedef struct {
-    u8 count;
-    u8 capacity;
-    void *entries;
-    s32 changed;
-} LabPCStorageList186690;
 
 
 
