@@ -278,7 +278,99 @@ void func_863007B8(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_275E40/func_86300818.s")
+extern void *D_87F119DC;
+extern void *D_863075D8;
+extern void func_87D00720(f32 *, f32 *, f32 *, f32 *, f32 *);
+extern s32 func_87D00670(f32 *, f32 *, f32 *, f32 *, f32 *, f32 *);
+
+
+
+
+
+s32 func_86300818(f32 *arg0, f32 *arg1, f32 *arg2, f32 arg3) {
+    u8 *child;
+    u8 *node;
+    u8 *obj;
+    f32 scale;
+    s8 mode;  // Unused: reserving a home for it keeps projected/origin/pos at their target offsets; removing the declaration shifts those slots +4 and scores 99.
+    struct { f32 x; f32 y; } pos;
+    s32 found;
+    f32 projected[2];
+    f32 limit;
+    f32 best;
+    f32 perp;
+    f32 t;
+    f32 dist;
+    f32 ratio;
+    f32 halfwidth;
+    f32 length;
+    f32 origin[2];
+    f32 out[2];
+    f32 x;
+    f32 y;
+
+    child = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    *arg1 = 3.4028235e38f;
+    node = *(u8 **)((u8 *)D_863075D8 + 0xDC0);
+    found = 0;
+    best = 3.4028235e38f;
+    limit = arg3;
+    while (node != NULL) {
+        obj = *(u8 **)(node + 0x20);
+        if ((*(s8 *)((u8 *)D_863075D8 + 0x8FE0) == 0) && ((1 << *(s8 *)(obj + 0x20)) & *(u8 *)(*(u8 **)((u8 *)D_863075D8 + 0xC) + 0x2182))) {
+            limit *= 0.1f;
+        }
+        switch (*(s8 *)((u8 *)D_863075D8 + 0x8FE0)) {
+        case 0:
+            scale = 0.0f;
+            break;
+        case 1:
+            scale = 0.25f;
+            break;
+        case 2:
+            scale = 5.0f;
+            break;
+        case 3:
+            scale = 1.0f;
+            break;
+        }
+        pos.x = (*(f32 *)(obj + 0x10) * scale) + *(f32 *)(node + 0x10);
+        pos.y = (*(f32 *)(obj + 0x14) * scale) + *(f32 *)(node + 0x14);
+        if (((*(f32 *)(child + 0x24) * pos.y) + (*(f32 *)(child + 0x20) * pos.x)) < 0.0f) {
+            projected[0] = (*(f32 *)(child + 0x20) * 50.54625) + *(f32 *)((u8 *)D_87F119DC + 0x48);
+            projected[1] = (*(f32 *)(child + 0x24) * 50.54625) + *(f32 *)((u8 *)D_87F119DC + 0x4C);
+            origin[0] = *(f32 *)(node + 0x48);
+            origin[1] = *(f32 *)(node + 0x4C);
+            func_87D00720(origin, projected, (f32 *)(child + 0x18), out, &length);
+            dist = sqrtf((*(f32 *)(node + 0x14) * *(f32 *)(node + 0x14)) + (*(f32 *)(node + 0x10) * *(f32 *)(node + 0x10)));
+            func_87D00670(projected, (f32 *)(child + 0x18), &perp, (f32 *)obj, (f32 *)&pos, &t);
+            if (((*(f32 *)(obj + 0x18) + dist) <= limit) || (t < 0.0f)) {
+                halfwidth = *(f32 *)((u8 *)D_863075D8 + 0x8F24) * 1.4142135f;
+                if (((-halfwidth < perp) && (perp < halfwidth)) || (length < 63.0f)) {
+                    x = (pos.x * t) + *(f32 *)(obj + 0);
+                    y = (pos.y * t) + *(f32 *)(obj + 4);
+                    if (dist != 0.0f) {
+                        ratio = sqrtf((x * x) + (y * y)) / dist;
+                        if (ratio < best) {
+                            arg0[0] = x;
+                            arg0[1] = y;
+                            best = ratio;
+                            found = 1;
+                            *arg1 = length;
+                            *arg2 = dist;
+                        }
+                    }
+                }
+            }
+        }
+        node = *(u8 **)(node + 4);
+    }
+    if (found != 0) {
+        arg0[0] += (((-*(f32 *)(child + 0x20)) * (101.0925 * *(f32 *)(child + 0x34))) + (*(f32 *)(child + 0x18) * 120.0f * *(f32 *)(child + 0x38)));
+        arg0[1] += (((-*(f32 *)(child + 0x20)) * (101.0925 * *(f32 *)(child + 0x34))) + (*(f32 *)(child + 0x18) * 120.0f * *(f32 *)(child + 0x38)));
+    }
+    return found;
+}
 #endif
 
 #ifdef VERSION_US
