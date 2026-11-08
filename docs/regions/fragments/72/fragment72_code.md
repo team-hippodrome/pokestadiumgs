@@ -223,3 +223,37 @@ is preserved. Private receipts: `rewrite-cleanup-f72-playback-controls`,
 `rewrite-cleanup-f72-playback-final-controls`,
 `rewrite-cleanup-f72-playback-link`, and `rewrite-cleanup-eighteenth-seal`.
 Coverage and compiler/tooling files are unchanged.
+
+## 2026-11-08 — `func_8F400EE0` text overlay accepted
+
+`func_8F400EE0`, **353 instructions / 1412 bytes**, frame **0x20**,
+two `s32` flag arguments. Full-ROM gate passes:
+`build/pokestadiumgs-us.z64: OK`, MD5 `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+All 22 functions in `fragment72_code.o` match the assembly-backed baseline.
+
+`func_8F401918` calls it last each frame with `(draw mode == 2, draw mode == 3)`.
+Between `func_800498C4` and `func_800499EC`, it prints message 8 of group 66
+centered at x 320. For mode 2 it adds `func_8004C874(66, D_8F402030[state])`,
+indexing the `s16` table with the halfword at `D_8F4020C0 + 0`. For mode 3 it
+adds `"%03d:%s"` with `D_8F402100` and `func_8004B7A4(D_8F402100)`.
+
+When `D_8F4020CC` is non-null it prints eight label rows (group 66, 23-31)
+at x 400, y 100-260, then their values with the formats below.
+`func_8F400E74(D_8F4020E8, row, flag)` sets white for the row selected by
+`D_8F4020E8` (or one whose flag is set) and gray for the rest. The per-row
+flags are the halfwords `D_8F4020EC..D_8F4020FA`.
+
+| Row | Value | Format |
+|---|---|---|
+| 0 | `D_8F4020C2` (number, then name via `func_8004B7A4`) | `%03d`, `%s` |
+| 2-4 | `f32` at `+0x24/+0x28/+0x2C` of the struct at `D_8F4020CC + 0x1C`, truncated | `%4d` |
+| 5 | `u16` at that struct's `+0x20` | `%04X` |
+| 6 | `f32` at `D_8F4020CC + 0x10` | `%5.2f` |
+| 7 | `s32` at that struct's `+0x48`, shifted right 16 | `%3d` |
+
+The `s16` table type and index width come from the original
+`sll 1` / `lh` pair. The function declares no locals, which gives the original
+0x20 frame. The text helpers are used through the file's existing implicit
+declarations, like `func_8F400E74`. Field roles are not named: the code only
+formats them.
+//@src/fragments/72/fragment72_code.c

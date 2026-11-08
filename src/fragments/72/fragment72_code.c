@@ -445,7 +445,77 @@ void func_8F400E74(s32 arg0, s32 arg1, s32 arg2) {
     func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F400EE0.s")
+extern s16 D_8F402030[];
+extern s16 D_8F4020EC;
+extern s16 D_8F4020EE;
+extern s16 D_8F4020F0;
+extern s16 D_8F4020F2;
+extern s16 D_8F4020F4;
+extern s16 D_8F4020F6;
+extern s16 D_8F4020F8;
+extern s16 D_8F4020FA;
+// Text overlay drawn by func_8F401918 after the preview. Always prints message 8 of
+// group 66. arg0 (draw mode 2) adds the entry named by D_8F402030 for the current
+// state, and arg1 (draw mode 3) adds the species number and name in D_8F402100. While a
+// model is loaded (D_8F4020CC), it lists eight rows, labels 23-31, with their current
+// values. func_8F400E74 brightens the row selected by D_8F4020E8 before each pair.
+void func_8F400EE0(s32 arg0, s32 arg1) {
+    func_800498C4();
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0, 0, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800496A4(16, 0);
+    func_800495F8(320, 40, 1, func_8004C874(66, 8));
+    if (arg0 != 0) {
+        func_8004972C(0, 0, 0xFF, 0xFF);
+        func_800497E4(0, 0xFF, 0xFF, 0xFF);
+        func_800496A4(8, 0);
+        func_800495F8(320, 64, 1, func_8004C874(66, D_8F402030[*(s16 *)&D_8F4020C0]));
+    }
+    if (arg1 != 0) {
+        func_8004972C(0, 0, 0xFF, 0xFF);
+        func_800497E4(0, 0xFF, 0xFF, 0xFF);
+        func_800496A4(8, 0);
+        func_800495F8(320, 64, 1, "%03d:%s", D_8F402100, func_8004B7A4(D_8F402100));
+    }
+    Font_DisableTwoCycleTexturing();
+    if (D_8F4020CC != NULL) {
+        func_800496A4(8, 0);
+        func_8F400E74(D_8F4020E8, 0, D_8F4020EC);
+        func_800495F8(400, 100, 2, func_8004C874(66, 23));
+        func_800495F8(400, 120, 2, func_8004C874(66, 24));
+        func_8F400E74(D_8F4020E8, 1, D_8F4020EE);
+        func_800495F8(400, 140, 2, func_8004C874(66, 25));
+        func_8F400E74(D_8F4020E8, 2, D_8F4020F0);
+        func_800495F8(400, 160, 2, func_8004C874(66, 26));
+        func_8F400E74(D_8F4020E8, 3, D_8F4020F2);
+        func_800495F8(400, 180, 2, func_8004C874(66, 27));
+        func_8F400E74(D_8F4020E8, 4, D_8F4020F4);
+        func_800495F8(400, 200, 2, func_8004C874(66, 28));
+        func_8F400E74(D_8F4020E8, 5, D_8F4020F6);
+        func_800495F8(400, 220, 2, func_8004C874(66, 29));
+        func_8F400E74(D_8F4020E8, 6, D_8F4020F8);
+        func_800495F8(400, 240, 2, func_8004C874(66, 30));
+        func_8F400E74(D_8F4020E8, 7, D_8F4020FA);
+        func_800495F8(400, 260, 1, func_8004C874(66, 31));
+        func_8F400E74(D_8F4020E8, 0, D_8F4020EC);
+        func_800495F8(400, 100, 0, "%03d", D_8F4020C2);
+        func_800495F8(400, 120, 0, "%s", func_8004B7A4(D_8F4020C2));
+        func_8F400E74(D_8F4020E8, 1, D_8F4020EE);
+        func_800495F8(400, 140, 0, "%4d", (s32)*(f32 *)(*(u8 **)((u8 *)D_8F4020CC + 0x1C) + 0x24));
+        func_8F400E74(D_8F4020E8, 2, D_8F4020F0);
+        func_800495F8(400, 160, 0, "%4d", (s32)*(f32 *)(*(u8 **)((u8 *)D_8F4020CC + 0x1C) + 0x28));
+        func_8F400E74(D_8F4020E8, 3, D_8F4020F2);
+        func_800495F8(400, 180, 0, "%4d", (s32)*(f32 *)(*(u8 **)((u8 *)D_8F4020CC + 0x1C) + 0x2C));
+        func_8F400E74(D_8F4020E8, 4, D_8F4020F4);
+        func_800495F8(400, 200, 0, "%04X", *(u16 *)(*(u8 **)((u8 *)D_8F4020CC + 0x1C) + 0x20));
+        func_8F400E74(D_8F4020E8, 5, D_8F4020F6);
+        func_800495F8(400, 220, 0, "%5.2f", *(f32 *)((u8 *)D_8F4020CC + 0x10));
+        func_8F400E74(D_8F4020E8, 6, D_8F4020F8);
+        func_800495F8(400, 240, 0, "%3d", *(s32 *)(*(u8 **)((u8 *)D_8F4020CC + 0x1C) + 0x48) >> 16);
+    }
+    func_800499EC();
+}
 
 extern s16 D_8F402030[];
 extern u8 D_8F402040[];
