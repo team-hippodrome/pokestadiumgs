@@ -2332,7 +2332,36 @@ typedef struct {
     u8 unk_3FF1D[0x4E03C - 0x3FF1D];
     f32 scroll_progress;
 } Fragment7NavigationState;
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_83008290.s")
+// 88-byte rule row: the word view makes each row assignment a lw/sw copy.
+typedef struct { u32 words[22]; } Fragment7RuleRow;
+typedef struct { u8 header[16]; Fragment7RuleRow rows[6]; } Fragment7RuleDeckView;
+typedef struct { u8 unk_00000[0x3FB60]; Fragment7RuleRow rows[6]; } Fragment7RuleCheckView;
+typedef struct { u8 value; } Fragment7RuleByte;
+
+extern u8 D_8300F924[];
+
+
+
+void func_83008290(void *arg0v, void *arg1v) {
+    Fragment7RuleDeckView *deck = arg0v;
+    Fragment7RuleCheckView *state = arg1v;
+    s32 selection = state->unk_00000[0x3C];
+    s32 i;
+
+    for (i = 0; i < 6; i++) {
+        deck->rows[i] = state->rows[i];
+    }
+    if ((selection >= 0) && (selection < 4)) {
+        *(s16 *)((u8 *)arg0v + 0xC) = func_8005DA1C(selection);
+        func_8005DC48(selection, (s32)arg0v);
+    } else {
+        *(s16 *)((u8 *)arg0v + 0xC) = 0;
+        // FAKE: a plain u8 assignment loads D_8300F924 through a fresh address
+        // temporary (lbu t7); the one-byte struct copy reuses the address
+        // temporary the sh zero above already holds (lbu t8). Plain u8 scores 10.
+        *(Fragment7RuleByte *)arg0v = *(Fragment7RuleByte *)((u32)D_8300F924);
+    }
+}
 #endif
 
 #ifdef VERSION_US
