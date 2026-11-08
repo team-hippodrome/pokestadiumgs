@@ -23,7 +23,294 @@ void func_8F400198(void) {
     Dma_CopyChunks(D_8F4020E4, temp_v0, temp_v0 + 0xBDC);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F4001CC.s")
+extern void func_800226C0(s32);
+extern void *D_80087200;
+extern u8 D_8F4020C0;
+extern s16 D_8F4020C4;
+extern s32 D_8F4020C8;
+extern s16 D_8F4020C2;
+extern void *D_8F4020CC;
+extern s16 D_8F4020E8;
+extern s32 D_8F4020E4;
+extern s32 func_80042FBC(void *, s32);
+extern s32 func_8004B7E0(s32, void *);
+extern f32 func_8004B888(s32);
+extern s32 func_8004BA34(s32);
+extern f32 func_8004BAE8(s32, s32);
+extern s16 func_8004BB58(s32, s32);
+extern s32 func_8004BBA8(s32, s32, void *);
+extern s32 func_8004BC6C(s32, s32);
+extern void func_8004BCBC(s32, void *);
+extern void func_8004BD28(s32, f32);
+extern void func_8004BD78(s32, s16);
+extern void func_8004BE50();
+extern void func_8004BE84(s32, s32, f32);
+extern void func_8004BEEC(s32, s32, s16);
+extern void func_8004BF3C(s32, s32, void *);
+extern void func_8004BFC4(s32, s32, s16);
+
+
+
+
+void func_8F4001CC(void)
+{
+  u8 *state;
+  s16 index;
+  s32 species;
+  f32 vec[3];
+  s16 value;
+  s16 cv;
+  s16 maximum;
+  u16 buttons;
+  f32 fvalue;
+  s16 *ptr;
+  state = &D_8F4020C0;
+  index = *((s16 *) (state + 0x28));
+  species = *((s16 *) (state + 2));
+  ptr = &D_8F4020E8;
+  if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x800)
+  {
+    do
+    {
+      (*ptr)--;
+      if ((*ptr) < 0)
+      {
+        *ptr = 7;
+      }
+    }
+    while ((((s16 *) state)[(*((s16 *) (state + 0x28))) + 0x16]) == 0);
+  }
+  if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x400)
+  {
+    do
+    {
+      (*ptr)++;
+      if (1)
+      {
+        if ((*ptr) >= 8)
+        {
+          *ptr = 0;
+        }
+      }
+    }
+    while ((((s16 *) state)[(*((s16 *) (state + 0x28))) + 0x16]) == 0);
+  }
+  if (index != (*((s16 *) state)))
+  {
+    func_800226C0(1);
+  }
+  switch (*ptr)
+  {
+    case 0:
+      ptr = &D_8F4020C2;
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+    {
+      cv = (*ptr) - 1;
+      *ptr = cv;
+      if (cv <= 0)
+      {
+        *ptr = 1;
+      }
+    }
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100)
+    {
+      cv = (*ptr) + 1;
+      *ptr = cv;
+      if (cv >= 0xFE)
+      {
+        *ptr = 0xFD;
+      }
+    }
+      if (species != (*ptr))
+    {
+      func_80042FBC(D_8F4020CC, *ptr);
+      return;
+    }
+      break;
+
+    case 1:
+      if (D_8F4020E4 != 0)
+    {
+      func_8004BBA8(D_8F4020E4, D_8F4020C2, vec);
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x200)
+      {
+        vec[0] -= 1.0f;
+      }
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x100)
+      {
+        vec[0] += 1.0f;
+      }
+      func_8004BF3C(D_8F4020E4, D_8F4020C2, vec);
+      return;
+    }
+      func_8004B7E0(D_8F4020C2, vec);
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x200)
+    {
+      vec[0] -= 1.0f;
+    }
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x100)
+    {
+      vec[0] += 1.0f;
+    }
+      func_8004BCBC(D_8F4020C2, vec);
+      return;
+
+    case 2:
+      if (D_8F4020E4 != 0)
+    {
+      func_8004BBA8(D_8F4020E4, D_8F4020C2, vec);
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x200)
+      {
+        vec[1] -= 1.0f;
+      }
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x100)
+      {
+        vec[1] += 1.0f;
+      }
+      func_8004BF3C(D_8F4020E4, D_8F4020C2, vec);
+      return;
+    }
+      func_8004B7E0(D_8F4020C2, vec);
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x200)
+    {
+      vec[1] -= 1.0f;
+    }
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x100)
+    {
+      vec[1] += 1.0f;
+    }
+      func_8004BCBC(D_8F4020C2, vec);
+      return;
+
+    case 3:
+      if (D_8F4020E4 != 0)
+    {
+      func_8004BBA8(D_8F4020E4, D_8F4020C2, vec);
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x200)
+      {
+        vec[2] -= 1.0f;
+      }
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x100)
+      {
+        vec[2] += 1.0f;
+      }
+      func_8004BF3C(D_8F4020E4, D_8F4020C2, vec);
+      return;
+    }
+      if ((!D_8F4020E8) && (!D_8F4020E8))
+    {
+    }
+      func_8004B7E0(D_8F4020C2, vec);
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x200)
+    {
+      vec[2] -= 1.0f;
+    }
+      if ((*((u16 *) (((u8 *) D_80087200) + 6))) & 0x100)
+    {
+      vec[2] += 1.0f;
+    }
+      func_8004BCBC(D_8F4020C2, vec);
+      return;
+
+    case 4:
+      if (D_8F4020E4 != 0)
+    {
+      value = func_8004BB58(D_8F4020E4, D_8F4020C2);
+      ;
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+      {
+        value -= 0x40;
+      }
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100)
+      {
+        value += 0x40;
+      }
+      func_8004BEEC(D_8F4020E4, D_8F4020C2, value);
+      return;
+    }
+      break;
+
+    case 5:
+      if (D_8F4020E4 != 0)
+    {
+      fvalue = func_8004BAE8(D_8F4020E4, D_8F4020C2);
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+      {
+        fvalue -= 1.0f;
+      }
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100)
+      {
+        fvalue += 1.0f;
+      }
+      func_8004BE84(D_8F4020E4, D_8F4020C2, fvalue);
+      return;
+    }
+      fvalue = func_8004B888(D_8F4020C2);
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+    {
+      fvalue = fvalue - 1.0f;
+    }
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100)
+    {
+      fvalue += 1.0f;
+    }
+      func_8004BD28(D_8F4020C2, fvalue);
+      return;
+
+    case 6:
+      if (D_8F4020E4 != 0)
+    {
+      value = func_8004BC6C(D_8F4020E4, D_8F4020C2);
+      maximum = *((s16 *) (((u8 *) (*((u8 **) (((u8 *) (*((u8 **) (((u8 *) D_8F4020CC) + 0x1C)))) + 0x44)))) + 0xA));
+      ;
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+      {
+        if (value > 0)
+        {
+          value -= 1;
+        }
+      }
+      if (((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100) && (value < (maximum - 1)))
+      {
+        value += 1;
+      }
+      func_8004BFC4(D_8F4020E4, D_8F4020C2, value);
+      return;
+    }
+      value = func_8004BA34(D_8F4020C2);
+      maximum = *((s16 *) (((u8 *) (*((u8 **) (((u8 *) (*((u8 **) (((u8 *) D_8F4020CC) + 0x1C)))) + 0x44)))) + 0xA));
+      if ((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x200)
+    {
+      if (value > 0)
+      {
+        value -= 1;
+      }
+    }
+      if (((*((u16 *) (((u8 *) D_80087200) + 0xC))) & 0x100) && (value < (maximum - 1)))
+    {
+      value += 1;
+    }
+      func_8004BD78(D_8F4020C2, value);
+      return;
+
+    case 7:
+      if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0x8000)
+    {
+      if (D_8F4020E4 != 0)
+      {
+        func_8F400198();
+        return;
+      }
+      /* Retail keeps the tested value in a0 across the beqz and reuses it as the
+         outgoing argument here, so the call carries D_8F4020E4 even though
+         func_8004BE50 (src/4C2E0.c) ignores arguments. */
+      func_8004BE50(D_8F4020E4);
+    }
+      break;
+
+  }
+
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F4009A4.s")
 
@@ -413,7 +700,7 @@ s32 func_8F401BC4(s32 arg0) {
 /* mkdraft:func_8F401C30 begin */
 extern s32 D_8F40203C;
 extern s16 D_8F4020C4;
-extern s32 D_8F4020CC;
+extern void *D_8F4020CC;
 extern s32 D_8F4020D0;
 extern s32 D_8F4020D4;
 extern s32 D_8F4020D8;
@@ -484,7 +771,7 @@ s32 func_8F401C30(s32 arg0) {
 /* mkdraft:func_8F401D88 begin */
 extern s32 D_8F4020E4;
 extern s16 D_8F4020C2;
-extern s32 D_8F4020CC;
+extern void *D_8F4020CC;
 extern s32 D_8F4020D8;
 extern s16 D_8F4020F8;
 extern void ModelAnim_SetFrame(u8 *arg0, s16 value);
@@ -492,13 +779,13 @@ extern s32 StageFade_StartFromOpaque(s32 duration);
 extern void func_800086A4(s32 frames);
 extern s32 func_80043064();
 extern s32 func_80043678(s32 arg0);
-extern s32 func_8004B7E0(s16 arg0, u8 *arg1);
-extern f32 func_8004B888(s16 arg0);
-extern s32 func_8004BA34(s16 arg0);
-extern f32 func_8004BAE8(s32 arg0, s16 arg1);
-extern s16 func_8004BB58(s32 arg0, s16 arg1);
-extern void func_8004BBA8(s32 arg0, s16 arg1, u8 *arg2);
-extern s32 func_8004BC6C(s32 arg0, s16 arg1);
+extern s32 func_8004B7E0(s32, void *);
+extern f32 func_8004B888(s32);
+extern s32 func_8004BA34(s32);
+extern f32 func_8004BAE8(s32, s32);
+extern s16 func_8004BB58(s32, s32);
+extern s32 func_8004BBA8(s32, s32, void *);
+extern s32 func_8004BC6C(s32, s32);
 extern void func_80064D28(void);
 extern void func_8F401918(s32 arg0);
 extern s32 func_8F401C30(s32 arg0);
