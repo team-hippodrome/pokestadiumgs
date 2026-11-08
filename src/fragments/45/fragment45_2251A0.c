@@ -774,7 +774,65 @@ s32 func_8AB01C04(s32 mode, void *record) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB01C88.s")
+extern Gfx *D_800D0510;
+extern Gfx D_80094E00[];
+extern Gfx D_80094F50[];
+extern s32 main_pool_alloc(s32, s32);
+extern u8 *func_8004D878(u8 *, s32, u8 *);
+extern void func_800504BC(s16 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+s32 func_8AB01C88(s32 arg0, u8 *arg1) {
+    s16 xy[2];
+    s16 coordinates[2];
+    void *node;
+    s32 texture;
+    void *object;
+
+    node = *(void **)(arg1 + 0x20);
+    texture = *(s32 *)((u8 *)node + 4);
+    object = *(void **)node;
+    switch (arg0) {
+    case 0:
+        *(s32 *)((u8 *)node + 4) = main_pool_alloc(0xC80, 0);
+        *(s32 *)((u8 *)node + 0xC) = 0;
+        break;
+    case 1:
+        if (*(u16 *)((u8 *)object + 0x30) == 0) {
+            if ((*(s32 *)((u8 *)node + 0xC) == 0) ||
+                (*(s16 *)((u8 *)node + 8) != *(u16 *)((u8 *)object + 0x32))) {
+                *(s16 *)((u8 *)node + 8) = *(u16 *)((u8 *)object + 0x32);
+                func_8004D878((u8 *)texture, *(s16 *)((u8 *)node + 8) + 1, 0);
+                *(s32 *)((u8 *)node + 0xC) = 1;
+            }
+            // FAKE: the compound statement changes the instruction stream IDO emits for
+            // these four display-list writes and the GfxRect_DrawTextured arguments.
+            // Diff score 3408 with the statements unwrapped, 3208 in a bare block, 0 with
+            // this wrapper.
+            if (1) {
+                func_800504BC(coordinates);
+                xy[1] = *(s16 *)(arg1 + 8) + coordinates[0];
+                xy[0] = *(s16 *)(arg1 + 0xA) + coordinates[1];
+                gSPDisplayList(D_800D0510++, D_80094E00);
+                gDPLoadTextureBlock(D_800D0510++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 40, 40, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            }
+            GfxRect_DrawTextured(xy[1], xy[0], 0x35, 0x35, 0, 0, 0x300, 0x300, 0x200000);
+            gSPDisplayList(D_800D0510++, D_80094F50);
+        } else {
+            *(s32 *)((u8 *)node + 0xC) = 0;
+        }
+        break;
+    }
+    return 0;
+}
+
+// Empty body at 0x8AB01ECC; the eight-byte `jr ra`/`nop` pair the ROM holds
+// between this function and TextPreview_InitializeModel (0x8AB01ED4).
+
+// Bytes at the retail stub address between the two functions: an
+// unreferenced empty function compiles to the retail jr ra/nop pair
+// there and keeps the fragment layout.
+void func_8AB01ECC_padding(void) {}
 #endif
 
 #ifdef VERSION_US
