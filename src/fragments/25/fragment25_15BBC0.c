@@ -131,7 +131,65 @@ void func_82101FB4(u8 *arg0, f32 *arg1, f32 arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_821020B0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82102190.s")
+extern f32 D_82103DB4;
+extern void func_82102B80(f32 *, f32, f32);
+extern f32 func_82102C78(f32 *);
+extern f32 func_82102D10(f32 *);
+extern void func_82102D34(f32 *);
+extern void func_82101FB4(u8 *, f32 *, f32);
+extern void func_821020B0(u8 *, f32 *);
+
+
+
+s32 func_82102190(u8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
+    f32 junk1;
+    f32 target[2];
+    f32 position[2];
+    f32 scaled_step;
+    f32 scale;
+    f32 remaining;
+    f32 junk4[2];
+    f32 *speed_step;
+    f32 target2[2];
+    f32 anchor[2];
+    f32 speed;
+    f32 t;
+    s32 done = 0;
+    s32 i;
+    u8 *ptr;
+    u8 *object;
+
+    func_82102B80(position, arg1, arg2);
+    func_82102C54(target, func_82101B80(*(u8 **)(arg0 + 0x84)), position);
+    speed = func_82102D10(target);
+    remaining = *(f32 *)(*(u8 **)(arg0 + 0x84)) - speed;
+    func_82102D34(&remaining);
+    speed += (remaining > 0) ? *(f32 *)(arg0 + 0x94) : -*(f32 *)(arg0 + 0x94);
+    i = 0;
+    ptr = arg0;
+    junk1 = 1.00999999f; // FAKE: dead store; keeps the load of this float literal
+    for (; i != 12; i += 4, ptr += 4) {
+        object = *(u8 **)(ptr + 0x84);
+        func_82102B94(anchor, arg3, speed);
+        func_82102BE8(anchor, position);
+        func_82102C54(target2, func_82101B80(object), position);
+        t = func_82102C78(target2) - arg3;
+        if (*(f32 *)(arg0 + 0x9C) < t) {
+            done = 1;
+        }
+        t = (t > 0) ? t : -t;
+        scale = (*(f32 *)(arg0 + 0x98) < t) ? 1.f : t / *(f32 *)(arg0 + 0x98);
+        scaled_step = (arg3 * *(f32 *)(arg0 + 0x94)) *
+                   ((*(f32 *)(arg0 + 0x90) - 1.f) * scale + ((i == 0) ? 1.0f : junk1));
+        func_82101FB4(object, anchor, scaled_step);
+        speed_step = &D_82103DB4;
+        speed += (remaining <= 0) ? (*speed_step) : (-*speed_step);
+    }
+    if (done) {
+        func_821020B0(arg0 + 0x84, position);
+    }
+    return done == 0;
+}
 
 extern void func_82102444(s32, s32);
 void func_821023F4(s32 arg0) {
