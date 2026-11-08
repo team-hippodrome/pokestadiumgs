@@ -221,7 +221,75 @@ void func_86004F2C(void *arg0, void *arg1, Fragment47Vec3d *arg2)
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86004FDC.s")
+extern u8 D_8600D238[];
+extern u8 D_8600D720[];
+extern u8 D_8600D760[];
+extern s32 MathUtil_Random16(void);
+extern s32 func_80040E80(s32, void *);
+extern s32 func_8004C8C0(u16 arg0);
+extern s32 func_80071940(s32 arg0, s32 arg1);
+extern void func_80071A40(s32 arg0, s16 *arg1);
+extern s32 func_8600062C();
+extern void func_86001A58(u8 *arg0, s32 arg1);
+extern void func_86002234(u8 *arg0, s32 arg1, f32 arg2, void *arg3, void *arg4);
+extern void func_8600CD10(void **arg0, s32 arg1);
+extern void func_87F00030(void);
+extern void func_87F01870(void *arg0);
+extern void func_87F01F34(void *);
+extern void func_87F06EAC(s32, void *, void *);
+extern void func_87F09EBC(u8 *arg0, s32 arg1);
+extern void func_87F0C650(void *arg0);
+extern void func_87F0C694(void *arg0, s32 arg1);
+extern void func_87F0D48C(void *, void *, s32);
+
+
+void func_86004FDC(void *state, void *resource) {
+    typedef struct { f64 values[8]; } StagePlanes;
+    typedef struct { u8 b7 : 1; u8 b6 : 1; u8 b5 : 1; u8 b4 : 1; u8 b3 : 1; u8 b2 : 1; u8 b1 : 1; u8 b0 : 1; } StateFlags;
+
+    s32 index;
+    u8 *ptr;
+
+    D_8600D234 = state;
+    *(void **)((u8 *)state + 0x7580) = resource;
+    ptr = (u8 *)state + 0xAF50;
+    func_87F0C650(ptr);
+    func_87F0D48C((u8 *)state + 0x74F0, *(void **)((u8 *)state + 0x7580), 0);
+    if (*(u8 *)((u8 *)*(void **)((u8 *)state + 0x7580) + 0x2180) == 4) {
+        func_87F0C694(ptr, 0x14);
+    }
+    *(s32 *)((u8 *)state + 0x75BC) = 0;
+    func_8004C8C0(0xDF);
+    ptr = (u8 *)state + 0x68A0;
+    func_80071940(0, (s32)ptr);
+    func_80071A40((s32)ptr, (s16 *)D_8600D760);
+    {
+        void *allocation;
+        allocation = MainPool_AllocState(main_pool_get_available(), 0);
+        *(void **)((u8 *)state + 0x6660) = func_80040E80(allocation, (u32)D_8600D238);
+        MainPool_FinalizeAllocation(allocation);
+    }
+    func_8600CD10((u8 *)state + 0x8128, *(void **)((u8 *)state + 0x7580));
+    *(StagePlanes *)((u8 *)state + 0x6848) = *(StagePlanes *)D_8600D720;
+    func_86004BD4(state);
+    for (index = 0; index != 4; index++) {
+        func_86002234((u8 *)state + index * 0x1998, index, (f32)*(f64 *)(D_8600DE30 + 0xF8),
+                      func_8600062C, state);
+        func_86001A58((u8 *)state + 0x75C8 + index * 0x2D8, index);
+    }
+    func_87F00030();
+    func_87F01870(*(void **)((u8 *)state + 0x7580));
+    func_87F01F34(*(void **)((u8 *)state + 0x7580));
+    func_87F06EAC(0x6D, (u8 *)state + 0x7584, *(void **)((u8 *)state + 0x7580));
+    func_87F09EBC((u8 *)state + 0x751C, *(void **)((u8 *)state + 0x7580));
+    ((StateFlags *)((u8 *)state + 0x75C0))->b6 = 0;
+    ((StateFlags *)((u8 *)state + 0x75C0))->b5 = 1;
+    ((StateFlags *)((u8 *)state + 0x75C0))->b7 = 0;
+    *(u8 *)((u8 *)state + 0x75C1) = MathUtil_Random16() % 4;
+    ((StateFlags *)((u8 *)state + 0x75C0))->b4 = 0;
+    ((StateFlags *)((u8 *)state + 0x75C0))->b1 = 0;
+    func_86004968(state);
+}
 
 /* mkdraft:func_8600520C begin */
 extern void func_87F029B8(s32, u8);
@@ -333,9 +401,194 @@ s32 func_860053F8(Func860053F8Record *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005434.s")
+extern void func_86003EFC(void *arg0, s32 arg1);
+extern void func_86007648(s32 arg0, s32 arg1);
+extern void func_87C00120(void *arg0, f64 arg1, f64 arg2, f64 arg3);
+extern f64 func_86004EA8(void *arg0, void *arg1);
+extern f32 __sinf(f32 arg0);
+extern f32 __cosf(f32 arg0);
+extern f64 D_8600D898;
+extern f32 D_8600D8A0;
+extern s32 D_8600E038;
+extern u8 D_8600DE30[];
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_860057D0.s")
+
+s32 func_86005434(s32 arg0) {
+    u8 *obj;
+    s32 i;
+    s32 count;
+    s32 best;
+    s32 min;
+    s32 total;
+    s32 index;
+    s32 value;
+    f32 angle;
+    f32 sine;
+    f32 cosine;
+    f64 scale;
+    f64 radius;
+
+    best = 0;
+    count = 0;
+    index = (total = 0);
+    min = *(s32 *)(D_8600DE30 + 0x208);
+    if (*(s32 *)(arg0 + 0x7518) >= 4) {
+        return 0;
+    }
+    if (!arg0) {
+    } // FAKE: empty null check; without it saved registers s4-s6 rotate.
+    i = 0;
+    obj = (u8 *)arg0;
+    do {
+        i += 0x1998;
+        if (*(s32 *)(obj + 0x1828) >= 7) {
+            count++;
+        } else {
+            value = *(s32 *)(obj + 0x1814);
+            if (value >= best) {
+                best = value;
+            }
+        }
+        obj += 0x1998;
+    } while (i < 0x6660);
+    if ((*(f64 *)(arg0 + 0x6888) < (f64)*(s32 *)(D_8600DE30 + 0x20C)) && (count < 3) &&
+        (best < *(s32 *)(D_8600DE30 + 0x210))) {
+        return 0;
+    }
+    if (func_860053F8((Func860053F8Record *)arg0) != 0) {
+        i = 0;
+        obj = (u8 *)arg0;
+        do {
+            *(f64 *)(obj + 0x17D0) = 0.0;
+            if (*(s32 *)(obj + 0x1828) < 7) {
+                func_86003EFC(obj, 8);
+            }
+            i += 0x1998;
+            obj += 0x1998;
+        } while (i != 0x6660);
+    } else {
+        i = 0;
+        obj = (u8 *)arg0;
+        do {
+            *(f64 *)(obj + 0x17D0) = 0.0;
+            if (*(s32 *)(obj + 0x1828) < 7) {
+                if (*(s32 *)(obj + 0x1814) < best) {
+                    func_86003EFC(obj, 8);
+                } else {
+                    value = *(s32 *)(obj + 0x1820);
+                    if (value < min) {
+                        min = value;
+                    }
+                }
+            }
+            i += 0x1998;
+            obj += 0x1998;
+            if (!obj) {
+            } // FAKE: empty null check; without it saved registers rotate.
+        } while (i < 0x6660);
+        i = 0;
+        obj = (u8 *)arg0;
+        do {
+            value = *(s32 *)(obj + 0x1828);
+            if (value < 7) {
+                if ((min >= *(s32 *)(obj + 0x1820)) || (D_8600E038 == 0)) {
+                    if (value != 3) {
+                        func_86003EFC(obj, 1);
+                        func_86003EFC(obj, 2);
+                        func_86003EFC(obj, 3);
+                    }
+                    func_86003EFC(obj, 6);
+                    total++;
+                } else {
+                    func_86003EFC(obj, 8);
+                }
+            }
+            i += 0x1998;
+            obj += 0x1998;
+        } while (i != 0x6660);
+    }
+    scale = D_8600D898;
+    i = 0;
+    obj = (u8 *)arg0;
+    do {
+        if (*(s32 *)(obj + 0x1828) == 6) {
+            angle = ((((f32)index - ((f32)(total - 1) * 0.5f)) * D_8600D8A0) * 30.0f) / 180.0f;
+            if (!(obj + 0x1878)) {
+            } // FAKE: empty pointer check; without it register assignment changes.
+            sine = __sinf(angle);
+            cosine = __cosf(angle);
+            radius = *(f64 *)(arg0 + 0x6670) * scale;
+            func_87C00120(obj + 0x1878, (f64)sine * radius, 0.0, (f64)cosine * radius);
+            *(f64 *)(obj + 0x1880) =
+                (*(f64 *)(obj + 0x17C8) - func_86004EA8((void *)arg0, obj + 0x1878)) +
+                *(f64 *)(obj + 0x1880);
+            index++;
+        }
+        i += 0x1998;
+        obj += 0x1998;
+    } while ((u32)i != 0x6660u);
+    if (*(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2180) == 4) {
+        *(u8 *)(arg0 + 0x75C0) = (*(u8 *)(arg0 + 0x75C0) & 0xFF) | 0x80; // FAKE: the 0xFF mask is an arithmetic nop on a value already zero-extended to u8.
+    } else {
+        func_86007648(arg0, 4);
+    }
+    return 1;
+}
+
+extern u8 D_8600D780[];
+extern f64 D_8600D8A8;
+extern f64 D_8600D8B0;
+extern f64 D_8600DEB0;
+extern void func_86001CE8(u8 *arg0, f32 *arg1, f32 *arg2);
+extern void func_86007D98(void *arg0, f64 arg1, f64 arg2, f64 arg3);
+extern void func_8600853C(void *arg0, void *arg1, f64 arg2, f64 arg3, void *arg4);
+extern void func_86009260(void *arg0, f64 arg1, void *arg2, s32 arg3, void *arg4);
+extern void func_860095B8(void *arg0, f64 arg1);
+extern void func_86009674(void *arg0, void *arg1, f64 arg2);
+
+
+void func_860057D0(s32 arg0, f64 arg1) {
+    f64 zero;
+    f64 axis[3];
+    f64 vec[3];
+    f32 var84;
+    f32 var80;
+    s32 i;
+    s32 j;
+
+    zero = 0.0;
+    func_87C00120(axis, zero, -D_8600DEB0 * D_8600D8A8, D_8600D8B0 * D_8600DEB0);
+    for (i = 0; i < 4; i++) {
+        func_860095B8((u8 *)arg0 + i * 0x2D8 + 0x7760, arg1);
+    }
+    for (i = 0; i < 4; i++) {
+        var84 = 0.0f;
+        var80 = 0.0f;
+        func_86001CE8((u8 *)arg0 + i * 0x2D8 + 0x75C8, &var84, &var80);
+        func_86007D98((u8 *)arg0 + i * 0x2D8 + 0x7760, var84, var80, arg1);
+    }
+    for (i = 0; i < 4; i++) {
+        func_86009260((u8 *)arg0 + i * 0x2D8 + 0x7760, arg1, D_8600D780, 1, vec);
+    }
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
+            if (i != j) {
+                func_8600853C((u8 *)arg0 + i * 0x2D8 + 0x7760,
+                              (u8 *)arg0 + j * 0x2D8 + 0x7760,
+                              arg1, 5.0, vec);
+            }
+            // FAKE: dead mention of arg0 that fixes uopt's walk so arg0 is $s3 and anim is $s4.
+            if (!arg0) {
+            }
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        // FAKE: constant-folded dead-if that gives zero a callee-saved FPR slot without emitting code.
+        if (zero == 0.0) {
+        }
+        func_86009674((u8 *)arg0 + i * 0x2D8 + 0x7760, axis, arg1);
+    }
+}
 
 /* mkdraft:func_86005A00 begin */
 extern f32 D_8600D8B8;
@@ -592,7 +845,7 @@ extern void func_860076EC(s32);
 extern s32 func_860065E8(s32);
 extern s32 func_87F00930(void);
 extern void func_87F006BC(void);
-extern void func_86005434(s32);
+s32 func_86005434(s32 arg0);
 extern void func_80028118(s32);
 extern u8 D_8600DE30[];
 void func_86006774(s32 arg0) {
@@ -678,7 +931,130 @@ void func_86006D24(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006D64.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006F20.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 func_8004C990(s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_87F00930(void);
+extern void func_8003C6B8(s32);
+extern void func_8600AB6C(s32, s32, void *);
+extern void func_8600AE6C(u8 *);
+extern void *func_87C007B0(f32 *, void *);
+extern f32 func_87C039D4(void *, void *, f32 *);
+extern void func_86000C6C(u8 *, s32, void *, f32, f32);
+extern void func_86000CCC(u8 *);
+typedef struct { f32 x, y, z; } Vec3;
+extern Vec3 D_8600D2C0;
+extern f64 D_8600DF20;
+extern s32 D_8600E03C;
+extern void func_800279C4(s32);
+extern void func_8600B474(s32, s32);
+extern void func_87F07FE8(void *);
+extern void func_87F01D44(void);
+extern void func_87F0A5BC(void *);
+extern void func_87F022F0(void);
+extern void func_87F0C88C(void *);
+
+
+
+void func_86006F20(u8 *arg0) {
+    s32 i;
+    u8 *p;
+    Gfx *g;
+    f32 alpha;
+    s32 delta;
+    Vec3 vec;
+    f32 pos[4];
+
+
+    g = D_800D0510++;
+    gSPDisplayList(g, D_80094E38);
+    g = D_800D0510++;
+    gDPSetRenderMode(g, 0, 0x0F0A7008);
+    func_8004D19C(0, 0, func_8004C990(0xDF, 0), 0, 0);
+    g = D_800D0510++;
+    g->words.w1 = (u32)D_80094F50;
+    g->words.w0 = 0xDE000000;
+    func_860049B8((Func860049B8Context *)arg0, *(f64 *)(arg0 + 0x6890));
+    if (*(s32 *)(arg0 + 0x7518) >= 2) {
+        if (func_87F00930() == 0) {
+            GeoRender_AdvanceFrameCounter();
+        }
+        func_8003C6B8(*(s32 *)(arg0 + 0x6660));
+        i = 0;
+        if ((*(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2180) == 4) == 0) {
+            for (i = 0; i < 4; i++) {
+                func_8600AB6C(i, (*(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2182) & (1 << i)) == 0, arg0 + 0x74F0);
+            }
+            for (i = 0; i < 4; i++) {
+                func_8600AE6C(arg0 + i * 0x1998);
+            }
+        }
+        if (func_87F00930() == 0) {
+            for (i = 0; i < 4; i++) {
+                alpha = -1.0f;
+                vec = D_8600D2C0;
+                if ((*(s32 *)(arg0 + i * 0x1998 + 0x1828) == 4U && *(s32 *)(arg0 + i * 0x1998 + 0x17A4) == 0) ||
+                    (*(s32 *)(arg0 + i * 0x1998 + 0x1828) == 3 && *(f64 *)(arg0 + i * 0x1998 + 0x17F0) > 0.0)) {
+                    alpha = func_87C039D4(arg0 + 0x8150, func_87C007B0((f32 *)&pos, arg0 + i * 0x1998), (f32 *)&vec);
+                }
+                func_86000C6C(arg0 + 0x189C + i * 0x1998, *(s32 *)(arg0 + i * 0x1998 + 0x1818), &vec, alpha, (f32)(*(f64 *)(arg0 + i * 0x1998 + 0x17F0) / D_8600DF20));
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            func_86000CCC(arg0 + 0x189C + i * 0x1998);
+        }
+        if ((*(u8 *)(*(u8 **)(arg0 + 0x7580) + 0x2180) == 4) == 0) {
+            delta = (s32)((f64)D_8600E03C - *(f64 *)(arg0 + 0x6888));
+            if (delta != ((struct { u8 pad[0xAF5C]; s32 x; } *)arg0)->x) {
+                if (delta != 0) {
+                    if (delta == 1 || delta == 2 || delta == 3) {
+                        func_800279C4(0xCF00);
+                    }
+                } else {
+                    func_800279C4(0xCF06);
+                }
+                ((struct { u8 pad[0xAF5C]; s32 x; } *)arg0)->x = delta;
+            }
+            func_8600B474(delta, func_87F00930());
+        }
+    }
+    switch (*(s32 *)(arg0 + 0x7518)) {
+        case 0:
+        case 1:
+            func_87F07FE8(arg0 + 0x7584);
+            break;
+        case 2:
+            if (func_87F00930() != 0) {
+                func_87F01D44();
+            }
+            break;
+        case 3:
+            if (func_87F00930() != 0) {
+                func_87F01D44();
+            }
+            break;
+        case 4:
+            {
+                typedef struct {
+                    u8 pad[0x75C0];
+                    u32 a : 4;
+                    u32 b : 1;
+                    u32 c : 27;
+                } S;
+                if (((S *)arg0)->b) {
+                    func_87F0A5BC(arg0 + 0x751C);
+                }
+            }
+            break;
+        case 5:
+        case 6:
+            func_87F022F0();
+            break;
+    }
+    func_87F0C88C(arg0 + 0xAF50);
+}
 
 extern void func_86001B1C(s32);
 void func_86007300(s32 arg0) {
@@ -731,8 +1107,8 @@ extern void func_87F00688();
 void func_86004BD4(u8 *arg0);
 extern void func_86004968();
 extern void func_860021C4(s32, s32, f32, void *, s32);
-extern void func_86003EFC(s32, s32);
-extern void func_8600062C();
+extern void func_86003EFC(void *arg0, s32 arg1);
+extern s32 func_8600062C();
 extern void StageContext_SetClearColor(s32);
 extern void StageFade_StartFromOpaque(s32);
 extern u8 D_8600DE30[];

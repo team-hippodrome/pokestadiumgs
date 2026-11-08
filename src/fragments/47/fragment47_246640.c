@@ -200,11 +200,142 @@ void func_860004C8_padding2(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_8600050C.s")
+extern u8 D_8600DE30[];
+extern void *func_87C00718(void *, void *, f64);
+
+
+
+void func_8600050C(u8 *arg0, void *arg1, void *arg2, f64 arg3, f32 arg4, f32 *arg5, f32 *arg6) {
+    struct {
+        f64 x;
+        f64 y;
+        f64 z;
+    } position, direction, normal;
+
+    func_87C00160(&position, arg2, arg0 + 0x18);
+    position.y = 0.0;
+    func_87C00160(&direction, arg1, arg0);
+    direction.y = 0.0;
+    // The caller also passes this quotient as arg3; the body recomputes it from
+    // the object at arg0 + 0x1870 instead and leaves the f64 slot unread.
+    func_87C00160(&direction, &direction, func_87C002A8(&normal, &position,
+        *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890) / (f64)*(s32 *)D_8600DE30 * 1.0f));
+    if ((f64)(arg4 * arg4) < func_87C00664(&direction)) {
+        func_87C00718(&direction, &direction, arg4);
+    }
+    *arg5 = direction.x;
+    *arg6 = -direction.z;
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_8600062C.s")
+extern f64 MathUtil_Atan2d_fragment48(f64, f64);
+extern f64 fragment48_main(f64);
+extern f32 MathUtil_Random_ZeroOne(void);
+extern void *func_87C00718(void *, void *, f64);
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+extern f64 D_8600D500;
+extern f64 D_8600D508;
+extern f64 D_8600D510;
+extern f64 D_8600D518;
+extern f32 D_8600D520;
+extern f64 D_8600D528;
+extern f64 D_8600D530;
+extern u8 D_8600DE30[];
+
+
+
+s32 func_8600062C(u8 *arg0, f32 *arg1, f32 *arg2) {
+    f64 one;
+    f64 zero;
+    Fragment47SteeringVector position;
+    Fragment47SteeringVector velocity;
+    f64 ratio;
+    s32 result;
+    u8 *other;
+    Fragment47SteeringConfig *config;
+    Fragment47SteeringConfig *override;
+    Fragment47SteeringVector separation;
+    u8 *nearby;
+    f32 distance;
+    u8 *target;
+    f64 angle;
+    Fragment47SteeringVector direction;
+    s32 pad; /* FAKE: frame pad; without it the score is 18 */
+
+    override = *(Fragment47SteeringConfig **)(arg0 + 0x1894);
+    if (override != NULL) {
+        config = override;
+    } else {
+        config = &D_8600D188;
+    }
+    one = 1.0;
+    zero = 0.0;
+    position = D_8600D158;
+    velocity = D_8600D170;
+    if (0) { /* dead: reserves result's spill slot (0x60) ahead of the sqrt temp (0x5C) */
+        result = func_86000170(arg0, 0, 0, 0.0) ^ (MathUtil_Random_ZeroOne() < config->probability);
+    }
+    distance = sqrtf((f32)(*(f64 *)(arg0 + 0x10) * *(f64 *)(arg0 + 0x10) +
+                           *(f64 *)arg0 * *(f64 *)arg0));
+    other = NULL;
+    if (*(s32 *)(arg0 + 0x1828) != 3) {
+        nearby = func_860002A8(arg0, 1, 1, D_8600D500);
+        if (nearby != NULL) {
+            func_87C00160(&separation, arg0, nearby);
+            separation.y = 0.0;
+            ratio = func_87C0068C(&separation);
+            if (ratio < (*(f64 *)(nearby + 0xC8) + *(f64 *)(arg0 + 0xC8)) * 2.0) {
+                *arg1 = (f32)((-separation.x / ratio) * 64.0);
+                *arg2 = (f32)((separation.z / ratio) * 64.0);
+            }
+        }
+        return 0;
+    }
+    ratio = (f64)sqrtf((f32)(*(f64 *)(arg0 + 0x10) * *(f64 *)(arg0 + 0x10) + *(f64 *)arg0 * *(f64 *)arg0)) / *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x66C0);
+    result = func_86000170(arg0, config->flags >> 31, (config->flags << 1) >> 31,
+                           D_8600D508) ^ (MathUtil_Random_ZeroOne() < config->probability);
+    if (ratio < (f64)config->threshold) {
+        if (*(f64 *)(arg0 + 0x17E8) > 0.0) {
+            target = func_860002A8(arg0, (config->flags << 2) >> 31,
+                                   (config->flags << 3) >> 31, D_8600D510);
+            if (target != NULL &&
+                D_8600D518 < (*(f64 *)(arg0 + 0x10) * *(f64 *)(arg0 + 0x10) +
+                              *(f64 *)arg0 * *(f64 *)arg0)) {
+                MathUtil_Atan2d_fragment48(-*(f64 *)arg0, -*(f64 *)(arg0 + 0x10));
+                angle = fragment48_main(
+                    fragment48_main((f64)(func_860004C8(arg0, target) + D_8600D520)) *
+                        (one - zero) + zero);
+                *arg2 = -__cosf((f32)angle) * config->speed;
+                *arg1 = __sinf((f32)angle) * config->speed;
+                return result;
+            }
+        } else {
+            other = func_860003DC(arg0, (config->flags << 4) >> 31,
+                                  (config->flags << 5) >> 31);
+            if (other == NULL) {
+                other = func_860002A8(arg0, (config->flags << 6) >> 31,
+                                      *(u8 *)((u8 *)config + 0xC) & 1, D_8600D528);
+            }
+            if (other == NULL) {
+                other = func_860002A8(arg0, (u32)*(u8 *)((u8 *)config + 0xD) >> 7,
+                                      (config->flags << 9) >> 31, D_8600D530);
+            }
+        }
+    }
+    if (other != NULL) {
+        direction = *(Fragment47SteeringVector *)other;
+        direction.y = 0.0;
+        func_87C00718(&direction, &direction, -*(f64 *)(other + 0x17C8));
+        func_87C00198(&position, other, &direction);
+        velocity = *(Fragment47SteeringVector *)(other + 0x18);
+    }
+    func_8600050C(arg0, &position, &velocity,
+                  *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890) / *(s32 *)D_8600DE30,
+                  config->speed, arg1, arg2);
+    return result;
+}
 #endif
 
 #ifdef VERSION_US
