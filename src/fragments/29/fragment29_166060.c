@@ -432,7 +432,157 @@ void func_88001144(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88001234.s")
+
+
+s32 func_88001234(s32 arg0, u16 arg1, s32 arg2) {
+    u16 value;
+
+    switch (arg0) {
+    case 0:
+        if (arg1 & 0xF) {
+            return 0;
+        }
+        arg1 = (s32)arg1 >> 2;
+        break;
+    case 1:
+        if (arg1 & 7) {
+            return 0;
+        }
+        arg1 = (s32)arg1 >> 1;
+        break;
+    case 2:
+        if (arg1 & 3) {
+            return 0;
+        }
+        break;
+    case 3:
+        if (arg1 & 1) {
+            return 0;
+        }
+        arg1 *= 2;
+        break;
+    }
+    if (arg2 != 0) {
+        value = 0x800 / arg1;
+    } else {
+        switch (arg1) {
+        case 0x4:
+        case 0x8:
+        case 0xC:
+        case 0x10:
+        case 0x14:
+        case 0x18:
+        case 0x1C:
+        case 0x20:
+        case 0x24:
+        case 0x28:
+        case 0x30:
+        case 0x40:
+        case 0x48:
+        case 0x4C:
+        case 0x64:
+        case 0x6C:
+        case 0x80:
+        case 0x90:
+        case 0x98:
+        case 0xA4:
+        case 0xC8:
+        case 0xD8:
+        case 0xE4:
+        case 0x100:
+        case 0x130:
+        case 0x148:
+        case 0x1B0:
+        case 0x1C8:
+        case 0x200:
+        case 0x2AC:
+        case 0x334:
+        case 0x390:
+            value = 0x800 / arg1;
+            break;
+        case 0x34:
+            value = 0x1A;
+            break;
+        case 0x2C:
+            value = 0x14;
+            break;
+        case 0x3C:
+            value = 0x13;
+            break;
+        case 0x38:
+            value = 0xE;
+            break;
+        case 0x44:
+        case 0x68:
+            value = 0xD;
+            break;
+        case 0x54:
+            value = 9;
+            break;
+        case 0x50:
+            value = 8;
+            break;
+        case 0x74:
+            value = 6;
+            break;
+        case 0x60:
+            value = 5;
+            break;
+        case 0x58:
+        case 0x5C:
+        case 0xA8:
+        case 0xC4:
+        case 0x13C:
+            value = 4;
+            break;
+        case 0x70:
+        case 0x78:
+        case 0x8C:
+            value = 3;
+            break;
+        case 0x7C:
+        case 0x84:
+        case 0x88:
+        case 0x94:
+        case 0x9C:
+        case 0xAC:
+        case 0xB0:
+        case 0xB4:
+        case 0xB8:
+        case 0xBC:
+        case 0xC0:
+        case 0xD4:
+        case 0xEC:
+        case 0x11C:
+        case 0x188:
+        case 0x224:
+        case 0x278:
+            value = 2;
+            break;
+        case 0xA0:
+        case 0xD0:
+        case 0xE0:
+        case 0xF4:
+        case 0xFC:
+        case 0x10C:
+        case 0x114:
+        case 0x128:
+        case 0x158:
+        case 0x168:
+        case 0x178:
+        case 0x19C:
+        case 0x1E4:
+        case 0x24C:
+        case 0x2EC:
+            value = 1;
+            break;
+        default:
+            value = 0;
+            break;
+        }
+    }
+    return value;
+}
 
 u16 func_880014A4(s32 arg0, u16 arg1) {
     u8 var_a3;
