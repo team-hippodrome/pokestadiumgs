@@ -186,7 +186,95 @@ void func_86600E00(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86600EEC.s")
+extern u8 D_86606788;
+extern u8 D_8660A990[];
+extern u8 D_8660AAF0[];
+extern s32 D_8660671C;
+extern s32 D_86606720;
+extern s32 D_86606724;
+extern f32 D_8660673C;
+extern s32 D_8660722C;
+extern u8 D_866072E8[];
+extern u32 func_8003570C(void);
+extern void func_87F03B8C(u8 *);
+extern void func_87F0CB58(void);
+
+
+
+void func_86600EEC(void) {
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x00) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x04) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x10) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x0C) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x24) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x18) = 1;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x28) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x14) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x08) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x2C) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x30) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x38) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x40) = guRandom() % D_86606724 - 5;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x44) = 0;
+        *(s32 *)(&D_86606788 + 0x34 + i * 4) = 0;
+        *(s32 *)(&D_86606788 + 0x44 + i * 4) = 0;
+        *(s32 *)(&D_86606788 + 0x64 + i * 4) = 0;
+        *(s32 *)(D_8660AAF0 + i * 4) = 0;
+        *(s32 *)(&D_86606788 + 0x78) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x3C) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x48) = func_8003570C() % 5;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x4C) = 0;
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x54) = 10;
+    }
+    *(s32 *)(&D_86606788 + 0x90) = func_8003570C() % 11;
+    *(s32 *)(&D_86606788 + 0x0C) = 0;
+    *(s32 *)(&D_86606788 + 0x8C) = 0;
+    *(s32 *)(&D_86606788 + 0x9C) = 0x50;
+    *(s32 *)(&D_86606788 + 0xA0) = 0;
+    *(s32 *)(&D_86606788 + 0xA4) = 0;
+    D_8660722C = D_8660671C * 30;
+    switch (*(s32 *)(&D_86606788 + 0x94)) {
+    case 1:
+        D_8660722C = 0x3C;
+        D_86606724 = 0x19;
+        break;
+    case 2:
+        D_8660722C = 0x3C;
+        D_86606724 = 0x19;
+        break;
+    case 3:
+        D_8660722C = 0x50;
+        D_86606724 = 0x28;
+        break;
+    case 4:
+        D_8660722C = 0x78;
+        D_86606724 = 0x3C;
+        break;
+    default:
+        D_8660722C = 0x46;
+        D_86606724 = 0x23;
+        break;
+    }
+    D_8660673C = D_86606720;
+    *(s32 *)(&D_86606788 + 0x14) = 0;
+    *(s32 *)(&D_86606788 + 0x7C) = 0;
+    *(s32 *)(&D_86606788 + 0x10) = 0;
+    *(s32 *)(&D_86606788 + 0x00) = 0;
+    D_8660673C = D_8660673C / 60.0f;
+    *(s32 *)(&D_86606788 + 0x88) = 0;
+    *(s32 *)(&D_86606788 + 0x54) = 0;
+    *(s32 *)(&D_86606788 + 0x5C) = 0;
+    *(s32 *)(&D_86606788 + 0x60) = 0;
+    *(s32 *)(&D_86606788 + 0x74) = 0;
+    *(s32 *)(&D_86606788 + 0x80) = 0x1B;
+    *(s32 *)(&D_86606788 + 0x84) = 0;
+    *(f32 *)(&D_86606788 + 0x58) = 0.0f;
+    func_87F03B8C(D_866072E8);
+    func_87F0CB58();
+}
 #endif
 
 #ifdef VERSION_US
@@ -448,11 +536,223 @@ func_86601910(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86601A04.s")
+extern u8 D_8660A990[];
+extern u8 D_86607410[];
+extern s32 D_866066F4[];
+extern s32 D_86606748;
+extern s32 ModelAnim_IsFinished();
+extern s32 func_8003F210(void *, s32);
+extern void ModelAnim_SetFrame(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s32);
+extern void func_8003F3BC(void *, s32);
+extern void func_80027A28(u16, u8);
+
+
+void func_86601A04(void *arg0, s32 arg1) {
+    s32 index;
+
+    index = arg1;
+    switch (*(s32 *)(D_8660A990 + index * 0x58 + 0x28)) {
+    case -1:
+        if (*(s32 *)(D_8660A990 + index * 0x58 + 0x38) == 1) {
+            if (ModelAnim_IsFinished(arg0) == 1 || D_86606748 == 0) {
+                ModelAnim_SetFrame(arg0, 0);
+                func_8003F210(D_86607410 + index * 0x168, 10);
+                ModelAnim_SetEventFrame(arg0, 0);
+                func_8003F3BC(arg0, 10);
+                func_80027A28(0x2F08, (u8)index);
+                *(s32 *)(D_8660A990 + index * 0x58 + 0x38) = 0;
+            }
+        } else if (ModelAnim_IsFinished(arg0) == 1) {
+            *(s32 *)(D_8660A990 + index * 0x58 + 0x28) = 0;
+            *(s32 *)(D_8660A990 + index * 0x58 + 4) = 0;
+            ModelAnim_SetEventFrame(arg0, 0);
+            func_8003F3BC(arg0, 0);
+            func_8003F210(D_86607410 + index * 0x168, 0);
+        }
+        break;
+    case 0:
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        if ((*(s32 *)((u8 *)arg0 + 0x48) >> 16) == 12) {
+            if ((*(s32 *)(D_8660A990 + index * 0x58 + 0x3C) >= 21 && D_866066F4[index] == 0) || *(s32 *)(D_8660A990 + index * 0x58 + 8) == 0) {
+                if ((*(s32 *)((u8 *)arg0 + 0x48) >> 16) == 13) { //!bug dead: the id was just tested for 12
+                    *(s32 *)(D_8660A990 + index * 0x58 + 0x3C) = 0;
+                    ModelAnim_SetEventFrame(arg0, 13);
+                    ModelAnim_SetFrame(arg0, 13);
+                }
+            } else {
+                ModelAnim_SetEventFrame(arg0, 11);
+                ModelAnim_SetFrame(arg0, 11);
+            }
+        }
+        if (ModelAnim_IsFinished(arg0) == 1) {
+            *(s32 *)(D_8660A990 + index * 0x58 + 0x28) = 0;
+            *(s32 *)(D_8660A990 + index * 0x58 + 0x10) = 0;
+            ModelAnim_SetEventFrame(arg0, 0);
+            func_8003F3BC(arg0, 0);
+            func_8003F210(D_86607410 + index * 0x168, 0);
+            *(f32 *)(D_866098A0 + index * 0x168 + 0x34) = 0.0f;
+            *(f32 *)(D_866098A0 + index * 0x168 + 0x30) = 0.0f;
+        }
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86601C98.s")
+extern u8 D_8660A990[];
+extern s32 D_866066F4[];
+extern s32 D_866066F0;
+extern u8 D_86606788;
+extern s32 D_8660A9A4;
+extern u8 D_8660A9AC[];
+
+// Per-frame record setup for the entity at arg1 (stride 0x58 in D_8660A990).
+// The 16-bit word at arg0v+6 is split into a direction/mask half (0xF00 selects
+// the stored value) and a low nibble tested bit by bit (8/4/1/2 -> 1..4 at
+// record+8) while a state at record+0x1C is still zero. mode >= 2 goes through
+// the low-nibble path, mode < 2 through the mask/0xC000 path. The tail compares
+// record+0x14 against D_86606788. Returns 1 on any transition.
+
+
+s32 func_86601C98(void *arg0v, s32 arg1) {
+    s32 temp;
+    s32 var_v1;
+    u16 var_v0;
+    s32 var_v0b;
+    s32 x;
+    s32 y;
+    s16 b;
+    s32 f;
+    s32 mask;
+    s32 mode;
+    u16 g;
+
+    if (arg1 == 0) {} // FAKE
+    if (arg0v == 0) {} // FAKE
+    var_v1 = 0;
+    var_v0 = 0;
+    f = *(u16 *)((u8 *)arg0v + 6);
+    temp = f;
+    if (f & 0xF00) {
+        f &= 0xFFFF;
+        var_v0 = f;
+    } else {
+        f = *(s16 *)((u8 *)arg0v + 2);
+        if (f < 0) {
+            x = -f;
+        } else {
+            x = f;
+        }
+        b = *(s16 *)((u8 *)arg0v + 4);
+        if (b < 0) {
+            y = -b;
+        } else {
+            y = b;
+        }
+        if (y < x) {
+            if (f >= 0xB) {
+                var_v0 = 0x100;
+            }
+            if (f < -0xA) {
+                var_v0 = 0x200;
+            }
+        } else {
+            if (b >= 0xB) {
+                var_v0 = 0x800;
+            }
+            if (b < -0xA) {
+                var_v0 = 0x400;
+            }
+        }
+    }
+    if (D_866066F4[arg1] == 0) {
+        mode = D_866066F0;
+        mask = temp & 0xC000;
+        if (mode < 2) {
+            if (mask != 0) {
+                if (*(s32 *)(D_8660A990 + arg1 * 0x58 + 0x1C) == 0) {
+                    var_v1 = 1;
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 0;
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 0x3C) = 1;
+                    if (mode == 0) {
+                        g = *(u16 *)((u8 *)arg0v + 6);
+
+                        if (g & 0x8000) {
+                            *(s32 *)(D_8660A990 + arg1 * 0x58 + 0x20) = 5;
+                        } else if (g & 0x4000) {
+                            *(s32 *)(D_8660A990 + arg1 * 0x58 + 0x20) = 6;
+                        }
+                    }
+                    if (mode == 0) {} // FAKE: keeps `mode` ($a2) live across the reload so `g` takes $a3; without it, score 35 (g -> $a2)
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 0x1C) = 1;
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 0x14) = *(s32 *)&D_86606788;
+                    if (var_v0 & 0x800) {
+                        *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 1;
+                        goto done;
+                    }
+                    if (var_v0 & 0x400) {
+                        *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 2;
+                        goto done;
+                    }
+                    if (var_v0 & 0x100) {
+                        *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 3;
+                        goto done;
+                    }
+                    if (var_v0 & 0x200) {
+                        *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 4;
+                        goto done;
+                    }
+                    goto done;
+                }
+            }
+            if (mask == 0) {
+                *(s32 *)(D_8660A9AC + arg1 * 0x58) = 0;
+            }
+            goto done;
+        }
+        var_v0b = temp & 0xF;
+        if (var_v0b != 0) {
+            if (*(s32 *)(D_8660A990 + arg1 * 0x58 + 0x1C) == 0) {
+                *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 0;
+                *(s32 *)(D_8660A990 + arg1 * 0x58 + 0x1C) = 1;
+                temp = *(u16 *)((u8 *)arg0v + 6);
+                var_v1 = 1;
+                var_v0b = 1;
+                if (temp & 8) {
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 1;
+                    goto done;
+                }
+                if (temp & 4) {
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 2;
+                    goto done;
+                }
+                if (temp & 1) {
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 3;
+                    goto done;
+                }
+                if (temp & 2) {
+                    *(s32 *)(D_8660A990 + arg1 * 0x58 + 8) = 4;
+                    goto done;
+                }
+                goto done;
+            }
+        }
+        if (var_v0b == 0) {
+            *(s32 *)(D_8660A9AC + arg1 * 0x58) = 0;
+        }
+        goto done;
+    }
+    if (*(s32 *)((u8 *)&D_8660A9A4 + arg1 * 0x58) < *(s32 *)&D_86606788) {
+        var_v1 = 1;
+    }
+done:
+    return var_v1;
+}
 #endif
 
 #ifdef VERSION_US
@@ -612,7 +912,7 @@ extern s32 D_8660AA34;
 extern s32 D_8660AA8C;
 extern s32 D_8660AAE4;
 extern u8 D_8660AAF0[];
-extern void func_8003F210(void *, s32);
+extern s32 func_8003F210(void *, s32);
 extern void func_8003F3BC(void *, s32);
 extern void ModelAnim_SetEventFrame(void *, s32);
 extern void ModelAnim_SetFrame(void *, s32);
@@ -1606,7 +1906,7 @@ extern s32 D_8660672C;
 extern u8 D_866067A0;
 extern u8 D_86606884[];
 extern u8 D_8660AAF0[];
-extern void func_8003F210(void *, s32);
+extern s32 func_8003F210(void *, s32);
 
 
 
