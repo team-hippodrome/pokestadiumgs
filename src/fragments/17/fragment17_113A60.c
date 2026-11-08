@@ -102,7 +102,116 @@ s32 func_822047BC(s32 arg0, s32 arg1) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82204804.s")
+extern u8 D_8220D8D0[];
+extern s16 D_8220EB98;
+extern void *D_8220DA08;
+extern Gfx *D_800D0510;
+extern u8 D_8220D860[];
+extern u8 D_8220DBA8[];
+extern u8 D_8220DBAC[];
+extern u8 D_8220DBB0[];
+extern u8 D_8220DBB4[];
+
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_80007328(Gfx **, s32, s32, u8 *);
+extern void func_80045DB4(u8 *, s32, s32, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+// The retail words pack the colour bytes as g, b, r with alpha in the low byte;
+// PR/gbi.h's gDPSetPrimColor and gDPSetEnvColor write r, g, b, a, which makes IDO
+// emit the byte loads in a different order.
+//@src/fragments/19/fragment19_124E40.c
+#define gDPSetPrimColor2(pkt, m, l, r, g, b, a) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = (_SHIFTL(G_SETPRIMCOLOR, 24, 8) | _SHIFTL(m, 8, 8) | _SHIFTL(l, 0, 8)); _g->words.w1 = (_SHIFTL(g, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(r, 24, 8) | _SHIFTL(a, 0, 8)); }
+#define gDPSetEnvColor2(pkt, r, g, b, a) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = _SHIFTL(G_SETENVCOLOR, 24, 8); _g->words.w1 = (unsigned int)(_SHIFTL(g, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(r, 24, 8) | _SHIFTL(a, 0, 8)); }
+
+
+
+void func_82204804(s32 arg0) {
+    u8 *base;
+    u8 *state;
+    void *tex0;
+    void *tex1;
+    u8 *prim;
+    u8 *env;
+    u32 uls;
+    u32 ult;
+    u32 lrs;
+    u32 lrt;
+
+    // Row address in the 52-byte table. IDO places its frame adjustment between
+    // the first two multiply steps only when the symbol is the first operand of
+    // this sum; the retail prologue has it there.
+    base = (u8 *)(D_8220D8D0 + arg0 * 52);
+    tex0 = (void *)func_8004C990(2, *(u16 *)(base + 0xC));
+    tex1 = (void *)func_8004C990(2, *(u16 *)(base + 0xE));
+    prim = base + 0x2A;
+    env = base + 0x2D;
+    if (*(s16 *)(*(u8 **)((u8 *)D_8220DA08 + 0x20)) != 0) {
+        switch (arg0) {
+        case 0:
+            prim = D_8220DBB0;
+            env = D_8220DBB4;
+            break;
+        case 1:
+            prim = D_8220DBA8;
+            env = D_8220DBAC;
+            break;
+        }
+    }
+    state = (u8 *)(arg0 * 24 + (s32)&D_8220EB98);
+    func_80007328(&D_800D0510, *(s32 *)(state + 4), arg0, prim);
+    gSPDisplayList(D_800D0510++, D_8220D860);
+    gDPSetPrimColor2(D_800D0510++, 0, *(s16 *)(base + 0x10), prim[0], prim[1], prim[2], 0xFF);
+    gDPSetEnvColor2(D_800D0510++, env[0], env[1], env[2], 0xFF);
+    func_80045DB4(func_8004CA60((u8 *)tex0), 0, 0, *(u8 *)((u8 *)tex0 + 4),
+                  (s32)*(u8 *)((u8 *)tex0 + 5), (s32)*(u16 *)((u8 *)tex0 + 0),
+                  (s32)*(u16 *)((u8 *)tex0 + 2), 1, 0, 0, 0, 5, 5,
+                  (s32)*(s16 *)(base + 0x1C), (s32)*(s16 *)(base + 0x1E));
+    uls = (u32)(*(f32 *)(state + 8) * 4.0f);
+    ult = (u32)(*(f32 *)(state + 0xC) * 4.0f);
+    lrs = (u32)((*(f32 *)(state + 8) + 31.0f) * 4.0f);
+    lrt = (u32)((*(f32 *)(state + 0xC) + 31.0f) * 4.0f);
+    gDPSetTileSize(D_800D0510++, 0, uls, ult, lrs, lrt);
+    func_80045DB4(func_8004CA60((u8 *)tex1), 0x100, 1, *(u8 *)((u8 *)tex1 + 4),
+                  (s32)*(u8 *)((u8 *)tex1 + 5), (s32)*(u16 *)((u8 *)tex1 + 0),
+                  (s32)*(u16 *)((u8 *)tex1 + 2), 1, 0, 0, 0, 5, 5,
+                  (s32)*(s16 *)(base + 0x20), (s32)*(s16 *)(base + 0x22));
+    uls = (u32)(*(f32 *)(state + 0x10) * 4.0f);
+    ult = (u32)(*(f32 *)(state + 0x14) * 4.0f);
+    lrs = (u32)((*(f32 *)(state + 0x10) + 31.0f) * 4.0f);
+    lrt = (u32)((*(f32 *)(state + 0x14) + 31.0f) * 4.0f);
+    gDPSetTileSize(D_800D0510++, 1, uls, ult, lrs, lrt);
+    GfxRect_DrawTextured(0, 0, 0x20, 0x20, 0, 0, 0x400, 0x400, 0);
+    *(f32 *)(state + 8) += (f32)*(s16 *)(base + 0x14) * 0.25f;
+    if (*(f32 *)(state + 8) >= 32.0f) {
+        *(f32 *)(state + 8) -= 32.0f;
+    }
+    if (*(f32 *)(state + 8) < 0.0f) {
+        *(f32 *)(state + 8) += 32.0f;
+    }
+    *(f32 *)(state + 0xC) += (f32)*(s16 *)(base + 0x16) * 0.25f;
+    if (*(f32 *)(state + 0xC) >= 32.0f) {
+        *(f32 *)(state + 0xC) -= 32.0f;
+    }
+    if (*(f32 *)(state + 0xC) < 0.0f) {
+        *(f32 *)(state + 0xC) += 32.0f;
+    }
+    *(f32 *)(state + 0x10) += (f32)*(s16 *)(base + 0x18) * 0.25f;
+    if (*(f32 *)(state + 0x10) >= 32.0f) {
+        *(f32 *)(state + 0x10) -= 32.0f;
+    }
+    if (*(f32 *)(state + 0x10) < 0.0f) {
+        *(f32 *)(state + 0x10) += 32.0f;
+    }
+    *(f32 *)(state + 0x14) += (f32)*(s16 *)(base + 0x1A) * 0.25f;
+    if (*(f32 *)(state + 0x14) >= 32.0f) {
+        *(f32 *)(state + 0x14) -= 32.0f;
+    }
+    if (*(f32 *)(state + 0x14) < 0.0f) {
+        *(f32 *)(state + 0x14) += 32.0f;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_8220510C.s")
 
