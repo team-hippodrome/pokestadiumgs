@@ -211,7 +211,81 @@ s16 SceneInput_UpdateCpuSelection(s32 index) {
     return buttons;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_26D1D0/func_86206EF8.s")
+extern u8 *D_8620E198;
+
+
+
+s16 func_86206EF8(void *arg0, void *arg1) {
+    unsigned int current;
+    s16 selected;
+    unsigned int btn;
+
+    selected = 0;
+    switch (*(s32 *)((u8 *)D_8620E198 + 0x54)) {
+    default:
+        selected = 0;
+        goto out;
+    case 1:
+        selected = *(s16 *)((u8 *)arg0 + 8);
+        goto out;
+    case 2:
+        if (*(u16 *)((u8 *)arg0 + 6) & 0x200) {
+            selected = 0x200;
+        } else if (*(u16 *)((u8 *)arg0 + 6) & 0x100) {
+            selected = 0x100;
+        } else if (*(u16 *)((u8 *)arg0 + 6) & 0x800) {
+            selected = 0x800;
+        } else if (*(u16 *)((u8 *)arg0 + 6) & 0x400) {
+            selected = 0x400;
+        } else {
+            selected = -0x8000;
+        }
+        if (*(u16 *)((u8 *)arg0 + 8) & 0x8000) {
+            selected |= 0x4000;
+        }
+        goto out;
+    case 0:
+        btn = *(u16 *)((u8 *)arg0 + 6);
+        if (btn != 0) {
+            current = *(u16 *)((u8 *)arg1 + 0x14);
+            if (current == 0) {
+                *(u16 *)((u8 *)arg1 + 0x14) = current | btn;
+                goto out;
+            }
+            if ((current & 0x200) && (current & 0x800)) {
+                selected = 2;
+            } else if ((current & 0x200) && (current & 0x400)) {
+                selected = 4;
+            } else if ((current & 0x100) && (current & 0x800)) {
+                selected = 8;
+            } else if ((current & 0x100) && (current & 0x400)) {
+                selected = 1;
+            } else if (current & 0x200) {
+                selected = 0x200;
+            } else if (current & 0x100) {
+                selected = 0x100;
+            } else if (current & 0x800) {
+                selected = 0x800;
+            } else if (current & 0x400) {
+                selected = 0x400;
+            } else if (current & 0x8000) {
+                selected = -0x8000;
+            }
+            *(u16 *)((u8 *)arg1 + 0x14) = 0;
+            goto out;
+        } else {
+            *(u16 *)((u8 *)arg1 + 0x14) = 0;
+            goto out;
+        }
+    case 3:
+        if (*(u16 *)((u8 *)arg0 + 8) & 0x8000) {
+            selected = 0x4000;
+        }
+        goto out;
+    }
+out:
+    return selected;
+}
 
 
 
@@ -225,7 +299,7 @@ extern void SceneModel_StartPlayerAction(s32 player_index);
 extern void func_86205724(s32 index);
 extern void func_8620572C(s32 index, f32 *origin, f32 *direction);
 extern u8 D_800CE060[];
-extern s16 func_86206EF8(u8 *, u8 *);
+s16 func_86206EF8(void *arg0, void *arg1);
 
 
 void func_862070B0(void)

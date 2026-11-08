@@ -60,7 +60,50 @@ void func_862055E8(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_26BF40/func_862055F0.s")
+typedef struct SceneDirectionChoice {
+    f32 origin[3];
+    f32 directions[4][3];
+    s16 buttons;
+} SceneDirectionChoice;
+
+extern SceneDirectionChoice D_86208F28[5];
+
+
+
+void func_862055F0(u8 *arg0, s32 arg1, s32 arg2) {
+    f32 temp_fv0;
+    u8 *global;
+    u8 *choice;
+    f32 *direction;
+
+    global = (u8 *)(u32)D_8620E198;
+    arg1 = *(u8 *)((u8 *)((u64 *)global + arg1 * 3) + 0x73BD2);
+    choice = (u8 *)D_86208F28 + (arg2 << 6);
+    direction = (f32 *)choice + arg1 * 3;
+
+    *(f32 *)(arg0 + 0x48) = *(f32 *)choice - *(f32 *)(global + 0xCC) * ((5.0f * *(f32 *)(global + 0xD8)) * (direction[3] * 18.0f));
+    global = (u8 *)(u32)D_8620E198;
+    *(f32 *)(arg0 + 0x50) = *(f32 *)(choice + 8) - *(f32 *)(global + 0xCC) * ((5.0f * *(f32 *)(global + 0xD8)) * (direction[5] * 18.0f));
+    *(f32 *)(arg0 + 0x4C) = 30.0f;
+    temp_fv0 = *(f32 *)((u8 *)(u32)D_8620E198 + 0xD8) * 0.4f;
+    *(f32 *)(arg0 + 0x5C) = temp_fv0;
+    *(f32 *)(arg0 + 0x58) = temp_fv0;
+    *(f32 *)(arg0 + 0x54) = temp_fv0;
+    switch (arg1) {
+    case 0:
+        *(s16 *)(arg0 + 0x44) = -0x6000;
+        break;
+    case 1:
+        *(s16 *)(arg0 + 0x44) = 0x6000;
+        break;
+    case 2:
+        *(s16 *)(arg0 + 0x44) = -0x2000;
+        break;
+    case 3:
+        *(s16 *)(arg0 + 0x44) = 0x2000;
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -101,11 +144,6 @@ void SceneMotion_RemoveInwardVelocity(u8 *object, f32 *normal) {
 #ifdef VERSION_US
 /* mkdraft:func_8620581C begin */
 extern f32 func_87D005E8(f32 *, f32 *, f32 *);
-typedef struct SceneDirectionChoice {
-    f32 origin[3];
-    f32 directions[4][3];
-    s16 buttons;
-} SceneDirectionChoice;
 
 extern SceneDirectionChoice D_86208F28[5];
 
