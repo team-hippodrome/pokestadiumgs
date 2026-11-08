@@ -597,3 +597,34 @@ consistent with their actual declarations, the signed `guRandom()` remainder,
 four actor updates, and both primary/secondary model loops. After an accept,
 refresh declarations from the current source instead of reinserting the
 already-installed struct definitions.
+
+## 2026-11-08 — scene state dispatcher accepted
+
+`func_86509E54`, **136 words / 544 bytes**, frame **0x18**. Full-ROM gate
+passes: `build/pokestadiumgs-us.z64: OK`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. All 57 functions in
+`fragment53_code.o` match the assembly-backed baseline.
+
+`Fragment53_RunScene` calls it each frame with the word at
+`D_8650C5E0 + 0xC`, which is `D_8650C5EC` itself. The callee never reads
+that argument: it switches on `D_8650C5EC` directly and returns the value
+left there. Before the switch, state 3 is forced when the byte at
+`D_8650DB10 + 0x2180` is 4 and `func_87F0C6F4(D_8650DA60)` reports nonzero
+(`D_8650C638` also becomes 3). `func_87F006BC` runs whenever
+`func_87F00930` returns zero, unless the state is 10.
+
+Observed transitions (states without a listed transition only call their
+handlers):
+
+| State | Work | Next state |
+|---|---|---|
+| 2 | waits for `StageContext_GetFadeMode() == 1` | 3 |
+| 9 | `Fragment64_UpdateBounceAndConfirm(D_8650DA70)` confirms; byte 0x2180 of `D_8650DB10` is 1 | 2 (clear color 0xFFFF, `StageFade_StartFromTransparent(10)`, `D_8650C638` = 2, `D_8650C62C` = 0) |
+| 9 | same confirmation, any other byte value | 8 (`func_87F02328`) |
+| 12 | waits for fade mode 1, then `func_86508484` | 11 (`StageFade_StartFromOpaque(10)`) |
+| 11 | — | 0 |
+
+The `u32` return copy is a marked FAKE: returning the global directly loads
+its high half into `$v0` instead of the original `$v1`. A permuter search
+found the copy; no other change was needed.
+//@src/fragments/53/fragment53_code.c
