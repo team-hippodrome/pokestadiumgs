@@ -467,5 +467,149 @@ s16 func_887011E8(s16 arg0)
   return (s16) ((((*((s16 *) (((u8 *) D_88701E00) + 0xE))) + (*((s16 *) (((u8 *) D_88701E00) + 0x5C)))) + (arg0 * 0x16)) + ((arg0 / 5) * 4));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/36/fragment36_code/func_88701240.s")
+extern u8 D_80094DE0[];
+extern u8 D_80094E38[];
+extern Gfx *D_800D0510;
+extern s32 func_8004C990(s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_80049064(s32, s32, s32, const char *);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_8004B314(s32, s32, s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+
+
+
+void func_88701240(void) {
+    u8 pad[16];  // FAKE: the function has no 16-byte object of its own; the local only
+                 // widens the frame from 0x58 to retail's 0x68 while texture stays at 0x54.
+    u16 *texture;
+    u16 *character;
+    s16 x;
+    s16 y;
+    s16 width;
+    u8 i;
+    u8 row;
+    s32 mode;
+
+    texture = (u16 *) func_8004C990(0x1D, 0);
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    if (D_88701E00->mode == 0) {
+    }  // FAKE: empty branch. Its presence alone puts x in s3 and y in s1; without it
+       // the color assignment of the whole function shifts.
+    x = D_88701E00->panel_x + 0xB;
+    y = D_88701E00->panel_y + 0x21;
+    for (i = 0; i < 2; i++, y++) {
+        gDPPipeSync(D_800D0510++);
+        if (i == 0) {
+            gDPSetFillColor(D_800D0510++, 0x10001);
+        } else {
+            gDPSetFillColor(D_800D0510++, -1);
+        }
+        gDPFillRectangle(D_800D0510++, x, y, x + 0x167, y);
+    }
+    func_800498C4();
+    func_800496A4(4, 1);
+    switch (D_88701E00->mode) {
+    case 2:
+        mode = 1;
+        break;
+    case 3:
+        mode = 2;
+        break;
+    default:
+        mode = 0;
+        break;
+    }
+    func_80049064(D_88701E00->panel_x + 0xB, D_88701E00->panel_y + 0xB, 0, func_8004C874(0x24, mode));
+    func_80049064(D_88701E00->panel_x + 0x4B, D_88701E00->slide_offset + D_88701E00->panel_y, 1, func_8004C874(0x24, 3));
+    func_80049064(D_88701E00->panel_x + 0xB9, D_88701E00->slide_offset + D_88701E00->panel_y, 1, func_8004C874(0x24, 4));
+    func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    func_80049064(D_88701E00->panel_x + 0x166, D_88701E00->slide_offset + D_88701E00->panel_y, 2, func_8004C874(0x24, 5));
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    for (row = 0; row < D_88701E00->keyboard_rows; row++) {
+        for (i = 0; i < 15; i++) {
+            func_88700020(func_8870118C(i), func_887011E8(row), D_88701E00->keyboard[row * 15 + i]);
+        }
+    }
+    func_800496A4(8, 2);
+    y = D_88701E00->entry_y;
+    character = D_88701E00->characters;
+    x = D_88701E00->entry_x;
+    for (i = 0; i < D_88701E00->capacity; i++, character++, x += 0x14) {
+        if ((D_88701E00->mode == 0 || D_88701E00->mode == 1) && i != 0 && (i & 0xF) == 0) {
+            x = D_88701E00->entry_x;
+            y += 0x1A;
+        }
+        if (*character == 0) {
+            func_88700020(x, y, 0xB7);
+        } else {
+            func_88700020(x, y, *character);
+        }
+    }
+    func_800499EC();
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0, 0xFF);
+    func_8004D19C(D_88701E00->label_x + D_88701E00->panel_x, D_88701E00->slide_offset + D_88701E00->panel_y,
+                  func_8004C990(0x2F, 0), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0, func_88700080(&D_88701E00->pulse));
+    func_8004D1FC((u8 *) texture);
+    GfxRect_DrawTextured(D_88701E00->indicator_x + D_88701E00->panel_x,
+                         D_88701E00->slide_offset + D_88701E00->panel_y + 0xB,
+                         texture[0], texture[1], 0, 0, 0x400, 0x400, 0);
+    if (D_88701E00->cursor != D_88701E00->capacity) {
+        if (D_88701E00->mode != 2 && D_88701E00->mode != 3) {
+            x = D_88701E00->entry_x + (D_88701E00->cursor % 16) * 0x14 + 1;
+            y = D_88701E00->entry_y + (D_88701E00->cursor / 16) * 0x1A + 0x12;
+        } else {
+            x = D_88701E00->entry_x + D_88701E00->cursor * 0x14 + 1;
+            y = D_88701E00->entry_y + 0x12;
+        }
+        GfxRect_DrawTextured(x, y, texture[0], texture[1], 0, 0, 0x400, 0x400, 0);
+    }
+    if (D_88701E00->cursor == D_88701E00->capacity || D_88701E00->error_flash != 0) {
+        if (D_88701E00->mode != 2 && D_88701E00->mode != 3) {
+            x = D_88701E00->entry_x + 0x140;
+            y = D_88701E00->entry_y + (D_88701E00->capacity / 16) * 0x1A - 0x17;
+        } else {
+            x = D_88701E00->entry_x + D_88701E00->capacity * 0x14;
+            y = D_88701E00->entry_y + 3;
+        }
+        if (D_88701E00->error_flash) {
+            D_88701E00->error_flash--;
+            gDPPipeSync(D_800D0510++);
+            gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0, 0xFF);
+        }
+        {
+            Gfx *_g = (Gfx *) D_800D0510++;
+            // w0 and w1 stay on one source line: as1 orders their two sw/or groups by
+            // .loc line, and splitting the statements swaps the two sw instructions.
+            // The x addend is written x - (0 - texture[1]) because uopt folds a
+            // subtracted negation back into addu while keeping x as the left operand,
+            // which is the retail encoding; a direct + emits the lhu result first.
+            _g->words.w0 = _SHIFTL(0xE5, 24, 8) | _SHIFTL((y + ((u16 *) texture)[0]) * 4, 0, 12) | _SHIFTL((x - (0 - ((u16 *) texture)[1])) * 4, 12, 12);             _g->words.w1 = _SHIFTL(0, 24, 3) | _SHIFTL(x * 4, 12, 12) | _SHIFTL(y * 4, 0, 12);
+            gImmp1(D_800D0510++, G_RDPHALF_1, (_SHIFTL(0, 16, 16) | _SHIFTL(0, 0, 16)));
+            gImmp1(D_800D0510++, G_RDPHALF_2, (_SHIFTL(0x400, 16, 16) | _SHIFTL(0x400, 0, 16)));
+        }
+    }
+    if (D_88701E00->keyboard_row == D_88701E00->keyboard_rows) {
+        if (D_88701E00->keyboard_column < 5) {
+            width = func_80049290(4, 1, func_8004C874(0x24, 3));
+            func_8004B314(D_88701E00->panel_x - (width >> 1) + 0x43,
+                          D_88701E00->slide_offset + D_88701E00->panel_y - 8, width + 0x10, 0x20);
+            return;
+        }
+        width = func_80049290(4, 1, func_8004C874(0x24, 4));
+        func_8004B314(D_88701E00->panel_x - (width >> 1) + 0xB1,
+                      D_88701E00->slide_offset + D_88701E00->panel_y - 8, width + 0x10, 0x20);
+        return;
+    }
+    func_8004B314(func_8870118C(D_88701E00->keyboard_column) - 8,
+                  func_887011E8(D_88701E00->keyboard_row) - 8, 0x20, 0x20);
+}
 #endif
