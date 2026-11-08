@@ -147,7 +147,81 @@ void func_8AF15584(s16 arg0, s16 arg1, s16 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15670.s")
+extern s16 D_8AF33C74;
+extern s16 D_8AF33C76;
+extern s16 D_8AF33C7A;
+extern s16 D_8AF33C7E;
+extern s32 D_8AF2BDC4;
+extern void func_8AC00738(void);
+extern void func_8AC0077C(s32, s32, s32, s32);
+extern void func_8AC043A8(s32, s32, s32);
+extern void func_8AC043E0(s32, s32, s32);
+extern void func_8AF0A3A8(s32, s32, s16);
+extern void func_8AF15584(s16, s16, s16);
+
+
+
+void func_8AF15670(s32 arg0)
+{
+    s32 pad[1]; // FAKE: never accessed; its 4 bytes at 0x38(sp) make the frame 0x48
+    struct {
+        s16 a;
+        s16 b; // FAKE: never read or written; puts c at 0x40(sp) instead of 0x3E(sp)
+        s16 c;
+    } ss;
+    s16 temp_s3;
+    s16 temp_s4;
+    s16 temp_s5;
+    s32 var_s0;
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_s3;
+
+    temp_s3 = (*((s16 *) (arg0 + 8))) + 0x3C;
+    temp_s5 = ((*((s16 *) (arg0 + 8))) - D_8AF33C7A) + 0x3C;
+    temp_s4 = (*((s16 *) (arg0 + 0xA))) + 0x14;
+    ss.c = *((s16 *) (arg0 + 0xA));
+    ss.a = *((s16 *) (arg0 + 0xE));
+    var_s1 = temp_s4;
+    var_s2 = temp_s3 - 0x14;
+    for (var_s0 = 0; var_s0 < 0x11; var_s0++) {
+        func_8AF0A3A8(var_s2, var_s1, var_s0);
+        var_s1 += 0x14;
+    }
+    func_8AC0077C(temp_s3, ss.c, temp_s3 + D_8AF33C7E, ss.c + ss.a);
+    var_s0 = 0;
+    var_s2 = temp_s5;
+    var_s1 = temp_s4 - 0x14;
+    do {
+        func_8AF0A3A8(var_s2, var_s1, var_s0);
+        var_s0 += 1;
+        var_s2 += 0x14;
+    } while (var_s0 < 0x11);
+    var_s3 = 0;
+    var_s1 = temp_s4;
+    var_s2 = temp_s5;
+    var_s0 = 0x17C;
+    do {
+        func_8AC043E0(var_s2, temp_s4, 0x154);
+        func_8AC043A8(temp_s5, var_s1, 0x154);
+        var_s3 += 0x14;
+        var_s1 += 0x14;
+        var_s2 += 0x14;
+    } while (var_s3 != var_s0);
+    func_8AF15584(0, temp_s5, temp_s4);
+    func_8AF15584(2, temp_s5, temp_s4);
+    func_8AF15584(5, temp_s5, temp_s4);
+    func_8AF15584(0x14, temp_s5, temp_s4);
+    func_8AF15584(0x28, temp_s5, temp_s4);
+    if (D_8AF2BDC4 & 0x10) {
+        func_8AF14E40(temp_s5 + (D_8AF33C74 * 0x14), temp_s4, 0x14, 0x154, 0xFF40);
+        func_8AF14E40(temp_s5, temp_s4 + (D_8AF33C76 * 0x14), 0x154, 0x14, 0xFF000020);
+    } else {
+        func_8AF14E40(temp_s5 + (D_8AF33C74 * 0x14), temp_s4, 0x14, 0x154, 0xFF20);
+        func_8AF14E40(temp_s5, temp_s4 + (D_8AF33C76 * 0x14), 0x154, 0x14, 0xFF000040);
+    }
+    func_8AC00738();
+}
 
 extern u8 D_8AF33770[][2];
 extern s16 D_8AF33C72;
