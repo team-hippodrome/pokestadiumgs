@@ -1016,7 +1016,185 @@ s32 func_8000E13C(s32 arg0, u8 *arg1, s16 arg2)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000E1E4.s")
+extern Acmd *func_8000E750(u32, u8 *, u8 *, s16 *, s32, Acmd *, s32);
+extern Acmd *(*D_80122A2C)(Acmd *cmd, s32 size, s32 update_index);
+
+// Same code as Majora's Mask AudioSynth_ProcessSamples (src/audio/lib/synthesis.c).
+// D_8011BE90 is the audio context: +0x01 synthesis reverb count, +0x14 pointer
+// to the 0x20-byte note sample states, +0x18 reverb array (0x2D0 stride),
+// +0x2C28 note count, +0x3468 pointer to the 0x100-byte notes.
+//
+// Two source facts the bytes pin down: func_8000E750's first parameter is a word
+// (`sw a0,0x150(sp)`, `sll t7,a0,8` in its own body), not a u8, and the note-state
+// offset is unsigned. Passing `(s32)note_indices[i]` to a u32 parameter makes IDO
+// emit the target's `lbu v0,0(s0)` / `or a0,v0,zero` / `sll t5,v0,8` sequence in the
+// voice loop; `sample_state_offset` as u32 is what makes that conversion a plain
+// copy instead of `andi a0,v0,255`.
+
+
+
+
+Acmd *func_8000E1E4(s16 *ai_buf, s32 num_samples_per_update, Acmd *cmd, s32 update_index)
+{
+// A note's sample state: bit 31 of the first word is its enabled flag
+// (src/10BB0.c reads the same bit through its AudioEnabledBit view, and
+// src/1A360.c declares the same eight flags as one 32-bit bitfield), and byte 1
+// holds the reverb index in its top three bits. The reverb index is read as a
+// 3-bit bitfield, which is why the extraction is a logical shift.
+//
+// enabled is volatile. `volatile u32 enabled : 1` makes IDO keep the loop-head
+// copy of the sample-state pointer, giving the target's `or v0,v1,zero` /
+// `lw t5,0(v0)` / `lbu t7,1(v0)` pair; without the qualifier IDO propagates the
+// copy into the word load and uses the copy for the byte load instead.
+// reverbIndex is a u8 bitfield, not u32: the u8 promotion makes the second
+// collection loop's `>= reverb_count` test `slt`, where u32 would emit `sltu`.
+typedef struct {
+    /* 0x00 */ volatile u32 enabled : 1;
+    /* 0x00 */ u32 needsInit : 1;
+    /* 0x00 */ u32 finished : 1;
+    /* 0x00 */ u32 unused : 1;
+    /* 0x00 */ u32 strongRight : 1;
+    /* 0x00 */ u32 strongLeft : 1;
+    /* 0x00 */ u32 strongReverbRight : 1;
+    /* 0x00 */ u32 strongReverbLeft : 1;
+    /* 0x01 */ u8 reverbIndex : 3;
+    /* 0x01 */ u8 unk_01 : 5;
+    /* 0x02 */ u8 unk_02[0x1E];
+} NoteSampleState; // size = 0x20
+
+    u8 note_indices[0x60];
+    s32 note_count = 0;
+    s32 reverb_index;
+    s32 use_reverb;
+    u32 sample_state_offset = *(s32 *)(D_8011BE90 + 0x2C28) * update_index;
+    s32 i;
+    s32 size;
+    NoteSampleState *sample_state;
+
+    if (*(s8 *)(D_8011BE90 + 1) == 0) {
+        // FAKE: `size` is the interleave byte count further down; here it is a
+        // running note index so that the walk is post-incremented in the load.
+        // Walking with the MM form `[sample_state_offset + i]` scores 2300.
+        size = sample_state_offset;
+        for (i = 0; i < *(s32 *)(D_8011BE90 + 0x2C28); i++) {
+            if (((NoteSampleState *)(*(u8 **)(D_8011BE90 + 0x14)))[size++].enabled) {
+                note_indices[note_count++] = i;
+            }
+        }
+    } else {
+
+        for (reverb_index = 0; reverb_index < *(s8 *)(D_8011BE90 + 1); reverb_index++) {
+            for (i = 0; i < *(s32 *)(D_8011BE90 + 0x2C28); i++) {
+                // FAKE: the comma keeps the offset in a temp of its own, so the loop
+                // preheader colours offset t2, scaled offset t3, sample-state base t4.
+                // The plain [sample_state_offset + i] subscript scores 35 (six
+                // register-only rows, same instructions).
+                sample_state = &((NoteSampleState *)(*(u8 **)(D_8011BE90 + 0x14)))[(0, sample_state_offset) + i];
+                if ((sample_state->enabled) &&
+                    (sample_state->reverbIndex == reverb_index)) {
+                    note_indices[note_count++] = i;
+                }
+            }
+        }
+
+        for (i = 0; i < *(s32 *)(D_8011BE90 + 0x2C28); i++) {
+            // FAKE: comma as in the loop above; the plain subscript scores 35.
+            sample_state = &((NoteSampleState *)(*(u8 **)(D_8011BE90 + 0x14)))[(0, sample_state_offset) + i];
+            if ((sample_state->enabled) &&
+                (sample_state->reverbIndex >= *(s8 *)(D_8011BE90 + 1))) {
+                note_indices[note_count++] = i;
+            }
+        }
+
+    }
+
+    // A_CLEARBUFF: clear both dry channels before any voice is mixed in.
+    AUDIO_CMD(cmd++, _SHIFTL(0x02, 24, 8) | _SHIFTL(0x930, 0, 24), 0x340);
+
+    i = 0;
+    for (reverb_index = 0; reverb_index < *(s8 *)(D_8011BE90 + 1); reverb_index++) {
+        s32 sub_delay;
+        SynthesisReverb *reverb;
+
+        reverb = (SynthesisReverb *)(D_8011BE90 + 0x18 + reverb_index * 0x2D0);
+        use_reverb = reverb->useReverb;
+        if (use_reverb) {
+            cmd = (Acmd *)func_8000DEE8((s32)cmd, num_samples_per_update, (u8 *)reverb, (s16)update_index);
+
+            // Mix the wet channel into the dry left/right pair; the volume is
+            // signed and stored at +0x00A.
+            aMix_GS(cmd++, 0x340 >> 4, *(s16 *)((u8 *)reverb + 0xA), 0xC70, 0x930);
+
+            sub_delay = reverb->subDelay;
+            if (sub_delay != 0) {
+                aDMEMMove_GS(cmd++, 0xC70, 0x3D0, 0x340);
+            }
+
+            // Decay the wet channel; +0x8000 is -100%.
+            aMix_GS(cmd++, 0x340 >> 4, reverb->unk_00C + 0x8000, 0xC70, 0xC70);
+
+            if (((reverb->leakRtl != 0) || (reverb->leakLtr != 0)) && (*(s8 *)(D_8011BE90 + 0x2C2E) != 3)) {
+                cmd = func_8000D174(cmd, reverb);
+            }
+
+            if (sub_delay != 0) {
+                if (reverb->unk_005 != -1) {
+                    cmd = func_8000D7B8(cmd, reverb, update_index);
+                }
+                cmd = func_8000DF5C(cmd, reverb, (s16)update_index);
+                cmd = (Acmd *)func_8000DEA8((s32)cmd, num_samples_per_update, (u8 *)reverb, (s16)update_index);
+                aMix_GS(cmd++, 0x340 >> 4, reverb->unk_016, 0x3D0, 0xC70);
+            }
+        }
+
+        while (i < note_count) {
+            if (((NoteSampleState *)(*(u8 **)(D_8011BE90 + 0x14) + ((sample_state_offset + note_indices[i]) << 5)))->reverbIndex != reverb_index) {
+                break;
+            }
+            cmd = func_8000E750((s32)note_indices[i], *(u8 **)(D_8011BE90 + 0x14) + ((sample_state_offset + note_indices[i]) << 5),
+                                *(u8 **)(D_8011BE90 + 0x3468) + (note_indices[i] << 8) + 0x10, ai_buf,
+                                num_samples_per_update, cmd, update_index);
+            i++;
+        }
+
+        if (use_reverb) {
+            // Filter buffers at +0x270/+0x274.
+            if ((*(s32 *)((u8 *)reverb + 0x270) != 0) || (*(s32 *)((u8 *)reverb + 0x274) != 0)) {
+                cmd = (Acmd *)func_8000D710((Gfx *)cmd, num_samples_per_update * 2, (u8 *)reverb);
+            }
+
+            if (sub_delay != 0) {
+                cmd = (Acmd *)func_8000E13C((s32)cmd, (u8 *)reverb, (s16)update_index);
+            } else {
+                if (reverb->unk_005 != -1) {
+                    cmd = func_8000D7B8(cmd, reverb, update_index);
+                }
+                cmd = func_8000DF5C(cmd, reverb, (s16)update_index);
+            }
+        }
+
+    }
+
+    while (i < note_count) {
+        cmd = func_8000E750((s32)note_indices[i],
+                            *(u8 **)(D_8011BE90 + 0x14) + ((sample_state_offset + note_indices[i]) << 5),
+                            *(u8 **)(D_8011BE90 + 0x3468) + (note_indices[i] << 8) + 0x10, ai_buf,
+                            num_samples_per_update, cmd, update_index);
+        i++;
+    }
+
+    size = num_samples_per_update * 2;
+    // A_INTERLEAVE 0x0D: interleaves 0x930/0xAD0 into 0x3B0 for the save.
+    AUDIO_CMD(cmd++, _SHIFTL(0x0D, 24, 8) | _SHIFTL(size >> 4, 16, 8) | _SHIFTL(0x3B0, 0, 16),
+              _SHIFTL(0x930, 16, 16) | _SHIFTL(0xAD0, 0, 16));
+
+    if (D_80122A2C != NULL) {
+        cmd = D_80122A2C(cmd, size * 2, update_index);
+    }
+    aSaveBuffer_GS(cmd++, 0x3B0, ai_buf, size * 2);
+
+    return cmd;
+}
 #endif
 
 #ifdef VERSION_US
