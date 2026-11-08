@@ -429,7 +429,73 @@ void func_82F019CC(void *arg0, void *arg1, s16 *arg2) {
     WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01A5C.s")
+extern s32 GbSave_GetPortAvailability(s32);
+extern void _bzero(void *, s32);
+extern void func_80057908(u8);
+extern u8 func_8005D92C(s32);
+extern s32 func_8005DF20(s32);
+
+// 0x58-byte record. func_82F01A5C copies it verbatim from the 0x60-byte
+// roster entries into the six-entry buffer at arg0 + 0x38, so only its size
+// and the word-aligned copy are established.
+typedef struct {
+    s32 unk_00[0x16];
+} unk_func_82F01A5C;
+
+
+
+s32 func_82F01A5C(void *arg0) {
+    unk_func_82F01A5C *out;
+    u8 *record;
+    u8 *state;
+    u8 *probe;
+    s32 count;
+    s32 index;
+    s32 port;
+    u8 *base;
+
+    base = (u8 *)arg0 + 0x38;
+    // Roster pointer; holds the same object whose buffer is cleared next.
+    state = *(u8 **)((u8 *)arg0 + 0xEF4);
+    _bzero(base, 0x210);
+    // Count occupied roster entries (stride 0x60), up to six.
+    count = 0;
+    probe = state;
+    while (count != 6) {
+        if (*probe == 0) {
+            break;
+        }
+        count++;
+        probe += 0x60;
+    }
+    if (count > 0) {
+        index = 0;
+        record = state;
+        out = (unk_func_82F01A5C *)base;
+        do {
+            // 1-based port id; 1-4 are the four Transfer Pak ports.
+            port = ((s8 *)record)[0x58] - 1;
+            *out = *(unk_func_82F01A5C *)record;
+            if (port >= 0 && port < 4) {
+                if (GbSave_GetPortAvailability(port) == 0) {
+                    func_80057908(port);
+                    *(s32 *)((u8 *)arg0 + 0xEC8) = func_8005D92C(port);
+                    *(s32 *)((u8 *)arg0 + 0xEE8) = func_8005DF20(port);
+                    ((u8 *)arg0)[0xEEC + index] = index;
+                } else {
+                    return 0;
+                }
+            } else {
+                // No cartridge in the slot.
+                ((s8 *)arg0)[0xEEC + index] = -1;
+            }
+            index++;
+            record += 0x60;
+            out++;
+        } while (index != count);
+    }
+    return 1;
+}
 
 extern void _bzero(void *, s32);
 extern s32 func_82F01A5C(void *);
