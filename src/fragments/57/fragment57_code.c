@@ -19,11 +19,178 @@ s32 func_83300398(s32 arg0, s32 arg1) {
     return arg0 + arg1 / 2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833003B0.s")
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
+extern s32 D_8330AC08;
+extern s32 D_8330907C[];
+extern s32 D_83308E2C;
+extern s32 D_83308E38[];
+extern s32 D_833090B0[];
+extern u8 *D_83308E34;
+
+typedef struct Func833003B0Blob {
+    s32 words[12];
+} Func833003B0Blob;
+
+
+
+void func_833003B0(s32 arg0) {
+    s32 off;
+    s32 temp;
+
+    *(s32 *)((u8 *)&D_8330AC08 + 0x20) = 0;
+    if (arg0 == 7) {
+        *(s32 *)((u8 *)&D_8330AC08 + 0x28) = 1;
+        *(s32 *)((u8 *)&D_8330AC08 + 0x24) = 5;
+        return;
+    }
+    *(s32 *)((u8 *)&D_8330A2B0 + 8) = arg0;
+    if (*(s16 *)(D_83308E34 + 2) == -1) {
+        off = arg0 * 4;
+        // FAKE: arg0 is dead after its store above; this assignment only stops uopt
+        // from copy-propagating `off = arg0 * 4` into a CSE temp (which adds a
+        // `move a2,v0`). Defining off inside this branch also gives the hoisted
+        // `sll` a later .loc line, so as1 orders it after the condition's `li at,-1`.
+        switch (*(s32 *)((u8 *)D_83308E38 + off)) {
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            return;
+        case 16:
+            *(Func833003B0Blob *)&D_8330AC08 = *(Func833003B0Blob *)D_8330907C;
+            *(s32 *)((u8 *)&D_8330AC08 + 0x18) = 1;
+            break;
+        }
+    } else {
+        off = *(s32 *)((u8 *)&D_8330A2B0 + 8) * 4;
+        switch (*(s32 *)((u8 *)D_83308E38 + off)) {
+        case 11:
+            *(Func833003B0Blob *)&D_8330AC08 = *(Func833003B0Blob *)D_8330907C;
+            *(s32 *)((u8 *)&D_8330AC08 + 0x28) = 1;
+            *(s32 *)((u8 *)&D_8330AC08 + 0x18) = 1;
+            break;
+        case 12:
+        case 14:
+            *(Func833003B0Blob *)&D_8330AC08 = *(Func833003B0Blob *)D_8330907C;
+            *(s32 *)((u8 *)&D_8330AC08 + 0x18) = 1;
+            break;
+        case 13:
+            *(s32 *)((u8 *)&D_8330AC08 + 0x28) = 1;
+            break;
+        }
+    }
+    *(s32 *)((u8 *)&D_8330AC08 + 0xC) = *(s32 *)((u8 *)D_833090B0 + off);
+    *(s32 *)((u8 *)&D_8330AC08 + 4) = func_83300398(*(s32 *)((u8 *)&D_8330AC08 + 0xC), *(s32 *)((u8 *)&D_8330AC08 + 0x14));
+    temp = D_83308E38[*(s32 *)((u8 *)&D_8330A2B0 + 8)];
+    if (temp == 11) {
+        *(s32 *)((u8 *)&D_8330AC08 + 0x24) = D_83308E2C * 4;
+    }
+    if (temp == 13) {
+        *(s32 *)((u8 *)&D_8330AC08 + 0x24) = (s32)((f64)D_83308E2C * 1.3);
+    }
+    if (temp == 17) {
+        *(s32 *)((u8 *)&D_8330A2B0 + 0x54) = -1;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833005F0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_8330084C.s")
+typedef struct unk_8330084C {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ s32 unk_0C;
+    /* 0x10 */ s32 unk_10;
+    /* 0x14 */ s32 unk_14;
+    /* 0x18 */ u8 unk_18[0x2C - 0x18];
+    /* 0x2C */ f32 unk_2C;
+} unk_8330084C;
+
+extern void *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern u8 *func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void func_833005F0(void *);
+
+#define gDL (*(Gfx **)&D_800D0510)
+
+// The result of func_8004CA60() is parked in an untyped temp `p` first, so the
+// copy into the callee-saved `tex` register is emitted at loop entry, after
+// the `i = 0` move (target order: or s3,zero,zero then or s6,zero,v0).
+
+
+void func_8330084C(unk_8330084C *arg0) {
+    s32 pad[4]; // FAKE: pads the frame to 0x90 bytes; never accessed
+    s32 x = arg0->unk_08, y = arg0->unk_0C;
+    s32 w = (s32)((f32)arg0->unk_10 * arg0->unk_2C);
+    s32 h = (s32)((f32)arg0->unk_14 * arg0->unk_2C);
+    s32 alpha;
+    s32 i;
+    s32 qh;
+    s32 qw;
+    s32 qy;
+    s32 qx;
+    u8 *tex;
+    u8 *p; // temp for the func_8004CA60 result; defers the tex copy to loop entry
+
+    if (h == 0) {} // FAKE: empty if; without it uopt colors w as s7 and h as s8, with it w is fp and h is s7 as in the target
+
+    if (h < 22) {
+        h = 22;
+    }
+    if (w >= 97) {
+        alpha = 255;
+    } else {
+        alpha = w * 255 / 96;
+    }
+
+    gDPPipeSync(gDL++);
+    gDPSetCycleType(gDL++, G_CYC_1CYCLE);
+    gDPSetPrimColor(gDL++, 0, 0, 255, 255, 200, alpha);
+    gDPSetCombine(gDL++, 0xFFFFFF, 0xFFFDF6FB);
+    gDPSetRenderMode(gDL++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+
+    Gfx_FillRectRgba((s16)(x + 5), (s16)(y + 5), (s16)(w - 10), (s16)(h - 10), 0, 0, 0x3C, alpha);
+    func_833005F0(arg0);
+    gSPDisplayList(gDL++, D_80094E38);
+    p = func_8004CA60(func_8004C990(0x4E, 0));
+    i = 0;
+    tex = p;
+    for (; i < 4; i++, tex += 0x100) {
+        gDPLoadTextureBlockS(gDL++, tex, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 16, 0,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                             G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        switch (i) {
+            case 0:
+                qx = x;
+                qy = y;
+                qw = w - 16;
+                qh = h - 16;
+                break;
+            case 1:
+                qx = x + w - 16;
+                qy = y;
+                qw = 16;
+                qh = h - 16;
+                break;
+            case 2:
+                qx = x;
+                qy = y + h - 16;
+                qw = w - 16;
+                qh = 16;
+                break;
+            case 3:
+                qx = x + w - 16; qy = y + h - 16; qw = 16; qh = 16;
+                break;
+        }
+        GfxRect_DrawTextured((s16)qx, (s16)qy, (s16)qw, (s16)qh, 0, 0, 0x400, 0x400, 0);
+    }
+    gSPDisplayList(gDL++, D_80094F50);
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300CB0.s")
 
@@ -354,7 +521,7 @@ void func_8004989C(s32);
 s32 func_8004C54C(s32, s32);
 void *func_8004C874(s32, s32);
 void *func_8004C8A0(void *, s32, s32, s32);
-s32 func_8330084C(s32 *);
+void func_8330084C(unk_8330084C *arg0);
 void func_83302088(void *);
 void func_83302180(void *);
 extern s32 D_83308E38[];
@@ -2278,7 +2445,7 @@ M2C_UNK func_80024480(s32, M2C_UNK);                /* extern */
 M2C_UNK func_8003F2C4(s32, M2C_UNK *, s32);         /* extern */
 M2C_UNK func_8003F3BC(M2C_UNK *, s32);              /* extern */
 M2C_UNK func_83300020(M2C_UNK);                     /* extern */
-M2C_UNK func_833003B0(M2C_UNK);                     /* extern */
+void func_833003B0(s32 arg0);                     /* extern */
 M2C_UNK func_83303640(M2C_UNK);                     /* extern */
 extern u8 *D_83308E34;
 extern s32 D_8330A4CC;
