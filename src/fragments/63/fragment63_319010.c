@@ -198,7 +198,55 @@ void func_87E16488(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E16738.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E16894.s")
+extern void *D_87E1EC88;
+extern void func_87C037C0(void *, void *);
+extern void func_87C03B60(void *, void *, void *);
+extern void func_8002781C(u16, u8, void *);
+
+// Bounces the 8 records at arg0+0x40 (6 floats each: position, then velocity) off y = 0, playing
+// sound 0x8F01 when the rebound exceeds 5, and clamps x to -500..2700 and z to -1600..500 while
+// the word at D_87E1EC88+4 is below 60.
+void func_87E16894(void *arg0) {
+    s32 i;
+    f32 *p;
+    // FAKE: the original reserves a 12-byte vector at sp+0x64, but only this one-float declaration
+    // reproduces its 0x70 frame. func_87C03B60 writes all three floats, so the write runs into the
+    // unused stack slots of p and i above it, as in the original. See the fragment63_319010 note.
+    f32 pos;
+
+    p = (f32 *)((u8 *)arg0 + 0x40);
+    for (i = 0; i != 8; i++, p += 6) {
+        if (p[1] < 0.0f) {
+            p[1] = 0.0f;
+            p[4] *= -1.2f;
+            p[3] *= 0.3f;
+            p[5] *= 0.3f;
+            if (p[4] > 5.0f) {
+                func_87C037C0((u8 *)D_87E1EC88 + 0x10D8, *(void **)(*(u8 **)((u8 *)D_87E1EC88 + 0xC) + 0xC));
+                func_87C03B60((u8 *)D_87E1EC88 + 0x10D8, p, &pos);
+                func_8002781C(0x8F01, ((u8 *)D_87E1EC88)[2], &pos);
+            }
+        }
+        if (*(s32 *)((u8 *)D_87E1EC88 + 4) < 60) {
+            if (p[0] < -500.0f) {
+                p[0] = -500.0f;
+                p[3] *= -0.4f;
+            }
+            if (p[0] > 2700.0f) {
+                p[0] = 2700.0f;
+                p[3] *= -0.4f;
+            }
+            if (p[2] < -1600.0f) {
+                p[2] = -1600.0f;
+                p[5] *= -0.4f;
+            }
+            if (p[2] > 500.0f) {
+                p[2] = 500.0f;
+                p[5] *= -0.4f;
+            }
+        }
+    }
+}
 
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 extern void func_80035A10(f32 *);
