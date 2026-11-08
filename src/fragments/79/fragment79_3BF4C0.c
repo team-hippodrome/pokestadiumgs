@@ -957,7 +957,39 @@ void BattlePlan_ScoreCurse(u8 *plan, u8 side) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BF4C0/func_84152AC0.s")
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+
+
+
+void func_84152AC0(void *arg0, u8 arg1) {
+    u8 chance;
+    u8 *own;
+    u8 *other;
+    s32 base;
+    s32 amount;
+    void *table;
+    own = func_84154B64(arg1);
+    other = func_84154B64((1 - (u32)arg1) & 0xFF);
+    base = (s32)(u32)arg0 + 4;
+    chance = 0xFF >> own[0x21];
+    *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = chance;
+    table = func_8414A3A0(arg1);
+    amount = *(u8 *)((u8 *)table + 0x37) * func_8414A2AC() * chance / 255;
+    if (*(u8 *)(other + 0x17) & 0x10) ((u32 *)(u32)base)[(u32)arg1 + 13] += amount;
+    if (*(u16 *)(other + 0x26) & 0x18) {
+        ((u32 *)(u32)base)[(u32)arg1 + 13] += amount >> 1;
+        if (*(u8 *)(other + 0x19) & 1) ((u32 *)(u32)base)[(u32)arg1 + 13] += amount;
+    }
+    if (*(u8 *)(other + 0x15) & 3) ((u32 *)(u32)base)[(u32)arg1 + 13] += amount;
+    if (*(u8 *)(other + 0x15) & 0x10) {
+        // FAKE: the constant branch changes the a1/a2 register assignment of the
+        // bump; without it the differ scores 65.
+        if (1) { ((u32 *)(u32)base)[(u32)arg1 + 13] += amount; }
+    }
+    *(u8 *)(u32)base |= 2;
+}
 
 extern u8 func_8414A2AC(void);
 extern void * func_8414A3A0(u8);
@@ -1334,5 +1366,319 @@ void func_84153D94(void *arg0, u8 arg1)
   }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BF4C0/func_84153E28.s")
+extern u8 func_80062D20(u8 arg0);
+extern u8 func_80062F2C(u8 arg0);
+extern u8 func_84154B24(void);
+extern void func_84152AC0(void *, u8);
+
+
+void func_84153E28(void *arg0, u8 arg1) {
+    s32 unused; // FAKE: unused; without it the byte locals move to 0x2e/0x2f.
+    u8 selected_move;
+    u8 roll;
+
+    selected_move = *(u8 *)((u8 *)arg0 + arg1 + 6);
+    roll = func_80062F2C(selected_move);
+    if (selected_move == 0)
+        return;
+    if (func_84154B24() == arg1) {
+        do {
+            switch (func_80062D20(selected_move)) {
+            case 1:
+            BattlePlan_ScoreSleep(arg0, arg1, 0xFF);
+                break;
+            case 33:
+            case 66:
+            BattlePlan_ScorePoison(arg0, arg1, selected_move, 0xFF);
+                break;
+            case 2:
+            case 77:
+            BattlePlan_ScorePoison(arg0, arg1, selected_move, roll);
+                break;
+            case 4:
+            case 108:
+            case 125:
+            BattlePlan_ScoreBurn(arg0, arg1, selected_move, roll);
+                break;
+            case 5:
+            BattlePlan_ScoreFreeze(arg0, arg1, selected_move, roll);
+                break;
+            case 67:
+            BattlePlan_ScoreParalysis(arg0, arg1, selected_move, 0xFF);
+                break;
+            case 6:
+            case 152:
+            BattlePlan_ScoreParalysis(arg0, arg1, selected_move, roll);
+                break;
+            case 10:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 0, 1);
+                break;
+            case 50:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 0, 2);
+                break;
+            case 139:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 0, 2);
+                break;
+            case 11:
+            case 145:
+            case 156:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 1, 1);
+                break;
+            case 51:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 1, 2);
+                break;
+            case 138:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 1, 2);
+                break;
+            case 12:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 2, 1);
+                break;
+            case 52:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 2, 2);
+                break;
+            case 13:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 3, 1);
+                break;
+            case 53:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 3, 2);
+                break;
+            case 14:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 4, 1);
+                break;
+            case 54:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 4, 2);
+                break;
+            case 15:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 5, 1);
+                break;
+            case 55:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 5, 2);
+                break;
+            case 16:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 6, 1);
+                break;
+            case 56:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 6, 2);
+                break;
+            case 140:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 0, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 1, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 2, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 3, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 4, 1);
+                break;
+            case 18:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 0, 1);
+                break;
+            case 58:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 0, 2);
+                break;
+            case 68:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 0, 1);
+                break;
+            case 19:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 1, 1);
+                break;
+            case 59:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 1, 2);
+                break;
+            case 69:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 1, 1);
+                break;
+            case 20:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 2, 1);
+                break;
+            case 60:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 2, 2);
+                break;
+            case 70:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 2, 1);
+                break;
+            case 21:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 3, 1);
+                break;
+            case 61:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 3, 2);
+                break;
+            case 71:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 3, 1);
+                break;
+            case 22:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 4, 1);
+                break;
+            case 62:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 4, 2);
+                break;
+            case 72:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 4, 1);
+                break;
+            case 23:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 5, 1);
+                break;
+            case 63:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 5, 2);
+                break;
+            case 73:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 5, 1);
+                break;
+            case 24:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 6, 1);
+                break;
+            case 64:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 6, 2);
+                break;
+            case 74:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 6, 1);
+                break;
+            case 25:
+            BattlePlan_ScoreHaze(arg0, arg1);
+                break;
+            case 27:
+            BattlePlan_AddRampageBonus(arg0, arg1);
+                break;
+            case 28:
+            func_8415132C(arg0, arg1);
+                break;
+            case 30:
+            BattlePlan_AddConversionBonus(arg0, arg1);
+                break;
+            case 141:
+            BattlePlan_AddFlinchBonus(arg0, arg1, 0xFF);
+                break;
+            case 31:
+            case 146:
+            BattlePlan_AddFlinchBonus(arg0, arg1, roll);
+                break;
+            case 32:
+            case 132:
+            case 133:
+            case 134:
+            func_8415178C(arg0, arg1, selected_move);
+                break;
+            case 35:
+            func_84151838(arg0, arg1);
+                break;
+            case 36:
+            func_841518D0(arg0, arg1, roll);
+                break;
+            case 42:
+            func_84151940(arg0, arg1);
+                break;
+            case 46:
+            func_84151A5C(arg0, arg1);
+                break;
+            case 47:
+            func_84151AF4(arg0, arg1);
+                break;
+            case 49:
+            func_84151B8C((s32)arg0, arg1, 0xFF);
+                break;
+            case 76:
+            func_84151B8C((s32)arg0, arg1, roll);
+                break;
+            case 57:
+            func_84151CD8(arg0, arg1);
+                break;
+            case 65:
+            func_84151D3C(arg0, arg1);
+                break;
+            case 79:
+            func_84151DD4(arg0, arg1);
+                break;
+            case 82:
+            BattlePlan_AddMimicBonus(arg0, arg1);
+                break;
+            case 83:
+            func_84151F20(arg0, arg1);
+                break;
+            case 84:
+            BattlePlan_AddLeechSeedBonus(arg0, arg1);
+                break;
+            case 86:
+            func_84152088(arg0, arg1);
+                break;
+            case 90:
+            func_84152140(arg0, arg1);
+                break;
+            case 93:
+            func_8415220C(arg0, arg1);
+                break;
+            case 94:
+            func_84152308(arg0, arg1);
+                break;
+            case 98:
+            func_841523BC(arg0, arg1);
+                break;
+            case 100:
+            func_84152408(arg0, arg1);
+                break;
+            case 102:
+            BattlePlan_AddHealBellBonus(arg0, arg1);
+                break;
+            case 105:
+            BattlePlan_AddStealableItemBonus(arg0, arg1);
+                break;
+            case 97:
+            func_841526CC(arg0, arg1);
+                break;
+            case 106:
+            func_84152764(arg0, arg1);
+                break;
+            case 107:
+            func_841528C4(arg0, arg1);
+                break;
+            case 109:
+            BattlePlan_ScoreCurse(arg0, arg1);
+                break;
+            case 111:
+            func_84152AC0(arg0, arg1);
+                break;
+            case 112:
+            func_84152C34(arg0, arg1);
+                break;
+            case 113:
+            BattlePlan_AddHitObstacleBonus(arg0, arg1);
+                break;
+            case 114:
+            BattlePlan_AddPerishSongBonus(arg0, arg1);
+                break;
+            case 115:
+            BattlePlan_AddSandstormBonus(arg0, arg1);
+                break;
+            case 116:
+            BattlePlan_ScoreEndure(arg0, arg1);
+                break;
+            case 118:
+            func_84153304(arg0, arg1, roll);
+                break;
+            case 120:
+            func_8415335C(arg0, arg1);
+                break;
+            case 124:
+            func_84153454(arg0, arg1);
+                break;
+            case 127:
+            BattlePlan_AddBatonPassBonus(arg0, arg1);
+                break;
+            case 129:
+            BattlePlan_AddConditionCountBonus(arg0, arg1);
+                break;
+            case 136:
+            BattlePlan_AddRainDanceBonus(arg0, arg1);
+                break;
+            case 137:
+            BattlePlan_AddSunnyDayBonus(arg0, arg1);
+                break;
+            case 142:
+            func_84153A64(arg0, arg1);
+                break;
+            case 143:
+            BattlePlan_AddPsychUpBonus(arg0, arg1);
+                break;
+            case 148:
+            func_84153D94(arg0, arg1);
+            }
+        } while (0);
+    }
+}
 #endif

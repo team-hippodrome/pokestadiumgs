@@ -32,12 +32,111 @@ void func_8411DCCC(u8 *arg0, f32 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38D510/func_8411DD8C.s")
+extern u8 *D_841911E0;
+extern s32 D_84183AB0;
+extern s32 func_8003C9B8();
+extern void Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
+
+// Old-style (K&R) definition: in the retail build func_8411E084 calls
+// func_8411DD8C() with no arguments (the retail object does not set a0/a1
+// there; //!bug), so the declaration below and this definition cannot be
+// prototypes with parameters.
+
+
+void func_8411DD8C(arg0, arg1)
+void *arg0;
+void *arg1;
+{
+    s32 sp24;
+
+    sp24 = D_84183AB0;
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0x5F) {
+        Vec3f_SetComponentsDuplicate(arg1, *(f32 *)(D_841911E0 + 0x50), *(f32 *)(D_841911E0 + 0x54), *(f32 *)(D_841911E0 + 0x58));
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0x33) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0x49) {
+        func_8003C9B8(arg0, 7, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0x57) {
+        func_8003C9B8(arg0, 7, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0x91) {
+        func_8003C9B8(arg0, 7, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xB8) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xD9) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xDA) {
+        func_8003C9B8(arg0, 2, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xE8) {
+        func_8003C9B8(arg0, 8, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xE9) {
+        func_8003C9B8(arg0, 4, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xE2) {
+        func_8003C9B8(arg0, 1, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xF5) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xB2) {
+        func_8003C9B8(arg0, 0xA, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xE9) {
+        func_8003C9B8(arg0, 4, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xF7) {
+        func_8003C9B8(arg0, 3, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xF9) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xFA) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if ((*(s16 *)((u8 *)arg0 + 0x1A)) == 0xD0) {
+        func_8003C9B8(arg0, 3, arg1);
+        return;
+    }
+    if (func_8411DC80((*(s16 *)((u8 *)arg0 + 0x1A)), &sp24, 4) != 0) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    if (func_8003C9B8(arg0, 0x64, arg1) == 0) {
+        func_8003C9B8(arg0, 9, arg1);
+        return;
+    }
+    func_8003C9B8(arg0, 0x64, arg1);
+}
 
 #ifdef CC_CHECK
 extern void func_8411DD8C(void *, void *);
 #else
-extern void func_8411DD8C(void);
+extern void func_8411DD8C();
 #endif
 #ifdef CC_CHECK
 void func_8411E084(void *arg0, void *arg1) {

@@ -240,7 +240,55 @@ void func_841055D8(u8 *arg0) {
     func_84105CE8();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3749B0/func_84105630.s")
+extern u32 Gfx_AllocDisplayList(s32);
+extern void func_84103394(void *);
+extern void func_84103478(u8 *);
+extern void func_84105CF0(void);
+extern void func_8410933C(u8 *);
+extern u8 *D_80094908;
+extern Gfx *D_800D0510;
+extern Gfx D_8416A170[];
+extern Gfx D_8416A1C0[];
+extern s32 D_84190070;
+extern s32 D_84190074;
+
+
+
+void func_84105630(u8 *arg0, s32 arg1) {
+    // Active scene transform state. Geo_NodePerspective reads the same
+    // projection (0x24, 0x28) and camera (0x60) fields.
+    //@src/340C0.c
+    u8 *scene = D_80094908;
+
+    switch (arg1) {
+    case 0:
+        D_84190074 = Gfx_AllocDisplayList(0x5BE0);
+        D_84190070 = 0;
+        break;
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        func_8410933C(arg0);
+        gSPPerspNormalize(D_800D0510++, *(u16 *)(scene + 0x28));
+        gSPMatrix(D_800D0510++, *(u32 *)(scene + 0x24), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+        gSPMatrix(D_800D0510++, *(u32 *)(scene + 0x60), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+        gSPDisplayList(D_800D0510++, D_8416A1C0);
+        func_84103394(scene);
+        gSPDisplayList(D_800D0510++, D_8416A170);
+        // Projection matrix occupies the last 0x60 bytes of the 0x5BE0-byte buffer.
+        guOrtho((Mtx *)(D_84190074 + 0x5B80), 0.0f, 320.0f, 0.0f, 240.0f, -2.0f, 2.0f, 1.0f);
+        gSPMatrix(D_800D0510++, (D_84190074 + 0x5B80) & 0x1FFFFFFF,
+                  G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+        func_84103478(arg0);
+        gSPDisplayList(D_800D0510++, D_8416A170);
+        break;
+    case 4:
+        func_84105CF0();
+        break;
+    }
+}
 
 extern void func_84105120(void);
 extern void func_841055D8(u8 *);

@@ -962,7 +962,28 @@ void func_84121CAC(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84121DE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_8412230C.s")
+// Three-angle rotation table copied from the fragment data blob; the retail
+// function copies all six bytes to a stack local before the record loop.
+typedef struct AfterimageRotation { s16 v[3]; } AfterimageRotation;
+extern AfterimageRotation D_84183CDC;
+extern void ModelAnim_SetFrame(u8 *arg0, s16 value);
+
+
+void func_8412230C(u8 *arg0) {
+    s32 i;
+    AfterimageRotation rotations = D_84183CDC;
+    for (i = 0; i < 2; i++) {
+        *(s16 *)(arg0 + i * 0x170 + 0x444) = 0;
+        *(s16 *)(arg0 + i * 0x170 + 0x442) = rotations.v[i];
+        *(u8 *)(arg0 + i * 0x170 + 0x2F5) = 0;
+        *(u8 *)(arg0 + i * 0x170 + 0x2D9) |= 1;
+        func_841202D0((f32 *)(arg0 + i * 0x170 + 0x2FC), (f32 *)(arg0 + 0x24));
+        func_841202F0((s16 *)(arg0 + i * 0x170 + 0x2F6), (s16 *)(arg0 + 0x1E));
+        Vec3f_SetComponentsDuplicate((f32 *)(arg0 + i * 0x170 + 0x308), 1.0f, 1.0f, 1.0f);
+        ModelAnim_SetFrame((f32 *)(arg0 + i * 0x170 + 0x2D8), *(s32 *)(arg0 + 0x48) >> 16);
+        func_8003F2C4(*(u8 **)(arg0 + 0x5C0), (f32 *)(arg0 + i * 0x170 + 0x2D8), *(s16 *)(arg0 + 0x40));
+    }
+}
 
 extern f32 D_84183CF0[];
 extern f32 D_84183CE4[];
