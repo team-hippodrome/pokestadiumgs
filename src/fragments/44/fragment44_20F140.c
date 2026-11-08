@@ -617,7 +617,205 @@ void func_8AF22594(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF22608.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF233B4.s")
+extern void func_8004C8C0(s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_800476A0(u8 *, s32);
+extern void func_800476FC(u8 *, s32);
+extern void func_80047738(s32, s32, s32, s32);
+extern void func_8AC07A8C(void);
+extern s32 func_8AF220E8(void);
+extern u8 *func_8AC06D8C(s32, s32);
+extern void func_8AC05E40(s32, s32, u8 *);
+extern void func_8AC06400(u8 *, u8 *);
+extern void func_8AC02C80(s32, s32, s32, u8 *);
+extern void func_8004E308(u8 *, void *, s32);
+extern s32 func_8004E0F0(s32, s16, s32);
+extern void func_8AF22608(s32);
+extern void func_8AC0080C(s32);
+extern void func_8AC006F4(void);
+extern s32 func_8AF2228C(void);
+extern s32 func_8AF22384(void);
+extern void func_80054488(s32, u8);
+extern void func_8AF219B4(void);
+extern void func_8AF013D8(void);
+extern s32 D_8AF26564;
+extern s16 D_8AF3A084;
+extern s16 D_8AF3A170;
+extern u8 D_8AF3A050[];
+extern u8 D_8AF3A0C8[];
+extern u8 D_8AF3A0F8[];
+extern u8 D_8AF3A1A8[];
+extern u8 D_8AF3A220[];
+extern u8 D_8AF3A298[];
+extern u8 D_8AF3A310[];
+extern u8 *D_8AF3A098;
+extern u8 *D_8AF3A09C;
+extern u8 *D_8AF3A0A0;
+extern u8 *D_8AF3A0A4;
+extern u8 *D_8AF3A0A8;
+extern u8 *D_8AF3A0AC;
+extern u8 *D_8AF3A0B8;
+extern u8 *D_8AF3A0BC;
+extern u8 *D_8AF3A0C0;
+extern u8 *D_8AF3A124;
+extern u8 *D_8AF3A128;
+extern u8 *D_8AF3A12C;
+extern u8 *D_8AF3A130;
+extern u8 *D_8AF3A134;
+extern u8 *D_8AF3A138;
+extern u8 *D_8AF3A13C;
+extern u8 *D_8AF3A150;
+extern u8 *D_8AF3A154;
+extern u8 *D_8AF3A164;
+extern u8 *D_8AF3A168;
+
+// Setup for window 31, opened by the fragment 44 menu dispatcher (case 31 in
+// fragment44_1EE290.c). Loads this window's assets from the archive returned by
+// func_8AF220E8 by four-character tag. For each of the D_8AF3A19C 0x44-byte records
+// at D_8AF3A198, it resolves the three tags stored at +4/+8/+0xC and the per-index
+// 'ff_N'/'fb_N' assets, registers func_8AF219B4 on the third asset, and caches
+// three func_8004E0F0 lookups for the record's halfword id. The starting record
+// D_8AF3A082 comes from the caller's object (kind 1), D_8AF3A084 (when D_8AF26564
+// is set) or 0.
+//@src/fragments/44/fragment44_1EE290.c
+void func_8AF233B4(void) {
+    s32 archive;
+    u8 *entry;
+    s32 i;
+    s16 slot;
+    void (*callback)(void);
+    s16 result;
+
+    D_8AF3A148 = 0;
+    func_8004C8C0(147);
+    func_8AC07A8C();
+    func_8004C8C0(187);
+    func_8004C8C0(50);
+    func_800476A0(D_8AF3A050, 3);
+    func_800476FC(D_8AF3A050, 3);
+    func_80047738(0, func_8004C990(187, 0), 0, 0);
+    func_80047738(1, func_8004C990(187, 1), 0, 0);
+    func_80047738(2, func_8004C990(50, 1), 0, 0);
+    archive = func_8AF220E8();
+    D_8AF3A08C = func_8AC06D8C(archive, 'msg1');
+    *(s16 *)(D_8AF3A08C + 0x30) = 56;
+    D_8AF3A090 = func_8AC06D8C(archive, 'msg2');
+    D_8AF3A094 = func_8AC06D8C(archive, 'name');
+    D_8AF3A098 = func_8AC06D8C(archive, 'endd');
+    D_8AF3A09C = func_8AC06D8C(archive, 'true');
+    D_8AF3A0A0 = func_8AC06D8C(archive, 'shob');
+    D_8AF3A0A4 = func_8AC06D8C(archive, 'yes1');
+    D_8AF3A0A8 = func_8AC06D8C(archive, 'no01');
+    D_8AF3A0AC = func_8AC06D8C(archive, 'no02');
+    D_8AF3A128 = func_8AC06D8C(archive, 'mes0');
+    D_8AF3A12C = func_8AC06D8C(archive, 'mes1');
+    D_8AF3A130 = func_8AC06D8C(archive, 'mes2');
+    D_8AF3A13C = func_8AC06D8C(archive, 'Abtn');
+    D_8AF3A134 = func_8AC06D8C(archive, 'AAAA');
+    D_8AF3A138 = func_8AC06D8C(archive, 'aaaa');
+    func_8AC05E40(archive, 'Abtn', D_8AF3A220);
+    func_8AC06400(D_8AF3A220, D_8AF3A13C);
+    func_8AC05E40(archive, 'AAAA', D_8AF3A298);
+    func_8AC06400(D_8AF3A298, D_8AF3A134);
+    func_8AC05E40(archive, 'aaaa', D_8AF3A310);
+    func_8AC06400(D_8AF3A310, D_8AF3A138);
+    D_8AF3A0B0 = (u16 *)func_8AC06D8C(archive, 'nmST');
+    D_8AF3A0B4 = (u16 *)func_8AC06D8C(archive, 'nmRV');
+    D_8AF3A0B8 = func_8AC06D8C(archive, 'swin');
+    D_8AF3A0BC = func_8AC06D8C(archive, 'stme');
+    D_8AF3A0C0 = func_8AC06D8C(archive, 'strt');
+    D_8AF3A150 = func_8AC06D8C(archive, 'joba');
+    D_8AF3A124 = func_8AC06D8C(archive, 'wind');
+    D_8AF3A154 = func_8AC06D8C(archive, 'abtn');
+    func_8AC05E40(archive, 'abtn', D_8AF3A1A8);
+    func_8AC06400(D_8AF3A1A8, D_8AF3A154);
+    func_8AC02C80(archive, 'r_l_', 'r_r_', D_8AF3A0C8);
+    func_8AC02C80(archive, 'sanl', 'sanr', D_8AF3A0F8);
+    entry = D_8AF3A198;
+    callback = func_8AF219B4;
+    for (i = 0; i < D_8AF3A19C; i++) {
+        *(u8 **)(entry + 0x20) = func_8AC06D8C(archive, *(s32 *)(entry + 4));
+        *(u8 **)(entry + 0x24) = func_8AC06D8C(archive, *(s32 *)(entry + 8));
+        *(u8 **)(entry + 0x28) = func_8AC06D8C(archive, *(s32 *)(entry + 0xC));
+        *(u8 **)(entry + 0x2C) = func_8AC06D8C(archive, i + 'ff_1');
+        *(u8 **)(entry + 0x30) = func_8AC06D8C(archive, i + 'fb_1');
+        func_8004E308(*(u8 **)(entry + 0x28), callback, i);
+        *(s32 *)(entry + 0x34) = func_8004E0F0(0, *(s16 *)entry, 0);
+        *(s32 *)(entry + 0x38) = func_8004E0F0(0, *(s16 *)entry, 1);
+        *(s32 *)(entry + 0x3C) = func_8004E0F0(0, *(s16 *)entry, 2);
+        entry += 0x44;
+    }
+    D_8AF3A160 = func_8AC06D8C(archive, 'yub1');
+    D_8AF3A164 = func_8AC06D8C(archive, 'yub2');
+    D_8AF3A168 = func_8AC06D8C(archive, 'yub3');
+    func_8004E308(D_8AF3A160, func_8AF013D8, 0);
+    func_8004E308(D_8AF3A164, func_8AF013D8, 0);
+    func_8004E308(D_8AF3A168, func_8AF013D8, 0);
+    if (D_8AF2BA6E == 1) {
+        D_8AF3A082 = D_8AF2BDD8[1];
+        func_8AF22608(0);
+        func_8AC0080C(8);
+    } else if (D_8AF26564 != 0) {
+        D_8AF3A082 = D_8AF3A084;
+        func_8AF22608(0);
+        func_8AC0080C(4);
+        func_8AC006F4();
+        func_8AC00738();
+    } else {
+        D_8AF3A082 = 0;
+        func_8AF22608(0);
+    }
+    D_8AF3A084 = 0;
+    if ((D_8AF2BA6E == 1) && (D_8AF2BDD8[2] != 0)) {
+        D_8AF2BA6E = 0;
+    }
+    if (D_8AF2BA6E == 1) {
+        D_8AF3A174 = 3;
+        D_8AF3A176 = 7;
+        switch ((*(u8 **)(D_8AF2BDD8 + 4))[0x9C6]) {
+            case 0:
+            case 4:
+                if (func_8AF2228C() != 0) {
+                    D_8AF3A174 = 1;
+                    if (func_8AF22384() != 0) {
+                        D_8AF3A176 = 4;
+                    } else {
+                        D_8AF3A176 = 5;
+                    }
+                } else {
+                    D_8AF3A174 = 2;
+                    D_8AF3A176 = 6;
+                }
+                func_8AF22608(4);
+                break;
+            default:
+            case 1:
+            case 2:
+            case 3:
+                func_8AF22608(6);
+                break;
+        }
+        slot = func_8AF21C04();
+        result = func_80054410(slot);
+        if (result != 1) {
+            if ((result != 2) && (D_8AF3A174 == 1)) {
+                D_8AF3A148 = 1;
+                D_8AF3A14C = slot;
+            }
+            func_80054488(slot, ((u8 *)&D_8AF3A174)[1]);
+            func_80051D64(19, 0);
+            func_80054E48(3);
+        }
+    } else if (D_8AF2BA6E == 1) {
+        // Unreachable: the preceding test already took every D_8AF2BA6E == 1 path.
+        // It is kept because the original code tests and stores it.
+        D_8AF2BA6E = 0;
+    }
+    func_8AF22594();
+    func_8AF21D14();
+    func_8AF21EE0();
+    D_8AF3A170 = 0;
+}
 
 extern void func_8AC006B8(s32, s32, s32, s32);
 void func_8AF23B38(void) {
