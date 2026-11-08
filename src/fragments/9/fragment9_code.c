@@ -457,7 +457,82 @@ void func_8FB02108(unk_func_8FB02108 *state) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB021F8.s")
+extern void func_80055A74(s32);
+extern void *func_8004C874(s32, s32);
+extern void func_80051864(s32, s32);
+extern s32 func_80055B14(void *, s32);
+extern s32 func_800535D4(s32, s32, void *, u8 *, u16);
+extern void func_80051D64(s32, s32);
+extern s32 func_80055028(void);
+// _bzero comes from global.h (include/229E0.h).
+
+// Shapes this function needs to compile to the retail code:
+//  - The zero-fill of the unused tail slots is an indexed `for (; count < 6; count++)`
+//    loop over the entries array. IDO strength-reduces the `count * 0x3C` index into
+//    the single temp `sll/subu/sll/addu` chain the target has; a pointer do/while
+//    instead emits a 60 constant (`multu`) and does not match.
+//  - `count` is dead after the fill (it is a local, and IDO keeps the increment), which
+//    is exactly what retail does.
+//  - The `jr ra`/`nop` pair after this function in retail is an unnamed 8-byte
+//    padding stub; no C is needed for it.
+
+
+void func_8FB021F8(unk_func_8FB02108 *state) {
+    s32 count;
+    s32 slot;
+    s32 i;
+    u8 *msg;
+    struct { u8 header[0x10]; u8 entries[6][0x3C]; u8 tail[8]; } buffer;
+    u8 padMid[0xC];
+    struct { u8 header[0x10]; u8 entries[6][0x3C]; u8 tail[8]; } blank;
+    s32 offset;
+    u8 *base;
+    u8 *name;
+    u8 *row;
+    u8 padBot[0x4];
+
+    slot = 0;
+    func_80055A74(state->index);
+    offset = 0;
+    base = (u8 *)state;
+    name = (u8 *)state + 0x4C;
+    row = (u8 *)state;
+    for (; offset < 0x1540; offset += 0x220, base += 0x220, name += 0x220, row += 0x220) {
+        count = 0;
+        msg = name;
+        if (*(s8 *)(base + 0x4C) == 0) {
+            msg = func_8004C874(0x2A, 0x56);
+        }
+        _bzero(&buffer, 0x180);
+        for (i = 0; i != 0x210; i += 0x58) {
+            if (*(u8 *)(row + i + 0x5C) != 0) {
+                func_80051864((s32)(row + i + 0x5C),
+                              (s32)((u8 *)&buffer.entries[count++][0]));
+            }
+        }
+        if (count != 0) {
+            if (count < 6) {
+                if (*(s32 *)((u8 *)state + state->index * 4 + 0x18) == 0) {
+                    for (; count < 6; count++) {
+                        _bzero(&buffer.entries[count][0], 0x3C);
+                    }
+                } else {
+                    continue;
+                }
+            }
+            func_80055B14(&buffer, slot);
+            func_800535D4(0x10, slot, msg, msg, *(u16 *)(base + 0x58));
+            func_80051D64(0x10, slot);
+            slot++;
+        }
+    }
+    for (; slot < 10; slot++) {
+        _bzero(&blank, 0x180);
+        func_80055B14(&blank, slot);
+        func_80051D64(0x10, slot);
+    }
+    func_80055028();
+}
 
 extern s32 func_8006B7FC(s32);
 struct MsgState *func_8FB02418(s32 arg0)
