@@ -197,7 +197,64 @@ s32 func_8850130C(u8 *arg0, s32 arg1, s32 arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501380.s")
+extern s8 D_8850E361;
+extern s8 D_88518CC1;
+extern u8 D_8850D6D8;
+extern u8 D_8850E368;
+extern void _bcopy(void *, void *, s32);
+u8 *func_88500CF0(u8 arg0);
+
+typedef struct {
+    u32 pad00[7];
+    u16 pad1C;
+    u8 flags;
+    u8 pad1F[7];
+    u16 kind;
+    u8 pad28[0x30];
+} Record;
+
+
+
+s32 func_88501380(void) {
+    s32 result = 0;
+    u32 i;
+    u32 j;
+    u8 counts[2];
+    Record blocks[2][6];
+
+    if (D_8850E361 == 0 || D_88518CC1 == 0) {
+        for (i = 0; i < 2; i++) {
+            counts[i] = ((u8 *)&D_8850D6D8)[i * 0xA960 + 0xC8C];
+            _bcopy((u8 *)&D_8850E368 + i * 0xA960, blocks[i],
+                   counts[i] * sizeof(Record));
+        }
+        for (i = 0; i < 2; i++) {
+            if (((s8 *)&D_8850D6D8)[i * 0xA960 + 0xC89] == 0) {
+                blocks[i][((s8 *)&D_8850D6D8)[i * 0xA960 + 0xC88]] =
+                    *(Record *)func_88500CF0(1 - i);
+            }
+        }
+        for (i = 0; i != 2; i++) {
+            Record *rec;
+            if (!result) {
+                if (counts[i] == 0) {
+                    result = 1;
+                }
+                rec = blocks[i];
+                j = 0;
+                for (; j < counts[i]; j++, rec++) {
+                    if (!(rec->flags & 1) && rec->kind != 0) {
+                        break;
+                    }
+                }
+                if (j == counts[i]) {
+                    result = 1;
+                }
+            }
+        }
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501570.s")
 
