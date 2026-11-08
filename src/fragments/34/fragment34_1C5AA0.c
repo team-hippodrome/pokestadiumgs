@@ -1063,7 +1063,71 @@ void func_8850BACC(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850BDE8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850C514.s")
+extern Gfx *D_800D0510;
+extern u8 D_8850D380[];
+extern s32 D_8852304C;
+extern s32 func_8004C990(s32, s32);
+
+
+void func_8850C514(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5)
+{
+  u16 *tex;
+  s16 sp72;
+  s16 sp70;
+  f32 step;
+  s32 sp68;
+  s16 sp66;
+  s16 sp64;
+  s16 sp62;
+  tex = (u16 *) func_8004C990(0x149, 2);
+  sp72 = (tex[0] * arg2) + (((tex[0] * arg2) > 0.0f) ? (0.5f) : (-0.5f));
+  sp70 = (tex[1] * arg2) + (((tex[1] * arg2) > 0.0f) ? (0.5f) : (-0.5f));
+  sp66 = (((f32) arg3) * arg2) + (((((f32) arg3) * arg2) > 0.0f) ? (0.5f) : (-0.5f));
+  sp64 = (((f32) arg4) * arg2) + (((((f32) arg4) * arg2) > 0.0f) ? (0.5f) : (-0.5f));
+  sp62 = (((f32) arg5) * arg2) + (((((f32) arg5) * arg2) > 0.0f) ? (0.5f) : (-0.5f));
+  step = 1024.0f / arg2;
+  sp68 = step + ((step > 0.0f) ? (0.5f) : (-0.5f));
+  step = (-1024.0f) / arg2;
+  step = (0, ((step > 0.0f) ? (0.5f) : (-0.5f)));
+  {
+    Gfx *_g = (Gfx *) (D_800D0510++);
+    _g->words.w1 = (_g->words.w0 = 0xDE000000, (unsigned int) D_8850D380);
+  }
+  func_8004D1FC(tex);
+  {
+    Gfx *_g = D_800D0510++;
+    _g->words.w0 = 0xFD100000;
+    _g->words.w1 = *((u32 *) (((u8 *) ((u32) D_8852304C)) + 8));
+  }
+  {
+    Gfx *_g = D_800D0510++;
+    _g->words.w0 = 0xF5100100;
+    _g->words.w1 = 0x07014451;
+  }
+  {
+    Gfx *_g = D_800D0510++;
+    _g->words.w0 = 0xE6000000;
+    _g->words.w1 = 0;
+  }
+  {
+    Gfx *_g = D_800D0510++;
+    _g->words.w0 = 0xF3000000;
+    _g->words.w1 = 0x073FF100;
+  }
+  {
+    Gfx *_g = D_800D0510++;
+    _g->words.w0 = 0xE7000000;
+    _g->words.w1 = 0;
+  }
+  gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0x100, 1, 0, 0, 5, 1, 0, 5, 1);
+  {
+    Gfx *_g = D_800D0510++;
+    _g->words.w0 = 0xF2000000;
+    _g->words.w1 = 0x0107C07C;
+  }
+  GfxRect_DrawTextured(arg0 + sp66, arg1 + sp62, sp72, sp70, 0, 0, (s16) sp68, (s16) sp68, 0x100000);
+  GfxRect_DrawTextured(arg0 + sp64, arg1 + sp62, sp72, sp70, ((tex[0] - 1) << 5), 0, ((f32) step) + ((-1024.0f) / arg2), (s16) sp68, 0x100000);
+}
 
 s32 func_800071A4(s32, s32, s32, s32, s32);
 extern void func_88508490();
