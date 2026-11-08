@@ -222,7 +222,79 @@ void func_84154DF8(u8 *arg0, u8 arg1, u8 arg2) {
     *(s32 *)(arg0 + 0x48) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154FC4.s")
+extern u8 *D_841951F8[];
+extern u8 D_8419E780[];
+extern u8 func_8006397C(u8 arg0);
+extern u8 func_800639C0(u8 arg0);
+
+
+
+s32 func_84154FC4(u8 *arg0, u8 arg1, u8 arg2) {
+    u8 *side;
+    u8 *state;
+
+    state = D_841951F8[arg1] + arg2 * 0x58;
+    side = D_8419E780 + (u32)arg1 * 0xCC + (u32)arg2 * 0x14;
+
+    arg0[0] = state[0x18];
+    arg0[1] = side[0x5C];
+    side += 0x54;
+    state += 0x18;
+    *(u16 *)(arg0 + 0x26) = state[0x24];
+    arg0[2] = func_8006397C(state[0]);
+    arg0[3] = func_800639C0(state[0]);
+    arg0[4] = side[0];
+    arg0[5] = side[1];
+    arg0[6] = side[2];
+    arg0[7] = side[3];
+    arg0[8] = side[4];
+    arg0[9] = side[5];
+    arg0[0xA] = side[6];
+    arg0[0xB] = side[7];
+    arg0[0xC] = state[0x1D];
+    *(u16 *)(arg0 + 0x28) = *(u16 *)(state + 0x26);
+    *(u16 *)(arg0 + 0x2A) = *(u16 *)(state + 0x28);
+    *(u16 *)(arg0 + 0x2C) = *(u16 *)(side + 0xA);
+    *(u16 *)(arg0 + 0x2E) = *(u16 *)(side + 0xC);
+    *(u16 *)(arg0 + 0x30) = *(u16 *)(side + 0xE);
+    *(u16 *)(arg0 + 0x32) = *(u16 *)(side + 0x10);
+    *(u16 *)(arg0 + 0x34) = *(u16 *)(side + 0x12);
+    *(u16 *)(arg0 + 0x36) = *(u16 *)(side + 0xA);
+    *(u16 *)(arg0 + 0x38) = *(u16 *)(side + 0xC);
+    *(u16 *)(arg0 + 0x3A) = *(u16 *)(side + 0xE);
+    *(u16 *)(arg0 + 0x3C) = *(u16 *)(side + 0x10);
+    *(u16 *)(arg0 + 0x3E) = *(u16 *)(side + 0x12);
+    arg0[0xD] = 7;
+    arg0[0xE] = 7;
+    arg0[0xF] = 7;
+    arg0[0x10] = 7;
+    arg0[0x11] = 7;
+    arg0[0x12] = 7;
+    arg0[0x13] = 7;
+    arg0[0x14] = side[9];
+    *(u16 *)(arg0 + 0x40) = *(u16 *)(state + 0x16);
+    *(u16 *)(arg0 + 0x42) = 0;
+    arg0[0x15] = 0;
+    arg0[0x16] = 0;
+    arg0[0x17] = 0;
+    arg0[0x18] = 0;
+    arg0[0x19] = 0;
+    arg0[0x1A] = 0;
+    arg0[0x1B] = 0;
+    arg0[0x1C] = 0;
+    arg0[0x1D] = 0;
+    arg0[0x1E] = 0;
+    arg0[0x1F] = 0;
+    arg0[0x20] = 0;
+    arg0[0x21] = 0;
+    arg0[0x23] = 0;
+    arg0[0x24] = 0;
+    arg0[0x25] = 0;
+    *(u16 *)(arg0 + 0x44) = 0;
+    arg0[0x22] = 0;
+    *(u16 *)(arg0 + 0x46) = 0;
+    *(s32 *)(arg0 + 0x48) = 0;
+}
 
 /* mkdraft:func_841551D4 begin */
 extern u8 *func_84156590(u8, u8);

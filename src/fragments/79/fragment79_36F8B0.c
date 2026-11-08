@@ -702,7 +702,98 @@ void func_8410119C(u8 *arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_841013F4.s")
+typedef struct ParticleVec3f {
+    f32 x, y, z;
+} ParticleVec3f;
+typedef struct ParticleVec3s {
+    s16 x, y, z;
+} ParticleVec3s;
+extern ParticleVec3f *ParticleMath_RotateVec3fY(ParticleVec3f *, ParticleVec3f, ParticleVec3s);
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern u32 func_8411E358(s32 arg0, s32 arg1);
+extern u32 func_8411EE54(u8 *arg0);
+extern s32 func_84100074(u8 *arg0, s32 arg1);
+
+
+
+void func_841013F4(u8 *arg0, s16 arg1) {
+    ParticleVec3f velocity;
+    ParticleVec3f rotated;
+    ParticleVec3s angles;
+    f32 scale;
+    void *obj;
+
+    obj = *(void **)(arg0 + 0x10);
+    velocity.x = 0.0f;
+    velocity.y = 0.0f;
+    velocity.z = *(f32 *)(arg0 + 0x5C);
+    rotated.x = 0.0f;
+    rotated.y = 0.0f;
+    rotated.z = 0.0f;
+    angles.x = *(s16 *)(D_84190194 + 0x1E);
+    angles.y = *(s16 *)(D_84190194 + 0x20);
+    angles.z = *(s16 *)(D_84190194 + 0x22);
+    switch (arg1) {
+    case 0:
+        ParticleMath_RotateVec3fY(&rotated, velocity, angles);
+        break;
+    case 1:
+        angles.y += 0x8000;
+        ParticleMath_RotateVec3fY(&rotated, velocity, angles);
+        break;
+    case 2:
+        angles.y += 0x4000;
+        ParticleMath_RotateVec3fY(&rotated, velocity, angles);
+        break;
+    case 3:
+        angles.y += 0xC000;
+        ParticleMath_RotateVec3fY(&rotated, velocity, angles);
+        break;
+    case 4:
+        rotated.y = velocity.z;
+        break;
+    case 5:
+        rotated.y = -velocity.z;
+        break;
+    case 6:
+        ParticleMath_RotateVec3fY(&rotated, velocity, *(ParticleVec3s *)(arg0 + 0x6A));
+        break;
+    case 7:
+        rotated.x = (*(f32 *)(arg0 + 0x5C) * D_80088E50[(s32)(*(u16 *)(arg0 + 0x6A)) >> 4]) *
+                   D_80087E50[(s32)(*(u16 *)(arg0 + 0x6C)) >> 4];
+        rotated.y = -*(f32 *)(arg0 + 0x5C) * D_80087E50[(s32)(*(u16 *)(arg0 + 0x6A)) >> 4];
+        rotated.z = (*(f32 *)(arg0 + 0x5C) * D_80088E50[(s32)(*(u16 *)(arg0 + 0x6A)) >> 4]) *
+                   D_80088E50[(s32)(*(u16 *)(arg0 + 0x6C)) >> 4];
+        break;
+    case 8:
+        rotated.x = (*(f32 *)(arg0 + 0x5C) * D_80088E50[(s32)(*(u16 *)(arg0 + 0x6A)) >> 4]) *
+                   D_80087E50[(s32)(*(u16 *)(arg0 + 0x6C)) >> 4];
+        rotated.y = -*(f32 *)(arg0 + 0x5C) * D_80087E50[(s32)(*(u16 *)(arg0 + 0x6A)) >> 4];
+        rotated.z = (*(f32 *)(arg0 + 0x5C) * D_80088E50[(s32)(*(u16 *)(arg0 + 0x6A)) >> 4]) *
+                   D_80088E50[(s32)(*(u16 *)(arg0 + 0x6C)) >> 4];
+        break;
+    }
+    if (func_84100074(arg0, 0x400) != 0) {
+        if (*(s32 *)((u8 *)obj + 4) & 8) {
+            scale = func_8411E358(*(s32 *)(arg0 + 8), *(u16 *)(arg0 + 0x68));
+        } else {
+            scale = func_8411EE54(*(u8 **)(arg0 + 8));
+        }
+        rotated.x *= scale * 0.01f;
+        rotated.y *= scale * 0.01f;
+        rotated.z *= scale * 0.01f;
+    }
+    if (arg1 == 8) {
+        *(f32 *)(arg0 + 0x44) = rotated.x;
+        *(f32 *)(arg0 + 0x48) = rotated.y;
+        *(f32 *)(arg0 + 0x4C) = rotated.z;
+        return;
+    }
+    *(f32 *)(arg0 + 0x44) += rotated.x;
+    *(f32 *)(arg0 + 0x48) += rotated.y;
+    *(f32 *)(arg0 + 0x4C) += rotated.z;
+}
 
 /* mkdraft:func_84101888 begin */
 extern s32 ParticleMath_RandomSignedOffsetBySign(u32, s32);

@@ -139,7 +139,35 @@ s32 func_8410A2A8(s32 arg0, s32 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_379450/func_8410A2C8.s")
+typedef struct unk_D_80128C5C {
+    /* 0x0 */ u8 r;
+    /* 0x1 */ u8 g;
+    /* 0x2 */ u8 b;
+    /* 0x3 */ u8 a;
+} unk_D_80128C5C;
+
+extern unk_D_80128C5C D_80128C5C;
+
+
+
+s32 func_8410A2C8(s32 arg0) {
+    u8 alpha;
+    s32 r;
+    s32 g;
+    s32 b;
+    s32 *p = &arg0; // FAKE: forces the narrow-parameter home store `sw a0,0(sp)`; 110 without it
+    u16 v = arg0;
+    r = (v >> 11) & 0x1F;
+    g = (v >> 6) & 0x1F;
+    b = (v >> 1) & 0x1F;
+    alpha = D_80128C5C.a;
+    if (alpha) {
+        r = (((((r * 8) + (r >> 2)) * (0xFF - alpha)) + (D_80128C5C.r * alpha)) / 255) >> 3;
+        g = (((((g * 8) + (g >> 2)) * (0xFF - alpha)) + (D_80128C5C.g * alpha)) / 255) >> 3;
+        b = (((((b * 8) + (b >> 2)) * (0xFF - alpha)) + (D_80128C5C.b * alpha)) / 255) >> 3;
+    }
+    return ((((r << 11) | (g << 6)) | (b << 1)) | 1) & 0xFFFF;
+}
 
 extern s32 D_84190204;
 extern u8 D_800D0510[];

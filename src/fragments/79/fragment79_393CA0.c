@@ -2081,7 +2081,21 @@ void func_84128954(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84128B04.s")
+extern u8 D_841951D1;
+
+
+
+void func_84128B04(void) {
+    switch (D_841951D1) {
+    case 0:
+        return;
+    case 1:
+        break;
+    case 2:
+        break;
+    }
+    D_841951D1 = 0;
+}
 #endif
 
 #ifdef VERSION_US
