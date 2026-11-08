@@ -368,7 +368,47 @@ void func_88000EC0(s8 *arg0, s16 arg1, s32 arg2) {
     }
     arg0[0] = arg1;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_166060/func_88000FC4.s")
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_88000EC0(s8 *, s16, s32);
+
+// Draws the two digits of `first`/`second` as a 2x2 block. func_88000EC0 converts
+// each s16 into `digits`; GfxRect_DrawTextured then draws it at (x, y) in an 8x14
+// cell. Each digit advances x by dx + 8, and on the first iteration the second row
+// is drawn below at y after adding dy + 8.
+//
+// The AND chain on x and the split shifts below are matching-only spellings: they
+// compute the same s16 coordinate as `x` and `digits[n] << 8` (the parameter
+// truncation drops the masked-off bits, and uopt folds the two constant shifts),
+// but they change uopt's temporary-coloring walk so the emitted registers match the
+// retail object. Replacing them with the folded forms was measured to disagree with
+// the retail register assignment even though the instruction sequence is unchanged.
+
+
+void func_88000FC4(s32 x, s32 y, s32 dx, s32 dy, s16 first, s16 second)
+{
+    s8 digits[4];
+    s32 i;
+    s16 values[2];
+
+    values[0] = first;
+    values[1] = second;
+    for (i = 0; i < 2; i++)
+    {
+        func_88000EC0(digits, values[i], 0);
+        if (digits[1] >= 0)
+        {
+            GfxRect_DrawTextured(x, y, 8, 14, (digits[1] << 2) << 6, 0, 0x400, 0x400, 0);
+        }
+        x += dx + 8;
+        GfxRect_DrawTextured(((((x & 0xFFFFFFFFFFFFFFFF) & (0xFFFF ^ 0)) & 0xFFFF) & 0xFFFF) & 0xFFFF, y, 8, 14, (digits[0] << 8) ^ 0, 0, 0x400, 0x400, 0);
+        if (i == 0)
+        {
+            x += dy + 8;
+            GfxRect_DrawTextured(x, y, 8, 14, 0xA00, 0, 0x400, 0x400, 0);
+            x += dy + 8;
+        }
+    }
+}
 
 typedef struct {
     s16 x1;
