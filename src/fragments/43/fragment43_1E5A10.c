@@ -435,17 +435,41 @@ void func_8AC00FEC(void) {
 }
 #endif
 
-// File-scope bss, pinned at 0x8AC09798 by linker_scripts/us/datamig_bss.ld:
-// the main-pool push mark and the two pop marks (tag word, active byte).
-static s32 sPoolPushTag;
-static u8 sPoolPushActive;
-static s32 sPoolPopTagBefore;
-static u8 sPoolPopActiveBefore;
-static s32 sPoolPopTagAfter;
-static u8 sPoolPopActiveAfter;
-
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC00FFC.s")
+extern s32 D_8AC086C0[];
+extern s32 main_pool_push_state(s32);
+
+// Main-pool marks: the push mark (tag word, active byte) followed by the two
+// pop marks. 24 bytes, pinned at 0x8AC09798 by
+// linker_scripts/us/datamig_bss.ld.
+//
+// The record is declared inside func_8AC00FFC because that changes how IDO 7.1
+// addresses it: a function-local static keeps the symbol in the `%hi`/`%lo`
+// immediate pair (`lui $at, %hi(SYM)` then `sw .., %lo(SYM)+offset($at)`), while
+// a file-scope static is materialised into a general register first
+// (`lui a0, %hi(SYM)` / `addiu a0, a0, %lo(SYM)`) and costs an extra
+// instruction for the same two stores.
+
+
+void func_8AC00FFC(s32 arg0) {
+    static struct {
+        s32 pushTag;
+        u8 pushActive;
+        s32 popTagBefore;
+        u8 popActiveBefore;
+        s32 popTagAfter;
+        u8 popActiveAfter;
+    } sPoolMark;
+    s32 i;
+    s32 result;
+
+    result = main_pool_push_state(arg0);
+    sPoolMark.pushActive = 0;
+    sPoolMark.pushTag = arg0;
+    for (i = 0; i < D_8AC086B8; i++) {} // karodo: the retail build keeps this empty delay loop.
+    D_8AC086C0[D_8AC086B8] = result;
+    D_8AC086B8++;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1268,7 +1292,129 @@ void func_8AC03334(s32 arg0, s32 arg1, s32 arg2, void *arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC033B8.s")
+extern s32 func_8004CA10(u16 *);
+extern s32 func_8004CA24(u16 *);
+extern s32 func_8004CA38(u8 *);
+extern s32 func_8004CA4C(u8 *);
+extern u8 *func_8004CA60(u8 *);
+extern void func_80045DB4(s32, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_800504BC(s16 *);
+extern Gfx D_8AC07D28[];
+extern Gfx *D_800D0510;
+
+typedef struct Sprite43Tile {
+    u8 *image;
+    s16 x, y;
+    s16 left, top;
+    s16 dx, dy;
+    s16 dleft, dtop;
+    u8 primR, primG, primB, primA;
+    u8 level;
+    u8 envR, envG, envB, envA;
+    u8 shiftS0, shiftT0;
+    u8 shiftS1, shiftT1;
+    u8 mode;
+    u8 unk_22[2];
+    s32 cms0, cmt0;
+    s32 cms1, cmt1;
+} Sprite43Tile;
+
+typedef struct Sprite43Quad {
+    u8 unk_00[8];
+    s16 x, y;
+    s16 width, height;
+    u8 unk_10[0x10];
+    Sprite43Tile *tile;
+} Sprite43Quad;
+
+
+
+s32 func_8AC033B8(s32 arg0, void *arg1) {
+    s16 pos[2];
+    s16 x, y, w, h;
+    Sprite43Tile *tile;
+    u8 *data;
+    s16 width, height, size;
+    s16 format;
+    Sprite43Quad *quad;
+    u8 *image;
+    u8 primR, primG, primB, primA, level;
+    u8 envR, envG, envB, envA;
+
+    tile = ((Sprite43Quad *)arg1)->tile;
+    image = tile->image;
+    primR = tile->primR;
+    primG = tile->primG;
+    primB = tile->primB;
+    primA = tile->primA;
+    level = tile->level;
+    envR = tile->envR;
+    envG = tile->envG;
+    envB = tile->envB;
+    envA = tile->envA;
+    switch (arg0) {
+    case 0:
+        break;
+    case 1:
+        func_800504BC(pos);
+        quad = arg1;
+        x = quad->x + pos[0];
+        y = quad->y + pos[1];
+        w = quad->width;
+        h = quad->height;
+        data = func_8004CA60(image);
+        width = func_8004CA10((u16 *)image);
+        height = func_8004CA24((u16 *)image);
+
+        size = func_8004CA4C(image);
+        if (size == 0) {}  // FAKE
+        format = func_8004CA38(image);
+        gSPDisplayList(D_800D0510++, D_8AC07D28);
+        switch (tile->mode) {
+        case 1:
+            gDPSetCombineLERP(D_800D0510++, NOISE, K5, PRIM_LOD_FRAC, PRIMITIVE, TEXEL1, TEXEL0, PRIMITIVE,
+                              TEXEL0, ENVIRONMENT, COMBINED, NOISE, COMBINED, 0, 0, 0, PRIM_LOD_FRAC);
+            break;
+        case 2:
+            gDPSetCombineLERP(D_800D0510++, NOISE, K5, PRIM_LOD_FRAC, PRIMITIVE, PRIMITIVE, TEXEL1,
+                              ENVIRONMENT, TEXEL0, ENVIRONMENT, COMBINED, NOISE, COMBINED, 0, 0, 0,
+                              PRIM_LOD_FRAC);
+            break;
+        case 3:
+            gDPSetCombineLERP(D_800D0510++, NOISE, TEXEL0, PRIM_LOD_FRAC, PRIMITIVE, 0, 0, 0, PRIM_LOD_FRAC,
+                              PRIMITIVE, ENVIRONMENT, COMBINED, ENVIRONMENT, 0, 0, 0, COMBINED);
+            break;
+        default:
+            gDPSetCombineLERP(D_800D0510++, NOISE, K5, PRIM_LOD_FRAC, PRIMITIVE, TEXEL1, 0, TEXEL0, 0,
+                              ENVIRONMENT, COMBINED, NOISE, COMBINED, 0, 0, 0, PRIM_LOD_FRAC);
+            break;
+        }
+        gDPSetPrimColor(D_800D0510++, 0, level, primR, primG, primB, primA);
+        gDPSetEnvColor(D_800D0510++, envR, envG, envB, envA);
+        tile->x += tile->dx;
+        tile->y += tile->dy;
+        tile->left += tile->dleft;
+        tile->top += tile->dtop;
+        if (tile->mode != 2) {
+            func_80045DB4((s32)data, 0, 0, (u32)format, (u32)size, width, height, 1, 0,
+                          tile->cms0, tile->cmt0, 5, 5, tile->shiftS0, tile->shiftT0);
+            func_80045DB4((s32)data, 0x100, 1, (u32)format, (u32)size, width, height, 1, 0,
+                          tile->cms1, tile->cmt1, 5, 5, tile->shiftS1, tile->shiftT1);
+        } else {
+            func_80045DB4((s32)data, 0, 0, (u32)format, (u32)size, width, height, 1, 0,
+                          tile->cms0, tile->cmt0, 6, 6, tile->shiftS0, tile->shiftT0);
+            func_80045DB4((s32)data, 0, 1, (u32)format, (u32)size, width, height, 1, 0,
+                          tile->cms1, tile->cmt1, 6, 6, tile->shiftS1, tile->shiftT1);
+        }
+        gDPSetTileSize(D_800D0510++, 0, tile->x, tile->y, tile->x + width - 1, tile->y + height - 1);
+        gDPSetTileSize(D_800D0510++, 1, tile->left, tile->top, tile->left + width - 1,
+                       tile->top + height - 1);
+        gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + w) << 2, (y + h) << 2, G_TX_RENDERTILE, 0,
+                            0, 0x80, 0x200);
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
