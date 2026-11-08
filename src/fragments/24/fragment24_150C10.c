@@ -1389,7 +1389,52 @@ void func_82B03688(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B0373C.s")
+extern s16 D_82B08638[];
+extern u16 D_82B12454;
+extern void func_82B0284C(u8 *, u8 *);
+extern void func_800498C4(void);
+extern void func_8004989C(s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800499EC(void);
+
+
+
+void func_82B0373C(void *arg0) {
+    s16 *params;
+    s16 id;
+    struct { s16 x; s16 y; s16 pad[12]; } coords;
+    s32 color;
+    func_82B0284C(arg0, (u8 *)&coords);
+    func_800498C4();
+    params = (s16 *)((u8 *)arg0 + 0x50);
+    func_800496A4(8, 0);
+    func_8004989C(0x19);
+
+    id = D_82B08638[params[3]];
+    if (id >= 0) {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF - params[4]);
+        
+        func_800495F8(coords.x + 0xF, coords.y + 9, 0, func_8004C874(0x1B, id));
+    }
+    if (params[0] != 0) {
+        id = D_82B08638[params[2]];
+        if (id >= 0) {
+            func_8004972C(0xFF, 0xFF, 0xFF, params[4]);
+            
+            func_800495F8(coords.x + 0xF, coords.y + 9, 0, func_8004C874(0x1B, id));
+        }
+    }
+    if (D_82B12454 & 8) {
+        func_800496A4(4, 0);
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        
+        func_800495F8(coords.x + 0x1D7, coords.y + 0x3B, 2, func_8004C874(0x1B, 0x16));
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1616,7 +1661,7 @@ void func_82B0504C(void *arg0) {
 #ifdef VERSION_US
 extern void Panel_DrawHeadingAndOptions(u8 *, s32);
 extern void func_82B03688(u8 *);
-extern void func_82B0373C(void);
+extern void func_82B0373C(void *);
 extern void func_82B03978(void);
 extern void func_82B03F38(void);
 extern void func_82B04008(void);
@@ -1626,7 +1671,7 @@ void func_82B05494(void *arg0, s32 arg1) {
     switch (*(s16 *)arg0) {
     case 1: Panel_DrawHeadingAndOptions(arg0, arg1); break;
     case 2: func_82B03688(arg0); break;
-    case 3: func_82B0373C(); break;
+    case 3: func_82B0373C(arg0); break;
     case 4: func_82B038BC(arg0); break;
     case 5: func_82B03978(); break;
     case 6: func_82B03F38(); break;
@@ -1934,7 +1979,98 @@ void func_82B062F8(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B070B8.s")
+/* func_82B070B8 uses F24State12450, func_81700B8C and func_81700CDC, declared earlier in this file. */
+extern u8 D_82B12450[0xFF8];
+extern u16 D_82B12454;
+
+extern s16 D_82B1246C;
+extern s16 D_82B1246E;
+extern s16 D_82B126A0;
+extern s16 D_82B126A2;
+extern void *D_82B12F68[];
+extern s32 func_82B01130(void);
+extern void func_82B05F60();
+extern s32 func_82B0173C(s32, s32);
+extern void *func_82B02800(s32, s32);
+extern void func_82B02924(void *, s32);
+extern void func_82B029B8(u8 *, s32);
+extern void func_82B02A34(void *, s32);
+
+
+
+
+
+void func_82B070B8(s32 arg0, s32 arg1) {
+    u8 *base;
+    F24State12450 *st;
+    s32 remove;
+    u8 *p;
+    u8 *obj;
+    s16 state;
+    s32 i;
+
+    base = (u8 *)D_82B12450;
+    st = &sState12450;
+    if (arg0 == 3) {
+        state = 4;
+        D_82B1246C = 0;
+    } else {
+        if (func_82B01130() != 0) {
+            func_82B05F60();
+            return;
+        }
+        state = 5;
+        D_82B1246E = 0;
+    }
+    st->flags = st->flags & 0xFFF7;
+    st->state = state;
+    if (func_81700B8C(1, (char *)func_82B0173C(state, arg0)) != 0) {
+        func_81700CDC(1);
+    }
+    p = (u8 *)D_82B12450;
+    i = 0;
+    if (D_82B126A2 > 0) {
+        do {
+            obj = *(u8 **)(p + 0xB68);
+            remove = 0;
+            switch (*(s16 *)obj) {
+            case 1:
+                if (arg0 != *(s16 *)(obj + 2)) {
+                    remove = 1;
+                } else {
+                    func_82B029B8(obj, 0);
+                }
+                break;
+            case 2:
+            case 3:
+                remove = 1;
+                break;
+            }
+            if (remove != 0) {
+                func_82B02A34(*(void **)(p + 0xB68), 0);
+            }
+            i += 1;
+            p += 4;
+        } while (i < *(s16 *)(base + 0x252));
+        i = 0;
+    }
+    *(s16 *)(base + 0x250) = 0;
+    if (arg0 == 3) {
+        ((u8 **)(base + 0xB18))[(*(s16 *)(base + 0x250))] = func_82B02800(6, 0);
+        (*(s16 *)(base + 0x250))++;
+    } else {
+        ((u8 **)(base + 0xB18))[(*(s16 *)(base + 0x250))] = func_82B02800(7, 0);
+        (*(s16 *)(base + 0x250))++;
+    }
+    if (*(s16 *)(base + 0x250) > 0) {
+        p = (u8 *)D_82B12450;
+        do {
+            func_82B02924(*(void **)(p + 0xB18), 0);
+            i += 1;
+            p += 4;
+        } while (i < *(s16 *)(base + 0x250));
+    }
+}
 #endif
 
 #ifdef VERSION_US
