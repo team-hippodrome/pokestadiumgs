@@ -471,11 +471,335 @@ s32 func_86A01CC4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A02A9C.s")
+extern s32 D_86A0D638[][4];
+extern u8 D_86A0D560[];
+extern f32 D_86A0F278[];
+extern u8 D_86A42D70;
+extern u8 D_86A45F20[];
+extern void *D_87F119DC;
+extern s32 D_87F119D8;
+extern void func_87F026E8(s32, void *);
+extern void func_8002781C(s32, s32, void *);
+extern s32 ItemBounds_ContainsPlayerPosition(s32, f32, f32, s32);
+extern s32 func_86A05AAC(s32, f32, f32);
+extern void func_86A0638C(s32, f32, f32);
+extern void func_86A06400(s32, f32, f32);
+extern s32 ItemQueue_TryPush();
+
+typedef struct {
+    /* 0x00 */ s32 unk_00;
+    /* 0x04 */ s32 unk_04;
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ s32 unk_0C;
+    /* 0x10 */ s32 unk_10;
+    /* 0x14 */ s32 unk_14;
+    /* 0x18 */ f32 unk_18;
+} Fragment60ItemUse;
+
+
+
+void func_86A02A9C(void) {
+    Fragment60ItemUse *use;
+    u8 *spot;
+    s32 *word;
+    s32 *pk;
+    f32 py;
+    s32 item;
+    s32 flag;
+    s32 player;
+    s32 center;
+    s32 i;
+    s32 mode;
+    s32 j;
+    s32 slot;
+    f32 offset;
+    s32 index;
+    s32 span;
+    f32 px;
+    f32 pz;
+    f32 target;
+    f32 temp;
+    volatile f32 limit;
+
+    flag = 0;
+    use = *(Fragment60ItemUse **)((u8 *)D_87F119DC + 0x20);
+    player = use->unk_00;
+    center = use->unk_08;
+    item = use->unk_04;
+    mode = use->unk_0C;
+    offset = use->unk_18;
+    index = guRandom() % 24;
+    px = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    py = *(f32 *)((u8 *)D_87F119DC + 0x4C);
+    pz = *(f32 *)((u8 *)D_87F119DC + 0x50);
+    if (mode == 0) {
+        if (offset < pz - 3.0f) {
+            target = pz - 3.0f;
+        } else if (pz + 3.0f < offset) {
+            target = pz + 3.0f;
+        } else {
+            target = offset;
+        }
+        limit = pz - 3.0f;
+        for (i = 0; i != 4; i++) {
+            if (ItemBounds_ContainsPlayerPosition(i, px, target, item) != 0) {
+                if (D_86A443F0.unk_0024[i] == 8) {
+                    goto done;
+                }
+                if (D_86A443F0.unk_0024[i] == 0xA) {
+                    goto done;
+                }
+                if (D_86A443F0.unk_00E8[i] + *(s32 *)(D_86A0D560 + item * 0x18 + 4) >= 6) {
+                    goto done;
+                }
+                if (func_86A05AAC(i, px, target) == 0) {
+                    goto done;
+                }
+            }
+        }
+        if (offset < limit) {
+            *(f32 *)((u8 *)D_87F119DC + 0x50) -= 3.0f;
+        } else if (pz + 3.0f < offset) {
+            *(f32 *)((u8 *)D_87F119DC + 0x50) += 3.0f;
+        } else {
+            *(f32 *)((u8 *)D_87F119DC + 0x50) = offset;
+        }
+        if ((py > 0.0f) && ((f64)pz < 133.33333333333331 - (f64)*(f32 *)(D_86A0D560 + item * 0x18 + 0x14) * 11.11111111111111)) {
+            if (py > 1.0f) {
+                *(f32 *)((u8 *)D_87F119DC + 0x4C) -= 1.0f;
+            }
+            if (py + 1.0f < 0.0f) {
+                *(f32 *)((u8 *)D_87F119DC + 0x4C) += 1.0f;
+            } else {
+                *(f32 *)((u8 *)D_87F119DC + 0x4C) = 0.0f;
+            }
+        }
+    done:
+        for (j = 0, word = (s32 *)((u8 *)D_86A0D638 + index * 0x10); j != 0x10; j += 4) {
+            slot = *word;
+            if (ItemBounds_ContainsPlayerPosition(slot, px, pz, item) != 0) {
+                if (func_86A05AAC(slot, px, pz) != 0) {
+                    pk = (s32 *)((u8 *)&D_86A443F0 + slot * 4);
+                    if (*(s32 *)((u8 *)pk + 0xE8) + *(s32 *)(D_86A0D560 + item * 0x18 + 4) < 6) {
+                        if (*(s32 *)((u8 *)pk + 0x188) == 0) {
+                            *(s32 *)((u8 *)pk + 0x24) = 8;
+                            *(s32 *)((u8 *)pk + 0x188) = 0x1B;
+                            *(s32 *)((u8 *)D_87F119DC + 0x1C) = 0;
+                            func_86A0638C(slot, px - D_86A443F0.position[slot][0], pz - D_86A443F0.position[slot][1]);
+                            func_86A06400(slot, px - D_86A443F0.position[slot][0], pz - D_86A443F0.position[slot][1]);
+                            *(s32 *)(*(u8 **)((u8 *)D_87F119DC + 0x20) + 0xC) = 1;
+                            *(s32 *)(*(u8 **)((u8 *)D_87F119DC + 0x20)) = slot;
+                            *(s32 *)((u8 *)pk + 0x16C0) = 0;
+                            break;
+                        }
+                    }
+                }
+            }
+            word++;
+        }
+    } else {
+        if (*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 0x1A) {
+            flag = 1;
+        } else {
+            if ((*(s32 *)((u8 *)D_87F119DC + 0x1C) >= 9) && (*(s32 *)((u8 *)D_87F119DC + 0x1C) < 0x12)) {
+                spot = (u8 *)&D_86A42D70 + player * 0x168;
+                *(f32 *)((u8 *)D_87F119DC + 0x48) = *(f32 *)(spot + 0xBC);
+                *(f32 *)((u8 *)D_87F119DC + 0x4C) = (f32)((f64)*(f32 *)(spot + 0xC0) - (f64)(D_86A0F278[*(s32 *)((u8 *)D_87F119DC + 0x1C) - 9] * 100.0f) * 0.1111111111111111);
+                *(f32 *)((u8 *)D_87F119DC + 0x50) = *(f32 *)(spot + 0xC4);
+                temp = (f32)((f64)D_86A0F278[*(s32 *)((u8 *)D_87F119DC + 0x1C) - 9] * 0.1111111111111111 * 2);
+                *(f32 *)((u8 *)D_87F119DC + 0x5C) = temp;
+                *(f32 *)((u8 *)D_87F119DC + 0x58) = temp;
+                *(f32 *)((u8 *)D_87F119DC + 0x54) = temp;
+            }
+            if (*(s32 *)((u8 *)D_87F119DC + 0x1C) == 0xC) {
+                ItemQueue_TryPush(player, item);
+            }
+        }
+    }
+    if (flag != 0) {
+        span = (s32)(*(f32 *)(D_86A0D560 + item * 0x18 + 0x10) * 10.0f + 1.0f) + 8;
+        for (i = center - span; i < center + span; i++) {
+            *(s32 *)(D_86A45F20 + i * 4) = 0;
+        }
+        *(s32 *)(*(u8 **)((u8 *)D_87F119DC + 0x20) + 0x1C) = 0;
+        func_87F026E8(D_87F119D8, D_87F119DC);
+        *(s32 *)(D_86A443F0.unk_0198 + 0x10) -= 1;
+        switch (D_86A443F0.unk_00E8[player]) {
+        case 1:
+            func_8002781C(0x8F05, player & 0xFF, D_86A443F0.unk_0E48[player]);
+            return;
+        case 2:
+            func_8002781C(0x8F06, player & 0xFF, D_86A443F0.unk_0E48[player]);
+            return;
+        case 3:
+            func_8002781C(0x8F07, player & 0xFF, D_86A443F0.unk_0E48[player]);
+            return;
+        case 4:
+            func_8002781C(0x8F08, player & 0xFF, D_86A443F0.unk_0E48[player]);
+            return;
+        case 5:
+            func_8002781C(0x8F09, player & 0xFF, D_86A443F0.unk_0E48[player]);
+            return;
+        }
+    } else {
+        if (mode == 0) {
+            *(f32 *)((u8 *)&D_86A443F0 + D_86A443F0.unk_1680 * 0x14 + 0xEC4) = px;
+            *(f32 *)((u8 *)&D_86A443F0 + D_86A443F0.unk_1680 * 0x14 + 0xEC8) = pz;
+            *(s32 *)((u8 *)&D_86A443F0 + D_86A443F0.unk_1680 * 0x14 + 0xED4) = item;
+            D_86A443F0.unk_1680++;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A03234.s")
+extern u8 D_86A0D570[];
+extern u8 D_86A42D50[];
+extern u8 D_86A45F20[];
+extern void *func_87F025B8(void *, void *);
+extern void func_86A02A9C(void);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F3BC(void *, s32);
+extern void func_800279C4(u16);
+extern s32 D_86A45A70;
+extern s32 D_86A45AC0;
+extern s32 D_86A45AC4;
+extern s32 D_86A0FD10;
+extern s32 D_86A0FD14;
+extern s32 D_86A0FD18;
+extern s32 D_86A0FD1C;
+extern s32 D_86A0FD20;
+extern s32 D_86A0FD24;
+extern s32 D_86A0FD28;
+extern s32 D_86A0FD2C;
+extern s32 D_86A0FD30;
+
+// Finds a free stage-pool record, rolls a kind, reserves the column it needs in D_86A45F20,
+// then spawns the object together with its animation table entry.
+
+
+void func_86A03234(void) {
+    u8 *obj;
+    u8 *anim;
+    f32 x;
+    s32 center;
+    f32 y;
+    s32 i;
+    s32 kind;
+    s32 count;
+    s32 roll;
+    s32 width;
+    s32 idx;
+
+    idx = 0; loop_1:
+    if (D_86A41490[idx].active != 0) {
+        idx += 1;
+        if ((StagePoolResetRecord *)D_86A42D50 != &D_86A41490[idx]) {
+            goto loop_1;
+        }
+    }
+    roll = guRandom() % 100;
+    if (roll < 3) {
+        kind = 0;
+    } else if (roll < 0x10) {
+        kind = 1;
+    } else if (roll < 0x20) {
+        kind = 2;
+    } else if (roll < 0x2E) {
+        if (D_86A45AC4 != 0) {
+            kind = 8;
+        } else {
+            kind = 3;
+        }
+    } else if (roll < 0x3E) {
+        if (D_86A45AC0 != 0) {
+            kind = 7;
+        } else {
+            kind = 4;
+        }
+    } else if (roll < 0x50) {
+        kind = 5;
+    } else {
+        count = 0;
+        for (i = 0; i < D_86A45A70; i++) {
+            if (*(s32 *)(D_86A443F0.unk_0EC4 + i * 0x14 + 0x10) == 6) {
+                count++;
+            }
+        }
+        kind = 6;
+        if (count >= 2) {
+            return;
+        }
+    }
+    width = (s32)((*(f32 *)(D_86A0D570 + kind * 0x18) * 10.0f) + 1.0f) + 8;
+    center = (guRandom() % (0x154 - (width * 2))) + width;
+    for (i = center - width; i < center + width; i++) {
+        if (((s32 *)D_86A45F20)[i] != 0) {
+            return;
+        }
+    }
+    for (i = center - width; i < center + width; i++) {
+        ((s32 *)D_86A45F20)[i] = 1;
+    }
+    obj = func_87F025B8(&D_86A11190, func_86A02A9C);
+    if (obj != NULL) {
+        x = (f32)(center - 0xAA);
+        y = 135.0f;
+        *(f32 *)(obj + 0x48) = x;
+        *(f32 *)(obj + 0x4C) = 5.5555553f;
+        *(f32 *)(obj + 0x50) = (f32)((f64)y + 100.0);
+        *(u32 *)((u8 *)&D_86A41490[idx] + 4) = kind;
+        *(s32 *)((u8 *)&D_86A41490[idx] + 0) = -1;
+        *(s32 *)((u8 *)&D_86A41490[idx] + 8) = center;
+        *(s32 *)((u8 *)&D_86A41490[idx] + 0xC) = 0;
+        *(s32 *)((u8 *)&D_86A41490[idx] + 0x1C) = 1;
+        *(f32 *)((u8 *)&D_86A41490[idx] + 0x10) = x;
+        *(f32 *)((u8 *)&D_86A41490[idx] + 0x18) = y;
+        *(f32 *)((u8 *)&D_86A41490[idx] + 0x14) = 0.0f;
+        *(u8 **)(obj + 0x20) = (u8 *)&D_86A41490[idx];
+        *(s32 *)(obj + 0x1C) = 0x1B;
+        *(s32 *)((u8 *)&D_86A443F0 + 0x1A8) += 1;
+        anim = obj + 0x24;
+        *(f32 *)(obj + 0x5C) = 0.22222222f;
+        y = *(f32 *)(obj + 0x5C);
+        *(f32 *)(obj + 0x58) = *(f32 *)(obj + 0x5C);
+        *(f32 *)(obj + 0x54) = *(f32 *)(obj + 0x5C);
+        func_8003F1DC(anim);
+        switch (kind) {
+        case 0:
+            func_8003F114(anim, 0, -1, D_86A0FD10);
+            func_8003F3BC(anim, 0);
+            func_800279C4(0x8F14);
+            break;
+        case 1:
+            func_8003F114(anim, 0, -1, D_86A0FD14);
+            func_800279C4(0x8F15);
+            break;
+        case 2:
+            func_8003F114(anim, 0, -1, D_86A0FD18);
+            break;
+        case 3:
+            func_8003F114(anim, 0, -1, D_86A0FD1C);
+            break;
+        case 4:
+            func_8003F114(anim, 0, -1, D_86A0FD20);
+            break;
+        case 5:
+            func_8003F114(anim, 0, -1, D_86A0FD24);
+            break;
+        case 6:
+            func_8003F114(anim, 0, -1, D_86A0FD28);
+            break;
+        case 7:
+            func_8003F114(anim, 0, -1, D_86A0FD2C);
+            break;
+        case 8:
+            func_8003F114(anim, 0, -1, D_86A0FD30);
+            break;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -672,7 +996,142 @@ s32 func_86A04100(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A046A4.s")
+extern unk_D_86A443F0 D_86A443F0;
+extern u8 D_86A45AD0[];
+extern u8 D_86A40FA0;
+extern void func_86A0B6F8(f32, f32, f32);
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern s32 func_86A04C04(s32);
+extern void func_86A041D8(void);
+extern f32 D_86A0F29C[];
+extern s32 D_86A0F8E0;
+extern s32 D_86A0FD00;
+extern s32 D_86A0FD04;
+
+
+
+void func_86A046A4(void) {
+    u8 *sp1C;
+    s32 sp30;
+    s32 sp2C;
+    u8 *sp28;
+
+    sp2C = ((guRandom() % 97) + (guRandom() % 97)) % 2;
+    // FAKE: dead statement. The three guRandom() calls make ugen reserve a second
+    // call-save temp slot at sp+0x20 (never referenced) and grow the frame to 0x38.
+    // Without it the frame stays 0x30 and two words differ (plain score 290).
+    if (0) {
+        D_86A0F8E0 = ((guRandom() % 97) + (guRandom() % 97) + (guRandom() % 97)) % 2;
+    }
+    if ((guRandom() % 97) >= 0x3D) {
+        return;
+    }
+    switch (*(s32 *)(D_86A443F0.unk_01B0)) {
+    case 0:
+        if (*(s32 *)(D_86A443F0.unk_0E60) >= 2) {
+            return;
+        }
+        break;
+    case 1:
+        if (*(s32 *)(D_86A443F0.unk_01B0 + 4) != 0) {
+            if (*(s32 *)(D_86A443F0.unk_0E60) >= 3) {
+                return;
+            }
+        } else {
+            if (*(s32 *)(D_86A443F0.unk_0E60) >= 2) {
+                return;
+            }
+        }
+        break;
+    case 2:
+    case 3:
+        if (*(s32 *)(D_86A443F0.unk_0E60) >= 3) {
+            return;
+        }
+        break;
+    }
+    sp30 = guRandom() % 4;
+    if (*(s32 *)(D_86A45AD0 + sp30 * 4) != 0) {
+        return;
+    }
+    switch (func_86A04C04(sp30)) {
+    case 0:
+        sp2C = 0;
+        break;
+    case 1:
+        sp2C = 1;
+        break;
+    case 2:
+        return;
+    }
+    sp28 = func_87F025B8(&D_86A40FA0, func_86A041D8);
+    if (sp28 == NULL) {
+        return;
+    }
+    *(s32 *)(D_86A45AD0 + sp30 * 4) = 1;
+    *(f32 *)(sp28 + 0x50) = D_86A0F29C[sp30];
+    *(s32 *)(sp28 + 0x20) = sp30;
+    *(f32 *)(sp28 + 0x4C) = 0.0f;
+    if (sp2C != 0) {
+        *(f32 *)(sp28 + 0x48) = 270.0f;
+        if ((guRandom() % 97) >= 0xB) {
+            *(f32 *)(sp28 + 0x10) = (f32)(-5 - (guRandom() % 3));
+            if (D_86A0F8E0 == 0) {
+                *(f32 *)(sp28 + 0x10) = (*(f32 *)(sp28 + 0x10) * 6.0f) / 5.0f;
+            }
+        } else {
+            *(f32 *)(sp28 + 0x10) = (f32)(-8 - (guRandom() % 3));
+            if (D_86A0F8E0 == 0) {
+                *(f32 *)(sp28 + 0x10) = (*(f32 *)(sp28 + 0x10) * 6.0f) / 5.0f;
+            }
+        }
+    } else {
+        *(f32 *)(sp28 + 0x48) = -270.0f;
+        if ((guRandom() % 97) >= 0xB) {
+            *(f32 *)(sp28 + 0x10) = (f32)((guRandom() % 3) + 5);
+            if (D_86A0F8E0 == 0) {
+                *(f32 *)(sp28 + 0x10) = (*(f32 *)(sp28 + 0x10) * 6.0f) / 5.0f;
+            }
+        } else {
+            *(f32 *)(sp28 + 0x10) = (f32)((guRandom() % 3) + 8);
+            if (D_86A0F8E0 == 0) {
+                *(f32 *)(sp28 + 0x10) = (*(f32 *)(sp28 + 0x10) * 6.0f) / 5.0f;
+            }
+        }
+    }
+    switch (*(s32 *)(D_86A443F0.unk_01B0)) {
+    case 0:
+        *(f32 *)(sp28 + 0x10) = *(f32 *)(sp28 + 0x10) * 0.8f;
+        break;
+    case 1:
+        *(f32 *)(sp28 + 0x10) = *(f32 *)(sp28 + 0x10) * 0.9f;
+        break;
+    case 2:
+        *(f32 *)(sp28 + 0x10) = *(f32 *)(sp28 + 0x10);
+        break;
+    case 3:
+        *(f32 *)(sp28 + 0x10) = *(f32 *)(sp28 + 0x10) * 1.2f;
+        break;
+    }
+    *(f32 *)(sp28 + 0x5C) = 0.6f;
+    *(f32 *)(sp28 + 0x58) = 0.6f;
+    *(f32 *)(sp28 + 0x54) = 0.6f;
+    *(s32 *)(D_86A443F0.unk_0E60) += 1;
+    func_86A0B6F8(*(f32 *)(sp28 + 0x48), *(f32 *)(sp28 + 0x50), *(f32 *)(sp28 + 0x10));
+    sp1C = sp28 + 0x24;
+    *(f32 *)(sp28 + 0x50) = (f32)((f64)*(f32 *)(sp28 + 0x50) + 5.0);
+    func_8003F1DC(sp1C);
+    if (sp2C != 0) {
+        func_8003F114(sp1C, 0, -1, D_86A0FD00);
+        func_8003F210(sp1C, 0);
+    } else {
+        func_8003F114(sp1C, 0, -1, D_86A0FD04);
+        func_8003F210(sp1C, 0);
+    }
+    *(u8 *)(sp28 + 0x26) |= 8;
+}
 #endif
 
 #ifdef VERSION_US
@@ -926,7 +1385,7 @@ extern unk_D_86A443F0 D_86A443F0;
 extern s32 D_86A0D638[][4];
 extern void func_86A0638C(s32 arg0, f32 arg1, f32 arg2);
 extern void func_86A06474();
-extern void func_86A06740(s32 arg0, f32 arg1, f32 arg2);
+s32 func_86A06740(s32 arg0, f32 arg1, f32 arg2);
 void func_86A06A1C(s32 arg0);
 extern void func_86A06BDC(s32 arg0);
 extern void func_86A06C3C(void);
@@ -1299,7 +1758,77 @@ s32 func_86A066F4(s16 arg0, s16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A06740.s")
+extern unk_D_86A443F0 D_86A443F0;
+extern s32 PlayerBounds_ContainsPointExceptPlayer(s32, f32, f32);
+extern s32 ItemBounds_SumCostsAtPoint(f32, f32);
+extern s32 ItemBounds_AnyContainsPoint(f32, f32);
+
+// Moves the player's ground-plane position by (arg1, arg2) if the destination is
+// legal. Three attempts, in order: move both axes, move x only, move y only. Each
+// attempt rejects the point when another player is already there, when the item
+// cost at the point plus the player's carried cost (unk_00E8) reaches 6, when the
+// player already holds 10 items and the point costs anything, or when the point is
+// inside any item's bounds; the move must then also land inside the stage limits.
+// The summed cost expression is written field-first so IDO evaluates the call first
+// and emits `addu dst, v0, field`; naming the arg0*4 field base in `p4` makes it the
+// one stack temp at 0x28 that survives the call, which is what fixes the frame layout.
+
+
+s32 func_86A06740(s32 arg0, f32 arg1, f32 arg2) {
+    f32 new_x;
+    f32 orig_x;
+    f32 orig_y;
+    u8 *p4;
+
+    orig_x = *(f32 *)((u8 *)&D_86A443F0 + arg0 * 8 + 4);
+    orig_y = *(f32 *)((u8 *)&D_86A443F0 + arg0 * 8 + 8);
+    new_x = orig_x + arg1;
+
+    if (PlayerBounds_ContainsPointExceptPlayer(arg0, new_x, (orig_y + arg2)) == 0) {
+        p4 = (u8 *)&D_86A443F0 + arg0 * 4;
+        if (*(s32 *)(p4 + 0xE8) + ItemBounds_SumCostsAtPoint(new_x, (orig_y + arg2)) < 6) {
+            if (*(s32 *)((u8 *)&D_86A443F0 + arg0 * 4 + 0x24) != 10 || ItemBounds_SumCostsAtPoint(new_x, (orig_y + arg2)) == 0) {
+                if (ItemBounds_AnyContainsPoint(new_x, (orig_y + arg2)) == 0) {
+                    if (new_x > -170.0f && new_x < 170.0f && (orig_y + arg2) > -150.0f && (orig_y + arg2) < 125.0f) {
+                        *(f32 *)((u8 *)&D_86A443F0 + arg0 * 8 + 4) = new_x;
+                        *(f32 *)((u8 *)&D_86A443F0 + arg0 * 8 + 8) = (orig_y + arg2);
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if (PlayerBounds_ContainsPointExceptPlayer(arg0, new_x, orig_y) == 0) {
+        p4 = (u8 *)&D_86A443F0 + arg0 * 4;
+        if (*(s32 *)(p4 + 0xE8) + ItemBounds_SumCostsAtPoint(new_x, orig_y) < 6) {
+            if (*(s32 *)((u8 *)&D_86A443F0 + arg0 * 4 + 0x24) != 10 || ItemBounds_SumCostsAtPoint(new_x, orig_y) == 0) {
+                if (ItemBounds_AnyContainsPoint(new_x, orig_y) == 0) {
+                    if (new_x > -170.0f && new_x < 170.0f) {
+                        *(f32 *)((u8 *)&D_86A443F0 + arg0 * 8 + 4) = new_x;
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if (PlayerBounds_ContainsPointExceptPlayer(arg0, orig_x, (orig_y + arg2)) == 0) {
+        p4 = (u8 *)&D_86A443F0 + arg0 * 4;
+        if (*(s32 *)(p4 + 0xE8) + ItemBounds_SumCostsAtPoint(orig_x, (orig_y + arg2)) < 6) {
+            if (*(s32 *)((u8 *)&D_86A443F0 + arg0 * 4 + 0x24) != 10 || ItemBounds_SumCostsAtPoint(orig_x, (orig_y + arg2)) == 0) {
+                if (ItemBounds_AnyContainsPoint(orig_x, (orig_y + arg2)) == 0) {
+                    if ((orig_y + arg2) > -150.0f && (orig_y + arg2) < 125.0f) {
+                        *(f32 *)((u8 *)&D_86A443F0 + arg0 * 8 + 8) = (orig_y + arg2);
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1421,7 +1950,98 @@ void func_86A06E0C(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A06E14.s")
+extern u8 D_86A42D50[];
+extern s32 D_86A42D60[4];
+extern u8 D_86A42D70;
+extern u8 D_86A438B0;
+extern u8 D_86A43310;
+extern u8 *D_86A46590;
+extern s32 D_86A45240;
+extern u8 StageContext_GetFadeMode(void);
+extern void func_86A0B7F0(s32 arg0);
+extern void func_87F00688();
+
+
+
+void func_86A06E14(void) {
+    s32 i;
+    s32 old;
+    u8 *model;
+    u8 *anim;
+
+    // unk_0E50 is the model update counter; its pre-increment value selects the branch.
+    old = (*(s32 *)D_86A443F0.unk_0E50)++;
+    // FAKE: the fade mode is kept in the loop-index local; comparing the call in place
+    // (if (StageContext_GetFadeMode() == 1)) grows the frame and scores 916, and the
+    // natural if (i == 1) emits bne s2,v0 instead of the target's bne v0,s2 (score 10).
+    i = StageContext_GetFadeMode();
+    if (1 == i) {
+        // Eight 0x168-byte model records run from entry 8 to entry 16, which starts at
+        // D_86A443F0. FAKE: spelling the bound from entry 8's own base stops IDO from
+        // hoisting the single D_86A443F0 address into one register and dropping the
+        // post-call recomputation; with the plain (u8 *)&D_86A443F0 bound the diff
+        // score is 400.
+        model = &D_86A438B0; do {
+            func_8003F1DC(model);
+            model += 360;
+        } while (model < (u8 *)&D_86A438B0 + 0xB40);
+
+        // FAKE: the call and the model increment share the loop-header line so as1 emits
+        // addiu s0,s0,0x168 before addiu s2,s2,0x4; with the increment on its own line the
+        // two increments swap (score 30).
+        // D_86A42D50 is declared u8[] for func_86A03234, but the entries here are words.
+        model = &D_86A42D70; for (i = 0; i < 4; i++) { func_8003F114(model, 0, -1, ((s32 *)D_86A42D50)[i]); model += 360;
+            anim = i * 0x18 + (u8 *)D_86A46590;
+            *(u8 *)(anim + 0x12) = 0xFF;
+            *(u8 *)(anim + 0x13) = 0xFF;
+            *(u8 *)(anim + 0x14) = 0xFF;
+            *(u8 *)(anim + 0x15) = 0xB4;
+        }
+
+        model = &D_86A43310;
+        for (i = 4; i < 8; i++) {
+            func_8003F114((u8 *)&D_86A43310 + (i - 4) * 360, 0, -1, D_86A42D60[i % 4]);
+        }
+
+        for (i = 0; i < 4; i++) {
+            func_86A0B7F0(i);
+        }
+
+        StageFade_StartFromOpaque(0x14);
+        *(s32 *)D_86A46548 = 3;
+        func_87F00688();
+        D_86A45240 = 0;
+        return;
+    }
+
+    if (old < 10) {
+        model = &D_86A438B0;
+        for (i = 0; i < 4; i++) {
+            func_8003F210(model, 1);
+            *(f32 *)(model + 0x24) = *(f32 *)(model + 0x24) + (2.5 + 0.3 * (1 - i));
+            *(f32 *)(model + 0x28) = *(f32 *)(model + 0x28) - 3.3;
+            *(f32 *)(model + 0x2C) = *(f32 *)(model + 0x2C) + 30.0;
+            model += 360;
+        }
+        model = (u8 *)&D_86A43E50;
+        for (i = 4; i < 8; i++) {
+            func_8003F210(model, 0xB);
+            if (func_8003EC54(model) > 0) {
+                ModelAnim_SetFrame(model, 0);
+            }
+            *(f32 *)(model + 0x24) = *(f32 *)(model + 0x24) + (2.5 + 0.3 * (1 - i));
+            *(f32 *)(model + 0x28) = *(f32 *)(model + 0x28) - 3.3;
+            *(f32 *)(model + 0x2C) = *(f32 *)(model + 0x2C) + 30.0;
+            model += 360;
+        }
+    } else {
+        model = &D_86A438B0; do {
+            func_8003F210(model, 8);
+            ModelAnim_SetSpeed(model, 0x20000);
+            model += 360;
+        } while (model != (u8 *)&D_86A43E50);
+    }
+}
 #endif
 
 #ifdef VERSION_US
