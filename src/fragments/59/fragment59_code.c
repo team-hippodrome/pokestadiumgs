@@ -194,7 +194,56 @@ void func_869004A4(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_869004AC.s")
+extern void func_81900164(s32, f32, f32, f32, s32);
+extern u8 D_8691A2A0[];
+extern s32 D_8691AB68[];
+extern u16 D_8691ADA8[];
+extern u16 D_80094904;
+
+
+
+s32 func_869004AC(s32 arg0, u8 *arg1) {
+    s32 idx;
+    u8 *state;
+    f32 scaled;
+
+    idx = *(s32 *)(arg1 + 0x14);
+    if (D_80094904 != D_8691ADA8[idx]) {
+        if (arg0 != 0 && arg0 == 2) {
+            state = D_8691A2A0 + idx * 4;
+            if (*(s32 *)(state + 0x50) != 0) {
+                *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) + 8.0f;
+                if (*(f32 *)(state + 0x60) >= 360.0f) {
+                    *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) - 360.0f;
+                }
+                scaled = *(f32 *)(state + 0x60) * 182.0416718f;
+                if (scaled >= 0.0f) {
+                    *(s16 *)(arg1 + 0x20) = scaled + 0.5f;
+                } else {
+                    *(s16 *)(arg1 + 0x20) = scaled - 0.5f;
+                }
+            }
+            if (*(s32 *)(D_8691A2A0 + 0x170) != 0 && *(s32 *)(state + 0x174) != 0 &&
+                *(s32 *)(state + 0x28) == 0x64) {
+                if (D_8691AB68[idx] != 0) {
+                    func_81900164(*(s32 *)(D_8691A2A0 + 0x184), *(f32 *)(arg1 + 0x24),
+                                  (f32)((f64)*(f32 *)(arg1 + 0x28) - 36.402622), 1.7599760f, idx);
+                } else {
+                    func_81900164(*(s32 *)(D_8691A2A0 + 0x184), *(f32 *)(arg1 + 0x24),
+                                  (f32)((f64)*(f32 *)(arg1 + 0x28) + 65.197736), 1.7599760f, idx);
+                }
+                *(s32 *)(state + 0x174) = 0;
+            }
+            // FAKE: empty block; IDO 7.1 folds it away but its presence in the
+            // flow graph rotates idx into $t0 and slot into $t2. Without it the
+            // same source differs in six registers (permuter score 1525).
+            if (idx) {
+            }
+        }
+    }
+    D_8691ADA8[idx] = D_80094904;
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -2293,11 +2342,204 @@ void func_86909EAC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690ABCC.s")
+extern void *D_87F119DC;
+extern s32 D_87F119D8;
+extern u8 D_8691AB80[];
+extern u8 D_8691A2A0[];
+extern void func_87F026E8(s32, void *, u8 *, s32);
+
+
+
+void func_8690ABCC(void) {
+    s32 result;
+    u32 index;
+    u32 half;
+    s32 half2;
+    u8 *obj;
+    u8 *entry;
+
+    result = 0;
+    obj = D_87F119DC;
+    *(f32 *)(obj + 0x48) -= *(f32 *)(obj + 0x10);
+    obj = D_87F119DC;
+    index = *(u32 *)(obj + 0x20);
+    if (index != 0) {
+        half = index >> 1;
+        entry = (u8 *)D_8691AB78 + half * 0xC;
+        *(f32 *)(entry + 0) = *(f32 *)(obj + 0x48);
+        *(f32 *)(entry + 4) = *(f32 *)(obj + 0x50);
+        *(s32 *)(entry + 8) = 1;
+        if (half == 1) { // FAKE: dead compare keeps half in a named low register; diff score 220 without it.
+        }
+    }
+    if ((*(f32 *)(obj + 0x10) != 0.0f) && (*(f32 *)(obj + 0x48) < 135.0f)) {
+        *(s32 *)(D_8691A2A0 + 0x80) += 1;
+        *(s32 *)(D_8691A2A0 + 0x88) += 1;
+    }
+    if (*(f32 *)(obj + 0x48) < -250.0f) {
+        result = 1;
+    }
+    if (*(s32 *)(obj + 0x1C) > 0) {
+        result = 1;
+        *(s32 *)(D_8691A2A0 + 0x80) += 1;
+    }
+    if (result != 0) {
+        index = *(u32 *)(obj + 0x20);
+        if (index != 0) {
+            half2 = index >> 1;
+            *(s32 *)(D_8691AB80 + half2 * 0xC) = 0;
+            if (half2 == 1) { // FAKE: dead compare keeps half2 in a named low register; diff score 210 without it.
+            }
+        }
+        D_8691A448.unk_324 -= 1;
+        func_87F026E8(D_87F119D8, obj, D_8691A2A0, result);
+        *(s32 *)(D_8691A2A0 + 0x88) -= 1;
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690AD3C.s")
+extern void *func_87F025B8(void *, void *);
+extern void func_8690ABCC(void);
+extern s32 D_8690F998;
+extern s32 D_86919020;
+extern s32 D_8691A318;
+
+
+
+void func_8690AD3C(s32 arg0)
+{
+  u8 *obj;
+  f32 x;
+  f32 y;
+  s32 lo;
+  s32 hi;
+  s32 count;
+  s32 timer;
+  x = D_8691A448.entries[arg0].x;
+  y = D_8691A448.entries[arg0].y;
+  lo = *((s32 *) (((u8 *) (&D_8690E558[D_8691A448.entries[arg0].unk_0C])) + 0xC));
+  hi = *((s32 *) (((u8 *) (&D_8690E558[D_8691A448.entries[arg0].unk_0C])) + 0x10));
+  count = (guRandom() % (hi + 1)) + lo;
+  timer = D_8691A448.entries[arg0].unk_10;
+  obj = func_87F025B8(D_86911448, func_8690ABCC);
+  if (obj != NULL)
+  {
+    D_8691A448.unk_324 += 1;
+    *((f32 *) (obj + 0x48)) = x - D_8690E7BC[D_8691A448.entries[arg0].unk_0C].unk_04;
+    *((f32 *) (obj + 0x4C)) = -D_8690E7BC[D_8691A448.entries[arg0].unk_0C].unk_08;
+    *((f32 *) (obj + 0x50)) = y;
+    switch (D_8691A318)
+    {
+      case 0:
+        count = (s32) (((f32) count) * 0.7f);
+        if (D_8690F998 == 0)
+      {
+        count = (s32) (((f32) count) * 1.2f);
+      }
+        break;
+
+      case 1:
+        count = (s32) (((f32) count) * 0.85f);
+        if (D_8690F998 == 0)
+      {
+        count = (s32) (((f32) count) * 1.2f);
+      }
+        break;
+
+      case 2:
+        count = (s32) ((f32) count);
+        if (D_8690F998 == 0)
+      {
+        count = (s32) (((f32) count) * 1.2f);
+      }
+        break;
+
+      case 3:
+        count = (s32) (((f32) count) * 1.2f);
+        if (D_8690F998 == 0)
+      {
+        count = (s32) (((f32) count) * 1.2f);
+      }
+        break;
+
+    }
+
+    switch (D_8691A448.entries[arg0].unk_0C)
+    {
+      case 3:
+      case 4:
+        break;
+
+      default:
+        if (0, D_8690F998 != 0)
+        {
+          if (((f32) count) < 4.0f)
+          {
+            count = 4;
+          }
+        }
+        else if (((f32) count) < 4.8f)
+        {
+          count = 4;
+        }
+        break;
+    }
+    *((f32 *) (obj + 0x10)) = (f32) count;
+    *((s32 *) (obj + 0x20)) = 0;
+    switch (D_8691A448.entries[arg0].unk_0C)
+    {
+      case 3:
+        *((s32 *) (obj + 0x1C)) = (-0x19) - timer;
+        break;
+
+      case 4:
+        *((s32 *) (obj + 0x1C)) = (-0x19) - timer;
+        break;
+
+      default:
+        *((s32 *) (obj + 0x1C)) = -0x3E8;
+        break;
+    }
+    *((s16 *) (obj + 0x42)) = -0x4001;
+    *((f32 *) (obj + 0x54)) = *((f32 *) ((u8 *) (&D_8690E7BC[D_8691A448.entries[arg0].unk_0C])));
+    *((f32 *) (obj + 0x58)) = *((f32 *) ((u8 *) (&D_8690E7BC[D_8691A448.entries[arg0].unk_0C])));
+    *((f32 *) (obj + 0x5C)) = *((f32 *) ((u8 *) (&D_8690E7BC[D_8691A448.entries[arg0].unk_0C])));
+    *((s32 *) (obj + 0x38)) = timer + 0xD48;
+    func_8003F1DC(obj + 0x24);
+    func_8003F114(obj + 0x24, 0, -1, D_86919020);
+  }
+  obj = func_87F025B8(D_86911448, func_8690ABCC);
+  if (obj != NULL)
+  {
+    D_8691A448.unk_324 += 1;
+    *((f32 *) (obj + 0x48)) = x;
+    *((f32 *) (obj + 0x4C)) = 0.0f;
+    *((f32 *) (obj + 0x50)) = y;
+    *((f32 *) (obj + 0x10)) = (f32) count;
+    switch (D_8691A448.entries[arg0].unk_0C)
+    {
+      case 3:
+        *((s32 *) (obj + 0x1C)) = (-0x19) - timer;
+        break;
+
+      case 4:
+        *((s32 *) (obj + 0x1C)) = (-0x19) - timer;
+        break;
+
+      default:
+        *((s32 *) (obj + 0x1C)) = -0x3E8;
+        break;
+    }
+    *((f32 *) (obj + 0x54)) = *((f32 *) ((u8 *) (&D_8690E558[D_8691A448.entries[arg0].unk_0C])));
+    *((f32 *) (obj + 0x58)) = *((f32 *) ((u8 *) (&D_8690E558[D_8691A448.entries[arg0].unk_0C])));
+    *((f32 *) (obj + 0x5C)) = *((f32 *) ((u8 *) (&D_8690E558[D_8691A448.entries[arg0].unk_0C])));
+    *((s32 *) (obj + 0x38)) = (D_8691A448.entries[arg0].unk_0C * 0xC8) + timer;
+    *((s32 *) (obj + 0x20)) = D_8691A448.unk_324;
+    func_8003F1DC(obj + 0x24);
+    func_8003F114(obj + 0x24, 0, -1, D_86919020);
+  }
+}
 #endif
 
 #ifdef VERSION_US
