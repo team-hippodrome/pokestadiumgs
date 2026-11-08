@@ -1481,7 +1481,82 @@ s32 func_8F102F94(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F102FB4.s")
+extern s8 D_8F1DEE48[];
+extern u8 D_8F1DECA8;
+extern u16 D_8F1DEE26;
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE2C;
+extern s32 D_8F1DEE34;
+extern s32 D_8F1DEE38;
+extern s32 D_8F1DEE3C;
+extern f32 D_8F1DEE4C;
+extern u8 D_8F1DEE68;
+extern u8 D_8F1DECCC;
+extern void *D_80094BB0;
+
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern f32 func_8004B888(s32);
+extern s32 func_800428F8(s32);
+extern s32 func_800427B8(s32);
+extern void func_8F100D58(s32, void *);
+
+
+
+
+
+void func_8F102FB4(s32 arg0, s32 arg1) {
+    s32 var_v0;
+    s32 z;
+    s16 *values;
+
+    if (arg0 != 0) {
+        var_v0 = func_800428F8(D_8F1DECA0);
+    } else {
+        var_v0 = func_800427B8(D_8F1DECA0);
+    }
+    if (var_v0 != 0) {
+        func_8003F1DC(&D_8F1DECA8);
+        func_8003F114(&D_8F1DECA8, 0, D_8F1DEE26, *(void **)(*(s32 *)(*(s32 *)((u8 *)D_8F1DECA0 + 0x38) + 8)));
+        if (arg1 != 0) {
+            *(s32 *)D_8F1DEE48 = 0;
+            D_8F1DEE34 = 0;
+            D_8F1DEE28 = 0;
+            D_8F1DEE2C = 0;
+            D_8F1DEE38 = 0;
+            // FAKE: `z + z` (the target has no such source expression) is what
+            // makes IDO schedule `or a2,zero,zero` before the D_8F1DEE3C store and
+            // start the pointer-pair temps at t1 instead of t0. z is always 0 here
+            // (D_8F1DEE38 was stored as 0 two statements above), so the value is
+            // unchanged.
+            z = D_8F1DEE38;
+            D_8F1DEE3C = z + z;
+            func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, z);
+            func_8003F3BC(&D_8F1DECA8, D_8F1DEE38);
+            if (D_8F1DEE24 != 0) {
+                D_8F1DEE4C = func_8004B888(D_8F1DEE24);
+            } else {
+                D_8F1DEE4C = 10.0f;
+            }
+            func_8F100D58(D_8F1DEE24, &D_8F1DECCC);
+            if (D_80094BB0 != NULL) {
+                if (D_8F1DEE24 >= 0x98) {
+                    values = (s16 *)(((D_8F1DEE24 * 8) - 0x4C0) + (&D_8F1DEE68));
+                    if ((values[2] == -1) && (values[3] == -1)) {
+                        values[2] = *((s16 *)(((u8 *)D_80094BB0) + 0x1A));
+                        values[3] = *((s16 *)(((u8 *)D_80094BB0) + 0x1C));
+                    }
+                }
+            }
+        } else {
+            D_8F1DEE28 = -1;
+            func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+            D_8F1DEE38 = -1;
+            func_8003F3BC(&D_8F1DECA8, D_8F1DEE38);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
