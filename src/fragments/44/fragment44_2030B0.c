@@ -14,8 +14,10 @@ typedef struct {
 
 
 
-void func_8AF14E40(s16 arg0, s16 arg1, s16 arg2, s16 arg3, Color arg4) {
-    Color *color = &arg4; // FAKE: the alias makes the draw-list cursor spill at four packet sites instead of two; diff score 1466 without it.
+// arg4 is a packed RGBA color word (red in the high byte); func_8AF15AD8 passes
+// constants such as 0xFF000040, and the body reads the bytes through a Color alias.
+void func_8AF14E40(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u32 arg4) {
+    Color *color = (Color *)&arg4; // FAKE: the alias makes the draw-list cursor spill at four packet sites instead of two; diff score 1466 without it.
     gSPDisplayList(D_800D0510++, D_80094E38);
     gDPSetEnvColor(D_800D0510++, color->r, color->g, color->b, color->a);
     gDPLoadTextureBlock(D_800D0510++, D_8AF27140, G_IM_FMT_IA, G_IM_SIZ_16b, 4, 2, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
@@ -176,7 +178,79 @@ void func_8AF15954(s16 value, s16 x, s16 y) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_2030B0/func_8AF15AD8.s")
+extern void func_8AC00738(void);
+extern void func_8AC0077C(s32, s32, s32, s32);
+extern void func_8AC043A8(s32, s32, s32);
+extern void func_8AC043E0(s32, s32, s32);
+extern void func_8AF0A3A8(s32, s32, s16);
+extern void func_8AF14E40(s16, s16, s16, s16, u32);
+extern void func_8AF15954(s16, s16, s16);
+extern s32 D_8AF2BDC4;
+extern u8 D_8AF33770[][2];
+extern s16 D_8AF33C72;
+extern s16 D_8AF33C74;
+extern s16 D_8AF33C76;
+extern s16 D_8AF33C80;
+extern s32 D_8AF33DB0;
+extern s16 D_8AF33DB8;
+
+
+
+void func_8AF15AD8(s32 arg0) {
+    s16 grid_x;
+    s16 grid_y;
+    s16 width;
+    s16 height;
+    s32 i;
+    s32 j;
+    u8 first;
+    u8 second;
+
+    grid_x = *(s16 *) (arg0 + 8) + 20;
+    grid_y = *(s16 *) (arg0 + 0xA) + 20;
+    width = *(s16 *) (arg0 + 0xC);
+    height = *(s16 *) (arg0 + 0xE);
+    func_8AC0077C(*(s16 *) (arg0 + 8), *(s16 *) (arg0 + 0xA),
+                  *(s16 *) (arg0 + 8) + width, *(s16 *) (arg0 + 0xA) + height);
+
+    for (i = 0; i < D_8AF33C80; i++) {
+        first = D_8AF33770[D_8AF33C72 + i][0];
+        second = D_8AF33770[D_8AF33C72 + i][1];
+        func_8AF0A3A8(grid_x + i * 60, grid_y - 20, first);
+        if (first != second) {
+            func_8AF0A3A8(grid_x + i * 60 + 20, grid_y - 20, second);
+        }
+    }
+
+    for (i = 0; i < 17; i++) {
+        func_8AF0A3A8(grid_x - 20, grid_y + i * 20, i);
+    }
+
+    for (i = 0; i < D_8AF33C80; i++) {
+        func_8AC043E0(grid_x + i * 60, grid_y, 340);
+        func_8AC043E0(grid_x + i * 60 + 40, grid_y, 340);
+    }
+
+    for (j = 0; j != 360; j += 20) {
+        func_8AC043A8(grid_x, grid_y + j, D_8AF33C80 * 60 - 20);
+    }
+
+    func_8AF15954(0, grid_x, grid_y);
+    func_8AF15954(2, grid_x, grid_y);
+    func_8AF15954(5, grid_x, grid_y);
+    func_8AF15954(20, grid_x, grid_y);
+    func_8AF15954(40, grid_x, grid_y);
+
+    if (D_8AF2BDC4 & 0x10) {
+        func_8AF14E40(grid_x + D_8AF33C74 * 60, grid_y, 40, 360, 0xFF40);
+        func_8AF14E40(grid_x, grid_y + D_8AF33C76 * 20, D_8AF33C80 * 60 - 20, 20, 0xFF000020);
+    } else {
+        func_8AF14E40(grid_x + D_8AF33C74 * 60, grid_y, 40, 360, 0xFF20);
+        func_8AF14E40(grid_x, grid_y + D_8AF33C76 * 20, D_8AF33C80 * 60 - 20, 20, 0xFF000040);
+    }
+    func_8AC00738();
+    D_8AF33DB8 = ((s16 *) ((u8 *) &D_8AF33DB0 + 8))[0] + 1;
+}
 
 extern void func_8AF15670(s32);
 extern void func_8AF15AD8(s32);

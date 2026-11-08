@@ -85,7 +85,101 @@ void func_8AF16878(u8 arg0, u8 arg1) {
     D_8AF341BF = arg1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF169A4.s")
+extern s16 D_8AF33DC0[];
+extern s16 D_8AF340BC;
+extern void *func_8AF00504(s16);
+extern s32 func_8AF003A8(s16);
+extern void func_8AC06E98(void *);
+extern s32 func_8AC06D8C(s32, s32);
+extern void func_8AC05ED4(s32, s32, s32);
+extern void func_8AC02C80(s32, s32, s32, void *);
+extern void func_8AC0651C(void *, s16, s16, s16, s16);
+extern void *func_8004C874(s32, s32);
+extern s32 func_8004C54C(s32, s32);
+extern void func_8AF02DA4(s32, s32);
+extern void func_8004C594(s32, s16);
+extern void _bzero(s32 *, s32);
+extern void *D_8AF27150;
+extern s32 D_8AF340C0;
+extern s32 D_8AF34138;
+extern s32 D_8AF341B0;
+extern s16 D_8AF263C4[];
+extern void *D_8AF340B4;
+extern void *D_8AF340B8;
+extern void *D_8AF341EC;
+extern u8 D_8AF341C0[];
+extern char D_8AF298E0[];
+extern char D_8AF298E8[];
+
+
+
+void func_8AF169A4(void) {
+    s32 page;
+    void *name;
+    s32 b;
+    void *wi1;
+    u8 *sprite;
+    s32 a;
+    u8 conf[0x504];
+
+    if (D_8AF341BE != D_8AF341BF) {
+        func_8AF00504(0x92);
+        page = func_8AF003A8(0x92);
+    } else {
+        func_8AF00504(0x89);
+        page = func_8AF003A8(0x89);
+    }
+    func_8AC06E98((void *)page);
+    wi1 = (void *)func_8AC06D8C(page, 0x77695F31);
+    D_8AF340B4 = (void *)func_8AC06D8C(page, 0x7469746C);
+    *(s16 *)((u8 *)D_8AF340B4 + 0x30) = 0x3B;
+    *(s16 *)((u8 *)D_8AF340B4 + 0x32) = 0xC3;
+    if (D_8AF341BE != D_8AF341BF) {
+        name = func_8004C874(0xC, D_8AF263C4[D_8AF341BE]);
+        sprintf((char *)((u8 *)D_8AF27150 + 0x52C), D_8AF298E0, name,
+                func_8004C874(0xC, D_8AF263C4[D_8AF341BF]));
+    } else {
+        sprintf((char *)((u8 *)D_8AF27150 + 0x52C), D_8AF298E8,
+                func_8004C874(0xC, D_8AF263C4[D_8AF341BE]));
+    }
+    func_8004C54C(0x3D, (s32)((u8 *)D_8AF27150 + 0x52C));
+    D_8AF340B8 = (void *)func_8AC06D8C(page, 0x736C6966);
+    *(s16 *)((u8 *)D_8AF340B8 + 0x30) = 0x3B;
+    *(s16 *)((u8 *)D_8AF340B8 + 0x32) = 0x1C;
+    func_8004C594(2, D_8AF340BC);
+    func_8AC05ED4(page, 0x79613175, (s32)&D_8AF340C0);
+    func_8AC05ED4(page, 0x79613173, (s32)&D_8AF34138);
+    func_8AC02C80(page, 0x725F6C5F, 0x725F725F, D_8AF341C0);
+    if (D_8AF341BE == D_8AF341BF) {
+        D_8AF341EC = (void *)func_8AC06D8C(page, 0x6162746E);
+        *(u16 *)((u8 *)D_8AF341EC + 2) &= ~1;
+    }
+    b = *(s16 *)((u8 *)wi1 + 8);
+    a = *(s16 *)((u8 *)wi1 + 0xA);
+    _bzero((s32 *)conf, 0x504);
+    *(s16 *)(conf + 0x00) = *(s16 *)((u8 *)wi1 + 0xC);
+    *(s16 *)(conf + 0x02) = *(s16 *)((u8 *)wi1 + 0xE);
+    *(s32 *)(conf + 0x04) = 0;
+    *(s32 *)(conf + 0x08) = 0;
+    *(s16 *)(conf + 0x0C) = 0;
+    *(s16 *)(conf + 0x0E) = 0;
+    *(s16 *)(conf + 0x12) = 0;
+    *(s16 *)(conf + 0x14) = 0xD;
+    *(s32 *)(conf + 0x24) = 0x55;
+    *(s32 *)(conf + 0x28) = 0x41;
+    *(s32 *)(conf + 0x2C) = 6;
+    *(s16 *)(conf + 0x3C) = 3;
+    *(s16 *)(conf + 0x3E) = 1;
+    *(s32 *)(conf + 0x34) = 5;
+    *(s32 *)(conf + 0x38) = 0;
+    *(s16 *)(conf + 0x4A) = 0x41;
+    func_8AF166E0((u8 *)D_8AF27150, 0xA, b, a, 8, 0, 0, 0, 0x64, 0x64, 0x64, 4, 0xB,
+                  (const unk_func_8AF166E0 *)conf);
+    func_8AF02DA4((s32)D_8AF27150, (s32)D_8AF33DC0);
+    *(s16 *)((u8 *)D_8AF27150 + 0x40) = 1;
+    sprite = (u8 *)D_8AF27150 + 0x28;
+    func_8AC0651C(&D_8AF341B0, (*(s32 *)(sprite + 0x20) - 1) / 6, 0x3C, 3, 0xA);
+}
 
 extern void *D_8AF27150;
 extern void *D_8AF263C0;
@@ -178,7 +272,7 @@ s32 func_8AF16EB0(u8 arg0) {
 
 /* mkdraft:func_8AF16EF0 begin */
 extern void *func_8004C874(s32, s32);
-extern void func_8004C54C(s32, s32);
+extern s32 func_8004C54C(s32, s32);
 extern void _bzero(s32 *, s32);
 extern s16 D_8AF263C4[];
 extern char D_8AF345F0[];
@@ -308,7 +402,7 @@ extern void func_8AC02C80(s32 arg0, s32 arg1, s32 arg2, void *arg3);
 extern void func_8AC05ED4(s32 arg0, s32 arg1, s32 arg2);
 extern void func_8AC0651C(void *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);
 extern s32 func_8AF003A8(s16 arg0);
-extern void func_8AF00504(s32);
+extern void *func_8AF00504(s16);
 
 extern s32 D_8AF342E4;
 extern s32 D_8AF342E8;
