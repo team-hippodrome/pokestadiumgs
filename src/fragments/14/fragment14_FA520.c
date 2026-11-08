@@ -65,7 +65,87 @@ void func_8130267C(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FA520/func_813026D0.s")
+extern s32 StageContext_GetFadeMode(void);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_800225C4(s32);
+extern void func_81700D44(s32);
+extern s32 func_81300B50(void *);
+extern void func_8130267C(u8 *);
+extern s32 D_81311D50;
+extern s32 D_81311D54;
+extern s32 D_81311D60;
+extern s32 D_8133197C;
+extern s32 D_81331984;
+extern u8 D_81317800[];
+
+
+
+s32 func_813026D0(s32 arg0) {
+    s32 next_state;
+    s32 tmp;
+    s32 var;
+
+    next_state = arg0;
+    switch (arg0) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            return 1;
+        }
+        break;
+    case 1:
+        switch (func_81300B50(D_81317800)) {
+        case -1:
+            func_800225C4(10);
+            D_81331984 = 1;
+            func_81700D44(0);
+            func_81700D44(1);
+            // FAKE: dead load and empty compare. var is overwritten in
+            // case 3 before any read. uopt eliminates the compare but keeps its
+            // literal 5 as a function-wide constant, which is what makes the two
+            // D_81311D54 stores in this function emit addiu a0,zero,5 instead of
+            // a ring temp. Score without these two lines: 130.
+            var = D_8133197C;
+            if (var == 5) {}
+            D_81311D54 = 5;
+            if (D_81311D50 != 0) {
+                StageFade_StartFromTransparent(5);
+                return 3;
+            }
+            return 3;
+        case 1:
+            tmp = D_8133197C;
+            func_8130267C((u8 *)tmp);
+            StageFade_StartFromTransparent(5);
+            func_800225C4(10);
+            func_81700D44(0);
+            func_81700D44(1);
+            D_81331984 = 0;
+            D_81311D54 = 5;
+            return 3;
+        }
+        break;
+    case 3:
+        // (&D_81311D60)[-3] is the same word as D_81311D54 (0x81311D54). Naming
+        // the load through the neighbour symbol stops uopt from folding it with
+        // the stores' D_81311D54 address into one register held across the whole
+        // function, which would grow the function from 97 to 99 instructions.
+        tmp = (&D_81311D60)[-3];
+        var = tmp < 1;
+        tmp -= 1;
+        D_81311D54 = tmp;
+        if (var) {
+            var = (D_81311D50 != 0) ? 2 : 4;
+            return var;
+        }
+        break;
+    case 2:
+        if (StageContext_GetFadeMode() == 1) {
+            return 4;
+        }
+        break;
+    }
+    return next_state;
+}
 
 extern s32 StageContext_GetFadeMode(void);
 extern void func_800086A4(s32);
