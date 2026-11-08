@@ -103,7 +103,87 @@ void func_8F500414(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/73/fragment73_code/func_8F500544.s")
+#include "controller.h"
+
+extern s16 D_8F5009A8;
+extern s16 D_8F5009AA;
+extern s16 D_8F5009AC;
+
+extern void func_800225C4(s32);
+extern void func_80022644(s32);
+extern void func_800226C0(s32);
+
+
+
+s32 func_8F500544(void) {
+    s16* sel = &D_8F5009A8;
+    s32 result = 0;
+    s32 prev = sel[0];
+    s32 prevSel = sel[2];
+    s16* cur = &D_8F5009A8;
+    s16* pick = &D_8F5009AC;
+    // FAKE: D_8F5009AE is the column count, the s16 stored directly after the picked
+    // column, so pick + 1 is its address. Naming the symbol instead puts its address
+    // constant in the case-0 block; deriving it from pick keeps `lui`/`lh` inside each
+    // clamp arm (score 270 without this line).
+    s16* lim = pick + 1;
+    s16* alt = &D_8F5009AA;
+
+    if ((D_80087200->buttonsRepeat) & 0x800) {
+        *cur = *cur - 1;
+        if (*cur < 0) {
+            *cur = 0;
+        }
+    }
+    if ((D_80087200->buttonsRepeat) & 0x400) {
+        *cur = *cur + 1;
+        if (*cur >= 2) {
+            *cur = 1;
+        }
+    }
+    if (prev != *cur) {
+        func_800226C0(1);
+    }
+    switch (*cur) {
+    case 0:
+        if ((D_80087200->buttonsRepeat) & 0x200) {
+            *pick = *pick - 1;
+            if (*pick <= 0) {
+                *pick = *lim;
+            }
+        }
+        if ((D_80087200->buttonsRepeat) & 0x100) {
+            *pick = *pick + 1;
+            if (*pick >= *lim) {
+                *pick = 1;
+            }
+        }
+        if (prevSel != *pick) {
+            func_800226C0(1);
+        }
+        if ((D_80087200->buttonsPressed) & 0x8000) {
+            // FAKE: a named s32 copy of the picked column. Passing D_8F5009AC straight
+            // to the call hoists its `lui` above the buttonsPressed load; through a
+            // local, the column address is materialized in this block and loaded in
+            // the `jal` delay slot, as retail does (score 230 without these two lines;
+            // an s16 local scores 35).
+            s32 v = *pick;
+            func_80022644(v);
+            *alt = *pick;
+        } else if (((D_80087200->buttonsPressed) & 0x4000) && *alt != 0) {
+            *alt = 0;
+            func_800225C4(0x28);
+        }
+        break;
+    case 1:
+        if ((D_80087200->buttonsPressed) & 0x8000) {
+            result = 1;
+            func_800226C0(2);
+        }
+        break;
+    }
+    return result;
+}
 
 extern s32 StageContext_GetFadeMode(void);
 extern void StageFade_StartFromTransparent(s32);
