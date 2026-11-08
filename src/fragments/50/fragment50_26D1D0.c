@@ -213,5 +213,105 @@ s16 SceneInput_UpdateCpuSelection(s32 index) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_26D1D0/func_86206EF8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_26D1D0/func_862070B0.s")
+
+
+
+
+extern u8 *D_8620E198;
+extern SceneDirectionChoice D_86208F28[5];
+s16 SceneInput_UpdateCpuSelection(s32 index);
+extern void SceneModel_SelectPlayerDirection(s32 player_index, s32 choice_index);
+extern void SceneModel_StartPlayerAction(s32 player_index);
+extern void func_86205724(s32 index);
+extern void func_8620572C(s32 index, f32 *origin, f32 *direction);
+extern u8 D_800CE060[];
+extern s16 func_86206EF8(u8 *, u8 *);
+
+
+void func_862070B0(void)
+{
+  SceneDirectionChoice *var_s0;
+  SceneDirectionChoice *var_s3;
+  s16 var_v0;
+  s32 temp_v1;
+  s32 var_s1;
+  s32 var_s4;
+  s16 var_s5;
+  s32 var_s6;
+  u8 *var_fp;
+  u8 *var_s7;
+  var_fp = D_800CE060;
+  var_s7 = D_8620E198 + 0x73BBC;
+  for (var_s4 = 0; var_s4 != 4; var_s4++)
+  {
+    var_s3 = D_86208F28;
+    var_s6 = 0;
+    var_s1 = 0;
+    if (((*((u8 *) ((*((u8 **) (D_8620E198 + 0xF4))) + 0x2180))) != 4) && ((*((u32 *) var_s7)) & 0x10000000))
+    {
+      var_v0 = func_86206EF8(var_fp, var_s7);
+      var_s5 = var_v0;
+    }
+    else
+    {
+      var_v0 = SceneInput_UpdateCpuSelection(var_s4);
+      var_s5 = var_v0;
+    }
+    var_s0 = D_86208F28;
+    loop_6_start:
+    if (var_s0->buttons & var_v0)
+    {
+      var_s3 = var_s0;
+      var_s6 = var_s1 & 0xFF;
+    }
+    else
+    {
+      var_s1++;
+      var_s0 = (SceneDirectionChoice *) (((u8 *) var_s0) + 0x40);
+      if (var_s1 != 5)
+      {
+        goto loop_6_start;
+      }
+    }
+
+    temp_v1 = *((s32 *) (D_8620E198 + 0x54));
+    switch (temp_v1)
+    {
+      case 2:
+        if (var_s3 != NULL)
+      {
+        SceneModel_SelectPlayerDirection(var_s4, var_s6);
+        if (var_s5 & 0x4000)
+        {
+          SceneModel_StartPlayerAction(var_s4);
+        }
+      }
+        break;
+
+      case 0:
+
+      case 1:
+        if (var_s3 != NULL)
+      {
+        func_8620572C(var_s4, var_s3->origin, (f32 *) ((((u8 *) var_s3) + (var_s6 * 0xC)) + 0xC));
+      }
+        break;
+
+      case 3:
+        if (var_v0 & 0x4000)
+      {
+        func_86205724(var_s4);
+      }
+        break;
+
+    }
+
+    var_fp += 0x28;
+    var_s7 += 0x18;
+  }
+
+  if (var_s1)
+  {
+  }
+}
 #endif
