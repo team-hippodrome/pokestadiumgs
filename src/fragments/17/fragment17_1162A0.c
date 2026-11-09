@@ -145,7 +145,58 @@ s32 func_82206B64(s32 arg0) {
     return (0x800 / arg0) & ~1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82206BA4.s")
+extern Gfx D_8220DA20[];
+extern Gfx *Gfx_AllocDisplayList(s32);
+extern void Gfx_SetVertexAttributes(Vtx *, s16, s16, s16, s16, s16, u8, u8, u8, u8);
+extern void func_800459AC(s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_82206BA4(s32 x, s32 y, s32 width, s32 remaining_height, u8 *image,
+                   s32 format, s32 size, s32 rows_per_strip, s32 strip_count, s32 swapped) {
+    s32 index;
+    s32 right_x;
+    s16 bottom_y;
+    Vtx *vertices;
+    s32 strip_height;
+    u32 offset;
+    s32 bottom_edge;
+    u8 *strip_image;
+
+    vertices = (Vtx *)Gfx_AllocDisplayList(strip_count * 4 * sizeof(Vtx));
+    if (vertices != NULL) {
+        gSPDisplayList(D_800D0510++, D_8220DA20);
+        right_x = x + width;
+        for (index = 0; index < strip_count; index++) {
+            if (remaining_height < rows_per_strip) {
+                strip_height = remaining_height;
+            } else {
+                strip_height = rows_per_strip;
+            }
+            offset = index * (width * rows_per_strip);
+            if (size == G_IM_SIZ_16b) {
+                strip_image = offset * 2 + image;
+            } else {
+                strip_image = offset + image;
+            }
+            bottom_edge = y - strip_height;
+            Gfx_SetVertexAttributes(vertices, (s16)x, (s16)y, 0, 0, 0, 255, 255, 255, 255);
+            // The pixel address is complete; reuse offset for the strip's 10.5 T coordinate.
+            offset = (s16)(strip_height << 5);
+            bottom_y = bottom_edge;
+            Gfx_SetVertexAttributes(vertices + 1, (s16)x, bottom_y, 0, 0, (s16)offset,
+                                    255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 2, (s16)right_x, bottom_y, 0, (s16)(width << 5),
+                                    (s16)offset, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 3, (s16)right_x, (s16)y, 0, (s16)(width << 5), 0,
+                                    255, 255, 255, 255);
+            func_800459AC((s32)strip_image, format, size, width, strip_height, swapped,
+                          0, 2, 2, 0, 0, 0, 0);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            remaining_height -= rows_per_strip;
+            y -= rows_per_strip;
+            vertices += 4;
+        }
+    }
+}
 
 extern u8 D_8220DA6C[];
 extern s16 D_8220DA40;
