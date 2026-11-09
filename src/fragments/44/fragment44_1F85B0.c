@@ -359,7 +359,78 @@ void func_8AF0B7BC(s16 arg0)
   }
   while (var_s0 != 0x11);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0B850.s")
+extern s16 D_8AF26948;
+extern u16 *D_8AF2D3D0;
+extern u16 *D_8AF2D440[];
+extern u16 *D_8AF2D3AC;
+extern u16 *D_8AF2D3B0;
+extern u16 *D_8AF2D3B4;
+extern u16 *D_8AF2D3B8;
+extern u16 *D_8AF2D3BC;
+extern u16 *D_8AF2D3C0;
+extern u16 *D_8AF2D47C;
+extern u16 *D_8AF2D480;
+extern u16 *D_8AF2D484;
+extern u16 *D_8AF2D3CC;
+extern u8 *D_8AF2BA8C;
+extern void func_8AC043A8(s32, s32, s32);
+extern void func_8AC043E0(s32, s32, s32);
+extern void func_8AF01C84(s32, s32, u8 *);
+
+// Draws the type matchup grid and applies pending node-state changes.
+void func_8AF0B850(void) {
+    s32 active;
+    s32 node_index;
+    s32 grid_x;
+
+    active = 1;
+    if (D_8AF26948 == 0) {
+        D_8AF26948++;
+    } else if (D_8AF26948 < 3) {
+        D_8AF2D3D0[1] &= ~0x2;
+        for (node_index = 0; node_index < 15; node_index++) {
+            D_8AF2D440[node_index][1] &= ~0x2;
+        }
+        D_8AF26948++;
+    } else {
+        active = 0;
+    }
+    if (active == 1) {
+        s32 column;
+
+        for (column = 0, grid_x = 200; column < 17; column++, grid_x += 20) {
+            func_8AF0A3A8(grid_x, 338, column);
+        }
+        func_8AF0B7BC(0);
+        func_8AF0B7BC(2);
+        func_8AF0B7BC(5);
+        func_8AF0B7BC(20);
+        func_8AF0B7BC(40);
+        func_8AC043A8(200, 338, 340);
+        func_8AC043A8(200, 358, 340);
+        func_8AC043A8(200, 398, 340);
+        grid_x = 200;
+        // Reuse the column counter as the right edge of the grid.
+        column = 560;
+        for (; grid_x != column; grid_x += 20) {
+            func_8AC043E0(grid_x, 338, 60);
+        }
+    } else {
+        D_8AF2D3AC[1] &= ~0x1;
+        D_8AF2D3B0[1] &= ~0x1;
+        D_8AF2D3B4[1] &= ~0x1;
+        D_8AF2D3B8[1] &= ~0x1;
+        D_8AF2D3BC[1] &= ~0x1;
+        D_8AF2D3C0[1] &= ~0x1;
+        D_8AF2D47C[1] &= ~0x1;
+        D_8AF2D480[1] &= ~0x1;
+        D_8AF2D484[1] &= ~0x1;
+    }
+    if (D_8AF2BAC8 == 2) {
+        func_8AF01C84(((s16 *)D_8AF2D3CC)[4], ((s16 *)D_8AF2D3CC)[5], D_8AF2BA8C);
+        D_8AF2BAC8 = 1;
+    }
+}
 
 extern void func_80043E70(s32, s32);
 extern s32 D_8AF2694C;
