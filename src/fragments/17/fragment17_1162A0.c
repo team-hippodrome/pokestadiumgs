@@ -1187,7 +1187,74 @@ extern s32 func_82209F50(void *);
 extern s32 func_8220A098(void *);
 s32 func_8220A154(s32 arg0, void *arg1) { s32 flag = *(s32 *)((u8 *)arg1 + 0x14); switch (arg0) { case 0: func_82208EB0(arg1); break; case 2: if (flag == 0) { func_82209EA8(); func_82209F50(arg1); } else { func_8220A098(arg1); } break; } return 0; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_8220A1C4.s")
+extern Gfx D_8220DEB0[];
+void func_8220A1C4(s32 texture) {
+    s32 alpha;
+    s32 strip_count;
+    Vtx *vertices;
+    u8 *image;
+    s32 width;
+    s32 remaining_height;
+    s32 index;
+    s32 strip_height;
+    s32 y;
+    f32 fade;
+    f32 alpha_value;
+    f32 rounding;
+    s32 left_x;
+    s32 right_x;
+    s32 pixel_offset;
+    s16 bottom_y;
+    s16 texture_t;
+
+    strip_count = 1;
+    vertices = (Vtx *)Gfx_AllocDisplayList(strip_count * 4 * sizeof(Vtx));
+    width = ((Fragment17TextureHeader *)texture)->width;
+    remaining_height = ((Fragment17TextureHeader *)texture)->height;
+    y = remaining_height / 2;
+    image = func_8004CA60((u8 *)texture);
+    if (vertices != NULL) {
+        fade = 1.0f - (f32)(320 - D_822106CE) / 200.0f;
+        if (fade < 0.001f) {
+            fade = 0.0f;
+        } else if (fade > 1.0f) {
+            fade = 1.0f;
+        }
+        alpha_value = 255.0f * fade;
+        if (alpha_value > 0.0f) {
+            rounding = 0.5f;
+        } else {
+            rounding = -0.5f;
+        }
+        gSPDisplayList(D_800D0510++, D_8220DEB0);
+        alpha = (s32)(rounding + alpha_value);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, alpha);
+        left_x = -(width / 2);
+        right_x = left_x + width;
+        for (index = 0; index < strip_count; index++) {
+            if (remaining_height < 34) {
+                strip_height = remaining_height;
+            } else {
+                strip_height = 34;
+            }
+            pixel_offset = index * (width * 34);
+            texture_t = strip_height << 5;
+            bottom_y = y - strip_height;
+            Gfx_SetVertexAttributes(vertices, (s16)left_x, (s16)y, 0, 0, 0, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 1, (s16)left_x, bottom_y, 0, 0, strip_height << 5, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 2, (s16)right_x, bottom_y, 0, (s16)(width << 5), texture_t, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 3, (s16)right_x, (s16)y, 0, (s16)(width << 5), 0, 255, 255, 255, 255);
+            func_800459AC((s32)(image + pixel_offset), ((Fragment17TextureHeader *)texture)->format,
+                          ((Fragment17TextureHeader *)texture)->size, width, strip_height,
+                          1, 0, 2, 2, 0, 0, 0, 0);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            vertices += 4;
+            y -= strip_height;
+            remaining_height -= strip_height;
+        }
+    }
+}
 
 extern void GeoRender_ApplyMaterialState();
 extern void func_8220A1C4(s32);
