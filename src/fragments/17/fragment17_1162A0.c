@@ -1161,7 +1161,53 @@ s32 func_8220AA08(s32 arg0, s32 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_8220AA54.s")
+typedef struct Fragment17TransitionModelRecord {
+    u8 model[360];
+    void *layout;
+    u8 unk_16C[4];
+} Fragment17TransitionModelRecord;
+extern Fragment17TransitionModelRecord D_822106D8[];
+extern void *D_8220DED8[];
+void func_8220AA54(s32 arg0, s32 arg1) {
+    s32 index;
+    struct S1_MemoryBlock *pool;
+    Fragment17TransitionModelRecord *record;
+    Fragment17TransitionModelRecord *entry;
+    Fragment17ChoiceEntry *choice;
+    s16 *selection;
+
+    selection = (s16 *)D_822106B0;
+    for (index = 0; index < 6; index++) {
+        choice = &D_8220DEF4[index];
+        if (index == 5) {
+            choice->enabled = arg1;
+        } else {
+            choice->enabled = 1;
+        }
+    }
+    *selection = arg0;
+    do {
+        choice = &D_8220DEF4[*selection];
+        if (choice->enabled != 0) {
+            break;
+        }
+        if (*selection > 0) {
+            --*selection;
+        }
+    } while (*selection > 0);
+    pool = (struct S1_MemoryBlock *)MainPool_AllocState(main_pool_get_available(), 0);
+    for (index = 0; index < 2; index++) {
+        entry = &D_822106D8[index];
+        entry->layout = process_geo_layout(pool, D_8220DED8[index]);
+    }
+    MainPool_FinalizeAllocation(pool);
+    for (index = 0; index < 2; index++) {
+        record = &D_822106D8[index];
+        func_8003F018((s32)record->model);
+        func_80037E3C(record->model, func_8220A154, (void *)index);
+        func_8003F114(record->model, 0, -1, record->layout);
+    }
+}
 
 /* mkdraft:func_8220AC38 begin */
 
