@@ -2,6 +2,9 @@
 
 
 #ifdef VERSION_US
+// Preserve the two debug strings ahead of the format string and switch tables.
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/D_8AF29130.s")
+
 /* mkdraft:func_8AF0A340 begin */
 extern s32 D_8AF2698C[];
 extern u8 *D_8AF2D510[];

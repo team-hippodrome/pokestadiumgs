@@ -331,3 +331,6 @@ D_8F103EC4 = 0x8F103EC4; // size:0x18 force_migration:true
 D_8F103EF0 = 0x8F103EF0; // size:0x24 force_migration:true
 D_8F103F34 = 0x8F103F34; // size:0x18 force_migration:true
 D_8F103FDC = 0x8F103FDC; // size:0x1C force_migration:true
+
+// Unreferenced debug strings before the fragment44 detail format and switch tables.
+D_8AF29130 = 0x8AF29130; // type:u8 size:0x34 force_not_migration:true
