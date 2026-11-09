@@ -221,7 +221,7 @@ SECTIONS
     /* Twenty-four recent sound IDs, shifted by func_800289B0. */
     .audio_history_bss 0x800D1AD8 (NOLOAD) : SUBALIGN(8)
     {
-        build/src/23D10.o(.bss)
+        build/src/26CC0.o(.bss)
     }
     /* Two active slots, following bytes, and all unchanged remaining audio objects. */
     .audio_remaining_bss 0x800D1B38 (NOLOAD) : SUBALIGN(8)
