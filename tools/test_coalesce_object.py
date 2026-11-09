@@ -1,7 +1,10 @@
 """Synthetic safety controls for scheduled shared-page address pairs."""
+from pathlib import Path
+import tempfile
 import unittest
 
 import coalesce_object as fold
+import coalesce_lui
 
 
 HI = 0x3C010000
@@ -228,6 +231,72 @@ class ScheduledPairs(unittest.TestCase):
         expected = [HI, store, 0x27BD0018, 0x03E00008, store | 0xBF30]
         self.assertEqual((actual, count), (expected, 1))
         self.assertEqual(kept, [(0, A, 5), (4, A, 6)])
+
+
+class AliasAddressResolution(unittest.TestCase):
+    def test_mapped_bss_owner_resolves_forward_aliases_for_folding(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            scripts = root / "linker_scripts/us"
+            scripts.mkdir(parents=True)
+            (scripts / "aliases.ld").write_text(
+                "SlotSecond = SlotFirst + 4;\nSlotFirst = Owner + 2720;\n"
+            )
+            (root / "build").mkdir()
+            (root / "build/pokestadiumgs-us.map").write_text(
+                "                0x00000000800d1b68 Owner\n"
+            )
+            addresses = coalesce_lui.resolve_repo_addresses(root)
+            words = [HI, STORE_A, HI, STORE_B, 0x03E00008, 0]
+            relocs = {0: [("SlotFirst", 5)], 4: [("SlotFirst", 6)],
+                      8: [("SlotSecond", 5)], 12: [("SlotSecond", 6)]}
+            actual, _, count = fold.fold_function_words(
+                words, relocs, addresses, None, "synthetic"
+            )
+            self.assertEqual(addresses["SlotFirst"], 0x800D2608)
+            self.assertEqual(addresses["SlotSecond"], 0x800D260C)
+            self.assertEqual((actual, count),
+                             ([HI, STORE_A, STORE_B | 0x260C, 0x03E00008, 0], 1))
+
+    def test_tracked_absolute_address_wins_over_alias(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            scripts = root / "linker_scripts/us"
+            scripts.mkdir(parents=True)
+            (scripts / "symbol_addrs.txt").write_text(
+                "Owner = 0x800D1B68;\nSlot = 0x800E0000;\n"
+            )
+            (scripts / "aliases.ld").write_text("Slot = Owner + 2720;\n")
+            self.assertEqual(coalesce_lui.resolve_repo_addresses(root)["Slot"],
+                             0x800E0000)
+
+    def test_constants_offsets_comments_and_first_definition(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "aliases.ld"
+            path.write_text(
+                "/* ignored = Wrong; */\nBase = 0x80008004;\n"
+                "Before = Base - 8; // signed-page boundary\n"
+                "After = Base + 0x4;\nCopy = After;\nAfter = Base + 99;\n"
+                "Octal = Base + 010;\n"
+            )
+            addresses = coalesce_lui.parse_linker_aliases([path], {})
+            self.assertEqual(addresses["Before"], 0x80007FFC)
+            self.assertEqual(addresses["After"], 0x80008008)
+            self.assertEqual(addresses["Copy"], addresses["After"])
+            self.assertEqual(addresses["Octal"], 0x8000800C)
+            self.assertNotEqual(coalesce_lui.hi16(addresses["Before"]),
+                                coalesce_lui.hi16(addresses["After"]))
+
+    def test_unknown_cycles_and_complex_expressions_are_not_guessed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "aliases.ld"
+            path.write_text(
+                "CycleA = CycleB;\nCycleB = CycleA;\nUnknown = Missing + 4;\n"
+                "Scaled = Owner * 4;\nAligned = ALIGN(Owner, 8);\n"
+                "InvalidOctal = Owner + 08;\n"
+            )
+            known = {"Owner": 0x800D1B68}
+            self.assertEqual(coalesce_lui.parse_linker_aliases([path], known), known)
 
 
 if __name__ == "__main__":
