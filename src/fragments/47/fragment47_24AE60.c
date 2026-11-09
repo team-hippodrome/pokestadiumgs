@@ -949,7 +949,71 @@ void func_86006D24(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006D64.s")
+typedef struct {
+    u32 bit_31 : 1;
+    u32 bit_30 : 1;
+    u32 bits_29_26 : 4;
+    u32 bit_25 : 1;
+    u32 bits_24_0 : 25;
+} Fragment47DispatchFlags;
+
+extern s32 func_80008970(void);
+extern s32 func_80001FF0(void);
+extern f64 D_8600DE38;
+extern void func_87F0D5B8(void *);
+extern void func_860033E8(void *);
+extern s32 func_87F0C6F4(void *);
+extern void func_86006964(s32);
+
+void func_86006D64(s32 state) {
+    s32 value;
+    s32 refresh_rate;
+    s32 offset;
+
+    value = func_80008970();
+    refresh_rate = func_80001FF0();
+    *(f64 *)((u8 *)state + 0x6890) = ((f64)value / (f64)refresh_rate) * D_8600DE38;
+    (*(s32 *)((u8 *)state + 0x75BC))++;
+    if (func_860062E0(*(u8 *)(*(u8 **)((u8 *)state + 0x7580) + 0x2182), 0x20)) {
+        value = ((Fragment47DispatchFlags *)((u8 *)state + 0x75C0))->bit_30;
+        value = !value;
+        ((Fragment47DispatchFlags *)((u8 *)state + 0x75C0))->bit_30 = value;
+    }
+    func_87F0D5B8((u8 *)state + 0x74F0);
+    switch (*(s32 *)((u8 *)state + 0x7518)) {
+        case 0:
+            func_86006448(state);
+            return;
+        case 1:
+            func_86006538(state);
+            return;
+        case 2:
+            func_8600666C(state);
+            break;
+        case 3:
+            func_86006774(state);
+            break;
+        case 4:
+            func_86006964(state);
+            break;
+        case 5:
+            func_86006C30(state);
+            break;
+        case 6:
+            func_86006D24(state);
+            break;
+    }
+    if ((*(s32 *)((u8 *)state + 0x7518) >= 2) && (func_87F00930() == 0)) {
+        for (offset = 0; offset < 26208; offset += 6552) {
+            func_860033E8((u8 *)state + offset);
+        }
+    }
+    if ((((Fragment47DispatchFlags *)((u8 *)state + 0x75C0))->bit_31 == 0) &&
+        (func_87F0C6F4((u8 *)state + 0xAF50) != 0)) {
+        ((Fragment47DispatchFlags *)((u8 *)state + 0x75C0))->bit_31 = 1;
+        ((Fragment47DispatchFlags *)((u8 *)state + 0x75C0))->bit_25 = 1;
+    }
+}
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
