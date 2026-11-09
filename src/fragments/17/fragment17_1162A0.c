@@ -28,6 +28,12 @@ typedef struct F17TransitionState {
     s16 state;
     s16 unk_02;
 } F17TransitionState;
+// func_8220AA54 initializes enabled in six consecutive 28-byte records.
+typedef struct Fragment17ChoiceEntry {
+    s32 enabled;
+    u8 unk_04[24];
+} Fragment17ChoiceEntry;
+extern Fragment17ChoiceEntry D_8220DEF4[];
 static F17TransitionState sTransition106B2 = { 0 };
 extern s16 D_822106B2;
 extern s16 D_822106CC, D_822106CE;
@@ -1210,13 +1216,12 @@ void func_8220AD1C(s16 *arg0) {
     arg0[1] = D_822106CE;
 }
 
-extern u8 D_8220DEF4;
 
 void func_8220AD38(s32 arg0, void *arg1) {
     void *temp_v0;
 
     if (arg0 < 6) {
-        temp_v0 = (arg0 * 0x1C) + &D_8220DEF4;
+        temp_v0 = &D_8220DEF4[arg0];
         (*(s16 *)((u8 *)(temp_v0) + (0xC))) = (s16) (*(s16 *)((u8 *)(arg1) + (0)));
         (*(s16 *)((u8 *)(temp_v0) + (0xE))) = (s16) (*(s16 *)((u8 *)(arg1) + (2)));
     }
@@ -1227,7 +1232,7 @@ void func_8220AD70(s32 arg0, void *arg1) {
     void *temp_v0;
 
     if (arg0 < 6) {
-        temp_v0 = (arg0 * 0x1C) + &D_8220DEF4;
+        temp_v0 = &D_8220DEF4[arg0];
         (*(s16 *)((u8 *)(arg1) + (0))) = (s16) (*(s16 *)((u8 *)(temp_v0) + (0xC)));
         (*(s16 *)((u8 *)(arg1) + (2))) = (s16) (*(s16 *)((u8 *)(temp_v0) + (0xE)));
     }
@@ -1238,7 +1243,7 @@ void func_8220ADA8(s32 arg0, void *arg1) {
     void *temp_v0;
 
     if (arg0 < 6) {
-        temp_v0 = (arg0 * 0x1C) + &D_8220DEF4;
+        temp_v0 = &D_8220DEF4[arg0];
         (*(s16 *)((u8 *)(temp_v0) + (0x10))) = (s16) (*(s16 *)((u8 *)(arg1) + (0)));
         (*(s16 *)((u8 *)(temp_v0) + (0x12))) = (s16) (*(s16 *)((u8 *)(arg1) + (2)));
     }
