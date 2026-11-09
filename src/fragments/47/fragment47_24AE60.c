@@ -907,7 +907,73 @@ void func_8600688C(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006964.s")
+typedef struct {
+    u32 bit_31 : 1;
+    u32 bit_30 : 1;
+    u32 bit_29 : 1;
+    u32 bit_28 : 1;
+    u32 bit_27 : 1;
+    u32 bit_26 : 1;
+    u32 bit_25 : 1;
+    u32 bits_24_0 : 25;
+} Fragment47Mode4Flags;
+extern s32 Fragment64_UpdateBounceAndConfirm(void *);
+extern void func_87C01E30(void *, void *, s32);
+extern u8 D_8600D7F0[];
+
+void func_86006964(s32 state) {
+    s32 i;
+    s32 active;
+    u8 *player;
+    s32 player_index;
+
+    i = 0;
+    if (*(s32 *)D_8600DE30 > 0) {
+        do {
+            func_86005CB4(state, *(f64 *)((u8 *)state + 0x6890) / (f64)*(s32 *)D_8600DE30, 0);
+            i++;
+        } while (i < *(s32 *)D_8600DE30);
+    }
+    if (((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_27) {
+        if (Fragment64_UpdateBounceAndConfirm((u8 *)state + 0x751C)) {
+            if ((*(u8 **)((u8 *)state + 0x7580))[0x2180] == 1) {
+                ((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_31 = 1;
+                ((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_29 = 0;
+            } else {
+                func_86007648(state, 5);
+            }
+        }
+    } else {
+        active = 0;
+        for (i = 0; i < 4; i++) {
+            player = (u8 *)state + i * 6552;
+            if (*(s32 *)(player + 0x1828) < 4) {
+                active++;
+                ((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_27 =
+                    ((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_27 ||
+                    (*(s16 *)(player + 0x17B4) == 9);
+            }
+        }
+        if (active <= 0) {
+            ((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_27 = 1;
+        }
+        if (((Fragment47Mode4Flags *)((u8 *)state + 0x75C0))->bit_27) {
+            for (player_index = 0; player_index != 4; player_index++) {
+                player = (u8 *)state + player_index * 6552;
+                if (*(s32 *)(player + 0x1828) == 8) {
+                    func_86003EFC(player, 7);
+                }
+            }
+            func_8600688C((u8 *)state);
+            for (i = 0; i != 4; i++) {
+                player = (u8 *)state + i * 6552;
+                if ((*(s32 *)(player + 0x1828) == 4) && (*(s32 *)(player + 0x17A4) == 0)) {
+                    func_87C01E30(player + 0x17A0, D_8600D7F0, 1);
+                }
+            }
+        }
+    }
+}
 
 extern s32 func_87F02104(void);
 void func_86006C30(s32 arg0) {
@@ -963,7 +1029,6 @@ extern f64 D_8600DE38;
 extern void func_87F0D5B8(void *);
 extern void func_860033E8(void *);
 extern s32 func_87F0C6F4(void *);
-extern void func_86006964(s32);
 
 void func_86006D64(s32 state) {
     s32 value;
