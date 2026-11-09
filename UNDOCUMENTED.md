@@ -3,14 +3,14 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **69 / 9,884 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,049 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 7,382 (3.4%)** (7,134 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
-- Functions still using m2c `temp_*` / `var_*` locals: **1,152**
-- Functions with generic `arg0`, `arg1`, ... parameters: **5,971 / 9,884 (60.4%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,249 / 2,262**
-- Struct fields with a real name: **6,220 / 10,149 (61.3%)**
-- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **14,742**
+- Variables with a real name: **248 / 7,695 (3.2%)** (7,447 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Functions still using m2c `temp_*` / `var_*` locals: **1,176**
+- Functions with generic `arg0`, `arg1`, ... parameters: **6,066 / 10,049 (60.4%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,285 / 2,335**
+- Struct fields with a real name: **6,365 / 10,419 (61.1%)**
+- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **16,150**
 <!-- AUTO_UNDOCUMENTED:END -->
 
 A function counts as commented when a `/* ... */` block ends on the line directly above its definition.
@@ -24,173 +24,178 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | File | Defined | No comment | `func_` | `D_/jtbl_` | `temp_/var_` locals | `arg{n}` | Raw offsets |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `src/C1E0.c` | 12 | 12 | 2,018 | 0 | 0 | 0 | 0 |
-| `src/fragments/79/fragment79_380A00.c` | 237 | 234 | 233 | 75 | 19 | 220 | 552 |
+| `src/fragments/79/fragment79_380A00.c` | 238 | 235 | 233 | 80 | 19 | 221 | 560 |
 | `src/340C0.c` | 411 | 411 | 224 | 119 | 45 | 242 | 125 |
-| `src/fragments/79/fragment79_3ADCA0.c` | 159 | 159 | 206 | 295 | 23 | 130 | 294 |
-| `src/fragments/20/fragment20_12C460.c` | 125 | 125 | 190 | 118 | 34 | 119 | 499 |
-| `src/fragments/49/fragment49_code.c` | 110 | 110 | 201 | 51 | 23 | 56 | 462 |
-| `src/fragments/52/fragment52_27E4E0.c` | 53 | 51 | 161 | 51 | 7 | 26 | 569 |
+| `src/fragments/20/fragment20_12C460.c` | 129 | 129 | 190 | 123 | 34 | 123 | 530 |
+| `src/fragments/79/fragment79_3ADCA0.c` | 160 | 160 | 206 | 295 | 23 | 131 | 294 |
+| `src/fragments/49/fragment49_code.c` | 111 | 111 | 202 | 51 | 23 | 57 | 470 |
+| `src/fragments/52/fragment52_27E4E0.c` | 55 | 53 | 163 | 55 | 7 | 28 | 580 |
 | `src/fragments/79/fragment79_37A6E0.c` | 82 | 81 | 75 | 24 | 16 | 74 | 583 |
-| `src/fragments/79/fragment79_393CA0.c` | 272 | 272 | 222 | 65 | 19 | 77 | 134 |
-| `src/fragments/47/fragment47_246640.c` | 71 | 71 | 125 | 59 | 5 | 63 | 445 |
+| `src/fragments/79/fragment79_393CA0.c` | 273 | 273 | 222 | 65 | 19 | 77 | 134 |
+| `src/fragments/61/fragment61_code.c` | 51 | 51 | 113 | 79 | 7 | 25 | 514 |
+| `src/fragments/47/fragment47_246640.c` | 72 | 72 | 125 | 62 | 5 | 64 | 451 |
 | `src/fragments/79/fragment79_38EFE0.c` | 102 | 102 | 117 | 81 | 8 | 99 | 309 |
-| `src/fragments/61/fragment61_code.c` | 49 | 49 | 110 | 77 | 7 | 25 | 413 |
 | `src/585D0.c` | 220 | 220 | 202 | 16 | 10 | 138 | 86 |
 | `src/fragments/79/fragment79_3A4030.c` | 158 | 158 | 202 | 72 | 5 | 117 | 45 |
 | `src/14640.c` | 111 | 111 | 138 | 61 | 7 | 69 | 179 |
-| `src/fragments/7/fragment7_BA250.c` | 94 | 94 | 183 | 67 | 14 | 57 | 95 |
-| `src/fragments/59/fragment59_code.c` | 38 | 38 | 106 | 85 | 5 | 14 | 258 |
+| `src/fragments/55/fragment55_code.c` | 49 | 48 | 107 | 131 | 5 | 23 | 235 |
+| `src/fragments/59/fragment59_code.c` | 40 | 40 | 106 | 86 | 6 | 15 | 263 |
+| `src/fragments/7/fragment7_BA250.c` | 95 | 95 | 183 | 68 | 14 | 57 | 97 |
+| `src/fragments/46/fragment46_code.c` | 79 | 79 | 122 | 201 | 9 | 52 | 45 |
+| `src/fragments/60/fragment60_code.c` | 57 | 57 | 108 | 107 | 9 | 28 | 193 |
+| `src/fragments/53/fragment53_code.c` | 42 | 41 | 111 | 159 | 6 | 19 | 162 |
 | `src/fragments/13/fragment13_EEC50.c` | 78 | 77 | 93 | 55 | 6 | 68 | 194 |
-| `src/fragments/53/fragment53_code.c` | 39 | 38 | 111 | 148 | 5 | 17 | 147 |
-| `src/fragments/24/fragment24_150C10.c` | 80 | 77 | 123 | 54 | 16 | 47 | 147 |
-| `src/fragments/43/fragment43_1E5A10.c` | 106 | 106 | 137 | 68 | 21 | 91 | 38 |
-| `src/fragments/46/fragment46_code.c` | 76 | 76 | 117 | 171 | 8 | 51 | 30 |
-| `src/fragments/12/fragment12_E7C00.c` | 69 | 69 | 106 | 23 | 11 | 60 | 168 |
+| `src/fragments/24/fragment24_150C10.c` | 82 | 79 | 123 | 57 | 16 | 49 | 155 |
+| `src/fragments/56/fragment56_code.c` | 38 | 38 | 106 | 108 | 8 | 13 | 201 |
+| `src/fragments/43/fragment43_1E5A10.c` | 108 | 108 | 138 | 70 | 21 | 93 | 38 |
+| `src/fragments/12/fragment12_E7C00.c` | 70 | 70 | 107 | 23 | 11 | 61 | 187 |
+| `src/fragments/54/fragment54_code.c` | 36 | 36 | 106 | 93 | 2 | 18 | 182 |
 | `src/517E0.c` | 113 | 113 | 123 | 6 | 30 | 98 | 64 |
-| `src/fragments/55/fragment55_code.c` | 44 | 43 | 104 | 110 | 5 | 22 | 132 |
-| `src/fragments/50/fragment50_266A60.c` | 50 | 50 | 121 | 18 | 6 | 16 | 199 |
+| `src/fragments/50/fragment50_266A60.c` | 51 | 51 | 121 | 22 | 6 | 16 | 201 |
 | `src/fragments/14/fragment14_FF070.c` | 82 | 81 | 155 | 18 | 11 | 81 | 59 |
-| `src/fragments/17/fragment17_10FFC0.c` | 49 | 48 | 94 | 57 | 12 | 32 | 149 |
-| `src/fragments/63/fragment63_312AE0.c` | 56 | 56 | 89 | 40 | 8 | 43 | 140 |
-| `src/fragments/45/fragment45_2251A0.c` | 73 | 73 | 125 | 88 | 9 | 29 | 49 |
-| `src/fragments/54/fragment54_code.c` | 33 | 33 | 104 | 91 | 1 | 16 | 121 |
-| `src/fragments/60/fragment60_code.c` | 52 | 52 | 106 | 85 | 9 | 27 | 81 |
-| `src/fragments/63/fragment63_30B540.c` | 47 | 45 | 150 | 8 | 8 | 41 | 106 |
+| `src/fragments/17/fragment17_10FFC0.c` | 51 | 50 | 96 | 58 | 12 | 34 | 155 |
+| `src/fragments/63/fragment63_312AE0.c` | 58 | 58 | 90 | 45 | 9 | 44 | 152 |
+| `src/fragments/45/fragment45_22AB80.c` | 46 | 46 | 113 | 166 | 6 | 34 | 30 |
+| `src/fragments/45/fragment45_2251A0.c` | 75 | 75 | 126 | 89 | 9 | 30 | 57 |
+| `src/fragments/57/fragment57_code.c` | 24 | 24 | 78 | 55 | 5 | 13 | 197 |
+| `src/fragments/63/fragment63_30B540.c` | 48 | 46 | 152 | 8 | 8 | 42 | 110 |
+| `src/fragments/67/fragment67_33FAE0.c` | 44 | 43 | 96 | 58 | 7 | 29 | 128 |
+| `src/23D10.c` | 98 | 97 | 106 | 103 | 3 | 45 | 3 |
 | `src/fragments/47/fragment47_24AE60.c` | 38 | 38 | 115 | 42 | 3 | 33 | 124 |
-| `src/fragments/57/fragment57_code.c` | 22 | 22 | 78 | 54 | 5 | 11 | 183 |
-| `src/23D10.c` | 96 | 95 | 105 | 100 | 3 | 44 | 3 |
+| `src/fragments/11/fragment11_D9DE0.c` | 78 | 76 | 118 | 93 | 2 | 60 | 2 |
 | `src/2C1B0.c` | 28 | 28 | 45 | 261 | 1 | 15 | 0 |
-| `src/fragments/11/fragment11_D9DE0.c` | 77 | 75 | 116 | 91 | 2 | 59 | 2 |
-| `src/fragments/56/fragment56_code.c` | 34 | 34 | 102 | 99 | 7 | 12 | 78 |
-| `src/fragments/67/fragment67_33FAE0.c` | 43 | 42 | 96 | 55 | 7 | 28 | 99 |
+| `src/fragments/51/fragment51_275E40.c` | 39 | 39 | 111 | 34 | 3 | 14 | 136 |
+| `src/fragments/44/fragment44_1F1850.c` | 42 | 42 | 83 | 76 | 3 | 32 | 99 |
 | `src/615D0.c` | 67 | 67 | 78 | 8 | 4 | 47 | 122 |
 | `src/fragments/67/fragment67_344D70.c` | 94 | 94 | 99 | 74 | 6 | 25 | 25 |
-| `src/fragments/45/fragment45_22AB80.c` | 43 | 43 | 94 | 126 | 5 | 34 | 19 |
-| `src/fragments/44/fragment44_1F1850.c` | 40 | 40 | 80 | 69 | 3 | 30 | 91 |
-| `src/fragments/21/fragment21_13FFA0.c` | 47 | 47 | 100 | 41 | 4 | 29 | 88 |
-| `src/fragments/51/fragment51_275E40.c` | 38 | 38 | 109 | 34 | 3 | 13 | 106 |
+| `src/fragments/21/fragment21_13FFA0.c` | 48 | 48 | 100 | 42 | 4 | 29 | 91 |
+| `src/fragments/63/fragment63_308D70.c` | 35 | 35 | 81 | 18 | 13 | 31 | 136 |
 | `src/fragments/44/fragment44_1EE290.c` | 39 | 39 | 181 | 51 | 8 | 20 | 1 |
-| `src/fragments/44/fragment44_1FD260.c` | 35 | 32 | 83 | 131 | 1 | 6 | 43 |
-| `src/fragments/69/fragment69_code.c` | 44 | 43 | 85 | 116 | 10 | 19 | 14 |
+| `src/fragments/44/fragment44_1FD260.c` | 36 | 33 | 83 | 133 | 1 | 6 | 43 |
+| `src/fragments/69/fragment69_code.c` | 45 | 44 | 90 | 117 | 11 | 20 | 17 |
+| `src/fragments/21/fragment21_144790.c` | 44 | 43 | 56 | 40 | 8 | 23 | 127 |
+| `src/fragments/17/fragment17_1162A0.c` | 40 | 40 | 123 | 69 | 8 | 16 | 38 |
 | `src/fragments/83/fragment83_code.c` | 62 | 62 | 85 | 43 | 9 | 35 | 50 |
 | `src/10BB0.c` | 54 | 54 | 72 | 40 | 5 | 34 | 78 |
-| `src/fragments/63/fragment63_308D70.c` | 33 | 33 | 77 | 15 | 12 | 29 | 115 |
+| `src/fragments/63/fragment63_317060.c` | 31 | 31 | 51 | 9 | 4 | 25 | 163 |
+| `src/fragments/79/fragment79_36F8B0.c` | 41 | 41 | 61 | 13 | 5 | 31 | 127 |
 | `src/fragments/14/fragment14_FAD40.c` | 45 | 45 | 88 | 22 | 9 | 45 | 67 |
 | `src/fragments/14/fragment14_F81B0.c` | 54 | 54 | 110 | 5 | 7 | 53 | 46 |
-| `src/fragments/63/fragment63_317060.c` | 30 | 30 | 51 | 8 | 4 | 24 | 155 |
+| `src/fragments/31/fragment31_190BB0.c` | 31 | 31 | 84 | 18 | 3 | 12 | 125 |
 | `src/6AA80.c` | 60 | 59 | 84 | 10 | 4 | 29 | 85 |
 | `src/fragments/4/fragment4_AFAA0.c` | 74 | 74 | 82 | 28 | 2 | 61 | 23 |
+| `src/fragments/63/fragment63_310270.c` | 43 | 43 | 72 | 12 | 7 | 33 | 100 |
 | `src/fragments/82/fragment82_4238F0.c` | 56 | 56 | 80 | 31 | 5 | 38 | 56 |
 | `src/fragments/79/fragment79_3C60B0.c` | 113 | 113 | 80 | 50 | 2 | 5 | 13 |
+| `src/fragments/63/fragment63_303990.c` | 40 | 40 | 121 | 14 | 5 | 17 | 60 |
+| `src/fragments/63/fragment63_319010.c` | 42 | 42 | 76 | 19 | 4 | 38 | 78 |
 | `src/21C0.c` | 1 | 1 | 252 | 0 | 0 | 0 | 0 |
 | `src/fragments/19/fragment19_121100.c` | 49 | 49 | 85 | 60 | 3 | 20 | 35 |
 | `src/fragments/44/fragment44_20F140.c` | 22 | 22 | 74 | 94 | 4 | 6 | 52 |
-| `src/fragments/21/fragment21_144790.c` | 41 | 40 | 55 | 34 | 8 | 21 | 93 |
+| `src/fragments/45/fragment45_22FAD0.c` | 26 | 26 | 81 | 109 | 5 | 20 | 11 |
 | `src/4CC20.c` | 59 | 59 | 81 | 10 | 14 | 41 | 44 |
-| `src/fragments/63/fragment63_310270.c` | 42 | 42 | 72 | 12 | 7 | 32 | 84 |
 | `src/fragments/6/fragment6_code.c` | 39 | 39 | 83 | 36 | 11 | 33 | 46 |
-| `src/fragments/79/fragment79_36F8B0.c` | 40 | 40 | 61 | 11 | 5 | 30 | 100 |
-| `src/fragments/63/fragment63_303990.c` | 39 | 39 | 120 | 14 | 5 | 17 | 50 |
 | `src/fragments/79/fragment79_3BF4C0.c` | 64 | 64 | 68 | 2 | 0 | 32 | 77 |
-| `src/fragments/63/fragment63_319010.c` | 40 | 40 | 75 | 17 | 4 | 36 | 66 |
 | `src/47580.c` | 74 | 73 | 82 | 23 | 5 | 41 | 13 |
 | `src/fragments/47/fragment47_24E0A0.c` | 42 | 42 | 66 | 12 | 2 | 31 | 83 |
 | `src/fragments/58/fragment58_code.c` | 19 | 19 | 73 | 57 | 3 | 8 | 76 |
+| `src/fragments/67/fragment67_33D6A0.c` | 37 | 37 | 74 | 33 | 5 | 9 | 78 |
 | `src/CE80.c` | 70 | 70 | 57 | 13 | 1 | 25 | 68 |
-| `src/fragments/31/fragment31_190BB0.c` | 29 | 29 | 74 | 16 | 3 | 11 | 100 |
+| `src/fragments/14/fragment14_104FC0.c` | 25 | 25 | 58 | 26 | 2 | 25 | 93 |
 | `src/fragments/31/fragment31_189760.c` | 25 | 25 | 87 | 46 | 3 | 10 | 58 |
 | `src/fragments/79/fragment79_3B7EA0.c` | 48 | 48 | 84 | 24 | 1 | 28 | 44 |
 | `src/fragments/25/fragment25_15A060.c` | 29 | 29 | 76 | 22 | 5 | 25 | 71 |
 | `src/6E850.c` | 55 | 55 | 53 | 36 | 4 | 38 | 40 |
-| `src/fragments/67/fragment67_33D6A0.c` | 36 | 36 | 70 | 30 | 5 | 8 | 76 |
+| `src/fragments/79/fragment79_3C40B0.c` | 22 | 22 | 28 | 8 | 3 | 14 | 151 |
 | `src/fragments/14/fragment14_1077C0.c` | 29 | 27 | 63 | 19 | 1 | 27 | 87 |
-| `src/fragments/17/fragment17_1162A0.c` | 38 | 38 | 92 | 53 | 7 | 15 | 18 |
-| `src/fragments/14/fragment14_104FC0.c` | 24 | 24 | 57 | 26 | 2 | 24 | 89 |
+| `src/fragments/66/fragment66_code.c` | 32 | 29 | 57 | 63 | 3 | 15 | 55 |
 | `src/fragments/14/fragment14_FD770.c` | 31 | 31 | 54 | 6 | 4 | 30 | 96 |
+| `src/fragments/77/fragment77_code.c` | 28 | 28 | 81 | 81 | 0 | 4 | 26 |
 | `src/fragments/79/fragment79_38D510.c` | 36 | 36 | 38 | 9 | 2 | 35 | 93 |
-| `src/fragments/45/fragment45_22FAD0.c` | 24 | 24 | 66 | 88 | 3 | 19 | 10 |
 | `src/fragments/22/fragment22_14B090.c` | 37 | 37 | 59 | 24 | 6 | 19 | 61 |
-| `src/fragments/77/fragment77_code.c` | 27 | 27 | 81 | 75 | 0 | 4 | 19 |
 | `src/fragments/9/fragment9_code.c` | 28 | 28 | 69 | 18 | 9 | 23 | 59 |
 | `src/1CDC0.c` | 35 | 35 | 47 | 23 | 4 | 18 | 76 |
-| `src/fragments/66/fragment66_code.c` | 29 | 26 | 57 | 61 | 2 | 13 | 43 |
+| `src/fragments/17/fragment17_113A60.c` | 23 | 23 | 41 | 49 | 3 | 19 | 68 |
 | `src/fragments/48/fragment48_256020.c` | 51 | 49 | 49 | 12 | 1 | 50 | 40 |
 | `src/fragments/79/fragment79_375530.c` | 35 | 35 | 52 | 9 | 1 | 18 | 86 |
+| `src/fragments/34/fragment34_1C5AA0.c` | 48 | 48 | 58 | 26 | 9 | 24 | 33 |
 | `src/fragments/40/fragment40_1DC1F0.c` | 18 | 18 | 63 | 25 | 4 | 12 | 76 |
-| `src/fragments/34/fragment34_1C5AA0.c` | 47 | 47 | 58 | 25 | 9 | 23 | 33 |
-| `src/fragments/17/fragment17_113A60.c` | 22 | 22 | 39 | 47 | 3 | 18 | 64 |
+| `src/fragments/44/fragment44_207AF0.c` | 26 | 26 | 62 | 68 | 9 | 19 | 14 |
+| `src/fragments/79/fragment79_3BC290.c` | 35 | 35 | 43 | 1 | 3 | 18 | 98 |
+| `src/fragments/31/fragment31_197640.c` | 33 | 33 | 77 | 19 | 3 | 8 | 55 |
 | `src/fragments/31/fragment31_179030.c` | 14 | 14 | 40 | 24 | 0 | 8 | 107 |
-| `src/fragments/79/fragment79_3C40B0.c` | 21 | 21 | 28 | 8 | 3 | 13 | 120 |
+| `src/fragments/63/fragment63_306150.c` | 27 | 27 | 76 | 19 | 7 | 24 | 39 |
+| `src/fragments/10/fragment10_D5250.c` | 25 | 25 | 61 | 18 | 0 | 22 | 64 |
+| `src/fragments/72/fragment72_code.c` | 21 | 21 | 72 | 35 | 6 | 10 | 43 |
 | `src/fragments/79/fragment79_377F80.c` | 43 | 41 | 67 | 27 | 8 | 28 | 14 |
-| `src/fragments/79/fragment79_3BC290.c` | 34 | 34 | 42 | 1 | 3 | 18 | 87 |
+| `src/fragments/8/fragment8_code.c` | 29 | 29 | 76 | 9 | 1 | 28 | 42 |
 | `src/fragments/32/fragment32_1B1330.c` | 20 | 20 | 84 | 68 | 1 | 8 | 3 |
 | `src/fragments/84/fragment84_code.c` | 46 | 46 | 75 | 34 | 6 | 8 | 14 |
-| `src/fragments/8/fragment8_code.c` | 28 | 28 | 75 | 9 | 1 | 27 | 42 |
 | `src/fragments/29/fragment29_168330.c` | 28 | 28 | 45 | 17 | 2 | 7 | 81 |
 | `src/fragments/12/fragment12_E5330.c` | 25 | 25 | 71 | 64 | 6 | 10 | 3 |
 | `src/1A360.c` | 30 | 29 | 28 | 16 | 1 | 20 | 84 |
-| `src/fragments/72/fragment72_code.c` | 19 | 19 | 68 | 33 | 6 | 10 | 41 |
 | `src/fragments/85/fragment85_code.c` | 36 | 36 | 71 | 27 | 2 | 13 | 27 |
 | `src/fragments/80/fragment80_4194A0.c` | 55 | 55 | 58 | 1 | 0 | 54 | 7 |
-| `src/fragments/10/fragment10_D5250.c` | 24 | 24 | 57 | 17 | 0 | 21 | 52 |
+| `src/fragments/34/fragment34_1C1BC0.c` | 28 | 28 | 54 | 31 | 4 | 10 | 47 |
 | `src/fragments/51/fragment51_27B9E0.c` | 15 | 15 | 28 | 21 | 2 | 13 | 89 |
-| `src/fragments/63/fragment63_306150.c` | 25 | 25 | 72 | 17 | 6 | 23 | 23 |
 | `src/fragments/81/fragment81_code.c` | 34 | 34 | 39 | 45 | 1 | 17 | 26 |
 | `src/fragments/1/fragment1_code.c` | 15 | 15 | 42 | 46 | 4 | 4 | 48 |
 | `src/fragments/44/fragment44_1F9DB0.c` | 16 | 16 | 41 | 65 | 2 | 8 | 27 |
-| `src/fragments/34/fragment34_1C1BC0.c` | 27 | 27 | 52 | 31 | 4 | 10 | 33 |
+| `src/fragments/82/fragment82_420EA0.c` | 37 | 37 | 45 | 28 | 3 | 6 | 40 |
 | `src/fragments/30/fragment30_170D70.c` | 10 | 10 | 53 | 25 | 1 | 2 | 63 |
+| `src/fragments/31/fragment31_183700.c` | 20 | 20 | 71 | 24 | 2 | 11 | 25 |
 | `src/fragments/44/fragment44_1F0680.c` | 15 | 15 | 20 | 10 | 0 | 14 | 93 |
-| `src/fragments/44/fragment44_207AF0.c` | 24 | 24 | 54 | 41 | 8 | 17 | 6 |
+| `src/fragments/18/fragment18_code.c` | 17 | 16 | 28 | 7 | 5 | 14 | 81 |
 | `src/fragments/63/fragment63_30F070.c` | 24 | 24 | 41 | 17 | 9 | 22 | 36 |
 | `src/641E0.c` | 40 | 40 | 43 | 27 | 3 | 34 | 1 |
 | `src/fragments/11/fragment11_D7BC0.c` | 39 | 37 | 39 | 6 | 10 | 36 | 20 |
+| `src/fragments/44/fragment44_201DA0.c` | 6 | 6 | 46 | 42 | 3 | 3 | 48 |
+| `src/fragments/31/fragment31_186690.c` | 21 | 21 | 75 | 32 | 5 | 3 | 11 |
 | `src/fragments/44/fragment44_204950.c` | 13 | 13 | 46 | 44 | 1 | 6 | 37 |
+| `src/fragments/63/fragment63_307D60.c` | 17 | 17 | 59 | 12 | 3 | 15 | 41 |
 | `src/fragments/45/fragment45_2324B0.c` | 22 | 22 | 48 | 53 | 0 | 12 | 10 |
+| `src/fragments/31/fragment31_17F280.c` | 26 | 26 | 70 | 20 | 0 | 4 | 24 |
+| `src/fragments/63/fragment63_305090.c` | 20 | 20 | 57 | 12 | 3 | 17 | 34 |
 | `src/fragments/11/fragment11_E1E10.c` | 28 | 28 | 60 | 10 | 4 | 27 | 13 |
-| `src/fragments/31/fragment31_197640.c` | 30 | 30 | 59 | 16 | 1 | 8 | 28 |
+| `src/fragments/16/fragment16_code.c` | 28 | 28 | 67 | 37 | 3 | 7 | 0 |
+| `src/fragments/20/fragment20_128B10.c` | 32 | 32 | 62 | 11 | 3 | 12 | 22 |
 | `src/fragments/37/fragment37_code.c` | 13 | 13 | 49 | 8 | 1 | 1 | 69 |
-| `src/fragments/16/fragment16_code.c` | 27 | 27 | 65 | 37 | 3 | 7 | 0 |
-| `src/fragments/20/fragment20_128B10.c` | 31 | 31 | 60 | 11 | 3 | 12 | 21 |
-| `src/fragments/31/fragment31_17F280.c` | 25 | 25 | 69 | 20 | 0 | 4 | 18 |
 | `src/fragments/44/fragment44_212740.c` | 20 | 20 | 34 | 68 | 2 | 4 | 8 |
+| `src/fragments/31/fragment31_17B150.c` | 16 | 16 | 66 | 14 | 0 | 6 | 32 |
 | `src/fragments/45/fragment45_2348E0.c` | 17 | 17 | 46 | 40 | 0 | 12 | 17 |
-| `src/fragments/31/fragment31_17B150.c` | 15 | 15 | 65 | 14 | 0 | 6 | 30 |
 | `src/fragments/80/fragment80_41AC50.c` | 34 | 34 | 34 | 36 | 0 | 18 | 7 |
-| `src/fragments/82/fragment82_420EA0.c` | 35 | 35 | 44 | 27 | 3 | 6 | 14 |
-| `src/fragments/31/fragment31_186690.c` | 20 | 20 | 64 | 28 | 4 | 3 | 9 |
-| `src/fragments/63/fragment63_305090.c` | 19 | 19 | 51 | 10 | 3 | 16 | 29 |
 | `src/fragments/29/fragment29_167940.c` | 8 | 8 | 9 | 3 | 4 | 7 | 96 |
 | `src/4F800.c` | 31 | 31 | 49 | 22 | 0 | 18 | 5 |
 | `src/fragments/44/fragment44_205C30.c` | 12 | 12 | 34 | 53 | 1 | 3 | 22 |
-| `src/fragments/44/fragment44_201DA0.c` | 4 | 4 | 35 | 40 | 2 | 2 | 41 |
 | `src/fragments/79/fragment79_3B9B80.c` | 25 | 25 | 43 | 7 | 5 | 12 | 27 |
-| `src/fragments/18/fragment18_code.c` | 16 | 15 | 20 | 5 | 5 | 13 | 59 |
+| `src/fragments/63/fragment63_315A90.c` | 20 | 20 | 35 | 6 | 8 | 19 | 30 |
 | `src/fragments/51/fragment51_27AC10.c` | 12 | 12 | 19 | 6 | 1 | 8 | 71 |
 | `src/44300.c` | 16 | 16 | 36 | 5 | 8 | 16 | 35 |
 | `src/fragments/48/fragment48_257730.c` | 22 | 22 | 26 | 0 | 2 | 20 | 46 |
 | `src/fragments/64/fragment64_324FB0.c` | 15 | 15 | 24 | 10 | 1 | 13 | 53 |
+| `src/fragments/34/fragment34_1BE300.c` | 14 | 14 | 31 | 12 | 0 | 5 | 53 |
 | `src/fragments/79/fragment79_373F70.c` | 15 | 15 | 23 | 9 | 0 | 13 | 55 |
+| `src/fragments/23/fragment23_code.c` | 17 | 17 | 43 | 22 | 7 | 11 | 14 |
 | `src/4420.c` | 31 | 31 | 26 | 6 | 6 | 23 | 21 |
+| `src/fragments/44/fragment44_2030B0.c` | 15 | 15 | 46 | 32 | 2 | 8 | 10 |
+| `src/fragments/63/fragment63_30E370.c` | 15 | 15 | 50 | 10 | 2 | 13 | 23 |
 | `src/43700.c` | 24 | 24 | 29 | 6 | 1 | 15 | 37 |
-| `src/fragments/31/fragment31_183700.c` | 16 | 16 | 55 | 17 | 2 | 10 | 11 |
+| `src/fragments/63/fragment63_31BD80.c` | 11 | 11 | 48 | 9 | 4 | 10 | 30 |
+| `src/fragments/17/fragment17_11B210.c` | 27 | 27 | 43 | 18 | 3 | 12 | 8 |
+| `src/fragments/19/fragment19_124E40.c` | 18 | 18 | 30 | 24 | 4 | 10 | 25 |
 | `src/fragments/44/fragment44_20D3A0.c` | 13 | 13 | 38 | 19 | 7 | 7 | 27 |
-| `src/fragments/17/fragment17_11B210.c` | 26 | 26 | 43 | 18 | 3 | 12 | 8 |
-| `src/fragments/63/fragment63_307D60.c` | 15 | 15 | 51 | 9 | 3 | 14 | 18 |
-| `src/fragments/19/fragment19_124E40.c` | 17 | 17 | 30 | 23 | 4 | 10 | 25 |
-| `src/fragments/23/fragment23_code.c` | 16 | 16 | 43 | 19 | 7 | 10 | 14 |
 | `src/fragments/44/fragment44_209BD0.c` | 10 | 10 | 36 | 39 | 1 | 5 | 18 |
+| `src/fragments/31/fragment31_19D160.c` | 6 | 6 | 26 | 11 | 0 | 0 | 65 |
 | `src/fragments/30/fragment30_16D4F0.c` | 14 | 14 | 38 | 12 | 2 | 6 | 35 |
 | `src/fragments/31/fragment31_1900C0.c` | 7 | 7 | 58 | 36 | 0 | 2 | 4 |
-| `src/fragments/44/fragment44_2030B0.c` | 14 | 14 | 46 | 32 | 1 | 7 | 5 |
+| `src/fragments/75/fragment75_code.c` | 17 | 17 | 49 | 22 | 2 | 7 | 8 |
+| `src/fragments/31/fragment31_175260.c` | 12 | 12 | 49 | 8 | 3 | 10 | 22 |
 | `src/dp_intro.c` | 27 | 27 | 22 | 23 | 0 | 9 | 22 |
 | `src/fragments/4/fragment4_B2D00.c` | 24 | 24 | 43 | 7 | 3 | 19 | 6 |
 | `src/fragments/64/fragment64_325920.c` | 7 | 7 | 20 | 10 | 1 | 6 | 58 |
 | `src/fragments/44/fragment44_20A610.c` | 12 | 12 | 24 | 44 | 0 | 3 | 18 |
 | `src/fragments/13/fragment13_EE5B0.c` | 10 | 10 | 44 | 25 | 1 | 8 | 11 |
-| `src/fragments/31/fragment31_175260.c` | 11 | 11 | 46 | 8 | 3 | 9 | 22 |
-| `src/fragments/63/fragment63_30E370.c` | 14 | 14 | 43 | 10 | 2 | 12 | 18 |
-| `src/fragments/63/fragment63_315A90.c` | 19 | 19 | 30 | 6 | 8 | 18 | 18 |
+| `src/fragments/44/fragment44_1F7DD0.c` | 6 | 6 | 35 | 24 | 0 | 1 | 33 |
 | `src/fragments/38/fragment38_1D5610.c` | 19 | 19 | 42 | 9 | 0 | 1 | 26 |
 | `src/fragments/44/fragment44_1F5F20.c` | 13 | 13 | 33 | 27 | 5 | 7 | 12 |
 | `src/fragments/30/fragment30_170430.c` | 7 | 7 | 34 | 12 | 0 | 1 | 41 |
@@ -199,70 +204,72 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/31/fragment31_19F570.c` | 16 | 16 | 41 | 18 | 2 | 3 | 14 |
 | `src/fragments/64/fragment64_3235A0.c` | 10 | 9 | 24 | 6 | 1 | 4 | 50 |
 | `src/fragments/31/fragment31_1A03C0.c` | 16 | 16 | 34 | 16 | 0 | 1 | 26 |
+| `src/fragments/41/fragment41_code.c` | 12 | 12 | 40 | 31 | 0 | 6 | 4 |
 | `src/4EE50.c` | 16 | 16 | 22 | 7 | 1 | 8 | 38 |
 | `src/8470.c` | 29 | 29 | 17 | 12 | 2 | 5 | 27 |
-| `src/fragments/75/fragment75_code.c` | 16 | 16 | 44 | 15 | 2 | 7 | 8 |
+| `src/fragments/78/fragment78_code.c` | 18 | 18 | 37 | 24 | 5 | 7 | 1 |
 | `src/fragments/79/fragment79_3BEAF0.c` | 16 | 16 | 25 | 3 | 3 | 15 | 30 |
 | `src/fragments/34/fragment34_1BD630.c` | 8 | 8 | 48 | 32 | 1 | 2 | 0 |
 | `src/fragments/40/fragment40_1E0550.c` | 21 | 21 | 37 | 19 | 0 | 13 | 1 |
 | `src/fragments/67/fragment67_34C8B0.c` | 15 | 15 | 47 | 23 | 3 | 3 | 0 |
 | `src/fragments/22/fragment22_14A2E0.c` | 11 | 11 | 42 | 29 | 4 | 4 | 0 |
+| `src/fragments/29/fragment29_166060.c` | 26 | 26 | 31 | 12 | 1 | 20 | 0 |
+| `src/fragments/48/fragment48_258080.c` | 17 | 17 | 35 | 2 | 6 | 17 | 12 |
 | `src/fragments/5/fragment5_code.c` | 11 | 11 | 43 | 11 | 0 | 10 | 14 |
+| `src/fragments/64/fragment64_3312D0.c` | 21 | 21 | 39 | 7 | 2 | 16 | 4 |
 | `src/fragments/79/fragment79_372DE0.c` | 27 | 23 | 24 | 9 | 7 | 25 | 1 |
-| `src/fragments/29/fragment29_166060.c` | 25 | 25 | 31 | 12 | 1 | 19 | 0 |
 | `src/fragments/33/fragment33_code.c` | 11 | 11 | 37 | 9 | 4 | 6 | 21 |
 | `src/fragments/71/fragment71_code.c` | 8 | 8 | 39 | 29 | 2 | 2 | 8 |
+| `src/fragments/14/fragment14_109280.c` | 14 | 14 | 38 | 8 | 0 | 14 | 13 |
 | `src/4C2E0.c` | 25 | 25 | 29 | 8 | 4 | 20 | 0 |
 | `src/56F90.c` | 31 | 31 | 15 | 17 | 2 | 21 | 0 |
 | `src/67F00.c` | 10 | 10 | 44 | 16 | 2 | 9 | 5 |
-| `src/fragments/48/fragment48_258080.c` | 16 | 16 | 34 | 1 | 6 | 16 | 12 |
 | `src/fragments/44/fragment44_1F6BF0.c` | 11 | 11 | 25 | 33 | 0 | 3 | 12 |
 | `src/fragments/14/fragment14_FCD40.c` | 14 | 14 | 31 | 5 | 0 | 14 | 19 |
+| `src/fragments/50/fragment50_26BF40.c` | 16 | 16 | 18 | 4 | 1 | 3 | 41 |
 | `src/57C0.c` | 24 | 24 | 9 | 6 | 7 | 15 | 21 |
 | `src/fragments/26/fragment26_15EA30.c` | 29 | 29 | 28 | 9 | 2 | 14 | 0 |
+| `src/fragments/32/fragment32_1B6E40.c` | 11 | 11 | 32 | 18 | 6 | 4 | 11 |
 | `src/fragments/63/fragment63_3166F0.c` | 17 | 17 | 29 | 6 | 4 | 7 | 19 |
 | `src/fragments/64/fragment64_322C90.c` | 10 | 10 | 26 | 18 | 3 | 3 | 22 |
-| `src/fragments/64/fragment64_3312D0.c` | 20 | 20 | 38 | 3 | 2 | 15 | 4 |
-| `src/fragments/78/fragment78_code.c` | 17 | 17 | 34 | 19 | 4 | 7 | 1 |
+| `src/72C30.c` | 16 | 16 | 13 | 12 | 2 | 14 | 23 |
 | `src/fragments/79/fragment79_379E90.c` | 9 | 9 | 28 | 29 | 1 | 3 | 10 |
 | `src/fragments/34/fragment34_1C3FA0.c` | 9 | 9 | 29 | 11 | 4 | 0 | 26 |
-| `src/fragments/41/fragment41_code.c` | 10 | 10 | 36 | 26 | 0 | 5 | 2 |
-| `src/fragments/63/fragment63_31BD80.c` | 9 | 9 | 39 | 7 | 4 | 9 | 11 |
 | `src/fragments/47/fragment47_2507E0.c` | 13 | 13 | 28 | 19 | 1 | 8 | 9 |
+| `src/fragments/39/fragment39_1DA9F0.c` | 16 | 16 | 24 | 4 | 2 | 15 | 16 |
 | `src/fragments/44/fragment44_1F85B0.c` | 11 | 10 | 31 | 27 | 4 | 5 | 0 |
 | `src/674D0.c` | 5 | 5 | 49 | 14 | 2 | 3 | 3 |
+| `src/fragments/24/fragment24_14FE20.c` | 9 | 9 | 48 | 12 | 2 | 5 | 0 |
+| `src/fragments/31/fragment31_174460.c` | 16 | 16 | 26 | 15 | 1 | 14 | 4 |
 | `src/fragments/31/fragment31_1A3960.c` | 13 | 13 | 34 | 17 | 0 | 1 | 11 |
 | `src/fragments/35/fragment35_1CCE70.c` | 11 | 10 | 21 | 40 | 1 | 4 | 0 |
 | `src/fragments/31/fragment31_193D50.c` | 10 | 10 | 34 | 15 | 1 | 3 | 12 |
 | `src/fragments/31/fragment31_1A1BD0.c` | 16 | 16 | 36 | 9 | 3 | 3 | 8 |
-| `src/fragments/39/fragment39_1DA9F0.c` | 15 | 15 | 24 | 4 | 2 | 14 | 16 |
 | `src/fragments/52/fragment52_2871C0.c` | 9 | 9 | 23 | 6 | 0 | 6 | 31 |
 | `src/65820.c` | 19 | 19 | 39 | 8 | 0 | 7 | 0 |
 | `src/fragments/48/fragment48_258D80.c` | 9 | 9 | 25 | 6 | 0 | 8 | 24 |
+| `src/fragments/31/fragment31_19DFC0.c` | 11 | 11 | 34 | 18 | 0 | 3 | 5 |
 | `src/fragments/31/fragment31_19E800.c` | 12 | 12 | 34 | 10 | 0 | 2 | 13 |
-| `src/fragments/24/fragment24_14FE20.c` | 8 | 8 | 44 | 12 | 2 | 4 | 0 |
 | `src/fragments/31/fragment31_18F6D0.c` | 19 | 18 | 23 | 3 | 1 | 19 | 6 |
 | `src/fragments/32/fragment32_1B8010.c` | 14 | 14 | 28 | 18 | 1 | 9 | 0 |
 | `src/fragments/64/fragment64_3290A0.c` | 12 | 11 | 28 | 9 | 0 | 6 | 16 |
 | `src/fragments/70/fragment70_code.c` | 10 | 9 | 31 | 15 | 1 | 2 | 12 |
 | `src/fragments/79/fragment79_3749B0.c` | 9 | 9 | 27 | 21 | 0 | 5 | 8 |
-| `src/fragments/14/fragment14_109280.c` | 13 | 13 | 27 | 3 | 0 | 13 | 13 |
-| `src/fragments/31/fragment31_19D160.c` | 5 | 5 | 20 | 10 | 0 | 0 | 34 |
+| `src/fragments/25/fragment25_15BBC0.c` | 9 | 8 | 20 | 7 | 6 | 8 | 20 |
 | `src/fragments/44/fragment44_1F5480.c` | 5 | 5 | 20 | 27 | 0 | 0 | 17 |
 | `src/fragments/67/fragment67_34B0F0.c` | 14 | 14 | 36 | 12 | 4 | 3 | 0 |
 | `src/fragments/79/fragment79_375110.c` | 11 | 11 | 11 | 3 | 1 | 11 | 32 |
 | `src/6DEC0.c` | 6 | 6 | 13 | 46 | 1 | 2 | 0 |
 | `src/fragments/10/fragment10_D4C50.c` | 5 | 5 | 35 | 5 | 1 | 5 | 17 |
+| `src/fragments/31/fragment31_1736F0.c` | 10 | 10 | 28 | 10 | 1 | 3 | 16 |
 | `src/fragments/42/fragment42_code.c` | 7 | 7 | 36 | 21 | 0 | 1 | 3 |
 | `src/fragments/79/fragment79_3C50B0.c` | 25 | 25 | 23 | 8 | 0 | 12 | 0 |
-| `src/fragments/34/fragment34_1BE300.c` | 13 | 13 | 29 | 11 | 0 | 5 | 9 |
 | `src/fragments/67/fragment67_343510.c` | 12 | 12 | 13 | 31 | 0 | 11 | 0 |
 | `src/1C2D0.c` | 10 | 10 | 6 | 4 | 0 | 9 | 37 |
-| `src/fragments/31/fragment31_174460.c` | 14 | 14 | 23 | 14 | 1 | 12 | 2 |
+| `src/fragments/14/fragment14_FA520.c` | 8 | 8 | 35 | 10 | 1 | 6 | 6 |
 | `src/fragments/31/fragment31_194450.c` | 6 | 6 | 33 | 13 | 0 | 2 | 11 |
 | `src/fragments/38/fragment38_1D8990.c` | 10 | 10 | 36 | 15 | 2 | 2 | 0 |
 | `src/fragments/64/fragment64_32DC40.c` | 10 | 10 | 14 | 6 | 1 | 9 | 25 |
-| `src/fragments/50/fragment50_26BF40.c` | 15 | 15 | 18 | 4 | 0 | 2 | 25 |
 | `src/fragments/51/fragment51_279D70.c` | 6 | 6 | 13 | 9 | 1 | 2 | 33 |
 | `src/fragments/74/fragment74_code.c` | 9 | 9 | 31 | 19 | 1 | 4 | 0 |
 | `src/68F90.c` | 3 | 3 | 37 | 10 | 3 | 2 | 8 |
@@ -271,19 +278,17 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/87/fragment87_code.c` | 15 | 15 | 27 | 9 | 4 | 8 | 0 |
 | `src/69650.c` | 5 | 5 | 35 | 12 | 3 | 4 | 3 |
 | `src/fragments/17/fragment17_10F9E0.c` | 5 | 5 | 28 | 14 | 0 | 4 | 11 |
-| `src/fragments/25/fragment25_15BBC0.c` | 7 | 6 | 19 | 6 | 5 | 7 | 19 |
 | `src/69F70.c` | 5 | 5 | 34 | 14 | 3 | 1 | 4 |
-| `src/72C30.c` | 15 | 15 | 13 | 4 | 2 | 13 | 14 |
-| `src/fragments/31/fragment31_19DFC0.c` | 10 | 10 | 31 | 13 | 0 | 2 | 4 |
 | `src/fragments/64/fragment64_324A10.c` | 4 | 4 | 19 | 6 | 1 | 3 | 27 |
-| `src/fragments/14/fragment14_FA520.c` | 7 | 7 | 32 | 8 | 1 | 5 | 6 |
+| `src/fragments/67/fragment67_3422F0.c` | 12 | 12 | 14 | 14 | 0 | 11 | 9 |
 | `src/fragments/67/fragment67_342DB0.c` | 7 | 7 | 11 | 7 | 3 | 5 | 26 |
 | `src/fragments/64/fragment64_32C420.c` | 9 | 9 | 18 | 5 | 1 | 5 | 20 |
-| `src/fragments/67/fragment67_3422F0.c` | 11 | 11 | 14 | 14 | 0 | 10 | 9 |
 | `src/fragments/79/fragment79_377570.c` | 19 | 19 | 24 | 9 | 1 | 1 | 4 |
 | `src/fragments/31/fragment31_195910.c` | 4 | 4 | 25 | 15 | 0 | 0 | 13 |
 | `src/fragments/52/fragment52_2862C0.c` | 8 | 7 | 11 | 3 | 0 | 3 | 33 |
-| `src/fragments/32/fragment32_1B6E40.c` | 9 | 9 | 21 | 17 | 5 | 2 | 2 |
+| `src/fragments/73/fragment73_code.c` | 6 | 6 | 36 | 13 | 1 | 1 | 0 |
+| `src/4AC10.c` | 16 | 16 | 13 | 10 | 1 | 16 | 0 |
+| `src/fragments/79/fragment79_379450.c` | 12 | 12 | 13 | 14 | 0 | 11 | 6 |
 | `src/fragments/79/fragment79_380210.c` | 10 | 10 | 16 | 13 | 0 | 10 | 7 |
 | `src/AC80.c` | 15 | 14 | 5 | 11 | 0 | 4 | 21 |
 | `src/fragments/64/fragment64_326820.c` | 5 | 5 | 17 | 9 | 0 | 5 | 19 |
@@ -292,16 +297,14 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/20/fragment20_1286C0.c` | 5 | 5 | 17 | 7 | 2 | 2 | 21 |
 | `src/9E00.c` | 13 | 13 | 4 | 28 | 0 | 2 | 6 |
 | `src/fragments/31/fragment31_194C30.c` | 7 | 7 | 24 | 7 | 0 | 2 | 13 |
+| `src/fragments/31/fragment31_19C390.c` | 5 | 5 | 20 | 10 | 0 | 1 | 17 |
 | `src/fragments/48/fragment48_2597B0.c` | 6 | 6 | 5 | 4 | 0 | 4 | 34 |
 | `src/fragments/68/fragment68_code.c` | 8 | 6 | 32 | 13 | 1 | 1 | 0 |
-| `src/fragments/79/fragment79_379450.c` | 11 | 11 | 13 | 13 | 0 | 10 | 6 |
 | `src/fragments/79/fragment79_38EBD0.c` | 8 | 8 | 16 | 7 | 0 | 7 | 15 |
-| `src/4AC10.c` | 15 | 15 | 11 | 10 | 1 | 15 | 0 |
 | `src/fragments/4/fragment4_AE600.c` | 11 | 11 | 27 | 7 | 1 | 6 | 0 |
 | `src/fragments/44/fragment44_1F5BD0.c` | 6 | 5 | 17 | 17 | 1 | 3 | 9 |
 | `src/fragments/64/fragment64_32FE10.c` | 9 | 9 | 24 | 6 | 2 | 9 | 2 |
 | `src/fragments/31/fragment31_1965A0.c` | 8 | 8 | 23 | 10 | 0 | 1 | 9 |
-| `src/fragments/73/fragment73_code.c` | 5 | 5 | 33 | 11 | 1 | 1 | 0 |
 | `src/44E70.c` | 22 | 22 | 9 | 2 | 2 | 15 | 0 |
 | `src/6670.c` | 15 | 14 | 16 | 12 | 4 | 4 | 0 |
 | `src/728D0.c` | 5 | 5 | 8 | 0 | 1 | 4 | 32 |
@@ -312,13 +315,12 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/1/fragment1_tail.c` | 4 | 4 | 28 | 10 | 1 | 2 | 3 |
 | `src/fragments/86/fragment86_code.c` | 15 | 15 | 20 | 7 | 0 | 6 | 0 |
 | `src/fragments/11/fragment11_D9520.c` | 13 | 12 | 18 | 1 | 1 | 13 | 2 |
+| `src/fragments/20/fragment20_1280F0.c` | 3 | 3 | 23 | 2 | 0 | 3 | 15 |
 | `src/fragments/31/fragment31_1732A0.c` | 9 | 9 | 13 | 5 | 1 | 7 | 11 |
-| `src/fragments/44/fragment44_1F7DD0.c` | 4 | 4 | 15 | 11 | 0 | 1 | 15 |
 | `src/fragments/67/fragment67_33F420.c` | 6 | 6 | 10 | 27 | 0 | 3 | 0 |
 | `src/fragments/80/fragment80_41A5F0.c` | 10 | 10 | 14 | 7 | 0 | 10 | 5 |
 | `src/fragments/44/fragment44_20BDB0.c` | 4 | 4 | 14 | 11 | 0 | 1 | 15 |
 | `src/fragments/25/fragment25_15CBC0.c` | 13 | 13 | 14 | 4 | 0 | 13 | 0 |
-| `src/fragments/31/fragment31_1736F0.c` | 8 | 8 | 24 | 8 | 1 | 3 | 0 |
 | `src/fragments/38/fragment38_1D8160.c` | 13 | 13 | 19 | 3 | 1 | 7 | 1 |
 | `src/fragments/44/fragment44_20CBF0.c` | 4 | 4 | 15 | 9 | 0 | 1 | 15 |
 | `src/7140.c` | 14 | 14 | 5 | 9 | 2 | 12 | 1 |
@@ -346,7 +348,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/66DF0.c` | 1 | 1 | 22 | 11 | 0 | 0 | 0 |
 | `src/fragments/31/fragment31_19CD60.c` | 5 | 5 | 17 | 8 | 0 | 0 | 4 |
 | `src/fragments/11/fragment11_E35C0.c` | 11 | 11 | 11 | 0 | 0 | 11 | 0 |
-| `src/fragments/31/fragment31_19C390.c` | 4 | 4 | 15 | 7 | 0 | 0 | 7 |
 | `src/fragments/64/fragment64_32AEF0.c` | 10 | 10 | 11 | 0 | 3 | 9 | 0 |
 | `src/fragments/79/fragment79_3CB430.c` | 13 | 13 | 8 | 9 | 2 | 1 | 0 |
 | `src/fragments/64/fragment64_32F5F0.c` | 7 | 7 | 12 | 3 | 0 | 2 | 8 |
@@ -356,6 +357,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/20/fragment20_12BB60.c` | 8 | 8 | 9 | 9 | 0 | 5 | 0 |
 | `src/fragments/21/fragment21_147D10.c` | 11 | 11 | 8 | 8 | 0 | 4 | 0 |
 | `src/fragments/32/fragment32_1B8DE0.c` | 6 | 6 | 15 | 8 | 1 | 1 | 0 |
+| `src/fragments/50/fragment50_26D1D0.c` | 7 | 7 | 9 | 4 | 2 | 2 | 7 |
 | `src/fragments/64/fragment64_32F2C0.c` | 6 | 6 | 19 | 4 | 0 | 2 | 0 |
 | `src/fragments/31/fragment31_1A6360.c` | 4 | 4 | 16 | 10 | 0 | 0 | 0 |
 | `src/226C0.c` | 5 | 5 | 14 | 9 | 0 | 1 | 0 |
@@ -367,7 +369,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/51/fragment51_279A20.c` | 3 | 3 | 9 | 13 | 0 | 1 | 2 |
 | `src/fragments/64/fragment64_331000.c` | 9 | 9 | 8 | 1 | 1 | 9 | 0 |
 | `src/fragments/79/fragment79_3D67F0.c` | 8 | 8 | 8 | 3 | 4 | 5 | 0 |
-| `src/fragments/20/fragment20_1280F0.c` | 2 | 2 | 19 | 2 | 0 | 2 | 2 |
 | `src/fragments/31/fragment31_1A5AE0.c` | 4 | 4 | 17 | 6 | 0 | 0 | 0 |
 | `src/fragments/64/fragment64_32EC70.c` | 5 | 5 | 6 | 10 | 1 | 5 | 0 |
 | `src/3E40.c` | 9 | 9 | 5 | 8 | 1 | 3 | 0 |
@@ -381,7 +382,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/208A0.c` | 5 | 5 | 6 | 1 | 1 | 4 | 7 |
 | `src/62E0.c` | 5 | 5 | 5 | 6 | 1 | 1 | 6 |
 | `src/fragments/29/fragment29_16B030.c` | 5 | 5 | 12 | 6 | 0 | 1 | 0 |
-| `src/fragments/50/fragment50_26D1D0.c` | 6 | 6 | 9 | 4 | 2 | 1 | 2 |
 | `src/fragments/52/fragment52_285F60.c` | 5 | 5 | 15 | 4 | 0 | 0 | 0 |
 | `src/fragments/65/fragment65_code.c` | 9 | 9 | 9 | 3 | 1 | 2 | 0 |
 | `src/fragments/79/fragment79_3D4DA0.c` | 6 | 6 | 5 | 6 | 4 | 3 | 0 |
@@ -476,6 +476,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `S1_DoubleTextureTrail` | `src/fragments/79/fragment79_3D4DA0.c` | 23 | 23 |
 | `S1_DoubleTextureTrail` | `src/fragments/79/fragment79_3D67F0.c` | 23 | 23 |
 | `s` | `src/10BB0.c` | 59 | 22 |
+| `ListConfig_8AF09CF4` | `src/fragments/44/fragment44_1F7DD0.c` | 21 | 21 |
 | `unk_D_8691A448` | `src/fragments/59/fragment59_code.c` | 22 | 21 |
 | `S1_unk_D_843C3508` | `src/fragments/79/fragment79_3D7DD0.c` | 20 | 20 |
 | `unk_func_87F0C358` | `src/fragments/64/fragment64_32EC70.c` | 18 | 18 |
@@ -486,6 +487,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `S1_unk_D_86002F58_004_000` | `src/fragments/67/fragment67_33FAE0.c` | 24 | 17 |
 | `unk_func_8130B06C` | `src/fragments/14/fragment14_FF070.c` | 17 | 17 |
 | `Frag41_Clock` | `src/fragments/41/fragment41_code.c` | 16 | 16 |
+| `Frag41_Rtc` | `src/fragments/41/fragment41_code.c` | 16 | 16 |
 | `Frag41_SaveState` | `src/fragments/41/fragment41_code.c` | 16 | 16 |
 | `S1_arg1_func_81407874_014_000_010` | `include/229E0.h` | 16 | 16 |
 | `unk_desc_826057A8` | `src/fragments/20/fragment20_12C460.c` | 16 | 16 |
@@ -508,5 +510,3 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `unk_D_82919A88` | `src/fragments/67/fragment67_33FAE0.c` | 13 | 13 |
 | `unk_D_88104EA0` | `src/fragments/30/fragment30_170D70.c` | 16 | 13 |
 | `unk_D_88523100` | `src/fragments/34/fragment34_1C5AA0.c` | 13 | 13 |
-| `unk_func_81303648` | `src/fragments/14/fragment14_FAD40.c` | 14 | 13 |
-| `unk_func_86407290` | `src/fragments/52/fragment52_285750.c` | 13 | 13 |
