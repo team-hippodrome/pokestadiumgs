@@ -20,13 +20,13 @@
 <path d="M70 100H1070" stroke="#343b44"/>
 <text x="60" y="105" text-anchor="end" fill="#aeb6c1">9,000</text>
 <g>
-<title>0–99: 8,329 C upstream; 71 open; 8,400 total</title>
-<rect x="82" y="117.15" width="64" height="212.85" fill="#41a657"/>
-<rect x="82" y="115.33" width="64" height="1.81" fill="#f5a416"/>
+<title>0–99: 8,330 C upstream; 70 open; 8,400 total</title>
+<rect x="82" y="117.12" width="64" height="212.88" fill="#41a657"/>
+<rect x="82" y="115.33" width="64" height="1.79" fill="#f5a416"/>
 <text x="114" y="355" text-anchor="middle">0–99</text>
 <text x="114" y="388" text-anchor="middle" font-weight="bold">8,400</text>
-<text x="114" y="412" text-anchor="middle" fill="#73d18a">8,329 C</text>
-<text x="114" y="436" text-anchor="middle" fill="#ffc35c">71 open</text>
+<text x="114" y="412" text-anchor="middle" fill="#73d18a">8,330 C</text>
+<text x="114" y="436" text-anchor="middle" fill="#ffc35c">70 open</text>
 </g>
 <g>
 <title>100–199: 1,207 C upstream; 102 open; 1,309 total</title>
