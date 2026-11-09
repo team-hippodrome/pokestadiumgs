@@ -74,8 +74,6 @@ void Fragment17_InitFadeState(void) {
 }
 /* mkdraft:Fragment17_InitFadeState end */
 
-extern s16 D_8220EC44;
-extern s16 D_8220EC46;
 // Counts D_8220EC46 down by one per call and sets D_8220EC44, the env color alpha drawn by
 // func_822069A4, to timer * 0xFF / 5. Returns that alpha; func_822085EC waits for 0.
 s32 func_82206950(void) {
@@ -92,7 +90,6 @@ s32 func_82206950(void) {
     return alpha;
 }
 
-extern s16 D_8220EC44;
 extern Gfx *D_800D0510;
 extern u8 D_8220DBC8[];
 extern void func_80046634();
@@ -100,8 +97,6 @@ extern void * D_8220DA08;
 void func_822069A4(void) { s16 *count_ptr = &D_8220EC44; if (*count_ptr > 0) { gSPDisplayList(D_800D0510++, D_8220DBC8); gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, *count_ptr); func_80046634(((s32 *)D_8220DA08)[1]); } }
 
 /* mkdraft:func_82206A2C begin */
-extern s32 D_8220EC40;
-extern s16 D_8220EC48;
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
 extern void func_800468A0(s32 arg0);
 extern void func_81600F0C(void *, s32, s32, s32, s32);
@@ -194,8 +189,6 @@ typedef struct Fragment17TextureRecord {
 } Fragment17TextureRecord;
 extern s16 D_8220DA5A[];
 extern s16 D_8220DA80[];
-extern s16 D_8220DA40;
-extern f32 D_80087E50[];
 extern s32 func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
 extern void func_82206BA4(s32, s32, s32, s32, u8 *, s32, s32, s32, s32, s32);
@@ -267,8 +260,6 @@ s32 func_82206FBC(s32 mode, void *node)
 
 extern u8 D_8220DAB8[];
 extern s16 D_8220DA94;
-extern f32 D_80087E50[];
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 s32 func_822071E8(s32 arg0, void *arg1)
 {
   s32 temp_v1;
@@ -306,10 +297,6 @@ extern s16 D_8220DAAA[];
 extern s16 D_8220DAEE[];
 extern s16 D_8220DAC8[][2];
 extern s16 D_8220DB0C[][2];
-extern s32 func_8004C990(s32, s32);
-extern u8 *func_8004CA60(u8 *);
-extern void func_82206BA4(s32, s32, s32, s32, u8 *, s32, s32, s32, s32, s32);
-extern void func_8003CD84(void);
 
 s32 func_822072D0(s32 mode, void *node) {
     s32 index = *(s32 *)((u8 *)node + 20);
@@ -416,7 +403,6 @@ extern void *process_geo_layout(struct S1_MemoryBlock *, void *);
 extern void func_8003F018(s32);
 extern void func_80037E3C(void *, Fragment17NodeCallback, void *);
 extern void func_8003F114(u8 *, s16, s16, void *);
-extern Fragment17TextureRecord D_8220F290[];
 extern void *D_8220DA44[];
 extern void *D_8220DA98[];
 extern void *D_8220DADC[];
@@ -464,16 +450,12 @@ void func_82207714(s32 arg0) {
     }
 }
 
-extern s32 main_pool_get_available(void);
-extern void MainPool_FinalizeAllocation(struct S1_MemoryBlock *);
-extern s32 D_8220EC40;
 
 extern void func_8005487C(u8 *);
 extern void func_82206854(s32, s32, s32);
 extern s32 func_800562B8(s32);
 extern void func_822068E0(void);
 extern s32 func_800071A4(s32, s32, s32, s32, s32);
-extern u8 *MainPool_AllocState(s32, s32);
 extern s32 func_8004EB58(u8 *, s32);
 extern s32 func_8005049C(s32, s32);
 extern void func_8004E308(s32, s32 (*)(s32, void *), s32);
@@ -501,13 +483,11 @@ extern s32 func_82205E04(s32, void *);
 extern s32 func_822061A8(s32, void *);
 extern s32 func_82206304(s32, u8 *);
 extern s32 func_822064DC(s32, void *);
-extern void *D_8220DA08;
 extern s32 D_8220DA0C;
 extern s32 D_8220DA10;
 extern s32 D_8220DA14;
 extern s32 D_8220DA18;
 extern s32 D_8220DA1C;
-extern s32 D_8220EC38;
 extern u8 D_8220EC28[];
 extern s32 D_8220E120;
 extern u8 D_8220EBE0[];
@@ -804,13 +784,6 @@ extern void func_822083C4();
 extern void func_8220B478();
 extern void func_8220B984();
 extern void func_8220D560();
-extern void *D_8220DA08;
-extern s32 D_8220DA14;
-extern s16 D_8220DA40;
-extern s16 D_8220DA94;
-extern s16 D_8220DAD8;
-extern u16 D_8220EB82;
-extern s32 D_82210578;
 void func_82208518(void) {
     BgStage_DrawFrame();
     func_82206A2C();
@@ -834,9 +807,7 @@ void func_82208518(void) {
 extern s16 D_8220EB80[];
 extern s32 func_82206950(void);
 extern s32 func_8220AC38(void);
-extern void func_82204744(void);
 extern s32 func_8220ADE0(s32);
-extern void func_800226C0(s32);
 
 s32 func_822085EC(void) {
     s32 var_v0 = 0;
@@ -858,11 +829,8 @@ s32 func_822085EC(void) {
 
 /* mkdraft:func_82208678 begin */
 extern u32 func_800060E8(void);
-extern void func_800226C0(s32);
 extern s32 func_8220AC64(void);
 extern void *D_80087200;
-extern void *D_8220DA08;
-extern s32 D_8220EC38;
 
 // Selection update for the two modes of this fragment's menu, dispatched on D_8220EC38.
 // Mode 1 clamps the s16 cursor at node + 0x2, mode 2 the one at node + 0x4, where "node" is
@@ -959,10 +927,8 @@ s32 func_82208678(void) {
 /* mkdraft:func_82208678 end */
 
 extern s32 func_8220D670(void);
-extern void *D_8220DA08;
 s32 func_822088FC(void) { s32 result = 0; s32 value = func_8220D670(); if (value != -1) { result = 1; if (value == 0) { *(s16 *)((u8 *)D_8220DA08 + 0x24) = 0; } else { *(s16 *)((u8 *)D_8220DA08 + 0x24) = 1; } } return result; }
 
-extern u8 D_8220D8D0[];
 extern s16 D_8220EB84;
 extern void func_8220AD1C(s16 *);
 extern void func_8220B7A0(s16, s16, u8 *, u8 *);
@@ -979,8 +945,6 @@ void func_82208954(s32 arg0) {
     }
 }
 
-extern s16 D_8220EB80[];
-extern s32 func_8220D67C(void);
 s32 func_822089C0(void) { s32 result = 0; s32 limit; if (func_8220D67C()) limit = 15; else limit = 30; D_8220EB80[2] = D_8220EB80[2] + 1; if (D_8220EB80[2] >= limit) result = 1; return result; }
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82208A1C.s")
@@ -1033,7 +997,47 @@ f32 func_822091E0(f32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_822091F0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82209360.s")
+extern f32 D_822106B0[];
+extern s16 D_822106B4, D_822106BE;
+extern f32 func_822091E0(f32 arg0);
+#pragma COALESCE_AT_LUI(func_82209360, D_822106C8, D_822106CE)
+void func_82209360(void) {
+    F17TransitionState *transition;
+    f32 *scales;
+    s32 done;
+    s16 *state;
+    f32 progress;
+    f32 scale;
+    f32 width;
+    f32 position;
+    transition = &sTransition106B2;
+    scales = D_822106B0;
+    state = (s16 *)D_822106B0;
+    state[2]++;
+    done = 0;
+    if (state[2] >= 2) {
+        width = D_822106B4 - 2;
+        progress = width / 5.0f;
+        if (progress >= 1.0f) {
+            progress = 1.0f;
+            done = 1;
+        }
+        scale = (0.6f * progress + 0.4f) * 0.75f;
+        scales[6] = scale;
+        scales[5] = func_822091E0(scale);
+        width = 35.0f;
+        position = 320.0f + width - scales[6] * width;
+        ((s16 *)scales)[15] = (position > 0.0f ? 0.5f : -0.5f) + position;
+        if (done) {
+            transition->state = 3;
+            transition->unk_02 = 0;
+            D_822106BE = 0;
+            scales[5] = 0.75f;
+            D_822106C8 = 0.75f;
+            D_822106CE = 320;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_822094C4.s")
 
@@ -1043,7 +1047,6 @@ f32 func_822091E0(f32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82209BA4.s")
 
-extern f32 D_822106B0[];
 
 void func_82209E90(void) {
     D_822106B0[5] = 0.0f;
@@ -1085,12 +1088,7 @@ s32 func_82209EA8(void) {
     }
 }
 
-extern s16 D_822106CC, D_822106CE;
 extern s16 D_822106D2;
-extern f32 D_822106C4;
-extern f32 D_822106C8;
-extern u16 D_822106B6;
-extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
 s32 func_82209F50(void *arg0) {
     s32 pad[4]; // FAKE: reserves the 0x38-byte frame, as in sibling func_8220A098.
     f32 fade;
@@ -1160,7 +1158,6 @@ s32 func_8220AA08(s32 arg0, s32 arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_8220AA54.s")
 
 /* mkdraft:func_8220AC38 begin */
-extern u8 D_82210698[];
 
 s32 func_8220AC38(void) {
     F17TransitionState *state = &sTransition106B2;
@@ -1193,7 +1190,6 @@ s32 func_8220AC64(void) {
     return result;
 }
 
-extern s16 D_822106BA;
 
 void func_8220ACF4(void) {
     D_822106BA = -1;
@@ -1208,7 +1204,6 @@ s32 func_8220AD10(void) {
     return D_822106B8;
 }
 
-extern s16 D_822106CC, D_822106CE;
 
 void func_8220AD1C(s16 *arg0) {
     arg0[0] = D_822106CC;
@@ -1258,7 +1253,6 @@ s32 func_8220ADE0(s32 arg0) {
     return result;
 }
 
-extern s16 D_822106B2;
 
 s32 func_8220AE10(void) {
     return D_822106B2 == 3;
