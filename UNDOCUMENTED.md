@@ -3,13 +3,13 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,050 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,054 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 7,696 (3.2%)** (7,448 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Variables with a real name: **248 / 7,700 (3.2%)** (7,452 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,176**
-- Functions with generic `arg0`, `arg1`, ... parameters: **6,066 / 10,050 (60.4%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,286 / 2,336**
-- Struct fields with a real name: **6,366 / 10,421 (61.1%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **6,067 / 10,054 (60.3%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,287 / 2,337**
+- Struct fields with a real name: **6,368 / 10,424 (61.1%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **16,150**
 <!-- AUTO_UNDOCUMENTED:END -->
 
@@ -70,10 +70,10 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/67/fragment67_344D70.c` | 94 | 94 | 99 | 74 | 6 | 25 | 25 |
 | `src/fragments/21/fragment21_13FFA0.c` | 48 | 48 | 100 | 42 | 4 | 29 | 91 |
 | `src/fragments/63/fragment63_308D70.c` | 35 | 35 | 81 | 18 | 13 | 31 | 136 |
+| `src/fragments/17/fragment17_1162A0.c` | 45 | 45 | 124 | 75 | 8 | 17 | 38 |
 | `src/fragments/44/fragment44_1EE290.c` | 39 | 39 | 181 | 51 | 8 | 20 | 1 |
 | `src/fragments/44/fragment44_1FD260.c` | 36 | 33 | 83 | 133 | 1 | 6 | 43 |
 | `src/fragments/69/fragment69_code.c` | 45 | 44 | 90 | 117 | 11 | 20 | 17 |
-| `src/fragments/17/fragment17_1162A0.c` | 41 | 41 | 123 | 71 | 8 | 16 | 38 |
 | `src/fragments/21/fragment21_144790.c` | 44 | 43 | 56 | 40 | 8 | 23 | 127 |
 | `src/fragments/83/fragment83_code.c` | 62 | 62 | 85 | 43 | 9 | 35 | 50 |
 | `src/10BB0.c` | 54 | 54 | 72 | 40 | 5 | 34 | 78 |
