@@ -539,7 +539,7 @@ extern f64 D_8600D8B0;
 extern f64 D_8600DEB0;
 extern void func_86001CE8(u8 *arg0, f32 *arg1, f32 *arg2);
 extern void func_86007D98(void *arg0, f64 arg1, f64 arg2, f64 arg3);
-extern void func_8600853C(void *arg0, void *arg1, f64 arg2, f64 arg3, void *arg4);
+extern f64 func_8600853C(void *arg0, void *arg1, f64 arg2, f64 arg3, void *arg4);
 extern void func_86009260(void *arg0, f64 arg1, void *arg2, s32 arg3, void *arg4);
 extern void func_860095B8(void *arg0, f64 arg1);
 extern void func_86009674(void *arg0, void *arg1, f64 arg2);
@@ -718,7 +718,180 @@ void func_86005B3C(u8 *arg0, s32 arg1, s32 arg2, u8 *arg3, s32 arg4) {
 }
 /* mkdraft:func_86005B3C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86005CB4.s")
+extern void func_86005A00(void *arg0, f32 *arg1, f32 *arg2);
+extern void func_86005B3C(u8 *arg0, s32 arg1, s32 arg2, u8 *arg3, s32 arg4);
+extern void * func_87C007B0(f32 *, void *);
+extern void func_87C03B60(void *, void *, void *);
+void func_86005CB4(s32 state, f64 step, s32 enabled)
+{
+    extern s32 func_860031C8(void *);
+    extern s32 func_860022F8(void *);
+    extern void func_86003868(u8 *, u8 *, void *, f64);
+    extern s32 func_8600472C(void *);
+    extern f64 func_860086A4(void *, void *, f64, f64, void *, s32, s32);
+    extern f64 func_860091F4(void *, f64, void *, f64, void *);
+    extern s32 func_86009C08(void *, void *);
+    extern void *func_87C002A8(void *, void *, f64);
+    extern f64 func_8600853C(void *arg0, void *arg1, f64 arg2, f64 arg3, void *arg4);
+    extern OSMesgQueue D_800CE100;
+    // func_87C03B60 writes two signed screen coordinates per contact.
+    //@src/fragments/48/fragment48_2597B0.c
+    typedef struct {
+        u8 prefix[0x8138];
+        s8 events[12][2];
+    } Fragment47SimulationEvents;
+
+    typedef struct {
+        u8 before_duration[0x17D0];
+        f64 stationary_delay;
+        u8 before_presence[0x1868 - 0x17D8];
+        s32 present;
+        u8 tail[0x1998 - 0x186C];
+    } Fragment47EntryActor;
+    f64 point[3];
+    u8 *players[5];
+    ControllerState *controller;
+    f64 impact;
+    f64 separation;
+    f64 boundary;
+    s32 count;
+    s32 event_count;
+    s32 buttons;
+    s32 mode;
+    s32 first_active;
+    s32 second_active;
+    s32 audible;
+    f32 axis_x;
+    f32 axis_y;
+    u8 **left;
+    u8 **right;
+    u8 *player;
+    u8 *other;
+    u8 *group;
+    f32 converted[3];
+    Fragment47Vec3d acceleration;
+    u8 *curve;
+    s32 player_state;
+    s32 audible_result;
+    count = 0;
+    event_count = 0;
+    for (mode = 0; mode < 4; mode++) {
+        if (((Fragment47EntryActor *)state)[mode].present != 0) { players[count++] = ((u8 *)&((Fragment47EntryActor *)state)[mode]); }
+    }
+    players[count] = 0;
+    for (left = players; (*left) != 0; left++)
+    {
+        for (right = left + 1; (*right) != 0; right++)
+        {
+            first_active = ((*((s32 *) ((*left) + 0x186C))) == 0) && ((*((f64 *) ((*left) + 0x17D0))) <= 0.0);
+            second_active = ((*((s32 *) ((*right) + 0x186C))) == 0) && ((*((f64 *) ((*right) + 0x17D0))) <= 0.0);
+            if (first_active || second_active)
+            {
+                func_860086A4(*left, *right, step, 0.1, point, first_active, second_active);
+            }
+        }
+
+    }
+
+    controller = D_800CE060;
+    player = (u8 *) state;
+    do
+    {
+        buttons = (*controller).buttonsPressed & 0xA000;
+        if (func_860031C8(player))
+        {
+            func_86005A00(controller, &axis_x, &axis_y);
+            if ((*((void **) (player + 0x1824))) != 0)
+            {
+                axis_x = 0.0f;
+                axis_y = 0.0f;
+                buttons = (*((s32 (**)(void *, f32 *, f32 *)) (player + 0x1824)))(player, &axis_x, &axis_y);
+            }
+            func_86007D98(player, axis_x, axis_y, step);
+            *((f32 *) (player + 0x1800)) = axis_x;
+            *((f32 *) (player + 0x1804)) = axis_y;
+        }
+        // IDO schedules this controller tail together with the integration loop.
+        if (buttons)
+        {
+            func_860022F8(player); } controller++; player += 6552; } while (((u8 *) controller) != ((u8 *) (&D_800CE100))); for (left = players; (*left) != 0; left++) { func_860095B8(*left, step); }
+    for (left = players; (*left) != 0; left++)
+    {
+        mode = 0;
+        if ((*((s32 *) ((*left) + 0x1828))) >= 7) {
+            mode = 2;
+            goto configuration_selected;
+        }
+        if (((*((s32 *) ((*left) + 0x1828))) == 3) && ((*((f64 *) ((*left) + 0x17D0))) > 0.0) &&
+            ((*((s32 *) ((*left) + 0x1898))) != 0)) {
+            mode = 1;
+        }
+    configuration_selected:
+        player_state = mode * 160;
+        group = ((u8 *) state) + player_state;
+        curve = group + 0x6668;
+        if (func_86009C08(curve, *left))
+        {
+            func_860091F4(*left, step, group + 0x66B8, 0.0, point);
+            boundary = (*((s32 *) (group + 0x6700))) ? (0.0) : (*((f64 *) (group + 0x66C0)));
+            func_860091F4(*left, step, curve, boundary, point);
+        }
+        else
+        {
+            func_86009260(*left, step, ((u8 *) state) + 0x6848, 1, point);
+        }
+    }
+
+    for (left = players; (*left) != 0; left++)
+    {
+        for (right = left + 1; (*right) != 0; right++)
+        {
+            player = *left;
+            separation = *((f64 *) (D_8600DE30 + 0x118));
+            if (!(*((s32 *) (player + 0x186C)))) continue;
+            other = *right;
+            if (!(*((s32 *) (other + 0x186C)))) continue;
+            {
+                if (((*((f64 *) (player + 0x17E0))) > 0.0) || ((*((f64 *) ((*right) + 0x17E0))) > 0.0))
+                {
+                    separation = *((f64 *) (D_8600DE30 + 0x168));
+                }
+                if (((*((f64 *) (player + 0x17E0))) > 0.0) && ((*((f64 *) ((*right) + 0x17E0))) > 0.0))
+                {
+                    separation = *((f64 *) (D_8600DE30 + 0x170));
+                }
+                impact = func_8600853C(player, *right, step, separation, point);
+                if (impact > 0.0)
+                {
+                    func_87C03B60(((u8 *) state) + 0x8150, func_87C007B0(converted, point), &((Fragment47SimulationEvents *) state)->events[event_count++]);
+                    if (enabled)
+                    {
+                        func_86003868(*left, *right, &((Fragment47SimulationEvents *) state)->events[event_count++], impact);
+                        audible_result = func_8600472C(*left);
+                        audible = audible_result || func_8600472C(*right);
+                        func_86005B3C((u8 *) state, *((s32 *) ((*left) + 0x1810)), *((s32 *) ((*right) + 0x1810)), (u8 *) point, audible);
+                    }
+                }
+            }
+        }
+
+    }
+
+    for (left = players; (*left) != 0; left++)
+    {
+        if ((*((s32 *) ((*left) + 0x1828))) >= 7)
+        {
+            func_86004F2C((u8 *) state, *left, &acceleration);
+            func_87C002A8(&acceleration, &acceleration, -(*((f64 *) (D_8600DE30 + 0x80))));
+        }
+        else
+        {
+            func_87C00120(&acceleration, 0.0, -(*((f64 *) (D_8600DE30 + 0x80))), 0.0);
+        }
+        func_86009674(*left, &acceleration, step);
+    }
+
+}
 
 s32 func_860062E0(s32 arg0, u16 arg1) {
     if (D_800CE060[0].buttonsPressed & arg1) {
@@ -743,7 +916,6 @@ void func_86006318(s32 arg0) {
 }
 
 extern void *func_87C007B0(f32 *, void *);
-extern void func_87C03B60(void *, void *, void *);
 extern void func_800278C0(u16, u8, void *, f32);
 void func_86006364(s32 arg0) {
     s32 i;
