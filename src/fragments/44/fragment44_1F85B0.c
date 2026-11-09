@@ -122,7 +122,73 @@ void func_8AF0A888(void) {
     D_8AF2D438 = func_8004C990(0xAD, 4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A900.s")
+extern s32 func_8003514C(void);
+extern u8 func_8005431C(void);
+extern u16 *D_8AF2BAB0;
+extern u16 *D_8AF2D390[];
+extern u16 *D_8AF2D394;
+extern u16 *D_8AF2D3A8;
+extern u16 *D_8AF2D384;
+extern u16 *D_8AF2D388;
+extern u16 *D_8AF2D38C;
+extern s32 D_8AF26940;
+
+// Apply the entry mask and mode overrides to bit 1 of the UI node flags.
+// The node flag halfword is at byte offset 2.
+void func_8AF0A900(s16 arg0) {
+    u16 *entry;
+    s32 byte_offset;
+    u16 flags;
+    u16 shifted_flags;
+    s32 i;
+    entry = D_8AF2BAB0;
+    byte_offset = arg0 * 2;
+    entry = (u16 *)((u8 *)entry + byte_offset - 2);
+    flags = *entry;
+    if (func_8003514C() != 0) {
+        shifted_flags = (flags & 0x4000) >> 1;
+        flags &= 0xDFFF;
+        flags |= shifted_flags;
+    }
+    for (i = 0; i < 7; i++) {
+        shifted_flags = flags << i;
+        if ((shifted_flags & 0x8000) == 0) {
+            D_8AF2D390[i][1] &= ~2;
+        } else {
+            D_8AF2D390[i][1] |= 2;
+        }
+    }
+    if (func_8003514C() != 0) {
+        D_8AF2D394[1] &= ~2;
+    }
+    if (byte_offset == 502 && (func_8005431C() & 0x10)) {
+        D_8AF2D3A8[1] |= 2;
+    }
+    if (D_8AF26940 == 0) {
+        for (i = 4; i < 7; i++) {
+            D_8AF2D390[i][1] |= 2;
+        }
+    }
+    shifted_flags = flags << 7;
+    if ((shifted_flags & 0x8000) == 0) {
+        D_8AF2D384[1] &= ~2;
+    } else {
+        D_8AF2D384[1] |= 2;
+    }
+    shifted_flags = flags << 8;
+    if ((shifted_flags & 0x8000) == 0) {
+        D_8AF2D388[1] &= ~2;
+    } else {
+        D_8AF2D388[1] |= 2;
+    }
+    shifted_flags = flags << 9;
+    if ((shifted_flags & 0x8000) == 0) {
+        D_8AF2D38C[1] &= ~2;
+    } else {
+        D_8AF2D38C[1] |= 2;
+    }
+}
+
 
 extern u8 func_8006397C(u8);
 extern u8 func_800639C0(u8);
