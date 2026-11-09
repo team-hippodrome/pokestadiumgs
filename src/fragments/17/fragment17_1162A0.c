@@ -1267,7 +1267,69 @@ s32 func_8220A5BC(s32 arg0, s32 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_8220A608.s")
+void func_8220A608(s32 texture) {
+    s32 intensity;
+    Vtx *vertices;
+    s32 width;
+    s32 remaining_height;
+    u8 *image;
+    s32 index;
+    s32 y;
+    s32 strip_height;
+    f32 fade;
+    f32 intensity_value;
+    f32 rounding;
+    s32 left_x;
+    s32 right_x;
+    s16 bottom_y;
+    s16 texture_t;
+
+    vertices = (Vtx *)Gfx_AllocDisplayList(3 * 4 * sizeof(Vtx));
+    width = ((Fragment17TextureHeader *)texture)->width;
+    remaining_height = ((Fragment17TextureHeader *)texture)->height;
+    y = remaining_height / 2;
+    image = func_8004CA60((u8 *)texture);
+    if (vertices != NULL) {
+        fade = 1.0f - (f32)(320 - D_822106CE) / 360.0f;
+        if (fade < 0.001f) {
+            fade = 0.0f;
+        } else if (fade > 1.0f) {
+            fade = 1.0f;
+        }
+        intensity_value = 255.0f * fade;
+        if (intensity_value > 0.0f) {
+            rounding = 0.5f;
+        } else {
+            rounding = -0.5f;
+        }
+        gSPDisplayList(D_800D0510++, D_8220DEB0);
+        intensity = (s32)(rounding + intensity_value);
+        gDPSetEnvColor(D_800D0510++, intensity, intensity, intensity, 255);
+        left_x = -(width / 2);
+        right_x = left_x + width;
+        for (index = 0; index < 3; index++) {
+            if (remaining_height < 24) {
+                strip_height = remaining_height;
+            } else {
+                strip_height = 24;
+            }
+            texture_t = strip_height << 5;
+            bottom_y = y - strip_height;
+            Gfx_SetVertexAttributes(vertices, (s16)left_x, (s16)y, 0, 0, 0, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 1, (s16)left_x, bottom_y, 0, 0, strip_height << 5, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 2, (s16)right_x, bottom_y, 0, (s16)(width << 5), texture_t, 255, 255, 255, 255);
+            Gfx_SetVertexAttributes(vertices + 3, (s16)right_x, (s16)y, 0, (s16)(width << 5), 0, 255, 255, 255, 255);
+            func_800459AC((s32)(image + index * (width * 48)), ((Fragment17TextureHeader *)texture)->format,
+                          ((Fragment17TextureHeader *)texture)->size, width, strip_height,
+                          1, 0, 2, 2, 0, 0, 0, 0);
+            gSPVertex(D_800D0510++, vertices, 4, 0);
+            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
+            vertices += 4;
+            y -= strip_height;
+            remaining_height -= strip_height;
+        }
+    }
+}
 
 extern void func_8220A608(s32);
 extern s32 D_822109B4;
