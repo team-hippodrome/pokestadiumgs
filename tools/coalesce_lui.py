@@ -104,6 +104,11 @@ _SYMBOL_ADDR_LINE = re.compile(r'^\s*([A-Za-z_.$][\w.$]*)\s*=\s*0x([0-9A-Fa-f]+)
 # else on the line) is a real symbol -- section/object-file rows always carry
 # extra columns (a section name, a size, a path) and must not be matched.
 _MAP_SYMBOL_LINE = re.compile(r'^\s{2,}0x([0-9A-Fa-f]{6,16})\s+([A-Za-z_.$][\w.$]*)\s*$')
+_ALIAS_ADDR_LINE = re.compile(
+    r'^\s*([A-Za-z_.$][\w.$]*)\s*=\s*'
+    r'([A-Za-z_.$][\w.$]*|0[xX][0-9A-Fa-f]+|0[0-7]*|[1-9][0-9]*)'
+    r'(?:\s*([+-])\s*(0[xX][0-9A-Fa-f]+|0[0-7]*|[1-9][0-9]*))?\s*;\s*(?://.*)?$'
+)
 
 # ``#pragma COALESCE_AT_LUI(func)`` folds every foldable run in ``func``.
 # The optional trailing symbol list -- ``COALESCE_AT_LUI(func, S1, S2, S3)`` --
@@ -184,6 +189,52 @@ def parse_linker_map(path) -> dict[str, int]:
     return addrs
 
 
+def parse_linker_aliases(paths, known: Mapping[str, int]) -> dict[str, int]:
+    """Resolve simple tracked aliases after their base addresses are known.
+
+    Accept symbol/constant bases with an optional integer offset. Unknown
+    bases, cycles and other linker expressions remain unresolved. Existing
+    authoritative addresses and the first definition of each alias win.
+    """
+    pending = {}
+    for raw_path in paths:
+        try:
+            text = Path(raw_path).read_text(encoding="latin1")
+        except OSError:
+            continue
+        text = re.sub(r'/\*.*?\*/', lambda m: ' ' + '\n' * m[0].count('\n'),
+                      text, flags=re.DOTALL)
+        for line in text.splitlines():
+            match = _ALIAS_ADDR_LINE.fullmatch(line)
+            if match:
+                name, base, sign, offset = match.groups()
+                pending.setdefault(name, (base, sign, offset))
+
+    def integer(value: str) -> int:
+        base = 16 if value.lower().startswith('0x') else 8 if value.startswith('0') else 10
+        return int(value, base)
+
+    addrs = dict(known)
+    while pending:
+        progressed = False
+        for name, (base, sign, offset) in list(pending.items()):
+            if name not in addrs:
+                if base[0].isdigit():
+                    value = integer(base)
+                elif base in addrs:
+                    value = addrs[base]
+                else:
+                    continue
+                if offset is not None:
+                    value += integer(offset) * (-1 if sign == '-' else 1)
+                addrs[name] = value
+            del pending[name]
+            progressed = True
+        if not progressed:
+            break
+    return addrs
+
+
 def _primary_worktree_root(repo_root: Path) -> Path | None:
     """Return the primary checkout for a linked Git worktree, if known.
 
@@ -240,7 +291,9 @@ def resolve_repo_addresses(repo_root: Path) -> dict[str, int]:
     (this project's convention keeps most ``dlabel``s out of
     ``symbol_addrs*.txt`` entirely); note it only lists such an alias in ld's
     ``PROVIDE``-assignment shape, which ``parse_linker_map`` deliberately does
-    not match, so the ``.ld`` scripts are not redundant with it.
+    not match, so the ``.ld`` scripts are not redundant with it. Finally,
+    tracked ``aliases*.ld`` scripts resolve aliases such as BSS field names
+    relative to an owner whose address came from the map.
     """
     repo_root = Path(repo_root)
     linker_scripts = repo_root / "linker_scripts"
@@ -255,7 +308,7 @@ def resolve_repo_addresses(repo_root: Path) -> dict[str, int]:
         for name, addr in parse_linker_map(map_path).items():
             addrs.setdefault(name, addr)
         break
-    return addrs
+    return parse_linker_aliases(sorted(linker_scripts.glob("*/aliases*.ld")), addrs)
 
 
 def find_coalesce_markers(source_text: str) -> set[str]:
