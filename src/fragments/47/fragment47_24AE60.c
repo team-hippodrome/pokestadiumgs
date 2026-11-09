@@ -80,7 +80,6 @@ typedef struct {
 extern void ModelAnim_SetAnimation(void *, s32);
 extern void ModelAnim_SetSpeed(void *, s32);
 extern void ModelAnim_SetFrame(void *, s16);
-extern u8 D_8600DE30[];
 void func_860049B8(Func860049B8Context *arg0, f64 arg1) {
     s32 i;
     s32 j;
@@ -410,7 +409,6 @@ extern f32 __cosf(f32 arg0);
 extern f64 D_8600D898;
 extern f32 D_8600D8A0;
 extern s32 D_8600E038;
-extern u8 D_8600DE30[];
 
 
 s32 func_86005434(s32 arg0) {
@@ -744,7 +742,6 @@ void func_86006318(s32 arg0) {
     } while (var_s0 != 0xB60);
 }
 
-extern void func_87C037C0(void *, void *);
 extern void *func_87C007B0(f32 *, void *);
 extern void func_87C03B60(void *, void *, void *);
 extern void func_800278C0(u16, u8, void *, f32);
@@ -771,8 +768,6 @@ extern s32 StageContext_GetFadeMode(void);
 extern void func_860057D0(s32, f64);
 extern void func_86006318(s32 arg0);
 extern void func_86006364(s32);
-extern void func_86007648(s32 arg0, s32 arg1);
-extern u8 D_8600DE30[];
 void func_86006448(s32 arg0) {
     typedef struct { unsigned int enabled : 1; unsigned int rest : 7; } Flags;
     s32 i;
@@ -795,12 +790,6 @@ void func_86006448(s32 arg0) {
     }
 }
 
-extern u8 D_8600DE30[];
-extern void func_86006364(s32);
-extern void func_860057D0(s32, f64);
-extern s32 StageContext_GetFadeMode(void);
-extern void func_86007648(s32, s32);
-extern void func_86006318(s32 arg0);
 void func_86006538(s32 arg0) {
     s32 count;
     s32 i;
@@ -839,15 +828,49 @@ s32 func_860065E8(s32 arg0) {
     //!bug: no return value when the result is neither 3 nor 4
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_8600666C.s")
+extern void func_86005CB4(s32, f64, s32);
+extern s32 func_87F006AC(void);
+extern void func_87F006BC(void);
+extern s32 func_87F00930(void);
+extern void func_800279C4(s32);
+void func_8600666C(s32 state) {
+    s32 count;
+    s32 i;
+
+    if ((func_860065E8(state) == 0) && (func_87F00930() == 0)) {
+        func_87F006BC();
+        count = *(s32 *)D_8600DE30;
+        i = 0;
+        if (count > 0) {
+            do {
+                func_86005CB4(state, *(f64 *)((u8 *)state + 0x6890) / (f64)count, 1);
+                count = *(s32 *)D_8600DE30;
+                i++;
+            } while (i < count);
+        }
+        switch (func_87F006AC()) {
+            case 1:
+                func_800279C4(12032);
+                break;
+            case 2:
+                func_800279C4(12033);
+                break;
+            case 3:
+                func_86007648(state, 3);
+                break;
+            case 0:
+            case 4:
+            case 5:
+            case 6:
+                break;
+        }
+    }
+}
 
 extern void func_860076EC(s32);
 extern s32 func_860065E8(s32);
-extern s32 func_87F00930(void);
-extern void func_87F006BC(void);
 s32 func_86005434(s32 arg0);
 extern void func_80028118(s32);
-extern u8 D_8600DE30[];
 void func_86006774(s32 arg0) {
     s32 count;
     s32 i;
@@ -887,8 +910,6 @@ void func_8600688C(u8 *arg0) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_24AE60/func_86006964.s")
 
 extern s32 func_87F02104(void);
-extern void func_86007648(s32 arg0, s32 arg1);
-extern u8 D_8600DE30[];
 void func_86006C30(s32 arg0) {
     typedef struct { u8 b7 : 1; u8 b6 : 1; u8 b5 : 1; u8 b4 : 1; u8 rest : 4; } StateFlags;
     s32 count;
@@ -920,7 +941,6 @@ void func_86006C30(s32 arg0) {
 
 extern void StageFade_StartFromOpaque(s32);
 s32 StageContext_GetFadeMode();
-extern void func_86007648(s32, s32);
 
 void func_86006D24(s32 arg0) {
     if (StageContext_GetFadeMode() == 1) {
@@ -936,11 +956,9 @@ extern u8 D_80094E38[];
 extern u8 D_80094F50[];
 extern s32 func_8004C990(s32, s32);
 extern void func_8004D19C(s32, s32, s32, s32, s32);
-extern s32 func_87F00930(void);
 extern void func_8003C6B8(s32);
 extern void func_8600AB6C(s32, s32, void *);
 extern void func_8600AE6C(u8 *);
-extern void *func_87C007B0(f32 *, void *);
 extern f32 func_87C039D4(void *, void *, f32 *);
 extern void func_86000C6C(u8 *, s32, void *, f32, f32);
 extern void func_86000CCC(u8 *);
@@ -948,7 +966,6 @@ typedef struct { f32 x, y, z; } Vec3;
 extern Vec3 D_8600D2C0;
 extern f64 D_8600DF20;
 extern s32 D_8600E03C;
-extern void func_800279C4(s32);
 extern void func_8600B474(s32, s32);
 extern void func_87F07FE8(void *);
 extern void func_87F01D44(void);
@@ -1107,11 +1124,6 @@ extern void func_87F00688();
 void func_86004BD4(u8 *arg0);
 extern void func_86004968();
 extern void func_860021C4(s32, s32, f32, void *, s32);
-extern void func_86003EFC(void *arg0, s32 arg1);
-extern s32 func_8600062C();
-extern void StageContext_SetClearColor(s32);
-extern void StageFade_StartFromOpaque(s32);
-extern u8 D_8600DE30[];
 
 // Four stage slots of stride 0x1998; D_8600DE30+0x214 is the first slot that
 // func_86003EFC(ptr, 7) still has to run on, and 0x6660 is 4 slots.
@@ -1156,7 +1168,6 @@ void func_86007428(s32 arg0) {
 /* mkdraft:func_86007428 end */
 
 extern void func_80021ED8(s32);
-extern void func_86004968();
 void func_860075A8(void *arg0) {
     func_80021ED8(0x21);
     func_86004968(arg0);
