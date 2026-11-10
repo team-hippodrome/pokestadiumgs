@@ -88,7 +88,72 @@ void func_8AF0A4AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
 }
 /* mkdraft:func_8AF0A4AC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0A6E4.s")
+extern u8 *D_8AF26944;
+extern void func_800504BC(s16 *arg0);
+
+// Selects the value, scale and texture row for a 150-pixel bar at the node's translated UI position.
+s32 func_8AF0A6E4(s32 phase, void *object) {
+    u16 selector;
+    u8 *data;
+    struct {
+        u16 row;
+        u16 scale;
+        u16 value;
+    } parameters;
+    s16 screen_x;
+    s16 origin[2];
+    s16 screen_y;
+    u8 *node;
+
+    node = object;
+    selector = *(u16 *)(node + 34);
+    data = D_8AF26944;
+    switch (selector) {
+        case 0:
+            parameters.value = data[46];
+            parameters.scale = 128;
+            parameters.row = 0;
+            break;
+        case 1:
+            parameters.value = data[47];
+            parameters.scale = 120;
+            parameters.row = 1;
+            break;
+        case 2:
+            parameters.value = data[48];
+            parameters.scale = 120;
+            parameters.row = 1;
+            break;
+        case 3:
+            parameters.value = data[50];
+            parameters.scale = 120;
+            parameters.row = 2;
+            break;
+        case 4:
+            parameters.value = data[51];
+            parameters.scale = 120;
+            parameters.row = 2;
+            break;
+        case 5:
+            parameters.value = data[49];
+            parameters.scale = 120;
+            parameters.row = 0;
+            break;
+        default:
+            return -1;
+    }
+
+    if (phase != 0) {
+        if (phase == 1) {
+            func_800504BC(origin);
+            screen_x = *(s16 *)(node + 8) + origin[0];
+            screen_y = *(s16 *)(node + 10) + origin[1];
+            func_8AF0A4AC(screen_x, screen_y, 150, parameters.value, parameters.scale, parameters.row);
+        }
+    }
+
+    return 0;
+}
 
 extern void Ui_DrawGradientQuad(s32, s32, u16, u16, s32 *, s32 *);
 extern u8 D_8AF26450;
@@ -101,7 +166,6 @@ s32 func_8AF0A800(void *arg0) {
     return 0;
 }
 
-extern void func_800504BC(s16 *arg0);
 s32 func_8AF0A850(s32 arg0, void *arg1) {
     struct { s32 pad[2]; s16 angles[2]; } scratch;
     if ((arg0 != 0) && (arg0 == 1)) {
