@@ -929,6 +929,7 @@
     - [0x183700, c,       fragments/31/fragment31_183700]
     - [0x186690, c,       fragments/31/fragment31_186690]
     - [0x189760, c,       fragments/31/fragment31_189760]
+    - [0x18E660, c,       fragments/31/fragment31_18E660]
     - [0x18F6D0, c,       fragments/31/fragment31_18F6D0]
     - [0x1900C0, c,       fragments/31/fragment31_1900C0]
     - [0x190BB0, c,       fragments/31/fragment31_190BB0]
@@ -973,7 +974,8 @@
     - [0x1A71D0, .rodata, fragments/31/fragment31_17F280] # labels in this range are referenced only by this file
     - [0x1A71E0, .rodata, fragments/31/fragment31_183700] # labels in this range are referenced only by this file
     - [0x1A7200, .rodata, fragments/31/fragment31_186690] # strings + jtbl_88233F90..jtbl_88233FD4
-    - [0x1A7270, .rodata, fragments/31/fragment31_189760] # strings + floats + jtbl_88234014..: a second object (strings after the previous object's jump tables)
+    - [0x1A7270, .rodata, fragments/31/fragment31_189760] # Strings, floats, and renderer jump tables.
+    - [0x1A72D0, .rodata, fragments/31/fragment31_18E660] # Storage-list filter jump table.
     - [0x1A7350, .rodata, fragments/31/fragment31_18F6D0] # Jump tables.
     - [0x1A73D0, .rodata, fragments/31/fragment31_1900C0] # jtbl_88234150/jtbl_88234170 + 0.3f constants
     - [0x1A7410, .rodata, fragments/31/fragment31_190BB0] # strings, jtbl_882341A0, jtbl_882341B8 (whole), jtbl_882341D0..jtbl_882342EC
