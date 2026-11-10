@@ -183,7 +183,7 @@ SECTIONS
      * block after relocation metadata has been consumed. */
     .fragment31_collected_values_bss 0x88234761 (NOLOAD) : SUBALIGN(1)
     {
-        build/src/fragments/31/fragment31_189760.o(.bss)
+        build/src/fragments/31/fragment31_18E660.o(.bss)
     }
     /* Playback handle and model pointer, cleared with the fragment runtime
      * state after relocation metadata has been consumed. */
