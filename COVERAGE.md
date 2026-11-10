@@ -10,8 +10,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
-| 0–99 | 8,331 | 69 | 8,400 | 99.2% |
-| 100–199 | 1,212 | 97 | 1,309 | 92.6% |
+| 0–99 | 8,332 | 68 | 8,400 | 99.2% |
+| 100–199 | 1,214 | 95 | 1,309 | 92.7% |
 | 200–299 | 311 | 109 | 420 | 74.0% |
 | 300–399 | 113 | 65 | 178 | 63.5% |
 | 400–499 | 43 | 36 | 79 | 54.4% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,052 / 10,532 (95.4%)**
-- Remaining `GLOBAL_ASM` owners: **480**
+- US functions with C implementations: **10,055 / 10,532 (95.5%)**
+- Remaining `GLOBAL_ASM` owners: **477**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -120,7 +120,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/44/fragment44_1F1850.c` | 4 | 47 | 91.5% |
 | `src/fragments/44/fragment44_1F5F20.c` | 1 | 14 | 92.9% |
 | `src/fragments/44/fragment44_1F6BF0.c` | 1 | 12 | 91.7% |
-| `src/fragments/44/fragment44_1F85B0.c` | 5 | 16 | 68.8% |
+| `src/fragments/44/fragment44_1F85B0.c` | 2 | 16 | 87.5% |
 | `src/fragments/44/fragment44_1F9DB0.c` | 4 | 20 | 80.0% |
 | `src/fragments/44/fragment44_1FD260.c` | 3 | 38 | 92.1% |
 | `src/fragments/44/fragment44_204950.c` | 1 | 14 | 92.9% |

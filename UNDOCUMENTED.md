@@ -3,13 +3,13 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,059 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,062 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 7,703 (3.2%)** (7,455 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Variables with a real name: **248 / 7,725 (3.2%)** (7,477 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,176**
-- Functions with generic `arg0`, `arg1`, ... parameters: **6,067 / 10,059 (60.3%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,287 / 2,341**
-- Struct fields with a real name: **6,388 / 10,444 (61.2%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **6,068 / 10,062 (60.3%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,287 / 2,342**
+- Struct fields with a real name: **6,391 / 10,447 (61.2%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **16,188**
 <!-- AUTO_UNDOCUMENTED:END -->
 
@@ -185,6 +185,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/17/fragment17_11B210.c` | 27 | 27 | 43 | 18 | 3 | 12 | 8 |
 | `src/fragments/19/fragment19_124E40.c` | 18 | 18 | 30 | 24 | 4 | 10 | 25 |
 | `src/fragments/44/fragment44_20D3A0.c` | 13 | 13 | 38 | 19 | 7 | 7 | 27 |
+| `src/fragments/44/fragment44_1F85B0.c` | 14 | 13 | 36 | 51 | 4 | 6 | 0 |
 | `src/fragments/44/fragment44_209BD0.c` | 10 | 10 | 36 | 39 | 1 | 5 | 18 |
 | `src/fragments/31/fragment31_19D160.c` | 6 | 6 | 26 | 11 | 0 | 0 | 65 |
 | `src/fragments/30/fragment30_16D4F0.c` | 14 | 14 | 38 | 12 | 2 | 6 | 35 |
@@ -238,7 +239,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/34/fragment34_1C3FA0.c` | 9 | 9 | 29 | 11 | 4 | 0 | 26 |
 | `src/fragments/47/fragment47_2507E0.c` | 13 | 13 | 28 | 19 | 1 | 8 | 9 |
 | `src/fragments/39/fragment39_1DA9F0.c` | 16 | 16 | 24 | 4 | 2 | 15 | 16 |
-| `src/fragments/44/fragment44_1F85B0.c` | 11 | 10 | 31 | 27 | 4 | 5 | 0 |
 | `src/674D0.c` | 5 | 5 | 49 | 14 | 2 | 3 | 3 |
 | `src/fragments/24/fragment24_14FE20.c` | 9 | 9 | 48 | 12 | 2 | 5 | 0 |
 | `src/fragments/31/fragment31_174460.c` | 16 | 16 | 26 | 15 | 1 | 14 | 4 |
