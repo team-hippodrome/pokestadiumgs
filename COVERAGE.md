@@ -11,8 +11,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
 | 0–99 | 8,332 | 68 | 8,400 | 99.2% |
-| 100–199 | 1,215 | 94 | 1,309 | 92.8% |
-| 200–299 | 311 | 109 | 420 | 74.0% |
+| 100–199 | 1,216 | 93 | 1,309 | 92.9% |
+| 200–299 | 312 | 108 | 420 | 74.3% |
 | 300–399 | 113 | 65 | 178 | 63.5% |
 | 400–499 | 43 | 36 | 79 | 54.4% |
 | 500–699 | 27 | 56 | 83 | 32.5% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,056 / 10,532 (95.5%)**
-- Remaining `GLOBAL_ASM` owners: **476**
+- US functions with C implementations: **10,058 / 10,532 (95.5%)**
+- Remaining `GLOBAL_ASM` owners: **474**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -79,7 +79,6 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/24/fragment24_150C10.c` | 11 | 92 | 88.0% |
 | `src/fragments/25/fragment25_15A060.c` | 1 | 30 | 96.7% |
 | `src/fragments/25/fragment25_15BBC0.c` | 1 | 10 | 90.0% |
-| `src/fragments/29/fragment29_167940.c` | 1 | 9 | 88.9% |
 | `src/fragments/29/fragment29_168330.c` | 2 | 30 | 93.3% |
 | `src/fragments/29/fragment29_16B030.c` | 1 | 6 | 83.3% |
 | `src/fragments/30/fragment30_16D4F0.c` | 2 | 16 | 87.5% |
@@ -102,7 +101,6 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/31/fragment31_1A1BD0.c` | 1 | 17 | 94.1% |
 | `src/fragments/32/fragment32_1B1330.c` | 2 | 22 | 90.9% |
 | `src/fragments/32/fragment32_1B6E40.c` | 1 | 12 | 91.7% |
-| `src/fragments/32/fragment32_1B9390.c` | 1 | 3 | 66.7% |
 | `src/fragments/32/fragment32_1B9840.c` | 1 | 2 | 50.0% |
 | `src/fragments/33/fragment33_code.c` | 1 | 12 | 91.7% |
 | `src/fragments/34/fragment34_1BE300.c` | 2 | 16 | 87.5% |
