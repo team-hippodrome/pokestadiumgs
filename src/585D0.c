@@ -3706,7 +3706,9 @@ s32 GbSave_CountBitmapBits(u8 *data, u8 count) {
 extern u8 func_8005D92C(s32 index);
 extern u8 D_801285D0[];
 
-void func_8005ECA4(s32 arg0) {
+// Forward the saved bitmap count consumed by func_88308080.
+//@src/fragments/32/fragment32_1B9390.c
+s32 func_8005ECA4(s32 arg0) {
     s32 address;
     u8 value;
 
@@ -3728,7 +3730,7 @@ void func_8005ECA4(s32 arg0) {
         value = 0xFB;
         break;
     }
-    GbSave_CountBitmapBits((void *)address, value);
+    return GbSave_CountBitmapBits((void *)address, value);
 }
 #endif
 
@@ -3736,7 +3738,9 @@ void func_8005ECA4(s32 arg0) {
 extern u8 func_8005D92C(s32 index);
 extern u8 D_801285D0[];
 
-void func_8005ED78(s32 arg0) {
+// Forward the saved bitmap count consumed by func_88308080.
+//@src/fragments/32/fragment32_1B9390.c
+s32 func_8005ED78(s32 arg0) {
     s32 address;
     u8 value;
 
@@ -3758,14 +3762,16 @@ void func_8005ED78(s32 arg0) {
         value = 0xFB;
         break;
     }
-    GbSave_CountBitmapBits((void *)address, value);
+    return GbSave_CountBitmapBits((void *)address, value);
 }
 #endif
 
 #ifdef VERSION_US
 
-void func_8005EE4C(s32 arg0) {
-    GbSave_CountBitmapBits((arg0 * 0x70) + 8 + D_80128570, 0xFB);
+// Forward the saved bitmap count consumed by func_88308080.
+//@src/fragments/32/fragment32_1B9390.c
+s32 func_8005EE4C(s32 arg0) {
+    return GbSave_CountBitmapBits((arg0 * 0x70) + 8 + D_80128570, 0xFB);
 }
 #endif
 
