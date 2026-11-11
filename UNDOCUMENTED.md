@@ -3,11 +3,11 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,062 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **69 / 10,063 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
 - Variables with a real name: **248 / 7,725 (3.2%)** (7,477 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,176**
-- Functions with generic `arg0`, `arg1`, ... parameters: **6,068 / 10,062 (60.3%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **6,070 / 10,063 (60.3%)**
 - Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,287 / 2,342**
 - Struct fields with a real name: **6,391 / 10,447 (61.2%)**
 - Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **16,188**
@@ -146,6 +146,7 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/44/fragment44_1F0680.c` | 15 | 15 | 20 | 10 | 0 | 14 | 93 |
 | `src/fragments/18/fragment18_code.c` | 17 | 16 | 28 | 7 | 5 | 14 | 81 |
 | `src/fragments/31/fragment31_189760.c` | 14 | 14 | 53 | 27 | 1 | 7 | 49 |
+| `src/fragments/63/fragment63_305090.c` | 21 | 21 | 58 | 14 | 3 | 19 | 34 |
 | `src/fragments/63/fragment63_30F070.c` | 24 | 24 | 41 | 17 | 9 | 22 | 36 |
 | `src/641E0.c` | 40 | 40 | 43 | 27 | 3 | 34 | 1 |
 | `src/fragments/11/fragment11_D7BC0.c` | 39 | 37 | 39 | 6 | 10 | 36 | 20 |
@@ -155,7 +156,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/63/fragment63_307D60.c` | 17 | 17 | 59 | 12 | 3 | 15 | 41 |
 | `src/fragments/45/fragment45_2324B0.c` | 22 | 22 | 48 | 53 | 0 | 12 | 10 |
 | `src/fragments/31/fragment31_17F280.c` | 26 | 26 | 70 | 20 | 0 | 4 | 24 |
-| `src/fragments/63/fragment63_305090.c` | 20 | 20 | 57 | 12 | 3 | 17 | 34 |
 | `src/fragments/11/fragment11_E1E10.c` | 28 | 28 | 60 | 10 | 4 | 27 | 13 |
 | `src/fragments/16/fragment16_code.c` | 28 | 28 | 67 | 37 | 3 | 7 | 0 |
 | `src/fragments/20/fragment20_128B10.c` | 32 | 32 | 62 | 11 | 3 | 12 | 22 |
