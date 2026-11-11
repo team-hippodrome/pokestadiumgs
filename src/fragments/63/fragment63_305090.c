@@ -3,32 +3,32 @@
 
 #ifdef VERSION_US
 extern s32 func_8004C990(s32, s32);
-void func_87E01720(s32 arg0, s32 arg1, s32 arg2, s32 arg3, void *arg4) {
+s32 func_87E01720(s32 arg0, s32 arg1, s32 arg2, s32 arg3, void *arg4) {
     u32 index;
 
     index = ((u32)arg0 % ((u32)arg1 * (u32)arg2)) / (u32)arg1;
-    func_8004C990(arg3, ((u8 *)arg4)[index]);
+    return func_8004C990(arg3, ((u8 *)arg4)[index]);
 }
 
 extern u8 D_87E19720[];
-extern void func_87E01720(s32, s32, s32, s32, void *);
-void func_87E01798(s32 arg0) {
-    func_87E01720(arg0, 4, 4, 0x1A6, D_87E19720);
+extern s32 func_87E01720(s32, s32, s32, s32, void *);
+s32 func_87E01798(s32 arg0) {
+    return func_87E01720(arg0, 4, 4, 0x1A6, D_87E19720);
 }
 
 extern u8 D_87E19724[];
-void func_87E017CC(s32 arg0) {
-    func_87E01720(arg0, 3, 8, 0x1A7, D_87E19724);
+s32 func_87E017CC(s32 arg0) {
+    return func_87E01720(arg0, 3, 8, 0x1A7, D_87E19724);
 }
 
 extern u8 D_87E1972C[];
-void func_87E01800(s32 arg0) {
-    func_87E01720(arg0, 3, 6, 0x1A4, D_87E1972C);
+s32 func_87E01800(s32 arg0) {
+    return func_87E01720(arg0, 3, 6, 0x1A4, D_87E1972C);
 }
 
 extern u8 D_87E19734[];
-void func_87E01834(s32 arg0) {
-    func_87E01720(arg0, 3, 8, 0x1A5, D_87E19734);
+s32 func_87E01834(s32 arg0) {
+    return func_87E01720(arg0, 3, 8, 0x1A5, D_87E19734);
 }
 
 /* mkdraft:func_87E01868 begin */
@@ -446,12 +446,62 @@ void func_87E02470(u8 *arg0) {
         temp = func_800071A4(0, 2, 124, 51, 0);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_305090/func_87E02538.s")
 
-extern void func_87E02538(void);
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[], D_80094F50[];
+extern void GfxImage_SetRenderTarget(Gfx **, void *);
+extern void GfxImage_FillRectangle(Gfx **, s32, s32, s32, s32, u16);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+
+void func_87E02538(u8 *arg0) {
+    s32 width = 124;
+    s32 height = 51;
+    s32 texture;
+    s32 frame;
+    u8 *node;
+    u8 *state;
+
+    node = *(u8 **)(arg0 + 20);
+    if (node != NULL) {
+        do {
+            state = *(u8 **)(node + 32);
+            GfxImage_SetRenderTarget(&D_800D0510, *(void **)(state + 12));
+            GfxImage_FillRectangle(&D_800D0510, 0, 0, width, height, 0xFFFE);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            gDPSetTextureFilter(D_800D0510++, G_TF_POINT);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+            gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+            //!bug: a kind outside 0..3 can leave the image words uninitialized.
+            switch (*(s32 *)(state + 4)) {
+            case 0:
+                texture = func_8004C990(424, 5);
+                frame = func_87E01798(*(s32 *)state);
+                break;
+            case 1:
+                texture = func_8004C990(424, 6);
+                frame = func_87E017CC(*(s32 *)state);
+                break;
+            case 2:
+                texture = func_8004C990(424, 0);
+                frame = func_87E01800(*(s32 *)state);
+                break;
+            case 3:
+                texture = func_8004C990(424, 4);
+                frame = func_87E01834(*(s32 *)state);
+                break;
+            }
+            func_8004D19C(0, 0, texture, 0, 0);
+            func_8004D19C(77, 3, frame, 0, 0);
+            gSPDisplayList(D_800D0510++, D_80094F50);
+            node = *(u8 **)(node + 4);
+        } while (node != NULL);
+    }
+}
+
+extern void func_87E02538(u8 *);
 extern void BgStage_DrawFrame(void);
-void func_87E0276C(void) {
-    func_87E02538();
+void func_87E0276C(u8 *arg0) {
+    func_87E02538(arg0);
     BgStage_DrawFrame();
 }
 

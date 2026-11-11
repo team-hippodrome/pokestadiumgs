@@ -199,8 +199,7 @@ extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
 extern s32 func_8004C990(s32, s32);
 extern void func_8004D19C(s32, s32, s32, s32, s32);
 extern void func_8003C6B8(s32);
-// These three are defined void in fragment63_305090.c, but every retail call site
-// consumes their result from v0.
+// The frame helpers forward the texture address returned by func_8004C990.
 //@src/fragments/63/fragment63_305090.c
 extern s32 func_87E01798(s32);
 extern s32 func_87E017CC(s32);
