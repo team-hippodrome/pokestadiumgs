@@ -1,11 +1,96 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
 extern s8 D_8800ED30; extern s8 D_8800ED31;
 void func_88001900(void) { D_8800ED30 = 10; D_8800ED31 = 1; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_167940/func_8800191C.s")
+extern void func_800226C0(s32);
+// Select an enabled pressed direction, then repeat held D-pad directions after
+// the shared delay. Bounds suppress the movement sound; the key is still returned.
+s16 func_8800191C(void *arg0) {
+    s16 key = 0;
+    s16 enabled = *(s16 *)((u8 *)arg0 + 36);
+    s32 at_bound;
+
+    if ((enabled & 0x800) && (D_80087200->buttonsPressed & 0x800)) {
+        key = 0x800;
+    } else if ((enabled & 0x400) && (D_80087200->buttonsPressed & 0x400)) {
+        key = 0x400;
+    } else if ((enabled & 0x200) && (D_80087200->buttonsPressed & 0x200)) {
+        key = 0x200;
+    } else if ((enabled & 0x100) && (D_80087200->buttonsPressed & 0x100)) {
+        key = 0x100;
+    } else if ((enabled & 8) && (D_80087200->buttonsPressed & 8)) {
+        key = 8;
+    } else if ((enabled & 4) && (D_80087200->buttonsPressed & 4)) {
+        key = 4;
+    }
+    if (key != 0) {
+        func_88001900();
+        if (key == 8 || key == 0x200 || key == 0x800) {
+            if (*(s16 *)((u8 *)arg0 + 8) == 0) {
+                at_bound = 1;
+            } else {
+                at_bound = 0;
+            }
+            if (at_bound == 0) {
+                func_800226C0(*(s32 *)((u8 *)arg0 + 40));
+            }
+        } else {
+            if (*(u16 *)((u8 *)arg0 + 12) == *(s16 *)((u8 *)arg0 + 8) + 1) {
+                at_bound = 1;
+            } else {
+                at_bound = 0;
+            }
+            if (at_bound == 0) {
+                func_800226C0(*(s32 *)((u8 *)arg0 + 40));
+            }
+        }
+    } else {
+        D_8800ED30--;
+        if (D_8800ED30 <= 0) {
+            D_8800ED30 = 0;
+            if ((enabled & 0x800) && (D_80087200->buttonsHeld & 0x800)) {
+                key = 0x800;
+            } else if ((enabled & 0x400) && (D_80087200->buttonsHeld & 0x400)) {
+                key = 0x400;
+            } else if ((enabled & 0x200) && (D_80087200->buttonsHeld & 0x200)) {
+                key = 0x200;
+            } else if ((enabled & 0x100) && (D_80087200->buttonsHeld & 0x100)) {
+                key = 0x100;
+            }
+            if (key != 0) {
+                D_8800ED30 = 1;
+                D_8800ED31--;
+                if (D_8800ED31 <= 0) {
+                    if (key != 0x400 && key != 0x800) {
+                        D_8800ED31 = 5;
+                    } else {
+                        D_8800ED31 = 2;
+                    }
+                    if (*(s16 *)((u8 *)arg0 + 8) == 0) {
+                        at_bound = 1;
+                    } else {
+                        at_bound = 0;
+                    }
+                    if (at_bound == 0) {
+                        if (*(u16 *)((u8 *)arg0 + 12) == *(s16 *)((u8 *)arg0 + 8) + 1) {
+                            at_bound = 1;
+                        } else {
+                            at_bound = 0;
+                        }
+                        if (at_bound == 0) {
+                            func_800226C0(*(s32 *)((u8 *)arg0 + 40));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return key;
+}
 
 void func_88001C24(void *arg0, u16 arg1, u8 arg2) {
     u16 var_v1;
@@ -197,9 +282,8 @@ void func_88001EBC(void *arg0) {
 /* mkdraft:func_88001EBC end */
 
 /* mkdraft:func_880020CC begin */
-s16 func_8800191C();
+s16 func_8800191C(void *);
 void func_88001EBC(void *);
-extern void *D_80087200;
 
 
 void func_880020CC(void *arg0)
@@ -208,7 +292,7 @@ void func_880020CC(void *arg0)
   s16 temp_v1;
   if ((*((s32 *) (((u8 *) arg0) + 4))) == 0)
   {
-    temp_v0 = func_8800191C();
+    temp_v0 = func_8800191C(arg0);
     temp_v1 = *((s16 *) (((u8 *) arg0) + 0));
     if (temp_v0 != temp_v1)
     {
