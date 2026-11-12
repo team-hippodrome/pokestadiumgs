@@ -11,7 +11,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
 | 0–99 | 8,332 | 68 | 8,400 | 99.2% |
-| 100–199 | 1,217 | 92 | 1,309 | 93.0% |
+| 100–199 | 1,220 | 89 | 1,309 | 93.2% |
 | 200–299 | 313 | 107 | 420 | 74.5% |
 | 300–399 | 113 | 65 | 178 | 63.5% |
 | 400–499 | 43 | 36 | 79 | 54.4% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,060 / 10,532 (95.5%)**
-- Remaining `GLOBAL_ASM` owners: **472**
+- US functions with C implementations: **10,063 / 10,532 (95.5%)**
+- Remaining `GLOBAL_ASM` owners: **469**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -49,7 +49,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/1/fragment1_code.c` | 4 | 24 | 83.3% |
 | `src/fragments/10/fragment10_D5250.c` | 3 | 27 | 88.9% |
 | `src/fragments/11/fragment11_D7BC0.c` | 2 | 39 | 94.9% |
-| `src/fragments/11/fragment11_D9DE0.c` | 4 | 26 | 84.6% |
+| `src/fragments/11/fragment11_D9DE0.c` | 3 | 26 | 88.5% |
 | `src/fragments/11/fragment11_E1E10.c` | 1 | 30 | 96.7% |
 | `src/fragments/12/fragment12_E7C00.c` | 3 | 72 | 95.8% |
 | `src/fragments/13/fragment13_EEC50.c` | 1 | 79 | 98.7% |
@@ -82,7 +82,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/29/fragment29_168330.c` | 2 | 30 | 93.3% |
 | `src/fragments/29/fragment29_16B030.c` | 1 | 6 | 83.3% |
 | `src/fragments/30/fragment30_16D4F0.c` | 2 | 16 | 87.5% |
-| `src/fragments/31/fragment31_1768F0.c` | 2 | 10 | 80.0% |
+| `src/fragments/31/fragment31_1768F0.c` | 1 | 10 | 90.0% |
 | `src/fragments/31/fragment31_177430.c` | 3 | 8 | 62.5% |
 | `src/fragments/31/fragment31_179030.c` | 1 | 15 | 93.3% |
 | `src/fragments/31/fragment31_17B150.c` | 2 | 18 | 88.9% |
@@ -147,7 +147,6 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/51/fragment51_27B9E0.c` | 1 | 17 | 94.1% |
 | `src/fragments/52/fragment52_27E4E0.c` | 3 | 56 | 94.6% |
 | `src/fragments/52/fragment52_2853B0.c` | 1 | 3 | 66.7% |
-| `src/fragments/52/fragment52_285750.c` | 1 | 6 | 83.3% |
 | `src/fragments/52/fragment52_2862C0.c` | 1 | 9 | 88.9% |
 | `src/fragments/53/fragment53_code.c` | 15 | 54 | 72.2% |
 | `src/fragments/54/fragment54_code.c` | 7 | 43 | 83.7% |
