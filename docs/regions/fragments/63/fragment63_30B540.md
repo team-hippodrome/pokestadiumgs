@@ -100,3 +100,54 @@ values confirms that the unsigned high-bit test equals the preceding
 signed-negative test. After final formatting, two further normal/blank
 complete-module controls, normal host syntax, and the full native stock
 IDO build pass. Retail ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+
+## `func_87E0A2D4`: confirmation and fade transition
+
+The state-7 handler matches 186 instructions / 744 bytes at US ROM
+`0x30DC44..0x30DF2C`, with a 24-byte frame. Caller `func_87E0A620`
+increments the unsigned counter at offset 1976 and dispatches this handler.
+It updates the children at offsets 1604, 96 and 140 before testing input.
+The frame-rate helper returns 50 or 60 according to the video standard.
+//@src/dp_intro.c
+
+For phase word 20 equal to 5, the handler issues audio command 80 when
+the counter equals the rounded rate times 2. After the counter exceeds
+the rounded rate times 0.5, it checks confirmation through
+`func_87E09BDC` with a rounded rate-times-2.5 threshold, or through the
+shared input helper's `0x8000` bit. Every rounding comparison and selected
+rounding arm calls the rate helper separately, preserving the original
+call sites and single-precision operations.
+
+`func_87E09BDC` now explicitly returns the `s32` result of
+`func_87E08E8C`: it checks the selected port, using port 0 when no slot is
+selected, and forwards the selected-port or elapsed-threshold result.
+Its bytes remain unchanged. On confirmation, the owner sets state word 4
+to 8, issues the existing audio commands, resets the three UI status
+values, and starts a 15-frame fade. Otherwise it updates the waiting status.
+//@src/fragments/63/fragment63_312AE0.c
+//@src/8470.c
+
+The source labels the unchecked shift count with `//!bug`:
+`func_87E07ED8` returns -1 when no slot reaches the shared target, and the
+owner uses that result in `1 << index` without a range check. The original
+MIPS shift uses the low five bits of the count. No new check or behavior
+change is introduced. Unknown function and global names are retained.
+
+Validation target: `VERSION=us`, master
+`681ed989c17bff34dad6443126730afbcbd64b1d` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/63/fragment63_30B540.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled full build reports exactly
+`build/pokestadiumgs-us.z64: OK`, MD5
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Retail byte comparison and whitespace
+checks pass. All 11,824 module text bytes, 272 read-only bytes, 24 register-info
+bytes, 51 defined function extents, and 522 semantic relocations equal the
+original assembly baseline. The helper and all previously matched C remain
+byte-identical; no padding, fixed registers, new data, or instruction rewriting
+is used.

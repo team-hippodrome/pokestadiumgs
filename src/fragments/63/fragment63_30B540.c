@@ -1178,7 +1178,8 @@ block_18:
 s32 func_87E07ED8(s32);
 extern s32 func_87E08E8C(u8 *, s32, u32);
 
-void func_87E09BDC(void *arg0, s32 arg1) {
+// Forward the selected-port or elapsed-threshold result to the state handlers.
+s32 func_87E09BDC(void *arg0, s32 arg1) {
     s32 temp_v0;
     s32 var_a1;
 
@@ -1187,7 +1188,7 @@ void func_87E09BDC(void *arg0, s32 arg1) {
     if (temp_v0 == -1) {
         var_a1 = 0;
     }
-    func_87E08E8C(arg0, var_a1, arg1);
+    return func_87E08E8C(arg0, var_a1, arg1);
 }
 
 extern s32 func_80001FF0(void);
@@ -1315,7 +1316,56 @@ void func_87E0A1B8(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E0A2D4.s")
+extern s32 StageFade_StartFromTransparent(s32);
+// After the rate-derived delay, wait for confirmation and enter the fade state.
+void func_87E0A2D4(void *arg0) {
+    s32 threshold;
+    s32 result;
+
+    func_87E14F98((s32)((u8 *)arg0 + 1604));
+    func_87E0C664((s32 *)((u8 *)arg0 + 96));
+    ListSlots_UpdateState((u8 *)arg0 + 140);
+    if (*(s32 *)((u8 *)arg0 + 20) == 5) {
+        if ((f32)func_80001FF0() * 2 >= 0.0f) {
+            threshold = (s32)((f32)func_80001FF0() * 2 + 0.5f);
+        } else {
+            threshold = (s32)((f32)func_80001FF0() * 2 - 0.5f);
+        }
+        if (threshold == *(u32 *)((u8 *)arg0 + 1976)) {
+            func_80021ED8(80);
+        }
+    }
+    if ((f32)func_80001FF0() * 0.5f >= 0.0f) {
+        threshold = (s32)((f32)func_80001FF0() * 0.5f + 0.5f);
+    } else {
+        threshold = (s32)((f32)func_80001FF0() * 0.5f - 0.5f);
+    }
+    if ((u32)threshold < *(u32 *)((u8 *)arg0 + 1976)) {
+        //!bug: func_87E07ED8 can return -1; the shift count is not checked.
+        if (*(u8 *)(*(u8 **)((u8 *)arg0 + 32) + 8578) &
+            (1 << func_87E07ED8(*(s32 *)((u8 *)arg0 + 32)))) {
+            if ((f32)func_80001FF0() * 2.5f >= 0.0f) {
+                threshold = (s32)((f32)func_80001FF0() * 2.5f + 0.5f);
+            } else {
+                threshold = (s32)((f32)func_80001FF0() * 2.5f - 0.5f);
+            }
+            result = func_87E09BDC(arg0, threshold);
+        } else {
+            result = func_87F0E610(func_87E016C8(), (u8 *)-1) & 0x8000;
+        }
+        if (result != 0) {
+            *(s32 *)((u8 *)arg0 + 4) = 8;
+            func_800279C4(0xCF02);
+            func_80021ED8(72);
+            func_87E10F50(-1);
+            func_87E10EA8(-1);
+            func_87E10F2C(-1);
+            StageFade_StartFromTransparent(15);
+        } else {
+            func_87E10F50(0);
+        }
+    }
+}
 
 extern void func_87E082E4(void *, s32);
 u8 StageContext_GetFadeMode(void);
