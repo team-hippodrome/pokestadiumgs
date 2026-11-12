@@ -22,6 +22,8 @@ typedef struct unk_func_86407290 {
     f32 unk_58;
     s32 unk_5C;
     s32 unk_60;
+    // Last frame applied by func_864073B0.
+    u16 unk_64;
 } unk_func_86407290;
 
 extern void *D_86416C00;
@@ -55,12 +57,12 @@ typedef struct {
 
 
 
-void func_86407330(f32 a, f32 b, u32 c, u32 d, f32 e, f32 g) {
+void func_86407330(f32 a, f32 b, f32 c, f32 d, f32 e, f32 g) {
     POSE *s = (POSE *)((u8 *)D_86416C00 + 0x14);
     s->cur0.x = a;
     s->cur0.y = b;
-    s->cur0.z = *(f32 *)&c;
-    s->cur1.x = *(f32 *)&d;
+    s->cur0.z = c;
+    s->cur1.x = d;
     s->cur1.y = e;
     s->cur1.z = g;
     s->from = s->cur0;
@@ -70,7 +72,53 @@ void func_86407330(f32 a, f32 b, u32 c, u32 d, f32 e, f32 g) {
 }
 /* mkdraft:func_86407330 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_285750/func_864073B0.s")
+extern f32 D_86409BC0;
+extern f32 D_80088E50[];
+extern u16 D_80094904;
+extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
+
+// Mode 2 advances once per frame; all modes apply the two camera triplets.
+s32 func_864073B0(s32 arg0, void *arg1) {
+    f32 angle;
+    s32 rounded;
+    f32 weight;
+    f32 inverse;
+
+    switch (arg0) {
+        case 0:
+            func_86407330(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -100.0f);
+            break;
+        case 2:
+            if (((unk_func_86407290 *)D_86416C00)->unk_64 != D_80094904 &&
+                ((unk_func_86407290 *)D_86416C00)->unk_5C < ((unk_func_86407290 *)D_86416C00)->unk_60) {
+                ((unk_func_86407290 *)D_86416C00)->unk_5C++;
+                angle = (((f32)((unk_func_86407290 *)D_86416C00)->unk_5C * 180.0f) / (f32)((unk_func_86407290 *)D_86416C00)->unk_60) * D_86409BC0;
+                if (angle >= 0.0f) {
+                    rounded = angle + 0.5f;
+                } else {
+                    rounded = angle - 0.5f;
+                }
+                weight = (1.0f - D_80088E50[(u16)rounded >> 4]) * 0.5f;
+                inverse = 1.0f - weight;
+                ((unk_func_86407290 *)D_86416C00)->unk_14.unk_00 = ((unk_func_86407290 *)D_86416C00)->unk_2C.unk_00 * inverse + ((unk_func_86407290 *)D_86416C00)->unk_44 * weight;
+                ((unk_func_86407290 *)D_86416C00)->unk_14.unk_04 = ((unk_func_86407290 *)D_86416C00)->unk_2C.unk_04 * inverse + ((unk_func_86407290 *)D_86416C00)->unk_48 * weight;
+                ((unk_func_86407290 *)D_86416C00)->unk_14.unk_08 = ((unk_func_86407290 *)D_86416C00)->unk_2C.unk_08 * inverse + ((unk_func_86407290 *)D_86416C00)->unk_4C * weight;
+                ((unk_func_86407290 *)D_86416C00)->unk_20.unk_00 = ((unk_func_86407290 *)D_86416C00)->unk_38.unk_00 * inverse + ((unk_func_86407290 *)D_86416C00)->unk_50 * weight;
+                ((unk_func_86407290 *)D_86416C00)->unk_20.unk_04 = ((unk_func_86407290 *)D_86416C00)->unk_38.unk_04 * inverse + ((unk_func_86407290 *)D_86416C00)->unk_54 * weight;
+                ((unk_func_86407290 *)D_86416C00)->unk_20.unk_08 = ((unk_func_86407290 *)D_86416C00)->unk_38.unk_08 * inverse + ((unk_func_86407290 *)D_86416C00)->unk_58 * weight;
+            }
+            break;
+    }
+    func_80038E14(arg1,
+        ((unk_func_86407290 *)D_86416C00)->unk_14.unk_00,
+        ((unk_func_86407290 *)D_86416C00)->unk_14.unk_04,
+        ((unk_func_86407290 *)D_86416C00)->unk_14.unk_08,
+        ((unk_func_86407290 *)D_86416C00)->unk_20.unk_00,
+        ((unk_func_86407290 *)D_86416C00)->unk_20.unk_04,
+        ((unk_func_86407290 *)D_86416C00)->unk_20.unk_08, 0);
+    ((unk_func_86407290 *)D_86416C00)->unk_64 = D_80094904;
+    return 1;
+}
 
 /* mkdraft:func_86407610 begin */
 extern u8 D_864097F0[];
