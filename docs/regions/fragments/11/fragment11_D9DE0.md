@@ -73,3 +73,42 @@ preserved. The zero-sized legacy cache label's ELF type changes from `OBJECT`
 to `NOTYPE`; the local C cache is the typed object at the same address. The
 original data blob is unchanged. No opcode substitution, unused local,
 artificial condition, compiler option or coverage update is involved.
+
+## 2026-11-12 — `func_81609A90` rectangle-change flags accepted
+
+`func_81609A90(s16 *arg0, s16 *arg1)` matches **138 instructions / 552
+bytes**, leaf, US ROM `0xE1630..0xE1858` (end exclusive). Each input is four
+signed halfwords interpreted as x, y, width and height by the comparisons
+and area products. `func_8130707C` and `func_8130A8E0` obtain the two
+four-halfword interpolated records, then select their order with a mode.
+The producer `func_8160945C` interpolates all four components.
+
+//@src/fragments/14/fragment14_FF070.c
+
+A rectangle is inside when x and y exceed 10, x + width is below 630, and
+y + height is below 470. With only the second rectangle inside and its
+area positive, set high-byte mask 0x80, 0x40 or 0x20 according to the first
+rectangle's right edge below 5, left edge at least 636, or neither. The
+reverse transition sets 0x10, 0x08 or 0x04 using the second rectangle's
+horizontal position. With both inside and either area positive, a second
+area greater than `first_area * 1.2f` sets 0x02; the opposite comparison
+sets 0x01. Preserve the original disjunction on positive areas.
+
+The new one-byte bitfield view accesses the high byte of the existing
+four-byte `D_8160BDF4`; it does not allocate storage. The neighboring
+`func_81609CB8` consumes those eight bits, calls `func_800226C0` with the
+corresponding IDs and clears the word. Unknown flag names remain. Direct
+byte `|=` updates reproduce control flow but leave temporary-register
+differences; assigning one-bit fields recovers every retail instruction.
+Reversing commutative integer operand spellings preserves retail operand
+and load order. No new FAKE code or padding is needed.
+
+Fresh validation on master `222a6b3562fb9b08a7cdcde0a8d6ebb0db9b4c08`
+plus this replacement: default syntax-enabled
+`make -W src/fragments/11/fragment11_D9DE0.c -j4 VERSION=us rom`, exact
+`build/pokestadiumgs-us.z64: OK`, full retail `cmp`, and `git diff --check`
+pass. ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`. Reader-only comparison
+preserves all module function extents, allocated data/layout and relocation
+targets. The 1.2f literal remains at the same pool offset; its relocation
+changes from the original local label to the compiler's section symbol.
+No storage migration, caller edits, layout, coverage, compiler or CI changes.
