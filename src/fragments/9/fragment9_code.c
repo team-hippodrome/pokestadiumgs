@@ -81,7 +81,123 @@ s32 func_8FB001C0(u8 *arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB002BC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB005E4.s")
+extern s32 D_80087200;
+extern u8 D_8FB038D8[];
+extern void func_800226C0();
+extern void func_8FB002BC(u8 *, u16);
+// Text starts at byte 14; the capacity halfword follows it at byte 32.
+// func_8FB000D0 loads a name here and func_8FB001C0 copies it back.
+typedef struct NameEditTextView {
+    s16 unk_00[7];
+    s8 text[18];
+    u16 capacity;
+} NameEditTextView;
+
+// Move over the 15-by-9 key grid and edit one- or two-byte text characters.
+s32 func_8FB005E4(u8 *arg0) {
+    s32 result;
+    s16 repeat;
+    u16 character;
+
+    result = 0;
+    repeat = *(u16 *)((u8 *)D_80087200 + 12);
+    if (repeat != 0) {
+        func_800226C0(1);
+        switch (repeat) {
+            case 0x200:
+                (*(s16 *)(arg0 + 8))--;
+                if (*(s16 *)(arg0 + 8) < 0) {
+                    *(s16 *)(arg0 + 8) = 14;
+                }
+                break;
+            case 0x100:
+                (*(s16 *)(arg0 + 8))++;
+                if (*(s16 *)(arg0 + 8) >= 15) {
+                    *(s16 *)(arg0 + 8) = 0;
+                }
+                break;
+            case 0x800:
+                (*(s16 *)(arg0 + 10))--;
+                if (*(s16 *)(arg0 + 10) < 0) {
+                    *(s16 *)(arg0 + 10) = 8;
+                }
+                break;
+            case 0x400:
+                (*(s16 *)(arg0 + 10))++;
+                if (*(s16 *)(arg0 + 10) >= 9) {
+                    *(s16 *)(arg0 + 10) = 0;
+                }
+                break;
+        }
+    }
+    if (*(u16 *)((u8 *)D_80087200 + 12) & 0x8000) {
+        character = ((u16 (*)[15])D_8FB038D8)[*(s16 *)(arg0 + 10)][*(s16 *)(arg0 + 8)];
+        func_800226C0(2);
+        if (*(u16 *)((u8 *)D_80087200 + 6) & 0x20) {
+            if (((character >= 42155) && (character < 42185)) ||
+                ((character >= 42191) && (character < 42204)) ||
+                ((character >= 42411) && (character < 42441)) ||
+                ((character >= 42447) && (character < 42460))) {
+                // FAKE: unsigned promotion retains the retail source register before u16 narrowing.
+                character += 1U;
+            }
+        } else if (*(u16 *)((u8 *)D_80087200 + 6) & 0x10) {
+            if (((character >= 42191) && (character < 42204)) ||
+                ((character >= 42447) && (character < 42460))) {
+                character += 2;
+            }
+        }
+        if (character != 94) {
+            func_8FB002BC(arg0, character);
+        } else {
+            result = 1;
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 12) & 0x4000) {
+        result = 2;
+    } else if (*(u16 *)((u8 *)D_80087200 + 12) & 0x1000) {
+        // FAKE: one source line preserves as1 scheduling of these independent stores.
+        *(s16 *)(arg0 + 10) = 8; *(s16 *)(arg0 + 8) = 14;
+    } else if (*(u16 *)((u8 *)D_80087200 + 12) & 8) {
+        arg0[14] = 0;
+        *(s16 *)(arg0 + 12) = 0;
+    } else if (*(u16 *)((u8 *)D_80087200 + 12) & 4) {
+        if (*(s16 *)(arg0 + 12) > 0) {
+            if (((NameEditTextView *)arg0)->text[*(s16 *)(arg0 + 12) - 1] & 0x80) {
+                *(s16 *)(arg0 + 12) -= 2;
+            } else {
+                (*(s16 *)(arg0 + 12))--;
+            }
+            if (*(s16 *)(arg0 + 12) < 0) {
+                *(s16 *)(arg0 + 12) = 0;
+            }
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 12) & 2) {
+        if (*(s16 *)(arg0 + 12) > 0) {
+            s32 previous;
+            s32 i;
+
+            if (((NameEditTextView *)arg0)->text[*(s16 *)(arg0 + 12) - 1] & 0x80) {
+                previous = *(s16 *)(arg0 + 12) - 2;
+            } else {
+                previous = *(s16 *)(arg0 + 12) - 1;
+            }
+            if (previous < 0) {
+                previous = 0;
+            }
+            for (i = 0; i < *(u16 *)(arg0 + 32) - *(s16 *)(arg0 + 12); i++) {
+                *(s8 *)(arg0 + previous + i + 14) = ((NameEditTextView *)arg0)->text[*(s16 *)(arg0 + 12) + i];
+            }
+            *(s16 *)(arg0 + 12) = previous;
+        }
+    } else if (*(u16 *)((u8 *)D_80087200 + 12) & 1) {
+        if (((NameEditTextView *)arg0)->text[*(s16 *)(arg0 + 12)] & 0x80) {
+            *(s16 *)(arg0 + 12) += 2;
+        } else if (((NameEditTextView *)arg0)->text[*(s16 *)(arg0 + 12)] != 0) {
+            (*(s16 *)(arg0 + 12))++;
+        }
+    }
+    return result;
+}
 
 /* mkdraft:func_8FB009C0 begin */
 extern u8 D_8FB03490[];
@@ -719,7 +835,7 @@ void func_8FB02698(void *arg0) {
 }
 
 /* mkdraft:func_8FB02878 begin */
-extern s32 func_8FB005E4(void *);
+extern s32 func_8FB005E4(u8 *);
 extern s32 func_8FB00FE8(void *);
 extern s32 func_8FB01CF8(u8 *, s32, s32);
 extern void func_8FB00E40(void *, void *);
