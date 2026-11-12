@@ -145,3 +145,56 @@ whitespace checks pass; both ROMs have MD5
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. All 13424 module text bytes and 240
 rodata bytes equal the assembly-backed baseline, including previous C.
 The owner independently matches ROM `0xD0550..0xD05F0` (end exclusive).
+
+## `func_8FB005E4`: key-grid input and name editing
+
+This handler matches 247 instructions / 988 bytes at US ROM
+`0xD0A64..0xD0E40`, with a 32-byte frame. Caller `func_8FB02878`
+uses it for edit page 2 and consumes its result: zero keeps editing,
+one accepts the page, and two cancels it. Repeat-button input moves over
+the existing 15-column, nine-row character table; only an exact direction
+mask enters the navigation switch. Confirmation selects the table word,
+applies the existing held-button character adjustments, and passes it to
+`func_8FB002BC`. Table word 94 accepts the page.
+
+The initializer and copy-back helpers establish text at byte 14 and the
+capacity halfword at byte 32. `NameEditTextView` describes those existing
+bytes without allocating storage. The remaining header halfwords keep
+unknown names. Cursor movement and deletion distinguish one- and two-byte
+characters by the high bit. Deletion copies the remaining capacity bytes
+forward from the old cursor, then installs the preceding character boundary.
+//@src/fragments/9/fragment9_code.c
+
+Controller offsets 12 and 6 are the repeat and held masks in
+`ControllerState`. This file retains its existing word-valued view of the
+controller pointer. The audio dispatcher consumes one word; this handler
+passes event 1 for nonzero repeat input and event 2 for confirmation. Its
+no-prototype declaration also preserves the file's existing legacy calls,
+including calls carrying an unused second argument register.
+//@include/controller.h
+//@src/audio_cue_dispatch.c
+
+The typed text-array access reproduces retail's base-first address addition.
+Two code-generation choices are labeled `// FAKE`: unsigned promotion on
+the one-step character adjustment retains the source register before
+halfword narrowing, and the two independent Start-button cursor stores
+share a source line to retain the original as1 schedule. No padding,
+fixed registers, instruction rewriting, new data ownership or helper
+behavior is introduced.
+
+Fresh validation targets `VERSION=us`, master
+`e03c10c491680572e82007e4f75028c4f9b55c74` plus this replacement:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/9/fragment9_code.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The normal syntax-enabled full build reports exactly
+`build/pokestadiumgs-us.z64: OK`. Rebuilt and retail ROM MD5:
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. Byte comparison and whitespace checks
+pass. All 13,424 module text bytes, 240 read-only bytes, 24 register-info
+bytes, 36 defined function extents, and 480 semantic relocations equal
+the original assembly baseline, including all previously matched C.
