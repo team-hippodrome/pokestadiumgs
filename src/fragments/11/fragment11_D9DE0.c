@@ -1722,7 +1722,57 @@ void func_816099E0(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
     func_8004D19C(arg0 - 0x10, arg1 - 0x10, temp, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81609A90.s")
+extern u32 D_8160BDF4;
+
+// High-byte flags consumed and cleared by func_81609CB8.
+typedef struct unk_func_81609A90 {
+    u8 unk_00_80 : 1;
+    u8 unk_00_40 : 1;
+    u8 unk_00_20 : 1;
+    u8 unk_00_10 : 1;
+    u8 unk_00_08 : 1;
+    u8 unk_00_04 : 1;
+    u8 unk_00_02 : 1;
+    u8 unk_00_01 : 1;
+} unk_func_81609A90;
+
+// Compare (x, y, width, height) rectangles and queue boundary/area-change flags.
+void func_81609A90(s16 *arg0, s16 *arg1) {
+    s32 valid0;
+    s32 valid1;
+    s32 area0;
+    s32 area1;
+
+    valid0 = arg0[0] > 10 && arg0[2] + arg0[0] < 630 && arg0[1] > 10 && arg0[3] + arg0[1] < 470;
+    valid1 = arg1[0] > 10 && arg1[2] + arg1[0] < 630 && arg1[1] > 10 && arg1[3] + arg1[1] < 470;
+    area1 = arg1[3] * arg1[2];
+    area0 = arg0[3] * arg0[2];
+    if (valid1 && area1 > 0 && !valid0) {
+        if (arg0[2] + arg0[0] < 5) {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_80 = 1;
+        } else if (arg0[0] >= 636) {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_40 = 1;
+        } else {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_20 = 1;
+        }
+    }
+    if (valid0 && area0 > 0 && !valid1) {
+        if (arg1[2] + arg1[0] < 5) {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_10 = 1;
+        } else if (arg1[0] >= 636) {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_08 = 1;
+        } else {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_04 = 1;
+        }
+    }
+    if (valid1 && valid0 && (area0 > 0 || area1 > 0)) {
+        if (area0 * 1.2f < area1) {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_02 = 1;
+        } else if (area1 * 1.2f < area0) {
+            ((unk_func_81609A90 *)&D_8160BDF4)->unk_00_01 = 1;
+        }
+    }
+}
 
 extern u32 D_8160BDF4;
 extern void func_800226C0(s32);
