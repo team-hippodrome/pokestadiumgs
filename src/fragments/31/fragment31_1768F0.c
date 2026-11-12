@@ -28,14 +28,65 @@ void func_88203670(s32 type, u8 *entries, u8 count) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203744.s")
-
 typedef struct LabPCStorageList {
     u8 count;
     u8 capacity;
     void *entries;
     s32 changed;
 } LabPCStorageList;
+
+extern LabPCStorageList D_88234630[];
+extern s32 D_88234660;
+extern void *D_88234664;
+extern s32 D_88233760[];
+extern u8 D_88006868[];
+extern void *mem_pool_alloc(void *, s32);
+extern s32 GbSave_GetRecordCapacity(s32);
+extern s32 func_80053230(s32);
+extern s32 func_8800005C(void);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern s32 Deck_ReadEntries(u8 *, s32, u8 *);
+extern s32 func_8006229C(u8 *);
+
+void func_88203744(void *pool) {
+    // FAKE: preserve the retail function's otherwise unused eight stack bytes.
+    s32 unused[2];
+    LabPCStorageList *list;
+    s32 i;
+    u8 *handle;
+    s32 bank;
+
+    D_88234660 = 0;
+    D_88234664 = mem_pool_alloc(pool, 118);
+    _bzero(D_88234664, 118);
+    for (i = 0, list = D_88234630; i < 4; i++, list++) {
+        switch (i) {
+            case 0:
+            case 1:
+                list->capacity = GbSave_GetRecordCapacity(D_88233760[i]);
+                bank = *(s8 *)D_88006868;
+                break;
+            case 2:
+            case 3:
+                list->capacity = func_80053230(D_88233760[i]);
+                bank = 0;
+                break;
+        }
+        list->changed = 0;
+        list->entries = mem_pool_alloc(pool, list->capacity * 118);
+        _bzero(list->entries, list->capacity * 118);
+        if (func_8800005C() != 0 && (i == 0 || i == 1)) {
+            list->count = 0;
+        } else {
+            handle = func_8006218C(D_88233760[i], bank, 0, 0);
+            if (handle != NULL) {
+                list->count = Deck_ReadEntries(list->entries, list->capacity, handle);
+                func_88203670(i, list->entries, list->count);
+                func_8006229C(handle);
+            }
+        }
+    }
+}
 
 // One 0x76-byte Lab PC storage entry (halfword aligned); see func_88203670's 0x76 stride.
 typedef struct unk_func_88203ED8 {

@@ -84,3 +84,50 @@ Verification: unchanged and candidate native modules each reproduce with
 bytes/layout, function/object extents and semantic relocations. Normal host
 syntax and `make -j1 COMPARE=1 RUN_CC_CHECK=1` pass; retail ROM MD5 is
 `1561c75d11cedf356a8ddb1a4a5f9d5d`. No compiler, linker, coverage or tool changes.
+
+## 2026-11-12 — `func_88203744` storage-list initialization accepted
+
+`func_88203744(void *pool)` matches **114 instructions / 456 bytes** with
+an 88-byte frame (US ROM `0x1769C4..0x176B8C`, end exclusive). It clears
+`D_88234660`, allocates and zeroes the 118-byte fallback at `D_88234664`,
+then initializes four existing `LabPCStorageList` descriptors at
+`D_88234630`. `func_8820137C` uses the fallback for other list types.
+
+The selector words in `D_88233760` are 37, 36, 23 and 22. Lists 0 and 1
+obtain capacity from `GbSave_GetRecordCapacity` and use the signed byte
+`D_88006868` as the deck port; lists 2 and 3 use `func_80053230` and port
+0. Each list receives a zeroed `capacity * 118` entry array and a cleared
+`changed` flag. When `func_8800005C` is nonzero, lists 0 and 1 receive a
+zero count. Otherwise, a successful `func_8006218C(selector, port, 0, 0)`
+handle supplies entries through `Deck_ReadEntries`; `func_88203670` clears
+entries whose existing flags are zero, and `func_8006229C` closes the
+handle. Failed opens preserve the existing count, as in retail.
+
+Inspected definitions and callers establish the pool-pointer interface,
+12-byte descriptors, 118-byte entries and three-argument reader. The
+existing typedef is moved before this owner; storage ownership is unchanged.
+The new declarations retain the helper definitions' word/pointer ABI.
+
+//@src/fragments/31/fragment31_186690.c
+//@src/fragments/31/fragment31_189760.c
+//@src/fragments/31/fragment31_174460.c
+//@src/fragments/29/fragment29_166060.c
+//@src/3A00.c
+//@src/517E0.c
+//@src/585D0.c
+//@src/615D0.c
+
+Putting the list initialization in the `for` initializer and assigning port
+0 after the capacity call recovers the retail instruction schedule. A
+marked `FAKE` unused two-word local preserves eight otherwise unused stack
+bytes. The port is assigned by every reachable switch case; its original
+live-in/live-out stack home is preserved without inventing an initial port.
+
+Fresh validation on master `5b3625a93b231fc725defa603571d3912dc34161`
+plus this source replacement: default syntax-enabled
+`make -W src/fragments/31/fragment31_1768F0.c -j4 VERSION=us rom`, exact
+`build/pokestadiumgs-us.z64: OK`, full retail `cmp`, and
+`git diff --check` pass. ROM MD5: `1561c75d11cedf356a8ddb1a4a5f9d5d`.
+Reader-only object comparison verifies all allocated module sections,
+function extents and semantic relocations against the original assembly
+module. No generated coverage, layout, compiler or CI changes.
