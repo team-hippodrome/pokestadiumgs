@@ -4,7 +4,53 @@
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1EC950/func_8AC06F60.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1EC950/func_8AC07378.s")
+typedef struct {
+    f32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+    f32 unk_0C;
+    f32 unk_10;
+    f32 unk_14;
+} unk_func_8220B248_018;
+typedef struct {
+    s16 unk_00;
+    s16 unk_02;
+    s16 unk_04;
+    s16 unk_06;
+    s16 unk_08;
+    u8 unk_0A[14];
+    unk_func_8220B248_018 unk_18[16];
+} unk_func_8220B248;
+
+extern f32 D_8AC07E30;
+extern s16 D_8AC07E34;
+
+void func_8AC07378(unk_func_8220B248 *arg0) {
+    unk_func_8220B248_018 *var_v0 = arg0->unk_18;
+    s32 var_v1;
+    s32 var_a1;
+    s16 *var_v3;
+    f32 var_fv0;
+    f32 var_fv1;
+    arg0->unk_02++;
+    var_v1 = arg0->unk_02 - 10;
+    if (var_v1 < 0) {
+        var_v1 = 0;
+    }
+    arg0->unk_08 = 255 - (var_v1 * 255) / D_8AC07E34;
+    if (arg0->unk_08 > 0) {
+        var_v3 = &arg0->unk_04;
+        for (var_a1 = 0; var_a1 < 16; var_a1++) {
+            var_fv0 = var_v0->unk_10;
+            var_fv1 = var_v0->unk_14 + D_8AC07E30 * arg0->unk_02;
+            var_v0->unk_00 = var_v3[0] + var_fv0 * arg0->unk_02;
+            var_v0->unk_04 = var_v3[1] + var_fv1 * arg0->unk_02;
+            var_v0++;
+        }
+    } else {
+        arg0->unk_00 = 0;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1EC950/func_8AC075A8.s")
 

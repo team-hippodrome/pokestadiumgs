@@ -4,7 +4,36 @@
 #ifdef VERSION_US
 extern u8 D_8009DE50[]; u8 func_800648A0(u8 index) { return D_8009DE50[index]; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_800648B8.s")
+s32 func_800648B8(u8 arg0) {
+    s32 result;
+    switch (arg0) {
+    default:
+        return 8;
+    case 0:
+    case 1:
+    case 52:
+    case 255:
+        result = 12;
+        break;
+    case 81:
+    case 82:
+    case 83:
+    case 84:
+    case 85:
+    case 86:
+    case 87:
+    case 88:
+    case 89:
+    case 90:
+    case 91:
+    case 92:
+    case 93:
+    case 94:
+    case 95:
+        return 4;
+    }
+    return result;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_80064940.s")
 

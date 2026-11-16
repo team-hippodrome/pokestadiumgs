@@ -9,6 +9,20 @@
 
 SECTIONS
 {
+    /* Address the original switch table in the shared loaded rodata.
+     * The compiler pads its 60-byte table to 64 bytes. */
+    .battle_lookup_table 0x800A52A0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/654A0.o(.rodata)
+    }
+
+    /* The compiled switch addresses the retail table in fragment 4's
+     * loaded data. Its 108-byte table is followed by IDO alignment. */
+    .fragment4_archive_dispatch_table 0x81805C64 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/4/fragment4_AE600.o(.rodata)
+    }
+
     /* Three adjacent two-byte function-static timers for func_8AB07C34,
      * func_8AB07DC4 and func_8AB07E6C, at 0x8AB16A34/36/38. The fragment
      * loader clears these addresses after relocation; compiler BSS alignment
@@ -285,3 +299,11 @@ ASSERT(D_800D1B40 == 0x800D1B40 && D_800D262E + 2 == 0x800D2630,
 ASSERT(ADDR(.fragment16_state_1D58_bss) == 0x82001D58 &&
        SIZEOF(.fragment16_state_1D58_bss) == 336,
        "fragment 16 grid state input footprint changed");
+
+ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
+       "fragment 4 archive dispatch table footprint changed");
+
+/* Entries in the shared assembly table target the C switch's return blocks. */
+.L80064924 = func_800648B8 + 0x6C;
+.L8006492C = func_800648B8 + 0x74;
+ASSERT(SIZEOF(.battle_lookup_table) == 64, "battle lookup table footprint changed");

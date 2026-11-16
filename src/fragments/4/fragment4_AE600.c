@@ -42,7 +42,51 @@ void func_818006FC(s32 arg0, s32 arg1, s32 arg2, f32 alpha, s16 arg4, s16 arg5) 
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AE600/func_818008E4.s")
+s32 func_8004C990(s32, s32);
+
+s32 func_818008E4(s32 arg0) {
+    switch (arg0) {
+    case 7:
+        return func_8004C990(0x14C, 0);
+    case 26:
+        return func_8004C990(0x14C, 1);
+    case 23:
+        return func_8004C990(0x14C, 2);
+    case 27:
+        return func_8004C990(0x14C, 4);
+    case 1:
+        return func_8004C990(0x14C, 5);
+    case 20:
+        return func_8004C990(0x14C, 6);
+    case 2:
+    case 6:
+        return func_8004C990(0x14C, 7);
+    case 8:
+        return func_8004C990(0x14C, 8);
+    case 22:
+        return func_8004C990(0x14C, 9);
+    case 4:
+        return func_8004C990(0x14C, 10);
+    case 25:
+        return func_8004C990(0x14C, 11);
+    case 0:
+        return func_8004C990(0x14C, 12);
+    case 3:
+        return func_8004C990(0x14C, 13);
+    case 24:
+        return func_8004C990(0x14C, 14);
+    case 5:
+        return func_8004C990(0x14C, 15);
+    case 9:
+        return func_8004C990(0x14C, 16);
+    case 21:
+        return func_8004C990(0x14C, 17);
+    case 19:
+        return func_8004C990(0x14C, 3);
+    default:
+        return func_8004C990(0x14C, 12);
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -74,7 +118,6 @@ void Gfx_SetupOrthoProjection(void) {
 #endif
 
 #ifdef VERSION_US
-s32 func_8004C990(s32, s32);
 extern void func_8004D1FC(s32);
 extern void func_81800020(f32, f32, s32, s32, s32, s32, f32, f32);
 void func_81800D70(s32 arg0, s32 arg1) {
