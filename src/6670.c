@@ -3,7 +3,33 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6670/func_80005A70.s")
+// Defined in this file so IDO's assembler can give each port's status and pad
+// stores in func_80005A70 one shared lui; with an extern declaration it
+// emits a lui per store.
+ControllerState D_800CE060[4];
+
+extern u8 D_800CE118;
+extern OSContStatus D_800CE120[4];
+extern OSContPad D_800CE130[4];
+
+// Clears the four controller records and, for each port bit set in D_800CE118
+// by func_8000644C, stores the 1-based port number and that port's
+// OSContStatus/OSContPad slots. IDO unrolls the second loop.
+void func_80005A70(void) {
+    ControllerState *controller;
+    s32 i;
+
+    for (controller = D_800CE060; controller < &D_800CE060[4]; controller++) {
+        _bzero(controller, sizeof(ControllerState));
+    }
+    for (i = 0; i < 4; i++) {
+        if (D_800CE118 & (1 << i)) {
+            D_800CE060[i].portNumber = i + 1;
+            D_800CE060[i].status = &D_800CE120[i];
+            D_800CE060[i].pad = &D_800CE130[i];
+        }
+    }
+}
 
 extern s16 MathUtil_Atan2s(f32, f32);
 void func_80005B88(ControllerState *state) { s16 x; s16 y; f32 x_norm; f32 y_norm; f32 magnitude; f32 old_magnitude; f32 scale; x = state->stickX; state->stickXNorm = 0.0f; state->stickYNorm = 0.0f; if (x < -7) { state->stickXNorm = (f32)(x + 6); } if (x >= 8) { state->stickXNorm = (f32)(x - 6); } y = state->stickY; if (y < -7) { state->stickYNorm = (f32)(y + 6); } if (y >= 8) { state->stickYNorm = (f32)(y - 6); } x_norm = state->stickXNorm; y_norm = state->stickYNorm; magnitude = sqrtf((x_norm * x_norm) + (y_norm * y_norm)); state->stickMagnitude = magnitude; if (magnitude > 64.0f) { scale = 64.0f / state->stickMagnitude; state->stickMagnitude = 64.0f; state->stickXNorm = x_norm * scale; state->stickYNorm = y_norm * scale; } if (state->stickMagnitude > 0.0f) { state->stickAngle = MathUtil_Atan2s(-state->stickYNorm, state->stickXNorm); } }
@@ -42,8 +68,7 @@ void Cont_StartReadInputs(void) { Cont_BlockEepromQueue(); osContStartReadData(&
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern void Cont_NoBlockEepromQueue(void);
 extern s32 GbPak_PollConnection();
-extern s32 func_80077424(s32 *);
-extern s32 D_800CE130;
+extern s32 func_80077424(OSContPad *);
 extern OSMesgQueue D_800CE100;
 
 // Reads the four controller slots once per call: latches the raw pad buttons,
@@ -73,7 +98,7 @@ void func_80005F0C(void) {
 
     var_s1 = D_800CE060;
     osRecvMesg(&D_800CE100, NULL, 1);
-    func_80077424(&D_800CE130);
+    func_80077424(D_800CE130);
     Cont_NoBlockEepromQueue();
     var_s2 = 0;
     do {
@@ -216,9 +241,7 @@ extern s32 osEepromProbe(OSMesgQueue *);
 extern OSMesgQueue D_800CE100;
 void Cont_InitEepromQueue(void);
 void Cont_InitEepromQueue(void);
-s32 func_80005A70();
 extern OSMesgQueue D_800CE100;
-extern OSContStatus D_800CE120;
 extern void *D_800CE148;
 
 u8 func_8000644C(void)
@@ -232,7 +255,7 @@ u8 func_8000644C(void)
   Cont_InitEepromQueue();
   osCreateMesgQueue(&D_800CE100, &D_800CE148, 1);
   osSetEventMesg(5U, &D_800CE100, NULL);
-  new_var2 = &D_800CE120;
+  new_var2 = D_800CE120;
   osContInit(&D_800CE100, new_var, new_var2);
   var_a0 = new_var2;
   var_v1 = 0;

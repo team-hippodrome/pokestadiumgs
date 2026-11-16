@@ -405,6 +405,8 @@
     - {vram: 0x800A7E80, type:  .bss, name: main}
     - {vram: 0x800AAA00, type:  bss, name: unk_bss}
     - {vram: 0x800AB3C0, type:  bss, name: unk_bss2}
+    - {vram: 0x800CE060, type: .bss, name: 6670} # src/6670.c D_800CE060 controller records (4 * 0x28)
+    - {vram: 0x800CE100, type:  bss, name: unk_bss2b}
     - {vram: 0x800D0490, type: .bss, name: 7140} # src/7140.c sramHandle (0x74 bytes; SUBALIGN(16) pads to 0x80)
     - {vram: 0x800D0510, type:  bss, name: unk_bss3}
     - {vram: 0x800D1A90, type: .bss, name: 2C1B0}

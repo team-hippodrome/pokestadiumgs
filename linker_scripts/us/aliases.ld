@@ -1585,3 +1585,11 @@ func_8006E944_weight = func_8006E944;
 
 /* The species filter narrows both halfword arguments to byte IDs. */
 func_8AF1F490_halfwords = func_8AF1F490;
+/* Interior addresses of src/6670.c D_800CE060[4] (ControllerState, 0x28 bytes
+ * each) that other owners still name directly: the per-port records referenced
+ * by the D_80087204/08/0C pointer table in asm/us/data/85DA0.data.s, and the
+ * +0x10 view used by src/fragments/13/fragment13_EEC50.c. */
+D_800CE070 = D_800CE060 + 0x10;
+D_800CE088 = D_800CE060 + 0x28;
+D_800CE0B0 = D_800CE060 + 0x50;
+D_800CE0D8 = D_800CE060 + 0x78;

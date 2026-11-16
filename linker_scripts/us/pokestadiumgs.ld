@@ -681,9 +681,10 @@ SECTIONS
         build/src/4420.o(.bss);
         build/src/57C0.o(.bss);
         build/src/62E0.o(.bss);
-        build/src/6670.o(.bss);
         build/asm/us/data/unk_bss.bss.o(.bss);
         build/asm/us/data/unk_bss2.bss.o(.bss);
+        build/src/6670.o(.bss);
+        build/asm/us/data/unk_bss2b.bss.o(.bss);
         build/src/7140.o(.bss);
         build/src/78D0.o(.bss);
         build/src/7A50.o(.bss);
