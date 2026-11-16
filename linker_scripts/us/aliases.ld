@@ -1579,3 +1579,9 @@ func_82205B00 = Fragment17_OptionColorCallback;
 
 /* The caller already masks the renderer's argument to one byte. */
 func_8AF0AB84_word_arg = func_8AF0AB84;
+
+/* The vertex blend weight and its one-float aggregate share the O32 argument slot. */
+func_8006E944_weight = func_8006E944;
+
+/* The species filter narrows both halfword arguments to byte IDs. */
+func_8AF1F490_halfwords = func_8AF1F490;

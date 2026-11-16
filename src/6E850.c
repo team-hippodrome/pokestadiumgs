@@ -585,7 +585,49 @@ void func_8006EB54(ModelSegmentAnimDesc *segment, f32 (*transforms)[4], ModelAni
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006ED10.s")
+extern void func_8006E944_weight(f32 (*)[4], void *, f32);
+
+void func_8006ED10(ModelSegmentAnimDesc *segment, f32 (*transforms)[4], ModelAnimVertex *out) {
+    s32 i;
+    s32 count;
+    s16 *classes;
+    s16 *remap;
+    ModelAnimVertex *vertex;
+    VertexPosBlend *blend;
+
+    classes = (s16 *)Memmap_GetSegmentVaddr(segment->tableSegment);
+    remap = (s16 *)Memmap_GetSegmentVaddr(segment->remapSegment);
+    count = (u16)segment->vertexCount;
+    vertex = out;
+    for (i = 0; i < count; i++, remap++, vertex++) {
+        if (i == *remap) {
+            switch (Model_GetVertexClass(classes, i)) {
+            case 0:
+                func_8006E7DC(transforms, &vertex->position);
+                break;
+            case 4:
+                func_8006E7DC(transforms + func_8006DE74(classes, i) * 4, &vertex->position);
+                break;
+            case 1:
+                func_8006E858(transforms, &vertex->position, D_8009F1E4[func_8006DE08(classes, i)]);
+                break;
+            case 5:
+                func_8006E944_weight(transforms, &vertex->position, D_8009F1E4[func_8006DDE8(classes, i)]);
+                break;
+            case 2:
+                blend = &vertex->position;
+                func_8006E7DC(transforms, blend);
+                Model_CopyPositionBuffer(blend, &D_80128C78[func_8006DE34(classes, i)]);
+                break;
+            case 3:
+                blend = &vertex->position;
+                func_8006E7DC(transforms, blend);
+                Model_CopyPositionBuffer(blend, &D_80128C78[func_8006DE54(classes, i)]);
+                break;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
