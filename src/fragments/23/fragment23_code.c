@@ -178,7 +178,60 @@ s32 func_82A0083C(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A0089C.s")
+/* Saved text position for func_82A0089C at 0x82A01A24. linker_scripts/us/datamig_bss.ld
+ * pins this object's .data there. It is defined in this file because IDO's
+ * assembler gives the two stores one lui only for a symbol defined in the file.
+ * FAKE: the one-element array, indexed by a variable, keeps IDO from loading the
+ * address into a base register. */
+typedef struct F23TextOrigin {
+    /* 0x00 */ s16 x;
+    /* 0x02 */ s16 y;
+} F23TextOrigin; // size = 0x4
+
+static F23TextOrigin sTextOrigin[1] = { 0 };
+
+extern s32 D_82A018B4;
+extern u8 D_82A01990[];
+extern s32 D_82A01994;
+extern s32 func_800472B8(s32);
+extern s32 func_800472E0(u8 *);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+
+// Widget callback. Mode 0 saves the position at +0x8 and stores
+// func_800472B8(+0x24) + D_82A018B4 at +0x26. Mode 1 sets flag 2 while
+// D_82A01994 is positive: it formats the text for +0x30 and D_82A01994 - 1, then
+// restores x and offsets y by half of (+0x26 * text width - D_82A018B4).
+// Otherwise it clears flag 2.
+s32 func_82A0089C(s32 arg0, u8 *arg1) {
+    s32 i = 0; // FAKE: constant index written as a variable (see F23TextOrigin)
+    u32 width;
+    s32 diff;
+    u8 buffer[0x200];
+    s32 pad; // FAKE: never used; moves buffer to the original stack slot.
+
+    switch (arg0) {
+        case 0:
+            sTextOrigin[i].x = *(s16 *)(arg1 + 8);
+            sTextOrigin[i].y = *(s16 *)(arg1 + 0xA);
+            *(s8 *)(arg1 + 0x26) = func_800472B8(*(u16 *)(arg1 + 0x24)) + D_82A018B4;
+            break;
+        case 1:
+            if (D_82A01994 > 0) {
+                *(u16 *)(arg1 + 2) |= 2;
+                // FAKE: D_82A01994 read through D_82A01990 so IDO reloads its address.
+                *(u16 *)(arg1 + 0x32) = *(s32 *)(D_82A01990 + 4) - 1;
+                func_8004C8A0(buffer, 0x200, *(u16 *)(arg1 + 0x30), *(u16 *)(arg1 + 0x32));
+                width = func_800472E0(buffer);
+                diff = *(s8 *)(arg1 + 0x26) * width - D_82A018B4;
+                *(s16 *)(arg1 + 8) = sTextOrigin[i].x;
+                *(s16 *)(arg1 + 0xA) = sTextOrigin[i].y - diff / 2;
+            } else {
+                *(u16 *)(arg1 + 2) &= ~2;
+            }
+            break;
+    }
+    return 0;
+}
 
 s32 func_82A009A0(s32 arg0) {
     s32 var_v1;
