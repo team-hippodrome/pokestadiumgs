@@ -719,11 +719,52 @@ void func_82C0273C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C02834.s")
+extern u8 func_80063804(u8);
+extern u8 func_80073480(u8);
+
+// Fills D_82C05E80.order with slot ids 1..251 (mode 0), or with
+// func_80063804/func_80073480 of each id (modes 1 and 2), calls func_82C0273C,
+// then clears unk_006 and sets unk_000.
+// The old-style definition keeps the u8 parameter's home store and mask in the
+// callee while the callers (declared with an empty parameter list) pass an int,
+// as in the original.
+void func_82C02834(mode)
+    u8 mode;
+{
+    s32 i;
+    s32 k = 0; // FAKE: constant index written as a variable so the two stores share a lui
+
+    switch (mode) {
+        case 0:
+            i = 1;
+            do {
+                D_82C05E80.order[i - 1] = i;
+                i++;
+            } while (i < 0xFC);
+            break;
+        case 1:
+            i = 1;
+            do {
+                D_82C05E80.order[i - 1] = func_80063804(i);
+                i++;
+            } while (i < 0xFC);
+            break;
+        case 2:
+            i = 1;
+            do {
+                D_82C05E80.order[i - 1] = func_80073480(i);
+                i++;
+            } while (i < 0xFC);
+            break;
+    }
+    func_82C0273C();
+    (&D_82C05E80)[k].unk_006 = 0;
+    (&D_82C05E80)[k].unk_000 = 1;
+}
 #endif
 
 #ifdef VERSION_US
-extern void func_82C02834(s32);
+extern void func_82C02834();
 extern u8 D_82C04C38;
 
 void func_82C02950(void) {
@@ -875,7 +916,7 @@ extern u8 D_82C05E86;
 extern u8 D_82C05E88;
 extern u8 D_82C05E90;
 extern void func_800226C0(s32);
-extern void func_82C02834(s32);
+extern void func_82C02834();
 extern void func_82C02B84(void);
 extern u16 func_82C03134(void);
 
