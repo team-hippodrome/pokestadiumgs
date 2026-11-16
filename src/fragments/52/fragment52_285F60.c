@@ -130,5 +130,4 @@ void func_86407D58(void* argument) {
     }
 }
 
-#pragma C_FUNCTION_PADDING(8)
 #endif

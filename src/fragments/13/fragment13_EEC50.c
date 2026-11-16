@@ -2007,6 +2007,4 @@ void Fragment13_SyncSceneSelections(struct Fragment13GroupState *arg0, void *arg
     func_824001C0(arg1, values, arg0->group, (*(u8 *)((u8 *)arg0 + 6) >= 6 && *(u8 *)((u8 *)arg0 + 6) < 23), (arg0->state == 1 || arg0->state == 2), arg2);
 }
 
-/* Preserve the original trailing alignment NOPs at 0x82407344-0x8240734C. */
-#pragma C_FUNCTION_PADDING(12)
 #endif

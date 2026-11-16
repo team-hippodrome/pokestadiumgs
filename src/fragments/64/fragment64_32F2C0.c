@@ -115,5 +115,4 @@ void func_87F0C930(FadeTimer* timer) {
         StageFade_StartFromTransparent(0x14);
     }
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

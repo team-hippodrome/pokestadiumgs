@@ -32,18 +32,26 @@ typedef struct {
 extern s32 D_82703360;
 extern s32 func_80001FF0(void);
 
+/* Shared by func_82700020 and func_827000B8. Defined in this file so that IDO's
+ * assembler keeps one `lui $at` for adjacent field stores; the fragment loader
+ * places it at 0x827034C8 (see linker_scripts/us/datamig_bss.ld). */
+static Fragment22PreviewState sPreviewState;
+
 void func_82700020(void *arg0) {
-    static Fragment22PreviewState sPreviewState;
+    // FAKE: indexing through a constant-propagated zero keeps every field store
+    // at sPreviewState+offset; a plain member access makes uopt build a base
+    // register for the struct.
+    s32 i = 0;
 
     func_8003F018((s32)&D_82703360);
-    sPreviewState.unk_04 = 0;
-    sPreviewState.unk_06 = 0;
-    sPreviewState.data = arg0;
-    sPreviewState.unk_08 = (func_80001FF0() * 30) / 2;
-    sPreviewState.unk_0A = 0;
-    sPreviewState.unk_0E = 320;
-    sPreviewState.unk_10 = 240;
-    func_8003F114((u8 *)&D_82703360, 0, -1, sPreviewState.data);
+    (&sPreviewState)[i].unk_04 = 0;
+    (&sPreviewState)[i].unk_06 = 0;
+    (&sPreviewState)[i].data = arg0;
+    (&sPreviewState)[i].unk_08 = (func_80001FF0() * 30) / 2;
+    (&sPreviewState)[i].unk_0A = 0;
+    (&sPreviewState)[i].unk_0E = 320;
+    (&sPreviewState)[i].unk_10 = 240;
+    func_8003F114((u8 *)&D_82703360, 0, -1, (&sPreviewState)[i].data);
 }
 
 /* mkdraft:func_827000B8 begin */
@@ -57,26 +65,21 @@ extern void *D_80087200;
 extern s32 D_82703360;
 extern s16 D_82703382;
 extern s32 D_82703384;
-extern s16 D_827034CC;
-extern s16 D_827034CE;
-extern s16 D_827034D0;
-extern s16 D_827034D2;
-extern s16 D_827034D4;
-extern s16 D_827034D6;
-extern s16 D_827034D8;
 
-#pragma COALESCE_AT_LUI(func_827000B8, D_827034CC, D_827034CE)
 
 
 void func_827000B8(void)
 {
-  s16 *D_827034CC_ptr = &D_827034CC;
+  s16 *modePtr = &sPreviewState.unk_04;
   u8 *sp1C;
   u8 *temp_a0;
   s16 counter;
   s32 var_v1;
-  s16 *D_827034CE_ptr = &D_827034CE;
-  s16 *D_827034D2_ptr = &D_827034D2;
+  // FAKE: reading unk_10 through a pointer stops uopt from sharing one base
+  // register between the unk_0E and unk_10 loads at the end.
+  s16 *yp = &sPreviewState.unk_10;
+  s16 *timerPtr = &sPreviewState.unk_06;
+  s16 *animPtr = &sPreviewState.unk_0A;
   s32 *D_82703360_ptr = &D_82703360;
   temp_a0 = D_827031C4->model;
   if ((*((u16 *) (((u8 *) D_80087200) + 8))) & 0xCC00)
@@ -87,30 +90,30 @@ void func_827000B8(void)
   {
     var_v1 = 0;
   }
-  switch (*D_827034CC_ptr)
+  switch (*modePtr)
   {
     case 0:
       if (var_v1 != 0)
     {
-      *D_827034CE_ptr = 0;
+      *timerPtr = 0;
     }
     else
     {
-      counter = (*D_827034CE_ptr) + 1;
-      *D_827034CE_ptr = counter;
+      counter = (*timerPtr) + 1;
+      *timerPtr = counter;
       // FAKE: dead pointer test (both pointers are non-null) used as a scheduling
       // barrier. Its `la`/`bne` pair is deleted by as1, but the split keeps the
-      // D_827034CE `lh` ahead of the D_827034D0 `lh`; without it the two loads
+      // unk_06 `lh` ahead of the unk_08 `lh`; without it the two loads
       // swap and the score is 340 (10 with it).
-      if (((!D_827034D2_ptr) && (!D_827034D2_ptr)) && (!D_827034D2_ptr))
+      if (((!animPtr) && (!animPtr)) && (!animPtr))
       {
       }
-      if (counter >= D_827034D0)
+      if (counter >= sPreviewState.unk_08)
       {
-        D_827034CC = 1, D_827034CE = 0;
-        D_827034D4 = guRandom() & 3;
-        D_827034D6 = (s16) (guRandom() % 640U);
-        D_827034D8 = (s16) (guRandom() % 480U);
+        sPreviewState.unk_04 = 1, sPreviewState.unk_06 = 0;
+        sPreviewState.unk_0C = guRandom() & 3;
+        sPreviewState.unk_0E = (s16) (guRandom() % 640U);
+        sPreviewState.unk_10 = (s16) (guRandom() % 480U);
 
         // FAKE: `& 0xFFFF` is a no-op for a 16-bit store and as1 deletes the
         // `andi 0xFFFF` it emits, but uopt claims one temp-pool slot for the
@@ -126,9 +129,9 @@ void func_827000B8(void)
     case 1:
       if (var_v1 != 0)
     {
-      *D_827034CC_ptr = 0;
+      *modePtr = 0;
 
-      *D_827034CE_ptr = 0;
+      *timerPtr = 0;
 
     }
     else
@@ -137,23 +140,23 @@ void func_827000B8(void)
 
       if (ModelAnim_IsFinished(temp_a0) != 0)
       {
-        if ((*D_827034D2_ptr) == 0)
+        if ((*animPtr) == 0)
         {
-          *D_827034D2_ptr = 2;
+          *animPtr = 2;
         }
         else
         {
-          *D_827034D2_ptr = 0;
-          D_827034D4 = guRandom() & 3;
-          D_827034D6 = (s16) (guRandom() % 640U);
-          D_827034D8 = (s16) (guRandom() % 480U);
+          *animPtr = 0;
+          sPreviewState.unk_0C = guRandom() & 3;
+          sPreviewState.unk_0E = (s16) (guRandom() % 640U);
+          sPreviewState.unk_10 = (s16) (guRandom() % 480U);
           // FAKE: same `& 0xFFFF` temp-pool claim as the case-0 store. Without
           // it the later temps in this branch and the tail come out one slot
           // lower than retail (score 440).
           D_82703382 = guRandom() & 0xFFFF;
         }
         func_8003F2C4(D_827031C0, sp1C, -1);
-        func_8003F2C4(D_827031C0, sp1C, *D_827034D2_ptr);
+        func_8003F2C4(D_827031C0, sp1C, *animPtr);
       }
 
     }
@@ -162,7 +165,7 @@ void func_827000B8(void)
   }
 
 
-  if ((*D_827034CC_ptr) == 0)
+  if ((*modePtr) == 0)
   {
     *((u8 *) (((u8 *) D_82703360_ptr) + 2)) = (u8) ((*((u8 *) (((u8 *) D_82703360_ptr) + 2))) | 4);
   }
@@ -170,7 +173,7 @@ void func_827000B8(void)
   {
     *((u8 *) (((u8 *) D_82703360_ptr) + 2)) = (u8) ((*((u8 *) (((u8 *) D_82703360_ptr) + 2))) & 0xFFFB);
   }
-  Vec3f_SetComponentsDuplicate(&D_82703384, ((f32) D_827034D6) - 320.0f, 240.0f - ((f32) D_827034D8), 0xC410C000);
+  Vec3f_SetComponentsDuplicate(&D_82703384, ((f32) sPreviewState.unk_0E) - 320.0f, 240.0f - ((f32) *yp), 0xC410C000);
 
 }
 /* mkdraft:func_827000B8 end */

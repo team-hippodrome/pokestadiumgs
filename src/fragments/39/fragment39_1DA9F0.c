@@ -602,5 +602,4 @@ void func_88A01990(void) {
     }
 }
 
-#pragma C_FUNCTION_PADDING(8)
 #endif

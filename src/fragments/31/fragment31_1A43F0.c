@@ -82,5 +82,4 @@ void func_882313A4(s8 arg0, s8 arg1, u16 arg2) {
     D_882349D0->unk_02 = arg2;
     D_8800EF54 = D_882349D0;
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

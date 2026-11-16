@@ -1705,6 +1705,4 @@ s32 Fragment51_Run(s32 arg0, void *arg1) {
     func_80027EE0(0xFFE);
     return *(s32 *)((u8 *)D_863075D8 + 0x8F58);
 }
-// Preserve the two alignment words after the fragment entrypoint.
-#pragma C_FUNCTION_PADDING(8)
 #endif

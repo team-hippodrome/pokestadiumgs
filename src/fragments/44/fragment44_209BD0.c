@@ -329,6 +329,4 @@ void func_8AF1C31C(void) {
         func_8AC05F00(D_8AF372F0);
     }
 }
-/* Preserve the original three alignment NOPs after this owner. */
-#pragma C_FUNCTION_PADDING(12)
 #endif

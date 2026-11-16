@@ -79,5 +79,4 @@ void func_81100228(s16 *arg0, const s16 *arg1) {
     arg0[1] = arg1[1];
     arg0[2] = arg1[2];
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

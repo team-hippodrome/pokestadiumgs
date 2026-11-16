@@ -1276,5 +1276,4 @@ s32 fragment82_main(s32 arg0, s32 arg1) {
     main_pool_pop_state(0x524C4544);
     return _bcmp(&D_82D23938, D_82D23B60, 0x224) != 0;
 }
-#pragma C_FUNCTION_PADDING(8)
 #endif
