@@ -1072,6 +1072,4 @@ u8* func_8004E0F0(u8* destination, s32 id, s32 index) {
     }
     return destination;
 }
-/* Original owner ends with three alignment NOPs after the return delay slot. */
-#pragma C_FUNCTION_PADDING(12)
 #endif

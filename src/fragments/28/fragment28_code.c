@@ -30,5 +30,4 @@ s32 fragment28_main(UNUSED s32 arg0, UNUSED s32 arg1) {
     main_pool_pop_state(0x4241544C);
     return 0;
 }
-#pragma C_FUNCTION_PADDING(8)
 #endif

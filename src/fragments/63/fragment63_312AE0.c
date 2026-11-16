@@ -1372,5 +1372,4 @@ extern void func_87F0277C(void);
 void func_87E120F8(void) {
     func_87F0277C();
 }
-#pragma C_FUNCTION_PADDING(8)
 #endif

@@ -307,5 +307,4 @@ s32 func_8410580C(s32 arg0, u8 *arg1, s32 arg2) {
     }
     return 0;
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

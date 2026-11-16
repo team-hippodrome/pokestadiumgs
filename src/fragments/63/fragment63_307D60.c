@@ -556,5 +556,4 @@ void func_87E053D0(u8 *arg0) {
     func_87E05258(arg0);
     BgStage_DrawFrame();
 }
-#pragma C_FUNCTION_PADDING(8)
 #endif

@@ -537,5 +537,4 @@ extern u32 D_87F15BB8;
 u32 func_87F0F468(void) {
     return D_87F15BB8;
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

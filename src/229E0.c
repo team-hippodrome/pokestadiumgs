@@ -245,7 +245,6 @@ void func_80022644(u32 arg0) {
     }
 }
 
-#pragma C_FUNCTION_PADDING(4)
 
 
 #endif
