@@ -2,8 +2,6 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1EC950/func_8AC06F60.s")
-
 typedef struct {
     f32 unk_00;
     f32 unk_04;
@@ -21,6 +19,27 @@ typedef struct {
     u8 unk_0A[14];
     unk_func_8220B248_018 unk_18[16];
 } unk_func_8220B248;
+
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 D_8AC07E28;
+extern f32 D_8AC07E2C;
+
+void func_8AC06F60(unk_func_8220B248 *arg0) {
+    s32 i;
+    s16 *pos = &arg0->unk_04;
+    unk_func_8220B248_018 *entry = arg0->unk_18;
+
+    for (i = 0; i < 16; i++) {
+        entry->unk_00 = pos[0];
+        entry->unk_04 = pos[1];
+        entry->unk_08 = 0.75f;
+        entry->unk_0C = 0.75f;
+        entry->unk_10 = D_80087E50[(u16)(i * 0x1000 + 0x800) >> 4] * D_8AC07E28;
+        entry->unk_14 = 0.0f - D_80088E50[(u16)(i * 0x1000 + 0x800) >> 4] * D_8AC07E28 + D_8AC07E2C;
+        entry++;
+    }
+}
 
 extern f32 D_8AC07E30;
 extern s16 D_8AC07E34;
@@ -91,8 +110,6 @@ void func_8AC07A8C(void) {
     } while (index != 3);
 }
 
-extern void func_8AC06F60(Entry_8AC07A8C *);
-
 s32 func_8AC07AF4(s32 arg0, s32 arg1, u8 *arg2, u8 *arg3) {
     Entry_8AC07A8C *var_s0 = D_8AC099D0;
     s32 var_v0;
@@ -106,7 +123,7 @@ s32 func_8AC07AF4(s32 arg0, s32 arg1, u8 *arg2, u8 *arg3) {
             var_s0->unk_0C = *(unk_func_8AC07AF4_00C *)arg2;
             var_s0->unk_0F = *(unk_func_8AC07AF4_00C *)arg3;
             var_s0->unk_08 = 255;
-            func_8AC06F60(var_s0);
+            func_8AC06F60((unk_func_8220B248 *)var_s0);
             return 1;
         }
     }
