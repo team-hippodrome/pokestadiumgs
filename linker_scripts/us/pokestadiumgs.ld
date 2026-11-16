@@ -109,6 +109,10 @@ SECTIONS
         build/src/26850.o(.text);
         build/src/269B0.o(.text);
         build/src/26CC0.o(.text);
+        build/src/27590.o(.text);
+        . += 0x10;
+        build/src/28D40.o(.text);
+        build/src/290C0.o(.text);
         build/src/2C1B0.o(.text);
         build/src/340C0.o(.text);
         build/src/35BE0.o(.text);
@@ -443,6 +447,9 @@ SECTIONS
         build/src/26850.o(.data);
         build/src/269B0.o(.data);
         build/src/26CC0.o(.data);
+        build/src/27590.o(.data);
+        build/src/28D40.o(.data);
+        build/src/290C0.o(.data);
         _2C1B0 = .;
         build/src/2C1B0.o(.data);
         _340C0 = .;
@@ -635,7 +642,9 @@ SECTIONS
         build/src/26850.o(.rodata);
         build/src/269B0.o(.rodata);
         build/src/26CC0.o(.rodata);
-        build/asm/us/data/A4590.rodata.o(.rodata);
+        build/src/27590.o(.rodata);
+        build/src/28D40.o(.rodata);
+        build/src/290C0.o(.rodata);
         build/src/2C1B0.o(.rodata);
         build/src/340C0.o(.rodata);
         build/src/35BE0.o(.rodata);
@@ -774,6 +783,9 @@ SECTIONS
         build/src/26850.o(.bss);
         build/src/269B0.o(.bss);
         build/src/26CC0.o(.bss);
+        build/src/27590.o(.bss);
+        build/src/28D40.o(.bss);
+        build/src/290C0.o(.bss);
         build/asm/us/data/unk_bss3.bss.o(.bss);
         /* datamig_bss.ld places the real C audio objects (src/2C1B0.o)
          * separately. Keep their original 0x800D1A90..0x800D2630
