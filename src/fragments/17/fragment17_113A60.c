@@ -698,7 +698,48 @@ void func_82206804(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82206854.s")
+/* The 0x18-byte scene record at 0x8220EB80 that func_82206854 clears; the other
+ * functions reach its fields through D_8220EB82, D_8220EB88 and D_8220EB90.
+ * linker_scripts/us/datamig_bss.ld pins this object's .data there.
+ * IDO's assembler gives two stores one lui only when the symbol is defined in
+ * this file, and the original uses three symbols: the stores to +0xC and +0x10
+ * get their own luis. FAKE: the one-element arrays, indexed by a variable, keep
+ * IDO from loading each address into a base register. */
+typedef struct F17SceneHeader {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ u16 flags; // bit 0 is tested by func_82205F2C and func_82208518
+    /* 0x04 */ s16 unk_04;
+    /* 0x08 */ void *unk_08;
+} F17SceneHeader; // size = 0xC
+
+typedef struct F17ScenePair {
+    /* 0x00 */ s32 unk_00; // D_8220EB90, tested by func_822067C4
+    /* 0x04 */ s32 unk_04;
+} F17ScenePair; // size = 0x8
+
+static F17SceneHeader sSceneHeader[1] = { 0 };
+static s32 sSceneValue[1] = { 0 };
+static F17ScenePair sScenePair[1] = { 0 };
+
+extern void _bzero(void *, s32);
+extern s32 func_80054CC4(u8 *, u8 *);
+
+// Clears the scene record, then stores arg0 and arg1/arg2. +0x10 stays zero when
+// both arg1 and arg2 are set.
+void func_82206854(s32 arg0, s32 arg1, s32 arg2) {
+    s32 i = 0; // FAKE: constant index written as a variable (see F17SceneHeader)
+
+    _bzero(sSceneHeader, 0x18);
+    sSceneHeader[i].flags = 0;
+    sSceneHeader[i].unk_00 = arg0;
+    sSceneValue[i] = arg1;
+    sScenePair[i].unk_00 = arg1;
+    sScenePair[i].unk_04 = arg2;
+    if ((arg1 != 0) && (arg2 != 0)) {
+        sScenePair[i].unk_00 = 0;
+    }
+    func_80054CC4((u8 *)*(void **)((u8 *)D_8220DA08 + 0x20) + 8, NULL);
+}
 
 
 #endif

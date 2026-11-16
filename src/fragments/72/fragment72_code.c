@@ -5,10 +5,31 @@
 #ifdef VERSION_US
 /* Playback resources used by func_8F400C58 and released by case 3 below. */
 typedef struct Fragment72PlaybackResources {
-    s32 handle;
-    void *model;
+    u16 *iconList; // render list from func_800437B4
+    void *image;   // color image from func_800071A4
 } Fragment72PlaybackResources;
-static Fragment72PlaybackResources sPlaybackResources;
+
+typedef struct Fragment72Pair {
+    s16 unk_00;
+    s16 unk_02;
+} Fragment72Pair;
+
+/* The state block at 0x8F4020C0 that the other functions reach through
+ * D_8F4020C0..D_8F402106. func_8F4009A4 uses this definition: IDO's assembler
+ * gives the two pair stores one lui only when the symbol is defined in this file.
+ * FAKE: the one-element arrays, indexed by variables in func_8F4009A4, keep IDO
+ * from loading the address into a base register. */
+typedef struct Fragment72State {
+    /* 0x00 */ u8 unk_00[0x8];
+    /* 0x08 */ void *unk_08[1];
+    /* 0x0C */ u8 unk_0C[0x4];
+    /* 0x10 */ Fragment72PlaybackResources playback[1];
+    /* 0x18 */ u8 unk_18[0x24];
+    /* 0x3C */ s16 unk_3C[1];
+    /* 0x3E */ s16 unk_3E;
+    /* 0x40 */ Fragment72Pair pairs[2];
+} Fragment72State; // size = 0x48
+static Fragment72State sState;
 
 extern u8 D_8F4020C0;
 extern s16 D_8F4020C2;
@@ -381,7 +402,34 @@ void func_8F4001CC(void)
 
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/72/fragment72_code/func_8F4009A4.s")
+extern void *func_800437B4(void *, s32, s32, s32);
+extern void *func_800071A4(s32, s32, s32, s32, s32);
+extern s32 func_80043B8C(void *, s32, u16);
+
+// Sets up the pair values from the mode at 0x3C, then creates the render list and
+// its image and marks the list when that mode is 1.
+void func_8F4009A4(void) {
+    u8 *state = &D_8F4020C0;
+    s32 i = 0; // FAKE: constant indices written as variables (see Fragment72State)
+    s32 j = 1;
+
+    *(s16 *)(state + 0x3E) = 0;
+    if (*(s16 *)(state + 0x3C) == 2) {
+        sState.pairs[i].unk_00 = 0xEB;
+        sState.pairs[j].unk_00 = 9;
+    } else {
+        sState.pairs[i].unk_00 = 1;
+        sState.pairs[j].unk_00 = 0x117;
+    }
+    sState.pairs[i].unk_02 = -1;
+    sState.pairs[j].unk_02 = 0;
+    sState.playback[i].iconList = func_800437B4(sState.unk_08[i], 1, 0xA0, 0xA0);
+    sState.playback[i].image = func_800071A4(0, 2, 0x28, 0x28, 0);
+    func_80043B8C(sState.playback[i].iconList, 0, 0x7BDE);
+    if (sState.unk_3C[i] == 1) {
+        *sState.playback[i].iconList |= 0x100;
+    }
+}
 
 u16 func_8F400A8C(u16* image, u16 stride) {
     u32 alpha = 0;
@@ -505,10 +553,8 @@ extern s32 func_80041C98(s32);
 extern u8 *func_8004BA70(s32);
 extern void func_80041E2C(void);
 
-/* The fragment's 0x48-byte runtime block starts 0x10 bytes below
- * sPlaybackResources in the pinned .bss section (linker_scripts/us/datamig_bss.ld
- * places this object's .bss at 0x8F4020D0 and the block was cleared from
- * 0x8F4020C0). */
+/* The fragment's 0x48-byte runtime block is sState, which
+ * linker_scripts/us/datamig_bss.ld pins at 0x8F4020C0. */
 typedef struct Fragment72RuntimeBlock {
     u8 pad_00[2];
     s16 unk_02;
@@ -527,7 +573,7 @@ typedef struct Fragment72RuntimeBlock {
 
 
 void func_8F400DE8(void) {
-    Fragment72RuntimeBlock *block = (Fragment72RuntimeBlock *)((u8 *)&sPlaybackResources - 0x10);
+    Fragment72RuntimeBlock *block = (Fragment72RuntimeBlock *)&sState;
 
     _bzero(block, 0x48);
     block->unk_02 = 0x98;
@@ -887,12 +933,12 @@ extern s32 D_8F4020D8;
 extern u8 StageContext_GetFadeMode(void);
 extern s32 StageFade_StartFromTransparent(s32 duration);
 void func_8F400020(void);
-extern s32 func_8F4009A4();
+void func_8F4009A4(void);
 extern void main_pool_pop_state(s32);
 extern void main_pool_push_state(s32);
 
 s32 func_8F401C30(s32 arg0) {
-    Fragment72PlaybackResources *playback = &sPlaybackResources;
+    Fragment72PlaybackResources *playback = &sState.playback[0];
     s32 var_s0 = arg0;
     s32 temp_v0;
 
@@ -933,8 +979,8 @@ s32 func_8F401C30(s32 arg0) {
             if (func_8F401BC4((s32)&D_8F4020C0)) {
                 var_s0 = 1;
                 main_pool_pop_state(D_8F40203C);
-                playback->handle = 0;
-                playback->model = 0;
+                playback->iconList = 0;
+                playback->image = 0;
                 D_8F4020C4 = -1;
             }
             break;
