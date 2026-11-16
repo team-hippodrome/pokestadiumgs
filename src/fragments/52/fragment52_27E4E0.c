@@ -1458,11 +1458,61 @@ f32 func_86403B3C(u8 *arg0, void *arg1, f32 arg2, f32 *arg3, void *arg4) {
 
 #ifdef VERSION_US
 extern u8 *D_86416C00;
-void func_86403CB4(void) { void *node; node = *(void **)(D_86416C00 + 0xE0C); while (node != NULL) { node = *(void **)((u8 *)node + 4); } }
+// Walks the list at D_86416C00 + 0xE0C to its end. There is no return statement:
+// the walk leaves the final (NULL) link in v0, and func_86403CDC tests that value.
+// The unprototyped K&R definition lets that caller pass its arg1 as well.
+s32 func_86403CB4() {
+    void *node;
+
+    node = *(void **)(D_86416C00 + 0xE0C);
+    while (node != NULL) {
+        node = *(void **)((u8 *)node + 4);
+    }
+}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86403CDC.s")
+extern f32 D_86409648[];
+s32 func_86403CDC(void *arg0, void *arg1, f32 arg2) {
+    s32 result;
+    s32 mode;
+
+    result = 0;
+    mode = *(s8 *)(*(u8 **)(D_86416C00 + 0x70) + 0x2181);
+    switch (mode) {
+    case 0:
+        if (func_86403CB4(arg1) == 0) {
+            if ((f32)func_8003570C() / 4294967296.0f < D_86409648[*(s32 *)((u8 *)arg1 + 4)] * 0.2f) {
+                result = 0x8000;
+            }
+        }
+        break;
+    case 1:
+        if (func_86403CB4(arg1) == 0) {
+            if ((f32)func_8003570C() / 4294967296.0f < D_86409648[*(s32 *)((u8 *)arg1 + 4)] * 0.7f) {
+                result = 0x8000;
+            }
+        }
+        break;
+    case 2:
+        if (func_86403CB4(arg1) == 0) {
+            if ((f32)func_8003570C() / 4294967296.0f < D_86409648[*(s32 *)((u8 *)arg1 + 4)]) {
+                result = 0x8000;
+            }
+        }
+        break;
+    case 3:
+        if (*(s32 *)((u8 *)arg1 + 4) == 0 || *(s32 *)((u8 *)arg1 + 4) == 1 || *(s32 *)((u8 *)arg1 + 4) == 3 || *(s32 *)((u8 *)arg1 + 4) == 2) {
+            if (func_86403CB4(arg1) == 0) {
+                if ((f32)func_8003570C() / 4294967296.0f < D_86409648[*(s32 *)((u8 *)arg1 + 4)]) {
+                    result = 0x8000;
+                }
+            }
+        }
+        break;
+    }
+    return (u16)result;
+}
 #endif
 
 #ifdef VERSION_US
