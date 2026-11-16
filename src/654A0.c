@@ -16,18 +16,9 @@ s32 func_800648B8(u8 arg0) {
         result = 12;
         break;
     case 81:
-    case 82:
-    case 83:
-    case 84:
-    case 85:
-    case 86:
     case 87:
-    case 88:
-    case 89:
-    case 90:
     case 91:
     case 92:
-    case 93:
     case 94:
     case 95:
         return 4;
@@ -35,13 +26,45 @@ s32 func_800648B8(u8 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_80064940.s")
+s32 func_80064940(u8 arg0) {
+    switch (arg0) {
+        case 81:
+        case 87:
+        case 91:
+        case 92:
+        case 94:
+        case 95:
+            return 4;
+    }
+    return 12;
+}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_80064980.s")
+s32 func_80064980(u8 arg0) {
+    s32 result;
 
-s32 func_800649CC(void) { return 2; }
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/654A0/func_800649D4.s")
+    switch (arg0) {
+        case 0:
+            result = 0;
+            break;
+        default:
+            result = 1;
+            break;
+        case 51:
+        case 71:
+        case 80:
+            result = 2;
+            break;
+        case 81:
+        case 87:
+        case 91:
+        case 92:
+        case 94:
+        case 95:
+            result = 3;
+            break;
+    }
+    return result;
+}
 
 extern void _bzero(s32 *, s32);
 extern s8 D_80128B50;
@@ -53,7 +76,6 @@ void func_800649E0(void) {
 }
 
 extern u8 D_80128B5A;
-u8 func_80064980(u8);
 void func_80064A10(u8 arg0, u8 arg1) {
     (&D_80128B58)[(u8)D_80128B50 * 4] = arg0;
     (&D_80128B58)[(u8)D_80128B50 * 4 + 1] = arg1;

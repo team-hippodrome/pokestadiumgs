@@ -2016,7 +2016,6 @@ func_800648A0 = 0x800648A0; // type:func
 func_800648B8 = 0x800648B8; // type:func
 func_80064940 = 0x80064940; // type:func
 func_80064980 = 0x80064980; // type:func
-func_800649CC = 0x800649CC; // type:func
 func_800649D4 = 0x800649D4; // type:func
 func_800649E0 = 0x800649E0; // type:func
 func_80064A10 = 0x80064A10; // type:func
