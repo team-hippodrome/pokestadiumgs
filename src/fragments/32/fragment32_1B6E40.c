@@ -23,7 +23,56 @@ void func_88305B30(State_88305B30 *arg0, s16 arg1, s16 arg2, u16 arg3, u16 arg4)
     arg0->initial = arg0->current;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B6E40/func_88305B84.s")
+// One 0x18-byte element of D_88308E38, the array traversed by func_8830602C,
+// func_8830609C, func_8830639C and func_88306404. Those functions only reach the
+// 0x0 state word and the 0x4 byte; this one also uses the 0x5 progress byte and
+// the two boxes that func_8830639C reads at 0x6 and func_88305B30 fills at 0x6
+// and 0xE. The fields span 4 + 1 + 1 + 8 + 8 = 22 bytes, padded to the 0x18
+// stride.
+typedef struct {
+    s32 state;
+    u8 unk_04;
+    s8 progress;
+    Bounds_88305B30 current;
+    Bounds_88305B30 initial;
+} unk_func_88305CA8;
+
+/* The animation state at 0x88308E30: the frame count (D_88308E30) and the four
+ * nodes (D_88308E38). linker_scripts/us/datamig_bss.ld pins this object's .data
+ * there. func_88305B84 uses this definition: IDO's assembler shares one lui
+ * across the first node's stores only for a symbol defined in this file, and
+ * because the count is in the same object IDO reloads it after each node store. */
+typedef struct F32AnimState {
+    /* 0x00 */ s8 frames;
+    /* 0x01 */ u8 unk_01[7];
+    /* 0x08 */ unk_func_88305CA8 nodes[4];
+} F32AnimState; // size = 0x68
+
+static F32AnimState sAnimState = { 0 };
+
+extern s32 func_80001FF0(void);
+
+// Sets the wind-up length (8 frames at 60 Hz, otherwise 6), arms the four nodes
+// and gives each its box.
+void func_88305B84(void) {
+    unk_func_88305CA8 *node;
+    s32 i;
+
+    if (func_80001FF0() == 60) {
+        sAnimState.frames = 8;
+    } else {
+        sAnimState.frames = 6;
+    }
+    node = sAnimState.nodes;
+    i = 0;
+    // One line on purpose: as1 breaks scheduling ties by source line, and the
+    // original's order needs these statements tied.
+    do { node->state = 1; node->progress = sAnimState.frames; node->unk_04 = 3; i++; node++; } while (i != 4);
+    func_88305B30((State_88305B30 *)&sAnimState.nodes[0], 0x3D, 0x3A, 0xC0, 0x90);
+    func_88305B30((State_88305B30 *)&sAnimState.nodes[1], 0x131, 0x3A, 0x114, 0xDE);
+    func_88305B30((State_88305B30 *)&sAnimState.nodes[2], 0x76, 0x13C, 0x1CF, 0x78);
+    func_88305B30((State_88305B30 *)&sAnimState.nodes[3], 0x3D, 0xCF, 0xC0, 0x49);
+}
 
 /* mkdraft:func_88305CA8 begin */
 extern u8 D_88308E38;
@@ -42,19 +91,6 @@ extern void func_80026068(u32);
 extern void func_8830058C(u8);
 extern void func_88307FB0(void *);
 
-// One 0x18-byte element of D_88308E38, the array traversed by func_8830602C,
-// func_8830609C, func_8830639C and func_88306404. Those functions only reach the
-// 0x0 state word and the 0x4 byte; this one also uses the 0x5 progress byte and
-// the two boxes that func_8830639C reads at 0x6 and func_88305B30 fills at 0x6
-// and 0xE. The fields span 4 + 1 + 1 + 8 + 8 = 22 bytes, padded to the 0x18
-// stride.
-typedef struct {
-    s32 state;
-    u8 unk_04;
-    s8 progress;
-    Bounds_88305B30 current;
-    Bounds_88305B30 initial;
-} unk_func_88305CA8;
 
 
 

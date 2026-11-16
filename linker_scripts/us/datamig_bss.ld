@@ -101,6 +101,14 @@ SECTIONS
      * clears this runtime area after consuming its relocation table. Only the
      * all-zero lookup record belongs in this input section; compiler alignment
      * contributes no loaded bytes. */
+    /* fragment32_1B6E40's animation state (frame count and four nodes). The
+     * fragment loader clears this runtime area after consuming its
+     * relocation table. */
+    .fragment32_anim_state_data 0x88308E30 (NOLOAD) : SUBALIGN(8)
+    {
+        build/src/fragments/32/fragment32_1B6E40.o(.data)
+    }
+
     .fragment43_lookup_failure_data 0x8AC08788 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/43/fragment43_1E5A10.o(.data)
@@ -278,6 +286,9 @@ SECTIONS
         build/src/2C1B0.o(.bss)
     }
 }
+
+ASSERT(SIZEOF(.fragment32_anim_state_data) == 112,
+       "fragment32 animation state must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
        "fragment74 runtime state must fit its original cleared RAM block");
