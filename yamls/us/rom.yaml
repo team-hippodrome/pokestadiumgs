@@ -62,6 +62,19 @@
     - [0x26CC0, c]
     - [0x2C1B0, c]
     - [0x340C0, c]
+    - [0x35BE0, c]
+    - [0x35D40, c]
+    - [0x35D60, c]
+    - [0x36220, c]
+    - [0x36300, c]
+    - [0x38A00, c]
+    - [0x39C70, c]
+    - [0x3D630, c]
+    - [0x3EA20, c]
+    - [0x3FBE0, c]
+    - [0x40600, c]
+    - [0x41B50, pad]
+    - [0x41B60, c]
     - [0x43700, c]
     - [0x44300, c]
     - [0x44E70, c]
@@ -411,7 +424,7 @@
     - {vram: 0x800D0510, type:  bss, name: unk_bss3}
     - {vram: 0x800D1A90, type: .bss, name: 2C1B0}
     - {vram: 0x800D2630, type:  bss, name: unk_bss4}
-    - {vram: 0x80124D00, type: .bss, name: 340C0} # src/340C0.c D_80124D00 (19 words; SUBALIGN(16) pads to 0x50)
+    - {vram: 0x80124D00, type: .bss, name: 36220} # src/36220.c D_80124D00 (19 words; SUBALIGN(16) pads to 0x50)
     - {vram: 0x80124D50, type:  bss, name: unk_bss5}
 
     # ultralib
