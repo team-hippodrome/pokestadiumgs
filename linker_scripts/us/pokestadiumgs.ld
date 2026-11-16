@@ -1487,6 +1487,7 @@ SECTIONS
         build/src/fragments/14/fragment14_FCD40.o(.text);
         build/src/fragments/14/fragment14_FD770.o(.text);
         build/src/fragments/14/fragment14_FF070.o(.text);
+        build/src/fragments/14/fragment14_1025F0.o(.text);
         build/src/fragments/14/fragment14_104FC0.o(.text);
         build/src/fragments/14/fragment14_1077C0.o(.text);
         build/src/fragments/14/fragment14_109280.o(.text);
@@ -1509,6 +1510,7 @@ SECTIONS
         build/asm/us/data/fragments/14/fragment14_data.data.o(.data);
         fragments_14_fragment14_FF070 = .;
         build/src/fragments/14/fragment14_FF070.o(.data);
+        build/src/fragments/14/fragment14_1025F0.o(.data);
         _10A120_data = .;
         build/asm/us/data/10A120.data.o(.data);
         fragments_14_fragment14_104FC0 = .;
@@ -1528,8 +1530,8 @@ SECTIONS
         build/src/fragments/14/fragment14_FAD40.o(.rodata);
         build/src/fragments/14/fragment14_FCD40.o(.rodata);
         build/src/fragments/14/fragment14_FD770.o(.rodata);
-        build/asm/us/data/10A6D0.rodata.o(.rodata);
         build/src/fragments/14/fragment14_FF070.o(.rodata);
+        build/src/fragments/14/fragment14_1025F0.o(.rodata);
         build/src/fragments/14/fragment14_104FC0.o(.rodata);
         build/src/fragments/14/fragment14_1077C0.o(.rodata);
         build/src/fragments/14/fragment14_109280.o(.rodata);
@@ -1549,6 +1551,7 @@ SECTIONS
         build/src/fragments/14/fragment14_FCD40.o(.bss);
         build/src/fragments/14/fragment14_FD770.o(.bss);
         build/src/fragments/14/fragment14_FF070.o(.bss);
+        build/src/fragments/14/fragment14_1025F0.o(.bss);
         build/src/fragments/14/fragment14_104FC0.o(.bss);
         build/src/fragments/14/fragment14_1077C0.o(.bss);
         build/src/fragments/14/fragment14_109280.o(.bss);

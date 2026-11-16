@@ -661,6 +661,7 @@
     - [0xFCD40,  c,       fragments/14/fragment14_FCD40]
     - [0xFD770,  c,       fragments/14/fragment14_FD770]
     - [0xFF070,  c,       fragments/14/fragment14_FF070]
+    - [0x1025F0, c,       fragments/14/fragment14_1025F0]
     - [0x104FC0, c,       fragments/14/fragment14_104FC0]
     - [0x1077C0, c,       fragments/14/fragment14_1077C0]
     - [0x109280, c,       fragments/14/fragment14_109280]
@@ -676,8 +677,8 @@
     - [0x10A440, .rodata, fragments/14/fragment14_FAD40] # the menu command lists, then jtbl_813123A8 through jtbl_81312418
     - [0x10A600, .rodata, fragments/14/fragment14_FCD40] # D_81312470, all three jump tables and renderer floats
     - [0x10A660, .rodata, fragments/14/fragment14_FD770] # original leading word, four tables and float literals
-    - [0x10A6D0, rodata]
-    - [0x10A7D0, .rodata, fragments/14/fragment14_FF070] # jtbl_81312648, jtbl_81312680 (+2 more)
+    - [0x10A6D0, .rodata, fragments/14/fragment14_FF070] # the deck loading strings, then the literals and jump tables of its functions
+    - [0x10A780, .rodata, fragments/14/fragment14_1025F0] # the command lists D_813125F0 through D_81312640, then jtbl_81312648 onward
     - [0x10A8C0, .rodata, fragments/14/fragment14_104FC0] # D_81312730 through jtbl_8131285C
     - [0x10AA10, .rodata, fragments/14/fragment14_1077C0] # D_81312880 (the three command lists D_813120E0's records point at) through D_813129F0's padding
     - [0x10AB90, .rodata, fragments/14/fragment14_109280] # D_81312A00 + jtbl_81312A04 + D_81312A10 (jtbl_81311AAC tail) + jtbl_81312A18 + jtbl_81312A2C, 16-byte aligned
