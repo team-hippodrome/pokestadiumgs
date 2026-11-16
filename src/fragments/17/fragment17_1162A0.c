@@ -34,7 +34,19 @@ typedef struct Fragment17ChoiceEntry {
     u8 unk_04[24];
 } Fragment17ChoiceEntry;
 extern Fragment17ChoiceEntry D_8220DEF4[];
-static F17TransitionState sTransition106B2 = { 0 };
+// Loader-cleared transition record at 0x822106B0. The scene's state machine
+// value is at +2 (also read as D_822106B2); func_82209360 sets the 0x14/0x18
+// scales and the 0x1E screen position when its zoom finishes.
+typedef struct F17TransitionRecord {
+    s16 unk_00;
+    F17TransitionState transition;
+    u8 unk_06[0xE];
+    f32 unk_14;
+    f32 unk_18;
+    s16 unk_1C;
+    s16 unk_1E;
+} F17TransitionRecord;
+static F17TransitionRecord sTransitionRecord = { 0 };
 extern s16 D_822106B2;
 extern s16 D_822106CC, D_822106CE;
 extern s16 D_822106BA;
@@ -1057,7 +1069,6 @@ f32 func_822091E0(f32 arg0) {
 extern f32 D_822106B0[];
 extern s16 D_822106B4, D_822106BE;
 extern f32 func_822091E0(f32 arg0);
-#pragma COALESCE_AT_LUI(func_82209360, D_822106C8, D_822106CE)
 void func_82209360(void) {
     F17TransitionState *transition;
     f32 *scales;
@@ -1067,7 +1078,9 @@ void func_82209360(void) {
     f32 scale;
     f32 width;
     f32 position;
-    transition = &sTransition106B2;
+    F17TransitionRecord *record;
+    transition = &sTransitionRecord.transition;
+    record = &sTransitionRecord;
     scales = D_822106B0;
     state = (s16 *)D_822106B0;
     state[2]++;
@@ -1090,8 +1103,8 @@ void func_82209360(void) {
             transition->unk_02 = 0;
             D_822106BE = 0;
             scales[5] = 0.75f;
-            D_822106C8 = 0.75f;
-            D_822106CE = 320;
+            record->unk_18 = 0.75f;
+            record->unk_1E = 320;
         }
     }
 }
@@ -1392,7 +1405,7 @@ void func_8220AA54(s32 arg0, s32 arg1) {
 /* mkdraft:func_8220AC38 begin */
 
 s32 func_8220AC38(void) {
-    F17TransitionState *state = &sTransition106B2;
+    F17TransitionState *state = &sTransitionRecord.transition;
     s32 ret = 0;
     if (*(s16 *)(D_82210698 + 0x1A) == 0) {
         state->state = 1;
@@ -1406,7 +1419,7 @@ s32 func_8220AC38(void) {
 typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
 extern s16 D_822106D4;
 s32 func_8220AC64(void) {
-    F17TransitionState *state = &sTransition106B2;
+    F17TransitionState *state = &sTransitionRecord.transition;
     s32 result = 0;
 
     if (*(s16 *)(D_82210698 + 0x1A) == 3) {

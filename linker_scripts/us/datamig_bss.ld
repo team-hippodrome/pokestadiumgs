@@ -149,9 +149,10 @@ SECTIONS
     }
 
     /* The scene and widget transition records keep their original loader-
-     * cleared addresses. Their input sections contain only the real four-byte
-     * records and normal compiler alignment, with no loaded initializer bytes. */
-    .fragment17_state_106B2_data 0x822106B2 (NOLOAD) : SUBALIGN(2)
+     * cleared addresses. Their input sections contain only the real records
+     * (0x20 bytes from 0x822106B0 for the scene) and normal compiler
+     * alignment, with no loaded initializer bytes. */
+    .fragment17_state_106B0_data 0x822106B0 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/17/fragment17_1162A0.o(.data)
     }
