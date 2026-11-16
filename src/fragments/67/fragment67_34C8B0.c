@@ -13,6 +13,8 @@ typedef struct F67DisplayRecord {
     /* 0x15 */ u8 background[3];
 } F67DisplayRecord;
 extern F67DisplayRecord D_8291BE80, D_8291BE98;
+extern u8 D_8291BEB0[];
+void func_800476A0(void *, s32);
 
 typedef struct F67Flow {
     /* 0x00 */ s16 timer;
@@ -57,7 +59,38 @@ void func_8290FDB0(s16 arg0) {
     func_80055028();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34C8B0/func_8290FE04.s")
+void func_8290FE04(s16 arg0) {
+    u8 *background;
+    u8 *foreground;
+
+    D_8291BE78.phase = 0;
+    D_8291BE78.timer = 0;
+    D_8291BE78.done = 0;
+    D_8291BE80.x = 115;
+    D_8291BE80.y = 560;
+    D_8291BE80.flags = 0;
+    D_8291BE80.selection = arg0;
+    background = D_829172D8[D_8291BE80.selection].background;
+    foreground = D_829172D8[D_8291BE80.selection].foreground;
+    D_8291BE80.background[0] = background[0];
+    D_8291BE80.background[1] = background[1];
+    D_8291BE80.background[2] = background[2];
+    D_8291BE80.foreground[0] = foreground[0];
+    D_8291BE80.foreground[1] = foreground[1];
+    D_8291BE80.foreground[2] = foreground[2];
+    D_8291BE98.x = 115;
+    D_8291BE98.y = -280;
+    D_8291BE98.flags = 0;
+    D_8291BE98.selection = arg0;
+    D_8291BE98.background[0] = background[0];
+    D_8291BE98.background[1] = background[1];
+    D_8291BE98.background[2] = background[2];
+    D_8291BE98.foreground[0] = foreground[0];
+    D_8291BE98.foreground[1] = foreground[1];
+    D_8291BE98.foreground[2] = foreground[2];
+    func_800476A0(D_8291BEB0, 4);
+    func_8290FDB0(arg0);
+}
 
 typedef struct F67ColorRow {
     u8* color;

@@ -340,7 +340,7 @@ s32 func_84124EFC(u8 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-extern u8 D_84195188[];
+static u8 D_84195188[10];
 extern u8 D_84195192[];
 extern void func_80035700(u32);
 extern u32 func_8003570C(void);
@@ -360,7 +360,19 @@ void Battle_SeedRandomByteBuffer(u32 seed) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_84125080.s")
+extern u8 D_84195180;
+
+u8 func_84125080(void) {
+    s32 i;
+
+    if (D_84195180 >= 10) {
+        for (i = 0; i < 10; i++) {
+            D_84195188[i] = D_84195188[i] * 5 + 1;
+        }
+        D_84195180 = 0;
+    }
+    return D_84195188[D_84195180++];
+}
 #endif
 
 #ifdef VERSION_US

@@ -339,7 +339,21 @@ s32 func_8600062C(u8 *arg0, f32 *arg1, f32 *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/47/fragment47_246640/func_86000AE0.s")
+extern Fragment47SteeringVector D_8600D4D0;
+// Use the scale factor in the fragment's loaded data.
+#pragma REUSE_LOADED_RODATA(func_86000AE0, 0x30, 3, 8, 8, D_8600D538)
+s32 func_86000AE0(u8 *arg0, f32 *arg1, f32 *arg2) {
+    Fragment47SteeringVector vec1;
+    Fragment47SteeringVector vec2; // FAKE: preserves the retail stack frame.
+
+    func_87C00160(&vec1, arg0 + 0x1878, arg0);
+    func_87C002A8(&vec1, &vec1, 0.1);
+    func_87C00198(arg0, arg0, &vec1);
+    func_8600050C(arg0, arg0 + 0x1878, &D_8600D4D0,
+                  *(f64 *)(*(u8 **)(arg0 + 0x1870) + 0x6890) / *(s32 *)D_8600DE30,
+                  D_8600D198, arg1, arg2);
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1236,7 +1250,6 @@ void func_86002F5C(u8 *arg0) {
 
 #ifdef VERSION_US
 extern u8 D_8600DE30[];
-extern void func_86000AE0(void);
 extern f64 func_87C00090(f64, f64, f64);
 extern void *func_87C00160(void *, void *, void *);
 extern f64 func_87C0068C(void *);
@@ -1633,7 +1646,6 @@ void func_86003D54(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_86000AE0(void);
 void func_86003DAC(u8 *arg0) {
     *(s32 *)(arg0 + 0x1868) = 1;
     *(s32 *)(arg0 + 0x186C) = 1;
