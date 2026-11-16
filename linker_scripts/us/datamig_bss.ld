@@ -9,6 +9,13 @@
 
 SECTIONS
 {
+    /* Address the original switch table in the shared loaded rodata.
+     * The compiler pads its 60-byte table to 64 bytes. */
+    .battle_lookup_table 0x800A52A0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/654A0.o(.rodata)
+    }
+
     /* The compiled switch addresses the retail table in fragment 4's
      * loaded data. Its 108-byte table is followed by IDO alignment. */
     .fragment4_archive_dispatch_table 0x81805C64 (NOLOAD) : SUBALIGN(4)
@@ -295,3 +302,8 @@ ASSERT(ADDR(.fragment16_state_1D58_bss) == 0x82001D58 &&
 
 ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
        "fragment 4 archive dispatch table footprint changed");
+
+/* Entries in the shared assembly table target the C switch's return blocks. */
+.L80064924 = func_800648B8 + 0x6C;
+.L8006492C = func_800648B8 + 0x74;
+ASSERT(SIZEOF(.battle_lookup_table) == 64, "battle lookup table footprint changed");
