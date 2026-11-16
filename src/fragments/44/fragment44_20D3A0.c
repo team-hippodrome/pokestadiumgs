@@ -183,7 +183,61 @@ s32 func_8AF1F590(s16 arg0) {
     return var_v1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F5F0.s")
+extern s16 *func_8AF01718(s16 *, s32);
+extern s32 func_80063804(u8);
+extern s32 func_8AC00FAC(u8);
+extern s32 func_8AF1E2F0(u8, u8);
+extern s16 *D_8AF2BA90[];
+extern s16 D_8AF3779A;
+extern s32 D_8AF2D302;
+extern s16 D_8AF39230[];
+extern u8 D_8AF27988[];
+extern u8 D_8AF27996[];
+
+extern s32 func_8AF1F490_halfwords(s16, s16);
+
+void func_8AF1F5F0(void) {
+ u8 *var_s0;
+ s16 var_s1;
+ s16 *var_s2;
+ s32 var_s3;
+ u8 var_s4;
+ s32 var_s8;
+ s32 var_v0;
+ s32 temp_s0;
+ func_8AF01718(D_8AF2BA90[0], D_8AF3779A);
+ var_s2 = D_8AF39230;
+ for (var_s8 = 1; var_s8 != 252; var_s8++) {
+    var_v0 = func_80063804(var_s8);
+    var_s1 = var_v0;
+    var_s4 = func_8AF01654(var_v0 & 0xFF);
+    if (func_8AF1F590(*(s16 *)&D_8AF2D302)) {
+       temp_s0 = func_8AC00FAC(*((u8 *)&D_8AF2D302 + 1)) & 0xFF;
+       var_v0 = func_8AC00FAC(var_s1);
+       if (temp_s0 == var_v0) {
+          if (!func_8AF1E2F0(var_s4, 15)) *var_s2++ = var_s1;
+       }
+    } else {
+       var_s3 = 0;
+       var_s0 = D_8AF27988;
+       do {
+          if (*(s16 *)&D_8AF2D302 == var_s0[0]) {
+             var_s3 = 1;
+             if ((var_s1 == 132) || (func_8AF1F40C(var_s0[1], var_s1) && !func_8AF1F514(var_s1) && !func_8AF1E2F0(var_s4, 15))) {
+                *var_s2++ = var_s1;
+             }
+          }
+          var_s0 += 2;
+       } while (var_s0 != D_8AF27996);
+       if (!var_s3) {
+          if (var_s1 == 132 || (func_8AF1F490_halfwords(*(s16 *)&D_8AF2D302, var_s1) && !func_8AF1F514(var_s1) && !func_8AF1E2F0(var_s4, 15))) {
+             *var_s2++ = var_s1;
+          }
+       }
+    }
+ }
+ *var_s2 = -1;
+}
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
