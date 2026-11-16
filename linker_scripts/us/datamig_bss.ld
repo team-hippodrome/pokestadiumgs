@@ -141,6 +141,14 @@ SECTIONS
         build/src/fragments/17/fragment17_1162A0.o(.data)
     }
 
+    /* fragment17_113A60's 0x18-byte scene record (three statics cleared by
+     * func_82206854). The fragment loader clears this runtime area after
+     * consuming its relocation table. */
+    .fragment17_scene_record_data 0x8220EB80 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/17/fragment17_113A60.o(.data)
+    }
+
     .fragment17_state_105E8_bss 0x822105E8 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/17/fragment17_113A60.o(.bss)
@@ -263,6 +271,9 @@ ASSERT(SIZEOF(.fragment74_runtime_state_bss) == 8224,
 
 ASSERT(SIZEOF(.fragment79_snapshot_pointers_data) == 16,
        "fragment79 snapshot pointers must occupy four original words");
+
+ASSERT(SIZEOF(.fragment17_scene_record_data) == 32,
+       "fragment17 scene record must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
        "fragment31 collected values must retain their compiler section footprint");
