@@ -3484,6 +3484,7 @@ SECTIONS
         build/asm/us/data/fragments/45/fragment45_header.o(.text);
         build/src/fragments/45/fragment45_2251A0.o(.text);
         build/src/fragments/45/fragment45_22AB80.o(.text);
+        build/src/fragments/45/fragment45_22D220.o(.text);
         build/src/fragments/45/fragment45_22FAD0.o(.text);
         build/src/fragments/45/fragment45_2324B0.o(.text);
         build/src/fragments/45/fragment45_2348E0.o(.text);
@@ -3496,6 +3497,7 @@ SECTIONS
         build/src/fragments/45/fragment45_2251A0.o(.data);
         fragments_45_fragment45_22AB80 = .;
         build/src/fragments/45/fragment45_22AB80.o(.data);
+        build/src/fragments/45/fragment45_22D220.o(.data);
         fragments_45_fragment45_22FAD0 = .;
         build/src/fragments/45/fragment45_22FAD0.o(.data);
         fragments_45_fragment45_2324B0 = .;
@@ -3509,8 +3511,8 @@ SECTIONS
         fragment45_RODATA_START = .;
         build/asm/us/data/fragments/45/fragment45_header.o(.rodata);
         build/src/fragments/45/fragment45_2251A0.o(.rodata);
-        build/asm/us/data/236990.rodata.o(.rodata);
         build/src/fragments/45/fragment45_22AB80.o(.rodata);
+        build/src/fragments/45/fragment45_22D220.o(.rodata);
         build/src/fragments/45/fragment45_22FAD0.o(.rodata);
         build/src/fragments/45/fragment45_2324B0.o(.rodata);
         build/src/fragments/45/fragment45_2348E0.o(.rodata);
@@ -3526,6 +3528,7 @@ SECTIONS
         build/asm/us/data/fragments/45/fragment45_header.o(.bss);
         build/src/fragments/45/fragment45_2251A0.o(.bss);
         build/src/fragments/45/fragment45_22AB80.o(.bss);
+        build/src/fragments/45/fragment45_22D220.o(.bss);
         build/src/fragments/45/fragment45_22FAD0.o(.bss);
         build/src/fragments/45/fragment45_2324B0.o(.bss);
         build/src/fragments/45/fragment45_2348E0.o(.bss);
