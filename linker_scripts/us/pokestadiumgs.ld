@@ -101,6 +101,11 @@ SECTIONS
         build/src/229E0.o(.text);
         build/src/audio_cue_dispatch.o(.text);
         build/src/23D10.o(.text);
+        build/src/23DA0.o(.text);
+        build/src/254A0.o(.text);
+        build/src/25B20.o(.text);
+        build/src/26850.o(.text);
+        build/src/269B0.o(.text);
         build/src/26CC0.o(.text);
         build/src/2C1B0.o(.text);
         build/src/340C0.o(.text);
@@ -416,6 +421,11 @@ SECTIONS
         build/src/229E0.o(.data);
         build/src/audio_cue_dispatch.o(.data);
         build/src/23D10.o(.data);
+        build/src/23DA0.o(.data);
+        build/src/254A0.o(.data);
+        build/src/25B20.o(.data);
+        build/src/26850.o(.data);
+        build/src/269B0.o(.data);
         build/src/26CC0.o(.data);
         _2C1B0 = .;
         build/src/2C1B0.o(.data);
@@ -591,6 +601,11 @@ SECTIONS
         build/asm/us/data/A3260.rodata.o(.rodata);
         build/src/audio_cue_dispatch.o(.rodata);
         build/src/23D10.o(.rodata);
+        build/src/23DA0.o(.rodata);
+        build/src/254A0.o(.rodata);
+        build/src/25B20.o(.rodata);
+        build/src/26850.o(.rodata);
+        build/src/269B0.o(.rodata);
         build/src/26CC0.o(.rodata);
         build/asm/us/data/A4590.rodata.o(.rodata);
         build/src/2C1B0.o(.rodata);
@@ -714,6 +729,11 @@ SECTIONS
         build/src/229E0.o(.bss);
         build/src/audio_cue_dispatch.o(.bss);
         build/src/23D10.o(.bss);
+        build/src/23DA0.o(.bss);
+        build/src/254A0.o(.bss);
+        build/src/25B20.o(.bss);
+        build/src/26850.o(.bss);
+        build/src/269B0.o(.bss);
         build/src/26CC0.o(.bss);
         build/asm/us/data/unk_bss3.bss.o(.bss);
         /* datamig_bss.ld places the real C audio objects (src/2C1B0.o)
