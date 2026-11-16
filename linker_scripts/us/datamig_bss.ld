@@ -326,3 +326,31 @@ ASSERT(SIZEOF(.battle_lookup_table) == 64, "battle lookup table footprint change
 .L81307280 = func_81307228 + 0x58;
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
+
+/* Case targets for the two mode dispatch tables. */
+.L8002B394 = func_8002B2FC + 0x98;
+.L8002B3A4 = func_8002B2FC + 0xA8;
+.L8002B3B4 = func_8002B2FC + 0xB8;
+.L8002B3C4 = func_8002B2FC + 0xC8;
+.L8002B3F0 = func_8002B2FC + 0xF4;
+.L8002B400 = func_8002B2FC + 0x104;
+.L8002B424 = func_8002B2FC + 0x128;
+
+/* Case targets for fragment 45's command dispatch table. */
+.L8AB06518 = func_8AB064C4 + 0x54;
+.L8AB06528 = func_8AB064C4 + 0x64;
+.L8AB06538 = func_8AB064C4 + 0x74;
+.L8AB06548 = func_8AB064C4 + 0x84;
+.L8AB06558 = func_8AB064C4 + 0x94;
+.L8AB06568 = func_8AB064C4 + 0xA4;
+.L8AB06578 = func_8AB064C4 + 0xB4;
+.L8AB06588 = func_8AB064C4 + 0xC4;
+.L8AB06598 = func_8AB064C4 + 0xD4;
+.L8AB065A8 = func_8AB064C4 + 0xE4;
+.L8AB065B8 = func_8AB064C4 + 0xF4;
+.L8AB065C8 = func_8AB064C4 + 0x104;
+.L8AB065D8 = func_8AB064C4 + 0x114;
+.L8AB065E8 = func_8AB064C4 + 0x124;
+.L8AB065F8 = func_8AB064C4 + 0x134;
+.L8AB06608 = func_8AB064C4 + 0x144;
+.L8AB06618 = func_8AB064C4 + 0x154;

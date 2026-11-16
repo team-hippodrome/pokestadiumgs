@@ -464,8 +464,55 @@ void func_87E03850(void *arg0) {
 }
 /* mkdraft:func_87E03850 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E03A08.s")
+extern f64 D_87E1B548;
+extern f32 D_87E1B550;
+void func_87E02B60(void);
+// Keep the scale literal in the fragment's shared rodata.
+#pragma REUSE_LOADED_RODATA(func_87E03A08, 0x78, 2, 4, 12, D_87E1B550)
+void func_87E03A08(void *arg0) {
+ s32 i;
+ u8 *entry;
+ u8 *node;
+ u8 *base;
+ f64 offset;
+ f32 scale;
+ f32 upper;
+ f32 lower;
+ f64 spacing;
+ f64 start;
+ base = (u8 *)arg0 + 0x14C;
+ func_87F02684((s32)base);
+ upper = 5.0f;
+ // FAKE: split constant initialization blocks to preserve load order.
 
+ lower = -7.0f;
+
+ offset = -78.0;
+
+ start = 18.0;
+
+ spacing = 40.0;
+ if (base == base) {}
+ scale = 0.6f;
+ for (i = 0; i < 4; i++) {
+  entry = func_87F025B8(base, func_87E02B60);
+  if (entry != NULL) {
+   node = entry + 0x24;
+   func_8003F1DC(node);
+   func_8003F114(node, 0, -1, *(s32 *)((u8 *)arg0 + 0x1FC));
+   *(u32 *)(entry + 0x38) = (u32)entry;
+   *(f32 *)(entry + 0x48) = i * spacing + start + offset;
+   if ((*(u8 **)((u8 *)arg0 + 0x204))[0x2180] == 3) {
+    *(f32 *)(entry + 0x4C) = lower;
+   } else {
+    *(f32 *)(entry + 0x4C) = upper;
+   }
+   *(f32 *)(entry + 0x5C) = scale;
+   *(f32 *)(entry + 0x58) = scale;
+   *(f32 *)(entry + 0x54) = scale;
+  }
+ }
+}
 extern void D_87E03018(void);
 extern void func_8003F1DC(void *arg0);
 extern void *func_87F025B8(void *arg0, void *arg1);

@@ -9,6 +9,26 @@ void func_8AB05A00(void) { s32 i; s32 value; value = -1; i = 2; *(u8 *)(D_8AB11D
 
 extern s16 D_8AB1269C;
 extern s32 D_8AB16958;
+extern void *D_8AB11D08;
+extern void func_8AC00F04(void *);
+extern void func_800503A4(u8 *);
+extern s32 func_8AB06650(s32);
+extern s32 func_8AB066B4(s32);
+extern s32 func_8AB06718(s32);
+extern s32 func_8AB0683C(s32);
+extern s32 func_8AB0699C(s32);
+extern int func_8AB06AE8(s32);
+extern s32 func_8AB06D78(s32);
+extern s32 func_8AB07128(s32);
+extern s32 func_8AB072EC(s32);
+extern s32 func_8AB072E4();
+extern s32 func_8AB073F4(s32);
+extern s32 func_8AB07538(s32);
+extern s32 func_8AB07A34(s32);
+extern s32 func_8AB07C34(s32);
+extern s32 func_8AB07DC4(s32);
+extern s32 func_8AB07E6C(s32);
+extern s32 func_8AB07F80(s32);
 extern void *D_8AB1695C;
 extern u8 D_8AB16A18[];
 extern void func_800504BC(s16 *);
@@ -232,8 +252,66 @@ void func_8AB06270(void *arg0, u16 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB062C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB064C4.s")
-
+// Keep the dispatch table in the fragment's shared loaded rodata.
+#pragma REUSE_LOADED_RODATA(func_8AB064C4, 0x40, 2, 68, 12, jtbl_8AB119BC)
+void func_8AB064C4(s32 arg0) {
+    D_8AB16958 = arg0;
+    func_8AC00F04(D_8AB11D08);
+    func_800503A4(D_8AB167A0);
+    switch (arg0) {
+    case 2:
+        func_8AB06650(2);
+        return;
+    case 3:
+        func_8AB066B4(2);
+        return;
+    case 4:
+        func_8AB06718(2);
+        return;
+    case 5:
+        func_8AB0683C(2);
+        return;
+    case 6:
+        func_8AB0699C(2);
+        return;
+    case 7:
+        func_8AB06AE8(2);
+        return;
+    case 8:
+        func_8AB06D78(2);
+        return;
+    case 9:
+        func_8AB07128(2);
+        return;
+    case 10:
+        func_8AB072EC(2);
+        return;
+    case 11:
+        func_8AB072E4(2);
+        return;
+    case 12:
+        func_8AB073F4(2);
+        return;
+    case 13:
+        func_8AB07538(2);
+        return;
+    case 14:
+        func_8AB07A34(2);
+        return;
+    case 15:
+        func_8AB07C34(2);
+        return;
+    case 16:
+        func_8AB07DC4(2);
+        return;
+    case 17:
+        func_8AB07E6C(2);
+        return;
+    case 18:
+        func_8AB07F80(2);
+        return;
+    }
+}
 extern s32 func_8AB06650(s32);
 s32 func_8AB06630(void) {
     return func_8AB06650(0);

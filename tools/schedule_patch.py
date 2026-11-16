@@ -586,7 +586,7 @@ def swap_function_words_in_object(
 
 _REUSE_RODATA_PRAGMA = re.compile(
     r"^[ \t]*#pragma\s+REUSE_LOADED_RODATA\(([A-Za-z_]\w*),\s*"
-    r"(0x[0-9A-Fa-f]+),\s*(\d+),\s*(\d+),\s*(\d+),\s*([A-Za-z_]\w*)\)$",
+    r"(0x[0-9A-Fa-f]+),\s*(\d+),\s*(\d+),\s*(-?\d+),\s*([A-Za-z_]\w*)\)$",
     re.MULTILINE,
 )
 
@@ -595,8 +595,8 @@ def reuse_loaded_rodata(object_bytes: bytes, source: str) -> bytes:
     """Point a compiler literal or jump table at its existing loaded copy.
 
     The marker gives the function, its first relocation offset, the number
-    of consecutive HI16/LO16 entries, the literal size, the trailing
-    alignment padding to remove, and the loaded symbol.
+    of HI16/LO16 entries for its section symbol, the literal size, the trailing
+    alignment padding to remove (negative to add), and the loaded symbol.
     """
     markers = _REUSE_RODATA_PRAGMA.findall(source)
     if not markers:
@@ -622,7 +622,10 @@ def _reuse_loaded_rodata(
     rodata = obj.section(".rodata").data
     relocations = obj.relocations(".rel.text")
     first = next((i for i, rel in enumerate(relocations) if rel.offset == function.value + offset), None)
-    pair = [] if first is None else relocations[first:first + count]
+    pair = []
+    if first is not None:
+        symbol = relocations[first].sym_index
+        pair = [rel for rel in relocations[first:] if rel.sym_index == symbol][:count]
     section_symbols = {
         i for i, sym in enumerate(symbols) if sym.shndx == rodata_index and sym.info & 0xF == 3
     }
@@ -638,7 +641,7 @@ def _reuse_loaded_rodata(
         raise SchedulePatchError(f"{name}: expected a small .rodata addend")
     start = words[1] & 0xFFFF
     end = start + size
-    keep_end = len(rodata) - padding
+    keep_end = len(rodata) - max(padding, 0)
     if (
         start % 4 or size % 4 or end > keep_end or any(rodata[keep_end:])
         or any(not start <= (word & 0xFFFF) < end for word in words[1:])
@@ -677,5 +680,5 @@ def _reuse_loaded_rodata(
                 sym.value -= size
     obj.set_symbols(symbols)
     rodata = obj.section(".rodata").data
-    obj.set_section_data(".rodata", rodata[:start] + rodata[end:keep_end])
+    obj.set_section_data(".rodata", rodata[:start] + rodata[end:keep_end] + bytes(max(-padding, 0)))
     return elf32.build(obj)
