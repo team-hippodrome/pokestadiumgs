@@ -47,11 +47,6 @@ void func_80071D98(u8 *arg0, s32 arg1) {
 
 /* mkdraft:func_80071DD8 begin */
 extern s32 func_8004B7A4(s32);
-#pragma REWRITE_FUNCTION_WORD(func_80071DD8, 0x08, 0xAFB40024, 0xAFB2001C)
-#pragma REWRITE_FUNCTION_WORD(func_80071DD8, 0x10, 0x0080A025, 0x00809025)
-#pragma REWRITE_FUNCTION_WORD(func_80071DD8, 0x18, 0xAFB30020, 0xAFB40024)
-#pragma REWRITE_FUNCTION_WORD(func_80071DD8, 0x1C, 0xAFB2001C, 0xAFB30020)
-#pragma REWRITE_FUNCTION_WORD(func_80071DD8, 0x38, 0x02802025, 0x02402025)
 
 void func_80071DD8(s32 arg0) {
     s32 i;
@@ -62,10 +57,12 @@ void func_80071DD8(s32 arg0) {
     for (i = 0; i != 0x100; i++) {
         name = func_8004B7A4(i + 1);
         if (bit == name) {
-        } /* karodo */
+        }
         bit = func_80071CD0(arg0, i);
+        if (arg0) {} // FAKE: the two empty uses of arg0 give it $s2.
         if (name == bit) {
-        } /* karodo */
+        }
+        if (arg0) {} // FAKE
     }
 }
 /* mkdraft:func_80071DD8 end */
