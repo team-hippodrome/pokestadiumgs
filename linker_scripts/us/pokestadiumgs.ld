@@ -1679,6 +1679,7 @@ SECTIONS
         fragment18_TEXT_START = .;
         build/asm/us/data/fragments/18/fragment18_header.o(.text);
         build/src/fragments/18/fragment18_code.o(.text);
+        . += 0x10;
         fragment18_TEXT_END = .;
         fragment18_TEXT_SIZE = ABSOLUTE(fragment18_TEXT_END - fragment18_TEXT_START);
         fragment18_DATA_START = .;

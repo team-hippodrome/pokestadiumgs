@@ -731,6 +731,7 @@
     subsegments:
     - [0x120260, textbin, fragments/18/fragment18_header]
     - [0x120280, c,       fragments/18/fragment18_code]
+    - [0x121000, pad]
     - [0x121010, data,    fragments/18/fragment18_data]
   
   - name: fragment19
