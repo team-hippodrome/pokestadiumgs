@@ -61,6 +61,11 @@
     - [0x229E0, c]
     - [0x232C0, c, audio_cue_dispatch]
     - [0x23D10, c]
+    - [0x23DA0, c]
+    - [0x254A0, c]
+    - [0x25B20, c]
+    - [0x26850, c]
+    - [0x269B0, c]
     - [0x26CC0, c]
     - [0x2C1B0, c]
     - [0x340C0, c]
@@ -365,7 +370,9 @@
     - [0xA2BD0, .rodata, 1CDC0] # jtbl_800A1FD0 (+2 more)
     - [0xA3260, rodata]
     - [0xA3270, .rodata, audio_cue_dispatch] # three cue-dispatch tables, then alignment
-    - [0xA37C0, .rodata, 23D10] # command tables and constants
+    - [0xA37C0, .rodata, 23DA0] # command tables and constants
+    - [0xA3E80, .rodata, 254A0] # func_80024E8C's switch table
+    - [0xA3EC0, .rodata, 25B20] # command dispatch tables and constants
     - [0xA43A0, .rodata, 26CC0] # mode and category dispatch tables
     - [0xA4590, rodata]
     - [0xA49F0, .rodata, 2C1B0] # queued-event tables and adjacent audio constants
