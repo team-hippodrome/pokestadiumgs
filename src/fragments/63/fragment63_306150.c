@@ -464,11 +464,7 @@ void func_87E03850(void *arg0) {
 }
 /* mkdraft:func_87E03850 end */
 
-extern f64 D_87E1B548;
-extern f32 D_87E1B550;
 void func_87E02B60(void);
-// Keep the scale literal in the fragment's shared rodata.
-#pragma REUSE_LOADED_RODATA(func_87E03A08, 0x78, 2, 4, 12, D_87E1B550)
 void func_87E03A08(void *arg0) {
  s32 i;
  u8 *entry;
@@ -493,7 +489,7 @@ void func_87E03A08(void *arg0) {
 
  spacing = 40.0;
  if (base == base) {}
- scale = 0.6f;
+ scale = 0.62f;
  for (i = 0; i < 4; i++) {
   entry = func_87F025B8(base, func_87E02B60);
   if (entry != NULL) {
@@ -517,7 +513,6 @@ extern void D_87E03018(void);
 extern void func_8003F1DC(void *arg0);
 extern void *func_87F025B8(void *arg0, void *arg1);
 extern void func_87F02684(s32);
-extern f64 D_87E1B558;
 
 
 
@@ -540,10 +535,10 @@ void func_87E03B70(void *arg0) {
         // diff score 530 without it.
         if (var_f0 == var_f0) {
         }
-        var_f4 = D_87E1B558;
+        var_f4 = -78.0;
         // FAKE: both empty pointer self-compares are needed to end the block that
-        // holds D_87E1B558 before the loop-invariant 18.0/40.0/0.625 signs enter
-        // it. The split gives the global the second slot of uopt's FPR walk (f26)
+        // holds -78.0 before the loop-invariant 18.0/40.0/0.625 signs enter
+        // it. The split gives the literal the second slot of uopt's FPR walk (f26)
         // instead of the fourth (f22); keeping one of the two scores 40, keeping
         // neither 705.
         if (arg0 == arg0) {

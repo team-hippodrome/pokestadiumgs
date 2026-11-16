@@ -230,7 +230,6 @@ extern void func_8003F114(void *, s32, s32, s32);
 extern void *func_87F025B8(void *, void *);
 extern void func_87F0AFD0(void *, void *, void *, void *);
 extern s32 func_8004C990(s32, s32);
-extern f32 D_87E1B570;
 
 
 
@@ -248,7 +247,7 @@ void func_87E06100(void *arg0) {
     void *var_s6;
 
     var_s6 = NULL;
-    for (var_s3 = 0, var_s5 = 0, temp_fs0 = D_87E1B570; var_s3 != 2; var_s3++, var_s5 += 0x9C) {
+    for (var_s3 = 0, var_s5 = 0, temp_fs0 = 0.8f; var_s3 != 2; var_s3++, var_s5 += 0x9C) {
         temp_s2 = *(u8 **)((u8 *)arg0 + 0x158) + var_s5;
         temp_v0 = func_87F025B8((u8 *)arg0 + 0x40, (void *)func_87E055B0);
         if (temp_v0 != NULL) {
