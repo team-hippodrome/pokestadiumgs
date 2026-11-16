@@ -228,7 +228,44 @@ u8 Audio_FindLowestPriorityChannel(AudioChannelGroup *state, u8 channel) {
     return best;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/27590/func_80027490.s")
+void func_80027634(void);
+
+void func_80027490(void) {
+    u8 i;
+    u8 *p;
+
+    if ((u8)D_80090BB0 != 0) {
+        func_80027634();
+        for (i = 0; i < 16; i++) {
+            ((u8 *)&D_80090BB8[i])[8] = func_80018C60(2, i, 2);
+        }
+        for (i = 0; i < 15; i++) {
+            p = (u8 *)&D_80090C84[i];
+            switch (p[0]) {
+                case 1:
+                case 3:
+                    p[0] = 2;
+                    break;
+                case 4:
+                    if (p[2] < p[3]) {
+                        p[2]++;
+                        break;
+                    }
+                    /* fallthrough */
+                case 2:
+                    func_80026ED8(i);
+                    break;
+                case 0:
+                default:
+                    D_80090C84[i] = D_80090CFC;
+                    break;
+            }
+        }
+        for (i = 0; i < 15; i++) {
+            ((u8 *)&D_80090C84[i])[6] = 0;
+        }
+    }
+}
 
 s32 func_800275E8(u8 arg0, Candidate275E8Bits *arg1) {
     arg1->value = D_80090BBC[arg0][0];
