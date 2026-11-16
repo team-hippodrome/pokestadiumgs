@@ -2571,7 +2571,6 @@ void GeoOverlay_DrawFadeQuad(S1_unk_D_86002F34_00C_0CC* arg0, S1_unk_D_86002F34_
     }
 }
 
-#pragma SWAP_FUNCTION_WORDS(func_80039808, 0xD0, 0xAFB80024, 0x00063403)
 
 void func_80039808(Vtx* arg0, S1_unk_D_86002F34_00C_0CC* arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6, s16 arg7) {
     f32 temp_fa0;
@@ -2581,6 +2580,8 @@ void func_80039808(Vtx* arg0, S1_unk_D_86002F34_00C_0CC* arg1, s16 arg2, s16 arg
     f32 a5;
     s16 tmp1;
     s16 tmp2;
+    s16 x;
+    s16 y;
 
     a4 = arg4;
     temp_fv1 = COSS(idx);
@@ -2590,7 +2591,17 @@ void func_80039808(Vtx* arg0, S1_unk_D_86002F34_00C_0CC* arg1, s16 arg2, s16 arg
     tmp1 = ((a4 * temp_fv1) - (temp_fa0 * a5));
     tmp2 = ((temp_fv1 * a5) + (a4 * temp_fa0));
 
-    Gfx_SetVertexAttributes(arg0, tmp1 + arg2, tmp2 + arg3, -1, arg6 * 32, arg7 * 32, arg1->color.r, arg1->color.g, arg1->color.b, ((u8)(arg2 - arg2) + 0xFF));
+    // FAKE: the write-backs to arg2/arg3 are dead, but they stop IDO from sinking
+    // x and y into the call. That keeps their instructions on these earlier
+    // lines, and as1's scheduler breaks the remaining tie by line number, which
+    // gives the retail order of `sra a2` and the alpha store (same as Pokemon
+    // Stadium's func_80012870).
+    x = tmp1 + arg2;
+    arg2 = x;
+    y = tmp2 + arg3;
+    arg3 = y;
+
+    Gfx_SetVertexAttributes(arg0, x, y, -1, arg6 * 32, arg7 * 32, arg1->color.r, arg1->color.g, arg1->color.b, 0xFF);
 }
 
 Vtx *func_800398F8(S1_unk_D_86002F34_00C_0CC *arg0) {
