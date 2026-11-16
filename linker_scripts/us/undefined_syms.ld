@@ -23,3 +23,12 @@ func_869054CC = 0x869054CC;
    func_84128204 (fragment79_393CA0.c); the file's other callers declare it s32.
    Defined by address so it also links when func_84125080 is still asm. */
 func_84125080_u16 = 0x84125080;
+/* Words in other fragments' data that splat reads as pointers into fragment47
+   (the fragments share VRAM). These addresses are literals in C objects
+   now, so define the names by address to keep the words' values. */
+D_8600D4E8 = 0x8600D4E8;
+D_8600D4F0 = 0x8600D4F0;
+D_8600D528 = 0x8600D528;
+D_8600D538 = 0x8600D538;
+D_8600D640 = 0x8600D640;
+D_8600D650 = 0x8600D650;

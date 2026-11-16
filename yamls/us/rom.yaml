@@ -1271,6 +1271,7 @@
     subsegments:
     - [0x246620, textbin, fragments/47/fragment47_header]
     - [0x246640, c,       fragments/47/fragment47_246640]
+    - [0x2471D0, c,       fragments/47/fragment47_2471D0]
     - [0x24AE60, c,       fragments/47/fragment47_24AE60]
     - [0x24E0A0, c,       fragments/47/fragment47_24E0A0]
     - [0x2507E0, c,       fragments/47/fragment47_2507E0]
@@ -1280,7 +1281,8 @@
     - [0x2537C0, data,    fragments/47/fragment47_data]
     - [0x253A10, .data,   fragments/47/fragment47_2507E0] # slot colors, animation counters and retained initialization tables
     - [0x253A70, data,    fragments/47/fragment47_data_tail]
-    - [0x253C70, .rodata, fragments/47/fragment47_246640] # callback/motion literals and state-update jump tables
+    - [0x253AF0, .rodata, fragments/47/fragment47_246640] # D_8600D4D0, then the steering literals
+    - [0x253B60, .rodata, fragments/47/fragment47_2471D0] # animation tables D_8600D540..D_8600D61C, the unused debug string, then literals and jump tables
     - [0x253D40, rodata,  fragments/47/fragment47_data_tail_rodata]
     - [0x253EF0, .rodata, fragments/47/fragment47_24AE60] # jtbl_8600D910 (func_86006F20, still GLOBAL_ASM) + jtbl_8600D92C (func_86007648), widened to 16-byte boundary. Extended to 0x253EF0-0x253F70: jump tables, double literals.
     - [0x253F70, .rodata, fragments/47/fragment47_24E0A0] # four double constants at D_8600D950..D_8600D968
