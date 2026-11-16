@@ -18,7 +18,33 @@ typedef struct Fragment22ModelPreview {
     u8 selection[8];
 } Fragment22ModelPreview;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14A2E0/func_82700020.s")
+typedef struct {
+    void *data;
+    s16 unk_04;
+    s16 unk_06;
+    s16 unk_08;
+    s16 unk_0A;
+    s16 unk_0C;
+    s16 unk_0E;
+    s16 unk_10;
+} Fragment22PreviewState;
+
+extern s32 D_82703360;
+extern s32 func_80001FF0(void);
+
+void func_82700020(void *arg0) {
+    static Fragment22PreviewState sPreviewState;
+
+    func_8003F018((s32)&D_82703360);
+    sPreviewState.unk_04 = 0;
+    sPreviewState.unk_06 = 0;
+    sPreviewState.data = arg0;
+    sPreviewState.unk_08 = (func_80001FF0() * 30) / 2;
+    sPreviewState.unk_0A = 0;
+    sPreviewState.unk_0E = 320;
+    sPreviewState.unk_10 = 240;
+    func_8003F114((u8 *)&D_82703360, 0, -1, sPreviewState.data);
+}
 
 /* mkdraft:func_827000B8 begin */
 extern Fragment22ModelPreview *D_827031C4;

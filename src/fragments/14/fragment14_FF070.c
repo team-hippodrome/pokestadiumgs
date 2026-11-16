@@ -94,10 +94,35 @@ void *func_81307204(void *arg0, s32 arg1) {
     return arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81307228.s")
+// The jump table is in the fragment's shared loaded rodata.
+#pragma REUSE_LOADED_RODATA(func_81307228, 0x3C, 2, 48, 0, jtbl_81312564)
+s32 func_81307228(unk_func_81306F74 *arg0) {
+
+    if (arg0->unk_137D0 < 16.0f) {
+        return 0;
+    }
+    switch (arg0->unk_137F5) {
+    case 0:
+    case 1:
+    case 2:
+    case 4:
+    case 5:
+    case 6:
+    case 11:
+        return 0;
+    case 3:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        return 1;
+    }
+#ifdef CC_CHECK
+    return 0;
+#endif
+}
 
 /* mkdraft:func_8130728C begin */
-extern s32 func_81307228(void *);
 extern void func_81600F0C(s32, s32, s32, s32, s32);
 extern s32 func_81600DA8(void *, void *);
 extern void func_816078C4(s32, s32, s32, s32, s32, s32);

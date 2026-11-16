@@ -9,6 +9,19 @@
 
 SECTIONS
 {
+    /* The preview initializer uses the work record in fragment 22's
+     * loaded data. Keep IDO's static storage references on that record. */
+    .fragment22_preview_state 0x827034C8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/22/fragment22_14A2E0.o(.bss)
+    }
+
+    /* The random byte buffer is part of fragment 79's loaded state. */
+    .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/79/fragment79_393CA0.o(.bss)
+    }
+
     /* Address the original switch table in the shared loaded rodata.
      * The compiler pads its 60-byte table to 64 bytes. */
     .battle_lookup_table 0x800A52A0 (NOLOAD) : SUBALIGN(4)
@@ -307,3 +320,9 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 .L80064924 = func_800648B8 + 0x6C;
 .L8006492C = func_800648B8 + 0x74;
 ASSERT(SIZEOF(.battle_lookup_table) == 64, "battle lookup table footprint changed");
+
+/* The assembly switch table targets these return blocks in the C function. */
+.L81307278 = func_81307228 + 0x50;
+.L81307280 = func_81307228 + 0x58;
+ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
+ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");

@@ -199,3 +199,53 @@ class ObjectTest(unittest.TestCase):
             patched_obj = elf32.parse(patched)
             self.assertEqual(len(patched_obj.section(".text").data) % 16, 0)
 
+
+
+class LoadedRodataTest(unittest.TestCase):
+    def test_keeps_loaded_reference_and_adjusts_later_local_literal(self):
+        import shutil
+        import subprocess
+        import tempfile
+
+        import elf32
+
+        if shutil.which("mips-linux-gnu-as") is None:
+            self.skipTest("mips-linux-gnu-as is unavailable")
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "fixture.s"
+            object_path = Path(directory) / "fixture.o"
+            source.write_text(
+                ".set noreorder\n"
+                ".text\n.globl func_a\n.type func_a,@function\nfunc_a:\n"
+                "lui $t0, %hi(table)\n"
+                "addu $t0, $t0, $a0\n"
+                "lw $t0, %lo(table)($t0)\n"
+                "lui $t1, %hi(other)\n"
+                "lw $t1, %lo(other)($t1)\n"
+                "jr $ra\nnop\n.size func_a, .-func_a\n"
+                ".section .rodata\n.word 0x11111111\n"
+                "table: .word func_a\n"
+                "other: .word 0x33333333\n.word 0\n"
+            )
+            subprocess.run(
+                ["mips-linux-gnu-as", "-mips2", "-o", str(object_path), str(source)],
+                check=True, capture_output=True,
+            )
+            original = object_path.read_bytes()
+            # The real IDO table has a section-relative relocation and no
+            # named local symbol that could refer to discarded bytes.
+            obj = elf32.parse(original)
+            symbols = obj.symbols()
+            table = next(s for s in symbols if s.name == "table")
+            table.shndx = 0
+            obj.set_symbols(symbols)
+            patched = schedule_patch.reuse_loaded_rodata(
+                elf32.build(obj), "#pragma REUSE_LOADED_RODATA(func_a, 0x0, 2, 4, 4, loaded_table)"
+            )
+            obj = elf32.parse(patched)
+            self.assertEqual(obj.section(".rodata").data, bytes.fromhex("1111111133333333"))
+            self.assertEqual(obj.relocations(".rel.rodata"), [])
+            symbols = obj.symbols()
+            relocations = obj.relocations(".rel.text")
+            self.assertEqual([symbols[r.sym_index].name for r in relocations[:2]], ["loaded_table"] * 2)
+            self.assertEqual(struct.unpack_from(">H", obj.section(".text").data, 18)[0], 4)
