@@ -166,5 +166,4 @@ s32 TextRenderer_QueuePersistentString(s16 x, s16 y, const char *fmt, ...) {
     va_end(args);
     return result;
 }
-#pragma C_FUNCTION_PADDING(28)
 #endif

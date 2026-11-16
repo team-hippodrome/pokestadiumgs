@@ -109,6 +109,4 @@ void func_80064B84(u8 arg0) {
     }
 }
 
-/* Preserve the five alignment NOPs at the end of the original assembly owner. */
-#pragma C_FUNCTION_PADDING(20)
 #endif
