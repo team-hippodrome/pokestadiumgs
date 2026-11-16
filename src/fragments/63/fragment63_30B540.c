@@ -1,5 +1,15 @@
 #include "global.h"
 
+extern void func_87E0D520(void *);
+extern void func_87E0C5E4(void *);
+extern void func_87E12BE8(void *);
+extern void func_87E15324(void *);
+extern void func_87E00030(void);
+extern void func_87E11B30(s32);
+extern void func_87E10EA8(s32);
+extern void func_87E10F2C(s32);
+extern void func_87E0168C(s32, s32, s32);
+
 
 #ifdef VERSION_US
 extern void func_80051D64(s32, s32);
@@ -445,25 +455,48 @@ s32 func_87E08564(s32 arg0) {
     return result;
 }
 
-/* func_87E085CC is still GLOBAL_ASM, but its .s is hand-maintained (not the
- * splat-generated asm/us/nonmatchings/.../func_87E085CC.s). It used to also
- * carry a manual .late_rodata word for jtbl_87E1B59C's first entry, needed
- * to land it immediately after func_87E08564's own compiler-generated jump
- * table (jtbl_87E1B580): a plain C global here would instead be emitted by
- * IDO BEFORE func_87E08564's switch table (IDO always emits named/array
- * rodata ahead of switch-table "late" rodata within one compilation),
- * landing at the wrong address.
- *
- * That manual word is no longer needed: fragment63_30B540's owned .rodata
- * subsegment in yamls/us/rom.yaml now spans the whole retail gap between
- * func_87E08564's late rodata and func_87E0A724/func_87E0A918's (rather
- * than stopping right after jtbl_87E1B59C's first word), so splat's own
- * extraction attributes the whole of jtbl_87E1B59C (and the other jump
- * tables/floats in that gap) to the still-unmatched functions that
- * actually reference them (func_87E08EF0, func_87E09654, func_87E09C20,
- * func_87E0A620), auto-generating correct `.section .late_rodata` blocks
- * for them. See the comment on that subsegment in yamls/us/rom.yaml. */
-#pragma GLOBAL_ASM("hand_asm/fragments/63/func_87E085CC_manual.s")
+void func_87E085CC(u8 *arg0, s32 arg1) {
+    s32 var_v1;
+    *(s32 *)((u8 *)arg0 + 4) = 4;
+    func_87E00030();
+    var_v1 = 1 << arg1;
+    if ((*(u8 *)((u8 *)*(void **)((u8 *)arg0 + 0x20) + 0x2182) & var_v1) &&
+        func_87E016D8(*(void **)((u8 *)arg0 + 0x20)) == 1 &&
+        *(s32 *)((u8 *)*(void **)((u8 *)arg0 + 0x20) + 0x2188) >= 7 &&
+        *(s8 *)((u8 *)*(void **)((u8 *)arg0 + 0x20) + 0x2181) == 2) {
+        func_87E07BD0();
+    }
+    if (!(*(u8 *)((u8 *)*(void **)((u8 *)arg0 + 0x20) + 0x2182) & var_v1) ||
+        !((u32)*(u32 *)((u8 *)*(void **)((u8 *)arg0 + 0x20) + arg1 * 1728 + 0x6B8) >> 31)) {
+        if (!(*(u8 *)((u8 *)*(void **)((u8 *)arg0 + 0x20) + 0x2182) & var_v1)) {
+            *(s32 *)((u8 *)arg0 + 0x14) = 5;
+        } else {
+            *(s32 *)((u8 *)arg0 + 0x14) = 4;
+            func_87E083CC(arg0, arg1);
+        }
+    } else if (func_87E08564(arg1)) {
+        if (func_87E083CC(arg0, arg1)) {
+            if (func_87E0835C(arg0, arg1)) *(s32 *)((u8 *)arg0 + 0x14) = 0;
+            else *(s32 *)((u8 *)arg0 + 0x14) = 1;
+        } else {
+            if (func_87E0835C(arg0, arg1)) *(s32 *)((u8 *)arg0 + 0x14) = 2;
+            else *(s32 *)((u8 *)arg0 + 0x14) = 3;
+        }
+    } else {
+        func_87E083CC(arg0, arg1);
+        if (func_87E0835C(arg0, arg1)) *(s32 *)((u8 *)arg0 + 0x14) = 2;
+        else *(s32 *)((u8 *)arg0 + 0x14) = 3;
+    }
+    func_87E0D520((u8 *)arg0 + 0x8C);
+    func_87E0C5E4((u8 *)arg0 + 0x60);
+    func_87E10EA8(36);
+    func_87E10F2C(0);
+    func_87E11B30(arg1);
+    func_87E12BE8((u8 *)arg0 + 0x628);
+    func_87E15324((u8 *)arg0 + 0x644);
+    *(s32 *)((u8 *)arg0 + 0x7B8) = 0;
+    func_87E0168C(3, 140, 20);
+}
 
 extern void func_87E0ADA8(u8 *, s32, s32 *, s32, s32);
 extern void func_87E0AC8C(u8 *);

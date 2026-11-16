@@ -888,9 +888,54 @@ void func_82602708(u8 *arg0) {
     *(u16 *)(arg0 + 0xA0) = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82602710.s")
+extern Gfx *D_800D0510;
+extern void GfxImage_FillCurrent(Gfx **, u16);
+extern void func_80007444(Gfx **, s32, s32, s32, s32, s32);
+void func_82602710(u8 *arg0) {
+    struct CutoutRect {
+        s16 enabled;
+        s16 pad;
+        s16 x;
+        s16 y;
+        s16 w;
+        s16 h;
+    } *rect;
+    s32 pad[1];
+    s32 w1;
+    s32 h1;
+    s32 w2;
+    s32 h2;
+    s32 w3;
+    s32 h3;
+    s32 w4;
+    s32 h4;
 
-
+    rect = (struct CutoutRect *)(arg0 + 0xA0);
+    if (rect->enabled == 0) {
+        GfxImage_FillCurrent(&D_800D0510, 1);
+        return;
+    }
+    w1 = 640;
+    h1 = rect->y;
+    w2 = rect->x;
+    h2 = rect->h;
+    w3 = 640 - rect->x - rect->w;
+    h3 = rect->h;
+    w4 = 640;
+    h4 = 480 - rect->y - rect->h;
+    if (w1 >= 0 && h1 >= 0) {
+        func_80007444(&D_800D0510, 0, 0, w1, h1, 1);
+    }
+    if (w2 >= 0 && h2 >= 0) {
+        func_80007444(&D_800D0510, 0, rect->y, w2, h2, 1);
+    }
+    if (w3 >= 0 && h3 >= 0) {
+        func_80007444(&D_800D0510, rect->x + rect->w, rect->y, w3, h3, 1);
+    }
+    if (w4 >= 0 && h4 >= 0) {
+        func_80007444(&D_800D0510, 0, rect->y + rect->h, w4, h4, 1);
+    }
+}
 extern Func82615340StateX *D_82615340;
 extern void func_82602710(u8 *);
 extern void BgStage_DrawFrame(void);

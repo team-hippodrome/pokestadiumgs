@@ -546,8 +546,45 @@ void func_813037F0(u8 *arg0) {
     arg0[19901] = 10;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FAD40/func_813038D0.s")
+extern s32 func_81306B0C(void *);
+extern void func_8130F5AC(void *);
+extern void func_81306E90(void *);
+void func_813038D0(unk_func_81303648 *arg0) {
+    s32 order;
+    s32 index;
 
+    order = func_81306B0C(arg0->unk_4DA0->unk_00D18);
+    index = func_8160A920((u8 *)arg0);
+    if (order == -1) {
+        return;
+    }
+    if (order >= 0) {
+        arg0->slots[index].mon.unk_01 = order;
+        func_800226C0(2);
+        index++;
+        if (index >= 6 || arg0->slots[index].mon.species == 0) {
+            arg0->unk_4DBD = 4;
+            func_8130F5AC(arg0->unk_4DA0);
+            func_81306E90(arg0->unk_4DA0->unk_00D18);
+            return;
+        }
+    } else {
+        arg0->slots[index].mon.unk_01 = 0;
+        func_800226C0(3);
+        index--;
+        if (index < 0) {
+            arg0->unk_4DBD = 4;
+            func_8130F5AC(arg0->unk_4DA0);
+            func_81306E90(arg0->unk_4DA0->unk_00D18);
+            for (index = 0; index < 6; index++) {
+                arg0->slots[index].mon.unk_01 = arg0->unk_4DBE[index];
+            }
+            return;
+        }
+    }
+    func_8160A928((u8 *)arg0, index);
+    arg0->unk_4DBD = 18;
+}
 extern s32 func_8160A9F0(void);
 s32 func_81303A38(void *arg0) {
     void *entry;

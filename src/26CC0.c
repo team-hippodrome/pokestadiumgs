@@ -1134,8 +1134,46 @@ void func_8002B1CC(void) {
 }
 /* mkdraft:func_8002B1CC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/26CC0/func_8002B2FC.s")
-
+// The two mode dispatch tables are shared with the original loaded rodata.
+#pragma REUSE_LOADED_RODATA(func_8002B2FC, 0x84, 2, 60, 0, jtbl_800A3D58)
+#pragma REUSE_LOADED_RODATA(func_8002B2FC, 0xE0, 2, 92, -8, jtbl_800A3D94)
+void func_8002B2FC(void) {
+    D_80091A18 = 0;
+    if (D_80090B94 != 19) {
+        func_80023A3C(70, 0, 0);
+    }
+    func_80023A3C(3, 0, 0);
+    if (D_80090B94 != 19) {
+        func_80021ED8(38);
+    }
+    if (D_800D1B78[0][9] != 0) {
+        switch (D_80090B94) {
+        case 14:
+            func_800314D4(8362);
+            return;
+        case 12:
+            func_800314D4(8361);
+            return;
+        case 13:
+            func_800314D4(8360);
+            return;
+        case 10:
+            switch (D_80090B98) {
+            case 1: case 4: case 7: case 10: case 12: case 13: case 17: case 20: case 23:
+                func_800314D4(8360);
+                return;
+            }
+            break;
+        case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
+            if (D_80090B98 == 8) {
+                func_800314D4(8359);
+                return;
+            }
+            break;
+        }
+    }
+    func_800314D4(8358);
+}
 void func_8002B43C(void) {
     D_80091A18 = 0;
     func_8002AAFC(0);

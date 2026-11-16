@@ -40,6 +40,7 @@ void func_8AF0A340(void) {
 
 extern Gfx *D_800D0510;
 extern Gfx D_80094E38[];
+extern Gfx D_8AF269D8[];
 extern u8 *D_8AF2D510[];
 extern s32 func_8004D1FC(u8 *);
 void func_8AF0A3A8(s32 x, s32 y, s16 index) {
@@ -293,8 +294,38 @@ void func_8AF0AAF8(void)
         matchups[i] = func_80063454((u8) Trade_GetSelectedBox(i), types[0], types[1], 0);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0AB84.s")
-
+void func_8AF0AB84(u8 arg0) {
+    u8 *texture;
+    gSPDisplayList(D_800D0510++, D_8AF269D8);
+    switch (arg0) {
+    case 0:
+        gDPSetPrimColor(D_800D0510++, 0, 0, 220, 0, 0, 255);
+        texture = (u8 *)D_8AF2D428;
+        break;
+    case 2:
+        gDPSetPrimColor(D_800D0510++, 0, 0, 220, 160, 0, 255);
+        texture = (u8 *)D_8AF2D42C;
+        break;
+    case 5:
+        gDPSetPrimColor(D_800D0510++, 0, 0, 220, 220, 0, 255);
+        texture = (u8 *)D_8AF2D430;
+        break;
+    case 20:
+        gDPSetPrimColor(D_800D0510++, 0, 0, 90, 210, 60, 255);
+        texture = (u8 *)D_8AF2D434;
+        break;
+    case 40:
+        gDPSetPrimColor(D_800D0510++, 0, 0, 55, 55, 180, 255);
+        texture = (u8 *)D_8AF2D438;
+        break;
+    default:
+        texture = NULL;
+        break;
+    }
+    if (texture != NULL) {
+        func_8004D1FC(texture);
+    }
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0ACDC.s")
 
 s32 func_8AC006F4();
@@ -402,15 +433,15 @@ void func_8AF0B724(s32 arg0, s32 arg1) {
 }
 
 void func_8AF0B724(s32 arg0, s32 arg1);
-s32 func_8AF0AB84(s32);
 extern s16 D_8AF2D3D8;
 
+extern void func_8AF0AB84_word_arg(s32);
 void func_8AF0B7BC(s16 arg0)
 {
   int new_var;
   s16 *var_s1;
   s32 var_s0;
-  func_8AF0AB84(arg0 & 0xFF);
+  func_8AF0AB84_word_arg(arg0 & 0xFF);
   var_s1 = &D_8AF2D3D8;
   var_s0 = 0;
   do

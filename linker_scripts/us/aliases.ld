@@ -1576,3 +1576,6 @@ func_82000020 = Fragment16_InitGridState;
 func_82000100 = Fragment16_UpdateGridFill;
 func_822068E0 = Fragment17_InitFadeState;
 func_82205B00 = Fragment17_OptionColorCallback;
+
+/* The caller already masks the renderer's argument to one byte. */
+func_8AF0AB84_word_arg = func_8AF0AB84;

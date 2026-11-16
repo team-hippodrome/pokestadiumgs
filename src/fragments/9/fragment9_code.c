@@ -276,8 +276,41 @@ void func_8FB009C0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB00C1C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB00E40.s")
-
+extern u8 func_80073420(u8);
+extern u8 func_80073570(u8);
+extern u8 func_80073510(u8);
+extern u8 func_80062E10(u8);
+extern s32 func_80061B88(s32, u16);
+extern void func_800619E8(u8*);
+// Keep the switch table at its retail address in the fragment data.
+#pragma REUSE_LOADED_RODATA(func_8FB00E40, 0x2C, 2, 48, 0, jtbl_8FB03B78)
+s32 func_8FB00E40(u8* arg0, u8* arg1) {
+    switch (**(u16**)(arg1 + 68)) {
+    case 1:
+        *(s32*)(arg1 + 60) = *(s16*)(arg0 + 8);
+        break;
+    case 6:
+        *(s32*)(arg1 + 52) = *(s16*)(arg0 + 8);
+        break;
+    case 7:
+        **(u8**)(arg1 + 72) = func_80073420(arg0[9]);
+        *(s32*)(*(u8**)(arg1 + 72) + 8) = func_80061B88(**(u8**)(arg1 + 72), (*(u8**)(arg1 + 72))[29]);
+        func_800619E8(*(u8**)(arg1 + 72));
+        *(u16*)(*(u8**)(arg1 + 72) + 38) = *(u16*)(*(u8**)(arg1 + 72) + 40);
+        HAL_Strcpy((s8*)*(u8**)(arg1 + 72) + 52, (s8*)func_800647C8(**(u8**)(arg1 + 72)));
+        break;
+    case 8:
+        (*(u8**)(arg1 + 72))[1] = func_80073570(arg0[9]);
+        break;
+    case 9: case 10: case 11: case 12:
+        (*(u8**)(arg1 + 72))[**(u16**)(arg1 + 68) - 7] = func_80073510(arg0[9]);
+        (*(u8**)(arg1 + 72))[**(u16**)(arg1 + 68) + 15] = func_80062E10(func_80073510(arg0[9]));
+        break;
+    default:
+        return 0;
+    }
+    return 1;
+}
 s32 func_8FB00C1C();
 s32 func_8FB00F78(void *arg0, void *arg1) {
     void *temp_v0;
@@ -838,7 +871,7 @@ void func_8FB02698(void *arg0) {
 extern s32 func_8FB005E4(u8 *);
 extern s32 func_8FB00FE8(void *);
 extern s32 func_8FB01CF8(u8 *, s32, s32);
-extern void func_8FB00E40(void *, void *);
+extern s32 func_8FB00E40(u8 *, u8 *);
 extern void func_8FB01634(void *, void *);
 /* func_8FB001C0 (s32 (u8 *, u8 *)) and func_8FB02108 (void (unk_func_8FB02108 *))
  * are defined earlier in this file; the calls below compile to the same

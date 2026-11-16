@@ -218,10 +218,11 @@ class LoadedRodataTest(unittest.TestCase):
                 ".set noreorder\n"
                 ".text\n.globl func_a\n.type func_a,@function\nfunc_a:\n"
                 "lui $t0, %hi(table)\n"
-                "addu $t0, $t0, $a0\n"
+                "lui $t2, %hi(external)\n"
                 "lw $t0, %lo(table)($t0)\n"
                 "lui $t1, %hi(other)\n"
                 "lw $t1, %lo(other)($t1)\n"
+                "addiu $t2, $t2, %lo(external)\n"
                 "jr $ra\nnop\n.size func_a, .-func_a\n"
                 ".section .rodata\n.word 0x11111111\n"
                 "table: .word func_a\n"
@@ -239,13 +240,21 @@ class LoadedRodataTest(unittest.TestCase):
             table = next(s for s in symbols if s.name == "table")
             table.shndx = 0
             obj.set_symbols(symbols)
+            raw = elf32.build(obj)
             patched = schedule_patch.reuse_loaded_rodata(
-                elf32.build(obj), "#pragma REUSE_LOADED_RODATA(func_a, 0x0, 2, 4, 4, loaded_table)"
+                raw, "#pragma REUSE_LOADED_RODATA(func_a, 0x0, 2, 4, 4, loaded_table)"
             )
             obj = elf32.parse(patched)
             self.assertEqual(obj.section(".rodata").data, bytes.fromhex("1111111133333333"))
             self.assertEqual(obj.relocations(".rel.rodata"), [])
             symbols = obj.symbols()
             relocations = obj.relocations(".rel.text")
-            self.assertEqual([symbols[r.sym_index].name for r in relocations[:2]], ["loaded_table"] * 2)
+            self.assertEqual([symbols[r.sym_index].name for r in relocations if r.offset in (0, 8)],
+                             ["loaded_table"] * 2)
+            self.assertEqual([symbols[r.sym_index].name for r in relocations if r.offset in (4, 20)],
+                             ["external"] * 2)
+            padded = schedule_patch.reuse_loaded_rodata(
+                raw, "#pragma REUSE_LOADED_RODATA(func_a, 0x0, 2, 4, -4, loaded_table)"
+            )
+            self.assertEqual(elf32.parse(padded).section(".rodata").data[-8:], bytes(8))
             self.assertEqual(struct.unpack_from(">H", obj.section(".text").data, 18)[0], 4)
