@@ -29,13 +29,13 @@
 <text x="114" y="436" text-anchor="middle" fill="#ffc35c">55 open</text>
 </g>
 <g>
-<title>100–199: 1,224 C upstream; 85 open; 1,309 total</title>
-<rect x="172" y="298.72" width="64" height="31.28" fill="#41a657"/>
-<rect x="172" y="296.55" width="64" height="2.17" fill="#f5a416"/>
+<title>100–199: 1,226 C upstream; 83 open; 1,309 total</title>
+<rect x="172" y="298.67" width="64" height="31.33" fill="#41a657"/>
+<rect x="172" y="296.55" width="64" height="2.12" fill="#f5a416"/>
 <text x="204" y="355" text-anchor="middle">100–199</text>
 <text x="204" y="388" text-anchor="middle" font-weight="bold">1,309</text>
-<text x="204" y="412" text-anchor="middle" fill="#73d18a">1,224 C</text>
-<text x="204" y="436" text-anchor="middle" fill="#ffc35c">85 open</text>
+<text x="204" y="412" text-anchor="middle" fill="#73d18a">1,226 C</text>
+<text x="204" y="436" text-anchor="middle" fill="#ffc35c">83 open</text>
 </g>
 <g>
 <title>200–299: 314 C upstream; 106 open; 420 total</title>
