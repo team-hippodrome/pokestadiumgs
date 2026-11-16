@@ -149,6 +149,13 @@ SECTIONS
         build/src/fragments/17/fragment17_113A60.o(.data)
     }
 
+    /* fragment17_11A7F0's overlay header (state, unk_02, x, y). The fragment
+     * loader clears this runtime area after consuming its relocation table. */
+    .fragment17_overlay_header_data 0x822109C0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/17/fragment17_11A7F0.o(.data)
+    }
+
     .fragment17_state_105E8_bss 0x822105E8 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/17/fragment17_113A60.o(.bss)
@@ -280,6 +287,9 @@ ASSERT(SIZEOF(.fragment79_snapshot_pointers_data) == 16,
 
 ASSERT(SIZEOF(.fragment17_scene_record_data) == 32,
        "fragment17 scene record must retain its compiler section footprint");
+
+ASSERT(SIZEOF(.fragment17_overlay_header_data) == 16,
+       "fragment17 overlay header must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
        "fragment31 collected values must retain their compiler section footprint");

@@ -149,5 +149,46 @@ void func_8220B770(void) {
     D_822109D4 = func_8004C990(0x93, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11A7F0/func_8220B7A0.s")
+/* The overlay header at 0x822109C0 (D_822109C0 above). linker_scripts/us/datamig_bss.ld
+ * pins this object's .data there. func_8220B7A0 uses this definition because IDO's
+ * assembler gives its four stores one lui only when the symbol is defined in this
+ * file. FAKE: the one-element array, indexed by a variable, keeps IDO from loading
+ * the address into a base register. */
+typedef struct F17OverlayHeader {
+    /* 0x00 */ s16 state;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ s16 x;
+    /* 0x06 */ s16 y;
+} F17OverlayHeader; // size = 0x8
+
+typedef struct F17Rgb {
+    u8 r;
+    u8 g;
+    u8 b;
+} F17Rgb;
+
+static F17OverlayHeader sOverlayHeader[1] = { 0 };
+
+extern void func_8220AE30(F17OverlayHeader *);
+
+// Starts the overlay when it is idle: stores the position and the two colors
+// (D_822109CC, with alpha D_822109C8 = 255, and D_822109CF) that func_8220B478
+// draws with. Returns 1 when started and 0 when the overlay was already active.
+s32 func_8220B7A0(s32 x, s32 y, u8 *color, u8 *color2) {
+    s32 result = 0;
+    s32 i = 0; // FAKE: constant index written as a variable (see F17OverlayHeader)
+
+    if (sOverlayHeader[i].state == 0) {
+        sOverlayHeader[i].state = 1;
+        sOverlayHeader[i].unk_02 = 0;
+        sOverlayHeader[i].x = x;
+        sOverlayHeader[i].y = y;
+        *(F17Rgb *)D_822109CC = *(F17Rgb *)color;
+        result = 1;
+        *(F17Rgb *)D_822109CF = *(F17Rgb *)color2;
+        D_822109C8 = 0xFF;
+        func_8220AE30(sOverlayHeader);
+    }
+    return result;
+}
 #endif
