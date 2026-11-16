@@ -241,7 +241,21 @@ s32 func_81801388(s32 duration, s32 audio_fade) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AE600/func_81801420.s")
+f32 D_81805920 = 0.5f;
+extern f32 D_81805CD8; // pi, in the fragment's data
+extern f32 __sinf(f32);
+
+// Advances the pulse phase by 1/60 of the frame step, wrapping at 1, and
+// stores 0.5 + 0.5 * sin(2 * pi * phase).
+void func_81801420(void) {
+    static f32 sPhase = 0.0f;
+
+    sPhase += func_818006B4() / 60.0f;
+    if (sPhase > 1.0f) {
+        sPhase -= 1.0f;
+    }
+    D_81805920 = __sinf((sPhase + sPhase) * D_81805CD8) * 0.5f + 0.5f;
+}
 #endif
 
 #ifdef VERSION_US
