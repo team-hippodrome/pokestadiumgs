@@ -193,6 +193,12 @@ SECTIONS
     {
         build/src/fragments/21/fragment21_147D10.o(.bss)
     }
+    /* fragment23_code's saved text position (func_82A0089C). The fragment
+     * loader clears this runtime area after consuming its relocation table. */
+    .fragment23_text_origin_data 0x82A01A24 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/23/fragment23_code.o(.data)
+    }
     /* Complete fragment 74 runtime state: 24-byte context/state prefix and
      * 8200-byte image view. This is exactly the original loader/initializer
      * clear range, 0x8F600BF0-0x8F602C10; its relocation metadata stays loaded. */
@@ -268,6 +274,9 @@ ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
 
 ASSERT(SIZEOF(.fragment72_playback_resources_bss) == 16,
        "fragment72 playback resources must retain their compiler section footprint");
+
+ASSERT(SIZEOF(.fragment23_text_origin_data) == 16,
+       "fragment23 text origin must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment24_state_12450_bss) == 32,
        "fragment24 state and parameter prefix must retain its compiler section footprint");
