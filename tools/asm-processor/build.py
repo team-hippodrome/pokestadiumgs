@@ -101,6 +101,20 @@ with tempfile.TemporaryDirectory(prefix="asm_processor") as tmpdirname:
         functions=functions,
     )
 
+    source = in_file.read_text(encoding="latin1")
+    if "#pragma REUSE_LOADED_RODATA(" in source:
+        sys.path.insert(0, str(dir_path.parent))
+        from coalesce_splice import SpliceError
+        from schedule_patch import SchedulePatchError, reuse_loaded_rodata
+
+        try:
+            out_file.write_bytes(reuse_loaded_rodata(out_file.read_bytes(), source))
+        except (SchedulePatchError, SpliceError) as exc:
+            out_file.unlink(missing_ok=True)
+            sys.exit(f"{in_file}: {exc}")
+
+        deps.extend([str(dir_path.parent / "schedule_patch.py"), str(dir_path.parent / "coalesce_splice.py")])
+
     deps_file = out_file.with_suffix(".asmproc.d")
     if deps:
         with deps_file.open("w") as f:

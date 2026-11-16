@@ -278,7 +278,7 @@ define print
 endef
 
 DECOMP_POKESTADIUMGS := $(filter-out src/libleo/%,$(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)))
-DECOMP_POKESTADIUMGS_FILTERED := $(patsubst %.c,%.o,$(addprefix build/,$(shell grep -l -E "GLOBAL_ASM|C_FUNCTION_PADDING" $(DECOMP_POKESTADIUMGS))))
+DECOMP_POKESTADIUMGS_FILTERED := $(patsubst %.c,%.o,$(addprefix build/,$(shell grep -l -E "GLOBAL_ASM|C_FUNCTION_PADDING|REUSE_LOADED_RODATA" $(DECOMP_POKESTADIUMGS))))
 
 # Padding still needs asm-processor after a file's final GLOBAL_ASM is removed.
 $(DECOMP_POKESTADIUMGS_FILTERED): CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $(AS) $(ASFLAGS) --

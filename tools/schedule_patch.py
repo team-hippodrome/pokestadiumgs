@@ -582,3 +582,100 @@ def swap_function_words_in_object(
     obj.set_section_data(".text", new_text)
     return elf32.build(obj), 1
 
+
+
+_REUSE_RODATA_PRAGMA = re.compile(
+    r"^[ \t]*#pragma\s+REUSE_LOADED_RODATA\(([A-Za-z_]\w*),\s*"
+    r"(0x[0-9A-Fa-f]+),\s*(\d+),\s*(\d+),\s*(\d+),\s*([A-Za-z_]\w*)\)$",
+    re.MULTILINE,
+)
+
+
+def reuse_loaded_rodata(object_bytes: bytes, source: str) -> bytes:
+    """Point a compiler literal or jump table at its existing loaded copy.
+
+    The marker gives the function, its first relocation offset, the number
+    of consecutive HI16/LO16 entries, the literal size, the trailing
+    alignment padding to remove, and the loaded symbol.
+    """
+    markers = _REUSE_RODATA_PRAGMA.findall(source)
+    if not markers:
+        raise SchedulePatchError("invalid REUSE_LOADED_RODATA pragma")
+    for name, offset, count, size, padding, symbol in markers:
+        object_bytes = _reuse_loaded_rodata(
+            object_bytes, name, int(offset, 16), int(count), int(size), int(padding), symbol
+        )
+    return object_bytes
+
+
+def _reuse_loaded_rodata(
+    object_bytes: bytes, name: str, offset: int, count: int, size: int, padding: int, loaded_symbol: str
+) -> bytes:
+    obj = elf32.parse(object_bytes)
+    rodata_index = obj.section_index(".rodata")
+    symbols = obj.symbols()
+    function_index = coalesce_splice._find_symbol_index(symbols, name, obj.section_index(".text"))
+    if rodata_index is None or function_index is None:
+        raise SchedulePatchError(f"{name}: expected function and .rodata")
+    function = symbols[function_index]
+    text = bytearray(obj.section(".text").data)
+    rodata = obj.section(".rodata").data
+    relocations = obj.relocations(".rel.text")
+    first = next((i for i, rel in enumerate(relocations) if rel.offset == function.value + offset), None)
+    pair = [] if first is None else relocations[first:first + count]
+    section_symbols = {
+        i for i, sym in enumerate(symbols) if sym.shndx == rodata_index and sym.info & 0xF == 3
+    }
+    expected_types = [coalesce_splice.R_MIPS_HI16] + [coalesce_splice.R_MIPS_LO16] * (count - 1)
+    if (
+        count < 2 or not size or [rel.type for rel in pair] != expected_types
+        or any(rel.offset >= function.value + function.size or rel.sym_index not in section_symbols for rel in pair)
+    ):
+        raise SchedulePatchError(f"{name}: expected consecutive .rodata HI16/LO16 relocations")
+
+    words = [struct.unpack_from(">I", text, rel.offset)[0] for rel in pair]
+    if words[0] & 0xFFFF:
+        raise SchedulePatchError(f"{name}: expected a small .rodata addend")
+    start = words[1] & 0xFFFF
+    end = start + size
+    keep_end = len(rodata) - padding
+    if (
+        start % 4 or size % 4 or end > keep_end or any(rodata[keep_end:])
+        or any(not start <= (word & 0xFFFF) < end for word in words[1:])
+    ):
+        raise SchedulePatchError(f"{name}: invalid literal extent or alignment padding")
+
+    # Preserve the original low offsets within the table or literal.
+    replacement = _append_symbols(obj, [elf32.Symbol(loaded_symbol, 0, 0, 16, 0, 0)])[loaded_symbol]
+    for i, (rel, word) in enumerate(zip(pair, words)):
+        rel.sym_index = replacement
+        if i:
+            struct.pack_into(">I", text, rel.offset, word - start)
+    obj.set_section_data(".text", bytes(text))
+    obj.set_relocations(".rel.text", relocations)
+    coalesce_splice._shift_section_relative_addends(obj, section_symbols, start, end, -size, name)
+
+    if obj.section(".rel.rodata"):
+        kept_relocations = []
+        for rel in obj.relocations(".rel.rodata"):
+            if start <= rel.offset < end:
+                continue
+            if rel.offset >= keep_end:
+                raise SchedulePatchError(f"{name}: relocation in trailing padding")
+            if rel.offset >= end:
+                rel.offset -= size
+            kept_relocations.append(rel)
+        obj.set_relocations(".rel.rodata", kept_relocations)
+
+    symbols = obj.symbols()
+    for i, sym in enumerate(symbols):
+        if sym.shndx == rodata_index and i not in section_symbols:
+            if (start <= sym.value < end or sym.value < start < sym.value + sym.size
+                    or sym.value >= keep_end):
+                raise SchedulePatchError(f"{name}: {sym.name} overlaps discarded .rodata")
+            if sym.value >= end:
+                sym.value -= size
+    obj.set_symbols(symbols)
+    rodata = obj.section(".rodata").data
+    obj.set_section_data(".rodata", rodata[:start] + rodata[end:keep_end])
+    return elf32.build(obj)
