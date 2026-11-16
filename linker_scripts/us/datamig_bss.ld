@@ -354,3 +354,22 @@ ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footpr
 .L8AB065F8 = func_8AB064C4 + 0x134;
 .L8AB06608 = func_8AB064C4 + 0x144;
 .L8AB06618 = func_8AB064C4 + 0x154;
+
+/* Case targets for fragment 45's menu dispatch table. */
+.L8AB062F4 = func_8AB062C4 + 0x30;
+.L8AB06304 = func_8AB062C4 + 0x40;
+.L8AB06314 = func_8AB062C4 + 0x50;
+.L8AB06324 = func_8AB062C4 + 0x60;
+.L8AB06334 = func_8AB062C4 + 0x70;
+.L8AB06344 = func_8AB062C4 + 0x80;
+.L8AB06354 = func_8AB062C4 + 0x90;
+.L8AB06364 = func_8AB062C4 + 0xA0;
+.L8AB06374 = func_8AB062C4 + 0xB0;
+.L8AB06384 = func_8AB062C4 + 0xC0;
+.L8AB06394 = func_8AB062C4 + 0xD0;
+.L8AB063A4 = func_8AB062C4 + 0xE0;
+.L8AB063B4 = func_8AB062C4 + 0xF0;
+.L8AB063C4 = func_8AB062C4 + 0x100;
+.L8AB063D4 = func_8AB062C4 + 0x110;
+.L8AB063E4 = func_8AB062C4 + 0x120;
+.L8AB063F4 = func_8AB062C4 + 0x130;

@@ -1,5 +1,9 @@
 #include "global.h"
 
+extern void *D_80087200;
+extern u16 D_8AB1268E;
+extern void func_8AB00B78(s32);
+
 
 #ifdef VERSION_US
 // Pointed to by D_8AB1129C in .data; it opens this file's .rodata.
@@ -250,10 +254,50 @@ void func_8AB06270(void *arg0, u16 arg1) {
     *(f32 *)((u8 *)arg0 + 0x44) = *temp * scale + offset;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB062C4.s")
+// Keep the menu dispatch table in the fragment rodata.
+#pragma REUSE_LOADED_RODATA(func_8AB062C4, 0x1C, 2, 68, 0, jtbl_8AB11978)
+s32 func_8AB062C4(s32 arg0) {
+ switch (arg0) {
+case 2: arg0 = func_8AB06650(1); break;
+case 3: arg0 = func_8AB066B4(1); break;
+case 4: arg0 = func_8AB06718(1); break;
+case 5: arg0 = func_8AB0683C(1); break;
+case 6: arg0 = func_8AB0699C(1); break;
+case 7: arg0 = func_8AB06AE8(1); break;
+case 8: arg0 = func_8AB06D78(1); break;
+case 9: arg0 = func_8AB07128(1); break;
+case 10: arg0 = func_8AB072EC(1); break;
+case 11: arg0 = func_8AB072E4(1); break;
+case 12: arg0 = func_8AB073F4(1); break;
+case 13: arg0 = func_8AB07538(1); break;
+case 14: arg0 = func_8AB07A34(1); break;
+case 15: arg0 = func_8AB07C34(1); break;
+case 16: arg0 = func_8AB07DC4(1); break;
+case 17: arg0 = func_8AB07E6C(1); break;
+case 18: arg0 = func_8AB07F80(1); break;
+ }
+ switch (arg0) {
+ case 4:
+   if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+      func_8AB05A00();
+      arg0 = func_8AB066B4(0);
+      func_8AB00B78(3);
+   }
+   break;
+ case 7: case 8:
+   if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+      func_8AB05A00();
+      arg0 = func_8AB07F80(0);
+      func_8AB00B78(3);
+   }
+   break;
+ }
+ func_8AB06270(D_8AB16980, D_8AB1268E);
+ return arg0;
+}
 
 // Keep the dispatch table in the fragment's shared loaded rodata.
-#pragma REUSE_LOADED_RODATA(func_8AB064C4, 0x40, 2, 68, 12, jtbl_8AB119BC)
+#pragma REUSE_LOADED_RODATA(func_8AB064C4, 0x40, 2, 68, 8, jtbl_8AB119BC)
 void func_8AB064C4(s32 arg0) {
     D_8AB16958 = arg0;
     func_8AC00F04(D_8AB11D08);
