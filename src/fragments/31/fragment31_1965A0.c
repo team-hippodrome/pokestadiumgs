@@ -241,5 +241,4 @@ void func_882241B8(void) {
 /* Retail carries three zero words after the epilogue (882243B4-882243BC);
  * fragment31_1965A0.o .text must stay 0x10A0 bytes so fragment31_197640.o
  * keeps starting at 0x882243C0 (same class as fragment31_1A43F0.c). */
-#pragma C_FUNCTION_PADDING(12)
 #endif

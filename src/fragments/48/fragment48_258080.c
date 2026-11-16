@@ -313,5 +313,4 @@ void func_87C02D1C(u8 *arg0, u8 *arg1) {
     *(f32 *)(arg1 + 0x34) = *(f64 *)(arg0 + 0x10);
     *(f32 *)(arg1 + 0x38) = *(f64 *)(arg0 + 0x18);
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

@@ -777,6 +777,5 @@ void func_80026068(u32 arg0) {
 
  void func_80026098(void) { GbAudio_GetActiveChannelMask(); }
 
-#pragma C_FUNCTION_PADDING(8)
 
 #endif

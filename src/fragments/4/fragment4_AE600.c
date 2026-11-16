@@ -249,5 +249,4 @@ extern f32 D_81805920;
 f32 func_818014A8(void) {
     return D_81805920;
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

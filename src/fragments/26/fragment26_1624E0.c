@@ -138,5 +138,4 @@ void func_81003DAC(s32 arg0, Func81003DACStateAlt *arg1) {
             break;
     }
 }
-#pragma C_FUNCTION_PADDING(8)
 #endif

@@ -272,5 +272,4 @@ void func_8AF09B2C(void) {
     func_800498C4();
     func_800499EC();
 }
-#pragma C_FUNCTION_PADDING(12)
 #endif

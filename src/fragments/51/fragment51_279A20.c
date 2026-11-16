@@ -74,5 +74,4 @@ void func_86303F00(void) {
         func_87F09040();
     }
 }
-#pragma C_FUNCTION_PADDING(8)
 #endif

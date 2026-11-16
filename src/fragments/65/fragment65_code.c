@@ -203,5 +203,4 @@ void func_87D00720(f32* a, f32* b, F65Vec2* direction, f32* out, f32* length)
     *length = sqrtf((out[1] * out[1]) + (out[0] * out[0]));
 }
 
-#pragma C_FUNCTION_PADDING(8)
 #endif

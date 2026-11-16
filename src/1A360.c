@@ -1056,6 +1056,4 @@ void AudioVoicePool_Init(void) {
         *(s32 *)(voice + 0x20) = func_800104A0(D_8011EBF0, 480);
     }
 }
-// The retail owner ends with two alignment nops.
-#pragma C_FUNCTION_PADDING(8)
 #endif
