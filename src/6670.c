@@ -274,5 +274,4 @@ u8 func_8000644C(void)
   func_80005A70();
   return D_800CE118;
 }
-#pragma C_FUNCTION_PADDING(16)
 #endif

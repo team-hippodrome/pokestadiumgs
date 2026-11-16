@@ -30,11 +30,13 @@
     - [0x57C0, c]
     - [0x62E0, c]
     - [0x6670, c]
+    - [0x7130, pad]
     - [0x7140, c]
     - [0x78D0, c]
     - [0x7A50, c]
     - [0x8470, c]
     - [0x95C0, c]
+    - [0x9DF0, pad]
     - [0x9E00, c]
     - [0xAC80, c]
     - [0xBF50, c]
@@ -93,6 +95,7 @@
     - [0x63CF0, c]
     - [0x641E0, c]
     - [0x654A0, c]
+    - [0x65810, pad]
     - [0x65820, c]
     - [0x65E20, c]
     - [0x667B0, c]
@@ -378,7 +381,7 @@
     - [0xA5C80, rodata]
     - [0xA5C90, .rodata, 63CF0] # D_800A5090 + jtbl_800A5094 + jtbl_800A5104
     - [0xA5D50, .rodata, 641E0] # Fallback records and all three species/move jump tables.
-    - [0xA5EA0, rodata] # 654A0 jtbl_800A52A0 (+2 more): mixed 4/8 late_rodata alignment skews asm-processor text by +4; keep in the blob
+    - [0xA5EA0, .rodata, 654A0] # jtbl_800A52A0, jtbl_800A52DC, jtbl_800A5318
     - [0xA5FD0, .rodata, 65820] # jtbl_800A53D0
     - [0xA6020, .rodata, 65E20] # jtbl_800A5420
     - [0xA6070, .rodata, 667B0] # jtbl_800A5470
