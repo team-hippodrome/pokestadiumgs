@@ -16,6 +16,13 @@ SECTIONS
         build/src/fragments/22/fragment22_14A2E0.o(.bss)
     }
 
+    /* Fragment 82's deck menu state header (func_82D00590), in the
+     * fragment's loaded data at D_82D07428. */
+    .fragment82_deck_menu_state_data 0x82D07428 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/82/fragment82_420EA0.o(.data)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
@@ -368,6 +375,8 @@ ASSERT(SIZEOF(.battle_lookup_table) == 64, "battle lookup table footprint change
 .L81307280 = func_81307228 + 0x58;
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
+ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
+       "fragment82 deck menu state header must retain its compiler section footprint");
 
 /* Case targets for the two mode dispatch tables. */
 .L8002B394 = func_8002B2FC + 0x98;

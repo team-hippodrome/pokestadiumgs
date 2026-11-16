@@ -203,7 +203,41 @@ void func_82D0049C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D00590.s")
+extern u8 func_80063804(u8);
+extern u8 func_80073480(u8);
+
+/* The deck menu state header at D_82D07428, owned here so IDO addresses it
+ * as an in-unit symbol. The per-slot records start at offset 0x110. */
+static u8 sDeckMenuState[0x110] = { 0 };
+
+void func_82D00590(u8 arg0) {
+    s32 i;
+
+    switch (arg0) {
+        case 0:
+            for (i = 1; i < 0xFC; i++) { sDeckMenuState[0x10 + i] = i; }
+            break;
+        case 1:
+            i = 1;
+            do {
+                sDeckMenuState[0x10 + i] = func_80063804(i);
+                i++;
+            } while (i < 0xFC);
+            break;
+        case 2:
+            i = 1;
+            do {
+                sDeckMenuState[0x10 + i] = func_80073480(i);
+                i++;
+            } while (i < 0xFC);
+            break;
+    }
+    func_82D0049C();
+    *(s16 *)(sDeckMenuState + 2) = 0;
+    sDeckMenuState[0xD] = 0;
+    sDeckMenuState[0xC] = 0;
+    sDeckMenuState[0xF] = 1;
+}
 
 extern u8 D_82D07428[];
 void func_82D00590(u8);
