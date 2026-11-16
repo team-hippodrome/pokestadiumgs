@@ -1469,7 +1469,44 @@ void func_82B03934(s32 arg0, s32 arg1) { s32 temp = func_8004C990(0x156, 0); fun
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B03F38.s")
+extern s16 D_82B1246C;
+
+// FAKE: IDO hoists the selection address into a saved register. The retail loop reloads
+// it at the loop head and uses a 72-byte frame with the coordinates at 0x34.
+// The hash guards the compiler output used by this instruction rewrite.
+#pragma REWRITE_FUNCTION_HEX(func_82B03F38, e21f118576934a3c8dced1aef442e10c386910622dc87ad87a1fa53bd9eb2bea, 27bdffb8afbf0024afb20020afb1001cafb000180c00000027a500340c00000000000000240400080c000000000028250000802500008825241200043c0e000085ce0000240400ff240500ff120e000800003025240400ff240500ff240600ff0c000000240700ff100000042404001b0c000000240700ff2404001b0c0000002605002287af003687a400340000302501f1282124a5000b004038250c00000024840009261000011612ffe42631001a0c000000000000008fbf00248fb000188fb1001c8fb2002003e0000827bd0048)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x14, 4, func_82B0284C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x1c, 4, func_800498C4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x28, 4, func_800496A4)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x3c, 5, D_82B1246C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x40, 6, D_82B1246C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x60, 4, func_8004972C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x70, 4, func_8004972C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x7c, 4, func_8004C874)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0x9c, 4, func_800495F8)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_82B03F38, 0xb0, 4, func_800499EC)
+void func_82B03F38(u8 *arg0) {
+    s32 i;
+    s32 y = 0;
+    struct {
+        s16 x;
+        s16 y;
+    } coords;
+
+    func_82B0284C(arg0, (u8 *)&coords);
+    func_800498C4();
+    func_800496A4(8, 0);
+    for (i = 0; i < 4; i++) {
+        if (i != D_82B1246C) {
+            func_8004972C(255, 255, 255, 255);
+        } else {
+            func_8004972C(255, 255, 0, 255);
+        }
+        func_800495F8(coords.x + 9, coords.y + y + 11, 0, func_8004C874(27, i + 34));
+        y += 26;
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1663,7 +1700,6 @@ extern void Panel_DrawHeadingAndOptions(u8 *, s32);
 extern void func_82B03688(u8 *);
 extern void func_82B0373C(void *);
 extern void func_82B03978(void);
-extern void func_82B03F38(void);
 extern void func_82B04008(void);
 extern void func_82B04718(void);
 extern void func_82B050E8(void);
@@ -1674,7 +1710,7 @@ void func_82B05494(void *arg0, s32 arg1) {
     case 3: func_82B0373C(arg0); break;
     case 4: func_82B038BC(arg0); break;
     case 5: func_82B03978(); break;
-    case 6: func_82B03F38(); break;
+    case 6: func_82B03F38(arg0); break;
     case 7: func_82B04008(); break;
     case 8: func_82B04718(); break;
     case 9: func_82B0504C(arg0); break;

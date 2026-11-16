@@ -12,6 +12,7 @@ struct Fragment44RowJob {
     s16 step;
     s32 active;
 };
+extern struct Fragment44RowJob D_8AF2BDE0;
 extern struct Fragment44RowJob D_8AF2BDF8;
 
 extern Gfx *D_800D0510;
@@ -125,7 +126,39 @@ void Fragment44_CullScrollRecordsBelow(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF0282C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF0299C.s")
+// FAKE: IDO combines the two row decrements and allocates different registers for the
+// position calculation. The retail routine schedules the second sign extension in the branch delay slot.
+// The hash guards the compiler output used by this instruction rewrite.
+#pragma REWRITE_FUNCTION_HEX(func_8AF0299C, 0692f7a25b6496471682654dc751a190bc0cd77a5e369399996181f68500b882, 8482006c848500528c8600542447ffff00073c002443ffff00031c0000073c0304e0001b00031c0300660019248200448c8e000c8c4f001c8c4b00003c090000252900000005c82301cfc0210319382100006012240a000100073c00000c68403c0e4f4700073c0335ce4954016d4021ad2e0000ad240004ad280008a526000ca52a000ea5270010a5250012ad2a001403e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF0299C, 0x3c, 5, D_8AF2BDE0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8AF0299C, 0x40, 6, D_8AF2BDE0)
+void func_8AF0299C(void *arg0) {
+    s16 count;
+    s16 row;
+    s16 step;
+    s32 width;
+    s16 *config;
+    u16 *pixels;
+    s16 position;
+
+    config = (s16 *)((u8 *)arg0 + 0x44);
+    step = config[7];
+    width = *(s32 *)(config + 8);
+    count = config[20] - 1;
+    row = config[20] - 1;
+    if (count >= 0) {
+        position = *(s32 *)((u8 *)arg0 + 0xC) + *(s32 *)(config + 14) - step;
+        pixels = *(u16 **)config + row * width;
+        D_8AF2BDE0.tag = 0x4F474954;
+        D_8AF2BDE0.owner = arg0;
+        D_8AF2BDE0.pixels = pixels;
+        D_8AF2BDE0.width = width;
+        D_8AF2BDE0.rows = 1;
+        D_8AF2BDE0.position = position;
+        D_8AF2BDE0.step = step;
+        D_8AF2BDE0.active = 1;
+    }
+}
 
 void Fragment44_PrepareTrailingScrollRow(void *arg0) {
     s16 count;

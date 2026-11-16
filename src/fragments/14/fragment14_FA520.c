@@ -1,6 +1,6 @@
 #include "global.h"
 
-// The empty record func_8130251C (still assembly) copies into the selection slots.
+// The empty record func_8130251C copies into the selection slots.
 const u8 D_813122A0[16] = { 0 };
 
 // The fragment's work area; the pointers at 0xA170/0xA174 are the ones other functions read as
@@ -9,6 +9,9 @@ typedef struct unk_D_81327800 {
     /* 0x0000 */ u8 unk_0000[0xA170];
     /* 0xA170 */ u8 *unk_A170;
     /* 0xA174 */ void *unk_A174;
+    /* 0xA178 */ void *unk_A178;
+    /* 0xA17C */ u8 *unk_A17C;
+    /* 0xA180 */ s32 unk_A180;
 } unk_D_81327800;
 extern unk_D_81327800 D_81327800;
 
@@ -40,7 +43,59 @@ void func_81302438(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FA520/func_8130251C.s")
+typedef struct S1_MemoryBlock S1_MemoryBlock;
+
+extern u8 D_81317800[];
+extern void func_8000612C(void);
+extern s32 func_800356CC(s32);
+extern s32 BinArchive_Open(s32, s32, s32, s32);
+extern s16 func_80071914(void *);
+extern s32 func_80071B20(s32, s32);
+extern s32 main_pool_get_available(void);
+extern S1_MemoryBlock *MainPool_AllocState(s32, s32);
+extern void *func_81600E28(void *, s32, s32);
+extern void MainPool_FinalizeAllocation(S1_MemoryBlock *);
+extern void func_81300830(void *, void *, void *, s32);
+extern void func_800355E4(s32);
+
+// FAKE: IDO recomputes the large-offset address for each selection slot. The retail routine
+// shares the 0x8000 base adjustment across the first four stores and uses a 48-byte frame.
+// The hash guards the compiler output used by this instruction rewrite.
+#pragma REWRITE_FUNCTION_HEX(func_8130251C, 6eea431c99cc18af84743362b2b516e5474555535ad61016f53e9e068b8991f6, 27bdffd0afbf001c0c000000afb000183c100000261000003c0300003401800024630000020110218c4e217c907800002404000ba1d80904906900008c59217ca3290910906c00008c4a217ca14c091c906f00008c4d217c0c000000a1af09280040202500002825240600010c0000000000382526017fffac22218126187fff8f18217d0c0000008f04094026047fff8c8421810c0000000040282526017fff0c000000ac222179004020250c00000000002825afa2002400402025240500010c0000002406001c26017fffac2221750c0000008fa400243c04000026057fff26067fff26077fff8ce721718cc6217d8ca521790c000000248400000c0000002404001b8fbf001c8fb0001827bd003003e0000800000000)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x8, 4, func_8000612C)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x10, 5, D_81327800)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x14, 6, D_81327800)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x18, 5, D_813122A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x20, 6, D_813122A0)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x58, 4, func_800356CC)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x6c, 4, BinArchive_Open)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x84, 4, func_80071914)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0x94, 4, func_80071B20)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xa0, 4, main_pool_get_available)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xac, 4, MainPool_AllocState)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xc0, 4, func_81600E28)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xd0, 4, MainPool_FinalizeAllocation)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xf4, 4, func_81300830)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xd8, 5, D_81317800)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xf8, 6, D_81317800)
+#pragma REWRITE_FUNCTION_RELOC_TARGET(func_8130251C, 0xfc, 4, func_800355E4)
+void func_8130251C(void) {
+    S1_MemoryBlock *pool;
+
+    func_8000612C();
+    D_81327800.unk_A17C[0x904] = D_813122A0[0];
+    D_81327800.unk_A17C[0x910] = D_813122A0[0];
+    D_81327800.unk_A17C[0x91C] = D_813122A0[0];
+    D_81327800.unk_A17C[0x928] = D_813122A0[0];
+    D_81327800.unk_A180 = BinArchive_Open(func_800356CC(11), 0, 1, 0);
+    D_81327800.unk_A178 = (void *)func_80071B20(D_81327800.unk_A180,
+                                              func_80071914(*(void **)(D_81327800.unk_A17C + 0x940)));
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    D_81327800.unk_A174 = func_81600E28(pool, 1, 28);
+    MainPool_FinalizeAllocation(pool);
+    func_81300830(D_81317800, D_81327800.unk_A178, D_81327800.unk_A17C, (s32)D_81327800.unk_A170);
+    func_800355E4(27);
+}
 
 extern void *D_81331974;
 extern u8 D_81317800[];
@@ -228,7 +283,6 @@ s32 func_80008624();
 s32 func_80047588(s32, s32);
 s32 func_8004C09C(s32);
 s32 func_8004C398();
-s32 func_8130251C();
 void func_81302854(void);
 s32 func_81302920(s32);
 s32 func_816031F4();
