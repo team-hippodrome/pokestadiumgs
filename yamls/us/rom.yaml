@@ -67,6 +67,10 @@
     - [0x26850, c]
     - [0x269B0, c]
     - [0x26CC0, c]
+    - [0x27590, c]
+    - [0x28D30, pad]
+    - [0x28D40, c]
+    - [0x290C0, c]
     - [0x2C1B0, c]
     - [0x340C0, c]
     - [0x35BE0, c]
@@ -374,7 +378,8 @@
     - [0xA3E80, .rodata, 254A0] # func_80024E8C's switch table
     - [0xA3EC0, .rodata, 25B20] # command dispatch tables and constants
     - [0xA43A0, .rodata, 26CC0] # mode and category dispatch tables
-    - [0xA4590, rodata]
+    - [0xA4590, .rodata, 27590] # bank sizes, debug strings, then literals and jump tables
+    - [0xA4660, .rodata, 290C0] # party debug strings, then literals and jump tables
     - [0xA49F0, .rodata, 2C1B0] # queued-event tables and adjacent audio constants
     - [0xA4EA0, rodata]
     - [0xA4EC0, .rodata, 43700] # jtbl_800A42C0

@@ -177,8 +177,6 @@ extern Color_80026938 D_80090AD0[];
 void func_80026938(u16 arg0) ;
 
 extern u16 D_800D19A0[];
-extern char D_800A39A0[];
-extern char D_800A39A4[];
 extern f32 func_80026990(u8);
 void Audio_DebugSampleHistogram(u8 mode) ;
 
@@ -232,8 +230,6 @@ typedef struct AudioVoiceParameters {
     f32 pitch;
     u8 balance;
 } AudioVoiceParameters;
-extern f64 D_800A39B0;
-extern f32 D_800A39B8;
 void Audio_UpdateEventVoiceParameters(void *arg0, u8 channel, u8 reset) ;
 
 extern s8 func_80018C60(s32, s32, s32);
@@ -276,7 +272,7 @@ void func_800277F0(u16 resource_id, void *context) ;
 
 void Audio_PlayDefaultSound(u16 id) ;
 
-extern u8 D_800A3990[];
+extern const u8 D_800A3990[];
 extern u8 D_80090D31[];
 // Decode the request, adjust its channel mask, and dispatch nonempty events.
 void Audio_BuildAndDispatchSoundEvent(u16 encoded, s32 offset, ResourceContext_80027774 *event) ;
@@ -405,11 +401,6 @@ void func_8002A9CC(s32 arg0) ;
 
 extern u8 *D_800D1B78[];
 extern u8 *D_800D1B80[];
-extern char D_800A3A60[];
-extern char D_800A3A6C[];
-extern char D_800A3A84[];
-extern char D_800A3A94[];
-extern char D_800A3AA4[];
 void func_8002A9D8(void) ;
 
 extern s8 D_80091A18;
