@@ -574,7 +574,215 @@ void func_88900F54(void) {
         break;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/38/fragment38_1D5610/func_88901A24.s")
+
+extern Gfx *D_800D0510;
+extern u8 *D_8800ECC4;
+extern u8 *D_8800ECC0;
+extern u8 *D_8800ECC8;
+extern u8 *D_8800687C;
+extern u8 D_80094E38[];
+extern u8 D_80094E00[];
+extern u8 D_80094F50[];
+extern u8 D_88903E10[];
+extern u8 D_88903E48[];
+extern f32 D_80087E50[];
+extern s32 func_80043678(u8 *);
+extern void func_800088DC(void);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern void func_88002C2C(s32, s32, s32);
+extern s32 func_8004CA10(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_88002CB8(s16, s16, s32, s32);
+extern void func_88002EC0(s16, s16, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern s32 func_88900528(s32);
+extern s32 func_8004C54C(s32, void *);
+
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_80048E30(u8 *, s32, s32, void *, s32);
+extern void func_800499EC(void);
+extern void func_80006F70(Gfx **, s16, s16, s32, s32);
+extern void func_880015F4(s16, s16, s32, s32, s32, s32, s32, s32);
+
+#define GW(a, b) { Gfx *g_ = D_800D0510++; ((u32 *)g_)[0] = (a); ((u32 *)g_)[1] = (b); }
+#define PX(d) ((s16)(*(s8 *)(D_88904190 + 0x12D) + (d)))
+#define PY(d) ((s16)(*(s8 *)(D_88904190 + 0x12E) + (d)))
+
+typedef struct { u8 r, g, b, a; } LabPCControllerColor;
+
+void func_88901A24(void) {
+    u32 i;
+    u16 strId;
+    u8 *tex;
+    s16 y;
+    u8 pct;
+    s32 flag;
+
+    flag = 0;
+    if (D_88904190[0x12C] != 0) {
+        if (*(s32 *)(D_88904190 + 0x120) != 13 && *(s32 *)(D_88904190 + 0x120) != 14) {
+            flag = 1;
+        }
+    }
+    *(s32 *)(D_88904190 + 0x64) = func_80043678(*(u8 **)(D_88904190 + 0x60));
+    func_800088DC();
+    GW(0xDE000000, (u32)D_80094E38);
+    func_8004D1FC(D_8800ECC4);
+    func_8004D27C(D_8800ECC0, 0x80, 1);
+    func_88002C2C(D_88904190[0x129], D_88904190[0x12A], D_88904190[0x12B]);
+    if (flag != 0) {
+        GfxRect_DrawTextured(PX(0xA4), PY(0x97), 0x16B, 0xA7, 0, 0, (s32)((1024.0f * (f32)func_8004CA10(D_8800ECC4)) / 363.0f + (0.0f < (((f32)func_8004CA10(D_8800ECC4) * 1024.0f) / 363.0f) ? 0.5f : -0.5f)), 0, 0);
+    }
+    if (*(s32 *)(D_88904190 + 0x120) == 12) {
+        GW(0xE7000000, 0);
+        GW(0xFB000000, 0xFFAA8CFF);
+    }
+    GfxRect_DrawTextured(PX(0xA4), PY(0x147), 0x16B, 0x72, 0, 0, (s32)((1024.0f * (f32)func_8004CA10(D_8800ECC4)) / 363.0f + (0.0f < (((f32)func_8004CA10(D_8800ECC4) * 1024.0f) / 363.0f) ? 0.5f : -0.5f)), 0, 0);
+    GW(0xE7000000, 0);
+    GW(0xE200001C, 0x0F0A7008);
+    if (flag != 0) {
+        if (*(s32 *)(D_88904190 + 0x120) == 12) {
+            GW(0xFB000000, ((D_88904190[0x12A] & 0xFF) << 16) | ((D_88904190[0x12B] & 0xFF) << 8) | 0xFF | ((D_88904190[0x129] & 0xFF) << 24));
+        }
+        func_88002CB8(PX(0x9F), PY(0x92), 0x178, 0xB4);
+        if (*(s32 *)(D_88904190 + 0x120) == 12) {
+            GW(0xE7000000, 0);
+            GW(0xFB000000, 0xFFAA8CFF);
+        }
+    }
+    func_88002CB8(PX(0x9F), PY(0x142), 0x178, 0x7F);
+    if (flag != 0) {
+        func_8004D27C(D_8800ECC8, 0x100, 2);
+        GW(0xE7000000, 0);
+        GW(0xFB000000, -1);
+        func_88002EC0(PX(0xEE), PY(0xA1), 0xD6, 0x93, 3);
+    }
+    switch (*(s32 *)(D_88904190 + 0x120)) {
+        case 6:
+        case 7:
+        case 8:
+        case 10:
+            GW(0xDE000000, (u32)D_80094E00);
+            func_8004D19C(*(s8 *)(D_88904190 + 0x12D) + 0x1E9, *(s8 *)(D_88904190 + 0x12E) + 0x195, func_8004C990(0x35, D_88903E48[D_88904190[0x13D]]), 0, 0x200000);
+            D_88904190[0x13D]++;
+            if (D_88904190[0x13D] >= 0xCU) {
+                D_88904190[0x13D] = 0;
+            }
+        break;
+    }
+    GW(0xDE000000, (u32)D_80094F50);
+    if (*(s32 *)(D_88904190 + 0x120) != 0) {
+        char buf[0x100];
+
+        func_800498C4();
+        func_800496A4(8, 1);
+        func_8004989C(0x1A);
+        if (func_88900528(*(s32 *)(D_88904190 + 0x120)) != 0) {
+            func_8004C54C(0x1A, *(u8 **)(D_88904190 + 0x68) + 0x34);
+            switch (*(s32 *)(D_88904190 + 0x120)) {
+                case 8:
+                case 13:
+                case 14:
+                    break;
+                default:
+                    func_8004C54C(0x41, D_88904190 + 0x9A);
+                    break;
+            }
+        } else {
+            func_8004C54C(0x1A, D_88904190 + 0x6C);
+        }
+        switch (*(s32 *)(D_88904190 + 0x120)) {
+            case 1:
+            case 2:
+            case 3:
+                strId = 6;
+                break;
+            case 4:
+                if (D_88904190[0x128] & 2) {
+                    strId = 7;
+                } else {
+                    func_8004C54C(0x22, func_8004B7A4(**(u8 **)(D_88904190 + 0x68)));
+                    strId = 8;
+                }
+                break;
+            case 5:
+                if ((*(u8 **)(D_88904190 + 0x68))[0x1E] & 1) {
+                    func_8004C54C(0x20, (*(u8 **)(D_88904190 + 0x68)) + 0x34);
+                } else {
+                    func_8004C54C(0x20, func_8004B7A4((*(u8 **)(D_88904190 + 0x68))[0]));
+                }
+                func_8004C54C(0x15, D_88904190 + 0x8C);
+                strId = 9;
+                break;
+            case 6: strId = 10; break;
+            case 7: strId = 11; break;
+            case 8: strId = 12; break;
+            case 9: strId = 13; break;
+            case 10: strId = 14; break;
+            case 11: strId = 15; break;
+            case 12: strId = 16; break;
+            case 13: strId = 17; break;
+            case 14: strId = 18; break;
+        }
+        func_80048E30(D_8800687C, *(s8 *)(D_88904190 + 0x12D) + 0xAE, *(s8 *)(D_88904190 + 0x12E) + 0x14F,
+                      func_8004C8A0(buf, 0x100, 0x45, strId), 1);
+        func_800499EC();
+    }
+    switch (*(s32 *)(D_88904190 + 0x120)) {
+        case 1:
+        case 2:
+        case 3:
+            GW(0xDE000000, (u32)D_88903E10);
+            switch (*(s32 *)(D_88904190 + 0x120)) {
+                case 1:
+                    pct = ((*(s16 *)(D_88904190 + 0x150) - *(s16 *)(D_88904190 + 0x13E)) * 255) / *(s16 *)(D_88904190 + 0x150);
+                    break;
+                case 2:
+                    pct = (*(s16 *)(D_88904190 + 0x152) * 255) / *(s16 *)(D_88904190 + 0x150);
+                    break;
+                case 3:
+                    pct = (*(s16 *)(D_88904190 + 0x13E) * 255) / *(s16 *)(D_88904190 + 0x156);
+                    break;
+            }
+            GW(0xFA000000 | (pct & 0xFF), -1);
+            func_80006F70(&D_800D0510, PX(0xF1), PY(0xA4), 0xD0, 0x8D);
+            tex = *(u8 **)(D_88904190 + 0x64);
+            y = *(s8 *)(D_88904190 + 0x12E) + 0xA4;
+            for (i = 0; i != 0x8D; y++, i++, tex += 0x1A0) {
+                GW(0xFD100000, (u32)tex);
+                GW(0xF5100000, 0x07080200);
+                GW(0xE6000000, 0);
+                GW(0xF3000000, 0x070CF028);
+                GW(0xE7000000, 0);
+                GW(0xF5106800, 0x00080200);
+                GW(0xF2000000, 0x0033C000);
+                GfxRect_DrawTextured(
+                    *(s8 *)(D_88904190 + 0x12D) + (s32)(((f32)*(s16 *)(D_88904190 + 0x142) * D_80087E50[(u16)(*(s16 *)(D_88904190 + 0x146) * i + *(s16 *)(D_88904190 + 0x144)) >> 4]) + (0.0f < ((f32)*(s16 *)(D_88904190 + 0x142) * D_80087E50[(u16)(*(s16 *)(D_88904190 + 0x146) * i + *(s16 *)(D_88904190 + 0x144)) >> 4]) ? 0.5f : -0.5f)) + 0xF1,
+                    y, 0xD0, 1, -0x10, -0x10, 0x400, 0x400, 0);
+            }
+            break;
+        default:
+            GW(0xDE000000, (u32)D_80094E00);
+            switch (*(s32 *)(D_88904190 + 0x120)) {
+                case 13:
+                case 14:
+                    func_80006F70(&D_800D0510, PX(0xF1), PY(0xA4), 0x62, 0x8D);
+                    break;
+            }
+            func_880015F4(PX(0xF1), PY(0xA4), 0xD0, 0x8D, *(s32 *)(D_88904190 + 0x64), 0, 2, 0);
+            break;
+    }
+    func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+}
+
+#undef GW
+#undef PX
+#undef PY
 
 extern void *BinArchive_Open();
 extern u8 LabPC_FindFireStoneEvolution(u8 species);
@@ -636,7 +844,6 @@ void func_88902624(s32 mode, u8 *pokemon, s8 level) {
     }
 }
 
-typedef struct { u8 r, g, b, a; } LabPCControllerColor;
 extern LabPCControllerColor *Color_SetRGB(LabPCControllerColor *, u8, u8, u8);
 extern void func_80042F94(void *, void *);
 extern void Audio_InitializeBufferMemory(void *);
