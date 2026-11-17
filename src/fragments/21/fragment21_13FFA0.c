@@ -967,7 +967,28 @@ void func_82502528(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82502854.s")
+// Archive handle and two state halfwords at 0x82508D08 in the fragment's
+// loaded data. IDO shares one lui across the three stores, so the record is
+// defined here and pinned by datamig_bss.ld.
+extern u8 D_82508F68[];
+extern s16 D_82508F72;
+extern u8 D_82508FCC[];
+extern void *D_82508680;
+extern s32 BinArchive_Open(s32, s32, s32, s32);
+extern s32 func_800356CC(s32);
+extern void func_80055EF0(void *, s32);
+extern void _bzero(void *, s32);
+void func_82502854(s32 arg0) {
+    static struct { s32 archive; s16 unk4; s16 unk6; } D_82508D08 = { 0 };
+    s32 enabled;
+    D_82508D08.archive = BinArchive_Open(func_800356CC(0xB), 0, 1, 1);
+    D_82508D08.unk4 = 0;
+    D_82508D08.unk6 = -1;
+    _bzero(D_82508F68, 0x7C);
+    D_82508F72 = -1;
+    enabled = (*(s16 *)D_82508680 != 0) ? 1 : 0;
+    func_80055EF0(D_82508FCC, enabled);
+}
 #endif
 
 #ifdef VERSION_US
