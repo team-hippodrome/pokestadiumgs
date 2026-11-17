@@ -1791,6 +1791,7 @@
     - [0x38EBD0, c,       fragments/79/fragment79_38EBD0]
     - [0x38EFA0, c,       fragments/79/fragment79_38EFA0]
     - [0x38EFE0, c,       fragments/79/fragment79_38EFE0]
+    - [0x38FB60, c,       fragments/79/fragment79_38FB60] # 16-aligned object boundary: the rodata zero-pads after jtbl_84189A80 before the 0x3F94C0 doubles.
     - [0x393B40, c,       fragments/79/fragment79_393B40]
     - [0x393BF0, c,       fragments/79/fragment79_393BF0]
     - [0x393CA0, c,       fragments/79/fragment79_393CA0]
@@ -1831,7 +1832,9 @@
     - [0x3F8850, .rodata, fragments/79/fragment79_380A00]
     - [0x3F8CE0, .rodata, fragments/79/fragment79_38D510] # Jump tables, float literals.
     - [0x3F90B0, rodata]
-    - [0x3F95D0, .rodata, fragments/79/fragment79_38EFE0] # Movement setup/update dispatch tables, 192 bytes.
+    - [0x3F9310, .rodata, fragments/79/fragment79_38EFE0] # jtbl_84189A80 (func_8411FF1C's switch).
+    - [0x3F94C0, rodata]
+    - [0x3F95D0, .rodata, fragments/79/fragment79_38FB60] # Movement setup/update dispatch tables, 192 bytes.
     - [0x3F9690, rodata]
     - [0x3FA610, .rodata, fragments/79/fragment79_393CA0] # Existing SendFightThread literal, then AD94/ADAC/ADCC/AECC tables.
     - [0x3FA770, rodata]
