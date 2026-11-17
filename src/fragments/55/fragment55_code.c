@@ -1259,7 +1259,182 @@ void func_86706D3C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86707E2C.s")
+extern void Font_DisableTwoCycleTexturing(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern void func_800497E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_87F09040(void);
+extern void func_867035A8(void);
+extern s32 D_8670BDB4[];
+extern s32 D_8670B3AC[];
+extern f32 D_8670B3C8;
+extern f32 D_8670BD9C;
+extern s32 D_8670C098;
+extern s32 D_8670BB4C;
+extern s32 D_8670B3C0;
+extern s32 D_8670B3B0;
+extern s32 D_8670B3B4;
+extern s32 D_8670B3B8;
+extern s32 D_8670B3BC;
+extern s32 D_8670B398;
+extern s32 D_8670B39C;
+extern s32 D_8670B3A0;
+extern s32 D_8670B3A4;
+extern s32 D_8670B3A8;
+extern s32 D_8670BDB8;
+extern s32 D_8670BDBC;
+extern s32 D_8670BDC0;
+extern s32 D_8670BDC4;
+extern s32 D_8670B368;
+extern s32 D_8670B388;
+extern s32 D_8670B3D8;
+extern s32 D_8670B3DC;
+extern f32 D_86710C50;
+extern f32 D_8670BD98;
+
+void func_86707E2C(void) {
+    func_87F09040();
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    D_8670C098 += 1;
+    if (D_8670C098 >= 21) {
+        D_8670C098 = 0;
+    }
+    func_800495F8(90, 40, 0, "マップ:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 11)) {
+        if (D_8670B3C0 == 0) {
+            func_800495F8(230, 40, 0, "ランダム");
+        } else {
+            func_800495F8(230, 40, 0, "せってい");
+        }
+    }
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 12)) {
+        if (D_8670BDB4[0] == 1) {
+            func_800495F8(90, 50, 0, "R");
+        }
+        if (D_8670B3C0 == 0) {
+            func_800495F8(100, 50, 0, "1:%d", D_8670B3AC[0]);
+        } else {
+            func_800495F8(100, 50, 0, "1:%d", D_8670B398);
+        }
+    }
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 13)) {
+        if (D_8670BDB8 == 1) {
+            func_800495F8(140, 50, 0, "R");
+        }
+        if (D_8670B3C0 == 0) {
+            func_800495F8(150, 50, 0, "2:%d", D_8670B3B0);
+        } else {
+            func_800495F8(150, 50, 0, "2:%d", D_8670B39C);
+        }
+    }
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 14)) {
+        if (D_8670BDBC == 1) {
+            func_800495F8(190, 50, 0, "R");
+        }
+        if (D_8670B3C0 == 0) {
+            func_800495F8(200, 50, 0, "3:%d", D_8670B3B4);
+        } else {
+            func_800495F8(200, 50, 0, "3:%d", D_8670B3A0);
+        }
+    }
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 15)) {
+        if (D_8670BDC0 == 1) {
+            func_800495F8(90, 60, 0, "R");
+        }
+        if (D_8670B3C0 == 0) {
+            func_800495F8(100, 60, 0, "4:%d", D_8670B3B8);
+        } else {
+            func_800495F8(100, 60, 0, "4:%d", D_8670B3A4);
+        }
+    }
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 16)) {
+        if (D_8670BDC4 == 1) {
+            func_800495F8(140, 60, 0, "R");
+        }
+        if (D_8670B3C0 == 0) {
+            func_800495F8(150, 60, 0, "5:%d", D_8670B3BC);
+        } else {
+            func_800495F8(150, 60, 0, "5:%d", D_8670B3A8);
+        }
+    }
+    func_800495F8(90, 70, 0, "オムナイトスケール:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 1)) {
+        func_800495F8(230, 70, 0, "%0.3f", (f64) D_86710C50);
+    }
+    func_800495F8(90, 80, 0, "オートスクロール:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 2)) {
+        if (D_8670B388 == 1) {
+            func_800495F8(230, 80, 0, "あり");
+        } else {
+            func_800495F8(230, 80, 0, "なし");
+        }
+    }
+    func_800495F8(90, 90, 0, "トゲピーのはやさ(たて）:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 3)) {
+        func_800495F8(230, 90, 0, "%0.3f", (f64) D_8670BD9C);
+    }
+    func_800495F8(90, 100, 0, "トゲピーのはやさ（よこ）:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 4)) {
+        func_800495F8(230, 100, 0, "%0.3f", (f64) D_8670BD98);
+    }
+    func_800495F8(90, 110, 0, "トラップへんこう:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 5)) {
+        if (D_8670B3D8 != 0) {
+            func_800495F8(230, 110, 0, "あり");
+        } else {
+            func_800495F8(230, 110, 0, "なし");
+        }
+    }
+    func_800495F8(90, 120, 0, "いどうオブジェクト:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 6)) {
+        switch (D_8670B368) {
+        case 0:
+            func_800495F8(230, 120, 0, "なし");
+            break;
+        case 1:
+            func_800495F8(230, 120, 0, "カメラ");
+            break;
+        case 2:
+            func_800495F8(230, 120, 0, "キャラクター");
+            break;
+        }
+    }
+    func_800495F8(90, 130, 0, "yオブジェクトかんかく:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 7)) {
+        func_800495F8(230, 130, 0, "%0.2f", (f64) D_8670B3C8);
+    }
+    func_800495F8(90, 140, 0, "ころがりブレーキ:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 8)) {
+        if (D_8670B3DC == 0) {
+            func_800495F8(230, 140, 0, "なし");
+        } else {
+            func_800495F8(230, 140, 0, "あり");
+        }
+    }
+    func_800495F8(90, 150, 0, "ころがりタイプ:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 9)) {
+        func_800495F8(230, 150, 0, "つうじょう");
+    }
+    func_800495F8(90, 160, 0, "CPUプレイ:");
+    if ((D_8670C098 >= 10) || (D_8670BB4C != 10)) {
+        func_800495F8(230, 160, 0, "あり");
+    }
+    // karodo: the retail build keeps this disabled debug line's format string in .rodata.
+    if (0) {
+        func_800495F8(90, 170, 0, "scale=%0.2f", 0.0);
+    }
+    func_867035A8();
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
 #endif
 
 void func_867086E4(void) {
