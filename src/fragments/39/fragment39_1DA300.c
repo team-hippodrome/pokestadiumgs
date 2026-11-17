@@ -76,7 +76,119 @@ u16 func_88A00020(void *arg0, void *arg1, void *arg2, u8 arg3)
     return count;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/39/fragment39_1DA300/func_88A00248.s")
+extern s32 D_88A01B70[];
+
+typedef struct Unk88A00248Slots {
+    /* 0x0 */ u8 **slots;
+    /* 0x4 */ u8 count;
+    /* 0x5 */ u8 count2;
+    /* 0x6 */ u8 capacity;
+} Unk88A00248Slots; // size = 0x8
+
+typedef struct Unk88A00248Rec {
+    /* 0x00 */ s32 id;
+    /* 0x04 */ s32 arg;
+    /* 0x08 */ u8 index;
+    /* 0x0C */ Unk88A00248Slots sub;
+} Unk88A00248Rec; // size = 0x14
+
+typedef struct Unk88A00248Buf {
+    /* 0x0 */ void *buf;
+    /* 0x4 */ u8 capacity;
+    /* 0x5 */ u8 unk5;
+    /* 0x6 */ u8 unk6;
+} Unk88A00248Buf; // size = 0x8
+
+typedef struct Unk88A00248Slot {
+    /* 0x00 */ Unk88A00248Rec *owner;
+    /* 0x04 */ u8 index;
+    /* 0x08 */ s32 flag;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ Unk88A00248Buf sub;
+} Unk88A00248Slot; // size = 0x18
+
+typedef struct Unk88A00248Entry {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s8 unk4;
+    /* 0x05 */ u8 unk5[0x5B];
+} Unk88A00248Entry; // size = 0x60
+
+void func_88A00248(void *pool, Unk88A00248Rec **arg1, Unk88A00248Slot **arg2, Unk88A00248Entry **arg3, u8 n, u8 arg5) {
+    Unk88A00248Buf *buf;
+    Unk88A00248Slot *q;
+    u32 i;
+    u8 sum;
+    u16 total;
+    u32 j;
+    u32 k;
+    Unk88A00248Rec *p;
+    Unk88A00248Entry *r;
+    u8 **slot;
+    Unk88A00248Slots *sub;
+    u8 counts[3];
+    s32 caps[3];
+
+    for (i = 0; i < n; i++) {
+        if (i == 2) {
+            counts[i] = func_800532C4(D_88A01B70[i]);
+            caps[i] = func_80053230(D_88A01B70[i]);
+        } else {
+            counts[i] = func_8005CB38(arg5, D_88A01B70[i]);
+            caps[i] = GbSave_GetRecordCapacity(D_88A01B70[i]);
+        }
+    }
+
+    *arg1 = mem_pool_alloc(pool, n * sizeof(Unk88A00248Rec));
+    sum = 0;
+    total = 0;
+    for (i = 0, p = *arg1; i < n; i++, p++) {
+        p->id = D_88A01B70[i];
+        if (i == 2) {
+            p->arg = 0;
+        } else {
+            p->arg = arg5;
+        }
+        p->index = i;
+        sub = &p->sub;
+        sub->count = counts[i];
+        sub->count2 = sub->count;
+        sub->capacity = caps[i];
+        sub->slots = mem_pool_alloc(pool, sub->count * 4);
+        sum += sub->count;
+        total += sub->count * sub->capacity;
+    }
+
+    q = mem_pool_alloc(pool, sum * sizeof(Unk88A00248Slot));
+    *arg2 = q;
+    p = *arg1;
+    for (i = 0; i < n; i++, p++) {
+        sub = &p->sub;
+        slot = sub->slots;
+        for (j = 0; j < sub->count; j++, slot++, q++) {
+            *slot = (u8 *)q;
+            q->owner = p;
+            q->index = j;
+            if (i == 0) {
+                q->flag = 1;
+            } else {
+                q->flag = 0;
+            }
+            q->unkC = 0;
+            buf = &q->sub;
+            buf->capacity = caps[i];
+            buf->unk5 = 0;
+            buf->unk6 = 0;
+            buf->buf = mem_pool_alloc(pool, buf->capacity * 4);
+        }
+    }
+
+    *arg3 = mem_pool_alloc(pool, total * sizeof(Unk88A00248Entry));
+    for (k = 0, r = *arg3; k < total; k++, r++) {
+        r->unk0 = 0;
+        r->unk4 = -1;
+    }
+    func_88A00020(*arg1, *arg2, *arg3, n);
+}
 
 /* mkdraft:func_88A0057C begin */
 extern s32 D_88A01C30;
