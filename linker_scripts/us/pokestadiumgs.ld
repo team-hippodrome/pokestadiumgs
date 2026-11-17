@@ -1640,6 +1640,7 @@ SECTIONS
         fragment16_TEXT_START = .;
         build/asm/us/data/fragments/16/fragment16_header.o(.text);
         build/src/fragments/16/fragment16_code.o(.text);
+        build/src/fragments/16/fragment16_10E250.o(.text);
         fragment16_TEXT_END = .;
         fragment16_TEXT_SIZE = ABSOLUTE(fragment16_TEXT_END - fragment16_TEXT_START);
         fragment16_DATA_START = .;
@@ -1647,10 +1648,15 @@ SECTIONS
         build/asm/us/data/fragments/16/fragment16_header.o(.data);
         fragments_16_fragment16_data_data = .;
         build/asm/us/data/fragments/16/fragment16_data.data.o(.data);
+        fragments_16_fragment16_10E250 = .;
+        build/src/fragments/16/fragment16_10E250.o(.data);
+        fragments_16_fragment16_10F180_data = .;
+        build/asm/us/data/fragments/16/fragment16_10F180.data.o(.data);
         fragment16_DATA_END = .;
         fragment16_DATA_SIZE = ABSOLUTE(fragment16_DATA_END - fragment16_DATA_START);
         fragment16_RODATA_START = .;
         build/src/fragments/16/fragment16_code.o(.rodata);
+        build/src/fragments/16/fragment16_10E250.o(.rodata);
         build/asm/us/data/10F1C0.rodata.o(.rodata);
         build/asm/us/data/fragments/16/fragment16_header.o(.rodata);
         fragments_16_fragment16_code = .;
@@ -1667,6 +1673,7 @@ SECTIONS
         fragment16_BSS_START = .;
         build/asm/us/data/fragments/16/fragment16_header.o(.bss);
         build/src/fragments/16/fragment16_code.o(.bss);
+        build/src/fragments/16/fragment16_10E250.o(.bss);
         fragment16_BSS_END = .;
         fragment16_BSS_SIZE = ABSOLUTE(fragment16_BSS_END - fragment16_BSS_START);
     }
