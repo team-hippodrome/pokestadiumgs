@@ -405,7 +405,12 @@ void func_88B04F70(s8 *arg0, s16 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04FB0.s")
 
-void func_88B05250(s8 *arg0, s16 arg1) {
+// Old-style definition: func_88B052B0 passes its u16 argument through without converting
+// it to s16 (lhu, no sign extension).
+void func_88B05250(arg0, arg1)
+    s8 *arg0;
+    s16 arg1;
+{
     *(s16 *)(arg0 + 0) = arg1;
     *(s16 *)(arg0 + 4) = D_8800686A;
     HAL_Strcpy(arg0 + 8, D_8800686D);
@@ -417,7 +422,55 @@ void func_88B05250(s8 *arg0, s16 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B052B0.s")
+// D_88B05F80: the deck count byte, then 50 entries of 0x14 bytes (D_88B05F82).
+typedef struct {
+    /* 0x00 */ u8 count;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 entries[50][0x14];
+} DeckList_88B052B0;
+
+// Records arg0 in the deck entry for the current player (D_88006868 word at +2 and name
+// D_8800686D). Without one, it takes the next free entry or, when all 50 are used, the entry
+// with the lowest use count (u16 at +2), resetting that count. It then writes the list back
+// through Deck_WriteEntries.
+void func_88B052B0(u16 arg0) {
+    s32 pad[2]; // FAKE: gives the 0x38 frame.
+    u8 *ptr;
+    u8 *minPtr;
+    u32 i;
+    u16 minCount;
+    void *handle;
+
+    for (i = 0, ptr = D_88B05F82; i < 50; i++, ptr += 0x14) {
+        if ((*(u16 *)(D_88006868 + 2) == *(u16 *)(ptr + 4)) && (HAL_Strcmp((s8 *)(ptr + 8), D_8800686D) == 0)) {
+            break;
+        }
+    }
+    if (i == 50) {
+        if (D_88B05F80[0] == 50) {
+            minCount = 0xFFFF;
+            ptr = D_88B05F82;
+            // minPtr has no initial value: a first count below 0xFFFF always sets it, and the
+            // retail code spills it uninitialized.
+            for (i = 0; i < 50; i++) {
+                if (*(u16 *)(ptr + 2) < minCount) {
+                    minCount = *(u16 *)(ptr + 2);
+                    minPtr = ptr;
+                }
+                ptr += 0x14;
+            }
+            ptr = minPtr;
+        } else {
+            ptr = ((DeckList_88B052B0 *)D_88B05F80)->entries[D_88B05F80[0]];
+            D_88B05F80[0]++;
+        }
+        *(u16 *)(ptr + 2) = 0;
+    }
+    func_88B05250((s8 *)ptr, arg0);
+    handle = func_8006218C(0x1C, 0, 0, 1);
+    Deck_WriteEntries(D_88B05F82, D_88B05F80[0], handle);
+    func_8006229C(handle);
+}
 
 extern u8 D_88B069AC[];
 extern u8 D_88B069CE[];
