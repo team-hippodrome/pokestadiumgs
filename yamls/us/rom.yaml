@@ -740,6 +740,7 @@
     - [0x10F9E0, c,       fragments/17/fragment17_10F9E0]
     - [0x10FFC0, c,       fragments/17/fragment17_10FFC0]
     - [0x113A60, c,       fragments/17/fragment17_113A60]
+    - [0x1154C0, c,       fragments/17/fragment17_1154C0]
     - [0x1162A0, c,       fragments/17/fragment17_1162A0] # scene fade, clipping and scene callbacks
     - [0x11A7F0, c,       fragments/17/fragment17_11A7F0]
     - [0x11B210, c,       fragments/17/fragment17_11B210]
