@@ -397,13 +397,41 @@ extern u16 D_8800686A;
 extern u8 D_88B05868[];
 extern u16 D_88B05F6E;
 extern s32 func_88B04380(u8);
-void func_88B04F70(s8 *arg0, s16 arg1) {
+void func_88B04F70(s8 *arg0, u16 arg1) {
     *(s16 *)(arg0 + 0) = arg1;
     *(s16 *)(arg0 + 2) = D_8800686A;
     HAL_Strcpy(arg0 + 4, D_8800686D);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1E0550/func_88B04FB0.s")
+typedef struct Entry16 {
+    u8 data[16];
+} Entry16;
+typedef struct {
+    u8 pad[0x3EA];
+    u8 count;
+    u8 unk_3EB;
+    Entry16 entries[100];
+} EntryList_88B04FB0;
+void func_88B04FB0(u16 arg0) {
+    void *handle;
+    Entry16 *entry;
+    s32 i;
+
+    if (D_88B05F80[0x3EA] == 100) {
+        entry = (Entry16 *)D_88B0636C;
+        for (i = 0; i < 99; i++) {
+            entry[0] = entry[1];
+            entry++;
+        }
+    } else {
+        entry = &((EntryList_88B04FB0 *)D_88B05F80)->entries[D_88B05F80[0x3EA]];
+        D_88B05F80[0x3EA]++;
+    }
+    func_88B04F70((s8 *)entry, arg0);
+    handle = func_8006218C(0x1D, 0, 0, 1);
+    Deck_WriteEntries(D_88B0636C, D_88B05F80[0x3EA], handle);
+    func_8006229C(handle);
+}
 
 // Old-style definition: func_88B052B0 passes its u16 argument through without converting
 // it to s16 (lhu, no sign extension).
