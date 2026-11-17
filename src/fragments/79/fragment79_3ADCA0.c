@@ -414,7 +414,23 @@ void func_8413F32C(s16 arg0, s16 arg1, u8 arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8413F390.s")
+void func_8413F390(s16 arg0, s16 arg1, s16 arg2, u16 arg3) {
+    s32 i;
+    s32 pad[1]; // FAKE
+    {
+        u8 buf[8];
+
+        i = 0;
+        do {
+            buf[i++] = arg3 % 10;
+            arg3 /= 10;
+            arg2--;
+        } while ((arg3 > 0) || (arg2 > 0));
+        for (i -= 1; i >= 0; i--, arg0 += 6) {
+            func_8413F32C(arg0, arg1, buf[i]);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1690,7 +1706,7 @@ extern s16 D_84186BE4;
 extern s16 D_84186BE8;
 extern s16 D_84186BEC;
 extern u8 *func_8413D29C(u8);
-extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F390(s16, s16, s16, u16);
 void func_84142F0C(u8 *arg0) {
     s32 var_s0;
     u8 *sp20;
@@ -1715,7 +1731,7 @@ extern u8 D_84186F94[];
 extern u8 func_80062EB0(u8, u8);
 extern void ParticleGfx_SetPrimColor_fragment79(u8 r, u8 g, u8 b, u8 a);
 extern void func_8413F32C(s16 arg0, s16 arg1, u8 arg2);
-extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F390(s16, s16, s16, u16);
 extern void func_8413F498(s16 arg0, s16 arg1, s16 arg2, u16 arg3);
 extern u8 * D_84195208[];
 void func_841430D0(u8 *arg0) {
@@ -1763,7 +1779,7 @@ extern u8 func_80062DD4(u8);
 extern u8 func_80062EB0(u8, u8);
 extern void ParticleGfx_SetPrimColor_fragment79(u8, u8, u8, u8);
 extern void func_8413F32C(s16, s16, u8);
-extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F390(s16, s16, s16, u16);
 extern void func_8413F498(s16, s16, s16, u16);
 extern s32 func_8413E840(f32);
 
@@ -1833,7 +1849,7 @@ typedef struct {
 extern u8 *D_841951F8;
 extern u8 func_8413FD04(u8,u8,u8);
 extern void func_8413F32C(s16,s16,u8);
-extern void func_8413F390(s16,s16,s32,u16);
+extern void func_8413F390(s16, s16, s16, u16);
 extern void func_8413F498(s16,s16,s16,u16);
 extern s16 D_84186CFC,D_84186D04,D_84186D08,D_84186D0C,D_84186D10,D_84186D14;
 void BattlePanel_DrawPartyLevelHpColumns(u8 *state) {
@@ -1865,7 +1881,7 @@ void BattlePanel_DrawPartyLevelHpColumns(u8 *state) {
 extern u8 *D_841951F8;
 extern s16 D_84186CFC,D_84186D04,D_84186D08,D_84186D0C,D_84186D10,D_84186D14;
 extern void func_8413F32C(s16,s16,u8);
-extern void func_8413F390(s16,s16,s32,u16);
+extern void func_8413F390(s16, s16, s16, u16);
 extern void func_8413F498(s16,s16,s16,u16);
 void BattlePanel_DrawPartyLevelHpGrid(u8 *state)
 {
@@ -1905,7 +1921,7 @@ extern u8 *D_84195208[];
 extern u8 D_84186F94[];
 extern s16 D_84186D54,D_84186D64,D_84186D68,D_84186D6C,D_84186D70,D_84186D74,D_84186D84,D_84186D88,D_84186D8C,D_84186D90;
 extern void func_8413F32C(s16,s16,u8);
-extern void func_8413F390(s16,s16,s32,u16);
+extern void func_8413F390(s16, s16, s16, u16);
 extern void func_8413F498(s16,s16,s16,u16);
 extern void ParticleGfx_SetPrimColor_fragment79(u8,u8,u8,u8);
 extern u8 func_80062EB0(u8,u8);
@@ -1951,7 +1967,7 @@ void BattlePanel_DrawSelectedLevelHpAndPp(u8 *state) {
 extern s16 D_84186EC4;
 extern s16 D_84186EC8;
 extern s16 D_84186ECC;
-extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F390(s16, s16, s16, u16);
 void func_84143BF4(void *arg0) {
     u16 sp26;
 
@@ -1972,7 +1988,7 @@ void func_84143BF4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8413F390(s16, s16, s32, u16);
+extern void func_8413F390(s16, s16, s16, u16);
 extern s16 D_84186E9C;
 extern s16 D_84186EA0;
 void func_84143CF0(void *arg0) {
