@@ -1690,6 +1690,7 @@ SECTIONS
         build/src/fragments/17/fragment17_10F9E0.o(.text);
         build/src/fragments/17/fragment17_10FFC0.o(.text);
         build/src/fragments/17/fragment17_113A60.o(.text);
+        build/src/fragments/17/fragment17_1154C0.o(.text);
         build/src/fragments/17/fragment17_1162A0.o(.text);
         build/src/fragments/17/fragment17_11A7F0.o(.text);
         build/src/fragments/17/fragment17_11B210.o(.text);
@@ -1704,6 +1705,8 @@ SECTIONS
         build/src/fragments/17/fragment17_10FFC0.o(.data);
         fragments_17_fragment17_113A60 = .;
         build/src/fragments/17/fragment17_113A60.o(.data);
+        fragments_17_fragment17_1154C0 = .;
+        build/src/fragments/17/fragment17_1154C0.o(.data);
         fragments_17_fragment17_1162A0 = .;
         build/src/fragments/17/fragment17_1162A0.o(.data);
         fragments_17_fragment17_11A7F0 = .;
@@ -1720,6 +1723,7 @@ SECTIONS
         build/asm/us/data/11DA80.rodata.o(.rodata);
         build/src/fragments/17/fragment17_10FFC0.o(.rodata);
         build/src/fragments/17/fragment17_113A60.o(.rodata);
+        build/src/fragments/17/fragment17_1154C0.o(.rodata);
         build/asm/us/data/11DAD0.rodata.o(.rodata);
         build/src/fragments/17/fragment17_1162A0.o(.rodata);
         build/src/fragments/17/fragment17_11A7F0.o(.rodata);
@@ -1737,6 +1741,7 @@ SECTIONS
         build/src/fragments/17/fragment17_10F9E0.o(.bss);
         build/src/fragments/17/fragment17_10FFC0.o(.bss);
         build/src/fragments/17/fragment17_113A60.o(.bss);
+        build/src/fragments/17/fragment17_1154C0.o(.bss);
         build/src/fragments/17/fragment17_1162A0.o(.bss);
         build/src/fragments/17/fragment17_11A7F0.o(.bss);
         build/src/fragments/17/fragment17_11B210.o(.bss);
