@@ -634,7 +634,46 @@ void func_82801BE8(u8 *arg0, void *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801D7C.s")
+extern s32 func_800472E0(s32);
+extern void func_81607408(void);
+extern u8 D_82802844[][3];
+void func_82801D7C(u8 *arg0, s32 arg1, s32 arg2) {
+    // Last panel color, a function-scope static at 0x82802A60; storing it inside
+    // the call argument gives retail's store placement.
+    static u8 *D_82802A60;
+    s32 text;
+    s32 width;
+    s32 lines;
+    s32 height;
+    f32 ratio;
+    u8 *color;
+    s32 start;
+
+    text = func_8004C874(0x19, func_82800B94(arg0) != 0 ? 0 : 0xC);
+    width = func_80049148(0x10, 1, text) + 0x16;
+    lines = func_800472E0(text);
+    height = lines * 0x18 + 0x12;
+    if (func_82800BB4(arg0) != 0) {
+        ratio = 1.0f;
+    } else {
+        ratio = D_8160BD08(*(f32 *)(arg0 + 4) / 12.0f);
+    }
+    if (*(s32 *)(arg0 + 0x8C) != 0 && (*(s32 *)arg0 << 2) < 0) {
+        color = D_82802844[1];
+    } else {
+        color = D_82802844[func_82800B94(arg0)];
+    }
+    start = -width;
+    Fragment11_DrawBorderedPanelFill((s16)((f32)(arg1 - width / 2 - start) * ratio + (f32)start), (s16)arg2, (s16)(f32)width, (s16)(f32)height, 1, D_82802A60 = color);
+    if (ratio > 0.99f) {
+        func_800498C4();
+        func_800496A4(0x10, 1);
+        func_8004989C(0x14);
+        func_800495F8(arg1, (s16)arg2 + 7, 1, text);
+        func_800499EC();
+    }
+    func_81607408();
+}
 
 /* mkdraft:func_82801F88 begin */
 extern u8 D_8280284C[][3];
