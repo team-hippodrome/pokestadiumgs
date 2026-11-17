@@ -20,9 +20,9 @@ typedef struct F17FadeRenderState {
     s16 active_buffer;
     F17FadeClipBuffer buffers[2];
 } F17FadeRenderState;
-// The constructor enumerates 100 rectangle names for each clipping buffer.
 // Legacy D_8220EC40..D_8220EC4A views address this same loader-cleared state.
 static F17FadeRenderState sFadeState;
+// The constructor enumerates 100 rectangle names for each clipping buffer.
 
 typedef struct F17TransitionState {
     s16 state;
@@ -46,7 +46,6 @@ typedef struct F17TransitionRecord {
     s16 unk_1C;
     s16 unk_1E;
 } F17TransitionRecord;
-static F17TransitionRecord sTransitionRecord = { 0 };
 extern s16 D_822106B2;
 extern s16 D_822106CC, D_822106CE;
 extern s16 D_822106BA;
@@ -1016,7 +1015,158 @@ void func_82208954(s32 arg0) {
 
 s32 func_822089C0(void) { s32 result = 0; s32 limit; if (func_8220D67C()) limit = 15; else limit = 30; D_8220EB80[2] = D_8220EB80[2] + 1; if (D_8220EB80[2] >= limit) result = 1; return result; }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82208A1C.s")
+extern void *D_8220DA08;
+extern s32 D_8220DA10;
+extern u8 D_8220D8D0[];
+extern s32 func_8220AE10(void);
+extern s32 func_8220AD04(void);
+extern void func_800226C0(s32);
+extern void func_82204430(s32);
+extern void func_8220ACF4(void);
+extern s32 func_80054E10(s32);
+extern s32 func_8220D630(void);
+extern void func_80035424(s32);
+extern void func_800225C4(s32);
+extern void StageContext_SetClearColor(u16);
+extern s32 StageFade_StartFromTransparent(s32);
+extern s32 func_822085EC(void);
+extern s32 func_82208678(void);
+extern s32 func_822088FC(void);
+extern s32 func_822089C0(void);
+extern void func_82208954(s32);
+s32 func_82208A1C(s32 arg0) {
+    s32 state = arg0;
+    s32 v;
+    s16 *countdown = &sFadeState.countdown;
+    s16 *activeBuffer = &sFadeState.active_buffer;
+
+    switch (state) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            state = 1;
+        }
+        break;
+    case 1:
+        if (func_822085EC() != 0) {
+            state = 2;
+            *countdown = 2;
+        }
+        break;
+    case 2:
+        guRandom();
+        if (func_8220AE10() != 0 && D_8220DA10 != 0 && (*(u16 *)((u8 *)D_80087200 + 8) & 1)) {
+            s16 *p = *(s16 **)((u8 *)D_8220DA08 + 0x20);
+            *p ^= 1;
+            func_800226C0(0x12);
+        }
+        v = func_8220AD04();
+        switch (v) {
+        case 0:
+            *(s32 *)D_8220DA08 = v;
+            state = 3;
+            D_8220EB84 = 0;
+            func_82204430(3);
+            D_8220EC38 = 1;
+            break;
+        case 1:
+            *(s32 *)D_8220DA08 = v;
+            if (func_80054E10(*(s32 *)((u8 *)D_8220DA08 + 0x20) + 8) != 0) {
+                state = 6;
+                func_8220D630();
+                *(s16 *)((u8 *)D_8220DA08 + 0x26) = 1;
+            } else {
+                state = 7;
+                func_82208954(v);
+            }
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            *(s32 *)D_8220DA08 = v;
+            state = 7;
+            func_82208954(v);
+            break;
+        case -2:
+            *(s32 *)D_8220DA08 = -1;
+            state = 8;
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(5);
+            func_80035424(0xF);
+            break;
+        }
+        switch (state) {
+        case 7:
+            *countdown = -1;
+            break;
+        case 6:
+            *countdown = 0x14;
+            *activeBuffer = 1;
+            break;
+        }
+        break;
+    case 3:
+        v = func_82208678();
+        if (v != 0) {
+            if (v == 1) {
+                state = 4;
+                D_8220EB84 = 0;
+            } else if (v == -1) {
+                state = 2;
+                D_8220EB84 = 0;
+                func_82204430(4);
+                D_8220EC38 = 0;
+                func_8220ACF4();
+            }
+        }
+        break;
+    case 4:
+        v = func_8220AD04();
+        if (v == 0) {
+            state = 7;
+            func_82208954(v);
+        }
+        if (state == 7) {
+            *countdown = -1;
+        }
+        break;
+    case 6:
+        if (func_822088FC() != 0) {
+            state = 7;
+            D_8220EB84 = 0;
+            *countdown = -1;
+        }
+        break;
+    case 7:
+        if (func_822089C0() != 0) {
+            state = 8;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(5);
+            arg0 = (s32)(D_8220D8D0 + *(s32 *)D_8220DA08 * 52);
+            if (*(s16 *)((u8 *)D_8220DA08 + 0x24) != 0) {
+                func_80035424(5);
+            } else {
+                switch (*(s16 *)arg0) {
+                case 1:
+                    func_80035424(5);
+                    break;
+                case 2:
+                    func_800225C4(10);
+                    break;
+                }
+            }
+        }
+        break;
+    case 8:
+        if (StageContext_GetFadeMode() == 1) {
+            state = 9;
+        }
+        break;
+    }
+    return state;
+}
+
+
 
 extern s32 StageContext_GetFadeMode(void); extern void func_800086A4(s32); extern void StageFade_StartFromOpaque(s32); extern void func_80064D28(void); extern void func_8220B930(void); extern void func_8220C340(void); extern void func_82204148(void); extern s32 func_82208A1C(s32); extern void func_800548C4(void *); extern void func_80051D64(s32, s32); extern s32 D_8220DA0C; extern u8 D_8220EC28[];
 extern void func_82208518(void);
@@ -1056,449 +1206,4 @@ void func_82208DCC(void) {
     func_80051D64(0x14, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82208EB0.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82209000.s")
-
-f32 func_822091E0(f32 arg0) {
-    return 1.5f - arg0;
-}
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_822091F0.s")
-
-extern f32 D_822106B0[];
-extern s16 D_822106B4, D_822106BE;
-extern f32 func_822091E0(f32 arg0);
-void func_82209360(void) {
-    F17TransitionState *transition;
-    f32 *scales;
-    s32 done;
-    s16 *state;
-    f32 progress;
-    f32 scale;
-    f32 width;
-    f32 position;
-    F17TransitionRecord *record;
-    transition = &sTransitionRecord.transition;
-    record = &sTransitionRecord;
-    scales = D_822106B0;
-    state = (s16 *)D_822106B0;
-    state[2]++;
-    done = 0;
-    if (state[2] >= 2) {
-        width = D_822106B4 - 2;
-        progress = width / 5.0f;
-        if (progress >= 1.0f) {
-            progress = 1.0f;
-            done = 1;
-        }
-        scale = (0.6f * progress + 0.4f) * 0.75f;
-        scales[6] = scale;
-        scales[5] = func_822091E0(scale);
-        width = 35.0f;
-        position = 320.0f + width - scales[6] * width;
-        ((s16 *)scales)[15] = (position > 0.0f ? 0.5f : -0.5f) + position;
-        if (done) {
-            transition->state = 3;
-            transition->unk_02 = 0;
-            D_822106BE = 0;
-            scales[5] = 0.75f;
-            record->unk_18 = 0.75f;
-            record->unk_1E = 320;
-        }
-    }
-}
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_822094C4.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_8220980C.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82209974.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_1162A0/func_82209BA4.s")
-
-
-void func_82209E90(void) {
-    D_822106B0[5] = 0.0f;
-    D_822106B0[6] = 0.0f;
-}
-
-extern void func_822091F0(void);
-extern void func_82209360(void);
-extern void func_822094C4(void);
-extern void func_8220980C(void);
-extern void func_82209974(void);
-extern void func_82209BA4(void);
-
-s32 func_82209EA8(void) {
-    switch (D_822106B2) {
-        case 0:
-            break;
-        case 1:
-            func_822091F0();
-            break;
-        case 2:
-            func_82209360();
-            break;
-        case 3:
-            func_822094C4();
-            break;
-        case 4:
-            func_8220980C();
-            break;
-        case 5:
-            func_82209974();
-            break;
-        case 6:
-            func_82209BA4();
-            break;
-        case 7:
-            func_82209E90();
-            break;
-    }
-}
-
-extern s16 D_822106D2;
-s32 func_82209F50(void *arg0) {
-    s32 pad[4]; // FAKE: reserves the 0x38-byte frame, as in sibling func_8220A098.
-    f32 fade;
-    f32 x;
-    f32 y;
-
-    fade = 1.0f - (f32)(320 - D_822106CE) / 360.0f;
-    if (fade < 0.001f) {
-        fade = 0.0f;
-    } else if (1.0f < fade) {
-        fade = 1.0f;
-    }
-    x = D_822106C4 * fade;
-    y = D_822106C8 * fade;
-    if (D_822106B6 & 1) {
-        x = 0.0f - x;
-    }
-    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x24), (f32)D_822106CC - 320.0f, 240.0f - (f32)(D_822106D2 + 0x15E), -579.0f);
-    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x30), x, y, 1.0f);
-}
-
-// Sets the vectors at arg0 + 0x24 to the screen point (D_822106CC, D_822106CE) relative to the
-// 640x480 center at depth -579, and at arg0 + 0x30 to (x, D_822106C8, 1), where x is
-// D_822106B0[5], negated when bit 0 of the halfword at D_822106B0 + 6 is set.
-s32 func_8220A098(void *arg0) {
-    s32 pad[4]; // FAKE: reserves the 0x30-byte frame; diff score 58 without it.
-    f32 x;
-
-    x = D_822106B0[5];
-    if (*(u16 *)((u8 *)D_822106B0 + 6) & 1) {
-        x = 0.0f - x;
-    }
-    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x24), D_822106CC - 320.0f, 240.0f - D_822106CE, -579.0f);
-    Vec3f_SetComponentsDuplicate((f32 *)((u8 *)arg0 + 0x30), x, D_822106C8, 1.0f);
-}
-
-extern s32 func_82208EB0(void *);
-extern s32 func_82209F50(void *);
-extern s32 func_8220A098(void *);
-s32 func_8220A154(s32 arg0, void *arg1) { s32 flag = *(s32 *)((u8 *)arg1 + 0x14); switch (arg0) { case 0: func_82208EB0(arg1); break; case 2: if (flag == 0) { func_82209EA8(); func_82209F50(arg1); } else { func_8220A098(arg1); } break; } return 0; }
-
-extern Gfx D_8220DEB0[];
-void func_8220A1C4(s32 texture) {
-    s32 alpha;
-    s32 strip_count;
-    Vtx *vertices;
-    u8 *image;
-    s32 width;
-    s32 remaining_height;
-    s32 index;
-    s32 strip_height;
-    s32 y;
-    f32 fade;
-    f32 alpha_value;
-    f32 rounding;
-    s32 left_x;
-    s32 right_x;
-    s32 pixel_offset;
-    s16 bottom_y;
-    s16 texture_t;
-
-    strip_count = 1;
-    vertices = (Vtx *)Gfx_AllocDisplayList(strip_count * 4 * sizeof(Vtx));
-    width = ((Fragment17TextureHeader *)texture)->width;
-    remaining_height = ((Fragment17TextureHeader *)texture)->height;
-    y = remaining_height / 2;
-    image = func_8004CA60((u8 *)texture);
-    if (vertices != NULL) {
-        fade = 1.0f - (f32)(320 - D_822106CE) / 200.0f;
-        if (fade < 0.001f) {
-            fade = 0.0f;
-        } else if (fade > 1.0f) {
-            fade = 1.0f;
-        }
-        alpha_value = 255.0f * fade;
-        if (alpha_value > 0.0f) {
-            rounding = 0.5f;
-        } else {
-            rounding = -0.5f;
-        }
-        gSPDisplayList(D_800D0510++, D_8220DEB0);
-        alpha = (s32)(rounding + alpha_value);
-        gDPSetEnvColor(D_800D0510++, 255, 255, 255, alpha);
-        left_x = -(width / 2);
-        right_x = left_x + width;
-        for (index = 0; index < strip_count; index++) {
-            if (remaining_height < 34) {
-                strip_height = remaining_height;
-            } else {
-                strip_height = 34;
-            }
-            pixel_offset = index * (width * 34);
-            texture_t = strip_height << 5;
-            bottom_y = y - strip_height;
-            Gfx_SetVertexAttributes(vertices, (s16)left_x, (s16)y, 0, 0, 0, 255, 255, 255, 255);
-            Gfx_SetVertexAttributes(vertices + 1, (s16)left_x, bottom_y, 0, 0, strip_height << 5, 255, 255, 255, 255);
-            Gfx_SetVertexAttributes(vertices + 2, (s16)right_x, bottom_y, 0, (s16)(width << 5), texture_t, 255, 255, 255, 255);
-            Gfx_SetVertexAttributes(vertices + 3, (s16)right_x, (s16)y, 0, (s16)(width << 5), 0, 255, 255, 255, 255);
-            func_800459AC((s32)(image + pixel_offset), ((Fragment17TextureHeader *)texture)->format,
-                          ((Fragment17TextureHeader *)texture)->size, width, strip_height,
-                          1, 0, 2, 2, 0, 0, 0, 0);
-            gSPVertex(D_800D0510++, vertices, 4, 0);
-            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
-            vertices += 4;
-            y -= strip_height;
-            remaining_height -= strip_height;
-        }
-    }
-}
-
-extern void GeoRender_ApplyMaterialState();
-extern void func_8220A1C4(s32);
-extern s32 D_82210844;
-s32 func_8220A5BC(s32 arg0, s32 arg1) {
-    if ((arg0 != 0) && (arg0 == 5) && (D_82210844 != 0)) {
-        func_8220A1C4(D_82210844);
-        GeoRender_ApplyMaterialState();
-    }
-    return 0;
-}
-
-void func_8220A608(s32 texture) {
-    s32 intensity;
-    Vtx *vertices;
-    s32 width;
-    s32 remaining_height;
-    u8 *image;
-    s32 index;
-    s32 y;
-    s32 strip_height;
-    f32 fade;
-    f32 intensity_value;
-    f32 rounding;
-    s32 left_x;
-    s32 right_x;
-    s16 bottom_y;
-    s16 texture_t;
-
-    vertices = (Vtx *)Gfx_AllocDisplayList(3 * 4 * sizeof(Vtx));
-    width = ((Fragment17TextureHeader *)texture)->width;
-    remaining_height = ((Fragment17TextureHeader *)texture)->height;
-    y = remaining_height / 2;
-    image = func_8004CA60((u8 *)texture);
-    if (vertices != NULL) {
-        fade = 1.0f - (f32)(320 - D_822106CE) / 360.0f;
-        if (fade < 0.001f) {
-            fade = 0.0f;
-        } else if (fade > 1.0f) {
-            fade = 1.0f;
-        }
-        intensity_value = 255.0f * fade;
-        if (intensity_value > 0.0f) {
-            rounding = 0.5f;
-        } else {
-            rounding = -0.5f;
-        }
-        gSPDisplayList(D_800D0510++, D_8220DEB0);
-        intensity = (s32)(rounding + intensity_value);
-        gDPSetEnvColor(D_800D0510++, intensity, intensity, intensity, 255);
-        left_x = -(width / 2);
-        right_x = left_x + width;
-        for (index = 0; index < 3; index++) {
-            if (remaining_height < 24) {
-                strip_height = remaining_height;
-            } else {
-                strip_height = 24;
-            }
-            texture_t = strip_height << 5;
-            bottom_y = y - strip_height;
-            Gfx_SetVertexAttributes(vertices, (s16)left_x, (s16)y, 0, 0, 0, 255, 255, 255, 255);
-            Gfx_SetVertexAttributes(vertices + 1, (s16)left_x, bottom_y, 0, 0, strip_height << 5, 255, 255, 255, 255);
-            Gfx_SetVertexAttributes(vertices + 2, (s16)right_x, bottom_y, 0, (s16)(width << 5), texture_t, 255, 255, 255, 255);
-            Gfx_SetVertexAttributes(vertices + 3, (s16)right_x, (s16)y, 0, (s16)(width << 5), 0, 255, 255, 255, 255);
-            func_800459AC((s32)(image + index * (width * 48)), ((Fragment17TextureHeader *)texture)->format,
-                          ((Fragment17TextureHeader *)texture)->size, width, strip_height,
-                          1, 0, 2, 2, 0, 0, 0, 0);
-            gSPVertex(D_800D0510++, vertices, 4, 0);
-            gSP2Triangles(D_800D0510++, 0, 1, 2, 0, 0, 2, 3, 0);
-            vertices += 4;
-            y -= strip_height;
-            remaining_height -= strip_height;
-        }
-    }
-}
-
-extern void func_8220A608(s32);
-extern s32 D_822109B4;
-s32 func_8220AA08(s32 arg0, s32 arg1) {
-    if ((arg0 != 0) && (arg0 == 5) && (D_822109B4 != 0)) {
-        func_8220A608(D_822109B4);
-        GeoRender_ApplyMaterialState();
-    }
-    return 0;
-}
-
-typedef struct Fragment17TransitionModelRecord {
-    u8 model[360];
-    void *layout;
-    u8 unk_16C[4];
-} Fragment17TransitionModelRecord;
-extern Fragment17TransitionModelRecord D_822106D8[];
-extern void *D_8220DED8[];
-void func_8220AA54(s32 arg0, s32 arg1) {
-    s32 index;
-    struct S1_MemoryBlock *pool;
-    Fragment17TransitionModelRecord *record;
-    Fragment17TransitionModelRecord *entry;
-    Fragment17ChoiceEntry *choice;
-    s16 *selection;
-
-    selection = (s16 *)D_822106B0;
-    for (index = 0; index < 6; index++) {
-        choice = &D_8220DEF4[index];
-        if (index == 5) {
-            choice->enabled = arg1;
-        } else {
-            choice->enabled = 1;
-        }
-    }
-    *selection = arg0;
-    do {
-        choice = &D_8220DEF4[*selection];
-        if (choice->enabled != 0) {
-            break;
-        }
-        if (*selection > 0) {
-            --*selection;
-        }
-    } while (*selection > 0);
-    pool = (struct S1_MemoryBlock *)MainPool_AllocState(main_pool_get_available(), 0);
-    for (index = 0; index < 2; index++) {
-        entry = &D_822106D8[index];
-        entry->layout = process_geo_layout(pool, D_8220DED8[index]);
-    }
-    MainPool_FinalizeAllocation(pool);
-    for (index = 0; index < 2; index++) {
-        record = &D_822106D8[index];
-        func_8003F018((s32)record->model);
-        func_80037E3C(record->model, func_8220A154, (void *)index);
-        func_8003F114(record->model, 0, -1, record->layout);
-    }
-}
-
-/* mkdraft:func_8220AC38 begin */
-
-s32 func_8220AC38(void) {
-    F17TransitionState *state = &sTransitionRecord.transition;
-    s32 ret = 0;
-    if (*(s16 *)(D_82210698 + 0x1A) == 0) {
-        state->state = 1;
-        state->unk_02 = 0;
-        ret = 1;
-    }
-    return ret;
-}
-/* mkdraft:func_8220AC38 end */
-
-typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
-extern s16 D_822106D4;
-s32 func_8220AC64(void) {
-    F17TransitionState *state = &sTransitionRecord.transition;
-    s32 result = 0;
-
-    if (*(s16 *)(D_82210698 + 0x1A) == 3) {
-        state->state = 5;
-        state->unk_02 = 0;
-        *(unk_func_8220AC64_pair *)&D_822106D4 = *(unk_func_8220AC64_pair *)&D_822106CC;
-        D_822106C4 = 0.75f;
-        D_822106C8 = 0.75f;
-        D_822106BA = -1;
-        func_800226C0(57);
-        result = 1;
-    }
-    return result;
-}
-
-
-void func_8220ACF4(void) {
-    D_822106BA = -1;
-}
-
-s32 func_8220AD04(void) {
-    return D_822106BA;
-}
-
-extern s16 D_822106B8;
-s32 func_8220AD10(void) {
-    return D_822106B8;
-}
-
-
-void func_8220AD1C(s16 *arg0) {
-    arg0[0] = D_822106CC;
-    arg0[1] = D_822106CE;
-}
-
-
-void func_8220AD38(s32 arg0, void *arg1) {
-    void *temp_v0;
-
-    if (arg0 < 6) {
-        temp_v0 = &D_8220DEF4[arg0];
-        (*(s16 *)((u8 *)(temp_v0) + (0xC))) = (s16) (*(s16 *)((u8 *)(arg1) + (0)));
-        (*(s16 *)((u8 *)(temp_v0) + (0xE))) = (s16) (*(s16 *)((u8 *)(arg1) + (2)));
-    }
-}
-
-
-void func_8220AD70(s32 arg0, void *arg1) {
-    void *temp_v0;
-
-    if (arg0 < 6) {
-        temp_v0 = &D_8220DEF4[arg0];
-        (*(s16 *)((u8 *)(arg1) + (0))) = (s16) (*(s16 *)((u8 *)(temp_v0) + (0xC)));
-        (*(s16 *)((u8 *)(arg1) + (2))) = (s16) (*(s16 *)((u8 *)(temp_v0) + (0xE)));
-    }
-}
-
-
-void func_8220ADA8(s32 arg0, void *arg1) {
-    void *temp_v0;
-
-    if (arg0 < 6) {
-        temp_v0 = &D_8220DEF4[arg0];
-        (*(s16 *)((u8 *)(temp_v0) + (0x10))) = (s16) (*(s16 *)((u8 *)(arg1) + (0)));
-        (*(s16 *)((u8 *)(temp_v0) + (0x12))) = (s16) (*(s16 *)((u8 *)(arg1) + (2)));
-    }
-}
-
-extern u8 D_8220DEF8[];
-s32 func_8220ADE0(s32 arg0) {
-    s32 result = 0;
-    if ((arg0 >= 0) && (arg0 < 6)) {
-        result = *(s32 *)(D_8220DEF8 + (arg0 * 0x1C));
-    }
-    return result;
-}
-
-
-s32 func_8220AE10(void) {
-    return D_822106B2 == 3;
-}
 #endif
