@@ -458,7 +458,119 @@ s32 func_8FB00FE8(void *arg0)
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB011DC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB01634.s")
+extern s32 Pokemon_StatExpForTarget();
+extern s32 Pokemon_CalculateStat();
+extern s32 func_80062EB0();
+extern void func_800619E8();
+extern s32 func_80061B88(s32, u16);
+s32 func_8FB01634(void *arg0_, void *arg1_) {
+    u8 *arg0 = arg0_;
+    u8 *arg1 = arg1_;
+    u8 *rec;
+    switch (**(u16 **)(arg1 + 0x44)) {
+    case 5:
+        *(u16 *)(arg1 + *(s32 *)(arg1 + 0x38) * 0x220 + 0x58) = *(s32 *)(arg0 + 0x14);
+        break;
+    case 3:
+        *(s32 *)(arg1 + 0x38) = *(s32 *)(arg0 + 0x14) - 1;
+        break;
+    case 13:
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 6) = *(s32 *)(arg0 + 0x14);
+        break;
+    case 25:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1D) = *(s32 *)(arg0 + 0x14);
+        *(s32 *)(*(u8 **)(arg1 + 0x48) + 8) = func_80061B88(**(u8 **)(arg1 + 0x48), *(u16 *)(arg0 + 0x16));
+        func_800619E8(*(u8 **)(arg1 + 0x48));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(rec + 0x26) = *(u16 *)(rec + 0x28);
+        break;
+    case 26:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x20) = *(s32 *)(arg0 + 0x14);
+        break;
+    case 20:
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x16) = *(s32 *)(arg0 + 0x14);
+        func_800619E8(*(u8 **)(arg1 + 0x48));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(rec + 0x26) = *(u16 *)(rec + 0x28);
+        break;
+    case 27:
+        rec = *(u8 **)(arg1 + 0x48);
+        {
+            s32 v = *(s32 *)(arg0 + 0x14);
+            u16 lim = *(u16 *)(rec + 0x28);
+            if (v < lim) {
+                *(u16 *)(rec + 0x26) = v;
+            } else {
+                *(u16 *)(rec + 0x26) = lim;
+            }
+        }
+        break;
+    case 28:
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0xc) = Pokemon_StatExpForTarget(0, rec[0], *(u16 *)(arg0 + 0x16), rec[0x1D], *(u16 *)(rec + 0x16));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x28) = Pokemon_CalculateStat(0, rec[0], *(u16 *)(rec + 0xc), rec[0x1D], *(u16 *)(rec + 0x16));
+        break;
+    case 29:
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0xe) = Pokemon_StatExpForTarget(1, rec[0], *(u16 *)(arg0 + 0x16), rec[0x1D], *(u16 *)(rec + 0x16));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x2a) = Pokemon_CalculateStat(1, rec[0], *(u16 *)(rec + 0xe), rec[0x1D], *(u16 *)(rec + 0x16));
+        break;
+    case 30:
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x10) = Pokemon_StatExpForTarget(2, rec[0], *(u16 *)(arg0 + 0x16), rec[0x1D], *(u16 *)(rec + 0x16));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x2c) = Pokemon_CalculateStat(2, rec[0], *(u16 *)(rec + 0x10), rec[0x1D], *(u16 *)(rec + 0x16));
+        break;
+    case 31:
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x12) = Pokemon_StatExpForTarget(3, rec[0], *(u16 *)(arg0 + 0x16), rec[0x1D], *(u16 *)(rec + 0x16));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x2e) = Pokemon_CalculateStat(3, rec[0], *(u16 *)(rec + 0x12), rec[0x1D], *(u16 *)(rec + 0x16));
+        break;
+    case 32:
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x14) = Pokemon_StatExpForTarget(4, rec[0], *(u16 *)(arg0 + 0x16), rec[0x1D], *(u16 *)(rec + 0x16));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x30) = Pokemon_CalculateStat(4, rec[0], *(u16 *)(rec + 0x14), rec[0x1D], *(u16 *)(rec + 0x16));
+        break;
+    case 33:
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x14) = Pokemon_StatExpForTarget(5, rec[0], *(u16 *)(arg0 + 0x16), rec[0x1D], *(u16 *)(rec + 0x16));
+        rec = *(u8 **)(arg1 + 0x48);
+        *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x32) = Pokemon_CalculateStat(5, rec[0], *(u16 *)(rec + 0x14), rec[0x1D], *(u16 *)(rec + 0x16));
+        break;
+    case 35:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1C) = *(s32 *)(arg0 + 0x14);
+        break;
+    case 21:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x18) = (*(s32 *)(arg0 + 0x14) << 6) | func_80062EB0((*(u8 **)(arg1 + 0x48))[2], (*(s32 *)(arg0 + 0x14) << 6) & 0xFF);
+        break;
+    case 22:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x19) = (*(s32 *)(arg0 + 0x14) << 6) | func_80062EB0((*(u8 **)(arg1 + 0x48))[3], (*(s32 *)(arg0 + 0x14) << 6) & 0xFF);
+        break;
+    case 23:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1a) = (*(s32 *)(arg0 + 0x14) << 6) | func_80062EB0((*(u8 **)(arg1 + 0x48))[4], (*(s32 *)(arg0 + 0x14) << 6) & 0xFF);
+        break;
+    case 24:
+        *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1b) = (*(s32 *)(arg0 + 0x14) << 6) | func_80062EB0((*(u8 **)(arg1 + 0x48))[5], (*(s32 *)(arg0 + 0x14) << 6) & 0xFF);
+        break;
+    case 37:
+        {
+            s32 v = *(u16 *)(arg0 + 0x16);
+            *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x14) = v;
+            *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x10) = v;
+            *(u16 *)(*(u8 **)(arg1 + 0x48) + 0xE) = v;
+            *(u16 *)(*(u8 **)(arg1 + 0x48) + 0xC) = v;
+        }
+        func_800619E8(*(u8 **)(arg1 + 0x48));
+        return 1;
+    default:
+        return 0;
+    }
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB01A74.s")
 
@@ -920,7 +1032,7 @@ extern s32 func_8FB005E4(u8 *);
 extern s32 func_8FB00FE8(void *);
 extern s32 func_8FB01CF8(u8 *, s32, s32);
 extern s32 func_8FB00E40(u8 *, u8 *);
-extern void func_8FB01634(void *, void *);
+extern s32 func_8FB01634(void *, void *);
 /* func_8FB001C0 (s32 (u8 *, u8 *)) and func_8FB02108 (void (unk_func_8FB02108 *))
  * are defined earlier in this file; the calls below compile to the same
  * $a0/$a1 setups under those signatures as under the void * spellings the
