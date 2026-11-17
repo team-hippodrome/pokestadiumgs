@@ -23,8 +23,54 @@ void func_87E12120(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_315A90/func_87E121AC.s")
+extern Gfx *D_800D0510;
 
+extern void *D_8009491C;
+
+extern void *func_8004CA60(void *);
+
+extern void func_8003CD84(void);
+
+void func_87E121AC(s32 arg0, s32 arg1) {
+    u8 *var_v0;
+    u8 *var_a3;
+    if (arg0 == 5) {
+        var_v0 = D_8009491C;
+        var_a3 = *(u8 **)(var_v0 + 20);
+        {
+            volatile Gfx *pipe = D_800D0510++;
+            pipe->words.w1 = 0;
+            pipe->words.w0 = 0xE7000000;
+        }
+        switch (*(s32 *)var_a3) {
+        case 0:
+            gDPSetCombine(D_800D0510++, 0x30FFFF, 0x5FFEF238);
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+            gDPSetEnvColor(D_800D0510++, 193, 160, 6, 255);
+            break;
+        case 1:
+            gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+            break;
+        case 2:
+            gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+            break;
+        case 3:
+            gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF238);
+            break;
+        case 4: case 5: case 6: case 7:
+            gDPSetCombine(D_800D0510++, 0x50FFFF, 0xFFFFF238);
+            {
+                Gfx *env = D_800D0510++;
+                env->words.w0 = 0xFB000000;
+                env->words.w1 = (_SHIFTL(var_v0[63], 0, 8) | (_SHIFTL(var_v0[62], 8, 8) | (_SHIFTL(var_v0[61], 16, 8) | _SHIFTL(var_v0[60], 24, 8))));
+            }
+            break;
+        }
+        gSPSegment(D_800D0510++, 15, func_8004CA60(*(void **)(var_a3 + 4)));
+        gSPDisplayList(D_800D0510++, *(Gfx **)(var_a3 + 8));
+        func_8003CD84();
+    }
+}
 extern u32 D_87E1AB64;
 extern s32 func_8004C990(s32, s32);
 extern void *func_87F025B8(void *, void (*)(void));

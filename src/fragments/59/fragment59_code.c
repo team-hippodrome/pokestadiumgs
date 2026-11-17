@@ -2808,7 +2808,133 @@ void func_8690B89C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690B984.s")
+extern void func_8690B984(void);
+
+void func_8690B984(void) {
+    s32 i;
+    s32 a, b, c, d;
+    s32 current;
+    u8 *controller;
+    for (i = 0; i != 4; i++) {
+        switch (i) {
+case 0: if ((*(u8 **)(D_8691AD58 + 12))[0x2180] != 4 && ((*(u8 **)(D_8691AD58 + 12))[0x2182] & 1)) continue; break;
+case 1: if ((*(u8 **)(D_8691AD58 + 12))[0x2180] != 4 && ((*(u8 **)(D_8691AD58 + 12))[0x2182] & 2)) continue; break;
+case 2: if ((*(u8 **)(D_8691AD58 + 12))[0x2180] != 4 && ((*(u8 **)(D_8691AD58 + 12))[0x2182] & 4)) continue; break;
+case 3: if ((*(u8 **)(D_8691AD58 + 12))[0x2180] != 4 && ((*(u8 **)(D_8691AD58 + 12))[0x2182] & 8)) continue; break;
+}
+controller = D_800CE060 + i * 40;
+*(u16 *)(controller + 8) &= ~0x8000;
+if (D_8690F998) { a = 21; b = 18; c = 15; d = 12; }
+else { a = 25; b = 21; c = 18; d = 14; }
+switch (*(s32 *)(D_8691A2A0 + 0x78)) {
+case 0:
+if (*(s32 *)(D_8691A2A0 + 0x80)) {
+if (D_8691A448.unk_324) {
+if (*(s32 *)(D_8691A2A0 + 0x84) == 0) {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) > a) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+} else {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} else {
+current = *(s32 *)(D_8691A2A0 + i * 4 + 16);
+if (current == 0) *(u16 *)(controller + 8) |= 0x8000;
+if ((D_8691A448.unk_334[i] - current) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] < 2) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} break;
+
+case 1:
+if (*(s32 *)(D_8691A2A0 + 0x80)) {
+if (D_8691A448.unk_324) {
+if (*(s32 *)(D_8691A2A0 + 0x84) == 0) {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) > b) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+} else {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} else {
+current = *(s32 *)(D_8691A2A0 + i * 4 + 16);
+if (current == 0) *(u16 *)(controller + 8) |= 0x8000;
+if ((D_8691A448.unk_334[i] - current) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] < 2) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} break;
+
+case 2:
+if (*(s32 *)(D_8691A2A0 + 0x80)) {
+if (D_8691A448.unk_324) {
+if (*(s32 *)(D_8691A2A0 + 0x84) == 0) {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) > c) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+} else {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} else {
+current = *(s32 *)(D_8691A2A0 + i * 4 + 16);
+if (current == 0) *(u16 *)(controller + 8) |= 0x8000;
+if ((D_8691A448.unk_334[i] - current) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] < 2) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} break;
+
+case 3:
+if (*(s32 *)(D_8691A2A0 + 0x80)) {
+if (D_8691A448.unk_324) {
+if (*(s32 *)(D_8691A2A0 + 0x84) == 0) {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) > d) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+} else {
+if ((D_8691A448.unk_334[i] - *(s32 *)(D_8691A2A0 + i * 4 + 16)) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] == 0) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} else {
+current = *(s32 *)(D_8691A2A0 + i * 4 + 16);
+if (current == 0) *(u16 *)(controller + 8) |= 0x8000;
+if ((D_8691A448.unk_334[i] - current) != 0) {
+ if (*(s32 *)(D_8691A2A0 + i * 4) >= 4) {
+ if (guRandom() % D_8691A448.unk_344[i] < 2) *(u16 *)(controller + 8) |= 0x8000;
+ }
+}
+}
+} break;
+} } }
 #endif
 
 #ifdef VERSION_US

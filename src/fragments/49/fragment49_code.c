@@ -771,8 +771,39 @@ s32 func_86101F60(f32 *x_delta, f32 *y_delta, s32 clamp_y) {
     return moved;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_861021A8.s")
+void func_861021A8(f32 *arg0, f32 *arg1) {
+    f32 min_t;
+    f32 dist;
+    f32 t;
+    void *node;
+    f32 x_end;
+    f32 y_end;
 
+    min_t = 1.0f;
+    node = *(void **)((u8 *)D_8610AD20 + 0xD38);
+    x_end = *(f32 *)((u8 *)D_87F119DC + 0x10) * 20.0f + *(f32 *)((u8 *)D_87F119DC + 0x48);
+    y_end = *(f32 *)((u8 *)D_87F119DC + 0x14) * 20.0f + *(f32 *)((u8 *)D_87F119DC + 0x4C);
+    while (node != NULL) {
+        func_8610167C(
+            *(f32 *)((u8 *)D_87F119DC + 0x48),
+            *(f32 *)((u8 *)D_87F119DC + 0x4C),
+            x_end,
+            y_end,
+            *(f32 *)((u8 *)node + 0x48),
+            *(f32 *)((u8 *)node + 0x4C),
+            &dist,
+            &t
+        );
+        if (dist < ((*(f32 *)((u8 *)D_8610AD20 + 0x9768) * 0.04f) * 700.0f + 19.2f) * 0.65f * 1.7f) {
+            if (t > 0.0f && t < 1.0f && dist < ((*(f32 *)((u8 *)D_8610AD20 + 0x9768) * 0.04f) * 700.0f + 19.2f) * 0.65f * 1.7f && t < min_t) {
+                min_t = t;
+            }
+        }
+        node = *(void **)((u8 *)node + 4);
+    }
+    *arg0 = (((x_end - *(f32 *)((u8 *)D_87F119DC + 0x48)) * min_t) / 20.0f) - *(f32 *)((u8 *)D_87F119DC + 0x10);
+    *arg1 = (((y_end - *(f32 *)((u8 *)D_87F119DC + 0x4C)) * min_t) / 20.0f) - *(f32 *)((u8 *)D_87F119DC + 0x14);
+}
 extern s32 D_8610AD20;
 extern void * D_87F119DC;
 void func_861023D4(void) {

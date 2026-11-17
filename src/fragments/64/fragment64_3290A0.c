@@ -340,8 +340,289 @@ void func_87F06D24(s32 kind, u8 *node) {
 }
 /* mkdraft:func_87F06D24 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3290A0/func_87F06EAC.s")
+extern u32 D_87F10D00[];
 
+extern u32 D_87F15B70[];
+
+extern u32 D_87F10D6C[];
+
+extern u32 D_87F10D74[];
+
+extern u32 D_87F10D7C[];
+
+extern u32 D_87F10D84[];
+
+extern u32 D_87F10D8C[];
+
+extern u32 D_87F10D94[];
+
+extern u32 D_87F10D9C[];
+
+extern u32 D_87F10DA4[];
+
+extern u32 D_87F10DAC[];
+
+extern u32 D_87F10DB4[];
+
+extern u32 D_87F10DBC[];
+
+extern u32 D_87F10DC4[];
+
+extern u32 D_87F10DCC[];
+
+extern u32 D_87F10DD4[];
+
+extern u32 D_87F10DDC[];
+
+extern u32 D_87F10DE4[];
+
+extern u32 D_87F10DEC[];
+
+extern u32 D_87F10DF4[];
+
+extern u32 D_87F10DFC[];
+
+extern u32 D_87F10E04[];
+
+extern u32 D_87F10E0C[];
+
+extern u32 D_87F10E14[];
+
+extern u32 D_87F10E1C[];
+
+extern u32 D_87F10E24[];
+
+extern u32 D_87F10E2C[];
+
+extern u32 D_87F10E34[];
+
+extern u32 D_87F10E50[];
+
+extern u32 D_87F10E98[];
+
+extern u32 D_87F10EB0[];
+
+extern u32 D_87F10EC4[];
+
+extern u32 D_87F10EDC[];
+
+extern u32 D_87F10F30[];
+
+extern u32 D_87F10F84[];
+
+extern u32 D_87F10F98[];
+
+extern u32 D_87F10FC0[];
+
+extern u32 D_87F10FE8[];
+
+extern u32 D_87F11010[];
+
+extern u32 D_87F11070[];
+
+extern u32 D_87F110B8[];
+
+extern u32 D_87F11100[];
+
+extern u32 D_87F11148[];
+
+extern u32 D_87F11164[];
+
+extern u32 D_87F11180[];
+
+extern void func_80055948(s32);
+
+extern void func_8005493C(u16 *);
+
+extern void func_87F0E390(u8 *, u8 *);
+
+extern void func_8004C4B0(s32);
+
+extern s32 func_8004DC6C(s32);
+
+extern s32 main_pool_get_available(void);
+
+extern s32 MainPool_AllocState(s32, s32);
+
+extern s32 func_80040E80(s32, void *);
+
+extern void func_80037E9C(s32, void *);
+
+extern s32 func_8004EB58(s32, s32);
+
+extern void MainPool_FinalizeAllocation(s32);
+
+extern void func_8004DCFC(s32, u32 *);
+
+extern s32 func_8004C8C0(s32);
+
+extern void func_87F0A6C8(s32, u32, u32 *, u32 *);
+
+extern void func_87F0A988(s32, s32, u32, u32, u32 *, u32 *);
+
+extern void func_87F0AA80(s32, u32, void *);
+
+extern void *func_87F0AB08(s32, u32, void (*)(s32, u8 *), s32);
+
+extern void func_87F0A688(s32, u32, s32);
+
+void func_87F06EAC(register s32 arg0, u8 *arg1, u8 *arg2) {
+u16 sp48[4];
+s32 state;
+u32 color1;
+u32 color2;
+u32 *colors2;
+u32 *colors3;
+func_80055948(3);
+func_8005493C(sp48);
+D_87F15B88 = arg1;
+*(s32 *)(arg1 + 40) = 0;
+func_87F0E390(arg1 + 44, arg2);
+func_8004C4B0(68);
+*(s32 *)arg1 = func_8004DC6C(arg0);
+if (*(s32 *)arg1 != 0) {
+state = MainPool_AllocState(main_pool_get_available(), 0);
+*(s32 *)(arg1 + 12) = func_80040E80(state, D_87F10D00);
+func_80037E9C(0, D_87F15B70);
+*(s32 *)(arg1 + 4) = func_8004EB58(state, *(s32 *)arg1);
+MainPool_FinalizeAllocation(state);
+func_8004DCFC(*(s32 *)arg1, (u32 *)(arg1 + 8));
+func_8004C8C0(427);
+func_8004C8C0(428);
+*(u32 *)(arg1 + 8) |= 3;
+switch (arg0) {
+case 97: colors2 = D_87F10D6C; break;
+case 110: colors2 = D_87F10D74; break;
+case 106: colors2 = D_87F10D7C; break;
+case 108: colors2 = D_87F10D84; break;
+case 103: colors2 = D_87F10D8C; break;
+case 105: colors2 = D_87F10D94; break;
+case 100: colors2 = D_87F10D9C; break;
+case 111: colors2 = D_87F10DA4; break;
+case 107: colors2 = D_87F10DAC; break;
+case 109: colors2 = D_87F10DB4; break;
+case 153: colors2 = D_87F10DBC; break;
+case 154: colors2 = D_87F10DC4; break;
+default: colors2 = D_87F10D6C; break;
+}
+func_87F0A6C8(*(s32 *)(arg1+4), 0x544C3143, colors2, colors2+1);
+color1 = 0x2F2FC3FF;
+color2 = 0x000000FF;
+func_87F0A6C8(*(s32 *)(arg1+4), 0x504D3143, &color1, &color2);
+color1 = 0x2D7908FF;
+func_87F0A6C8(*(s32 *)(arg1+4), 0x504D3243, &color1, &color2);
+color1 = 0xD11C1CFF;
+func_87F0A6C8(*(s32 *)(arg1+4), 0x504D3343, &color1, &color2);
+color1 = 0xDD8200FF;
+func_87F0A6C8(*(s32 *)(arg1+4), 0x504D3443, &color1, &color2);
+switch (arg0) {
+case 97: colors2 = D_87F10DCC;
+colors3 = D_87F10E2C; break;
+case 110: colors2 = D_87F10DD4;
+colors3 = D_87F10E34; break;
+case 106: colors2 = D_87F10DDC;
+colors3 = D_87F10E34; break;
+case 108: colors2 = D_87F10DE4;
+colors3 = D_87F10E2C; break;
+case 103: colors2 = D_87F10DEC;
+colors3 = D_87F10E34; break;
+case 105: colors2 = D_87F10DF4;
+colors3 = D_87F10E34; break;
+case 100: colors2 = D_87F10DFC;
+colors3 = D_87F10E34; break;
+case 111: colors2 = D_87F10E04;
+colors3 = D_87F10E2C; break;
+case 107: colors2 = D_87F10E0C;
+colors3 = D_87F10E34; break;
+case 109: colors2 = D_87F10E14;
+colors3 = D_87F10E2C; break;
+case 153: colors2 = D_87F10E1C;
+colors3 = D_87F10E2C; break;
+case 154: colors2 = D_87F10E24;
+colors3 = D_87F10E34; break;
+default: colors2 = D_87F10DCC;
+colors3 = D_87F10E2C; break;
+}
+func_87F0A988(*(s32 *)(arg1+4), 1, 0x57443141, 0x57443142, colors2, colors2+1);
+func_87F0A988(*(s32 *)(arg1+4), 1, 0x57443241, 0x57443242, colors3, colors3+1);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x535F4D31, D_87F10F98);
+
+switch (arg0) {
+case 97:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D31, D_87F10E98);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x545F4D31, D_87F10FC0);
+break;
+case 110:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x4C5F4D31, D_87F11164);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x525F4D31, D_87F11180);
+break;
+case 106:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D33, D_87F10F30);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x425F4D31, D_87F10F84);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x4A5F4D32, D_87F11148);
+break;
+case 108:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x545F4D33, D_87F11010);
+break;
+case 103:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D35, D_87F10E98);
+break;
+case 105:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D32, D_87F10EB0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565031, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565032, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565033, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565034, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565035, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565036, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565037, func_87F06AA8, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x45565038, func_87F06AA8, 1);
+break;
+case 100:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D34, D_87F10EC4);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x4A5F4D33, D_87F11100);
+break;
+case 111:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x545F4D34, D_87F10FE8);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425031, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425032, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425033, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425034, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425035, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425036, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425037, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425038, func_87F0691C, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x44425039, func_87F0691C, 0);
+if (sp48[0] & 1) func_87F0A688(*(s32 *)(arg1+4), 0x4742415F, 0);
+if (sp48[0] & 2) func_87F0A688(*(s32 *)(arg1+4), 0x43554245, 4);
+break;
+case 107:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D32, D_87F10EB0);
+break;
+case 109:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D32, D_87F10EB0);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x545F4D32, D_87F11070);
+break;
+case 153:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D32, D_87F10EB0);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x545F4D31, D_87F10FC0);
+break;
+case 154:
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D33, D_87F10EDC);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x4A5F4D31, D_87F110B8);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x4f545031, func_87F06D24, 0);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x4f545032, func_87F06D24, 1);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x4f545033, func_87F06D24, 2);
+func_87F0AB08(*(s32 *)(arg1 + 4), 0x4f545034, func_87F06D24, 3);
+break;
+default: func_87F0AA80(*(s32 *)(arg1 + 4), 0x415F4D31, D_87F10E50);
+func_87F0AA80(*(s32 *)(arg1 + 4), 0x545F4D31, D_87F10FC0);
+break;
+}
+arg1[16] = arg2[0x2182];
+func_87F06734(arg0, arg1, arg2);
+}
+}
 extern Gfx *D_800D0510;
 extern f32 D_80087E50[];
 extern s32 func_8004C990(s32, s32);
