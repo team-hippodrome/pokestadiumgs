@@ -181,38 +181,111 @@ void func_8290711C(s32 arg0) {
     }
 }
 
-// Byte 0: sequence state (0 = reset counter, 1 = advancing, 2 = finished after frame 61).
-// Byte 2: frame counter passed to the seven interpolation steps called below.
-// The f32s at +4 and +8 are D_82919D4C and D_82919D50.
-extern u8 D_82919D48[];
+typedef struct {
+    /* 0x00 */ u8 state; // 0 = reset counter, 1 = advancing, 2 = finished after frame 61
+    /* 0x01 */ u8 unk01;
+    /* 0x02 */ u8 frame; // passed to the seven interpolation steps in func_82907188
+    /* 0x03 */ u8 unk03;
+    /* 0x04 */ f32 f04; // D_82919D4C
+    /* 0x08 */ f32 f08; // D_82919D50
+    /* 0x0C */ f32 f0C, f10, f14, f18; // prim color for the center text
+    /* 0x1C */ f32 f1C, f20, f24;      // env color for the center text
+    /* 0x28 */ f32 f28, f2C, f30, f34; // prim color for the vertical pair
+    /* 0x38 */ f32 f38, f3C, f40;      // env color for the vertical pair
+    /* 0x44 */ f32 f44, f48, f4C, f50; // prim color for the horizontal pair
+    /* 0x54 */ f32 f54, f58, f5C;      // env color for the horizontal pair
+    /* 0x60 */ f32 f60, f64, f68;
+    /* 0x6C */ f32 f6C; // alpha of the top text
+} F67TextBlock;
+
+extern F67TextBlock D_82919D48;
 void func_82907188(void) {
-    switch (D_82919D48[0]) {
+    switch (D_82919D48.state) {
     case 0:
-        D_82919D48[0] = 1;
-        D_82919D48[2] = 0;
-        func_82906D64(D_82919D48[2]);
-        func_82906CC8(D_82919D48[2]);
-        func_82906EC4(D_82919D48[2]);
-        func_82906DFC(D_82919D48[2]);
-        func_82907054(D_82919D48[2]);
-        func_82906F8C(D_82919D48[2]);
-        func_8290711C(D_82919D48[2]);
+        D_82919D48.state = 1;
+        D_82919D48.frame = 0;
+        func_82906D64(D_82919D48.frame);
+        func_82906CC8(D_82919D48.frame);
+        func_82906EC4(D_82919D48.frame);
+        func_82906DFC(D_82919D48.frame);
+        func_82907054(D_82919D48.frame);
+        func_82906F8C(D_82919D48.frame);
+        func_8290711C(D_82919D48.frame);
         break;
     case 1:
-        D_82919D48[2]++;
-        func_82906D64(D_82919D48[2]);
-        func_82906CC8(D_82919D48[2]);
-        func_82906EC4(D_82919D48[2]);
-        func_82906DFC(D_82919D48[2]);
-        func_82907054(D_82919D48[2]);
-        func_82906F8C(D_82919D48[2]);
-        func_8290711C(D_82919D48[2]);
-        if (D_82919D48[2] == 61) {
-            D_82919D48[0] = 2;
+        D_82919D48.frame++;
+        func_82906D64(D_82919D48.frame);
+        func_82906CC8(D_82919D48.frame);
+        func_82906EC4(D_82919D48.frame);
+        func_82906DFC(D_82919D48.frame);
+        func_82907054(D_82919D48.frame);
+        func_82906F8C(D_82919D48.frame);
+        func_8290711C(D_82919D48.frame);
+        if (D_82919D48.frame == 61) {
+            D_82919D48.state = 2;
         }
         break;
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_343510/func_82907274.s")
+
+extern Gfx D_829124D0[];
+extern Gfx D_829124A0[];
+extern Gfx *D_800D0510;
+extern char *func_8004B7A4(s32);
+extern s32 func_80049148(s32, s32, char *);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800497E4(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_800499EC(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern char D_829174E0[], D_829174E4[], D_829174E8[], D_829174EC[], D_829174F0[], D_829174F4[];
+
+void func_82907274(s16 arg0) {
+    char *str;
+    s32 halfW;
+
+    if (D_82919D48.state == 0) {
+        return;
+    }
+    str = func_8004B7A4(arg0);
+    halfW = func_80049148(0x10, 0, str) / 2;
+    func_800498C4();
+    func_800496A4(0x10, 0);
+    gSPDisplayList(D_800D0510++, D_829124D0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, (u8)D_82919D48.f54, (u8)D_82919D48.f58, (u8)D_82919D48.f5C, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, (u8)D_82919D48.f44, (u8)D_82919D48.f48, (u8)D_82919D48.f4C, (u8)D_82919D48.f50);
+    func_800495BC((0xA0 - halfW) - (s16)(s32)D_82919D48.f08, 0xB4, D_829174E0, str);
+    func_800495BC((0xA0 - halfW) + (s16)(s32)D_82919D48.f08, 0xB4, D_829174E4, str);
+    func_800499EC();
+    func_800498C4();
+    func_800496A4(0x10, 0);
+    gSPDisplayList(D_800D0510++, D_829124D0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, (u8)D_82919D48.f38, (u8)D_82919D48.f3C, (u8)D_82919D48.f40, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, (u8)D_82919D48.f28, (u8)D_82919D48.f2C, (u8)D_82919D48.f30, (u8)D_82919D48.f34);
+    func_800495BC((0xA0 - halfW) - (s16)(s32)D_82919D48.f04, 0xB4, D_829174E8, str);
+    func_800495BC((0xA0 - halfW) + (s16)(s32)D_82919D48.f04, 0xB4, D_829174EC, str);
+    func_800499EC();
+    func_800498C4();
+    func_800496A4(0x10, 0);
+    gSPDisplayList(D_800D0510++, D_829124A0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, (u8)D_82919D48.f1C, (u8)D_82919D48.f20, (u8)D_82919D48.f24, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, (u8)D_82919D48.f0C, (u8)D_82919D48.f10, (u8)D_82919D48.f14, (u8)D_82919D48.f18);
+    func_800495BC((0xA0 - halfW), 0xB4, D_829174F0, str);
+    func_800499EC();
+    func_800498C4();
+    func_800496A4(0x10, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0, 0x80, 0xFF, (u8)D_82919D48.f6C);
+    func_800497E4(0xFF, 0xFF, 0xFF, (u8)D_82919D48.f6C);
+    func_800495BC((0xA0 - halfW), 0xB4, D_829174F4, str);
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
 #endif
