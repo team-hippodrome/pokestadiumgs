@@ -247,6 +247,13 @@ SECTIONS
     {
         build/src/fragments/21/fragment21_147D10.o(.bss)
     }
+    /* func_82A00C84's function-static setup state (selection, cursor, model
+     * and scene handles) at D_82A01990. IDO gives the paired stores one lui
+     * and reloads each handle after storing it only for a function static. */
+    .fragment23_setup_state_bss 0x82A01990 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/23/fragment23_code.o(.bss)
+    }
     /* fragment23_code's saved text position (func_82A0089C). The fragment
      * loader clears this runtime area after consuming its relocation table. */
     .fragment23_text_origin_data 0x82A01A24 (NOLOAD) : SUBALIGN(4)
@@ -344,6 +351,9 @@ ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
 
 ASSERT(SIZEOF(.fragment72_state_bss) == 80,
        "fragment72 runtime state must retain their compiler section footprint");
+
+ASSERT(SIZEOF(.fragment23_setup_state_bss) == 64,
+       "fragment23 setup state must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment23_text_origin_data) == 16,
        "fragment23 text origin must retain its compiler section footprint");
