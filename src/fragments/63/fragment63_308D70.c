@@ -60,7 +60,7 @@ void func_87E05458(void *arg0) {
 extern f32 D_80087E50[];
 #define SINS_87E055B0(x) D_80087E50[(u16)(x) >> 4]
 extern void *D_87F119DC;
-extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
+extern s32 func_87F0B4AC(void *, f32 *, f32 *, s16 *);
 typedef struct { f32 x, y, z; } Vec3_87E055B0;
 #define ROUND_87E055B0(x) ((x) >= 0.0f ? (s32)((x) + 0.5f) : (s32)((x) - 0.5f))
 #define DEG_87E055B0(d) ROUND_87E055B0((d) * 182.04167f)
@@ -109,7 +109,6 @@ void func_87E05874(s32 arg0, s32 arg1) {
     }
 }
 
-extern s32 func_87F0B4AC(void *, f32 *, f32 *, s16 *);
 extern void *D_87E1EB90;
 extern void *D_87F119DC;
 
