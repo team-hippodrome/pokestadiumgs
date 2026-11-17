@@ -79,7 +79,7 @@ void func_87E05874(s32 arg0, s32 arg1) {
     }
 }
 
-extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
+extern s32 func_87F0B4AC(void *, f32 *, f32 *, s16 *);
 extern void *D_87E1EB90;
 extern void *D_87F119DC;
 
@@ -207,7 +207,63 @@ void func_87E05CE4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     func_8003F3BC(arg2, arg4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E05D74.s")
+typedef struct { f32 x, y, z; } Vec3f_87E05D74;
+typedef struct { s16 x, y, z; } Vec3s_87E05D74;
+extern void func_8003F1DC(void *);
+extern u32 func_8003570C(void);
+extern u8 *D_87E19F64[][2];
+extern s32 func_8003F2C4(s32, void *, s32);
+void func_87E05D74(void) {
+    u8 *obj;
+    u8 *entry;
+    s32 r;
+
+    obj = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    func_87F0B4AC(obj + 8, (f32 *)((u8 *)D_87F119DC + 0x48), (f32 *)((u8 *)D_87F119DC + 0x54), (s16 *)((u8 *)D_87F119DC + 0x42));
+    if (*(s32 *)obj == *(s32 *)((u8 *)D_87E1EB90 + 8)) {
+        entry = D_87E19F64[*(s32 *)obj][*(s32 *)(obj + 4)];
+        if (*(u8 *)((u8 *)D_87F119DC + 0x25) & 1) {
+            if (*(s32 *)((u8 *)D_87E1EB90 + 4) == 2) {
+                ModelAnim_SetSpeed((u8 *)D_87F119DC + 0x24, 0x20000);
+            }
+            if (ModelAnim_IsFinished((void *)((u8 *)D_87F119DC + 0x24))) {
+                if (*(s32 *)((u8 *)D_87E1EB90 + 4) == 2) {
+                    func_8003F2C4(*(s32 *)(obj + 0x90), (u8 *)D_87F119DC + 0x24, *(s32 *)(entry + 0x14));
+                } else {
+                    r = func_8003570C() & 3;
+                    func_8003F2C4(*(s32 *)(obj + 0x90), (u8 *)D_87F119DC + 0x24, -1);
+                    func_8003F2C4(*(s32 *)(obj + 0x90), (u8 *)D_87F119DC + 0x24, *(s32 *)((u8 *)((s32 *)entry + r) + 4));
+                    func_8003F3BC((s32)((u8 *)D_87F119DC + 0x24), -1);
+                    func_8003F3BC((s32)((u8 *)D_87F119DC + 0x24), *(s32 *)((u8 *)((s32 *)entry + r) + 0x18));
+                }
+            }
+            // The redundant second 0x7C test is in the retail branch sequence.
+            if ((*(s32 *)((u8 *)D_87F119DC + 0x7C) == 0) || ((*(s32 *)((u8 *)D_87F119DC + 0x7C) != 0) && ModelAnim_IsEventTrackDone((u8 *)D_87F119DC + 0x24))) {
+                if ((f32)func_8003570C() / 4294967296.0f < (f64)0.05f) {
+                    func_8003F3BC((s32)((u8 *)D_87F119DC + 0x24), -1);
+                    func_8003F3BC((s32)((u8 *)D_87F119DC + 0x24), *(s32 *)(entry + 0x28));
+                }
+            }
+        }
+    } else {
+        *(s32 *)obj = *(s32 *)((u8 *)D_87E1EB90 + 8);
+        if (*(s32 *)obj != -1) {
+            entry = D_87E19F64[*(s32 *)obj][*(s32 *)(obj + 4)];
+        } else {
+            entry = NULL;
+        }
+        if (entry != NULL) {
+            func_8003F1DC((u8 *)D_87F119DC + 0x24);
+            func_87E05CE4(*(s32 *)(obj + 0x90), *(s32 *)entry, (s32)((u8 *)D_87F119DC + 0x24), *(s32 *)(entry + 4), *(s32 *)(entry + 0x18));
+            *(Vec3f_87E05D74 *)((u8 *)D_87F119DC + 0x48) = *(Vec3f_87E05D74 *)(entry + 0x38);
+            *(Vec3s_87E05D74 *)((u8 *)D_87F119DC + 0x42) = *(Vec3s_87E05D74 *)(entry + 0x30);
+            *(f32 *)((u8 *)D_87F119DC + 0x54) = *(f32 *)((u8 *)D_87F119DC + 0x58) = *(f32 *)((u8 *)D_87F119DC + 0x5C) = *(f32 *)(entry + 0x2C);
+            *(u8 *)((u8 *)D_87F119DC + 0x25) |= 1;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x25) &= ~1;
+        }
+    }
+}
 
 extern void func_87F0252C(u8 *, s32, s32, s32);
 extern u8 D_80126420;
