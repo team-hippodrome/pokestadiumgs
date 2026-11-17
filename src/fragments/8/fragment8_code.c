@@ -2,66 +2,47 @@
 
 
 #ifdef VERSION_US
-void func_82F00020(u32 arg0) {
+s32 func_82F00020(u32 arg0) {
     switch (arg0) {
     case 7:
-        func_8004C990(332, 0);
-        return;
+        return func_8004C990(332, 0);
     case 26:
-        func_8004C990(332, 1);
-        return;
+        return func_8004C990(332, 1);
     case 23:
-        func_8004C990(332, 2);
-        return;
+        return func_8004C990(332, 2);
     case 27:
-        func_8004C990(332, 4);
-        return;
+        return func_8004C990(332, 4);
     case 1:
-        func_8004C990(332, 5);
-        return;
+        return func_8004C990(332, 5);
     case 20:
-        func_8004C990(332, 6);
-        return;
+        return func_8004C990(332, 6);
     case 2:
     case 6:
-        func_8004C990(332, 7);
-        return;
+        return func_8004C990(332, 7);
     case 8:
-        func_8004C990(332, 8);
-        return;
+        return func_8004C990(332, 8);
     case 22:
-        func_8004C990(332, 9);
-        return;
+        return func_8004C990(332, 9);
     case 4:
-        func_8004C990(332, 10);
-        return;
+        return func_8004C990(332, 10);
     case 25:
-        func_8004C990(332, 11);
-        return;
+        return func_8004C990(332, 11);
     case 0:
-        func_8004C990(332, 12);
-        return;
+        return func_8004C990(332, 12);
     case 3:
-        func_8004C990(332, 13);
-        return;
+        return func_8004C990(332, 13);
     case 24:
-        func_8004C990(332, 14);
-        return;
+        return func_8004C990(332, 14);
     case 5:
-        func_8004C990(332, 15);
-        return;
+        return func_8004C990(332, 15);
     case 9:
-        func_8004C990(332, 16);
-        return;
+        return func_8004C990(332, 16);
     case 21:
-        func_8004C990(332, 17);
-        return;
+        return func_8004C990(332, 17);
     case 19:
-        func_8004C990(332, 3);
-        return;
+        return func_8004C990(332, 3);
     default:
-        func_8004C990(332, 12);
-        return;
+        return func_8004C990(332, 12);
     }
 }
 
@@ -282,7 +263,7 @@ extern void func_8180567C(s32, void *, void *);
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
-extern void func_800495BC(s32, s32, s32);
+extern void func_800495BC();
 extern void func_800499EC(void);
 
 void func_82F00860(s32 arg0, void *arg1, void *arg2) {
@@ -440,8 +421,89 @@ u8 *func_82F00C2C(u8 *pokemon) {
     //!bug no return for a gender value other than 0, 1 or 2; $v0 still holds that value.
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F00CF4.s")
+extern void WidgetResources_DrawRecords(s32, s32, s32);
+extern void WidgetResources_DrawSelection(s32, s32, s32);
+extern s32 func_80062D98(u8);
+extern u8 *func_81602C68(s32);
+extern void func_818006FC(s32, s32, s32, f32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+// FAKE: func_8004D998 is void in src/4CC20.c; an int-returning declaration keeps $v0 busy after
+// the call so the display-list pointers below land in $v1 as in the ROM.
+extern s32 func_8004D998(s32, s32, s32, s32, s32);
+extern void func_800495F8();
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern u8 *func_82F00C2C(u8 *);
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+// 0x58-byte party records; arg1[0xECE] selects one (1-based) from the array at arg1 + 0x38.
+typedef struct { u8 b[0x58]; } MonRec58;
+void func_82F00CF4(s32 arg0, u8 *arg1, s16 *arg2) {
+    s16 x;
+    u8 *mon;
+    s16 y;
+    f32 fade;
+    u8 *entry;
+    u8 *rgb;
+    s32 i;
+    s32 alpha;
+    u8 type; // FAKE: holding the first type in a declared u8 orders the beq operands and stack temps.
 
+    mon = ((MonRec58 *)(arg1 + 0x38))[arg1[0xECE] - 1].b;
+    fade = func_818055E0((void *)arg0, arg1);
+    entry = func_818054D0((void *)arg0, arg1[0x1F]);
+    x = arg2[0];
+    y = arg2[1];
+    WidgetResources_DrawRecords(arg0, (s32)arg1, (s32)arg2);
+    func_818006FC(x + 0xC, y + 0x68, 0x82, fade);
+    func_818006FC(x + 0xC, y + 0xD8, 0x82, fade);
+    if (mon[0] > 0) {
+        gSPDisplayList((*(Gfx **)D_800D0510)++, D_80094E38);
+        gDPSetEnvColor((*(Gfx **)D_800D0510)++, 0xFF, 0xFF, 0xFF, (u32)(255.0f * fade));
+        for (i = 0; i < 4; i++) {
+            alpha = func_80062D98(mon[2 + i]);
+            if (mon[2 + i] != 0) {
+                func_8004D19C(x + 0xC, y + i * 26 + 0x70, (s32)func_82F00020(alpha), 0, 0);
+            }
+        }
+        func_8004D19C(x + 0x3E, y + 0x4E, (s32)func_82F00020(func_8006397C(mon[0])), 0, 0);
+        if ((type = func_8006397C(mon[0])) != func_800639C0(mon[0])) {
+            func_8004D19C(x + 0x56, y + 0x4E, (s32)func_82F00020(func_800639C0(mon[0])), 0, 0);
+        }
+        func_8004D998(x + 0xC, y + 0x24, (s32)arg1 + 0x248, 0, 1);
+        gSPDisplayList((*(Gfx **)D_800D0510)++, D_80094F50);
+        func_800498C4();
+        alpha = 255.0f * fade;
+        func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        func_800496A4(8, 1);
+        func_800495BC(x + 0xC, y + 0xA, "%s%s", mon + 0x34, func_82F00C2C(mon));
+        func_800496A4(4, -1);
+        func_800495BC(x + 0x36, y + 0x26, "%s%d", func_8004C874(13, 0x15), mon[0x1D]);
+        func_800496A4(4, 0);
+        func_800495BC(x + 0x56, y + 0x3A, "%d", *(u16 *)(mon + 0x28));
+        func_800496A4(4, 1);
+        for (i = 0; i < 4; i++) {
+            if (mon[2 + i] > 0) {
+                rgb = func_81602C68(func_80062D98(mon[2 + i]));
+                if (*(s32 *)(entry + 0x20) != 0 && (i + 1) == arg1[0xED0]) {
+                    func_8004972C(0xFF, 0xFF, 0, alpha);
+                } else {
+                    func_8004972C(rgb[0], rgb[1], rgb[2], alpha);
+                }
+                func_800495BC(x + 0x24, y + i * 26 + 0x72, func_80062CE0(mon[2 + i]));
+            }
+        }
+        func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        func_800496A4(4, 1);
+        func_800495F8(x + 0x7A, y + 0xE0, 2, "%d", *(u16 *)(mon + 0x2A));
+        func_800495F8(x + 0x7A, y + 0xF4, 2, "%d", *(u16 *)(mon + 0x2C));
+        func_800495F8(x + 0x7A, y + 0x108, 2, "%d", *(u16 *)(mon + 0x30));
+        func_800495F8(x + 0x7A, y + 0x11C, 2, "%d", *(u16 *)(mon + 0x32));
+        func_800495F8(x + 0x7A, y + 0x130, 2, "%d", *(u16 *)(mon + 0x2E));
+        func_800499EC();
+    }
+    WidgetResources_DrawSelection(arg0, (s32)arg1, (s32)arg2);
+}
 extern void func_800226C0(s32);
 void func_82F01220(void *arg0, s32 arg1) {
     if (arg1 < 0) {
