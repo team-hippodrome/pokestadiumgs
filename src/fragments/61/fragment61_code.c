@@ -1152,7 +1152,73 @@ void func_86B08214(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B08978.s")
+extern void func_8003F210(void *, s32);
+extern void func_86B0B608(s32);
+extern void func_86B0B9A0(void);
+extern void func_87F00688(void);
+extern u8 D_86B17340[];
+extern u8 D_86B16DA0[];
+extern s32 D_86B16D90[];
+extern s32 D_86B17910;
+extern s32 D_86B17908;
+
+// 0x18-byte record whose bytes 0x12..0x15 hold an RGBA color.
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x12];
+    /* 0x12 */ u8 r;
+    /* 0x13 */ u8 g;
+    /* 0x14 */ u8 b;
+    /* 0x15 */ u8 a;
+    /* 0x16 */ u8 unk_16[2];
+} ColorRecord_86B08978; // size = 0x18
+
+// Only the color-record pointer at offset 0x18 is accessed here.
+extern struct {
+    /* 0x00 */ u8 unk_00[0x18];
+    /* 0x18 */ ColorRecord_86B08978 *colors;
+} D_86B181F0;
+
+// When the fade mode is 1, resets the four 0x168-byte animations at D_86B17340, starts the four
+// at D_86B16DA0 with D_86B16D90's clips and colors their records (0xFF, 0xFF, 0xFF, 0xB4), sets
+// up the D_86B17910 animation at frame 0x1E, starts a fade from opaque and sets the stage state
+// to 3. Otherwise it advances the D_86B17340 animations (func_8003F210 mode 7), restarts each
+// finished one at a random frame 0..5 and stores -0x1001 at offset 0x20.
+void func_86B08978(void) {
+    s32 i;
+    ColorRecord_86B08978 *color;
+
+    if (StageContext_GetFadeMode() == 1) {
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC(D_86B17340 + i * 0x168);
+        }
+        for (i = 0; i < 4; i++) {
+            func_8003F114(D_86B16DA0 + i * 0x168, 0, -1, D_86B16D90[i]);
+            func_86B0B608(i);
+            color = &D_86B181F0.colors[i];
+            color->r = 0xFF;
+            color->g = 0xFF;
+            color->b = 0xFF;
+            color->a = 0xB4;
+        }
+        func_8003F1DC(&D_86B17910);
+        func_8003F114(&D_86B17910, 0, -1, D_86B17908);
+        func_8003F210(&D_86B17910, 1);
+        ModelAnim_SetFrame(&D_86B17910, 0x1E);
+        func_8003F3BC(&D_86B17910, 0);
+        func_86B0B9A0();
+        StageFade_StartFromOpaque(0x14);
+        *(s32 *)D_86B181C0 = 3;
+        func_87F00688();
+    } else {
+        for (i = 0; i < 4; i++) {
+            func_8003F210(D_86B17340 + i * 0x168, 7);
+            if (func_8003EC54(D_86B17340 + i * 0x168) == 1) {
+                ModelAnim_SetFrame(D_86B17340 + i * 0x168, guRandom() % 6);
+            }
+            *(s16 *)(D_86B17340 + i * 0x168 + 0x20) = -0x1001;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
