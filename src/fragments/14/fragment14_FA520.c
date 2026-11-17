@@ -1,6 +1,6 @@
 #include "global.h"
 
-// The empty record func_8130251C (still assembly) copies into the selection slots.
+// The empty record func_8130251C copies into the selection slots.
 const u8 D_813122A0[16] = { 0 };
 
 // The fragment's work area; the pointers at 0xA170/0xA174 are the ones other functions read as
@@ -9,6 +9,9 @@ typedef struct unk_D_81327800 {
     /* 0x0000 */ u8 unk_0000[0xA170];
     /* 0xA170 */ u8 *unk_A170;
     /* 0xA174 */ void *unk_A174;
+    /* 0xA178 */ s32 unk_A178;
+    /* 0xA17C */ u8 *unk_A17C;
+    /* 0xA180 */ s32 unk_A180;
 } unk_D_81327800;
 extern unk_D_81327800 D_81327800;
 
@@ -40,7 +43,41 @@ void func_81302438(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FA520/func_8130251C.s")
+typedef struct F14SelectionByte {
+    u8 value;
+} F14SelectionByte;
+
+extern void func_8000612C(void);
+extern s32 func_800356CC(s32);
+extern s32 BinArchive_Open(s32, s32, s32, s32);
+extern s32 func_80071914(s32);
+extern s32 func_80071B20(s32, s32);
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern u8 *func_81600E28(void *, s32, s32);
+extern void func_81300830(void *, s32, u8 *, u8 *);
+extern void func_800355E4(s32);
+extern u8 D_81317800[];
+s32 func_8130251C() {
+    s32 pad[2]; // FAKE
+    void *blk;
+    s32 i;
+
+    func_8000612C();
+    for (i = 0; i < 4; i++) {
+        ((F14SelectionByte *)(D_81327800.unk_A17C + 0x904 + i * 0xC))[0] = *(F14SelectionByte *)D_813122A0;
+    }
+    D_81327800.unk_A180 = BinArchive_Open(func_800356CC(0xB), 0, 1, 0);
+    D_81327800.unk_A178 = func_80071B20(D_81327800.unk_A180, func_80071914(*(s32 *)(D_81327800.unk_A17C + 0x940)));
+    blk = MainPool_AllocState(main_pool_get_available(), 0);
+    D_81327800.unk_A174 = func_81600E28(blk, 1, 0x1C);
+    MainPool_FinalizeAllocation(blk);
+    func_81300830(D_81317800, D_81327800.unk_A178, D_81327800.unk_A17C, D_81327800.unk_A170);
+    func_800355E4(0x1B);
+}
+
+
 
 extern void *D_81331974;
 extern u8 D_81317800[];
