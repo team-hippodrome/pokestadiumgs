@@ -455,10 +455,6 @@ void func_8AC00FFC(s32 arg0) {
     static struct {
         s32 pushTag;
         u8 pushActive;
-        s32 popTagBefore;
-        u8 popActiveBefore;
-        s32 popTagAfter;
-        u8 popActiveAfter;
     } sPoolMark;
     s32 i;
     s32 result;
@@ -473,7 +469,31 @@ void func_8AC00FFC(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC01064.s")
+typedef struct {
+    s32 tag_before;
+    u8 active_before;
+    s32 tag_after;
+    u8 active_after;
+} Fragment43PoolPopMark;
+
+extern void StageLoader_WaitForRetrace(void);
+
+extern s32 main_pool_pop_state(s32);
+
+void func_8AC01064(s32 arg0) {
+    static Fragment43PoolPopMark sPoolPopMark;
+    s32 i;
+    s32 result;
+    sPoolPopMark.tag_before = arg0;
+    sPoolPopMark.active_before = 0;
+    StageLoader_WaitForRetrace();
+    result = main_pool_pop_state(arg0);
+    D_8AC086B8--;
+    sPoolPopMark.active_after = 0;
+    sPoolPopMark.tag_after = arg0;
+    for (i = 0; i < D_8AC086B8; i++) {} // karodo: empty delay loop in retail.
+    if (result) {}
+}
 #endif
 
 #ifdef VERSION_US
@@ -902,14 +922,79 @@ void func_8AC01F8C(unk_func_8AC01F8C *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC02564.s")
+extern void func_8AC0202C(void *);
+
+extern s32 func_8AC02564(s32, void *);
+
+extern void func_800504BC(s16 *);
+
+extern s32 func_8004C990(s32, s32);
+
+s32 func_8AC02564(s32 arg0, void *arg1) {
+    u8 *s0 = *(u8 **)((u8 *)arg1 + 0x20);
+    u8 *v1 = *(u8 **)s0;
+    func_800504BC((s16 *)&D_8AC099BC);
+    *(s16 *)(s0 + 0xE) = *(s16 *)(v1 + 8) + *(s16 *)&D_8AC099BC;
+    *(s16 *)(s0 + 0x10) = *(s16 *)(v1 + 0xA) + ((s16 *)&D_8AC099BC)[1];
+
+    switch (arg0) {
+    case 0:
+        *(s16 *)(s0 + 4) = 0;
+        switch (*(s16 *)(s0 + 0x12)) {
+        case 6:
+            *(s16 *)(s0 + 0x16) = 0;
+            break;
+        case 10:
+            *(void **)(s0 + 0x1C) = (void *)func_8004C990(*(u16 *)(v1 + 0x24), *(u16 *)(v1 + 0x26));
+            *(u16 *)(v1 + 2) &= ~2;
+            break;
+        default:
+            *(u16 *)(v1 + 2) &= ~2;
+            break;
+        }
+        *(s16 *)(s0 + 6) = *(s16 *)(s0 + 0xE);
+        *(s16 *)(s0 + 8) = *(s16 *)(s0 + 0x10);
+        *(s16 *)(s0 + 0xA) = *(s16 *)(v1 + 8);
+        *(s16 *)(s0 + 0xC) = *(s16 *)(v1 + 0xA);
+        break;
+    case 1:
+        if (*(s16 *)(s0 + 4) > 0) {
+            switch (*(s16 *)(s0 + 0x12)) {
+            case 6:
+            case 10:
+                break;
+            default:
+                *(u16 *)(v1 + 2) |= 2;
+                break;
+            }
+        }
+        switch (*(s16 *)(s0 + 0x12)) {
+        case 1: func_8AC01634(s0); break;
+        case 2: func_8AC01664(s0); break;
+        case 3: func_8AC016A8(s0); break;
+        case 7: Fragment43_DrawForwardTextureStrip(s0); break;
+        case 8: Fragment43_DrawReverseTextureStrip(s0); break;
+        case 4: func_8AC01B74(s0); break;
+        case 5: func_8AC01D88(s0); break;
+        case 9: func_8AC01F20(s0); break;
+        case 6: func_8AC01F8C((unk_func_8AC01F8C *)s0); break;
+        case 10: func_8AC0202C(s0); break;
+        default: break;
+        }
+        if (*(s16 *)(s0 + 4) == 0) {
+            *(s16 *)(s0 + 4) = 1;
+        }
+        break;
+    }
+    *(s16 *)(s0 + 0x12) = 0;
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
 extern void _bzero(void *, s32);
 extern s32 func_8AC06D8C(s32, s32);
 extern void func_8004E308(s32, s32 *, s32 *);
-extern u8 func_8AC02564;
 void func_8AC02770(s32 arg0, s32 arg1, void *arg2, s16 arg3) {
     s32 v0;
 
@@ -925,7 +1010,6 @@ void func_8AC02770(s32 arg0, s32 arg1, void *arg2, s16 arg3) {
 extern void _bzero(void *, s32);
 extern s32 func_8AC06D8C(s32, s32);
 extern void func_8004E308(s32, s32 *, s32 *);
-extern u8 func_8AC02564;
 void func_8AC027D0(s32 arg0, s32 arg1, void *arg2, s32 arg3) {
     s32 v0;
 
