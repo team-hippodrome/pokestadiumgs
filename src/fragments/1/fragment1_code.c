@@ -151,7 +151,74 @@ void func_83500708(void) {
 }
 /* mkdraft:func_83500708 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83500C14.s")
+extern s16 D_83503E84;
+extern s32 D_83503AE0;
+extern s32 D_83503AF0;
+
+// Draws six 0xAA0-byte strips of the texture from asset (68, D_83503E84 ? 1 : 0)
+// in two passes: pass 0 at prim alpha 80, shifted down by D_83503AF0, then pass 1
+// at alpha 255. Strips 0-4 are 136x10 tiles and strip 5 is a 136x4 tile.
+// D_83503AE0 is the y before the first strip; D_83503BE8 scales the rectangle
+// sizes, the per-strip y step and the two texture scales.
+void func_83500C14(void) {
+    s32 archive;
+    s32 i;
+    s32 pass;
+    s32 y;
+    u8 *texBase;
+    u32 shift;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    if (D_83503E84 == 0) {
+        archive = func_8004C990(68, 0);
+    } else {
+        archive = func_8004C990(68, 1);
+    }
+    texBase = func_8004CA60((u8 *)archive);
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetCombine(D_800D0510++, 0xFCFFFFFF, 0xFFFCF67B);
+    for (pass = 0; pass != 2; pass++) {
+        shift = 0;
+        y = D_83503AE0;
+        if (pass == 0) {
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 80);
+            shift = 1;
+        } else {
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+        }
+        for (i = 0; i < 6; i++) {
+            y = y + 10.0f * D_83503BE8;
+            if (i < 5) {
+                gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texBase + i * 0xAA0);
+                gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+                gDPLoadSync(D_800D0510++);
+                gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 1359, 0);
+                gDPPipeSync(D_800D0510++);
+                gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 34, 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
+                gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 135 << 2, 9 << 2);
+                GfxRect_DrawTextured(ROUND_MAX(320.0f - 68.0f * D_83503BE8),
+                                     (s32) ROUND_MAX((f32) y) + *(s32 *) &D_83503AF0 * shift,
+                                     ROUND_MAX(136.0f * D_83503BE8), ROUND_MAX(10.0f * D_83503BE8), 0, 0,
+                                     ROUND_MAX(1024.0f / D_83503BE8), ROUND_MAX(1024.0f / D_83503BE8), 0);
+            } else {
+                gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texBase + i * 0xAA0);
+                gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+                gDPLoadSync(D_800D0510++);
+                gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 543, 0);
+                gDPPipeSync(D_800D0510++);
+                gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 34, 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
+                gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 135 << 2, 3 << 2);
+                GfxRect_DrawTextured(ROUND_MAX(320.0f - 68.0f * D_83503BE8),
+                                     (s32) ROUND_MAX((f32) y) + *(s32 *) &D_83503AF0 * shift,
+                                     ROUND_MAX(136.0f * D_83503BE8), ROUND_MAX(4.0f * D_83503BE8), 0, 0,
+                                     ROUND_MAX(1024.0f / D_83503BE8), ROUND_MAX(1024.0f / D_83503BE8), 0);
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
 
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];
