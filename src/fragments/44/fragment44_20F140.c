@@ -615,7 +615,245 @@ void func_8AF22594(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF22608.s")
+extern u16 *D_8AF3A0B0;
+extern u16 *D_8AF3A0B4;
+extern u8 *D_8AF3A08C;
+extern u8 *D_8AF3A090;
+extern u8 *D_8AF3A094;
+extern u8 *D_8AF3A098;
+extern u8 *D_8AF3A09C;
+extern u8 *D_8AF3A0A0;
+extern u8 *D_8AF3A0A4;
+extern u8 *D_8AF3A0A8;
+extern u8 *D_8AF3A0AC;
+extern u8 *D_8AF3A0B8;
+extern u8 *D_8AF3A0BC;
+extern u8 *D_8AF3A0C0;
+extern u8 *D_8AF3A124;
+extern u8 *D_8AF3A128;
+extern u8 *D_8AF3A12C;
+extern u8 *D_8AF3A130;
+extern u8 *D_8AF3A134;
+extern u8 *D_8AF3A138;
+extern u8 *D_8AF3A13C;
+extern u8 *D_8AF3A150;
+extern u8 *D_8AF3A154;
+extern s32 D_8AF3A194;
+extern s16 D_8AF3A174;
+extern s16 D_8AF3A140;
+extern s16 D_8AF3A142;
+extern s16 D_8AF3A080;
+extern u8 D_8AF279C4[];
+extern u8 D_8AF279C8[];
+extern void func_8AF21D14(void);
+extern void func_8AF21EE0(void);
+extern s16 func_8AF21C04(void);
+extern void func_8AF21FBC(s16);
+extern s32 func_8AC07AF4(s32, s32, u8 *, u8 *);
+extern s32 func_8004C874(s32, s32);
+extern void func_8004C54C(s32, s32);
+extern void func_80021ED8(s32);
+extern void func_8AF00130(s32);
+void func_8AF22608(s16 arg0) {
+    s32 pad[1]; // FAKE
+    D_8AF3A080 = arg0;
+    D_8AF3A140 = 0;
+    D_8AF3A142 = 0;
+    switch (*(u16 *)&D_8AF3A080) {
+        case 0:
+            func_8AF21D14();
+            *(u16 *)(D_8AF3A08C + 2) |= 2;
+            *(u16 *)(D_8AF3A090 + 2) &= ~2;
+            *(u16 *)(D_8AF3A094 + 2) |= 2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) |= 1;
+            *(u16 *)(D_8AF3A0A0 + 2) &= ~2;
+            *(u16 *)(D_8AF3A09C + 2) &= ~2;
+            *(u16 *)(D_8AF3A0B8 + 2) &= ~1;
+            *(u16 *)(D_8AF3A150 + 2) &= ~1;
+            *(u16 *)(D_8AF3A124 + 2) |= 1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A138 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A0A4 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A8 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0AC + 2) &= ~2;
+            break;
+        case 1:
+            *(u16 *)(D_8AF3A08C + 2) &= ~2;
+            *(u16 *)(D_8AF3A090 + 2) &= ~2;
+            *(u16 *)(D_8AF3A094 + 2) &= ~2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) |= 1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0B8 + 2) &= ~1;
+            *(u16 *)(D_8AF3A150 + 2) |= 1;
+            *(u16 *)(D_8AF3A124 + 2) &= ~1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A128 + 2) |= 2;
+            *(u16 *)(D_8AF3A12C + 2) &= ~2;
+            *(u16 *)(D_8AF3A130 + 2) &= ~2;
+            *(u16 *)(D_8AF3A13C + 2) |= 1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            break;
+        case 2:
+            *(u16 *)(D_8AF3A08C + 2) &= ~2;
+            *(u16 *)(D_8AF3A090 + 2) &= ~2;
+            *(u16 *)(D_8AF3A094 + 2) &= ~2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) |= 1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0B8 + 2) &= ~1;
+            *(u16 *)(D_8AF3A150 + 2) &= ~1;
+            *(u16 *)(D_8AF3A124 + 2) &= ~1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A128 + 2) &= ~2;
+            *(u16 *)(D_8AF3A12C + 2) |= 2;
+            *(u16 *)(D_8AF3A130 + 2) |= 2;
+            *(u16 *)(D_8AF3A13C + 2) |= 1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            break;
+        case 4:
+        case 6:
+            func_8AF21D14();
+            *(u16 *)(D_8AF3A08C + 2) |= 2;
+            *(u16 *)(D_8AF3A090 + 2) &= ~2;
+            *(u16 *)(D_8AF3A094 + 2) |= 2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0B8 + 2) &= ~1;
+            *(u16 *)(D_8AF3A150 + 2) &= ~1;
+            *(u16 *)(D_8AF3A124 + 2) |= 1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0A4 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A8 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0AC + 2) &= ~2;
+            if (D_8AF3A174 == 1) {
+                if (func_8AC07AF4(0x140, 0xC8, D_8AF279C4, D_8AF279C8) != 0) {
+                    func_8AF00130(0xCE);
+                }
+                func_80021ED8(0x49);
+                D_8AF3A194 = 1;
+            }
+            break;
+        case 5:
+        case 7:
+            *(u16 *)(D_8AF3A08C + 2) |= 2;
+            *(u16 *)(D_8AF3A090 + 2) |= 2;
+            *(u16 *)(D_8AF3A094 + 2) |= 2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0A0 + 2) &= ~2;
+            *(u16 *)(D_8AF3A09C + 2) &= ~2;
+            *(u16 *)(D_8AF3A0B8 + 2) |= 1;
+            *(u16 *)(D_8AF3A150 + 2) |= 1;
+            *(u16 *)(D_8AF3A124 + 2) |= 1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A138 + 2) |= 1;
+            *(u16 *)(D_8AF3A0A4 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A8 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0AC + 2) &= ~2;
+            break;
+        case 8:
+            *(u16 *)(D_8AF3A08C + 2) |= 2;
+            *(u16 *)(D_8AF3A090 + 2) |= 2;
+            *(u16 *)(D_8AF3A094 + 2) |= 2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0A0 + 2) &= ~2;
+            *(u16 *)(D_8AF3A09C + 2) &= ~2;
+            *(u16 *)(D_8AF3A0B8 + 2) |= 1;
+            *(u16 *)(D_8AF3A150 + 2) |= 1;
+            *(u16 *)(D_8AF3A124 + 2) &= ~1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A138 + 2) |= 1;
+            *(u16 *)(D_8AF3A0A4 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A8 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0AC + 2) &= ~2;
+            func_8AF21FBC(1);
+            break;
+        case 10:
+            *(u16 *)(D_8AF3A08C + 2) &= ~2;
+            *(u16 *)(D_8AF3A090 + 2) |= 2;
+            *(u16 *)(D_8AF3A094 + 2) &= ~2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            D_8AF3A0B0[1] &= ~2;
+            D_8AF3A0B4[1] &= ~2;
+            *(u16 *)(D_8AF3A0A0 + 2) &= ~2;
+            *(u16 *)(D_8AF3A09C + 2) &= ~2;
+            *(u16 *)(D_8AF3A0B8 + 2) |= 1;
+            *(u16 *)(D_8AF3A150 + 2) |= 1;
+            *(u16 *)(D_8AF3A124 + 2) &= ~1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A138 + 2) |= 1;
+            *(u16 *)(D_8AF3A0A4 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A8 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0AC + 2) &= ~2;
+            func_8AF21FBC(2);
+            break;
+        case 9:
+            *(u16 *)(D_8AF3A08C + 2) &= ~2;
+            *(u16 *)(D_8AF3A090 + 2) |= 2;
+            *(u16 *)(D_8AF3A094 + 2) &= ~2;
+            *(u16 *)(D_8AF3A098 + 2) |= 2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            D_8AF3A0B0[1] &= ~2;
+            D_8AF3A0B4[1] &= ~2;
+            *(u16 *)(D_8AF3A0A0 + 2) &= ~2;
+            *(u16 *)(D_8AF3A09C + 2) &= ~2;
+            *(u16 *)(D_8AF3A0B8 + 2) &= ~1;
+            *(u16 *)(D_8AF3A150 + 2) &= ~1;
+            *(u16 *)(D_8AF3A124 + 2) |= 1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0A4 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A8 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0AC + 2) &= ~2;
+            break;
+        case 3:
+            *(u16 *)(D_8AF3A08C + 2) |= 2;
+            *(u16 *)(D_8AF3A090 + 2) &= ~2;
+            *(u16 *)(D_8AF3A094 + 2) |= 2;
+            *(u16 *)(D_8AF3A098 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0BC + 2) &= ~1;
+            *(u16 *)(D_8AF3A0C0 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0B8 + 2) |= 1;
+            *(u16 *)(D_8AF3A150 + 2) |= 1;
+            *(u16 *)(D_8AF3A124 + 2) |= 1;
+            *(u16 *)(D_8AF3A154 + 2) &= ~1;
+            *(u16 *)(D_8AF3A13C + 2) &= ~1;
+            *(u16 *)(D_8AF3A134 + 2) &= ~1;
+            *(u16 *)(D_8AF3A138 + 2) &= ~1;
+            *(u16 *)(D_8AF3A0A0 + 2) |= 2;
+            *(u16 *)(D_8AF3A09C + 2) &= ~2;
+            *(u16 *)(D_8AF3A090 + 2) &= ~2;
+            *(u16 *)(D_8AF3A0A4 + 2) |= 2;
+            *(u16 *)(D_8AF3A0A8 + 2) |= 2;
+            *(u16 *)(D_8AF3A0AC + 2) |= 2;
+            func_8AF21EE0();
+            D_8AF3A140 = 0;
+            func_8004C54C(0xC, func_8004C874(0x38, func_8AF21C04() + 0xBA));
+            break;
+    }
+}
+
 
 extern void func_8004C8C0(s32);
 extern s32 func_8004C990(s32, s32);
@@ -630,7 +868,7 @@ extern void func_8AC06400(u8 *, u8 *);
 extern void func_8AC02C80(s32, s32, s32, u8 *);
 extern void func_8004E308(u8 *, void *, s32);
 extern s32 func_8004E0F0(s32, s16, s32);
-extern void func_8AF22608(s32);
+extern void func_8AF22608(s16);
 extern void func_8AC0080C(s32);
 extern void func_8AC006F4(void);
 extern s32 func_8AF2228C(void);
@@ -833,7 +1071,7 @@ extern u8 *D_8AF2BDD8;
 extern s8 D_8AF3A144;
 extern s32 func_8AC07AF4();
 extern void func_8AF21D14(void);
-extern void func_8AF22608(s32);
+extern void func_8AF22608(s16);
 extern s32 func_8AF223C8();
 extern s16 D_8AF2BDDC;
 extern s32 D_8AF2BA68;
