@@ -227,6 +227,13 @@ SECTIONS
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
     }
+
+    /* func_823053A8's header statics at the start of the fragment 19 runtime
+     * state; the loader clears this area. */
+    .fragment19_state_6AF8_bss 0x82306AF8 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/19/fragment19_124E40.o(.bss)
+    }
     /* State, flags and counter at the start of fragment 24's runtime state.
      * The loader clears this area; input-section alignment is NOLOAD. */
     .fragment24_state_12450_bss 0x82B12450 (NOLOAD) : SUBALIGN(2)
