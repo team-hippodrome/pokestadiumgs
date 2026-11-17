@@ -15,7 +15,66 @@ void func_882041E0(void) {
     D_882346AC = 2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_177430/func_882041F0.s")
+typedef struct { s32 a, b; } Pair8_882041F0;
+typedef struct {
+    s16 x, y, w, h;
+    s16 unk8;
+    s16 unkA;
+    s32 unkC;
+    u8 *unk10;
+    u8 unk14[4];
+    u8 unk18;
+    u8 pad19;
+    s16 unk1A;
+    u8 pad1C[0xC];
+    s32 unk28;
+    s32 unk2C;
+} F31Menu;
+extern s32 func_80001FF0(void);
+extern s32 func_8800005C(void);
+extern u8 D_88006020[];
+extern u8 D_8823468C;
+extern u8 *D_88234568[];
+extern u8 *D_882346D0[];
+extern s16 D_882346C8;
+extern u16 D_882346CA;
+extern s32 func_88002958(u8 **, u16, s32, s16);
+extern s32 func_8004C874(s32, s32);
+
+void func_882041F0(void) {
+    // Four bytes at 0x88234694 that menu->unk10 points at; as a function-scope
+    // static the four clears share one lui.
+    static struct { u8 r, g, b, a; } D_88234694;
+    s32 pad; // FAKE: count spills at 0x28
+    s32 count;
+    s32 i;
+
+    ((F31Menu *)&D_88234680)->unk2C = 0;
+    ((F31Menu *)&D_88234680)->unk8 = 0;
+    ((F31Menu *)&D_88234680)->x = 0x44;
+    ((F31Menu *)&D_88234680)->w = 0x138;
+    ((F31Menu *)&D_88234680)->y = (600.0f / func_80001FF0()) + ((600.0f / func_80001FF0()) > 0.0f ? 0.5f : -0.5f);
+    ((F31Menu *)&D_88234680)->h = (3000.0f / func_80001FF0()) + ((3000.0f / func_80001FF0()) > 0.0f ? 0.5f : -0.5f);
+    if (func_8800005C() != 0) {
+        D_88234694.g = 0;
+        D_88234694.b = 0;
+        D_88234694.a = 0;
+        D_88234694.r = 0;
+        ((F31Menu *)&D_88234680)->unk18 = 1;
+        ((F31Menu *)&D_88234680)->unkC = 1;
+        ((F31Menu *)&D_88234680)->unk10 = (u8 *)&D_88234694;
+        count = 4;
+    } else {
+        *(Pair8_882041F0 *)&D_8823468C = *(Pair8_882041F0 *)D_88006020;
+        count = 5;
+    }
+    ((F31Menu *)&D_88234680)->unk1A = func_88002958(D_88234568, 5, 0x10, 1);
+    for (i = 0; i < 5; i++) {
+        D_882346D0[i] = (u8 *)func_8004C874(0x1F, i + 6);
+    }
+    D_882346CA = func_88002958(D_882346D0, count, 8, 1) + 0x21;
+    D_882346C8 = 0x24C - D_882346CA;
+}
 
 extern void func_88000288(void *, s16, s16, s16, u8, u8, u8, u8);
 extern s32 func_80001FF0(void);
