@@ -206,7 +206,78 @@ void func_8290E8D8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_34B0F0/func_8290EAC0.s")
+extern Gfx *D_800D0510;
+void func_8290EAC0(u8 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    s32 right;
+    s32 bottom;
+    s32 x1;
+    s32 pad[5];
+    s32 div = 32;
+    s32 xx;
+    s32 cols;
+    s32 rows;
+    s32 tx;
+    s32 ty;
+
+    if (arg1 < 0) {
+        arg3 += arg1;
+        arg1 = 0;
+    }
+    if (arg2 < 0) {
+        arg4 += arg2;
+        arg2 = 0;
+    }
+    right = arg1 + arg3;
+    if (right >= 0x281) {
+        do {
+            if (arg1 > 0x280) {
+                arg1 = 0x280;
+            }
+            arg3 = 0x280 - arg1;
+        } while (0);
+        right = arg3 + arg1;
+    }
+    bottom = arg2 + arg4;
+    if (bottom >= 0x1E1) {
+        do {
+            if (arg2 > 0x1E0) {
+                arg2 = 0x1E0;
+            }
+            arg4 = 0x1E0 - arg2;
+        } while (0);
+        bottom = arg4 + arg2;
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    gDPSetTexturePersp(D_800D0510++, G_TP_NONE);
+    gDPSetScissor(D_800D0510++, G_SC_NON_INTERLACE, arg1, arg2, right, bottom);
+    gDPSetCombineMode(D_800D0510++, G_CC_DECALRGB, G_CC_DECALRGB);
+    gDPPipeSync(D_800D0510++);
+    x1 = right;
+    bottom = arg4 + arg2;
+    for (; arg2 < bottom;) {
+        ty = arg2 % div;
+        rows = div - ty;
+        if (arg2 + rows > bottom) {
+            rows = bottom - arg2;
+        }
+        for (xx = arg1; xx < x1;) {
+            tx = xx % div;
+            cols = div - tx;
+            if (xx + cols > right) {
+                cols = right - xx;
+            }
+            gDPLoadTextureBlock(D_800D0510++, arg0 + (((arg2 / div) * 20) + (xx / div)) * 0x200, G_IM_FMT_RGBA,
+                                G_IM_SIZ_16b, 16, 16, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP,
+                                G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            gSPTextureRectangle(D_800D0510++, xx << 2, arg2 << 2, (xx + cols) << 2, (arg2 + rows) << 2, G_TX_RENDERTILE, tx << 4, ty << 4, 0x200, 0x200);
+            xx = xx + cols;
+        }
+        arg2 = arg2 + rows;
+    }
+    gDPSetScissor(D_800D0510++, G_SC_NON_INTERLACE, 0, 0, 640, 480);
+}
 #endif
 
 #ifdef VERSION_US
