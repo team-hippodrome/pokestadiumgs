@@ -2,7 +2,52 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/73/fragment73_code/func_8F500020.s")
+extern s32 func_80041C98(s32);
+extern void func_80041E2C(void);
+extern void _bzero(void *, s32);
+extern s16 func_8002263C(void);
+extern u8 *ModelPreview_Create(s32, s32, s32);
+extern void func_80042D54(u8 *, s32);
+extern void func_80042FBC(u8 *, s32);
+extern void func_800371B4(u8 *, u8 *, f32, s32, s32);
+extern f32 D_8F500990[];
+void func_8F500020(void) {
+    // Preview state at 0x8F5009A0 (cleared from +8). IDO shares one lui across
+    // neighbouring field stores only for a function-scope static; datamig_bss.ld
+    // pins this object's .bss at 0x8F5009A0.
+    static struct {
+        s32 unk_00;
+        s32 unk_04;
+        s16 unk_08;
+        s16 unk_0A;
+        s16 unk_0C;
+        s16 unk_0E;
+        s16 unk_10;
+        void *unk_14;
+        u8 *unk_18;
+        s32 unk_1C;
+    } D_8F5009A0;
+    u8 *p;
+    s32 sp20 = func_80041C98(1);
+
+    func_80041E2C();
+    _bzero(&D_8F5009A0.unk_08, 0x18);
+    D_8F5009A0.unk_08 = 0;
+    D_8F5009A0.unk_0A = 0;
+    D_8F5009A0.unk_0C = 1;
+    D_8F5009A0.unk_0E = func_8002263C();
+    D_8F5009A0.unk_10 = 0;
+    D_8F5009A0.unk_18 = ModelPreview_Create((s32)(D_8F5009A0.unk_14 = (void *)sp20), 0x80, 0x80);
+    func_80042D54(D_8F5009A0.unk_18, 0);
+    D_8F5009A0.unk_1C = 0;
+    *(u16 *)D_8F5009A0.unk_18 &= 0xFFFD;
+    *(u16 *)D_8F5009A0.unk_18 &= 0xFFFB;
+    func_80042FBC(D_8F5009A0.unk_18, 0xAC);
+    *(f32 *)(D_8F5009A0.unk_18 + 0x10) *= D_8F500990[0];
+    if (*(u8 **)(*(u8 **)(D_8F5009A0.unk_18 + 0x18) + 0xC)) {} // FAKE: moves the camera pointer from v0 to v1.
+    p = *(u8 **)(*(u8 **)(D_8F5009A0.unk_18 + 0x18) + 0xC);
+    func_800371B4(p + 0xB4, p + 0xA8, 1250.0f, 0x71C, 0);
+}
 
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
