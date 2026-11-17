@@ -37,6 +37,12 @@ SECTIONS
         build/src/fragments/10/fragment10_D5250.o(.bss)
     }
 
+    /* func_8F801FC4's list-cursor statics (cursor, top, page, last). */
+    .fragment77_list_cursor_bss 0x8F809FC8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/77/fragment77_code.o(.bss)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
