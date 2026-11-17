@@ -448,9 +448,113 @@ u8 func_8AF0C96C(u8 *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0CA00.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0CE6C.s")
-
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern u8 *func_80064800(u8);
+extern u8 D_8AF2D302[];
+extern s16 D_8AF2ED00;
+extern s16 D_8AF2ED02;
+extern s16 D_8AF2E89E;
+extern u8 *D_8AF2D594;
 extern u8 *D_8AF2E888;
+
+void func_8AF0CE6C(s16 arg0, s16 arg1) {
+    s32 i;
+    u8 b0, b1;
+    u8 sp59;
+    u8 sp58;
+    u8 flag = 0x60;
+    if (func_8AF00020() == 0) {
+        flag = 0x40;
+    }
+    func_8004C874(0, arg0 - 1);
+    D_8AF2ED00 = func_8006397C(D_8AF2D302[1]);
+    D_8AF2ED02 = func_800639C0(D_8AF2D302[1]);
+    _bzero(D_8AF2D758, 0x190);
+    D_8AF2E89E = 0;
+    func_8004C874(0, arg1 - 1);
+    D_8AF2D594 = func_80064800(arg1);
+    while (1) {
+        b0 = D_8AF2D594[0];
+        b1 = D_8AF2D594[1];
+        sp59 = D_8AF2D594[2];
+        if (b0 == 0) {
+            break;
+        }
+        sp58 = func_80062D98(b1);
+        if (func_8AF0C5BC(arg1, (s16)b1) != 0) {
+            D_8AF2E888 = D_8AF2D758;
+            for (i = 0; i < 0x14; i++, D_8AF2E888 += 0x14) {
+                if (D_8AF2E888[0] == 0 || b1 == D_8AF2E888[0]) {
+                    func_8004C874(6, b1 - 1);
+                    if ((sp59 & flag) && b0 > 0) {
+                        D_8AF2E888[0] = b1;
+                        D_8AF2E888[5] = func_8AF01530(func_80062D98(b1));
+                        *(s32 *)(D_8AF2E888 + 0xC) = func_8004C874(6, b1 - 1);
+                        if (func_8AF0BB40((s16)b1) != 0) {
+                            if (sp58 == D_8AF2ED00 || sp58 == D_8AF2ED02) {
+                                D_8AF2E888[0xA] = 1;
+                            }
+                        }
+                        if (sp59 & 0x40) {
+                            D_8AF2E888[0x10] = b0;
+                        }
+                        if (sp59 & 0x20) {
+                            if (func_8AF00020() != 0) {
+                                D_8AF2E888[0x11] = b0;
+                            }
+                        }
+                        if (!(i + 1 < D_8AF2E89E)) {
+                            D_8AF2E89E = i + 1;
+                        }
+                    }
+                    i = 0x14;
+                }
+            }
+        }
+        D_8AF2D594 += 3;
+    }
+    if (func_8AF00020() != 0) {
+        func_8004C874(0, arg0 - 1);
+        D_8AF2D594 = func_80064800(arg0);
+        while (1) {
+            b0 = D_8AF2D594[0];
+            b1 = D_8AF2D594[1];
+            sp59 = D_8AF2D594[2];
+            if (b0 == 0) {
+                break;
+            }
+            sp58 = func_80062D98(b1);
+                if (func_8AF0C5BC(arg0, (s16)b1) != 0) {
+                D_8AF2E888 = D_8AF2D758;
+                for (i = 0; i < 0x14; i++, D_8AF2E888 += 0x14) {
+                        if (D_8AF2E888[0] == 0 || b1 == D_8AF2E888[0]) {
+                        func_8004C874(6, b1 - 1);
+                        if ((sp59 & 0x10) && b0 > 0) {
+                            D_8AF2E888[0] = b1;
+                            D_8AF2E888[5] = func_8AF01530(func_80062D98(b1));
+                            *(s32 *)(D_8AF2E888 + 0xC) = func_8004C874(6, b1 - 1);
+                            if (func_8AF0BB40((s16)b1) != 0) {
+                                if (sp58 == D_8AF2ED00 || sp58 == D_8AF2ED02) {
+                                    D_8AF2E888[0xA] = 1;
+                                }
+                            }
+                            if (sp59 & 0x10) {
+                                D_8AF2E888[0x12] = b0;
+                            }
+                            if (!(i + 1 < D_8AF2E89E)) {
+                                D_8AF2E89E = i + 1;
+                            }
+                        }
+                        i = 0x14;
+                    }
+                }
+            }
+            D_8AF2D594 += 3;
+        }
+    }
+}
+
 extern u8 D_8AF2D8E8[];
 s32 func_8AF0D29C(s16 id) {
     s32 i;
