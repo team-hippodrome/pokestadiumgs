@@ -411,7 +411,33 @@ void Fragment53_UpdateTrajectoryPosition(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86502524.s")
+extern s32 D_8650C474;
+extern s32 D_8650C498;
+extern s32 D_8650C4B4;
+extern s32 D_8650C4AC;
+extern f32 D_8650C4B8;
+extern s32 D_8650C4CC;
+extern s32 D_8650D9D4;
+extern f32 D_8650C4F4;
+extern void func_865020D8(void);
+// Four loader-cleared 0x168-byte models (scale at +0x30). Retail shares one
+// lui between the +0x34/+0x30 stores, which only a section-relative static
+// gives; datamig_bss.ld pins this object's .bss at 0x86510010.
+static u8 D_86510010[0x5A0];
+extern f32 sqrtf(f32);
+#pragma intrinsic(sqrtf)
+void func_86502524(void) {
+    s32 i;
+    D_8650C498 = D_8650C474 + 0x5C;
+    D_8650C4B4 = D_8650C498 - D_8650C4CC - 10;
+    D_8650D9D4 = (s32)(sqrtf((f32)((f64)(D_8650C4AC - D_8650C498) / 4.9)) / D_8650C4B8 + 1.0f - 2.0f);
+    func_865020D8();
+    for (i = 0; i < 4; i++) {
+        *(f32 *)(D_86510010 + i * 0x168 + 0x38) = D_8650C4F4;
+        *(f32 *)(D_86510010 + i * 0x168 + 0x34) = D_8650C4F4;
+        *(f32 *)(D_86510010 + i * 0x168 + 0x30) = D_8650C4F4;
+    }
+}
 #endif
 
 #ifdef VERSION_US

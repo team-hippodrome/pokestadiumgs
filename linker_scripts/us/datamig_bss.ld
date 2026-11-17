@@ -206,6 +206,14 @@ SECTIONS
         build/src/fragments/17/fragment17_11B210.o(.bss)
     }
 
+    /* Fragment 53's four loader-cleared 0x168-byte models at D_86510010.
+     * func_86502524's unrolled scale stores share lui pairs only for a
+     * section-relative static, so the array is defined in C. */
+    .fragment53_models_10010_bss 0x86510010 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/53/fragment53_code.o(.bss)
+    }
+
     /* Fragment 21's saved argument pair and three state halfwords. Both
      * records are loader-cleared; compiler alignment has no load image. */
     .fragment21_pair_9004_data 0x82509004 (NOLOAD) : SUBALIGN(2)
@@ -304,6 +312,9 @@ SECTIONS
 
 ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
        "fragment21 archive record must retain its compiler section footprint");
+
+ASSERT(SIZEOF(.fragment53_models_10010_bss) == 0x5A0,
+       "fragment53 models must keep four 0x168-byte records");
 
 ASSERT(SIZEOF(.fragment32_anim_state_data) == 112,
        "fragment32 animation state must retain its compiler section footprint");
