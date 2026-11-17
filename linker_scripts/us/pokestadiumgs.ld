@@ -3477,7 +3477,6 @@ SECTIONS
         build/src/fragments/44/fragment44_20BDB0.o(.bss);
         build/src/fragments/44/fragment44_20C560.o(.bss);
         build/src/fragments/44/fragment44_20CBF0.o(.bss);
-        build/src/fragments/44/fragment44_20D3A0.o(.bss);
         build/src/fragments/44/fragment44_20EBC0.o(.bss);
         build/src/fragments/44/fragment44_20F140.o(.bss);
         build/src/fragments/44/fragment44_212740.o(.bss);
