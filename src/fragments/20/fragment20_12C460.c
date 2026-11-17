@@ -2073,8 +2073,57 @@ void func_82608C1C(u8 *arg0, s32 arg1) {
 }
 /* mkdraft:func_82608C1C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82608EC4.s")
+typedef struct Color {
+    /* 0x00 */ u8 r;
+    /* 0x01 */ u8 g;
+    /* 0x02 */ u8 b;
+    /* 0x03 */ u8 a;
+} Color;
 
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+
+void func_82608EC4(u8 *arg0, s32 arg1) {
+    struct {
+        s32 count;
+        u16 *glyphs[1];
+    } *text;
+    s32 pad[1];
+    u16 *glyph;
+    s32 total_width;
+    s32 cur_x;
+    s32 i;
+    s16 y;
+    s16 x;
+    struct Color { u8 r, g, b, a; } prim;
+    struct Color2 { u8 r, g, b, a; } env;
+
+    text = (void *)(arg0 + 0x30);
+    total_width = 0;
+    x = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    y = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    if (arg1 != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+    }
+    func_82607BF4(*(s16 *)arg0, (u8 *)&prim, (u8 *)&env, *(s16 *)(arg0 + 0xC), (*(u16 *)(arg0 + 4) & 8) != 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+    gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+    for (i = 0; i < text->count; i++) {
+        glyph = text->glyphs[i];
+        if (glyph != NULL) {
+            total_width += *glyph;
+        }
+    }
+    cur_x = x;
+    cur_x += (*(s16 *)(arg0 + 0x24) - total_width) / 2;
+    for (i = 0; i < text->count; i++) {
+        glyph = text->glyphs[i];
+        if (glyph != NULL) {
+            func_8004D19C(cur_x, y + 9, (s32)glyph, 0, 0);
+            cur_x += *glyph;
+        }
+    }
+}
 extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 void func_826090F4(u8 *arg0, s32 arg1) {
     u8 *tex;
@@ -2508,8 +2557,63 @@ void func_8260A0B8(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260A6B4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260AF30.s")
+void func_8260AF30(void *arg0, s32 arg1) {
+    u8 *rows;
+    u16 *texture;
+    s32 strip_width;
+    s32 texture_height;
+    s32 pad1; // FAKE: unused; preserves 0xF8 stack layout
+    s16 origin_y;
+    s16 origin_x;
+    struct { u8 r, g, b, a; } prim;
+    struct { u8 r, g, b, a; } env;
+    s32 x_base;
+    s32 y_base;
+    s32 cols;
+    s32 step_x;
+    s32 step_y;
+    s32 width;
+    s32 height;
+    s32 x;
+    s32 y;
+    s32 i;
 
+    texture = (u16 *)func_8004C990(81, 0);
+    strip_width = (s32)texture[0] / 4;
+    texture_height = texture[1];
+    if (texture != NULL) {
+        origin_x = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+        origin_y = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+        x_base = 12;
+        y_base = 147;
+        cols = 4;
+        step_x = 135;
+        step_y = 0;
+        width = 126;
+        height = 42;
+        if (arg1 != 0) {
+            gSPDisplayList(D_800D0510++, D_80094E78);
+            gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+            func_8004D1FC((u8 *)texture);
+        }
+        func_82607BF4(*(s16 *)arg0, (u8 *)&prim, (u8 *)&env, *(s16 *)((u8 *)arg0 + 12), (*(u16 *)((u8 *)arg0 + 4) & 8) != 0);
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, prim.r, prim.g, prim.b, 255);
+        gDPSetPrimColor(D_800D0510++, 0, 0, env.r, env.g, env.b, 255);
+        for (i = 0; i < 4; i++) {
+            x = (origin_x + x_base) + (step_x * (i % cols));
+            y = (origin_y + y_base) + (step_y * (i / cols));
+            GfxRect_DrawTextured((s16)x, (s16)y, (s16)strip_width, (s16)texture_height, (s16)(strip_width * 0), 0, 1024, 1024, 0);
+            GfxRect_DrawTextured((s16)(x + strip_width), (s16)y, (s16)(width - strip_width * 2), (s16)texture_height, (s16)(strip_width << 5), 0, 0, 1024, 0);
+            GfxRect_DrawTextured((s16)((x + width) - strip_width), (s16)y, (s16)strip_width, (s16)texture_height, (s16)(strip_width << 5), 0, 1024, 1024, 0);
+            GfxRect_DrawTextured((s16)x, (s16)(y + texture_height), (s16)strip_width, (s16)(height - texture_height * 2), (s16)((strip_width * 2) << 5), 0, 1024, 0, 0);
+            GfxRect_DrawTextured((s16)x, (s16)((y + height) - texture_height), (s16)strip_width, (s16)texture_height, (s16)((strip_width * 2) << 5), 0, 1024, 1024, 0);
+            GfxRect_DrawTextured((s16)(x + strip_width), (s16)((y + height) - texture_height), (s16)(width - strip_width * 2), (s16)texture_height, (s16)((strip_width * 3) << 5), 0, 0, 1024, 0);
+            GfxRect_DrawTextured((s16)((x + width) - strip_width), (s16)((y + height) - texture_height), (s16)strip_width, (s16)texture_height, (s16)((strip_width * 3) << 5), 0, 1024, 1024, 0);
+            GfxRect_DrawTextured((s16)((x + width) - strip_width), (s16)(y + texture_height), (s16)strip_width, (s16)(height - texture_height * 2), (s16)((strip_width * 3) << 5), 0, 1024, 0, 0);
+        }
+    }
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260B424.s")
 
 /* mkdraft:func_8260B8CC begin */
@@ -3119,12 +3223,7 @@ typedef struct unk_func_8260DB98 {
     /* 0x0E */ u8 unk_0E[0x06];
     /* 0x14 */ s16 unk_14;
 } unk_func_8260DB98;
-typedef struct Color {
-    /* 0x00 */ u8 r;
-    /* 0x01 */ u8 g;
-    /* 0x02 */ u8 b;
-    /* 0x03 */ u8 a;
-} Color;
+
 
 
 void func_8260DB98(u8 *arg0, s32 arg1) {

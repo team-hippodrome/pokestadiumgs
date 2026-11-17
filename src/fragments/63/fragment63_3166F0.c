@@ -4,8 +4,66 @@
 #ifdef VERSION_US
 extern void func_8004C8C0(s32);
 extern void func_87F0277C(s32);
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_3166F0/func_87E12D80.s")
+typedef struct unk_func_87E13558 {
+    f32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+} unk_func_87E13558;
 
+typedef struct { s16 unk_00[3]; } unk_func_87E12D80_rotation;
+
+extern u8 *D_87F119DC;
+
+extern f32 D_80087E50[];
+
+extern void func_87F0B4AC(void *, void *, void *, void *);
+
+extern void func_87E12D80(void);
+
+void func_87E12D80(void) {
+    u8 *state = *(u8 **)(D_87F119DC + 56);
+    f32 angle;
+    if (*(u32 *)state & 1) {
+        func_87F0B4AC(state + 460, D_87F119DC + 72, D_87F119DC + 84, D_87F119DC + 66);
+        if (*(s32 *)(state + 592) != 0) {
+            *(u32 *)(state + 616) = 0;
+        } else {
+            if (*(u32 *)state & 2) {
+                *(u32 *)state &= ~1;
+                *(u8 **)(state + 12) = 0;
+            }
+            switch (*(s32 *)(state + 4)) {
+            case 0:
+                angle = (*(u32 *)(state + 616) % 360) * 15.0f * 182.04167f;
+                *(f32 *)(state + 28) = D_80087E50[(u16)((angle >= 0.0f) ? (s32)(angle + 0.5f) : (s32)(angle - 0.5f)) >> 4] * 5.0f;
+                *(f32 *)(state + 32) = 0.0f;
+                *(f32 *)(state + 36) = 0.0f;
+                break;
+            case 1:
+                angle = (*(u32 *)(state + 616) % 360) * 15.0f * 182.04167f;
+                *(f32 *)(state + 28) = D_80087E50[(u16)((angle >= 0.0f) ? (s32)(angle + 0.5f) : (s32)(angle - 0.5f)) >> 4] * 5.0f;
+                *(f32 *)(state + 32) = -D_80087E50[(u16)((angle >= 0.0f) ? (s32)(angle + 0.5f) : (s32)(angle - 0.5f)) >> 4] * 5.0f;
+                *(f32 *)(state + 36) = 0.0f;
+                break;
+            }
+            if (*(u8 **)(state + 12) != 0) {
+                *(unk_func_87E13558 *)(D_87F119DC + 72) = *(unk_func_87E13558 *)(*(u8 **)(state + 12) + 72);
+                *(unk_func_87E12D80_rotation *)(D_87F119DC + 66) = *(unk_func_87E12D80_rotation *)(*(u8 **)(state + 12) + 66);
+                D_87F119DC[37] |= 1;
+            } else {
+                D_87F119DC[37] &= 0xFFFE;
+                *(f32 *)(D_87F119DC + 72) = 0.0f;
+                *(f32 *)(D_87F119DC + 76) = 0.0f;
+                *(f32 *)(D_87F119DC + 80) = 0.0f;
+            }
+            *(f32 *)(D_87F119DC + 72) += *(f32 *)(state + 16) + *(f32 *)(state + 28);
+            *(f32 *)(D_87F119DC + 76) += *(f32 *)(state + 20) + *(f32 *)(state + 32);
+            *(f32 *)(D_87F119DC + 80) += *(f32 *)(state + 24) + *(f32 *)(state + 36);
+        }
+    } else {
+        D_87F119DC[37] &= 0xFFFE;
+    }
+}
 extern void *D_8009491C;
 extern Gfx *D_800D0510;
 extern u8 *func_8004CA60(u8 *);
@@ -159,11 +217,7 @@ void func_87E134E8(void) {
     (*(s32 *)((u8 *)(D_87E1EBD8) + (0))) = (s32) ((*(s32 *)((u8 *)(D_87E1EBD8) + (0))) | 2);
 }
 
-typedef struct unk_func_87E13558 {
-    f32 unk_00;
-    f32 unk_04;
-    f32 unk_08;
-} unk_func_87E13558;
+
 
 void func_87E13558(u8 *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
     if ((*(u32 *)D_87E1EBD8 & 1) && !(*(u32 *)D_87E1EBD8 & 2)) {

@@ -2,8 +2,29 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11A7F0/func_8220AE30.s")
+extern f32 D_80087E50[];
 
+extern f32 D_80088E50[];
+
+extern f32 D_8220E048;
+
+extern f32 D_8220E04C;
+
+void func_8220AE30(s16 *arg0) {
+    s16 *origin = arg0 + 2;
+    f32 *particle = (f32 *) ((u8 *) arg0 + 0x18);
+    s32 i;
+
+    for (i = 0; i < 16; i++) {
+        particle[0] = origin[0];
+        particle[1] = origin[1];
+        particle[2] = 1.0f;
+        particle[3] = 1.0f;
+        particle[4] = D_80087E50[(u16)(i * 4096 + 2048) >> 4] * D_8220E048;
+        particle[5] = 0.0f - D_80088E50[(u16)(i * 4096 + 2048) >> 4] * D_8220E048 + D_8220E04C;
+        particle += 6;
+    }
+}
 /* mkdraft:func_8220B248 begin */
 extern f32 D_8220E050;
 extern s16 D_8220E054;
@@ -169,7 +190,7 @@ typedef struct F17Rgb {
 
 static F17OverlayHeader sOverlayHeader[1] = { 0 };
 
-extern void func_8220AE30(F17OverlayHeader *);
+void func_8220AE30(s16 *arg0);
 
 // Starts the overlay when it is idle: stores the position and the two colors
 // (D_822109CC, with alpha D_822109C8 = 255, and D_822109CF) that func_8220B478

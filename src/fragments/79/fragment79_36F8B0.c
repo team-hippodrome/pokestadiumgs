@@ -940,8 +940,176 @@ void func_84101C00(u8 *arg0, Func84100688Table **arg1, u8 *arg2) {
 }
 /* mkdraft:func_84101C00 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_36F8B0/func_84101D54.s")
+extern void func_84104A00(u8 *);
 
+extern void func_84105A0C(u8 *);
+
+extern u32 func_841094EC(void);
+
+extern s32 D_841901A4;
+
+extern void fragment27_main(u32 *,u32);
+
+extern s32 ParticleMath_HasBits(void *arg0, s32 arg1);
+
+extern void BattleAnim_GetPointAlongCameraRay(u8 *, f32);
+
+void func_84101D54(u8 *arg0) {
+    f32 scale;
+    u8 *state;
+    s32 target;
+    s16 *size_track;
+    f32 step,end;
+    u8 **motion;
+    u8 **dynamics;
+    u8 **rotation;
+    u8 **position;
+    Func84100688Table **velocity;
+    ParticleVec3f vector;
+    u32 frame;
+    u32 raw;
+    Func84100688Table **colors;
+    u32 mode;
+    u8 prim_buf[4];
+    u8 *prim;
+    u8 env_buf[4];
+    u8 *env;
+    u8 *fade_pair;
+    s32 current;
+    s32 changed;
+    u8 *fade;
+    s32 start;
+    u8 *fade_out;
+    state=*(u8 **)(arg0+16);
+    if(state!=NULL) {
+        if(ParticleMath_HasBits((s32 *)(state+4),0x20000)) func_84104A00(arg0);
+        if(ParticleMath_HasBits((s32 *)(state+4),1)) BattleAnim_GetPointAlongCameraRay(arg0+56,(f32)*(s16 *)(*(u8 **)(state+20)+6));
+        if(*(u8 ***)(state+12) && (*(u8 ***)(state+12))[1]) {
+            size_track=((s16 (*)[4])(*(u8 ***)(state+12))[1])[arg0[125]];
+            if(size_track && size_track[2]) {
+                if(arg0[127]>=size_track[3]) {
+                    step=size_track[2]*0.001f;
+                    end=size_track[1]*0.001f;
+                    if(*(f32 *)(arg0+28)<end) {
+                        *(f32 *)(arg0+28)+=step;
+                        if(end<*(f32 *)(arg0+28)) *(f32 *)(arg0+28)=end;
+                    } else if(end<*(f32 *)(arg0+28)) {
+                        *(f32 *)(arg0+28)-=step;
+                        if(*(f32 *)(arg0+28)<end) *(f32 *)(arg0+28)=end;
+                    }
+                }
+                func_84101AF4(arg0,state);
+            }
+        }
+        if(*(u8 **)(state+16)) {
+            motion=*(u8 ***)(*(u8 **)(state+16)+12);
+            if(motion) {
+                dynamics=(u8 **)motion[0];
+                rotation=(u8 **)motion[1];
+                position=(u8 **)motion[2];
+                velocity=(Func84100688Table **)motion[3];
+                if(*(s32 *)(state+4)&8) scale=func_8411E358(*(s32 *)(arg0+8),*(u16 *)(arg0+104))*0.01f;
+                else scale=func_8411EE54(*(u8 **)(arg0+8))*0.01f;
+                if(rotation) {
+                    if(rotation[0]) func_84101888((s16 *)(arg0+106),rotation[0],arg0[127],(s16 *)(arg0+112));
+                    if(rotation[1]) func_84101888((s16 *)(arg0+108),rotation[1],arg0[127],(s16 *)(arg0+114));
+                    if(rotation[2]) func_84101888((s16 *)(arg0+110),rotation[2],arg0[127],(s16 *)(arg0+116));
+                }
+                if(position) {
+                    if(position[0]) func_84101A08((f32 *)(arg0+68),position[0],arg0[127]);
+                    if(position[1]) func_84101A08((f32 *)(arg0+72),position[1],arg0[127]);
+                    if(position[2]) func_84101A08((f32 *)(arg0+76),position[2],arg0[127]);
+                }
+                if(velocity) {
+                    vector.x=vector.y=vector.z=0.0f;
+                    func_84101084(velocity,arg0);
+                    vector.z=*(s16 *)(arg0+102)*scale;
+                    ParticleMath_RotateVec3fY((ParticleVec3f *)(arg0+80),vector,*(ParticleVec3s *)(arg0+106));
+                }
+                if(dynamics) {
+                    if(dynamics[0]) {
+                        func_8410119C(arg0,(Func84100688Table **)dynamics[0]);
+                        func_841013F4(arg0,*(s16 *)dynamics[0]);
+                    }
+                    if(dynamics[1]) {
+                        if(dynamics[1][0]==arg0[127] && *(s8 *)(dynamics[1]+1)==0) *(s16 *)(arg0+96)=*(s16 *)(dynamics[1]+4);
+                        if(arg0[127]>=dynamics[1][0]) {
+                            if(*(s8 *)(dynamics[1]+1)>0) {
+                                *(s16 *)(arg0+96)+=*(s8 *)(dynamics[1]+1);
+                                if(*(s16 *)(arg0+96)>*(s16 *)(dynamics[1]+4)) *(s16 *)(arg0+96)=*(s16 *)(dynamics[1]+4);
+                            } else if(*(s8 *)(dynamics[1]+1)<0) {
+                                *(s16 *)(arg0+96)+=*(s8 *)(dynamics[1]+1);
+                                if(*(s16 *)(arg0+96)<*(s16 *)(dynamics[1]+4)) *(s16 *)(arg0+96)=*(s16 *)(dynamics[1]+4);
+                            }
+                            if(arg0[151]==100) *(f32 *)(arg0+72)+=0.01f*(*(s16 *)(arg0+96))*scale;
+                            else *(f32 *)(arg0+72)+=((u32)arg0[151]/100.0f)*0.01f*(*(s16 *)(arg0+96))*scale;
+                        }
+                    }
+                    if(dynamics[2] && arg0[127]>=*(s16 *)dynamics[2]) *(f32 *)(arg0+72)-=0.01f*(*(s16 *)(dynamics[2]+2))*scale;
+                }
+            }
+            if(*(u8 **)(*(u8 **)(state+16)+8)) func_84101C00(arg0,*(Func84100688Table ***)(*(u8 **)(*(u8 **)(state+16)+8)),state);
+        }
+        if(ParticleMath_HasBits((s32 *)(state+4),0x10000)) func_84105A0C(arg0+108);
+        if(*(u8 **)(state+20)) {
+            if(ParticleMath_HasBits((s32 *)(state+4),2)) {
+                if(*(s16 *)(*(u8 **)(state+20)+4)==arg0[127]) func_84100020(arg0,128);
+            } else {
+                if(*(s16 *)(*(u8 **)(state+20)+4) && *(s16 *)(*(u8 **)(state+20)+4)==arg0[127]) func_84100094(arg0);
+            }
+            if(*(u8 ***)(*(u8 **)(state+20)+8) && **(u8 ***)(*(u8 **)(state+20)+8)) {
+                colors=*(Func84100688Table ***)(*(u8 **)(state+20)+8);
+                mode=colors[0]->pad_00[0];
+                raw=arg0[127];
+                if(raw>=colors[0]->divisor) raw=colors[0]->divisor-1;
+                frame=raw%colors[0]->divisor;
+                if(colors[1]) {
+                    if(mode==0) prim=(u8 *)colors[1]+frame*4;
+                    else if(colors[0]->pad_00[0]==1) prim=func_84100874(prim_buf,colors,frame);
+                    arg0[132]=prim[0];arg0[133]=prim[1];arg0[134]=prim[2];arg0[135]=prim[3];
+                }
+                if(((u8 **)colors)[2]) {
+                    if(mode==0) env=((u8 **)colors)[2]+frame*4;
+                    else if(colors[0]->pad_00[0]==1) env=func_841009D8(env_buf,colors,frame);
+                    arg0[139]=env[0];arg0[140]=env[1];arg0[141]=env[2];arg0[142]=env[3];
+                }
+            }
+            fade_pair=*(u8 **)(*(u8 **)(state+20)+12);
+            if(fade_pair) {
+                changed=0;
+                if(*(u8 **)(fade_pair+4)) {
+                    fade=*(u8 **)(fade_pair+4);
+                    start=0;
+                    if(*(u32 *)(arg0+20)&0x80000) { if(D_841901A4) start=1; }
+                    else if(*(u32 *)(arg0+20)&1) {
+                        if(func_841094EC()) { arg0[130]++;if(arg0[130]>=*(s16 *)(fade+2)) start=1; }
+                    } else if(arg0[127]>=*(s16 *)(fade+2)) start=1;
+                    if(start) {
+                        changed=1;
+                        if(ParticleMath_LacksBits((s32 *)(state+4),512) || ParticleMath_HasBits((s32 *)(state+4),2048)) fragment27_main((u32 *)(arg0+20),16);
+                        current=arg0[135];target=fade[0];
+                        if(current<target) { current+=fade[1];if(target<current) current=target; }
+                        else if(target<current) { current-=fade[1];if(current<target) current=target; }
+                        arg0[135]=current;
+                        if(ParticleMath_HasBits((s32 *)(state+4),0x40000000) && fade[0]==arg0[135]) func_84100094(arg0);
+                        if(ParticleMath_HasBits((s32 *)(state+4),4096)) { fragment27_main((u32 *)(arg0+20),32);arg0[142]=arg0[135]; }
+                    }
+                }
+                if(**(u8 ***)(*(u8 **)(state+20)+12) && !changed) {
+                    fade_out=**(u8 ***)(*(u8 **)(state+20)+12);
+                    if(arg0[127]>=fade_out[3]) {
+                        if(ParticleMath_LacksBits((s32 *)(state+4),512) || ParticleMath_HasBits((s32 *)(state+4),2048)) fragment27_main((u32 *)(arg0+20),16);
+                        current=arg0[135];target=fade_out[1];
+                        if(current<target) { current+=fade_out[2];if(target<current) current=target; }
+                        else if(target<current) { current-=fade_out[2];if(current<target) current=target; }
+                        arg0[135]=current;
+                        if(ParticleMath_HasBits((s32 *)(state+4),4096)) { fragment27_main((u32 *)(arg0+20),32);arg0[142]=arg0[135]; }
+                    }
+                }
+            }
+        }
+    }
+}
 extern u8 D_8418C958;
 extern s32 GeoRender_FindAnchorPosition(s32, s16, s32);
 void func_84102750(s32 arg0, void *arg1) {
@@ -993,7 +1161,7 @@ typedef struct unk_func_841027B4 {
     /* 0x50 */ unk_func_841027B4_vec3f unk_50;
 } unk_func_841027B4;
 
-M2C_UNK func_84101D54(u8 *);                        /* extern */
+void func_84101D54(u8 *arg0);
 
 
 

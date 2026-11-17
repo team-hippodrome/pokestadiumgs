@@ -960,8 +960,63 @@ void func_84121CAC(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_38EFE0/func_84121DE8.s")
+extern f32 D_84183CC0[];
 
+extern f32 D_84183CCC[];
+
+extern f32 D_84189C84;
+
+extern f32 D_84189C88;
+
+extern f32 D_84189C8C;
+
+extern f32 D_84189C90;
+
+extern void func_84121DE8(u8 *);
+
+void func_84121DE8(u8 *arg0) {
+    typedef struct {
+        f32 x;
+        f32 y;
+        f32 z;
+    } BA_Vec3f_L;
+    typedef struct {
+        f32 v[4];
+    } BA_Vec4_L;
+
+    s32 i;
+    f32 tmp;
+    BA_Vec3f_L sp5C;
+    f32 sp4C[4];
+
+    *(BA_Vec3f_L *)&sp5C = *(BA_Vec3f_L *)D_84183CC0;
+    *(BA_Vec4_L *)sp4C = *(BA_Vec4_L *)D_84183CCC;
+    for (i = 0; i < 2; i++) {
+        *(u8 *)(arg0 + i * 0x170 + 0x2F5) = Math_StepToS32(*(u8 *)(arg0 + i * 0x170 + 0x2F5), 0x80, 0xF, 0xF);
+        *(s16 *)(arg0 + i * 0x170 + 0x444) = Math_StepToS32(*(s16 *)(arg0 + i * 0x170 + 0x444), 0x222, 0x64, 0x64);
+        *(s16 *)(arg0 + i * 0x170 + 0x442) += *(s16 *)(arg0 + i * 0x170 + 0x444);
+        tmp = (D_80087E50[(u16)*(s16 *)(arg0 + i * 0x170 + 0x442) >> 4] * *(f32 *)(arg0 + 0x64C) / 4) * sp4C[i];
+        BattleAnim_Vec3fSetPolarXZ(&sp5C, tmp, *(s16 *)(arg0 + 0x20));
+        *(f32 *)(arg0 + i * 0x170 + 0x2FC) = *(f32 *)(arg0 + 0x24) + sp5C.x;
+        *(f32 *)(arg0 + i * 0x170 + 0x300) = *(f32 *)(arg0 + 0x28) + sp5C.y;
+        *(f32 *)(arg0 + i * 0x170 + 0x304) = *(f32 *)(arg0 + 0x2C) + sp5C.z;
+        ModelAnim_SetFrame(arg0 + i * 0x170 + 0x2D8, *(s32 *)(arg0 + 0x48) >> 0x10);
+        func_8003F2C4(*(void **)(arg0 + 0x5C0), arg0 + i * 0x170 + 0x2D8, *(s16 *)(arg0 + 0x40));
+    }
+
+    if (*(s16 *)(arg0 + 0x442) >= 0 && *(s16 *)(arg0 + 0x442) < 0x4000) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80088E50[(u16)*(s16 *)(arg0 + 0x442) >> 4] * D_84189C84 + 1.0f) * 255.0f);
+    } else if (*(s16 *)(arg0 + 0x442) >= 0x4000 && *(s16 *)(arg0 + 0x442) < 0x8000) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80088E50[(u16)(*(s16 *)(arg0 + 0x442) + 0x8000) >> 4] * D_84189C88 + 1.0f) * 255.0f);
+    } else if (*(s16 *)(arg0 + 0x442) >= -0x8000 && *(s16 *)(arg0 + 0x442) < -0x4000) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80087E50[(u16)*(s16 *)(arg0 + 0x442) >> 4] * D_84189C8C + 1.0f) * 255.0f);
+    } else if (*(s16 *)(arg0 + 0x442) >= -0x4000 && *(s16 *)(arg0 + 0x442) < 0) {
+        *(u8 *)(arg0 + 0x1D) = ((D_80087E50[(u16)*(s16 *)(arg0 + 0x442) >> 4] * D_84189C90 + 1.0f) * 255.0f);
+    }
+    if (*(u8 *)(arg0 + 0x1D) < 0x81) {
+        *(u8 *)(arg0 + 0x1D) = 0x80;
+    }
+}
 // Three-angle rotation table copied from the fragment data blob; the retail
 // function copies all six bytes to a stack local before the record loop.
 typedef struct AfterimageRotation { s16 v[3]; } AfterimageRotation;

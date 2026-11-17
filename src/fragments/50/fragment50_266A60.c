@@ -993,7 +993,167 @@ void func_86202C14(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86202E94.s")
+extern u8 D_86208038[];
+
+extern u8 D_862093B8[];
+
+extern u8 D_8620E180[];
+
+extern u8 D_8620E168[];
+
+extern u8 D_8620E150[];
+
+extern s32 D_86208030;
+
+extern s32 D_86208034;
+
+extern s32 D_87F0FB08;
+
+extern s32 D_87F0FB0C;
+
+typedef struct unk_func_86202E94 {
+    u8 unk_00000[0x72254];
+    void *unk_72254[4];
+    u8 unk_72264[0x73CB8-0x72264];
+    u8 unk_73CB8[4];
+    s32 unk_73CBC;
+} unk_func_86202E94;
+
+extern void func_87F0C650(void *);
+
+extern void func_87F0C694(void *, s32);
+
+extern void func_87F01870(void *);
+
+extern void func_87F01F34(void *);
+
+extern void func_87F00030(void);
+
+extern void func_87F0455C(void);
+
+extern void func_8004DDF4(s32);
+
+extern s32 main_pool_get_available(void);
+
+extern void *MainPool_AllocState(s32,s32);
+
+extern void *func_80040E80(void *,void *);
+
+extern void *func_8004DF38(void *,s32,s32);
+
+extern void *MainPool_AllocAligned(void *,s32,s32);
+
+extern void MainPool_FinalizeAllocation(void *);
+
+extern void ModelRenderer_InitDisplayRoots(void);
+
+extern void func_80037E9C(s32,void *);
+
+extern void func_87F024CC(void);
+
+extern void func_87F02CB0(void *,s32);
+
+extern void func_87F0252C(void *,void *,void *,s32);
+
+extern void func_86206508(void);
+
+extern void func_87F029B8(void *,s32);
+
+extern void func_87F0D48C(void *,void *,s32);
+
+extern void func_862075BC(void);
+
+extern void SceneAux_LoadResources(void);
+
+extern s32 func_87F04314(s16,s8,s8,s32,s8,s8,s8,s8,s8,void *,void *,void *);
+
+extern void SceneModel_InitPlayers(void);
+
+extern void StageFade_StartFromOpaque(s32);
+
+extern void func_87F00688(void);
+
+extern void func_86202AC4(void);
+
+void func_86202E94(void) {
+s32 i;
+s32 pool;
+func_87F0C650(((u8 *)D_8620E198)+288);
+if ((*(u8 **)(((u8 *)D_8620E198)+244))[0x2180]==4) {
+func_87F0C694(((u8 *)D_8620E198)+288,20);
+}
+func_87F01870(*(void **)(((u8 *)D_8620E198)+244));
+func_87F01F34(*(void **)(((u8 *)D_8620E198)+244));
+func_87F00030();
+func_87F0455C();
+func_86202C14();
+func_8004DDF4(155);
+func_8004DDF4(153);
+func_87F0C094(((u8 *)D_8620E198)+112,56.0f,47.0f,56.0f,2708.0f,-9185,8192);
+pool=(s32)MainPool_AllocState(main_pool_get_available(),0);
+*(void **)(((u8 *)D_8620E198)+240)=func_80040E80(pool,D_86208038);
+*(void **)(((u8 *)D_8620E198)+300)=func_8004DF38(pool,153,0);
+*(void **)(((u8 *)D_8620E198)+304)=func_8004DF38(pool,153,1);
+*(void **)(((u8 *)D_8620E198)+308)=func_8004DF38(pool,153,2);
+*(void **)(((u8 *)D_8620E198)+312)=func_8004DF38(pool,153,3);
+*(void **)(((u8 *)D_8620E198)+316)=func_80040E80(pool,D_862093B8);
+*(void **)(((u8 *)D_8620E198)+320)=func_8004DF38(pool,155,0);
+*(void **)(((u8 *)D_8620E198)+324)=func_8004DF38(pool,155,1);
+*(void **)(((u8 *)D_8620E198)+328)=func_8004DF38(pool,155,2);
+for(i=0;i<4;i++) ((unk_func_86202E94 *)D_8620E198)->unk_72254[i]=MainPool_AllocAligned(pool,*(s32 *)(D_8620DF60+i*12+8)*48,8);
+MainPool_FinalizeAllocation(pool);
+ModelRenderer_InitDisplayRoots();
+func_80037E9C(0,D_8620E180);
+func_80037E9C(0,D_8620E168);
+func_80037E9C(0,D_8620E150);
+func_87F024CC();
+func_87F02CB0(((u8 *)D_8620E198)+0x73B88,128);
+func_87F0252C(D_8620E180,((u8 *)D_8620E198)+372,((u8 *)D_8620E198)+392,128);
+func_87F0252C(D_8620E168,((u8 *)D_8620E198)+0xED88,((u8 *)D_8620E198)+0xED9C,1024);
+for(i=0;i<128;++i) {
+*(void **)(((u8 *)D_8620E198)+i*396+424)=((u8 *)D_8620E198)+i*76+0xC788;
+}
+func_87F0252C(D_8620E150,((u8 *)D_8620E198)+0x71D9C,((u8 *)D_8620E198)+0x71DB0,3);
+func_86206508();
+func_87F029B8(((u8 *)D_8620E198)+0x728A8,(*(u8 **)(((u8 *)D_8620E198)+244))[0x2182]);
+func_87F0D48C(((u8 *)D_8620E198)+248,*(void **)(((u8 *)D_8620E198)+244),0);
+func_862075BC();
+func_862006C8();
+func_862002A4();
+SceneMotion_CreateThreeModels();
+for(i=0;i!=4;i++) {
+((unk_func_86202E94 *)D_8620E198)->unk_73CB8[i]=(((*(u8 **)(((u8 *)D_8620E198)+244))[0x2182] & (1<<i)) ? 6 : 2)+i;
+}
+SceneAux_LoadResources();
+func_86202AC4();
+func_87F04314(0,0,0,(s32)"GRAVITY",12,0,10,1,3,(void *)(((u8 *)D_8620E198)+0),(void *)(((u8 *)D_8620E198)+4),(void *)(((u8 *)D_8620E198)+8));
+func_87F04314(0,0,1,(s32)"SP DEC",12,1,10,1,5,(void *)(((u8 *)D_8620E198)+48),(void *)(((u8 *)D_8620E198)+52),(void *)(((u8 *)D_8620E198)+56));
+func_87F04314(0,0,2,(s32)"F_BOUND",12,2,10,1,3,(void *)(((u8 *)D_8620E198)+12),(void *)(((u8 *)D_8620E198)+16),(void *)(((u8 *)D_8620E198)+20));
+func_87F04314(0,0,3,(s32)"PHYSICS",12,3,6,1,3,(void *)(((u8 *)D_8620E198)+60),(void *)(((u8 *)D_8620E198)+64),(void *)(((u8 *)D_8620E198)+68));
+func_87F04314(0,0,4,(s32)"SHOT_PW",12,4,10,4,5,(void *)(((u8 *)D_8620E198)+24),(void *)(((u8 *)D_8620E198)+28),(void *)(((u8 *)D_8620E198)+32));
+func_87F04314(0,0,5,(s32)"SPD MX",12,5,10,3,3,(void *)(((u8 *)D_8620E198)+36),(void *)(((u8 *)D_8620E198)+40),(void *)(((u8 *)D_8620E198)+44));
+func_87F04314(1,0,0,(s32)"EGGS",12,0,6,2,3,(void *)(((u8 *)D_8620E198)+72),(void *)(((u8 *)D_8620E198)+76),(void *)(((u8 *)D_8620E198)+80));
+func_87F04314(1,0,1,(s32)"EGG SIZE",12,1,10,2,3,(void *)(((u8 *)D_8620E198)+100),(void *)(((u8 *)D_8620E198)+104),(void *)(((u8 *)D_8620E198)+108));
+func_87F04314(1,16,0,(s32)"SO POS",28,0,10,2,3,(void *)(((u8 *)D_8620E198)+204),(void *)(((u8 *)D_8620E198)+208),(void *)(((u8 *)D_8620E198)+212));
+func_87F04314(1,16,1,(s32)"SO SC",28,1,10,3,3,(void *)(((u8 *)D_8620E198)+216),(void *)(((u8 *)D_8620E198)+220),(void *)(((u8 *)D_8620E198)+224));
+func_87F04314(2,0,0,(s32)"OPERATION",12,0,6,2,0,(void *)(((u8 *)D_8620E198)+84),(void *)(((u8 *)D_8620E198)+88),(void *)(((u8 *)D_8620E198)+92));
+func_87F04314(2,0,1,(s32)"CAM LOK X",12,1,10,5,3,(void *)(((u8 *)D_8620E198)+124),&D_86208030,&D_86208034);
+func_87F04314(2,0,2,(s32)"CAM LOK Y",12,2,10,5,3,(void *)(((u8 *)D_8620E198)+128),&D_86208030,&D_86208034);
+func_87F04314(2,0,3,(s32)"CAM LOK Z",12,3,10,5,3,(void *)(((u8 *)D_8620E198)+132),&D_86208030,&D_86208034);
+func_87F04314(2,0,4,(s32)"CAM DIST",12,4,10,5,3,(void *)(((u8 *)D_8620E198)+136),&D_86208030,&D_86208034);
+func_87F04314(2,0,5,(s32)"CAM AG_X",14,5,4,5,0,(void *)(((u8 *)D_8620E198)+140),&D_87F0FB08,&D_87F0FB0C);
+func_87F04314(2,0,6,(s32)"CAM AG_Y",14,6,4,5,0,(void *)(((u8 *)D_8620E198)+142),&D_87F0FB08,&D_87F0FB0C);
+func_87F04314(2,0,7,(s32)"SHUFFLE  ",12,7,3,1,0,(void *)(((u8 *)D_8620E198)+96),(void *)(((u8 *)D_8620E198)+97),(void *)(((u8 *)D_8620E198)+98));
+((unk_func_86202E94 *)D_8620E198)->unk_73CBC=0;
+if ((*(u8 **)(((u8 *)D_8620E198)+244))[0x2180]==4) {
+func_8620736C();
+func_86206304();
+SceneModel_InitPlayers();
+StageFade_StartFromOpaque(20);
+*(s32 *)(((u8 *)D_8620E198)+232)=3;
+func_87F00688();
+}
+}
 #endif
 
 #ifdef VERSION_US
