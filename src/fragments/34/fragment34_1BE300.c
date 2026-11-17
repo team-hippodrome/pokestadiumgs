@@ -487,5 +487,183 @@ void func_885037EC(void) {
     main_pool_pop_state(0x50495550);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88503830.s")
+typedef struct {
+    u8 unk_00;
+    u8 type;
+    u8 unk_02[18];
+} Fragment34Entry;
+typedef struct {
+    u8 data[0x4C];
+} Fragment34Node;
+extern Fragment34Entry D_8850D678[];
+extern Fragment34Node D_8800ED50[];
+extern void main_pool_push_state(s32);
+extern void func_88800020(void);
+extern void *Util_Malloc(s32);
+extern s32 GbSave_GetRecordCapacity(s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void *MainPool_AllocAligned(s32, s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 func_8004C8C0(s32);
+extern s32 func_8003514C(void);
+extern u8 *func_8006218C(s32, s32, s32, s32);
+extern u8 Deck_ReadEntries(u8 *, s32, u8 *);
+extern void func_8005EE88(s32, s32, u8 *);
+extern void func_80062304(u8 *);
+extern void HAL_Strcpy(u8 *, s32);
+extern s32 func_80001FF0(void);
+extern void func_880024FC(u8 *, u8 *, u8, s32, s32, s32, s32, s32, s32);
+extern u8 *func_88000578(u8 *, u8);
+extern s32 func_88004804(s32, s32, s16, s32, s32, s32, s32, s32, s32, u8 *, u8 *, u8 *, u8 *, s32, s32);
+extern void func_88000288(u8 *, s16, s32, s32, s32, s32, s32, s32);
+extern void func_88501570(void);
+extern void func_88501AE8(void);
+extern void func_88503644(void);
+
+/* Converts a duration in 60 Hz frames to func_80001FF0's frame rate, rounding to nearest. */
+#define FRAMES_AT_60HZ(n) \
+    ((s32)((f32)(n) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(n) / 60.0f > 0.0f) ? 0.5f : -0.5f)))
+#define STATE_S16(offset) (*(s16 *)(D_8850D6D0 + (offset)))
+
+/* Allocates the 0xA4-byte state at D_8850D6D0 for slot arg0. Reads the arg1 deck records (group 0
+   and D_8850D6D0[0x2E] more) into the slot's 0xA960-byte block at D_8850D6D8, then creates the two
+   0x4C-byte D_8800ED50 nodes stored at D_8850D6D0[0] and [4]. */
+void func_88503830(u8 arg0, s8 arg1) {
+    s32 poolState;
+    u8 *group;
+    s32 i;
+    u8 *record;
+    s32 node;
+    u8 capacity;
+    s32 unused; // FAKE: unused, reserves the stack slot between capacity and color.
+    u8 color[4];
+
+    main_pool_push_state(0x50495550);
+    func_88800020();
+    D_8850D6D0 = Util_Malloc(0xA4);
+    D_8850D6D0[0xA] = arg0;
+    D_8850D6D0[0x2C] = GbSave_GetRecordCapacity(33);
+    poolState = MainPool_AllocState(main_pool_get_available(), 0);
+    *(void **)(D_8850D6D0 + 0x14) = MainPool_AllocAligned(poolState, D_8850D6D0[0x2C] * 3200, 8);
+    *(void **)(D_8850D6D0 + 0x18) = MainPool_AllocAligned(poolState, D_8850D6D0[0x2C] * 3200, 8);
+    MainPool_FinalizeAllocation(poolState);
+    func_8004C8C0(154);
+    *(void **)(D_8850D6D0 + 0x1C) = (void *)func_8004C990(154, 0);
+    func_8004C8C0(241);
+    *(void **)(D_8850D6D0 + 0x20) = (void *)func_8004C990(241, 0);
+    func_8004C8C0(243);
+    *(void **)(D_8850D6D0 + 0x24) = (void *)func_8004C990(243, 0);
+    func_8004C8C0(252);
+    *(void **)(D_8850D6D0 + 0x28) = (void *)func_8004C990(252, 0);
+    if (func_8003514C() == 0) {
+        D_8850D6D0[0x2D] = 9;
+        STATE_S16(0x8C) = 269;
+        STATE_S16(0x8E) = 442;
+        STATE_S16(0x90) = 135;
+        STATE_S16(0x92) = 47;
+        STATE_S16(0x94) = 142;
+        STATE_S16(0x96) = 143;
+        STATE_S16(0x98) = 445;
+        STATE_S16(0x9A) = 129;
+        STATE_S16(0x9C) = 365;
+        STATE_S16(0x9E) = 150;
+        STATE_S16(0xA0) = 99;
+        STATE_S16(0xA2) = 509;
+        switch (D_8850D678[arg1].type) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                D_8850D6D0[0x2E] = 8;
+                break;
+            default:
+                D_8850D6D0[0x2E] = 9;
+                break;
+        }
+    } else {
+        D_8850D6D0[0x2D] = 14;
+        STATE_S16(0x8C) = 365;
+        STATE_S16(0x8E) = 491;
+        STATE_S16(0x90) = 86;
+        STATE_S16(0x92) = 23;
+        STATE_S16(0x94) = 118;
+        STATE_S16(0x96) = 119;
+        STATE_S16(0x98) = 494;
+        STATE_S16(0x9A) = 80;
+        STATE_S16(0x9C) = 461;
+        STATE_S16(0x9E) = 126;
+        STATE_S16(0xA0) = 87;
+        STATE_S16(0xA2) = 534;
+        D_8850D6D0[0x2E] = 14;
+    }
+    group = &D_8850D6D8 + arg0 * 0xA960;
+    group[0] = arg1;
+    group[1] = 0;
+    group[0xC88] = 0;
+    group[0xC89] = 0;
+    D_8850D6D0[0x31] = 0;
+    D_8850D6D0[0x2F] = 0;
+    group += 0xC8C;
+    for (i = 0; i < D_8850D6D0[0x2E] + 1; i++) {
+        if (i == 0) {
+            record = func_8006218C(32, arg1, 0, 0);
+            capacity = GbSave_GetRecordCapacity(32);
+        } else {
+            record = func_8006218C(33, arg1, i - 1, 0);
+        }
+        if (record != NULL) {
+            group[0] = Deck_ReadEntries(group + 4, capacity, record);
+            if (i != 0 && group[0] != 0) {
+                D_8850D6D0[0x2F]++;
+                D_8850D6D0[D_8850D6D0[0x2F] + 0x31] = i;
+                func_8005EE88(arg1, i - 1, group + 0xA54);
+            }
+            func_80062304(record);
+        }
+        if (i == 0) {
+            capacity = GbSave_GetRecordCapacity(33);
+            HAL_Strcpy(group + 0xA54, func_8004C874(52, 1));
+        }
+        group += 0xA74;
+    }
+    D_8850D6D0[0x30] = 0;
+    func_880024FC(D_8850D6D0 + 0x40, D_8850D6D0 + 0x30, (u8)(D_8850D6D0[0x2F] + 1), 527,
+                  (s32)(1980.0f / func_80001FF0() + ((1980.0f / func_80001FF0() > 0.0f) ? 0.5f : -0.5f)), 0, 48,
+                  0, 10);
+    D_8850D6D0[0x10] = 0;
+    D_8850D6D0[0x11] = 0;
+    func_88500D60(0);
+    func_88000578(color, D_8850D678[arg1].type);
+    // FAKE: the u32 conversion keeps arg0 from being shared with the group address computation.
+    node = func_88004804(0, 3, (s16)((u32)arg0 * 273 + 51), 32, 0, 1, color[0], color[1], color[2],
+                         (u8 *)&D_88000E4C, (u8 *)&D_88000E4C, (u8 *)&D_88000E4C, (u8 *)&D_88000E4C, 0, 0);
+    *(u8 **)D_8850D6D0 = (u8 *)&D_8800ED50[node];
+    *(s16 *)(*(u8 **)D_8850D6D0 + 0x10) = 267;
+    *(s16 *)(*(u8 **)D_8850D6D0 + 0x12) = 45;
+    node = func_88004804(0, 3, 51, 73, 0, 2, 230, 0xFF, 240, (u8 *)func_88501570, (u8 *)func_88501AE8,
+                         (u8 *)func_88503644, (u8 *)func_885037EC, 0, 1);
+    *(u8 **)(D_8850D6D0 + 4) = (u8 *)&D_8800ED50[node];
+    *(s16 *)(*(u8 **)(D_8850D6D0 + 4) + 0x10) = 540;
+    *(s16 *)(*(u8 **)(D_8850D6D0 + 4) + 0x12) = 382;
+    D_8850D6D0[8] = 2;
+    D_8850D6D0[9] = 2;
+    STATE_S16(0xE) = 0;
+    STATE_S16(0xC) = STATE_S16(0xE);
+    *(s32 *)(D_8850D6D0 + 0x64) = 1;
+    func_88000288(D_8850D6D0 + 0x68, FRAMES_AT_60HZ(5) + FRAMES_AT_60HZ(8) + FRAMES_AT_60HZ(30), 0xFF, 0,
+                  FRAMES_AT_60HZ(5), FRAMES_AT_60HZ(8), FRAMES_AT_60HZ(30), FRAMES_AT_60HZ(8));
+    func_88000288(D_8850D6D0 + 0x74, 0, 0xFF, 0, FRAMES_AT_60HZ(13), FRAMES_AT_60HZ(10), FRAMES_AT_60HZ(5),
+                  FRAMES_AT_60HZ(7));
+    i = D_88804054 != 0;
+    if (i) {
+        i = fragment29_main(D_8850D678[arg1].type) == 0;
+    }
+    *(s32 *)(D_8850D6D0 + 0x80) = i;
+    *(s32 *)(D_8850D6D0 + 0x84) = 1;
+    D_880068B4 = 0;
+}
+
+#undef FRAMES_AT_60HZ
+#undef STATE_S16
 #endif
