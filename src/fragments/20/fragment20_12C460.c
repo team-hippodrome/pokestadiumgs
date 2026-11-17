@@ -1598,11 +1598,11 @@ void func_82606B28(Self_82606B28 *arg0) {
     }
 }
 
-extern s32 D_826155C8;
-extern s32 D_826155CC;
-extern s32 D_826155D0;
-extern s32 D_826155D4;
 void func_82606CE8(u8 *arg0) {
+    static s32 D_826155C8 = 6;
+    static s32 D_826155CC = 3;
+    static s32 D_826155D0 = 4;
+    static s32 D_826155D4 = 2;
     u8 *sub;
     s32 duration;
     s32 stagger;
@@ -1666,9 +1666,56 @@ unk_func_82606E90* func_82606E90(unk_func_82606E90* arg0) {
     return result;
 }
 
+// Placeholder for func_82606EC8's function-scope statics (D_826155D8..D_826155F0)
+// until that function is in C; keeps func_82607528's statics at 0x826155F4.
+static s32 D_826155D8_82606EC8[7] = { 6, 3, 4, 2, 12, 40, 10 };
+
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606EC8.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82607528.s")
+extern void func_82606CE8(u8 *);
+extern void func_82606EC8(u8 *);
+void func_82607528(arg0)
+    u8 *arg0;
+{
+    static s32 D_826155F4 = 5;
+    static s32 D_826155F8 = 15;
+    static s32 D_826155FC = 5;
+    s32 pad0[1]; // FAKE
+    s32 t;
+    s32 total;
+
+    total = D_826155F4 + D_826155F8;
+
+    switch (*(s16 *)arg0) {
+    case 1:
+        func_82606B28(arg0); break;
+    case 4:
+        func_82606CE8(arg0); break;
+    case 6:
+        func_82606EC8(arg0); break;
+    case 5:
+        if (*(s16 *)(arg0 + 8) < 1000) {
+            *(s16 *)(arg0 + 8) += 1;
+        }
+        t = *(s16 *)(arg0 + 8);
+        if (t > D_826155FC) {
+            t = D_826155FC;
+        }
+        *(s16 *)(arg0 + 0x34) = (t * 0xFF) / D_826155FC;
+        break;
+    }
+    if (*(u16 *)(arg0 + 4) & 1) {
+        *(s16 *)(arg0 + 0xE) += 1;
+        if (*(s16 *)(arg0 + 0xE) < D_826155F4) {
+            *(s16 *)(arg0 + 0xC) = (*(s16 *)(arg0 + 0xE) * 0xFF) / D_826155F4;
+        } else {
+            *(s16 *)(arg0 + 0xC) = 0xFF - ((*(s16 *)(arg0 + 0xE) - D_826155F4) * 0xFF) / D_826155F8;
+        }
+        if (total == *(s16 *)(arg0 + 0xE)) {
+            *(u16 *)(arg0 + 4) &= 0xFFFE;
+        }
+    }
+}
 
 typedef struct { s16 a; s16 b; } Pair16_7734;
 void func_82607734(void *arg0, s32 arg1) {
