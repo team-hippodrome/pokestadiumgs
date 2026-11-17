@@ -113,7 +113,74 @@ void func_82900798(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_33CB20/func_829007A0.s")
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+extern s32 func_800459AC(u8 *, s32, s32, u32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+extern void func_829007A0(s32, s16, u16, u16, u16, u16, u8 *, s32, s32, s32);
+
+void func_829007A0(s32 arg0, s16 arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u8 *arg6, s32 arg7, s32 arg8, s32 arg9) {
+    s32 y;
+    s32 last_row;
+    s32 height;
+    s32 texture_step;
+    s32 remaining;
+    s32 count;
+    s32 i;
+    s32 step_rows;
+    s32 step;
+    s32 w;
+    u8 *start;
+    s32 h;
+    s32 width;
+    f32 ratio;
+    s32 d0;
+
+    if (arg6 != NULL && arg2 != 0 && arg3 != 0) {
+        width = arg2;
+        w = func_8290074C((f32)arg4 / arg2);
+        h = func_8290074C((f32)arg5 / arg3);
+        y = arg1;
+        ratio = (f32)arg3 / arg5;
+        switch (arg8) {
+        case 0:
+            texture_step = 0;
+            break;
+        case 1:
+            texture_step = 1;
+            break;
+        case 2:
+            texture_step = 2;
+            break;
+        case 3:
+            texture_step = 4;
+            break;
+        }
+        i = 0;
+        if (texture_step != 0) {
+            step = 0x1000 / texture_step;
+        } else {
+            step = 0x2000;
+        }
+        step_rows = (step / arg4) & ~1;
+        for (; i < arg5; i += step_rows) {
+            remaining = arg5 - i;
+            count = remaining < step_rows ? remaining : step_rows;
+            if (texture_step != 0) {
+                start = &arg6[arg4 * i * texture_step];
+            } else {
+                start = &arg6[arg4 * i / 2];
+            }
+            height = count * ratio;
+            d0 = arg0;
+            if (y + height > 0 && y < 0x140) {
+                func_800459AC(start, arg7, arg8, arg4, count, arg9, 0, 2, 2, 0, 0, 0, 0);
+                GfxRect_DrawTextured(d0, y, width, height, -16, -16, w, h, 0);
+            }
+            y = y + height;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -123,7 +190,7 @@ extern s32 func_8004CA24(u16 *);
 extern u8 *func_8004CA60(u8 *);
 extern s32 func_8004CA38(u8 *);
 extern s32 func_8004CA4C(u8 *);
-extern void func_829007A0(s16, s16, u16, u16, s32, s32, u8 *, s32, s32, s32);
+void func_829007A0(s32 arg0, s16 arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u8 *arg6, s32 arg7, s32 arg8, s32 arg9);
 
 void func_82900AFC(s16 arg0, s16 arg1, u16 arg2, u16 arg3, u16 *arg4) {
     s32 sp44;
