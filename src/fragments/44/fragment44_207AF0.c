@@ -591,7 +591,153 @@ void func_8AF1A72C(void) {
     _bzero(&D_8AF357C0, 0xE);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF1A764.s")
+extern void func_8004C4B0(s32);
+extern void func_8004C8C0(s32);
+extern void func_800476A0(void *, s32);
+extern void func_800476FC(void *, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_80047738(s32, s32, s32, s32);
+extern void func_8AF1A2B8(void *);
+extern void func_8AC0651C(void *, s16, s16, s16, s16);
+extern void func_8AC05ED4(s32, s32, void *);
+extern void func_8AC02898(void);
+extern void func_8AC03C28(void);
+extern void Fragment43_FillRectangleCallback(void);
+extern u8 D_8AF37080[];
+extern u8 *D_8AF35180;
+extern void *func_8AF00504(s16);
+extern s32 func_8AF003A8(s16);
+extern void func_8AC06E98(void *);
+extern s32 func_8AC06D8C(s32, s32);
+extern void func_8004E308(s32, s32 *, s32 *);
+extern void func_8AC02C80(s32, s32, s32, void *);
+extern s16 D_8AF36F28;
+extern s32 D_8AF357D0;
+extern u8 D_8AF357C0;
+extern s16 D_8AF357AC;
+extern s16 D_8AF357AE;
+extern s16 D_8AF357A8;
+extern s16 D_8AF357AA;
+extern void *D_8AF35184, *D_8AF37030, *D_8AF35188, *D_8AF3517C, *D_8AF35174, *D_8AF35178;
+extern void *D_8AF3518C, *D_8AF35190, *D_8AF35194, *D_8AF35198, *D_8AF3519C, *D_8AF351A0, *D_8AF351A4;
+extern void *D_8AF37074, *D_8AF37078;
+extern void *D_8AF37038[15];
+extern s32 D_8AF27440[];
+extern u8 D_8AF35058;
+extern u8 D_8AF350D0;
+extern u8 D_8AF35148;
+extern s8 D_8AF356A8;
+
+void func_8AF1A764(void) {
+    s32 i;
+    s32 pad; // FAKE: unused; reserves the stack slot that puts the er-slot handles at 0x38-0x44.
+    s32 page;
+    s16 visible;
+    s32 ers0;
+    s32 ers1;
+    s32 ers2;
+    s32 ers3;
+    u8 *p;
+
+    func_8004C4B0(8);
+    func_8004C4B0(0xA);
+    func_8004C4B0(9);
+    func_8004C4B0(0xB);
+    func_8004C4B0(0x3B);
+    func_8004C4B0(7);
+    func_8004C4B0(6);
+    func_8004C8C0(0x37);
+    func_8004C8C0(0x143);
+    func_8004C8C0(0x38);
+    func_800476A0(D_8AF37080, 7);
+    func_800476FC(D_8AF37080, 7);
+    func_80047738(0, func_8004C990(0x37, 0), 0, 0);
+    if (func_8AF00020() != 0) {
+        func_80047738(1, func_8004C990(0x37, 1), 0, 0);
+    } else {
+        func_80047738(1, func_8004C990(0x143, 0), 0, 0);
+    }
+    func_80047738(2, func_8004C990(0x38, 2), 0, 0);
+    func_80047738(3, func_8004C990(0x38, 5), 0, 0);
+    func_80047738(4, func_8004C990(0x38, 4), 0, 0);
+    func_80047738(5, func_8004C990(0x38, 1), 0, 0);
+    func_80047738(6, func_8004C990(0x38, 7), 0, 0);
+    func_8AF00504(0x77);
+    page = func_8AF003A8(0x77);
+    func_8AC06E98((void *)page);
+    D_8AF357B4 = 0;
+    D_8AF36F28 = 0;
+    p = (u8 *)&D_8AF357D0;
+    for (i = 0; i < 0xF9; i++, p += 12) {
+        if (p[0] > 0) {
+            D_8AF36F28++;
+            if (p[0] != 0xFF) {
+                D_8AF357B4++;
+            }
+        } else {
+            break;
+        }
+    }
+    D_8AF35184 = (void *)func_8AC06D8C(page, 0x7469746C);
+    *(s16 *)((u8 *)D_8AF35184 + 0x30) = 0x3B;
+    *(s16 *)((u8 *)D_8AF35184 + 0x32) = 0xD9;
+    D_8AF37030 = (void *)func_8AC06D8C(page, 0x626F6F6B);
+    D_8AF35188 = (void *)func_8AC06D8C(page, 0x62756E32);
+    *(u16 *)((u8 *)D_8AF35188 + 2) &= 0xFFFD;
+    D_8AF3517C = (void *)func_8AC06D8C(page, 0x736C6966);
+    *(s16 *)((u8 *)D_8AF3517C + 0x30) = 0x3B;
+    *(s16 *)((u8 *)D_8AF3517C + 0x32) = 0xD1;
+    D_8AF35174 = (void *)func_8AC06D8C(page, 0x6974656D);
+    D_8AF35178 = (void *)func_8AC06D8C(page, 0x62756E5F);
+    func_8004E308((s32)D_8AF35174, (s32 *)func_8AC02898, (s32 *)&D_8AF355A8);
+    func_8004E308((s32)D_8AF35178, (s32 *)func_8AC02898, (s32 *)&D_8AF356A8);
+    D_8AF3518C = (void *)func_8AC06D8C(page, 0x6F6E6F66);
+    D_8AF35190 = (void *)func_8AC06D8C(page, 0x74797065);
+    D_8AF35194 = (void *)func_8AC06D8C(page, 0x775F685F);
+    D_8AF35198 = (void *)func_8AC06D8C(page, 0x635F6D67);
+    *(s16 *)((u8 *)D_8AF35198 + 0x30) = 0x3B;
+    switch (D_8AF34D70) {
+    case 2:
+        *(s16 *)((u8 *)D_8AF35198 + 0x32) = 0x112;
+        break;
+    case 3:
+        *(s16 *)((u8 *)D_8AF35198 + 0x32) = 0x111;
+        break;
+    }
+    D_8AF3519C = (void *)func_8AC06D8C(page, 0x70696330);
+    D_8AF351A0 = (void *)func_8AC06D8C(page, 0x70696331);
+    D_8AF351A4 = (void *)func_8AC06D8C(page, 0x70696363);
+    func_8004E308((s32)D_8AF3519C, (s32 *)func_8AC03C28, (s32 *)D_8AF351A4);
+    func_8004E308((s32)D_8AF351A0, (s32 *)func_8AC03C28, (s32 *)D_8AF351A4);
+    *(u16 *)((u8 *)D_8AF3519C + 2) &= 0xFFFE;
+    *(u16 *)((u8 *)D_8AF351A0 + 2) &= 0xFFFE;
+    D_8AF35180 = (u8 *)func_8AC06D8C(page, 0x69745F77);
+    D_8AF357A8 = *(s16 *)(D_8AF35180 + 8);
+    D_8AF357AA = *(s16 *)(D_8AF35180 + 0xA);
+    visible = *(s16 *)(D_8AF35180 + 0xE) / 20 - 1;
+    func_8AC05ED4(page, 0x79615F75, &D_8AF35058);
+    func_8AC05ED4(page, 0x79615F73, &D_8AF350D0);
+    D_8AF37074 = (void *)func_8AC06D8C(page, 0x725F6C5F);
+    D_8AF37078 = (void *)func_8AC06D8C(page, 0x725F725F);
+    func_8AC02C80(page, 0x725F6C5F, 0x725F725F, &D_8AF35148);
+    for (i = 0; i < 15; i++) {
+        D_8AF37038[i] = (void *)func_8AC06D8C(page, D_8AF27440[i]);
+    }
+    ers0 = func_8AC06D8C(page, 0x65727330);
+    ers1 = func_8AC06D8C(page, 0x65727331);
+    ers2 = func_8AC06D8C(page, 0x65727332);
+    ers3 = func_8AC06D8C(page, 0x65727333);
+    func_8004E308(ers0, (s32 *)Fragment43_FillRectangleCallback, (s32 *)0xFFF1);
+    func_8004E308(ers1, (s32 *)Fragment43_FillRectangleCallback, (s32 *)0xFFF1);
+    func_8004E308(ers2, (s32 *)Fragment43_FillRectangleCallback, (s32 *)0xFFF1);
+    func_8004E308(ers3, (s32 *)Fragment43_FillRectangleCallback, (s32 *)0xFFF1);
+    D_8AF357B0 = (s32)func_8004C874(0x3B, 0x46);
+    // FAKE: the (u32) conversion keeps the row offset as a separate *4 then *12;
+    // without it IDO folds the row stride into one *48.
+    func_8AF1A2B8(((Unk8AF19CB0 *)&D_8AF357D0) + D_8AF357AC + (u32)(D_8AF357AE * 4));
+    func_8AC0651C(&D_8AF357C0, (D_8AF36F28 - 1) / 4, 20, visible, 8);
+}
+
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF1AE30.s")
 
