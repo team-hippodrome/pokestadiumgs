@@ -239,7 +239,49 @@ s32 func_80063F18(u8 arg0, u8 arg1) {
     return Pokemon_CanLearnGen1Machine(a, func_80063044(arg1));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/641E0/func_80063F4C.s")
+extern u8 D_8009D284[];
+
+typedef struct LearnEntry {
+    /* 0x0 */ u8 level;
+    /* 0x1 */ u8 move;
+    /* 0x2 */ u8 mask;
+} LearnEntry; // size = 0x3
+
+s32 func_80063F4C(u8 species, u8 move, u8 level, u8 mask, u8 flag) {
+    u8 limit = level;
+    LearnEntry *p;
+    s32 m;
+    u32 result;
+    u8 entryLevel;
+    u8 *e;
+
+    if (species > 0 && species < 0xFC && move > 0 && move < 0xFC && level > 0 && level < 0x65) {
+        e = D_8009D284 + (species - 1) * 12;
+        if (e[1] == species) {
+            if (level >= 5 && flag) {
+                limit = 0x64;
+            }
+        }
+        p = *(LearnEntry **)(e + 8);
+        while ((entryLevel = p->level) != 0) {
+            result = entryLevel;
+            if (entryLevel > limit) {
+                break;
+            }
+            if (move == p->move) {
+                m = p->mask & mask;
+                if ((m & 0x7F) != 0) {
+                    return result;
+                }
+                if ((m & 0x80) && level >= entryLevel) {
+                    return result;
+                }
+            }
+            p++;
+        }
+    }
+    return 0;
+}
 
 extern s32 func_80063F4C(u8, u8, u8, u8, u8);
 s32 func_80064070(u8 arg0, u8 arg1, u8 arg2) {
