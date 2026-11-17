@@ -4188,10 +4188,12 @@ SECTIONS
         fragment57_DATA_START = .;
         fragments_57_fragment57_header = .;
         build/asm/us/data/fragments/57/fragment57_header.o(.data);
-        fragments_57_fragment57_code = .;
-        build/src/fragments/57/fragment57_code.o(.data);
         fragments_57_fragment57_data_data = .;
         build/asm/us/data/fragments/57/fragment57_data.data.o(.data);
+        fragments_57_fragment57_code = .;
+        build/src/fragments/57/fragment57_code.o(.data);
+        _2C4A30_data = .;
+        build/asm/us/data/2C4A30.data.o(.data);
         fragment57_DATA_END = .;
         fragment57_DATA_SIZE = ABSOLUTE(fragment57_DATA_END - fragment57_DATA_START);
         fragment57_RODATA_START = .;
