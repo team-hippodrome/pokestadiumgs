@@ -914,7 +914,132 @@ void func_882261CC(s16 arg0, s16 arg1, u16 arg2, u16 arg3, u8 arg4, s8 arg5) {
         0, 0, (s32) ROUND_MAX(ratio_x), (s32) ROUND_MAX(ratio_y), 0, arg4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88226378.s")
+extern void func_8821C2C8(s32);
+#define S D_88234870
+#define F(o, t) (*(t *)(S + (o)))
+
+void func_88226378(void) {
+    s32 buttons;
+    u32 i;
+    s32 j;
+    u8 val;
+    s32 mode;
+    u8 *p;
+
+    buttons = *(u16 *)((u8 *)D_80087200 + 8);
+    if (buttons & 0x4000) {
+        if (func_88225FA8() == 0) {
+            func_800226C0(0x48);
+            for (i = 0, j = 0; i < F(0, u8); i++, j += 4) {
+                func_88004990(**(u8 **)(S + 4 + j), 0);
+            }
+            D_880068B8 = 1;
+        }
+    } else if (F(0x80, s32) != 0) {
+        if (buttons & 0x8000) {
+            if (func_88225FA8() == 0) {
+                mode = F(0x84, s16);
+                switch (mode) {
+                case 0:
+                    func_800226C0(0x134);
+                    F(0x94, u8) ^= 1;
+                    func_88226058(S + 0xA0, F(0x94, u8));
+                    break;
+                case 1:
+                    func_800226C0(0x134);
+                    if (func_88225EA0() != 0) { val = 0; } else { val = 1; }
+                    func_88226058(S + 0xA2, val);
+                    for (i = 0, j = 0; i < F(0x18, u16); i++, j += 2) {
+                        F(0x98, u8 *)[i] = val;
+                        func_88226058(F(0xA8, u8 *) + j, val);
+                    }
+                    break;
+                case 2:
+                    func_800226C0(0x134);
+                    if (func_88225EEC() != 0) { val = 0; } else { val = 1; }
+                    func_88226058(S + 0xA4, val);
+                    for (i = 0, j = 0; i < F(0x28, u16); i++, j += 2) {
+                        F(0x9C, u8 *)[i] = val;
+                        func_88226058(F(0xAC, u8 *) + j, val);
+                    }
+                    break;
+                case 3:
+                    func_800226C0(0x5C);
+                    func_88225D80(1);
+                    func_8821C2C8(0);
+                    func_8821C0B0();
+                    func_8800225C(D_88006880, 0, 0);
+                    for (i = 0, j = 0; i < F(0, u8); i++, j += 4) {
+                        func_88004990(**(u8 **)(S + 4 + j), 0);
+                    }
+                    D_880068B8 = 1;
+                    break;
+                }
+            }
+        } else if ((F(0x84, s16) == 1 || F(0x84, s16) == 2) && (buttons & 0x100)) {
+            func_800226C0(0x46);
+            F(0x80, s32) = 0;
+        } else {
+            func_88002720(S + 0x84, 4, S + 0x88);
+        }
+    } else if (buttons & 0x8000) {
+        if (func_88225FA8() == 0) {
+            func_800226C0(0x134);
+            switch (F(0x84, s16)) {
+            case 1: {
+                s16 idx = F(0x1A, s16);
+                F(0x98, u8 *)[idx] ^= 1;
+                func_88226058(F(0xA8, u8 *) + idx * 2, F(0x98, u8 *)[idx]);
+                break;
+            }
+            case 2: {
+                s16 idx = F(0x2A, s16);
+                F(0x9C, u8 *)[idx] ^= 1;
+                func_88226058(F(0xAC, u8 *) + idx * 2, F(0x9C, u8 *)[idx]);
+                break;
+            }
+            }
+        }
+    } else if (buttons & 0x200) {
+        func_800226C0(0x46);
+        F(0x80, s32) = 1;
+    } else {
+        mode = F(0x84, s16);
+        if (mode == 1 || mode == 2) {
+            p = (F(0x84, s16) == 1) ? S + 0x14 : S + 0x24;
+            func_88002720((s16 *)(p + 6), *(u16 *)(p + 4), p + 8);
+        }
+    }
+    mode = F(0x84, s16);
+    switch (mode) {
+    case 1:
+    case 2:
+        F(8, u8 *)[0x1C] = 0xDC;
+        F(8, u8 *)[0x1D] = 0xDC;
+        F(8, u8 *)[0x1E] = 0xB4;
+        break;
+    default:
+        F(8, u8 *)[0x1C] = 0x96;
+        F(8, u8 *)[0x1D] = 0x96;
+        F(8, u8 *)[0x1E] = 0x82;
+        break;
+    }
+    if (F(0, u8) == 3) {
+        if (F(0x84, s16) == 2) {
+            F(0xC, u8 *)[0x1C] = 0xFF;
+            F(0xC, u8 *)[0x1D] = 0xAA;
+            F(0xC, u8 *)[0x1E] = 0x8C;
+        } else {
+            F(0xC, u8 *)[0x1C] = 0x96;
+            F(0xC, u8 *)[0x1D] = 0x96;
+            F(0xC, u8 *)[0x1E] = 0x82;
+        }
+    }
+    func_88225F38();
+    func_88226100();
+}
+#undef F
+#undef S
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88226918.s")
 
