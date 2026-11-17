@@ -123,7 +123,69 @@ void Fragment44_CullScrollRecordsBelow(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF0282C.s")
+extern s32 main_pool_get_available(void);
+extern void func_8AC00FFC(s32);
+extern void func_8AC01064(s32);
+
+// Row-job callback. Every mode records the job's tag in D_8AF2BF30 and clears its busy byte.
+// Mode 0 deactivates the job. Mode 1 loads the tag's archive, allocates rows * width 0xC80-byte
+// cells and builds them with func_8AF02584, one row of `width` pixel codes at a time, stopping at
+// a -1 code or a failed build. Mode 2 deactivates the job and releases the archive.
+void func_8AF0282C(struct Fragment44RowJob *job, s16 mode) {
+    // Defined here so the two stores share retail's `lui $at`; pinned at 0x8AF2BF30 in
+    // datamig_bss.ld.
+    static struct { s32 tag; u8 busy; } D_8AF2BF30;
+    s32 tag;
+    s32 pad[4]; // FAKE: gives the 0x70-byte frame
+    void *owner;
+    u16 *pixels;
+    s16 width;
+    s16 rows;
+    s16 position;
+    s16 step;
+    u8 *dst;
+    s32 i;
+    s32 j;
+
+    width = job->width;
+    rows = job->rows;
+    pixels = job->pixels;
+    owner = job->owner;
+    position = job->position;
+    step = job->step;
+    tag = job->tag;
+    D_8AF2BF30.tag = tag;
+    D_8AF2BF30.busy = 0;
+    switch (mode) {
+        case 0:
+            job->active = 0;
+            break;
+        case 1:
+            main_pool_get_available();
+            func_8AC00FFC(tag);
+            dst = (u8 *)main_pool_alloc(width * 0xC80 * (u32)rows, 0);
+            main_pool_get_available();
+            for (i = 0; i < rows; i++) {
+                for (j = 0; j < width; j++) {
+                    s16 px = *pixels;
+                    if (px == -1) {
+                        return;
+                    }
+                    if (func_8AF02584(dst, owner, px, j, position) == 0) {
+                        return;
+                    }
+                    dst += 0xC80;
+                    pixels++;
+                }
+                position += step;
+            }
+            break;
+        case 2:
+            job->active = 0;
+            func_8AC01064(tag);
+            break;
+    }
+}
 
 extern struct Fragment44RowJob D_8AF2BDE0;
 
