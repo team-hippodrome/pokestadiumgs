@@ -1,5 +1,6 @@
 #include "global.h"
 
+extern s32 func_80062CE0(u8);
 
 #ifdef VERSION_US
 s32 func_82F00020(u32 arg0) {
@@ -521,7 +522,48 @@ void func_82F01220(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F012AC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F01658.s")
+extern s32 func_80062D5C(u8);
+extern s32 func_80049148();
+extern s8 *func_80063270(u8);
+extern u32 func_80062DD4(u8);
+extern void func_8004989C(s32);
+void func_82F01658(s32 x, s32 y, s32 arg2, f32 arg3) {
+    f32 pct;
+    s32 level;
+    s32 w;
+    u8 *rgb;
+    s32 alpha;
+
+    level = func_80062D5C((u8)arg2);
+
+    if (arg2 == 0) {
+        return;
+    }
+    if (arg3 < 0.01) {
+        return;
+    }
+    rgb = func_81602C68(func_80062D98((u8)arg2));
+    func_800498C4();
+    func_800496A4(8, 0);
+    alpha = 255.0f * arg3;
+    func_8004972C(rgb[0], rgb[1], rgb[2], alpha);
+    func_800495BC(x + 0xB, y + 0xB, func_80062CE0((u8)arg2));
+    func_800496A4(4, 0);
+    w = func_80049148(4, 0, "%s%s", func_8004C874(0xD, 1), func_8004C874(0xD, 0x16));
+    func_800495BC(x + w + 0x97, y + 0xF, func_80063270(func_80062D98((u8)arg2)));
+    func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+    func_800495BC(x + 0x97, y + 0xF, "%s%s", func_8004C874(0xD, 1), func_8004C874(0xD, 0x16));
+    if (level < 2) {
+        func_800495BC(x + 0xB, y + 0x23, "%s%s---", func_8004C874(0xD, 0xF), func_8004C874(0xD, 0x16));
+    } else {
+        func_800495BC(x + 0xB, y + 0x23, "%s%s%3d", func_8004C874(0xD, 0xF), func_8004C874(0xD, 0x16), level);
+    }
+    pct = func_80062DD4((u8)arg2) * 100.0f / 255.0f;
+    func_800495BC(x + 0x89, y + 0x23, "%s%s%3.0f", func_8004C874(0xD, 0x10), func_8004C874(0xD, 0x16), pct);
+    func_8004989C(0x14);
+    func_800495BC(x + 0xB, y + 0x3B, func_8004C874(7, arg2 - 1));
+    func_800499EC();
+}
 
 typedef struct unk_func_82F01958 {
     u8 unk_000[3791];
@@ -530,30 +572,26 @@ typedef struct unk_func_82F01958 {
 } unk_func_82F01958;
 extern void WidgetResources_DrawRecords(s32, s32, s32);
 extern void WidgetResources_DrawSelection(s32, s32, s32);
-extern void func_82F01658(s16, s16, u8, f32);
+extern void func_82F01658(s32, s32, s32, f32);
 void func_82F01958(void *arg0, void *arg1, s16 *arg2) {
-    struct {
-        f32 weight;
-        u8 value;
-    } draw;
+    s32 value;
+    f32 weight;
 
-    draw.weight = func_818055E0(arg0, (u8 *)arg1);
+    weight = func_818055E0(arg0, (u8 *)arg1);
     WidgetResources_DrawRecords((s32)arg0, (s32)arg1, (s32)arg2);
-    draw.value = ((unk_func_82F01958 *)arg1)->unk_ED0[((unk_func_82F01958 *)arg1)->unk_ECF];
-    func_82F01658(arg2[0], arg2[1], draw.value, draw.weight);
+    value = ((unk_func_82F01958 *)arg1)->unk_ED0[((unk_func_82F01958 *)arg1)->unk_ECF];
+    func_82F01658(arg2[0], arg2[1], value, weight);
     WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
 }
 
 void func_82F019CC(void *arg0, void *arg1, s16 *arg2) {
-    struct {
-        f32 weight;
-        u8 value;
-    } draw;
+    s32 value;
+    f32 weight;
 
-    draw.weight = func_818055E0(arg0, (u8 *)arg1);
+    weight = func_818055E0(arg0, (u8 *)arg1);
     WidgetResources_DrawRecords((s32)arg0, (s32)arg1, (s32)arg2);
-    draw.value = ((u8 (*)[88])arg1)[((u8 *)arg1)[3790]][((u8 *)arg1)[3792] - 31];
-    func_82F01658(arg2[0], arg2[1], draw.value, draw.weight);
+    value = ((u8 (*)[88])arg1)[((u8 *)arg1)[3790]][((u8 *)arg1)[3792] - 31];
+    func_82F01658(arg2[0], arg2[1], value, weight);
     WidgetResources_DrawSelection((s32)arg0, (s32)arg1, (s32)arg2);
 }
 
