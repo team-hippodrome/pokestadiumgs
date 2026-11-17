@@ -731,7 +731,164 @@ void func_881023CC(void) {
 }
 /* mkdraft:func_881023CC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/30/fragment30_16D4F0/func_881024F8.s")
+extern u8 D_88006868[];
+extern u8 D_8800686D[];
+extern u8 D_8800ED08[];
+extern s32 D_8800ECC0;
+extern s32 D_8800ECC4;
+extern s32 D_880068AC;
+extern u8 D_88A01C30[];
+extern u8 D_88A01C34[];
+extern u8 D_88A01C38[];
+extern u32 mem_pool_try_init(s32, s32);
+extern u8 *Util_Malloc(s32);
+extern s32 func_8800005C(void);
+extern void func_88004014(void);
+extern void func_88000288(u8 *, s32, s32, s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_8004C8C0();
+extern void func_80055948(s32);
+extern void func_8005487C(void *);
+extern s32 func_800549DC(s32);
+extern void func_88A00D0C(u32);
+extern s32 func_88A00248(u32, u8 *, u8 *, u8 *, s32, s32);
+extern void func_8810009C(s32, s32);
+#define F31_ROUND(n) ((s32)((f32)(n) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(n) / 60.0f > 0.0f) ? 0.5f : -0.5f)))
+
+typedef struct Unk881024F8 {
+    u8 unk00[4];
+    u8 unk04; u8 unk05; u8 unk06; u8 unk07;
+    s8 unk08; u8 unk09; u8 pad0A[2];
+    s32 unk0C; s32 unk10;
+    u8 unk14; u8 unk15; u8 unk16; u8 pad17;
+    s32 unk18; s32 unk1C; s32 unk20; s32 unk24;
+    u8 pad28[0x10];
+    u8 unk38[0xC];
+} Unk881024F8;
+#define ctx ((Unk881024F8 *)D_88104E80)
+s32 func_881024F8(s32 arg0) {
+    u32 pool;
+    u8 buf[16];
+
+    pool = mem_pool_try_init(0x18000, 0);
+    D_88104E80 = Util_Malloc(0x44);
+    D_88006868[0] = func_80064C88();
+    *(s16 *)(D_88006868 + 2) = func_8005DA1C(*(s8 *)D_88006868);
+    D_88006868[4] = func_8005D92C(*(s8 *)D_88006868);
+    func_8005DC48(*(s8 *)D_88006868, D_8800686D);
+    func_8004C8C0(0x1B);
+    func_8004C8C0(0xEF);
+    func_8004C8C0(0x79);
+    func_8004C8C0(0x38);
+    func_8004C8C0(0xA4);
+    func_8004C8C0(0x14E);
+    func_8004C8C0(0xF5);
+    func_8004C8C0(0xA0);
+    func_8004C8C0(0xA1);
+    func_8004C8C0(0xA2);
+    func_8004C8C0(0xA3);
+    func_8004C8C0(0x10);
+    D_8800ECC0 = func_8004C990(0x10, 1);
+    func_8004C8C0(0x11);
+    D_8800ECC4 = func_8004C990(0x11, 0);
+    func_80055948(3);
+    func_8004C8C0(0x37);
+    func_800476A0(D_8800ED08, 2);
+    func_800476FC(D_8800ED08, 2);
+    func_8005487C(buf);
+    if (!(*(u16 *)(buf + 2) & 0x100)) {
+        func_8004C8C0(0x143);
+        func_80047738(0, func_8004C990(0x143, 0), 0, 0);
+    } else {
+        func_80047738(0, func_8004C990(0x37, 1), 0, 0);
+    }
+    func_80047738(1, func_8004C990(0x37, 0), 0, 0);
+    func_8004C4B0(0x1E);
+    func_8004C4B0(8);
+    func_8004C4B0(0x27);
+    D_880068AC = func_8004D690(3);
+    if (func_8800005C() != 0) {
+        ctx->unk04 = 0;
+    } else if (func_8005DE8C(*(s8 *)D_88006868) == 0) {
+        ctx->unk04 = func_8005DF98(*(s8 *)D_88006868);
+    } else {
+        ctx->unk04 = 0;
+    }
+    ctx->unk05 = ctx->unk06 = 0;
+    if (func_800549DC(0) != 0) {
+        ctx->unk05 = 0x53;
+        if (func_800549DC(1) != 0) {
+            ctx->unk06 = 0xCF;
+        }
+    } else if (func_800549DC(1) != 0) {
+        ctx->unk05 = 0xCF;
+    }
+    if (ctx->unk04 != 0 || ctx->unk05 != 0 || ctx->unk06 != 0) {
+        if (ctx->unk04 != 0) {
+            func_88A00D0C(pool);
+        }
+        if (ctx->unk05 != 0 || ctx->unk06 != 0) {
+            func_80055948(1);
+            func_80055948(2);
+            func_88A00248(pool, D_88A01C30, D_88A01C34, D_88A01C38, 3, *(s8 *)D_88006868);
+        }
+        if (arg0 == 8) {
+            ctx->unk08 = -1;
+        } else {
+            ctx->unk08 = 0;
+        }
+    } else {
+        ctx->unk08 = 0;
+    }
+    ctx->unk09 = 0;
+    ctx->unk07 = 6;
+    ctx->unk0C = 0;
+    ctx->unk10 = 0;
+    ctx->unk14 = 0;
+    ctx->unk15 = F31_ROUND(30) + Credits_RandomRange(F31_ROUND(150) - F31_ROUND(30) + 1);
+    ctx->unk16 = 9;
+    switch (arg0) {
+    case 8:
+        if (ctx->unk04 != 0) {
+            ctx->unk0C = 1;
+        }
+        if (ctx->unk05 != 0) {
+            ctx->unk10 = 1;
+            func_8810009C(3, 0);
+        } else if (ctx->unk04 != 0) {
+            func_8810009C(2, 0);
+        } else {
+            func_8810009C(3, 2);
+        }
+        break;
+    case 1:
+        func_8810009C(2, 2);
+        break;
+    case 6:
+        func_8810009C(1, 2);
+        break;
+    case 5:
+        func_8810009C(0, 2);
+        break;
+    default:
+        func_8810009C(3, 2);
+        break;
+    }
+    ctx->unk18 = 1;
+    ctx->unk1C = func_8005DDD4(*(s8 *)D_88006868);
+    if (func_8800005C() != 0) {
+        ctx->unk20 = 1;
+    } else {
+        ctx->unk20 = func_8005DF70(*(s8 *)D_88006868);
+    }
+    ctx->unk24 = 0;
+    func_88000288(ctx->unk38, 0, 0xFF, 0, F31_ROUND(2), F31_ROUND(20), F31_ROUND(2), F31_ROUND(20));
+    D_880068B4 = D_880068B8 = 1;
+    Input_SetRepeatController(D_80087200);
+    D_88006860 = 7;
+    func_88004014();
+}
+#undef ctx
 
 #ifndef M2C_FIELD /* sweep: m2c --valid-syntax helpers (mirrors mkdraft.py) */
 #define M2C_UNK s32
