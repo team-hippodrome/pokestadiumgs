@@ -94,7 +94,260 @@ void func_86B00994_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B00A3C.s")
+extern u8 *D_86B180E0[];
+extern Gfx *D_86B180D8;
+extern u8 *D_86B1817C;
+extern u8 *D_86B18180[];
+extern s32 func_80001FF0(void);
+extern s32 D_86B0E0A0;
+extern u8 *D_86B181C0;
+extern void func_87F0C650(void *);
+extern void func_87F0C694(void *, s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_87F024CC(void);
+extern void func_87F01870(void *);
+extern void func_87F01F34(void *);
+extern void func_87F00030(void);
+extern void func_87F024F4(void *, void *, s32);
+extern void func_80037E9C(s32, void *);
+extern void func_87F0252C(void *, void *, void *, s32);
+extern void func_8004C8C0(s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_87F08DF8(s32, f32, f32, s32);
+extern void func_8004DDF4(s32);
+#include "color_adjustment.h"
+extern ColorAdjustment func_87F0AD50(s32, s32, s32);
+extern s32 func_8004E018(s32, s32, s32, ColorAdjustment);
+extern void func_8003F018(void *);
+extern void func_80037E3C(u8 *, void *, s32);
+extern void func_87F03BB0(void *, s32);
+extern void func_87F029B8(void *, s32);
+extern void func_86B0B608(s32);
+extern void func_86B0B9A0(void);
+extern void func_87F00688(void);
+extern void func_8003F3BC(void *, s32);
+extern void StageFade_StartFromOpaque(s32);
+extern void func_800225C4(s32);
+extern u8 D_86B0D9A8, D_86B0D18C, D_86B0D1C0, D_86B0D88C;
+extern s32 D_86B0E7F0, D_86B0E99C, D_86B180D4, D_86B0E188, D_86B0E190, D_86B0E18C, D_86B0E194, D_86B0E198, D_86B0E19C, D_86B0E1A0, D_86B0E1A4, D_86B17908;
+extern u8 D_86B0E9A0, D_86B0E9B8, D_86B0EE60, D_86B0EE78, D_86B12AD0, D_86B12AF0, D_86B0E088, D_86B13A68, D_86B13A80;
+extern s32 D_86B180F8[], D_86B18108[], D_86B18150[], D_86B18178, D_86B181A8[], D_86B18118[], D_86B18128[];
+extern u8 D_86B0E070, D_86B17F30, D_86B17F48;
+extern u8 D_86B16DA0[], D_86B17340[], D_86B17364[];
+extern u32 D_86B16D90[];
+extern u8 D_87F15B70;
+extern s32 D_86B17910;
+extern s32 D_86B0E7F4;
+extern u8 D_86B0E1A8, D_86B0E1C0, D_86B0E7F8, D_86B0E810, D_86B178E8;
+extern s32 func_86B023FC();
+extern s32 func_86B03228();
+extern void func_8003F03C(void *, void *);
+extern void func_87F06430(void *, s32);
+extern void func_8003F114(u8 *, s32, s32, s32);
+extern void func_8003F210(void *, s32);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_8003F1DC(u8 *);
+extern void func_86B007D0(void);
+typedef struct { f32 x, y, z; } Vec3f_86B;
+typedef struct { s32 unk00; Vec3f_86B unk04; u8 pad10[2]; u8 unk12; u8 unk13; u8 unk14; u8 unk15; u8 pad16[2]; } Unk86B_18;
+typedef struct { u8 pad0[0x54]; Vec3f_86B unk54; u8 pad60[0x12C]; } Unk86B_18C;
+typedef struct { u8 pad0[0x14]; Unk86B_18C *unk14; Unk86B_18 *unk18; } Unk86B181F0;
+extern Unk86B181F0 D_86B181F0;
+void func_86B00A3C(void) {
+    s32 padA[2]; // FAKE
+    Unk86B_18 *ep2;
+    Unk86B_18 *ep3;
+    ColorAdjustment tint;
+    s32 padB[1]; // FAKE
+    s32 pool;
+    s32 i;
+    f32 sixth;
+    Unk86B_18 *ep;
+    Unk86B_18C *fp;
+
+    if (func_80001FF0() == 0x3C) {
+        D_86B0E0A0 = 1;
+    } else {
+        D_86B0E0A0 = 0;
+    }
+    func_87F0C650(D_86B181C0 + 0x1C);
+    if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 4) {
+        func_87F0C694(D_86B181C0 + 0x1C, 0x14);
+    }
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    *(s32 *)(D_86B181C0 + 8) = func_80040E80(pool, &D_86B0D9A8);
+    D_86B0E7F0 = func_80040E80(pool, &D_86B0D18C);
+    D_86B0E99C = func_80040E80(pool, &D_86B0D1C0);
+    D_86B180D4 = func_80040E80(pool, &D_86B0D88C);
+    D_86B0E188 = WidgetTree_RunMessagePanelSilent(pool, 0x97);
+    D_86B0E190 = WidgetTree_RunMessagePanelSilent(pool, 0xD8);
+    D_86B0E18C = WidgetTree_RunMessagePanelSilent(pool, 0xD3);
+    D_86B0E194 = WidgetTree_RunMessagePanelSilent(pool, 0xD1);
+    D_86B0E198 = WidgetTree_RunMessagePanelSilent(pool, 0xD5);
+    D_86B0E19C = WidgetTree_RunMessagePanelSilent(pool, 0xCB);
+    D_86B0E1A0 = WidgetTree_RunMessagePanelSilent(pool, 0xCC);
+    D_86B0E1A4 = WidgetTree_RunMessagePanelSilent(pool, 0xCF);
+    D_86B17908 = WidgetTree_RunMessagePanelSilent(pool, 0x96);
+    MainPool_FinalizeAllocation(pool);
+    ModelRenderer_InitDisplayRoots();
+    func_87F024CC();
+    func_87F01870(*(void **)(D_86B181C0 + 0xC));
+    func_87F01F34(*(void **)(D_86B181C0 + 0xC));
+    func_87F00030();
+    func_87F024F4(&D_86B0E9A0, &D_86B0E9B8, 3);
+    func_87F024F4(&D_86B0EE60, &D_86B0EE78, 0x27);
+    func_87F024F4(&D_86B12AD0, &D_86B12AF0, 0xA);
+    func_80037E9C(0, &D_86B0E088);
+    func_87F0252C(&D_86B0E088, &D_86B13A68, &D_86B13A80, 0x21);
+    func_8004C8C0(0x1B2);
+    func_8004C8C0(0x1AD);
+    func_8004C8C0(0x1AE);
+    D_86B180F8[0] = func_8004C990(0x1B2, 6);
+    D_86B180F8[1] = func_8004C990(0x1B2, 7);
+    D_86B180F8[2] = func_8004C990(0x1B2, 8);
+    D_86B180F8[3] = func_8004C990(0x1B2, 9);
+    D_86B18108[0] = func_8004C990(0x1B2, 2);
+    D_86B18108[1] = func_8004C990(0x1B2, 3);
+    D_86B18108[2] = func_8004C990(0x1B2, 4);
+    D_86B18108[3] = func_8004C990(0x1B2, 5);
+    D_86B18150[0] = func_8004C990(0x1AD, 0);
+    D_86B18150[1] = func_8004C990(0x1AD, 1);
+    D_86B18150[2] = func_8004C990(0x1AD, 2);
+    D_86B18150[3] = func_8004C990(0x1AD, 3);
+    D_86B18150[4] = func_8004C990(0x1AD, 4);
+    D_86B18150[5] = func_8004C990(0x1AD, 5);
+    D_86B18150[6] = func_8004C990(0x1AD, 6);
+    D_86B18150[7] = func_8004C990(0x1AD, 7);
+    D_86B18150[8] = func_8004C990(0x1AD, 8);
+    D_86B18150[9] = func_8004C990(0x1AD, 9);
+    D_86B18178 = func_8004C990(0x1AE, 1);
+    func_8004C8C0(0x189);
+    func_8004C8C0(0x18A);
+    D_86B1817C = (u8 *)func_8004C990(0x189, 0);
+    D_86B18180[0] = (u8 *)func_8004C990(0x18A, 0);
+    D_86B18180[1] = (u8 *)func_8004C990(0x18A, 1);
+    D_86B18180[2] = (u8 *)func_8004C990(0x18A, 2);
+    D_86B18180[3] = (u8 *)func_8004C990(0x18A, 3);
+    D_86B18180[4] = (u8 *)func_8004C990(0x18A, 4);
+    D_86B18180[5] = (u8 *)func_8004C990(0x18A, 5);
+    D_86B18180[6] = (u8 *)func_8004C990(0x18A, 6);
+    D_86B18180[7] = (u8 *)func_8004C990(0x18A, 7);
+    D_86B18180[8] = (u8 *)func_8004C990(0x18A, 8);
+    D_86B18180[9] = (u8 *)func_8004C990(0x18A, 9);
+    D_86B181A8[0] = 0xB43C3CFF;
+    D_86B181A8[1] = 0xB48C28FF;
+    D_86B181A8[2] = 0x28A028FF;
+    D_86B181A8[3] = 0x289696FF;
+    D_86B181A8[4] = 0x5050C8FF;
+    D_86B181A8[5] = 0x963C96FF;
+    func_8004C8C0(0x185);
+    func_8004C8C0(0x186);
+    D_86B18118[0] = func_8004C990(0x185, 2);
+    D_86B18118[1] = func_8004C990(0x185, 0);
+    D_86B18118[2] = func_8004C990(0x185, 3);
+    D_86B18128[0] = func_8004C990(0x186, 0);
+    D_86B18128[1] = func_8004C990(0x186, 1);
+    D_86B18128[2] = func_8004C990(0x186, 2);
+    D_86B18128[3] = func_8004C990(0x186, 3);
+    D_86B18128[4] = func_8004C990(0x186, 4);
+    D_86B18128[5] = func_8004C990(0x186, 5);
+    D_86B18128[6] = func_8004C990(0x186, 6);
+    D_86B18128[7] = func_8004C990(0x186, 7);
+    D_86B18128[8] = func_8004C990(0x186, 8);
+    D_86B18128[9] = func_8004C990(0x186, 9);
+    func_8004C8C0(0x188);
+    D_86B180E0[0] = (u8 *)func_8004C990(0x188, 0);
+    D_86B180E0[1] = (u8 *)func_8004C990(0x188, 1);
+    D_86B180E0[2] = (u8 *)func_8004C990(0x188, 2);
+    D_86B180E0[3] = (u8 *)func_8004C990(0x188, 3);
+    D_86B180E0[4] = (u8 *)func_8004C990(0x188, 4);
+    D_86B180D8 = (Gfx *)func_87F08DF8(func_8004C990(0x188, 0), 0.0f, 0.0f, 0xF000000);
+    func_80037E9C(0, &D_86B0E070);
+    func_87F0252C(&D_86B0E070, &D_86B17F30, &D_86B17F48, 1);
+    for (i = 0; i < 4; i++) {
+        func_8004DDF4(0x8F);
+        pool = MainPool_AllocState(main_pool_get_available(), 0);
+        tint = func_87F0AD50(*(s32 *)(D_86B181C0 + 0xC), 0xB, i);
+        D_86B16D90[i] = func_8004E018(pool, 0x8F, 0, tint);
+        MainPool_FinalizeAllocation(pool);
+    }
+    sixth = 0.16666667f;
+    for (i = 0; i < 4; i++) {
+        func_8003F03C(D_86B17340 + i * 0x168, &D_87F15B70);
+        func_87F06430(D_86B17364 + i * 0x168, i);
+        *(f32 *)(D_86B17340 + i * 0x168 + 0x38) = sixth;
+        *(f32 *)(D_86B17340 + i * 0x168 + 0x34) = sixth;
+        *(f32 *)(D_86B17340 + i * 0x168 + 0x30) = sixth;
+        *(f32 *)(D_86B17340 + i * 0x168 + 0x28) = 50.0f;
+        func_8003F114(D_86B17340 + i * 0x168, 0, -1, D_86B16D90[i]);
+        func_8003F210(D_86B17340 + i * 0x168, 0);
+        ModelAnim_SetFrame(D_86B17340 + i * 0x168, guRandom() % 30);
+    }
+    for (i = 0; i < 4; i++) {
+        func_8003F018(D_86B16DA0 + i * 0x168);
+        func_80037E3C(D_86B16DA0 + i * 0x168, func_86B023FC, i);
+        *(f32 *)(D_86B16DA0 + i * 0x168 + 0x38) = sixth;
+        *(f32 *)(D_86B16DA0 + i * 0x168 + 0x34) = sixth;
+        *(f32 *)(D_86B16DA0 + i * 0x168 + 0x30) = sixth;
+    }
+    func_8003F018((u8 *)&D_86B17910);
+    func_80037E3C((u8 *)&D_86B17910, func_86B03228, 0);
+    *(f32 *)((u8 *)&D_86B17910 + 0x38) = 0.5f;
+    *(f32 *)((u8 *)&D_86B17910 + 0x34) = *(f32 *)((u8 *)&D_86B17910 + 0x38);
+    *(f32 *)((u8 *)&D_86B17910 + 0x30) = *(f32 *)((u8 *)&D_86B17910 + 0x34);
+    func_8004C8C0(0x133);
+    D_86B0E7F4 = func_87F08DF8(func_8004C990(0x133, 0), 0.0f, 0.0f, 0xF000000);
+    func_87F024F4(&D_86B0E1A8, &D_86B0E1C0, 4);
+    func_87F024F4(&D_86B0E7F8, &D_86B0E810, 1);
+    func_87F03BB0(&D_86B178E8, 0x63);
+    func_87F029B8(&D_86B181F0, *(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182));
+    for (i = 0; i < 4; i++) {
+        ep2 = &D_86B181F0.unk18[i];
+        ep2->unk00 = 0;
+        ep3 = &D_86B181F0.unk18[i];
+        ep3->unk04.x = 0;
+        ep3->unk04.y = 55;
+        ep3->unk04.z = 0;
+        fp = &D_86B181F0.unk14[i];
+        fp->unk54.x = 0.9f;
+        fp->unk54.y = 0.9f;
+        fp->unk54.z = 0.9f;
+        ep = &D_86B181F0.unk18[i];
+        ep->unk12 = 0xFF;
+        ep->unk13 = 0xFF;
+        ep->unk14 = 0xFF;
+        ep->unk15 = 0;
+    }
+    func_86B007D0();
+    if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 4) {
+        for (i = 0; i < 4; i++) {
+            func_8003F114(D_86B16DA0 + i * 0x168, 0, -1, D_86B16D90[i]);
+            func_86B0B608(i);
+            ep = &D_86B181F0.unk18[i];
+            ep->unk15 = 0xB4;
+            ep->unk12 = 0xFF;
+            ep->unk13 = 0xFF;
+            ep->unk14 = 0xFF;
+        }
+        func_8003F1DC((u8 *)&D_86B17910);
+        func_8003F114((u8 *)&D_86B17910, 0, -1, D_86B17908);
+        func_8003F210((u8 *)&D_86B17910, 1);
+        ModelAnim_SetFrame((u8 *)&D_86B17910, 0x1E);
+        func_8003F3BC((u8 *)&D_86B17910, 0);
+        func_86B0B9A0();
+        StageFade_StartFromOpaque(0x14);
+        *(s32 *)D_86B181C0 = 3;
+        func_87F00688();
+        *(s32 *)D_86B181C0 = 3;
+        func_87F00688();
+        func_800225C4(0x28);
+    }
+}
 #endif
 
 #ifdef VERSION_US
