@@ -3236,7 +3236,48 @@ s32 fragment49_main(s32 arg0, s32 arg1) {
     return *(s32 *)((u8 *)D_8610AD20 + 0x97E8);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86109AE0.s")
+extern u8 D_8610A224[];
+typedef struct { f32 x, y, z; } Vec_86109AE0;
+void func_86109AE0(s32 arg0, u8 *arg1) {
+    s32 pad; // FAKE: retail frame is 0x28
+    u8 *p;
+    u8 *a;
+    u8 *q;
+    f32 ang;
+    f32 sinv;
+    s32 idx;
+    f32 dist;
+
+    if (arg0 == 2) {
+        p = *(u8 **)(arg1 + 0x14);
+        a = D_8610A224 + *(u8 *)(p + 0x10) * 8;
+        if (func_87F00930() == 0) {
+            *(u32 *)(p + 0xC) += 1;
+        }
+        ang = (f32)(*(u32 *)(p + 0xC) % 0x168) * 15.0f * 182.04167f;
+        if (ang >= 0.0f) {
+            idx = (s32)(ang + 0.5f);
+        } else {
+            idx = (s32)(ang - 0.5f);
+        }
+        sinv = D_80087E50[(idx & 0xFFFF) >> 4];
+        if ((*(u32 *)(*(u8 **)(p + 8) + 0xC) & 0x10000) != 0) {
+            a[3] = (u8)(25.0f * sinv + 125.0f);
+        } else {
+            if (a[3] >= 2) {
+                a[3] = a[3] - 1;
+            } else {
+                a[3] = 0;
+                arg1[1] = arg1[1] & 0xFFFE;
+            }
+        }
+        q = *(u8 **)(p + 8);
+        dist = sqrtf(*(f32 *)(q + 0x14) * *(f32 *)(q + 0x14) + *(f32 *)(q + 0x10) * *(f32 *)(q + 0x10)) / sqrtf(450.0f);
+        *(Vec_86109AE0 *)(arg1 + 0x24) = *(Vec_86109AE0 *)(q + 0xD0);
+        *(f32 *)(arg1 + 0x2C) = *(f32 *)(arg1 + 0x2C) - 20.0f;
+        *(f32 *)(arg1 + 0x30) = *(f32 *)(arg1 + 0x34) = *(f32 *)(arg1 + 0x38) = (0.1f * sinv + 2.25f) + (2.25f * dist * 0.5f);
+    }
+}
 
 extern Gfx *D_800D0510;
 extern void *D_8009491C;
@@ -3274,7 +3315,6 @@ extern void *func_87F025B8(void *, void *);
 extern void func_80037E3C(void *, void *, void *);
 extern void func_8003F1DC(void *);
 extern void func_8003F114(void *, s32, s32, s32);
-extern void func_86109AE0(void);
 void func_86109EAC(void *arg0, s32 arg1, s32 arg2) {
     u8 *result;
     u8 *entry;
