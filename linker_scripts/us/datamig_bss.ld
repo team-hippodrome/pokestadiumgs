@@ -23,6 +23,14 @@ SECTIONS
         build/src/fragments/82/fragment82_420EA0.o(.data)
     }
 
+    /* func_82606B28's two function-static limits (6 and 3) live in fragment
+     * 20's loaded data at D_826155C0/D_826155C4; IDO only reloads them after
+     * calls when they are statics of that function. */
+    .fragment20_slot_fade_data 0x826155C0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/20/fragment20_12C460.o(.data)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
@@ -213,6 +221,14 @@ SECTIONS
         build/src/fragments/73/fragment73_code.o(.bss)
     }
 
+    /* Fragment 53's four loader-cleared 0x168-byte models at D_86510010.
+     * func_86502524's unrolled scale stores share lui pairs only for a
+     * section-relative static, so the array is defined in C. */
+    .fragment53_models_10010_bss 0x86510010 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/53/fragment53_code.o(.bss)
+    }
+
     /* Fragment 21's saved argument pair and three state halfwords. Both
      * records are loader-cleared; compiler alignment has no load image. */
     .fragment21_pair_9004_data 0x82509004 (NOLOAD) : SUBALIGN(2)
@@ -315,6 +331,9 @@ ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
 ASSERT(SIZEOF(.fragment73_preview_9A0_bss) == 32,
        "fragment73 preview state must keep its 0x20-byte footprint");
 
+ASSERT(SIZEOF(.fragment53_models_10010_bss) == 0x5A0,
+       "fragment53 models must keep four 0x168-byte records");
+
 ASSERT(SIZEOF(.fragment32_anim_state_data) == 112,
        "fragment32 animation state must retain its compiler section footprint");
 
@@ -390,6 +409,7 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 /* The assembly switch table targets these return blocks in the C function. */
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
+ASSERT(SIZEOF(.fragment20_slot_fade_data) == 16, "fragment 20 slot fade limits footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
 ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
