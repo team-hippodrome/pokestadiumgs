@@ -1469,7 +1469,31 @@ void func_82B03934(s32 arg0, s32 arg1) { s32 temp = func_8004C990(0x156, 0); fun
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B03F38.s")
+// Draws the four option rows, highlighting the selected one. Old-style definition: the
+// caller passes no argument and arg0 just flows through a0. sSelected is the selection
+// word at 0x82B1246C (D_82B1246C elsewhere); as an in-unit static IDO reloads it each row.
+void func_82B03F38(arg0)
+    u8 *arg0;
+{
+    static s16 sSelected;
+    struct { s16 x; s16 y; s32 pad[4]; } pair;
+    u32 i;
+    s32 y;
+
+    func_82B0284C(arg0, (u8 *)&pair);
+    func_800498C4();
+    func_800496A4(8, 0);
+    for (i = 0, y = 0; i < 4; i++) {
+        if (i != sSelected) {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        }
+        func_800495F8(pair.x + 9, pair.y + y + 0xB, 0, func_8004C874(0x1B, i + 0x22));
+        y += 0x1A;
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1663,7 +1687,7 @@ extern void Panel_DrawHeadingAndOptions(u8 *, s32);
 extern void func_82B03688(u8 *);
 extern void func_82B0373C(void *);
 extern void func_82B03978(void);
-extern void func_82B03F38(void);
+extern void func_82B03F38();
 extern void func_82B04008(void);
 extern void func_82B04718(void);
 extern void func_82B050E8(void);
