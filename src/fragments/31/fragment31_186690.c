@@ -398,7 +398,315 @@ void func_88214394(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_186690/func_882143EC.s")
+
+extern s16 D_8800EF58;
+extern void *func_8004C874(s32, s32);
+extern void func_88206508(void *, u8 *);
+extern void func_882206A0(s32);
+extern s32 func_88200D04(s32);
+extern void func_882295E4(s32, s32, void (*)(void));
+extern void func_88228BCC(s32, s32, void (*)(void));
+extern void func_88206430(void);
+extern void func_880020CC(u8 *);
+extern void func_88002720(u8 *, s32, void *);
+extern u8 D_88006020[];
+extern void func_88206460(void);
+extern void func_882308A0(s32);
+extern u8 *D_88234620;
+extern u8 D_88234648;
+
+#define LIST0_IDLE(v) v = (head0 == 0 && *(s32 *)(s + 0x10) == 0 && *(s16 *)(s + 0x2E) == 0) ? 1 : 0
+#define LIST1_IDLE(v) v = (*(s16 *)(s + 0x38) == 0 && *(s32 *)(s + 0x3C) == 0 && *(s16 *)(s + 0x5A) == 0) ? 1 : 0
+#define BUTTONS (*(u16 *)((u8 *)D_80087200 + 8))
+#define SHOW_MESSAGE(n) func_88206508(func_8004C874(0x23, (n)), D_88234730 + 0x64)
+// D_88234730 with the two storage list scroll records at 0xC.
+typedef struct {
+    /* 0x00 */ u8 unk_00[0xC];
+    /* 0x0C */ StorageListScrollRecord rec[2];
+} Storage882143EC;
+#define LIST_SCROLL(i) ((u8 *)&((Storage882143EC *)s)->rec[i])
+#define LIST_COUNT(i) (D_88234630[(i) * 2 + 1].unk_00)
+
+void func_882143EC(void) {
+    u8 *s;
+    s16 head0;
+    s32 idle;
+    u8 *o;
+    u8 *e;
+
+    if (D_8800EF58 != 0) {
+        return;
+    }
+    if (*(s32 *)(D_88234564 + 0xA4) != 2) {
+        goto done;
+    }
+    s = D_88234730;
+    if (s[0x64] != 0) {
+        goto done;
+    }
+    if (D_880068B4 != 1) {
+        goto done;
+    }
+    head0 = *(s16 *)(s + 0xC);
+    LIST0_IDLE(idle);
+    if (idle) {
+        LIST1_IDLE(idle);
+        if (idle && D_882346F0 == 0) {
+            if ((s[0] == 0 && (BUTTONS & 0x10)) || (s[0] == 1 && (BUTTONS & 0x20))) {
+                func_800226C0(0x135);
+                s = D_88234730;
+                s[0] ^= 1;
+                func_88001900();
+                goto done;
+            }
+        }
+    }
+    if (*(s32 *)(s + 4) != 0) {
+        idle = BUTTONS;
+        if (idle & 0x4000) {
+            func_800226C0(0x48);
+            D_88234730[0x64] = 2;
+            if (func_88200D04(7) != 0) {
+                func_882295E4(0x140, 0xF0, func_88206430);
+            } else {
+                func_88228BCC(0x140, 0xF0, func_88206430);
+            }
+            goto done;
+        }
+        if (idle & 0x8000) {
+            func_800226C0(0x5C);
+            s = D_88234730;
+            idle = *(s16 *)(s + 8);
+            switch (idle) {
+            case 3:
+                s[0x64] = 2;
+                func_882206A0(3);
+                break;
+            case 4:
+                s[0x64] = 2;
+                func_882206A0(5);
+                break;
+            default:
+                func_882064B4(0, (s32 *)(s + 4), s + 0xC, s + 0x38);
+                func_88001900();
+                break;
+            }
+            goto done;
+        }
+        func_880020CC(LIST_SCROLL(s[0]));
+        func_88002720(D_88234730 + 8, 7, D_88006020);
+        goto done;
+    }
+    switch (D_882346F0) {
+    case 0:
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x4000)) {
+                func_800226C0(0x48);
+                s = D_88234730;
+                func_882064B4(1, (s32 *)(s + 4), s + 0xC, s + 0x38);
+                Input_SetRepeatController(D_80087200);
+                goto done;
+            }
+        }
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x8000)) {
+                switch (*(u16 *)(s + 8)) {
+                case 0:
+                    if (LIST_COUNT(s[0]) == 0) {
+                        SHOW_MESSAGE(0xA);
+                        goto done;
+                    }
+                    o = (u8 *)&D_88234630[(1 - s[0]) * 2];
+                    if (o[0xC] == o[0xD]) {
+                        SHOW_MESSAGE(0xB);
+                        goto done;
+                    }
+                    func_800226C0(0x47);
+                    D_882346F0 = 1;
+                    s = D_88234730;
+                    s[0] ^= 1;
+                    StorageList_UpdateScrollCount(D_88234730[0], 1);
+                    goto done;
+                case 1:
+                    if (LIST_COUNT(s[0]) < 2) {
+                        SHOW_MESSAGE(0xC);
+                        goto done;
+                    }
+                    func_800226C0(0x47);
+                    D_882346F0 = 2;
+                    s = D_88234730;
+                    *(s16 *)(s + 0x70) = ((Storage882143EC *)s)->rec[s[0]].position;
+                    goto done;
+                case 2:
+                    if (((u8 *)D_88234630)[0xC] == 0 || ((u8 *)D_88234630)[0x24] == 0) {
+                        SHOW_MESSAGE(0xD);
+                        goto done;
+                    }
+                    func_800226C0(0x47);
+                    D_882346F0 = 3;
+                    s = D_88234730;
+                    s[0] ^= 1;
+                    goto done;
+                case 5:
+                    if (LIST_COUNT(s[0]) == 0) {
+                        SHOW_MESSAGE(0xF);
+                        goto done;
+                    }
+                    func_800226C0(0x47);
+                    D_88234730[0x64] = 2;
+                    D_882346F4 = 1;
+                    e = StorageList_GetEntry(1, D_88234730[0]);
+                    D_88234730[0x160] = e[0x75];
+                    D_88234620 = D_88234730 + 0x160;
+                    func_882206A0(4);
+                    goto done;
+                case 6:
+                    if (LIST_COUNT(s[0]) == 0) {
+                        SHOW_MESSAGE(0xE);
+                        goto done;
+                    }
+                    func_800226C0(0x47);
+                    D_88234730[0x64] = 2;
+                    e = StorageList_GetEntry(1, *D_88234730);
+                    func_882308A0(e[0x75]);
+                    goto done;
+                default:
+                    goto done;
+                }
+            }
+        }
+        func_880020CC(LIST_SCROLL(s[0]));
+        goto done;
+    case 1:
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x4000)) {
+                func_800226C0(0x48);
+                StorageList_UpdateScrollCount(*D_88234730, 0);
+                s = D_88234730;
+                s[0] ^= 1;
+                D_882346F0 = 0;
+                goto done;
+            }
+        }
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x8000)) {
+                func_88213BE4(0xF, 1);
+                goto done;
+            }
+        }
+        func_880020CC(LIST_SCROLL(s[0]));
+        goto done;
+    case 2:
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x4000)) {
+                func_800226C0(0x48);
+                D_882346F0 = 0;
+                goto done;
+            }
+        }
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x8000)) {
+                if (*(s16 *)(s + 0x70) == ((Storage882143EC *)s)->rec[s[0]].position) {
+                    func_800226C0(0x49);
+                } else {
+                    func_88213BE4(0x10, 1);
+                }
+                goto done;
+            }
+        }
+        func_880020CC(LIST_SCROLL(s[0]));
+        goto done;
+    case 3:
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x4000)) {
+                func_800226C0(0x48);
+                s = D_88234730;
+                s[0] ^= 1;
+                D_882346F0 = 0;
+                goto done;
+            }
+        }
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x8000)) {
+                func_88213BE4(0x11, 1);
+                goto done;
+            }
+        }
+        func_880020CC(LIST_SCROLL(s[0]));
+        goto done;
+    case 4:
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle) {
+                if ((s[0] == 0 && (BUTTONS & 0x10)) || (s[0] == 1 && (BUTTONS & 0x20))) {
+                    func_800226C0(0x135);
+                    StorageList_UpdateScrollCount(D_88234730[0], 0);
+                    s = D_88234730;
+                    s[0] ^= 1;
+                    StorageList_UpdateScrollCount(D_88234730[0], 1);
+                    func_88001900();
+                    goto done;
+                }
+            }
+        }
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x4000)) {
+                func_800226C0(0x48);
+                StorageList_UpdateScrollCount(D_88234730[0], 0);
+                D_882346F0 = 0;
+                s = D_88234730;
+                func_882064B4(1, (s32 *)(s + 4), s + 0xC, s + 0x38);
+                Input_SetRepeatController(D_80087200);
+                goto done;
+            }
+        }
+        LIST0_IDLE(idle);
+        if (idle) {
+            LIST1_IDLE(idle);
+            if (idle && (BUTTONS & 0x8000)) {
+                o = (u8 *)&D_88234630[s[0] * 2];
+                if (o[0xC] == o[0xD]) {
+                    SHOW_MESSAGE(0x11);
+                } else {
+                    func_88213BE4(0x13, 1);
+                }
+                goto done;
+            }
+        }
+        func_880020CC(LIST_SCROLL(s[0]));
+        goto done;
+    default:
+        break;
+    }
+done:
+    func_88206460();
+}
+
+#undef LIST0_IDLE
+#undef LIST1_IDLE
+#undef BUTTONS
+#undef SHOW_MESSAGE
+#undef LIST_SCROLL
+#undef LIST_COUNT
 
 /* mkdraft:func_882152F4 begin */
 typedef struct { u8 pad[8]; s16 position; s16 start; u8 pad2[0x20]; } Scroll18690;
