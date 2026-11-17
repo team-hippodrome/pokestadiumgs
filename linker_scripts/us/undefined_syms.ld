@@ -32,3 +32,7 @@ D_8600D528 = 0x8600D528;
 D_8600D538 = 0x8600D538;
 D_8600D640 = 0x8600D640;
 D_8600D650 = 0x8600D650;
+
+/* fragment9_code .rodata: interior addresses of C-defined arrays used by asm */
+D_8FB039E6 = 0x8FB039E6;
+D_8FB03A3A = 0x8FB03A3A;

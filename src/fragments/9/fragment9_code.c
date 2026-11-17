@@ -2,6 +2,57 @@
 
 
 #ifdef VERSION_US
+/* fragment9_code .rodata, 0x8FB038D0-0x8FB03B47: read-only tables and the
+ * debug-menu strings, laid out in address order ahead of the jump tables. */
+const u8 D_8FB038D0[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const u8 D_8FB038D8[272] = { 0xA4, 0xA2, 0xA4, 0xA4, 0xA4, 0xA6, 0xA4, 0xA8, 0xA4, 0xAA, 0xA4, 0xAB, 0xA4, 0xAD, 0xA4, 0xAF, 0xA4, 0xB1, 0xA4, 0xB3, 0xA4, 0xB5, 0xA4, 0xB7, 0xA4, 0xB9, 0xA4, 0xBB, 0xA4, 0xBD, 0xA4, 0xBF, 0xA4, 0xC1, 0xA4, 0xC4, 0xA4, 0xC6, 0xA4, 0xC8, 0xA4, 0xCA, 0xA4, 0xCB, 0xA4, 0xCC, 0xA4, 0xCD, 0xA4, 0xCE, 0xA4, 0xCF, 0xA4, 0xD2, 0xA4, 0xD5, 0xA4, 0xD8, 0xA4, 0xDB, 0xA4, 0xDE, 0xA4, 0xDF, 0xA4, 0xE0, 0xA4, 0xE1, 0xA4, 0xE2, 0xA4, 0xE4, 0xA1, 0xA1, 0xA4, 0xE6, 0xA1, 0xA1, 0xA4, 0xE8, 0xA4, 0xE9, 0xA4, 0xEA, 0xA4, 0xEB, 0xA4, 0xEC, 0xA4, 0xED, 0xA4, 0xEF, 0xA4, 0xF2, 0xA4, 0xF3, 0x21, 0x2B, 0x21, 0x2C, 0xA4, 0xA1, 0xA4, 0xA3, 0xA4, 0xA5, 0xA4, 0xA7, 0xA4, 0xA9, 0xA4, 0xE3, 0xA4, 0xE5, 0xA4, 0xE7, 0xA4, 0xC3, 0xA1, 0xA3, 0xA5, 0xA2, 0xA5, 0xA4, 0xA5, 0xA6, 0xA5, 0xA8, 0xA5, 0xAA, 0xA5, 0xAB, 0xA5, 0xAD, 0xA5, 0xAF, 0xA5, 0xB1, 0xA5, 0xB3, 0xA5, 0xB5, 0xA5, 0xB7, 0xA5, 0xB9, 0xA5, 0xBB, 0xA5, 0xBD, 0xA5, 0xBF, 0xA5, 0xC1, 0xA5, 0xC4, 0xA5, 0xC6, 0xA5, 0xC8, 0xA5, 0xCA, 0xA5, 0xCB, 0xA5, 0xCC, 0xA5, 0xCD, 0xA5, 0xCE, 0xA5, 0xCF, 0xA5, 0xD2, 0xA5, 0xD5, 0xA4, 0xD8, 0xA5, 0xDB, 0xA5, 0xDE, 0xA5, 0xDF, 0xA5, 0xE0, 0xA5, 0xE1, 0xA5, 0xE2, 0xA5, 0xE4, 0xA1, 0xA1, 0xA5, 0xE6, 0xA1, 0xA1, 0xA5, 0xE8, 0xA5, 0xE9, 0xA4, 0xEA, 0xA5, 0xEB, 0xA5, 0xEC, 0xA5, 0xED, 0xA5, 0xEF, 0xA5, 0xF2, 0xA5, 0xF3, 0x00, 0x24, 0x00, 0x40, 0xA5, 0xA1, 0xA5, 0xA3, 0xA5, 0xA5, 0xA5, 0xA7, 0xA5, 0xA9, 0xA5, 0xE3, 0xA5, 0xE5, 0xA5, 0xE7, 0xA5, 0xC3, 0xA1, 0xBC, 0xA3, 0xB1, 0xA3, 0xB2, 0xA3, 0xB3, 0xA3, 0xB4, 0xA3, 0xB5, 0xA3, 0xB6, 0xA3, 0xB7, 0xA3, 0xB8, 0xA3, 0xB9, 0xA3, 0xB0, 0xA1, 0xA9, 0xA1, 0xAA, 0xA1, 0xDF, 0xA1, 0xA5, 0x00, 0x5E, 0x00, 0x00 };
+const u8 D_8FB039E8[80] = { 0xA4, 0xAB, 0xA4, 0xAD, 0xA4, 0xAF, 0xA4, 0xB1, 0xA4, 0xB3, 0xA4, 0xB5, 0xA4, 0xB7, 0xA4, 0xB9, 0xA4, 0xBB, 0xA4, 0xBD, 0xA4, 0xBF, 0xA4, 0xC1, 0xA4, 0xC4, 0xA4, 0xC6, 0xA4, 0xC8, 0xA4, 0xCF, 0xA4, 0xD2, 0xA4, 0xD5, 0xA4, 0xD8, 0xA4, 0xDB, 0xA5, 0xAB, 0xA5, 0xAD, 0xA5, 0xAF, 0xA5, 0xB1, 0xA5, 0xB3, 0xA5, 0xB5, 0xA5, 0xB7, 0xA5, 0xB9, 0xA5, 0xBB, 0xA5, 0xBD, 0xA5, 0xBF, 0xA5, 0xC1, 0xA5, 0xC4, 0xA5, 0xC6, 0xA5, 0xC8, 0xA5, 0xCF, 0xA5, 0xD2, 0xA5, 0xD5, 0xA5, 0xD8, 0xA5, 0xDB };
+const u8 D_8FB03A38[4] = { 0xA4, 0xCF, 0xA4, 0xD2 };
+const u8 D_8FB03A3C[16] = { 0xA4, 0xD5, 0xA4, 0xD8, 0xA4, 0xDB, 0xA5, 0xCF, 0xA5, 0xD2, 0xA5, 0xD5, 0xA5, 0xD8, 0xA5, 0xDB };
+const char D_8FB03A4C[8] = "None";
+const char D_8FB03A54[8] = "%3d:";
+const char D_8FB03A5C[8] = "%3d:";
+const char D_8FB03A64[8] = "%3d:";
+const u8 D_8FB03A6C[4] = { 0x00, 0x00, 0x00, 0x00 };
+const char D_8FB03A70[4] = "%s:";
+const char D_8FB03A74[8] = "%s%s";
+const char D_8FB03A7C[4] = "*";
+const char D_8FB03A80[4] = "+";
+const u8 D_8FB03A84[4] = { 0x00, 0x00, 0x00, 0x00 };
+const char D_8FB03A88[4] = "%s:";
+const char D_8FB03A8C[4] = "%s:";
+const char D_8FB03A90[4] = "%s:";
+const char D_8FB03A94[8] = "%05d";
+const char D_8FB03A9C[4] = "%s:";
+const char D_8FB03AA0[8] = "%05d";
+const char D_8FB03AA8[4] = "%s:";
+const char D_8FB03AAC[4] = "%2d";
+const char D_8FB03AB0[4] = "%s:";
+const char D_8FB03AB4[8] = "%05d";
+const char D_8FB03ABC[4] = "%s:";
+const char D_8FB03AC0[4] = "%d";
+const char D_8FB03AC4[4] = "%s:";
+const char D_8FB03AC8[4] = "%5d";
+const char D_8FB03ACC[4] = "%s:";
+const char D_8FB03AD0[8] = "%04X";
+const char D_8FB03AD8[4] = "%s:";
+const char D_8FB03ADC[8] = "%d(%d)";
+const char D_8FB03AE4[4] = "%s:";
+const char D_8FB03AE8[4] = "%d";
+const char D_8FB03AEC[4] = "%s:";
+const char D_8FB03AF0[8] = "%03d";
+const char D_8FB03AF8[4] = "%s:";
+const char D_8FB03AFC[8] = "%03d";
+const char D_8FB03B04[4] = "%s:";
+const char D_8FB03B08[8] = "%03d";
+const char D_8FB03B10[4] = "%s:";
+const char D_8FB03B14[4] = "%s";
+const char D_8FB03B18[4] = "%s:";
+const char D_8FB03B1C[8] = "%d:%s";
+const char D_8FB03B24[4] = "%s:";
+const char D_8FB03B28[4] = "%s";
+const char D_8FB03B2C[28] = "Registered PokeMon Editor";
+
 extern Gfx *D_800D0510;
 extern u8 D_80094DE0[];
 void func_8FB00020(s32 arg0, s32 arg1, s32 arg2) {
@@ -82,7 +133,7 @@ s32 func_8FB001C0(u8 *arg0, u8 *arg1) {
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB002BC.s")
 
 extern s32 D_80087200;
-extern u8 D_8FB038D8[];
+extern const u8 D_8FB038D8[];
 extern void func_800226C0();
 extern void func_8FB002BC(u8 *, u16);
 // Text starts at byte 14; the capacity halfword follows it at byte 32.
@@ -202,8 +253,7 @@ s32 func_8FB005E4(u8 *arg0) {
 /* mkdraft:func_8FB009C0 begin */
 extern u8 D_8FB03490[];
 extern u8 D_8FB03494[];
-extern u8 D_8FB038D8[];
-extern u8 D_8FB039E6[];
+extern const u8 D_8FB038D8[];
 extern s32 D_8FB03DF0;
 extern void Ui_DrawGradientPanel(s32, s32, s32, s32, s32, s32);
 extern void func_800498C4(void);
@@ -243,7 +293,7 @@ void func_8FB009C0(void *arg0) {
     // state in s4 and the row step in s5; that variant scores 170 in the differ.
     do {
         func_800496A4(4, 0);
-        row = (u16 *)D_8FB038D8; last = (u16 *)D_8FB039E6;
+        row = (u16 *)D_8FB038D8; last = (u16 *)(D_8FB038D8 + 0x10E);
         y = 0;
         do {
             for (i = 0; i != 15; i++) {
@@ -282,14 +332,12 @@ extern u8 func_80073510(u8);
 extern u8 func_80062E10(u8);
 extern s32 func_80061B88(s32, u16);
 extern void func_800619E8(u8*);
-// Keep the switch table at its retail address in the fragment data.
-#pragma REUSE_LOADED_RODATA(func_8FB00E40, 0x2C, 2, 48, 0, jtbl_8FB03B78)
 s32 func_8FB00E40(u8* arg0, u8* arg1) {
     switch (**(u16**)(arg1 + 68)) {
-    case 1:
+    case 4:
         *(s32*)(arg1 + 60) = *(s16*)(arg0 + 8);
         break;
-    case 6:
+    case 1:
         *(s32*)(arg1 + 52) = *(s16*)(arg0 + 8);
         break;
     case 7:
@@ -691,7 +739,7 @@ struct MsgState *func_8FB02418(s32 arg0)
   return func_800718B8(func_8006A600(temp_v0 & 0xFFFF, (temp_v0 & 0xFF) & 0xFFu, 0));
 }
 
-extern u8 D_8FB03A6C[];
+extern const u8 D_8FB03A6C[];
 void *func_8FB02454(void *arg0) {
     u16 temp_a1;
     void *temp_v0;
@@ -955,22 +1003,7 @@ void func_8FB029B4(void *arg0) {
     Fragment9_UpdateSelectionPointers(arg0);
 }
 
-/* func_8FB02A10 is still GLOBAL_ASM, but its .s is hand-maintained (not the
- * splat-generated asm/us/nonmatchings/.../func_8FB02A10.s) so it can also
- * carry jtbl_8FB03D2C, its own 38-entry switch table, in a .late_rodata
- * block ahead of its .text. The table's bytes are inside this file's
- * [0xD4170, .rodata] range, but splat lists no user for them (this
- * hand-maintained .s is not among the files it regenerates), so nothing
- * but this block emits them. asm-processor places the block at this
- * pragma's position in the .rodata stream: right after func_8FB02878's
- * two tables and immediately before func_8FB03164's own
- * compiler-generated jtbl_8FB03DC4, the exact retail order. A plain C
- * global here would instead be emitted by IDO ahead of ALL switch-table
- * "late" rodata in this compilation (before jtbl_8FB03DC4, which is right
- * where we want it) -- but ahead of the file's other regular named rodata
- * too, changing its order and thus its address, since IDO groups named
- * rodata together in emission order across the whole file. */
-#pragma GLOBAL_ASM("hand_asm/fragments/9/func_8FB02A10_manual.s")
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02A10.s")
 
 extern void func_8FB009C0(void *arg0);
 extern void func_8FB011DC(void *arg0, void *arg1);
@@ -993,7 +1026,7 @@ void func_8FB03164(void *arg0) {
     }
 }
 
-extern u8 D_8FB03B2C[];
+extern const char D_8FB03B2C[];
 extern void BgStage_DrawFrame(void);
 extern void GfxImage_FillCurrent(Gfx **, s32);
 extern void func_800495F8(s32, s32, s32, s32);
