@@ -1542,7 +1542,61 @@ void func_82606784(u8*a0,s32 a1,s32 a2,s32 a3){if(*(s16*)(a0+6)==0){*(s16*)(a0+6
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826067D4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606B28.s")
+typedef struct List_82606B28 {
+    s16 unk_0;
+    s16 sel;
+    s16 count;
+    s16 limit;
+    s16 active;
+    s16 vals[1];
+} List_82606B28;
+
+typedef struct Self_82606B28 {
+    s16 unk_0;
+    s16 unk_2;
+    s16 unk_4;
+    s16 unk_6;
+    s16 unk_8;
+} Self_82606B28;
+
+void func_82606B28(Self_82606B28 *arg0) {
+    static s32 D_826155C0 = 6;
+    static s32 D_826155C4 = 3;
+    List_82606B28 *list = (List_82606B28 *)((u8 *)arg0 + 0x30);
+    s32 i;
+    s32 v;
+    s16 cur;
+
+    if (arg0->unk_8 < 30000) {
+        arg0->unk_8 += 1;
+    }
+    if (list->active != 0) {
+        for (i = 0; i < list->count; i++) {
+            v = arg0->unk_8 - D_826155C4 * i - (D_826155C4 << 2) * arg0->unk_2;
+            cur = list->vals[i];
+            if (list->vals[i] == 0) {
+                continue;
+            }
+            if (i < list->limit) {
+                if (v < 0) {
+                    v = 0;
+                } else if (v > D_826155C0) {
+                    v = D_826155C0;
+                }
+                list->vals[i] = 0xFF - (v * 0xFF) / D_826155C0;
+                if (cur == 0xFF && list->vals[i] < 0xFF) {
+                    if (i != list->sel) {
+                        func_800226C0(0x67);
+                    } else {
+                        func_800226C0(0x68);
+                    }
+                }
+            } else {
+                list->vals[i] = 0xFF;
+            }
+        }
+    }
+}
 
 extern s32 D_826155C8;
 extern s32 D_826155CC;
