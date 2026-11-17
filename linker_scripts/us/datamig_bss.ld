@@ -31,6 +31,12 @@ SECTIONS
         build/src/fragments/20/fragment20_12C460.o(.data)
     }
 
+    /* Fragment 61's runtime state record (func_86B007D0's sBlob). */
+    .fragment61_state_bss 0x86B17A78 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/61/fragment61_code.o(.bss)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
@@ -400,6 +406,7 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
 ASSERT(SIZEOF(.fragment20_slot_fade_data) == 16, "fragment 20 slot fade limits footprint changed");
+ASSERT(SIZEOF(.fragment61_state_bss) == 0x4C0, "fragment 61 state record footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
 ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
