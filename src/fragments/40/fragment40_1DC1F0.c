@@ -1,5 +1,7 @@
 #include "global.h"
 
+extern u32 Credits_RandomRange(u32);
+
 
 #ifdef VERSION_US
 /* mkdraft:func_88B00020 begin */
@@ -493,7 +495,285 @@ void func_88B01C54(u8 *tex0, u8 *tex1, s32 left, s32 top, s32 width, s32 height)
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B01FE0.s")
+extern u8 D_88B05B90[];
+extern u8 D_88B05B94[];
+extern u8 D_88B05B98[][3];
+extern u8 D_88B05BB0[][3];
+extern u16 D_88B05BC8[];
+extern u8 D_88B05BD8[];
+extern u8 D_88B05D70[];
+extern u8 D_8800686C;
+extern s8 D_88006868;
+extern s32 D_8800687C;
+extern u8 D_8800686D[];
+extern u16 D_8800686A;
+extern s8 D_8800EF40;
+extern Gfx D_80094E00[];
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern s32 func_80001FF0(void);
+extern void func_88B003B0(s32);
+extern void func_800088DC(void);
+extern void func_88B010A0(f32, s32);
+extern void func_8004B35C(s32, s32, s32, s32, u8 *);
+extern void func_88B01824(s32, s32, s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_88000808(u8, s16, s16, s32, s32);
+extern s32 func_80048E30(s32, s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, void *, s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern void func_800499EC(void);
+extern void func_800498C4(void);
+extern void func_88005740(void);
+extern s32 func_80008648(void);
+extern s32 func_8004C594(s32, s32);
+
+#define FRAMES(n) ((s32)((f32)(n) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(n) / 60.0f > 0.0f) ? 0.5f : -0.5f)))
+#define ROUND(x) ((s32)((x) + (((x) > 0.0f) ? 0.5f : -0.5f)))
+#define LERP(a, b, t) ((b) * (t) + (a) * (1.0f - (t)))
+// Writes one G_SETPRIMCOLOR/G_SETENVCOLOR-style command through the Gfx pointer variable gp.
+#define SET_COLOR_CMD(gp, cmd, r, gg, b, a) \
+    gp = D_800D0510++;                    \
+    gp->words.w0 = cmd;                   \
+    gp->words.w1 = (_SHIFTL(r, 24, 8) | _SHIFTL(gg, 16, 8) | _SHIFTL(b, 8, 8) | _SHIFTL(a, 0, 8))
+#define R2_S ((u8 *)D_88B05F60)
+#define R2_CLK (R2_S + 0x1C)
+#define R2_SB ((s8 *)D_88B05F60)
+#define R2_MODE8 (*(s32 *)(*(u8 **)(R2_S + 0x450) + 8))
+#define R2_MODE (*(s32 *)(*(u8 **)(R2_S + 0x450) + 4))
+
+void func_88B01FE0(s32 arg0) {
+    u8 *clock;
+    s32 pad[6]; // FAKE
+    f32 r;
+    Gfx *g2;
+    Gfx *g;
+
+    clock = R2_CLK;
+    if (R2_S[0] == 0) {
+        if (R2_MODE == 1 && *(s32 *)(R2_S + 4) != 0) {
+            R2_S[2] = 2;
+            R2_S[3] = 1;
+        } else if (R2_MODE == 4 && *(s32 *)(R2_S + 4) != 0) {
+            R2_S[2] = 4;
+            R2_S[3] = 1;
+        } else if (R2_S[2] == 1) {
+            if (R2_SB[1] == 1) {
+                R2_S[2] = 2;
+                if (R2_MODE == 2) {
+                    R2_S[3] = FRAMES(4);
+                } else {
+                    if (R2_MODE == 1) {
+                        R2_S[2] = 2;
+                    } else if (R2_MODE == 4) {
+                        R2_S[2] = 4;
+                    }
+                    *(s32 *)(R2_S + 4) = 1;
+                    R2_S[0xB] = *(s32 *)(*(u8 **)(R2_S + 0x450) + 0xC);
+                    R2_S[3] = Credits_RandomRange(FRAMES(4)) + 1;
+                }
+            } else if (R2_SB[1] == -1) {
+                if (R2_MODE == 3) {
+                    R2_S[2] = 3;
+                } else {
+                    R2_S[2] = 0;
+                }
+                switch (R2_MODE) {
+                case 1:
+                case 4:
+                    R2_S[3] = 3;
+                    break;
+                default:
+                    R2_S[3] = FRAMES(12) + Credits_RandomRange(FRAMES(80) - FRAMES(12) + 1);
+                    break;
+                }
+            }
+        } else {
+            R2_S[3]--;
+            if (R2_S[3] == 0) {
+                switch (R2_S[2]) {
+                case 0:
+                case 3:
+                    R2_SB[1] = 1;
+                    break;
+                case 2:
+                case 4:
+                    R2_SB[1] = -1;
+                    break;
+                }
+                R2_S[2] = 1;
+            }
+        }
+
+        if (R2_MODE8 == 2) {
+            R2_S[9] = 2;
+            R2_S[0xA] = 1;
+        } else {
+            if (R2_S[9] == 1) {
+                if (R2_SB[8] == 1) {
+                    if (*(s32 *)(R2_S + 0x238) != 0 && R2_MODE8 == 0) {
+                        R2_S[9] = 0;
+                        R2_S[0xA] = 1;
+                    } else {
+                        R2_S[9] = 2;
+                        R2_S[0xA] = Credits_RandomRange(2) + 1;
+                    }
+                } else if (R2_SB[8] == -1) {
+                    if (*(s32 *)(R2_S + 0x238) != 0 && R2_MODE8 == 1) {
+                        R2_S[9] = 2;
+                        R2_S[0xA] = 1;
+                    } else {
+                        R2_S[9] = 0;
+                        R2_S[0xA] = Credits_RandomRange(2) + 1;
+                    }
+                }
+            } else {
+                if (*(s32 *)(R2_S + 0x238) != 0) {
+                    if (R2_S[9] == 2 && R2_MODE8 == 1) {
+                        goto after_timers;
+                    }
+                    if (R2_S[9] == 0 && R2_MODE8 == 0) {
+                        goto after_timers;
+                    }
+                }
+                R2_S[0xA]--;
+                if (R2_S[0xA] == 0) {
+                    switch (R2_S[9]) {
+                    case 0:
+                        R2_SB[8] = 1;
+                        break;
+                    case 2:
+                        R2_SB[8] = -1;
+                        break;
+                    }
+                    R2_S[9] = 1;
+                }
+            }
+        }
+    }
+after_timers:
+    func_88B003B0(arg0);
+    func_800088DC();
+
+    if (clock[3] == 17 && clock[4] == 59 && clock[5] == 59) {
+        func_88B01C54(*(u8 **)(R2_S + 0x240), *(u8 **)(R2_S + 0x244), 0, 0, 640, 480);
+    } else if (clock[3] == 3 && clock[4] == 59 && clock[5] == 59) {
+        func_88B01C54(*(u8 **)(R2_S + 0x244), *(u8 **)(R2_S + 0x240), 0, 0, 640, 480);
+    } else {
+        func_88B01A60(((u8 **)(R2_S + 0x240))[((clock[3] >= 4 && clock[3] < 18) ? 0 : 1)], 0, 0, 640, 480);
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    if (clock[3] == 17 && clock[4] == 59 && clock[5] == 59) {
+        r = (f32)(u32) * (u16 *)(clock + 0xC) / (f32)func_80001FF0();
+        SET_COLOR_CMD(g, 0xFB000000, ROUND(LERP(255, 240, r)), ROUND(LERP(255, 240, r)), ROUND(LERP(255, 255, r)), 255);
+    } else if (clock[3] == 3 && clock[4] == 59 && clock[5] == 59) {
+        r = (f32)(u32) * (u16 *)(clock + 0xC) / (f32)func_80001FF0();
+        SET_COLOR_CMD(g, 0xFB000000, ROUND(LERP(240, 255, r)), ROUND(LERP(240, 255, r)), ROUND(LERP(255, 255, r)), 255);
+    } else if (clock[3] >= 4 && clock[3] < 18) {
+        SET_COLOR_CMD(g, 0xFB000000, 255, 255, 255, 255);
+    } else {
+        SET_COLOR_CMD(g, 0xFB000000, 240, 240, 255, 255);
+    }
+    func_8004D19C(451, 45, func_8004C990(451, 0), 0, 0);
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0x30FE61, 0x55FEF379);
+
+    if (clock[3] == 17 && clock[4] == 59 && clock[5] == 59) {
+        r = (f32)(u32) * (u16 *)(clock + 0xC) / (f32)func_80001FF0();
+        SET_COLOR_CMD(g, 0xFA000000, ROUND(LERP(255, 220, r)), ROUND(LERP(255, 240, r)), ROUND(LERP(255, 255, r)), 255);
+        SET_COLOR_CMD(g2, 0xFB000000, ROUND(LERP(0, 0, r)), ROUND(LERP(0, 0, r)), ROUND(LERP(0, 20, r)), 255);
+    } else if (clock[3] == 3 && clock[4] == 59 && clock[5] == 59) {
+        r = (f32)(u32) * (u16 *)(clock + 0xC) / (f32)func_80001FF0();
+        SET_COLOR_CMD(g, 0xFA000000, ROUND(LERP(220, 255, r)), ROUND(LERP(240, 255, r)), ROUND(LERP(255, 255, r)), 255);
+        SET_COLOR_CMD(g2, 0xFB000000, ROUND(LERP(0, 0, r)), ROUND(LERP(0, 0, r)), ROUND(LERP(20, 0, r)), 255);
+    } else if (clock[3] >= 4 && clock[3] < 18) {
+        SET_COLOR_CMD(g, 0xFA000000, 255, 255, 255, 255);
+        SET_COLOR_CMD(g, 0xFB000000, 0, 0, 0, 255);
+    } else {
+        SET_COLOR_CMD(g, 0xFA000000, 220, 240, 255, 255);
+        SET_COLOR_CMD(g, 0xFB000000, 0, 0, 20, 255);
+    }
+    func_8004D19C(207, 99, func_8004C990(450, 0), 0, 0);
+
+    if (R2_S[2] != 0) {
+        if (*(s32 *)(*(u8 **)(R2_S + 0x450) + 4) != 2) {
+            func_8004D19C(263, 206, func_8004C990(450, R2_S[2] + 8), 0, 0);
+        }
+        func_8004D19C(324, 206, func_8004C990(450, R2_S[2] + 4), 0, 0);
+    }
+    if (R2_S[9] != 0) {
+        func_8004D19C(292, 263, func_8004C990(450, R2_S[9] + 12), 0, 0);
+    }
+    if (R2_S[0xB] != 0) {
+        func_8004D19C(256, 194, func_8004C990(450, R2_S[0xB] + 2), 0, 0);
+        func_8004D19C(328, 194, func_8004C990(450, R2_S[0xB]), 0, 0);
+    }
+    if (**(s16 **)(R2_S + 0x450) == 58) {
+        func_8004D19C(322, 331, func_8004C990(450, 15), 0, 0);
+    }
+    if (arg0 != 0) {
+        func_88B01438(*(s16 *)(R2_S + 0xC) + 10, *(s16 *)(R2_S + 0xE) + 10, *(u16 *)(R2_S + 0x10) - 20,
+                      *(u16 *)(R2_S + 0x12) - 20, D_88B05B90, D_88B05B94);
+        func_88B01438(*(s16 *)(R2_S + 0x14) + 12, *(s16 *)(R2_S + 0x16) + 12, *(u16 *)(R2_S + 0x18) - 24,
+                      *(u16 *)(R2_S + 0x1A) - 24, D_88B05B90, D_88B05B94);
+    }
+
+    func_88B010A0(((f32)clock[4] / 60.0f + (f32)clock[3]) * -360.0f / 12.0f, 0);
+    func_88B010A0(((f32)clock[5] / 60.0f + (f32)clock[4]) * -360.0f / 60.0f, 1);
+    func_88B010A0((f32)clock[5] * -360.0f / 60.0f, 2);
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D19C(515, 92, func_8004C990(449, 0), 0, 0);
+    if (arg0 != 0) {
+        func_8004B35C(*(s16 *)(R2_S + 0xC), *(s16 *)(R2_S + 0xE), *(u16 *)(R2_S + 0x10), *(u16 *)(R2_S + 0x12),
+                      func_8004C990(452, 0));
+        func_88B01824(*(s16 *)(R2_S + 0x14), *(s16 *)(R2_S + 0x16), *(u16 *)(R2_S + 0x18), *(u16 *)(R2_S + 0x1A));
+    }
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetCombine(D_800D0510++, 0x30FE61, 0x55FEF379);
+    gDPSetPrimColor(D_800D0510++, 0, 0, D_88B05B98[clock[2]][0], D_88B05B98[clock[2]][1], D_88B05B98[clock[2]][2], 255);
+    gDPSetEnvColor(D_800D0510++, D_88B05BB0[clock[2]][0], D_88B05BB0[clock[2]][1], D_88B05BB0[clock[2]][2], 255);
+    func_8004D19C(478, 155, func_8004C990(453, D_88B05BC8[clock[2]]), 0, 0);
+
+    if (R2_S[0] == 0) {
+        gSPDisplayList(D_800D0510++, D_80094E00);
+        func_88000808(D_8800686C, 60, 49, 0, 0x200000);
+        if (*(s32 *)(R2_S + 0x238) != 0 && **(s16 **)(R2_S + 0x450) != 58) {
+            func_8004D19C(499, 400, func_8004C990(53, D_88B05BD8[R2_S[0x24C]]), 0, 0x200000);
+            if (arg0 != 2) {
+                R2_S[0x24C]++;
+                if (R2_S[0x24C] >= 8U) {
+                    R2_S[0x24C] = 0;
+                }
+            }
+        }
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        func_800498C4();
+        func_800496A4(8, 3);
+        func_8004C594(1, D_88006868 + 1);
+        {
+            u8 buf[0x20];
+
+            func_80048E30(D_8800687C, 88, 51, (s32)func_8004C8A0(buf, 0x10, 61, 0), 1);
+        }
+        func_80048E30(D_8800687C, 134, 50, (s32)D_8800686D, 1);
+        func_800496A4(4, 3);
+        func_80048E30(D_8800687C, 248, 53, (s32)func_8004C874(61, 1), 1);
+        func_800495F8(285, 53, 0, D_88B05D70, D_8800686A);
+        func_800496A4(0x10, 1);
+        func_8004989C(0x20);
+        func_80048E30(D_8800687C, 112, 337, (s32)(R2_S + 0x30), 1);
+        func_800499EC();
+    }
+    if (D_8800EF40 != -1) {
+        func_88005740();
+    }
+    func_80008648();
+}
 
 extern s32 func_80001FF0(void);
 extern void StageFade_StartFromOpaque(s32);
