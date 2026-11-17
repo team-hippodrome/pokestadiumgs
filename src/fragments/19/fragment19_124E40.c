@@ -517,7 +517,100 @@ s32 func_823052FC(s32 arg0, s32 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_823053A8.s")
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *func_80040E80(void *, void *);
+extern void func_8003F018(void *);
+extern void func_80037E3C(void *, void *, s32);
+extern void func_8003F114(void *, s32, s32, void *);
+extern u8 D_82305C70[];
+extern u8 D_82305CA4[];
+extern u8 D_82305CD8[];
+extern s16 D_82305BB0[][2];
+extern s16 D_82305BD8[][2];
+extern u8 D_82306980[];
+extern u16 D_82306AEC;
+extern u8 *D_82306AE8;
+extern s32 func_823043D8(s32 arg0, void *arg1);
+extern s32 func_82304520();
+typedef struct Rec_823053A8 {
+    u8 obj[0x168];
+    u8 obj2[0x168];
+    void *unk_2D0;
+    s16 unk_2D4;
+    s16 unk_2D6;
+    s16 unk_2D8;
+    s16 unk_2DA;
+    s16 unk_2DC;
+    s16 unk_2DE;
+    s16 unk_2E0;
+    s16 unk_2E2;
+    s16 unk_2E4;
+    s16 unk_2E6;
+    s16 unk_2E8;
+    s16 unk_2EA;
+    s16 unk_2EC;
+    s16 unk_2EE;
+} Rec_823053A8;
+
+extern Rec_823053A8 D_82306B00[4];
+void func_823053A8(void) {
+    static struct { s16 unk_0; s16 unk_2; s16 unk_4; s16 unk_6; } D_82306AF8;
+    s32 pad;
+    u8 *pool;
+    void *sp4C;
+    void *sp48;
+    void *sp44;
+    s32 i;
+    Rec_823053A8 *rec;
+    s16 *bb;
+    void *f1;
+    void *f2;
+
+    _bzero(&D_82306AF8, 0xBC8);
+    D_82306AF8.unk_2 = 0;
+    D_82306AF8.unk_4 = 0;
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    sp4C = func_80040E80(pool, D_82305C70);
+    sp48 = func_80040E80(pool, D_82305CA4);
+    sp44 = func_80040E80(pool, D_82305CD8);
+    MainPool_FinalizeAllocation(pool);
+    for (i = 0; i < 4; i++) {
+        bb = D_82305BB0[i];
+        f1 = func_82304260;
+        f2 = func_823043D8;
+        rec = &D_82306B00[i];
+        func_8003F018(rec->obj);
+        func_80037E3C(rec->obj, f1, i);
+        func_8003F114(rec->obj, 0, -1, sp4C);
+        func_8003F018(rec->obj2);
+        func_80037E3C(rec->obj2, f2, i);
+        func_8003F114(rec->obj2, 0, -1, sp48);
+        rec->unk_2D0 = func_8004C990(bb[0], bb[1]);
+        rec->unk_2D4 = 0;
+        rec->unk_2D8 = 0;
+        rec->unk_2DC = i;
+        rec->unk_2DE = 0x280;
+        rec->unk_2E0 = -0x1E0;
+        rec->unk_2E2 = D_82305BD8[i][0];
+        rec->unk_2E4 = D_82305BD8[i][1];
+        rec->unk_2E6 = 0x280;
+        rec->unk_2E8 = -0x1E0;
+        rec->unk_2EA = -0x280;
+        if ((i & 1) == 0) {
+            rec->unk_2EC = -0x1E0;
+        } else {
+            rec->unk_2EA = 0x280;
+            rec->unk_2EC = 0x1E0;
+        }
+    }
+    D_82306AEC = 0;
+    func_8003F018(D_82306980);
+    func_80037E3C(D_82306980, func_82304520, 0);
+    func_8003F114(D_82306980, 0, -1, sp44);
+    D_82306AE8 = func_8004C990(0x49, 0);
+}
 
 /* mkdraft:func_823055DC begin */
 extern void func_800226C0(s32);
