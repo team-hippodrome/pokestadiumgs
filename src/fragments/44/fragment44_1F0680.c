@@ -125,7 +125,33 @@ void Fragment44_CullScrollRecordsBelow(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF0282C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF0299C.s")
+extern struct Fragment44RowJob D_8AF2BDE0;
+
+void func_8AF0299C(void *arg0) {
+    s16 row;
+    s16 step;
+    s32 width;
+    s16 *config;
+    u16 *pixels;
+    s16 position;
+    config = (s16 *)((u8 *)arg0 + 0x44);
+    row = (u32)config[20] - 1;
+    step = config[7];
+    width = *(s32 *)(config + 8);
+    position = config[20] - 1;
+    if (position >= 0) {
+        position = (*(s32 *)(config + 14) + *(s32 *)((u8 *)arg0 + 0xC)) + step * -1;
+        pixels = *(u16 **)config + row * width;
+        D_8AF2BDE0.tag = 0x4F474954;
+        D_8AF2BDE0.owner = arg0;
+        D_8AF2BDE0.pixels = pixels;
+        D_8AF2BDE0.width = width;
+        D_8AF2BDE0.rows = 1;
+        D_8AF2BDE0.position = position;
+        D_8AF2BDE0.step = step;
+        D_8AF2BDE0.active = 1;
+    }
+}
 
 void Fragment44_PrepareTrailingScrollRow(void *arg0) {
     s16 count;

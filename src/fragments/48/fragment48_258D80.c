@@ -133,14 +133,67 @@ s32 func_87C03178(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C031B8.s")
+extern s32 MathUtil_Random16(void);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C03370.s")
+void func_87C031B8(u8 *arg0) {
+    f64 vec[4];
+    s32 i;
+    *(s32 *)(arg0 + 0x548) = 0;
+    for (i = 0; i < 1; i++) {
+        func_87C00120(vec, 0.0, 2000.0, 0.0);
+        func_87C02DF0(arg0 + 0x48 + i * 0x390, (s32)(arg0 + 0x10), vec, 250.0f);
+        func_87C02F74(arg0 + 0x48 + i * 0x390, (MathUtil_Random16() % 6) + 1);
+        func_87C00120(arg0 + 0x338 + i * 0x390, -1.0, -0.2, 0.0);
+        func_87C00120(arg0 + 0x370 + i * 0x390, 0.1, 0.2, 0.03);
+        func_87C00120(arg0 + 0x338 + i * 0x390, 0.1, 0.2, 1.3);
+    }
+}
+
+
+struct Block32 {
+    s32 words[8];
+};
+
+void *func_87C03370(s32 arg0, s32 arg1) {
+    extern u8 D_87C04288[];
+    extern u8 D_87C04270[];
+    extern u8 D_87C03D00[];
+    extern struct Block32 D_87C040C8[];
+    extern u8 D_87C04168[];
+    extern void func_80037E9C(s32, void *);
+    extern void *MainPool_AllocAligned(s32, s32, s32);
+    extern s32 func_8004DE3C(s32, s32);
+    extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+    extern void *func_80040E80(s32, void *);
+    extern void func_87C02080(u8 *, f64, u8 *);
+    s32 i;
+    u8 *obj;
+    f64 vec[3];
+
+    func_80037E9C(0, D_87C04288);
+    func_80037E9C(0, D_87C04270);
+    obj = MainPool_AllocAligned(arg0, 1360, 4);
+    func_8004DE3C(arg0, 152);
+    *(s32 *)(obj + 4) = WidgetTree_RunMessagePanelSilent(arg0, 152);
+    *(void **)obj = func_80040E80(arg0, D_87C03D00);
+    *(s32 *)(obj + 8) = *(s32 *)(*(u8 **)obj + 12);
+    func_87C00120(vec, 500.0, 500.0, 500.0);
+    func_87C02080(obj + 16, 10.0, (u8 *)vec);
+    func_87C031B8(obj);
+    for (i = 0; i < 5; i++) {
+        *(struct Block32 *)(obj + 0x3D8 + i * 0x30) = D_87C040C8[i];
+        *(f64 *)(obj + 0x3F8 + i * 0x30) = (i == 0) ? 0.9 : 0.9;
+        *(f64 *)(obj + 0x400 + i * 0x30) = (i == 0) ? 0.4 : 0.0;
+    }
+    for (i = 0; i < 1; i++) {
+        func_87C02E24(obj + 0x48 + i * 0x390, D_87C04270, D_87C04288, *(void **)(obj + 4));
+    }
+    return obj;
+}
 
 extern void Geo_RenderRootNode(s32); void WidgetTree_OpenMessagePanel_fragment48(u8 *arg0) { Geo_RenderRootNode(*(s32 *)(arg0 + 0)); }
 
 extern u8 D_87C04168[];
-extern s32 MathUtil_Random16(void);
 extern s32 func_80001FF0(void);
 extern s32 func_80008970(void);
 extern void func_87C02ADC(u8 *arg0, u8 *arg1, f64 arg2);
