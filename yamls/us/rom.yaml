@@ -1228,7 +1228,7 @@
     - [0x216FC0, .rodata, fragments/44/fragment44_1F1850] # Jump tables.
     - [0x217140, rodata]
     - [0x217300, .rodata, fragments/44/fragment44_1F5F20] # labels in this range are referenced only by this file
-    - [0x217360, rodata]
+    - [0x217360, .rodata, fragments/44/fragment44_1F6BF0] # Float literals and func_8AF09130's jump table.
     - [0x2173A0, .rodata, fragments/44/fragment44_1F85B0] # Debug strings, format string and jump tables.
     - [0x2174A0, rodata]
     - [0x2177B0, .rodata, fragments/44/fragment44_1FD260] # Strings, jump tables.
