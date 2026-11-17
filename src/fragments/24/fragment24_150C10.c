@@ -1497,7 +1497,47 @@ void func_82B03F38(arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B04008.s")
+// Draws the eight list rows from the 0x40-byte strings at D_82B12472. Old-style
+// definition: the caller passes no argument. The selection and count are statics of
+// this function (0x82B1246E/0x82B12470), so IDO reloads them each row.
+extern void Gfx_FillRectRgb(s16, s16, s16, s16, u8, u8, u8);
+extern Gfx D_80094D90[];
+extern u8 D_82B12472[];
+void func_82B04008(arg0)
+    u8 *arg0;
+{
+    static s16 D_82B1246E; // selected row
+    static s16 D_82B12470; // row count; rows are white when it is 0
+    struct { s16 x; s16 y; s32 pad[4]; } pair;
+    s32 pad2[0x1F]; // FAKE: retail frame is 0xE8
+    s32 i;
+    s32 w;
+    u8 *text;
+    func_82B0284C(arg0, (u8 *)&pair);
+    w = *(s16 *)(arg0 + 0x48) - 0x16;
+    gSPDisplayList(D_800D0510++, D_80094D90);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+    for (i = 0; i < 7; i++) {
+        Gfx_FillRectRgb(pair.x + 9, pair.y + i * 0x1A + 0x21, (s16)w, 1, 100, 100, 100);
+    }
+    func_800498C4();
+    func_800496A4(8, 0);
+    text = D_82B12472;
+    for (i = 0; i < 8; i++) {
+        if (D_82B12470 > 0) {
+            if ((u32)i != D_82B1246E) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            }
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_800495F8(pair.x + 9, pair.y + i * 0x1A + 0xB, 0, text);
+        text += 0x40;
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1688,7 +1728,7 @@ extern void func_82B03688(u8 *);
 extern void func_82B0373C(void *);
 extern void func_82B03978(void);
 extern void func_82B03F38();
-extern void func_82B04008(void);
+extern void func_82B04008();
 extern void func_82B04718(void);
 extern void func_82B050E8(void);
 void func_82B05494(void *arg0, s32 arg1) {
