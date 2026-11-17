@@ -2,11 +2,23 @@
 
 
 #ifdef VERSION_US
-// The 0.01f step limit at the head of this file's .rodata. It is defined as a
-// const array (IDO places const scalars in .data, arrays in .rodata) because
-// spelling it as a literal in func_8AF18190 changes that function's register
-// scheduling; the array read compiles to the same lwc1 from 0x8AF29B30.
-const f32 D_8AF29B30[1] = {0.01f};
+// Not referenced by code or data (debug format strings); they open this file's .rodata.
+const char D_8AF29940[] = "MBLKID_ItemName cf = %d\n";
+const char D_8AF2995C[] = "MBLKID_ItemNameOld cf = %d\n";
+const char D_8AF29978[] = "MBLKID_ItemExp cf = %d\n";
+const char D_8AF29990[] = "MBLKID_ItemExpOld cf = %d\n";
+const char D_8AF299AC[] = "MBLKID_SkillExp cf = %d\n";
+const char D_8AF299C8[] = "ogSetPage_ITEM_MENU()\n";
+const char D_8AF299E0[] = "ogSetPage_ITEM_MENU() step 0.1\n";
+const char D_8AF29A00[] = "ogSetPage_ITEM_MENU() step 0.3\n";
+const char D_8AF29A20[] = "ogSetPage_ITEM_MENU() step 0.5\n";
+const char D_8AF29A40[] = "ogSetPage_ITEM_MENU() step 1\n";
+const char D_8AF29A60[] = "ogSetPage_ITEM_MENU() step 2\n";
+const char D_8AF29A80[] = "ogSetPage_ITEM_MENU() step 3\n";
+const char D_8AF29AA0[] = "ogSetPage_ITEM_MENU() step 4\n";
+const char D_8AF29AC0[] = "ogSetPage_ITEM_MENU() step 5\n";
+const char D_8AF29AE0[] = "ogSetPage_ITEM_MENU() End\n";
+
 
 /* mkdraft:func_8AF179C0 begin */
 extern void func_800504BC(s16 *);
@@ -87,7 +99,72 @@ void func_8AF17AF8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_205C30/func_8AF17BA8.s")
+extern s32 D_8AF34FC0, D_8AF34FC4, D_8AF34FC8, D_8AF34FCC, D_8AF34FD0, D_8AF34FD4, D_8AF34FD8, D_8AF34FDC;
+extern u8 *D_8AF34FE0, *D_8AF34FE4, *D_8AF34FE8, *D_8AF34FEC;
+extern s16 D_8AF3500C;
+//!bug Declared s32 to agree with the later prototype, but never returns a value.
+s32 func_8AF17BA8() {
+    *(u16 *)((u8 *)D_8AF34FE0 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FD0 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FE4 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FD4 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FE8 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FD8 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FEC + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF34FDC + 2) &= 0xFFFD;
+    switch (D_8AF3500C) {
+    case 0:
+        *(u16 *)((u8 *)D_8AF34FC8 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FCC + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC0 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FC4 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FE8 + 2) |= 0x2;
+        *(u16 *)((u8 *)D_8AF34FD8 + 2) |= 0x2;
+        *(u16 *)((u8 *)D_8AF34FEC + 2) |= 0x2;
+        *(u16 *)((u8 *)D_8AF34FDC + 2) |= 0x2;
+        break;
+    case 8:
+        *(u16 *)((u8 *)D_8AF34FC8 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FCC + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC0 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FC4 + 2) &= 0xFFFE;
+        break;
+    case 7:
+        *(u16 *)((u8 *)D_8AF34FC8 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FCC + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC0 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC4 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FE0 + 2) |= 0x2;
+        *(u16 *)((u8 *)D_8AF34FD0 + 2) |= 0x2;
+        *(u16 *)((u8 *)D_8AF34FE4 + 2) |= 0x2;
+        *(u16 *)((u8 *)D_8AF34FD4 + 2) |= 0x2;
+        break;
+    case 9:
+        *(u16 *)((u8 *)D_8AF34FC8 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FCC + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC0 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FC4 + 2) &= 0xFFFE;
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+        *(u16 *)((u8 *)D_8AF34FC8 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FCC + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC0 + 2) |= 0x1;
+        *(u16 *)((u8 *)D_8AF34FC4 + 2) |= 0x1;
+        break;
+    default:
+        *(u16 *)((u8 *)D_8AF34FC0 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FC4 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FC8 + 2) &= 0xFFFE;
+        *(u16 *)((u8 *)D_8AF34FCC + 2) &= 0xFFFE;
+        break;
+    }
+}
+
 
 void func_8AF17F0C(u8 *arg0, s32 arg1, s32 arg2) {
     *(s32 *)(arg0 + 0x28) = arg1;
@@ -172,12 +249,9 @@ void func_8AF180F4(void) {
 
 extern u8 *D_8AF34F70;
 extern u8 *D_8AF34F74;
-extern f32 D_8AF29B24;
-extern f32 D_8AF29B28;
-
 void func_8AF1812C(void) {
-    f32 first = D_8AF29B24;
-    f32 second = D_8AF29B28;
+    f32 first = 0.6f;
+    f32 second = 0.01f;
     *(f32 *)(D_8AF34F70 + 0x40) = first;
     *(f32 *)(D_8AF34F70 + 0x44) = first;
     *(f32 *)(D_8AF34F74 + 0x40) = second;
@@ -188,11 +262,9 @@ void func_8AF1812C(void) {
 
 extern u8 *D_8AF34F78;
 extern u8 *D_8AF34F7C;
-extern f32 D_8AF29B2C;
-
 void func_8AF18190(void) {
-    f32 first = D_8AF29B2C;
-    f32 second = D_8AF29B30[0];
+    f32 first = 0.6f;
+    f32 second = 0.01f;
     *(f32 *)(D_8AF34F78 + 0x40) = first;
     *(f32 *)(D_8AF34F78 + 0x44) = first;
     *(f32 *)(D_8AF34F7C + 0x40) = second;
