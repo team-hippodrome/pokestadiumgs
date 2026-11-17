@@ -1395,7 +1395,8 @@
     - [0x288070, .rodata, fragments/52/fragment52_2853B0] # Float literals of func_8640708C.
     - [0x288080, rodata]
     - [0x288100, .rodata, fragments/52/fragment52_285F60] # Float literals of func_86407CE0 and func_86407D58.
-    - [0x288120, rodata,  fragments/52/fragment52_data_tail]
+    - [0x288120, .rodata, fragments/52/fragment52_2862C0] # Float literals of func_86407E58 and func_864082A8.
+    - [0x288130, rodata,  fragments/52/fragment52_data_tail]
 
   - name: fragment53
     type: code
