@@ -37,6 +37,12 @@ SECTIONS
         build/src/fragments/10/fragment10_D5250.o(.bss)
     }
 
+    /* func_8AF176C4's redraw counter static, in fragment 44's loaded data. */
+    .fragment44_redraw_count_bss 0x8AF27160 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_204950.o(.bss)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
