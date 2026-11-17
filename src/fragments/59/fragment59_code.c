@@ -2343,7 +2343,569 @@ void func_8690580C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86907614.s")
+extern s32 func_80044144(s32);
+
+extern s32 func_8690C46C(void);
+
+extern void func_8690C7F0(s32);
+
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+
+extern u8 D_80094E78[], D_80094F50[];
+
+extern void func_800503A4(s32);
+
+extern s32 D_8690FAC0;
+
+extern void func_87F0A6C8(s32, s32, s32 *, s32 *);
+
+extern u8 D_80094F50[];
+
+extern s32 func_87F0A688(s32, s32, s32);
+
+extern s32 func_8004C990(s32, s32);
+
+void func_86907614(void) {
+    s32 timer = *(s32 *)(D_8691A2A0 + 76);
+    s32 index;
+    s32 pad[2]; // FAKE: preserve the original callback frame.
+    s32 prim;
+    s32 env;
+    s32 color_pad[2]; // FAKE: preserve color word stack offsets.
+    f64 fraction;
+    if (func_80044144(D_8690F9E0) != 0 && timer != 0) {
+        index = func_8690C46C();
+        switch ((*(s32 *)(D_8691A2A0+72))) {
+case 0:
+ prim = 0xFFFFFFFF;
+ env = 0x9B0078FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503143, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050314D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050314D, 13);
+prim = 0xFFFFFFFF;
+env = 0x006400FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503243, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050324D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050324D, 9);
+prim = 0xFFFFFFFF;
+env = 0x000082FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503343, &prim, &env);
+break;
+case 1:
+ prim = 0xFFFFFFFF;
+ env = 0x9B0078FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503143, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050314D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050314D, 14);
+prim = 0xFFFFFFFF;
+env = 0x006400FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503243, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050324D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050324D, 9);
+prim = 0xFFFFFFFF;
+env = 0x000082FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503343, &prim, &env);
+break;
+case 2:
+ prim = 0xFFFFFFFF;
+ env = 0x9B0078FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503143, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050314D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050314D, 15);
+prim = 0xFFFFFFFF;
+env = 0x006400FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503243, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050324D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050324D, 10);
+prim = 0xFFFFFFFF;
+env = 0x000082FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503343, &prim, &env);
+break;
+case 3:
+ prim = 0xFFFFFFFF;
+ env = 0x9B0078FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503143, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050314D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050314D, 16);
+prim = 0xFFFFFFFF;
+env = 0x006400FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503243, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050324D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050324D, 10);
+prim = 0xFFFFFFFF;
+env = 0x000082FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503343, &prim, &env);
+break;
+case 4:
+ prim = 0xFFFFFFFF;
+ env = 0x9B0078FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503443, &prim, &env);
+prim = 0xFFFFFFFF;
+env = 0x006400FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503243, &prim, &env);
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x5050324D, &prim, &env);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x5050324D, 11);
+prim = 0xFFFFFFFF;
+env = 0x000082FF;
+func_87F0A6C8(((s32 *)&D_8690FAC0)[index], 0x50503343, &prim, &env);
+break;
+}
+if (D_8691A448.unk_388 != 0) {
+            switch ((*(s32 *)(D_8691A2A0+72))) {
+            case 4:
+                break;
+            case 0:
+                switch (D_8691A448.unk_32C) {
+                case 0:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                    break;
+                case 1:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                    break;
+                case 2:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                    break;
+                case 3:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 13);
+                    break;
+                case 4:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                    break;
+                case 5:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 7);
+                    break;
+                case 6:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+                    break;
+                case 7:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 2);
+                    break;
+                case 8:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                    break;
+                case 9:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 9);
+                    break;
+                }
+                break;
+            case 1:
+                switch (D_8691A448.unk_32C) {
+                case 0:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                    break;
+                case 1:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                    break;
+                case 2:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 1);
+                    break;
+                case 3:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 16);
+                    break;
+                case 4:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                    break;
+                case 5:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 13);
+                    break;
+                case 6:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                    break;
+                case 7:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 10);
+                    break;
+                case 8:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 4);
+                    break;
+                case 9:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 7);
+                    break;
+                case 10:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+                    break;
+                case 11:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 2);
+                    break;
+                case 12:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                    break;
+                case 13:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 5);
+                    break;
+                case 14:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 9);
+                    break;
+                }
+                break;
+            case 2:
+                switch (D_8691A448.unk_32C) {       /* switch 4; irregular */
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 5; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 14);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 17);break;
+                    }
+                    break;
+                case 1:
+                    switch (D_8691A448.unk_330) {   /* switch 6; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 1);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 16);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 1);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 16);break;
+                    }
+                    break;
+                case 2:
+                    switch (D_8691A448.unk_330) {   /* switch 7; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 13);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 15);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 13);break;
+                    }
+                    break;
+                }
+                break;
+            case 3:
+                switch (D_8691A448.unk_32C) {       /* switch 8; irregular */
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 9; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 10);
+                        break;
+                    case 3:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 4);
+                        break;
+                    case 6:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3443, 15);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 10);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3543, 4);break;
+                    }
+                    break;
+                case 1:
+                    switch (D_8691A448.unk_330) {   /* switch 10; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 7);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+                        break;
+                    case 3:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 2);
+                        break;
+                    case 6:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3443, 7);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3543, 2);break;
+                    }
+                    break;
+                case 2:
+                    switch (D_8691A448.unk_330) {   /* switch 11; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 5);
+                        break;
+                    case 3:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 9);
+                        break;
+                    case 6:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3443, 17);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 5);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3543, 9);break;
+                    }
+                    break;
+                }
+                break;
+            }
+        } else {
+            switch ((*(s32 *)(D_8691A2A0+72))) {
+            case 4:
+                break;
+            case 0:
+                switch (D_8690E8CC[D_8691A448.unk_32C]) {
+                case 0:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                    break;
+                case 1:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                    break;
+                case 2:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 7);
+                    break;
+                case 10:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 9);
+                    break;
+                case 11:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+                    break;
+                case 12:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 13);
+                    break;
+                case 13:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                    break;
+                case 15:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 2);
+                    break;
+                }
+                break;
+            case 1:
+                switch (D_8690E8EC[D_8691A448.unk_32C]) {
+                case 0:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                    break;
+                case 1:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                    break;
+                case 2:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 7);
+                    break;
+                case 3:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 3);
+                    break;
+                case 4:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 6);
+                    break;
+                case 5:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 1);
+                    break;
+                case 6:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 10);
+                    break;
+                case 8:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 5);
+                    break;
+                case 9:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 4);
+                    break;
+                case 10:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 9);
+                    break;
+                case 11:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+                    break;
+                case 12:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 13);
+                    break;
+                case 13:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                    break;
+                case 15:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 2);
+                    break;
+                case 16:
+                    func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 16);
+                    break;
+                }
+                break;
+            case 2:
+                switch (D_8690E928[D_8691A448.unk_32C]) {
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 16; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 14);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 15);break;
+                    }
+                    break;
+                case 3:
+                    switch (D_8691A448.unk_330) {   /* switch 17; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 3);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 6);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 3);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 6);break;
+                    }
+                    break;
+                case 5:
+                    switch (D_8691A448.unk_330) {   /* switch 18; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 1);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 10);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 1);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 10);break;
+                    }
+                    break;
+                case 8:
+                    switch (D_8691A448.unk_330) {   /* switch 19; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 5);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 4);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 5);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 4);break;
+                    }
+                    break;
+                case 10:
+                    switch (D_8691A448.unk_330) {   /* switch 20; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 9);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 8);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 9);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 8);break;
+                    }
+                    break;
+                case 13:
+                    switch (D_8691A448.unk_330) {
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 17);
+                        break;
+                    }
+                    break;
+                case 15:
+                    switch (D_8691A448.unk_330) {   /* switch 21; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 2);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 16);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 2);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 16);break;
+                    }
+                    break;
+                }
+                break;
+            case 3:
+                switch (D_8690E944[D_8691A448.unk_32C]) { /* switch 22; irregular */
+                case 0:
+                    switch (D_8691A448.unk_330) {   /* switch 23; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 14);
+                        break;
+                    case 3:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 7);
+                        break;
+                    case 6:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3443, 14);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 15);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3543, 7);break;
+                    }
+                    break;
+                case 3:
+                    switch (D_8691A448.unk_330) {   /* switch 24; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 3);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 6);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 3);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 6);break;
+                    }
+                    break;
+                case 5:
+                    switch (D_8691A448.unk_330) {   /* switch 25; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 1);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 10);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 1);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 10);break;
+                    }
+                    break;
+                case 8:
+                    switch (D_8691A448.unk_330) {   /* switch 26; irregular */
+                    case 0:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 5);
+                        break;
+                    case 1:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3143, 4);
+                        break;
+                    case 2:
+                        func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3243, 5);
+func_87F0A688(((s32 *)&D_8690FAC0)[index], 0x4E4D3343, 4);break;
+                    }
+                    break;
+                }
+                break;
+            }
+        }
+switch ((*(s32 *)(D_8691A2A0+72))) {
+case 0:
+case 1:
+case 2:
+case 3:
+    func_800503A4(((s32 *)&D_8690FAC0)[index]);
+    func_8690C7F0(index);
+    break;
+case 4:
+    func_800503A4(((s32 *)&D_8690FAC0)[index]);
+    break;
+}
+if (timer < 84 && timer >= 12) {
+if (timer < 36) {
+gSPDisplayList(D_800D0510++, D_80094E78);
+gDPSetPrimColor(D_800D0510++, 0, 0, 230, 240, 255, 255);
+gDPSetEnvColor(D_800D0510++, 0, 0, 80, 255);
+{ Gfx *dl = D_800D0510++; dl->words.w0 = 0xFC30FE61; dl->words.w1 = 0x55FEF379; }
+func_8004D19C((s32)(((timer - 12.0) / 24.0) * 73.0 + 644.0 * (1.0 - ((timer - 12.0) / 24.0))), 76, func_8004C990(416, 18), 0, 0);
+gSPDisplayList(D_800D0510++, D_80094F50);
+} else if(timer<60) {
+gSPDisplayList(D_800D0510++, D_80094E78);
+gDPSetPrimColor(D_800D0510++, 0, 0, 230, 240, 255, 255);
+gDPSetEnvColor(D_800D0510++, 0, 0, 80, 255);
+{ Gfx *dl = D_800D0510++; dl->words.w0 = 0xFC30FE61; dl->words.w1 = 0x55FEF379; }
+func_8004D19C(73, 76, func_8004C990(416, 18), 0, 0);
+gSPDisplayList(D_800D0510++, D_80094F50);
+} else {
+gSPDisplayList(D_800D0510++, D_80094E78);
+gDPSetPrimColor(D_800D0510++, 0, 0, 230, 240, 255, 255);
+gDPSetEnvColor(D_800D0510++, 0, 0, 80, 255);
+{ Gfx *dl = D_800D0510++; dl->words.w0 = 0xFC30FE61; dl->words.w1 = 0x55FEF379; }
+func_8004D19C((s32)(((timer - 60.0) / 24.0) * -500.0 + 73.0 * (1.0 - ((timer - 60.0) / 24.0))), 76, func_8004C990(416, 18), 0, 0);
+gSPDisplayList(D_800D0510++, D_80094F50);
+}
+}
+}
+}
 #endif
 
 #ifdef VERSION_US

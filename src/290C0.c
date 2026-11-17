@@ -50,8 +50,32 @@ void Audio_RemoveRecentSoundAt(u16 arg0) {
     D_800D1AD8[0] = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/290C0/func_80028ADC.s")
+extern u8 D_800D1B40[];
 
+s32 func_80028ADC(const void *arg0) {
+ u32 i;
+ u32 j;
+ u16 count;
+ u16 sound;
+ count = (u16)(((const u16 *)arg0)[0] & 0xFF);
+ for (i = 0; i < count; i++) {
+  D_800D1B40[i] = i + 1;
+ }
+ for (i = 0; i < count * 3; i++) Audio_SwapSoundCandidates(D_800D1B40, (func_800194A0() % count) + D_800D1B40);
+ for (i = 0; i < count; i++) {
+  sound = Audio_FilterRecentSoundId(((const u16 *)arg0)[D_800D1B40[i]]);
+  if (sound != 0) { func_800289B0(sound); return (u16)sound; }
+ }
+ for (i = 0; i < 24; i++) {
+  for (j = 1; j <= count; j++) {
+   sound = ((const u16 *)arg0)[j];
+   if ((u32)sound == D_800D1AD8[i]) {
+    Audio_RemoveRecentSoundAt(i); func_800289B0(sound); return sound;
+   }
+  }
+ }
+ return 0;
+}
 void func_80028CA8(const void *sound_candidates) {
     s32 v0;
     s32 masked;

@@ -322,9 +322,55 @@ f32 func_8130AAA8(unk_func_8130B06C *arg0, f32 arg1, f32 arg2) {
     return (target - base) * t + base;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1025F0/func_8130AC40.s")
+typedef struct unk_D_8131209C { u8 unk_00[3]; } unk_D_8131209C;
 
+extern unk_D_8131209C D_8131209C;
 
+extern f32 func_8130B4E8(unk_func_8130B06C *, s16 *);
+
+extern void func_8160B54C(s32, s32, s16 *);
+
+extern void func_8160B3E0(s32, s32, s32, s32, s32, s32, f32, s32, s16 *, s32, s32, s32, s32, void *);
+
+extern f32 func_8130AAA8(unk_func_8130B06C *, f32, f32);
+
+extern f32 (*D_8160BD08)(f32);
+
+void func_8130AC40(unk_func_8130B06C *arg0, s32 arg1, s32 arg2, f32 arg3) {
+    unk_D_8131209C color = D_8131209C;
+    s16 rect[4];
+    f32 scale;
+    f32 t;
+    s32 x;
+    s32 y;
+    s32 selected;
+    s32 flag1;
+    s32 flag2;
+    s16 *clip;
+    scale = func_8130B4E8(arg0, rect);
+    t = scale;
+    x = 95;
+    y = func_8130AAA8(arg0, (f32)arg2, arg3);
+    selected = arg2 == arg0->unk_E915 + arg0->unk_E914;
+    flag1 = selected && func_8130A9C8((u8 *)arg0);
+    flag2 = flag1 && func_8130AA18((u8 *)arg0);
+    clip = func_8130AA54((u8 *)arg0, arg2) ? rect : NULL;
+    if (rect[3] + rect[1] >= y - 20 && rect[1] <= y + 166) {
+        if (arg0->unk_E912 == 9 && selected) {
+            t = 1.0f - D_8160BD08(arg0->unk_E904 / 16);
+        }
+        if (clip) {
+            x = (rect[2] + rect[0] - x) * (1.0f - t) + x;
+        }
+        if ((!selected || (arg0->unk_E912 != 10 && arg0->unk_E912 != 9)) &&
+            ((u8 *)(u32)arg1)[32] == 0) {
+            func_8160B54C(x, y, clip);
+        } else {
+            func_8160B3E0(arg1, x, y, arg2, -1, 0, scale, 0, clip, 0,
+                flag1, flag2, !func_8130AA54((u8 *)arg0, arg2), (u8 *)arg0->unk_E8EC + 152);
+        }
+    }
+}
 /* mkdraft:func_8130AEF4 begin */
 extern s32 func_813002D0(void *);
 extern s32 func_8160A438();
@@ -492,7 +538,6 @@ void func_8130B320(void *arg0, void *arg1, s32 arg2, s32 arg3) {
     func_8130A8E0(arg0, 1);
 }
 
-extern f32 (*D_8160BD08)(f32);
 extern s16 *func_81609530(s32);
 extern void func_8160945C(s16 *, s16 *, s16 *, f32);
 f32 func_8130B3B8(unk_func_8130B06C *arg0, s16 *arg1) {

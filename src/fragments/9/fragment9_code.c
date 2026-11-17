@@ -519,8 +519,82 @@ s32 func_8FB00FE8(void *arg0)
 }
 /* mkdraft:func_8FB00FE8 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB011DC.s")
+extern void func_8004972C(s32,s32,s32,s32);
 
+extern u8 *func_8004B7A4(s32);
+
+extern u8 *func_80062CE0(u8);
+
+extern u8 *func_800635E0(u8);
+
+extern s32 func_800643CC(s32,u8,s32);
+
+
+
+
+
+extern void func_8FB011DC(void *arg0, void *arg1);
+
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+
+void func_8FB011DC(void *arg0, void *arg1) {
+    s32 i;
+    s32 value;
+    u8 key;
+    u8 *mon = *(u8 **)((u8 *)arg1 + 72);
+    s32 y;
+    s32 pick;
+    Ui_DrawGradientPanel(*(u16 *)((u8 *)arg0 + 0) - 10,*(u16 *)((u8 *)arg0 + 2) - 10,*(u16 *)((u8 *)arg0 + 4) + 20,*(u16 *)((u8 *)arg0 + 6) + 20,(s32)D_8FB03490,(s32)D_8FB03494);
+    func_800498C4();
+    func_800496A4(4,0);
+    for (i = 0; i < *(u16 *)((u8 *)arg0 + 12); i++) {
+        func_8004972C(255,255,255,255);
+        if (**(u16 **)((u8 *)arg1 + 68) != 1 && **(u16 **)((u8 *)arg1 + 68) != 4 && *(s16 *)((u8 *)arg0 + 10) + i == 0) {
+            func_80048E30(D_8FB03DF0,*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2),D_8FB03A4C,1);
+        } else {
+            switch (**(u16 **)((u8 *)arg1 + 68)) {
+            case 4:
+                func_80048E30(D_8FB03DF0,*(u16 *)((u8 *)arg0 + 0),*(u16 *)((u8 *)arg0 + 2) + i * 20,((unk_func_8FB02108 *)arg1)->rows[*(s32 *)((u8 *)arg1 + 56)].entries[(u32)*(s16 *)((u8 *)arg0 + 10)] + i * 88U + 52,1);
+                break;
+            case 1:
+                func_80048E30(D_8FB03DF0,*(u16 *)((u8 *)arg0 + 0),*(u16 *)((u8 *)arg0 + 2) + i * 20,((u8 **)arg1 + *(s16 *)((u8 *)arg0 + 10))[i],1);
+                break;
+            case 7:
+                value = func_80073420(*(s16 *)((u8 *)arg0 + 10) + i);
+                func_8004972C(255,255,255,255);
+                y = i * 20;
+                func_800495F8(*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2) + y,2,D_8FB03A54,value);
+                func_80048E30(D_8FB03DF0,*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2) + y,func_8004B7A4(value),1);
+                break;
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+                pick = func_80073510(*(s16 *)((u8 *)arg0 + 10) + i);
+                if (func_800643CC(mon[0],pick,mon[29])) {
+                    func_8004972C(255,255,255,255);
+                    key = pick;
+                } else {
+                    key = pick;
+                    if (func_800643CC(mon[0],key,100)) func_8004972C(255,255,100,255);
+                    else func_8004972C(255,100,100,255);
+                }
+                y = i * 20;
+                func_800495F8(*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2) + y,2,D_8FB03A5C,pick);
+                func_80048E30(D_8FB03DF0,*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2) + y,func_80062CE0(key),1);
+                break;
+            case 8:
+                y = i * 20;
+                func_800495F8(*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2) + y,2,D_8FB03A64,func_80073570(*(s16 *)((u8 *)arg0 + 10) + i));
+                value = func_80073570(*(s16 *)((u8 *)arg0 + 10) + i);
+                func_80048E30(D_8FB03DF0,*(u16 *)((u8 *)arg0 + 0) + 80,*(u16 *)((u8 *)arg0 + 2) + y,func_800635E0(value),1);
+                break;
+            }
+        }
+    }
+    func_800499EC();
+    func_8FB00020(*(u16 *)((u8 *)arg0 + 0),(*(s16 *)((u8 *)arg0 + 8) - *(s16 *)((u8 *)arg0 + 10)) * 20 + *(u16 *)((u8 *)arg0 + 2) + 16,*(u16 *)((u8 *)arg0 + 4));
+}
 extern s32 Pokemon_StatExpForTarget();
 extern s32 Pokemon_CalculateStat();
 extern s32 func_80062EB0();
@@ -1230,7 +1304,7 @@ void func_8FB03164(void *arg0) {
 extern const char D_8FB03B2C[];
 extern void BgStage_DrawFrame(void);
 extern void GfxImage_FillCurrent(Gfx **, s32);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
 extern void func_80008648(void);
 extern void func_8FB02A10(void *, s32);
 extern void func_8FB03164(void *);

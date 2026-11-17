@@ -368,8 +368,41 @@ void Audio_PlayDefaultSound(u16 id) {
     Audio_BuildAndDispatchSoundEvent(id, 0, &context);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/27590/func_80027A28.s")
+extern u16 D_80090D08[], D_80090D10[], D_80090D20[], D_80090D18[];
 
+void func_80027A28(u16 arg0, u8 arg1) {
+ ResourceContext_80027774 context;
+ context.kind = 0;
+ context.scale = 1.0f;
+ context.bank = (arg0 & 0xF000) >> 12;
+ switch (context.bank) {
+ case 1: case 3: case 7: case 8: case 9: context.resource = &D_80090D08[arg1]; break;
+ case 2: case 4: context.resource = &D_80090D10[arg1]; break;
+ case 6: context.resource = &D_80090D20[arg1]; break;
+ case 11: context.resource = &D_80090D18[arg1]; break;
+ default: context.resource = D_80090D04; break;
+ }
+ switch (arg0) {
+ case 0x7F01:
+ switch (arg1) {
+ case 0: context.scale = 0.97f; break;
+ case 1: break;
+ case 2: context.scale = 0.98f; break;
+ case 3: context.scale = 0.99f; break;
+ default: return;
+ } break;
+ case 0x3F02:
+ switch (arg1) {
+ case 0: context.scale = 1.34f; break;
+ case 1: break;
+ case 2: context.scale = 0.85f; break;
+ case 3: context.scale = 0.68f; break;
+ default: return;
+ } break;
+ default: break;
+ }
+ func_80027BD4(arg0, arg1, &context);
+}
 void Audio_BuildAndDispatchSoundEvent(u16 encoded, s32 offset, ResourceContext_80027774 *event) {
     u8 i;
     u8 j;
