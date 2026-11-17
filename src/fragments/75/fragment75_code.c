@@ -133,7 +133,70 @@ void func_8FA00AC0(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA00AC8.s")
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495BC(s16, s16, const char *, ...);
+extern void HAL_Printf(s16, s16, const char *, ...);
+extern s32 func_80054410(s32);
+extern u8 func_8005453C(s32);
+extern u8 func_8005431C(void);
+extern s16 D_8FA01988;
+extern s16 D_8FA0198C;
+extern s16 D_8FA01984;
+extern u8 D_8FA01990;
+extern u8 D_8FA02020[];
+extern u8 D_8FA02021[];
+extern u8 D_8FA02022[];
+extern s32 D_8FA01D30[];
+extern s32 D_8FA02014;
+void func_8FA00AC8(void) {
+    s32 pad; // FAKE
+    u8 b5C[16];
+    u8 b4C[16]; // FAKE size
+    s32 i;
+
+    D_8FA02014 = D_8FA01D30[0];
+    func_800498C4();
+    func_800496A4(2, 0);
+    func_8004972C(255, 255, 255, 255);
+    func_800495BC(30, 190, "モデル %dK", (u32)(*(s32 *)(D_8FA02014 + 0x2C) + 0x3FF) >> 10);
+    func_800495BC(30, 210, "アニメ %dK", (u32)(*(s32 *)(D_8FA02014 + 0x34) + 0x3FF) >> 10);
+    {
+        u8 *p;
+        for (i = 0, p = b5C; i < 16; i++) {
+            *p = func_80054410(i);
+            p++;
+        }
+        for (i = 0, p = b4C; i < 9; i++) {
+            *p = func_8005453C(i);
+            p++;
+        }
+    }
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C, "Item flag = 0x%02X", func_8005431C());
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 10, "Battle 1 = %02X %02X %02X %02X %02X %02X %02X", b5C[0], b5C[1], b5C[2], b5C[3], b5C[4], b5C[5], b5C[6]);
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 20, "Battle 2 = %02X %02X %02X %02X %02X", b5C[7], b5C[8], b5C[9], b5C[10], b5C[11]);
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 30, "Battle 3 = %02X %02X %02X %02X", b5C[12], b5C[13], b5C[14], b5C[15]);
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 40, "Battle Class 0x%02X, 0x%02X, 0x%02X", b4C[0], b4C[1], b4C[2]);
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 50, "Kentei Class 0x%02X, 0x%02X, 0x%02X", b4C[3], b4C[4], b4C[5]);
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 60, "Ohanashi 0x%02X, 0x%02X, 0x%02X", D_8FA02020[0], D_8FA02021[0], D_8FA02022[0]);
+    HAL_Printf(D_8FA01988 + 10, D_8FA0198C + 70, "MEDAL 0x%02X", D_8FA01990);
+    HAL_Printf(D_8FA01988, D_8FA0198C + D_8FA01984 * 10, ">");
+    func_800499EC();
+}
+
+// Not referenced by code or data (debug format strings); they follow func_8FA00AC8's strings in .rodata.
+const char D_8FA01BCC[] = "ogCheckFlashFaceIconAll_debug  class = %d \n";
+const char D_8FA01BF8[] = "UNI_EFFWK_TYPE %d\n";
+const char D_8FA01C0C[] = "ZANZOU_WK_TYPE     %d  *  %d = %d\n";
+const char D_8FA01C30[] = "STAR_WK_TYPE       %d  *  %d = %d\n";
+const char D_8FA01C54[] = "KIRAKIRA_WK_TYPE   %d  *  %d = %d\n";
+const char D_8FA01C78[] = "BEAM_WIRE_WK_TYPE            %d\n";
+const char D_8FA01C9C[] = "KIRAKIRA_KARTEN_TAPE_WK_TYPE\t%d\n";
+const char D_8FA01CC0[] = "TAPE_WK_TYPE\t%d * %d = %d\n";
+const char D_8FA01CDC[] = "--- Ogawa No Yu   GameProc() start ---\n";
+
 #endif
 
 #ifdef VERSION_US
