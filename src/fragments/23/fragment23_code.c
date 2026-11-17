@@ -94,7 +94,14 @@ extern s32 func_8004D1FC(u8 *);
 // mode, textured with the image func_8004C990(14, 1) returns. The projection setup and vertex
 // order follow func_88100C80's gradient quad.
 //@src/fragments/30/fragment30_16D4F0.c
-void func_82A001DC(s32 x0, s16 y0, s32 x1, s16 y1) {
+// Old-style definition: func_82A005D8 passes y0 as an unconverted int (no sign extension of
+// y + 8), and the callee reads the halfword back from its home slot.
+void func_82A001DC(x0, y0, x1, y1)
+    s32 x0;
+    s16 y0;
+    s32 x1;
+    s16 y1;
+{
     s32 temp; // FAKE: holds the screen dimensions pointer, then y0; diff score 28 without it (separate locals).
     Vtx *vertices;
     Mtx *matrix;
@@ -133,7 +140,62 @@ void func_82A001DC(s32 x0, s16 y0, s32 x1, s16 y1) {
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A005D8.s")
+extern s16 D_82A01998;
+extern s16 D_82A0199A;
+extern u8 D_82A01A0A[];
+
+// One 0x10-byte record per D_82A01990 slot in D_82A019C8.
+typedef struct {
+    /* 0x00 */ s16 angle;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ s16 x;
+    /* 0x06 */ s16 y;
+    /* 0x08 */ s16 dx;
+    /* 0x0A */ s16 dy;
+    /* 0x0C */ u8 unk_0C[4];
+} Node_82A005D8; // size = 0x10
+
+// Widget callback for slot arg1+0x20. Mode 0 saves the widget position into the slot's
+// D_82A019C8 record (angle = slot << 14). Mode 1 moves the widget to the record position plus
+// its offset when the slot's D_82A01A0A byte is set, draws a band from it to the slot's
+// D_82A01990 point, and for the selected slot (D_82A01990 word 0) centers the 0x74 image on
+// it in D_82A01998/D_82A0199A; otherwise it clears flag 0x2 at arg1+2.
+s32 func_82A005D8(s32 arg0, u8 *arg1) {
+    s32 pad0; // FAKE: with pad below, gives the 0x40 frame and slot spill at sp+0x38.
+    s32 slot = *(s32 *)(arg1 + 0x20);
+    s32 pad[3]; // FAKE
+    Node_82A005D8 *node;
+    u16 *widgetImage;
+    u16 *cursorImage;
+    s32 offset;
+
+    node = &((Node_82A005D8 *)D_82A019C8)[slot];
+    switch (arg0) {
+        case 0:
+            node->angle = slot << 14;
+            node->x = *(s16 *)(arg1 + 8);
+            node->y = *(s16 *)(arg1 + 0xA);
+            break;
+        case 1:
+            if (D_82A01A0A[slot * 4] != 0) {
+                *(s16 *)(arg1 + 8) = node->x + node->dx;
+                *(s16 *)(arg1 + 0xA) = node->y + node->dy;
+                offset = (slot >= 2) ? 0x24 : 0x42;
+                func_82A001DC(*(s16 *)(arg1 + 8) + offset, *(s16 *)(arg1 + 0xA) + 8,
+                              *(s16 *)(D_82A01990 + slot * 4 + 0xC), *(s16 *)(D_82A01990 + slot * 4 + 0xE));
+                if (slot == *(s32 *)D_82A01990) {
+                    widgetImage = (u16 *)func_8004C990(*(u16 *)(arg1 + 0x24), *(u16 *)(arg1 + 0x26));
+                    cursorImage = (u16 *)func_8004C990(0x74, 0);
+                    D_82A01998 = *(s16 *)(arg1 + 8) + widgetImage[0] / 2 - (cursorImage[0] * 2) / 2;
+                    D_82A0199A = *(s16 *)(arg1 + 0xA) + widgetImage[1] / 2 - cursorImage[1] / 2;
+                }
+            } else {
+                *(u16 *)(arg1 + 2) &= 0xFFFD;
+            }
+            break;
+    }
+    return 0;
+}
 
 s32 func_82A00784(s32 arg0, u8 *arg1) { if (arg0 == 0) { (*(u16 *)((u8 *)arg1 + 2)) &= 0xFFFD; } return 0; }
 
