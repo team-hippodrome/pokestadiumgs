@@ -1705,7 +1705,8 @@
     subsegments:
     - [0x362890, textbin, fragments/73/fragment73_header]
     - [0x3628B0, c,       fragments/73/fragment73_code]
-    - [0x363210, data,    fragments/73/fragment73_data]
+    - [0x363210, .data,   fragments/73/fragment73_code]
+    - [0x363230, data,    fragments/73/fragment73_data]
   
   - name: fragment74
     type: code
