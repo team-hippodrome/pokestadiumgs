@@ -1411,25 +1411,10 @@ extern void func_86B0B9A0(void);
 extern void func_87F00688(void);
 extern u8 D_86B17340[];
 extern u8 D_86B16DA0[];
-extern s32 D_86B16D90[];
 extern s32 D_86B17910;
 extern s32 D_86B17908;
 
-// 0x18-byte record whose bytes 0x12..0x15 hold an RGBA color.
-typedef struct {
-    /* 0x00 */ u8 unk_00[0x12];
-    /* 0x12 */ u8 r;
-    /* 0x13 */ u8 g;
-    /* 0x14 */ u8 b;
-    /* 0x15 */ u8 a;
-    /* 0x16 */ u8 unk_16[2];
-} ColorRecord_86B08978; // size = 0x18
-
-// Only the color-record pointer at offset 0x18 is accessed here.
-extern struct {
-    /* 0x00 */ u8 unk_00[0x18];
-    /* 0x18 */ ColorRecord_86B08978 *colors;
-} D_86B181F0;
+// D_86B181F0 (Unk86B181F0) is declared above func_86B00A3C; its unk18 records hold an RGBA color at 0x12..0x15.
 
 // When the fade mode is 1, resets the four 0x168-byte animations at D_86B17340, starts the four
 // at D_86B16DA0 with D_86B16D90's clips and colors their records (0xFF, 0xFF, 0xFF, 0xB4), sets
@@ -1438,7 +1423,7 @@ extern struct {
 // finished one at a random frame 0..5 and stores -0x1001 at offset 0x20.
 void func_86B08978(void) {
     s32 i;
-    ColorRecord_86B08978 *color;
+    Unk86B_18 *color;
 
     if (StageContext_GetFadeMode() == 1) {
         for (i = 0; i < 4; i++) {
@@ -1447,11 +1432,11 @@ void func_86B08978(void) {
         for (i = 0; i < 4; i++) {
             func_8003F114(D_86B16DA0 + i * 0x168, 0, -1, D_86B16D90[i]);
             func_86B0B608(i);
-            color = &D_86B181F0.colors[i];
-            color->r = 0xFF;
-            color->g = 0xFF;
-            color->b = 0xFF;
-            color->a = 0xB4;
+            color = &D_86B181F0.unk18[i];
+            color->unk12 = 0xFF;
+            color->unk13 = 0xFF;
+            color->unk14 = 0xFF;
+            color->unk15 = 0xB4;
         }
         func_8003F1DC(&D_86B17910);
         func_8003F114(&D_86B17910, 0, -1, D_86B17908);
