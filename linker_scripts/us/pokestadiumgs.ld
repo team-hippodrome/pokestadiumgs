@@ -3702,6 +3702,8 @@ SECTIONS
         build/src/fragments/48/fragment48_2597B0.o(.data);
         fragments_48_fragment48_data_data = .;
         build/asm/us/data/fragments/48/fragment48_data.data.o(.data);
+        build/src/fragments/48/fragment48_258D80.o(.rodata);
+        build/asm/us/data/fragments/48/fragment48_data_tail.data.o(.data);
         fragment48_DATA_END = .;
         fragment48_DATA_SIZE = ABSOLUTE(fragment48_DATA_END - fragment48_DATA_START);
         fragment48_RODATA_START = .;
@@ -3709,7 +3711,6 @@ SECTIONS
         build/src/fragments/48/fragment48_256020.o(.rodata);
         build/src/fragments/48/fragment48_257730.o(.rodata);
         build/src/fragments/48/fragment48_258080.o(.rodata);
-        build/src/fragments/48/fragment48_258D80.o(.rodata);
         build/src/fragments/48/fragment48_2597B0.o(.rodata);
         fragment48_RODATA_END = .;
         fragment48_RODATA_SIZE = ABSOLUTE(fragment48_RODATA_END - fragment48_RODATA_START);

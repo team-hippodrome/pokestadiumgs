@@ -184,7 +184,48 @@ s32 func_82100764(f32 arg0) {
 }
 /* mkdraft:func_82100764 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15A060/func_821008BC.s")
+typedef struct { s32 unk_00[12]; } unk_func_821008BC_block;
+typedef struct {
+    u8 unk_00[0x28];
+    s32 unk_28, unk_2C, unk_30, unk_34, unk_38;
+    u8 unk_3C;
+    u8 unk_3D[3];
+    unk_func_821008BC_block unk_40;
+    u8 unk_70, unk_71;
+    u8 unk_72[16];
+    u8 unk_82, unk_83;
+    u8 unk_84[14];
+    u16 unk_92;
+} unk_func_821008BC;
+
+s32 func_821008BC(unk_func_821008BC *state) {
+    s32 pad;
+    s32 value;
+    u8 first;
+    u8 second;
+    func_82100658((u8 *)state + 0x70);
+    state->unk_40 = *(unk_func_821008BC_block *)((u8 *)state + 0x70);
+    if ((s32)((state->unk_92 & 1) != 0) != 0) state->unk_28 = 1;
+    else state->unk_28 = 0;
+    state->unk_2C = state->unk_83 != 0;
+    if (!state->unk_2C && func_800560F0(state->unk_28)) {
+        state->unk_38 = 1;
+        state->unk_83 = 1;
+    }
+    state->unk_30 = state->unk_82 != 0;
+    state->unk_34 = state->unk_28 || (state->unk_2C && !state->unk_30) || state->unk_38;
+    value = func_800561E4();
+    first = value >= 3 ? 2 : value;
+    second = value < 3 ? 0 : value - 2;
+    if (state->unk_70 < first) {
+        state->unk_70 = first;
+        switch (state->unk_70) {
+        case 1: state->unk_3C = 1; break;
+        case 2: state->unk_3C = 2; break;
+        }
+    }
+    if (state->unk_71 < second) state->unk_71 = second;
+}
 
 void func_82100A40(void *arg0) {
     typedef struct {

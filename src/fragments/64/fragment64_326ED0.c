@@ -101,7 +101,77 @@ s32 func_87F04314(s16 arg0, s8 arg1, s8 arg2, s32 arg3, s8 arg4, s8 arg5, s8 arg
 }
 /* mkdraft:func_87F04314 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F0455C.s")
+extern f32 D_87F119E8;
+extern f32 D_87F119EC;
+extern s32 D_87F119F8;
+extern s32 D_87F119F0;
+extern s32 D_87F119F4;
+extern u8 D_87F119E0[];
+extern u8 D_87F119E4[];
+const u8 D_87F11490[4] = { 0 };
+const u8 D_87F11494[4] = { 0 };
+const u8 D_87F11498[4] = { 0 };
+const u8 D_87F1149C[4] = { 0 };
+const u8 D_87F114A0[4] = { 0 };
+extern s32 D_87F0FAE0;
+extern const u8 D_87F0FB30[];
+extern const u8 D_87F0FB74[];
+void func_87F0455C(void) {
+    u8 *end;
+    Entry *entry;
+    s32 *grid;
+    s32 i;
+    void *v1;
+    void *v2;
+    void *v3;
+    void *v4;
+    void *v5;
+    void *v6;
+    void *v7;
+    void *p3;
+    void *p4;
+    void *p5;
+    void *p6;
+    void *p7;
+
+    D_87F119E8 = 160.0f;
+    D_87F119EC = 120.0f;
+    D_87F119F0 = (D_87F119F8 = func_87F04260((s32)D_87F119E8, (s32)D_87F119EC)) % 38;
+    D_87F119F4 = D_87F119F8 / 38;
+
+    for (entry = (Entry *)D_87F13BD8, grid = (s32 *)D_87F11A00, end = D_87F11A00 + 0x21D8; (u8 *)grid < end;
+         entry = (Entry *)((u8 *)entry + 0xA80), grid = (s32 *)((u8 *)grid + 0xB48)) {
+        for (i = 0; i < 0x60; i++) {
+            entry[i].unkA = 0;
+        }
+
+        for (i = 0; i < 0x2D2; i++) {
+            grid[i] = -1;
+        }
+    }
+
+    v1 = (void *)D_87F1149C;
+    v2 = (void *)D_87F11498;
+    v3 = (void *)D_87F11494;
+    v4 = &D_87F0FAE0;
+    v5 = (void *)D_87F11490;
+    v6 = (void *)D_87F0FB74;
+    v7 = (void *)D_87F0FB30;
+
+    p3 = &D_87F119F0;
+    p4 = &D_87F119F4;
+    p5 = (void *)D_87F119E0;
+    p6 = (void *)D_87F114A0;
+    p7 = (void *)D_87F119E4;
+
+    for (i = 0; i < 3; i++) {
+        func_87F04314(i, 0, 0, (s32)v5, 0x25, 0x10, 6, 1, 0, (s32)v4, (s32)v7, (s32)v7);
+        func_87F04314(i, 0, 0, (s32)v3, 0x21, 0x11, 6, 2, 0, (s32)p3, (s32)v7, (s32)v7);
+        func_87F04314(i, 0, 0, (s32)v2, 0x25, 0x11, 6, 2, 0, (s32)p4, (s32)v7, (s32)v7);
+        func_87F04314(i, 0, 0, (s32)v1, 0x21, 0x12, 10, 3, 0, (s32)p5, (s32)v6, (s32)v6);
+        func_87F04314(i, 0, 0, (s32)p6, 0x25, 0x12, 10, 3, 0, (s32)p7, (s32)v6, (s32)v6);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F04894.s")
 
