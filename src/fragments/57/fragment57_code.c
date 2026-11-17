@@ -369,7 +369,90 @@ void func_833018E8(void) {
     D_8330ABE0 = *(s16 *)D_83308E34;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833019CC.s")
+extern s32 D_833090AC;
+extern s32 D_8330ABD8;
+extern ColorAdjustment D_833091DC;
+extern void func_80041FA0(s32, u16, ColorAdjustment);
+extern u32 func_8003570C(void);
+// Declared non-void here: retail never reuses $v0 after this call.
+extern s32 func_800428F8(s32);
+extern void *func_80004B4C(s32, s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern u8 *D_8330AC00;
+extern u8 *D_8330AC04;
+extern s32 D_8330A4D0;
+extern s32 D_8330ABE0;
+extern void func_83303AB0(s32);
+extern void func_83305C1C(s32);
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern s32 Gfx_InitDisplayListBuffers(s32, s32);
+extern s32 func_80041C98(s32);
+extern void func_833018E8(void);
+extern f32 func_8004B888(s32);
+extern s32 func_8003F2C4(s32, s32 *, s32);
+extern s32 func_8003F3BC(s32 *, s32);
+#define A2B0_F(off) (*(f32 *)((u8 *)&D_8330A2B0 + (off)))
+#define A2B0_S(off) (*(s32 *)((u8 *)&D_8330A2B0 + (off)))
+#define A4D0_F(off) (*(f32 *)((u8 *)&D_8330A4D0 + (off)))
+void func_833019CC(void) {
+    f32 scale;
+
+    A2B0_S(0x48) = 0;
+    A2B0_S(0x44) = 0;
+    A2B0_F(0xC8) = 600.0f;
+    A2B0_F(0x5C) = 0.0f;
+    A2B0_F(0xC4) = 0.0f;
+    A2B0_F(0xAC) = 0.0f;
+    A2B0_F(0xCC) = 700.0f;
+    A2B0_F(0xB0) = 200.0f;
+    A2B0_F(0xB4) = 1500.0f;
+    A2B0_F(0xD4) = 300.0f;
+    A2B0_S(0x40) = 1;
+    A2B0_S(0x30) = 0;
+    A2B0_F(0xD0) = 0.0f;
+    A2B0_F(0xD8) = 0.0f;
+    A2B0_F(0x7C) = 0.0f;
+    A2B0_F(0x80) = 0.0f;
+    A2B0_F(0x84) = 0.0f;
+    func_83303AB0(D_8330ABD8);
+    func_83305C1C(D_8330ABD8);
+    main_pool_push_state('SWCH');
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    D_8330A4CC = func_80041C98(1);
+    if (D_833090AC == 1) {
+        D_8330ABDC = func_8003570C() % 101 + 1;
+        D_8330ABE0 = func_8003570C() % 101 + 1;
+        func_80041FA0(D_8330A4CC, D_8330ABDA, D_833091DC);
+    } else {
+        func_833018E8();
+    }
+    func_800428F8(D_8330A4CC);
+    A2B0_S(0x28) = 0;
+    D_8330AC00 = D_8330AC04;
+    *(s16 *)(D_8330AC00 + 0x658) = D_8330ABD8;
+    *(void **)(D_8330AC00 + 0x2D4) = func_80004B4C(*(s32 *)(D_8330AC00 + 0x2D0), *(s16 *)(D_8330AC00 + 0x658) - 1);
+    func_8003F1DC(&D_8330A4D0);
+    func_8003F114((u8 *)&D_8330A4D0, 0, D_8330ABDA, **(void ***)(*(u8 **)(D_8330A4CC + 0x38) + 8));
+    scale = func_8004B888(*(s16 *)(D_8330AC00 + 0x658));
+    A4D0_F(0x38) = scale;
+    A4D0_F(0x34) = scale;
+    A4D0_F(0x30) = scale;
+    *((u8 *)&D_8330A4D0 + 2) &= ~0x40;
+    A4D0_F(0x24) = A2B0_F(0x70);
+    A4D0_F(0x28) = A2B0_F(0x74);
+    A4D0_F(0x2C) = A2B0_F(0x78);
+    A2B0_S(0x34) = *(u8 *)(*(u8 **)(D_8330AC00 + 0x2D4) + 0x13B0);
+    A2B0_S(0x38) = *(s8 *)(*(u8 **)(D_8330AC00 + 0x2D4) + 0x13B1);
+    if (A2B0_S(0x34) == 0) {
+        A2B0_S(0x34) = 3;
+        A2B0_S(0x38) = 3;
+    }
+    func_8003F2C4(D_8330A4CC, &D_8330A4D0, 0);
+    func_8003F3BC(&D_8330A4D0, 0);
+    main_pool_pop_state('SWCH');
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83301C60.s")
 
