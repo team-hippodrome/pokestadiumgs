@@ -26,7 +26,7 @@ extern s32 func_8004CA60(void *);
 //@src/fragments/32/fragment32_1B9840.c
 
 
-void func_88308530(s16 x, s16 y, s32 code) {
+void func_88308530(s32 x, s32 y, s32 code) {
     unk_func_88308530 *texture; // 0x54
     s32 pad;                    // FAKE: unused; only this seven-local set gives the 0x58-byte
                                 // frame, and with the pad removed the score is 82.
@@ -48,5 +48,27 @@ void func_88308530(s16 x, s16 y, s32 code) {
 }
 /* mkdraft:func_88308530 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/32/fragment32_1B9840/func_8830865C.s")
+// Draws `str` one glyph at a time with func_88308530, 19 pixels apart (20-pixel glyphs that
+// overlap by one). `align` 1 centers the string on x and 2 right-aligns it; the width is written
+// as len * 20 + len * -1, which keeps retail's negu/addu form instead of a folded subu.
+void func_8830865C(s32 x, s32 y, s32 align, s8 *str) {
+    s8 c;
+
+    if (align != 0) {
+        s32 len = strlen(str);
+
+        switch (align) {
+            case 1:
+                x -= (len * 20 + len * -1 + 1) >> 1;
+                break;
+            case 2:
+                x = x + -(len * 20 + len * -1) - 1;
+                break;
+        }
+    }
+    while ((c = *str++) != 0) {
+        func_88308530(x, y, c);
+        x += 19;
+    }
+}
 #endif
