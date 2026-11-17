@@ -400,7 +400,90 @@ void func_86306690(u8 *arg0, s8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27B9E0/func_86306710.s")
+// Moves the overlay object at D_87F119DC: normalises its direction at +0x10/+0x14,
+// applies the speed/drag of the record at +0x20 (reusing arg0 to hold it), turns the
+// angle at +0x46 and advances the position at +0x48/+0x4C. Once flag 0x40000000 is set the
+// object fades out (+0x41) and is freed when it leaves +-350 or fades fully; before that,
+// leaving +-250 updates the scores and sets the flag.
+extern f32 D_863075A4;
+extern f32 D_863075A8;
+extern void *D_87F119D8;
+extern void func_87D0059C(void *, void *);
+extern void func_87F026E8(void *, void *);
+extern void Fragment51_UpdateScores(void);
+
+typedef struct {
+    u8 unk_0000[0x8F28];
+    s32 unk_8F28;
+    s32 unk_8F2C;
+} Unk86306710Ctx;
+
+void func_86306710(void **arg0) {
+    f32 drag;
+    f32 scale;
+    f32 dy;
+    f32 dx;
+    s8 position[2];
+
+    arg0 = *(void ***)((u8 *)D_87F119DC + 0x20);
+    func_86306638(arg0);
+    // FAKE: dead load of the speed at +0x18 (folded into the later load); it makes IDO
+    // colour D_863075A4 in f2 and the speed in f0 like retail. Same trick as func_86306AC0.
+    dx = *(f32 *)((u8 *)arg0 + 0x18);
+    scale = sqrtf(*(f32 *)((u8 *)D_87F119DC + 0x14) * *(f32 *)((u8 *)D_87F119DC + 0x14) +
+                 *(f32 *)((u8 *)D_87F119DC + 0x10) * *(f32 *)((u8 *)D_87F119DC + 0x10));
+    if (scale > 0.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x10) /= scale;
+        *(f32 *)((u8 *)D_87F119DC + 0x14) /= scale;
+    }
+    drag = D_863075A4;
+    *(f32 *)((u8 *)arg0 + 0x18) *= *(f32 *)(D_863075D8 + 0x8F38);
+    dx = *(f32 *)((u8 *)arg0 + 0x18) * *(f32 *)((u8 *)D_87F119DC + 0x10);
+    dy = *(f32 *)((u8 *)arg0 + 0x18) * *(f32 *)((u8 *)D_87F119DC + 0x14);
+    *(f32 *)((u8 *)arg0 + 0x10) *= drag;
+    *(f32 *)((u8 *)arg0 + 0x14) *= drag;
+    *(f32 *)((u8 *)D_87F119DC + 0x10) += *(f32 *)((u8 *)arg0 + 0x10);
+    *(f32 *)((u8 *)D_87F119DC + 0x14) += *(f32 *)((u8 *)arg0 + 0x14);
+    func_87D0059C((u8 *)D_87F119DC + 0x10, (u8 *)D_87F119DC + 0x14);
+    *(f32 *)((u8 *)D_87F119DC + 0x10) *= scale;
+    *(f32 *)((u8 *)D_87F119DC + 0x14) *= scale;
+    *(s16 *)((u8 *)D_87F119DC + 0x46) +=
+        (*(f32 *)((u8 *)D_87F119DC + 0x10) * *(f32 *)((u8 *)arg0 + 0x14) -
+         *(f32 *)((u8 *)arg0 + 0x10) * *(f32 *)((u8 *)D_87F119DC + 0x14)) *
+        D_863075A8;
+    *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u8 *)D_87F119DC + 0x10) + dx;
+    *(f32 *)((u8 *)D_87F119DC + 0x4C) += *(f32 *)((u8 *)D_87F119DC + 0x14) + dy;
+    func_863060CC((s32)D_87F119DC);
+    if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x40000000) {
+        if (*(u8 *)((u8 *)D_87F119DC + 0x41) > 0x10) {
+            *(u8 *)((u8 *)D_87F119DC + 0x41) -= 0x10;
+        } else {
+            *(u8 *)((u8 *)D_87F119DC + 0x41) = 0;
+        }
+        if (*(f32 *)((u8 *)D_87F119DC + 0x48) < -350.0f || *(f32 *)((u8 *)D_87F119DC + 0x48) > 350.0f ||
+            *(f32 *)((u8 *)D_87F119DC + 0x4C) < -350.0f || *(f32 *)((u8 *)D_87F119DC + 0x4C) > 350.0f ||
+            *(u8 *)((u8 *)D_87F119DC + 0x41) == 0) {
+            func_87F026E8(D_87F119D8, D_87F119DC);
+            ((Unk86306710Ctx *)D_863075D8)->unk_8F28 = 1;
+            ((Unk86306710Ctx *)D_863075D8)->unk_8F2C = 0;
+        }
+    } else if (*(f32 *)((u8 *)D_87F119DC + 0x48) < -250.0f || *(f32 *)((u8 *)D_87F119DC + 0x48) > 250.0f ||
+               *(f32 *)((u8 *)D_87F119DC + 0x4C) < -250.0f || *(f32 *)((u8 *)D_87F119DC + 0x4C) > 250.0f) {
+        Fragment51_UpdateScores();
+        *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x40000000;
+        *(f32 *)((u8 *)arg0 + 0x10) = 0.0f;
+        *(f32 *)((u8 *)arg0 + 0x14) = 0.0f;
+        func_87C03B60(D_863075D8 + 0x8F5C, (u8 *)D_87F119DC + 0x48, position);
+        func_800277F0(0x6F05, position);
+        func_800277F0(0x6F0B, position);
+    }
+    func_863063C0(arg0);
+    if (*(s32 *)D_863075D8 == 5) {
+        *(s32 *)((u8 *)D_87F119DC + 0xC) |= 0x20000000;
+    }
+    func_86306690(D_87F119DC, arg0);
+    func_8630665C(arg0);
+}
 
 extern u8 *D_863075D8;
 extern f32 D_863075AC;
