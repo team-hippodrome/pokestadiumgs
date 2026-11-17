@@ -324,7 +324,70 @@ void func_8FB009C0(void *arg0) {
 }
 /* mkdraft:func_8FB009C0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB00C1C.s")
+// The leading bytes of the edited Pokemon record: species, held item, then the four moves.
+typedef struct EditMon8FB {
+    u8 species;
+    u8 item;
+    u8 moves[4];
+} EditMon8FB;
+
+extern u8 func_80073450(u8);
+extern u8 func_800735A0(u8);
+extern u8 func_80073540(u8);
+s32 func_8FB00C1C(arg0, arg1) u8 *arg0; u8 *arg1; {
+    switch (**(u16 **)(arg1 + 0x44)) {
+    case 4:
+        *(u16 *)(arg0 + 0xC) = 6;
+        *(u16 *)(arg0 + 0xE) = 5;
+        *(s16 *)(arg0 + 8) = 0;
+        *(s16 *)(arg0 + 0xA) = 0;
+        return 1;
+    case 1:
+        *(u16 *)(arg0 + 0xC) = 6;
+        *(u16 *)(arg0 + 0xE) = 5;
+        *(s16 *)(arg0 + 8) = 0;
+        *(s16 *)(arg0 + 0xA) = 0;
+        return 1;
+    case 7:
+        *(u16 *)(arg0 + 0xC) = 10;
+        *(u16 *)(arg0 + 0xE) = 0xFD;
+        *(s16 *)(arg0 + 8) = func_80073450(**(u8 **)(arg1 + 0x48));
+        *(s16 *)(arg0 + 0xA) = *(s16 *)(arg0 + 8) - *(u16 *)(arg0 + 0xC) / 2;
+        if (*(s16 *)(arg0 + 0xA) < 0) {
+            *(s16 *)(arg0 + 0xA) = 0;
+        }
+        if (*(s16 *)(arg0 + 0xA) > *(u16 *)(arg0 + 0xE) - *(u16 *)(arg0 + 0xC) + 1) {
+            *(s16 *)(arg0 + 0xA) = *(u16 *)(arg0 + 0xE) - *(u16 *)(arg0 + 0xC) + 1;
+        }
+        return 1;
+    case 8:
+        *(u16 *)(arg0 + 0xC) = 10;
+        *(u16 *)(arg0 + 0xE) = 0xFF;
+        *(s16 *)(arg0 + 8) = func_800735A0((*(u8 **)(arg1 + 0x48))[1]);
+        *(s16 *)(arg0 + 0xA) = *(s16 *)(arg0 + 8) - *(u16 *)(arg0 + 0xC) / 2;
+        if (*(s16 *)(arg0 + 0xA) < 0) {
+            *(s16 *)(arg0 + 0xA) = 0;
+        }
+        if (*(s16 *)(arg0 + 0xA) > *(u16 *)(arg0 + 0xE) - *(u16 *)(arg0 + 0xC) + 1) {
+            *(s16 *)(arg0 + 0xA) = *(u16 *)(arg0 + 0xE) - *(u16 *)(arg0 + 0xC) + 1;
+        }
+        return 1;
+    case 9: case 10: case 11: case 12:
+        *(u16 *)(arg0 + 0xC) = 10;
+        *(u16 *)(arg0 + 0xE) = 0xFB;
+        *(s16 *)(arg0 + 8) = func_80073540((*(EditMon8FB **)(arg1 + 0x48))->moves[**(u16 **)(arg1 + 0x44) - 9]);
+        *(s16 *)(arg0 + 0xA) = *(s16 *)(arg0 + 8) - *(u16 *)(arg0 + 0xC) / 2;
+        if (*(s16 *)(arg0 + 0xA) < 0) {
+            *(s16 *)(arg0 + 0xA) = 0;
+        }
+        if (*(s16 *)(arg0 + 0xA) > *(u16 *)(arg0 + 0xE) - *(u16 *)(arg0 + 0xC) + 1) {
+            *(s16 *)(arg0 + 0xA) = *(u16 *)(arg0 + 0xE) - *(u16 *)(arg0 + 0xC) + 1;
+        }
+        return 1;
+    default:
+        return 0;
+    }
+}
 
 extern u8 func_80073420(u8);
 extern u8 func_80073570(u8);
