@@ -138,7 +138,129 @@ void func_8AF210FC(s16 arg0) {
 }
 /* mkdraft:func_8AF210FC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF2123C.s")
+// Sets up the screen's archive (overlay 0x8A): clears the work buffers, looks up its
+// nodes and clip tables, prints the two-digit value from D_8AF37799 and shows the panels.
+extern u8 *D_8AF3A03C;
+extern u8 *D_8AF3A040;
+extern u8 *D_8AF3A044;
+extern u8 *D_8AF3A048;
+void func_8AF2123C(void) {
+    extern u8 *D_8AF3A04C;
+    extern u8 D_8AF39E00;
+    extern u8 D_8AF39E78;
+    extern u8 D_8AF39EF0;
+    extern u8 D_8AF39F68;
+    extern u8 D_8AF3A010[];
+    extern u8 D_8AF37799;
+    extern s16 D_8AF37798;
+    extern s32 func_8AF20ED0(s32, u8 *);
+    extern u8 D_8AF39FE0;
+    extern u8 D_8AF39FF0;
+    extern u8 D_8AF39A00[];
+    extern u8 D_8AF39C00[];
+    extern void func_8AF00504(s32);
+    extern s32 func_8AF003A8(s16);
+    extern void func_8AC06E98(u8 *);
+    extern u8 *func_8AC06D8C(s32, s32);
+    extern void func_8004E308(u8 *, void *, s32);
+    extern void func_8AC05ED4(s32, s32, u8 *);
+    extern void func_8AC02C80(s32, s32, s32, u8 *);
+    extern u8 func_8AF01654(u8);
+    extern void func_8AF1E32C(void *, u8);
+    extern s32 func_8004B7A4(s32);
+    extern void func_8004C54C(s32, s32);
+    extern s32 func_8004C874(s32, s32);
+    extern int sprintf(char *, const char *, ...);
+    u8 *archive;
+    u8 *n;
+    s32 r;
+    u8 *a;
+    u8 *b;
+    u8 packed;
+    u8 tens;
+    u8 ones;
+    s32 tensText;
+    s32 onesChar;
+    s32 tensChar;
+
+    _bzero(D_8AF279B0, 0xB58);
+    _bzero(&D_8AF39FE0, 0xE);
+    _bzero(&D_8AF39FF0, 0xE);
+    func_8AF00504(0x8A);
+    archive = (u8 *)func_8AF003A8(0x8A);
+    D_8AF3A04C = archive;
+    func_8AC06E98(archive);
+    D_8AF3A000 = (s32)func_8AC06D8C((s32)D_8AF3A04C, 0x77695F31);
+    func_8004E308((u8 *)D_8AF3A000, func_8AF20ED0, (s32)D_8AF279B0);
+    D_8AF3A004 = (s32)func_8AC06D8C((s32)D_8AF3A04C, 0x77695F32);
+    func_8004E308((u8 *)D_8AF3A004, func_8AF20ED0, (s32)(D_8AF279B0 + 0x52C));
+    D_8AF3A03C = func_8AC06D8C((s32)D_8AF3A04C, 0x79613175);
+    D_8AF3A040 = func_8AC06D8C((s32)D_8AF3A04C, 0x79613173);
+    D_8AF3A044 = func_8AC06D8C((s32)D_8AF3A04C, 0x79613275);
+    D_8AF3A048 = func_8AC06D8C((s32)D_8AF3A04C, 0x79613273);
+    func_8AC05ED4((s32)D_8AF3A04C, 0x79613175, &D_8AF39E00);
+    func_8AC05ED4((s32)D_8AF3A04C, 0x79613173, &D_8AF39E78);
+    func_8AC05ED4((s32)D_8AF3A04C, 0x79613275, &D_8AF39EF0);
+    func_8AC05ED4((s32)D_8AF3A04C, 0x79613273, &D_8AF39F68);
+    *(u16 *)(D_8AF3A03C + 2) &= 0xFFFE;
+    *(u16 *)(D_8AF3A040 + 2) &= 0xFFFE;
+    *(u16 *)(D_8AF3A044 + 2) &= 0xFFFE;
+    *(u16 *)(D_8AF3A048 + 2) &= 0xFFFE;
+    func_8AC02C80((s32)D_8AF3A04C, 0x725F6C5F, 0x725F725F, D_8AF3A010);
+    packed = func_8AF01654(D_8AF37799);
+    tens = (packed & 0xF0) >> 4;
+    ones = packed & 0xF;
+    func_8AF1E32C(D_8AF39A00, tens);
+    func_8AF1E32C(D_8AF39C00, ones);
+    r = func_8004B7A4(D_8AF37798);
+    func_8004C54C(0x19, r);
+    n = func_8AC06D8C((s32)D_8AF3A04C, 0x736C6966);
+    *(s16 *)(n + 0x30) = 0x3B;
+    *(s16 *)(n + 0x32) = 0x104;
+    *(u16 *)(n + 2) &= 0xFFFD;
+    tensChar = tens + 0xEB;
+    tensText = func_8004C874(0x3B, tensChar);
+    onesChar = ones + 0xEB;
+    r = func_8004C874(0x3B, onesChar);
+    sprintf((char *)D_8AF279B0 + 0xA58, "%s/%s", tensText, r);
+    func_8004C54C(0x44, (s32)(D_8AF279B0 + 0xA58));
+    a = func_8AC06D8C((s32)D_8AF3A04C, 0x67755F31);
+    *(s16 *)(a + 0x30) = 0x3B;
+    *(s16 *)(a + 0x32) = tensChar;
+    b = func_8AC06D8C((s32)D_8AF3A04C, 0x67755F32);
+    *(s16 *)(b + 0x30) = 0x3B;
+    *(s16 *)(b + 0x32) = onesChar;
+    *(u16 *)(n + 2) |= 2;
+    *(u16 *)((u8 *)D_8AF3A000 + 2) |= 1;
+    *(u16 *)(D_8AF3A03C + 2) |= 1;
+    *(u16 *)(D_8AF3A040 + 2) |= 1;
+    *(u16 *)((u8 *)D_8AF3A004 + 2) |= 1;
+    *(u16 *)(D_8AF3A044 + 2) |= 1;
+    *(u16 *)(D_8AF3A048 + 2) |= 1;
+    func_8AF210FC(0);
+    func_8AF210FC(1);
+    D_8AF3A008 = 0;
+}
+
+// Not referenced by code (debug strings); they follow func_8AF2123C's format string in .rodata.
+const char D_8AF2A1EC[] = "ogSetPage_EGG_NAME_S2() end.\n";
+const char D_8AF2A20C[] = "";
+const char D_8AF2A210[] = "===== TRAINER CLASS =====\n";
+const char D_8AF2A22C[] = "===== JIMREADER CLASS =====\n";
+const char D_8AF2A24C[] = "===== SITENNOU CLASS =====\n";
+const char D_8AF2A268[] = "===== HANABI 1  hantei_1 = %d\n";
+const char D_8AF2A288[] = "/////// HANABI 1 !!!!  //////////\n";
+const char D_8AF2A2AC[] = "pane_msg1 = 0x%08x\n";
+const char D_8AF2A2C0[] = "result: Player Win !\n";
+const char D_8AF2A2D8[] = "result: Com Win !\n";
+const char D_8AF2A2EC[] = "old_hantei = %d\n";
+const char D_8AF2A300[] = "write to flash. com[%d]< hantei_1 %d >   hantei_2 %d\n";
+const char D_8AF2A338[] = "OG_BATTLE_MODE_RETURN_WIN2: orgClearFlg = %d  ClassFlag = %d\n";
+const char D_8AF2A378[] = "Battle start! class %d trainer(%d)\n";
+const char D_8AF2A39C[] = "jump Hint step 1\n";
+const char D_8AF2A3B0[] = "jump Hint step 2\n";
+const char D_8AF2A3C4[] = "jump Hint step 3\n";
+const char D_8AF2A3D8[] = "jump Hint end \n";
 
 /* mkdraft:func_8AF21610 begin */
 extern s32 func_8AF0326C(u8 *);
