@@ -206,6 +206,13 @@ SECTIONS
         build/src/fragments/17/fragment17_11B210.o(.bss)
     }
 
+    /* func_8F500020's preview state in fragment 73's loader-cleared area
+     * at 0x8F5009A0 (fields from +8 are cleared by the function). */
+    .fragment73_preview_9A0_bss 0x8F5009A0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/73/fragment73_code.o(.bss)
+    }
+
     /* Fragment 21's saved argument pair and three state halfwords. Both
      * records are loader-cleared; compiler alignment has no load image. */
     .fragment21_pair_9004_data 0x82509004 (NOLOAD) : SUBALIGN(2)
@@ -304,6 +311,9 @@ SECTIONS
 
 ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
        "fragment21 archive record must retain its compiler section footprint");
+
+ASSERT(SIZEOF(.fragment73_preview_9A0_bss) == 32,
+       "fragment73 preview state must keep its 0x20-byte footprint");
 
 ASSERT(SIZEOF(.fragment32_anim_state_data) == 112,
        "fragment32 animation state must retain its compiler section footprint");
