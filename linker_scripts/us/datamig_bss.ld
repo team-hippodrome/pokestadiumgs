@@ -52,6 +52,12 @@ SECTIONS
         build/src/fragments/44/fragment44_1EE290.o(.bss)
     }
 
+    /* Tag and active flag used by the fragment 44 view callback. */
+    .fragment44_view_state_bss 0x8AF395B8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_20D3A0.o(.bss)
+    }
+
     /* Four-byte panel color cache. Its original loaded zero word stays in
      * the fragment data image; compiler BSS alignment has no load image. */
     .fragment11_panel_color_cache_bss 0x8160BE5C (NOLOAD) : SUBALIGN(4)

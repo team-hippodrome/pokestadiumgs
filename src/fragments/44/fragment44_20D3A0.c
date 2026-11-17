@@ -41,7 +41,38 @@ s32 func_8AF1F130(s32 arg0, Func8AF1F130Arg *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20D3A0/func_8AF1F1F0.s")
+extern void func_8AC007B8(s32, s32, s32, s32);
+extern void func_8AF02F18(void *);
+extern void func_8AC00738(void);
+
+s32 func_8AF1F1F0(s32 arg0, u8 *arg1) {
+    struct { s32 pad[2]; s16 angles[2]; } scratch;
+    static struct {
+        s32 tag;
+        u8 active;
+    } state;
+    s32 *ptr;
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 w;
+    ptr = *(s32 **)(arg1 + 0x20);
+    if ((arg0 != 0) && (arg0 == 1)) {
+        func_800504BC(scratch.angles);
+        x = *(s16 *)(arg1 + 8) + scratch.angles[0];
+        y = *(s16 *)(arg1 + 10) + scratch.angles[1];
+        z = *(s16 *)(arg1 + 12);
+        w = *(s16 *)(arg1 + 14);
+        ptr[2] = x;
+        ptr[3] = y;
+        state.active = 0;
+        state.tag = *(s32 *)(arg1 + 4);
+        func_8AC007B8(x, y, z, w);
+        func_8AF02F18(ptr);
+        func_8AC00738();
+    }
+    return 0;
+}
 
 extern void func_8004B314(s32, s32, s32, s32);
 s32 func_8AF1F294(s32 arg0, Func8AF1F130Arg *arg1) {
@@ -519,7 +550,6 @@ s16 func_8AF2078C(void) {
     func_8AC06220(&D_8AF39510, D_8AF2BDC6);
     return sp1E;
 }
-void func_8AC00738(void);                           /* extern */
 void func_8AC05F00(M2C_UNK *);                       /* extern */
 s32 func_8AC0665C(M2C_UNK *, s16);                  /* extern */
 s32 func_8AC0672C(M2C_UNK *, s16);                  /* extern */
