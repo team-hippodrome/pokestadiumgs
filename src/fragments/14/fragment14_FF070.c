@@ -85,7 +85,33 @@ void func_8130707C(void *arg0, s32 arg1) {
     ((struct S *)arg0)->value = sp24;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81307128.s")
+extern f32 func_8160762C(u8, s32, s32 *, s32 *);
+extern void func_81607440(s32, s32, s32, s32, f32, s32, s32);
+typedef struct unk_func_81307128_entry {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ u8 unk_08;
+    /* 0x09 */ u8 unk_09[0x18 - 0x9];
+} unk_func_81307128_entry;
+typedef struct unk_func_81307128 {
+    /* 0x00000 */ unk_func_81307128_entry entries[0x137B8 / 0x18];
+    /* 0x137B8 */ f32 unk_137B8;
+    /* 0x137BC */ u8 unk_137BC[0x137F4 - 0x137BC];
+    /* 0x137F4 */ u8 unk_137F4;
+    /* 0x137F5 */ u8 unk_137F5[0x137F9 - 0x137F5];
+    /* 0x137F9 */ u8 unk_137F9;
+} unk_func_81307128;
+void func_81307128(unk_func_81307128 *arg0, s32 arg1, s32 arg2) {
+    s32 pad; // FAKE
+    s32 sp38;
+    s32 sp34;
+    s32 n = (arg0->entries[arg0->unk_137F4].unk_08 + 3) / 4 - 2;
+
+    arg0->unk_137B8 = (func_8160762C(arg0->unk_137F9, n, &sp38, &sp34) - arg0->unk_137B8) * 0.35f + arg0->unk_137B8;
+    func_81607440(arg1 + 7, arg2 + 7, 0x13, 0x8E, arg0->unk_137B8, sp38, sp34);
+}
+
+void func_813071FC(void) {
+}
 
 void *func_81307204(void *arg0, s32 arg1) {
     while (arg1-- > 0) {
