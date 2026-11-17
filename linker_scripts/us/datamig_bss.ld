@@ -161,7 +161,7 @@ SECTIONS
      * alignment, with no loaded initializer bytes. */
     .fragment17_state_106B0_data 0x822106B0 (NOLOAD) : SUBALIGN(4)
     {
-        build/src/fragments/17/fragment17_1162A0.o(.data)
+        build/src/fragments/17/fragment17_118870.o(.data)
     }
 
     /* fragment17_113A60's 0x18-byte scene record (three statics cleared by
