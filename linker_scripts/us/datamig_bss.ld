@@ -170,12 +170,12 @@ SECTIONS
         build/src/fragments/17/fragment17_1162A0.o(.data)
     }
 
-    /* fragment17_113A60's 0x18-byte scene record (three statics cleared by
+    /* fragment17_1154C0's 0x18-byte scene record (three statics cleared by
      * func_82206854). The fragment loader clears this runtime area after
      * consuming its relocation table. */
     .fragment17_scene_record_data 0x8220EB80 (NOLOAD) : SUBALIGN(4)
     {
-        build/src/fragments/17/fragment17_113A60.o(.data)
+        build/src/fragments/17/fragment17_1154C0.o(.data)
     }
 
     /* fragment17_11A7F0's overlay header (state, unk_02, x, y). The fragment
@@ -188,6 +188,12 @@ SECTIONS
     .fragment17_state_105E8_bss 0x822105E8 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/17/fragment17_113A60.o(.bss)
+    }
+    /* func_82205C14's slide offset and base position (function statics),
+     * in fragment 17's loader-cleared runtime area. */
+    .fragment17_slide_state_10640_bss 0x82210640 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/17/fragment17_1154C0.o(.bss)
     }
     /* Loader-cleared color/state header and transition rows for fragment 19.
      * The input sections contain the real objects and compiler alignment;
