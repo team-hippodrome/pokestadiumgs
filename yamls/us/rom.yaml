@@ -1447,6 +1447,9 @@
     - [0x2BB830, textbin, fragments/57/fragment57_header]
     - [0x2BB850, c,       fragments/57/fragment57_code]
     - [0x2C3F90, data,    fragments/57/fragment57_data]
+    - [0x2C4A20, .data,   fragments/57/fragment57_code] # func_83302290's blink counter (0x833091F4) and the unreferenced word,
+                                                          # D_833091F8 and D_833091FC in the same 16-byte IDO-padded section
+    - [0x2C4A30, data]
     - [0x2C4A60, .rodata, fragments/57/fragment57_code] # Strings, jump tables, float literals, double literals.
     - [0x2C5A70, rodata]
 
