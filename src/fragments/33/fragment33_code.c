@@ -1,5 +1,6 @@
 #include "global.h"
 #include "controller.h"
+extern s32 D_8800687C;
 
 
 #ifdef VERSION_US
@@ -186,8 +187,98 @@ void func_8840045C(s16 x, s16 y, s16 width, s16 height) {
     GfxRect_DrawTextured(x + 8, y + height - 8, width - 16, 8, 736, 0, 0, 0x400, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/33/fragment33_code/func_88400610.s")
-
+extern Gfx *D_800D0510;
+extern Gfx D_80094DE0[], D_80094DB8[], D_80094E38[], D_80094F50[];
+extern s32 func_886000F0(s32);
+extern char *func_8004B7A4(s32);
+void func_800498C4(void);
+void func_800499EC(void);
+void func_800496A4(s32, s32);
+void func_80049064(s32, s32, s32, const char *);
+void func_88600170(s32, s32, s8);
+void func_88400610(void) {
+    s16 x;
+    s16 y;
+    u32 tick_left = 29;
+    u32 tick_right = 31;
+    u32 i;
+    s32 species;
+    s32 name_id;
+    func_884001CC((u8 *)D_884017E0);
+    func_800088DC();
+    func_88400284(0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetTexturePersp(D_800D0510++, G_TP_PERSP);
+    func_8000766C(&D_800D0510, 0, 0, 320, 240);
+    GeoRender_AdvanceFrameCounter();
+    func_8003C6B8(D_884017E0->layout);
+    if (func_886000F0(D_884017E0->species) == 1) func_88400284(1);
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    gDPSetFillColor(D_800D0510++, 0x67FF67FF);
+    gDPFillRectangle(D_800D0510++, 108, 24, 262, 24);
+    gDPFillRectangle(D_800D0510++, 30, 51, 30, 216);
+    gDPFillRectangle(D_800D0510++, 108, 22, 108, 26);
+    gDPFillRectangle(D_800D0510++, 262, 22, 262, 26);
+    gDPFillRectangle(D_800D0510++, 28, 51, 32, 51);
+    gDPFillRectangle(D_800D0510++, 28, 216, 32, 216);
+    for (i = 0, x = 119; i < 13; i++, x += 11) {
+        gDPFillRectangle(D_800D0510++, x, 23, x, 25);
+    }
+    for (i = 0, y = 62; i < 14; i++, y += 11) {
+        gDPFillRectangle(D_800D0510++, tick_left, y, tick_right, y);
+    }
+    gSPDisplayList(D_800D0510++, D_80094DB8);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 170);
+    gDPFillRectangle(D_800D0510++, 30, 24, 101, 44);
+    gDPFillRectangle(D_800D0510++, D_884017E0->unk_42, 196, D_884017E0->unk_42 + D_884017E0->unk_44, 216);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0, 255, 255, 255);
+    gDPSetCombineLERP(D_800D0510++, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, ENVIRONMENT, 0);
+    func_8004D19C(42, 195, func_8004C990(268, 0), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0, 255, 0, 255);
+    gDPSetCombineLERP(D_800D0510++, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    func_8004D19C(D_884017E0->unk_46, 201, func_8004C990(270, 0), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 150, 255);
+    func_8004D1FC(func_8004C990(269, 0));
+    func_8840045C(28, 22, 75, 24);
+    func_8840045C(D_884017E0->unk_3E, 194, D_884017E0->unk_40, 24);
+    if (func_886000F0(D_884017E0->species) >= 2) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        func_88600170(268, 44, D_884017E0->unk_34);
+        if (D_884017E0->unk_35 != D_884017E0->unk_34)
+            func_88600170(268, 66, D_884017E0->unk_35);
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 220, 255, 230, 255);
+    gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    func_8004D19C(268, 22, func_8004C990(270, 1), 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(1, 0);
+    species = D_884017E0->species;
+    if (species >= 254) name_id = 201; else name_id = species;
+    func_80049064(65, 29, 1, func_8004B7A4(name_id));
+    func_80048E30(D_8800687C, D_884017E0->unk_3C, 201, D_884017E0->unk_38, 1);
+    func_800499EC();
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gDPSetCombineMode(D_800D0510++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetRenderMode(D_800D0510++, 0x5F505240, 0);
+    gDPFillRectangle(D_800D0510++, 108, 23, 263, 26);
+    gDPFillRectangle(D_800D0510++, 107, 21, 110, 28);
+    gDPFillRectangle(D_800D0510++, 261, 21, 264, 28);
+    gDPFillRectangle(D_800D0510++, 29, 51, 32, 217);
+    gDPFillRectangle(D_800D0510++, 27, 50, 34, 53);
+    gDPFillRectangle(D_800D0510++, 27, 215, 34, 218);
+    gDPFillRectangle(D_800D0510++, 27, 21, 104, 47);
+    gDPFillRectangle(D_800D0510++, D_884017E0->unk_3E - 1, 193, D_884017E0->unk_3E + D_884017E0->unk_40 + 1, 219);
+    func_80008648();
+}
 extern s32 func_80001FF0(void);
 extern void func_800086A4(s32);
 extern void StageFade_StartFromOpaque(s32);

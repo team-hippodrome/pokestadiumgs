@@ -165,7 +165,73 @@ void func_8AF1DCD4(void) {
     ((Node8AF1DCD4 *)n3)->f02 |= 2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20BDB0/func_8AF1E034.s")
+extern void *D_8AF263C0;
+
+extern u16 D_8AF2BDC6;
+
+extern s16 D_8AF2D302;
+
+extern s32 func_8AF0326C(void *);
+
+extern void func_8AF00130(s32);
+
+extern u8 func_8AF01654(u8);
+
+extern void func_8AC0686C(void *, s16);
+
+extern void func_8AC0619C(void *, u16);
+
+extern void func_8AC06220(void *, u16);
+
+extern void func_8AC063AC(void *, u16);
+
+s16 func_8AF1E034(void) {
+    s16 result;
+    Snapshot_8AF1DB40 *snapshot;
+    u8 *sub;
+    u8 *cfg;
+    unsigned long buttons;
+    s16 state;
+    s16 value;
+    u8 code;
+    result = 24;
+    snapshot = D_8AF27930;
+    sub = (u8 *)snapshot + 40;
+    cfg = (u8 *)snapshot + 68;
+    if (func_8AF0326C(snapshot) == 0 && (state = *(s16 *)(sub + 18)) == 0) {
+        {
+            buttons = *(u16 *)((u8 *)D_8AF263C0 + 8);
+            buttons ^= 0;
+            if (buttons & 0x4000) {
+                func_8AF00130(3);
+                result = 23;
+                D_8AF27934 = 0;
+            } else if (state == 0 && (buttons & 0x8000)) {
+                D_8AF37F48 = D_8AF37F38;
+                D_8AF27938 = 1;
+                state = (s16)(*(s16 *)(sub + 12) + *(s32 *)(cfg + 16) * *(s16 *)(sub + 16));
+                value = *(s16 *)(*(u8 **)(sub + 28) + state * 2);
+                if (state < *(s32 *)(cfg + 4)) {
+                    code = func_8AF01654(value);
+                    *(s16 *)(sub + 22) = value;
+                    D_8AF2D302 = value;
+                    func_8AF1DBA4();
+                    D_8AF37798 = value;
+                    if ((code & 0xF) == ((code & 0xF0) >> 4)) result = 26;
+                    else result = 27;
+                    func_8AF00130(194);
+                }
+            }
+        }
+    }
+    func_8AC0686C(&D_8AF37F38, *(s16 *)(sub + 16));
+    func_8AC0619C(D_8AF37D98, D_8AF2BDC6);
+    func_8AC06220(D_8AF37E10, D_8AF2BDC6);
+    func_8AC063AC(D_8AF37E90, D_8AF2BDC6);
+    return result;
+}
+extern u8 D_8AF37D98[];
+extern u8 D_8AF37E10[];
 
 extern void func_8AC00738(void);
 extern s32 func_8AC0665C(s16 *, s16);

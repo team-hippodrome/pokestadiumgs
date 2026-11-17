@@ -3438,6 +3438,7 @@ SECTIONS
         build/src/fragments/44/fragment44_209BD0.o(.rodata);
         build/asm/us/data/217E20.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20A610.o(.rodata);
+        build/asm/us/data/218130.rodata.o(.rodata);
         build/src/fragments/44/fragment44_20BDB0.o(.rodata);
         build/src/fragments/44/fragment44_20C560.o(.rodata);
         build/src/fragments/44/fragment44_20CBF0.o(.rodata);

@@ -2,8 +2,31 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82600A40.s")
+extern u32 func_8003570C(void);
 
+extern void func_82600A40(s32 *, s32, s32);
+
+typedef struct { u8 pad_00[4]; void *unk_04; } Func82615340StateX;
+
+extern Func82615340StateX *D_82615340;
+
+void func_82600A40(s32 *output, s32 draw_count, s32 pool_count) {
+ s32 i; s32 j; s32 permutation[32]; s32 index; s32 count;
+ count = pool_count; pool_count = 0; i = 0;
+ if (count > 0) { do { permutation[i] = i; i++; if (i < count) { continue; } break; } while (1); }
+ for (i = 0; i < draw_count; i++) {
+ if (*(s32 *)((u8 *)D_82615340 + 0x98) == 0) {
+ index = guRandom() % (u32)count;
+ } else {
+ index = func_8003570C() % (u32)count;
+ }
+ output[i] = permutation[index];
+ for (j = index; j < count - 1; j++) {
+ permutation[j] = permutation[j + 1];
+ }
+ count--;
+ }
+}
 extern void func_82600A40(s32 *, s32, s32);
 void RecordSelection_ChooseSortedIndices(s32 *output, s32 draw_count, s32 pool_count) {
     s32 index;
@@ -637,7 +660,7 @@ void RecordText_SelectAndMeasure(void *context, u8 records[][152]) {
 
 extern void *func_80041C98(u32);
 extern void func_80041E2C(void);
-typedef struct { u8 pad_00[4]; void *unk_04; } Func82615340StateX;
+
 extern Func82615340StateX *D_82615340;
 typedef struct PokeIconList44300 PokeIconList44300Extern;
 extern PokeIconList44300Extern *func_800437B4(void *, s32, s32, s32);
