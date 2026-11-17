@@ -20,13 +20,80 @@ s32 func_82303D84(u32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_82303E14.s")
+extern f32 (*D_8160BD18)(f32);
+extern f32 (*D_8160BD1C)(f32);
+extern s32 D_82305C10;
+extern s32 D_82305C14;
+extern s32 D_82305C18;
+extern void func_800226C0(s32);
+void func_82303E14(u8 *arg0) {
+    s32 pad; // FAKE
+    f32 ratio;
+    f32 cos_ratio;
+
+    switch (*(u16 *)(arg0 + 0x2D4)) {
+    case 1: {
+        s32 max = D_82305C10;
+        *(s16 *)(arg0 + 0x2D6) += 1;
+        if (*(s16 *)(arg0 + 0x2D6) < max) {
+            ratio = (f32)*(s16 *)(arg0 + 0x2D6) / (f32)max;
+            cos_ratio = D_8160BD18(ratio);
+            *(s16 *)(arg0 + 0x2DE) = (s16)(s32)(((f32)*(s16 *)(arg0 + 0x2E6) - (f32)*(s16 *)(arg0 + 0x2E6) * cos_ratio) + (D_8160BD18(ratio) * (f32)*(s16 *)(arg0 + 0x2E6) < (f32)*(s16 *)(arg0 + 0x2E6) ? 0.5f : -0.5f));
+            cos_ratio = D_8160BD1C(ratio);
+            *(s16 *)(arg0 + 0x2E0) = (s16)(s32)(((f32)*(s16 *)(arg0 + 0x2E8) - (f32)*(s16 *)(arg0 + 0x2E8) * cos_ratio) + (D_8160BD1C(ratio) * (f32)*(s16 *)(arg0 + 0x2E8) < (f32)*(s16 *)(arg0 + 0x2E8) ? 0.5f : -0.5f));
+        } else {
+            *(s16 *)(arg0 + 0x2D4) = 2;
+            *(s16 *)(arg0 + 0x2DE) = 0;
+            *(s16 *)(arg0 + 0x2E0) = 0;
+            if (*(s16 *)(arg0 + 0x2DC) != 0) {
+                func_800226C0(0xB0);
+            }
+        }
+        break;
+    }
+    case 3: {
+        s32 max = D_82305C14;
+        *(s16 *)(arg0 + 0x2D6) += 1;
+        if (*(s16 *)(arg0 + 0x2D6) < max) {
+            ratio = (f32)*(s16 *)(arg0 + 0x2D6) / (f32)max;
+            cos_ratio = D_8160BD18(ratio);
+            *(s16 *)(arg0 + 0x2DE) = (s16)(s32)((f32)*(s16 *)(arg0 + 0x2E6) * cos_ratio + (0.0f < (f32)*(s16 *)(arg0 + 0x2E6) * D_8160BD18(ratio) ? 0.5f : -0.5f));
+            cos_ratio = D_8160BD1C(ratio);
+            *(s16 *)(arg0 + 0x2E0) = (s16)(s32)((f32)*(s16 *)(arg0 + 0x2E8) * cos_ratio + (0.0f < (f32)*(s16 *)(arg0 + 0x2E8) * D_8160BD1C(ratio) ? 0.5f : -0.5f));
+        } else {
+            *(s16 *)(arg0 + 0x2D4) = 0;
+            *(s16 *)(arg0 + 0x2DE) = 0;
+            *(s16 *)(arg0 + 0x2E0) = 0;
+        }
+        break;
+    }
+    case 4: {
+        s32 max = D_82305C18;
+        *(s16 *)(arg0 + 0x2D6) += 1;
+        if (*(s16 *)(arg0 + 0x2D6) < max) {
+            ratio = (f32)*(s16 *)(arg0 + 0x2D6) / (f32)max;
+            cos_ratio = D_8160BD18(ratio);
+            *(s16 *)(arg0 + 0x2DE) = (s16)(s32)((f32)*(s16 *)(arg0 + 0x2EA) * cos_ratio + (0.0f < (f32)*(s16 *)(arg0 + 0x2EA) * D_8160BD18(ratio) ? 0.5f : -0.5f));
+            cos_ratio = D_8160BD1C(ratio);
+            *(s16 *)(arg0 + 0x2E0) = (s16)(s32)((f32)*(s16 *)(arg0 + 0x2EC) * cos_ratio + (0.0f < (f32)*(s16 *)(arg0 + 0x2EC) * D_8160BD1C(ratio) ? 0.5f : -0.5f));
+        } else {
+            *(s16 *)(arg0 + 0x2D4) = 0;
+            *(s16 *)(arg0 + 0x2DE) = *(s16 *)(arg0 + 0x2EA);
+            *(s16 *)(arg0 + 0x2E0) = *(s16 *)(arg0 + 0x2EC);
+        }
+        break;
+    }
+    case 0:
+    case 2:
+        break;
+    }
+}
+
 
 /* mkdraft:func_82304260 begin */
 extern void func_82303E14(u8 *);
 extern s32 func_82301428(void);
 extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
-extern f32 D_82305D64;
 extern Vec2s D_82306AF4;
 extern u8 D_82306AF8[];
 extern s16 D_82306DDA[];
@@ -70,7 +137,7 @@ s32 func_82304260(s32 arg0, u8 *arg1) {
                 scale = 1.0f;
             } else {
                 /* Only the entry func_82301428 reports as current updates D_82306AF4. */
-                scale = D_82305D64;
+                scale = 1.05f;
                 *result_dst = result;
             }
             Vec3f_SetComponentsDuplicate((void *)(arg1 + 0x30), scale, scale, scale);
@@ -85,7 +152,6 @@ s32 func_82304260(s32 arg0, u8 *arg1) {
 extern s32 func_82301428(void);
 extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
 extern void func_82303D60(Vec2s *arg0, Vec2s *arg1, Vec2s *arg2);
-extern f32 D_82305D68;
 extern u8 D_82306AF8[];
 extern u16 D_82306AEC;
 // The return type must also be applied to the file-scope declaration at
@@ -122,7 +188,7 @@ s32 func_823043D8(s32 arg0, void *arg1) {
             if (current_index != selected_index) {
                 scale = 1.0f;
             } else {
-                scale = D_82305D68;
+                scale = 1.05f;
             }
             Vec3f_SetComponentsDuplicate((u8 *)arg1 + 0x30, scale, scale, scale);
         }
@@ -133,7 +199,6 @@ s32 func_823043D8(s32 arg0, void *arg1) {
 
 extern s32 func_82301428(void);
 extern void *Vec3f_SetComponentsDuplicate(void *, f32, f32, f32);
-extern f32 D_82305D6C;
 extern Vec2s D_82306AF0;
 extern Vec2s D_82306AF4;
 extern u8 D_82306DD4[];
@@ -150,7 +215,7 @@ s32 func_82304520(s32 arg0, s32 arg1) {
                                       (f32)sp20.x - 320.0f,
                                       240.0f - (f32)sp20.y,
                                       -579.0f);
-        Vec3f_SetComponentsDuplicate((void *)(arg1 + 0x30), D_82305D6C, D_82305D6C, D_82305D6C);
+        Vec3f_SetComponentsDuplicate((void *)(arg1 + 0x30), 1.1f, 1.1f, 1.1f);
     }
     return 0;
 }
