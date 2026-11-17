@@ -1183,7 +1183,646 @@ f32 func_86B05738(f32 arg0) { f32 angle = arg0;
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B057B0.s")
+extern int guRandom(void);
+extern u8 D_800CE060[];
+extern s32 D_86B0E0A0;
+extern u8 *D_86B181C0;
+extern f32 D_86B0D1FC[];
+extern f32 D_86B0D1F4;
+extern f32 D_86B0D1F8;
+extern u8 D_86B16DA0[];
+extern u8 D_86B17E2C;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+extern f32 func_86B080D4(f32 arg0, f32 arg1);
+extern f32 func_86B08120(f32 arg0, f32 arg1);
+extern s16 func_86B07D58(f32 arg0, f32 arg1);
+extern void func_86B07D94(s32 arg0, s32 arg1);
+extern void func_86B0BB24(s32 arg0);
+extern void func_8002781C(u16 resource_id, u8 mode, ...);
+extern s32 func_8003EC54(s32 *);
+extern u8 *func_87F03F38(u8 *arg0, s32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, s32 arg6);
+extern f32 func_87C039D4(u8 *arg0, void *arg1, f32 *arg2);
+
+// Per-player views of the state block at D_86B17A78: p0 = base + i * 4 (s32/f32 arrays),
+// p2 = base + i * 8 (f32 pairs), p3 = base + i * 2 (s16 / u8 pairs).
+#define W(o) (((s32 *)(D_86B17A78 + (o)))[i])
+#define F(o) (((f32 *)(D_86B17A78 + (o)))[i])
+#define G(o) (*(f32 *)(D_86B17A78 + (o)))
+#define GW(o) (*(s32 *)(D_86B17A78 + (o)))
+#define P(o) (((f32 (*)[2])(D_86B17A78 + (o)))[i][0])
+#define H(o) (((s16 *)(D_86B17A78 + (o)))[i])
+#define BY(o) (((u8 (*)[2])(D_86B17A78 + (o)))[i][0])
+#define RND(a) ((a) >= 0 ? (s32)((a) + 0.5f) : (s32)((a) - 0.5f))
+#define SMOOTH(a) ((f32)(((f64)D_80087E50[(u16)RND(a) >> 4] + 1.0 - (f64)D_80088E50[(u16)RND(a) >> 4]) * 0.5))
+#define TWO_PI 6.2831855f
+#define UPD_BYTES(arg) \
+    BY(0x49C) = (s32)(P(0x14) * 64.0f / 200.0f); \
+    BY(0x49D) = (s32)(P(0x18) * 64.0f / 200.0f); \
+    func_86B07D94(i, (arg))
+#define SET_VEL_NEG(var, a, b) var = (func_86B07D58(-(a), -(b)) - 0x3FFF) % mod
+
+void func_86B057B0(void) {
+    s32 i;
+    s32 mod;
+    f32 tmp;
+    s32 c; // FAKE: unused, reserves a stack slot
+    s32 d;
+    s32 sp178;
+    s32 sp174;
+    s32 pressed;
+    s32 sp16C;
+    f32 fs1;
+    f32 fs0;
+
+    guRandom();
+    sp178 = 0;
+    sp174 = 0;
+    if (D_86B0E0A0 != 0) {
+        sp16C = guRandom() % 3;
+    } else {
+        sp16C = guRandom() % 4;
+    }
+    for (i = 0, mod = 0xFFFF; i < 4; i++) {
+        P(0x98) = P(0x14);
+        P(0x9C) = P(0x18);
+        func_86B0BB24(i);
+        BY(0x49C) = (s32)(P(0x14) * 64.0f / 200.0f);
+        BY(0x49D) = (s32)(P(0x18) * 64.0f / 200.0f);
+        if (GW(0x354) == 0 && GW(0x284) < GW(0x288) + 100 && *(s32 *)D_86B181C0 == 6 && W(0x34) == 2 && F(0x48) == 130.0f) {
+            if ((f64)func_86B080D4(F(0xFC), G(0xF8)) <= 0.032) {
+                pressed = *(u16 *)(D_800CE060 + i * 0x28 + 8);
+                if (pressed & 0x8000) {
+                    W(0x374) = GW(0x284);
+                    W(0x34) = 6;
+                    sp178 = 1;
+                    d = W(0x374) - GW(0x288);
+                    if (d - 5 >= 0) {
+                        if (D_86B0E0A0 != 0) {
+                            W(0x3A4) = d * 3 + sp16C - 15;
+                        } else {
+                            W(0x3A4) = d * 4 + sp16C - 20;
+                        }
+                    }
+                    func_8002781C(0xAF02, i, &D_86B17A78[i * 2 + 0x49C]);
+                } else if (pressed & 0x4000) {
+                    W(0x384) = GW(0x284);
+                    W(0x34) = 12;
+                    sp178 = 1;
+                    func_8002781C(0xAF02, i, &D_86B17A78[i * 2 + 0x49C]);
+                }
+            }
+        }
+        switch (W(0x34)) {
+        case 0:
+            {
+                if (*(s32 *)D_86B17A78 < 4) {
+                    fs0 = 0.016f;
+                } else {
+                    fs0 = 0.019111111f;
+                }
+                if (func_86B08120(G(0xF8) + D_86B0D1FC[i], F(0x58)) <= fs0) {
+                    W(0x34) = 2;
+                    if ((F(0x58) = F(0xFC) + D_86B0D1FC[i]) < 0.0f) {
+                        F(0x58) = F(0x58) + TWO_PI;
+                    }
+                    fs1 = F(0x48) * __cosf(F(0x58));
+                    P(0x14) = fs1;
+                    fs0 = F(0x48) * __sinf(F(0x58));
+                    P(0x18) = fs0;
+                    H(0xE8) = func_86B07D58(-fs1, -fs0);
+                    F(0x10C) = F(0x48);
+                    F(0x11C) = 130.0f;
+                    W(0x12C) = (s32)(50.0f / D_86B0D1F4);
+                    W(0x13C) = 0;
+                    if ((F(0x14C) = F(0xFC) + D_86B0D1FC[i]) > 6.28318548202514648) {
+                        F(0x14C) = F(0x14C) - TWO_PI;
+                    }
+                    F(0x15C) = (f32)(((f64)G(0xF8) - 0.016 * (f64)W(0x12C)) + (f64)D_86B0D1FC[i]);
+                    if (F(0x15C) > TWO_PI) {
+                        F(0x15C) = F(0x15C) - TWO_PI;
+                    }
+                    if (F(0x15C) < 0) {
+                        F(0x15C) = F(0x15C) + TWO_PI;
+                    }
+                    F(0x16C) = F(0x48);
+                }
+                UPD_BYTES(0);
+            }
+            break;
+        case 1:
+        case 2:
+        case 3:
+            W(0x364) = 0;
+            if (F(0x48) > 130.0f) {
+                F(0x48) = F(0x48) - D_86B0D1F4;
+                if (F(0x48) < 130.0f) {
+                    F(0x48) = 130.0f;
+                }
+            } else if (F(0x48) < 130.0f) {
+                F(0x48) = F(0x48) + D_86B0D1F4;
+                if (F(0x48) > 130.0f) {
+                    F(0x48) = 130.0f;
+                }
+            }
+            if ((f64)func_86B080D4(F(0xFC), G(0xF8)) > 0.032) {
+                F(0xFC) = (f32)((f64)F(0xFC) - 0.032);
+                if (F(0xFC) < 0.0f) {
+                    F(0xFC) = (f32)((f64)F(0xFC) + 6.28318548202514648);
+                }
+                F(0x58) = F(0xFC) + D_86B0D1FC[i];
+            } else {
+                F(0xFC) = G(0xF8);
+                F(0x58) = F(0xFC) + D_86B0D1FC[i];
+            }
+            if (F(0x58) < 0.0f) {
+                F(0x58) = F(0x58) + TWO_PI;
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            SET_VEL_NEG(H(0xF0), fs1, fs0);
+            if (W(0xB8) == 0xE) {
+                H(0xE8) = (func_86B07D58(-fs1, -fs0) - 0x3FFF) % mod;
+            }
+            if (F(0x48) != 130.0f) {
+                if (130.0f <= F(0x48) + D_86B0D1F8 * D_86B0D1F4) {
+                    H(0xF0) = func_86B07D58(fs1 - P(0x98), fs0 - P(0x9C));
+                } else {
+                    fs1 = F(0x11C) * __cosf(F(0x15C));
+                    tmp = F(0x11C) * __sinf(F(0x15C));
+                    H(0xF0) = (func_86B07D58(-fs1, -tmp) - 0x3FFF) % mod;
+                }
+            }
+            UPD_BYTES(0);
+            break;
+        case 4:
+            {
+                s32 n = W(0x12C);
+                f32 p0e1;
+                f32 p0e2;
+                f32 r0b;
+                f32 r0c;
+                f32 p1e1;
+                f32 p1e2;
+                f32 y; // FAKE: unused, reserves a stack slot
+                f32 r1b;
+                f32 r1a;
+                f32 cx;
+                f32 sy;
+                f32 spd;
+                s32 k = W(0x13C);
+                W(0x13C)++;
+                p0e1 = (f32)k / (f32)(n - 1);
+                p0e2 = (f32)k / (f32)(n - 1);
+                r0b = (f32)(1.0 - (f64)p0e2);
+                r0c = (f32)(1.0 - (f64)p0e1);
+                p1e1 = (f32)(k + 1) / (f32)(n - 1);
+                p1e2 = (f32)(k + 1) / (f32)(n - 1);
+                r1a = (f32)(1.0 - (f64)p1e1);
+                r1b = (f32)(1.0 - (f64)p1e2);
+                spd = F(0x11C) * p1e2 + F(0x10C) * r1b;
+                if (F(0x15C) < F(0x14C)) {
+                    fs0 = F(0x15C) * p1e1 + F(0x14C) * r1a;
+                } else {
+                    fs0 = F(0x15C) * p1e1 + (F(0x14C) + TWO_PI) * r1a;
+                    if (fs0 > TWO_PI) {
+                        fs0 = fs0 - TWO_PI;
+                    }
+                }
+                if (fs0 < 0.0f) {
+                    fs0 = fs0 + TWO_PI;
+                }
+                if ((f64)fs0 > 6.28318548202514648) {
+                    fs0 = fs0 - TWO_PI;
+                }
+                cx = __cosf(fs0) * spd;
+                sy = __sinf(fs0) * spd;
+                F(0x16C) = F(0x48);
+                F(0x48) = F(0x11C) * p0e2 + F(0x10C) * r0b;
+                if (k == n - 1) {
+                    F(0x48) = 130.0f;
+                    F(0xFC) = F(0x15C) - D_86B0D1FC[i];
+                    W(0x34) = 2;
+                }
+                if (F(0x15C) < F(0x14C)) {
+                    F(0x58) = F(0x15C) * p0e1 + F(0x14C) * r0c;
+                } else {
+                    F(0x58) = F(0x15C) * p0e1 + (F(0x14C) + TWO_PI) * r0c;
+                    if (F(0x58) > TWO_PI) {
+                        F(0x58) = F(0x58) - TWO_PI;
+                    }
+                }
+                if (F(0x58) < 0.0f) {
+                    F(0x58) = F(0x58) + TWO_PI;
+                }
+                if ((f64)F(0x58) > 6.28318548202514648) {
+                    F(0x58) = F(0x58) - TWO_PI;
+                }
+                fs1 = F(0x48) * __cosf(F(0x58));
+                P(0x14) = fs1;
+                fs0 = F(0x48) * __sinf(F(0x58));
+                P(0x18) = fs0;
+                if (F(0x48) != 130.0f) {
+                    H(0xF0) = func_86B07D58(cx - fs1, sy - fs0);
+                } else {
+                    SET_VEL_NEG(H(0xF0), fs1, fs0);
+                }
+                UPD_BYTES(0);
+            }
+            break;
+        case 5:
+        case 6:
+        case 10:
+        case 11:
+        case 12:
+            switch (W(0x34)) {
+            case 5:
+            case 6:
+                if (F(0x48) > 45.0f) {
+                    sp174 = 1;
+                }
+                F(0x48) = F(0x48) - 28.0f;
+                if (F(0x48) < 75.0f) {
+                    F(0x48) = 75.0f;
+                    if (GW(0x33C) != 0) {
+                        W(0x34) = 10;
+                    } else {
+                        W(0x34) = 14;
+                        F(0xD8) = (130.0f - F(0x48)) / 14.0f;
+                        func_8002781C(0xAF04, i, &D_86B17A78[i * 2 + 0x49C]);
+                    }
+                }
+                break;
+            case 10:
+                if (F(0x48) > 45.0f) {
+                    sp174 = 1;
+                }
+                F(0x48) = F(0x48) - 14.0f;
+                if (F(0x48) < 45.0f) {
+                    F(0x48) = 45.0f;
+                }
+                break;
+            case 11:
+                if (F(0x48) > 22.0f) {
+                    sp174 = 1;
+                }
+                F(0x48) = F(0x48) - 14.0f;
+                if (F(0x48) < 0.0f) {
+                    F(0x48) = 0.01f;
+                }
+                break;
+            case 12:
+                if (F(0x48) > 45.0f) {
+                    sp174 = 1;
+                }
+                F(0x48) = F(0x48) - 28.0f;
+                if (F(0x48) < 100.0f) {
+                    W(0x34) = 7;
+                    F(0x48) = 100.0f;
+                }
+                break;
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            H(0xF0) = func_86B07D58(-fs1, -fs0);
+            UPD_BYTES(2);
+            if (sp174 != 0 && sp178 != 0) {
+                if (W(0x364) == 0) {
+                    u8 *fx = func_87F03F38(&D_86B178E8, 0, fs1, 10.0f, fs0 + 20.0f, 2.25f, 15);
+                    if (fx != NULL) {
+                        u8 *q = *(u8 **)(fx + 0x20);
+                        q[0x13] = 0x7F;
+                        q[0x10] = 0xFF;
+                        q[0x11] = 0xFF;
+                        q[0x12] = 0xFF;
+                        {
+                            u8 *q2 = *(u8 **)(fx + 0x20);
+                            *(s16 *)(q2 + 0x1E) = 0x20;
+                        }
+                    }
+                    W(0x394) = 0x50;
+                    *(f32 *)(D_86B17A78 + i * 12 + 0x438) = P(0x14);
+                    *(f32 *)(D_86B17A78 + i * 12 + 0x43C) = 55.0f;
+                    *(f32 *)(D_86B17A78 + i * 12 + 0x440) = P(0x18);
+                    func_87C039D4(&D_86B17E2C, D_86B17A78 + i * 12 + 0x438, (f32 *)(D_86B17A78 + i * 12 + 0x468));
+                }
+            }
+            W(0x364) = (W(0x364) + 1) % 3;
+            break;
+        case 7:
+            {
+                W(0x34) = 8;
+                if ((F(0x58) = F(0xFC) + D_86B0D1FC[i]) < 0.0f) {
+                    F(0x58) = F(0x58) + TWO_PI;
+                }
+                fs1 = F(0x48) * __cosf(F(0x58));
+                P(0x14) = fs1;
+                tmp = F(0x48) * __sinf(F(0x58));
+                P(0x18) = tmp;
+                BY(0x49C) = (s32)(P(0x14) * 64.0f / 200.0f);
+                BY(0x49D) = (s32)(P(0x18) * 64.0f / 200.0f);
+                fs0 = __cosf((f32)((f64)(G(0xF8) + D_86B0D1FC[i]) - 0.064));
+                H(0xF0) = func_86B07D58(fs0 * 130.0f - fs1, __sinf((f32)((f64)(G(0xF8) + D_86B0D1FC[i]) - 0.064)) * 130.0f - tmp);
+                func_86B07D94(i, 1);
+                if (H(0xF0) == H(0xE8)) {
+                    W(0x34) = 8;
+                }
+                F(0x11C) = 130.0f;
+                W(0x13C) = 0;
+                F(0x10C) = F(0x48);
+                W(0x12C) = (s32)((130.0f - F(0x48)) / 3.75f);
+                F(0x14C) = F(0xFC) + D_86B0D1FC[i];
+                if ((f64)F(0x14C) > 6.28318548202514648) {
+                    F(0x14C) = F(0x14C) - TWO_PI;
+                }
+                F(0x15C) = (f32)(((f64)G(0xF8) - 0.016 * (f64)W(0x12C)) + (f64)D_86B0D1FC[i]);
+                if (F(0x15C) > TWO_PI) {
+                    F(0x15C) = F(0x15C) - TWO_PI;
+                }
+                if (F(0x15C) < 0.0f) {
+                    F(0x15C) = F(0x15C) + TWO_PI;
+                }
+                F(0x16C) = F(0x48);
+            }
+            break;
+        case 8:
+            {
+                s32 n = W(0x12C);
+                f32 p0e1;
+                f32 p0e2;
+                f32 r0b;
+                f32 r0c;
+                f32 p1e1;
+                f32 p1e2;
+                f32 y; // FAKE: unused, reserves a stack slot
+                f32 r1b;
+                f32 r1a;
+                f32 cx;
+                f32 sy;
+                f32 spd;
+                s32 k = W(0x13C);
+                W(0x13C)++;
+                p0e1 = SMOOTH((f32)k * 90.0f / (f32)(n - 1) * 182.0416718f);
+                p0e2 = SMOOTH((f32)k * 90.0f / (f32)(n - 1) * 182.0416718f);
+                r0b = (f32)(1.0 - (f64)p0e2);
+                r0c = (f32)(1.0 - (f64)p0e1);
+                p1e1 = SMOOTH((f32)(k + 1) * 90.0f / (f32)(n - 1) * 182.0416718f);
+                p1e2 = SMOOTH((f32)(k + 1) * 90.0f / (f32)(n - 1) * 182.0416718f);
+                r1a = (f32)(1.0 - (f64)p1e1);
+                r1b = (f32)(1.0 - (f64)p1e2);
+                spd = F(0x11C) * p1e2 + F(0x10C) * r1b;
+                if (F(0x15C) < F(0x14C)) {
+                    fs0 = F(0x15C) * p1e1 + F(0x14C) * r1a;
+                } else {
+                    fs0 = F(0x15C) * p1e1 + (F(0x14C) + TWO_PI) * r1a;
+                    if (fs0 > TWO_PI) {
+                        fs0 = fs0 - TWO_PI;
+                    }
+                }
+                if (fs0 < 0.0f) {
+                    fs0 = fs0 + TWO_PI;
+                }
+                if ((f64)fs0 > 6.28318548202514648) {
+                    fs0 = fs0 - TWO_PI;
+                }
+                cx = __cosf(fs0) * spd;
+                sy = __sinf(fs0) * spd;
+                F(0x16C) = F(0x48);
+                F(0x48) = F(0x11C) * p0e2 + F(0x10C) * r0b;
+                if (k == n - 1) {
+                    F(0x48) = 130.0f;
+                    F(0xFC) = F(0x15C) - D_86B0D1FC[i];
+                    W(0x34) = 2;
+                }
+                if (F(0x15C) < F(0x14C)) {
+                    F(0x58) = F(0x15C) * p0e1 + F(0x14C) * r0c;
+                } else {
+                    F(0x58) = F(0x15C) * p0e1 + (F(0x14C) + TWO_PI) * r0c;
+                    if (F(0x58) > TWO_PI) {
+                        F(0x58) = F(0x58) - TWO_PI;
+                    }
+                }
+                if (F(0x58) < 0.0f) {
+                    F(0x58) = F(0x58) + TWO_PI;
+                }
+                if ((f64)F(0x58) > 6.28318548202514648) {
+                    F(0x58) = F(0x58) - TWO_PI;
+                }
+                fs1 = F(0x48) * __cosf(F(0x58));
+                P(0x14) = fs1;
+                fs0 = F(0x48) * __sinf(F(0x58));
+                P(0x18) = fs0;
+                if (F(0x48) != 130.0f) {
+                    H(0xF0) = func_86B07D58(cx - fs1, sy - fs0);
+                } else {
+                    SET_VEL_NEG(H(0xF0), fs1, fs0);
+                }
+                UPD_BYTES(1);
+            }
+            break;
+        case 9:
+            F(0x48) = F(0x48) + 7.0f;
+            if (F(0x48) > 130.0f) {
+                F(0x48) = 130.0f;
+                W(0x34) = 2;
+            }
+            if ((f64)func_86B080D4(F(0xFC), G(0xF8)) > 0.032) {
+                F(0xFC) = (f32)((f64)F(0xFC) - 0.032);
+                if (F(0xFC) < 0.0f) {
+                    F(0xFC) = (f32)((f64)F(0xFC) + 6.28318548202514648);
+                }
+                F(0x58) = F(0xFC) + D_86B0D1FC[i];
+            } else {
+                F(0xFC) = G(0xF8);
+                F(0x58) = F(0xFC) + D_86B0D1FC[i];
+            }
+            if (F(0x58) < 0.0f) {
+                F(0x58) = F(0x58) + TWO_PI;
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            SET_VEL_NEG(H(0xF0), fs1, fs0);
+            UPD_BYTES(2);
+            break;
+        case 14:
+            if (W(0xB8) == 0xE) {
+                u8 *anim = D_86B16DA0 + i * 360;
+                if (func_8003EC54((s32 *)anim) >= 3) {
+                    if (func_8003EC54((s32 *)anim) < 0x11) {
+                        F(0x48) += F(0xD8);
+                    }
+                }
+            }
+            if (W(0xB8) == 0xE) {
+                if (func_8003EC54((s32 *)(D_86B16DA0 + i * 360)) == 0x10) {
+                    F(0x48) = 130.0f;
+                }
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            H(0xF0) = func_86B07D58(-fs1, -fs0);
+            UPD_BYTES(2);
+            break;
+        case 16:
+            F(0x48) = F(0x48) + 8.4375f;
+            if (F(0x48) > 180.0f) {
+                F(0x48) = 180.0f;
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            H(0xF0) = func_86B07D58(-fs1, -fs0);
+            UPD_BYTES(2);
+            break;
+        case 13:
+        case 15:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+            UPD_BYTES(0);
+            break;
+        case 21:
+            W(0x34) = 0x16;
+            F(0x58) = F(0xFC) + D_86B0D1FC[i];
+            if (F(0x58) < 0.0f) {
+                F(0x58) = F(0x58) + TWO_PI;
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            SET_VEL_NEG(H(0xE8), fs1, fs0);
+            F(0x11C) = 87.5f;
+            F(0x10C) = F(0x48);
+            if (87.5f < F(0x48)) {
+                W(0x12C) = (s32)((F(0x48) - 87.5f) / D_86B0D1F4);
+            } else {
+                W(0x12C) = (s32)((87.5f - F(0x48)) / D_86B0D1F4);
+            }
+            W(0x13C) = 0;
+            F(0x14C) = F(0xFC) + D_86B0D1FC[i];
+            if ((f64)F(0x14C) > 6.28318548202514648) {
+                F(0x14C) = F(0x14C) - TWO_PI;
+            }
+            F(0x15C) = (f32)(((f64)G(0xF8) - 0.024 * (f64)W(0x12C)) + (f64)D_86B0D1FC[i]);
+            if (F(0x15C) > TWO_PI) {
+                F(0x15C) = F(0x15C) - TWO_PI;
+            }
+            if (F(0x15C) < 0.0f) {
+                F(0x15C) = F(0x15C) + TWO_PI;
+            }
+            F(0x16C) = F(0x48);
+            UPD_BYTES(0);
+            break;
+        case 22:
+            {
+                s32 n = W(0x12C);
+                f32 p0e1;
+                f32 p0e2;
+                f32 r0b;
+                f32 r0c;
+                f32 p1e1;
+                f32 p1e2;
+                f32 y; // FAKE: unused, reserves a stack slot
+                f32 r1b;
+                f32 r1a;
+                f32 cx;
+                f32 sy;
+                f32 spd;
+                f32 ang;
+                s32 k = W(0x13C);
+                W(0x13C)++;
+                p0e1 = SMOOTH((f32)k * 90.0f / (f32)(n - 1) * 182.0416718f);
+                p0e2 = SMOOTH((f32)k * 90.0f / (f32)(n - 1) * 182.0416718f);
+                r0b = (f32)(1.0 - (f64)p0e2);
+                r0c = (f32)(1.0 - (f64)p0e1);
+                p1e1 = SMOOTH((f32)(k + 1) * 90.0f / (f32)(n - 1) * 182.0416718f);
+                p1e2 = SMOOTH((f32)(k + 1) * 90.0f / (f32)(n - 1) * 182.0416718f);
+                r1a = (f32)(1.0 - (f64)p1e1);
+                r1b = (f32)(1.0 - (f64)p1e2);
+                spd = F(0x11C) * p1e2 + F(0x10C) * r1b;
+                if (F(0x15C) < F(0x14C)) {
+                    ang = F(0x15C) * p1e1 + F(0x14C) * r1a;
+                } else {
+                    ang = F(0x15C) * p1e1 + (F(0x14C) + TWO_PI) * r1a;
+                    if (ang > TWO_PI) {
+                        ang = ang - TWO_PI;
+                    }
+                }
+                if (ang < 0.0f) {
+                    ang = ang + TWO_PI;
+                }
+                if ((f64)ang > 6.28318548202514648) {
+                    ang = ang - TWO_PI;
+                }
+                cx = __cosf(ang) * spd;
+                sy = __sinf(ang) * spd;
+                F(0x16C) = F(0x48);
+                F(0x48) = F(0x11C) * p0e2 + F(0x10C) * r0b;
+                if (k == n - 1) {
+                    F(0x48) = 87.5f;
+                    F(0xFC) = F(0x15C) - D_86B0D1FC[i];
+                    W(0x34) = 0x17;
+                }
+                if (F(0x15C) < F(0x14C)) {
+                    F(0x58) = F(0x15C) * p0e1 + F(0x14C) * r0c;
+                } else {
+                    F(0x58) = F(0x15C) * p0e1 + (F(0x14C) + TWO_PI) * r0c;
+                    if (F(0x58) > TWO_PI) {
+                        F(0x58) = F(0x58) - TWO_PI;
+                    }
+                }
+                if (F(0x58) < 0.0f) {
+                    F(0x58) = F(0x58) + TWO_PI;
+                }
+                if ((f64)F(0x58) > 6.28318548202514648) {
+                    F(0x58) = F(0x58) - TWO_PI;
+                }
+                fs1 = F(0x48) * __cosf(F(0x58));
+                P(0x14) = fs1;
+                fs0 = F(0x48) * __sinf(F(0x58));
+                P(0x18) = fs0;
+                if (F(0x48) != 87.5f) {
+                    H(0xF0) = func_86B07D58(cx - fs1, sy - fs0);
+                } else {
+                    SET_VEL_NEG(H(0xF0), fs1, fs0);
+                }
+                UPD_BYTES(0);
+            }
+            break;
+        case 23:
+            F(0xFC) = G(0xF8);
+            F(0x58) = F(0xFC) + D_86B0D1FC[i];
+            if (F(0x58) < 0.0f) {
+                F(0x58) = F(0x58) + TWO_PI;
+            }
+            fs1 = F(0x48) * __cosf(F(0x58));
+            P(0x14) = fs1;
+            fs0 = F(0x48) * __sinf(F(0x58));
+            P(0x18) = fs0;
+            SET_VEL_NEG(H(0xF0), fs1, fs0);
+            UPD_BYTES(0);
+            break;
+        default:
+            break;
+        }
+        W(0xB8) = W(0x34);
+    }
+}
+
+
 #endif
 
 #ifdef VERSION_US
