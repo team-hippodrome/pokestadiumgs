@@ -175,7 +175,54 @@ void func_8F6004D4(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/74/fragment74_code/func_8F60051C.s")
+extern void func_8004E0F0(u8 *, s32, s32);
+extern void func_80003F74(u8 *, u8 *, u8 *, s32);
+extern s32 main_pool_alloc(s32, s32);
+extern s32 main_pool_try_free(s32);
+
+// Archive header at the input state's +0x28: `data` is the payload base and each 16-byte entry
+// from +0x10 holds that image's offset into it.
+typedef struct F74Archive {
+    /* 0x00 */ u8 pad_00[4];
+    /* 0x04 */ u8 *data;
+    /* 0x08 */ u8 pad_08[8];
+    /* 0x10 */ struct F74Entry {
+        /* 0x00 */ s32 offset;
+        /* 0x04 */ u8 pad_04[0xC];
+    } entries[1];
+} F74Archive;
+
+// When the reload flag (unk_08[0]) is set, clears it and, if the requested image (unk_08[1],
+// unk_08[2]) differs from the loaded one (unk_10[0], unk_10[1]), loads it into the image view,
+// records it as loaded and stores the first word of its decompressed 16-byte header in unk_10[3].
+void func_8F60051C(void) {
+    struct InputState { u8 unk_00[40]; F74Archive *unk_28; };
+    s32 pad[1]; // FAKE: with pad2, gives the 0x30-byte frame and src at sp+0x20
+    F74Archive *archive;
+    struct F74Entry *entry;
+    u8 *src;
+    s32 pad2; // FAKE
+    u8 *buf;
+    F74RuntimeState *state = &sRuntimeState;
+
+    archive = ((struct InputState *)sRuntimeState.prefix.context)->unk_28;
+    if (sRuntimeState.unk_08[0] != 0) {
+        state->unk_08[0] = 0;
+        if (state->unk_10[0] != state->unk_08[1] || state->unk_10[1] != state->unk_08[2]) {
+            entry = &archive->entries[state->unk_08[1]];
+            src = archive->data + entry->offset;
+            func_8004E0F0(state->image, state->unk_08[1], state->unk_08[2]);
+            state->unk_10[0] = state->unk_08[1];
+            state->unk_10[1] = state->unk_08[2];
+            buf = (u8 *)main_pool_alloc(0x10, 1);
+            if (buf != NULL) {
+                func_80003F74(buf, src, src + 0x10, 0);
+                state->unk_10[3] = *(s32 *)buf;
+                main_pool_try_free((s32)buf);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/74/fragment74_code/func_8F600610.s")
 
