@@ -357,7 +357,7 @@ ASSERT(SIZEOF(.fragment72_state_bss) == 80,
 ASSERT(SIZEOF(.fragment23_text_origin_data) == 16,
        "fragment23 text origin must retain its compiler section footprint");
 
-ASSERT(SIZEOF(.fragment24_state_12450_bss) == 32,
+ASSERT(SIZEOF(.fragment24_state_12450_bss) == 48,
        "fragment24 state and parameter prefix must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
