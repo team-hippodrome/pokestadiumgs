@@ -136,7 +136,49 @@ void func_86500354(s32 arg0, void *arg1)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86500780.s")
+extern s32 D_8650C84C[], D_8650C868[];
+
+extern s32 D_8650C4CC;
+
+void func_86500780(s32 arg0, void *arg1) {
+ s32 index;
+ Vtx *vtx;
+ s32 i;
+ s32 j = 0;
+ struct Fragment53ActorState *st;
+ f32 scale;
+ u32 v = *(u32 *)((u8 *)arg1 + 0x14);
+ if (v < 2) index = 0;
+ else if (v < 4) index = 1;
+ else if (v < 6) index = 2;
+ else if (v < 8) index = 3;
+ st = &D_86511698[index];
+ if ((*(s32 *)((u8 *)st + 0x54) == 1) && !(v & 1)) j = 1;
+ if ((*(s32 *)((u8 *)st + 0x54) == 2) && ((v & 1) == 1)) j = 1;
+ if ((arg0 == 5) && !j) {
+  vtx = Gfx_AllocDisplayList(224);
+  scale = 1.0f;
+  if (*(s32 *)((u8 *)st + 0x54) == 3) {
+   scale = 0.5f;
+   if (!(*(u32 *)((u8 *)arg1 + 0x14) & 1)) {
+    *(f32 *)((u8 *)st + 0x64) = D_8650C4CC / *(s32 *)((u8 *)st + 0x38);
+    *(s32 *)((u8 *)st + 0x5C) = 980;
+   } else {
+    *(f32 *)((u8 *)st + 0x64) = D_8650C4CC / (D_8650C4CC - *(s32 *)((u8 *)st + 0x38));
+    *(s32 *)((u8 *)st + 0x5C) = -980;
+   }
+  }
+  for (i = 0; i < 14; i++) vtx[i] = D_8650C160[i];
+  scale *= 35.0f;
+  for (j = 0; j < 7; j++) {
+   vtx[D_8650C84C[j]].v.ob[1] = *(s32 *)((u8 *)st + 0x5C) + scale;
+   vtx[D_8650C868[j]].v.ob[1] = *(s32 *)((u8 *)st + 0x5C) - scale;
+  }
+  gSPVertex(D_800D0510++, vtx, 14, 0);
+  gSPDisplayList(D_800D0510++, D_8650C348);
+  func_8003CD84();
+ }
+}
 #endif
 
 #ifdef VERSION_US

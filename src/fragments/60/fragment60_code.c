@@ -2045,7 +2045,70 @@ void func_86A06E14(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A07124.s")
+extern void func_86A07124(void);
+
+extern s32 D_86A465B8;
+
+extern void func_87F0C930(void *);
+
+extern void func_86A0B49C(void);
+
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+
+void func_86A07124(void) {
+    s32 old;
+    s32 i;
+    s32 changed;
+    s32 *counter = &D_86A465B8;
+    old = (*(s32 *)D_86A443F0.unk_0E50)++;
+    func_86A06D88();
+    if (old == 0) {
+        *counter = 0;
+    }
+    if ((*(u8 **)(D_86A46548 + 12))[8576] == 4) {
+        func_87F0C930(D_86A46548 + 28);
+    }
+    if (D_86A443F0.unk_00D4 != 0) {
+        func_86A0B49C();
+        for (i = 0; i < 4; i++) {
+            D_86A443F0.unk_0E64[i] = 0;
+            ((s16 *)D_86A443F0.unk_0E6C)[i] = 0;
+            D_86A443F0.unk_0024[i] = D_86A443F0.unk_0178[i] ? 6 : 7;
+        }
+        if ((*(u8 **)(D_86A46548 + 12))[8576] == 4) {
+            func_87F0C930(D_86A46548 + 28);
+        } else {
+            Fragment64_StartPlayerPanel(&D_86A0F920, *(u8 **)(D_86A46548 + 12), 9,
+                D_86A443F0.unk_0178[0], D_86A443F0.unk_0178[1],
+                D_86A443F0.unk_0178[2], D_86A443F0.unk_0178[3]);
+        }
+        *(s32 *)D_86A46548 = 6;
+    } else {
+        changed = 0;
+        func_86A05DCC();
+        func_86A06D88();
+        for (i = 0; i < 4; i++) {
+            if (D_86A443F0.unk_00C4[i] < D_86A443F0.unk_00B4[i]) {
+                changed = 1;
+                D_86A443F0.unk_00C4[i] += *counter;
+                if (D_86A443F0.unk_00C4[i] >= D_86A443F0.unk_00B4[i]) {
+                    D_86A443F0.unk_00C4[i] = D_86A443F0.unk_00B4[i];
+                    func_800279C4(0x8F13);
+                }
+            }
+        }
+        if (changed) {
+            func_800279C4(0x8012);
+        }
+        if (D_86A443F0.unk_00C4[0] == D_86A443F0.unk_00B4[0] &&
+            D_86A443F0.unk_00C4[1] == D_86A443F0.unk_00B4[1] &&
+            D_86A443F0.unk_00C4[2] == D_86A443F0.unk_00B4[2] &&
+            D_86A443F0.unk_00C4[3] == D_86A443F0.unk_00B4[3]) {
+            D_86A443F0.unk_00D4 = 1;
+        }
+        (*counter)++;
+    }
+}
 #endif
 
 #ifdef VERSION_US

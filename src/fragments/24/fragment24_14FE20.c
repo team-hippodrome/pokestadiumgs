@@ -121,8 +121,83 @@ void func_82B00098(void) {
 }
 /* mkdraft:func_82B00098 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_14FE20/func_82B002B8.s")
+extern s16 D_82B12224;
 
+extern u8 D_82B12228[];
+
+extern u8 D_82B0853C[];
+
+extern u8 D_82B08540[];
+
+extern void func_8004C09C(s32);
+
+extern void func_8004C4B0(s32);
+
+extern void func_8004C8C0(s32);
+
+extern void func_817000A4(void);
+
+extern void func_81700974(s32, s32, s32, s32, void *, void *, void *, s32);
+
+extern void *func_82B01850(s32, u32);
+
+extern void func_81700C70(s32);
+
+extern void func_82B05654(s32, u32, s32, void *, s32, s32);
+
+extern void func_82B05E98();
+
+extern void func_82B05920(void);
+
+extern void func_82B05E3C(s32);
+
+extern void func_82B002B8(u32, s32, s32, s32);
+
+extern s32 D_82B08520;
+
+extern s32 D_82B0852C;
+
+extern u8 *D_82B12448;
+
+void func_82B002B8(u32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    u8 *deck;
+    u8 *handle;
+    void *text;
+    s32 i;
+    u8 *end;
+    s16 *count = &D_82B12224;
+    func_8004C09C(11);
+    func_8004C4B0(27);
+    func_8004C4B0(42);
+    func_8004C8C0(338);
+    _bzero(D_82B087C0, 40080);
+    func_82B00098();
+    handle = func_8006218C(24, 0, 0, 0);
+    deck = D_82B12228; end = (u8 *)&D_82B12448;
+    do {
+        if (Deck_ReadEntries(deck, 1, handle) <= 0) break;
+        deck += 68;
+        *count = *count + 1;
+    } while (deck != end);
+    func_80062304(handle);
+    func_817000A4();
+    text = NULL;
+    func_81700974(0, 0, 48, 16, func_8004C874(27, 58), D_82B0853C, D_82B08540, 0);
+    if (arg1 == 0) text = func_82B01850(D_82B0852C, arg0);
+    if (text == NULL) text = func_8004C874(27, 59);
+    func_81700974(1, 640, 48, 16, text, D_82B0853C, D_82B08540, 0);
+    if (arg1 == 0) {
+        func_81700C70(0);
+        func_81700C70(1);
+    }
+    func_82B05654(D_82B08520, arg0, D_82B12224, (u8 *)D_82B087C0 + 39528, arg2, arg3);
+    for (i = 0; i < 2; i++) {
+        func_82B05E98(i, D_82B087C0[i].name, D_82B087C0[i].unk_08, D_82B087C0[i].unk_02,
+                      D_82B087C0[i].unk_1C, D_82B087C0[i].unk_230, D_82B087C0[i].status);
+    }
+    func_82B05920();
+    func_82B05E3C(D_82B0852C);
+}
 extern void BgStage_DrawFrame();
 extern void func_82B080D0();
 extern void func_80008648();

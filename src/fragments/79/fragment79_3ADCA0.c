@@ -1121,7 +1121,58 @@ void func_8414111C(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84141278.s")
+extern void func_8413F6C0(s16 arg0, s16 arg1, u16 arg3);
+
+extern void func_84141278(void *);
+
+extern void ParticleGfx_SetPrimColor_fragment79(u8,u8,u8,u8);
+
+extern u8 D_84186F68[];
+
+extern u8 D_84186F6C[];
+
+void func_84141278(void *arg0) {
+    u8 index;
+    u16 offset = 0;
+
+    index = ((u8 *)arg0)[1];
+    if (((u8 *)arg0)[8] & 2) {
+        return;
+    }
+    if ((&D_841951F8)[index][8] < 1) {
+        return;
+    }
+    ParticleGfx_SetPrimColor_fragment79(D_84186F6C[0], D_84186F6C[1], D_84186F6C[2], 0xFF);
+    func_8413F6C0((s16)(*(s16 *)((u8 *)arg0 + 0x12) + D_84186D00), (s16)(*(s16 *)((u8 *)arg0 + 0x14) + D_84186CF4), 1);
+    if ((&D_841951F8)[index][8] < 2) {
+        return;
+    }
+    offset += 0x43;
+    ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+    func_8413F6C0((s16)(*(s16 *)((u8 *)arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)((u8 *)arg0 + 0x14) + D_84186CF4), 3);
+    if ((&D_841951F8)[index][8] < 3) {
+        return;
+    }
+    offset += 0x43;
+    func_8413F6C0((s16)(*(s16 *)((u8 *)arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)((u8 *)arg0 + 0x14) + D_84186CF4), 5);
+    if ((&D_841951F8)[index][8] < 4) {
+        return;
+    }
+    offset = 0;
+    ParticleGfx_SetPrimColor_fragment79(D_84186F68[0], D_84186F68[1], D_84186F68[2], 0xFF);
+    func_8413F6C0((s16)(*(s16 *)((u8 *)arg0 + 0x12) + D_84186D00), (s16)(*(s16 *)((u8 *)arg0 + 0x14) + D_84186CF4 + 0x2E), 0);
+    if ((&D_841951F8)[index][8] < 5) {
+        return;
+    }
+    offset += 0x43;
+    ParticleGfx_SetPrimColor_fragment79(D_84186F70[0], D_84186F70[1], D_84186F70[2], 0xFF);
+    func_8413F6C0((s16)(*(s16 *)((u8 *)arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)((u8 *)arg0 + 0x14) + D_84186CF4 + 0x2E), 2);
+    if ((&D_841951F8)[index][8] < 6) {
+        return;
+    }
+    offset += 0x43;
+    func_8413F6C0((s16)(*(s16 *)((u8 *)arg0 + 0x12) + D_84186D00 + offset), (s16)(*(s16 *)((u8 *)arg0 + 0x14) + D_84186CF4 + 0x2E), 4);
+}
 #endif
 
 #ifdef VERSION_US

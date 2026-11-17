@@ -336,8 +336,159 @@ void func_8AF24AE0(void) {
     (*(s16 *)((u8 *)(D_8AF3A3C0) + (50))) = (s16)v;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF25028.s")
+extern u8 D_8AF3A3A0[], D_8AF3A6E8[], D_8AF3A408[], D_8AF3A438[];
 
+extern struct Panel44 D_8AF3A470, D_8AF3A4E8, D_8AF3A560;
+
+extern struct Cursor44 *D_8AF3A6E0;
+
+extern void *D_8AF3A5D8, *D_8AF3A5DC, *D_8AF3A5E0, *D_8AF3A5E4, *D_8AF3A5E8, *D_8AF3A5EC, *D_8AF3A5F0, *D_8AF3A664;
+
+extern s32 func_8004C8C0(s32), func_8004C990(s32,s32);
+
+extern void func_800476A0(void *,s32), func_800476FC(void *,s32);
+
+extern s32 func_80047738(s32,s32,s32,s32);
+
+extern void func_8AF00504(s16);
+
+extern s32 func_8AF003A8(s16), func_8AC06D8C(s32,u32);
+
+extern void func_8AC04744(void *,s32,u32,u32), func_8AC05E40(s32,u32,void *), func_8AC06400(void *,void *), func_8AC02C80(s32,u32,u32,void *);
+
+extern void func_8004E308(void *,void (*)(void),void *);
+
+extern void func_8AF013D8(void), func_8AC03AFC(void), func_8AC03C28(void), func_8AC00270(void);
+
+extern s32 Fragment43_TryGrantCompletionReward(s16);
+
+struct Panel44 {
+    u8 pad00[0x40];
+    f32 unk_40;
+    f32 unk_44;
+    f32 unk_48;
+    f32 unk_4C;
+    f32 unk_50;
+    f32 unk_54;
+};
+
+struct Cursor44 {
+    u8 pad00[8];
+    s16 unk_08;
+    s16 unk_0A;
+};
+
+extern s16 D_8AF3A3D0;
+
+extern s32 D_8AF3A668;
+
+extern s16 D_8AF3A3CC;
+
+extern s16 D_8AF3A3CE;
+
+extern s16 D_8AF279E0;
+
+extern void func_8AF24AE0(void);
+
+extern s16 D_8AF3A6E4;
+
+extern void func_8AF24628(void);
+
+extern s16 D_8AF3A662;
+
+extern void *D_8AF3A664;
+
+void func_8AF25028(void) {
+ s32 i;
+ s32 resource;
+ void *parent1;
+ void *child1;
+ void *parent2;
+ void *child2;
+ void *parent3;
+ void *child3;
+ void *eye;
+ func_8004C8C0(190);func_8004C8C0(187);
+ func_800476A0(D_8AF3A3A0,2);func_800476FC(D_8AF3A3A0,2);
+ func_80047738(0,func_8004C990(190,0),0,0);
+ func_80047738(1,func_8004C990(187,1),0,0);
+ func_8AF00504(206);func_8AF00504(155);
+ resource=func_8AF003A8(206);
+ func_8AC04744(D_8AF3A6E8,resource,0x77696E5F,0x6D73675F);
+D_8AF3A3D8[0] = (void *)func_8AC06D8C(resource,0x74655F31);
+D_8AF3A3DC = (void *)func_8AC06D8C(resource,0x74655F32);
+D_8AF3A3E0 = (void *)func_8AC06D8C(resource,0x74655F33);
+D_8AF3A3E4 = (void *)func_8AC06D8C(resource,0x74655F34);
+D_8AF3A3E8 = (void *)func_8AC06D8C(resource,0x74655F35);
+D_8AF3A3EC = (void *)func_8AC06D8C(resource,0x74655F36);
+D_8AF3A3F0 = (void *)func_8AC06D8C(resource,0x74655F37);
+D_8AF3A3F4 = (void *)func_8AC06D8C(resource,0x74655F38);
+D_8AF3A3F8 = (void *)func_8AC06D8C(resource,0x74655F39);
+D_8AF3A3FC = (void *)func_8AC06D8C(resource,0x74653130);
+D_8AF3A400 = (void *)func_8AC06D8C(resource,0x74653131);
+D_8AF3A404 = (void *)func_8AC06D8C(resource,0x74653132);
+D_8AF3A464=(void *)func_8AC06D8C(resource,0x636F7072);
+D_8AF3A468=(void *)func_8AC06D8C(resource,0x73696C76);
+D_8AF3A46C=(void *)func_8AC06D8C(resource,0x676F6C64);
+func_8AC05E40(resource,0x636F7072,&D_8AF3A470);func_8AC06400(&D_8AF3A470,D_8AF3A464);
+func_8AC05E40(resource,0x73696C76,&D_8AF3A4E8);func_8AC06400(&D_8AF3A4E8,D_8AF3A468);
+func_8AC05E40(resource,0x676F6C64,&D_8AF3A560);func_8AC06400(&D_8AF3A560,D_8AF3A46C);
+for(i=0;i<12;i++) func_8004E308(D_8AF3A3D8[i],func_8AF013D8,0);
+func_8AC02C80(resource,0x725F6C5F,0x725F725F,D_8AF3A408);
+func_8AC02C80(resource,0x73616E6C,0x73616E72,D_8AF3A438);
+D_8AF3A5D8=(void *)func_8AC06D8C(resource,0x686C6330);
+D_8AF3A5DC=(void *)func_8AC06D8C(resource,0x686C6331);
+D_8AF3A5E0=(void *)func_8AC06D8C(resource,0x686C6332);
+func_8004E308(D_8AF3A5D8,func_8AC03AFC,0);
+func_8004E308(D_8AF3A5DC,func_8AC03AFC,0);
+func_8004E308(D_8AF3A5E0,func_8AC03AFC,0);
+D_8AF3A5E4=(void *)func_8AC06D8C(resource,0x766C6330);
+D_8AF3A5E8=(void *)func_8AC06D8C(resource,0x766C6331);
+D_8AF3A5EC=(void *)func_8AC06D8C(resource,0x766C6332);
+D_8AF3A5F0=(void *)func_8AC06D8C(resource,0x766C6333);
+func_8004E308(D_8AF3A5E4,func_8AC03AFC,0);
+func_8004E308(D_8AF3A5E8,func_8AC03AFC,0);
+func_8004E308(D_8AF3A5EC,func_8AC03AFC,0);
+func_8004E308(D_8AF3A5F0,func_8AC03AFC,0);
+parent1=(void *)func_8AC06D8C(resource,0x70695F5F);
+ func_8004E308(parent1,func_8AC03C28,(child1=(void *)func_8AC06D8C(resource,0x70695F63)));
+parent2=(void *)func_8AC06D8C(resource,0x70696B61);
+ func_8004E308(parent2,func_8AC03C28,(child2=(void *)func_8AC06D8C(resource,0x706B5F63)));
+parent3=(void *)func_8AC06D8C(resource,0x7261695F);
+ func_8004E308(parent3,func_8AC03C28,(child3=(void *)func_8AC06D8C(resource,0x72695F63)));
+D_8AF3A5F4=(void *)func_8AC06D8C(resource,0x6F686131);
+D_8AF3A5F8=(void *)func_8AC06D8C(resource,0x71697A31);
+D_8AF3A5FC=(void *)func_8AC06D8C(resource,0x62746C31);
+D_8AF3A600=(void *)func_8AC06D8C(resource,0x6F686132);
+D_8AF3A604=(void *)func_8AC06D8C(resource,0x71697A32);
+D_8AF3A608=(void *)func_8AC06D8C(resource,0x62746C32);
+D_8AF3A60C=(void *)func_8AC06D8C(resource,0x6F686133);
+D_8AF3A610=(void *)func_8AC06D8C(resource,0x71697A33);
+D_8AF3A614=(void *)func_8AC06D8C(resource,0x62746C33);
+D_8AF3A618=(void *)func_8AC06D8C(resource,0x73747231);
+D_8AF3A61C=(void *)func_8AC06D8C(resource,0x73747232);
+D_8AF3A620=(void *)func_8AC06D8C(resource,0x73747233);
+D_8AF3A624=(void *)func_8AC06D8C(resource,0x73747234);
+D_8AF3A628=(void *)func_8AC06D8C(resource,0x73747235);
+D_8AF3A62C=(void *)func_8AC06D8C(resource,0x73747236);
+D_8AF3A630=(void *)func_8AC06D8C(resource,0x61647331);
+D_8AF3A634=(void *)func_8AC06D8C(resource,0x61647332);
+D_8AF3A638=(void *)func_8AC06D8C(resource,0x61647333);
+D_8AF3A3C0=(void *)func_8AC06D8C(resource,0x6D73675F);
+eye=(void *)func_8AC06D8C(resource,0x6579655F);
+ func_8004E308(eye,func_8AC00270,0);
+resource=func_8AF003A8(155);
+D_8AF3A664=(void *)func_8AC06D8C(resource,0x6162746E);
+func_8AC05E40(resource,0x6162746E,&D_8AF3A668);func_8AC06400(&D_8AF3A668,D_8AF3A664);
+*(u16 *)((u8 *)D_8AF3A664+2)&=~1;
+D_8AF3A6E0=(struct Cursor44 *)func_8AC06D8C(resource,0x6D65646C);
+for(i=0;i<3;i++) Fragment43_TryGrantCompletionReward((s16)i);
+D_8AF3A3C8=0;D_8AF3A3CA=0;
+if(D_8AF279E0==1) {D_8AF3A3C8=D_8AF3A3CC;D_8AF3A3CA=D_8AF3A3CE;} else func_8AF2458C();
+func_8AF24628();func_8AF24AE0();
+D_8AF3A3D0=0;D_8AF3A662=0;
+if(D_8AF279E4) {D_8AF3A662=1;func_8AF24A7C();D_8AF279E4=0;D_8AF3A6E4=0;}
+}
 extern void func_8AF24508(s16);
 extern s16 D_8AF279E0;
 extern s16 D_8AF3A3CC;

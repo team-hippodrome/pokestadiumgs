@@ -1303,8 +1303,65 @@ void func_87E09C20(s32 arg0) {
         *(u32 *)((u8 *)arg0 + 0x7B8) = 0;
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30B540/func_87E09F20.s")
+extern void func_87E15504(void *, s32);
 
+extern void func_87E155DC(void *);
+
+void func_87E09F20(u8 *arg0) {
+    s32 update;
+    s32 variation;
+    s32 param;
+    u8 *panel;
+    s32 delay;
+    if (*(u32 *)(arg0 + 1976) == 120) func_80021ED8(80);
+    if (*(u32 *)(arg0 + 1976) == 20) {
+        variation = *(s32 *)(arg0 + 20);
+        switch (variation) {
+        default:
+            param = *(s32 *)(*(u8 **)(arg0 + 32) + 8584);
+            break;
+        case 1: case 3: case 4:
+            param = 0;
+            break;
+        }
+        func_87E15504(arg0 + 1604, param);
+    }
+    if (*(u32 *)(arg0 + 1976) >= 21) {
+        panel = arg0 + 1604;
+        func_87E14F98((s32)panel);
+        update = func_87E0C664((s32 *)(arg0 + 96));
+        param = ListSlots_UpdateState(arg0 + 140);
+        if (update == 0 && param == 0 && *(u32 *)(arg0 + 1976) >= 121) {
+            func_87E10F50(0);
+            if ((f32)func_80001FF0() * (f32)2 >= 0.0f) {
+                delay = (s32)((f32)func_80001FF0() * (f32)2 + 0.5f);
+            } else {
+                delay = (s32)((f32)func_80001FF0() * (f32)2 - 0.5f);
+            }
+            if ((f32)func_80001FF0() * (f32)0.5 >= 0.0f) {
+                variation = (s32)((f32)func_80001FF0() * (f32)0.5 + 0.5f);
+            } else {
+                variation = (s32)((f32)func_80001FF0() * (f32)0.5 - 0.5f);
+            }
+            if (func_87E09BDC(arg0, variation * 2 + delay)) {
+                *(u32 *)(arg0 + 1976) = 0;
+                func_87E10F50(-1);
+                if (*(u32 *)(arg0 + 20) != 3 && *(u32 *)(arg0 + 20) != 4) {
+                    *(s32 *)(arg0 + 4) = 6;
+                    func_87E155DC(panel);
+                    func_87E10EA8(-1);
+                    func_87E10F2C(-1);
+                } else {
+                    *(s32 *)(arg0 + 4) = 7;
+                    func_87E10EA8(41);
+                    func_87E10F2C(0);
+                }
+                func_800279C4(0xCF02);
+            }
+        }
+        func_87E07CD0();
+    }
+}
 extern s32 func_87E07ED8(s32);
 extern void func_87E14F98(s32);
 extern void func_87F0F3E4(s32);
