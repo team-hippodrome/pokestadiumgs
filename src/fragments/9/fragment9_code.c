@@ -572,7 +572,33 @@ s32 func_8FB01634(void *arg0_, void *arg1_) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB01A74.s")
+
+s32 func_8FB01A74(arg0, arg1) s32 *arg0; u8 *arg1; {
+    u8 *p;
+    switch (*(u16 *)*(u8 **)(arg1 + 0x44)) {
+    case 37: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0xC); break;
+    case 5: arg0[5] = ((u16 (*)[0x110])(arg1 + 0x58))[*(s32 *)(arg1 + 0x38)][0]; break;
+    case 3: arg0[5] = *(s32 *)(arg1 + 0x38) + 1; break;
+    case 13: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 6); break;
+    case 20: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x16); break;
+    case 25: arg0[5] = *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1D); break;
+    case 26: arg0[5] = *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x20); break;
+    case 27: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x26); break;
+    case 28: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x28); break;
+    case 29: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x2A); break;
+    case 30: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x2C); break;
+    case 31: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x2E); break;
+    case 32: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x30); break;
+    case 33: arg0[5] = *(u16 *)(*(u8 **)(arg1 + 0x48) + 0x32); break;
+    case 21: arg0[5] = (s32)(*(u8 *)(*(u8 **)(arg1 + 0x48) + 0x18) & 0xC0) >> 6; break;
+    case 22: arg0[5] = (s32)(*(u8 *)(*(u8 **)(arg1 + 0x48) + 0x19) & 0xC0) >> 6; break;
+    case 23: arg0[5] = (s32)(*(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1A) & 0xC0) >> 6; break;
+    case 24: arg0[5] = (s32)(*(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1B) & 0xC0) >> 6; break;
+    case 35: arg0[5] = *(u8 *)(*(u8 **)(arg1 + 0x48) + 0x1C); break;
+    default: return 0;
+    }
+    return 1;
+}
 
 /* Initializes the number-display widget state at
  * arg0 (the same struct drawn by func_8FB01EC4/func_8FB01FCC
