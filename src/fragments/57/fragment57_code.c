@@ -464,7 +464,6 @@ void func_83302180(void *arg0) {
 }
 /* mkdraft:func_83302180 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83302290.s")
 
 extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
 extern void func_800496A4(s32, s32);
@@ -474,6 +473,122 @@ extern void func_800498C4(void);
 extern void func_800499EC(void);
 extern void Font_EnableTwoCycleTexturing(void);
 extern void Font_DisableTwoCycleTexturing(void);
+extern s32 D_8330A2CC;
+
+// IDO pads this object's .data section to 16 bytes. Its first word, 0x833091F0, is not
+// referenced by any code; it is carried here so func_83302290's blink counter lands at
+// 0x833091F4 and the following data blob stays in place.
+f32 D_833091F0 = 0.0f;
+
+#define F32(off) (*(f32 *)((u8 *)&D_8330A2B0 + (off)))
+#define S32(off) (*(s32 *)((u8 *)&D_8330A2B0 + (off)))
+// 20-byte light records start at D_8330A2B0 + 0xE4 (color) / + 0xF4 (direction).
+#define LIGHT(i) ((u8 *)&D_8330A2B0 + (i) * 20)
+
+// Debug pause overlay: prints "PAUSE" and either the camera/monster tuning values
+// (D_8330A2B0.unk_10 >= 4, cursor at unk_2C) or the lighting values (cursor at unk_18,
+// selected light at D_8330A2CC). The selected row blinks via a 21-frame counter.
+void func_83302290(void) {
+    // Function-scope static: retail reloads its %hi for every access, which IDO does not
+    // do for an extern or a file-scope static (both get one cached address register).
+    static s32 D_833091F4 = 0;
+    s32 idx;
+
+    D_833091F4++;
+    if (D_833091F4 >= 21) {
+        D_833091F4 = 0;
+    }
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(255, 255, 255, 255);
+    func_800497E4(255, 255, 255, 255);
+    idx = D_8330A2CC;
+    func_800495F8(0xA0, 0x19, 1, "PAUSE");
+    if (S32(0x10) >= 4) {
+        if (S32(0x2C) != 13 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 40, 0, "offsety:%0.1f ", (f64)F32(0x5c));
+        }
+        if (S32(0x2C) != 0 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 50, 0, "monsoffset x:%0.1f ", (f64)F32(0x94));
+        }
+        if (S32(0x2C) != 1 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 60, 0, "monsoffset y:%0.1f ", (f64)F32(0x98));
+        }
+        if (S32(0x2C) != 2 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 70, 0, "monsoffset z:%0.1f ", (f64)F32(0x9c));
+        }
+        if (S32(0x2C) != 3 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 80, 0, "cameraoffset x:%0.1f ", (f64)F32(0xb8));
+        }
+        if (S32(0x2C) != 4 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 90, 0, "cameraoffset y:%0.1f ", (f64)F32(0xbc));
+        }
+        if (S32(0x2C) != 5 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 100, 0, "cameraoffset z:%0.1f ", (f64)F32(0xc0));
+        }
+        if (S32(0x2C) != 6 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 110, 0, "move speed:%0.2f", (f64)F32(0x60));
+        }
+        if (S32(0x2C) != 7 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 120, 0, "move speed2:%0.2f", (f64)F32(0x64));
+        }
+        if (S32(0x2C) != 8 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 130, 0, "search null:%0.1f ", (f64)F32(0x68));
+        }
+        if (S32(0x2C) != 9 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 140, 0, "search look:%0.1f ", (f64)F32(0x6c));
+        }
+        if (S32(0x2C) != 10 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 150, 0, "posx:%0.1f ", (f64)F32(0x70));
+        }
+        if (S32(0x2C) != 11 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 160, 0, "posy:%0.1f ", (f64)F32(0x74));
+        }
+        if (S32(0x2C) != 12 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 170, 0, "posz:%0.1f ", (f64)F32(0x78));
+        }
+    } else {
+        if (S32(0x18) != 0 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 0x32, 0, "camera near:%0.1f ", (f64)F32(0xDC));
+        }
+        if (S32(0x18) != 1 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 0x3C, 0, "camera far :%0.1f ", (f64)F32(0xE0));
+        }
+        if (S32(0x18) != 2 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 0x46, 0, "lightno :%d", idx);
+        }
+        func_800495F8(0xA0, 0x50, 0, "(a_x=%5x a_y=%5x)", *(s16 *)(LIGHT(idx) + 0xF4), *(s16 *)(LIGHT(idx) + 0xF6));
+        if (S32(0x18) != 3 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 90, 0, "diff_r :%d", *(u8 *)(LIGHT(idx) + 0xE4));
+        }
+        if (S32(0x18) != 4 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 100, 0, "diff_g :%d", *(u8 *)(LIGHT(idx) + 0xE5));
+        }
+        if (S32(0x18) != 5 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 110, 0, "diff_b :%d", *(u8 *)(LIGHT(idx) + 0xE6));
+        }
+        if (S32(0x18) != 6 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 120, 0, "ambient :%d", *(u8 *)(LIGHT(idx) + 0xE7));
+        }
+        if (S32(0x18) != 7 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 130, 0, "ambient_r :%d", *(u8 *)((u8 *)&D_8330A2B0 + 0x10C));
+        }
+        if (S32(0x18) != 8 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 140, 0, "ambient_g :%d", *(u8 *)((u8 *)&D_8330A2B0 + 0x10D));
+        }
+        if (S32(0x18) != 9 || D_833091F4 >= 10) {
+            func_800495F8(0x8C, 150, 0, "ambient_b  :%d", *(u8 *)((u8 *)&D_8330A2B0 + 0x10E));
+        }
+    }
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+
+#undef LIGHT
+#undef S32
+#undef F32
+
 extern f32 D_8330AC5C;
 extern f32 D_8330AC60;
 extern f32 D_8330ACCC;
@@ -639,8 +754,8 @@ extern void *D_800D0510;
 extern u8 D_80094E38[];
 extern u8 D_80094EC0[];
 extern u8 D_80094F50[];
-extern s32 D_833091F8;
-extern s32 D_833091FC;
+s32 D_833091F8 = 0;
+s32 D_833091FC = 15;
 extern s32 D_83309200;
 extern u8 *func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
