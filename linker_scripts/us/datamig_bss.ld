@@ -80,6 +80,12 @@ SECTIONS
         build/src/fragments/44/fragment44_20D3A0.o(.bss)
     }
 
+    /* func_8AF25F40's zoom-step statics. */
+    .fragment44_zoom_step_bss 0x8AF3A6F8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_212740.o(.bss)
+    }
+
     /* Four-byte panel color cache. Its original loaded zero word stays in
      * the fragment data image; compiler BSS alignment has no load image. */
     .fragment11_panel_color_cache_bss 0x8160BE5C (NOLOAD) : SUBALIGN(4)
