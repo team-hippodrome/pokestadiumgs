@@ -1903,8 +1903,81 @@ void func_80030AD4(u8 arg0, u32 arg1, u32 arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_8003121C.s")
+extern u8 D_80091D10[], D_80091D18[], D_80091D20[], D_80091D30[], D_80091D40[], D_80091D4C[], D_80091D54[], D_80091D60[], D_80091F10[];
 
+void func_8003121C(u8 arg0, u32 arg1, u32 arg2) {
+    u32 sound[2];
+    if (arg2 >= 254 && arg2 < 279) { arg2 = 201; }
+    if (arg2 == 300 || arg2 == 279) { arg2 = 25; }
+    if (arg2 == 0 || arg2 >= 252 || arg1 == 300) { return; }
+    if (D_80091AB0 == 0) {
+        func_80030AD4(arg0, arg1, arg2);
+        D_80091AB0 = 1;
+    } else { D_80091AB0 = 0; }
+    if (arg1 == 251) {
+        if (D_80091A7C != 0) {
+            Audio_ClearCommandQueue();
+            return;
+        }
+        func_80023A3C(2, 0, 0);
+        D_80091A7C = 1;
+    } else { D_80091A7C = 0; }
+    if (arg1 == 164) {
+        D_80091A38 = 1;
+        return;
+    }
+    switch (D_800D1AD2) {
+    case 0:
+    case 1:
+    case 4:
+        if (D_80091AE4 != 0) { func_80028CA8(D_80091D4C); }
+        else { func_80028CA8(D_80091D40); }
+        break;
+    case 2:
+        func_80028CA8(D_80091D30);
+        break;
+    case 3:
+    case 5:
+    case 7:
+    case 10:
+    case 12:
+    case 13:
+    case 16:
+        if (D_800D2638 == 1) {
+            if (D_80091A38 == 0) { func_80028CA8(D_80091D10); }
+            else { func_80028CA8(D_80091D18); }
+        } else { func_80028CA8(D_80091D20); }
+        break;
+    case 15:
+        if (D_800D26A8[D_80091A40] != 0) { func_80028CA8(D_80091D60); }
+        else { func_80028CA8(D_80091D54); }
+        break;
+    case 14:
+        sound[0] = arg1 + 12287;
+        func_800314D4((u16)sound[0]);
+        if (sound[0] == 12513) {
+            func_80031530(6);
+            func_80028CA8(D_80091F10);
+            D_80091A44 = 1;
+            D_80091AC8 = 1;
+        }
+        break;
+    case 6:
+        func_800314D4(8630);
+        func_80023A3C(2, 0, 0);
+        break;
+    case 9:
+        func_800314D4(8223);
+        func_80023A3C(2, 0, 0);
+        break;
+    case 8:
+    case 11:
+    case 17:
+    default:
+        break;
+    }
+    D_80091A38 = 1;
+}
 void func_800314D4(s32 arg0) {
     if ((u8)D_80091A0C != 0) {
         if ((u8)D_80091A10 != 0) {
@@ -2376,6 +2449,8 @@ s16 GbAudio_RenderPulse2(void) {
     return out;
 }
 
+// Keep the following float constants aligned after the jump table.
+#pragma asmproc late_rodata_alignment("func_80032A28", 8)
 #pragma GLOBAL_ASM("asm/us/nonmatchings/2C1B0/func_80032A28.s")
 
 void func_80032E40(u8 arg0) {
