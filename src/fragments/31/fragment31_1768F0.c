@@ -120,23 +120,61 @@ s32 func_8820390C(u8 *arg0) {
 
 /* mkdraft:func_88203A18 begin */
 
-s32 func_88203A18(void *entry, LabPCStorageList *list) {
+u8 func_88203A18(void *entry, LabPCStorageList *list) {
     u32 index;
 
     index = 0;
     if (list->capacity != 0) {
         do {
             if (entry == (void *)((u8 *)list->entries + index * 0x76)) {
-                return index & 0xFF;
+                return index;
             }
             index++;
         } while (index < list->capacity);
     }
-    return index & 0xFF;
+    return index;
 }
 /* mkdraft:func_88203A18 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1768F0/func_88203A58.s")
+// Removes an entry from a storage list: slot 0 and 2 entries are cleared in
+// place, slot 1 and 3 lists shift the following 0x76-byte records down.
+typedef struct { u16 h[0x3B]; } Rec76;
+extern u8 D_88A01C40[];
+extern s32 func_8820390C(u8 *);
+void func_88203A58(u8 *arg0) {
+    s32 idx;
+    LabPCStorageList *list;
+    s32 i;
+
+    if (arg0 == (u8 *)D_88234664) {
+        _bzero(D_88234664, 0x76);
+        return;
+    }
+    idx = func_8820390C(arg0);
+    list = &D_88234630[idx];
+    i = func_88203A18(arg0, list);
+    switch (idx) {
+    case 0:
+        _bzero(arg0, 0x76);
+        break;
+    case 2:
+        _bzero(arg0, 0x76);
+        D_88A01C40[i] = 0;
+        break;
+    case 1:
+    case 3:
+        list->count--;
+        if (i < list->count) {
+            do {
+                *(Rec76 *)arg0 = *(Rec76 *)(arg0 + 0x76);
+                i++;
+                arg0 += 0x76;
+            } while (i < list->count);
+        }
+        break;
+    }
+    list->changed = 1;
+}
 
 /* mkdraft:func_88203BE4 begin */
 extern LabPCStorageList D_88234630[];
