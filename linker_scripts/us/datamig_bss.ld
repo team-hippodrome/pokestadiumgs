@@ -23,6 +23,14 @@ SECTIONS
         build/src/fragments/82/fragment82_420EA0.o(.data)
     }
 
+    /* func_82606B28's two function-static limits (6 and 3) live in fragment
+     * 20's loaded data at D_826155C0/D_826155C4; IDO only reloads them after
+     * calls when they are statics of that function. */
+    .fragment20_slot_fade_data 0x826155C0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/20/fragment20_12C460.o(.data)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
@@ -391,6 +399,7 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 /* The assembly switch table targets these return blocks in the C function. */
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
+ASSERT(SIZEOF(.fragment20_slot_fade_data) == 16, "fragment 20 slot fade limits footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
 ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
