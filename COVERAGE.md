@@ -10,21 +10,21 @@ US bucket totals are retained from this table; open function sizes are counted f
 
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
-| 0–99 | 8,364 | 36 | 8,400 | 99.6% |
-| 100–199 | 1,237 | 72 | 1,309 | 94.5% |
-| 200–299 | 321 | 99 | 420 | 76.4% |
-| 300–399 | 115 | 63 | 178 | 64.6% |
+| 0–99 | 8,369 | 31 | 8,400 | 99.6% |
+| 100–199 | 1,244 | 65 | 1,309 | 95.0% |
+| 200–299 | 328 | 92 | 420 | 78.1% |
+| 300–399 | 118 | 60 | 178 | 66.3% |
 | 400–499 | 42 | 37 | 79 | 53.2% |
-| 500–699 | 33 | 50 | 83 | 39.8% |
-| 700–999 | 11 | 22 | 33 | 33.3% |
+| 500–699 | 36 | 47 | 83 | 43.4% |
+| 700–999 | 12 | 21 | 33 | 36.4% |
 | 1000–1499 | 4 | 12 | 16 | 25.0% |
-| 1500–1999 | 1 | 5 | 6 | 16.7% |
+| 1500–1999 | 2 | 4 | 6 | 33.3% |
 | 2000+ | 4 | 4 | 8 | 50.0% |
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,132 / 10,532 (96.2%)**
-- Remaining `GLOBAL_ASM` owners: **400**
+- US functions with C implementations: **10,159 / 10,532 (96.5%)**
+- Remaining `GLOBAL_ASM` owners: **373**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -36,11 +36,10 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/1CDC0.c` | 2 | 37 | 94.6% |
 | `src/23DA0.c` | 3 | 3 | 0.0% |
 | `src/25B20.c` | 1 | 1 | 0.0% |
-| `src/27590.c` | 2 | 3 | 33.3% |
-| `src/290C0.c` | 6 | 6 | 0.0% |
-| `src/2C1B0.c` | 3 | 15 | 80.0% |
+| `src/27590.c` | 1 | 3 | 66.7% |
+| `src/290C0.c` | 5 | 6 | 16.7% |
+| `src/2C1B0.c` | 2 | 15 | 86.7% |
 | `src/585D0.c` | 1 | 229 | 99.6% |
-| `src/641E0.c` | 1 | 44 | 97.7% |
 | `src/6AA80.c` | 2 | 74 | 97.3% |
 | `src/6E850.c` | 2 | 55 | 96.4% |
 | `src/72C30.c` | 1 | 16 | 93.8% |
@@ -53,7 +52,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/11/fragment11_E1E10.c` | 1 | 30 | 96.7% |
 | `src/fragments/12/fragment12_E7C00.c` | 3 | 72 | 95.8% |
 | `src/fragments/13/fragment13_EEC50.c` | 1 | 79 | 98.7% |
-| `src/fragments/14/fragment14_1025F0.c` | 2 | 2 | 0.0% |
+| `src/fragments/14/fragment14_1025F0.c` | 1 | 2 | 50.0% |
 | `src/fragments/14/fragment14_104FC0.c` | 1 | 26 | 96.2% |
 | `src/fragments/14/fragment14_1077C0.c` | 1 | 28 | 96.4% |
 | `src/fragments/14/fragment14_F81B0.c` | 1 | 55 | 98.2% |
@@ -63,18 +62,17 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/17/fragment17_10FFC0.c` | 3 | 56 | 94.6% |
 | `src/fragments/17/fragment17_113A60.c` | 5 | 82 | 93.9% |
 | `src/fragments/17/fragment17_1162A0.c` | 8 | 15 | 46.7% |
-| `src/fragments/17/fragment17_11A7F0.c` | 1 | 5 | 80.0% |
 | `src/fragments/17/fragment17_11B210.c` | 1 | 28 | 96.4% |
 | `src/fragments/19/fragment19_121100.c` | 5 | 54 | 90.7% |
 | `src/fragments/19/fragment19_124E40.c` | 2 | 22 | 90.9% |
 | `src/fragments/2/fragment2_code.c` | 3 | 7 | 57.1% |
-| `src/fragments/20/fragment20_128B10.c` | 2 | 35 | 94.3% |
-| `src/fragments/20/fragment20_12C460.c` | 17 | 146 | 88.4% |
+| `src/fragments/20/fragment20_128B10.c` | 1 | 35 | 97.1% |
+| `src/fragments/20/fragment20_12C460.c` | 15 | 146 | 89.7% |
 | `src/fragments/21/fragment21_13FFA0.c` | 9 | 56 | 83.9% |
 | `src/fragments/21/fragment21_144790.c` | 2 | 46 | 95.7% |
 | `src/fragments/22/fragment22_14B090.c` | 1 | 40 | 97.5% |
 | `src/fragments/23/fragment23_code.c` | 2 | 20 | 90.0% |
-| `src/fragments/24/fragment24_150C10.c` | 11 | 92 | 88.0% |
+| `src/fragments/24/fragment24_150C10.c` | 10 | 92 | 89.1% |
 | `src/fragments/25/fragment25_15BBC0.c` | 1 | 10 | 90.0% |
 | `src/fragments/29/fragment29_168330.c` | 2 | 30 | 93.3% |
 | `src/fragments/29/fragment29_16B030.c` | 1 | 6 | 83.3% |
@@ -89,15 +87,13 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/31/fragment31_18E660.c` | 1 | 1 | 0.0% |
 | `src/fragments/31/fragment31_190BB0.c` | 1 | 32 | 96.9% |
 | `src/fragments/31/fragment31_194C30.c` | 1 | 8 | 87.5% |
-| `src/fragments/31/fragment31_195910.c` | 1 | 5 | 80.0% |
 | `src/fragments/31/fragment31_1965A0.c` | 1 | 9 | 88.9% |
-| `src/fragments/31/fragment31_197640.c` | 5 | 38 | 86.8% |
+| `src/fragments/31/fragment31_197640.c` | 4 | 38 | 89.5% |
 | `src/fragments/31/fragment31_19E800.c` | 1 | 13 | 92.3% |
 | `src/fragments/31/fragment31_1A03C0.c` | 1 | 17 | 94.1% |
 | `src/fragments/31/fragment31_1A1BD0.c` | 1 | 17 | 94.1% |
 | `src/fragments/32/fragment32_1B1330.c` | 2 | 22 | 90.9% |
 | `src/fragments/32/fragment32_1B9840.c` | 1 | 2 | 50.0% |
-| `src/fragments/33/fragment33_code.c` | 1 | 12 | 91.7% |
 | `src/fragments/34/fragment34_1BE300.c` | 2 | 16 | 87.5% |
 | `src/fragments/34/fragment34_1C1BC0.c` | 1 | 29 | 96.6% |
 | `src/fragments/34/fragment34_1C3FA0.c` | 2 | 11 | 81.8% |
@@ -108,10 +104,10 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/4/fragment4_AE600.c` | 2 | 15 | 86.7% |
 | `src/fragments/40/fragment40_1DC1F0.c` | 2 | 20 | 90.0% |
 | `src/fragments/40/fragment40_1E0550.c` | 2 | 23 | 91.3% |
-| `src/fragments/43/fragment43_1E5A10.c` | 6 | 114 | 94.7% |
+| `src/fragments/43/fragment43_1E5A10.c` | 4 | 114 | 96.5% |
 | `src/fragments/43/fragment43_1EC950.c` | 1 | 5 | 80.0% |
 | `src/fragments/44/fragment44_1F0680.c` | 2 | 18 | 88.9% |
-| `src/fragments/44/fragment44_1F1850.c` | 4 | 47 | 91.5% |
+| `src/fragments/44/fragment44_1F1850.c` | 3 | 47 | 93.6% |
 | `src/fragments/44/fragment44_1F5F20.c` | 1 | 14 | 92.9% |
 | `src/fragments/44/fragment44_1F6BF0.c` | 1 | 12 | 91.7% |
 | `src/fragments/44/fragment44_1F85B0.c` | 1 | 16 | 93.8% |
@@ -119,8 +115,6 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/44/fragment44_1FD260.c` | 3 | 38 | 92.1% |
 | `src/fragments/44/fragment44_204950.c` | 1 | 14 | 92.9% |
 | `src/fragments/44/fragment44_207AF0.c` | 2 | 28 | 92.9% |
-| `src/fragments/44/fragment44_20A610.c` | 1 | 13 | 92.3% |
-| `src/fragments/44/fragment44_20BDB0.c` | 2 | 7 | 71.4% |
 | `src/fragments/44/fragment44_20D3A0.c` | 1 | 16 | 93.8% |
 | `src/fragments/44/fragment44_20F140.c` | 2 | 25 | 92.0% |
 | `src/fragments/44/fragment44_212740.c` | 1 | 22 | 95.5% |
@@ -131,7 +125,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/46/fragment46_code.c` | 2 | 80 | 97.5% |
 | `src/fragments/47/fragment47_251C30.c` | 1 | 3 | 66.7% |
 | `src/fragments/49/fragment49_code.c` | 5 | 116 | 95.7% |
-| `src/fragments/50/fragment50_266A60.c` | 4 | 52 | 92.3% |
+| `src/fragments/50/fragment50_266A60.c` | 3 | 52 | 94.2% |
 | `src/fragments/50/fragment50_26BF40.c` | 1 | 16 | 93.8% |
 | `src/fragments/51/fragment51_27AC10.c` | 1 | 12 | 91.7% |
 | `src/fragments/51/fragment51_27B9E0.c` | 1 | 17 | 94.1% |
@@ -144,13 +138,12 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/56/fragment56_code.c` | 7 | 46 | 84.8% |
 | `src/fragments/57/fragment57_code.c` | 9 | 32 | 71.9% |
 | `src/fragments/58/fragment58_code.c` | 7 | 25 | 72.0% |
-| `src/fragments/59/fragment59_code.c` | 7 | 44 | 84.1% |
+| `src/fragments/59/fragment59_code.c` | 6 | 44 | 86.4% |
 | `src/fragments/60/fragment60_code.c` | 11 | 67 | 83.6% |
 | `src/fragments/61/fragment61_code.c` | 13 | 57 | 77.2% |
 | `src/fragments/63/fragment63_306150.c` | 1 | 28 | 96.4% |
 | `src/fragments/63/fragment63_308D70.c` | 3 | 39 | 92.3% |
 | `src/fragments/63/fragment63_30F070.c` | 1 | 25 | 96.0% |
-| `src/fragments/63/fragment63_3166F0.c` | 1 | 1 | 0.0% |
 | `src/fragments/63/fragment63_317060.c` | 1 | 74 | 98.6% |
 | `src/fragments/63/fragment63_319010.c` | 2 | 8 | 75.0% |
 | `src/fragments/63/fragment63_31CB20.c` | 1 | 3 | 66.7% |
@@ -160,20 +153,18 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/64/fragment64_32DC40.c` | 1 | 11 | 90.9% |
 | `src/fragments/64/fragment64_32F5F0.c` | 1 | 8 | 87.5% |
 | `src/fragments/66/fragment66_code.c` | 5 | 33 | 84.8% |
-| `src/fragments/67/fragment67_33CB20.c` | 1 | 10 | 90.0% |
 | `src/fragments/67/fragment67_343510.c` | 1 | 13 | 92.3% |
 | `src/fragments/67/fragment67_344D70.c` | 1 | 90 | 98.9% |
 | `src/fragments/67/fragment67_34B0F0.c` | 2 | 15 | 86.7% |
 | `src/fragments/69/fragment69_code.c` | 2 | 46 | 95.7% |
 | `src/fragments/7/fragment7_BA250.c` | 5 | 100 | 95.0% |
-| `src/fragments/73/fragment73_code.c` | 2 | 8 | 75.0% |
+| `src/fragments/73/fragment73_code.c` | 1 | 8 | 87.5% |
 | `src/fragments/74/fragment74_code.c` | 2 | 11 | 81.8% |
 | `src/fragments/75/fragment75_code.c` | 2 | 16 | 87.5% |
 | `src/fragments/77/fragment77_code.c` | 2 | 30 | 93.3% |
-| `src/fragments/79/fragment79_36F8B0.c` | 1 | 42 | 97.6% |
 | `src/fragments/79/fragment79_375530.c` | 1 | 30 | 96.7% |
 | `src/fragments/79/fragment79_377570.c` | 1 | 20 | 95.0% |
-| `src/fragments/79/fragment79_38EFE0.c` | 2 | 109 | 98.2% |
+| `src/fragments/79/fragment79_38EFE0.c` | 1 | 109 | 99.1% |
 | `src/fragments/79/fragment79_393CA0.c` | 1 | 461 | 99.8% |
 | `src/fragments/79/fragment79_3A4030.c` | 1 | 15 | 93.3% |
 | `src/fragments/79/fragment79_3ADCA0.c` | 2 | 166 | 98.8% |
@@ -189,4 +180,4 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/82/fragment82_4238F0.c` | 2 | 58 | 96.6% |
 | `src/fragments/83/fragment83_code.c` | 2 | 64 | 96.9% |
 | `src/fragments/84/fragment84_code.c` | 3 | 42 | 92.9% |
-| `src/fragments/9/fragment9_code.c` | 3 | 36 | 91.7% |
+| `src/fragments/9/fragment9_code.c` | 2 | 36 | 94.4% |
