@@ -57,7 +57,37 @@ void func_87E05458(void *arg0) {
 }
 /* mkdraft:func_87E05458 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E055B0.s")
+extern f32 D_80087E50[];
+#define SINS_87E055B0(x) D_80087E50[(u16)(x) >> 4]
+extern void *D_87F119DC;
+extern void func_87F0B4AC(void *, f32 *, f32 *, s16 *);
+typedef struct { f32 x, y, z; } Vec3_87E055B0;
+#define ROUND_87E055B0(x) ((x) >= 0.0f ? (s32)((x) + 0.5f) : (s32)((x) - 0.5f))
+#define DEG_87E055B0(d) ROUND_87E055B0((d) * 182.04167f)
+void func_87E055B0(void) {
+    u8 *obj = *(u8 **)((u8 *)D_87F119DC + 0x38);
+    u8 *src;
+
+    switch (*(s32 *)obj) {
+        case 0:
+            func_87F0B4AC(obj + 0x14, (f32 *)((u8 *)D_87F119DC + 0x48), (f32 *)((u8 *)D_87F119DC + 0x54), (s16 *)((u8 *)D_87F119DC + 0x42));
+            if (*(s32 *)(obj + 0x98) == 0) {
+                src = *(u8 **)(obj + 8);
+                if (src != NULL) {
+                    *(Vec3_87E055B0 *)((u8 *)D_87F119DC + 0x48) = *(Vec3_87E055B0 *)(src + 0x48);
+                    *(f32 *)((u8 *)D_87F119DC + 0x48) += -10.0f;
+                    *(f32 *)((u8 *)D_87F119DC + 0x4C) += 28.0f;
+                }
+            }
+            break;
+        case 1:
+            *(Vec3_87E055B0 *)((u8 *)D_87F119DC + 0x48) = *(Vec3_87E055B0 *)(*(u8 **)(obj + 8) + 0x48);
+            *(f32 *)((u8 *)D_87F119DC + 0x48) += -10.0f;
+            *(f32 *)((u8 *)D_87F119DC + 0x4C) += -5.0f;
+            *(s16 *)((u8 *)D_87F119DC + 0x46) = DEG_87E055B0(SINS_87E055B0(DEG_87E055B0((f32)(*(u32 *)((u8 *)D_87F119DC + 0x1C) % 360) * 5.0f)) * 10.0f);
+            break;
+    }
+}
 
 extern Gfx *D_800D0510;
 extern void *D_8009491C;
