@@ -232,6 +232,13 @@ SECTIONS
         build/src/fragments/17/fragment17_11B210.o(.bss)
     }
 
+    /* func_8F500020's preview state in fragment 73's loader-cleared area
+     * at 0x8F5009A0 (fields from +8 are cleared by the function). */
+    .fragment73_preview_9A0_bss 0x8F5009A0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/73/fragment73_code.o(.bss)
+    }
+
     /* Fragment 53's four loader-cleared 0x168-byte models at D_86510010.
      * func_86502524's unrolled scale stores share lui pairs only for a
      * section-relative static, so the array is defined in C. */
@@ -338,6 +345,9 @@ SECTIONS
 
 ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
        "fragment21 archive record must retain its compiler section footprint");
+
+ASSERT(SIZEOF(.fragment73_preview_9A0_bss) == 32,
+       "fragment73 preview state must keep its 0x20-byte footprint");
 
 ASSERT(SIZEOF(.fragment53_models_10010_bss) == 0x5A0,
        "fragment53 models must keep four 0x168-byte records");
