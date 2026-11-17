@@ -524,7 +524,252 @@ void func_882114EC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_183700/func_88211550.s")
+extern s32 D_80087200;
+extern s32 D_880068B4;
+extern s16 D_8800EF58;
+extern u8 D_88006020[];
+extern s32 func_8004C874(s32, s32);
+extern void func_88206508(s32, void *);
+extern void func_800226C0(s32);
+extern void func_88001900(void);
+extern void func_880020CC(void *);
+extern void func_88002720(void *, u16, void *);
+extern void func_882064B4(s32, void *, void *, void *);
+extern s32 func_88200D04(s32);
+extern void func_882295E4(s32, s32, void *);
+extern void func_88228BCC(s32, s32, void *);
+extern void func_88206430(void);
+extern void func_88206460(void);
+extern void func_8822FA58(void *);
+extern void func_88230384(void);
+extern void func_8823010C(s32);
+extern void *func_882104DC(s32, u8);
+
+#define P8 ((u8 *)D_88234720)
+#define PS(o) (*(s16 *)(P8 + (o)))
+#define PW(o) (*(s32 *)(P8 + (o)))
+#define BTN (*(u16 *)(*(u8 **)&D_80087200 + 8))
+#define EMPTY0 ((PS(0xC) == 0 && PW(0x10) == 0 && PS(0x2E) == 0) ? 1 : 0)
+#define EMPTY1 ((PS(0x38) == 0 && PW(0x3C) == 0 && PS(0x5A) == 0) ? 1 : 0)
+#define ERR(n) func_88206508(func_8004C874(0x22, (n)), P8 + 0x64)
+// The control block at D_88234720: the selected slot index, then two 0x2C-byte slot records at 0xC.
+typedef struct unk_D_88234720_ctl {
+    /* 0x00 */ u8 cur;
+    /* 0x01 */ u8 unk_01[0xB];
+    /* 0x0C */ unk_D_88234720 slots[2];
+} unk_D_88234720_ctl;
+#define CTL ((unk_D_88234720_ctl *)D_88234720)
+#define CURSLOT (&CTL->slots[CTL->cur])
+
+void func_88211550(void) {
+    void *entry;
+    s32 v;
+
+    if (D_8800EF58 != 0) {
+        return;
+    }
+    if (*(s32 *)((u8 *)D_88234564 + 0xA4) == 2 && P8[0x64] == 0 && D_880068B4 == 1) {
+        if (EMPTY0 != 0 && EMPTY1 != 0 && D_882346F0 == 0 &&
+            ((P8[0] == 0 && (BTN & 0x10) != 0) || (P8[0] == 1 && (BTN & 0x20) != 0))) {
+            func_800226C0(0x135);
+            P8[0] ^= 1;
+            func_88001900();
+            goto end;
+        }
+        if (PW(4) != 0) {
+            if ((BTN & 0x4000) != 0) {
+                func_800226C0(0x48);
+                P8[0x64] = 2;
+                if (func_88200D04(9) != 0) {
+                    func_882295E4(0x140, 0xF0, func_88206430);
+                } else {
+                    func_88228BCC(0x140, 0xF0, func_88206430);
+                }
+            } else if ((BTN & 0x8000) != 0) {
+                func_800226C0(0x5C);
+                func_882064B4(0, P8 + 4, P8 + 0xC, P8 + 0x38);
+                func_88001900();
+            } else {
+                func_880020CC(CURSLOT);
+                func_88002720(P8 + 8, 5, D_88006020);
+            }
+            goto end;
+        }
+        entry = func_882104DC(1, P8[0]);
+        switch (D_882346F0) {
+        case 0:
+            if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x4000) != 0) {
+                func_800226C0(0x48);
+                func_882064B4(1, P8 + 4, P8 + 0xC, P8 + 0x38);
+                Input_SetRepeatController(D_80087200);
+            } else if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x8000) != 0) {
+                switch (*(u16 *)(P8 + 8)) {
+                case 0:
+                    if (((u8 *)entry)[0x15] == 0) {
+                        ERR(8);
+                    } else {
+                        func_800226C0(0x47);
+                        P8[0x64] = 2;
+                        func_8822FA58(entry);
+                    }
+                    break;
+                case 1:
+                    if (((u8 *)entry)[0x15] == 0) {
+                        ERR(5);
+                    } else if (func_88210FAC() == 0) {
+                        ERR(9);
+                    } else {
+                        switch (func_88210ECC(entry)) {
+                        case 1:
+                            ERR(0xA);
+                            break;
+                        case 2:
+                            ERR(0xD);
+                            break;
+                        case 3:
+                            func_88206508(func_8004C874(0x1F, 0x12), P8 + 0x64);
+                            break;
+                        case 0:
+                            func_800226C0(0x47);
+                            D_882346F0 = 1;
+                            P8[0] ^= 1;
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    if (((u8 *)entry)[0x15] == 0) {
+                        ERR(6);
+                    } else {
+                        func_800226C0(0x47);
+                        D_882346F0 = 2;
+                        PS(0x66) = *(s16 *)((u8 *)CURSLOT + 8);
+                    }
+                    break;
+                case 3:
+                    if (((u8 *)entry)[0x15] == 0) {
+                        ERR(7);
+                    } else if (func_88211018() != 0) {
+                        ERR(0xB);
+                    } else {
+                        switch (func_88210ECC(entry)) {
+                        case 1:
+                            ERR(0xA);
+                            break;
+                        case 2:
+                            ERR(0xE);
+                            break;
+                        case 3:
+                            func_88206508(func_8004C874(0x1F, 0x12), P8 + 0x64);
+                            break;
+                        case 0:
+                            func_800226C0(0x47);
+                            D_882346F0 = 3;
+                            P8[0] ^= 1;
+                            break;
+                        }
+                    }
+                    break;
+                case 4:
+                    if (func_8800005C() != 0 && P8[0] == 0) {
+                        ERR(0xF);
+                    } else {
+                        func_800226C0(0x47);
+                        P8[0x64] = 2;
+                        func_88230384();
+                    }
+                    break;
+                }
+            } else {
+                func_880020CC(CURSLOT);
+            }
+            break;
+        case 1:
+            if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x4000) != 0) {
+                func_800226C0(0x48);
+                P8[0] ^= 1;
+                D_882346F0 = 0;
+            } else if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x8000) != 0) {
+                if (((u8 *)entry)[0x15] != 0) {
+                    ERR(0xC);
+                } else {
+                    if (func_8800005C() == 0 && func_882110FC(func_882104DC(1, (u8)(1 - P8[0]))) != 0) {
+                        func_800226C0(0x47);
+                        P8[0x64] = 2;
+                        func_8823010C(func_8004C874(0x22, 0x10));
+                    } else {
+                        func_800226C0(0x5D);
+                        func_88211168(0, 0);
+                    }
+                }
+            } else {
+                func_880020CC(CURSLOT);
+            }
+            break;
+        case 2:
+            if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x4000) != 0) {
+                func_800226C0(0x48);
+                D_882346F0 = 0;
+            } else if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x8000) != 0) {
+                if (PS(0x66) == *(s16 *)((u8 *)CURSLOT + 8)) {
+                    func_800226C0(0x49);
+                } else {
+                    if ((func_8800005C() == 0 || P8[0] == 1) &&
+                        (func_882110FC(func_882104DC(3, P8[0])) != 0 || func_882110FC(entry) != 0)) {
+                        func_800226C0(0x47);
+                        P8[0x64] = 2;
+                        func_8823010C(func_8004C874(0x22, 0x11));
+                    } else {
+                        func_800226C0(0x5D);
+                        func_88211168(0, 0);
+                    }
+                }
+            } else {
+                func_880020CC(CURSLOT);
+            }
+            break;
+        case 3:
+            if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x4000) != 0) {
+                func_800226C0(0x48);
+                P8[0] ^= 1;
+                D_882346F0 = 0;
+            } else if (EMPTY0 != 0 && EMPTY1 != 0 && (BTN & 0x8000) != 0) {
+                if (((u8 *)entry)[0x15] == 0) {
+                    ERR(7);
+                } else {
+                    switch (func_88210ECC(entry)) {
+                    case 1:
+                        ERR(0xA);
+                        break;
+                    case 2:
+                        ERR(0xE);
+                        break;
+                    case 3:
+                        func_88206508(func_8004C874(0x1F, 0x12), P8 + 0x64);
+                        break;
+                    case 0:
+                        if (func_8800005C() == 0 &&
+                            (func_882110FC(func_882104DC(1, (u8)(1 - P8[0]))) != 0 || func_882110FC(entry) != 0)) {
+                            func_800226C0(0x47);
+                            P8[0x64] = 2;
+                            func_8823010C(func_8004C874(0x22, 0x12));
+                        } else {
+                            func_800226C0(0x5D);
+                            func_88211168(0, 0);
+                        }
+                        break;
+                    }
+                }
+            } else {
+                func_880020CC(CURSLOT);
+            }
+            break;
+        }
+    }
+end:
+    func_88206460();
+}
+
 
 // Layout of the D_88234720 state, as in fragment31_186690's State18690.
 //@src/fragments/31/fragment31_186690.c
