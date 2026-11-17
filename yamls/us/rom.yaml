@@ -1310,6 +1310,8 @@
     - [0x258D80, c,       fragments/48/fragment48_258D80]
     - [0x2597B0, c,       fragments/48/fragment48_2597B0]
     - [0x259CD0, data,    fragments/48/fragment48_data]
+    - [0x25A180, .rodata, fragments/48/fragment48_258D80] # func_87C031B8 and func_87C03370 double literals
+    - [0x25A1D0, rodata]
   
   - name: fragment49
     type: code

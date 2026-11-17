@@ -133,7 +133,22 @@ s32 func_87C03178(s32 arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C031B8.s")
+extern void *func_87C00120(void *, f64, f64, f64);
+extern s32 MathUtil_Random16(void);
+void func_87C031B8(u8 *arg0) {
+    s32 pad[2]; // FAKE
+    f64 vec[3];
+    s32 i;
+    *(s32 *)(arg0 + 0x548) = 0;
+    for (i = 0; i != 0x390; i += 0x390) {
+        func_87C00120(vec, 0.0, 2000.0, 0.0);
+        func_87C02DF0(arg0 + 0x48 + i, arg0 + 0x10, vec, 250.0f);
+        func_87C02F74(arg0 + 0x48 + i, MathUtil_Random16() % 6 + 1);
+        func_87C00120(arg0 + 0x338 + i, -1.0, -0.2, 0.0);
+        func_87C00120(arg0 + 0x370 + i, 0.1, 0.2, 0.03);
+        func_87C00120(arg0 + 0x338 + i, 0.1, 0.2, 1.3);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/48/fragment48_258D80/func_87C03370.s")
 
