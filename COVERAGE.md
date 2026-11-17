@@ -10,9 +10,9 @@ US bucket totals are retained from this table; open function sizes are counted f
 
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
-| 0–99 | 8,363 | 37 | 8,400 | 99.6% |
+| 0–99 | 8,364 | 36 | 8,400 | 99.6% |
 | 100–199 | 1,237 | 72 | 1,309 | 94.5% |
-| 200–299 | 320 | 100 | 420 | 76.2% |
+| 200–299 | 321 | 99 | 420 | 76.4% |
 | 300–399 | 115 | 63 | 178 | 64.6% |
 | 400–499 | 42 | 37 | 79 | 53.2% |
 | 500–699 | 33 | 50 | 83 | 39.8% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,130 / 10,532 (96.2%)**
-- Remaining `GLOBAL_ASM` owners: **402**
+- US functions with C implementations: **10,132 / 10,532 (96.2%)**
+- Remaining `GLOBAL_ASM` owners: **400**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -58,7 +58,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/14/fragment14_1077C0.c` | 1 | 28 | 96.4% |
 | `src/fragments/14/fragment14_F81B0.c` | 1 | 55 | 98.2% |
 | `src/fragments/14/fragment14_FA520.c` | 1 | 9 | 88.9% |
-| `src/fragments/14/fragment14_FF070.c` | 5 | 91 | 94.5% |
+| `src/fragments/14/fragment14_FF070.c` | 4 | 91 | 95.6% |
 | `src/fragments/16/fragment16_code.c` | 2 | 29 | 93.1% |
 | `src/fragments/17/fragment17_10FFC0.c` | 3 | 56 | 94.6% |
 | `src/fragments/17/fragment17_113A60.c` | 5 | 82 | 93.9% |
@@ -66,7 +66,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/17/fragment17_11A7F0.c` | 1 | 5 | 80.0% |
 | `src/fragments/17/fragment17_11B210.c` | 1 | 28 | 96.4% |
 | `src/fragments/19/fragment19_121100.c` | 5 | 54 | 90.7% |
-| `src/fragments/19/fragment19_124E40.c` | 3 | 22 | 86.4% |
+| `src/fragments/19/fragment19_124E40.c` | 2 | 22 | 90.9% |
 | `src/fragments/2/fragment2_code.c` | 3 | 7 | 57.1% |
 | `src/fragments/20/fragment20_128B10.c` | 2 | 35 | 94.3% |
 | `src/fragments/20/fragment20_12C460.c` | 17 | 146 | 88.4% |
