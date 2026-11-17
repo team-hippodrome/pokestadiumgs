@@ -3175,7 +3175,44 @@ void func_833078C4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307AAC.s")
+// Steps the three byte values in rows 0-1 of the D_8330A2B0 overlay (and row 2
+// on the first outer pass) by |start - end| / arg0 per counter tick. Each
+// D_83308E54 row holds three start values then three end values; D_83308E84 is
+// the third such row.
+typedef struct {
+    u8 unk_00[0x24];
+    s32 counter;
+    u8 unk_28[0xBC];
+    u8 rows[3][0x14];
+} Fragment57Fade;
+extern s32 D_83308E54[2][6];
+extern s32 D_83308E84[6];
+void func_83307AAC(s32 arg0) {
+    s32 i;
+    s32 *src;
+    s32 j;
+    s32 diff;
+    s32 val;
+
+    if (((Fragment57Fade *)&D_8330A2B0)->counter <= arg0) {
+        for (i = 0; i < 2; i++) {
+            for (j = 0; j < 3; j++) {
+                if (i == 0) {
+                    src = &D_83308E84[j];
+                    val = *src;
+                    diff = val - src[3];
+                    ((Fragment57Fade *)&D_8330A2B0)->rows[2][j] =
+                        val - ((diff < 0 ? -diff : diff) / arg0) * ((Fragment57Fade *)&D_8330A2B0)->counter;
+                }
+                val = D_83308E54[i][j];
+                diff = val - D_83308E54[i][j + 3];
+                ((Fragment57Fade *)&D_8330A2B0)->rows[i][j] =
+                    val - ((diff < 0 ? -diff : diff) / arg0) * ((Fragment57Fade *)&D_8330A2B0)->counter;
+            }
+        }
+        ((Fragment57Fade *)&D_8330A2B0)->counter++;
+    }
+}
 
 extern s32 D_83308E2C;
 extern void func_80021ED8(s32);
