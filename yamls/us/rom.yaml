@@ -742,6 +742,7 @@
     - [0x10F9E0, c,       fragments/17/fragment17_10F9E0]
     - [0x10FFC0, c,       fragments/17/fragment17_10FFC0]
     - [0x113A60, c,       fragments/17/fragment17_113A60]
+    - [0x1154C0, c,       fragments/17/fragment17_1154C0]
     - [0x1162A0, c,       fragments/17/fragment17_1162A0] # scene fade, clipping and scene callbacks
     - [0x118870, c,       fragments/17/fragment17_118870] # scene transition record and its callbacks
     - [0x11A7F0, c,       fragments/17/fragment17_11A7F0]
@@ -1388,7 +1389,8 @@
     - [0x2871C0, c,       fragments/52/fragment52_2871C0]
     - [0x287A90, data,    fragments/52/fragment52_data]
     - [0x287E50, .rodata, fragments/52/fragment52_27E4E0] # Jump tables, float literals, double literals.
-    - [0x288070, rodata]
+    - [0x288070, .rodata, fragments/52/fragment52_2853B0] # Float literals of func_8640708C.
+    - [0x288080, rodata]
     - [0x288100, .rodata, fragments/52/fragment52_285F60] # Float literals of func_86407CE0 and func_86407D58.
     - [0x288120, rodata,  fragments/52/fragment52_data_tail]
 
@@ -1449,6 +1451,9 @@
     - [0x2BB830, textbin, fragments/57/fragment57_header]
     - [0x2BB850, c,       fragments/57/fragment57_code]
     - [0x2C3F90, data,    fragments/57/fragment57_data]
+    - [0x2C4A20, .data,   fragments/57/fragment57_code] # func_83302290's blink counter (0x833091F4) and the unreferenced word,
+                                                          # D_833091F8 and D_833091FC in the same 16-byte IDO-padded section
+    - [0x2C4A30, data]
     - [0x2C4A60, .rodata, fragments/57/fragment57_code] # Strings, jump tables, float literals, double literals.
     - [0x2C5A70, rodata]
 
