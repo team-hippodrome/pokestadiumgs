@@ -72,6 +72,14 @@ SECTIONS
         build/src/fragments/44/fragment44_1EE290.o(.bss)
     }
 
+    /* func_8AF0282C's row-job tag and busy byte (8 bytes, padded to 16; nothing else uses
+     * 0x8AF2BF38-0x8AF2BF3F). Like the loader state above, the loaded image's relocation
+     * metadata stays in place underneath. */
+    .fragment44_row_job_bss 0x8AF2BF30 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_1F0680.o(.bss)
+    }
+
     /* Tag and active flag used by the fragment 44 view callback. */
     .fragment44_view_state_bss 0x8AF395B8 (NOLOAD) : SUBALIGN(4)
     {
@@ -400,6 +408,8 @@ ASSERT(SIZEOF(.fragment11_panel_color_cache_bss) == 16,
 
 ASSERT(SIZEOF(.fragment44_load_state_bss) == 16,
        "fragment44 loader state must retain its native aligned input footprint");
+ASSERT(SIZEOF(.fragment44_row_job_bss) == 16,
+       "fragment44 row-job state must stay below D_8AF2BF40");
 
 ASSERT(audio_storage_RAM_START == 0x800D1A90 && audio_storage_RAM_END == 0x800D2630,
        "audio RAM reservation endpoints moved");
