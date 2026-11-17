@@ -17,7 +17,7 @@ extern void* func_8004C8A0(void*, s32, s32, s32);
 extern void func_800495BC(s32, s32, const char*, ...);
 extern void func_8004989C(s32);
 extern void func_800499EC(void);
-extern s16 D_8F500980[];
+s16 D_8F500980[2] = { 0x28, 0x29 };
 extern s16 D_8F5009A8;
 extern s16 D_8F5009AA;
 extern s16 D_8F5009AC;
@@ -58,12 +58,32 @@ void func_8F500130(void) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/73/fragment73_code/func_8F5002F4.s")
+extern Gfx* D_800D0510;
+extern Gfx D_80094E38[];
+extern s32 D_8F5009BC;
+extern void Gfx_DrawTextureRgba16(s16, s16, s16, s16, u8 *, s16, s32);
+void func_8F5002F4(void) {
+    static s32 sX = 0xC0;
+    static s32 sY = 0x118;
+    u8 *p;
+    s32 i;
+    s32 off;
+
+    p = (u8 *)D_8F5009BC;
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    for (i = 0; i < 8; i++) {
+        Gfx_DrawTextureRgba16(sX, sY + i * 0x10, 0x80, 0x10, p + i * 0x1000, 0x80, 0);
+        Gfx_DrawTextureRgba16(sX + 0x80, sY + i * 0x10, 0x80, 0x10, p + i * 0x1000, 0x80, 0);
+    }
+}
+
+s32 D_8F50098C = 0;
+f32 D_8F500990[4] = { 0.6f, 0.0f, 0.0f, 0.0f };
 
 extern u8* D_8F5009B8;
 extern void* D_8F5009B4;
 extern s16 D_8F5009B0;
-extern s32 D_8F5009BC;
 extern s32 ModelAnim_IsFinished(void*);
 extern void ModelAnim_SetResourceAnimation(void*, void*, s32);
 extern s32 func_80043678(void*);
