@@ -144,9 +144,6 @@ extern u8 D_87E1A31C[];
 extern u8 D_87E1A330[];
 extern u8 D_87E1A344[];
 extern u8 D_87E1A358[];
-extern f32 D_87E1B6A0;
-extern f32 D_87E1B6A4;
-extern f32 D_87E1B6A8;
 
 
 
@@ -180,7 +177,7 @@ void *arg0;
     if (*(u8 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x21F6) >= 2) {
         *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A358;
         *(s32 *)((u8 *)arg0 + 0x28) = 0x10;
-    } else if ((ratio = (f32)(arr[0] - arr[1]) / (f32)*(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2188)) >= D_87E1B6A0) {
+    } else if ((ratio = (f32)(arr[0] - arr[1]) / (f32)*(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2188)) >= 0.4f) {
         *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A330;
         *(s32 *)((u8 *)arg0 + 0x28) = 0xE;
     } else {
@@ -194,10 +191,10 @@ void *arg0;
         if (tmp > 0 && count >= 3) {
             *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A344;
             *(s32 *)((u8 *)arg0 + 0x28) = 0xF;
-        } else if ((ratio = (f32)arr[0] / (f32)*(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2188)) <= D_87E1B6A4) {
+        } else if ((ratio = (f32)arr[0] / (f32)*(s32 *)((u8 *)*(void **)((u8 *)arg0 + 4) + 0x2188)) <= 0.3f) {
             *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A2F4;
             *(s32 *)((u8 *)arg0 + 0x28) = 0xB;
-        } else if (ratio <= D_87E1B6A8) {
+        } else if (ratio <= 0.6f) {
             *(u8 **)((u8 *)arg0 + 0x24) = D_87E1A308;
             *(s32 *)((u8 *)arg0 + 0x28) = 0xC;
         } else {
@@ -249,7 +246,7 @@ s32 func_87E0BE78(void *arg0)
 }
 
 extern f32 D_87E1A36C[][3];
-extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
 extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
 extern void func_87F0B24C(u8 *, u8 *, f32, f32, f32, s32, s32);
 
@@ -268,15 +265,55 @@ void func_87E0BEB4(arg0) {
     for (node = *(u8 **)((u8 *)arg0 + 0x18); node != 0; node = *(u8 **)(node + 4), i++) {
         object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
         duration = (i % 3) * 5 + 5;
-        func_87F0B1A4(object + 0x14, node + 0x48, D_87E1A36C[i][0], *(s32 *)&D_87E1A36C[i][1], D_87E1A36C[i][2], duration, 0x5000);
+        func_87F0B1A4(object + 0x14, node + 0x48, D_87E1A36C[i][0], D_87E1A36C[i][1], D_87E1A36C[i][2], duration, 0x5000);
         func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, 0.0f, 0.0f, duration, 0);
         func_87F0B24C(object + 0x14, node + 0x54, 1.0f, 1.0f, 1.0f, duration, 0);
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_30F070/func_87E0BFFC.s")
+void func_87E0BFFC(s32 arg0, s32 sel, s32 mode) {
+    u8 *node;
+    u8 *object;
+    s32 i;
+    f32 *p;
+    f32 rot;
+    s32 dur;
 
-extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+    i = 0;
+    node = *(u8 **)((u8 *)arg0 + 0x18);
+    if (node != NULL) {
+        do {
+            object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
+            if (i == sel) {
+                switch (mode) {
+                case 1:
+                    func_87F0B1A4(object + 0x14, node + 0x48, 0, 20.0f, 150.0f, 12, 0x5000);
+                    func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, 0.0f, 360.0f, 12, 0x8000);
+                    break;
+                default:
+                    func_87F0B1A4(object + 0x14, node + 0x48, -32.0f, -32.0f, 0.0f, 15, 0x2000);
+                    func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, 0.0f, 0.0f, 15, 0);
+                    func_87F0B24C(object + 0x14, node + 0x54, 0.7432432175f, 0.7432432175f, 0.7432432175f, 15, 0);
+                    break;
+                }
+            } else {
+                p = D_87E1A3B4 + i * 3;
+                if (i < 3) {
+                    rot = -90.0f;
+                } else {
+                    rot = 90.0f;
+                }
+                dur = (i % 3) * 5 + 5;
+                func_87F0B1A4(object + 0x14, node + 0x48, p[0], p[1], p[2], dur, 0x2000);
+                func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, rot, 0.0f, dur, 0);
+            }
+            node = *(u8 **)(node + 4);
+            i++;
+        } while (node != NULL);
+    }
+}
+
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
 extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
 void func_87E0C290(u8 *arg0, s32 selected) {
     u8 *node;
@@ -287,7 +324,7 @@ void func_87E0C290(u8 *arg0, s32 selected) {
     for (node = *(u8 **)(arg0 + 0x18); node != NULL; node = *(u8 **)(node + 4)) {
         object = *(u8 **)(*(u8 **)(node + 0x38) + 0xC);
         if (i == selected) {
-            func_87F0B1A4(object + 0x14, node + 0x48, *(f32 *)(node + 0x48) - 160.0f, *(s32 *)(node + 0x4C),
+            func_87F0B1A4(object + 0x14, node + 0x48, *(f32 *)(node + 0x48) - 160.0f, *(f32 *)(node + 0x4C),
                           *(f32 *)(node + 0x50) + 200.0f, 15, 0x2000);
             func_87F0B2F4(object + 0x14, (s16 *)(node + 0x42), 0.0f, -90.0f, 0.0f, 15, 0);
         }
@@ -360,7 +397,7 @@ void func_87E0C454(void *arg0, s32 arg1) {
     func_87E0BFFC((s32) arg0, arg1, 0);
 }
 
-extern void func_87F0B1A4(u8 *, u8 *, f32, s32, f32, s32, s32);
+extern void func_87F0B1A4(u8 *, u8 *, f32, f32, f32, s32, s32);
 extern void func_87F0B2F4(u8 *, s16 *, f32, f32, f32, s32, s32);
 void func_87E0C4B4(void *arg0) {
     void *var_v0;
@@ -373,7 +410,7 @@ void func_87E0C4B4(void *arg0) {
             func_87F0B1A4((u8 *)var_v1 + 0x14,
                           (u8 *)var_v0 + 0x48,
                           *(f32 *)((u8 *)var_v0 + 0x48) - 160.0f,
-                          *(s32 *)((u8 *)var_v0 + 0x4C),
+                          *(f32 *)((u8 *)var_v0 + 0x4C),
                           300.0f, 15, 0x2000);
             func_87F0B2F4((u8 *)var_v1 + 0x14,
                           (s16 *)((u8 *)var_v0 + 0x42),
