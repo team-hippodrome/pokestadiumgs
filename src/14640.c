@@ -1857,7 +1857,111 @@ void func_80016B38(Sample **arg0, u32 arg1, SampleBankRelocInfo *arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/14640/func_80016C78.s")
+extern s32 D_800D1300;
+extern void *func_80016500(s32, s32, u32, s32, s32, s32, s32);
+extern OSMesgQueue D_8011E058;
+// Same code as Ocarina of Time / Majora's Mask AudioLoad_RelocateFontAndPreloadSamples, including
+// its two empty ifs on size and on the disk drive medium (3).
+void func_80016C78(s32 fontId, s32 fontData, SampleBankRelocInfo *sampleBankReloc, s32 isAsync) {
+    AudioPreloadReq *preload;
+    AudioPreloadReq *topPreload;
+    Sample *sample;
+    s32 size;
+    s32 nChunks;
+    u8 *sampleRamAddr;
+    s32 preloadInProgress;
+    s32 i;
+
+    preloadInProgress = FALSE;
+    if (gAudioContext.preloadSampleStackTop != 0) {
+        preloadInProgress = TRUE;
+    } else {
+        D_800D1300 = 0;
+    }
+
+    gAudioContext.numUsedSamples = 0;
+    func_800151E0(fontId, (u32 *)fontData, sampleBankReloc);
+
+    size = 0;
+    for (i = 0; i < gAudioContext.numUsedSamples; i++) {
+        size += (gAudioContext.usedSamples[i]->size + 0xF) & ~0xF;
+    }
+    if (size && size) {} // FAKE, as in OoT
+
+    for (i = 0; i < gAudioContext.numUsedSamples; i++) {
+        if (gAudioContext.preloadSampleStackTop == 120) {
+            break;
+        }
+
+        sample = gAudioContext.usedSamples[i];
+        sampleRamAddr = NULL;
+        switch (isAsync) {
+            case FALSE:
+                if (sample->medium == sampleBankReloc->medium1) {
+                    sampleRamAddr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId1,
+                                                        (s32)sample->sampleAddr, sample->medium, 1);
+                } else if (sample->medium == sampleBankReloc->medium2) {
+                    sampleRamAddr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId2,
+                                                        (s32)sample->sampleAddr, sample->medium, 1);
+                } else if (sample->medium == 3) {
+                    sampleRamAddr = (u8 *)func_80012528(sample->size, 0xFE, (s32)sample->sampleAddr,
+                                                        sample->medium, 1);
+                }
+                break;
+
+            case TRUE:
+                if (sample->medium == sampleBankReloc->medium1) {
+                    sampleRamAddr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId1,
+                                                        (s32)sample->sampleAddr, sample->medium, 0);
+                } else if (sample->medium == sampleBankReloc->medium2) {
+                    sampleRamAddr = (u8 *)func_80012528(sample->size, sampleBankReloc->sampleBankId2,
+                                                        (s32)sample->sampleAddr, sample->medium, 0);
+                } else if (sample->medium == 3) {
+                    sampleRamAddr = (u8 *)func_80012528(sample->size, 0xFE, (s32)sample->sampleAddr,
+                                                        sample->medium, 0);
+                }
+                break;
+        }
+        if (sampleRamAddr == NULL) {
+            continue;
+        }
+
+        switch (isAsync) {
+            case FALSE:
+                if (sample->medium == 1) {
+                    func_80015570((s32)sample->sampleAddr, (s32)sampleRamAddr, sample->size,
+                                  gAudioContext.sampleBankTable->unkMediumParam);
+                    sample->sampleAddr = sampleRamAddr;
+                    sample->medium = 0;
+                } else {
+                    func_8001544C((u32)sample->sampleAddr, sampleRamAddr, sample->size, sample->medium);
+                    sample->sampleAddr = sampleRamAddr;
+                    sample->medium = 0;
+                }
+                if (sample->medium == 3) {} // FAKE, as in OoT
+                break;
+
+            case TRUE:
+                preload = &gAudioContext.preloadSampleStack[gAudioContext.preloadSampleStackTop];
+                preload->sample = sample;
+                preload->ramAddr = sampleRamAddr;
+                preload->encodedInfo = (gAudioContext.preloadSampleStackTop << 24) | 0xFFFFFF;
+                preload->isFree = FALSE;
+                preload->endAndMediumKey = (u32)sample->sampleAddr + sample->size + sample->medium;
+                gAudioContext.preloadSampleStackTop++;
+                break;
+        }
+    }
+    gAudioContext.numUsedSamples = 0;
+
+    if (gAudioContext.preloadSampleStackTop != 0 && !preloadInProgress) {
+        topPreload = &gAudioContext.preloadSampleStack[gAudioContext.preloadSampleStackTop - 1];
+        sample = topPreload->sample;
+        nChunks = (sample->size >> 12) + 1;
+        func_80016500((s32)sample->sampleAddr, (s32)topPreload->ramAddr, sample->size, sample->medium, nChunks,
+                      (s32)&D_8011E058, topPreload->encodedInfo);
+    }
+}
 
 
 // Same code as Ocarina of Time AudioLoad_ProcessSamplePreloads (src/code/audio_load.c), with the
