@@ -295,6 +295,13 @@ SECTIONS
     }
     /* Four compacted nonzero values, cleared with the fragment's runtime
      * block after relocation metadata has been consumed. */
+    /* func_882041F0's four-byte function static at 0x88234694, inside
+     * fragment 31's loaded menu data. */
+    .fragment31_menu_bytes_bss 0x88234694 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/31/fragment31_177430.o(.bss)
+    }
+
     .fragment31_collected_values_bss 0x88234761 (NOLOAD) : SUBALIGN(1)
     {
         build/src/fragments/31/fragment31_18E660.o(.bss)
@@ -369,6 +376,8 @@ ASSERT(SIZEOF(.fragment17_scene_record_data) == 32,
 ASSERT(SIZEOF(.fragment17_overlay_header_data) == 16,
        "fragment17 overlay header must retain its compiler section footprint");
 
+ASSERT(SIZEOF(.fragment31_menu_bytes_bss) == 16,
+       "fragment31 menu bytes must retain their compiler section footprint");
 ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
        "fragment31 collected values must retain their compiler section footprint");
 
