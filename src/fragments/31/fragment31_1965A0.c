@@ -203,7 +203,180 @@ void func_882235CC(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1965A0/func_88223850.s")
+
+
+extern Gfx *D_800D0510;
+extern Gfx D_80094DE0[];
+extern Gfx D_80094E38[];
+extern u8 D_88005FA0[];
+extern u8 *D_8800ECFC;
+extern u8 *D_8800ED04;
+extern u8 *D_8800ECC8;
+extern u8 *D_8800687C;
+extern void func_880008B0(s16, s16, s16);
+extern void func_88002BA0(u8, u8, u8);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern void func_88002EC0(s16, s16, u16, u16, u8);
+extern void func_88000C2C(u16, s16, s16, s16, s16, u16, s16, s16, s16, s16);
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern s32 func_8004D334(s32, s32);
+extern void func_8004D40C(s32);
+extern void func_8004D5B8(s32, s32, s32, const char *, ...);
+extern void func_800498C4();
+extern void func_880006BC(u8 *);
+extern void func_800496A4();
+extern void *func_88000510(void *, s8);
+extern void func_880006E0(void *);
+extern s32 func_80063270(u8);
+extern void func_80048E30(void *, s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_80049064(s32, s32, s32, const char *);
+extern void func_8004972C();
+extern void func_800499EC();
+extern void func_8004B314(s32, s32, s32, s32);
+extern void func_8004B2CC(s32, s32, s32, s32, u8, u8, u8, s32);
+#define ST ((u8 *)D_88234850)
+#define F(o, t) (*(t *)(ST + (o)))
+#define SELECTED(i) D_882338E0[F(0xE, s16) + (i)]
+
+void func_88223850(void) {
+    u8 buf[12];
+    u8 i;
+    Gfx *g;
+    s16 y;
+    s16 a1;
+    s16 a3;
+    u8 n;
+    s8 c;
+
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_880008B0(0xB2, 0xB3, 0xE4);
+    n = F(0x26, s16) == 0 ? 9 : 0xA;
+    for (i = 0, y = 0xC0; i < 2; i++, y += 0x26) {
+        g = D_800D0510++;
+        g->words.w1 = 0;
+        g->words.w0 = _SHIFTL(G_RDPPIPESYNC, 24, 8);
+        if (F(0x30, s32) != 0 || i == ((F31SelectionTail *)(ST + 0x34))->current) {
+            g = D_800D0510++;
+            g->words.w1 = (unsigned int)(0x09A909A9);
+            g->words.w0 = _SHIFTL(G_SETFILLCOLOR, 24, 8);
+        } else {
+            g = D_800D0510++;
+            g->words.w1 = (unsigned int)(0x39CF39CF);
+            g->words.w0 = _SHIFTL(G_SETFILLCOLOR, 24, 8);
+        }
+        gDPFillRectangle(D_800D0510++, 185, y, 277, y + 0x19);
+    }
+    y = 0xD1 - F(0x26, s16);
+    for (i = 0; i < n; i++, y += 0x17) {
+        a3 = y;
+        a1 = y + 0x15;
+        if (i == 0) {
+            if (y < 0xD1) {
+                a3 = 0xD1;
+            }
+        } else if (i == 9 && a1 >= 0x19F) {
+            a1 = 0x19E;
+        }
+        gDPPipeSync(D_800D0510++);
+        if ((c = SELECTED(i)) == F(0x36, s8) || c == F(0x37, s8)) {
+            if (F(0x30, s32) != 0) {
+                gDPSetFillColor(D_800D0510++, 0x39D739D7);
+            } else {
+                gDPSetFillColor(D_800D0510++, 0x2AFF2AFF);
+            }
+        } else {
+            if (F(0x30, s32) != 0) {
+                gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+            } else {
+                gDPSetFillColor(D_800D0510++, 0x09A909A9);
+            }
+        }
+        gDPFillRectangle(D_800D0510++, 294, a3, 398, a1);
+        a1++;
+        if (a1 < 0x19F) {
+            gDPPipeSync(D_800D0510++);
+            if (F(0x30, s32) != 0) {
+                gDPSetFillColor(D_800D0510++, 0x63196319);
+            } else {
+                gDPSetFillColor(D_800D0510++, 0x7D3F7D3F);
+            }
+            gDPFillRectangle(D_800D0510++, 294, a1, 398, a1);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_88002BA0(0xFF, 0xFF, 0xFF);
+    func_8004D1FC(D_8800ECFC);
+    func_8004D27C(D_8800ED04, 0x20, 1);
+    func_8004D27C(D_8800ECC8, 0x100, 2);
+    func_88002EC0(0x123, 0xBD, 0x6F, 0xF6, 3);
+    for (i = 0, y = 0xBD; i < 2; i++, y += 0x26) {
+        func_88002EC0(0xB6, y, 0x63, 0x20, 3);
+    }
+    for (i = 0, y = 0x10B; i < 2; i++, y += 0x24) {
+        func_88002EC0(0xBC, y, 0x57, 0x1E, 2);
+    }
+    func_88002EC0(0x126, 0xC0, 0x69, 0x11, 2);
+    func_88002EC0(0x126, 0x19F, 0x69, 0x11, 2);
+    func_88000C2C((F(0xE, s16) == 0 && F(0x26, s16) == 0) ? 0 : 1, 0x141, 0xC4, 0x153, 0xC4,
+                  ((u16)F(0x10, u16) - F(0x12, u8) == F(0xE, s16)) ? 0 : 1, 0x153, 0x1A3, 0x167, 0x1A3);
+    func_80006F70(&D_800D0510, 0x126, 0xD1, 0x69, 0xCE);
+    g = D_800D0510++;
+    g->words.w1 = 0;
+    g->words.w0 = _SHIFTL(G_RDPPIPESYNC, 24, 8);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+    func_8004D334(0xEF, 0);
+    func_8004D40C(1);
+    y = 0xD5 - F(0x26, s16);
+    for (i = 0; i < n; i++, y += 0x17) {
+        func_8004D5B8(0x13C, y, 2, "%d", i - (-1 - F(0xE, s16)));
+    }
+    func_800498C4();
+    func_880006BC(D_88005FA0);
+    func_800496A4(4, 2);
+    y = 0xD4 - F(0x26, s16);
+    for (i = 0; i < n; i++, y += 0x17) {
+        c = SELECTED(i);
+        func_880006E0(func_88000510(buf, c));
+        func_80048E30(D_8800687C, 0x145, y, func_80063270(c), 1);
+    }
+    func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+    func_800496A4(4, 1);
+    func_880006E0(D_88005FA0);
+    func_80048E30(D_8800687C, 0xB2, 0x9D, func_8004C874(0x25, 0x34), 1);
+    func_800496A4(8, 1);
+    y = 0xC3;
+    for (i = 0; i < 2; i++, y += 0x26) {
+        if (((s8 *)(ST + 0x36))[i] == -1) {
+            func_880006E0(D_88005FA0);
+            func_80049064(0xE7, y, 1, func_8004C874(0x25, 0x39));
+        } else {
+            c = ((s8 *)(ST + 0x36))[i];
+            func_880006E0(func_88000510(buf, c));
+            func_80049064(0xE7, y, 1, func_80063270(c));
+        }
+    }
+    func_880006E0(D_88005FA0);
+    for (i = 0, y = 0x110; i < 2; i++, y += 0x24) {
+        func_80049064(0xE7, y, 1, func_8004C874(0x25, i + 0x32));
+        if (func_8821B7C0() == 0) {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0x64);
+        }
+    }
+    func_800499EC();
+    if (F(0x30, s32) != 0) {
+        s16 v = F(0x34, s16);
+        if (v >= 2) {
+            func_8004B314(0xB7, v * 0x24 + 0xBE, 0x61, 0x28);
+        } else {
+            func_8004B314(0xB1, v * 0x26 + 0xB8, 0x6D, 0x2A);
+        }
+    } else {
+        func_8004B314(0x123, F(0x14, s16) - 3, 0x6F, 0x1C);
+        func_8004B2CC(0xB1, F(0x34, s16) * 0x26 + 0xB8, 0x6D, 0x2A, 0x96, 0x96, 0x5A, 0);
+    }
+}
 
 extern void *Util_Malloc(s32);
 extern s32 func_88004804(s32, s32, s16, s16, s32, s32, s32, s32, s32,
