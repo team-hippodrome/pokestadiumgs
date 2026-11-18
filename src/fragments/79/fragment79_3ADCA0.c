@@ -1540,7 +1540,97 @@ void func_841420A4(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_8414216C.s")
+extern s16 D_84186CF4;
+extern void func_8413F858(s16, s16, u16, u16);
+extern s16 D_84186BD0;
+extern s16 D_84186BD4;
+extern s16 D_84186CF0;
+extern s16 D_84186D58;
+extern s16 D_84186D5C;
+extern u16 D_84186BF0;
+extern u8 D_84195218[];
+extern u8 func_8413FD04(u8, u8, u8);
+typedef struct { u8 pad0[0x26]; u16 cur; u16 hp; } Sub58;
+typedef struct { u8 pad0[0x18]; Sub58 s; u8 pad[0x58 - 0x18 - 0x2A]; } Mon58;
+void func_8414216C(u8 *arg0) {
+    u8 side;
+    u16 xoff = 0;
+    u16 s0;
+    u16 a0;
+    s32 yoff = 0;
+    s32 i;
+    Sub58 *m;
+
+    if ((arg0[8] & 1) || (arg0[8] & 2) || (arg0[8] & 0x10)) {
+        return;
+    }
+    side = arg0[1];
+    switch (arg0[0]) {
+    case 1:
+        if (*(u16 *)((D_84195218 + side * 0x18) + 8) > 0) {
+            a0 = (*(f32 *)((D_84195218 + side * 0x18) + 4) > 1.0) ? (s32)(u16)*(f32 *)((D_84195218 + side * 0x18) + 4) : (*(f32 *)((D_84195218 + side * 0x18) + 4) > 0.0) ? 1 : 0;
+            s0 = (u16)((*(f32 *)((D_84195218 + side * 0x18) + 4) * D_84186BF0) / *(u16 *)((D_84195218 + side * 0x18) + 8));
+            if (s0 == 0 && *(f32 *)((D_84195218 + side * 0x18) + 4) != 0.0) {
+                s0++;
+            }
+            func_8413F988(a0, *(u16 *)((D_84195218 + side * 0x18) + 8));
+            func_8413F858(*(s16 *)(arg0 + 0xA) + D_84186BD4, *(s16 *)(arg0 + 0xC) + D_84186BD0, D_84186BF0, s0);
+        }
+        break;
+    case 0xB:
+        yoff = 0x58;
+
+        for (i = 0; i < 3; i++) {
+            a0 = func_8413FD04(side, arg0[2], i);
+            if (a0 == 0xFF) {
+                return;
+            }
+            m = (Sub58 *)(((u8 **)&D_841951F8)[side] + (u32)a0 * yoff + 0x18);
+            if (m->hp > 0) {
+                s0 = (m->cur * D_84186BF0) / m->hp;
+                if (s0 == 0 && m->cur != 0) {
+                    s0++;
+                }
+                func_8413F988(m->cur, m->hp);
+                func_8413F858(*(s16 *)(arg0 + 0x12) + D_84186CF0 + xoff, *(s16 *)(arg0 + 0x14) + D_84186CF4, D_84186BF0, s0);
+            }
+            xoff += 0x43;
+        }
+        break;
+    case 0xC:
+        for (i = 0; i < ((u8 **)&D_841951F8)[side][8]; i++) {
+            m = (Sub58 *)((u8 *)(((Mon58 **)&D_841951F8)[side] + i) + 0x18);
+            if (m->hp > 0) {
+                s0 = (m->cur * D_84186BF0) / m->hp;
+                if (s0 == 0 && m->cur != 0) {
+                    s0++;
+                }
+                func_8413F988(m->cur, m->hp);
+                func_8413F858(*(s16 *)(arg0 + 0x12) + D_84186CF0 + xoff, *(s16 *)(arg0 + 0x14) + D_84186CF4 + (yoff << 0), D_84186BF0, s0);
+            }
+            xoff += 0x43;
+            if (i == 2) {
+                xoff = 0;
+                yoff = 0x2E;
+            }
+        }
+        break;
+    case 0xD:
+        yoff = 0x58;
+
+        m = (Sub58 *)(*(s32 *)(arg0 + 4) * yoff + ((u8 **)&D_841951F8)[side] + 0x18);
+        if (m->hp > 0) {
+            s0 = (m->cur * D_84186BF0) / m->hp;
+            if (s0 == 0 && m->cur != 0) {
+                s0++;
+            }
+            func_8413F988(m->cur, m->hp);
+            func_8413F858(*(s16 *)(arg0 + 0xA) + D_84186D5C, *(s16 *)(arg0 + 0xC) + D_84186D58, D_84186BF0, s0);
+        }
+        break;
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -2807,7 +2897,7 @@ extern void func_84141020(void *);
 extern void func_841410A0(void *);
 extern void func_84141F20(u8 *arg0);
 extern void func_84141768(void *);
-extern void func_8414216C(void *);
+extern void func_8414216C(u8 *);
 extern void func_841420A4(void *);
 extern void func_841427DC(u8 *state);
 extern void func_84142B78(void *);
