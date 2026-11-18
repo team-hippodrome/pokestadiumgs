@@ -670,7 +670,46 @@ void func_823055DC(u8 *arg0) {
 }
 /* mkdraft:func_823055DC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_124E40/func_8230570C.s")
+extern s32 D_82305C64;
+// K&R definition: the second parameter is never read before it is written.
+// It only reuses $a1 as scratch, the way the retail code does for its dead zero.
+void func_8230570C(arg0, var_a1)
+    u8 *arg0;
+    s32 var_a1; // FAKE
+{
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_s6;
+    s32 q;
+    u8 *temp_s2;
+    u8 *var_s0;
+
+    *((s16 *) (arg0 + 6)) = (*((s16 *) (arg0 + 6))) + 1;
+    var_s6 = 1;
+    q = (*(s16 *) (arg0 + 6)) / D_82305C64;
+    var_s2 = -q + 3;
+    q = var_s2; // FAKE: a second def of q stops uopt folding (3 - q) * 0x2F0
+    temp_s2 = (var_s2 * 0x2F0) + arg0 + 8;
+    var_s0 = arg0 + 8; var_s1 = 0; var_a1 = 0; do {
+        if ((var_s0 >= temp_s2) && ((*((s16 *) (var_s0 + 0x2D4))) == 2)) {
+            *((s16 *) (var_s0 + 0x2D4)) = 3;
+            *((s16 *) (var_s0 + 0x2D6)) = 0;
+            func_800226C0(0xB1);
+            var_a1 = var_s1; // FAKE
+        }
+        var_s1 += 0x2F0;
+        if ((*((s16 *) (var_s0 + 0x2D4))) != 0) {
+            var_s6 = 0;
+        }
+        var_s0 += 0x2F0;
+    } while (var_s1 != 0xBC0);
+    if (var_a1 == 2) { // FAKE
+    }
+    if (var_s6 != 0) {
+        *((s16 *) (arg0 + 2)) = 0;
+        *((s16 *) (arg0 + 6)) = 0;
+    }
+}
 
 extern void func_800226C0(s32);
 void func_8230583C(u8 *arg0)
@@ -713,7 +752,7 @@ void func_8230583C(u8 *arg0)
 }
 
 extern void func_823055DC(u8 *);
-extern void func_8230570C(u8 *);
+extern void func_8230570C();
 extern void func_8230583C(u8 *);
 extern u8 D_82306AF8[];
 void func_82305914(void) {
