@@ -2126,14 +2126,16 @@ SECTIONS
         build/asm/us/data/fragments/25/fragment25_header.o(.data);
         fragments_25_fragment25_15A060 = .;
         build/src/fragments/25/fragment25_15A060.o(.data);
-        fragments_25_fragment25_15BBC0 = .;
-        build/src/fragments/25/fragment25_15BBC0.o(.data);
         fragments_25_fragment25_15C920 = .;
         build/src/fragments/25/fragment25_15C920.o(.data);
         fragments_25_fragment25_15CBC0 = .;
         build/src/fragments/25/fragment25_15CBC0.o(.data);
         fragments_25_fragment25_data_data = .;
         build/asm/us/data/fragments/25/fragment25_data.data.o(.data);
+        fragments_25_fragment25_15BBC0 = .;
+        build/src/fragments/25/fragment25_15BBC0.o(.data);
+        _15DE20_data = .;
+        build/asm/us/data/15DE20.data.o(.data);
         fragment25_DATA_END = .;
         fragment25_DATA_SIZE = ABSOLUTE(fragment25_DATA_END - fragment25_DATA_START);
         fragment25_RODATA_START = .;
