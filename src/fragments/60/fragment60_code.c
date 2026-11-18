@@ -40,7 +40,10 @@ typedef struct unk_D_86A443F0 {
     /* 0x0188 */ s32 unk_0188[4]; // func_86A06C3C sets 40 together with unk_0024 = 9
     /* 0x0198 */ char unk_0198[0x14];
     /* 0x01AC */ s32 unk_01AC; // func_86A06D88 clears it
-    /* 0x01B0 */ char unk_01B0[0xC98];
+    /* 0x01B0 */ char unk_01B0[0xC68];
+    /* 0x0E18 */ s32 unk_0E18[4]; // func_86A095A0 draws it in decimal digits at the player's D_86A0F304 position
+    /* 0x0E28 */ s32 unk_0E28[4]; // effect kind 1-4; func_86A095A0 picks the effect colors and texture by it
+    /* 0x0E38 */ s32 unk_0E38[4]; // effect timer; func_86A095A0 draws the effect while nonzero and counts it down
     /* 0x0E48 */ u8 unk_0E48[4][2]; // func_86A0B5CC passes the player's pair to func_8002781C
     /* 0x0E50 */ char unk_0E50[4];
     /* 0x0E54 */ Fragment60Color unk_0E54; // func_86A07334 blends from this color to unk_0E58
@@ -2335,7 +2338,253 @@ void func_86A07334(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A095A0.s")
+extern u8 *D_86A464D8;
+extern s32 D_86A464DC;
+extern u8 *D_86A464E0[10];
+extern u8 *D_86A46508;
+extern u8 *D_86A4650C[7];
+extern u8 *D_86A46520[10];
+extern s32 D_86A0F304[8];
+extern s32 D_86A0F324[4];
+extern s32 D_86A0F334[4];
+extern f32 D_86A0F344[11];
+extern s32 D_86A0F370[4];
+extern s32 D_86A0F380[4];
+extern f32 D_86A0F390[7];
+extern void func_87F0D600(u8 *, s32, s32, s32, f32, f32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+
+// Texture width (u16 at 0) or height (u16 at 2), unscaled.
+#define TEX_WIDTH(tex) ((f32)(u32)((u16 *)(tex))[0])
+#define TEX_HEIGHT(tex) ((f32)(u32)((u16 *)(tex))[1])
+// Rounds half away from zero; the _F64 form compares a double but adds a float half.
+#define ROUND_HALF_AWAY(x) ((x) + (((x) > 0.0f) ? 0.5f : -0.5f))
+#define ROUND_HALF_AWAY_F64(x) ((x) + (((x) > 0.0) ? 0.5f : -0.5f))
+
+// Draws the per-player overlay at the screen x, y pairs in D_86A0F304:
+// - the D_86A464D8 texture at each pair, with a different environment color per player;
+// - for player n, D_86A46470[n] (bit n of byte 0x2182 set, or byte 0x2180 is 4) or
+//   D_86A46480[n] at 0.7 scale, then func_87F0D600 and the D_86A464DC sprite at the same pairs;
+// - D_86A443F0.unk_0E18 in decimal digits, then two effect sprites per player while unk_0E38 is
+//   nonzero, after which every nonzero unk_0E38 is decremented;
+// - unless byte 0x2180 is 4, unk_0000 / D_86A0F8E4 rounded up, in digits at 145, 55.
+void func_86A095A0(void) {
+    s32 i;
+    s32 value;
+    s32 remaining;
+
+    gSPDisplayList(D_800D0510++, D_80094E78);
+    func_8004D1FC(D_86A464D8);
+    gDPSetCombine(D_800D0510++, 0x30B261, 0x5566FF7F);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(D_800D0510++, 0x00, 0x08, 0x58, 0xFF);
+    GfxRect_DrawTextured(D_86A0F304[0] + 26, D_86A0F304[1] - 3, ROUND_HALF_AWAY(TEX_WIDTH(D_86A464D8)),
+                         ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464D8)), 0, 0, 1024, 1024, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(D_800D0510++, 0x0D, 0x38, 0x17, 0xFF);
+    GfxRect_DrawTextured(D_86A0F304[2] + 26, D_86A0F304[3] - 3, ROUND_HALF_AWAY(TEX_WIDTH(D_86A464D8)),
+                         ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464D8)), 0, 0, 1024, 1024, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(D_800D0510++, 0x58, 0x08, 0x08, 0xFF);
+    GfxRect_DrawTextured(D_86A0F304[4] + 26, D_86A0F304[5] - 3, ROUND_HALF_AWAY(TEX_WIDTH(D_86A464D8)),
+                         ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464D8)), 0, 0, 1024, 1024, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(D_800D0510++, 0x68, 0x38, 0x00, 0xFF);
+    GfxRect_DrawTextured(D_86A0F304[6] + 26, D_86A0F304[7] - 3, ROUND_HALF_AWAY(TEX_WIDTH(D_86A464D8)),
+                         ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464D8)), 0, 0, 1024, 1024, 0);
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 1)) {
+        func_8004D1FC(D_86A46470[0]);
+        GfxRect_DrawTextured(D_86A0F304[0], D_86A0F304[1], TEX_SCALED_WIDTH(D_86A46470[0], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46470[0], 0.7f), 0, 0, 1463, 1463, 0);
+    } else {
+        func_8004D1FC(D_86A46480[0]);
+        GfxRect_DrawTextured(D_86A0F304[0], D_86A0F304[1], TEX_SCALED_WIDTH(D_86A46480[0], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46480[0], 0.7f), 0, 0, 1463, 1463, 0);
+    }
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 2)) {
+        func_8004D1FC(D_86A46470[1]);
+        GfxRect_DrawTextured(D_86A0F304[2], D_86A0F304[3], TEX_SCALED_WIDTH(D_86A46470[1], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46470[1], 0.7f), 0, 0, 1463, 1463, 0);
+    } else {
+        func_8004D1FC(D_86A46480[1]);
+        GfxRect_DrawTextured(D_86A0F304[2], D_86A0F304[3], TEX_SCALED_WIDTH(D_86A46480[1], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46480[1], 0.7f), 0, 0, 1463, 1463, 0);
+    }
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 4)) {
+        func_8004D1FC(D_86A46470[2]);
+        GfxRect_DrawTextured(D_86A0F304[4], D_86A0F304[5], TEX_SCALED_WIDTH(D_86A46470[2], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46470[2], 0.7f), 0, 0, 1463, 1463, 0);
+    } else {
+        func_8004D1FC(D_86A46480[2]);
+        GfxRect_DrawTextured(D_86A0F304[4], D_86A0F304[5], TEX_SCALED_WIDTH(D_86A46480[2], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46480[2], 0.7f), 0, 0, 1463, 1463, 0);
+    }
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 4 || ((*(u8 **)(D_86A46548 + 0xC))[0x2182] & 8)) {
+        func_8004D1FC(D_86A46470[3]);
+        GfxRect_DrawTextured(D_86A0F304[6], D_86A0F304[7], TEX_SCALED_WIDTH(D_86A46470[3], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46470[3], 0.7f), 0, 0, 1463, 1463, 0);
+    } else {
+        func_8004D1FC(D_86A46480[3]);
+        GfxRect_DrawTextured(D_86A0F304[6], D_86A0F304[7], TEX_SCALED_WIDTH(D_86A46480[3], 0.7f),
+                             TEX_SCALED_HEIGHT(D_86A46480[3], 0.7f), 0, 0, 1463, 1463, 0);
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_87F0D600(D_86A0F988, 0, D_86A0F304[0], D_86A0F304[1], 0.7f, 0.7f);
+    func_87F0D600(D_86A0F988, 1, D_86A0F304[2], D_86A0F304[3], 0.7f, 0.7f);
+    func_87F0D600(D_86A0F988, 2, D_86A0F304[4], D_86A0F304[5], 0.7f, 0.7f);
+    func_87F0D600(D_86A0F988, 3, D_86A0F304[6], D_86A0F304[7], 0.7f, 0.7f);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D19C(D_86A0F304[0] + 32, D_86A0F304[1], D_86A464DC, 0, 0);
+    func_8004D19C(D_86A0F304[2] + 32, D_86A0F304[3], D_86A464DC, 0, 0);
+    func_8004D19C(D_86A0F304[4] + 32, D_86A0F304[5], D_86A464DC, 0, 0);
+    func_8004D19C(D_86A0F304[6] + 32, D_86A0F304[7], D_86A464DC, 0, 0);
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    gSPDisplayList(D_800D0510++, D_80094E78);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+    gDPSetCombine(D_800D0510++, 0x61FEC3, 0xFFFFF3F9);
+
+    // Each player's unk_0E18 in one or two digits at the player's position.
+    for (i = 0; i < 4; i++) {
+        value = D_86A443F0.unk_0E18[i];
+        if (value >= 10) {
+            func_8004D1FC(D_86A464E0[value / 10]);
+            GfxRect_DrawTextured(D_86A0F304[i * 2] + 29, D_86A0F304[i * 2 + 1] + 10,
+                                 ROUND_HALF_AWAY(TEX_WIDTH(D_86A464E0[value / 10])),
+                                 ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464E0[value / 10])), 0, 0, 1024, 1024, 0);
+            func_8004D1FC(D_86A464E0[value % 10]);
+            GfxRect_DrawTextured(D_86A0F304[i * 2] + 36, D_86A0F304[i * 2 + 1] + 10,
+                                 ROUND_HALF_AWAY(TEX_WIDTH(D_86A464E0[value % 10])),
+                                 ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464E0[value % 10])), 0, 0, 1024, 1024, 0);
+        } else {
+            func_8004D1FC(D_86A464E0[value % 10]);
+            GfxRect_DrawTextured(D_86A0F304[i * 2] + 32, D_86A0F304[i * 2 + 1] + 10,
+                                 TEX_SCALED_WIDTH(D_86A464E0[value % 10], 1.2f),
+                                 ROUND_HALF_AWAY(TEX_HEIGHT(D_86A464E0[value % 10])), 0, 0, 853, 1024, 0);
+        }
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    gSPDisplayList(D_800D0510++, D_80094E78);
+    gDPSetCombine(D_800D0510++, 0x30B261, 0x5566FF7F);
+
+    // First effect sprite: D_86A46508 scaled by D_86A0F344[k], where k comes from 30 - unk_0E38
+    // (values 0-1 map to 9-10, the rest wrap through 0-8), in colors picked by unk_0E28.
+    for (i = 0; i < 4; i++) {
+        if (D_86A443F0.unk_0E38[i] != 0) {
+            switch (D_86A443F0.unk_0E28[i]) {
+            case 1:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0x50, 0x8C, 0xC8, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+                break;
+            case 2:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0x64, 0xAA, 0x00, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+                break;
+            case 3:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0xDC, 0x50, 0xA0, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+                break;
+            case 4:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0xF0, 0xAA, 0x00, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+                break;
+            }
+            {
+                s32 idx;
+
+                idx = 30 - D_86A443F0.unk_0E38[i];
+                if (idx < 2) {
+                    idx = idx + 9;
+                } else {
+                    idx = (idx - 2) % 9;
+                }
+                func_8004D1FC(D_86A46508);
+                GfxRect_DrawTextured(
+                    ROUND_HALF_AWAY(D_86A0F324[i] + (0.72f - D_86A0F344[idx]) * 56.0f / 2.0f),
+                    ROUND_HALF_AWAY(D_86A0F334[i] + (0.72f - D_86A0F344[idx]) * 42.0f / 2.0f),
+                    TEX_SCALED_WIDTH(D_86A46508, D_86A0F344[idx]), TEX_SCALED_HEIGHT(D_86A46508, D_86A0F344[idx]), 0, 0,
+                    ROUND_HALF_AWAY(1024.0f / D_86A0F344[idx]), ROUND_HALF_AWAY(1024.0f / D_86A0F344[idx]), 0);
+            }
+        }
+    }
+
+    // Second effect sprite: D_86A4650C[unk_0E28] scaled by D_86A0F390[30 - unk_0E38], capped at entry 6.
+    for (i = 0; i < 4; i++) {
+        if (D_86A443F0.unk_0E38[i] != 0) {
+            switch (D_86A443F0.unk_0E28[i]) {
+            case 1:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0xDC, 0xE6, 0xFF, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 0x28, 0x32, 0x78, 0xFF);
+                break;
+            case 2:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0xE6, 0xFF, 0xC8, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 0x3C, 0x78, 0x00, 0xFF);
+                break;
+            case 3:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xDC, 0xF0, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 0xC8, 0x1E, 0x50, 0xFF);
+                break;
+            case 4:
+                gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0xC8, 0xFF);
+                gDPSetEnvColor(D_800D0510++, 0xC8, 0x5A, 0x00, 0xFF);
+                break;
+            }
+            {
+                s32 idx;
+
+                idx = 30 - D_86A443F0.unk_0E38[i];
+                if (idx >= 6) {
+                    idx = 6;
+                }
+                func_8004D1FC(D_86A4650C[D_86A443F0.unk_0E28[i]]);
+                GfxRect_DrawTextured(ROUND_HALF_AWAY_F64(D_86A0F370[i] + (0.85 - D_86A0F390[idx]) * 24.0 / 2),
+                                     ROUND_HALF_AWAY_F64(D_86A0F380[i] + (0.85 - D_86A0F390[idx]) * 16.0 / 2),
+                                     TEX_SCALED_WIDTH(D_86A4650C[D_86A443F0.unk_0E28[i]], D_86A0F390[idx]),
+                                     TEX_SCALED_HEIGHT(D_86A4650C[D_86A443F0.unk_0E28[i]], D_86A0F390[idx]), 0, 0,
+                                     ROUND_HALF_AWAY(1024.0f / D_86A0F390[idx]),
+                                     ROUND_HALF_AWAY(1024.0f / D_86A0F390[idx]), 0);
+            }
+        }
+    }
+
+    for (i = 0; i < 4; i++) {
+        if (D_86A443F0.unk_0E38[i] != 0) {
+            D_86A443F0.unk_0E38[i]--;
+        }
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] != 4) {
+        gSPDisplayList(D_800D0510++, D_80094E78);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0x3C, 0x3C, 0x3C, 0xC8);
+        gDPSetEnvColor(D_800D0510++, 0xDC, 0xDC, 0xDC, 0xFF);
+        gDPSetCombine(D_800D0510++, 0x30B261, 0x5566FF7F);
+        remaining = (D_86A443F0.unk_0000 + D_86A0F8E4 - 1) / D_86A0F8E4;
+        if (remaining < 0) {
+            remaining = 0;
+        }
+        if (remaining >= 10) {
+            func_8004D1FC(D_86A46520[remaining / 10]);
+            GfxRect_DrawTextured(145, 55, ROUND_HALF_AWAY(TEX_WIDTH(D_86A46520[remaining / 10])),
+                                 ROUND_HALF_AWAY(TEX_HEIGHT(D_86A46520[remaining / 10])), 0, 0, 1024, 1024, 0);
+            func_8004D1FC(D_86A46520[remaining % 10]);
+            GfxRect_DrawTextured(159, 55, ROUND_HALF_AWAY(TEX_WIDTH(D_86A46520[remaining % 10])),
+                                 ROUND_HALF_AWAY(TEX_HEIGHT(D_86A46520[remaining % 10])), 0, 0, 1024, 1024, 0);
+        } else {
+            func_8004D1FC(D_86A46520[remaining % 10]);
+            GfxRect_DrawTextured(152, 55, TEX_SCALED_WIDTH(D_86A46520[remaining % 10], 1.2f),
+                                 ROUND_HALF_AWAY(TEX_HEIGHT(D_86A46520[remaining % 10])), 0, 0, 853, 1024, 0);
+        }
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+}
 #endif
 
 #ifdef VERSION_US

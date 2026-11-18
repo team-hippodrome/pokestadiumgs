@@ -353,15 +353,184 @@ void func_8130DA04(u8 *arg0, void *arg1) {
 }
 /* mkdraft:func_8130DA04 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_104FC0/func_8130DEB8.s")
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_81605908(s32, s32, s32, s32, s32 *);
+extern void func_81605950(void);
+extern void func_816059CC(s32, s32, s32, s32, s32 *);
+extern s32 *func_80062CE0(u8);
+extern u8 func_80062D98(u8);
+extern void func_81603C84(s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern s32 func_816087C8(u8 *);
+extern void *func_8004B7A4(s32);
+extern s32 func_8130CE3C(u8 *);
+extern u8 func_8006397C(s32);
+extern s32 func_80063270(u8);
+extern u8 func_800639C0(s32);
+extern void func_81607408(void);
+extern void func_8130D4E0(u8 *, s16 *);
+extern void func_8130D6A4(u8 *);
+extern void func_8130DA04(u8 *, void *);
+extern f32 func_8130D340(u8 *, unk_func_8130D45C *);
+extern void func_81606304(s32, s32, s32, s32, s32);
+extern void func_81602DA4(s32);
+extern s32 D_813120C4, D_813120C8, D_813120CC, D_813120D0, D_813120D4;
+extern Gfx D_80094E38[], D_80094F50[];
+extern const s32 D_813127C0[4];
+extern const s32 D_813127D0[];
+void func_8130DEB8(u8 *arg0, void *arg1) {
+    s32 flag;
+    s32 i;
+    s32 x;
+    s32 y;
+    u8 *data;
+    void *lbl;
+    unk_func_8130D45C rect;
+    unk_func_8130D45C rect2;
+    f32 fade;
+    s32 w;
+    s32 xo1;
+    void *lbl2;
+    void *name;
+    s32 xo;
 
-// Data func_8130DEB8 (still assembly) reads; its loop end pointer one past D_813127DC is the
-// linker alias D_813127E0.
-const u8 D_8131279C[4] = { 0 };
-const char D_813127A0[8] = "%s%s";
-const char D_813127A8[8] = "%s%s";
-const char D_813127B0[8] = "%s%s";
-const char D_813127B8[8] = "%s%s";
+    flag = 0;
+    x = *(s16 *)(arg0 + 8);
+    y = *(s16 *)(arg0 + 0xA);
+    data = *(u8 **)(arg0 + 0x6C);
+    fade = 1.0f - func_8130CEF0(arg0, (u8 *)&rect);
+    func_8130D45C(arg0, &rect2, &rect);
+    if (arg0[0x34] == 0) {
+        return;
+    }
+    if (func_81600DA8(arg1, arg0) != 0) {
+        if (*(u8 **)(arg0 + 0x5C) != NULL) {
+            if ((*(u8 **)(arg0 + 0x5C))[0x87] == 1 || (*(u8 **)(arg0 + 0x5C))[0x87] == 2 || (*(u8 **)(arg0 + 0x5C))[0x87] == 3) {
+                flag = 1;
+            }
+        }
+        func_816048E0(rect.unk_00, rect.unk_02, rect.unk_04, rect.unk_06, fade);
+        func_80006F70(&D_800D0510, rect.unk_00 + 8, rect.unk_02 + 8, rect.unk_04 - 0x13, rect.unk_06 - 0x13);
+        if (fade <= 0.1f && data[0] > 0 && data[0] < 0xFC) {
+            func_81605908(x + 0x95, y + 0x74, 0x40, 0x40, &D_813120C4);
+            func_81605950();
+            if (func_8130CE30(arg0)) {
+                func_816059CC(x + 0x192, y + 0x8B, 0x89, 0x33, &D_813120CC);
+            }
+            func_816059CC(x + 0x66, y + 0x24, 0x98, 0x4B, &D_813120C8);
+            func_816059CC(x + 0x103, y + 0x20, 0x83, 0x6C, &D_813120D0);
+            func_816059CC(x + 6, y + 0xA, 0x215, 0x20, &D_813120D4);
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            for (i = 0; i < 4; i++) {
+                xo1 = D_813127C0[i] - 10;
+                if (data[2 + i] <= 0) {
+                    break;
+                }
+                if (i == 0 || i == 3) {
+                    xo1 -= func_80049148(4, 1, (const char *)func_80062CE0(data[2 + i]));
+                }
+                func_81603C84(x + xo1 - 0x17, D_813127D0[i] + y - 2, func_80062D98(data[2 + i]));
+            }
+            gSPDisplayList(D_800D0510++, D_80094F50);
+            func_800498C4();
+            func_800496A4(4, 1);
+            for (i = 0; i < 4; i++) {
+                xo = D_813127C0[i] - 10;
+                if (data[2 + i] <= 0) {
+                    break;
+                }
+                name = func_80062CE0(data[2 + i]);
+                if (i == 0 || i == 3) {
+                    xo -= func_80049148(4, 1, name);
+                }
+                func_81602DA4(func_80062D98(data[2 + i]));
+                func_800495BC(x + xo, D_813127D0[i] + y, name);
+            }
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            func_800496A4(8, 1);
+            func_800495BC(x + 0xE, y + 0xE, "%s%s", data + 0x34, func_816087C8(data));
+            func_800496A4(4, 1);
+            func_800495BC(x + 0x89, y + 0x12, func_8004C874(0xD, 0x15));
+            func_800496A4(8, 1);
+            func_800495BC(x + 0x98, y + 0xE, "%d", data[0x1D]);
+            if (flag == 0) {
+                func_800496A4(4, 1);
+                func_800495BC(x + 0xE2, y + 0x12, "%s%03d", func_8004C874(0xD, 0x11), data[0]);
+                func_800496A4(4, 1);
+                func_800495BC(x + 0x13A, y + 0x12, func_8004B7A4(data[0]));
+            }
+            func_800496A4(4, 0);
+            func_800495BC(x + 0x6E, y + 0x2C, "%s%s", func_8004C874(0xD, 2), func_8004C874(0xD, 0x1C));
+            func_800496A4(8, 1);
+            func_800495BC(x + 0x98, y + 0x28, "%d", *(u16 *)(data + 0x28));
+            if (flag == 0) {
+                func_800496A4(4, 2);
+                func_800495BC(x + 0x10B, y + 0x28, func_8004C874(0xD, 3));
+                func_800495BC(x + 0x10B, y + 0x3B, func_8004C874(0xD, 4));
+                func_800495BC(x + 0x10B, y + 0x4E, func_8004C874(0xD, 6));
+                func_800495BC(x + 0x10B, y + 0x61, func_8004C874(0xD, 7));
+                func_800495BC(x + 0x10B, y + 0x74, func_8004C874(0xD, 5));
+                func_800496A4(4, 1);
+                func_800495F8(x + 0x17E, y + 0x28, 2, "%d", *(u16 *)(data + 0x2A));
+                func_800495F8(x + 0x17E, y + 0x3B, 2, "%d", *(u16 *)(data + 0x2C));
+                func_800495F8(x + 0x17E, y + 0x4E, 2, "%d", *(u16 *)(data + 0x30));
+                func_800495F8(x + 0x17E, y + 0x61, 2, "%d", *(u16 *)(data + 0x32));
+                func_800495F8(x + 0x17E, y + 0x74, 2, "%d", *(u16 *)(data + 0x2E));
+            }
+            if (func_8130CE30(arg0)) {
+                lbl = (void *)func_8004C874(0xD, 8);
+                lbl2 = "";
+                if (arg0[0x39] != 0) {
+                    lbl2 = (void *)func_8004C874(8, arg0[0x39] - 1);
+                }
+                func_800496A4(4, 1);
+                func_800495F8(x + 0x1D9, y + 0x93, 1, lbl);
+                if (func_8130CE3C(arg0)) {
+                    func_8004972C(0x80, 0x80, 0x80, 0xFF);
+                }
+                func_800495F8(x + 0x1D8, y + 0xA5, 1, lbl2);
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            }
+            func_800496A4(4, 2);
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            func_800495BC(x + 0x6E, y + 0x44, "%s%s", func_8004C874(0xD, 0x12), func_8004C874(0xD, 0x16));
+            func_81602DA4(func_8006397C(data[0]));
+            w = func_80049148(4, 2, "%s%s", func_8004C874(0xD, 0x12), func_8004C874(0xD, 0x16));
+            func_800495BC(w + x + 0x6E, y + 0x44, func_80063270(func_8006397C(data[0])));
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            if (func_8006397C(data[0]) != func_800639C0(data[0])) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                func_800495BC(x + 0x6E, y + 0x57, "%s%s", func_8004C874(0xD, 0x13), func_8004C874(0xD, 0x16));
+                func_81602DA4(func_800639C0(data[0]));
+                w = func_80049148(4, 2, "%s%s", func_8004C874(0xD, 0x13), func_8004C874(0xD, 0x16));
+                func_800495BC(w + x + 0x6E, y + 0x57, func_80063270(func_800639C0(data[0])));
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            }
+            func_800499EC();
+        }
+        func_81607408();
+    }
+    if (func_81600DA8(arg1, arg0 + 4) != 0 && fade <= 0.1f) {
+        func_8130D4E0(arg0, (s16 *)&rect2);
+    }
+    if (func_81600DA8(arg1, arg0 + 3) != 0) {
+        func_8130D6A4(arg0);
+    }
+    func_8130DA04(arg0, arg1);
+    if (arg0[0x34] >= 5 && func_81600DA8(arg1, arg0 + 2) != 0) {
+        unk_func_8130D45C rect3;
+        s32 idx = *(s8 *)(arg0 + 0x38);
+        f32 t; // FAKE: the result is unused, but retail's frame has this slot
+        u8 *cnts;
+
+        t = func_8130D340(arg0, &rect3);
+        cnts = data + idx;
+        func_81606304(rect3.unk_00, rect3.unk_02, rect3.unk_04, rect3.unk_06, cnts[2]);
+    }
+}
+
+// Column offsets and row heights func_8130DEB8 walks. D_813127D0 and D_813127DC are one
+// 4-entry table; IDO turns the 4-iteration loops into pointer compares against D_813127E0.
 const s32 D_813127C0[4] = { 179, 254, 230, 155 };
 const s32 D_813127D0[3] = { 116, 140, 164 };
 const s32 D_813127DC[1] = { 140 };

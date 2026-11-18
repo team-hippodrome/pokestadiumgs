@@ -130,12 +130,87 @@ s32 func_8FB001C0(u8 *arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB002BC.s")
+/* Same layout as NameEditTextView below, with the cursor at byte 12 named. */
+typedef struct NameEditBuffer {
+    /* 0x00 */ u8 unk_00[0xC];
+    /* 0x0C */ s16 pos;
+    /* 0x0E */ s8 text[0x12];
+    /* 0x20 */ u16 cap;
+} NameEditBuffer;
+void func_8FB002BC(NameEditBuffer *arg0, u16 arg1) {
+    u16 prev;
+    s32 i;
+    s32 k;
+    s32 lim;
+    s32 j;
+
+    prev = (*(u8 *)&arg0->text[arg0->pos - 2] << 8) | (u8)arg0->text[arg0->pos - 1];
+    switch (arg1) {
+    case 0x212B:
+        if (arg0->pos > 0) {
+            for (i = 0; i < 40; i++) {
+                if (prev == ((u16 *)D_8FB039E8)[i]) {
+                    arg0->text[arg0->pos - 1] += 1;
+                }
+            }
+        }
+        return;
+    case 0x212C:
+        if (arg0->pos > 0) {
+            for (i = 0; i < 10; i++) {
+                if (prev == ((u16 *)D_8FB03A38)[i]) {
+                    arg0->text[arg0->pos - 1] += 2;
+                }
+            }
+        }
+        return;
+    default:
+        if (arg1 >= 0x100) {
+            if (arg0->pos < arg0->cap - 1) {
+                for (k = arg0->cap - 4; k >= arg0->pos; k--) {
+                    arg0->text[k + 2] = arg0->text[k];
+                }
+                arg0->text[arg0->pos] = (arg1 >> 8) & 0xFF;
+                arg0->pos++;
+                arg0->text[arg0->pos] = arg1 & 0xFF;
+                arg0->pos++;
+            }
+        } else {
+            if (arg0->pos < arg0->cap) {
+                for (k = arg0->cap - 3; k >= arg0->pos; k--) {
+                    arg0->text[k + 1] = arg0->text[k];
+                }
+                arg0->text[arg0->pos] = arg1;
+                arg0->pos++;
+            }
+        }
+        break;
+    }
+    lim = arg0->cap;
+    lim--;
+    k = 0;
+    j = 0;
+    if (lim > 0) {
+        if (arg0->text[0] != 0) {
+            do {
+                k += 2;
+                if (arg0->text[j] & 0x80) {
+                    j += 2;
+                } else {
+                    j += 1;
+                }
+            } while (k < lim && arg0->text[j] != 0);
+        }
+    }
+    arg0->text[j] = 0;
+    if (j < arg0->pos) {
+        arg0->pos = j;
+    }
+}
 
 extern s32 D_80087200;
 extern const u8 D_8FB038D8[];
 extern void func_800226C0();
-extern void func_8FB002BC(u8 *, u16);
 // Text starts at byte 14; the capacity halfword follows it at byte 32.
 // func_8FB000D0 loads a name here and func_8FB001C0 copies it back.
 typedef struct NameEditTextView {
@@ -199,7 +274,7 @@ s32 func_8FB005E4(u8 *arg0) {
             }
         }
         if (character != 94) {
-            func_8FB002BC(arg0, character);
+            func_8FB002BC((void *)arg0, character);
         } else {
             result = 1;
         }

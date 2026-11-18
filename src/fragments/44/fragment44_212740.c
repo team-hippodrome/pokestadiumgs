@@ -740,7 +740,7 @@ void func_8AF25DF0(void) {
 /* mkdraft:func_8AF25EA0 begin */
 extern u8 D_8AF3A660;
 extern void func_8AF24628(void);
-extern s32 func_8AF25F40(s32);
+extern s32 func_8AF25F40(s16);
 
 void func_8AF25EA0(void) {
     (*(s16 *)((u8 *)(D_8AF3A3C0) + (0x30))) = 0x36;
@@ -758,9 +758,73 @@ void func_8AF25EA0(void) {
 }
 /* mkdraft:func_8AF25EA0 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_212740/func_8AF25F40.s")
+extern void func_800225C4(s32);
+extern void func_80021ED8(s32);
+extern void func_8AF00130(s32);
 
-s32 func_8AF25F40(s32);
+s32 func_8AF25F40(s16 mode) {
+    struct Panel44 *panel;
+    f32 x;
+    f32 y;
+    f32 scale;
+    f32 tx;
+    f32 ty;
+    // Function-scope statics: retail re-materializes each address per access.
+    static f32 sStepX;
+    static f32 sStepY;
+    static f32 sScaleStep;
+    static s16 sFrame;
+
+    switch (D_8AF3A661) {
+        case 0:
+            panel = &D_8AF3A470;
+            break;
+        case 1:
+            panel = &D_8AF3A4E8;
+            break;
+        case 2:
+            panel = &D_8AF3A560;
+            break;
+    }
+    switch (mode) {
+        case 0:
+            tx = panel->unk_50;
+            ty = panel->unk_54;
+            x = D_8AF3A6E0->unk_08;
+            y = D_8AF3A6E0->unk_0A;
+            scale = 0.1f;
+            sStepX = (tx - x) / 15.0f;
+            sStepY = (ty - y) / 15.0f;
+            panel->unk_48 = x;
+            panel->unk_4C = y;
+            panel->unk_40 = scale;
+            panel->unk_44 = scale;
+            sScaleStep = (1.0f - scale) / 15.0f;
+            sFrame = 0;
+            func_800225C4(0xF);
+            func_8AF00130(0xEC);
+            return 0;
+        case 1:
+            panel->unk_40 += sScaleStep;
+            panel->unk_44 += sScaleStep;
+            panel->unk_48 += sStepX;
+            panel->unk_4C += sStepY;
+            if (sFrame >= 15) {
+                panel->unk_40 = 1.0f;
+                panel->unk_48 = panel->unk_50;
+                panel->unk_44 = 1.0f;
+                panel->unk_4C = panel->unk_54;
+                func_80021ED8(0x49);
+                func_8AF00130(0xED);
+                return -1;
+            }
+            sFrame++;
+            break;
+    }
+    return 0;
+}
+
+s32 func_8AF25F40(s16);
 extern s16 D_8AF3A662;
 extern void *D_8AF3A664;
 
