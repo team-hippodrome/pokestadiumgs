@@ -71,7 +71,15 @@ void func_8AC07378(unk_func_8220B248 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1EC950/func_8AC075A8.s")
+// One particle of an entry: screen position, x/y scale and velocity.
+typedef struct {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 scale_x;
+    /* 0x0C */ f32 scale_y;
+    /* 0x10 */ f32 vel_x;
+    /* 0x14 */ f32 vel_y;
+} Particle_8AC075A8; // size = 0x18
 
 // func_8AC075A8 packs each triple into an RDP color command.
 typedef struct {
@@ -91,10 +99,74 @@ typedef struct {
     unk_func_8AC07AF4_00C unk_0F;
     u8 unk_12[2];
     s32 resource;
-    u8 tail[0x180];
+    Particle_8AC075A8 particles[16];
 } Entry_8AC07A8C;
 extern Entry_8AC07A8C D_8AC099D0[3];
 extern s32 func_8004C990(s32, s32);
+
+// x/y pair view of a particle's scale; func_8AC075A8 reads the scale through it for the size test.
+typedef struct {
+    f32 x;
+    f32 y;
+} Scale_8AC075A8;
+
+extern Gfx *D_800D0510;
+extern u8 D_8AC07DF0[];
+extern s32 func_8004D1FC(u16 *);
+#define ROUND_HALF_43(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+
+// Draws each active entry's 16 particles as textured rectangles sized by the texture's width and
+// height (the resource's first two u16s) times the particle scale.
+void func_8AC075A8(void) {
+    s32 k;
+    s32 j;
+    Entry_8AC07A8C *e;
+    Particle_8AC075A8 *p;
+    u16 *tex;
+    s32 width, height;
+    s16 x, y, dsdx, dtdy, x2, y2;
+    f32 fw, fh;
+    Scale_8AC075A8 *s;
+    unk_func_8AC07AF4_00C *prim;
+    unk_func_8AC07AF4_00C *env;
+
+    e = D_8AC099D0;
+    for (k = 0; k < 3; k++, e++) {
+        if (e->state != 0) {
+            func_8AC07378((unk_func_8220B248 *)e);
+        }
+        if (e->state == 0) {
+            continue;
+        }
+        tex = (u16 *)e->resource;
+        p = e->particles;
+        prim = &e->unk_0C;
+        env = &e->unk_0F;
+        if (tex == NULL) {
+            continue;
+        }
+        gSPDisplayList(D_800D0510++, D_8AC07DF0);
+        gDPSetPrimColor(D_800D0510++, 0, 0, prim->unk_00, prim->unk_01, prim->unk_02, e->unk_08);
+        gDPSetEnvColor(D_800D0510++, env->unk_00, env->unk_01, env->unk_02, 0xFF);
+        func_8004D1FC(tex);
+        for (j = 0; j < 16; j++, p++) {
+            s = (Scale_8AC075A8 *)&p->scale_x;
+            fw = (f32)(u32)tex[0] * p->scale_x;
+            fh = (f32)(u32)tex[1] * p->scale_y;
+            width = (s32)ROUND_HALF_43(fw);
+            height = (s32)ROUND_HALF_43(fh);
+            if (s->x > 0.001f && s->y > 0.001f) {
+                dsdx = (s32)(1024.0f / s->x);
+                dtdy = (s32)(1024.0f / s->y);
+                x = (s32)(p->x - fw / 2);
+                y = (s32)(p->y - fh / 2);
+                x2 = x + width;
+                y2 = y + height;
+                gSPScisTextureRectangle(D_800D0510++, x << 2, y << 2, x2 << 2, y2 << 2, G_TX_RENDERTILE, width, height, dsdx, dtdy);
+            }
+        }
+    }
+}
 
 void func_8AC07A8C(void) {
     Entry_8AC07A8C *entry = D_8AC099D0;
