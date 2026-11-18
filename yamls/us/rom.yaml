@@ -853,6 +853,7 @@
     - [0x14FE20, c,       fragments/24/fragment24_14FE20]
     - [0x150C10, c,       fragments/24/fragment24_150C10]
     - [0x158320, data,    fragments/24/fragment24_data]
+    - [0x158450, .data,   fragments/24/fragment24_150C10] # D_82B08650, func_82B04718 statics, D_82B0865C
     - [0x158470, .rodata, fragments/24/fragment24_14FE20] # Jump tables.
     - [0x158490, .rodata, fragments/24/fragment24_150C10] # D_82B08690, jtbl_82B08698 (+7 more)
     - [0x1585C0, rodata]

@@ -1566,7 +1566,14 @@ void func_82B041C8(s32 arg0, s32 arg1, u8 *arg2, s32 arg3, s32 arg4) {
 #ifdef VERSION_US
 extern Gfx *D_800D0510;
 extern void func_80044270(s16, s16, s16, s16, s32, s32, s32, s32, s32);
-void func_82B042D8(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void func_82B042D8(arg0, arg1, arg2, arg3, arg4, arg5)
+    s16 arg0;
+    s16 arg1;
+    s32 arg2;
+    s32 arg3;
+    s32 arg4;
+    s32 arg5;
+{
     s32 var_a1; Gfx *gfx; s16 *coords;
     gfx = (Gfx *)func_8004C990(0x9A, 0);
     if (gfx != NULL && arg2 != 0) {
@@ -1689,7 +1696,129 @@ void func_82B04624(s32 a0, s32 a1, s32 a2, s32 a3, s32 a4)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B04718.s")
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004C990(s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern f32 D_80087E50[];
+extern u8 D_80094E38[];
+extern void func_8004C54C();
+extern s32 func_8004C8A0(void *, s32, s32, s32);
+extern void func_82B0284C(u8 *, u8 *);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800499EC(void);
+extern s32 func_80064474(s32, s32);
+extern Gfx *D_800D0510;
+extern s16 D_82B085B8[];
+extern s16 D_82B1246E;
+s16 D_82B08650[2] = { 0x1C, 0x1D };
+
+void func_82B04718(arg0)
+    u8 *arg0;
+{
+    static s16 D_82B08654 = 0;
+    static s16 D_82B08658 = 0;
+    s32 sp194;
+    u8 *panel;
+    s16 xy[2];
+    char num[0x14];
+    char buf[0x80];
+    s32 alpha;
+    s32 h[2];
+    f32 f;
+    f32 g;
+    s32 i;
+    u8 *entry;
+    s32 s1;
+    s32 a3;
+    u8 *p;
+    s32 x;
+    s32 y;
+    s32 pad[11];
+
+    panel = arg0 + 0x50;
+#define SINU(x) (D_80087E50[(u16)(x) >> 4] * 0.5f + 0.5f)
+#define RND(x) (s32)((x) + (0.0f < (x) ? 0.5f : -0.5f))
+    alpha = RND(SINU(D_82B08654) * 255.0f);
+    h[1] = RND(SINU(D_82B08658) * 100.0f) + 0x32;
+    h[0] = RND(SINU(D_82B08658) * 205.0f) + 0x32;
+    D_82B08658 += 0x100;
+    D_82B08654 += 0x400;
+    func_82B0284C(arg0, (u8 *)xy);
+    gSPDisplayList(D_800D0510++, D_80094D90);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+    Gfx_FillRectRgb(xy[0] + 0x7D, xy[1] + 7, 1, 0x58, 0, 0, 0);
+    GfxRect_DrawTextured(xy[0] + 0xFD, xy[1] + 7, 1, 0x58, 0, 0, 0, 0, 0);
+    GfxRect_DrawTextured(xy[0] + 0x17D, xy[1] + 7, 1, 0x58, 0, 0, 0, 0, 0);
+    Gfx_FillRectRgb(xy[0] + 0x7E, xy[1] + 7, 1, 0x58, 0xFF, 0xFF, 0xFF);
+    GfxRect_DrawTextured(xy[0] + 0xFE, xy[1] + 7, 1, 0x58, 0, 0, 0, 0, 0);
+    GfxRect_DrawTextured(xy[0] + 0x17E, xy[1] + 7, 1, 0x58, 0, 0, 0, 0, 0);
+    Gfx_FillRectRgb(xy[0] + 0x7F, xy[1] + 0x32, 0x179, 1, 0, 0, 0);
+    Gfx_FillRectRgb(xy[0] + 0x7F, xy[1] + 0x33, 0x179, 1, 0xFF, 0xFF, 0xFF);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0x50, 0xFF);
+    func_8004D19C(xy[0] + 0x19, xy[1] + 0xE, func_8004C990(0x105, 0), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0, 0, 0, 0x78);
+    func_8004D19C(xy[0] + 0x29, xy[1] + 0xE, func_8004C990(0x106, D_82B085B8[*(s16 *)(arg0 + 2)]), 0, 0);
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+    func_8004D19C(xy[0] + 0x26, xy[1] + 0xA, func_8004C990(0x106, D_82B085B8[*(s16 *)(arg0 + 2)]), 0, 0);
+    for (i = 0; i < *(s16 *)(panel + 6); i++) {
+        x = xy[0] + (i % 3) * 0x80 + 0x83;
+        y = xy[1] + (i / 3) * 0x30 + 7;
+        func_82B041C8(x, y,
+                      *(u8 **)(panel + 0xC) != NULL ? *(u8 **)(panel + 0xC) + i * 0xC80 : NULL,
+                      *(s16 *)(panel + 0x10 + i * 2), alpha);
+    }
+    func_8004D1FC((u8 *)func_8004C990(0x9A, 0));
+    for (i = 0; i < *(s16 *)(panel + 6); i++) {
+        entry = *(u8 **)(panel + 8) + i * 0x58;
+        s1 = 1;
+        if (*(u8 **)(panel + 0xC) != NULL) {
+            s1 = entry[1];
+            a3 = func_81601EAC(entry[1], entry[0]);
+        } else {
+            a3 = 1;
+        }
+        if (!(entry[0x1E] & 1)) {
+            func_82B042D8(xy[0] + (i % 3) * 0x80 + 0xE8, xy[1] + (i / 3) * 0x30 + 0x1D, s1, a3,
+                          *(s16 *)(panel + 0x10 + i * 2), alpha);
+        }
+    }
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_8004C54C(0x15, *(s32 *)panel);
+    func_800495F8(xy[0] + 0x40, xy[1] + 0x35, 1, (char *)func_8004C8A0(buf, 0x80, 0x1B, 0x28));
+    func_800496A4(4, -1);
+    sprintf(num, "%05d", *(u16 *)(panel + 4));
+    func_8004C54C(0x16, (s32)num);
+    func_800495F8(xy[0] + 0x40, xy[1] + 0x4D, 1, (char *)func_8004C8A0(buf, 0x80, 0x1B, 0x29));
+    for (i = 0; i < *(s16 *)(panel + 6); i++) {
+        entry = *(u8 **)(panel + 8) + i * 0x58;
+        func_82B04430(xy[0] + (i % 3) * 0x80 + 0xAC, xy[1] + (i / 3) * 0x30 + 9, (s32)(entry + 0x34),
+                      *(s16 *)(panel + 0x10 + i * 2), alpha);
+        if (!(entry[0x1E] & 1)) {
+            func_82B044B8(xy[0] + (i % 3) * 0x80 + 0xAC, xy[1] + (i / 3) * 0x30 + 0x1D, entry[0x1D],
+                          *(s16 *)(panel + 0x10 + i * 2), alpha);
+        }
+        if (*(u8 **)(panel + 0xC) != NULL && !(entry[0x1E] & 1)) {
+            func_82B04558(xy[0] + (i % 3) * 0x80 + 0x9B, xy[1] + (i / 3) * 0x30 + 0x1D,
+                          func_80064474(entry[0], *(u16 *)(entry + 0x16)),
+                          *(s16 *)(panel + 0x10 + i * 2), alpha);
+        }
+    }
+    func_800499EC();
+    if (*(s16 *)(panel + 0x1C) != 0) {
+        p = (u8 *)func_82B011C0(D_82B12458, D_82B1246E);
+        if (p != NULL) {
+            func_82B04624(xy[0] + 0x7D, xy[1] + 3, *(u16 *)(p + 0x38), h[1], h[0]);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1729,7 +1858,7 @@ extern void func_82B0373C(void *);
 extern void func_82B03978(void);
 extern void func_82B03F38();
 extern void func_82B04008();
-extern void func_82B04718(void);
+extern void func_82B04718();
 extern void func_82B050E8(void);
 void func_82B05494(void *arg0, s32 arg1) {
     switch (*(s16 *)arg0) {
@@ -2020,7 +2149,7 @@ void func_82B062BC(void) {
 extern void _bzero(void *, s32);
 extern void *func_8004C874(s32, s32);
 extern void HAL_Strcpy(void *, s32);
-extern s16 D_82B0865C[];
+s16 D_82B0865C[10] = { 0x1E, 0x2D, 0x3C, 0x4B, 0, 0, 0, 0, 0, 0 };
 void func_82B062F8(void *arg0, s32 arg1) {
     _bzero(arg0, 0x58);
     if (arg1 < 4) {
