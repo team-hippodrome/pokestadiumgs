@@ -275,7 +275,52 @@ s32 func_800275E8(u8 arg0, Candidate275E8Bits *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/27590/func_80027634.s")
+// Consumes the pending mode request and advances a timed sequence of command 0x49 values.
+// A call without a request resets the elapsed ticks and signed command value.
+void func_80027634(void) {
+    static u16 sAudioRequestTicks = 0;
+    static s8 sAudioRequestValue = 0;
+    s32 divisor;
+    u16 interval;
+
+    if (D_80090BB4 != 0) {
+        D_80090BB4--;
+        switch (D_80090BB4) {
+        case 4:
+            divisor = 15;
+            break;
+        case 6:
+            divisor = 18;
+            break;
+        case 11:
+            divisor = 30;
+            break;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        default:
+            divisor = 80;
+            break;
+        }
+        if (sAudioRequestTicks < 450) {
+            interval = 450 / divisor;
+            if (sAudioRequestTicks % interval == 0) {
+                func_80018728(0x49000000, ++sAudioRequestValue);
+            }
+            sAudioRequestTicks++;
+        }
+    } else {
+        sAudioRequestTicks = 0;
+        sAudioRequestValue = 0;
+    }
+    D_80090BB4 = 0;
+}
 
 void func_80027774(u16 arg0, u8 arg1) {
     ResourceContext_80027774 context;
