@@ -328,7 +328,118 @@ s32 func_81307600(void *arg0p, s32 arg1)
 }
 /* mkdraft:func_81307600 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130785C.s")
+extern s32 Deck_ReadEntries(u8 *buffer, s32 remaining, u8 *handle);
+extern s32 func_8005CB38(s32 arg0, s32 arg1);
+extern u8 *func_8006218C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern s32 func_80062304(u8 *arg0);
+extern s32 func_8006236C(u8 *, s32);
+extern void func_800619E8(u8 *);
+extern void func_80061F44(u8 *);
+extern void func_80071E48(u8 *, u8 *);
+extern void func_8004D878(u8 *, s32, u8 *);
+typedef struct F8130785C_Record {
+    u8 count;
+    u8 unk_01;
+    u8 pad[2];
+    u8 *items[5];
+} F8130785C_Record;
+typedef struct F8130785C_State {
+    u8 unk_00000[8];
+    F8130785C_Record records[16];
+} F8130785C_State;
+typedef struct F8130785C_Tail {
+    u8 unk_0000[0x37AC];
+    u8 *unk_137AC;
+    u8 *unk_137B0;
+    u8 unk_137B4[0x37F4 - 0x37B4];
+    u8 unk_137F4;
+    u8 unk_137F5[3];
+    s8 unk_137F8;
+    u8 unk_137F9[2];
+    u8 unk_137FB;
+} F8130785C_Tail;
+typedef struct F8130785C_Flags { u32 pad:5; u32 bit26:1; u32 rest:26; } F8130785C_Flags;
+#define ST ((F8130785C_Tail *)((u8 *)arg0 + 0x10000))
+#define ENTRY(n) (((u8 (*)[0xCE8])arg1)[n])
+
+s32 func_8130785C(void *arg0, void *arg1, s32 arg2) {
+    s32 k;
+    s32 idx;
+    u8 *deck;
+    s32 count;
+    u8 buf[8];
+    F8130785C_Record *record;
+    F8130785C_Record *rec2;
+    s32 i;
+
+    *(s16 *)((u8 *)arg1 + 0x33A8) = ST->unk_137F8;
+    *(s16 *)((u8 *)arg1 + 0x33AA) = ST->unk_137F4;
+    count = 0;
+    for (i = 0; i < 4; i++) {
+        ENTRY(i)[0] = 0;
+        *(s32 *)(ENTRY(i) + 0x58) = 0;
+    }
+    if (ST->unk_137F4 < ST->unk_137FB) {
+        record = &((F8130785C_State *)arg0)->records[ST->unk_137F4];
+        if (ST->unk_137F8 < 4 && ST->unk_137F8 >= 0 && func_8005CB38(ST->unk_137F8, 0x21) >= ST->unk_137F4) {
+            if (ST->unk_137F4 == 0) {
+                deck = func_8006218C(0x20, ST->unk_137F8, 0, 0);
+            } else {
+                deck = func_8006218C(0x21, ST->unk_137F8, ST->unk_137F4 - 1, 0);
+            }
+            if (deck != NULL) {
+                i = arg2 * 4;
+                for (k = 0; k != 4; k++) {
+                    if (i < record->count) {
+                        idx = func_81306EE0(arg0, ST->unk_137F4);
+                        buf[count] = record->items[idx][i];
+                        if (func_8006236C(deck, buf[count]) != 0) {
+                            count += Deck_ReadEntries(ENTRY(k), 1, deck);
+                            if (ST->unk_137F4 == 0) {
+                                func_800619E8(ENTRY(k));
+                            }
+                            func_80061F44(ENTRY(k));
+                        }
+                        i++;
+                    }
+                }
+                func_80062304(deck);
+            }
+        }
+    } else if (ST->unk_137B0 != NULL) {
+        rec2 = &((F8130785C_State *)arg0)->records[ST->unk_137FB];
+        i = arg2 * 4;
+        for (k = 0; k != 4; k++) {
+            if (i < ST->unk_137B0[0]) {
+                idx = func_81306EE0(arg0, ST->unk_137F4);
+                buf[count] = rec2->items[idx][i];
+                func_80071E48(ENTRY(count), ((u8 (*)[0x18])ST->unk_137B0)[buf[count]] + 4);
+                i++;
+                ENTRY(count)[0x1E] |= 4;
+                count++;
+            }
+        }
+    }
+    for (i = 0; i < count; i++) {
+        func_8004D878(ENTRY(i) + 0x60, 0, ENTRY(i));
+        if (ST->unk_137F4 >= ST->unk_137FB) {
+            ENTRY(i)[0x58] = 5;
+        } else {
+            ENTRY(i)[0x58] = ST->unk_137F8 + 1;
+        }
+        ENTRY(i)[0x5A] = buf[i];
+        ENTRY(i)[0x59] = ST->unk_137F4;
+        ENTRY(i)[0x5B] = ENTRY(i)[0];
+    }
+    if (!((F8130785C_Flags *)(*(u8 **)(*(u8 **)(ST->unk_137AC + 0x1A148) + 0x940) + 0x40))->bit26) {
+        for (i = 0; i < count; i++) {
+            ENTRY(i)[1] = 0;
+        }
+    }
+    return count;
+}
+#undef ST
+#undef ENTRY
 
 extern s32 func_8130785C(void *, void *, s32);
 void func_81307C94(void *arg0) {
