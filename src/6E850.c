@@ -810,7 +810,7 @@ void func_8006F23C(void *arg0) {
 #ifdef VERSION_US
 extern void func_8006EFF0(f32 *, f32 *, f32, f32, f32);
 extern f32 func_8006EF04(f32 *arg0, f32 *arg1);
-void func_8006F438(void *arg0, u8 *arg1, f32 arg2, f32 arg3)
+void func_8006F438(void *arg0, u8 *arg1, void *arg2, f32 arg3)
 {
   u8 *record;
   u8 *item;
@@ -865,7 +865,7 @@ void func_8006F438(void *arg0, u8 *arg1, f32 arg2, f32 arg3)
 #ifdef VERSION_US
 extern void func_8006F0A8(f32 *, f32 *, f32, f32, f32);
 extern f32 func_8006EF04(f32 *arg0, f32 *arg1);
-void func_8006F548(void *arg0, u8 *arg1, f32 arg2, f32 arg3)
+void func_8006F548(void *arg0, u8 *arg1, void *arg2, f32 arg3)
 {
   u8 *record;
   u8 *item;
@@ -986,7 +986,7 @@ void Model_OffsetVertexHeightsByClass(u8 *arg0, u8 *arg1, f32 arg2) {
 #endif
 
 #ifdef VERSION_US
-void func_8006F83C(u8 *arg0, u8 *arg1, f32 arg2, BlendWeight1F arg3)
+void func_8006F83C(u8 *arg0, u8 *arg1, f32 arg2, void *arg3)
 {
   s16 *classes;
   s16 *indices;
@@ -1124,7 +1124,112 @@ void func_8006F9B0(ModelSegmentAnimDesc *segment, ModelAnimVertex *vertices) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006FBC4.s")
+void func_8006FBC4(void *arg0, f32 (*arg1)[4]) {
+    ModelSegmentAnimDesc *segment;
+    s32 pad; // FAKE: preserves the original stack layout.
+    s32 count;
+    s32 i;
+    s32 target;
+    s16 *remap;
+    s16 *cursor;
+
+    segment = (ModelSegmentAnimDesc *)Memmap_GetSegmentVaddr(*(u32 *)((u8 *)arg0 + 4));
+    count = *(u16 *)((u8 *)segment + 4);
+    switch (*(u16 *)segment) {
+    case 3:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F658((u8 *)segment, (u8 *)((u8 *)arg0 + 0x40), -10.0f);
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F438(segment, (u8 *)((u8 *)arg0 + 0x40), arg0, 0.7f);
+        break;
+    case 4:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F658((u8 *)segment, (u8 *)((u8 *)arg0 + 0x40), -10.0f);
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        break;
+    case 13:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        break;
+    case 12:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F658((u8 *)segment, (u8 *)((u8 *)arg0 + 0x40), -10.0f);
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F438(segment, (u8 *)((u8 *)arg0 + 0x40), arg0, 0.7f);
+        break;
+    case 14:
+        func_8006ED10(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F438(segment, (u8 *)((u8 *)arg0 + 0x40), arg0, 0.7f);
+        break;
+    case 10:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        Model_OffsetVertexHeightsByClass((u8 *)segment, (u8 *)((u8 *)arg0 + 0x40), 160.0f);
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F548(segment, (u8 *)((u8 *)arg0 + 0x40), arg0, 1.0f);
+        break;
+    case 11:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F83C((u8 *)segment, (u8 *)((u8 *)arg0 + 0x40), 160.0f, arg0);
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F548(segment, (u8 *)((u8 *)arg0 + 0x40), arg0, 1.0f);
+        break;
+    case 1:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        break;
+    case 2:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F658((u8 *)segment, (u8 *)((u8 *)arg0 + 0x40), -10.0f);
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        break;
+    case 5:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        break;
+    case 6:
+        func_8006EB54(segment, arg1, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006E2F8(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        func_8006F9B0(segment, (ModelAnimVertex *)((u8 *)arg0 + 0x40));
+        break;
+    default:
+        return;
+    }
+
+    remap = (s16 *)Memmap_GetSegmentVaddr(segment->remapSegment);
+    if (count > 0) {
+        ModelAnimVertex *v = (ModelAnimVertex *)((u8 *)arg0 + 0x40);
+        ModelAnimVertex *src;
+        ModelAnimVertex *dst;
+        cursor = remap;
+        i = 0;
+    loop:
+        target = *cursor;
+        if (target != i) {
+            src = target + v;
+            dst = i + v;
+            dst->position.base.x = src->position.base.x;
+            dst->position.base.y = src->position.base.y;
+            dst->position.base.z = src->position.base.z;
+            dst->position.color.x = src->position.color.x;
+            dst->position.color.y = src->position.color.y;
+            dst->position.color.z = src->position.color.z;
+            dst->position.unk_30[4] = src->position.unk_30[4];
+        }
+        i++;
+        cursor++;
+        if (i != count) {
+            goto loop;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
