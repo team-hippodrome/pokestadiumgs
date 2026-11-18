@@ -1,5 +1,18 @@
 #include "global.h"
+#ifndef FRAGMENT46_LOOKUP_ENTRY_DEFINED
+#define FRAGMENT46_LOOKUP_ENTRY_DEFINED
+typedef struct { s16 key; u8 pad2[2]; s32 value; u8 pad8[8]; } Fragment46LookupEntry;
+#endif
+extern u16 D_8AE08506;
+extern f32 D_80087E50[], D_80088E50[];
+extern Gfx D_8AE07330[], D_8AE07368[], D_8AE07380[], D_8AE07398[], D_8AE073F0[], D_8AE07460[], D_8AE07478[], D_8AE07590[], D_8AE075D0[], D_8AE075E0[];
+extern Vtx D_8AE07490[], D_8AE07510[];
+extern s32 D_8AE098EC, D_8AE098F0;
 #include "controller.h"
+extern Gfx *D_800D0510;
+extern u8 D_8AE071E8[], D_8AE07228[];
+extern s32 D_8AE09918, D_8AE09900, D_8AE09908, D_8AE09910, D_8AE09914;
+extern s32 func_8004D1FC(u8 *);
 
 
 #ifdef VERSION_US
@@ -149,11 +162,75 @@ void func_8AE0043C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE004C0.s")
+void func_8AE004C0(Fragment46LookupEntry *arg0, Mtx *arg1, Mtx *arg2, u8 arg3) {
+ s32 i;
+ u8 *texture_start;
+ Mtx translation;
+ Mtx scale_mtx;
+ f32 scale;
+ f32 selected_scale;
+ s32 angle;
+ s16 (*position)[3];
+ angle = (u16)(D_8AE08506 * 2000);
+ if (D_8AE084EC == 1) {
+  scale = 3.0f;
+  selected_scale = 5.0f;
+ } else {
+  scale = D_80087E50[(u16)angle >> 4] * 0.5f + 3.0f;
+  selected_scale = D_80088E50[(u16)angle >> 4] + 5.0f;
+ }
+ texture_start = (u8 *)D_8AE0A164;
+ if (arg0->key == D_8AE084E0) {
+ guScale(&scale_mtx, selected_scale, selected_scale, selected_scale);
+ position = (s16 (*)[3])arg0->pad8;
+ } else {
+ guScale(&scale_mtx,scale,scale,scale);
+ position = (s16 (*)[3])arg0->pad8;
+ }
+ guTranslate(&translation,(*position)[0],(*position)[2],-(*position)[1]);
+ guMtxCatL(&scale_mtx,&translation,&translation);
+ guMtxCatL(arg2,&translation,arg1);
+ gSPDisplayList(D_800D0510++,D_8AE073F0);
+ gDPSetPrimColor(D_800D0510++,255,255,255,255,255,arg3);
+ gSPMatrix(D_800D0510++,arg1,G_MTX_MODELVIEW|G_MTX_LOAD|G_MTX_PUSH);
+ gSPDisplayList(D_800D0510++,D_8AE07460);
+ gSPPopMatrix(D_800D0510++,G_MTX_MODELVIEW);
+ gSPDisplayList(D_800D0510++,D_8AE07478);
+ gSPDisplayList(D_800D0510++,D_8AE07590);
+ gDPSetPrimColor(D_800D0510++,255,255,255,255,255,arg3);
+ i = 0;
+ do {
+  gDPLoadTextureTile(D_800D0510++,texture_start + i * 1600,G_IM_FMT_RGBA,G_IM_SIZ_16b,40,20,0,0,39,19,0,G_TX_CLAMP|G_TX_MIRROR,G_TX_CLAMP|G_TX_MIRROR,6,5,0,0);
+  gDPPipeSync(D_800D0510++);
+  gSPMatrix(D_800D0510++,arg1,G_MTX_MODELVIEW|G_MTX_LOAD|G_MTX_PUSH);
+  gSPVertex(D_800D0510++,D_8AE07490 + i * 4,4,0);
+  i++;
+  gSPDisplayList(D_800D0510++,D_8AE075D0);
+  gSPPopMatrix(D_800D0510++,G_MTX_MODELVIEW);
+ } while (i < 2);
+ gSPDisplayList(D_800D0510++,D_8AE075E0);
+ if (arg0->value == 8) { gDPSetPrimColor(D_800D0510++,255,255,0,128,255,arg3); }
+ else if (arg0->value & 0x18) {
+  if (!(arg0->value & 0xE7)) { gDPSetPrimColor(D_800D0510++,255,255,0,128,255,arg3); }
+  else { gDPSetPrimColor(D_800D0510++,255,255,200,50,200,arg3); }
+ } else { gDPSetPrimColor(D_800D0510++,255,255,255,100,100,arg3); }
+ gSPDisplayList(D_800D0510++,D_8AE07330);
+ gSPMatrix(D_800D0510++,arg1,G_MTX_MODELVIEW|G_MTX_LOAD|G_MTX_PUSH);
+ func_8004D1FC((u8 *)D_8AE098EC);
+ gSPDisplayList(D_800D0510++,D_8AE07368);
+ gDPSetPrimColor(D_800D0510++,255,255,255,255,255,arg3);
+ func_8004D1FC((u8 *)D_8AE098F0);
+ gSPDisplayList(D_800D0510++,D_8AE07380);
+ gSPPopMatrix(D_800D0510++,G_MTX_MODELVIEW);
+ gSPDisplayList(D_800D0510++,D_8AE07398);
+}
 #endif
 
 #ifdef VERSION_US
+#ifndef FRAGMENT46_LOOKUP_ENTRY_DEFINED
+#define FRAGMENT46_LOOKUP_ENTRY_DEFINED
 typedef struct { s16 key; u8 pad2[2]; s32 value; u8 pad8[8]; } Fragment46LookupEntry;
+#endif
 extern Fragment46LookupEntry D_8AE08508[];
 extern s32 D_8AE0A158;
 extern Mtx *D_8AE084DC;

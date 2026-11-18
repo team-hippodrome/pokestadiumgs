@@ -184,7 +184,49 @@ u8 BattleMoveState_FindStrongestMove(u8 side, u8 category) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C50B0/func_84155F28.s")
+extern u8 *func_8414A3A0(u8);
+
+extern u32 Pokemon_CalculateStat(s32, s32, u16, u16, u16);
+
+extern void func_84155F28(u8, u8);
+
+void func_84155F28(u8 arg0, u8 arg1) {
+    MoveStatRecord *record;
+    u8 *context;
+    s32 i;
+    u8 *party;
+    context = func_8414A3A0(1 - arg0);
+    party = D_841951F8[arg0] + arg1 * 88 + 24;
+    if (party[0] == 202) {
+        record = &((MoveStatSide *)D_8419EE00)[arg0].records[arg1];
+        for (i = 0; i < 4; i++) {
+            record->moves[i] = party[i + 2];
+        }
+        record->flags |= 0x1E;
+    } else if (*(u32 *)context & 0x8000) {
+        record = &((MoveStatSide *)D_8419EE00)[arg0].records[arg1];
+        for (i = 0; i < 4; i++) {
+            record->moves[i] = (i == 0 ? (record->flags |= 2, party[i + 2]) : party[i + 2]);
+        }
+    } else {
+        record = &((MoveStatSide *)D_8419EE00)[arg0].records[arg1];
+        i = 0;
+        do {
+            record->moves[i] = 255;
+            i++;
+        } while (i < 4);
+    }
+    for (i = 0; i < 6; i++) {
+        record->unk_05[i] = 0;
+    }
+    record->unk_0B = party[1] ? 255 : 0;
+    record->unk_0C[0] = 70;
+    record->attack = Pokemon_CalculateStat(1, party[0], ((0U - context[4]) << 8) + 0xFF00, party[29], *(u16 *)(party + 22));
+    record->defense = Pokemon_CalculateStat(2, party[0], ((0U - context[4]) << 8) + 0xFF00, party[29], *(u16 *)(party + 22));
+    record->speed = *(u16 *)(party + 46);
+    record->special_attack = Pokemon_CalculateStat(4, party[0], ((0U - context[4]) << 8) + 0xFF00, party[29], *(u16 *)(party + 22));
+    record->special_defense = Pokemon_CalculateStat(5, party[0], ((0U - context[4]) << 8) + 0xFF00, party[29], *(u16 *)(party + 22));
+}
 #endif
 
 #ifdef VERSION_US
