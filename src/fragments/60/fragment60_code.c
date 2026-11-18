@@ -53,7 +53,8 @@ typedef struct unk_D_86A443F0 {
     /* 0x0E64 */ s16 unk_0E64[4]; // func_86A06400 stores the heading from MathUtil_Atan2s
     /* 0x0E6C */ char unk_0E6C[8];
     /* 0x0E74 */ s16 unk_0E74[4]; // func_86A0638C stores the heading from MathUtil_Atan2s
-    /* 0x0E7C */ char unk_0E7C[0x44];
+    /* 0x0E7C */ char unk_0E7C[8];
+    /* 0x0E84 */ f32 unk_0E84[3][5]; // x, z, vx, vz, pad; func_86A0C9B4 copies x/z into unk_16A8 and steps x by vx
     /* 0x0EC0 */ s32 unk_0EC0; // number of unk_16A8 entries CollisionBounds_ContainsPoint (asm) tests; func_86A06D88 clears it
     /* 0x0EC4 */ char unk_0EC4[0x7BC];
     /* 0x1680 */ s32 unk_1680; // func_86A06D88 clears it
@@ -3004,7 +3005,109 @@ void func_86A0C9AC(u8 *arg0) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A0C9B4.s")
+// Marches nine directions from the player's position while the unk_0E84 entries move, dropping a
+// direction once it hits CollisionBounds_ContainsPoint. Returns the first direction still clear.
+// lane is only set for arg1 == 0 or 1; retail reads it uninitialised for other values.
+s32 func_86A0C9B4(s32 arg0, s32 arg1) {
+    f32 x;
+    f32 z;
+    s32 alive[9];
+    s32 saved[9];
+    s32 lane;
+    f32 dirs[9][2];
+    f32 tz;
+    f32 tx;
+    s32 i;
+    s32 step;
+
+    if (D_86A443F0.position[arg0][0] > 0.0f) {
+        if (arg1 == 1) {
+            lane = 0;
+        }
+        if (arg1 == 0) {
+            lane = 2;
+        }
+    } else {
+        if (arg1 == 1) {
+            lane = 1;
+        }
+        if (arg1 == 0) {
+            lane = 3;
+        }
+    }
+    for (i = 0; i < 9; i++) {
+        saved[i] = 1;
+        alive[i] = 1;
+        func_86A0CED8(&tx, &tz, ((f32 (*)[9][2])D_86A0F004)[lane][i][0], ((f32 (*)[9][2])D_86A0F004)[lane][i][1]);
+        if (D_86A443F0.unk_00D8[arg0] > 5.0f) {
+            dirs[i][0] = 2 * tx * 0.015625;
+            dirs[i][1] = -(2 * tz * 0.015625);
+        } else {
+            dirs[i][0] = (7.0f - D_86A443F0.unk_00D8[arg0]) * tx * 0.015625;
+            dirs[i][1] = -((7.0f - D_86A443F0.unk_00D8[arg0]) * tz * 0.015625);
+        }
+    }
+    for (i = 0; i < D_86A443F0.unk_0EC0; i++) {
+        D_86A443F0.unk_16A8[i][0] = D_86A443F0.unk_0E84[i][0];
+        D_86A443F0.unk_16A8[i][1] = D_86A443F0.unk_0E84[i][1];
+    }
+    for (step = 0; step < D_86A443F0.unk_16A4; step++) {
+        if (alive[0] + alive[1] + alive[2] + alive[3] + alive[4] + alive[5] + alive[6] + alive[7] + alive[8] == 0) {
+            break;
+        }
+        for (i = 0; i < 9; i++) {
+            saved[i] = alive[i];
+        }
+        for (i = 0; i < D_86A443F0.unk_0EC0; i++) {
+            D_86A443F0.unk_16A8[i][0] += D_86A443F0.unk_0E84[i][2];
+        }
+        for (i = 0; i < 9; i++) {
+            if (alive[i] == 0) {
+                continue;
+            }
+            x = D_86A443F0.position[arg0][0] + dirs[i][0] * (step + 1);
+            z = D_86A443F0.position[arg0][1] + dirs[i][1] * (step + 1);
+            if (x < -170.0f) {
+                x = -170.0f;
+            }
+            if (170.0f < x) {
+                x = 170.0f;
+            }
+            if (z < -150.0f) {
+                if (arg1 == 1) {
+                    break;
+                }
+                if (arg1 == 0) {
+                    continue;
+                }
+                z = -150.0f;
+            }
+            if (125.0f < z) {
+                if (arg1 == 0) {
+                    break;
+                }
+                if (arg1 == 1) {
+                    continue;
+                }
+                z = 125.0f;
+            }
+            if (CollisionBounds_ContainsPoint(x, z)) {
+                alive[i] = 0;
+            }
+        }
+    }
+    if (alive[0] + alive[1] + alive[2] + alive[3] + alive[4] + alive[5] + alive[6] + alive[7] + alive[8] == 0) {
+        for (i = 0; i < 9; i++) {
+            alive[i] = saved[i];
+        }
+    }
+    for (i = 0; i < 9; i++) {
+        if (alive[i] != 0) {
+            return i;
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
