@@ -446,7 +446,121 @@ u8 func_8AF0C96C(u8 *arg0) {
     return minimum;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F9DB0/func_8AF0CA00.s")
+typedef struct { s32 w[5]; } Slot_8AF0CA00;
+extern u8 func_8006397C(u8);
+extern u8 func_800639C0(u8);
+extern u8 *func_80064800(u8);
+extern s16 D_8AF2ED00;
+extern s16 D_8AF2ED02;
+extern u8 *D_8AF2D594;
+extern u8 *D_8AF2E888;
+extern s16 D_8AF2E89C;
+void func_8AF0CA00(s16 arg0) {
+    s32 i;
+    s32 j;
+    u8 b0, b1;
+    u8 sp8D;
+    u8 sp8C;
+    Slot_8AF0CA00 *s5;
+    Slot_8AF0CA00 *s0;
+    Slot_8AF0CA00 tmp;
+    u8 min;
+    u8 v;
+    u8 flag = 0xF;
+    if (func_8AF00020() == 0) {
+        flag = 7;
+    }
+    D_8AF2ED00 = func_8006397C(arg0);
+    D_8AF2ED02 = func_800639C0(arg0);
+    D_8AF2D594 = func_80064800(arg0);
+    _bzero((s32 *)D_8AF2D5C8, 0x190);
+    D_8AF2E89C = 0;
+    while (1) {
+        b0 = D_8AF2D594[0];
+        b1 = D_8AF2D594[1];
+        sp8D = D_8AF2D594[2];
+        if (b0 == 0) {
+            break;
+        }
+        sp8C = func_80062D98(b1);
+        D_8AF2E888 = D_8AF2D5C8;
+        for (i = 0; i < 0x14; i++, D_8AF2E888 += 0x14) {
+            if (b1 == D_8AF2E888[0] || D_8AF2E888[0] == 0) {
+                if (sp8D & flag) {
+                    if (D_8AF2E888[0] == 0) {
+                        D_8AF2E89C++;
+                        D_8AF2E888[0] = b1;
+                        D_8AF2E888[5] = func_8AF01530(sp8C);
+                        *(s32 *)(D_8AF2E888 + 0xC) = (s32)func_8004C874(6, b1 - 1);
+                        if (func_8AF0BB40((s16)b1) != 0) {
+                            if (sp8C == D_8AF2ED00 || sp8C == D_8AF2ED02) {
+                                D_8AF2E888[0xA] = 1;
+                            }
+                        }
+                        if (sp8D & 1) {
+                            D_8AF2E888[1] = b0;
+                        }
+                        if (sp8D & 2) {
+                            D_8AF2E888[2] = b0;
+                        }
+                        if (sp8D & 4) {
+                            D_8AF2E888[3] = b0;
+                        }
+                        if (sp8D & 8) {
+                            if (func_8AF00020() != 0) {
+                                D_8AF2E888[4] = b0;
+                            }
+                        }
+                    } else if (b1 == D_8AF2E888[0]) {
+                        if (arg0 == 0xEB) {
+                            D_8AF2E89C++;
+                            D_8AF2E888 += 0x14;
+                            while (1) {
+                                if (D_8AF2E888[0] == 0) {
+                                    break;
+                                }
+                                D_8AF2E888 += 0x14;
+                            }
+                            D_8AF2E888[0] = b1;
+                            D_8AF2E888[5] = func_8AF01530(sp8C);
+                            *(s32 *)(D_8AF2E888 + 0xC) = (s32)func_8004C874(6, b1 - 1);
+                        }
+                        if (sp8D & 1) {
+                            D_8AF2E888[1] = b0;
+                        }
+                        if (sp8D & 2) {
+                            D_8AF2E888[2] = b0;
+                        }
+                        if (sp8D & 4) {
+                            D_8AF2E888[3] = b0;
+                        }
+                        if (sp8D & 8) {
+                            if (func_8AF00020() != 0) {
+                                D_8AF2E888[4] = b0;
+                            }
+                        }
+                        ; // empty statement (likely a compiled-out debug print) needed for codegen
+                    }
+                }
+                i = 0x14;
+            }
+        }
+        D_8AF2D594 += 3;
+    }
+    s5 = (Slot_8AF0CA00 *)D_8AF2D5C8;
+    for (i = 0; i < D_8AF2E89C - 1; i++, s5++) {
+        min = func_8AF0C96C((u8 *)s5);
+        for (j = i + 1; j < D_8AF2E89C; j++) {
+            s0 = &((Slot_8AF0CA00 *)D_8AF2D5C8)[j];
+            if ((v = func_8AF0C96C((u8 *)s0)) < min) {
+                min = v;
+                tmp = *s5;
+                *s5 = *s0;
+                *s0 = tmp;
+            }
+        }
+    }
+}
 
 extern u8 func_8006397C(u8);
 extern u8 func_800639C0(u8);
