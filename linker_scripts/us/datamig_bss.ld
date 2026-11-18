@@ -435,6 +435,13 @@ SECTIONS
     {
         build/src/2C1B0.o(.bss)
     }
+
+    /* func_86701C6C's function-static context pointer (retail D_8670C850), in fragment 55's
+     * reloc-table area that the game reuses as bss after loading. */
+    .fragment55_ctx_ptr_bss 0x8670C850 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/55/fragment55_code.o(.bss)
+    }
 }
 
 ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
@@ -535,6 +542,7 @@ ASSERT(SIZEOF(.fragment20_slot_fade_data) == 0x40, "fragment 20 slot fade limits
 ASSERT(SIZEOF(.fragment10_panel_color_bss) == 16, "fragment 10 panel color footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
+ASSERT(SIZEOF(.fragment55_ctx_ptr_bss) == 16, "fragment 55 context pointer footprint changed");
 ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
        "fragment82 deck menu state header must retain its compiler section footprint");
 

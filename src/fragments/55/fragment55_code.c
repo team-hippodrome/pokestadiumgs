@@ -489,7 +489,87 @@ s32 func_8670122C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86701C6C.s")
+// Steering context handed to func_867014C0 / func_86701874; they set done when the target slot is reached.
+typedef struct { f32 x; f32 z; f32 tx; f32 spd; s32 slot; s32 done; } Ctx86701C6C;
+// One 0x38-byte record of D_86728328 per player.
+typedef struct { f32 unk00; u8 pad04[0x14]; s32 unk18; s32 unk1C; s32 unk20; u8 pad24[8]; s32 unk2C; s32 unk30; s32 unk34; } Ent86728328;
+#define ENT_86701C6C(i) (((Ent86728328 *)&D_86728328)[i])
+extern Ctx86701C6C D_8670C838;
+extern f32 D_8670BAE8[];
+extern f32 D_8670B3CC;
+extern f32 D_86710C08[];
+extern s32 D_8670BAD8;
+extern s32 D_8670BB48;
+extern s32 func_8670122C(s32);
+extern void func_867014C0(s32, Ctx86701C6C *);
+extern void func_86701874(s32, Ctx86701C6C *);
+extern s32 func_86700FD4(s32, s32);
+// Picks the player's target slot (unk20) and steers toward it through D_8670C838.
+// sCurCtx is retail's D_8670C850; as a function static IDO keeps it in a register and stores it back
+// before each call.
+void func_86701C6C(s32 idx) {
+    static Ctx86701C6C *sCurCtx;
+    s32 rnd;
+
+    sCurCtx = &D_8670C838;
+    sCurCtx->done = 0;
+    if (D_8670BB48 != 1) {
+        return;
+    }
+    if (D_86728408[idx].unk38 > 0 && ENT_86701C6C(idx).unk2C < 2) {
+        ENT_86701C6C(idx).unk20 = func_8670122C(idx);
+    }
+    sCurCtx->slot = ENT_86701C6C(idx).unk20;
+    if (sCurCtx->slot == 0x3E8 || D_8670C984[idx][sCurCtx->slot][0] < 0) {
+        if (D_86728408[idx].unk38 == 0) {
+            ENT_86701C6C(idx).unk20 = func_86700FD4(idx, 0);
+            sCurCtx->slot = ENT_86701C6C(idx).unk20;
+        }
+    }
+    if (sCurCtx->slot == 0x3E8 || D_8670C980[idx][sCurCtx->slot].unk04[0] < 0) {
+        ENT_86701C6C(idx).unk1C = 0;
+        return;
+    }
+    ENT_86701C6C(idx).unk1C = 0;
+    sCurCtx->x = D_86711760[idx][sCurCtx->slot].x;
+    sCurCtx->z = D_86711760[idx][sCurCtx->slot].z;
+    sCurCtx->tx = D_86710C20[idx].x;
+    if (sCurCtx->z < D_86710C20[idx].z + ENT_86701C6C(idx).unk00) {
+        rnd = guRandom() % 100;
+        if (rnd >= 51) {
+            ENT_86701C6C(idx).unk34 = 1;
+        } else {
+            ENT_86701C6C(idx).unk34 = -1;
+        }
+        rnd = D_8670C980[idx][sCurCtx->slot].unk04[0];
+        sCurCtx->spd = D_8670BAE8[rnd * 2] * D_8670C890;
+        ENT_86701C6C(idx).unk18 = 0;
+        if (ENT_86701C6C(idx).unk2C >= 2) {
+            func_867014C0(idx, sCurCtx);
+        } else {
+            func_86701874(idx, sCurCtx);
+        }
+        if (sCurCtx->done == 1) {
+            ENT_86701C6C(idx).unk20 = func_86700FD4(idx, 0);
+            ENT_86701C6C(idx).unk18 = 0;
+            ENT_86701C6C(idx).unk1C = 0;
+        }
+    } else {
+        if (sCurCtx->tx < D_86710C08[idx] + D_8670B3CC + (f32)((3 - ENT_86701C6C(idx).unk2C) * 10)) {
+            ENT_86701C6C(idx).unk34 = 1;
+        }
+        if (D_86710C08[idx + 1] - D_8670B3CC - (f32)((3 - ENT_86701C6C(idx).unk2C) * 10) < sCurCtx->tx) {
+            ENT_86701C6C(idx).unk34 = -1;
+        }
+        ENT_86701C6C(idx).unk1C = ENT_86701C6C(idx).unk34 * (ENT_86701C6C(idx).unk2C + 1) * 10;
+    }
+    if (D_86711760[idx][ENT_86701C6C(idx).unk20].z < D_86710C20[idx].z) {
+        ENT_86701C6C(idx).unk1C = 0;
+        if (D_86728408[idx].unk38 == 0 || D_86710C20[idx].z < D_8670BAD8) {
+            ENT_86701C6C(idx).unk20 = func_86700FD4(idx, 1);
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
