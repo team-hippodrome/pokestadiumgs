@@ -255,5 +255,69 @@ void func_821023F4(s32 arg0) {
     } while (var_s0 != 3);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/25/fragment25_15BBC0/func_82102444.s")
+f32 D_82103DB0 = 0.0f;
+f32 D_82103DB4 = 2.094395161f;
+
+extern u8 *D_82103DC8[3];
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern u8 *func_8004C990(s32, u16);
+extern void func_8004D19C(s32, s32, u8 *, s32, s32);
+void func_82102444(s32 arg0, s32 arg1) {
+    static s32 D_82103DB8 = 150;
+    static s32 D_82103DBC = 250;
+    static s32 D_82103DC0 = 100;
+    static s32 D_82103DC4 = 150;
+    s32 j;
+    s32 i;
+    u8 *p;
+    s32 r;
+    s32 a;
+
+    if (D_82103DC8[0] == NULL) {
+        for (i = 0; i < 3; i++) {
+            D_82103DC8[i] = func_8004C990(0x46, D_82104110[i]);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    j = *(s32 *)((u8 *)arg0 + 0x24);
+    p = (u8 *)arg0 + j * 8;
+    for (i = 3; i >= 0; i--) {
+        j++;
+        p += 8;
+        if (j >= 4) {
+            j -= 4;
+            p -= 0x20;
+        }
+        gDPPipeSync(D_800D0510++);
+        if (i == 0) {
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+        } else {
+            switch (arg1 % 3) {
+            case 0:
+                r = (s32)((f32)(D_82103DBC - D_82103DB8) * (f32)(4 - i) / 4 + (f32)D_82103DB8);
+                a = (s32)((f32)(D_82103DC4 - D_82103DC0) * (f32)(4 - i) / 4 + (f32)D_82103DC0);
+                gDPSetEnvColor(D_800D0510++, r, D_82103DB8, D_82103DB8, a);
+                break;
+            case 1:
+                r = (s32)((f32)(D_82103DBC - D_82103DB8) * (f32)(4 - i) / 4 + (f32)D_82103DB8);
+                a = (s32)((f32)(D_82103DC4 - D_82103DC0) * (f32)(4 - i) / 4 + (f32)D_82103DC0);
+                gDPSetEnvColor(D_800D0510++, D_82103DB8, D_82103DB8, r, a);
+                break;
+            case 2:
+                r = (s32)((f32)(D_82103DBC - D_82103DB8) * (f32)(4 - i) / 4 + (f32)D_82103DB8);
+                a = (s32)((f32)(D_82103DC4 - D_82103DC0) * (f32)(4 - i) / 4 + (f32)D_82103DC0);
+                gDPSetEnvColor(D_800D0510++, r & 0xFF, r & 0xFF, D_82103DB8, a);
+                break;
+            }
+        }
+        func_8004D19C((s32)*(f32 *)(p + 4), (s32)(*(f32 *)(p + 8) - (f32)(*(u16 *)(D_82103DC8[0] + 2) / 2)),
+                      D_82103DC8[j % 3], 1, 0);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+
+u8 *D_82103DC8[3] = { NULL, NULL, NULL };
+u8 *D_82103DD4[3] = { NULL, NULL, NULL };
 #endif
