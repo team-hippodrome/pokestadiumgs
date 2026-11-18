@@ -2,7 +2,26 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AE600/func_81800020.s")
+void func_81800020(f32 x, f32 y, f32 width, f32 height, s16 s, s16 t, f32 hscale, f32 vscale) {
+    extern u32 D_800D0510;
+    enum { ZERO = 0 };
+    if (x < ((f32)ZERO)) {
+        s -= x * hscale;
+        x = (width += x, ((f32)ZERO));
+    }
+    if (y < ((f32)ZERO)) {
+        t -= y * vscale;
+        y = (height += y, ((f32)ZERO));
+    }
+    if (640.0f <= x + width) width = 640.0f - x;
+    if (480.0f <= y + height) height = 480.0f - y;
+    if (width <= ((f32)ZERO) || height <= ((f32)ZERO) || 640 <= x || 480 <= y) return;
+    if (x + width <= ((f32)ZERO) || y + height <= ((f32)ZERO)) return;
+    gSPScisTextureRectangle((*(Gfx **)&D_800D0510)++, x * 4.0f, y * 4.0f, (x + width) * 4.0f, (y + height) * 4.0f,
+                            G_TX_RENDERTILE, s << 5, t << 5,
+                            (s16)((hscale * 1024.0f) + ((hscale * 1024.0f > 0.0f) ? 0.5f : -0.5f)),
+                            (s16)((vscale * 1024.0f) + ((vscale * 1024.0f > 0.0f) ? 0.5f : -0.5f)));
+}
 #endif
 
 #ifdef VERSION_US
@@ -115,7 +134,7 @@ void Gfx_SetupOrthoProjection(void) {
 
 #ifdef VERSION_US
 extern void func_8004D1FC(s32);
-extern void func_81800020(f32, f32, f32, f32, s32, s32, f32, f32);
+extern void func_81800020(f32, f32, f32, f32, s16, s16, f32, f32);
 
 // Draws arg2 digits of arg3, right to left, 9 pixels apart starting at (arg0, arg1).
 void func_81800C18(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -160,7 +179,7 @@ extern s32 func_8004CA24(u16 *);
 extern u8 *func_8004CA60(u8 *);
 extern s32 func_8004CA38(u8 *);
 extern s32 func_8004CA4C(u8 *);
-extern void func_81800E38(s16, s16, u16, u16, s32, s32, u8 *, s32, s32, s32);
+extern void func_81800E38(s16, s16, u16, u16, u16, u16, u8 *, s32, s32, s32);
 
 void func_818011EC(s16 arg0, s16 arg1, u16 arg2, u16 arg3, void *arg4) {
     s32 sp44;
