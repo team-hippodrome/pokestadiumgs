@@ -85,9 +85,13 @@ extern u8 *D_86B181C0;
 extern f32 __cosf(f32);
 extern f32 __sinf(f32);
 // Fragment 61's 0x4B4-byte runtime state at 0x86B17A78 (D_86B17A78 in the other
-// functions), reset from the D_86B0D384 template. Its .bss is pinned in
-// datamig_bss.ld; as an in-unit static the mode stores share one lui.
-static Blob86B007D0 sBlob;
+// functions), reset from the D_86B0D384 template. This unit's .bss is pinned at
+// 0x86B17A78 in datamig_bss.ld and is laid out in declaration order:
+// sStateHead (0x00-0x37), func_86B01A94's sStatePair (0x38-0x3F) and
+// sStateTail (0x40-0x4B3). func_86B007D0 reaches the whole record through
+// sStateHead; as an in-unit static the mode stores share one lui.
+static u8 sStateHead[0x38];
+#define sBlob (*(Blob86B007D0 *)sStateHead)
 void func_86B007D0(void) {
     f32 *p;
     s32 i;
@@ -535,10 +539,13 @@ extern void func_80021ED8(s32);
 // lands at 0x20 instead of the target's 0x24 (differ score 8, all other 199
 // instructions identical). `counter` is the only variable assigned before any
 // call, so as a parameter its incoming register is dead at entry and no spill
-// code is added. Without the parameter the score is 8.
+// code is added. Without the parameter the score is 8. The definition is K&R
+// style so func_86B01A94 can make that argument-less call.
 
 
-void func_86B01770(s32 counter) {
+void func_86B01770(counter)
+    s32 counter;
+{
     s32 n;
     u32 i;
     s32 value;
@@ -609,7 +616,273 @@ void func_86B01770(s32 counter) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B01A94.s")
+extern void func_8003F1DC(u8 *);
+extern void func_8003F114(u8 *, s32, s32, s32);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_8003F210(void *, s32);
+extern void func_8003F03C(void *, void *);
+extern void func_87F06430(void *, s32);
+extern s32 func_87F00930(void);
+extern void func_87F006BC(void);
+extern void func_87F0277C(s32 *);
+extern u8 D_86B17F30;
+extern u8 *D_86B181C0;
+extern u8 D_86B16DA0[];
+extern u8 *D_86B18208;
+extern s32 D_86B17910;
+extern s32 StageContext_GetFadeMode(void);
+extern void func_86B00994(void);
+extern void func_86B08978(void);
+extern s32 func_87F01A40(void);
+extern s32 func_87F006AC(void);
+extern void func_86B01720(s32);
+extern void func_86B08B74(void);
+extern void func_86B08CF4(void);
+extern void func_86B08E10(void);
+extern void func_86B08F20(void);
+extern void func_86B09380(void);
+extern s32 Fragment64_UpdateBounceAndConfirm(void *);
+extern u8 D_86B0E0E0[];
+extern s32 D_86B17AAC;
+extern s32 D_86B17AB8;
+extern s32 D_86B0D164;
+extern s32 func_87F02104(void);
+extern void StageContext_SetClearColor(s32);
+extern void StageFade_StartFromTransparent(s32);
+extern void StageFade_StartFromOpaque(s32);
+extern u8 D_86B17340[];
+extern u8 D_86B17364[];
+extern u32 D_86B16D90[];
+extern u8 D_87F15B70;
+extern void func_86B09834(void);
+extern u8 D_86B0E148[];
+extern void func_87F0D5B8(void *);
+extern s32 func_87F0C6F4(void *);
+extern void func_800279C4(s32);
+extern void func_80021ED8(s32);
+extern u8 D_86B17A78[];
+#define FRAG_CONFIRM() \
+    if (*(s32 *)(D_86B17A78 + 0x35C) != 0) { \
+        if (Fragment64_UpdateBounceAndConfirm(D_86B0E0E0) != 0) { \
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 1) { \
+                func_86B01720(2); \
+            } else { \
+                *(s32 *)D_86B181C0 = 0xB; \
+            } \
+        } \
+    }
+void func_86B01A94(void) {
+    // D_86B17AB0/D_86B17AB4 (state record +0x38). As a function-scope static the
+    // two clears share one `lui $at` and get no base register, as in retail.
+    static struct { s32 a, b; } sStatePair;
+    s32 i;
+    u8 *p;
+    s32 pad;
+    if (func_87F00930() == 0) {
+        func_87F006BC();
+    }
+    func_87F0277C((s32 *)&D_86B17F30);
+    switch (*(s32 *)D_86B181C0) {
+    case 0:
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC(D_86B16DA0 + i * 0x168);
+            p = D_86B18208 + i * 0x18;
+            p[0x12] = 0xFF;
+            p[0x13] = 0xFF;
+            p[0x14] = 0xFF;
+            p[0x15] = 0;
+        }
+        func_8003F1DC((u8 *)&D_86B17910);
+        if (StageContext_GetFadeMode() == 0) {
+            *(s32 *)D_86B181C0 = 1;
+        }
+        break;
+    case 1:
+        func_86B00994();
+        break;
+    case 2:
+        func_86B08978();
+        break;
+    case 3:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            if (func_87F006AC() == 1) {
+                func_800279C4(0x2F00);
+            }
+            if ((*(s32 *)(D_86B17A78 + 0x284))++ == 0x41) {
+                func_80021ED8(0x35);
+            }
+            if (func_87F006AC() == 2) {
+                *(s32 *)D_86B181C0 = 4;
+                D_86B17AAC = 0;
+                sStatePair.a = 0;
+                sStatePair.b = 0;
+                D_86B17AB8 = 0;
+                *(s32 *)(D_86B17A78 + 0x284) = 0;
+            }
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 4:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86B08B74();
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 5:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86B08CF4();
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 6:
+        switch (func_87F01A40()) {
+        case 0:
+            func_86B01770();
+            break;
+        case 2:
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 7:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86B08E10();
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 8:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86B08F20();
+            FRAG_CONFIRM();
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 9:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86B09380();
+            if (Fragment64_UpdateBounceAndConfirm(D_86B0E0E0) != 0) {
+                if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 1) {
+                    func_86B01720(2);
+                } else {
+                    *(s32 *)D_86B181C0 = 0xB;
+                }
+            }
+            break;
+        case 3:
+            func_86B01720(0);
+            break;
+        case 4:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 10:
+        func_86B09380();
+        if (Fragment64_UpdateBounceAndConfirm(D_86B0E0E0) != 0) {
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 1) {
+                func_86B01720(2);
+            } else {
+                *(s32 *)D_86B181C0 = 0xB;
+            }
+        }
+        break;
+    case 11:
+        D_86B0D164 = 1;
+        func_86B09380();
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(0);
+            *(s32 *)D_86B181C0 = 0xC;
+            *(s32 *)(D_86B181C0 + 4) = 0;
+            StageFade_StartFromTransparent(0xA);
+            for (i = 0; i < 4; i++) {
+                func_8003F03C(D_86B17340 + i * 0x168, &D_87F15B70);
+                func_87F06430(D_86B17364 + i * 0x168, i);
+                *(f32 *)(D_86B17340 + i * 0x168 + 0x38) = 0.16666667f;
+                *(f32 *)(D_86B17340 + i * 0x168 + 0x34) = 0.16666667f;
+                *(f32 *)(D_86B17340 + i * 0x168 + 0x30) = 0.16666667f;
+                *(f32 *)(D_86B17340 + i * 0x168 + 0x28) = 50.0f;
+                func_8003F114(D_86B17340 + i * 0x168, 0, -1, D_86B16D90[i]);
+                func_8003F210(D_86B17340 + i * 0x168, 0);
+                ModelAnim_SetFrame(D_86B17340 + i * 0x168, guRandom() % 30);
+            }
+            break;
+        case 2:
+            func_86B01720(0);
+            break;
+        case 3:
+            func_86B01720(1);
+            break;
+        }
+        break;
+    case 12:
+        func_86B09834();
+        if (StageContext_GetFadeMode() == 1) {
+            *(s32 *)D_86B181C0 = *(s32 *)(D_86B181C0 + 4);
+            if (*(s32 *)D_86B181C0 == 0) {
+                func_86B007D0();
+                StageFade_StartFromOpaque(0xA);
+            }
+        }
+        break;
+    }
+    func_87F0D5B8(D_86B0E148);
+    if (func_87F0C6F4(D_86B181C0 + 0x1C) != 0) {
+        *(s32 *)(D_86B181C0 + 0x18) = 3;
+        *(s32 *)D_86B181C0 = 0xD;
+    }
+}
+
+// Rest of the state record after sStatePair (0x86B17AB8-0x86B17F2B).
+static u8 sStateTail[0x474];
+
 #endif
 
 #ifdef VERSION_US
