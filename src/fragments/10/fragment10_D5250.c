@@ -594,7 +594,42 @@ s32 func_828019B4(u8 *arg0) {
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82801A08.s")
+extern f32 __sinf(f32);
+void func_82801A08(u8 *arg0) {
+    // Pulse period and phase: function-scope statics in fragment 10's loaded data
+    // (0x8280283C/0x82802840), so IDO re-luis them at each use.
+    static f32 D_8280283C = 60.0f;
+    static f32 D_82802840 = 0.0f;
+    f32 step;
+    s32 i;
+    f32 sp70[4];
+
+    step = func_816092FC() / 10.0f;
+    D_82802840 += func_816092FC();
+    if (D_82802840 >= D_8280283C) {
+        D_82802840 = D_82802840 - D_8280283C;
+    }
+    for (i = 0; i < 4; i++) {
+        if (*(s32 *)(arg0 + 0x10) == i) {
+            if (arg0[0xC] == 3 || arg0[0xC] == 0) {
+                sp70[i] = 1.0f;
+            } else {
+                sp70[i] = __sinf(6.2831855f * D_82802840 / D_8280283C) * 0.2f + 0.3f;
+            }
+        } else {
+            sp70[i] = 0.0f;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (((f32 *)(arg0 + 0x98))[i] + step < sp70[i]) {
+            ((f32 *)(arg0 + 0x98))[i] = ((f32 *)(arg0 + 0x98))[i] + step;
+        } else if (sp70[i] < ((f32 *)(arg0 + 0x98))[i] - step) {
+            ((f32 *)(arg0 + 0x98))[i] = ((f32 *)(arg0 + 0x98))[i] - step;
+        } else {
+            ((f32 *)(arg0 + 0x98))[i] = sp70[i];
+        }
+    }
+}
 
 void func_82801BE8(u8 *arg0, void *arg1) {
     f32 step;
