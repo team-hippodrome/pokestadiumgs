@@ -723,14 +723,10 @@
     - [0x10F180, data,    fragments/16/fragment16_10F180]
     - [0x10F1A0, .rodata, fragments/16/fragment16_10E250] # Jump tables.
     - [0x10F1C0, rodata]
-    # The fade-state static (the C .data at 0x82001EA0) and the trailing
-    # data blob follow the constant pool; retain their .data input sections
-    # in the .rodata group, as fragments 86-88 do for their tails.
+    # The fade state's load image (0x82001EA0) and the trailing data blob
+    # follow the constant pool; keep them in the .rodata group, as fragments
+    # 86-88 do for their tails.
     - start: 0x10F310
-      type: .data
-      name: fragments/16/fragment16_code
-      linker_section_order: .rodata
-    - start: 0x10F320
       type: data
       name: fragments/16/fragment16_tail
       linker_section_order: .rodata

@@ -220,7 +220,88 @@ s32 func_8200070C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/16/fragment16_code/func_82000794.s")
+extern s32 D_82001D50;
+extern s32 func_80001FF0(void);
+
+// Steps the overlay fade: mode 1 waits, then covers the screen and starts the
+// mode-2 blink; mode 3 pulses until the overlay is opaque past the limit, then
+// mode 4 ramps it back to clear and finishes in mode 5.
+void func_82000794(void) {
+    // Phase lengths in frames (retail D_82001CD8..D_82001CEC; datamig_bss.ld
+    // pins this object's .rodata there). IDO reloads them after calls only
+    // as statics of this function.
+    static s32 sBlinkFadeIn = 16;
+    static s32 sBlinkHold = 20;
+    static s32 sBlinkFadeOut = 16;
+    static s32 sPulseFadeIn = 2;
+    static s32 sPulseHold = 1;
+    static s32 sPulseFadeOut = 2;
+    s32 pad[2];
+    s32 period;
+    s32 limit;
+    s32 phase;
+    Fragment16FadeState *fade = &sFadeState;
+
+    period = sPulseFadeIn + sPulseHold + sPulseFadeOut;
+    switch (fade->mode) {
+        case 1:
+            fade->counter++;
+            if (fade->counter < func_80001FF0() * 2 / 5) {
+                fade->mode = 2;
+                fade->alpha = 255;
+                fade->flags |= 2;
+                fade->counter = sBlinkHold;
+            }
+            break;
+        case 2:
+            fade->counter = (fade->counter + 1) % 64;
+            if (fade->counter < sBlinkFadeIn) {
+                fade->alpha = fade->counter * 255 / sBlinkFadeIn;
+            } else if (fade->counter < sBlinkFadeIn + sBlinkHold) {
+                fade->alpha = 255;
+            } else if (fade->counter < sBlinkFadeIn + sBlinkHold + sBlinkFadeOut) {
+                phase = fade->counter - sBlinkFadeIn - sBlinkHold;
+                fade->alpha = 255 - phase * 255 / sBlinkFadeOut;
+            } else {
+                fade->alpha = 0;
+            }
+            break;
+        case 3:
+            fade->counter++;
+            if (D_82001D50 != 0) {
+                limit = func_80001FF0() * 3 / 5;
+            } else {
+                limit = 10;
+            }
+            if (fade->counter >= limit && fade->alpha == 255) {
+                fade->mode = 4;
+                fade->alpha = 255;
+                fade->counter = 0;
+            } else {
+                phase = fade->counter % period;
+                if (phase < sPulseFadeIn) {
+                    fade->alpha = phase * 255 / sPulseFadeIn;
+                } else if (phase < sPulseFadeIn + sPulseHold) {
+                    fade->alpha = 255;
+                } else if (phase < sPulseFadeIn + sPulseHold + sPulseFadeOut) {
+                    fade->alpha = 255 - (phase - sPulseFadeIn - sPulseHold) * 255 / sPulseFadeOut;
+                } else {
+                    fade->alpha = 0;
+                }
+            }
+            break;
+        case 4:
+            limit = func_80001FF0() * 2 / 5;
+            fade->counter++;
+            fade->alpha = 255 - fade->counter * 255 / limit;
+            if (fade->counter < limit) {
+                fade->mode = 5;
+                fade->alpha = 0;
+                fade->counter = 0;
+            }
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -249,17 +330,9 @@ void Fragment16_DrawFadingOverlay(void) {
 #endif
 
 #ifdef VERSION_US
-// Fragment-local overlay fade state; retail .data words at 0x82001EA0. func_82000794
-// dispatches on mode and steps counter each frame; Fragment16_DrawFadingOverlay draws
-// the overlay quad with alpha as the env-color alpha. The initializer is dead at
-// runtime: func_8200070C bzeroes 12 bytes at this address during fragment setup.
-static Fragment16FadeState sFadeState = { 1536, 1920, 1280, 1940, 1536, 1952 };
-// IDO pads this object's .data section to 16 bytes, so the retail word at
-// 0x82001EAC (D_82001EAC, the old data-blob head) is carried here: the C-owned
-// range must be one full aligned section or the following blob shifts 4 bytes.
-// func_82000DE8 and func_82001A78 clear/read it as one word; func_8200182C
-// reads it alongside the fade-state fields.
-static s16 sFadeStateTail[2] = { 1280, 1944 };
+// func_82000794 dispatches on the fade mode and steps counter each frame;
+// Fragment16_DrawFadingOverlay draws the overlay quad with alpha as the env-color
+// alpha. func_8200070C clears the state during fragment setup.
 
 // Starts fade sequence mode 1: the screen is held clear, then instantly covered (the
 // mode-1 exit in func_82000794 sets alpha = 255, flags bit 1, and mode 2).
@@ -274,8 +347,7 @@ void func_82000CB0(void) {
 #endif
 
 #ifdef VERSION_US
-// Requires the Fragment16FadeState typedef and sFadeState definition spliced with
-// func_82000CB0 (do not duplicate them here: cfe rejects the redeclaration).
+// Requires the Fragment16FadeState typedef and sFadeState declaration above.
 
 // Starts fade sequence mode 3: the overlay alpha pulses, and once it reaches 255 after
 // the sequence length, func_82000794 enters mode 4, which ramps the overlay back to clear.
