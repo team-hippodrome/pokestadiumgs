@@ -120,7 +120,66 @@ void func_87E02A70(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_306150/func_87E02B60.s")
+extern void *D_87F119DC;
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern void *D_87E1EB78;
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+void func_87E02B60(void) {
+    u8 *obj;
+    s32 sel[1];
+    s32 angle;
+    f32 frac;
+    u8 *ctx;
+    u8 *st;
+
+    obj = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    ctx = D_87E1EB78; st = *(u8 **)((u8 *)D_87E1EB78 + 0x204);
+    if ((1 << *(s32 *)obj) & *(u8 *)(*(u8 **)((u8 *)D_87E1EB78 + 0x204) + 0x2182)) {
+        sel[0] = *(s32 *)obj + 6;
+        if (*(s32 *)((u8 *)D_87E1EB78 + 4) == 0) {
+            *(f32 *)(obj + 0xC) += 255.0f;
+            if (*(f32 *)(obj + 0xC) > 4095.0f) {
+                *(f32 *)(obj + 0xC) = 4095.0f;
+            }
+            *(f32 *)(obj + 0x10) += 0.1f;
+            if (*(f32 *)(obj + 0x10) > 1.0f) {
+                *(f32 *)(obj + 0x10) = 1.0f;
+            }
+        } else {
+            *(f32 *)(obj + 0xC) -= 1023.0f;
+            if (*(f32 *)(obj + 0xC) < 0) {
+                *(f32 *)(obj + 0xC) = 0.0f;
+            }
+            *(f32 *)(obj + 0x10) -= 0.1f;
+            if (*(f32 *)(obj + 0x10) < 0.0f) {
+                *(f32 *)(obj + 0x10) = 0.0f;
+            }
+        }
+    } else {
+        if (*(u8 *)(*(u8 **)((u8 *)D_87E1EB78 + 0x204) + 0x2180) == 3) {
+            sel[0] = 0;
+        } else {
+            sel[0] = 1;
+        }
+        *(f32 *)(obj + 0xC) -= 1023.0f;
+        if (*(f32 *)(obj + 0xC) < 0) {
+            *(f32 *)(obj + 0xC) = 0.0f;
+        }
+        *(f32 *)(obj + 0x10) -= 0.1f;
+        if (*(f32 *)(obj + 0x10) < 0.0f) {
+            *(f32 *)(obj + 0x10) = 0.0f;
+        }
+    }
+    frac = (*(s32 *)((u8 *)D_87F119DC + 0x1C) % 60) / 60.0f;
+    *(s16 *)((u8 *)D_87F119DC + 0x46) = *(f32 *)(obj + 0xC) * D_80087E50[(u16)(u32)(65535.0f * frac) >> 4];
+    frac = (*(s32 *)((u8 *)D_87F119DC + 0x1C) % 15) / 15.0f;
+    angle = (u16)(u32)(65535.0f * frac) >> 4;
+    *(f32 *)((u8 *)D_87F119DC + 0x54) = *(f32 *)(obj + 0x10) * D_80087E50[angle] * 0.05f + 0.62f;
+    *(f32 *)((u8 *)D_87F119DC + 0x58) = *(f32 *)(obj + 0x10) * D_80088E50[angle] * 0.025f + 0.62f;
+    *(u8 **)(obj + 8) = func_8004CA60((u8 *)func_8004C990(0x1B2, sel[0]));
+}
 
 extern Gfx *D_800D0510;
 extern void *D_8009491C;
