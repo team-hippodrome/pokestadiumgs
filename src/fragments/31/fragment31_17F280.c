@@ -393,7 +393,354 @@ void func_8820CE2C(void) {
     *(u8*)D_88234710 ^= 1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17F280/func_8820CF8C.s")
+extern void* func_8004C874(s32, s32);
+extern s16 D_8800EF58;
+extern s32 D_88234564;
+extern u8 D_88006020[];
+extern void func_88206508(void *, u8 *);
+extern void func_88206460(void);
+extern s32 func_88200D04(u8);
+extern void func_88206430(void);
+extern void func_882295E4(s16, s16, s32);
+extern void func_88228BCC(s16, s16, s32);
+extern void func_8822C6D8(u8 arg0, s32 *arg1, u8 *arg2);
+extern void LabPC_CreateSortDialog();
+extern void func_882064B4(s32, s32 *, void *, void *);
+extern void func_880020CC(void *);
+extern void func_88002720(s16 *, u16, s32 *);
+extern s32 func_8822CED0(u8, s16, u8, void (*)(void));
+extern u8 func_88A01074(u8, u8, s32);
+extern void func_88231698(void);
+extern void func_882318B0(void);
+
+#define ST ((u8 *)D_88234710)
+#define ST_S16(o) (*(s16 *)(ST + (o)))
+#define ST_S32(o) (*(s32 *)(ST + (o)))
+#define ST_U8(o) (*(u8 *)(ST + (o)))
+#define BTN (*(u16 *)((u8 *)*(void **)&D_80087200 + 8))
+#define IDLE_A() (ST_S16(0x14) == 0 && ST_S32(0x18) == 0 && ST_S16(0x36) == 0)
+#define IDLE_B() (ST_S16(0x40) == 0 && ST_S32(0x44) == 0 && ST_S16(0x62) == 0)
+#define REC(slot) ((u8 *)&((F31SelectionState *)D_88234710)->records[slot])
+#define ERR(n) do { func_88206508(func_8004C874(0x21, (n)), ST + 0xAC); } while (0)
+#define SLOT ST_U8(0)
+
+void func_8820CF8C(void) {
+    s32 i;
+    s32 a1;
+    s32 played;
+    u8 *pair;
+    u8 r;
+    s16 sp5C;
+    s32 flag58;
+    s32 idx54;
+    u8 sp53;
+    s16 diff;
+    s16 sp4E;
+    u8 *e2;
+    u8 *ent;
+
+    if (D_8800EF58 != 0) {
+        return;
+    }
+    if (*(s32 *)((u8 *)D_88234564 + 0xA4) != 2 || ST_U8(0xAC) != 0 || D_880068B4 != 1) {
+        goto end;
+    }
+    if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && D_882346F0 == 0) {
+        if ((SLOT == 0 && (BTN & 0x10)) || (SLOT == 1 && (BTN & 0x20))) {
+            func_800226C0(0x135);
+            SLOT ^= 1;
+            func_88001900();
+            goto end;
+        }
+    }
+    if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && D_882346F0 == 0 && (BTN & 3)) {
+        a1 = ((F31SelectionState *)D_88234710)->list[SLOT];
+        func_800226C0(0x134);
+        do {
+            if (BTN & 2) {
+                if (a1 == 0) {
+                    a1 = 3;
+                } else {
+                    a1--;
+                }
+            } else if (BTN & 1) {
+                a1++;
+                if (a1 == 4) {
+                    a1 = 0;
+                }
+            }
+        } while (a1 == ((F31SelectionState *)D_88234710)->list[1 - SLOT]);
+        func_8820C114(SLOT, a1);
+        goto end;
+    }
+    if (ST_S32(4) != 0) {
+        if (BTN & 0x4000) {
+            func_800226C0(0x48);
+            ST_U8(0xAC) = 2;
+            if (func_88200D04(2) != 0) {
+                func_882295E4(0x140, 0xF0, func_88206430);
+            } else {
+                func_88228BCC(0x140, 0xF0, func_88206430);
+            }
+            goto end;
+        }
+        if (BTN & 0x8000) {
+            func_800226C0(0x5C);
+            switch (ST_S16(8)) {
+                case 0:
+                    func_8822C6D8(SLOT, (s32 *)(ST + 0xC), ST + 0x6C);
+                    break;
+                case 4:
+                    ST_U8(0xAC) = 2;
+                    LabPC_CreateSortDialog(((F31SelectionState *)D_88234710)->list[SLOT], REC(SLOT), ST + 0x6C);
+                    break;
+                default:
+                    func_882064B4(0, ST + 4, ST + 0x14, ST + 0x40);
+                    func_88001900();
+                    break;
+            }
+            goto end;
+        }
+        func_880020CC(REC(SLOT));
+        func_88002720(ST + 8, 5, D_88006020);
+        goto end;
+    }
+    switch (D_882346F0) {
+    case 0:
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x4000)) {
+            func_800226C0(0x48);
+            func_882064B4(1, ST + 4, ST + 0x14, ST + 0x40);
+            Input_SetRepeatController(*(s32 *)&D_80087200);
+            goto end;
+        }
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x8000)) {
+            played = 0;
+            switch (ST_S16(8)) {
+            case 0:
+                goto done0;
+            case 1:
+                if (func_88A007BC(((F31SelectionState *)D_88234710)->list[SLOT]) == 0) {
+                    ERR(5);
+                    goto done0;
+                }
+                if ((ST_S32(0xC) == 2 && ST_S32(0x10) == 3) || (ST_S32(0xC) == 3 && ST_S32(0x10) == 2)) {
+                    ERR(0x10);
+                    goto done0;
+                }
+                if (func_8800005C() != 0 && ((F31SelectionState *)D_88234710)->list[1 - SLOT] == 2) {
+                    ERR(0xC);
+                    goto done0;
+                }
+                if (func_8800005C() == 0 && ((F31SelectionState *)D_88234710)->list[1 - SLOT] == 3) {
+                    ERR(0xD);
+                    goto done0;
+                }
+                if (func_8800005C() != 0 && ((F31SelectionState *)D_88234710)->list[SLOT] == 2) {
+                    ERR(0xE);
+                    goto done0;
+                }
+                if (func_8800005C() == 0 && ((F31SelectionState *)D_88234710)->list[SLOT] == 3) {
+                    ERR(0xF);
+                    goto done0;
+                }
+                if (func_8820C798() != 0) {
+                    ERR(9);
+                    goto done0;
+                }
+                pair = func_8820C040(1, SLOT);
+                r = func_88A01074(pair[0], pair[1], ((F31SelectionState *)D_88234710)->list[1 - SLOT]);
+                if (r == 0) {
+                    ERR(8);
+                    goto done0;
+                }
+                if (pair[1] == 1) {
+                    D_88234718 = 0;
+                    D_88234934 = 1;
+                    func_8820CCA8();
+                    goto done0;
+                }
+                played = 1;
+                ST_S32(0xBC) = func_8822CED0(SLOT, ((F31SelectionState *)D_88234710)->records[SLOT].scroll, r, func_8820CCA8);
+                break;
+            case 2:
+                sp5C = ((F31SelectionState *)D_88234710)->records[SLOT].position;
+                flag58 = func_8800005C() == 0 && ((F31SelectionState *)D_88234710)->list[SLOT] == 0;
+                if (flag58) {
+                    idx54 = func_88A00FD4(func_8006378C(*func_8820C040(1, SLOT)));
+                }
+                if (flag58) {
+                    if (sp5C >= D_88A01C64[7] && sp5C < D_88A01C64[7] + D_88A01C64[3]) {
+                        ERR(0xA);
+                        goto done0;
+                    }
+                }
+                if (func_88A007BC(((F31SelectionState *)D_88234710)->list[SLOT]) < 2 || (flag58 && (D_88A01C64 + idx54)[1] == 1)) {
+                    ERR(6);
+                    goto done0;
+                }
+                played = 1;
+                D_882346F0 = 2;
+                ST_S16(0xB8) = sp5C;
+                break;
+            case 3:
+                if (func_88A007BC(ST_S32(0xC)) == 0 || func_88A007BC(ST_S32(0x10)) == 0
+                    || (((func_8800005C() == 0 && ST_S32(0xC) == 0) || (func_8800005C() == 0 && ST_S32(0x10) == 0))
+                        && func_8820C800((1 - SLOT) & 0xFF, func_8006378C(*func_8820C040(1, SLOT))) == 0)) {
+                    ERR(7);
+                    goto done0;
+                }
+                if ((ST_S32(0xC) == 2 && ST_S32(0x10) == 3) || (ST_S32(0xC) == 3 && ST_S32(0x10) == 2)) {
+                    ERR(0x10);
+                    goto done0;
+                }
+                if (func_8800005C() != 0 && (ST_S32(0xC) == 2 || ST_S32(0x10) == 2)) {
+                    ERR(0xC);
+                    goto done0;
+                }
+                if (func_8800005C() == 0 && (ST_S32(0xC) == 3 || ST_S32(0x10) == 3)) {
+                    ERR(0xD);
+                    goto done0;
+                }
+                if (func_8820C798() != 0) {
+                    ERR(9);
+                    goto done0;
+                }
+                played = 1;
+                D_882346F0 = 3;
+                SLOT ^= 1;
+                if (func_8800005C() == 0 && ((F31SelectionState *)D_88234710)->list[SLOT] == 0) {
+                    sp53 = func_8006378C(*func_8820C040(1, (1 - SLOT) & 0xFF));
+                    i = func_8006378C(*func_8820C040(1, SLOT));
+                    if (i != sp53) {
+                        func_8820CA50(SLOT, sp53);
+                    }
+                }
+                break;
+            }
+        done0:
+            if (played) {
+                func_800226C0(0x47);
+            }
+            goto end;
+        }
+        func_880020CC(REC(SLOT));
+        goto end;
+    case 1:
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x4000)) {
+            func_800226C0(0x48);
+            func_8820C65C(SLOT, 0);
+            SLOT ^= 1;
+            D_882346F0 = 0;
+            if (D_88234718 == 2) {
+                *(s32 *)(ST_S32(0xBC) + 0x2C) = 1;
+                D_880068B4 = 0;
+            }
+            goto end;
+        }
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x8000)) {
+            if (func_8800005C() == 0 && ((F31SelectionState *)D_88234710)->list[SLOT] == 0) {
+                if (((F31SelectionState *)D_88234710)->records[SLOT].position < ST_S16(0xC0) || ST_S16(0xC2) < ((F31SelectionState *)D_88234710)->records[SLOT].position) {
+                    func_800226C0(0x49);
+                    goto end;
+                }
+            }
+            func_8820CB74();
+            goto end;
+        }
+        func_880020CC(REC(SLOT));
+        goto end;
+    case 2:
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x4000)) {
+            func_800226C0(0x48);
+            D_882346F0 = 0;
+            goto end;
+        }
+        a1 = SLOT;
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x8000)) {
+            if (ST_S16(0xB8) == ((F31SelectionState *)D_88234710)->records[a1].position) {
+                goto err49;
+            }
+            if (func_8800005C() == 0 && ((F31SelectionState *)D_88234710)->list[SLOT] == 0) {
+                if (func_8006378C(((u8 (*)[2])D_88A01C64)[ST_S16(0xB8)][9]) != func_8006378C(*func_8820C040(1, SLOT))) {
+                err49:
+                    func_800226C0(0x49);
+                    goto end;
+                }
+            }
+            sp4E = ((F31SelectionState *)D_88234710)->records[SLOT].start;
+            e2 = Util_Malloc(0xC);
+            *(void **)e2 = func_8820C040(3, SLOT);
+            *(void **)(e2 + 4) = func_8820C040(1, SLOT);
+            diff = ST_S16(0xB8) - sp4E;
+            if (diff >= 0 && diff < 8) {
+                e2[8] = diff;
+            } else {
+                ((s8 *)e2)[8] = -1;
+            }
+            e2[9] = ((F31SelectionState *)D_88234710)->records[SLOT].position - sp4E;
+            e2[10] = SLOT;
+            D_8800EF54 = e2;
+            func_800226C0(0x5D);
+            func_800226C0(0x63);
+            func_88231698();
+            *(s32 *)(D_88A01C64 + *(s32 *)(ST + SLOT * 4 + 0xC) * 4 + 0x104) = 1;
+            goto end;
+        }
+        func_880020CC(REC(a1));
+        goto end;
+    case 3:
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x4000)) {
+            func_800226C0(0x48);
+            SLOT ^= 1;
+            D_882346F0 = 0;
+            goto end;
+        }
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (BTN & 0x8000)) {
+            if (func_8820C798() != 0) {
+                ERR(9);
+                goto end;
+            }
+            if ((func_8800005C() == 0 && ST_S32(0xC) == 0) || (func_8800005C() == 0 && ST_S32(0x10) == 0)) {
+                if (func_8006378C(*func_8820C040(1, 0)) != func_8006378C(*func_8820C040(1, 1))) {
+                    func_800226C0(0x49);
+                    goto end;
+                }
+            }
+            if (func_8820C94C() != 0) {
+                ERR(0xB);
+                goto end;
+            }
+            ent = Util_Malloc(0xC);
+            for (i = 0; i < 2; i++) {
+                *(void **)(ent + i * 4) = func_8820C040(1, (u8)i);
+                ent[8 + i] = ST_S16(0x1C + i * 44) - ST_S16(0x1E + i * 44);
+                *(s32 *)(D_88A01C64 + *(s32 *)(ST + i * 4 + 0xC) * 4 + 0x104) = 1;
+            }
+            D_8800EF54 = ent;
+            func_800226C0(0x5D);
+            func_800226C0(0x63);
+            func_882318B0();
+            goto end;
+        }
+        func_880020CC(REC(SLOT));
+        goto end;
+    default:
+        goto end;
+    }
+end:
+    func_88206460();
+}
+
+#undef ST
+#undef ST_S16
+#undef ST_S32
+#undef ST_U8
+#undef BTN
+#undef IDLE_A
+#undef IDLE_B
+#undef REC
+#undef ERR
+#undef SLOT
 
 s32 func_8820E450(u8 arg0, u8 arg1) {
     u32 index = arg0;
