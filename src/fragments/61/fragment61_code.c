@@ -675,9 +675,237 @@ s32 func_86B021E8(s32 arg0, void *arg1) {
 }
 
 #endif
-
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B023FC.s")
+extern u16 D_86B12AE8[];
+extern u16 D_80094904;
+extern u8 D_86B17A78[];
+extern u8 D_86B16DA0[];
+extern u8 *D_86B18208;
+extern u8 *D_86B181C0;
+extern s32 D_86B17C18;
+extern f32 D_86B0D20C[];
+extern f32 D_86B0D2D4[];
+extern f32 __cosf(f32);
+extern f32 __sinf(f32);
+extern f32 sqrtf(f32);
+extern void func_8003F210(void *, s32);
+extern void func_8003F3BC(void *, s32);
+extern s32 ModelAnim_IsFinished(void *);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_8003EC54(s32 *);
+extern void func_8002781C(u16 resource_id, u8 mode, ...);
+#define SPEED_CALC(m, k1, k2, k3, k4, k5, k6, k7) \
+    ModelAnim_SetSpeed(m, (s32)(81920.0f * sqrtf((*(f32 *)(D_86B17A78 + idx * 8 + 0x14) - *(f32 *)(D_86B17A78 + idx * 8 + 0x98)) * (*(f32 *)(D_86B17A78 + idx * 8 + 0x14) - *(f32 *)(D_86B17A78 + idx * 8 + 0x98)) + (*(f32 *)(D_86B17A78 + idx * 8 + 0x18) - *(f32 *)(D_86B17A78 + idx * 8 + 0x9C)) * (*(f32 *)(D_86B17A78 + idx * 8 + 0x18) - *(f32 *)(D_86B17A78 + idx * 8 + 0x9C))) \
+        / sqrtf((130.0f * (__cosf(0.016f) - __cosf(0.0f))) * (130.0f * (__cosf(0.016f) - __cosf(0.0f))) + (130.0f * (__sinf(0.016f) - __sinf(0.0f))) * (130.0f * (__sinf(0.016f) - __sinf(0.0f))))))
+s32 func_86B023FC(s32 arg0, u8 *arg1) {
+    u8 *s1;
+    s32 state;
+    s32 idx;
+    s32 v;
+
+    idx = *(s32 *)(arg1 + 0x14);
+    *(s32 *)(arg1 + 0xA0) = -0x100;
+    if (D_80094904 != D_86B12AE8[idx] && arg0 != 0 && arg0 == 2) {
+        *(f32 *)(arg1 + 0x24) = *(f32 *)(D_86B17A78 + idx * 8 + 0x14);
+        *(f32 *)(arg1 + 0x2C) = *(f32 *)(D_86B17A78 + idx * 8 + 0x18);
+        *(s16 *)(arg1 + 0x20) = *(s16 *)(D_86B17A78 + idx * 2 + 0xE8);
+        s1 = D_86B17A78 + idx * 4;
+        switch (*(s32 *)(s1 + 0x34)) {
+        case 0:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 0);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            break;
+        case 1:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 1);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 2;
+            }
+            break;
+        case 2:
+        case 4:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 2);
+            SPEED_CALC((D_86B16DA0 + idx * 0x168), 0, 0, 0, 0, 0, 0, 0);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            break;
+        case 3:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 3);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 0;
+            }
+            break;
+        case 5:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 4);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 6;
+            }
+            break;
+        case 7:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 2);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            break;
+        case 8:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 2);
+            SPEED_CALC((D_86B16DA0 + idx * 0x168), 0, 0, 0, 0, 0, 0, 0);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            break;
+        case 9:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 5);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            ModelAnim_SetSpeed((D_86B16DA0 + idx * 0x168), 0x4000);
+            break;
+        case 6:
+        case 12:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 5);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            ModelAnim_SetSpeed((D_86B16DA0 + idx * 0x168), 0x10000);
+            break;
+        case 10:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 6);
+            ModelAnim_SetSpeed((D_86B16DA0 + idx * 0x168), 0x18000);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                v = *(s32 *)(s1 + 0xC8);
+                *(s32 *)(s1 + 0x34) = v;
+                if (v == 0xE) {
+                    func_8002781C(0xAF03, (u8)idx, D_86B17A78 + idx * 2 + 0x49C);
+                }
+            }
+            if (*(f32 *)(s1 + 0x48) <= 45.0f) {
+                if (*(s32 *)(s1 + 0xC8) == 0xE) {
+                    *(s32 *)(s1 + 0x34) = *(s32 *)(s1 + 0xC8);
+                    *(f32 *)(s1 + 0x48) = 45.0f;
+                    *(f32 *)(s1 + 0xD8) = (130.0f - *(f32 *)(s1 + 0x48)) / 14.0f;
+                    func_8002781C(0xAF03, (u8)idx, D_86B17A78 + idx * 2 + 0x49C);
+                }
+            }
+            break;
+        case 11:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 6);
+            ModelAnim_SetSpeed((D_86B16DA0 + idx * 0x168), 0x18000);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = *(s32 *)(s1 + 0xC8);
+            }
+            break;
+        case 13:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 7);
+            ModelAnim_SetSpeed((D_86B16DA0 + idx * 0x168), 0x10000);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (func_8003EC54((s32 *)(D_86B16DA0 + idx * 0x168)) == 0) {
+                if (*(s32 *)(s1 + 0x1A4) != 0) {
+                    *(s32 *)(s1 + 0x1B4) += 1;
+                }
+            }
+            if (*(s32 *)(s1 + 0x1A4) != 0) {
+                *(s32 *)(s1 + 0x1A4) += 1;
+            }
+            if (*(s32 *)(s1 + 0x214) != 0) {
+                *(s32 *)(s1 + 0x214) -= 1;
+                ((s32 *)(D_86B17A78 + idx * 20 + 0x220))[*(s32 *)(s1 + 0x1B4)] += 1;
+            }
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                if (*(s32 *)(s1 + 0x1A4) != 0) {
+                    *(s32 *)(s1 + 0x1A4) = 0;
+                }
+                if (*(s32 *)D_86B181C0 == 6) {
+                    *(s32 *)(s1 + 0x34) = 7;
+                }
+                if (D_86B17C18 != 0) {
+                    *(s32 *)(s1 + 0x34) = 0x15;
+                }
+            }
+            break;
+        case 14:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 8);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 2;
+            }
+            break;
+        case 15:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 9);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 1);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(f32 *)(s1 + 0x48) = (f32)((f64)*(f32 *)(s1 + 0x48) + 35.58583333333334);
+                *(s32 *)(s1 + 0x34) = 7;
+            }
+            break;
+        case 16:
+            if (*(f32 *)(s1 + 0x48) != 180.0f) {
+                *(s32 *)(arg1 + 0xA0) = 0x9F;
+            }
+            func_8003F210((D_86B16DA0 + idx * 0x168), 10);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 0x11;
+                func_8002781C(0xAF07, (u8)idx, D_86B17A78 + idx * 2 + 0x49C);
+            }
+            break;
+        case 17:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 11);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 0x12;
+            }
+            break;
+        case 18:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 12);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                *(s32 *)(s1 + 0x34) = 0;
+            }
+            break;
+        case 19:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 13);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 2);
+            if (ModelAnim_IsFinished((D_86B16DA0 + idx * 0x168))) {
+                if (D_86B17C18 != 0) {
+                    *(s32 *)(s1 + 0x34) = 0x14;
+                } else {
+                    *(s32 *)(s1 + 0x34) = 7;
+                }
+            }
+            break;
+        case 20:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 14);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 3);
+            break;
+        case 21:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 2);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            break;
+        case 22:
+        case 23:
+            func_8003F210((D_86B16DA0 + idx * 0x168), 5);
+            func_8003F3BC((D_86B16DA0 + idx * 0x168), 0);
+            ModelAnim_SetSpeed((D_86B16DA0 + idx * 0x168), 0x10000);
+            break;
+        }
+        switch (*(s32 *)(s1 + 0x34)) {
+        case 0xD: {
+            u8 *p = D_86B18208 + idx * 0x18; *(f32 *)(p + 4) = *(f32 *)(D_86B17A78 + idx * 8 + 0x14); v = func_8003EC54((s32 *)(D_86B16DA0 + idx * 0x168));
+            *(f32 *)(p + 8) = (f32)((f64)D_86B0D20C[v] * 0.16666666666666666 * 50.0 - 5.260833);
+            *(f32 *)(p + 0xC) = *(f32 *)(D_86B17A78 + idx * 8 + 0x18);
+            break; }
+        case 0xE: {
+            u8 *p = D_86B18208 + idx * 0x18; *(f32 *)(p + 4) = *(f32 *)(D_86B17A78 + idx * 8 + 0x14); v = func_8003EC54((s32 *)(D_86B16DA0 + idx * 0x168));
+            *(f32 *)(p + 8) = (f32)((f64)D_86B0D2D4[v] * 0.16666666666666666 * 50.0 - 5.260833);
+            *(f32 *)(p + 0xC) = *(f32 *)(D_86B17A78 + idx * 8 + 0x18);
+            break; }
+        default: {
+            u8 *p =  D_86B18208 + idx * 0x18;
+            *(f32 *)(p + 4) = *(f32 *)(D_86B17A78 + idx * 8 + 0x14);
+            *(f32 *)(p + 8) = 55.0f;
+            *(f32 *)(p + 0xC) = *(f32 *)(D_86B17A78 + idx * 8 + 0x18);
+            break; }
+        }
+    }
+    D_86B12AE8[idx] = D_80094904;
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
