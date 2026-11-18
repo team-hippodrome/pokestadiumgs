@@ -801,7 +801,78 @@ void func_8F801F44(void) {
     D_8F809FC0.halfwords[3] = D_8F809FC0.halfwords[6] * 20;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/77/fragment77_code/func_8F801FC4.s")
+extern s32 Input_GetRepeatedDPad(void);
+s32 func_8F801FC4(void) {
+    // Function-scope statics at 0x8F809FC8 (cursor, top row, page size, last row):
+    // retail never reloads them after a store and rematerializes each address.
+    static struct {
+        s16 cur;
+        s16 top;
+    } sList;
+    static u16 sPage;
+    static u16 sMax;
+    s32 result = 0;
+    s16 input;
+    s32 raw;
+    s32 buttons;
+    u16 max;
+    u16 page;
+
+    raw = Input_GetRepeatedDPad(); input = raw;
+    if (raw) {
+        func_800226C0(1);
+        switch (input) {
+            case 0x200:
+                page = sPage;
+                sList.cur -= page;
+                if (sList.cur < 0) {
+                    sList.cur = 0;
+                }
+                sList.top -= page;
+                if (sList.top < 0) {
+                    sList.top = 0;
+                }
+                break;
+            case 0x100:
+                page = sPage;
+                sList.cur += page;
+                max = sMax;
+                if (sList.cur > max) {
+                    sList.cur = max;
+                }
+                sList.top += page;
+                if (sList.top > max - page + 1) {
+                    sList.top = max - page + 1;
+                }
+                break;
+            case 0x800:
+                sList.cur--;
+                if (sList.cur < 0) {
+                    sList.cur = 0;
+                }
+                if (sList.cur < sList.top) {
+                    sList.top = sList.cur;
+                }
+                break;
+            case 0x400:
+                sList.cur++;
+                if (sList.cur > sMax) {
+                    sList.cur = sMax;
+                }
+                if (sList.cur >= sList.top + sPage) {
+                    sList.top = sList.cur - sPage + 1;
+                }
+                break;
+        }
+    }
+    buttons = D_80087200->buttonsPressed;
+    if (buttons & 0x8000) {
+        result = 1;
+    } else if (buttons & 0x4000) {
+        result = 2;
+    }
+    return result;
+}
 
 s32 func_8F8021E8(void) {
     s32 event;
