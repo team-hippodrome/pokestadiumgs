@@ -31,6 +31,14 @@ SECTIONS
         build/src/fragments/20/fragment20_12C460.o(.data)
     }
 
+    /* Fragment 20's mode state block D_8261A490 (0x35DC bytes). It is
+     * defined in fragment20_12C460.c so as1 folds the shared-page `lui $at`
+     * for stores to its fields, as in func_82614CE0. */
+    .fragment20_state_bss 0x8261A490 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/20/fragment20_12C460.o(.bss)
+    }
+
     /* func_82801A08's pulse period and phase statics (60.0f, 0.0f). */
     .fragment10_pulse_data 0x8280283C (NOLOAD) : SUBALIGN(4)
     {

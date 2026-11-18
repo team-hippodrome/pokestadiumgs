@@ -1772,12 +1772,15 @@ void func_82607790(unk_func_82607790 *arg0) {
 
 extern s32 D_8261A5A0;
 extern u16 D_8261A494;
-extern s16 D_8261A490;
+/* Mode state block (0x35DC bytes, cleared by func_82610C84). It is defined
+ * here, not extern, so as1 can share one `lui $at` across stores to its
+ * fields the way the retail object does (see func_82614CE0). */
+s16 D_8261A490[0x35DC / 2];
 void func_826078B4(void *arg0) {
     s16 *entry = arg0;
     s32 is_one;
 
-    is_one = D_8261A490 == 1;
+    is_one = D_8261A490[0] == 1;
     if (entry != NULL && entry[3] == 2) {
         entry[3] = 4;
         entry[4] = 0;
@@ -3904,7 +3907,7 @@ extern void _bzero(void *, s32);
 extern s32 D_8261A5A0;
 extern s32 func_8260F7FC(s32);
 extern s32 func_826101B4(s32);
-extern s16 D_8261A490;
+extern s16 D_8261A490[];
 s32 func_82610C84(s32 arg0, s32 arg1) {
     s32 result;
     s32 mode;
@@ -3913,7 +3916,7 @@ s32 func_82610C84(s32 arg0, s32 arg1) {
     _bzero((void *)&D_8261A490, 0x35DC);
     D_8261A5A0 = arg0;
     mode = *(s16 *)((u8 *)&arg1 + 2);
-    D_8261A490 = mode;
+    D_8261A490[0] = mode;
     switch (mode) {
     case 0:
         result = func_8260F7FC(arg0);
@@ -3925,7 +3928,7 @@ s32 func_82610C84(s32 arg0, s32 arg1) {
     return result;
 }
 
-extern s16 D_8261A490;
+extern s16 D_8261A490[];
 s32 func_82610D14(void) {
     u8 *base = (u8 *)&D_8261A490;
     s32 result = 1;
@@ -5875,7 +5878,7 @@ void func_82614A0C(void *arg0) {
     }
 }
 
-extern s16 D_8261A490;
+extern s16 D_8261A490[];
 extern u16 D_8261A494;
 extern s16 D_8261DA4C;
 extern void func_82614A0C(void *arg0);
@@ -5928,7 +5931,59 @@ s32 func_82614BD0(void) {
     return (D_8261A494 & 1) != 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82614CE0.s")
+typedef struct {
+    s16 mode;
+    s16 unk2;
+    u16 flags;
+    s16 unk6;
+    u8 pad8[0xA];
+    s16 unk12;
+    u8 pad14[4];
+    s16 count;
+    u8 pad1A[0x34F4 - 0x1A];
+    void *entries[1];
+} S_82614CE0;
+extern u8 D_8261A5A4[];
+
+s32 func_82614CE0(void) {
+    s32 ret = 0;
+    s16 *fields = D_8261A490;
+    S_82614CE0 *base = (S_82614CE0 *)&D_8261A490;
+    s32 i;
+    void *entry;
+
+    if ((base->flags & 1) && fields[1] == 0) {
+        fields[1] = 1;
+        fields[3] = 0;
+        fields[12] = 0;
+        switch (fields[0]) {
+            case 0:
+                for (i = 0; i < fields[9]; i++) {
+                    base->entries[fields[12]] = func_82604C40(1, i, D_8261A5A4, 0x14);
+                    fields[12]++;
+                }
+                base->entries[fields[12]] = func_82604C40(2, 0, D_8261A5A4, 0x14);
+                fields[12]++;
+                entry = func_82604C40(3, 0, D_8261A5A4, 0x14);
+                if (entry != NULL) {
+                    base->entries[fields[12]] = entry;
+                    fields[12]++;
+                }
+                break;
+            case 1:
+                for (i = 0; i < 2; i++) {
+                    base->entries[fields[12]] = func_82604C40(6, i, D_8261A5A4, 0x14);
+                    fields[12]++;
+                }
+                break;
+        }
+        for (i = 0; i < base->count; i++) {
+            func_8260675C(base->entries[i]);
+        }
+        ret = 1;
+    }
+    return ret;
+}
 
 extern s16 D_8261A492;
 extern u16 D_8261A494;
