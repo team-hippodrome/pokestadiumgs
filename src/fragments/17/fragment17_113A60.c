@@ -9,6 +9,11 @@ typedef struct F17TransitionState {
     s16 unk_02;
 } F17TransitionState;
 static F17TransitionState sTransition105E8;
+static F17TransitionState sTransition105EC;
+/* Transition fade state at D_822105F0: mode, step, current x/y/z/w and the
+ * x/y/z/w targets. Local storage (not extern) is what lets as1 share one
+ * `lui $at` across the field stores, as the retail object does. */
+static s16 sFade105F0[14];
 
 typedef struct { s16 a; s16 b; } Pair16_b2;
 extern s16 D_822105F0;
@@ -44,7 +49,61 @@ void func_822040A0(s16 *arg0) {
     v0[7] = v0[5] - v0[13];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82204148.s")
+void func_82204148(void) {
+    s16 step;
+    s16 y;
+    s32 z;
+    s16 *st = sFade105F0;
+
+    switch (st[0]) {
+        case 1:
+        case 2:
+            return;
+        case 3:
+            step = st[1] + 1;
+            if (step < 4) {
+                st[2] = (0x3B - st[8]) * step / 4 + st[8];
+                st[3] = (0x150 - st[9]) * step / 4 + st[9];
+                y = (0x1F4 - st[10]) * step / 4 + st[10];
+                z = (0x70 - st[11]) * step / 4 + st[11];
+                st[1] = step; z = (s16)z;
+            } else {
+                st[0] = 2;
+                st[2] = 0x3B;
+                st[3] = 0x150;
+                y = 0x1F4;
+                st[1] = 0;
+                z = 0x70;
+            }
+            st[6] = y - st[12];
+            st[7] = z - st[13];
+            st[5] = z;
+            st[4] = y;
+            break;
+        case 4:
+            step = st[1] + 1;
+            if (step < 4) {
+                st[2] = (st[8] - 0x3B) * step / 4 + 0x3B;
+                st[3] = (st[9] - 0x150) * step / 4 + 0x150;
+                y = (st[10] - 0x1F4) * step / 4 + 0x1F4;
+                z = (st[11] - 0x70) * step / 4 + 0x70;
+                st[1] = step; z = (s16)z;
+            } else {
+                st[0] = 1;
+                st[2] = st[8];
+                st[3] = st[9];
+                y = st[10];
+                z = st[11];
+                z = (s16)z;
+                st[1] = 0;
+            }
+            st[6] = y - st[12];
+            st[7] = z - st[13];
+            st[5] = z;
+            st[4] = y;
+            break;
+    }
+}
 
 extern s16 D_822105F0;
 
