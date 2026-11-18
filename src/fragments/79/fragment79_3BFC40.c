@@ -1,0 +1,1651 @@
+#include "global.h"
+
+
+#ifdef VERSION_US
+typedef struct {
+    u8 flags;
+    u8 unk_01[7];
+    u8 selected[2];
+    u8 unk_0A[42];
+    u32 score[2];
+} BattlePlanScoreHeader;
+
+typedef struct {
+    u8 unk_00[13];
+    u8 stages[7];
+} BattlePlanStageRecord;
+extern u8 *func_84154B64(u8);
+extern u8 *func_84154B30(u8);
+extern void *func_84156590(u8);
+extern s32 func_84156618(u8, u8, s32);
+extern u8 func_84149424(void);
+extern u8 func_80062D20(u8);
+extern u8 func_84154B18(void);
+extern void func_8414A180(u8 *, u8, u8);
+extern void func_8414A144(u8 *);
+extern u8 * func_84154B64(u8);
+extern void func_8414D198(void *, u8);
+extern u16 func_84148520(u16, u16, u8);
+extern u8 * func_84154B30(u8);
+extern s32 func_84155544(u8 *, u8);
+extern s32 BattleRecord_HasMove(u8 *, u8);
+extern u8 func_80063660(u8);
+extern u8 func_8414A264(void);
+extern void * func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+extern s32 func_84154B9C(u8, u16);
+void BattlePlan_ScoreSleep(void *plan, u8 side, u8 chance) {
+    u8 *other;
+    u8 *own;
+    s32 base;
+    s32 amount;
+    u8 *table;
+    base = (s32)(u32)plan + 4;
+    other = func_84154B30(1 - side);
+    own = func_84154B64(side);
+    if (*(u16 *)(other + 46) != 0) return;
+    if ((other[3] & 4) != 0) return;
+    if ((other[32] & 0x10) != 0) return;
+    if (func_80063660(other[9]) == 23) return;
+    if (func_84154B9C(1 - side, 7) != 0) return;
+    *(u8 *)(u32)base |= 2;
+    table = func_8414A3A0(side);
+    amount = table[12] * func_8414A264() * chance / 255;
+    ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    if (BattleRecord_HasMove(own, 171) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+    if (BattleRecord_HasMove(own, 138) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+    *(u8 *)((u32)base + (u32)side + 8) = chance;
+}
+
+extern s32 func_84155574(u8 *, u8);
+extern u8 func_80062D98(u8);
+extern s32 func_84155544(u8 *, u8);
+extern s32 func_841556C4(u8 *, u8);
+void BattlePlan_ScorePoison(u8 *plan, u8 side, u8 move, u8 chance) {
+    u8 *own;
+    u8 *other;
+    s32 base;
+    u8 move_type;
+    s32 amount;
+    u8 *cursor;
+    base = (s32)(u32)plan + 4;
+    own = func_84154B64(side);
+    other = func_84154B30((1 - (u32)side) & 0xFF);
+    move_type = func_80062D98(move);
+    if (*(u16 *)(other + 46) != 0) return;
+    if ((other[3] & 4) != 0) return;
+    if ((other[32] & 0x10) != 0) return;
+    if (func_80063660(other[9]) == 20) return;
+    cursor = other + 8;
+    if (func_84155544(cursor, 3) != 0) return;
+    if (func_84155574(cursor, move_type) == 0) return;
+    *(u8 *)((u32)base + (u32)side + 8) = chance;
+    cursor = func_8414A3A0(side);
+    amount = cursor[13] * func_8414A264() * chance / 255;
+    ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    if (move == 92) { ((u32 *)(u32)base)[(u32)side + 13] += amount >> 1; }
+    if (func_841556C4(own, 111) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+    *(u8 *)(u32)base |= 2;
+}
+
+void BattlePlan_ScoreBurn(void *plan, u8 side, u8 move, u8 chance) {
+    u8 *other;
+    u8 *own;
+    s32 base;
+    u8 move_type;
+    s32 amount;
+    u8 *table;
+    base = (s32)(u32)plan + 4;
+    other = func_84154B30((1 - (u32)side) & 0xFF);
+    own = func_84154B64(side);
+    move_type = func_80062D98(move);
+    table = func_8414A3A0(side);
+    amount = table[14] * func_8414A264() * chance / 255;
+    if (*(u16 *)(other + 46) != 0) {
+        if ((*(u16 *)(other + 46) & 0x20) != 0) {
+            *(u8 *)((u32)base + (u32)side + 8) = chance;
+            ((u32 *)(u32)base)[(u32)side + 13] -= amount;
+        }
+        return;
+    }
+    if ((other[3] & 4) != 0) return;
+    if ((other[32] & 0x10) != 0) return;
+    if (func_80063660(other[9]) == 21) return;
+    if (func_84155544(other + 8, move_type) != 0) return;
+    if (func_84155574(other + 8, move_type) == 0) return;
+    *(u8 *)(u32)base |= 2;
+    *(u8 *)((u32)base + (u32)side + 8) = chance;
+    ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    if (func_841556C4(own, 111) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+}
+
+extern u8 *func_84154B0C(void);
+void BattlePlan_ScoreFreeze(void *plan, u8 side, u8 move, u8 chance) {
+    u8 *other;
+    u8 *cursor;
+    u8 move_type;
+    s32 base;
+    u8 amount;
+    u8 other_side;
+    base = (s32)(u32)plan + 4;
+    other_side = (1 - (u32)side) & 0xFF;
+    other = func_84154B30(other_side);
+    move_type = func_80062D98(move);
+    if (*(u16 *)(other + 46) != 0) return;
+    if ((other[3] & 4) != 0) return;
+    if ((other[32] & 0x10) != 0) return;
+    if (func_80063660(other[9]) == 22) return;
+    if (func_84154B0C()[408] == 2) return;
+    cursor = other + 8;
+    if (func_84155544(cursor, move_type) != 0) return;
+    if (func_84155574(cursor, move_type) == 0) return;
+    if (func_84154B9C(other_side, 0x20) != 0) return;
+    *(u8 *)((u32)base + (u32)side + 8) = chance;
+    amount = func_8414A264();
+    cursor = func_8414A3A0(side);
+    ((u32 *)(u32)base)[(u32)side + 13] += cursor[15] * amount * chance / 255;
+}
+
+void BattlePlan_ScoreParalysis(void *plan, u8 side, u8 move, u8 chance) {
+    u8 *other;
+    u8 *table;
+    u8 move_type;
+    s32 base;
+    u8 amount;
+    base = (s32)(u32)plan + 4;
+    other = func_84154B30((1 - (u32)side) & 0xFF);
+    move_type = func_80062D98(move);
+    if (*(u16 *)(other + 46) != 0) return;
+    if ((other[3] & 4) != 0) return;
+    if ((other[32] & 0x10) != 0) return;
+    if (func_80063660(other[9]) == 24) return;
+    if (func_84155574(other + 8, move_type) == 0) return;
+    *(u8 *)(u32)base |= 2;
+    *(u8 *)((u32)base + (u32)side + 8) = chance;
+    amount = func_8414A264();
+    table = func_8414A3A0(side);
+    ((u32 *)(u32)base)[(u32)side + 13] += table[16] * amount * chance / 255;
+}
+
+extern u8 func_8414A2C4(void);
+extern void *D_841951F8[];
+extern u8 BattleMoveState_FindStrongestMove(u8, u8);
+extern u8 func_8414A270(u8);
+void BattlePlan_ScoreStatIncrease(u8 *plan, u8 side, u8 move, u8 chance, u8 stage, u8 gain) {
+    u8 factor;
+    u8 *own;
+    u8 *other;
+    s32 base;
+    u8 *table;
+    s32 amount;
+    own = func_84154B64(side);
+    other = func_84154B64(1 - side);
+    base = (s32)(u32)plan + 4;
+    table = func_8414A3A0(side);
+    if (move == 111 && (own[22] & 1) == 0 && BattleRecord_HasMove(own, 205) != 0) {
+        *(u8 *)((u32)base + (u32)side + 8) = chance;
+        ((u32 *)(u32)base)[(u32)side + 13] += table[11] * func_8414A2C4() * chance / 255;
+    }
+    if (((BattlePlanStageRecord *)own)->stages[stage] >= 13) return;
+    if (stage < 5 && ((u16 *)(own + 54))[stage] >= 999) return;
+    *(u8 *)((u32)base + (u32)side + 8) = chance;
+    if (((BattlePlanStageRecord *)own)->stages[stage] + gain >= 14) {
+        gain = 13 - ((BattlePlanStageRecord *)own)->stages[stage];
+    }
+    factor = (13 - ((BattlePlanStageRecord *)own)->stages[stage]) * gain;
+    amount = (table + 23)[stage] * func_8414A270(stage) * factor * chance / 255;
+    ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    switch (stage) {
+    case 0:
+        if (BattleMoveState_FindStrongestMove(side, 0) != 0) ((u32 *)(u32)base)[(u32)side + 13] += amount >> 1;
+        break;
+    case 1:
+        if (BattleMoveState_FindStrongestMove(1 - side, 0) != 0) ((u32 *)(u32)base)[(u32)side + 13] += amount >> 1;
+        break;
+    case 2:
+        if (*(u16 *)(other + 58) < *(u16 *)(own + 58)) ((u32 *)(u32)base)[(u32)side + 13] = 0;
+        break;
+    case 3:
+        if (BattleMoveState_FindStrongestMove(side, 1) != 0) ((u32 *)(u32)base)[(u32)side + 13] += amount >> 1;
+        break;
+    case 4:
+        if (BattleMoveState_FindStrongestMove(1 - side, 1) != 0) ((u32 *)(u32)base)[(u32)side + 13] += amount >> 1;
+        break;
+    }
+    if (BattleRecord_HasMove(own, 226) != 0 && ((u8 *)D_841951F8[side])[9] >= 2) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 func_80062D5C(u8);
+void BattlePlan_ScoreStatReduction(u8 *plan, u8 side, u8 move, u8 chance, u8 stage, u8 drop) {
+    u8 factor;
+    u8 *own;
+    u8 *other;
+    u8 move_type;
+    s32 amount;
+    BattlePlanScoreHeader *header;
+    u8 *table;
+    own = func_84154B64(side);
+    other = func_84154B64(1 - side);
+    header = (BattlePlanScoreHeader *)(plan + 4);
+    if ((other[24] & 0x10) != 0) return;
+    if ((other[24] & 2) != 0) return;
+    if (((BattlePlanStageRecord *)other)->stages[stage] < 2) return;
+    if (stage < 5 && ((u16 *)(other + 54))[stage] < 2) return;
+    if (func_80062D5C(move) > 0) {
+        move_type = func_80062D98(move);
+        if (func_84155574(other, move_type) == 0) return;
+    }
+    header->selected[side] = chance;
+    if (((BattlePlanStageRecord *)other)->stages[stage] - drop <= 0) {
+        drop = ((BattlePlanStageRecord *)other)->stages[stage] - 1;
+    }
+    factor = (((BattlePlanStageRecord *)other)->stages[stage] - 1) * drop;
+    table = func_8414A3A0(side);
+    amount = (table + 30)[stage] * func_8414A270(stage) * factor * chance / 255;
+    switch (stage) {
+    case 0:
+        if (BattleMoveState_FindStrongestMove(1 - side, 0) != 0) amount += amount >> 1;
+        break;
+    case 1:
+        if (BattleMoveState_FindStrongestMove(side, 0) != 0) amount += amount >> 1;
+        break;
+    case 2:
+        if (*(u16 *)(other + 58) < *(u16 *)(own + 58)) amount = 0;
+        break;
+    case 3:
+        if (BattleMoveState_FindStrongestMove(1 - side, 1) != 0) amount += amount >> 1;
+        break;
+    case 4:
+        if (BattleMoveState_FindStrongestMove(side, 1) != 0) amount += amount >> 1;
+        break;
+    }
+    header->score[side] += amount;
+    header->flags |= 2;
+}
+
+extern void BattlePlan_ScoreStatIncrease(u8 *, u8, u8, u8, u8, u8);
+extern void BattlePlan_ScoreStatReduction(u8 *, u8, u8, u8, u8, u8);
+void BattlePlan_ScoreHaze(u8 *plan, u8 side) {
+    s32 first_stage;
+    s32 second_stage;
+    BattlePlanStageRecord *records[2];
+    s32 i;
+    s32 base;
+    base = (s32)(u32)plan + 4;
+    records[0] = (void *)func_84154B64(0);
+    records[1] = (void *)func_84154B64(1);
+    for (i = 0; i < 7; i++) {
+        first_stage = records[0]->stages[i];
+        if (first_stage >= 8) {
+            BattlePlan_ScoreStatReduction(plan, 1, 114, 0xFF, i, first_stage - 7);
+        } else if (first_stage < 7) {
+            BattlePlan_ScoreStatIncrease(plan, 0, 114, 0xFF, i, 7 - first_stage);
+        }
+        second_stage = records[1]->stages[i];
+        if (second_stage >= 8) {
+            BattlePlan_ScoreStatReduction(plan, 0, 114, 0xFF, i, second_stage - 7);
+        } else if (second_stage < 7) {
+            BattlePlan_ScoreStatIncrease(plan, 1, 114, 0xFF, i, 7 - second_stage);
+        }
+    }
+    *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 func_80063660(u8);
+extern u8 func_8414A2A0(void);
+extern void * func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+void BattlePlan_AddRampageBonus(u8 *plan, u8 side) {
+    u8 *state;
+    u8 *sub;
+    u8 value;
+    s32 base;
+    u8 *table;
+    u8 amount;
+    base = (s32)(u32)plan + 4;
+    state = func_84154B30(side);
+    sub = state + 8;
+    if ((state[3] & 4) == 0) {
+        //!bug: Later comparisons test the stored Boolean, not the getter result.
+        value = func_80063660(sub[1]) != 25;
+        if (value != 0 && value != 16 && value != 15) {
+            *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+            amount = func_8414A2A0();
+            table = func_8414A3A0(side);
+            ((u32 *)(u32)base)[(u32)side + 13] += table[18] * amount;
+        }
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+void func_8415132C(void *arg0, u8 arg1) {
+    s32 base;
+    u8 *sub;
+    u8 *state;
+    s32 mult;
+    u8 var;
+    void *table;
+
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B30((1 - (u32)arg1) & 0xFF);
+    sub = state + 8;
+    if (state[2] >= 2) {
+        var = 0;
+        table = func_8414A3A0(arg1);
+        mult = *(u8 *)((u8 *)table + 0x3F) * func_8414A2AC();
+        if (sub[0xD] >= 9) {
+            var = (sub[0xD] - 7) >> 1;
+        }
+        if (sub[0x10] >= 9) {
+            var += (sub[0x10] - 7) >> 1;
+        }
+        *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += var * mult;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_80062D98(u8);
+extern s32 func_84155544(u8 *, u8);
+s32 func_84151420(u8 *arg0, u8 arg1) {
+    u8 value;
+    u8 result;
+    value = *(u8 *)((s32)(u32)arg0 + arg1 + 4);
+    if (value == 0) return 0;
+    result = func_80062D98(value);
+    if (result == 0x13) return 0;
+    if (func_84155544(arg0, result) != 0) return 0;
+    return 1;
+}
+
+extern s32 func_84151420(u8 *, u8);
+
+s32 func_84151498(u8 *arg0) {
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (func_84151420(arg0, i) != 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+extern u8 func_80063454(u8, u8, u8, s32);
+u8 BattlePlan_CountResistingMoveSlots(u8 side, u8 target_type) {
+    u8 count;
+    u8 *record;
+    s32 i;
+    u8 move_type;
+    count = 0;
+    record = func_84154B64(side);
+    for (i = 0; i < 4; i++) {
+        if (func_84151420(record, i) != 0) {
+            move_type = func_80062D98(*(u8 *)((u32)record + (u32)i + 4));
+            if (func_80063454(target_type, move_type, move_type, 0) < 10) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+extern u8 func_84148C74(u8);
+void BattlePlan_AddConversionBonus(u8 *plan, u8 side) {
+    u8 other_side;
+    u8 move;
+    s32 base;
+    u8 *table;
+    u8 incoming_type;
+    u8 count;
+    u8 amount;
+    base = (s32)(u32)plan + 4;
+    other_side = 1 - side;
+    move = *(u8 *)((u32)plan + (u32)other_side + 6);
+    if (move == 0) {
+        move = func_84148C74(other_side);
+    }
+    if (func_84151498(func_84154B64(side)) != 0) {
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        amount = func_8414A2AC();
+        table = func_8414A3A0(side);
+        incoming_type = func_80062D98(move);
+        count = BattlePlan_CountResistingMoveSlots(side, incoming_type);
+        ((u32 *)(u32)base)[(u32)side + 13] += count * table[48] * amount;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern s32 func_8414C858(u8 *);
+extern u8 func_8414A288(void);
+void BattlePlan_AddFlinchBonus(u8 *plan, u8 side, u8 chance) {
+    u8 *other;
+    BattlePlanScoreHeader *base;
+    u8 *table;
+    u8 amount;
+    base = (void *)(plan + 4);
+    other = func_84154B64((1 - (u32)side) & 0xFF);
+    if (((other[24] & 0x10) == 0) && ((*(u16 *)(other + 38) & 0x27) == 0)) {
+        if (func_8414C858(plan) != 0) {
+            base->selected[side] = chance;
+            amount = func_8414A288();
+            table = func_8414A3A0(side);
+            base->score[side] += table[17] * amount * chance / 255;
+            base->flags |= 2;
+        }
+    }
+}
+
+extern s32 func_8414A2DC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_8415178C(void *arg0, u8 arg1, u8 arg2) {
+    void *state;
+    s32 base;
+    u8 pad;
+    void *table;
+    s32 amount;
+    state=func_84154B64((s32)arg1);
+    if (*(u16 *)((u8 *)state+0x2A)!=*(u16 *)((u8 *)state+0x28)) {
+        base=(s32)(u32)arg0+4;
+        table=func_8414A3A0(arg1);
+        amount=*(u8 *)((u8 *)table+0x3D) * func_8414A2DC();
+        *(u8 *)((u8 *)(u32)base+(u32)arg1+8)=0xFF;
+        if (*(u8 *)((u8 *)arg0+1)&2) amount>>=2;
+        *(s32 *)((u8 *)(u32)base+((u32)arg1<<2)+0x34)+=amount;
+        *(u8 *)(u32)base|=2;
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+void func_84151838(void *arg0, u8 arg1) { s32 base; void *table; u32 *entry; u8 amount; base = (s32)(u32)arg0 + 4; if ((func_84154B30(arg1)[3] & 8) == 0) { *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF; amount = func_8414A2AC(); table = func_8414A3A0(arg1); entry = (u32 *)((u8 *)(u32)base + (arg1 << 2) + 0x34); *entry += *(u8 *)((u8 *)table + 0x25) * amount; *(u8 *)(u32)base |= 2; } }
+
+
+void func_841518D0(void *arg0, u8 arg1, u8 arg2) {
+    u8 local = arg2 / 3;
+
+    BattlePlan_ScoreBurn(arg0, arg1, 0xA1, local);
+    BattlePlan_ScoreFreeze(arg0, arg1, 0xA1, local);
+    BattlePlan_ScoreParalysis(arg0, arg1, 0xA1, local);
+}
+
+extern s32 func_841493F4(void);
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84151940(void *arg0, u8 arg1) {
+    u8 *state;
+    s32 base;
+    s32 amount;
+    void *table;
+    state = func_84154B64((1 - (u32)arg1) & 0xFF);
+    if (state[0x23] > 0) return;
+    if (state[0x18] & 0x10) return;
+    table = func_8414A3A0(arg1);
+    base = (s32)(u32)arg0 + 4;
+    amount = *(u8 *)((u8 *)table + 0x2D) * func_8414A2AC();
+    *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+    *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += (amount * func_841493F4()) / 128;
+    if ((state[0x15] & 0x10) && state[0x1F] >= 2) *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+    *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF;
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84151A5C(void *arg0, u8 arg1) {
+    s32 base;
+    void *state;
+    void *table;
+    u8 amount;
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B64(arg1);
+    if (0 == (*(u8 *)((u8 *)state + 0x18) & 2)) {
+        *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        amount = func_8414A2AC();
+        table = func_8414A3A0(arg1);
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)table + 0x26) * amount;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84151AF4(void *arg0, u8 arg1) {
+    s32 base;
+    void *state;
+    void *table;
+    u8 amount;
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B64(arg1);
+    if (0 == (*(u8 *)((u8 *)state + 0x18) & 4)) {
+        *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        amount = func_8414A2AC();
+        table = func_8414A3A0(arg1);
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)table + 0x27) * amount;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 *func_84154B64(u8);
+extern s32 func_841556C4(u8 *, u8);
+void func_84151B8C(s32 arg0, u8 arg1, u8 arg2) {
+    u8 *state;
+    u8 *sub;
+    u8 *other;
+    s32 base;
+    s32 amount;
+    void *table;
+    s32 unused;
+
+    state = func_84154B30((1 - (u32)arg1) & 0xFF);
+    sub = state + 8;
+    other = func_84154B64(arg1);
+    if (func_80063660(sub[1]) == 0x19) return;
+    if (sub[0x17] & 0x80) return;
+    if (sub[0x18] & 0x10) return;
+    base = arg0 + 4;
+    if (state[3] & 4) return;
+    *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = arg2;
+    table = func_8414A3A0(arg1);
+    amount = (*(u8 *)((u8 *)table + 0x12) * func_8414A2A0() * arg2) / 255;
+    *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+    if (func_841556C4(other, 0x6F)) {
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+    }
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 *func_84154B64(u8);
+void func_84151CD8(void *arg0, u8 arg1) { s32 base; base = (s32)(u32)arg0 + 4; if ((*(u8 *)((u8 *)func_84154B64((1 - arg1) & 0xFF) + 0x19) & 8) == 0) { *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF; *(u8 *)((u8 *)(u32)base) |= 2; } }
+
+extern u8 func_8414A2AC(void);
+extern void *func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+void func_84151D3C(void *arg0, u8 arg1) { void *state; void *table; s32 base; u8 value; state = func_84154B30(arg1); base = (s32)(u32)arg0 + 4; if ((*(u8 *)((u8 *)state + 3) & 0x10) == 0) { *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF; value = func_8414A2AC(); table = func_8414A3A0(arg1); *(u32 *)((u8 *)(u32)base + (arg1 << 2) + 0x34) += (*(u8 *)((u8 *)table + 0x28)) * value; *(u8 *)((u8 *)(u32)base) |= 2; } }
+
+extern u8 *func_84154B64(u8);
+void func_84151DD4(void *arg0, u8 arg1) { void *state; s32 base; state = func_84154B64(arg1); base = (s32)(u32)arg0 + 4; if (((*(u8 *)((u8 *)state + 0x18) & 0x10) == 0) && (((s32)*(u16 *)((u8 *)state + 0x2A) >> 2) < (s32)*(u16 *)((u8 *)state + 0x28))) { *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF; *(u8 *)((u8 *)(u32)base) |= 2; } }
+
+void BattlePlan_AddMimicBonus(u8 *plan, u8 side) {
+    u8 *own;
+    u8 *other;
+    u8 move;
+    s32 i;
+    u8 *table;
+    s32 base;
+    u8 amount;
+    base = (s32)(u32)plan + 4;
+    own = func_84154B64(side);
+    other = func_84154B64((1 - (u32)side) & 0xFF);
+    move = other[36];
+    if ((move != 0) && (move != 165)) {
+        for (i = 0; i < 4; i++) {
+            if (own[i + 4] == move) {
+                return;
+            }
+        }
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        amount = func_8414A2AC();
+        table = func_8414A3A0(side);
+        ((u32 *)(u32)base)[(u32)side + 13] += table[62] * amount;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+void func_84151F20(void *arg0, u8 arg1) {
+    void *table;
+    u32 *entry;
+    u8 amount;
+    s32 base;
+    base = (s32)(u32)arg0 + 4;
+    *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF;
+    amount = func_8414A2AC();
+    table = func_8414A3A0(arg1);
+    entry = (u32 *)((u8 *)(u32)base + (arg1 << 2) + 0x34);
+    *entry += *(u8 *)((u8 *)table + 0x2F) * amount;
+    *(u8 *)(u32)base |= 2;
+}
+
+void BattlePlan_AddLeechSeedBonus(u8 *plan, u8 side) {
+    u8 *own;
+    u8 *other;
+    s32 base;
+    u32 amount;
+    u8 *table;
+    own = func_84154B64(side);
+    other = func_84154B64((1 - (u32)side) & 0xFF);
+    base = (s32)(u32)plan + 4;
+    if ((other[24] & 0x90) == 0 && func_84155544(other, 22) == 0) {
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        table = func_8414A3A0(side);
+        amount = table[19] * func_8414A2A0();
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+        if (func_841556C4(own, 111) != 0) {
+            ((u32 *)(u32)base)[(u32)side + 13] += amount;
+        }
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84152088(void *arg0, u8 arg1) {
+    s32 base;
+    u8 *state;
+    u8 flag;
+
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B64((1 - (u32)arg1) & 0xFF);
+    flag = state[0x24];
+    if (flag == 0) {
+        return;
+    }
+    if (flag == 0xA5) {
+        return;
+    }
+    if (state[0x1D] > 0) {
+        return;
+    }
+    *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+    *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)func_8414A3A0(arg1) + 0x29) * func_8414A2AC();
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 func_8414A2A0(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84152140(void *arg0, u8 arg1) {
+    s32 sp18;
+    s32 base;
+    u8 value;
+    void *table;
+    u8 sp1F;
+
+    table = func_84154B64((1 - (u32)arg1) & 0xFF);
+    value = *(u8 *)((u8 *)table + 0x25);
+    if ((value != 0) && (value != 0xA5) && (value != 0xE3) && (value != 0x77)) {
+        base = (s32)(u32)arg0 + 4;
+        if (!(*(u8 *)((u8 *)table + 0x19) & 0x10)) {
+            *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+            sp18 = base;
+            sp1F = func_8414A2A0();
+            table = func_8414A3A0(arg1);
+            *(u32 *)((u8 *)(u32)sp18 + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)table + 0x14) * sp1F;
+            *(u8 *)(u32)sp18 |= 2;
+        }
+    }
+}
+
+extern u8 func_80063454(u8, u8, u8, s32);
+extern u8 func_80062D98(u8);
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+extern s32 func_84155544(u8 *, u8);
+void func_8415220C(void *arg0, u8 arg1) {
+    void *ptr1;
+    s32 index;
+    s32 base;
+    u8 val1;
+    u8 val2;
+    s32 mult;
+    void *ptr2;
+
+    base = (s32)(u32)arg0 + 4;
+    index = arg1;
+    ptr1 = func_84154B64(index);
+    ptr2 = func_84154B64((1 - index) & 0xFF);
+    val1 = *(u8 *)((u8 *)ptr2 + 0x24);
+    if (val1 != 0) {
+        val2 = func_80062D98(val1);
+        if ((val2 != 0x13) && (func_84155544(ptr1, val2) == 0)) {
+            *(u8 *)((u8 *)(u32)base + index + 8) = 0xFF;
+            ptr2 = func_8414A3A0(index);
+            mult = *(u8 *)((u8 *)ptr2 + 0x31) * func_8414A2AC();
+            if (func_80063454(val2, *(u8 *)((u8 *)ptr1 + 2), *(u8 *)((u8 *)ptr1 + 3), 0) >= 0xB) {
+                *(u32 *)((u8 *)(u32)base + (index << 2) + 0x34) += mult;
+            }
+            *(u8 *)(u32)base |= 2;
+        }
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84152308(void *arg0, u8 arg1) {
+    void *state;
+    s32 base;
+    s32 amount;
+    void *table;
+    
+    state = func_84154B64((1 - (u32)arg1) & 0xFF);
+    if (*(u8 *)((u8 *)state + 0x18) & 0x10) return;
+    base = (s32)(u32)arg0 + 4;
+    if (*(u8 *)((u8 *)state + 0x19) & 0x20) return;
+    
+    *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+    table = func_8414A3A0(arg1);
+    amount = func_8414A2AC();
+    amount *= *(u8 *)((u8 *)table + 0x32);
+    *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+    *(u8 *)(u32)base |= 2;
+    
+}
+
+extern void *D_841951F8[];
+void func_841523BC(void *arg0, u8 arg1) {
+    s32 base;
+    base = (s32)(u32)arg0 + 4;
+    if (((u8 *)D_841951F8[arg1])[9] >= 2) {
+        *(u8 *)((u8 *)(u32)base + arg1 + 8) = 0xFF;
+        *(u8 *)((u8 *)(u32)base) |= 2;
+    }
+}
+
+extern u8 func_8414A2D0(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84152408(void *arg0, u8 arg1) {
+    u8 scratch[8];
+    void *table;
+    s32 base;
+    u8 mult;
+    u8 value;
+
+    value = *((u8 *)func_84154B64((1 - (u32)arg1) & 0xFF) + 0x24);
+    if ((value != 0) && (value != 0xA5)) {
+        base = ((s32)(u32)arg0 + 4) ^ 0;
+        *((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        mult = func_8414A2D0();
+        table = func_8414A3A0(arg1);
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *((u8 *)table + 0x33) * mult;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BFC40/func_841524B4.s")
+
+extern s32 func_84154B9C(u8, u16);
+extern u8 func_841524B4(u8);
+void BattlePlan_AddHealBellBonus(u8 *plan, u8 side) {
+    u8 *own;
+    s32 base;
+    u32 amount;
+    u8 *table;
+    own = func_84154B64(side);
+    base = (s32)(u32)plan + 4;
+    if (func_84154B9C(side, 0xFF) != 0 || (own[23] & 0x80) != 0) {
+        *(u8 *)(u32)base |= 2;
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        table = func_8414A3A0(side);
+        amount = table[52] * func_8414A2AC();
+        ((u32 *)(u32)base)[(u32)side + 13] += amount * func_841524B4(side);
+    }
+}
+
+extern s32 func_80063754(s32);
+void BattlePlan_AddStealableItemBonus(u8 *plan, u8 side) {
+    u8 *own;
+    u8 *other;
+    s32 base;
+    u8 *table;
+    u8 amount;
+    own = func_84154B64(side);
+    other = func_84154B64((1 - (u32)side) & 0xFF);
+    base = (s32)(u32)plan + 4;
+    if (own[1] == 0 && other[1] != 0 && func_80063754(other[1]) == 0) {
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        amount = func_8414A2AC();
+        table = func_8414A3A0(side);
+        ((u32 *)(u32)base)[(u32)side + 13] += table[53] * amount;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_841526CC(void *arg0, u8 arg1) {
+    s32 base;
+    void *state;
+    void *table;
+    u8 amount;
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B64(arg1);
+    if (((*(u16 *)((u8 *)state + 0x26) & 7) != 0)) {
+        *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        amount = func_8414A2AC();
+        table = func_8414A3A0(arg1);
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)table + 0x36) * amount;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern void *D_841951FC[];
+extern s32 func_841493F4(void);
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+extern s32 func_841556C4(u8 *, u8);
+void func_84152764(void *arg0, u8 arg1)
+{
+    u8 *state;
+    u8 *other;
+    s32 base;
+    s32 amount;
+    void *table;
+
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B64(arg1);
+    table = (void *)(u32)arg1;
+    other = func_84154B64((u8)(1 - (u32)table));
+    if (!(state[0x19] & 0x80) && (*(u8 *)((u8 *)(*(void **)((u8 *)D_841951FC + -(s32)((u32)table << 2))) + 9) >= 2) && (func_841556C4(other, 0x7F) == 0)) {
+        table = func_8414A3A0(arg1);
+        amount = func_8414A2AC();
+        amount *= *(u8 *)((u8 *)table + 0x2D);
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += (amount * func_841493F4()) / 128;
+        if ((other[0x15] & 0x10) && (other[0x1F] >= 2)) {
+            *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += amount;
+        }
+        *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_841528C4(void *arg0, u8 arg1) {
+    s32 base;
+    u8 *state;
+    void *table;
+
+    state = func_84154B64((1 - (u32)arg1) & 0xFF);
+    if (!(state[0x18] & 0x10)) {
+        if (*(u16 *)(state + 0x26) & 7) {
+            base = (s32)(u32)arg0 + 4;
+            if (!(state[0x15] & 1)) {
+                *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+                table = func_8414A3A0(arg1);
+                *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) = *(u8 *)((u8 *)table + 0x16) * func_8414A2AC();
+                *(u8 *)(u32)base |= 2;
+            }
+        }
+    }
+}
+
+extern void BattlePlan_ScoreStatIncrease(u8 *, u8, u8, u8, u8, u8);
+extern void BattlePlan_ScoreStatReduction(u8 *, u8, u8, u8, u8, u8);
+void BattlePlan_ScoreCurse(u8 *plan, u8 side) {
+    u8 *own;
+    u8 *other;
+    u8 other_side;
+    s32 base;
+    u8 *table;
+    base = (s32)(u32)plan + 4;
+    own = func_84154B64(side);
+    other_side = 1 - side;
+    other = func_84154B64(other_side);
+    if (func_84155544(own, 8) != 0) {
+        if (((other[21] & 2) == 0) && ((other[24] & 0x10) == 0)) {
+            *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+            table = func_8414A3A0(side);
+            ((u32 *)(u32)base)[(u32)side + 13] = table[22] * func_8414A2AC();
+            *(u8 *)(u32)base |= 2;
+        }
+    } else {
+        BattlePlan_ScoreStatIncrease(plan, side, 174, 0xFF, 0, 1);
+        BattlePlan_ScoreStatIncrease(plan, side, 174, 0xFF, 1, 1);
+        BattlePlan_ScoreStatReduction(plan, other_side, 174, 0xFF, 2, 1);
+    }
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+
+
+
+void func_84152AC0(void *arg0, u8 arg1) {
+    u8 chance;
+    u8 *own;
+    u8 *other;
+    s32 base;
+    s32 amount;
+    void *table;
+    own = func_84154B64(arg1);
+    other = func_84154B64((1 - (u32)arg1) & 0xFF);
+    base = (s32)(u32)arg0 + 4;
+    chance = 0xFF >> own[0x21];
+    *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = chance;
+    table = func_8414A3A0(arg1);
+    amount = *(u8 *)((u8 *)table + 0x37) * func_8414A2AC() * chance / 255;
+    if (*(u8 *)(other + 0x17) & 0x10) ((u32 *)(u32)base)[(u32)arg1 + 13] += amount;
+    if (*(u16 *)(other + 0x26) & 0x18) {
+        ((u32 *)(u32)base)[(u32)arg1 + 13] += amount >> 1;
+        if (*(u8 *)(other + 0x19) & 1) ((u32 *)(u32)base)[(u32)arg1 + 13] += amount;
+    }
+    if (*(u8 *)(other + 0x15) & 3) ((u32 *)(u32)base)[(u32)arg1 + 13] += amount;
+    if (*(u8 *)(other + 0x15) & 0x10) {
+        // FAKE: the constant branch changes the a1/a2 register assignment of the
+        // bump; without it the differ scores 65.
+        if (1) { ((u32 *)(u32)base)[(u32)arg1 + 13] += amount; }
+    }
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+void func_84152C34(void *arg0, u8 arg1) { s32 base; void *table; u32 *entry; u8 amount; base = (s32)(u32)arg0 + 4; if ((func_84154B30((0x1 - (u32)arg1) & 0xFF)[3] & 1) == 0) { *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF; amount = func_8414A2AC(); table = func_8414A3A0(arg1); entry = (u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34); *entry += *(u8 *)((u8 *)table + 0x38) * amount; *(u8 *)(u32)base |= 2; } }
+
+extern u8 func_80062D5C(u8);
+extern u8 func_80062D98(u8);
+s32 BattlePlan_HasOnlyNormalOrFightingMoves(u8 *state) {
+    s32 i;
+    u16 type;
+    for (i = 0; i < 4; i++) {
+        if (state[i + 4] == 0) {
+            break;
+        }
+        type = func_80062D98(state[i + 4]);
+        //!bug The retail code tests the power getter address instead of calling it.
+        if (type != 0 && type != 1 && func_80062D5C != NULL) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+u8 BattlePlan_CountHitObstacles(u8 side) {
+    u8 result;
+    u8 *own;
+    u8 *other;
+    result = 0;
+    own = func_84154B64(side);
+    other = func_84154B64((1 - side) & 0xFF);
+    if (own[18] < 7) {
+        result = 1;
+    }
+    if (other[19] >= 8) {
+        result++;
+    }
+    if (func_84155544(other, 8) != 0 && BattlePlan_HasOnlyNormalOrFightingMoves(own) != 0) {
+        result += 2;
+    }
+    return result;
+}
+
+void BattlePlan_AddHitObstacleBonus(u8 *plan, u8 side) {
+    u8 count;
+    u8 *other;
+    s32 base;
+    u8 *table;
+    u32 *score;
+    u8 amount;
+    func_84154B64(side);
+    other = func_84154B64((1 - (u32)side) & 0xFF);
+    base = (s32)(u32)plan + 4;
+    if ((other[21] & 8) == 0) {
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        count = BattlePlan_CountHitObstacles(side);
+        if (count > 0) {
+            amount = func_8414A2AC();
+            table = func_8414A3A0(side);
+            score = (u32 *)((u32)base + ((u32)side << 2));
+            score[13] += count * table[57] * amount;
+            *(u8 *)(u32)base |= 2;
+        }
+    }
+}
+
+void BattlePlan_AddPerishSongBonus(u8 *plan, u8 side) {
+    u8 *own;
+    s32 base;
+    s32 index;
+    u32 amount;
+    u8 *table;
+    own = func_84154B64(side);
+    index = side;
+    base = (s32)(u32)plan + 4;
+    if ((func_84154B64((1 - index) & 0xFF)[21] & 0x10) == 0 && ((u8 *)D_841951F8[side])[9] >= 2) {
+        *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+        table = func_8414A3A0(side);
+        amount = table[58] * func_8414A2AC();
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+        if ((*(u8 **)((u32)D_841951FC + -(s32)(index << 2)))[9] == 1) {
+            ((u32 *)(u32)base)[(u32)side + 13] += amount * 3;
+        }
+        if (func_841556C4(own, 111) != 0) {
+            ((u32 *)(u32)base)[(u32)side + 13] += amount;
+        }
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2B8(void);
+void BattlePlan_AddSandstormBonus(u8 *plan, u8 side) {
+    u8 *own;
+    u8 *other;
+    s32 base;
+    s32 amount;
+    u8 *table;
+    base = (s32)(u32)plan + 4;
+    own = func_84154B64(side);
+    other = func_84154B64((1 - (u32)side) & 0xFF);
+    if (func_84154B0C()[408] == 3) return;
+    *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
+    table = func_8414A3A0(side);
+    amount = table[44] * func_8414A2B8();
+    if (func_84155544(own, 5) != 0 || func_84155544(own, 4) != 0 || func_84155544(own, 9) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+    if (func_84155544(other, 5) != 0 || func_84155544(other, 4) != 0 || func_84155544(other, 9) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] -= amount;
+    }
+    if (func_841556C4(own, 111) != 0) {
+        ((u32 *)(u32)base)[(u32)side + 13] += amount;
+    }
+    ((u32 *)(u32)base)[(u32)side + 13] += amount / 2;
+    *(u8 *)(u32)base |= 2;
+}
+
+void BattlePlan_ScoreEndure(u8 *plan, u8 side) {
+    u8 chance;
+    u8 *own;
+    s32 base;
+    s32 amount;
+    u8 *table;
+    base = (s32)(u32)plan + 4;
+    own = func_84154B64(side);
+    chance = 0xFF >> own[33];
+    plan[(u32)side + 12] = chance;
+    table = func_8414A3A0(side);
+    amount = table[55] * func_8414A2AC() * chance / 255;
+    if (func_841556C4(own, 99) != 0) {
+        if (*(u16 *)(own + 40) * 48 / *(u16 *)(own + 42) >= 6) {
+            ((u32 *)(u32)base)[(u32)side + 13] += amount;
+        }
+    }
+    *(u8 *)(u32)base |= 2;
+}
+
+extern void func_84151B8C(s32, u8, u8);
+extern u8 *func_84154B64(u8);
+void func_84153304(s32 arg0, u8 arg1, u8 arg2) {
+    if ((s32) (*(u8 *)((u8 *)(func_84154B64((1 - arg1) & 0xFF)) + (0xD))) < 0xD) {
+        func_84151B8C(arg0, arg1, arg2);
+    }
+}
+
+extern s32 func_80064474(u8, u16);
+extern u8 func_8414A2A0(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_8415335C(void *arg0, u8 arg1) {
+    u8 val1;
+    void *ptr1, *ptr2;
+    s32 index;
+    s32 base;
+    u8 amount;
+    u8 val2;
+
+    base = (s32)(u32)arg0 + 4;
+    index = arg1;
+    ptr1 = func_84154B64(index);
+    ptr2 = func_84154B64((1 - index) & 0xFF);
+    if (!(*(u8 *)((u8 *)ptr2 + 0x15) & 0x80)) {
+        val1 = func_80064474(*(u8 *)ptr1, *(u16 *)((u8 *)ptr1 + 0x40));
+        val2 = func_80064474(*(u8 *)ptr2, *(u16 *)((u8 *)ptr2 + 0x40));
+        if ((val1 != 0) && (val2 != 0) && (val1 != val2)) {
+            *(u8 *)((u8 *)(u32)base + index + 8) = 0xFF;
+            amount = func_8414A2A0();
+            ptr1 = func_8414A3A0(index);
+            *(u32 *)((u8 *)(u32)base + (index << 2) + 0x34) += *(u8 *)((u8 *)ptr1 + 0x15) * amount;
+            *(u8 *)(u32)base |= 2;
+        }
+    }
+}
+
+extern s32 func_841556C4(u8 *, u8);
+extern u8 func_8414A2C4(void);
+extern u8 func_8414A2AC(void);
+extern void * func_8414A3A0(u8);
+extern u8 * func_84154B30(u8);
+void func_84153454(void *arg0, u8 arg1) {
+    u8 *state;
+    u8 *sub;
+    s32 base;
+    void *table;
+    s32 unused;
+    base = (s32)(u32)arg0 + 4;
+    state = func_84154B30(arg1);
+    sub = state + 8;
+    table = func_8414A3A0(arg1);
+    if (!(state[3] & 4)) {
+        if (func_841556C4(sub, 0x1B) != 0) {
+            *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)table + 0xB) * func_8414A2C4();
+        }
+        *(u8 *)((u8 *)(u32)base + (u32)arg1 + 8) = 0xFF;
+        *(u32 *)((u8 *)(u32)base + ((u32)arg1 << 2) + 0x34) += *(u8 *)((u8 *)table + 0x3B) * func_8414A2AC();
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern void * D_841951F8[];
+void BattlePlan_AddBatonPassBonus(u8 *plan, u8 side) {
+    u8 *record;
+    u8 *sub;
+    s32 amount;
+    u8 *table;
+    s32 i;
+    s32 stage_index;
+    s32 base;
+    base = (s32)(u32)plan + 4;
+    record = func_84154B30(side);
+    sub = record + 8;
+    table = func_8414A3A0(side);
+    if (record[2] < 2) return;
+    amount = table[46] * func_8414A2AC();
+    if (record[1] != ((u8 *)D_841951F8[side])[10]) {
+        goto mark_plan;
+    }
+    i = 0;
+    do {
+        stage_index = i + 13;
+        if (sub[stage_index] >= 8) {
+            ((u32 *)(u32)base)[(u32)side + 13] += amount >> 2;
+        }
+        i++;
+    } while (i < 7);
+mark_plan:
+    *(u8 *)(u32)base |= 2;
+}
+
+u8 *func_84154B30(u8);
+u8 func_84153718(u8 arg0) { u8 *state; u8 result; state = func_84154B30(arg0); result = 0; if ((state[0x20] & 0x80) != 0) result = 1; if ((state[3] & 1) != 0) { result++; result &= 0xFF; } if (state[0x2B] > 0) result++; return result; }
+
+void BattlePlan_AddConditionCountBonus(u8 *state, u8 side) {
+    s32 base;
+    u32 *entry;
+    u8 count;
+    u8 amount;
+    base = (s32)(u32)state + 4;
+    state[(u32)side + 12] = 0xFF;
+    amount = func_8414A2AC();
+    count = func_84153718(side);
+    entry = (u32 *)(base + ((u32)side << 2));
+    entry[13] += ((u32)count << 7) * amount;
+    *(u8 *)(u32)base |= 2;
+}
+
+extern u8 *func_84154B0C(void);
+extern u8 func_8414A2B8(void);
+extern u8 func_84148C74(u8);
+extern u8 func_80062D98(u8);
+extern s32 BattleRecord_HasPoweredMoveOfType(u8 *, u8);
+extern s32 BattleRecord_HasMove(u8 *, u8);
+void BattlePlan_AddRainDanceBonus(u8 *plan, u8 side) {
+    u8 *own;
+    BattlePlanScoreHeader *base;
+    s32 amount;
+    u8 *table;
+    own = func_84154B64(side);
+    base = (void *)(plan + 4);
+    if (func_84154B0C()[408] != 1) {
+        base->selected[side] = 0xFF;
+        table = func_8414A3A0(side);
+        amount = table[43] * func_8414A2B8();
+        if (BattleRecord_HasPoweredMoveOfType(own, 21) != 0) {
+            base->score[side] += amount;
+        }
+        if (func_80062D98(func_84148C74((1 - (u32)side) & 0xFF)) == 20) {
+            base->score[side] += amount;
+        }
+        if (BattleRecord_HasMove(own, 87) != 0) {
+            base->score[side] += amount;
+        }
+        base->score[side] += amount / 2;
+        base->flags |= 2;
+    }
+}
+
+void BattlePlan_AddSunnyDayBonus(u8 *plan, u8 side) {
+    u8 *own;
+    BattlePlanScoreHeader *base;
+    s32 amount;
+    u8 *table;
+    own = func_84154B64(side);
+    base = (void *)(plan + 4);
+    if (func_84154B0C()[408] != 2) {
+        base->selected[side] = 0xFF;
+        table = func_8414A3A0(side);
+        amount = table[42] * func_8414A2B8();
+        if (BattleRecord_HasPoweredMoveOfType(own, 20) != 0) {
+            base->score[side] += amount;
+        }
+        if (func_80062D98(func_84148C74((1 - (u32)side) & 0xFF)) == 21) {
+            base->score[side] += amount;
+        }
+        if (BattleRecord_HasMove(own, 76) != 0) {
+            base->score[side] += amount;
+        }
+        base->score[side] += amount / 2;
+        base->flags |= 2;
+    }
+}
+
+extern void BattlePlan_ScoreStatIncrease(u8 *, u8, u8, u8, u8, u8);
+extern u8 *func_84154B64(u8);
+void func_84153A64(void *arg0, u8 arg1)
+{
+  u8 *state;
+  int new_var;
+  state = func_84154B64(arg1);
+  new_var = 4;
+  func_84154B64((1 - ((u32) arg1)) & 0xFF);
+  if ((((*((u16 *) (state + 0x28))) >= ((*((u16 *) (state + 0x2A))) >> 1)) && (state[0xD] < 0xD)) && ((*((u16 *) (state + 0x36))) < 0x3E7))
+  {
+    BattlePlan_ScoreStatIncrease(arg0, arg1, 0xBB, 0xFF, 0, 0xD);
+    *(((u8 *) arg0) + new_var) |= 2;
+  }
+}
+
+s32 BattlePlan_HasUnfavorableStages(u8 *plan, u8 side) {
+    s32 i;
+    BattlePlanStageRecord *own;
+    BattlePlanStageRecord *other;
+    own = (void *)func_84154B64(side);
+    other = (void *)func_84154B64((1 - (u32)side) & 0xFF);
+    for (i = 0; i < 7; i++) {
+        if (own->stages[i] < 7) {
+            return 1;
+        }
+        if (other->stages[i] > 7) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void BattlePlan_AddPsychUpBonus(u8 *plan, u8 side) {
+    BattlePlanStageRecord *own;
+    s32 i;
+    s32 difference;
+    BattlePlanStageRecord *other;
+    s32 base;
+    base = (s32)(u32)plan + 4;
+    own = (void *)func_84154B64(side);
+    other = (void *)func_84154B64((1 - (u32)side) & 0xFF);
+    if (BattlePlan_HasUnfavorableStages(plan, side) != 0) {
+        for (i = 0; i < 7; i++) {
+            difference = other->stages[i] - own->stages[i];
+            if (difference > 0) {
+                BattlePlan_ScoreStatIncrease(plan, side, 244, 0xFF, i, difference);
+            }
+        }
+        *(u8 *)(u32)base |= 2;
+    }
+}
+
+extern u8 func_8414A2D0(void);
+extern void * func_8414A3A0(u8);
+extern u8 *func_84154B64(u8);
+void func_84153D94(void *arg0, u8 arg1)
+{
+  s32 base;
+  void *table;
+  u8 *new_var;
+  volatile unsigned char amount;
+  base = ((s32) ((u32) arg0)) + 4;
+  if ((*((u8 *) (((u8 *) func_84154B64(arg1)) + 0x22))) == 0)
+  {
+    *((u8 *) ((((u8 *) ((u32) base)) + ((u32) arg1)) + 8)) = 0xFF;
+    amount = func_8414A2D0();
+    table = func_8414A3A0(arg1);
+    new_var = (u8 *) table;
+    *((u32 *) ((((u8 *) ((u32) base)) + (((u32) arg1) << 2)) + 0x34)) += (*((u8 *) (new_var + 0x3C))) * amount;
+    *((u8 *) ((u32) base)) |= 2;
+  }
+}
+
+extern u8 func_80062D20(u8 arg0);
+extern u8 func_80062F2C(u8 arg0);
+extern u8 func_84154B24(void);
+extern void func_84152AC0(void *, u8);
+
+
+void func_84153E28(void *arg0, u8 arg1) {
+    s32 unused; // FAKE: unused; without it the byte locals move to 0x2e/0x2f.
+    u8 selected_move;
+    u8 roll;
+
+    selected_move = *(u8 *)((u8 *)arg0 + arg1 + 6);
+    roll = func_80062F2C(selected_move);
+    if (selected_move == 0)
+        return;
+    if (func_84154B24() == arg1) {
+        do {
+            switch (func_80062D20(selected_move)) {
+            case 1:
+            BattlePlan_ScoreSleep(arg0, arg1, 0xFF);
+                break;
+            case 33:
+            case 66:
+            BattlePlan_ScorePoison(arg0, arg1, selected_move, 0xFF);
+                break;
+            case 2:
+            case 77:
+            BattlePlan_ScorePoison(arg0, arg1, selected_move, roll);
+                break;
+            case 4:
+            case 108:
+            case 125:
+            BattlePlan_ScoreBurn(arg0, arg1, selected_move, roll);
+                break;
+            case 5:
+            BattlePlan_ScoreFreeze(arg0, arg1, selected_move, roll);
+                break;
+            case 67:
+            BattlePlan_ScoreParalysis(arg0, arg1, selected_move, 0xFF);
+                break;
+            case 6:
+            case 152:
+            BattlePlan_ScoreParalysis(arg0, arg1, selected_move, roll);
+                break;
+            case 10:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 0, 1);
+                break;
+            case 50:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 0, 2);
+                break;
+            case 139:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 0, 2);
+                break;
+            case 11:
+            case 145:
+            case 156:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 1, 1);
+                break;
+            case 51:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 1, 2);
+                break;
+            case 138:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 1, 2);
+                break;
+            case 12:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 2, 1);
+                break;
+            case 52:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 2, 2);
+                break;
+            case 13:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 3, 1);
+                break;
+            case 53:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 3, 2);
+                break;
+            case 14:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 4, 1);
+                break;
+            case 54:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 4, 2);
+                break;
+            case 15:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 5, 1);
+                break;
+            case 55:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 5, 2);
+                break;
+            case 16:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 6, 1);
+                break;
+            case 56:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, 0xFF, 6, 2);
+                break;
+            case 140:
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 0, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 1, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 2, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 3, 1);
+            BattlePlan_ScoreStatIncrease(arg0, arg1, selected_move, roll, 4, 1);
+                break;
+            case 18:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 0, 1);
+                break;
+            case 58:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 0, 2);
+                break;
+            case 68:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 0, 1);
+                break;
+            case 19:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 1, 1);
+                break;
+            case 59:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 1, 2);
+                break;
+            case 69:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 1, 1);
+                break;
+            case 20:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 2, 1);
+                break;
+            case 60:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 2, 2);
+                break;
+            case 70:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 2, 1);
+                break;
+            case 21:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 3, 1);
+                break;
+            case 61:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 3, 2);
+                break;
+            case 71:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 3, 1);
+                break;
+            case 22:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 4, 1);
+                break;
+            case 62:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 4, 2);
+                break;
+            case 72:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 4, 1);
+                break;
+            case 23:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 5, 1);
+                break;
+            case 63:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 5, 2);
+                break;
+            case 73:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 5, 1);
+                break;
+            case 24:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 6, 1);
+                break;
+            case 64:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, 0xFF, 6, 2);
+                break;
+            case 74:
+            BattlePlan_ScoreStatReduction(arg0, arg1, selected_move, roll, 6, 1);
+                break;
+            case 25:
+            BattlePlan_ScoreHaze(arg0, arg1);
+                break;
+            case 27:
+            BattlePlan_AddRampageBonus(arg0, arg1);
+                break;
+            case 28:
+            func_8415132C(arg0, arg1);
+                break;
+            case 30:
+            BattlePlan_AddConversionBonus(arg0, arg1);
+                break;
+            case 141:
+            BattlePlan_AddFlinchBonus(arg0, arg1, 0xFF);
+                break;
+            case 31:
+            case 146:
+            BattlePlan_AddFlinchBonus(arg0, arg1, roll);
+                break;
+            case 32:
+            case 132:
+            case 133:
+            case 134:
+            func_8415178C(arg0, arg1, selected_move);
+                break;
+            case 35:
+            func_84151838(arg0, arg1);
+                break;
+            case 36:
+            func_841518D0(arg0, arg1, roll);
+                break;
+            case 42:
+            func_84151940(arg0, arg1);
+                break;
+            case 46:
+            func_84151A5C(arg0, arg1);
+                break;
+            case 47:
+            func_84151AF4(arg0, arg1);
+                break;
+            case 49:
+            func_84151B8C((s32)arg0, arg1, 0xFF);
+                break;
+            case 76:
+            func_84151B8C((s32)arg0, arg1, roll);
+                break;
+            case 57:
+            func_84151CD8(arg0, arg1);
+                break;
+            case 65:
+            func_84151D3C(arg0, arg1);
+                break;
+            case 79:
+            func_84151DD4(arg0, arg1);
+                break;
+            case 82:
+            BattlePlan_AddMimicBonus(arg0, arg1);
+                break;
+            case 83:
+            func_84151F20(arg0, arg1);
+                break;
+            case 84:
+            BattlePlan_AddLeechSeedBonus(arg0, arg1);
+                break;
+            case 86:
+            func_84152088(arg0, arg1);
+                break;
+            case 90:
+            func_84152140(arg0, arg1);
+                break;
+            case 93:
+            func_8415220C(arg0, arg1);
+                break;
+            case 94:
+            func_84152308(arg0, arg1);
+                break;
+            case 98:
+            func_841523BC(arg0, arg1);
+                break;
+            case 100:
+            func_84152408(arg0, arg1);
+                break;
+            case 102:
+            BattlePlan_AddHealBellBonus(arg0, arg1);
+                break;
+            case 105:
+            BattlePlan_AddStealableItemBonus(arg0, arg1);
+                break;
+            case 97:
+            func_841526CC(arg0, arg1);
+                break;
+            case 106:
+            func_84152764(arg0, arg1);
+                break;
+            case 107:
+            func_841528C4(arg0, arg1);
+                break;
+            case 109:
+            BattlePlan_ScoreCurse(arg0, arg1);
+                break;
+            case 111:
+            func_84152AC0(arg0, arg1);
+                break;
+            case 112:
+            func_84152C34(arg0, arg1);
+                break;
+            case 113:
+            BattlePlan_AddHitObstacleBonus(arg0, arg1);
+                break;
+            case 114:
+            BattlePlan_AddPerishSongBonus(arg0, arg1);
+                break;
+            case 115:
+            BattlePlan_AddSandstormBonus(arg0, arg1);
+                break;
+            case 116:
+            BattlePlan_ScoreEndure(arg0, arg1);
+                break;
+            case 118:
+            func_84153304(arg0, arg1, roll);
+                break;
+            case 120:
+            func_8415335C(arg0, arg1);
+                break;
+            case 124:
+            func_84153454(arg0, arg1);
+                break;
+            case 127:
+            BattlePlan_AddBatonPassBonus(arg0, arg1);
+                break;
+            case 129:
+            BattlePlan_AddConditionCountBonus(arg0, arg1);
+                break;
+            case 136:
+            BattlePlan_AddRainDanceBonus(arg0, arg1);
+                break;
+            case 137:
+            BattlePlan_AddSunnyDayBonus(arg0, arg1);
+                break;
+            case 142:
+            func_84153A64(arg0, arg1);
+                break;
+            case 143:
+            BattlePlan_AddPsychUpBonus(arg0, arg1);
+                break;
+            case 148:
+            func_84153D94(arg0, arg1);
+            }
+        } while (0);
+    }
+}
+#endif

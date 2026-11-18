@@ -1819,6 +1819,7 @@
     - [0x3BE6B0, c,       fragments/79/fragment79_3BE6B0]
     - [0x3BEAF0, c,       fragments/79/fragment79_3BEAF0]
     - [0x3BF4C0, c,       fragments/79/fragment79_3BF4C0]
+    - [0x3BFC40, c,       fragments/79/fragment79_3BFC40]
     - [0x3C40B0, c,       fragments/79/fragment79_3C40B0]
     - [0x3C50B0, c,       fragments/79/fragment79_3C50B0]
     - [0x3C60B0, c,       fragments/79/fragment79_3C60B0]
@@ -1861,7 +1862,8 @@
     - [0x3FB2A0, .rodata, fragments/79/fragment79_3B9B80] # labels in this range are referenced only by this file
     - [0x3FB2B0, .rodata, fragments/79/fragment79_3BC290] # labels in this range are referenced only by this file
     - [0x3FB760, .rodata, fragments/79/fragment79_3BEAF0] # labels in this range are referenced only by this file
-    - [0x3FB9D0, .rodata, fragments/79/fragment79_3BF4C0] # Scoring constants and all three jump tables,720 bytes.
+    - [0x3FB9D0, .rodata, fragments/79/fragment79_3BF4C0] # func_8414FC30 double literals, padded to 16.
+    - [0x3FBA00, .rodata, fragments/79/fragment79_3BFC40] # All three jump tables.
     - [0x3FBCA0, .rodata, fragments/79/fragment79_3C50B0] # Both selected-state jump tables,176 bytes.
     - [0x3FBD50, rodata]
     - [0x3FBDC0, .rodata, fragments/79/fragment79_3C60B0] # Per-file float constants,192 bytes.
