@@ -347,7 +347,39 @@ void func_82209360(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_822094C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_8220980C.s")
+extern s16 D_822106C0, D_822106D4;
+typedef struct F17Point { s16 x, y; } F17Point;
+// Lerps the transition record's position (unk_1C/1E) from the saved start point
+// D_822106D4/D_822106D6 toward the entry's target over five frames. FAKE forms
+// reproduce retail's load order: D_822106D6 is read through the record base
+// (0x822106B0 + 0x26) so it stays after the unk_1C store.
+void func_8220980C(void) {
+    s16 *state = (s16 *)D_822106B0;
+    s16 *entry;
+    s16 *pt; // FAKE: second name for D_822106D4
+    s32 z = 0; // FAKE: zero index
+    F17TransitionRecord *rec = &sTransitionRecord;
+    f32 progress;
+    f32 v;
+    f32 v2;
+
+    entry = (s16 *)&D_8220DEF4[state[4]];
+    state[2]++;
+    pt = &D_822106D4;
+    if (state[2] < 5) {
+        progress = D_822106B4 / 5.0f;
+        v = (entry[6] - ((F17Point *)&D_822106D4)->x) * progress + ((F17Point *)pt)->x;
+        (&sTransitionRecord)[z].unk_1C = ((v > 0.0f) ? 0.5f : -0.5f) + v;
+        v2 = *(s16 *)((u8 *)rec + 0x26) + (entry[7] - *(s16 *)((u8 *)rec + 0x26)) * progress;
+        (&sTransitionRecord)[z].unk_1E = ((v2 > 0.0f) ? 0.5f : -0.5f) + v2;
+    } else {
+        rec->transition.state = 3;
+        rec->transition.unk_02 = 0;
+        D_822106C0 = 0;
+        rec->unk_1C = entry[6];
+        rec->unk_1E = entry[7];
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209974.s")
 
