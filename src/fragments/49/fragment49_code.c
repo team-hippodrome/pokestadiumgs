@@ -59,8 +59,63 @@ void func_861003A4(void) {
 
 extern void func_86107098(s32, s32, f32, f32, f32, f32, f32, f32);
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86100418.s")
-
+void func_86100418(void) {
+    typedef struct {
+        u8 time;
+        u8 param;
+        u8 kind;
+        u8 pad;
+    } Event86100418;
+    typedef struct {
+        u8 pad[0x8F24];
+        f32 timer;
+        u8 pad8F28[0x8FD0 - 0x8F28];
+        Event86100418 *current;
+        u8 pad8FD4[0x9774 - 0x8FD4];
+        f32 step;
+        u8 pad9778[0x97E4 - 0x9778];
+        s8 flag;
+    } Context86100418;
+    Event86100418 *entry;
+    f32 position;
+    f32 angle;
+    f32 t;
+    ((Context86100418 *)(u32)D_8610AD20)->timer -= ((Context86100418 *)(u32)D_8610AD20)->step;
+    if (((Context86100418 *)(u32)D_8610AD20)->timer > 1000.0f) {
+        func_86100120();
+    }
+    entry = ((Context86100418 *)(u32)D_8610AD20)->current;
+    while (entry->kind != 4) {
+        t = (f32)entry->time / 255.0f * 1000.0f;
+        if (t < ((Context86100418 *)(u32)D_8610AD20)->timer) {
+            switch (entry->kind) {
+            case 0:
+                func_861003A4();
+                break;
+            case 1:
+                if (((Context86100418 *)(u32)D_8610AD20)->flag != 0) {
+                    func_861003A4();
+                }
+                break;
+            case 2:
+                if (((Context86100418 *)(u32)D_8610AD20)->flag != 0 && ((Context86100418 *)(u32)D_8610AD20)->flag != 1) {
+                    func_861003A4();
+                }
+                break;
+            case 3:
+                position = 464.84979248046875f;
+                angle = -((f32)entry->param / 255.0f) * 213.68527221679688f * 2.0f + 213.68527221679688f;
+                func_86107098(0x10000000, 0, position, angle, 0.0f, 0.0f, 0.0f, 0.0f);
+                break;
+            }
+            entry = ((Context86100418 *)(u32)D_8610AD20)->current;
+            ((Context86100418 *)(u32)D_8610AD20)->current = entry + 1;
+            entry = ((Context86100418 *)(u32)D_8610AD20)->current;
+        } else {
+            break;
+        }
+    }
+}
 extern s32 D_8610AD20;
 extern s32 func_87F08208(void *);
 extern void StageContext_SetClearColor(s32);
