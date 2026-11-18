@@ -911,7 +911,107 @@ void func_8680422C(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868044D4.s")
+extern u8 D_86809208[];
+extern s32 D_8682F2D4;
+extern s32 D_86807C8C;
+extern s32 D_86807C7C;
+extern s32 D_86807C78;
+extern void func_8003F210(void *, s32);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern void func_8003F3BC(u8 *, s32);
+// Per-slot views: entry record, falling model, group state and the group's player model.
+#define DROP_MODELS ((Fragment56PointModelView (*)[40])D_86809208)
+#define ENTRY (D_8682CD18 + i * 1600 + j * 40)
+#define MODEL (&DROP_MODELS[i][j])
+#define GROUP (&D_8682EE18[i])
+#define PLAYER (D_868086C8 + i * 0x168)
+
+// Moves the falling drop models and scores the ones that reach the floor.
+void func_868044D4(void) {
+    s32 i;
+    s32 j;
+    u32 played_miss;
+    u32 played_land;
+    u32 played_hit;
+
+    D_8682F2D4 = 0;
+    played_miss = 0;
+    played_land = 0;
+    played_hit = 0;
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 40; j++) {
+            if (*(s32 *)(ENTRY + 4) == -1) {
+                continue;
+            }
+            if (i == 0) {
+                D_8682F2D4++;
+            }
+            *(f32 *)(ENTRY + 0x20) += D_86807C84;
+            if (D_86807C8C == 1) {
+                MODEL->position[1] = (f32)*(s32 *)(ENTRY + 0xC) - *(f32 *)(ENTRY + 0x24) * D_86807CC8 * *(f32 *)(ENTRY + 0x20) * *(f32 *)(ENTRY + 0x20);
+            } else {
+                MODEL->position[1] = (f32)*(s32 *)(ENTRY + 0xC) - *(f32 *)(ENTRY + 0x24) * 10.0f * D_86807CC8 * *(f32 *)(ENTRY + 0x20);
+            }
+            MODEL->rotation[2] += *(s16 *)ENTRY;
+            MODEL->rotation[0] += *(s16 *)ENTRY;
+            MODEL->rotation[1] += *(s16 *)ENTRY;
+            if (MODEL->position[1] <= D_8682F304) {
+                if (GROUP->mode == 13) {
+                    continue;
+                }
+                if (*(s32 *)(ENTRY + 0x10) == 0) {
+                    if (*(s32 *)(ENTRY + 8) == GROUP->mode || func_868040EC(i, j) == D_86807C7C) {
+                        *(s32 *)(ENTRY + 0x10) = 1;
+                        *(s32 *)((u8 *)GROUP + 0x118) = guRandom() % 10 + 10;
+                        if (*(s32 *)(ENTRY + 4) == 1) {
+                            if (*(s32 *)((u8 *)GROUP + 0x30) == 0) {
+                                if (*(s32 *)((u8 *)GROUP + 0x14) != 0 && played_hit == 0) {
+                                    func_80027A28(0x7F00, i);
+                                    played_hit = 1;
+                                }
+                                if (played_land == 0) {
+                                    func_80027A28(0x7F02, i);
+                                    played_land = 1;
+                                }
+                                func_8003F1DC(MODEL);
+                                *(s32 *)((u8 *)GROUP + 0x28) = GROUP->mode;
+                                *(s32 *)((u8 *)GROUP + 0x30) = 1;
+                                GROUP->mode = 13;
+                                *(s32 *)((u8 *)GROUP + 0x1C) = 1;
+                                func_8003F210(PLAYER, 13);
+                                ModelAnim_SetFrame(PLAYER, 0);
+                                ModelAnim_SetEventFrame(PLAYER, 0);
+                                func_8003F3BC(PLAYER, 0);
+                                func_8680422C(i);
+                                *(s32 *)(ENTRY + 0x1C) = 0;
+                            }
+                        } else {
+                            if (played_miss == 0) {
+                                func_80027A28(0x7F01, i);
+                                played_miss = 1;
+                            }
+                            func_8003F1DC(MODEL);
+                            *(s32 *)((u8 *)GROUP + 0x44) = i * 2 + 1;
+                            *(s32 *)(ENTRY + 0x1C) = 0;
+                            GROUP->mode += 9;
+                            func_8003F210(PLAYER, GROUP->mode);
+                            *(s32 *)((u8 *)GROUP + 0x14) += 1;
+                        }
+                    }
+                }
+                if (MODEL->position[1] <= D_8682F304 - (f32)D_86807C78) {
+                    *(s32 *)(ENTRY + 0x10) = -1;
+                }
+            }
+        }
+    }
+}
+#undef DROP_MODELS
+#undef ENTRY
+#undef MODEL
+#undef GROUP
+#undef PLAYER
 
 extern u8 D_86809208[];
 extern f32 D_8682F2FC;
