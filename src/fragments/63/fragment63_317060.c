@@ -634,7 +634,94 @@ void func_87E14F98(s32 arg0) {
     func_87F0C3EC(&D_87E1EC10);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_317060/func_87E14FF4.s")
+typedef struct { u8 pad0[0x20]; u8 *unk20; u8 pad24[0x14]; u8 *unk38; u8 pad3C[0x18C - 0x3C]; } Unk87E14FF4Elem;
+typedef struct { s32 x[2]; } Unk87E14FF4D;
+typedef struct { s32 id; u8 *owner; s32 unk8; s32 unkC; } Unk87E14FF4E;
+extern void func_87F0C094(void *, f32, f32, f32, f32, s32, s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern void MainPool_FinalizeAllocation(s32);
+extern void *func_80037E9C(s32, void *);
+extern void func_80041E2C(void);
+extern void func_8004DDF4(s32);
+extern void func_87E11E48(void *, u8 *, s32);
+extern void func_8004C8C0(s32);
+extern u8 *MainPool_AllocAligned(s32, s32, s32);
+extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+extern s32 func_87F08E3C(s32, s32);
+extern void func_87F0252C(void *, u8 *, u8 *, s32);
+extern s32 func_80041C98(s32);
+extern u8 D_87E1EBE0[];
+extern u8 D_87E1EBF8[];
+extern u8 D_87E1B1B0[];
+extern u8 D_87E1ACE0[];
+extern u8 D_87E1AD14[];
+extern u8 D_87E1AD88[];
+void func_87E14FF4(u8 *arg0, s32 arg1) {
+    Unk87E14FF4D *dd;
+    Unk87E14FF4E *e;
+    u8 **f;
+    Unk87E14FF4Elem *a;
+    Unk87E14FF4Elem *b;
+    Unk87E14FF4Elem *c;
+    s32 i;
+    s32 pool;
+
+    *(s32 *)arg0 = arg1;
+    *(s32 *)(arg0 + 0x160) = 0;
+    *(s32 *)(arg0 + 0x164) = 0;
+    *(s32 *)(arg0 + 0x168) = -1;
+    *(s32 *)(arg0 + 0x40) = 0;
+    *(f32 *)(arg0 + 0x16C) = 0.0f;
+    func_87F0C094(&D_87E1EC10, 0.0f, 45.0f, 0.0f, 900.0f, -0x11C7, 0);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    *(s32 *)(arg0 + 0x170) = func_80040E80(pool, D_87E1B1B0);
+    MainPool_FinalizeAllocation(pool);
+    func_80037E9C(0, D_87E1EBE0);
+    func_80037E9C(0, D_87E1EBF8);
+    for (i = 0; i < 0x12; i++) {
+        *(s32 *)(arg0 + i * 0xC + 0x88) = 0;
+        *(u8 *)(arg0 + i * 0xC + 0x90) &= 0xFF7F;
+    }
+    func_80041E2C();
+    func_8004DDF4(0xDC);
+    func_8004DDF4(0xDD);
+    func_87E11E48(D_87E1EBE0, arg0 + 0x64, 9);
+    *(s32 *)(arg0 + 0x80) = 0;
+    *(f32 *)(arg0 + 0x84) = 0.0f;
+    func_8004C8C0(0x166);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    a = (Unk87E14FF4Elem *)MainPool_AllocAligned(pool, 0x330C, 4);
+    b = (Unk87E14FF4Elem *)MainPool_AllocAligned(pool, 0x18C, 4);
+    c = (Unk87E14FF4Elem *)MainPool_AllocAligned(pool, 0x318, 4);
+    *(s32 *)(arg0 + 0x54) = func_80040E80(pool, D_87E1ACE0);
+    *(s32 *)(arg0 + 0x58) = func_80040E80(pool, D_87E1AD14);
+    *(s32 *)(arg0 + 0x5C) = WidgetTree_RunMessagePanelSilent(pool, 0xDC);
+    *(s32 *)(arg0 + 0x60) = WidgetTree_RunMessagePanelSilent(pool, 0xDD);
+    dd = (Unk87E14FF4D *)MainPool_AllocAligned(pool, 0x108, 4);
+    e = (Unk87E14FF4E *)MainPool_AllocAligned(pool, 0x10, 4);
+    f = (u8 **)MainPool_AllocAligned(pool, 4, 4);
+    MainPool_FinalizeAllocation(pool);
+    *(s32 *)(arg0 + 0x44) = func_87F08E3C(func_8004C990(0x166, 0), 0x0F000000);
+    *(u8 **)(arg0 + 0x48) = D_87E1AD88;
+    func_87F0252C(D_87E1EBF8, arg0 + 4, (u8 *)a, 0x21);
+    func_87F0252C(D_87E1EBE0, arg0 + 0x18, (u8 *)b, 1);
+    func_87F0252C(D_87E1EBE0, arg0 + 0x2C, (u8 *)c, 2);
+    for (i = 0; i < 0x21; i++) {
+        a[i].unk38 = (u8 *)&dd[i];
+    }
+    for (i = 0; i < 1; i++) {
+        b[i].unk20 = (u8 *)&e[i];
+        e[i].id = func_80041C98(5);
+        e[i].owner = arg0;
+        e[i].unk8 = 0;
+    }
+    for (i = 0; i < 2; i++) {
+        c[i].unk20 = (u8 *)&f[i];
+        f[i] = arg0;
+    }
+}
 
 void func_87E15324(u8 *arg0) {}
 
