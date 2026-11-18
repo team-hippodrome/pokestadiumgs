@@ -1353,7 +1353,147 @@ void func_8FB029B4(void *arg0) {
     Fragment9_UpdateSelectionPointers(arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/9/fragment9_code/func_8FB02A10.s")
+extern void func_800495BC(s32, s32, const char *, ...);
+extern s32 func_8006461C(u8);
+typedef struct { u8 species; u8 item; u8 moves[4]; u8 pad6[0x12]; u8 pp[4]; } Mon8FB;
+void func_8FB02A10(void *arg0, s32 arg1) {
+    s32 pad[3]; // FAKE
+    u8 *team;
+    u8 *mon;
+    u8 key;
+    s32 sel;
+    s32 v;
+    u8 *name;
+    u8 *ent;
+
+    sel = arg1 == *(s32 *)((u8 *)arg0 + 0x30);
+    team = (u8 *)&((unk_func_8FB02108 *)arg0)->rows[*(s32 *)((u8 *)arg0 + 0x38)];
+    mon = ((unk_func_8FB02108_row *)team)->entries[*(s32 *)((u8 *)arg0 + 0x3C)];
+    if (sel) {
+        func_8004972C(0xFF, 0xFF, 0, 0xFF);
+    } else {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+    ent = D_8FB034A0 + arg1 * 0x24;
+    switch (*(u16 *)ent) {
+        default:
+            break;
+        case 0:
+        case 1:
+        case 2:
+            func_80048E30(D_8FB03DF0, *(u16 *)(ent + 4), *(u16 *)(ent + 6), ent + 0x12, 1);
+            break;
+        case 7:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03A70, ent + 0x12);
+            if (mon[0] != 0) {
+                v = mon[0];
+                name = func_8004B7A4(v);
+                func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03A74, name,
+                              (func_8006461C(mon[0x20]) == 1) ? D_8FB03A7C
+                              : (func_8006461C(mon[0x20]) == 2) ? D_8FB03A80 : (const char *)D_8FB03A84);
+            }
+            break;
+        case 8:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03A88, ent + 0x12);
+            if (mon[1] != 0) {
+                func_80048E30(D_8FB03DF0, *(u16 *)(ent + 4), *(u16 *)(ent + 6), func_800635E0(mon[1]), 1);
+            }
+            break;
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03A8C, ent + 0x12);
+            if (((Mon8FB *)mon)->moves[*(u16 *)ent - 9] != 0) {
+                key = ((Mon8FB *)mon)->moves[*(u16 *)ent - 9];
+                if (func_800643CC(mon[0], key, mon[0x1D])) {
+                    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                } else if (func_800643CC(mon[0], key, 100)) {
+                    func_8004972C(0xFF, 0xFF, 100, 0xFF);
+                } else {
+                    func_8004972C(0xFF, 100, 100, 0xFF);
+                }
+                func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), func_80062CE0(key));
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            }
+            break;
+        case 13:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03A90, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03A94, *(u16 *)(mon + 6));
+            break;
+        case 37:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03A9C, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AA0, *(u16 *)(mon + 0xC));
+            break;
+        case 3:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AA8, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AAC, *(s32 *)((u8 *)arg0 + 0x38) + 1);
+            break;
+        case 5:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AB0, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AB4, *(u16 *)(team + 0xC));
+            break;
+        case 14:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03ABC, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AC0, *(s32 *)(mon + 8));
+            break;
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AC4, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AC8, ((u16 *)mon)[*(u16 *)ent - 9]);
+            break;
+        case 20:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03ACC, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AD0, *(u16 *)(mon + 0x16));
+            break;
+        case 21:
+        case 22:
+        case 23:
+        case 24:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AD8, ent + 0x12);
+            key = ((Mon8FB *)mon)->pp[*(u16 *)ent - 21];
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03ADC, (key & 0xC0) >> 6, key & 0x3F);
+            break;
+        case 26:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AE4, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AE8, mon[0x20]);
+            break;
+        case 27:
+        case 28:
+        case 29:
+        case 30:
+        case 31:
+        case 32:
+        case 33:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AEC, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AF0, ((u16 *)mon)[*(u16 *)ent - 8]);
+            break;
+        case 35:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03AF8, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03AFC, mon[0x1C]);
+            break;
+        case 25:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03B04, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03B08, mon[0x1D]);
+            break;
+        case 34:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03B10, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03B14, mon + 0x34);
+            break;
+        case 4:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03B18, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03B1C, *(s32 *)((u8 *)arg0 + 0x3C) + 1,
+                          ((unk_func_8FB02108_row *)team)->entries[*(s32 *)((u8 *)arg0 + 0x3C)] + 0x34);
+            break;
+        case 6:
+            func_800495F8(*(u16 *)(ent + 4), *(u16 *)(ent + 6), 2, D_8FB03B24, ent + 0x12);
+            func_800495BC(*(u16 *)(ent + 4), *(u16 *)(ent + 6), D_8FB03B28, team);
+            break;
+    }
+}
 
 extern void func_8FB009C0(void *arg0);
 extern void func_8FB011DC(void *arg0, void *arg1);
