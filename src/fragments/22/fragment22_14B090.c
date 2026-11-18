@@ -297,7 +297,59 @@ void func_82701300(void *arg0, u8 *arg1, s32 arg2) {
 }
 /* mkdraft:func_82701300 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/22/fragment22_14B090/func_827013F0.s")
+// The menu record lives in fragment 22's loaded data. It is defined here, with its
+// .bss pinned onto that address in datamig_bss.ld, so as1 folds the shared
+// `lui $at` of back-to-back field stores as retail does. The FAKE zero index z
+// keeps uopt from holding the record's address in a register.
+static Fragment22Menu D_827034E0;
+extern u16 D_827034EC;
+extern u8 D_82703514[];
+extern Quad800548C4 *D_82703500;
+extern s32 func_8004C8C0(s32);
+
+s32 func_827013F0(Quad800548C4 *arg0, void *arg1) {
+    s32 i;
+    void *entry;
+    s32 z = 0; // FAKE: zero index, see the comment above
+
+    _bzero(&D_827034E0, 0x2B4);
+    if (func_8004C8C0(0xF7) != 0) {
+        (&D_827034E0)[z].state = 0;
+        (&D_827034E0)[z].unk_0a = -2;
+        (&D_827034E0)[z].flags |= 1;
+        (&D_827034E0)[z].unk_16 = 2;
+        (&D_827034E0)[z].unk_18 = &(&D_827034E0)[z].unk_04;
+        (&D_827034E0)[z].unk_1c = (&arg1)[z]; // FAKE: keeps arg1 in its stack home
+        (&D_827034E0)[z].settings = arg0;
+        (&D_827034E0)[z].settings_backup = *arg0;
+        entry = func_82700E38(D_82703514, 0x10);
+        if (entry != 0) {
+            func_8270103C(entry, 1, 0);
+        }
+        for (i = 0; i < 5; i++) {
+            entry = func_82700E38(D_82703514, 0x10);
+            if (!arg0) { // FAKE: keeps arg0 live into the loop so it doesn't share i's register
+            }
+            if (entry != 0) {
+                func_8270103C(entry, 2, i);
+            }
+        }
+        for (i = 0; i < 2; i++) {
+            entry = func_82700E38(D_82703514, 0x10);
+            if (entry != 0) {
+                func_8270103C(entry, 3, i);
+            }
+        }
+        for (i = 0; i < 3; i++) {
+            entry = func_82700E38(D_82703514, 0x10);
+            if (entry != 0) {
+                func_8270103C(entry, 4, i);
+            }
+        }
+        func_82701300(&D_827034E0, (u8 *)D_82703500, 0);
+    }
+    return (D_827034EC & 1) != 0;
+}
 
 extern u16 D_827034EC;
 extern u8 D_82703514[];
