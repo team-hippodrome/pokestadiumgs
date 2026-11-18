@@ -31,6 +31,12 @@ SECTIONS
         build/src/fragments/20/fragment20_12C460.o(.data)
     }
 
+    /* func_82801A08's pulse period and phase statics (60.0f, 0.0f). */
+    .fragment10_pulse_data 0x8280283C (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/10/fragment10_D5250.o(.data)
+    }
+
     /* func_82801D7C's last-color static, in fragment 10's loaded data. */
     .fragment10_panel_color_bss 0x82802A60 (NOLOAD) : SUBALIGN(4)
     {
@@ -504,6 +510,7 @@ ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
 .L8002B400 = func_8002B2FC + 0x104;
 .L8002B424 = func_8002B2FC + 0x128;
 
+ASSERT(SIZEOF(.fragment10_pulse_data) == 16, "fragment 10 pulse statics footprint changed");
 /* Case targets for fragment 45's command dispatch table. */
 .L8AB06518 = func_8AB064C4 + 0x54;
 .L8AB06528 = func_8AB064C4 + 0x64;
