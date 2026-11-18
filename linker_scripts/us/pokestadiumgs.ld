@@ -2077,10 +2077,10 @@ SECTIONS
         build/asm/us/data/fragments/24/fragment24_header.o(.data);
         fragments_24_fragment24_14FE20 = .;
         build/src/fragments/24/fragment24_14FE20.o(.data);
-        fragments_24_fragment24_150C10 = .;
-        build/src/fragments/24/fragment24_150C10.o(.data);
         fragments_24_fragment24_data_data = .;
         build/asm/us/data/fragments/24/fragment24_data.data.o(.data);
+        fragments_24_fragment24_150C10 = .;
+        build/src/fragments/24/fragment24_150C10.o(.data);
         fragment24_DATA_END = .;
         fragment24_DATA_SIZE = ABSOLUTE(fragment24_DATA_END - fragment24_DATA_START);
         fragment24_RODATA_START = .;
