@@ -353,7 +353,7 @@ s32 func_80028E60(u32 arg0)
 void func_80028EA8(void) ;
 
 // Ten-word sound command queue at 0x800D1A90; Audio_UpdateCommandQueue consumes it.
-//@src/2C1B0.c
+//@src/290C0.c
 extern s32 gAudioCommandQueue[10];
 
 // Battle event queue and its response snapshots at 0x800D1AB8, directly after
@@ -361,7 +361,7 @@ extern s32 gAudioCommandQueue[10];
 // The queue is its own symbol: func_8002C2E0 walks it with a pointer that starts at
 // 0x800D1AB8 (displacement 0), which a field at offset 40 of a larger struct does not
 // produce. Legacy address labels refer to the fields through linker_scripts/us/aliases.ld.
-//@src/2C1B0.c
+//@src/290C0.c
 typedef struct {
     u16 event_queue[10];
     u8 unk_14[2];

@@ -717,7 +717,7 @@ alias; command 111 calls `func_8002BE44`. Other commands go to
 queue. The helper implementations establish their real parameter widths;
 `Audio_RequestSlot` takes only the byte index.
 //@src/229E0.c
-//@src/2C1B0.c
+//@src/290C0.c
 
 The same-file caller `func_841374D0` supplies the byte at offset 384 and each
 halfword from offset 388, using the count byte at offset 386. Existing unknown
