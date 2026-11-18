@@ -807,7 +807,115 @@ void func_86A03234(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A036F4.s")
+extern void func_80027A28(s32, s32);
+void func_86A036F4(void) {
+    u8 *use;
+    f32 tx;
+    f32 cx;
+    f32 cy;
+    f32 cz;
+    s32 flag;
+    s32 player;
+    s32 kind;
+    s32 n;
+    f32 ty[1];
+    f32 tz[1];
+    s32 pad;
+
+    flag = 0;
+    use = *(u8 **)((u8 *)D_87F119DC + 0x20);
+    player = *(s32 *)(use + 0);
+    kind = *(s32 *)(use + 4);
+    tx = *(f32 *)(use + 0x10);
+    ty[0] = *(f32 *)(use + 0x14);
+    tz[0] = *(f32 *)(use + 0x18);
+    cx = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    cy = *(f32 *)((u8 *)D_87F119DC + 0x4C);
+    cz = *(f32 *)((u8 *)D_87F119DC + 0x50);
+    if (tx < cx - 8.0f) {
+        *(f32 *)((u8 *)D_87F119DC + 0x48) -= 8.0f;
+    } else if (cx + 8.0f < tx) {
+        *(f32 *)((u8 *)D_87F119DC + 0x48) += 8.0f;
+    } else {
+        *(f32 *)((u8 *)D_87F119DC + 0x48) = tx;
+        if (ty[0] < cy - 8.0f) {
+            *(f32 *)((u8 *)D_87F119DC + 0x4C) -= 8.0f;
+        } else if (cy + 8.0f < ty[0]) {
+            *(f32 *)((u8 *)D_87F119DC + 0x4C) += 8.0f;
+        } else {
+            *(f32 *)((u8 *)D_87F119DC + 0x4C) = ty[0];
+            if (tz[0] < cz - 8.0f) {
+                *(f32 *)((u8 *)D_87F119DC + 0x50) -= 8.0f;
+            } else if (cz + 8.0f < tz[0]) {
+                *(f32 *)((u8 *)D_87F119DC + 0x50) += 8.0f;
+            } else {
+                *(f32 *)((u8 *)D_87F119DC + 0x50) = tz[0];
+            }
+        }
+    }
+    D_86A443F0.unk_01AC++;
+    if (tx == *(f32 *)((u8 *)D_87F119DC + 0x48) && ty[0] == *(f32 *)((u8 *)D_87F119DC + 0x4C) &&
+        tz[0] == *(f32 *)((u8 *)D_87F119DC + 0x50)) {
+        flag = 1;
+    }
+    if (flag != 0) {
+        *(s32 *)(*(u8 **)((u8 *)D_87F119DC + 0x20) + 0x1C) = 0;
+        func_87F026E8(D_87F119D8, D_87F119DC);
+        D_86A443F0.unk_01AC--;
+        n = D_86A443F0.unk_0E18[player]++;
+        *(s32 *)((u8 *)&D_86A443F0 + 0x1B8 + player * 0x318 + n * 4) = kind;
+        if (n > 0 && *(s32 *)((u8 *)&D_86A443F0 + 0x1B8 + player * 0x318 + (n - 1) * 4) == *(s32 *)((u8 *)&D_86A443F0 + 0x1B8 + player * 0x318 + n * 4)) {
+            D_86A443F0.unk_0E28[player]++;
+            if (D_86A443F0.unk_0E28[player] >= 5) {
+                D_86A443F0.unk_0E28[player] = 4;
+            }
+            D_86A443F0.unk_00B4[player] += *(u32 *)(D_86A0D560 + kind * 0x18) * (D_86A443F0.unk_0E28[player] + 1);
+            if (D_86A443F0.unk_00B4[player] >= 100000) {
+                D_86A443F0.unk_00B4[player] = 99999;
+            }
+            switch (D_86A443F0.unk_0E28[player]) {
+            case 1:
+                func_8002781C(0x8F16, player & 0xFF, D_86A443F0.unk_0E48[player]);
+                break;
+            case 2:
+                func_8002781C(0x8F17, player & 0xFF, D_86A443F0.unk_0E48[player]);
+                break;
+            case 3:
+                func_8002781C(0x8F18, player & 0xFF, D_86A443F0.unk_0E48[player]);
+                break;
+            case 4:
+                func_8002781C(0x8F19, player & 0xFF, D_86A443F0.unk_0E48[player]);
+                break;
+            }
+            D_86A443F0.unk_0E38[player] = 30;
+        } else {
+            D_86A443F0.unk_0E38[player] = 0;
+            D_86A443F0.unk_00B4[player] += *(s32 *)(D_86A0D560 + kind * 0x18);
+            if (D_86A443F0.unk_00B4[player] >= 100000) {
+                D_86A443F0.unk_00B4[player] = 99999;
+            }
+            D_86A443F0.unk_0E28[player] = 0;
+            switch (kind) {
+            case 0:
+                func_80027A28(0x8F00, player & 0xFF);
+                break;
+            case 1:
+            case 2:
+                func_80027A28(0x8F04, player & 0xFF);
+                break;
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                func_80027A28(0x8F00, player & 0xFF);
+                break;
+            }
+        }
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
