@@ -2613,7 +2613,42 @@ void func_864066B4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86406710.s")
+void func_86406710(void) {
+    u8 *node;
+    s32 i;
+    s32 a; // FAKE
+
+    func_864066B4();
+    if (func_8640633C() != 0) {
+        node = *(u8 **)(D_86416C00 + 0xE0C);
+        while (node != NULL) {
+            *(s32 *)(node + 0x1C) = 0;
+            *(s32 *)(node + 0xC) &= 0xCFFFFFFF;
+            *(s32 *)(node + 0xC) |= 0x40000000;
+            node = *(u8 **)(node + 4);
+        }
+        if (*(u8 *)(*(u8 **)(D_86416C00 + 0x70) + 0x2180) == 4) {
+            func_87F0C930(D_86416C00 + 0x9C);
+            return;
+        }
+        *(s32 *)(D_86416C00 + 0x10) = 5;
+        *(s32 *)(D_86416C00 + 0xCEAC) = 0;
+        if ((*(s32 *)(D_86416C00 + 0x7DC) & 0x10000) && (*(s32 *)(D_86416C00 + 0x968) & 0x10000) &&
+            (*(s32 *)(D_86416C00 + 0xAF4) & 0x10000) && (*(s32 *)(D_86416C00 + 0xC80) & 0x10000)) {
+            for (i = 0; i < 4; i++) {
+                *(s32 *)(D_86416C00 + 0x7DC + i * 0x18C) &= ~0x10000;
+            }
+        }
+        // FAKE: the dead assignment to a
+        Fragment64_StartPlayerPanel(D_86416C00 + 0x724, *(s32 *)(D_86416C00 + 0x70), 6,
+                                    a = *(s32 *)(D_86416C00 + 0x7DC) & 0x10000,
+                                    *(s32 *)(D_86416C00 + 0x968) & 0x10000,
+                                    *(s32 *)(D_86416C00 + 0xAF4) & 0x10000,
+                                    *(s32 *)(D_86416C00 + 0xC80) & 0x10000);
+        func_87F0CB24();
+        func_864081E8();
+    }
+}
 #endif
 
 #ifdef VERSION_US
