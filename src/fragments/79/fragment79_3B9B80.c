@@ -3,7 +3,37 @@
 
 #ifdef VERSION_US
 extern u8 func_84154B24(void);
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414A2F0.s")
+extern void _bzero(void *, s32);
+extern void _bcopy(void *, void *, s32);
+extern void func_80003F74(void *, void *, void *, s32);
+extern u8 D_15833A0[];
+extern u8 *D_841951F8[];
+
+// Copies the 0x44-byte record arg1 (1-based) of D_15833A0 into this side's
+// block at +0x49C, after clearing it.  arg1 == 0xFF leaves the block alone,
+// arg1 == 0 only clears it.
+void func_8414A2F0(u8 arg0, volatile u8 arg1) {
+    u8 *buf;
+    u8 *end;
+
+    {
+        u8 scratch[0x4C];
+        u8 idx = arg1;
+
+        // FAKE: the block changes uopt's regions, so idx is spilled to the
+        // same stack slot as buf (0x1C), as in the target.
+        if (1) {
+            buf = (u8 *)((u32)scratch & ~7U);
+            if (idx != 0xFF) {
+                _bzero(D_841951F8[arg0] + 0x49C, 0x44);
+                if (idx != 0) {
+                    func_80003F74(buf, (end = D_15833A0 + arg1 * 0x44) - 0x44, end, 0);
+                    _bcopy(buf, D_841951F8[arg0] + 0x49C, 0x44);
+                }
+            }
+        }
+    }
+}
 
 extern u8 *D_841951F8[];
 u8 *func_8414A3A0(u8 arg0) {
@@ -14,14 +44,13 @@ s32 func_8414A3C0(u8 arg0, u32 arg1) {
     return (*(u32 *)(D_841951F8[arg0] + 0x49C) & arg1) != 0;
 }
 
-extern void func_8414A2F0(s32, u8);
 void func_8414A3E8(void) {
     s32 i;
     u8 **p;
     p = D_841951F8;
     i = 0;
     do {
-        func_8414A2F0(i & 0xFF, (*p)[0x49A]);
+        func_8414A2F0(i, (*p)[0x49A]);
         i++;
         p++;
     } while (i != 2);
