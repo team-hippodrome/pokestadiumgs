@@ -174,7 +174,10 @@ void func_8340135C(Fragment58State *arg0) {
 /* mkdraft:func_8340135C end */
 
 /* mkdraft:func_83401454 begin */
-extern f32 D_83403F20;
+// IDO pads this object's .data section to 16 bytes: D_83403F20, the unreferenced 0.0f word
+// after it, func_83401AAC's blink counter and the first word of D_83403F2C.
+f32 D_83403F20 = 32.0f;
+f32 D_83403F24 = 0.0f;
 
 // Moves the state's 0x08/0x0C position back out of the transition offset shared through
 // D_83403F20: x by the offset, the other axis by the offset scaled by unk14/unk10, and
@@ -187,7 +190,6 @@ extern f32 D_83403F20;
 // (typedef earlier in src/fragments/58/fragment58_code.c) and the two functions are the
 // in and out halves of one transition. unk38 holds a float although that struct declares
 // its word s32.
-// D_83403F20 is initialised to .float 32 in asm/us/data/fragments/58/fragment58_data.data.s
 // FAKE: local alias for D_83403F20; naming the global in each statement scores 98445.
 // FAKE: the always-true block keeps uopt from hoisting the 12.0f clamp constant into
 // the unk1C == -1 branch's delay slot (bne becomes bnel and the FP results move to
@@ -271,7 +273,73 @@ void func_83401904(void) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83401AAC.s")
+extern s32 D_834041A8;
+extern s32 D_834041AC;
+extern f32 D_834041F8;
+extern f32 D_834041FC;
+extern u8 D_83404228;
+extern u8 D_83404229;
+extern u8 D_8340422A;
+// 20-byte light records start at D_83404188 + 0x78 (color) / + 0x88 (direction).
+#define LIGHT(i) ((u8 *)&D_83404188 + (i) * 20)
+
+// Debug pause overlay: prints "PAUSE", the camera near/far planes and the selected light's
+// direction, colour and ambient values. The row under the cursor (D_834041A8) blinks via a
+// 21-frame counter. Same layout as func_83302290 in fragment 57.
+void func_83401AAC(void) {
+    // Function-scope static: retail reloads its %hi for every access, which IDO does not
+    // do for an extern or a file-scope static (both get one cached address register).
+    static s32 D_83403F28 = 0;
+    s32 idx;
+
+    if (++D_83403F28 >= 0x15) {
+        D_83403F28 = 0;
+    }
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    idx = D_834041AC;
+    func_800495F8(0xA0, 0x19, 1, "PAUSE");
+    if (D_834041A8 != 0 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x32, 0, "camera near:%0.1f ", D_834041F8);
+    }
+    if (D_834041A8 != 1 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x3C, 0, "camera far :%0.1f ", D_834041FC);
+    }
+    if (D_834041A8 != 2 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x46, 0, "lightno :%d", idx);
+    }
+    func_800495F8(0xA0, 0x50, 0, "(a_x=%5x a_y=%5x)", *(s16 *)(LIGHT(idx) + 0x88), *(s16 *)(LIGHT(idx) + 0x8A));
+    if (D_834041A8 != 3 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x5A, 0, "diff_r :%d", LIGHT(idx)[0x78]);
+    }
+    if (D_834041A8 != 4 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x64, 0, "diff_g :%d", LIGHT(idx)[0x79]);
+    }
+    if (D_834041A8 != 5 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x6E, 0, "diff_b :%d", LIGHT(idx)[0x7A]);
+    }
+    if (D_834041A8 != 6 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x78, 0, "ambient :%d", LIGHT(idx)[0x7B]);
+    }
+    if (D_834041A8 != 7 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x82, 0, "ambient_r :%d", D_83404228);
+    }
+    if (D_834041A8 != 8 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x8C, 0, "ambient_g :%d", D_83404229);
+    }
+    if (D_834041A8 != 9 || D_83403F28 >= 0xA) {
+        func_800495F8(0x8C, 0x96, 0, "ambient_b  :%d", D_8340422A);
+    }
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+
+// Shares the 16-byte padded .data section with D_83403F20 and the counter above; its
+// second word (0x43) stays in asm/us/data/fragments/58/2CC340.data.s.
+s32 D_83403F2C = 0x43;
 
 typedef struct {
     u8 color[4];

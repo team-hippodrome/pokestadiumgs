@@ -4236,10 +4236,12 @@ SECTIONS
         fragment58_DATA_START = .;
         fragments_58_fragment58_header = .;
         build/asm/us/data/fragments/58/fragment58_header.o(.data);
-        fragments_58_fragment58_code = .;
-        build/src/fragments/58/fragment58_code.o(.data);
         fragments_58_fragment58_data_data = .;
         build/asm/us/data/fragments/58/fragment58_data.data.o(.data);
+        fragments_58_fragment58_code = .;
+        build/src/fragments/58/fragment58_code.o(.data);
+        _2CC340_data = .;
+        build/asm/us/data/2CC340.data.o(.data);
         fragment58_DATA_END = .;
         fragment58_DATA_SIZE = ABSOLUTE(fragment58_DATA_END - fragment58_DATA_START);
         fragment58_RODATA_START = .;
