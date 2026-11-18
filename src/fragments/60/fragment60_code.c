@@ -810,7 +810,82 @@ void func_86A03234(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A03B10.s")
+extern void func_86A036F4(void);
+extern s32 D_86A0FD08;
+extern s32 D_86A0FD0C;
+extern f32 D_86A443F4[][2];
+extern f32 D_86A0F154[][3];
+typedef struct {
+    s32 unk_00;
+    s32 unk_04;
+    u8 unk_08[8];
+    f32 unk_10[3];
+    s32 active;
+} PoolRec86A03B10;
+void func_86A03B10(s32 arg0, s32 arg1) {
+    s32 pad[2];
+    PoolRec86A03B10 *slot;
+    u8 *obj;
+    s32 i;
+
+    i = 0;
+loop:
+    if (D_86A41490[i].active != 0) {
+        i++;
+        if ((StagePoolResetRecord *)D_86A42D50 != &D_86A41490[i]) {
+            goto loop;
+        }
+    }
+    obj = func_87F025B8(&D_86A1AAD0, func_86A036F4);
+    *(f32 *)(obj + 0x48) = D_86A443F4[arg0][0];
+    *(f32 *)(obj + 0x4C) = 5.5555553f;
+    switch (arg1) {
+    case 0:
+        *(f32 *)(obj + 0x50) = -175.0f;
+        break;
+    case 1:
+    case 2:
+        *(f32 *)(obj + 0x50) = -183.33333f;
+        break;
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+        *(f32 *)(obj + 0x50) = -175.0f;
+        break;
+    }
+    *(void **)(obj + 0x20) = D_86A41490;
+    ((PoolRec86A03B10 *)D_86A41490)[i].unk_00 = arg0;
+    ((PoolRec86A03B10 *)D_86A41490)[i].unk_04 = arg1;
+    ((PoolRec86A03B10 *)D_86A41490)[i].active = 1;
+    ((PoolRec86A03B10 *)D_86A41490)[i].unk_10[0] = D_86A0F154[arg0][0] * 0.1111111111111111;
+    ((PoolRec86A03B10 *)D_86A41490)[i].unk_10[1] = D_86A0F154[arg0][1] * 0.1111111111111111;
+    ((PoolRec86A03B10 *)D_86A41490)[i].unk_10[2] = D_86A0F154[arg0][2] * 0.1111111111111111;
+    *(void **)(obj + 0x20) = &D_86A41490[i];
+    *(f32 *)(obj + 0x54) = 0.11111111f;
+    *(f32 *)(obj + 0x58) = 0.11111111f;
+    *(f32 *)(obj + 0x5C) = 0.11111111f;
+    func_8003F1DC(obj + 0x24);
+    switch (arg1) {
+    case 0:
+        func_8003F114(obj + 0x24, 0, -1, D_86A0FD08);
+        break;
+    case 1:
+    case 2:
+        func_8003F114(obj + 0x24, 0, -1, D_86A0FD0C);
+        break;
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+        func_8003F114(obj + 0x24, 0, -1, D_86A0FD08);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
