@@ -1148,7 +1148,56 @@ s32 func_82202BE4(s32 arg0, F82201C70_Input *arg1) {
 }
 /* mkdraft:func_82202BE4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82202E0C.s")
+extern u32 D_8220D840;
+extern u16 D_8220E4C0;
+typedef struct { u8 c[4]; } F17ColorWord2E0C;
+s32 func_82202E0C(s32 arg0, u8 *arg1) {
+    s32 *var_t0;
+    s32 *var_t1;
+    s32 mask;
+    s32 var_a3;
+    u32 temp_hi;
+    u32 temp_v1;
+    u32 var_a2;
+    s32 temp_t2;
+
+    temp_t2 = *(s32 *)(arg1 + 0x20);
+
+    if (arg0 == 0) {
+    } else if (arg0 == 1) {
+        if (temp_t2 == 0) {
+            temp_v1 = *(u32 *)((u8 *)&D_8220D840 + 4) + 1;
+            temp_hi = temp_v1 % 45U;
+            var_a3 = 0xF;
+            /* Empty test on the remainder keeps the counter store after the
+               divu, as in retail. */
+            if ((s32)temp_hi < 0) {} D_8220D844 = temp_v1;
+            if ((s32) temp_hi < 0x1E) {
+                var_a2 = temp_hi;
+                var_a3 = 0x1E;
+                var_t0 = &D_8220D794;
+                var_t1 = &D_8220D797;
+            } else {
+                var_a2 = temp_hi - 0x1E;
+                var_t0 = &D_8220D797;
+                var_t1 = &D_8220D794;
+            }
+            arg1[0x28] = ((u8 *)var_t0)[0] + (s32)((((u8 *)var_t1)[0] - ((u8 *)var_t0)[0]) * var_a2) / var_a3;
+            arg1[0x29] = ((u8 *)var_t0)[1] + (s32)((((u8 *)var_t1)[1] - ((u8 *)var_t0)[1]) * var_a2) / var_a3;
+            arg1[0x2A] = ((u8 *)var_t0)[2] + (s32)((((u8 *)var_t1)[2] - ((u8 *)var_t0)[2]) * var_a2) / var_a3;
+            mask = 1;
+            *(F17ColorWord2E0C *)(arg1 + 0x2C) = *(F17ColorWord2E0C *)(arg1 + 0x28);
+        } else {
+            mask = 2;
+        }
+        if (D_8220E4C0 & mask) {
+            *(u16 *)(arg1 + 2) |= 2;
+        } else {
+            *(u16 *)(arg1 + 2) &= 0xFFFD;
+        }
+    }
+    return 0;
+}
 
 extern u8 D_8220E310[];
 extern u8 *func_8004C874(s32, s32);
