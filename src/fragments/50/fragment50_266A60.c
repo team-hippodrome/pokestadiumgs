@@ -781,7 +781,76 @@ void func_86201E70(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_8620218C.s")
+typedef struct { f32 x, y, z; } V3_8620218C;
+typedef struct {
+    u8 pad0[0xC];
+    f32 vel[3];
+    f32 pos[3];
+    u8 pad24[0x10];
+    f32 radius;
+} Body8620218C;
+
+void func_8620218C(void *a0, void *a1) {
+    u8 *arg0 = a0;
+    u8 *arg1 = a1;
+    f32 pad;
+    f32 dist;
+    f32 r;
+    Body8620218C *a;
+    Body8620218C *b;
+    V3_8620218C n;
+    V3_8620218C p;
+    f32 dx, dy, dz;
+    f32 k;
+    f32 s;
+
+    dx = *(f32 *)(arg1 + 0x48) - *(f32 *)(arg0 + 0x48);
+    dy = *(f32 *)(arg1 + 0x4C) - *(f32 *)(arg0 + 0x4C);
+    dz = *(f32 *)(arg1 + 0x50) - *(f32 *)(arg0 + 0x50);
+    s = *(f32 *)((u8 *)D_8620E198 + 0x64) * 0.75f * 100.0f;
+    a = *(Body8620218C **)(arg0 + 0x20);
+    b = *(Body8620218C **)(arg1 + 0x20);
+    r = *(f32 *)((u8 *)D_8620E198 + 0x64) * 0.75f * 100.0f * a->radius + s * b->radius;
+    if ((dx > 0.0f ? dx : -dx) < r) {
+        if ((dy > 0.0f ? dy : -dy) < r) {
+            if ((dz > 0.0f ? dz : -dz) < r) {
+                dist = sqrtf(dx * dx + dy * dy + dz * dz);
+                if (dist < r) {
+                    p.x = *(f32 *)(arg1 + 0x10) - *(f32 *)(arg0 + 0x10);
+                    p.y = *(f32 *)(arg1 + 0x14) - *(f32 *)(arg0 + 0x14);
+                    p.z = *(f32 *)(arg1 + 0x18) - *(f32 *)(arg0 + 0x18);
+                    if (dist == 0.0f) {
+                        n.x = 2.0f * ((f32)func_8003570C() / 4294967296.0f) - 1.0f;
+                        n.y = 2.0f * ((f32)func_8003570C() / 4294967296.0f) - 1.0f;
+                        n.z = 2.0f * ((f32)func_8003570C() / 4294967296.0f) - 1.0f;
+                        if (n.x == 0.0f && n.y == 0.0f && n.z == 0.0f) {
+                            n.x = 1.0f;
+                        }
+                    } else {
+                        n.x = dx;
+                        n.y = dy;
+                        n.z = dz;
+                    }
+                    func_80035A10((f32 *)&n);
+                    k = (p.x * n.x + p.y * n.y + p.z * n.z) * 0.1f;
+                    a->vel[0] += n.x * k;
+                    a->vel[1] += n.y * k;
+                    a->vel[2] += n.z * k;
+                    b->vel[0] -= n.x * k;
+                    b->vel[1] -= n.y * k;
+                    b->vel[2] -= n.z * k;
+                    k = (r - dist) * 0.5f;
+                    a->pos[0] -= n.x * k;
+                    a->pos[1] -= n.y * k;
+                    a->pos[2] -= n.z * k;
+                    b->pos[0] += n.x * k;
+                    b->pos[1] += n.y * k;
+                    b->pos[2] += n.z * k;
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
