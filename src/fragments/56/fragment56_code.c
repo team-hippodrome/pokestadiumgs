@@ -739,7 +739,73 @@ void func_86803618(s32 arg0) {
 }
 /* mkdraft:func_86803618 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868039F8.s")
+extern u8 D_86808598[];
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern s32 D_868074F0[];
+extern s32 D_86807E40[][7];
+extern u32 D_86807F08;
+extern void func_87F0D600(u8 *, s32, s32, s32, f32, f32);
+extern void func_87F061F0(void);
+extern void func_86803618(s32);
+extern void Font_DisableTwoCycleTexturing(void);
+#define GROUP_I(i, t, off) (*(t *)((u8 *)&D_8682EE18[i] + (off)))
+
+void func_868039F8(void) {
+    s32 i;
+    u8 *tex;
+    s32 *color;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (i = 0; i < 4; i++) {
+        tex = (u8 *)func_8004C990(0x1B2, D_868074F0[GROUP_I(i, s32, 0x3C)]);
+        func_8004D1FC(tex);
+        if (*(u8 *)((u8 *)D_86808590 + 0x2180) != 4) {
+            GfxRect_DrawTextured(D_86807EB0[i], 0xBD, TEX_SCALED_WIDTH(tex, 0.62f), TEX_SCALED_HEIGHT(tex, 0.62f), 0, 0, 0x674, 0x674, 0);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    for (i = 0; i < 4; i++) {
+        if (*(u8 *)((u8 *)D_86808590 + 0x2180) != 4) {
+            func_87F0D600(D_86808598, i, D_86807EB0[i], 0xBD, 0.62, 0.62);
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        func_87F061F0();
+        color = D_86807E40[i];
+        gDPSetPrimColor(D_800D0510++, 0, 0, color[0], color[1], color[2], color[3]);
+        gDPSetEnvColor(D_800D0510++, color[4], color[5], color[6], 0xFF);
+        func_86803618(i);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    *(s32 *)((u8 *)&D_8682F2A8 + 0x50) = 1;
+    for (i = 0; i < 4; i++) {
+        if (GROUP_I(i, s32, 0x14) >= *(s32 *)((u8 *)&D_8682F2A8 + 0x50)) {
+            *(s32 *)((u8 *)&D_8682F2A8 + 0x50) = GROUP_I(i, s32, 0x14);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_87F061F0();
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0x9B, 0xC8);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0x64, 0x00, 0xFF);
+    tex = (u8 *)func_8004C990(0x194, 10);
+    if (*(u8 *)((u8 *)D_86808590 + 0x2180) != 4) {
+        func_8004D19C(0x88, 0x10, (s32)tex, 0, 0);
+        func_8680349C(D_86807C48);
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(4, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0, 0, 0xFF, 0xFF);
+    if (*(s32 *)((u8 *)&D_8682F2A8 + 0x48) == 1) {
+        D_86807F08 = 1;
+    }
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+#undef GROUP_I
 
 s32 func_87F00930();
 extern void func_87F01D44();
