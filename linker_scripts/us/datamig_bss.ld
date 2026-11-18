@@ -29,6 +29,14 @@ SECTIONS
         build/src/fragments/22/fragment22_14A2E0.o(.bss)
     }
 
+    /* Fragment 58's text overlay state D_83404888, in the fragment's loaded
+     * data. func_8340156C needs it defined in fragment58_code.c so as1 folds
+     * the shared `lui $at` of its back-to-back field stores. */
+    .fragment58_state_bss 0x83404888 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/58/fragment58_code.o(.bss)
+    }
+
     /* Fragment 82's deck menu state header (func_82D00590), in the
      * fragment's loaded data at D_82D07428. */
     .fragment82_deck_menu_state_data 0x82D07428 (NOLOAD) : SUBALIGN(4)
