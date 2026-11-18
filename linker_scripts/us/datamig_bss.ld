@@ -9,6 +9,19 @@
 
 SECTIONS
 {
+    /* Request ticks and signed command value used by func_80027634. The
+     * retail data image supplies their zero initial values. Only the fields
+     * at offsets 0 and 4 belong to these objects; the tail has no load image. */
+    .audio_request_state_data 0x800918EC (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/27590.o(.data)
+    }
+    ASSERT(SIZEOF(.audio_request_state_data) == 16,
+           "audio request storage extent changed")
+    ASSERT(ADDR(.audio_request_state_data) == D_800918EC,
+           "audio request tick address changed")
+
+
     /* The preview initializer uses the work record in fragment 22's
      * loaded data. Keep IDO's static storage references on that record. */
     .fragment22_preview_state 0x827034C8 (NOLOAD) : SUBALIGN(4)
