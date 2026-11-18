@@ -1309,8 +1309,126 @@ s32 func_82303508(void) {
     }
     return result;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230362C.s")
+extern u16 D_82305E84[];
 
+s32 func_8230362C(s32 arg0, s32 arg1) {
+    s32 result;
+    s32 *reset = &D_82305E98;
+    unk_D_82305A74 *entry;
+    s16 *timer = D_82305E68;
+    result = arg0;
+    switch (arg0) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            result = 2;
+            if (arg1 != 0) {
+                func_81700C0C(0);
+            }
+            func_8230099C();
+            func_82300F1C();
+        }
+        break;
+    case 1:
+        if (func_823030A4() != 0) {
+            result = 2;
+            if (arg1 != 0) {
+                func_81700C0C(0);
+            }
+            func_8230099C();
+            func_82300F1C();
+            D_82305A70[2] = 0;
+        }
+        break;
+    case 2:
+        if (func_823030C4() != 0) {
+            timer[3] = 0;
+            timer[4] = -1;
+            if ((timer[2]) >= 0) {
+                entry = &((unk_D_82305A74 *)D_82305A74)[(timer[2])];
+                if (*(s16 *)&entry->unk_00[2] >= 2) {
+                    timer[3] = (u16)D_82305E68[(timer[2]) + 14] - 1;
+                    func_81700B8C(2, (const char *)func_8004C874((u16)D_82305E68[(timer[2]) + 6], (u16)D_82305E68[(timer[2]) + 10]));
+                    func_81700C0C(2);
+                    result = 3;
+                    func_82305988(*(u16 *)entry->unk_00, D_82305E84[timer[2]]);
+                    func_823059D4();
+                    func_82300A78();
+                    *(u16 *)((u8 *)reset - 38) &= 0xFFFE;
+                    func_82300F34();
+                } else if (*(s16 *)&entry->unk_00[10] == 0) {
+                    result = 5;
+                    *reset = 0;
+                    *(u16 *)((u8 *)reset - 38) |= 4;
+                    *timer = 0;
+                } else {
+                    result = 6;
+                    *timer = 0;
+                    func_80035424(15);
+                }
+            } else if ((timer[2]) == -2) {
+                result = 4;
+                *timer = 0;
+                func_82300A78();
+                func_82300F34();
+            } else {
+                result = 7;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(5);
+                func_80035424(15);
+            }
+        }
+        break;
+    case 4:
+        if (func_82303488() != 0) {
+            result = 8;
+        }
+        break;
+    case 3:
+        if (func_82303308() != 0) {
+            if (timer[4] >= 0) {
+                unk_D_82305A74 *entry;
+                entry = &((unk_D_82305A74 *)D_82305A74)[timer[2]];
+                if (*(s16 *)&entry->unk_00[10] == 0) {
+                    result = 5;
+                    *reset = 0;
+                    *(u16 *)((u8 *)reset - 38) |= 4;
+                    *timer = 0;
+                } else {
+                    result = 6;
+                    *timer = 0;
+                    func_80035424(15);
+                }
+                func_82305A0C();
+            } else {
+                result = 2;
+                func_81700D44(2);
+                func_823059F0();
+                func_8230099C();
+                *(u16 *)((u8 *)reset - 38) |= 1;
+                func_82300F1C();
+            }
+        }
+        break;
+    case 5:
+        if (func_82303508() != 0) {
+            result = 8;
+        }
+        break;
+    case 6:
+        if (++*timer >= 20) {
+            result = 7;
+            StageContext_SetClearColor(1);
+            StageFade_StartFromTransparent(5);
+        }
+        break;
+    case 7:
+        if (StageContext_GetFadeMode() == 1) {
+            result = 8;
+        }
+        break;
+    }
+    return result;
+}
 extern s8 *D_82305A70;
 extern s32 D_82305E94;
 s32 func_82303A04(s32 arg0, s32 arg1) {
