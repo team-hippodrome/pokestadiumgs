@@ -913,7 +913,74 @@ void func_8680422C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868044D4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868048C8.s")
+extern u8 D_86809208[];
+extern f32 D_8682F2FC;
+// D_86809208 is the third [4][40] model pool (also u8[] below).
+#define FALL_MODELS ((Fragment56PointModelView (*)[40])D_86809208)
+
+// Recycles landed pool models and spawns ground markers for models that fell below the floor.
+void func_868048C8(void) {
+    s32 i;
+    s32 j;
+    s32 sound_played;
+    s32 cleared[4];
+    s32 k;
+    f32 scale;
+    for (i = 0; i < 4; i++) {
+        cleared[i] = 0;
+        for (k = 0; k < 40; k++) {
+            if (D_8682EE18[i].active[k] == 1) {
+                if ((u32)D_8681EBF8[i][k].unk_014 > 10) {
+                    func_8003F1DC(&D_8681EBF8[i][k]);
+                    D_8682EE18[i].active[k] = 0;
+                }
+            }
+        }
+    }
+    sound_played = 0;
+    for (j = 0; j < 40; j++) {
+        for (i = 0; i < 4; i++) {
+            if (FALL_MODELS[i][j].position[1] <= -470.0f) {
+                if (*(s32 *)(D_8682CD18 + i * 1600 + j * 40 + 4) != -1) {
+                    func_8003F1DC(&FALL_MODELS[i][j]);
+                    if (*(s32 *)(D_8682CD18 + i * 1600 + j * 40 + 0x1C) == 1) {
+                        if (sound_played == 0) {
+                            func_80027A28(32517, 2);
+                            sound_played = 1;
+                        }
+                        k = D_8682EE18[i].pool_cursor;
+                        D_8682EE18[i].active[k] = 1;
+                        func_8003F114((u8 *)&D_8681EBF8[i][k], 0, -1, D_8682CD14);
+                        D_8681EBF8[i][k].unk_014 = 0;
+                        D_8681EBF8[i][k].position[2] = D_8682F2FC * 4.39;
+                        D_8681EBF8[i][k].position[0] = FALL_MODELS[i][j].position[0];
+                        D_8681EBF8[i][k].position[1] = (f32)D_86807CB8;
+                        scale = D_86807CC0;
+                        D_8681EBF8[i][k].scale[2] = scale;
+                        D_8681EBF8[i][k].scale[1] = scale;
+                        D_8681EBF8[i][k].scale[0] = scale;
+                        D_8682EE18[i].pool_cursor++;
+                        if (D_8682EE18[i].pool_cursor >= 40) {
+                            D_8682EE18[i].pool_cursor = 0;
+                        }
+                    }
+                    *(s32 *)(D_8682CD18 + i * 1600 + j * 40 + 4) = -1;
+                }
+            }
+        }
+    }
+    for (j = 0; j < 20; j++) {
+        for (i = 0; i < 4; i++) {
+            if (D_8682E618[i][j].state == 1) {
+                if (D_86817308[i][j].position[1] <= -470.0f && D_8682E618[i][j].state != 0) {
+                    func_8003F1DC(&D_86817308[i][j]);
+                    D_8682E618[i][j].state = 0;
+                }
+            }
+        }
+    }
+}
+#undef FALL_MODELS
 
 extern void *D_8682F308;
 extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
