@@ -20,11 +20,61 @@ typedef struct Fragment2State {
     /* 0x01C */ s32 unk_01C;
     /* 0x020 */ Fragment2Model models[4];
 } Fragment2State;
-extern Fragment2State D_81900820;
+// Defined here (pinned at 0x81900820 by datamig_bss.ld) so as1 can fold the
+// shared `lui $at` for stores to its fields, as in func_81900020.
+static Fragment2State D_81900820;
+// FAKE: fills 0x81900DE0..0x81900DFB (D_81900DE0, D_81900DF8 and neighbours)
+// so func_8190037C's sBlinkTimer stays at 0x81900DFC.
+static u8 sFragment2StatePad[0x1C];
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/2/fragment2_code/func_81900020.s")
+extern s16 D_81900710;
+extern f32 D_81900714;
+extern s32 D_81900718;
+extern u8 D_8190071C[];
+extern u8 D_81900750[];
+extern s32 D_81900838;
+extern s32 D_8190083C;
+extern f32 D_81900830;
+extern s16 D_81900834;
+extern s32 D_81900DE0;
+extern s32 func_8004C990(s32, s32);
+extern s32 D_81900DF8;
+extern s32 func_80040E80(void *, void *);
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void func_80037E9C(void *, void *);
+extern void func_8003F03C(s32, void *);
+extern void func_8004C8C0(s32);
+extern s32 func_87F08E3C(s32, s32);
+void func_81900020(s32 arg0) {
+    Fragment2State *st = &D_81900820;
+    void *pool;
+    s32 i;
+
+    D_81900710 = 0x800;
+    D_81900714 = 0.0f;
+    D_81900DF8 = 0;
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    if (D_81900718 == 0) {
+        D_8190083C = func_80040E80(pool, D_8190071C);
+    } else {
+        D_8190083C = func_80040E80(pool, D_81900750);
+    }
+    MainPool_FinalizeAllocation(pool);
+    st->scale = 0.0f;
+    st->unk_014 = 0;
+    func_8004C8C0(0x1B1);
+    D_81900838 = func_87F08E3C(func_8004C990(0x1B1, 0), 0x0F000000);
+    func_80037E9C(NULL, (void *)&D_81900DE0);
+    for (i = 0; i < 4; i++) {
+        func_8003F03C((s32)&st->models[i], &D_81900DE0);
+        st->active[i] = 0;
+    }
+}
+
 
 extern s32 D_81900718;
 void func_81900154(void) {
