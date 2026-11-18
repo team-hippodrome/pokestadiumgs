@@ -1,4 +1,9 @@
 #include "global.h"
+extern s32 func_800472E0(s32);
+extern void func_81607408(void);
+extern f32 D_8280283C, D_82802840;
+extern f32 func_816092FC(void);
+extern f32 __sinf(f32);
 
 
 #ifdef VERSION_US
@@ -227,7 +232,7 @@ extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_8004989C(s32);
 extern void func_800495BC(s32, s32, s32 *);
-extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800495F8();
 extern void func_800499EC(void);
 extern u8 D_82802838;
 void func_82801144(void) {
@@ -842,8 +847,90 @@ void func_828020C4(u8 *arg0)
 }
 /* mkdraft:func_828020C4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/10/fragment10_D5250/func_82802224.s")
+extern void func_80006F70(Gfx **, s32, s32, s32, s32);
+extern void func_81603598(s32, s32, s32, s32, f32);
+extern void func_81608918(s32, s32, void *);
+extern f32 func_818014A8(void);
+extern void func_82801F88(u8 *, s32);
+extern void func_82800BC8(s32, f32);
+extern void func_82801D7C(u8 *, s32, s32);
+extern u8 D_8280285C[];
+extern u8 D_82802860[];
+extern u8 D_82802918[];
+void func_82802224(u8 *arg0, void *arg1) {
+    s32 i;
+    s32 x;
+    s32 y;
+    s32 value;
+    u8 *kind;
+    f32 scale;
+    s16 rect[4];
 
+    if (func_82800BB4(arg0)) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        func_828020C4(arg0);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+    for (i = 0; i < 4; i++) {
+        scale = func_82800E94(arg0, rect, i);
+        if (rect[0] < 641 && rect[2] + rect[0] > 0 && rect[1] < 481 && rect[3] + rect[1] > 0) {
+            value = !func_82800BB4(arg0);
+            kind = arg0 + i;
+            Fragment11_DrawBorderedPanelFill(rect[0], rect[1], rect[2], rect[3], value, kind[24] != 2 ? D_8280285C : D_82802860);
+            x = (rect[2] - 61) / 2 + rect[0];
+            y = (rect[3] - 58) / 2 + rect[1];
+            if (func_82800BB4(arg0)) {
+                if ((arg0[12] != 0 && arg0[12] != 3) || i != *(s32 *)(arg0 + 16)) {
+                    y -= 200.0f * (1.0f - scale);
+                } else {
+                    y += 31.0f * (1.0f - scale);
+                }
+            }
+            if (kind[24] != 2) {
+                func_80006F70(&D_800D0510, 0, 0, 640, 145);
+                func_81603598(x, y - 73, ((s32 *)(arg0 + 100))[i], i, 1.0f);
+                func_81607408();
+            }
+            if (func_82800B94(arg0) && i == *(s32 *)(arg0 + 16)) {
+                gSPDisplayList(D_800D0510++, D_80094E38);
+                func_81608918(x - 20, y - 43, arg0 + 8);
+                gSPDisplayList(D_800D0510++, D_80094F50);
+            }
+            if ((scale > 0.99f && kind[24] != 2) ||
+                ((arg0[12] == 3 || arg0[12] == 0) && i == *(s32 *)(arg0 + 16))) {
+                func_800498C4();
+                func_800496A4(8, 1);
+                if (arg0[144] & (1 << i)) {
+                    scale = func_818014A8();
+                    value = 128.0f * scale + 127.0f;
+                    func_8004972C(value, value, 127, 255);
+                }
+                func_800495F8(rect[2] / 2 + rect[0], rect[1] + 7, 1, (s32)(arg0 + 28 + i * 12));
+                func_800496A4(4, 0);
+                if (((s32 *)(arg0 + 84))[i] >= 0) {
+                    value = func_8004C874(13, 9);
+                    func_800495F8(rect[2] / 2 + rect[0], rect[1] + 31, 1, D_82802918, value, ((s32 *)(arg0 + 84))[i]);
+                } else if (((s32 *)(arg0 + 84))[i] == -2) {
+                    value = func_8004C874(13, 9);
+                    func_800495F8(rect[2] / 2 + rect[0], rect[1] + 31, 1, "%s %s", value, func_8004C874(23, 65));
+                }
+                func_800499EC();
+            }
+            if (!func_82800BB4(arg0) || kind[24] != 2) {
+                func_82801F88(arg0, i);
+            }
+        }
+    }
+    if (*(u32 *)arg0 & 0x20000) {
+        if (func_82800B94(arg0)) {
+            func_82800BC8(*(s32 *)(arg0 + 132), D_8160BD08(*(f32 *)(arg0 + 4) / 12.0f));
+        }
+    }
+    func_82801D7C(arg0, 321, 405);
+    if (arg0[144]) {
+        func_82801144();
+    }
+}
 s32 func_8280276C(u8 *arg0) {
     if (arg0[0xC]) return -2;
     if (*(u32 *)(arg0 + 0x8C)) {

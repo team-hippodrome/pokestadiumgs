@@ -26,6 +26,18 @@ typedef struct {
     s16 spacingX, spacingY, left, right, top, bottom;
     s32 constrain;
 } F29TextLayout;
+typedef struct {
+    u8 **strings;
+    u16 count;
+    u8 unk_06[10];
+} unk_func_880036CC_list;
+typedef struct {
+    s32 unk_00;
+    unk_func_880036CC_list lists[2];
+    s32 font;
+    s16 spacingX, spacingY;
+    u16 width, total_width;
+} unk_func_880036CC;
 
 extern u8 D_8800ED50[];
 extern void func_880046EC(s32,s32,s16,s16,s32,s32,u8,u8,u8,s32*,s32*,s32*,s32*,u8,u8,void*);
@@ -510,8 +522,118 @@ void func_88003858(F29Rect *rect, u8 *data) {
     *(s16 *)(data + 0x18) = rect->width - 25;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_168330/func_88003A00.s")
+void func_88003A00(u8 *arg0) {
+    s32 width;
+    s32 duration;
+    s32 height;
+    s32 half;
+    f32 ratio;
+    f32 scaled;
+    f32 width_scaled;
+    f32 height_scaled;
+    f32 bias;
+    duration = *(s32 *)(arg0 + 20) == 3 ? 4 : D_8800EF18;
+    switch (*(s32 *)(arg0 + 28)) {
+    case 1:
+        if (D_80128C60 >= 5 && *(s8 *)(arg0 + 32) == 0) func_800226C0(4);
+        (*(s8 *)(arg0 + 32))++;
+        if (*(s8 *)(arg0 + 32) <= 0) return;
+        break;
+    case 3:
+        (*(s8 *)(arg0 + 32))--;
+        break;
+    case 2:
+        if (*(s8 *)(arg0 + 32) > duration) {
+            (*(s8 *)(arg0 + 32))--;
+            if (*(s8 *)(arg0 + 32) == duration) {
+                *(s32 *)(arg0 + 28) = 3;
+                if (D_80128C60 < 4) func_800226C0(91);
+                else func_800226C0(6);
+                (*(s8 *)(arg0 + 32))--;
+            } else return;
+        } else return;
+        break;
+    default:
+        return;
+    }
+    if (*(s32 *)(arg0 + 20) == 3) {
+        switch (*(s8 *)(arg0 + 32)) {
+        case 0: {
+            *(s32 *)(arg0 + 28) = 0;
+            (*(void (**)(void))(arg0 + 64))();
+            return;
+        }
+        case 4: {
+            *(s32 *)(arg0 + 28) = 2;
+            *(s16 *)arg0 = *(s16 *)(arg0 + 8);
+            *(s16 *)(arg0 + 2) = *(s16 *)(arg0 + 10);
+            *(s16 *)(arg0 + 4) = *(u16 *)(arg0 + 12);
+            *(s16 *)(arg0 + 6) = *(u16 *)(arg0 + 14);
+            if (D_80128C60 < 4) func_800226C0(74);
+            if (arg0[24] == 255 && arg0[25] == 170 && arg0[26] == 140) {
+                if (D_80128C60 < 4) func_800226C0(97);
+                else func_800226C0(5);
+            }
+            (*(void (**)(void))(arg0 + 60))();
+            return;
+        }
+        default: {
+            ratio = (f32)*(s8 *)(arg0 + 32) / duration;
+            width = *(u16 *)(arg0 + 12);
+            width_scaled = (width - 32) * ratio;
+            bias = width_scaled > 0.0f ? 0.5f : -0.5f;
+            *(s16 *)(arg0 + 4) = (s32)(bias + width_scaled) + 32;
+            height = *(u16 *)(arg0 + 14);
+            height_scaled = (height - 32) * ratio;
+            bias = height_scaled > 0.0f ? 0.5f : -0.5f;
+            *(s16 *)(arg0 + 6) = (s32)(bias + height_scaled) + 32;
+            *(s16 *)(arg0 + 0) = *(s16 *)(arg0 + 8) + (width >> 1) - (*(u16 *)(arg0 + 4) >> 1);
+            *(s16 *)(arg0 + 2) = *(s16 *)(arg0 + 10) + (height >> 1) - (*(u16 *)(arg0 + 6) >> 1);
+        }
 
+        }    } else {
+        if (*(s8 *)(arg0 + 32) == 0) {
+            *(s32 *)(arg0 + 28) = 0;
+            (*(void (**)(void))(arg0 + 64))();
+        } else if (*(s8 *)(arg0 + 32) == D_8800EF18) {
+            *(s32 *)(arg0 + 28) = 2;
+            *(s16 *)arg0 = *(s16 *)(arg0 + 8);
+            *(s16 *)(arg0 + 2) = *(s16 *)(arg0 + 10);
+            *(s16 *)(arg0 + 4) = *(u16 *)(arg0 + 12);
+            *(s16 *)(arg0 + 6) = *(u16 *)(arg0 + 14);
+            if (D_80128C60 < 4) {
+                func_800226C0(74);
+                if (arg0[24] == 219 && arg0[25] == 220 && arg0[26] == 180) func_800226C0(80);
+            }
+            if (arg0[24] == 255 && arg0[25] == 170 && arg0[26] == 140) {
+                if (D_80128C60 < 4) func_800226C0(97);
+                else func_800226C0(5);
+            }
+            (*(void (**)(void))(arg0 + 60))();
+        } else {
+            half = duration >> 1;
+            if (*(s8 *)(arg0 + 32) <= half) {
+                ratio = (f32)*(s8 *)(arg0 + 32) / half;
+                width = *(u16 *)(arg0 + 12);
+                scaled = (width - 14) * ratio;
+                bias = scaled > 0.0f ? 0.5f : -0.5f;
+                *(s16 *)(arg0 + 4) = (s32)(bias + scaled) + 14;
+                *(s16 *)(arg0 + 6) = 12;
+                height = *(u16 *)(arg0 + 14);
+            } else {
+                *(s16 *)(arg0 + 4) = /* FAKE: prevent reuse of the later width reload. */ *(volatile u16 *)(arg0 + 12);
+                ratio = (f32)(*(s8 *)(arg0 + 32) - half) / half;
+                height = *(u16 *)(arg0 + 14);
+                scaled = (height - 12) * ratio;
+                bias = scaled > 0.0f ? 0.5f : -0.5f;
+                width = *(u16 *)(arg0 + 12);
+                *(s16 *)(arg0 + 6) = (s32)(bias + scaled) + 12;
+            }
+            *(s16 *)(arg0 + 0) = *(s16 *)(arg0 + 8) + (width >> 1) - (*(u16 *)(arg0 + 4) >> 1);
+            *(s16 *)(arg0 + 2) = *(s16 *)(arg0 + 10) + (height >> 1) - (*(u16 *)(arg0 + 6) >> 1);
+        }
+    }
+}
 extern void func_88003A00();
 void func_88003FBC(void *arg0) {
     s8 var_v0;
@@ -523,7 +645,7 @@ void func_88003FBC(void *arg0) {
             var_v0 = D_8800EF18;
         }
         if (var_v0 == (*(s8 *)((u8 *)(arg0) + (0x20)))) {
-            func_88003A00();
+            func_88003A00(arg0);
         }
     }
 }

@@ -125,8 +125,62 @@ void func_82300368(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_823003B4.s")
+extern void func_823003B4(s16 *);
 
+extern u8 D_80094E38[];
+
+extern Gfx *D_800D0510;
+
+extern s32 D_82305E98;
+
+void func_823003B4(s16 *arg0) {
+    s32 pad[1]; // FAKE: reserves original stack slots.
+    s32 x;
+    s32 y;
+    s32 width;
+    s32 height;
+    s32 index;
+    s32 step;
+    s32 *texture_base = &D_82305E98;
+    u8 alpha;
+    f32 alpha_value;
+    unk_D_82305E68_entry *entry;
+    func_8004657C();
+    width = 640;
+    height = 480;
+    step = 32;
+    for (y = 0; y < height; y += step) {
+        for (x = 0; x < width; x += step) {
+            s32 texture;
+            texture = 0;
+            index = (y / step) * 20 + (x / step);
+            if (((unk_D_82305E68_entry *)arg0)[index + 1].unk_04 == 1.0f) {
+                texture = *texture_base + index * 512;
+            }
+            if (texture != 0) {
+                gDPLoadTextureBlock(D_800D0510++, (u8 *)texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+                    G_TX_CLAMP,G_TX_CLAMP,G_TX_NOMASK,G_TX_NOMASK,G_TX_NOLOD,G_TX_NOLOD);
+                gSPTextureRectangle(D_800D0510++, x<<2,y<<2,(x+step)<<2,(y+step)<<2,G_TX_RENDERTILE,0,0,512,512);
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (y = 0; y < height; y += step) {
+        for (x = 0; x < width; x += step) {
+            s32 texture;
+            index = (y / step) * 20 + (x / step);
+            entry = &((unk_D_82305E68_entry *)arg0)[index + 1];
+            if (entry->unk_04 > 0.0f && entry->unk_04 < 1.0f) {
+                texture = *texture_base + index * 512;
+                gDPPipeSync(D_800D0510++);
+                gDPSetEnvColor(D_800D0510++,255,255,255,(s32)((entry->unk_04 * 255.0f) + ((entry->unk_04 * 255.0f) > 0.0f ? 0.5f : -0.5f)));
+                gDPLoadTextureBlock(D_800D0510++, (u8 *)texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16,16,0,
+                    G_TX_CLAMP,G_TX_CLAMP,G_TX_NOMASK,G_TX_NOMASK,G_TX_NOLOD,G_TX_NOLOD);
+                gSPTextureRectangle(D_800D0510++,x<<2,y<<2,(x+step)<<2,(y+step)<<2,G_TX_RENDERTILE,0,0,512,512);
+            }
+        }
+    }
+}
 extern s16 D_82305EE4;
 extern s16 D_82305EE8;
 extern s32 D_82305E94;

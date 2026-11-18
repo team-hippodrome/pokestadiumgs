@@ -2,7 +2,77 @@
 
 #ifdef VERSION_US
 
-#pragma GLOBAL_ASM("hand_asm/229E0/func_80024F20_manual.s")
+extern u8 D_80090A9C;
+extern u8 D_80090A94[2][4];
+extern u8 D_80090A90;
+void func_80024F20(u32 arg0, s32 arg1, s32 arg2) {
+    u8 *enabled = &D_80090A9C;
+    s8 preset;
+    u8 channel;
+    s32 command;
+    switch (arg0) {
+    case 100:
+        switch (arg1) {
+        case 3: func_80024F20(0x10007, 0, 0); break;
+        case 2: func_80024F20(0x10008, 0, 0); break;
+        case 1: func_80024F20(0x10009, 0, 0); break;
+        case 0: func_80024F20(0x1000A, 0, 0); break;
+        }
+        *enabled = 0;
+        return;
+    case 101:
+        if (*enabled == 0) {
+            func_80024F20(0x10001, 0, 0);
+            *enabled = 1;
+        }
+        if (arg1 >= 6) func_80024F20(0x10002, 0, 0);
+        else if (arg1 >= 3) func_80024F20(0x10003, 0, 0);
+        else if (arg1 > 0) func_80024F20(0x10004, 0, 0);
+        else if (arg1 == 0) func_80024F20(0x10005, 0, 0);
+        return;
+    case 0x10005:
+        *enabled = 0;
+        break;
+    case 102:
+        func_8001874C(0x06040405, 1);
+        func_8001874C(0x06040505, 1);
+        func_8001874C(0x06040605, 1);
+        *enabled = 0;
+        return;
+    }
+    switch (arg0 & 0xFFFF0000) {
+    case 0:
+        if (arg1 < 4 && arg1 >= 0) {
+            arg2 = arg2 == 4 ? 1 : 0;
+            preset = D_80090A94[arg2][arg1];
+            command = arg1 & 0xFF;
+            command <<= 8;
+            command |= 0x06040000;
+            func_8001874C(command, channel = arg0);
+            func_8001874C(command | 1, preset);
+        }
+        break;
+    case 0x10000:
+        switch (arg0) {
+        case 0x10001:
+        case 0x10005:
+        case 0x1000F:
+        case 0x10010:
+            channel = 6;
+            break;
+        case 0x1000C:
+        case 0x1000D:
+            channel = 7;
+            break;
+        default:
+            channel = D_80090A90 + 4;
+            D_80090A90 ^= 1;
+            break;
+        }
+        func_8001874C(0x06040000 | ((channel & 0xFF) << 8), arg0);
+        break;
+    }
+}
 
 void func_800251F8(s32 arg0) {
     switch (arg0) {

@@ -1,4 +1,13 @@
 #include "global.h"
+#include "controller.h"
+extern s32 D_87F0FAE4;
+extern u8 D_87F114A4[];
+extern u8 D_87F114A8[];
+extern u8 D_87F114AC[];
+void func_87F05930(Gfx **);
+void func_87F05954(s32, s32, s32, s32);
+void func_87F05CE0(s32, s32, s32, s32);
+void func_87F05D34(s32, s32, s32, f32, s32);
 
 
 #ifdef VERSION_US
@@ -173,10 +182,212 @@ void func_87F0455C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F04894.s")
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_326ED0/func_87F05204.s")
-
+void func_87F04894(void) {
+    s32 pad[4];
+    Entry *entries;
+    s32 *grid;
+    Entry *entry;
+    s32 index;
+    s32 column;
+    f32 step;
+    f32 direction;
+    if ((D_80087208->buttonsPressed & 0x100) == 0x100) {
+        if (D_87F0FAE0 < 0) D_87F0FAE0 = D_87F0FAE4;
+        else {
+            D_87F0FAE0 += 1;
+            if (D_87F0FAE0 == 3) D_87F0FAE0 = 0;
+        }
+    } else if ((D_80087208->buttonsPressed & 0x200) == 0x200) {
+        if (D_87F0FAE0 < 0) D_87F0FAE0 = D_87F0FAE4;
+        else {
+            D_87F0FAE0 -= 1;
+            if (D_87F0FAE0 < 0) D_87F0FAE0 = 2;
+        }
+    } else if ((D_80087208->buttonsPressed & 0x400) == 0x400) {
+        if (D_87F0FAE0 >= 0) {
+            D_87F0FAE4 = D_87F0FAE0;
+            D_87F0FAE0 = -1;
+        }
+    }
+    if (D_87F0FAE0 >= 0 && D_87F0FAE0 < 3) {
+        entries = (Entry *)(D_87F13BD8 + D_87F0FAE0 * 2688);
+        grid = (s32 *)(D_87F11A00 + D_87F0FAE0 * 2888);
+        step = (f32)D_80087208->stickX * 0.03;
+        step *= step;
+        if (step < 0.1) step = 0;
+        if (D_80087208->stickX < 0) {
+            D_87F119E8 -= step;
+            if (D_87F119E8 < 22.0f) D_87F119E8 = 297.0f;
+        } else {
+            D_87F119E8 += step;
+            if (297.0f < D_87F119E8) D_87F119E8 = 22.0f;
+        }
+        step = (f32)D_80087208->stickY * 0.03;
+        step *= step;
+        if (step < 0.1) step = 0;
+        if (D_80087208->stickY >= 0) {
+            D_87F119EC -= step;
+            if (D_87F119EC < 20.0f) D_87F119EC = 215.0f;
+        } else {
+            D_87F119EC += step;
+            if (D_87F119EC > 215.0f) D_87F119EC = 20.0f;
+        }
+        D_87F119F8 = func_87F04260((s32)D_87F119E8, (s32)D_87F119EC);
+        if (D_87F119F8 < 0) {
+            D_87F119F0 = D_87F119F4 = -1;
+        } else {
+            column = D_87F119F8 % 38;
+            D_87F119F0 = column;
+            D_87F119F4 = D_87F119F8 / 38;
+            do {
+            } while (0);
+            index = grid[D_87F119F8];
+            if (index >= 0) {
+                entry = &entries[index];
+                if (entry->unkA == 1) return;
+                if ((D_80087208->buttonsRepeat & 0x8000) == 0x8000) direction = 1.0f;
+                else if ((D_80087208->buttonsRepeat & 0x4000) == 0x4000) direction = -1.0f;
+                else return;
+                index = entry->unk8 - column;
+                if (index >= 0) {
+                    step = 1.0f;
+                    while (index--) step *= 10.0;
+                } else if (index < -1) {
+                    index = -2 - index;
+                    step = 0.1f;
+                    while (index--) step *= 0.1;
+                } else return;
+                switch (entry->unkA) {
+                case 2:
+                    if (*(s8 *)entry->unk14 != *(s8 *)entry->unk18) {
+                        *(s8 *)entry->unk10 += (s8)(direction * step);
+                        if (*(s8 *)entry->unk10 < *(s8 *)entry->unk14)
+                            *(s8 *)entry->unk10 = *(s8 *)entry->unk14;
+                        else if (*(s8 *)entry->unk10 > *(s8 *)entry->unk18)
+                            *(s8 *)entry->unk10 = *(s8 *)entry->unk18;
+                    }
+                    break;
+                case 3:
+                    if (*(u8 *)entry->unk14 != *(u8 *)entry->unk18) {
+                        *(u8 *)entry->unk10 += (u8)(s32)(direction * step);
+                        if (*(u8 *)entry->unk10 < *(u8 *)entry->unk14)
+                            *(u8 *)entry->unk10 = *(u8 *)entry->unk14;
+                        else if (*(u8 *)entry->unk10 > *(u8 *)entry->unk18)
+                            *(u8 *)entry->unk10 = *(u8 *)entry->unk18;
+                    }
+                    break;
+                case 4:
+                    if (*(s16 *)entry->unk14 != *(s16 *)entry->unk18) {
+                        *(s16 *)entry->unk10 += (s16)(direction * step);
+                        if (*(s16 *)entry->unk10 < *(s16 *)entry->unk14)
+                            *(s16 *)entry->unk10 = *(s16 *)entry->unk14;
+                        else if (*(s16 *)entry->unk10 > *(s16 *)entry->unk18)
+                            *(s16 *)entry->unk10 = *(s16 *)entry->unk18;
+                    }
+                    break;
+                case 5:
+                    if (*(u16 *)entry->unk14 != *(u16 *)entry->unk18) {
+                        *(u16 *)entry->unk10 += (u16)(direction * step);
+                        if (*(u16 *)entry->unk10 < *(u16 *)entry->unk14)
+                            *(u16 *)entry->unk10 = *(u16 *)entry->unk14;
+                        else if (*(u16 *)entry->unk10 > *(u16 *)entry->unk18)
+                            *(u16 *)entry->unk10 = *(u16 *)entry->unk18;
+                    }
+                    break;
+                case 6: case 8:
+                    if (*(s32 *)entry->unk14 != *(s32 *)entry->unk18) {
+                        *(s32 *)entry->unk10 += (s32)(direction * step);
+                        if (*(s32 *)entry->unk10 < *(s32 *)entry->unk14)
+                            *(s32 *)entry->unk10 = *(s32 *)entry->unk14;
+                        else if (*(s32 *)entry->unk10 > *(s32 *)entry->unk18)
+                            *(s32 *)entry->unk10 = *(s32 *)entry->unk18;
+                    }
+                    break;
+                case 7: case 9:
+                    if (*(u32 *)entry->unk14 != *(u32 *)entry->unk18) {
+                        *(u32 *)entry->unk10 += (u32)(direction * step);
+                        if (*(u32 *)entry->unk10 < *(u32 *)entry->unk14)
+                            *(u32 *)entry->unk10 = *(u32 *)entry->unk14;
+                        else if (*(u32 *)entry->unk10 > *(u32 *)entry->unk18)
+                            *(u32 *)entry->unk10 = *(u32 *)entry->unk18;
+                    }
+                    break;
+                case 10:
+                    if (*(f32 *)entry->unk14 != *(f32 *)entry->unk18) {
+                        *(f32 *)entry->unk10 += (f32)(direction * step);
+                        if (*(f32 *)entry->unk10 < *(f32 *)entry->unk14)
+                            *(f32 *)entry->unk10 = *(f32 *)entry->unk14;
+                        else if (*(f32 *)entry->unk10 > *(f32 *)entry->unk18)
+                            *(f32 *)entry->unk10 = *(f32 *)entry->unk18;
+                    }
+                    break;
+                case 11:
+                    if (*(f64 *)entry->unk14 != *(f64 *)entry->unk18) {
+                        *(f64 *)entry->unk10 += (f64)(direction * step);
+                        if (*(f64 *)entry->unk10 < *(f64 *)entry->unk14)
+                            *(f64 *)entry->unk10 = *(f64 *)entry->unk14;
+                        else if (*(f64 *)entry->unk10 > *(f64 *)entry->unk18)
+                            *(f64 *)entry->unk10 = *(f64 *)entry->unk18;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+void func_87F05204(Gfx **arg0) {
+    Gfx *dl;
+    Entry *entry;
+    Entry *start;
+    s32 *out;
+    dl = *arg0;
+    out = (s32 *)&dl;
+    if (D_87F0FAE0 >= 0 && D_87F0FAE0 < 3) {
+        start = (Entry *)(D_87F13BD8 + D_87F0FAE0 * 2688);
+        func_87F05930((Gfx **)out);
+        for (entry = start + 95; entry >= start; entry--) {
+            if (entry->unkA == 0) continue;
+            if (entry->unk4 != 0) {
+                func_87F05954((s32)out, entry->unk0 * 7 + 29, entry->unk1 * 10 + 26, entry->unk4);
+            }
+            if (entry->unkA == 1) continue;
+            switch (entry->unkA) {
+            case 2:
+                func_87F05CE0((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(s8 *)entry->unk10);
+                break;
+            case 3:
+                func_87F05CE0((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(u8 *)entry->unk10);
+                break;
+            case 4:
+                func_87F05CE0((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(s16 *)entry->unk10);
+                break;
+            case 5:
+                func_87F05CE0((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(u16 *)entry->unk10);
+                break;
+            case 6: case 8:
+                func_87F05CE0((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(s32 *)entry->unk10);
+                break;
+            case 7: case 9:
+                func_87F05CE0((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(u32 *)entry->unk10);
+                break;
+            case 10:
+                func_87F05D34((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, *(f32 *)entry->unk10, entry->unkC);
+                break;
+            case 11:
+                func_87F05D34((s32)out, entry->unk8 * 7 + 29, entry->unk9 * 10 + 26, (f32)*(f64 *)entry->unk10, entry->unkC);
+                break;
+            }
+        }
+        if (D_87F119F8 >= 0) {
+            func_87F05954((s32)out, (D_87F119F8 % 38) * 7 + 27, (D_87F119F8 / 38) * 10 + 28, (s32)"L");
+            func_87F05954((s32)out, (D_87F119F8 % 38) * 7 + 31, (D_87F119F8 / 38) * 10 + 24, (s32)"]");
+        }
+        *(f32 *)D_87F119E0 = D_87F119E8;
+        *(f32 *)D_87F119E4 = D_87F119EC + 8.0f;
+        func_87F05954((s32)out, (s32)*(f32 *)D_87F119E0, (s32)*(f32 *)D_87F119E4, (s32)"^");
+        *arg0 = dl;
+    }
+}
 s32 func_87F056E0(void *arg0, s32 arg1) {
     s32 count;
     s32 negative;
