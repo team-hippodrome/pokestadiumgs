@@ -442,8 +442,121 @@ void func_888010B0(void) {
     func_80048E30(D_8800687C, 0x1D1, 0x5E, (const char *)func_8004B7A4(*D_880068B0), 1);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88801138.s")
+extern s32 func_8800335C(void);
 
+extern void func_88801138(void);
+
+extern s32 D_88804058;
+
+void func_88801138(void) {
+    s32 a3;
+    s32 v0;
+    s32 a1;
+    s32 timer;
+    u8 index;
+    u16 buttons;
+    s32 i;
+    s32 state = 3;
+    u8 *available;
+
+    timer = D_88804050[0x10];
+    if (timer != 0) {
+        D_88804050[0x10] = timer - 1;
+        if (D_88804050[0x10] != 0) return;
+        *(s32 *)(*(s32 *)(D_88804050 + 0x1C) + 0x34) = 0;
+        timer = *(s32 *)D_88804050;
+        if (timer == 3 || timer == 4) {
+            *(s32 *)(D_88804050 + 0x14) = 0;
+        }
+        return;
+    }
+    buttons = D_88804050[0x11];
+    if (buttons != 0) {
+        a1 = *(s32 *)D_88804050;
+        v0 = *(u32 *)D_88804050;
+        if (a1 != 3 && v0 != 4) {
+            D_88804050[0x11] = buttons - 1;
+            return;
+        }
+        buttons = D_80087200->buttonsPressed;
+        a3 = 1;
+        if ((buttons & 0xC000) != 0) {
+            v0 = 0;
+            if ((buttons & 0x8000) != 0) {
+                if (state == a1 && *(s32 *)(D_88804050 + 0x3B8) != 0) {
+                    a3 = 0;
+                } else if (*(s16 *)(D_88804050 + 0x24) == 0) {
+                    D_88804058 = 1;
+                    func_800226C0(0x92);
+                } else {
+                    v0 = 1;
+                }
+            } else if ((buttons & 0x4000) != 0) {
+                v0 = 1;
+            }
+        if (v0 != 0) {
+            func_800226C0(*(s32 *)(D_88804050 + 0x358));
+        }
+        if (a3 == 0) return;
+        func_88004990(*(u8 *)(*(s32 *)(D_88804050 + 0x1C)), 0);
+        *(s32 *)(*(s32 *)(D_88804050 + 0x1C) + 0x34) = 1;
+        (*(void (*)(void))(*(s32 *)(D_88804050 + 0x54)))();
+        return;
+        } else {
+            if (*(s32 *)(D_88804050 + 0x3B8) != 0) return;
+            v0 = *(s16 *)(D_88804050 + 0x24);
+            switch (v0) {
+            case 0:
+                if ((buttons & 0x100) != 0) {
+                    func_800226C0(*(s32 *)(D_88804050 + 0x350));
+                    *(s16 *)(D_88804050 + 0x24) = 1;
+                }
+                break;
+            case 1:
+                if ((buttons & 0x200) != 0) {
+                    func_800226C0(*(s32 *)(D_88804050 + 0x350));
+                    *(s16 *)(D_88804050 + 0x24) = 0;
+                }
+                break;
+            }
+            return;
+        }
+    }
+    if (func_8800335C() != 0) return;
+    if (*(s32 *)D_88804050 != 0) return;
+    buttons = D_80087200->buttonsPressed;
+    if ((buttons & 0x4000) != 0) {
+        func_800226C0(*(s32 *)(D_88804050 + 0x358));
+        func_88004990(*(u8 *)(*(s32 *)(D_88804050 + 0x1C)), 0);
+        *(s32 *)(*(s32 *)(D_88804050 + 0x1C) + 0x34) = 1;
+        (*(void (*)(void))(*(s32 *)(D_88804050 + 0x54)))();
+        return;
+    }
+    if ((D_880068B0[0x1E] & 1) != 0) return;
+    if ((buttons & 0xF) != 0) {
+        v0 = func_8880030C();
+        index = v0;
+        if (((u8 *)D_880068B0 + v0)[2] == 0) {
+            func_800226C0(*(s32 *)(D_88804050 + 0x35C));
+            return;
+        }
+        func_88800A30();
+        *(s32 *)(D_88804050 + 4) = 1;
+        D_88804050[0x26] = index;
+        return;
+    }
+    if ((buttons & 0x1000) != 0) {
+        func_88800A30();
+        *(s32 *)(D_88804050 + 4) = 2;
+        ((s8 *)D_88804050)[0x27] = -1;
+        ((s8 *)D_88804050)[0x26] = ((s8 *)D_88804050)[0x27];
+        available = D_880068B0 + 2;
+        for (i = 0; i < 4; i++, available++) {
+            if (*available == 0) D_88804050[0x3B0 + i] = 1;
+            else D_88804050[0x3B0 + i] = 0;
+        }
+    }
+}
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
 extern u8 D_80094F50[];

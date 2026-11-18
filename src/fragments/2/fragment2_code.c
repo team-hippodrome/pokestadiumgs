@@ -50,7 +50,51 @@ void func_81900164(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/2/fragment2_code/func_81900214.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/2/fragment2_code/func_8190037C.s")
+extern s32 D_81900DF8;
+extern s16 D_81900710;
+extern f32 D_81900714;
+extern char D_81900800[];
+extern char D_8190080C[];
+extern char D_81900818[];
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800499EC(void);
+// Draws three debug readouts while any of the four models is active. The
+// readout whose index matches D_81900DF8 blinks: it is hidden for the first
+// 10 of every 21 frames. sBlinkTimer lives at 0x81900DFC, past the fragment's
+// loaded data (pinned in datamig_bss.ld).
+void func_8190037C(s32 arg0) {
+    s32 i;
+    static s32 sBlinkTimer;
+    s32 any = 0;
+
+    for (i = 0; i < 4; i++) {
+        if (D_81900820.active[i] == 1) {
+            any = 1;
+        }
+    }
+    if (any) {
+        func_800498C4();
+        sBlinkTimer++;
+        if (sBlinkTimer > 20) {
+            sBlinkTimer = 0;
+        }
+        func_800496A4(1, 0);
+        func_8004972C(255, 255, 255, 255);
+        if (D_81900DF8 != 0 || sBlinkTimer >= 10) {
+            func_800495F8(100, 40, 1, D_81900800, D_81900710);
+        }
+        if (D_81900DF8 != 1 || sBlinkTimer >= 10) {
+            func_800495F8(100, 50, 1, D_8190080C, D_81900820.scale);
+        }
+        if (D_81900DF8 != 2 || sBlinkTimer >= 10) {
+            func_800495F8(100, 60, 1, D_81900818, D_81900714);
+        }
+        func_800499EC();
+    }
+}
 
 /* mkdraft:func_81900500 begin */
 // Partial view of the active scene object at D_8009491C: only the field this
