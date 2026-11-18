@@ -72,7 +72,6 @@
     - [0x28D30, pad]
     - [0x28D40, c]
     - [0x290C0, c]
-    - [0x2C1B0, c]
     - [0x340C0, c]
     - [0x35BE0, c]
     - [0x35D40, c]
@@ -382,7 +381,6 @@
     - [0xA43A0, .rodata, 26CC0] # mode and category dispatch tables
     - [0xA4590, .rodata, 27590] # bank sizes, debug strings, then literals and jump tables
     - [0xA4660, .rodata, 290C0] # party debug strings, then literals and jump tables
-    - [0xA49F0, .rodata, 2C1B0] # queued-event tables and adjacent audio constants
     - [0xA4EA0, rodata]
     - [0xA4EC0, .rodata, 43700] # jtbl_800A42C0
     - [0xA4EE0, .rodata, 47580] # jtbl_800A43C0 (+2 more)
@@ -439,7 +437,7 @@
     - {vram: 0x800CE100, type:  bss, name: unk_bss2b}
     - {vram: 0x800D0490, type: .bss, name: 7140} # src/7140.c sramHandle (0x74 bytes; SUBALIGN(16) pads to 0x80)
     - {vram: 0x800D0510, type:  bss, name: unk_bss3}
-    - {vram: 0x800D1A90, type: .bss, name: 2C1B0}
+    - {vram: 0x800D1A90, type: .bss, name: 290C0}
     - {vram: 0x800D2630, type:  bss, name: unk_bss4}
     - {vram: 0x80124D00, type: .bss, name: 36220} # src/36220.c D_80124D00 (19 words; SUBALIGN(16) pads to 0x50)
     - {vram: 0x80124D50, type:  bss, name: unk_bss5}

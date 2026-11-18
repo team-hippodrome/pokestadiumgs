@@ -440,20 +440,17 @@ SECTIONS
     {
         build/src/fragments/66/fragment66_code.o(.data)
     }
-    /* Real command/event queue prefix: explicit all-zero C data, loader cleared. */
+    /* Real command queue: explicit all-zero C data, loader cleared. */
     .audio_queue_prefix_bss 0x800D1A90 (NOLOAD) : SUBALIGN(8)
     {
-        build/src/2C1B0.o(.data)
+        build/src/290C0.o(.data)
     }
-    /* Twenty-four recent sound IDs, shifted by func_800289B0. */
-    .audio_history_bss 0x800D1AD8 (NOLOAD) : SUBALIGN(8)
+    /* Queued event state, the twenty-four recent sound IDs (shifted by
+     * func_800289B0), two active slots, following bytes, and all remaining
+     * audio objects. */
+    .audio_remaining_bss 0x800D1AB8 (NOLOAD) : SUBALIGN(8)
     {
         build/src/290C0.o(.bss)
-    }
-    /* Two active slots, following bytes, and all unchanged remaining audio objects. */
-    .audio_remaining_bss 0x800D1B38 (NOLOAD) : SUBALIGN(8)
-    {
-        build/src/2C1B0.o(.bss)
     }
 
     /* func_86701C6C's function-static context pointer (retail D_8670C850), in fragment 55's
@@ -534,12 +531,10 @@ ASSERT(SIZEOF(.fragment44_row_job_bss) == 16,
 
 ASSERT(audio_storage_RAM_START == 0x800D1A90 && audio_storage_RAM_END == 0x800D2630,
        "audio RAM reservation endpoints moved");
-ASSERT(SIZEOF(.audio_queue_prefix_bss) == 80,
-       "audio queue prefix must retain its native aligned input footprint");
-ASSERT(SIZEOF(.audio_history_bss) == 96,
-       "recent sound history must contain exactly 24 words");
-ASSERT(SIZEOF(.audio_remaining_bss) == 2816,
-       "remaining audio input BSS footprint changed");
+ASSERT(SIZEOF(.audio_queue_prefix_bss) == 48,
+       "audio command queue must retain its native aligned input footprint");
+ASSERT(SIZEOF(.audio_remaining_bss) == 2944,
+       "audio input BSS footprint changed");
 ASSERT(gAudioCommandQueue == 0x800D1A90 && gAudioQueuedState == 0x800D1AB8,
        "audio queue prefix moved");
 ASSERT(gAudioRecentSoundHistory == 0x800D1AD8 && gAudioHistorySelection == 0x800D1B38,

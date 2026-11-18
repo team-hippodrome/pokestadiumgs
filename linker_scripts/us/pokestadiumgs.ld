@@ -114,7 +114,6 @@ SECTIONS
         . += 0x10;
         build/src/28D40.o(.text);
         build/src/290C0.o(.text);
-        build/src/2C1B0.o(.text);
         build/src/340C0.o(.text);
         build/src/35BE0.o(.text);
         build/src/35D40.o(.text);
@@ -452,8 +451,6 @@ SECTIONS
         build/src/27590.o(.data);
         build/src/28D40.o(.data);
         build/src/290C0.o(.data);
-        _2C1B0 = .;
-        build/src/2C1B0.o(.data);
         _340C0 = .;
         build/src/340C0.o(.data);
         build/src/35BE0.o(.data);
@@ -648,7 +645,6 @@ SECTIONS
         build/src/27590.o(.rodata);
         build/src/28D40.o(.rodata);
         build/src/290C0.o(.rodata);
-        build/src/2C1B0.o(.rodata);
         build/src/340C0.o(.rodata);
         build/src/35BE0.o(.rodata);
         build/src/35D40.o(.rodata);
@@ -791,7 +787,7 @@ SECTIONS
         build/src/28D40.o(.bss);
         build/src/290C0.o(.bss);
         build/asm/us/data/unk_bss3.bss.o(.bss);
-        /* datamig_bss.ld places the real C audio objects (src/2C1B0.o)
+        /* datamig_bss.ld places the real C audio objects (src/290C0.o)
          * separately. Keep their original 0x800D1A90..0x800D2630
          * loader-cleared RAM span here. */
         audio_storage_RAM_START = ABSOLUTE(.);
