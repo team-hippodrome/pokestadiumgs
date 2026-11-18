@@ -1168,5 +1168,75 @@ void func_81309EB0(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130A044.s")
+extern void func_81600A34(void *, void *, s32, s32, s32, s32, s32);
+extern void func_81606E84(s16 *, s32, s32, f32, s32);
+typedef struct F8130A044_State { u8 pad[0x137BC]; f32 unk_137BC; u8 pad2[0x137E4 - 0x137C0]; s32 unk_137E4; } F8130A044_State;
+#define ST(t, off) (*(t *)((u8 *)arg0 + (off)))
+
+void func_8130A044(void *arg0, void *arg1) {
+    s32 pad0[2];
+    s32 dirty;
+    s32 prev;
+    s32 mode;
+    s32 pad1;
+    s16 pos[2];
+    s32 pad2;
+    s32 x;
+    s32 y;
+    s16 rect[4];
+
+    dirty = 0;
+    prev = D_8009F860;
+    mode = ST(u8, 0x137F5);
+    switch (ST(u8, 0x137F5)) {
+        case 1:
+        case 2:
+            func_81309ACC(arg0);
+            return;
+        case 4:
+            func_81309D00((u32)arg0);
+            break;
+        case 5:
+            func_81309D34(arg0);
+            dirty = 1;
+            break;
+        case 6:
+            func_81309DD8(arg0);
+            dirty = 1;
+            break;
+        case 3:
+            func_81309928(arg0);
+            dirty = 1;
+            break;
+        case 11:
+            func_81308E3C(arg0);
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+            func_81309AE0(arg0);
+            dirty = 1;
+            break;
+    }
+    func_81309EB0(arg0);
+    if (dirty == 0 && ST(s32, 0x137E4) != 0) {
+        dirty = 1;
+        ((F8130A044_State *)arg0)->unk_137E4 = 0;
+    }
+    func_81306F74(arg0, pos);
+    x = pos[0];
+    y = pos[1];
+    if (func_81307228(arg0) != 0) {
+        func_81600A34(arg1, (void *)0x54455854, ST(u8, 0x137F5) == 7 || prev != D_8009F860 || mode != ST(u8, 0x137F5), x - 0x2F, y - 0x37, 0x280, 0x10);
+    }
+    func_81600A34(arg1, (void *)0x424F5853, 0, ((ST(s32, 0x137E8) != 0) ? 0x30 : 0x57) + x, func_81306F20(arg0) + y - 0x20, (ST(s32, 0x137E8) != 0) ? 0x1C4 : 0x178, 0x17);
+    func_81600A34(arg1, (void *)0x4C5F4254, 0, (s32)((f32)(((ST(s32, 0x137E8) != 0) ? 7 : 0x2E) + x) - ST(f32, 0x137C0)), func_81306F20(arg0) + y - 0x23, 0x20, 0x18);
+    func_81600A34(arg1, (void *)0x525F4254, 0, (s32)(ST(f32, 0x137C8) + (f32)(((ST(s32, 0x137E8) != 0) ? 0x1F9 : 0x1D4) + x)), func_81306F20(arg0) + y - 0x23, 0x20, 0x18);
+    ((F8130A044_State *)arg0)->unk_137BC = ST(f32, 0x137BC) + ((f32)ST(u8, 0x137F4) - ST(f32, 0x137BC)) * 0.4f;
+    func_81606E84(rect, ((ST(s32, 0x137E8) != 0) ? 0x30 : 0x57) + x, func_81306F20(arg0) + y - 0x20, ST(f32, 0x137BC), ST(s32, 0x137E8));
+    func_81600A34(arg1, (void *)0x494E4449, 0, rect[0], rect[1], rect[2], rect[3]);
+    func_81600A34(arg1, arg0, dirty, x, y, 0x224, 0x9F);
+}
+#undef ST
 #endif
