@@ -418,13 +418,17 @@ SECTIONS
     {
         build/src/fragments/57/fragment57_code.o(.bss)
     }
-    /* Two six-word output bounds records in loader-cleared runtime memory. */
+    /* Fragment 66's loader-cleared runtime memory from the two six-word
+     * output bounds records (0x82E05938) through the view-state prefix
+     * (0x82E06138) to func_82E01CE8's three counters (0x82E08A70). The two
+     * gap arrays stand for objects still owned by asm data. */
     .fragment66_output_bounds_bss 0x82E05938 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/66/fragment66_code.o(.bss)
     }
-    /* Existing view-state prefix and its two dimensions, cleared by the loader. */
-    .fragment66_view_prefix_data 0x82E06138 (NOLOAD) : SUBALIGN(4)
+    /* func_82E01CE8's three function statics in fragment 66's loaded data
+     * (D_82E05444..D_82E0544C); the retail data image supplies their values. */
+    .fragment66_intro_state_data 0x82E05444 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/66/fragment66_code.o(.data)
     }
@@ -502,10 +506,10 @@ ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
 ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 48,
        "fragment57 dialog context must retain its original 48-byte footprint");
 
-ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 48,
-       "fragment66 output bounds must retain their original 48-byte footprint");
-ASSERT(SIZEOF(.fragment66_view_prefix_data) == 32,
-       "fragment66 view prefix must retain its original 32-byte footprint");
+ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 0x3150,
+       "fragment66 runtime bss must end after func_82E01CE8's counters");
+ASSERT(SIZEOF(.fragment66_intro_state_data) == 16,
+       "fragment66 intro state must retain its 16-byte aligned footprint");
 
 ASSERT(SIZEOF(.fragment19_state_5EE4_data) == 16,
        "fragment19 secondary state must retain its native aligned input footprint");
