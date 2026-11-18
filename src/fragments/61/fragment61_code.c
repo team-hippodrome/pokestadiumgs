@@ -65,7 +65,62 @@ s32 func_86B00158(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B007D0.s")
+typedef struct {
+    u8 unk_00[0x14];
+    f32 vel[4][2];
+    u8 unk_34[0x48 - 0x34];
+    f32 mag[4];
+    f32 angle[4];
+    s32 mode;
+    s32 all;
+    u8 unk_70[0x4B4 - 0x70];
+} Blob86B007D0;
+extern void func_87F02684(void *);
+extern void func_87F02328(void);
+extern u8 D_86B0E9A0, D_86B0EE60, D_86B12AD0, D_86B13A68, D_86B0E1A8, D_86B0E7F8;
+extern u8 D_86B0D384[];
+
+
+extern u8 *D_86B181C0;
+extern f32 __cosf(f32);
+extern f32 __sinf(f32);
+// Fragment 61's 0x4B4-byte runtime state at 0x86B17A78 (D_86B17A78 in the other
+// functions), reset from the D_86B0D384 template. Its .bss is pinned in
+// datamig_bss.ld; as an in-unit static the mode stores share one lui.
+static Blob86B007D0 sBlob;
+void func_86B007D0(void) {
+    f32 *p;
+    s32 i;
+    u8 *q;
+    s32 flags;
+    func_87F02684(&D_86B0E9A0);
+    func_87F02684(&D_86B0EE60);
+    func_87F02684(&D_86B12AD0);
+    func_87F02684(&D_86B13A68);
+    func_87F02684(&D_86B0E1A8);
+    func_87F02684(&D_86B0E7F8);
+    sBlob = *(Blob86B007D0 *)D_86B0D384;
+    for (i = 0; i < 4; i++) {
+        sBlob.vel[i][0] = sBlob.mag[i] * __cosf(sBlob.angle[i]);
+        sBlob.vel[i][1] = sBlob.mag[i] * __sinf(sBlob.angle[i]);
+    }
+    q = D_86B181C0;
+    flags = *(s8 *)(*(u8 **)(q + 0xC) + 0x2181);
+    switch (flags) {
+    case 0: sBlob.mode = 0; break;
+    case 1: sBlob.mode = 1; break;
+    case 2: sBlob.mode = 2; break;
+    case 3: sBlob.mode = 3; break;
+    }
+    flags = *(u8 *)(*(u8 **)(q + 0xC) + 0x2182);
+    if ((flags & 1) && (flags & 2) && (flags & 4) && (flags & 8)) {
+        sBlob.all = 1;
+        sBlob.mode = 2;
+    } else {
+        sBlob.all = 0;
+    }
+    func_87F02328();
+}
 #endif
 
 #ifdef VERSION_US
