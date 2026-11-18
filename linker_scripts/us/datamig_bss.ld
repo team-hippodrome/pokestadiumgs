@@ -49,6 +49,11 @@ SECTIONS
         build/src/fragments/44/fragment44_204950.o(.bss)
     }
 
+    .fragment61_state_bss 0x86B17A78 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/61/fragment61_code.o(.bss)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
@@ -538,3 +543,4 @@ ASSERT(SIZEOF(.fragment10_pulse_data) == 16, "fragment 10 pulse statics footprin
 .L8AB063D4 = func_8AB062C4 + 0x110;
 .L8AB063E4 = func_8AB062C4 + 0x120;
 .L8AB063F4 = func_8AB062C4 + 0x130;
+ASSERT(SIZEOF(.fragment61_state_bss) == 0x4C0, "fragment 61 state record footprint changed");
