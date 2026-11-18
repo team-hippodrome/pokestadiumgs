@@ -110,6 +110,11 @@ SECTIONS
         build/src/fragments/11/fragment11_D9DE0.o(.bss)
     }
 
+    .fragment77_list_cursor_bss 0x8F809FC8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/77/fragment77_code.o(.bss)
+    }
+
     /* Pool-drain counter, explicitly initialized to zero. Its retail zero
      * word remains in the loaded data blob. Only this scalar belongs here;
      * compiler alignment bytes have no load image. */
