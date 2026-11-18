@@ -239,7 +239,82 @@ void func_8FC00AC4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC00B68.s")
+typedef struct {
+    u16 x;
+    u16 y;
+    s16 unk_04;
+    s16 unk_06;
+    s16 column;
+    s16 row;
+    s16 cursor;
+    s8 text[32];
+} Fragment84TextEntryState;
+
+extern u16 D_8FC025C0[14][15];
+
+extern void func_80049628(s32, s32, s32);
+
+extern u8 D_8FC0C768;
+
+extern void func_8FC00B68(void);
+
+void func_8FC00B68(void) {
+    Fragment84TextEntryState *state;
+    s32 i;
+    s32 count;
+    s32 row;
+    s32 column;
+    s32 step;
+    u16 *table;
+    u16 *table_end;
+    u16 code;
+
+    state = (Fragment84TextEntryState *)&D_8FC0C768;
+    count = 0;
+    step = 18;
+    i = 0;
+    while (i != state->cursor) {
+        if (state->text[i] & 0x80) {
+            i += 2;
+        } else {
+            i++;
+        }
+        count++;
+    }
+    func_8FC00138(state->x + count * step, state->y + 20, 20);
+    func_8FC00138(state->x + state->column * 20 + (state->column / 5) * 5 - 15, state->y + state->row * 20 + 46, 16);
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_8004972C(255, 255, 255, 255);
+    count = 0;
+    i = 0;
+    while (state->text[i] != 0) {
+        if (state->text[i] & 0x80) {
+            code = state->text[i];
+            code <<= 8;
+            code |= (u8)state->text[i + 1];
+            i += 2;
+        } else {
+            code = state->text[i];
+            i++;
+        }
+        if (code != 10) {
+            func_80049628(state->x + count * 18, state->y, code);
+        } else {
+            func_8004972C(255, 128, 100, 255);
+            func_80049628(state->x + count * 20 - 5, state->y, -24105);
+            func_8004972C(255, 255, 255, 255);
+        }
+        count++;
+    }
+    func_800496A4(4, 0);
+    for (table = D_8FC025C0[0], table_end = &D_8FC025C0[14][0], row = 0; table != table_end; table += 15, row++) {
+        for (column = 0; column < 15; column++) {
+            func_80049628(state->x + column * 20 + (column / 5) * 5 - 15, state->y + row * 20 + 30, table[column]);
+        }
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
