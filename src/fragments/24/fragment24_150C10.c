@@ -2318,7 +2318,131 @@ void func_82B06360(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B06C98.s")
+extern u8 D_82B12450[0xFF8];
+extern s16 D_82B1245C;
+extern s16 D_82B126A0;
+extern void *D_82B126A4;
+extern void *D_80087200;
+extern void func_82B0556C(void);
+extern void func_82B0560C(void);
+extern void func_82B02A34(void *, s32);
+#define CUR (*cur)
+#define BTN(o) (*(u16 *)((u8 *)D_80087200 + (o)))
+#define OPT(o) (*(s16 *)((u8 *)*opt + (o)))
+#define ENABLED(b) (((s16 *)((b) + 0x14))[*(s16 *)((b) + 0xC)])
+void func_82B06C98(void) {
+    void **opt = &D_82B126A4;
+    s32 old[1];
+    s32 changed[1];
+    s16 *cur = &D_82B1245C;
+    s32 i;
+    u8 *base;
+    s32 buttons;
+    s32 prev;
+
+    base = D_82B12450;
+    old[0] = *(s16 *)(base + 0xC);
+    changed[0] = 0;
+    if (func_82B02870() != 0) {
+        if ((BTN(0xC) & 0x800) && !(BTN(6) & 0x300)) {
+            do {
+                CUR = CUR - 1;
+                if (CUR < 0) {
+                    CUR = 0;
+                }
+            } while (ENABLED(base) == 0);
+        }
+        if ((BTN(0xC) & 0x400) && !(BTN(6) & 0x300)) {
+            do {
+                CUR = CUR + 1;
+                if (CUR >= 4) {
+                    CUR = 3;
+                }
+            } while (ENABLED(base) == 0);
+        }
+        if (old[0] != CUR) {
+            func_800226C0(1);
+        }
+        buttons = BTN(8);
+        if (buttons & 0x4000) {
+            changed[0] = 1;
+            func_82B0560C();
+            func_800226C0(3);
+        } else {
+            switch (CUR) {
+            case 0:
+                prev = OPT(4);
+                if (BTN(0xC) & 0x8000) {
+                    OPT(4) = OPT(4) + 1;
+                    if (OPT(4) >= 2) {
+                        OPT(4) = 0;
+                    }
+                }
+                if (prev != OPT(4)) {
+                    func_800226C0(0x12);
+                }
+                func_82B0556C();
+                break;
+            case 1:
+                prev = OPT(6);
+                if (((s16 *)(D_82B12450 + 0x14))[CUR] != 0) {
+                    if (BTN(0xC) & 0x200) {
+                        OPT(6) = OPT(6) - 5;
+                        if (OPT(6) < 5) {
+                            OPT(6) = 5;
+                        }
+                    }
+                    if (BTN(0xC) & 0x100) {
+                        OPT(6) = OPT(6) + 5;
+                        if (OPT(6) > 90) {
+                            OPT(6) = 90;
+                        }
+                    }
+                }
+                if (prev != OPT(6)) {
+                    func_800226C0(0x13);
+                }
+                break;
+            case 2:
+                prev = OPT(8);
+                if (((s16 *)(D_82B12450 + 0x14))[CUR] != 0) {
+                    if (BTN(0xC) & 0x200) {
+                        OPT(8) = OPT(8) - 10;
+                        if (OPT(8) < 10) {
+                            OPT(8) = 10;
+                        }
+                    }
+                    if (BTN(0xC) & 0x100) {
+                        OPT(8) = OPT(8) + 10;
+                        if (OPT(8) > 90) {
+                            OPT(8) = 90;
+                        }
+                    }
+                }
+                if (prev != OPT(8)) {
+                    func_800226C0(0x13);
+                }
+                break;
+            case 3:
+                if (buttons & 0x8000) {
+                    changed[0] = 1;
+                    func_800226C0(0x11);
+                }
+                break;
+            }
+        }
+        if (changed[0] != 0) {
+            for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+                func_82B02A34(*(void **)(D_82B12450 + i * 4 + 0xB18), 0);
+            }
+            func_82B060A0(1);
+        }
+    }
+}
+#undef CUR
+#undef BTN
+#undef OPT
+#undef ENABLED
 #endif
 
 #ifdef VERSION_US
