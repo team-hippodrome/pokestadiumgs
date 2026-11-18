@@ -57,6 +57,8 @@ void func_861003A4(void) {
     func_86105C30(-((f32)*(u8 *)((u8 *)(u32)*(s32 *)((u8 *)(u32)D_8610AD20 + 0x8FD0) + 1) / 255.0f) * 444.18225f + 213.68527f);
 }
 
+extern void func_86107098(s32, s32, f32, f32, f32, f32, f32, f32);
+
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86100418.s")
 
 extern s32 D_8610AD20;
@@ -368,7 +370,7 @@ typedef union { f32 f; s32 i; } Coord86100F1C;
 typedef struct { u8 pad[0x48]; Coord86100F1C x; Coord86100F1C y; Coord86100F1C z; } Object86100F1C;
 extern u32 func_8003570C(void);
 extern void func_86101558(f32 *arg0, f32 *arg1);
-extern void func_86107098(s32, s32, s32, s32, f32, f32, f32, f32);
+extern void func_86107098(s32, s32, f32, f32, f32, f32, f32, f32);
 extern s32 D_8610AD20;
 void func_86100F1C(Object86100F1C *arg0, void *arg1, s32 arg2) {
     f32 x;
@@ -378,7 +380,7 @@ void func_86100F1C(Object86100F1C *arg0, void *arg1, s32 arg2) {
         x = ((((f32)func_8003570C() / 4294967296.0f) * 685.94995f + -364.41092f) * 0.7f) - arg0->x.f;
         y = ((((f32)func_8003570C() / 4294967296.0f) * 408.35455f + -209.00037f) * 0.7f) - arg0->y.f;
         func_86101558(&x, &y);
-        func_86107098(arg2 | 0x20000000, (s32)arg0, arg0->x.i, arg0->y.i, arg0->z.f, x * 15.0f - *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774), y * 15.0f, 0.0f);
+        func_86107098(arg2 | 0x20000000, (s32)arg0, arg0->x.f, arg0->y.f, arg0->z.f, x * 15.0f - *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9774), y * 15.0f, 0.0f);
         (*(s32 *)((u8 *)arg1 + 4))--;
         func_861000B8(arg0, 0xF05);
     }
@@ -1616,7 +1618,7 @@ extern s32 D_8610AD20;
 extern void *func_87F025B8(void *, void *);
 extern void func_8003F114(void *, s32, s32, s32);
 extern void func_8003F1DC(void *);
-extern void func_8003F210(void *, s32);
+extern s32 func_8003F210(void *, s32);
 extern void func_87F06430(void *, s32);
 
 
@@ -1651,14 +1653,56 @@ void func_86105508(void) {
     }
 }
 
-#pragma GLOBAL_ASM("hand_asm/fragments/49/func_861056C0_rodata_manual.s")
+void func_861056C0(void *arg0, void *arg1) {
+    s32 i;
+    f32 diff[3];
+    f32 dist;
+    u8 *s2;
+    s32 s1;
 
-extern f32 D_8610AC50;
-void func_86105928(f32 *arg0) { f32 zero; f32 value; zero = 0.0f; value = D_8610AC50; arg0[4] = zero; arg0[5] = zero; arg0[6] = zero; arg0[23] = value; arg0[22] = value; arg0[21] = value; }
+    s2 = *(u8 **)arg0;
+    if ((*(s32 *)(s2 + 0xC) << 1) < 0) {
+        return;
+    }
+
+    Vec3f_Subtract(diff, s2 + 0x48, (u8 *)arg1 + 0x48);
+    dist = sqrtf(diff[2] * diff[2] + (diff[1] * diff[1] + diff[0] * diff[0]));
+    if (!(dist < (((*(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768) * 0.04f) * 700.0f + 19.2f) * 0.65f))) {
+        return;
+    }
+
+    *(s32 *)((u8 *)arg1 + 0xC) |= 0x10000000;
+    *(s32 *)((u8 *)arg1 + 0x1C) = 0;
+    func_87F03884((u8 *)(u32)D_8610AD20 + 0x9018, 0, (u8 *)arg1 + 0x24, 7.0f, -17.0f, 0.0f, 0, 3.7f, 15);
+
+    if (dist != 0.0f) {
+        diff[0] /= dist;
+        diff[1] /= dist;
+        diff[2] /= dist;
+    } else {
+        diff[1] = -1.0f;
+    }
+
+    *(f32 *)(s2 + 0x10) += diff[0] * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x97A8);
+    *(f32 *)(s2 + 0x14) += diff[1] * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x97A8);
+    *(f32 *)(s2 + 0x18) += diff[2] * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x97A8);
+
+    s1 = *(f32 *)((u8 *)(u32)D_8610AD20 + 0x97C0) * (f32)(*(s32 *)((u8 *)arg0 + 4) + 1);
+    if (s1 == 0) {
+        s1 = 1;
+    }
+
+    for (i = 0; i < s1; i++) {
+        func_86100F1C((Object86100F1C *)s2, arg0, 0);
+    }
+
+    func_86100E20(s2, 0x40000000);
+    func_861000B8(s2, 0xF02);
+}
+
+void func_86105928(f32 *arg0) { f32 zero; f32 value; zero = 0.0f; value = 0.6400000453f; arg0[4] = zero; arg0[5] = zero; arg0[6] = zero; arg0[23] = value; arg0[22] = value; arg0[21] = value; }
 
 extern void *D_87F119D8;
-extern f32 D_8610AC54;
-extern f32 D_8610AC58;
 extern f32 __sinf(f32);
 extern void func_861056C0(void *, void *);
 void func_86105950(void) {
@@ -1670,12 +1714,12 @@ void func_86105950(void) {
     record = *(u8 **)((u8 *)D_87F119DC + 0x20);
     (*(s32 *)record) += 1;
     *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u32)D_8610AD20 + 0x9774);
-    *(f32 *)((u8 *)D_87F119DC + 0x4C) = *(f32 *)(record + 4) + (__sinf((f32)(*(s32 *)record) * D_8610AC54) * 10.0f);
+    *(f32 *)((u8 *)D_87F119DC + 0x4C) = *(f32 *)(record + 4) + (__sinf((f32)(*(s32 *)record) * 0.2094395012f) * 10.0f);
     for (i = 0; i < 4; i++) {
         func_861056C0(pool, D_87F119DC);
         pool += 44;
     }
-    if (*(f32 *)((u8 *)D_87F119DC + 0x48) < D_8610AC58) {
+    if (*(f32 *)((u8 *)D_87F119DC + 0x48) < -464.8497925f) {
         func_87F026E8((s32)D_87F119D8, (s32)D_87F119DC);
     }
     if (*(s32 *)((u8 *)D_87F119DC + 0xC) & 0x10000000) {
@@ -1726,7 +1770,6 @@ void func_86105AD8(s32 arg0, s32 arg1) {
 
 extern void *func_87F025B8(void *, void *);
 extern void func_86105950(void);
-extern f32 D_8610AC5C;
 extern void func_8003F114(void *, s32, s32, s32);
 extern void func_8003F1DC(void *);
 void func_86105C30(f32 arg0) {
@@ -1748,7 +1791,7 @@ void func_86105C30(f32 arg0) {
         data = obj->data;
         obj->self = obj;
         func_86105928((f32 *)obj);
-        obj->x = D_8610AC5C;
+        obj->x = 464.8497925f;
         obj->y = arg0;
         obj->z = 0.0f;
         *(u32 *)data = 0;
@@ -2277,7 +2320,7 @@ extern void func_8003F114(void *, s32, s32, s32);
 extern void func_8003F1DC(void *);
 extern void * func_87F025B8(void *, void *);
 extern s32 D_8610AD20;
-void func_86107098(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7) {
+void func_86107098(s32 arg0, s32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7) {
     u8 *obj;
 
     obj = func_87F025B8((u8 *)(u32)D_8610AD20 + 0x2600, (void *)func_86106C54);
@@ -2291,7 +2334,7 @@ void func_86107098(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, f32 arg5, f
 }
 
 extern f32 D_80088E50[];
-extern void func_86107098(s32, s32, s32, s32, f32, f32, f32, f32);
+extern void func_86107098(s32, s32, f32, f32, f32, f32, f32, f32);
 extern u32 func_8003570C(void);
 extern f32 D_80087E50[];
 extern s32 D_8610AD20;
@@ -2303,7 +2346,7 @@ void func_86107150(s32 arg0) {
     u8 *base = (u8 *)D_87F119DC + 0xD0;
     if (*(s32 *)((u8 *)D_8610AD20 + 0x3C) == 5) {
         u32 idx = (u16)angle >> 4;
-        func_86107098((s32)0x80000000, arg0, *(s32 *)(base + 0), *(s32 *)(base + 4),
+        func_86107098((s32)0x80000000, arg0, *(f32 *)(base + 0), *(f32 *)(base + 4),
                       *(f32 *)(base + 8), D_80088E50[idx] * 10.0f, D_80087E50[idx] * 10.0f, 0.0f);
     }
 }
