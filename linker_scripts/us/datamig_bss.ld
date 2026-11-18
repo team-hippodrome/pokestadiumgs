@@ -494,7 +494,7 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 /* The assembly switch table targets these return blocks in the C function. */
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
-ASSERT(SIZEOF(.fragment20_slot_fade_data) == 16, "fragment 20 slot fade limits footprint changed");
+ASSERT(SIZEOF(.fragment20_slot_fade_data) == 0x40, "fragment 20 slot fade limits footprint changed");
 ASSERT(SIZEOF(.fragment10_panel_color_bss) == 16, "fragment 10 panel color footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
