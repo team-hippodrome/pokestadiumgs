@@ -24,7 +24,7 @@ typedef struct {
     s32 unk34;
     s32 unk38;
 } Fragment58State;
-extern Fragment58State D_83404888;
+static Fragment58State D_83404888;
 extern Fragment58State D_83403DCC;
 extern s32 D_83403D68[];
 extern s32 D_83403E08[];
@@ -234,8 +234,6 @@ s32 func_83401454(Fragment58State *arg0) {
 }
 /* mkdraft:func_83401454 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_8340156C.s")
-
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void Font_EnableTwoCycleTexturing(void);
@@ -244,6 +242,108 @@ extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800497E4(s32, s32, s32, s32);
 extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
 extern void func_800499EC(void);
+extern s32 D_834048FC[1];
+extern s32 D_83403C7C;
+extern s32 D_834047F0;
+extern void func_8004989C(s32);
+extern void func_8004C54C(s32, s32);
+extern s32 func_8004C874();
+extern s32 func_8004C8A0(void *, s32, s32, s32);
+extern void func_8340010C(Fragment58State *);
+
+// Fragment 58's text overlay driver. Fields of D_83404888 and D_834048FC are
+// reached through a FAKE zero index z so uopt reloads each one from its own
+// %hi/%lo pair instead of keeping the address in a register, as retail does.
+void func_8340156C(void) {
+    s32 idx;
+    s32 y;
+    char buf[0x68];
+    s32 z = 0; // FAKE
+    s32 *p;
+
+    if ((&D_83404888)[z].unk18 != 0) {
+        if ((&D_83404888)[z].unk18 == 1) {
+            func_8340135C(&D_83404888);
+            if ((&D_83404888)[z].unk24 < (&D_83404888)[z].unk20) {
+                (&D_83404888)[z].unk18 = -1;
+                *(u32 *)&(&D_83404888)[z].unk1C = -1;
+            }
+        }
+        if ((&D_83404888)[z].unk18 == -1) {
+            func_83401454(&D_83404888);
+        }
+        if ((&D_83404888)[z].unk18 != 0) {
+            func_8340010C(&D_83404888);
+        }
+        func_800498C4();
+        func_800496A4(2, 1);
+        Font_EnableTwoCycleTexturing();
+        func_8004972C(0xFF, 0xFF, 0xFF, (&D_83404888)[z].unk2C);
+        func_800497E4(0xFF, 0xFF, 0xFF, (&D_83404888)[z].unk30);
+        if ((&D_83404888)[z].unk1C == 1) {
+            (&D_83404888)[z].unk2C += (&D_83404888)[z].unk34 * 20;
+        }
+        switch ((&D_83404888)[z].unk34) {
+        case 1:
+            if ((&D_83404888)[z].unk2C >= 0xDD) {
+                (&D_83404888)[z].unk30 += (&D_83404888)[z].unk34 * 10;
+            }
+            if ((&D_83404888)[z].unk2C >= 0xFF) {
+                (&D_83404888)[z].unk2C = 0xFF;
+            }
+            if ((&D_83404888)[z].unk30 >= 0xFF) {
+                (&D_83404888)[z].unk30 = 0xFF;
+                (&D_83404888)[z].unk34 = 0;
+            }
+            break;
+        case -1:
+            (&D_83404888)[z].unk2C += (&D_83404888)[z].unk34 * 15;
+            (&D_83404888)[z].unk30 += (&D_83404888)[z].unk34 * 15;
+            if ((&D_83404888)[z].unk2C <= 0) {
+                (&D_83404888)[z].unk2C = 0;
+            }
+            if ((&D_83404888)[z].unk30 <= 0) {
+                (&D_83404888)[z].unk34 = 1;
+                (&D_83404888)[z].unk30 = 0;
+                D_834048FC[z] = 0;
+            }
+            break;
+        case 2:
+            D_834048FC[z]++;
+            if (D_83403C7C < D_834048FC[z]) {
+                (&D_83404888)[z].unk34 = 1;
+            }
+            break;
+        case 0:
+            break;
+        }
+        y = (&D_83404888)[z].unk0C + 10;
+        func_8004989C(0xE);
+        if ((&D_83404888)[z].unk1C == 1) {
+            if ((&D_83404888)[z].unk28 == 1) {
+                (&D_83404888)[z].unk20++;
+            }
+            idx = D_83404190;
+            if ((&D_83404888)[z].unk34 == -1) {
+                idx = D_83404190 - 1;
+            }
+            p = &D_83403D68[idx];
+            idx = 0; // FAKE: kills idx so p keeps its own register (v1)
+            if (*p == 4) {
+                if (D_834047F0 == 0xCF) {
+                    p += 3;
+                }
+                func_8004C54C(0x1F, func_8004C874(0, D_834047F0 - 1));
+                func_800495F8((&D_83404888)[z].unk08 + 0xE, y, 0, (const char *)func_8004C8A0(buf, 100, 20, *p));
+            } else {
+                func_800495F8((&D_83404888)[z].unk08 + 0xE, y, 0, (const char *)func_8004C874(0x14, *p));
+            }
+        }
+        Font_DisableTwoCycleTexturing();
+        func_800499EC();
+    }
+}
+
 extern s32 D_83404194;
 extern f32 D_834048C4;
 extern f32 D_834048C8;
