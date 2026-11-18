@@ -3028,5 +3028,111 @@ void func_86A0CED8(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A0CF80.s")
+f32 func_86A0CF80(f32 *arg0, f32 *arg1, s32 arg2) {
+    s32 i, best, priority, preferred;
+    s32 queued = *(s32 *)((u8 *)&D_86A443F0 + arg2 * 4 + 3608);
+    f32 x, z, cx, cz, distance, dx, dz, candidate;
+    preferred = 0;
+    if (D_86A443F0.unk_1680 <= 0) return -100.0f;
+    switch (*(s8 *)(*(u8 **)(D_86A46548 + 12) + 8577)) {
+    case 0:
+        x = D_86A443F0.position[arg2][0];
+        z = D_86A443F0.position[arg2][1];
+        cx = *(f32 *)(D_86A443F0.unk_0EC4);
+        *arg0 = cx;
+        cz = *(f32 *)(D_86A443F0.unk_0EC4 + 4);
+        *arg1 = cz;
+        distance = (x - cx) * (x - cx) + (z - cz) * (z - cz);
+        best = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)(D_86A443F0.unk_0EC4 + 16)].unk_00;
+        for (i = 1; i < D_86A443F0.unk_1680; i++) {
+            cx = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20);
+            cz = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20 + 4);
+            priority = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)(D_86A443F0.unk_0EC4 + i * 20 + 16)].unk_00;
+            if (priority < best || (best == priority && ((dx = x-cx, dz = z-cz, dx*dx+dz*dz) < distance))) {
+                *arg0 = cx;
+                *arg1 = cz;
+                dx = x - cx; dz = z - cz; distance = dx * dx + dz * dz; best = priority;
+            }
+        }
+        return distance;
+
+    case 1:
+        x = D_86A443F0.position[arg2][0];
+        z = D_86A443F0.position[arg2][1];
+        cx = *(f32 *)(D_86A443F0.unk_0EC4);
+        *arg0 = cx;
+        cz = *(f32 *)(D_86A443F0.unk_0EC4 + 4);
+        *arg1 = cz;
+        distance = (x - cx) * (x - cx) + (z - cz) * (z - cz);
+
+        for (i = 1; i < D_86A443F0.unk_1680; i++) {
+            cx = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20);
+            cz = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20 + 4);
+            dx = x - cx; dz = z - cz; candidate = dx * dx + dz * dz;
+            if (candidate < distance) {
+                *arg0 = cx;
+                *arg1 = cz;
+                distance = candidate;
+            }
+        }
+        return distance;
+
+    case 2:
+        x = D_86A443F0.position[arg2][0];
+        z = D_86A443F0.position[arg2][1];
+        cx = *(f32 *)(D_86A443F0.unk_0EC4);
+        *arg0 = cx;
+        cz = *(f32 *)(D_86A443F0.unk_0EC4 + 4);
+        *arg1 = cz;
+        distance = (x - cx) * (x - cx) + (z - cz) * (z - cz);
+        best = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)(D_86A443F0.unk_0EC4 + 16)].unk_00;
+        for (i = 1; i < D_86A443F0.unk_1680; i++) {
+            cx = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20);
+            cz = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20 + 4);
+            priority = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)(D_86A443F0.unk_0EC4 + i * 20 + 16)].unk_00;
+            if (priority > best || (best == priority && ((dx = x-cx, dz = z-cz, dx*dx+dz*dz) < distance))) {
+                *arg0 = cx;
+                *arg1 = cz;
+                dx = x - cx; dz = z - cz; distance = dx * dx + dz * dz; best = priority;
+            }
+        }
+        return distance;
+
+    case 3:
+        if (*(s32 *)((u8 *)&D_86A443F0 + arg2 * 4 + 232) != 0) {
+            preferred = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)((u8 *)&D_86A443F0 + arg2 * 4 + 248)].unk_00;
+        } else if (queued > 0) {
+            preferred = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)((u8 *)&D_86A443F0 + arg2 * 792 + queued * 4 + 436)].unk_00;
+        }
+        if (preferred == 20) preferred = 0;
+        x = D_86A443F0.position[arg2][0];
+        z = D_86A443F0.position[arg2][1];
+        cx = *(f32 *)(D_86A443F0.unk_0EC4);
+        *arg0 = cx;
+        cz = *(f32 *)(D_86A443F0.unk_0EC4 + 4);
+        *arg1 = cz;
+        distance = (x - cx) * (x - cx) + (z - cz) * (z - cz);
+
+        best = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)(D_86A443F0.unk_0EC4 + 16)].unk_00;
+        for (i = 1; i < D_86A443F0.unk_1680; i++) {
+            cx = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20);
+            cz = *(f32 *)(D_86A443F0.unk_0EC4 + i * 20 + 4);
+            priority = ((Fragment60QueueEntry *)D_86A0D560)[*(s32 *)(D_86A443F0.unk_0EC4 + i * 20 + 16)].unk_00;
+            if (preferred != 0) {
+                if ((best == preferred && ((dx = x-cx, dz = z-cz, dx*dx+dz*dz) < distance)) ||
+                    (best != preferred && best < priority)) {
+                    dx = x-cx; dz = z-cz;
+                    candidate = dx*dx+dz*dz;
+                    distance = candidate; *arg0 = cx; *arg1 = cz;
+                    best = priority;
+                }
+            } else if (priority > best || (best == priority && ((dx = x-cx, dz = z-cz, dx*dx+dz*dz) < distance))) {
+                *arg0 = cx; *arg1 = cz;
+                dx=x-cx; dz=z-cz;
+                distance=dx*dx+dz*dz; best=priority;
+            }
+        }
+        return distance;
+    }
+}
 #endif

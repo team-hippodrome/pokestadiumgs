@@ -1080,7 +1080,159 @@ s16 func_82502924(u8 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82502960.s")
+typedef struct {
+    s16 x;
+    s16 y;
+} Fragment21Pos;
+
+extern void func_8250684C(void);
+
+extern void Fragment21_SetRecordDefaults(void *arg0, s32 arg1, s32 arg2, s32 arg3,
+                                         void *arg4, void *arg5, void *arg6, s32 arg7, s32 arg8);
+
+extern void func_82506AA4(s16 *arg0, s32 arg1, s32 arg2);
+
+extern void func_825069F0(void *arg0, s32 arg1, s32 arg2, void *arg3, void *arg4, void *arg5, void *arg6, void *arg7);
+
+extern void Fragment21_CreateType1Record(s32 arg0, void *arg1, s16 arg2, s16 arg3, s32 arg4);
+
+extern void Fragment21_CreateType1RecordWithValues(s32 arg0, void *arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+
+extern void func_82507D90(void);
+
+extern s32 D_82508D04;
+
+void func_82502960(void) {
+    s32 extra_w;
+    s32 pad1; // FAKE
+    u8 *entry = D_82508D10 + *(s16 *)(D_82508F68 + 2) * 60;
+    u8 *menu = *(u8 **)(D_82508F68 + 28);
+    u8 *selected = *(s16 *)(D_82508F68 + 2) * 48 + *(u8 **)(menu + 28);
+    u8 *node;
+    s32 width;
+    s32 pad2; // FAKE
+    s32 height = 0;
+    s32 pad3; // FAKE
+    Fragment21Pos p0;
+    Fragment21Pos p1;
+    Fragment21Pos p2;
+    Fragment21Pos p3;
+    s32 w1 = 0;
+    s32 h1 = 0;
+    Fragment21Pos p4;
+    Fragment21Pos p5;
+    Fragment21Pos corners[4];
+    Fragment21Pos extra;
+    s32 k_width;
+    s32 i;
+    s32 color;
+
+    p0.x = p0.y = 0;
+    p1 = p0;
+    p2 = p0;
+    p3 = p0;
+    color = -1;
+    width = 0;
+    if (*(u8 **)(entry + 8) != NULL) {
+        color = *(s32 *)(*(u8 **)(entry + 8) + 40);
+    }
+    func_8250684C();
+
+    node = func_8005049C((void *)D_82508D04, 0x4B5F5749);
+    if (node != NULL) {
+        p0.x = *(s16 *)(node + 8);
+        p0.y = *(s16 *)(node + 10);
+        width = *(s16 *)(node + 12);
+        height = *(s16 *)(node + 14);
+    }
+    node = func_8005049C((void *)D_82508D04, 0x475F4E4D);
+    if (node != NULL) {
+        p1.x = *(s16 *)(node + 8);
+        p1.y = *(s16 *)(node + 10);
+    }
+    node = func_8005049C((void *)D_82508D04, 0x545F3031);
+    if (node != NULL) {
+        p2.x = *(s16 *)(node + 8);
+        p2.y = *(s16 *)(node + 10);
+    }
+    node = func_8005049C((void *)D_82508D04, 0x4B303030);
+    if (node != NULL) {
+        p3.x = *(s16 *)(node + 8);
+        p3.y = *(s16 *)(node + 10);
+    }
+    node = func_8005049C((void *)D_82508D04, 0x6B5F7730);
+    k_width = node != NULL ? *(s16 *)(node + 12) : width;
+
+    Fragment21_SetRecordDefaults(&p0, width, height, k_width, &p1, &p2, &p3, *(s16 *)(menu + 20), *(s16 *)(menu + 22));
+
+    extra.x = extra.y = 0;
+    if (*(s32 *)(menu + 40) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 40));
+        if (node != NULL) {
+            extra.x = *(s16 *)(node + 8);
+            extra.y = *(s16 *)(node + 10);
+            extra_w = *(s16 *)(node + 12);
+            func_82506AA4((s16 *)&extra, extra_w, *(s16 *)(node + 14));
+        }
+    }
+
+    p4.x = p4.y = 0;
+    p5 = p4;
+    for (i = 0; i < 4; i++) {
+        corners[i] = p4;
+    }
+    if (*(s32 *)(menu + 44) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 44));
+        if (node != NULL) {
+            p4.x = *(s16 *)(node + 8);
+            p4.y = *(s16 *)(node + 10);
+            w1 = *(s16 *)(node + 12);
+            h1 = *(s16 *)(node + 14);
+        }
+    }
+    if (*(s32 *)(menu + 48) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 48));
+        if (node != NULL) {
+            p5.x = *(s16 *)(node + 8);
+            p5.y = *(s16 *)(node + 10);
+        }
+    }
+    if (*(s32 *)(menu + 52) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 52));
+        if (node != NULL) {
+            corners[0].x = *(s16 *)(node + 8);
+            corners[0].y = *(s16 *)(node + 10);
+        }
+    }
+    if (*(s32 *)(menu + 56) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 56));
+        if (node != NULL) {
+            corners[1].x = *(s16 *)(node + 8);
+            corners[1].y = *(s16 *)(node + 10);
+        }
+    }
+    if (*(s32 *)(menu + 60) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 60));
+        if (node != NULL) {
+            corners[2].x = *(s16 *)(node + 8);
+            corners[2].y = *(s16 *)(node + 10);
+        }
+    }
+    if (*(s32 *)(menu + 64) != 0) {
+        node = func_8005049C((void *)D_82508D04, *(s32 *)(menu + 64));
+        if (node != NULL) {
+            corners[3].x = *(s16 *)(node + 8);
+            corners[3].y = *(s16 *)(node + 10);
+        }
+    }
+
+    func_825069F0(&p4, w1, h1, &p5, &corners[0], &corners[1], &corners[2], &corners[3]);
+    Fragment21_CreateType1Record(0, &color, *(s16 *)(selected + 34), func_82502924(*(u8 **)(entry + 12)), ((s32 *)(entry + 24))[**(u8 **)(entry + 12)]);
+    if (*(s16 *)(selected + 44) != 0) {
+        Fragment21_CreateType1RecordWithValues(1, &color, *(s16 *)(selected + 34), *(s32 *)(entry + 28), *(s32 *)(entry + 32), *(s32 *)(entry + 36), *(s32 *)(entry + 40));
+    }
+    func_82507D90();
+}
 #endif
 
 #ifdef VERSION_US

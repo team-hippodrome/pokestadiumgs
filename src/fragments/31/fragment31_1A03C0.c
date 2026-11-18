@@ -1,5 +1,6 @@
 #include "global.h"
 #include "controller.h"
+#include "229E0.h"
 
 
 #ifdef VERSION_US
@@ -152,7 +153,7 @@ void func_8822D750(void) {
 }
 
 extern s32 D_880068B4;
-extern void Util_Free(s32);
+extern void Util_Free(void *);
 void func_8822D778(void) {
     Input_SetRepeatController(D_80087200);
     D_880068B4 = 1;
@@ -243,6 +244,37 @@ void func_8822DB00(void) {
     Input_SetRepeatController(D_80087200);
     D_880068B8 = 0;
 }
+
+typedef struct {
+    u8 **items;
+    u16 count;
+    s16 cursor;
+    s32 blocked;
+    u8 *flags;
+} LabPCOwnedList;
+
+typedef struct {
+    u8 unk_00;
+    u8 *unk_04;
+    u8 *unk_08;
+    s32 unk_0C;
+    s16 unk_10;
+    s32 unk_14;
+    u8 *unk_18;
+    u8 unk_1C[3];
+    void *unk_20[3];
+    u16 unk_2C;
+    s16 unk_2E;
+    s32 unk_30;
+    LabPCOwnedList list1;
+    LabPCOwnedList list2;
+    s32 unk_54;
+    s16 unk_58;
+    s16 unk_5A;
+    u8 unk_5C[4];
+    u8 **unk_60;
+    u8 **unk_64;
+} LabPCListChoiceState;
 
 extern void *D_88234950;
 // Free both child-allocation lists, their backing buffers and the shared owner.
@@ -404,5 +436,104 @@ void LabPC_DrawListChoiceDialog(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A03C0/func_8822E290.s")
+extern s8 D_88006868;
+extern void D_88000E4C(void);
+extern s32 func_80049290(s32, s32, const char *);
+extern s32 func_8005CB38(s32, s32);
+extern void *func_8005EE88(s32, s32, void *);
+extern s32 func_800532C4(s32);
+extern s32 func_80053524(s32, u8 *);
+extern void func_88003480(s32, u16, u16, s16 *, s16 *);
+void func_8822E290(u8 arg0, LabPCBytePair *arg1, LabPCBytePair *arg2) {
+    u32 i;
+    u8 mode;
+    LabPCOwnedList *list;
+    u8 *box;
+    u8 rgb[3];
+    s16 side_x;
+    u16 label_width;
+    s32 side;
+
+    D_88234950 = Util_Malloc(sizeof(LabPCListChoiceState));
+    ((LabPCListChoiceState *)D_88234950)->unk_00 = arg0;
+    ((LabPCListChoiceState *)D_88234950)->unk_0C = 1;
+    ((LabPCListChoiceState *)D_88234950)->unk_10 = 0;
+    _bzero(((LabPCListChoiceState *)D_88234950)->unk_1C, 3);
+    ((LabPCListChoiceState *)D_88234950)->unk_14 = 0;
+    ((LabPCListChoiceState *)D_88234950)->unk_18 = ((LabPCListChoiceState *)D_88234950)->unk_1C;
+    if (arg1->first == 0 || arg2->first == 0) {
+        ((LabPCListChoiceState *)D_88234950)->unk_14 = 1;
+        ((LabPCListChoiceState *)D_88234950)->unk_1C[0] = 1;
+        ((LabPCListChoiceState *)D_88234950)->unk_10 = 1;
+        Color_SetRGB((Color3573C *)rgb, 220, 220, 180);
+    } else Color_SetRGB((Color3573C *)rgb, 150, 150, 130);
+    for (i = 0; i < 3; i++) {
+        ((LabPCListChoiceState *)D_88234950)->unk_20[i] = func_8004C874(32, i + 16);
+    }
+    label_width = func_80049290(8, 1, ((LabPCListChoiceState *)D_88234950)->unk_20[0]);
+    ((LabPCListChoiceState *)D_88234950)->unk_2C = label_width + 34;
+    for (i = 0; i < 2; i++) {
+        ((LabPCListChoiceState *)D_88234950)->unk_2C = func_80049290(8, 1, ((LabPCListChoiceState *)D_88234950)->unk_20[i + 1]) < ((LabPCListChoiceState *)D_88234950)->unk_2C ?
+            ((LabPCListChoiceState *)D_88234950)->unk_2C : func_80049290(8, 1, ((LabPCListChoiceState *)D_88234950)->unk_20[i + 1]);
+    }
+    ((LabPCListChoiceState *)D_88234950)->unk_04 = D_8800ED50 + func_88004804(0, 3, 0, 0, 0, 1, 220, 220, 180,
+        (s32 *)LabPC_UpdateListChoiceDialogInput, (s32 *)LabPC_DrawListChoiceDialog, (s32 *)func_8822DB00, (s32 *)LabPC_DestroyOwnedLists, 0, 0) * 76;
+    box = (((LabPCListChoiceState *)D_88234950)->unk_04 + 4);
+    if (arg0 == 0) {
+        *(s16 *)(box + 8) = 169;
+        *(s16 *)(box + 10) = 104;
+    } else {
+        *(s16 *)(box + 8) = 468;
+        *(s16 *)(box + 10) = 104;
+    }
+    *(u16 *)(box + 12) = ((LabPCListChoiceState *)D_88234950)->unk_2C + 31;
+    *(u16 *)(box + 14) = 101;
+    func_88003480(1, *(u16 *)(box + 12), *(u16 *)(box + 14), (s16 *)(box + 8), (s16 *)(box + 10));
+    ((LabPCListChoiceState *)D_88234950)->unk_2E = *(s16 *)(box + 8) + label_width + 21;
+    if (arg0 == 0) {
+        side = 0;
+        side_x = *(u16 *)(box + 12) + *(s16 *)(box + 8) + 4;
+    } else {
+        side = 2;
+        side_x = *(s16 *)(box + 8) - 5;
+    }
+    ((LabPCListChoiceState *)D_88234950)->unk_30 = 0;
+    ((LabPCListChoiceState *)D_88234950)->unk_54 = 4;
+    ((LabPCListChoiceState *)D_88234950)->unk_58 = 1;
+    ((LabPCListChoiceState *)D_88234950)->unk_5A = 4;
+    for (mode = 1; mode < 3; mode++) {
+        if (mode == 1) {
+            list = &((LabPCListChoiceState *)D_88234950)->list1;
+            list->count = func_8005CB38(D_88006868, 33);
+            ((LabPCListChoiceState *)D_88234950)->unk_60 = Util_Malloc(list->count * 4);
+            for (i = 0; i < list->count; i++) {
+                ((LabPCListChoiceState *)D_88234950)->unk_60[i] = Util_Malloc(9);
+                func_8005EE88(D_88006868, i, ((LabPCListChoiceState *)D_88234950)->unk_60[i]);
+            }
+            list->items = ((LabPCListChoiceState *)D_88234950)->unk_60;
+        } else if (mode == 2) {
+            list = &((LabPCListChoiceState *)D_88234950)->list2;
+            list->count = func_800532C4(17);
+            ((LabPCListChoiceState *)D_88234950)->unk_64 = Util_Malloc(list->count * 4);
+            for (i = 0; i < list->count; i++) {
+                ((LabPCListChoiceState *)D_88234950)->unk_64[i] = Util_Malloc(18);
+                func_80053524(i, ((LabPCListChoiceState *)D_88234950)->unk_64[i]);
+            }
+            list->items = ((LabPCListChoiceState *)D_88234950)->unk_64;
+        }
+        list->cursor = 0;
+        list->blocked = 0;
+        list->flags = Util_Malloc(list->count);
+        for (i = 0; i < list->count; i++) {
+            if ((mode == arg1->first && i == arg1->second) || (mode == arg2->first && i == arg2->second)) {
+                list->blocked = 1;
+                list->flags[i] = 1;
+                if (i == list->cursor) list->cursor++;
+            } else list->flags[i] = 0;
+        }
+    }
+    ((LabPCListChoiceState *)D_88234950)->unk_08 = D_8800ED50 + func_88004804((s32)&((LabPCListChoiceState *)D_88234950)->unk_30, 1, side_x, 104, side, 1, rgb[0], rgb[1], rgb[2],
+        (s32 *)D_88000E4C, (s32 *)D_88000E4C, (s32 *)D_88000E4C, (s32 *)D_88000E4C, 0, 0) * 76;
+    D_880068B4 = 0;
+}
 #endif
