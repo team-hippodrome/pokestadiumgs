@@ -786,10 +786,48 @@ void func_84152408(void *arg0, u8 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BFC40/func_841524B4.s")
+typedef struct B0Ent841524B4 {
+    /* 0x00 */ u8 unk_00[0x24];
+    /* 0x24 */ u8 active;
+    /* 0x25 */ u8 unk_25;
+    /* 0x26 */ u16 hp;
+    /* 0x28 */ u8 unk_28[0x30];
+} B0Ent841524B4; // size = 0x58
+
+typedef struct B0Side841524B4 {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ u8 count;
+    /* 0x09 */ u8 unk_09[0xF];
+    /* 0x18 */ B0Ent841524B4 ents[1];
+} B0Side841524B4;
+
+// Counts the side's entries that are active and have hp left.
+// K&R definition: `side` is a FAKE second parameter, written before it is
+// read, so the side pointer is allocated to $a1 as in the target.
+u8 func_841524B4(arg0, side)
+    u8 arg0;
+    B0Side841524B4 *side;
+{
+    u8 count = 0;
+    s32 i;
+    B0Ent841524B4 *ent;
+    B0Ent841524B4 *e;
+
+    side = ((B0Side841524B4 **)D_841951F8)[arg0];
+    for (i = 0; i < side->count; i++) {
+        ent = side->ents;
+        e = ent;
+        e += i;
+        if (e->hp > 0 && e->active) {
+            count++;
+        }
+    }
+    // FAKE: dead store; keeps the entry pointer copied into $v0 as in the target.
+    e = ent;
+    return count;
+}
 
 extern s32 func_84154B9C(u8, u16);
-extern u8 func_841524B4(u8);
 void BattlePlan_AddHealBellBonus(u8 *plan, u8 side) {
     u8 *own;
     s32 base;
@@ -802,7 +840,8 @@ void BattlePlan_AddHealBellBonus(u8 *plan, u8 side) {
         *(u8 *)((u32)base + (u32)side + 8) = 0xFF;
         table = func_8414A3A0(side);
         amount = table[52] * func_8414A2AC();
-        ((u32 *)(u32)base)[(u32)side + 13] += amount * func_841524B4(side);
+        // func_841524B4 has a K&R definition, so narrow the argument here.
+        ((u32 *)(u32)base)[(u32)side + 13] += amount * func_841524B4(side & 0xFF);
     }
 }
 
