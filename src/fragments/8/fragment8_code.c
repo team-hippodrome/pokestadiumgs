@@ -520,8 +520,62 @@ void func_82F01220(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/8/fragment8_code/func_82F012AC.s")
+void func_82F012AC(s32 arg0, u8 *arg1, s16 *arg2) {
+    f32 fade;
+    f32 alpha_float;
+    u8 *volatile entry;
+    s32 alpha;
+    s32 i;
+    s32 x, y;
+    u8 *move;
+    u8 *color;
+    s32 type;
+    Gfx **display;
 
+    entry = func_818054D0((void *)arg0, arg1[31]);
+    fade = func_818055E0((void *)arg0, arg1);
+    WidgetResources_DrawRecords(arg0, (s32)arg1, (s32)arg2);
+    func_818006FC(arg2[0] + 12, arg2[1] + 32, 326, fade);
+    func_800498C4();
+    func_800496A4(8, 1);
+    alpha_float = 255.0f * fade;
+    alpha = (s32)alpha_float;
+    func_8004972C(255, 255, 255, alpha);
+    for (i = 0, move = arg1; i < 14; i++, move++) {
+        x = (i % 2) * 168;
+        x += arg2[0] + 36;
+        y = (i / 2) * 26;
+        y += arg2[1] + 40;
+        if (!arg1) {}
+        if (!arg1) {}
+        if (move[3793] > 0) {
+            color = func_81602C68(func_80062D98(move[3793]));
+            if (*(s32 *)(entry + 32) && i + 1 == arg1[3791]) {
+                func_8004972C(255, 255, 0, (s32)((f32)255.0 * fade));
+            } else {
+                func_8004972C(color[0], color[1], color[2], alpha);
+            }
+            func_800495BC(x, y, func_80062CE0(move[3793]));
+        }
+    }
+    func_800499EC();
+    display = (Gfx **)&D_800D0510;
+    gSPDisplayList((*display)++, D_80094E38);
+    gDPSetEnvColor((*display)++, 255, 255, 255, (u32)alpha_float);
+    for (i = 0, move = arg1; i != 14; i++, move++) {
+        type = func_80062D98(move[3793]);
+        x = (i % 2) * 168;
+        x += arg2[0] + 12;
+        y = (i / 2) * 26;
+        y += arg2[1] + 40;
+        if (!arg1) {}
+        if (move[3793] != 0) {
+            func_8004D19C(x, y, func_82F00020(type), 0, 0);
+        }
+    }
+    gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    WidgetResources_DrawSelection(arg0, (s32)arg1, (s32)arg2);
+}
 extern s32 func_80062D5C(u8);
 extern s32 func_80049148();
 extern s8 *func_80063270(u8);
