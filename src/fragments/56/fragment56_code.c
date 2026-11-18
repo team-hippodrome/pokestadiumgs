@@ -324,8 +324,8 @@ extern s32 D_86807CC4;
 extern s32 D_86807C44;
 extern s32 D_86807C3C;
 extern s32 D_86807C48;
-extern s32 D_86807A74[];
-extern s32 D_868084E8;
+extern u8 *D_86807A74[];
+extern u8 *D_868084E8;
 extern u8 D_868085E8[];
 extern u32 func_8003570C(void);
 extern void func_87F03B8C(void *);
@@ -1152,7 +1152,122 @@ void func_86804C5C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86804EE0.s")
+extern u8 D_86809208[];
+extern s32 D_86807C88;
+extern s32 D_86807C90;
+extern s32 D_86807C6C;
+extern void *D_8682CCFC;
+extern f32 D_86807C50;
+extern u32 D_868086AC;
+extern void *D_8682CD10;
+#define SPAWN_SCRIPT D_868084E8
+#define SPAWN_STATE(type, off) (*(type *)((u8 *)&D_8682F2A8 + (off)))
+#define ENTRY (D_8682CD18 + i * 1600 + slot * 40)
+#define MODEL (&((Fragment56PointModelView (*)[40])D_86809208)[i][slot])
+#define PLAYER (D_868086C8 + i * 0x168)
+
+// Spawns the next row of drop models from the spawn script, one per group, until a
+// script entry with a nonzero delay; 6 in the delay byte means no countdown change.
+void func_86804EE0(void) {
+    s32 i;
+    s32 slot;
+    s32 rnd;
+    f32 speed;
+
+    for (;;) {
+        rnd = func_8003570C() % 101;
+        slot = SPAWN_STATE(s32, 0x1C);
+        SPAWN_STATE(s32, 0x1C) += 1;
+        if (SPAWN_STATE(s32, 0x1C) >= 40) {
+            SPAWN_STATE(s32, 0x1C) = 0;
+        }
+        for (i = 0; i < 4; i++) {
+            if (D_86807C88 == 0 || D_86807C90 == 0) {
+                switch (SPAWN_SCRIPT[0]) {
+                    case 0:
+                        *(s32 *)(ENTRY + 8) = 1;
+                        speed = 0.0f;
+                        break;
+                    case 2:
+                        *(s32 *)(ENTRY + 8) = 3;
+                        speed = 5.0f;
+                        break;
+                    case 1:
+                        *(s32 *)(ENTRY + 8) = 2;
+                        speed = -5.0f;
+                        break;
+                }
+            } else {
+                switch (SPAWN_SCRIPT[0]) {
+                    case 0:
+                        *(s32 *)(ENTRY + 8) = 1;
+                        speed = 0.0f;
+                        break;
+                    case 1:
+                        *(s32 *)(ENTRY + 8) = 3;
+                        speed = 5.0f;
+                        break;
+                    case 2:
+                        *(s32 *)(ENTRY + 8) = 2;
+                        speed = -5.0f;
+                        break;
+                }
+            }
+            *(s32 *)(ENTRY + 0x10) = 0;
+            *(s32 *)(ENTRY + 0xC) = 550;
+            *(s32 *)(ENTRY + 0x14) = 0;
+            *(f32 *)(ENTRY + 0x20) = 0.0f;
+            *(f32 *)(ENTRY + 0x24) = D_86807C60;
+            *(s16 *)ENTRY = rnd << 4;
+            if (SPAWN_SCRIPT[1] == 1) {
+                if (D_86807C6C < rnd) {
+                    *(s32 *)(ENTRY + 4) = 1;
+                    func_8003F114((u8 *)MODEL, 0, -1, D_8682CCFC);
+                    *(s16 *)ENTRY = 0;
+                    *(s32 *)(ENTRY + 0x1C) = 1;
+                    MODEL->scale[2] = D_86807C50 * 3.8 / 0.17;
+                    MODEL->scale[1] = MODEL->scale[2];
+                    MODEL->scale[0] = MODEL->scale[2];
+                }
+            } else {
+                if (i == 3) {
+                    D_86807C48--;
+                }
+                if (i == 3) {
+                    SPAWN_STATE(s32, 0x34)++;
+                }
+                *(s32 *)(ENTRY + 4) = 0;
+                func_8003F114((u8 *)MODEL, 0, -1, D_8682CD10);
+                *(s16 *)ENTRY = rnd << 5;
+                *(s32 *)(ENTRY + 0x1C) = 1;
+                MODEL->scale[0] = MODEL->scale[1] = MODEL->scale[2] = D_86807C50;
+            }
+            MODEL->rotation[0] = MODEL->rotation[1] = MODEL->rotation[2] = 0;
+            MODEL->rotation[0] -= *(s16 *)ENTRY * D_868086AC;
+            MODEL->rotation[1] -= *(s16 *)ENTRY * D_868086AC;
+            MODEL->rotation[2] -= *(s16 *)ENTRY * D_868086AC;
+            MODEL->position[1] = *(s32 *)(ENTRY + 0xC);
+            MODEL->position[0] = *(f32 *)(PLAYER + 0x24) + speed * D_8682F2FC;
+            MODEL->position[2] = D_8682F2FC * 4.39;
+        }
+        if (SPAWN_SCRIPT[5] != 0) {
+            D_868084E8 += 3;
+            if (SPAWN_SCRIPT[2] != 6) {
+                SPAWN_STATE(s32, 0x20) = SPAWN_STATE(s32, 0x20) - SPAWN_SCRIPT[2] * D_86807C9C;
+            }
+            return;
+        }
+        D_868084E8 += 3;
+        if (SPAWN_SCRIPT[2] != 6) {
+            SPAWN_STATE(s32, 0x20) = SPAWN_STATE(s32, 0x20) - SPAWN_SCRIPT[2] * D_86807C9C;
+        }
+    }
+}
+#undef SPAWN_SCRIPT
+#undef SPAWN_STATE
+#undef ENTRY
+#undef MODEL
+#undef PLAYER
 
 extern s32 D_86807C3C;
 extern s32 D_86807C44;
@@ -1166,8 +1281,8 @@ extern s32 D_8682EF50;
 extern s32 D_8682F074;
 extern s32 D_8682F198;
 extern s32 D_8682F2A8;
-extern s32 D_86807A74[];
-extern s32 D_868084E8;
+extern u8 *D_86807A74[];
+extern u8 *D_868084E8;
 extern u8 D_86807F10[];
 extern u8 D_86807F88[];
 extern u8 D_86807FD0[];
@@ -1379,7 +1494,7 @@ extern s32 D_8682F2B4;
 extern s32 D_86807C3C;
 extern s32 D_86807C88;
 extern s32 D_86807C48;
-extern s32 D_868084E8;
+extern u8 *D_868084E8;
 extern u8 D_8682CD18[];
 extern void func_8680537C(void);
 extern void func_868044D4(void);
