@@ -375,7 +375,370 @@ void func_8820908C(void) {
 }
 /* mkdraft:func_8820908C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17B150/func_88209278.s")
+extern void func_88206460();
+extern void func_88206508();
+extern void func_882064B4();
+extern void func_8822E290();
+extern void func_8822E8D8();
+extern void func_88002720();
+extern void func_880020CC();
+extern s32 func_88201F0C();
+extern s32 func_88200D04();
+extern void func_88228F30();
+extern void func_882295E4();
+extern void func_88228BCC();
+extern void func_88206430();
+extern void func_88231D30();
+extern void func_88231F24();
+extern void func_882320F0();
+extern s32 func_800532C4();
+extern s32 func_8005CB38();
+extern s8 D_88006868;
+extern u8 D_88006020[];
+extern s32 D_882345F4;
+extern s16 D_8800EF58;
+
+#define DP ((u8 *)D_88234700)
+#define D8(o) (*(u8 *)(DP + (o)))
+#define D16(o) (*(s16 *)(DP + (o)))
+#define D32(o) (*(s32 *)(DP + (o)))
+#define PAD() (*(u16 *)((u8 *)D_80087200 + 8))
+#define IDLE_A() (D16(0x10) == 0 && D32(0x14) == 0 && D16(0x32) == 0)
+#define IDLE_B() (D16(0x3C) == 0 && D32(0x40) == 0 && D16(0x5E) == 0)
+#define REC(i) (((u8 (*)[0x2C])DP)[i])
+
+#define CUR(n) (((u8 (*)[2])(DP + 0xA))[n])
+typedef struct { u8 a; u8 b; } Pair9278;
+void func_88209278(void) {
+    s32 i;
+    u8 *tmp;
+    Pair9278 cur;
+    s32 obj;
+    s32 sel;
+    u8 *p8;
+    s16 diff;
+    s16 base;
+    u8 *p12;
+    u8 *p12b;
+
+    if (D_8800EF58 != 0) {
+        return;
+    }
+    if (*(s32 *)((u8 *)D_88234564 + 0xA4) == 2 && D8(0x68) == 0 && D_880068B4 == 1) {
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && D_882346F0 == 0) {
+            if ((D8(0) == 0 && (PAD() & 0x10)) || (D8(0) == 1 && (PAD() & 0x20))) {
+                func_800226C0(0x135);
+                D8(0) ^= 1;
+                func_88001900();
+                goto end;
+            }
+        }
+        if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && D_882346F0 == 0 && (PAD() & 3) != 0) {
+            cur = *(Pair9278 *)CUR(D8(0));
+            func_800226C0(0x134);
+            do {
+                if (PAD() & 2) {
+                    switch (cur.a) {
+                        case 0:
+                            cur.a = 2;
+                            cur.b = func_800532C4(0x11) - 1;
+                            break;
+                        case 1:
+                            if (cur.b == 0) {
+                                cur.a = 0;
+                            } else {
+                                cur.b--;
+                            }
+                            break;
+                        case 2:
+                            if (cur.b == 0) {
+                                cur.a = 1;
+                                cur.b = func_8005CB38(D_88006868, 0x21) - 1;
+                            } else {
+                                cur.b--;
+                            }
+                            break;
+                    }
+                } else if (PAD() & 1) {
+                    switch (cur.a) {
+                        case 0:
+                            cur.a = 1;
+                            cur.b = 0;
+                            break;
+                        case 1:
+                            if (func_8005CB38(D_88006868, 0x21) == cur.b + 1) {
+                                cur.a = 2;
+                                cur.b = 0;
+                            } else {
+                                cur.b++;
+                            }
+                            break;
+                        case 2:
+                            if (func_800532C4(0x11) == cur.b + 1) {
+                                cur.b = 0;
+                                cur.a = 0;
+                            } else {
+                                cur.b++;
+                            }
+                            break;
+                    }
+                }
+            } while (cur.a == CUR(1 - D8(0))[0] && cur.b == CUR(1 - D8(0))[1]);
+            func_88208010((u8)D8(0), cur.a, cur.b);
+            goto end;
+        }
+        if (D32(4) != 0) {
+            if (PAD() & 0x4000) {
+                func_800226C0(0x48);
+                D8(0x68) = 2;
+                if (func_88201F0C() != 0) {
+                    func_88228F30(0x140, 0xF0, func_88206430);
+                } else if (func_88200D04(7) != 0) {
+                    func_882295E4(0x140, 0xF0, func_88206430);
+                } else {
+                    func_88228BCC(0x140, 0xF0, func_88206430);
+                }
+                goto end;
+            } else if (PAD() & 0x8000) {
+                func_800226C0(0x5C);
+                if (D16(8) == 0) {
+                    D8(0x68) = 2;
+                    func_8822E290(D8(0), DP + 0xA, DP + 0xC);
+                } else {
+                    func_882064B4(0, DP + 4, DP + 0x10, DP + 0x3C);
+                    func_88001900();
+                }
+                goto end;
+            } else {
+                func_880020CC(REC(D8(0)) + 0x10);
+                func_88002720(DP + 8, 6, D_88006020);
+                goto end;
+            }
+        }
+        obj = func_88207F18(1, D8(0));
+        switch (D_882346F0) {
+            case 0:
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x4000)) {
+                    func_800226C0(0x48);
+                    func_882064B4(1, DP + 4, DP + 0x10, DP + 0x3C);
+                    Input_SetRepeatController(D_80087200);
+                    goto end;
+                }
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x8000)) {
+                    switch (*(u16 *)(DP + 8)) {
+                        case 0:
+                            goto end;
+                        case 1:
+                        case 5:
+                            tmp = func_88201ED0(CUR(D8(0))[0], CUR(D8(0))[1]);
+                            if (tmp[0x15] == 0) {
+                                if (D16(8) == 1) {
+                                    tmp = func_8004C874(0x20, 0xB);
+                                } else {
+                                    tmp = func_8004C874(0x20, 0xC);
+                                }
+                                func_88206508(tmp, DP + 0x68);
+                                goto end;
+                            }
+                            if (D16(8) == 5) {
+                                if (func_80063754(((u8 *)obj)[9]) != 0) {
+                                    func_88206508(func_8004C874(0x20, 0xF), DP + 0x68);
+                                    goto end;
+                                }
+                            }
+                            D_882345F4 = obj;
+                            D8(0x68) = 2;
+                            sel = (D16(8) == 1) ? 0 : 4;
+                            func_800226C0(0x47);
+                            func_8822E8D8((u8 *)D_882345F4 + 8, sel);
+                            goto end;
+                        case 2:
+                            tmp = func_88201ED0(CUR(D8(0))[0], CUR(D8(0))[1]);
+                            if (tmp[0x15] == 0) {
+                                func_88206508(func_8004C874(0x20, 8), DP + 0x68);
+                                goto end;
+                            }
+                            if (func_88201ED0(CUR(1 - D8(0))[0], CUR(1 - D8(0))[1])[0x15] == func_88201ED0(CUR(1 - D8(0))[0], CUR(1 - D8(0))[1])[0x14]) {
+                                func_88206508(func_8004C874(0x20, 0xD), DP + 0x68);
+                                goto end;
+                            }
+                            switch (func_88208B38((u8 *)obj)) {
+                                case 1:
+                                    func_88206508(func_8004C874(0x20, 0xE), DP + 0x68);
+                                    break;
+                                case 3:
+                                    func_88206508(func_8004C874(0x1F, 0xF), DP + 0x68);
+                                    break;
+                                case 2:
+                                    func_88206508(func_8004C874(0x1F, 0x10), DP + 0x68);
+                                    break;
+                                case 4:
+                                    func_88206508(func_8004C874(0x1F, 0x12), DP + 0x68);
+                                    break;
+                                case 5:
+                                    func_88206508(func_8004C874(0x1F, 0x11), DP + 0x68);
+                                    break;
+                                case 0:
+                                    func_800226C0(0x47);
+                                    D_882346F0 = 1;
+                                    D8(0) ^= 1;
+                                    func_882089E4(D8(0), 1);
+                                    break;
+                            }
+                            goto end;
+                        case 3:
+                            tmp = func_88201ED0(CUR(D8(0))[0], CUR(D8(0))[1]);
+                            if (tmp[0x15] < 2) {
+                                func_88206508(func_8004C874(0x20, 9), DP + 0x68);
+                                goto end;
+                            }
+                            func_800226C0(0x47);
+                            D_882346F0 = 2;
+                            D16(0x74) = *(s16 *)(REC(D8(0)) + 0x18);
+                            goto end;
+                        case 4:
+                            tmp = func_88201ED0(DP[0xA], DP[0xB]);
+                            if (tmp[0x15] == 0 || func_88201ED0(DP[0xC], DP[0xD])[0x15] == 0) {
+                                func_88206508(func_8004C874(0x20, 0xA), DP + 0x68);
+                                goto end;
+                            }
+                            switch (func_88208B38((u8 *)obj)) {
+                                case 1:
+                                    func_88206508(func_8004C874(0x20, 0xE), DP + 0x68);
+                                    break;
+                                case 3:
+                                    func_88206508(func_8004C874(0x1F, 0xF), DP + 0x68);
+                                    break;
+                                case 2:
+                                    func_88206508(func_8004C874(0x1F, 0x10), DP + 0x68);
+                                    break;
+                                case 4:
+                                    func_88206508(func_8004C874(0x1F, 0x12), DP + 0x68);
+                                    break;
+                                case 0:
+                                    func_800226C0(0x47);
+                                    D_882346F0 = 3;
+                                    D8(0) ^= 1;
+                                    break;
+                            }
+                            goto end;
+                    }
+                    goto end;
+                }
+                func_880020CC(REC(D8(0)) + 0x10);
+                goto end;
+
+            case 1:
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x4000)) {
+                    func_800226C0(0x48);
+                    func_882089E4(D8(0), 0);
+                    D8(0) ^= 1;
+                    D_882346F0 = 0;
+                    goto end;
+                }
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x8000)) {
+                    p8 = Util_Malloc(8);
+                    *(s32 *)p8 = func_88207F18(1, (1 - D8(0)) & 0xFF);
+                    p8[6] = 1 - D8(0);
+                    for (i = 0; i != 2; i++) {
+                        p8[4 + i] = *(s16 *)(REC(i) + 0x18) - *(s16 *)(REC(i) + 0x1A);
+                    }
+                    D_8800EF54 = p8;
+                    func_800226C0(0x5D);
+                    func_800226C0(0x63);
+                    func_882320F0();
+                    goto end;
+                }
+                func_880020CC(REC(D8(0)) + 0x10);
+                goto end;
+
+            case 2:
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x4000)) {
+                    func_800226C0(0x48);
+                    D_882346F0 = 0;
+                    goto end;
+                }
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x8000)) {
+                    if (D16(0x74) == *(s16 *)(REC(D8(0)) + 0x18)) {
+                        func_800226C0(0x49);
+                        goto end;
+                    }
+                    base = *(s16 *)(REC(D8(0)) + 0x1A);
+                    p12 = Util_Malloc(0xC);
+                    *(s32 *)p12 = func_88207F18(3, D8(0));
+                    *(s32 *)(p12 + 4) = func_88207F18(1, D8(0));
+                    diff = D16(0x74) - base;
+                    if (diff >= 0 && diff < 6) {
+                        p12[8] = diff;
+                    } else {
+                        ((s8 *)p12)[8] = -1;
+                    }
+                    p12[9] = *(s16 *)(REC(D8(0)) + 0x18) - base;
+                    p12[0xA] = D8(0);
+                    D_8800EF54 = p12;
+                    func_800226C0(0x5D);
+                    func_800226C0(0x63);
+                    func_88231D30();
+                    goto end;
+                }
+                func_880020CC(REC(D8(0)) + 0x10);
+                goto end;
+
+            case 3:
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x4000)) {
+                    func_800226C0(0x48);
+                    D8(0) ^= 1;
+                    D_882346F0 = 0;
+                    goto end;
+                }
+                if ((IDLE_A() ? 1 : 0) != 0 && (IDLE_B() ? 1 : 0) != 0 && (PAD() & 0x8000)) {
+                    switch (func_88208B38((u8 *)obj)) {
+                        case 1:
+                            func_88206508(func_8004C874(0x20, 0xE), DP + 0x68);
+                            break;
+                        case 3:
+                            func_88206508(func_8004C874(0x1F, 0xF), DP + 0x68);
+                            break;
+                        case 2:
+                            func_88206508(func_8004C874(0x1F, 0x10), DP + 0x68);
+                            break;
+                        case 4:
+                            func_88206508(func_8004C874(0x1F, 0x12), DP + 0x68);
+                            break;
+                        case 5:
+                            func_88206508(func_8004C874(0x1F, 0x11), DP + 0x68);
+                            break;
+                        case 0:
+                            p12b = Util_Malloc(0xC);
+                            for (i = 0; i != 2; i++) {
+                                *(s32 *)(p12b + i * 4) = func_88207F18(1, i);
+                                p12b[8 + i] = *(s16 *)(REC(i) + 0x18) - *(s16 *)(REC(i) + 0x1A);
+                            }
+                            D_8800EF54 = p12b;
+                            func_800226C0(0x5D);
+                            func_800226C0(0x63);
+                            func_88231F24();
+                            break;
+                    }
+                    goto end;
+                }
+                func_880020CC(REC(D8(0)) + 0x10);
+                goto end;
+        }
+    }
+end:
+    func_88206460();
+}
+
+#undef CUR
+#undef DP
+#undef D8
+#undef D16
+#undef D32
+#undef PAD
+#undef IDLE_A
+#undef IDLE_B
+#undef REC
 
 /* mkdraft:func_8820A56C begin */
 extern s32 D_882346F0;
