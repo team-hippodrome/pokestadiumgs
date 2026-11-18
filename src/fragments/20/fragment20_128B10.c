@@ -1226,7 +1226,40 @@ void func_82602E14(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_128B10/func_82602FE8.s")
+typedef struct Mon_82602FE8 {
+    /* 0x00 */ u8 unk_00[0x2E];
+    /* 0x2E */ u16 hp;
+    /* 0x30 */ u8 unk_30[0x28];
+} Mon_82602FE8; // size = 0x58
+
+typedef struct Hdr_82602FE8 {
+    /* 0x00 */ s16 count;
+    /* 0x02 */ u8 unk_02[2];
+    /* 0x04 */ s8 sizes[1];
+} Hdr_82602FE8;
+
+// Returns 1 if none of the team's mons (sum of the header's group sizes) has
+// hp == 0.  The mon records overlay the same buffer as the header.
+s32 func_82602FE8(void *arg0) {
+    s32 ok;
+    s32 total;
+    s32 j;
+    s32 i;
+
+    ok = 1;
+    total = 0;
+    // FAKE: dead store; keeps the register allocation of the target.
+    j = 0;
+    for (i = 0; i < ((Hdr_82602FE8 *)arg0)->count; i++) {
+        total += ((Hdr_82602FE8 *)arg0)->sizes[i];
+    }
+    for (j = 0; j < total; j++) {
+        if (((Mon_82602FE8 *)arg0)[j].hp == 0) {
+            ok = 0;
+        }
+    }
+    return ok;
+}
 
 #include "229E0.h"
 typedef struct PokeIconList44300 PokeIconList44300;
