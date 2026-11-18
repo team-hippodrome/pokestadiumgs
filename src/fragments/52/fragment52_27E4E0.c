@@ -1748,7 +1748,10 @@ f32 func_86404724(void) {
 // Classifies the x/z position at 0x48/0x50 into a zone: corners 0-3 (each also sets one
 // flag bit at 0xC), then edges 4-7, and stores it at child + 4. When the zone changes,
 // child + 0x54 receives a new value from func_86404724.
-void func_86404824(u8 *arg0) {
+// Declared s32 with no return statement, as if the original omitted void. This function's code
+// is the same either way; func_86404D8C needs $v0 to look defined after the call (the ROM puts its
+// zone-mode pointer in $v1).
+s32 func_86404824(u8 *arg0) {
     u8 *child;
     s32 previous_zone;
 
@@ -1869,7 +1872,117 @@ void func_86404D48(u8 *arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/52/fragment52_27E4E0/func_86404D8C.s")
+// Per-frame update of the four 0x18C-byte records at D_86416C00 + 0x7D0. Pass 1 classifies
+// each record's zone, feeds it controller input (pad buttons for human players, func_86403F5C
+// otherwise) and counts frames. Pass 2 moves the record, takes the angle from the zone offset
+// in D_86409628 as a 0..1 fraction, rotated by a quarter turn per child + 8, and on a goal
+// (fraction < 0.25 with all of flags 0xF00000 set) decrements child + 0xC and calls
+// func_86403550. Pass 3 adjusts the goal counter at child + 0x44 and plays the result sounds.
+// The loops share i, which keeps loop 1's exit test as slti like the ROM.
+extern u8 D_800CE060[];
+extern f32 *D_86409628[];
+extern void func_86409378(u8 *, u8 *, s32);
+extern void func_864094BC(u8 *, u8 *, s32);
+extern void func_800279C4(s32);
+extern void func_86408CA0(s32, s32);
+extern s16 MathUtil_Atan2s(f32, f32);
+
+void func_86404D8C(void) {
+    u8 *obj;
+    u16 buttons;
+    s32 flags[4];
+    f32 *ofs;
+    s32 unused; // FAKE: an unused local; without it f's spill slot moves from sp+0x64 to sp+0x68.
+    u8 *rec;
+    u8 *pad;
+    u8 *mode;
+    s32 i;
+    f32 f;
+    u8 *state;
+
+    state = D_86416C00 + 0x7D0;
+    pad = D_800CE060;
+    for (i = 0; i < 4; i++, state += 0x18C, pad += 0x28) {
+        func_86404824(state);
+        mode = *(u8 **)(D_86416C00 + 0x70);
+        if (mode[0x2180] != 4 && (mode[0x2182] & (1 << i))) {
+            buttons = *(u16 *)(pad + 6) & 0xF00;
+            buttons |= *(u16 *)(pad + 8);
+        } else {
+            buttons = func_86403F5C(state);
+        }
+        func_86402B1C(state, buttons);
+        *(s32 *)(state + 0x1C) += 1;
+    }
+    func_86401D1C();
+
+    state = D_86416C00 + 0x7D0;
+    for (i = 0; i < 4; i++) {
+        obj = *(u8 **)(state + 0x20);
+        ofs = D_86409628[*(s32 *)(obj + 4)];
+        flags[i] = 0;
+        func_86404D48(state, obj);
+        f = MathUtil_Atan2s(ofs[0] * 23.2f + *(f32 *)(state + 0x48), -(ofs[1] * 23.2f + *(f32 *)(state + 0x50))) / 65535.0f;
+        switch (*(s32 *)(obj + 8)) {
+        case 2:
+            f -= 0.75f;
+            break;
+        case 0:
+            f -= 0.25f;
+            break;
+        case 1:
+            f -= 0.5f;
+            break;
+        }
+        if (f < 0.0f) {
+            f += 1.0f;
+        }
+        if (1.0f < f) {
+            f -= 1.0f;
+        }
+        if (f < 0.25f && (*(s32 *)(state + 0xC) & 0xF00000) == 0xF00000) {
+            *(s32 *)(obj + 0xC) -= 1;
+            *(s32 *)(state + 0xC) &= 0xFF0FFFFF;
+            func_86403550(obj);
+            flags[i] = 1;
+        }
+        if (!(*(s32 *)(state + 0xC) & 0x40000)) {
+            *(f32 *)(obj + 0x10) = (f32)(*(s32 *)(D_86416C00 + 8) - *(s32 *)(obj + 0xC)) + f;
+        }
+        func_86404A0C(state);
+        func_86401DBC(state, obj, *(f32 *)(obj + 0x18));
+        state += 0x18C;
+    }
+    func_864033AC();
+
+    state = D_86416C00 + 0x7D0;
+    for (i = 0; i < 4; i++) {
+        rec = *(u8 **)(state + 0x20);
+        if (flags[i] != 0) {
+            if (*(s32 *)(rec + 0xC) > 0) {
+                *(s32 *)(rec + 0x44) += *(s32 *)(rec + 0x14);
+                if (*(s32 *)(rec + 0x44) >= 4) {
+                    *(s32 *)(rec + 0x44) = 3;
+                }
+                func_86409378(D_86416C00 + 0xB554, state, *(s32 *)(rec + 0x44));
+            } else {
+                while (*(s32 *)(rec + 0x44) > 0) {
+                    *(s32 *)(rec + 0x44) -= 1;
+                    func_864094BC(D_86416C00 + 0xB554, state, *(s32 *)(rec + 0x44));
+                }
+            }
+            if (*(s32 *)(rec + 0x14) == 0) {
+                if (*(s32 *)(rec + 0xC) == 1) {
+                    func_800279C4(0x5F0A);
+                    func_86408CA0(0x64, 0x1E);
+                } else if (*(s32 *)(rec + 0xC) >= 2) {
+                    func_800279C4(0x5F09);
+                }
+            }
+        }
+        state += 0x18C;
+    }
+}
 #endif
 
 #ifdef VERSION_US
