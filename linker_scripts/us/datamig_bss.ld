@@ -37,10 +37,10 @@ SECTIONS
         build/src/fragments/10/fragment10_D5250.o(.bss)
     }
 
-    /* func_8F801FC4's list-cursor statics (cursor, top, page, last). */
-    .fragment77_list_cursor_bss 0x8F809FC8 (NOLOAD) : SUBALIGN(4)
+    /* func_8AF176C4's redraw counter static, in fragment 44's loaded data. */
+    .fragment44_redraw_count_bss 0x8AF27160 (NOLOAD) : SUBALIGN(4)
     {
-        build/src/fragments/77/fragment77_code.o(.bss)
+        build/src/fragments/44/fragment44_204950.o(.bss)
     }
 
     /* The random byte buffer is part of fragment 79's loaded state. */
@@ -86,11 +86,22 @@ SECTIONS
         build/src/fragments/44/fragment44_20D3A0.o(.bss)
     }
 
+    /* func_8AF25F40's zoom-step statics. */
+    .fragment44_zoom_step_bss 0x8AF3A6F8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_212740.o(.bss)
+    }
+
     /* Four-byte panel color cache. Its original loaded zero word stays in
      * the fragment data image; compiler BSS alignment has no load image. */
     .fragment11_panel_color_cache_bss 0x8160BE5C (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/11/fragment11_D9DE0.o(.bss)
+    }
+
+    .fragment77_list_cursor_bss 0x8F809FC8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/77/fragment77_code.o(.bss)
     }
 
     /* Pool-drain counter, explicitly initialized to zero. Its retail zero
@@ -220,6 +231,13 @@ SECTIONS
     .fragment19_transition_5EB0_bss 0x82305EB0 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
+    }
+
+    /* func_823053A8's header statics at the start of the fragment 19 runtime
+     * state; the loader clears this area. */
+    .fragment19_state_6AF8_bss 0x82306AF8 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/19/fragment19_124E40.o(.bss)
     }
     /* State, flags and counter at the start of fragment 24's runtime state.
      * The loader clears this area; input-section alignment is NOLOAD. */

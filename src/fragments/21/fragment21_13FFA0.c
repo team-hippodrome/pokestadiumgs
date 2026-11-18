@@ -868,7 +868,7 @@ void func_82502120(void *arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4)
 
 #ifdef VERSION_US
 extern void *D_82508680;
-s32 func_82502404(s16 *arg0, s16 *arg1, s32 arg2, u16 arg3, s32 arg4, s32 arg5, s32 arg6) {
+s32 func_82502404(s16 *arg0, s16 *arg1, s32 arg2, u16 arg3, u8 arg4, s32 arg5, s32 arg6) {
     s32 result;
     s32 enabled;
     s32 i;
@@ -932,7 +932,7 @@ extern u8 D_82508FCC[];
 extern u8 D_82508FD0[];
 extern u8 D_82508FD8[];
 extern u8 *D_82508F84;
-s32 func_82502404(s16 *arg0, s16 *arg1, s32 arg2, u16 arg3, s32 arg4, s32 arg5, s32 arg6);
+s32 func_82502404(s16 *arg0, s16 *arg1, s32 arg2, u16 arg3, u8 arg4, s32 arg5, s32 arg6);
 
 
 void func_82502528(void) {
@@ -963,7 +963,63 @@ void func_82502528(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82502634.s")
+extern s32 D_82508D08;
+extern s32 func_8006AB68(s32, s32, s32);
+extern void func_8004C4B0();
+extern void *func_8004C874(s32, s32);
+extern void func_80049C70(s32 *, s32 *, void *);
+extern s32 func_8004E0F0(s32, s32, s32);
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+
+typedef struct { u8 pad[3]; u8 id; u8 rest[0x94]; } MsgEntry;
+typedef struct { u8 count; u8 pad[3]; MsgEntry e[8]; } MsgTable;
+
+void func_82502634(s32 arg0, u16 arg1, u8 arg2, void *arg3, u8 *arg4, s32 arg5) {
+    s32 pad; // FAKE
+    s32 i;
+    s32 j;
+    s32 pad2; // FAKE
+    s32 n;
+    void *ret;
+    MsgTable *tbl;
+    MsgEntry *sub;
+    u8 *p0;
+    u8 *rp;
+    s32 a;
+    s32 b;
+
+    for (i = 0; i < arg5; i++) {
+        p0 = D_82508D10 + i * 0x3C;
+        rp = arg4 + i * 0x30;
+        func_82502404((s16 *)p0, (s16 *)(D_82508D12 + i * 0x3C), arg0, arg1, arg2, i, *(s16 *)(rp + 0x26));
+        *(void **)(p0 + 4) = func_8005049C(arg3, *(s32 *)(rp + 0x18));
+        *(void **)(p0 + 8) = func_8005049C(arg3, *(s32 *)(rp + 0x1C));
+        *(u8 **)(p0 + 0xC) = func_80004B4C(D_82508D08, func_8006AB68(0x300, *(s16 *)(rp + 0x26), *(s16 *)D_82508680));
+        if (*(u8 **)(p0 + 0xC) != NULL) {
+            n = **(u8 **)(p0 + 0xC);
+            for (j = 0; j < 8; j++) {
+                *(s32 *)(p0 + 0x1C + j * 4) = 0;
+                if (j < n) {
+                    tbl = *(MsgTable **)(p0 + 0xC);
+                    sub = &tbl->e[j];
+                    a = -1;
+                    b = -1;
+                    main_pool_push_state(0x746D7367); // 'tmsg'
+                    func_8004C4B0(sub->id + 0x4C);
+                    ret = func_8004C874(sub->id + 0x4C, 0);
+                    if (ret != NULL) {
+                        func_80049C70(&a, &b, ret);
+                    }
+                    main_pool_pop_state(0x746D7367); // 'tmsg'
+                    if (a != -1 && b != -1) {
+                        *(s32 *)(p0 + 0x1C + j * 4) = func_8004E0F0(0, a, b);
+                    }
+                }
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US

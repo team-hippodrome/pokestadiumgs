@@ -353,7 +353,86 @@ void func_86200AD4(Candidate86200AD4Obj *arg0, Candidate86200AD4Obj1 *arg1, Cand
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86200C30.s")
+extern f32 Geometry_ComputePlaneParameter(f32 *, f32 *, f32 *);
+extern s32 Geometry_TestSphereContact(f32 *, f32, f32 *, f32 *, f32 *);
+extern s32 Geometry_TestSegmentContact(f32 *, f32, f32 *, f32 *, f32 *, f32 *);
+void func_86200C30(s32 baseAddr, void *objv, void *triv, s32 *count, f32 *arg4) {
+    f32 *node = *(f32 **)((u8 *)objv + 0x20);
+    f32 p[3];
+    f32 q[3];
+    f32 d[3];
+    f32 *of = (f32 *)objv;
+    f32 *tf = (f32 *)triv;
+    f32 t;
+    f32 x;
+    f32 *v0;
+    f32 *v1;
+    f32 *v2;
+    f32 hit[3];
+    f32 dep;
+    f32 z;
+    f32 pt[3];
+    f32 n[3];
+
+#define KA (100.0f * ((*(f32 *)((u8 *)D_8620E198 + 0x64)) * 0.75f) * node[0x34 / 4])
+#define KC (node[0x34 / 4] * ((*(f32 *)((u8 *)D_8620E198 + 0x64)) * 0.75f * 100.0f))
+
+    d[0] = of[0x48 / 4] - node[0];
+    d[1] = of[0x4C / 4] - node[1];
+    d[2] = of[0x50 / 4] - node[2];
+    if (d[0] == 0.0f * d[0] && d[1] == 0.0f * d[1] && d[2] == 0.0f * d[2]) {
+        d[0] = -tf[0];
+        d[1] = -tf[1];
+        d[2] = -tf[2];
+    } else {
+        func_80035A10(d);
+    }
+    p[0] = node[0] - KA * d[0];
+    p[1] = node[1] - KA * d[1];
+    p[2] = node[2] - KA * d[2];
+    q[0] = of[0x48 / 4] + d[0] * KA - p[0];
+    q[1] = of[0x4C / 4] + d[1] * KA - p[1];
+    q[2] = of[0x50 / 4] + d[2] * KA - p[2];
+    t = Geometry_ComputePlaneParameter(tf, p, q);
+    v0 = (f32 *)((u8 *)baseAddr + ((u8 *)triv)[0x10] * 0xC);
+    v1 = (f32 *)((u8 *)baseAddr + ((u8 *)triv)[0x11] * 0xC);
+    v2 = (f32 *)((u8 *)baseAddr + ((u8 *)triv)[0x12] * 0xC);
+    x = p[0] + q[0] * t;
+    z = p[2] + q[2] * t;
+    if ((0.0f < t && t < 1.0f && Geometry_IsPointInTriangleXZ(x, z, v0[0], v0[2], v1[0], v1[2], v2[0], v2[2]))
+        || SceneCollision_TestBoundedPlaneHit(objv, tf, KC, v0, v1, v2)) {
+        pt[0] = of[0x48 / 4] - KA * tf[0];
+        pt[1] = of[0x4C / 4] - KA * tf[1];
+        pt[2] = of[0x50 / 4] - KA * tf[2];
+        n[0] = tf[0];
+        n[1] = tf[1];
+        n[2] = tf[2];
+        t = Geometry_ComputePlaneParameter(tf, pt, n);
+        func_86200AD4(objv, node, arg4, n, t);
+        *count += 1;
+    } else if (Geometry_TestSegmentContact(of + 0x48 / 4, KC, v0, v1, hit, &dep)) {
+        func_86200AD4(objv, node, arg4, hit, dep);
+        *count += 1;
+    } else if (Geometry_TestSegmentContact(of + 0x48 / 4, KC, v1, v2, hit, &dep)) {
+        func_86200AD4(objv, node, arg4, hit, dep);
+        *count += 1;
+    } else if (Geometry_TestSegmentContact(of + 0x48 / 4, KC, v2, v0, hit, &dep)) {
+        func_86200AD4(objv, node, arg4, hit, dep);
+        *count += 1;
+    } else if (Geometry_TestSphereContact(of + 0x48 / 4, KC, v0, hit, &dep)) {
+        func_86200AD4(objv, node, arg4, hit, dep);
+        *count += 1;
+    } else if (Geometry_TestSphereContact(of + 0x48 / 4, KC, v1, hit, &dep)) {
+        func_86200AD4(objv, node, arg4, hit, dep);
+        *count += 1;
+    } else if (Geometry_TestSphereContact(of + 0x48 / 4, KC, v2, hit, &dep)) {
+        func_86200AD4(objv, node, arg4, hit, dep);
+        *count += 1;
+    }
+}
+#undef KA
+#undef KC
+
 #endif
 
 void func_862012F8(void) {

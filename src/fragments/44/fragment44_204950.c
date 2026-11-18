@@ -530,5 +530,73 @@ s16 func_8AF174DC(void) {
 }
 /* mkdraft:func_8AF174DC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_204950/func_8AF176C4.s")
+extern s16 D_8AF34D66;
+extern u8 D_8AC081B0[][4];
+extern void func_8AC04418(s32, s32, s32, s32);
+extern void func_8AC0077C(s32, s32, s32, s32);
+
+void func_8AF176C4(void) {
+    // Function-scope static: retail reloads it with separate lui/lh and lui/sh.
+    static s16 sRedrawCount;
+    s32 i;
+    s32 j;
+    u8 *entry;
+    u8 *color;
+    s32 pad[2]; // FAKE: frame padding
+    s16 rows;
+    s16 y;
+    s16 right;
+    s16 bottom;
+    s16 x;
+    s16 px;
+    s16 py;
+    u8 id;
+    u8 alpha;
+    s16 pad2; // FAKE
+    s16 skip;
+    s32 pad3; // FAKE
+
+    skip = *(s16 *)(D_8AF342E8 + 0xE) / 16;
+    rows = (D_8AF34C32 + 3) / 4 - 1;
+    x = *(s16 *)(D_8AF342E8 + 0x8);
+    y = *(s16 *)(D_8AF342E8 + 0xA);
+    right = *(s16 *)(D_8AF342E8 + 0xC) + *(s16 *)(D_8AF342E8 + 0x8);
+    bottom = *(s16 *)(D_8AF342E8 + 0xE) + *(s16 *)(D_8AF342E8 + 0xA);
+    func_8AC04418(*(s16 *)(D_8AF342E8 + 0x8), y, right, bottom);
+    func_8AC0077C(x, y, right, bottom);
+    func_800498C4();
+    func_800496A4(4, 0);
+    entry = D_8AF34818[0];
+    for (i = 0; i < rows + 1; i++) {
+        for (j = 0; j < 4; j++, entry += 3) {
+            id = entry[0];
+            if (id == 0) {
+                i = skip;
+                break;
+            }
+            px = *(s16 *)(D_8AF342E8 + 0x8) + j * 130 + 6;
+            py = *(s16 *)(D_8AF342E8 + 0xA) + i * 20 - *(s16 *)&D_8AF34808 + 4;
+            if (py > y - 20 && py < bottom + 20) {
+                if (D_8AF34D66 > 0 && id == 0xFE) {
+                    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                    func_800495BC(px, py, func_8004C874(0x3B, 0xC6));
+                } else if (id != 0xFF) {
+                    alpha = (entry[2] == 0) ? 0xFF : 0xA0;
+                    color = D_8AC081B0[entry[1]];
+                    func_8004972C(color[0], color[1], color[2], alpha);
+                    func_800495BC(px, py, func_8004C874(6, id - 1));
+                }
+            }
+        }
+    }
+    func_800499EC();
+    func_8AC00738();
+    if (func_8AC0665C(&D_8AF34808, D_8AF347F6) != 0) {
+        func_8AC05F00(&D_8AF341F0);
+    }
+    if (func_8AC0672C(&D_8AF34808, D_8AF347F6) != 0) {
+        func_8AC05F00(&D_8AF34268);
+    }
+    sRedrawCount++;
+}
 #endif
