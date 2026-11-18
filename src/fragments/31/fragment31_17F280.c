@@ -992,5 +992,162 @@ void func_8820FD80(void) {
     func_80049064(0x140, 0x183, 1, func_8004C874(0x21, (*(s16 *)((u8 *)(D_88234710) + (8)))));
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_17F280/func_8820FDF8.s")
+extern void func_88206668(void);
+extern s32 D_880068B8;
+extern s32 D_88234714;
+extern u8 *D_8800ECC4;
+extern u8 *D_8800ECC0;
+extern Gfx *D_800D0510;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern Gfx D_80094DE0[];
+extern Gfx D_80094E00[];
+extern u8 D_88005FA0[];
+extern s32 D_882345C8;
+extern s16 D_8800EF58;
+extern s32 D_88234718;
+extern u8 D_8800686C;
+extern u8 D_882337E0[];
+extern s32 func_8004CA10(u8 *);
+extern void func_88002C2C(u8, u8, u8);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern void func_8822C4A0(void);
+extern void func_800499EC(void);
+extern void func_88206714(u8 *, u8);
+extern void func_88207D14(s32);
+extern void func_8820ED44(u8, u8);
+extern void func_88005C7C(void);
+extern void func_88206CC0(u8 *, s32, s32, s32, s32, s32, void *);
+extern void func_8820FD58(void);
+extern void func_8820E6A4(void);
+extern void func_88000808(u8, s32, s32, s32, s32);
+extern void func_880006BC(u8 *);
+extern void func_80006F70(Gfx **, s32, s32, s32, s32);
+extern void func_8820E9BC(void);
+extern void func_882027F0(u8 *, s32, s32, s32, s32, s32, s32);
+extern void func_88005F08(void);
+extern s32 func_880032C4(void);
+extern void func_88207D80(u8, s32, s16, u8 *, u8 *, s32);
+extern void func_8820FD80(void);
+
+void func_8820FDF8(void) {
+    u32 i;
+    u32 j;
+    s32 x;
+    s32 types[2];
+
+    if (D_880068B8 == 0) {
+        if (D_88234714 != 0) {
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            func_8004D1FC(D_8800ECC4);
+            func_88002C2C(0xDC, 0xDC, 0xB4);
+            GfxRect_DrawTextured(0x31, 0x17A, 0x21C, 0x3F, 0, 0,
+                                 (s32)(1024.0f * (f32)func_8004CA10(D_8800ECC4) / 540.0f +
+                                       (((f32)func_8004CA10(D_8800ECC4) * 1024.0f / 540.0f > 0.0f) ? 0.5f : -0.5f)),
+                                 0, 0);
+            gSPDisplayList(D_800D0510++, D_80094F50);
+            func_800498C4();
+            func_800496A4(8, 1);
+            func_8004989C(0x1A);
+            func_8822C4A0();
+            func_800499EC();
+        }
+    } else if (*(s32 *)((u8 *)D_88234564 + 0x1C) != 2) {
+        func_88206668();
+    } else if (*(s32 *)((u8 *)D_88234564 + 0xA4) != 2) {
+        func_88206714(D_882337E0, *(u8 *)D_88234710);
+        func_800498C4();
+        func_8820FD80();
+        func_800499EC();
+    } else {
+        u8 *str;
+
+    func_88207D14((s32)D_88234710 + 0xAC);
+    for (i = 0; i < 2; i++) {
+        if (*(s16 *)((u8 *)D_88234710 + i * 0x2C + 0x36) == 0) {
+            types[i] = 8;
+        } else {
+            types[i] = 9;
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    for (i = 0; i < 2; i++) {
+        func_8820ED44(i, types[i]);
+    }
+    func_88005C7C();
+    func_88206CC0(D_882337E0, *(u8 *)D_88234710, *(s32 *)((u8 *)D_88234710 + 4), *(s16 *)((u8 *)D_88234710 + 8),
+                  (s32)((u8 *)D_88234710 + 0x14), (s32)((u8 *)D_88234710 + 0x40), func_8820FD58);
+    if (*(s32 *)((u8 *)D_88234710 + 4) == 0) {
+        func_8820E6A4();
+    }
+    gSPDisplayList(D_800D0510++, D_80094E00);
+    for (i = 0, j = 0; j < 2; j++) {
+        x = (j == 0) ? 0x46 : 0x238;
+        switch (*(s32 *)((u8 *)D_88234710 + j * 4 + 0xC)) {
+        case 0:
+        case 1:
+            func_88000808(D_8800686C, (s16)x, 0x50, 1, 0x200000);
+            break;
+        default:
+            func_8004D19C(x, 0x50, D_882345C8, 1, 0x200000);
+            break;
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_880006BC(D_88005FA0);
+    func_800496A4(4, 1);
+    j = 0;
+    for (i = 0; i < 2; i++) {
+        switch (*(s32 *)((u8 *)D_88234710 + j * 4 + 0xC)) {
+            case 0:
+                str = (u8 *)func_8004C874(0x21, func_8800005C() ? 0x11 : 0x12);
+                break;
+            case 1:
+                str = (u8 *)D_88234710 + 0x6C;
+                break;
+            case 2:
+                str = (u8 *)func_8004C874(0x21, 0x14);
+                break;
+            case 3:
+                str = (u8 *)func_8004C874(0x21, 0x15);
+                break;
+        }
+        switch (i) {
+            case 0:
+                func_80049064(0xA9, 0x53, 1, (s32)str);
+                break;
+            case 1:
+                func_80049064(0x1D5, 0x53, 1, (s32)str);
+                break;
+        }
+        j++;
+    }
+    func_80006F70(&D_800D0510, 0x34, 0x7D, 0xDF, 0xD7);
+    func_8820F7EC(0, types[0]);
+    func_80006F70(&D_800D0510, 0x16B, 0x7D, 0xDF, 0xD7);
+    func_8820F7EC(1, types[1]);
+    func_80006F70(&D_800D0510, 0x2C, 0x48, 0x229, 0x17F);
+    func_880006E0(D_88005FA0);
+    if (*(s32 *)((u8 *)D_88234710 + 4) != 0) {
+        func_8820FD80();
+    } else {
+        func_8820E9BC();
+        if (D_8800EF58 == 0 && ((F31SelectionState *)D_88234710)->enabled[*(u8 *)D_88234710] == 0
+            && func_88A007BC(((F31SelectionState *)D_88234710)->list[*(u8 *)D_88234710]) != 0) {
+            func_800496A4(8, 2);
+            func_8004989C(0x1A);
+            func_882027F0((u8 *)func_8820C040(1, *(u8 *)D_88234710), 0x183, 0x19D, 0xC8, 0x168, 0x1CC, 0x17C);
+        }
+    }
+    func_88005F08();
+    func_800499EC();
+    func_88207D80(*(u8 *)D_88234710, *(s32 *)((u8 *)D_88234710 + 4), *(s16 *)((u8 *)D_88234710 + 8),
+                  (u8 *)D_88234710 + 0x14, (u8 *)D_88234710 + 0x40, !func_880032C4() || D_88234718 == 2);
+    }
+}
+
 #endif
