@@ -401,10 +401,14 @@ f32 func_8130FF70(f32 arg0) {
 #endif
 
 #ifdef VERSION_US
-void func_8130FFE0(f32 arg0, f32 arg1) {
+typedef struct {
+    f32 angles[4];
+} Fragment14Angles;
+
+f32 func_8130FFE0(f32 arg0, f32 arg1) {
     f32 temp[2];
     temp[0] = func_8130FF70(arg1);
-    func_8130FF70(temp[0] - func_8130FF70(arg0));
+    return func_8130FF70(temp[0] - func_8130FF70(arg0));
 }
 #endif
 
@@ -450,7 +454,79 @@ f64 MathUtil_Atan2d_fragment14(f64 arg0, f64 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_1077C0/func_813102A4.s")
+s32 func_813102A4(u8 *arg0, s32 arg1, s32 arg2) {
+    f32 diff_angle;
+    s32 index;
+    s32 s5;
+    s32 i;
+    f32 best_angle;
+    f32 best_dist;
+    f32 dx;
+    f32 dy;
+    Fragment14Angles angles;
+
+    index = arg1;
+    while (1) {
+        s16 next = ((const s16 (*)[10])D_81312898)[index][arg2 + 6];
+        if (next < 0) {
+            break;
+        }
+        index = next;
+        if (func_8130F970(arg0, (unsigned)next) != 0) {
+            break;
+        }
+    }
+
+    i = func_8130F970(arg0, index);
+    s5 = arg1;
+    if (i == 0) {
+        index = arg1;
+    }
+
+    if (index == arg1) {
+        best_angle = 100.0f;
+        best_dist = 10000.0f;
+        for (i = 0; i < 7; i++) {
+            angles = *(Fragment14Angles *)D_81312948;
+            if (i == arg1) {
+                continue;
+            }
+            if (func_8130F970(arg0, i) == 0) {
+                continue;
+            }
+            dx = (f32)(((const s16 (*)[10])D_81312898)[i][4] - ((const s16 (*)[10])D_81312898)[arg1][4]);
+            dy = (f32)(((const s16 (*)[10])D_81312898)[i][5] - ((const s16 (*)[10])D_81312898)[arg1][5]);
+            diff_angle = (func_8130FFE0(angles.angles[arg2], func_8130FF70((f32)MathUtil_Atan2d_fragment14(dy, dx))) > 0.0f) ?
+                          func_8130FFE0(angles.angles[arg2], func_8130FF70((f32)MathUtil_Atan2d_fragment14(dy, dx))) :
+                         -func_8130FFE0(angles.angles[arg2], func_8130FF70((f32)MathUtil_Atan2d_fragment14(dy, dx)));
+            if (((diff_angle > best_angle) ? (diff_angle - best_angle) : -(diff_angle - best_angle)) < 0.0001f) {
+                dx = sqrtf(dx * dx + dy * dy);
+                if (dx < best_dist) {
+                    best_dist = dx;
+                    best_angle = diff_angle;
+                    s5 = i;
+                }
+            } else {
+                if (index) {
+                }
+                if (diff_angle < best_angle) {
+                    best_angle = diff_angle;
+                    s5 = i;
+                    best_dist = sqrtf(dx * dx + dy * dy);
+                }
+            }
+            if (i) {
+            }
+        }
+        if (best_angle < 1.5707964f) {
+            index = s5;
+        }
+        if (s5) {
+        }
+    }
+
+    return index;
+}
 #endif
 
 #ifdef VERSION_US
