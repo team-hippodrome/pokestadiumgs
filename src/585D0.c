@@ -884,7 +884,67 @@ void func_800596D0(s32 arg0, u32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/585D0/func_8005989C.s")
+extern u8 D_800972E0[12];
+extern u8 D_800972EC[23][2];
+extern u8 D_8009731C[24][2];
+extern u8 D_8009734C[2];
+extern u8 D_80097350[2];
+
+void func_8005989C(s32 arg0) {
+    s32 i;
+    s32 a;
+    s32 b;
+    Arg1_80057F58 data = *(Arg1_80057F58 *)&D_80128570[arg0 * 112 + 0x60];
+
+    *(u32 *)&D_80128570[arg0 * 112] &= ~0x100;
+    switch (func_8005D92C(arg0)) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        b = data.p[0x8A];
+        for (i = 0; i < 12; i++) {
+            if (b == D_800972E0[i]) {
+                *(u32 *)&D_80128570[arg0 * 112] |= 0x100;
+                break;
+            }
+        }
+        break;
+    case 5:
+    case 6:
+        b = data.p[0x869];
+        a = data.p[0x868];
+        if (a == D_8009734C[0] && b == D_8009734C[1]) {
+            *(u32 *)&D_80128570[arg0 * 112] |= 0x10000;
+        } else if (a == D_80097350[0] && b == D_80097350[1]) {
+            *(u32 *)&D_80128570[arg0 * 112] |= 0x20100;
+        } else {
+            for (i = 0; i < 23; i++) {
+                if (a == D_800972EC[i][0] && b == D_800972EC[i][1]) {
+                    *(u32 *)&D_80128570[arg0 * 112] |= 0x100;
+                    break;
+                }
+            }
+        }
+        break;
+    case 7:
+        b = data.p[0x844];
+        a = data.p[0x843];
+        if (a == D_8009734C[0] && b == D_8009734C[1]) {
+            *(u32 *)&D_80128570[arg0 * 112] |= 0x10000;
+        } else if (a == D_80097350[0] && b == D_80097350[1]) {
+            *(u32 *)&D_80128570[arg0 * 112] |= 0x20100;
+        } else {
+            for (i = 0; i < 24; i++) {
+                if (a == D_8009731C[i][0] && b == D_8009731C[i][1]) {
+                    *(u32 *)&D_80128570[arg0 * 112] |= 0x100;
+                    break;
+                }
+            }
+        }
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1545,7 +1605,7 @@ void func_8005ACE8(s32 arg0) {
 #ifdef VERSION_US
 extern s8 GbSave_LoadMainSave(s32);
 extern s32 func_8005D964(s32);
-extern s32 func_8005989C(s32);
+extern void func_8005989C(s32);
 extern void func_8005ACE8(s32);
 extern u8 D_80128570[];
 void func_8005AD58(s32 arg0) {
