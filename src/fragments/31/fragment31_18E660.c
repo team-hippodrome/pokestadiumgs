@@ -3,7 +3,12 @@
 #ifdef VERSION_US
 extern s32 func_8821BA34(u16, void *);
 
-typedef struct unk_D_88234758 { u16 unk_00; u8 unk_02; u8 unk_03; u8 unk_04[3]; s8 unk_07[2]; } unk_D_88234758;
+typedef struct unk_D_88234758 { u16 unk_00; u8 unk_02; u8 unk_03; u8 unk_04[3]; s8 unk_07[2]; u8 unk_09[4]; } unk_D_88234758;
+extern u8 func_8006397C(u8), func_800639C0(u8);
+extern s32 func_80064474(u8, u16);
+extern s32 func_8006456C(s32), func_80063754(s32);
+extern s32 func_80071CD0(s32, s32);
+extern s32 func_88000770(u8 *);
 extern u8 D_88234761;
 extern u8 D_88234762;
 extern u8 D_88234763;
@@ -181,8 +186,132 @@ u32 func_8821B9EC(s32 arg0) {
     return -1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_18E660/func_8821BA34.s")
-
+s32 func_8821BA34(u16 arg0, void *arg1) {
+    u16 result = 0;
+    u8 count;
+    u8 species;
+    u8 *state;
+    s32 value;
+    s8 selected_types[2];
+    s8 types[2];
+    u32 i;
+    u32 j;
+    s16 match;
+    s16 sought;
+    switch (arg0) {
+    case 1:
+        if (!(((u8 *)arg1)[30] & 1) && ((u8 *)arg1)[0] != 252) {
+            state = (u8 *)&D_88234758;
+            match = state[2];
+            value = state[3];
+            result = ((u8 *)arg1)[29] >= MIN(match, value) && ((u8 *)arg1)[29] <= MAX(match, value);
+        }
+        break;
+    case 2:
+        if (!(((u8 *)arg1)[30] & 1)) {
+            state = (u8 *)&D_88234758;
+            for (i = 0; i < 4; i++) if (((unk_D_88234758 *)state)->unk_09[i] == 0) break;
+            count = i;
+            result = 1;
+            for (i = 0; i != count; i++) {
+                j = 0;
+                sought = ((unk_D_88234758 *)state)->unk_09[i];
+                for (; j < 4; j++) if (sought == ((u8 *)arg1)[2 + j]) break;
+                if (j == 4) { result = 0; break; }
+            }
+        }
+        break;
+    case 4:
+        if (!(((u8 *)arg1)[30] & 1) && ((u8 *)arg1)[0] != 252) {
+            types[0] = func_8006397C(((u8 *)arg1)[0]);
+            types[1] = func_800639C0(((u8 *)arg1)[0]);
+            state = (u8 *)&D_88234758;
+            for (i = 0; i < 2; i++) if (((unk_D_88234758 *)state)->unk_07[i] == -1) break;
+            count = i;
+            result = 1;
+            for (i = 0; i != count; i++) {
+                sought = ((unk_D_88234758 *)state)->unk_07[i];
+                for (j = 0; j < 2; j++) if (sought == types[j]) break;
+                if (j == 2) { result = 0; break; }
+            }
+        }
+        break;
+    case 8:
+        if (!(((u8 *)arg1)[30] & 1) && ((u8 *)arg1)[0] != 252) {
+            state = (u8 *)&D_88234758;
+            selected_types[0] = ((s8 *)state)[5];
+            selected_types[1] = ((s8 *)state)[6];
+            types[0] = func_8006397C(((u8 *)arg1)[0]);
+            types[1] = func_800639C0(((u8 *)arg1)[0]);
+            result = (selected_types[0] == types[0] && selected_types[1] == types[1]) ||
+                     (selected_types[0] == types[1] && selected_types[1] == types[0]);
+        }
+        break;
+    case 16:
+        state = (u8 *)&D_88234758;
+        match = state[4];
+        if (match == 253) result = (((u8 *)arg1)[30] & 1) != 0;
+        else {
+            result = ((((u8 *)arg1)[0] ^ match) == 0) && !((((u8 *)arg1)[30] & 1) != 0);
+        }
+        break;
+    case 32:
+        if (!(((u8 *)arg1)[30] & 1)) {
+            match = ((u8 *)arg1)[0];
+            if (match != 252) {
+                switch (*(s32 *)((u8 *)&D_88234758 + 24)) {
+                case 0: case 1: case 2:
+                    state = (u8 *)D_882347C4->references[*(s32 *)((u8 *)&D_88234758 + 24)];
+                    break;
+                default:
+                    state = D_882347C4->entries[*(s32 *)((u8 *)&D_88234758 + 24) - 3];
+                    break;
+                }
+                result = func_80071CD0((s32)(state + 20), match - 1);
+            }
+        }
+        break;
+    case 64:
+        state = (u8 *)&D_88234758;
+        if ((((u8 *)arg1)[30] & 1) || ((u8 *)arg1)[0] == 252) {
+            if (((volatile u8 *)state)[13] == 0) result = 1;
+        } else {
+            value = func_80064474(((u8 *)arg1)[0], *(u16 *)((u8 *)arg1 + 22));
+            state = (u8 *)&D_88234758;
+            result = (state[13] ^ value) == 0;
+        }
+        break;
+    case 128:
+        if (!(((u8 *)arg1)[30] & 1)) result = func_8006456C(*(u16 *)((u8 *)arg1 + 22));
+        break;
+    case 256:
+        if (!(((u8 *)arg1)[30] & 1)) {
+            switch (*(s32 *)((u8 *)&D_88234758 + 16)) {
+            case 1: result = func_8006461C(((u8 *)arg1)[32]) == 1; break;
+            case 2: result = func_8006461C(((u8 *)arg1)[32]) == 2; break;
+            }
+        }
+        break;
+    case 512:
+        switch (*(s32 *)((u8 *)&D_88234758 + 20)) {
+        case 0:
+            if (!(((u8 *)arg1)[30] & 1) && ((u8 *)arg1)[0] != 252) result = func_880007B0(arg1);
+            break;
+        case 1:
+            species = ((u8 *)arg1)[0];
+            if (species > 0 && species < 152 && func_88000770(arg1) && !(((u8 *)arg1)[30] & 1)) result = 1;
+            break;
+        case 2:
+            if ((((u8 *)arg1)[30] & 1) || ((u8 *)arg1)[0] >= 152) result = 1;
+            break;
+        }
+        break;
+    case 1024:
+        if (!(((u8 *)arg1)[30] & 1)) result = func_80063754(((u8 *)arg1)[1]);
+        break;
+    }
+    return result;
+}
 // Compact the current pointer list in place and return the number of matching entries.
 u16 StorageList_FilterPointers(u16 filter, u16 count) {
     u8 **source = (u8 **)D_88234750;

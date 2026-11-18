@@ -452,7 +452,84 @@ void func_82A00BF4(void)
   }
   while (var_s0 != 4);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/23/fragment23_code/func_82A00C84.s")
+extern u8 D_82A01A18[];
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(s32, s32 *);
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern u8 *func_8004EB58(void *, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *func_8005049C(void *, s32);
+extern void func_8004E308(void *, void *, s32);
+extern void func_8005053C(void *, u8 *);
+typedef struct Unk82A01990 {
+    /* 0x00 */ s32 sel;
+    /* 0x04 */ s32 count;
+    /* 0x08 */ s16 cursorX;
+    /* 0x0A */ s16 cursorY;
+    /* 0x0C */ s16 points[4][2];
+    /* 0x1C */ s32 modelA;
+    /* 0x20 */ s32 modelB;
+    /* 0x24 */ s32 modelC;
+    /* 0x28 */ u8 *sceneA;
+    /* 0x2C */ u8 *sceneB;
+    /* 0x30 */ u8 *sceneC;
+} Unk82A01990; // size = 0x34
+
+// Loads the three scene models and binds their node callbacks. The setup state is a
+// static of this function at 0x82A01990 (pinned in datamig_bss.ld); the other
+// functions in this file reach the same words through D_82A01990..D_82A019C0.
+void func_82A00C84(s32 arg0, s32 arg1) {
+    s32 size;
+    void *pool;
+    void *node;
+    s32 i;
+    static Unk82A01990 sState;
+
+    func_82A00BF4();
+    sState.sel = arg0;
+    sState.count = arg1;
+    sState.cursorX = -1;
+    sState.cursorY = -1;
+    if ((sState.modelA = func_8004DC6C(0x24)) != 0) {
+        func_8004DCFC(sState.modelA, 0);
+    }
+    if ((sState.modelB = func_8004DC6C(0xD)) != 0) {
+        func_8004DCFC(sState.modelB, 0);
+    }
+    if ((sState.modelC = func_8004DC6C(0x14)) != 0) {
+        func_8004DCFC(sState.modelC, 0);
+    }
+    size = main_pool_get_available();
+    pool = MainPool_AllocState(size, 0);
+    sState.sceneA = func_8004EB58(pool, sState.modelA);
+    sState.sceneB = func_8004EB58(pool, sState.modelB);
+    sState.sceneC = func_8004EB58(pool, sState.modelC);
+    MainPool_FinalizeAllocation(pool);
+    func_8004E308(func_8005049C(sState.sceneA, 0x4D534730), func_82A0089C, 0); // 'MSG0'
+    node = func_8005049C(sState.sceneB, 0x45594553); // 'EYES'
+    func_8004E308(node, func_82A00178, 0);
+    func_8005053C(node, D_82A01A18);
+    func_80050578((u8 *)node, D_82A01898[0]);
+    for (i = 0; i < 4; i++) {
+        func_8004E308(func_8005049C(sState.sceneC, 0x504C4731 + i), func_82A007A0, i); // 'PLG1'
+        func_8004E308(func_8005049C(sState.sceneC, 0x434E5431 + i), func_82A005D8, i); // 'CNT1'
+        func_8004E308(func_8005049C(sState.sceneC, 0x53445731 + i), func_82A0083C, i); // 'SDW1'
+        func_8004E308(func_8005049C(sState.sceneC, 0x47425531 + i), func_82A00ABC, i); // 'GBU1'
+    }
+    func_8004E308(func_8005049C(sState.sceneC, 0x57494E30), func_82A00784, 0); // 'WIN0'
+    func_8004E308(func_8005049C(sState.sceneC, 0x4D534730), func_82A00784, 0); // 'MSG0'
+    func_8004E308(func_8005049C(sState.sceneC, 0x57494E31), func_82A00784, 0); // 'WIN1'
+    func_8004E308(func_8005049C(sState.sceneC, 0x4D534731), func_82A00784, 0); // 'MSG1'
+    func_8004E308(func_8005049C(sState.sceneC, 0x4142544E), func_82A00784, 0); // 'ABTN'
+    for (i = 0; i < 4; i++) {
+        func_8004E308(func_8005049C(sState.sceneC, 0x47424431 + i), func_82A00784, 0); // 'GBD1'
+        func_8004E308(func_8005049C(sState.sceneC, 0x4E414D30 + i), func_82A00784, 0); // 'NAM0'
+        func_8004E308(func_8005049C(sState.sceneC, 0x49443030 + i), func_82A00784, 0); // 'ID00'
+        func_8004E308(func_8005049C(sState.sceneC, 0x45525230 + i), func_82A00784, 0); // 'ERR0'
+        func_8004E308(func_8005049C(sState.sceneC, 0x57415030 + i), func_82A00784, 0); // 'WAP0'
+    }
+}
 
 extern Gfx *D_800D0510;
 extern u8 D_82A018B8[];
