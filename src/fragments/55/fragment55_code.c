@@ -481,7 +481,117 @@ s32 func_8670122C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867014C0.s")
+// Steering context handed to func_867014C0 / func_86701874; they set done when the target slot is reached.
+typedef struct { f32 x; f32 z; f32 tx; f32 spd; s32 slot; s32 done; } Ctx86701C6C;
+// One 0x38-byte record of D_86728328 per player.
+typedef struct {
+    f32 unk00; f32 unk04; f32 unk08; u8 pad0C[4]; s32 unk10; u8 pad14[4];
+    s32 unk18; s32 unk1C; s32 unk20; s32 unk24; u8 pad28[4]; s32 unk2C; s32 unk30; s32 unk34;
+} Ent86728328;
+#define ENT_86701C6C(i) (((Ent86728328 *)&D_86728328)[i])
+extern f32 D_8670C894;
+
+// Steers player idx left/right around rows ahead of it (unk18 = -1/1), then sets unk1C/unk24 toward tx.
+// scale = 0 is assigned after the unk18 store so IDO schedules the -1 constant first, as in retail.
+void func_867014C0(s32 idx, Ctx86701C6C *ctx) {
+    f32 x = ctx->x;
+    f32 tx = ctx->tx;
+    f32 z = ctx->z;
+    f32 spd = ctx->spd;
+    s32 slot = ctx->slot;
+    Row86706A30 *row;
+    s32 left;
+    s32 right;
+    s32 i;
+    s32 j;
+    s32 type;
+    s32 scale;
+    f32 base;
+    f32 target;
+    f32 dist;
+
+    if (x <= tx) {
+        ENT_86701C6C(idx).unk18 = 1;
+    }
+    if (tx < x) {
+        ENT_86701C6C(idx).unk18 = -1;
+    }
+    left = 0;
+    right = 0;
+    for (i = 1; i <= ENT_86701C6C(idx).unk10; i++) {
+        j = slot + i;
+        if (j >= 60) {
+            j -= 60;
+        }
+        row = &D_86711760[idx][j];
+        if (row->z < z + 80.0f) {
+            if (row->x < tx) {
+                left++;
+            } else {
+                right++;
+            }
+        }
+    }
+    if (right >= left) {
+        ENT_86701C6C(idx).unk18 = -1;
+    } else if (right < left) {
+        ENT_86701C6C(idx).unk18 = 1;
+    }
+    if (tx + 100.0f <= x) {
+        ENT_86701C6C(idx).unk18 = 1;
+    }
+    if (x < tx - 100.0f) {
+        ENT_86701C6C(idx).unk18 = -1;
+    }
+    if (*(f32 *)((u8 *)&D_86728408[idx] + 0x1C) + D_8670C894 - 40.0f <= x + spd) {
+        ENT_86701C6C(idx).unk18 = -1;
+    }
+    if (x - spd < *(f32 *)((u8 *)&D_86728408[idx] + 0x1C) + 40.0f) {
+        ENT_86701C6C(idx).unk18 = 1;
+    }
+    scale = 1;
+    if (10 == D_8670C984[idx][slot][0]) {
+        if (tx < x) {
+            ENT_86701C6C(idx).unk18 = 1;
+        } else {
+            ENT_86701C6C(idx).unk18 = -1;
+        }
+        scale = 0;
+    }
+    if (ENT_86701C6C(idx).unk18 == -1) {
+        target = (-spd - ENT_86701C6C(idx).unk04) * (f32)scale + x;
+        if (target < tx) {
+            dist = -(target - tx);
+        } else {
+            dist = target - tx;
+        }
+        ENT_86701C6C(idx).unk1C = ENT_86701C6C(idx).unk08 * -dist;
+    } else {
+        target = (ENT_86701C6C(idx).unk04 + spd) * (f32)scale + x;
+        if (tx < target) {
+            dist = -(tx - target);
+        } else {
+            dist = tx - target;
+        }
+        ENT_86701C6C(idx).unk1C = ENT_86701C6C(idx).unk08 * dist;
+    }
+    ENT_86701C6C(idx).unk24 = ENT_86701C6C(idx).unk18;
+    if (ENT_86701C6C(idx).unk18 == 1) {
+        if (10 == D_8670C984[idx][slot][0]) {
+            if (x + 10.0f < tx) {
+                ctx->done = 1;
+            } else if (ENT_86701C6C(idx).unk04 + (x + spd) < tx) {
+                ctx->done = 1;
+            }
+        }
+    } else if (10 == D_8670C984[idx][slot][0]) {
+        if (tx < x - 10.0f) {
+            ctx->done = 1;
+        } else if (tx < (x - spd) - ENT_86701C6C(idx).unk04) {
+            ctx->done = 1;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -489,11 +599,6 @@ s32 func_8670122C(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-// Steering context handed to func_867014C0 / func_86701874; they set done when the target slot is reached.
-typedef struct { f32 x; f32 z; f32 tx; f32 spd; s32 slot; s32 done; } Ctx86701C6C;
-// One 0x38-byte record of D_86728328 per player.
-typedef struct { f32 unk00; u8 pad04[0x14]; s32 unk18; s32 unk1C; s32 unk20; u8 pad24[8]; s32 unk2C; s32 unk30; s32 unk34; } Ent86728328;
-#define ENT_86701C6C(i) (((Ent86728328 *)&D_86728328)[i])
 extern Ctx86701C6C D_8670C838;
 extern f32 D_8670BAE8[];
 extern f32 D_8670B3CC;
