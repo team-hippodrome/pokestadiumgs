@@ -37,6 +37,15 @@ SECTIONS
         build/src/fragments/58/fragment58_code.o(.bss)
     }
 
+    /* Fragment 22's menu record D_827034E0 (0x2B4 bytes), in the fragment's
+     * loaded data. func_827013F0 needs it defined in fragment22_14B090.c so
+     * as1 folds the shared `lui $at` of its field stores. It overlaps the tail
+     * of .fragment22_preview_state; both are NOLOAD views of the same data. */
+    .fragment22_menu_bss 0x827034E0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/22/fragment22_14B090.o(.bss)
+    }
+
     /* Fragment 82's deck menu state header (func_82D00590), in the
      * fragment's loaded data at D_82D07428. */
     .fragment82_deck_menu_state_data 0x82D07428 (NOLOAD) : SUBALIGN(4)
