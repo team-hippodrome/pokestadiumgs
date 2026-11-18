@@ -2884,7 +2884,40 @@ void func_8413C3A8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3A4030/func_8413C500.s")
+void func_8413C500(void) {
+    u8 cnt[2];
+    f32 sum[2];
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < 2; i++) {
+        cnt[i] = 0;
+        sum[i] = 0.0f;
+        if (((u8 *)D_841951F8[i])[8] > 0) {
+            for (j = 0; j < ((u8 *)D_841951F8[i])[8]; j++) {
+                u8 *r = ((u8 *)D_841951F8[i]) + 0x18 + j * 0x58;
+                if (r[0] != 0) {
+                    if (*(u16 *)(r + 0x26) > 0) {
+                        cnt[i]++;
+                    }
+                    sum[i] += (f32)(u32)*(u16 *)(r + 0x26) / (f32)(u32)*(u16 *)(r + 0x28);
+                }
+            }
+            sum[i] /= (f32)(u32)((u8 *)D_841951F8[i])[8];
+        }
+    }
+    if (cnt[1] < cnt[0]) {
+        ((u8 *)D_841951F0)[0x9C6] = 0;
+    } else if (cnt[0] < cnt[1]) {
+        ((u8 *)D_841951F0)[0x9C6] = 1;
+    } else if (sum[1] < sum[0]) {
+        ((u8 *)D_841951F0)[0x9C6] = 0;
+    } else if (sum[0] < sum[1]) {
+        ((u8 *)D_841951F0)[0x9C6] = 1;
+    } else {
+        ((u8 *)D_841951F0)[0x9C6] = 2;
+    }
+}
 #endif
 
 #ifdef VERSION_US
