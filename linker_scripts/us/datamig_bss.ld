@@ -233,6 +233,12 @@ SECTIONS
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
     }
+    /* fragment2's on-screen blink counter (a function-scope static in
+     * func_8190037C), past the end of the fragment's loaded data. */
+    .fragment2_blink_bss 0x81900DFC (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/2/fragment2_code.o(.bss)
+    }
 
     /* func_823053A8's header statics at the start of the fragment 19 runtime
      * state; the loader clears this area. */
@@ -421,6 +427,9 @@ ASSERT(SIZEOF(.fragment23_setup_state_bss) == 64,
 
 ASSERT(SIZEOF(.fragment23_text_origin_data) == 16,
        "fragment23 text origin must retain its compiler section footprint");
+
+ASSERT(SIZEOF(.fragment2_blink_bss) == 16,
+       "fragment2 blink counter must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment24_state_12450_bss) == 48,
        "fragment24 state and parameter prefix must retain its compiler section footprint");
