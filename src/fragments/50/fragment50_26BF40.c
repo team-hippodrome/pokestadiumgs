@@ -469,5 +469,58 @@ void SceneModel_InitPlayers(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_26BF40/func_86206508.s")
+#include "color_adjustment.h"
+extern void *MainPool_AllocState(s32, s32);
+extern s32 main_pool_get_available(void);
+extern void MainPool_FinalizeAllocation(void *);
+extern void *MainPool_AllocAligned(void *, u32, s32);
+extern void func_8004DDF4(s32);
+extern ColorAdjustment func_87F0AD50(s32, s32, s32);
+extern s32 func_8004E018(void *, s32, s32, ColorAdjustment);
+extern s32 func_8004DFEC(void *, s32, ColorAdjustment);
+extern void func_87F024F4(void *, void *, s32);
+
+#define SCENE ((u8 *)(u32)D_8620E198)
+
+void func_86206508(void) {
+    void *pool;
+    s32 i;
+    s32 j;
+    u8 *p;
+
+    for (i = 0; i < 4; i++) {
+        switch ((*(u8 **)(*(u8 **)(SCENE + 0xF4) + i * 0x6C0 + 0xC))[4]) {
+            case 0xA2:
+                func_8004DDF4(0x8E);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                for (j = 0; j < 2; j++) {
+                    ((s32 (*)[2])(SCENE + 0x14C))[i][j] = func_8004E018(pool, 0x8E, j, func_87F0AD50(*(s32 *)(SCENE + 0xF4), 3, i));
+                }
+                MainPool_FinalizeAllocation(pool);
+                break;
+            case 0xCB:
+                func_8004DDF4(0xDF);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                ((s32 (*)[2])(SCENE + 0x14C))[i][0] = func_8004DFEC(pool, 0xDF, func_87F0AD50(*(s32 *)(SCENE + 0xF4), 3, i));
+                ((s32 (*)[2])(SCENE + 0x14C))[i][1] = ((s32 (*)[2])(SCENE + 0x14C))[i][0];
+                MainPool_FinalizeAllocation(pool);
+                break;
+            default:
+                for (j = 0; j < 2; j++) {
+                    ((s32 (*)[2])(SCENE + 0x14C))[i][j] = 0;
+                }
+                break;
+        }
+    }
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    p = MainPool_AllocAligned(pool, 0x70, 4);
+    MainPool_FinalizeAllocation(pool);
+    func_87F024F4(SCENE + 0x72264, SCENE + 0x72278, 4);
+    for (j = 0; j < 4; j++) {
+        ((s32 *)p)[j * 7] = j;
+        *(u8 **)(SCENE + j * 0x18C + 0x72298) = p + j * 0x1C;
+    }
+}
+
+#undef SCENE
 #endif

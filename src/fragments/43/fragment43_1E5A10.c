@@ -1533,7 +1533,33 @@ s32 Fragment43_FillRectangleCallback(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC03AFC.s")
+typedef struct { u8 r, g, b, a; } F43AFCColor;
+extern u8 D_8AC07D90[];
+s32 func_8AC03AFC(s32 arg0, void *arg1) {
+    s16 pos[2];
+    s32 pad; // FAKE
+    s32 unused; // FAKE
+    if ((arg0 != 0) && (arg0 == 1)) {
+        func_800504BC(pos);
+        {
+            s16 x;
+            F43AFCColor color;
+            s16 y;
+            s16 w;
+            s16 h;
+            x = *(s16 *)((u8 *)arg1 + 8) + pos[0];
+            y = *(s16 *)((u8 *)arg1 + 0xA) + pos[1];
+            w = *(s16 *)((u8 *)arg1 + 0xC);
+            h = *(s16 *)((u8 *)arg1 + 0xE);
+            color = *(F43AFCColor *)((u8 *)arg1 + 0x28);
+            gSPDisplayList(D_800D0510++, D_8AC07D90);
+            gDPSetPrimColor(D_800D0510++, 0, 0, color.r, color.g, color.b, color.a);
+            unused = x | y; // FAKE
+            gDPFillRectangle(D_800D0510++, x, y, x + w, y + h);
+        }
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US

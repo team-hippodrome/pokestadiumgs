@@ -43,6 +43,12 @@ SECTIONS
         build/src/fragments/10/fragment10_D5250.o(.bss)
     }
 
+    /* func_8AF176C4's redraw counter static, in fragment 44's loaded data. */
+    .fragment44_redraw_count_bss 0x8AF27160 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_204950.o(.bss)
+    }
+
     /* The random byte buffer is part of fragment 79's loaded state. */
     .fragment79_random_bytes 0x84195188 (NOLOAD) : SUBALIGN(4)
     {
@@ -84,6 +90,12 @@ SECTIONS
     .fragment44_view_state_bss 0x8AF395B8 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/44/fragment44_20D3A0.o(.bss)
+    }
+
+    /* func_8AF25F40's zoom-step statics. */
+    .fragment44_zoom_step_bss 0x8AF3A6F8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_212740.o(.bss)
     }
 
     /* Four-byte panel color cache. Its original loaded zero word stays in
@@ -221,6 +233,13 @@ SECTIONS
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
     }
+
+    /* func_823053A8's header statics at the start of the fragment 19 runtime
+     * state; the loader clears this area. */
+    .fragment19_state_6AF8_bss 0x82306AF8 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/19/fragment19_124E40.o(.bss)
+    }
     /* State, flags and counter at the start of fragment 24's runtime state.
      * The loader clears this area; input-section alignment is NOLOAD. */
     .fragment24_state_12450_bss 0x82B12450 (NOLOAD) : SUBALIGN(2)
@@ -279,6 +298,13 @@ SECTIONS
     .fragment21_transition_9680_bss 0x82509680 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/21/fragment21_147D10.o(.bss)
+    }
+    /* func_82A00C84's function-static setup state (selection, cursor, model
+     * and scene handles) at D_82A01990. IDO gives the paired stores one lui
+     * and reloads each handle after storing it only for a function static. */
+    .fragment23_setup_state_bss 0x82A01990 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/23/fragment23_code.o(.bss)
     }
     /* fragment23_code's saved text position (func_82A0089C). The fragment
      * loader clears this runtime area after consuming its relocation table. */
@@ -390,6 +416,9 @@ ASSERT(SIZEOF(.fragment31_collected_values_bss) == 16,
 ASSERT(SIZEOF(.fragment72_state_bss) == 80,
        "fragment72 runtime state must retain their compiler section footprint");
 
+ASSERT(SIZEOF(.fragment23_setup_state_bss) == 64,
+       "fragment23 setup state must retain its compiler section footprint");
+
 ASSERT(SIZEOF(.fragment23_text_origin_data) == 16,
        "fragment23 text origin must retain its compiler section footprint");
 
@@ -447,7 +476,6 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
 ASSERT(SIZEOF(.fragment20_slot_fade_data) == 16, "fragment 20 slot fade limits footprint changed");
-ASSERT(SIZEOF(.fragment10_pulse_data) == 16, "fragment 10 pulse statics footprint changed");
 ASSERT(SIZEOF(.fragment10_panel_color_bss) == 16, "fragment 10 panel color footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
@@ -463,6 +491,7 @@ ASSERT(SIZEOF(.fragment82_deck_menu_state_data) == 272,
 .L8002B400 = func_8002B2FC + 0x104;
 .L8002B424 = func_8002B2FC + 0x128;
 
+ASSERT(SIZEOF(.fragment10_pulse_data) == 16, "fragment 10 pulse statics footprint changed");
 /* Case targets for fragment 45's command dispatch table. */
 .L8AB06518 = func_8AB064C4 + 0x54;
 .L8AB06528 = func_8AB064C4 + 0x64;

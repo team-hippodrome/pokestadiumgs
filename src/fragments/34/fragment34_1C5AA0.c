@@ -298,10 +298,47 @@ void func_88508E34(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88508F78.s")
+extern u8 D_8850D2EC[];
+extern u8 D_8850D2F8[];
+extern u8 D_8850D2FC[];
+extern s32 func_8004C990(s32, s32);
+extern u8 *func_8004CA60(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern void func_800459AC(u8 *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_88508F78(s16 x, s16 y, f32 scale, s16 idx) {
+    u8 *entry = &D_8850D2EC[idx];
+    u16 *img = (u16 *)func_8004C990(0x145, *entry);
+    u8 *tex = func_8004CA60((u8 *)img);
+    s16 s;
+    s16 t;
+    s16 step;
+    s32 row;
+    s16 offs;
+    f32 sx;
+    s32 i;
+    s32 w;
+
+    if ((x < 640) && (-(w = img[0]) < x) && (y < 480) && (-img[1] < y)) {
+        offs = -16;
+        sx = scale;
+        if (entry >= D_8850D2F8 && entry < D_8850D2FC) {
+            offs = ((w - 1) << 5) + offs;
+            sx = 0.0f - scale;
+        }
+        s = 1024.0f / sx + ((0.0f < 1024.0f / sx) ? 0.5f : -0.5f);
+        t = 1024.0f / scale + ((0.0f < 1024.0f / scale) ? 0.5f : -0.5f);
+        step = ((u32)img[1] * scale) / 2 + ((0.0f < ((u32)img[1] * scale) / 2) ? 0.5f : -0.5f);
+        for (i = 0, row = y; i != 2U; i++) {
+            func_800459AC(tex, ((u8 *)img)[4], ((u8 *)img)[5], img[0], img[1] / 2, 1, 0, 2, 2, 0, 0, 0, 0);
+            GfxRect_DrawTextured(x, row, ((s16 *)img)[0], img[1] / 2, offs, -16, s, t, 0);
+            row += step;
+            tex += (img[0] * img[1] / 2) * 2;
+        }
+    }
+}
 
 extern void Gfx_SetScissorRect(Gfx **, s32, s32, s32, s32);
-extern void func_88508F78(s32, s32, s32, s16);
+extern void func_88508F78(s16, s16, f32, s16);
 extern Gfx *D_800D0510;
 extern u8 D_88523148;
 extern u8 D_88523100[];
@@ -318,7 +355,7 @@ void func_88509290(void) {
                 }
                 Gfx_SetScissorRect(&D_800D0510, *(s16 *)(p + 0xA), *(s16 *)(p + 0xC), *(s16 *)(p + 0xE), *(s16 *)(p + 0x10));
             }
-            func_88508F78(*(s16 *)(p + 6), *(s16 *)(p + 8), *(s32 *)(p + 0x18), (s16)(*(f32 *)(p + 0x1C) + ((0.0f < *(f32 *)(p + 0x1C)) ? 0.5f : -0.5f)));
+            func_88508F78(*(s16 *)(p + 6), *(s16 *)(p + 8), *(f32 *)(p + 0x18), (s16)(*(f32 *)(p + 0x1C) + ((0.0f < *(f32 *)(p + 0x1C)) ? 0.5f : -0.5f)));
         }
         i++;
         p += 0x24;
