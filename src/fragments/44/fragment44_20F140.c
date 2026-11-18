@@ -1,5 +1,33 @@
 #include "global.h"
 
+extern void func_8AF00504(s32);
+extern s32 func_8AF003A8(s16);
+extern u8 *func_8AC06D8C(s32, s32);
+extern void func_8AC02C80(s32, s32, s32, u8 *);
+extern void func_8004E308(u8 *, void *, s32);
+extern u8 func_8AF01654(u8);
+extern void func_8004C54C(s32, s32);
+extern s32 func_8004C874(s32, s32);
+extern u8 D_8AF39A00[], D_8AF39C00[];
+extern u8 D_8AF3A010[];
+extern u8 D_8AF37799;
+extern s16 D_8AF37798;
+extern u8 D_8AF39E00, D_8AF39E78, D_8AF39EF0, D_8AF39F68;
+extern u8 D_8AF39FE0, D_8AF39FF0;
+extern u8 *D_8AF3A03C, *D_8AF3A040, *D_8AF3A044, *D_8AF3A048;
+extern const char D_8AF2A1E4[];
+
+typedef struct Fragment44ImageReference {
+    s32 value;
+} Fragment44ImageReference;
+
+extern s16 D_8AF3A080, D_8AF3A082;
+extern u8 *D_8AF3A198, *D_8AF3A124;
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_8004B2CC(s32, s32, s32, s32, u8, u8, u8, s32);
+
 
 #ifdef VERSION_US
 // Not referenced by code or data (debug format strings); they open this file's .rodata.
@@ -379,8 +407,66 @@ void func_8AF21960(void *arg0, u16 *arg1) {
 }
 /* mkdraft:func_8AF21960 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_20F140/func_8AF219B4.s")
-
+s32 func_8AF219B4(s32 arg0, u8 *arg1) {
+    struct { s16 x; s16 y; } pos;
+    s16 x;
+    s16 y;
+    s16 index;
+    u8 *record;
+    s32 texture;
+    u8 *node;
+    index = *(s16 *)(arg1 + 0x22);
+    record = D_8AF3A198 + index * 68;
+    switch (arg0) {
+    case 0:
+        node = *(u8 **)(record + 0x30);
+        *(u16 *)(node + 2) &= ~1;
+        *(Fragment44ImageReference *)(*(u8 **)(record + 0x30) + 0x2C) = *(Fragment44ImageReference *)(D_8AF3A124 + 0x3C);
+        break;
+    case 1:
+        func_800504BC(&pos.x);
+        x = pos.x;
+        x += *(s16 *)(arg1 + 8);
+        y = pos.y;
+        y += *(s16 *)(arg1 + 10);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0);
+        texture = record[0x18];
+        if (index == D_8AF3A082 && *(s16 *)(record + 0x40) == 1) texture = record[0x19];
+        func_8004D19C(x, y, *(s32 *)(record + 0x34 + texture * 4), 0, 0);
+        switch (*(u16 *)&D_8AF3A080) {
+        case 9:
+            node = *(u8 **)(record + 0x30);
+            *(u16 *)(node + 2) |= 1;
+            break;
+        case 0:
+            if (index == D_8AF3A082) {
+                node = *(u8 **)(record + 0x30);
+                *(u16 *)(node + 2) |= 1;
+                func_8004B2CC(x, y, 64, 64, 255, 255, 0, 1);
+            } else {
+                node = *(u8 **)(record + 0x30);
+                *(u16 *)(node + 2) &= ~1;
+            }
+            break;
+        case 3: case 4: case 5: case 6: case 7:
+            if (index == D_8AF3A082) {
+                node = *(u8 **)(record + 0x30);
+                *(u16 *)(node + 2) |= 1;
+            } else {
+                node = *(u8 **)(record + 0x30);
+                *(u16 *)(node + 2) &= ~1;
+            }
+            break;
+        default:
+            node = *(u8 **)(record + 0x30);
+            *(u16 *)(node + 2) &= ~1;
+            break;
+        }
+        break;
+    }
+    return 0;
+}
 extern u8 *D_8AF2BDD8;
 s16 func_8AF21C04(void) {
     u8 *entry = D_8AF2BDD8;
@@ -996,7 +1082,7 @@ extern void func_8AC006F4(void);
 extern s32 func_8AF2228C(void);
 extern s32 func_8AF22384(void);
 extern void func_80054488(s32, u8);
-extern void func_8AF219B4(void);
+extern s32 func_8AF219B4(s32, u8 *);
 extern void func_8AF013D8(void);
 extern s32 D_8AF26564;
 extern s16 D_8AF3A084;

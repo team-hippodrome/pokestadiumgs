@@ -1,5 +1,30 @@
 #include "global.h"
+extern s32 D_826153D4, D_826153D8, D_826153DC;
+extern s32 D_82615700, D_82615704;
+extern u32 D_826156FC;
+extern u8 D_8261A5A4[];
+typedef struct Func82604D40Pair {
+    s16 unk_00;
+    s16 unk_02;
+} Func82604D40Pair;
 
+typedef struct unk_func_8260F108 {
+    s16 state, alpha, timer, selection, stopped;
+    u8 unk_0A[2];
+    u32 phase, speed;
+    Func82604D40Pair position, origin, target;
+} unk_func_8260F108;
+extern s16 D_8261575C, D_82615760, D_82615764;
+extern s32 D_826153C8, D_826153CC;
+extern s32 D_826155B0, D_826155B4, D_826155B8, D_826155BC;
+extern s32 D_826155F4, D_826155F8, D_826155FC;
+extern s32 func_8006CBA0(s32, s32);
+extern s16 D_8261A4A2;
+extern void func_80043A30(void *, void *, s32);
+extern s32 func_8004418C(void *, s32, s32, s32);
+extern s32 func_80043BD4(void *, s32, s32);
+extern s32 D_826155D8, D_826155DC, D_826155E0, D_826155E4, D_826155E8, D_826155EC, D_826155F0;
+extern f32 D_80087E50[], D_80088E50[];
 
 #ifdef VERSION_US
 extern u32 osSetIntMask(u32 arg0);
@@ -464,10 +489,7 @@ s32 func_82604CF0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 }
 
 /* mkdraft:func_82604D40 begin */
-typedef struct Func82604D40Pair {
-    s16 unk_00;
-    s16 unk_02;
-} Func82604D40Pair;
+
 
 typedef struct Func82604D40Desc {
     /* 0x00 */ s16 unk_00;
@@ -3740,8 +3762,89 @@ void func_8260F0DC(u8 *arg0) {
     func_800226C0(0x78);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260F108.s")
-
+void func_8260F108(unk_func_8260F108 *state) {
+    s16 timer;
+    s16 duration;
+    s32 column;
+    s32 row;
+    u32 phase;
+    u8 *entry;
+    if (state->state != 0) {
+        switch (state->state) {
+        case 0: break;
+        case 1:
+            duration = D_8261575C;
+            state->timer++;
+            timer = state->timer;
+            state->alpha = timer * 255 / duration;
+            if (timer >= duration) {
+                state->state = 2;
+                state->timer = 0;
+            }
+            break;
+        case 2:
+            state->timer++;
+            timer = state->timer;
+            if (state->timer >= D_826153C8) {
+                row = state->selection / 4;
+                column = state->selection % 4;
+                entry = func_82604C40(7, row, D_8261A5A4, 20);
+                state->state = 3;
+                state->timer = 0;
+                state->origin = state->position;
+                state->target.unk_00 = *(s16 *)(entry + 20) + *(s16 *)(entry + 16) + column * 135 + 27;
+                state->target.unk_02 = *(s16 *)(entry + 22) + *(s16 *)(entry + 18) + 28;
+            }
+            break;
+        case 3:
+            row = D_82615760;
+            state->timer++;
+            timer = state->timer;
+            state->position.unk_00 = (state->target.unk_00 - state->origin.unk_00) * timer / row + state->origin.unk_00;
+            state->position.unk_02 = (state->target.unk_02 - state->origin.unk_02) * timer / row + state->origin.unk_02;
+            if (timer >= row) {
+                state->state = 4;
+                state->timer = 0;
+                state->position.unk_00 = state->target.unk_00;
+                state->position.unk_02 = state->target.unk_02;
+            }
+            break;
+        case 4:
+            if (state->speed > 65536) {
+                state->speed -= 32768;
+                if (state->speed < 65536) state->speed = 65536;
+            } else {
+                phase = state->phase >> 16;
+                state->timer++;
+            timer = state->timer;
+                if (phase == 0 && state->timer >= D_826153CC) {
+                    state->state = 5;
+                    state->timer = 0;
+                    state->speed = 0;
+                    state->stopped = 1;
+                    func_800226C0(121);
+                }
+            }
+            break;
+        case 5:
+            duration = D_82615764;
+            state->timer++;
+            timer = state->timer;
+            state->alpha = 255 - timer * 255 / duration;
+            if (timer >= duration) {
+                state->state = 6;
+                state->timer = 0;
+                state->alpha = 0;
+            }
+            break;
+        }
+        state->phase += state->speed;
+        if (state->phase >= 655360) {
+            state->phase -= 655360;
+            if (state->stopped == 0) func_800226C0(120);
+        }
+    }
+}
 extern s32 func_8004E0F0(s32, s32, s32);
 s32 func_8260F49C(s32 arg0, s32 arg1) {
     s32 value;
@@ -3838,6 +3941,32 @@ s32 func_8260F7C4(s32 arg0, s32 arg1) {
     return var_v1;
 }
 
+typedef struct LayoutEntry8261A490 {
+    /* 0x0 */ s16 type;
+    /* 0x2 */ s16 index;
+    /* 0x4 */ s16 offset;
+} LayoutEntry8261A490; // size = 0x6
+
+typedef struct State8261A490 {
+    /* 0x0000 */ s16 mode;
+    /* 0x0002 */ s16 unk_02;
+    /* 0x0004 */ u16 unk_04;
+    /* 0x0006 */ u8 pad06[0x12 - 0x6];
+    /* 0x0012 */ s16 unk_12;
+    /* 0x0014 */ s16 unk_14;
+    /* 0x0016 */ s16 unk_16;
+    /* 0x0018 */ union { u8 pad18[0x38 - 0x18]; struct { s16 unk_18; s16 unk_1A; s16 unk_1C; }; };
+    /* 0x0038 */ s16 unk_38[24];
+    /* 0x0068 */ u8 *unk_68[24];
+    /* 0x00C8 */ s32 unk_C8[2];
+    /* 0x00D0 */ s32 unk_D0[16];
+    /* 0x0110 */ u8 *unk_110;
+    /* 0x0114 */ s16 unk_114[(0x3544 - 0x114) / 2];
+    /* 0x3544 */ LayoutEntry8261A490 layout[8];
+} State8261A490;
+
+#define sState8261A490 (*(State8261A490 *)&D_8261A490)
+
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260F7FC.s")
 
 
@@ -3905,7 +4034,7 @@ void func_8260FFE8(void *arg0, u32 arg1)
 
 extern void _bzero(void *, s32);
 extern s32 D_8261A5A0;
-extern s32 func_8260F7FC(s32);
+
 extern s32 func_826101B4(s32);
 extern s16 D_8261A490[];
 s32 func_82610C84(s32 arg0, s32 arg1) {
@@ -5067,7 +5196,7 @@ void func_826137B8(s16 *arg0) {
 extern s16 D_8261A492;
 extern u16 D_8261A494;
 extern s16 D_8261DA4C;
-extern void func_8260F108(void *);
+extern void func_8260F108(unk_func_8260F108 *);
 void func_826114DC(u8 *arg0);
 extern void func_826119DC(void *);
 extern void func_82611D44(void *);

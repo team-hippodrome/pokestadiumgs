@@ -195,8 +195,220 @@ void func_87F0B2F4(u8 *arg0, f32 *arg1, f32 arg2, f32 arg3, f32 arg4, s32 arg5, 
 }
 /* mkdraft:func_87F0B2F4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_32DC40/func_87F0B4AC.s")
+extern f32 D_80088E50[];
 
+extern f32 D_80087E50[];
+
+extern f32 D_87F116DC;
+
+extern f32 D_87F116E0;
+
+extern f32 D_87F116E4;
+
+extern f32 D_87F116E8;
+
+extern f32 D_87F116EC;
+
+extern f32 D_87F116F0;
+
+extern f32 D_87F116F4;
+
+extern f32 D_87F116F8;
+
+extern f32 D_87F116FC;
+
+extern f32 D_87F11700;
+
+extern f32 D_87F11704;
+
+extern void func_800279C4(u16);
+
+u32 func_87F0B4AC(void *state, f32 *arg1, f32 *arg2, s16 *arg3) {
+    struct BounceState {
+        s32 unk_00;
+        s32 unk_04;
+        s32 unk_08;
+        f32 unk_0C;
+        f32 unk_10;
+        f32 unk_14;
+        f32 unk_18;
+        f32 unk_1C;
+        u32 bit31 : 1;
+        u32 bit30 : 1;
+        u32 rest : 30;
+    };
+    struct MotionState {
+        f32 start[9];
+        f32 target[9];
+        struct BounceState bounce;
+        s32 position_elapsed;
+        s32 position_duration;
+        s32 scale_elapsed;
+        s32 scale_duration;
+        s32 rotation_elapsed;
+        s32 rotation_duration;
+        u32 flags;
+    };
+    f32 angle, weight, inverse, value, ratio, sine;
+    s32 rounded;
+    struct BounceState *work;
+    s32 frame;
+
+    if (((struct MotionState *)state)->flags & 1) {
+        ((struct MotionState *)state)->position_elapsed += 1;
+        if (((struct MotionState *)state)->position_elapsed > ((struct MotionState *)state)->position_duration) {
+            ((struct MotionState *)state)->position_elapsed = ((struct MotionState *)state)->position_duration;
+            ((struct MotionState *)state)->flags &= ~1u;
+        }
+        angle = ((f32)((struct MotionState *)state)->position_elapsed * 180.0f / (f32)((struct MotionState *)state)->position_duration) * D_87F116DC;
+        if (angle >= 0.0f) {
+            rounded = (s32)(angle + 0.5f);
+        } else {
+            rounded = (s32)(angle - 0.5f);
+        }
+        weight = (D_80088E50[(u16)rounded >> 4] + 1.0f) * 0.5f;
+        inverse = 1.0f - weight;
+        arg1[0] = ((struct MotionState *)state)->target[0] * inverse + ((struct MotionState *)state)->start[0] * weight;
+        arg1[1] = ((struct MotionState *)state)->target[1] * inverse + ((struct MotionState *)state)->start[1] * weight;
+        arg1[2] = ((struct MotionState *)state)->target[2] * inverse + ((struct MotionState *)state)->start[2] * weight;
+    } else {
+        ((struct MotionState *)state)->flags &= ~0x3000u;
+    }
+    if (((struct MotionState *)state)->flags & 16) {
+        ((struct MotionState *)state)->scale_elapsed += 1;
+        if (((struct MotionState *)state)->scale_elapsed > ((struct MotionState *)state)->scale_duration) {
+            ((struct MotionState *)state)->scale_elapsed = ((struct MotionState *)state)->scale_duration;
+            ((struct MotionState *)state)->flags &= ~16u;
+        }
+        angle = ((f32)((struct MotionState *)state)->scale_elapsed * 180.0f / (f32)((struct MotionState *)state)->scale_duration) * D_87F116E0;
+        if (angle >= 0.0f) {
+            rounded = (s32)(angle + 0.5f);
+        } else {
+            rounded = (s32)(angle - 0.5f);
+        }
+        weight = (D_80088E50[(u16)rounded >> 4] + 1.0f) * 0.5f;
+        inverse = 1.0f - weight;
+        arg2[0] = ((struct MotionState *)state)->target[3] * inverse + ((struct MotionState *)state)->start[3] * weight;
+        arg2[1] = ((struct MotionState *)state)->target[4] * inverse + ((struct MotionState *)state)->start[4] * weight;
+        arg2[2] = ((struct MotionState *)state)->target[5] * inverse + ((struct MotionState *)state)->start[5] * weight;
+    }
+    if (((struct MotionState *)state)->flags & 256) {
+        ((struct MotionState *)state)->rotation_elapsed += 1;
+        if (((struct MotionState *)state)->rotation_elapsed > ((struct MotionState *)state)->rotation_duration) {
+            ((struct MotionState *)state)->rotation_elapsed = ((struct MotionState *)state)->rotation_duration;
+            ((struct MotionState *)state)->flags &= ~256u;
+        }
+        angle = ((f32)((struct MotionState *)state)->rotation_elapsed * 180.0f / (f32)((struct MotionState *)state)->rotation_duration) * D_87F116E4;
+        if (angle >= 0.0f) {
+            rounded = (s32)(angle + 0.5f);
+        } else {
+            rounded = (s32)(angle - 0.5f);
+        }
+        weight = (D_80088E50[(u16)rounded >> 4] + 1.0f) * 0.5f;
+        inverse = 1.0f - weight;
+        if ((((struct MotionState *)state)->target[6] * inverse + ((struct MotionState *)state)->start[6] * weight) * D_87F116E8 >= 0.0f) {
+            arg3[0] = (s32)((((struct MotionState *)state)->target[6] * inverse + ((struct MotionState *)state)->start[6] * weight) * D_87F116EC + 0.5f);
+        } else {
+            arg3[0] = (s32)((((struct MotionState *)state)->target[6] * inverse + ((struct MotionState *)state)->start[6] * weight) * D_87F116F0 - 0.5f);
+        }
+        value = (((struct MotionState *)state)->target[7] * inverse + ((struct MotionState *)state)->start[7] * weight) * D_87F116F4;
+        if (value >= 0.0f) {
+            arg3[1] = (s32)(value + 0.5f);
+        } else {
+            arg3[1] = (s32)(value - 0.5f);
+        }
+        value = (((struct MotionState *)state)->target[8] * inverse + ((struct MotionState *)state)->start[8] * weight) * D_87F116F8;
+        if (value >= 0.0f) {
+            arg3[2] = (s32)(value + 0.5f);
+        } else {
+            arg3[2] = (s32)(value - 0.5f);
+        }
+    } else {
+        ((struct MotionState *)state)->flags &= ~0x18000u;
+    }
+    work = &((struct MotionState *)state)->bounce;
+    if (!(((struct MotionState *)state)->flags & 1)) {
+        if (work->bit31) {
+            ((struct MotionState *)state)->bounce.unk_04 += 1;
+            if (((struct MotionState *)state)->bounce.unk_04 > ((struct MotionState *)state)->bounce.unk_08) {
+                work->unk_04 = work->unk_08;
+            }
+            ratio = (f32)work->unk_04 / (f32)work->unk_08;
+            work->unk_00 += 1;
+            work->unk_0C = work->unk_18 * ratio;
+            angle = (f32)((u32)work->unk_00 % 360) * 5.0f * D_87F116FC;
+            if (angle >= 0.0f) {
+                rounded = (s32)(angle + 0.5f);
+            } else {
+                rounded = (s32)(angle - 0.5f);
+            }
+            sine = D_80087E50[(u16)rounded >> 4];
+            value = work->unk_1C * sine * ratio;
+            work->unk_10 = value;
+            arg1[2] = work->unk_14 + work->unk_0C + value;
+        }
+        if (work->bit30) {
+            arg1[2] -= work->unk_18 * D_87F11700;
+            if (arg1[2] < work->unk_14) {
+                arg1[2] = work->unk_14;
+                ((u8 *)state)[0x68] &= 0xFFBF;
+            }
+        }
+    }
+    if (((struct MotionState *)state)->flags & 0x1000) {
+        value = (f32)((struct MotionState *)state)->position_duration * 0.5f;
+        if (value >= 0.0f) {
+            frame = (s32)(value + 0.5f);
+        } else {
+            frame = (s32)(value - 0.5f);
+        }
+        if (frame == ((struct MotionState *)state)->position_elapsed) {
+            func_800279C4(0xCF11);
+            ((struct MotionState *)state)->flags &= ~0x1000u;
+        }
+    }
+    if (((struct MotionState *)state)->flags & 0x2000) {
+        value = (f32)((struct MotionState *)state)->position_duration * D_87F11704;
+        if (value >= 0.0f) {
+            rounded = (s32)(value + 0.5f);
+        } else {
+            rounded = (s32)(value - 0.5f);
+        }
+        if (rounded == ((struct MotionState *)state)->position_elapsed) {
+            func_800279C4(0xCF12);
+            ((struct MotionState *)state)->flags &= ~0x2000u;
+        }
+    }
+    if (((struct MotionState *)state)->flags & 0x4000) {
+        if (((struct MotionState *)state)->flags & 1) {
+            if (((struct MotionState *)state)->position_elapsed + 1 == ((struct MotionState *)state)->position_duration) {
+                func_800279C4(0xCF10);
+                ((struct MotionState *)state)->flags &= ~0x4000u;
+            }
+        } else if (((struct MotionState *)state)->flags & 0x100) {
+            if (((struct MotionState *)state)->rotation_elapsed + 1 == ((struct MotionState *)state)->rotation_duration) {
+                func_800279C4(0xCF10);
+                ((struct MotionState *)state)->flags &= ~0x4000u;
+            }
+        } else if (((struct MotionState *)state)->flags & 0x10) {
+            if (((struct MotionState *)state)->scale_elapsed + 1 == ((struct MotionState *)state)->scale_duration) {
+                func_800279C4(0xCF10);
+                ((struct MotionState *)state)->flags &= ~0x4000u;
+            }
+        }
+    }
+    if (((struct MotionState *)state)->flags & 0x8000) {
+        func_800279C4(0xC215);
+        if (((struct MotionState *)state)->rotation_elapsed == ((struct MotionState *)state)->rotation_duration) {
+            ((struct MotionState *)state)->flags &= ~0x8000u;
+        }
+    }
+    if (((struct MotionState *)state)->flags & 0x10000) {
+        func_800279C4(0xCF18);
+        ((struct MotionState *)state)->flags &= ~0x10000u;
+    }
+    return ((struct MotionState *)state)->flags;
+}
 extern void func_8004C8C0(s32);
 void func_87F0BD10(void) {
     func_8004C8C0(447);

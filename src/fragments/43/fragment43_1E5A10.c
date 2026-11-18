@@ -1,4 +1,53 @@
 #include "global.h"
+extern Gfx D_80094E38[], D_80094F50[];
+typedef struct unk_func_8AC049A8_State {
+    u8 unk_00[0x24];
+    u16 unk_24, unk_26;
+    u8 unk_28[0x10];
+    u8 *texture;
+    Gfx *display_list;
+    f32 scale_x, scale_y, x, y, initial_x, initial_y;
+    s16 width, height, format, size, strip_height, flip_x, flip_y, strip_count, remainder;
+    u8 unk_6A[2];
+    union { u32 word; u8 bytes[4]; } color;
+    s16 cached;
+    u8 unk_72[2];
+    s32 follow;
+} unk_func_8AC049A8_State;
+typedef struct unk_func_8AC049A8_Node {
+    u8 unk_00, flags;
+    u16 status;
+    s32 unk_04;
+    s16 x, y;
+    u8 unk_0C[0x14];
+    unk_func_8AC049A8_State *state;
+} unk_func_8AC049A8_Node;
+extern s32 D_8AC07DDC;
+extern u32 Gfx_AllocDisplayList(s32);
+
+
+    struct Fragment43Color3AFC {
+        u8 r, g, b, a;
+    };
+    struct Fragment43Quad3AFC {
+        u8 pad00[8];
+        s16 x, y, w, h;
+        u8 pad10[0x18];
+        struct Fragment43Color3AFC color;
+    };
+
+typedef struct unk_func_8AC0202C_draw {
+    u8 prim[4];
+    u8 env[4];
+    void *texture;
+    u16 mode;
+} unk_func_8AC0202C_draw;
+typedef struct unk_D_8AC099C8 {
+    void *unk_00;
+    u8 unk_04;
+} unk_D_8AC099C8;
+extern unk_D_8AC099C8 D_8AC099C8;
+extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 
 
 void fragment43_main(void) {
@@ -343,7 +392,77 @@ s32 func_8AC008E4(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC00908.s")
+void func_8AC00908(s32 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    s32 right;
+    s32 bottom;
+    s32 x1;
+    s32 pad[5];
+    s32 div = 32;
+    s32 xx;
+    s32 cols;
+    s32 rows;
+    s32 tx;
+    s32 ty;
+
+    if (arg1 < 0) {
+        arg3 += arg1;
+        arg1 = 0;
+    }
+    if (arg2 < 0) {
+        arg4 += arg2;
+        arg2 = 0;
+    }
+    right = arg1 + arg3;
+    if (right >= 0x281) {
+        do {
+            if (arg1 > 0x280) {
+                arg1 = 0x280;
+            }
+            arg3 = 0x280 - arg1;
+        } while (0);
+        right = arg3 + arg1;
+    }
+    bottom = arg2 + arg4;
+    if (bottom >= 0x1E1) {
+        do {
+            if (arg2 > 0x1E0) {
+                arg2 = 0x1E0;
+            }
+            arg4 = 0x1E0 - arg2;
+        } while (0);
+        bottom = arg4 + arg2;
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
+    gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    gDPSetTexturePersp(D_800D0510++, G_TP_NONE);
+    gDPSetScissor(D_800D0510++, G_SC_NON_INTERLACE, arg1, arg2, right, bottom);
+    gDPSetCombineMode(D_800D0510++, G_CC_DECALRGB, G_CC_DECALRGB);
+    gDPPipeSync(D_800D0510++);
+    x1 = right;
+    bottom = arg4 + arg2;
+    for (; arg2 < bottom;) {
+        ty = arg2 % div;
+        rows = div - ty;
+        if (arg2 + rows > bottom) {
+            rows = bottom - arg2;
+        }
+        for (xx = arg1; xx < x1;) {
+            tx = xx % div;
+            cols = div - tx;
+            if (xx + cols > right) {
+                cols = right - xx;
+            }
+            gDPLoadTextureBlock(D_800D0510++, arg0 + (((arg2 / div) * 20) + (xx / div)) * 0x200, G_IM_FMT_RGBA,
+                                G_IM_SIZ_16b, 16, 16, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP,
+                                G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            gSPTextureRectangle(D_800D0510++, xx << 2, arg2 << 2, (xx + cols) << 2, (arg2 + rows) << 2, G_TX_RENDERTILE, tx << 4, ty << 4, 0x200, 0x200);
+            xx = xx + cols;
+        }
+        arg2 = arg2 + rows;
+    }
+    gDPSetScissor(D_800D0510++, G_SC_NON_INTERLACE, 0, 0, 640, 480);
+}
 #endif
 
 #ifdef VERSION_US
@@ -388,7 +507,7 @@ void func_8AC00DF4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8AC00908(s32, s16, s16, s16, s32);
+extern void func_8AC00908(s32, s16, s16, s16, s16);
 void func_8AC00F04(s32 arg0) {
     s32 var_s0;
     void **var_s1;
@@ -498,7 +617,7 @@ void func_8AC01064(s32 arg0) {
 
 #ifdef VERSION_US
 extern u8 *func_8004CA60(u8 *);
-extern void func_800459AC(u8 *, u8, u8, u16, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_800459AC(u8 *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 s32 func_8AC010D4(u8 *arg0, u16 arg1, u16 arg2) {
     if (arg0 == NULL) {
         return 0;
@@ -1903,7 +2022,7 @@ s32 Fragment43_GrowthRectCallback(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-extern void func_8AC049A8(void);
+extern s32 func_8AC049A8(s32, void *);
 extern void func_8004E308(s32, s32 *, s32 *);
 extern s32 func_8AC06D8C(s32, s32);
 void func_8AC05E40(s32 arg0, s32 arg1, s32 arg2) { typedef struct { s32 w[14]; } CopyBlock; CopyBlock *src; CopyBlock *dst; s32 *result; _bzero((void *)arg2, 0x78); result = func_8AC06D8C(arg0, arg1); src = (void *)result; dst = (void *)arg2; *dst = *src; *(s16 *)((u8 *)arg2 + 0x70) = 0; func_8004E308((s32)result, (s32 *)&func_8AC049A8, (s32 *)arg2); }
