@@ -299,12 +299,20 @@ SECTIONS
     {
         build/src/fragments/24/fragment24_150C10.o(.bss)
     }
-    /* Complete 0x144-byte grid state, cleared by its initializer. Native
-     * BSS adds 12 alignment bytes; those bytes are not C fields. The fade
-     * initializer remains in the normal loaded data section. */
+    /* Complete 0x144-byte grid state, cleared by its initializer, then the
+     * 12-byte overlay fade state at 0x82001EA0 (IDO aligns it to +0x148).
+     * The fragment's data image supplies the fade state's load bytes. */
     .fragment16_state_1D58_bss 0x82001D58 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/16/fragment16_code.o(.bss)
+    }
+    /* func_82000794's six function-static phase lengths live in fragment
+     * 16's loaded data at D_82001CD8..D_82001CEC; IDO only reloads them
+     * after calls when they are statics of that function. The data image
+     * supplies their values. */
+    .fragment16_fade_lengths_data 0x82001CD8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/16/fragment16_code.o(.data)
     }
     /* Adjacent state halfwords used by the fragment 17 panel helpers. */
     .fragment17_state_10C32_bss 0x82210C32 (NOLOAD) : SUBALIGN(2)
@@ -528,7 +536,7 @@ ASSERT(D_800D1B40 == 0x800D1B40 && D_800D262E + 2 == 0x800D2630,
        "remaining audio object endpoints moved");
 
 ASSERT(ADDR(.fragment16_state_1D58_bss) == 0x82001D58 &&
-       SIZEOF(.fragment16_state_1D58_bss) == 336,
+       SIZEOF(.fragment16_state_1D58_bss) == 352,
        "fragment 16 grid state input footprint changed");
 
 ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
@@ -539,6 +547,7 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
 ASSERT(SIZEOF(.fragment20_slot_fade_data) == 0x40, "fragment 20 slot fade limits footprint changed");
+ASSERT(SIZEOF(.fragment16_fade_lengths_data) == 0x20, "fragment 16 fade lengths footprint changed");
 ASSERT(SIZEOF(.fragment10_panel_color_bss) == 16, "fragment 10 panel color footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
 ASSERT(SIZEOF(.fragment79_random_bytes) == 16, "fragment 79 random buffer footprint changed");
