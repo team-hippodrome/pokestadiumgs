@@ -2215,7 +2215,102 @@ void func_82B062F8(void *arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B06360.s")
+extern u8 D_82B12450[0xFF8];
+extern u8 D_82B13030[];
+extern s16 D_82B12694;
+extern s32 func_82B0173C(s32, s32);
+extern s32 func_81700B8C(s32, s32);
+extern void func_81700CDC(s32 arg0);
+extern void *func_82B02800(s32, s32);
+extern s32 func_82B011C0(s32, s32);
+extern void func_82B02924(void *, s32);
+extern void func_82B02A34(void *, s32);
+
+// Resets the selection screen: validates both players' teams against the
+// current cup rules (or default entries in mode 3), sets the result flag bit,
+// rebuilds the choice flags at +0x246, then re-registers the player (type 8)
+// and option (type 9) entries and enables them.
+void func_82B06360(s32 arg0) {
+    u8 *base;
+    s32 found;
+    s32 i;
+    u8 *record;
+    s32 rules;
+    u8 *entry;
+    s32 mode;
+
+    base = (u8 *)&D_82B12450;
+    *(s16 *)base = 6;
+    found = 0;
+    *(s16 *)(base + 6) = 0;
+    if (func_81700B8C(1, func_82B0173C(*(s16 *)base, *(s16 *)(base + 8))) != 0) {
+        func_81700CDC(1);
+    }
+    for (i = 0; i < 2; i++) {
+        record = (u8 *)func_82B02800(8, i) + 0x50;
+        rules = 0;
+        if (*(s16 *)(base + 8) != 3) {
+            func_82B05EF0(i, *(s32 *)(D_82B12450 + i * 4 + 0xBBC), *(u16 *)(D_82B12450 + i * 2 + 0xBC4),
+                          *(s16 *)(D_82B12450 + i * 2 + 0xBC8), *(s32 *)(D_82B12450 + i * 4 + 0xBCC),
+                          *(s32 *)(D_82B12450 + i * 4 + 0xBD4));
+            rules = func_82B011C0(*(s16 *)(base + 8), *(s16 *)(base + 0x1E));
+        } else {
+            entry = D_82B13030;
+            do {
+                func_82B062F8(entry, *(s16 *)(base + 0x1C));
+                entry += 0x58;
+            } while (entry != (u8 *)&D_82B13240);
+            func_82B05EF0(i, *(s32 *)(D_82B12450 + i * 4 + 0xBBC), *(u16 *)(D_82B12450 + i * 2 + 0xBC4), 6,
+                          (s32)(base + 0xBE0), 0);
+        }
+        if (TeamRules_ValidateSelection((s16 *)(record + 0x10), (s16 *)(record + 0x1C), (u8 *)rules,
+                                        *(s16 *)(record + 6), *(u8 **)(record + 8))) {
+            found = 1;
+        }
+    }
+    if (found) {
+        *(u16 *)(base + 4) |= 4;
+    } else {
+        *(u16 *)(base + 4) |= 2;
+    }
+    for (i = 0; i < 3; i++) {
+        // u16: IDO then keeps this 1 apart from the s16 1 stored to D_82B12694.
+        *(u16 *)(D_82B12450 + i * 2 + 0x246) = 1;
+        if (i == 0 && found) {
+            *(s16 *)(D_82B12450 + i * 2 + 0x246) = 0;
+        }
+    }
+    if (arg0) {
+        for (i = 0; i < 3; i++) {
+            if (*(s16 *)(D_82B12450 + i * 2 + 0x246) != 0) {
+                D_82B12694 = i;
+                break;
+            }
+        }
+    } else {
+        D_82B12694 = 1;
+    }
+    for (i = 0; i < *(s16 *)(base + 0x252); i++) {
+        func_82B02A34(*(void **)(D_82B12450 + i * 4 + 0xB68), 0);
+    }
+    func_82B02A34(func_82B02800(3, 0), 0);
+    *(s16 *)(base + 0x250) = 0;
+    for (i = 0; i < 2; i++) {
+        ((void **)(base + 0xB18))[*(s16 *)(base + 0x250)] = func_82B02800(8, i);
+        (*(s16 *)(base + 0x250))++;
+    }
+    for (i = 0; i < 3; i++) {
+        ((void **)(D_82B12450 + 0xB18))[*(s16 *)(base + 0x250)] = func_82B02800(9, i);
+        (*(s16 *)(base + 0x250))++;
+    }
+    for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+        mode = 0;
+        if (!arg0 && **(s16 **)(D_82B12450 + i * 4 + 0xB18) == 8) {
+            mode = 1;
+        }
+        func_82B02924(*(void **)(D_82B12450 + i * 4 + 0xB18), mode);
+    }
+}
 #endif
 
 #ifdef VERSION_US
