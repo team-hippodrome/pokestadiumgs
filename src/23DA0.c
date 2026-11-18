@@ -54,7 +54,233 @@ s32 func_80023A10(u8 arg0, u8 arg1) {
     return D_8009061C[arg0][arg1];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/23DA0/func_80023A3C.s")
+extern u8 D_80090650[];
+extern void func_800231A0();
+void func_80023A3C(s32 arg0, s32 arg1, s32 arg2) {
+    u8 kind;
+    u8 idx;
+
+    switch ((u32)arg0) {
+        case 0:
+            kind = 0;
+            if (*(u8 *)&D_80090B90 != 0) {
+                switch (D_80090BA0) {
+                    case 1: idx = 7; break;
+                    case 2: idx = 8; break;
+                    case 3: idx = 0x3E; break;
+                    case 4: idx = 0x3F; break;
+                    case 5: idx = 0x40; break;
+                    case 6: idx = 0x41; break;
+                    case 7: idx = 0x42; break;
+                    case 8: idx = 0x43; break;
+                    case 9: idx = 0x44; break;
+                    default: return;
+                }
+            } else {
+                switch (D_80090BA0) {
+                    case 1: idx = 1; break;
+                    case 2: idx = 2; break;
+                    case 3: idx = 0x3E; break;
+                    case 4: idx = 0x3F; break;
+                    case 5: idx = 0x40; break;
+                    case 6: idx = 0x41; break;
+                    case 7: idx = 0x42; break;
+                    case 8: idx = 0x43; break;
+                    case 9: idx = 0x44; break;
+                    default: return;
+                }
+            }
+            break;
+        case 1:
+            kind = 1;
+            if (D_80090BA0 == 1) {
+                idx = 3;
+            } else if (D_80090BA0 == 2) {
+                idx = 4;
+            } else {
+                return;
+            }
+            break;
+        case 2:
+            kind = 0;
+            if (D_80090BA0 == 1) {
+                idx = 5;
+            } else if (D_80090BA0 == 2) {
+                idx = 6;
+            } else {
+                return;
+            }
+            if (*(u8 *)&D_80090B90 != 0) {
+                if (D_80090BA0 == 1) {
+                    idx = 9;
+                } else if (D_80090BA0 == 2) {
+                    idx = 0xA;
+                } else {
+                    return;
+                }
+            }
+            break;
+        case 3:
+            kind = 0;
+            if (*(u8 *)&D_80090B90 != 0) {
+                switch (D_80090BA0) {
+                    case 1: idx = 0x36; break;
+                    case 2: idx = 0x37; break;
+                    case 3: idx = 0x3E; break;
+                    case 4: idx = 0x3F; break;
+                    case 5: idx = 0x40; break;
+                    case 6: idx = 0x41; break;
+                    case 7: idx = 0x42; break;
+                    case 8: idx = 0x43; break;
+                    case 9: idx = 0x44; break;
+                    default: return;
+                }
+            } else {
+                switch (D_80090BA0) {
+                    case 1: idx = 0x34; break;
+                    case 2: idx = 0x35; break;
+                    case 3: idx = 0x3E; break;
+                    case 4: idx = 0x3F; break;
+                    case 5: idx = 0x40; break;
+                    case 6: idx = 0x41; break;
+                    case 7: idx = 0x42; break;
+                    case 8: idx = 0x43; break;
+                    case 9: idx = 0x44; break;
+                    default: return;
+                }
+            }
+            break;
+        case 4:
+            if (arg1 == 0) {
+                kind = 2;
+                idx = 0xB;
+            } else {
+                kind = 1;
+                idx = 0xC;
+            }
+            break;
+        case 5: kind = 2; idx = 0xD; break;
+        case 6: kind = 2; idx = 0xE; break;
+        case 60: kind = 2; idx = 0x48; break;
+        case 61: kind = 2; idx = 0x4D; break;
+        case 7:
+            if (arg1 == 0x12C) {
+                arg1 = 0x19;
+            }
+            if (arg1 >= 0xFE && arg1 < 0x117) {
+                arg1 = 0xC9;
+            }
+            if (arg1 == 0x117) {
+                arg1 = 0x19;
+            }
+            if (arg1 <= 0 || arg1 >= 0xFC) {
+                return;
+            }
+            switch (((u8 *)&D_8009022C)[arg1 * 4]) {
+                case 0: idx = 0x11; kind = 1; break;
+                case 1: idx = 0x10; kind = 1; break;
+                case 2: idx = 0xF; kind = 1; break;
+                default: return;
+            }
+            break;
+        case 8: kind = 1; idx = 0x12; break;
+        case 9: kind = 1; idx = 0x13; break;
+        case 10: kind = 1; idx = 0x14; break;
+        case 11: kind = 1; idx = 0x15; break;
+        case 13: kind = 1; idx = 0x1A; break;
+        case 12:
+            if (arg1 == 0x12C || arg1 == 0x117) {
+                kind = 1;
+                idx = 0x19;
+                break;
+            }
+            if (arg1 >= 0xFE && arg1 < 0x117) {
+                arg1 = 0xC9;
+            }
+            if (arg1 <= 0 || arg1 >= 0xFC) {
+                return;
+            }
+            switch (((u8 *)&D_8009022C)[arg1 * 4 + 1]) {
+                case 0: idx = 0x18; kind = 1; break;
+                case 1: idx = 0x17; kind = 1; break;
+                case 2: idx = 0x16; kind = 1; break;
+                default: return;
+            }
+            break;
+        case 14: kind = 1; idx = 0x1B; break;
+        case 15: kind = 1; idx = 0x1C; break;
+        case 16: kind = 1; idx = 0x1D; break;
+        case 40: kind = 1; idx = 0x1E; break;
+        case 17: kind = 1; idx = 0x1F; break;
+        case 18: kind = 1; idx = 0x20; break;
+        case 19: kind = 1; idx = 0x22; break;
+        case 20: kind = 1; idx = 0x23; break;
+        case 21:
+            func_800231A0(0xC9, 1, 1);
+            return;
+        case 22: kind = 1; idx = 0x25; break;
+        case 23: kind = 1; idx = 0x26; break;
+        case 24: kind = 1; idx = 0x27; break;
+        case 25: kind = 1; idx = 0x28; break;
+        case 47: kind = 1; idx = 0x4F; break;
+        case 26: kind = 0; idx = 0x29; break;
+        case 27: kind = 0; idx = 0x2A; break;
+        case 28: kind = 0; idx = 0x2B; break;
+        case 41: kind = 0; idx = 0x46; break;
+        case 42: kind = 0; idx = 0x47; break;
+        case 29: kind = 1; idx = 0x2C; break;
+        case 30: kind = 1; idx = 0x2D; break;
+        case 31: kind = 1; idx = 0x2E; break;
+        case 32: kind = 1; idx = 0x2F; break;
+        case 38:
+            kind = 1;
+            idx = 0x21;
+            D_80090650[0] = 0;
+            break;
+        case 39:
+            kind = 2;
+            idx = 0x30;
+            D_80090650[0] = 1;
+            break;
+        case 33: kind = 1; idx = 0x31; break;
+        case 34: kind = 1; idx = 0x32; break;
+        case 35: kind = 1; idx = 0x33; break;
+        case 36: kind = 1; idx = 0x49; break;
+        case 37: kind = 1; idx = 0x4A; break;
+        case 46: kind = 1; idx = 0x4E; break;
+        case 50:
+            kind = 2;
+            if (D_80090650[0] == 0) {
+                idx = 0x38;
+                break;
+            }
+            D_80090650[0] = 0;
+            return;
+        case 51:
+            kind = 1;
+            switch (arg1) {
+                case 10: idx = 0x39; break;
+                case 3: idx = 0x3A; break;
+                case 2: idx = 0x3B; break;
+                case 1: idx = 0x3C; break;
+                case 0: idx = 0x3D; break;
+                default: return;
+            }
+            break;
+        case 52: kind = 2; idx = 0x45; break;
+        case 70: kind = 2; idx = 0x4B; break;
+        case 45: kind = 2; idx = 0x4C; break;
+        case 100: kind = 0; idx = 0x3E; break;
+        case 101: kind = 0; idx = 0x3F; break;
+        case 102: kind = 0; idx = 0x40; break;
+        case 103: kind = 0; idx = 0x41; break;
+        case 104: kind = 0; idx = 0x42; break;
+        case 105: kind = 0; idx = 0x43; break;
+        case 106: kind = 0; idx = 0x44; break;
+        default: break;
+    }
+    func_8001874C(((kind & 0xFF) << 8) | 0x06020000, idx);
+}
 
 void func_80024180(u32 arg0, s32 arg1) {
     switch (arg0) {
