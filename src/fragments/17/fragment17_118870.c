@@ -32,13 +32,16 @@ typedef struct Fragment17ChoiceEntry {
     u8 unk_04[24];
 } Fragment17ChoiceEntry;
 extern Fragment17ChoiceEntry D_8220DEF4[];
+typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
 // Loader-cleared transition record at 0x822106B0. The scene's state machine
 // value is at +2 (also read as D_822106B2); func_82209360 sets the 0x14/0x18
 // scales and the 0x1E screen position when its zoom finishes.
 typedef struct F17TransitionRecord {
     s16 unk_00;
     F17TransitionState transition;
-    u8 unk_06[0xE];
+    u16 unk_06;
+    s16 unk_08;
+    u8 unk_0A[0xA];
     f32 unk_14;
     f32 unk_18;
     s16 unk_1C;
@@ -237,7 +240,61 @@ extern void func_8220BF68(s32);
 extern void func_8220D560();
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82208EB0.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209000.s")
+extern s16 D_822106B8;
+extern s16 D_822106D4;
+// Moves the menu selection (sTransitionRecord.unk_08) in direction arg0 and starts the
+// transition when it changes. Writing the record through a local pointer gives retail's
+// per-access `lui` (shared for the +2/+4 pair) instead of a hoisted base register.
+void func_82209000(s32 arg0) {
+    s16 prev = D_822106B8;
+    Fragment17ChoiceEntry *cur = &D_8220DEF4[D_822106B8];
+    Fragment17ChoiceEntry *nw;
+    s16 n;
+    F17TransitionRecord *rec = &sTransitionRecord;
+
+    switch (arg0) {
+    case 0:
+        n = *(s16 *)((u8 *)cur + 0x14);
+        if (n >= 0 && D_8220DEF4[n].enabled != 0) {
+            rec->unk_08 = n;
+        }
+        break;
+    case 1:
+        n = *(s16 *)((u8 *)cur + 0x16);
+        if (n >= 0 && D_8220DEF4[n].enabled != 0) {
+            rec->unk_08 = n;
+        }
+        break;
+    case 2:
+        n = *(s16 *)((u8 *)cur + 0x18);
+        if (n >= 0 && D_8220DEF4[n].enabled != 0) {
+            rec->unk_08 = n;
+        }
+        break;
+    case 3:
+        n = *(s16 *)((u8 *)cur + 0x1A);
+        if (n >= 0 && D_8220DEF4[*(s16 *)((u8 *)cur + 0x18)].enabled != 0) {
+            rec->unk_08 = n;
+        }
+        break;
+    }
+    if (prev != rec->unk_08) {
+        nw = &D_8220DEF4[rec->unk_08];
+        rec->transition.state = 4;
+        rec->transition.unk_02 = 0;
+        if (*(s32 *)((u8 *)nw + 8) == 0) {
+            rec->unk_06 &= ~1;
+        } else {
+            rec->unk_06 |= 1;
+        }
+        *(unk_func_8220AC64_pair *)&D_822106D4 = *(unk_func_8220AC64_pair *)&D_822106CC;
+        if (*(s32 *)((u8 *)cur + 4) != 0 || *(s32 *)((u8 *)nw + 4) != 0) {
+            func_800226C0(0x34);
+        } else {
+            func_800226C0(1);
+        }
+    }
+}
 
 f32 func_822091E0(f32 arg0) {
     return 1.5f - arg0;
@@ -290,7 +347,39 @@ void func_82209360(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_822094C4.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_8220980C.s")
+extern s16 D_822106C0, D_822106D4;
+typedef struct F17Point { s16 x, y; } F17Point;
+// Lerps the transition record's position (unk_1C/1E) from the saved start point
+// D_822106D4/D_822106D6 toward the entry's target over five frames. FAKE forms
+// reproduce retail's load order: D_822106D6 is read through the record base
+// (0x822106B0 + 0x26) so it stays after the unk_1C store.
+void func_8220980C(void) {
+    s16 *state = (s16 *)D_822106B0;
+    s16 *entry;
+    s16 *pt; // FAKE: second name for D_822106D4
+    s32 z = 0; // FAKE: zero index
+    F17TransitionRecord *rec = &sTransitionRecord;
+    f32 progress;
+    f32 v;
+    f32 v2;
+
+    entry = (s16 *)&D_8220DEF4[state[4]];
+    state[2]++;
+    pt = &D_822106D4;
+    if (state[2] < 5) {
+        progress = D_822106B4 / 5.0f;
+        v = (entry[6] - ((F17Point *)&D_822106D4)->x) * progress + ((F17Point *)pt)->x;
+        (&sTransitionRecord)[z].unk_1C = ((v > 0.0f) ? 0.5f : -0.5f) + v;
+        v2 = *(s16 *)((u8 *)rec + 0x26) + (entry[7] - *(s16 *)((u8 *)rec + 0x26)) * progress;
+        (&sTransitionRecord)[z].unk_1E = ((v2 > 0.0f) ? 0.5f : -0.5f) + v2;
+    } else {
+        rec->transition.state = 3;
+        rec->transition.unk_02 = 0;
+        D_822106C0 = 0;
+        rec->unk_1C = entry[6];
+        rec->unk_1E = entry[7];
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209974.s")
 
@@ -595,7 +684,6 @@ s32 func_8220AC38(void) {
 }
 /* mkdraft:func_8220AC38 end */
 
-typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
 extern s16 D_822106D4;
 s32 func_8220AC64(void) {
     F17TransitionState *state = &sTransitionRecord.transition;
