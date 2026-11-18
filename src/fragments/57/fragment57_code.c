@@ -317,6 +317,9 @@ typedef struct unk_D_8330A2B0 {
     /* 0xC0 */ f32 unk_C0;
     /* 0xC4 */ f32 cameraPos[3]; // printed as "cam posx", "cam posy", "cam posz"
     /* 0xD0 */ f32 cameraAt[3]; // printed as "cam latx", "cam laty", "cam latz" (look-at point)
+    /* 0xDC */ u8 unk_DC[0xE4 - 0xDC];
+    /* 0xE4 */ u8 unk_E4[2][0x14];
+    /* 0x10C */ u8 unk_10C[4];
 } unk_D_8330A2B0;
 
 extern unk_D_8330A2B0 D_8330A2B0;
@@ -369,7 +372,90 @@ void func_833018E8(void) {
     D_8330ABE0 = *(s16 *)D_83308E34;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833019CC.s")
+extern s32 D_833090AC;
+extern s32 D_8330ABD8;
+extern ColorAdjustment D_833091DC;
+extern void func_80041FA0(s32, u16, ColorAdjustment);
+extern u32 func_8003570C(void);
+// Declared non-void here: retail never reuses $v0 after this call.
+extern s32 func_800428F8(s32);
+extern void *func_80004B4C(s32, s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern u8 *D_8330AC00;
+extern u8 *D_8330AC04;
+extern s32 D_8330A4D0;
+extern s32 D_8330ABE0;
+extern void func_83303AB0(s32);
+extern void func_83305C1C(s32);
+extern void main_pool_push_state(s32);
+extern void main_pool_pop_state(s32);
+extern s32 Gfx_InitDisplayListBuffers(s32, s32);
+extern s32 func_80041C98(s32);
+extern void func_833018E8(void);
+extern f32 func_8004B888(s32);
+extern s32 func_8003F2C4(s32, s32 *, s32);
+extern s32 func_8003F3BC(s32 *, s32);
+#define A2B0_F(off) (*(f32 *)((u8 *)&D_8330A2B0 + (off)))
+#define A2B0_S(off) (*(s32 *)((u8 *)&D_8330A2B0 + (off)))
+#define A4D0_F(off) (*(f32 *)((u8 *)&D_8330A4D0 + (off)))
+void func_833019CC(void) {
+    f32 scale;
+
+    A2B0_S(0x48) = 0;
+    A2B0_S(0x44) = 0;
+    A2B0_F(0xC8) = 600.0f;
+    A2B0_F(0x5C) = 0.0f;
+    A2B0_F(0xC4) = 0.0f;
+    A2B0_F(0xAC) = 0.0f;
+    A2B0_F(0xCC) = 700.0f;
+    A2B0_F(0xB0) = 200.0f;
+    A2B0_F(0xB4) = 1500.0f;
+    A2B0_F(0xD4) = 300.0f;
+    A2B0_S(0x40) = 1;
+    A2B0_S(0x30) = 0;
+    A2B0_F(0xD0) = 0.0f;
+    A2B0_F(0xD8) = 0.0f;
+    A2B0_F(0x7C) = 0.0f;
+    A2B0_F(0x80) = 0.0f;
+    A2B0_F(0x84) = 0.0f;
+    func_83303AB0(D_8330ABD8);
+    func_83305C1C(D_8330ABD8);
+    main_pool_push_state('SWCH');
+    Gfx_InitDisplayListBuffers(0x20000, 0);
+    D_8330A4CC = func_80041C98(1);
+    if (D_833090AC == 1) {
+        D_8330ABDC = func_8003570C() % 101 + 1;
+        D_8330ABE0 = func_8003570C() % 101 + 1;
+        func_80041FA0(D_8330A4CC, D_8330ABDA, D_833091DC);
+    } else {
+        func_833018E8();
+    }
+    func_800428F8(D_8330A4CC);
+    A2B0_S(0x28) = 0;
+    D_8330AC00 = D_8330AC04;
+    *(s16 *)(D_8330AC00 + 0x658) = D_8330ABD8;
+    *(void **)(D_8330AC00 + 0x2D4) = func_80004B4C(*(s32 *)(D_8330AC00 + 0x2D0), *(s16 *)(D_8330AC00 + 0x658) - 1);
+    func_8003F1DC(&D_8330A4D0);
+    func_8003F114((u8 *)&D_8330A4D0, 0, D_8330ABDA, **(void ***)(*(u8 **)(D_8330A4CC + 0x38) + 8));
+    scale = func_8004B888(*(s16 *)(D_8330AC00 + 0x658));
+    A4D0_F(0x38) = scale;
+    A4D0_F(0x34) = scale;
+    A4D0_F(0x30) = scale;
+    *((u8 *)&D_8330A4D0 + 2) &= ~0x40;
+    A4D0_F(0x24) = A2B0_F(0x70);
+    A4D0_F(0x28) = A2B0_F(0x74);
+    A4D0_F(0x2C) = A2B0_F(0x78);
+    A2B0_S(0x34) = *(u8 *)(*(u8 **)(D_8330AC00 + 0x2D4) + 0x13B0);
+    A2B0_S(0x38) = *(s8 *)(*(u8 **)(D_8330AC00 + 0x2D4) + 0x13B1);
+    if (A2B0_S(0x34) == 0) {
+        A2B0_S(0x34) = 3;
+        A2B0_S(0x38) = 3;
+    }
+    func_8003F2C4(D_8330A4CC, &D_8330A4D0, 0);
+    func_8003F3BC(&D_8330A4D0, 0);
+    main_pool_pop_state('SWCH');
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83301C60.s")
 
@@ -3227,7 +3313,269 @@ s32 func_83307C2C(s32 arg0) {
     return arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83307C7C.s")
+
+
+extern u8 D_8330A638[];
+extern u8 D_8330A7A0[];
+extern u8 D_8330A908[];
+extern s32 D_8330AC58;
+extern s32 D_8330AC20;
+extern s32 D_8330ABE8[];
+extern s32 D_8330ABEC;
+extern s32 D_8330ABF0;
+extern u8 D_83308F68[];
+extern s32 D_83308E84[];
+extern s16 D_833090D4;
+extern s16 D_833090D8;
+extern s32 StageContext_GetFadeMode(void);
+extern void func_8003F210(void *, s32);
+extern void StageContext_SetClearColor(u16);
+extern s32 StageFade_StartFromOpaque(s32);
+extern s32 StageFade_StartFromTransparent(s32);
+extern void func_83307AAC(s32);
+extern void func_833003B0(s32);
+extern void func_8330309C(s32);
+extern void func_83306BF0(void);
+extern void func_83306D0C(void);
+extern s32 func_83307C2C(s32);
+extern void func_833078C4(void);
+extern s32 func_81A00074(void *, s32);
+extern void func_83307088(void);
+extern void func_833019CC(void);
+typedef struct { s32 w[12]; } Func83307C7CBlob48;
+typedef struct { s32 w[68]; } Func83307C7CBlob110;
+#define S32(off) (*(s32 *)((u8 *)&D_8330A2B0 + (off)))
+#define F32(off) (*(f32 *)((u8 *)&D_8330A2B0 + (off)))
+
+// Per-frame step of the intro sequence: advances the state in D_8330A2B0 (+0x0), swaps the
+// animated models per stage and returns the next state. The +0xC frame counter is read as
+// D_8330A2B0.frame in case 9; the S32() form there makes IDO evaluate the compare in the wrong order.
+s32 func_83307C7C(s32 arg0) {
+    s32 i, j;
+
+    S32(0) = arg0;
+    switch (D_8330A2B0.unk_10) {
+    case 1:
+        D_8330A2B0.frame = D_8330A680 >> 16;
+        break;
+    case 2:
+        D_8330A2B0.frame = D_8330A7E8 >> 16;
+        break;
+    case 3:
+        D_8330A2B0.frame = D_8330A950 >> 16;
+        break;
+    case 4:
+        if (S32(0x14) == 0) {
+            if (D_8330A2B0.frame < D_83308E2C * 20) {
+                D_8330A2B0.frame += 1;
+            }
+        }
+        break;
+    }
+    if ((D_80087200->buttonsPressed & 0x1000) && D_833090AC == 1) {
+        S32(0x14) = 1 - S32(0x14);
+    }
+    func_833078C4();
+    switch (S32(0)) {
+    case 0:
+        if (StageContext_GetFadeMode() == 0) {
+            S32(0) = S32(4);
+        }
+        break;
+    case 1:
+        func_8003F1DC(&D_8330A4D0);
+        func_8003F1DC(D_8330AA70);
+        func_80021ED8(0x56);
+        *(Func83307C7CBlob48 *)&D_8330AC08 = *(Func83307C7CBlob48 *)D_8330907C;
+        *(Func83307C7CBlob110 *)&D_8330A2B0 = *(Func83307C7CBlob110 *)D_83308F68;
+        D_833090D4 = 0x4000;
+        D_833090D8 = 0;
+        S32(0x3C) = 0;
+        D_8330A2B0.unk_10 = 1;
+        F32(0xC8) = 200.0f;
+        F32(0xCC) = 1200.0f;
+        F32(0xD0) = 0.0f;
+        F32(0xD4) = 10.0f;
+        F32(0xDC) = 100.0f;
+        func_87F034CC(&D_8330AC38);
+        func_8003F114(D_8330A638, 0, -1, D_8330ABE8[0]);
+        func_8003F210(D_8330A638, 0);
+        func_8003F3BC((s32 *)D_8330A638, 0);
+        ModelAnim_SetFrame(D_8330A638, 0);
+        ModelAnim_SetEventFrame(D_8330A638, 0);
+        D_8330A2B0.frame = 0;
+        S32(0) = 2;
+        D_8330AC58 = 0;
+        break;
+    case 2:
+        if (D_8330A2B0.frame >= 0x81) {
+            S32(0) = 3;
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromTransparent(0x14);
+        }
+        break;
+    case 3:
+        if (StageContext_GetFadeMode() == 1) {
+            StageFade_StartFromOpaque(0xA);
+            D_8330A2B0.unk_10 = 2;
+            func_8003F1DC(D_8330A638);
+            func_8003F114(D_8330A7A0, 0, -1, D_8330ABEC);
+            func_8003F210(D_8330A7A0, 0);
+            ModelAnim_SetFrame(D_8330A7A0, 0);
+            D_8330A2B0.frame = 0;
+            S32(0) = 4;
+        }
+        break;
+    case 4:
+        if (D_8330A2B0.frame == 1) {
+            func_833003B0(0);
+        }
+        if ((D_8330A7E8 >> 16) >= 0x32) {
+            func_83307AAC(0x15);
+        }
+        if (D_8330A2B0.frame >= 0xC7) {
+            S32(0) = 5;
+        }
+        break;
+    case 5:
+        D_8330A2B0.unk_10 = 3;
+        D_8330A2B0.frame = 0;
+        F32(0xDC) = 5.0f;
+        func_8003F1DC(D_8330A7A0);
+        func_8003F114(D_8330A908, 0, -1, D_8330ABF0);
+        func_8003F210(D_8330A908, 0);
+        S32(0) = 6;
+        break;
+    case 6:
+        if (D_8330A2B0.frame == 0x28) {
+            func_833003B0(1);
+        }
+        if (D_8330A2B0.frame == 0x64) {
+            func_833003B0(2);
+        }
+        if (D_8330A2B0.frame >= 0x6D) {
+            func_800225C4(0x28);
+            StageContext_SetClearColor(0xFFFF);
+            S32(0) = 7;
+            StageFade_StartFromTransparent(0x28);
+        }
+        break;
+    case 7:
+        if (StageContext_GetFadeMode() == 1) {
+            D_8330A2B0.unk_10 = 4;
+            D_8330A2B0.frame = 0;
+            S32(0x3C) = 1;
+            D_833090D4 = 0x4000;
+            D_833090D8 = 0;
+            F32(0xDC) = 100.0f;
+            func_8003F1DC(D_8330A908);
+            S32(0) = 8;
+            S32(0x40) = 1;
+            func_83303AB0(D_8330ABD8);
+            func_83305C1C(D_8330ABD8);
+            StageContext_SetClearColor(0xFFFF);
+            StageFade_StartFromOpaque(0x23);
+            for (i = 0; i < 2; i++) {
+                for (j = 0; j < 3; j++) {
+                    D_8330A2B0.unk_10C[j] = D_83308E84[j];
+                    D_8330A2B0.unk_E4[i][j] = D_83308E54[i][j];
+                }
+            }
+        }
+        break;
+    case 8:
+        if (D_8330A2B0.frame == 5) {
+            func_80021ED8(0x31);
+            D_8330AC58 = 1;
+            func_833003B0(3);
+        }
+        if (D_8330A2B0.frame == 0x50) {
+            func_833003B0(4);
+        }
+        if (S32(0x40) == 1) {
+            func_833019CC();
+            S32(0x40) = 0;
+        }
+        func_83306BF0();
+        break;
+    case 9:
+        if (D_8330A2B0.frame == D_83308E2C + 10) {
+            func_833003B0(5);
+        }
+        func_83306D0C();
+        break;
+    case 13:
+        if (S32(0x4C) > 0) {
+            S32(0x4C) += 1;
+        }
+        if (S32(0x4C) >= 0x15 && func_80025D44() != 0) {
+            func_80025CBC(2);
+        }
+        if (StageContext_GetFadeMode() == 1) {
+            S32(0) = S32(4);
+            if (S32(0) != 0xE && D_833090AC == 1) {
+                StageFade_StartFromOpaque(0xA);
+            }
+        }
+        break;
+    case 10:
+        if (S32(0x4C) > 0) {
+            S32(0x4C) += 1;
+        }
+        if (S32(0x4C) >= 0x15 && func_80025D44() != 0) {
+            func_80025CBC(2);
+        }
+        if (func_80025D44() == 0) {
+            if (StageContext_GetFadeMode() == 1) {
+                S32(0x58) = -1;
+                S32(0x3C) = 0;
+                D_8330AC20 = 0;
+                func_8003F1DC(&D_8330A4D0);
+                func_8003F1DC(D_8330AA70);
+                func_87F034CC(&D_8330AC38);
+                S32(0) = 0xB;
+                S32(0x58) = 1;
+                StageFade_StartFromOpaque(3);
+            }
+        }
+        break;
+    case 11:
+        func_8330309C(((s8 *)D_83308E34)[0x5C] - 1);
+        S32(0) = 0xC;
+        break;
+    case 12:
+        if (S32(0x58) > 0) {
+            S32(0x58) += 1;
+        }
+        if (S32(0x58) < 0) {
+            S32(0x58) -= 1;
+        }
+        if (func_81A00074(D_8330A288, ((s8 *)D_83308E34)[0x5C] - 1) != 0) {
+            if (S32(0x58) > 0) {
+                S32(0) = 0xD;
+                S32(4) = 0xE;
+                StageContext_SetClearColor(1);
+                StageFade_StartFromTransparent(5);
+            } else {
+                S32(0) = 0xE;
+            }
+        } else {
+            if (S32(0x58) <= 0) {
+                S32(0x58) = 1;
+                StageFade_StartFromOpaque(5);
+            }
+            S32(0) = 0xC;
+        }
+        break;
+    }
+    if (S32(0x14) == 1) {
+        func_83307088();
+    }
+    D_8330AC58 = func_83307C2C(D_8330AC58);
+    return S32(0);
+}
+#undef S32
+#undef F32
 
 
 /* mkdraft:func_833084B0 begin */

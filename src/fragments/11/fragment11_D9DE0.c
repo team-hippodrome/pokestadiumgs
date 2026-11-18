@@ -1039,7 +1039,20 @@ f32 func_81606E14(f32 arg0, s32 arg1) {
     return ((f32)D_8160C0F0[index + 1] - (f32)D_8160C0F0[index]) * (arg0 - (f32)index) + (f32)D_8160C0F0[index];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606E84.s")
+// Fills arg0[0..3] from two func_81606E14 samples at arg3 and arg3 + 1
+// (arg3 capped at 10 when arg4 is 0) and from arg2.
+void func_81606E84(s16 *arg0, s32 arg1, s32 arg2, f32 arg3, s32 arg4) {
+    if (arg4 == 0) {
+        if (arg3 > 10.0f) {
+            arg3 = 10.0f;
+        }
+    }
+    arg0[0] = func_81606E14(arg3, arg4) + (f32)arg1 - 7.0f;
+    arg3 = func_81606E14(arg3 + 1.0f, arg4);
+    arg0[2] = arg3 + (f32)arg1 + 10 - arg0[0];
+    arg0[1] = arg2 - 8;
+    arg0[3] = arg2 - arg0[1] + 35;
+}
 
 extern void func_81606E84(s16 *, s32, s32, f32, s32);
 extern void Fragment11_DrawThickPanelFrame();

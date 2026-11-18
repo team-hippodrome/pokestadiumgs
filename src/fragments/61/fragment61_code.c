@@ -681,7 +681,101 @@ s32 func_86B021E8(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B03228.s")
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_8003EC54(s32 *);
+extern u16 D_80094904;
+extern u16 D_86B178E0;
+extern s32 D_86B17910;
+extern s32 D_86B17ABC;
+extern void func_8003F210(void *, s32);
+extern void func_800279C4(s32);
+extern void func_86B0952C(void);
+s32 func_86B03228(s32 arg0, s32 arg1) {
+    s32 i;
+    if (D_86B178E0 != D_80094904) {
+        if (guRandom() % 300 == 0) {
+            ModelAnim_SetEventFrame((void *)&D_86B17910, 0);
+        }
+        if (arg0 != 0 && arg0 == 2) {
+            switch (D_86B17ABC) {
+            case 0:
+                func_8003F210((void *)&D_86B17910, 0);
+                break;
+            case 1:
+                func_8003F210((void *)&D_86B17910, 1);
+                if (*(s32 *)D_86B17A78 < 5) {
+                    if (func_8003EC54(&D_86B17910) == 0) {
+                        func_800225C4(2);
+                    }
+                }
+                if (func_8003EC54(&D_86B17910) == 5) {
+                    func_800279C4(0xAF01);
+                }
+                break;
+            case 2:
+                func_8003F210((void *)&D_86B17910, 2);
+                if (func_8003EC54(&D_86B17910) == 0) {
+                    func_800279C4(0xAF08);
+                }
+                if (func_8003EC54(&D_86B17910) == 5) {
+                    func_800279C4(0xAF00);
+                    if (*(s32 *)D_86B17A78 < 5) {
+                        if (*(s32 *)D_86B17A78 < 4) {
+                            func_80021ED8(0x36);
+                        } else {
+                            func_80021ED8(0x65);
+                        }
+                    }
+                }
+                if (func_8003EC54(&D_86B17910) == 5) {
+                    if (*(s32 *)D_86B17A78 < 5) {
+                        func_86B0952C();
+                    }
+                }
+                if (ModelAnim_IsFinished((void *)&D_86B17910) != 0) {
+                    D_86B17ABC = 0;
+                }
+                break;
+            case 3:
+                func_8003F210((void *)&D_86B17910, 1);
+                if (func_8003EC54(&D_86B17910) >= 5) {
+                    D_86B17ABC = 5;
+                }
+                break;
+            case 4:
+                func_8003F210((void *)&D_86B17910, 1);
+                if (func_8003EC54(&D_86B17910) >= 5) {
+                    D_86B17ABC = 6;
+                }
+                break;
+            case 5:
+                func_8003F210((void *)&D_86B17910, 1);
+                ModelAnim_SetSpeed((u8 *)&D_86B17910, 0xFFFF0000);
+                if (func_8003EC54(&D_86B17910) < 0) {
+                    D_86B17ABC = 0;
+                    func_800280EC();
+                }
+                if (func_8003EC54(&D_86B17910) == 4) {
+                    for (i = 2; i != 10; i += 4) {}
+                }
+                break;
+            case 6:
+                func_8003F210((void *)&D_86B17910, 1);
+                ModelAnim_SetSpeed((u8 *)&D_86B17910, 0xFFFF0000);
+                if (func_8003EC54(&D_86B17910) < 0) {
+                    D_86B17ABC = 3;
+                }
+                if (func_8003EC54(&D_86B17910) == 4) {
+                    for (i = 2; i != 10; i += 4) {}
+                }
+                break;
+            }
+        }
+    }
+    D_86B178E0 = D_80094904;
+    return 0;
+}
+
 #endif
 
 #ifdef VERSION_US

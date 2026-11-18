@@ -717,8 +717,11 @@
     subsegments:
     - [0x10D470, textbin, fragments/16/fragment16_header]
     - [0x10D490, c,       fragments/16/fragment16_code]
+    - [0x10E250, c,       fragments/16/fragment16_10E250]
     - [0x10F080, data,    fragments/16/fragment16_data]
-    - [0x10F1A0, .rodata, fragments/16/fragment16_code] # Jump tables.
+    - [0x10F170, .data,   fragments/16/fragment16_10E250] # func_82001344's ticker static.
+    - [0x10F180, data,    fragments/16/fragment16_10F180]
+    - [0x10F1A0, .rodata, fragments/16/fragment16_10E250] # Jump tables.
     - [0x10F1C0, rodata]
     # The fade-state static (the C .data at 0x82001EA0) and the trailing
     # data blob follow the constant pool; retain their .data input sections
@@ -1392,7 +1395,8 @@
     - [0x288070, .rodata, fragments/52/fragment52_2853B0] # Float literals of func_8640708C.
     - [0x288080, rodata]
     - [0x288100, .rodata, fragments/52/fragment52_285F60] # Float literals of func_86407CE0 and func_86407D58.
-    - [0x288120, rodata,  fragments/52/fragment52_data_tail]
+    - [0x288120, .rodata, fragments/52/fragment52_2862C0] # Float literals of func_86407E58 and func_864082A8.
+    - [0x288130, rodata,  fragments/52/fragment52_data_tail]
 
   - name: fragment53
     type: code
