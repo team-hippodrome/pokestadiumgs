@@ -155,13 +155,41 @@ void func_86800508(void) {
 }
 
 typedef struct Fragment56PointGroupView {
-    u8 unk_000[16];
+    u8 unk_000[8];
+    s32 difficulty;
+    u8 unk_00C[4];
     s32 mode;
-    u8 unk_014[56];
+    u8 unk_014[8];
+    s32 selection;
+    u8 unk_020[4];
+    s32 target;
+    u8 unk_028[36];
     s32 pool_cursor;
     s32 active[40];
-    u8 unk_0F0[52];
+    f32 timer;
+    f32 threshold;
+    f32 margin;
+    f32 speed;
+    f32 base_speed;
+    u8 unk_104[8];
+    s32 unk_10C;
+    s32 randomize;
+    s32 selected;
+    u8 unk_118[12];
 } Fragment56PointGroupView;
+
+typedef struct Fragment56CatchRecord {
+    u8 unk_00[4];
+    s32 unk_04;
+    s32 unk_08;
+    u8 unk_0C[28];
+} Fragment56CatchRecord;
+
+extern u8 D_86809208[], D_8682CD18[];
+extern s32 D_86807C70, D_86807C78;
+extern s32 D_8682F2D4, D_8682F2E4, D_8682F2EC;
+extern s32 D_86807BC4[][6];
+extern f32 D_86807DF8, D_86807DFC;
 
 extern Fragment56PointGroupView D_8682EE18[4];
 extern u32 func_8003570C(void);
@@ -508,10 +536,284 @@ void Fragment56_UpdateBallisticModels(s32 group_index) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_868014C0.s")
+void func_868014C0(s32 arg0) {
+    s32 i;
+    f32 height;
+    f32 y;
+    s32 nearest;
+    s32 typeA;
+    s32 typeB;
+    s32 choice;
+    s32 type;
+    s32 old_choice;
+    u32 random;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86801E8C.s")
+    old_choice = 0;
+    typeB = typeA = nearest = -1;
+    if (D_8682EE18[arg0].target != -1) {
+        if (((Fragment56PointModelView (*)[40])D_86809208)[arg0][D_8682EE18[arg0].target].position[1] <
+            D_8682F304 - D_8682EE18[arg0].threshold * D_86807C78) {
+            switch (D_8682EE18[arg0].difficulty) {
+            case 1:
+                D_8682EE18[arg0].timer = 200 - ((func_8003570C() % 21) * D_8682F2D4) / 4;
+                D_8682EE18[arg0].unk_10C = -1;
+                D_8682EE18[arg0].speed = D_8682EE18[arg0].base_speed * (func_8003570C() / 4294967296.0f * 0.1f) * D_86807DFC;
+                break;
+            case 2:
+                D_8682EE18[arg0].timer = 150 - ((func_8003570C() % 21) * D_8682F2D4) / 4;
+                D_8682EE18[arg0].unk_10C = -1;
+                D_8682EE18[arg0].speed = D_8682EE18[arg0].base_speed * (func_8003570C() / 4294967296.0f * 0.1f) * D_86807DFC;
+                break;
+            case 3:
+                D_8682EE18[arg0].timer = 120 - ((func_8003570C() % 21) * D_8682F2D4) / 4;
+                D_8682EE18[arg0].unk_10C = -1;
+                D_8682EE18[arg0].speed = (D_8682EE18[arg0].base_speed + func_8003570C() / 4294967296.0f * 0.3f) * D_86807DFC;
+                break;
+            case 4:
+                D_8682EE18[arg0].timer = 80 - ((func_8003570C() % 21) * D_8682F2D4) / 2;
+                D_8682EE18[arg0].unk_10C = -1;
+                D_8682EE18[arg0].speed = (D_8682EE18[arg0].base_speed + func_8003570C() / 4294967296.0f * 0.5f) * D_86807DFC;
+                break;
+            }
+            D_8682EE18[arg0].target = -1;
+        } else {
+            return;
+        }
+    } else {
+        height = D_8682EE18[arg0].timer + D_8682F304;
+        for (i = 0; i != 40; i++) {
+            y = ((Fragment56PointModelView (*)[40])D_86809208)[arg0][i].position[1];
+            if (y <= height && D_8682F304 - D_86807C78 * 5 < y) {
+                if (((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][i].unk_04 != -1) {
+                    height = y;
+                    if (((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][i].unk_04 == 0) {
+                        typeA = i;
+                    } else {
+                        typeB = i;
+                    }
+                    nearest = i;
+                }
+            }
+        }
+    }
+    if (nearest == -1) {
+        return;
+    }
+    D_8682EE18[arg0].target = nearest;
+    if (D_8682EE18[arg0].randomize == 1) {
+        D_8682EE18[arg0].selection += func_8003570C() % 4;
+        if (D_8682EE18[arg0].selection >= 4) {
+            D_8682EE18[arg0].selection -= 3;
+        }
+        D_8682EE18[arg0].randomize = 0;
+        return;
+    }
+    choice = ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][nearest].unk_08;
+    if (nearest == typeA) {
+        if (typeB != -1 &&
+            ((Fragment56PointModelView (*)[40])D_86809208)[arg0][typeB].position[1] <
+                D_8682EE18[arg0].margin * D_86807DF8 + ((Fragment56PointModelView (*)[40])D_86809208)[arg0][typeA].position[1] &&
+            ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][typeA].unk_08 == ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][typeB].unk_08) {
+            return;
+        }
+        D_8682EE18[arg0].selected = nearest;
+    } else if (func_8003570C() % 101 < D_86807C70) {
+        if (typeA != -1) {
+            if (choice == ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][typeB].unk_08) {
+                old_choice = choice;
+                if (--choice <= 0) {
+                    choice = 2;
+                }
+            } else {
+                choice = ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][typeA].unk_08;
+            }
+        } else {
+            old_choice = choice;
+            if (--choice <= 0) {
+                choice = 2;
+            }
+        }
+        if (old_choice != 0) {
+            for (i = 0; i != 40; i++) {
+                if (height == ((Fragment56PointModelView (*)[40])D_86809208)[arg0][i].position[1]) {
+                    if (((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][i].unk_04 == 1) {
+                        if (i != nearest) {
+                            choice = 6 - ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][i].unk_08 -
+                                     ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][nearest].unk_08;
+                        }
+                    } else {
+                        choice = ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][i].unk_08;
+                    }
+                }
+            }
+        }
+    }
+    random = func_8003570C() % 101;
+    if (D_86807BC4[D_8682F2E4][D_8682F2EC] + func_8003570C() % 11 < random) {
+        if (old_choice == 0) {
+            choice++;
+            if (choice >= 4) {
+                choice = 1;
+            }
+            if (typeB != 0 && choice == ((Fragment56CatchRecord (*)[40])D_8682CD18)[arg0][typeB].unk_08) {
+                choice++;
+            }
+            if (choice >= 4) {
+                choice = 1;
+            }
+        }
+    }
+    switch (choice) {
+    case 1:
+        D_8682EE18[arg0].selection = 2;
+        break;
+    case 3:
+        D_8682EE18[arg0].selection = 1;
+        break;
+    case 2:
+        D_8682EE18[arg0].selection = 3;
+        break;
+    }
+}
 
+// Retail jr ra/nop pair after func_868014C0 (inside its symbol extent):
+// an unreferenced empty function keeps the fragment layout.
+void func_868014C0_padding(void) {}
+
+extern s32 D_86807C5C;
+extern s32 D_86807C7C;
+extern s32 D_86807C80;
+extern s32 D_86807CA0;
+extern s32 D_86807CA4;
+extern s32 func_8003F210(void *, s32);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+struct Func3EC34;
+extern s32 ModelAnim_IsFinished(struct Func3EC34 *);
+
+extern u8 D_800CE060[];
+s32 func_86801E8C(s32 arg0, void *arg1) {
+    s32 index = *(s32 *)((u8 *)arg1 + 0x14);
+    s32 pad[2];
+    u32 input;
+    u16 buttons;
+    s32 pad_buttons;
+    u8 *state;
+    u8 *model;
+    s32 mode;
+    if (arg0 != 0) {
+    if (arg0 == 2) {
+        if (D_8682F2A8 == 1 && *(s32 *)((u8 *)&D_8682F2A8 + 12) != 1) {
+            input = *(u16 *)(D_800CE060 + index * 40 + 6);
+            buttons = 0;
+            if (input & 0xF00) { state = (u8 *)&D_8682EE18[index]; }
+            else if (input & 0xF) { state = (u8 *)&D_8682EE18[index]; }
+            else if (input & 0x30) {
+                if (input == 0x10) {
+                    state = (u8 *)&D_8682EE18[index];
+                    buttons = 0x100;
+                    *(s32 *)(state + 0x34) += 1;
+                    *(s32 *)(state + 0x38) = 0;
+                } else if (input == 0x20) {
+                    state = (u8 *)&D_8682EE18[index];
+                    buttons = 0x200;
+                    *(s32 *)(state + 0x38) += 1;
+                    *(s32 *)(state + 0x34) = 0;
+                } else {
+                    state = (u8 *)&D_8682EE18[index];
+                    buttons = 8;
+                }
+            } else { state = (u8 *)&D_8682EE18[index]; }
+            if (*(s32 *)(state + 0x30) > 0) (*(s32 *)(state + 0x30))++;
+            if (*(s32 *)(state + 0x30) > D_86807CA4) *(s32 *)(state + 0x30) = 0;
+            if (*(s32 *)(state + 8)) func_868014C0(index);
+            mode = *(s32 *)(state + 16);
+            if (mode <= D_86807C7C * 9 + 3) {
+                if (*(s32 *)(state + 8) == 0) {
+                    *(s32 *)(state + 28) = 2;
+                    if (buttons & 0x101) *(s32 *)(state + 28) = 1;
+                    if (buttons & 0x202) *(s32 *)(state + 28) = 3;
+                    if (buttons & 8) *(s32 *)(state + 28) = 2;
+                }
+                mode = *(s32 *)(state + 16);
+                if (mode != 13) {
+if (*(s32 *)(state + 28) == 2) {
+if (D_86807C80 == 0 && mode != 10) {
+*(s32 *)(state + 16) = 1;
+func_8003F210(D_868086C8 + index * 360, 1);
+} else { switch (mode) {
+case 0:
+ *(s32 *)(state + 16) = 1;
+func_8003F210(D_868086C8 + index * 360, 1);  break;
+case 2:
+ *(s32 *)(state + 16) = 7;
+func_8003F210(D_868086C8 + index * 360, 7);  break;
+case 3:
+ *(s32 *)(state + 16) = 5;
+func_8003F210(D_868086C8 + index * 360, 5);  break;
+case 11: case 12:
+if (D_86807CA0 == 1) { *(s32 *)(state + 16) = 1;
+func_8003F210(D_868086C8 + index * 360, 1); } break;
+} } }
+else if (*(s32 *)(state + 28) == 1) {
+if (D_86807C80 == 0 && mode != 12) {
+*(s32 *)(state + 16) = 3;
+func_8003F210(D_868086C8 + index * 360, 3);
+} else { switch (mode) {
+case 0:
+ *(s32 *)(state + 16) = 3;
+func_8003F210(D_868086C8 + index * 360, 3);  break;
+case 1:
+ *(s32 *)(state + 16) = 4;
+func_8003F210(D_868086C8 + index * 360, 4);  break;
+case 2:
+ *(s32 *)(state + 16) = 8;
+func_8003F210(D_868086C8 + index * 360, 8);  break;
+case 10: case 11:
+if (D_86807CA0 == 1) { *(s32 *)(state + 16) = 3;
+func_8003F210(D_868086C8 + index * 360, 3); } break;
+} } }
+else if (*(s32 *)(state + 28) == 3) {
+if (D_86807C80 == 0 && mode != 11) {
+*(s32 *)(state + 16) = 2;
+func_8003F210(D_868086C8 + index * 360, 2);
+} else { switch (mode) {
+case 0:
+ *(s32 *)(state + 16) = 2;
+func_8003F210(D_868086C8 + index * 360, 2);  break;
+case 1:
+ *(s32 *)(state + 16) = 6;
+func_8003F210(D_868086C8 + index * 360, 6);  break;
+case 3:
+ *(s32 *)(state + 16) = 9;
+func_8003F210(D_868086C8 + index * 360, 9);  break;
+case 10: case 12:
+if (D_86807CA0 == 1) { *(s32 *)(state + 16) = 2;
+func_8003F210(D_868086C8 + index * 360, 2); } break;
+} } }
+ } }
+mode = *(s32 *)(state + 16);
+model = D_868086C8 + index * 360;
+if (mode == 13) { func_8680105C(index); model[0xA3] = 0x80; } else model[0xA3] = 0;
+Fragment56_UpdateBallisticModels(index);
+if (ModelAnim_IsFinished((struct Func3EC34 *)model)) {
+switch (*(s32 *)(state + 16)) {
+case 5: case 7: case 10: *(s32 *)(state + 16) = 1;
+func_8003F210(model, 1); break;
+case 4: case 8: case 12: *(s32 *)(state + 16) = 3;
+func_8003F210(model, 3); break;
+case 6: case 9: case 11: *(s32 *)(state + 16) = 2;
+func_8003F210(model, 2); break;
+case 13:
+*(s32 *)(state + 28) = 2;
+*(s32 *)(state + 16) = 1;
+func_8003F210(model, 1); break;
+}
+}
+mode = *(s32 *)(state + 16);
+if (mode >= 4 && mode < 10) ModelAnim_SetSpeed(model, D_86807C5C << 16);
+else if (mode >= 10 && mode < 13) ModelAnim_SetSpeed(model, 0x20000);
+else ModelAnim_SetSpeed(model, 0x10000);
+} } } }
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86802740.s")
 
 /* mkdraft:func_86802EE8 begin */
@@ -982,7 +1284,6 @@ extern s32 D_8682F2D4;
 extern s32 D_86807C8C;
 extern s32 D_86807C7C;
 extern s32 D_86807C78;
-extern void func_8003F210(void *, s32);
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void ModelAnim_SetEventFrame(u8 *, s16);
 extern void func_8003F3BC(u8 *, s32);
@@ -1152,7 +1453,6 @@ extern void *D_8682F308;
 extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
 extern void ModelAnim_SetEventFrame(u8 *, s16);
 extern void ModelAnim_SetFrame(u8 *, s16);
-extern void func_8003F210(void *, s32);
 extern void func_8003F3BC(u8 *, s32);
 extern void func_81900164(s32, f32, f32, f32, s32);
 extern void func_87F0C930(void *);
@@ -1634,7 +1934,6 @@ extern void Fragment56_InitStateRecords(void);
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F114(u8 *, s16, s16, void *);
 extern void func_8003F1DC(void *);
-extern void func_8003F210(void *, s32);
 extern u8 D_868086C8[];
 extern u8 D_86808C68[];
 extern s32 D_8682CD00[];
@@ -1906,7 +2205,6 @@ void func_868063CC(void) {
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F114(u8 *, s16, s16, void *);
 extern void func_8003F1DC(void *);
-extern void func_8003F210(void *, s32);
 extern void func_86800A7C(void);
 extern void Fragment56_UpdateMovingModels(void);
 extern u8 D_868086C8[];
@@ -2170,7 +2468,7 @@ s32 arg0;
 }
 
 extern s32 D_8680806C;
-typedef struct { u8 pad[0x44]; u8 *value44; s32 value48; } Func3EC34;
+typedef struct Func3EC34 { u8 pad[0x44]; u8 *value44; s32 value48; } Func3EC34;
 extern s32 ModelAnim_IsFinished(Func3EC34 *);
 extern void ModelAnim_SetEventFrame(u8 *, s16);
 extern s32 ModelAnim_SetEventTrack(void *, s32);
@@ -2179,7 +2477,6 @@ extern void func_8680422C(s32);
 extern void Fragment56_UpdateBallisticModels(s32);
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F1DC(void *);
-extern void func_8003F210(void *, s32);
 extern u8 D_868086C8[];
 void Fragment56_UpdateModelAnimations(void) {
     struct AnimState {
@@ -2347,7 +2644,6 @@ extern void *D_86808590;
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void func_8003F114(u8 *, s16, s16, void *);
 extern void func_8003F1DC(void *);
-extern void func_8003F210(void *, s32);
 extern void func_86800A7C(void);
 extern void func_86803ED8(void);
 extern u8 D_868086C8[];

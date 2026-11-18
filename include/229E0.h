@@ -16,7 +16,7 @@ extern unsigned char D_80090137[0x100];
 extern unsigned char D_800917F8[0x100];
 f32 func_80021DE0(s32 arg0) ;
 
-extern void func_800187AC();
+extern s32 func_800187AC(void);
 extern s8 D_8009019C;
 extern s8 D_800901A0;
 extern s8 D_800901A4;
