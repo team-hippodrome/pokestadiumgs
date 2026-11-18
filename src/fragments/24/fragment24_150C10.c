@@ -1848,7 +1848,62 @@ void func_82B0504C(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B050E8.s")
+/* Panel kind 10: two rows of textures (three passes with different env colors), a marker
+ * for each nonzero row kind at arg0 + 0x50, then each row's label text by kind.
+ * K&R definition: func_82B05494 calls it with no arguments, but it reads arg0. */
+extern s16 D_82B085B8[];
+extern void func_8004989C(s32);
+
+void func_82B050E8(arg0)
+    u8 *arg0;
+{
+    s16 *tail;
+    s32 i;
+    s16 coords[2];
+    char *text;
+
+    func_82B0284C(arg0, (u8 *)coords);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0x50, 0xFF);
+    for (i = 0; i < 2; i++) {
+        func_8004D19C(coords[0] + 8, coords[1] + i * 0x44 + 0x20, func_8004C990(0x105, 0), 0, 0);
+    }
+    tail = (s16 *)(arg0 + 0x50);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0, 0, 0, 0x78);
+    for (i = 0; i < 2; i++) {
+        func_8004D19C(coords[0] + 0x18, coords[1] + i * 0x44 + 0x20, func_8004C990(0x106, D_82B085B8[i]), 0, 0);
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+    for (i = 0; i < 2; i++) {
+        func_8004D19C(coords[0] + 0x15, coords[1] + i * 0x44 + 0x1C, func_8004C990(0x106, D_82B085B8[i]), 0, 0);
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0x00, 0x32, 0x8C);
+    for (i = 0; i < 2; i++) {
+        if (tail[i] != 0) {
+            func_8004D19C(coords[0] + 0xD, coords[1] + i * 0x44 + 0xC, func_8004C990(0x47, 0), 0, 0);
+        }
+    }
+    func_800498C4();
+    func_800496A4(0x10, 0);
+    func_8004989C(0x1E);
+    for (i = 0; i < 2; i++) {
+        text = NULL;
+        switch (tail[i]) {
+        case 2: text = func_8004C874(0x1B, 0x32); break;
+        case 1: text = func_8004C874(0x1B, 0x33); break;
+        case 3: text = func_8004C874(0x1B, 0x36); break;
+        case 4: text = func_8004C874(0x1B, 0x34); break;
+        case 5: text = func_8004C874(0x1B, 0x35); break;
+        }
+        func_800495F8(coords[0] + 0x6A, coords[1] + i * 0x44 + 0xC, 0, text);
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1859,7 +1914,7 @@ extern void func_82B03978(void);
 extern void func_82B03F38();
 extern void func_82B04008();
 extern void func_82B04718();
-extern void func_82B050E8(void);
+extern void func_82B050E8();
 void func_82B05494(void *arg0, s32 arg1) {
     switch (*(s16 *)arg0) {
     case 1: Panel_DrawHeadingAndOptions(arg0, arg1); break;
