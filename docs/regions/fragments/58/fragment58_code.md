@@ -61,3 +61,13 @@ Twin model callbacks: on step 2 they copy a 3-byte color plus a fourth byte from
 ## 2026-10-28 — `D_83404188` typed as a record
 
 `D_83404188` is now declared as `Fragment58State188` (state word, `unk_14`/`unk_18`, and `colorA`/`colorB` at 0x78/0x8C) instead of an `s32` read through a cast struct. The camera-color callbacks read `D_83404188.colorA[i]`, `func_834022F8` switches on `.state`, and the `+0x14`/`+0x18` stores use the named fields. Byte-identical.
+
+## 2026-11-19 — `func_834022F8` matched
+
+Sliding-sprite intro: four sprites move toward the target in `D_83403F2C` and each is drawn twice. Once the first sprite reaches both targets, only it is drawn, and a flash overlay pulses in and fades out.
+- `D_83403F34`, `D_83403F38` and `D_83403F3C` are function statics. As externs, IDO hoisted their addresses into saved registers. The fragment's C `.data` now runs from `0x2CC330` to `0x2CC350`. `D_83403F2C` becomes `s32[2] = { 0x43, 0x43 }`, and the remaining 16 zero bytes stay in `asm/us/data/2CC350.data.s`.
+- The loop is `for (i = 0; i < count; i++)` over `D_83404848.unk00[i]`, `[i + 4]`, `[i + 8]` and `[i + 12]`. IDO turns `i` into the pointer in `$s0` and rebuilds `base + count * 4` before the texture call. A pointer loop instead let it rewrite the later `count == 1` tests as pointer compares.
+- `D_83404188` words go through `((s32 *)&D_83404188)[n]`, which keeps the address in `$fp`. A `(u32)`-cast pointer local takes `$s7` instead.
+- The float rounding is one expression per axis, `ROUND_DIFF58(a, b)`. Named `a`, `b` and `half` locals change the frame and the float register picks.
+- Alpha arguments are passed plain, without `& 0xFF`. The extra mask shifted the temp-register rotation through both display-list blocks.
+- One unused `s32` after `count` (marked FAKE) puts the two hoisted display-list addresses at retail's `sp+0x68` and `sp+0x60`.
