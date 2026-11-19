@@ -166,7 +166,7 @@ void func_885011EC(u8* arg0) {
 #define M2C_STRUCT_COPY(dst, src) ((dst) = (src))
 #endif
 
-s32 func_8004C874(M2C_UNK, s16);                    /* extern */
+s32 func_8004C874(s32, s32);                         /* extern */
 M2C_UNK func_88903C50(s32, M2C_UNK, M2C_UNK, M2C_UNK, s32, s32, s32, s32, s32, s32, u8 *, M2C_UNK *, void (*)()); /* extern */
 extern M2C_UNK D_88000E4C;
 
@@ -415,7 +415,391 @@ void func_88501570(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1BE300/func_88501AE8.s")
+typedef struct {
+    u8 unk_00;
+    u8 type;
+    u8 unk_02[18];
+} Fragment34Entry;
+extern Fragment34Entry D_8850D678[];
+typedef struct { u8 r, g, b, a; } Color3573C;
+extern Color3573C *Color_SetRGB(Color3573C *, u8, u8, u8);
+extern u8 D_80094E00[];
+extern u8 D_80094E38[];
+extern u8 D_80094DE0[];
+extern u8 D_80094D90[];
+extern u8 D_80094F50[];
+extern s32 D_8800ECC4;
+extern s32 D_8800ECC8;
+extern s32 D_8800ECCC;
+extern s32 D_8800ECD0;
+extern s32 D_8800687C;
+
+extern u8 D_8850D67C[];
+extern s32 Envelope_Advance(u8 *);
+extern s32 GbSave_GetRecordCapacity(s32);
+extern void func_88002C2C(u8, u8, u8);
+extern s32 func_8004D1FC(s32);
+extern s32 func_8004CA10(s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern void func_88000808(u8, s16, s16, s32, s32);
+extern s32 func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void func_88001144(s16, s16, s16, s16, s32);
+extern s32 func_880007B0(u8 *);
+extern void func_88002BA0(u8, u8, u8);
+extern s32 func_8004D27C(s32, s32, s32);
+extern void func_88002EC0(s16, s16, u16, u16, u8);
+extern s32 func_8004D19C(s16, s32, s32, s32, s32);
+extern s32 func_8004D334(s32, s32);
+extern void func_8004D40C(s32);
+extern void func_8004D5B8(s32, s32, s32, char *, s32);
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
+extern void func_8004D998(s32, s32, u8 *, s32, s32);
+extern void func_800498C4(void);
+extern u8 *func_88000308(Color3573C *, s16);
+extern void func_800496A4(s32, s32);
+extern void func_88000488(u8 *, s32);
+extern s32 func_80048E30(s32, s32, s32, u8 *, s32);
+extern s32 func_80064474(s32, s32);
+extern Gfx *D_800D0510;
+extern void func_800495F8(s32, s32, s32, char *, ...);
+extern void func_800499EC(void);
+extern void func_880009A8(s32, s16, s16, s16, s16, s16, s16);
+
+typedef struct {
+    u8 count;
+    u8 pad01[3];
+    u8 items[30][0x58];
+    u8 name[0x20];
+} Fragment34BoxRow;
+typedef struct {
+    s8 id;
+    u8 pad001[0xC8B];
+    Fragment34BoxRow rows[1];
+} Fragment34BoxGroup;
+
+/* Accessors for the state block at D_8850D6D0. */
+#define ST D_8850D6D0
+#define STB(o) (ST[o])
+#define STH(o) (*(s16 *)(ST + (o)))
+#define STHU(o) (*(u16 *)(ST + (o)))
+#define STW(o) (*(s32 *)(ST + (o)))
+#define STP(o) (*(s16 **)(ST + (o)))
+typedef struct { u8 pad00[0x30]; s8 cur; s8 sel[2]; } Fragment34SelView;
+typedef struct { u8 pad00[0x2C]; u8 curRecord; } Fragment34RecordView;
+/* Row selected on the current side (byte 0x30 picks sel[0] or sel[1]). */
+#define CUR_SEL (((Fragment34SelView *)ST)->sel[((Fragment34SelView *)ST)->cur])
+/* Mixes a and b by env / 255 (env = 255 gives a). */
+#define LERP(a, b) ((f32)((a) * env + (b) * (255 - env)) / 255.0f)
+/* Rounds to the nearest integer, halves away from zero. */
+#define RND8(x) ((s32)((x) + (((x) > 0.0f) ? 0.5f : -0.5f)))
+/* Converts a duration in 60 Hz frames to func_80001FF0's frame rate, rounding to nearest. */
+#define FRAMES_AT_60HZ(n) \
+    ((s32)((f32)(n) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(n) / 60.0f > 0.0f) ? 0.5f : -0.5f)))
+/* Sets the fill color for the following rectangles. */
+#define FILL(c) do { gDPPipeSync(D_800D0510++); gDPSetFillColor(D_800D0510++, c); } while (0)
+
+/* Draws the box grids for one or two rows, the tab bar, the record icons and labels, and the cursor. */
+void func_88501AE8(void) {
+    u32 i;
+    u32 j;
+    s32 col;
+    u8 *e;
+    s32 nrows;
+    s32 found;
+    s16 xoff;
+    s16 x;
+    s16 y;
+    u8 k;
+    s8 sel[2];
+    u8 *rowp[2];
+    u8 *d;
+    Color3573C color;
+    u32 v;
+    u8 env;
+    Fragment34BoxGroup *base;
+
+    env = Envelope_Advance(ST + 0x74);
+    base = (Fragment34BoxGroup *)(ST[0xA] * 0xA960 + &D_8850D6D8);
+    sel[0] = CUR_SEL;
+    rowp[0] = &base->rows[sel[0]].count;
+    if (STH(0x56) == 0) {
+        nrows = 1;
+    } else {
+        sel[1] = func_88500E4C();
+        rowp[1] = &base->rows[sel[1]].count;
+        nrows = 2;
+    }
+
+    if (STB(8) != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        func_88002C2C(0xE6, 0xFF, 0xF0);
+        func_8004D1FC(D_8800ECC4);
+        GfxRect_DrawTextured(56, 78, 527, 34, 0, 0,
+                             (s32)(1024.0f * (f32)func_8004CA10(D_8800ECC4) / 527.0f + ((1024.0f * (f32)func_8004CA10(D_8800ECC4) / 527.0f > 0.0f) ? 0.5f : -0.5f)),
+                             0, 0);
+    }
+
+    if (STB(9) != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E00);
+        func_88000808(D_8850D679[base->id * 20], (s16)(STB(0xA) * 273 + 62), 42, 0, 0x200000);
+        gSPDisplayList(D_800D0510++, D_80094F50);
+    }
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_80006F70(&D_800D0510, 56, 112, 527, 335);
+
+    col = 0;
+    xoff = 0;
+    for (; col != nrows; col++, xoff += 527) {
+        e = rowp[col] + 4;
+        k = 0;
+        FILL(0x09A909A9);
+        found = 0;
+        for (j = 0, y = 115; j < 5; j++, y += 66) {
+            x = xoff - STH(0x56) + 59;
+            for (i = 0; i < 6; i++, x += 87) {
+                if (found == 0) {
+                    if ((sel[col] == 0 && GbSave_GetRecordCapacity(32) == k) || (sel[col] != 0 && k == ((Fragment34RecordView *)ST)->curRecord)) {
+                        gDPPipeSync(D_800D0510++);
+                        gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+                        found = 1;
+                    } else if (STW(0x80) != 0) {
+                        gDPPipeSync(D_800D0510++);
+                        if (k >= rowp[col][0]) {
+                            gDPSetFillColor(D_800D0510++, 0x09A909A9);
+                        } else if (func_880007B0(e) == 0 || func_80063754(e[1]) != 0) {
+                            gDPSetFillColor(D_800D0510++, 0x50075007);
+                        } else {
+                            gDPSetFillColor(D_800D0510++, 0x09A909A9);
+                        }
+                    }
+                }
+                func_88001144(x, y, 86, 65, 0x300000);
+                k++;
+                e += 0x58;
+            }
+        }
+    }
+    col = 0;
+    xoff = 0;
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0x7D3F7D3F);
+    for (; col != nrows; col++, xoff += 527) {
+        x = 145 - STH(0x56) + xoff;
+        for (i = 0; i < 5; i++, x += 87) {
+            func_88001144(x, 115, 1, 329, 0x300000);
+        }
+        y = 180;
+        x = xoff - STH(0x56) + 59;
+        for (j = 0; j < 4; j++, y += 66) {
+            func_88001144(x, y, 521, 1, 0x300000);
+        }
+    }
+    col = 0;
+    xoff = 0;
+
+    func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0x7D3F7D3F);
+    for (i = 0, x = STH(0x94); i < STB(0x2D); i++, x += 24) {
+        gDPFillRectangle(D_800D0510++, x, 85, x, 104);
+    }
+    i = 0;
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0x09A909A9);
+    gDPFillRectangle(D_800D0510++, STH(0x98), 85, STH(0x9A) + STH(0x98) - 1, 104);
+    gSPDisplayList(D_800D0510++, D_80094D90);
+
+    if (STH(0x56) == 0 && (s8)STB(0x30) == 0) {
+        color.r = RND8(LERP(255, 0));
+        color.g = RND8(LERP(255, 140));
+        color.b = RND8(LERP(0, 100));
+    } else {
+        Color_SetRGB(&color, 0, 0x8C, 0x64);
+    }
+    gDPSetPrimColor(D_800D0510++, 0, 0, color.r, color.g, color.b, 255);
+    gDPFillRectangle(D_800D0510++, 95, 85, STH(0x92) + 95, 105);
+
+    x = STH(0x96);
+    for (i = 0; i < STB(0x2D); i++, x += 24) {
+        if (i >= STB(0x2E) || base->rows[i + 1].count == 0) {
+            Color_SetRGB(&color, 0x46, 0x46, 0x46);
+        } else if (STH(0x56) == 0 && i + 1 == CUR_SEL) {
+            color.r = RND8(LERP(255, 0));
+            color.g = RND8(LERP(255, 70));
+            color.b = RND8(LERP(0, 130));
+        } else {
+            Color_SetRGB(&color, 0, 0x46, 0x82);
+        }
+        gDPSetPrimColor(D_800D0510++, 0, 0, color.r, color.g, color.b, 255);
+        gDPFillRectangle(D_800D0510++, x, 85, x + 23, 105);
+    }
+    i = 0;
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_8004D1FC((s32)STP(0x28));
+    GfxRect_DrawTextured(STH(0xA0), 87, STP(0x28)[0], STP(0x28)[1], -16, -16, 1024, 1024, 0);
+    func_88002BA0(0xFF, 0xFF, 0xFF);
+    func_8004D27C(D_8800ECC8, 0x180, 2);
+    if (STB(8) != 0) {
+        func_88002EC0(STH(0x8E), 82, STHU(0x90), 26, 3);
+        func_88002EC0(92, 82, STHU(0x8C), 26, 3);
+        func_8004D19C(64, 83, D_8800ECCC, 0, 0);
+        func_8004D19C(STH(0x9C), 83, D_8800ECD0, 0, 0);
+    }
+    func_8004D334(239, 0);
+    func_8004D40C(1);
+    func_8004D27C(STW(0x20), 0x100, 1);
+
+    x = STH(0x9E) + 4;
+    for (i = 0; i < STB(0x2E); i++, x += 24) {
+        gDPPipeSync(D_800D0510++);
+        if (base->rows[i + 1].count == 0) {
+            gDPSetEnvColor(D_800D0510++, 0xA0, 0xA0, 0xA0, 0xFF);
+        } else {
+            gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_8004D5B8(x, 88, 1, "%d", i + 1);
+    }
+    func_80006F70(&D_800D0510, 56, 112, 527, 335);
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xE6, 0xFF, 0xF0, 0xFF);
+    for (; col != nrows; col++, xoff += 527) {
+        func_88002EC0(56 - STH(0x56) + xoff, 112, 527, 335, 3);
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, 0xFF);
+    func_8004D27C((s32)STP(0x24), 0x180, 2);
+
+    for (col = 0, xoff = 0; col != nrows; col++, xoff += 527) {
+        k = 0;
+        y = 145;
+        e = rowp[col] + 4;
+        for (j = 0; j < 5; j++, y += 66) {
+            x = xoff - STH(0x56) + 73;
+            for (i = 0; i < 6; i++, x += 87) {
+                if (k == rowp[col][0]) {
+                    j = 5;
+                    break;
+                }
+                if ((e[0x1E] & 1) == 0) {
+                    func_80044424(x - 9, y, STP(0x20)[0], STP(0x20)[1], 0, 0, 1024, 1024, 0, 1);
+                    if (e[0] == 0xFC) {
+                        for (v = 0; v < 2; v++) {
+                            func_80044424(x + v * 9, y, STP(0x24)[0], STP(0x24)[1], 0, 0, 1024, 1024, 0, 2);
+                        }
+                    } else {
+                        func_8004D5B8(x, y, 0, "%d", e[0x1D]);
+                    }
+                }
+                k++;
+                e += 0x58;
+            }
+        }
+    }
+    col = 0;
+    xoff = 0;
+
+    for (; col != nrows; col++, xoff += 527) {
+        d = ((u8 **)(ST + 0x14))[STB(0x10) ^ col];
+        k = 0;
+        y = 119;
+        for (j = 0; j < 5; j++, y += 66) {
+            x = 100 - STH(0x56) + xoff;
+            for (i = 0; i < 6; i++, x += 87) {
+                if (k == rowp[col][0]) {
+                    j = 5;
+                    break;
+                }
+                func_8004D998(x, y, d, 0, 0);
+                k++;
+                d += 0xC80;
+            }
+        }
+    }
+
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xAA, 0x00, 0xFF);
+    func_8004D1FC(STW(0x1C));
+    for (col = 0, xoff = 0; col != nrows; col++, xoff += 527) {
+        k = 0;
+        y = 125;
+        e = rowp[col] + 4;
+        for (j = 0; j < 5; j++, y += 66) {
+            x = 82 - STH(0x56) + xoff;
+            for (i = 0; i < 6; i++, x += 87) {
+                if (k == rowp[col][0]) {
+                    j = 5;
+                    break;
+                }
+                if ((e[0x1E] & 1) == 0 && e[1] != 0) {
+                    GfxRect_DrawTextured(x, y, STP(0x1C)[0], STP(0x1C)[1], 0, 0, 1024, 1024, 0);
+                }
+                k++;
+                e += 0x58;
+            }
+        }
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    STW(0x60) = 0;
+    if (STW(0x64) == 0) {
+        func_880002F4(ST + 0x68, (s16)(FRAMES_AT_60HZ(5) +
+                                      // FAKE: the comma only changes the stack slot of the rounding term
+                                      (s32)((f32)8 * func_80001FF0() / 60.0f + (((0, (f32)8) * func_80001FF0() / 60.0f > 0.0f) ? 0.5f : -0.5f)) +
+                                      FRAMES_AT_60HZ(30)));
+    }
+    func_88000308(&color, (s16)Envelope_Advance(ST + 0x68));
+    gDPSetPrimColor(D_800D0510++, 0, 0, color.r, color.g, color.b, 255);
+    func_800496A4(4, 1);
+
+    for (col = 0, xoff = 0; col != nrows; col++, xoff += 527) {
+        k = 0;
+        y = 160;
+        e = rowp[col] + 4;
+        for (j = 0; j < 5; j++, y += 66) {
+            x = 64 - STH(0x56) + xoff;
+            for (i = 0; i < 6; i++, x += 87) {
+                if (k == rowp[col][0]) {
+                    j = 5;
+                    break;
+                }
+                if (x >= -100 && x < 640) {
+                    if (func_880007B0(e) == 0) {
+                        func_88000488(ST + 0x60, 1);
+                    }
+                    func_80048E30(D_8800687C, x, y, e + 0x34, 1);
+                    func_88000488(ST + 0x60, 0);
+                    if ((e[0x1E] & 1) == 0 && e[0] != 0xFC) {
+                        v = func_80064474(e[0], *(u16 *)(e + 0x16));
+                        if (v != 0) {
+                            v &= 0xFF;
+                            func_80048E30(D_8800687C, x + 1, y - 35, (u8 *)func_8004C874(38, v - 1), 1);
+                        }
+                    }
+                }
+                k++;
+                e += 0x58;
+            }
+        }
+    }
+
+    func_80006F70(&D_800D0510, 0, 0, 640, 480);
+    if (STH(0x56) == 0) {
+        func_800495F8(STH(0xA2), 87, 1, (char *)base->rows[CUR_SEL].name);
+    }
+    if (STB(9) != 0) {
+        func_800495F8(STB(0xA) * 273 + 190, 47, 0, "%s %05d", (s32)func_8004C874(13, 9),
+                      *(u16 *)(D_8850D67C + base->id * 20));
+        func_800496A4(8, 1);
+        func_80048E30(D_8800687C, STB(0xA) * 273 + 88, 43, (u8 *)&D_8850D678[base->id] + 6, 1);
+    }
+    func_800499EC();
+    if (STH(0x56) == 0) {
+        func_880009A8(*(s32 *)(*(u8 **)(ST + 4) + 0x2C), STH(0xC) * 87 + 59, STH(0xE) * 66 + 115, 86, 65, 0, 0);
+    }
+}
 
 extern u8 D_8850D679[];
 extern s32 D_88804054;
@@ -488,14 +872,8 @@ void func_885037EC(void) {
 }
 
 typedef struct {
-    u8 unk_00;
-    u8 type;
-    u8 unk_02[18];
-} Fragment34Entry;
-typedef struct {
     u8 data[0x4C];
 } Fragment34Node;
-extern Fragment34Entry D_8850D678[];
 extern Fragment34Node D_8800ED50[];
 extern void main_pool_push_state(s32);
 extern void func_88800020(void);
@@ -521,9 +899,6 @@ extern void func_88501570(void);
 extern void func_88501AE8(void);
 extern void func_88503644(void);
 
-/* Converts a duration in 60 Hz frames to func_80001FF0's frame rate, rounding to nearest. */
-#define FRAMES_AT_60HZ(n) \
-    ((s32)((f32)(n) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(n) / 60.0f > 0.0f) ? 0.5f : -0.5f)))
 #define STATE_S16(offset) (*(s16 *)(D_8850D6D0 + (offset)))
 
 /* Allocates the 0xA4-byte state at D_8850D6D0 for slot arg0. Reads the arg1 deck records (group 0
