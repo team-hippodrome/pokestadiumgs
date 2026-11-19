@@ -243,7 +243,33 @@ void Fragment44_PrepareTrailingScrollRow(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F0680/func_8AF02AE0.s")
+void func_8AF02AE0(void *arg0, struct Fragment44RowJob *job, s32 tag) {
+    u8 *config = (u8 *)arg0 + 0x44;
+    s32 width = *(s32 *)((u8 *)arg0 + 0x54);
+    s32 limit = *(s32 *)((u8 *)arg0 + 0x48);
+    s16 step = *(s16 *)((u8 *)arg0 + 0x52);
+    s16 end;
+    s16 rows;
+    s16 row;
+    s16 position;
+    u16 *pixels;
+
+    end = *(s32 *)((u8 *)arg0 + 0x54) * *(s16 *)((u8 *)arg0 + 0x6C);
+    row = *(s16 *)((u8 *)arg0 + 0x6C);
+    rows = *(s16 *)((u8 *)arg0 + 0x6E);
+    if (end <= limit) {
+        position = *(s32 *)(config + 0x1C) + *(s32 *)((u8 *)arg0 + 0xC);
+        pixels = *(u16 **)config + row * width;
+        job->tag = tag;
+        job->owner = arg0;
+        job->pixels = pixels;
+        job->width = width;
+        job->rows = rows;
+        job->position = position;
+        job->step = step;
+        job->active = 1;
+    }
+}
 
 void Fragment44_ShiftActiveScrollRecords(void *arg0, s16 delta) {
     s32 i;
@@ -262,7 +288,6 @@ void Fragment44_ShiftActiveScrollRecords(void *arg0, s16 delta) {
 }
 
 extern void *func_800071A4(s32, s32, s32, s32, s32);
-extern void func_8AF02AE0(void *, void *, s32);
 void Fragment44_InitializeScrollList(s32 arg0, s32 arg1, void *job, s32 tag) {
     s32 config;
     u8 *saved_config;
