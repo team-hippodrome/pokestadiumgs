@@ -1,13 +1,21 @@
 #include "global.h"
 #include "controller.h"
 
-// Four model records, initialized by the fragment loader and model setup.
-//@src/fragments/54/fragment54_code.c
-typedef u8 Fragment54Model[0x168];
-static Fragment54Model sPlayerModels[4] = { { 0 } };
+// This file's .data, [0x866066F0, 0x86606710): D_866066F0, the D_866066F4 table
+// (read by func_86600678 and func_86602828) and D_8660670C.
+s32 D_866066F0 = 0;
+s32 D_866066F4[6] = { 1, 2, 3, 4, 1, 8 };
+s32 D_8660670C = 0;
 
-// File-scope bss, pinned at 0x866098A0 by linker_scripts/us/datamig_bss.ld:
-// four 0x168-byte per-player position records.
+// This file's .bss, [0x86607410, 0x86609E40), pinned by
+// linker_scripts/us/datamig_bss.ld. The fragment loader clears it after
+// consuming the relocation metadata that the first part overlaps.
+// Four player model records.
+typedef u8 Fragment54Model[0x168];
+static Fragment54Model sPlayerModels[4];
+// [0x866079B0, 0x866098A0): no file-scope object of this file is known here yet.
+static u8 sBss_866079B0[0x1EF0];
+// Four 0x168-byte per-player position records.
 static u8 D_866098A0[4 * 0x168];
 
 
@@ -1066,7 +1074,227 @@ void func_8660278C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86602828.s")
+#endif
+
+#ifdef VERSION_US
+typedef struct F54Ret { s32 a; } F54Ret;
+extern void *D_86607230;
+extern u8 D_86607238;
+extern u8 D_86607310;
+extern u8 D_86607358;
+extern u8 D_86607260[];
+extern u8 D_86607298[];
+extern u8 D_866072E8[];
+extern u8 D_87F15B70[];
+extern u8 D_86606C08[];
+extern u8 D_86606D24[];
+extern u8 D_86606754[];
+extern u8 D_86606660[];
+extern void *D_866073DC;
+extern void *D_866073E0;
+extern void *D_86607400;
+extern void *D_86607404;
+extern s32 D_866073F8;
+extern s32 D_866073FC;
+extern s32 D_86607408;
+extern u8 D_866073E8[];
+extern void func_8003F114(void *, s32, s32, s32);
+extern u8 D_866071B8[];
+extern u8 D_866071D0[];
+extern u8 D_866071A0[];
+extern u8 D_866071E8[];
+extern u8 D_86607200[];
+extern u8 D_866080B8[];
+extern u8 D_866079D4[];
+extern u8 D_866079B0[];
+extern s32 D_86606DD4[];
+extern s32 D_86606DF4[];
+extern s32 D_86606B64[];
+extern s16 D_86606E14[];
+extern f32 D_86606750;
+extern u8 D_866068CC[];
+extern u8 D_86608220[];
+extern u8 D_866098A0[];
+extern u8 D_8660A3E0[];
+extern u8 D_86609E40[];
+extern u8 D_8660A990[];
+extern s32 D_866066F4[];
+extern u8 D_86606788;
+extern void func_87F0C650(void *);
+extern void func_87F0C694(void *, s32);
+extern void func_8004DDF4(s32);
+extern void *func_80040E80(void *, void *);
+extern s32 WidgetTree_RunMessagePanelSilent(void *, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern F54Ret func_87F0AD50(void *, s32, s32);
+extern s32 func_8004DFEC(void *, s32, F54Ret);
+extern void func_8660278C(void);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_87F01870(void *);
+extern void func_87F0D48C(void *, void *, s32);
+extern void func_87F03700(void *, s32);
+extern void func_87F034F0(void *, void *, s32);
+extern void func_87F09EBC(void *, void *);
+extern void func_86600EEC(void);
+extern void func_80041E2C(void);
+extern void func_80037E9C(s32, void *);
+extern void func_8003F018(void *);
+extern void func_8003F03C(void *, void *);
+extern void func_80037E3C(void *, void *, s32);
+extern void func_87F06430(void *, s32);
+#define F54(p, o) (*(f32 *)((u8 *)(p) + (o)))
+#define S54(o) (*(s32 *)((u8 *)&D_86606788 + (o)))
+
+void func_86602828(void) {
+    s32 i;
+    s32 j;
+    s32 count;
+    void *pool;
+    u8 *rec;
+    s32 *out;
+    F54Ret ret;
+
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4) {
+        func_87F0C650(&D_86607310);
+        func_87F0C694(&D_86607310, 0x14);
+    }
+    func_8004DDF4(0x38);
+    func_8004DDF4(0x39);
+    func_8004DDF4(0xBE);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    D_866073DC = func_80040E80(pool, D_86606C08);
+    D_866073E0 = func_80040E80(pool, D_86606D24);
+    D_86607400 = func_80040E80(pool, D_86606754);
+    D_86607404 = func_80040E80(pool, D_86606660);
+    D_866073F8 = WidgetTree_RunMessagePanelSilent(pool, 0x38);
+    D_866073FC = WidgetTree_RunMessagePanelSilent(pool, 0x39);
+    D_86607408 = WidgetTree_RunMessagePanelSilent(pool, 0xBE);
+    MainPool_FinalizeAllocation(pool);
+    for (i = 0; i < 4; i++) {
+        *(s32 *)(D_8660A990 + i * 0x58 + 0x50) = *(u8 *)(*(s32 *)((u8 *)D_86607230 + i * 0x6C0 + 0x14) + 4);
+        if (*(s32 *)(D_8660A990 + i * 0x58 + 0x50) == 0x19) {
+            *(s32 *)(D_8660A990 + i * 0x58 + 0x50) = 0xC9;
+        } else {
+            *(s32 *)(D_8660A990 + i * 0x58 + 0x50) = 0x6B;
+        }
+        func_8004DDF4(*(s32 *)(D_8660A990 + i * 0x58 + 0x50));
+        pool = MainPool_AllocState(main_pool_get_available(), 0);
+        ret = func_87F0AD50(D_86607230, 5, i);
+        ((s32 *)D_866073E8)[i] = func_8004DFEC(pool, *(s32 *)(D_8660A990 + i * 0x58 + 0x50), ret);
+        MainPool_FinalizeAllocation(pool);
+    }
+    S54(0x94) = 0;
+    for (i = 0; i < 4; i++) {
+        if (*(u8 *)((u8 *)D_86607230 + 0x2182) & (1 << i)) {
+            D_866066F4[i] = 0;
+            *(s32 *)(D_8660A990 + i * 0x58 + 0x34) = i + 5;
+        } else {
+            D_866066F4[i] = 4 - *(s8 *)((u8 *)D_86607230 + 0x2181);
+            *(s32 *)(D_8660A990 + i * 0x58 + 0x34) = i + 1;
+            S54(0x94) = D_866066F4[i];
+        }
+    }
+    if (*(u8 *)((u8 *)D_86607230 + 0x2180) == 4) {
+        for (i = 0; i < 4; i++) {
+            D_866066F4[i] = 4 - *(s8 *)((u8 *)D_86607230 + 0x2181);
+        }
+    }
+    func_8660278C();
+    ModelRenderer_InitDisplayRoots();
+    func_87F01870(D_86607230);
+    func_87F0D48C(&D_86607238, D_86607230, 0);
+    func_87F03700(D_86607260, 0x63);
+    func_87F034F0(D_87F15B70, D_866072E8, 0x28);
+    func_87F03700(D_86607298, 0x28);
+    func_87F09EBC(&D_86607358, D_86607230);
+    func_86600EEC();
+    func_80041E2C();
+    count = 4;
+    func_80037E9C(0, D_866071B8);
+    func_80037E9C(0, D_866071D0);
+    func_80037E9C(0, D_866071A0);
+    func_80037E9C(0, D_866071E8);
+    func_80037E9C(0, D_86607200);
+    func_8003F03C(D_866080B8, D_866071A0);
+    F54(D_866080B8, 0x30) = 1.0f;
+    F54(D_866080B8, 0x38) = 1.0f;
+    F54(D_866080B8, 0x34) = 1.0f;
+    F54(D_866080B8, 0x2C) = 0.0f;
+    F54(D_866080B8, 0x24) = 0.0f;
+    F54(D_866080B8, 0x28) = 0.0f;
+    func_8003F114(D_866080B8, 0, -1, D_866073F8);
+    func_80037E3C(D_866080B8, func_86601910, 0);
+    for (i = 0; i < count; i++) {
+        func_8003F03C(D_866079B0 + i * 0x168, D_87F15B70);
+        func_8003F114(D_866079B0 + i * 0x168, 0, -1, ((s32 *)D_866073E8)[i]);
+        func_87F06430(D_866079D4 + i * 0x168, i);
+        F54(D_866079B0 + i * 0x168, 0x38) = 0.15f;
+        F54(D_866079B0 + i * 0x168, 0x34) = 0.15f;
+        F54(D_866079B0 + i * 0x168, 0x30) = 0.15f;
+        F54(D_866079B0 + i * 0x168, 0x28) = 55.0f;
+        func_8003F210(D_866079B0 + i * 0x168, 5);
+        ModelAnim_SetFrame(D_866079B0 + i * 0x168, (s16)(guRandom() % 25));
+        ModelAnim_SetEventFrame(D_866079B0 + i * 0x168, 0);
+        func_8003F3BC(D_866079B0 + i * 0x168, 0);
+        ModelAnim_SetSpeed(D_866079B0 + i * 0x168, 0x10000);
+        func_8003F018(D_86607410 + i * 0x168);
+        F54(D_86607410 + i * 0x168, 0x30) = 0.7f;
+        F54(D_86607410 + i * 0x168, 0x38) = 0.7f;
+        F54(D_86607410 + i * 0x168, 0x34) = 0.7f;
+        F54(D_86607410 + i * 0x168, 0x2C) = -200.0f;
+        if (*(s32 *)(D_8660A990 + i * 0x58 + 0x50) == 0xC9) {
+            F54(D_86607410 + i * 0x168, 0x38) = D_86606750;
+            F54(D_86607410 + i * 0x168, 0x34) = D_86606750;
+            F54(D_86607410 + i * 0x168, 0x30) = D_86606750;
+        }
+        F54(D_86607410 + i * 0x168, 0x24) = D_86606DD4[i * 2];
+        F54(D_86607410 + i * 0x168, 0x28) = D_86606DD4[i * 2 + 1];
+        func_8003F03C(D_8660A3E0 + i * 0x168, D_866071B8);
+        func_80037E3C(D_86607410 + i * 0x168, func_86602260, i);
+        func_8003F018(D_866098A0 + i * 0x168);
+        F54(D_866098A0 + i * 0x168, 0x38) = 1.0f;
+        F54(D_866098A0 + i * 0x168, 0x30) = 0.0f;
+        F54(D_866098A0 + i * 0x168, 0x34) = 0.0f;
+        F54(D_866098A0 + i * 0x168, 0x2C) = 150.0f;
+        F54(D_866098A0 + i * 0x168, 0x24) = D_86606B64[i * 2];
+        F54(D_866098A0 + i * 0x168, 0x28) = D_86606B64[i * 2 + 1];
+        func_8003F114(D_866098A0 + i * 0x168, 0, -1, D_86607400);
+        func_8003F03C(D_86609E40 + i * 0x168, D_86607200);
+        F54(D_86609E40 + i * 0x168, 0x2C) = 150.0f;
+        F54(D_86609E40 + i * 0x168, 0x38) = 1.0f;
+        F54(D_86609E40 + i * 0x168, 0x30) = 12.0f;
+        F54(D_86609E40 + i * 0x168, 0x34) = 8.0f;
+        F54(D_86609E40 + i * 0x168, 0x24) = D_86606DF4[i * 2];
+        F54(D_86609E40 + i * 0x168, 0x28) = D_86606DF4[i * 2 + 1];
+        *(s16 *)(D_86609E40 + i * 0x168 + 0x22) = D_86606E14[i];
+        for (j = 0; j < 4; j++) {
+            func_8003F03C(D_86608220 + i * 0x5A0 + j * 0x168, D_866071E8);
+            F54(D_86608220 + i * 0x5A0 + j * 0x168, 0x30) = 1;
+            F54(D_86608220 + i * 0x5A0 + j * 0x168, 0x34) = 1;
+            F54(D_86608220 + i * 0x5A0 + j * 0x168, 0x2C) = F54(D_866080B8, 0x2C) - 50.0f;
+            F54(D_86608220 + i * 0x5A0 + j * 0x168, 0x38) = 1.0f;
+            switch (j) {
+                case 0:
+                    *(s16 *)(D_86608220 + i * 0x5A0 + j * 0x168 + 0x1E) = -0x8000;
+                    *(s16 *)(D_86608220 + i * 0x5A0 + j * 0x168 + 0x20) = -0x8000;
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    *(s16 *)(D_86608220 + i * 0x5A0 + j * 0x168 + 0x22) = 0x4000;
+                    break;
+                case 3:
+                    *(s16 *)(D_86608220 + i * 0x5A0 + j * 0x168 + 0x22) = -0x4000;
+                    break;
+            }
+            F54(D_86608220 + i * 0x5A0 + j * 0x168, 0x24) = F54(D_866080B8, 0x24) + *(f32 *)(D_866068CC + i * 0x20 + j * 8);
+            F54(D_86608220 + i * 0x5A0 + j * 0x168, 0x28) = F54(D_866080B8, 0x28) + *(f32 *)(D_866068CC + i * 0x20 + j * 8 + 4);
+            func_8003F114(D_86608220 + i * 0x5A0 + j * 0x168, 0, -1, D_866073FC);
+            func_80037E3C(D_86608220 + i * 0x5A0 + j * 0x168, func_866023F4, j);
+        }
+    }
+}
+
 #endif
 
 void func_86603100(void) {
