@@ -435,7 +435,102 @@ void func_8410679C(u8 *arg0, u8 *arg1, u32 arg2, f32 arg3)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_375530/func_84106AC4.s")
+void func_84106AC4(u8 *arg0, u8 *arg1, s32 arg2, f32 arg3) {
+    extern void func_84100020(u8 *, s32);
+    extern s16 D_84190160[2], D_84190164;
+    ParticleVec3f velocity;
+    u8 *range;
+    s32 tmp;
+
+    if (*(u8 **)(arg1 + 16) == NULL) return;
+    if (**(u8 ***)(arg1 + 16) != NULL) {
+        func_84100020(arg0, 0x800);
+        range = **(u8 ***)(arg1 + 16);
+        if (*(s16 *)range == 1) arg0[129] = *(s16 *)(range + 2) * arg2 + 1;
+        else if (*(s16 *)range == 2) arg0[129] = arg2 % *(s16 *)(range + 2) + 1;
+        else if (*(s16 *)range == 3) arg0[129] = ParticleMath_RandomRange(*(s16 *)(range + 2));
+        else arg0[129] = *(s16 *)(range + 2);
+    }
+    {
+        u8 *motion_cfg = *(u8 **)((*(u8 **)(arg1 + 16)) + 4);
+        if (motion_cfg != NULL) {
+            u8 *jitter = *(u8 **)(motion_cfg + 4);
+            if (jitter != NULL) {
+                func_841063D8((s16 *)(arg0 + 106), *(s16 *)jitter, *(RectJitterRange *)(jitter + 2), arg2);
+            }
+            {
+                u8 *euler = *(u8 **)(*(u8 **)((*(u8 **)(arg1 + 16)) + 4) + 8);
+                if (euler != NULL) {
+                    func_84105FC8(&velocity.x, *(s16 *)euler, *(ParticleEulerRange *)(euler + 2), arg0);
+                    func_84105F10((ParticleVec3f *)(arg0 + 44), velocity, arg3);
+                }
+            }
+        }
+    }
+    if (*(u8 **)((*(u8 **)(arg1 + 16)) + 8) != NULL) {
+        u8 *lifetime = **(u8 ***)(*(u8 **)(arg1 + 16) + 8);
+        if (lifetime != NULL) {
+            if (*(s16 *)(lifetime + 8) != 0) {
+                tmp = *(s16 *)(lifetime + 8);
+                *(s16 *)(arg0 + 98) = *(s16 *)(lifetime + 10) + ParticleMath_RandomSigned(tmp);
+            } else {
+                *(s16 *)(arg0 + 98) = 1000;
+            }
+        }
+    }
+    if (*(u8 **)((*(u8 **)(arg1 + 16)) + 12) == NULL) return;
+    if (**(u8 ***)(*(u8 **)(arg1 + 16) + 12) != NULL) {
+        u8 *size_range;
+        u8 *scale = ***(u8 ****)(*(u8 **)(arg1 + 16) + 12);
+        if (scale != NULL) {
+            if (*(u8 **)(scale + 8) != NULL) {
+                size_range = *(u8 **)(scale + 8);
+                if (*(s16 *)(size_range + 8) != 0) {
+                    tmp = *(s16 *)(size_range + 8);
+                    *(s16 *)(arg0 + 100) = *(s16 *)(size_range + 10) + ParticleMath_RandomSigned(tmp);
+                } else {
+                    *(s16 *)(arg0 + 100) = 100;
+                }
+            } else {
+                if (*(u8 **)(scale + 4) != NULL) {
+                    scale = *(u8 **)(scale + 4);
+                    tmp = *(s16 *)scale;
+                    if (tmp == 1) {
+                        *(f32 *)(arg0 + 92) = *(s16 *)(scale + 4) * 0.01f;
+                        if (*(s16 *)(scale + 10) != 0) {
+                            tmp = *(s16 *)(scale + 10);
+                            *(f32 *)(arg0 + 92) += 0.01f * (f32)(u32)ParticleMath_RandomRange(tmp);
+                        }
+                    } else if (tmp == 2) {
+                        *(f32 *)(arg0 + 92) = *(s16 *)(scale + 4) * 0.01f;
+                        if (*(s16 *)(scale + 10) != 0) {
+                            *(f32 *)(arg0 + 92) += (0.01f * *(s16 *)(scale + 10)) * arg2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    {
+        u8 *axes;
+        if (*(u8 **)((*(u8 **)((*(u8 **)(arg1 + 16)) + 12)) + 8) != NULL) {
+            axes = *(u8 **)((*(u8 **)((*(u8 **)(arg1 + 16)) + 12)) + 8);
+            func_841065E0(arg0 + 68, *(void **)axes, &D_84190160[0], arg2, arg3);
+            func_841065E0(arg0 + 72, *(void **)(axes + 4), &D_84190160[1], arg2, arg3);
+            func_841065E0(arg0 + 76, *(void **)(axes + 8), &D_84190164, arg2, arg3);
+        }
+    }
+    if (**(u8 ***)(*(u8 **)(arg1 + 16) + 12) != NULL) {
+        if (*(u8 **)(**(u8 ***)(*(u8 **)(arg1 + 16) + 12) + 4) != NULL) {
+            tmp = (*(u8 **)(**(u8 ***)(*(u8 **)(arg1 + 16) + 12) + 4))[2];
+            if (tmp != 0) {
+                arg0[151] = (*(u8 **)(**(u8 ***)(*(u8 **)(arg1 + 16) + 12) + 4))[3] + ParticleMath_RandomSigned(tmp);
+            } else {
+                arg0[151] = 100;
+            }
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
