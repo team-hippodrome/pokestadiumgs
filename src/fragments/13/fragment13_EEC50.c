@@ -600,8 +600,78 @@ void Fragment13_DrawPageIndicatorPanel(void *arg0, s32 group, f32 amount, s32 en
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/13/fragment13_EEC50/func_82403624.s")
-
+void func_82403624(s32 arg0, void *arg1, s32 group, f32 amount, s32 end, s32 start, f32 progress) {
+ extern s32 Fragment13_GetGroupedListItem(struct Fragment13GroupedList *, s32, s32);
+ extern void func_82403C84(s32,s32,s32,s32,s32);
+ extern u8 D_82407880[], D_82407884[];
+ extern s32 func_824048A0(void *, s32);
+ s32 base_y;
+ s32 page;
+ s32 y;
+ s32 height;
+ s32 col;
+ s32 row;
+ f32 position;
+ f32 pulse;
+ f32 phase;
+ s32 pages;
+ s32 item;
+ s32 item_y;
+ s32 mapped;
+ s32 marked;
+ s32 item_x;
+ struct Fragment13GroupedList *list = (void *)((u8 *)arg1 + 0x54);
+ y = (s32)(-70.0f * amount + 238.0f);
+ pages = (*(s16 *)((u8 *)arg1 + group * 2 + 0x154) + 4) / 5;
+ if (start >= *(s16 *)((u8 *)arg1 + group * 2 + 0x154)) start = ((s16 *)arg1)[group + 170];
+ if (end >= list->counts[group]) end = list->counts[group];
+ position = (f32)(end / 5 - start / 5) * progress + (f32)(start / 5);
+ page = (s32)position;
+ pulse = (f32)page;
+ phase = position - pulse;
+ pulse = phase > 0.5f ? 1.0f - phase : phase;
+ phase = pulse;
+ if (y < 240) {
+  if (func_81600DA8((void *)arg0, (void *)2)) {
+   height = 68;
+   if (y + 72 > 240) height = 236 - y;
+   if (height > 0) {
+    func_82401198(41,y,242,74);
+    Fragment13_DrawColoredPanelFill(43,y+2,236,height,D_82407880);
+    func_80006F70(&D_800D0510,43,y+4,236,height);
+    base_y = y + 11;
+    for (col=0;col<5;col++) {
+     for (row=page-1;row<(s32)position+2;row++) {
+      item = row*5+col;
+      if (item < 0 || item > list->counts[group]) continue;
+      item_y = base_y + 47.0f * (row-position);
+      if (item_y > 240) continue;
+      item_x = col*44+53;
+      Fragment13_DrawTexturedPanelBorder(item_x,item_y,40,40);
+      mapped = Fragment13_GetGroupedListItem(list,group,item);
+      marked = func_824048A0(arg1,item);
+      func_82403C84(item_x+2,item_y+2,group,mapped,marked);
+     }
+    }
+    Fragment13_DrawPanelCorners(53.0f+((f32)(end%5-start%5)*progress+(f32)(start%5))*44.0f,base_y,40,40);
+    func_80006F70(&D_800D0510,0,0,320,240);
+   }
+  }
+  gSPDisplayList(D_800D0510++,D_80094E38);
+  gDPSetRenderMode(D_800D0510++,0,0x0F0A7008);
+  if (position >= 1.0f) {
+ pulse = start<end?0.0f:phase;
+ Fragment13_DrawTintedPanel((void *)arg0,35,y+9,(u16 *)D_82407854,(void *)8,pulse,D_82407884);
+ }
+  else if (position >= 0.0f) {
+ pulse = -1.0f+position;
+ Fragment13_DrawTintedPanel((void *)arg0,35,y+9,(u16 *)D_82407854,(void *)8,pulse,D_82407884);
+ }
+  if (position < pages-2) Fragment13_DrawTintedPanel((void *)arg0,35,y+37,(u16 *)D_82407858,(void *)9,start<end?phase:0.0f,D_82407884);
+  else if (position < (f32)(pages-1)) Fragment13_DrawTintedPanel((void *)arg0,35,y+37,(u16 *)D_82407858,(void *)9,((f32)(pages-1)-position)+-1.0f,D_82407884);
+  gSPDisplayList(D_800D0510++,D_80094F50);
+ }
+}
 /* mkdraft:func_82403C84 begin */
 extern s32 func_8004CA10(u16 *);
 extern s32 func_8004CA24(u16 *);
