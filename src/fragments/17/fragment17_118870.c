@@ -459,9 +459,61 @@ void func_82209974(void) {
     }
 }
 
+// Second half of the selection transition: lerps the record position toward the
+// selected entry's rect, snaps it into state 7 on the fifth frame, then sets the
+// zoom scale (C4/C8) from the remaining distance. The `x < 0` int literal makes
+// IDO load a fresh 0.0f as retail does, and the (s32) round casts give retail's
+// t-register rotation.
+void func_82209BA4(void) {
+    s16 *state = (s16 *)D_822106B0;
+    F17TransitionRecord *rec = &sTransitionRecord;
+    s16 *choice;
+    f32 progress;
+    f32 base;
+    f32 target;
+    f32 x;
+    f32 y;
+    f32 scale;
+    f32 factor;
+    s32 n;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209BA4.s")
-
+    choice = (s16 *)&D_8220DEF4[state[4]];
+    state[2]++;
+    if (state[2] >= 5) {
+        n = D_822106B4 - 5;
+        progress = n / 5.0f;
+        target = choice[8] + choice[6];
+        base = state[18];
+        x = (target - base) * progress + base;
+        state[14] = (x > 0.0f ? 0.5f : -0.5f) + x;
+        y = state[19] + (choice[7] + choice[9] - state[19]) * progress;
+        state[15] = (y > 0.0f ? 0.5f : -0.5f) + y;
+        D_822106D0 = (s32)((x > 0.0f ? 0.5f : -0.5f) + x) - state[18];
+        D_822106D2 = (s32)((y > 0.0f ? 0.5f : -0.5f) + y) - choice[7];
+        if (n == 5) {
+            rec->transition.state = 7;
+            rec->transition.unk_02 = 0;
+            rec->unk_1C = target;
+            rec->unk_1E = choice[9] + choice[7];
+            D_822106BA = rec->unk_08;
+        }
+        x = target - D_822106CC; // distance left
+        if (x < 0) {
+            x = -x;
+        }
+        scale = (x / 40.0f + 0.4f) * 0.75f;
+        if (scale > 0.75f) {
+            scale = 0.75f;
+        }
+        rec->unk_14 = scale;
+        base = func_822091E0(scale);
+        scale = D_822106C4;
+        factor = 1.0f - 0.9f * progress;
+        scale *= factor;
+        D_822106C8 = base * factor;
+        rec->unk_14 = scale;
+    }
+}
 
 void func_82209E90(void) {
     D_822106B0[5] = 0.0f;
