@@ -1177,7 +1177,7 @@ void func_86A036F4(void) {
     s32 n;
     f32 ty[1];
     f32 tz[1];
-    s32 pad; // FAKE: frame padding
+    s32 pad;
 
     flag = 0;
     use = *(u8 **)((u8 *)D_87F119DC + 0x20);
@@ -3907,7 +3907,7 @@ typedef struct {
     f32 unk4;
 } Pair;
 typedef struct {
-    s32 pad; // FAKE: frame padding
+    s32 pad;
     Pair pair;
 } Local;
 extern u8 D_86A0F004[];
