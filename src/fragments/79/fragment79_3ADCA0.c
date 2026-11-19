@@ -828,7 +828,71 @@ void func_84140690(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3ADCA0/func_84140718.s")
+void func_84140718(void *arg0) {
+    extern Gfx D_84186B20[];
+    s32 stage;
+    u8 *asset;
+    s32 width;
+    s32 height;
+    u32 format;
+    s32 size;
+    u8 *texture;
+    asset = func_8004C990(305,0);
+    width = func_8004CA10((u16 *)asset);
+    height = func_8004CA24((u16 *)asset);
+    texture = func_8004CA60(asset);
+    format = func_8004CA38(asset);
+    size = func_8004CA4C(asset);
+    gSPDisplayList(D_800D0510++,D_841869E0);
+    stage = *(u8 *)((u8 *)arg0 + 9);
+    if (stage >= 8) {
+        u8 step;
+        u8 rows;
+        step = 20 - *(u8 *)((u8 *)arg0 + 9);
+        if (*(u8 *)((u8 *)arg0 + 9) < 21) {
+            ParticleGfx_SetPrimColor_fragment79(255,245,195,255);
+            rows = step * 2;
+            func_8413E8E4(*(s16 *)((u8 *)arg0+10),*(s16 *)((u8 *)arg0+12),width,rows,width,rows,texture,format,size,1);
+            texture += width * rows;
+            gSPDisplayList(D_800D0510++,D_84186B20);
+            ParticleGfx_SetPrimColor_fragment79(255,0,0,200);
+            func_8413E8E4(*(s16 *)((u8 *)arg0+10),(s16)(*(s16 *)((u8 *)arg0+12)+rows-1),width,1,width,3,texture,format,size,1);
+            ParticleGfx_SetPrimColor_fragment79(255,128,128,255);
+            func_8413E8E4(*(s16 *)((u8 *)arg0+10),(s16)(*(s16 *)((u8 *)arg0+12)+rows),width,1,width,1,texture,format,size,1);
+        }
+    } else {
+        ParticleGfx_SetPrimColor_fragment79(255,235,195,255);
+        func_8413EC88(*(s16 *)((u8 *)arg0+10),*(s16 *)((u8 *)arg0+12),width,height,asset);
+        if (*(u8 *)((u8 *)arg0+9) < 8 && *(u8 *)((u8 *)arg0+9) >= 3) {
+            u8 pulse;
+            u8 spread;
+            u8 dy;
+            pulse = 8 - *(u8 *)((u8 *)arg0+9);
+            gSPDisplayList(D_800D0510++,D_84186B20);
+            ParticleGfx_SetPrimColor_fragment79(255,255,255,(u8)(*(u8 *)((u8 *)arg0+9) * 51 - 102));
+            spread = (pulse * 2) * pulse;
+            dy = pulse * 2;
+            func_8413EC88((s16)(*(s16 *)((u8 *)arg0+10)-spread),(s16)(*(s16 *)((u8 *)arg0+12)+dy),(u16)(width+spread*2),(u16)(height-dy*2),asset);
+            gSPDisplayList(D_800D0510++,D_841869E0);
+        }
+        if (*(u8 *)((u8 *)arg0+9) < 6 && *(u8 *)((u8 *)arg0+9) > 0) {
+            u8 pulse;
+            u8 half;
+            s16 spread;
+            pulse = 6 - *(u8 *)((u8 *)arg0+9);
+            ParticleGfx_SetPrimColor_fragment79(255,235,195,(u8)(*(u8 *)((u8 *)arg0+9)*36));
+            spread = (u8)((pulse * 4) * pulse);
+            format = spread;
+            size = format;
+            half = spread / 2;
+            func_8413EC88((s16)(*(s16 *)((u8 *)arg0+10)-format),(s16)(*(s16 *)((u8 *)arg0+12)-half),(u16)(width+size*2),(u16)(height+half*2),asset);
+        }
+        if (*(u8 *)((u8 *)arg0+9) == 1) {
+            *(u8 *)((u8 *)arg0+9) = 61;
+            *(s32 *)((u8 *)arg0+4) = 2;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -869,7 +933,7 @@ void func_84140C8C(void *arg0) {
         temp_v0 = (*(s32 *)((u8 *)(arg0) + (4)));
         switch (temp_v0) {                          /* irregular */
         case 1:
-            func_84140718();
+            func_84140718(arg0);
             return;
         case 2:
             func_84140B64(arg0);
