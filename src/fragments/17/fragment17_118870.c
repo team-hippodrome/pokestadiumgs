@@ -421,7 +421,44 @@ void func_8220980C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209974.s")
+extern s16 D_822106D0;
+extern s16 D_822106D2;
+extern s16 D_822106D6;
+// Moves the transition record's position (unk_1C/1E) from D_822106D4/D6 toward the
+// selected entry's corner over five frames, then snaps it and starts state 6.
+void func_82209974(void) {
+    s16 *state = (s16 *)D_822106B0;
+    F17TransitionRecord *rec = &sTransitionRecord;
+    Fragment17ChoiceEntry *entry;
+    s16 tx;
+    f32 progress;
+    f32 x;
+    f32 y;
+
+    entry = &D_8220DEF4[state[4]];
+    state[2]++;
+    if (((u16 *)state)[3] & 1) {
+        tx = *(s16 *)&entry->unk_04[8] - 16;
+    } else {
+        tx = *(s16 *)&entry->unk_04[8] + 16;
+    }
+    if (D_822106B4 < 5) {
+        progress = D_822106B4 / 5.0f;
+        x = state[18] + (tx - state[18]) * progress;
+        state[14] = (x > 0.0f ? 0.5f : -0.5f) + x;
+        y = state[19] + (*(s16 *)&entry->unk_04[10] + 16 - state[19]) * progress;
+        state[15] = (y > 0.0f ? 0.5f : -0.5f) + y;
+        D_822106D0 = (s32)((x > 0.0f ? 0.5f : -0.5f) + x) - state[18];
+        D_822106D2 = (s32)((y > 0.0f ? 0.5f : -0.5f) + y) - *(s16 *)&entry->unk_04[10];
+    } else {
+        rec->transition.state = 6;
+        rec->transition.unk_02 = 0;
+        rec->unk_1C = tx;
+        rec->unk_1E = *(s16 *)&entry->unk_04[10] + 16;
+        *(unk_func_8220AC64_pair *)&D_822106D4 = *(unk_func_8220AC64_pair *)&D_822106CC;
+    }
+}
+
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209BA4.s")
 
