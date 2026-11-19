@@ -98,7 +98,35 @@ void func_81900164(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
     D_81900820.models[arg4].index = arg4;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/2/fragment2_code/func_81900214.s")
+extern f32 D_80087E50[];
+// Each active model pulses: both scale fields get half the base scale plus a
+// sine-table term (|sin| * half) indexed by the phase in unk_014.
+void func_81900214(s32 arg0) {
+    s16 phase;
+    f32 halfA;
+    s32 i;
+    f32 v;
+    f32 a;
+    u16 idx;
+    f32 two;
+    s32 z = 0; // FAKE: zero index gives each state access its own lui
+    s32 *active;
+
+    two = 2.0f; // a variable, not a literal, keeps div.s (x / 2.0f becomes mul 0.5)
+    active = D_81900820.active;
+    for (i = 0; i < 4; i++) {
+        idx = (u16)(phase = (&D_81900820)[z].unk_014); // FAKE: s16 middle step
+        if (active[i] == 0) {
+        } else {
+            v = D_80087E50[idx >> 4];
+            a = (v < 0.0f) ? -v : v;
+            halfA = (&D_81900820)[z].scale / two;
+            v = (&D_81900820)[z].scale / two;
+            D_81900820.models[i].unk_030 = D_81900820.models[i].unk_034 = a * halfA + v;
+        }
+    }
+    (&D_81900820)[z].unk_014 += D_81900710;
+}
 
 extern s32 D_81900DF8;
 extern s16 D_81900710;
