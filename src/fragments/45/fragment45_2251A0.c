@@ -250,12 +250,76 @@ void func_8AB005B0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB00618.s")
+extern volatile s16 D_8AB1653C;
+extern u8 D_8AB1653E;
+extern u8 D_8AB1653F;
+extern u8 D_8AB16540;
+extern s8 D_8AB16541;
+extern s8 D_8AB16542;
+extern s8 D_8AB16543;
+// Pulsing colour at 0x8AB16520 (pinned in datamig_bss.ld). It is defined
+// here so as1 shares one `lui $at` across the stores to r, g and b.
+typedef struct Fragment45Color {
+    /* 0x0 */ u8 unk_0;
+    /* 0x1 */ u8 r;
+    /* 0x2 */ u8 g;
+    /* 0x3 */ u8 b;
+} Fragment45Color;
+static Fragment45Color sColor;
+// Every 30 frames the colour restarts from a new base (white, then pink,
+// then yellow) and drifts by a per-channel step on the frames in between.
+// The frame timer D_8AB1653C is volatile: retail reloads it after each store.
+void func_8AB00618(void) {
+    s32 z = 0; // FAKE: zero index gives each colour access its own lui
+
+    switch (D_8AB1653C) {
+    case 0:
+        D_8AB1653E = 0xFF;
+        D_8AB16540 = 0xFF;
+        D_8AB1653F = 0xFF;
+        D_8AB16541 = 0;
+        D_8AB16542 = -10;
+        D_8AB16543 = 0;
+        (&sColor)[z].r = D_8AB1653E;
+        (&sColor)[z].g = D_8AB1653F;
+        (&sColor)[z].b = D_8AB16540;
+        break;
+    case 10:
+        D_8AB1653F = 0x9B;
+        D_8AB1653E = 0xFF;
+        D_8AB16540 = 0xFF;
+        D_8AB16541 = 0;
+        D_8AB16542 = 10;
+        D_8AB16543 = -15;
+        (&sColor)[z].r = D_8AB1653E;
+        (&sColor)[z].g = D_8AB1653F;
+        (&sColor)[z].b = D_8AB16540;
+        break;
+    case 20:
+        // One line on purpose: split over three lines, IDO schedules the 0x69 store later.
+        D_8AB1653E = 0xFF; D_8AB1653F = 0xFF; D_8AB16540 = 0x69;
+        D_8AB16541 = 0;
+        D_8AB16542 = 0;
+        D_8AB16543 = 15;
+        (&sColor)[z].r = D_8AB1653E;
+        (&sColor)[z].g = D_8AB1653F;
+        (&sColor)[z].b = D_8AB16540;
+        break;
+    default:
+        (&sColor)[z].r += D_8AB16541;
+        (&sColor)[z].g += D_8AB16542;
+        (&sColor)[z].b += D_8AB16543;
+        break;
+    }
+    D_8AB1653C += 1;
+    if (D_8AB1653C >= 30) {
+        D_8AB1653C = 0;
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern Copy34 D_8AB110C8;
-extern s16 D_8AB1653C;
 extern void func_8AB00618(void);
 extern s32 func_8004C990(s32, s32);
 void func_8AB007E0(void) {
@@ -265,7 +329,7 @@ void func_8AB007E0(void) {
     dst = &D_8AB16508;
     *dst = *src;
     dst->words[0] = func_8004C990(0x99, 2);
-    D_8AB1653C = 0;
+    *(s16 *)&D_8AB1653C = 0; // plain store (lui at + sh), not the volatile view
     func_8AB00618();
 }
 #endif
