@@ -22,17 +22,65 @@ typedef struct {
     s32 unk04[3];
 } Stage55Slot;
 
-typedef struct { u8 pad24[0x24]; f32 x; f32 y; f32 z; u8 tail[0x138]; } Row86706A30;
+struct Stage55FadeModel {
+    u8 unk00[0x1D];
+    u8 alpha;
+    u8 unk1E[0x1A];
+    f32 scale_z;
+    u8 unk3C[0x12C];
+};
+
+typedef struct {
+    u8 pad00[0x14];
+    s32 unk14;
+    u8 pad18[6];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[2];
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 scale[3];
+    u8 tail[0x12C];
+} Row86706A30;
+
 typedef struct State86703DF4 {
-    u8 pad00[0x08];
+    u8 pad00[8];
     s32 unk08;
-    u8 pad0C[0x20];
+    u8 pad0C[4];
+    f32 unk10;
+    s32 unk14;
+    s32 unk18;
+    f32 unk1C;
+    s32 unk20;
+    u8 pad24[8];
     s32 unk2C;
-    u8 pad30[0x08];
+    u8 pad30[8];
     s32 unk38;
-    u8 pad3C[0x0C];
+    u8 pad3C[12];
     s32 unk48;
-    u8 pad4C[0x60];
+    s32 unk4C;
+    u8 pad50[4];
+    s32 unk54;
+    f32 unk58;
+    f32 unk5C;
+    s32 unk60;
+    s32 unk64;
+    s32 unk68;
+    s32 unk6C;
+    u8 pad70[4];
+    s32 unk74;
+    u8 pad78[4];
+    s32 unk7C;
+    u8 pad80[4];
+    f32 unk84;
+    u8 pad88[12];
+    s32 unk94;
+    u8 pad98[4];
+    s32 unk9C;
+    s32 unkA0;
+    s32 unkA4;
+    u8 padA8[4];
 } State86703DF4;
 
 
@@ -1064,7 +1112,174 @@ void func_867036B4(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867037B8.s")
+s32 func_867037B8(s32 arg0, f32 arg1, f32 arg2) {
+    extern struct Stage55FadeModel D_86710668[];
+    extern f32 D_8670BAE8[], D_8670B350, D_8670B354;
+    extern s32 D_8670B3D8;
+    extern void func_80027A28(u16, u8);
+    enum { TWO = 2 };
+
+    s32 one = 1;
+    f32 z;
+    f32 *extent;
+    s32 i;
+    f32 x;
+
+    if (D_86728408[arg0].unk68 > 0) {
+        return 1;
+    }
+    if (D_86728408[arg0].unk2C != 10) {
+        D_86728408[arg0].unk2C = 0;
+    }
+    D_86728408[arg0].unk7C = 0;
+    D_8670C89C = D_86710C20[arg0].z + 8.0f * D_8670B3C8;
+    for (i = 0; i != 60; i++) {
+        register s32 contact = 0;
+        if (D_8670C980[arg0][i].unk04[0] == -1) {
+            continue;
+        }
+        if (D_8670C89C < D_86711760[arg0][i].z) {
+            continue;
+        }
+        z = D_86710C20[arg0].z - arg2 * (f32)TWO;
+        x = D_86710C20[arg0].x + arg1 * (f32)TWO;
+        extent = ((f32 (*)[2])D_8670BAE8)[D_8670C980[arg0][i].unk04[0]];
+        if (z < D_86711760[arg0][i].z + extent[1] * D_8670C890 &&
+            D_86711760[arg0][i].z - extent[1] * D_8670C890 < z &&
+            x < D_86711760[arg0][i].x + extent[0] * D_8670C890 &&
+            D_86711760[arg0][i].x - extent[0] * D_8670C890 < x) {
+            contact = 2;
+        }
+        if (contact != 2) {
+            continue;
+        }
+        if (D_86728408[arg0].unk38 > 0) {
+            if (D_8670C980[arg0][i].unk04[0] == 10) {
+                D_86728408[arg0].unk84 = D_86728408[arg0].unk10 + (5.6 * D_8670B3C8) / 18.0;
+                D_86710668[arg0].alpha = 255;
+                D_86728408[arg0].unk94 = one;
+                D_86728408[arg0].unk74 = one;
+                D_86710668[arg0].scale_z *= 1.5;
+                if (D_86728408[arg0].unk5C + D_8670BD9C < 0.75) {
+                    D_86728408[arg0].unk9C += 1;
+                    D_86728408[arg0].unk5C += D_8670B350;
+                }
+                if (D_86728408[arg0].unk5C + D_8670BD9C > 0.75) {
+                    D_86728408[arg0].unk5C = 0.3f;
+                } else {
+                    D_86728408[arg0].unk58 += D_8670B354;
+                }
+            } else {
+                switch (D_8670C980[arg0][i].unk04[0]) {
+                case 11:
+                    if ((u32)D_86711760[arg0][i].unk14 < 7 || (u32)D_86711760[arg0][i].unk14 >= 27) {
+                        return 1;
+                    }
+                    if ((u32)D_86711760[arg0][i].unk14 >= 6 && (u32)D_86711760[arg0][i].unk14 < 13) {
+                        func_80027A28(0x9F00, arg0);
+                        D_86728408[arg0].unk68 = one;
+                        break;
+                    }
+                case 1:
+                case 2:
+                    D_86728408[arg0].unk2C = 4;
+                    D_86728408[arg0].unk38 = 0;
+                    D_86728408[arg0].unk94 = -1;
+                    D_86728408[arg0].unk5C = 0.0f;
+                    D_86728408[arg0].unk58 = 0.0f;
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    func_80027A28(0x9F00, arg0);
+                    D_86728408[arg0].unk68 = one;
+                    break;
+                case 0:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    break;
+                }
+            }
+            if (D_8670C980[arg0][i].unk04[0] != 0) {
+                D_8670C980[arg0][i].resource_index = -1;
+                D_8670C980[arg0][i].unk04[0] = -1;
+            } else {
+                D_86728408[arg0].unk7C = one;
+            }
+            D_86710C20[arg0].y = 80.0f;
+            return 1;
+        }
+        switch (D_8670C980[arg0][i].unk04[0]) {
+        case 0:
+            do {
+                if (D_86728408[arg0].unk2C == 10) {
+                    break;
+                }
+                D_86728408[arg0].unk2C = one;
+            } while (0);
+            break;
+        case 1:
+            D_86728408[arg0].unk2C = 3;
+            break;
+        case 11:
+            if ((u32)D_86711760[arg0][i].unk14 < 7 || (u32)D_86711760[arg0][i].unk14 >= 27) {
+                return 1;
+            }
+            if ((u32)D_86711760[arg0][i].unk14 >= 6 && (u32)D_86711760[arg0][i].unk14 < 13) {
+                func_80027A28(0x9F00, arg0);
+                D_86728408[arg0].unk68 = one;
+                break;
+            }
+        case 2:
+            D_86728408[arg0].unk2C = 4;
+            break;
+        case 3:
+        case 4:
+        case 5:
+            D_86728408[arg0].unk2C = 2;
+            break;
+        case 10:
+            D_86728408[arg0].unk64 = one;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            if (D_86710C20[arg0].z < D_86711760[arg0][i].z - extent[1] * D_8670C890) {
+                D_86728408[arg0].unk4C = 0;
+            } else {
+                D_86728408[arg0].unk4C = one;
+            }
+            D_86728408[arg0].unk2C = 6;
+            break;
+        case 9:
+            D_86728408[arg0].unk2C = 5;
+            break;
+        }
+        if (one == D_86728408[arg0].unk2C) {
+            return 1;
+        }
+        if (D_86728408[arg0].unk2C != 6) {
+            if (D_8670B3D0 >= 2) {
+                D_86728408[arg0].unk54 = 0;
+                D_86728408[arg0].unk5C = 0.0f;
+                D_86728408[arg0].unk58 = 0.0f;
+            }
+            if (one == D_8670B3D8) {
+                D_86727CE8[D_8670C980[arg0][i].unk04[2]] = one;
+            }
+            if (D_8670C980[arg0][i].unk04[0] != 11) {
+                D_8670C980[arg0][i].resource_index = -1;
+                D_8670C980[arg0][i].unk04[0] = -1;
+            }
+            *(s32 *)(D_86728348 + arg0 * 56) = func_86700FD4(arg0, 1);
+        }
+        return -1;
+    }
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1179,7 +1394,7 @@ void Stage55_UpdateModelSounds(s32 arg0) {
 
 #ifdef VERSION_US
 typedef struct { u8 unk00[0x94]; s32 mode; u8 unk98[0x14]; } Stage55FadeState;
-typedef struct { u8 unk00[0x1D]; u8 alpha; u8 unk1E[0x1A]; f32 scale_z; u8 unk3C[0x12C]; } Stage55FadeModel;
+typedef struct Stage55FadeModel Stage55FadeModel;
 extern Stage55FadeModel D_86710668[];
 extern State86703DF4 D_86728408[];
 extern void func_8003F1DC(void *);
