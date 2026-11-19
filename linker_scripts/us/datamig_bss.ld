@@ -367,6 +367,14 @@ SECTIONS
         build/src/fragments/21/fragment21_13FFA0.o(.data)
     }
 
+    /* func_82502EBC's four state halfwords at D_82508F70. IDO shares one
+     * lui across the stores only when the record is a function-scope
+     * static. */
+    .fragment21_state_8F70_bss 0x82508F70 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/21/fragment21_13FFA0.o(.bss)
+    }
+
     .fragment21_state_8FF0_bss 0x82508FF0 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/21/fragment21_144790.o(.bss)
