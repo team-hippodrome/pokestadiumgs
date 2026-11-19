@@ -451,8 +451,9 @@ SECTIONS
     {
         build/src/fragments/54/fragment54_code.o(.data)
     }
-    /* Dialog geometry, transition state, counters and fraction; the
-     * fragment loader clears this complete 48-byte runtime record. */
+    /* Fragment 57's loader-cleared runtime memory: the 48-byte dialog record
+     * sDialog, the camera/menu objects after it, then func_83300CB0's
+     * function-scope statics (0x8330AC08-0x8330ACF8). */
     .fragment57_dialog_context_bss 0x8330AC08 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/57/fragment57_code.o(.bss)
@@ -539,8 +540,8 @@ ASSERT(SIZEOF(.fragment24_state_12450_bss) == 48,
 ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
        "fragment54 player models must occupy their original runtime footprint");
 
-ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 48,
-       "fragment57 dialog context must retain its original 48-byte footprint");
+ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 0xF0,
+       "fragment57 runtime bss must end after func_83300CB0's statics");
 
 ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 0x3150,
        "fragment66 runtime bss must end after func_82E01CE8's counters");
