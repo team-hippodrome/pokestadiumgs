@@ -1536,7 +1536,91 @@ s32 func_86A04100(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A041D8.s")
+void func_86A041D8(void) {
+    extern s32 D_86A0EFF4[], D_86A452B0;
+    extern u8 D_86A45274[], D_86A45278[], D_86A4527C[], D_86A45280[];
+    extern s32 func_86A05344(f32, f32);
+    extern s32 ItemBounds_ContainsRotatedOffset(s32, f32, f32);
+    s32 pad[2]; // FAKE: retains unused frame space.
+    s32 mask;
+    s32 gone = 0;
+    s32 i;
+
+    s32 trail_index;
+    s32 offset;
+    s32 count;
+    s32 item;
+    f32 x;
+    f32 z;
+    f32 dx;
+    f32 dz;
+    f32 distance;
+    f32 velocity;
+    f32 scaled;
+    *(f32 *)((u8 *)D_87F119DC + 0x48) += *(f32 *)((u8 *)D_87F119DC + 0x10);
+    *(f32 *)((u8 *)D_87F119DC + 0x50) -= 5.0;
+    x = *(f32 *)((u8 *)D_87F119DC + 0x48);
+    z = *(f32 *)((u8 *)D_87F119DC + 0x50);
+    mask = func_86A05344(x, z);
+    for (i = 0; i < 4; i++) {
+        if ((D_86A0EFF4[i] & mask) && ((s32 *)D_86A443F0.unk_0198)[i] == 0 &&
+            D_86A443F0.unk_0024[i] != 9 && D_86A443F0.unk_0024[i] != 8) {
+            dz = D_86A443F0.position[i][1] - z;
+            dx = D_86A443F0.position[i][0] - x;
+
+            distance = sqrtf(dz * dz + dx * dx);
+            if (distance < 0.01) distance = 0.01f;
+            velocity = *(f32 *)((u8 *)D_87F119DC + 0x10);
+            scaled = dx * velocity;
+            scaled /= distance;
+            scaled /= 10.0f;
+            D_86A443F0.unk_0044[i][0] = scaled;
+            D_86A443F0.unk_0044[i][0] += velocity * 0.5f;
+            D_86A443F0.unk_0044[i][1] = (*(f32 *)((u8 *)D_87F119DC + 0x10) * (dz = D_86A443F0.position[i][1] - z)) / distance / 10.0f;
+            ((s16 *)D_86A443F0.unk_0E7C)[i] = 0;
+            D_86A443F0.unk_0024[i] = 10;
+            count = 0;
+            while ((item = func_86A0405C(i)) != -1) {
+                func_86A03DDC(D_86A443F0.position[i][0], D_86A443F0.position[i][1], D_86A443F0.unk_0044[i][0], D_86A443F0.unk_0044[i][1], item);
+                count++;
+            }
+            if (count) func_8002781C(0x8F03, (u8)i, D_86A443F0.unk_0E48[i]);
+            else func_8002781C(0x8F02, (u8)i, D_86A443F0.unk_0E48[i]);
+            D_86A443F0.unk_0188[i] = 37;
+            ((s32 *)D_86A443F0.unk_0198)[i] = 10;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (D_86A443F0.unk_0024[i] != 10 && D_86A443F0.unk_0024[i] != 8 && D_86A443F0.unk_0024[i] != 9 &&
+            ItemBounds_ContainsRotatedOffset(i, x, z) && D_86A443F0.unk_0188[i] == 0) {
+            func_8002781C(0x8F01, (u8)i, D_86A443F0.unk_0E48[i]);
+            D_86A443F0.unk_0188[i] = (s32)*(f32 *)((u8 *)D_87F119DC + 0x10);
+            if (D_86A443F0.unk_0188[i] < 0) D_86A443F0.unk_0188[i] = -D_86A443F0.unk_0188[i];
+            D_86A443F0.unk_0044[i][0] = 0.0f;
+            D_86A443F0.unk_0044[i][1] = 0.0f;
+            if (z < D_86A443F0.position[i][1]) {
+                if (*(f32 *)((u8 *)D_87F119DC + 0x10) > 0.0f) ((s16 *)D_86A443F0.unk_0E7C)[i] = -1;
+                else ((s16 *)D_86A443F0.unk_0E7C)[i] = 1;
+            } else {
+                if (*(f32 *)((u8 *)D_87F119DC + 0x10) > 0.0f) ((s16 *)D_86A443F0.unk_0E7C)[i] = 1;
+                else ((s16 *)D_86A443F0.unk_0E7C)[i] = -1;
+            }
+        }
+    }
+    if (*(f32 *)((u8 *)D_87F119DC + 0x48) < -270.0f || *(f32 *)((u8 *)D_87F119DC + 0x48) > 270.0f) gone = 1;
+    if (gone) {
+        (*(s32 *)D_86A443F0.unk_0E60)--;
+        ((s32 *)D_86A45AD0)[*(s32 *)((u8 *)D_87F119DC + 0x20)] = 0;
+        func_87F026E8(D_87F119D8, D_87F119DC);
+    } else {
+        D_86A443F0.unk_0E84[D_86A443F0.unk_0EC0][0] = *(f32 *)((u8 *)D_87F119DC + 0x48);
+        D_86A443F0.unk_0E84[D_86A443F0.unk_0EC0][1] = *(f32 *)((u8 *)D_87F119DC + 0x50);
+        D_86A443F0.unk_0E84[D_86A443F0.unk_0EC0][2] = *(f32 *)((u8 *)D_87F119DC + 0x10);
+        D_86A443F0.unk_0E84[D_86A443F0.unk_0EC0][3] = *(f32 *)((u8 *)D_87F119DC + 0x18);
+        D_86A443F0.unk_0EC0++;
+    }
+    *(f32 *)((u8 *)D_87F119DC + 0x50) += 5.0;
+}
 #endif
 
 #ifdef VERSION_US
