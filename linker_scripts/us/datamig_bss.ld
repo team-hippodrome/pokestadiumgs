@@ -380,6 +380,14 @@ SECTIONS
         build/src/fragments/53/fragment53_code.o(.bss)
     }
 
+    /* func_8650515C's static table index D_8650D9D0, in fragment 53's
+     * loader-cleared area over the relocation tail. It is a function
+     * static so IDO keeps it in a register across the case-2 loop. */
+    .fragment53_index_D9D0_bss 0x8650D9D0 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/53/fragment53_28E360.o(.bss)
+    }
+
     /* Fragment 21's saved argument pair and three state halfwords. Both
      * records are loader-cleared; compiler alignment has no load image. */
     .fragment21_pair_9004_data 0x82509004 (NOLOAD) : SUBALIGN(2)
@@ -514,6 +522,9 @@ ASSERT(SIZEOF(.fragment73_preview_9A0_bss) == 32,
 
 ASSERT(SIZEOF(.fragment53_models_10010_bss) == 0x5A0,
        "fragment53 models must keep four 0x168-byte records");
+
+ASSERT(SIZEOF(.fragment53_index_D9D0_bss) == 16,
+       "fragment53 table index must keep its 16-byte compiler footprint");
 
 ASSERT(SIZEOF(.fragment32_anim_state_data) == 112,
        "fragment32 animation state must retain its compiler section footprint");
