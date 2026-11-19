@@ -489,7 +489,31 @@ void func_88003534(F29Rect *rect, F29TextLayout *text) {
     text->y = rect->y + text->top;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_168330/func_880036CC.s")
+#define DATA ((unk_func_880036CC *)data)
+void func_880036CC(F29Rect *rect, u8 *data) {
+    unk_func_880036CC_list *group;
+    u16 size;
+
+    group = DATA->lists[0].count >= DATA->lists[1].count ? &DATA->lists[0] : &DATA->lists[1];
+    size = func_88002958(DATA->lists[0].strings, DATA->lists[0].count, DATA->font, DATA->spacingX);
+    if (size > func_88002958(DATA->lists[1].strings, DATA->lists[1].count, DATA->font, DATA->spacingX)) {
+        DATA->width = func_88002958(DATA->lists[0].strings, DATA->lists[0].count, DATA->font, DATA->spacingX);
+    } else {
+        DATA->width = func_88002958(DATA->lists[1].strings, DATA->lists[1].count, DATA->font, DATA->spacingX);
+    }
+    DATA->width = DATA->width < 40 ? 40 : DATA->width;
+    // FAKE: dead store; keeps 7 and &D_80128C60 in registers like retail.
+    size = D_80128C60 == 7 ? 0x24 : 0x19;
+    DATA->total_width = DATA->width + 0x34;
+    if (DATA->unk_00 != 0) {
+        DATA->total_width += 0x16;
+    }
+    rect->width = (D_80128C60 == 7 ? 0x2A : 0x26) + DATA->total_width;
+    size = func_88002A08(group->strings, group->count, DATA->font, DATA->spacingY);
+    rect->height = (D_80128C60 == 7 ? 0x24 : 0x19) + size;
+    func_88003480(rect->anchor, rect->width, rect->height, &rect->x, &rect->y);
+}
+#undef DATA
 
 void func_88003858(F29Rect *rect, u8 *data) {
     u16 headingHeight;
