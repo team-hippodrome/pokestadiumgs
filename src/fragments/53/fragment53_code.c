@@ -314,7 +314,196 @@ s32 func_8650123C(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86501280.s")
+extern s32 D_8650C4D4;
+extern s32 D_8650C4DC;
+extern s32 D_8650C45C[];
+extern s32 D_8650C470;
+extern s32 D_8650C5CC[];
+extern s32 D_8650C5E0;
+extern s32 D_8650C5F8;
+extern s32 D_8650D9D4;
+extern u32 func_8003570C(void);
+// Words of the per-player actor records, addressed through D_86511698 so that
+// IDO knows the stores do not alias the score globals.
+#define ACT_F18(i) (*(s32 *)((u8 *)&D_86511698[i] + 0x18))
+#define ACT_F1C(i) (*(s32 *)((u8 *)&D_86511698[i] + 0x1C))
+#define ACT_F90(i) (*(s32 *)((u8 *)&D_86511698[i] + 0x90))
+#define ACT_F94(i) (*(s32 *)((u8 *)&D_86511698[i] + 0x94))
+// Sets word 0x1C of each active player's record from its level
+// (D_8650C45C) and random rolls. Declared s32 like its callers' prototypes, but it returns no
+// value (a void return type changes func_86508A14's codegen).
+s32 func_86501280(void) {
+    s32 i;
+    s32 step;
+    s32 tier;
+    s32 roll;
+
+    for (i = 0; i < 4; i++) {
+        ACT_F1C(i) = 0;
+    }
+    for (i = 0; i < 4; i++) {
+        if (D_8650C45C[i] == 0) {
+            continue;
+        }
+        roll = (func_8003570C() % 0x4F + D_8650C5F8);
+        roll = roll - (roll / 10) * 10;
+        tier = ACT_F90(i) / 3;
+        if (D_8650C470 != 3) {
+            continue;
+        }
+        step = 1;
+        switch (D_8650C45C[i]) {
+        case 1:
+            if (func_8003570C() % 0xC9 > 0x1E) {
+                step = -1;
+            }
+            if (roll >= tier + 6) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC;
+            } else if (roll >= tier + 4) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step;
+            } else if (roll >= tier + 2) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 2;
+            } else {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 3;
+            }
+            if (D_8650D9D4 + D_8650C4DC < ACT_F1C(i)) {
+                if (tier + 6 < 7) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 2 - 1;
+                } else {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 3 - 1;
+                }
+            }
+            if (ACT_F1C(i) < D_8650D9D4) {
+                ACT_F1C(i) = D_8650D9D4 + guRandom() % 4;
+            }
+            if (roll >= 3) {
+                if (ACT_F1C(i) < D_8650D9D4) {
+                    ACT_F1C(i) = func_8003570C() % 3 + D_8650D9D4;
+                }
+                if (D_8650D9D4 + D_8650C4DC < ACT_F1C(i)) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - func_8003570C() % 3 - 1;
+                }
+            }
+            if (D_8650D9D4 + D_8650C4DC == ACT_F1C(i)) {
+                if (D_8650C5CC[D_8650C45C[i]] + 10 < ACT_F18(i) + 0x14) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 2 - 1;
+                }
+            }
+            break;
+        case 2:
+            if (func_8003570C() % 0xC9 > 0x28) {
+                step = -1;
+            }
+            if (roll >= tier + 8) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC;
+            } else if (roll > tier + 6) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step;
+            } else if (roll > tier + 4) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 2;
+            } else if (roll > tier + 2) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 3;
+            } else {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 4;
+            }
+            if (roll >= 2) {
+                if (D_8650D9D4 + D_8650C4DC < ACT_F1C(i)) {
+                    if (ACT_F90(i) >= 3) {
+                        ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 4 - 1;
+                    } else {
+                        ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 4 - 1;
+                    }
+                }
+                if (ACT_F1C(i) < D_8650D9D4) {
+                    ACT_F1C(i) = guRandom() % 3 + D_8650D9D4 + 1;
+                }
+            }
+            if (ACT_F1C(i) < D_8650D9D4) {
+                ACT_F1C(i) = guRandom() % 3 + D_8650D9D4 + 1;
+            }
+            if (D_8650D9D4 + D_8650C4D4 < ACT_F1C(i)) {
+                ACT_F1C(i) = guRandom() % 3 + D_8650D9D4 + D_8650C4DC + 1;
+            }
+            if (D_8650D9D4 + D_8650C4DC == ACT_F1C(i)) {
+                if (D_8650C5CC[D_8650C45C[i]] + 10 < ACT_F18(i) + 0x14) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 2 - 1;
+                }
+            }
+            break;
+        case 3:
+            if (func_8003570C() % 0xC9 > 0x28) {
+                step = -1;
+            }
+            if (roll >= tier + 8) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + 1;
+            } else if (roll >= tier + 6) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step;
+            } else if (roll >= tier + 4) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 2;
+            } else if (tier < roll) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 3;
+            } else {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 4;
+            }
+            if (roll >= 3) {
+                if (D_8650D9D4 + D_8650C4D4 < ACT_F1C(i)) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - guRandom() % 2 - 1;
+                }
+                if (ACT_F1C(i) < D_8650D9D4) {
+                    ACT_F1C(i) = guRandom() % 3 + D_8650D9D4 + 1;
+                }
+            }
+            break;
+        case 4:
+            if (func_8003570C() % 0xC9 > 0x6E) {
+                step = -1;
+            }
+            if (roll > tier + 9) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + 1;
+            } else if (roll > tier + 7) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step;
+            } else if (roll >= 6) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 2;
+            } else if (roll >= 4) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 3;
+            } else if (roll >= 3) {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 4;
+            } else {
+                ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + step * 5;
+            }
+            break;
+        }
+        if (D_8650C5E0 >= 4) {
+            if (ACT_F18(i) + func_8650123C(ACT_F1C(i), i) <= 0) {
+                if (ACT_F1C(i) < D_8650D9D4) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - (func_8003570C() & 3) - 1;
+                }
+                if (D_8650D9D4 + D_8650C4DC < ACT_F1C(i)) {
+                    ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - (func_8003570C() & 3) - 1;
+                }
+                if (ACT_F18(i) + func_8650123C(ACT_F1C(i), i) <= 0) {
+                    if (ACT_F1C(i) < D_8650D9D4) {
+                        ACT_F1C(i) = D_8650D9D4 + 2;
+                    }
+                    if (D_8650D9D4 + D_8650C4DC < ACT_F1C(i)) {
+                        ACT_F1C(i) = D_8650D9D4 + D_8650C4DC - 2;
+                    }
+                }
+            }
+        }
+        if (D_8650C5CC[D_8650C45C[i]] < ACT_F18(i)) {
+            ACT_F1C(i) = D_8650D9D4 + D_8650C4DC + guRandom() % 6 + 2;
+            if (D_8650D9D4 + D_8650C4DC == ACT_F1C(i)) {
+                if (ACT_F94(i) >= 2) {
+                    ACT_F1C(i) = guRandom() % 2 + D_8650D9D4 + D_8650C4DC + 1;
+                }
+            }
+        }
+    }
+}
+#undef ACT_F18
+#undef ACT_F1C
+#undef ACT_F90
+#undef ACT_F94
 #endif
 
 #ifdef VERSION_US
