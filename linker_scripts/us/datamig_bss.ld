@@ -316,6 +316,13 @@ SECTIONS
     {
         build/src/fragments/45/fragment45_2251A0.o(.bss)
     }
+    /* fragment45's panel pulse phases at 0x8AB14670 (sPanelPhase, an
+     * initialized static in fragment45_2251A0.c so IDO keeps the retail
+     * reloads in func_8AB04038). NOLOAD view of the fragment's bss. */
+    .fragment45_panel_phase_data 0x8AB14670 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/45/fragment45_2251A0.o(.data)
+    }
     /* fragment2's state block D_81900820 (defined in fragment2_code.c so as1
      * folds the shared-page `lui $at`, as in func_81900020), then a pad and
      * the on-screen blink counter (a function-scope static in func_8190037C)

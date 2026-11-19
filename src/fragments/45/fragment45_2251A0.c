@@ -1603,7 +1603,33 @@ void TextHighlight_AnimateScales(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB04038.s")
+extern u8 D_8AB14468[];
+extern u8 D_8AB144E0[];
+/* Per-panel pulse phases at 0x8AB14670. Initialized so the static lands in
+ * this TU's .data, pinned by datamig_bss.ld. */
+static u16 sPanelPhase[4] = { 0 };
+
+/* Pulses the four panels' scale and offset. p3 walks the panels and ends on
+ * panel 3, which retail keeps as the base for panels 1-3. */
+void func_8AB04038(void) {
+    s32 i;
+    u8 *p0;
+    u8 *p3;
+
+    p0 = D_8AB14468;
+    for (i = 0, p3 = D_8AB14468; i < 4; i++, p3 += 0x78) {
+        sPanelPhase[i] += 0x1000;
+    }
+    p3 -= 0x78;
+    *(f32 *)(p0 + 0x44) = D_80088E50[sPanelPhase[0] >> 4] * 0.1f + 0.9f;
+    *(f32 *)(p0 + 0x4C) = *(f32 *)(p0 + 0x54) - (*(s16 *)(p0 + 0x5A) * 0.1f) * D_80088E50[sPanelPhase[0] >> 4];
+    *(f32 *)(p3 - 0xF0 + 0x40) = D_80088E50[sPanelPhase[1] >> 4] * 0.1f + 0.9f;
+    *(f32 *)(p3 - 0xF0 + 0x48) = *(f32 *)(p3 - 0xF0 + 0x50) + (*(s16 *)(p3 - 0xF0 + 0x58) * 0.1f) * D_80088E50[sPanelPhase[1] >> 4];
+    *(f32 *)(p3 - 0x78 + 0x44) = D_80088E50[sPanelPhase[2] >> 4] * 0.1f + 0.9f;
+    *(f32 *)(p3 - 0x78 + 0x4C) = *(f32 *)(p3 - 0x78 + 0x54) + (*(s16 *)(p3 - 0x78 + 0x5A) * 0.1f) * D_80088E50[sPanelPhase[2] >> 4];
+    *(f32 *)(p3 + 0x40) = D_80088E50[sPanelPhase[3] >> 4] * 0.1f + 0.9f;
+    *(f32 *)(p3 + 0x48) = *(f32 *)(p3 + 0x50) - (*(s16 *)(p3 + 0x58) * 0.1f) * D_80088E50[sPanelPhase[3] >> 4];
+}
 #endif
 
 #ifdef VERSION_US
