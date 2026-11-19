@@ -4029,10 +4029,10 @@ SECTIONS
         fragment53_DATA_START = .;
         fragments_53_fragment53_header = .;
         build/asm/us/data/fragments/53/fragment53_header.o(.data);
-        fragments_53_fragment53_code = .;
-        build/src/fragments/53/fragment53_code.o(.data);
         fragments_53_fragment53_data_data = .;
         build/asm/us/data/fragments/53/fragment53_data.data.o(.data);
+        fragments_53_fragment53_code = .;
+        build/src/fragments/53/fragment53_code.o(.data);
         fragments_53_fragment53_28E360 = .;
         build/src/fragments/53/fragment53_28E360.o(.data);
         _296690_data = .;
