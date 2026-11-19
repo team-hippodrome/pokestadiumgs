@@ -258,8 +258,9 @@ void func_8AF0A900(s16 arg0) {
 }
 
 
-extern u8 func_8006397C(u8);
-extern u8 func_800639C0(u8);
+extern s32 func_8006397C(u8);
+extern s32 func_800639C0(u8);
+extern s16 func_8AF01530(s16);
 extern s16 Trade_GetSelectedBox(s16);
 extern s16 func_80063454(u8, u8, u8, s32);
 extern u8 D_8AF2D302[];
@@ -326,7 +327,183 @@ void func_8AF0AB84(u8 arg0) {
         func_8004D1FC(texture);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F85B0/func_8AF0ACDC.s")
+extern s16 D_8AF2D508;
+extern u16 *D_8AF2D3AC;
+extern u16 *D_8AF2D3B0;
+extern u16 *D_8AF2D3B4;
+extern u16 *D_8AF2D3B8;
+extern u16 *D_8AF2D3BC;
+extern u16 *D_8AF2D3C0;
+extern void *D_8AF2D3C4;
+extern void *D_8AF2D3C8;
+extern u16 *D_8AF2D3CC;
+extern u16 *D_8AF2D3D0;
+extern u16 *D_8AF2D440[];
+extern u16 *D_8AF2D47C;
+extern u16 *D_8AF2D480;
+extern u16 *D_8AF2D484;
+extern s32 D_8AF2D490;
+extern s16 D_8AF2BAC8;
+extern s16 D_8AF26948;
+extern void func_8004C4B0(s32);
+extern void func_8AF00504(s32);
+extern s32 func_8AF003A8(s32);
+extern void func_8AC06E98(s32);
+extern s32 func_8AC06D8C(s32, s32);
+extern u8 *D_8AF2D380;
+extern u8 *D_8AF2D3A0[];
+extern s32 D_8AF26950[];
+extern s16 D_8AF2C9E0;
+extern u8 Pokemon_GetBaseStat(u8, s32);
+extern s32 D_8AF2D488;
+extern void func_8AC05E40(s32, s32, void *);
+extern void func_8AC06400(void *, s32);
+extern s32 D_8AF2D420;
+extern s32 func_80041C98(s32);
+extern s32 D_8AF2BA88;
+extern u16 *D_8AF2BA84;
+extern void *ModelPreview_Create(s32, s32, s32);
+extern void func_80042D74(void *, void *);
+extern s32 func_80042FBC(void *, s32);
+extern void func_8AF013D8();
+extern s16 D_8AF263C4[];
+extern int sprintf(char *, const char *, ...);
+extern void func_8004E308(s32, void *, s32);
+void func_8AF0ACDC(void) {
+    s32 pad[2]; // FAKE
+    u8 *data = D_8AF26944;
+    s32 pad1[7]; // FAKE
+    s32 page;
+    s32 id;
+    s32 i;
+    u8 sp8;
+    u8 *cwak;
+    u8 *s1;
+    u8 *sa;
+    D_8AF2D508 = 0;
+    func_8004C4B0(0xD);
+    func_8004C4B0(1);
+    func_8004C4B0(2);
+    func_8004C4B0(3);
+    func_8004C8C0(0xAD);
+    func_8004C8C0(0xBE);
+    func_8004C8C0(0x14C);
+    func_8004C8C0(0xBC);
+    func_8004C8C0(0x38);
+    func_8AF0A888();
+    func_8004C8C0(0xC7);
+    for (i = 0; &D_8AF2D578[i] < &D_8AF2D578[3]; i++) {
+        D_8AF2D558[i] = func_8004C990(0xC7, i * 3);
+        D_8AF2D568[i] = func_8004C990(0xC7, i * 3 + 1);
+        D_8AF2D578[i] = func_8004C990(0xC7, i * 3 + 2);
+    }
+    func_8AF0A340();
+    func_8AF00504(0x3A);
+    page = func_8AF003A8(0x3A);
+    func_8AC06E98(page);
+    func_8004C594(3, (*(s16 *)D_8AF2D302));
+    D_8AF2D380 = (u8 *)func_8AC06D8C(page, 0x6E616D65);
+    *(s16 *)(D_8AF2D380 + 0x30) = 0;
+    *(s16 *)(D_8AF2D380 + 0x32) = (*(s16 *)D_8AF2D302) - 1;
+    func_8004C54C(0x2C, (s32)func_8004C874(2, (*(s16 *)D_8AF2D302) - 1));
+    func_8004C54C(0x2D, (s32)func_8004C874(3, (*(s16 *)D_8AF2D302) - 1));
+    func_8004C54C(0x2E, (s32)func_8004C874(1, (*(s16 *)D_8AF2D302) - 1));
+    D_8AF2D384 = (u8 *)func_8AC06D8C(page, 0x63757031);
+    D_8AF2D388 = (u8 *)func_8AC06D8C(page, 0x63757032);
+    D_8AF2D38C = (u8 *)func_8AC06D8C(page, 0x63757033);
+    D_8AF2D390[0] = (void *)func_8AC06D8C(page, 0x63615F31);
+    D_8AF2D390[1] = (void *)func_8AC06D8C(page, 0x63615F32);
+    D_8AF2D390[2] = (void *)func_8AC06D8C(page, 0x63615F33);
+    D_8AF2D390[3] = (void *)func_8AC06D8C(page, 0x63615F34);
+    D_8AF2D390[4] = (void *)func_8AC06D8C(page, 0x63615F35);
+    D_8AF2D390[5] = (void *)func_8AC06D8C(page, 0x63615F36);
+    D_8AF2D390[6] = (void *)func_8AC06D8C(page, 0x63615F37);
+    func_8AF0A900((*(s16 *)D_8AF2D302));
+    if (D_8AF26940 == 0) {
+        for (i = 0; i < 3; i++) {
+            *(s16 *)(D_8AF2D3A0[i] + 0x24) = 0xBE;
+            *(s16 *)(D_8AF2D3A0[i] + 0x26) = 0;
+        }
+    }
+    cwak = (u8 *)func_8AC06D8C(page, 0x6377616B);
+    if (func_8AF00020() == 0) {
+        D_8AF2D390[6][1] &= 0xFFFE;
+        *(u16 *)(cwak + 2) &= 0xFFFE;
+    }
+    D_8AF2D3AC = (void *)func_8AC06D8C(page, 0x6D746870);
+    D_8AF2D3B0 = (void *)func_8AC06D8C(page, 0x6D746174);
+    D_8AF2D3B4 = (void *)func_8AC06D8C(page, 0x6D74626B);
+    D_8AF2D3B8 = (void *)func_8AC06D8C(page, 0x6D747361);
+    D_8AF2D3BC = (void *)func_8AC06D8C(page, 0x6D747362);
+    D_8AF2D3C0 = (void *)func_8AC06D8C(page, 0x6D747370);
+    func_8004E308((s32)D_8AF2D3AC, func_8AF0A6E4, 0);
+    func_8004E308((s32)D_8AF2D3B0, func_8AF0A6E4, 1);
+    func_8004E308((s32)D_8AF2D3B4, func_8AF0A6E4, 2);
+    func_8004E308((s32)D_8AF2D3B8, func_8AF0A6E4, 3);
+    func_8004E308((s32)D_8AF2D3BC, func_8AF0A6E4, 4);
+    func_8004E308((s32)D_8AF2D3C0, func_8AF0A6E4, 5);
+    D_8AF2D3AC[1] &= ~2;
+    D_8AF2D3B0[1] &= ~2;
+    D_8AF2D3B4[1] &= ~2;
+    D_8AF2D3B8[1] &= ~2;
+    D_8AF2D3BC[1] &= ~2;
+    D_8AF2D3C0[1] &= ~2;
+    D_8AF2D3C4 = (void *)func_8AC06D8C(page, 0x74655F31);
+    D_8AF2D3C8 = (void *)func_8AC06D8C(page, 0x74655F32);
+    func_8004E308((s32)D_8AF2D3C4, func_8AF013D8, 0);
+    func_8004E308((s32)D_8AF2D3C8, func_8AF013D8, 0);
+    D_8AF2D3D0 = (void *)func_8AC06D8C(page, 0x626F6F6B);
+    i = 0;
+    do {
+        D_8AF2D440[i] = (void *)func_8AC06D8C(page, D_8AF26950[i]);
+        i++;
+    } while (i < 15);
+    D_8AF2D47C = (void *)func_8AC06D8C(page, 0x65727330);
+    D_8AF2D480 = (void *)func_8AC06D8C(page, 0x65727331);
+    D_8AF2D484 = (void *)func_8AC06D8C(page, 0x65727332);
+    sp8 = (u8)(s32)(id = *(u16 *)D_8AF2D302);
+    D_8AF2C9E0 = 0;
+    s1 = data;
+    data = NULL; // FAKE
+    *(u16 *)(s1 + 0x2C) = *(u16 *)D_8AF2D302;
+    s1 += 0x28;
+    s1[6] = Pokemon_GetBaseStat(sp8, 0);
+    s1[7] = Pokemon_GetBaseStat(sp8, 1);
+    s1[8] = Pokemon_GetBaseStat(sp8, 2);
+    s1[9] = Pokemon_GetBaseStat(sp8, 3);
+    s1[10] = Pokemon_GetBaseStat(sp8, 4);
+    s1[11] = Pokemon_GetBaseStat(sp8, 5);
+    s1[12] = Pokemon_GetBaseStat(sp8, 6);
+    s1[0xD] = func_8AF01530(func_8006397C(sp8));
+    s1[0xE] = func_8AF01530(func_800639C0(sp8));
+    D_8AF2D488 = func_8AC06D8C(page, 0x6162746E);
+    func_8AC05E40(page, 0x6162746E, &D_8AF2D490);
+    func_8AC06400(&D_8AF2D490, D_8AF2D488);
+    if (s1[0xE] == s1[0xD]) {
+        D_8AF2D420 = 1;
+    } else {
+        D_8AF2D420 = 2;
+    }
+    func_8AF0AAF8();
+    D_8AF2D3CC = (void *)func_8AC06D8C(page, 0x706F6B65);
+    D_8AF2BA88 = func_80041C98(1);
+    D_8AF2BA84 = ModelPreview_Create(D_8AF2BA88, 0x60, 0x70);
+    func_8004E308((s32)D_8AF2D3CC, func_8AF0A850, 0);
+    func_80042D74(D_8AF2BA84, func_8AF0A800);
+    func_80042FBC(D_8AF2BA84, id);
+    *D_8AF2BA84 |= 0x100;
+    *D_8AF2BA84 &= ~2;
+    *D_8AF2BA84 &= 0xFFFB;
+    D_8AF2BAC8 = 1;
+    D_8AF26948 = 0;
+    if (D_8AF2D420 == 1) {
+        func_8004C54C(0x2F, (s32)func_8004C874(0xC, D_8AF263C4[s1[0xD]]));
+    } else {
+        sa = func_8004C874(0xC, D_8AF263C4[s1[0xD]]);
+        sprintf((char *)(D_8AF26944 + 0x52C), "%s/%s", sa, func_8004C874(0xC, D_8AF263C4[s1[0xE]]));
+        func_8004C54C(0x2F, (s32)(D_8AF26944 + 0x52C));
+    }
+}
 
 s32 func_8AC006F4();
 s32 func_8AC007FC();
