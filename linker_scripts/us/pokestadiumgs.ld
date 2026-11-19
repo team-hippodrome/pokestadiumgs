@@ -4589,8 +4589,6 @@ SECTIONS
         build/asm/us/data/fragments/64/fragment64_header.o(.data);
         fragments_64_fragment64_322C90 = .;
         build/src/fragments/64/fragment64_322C90.o(.data);
-        fragments_64_fragment64_3235A0 = .;
-        build/src/fragments/64/fragment64_3235A0.o(.data);
         fragments_64_fragment64_324A10 = .;
         build/src/fragments/64/fragment64_324A10.o(.data);
         fragments_64_fragment64_324FB0 = .;
@@ -4625,6 +4623,10 @@ SECTIONS
         build/src/fragments/64/fragment64_32EC70.o(.data);
         fragments_64_fragment64_data_data = .;
         build/asm/us/data/fragments/64/fragment64_data.data.o(.data);
+        fragments_64_fragment64_3235A0 = .;
+        build/src/fragments/64/fragment64_3235A0.o(.data);
+        _332290_data = .;
+        build/asm/us/data/332290.data.o(.data);
         fragments_64_fragment64_32F2C0 = .;
         build/src/fragments/64/fragment64_32F2C0.o(.data);
         fragments_64_fragment64_32F5F0 = .;

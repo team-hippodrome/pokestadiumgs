@@ -1590,7 +1590,9 @@
     - [0x331000, c,       fragments/64/fragment64_331000]
     - [0x3312D0, c,       fragments/64/fragment64_3312D0]
     - [0x3320F0, c,       fragments/64/fragment64_3320F0]
-    - [0x3321A0, data,    fragments/64/fragment64_data]
+    - [0x3321A0, data,    fragments/64/fragment64_data]  # [0x3321A0, 0x332270)
+    - [0x332270, .data,   fragments/64/fragment64_3235A0] # D_87F0F600..60C colour endpoints, D_87F0F610, func_87F00944's frame counter static (16-byte IDO section)
+    - [0x332290, data]   # [0x332290, 0x333F10)
     - [0x333F10, .data,   fragments/64/fragment64_32F2C0]
     - [0x333F20, data,    fragments/64/fragment64_data_tail]
     - [0x334100, .rodata, fragments/64/fragment64_326ED0] # Strings, jump tables, float literals, double literals.

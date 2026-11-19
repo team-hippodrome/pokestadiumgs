@@ -3,20 +3,97 @@
 
 
 #ifdef VERSION_US
-extern u8 *D_87F0F610;
+// This file's .data (16-byte section at 0x87F0F600): two prim/env colour
+// endpoint pairs blended by func_87F00944, D_87F0F610, and func_87F00944's
+// pulse timer static.
+extern u8 D_87F11940[];
+u8 D_87F0F600[4] = { 0xFF, 0xFF, 0x64, 0xFF };
+u8 D_87F0F604[4] = { 0xA0, 0x46, 0x00, 0xFF };
+u8 D_87F0F608[4] = { 0xA0, 0x78, 0x00, 0xFF };
+u8 D_87F0F60C[4] = { 0x46, 0x28, 0x00, 0xFF };
+u8 *D_87F0F610 = D_87F11940;
 u32 func_87F00930(void) {
     return ((u32)D_87F0F610[0x3D]) >> 7;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/64/fragment64_3235A0/func_87F00944.s")
+// Color pair handed to func_87F00944. The callee reads both words byte-by-byte
+// and rebuilds each as (r << 24) | (g << 16) | (b << 8) | a, so the word
+// stores big-endian RGBA.
+typedef union { u8 rgba[4]; u32 word; } unk_func_87F01110_color;
+
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern f32 D_87F11460;
+extern f32 D_80088E50[];
+// Declared with a return value so $v0 counts as live after the call, which
+// gives retail's temp registers.
+extern s32 func_800504BC(s16 *);
+extern s32 func_8004C990(u32, u32);
+extern void func_8004D19C(s32, s32, s32, s32, s32);
+
+// One channel of the prim/env pulse: from[i] * (1 - w) + to[i] * w.
+#define PULSE_CHANNEL(from, to, i) ((u32)((f32)(from)[i] * iw + (f32)(to)[i] * w) & 0xFF)
+#define PULSE_CHANNEL_R(from, to) ((u32)((f32)(to)[0] * w + (f32)(from)[0] * iw) & 0xFF)
+
+// Draws a sprite at arg0's position. With arg3 set, the prim/env colors pulse
+// between D_87F0F600/D_87F0F604 and D_87F0F608/D_87F0F60C over a 41-frame
+// cycle; otherwise arg1/arg2 are used as given. The OR operands are written in
+// the order IDO needs to evaluate the channels like retail.
+void func_87F00944(u8 *arg0, unk_func_87F01110_color arg1, unk_func_87F01110_color arg2, s32 arg3) {
+    static s32 sPulseTimer = 0; // D_87F0F614
+    s32 pad; // keeps pos at sp+0x48
+    s16 pos[2];
+    f32 w;
+    f32 iw;
+
+    func_800504BC(pos);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetCombine(D_800D0510++, 0x30FE61, 0x55FEF379);
+    if (arg3 != 0) {
+        sPulseTimer++;
+        if (sPulseTimer >= 0x29) {
+            sPulseTimer = 0;
+        }
+        w = (1.0f - D_80088E50[(u16)(u32)(D_87F11460 * ((f32)sPulseTimer / 40.0f)) >> 4]) * 0.5f;
+        iw = 1.0f - w;
+        {
+            Gfx *_g = D_800D0510++;
+            _g->words.w0 = 0xFA000000;
+            _g->words.w1 = (PULSE_CHANNEL(D_87F0F600, D_87F0F608, 1) << 16) | (PULSE_CHANNEL(D_87F0F600, D_87F0F608, 2) << 8) |
+                           (PULSE_CHANNEL_R(D_87F0F600, D_87F0F608) << 24) | 0xFF;
+        }
+        {
+            Gfx *_g = D_800D0510++;
+            _g->words.w0 = 0xFB000000;
+            _g->words.w1 = (PULSE_CHANNEL(D_87F0F604, D_87F0F60C, 1) << 16) | (PULSE_CHANNEL(D_87F0F604, D_87F0F60C, 2) << 8) |
+                           (PULSE_CHANNEL_R(D_87F0F604, D_87F0F60C) << 24) | 0xFF;
+        }
+    } else {
+        {
+            Gfx *_g = D_800D0510++;
+            _g->words.w0 = 0xFA000000;
+            _g->words.w1 = ((arg1.rgba[1] & 0xFF) << 16) | ((arg1.rgba[2] & 0xFF) << 8) | (arg1.rgba[3] & 0xFF) |
+                           ((arg1.rgba[0] & 0xFF) << 24);
+        }
+        {
+            Gfx *_g = D_800D0510++;
+            _g->words.w0 = 0xFB000000;
+            _g->words.w1 = ((arg2.rgba[1] & 0xFF) << 16) | ((arg2.rgba[2] & 0xFF) << 8) | (arg2.rgba[3] & 0xFF) |
+                           ((arg2.rgba[0] & 0xFF) << 24);
+        }
+    }
+    func_8004D19C(*(s16 *)(arg0 + 8) + pos[0], *(s16 *)(arg0 + 0xA) + pos[1],
+                  func_8004C990(*(u16 *)(arg0 + 0x24), *(u16 *)(arg0 + 0x26)), 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+}
+
+#undef PULSE_CHANNEL
+#undef PULSE_CHANNEL_R
 
 /* mkdraft:func_87F01110 begin */
 extern u8 *D_87F0F610;
 
-// Color pair handed to func_87F00944. The callee reads both words byte-by-byte
-// (lbu at 0x54..0x57 and 0x58..0x5B of its frame) and rebuilds each as
-// (r << 24) | (g << 16) | (b << 8) | a, so the word stores big-endian RGBA.
-typedef union { u8 rgba[4]; u32 word; } unk_func_87F01110_color;
 extern void func_87F00944(u8 *arg0, unk_func_87F01110_color arg1, unk_func_87F01110_color arg2, s32 arg3);
 
 // Always returns 1. arg0 == 0 only clears bit 1 of the u16 at arg1 + 2.
