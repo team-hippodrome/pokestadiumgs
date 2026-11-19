@@ -44,6 +44,27 @@ typedef struct {
     u32 words[21];
 } BattleMetadata84;
 extern BattleMetadata84 D_800D1B98[];
+
+typedef struct {
+    u32 words[312];
+} AudioBattleState;
+
+typedef struct {
+    unk_D_800D1B88 member;
+    u8 unk_2A[46];
+} AudioRosterMember;
+
+typedef struct {
+    u8 unk_00[24];
+    AudioRosterMember members[12];
+    BattleMetadata84 metadata;
+} AudioRoster;
+
+extern AudioBattleState *D_800D1B70;
+extern AudioBattleState D_800D1C48[], D_800D2128[];
+extern u8 D_80091A48, D_80091A4C;
+extern void func_80028ECC(void);
+s32 Party_CountLivingGroupMembers(u8 *party);
 extern u8 D_80091A38, D_80091AEC, D_80091AD0, D_80091A44, D_80091A84, D_80091A88, D_80091AF4;
 extern u8 D_800D2680[2][12], D_800D1B38[], D_800D2648[], D_800D1B3A;
 extern u8 D_800D2698[], D_800D269A[], D_800D269C[];
@@ -451,8 +472,117 @@ void func_8002AAD0(u8 arg0) {
     D_80091A18 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/290C0/func_8002AAFC.s")
-
+extern u8 *D_800D1B7C;
+extern BattleMetadata84 D_800D1BEC[];
+extern const u8 D_80091BA0[], D_80091BB0[];
+extern void func_800226C0(u32 arg0);
+void func_8002AAFC(s32 arg0) {
+ s32 i;
+ u32 *counter;
+ s32 j;
+ if (arg0) {
+  func_800226C0(0);
+  D_80091A1C = 1;
+  D_80091A20 = 0;
+  D_80091A34 = 0;
+  D_800D1B38[0] = D_800D1B78[0][10];
+  D_800D1B38[1] = D_800D1B7C[10];
+  D_800D1B88[0] = &((AudioRoster *)D_800D1B78[0])->members[D_800D1B78[0][10]].member;
+  D_800D1B88[1] = &((AudioRoster *)D_800D1B7C)->members[D_800D1B7C[10]].member;
+  D_800D1B98[0] = ((AudioRoster *)D_800D1B78[0])->metadata;
+  D_800D1BEC[0] = ((AudioRoster *)D_800D1B7C)->metadata;
+  D_800D1C48[0] = D_800D1B70[0];
+  D_800D2128[0] = D_800D1B70[1];
+  D_800D262E[0] = ((u8 *)D_800D1B88[0])[1];
+  D_800D262E[1] = ((u8 *)D_800D1B88[1])[1];
+  D_800D2610[0] = D_800D1B88[0]->unk26;
+  D_800D2610[1] = D_800D1B88[1]->unk26;
+  counter = &D_800D2638;
+  if (*counter == 0) {
+   D_800D2618[0] = D_800D1B88[0]->unk28;
+   D_800D2618[1] = D_800D1B88[1]->unk28;
+   if (D_800D1B78[0][18] || D_800D1B7C[18]) func_8002AAD0(1);
+   else func_8002AAD0(0);
+  }
+  D_800D26AC[0] = D_800D1B78[0][9];
+  D_800D26AC[1] = D_800D1B7C[9];
+  if (*(u8 *)&D_80091A18) {
+   D_800D26AE[0] = Party_CountLivingGroupMembers(D_800D1B78[0]);
+   D_800D26AE[1] = Party_CountLivingGroupMembers(D_800D1B7C);
+  }
+  if (((u8 *)D_800D1B70)[0x9C4] == 1) func_80023A3C(27,0,0);
+  else if (((u8 *)D_800D1B70)[0x9C4] == 3) func_80023A3C(28,0,0);
+  else func_80023A3C(0,0,0);
+  func_80028ECC();
+  D_800D2618[0] = D_800D1B88[0]->unk26;
+  D_800D2618[1] = D_800D1B88[1]->unk26;
+  for (i=0;i<7;i++) D_800D2620[0][i]=D_800D1B80[0][30+i];
+  for (i=0;i<7;i++) D_800D2620[1][i]=D_800D1B80[1][30+i];
+  D_80091AEC = 0;
+ } else {
+  D_80091A1C = 0;
+  D_80091A20 = 0;
+  D_80091A34 = 0;
+  D_80091A38 = 0;
+  D_80091ACC = 0;
+  D_80091AC8 = 0;
+  D_80091A4C = 0;
+  D_80091A48 = 0;
+  D_80091B10 = 0;
+  D_80091AAC = 0;
+  D_80091A50 = 0;
+  D_80091A7C = 0;
+  D_80091A3C = 0;
+  D_80091A84 = 0;
+  D_80091A88 = 0;
+  D_80091AA0 = 0;
+  D_80091AA4 = 0;
+  D_80091AF8 = 0;
+  D_80091A8C = 0;
+  D_80091A80 = 0;
+  D_80091A90 = 0;
+  D_80091AD0 = 0;
+  D_80091AD4 = 0;
+  D_80091AD8 = 0;
+  D_80091ADC = 0;
+  D_80091AE0 = 0;
+  D_80091AE4 = 0;
+  D_80091AB0 = 0;
+  D_80091AB4 = -1;
+  D_80091AE8 = 0;
+  D_80091AF0 = 0;
+  D_80091AF4 = 0;
+  func_80024180(0,0);
+  Audio_ClearCommandQueue();
+  if (D_80091A14 && !func_80019230(4,1,0)) {
+   if (D_800D1B88[0]->unk26 && D_800D1B88[1]->unk26) {
+    if (func_800194A0()%3 == 1) {
+     func_80031530(5);
+     func_80028CA8(D_80091BA0);
+    }
+   } else {
+    func_80031530(5);
+    func_80028CA8(D_80091BB0);
+   }
+  }
+  counter = &D_800D2638;
+  (*counter)++;
+  for (j=0;j!=2;j++) {
+   D_800D2640[j]++;
+   if (D_800D1B5E[j]) D_800D1B5E[j]--;
+   if (D_800D1B60[j]) D_800D1B60[j]--;
+   if (D_800D1B62[j]>=3) D_800D1B62[j]=2;
+   if (D_800D1B62[j]) D_800D1B62[j]--;
+   if (D_800D1B64[j]) D_800D1B64[j]--;
+   if (D_800D26A6[j]) D_800D26A6[j]--;
+   if (D_800D26A8[j]) D_800D26A8[j]--;
+   if (D_800D1B66[j] && D_800D1B66[j]<126) D_800D1B66[j]++;
+   if (D_800D1B68[j]) D_800D1B68[j]--;
+   D_800D26AA[j]=0;
+   D_800D1ACC[j]=0;
+  }
+ }
+}
 void func_8002B1A0(void) { func_8002A25C(); func_80024180(0, 0); }
 
 /* mkdraft:func_8002B1CC begin */
