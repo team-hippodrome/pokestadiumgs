@@ -104,6 +104,7 @@ SECTIONS
         build/src/audio_cue_dispatch.o(.text);
         build/src/23D10.o(.text);
         build/src/23DA0.o(.text);
+        build/src/24610.o(.text);
         build/src/25080.o(.text);
         build/src/254A0.o(.text);
         build/src/25B20.o(.text);
@@ -442,6 +443,7 @@ SECTIONS
         build/src/audio_cue_dispatch.o(.data);
         build/src/23D10.o(.data);
         build/src/23DA0.o(.data);
+        build/src/24610.o(.data);
         build/src/25080.o(.data);
         build/src/254A0.o(.data);
         build/src/25B20.o(.data);
@@ -636,6 +638,7 @@ SECTIONS
         build/src/audio_cue_dispatch.o(.rodata);
         build/src/23D10.o(.rodata);
         build/src/23DA0.o(.rodata);
+        build/src/24610.o(.rodata);
         build/src/25080.o(.rodata);
         build/src/254A0.o(.rodata);
         build/src/25B20.o(.rodata);
@@ -777,6 +780,7 @@ SECTIONS
         build/src/audio_cue_dispatch.o(.bss);
         build/src/23D10.o(.bss);
         build/src/23DA0.o(.bss);
+        build/src/24610.o(.bss);
         build/src/25080.o(.bss);
         build/src/254A0.o(.bss);
         build/src/25B20.o(.bss);
