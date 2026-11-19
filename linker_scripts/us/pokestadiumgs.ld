@@ -702,9 +702,9 @@ SECTIONS
         build/src/72540.o(.rodata);
         build/src/72720.o(.rodata);
         build/src/728D0.o(.rodata);
-        build/src/72C30.o(.rodata);
         build/src/73C80.o(.rodata);
         build/asm/us/data/A6600.rodata.o(.rodata);
+        build/src/72C30.o(.rodata);
         build/src/74020.o(.rodata);
         build/lib/libultra.a:setintmask.o(.rodata);
         build/lib/libultra.a:sinf.o(.rodata);
