@@ -91,7 +91,8 @@ extern u8 D_80091F48[], D_80091F50[], D_80091F58[], D_80091F6C[];
 u8 D_800D1B40[36];
 u8 D_800D1B64[2];
 u8 D_800D1B66[2];
-u8 D_800D1B68[2728];
+u8 D_800D1B68[2720];
+u8 *D_800D2608[2];
 s32 D_800D2610[2];
 s32 D_800D2618[2];
 u8 D_800D2620[2][7];
@@ -443,8 +444,30 @@ void func_8002A80C(s32 arg0) {
     D_80091A10 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/290C0/func_8002A830.s")
+void func_8002A830(AudioBattleState *arg0) {
+    extern BattleMetadata84 D_800D1BEC[];
+    extern u8 *D_800D1C40[];
+    extern void func_8002AAD0(u8);
 
+    D_800D1B70 = arg0;
+    D_800D1B78[0] = (u8 *)D_800D1B70;
+    D_800D1B78[1] = (u8 *)(D_800D1B70 + 1);
+    D_800D1B98[0] = ((AudioRoster *)D_800D1B78[0])->metadata;
+    D_800D1BEC[0] = ((AudioRoster *)D_800D1B78[1])->metadata;
+    D_800D1B80[0] = (u8 *)D_800D1B98;
+    D_800D1B80[1] = (u8 *)D_800D1BEC;
+    D_800D1C40[0] = (u8 *)&((AudioRoster *)D_800D1B78[0])->metadata;
+    D_800D1C40[1] = (u8 *)&((AudioRoster *)D_800D1B78[1])->metadata;
+    D_800D1C48[0] = D_800D1B70[0];
+    D_800D2128[0] = D_800D1B70[1];
+    D_800D2608[0] = (u8 *)D_800D1C48;
+    D_800D2608[1] = (u8 *)D_800D2128;
+    if (D_800D1B78[0][18] != 0 || D_800D1B78[1][18] != 0) {
+        func_8002AAD0(1);
+    } else {
+        func_8002AAD0(0);
+    }
+}
 void func_8002A9C0(s32 arg0) {
     D_800D2630 = arg0;
 }
