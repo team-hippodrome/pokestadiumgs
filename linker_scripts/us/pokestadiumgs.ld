@@ -2898,10 +2898,12 @@ SECTIONS
         build/src/fragments/34/fragment34_1C1BC0.o(.data);
         fragments_34_fragment34_1C3FA0 = .;
         build/src/fragments/34/fragment34_1C3FA0.o(.data);
-        fragments_34_fragment34_1C5AA0 = .;
-        build/src/fragments/34/fragment34_1C5AA0.o(.data);
         fragments_34_fragment34_data_data = .;
         build/asm/us/data/fragments/34/fragment34_data.data.o(.data);
+        fragments_34_fragment34_1C5AA0 = .;
+        build/src/fragments/34/fragment34_1C5AA0.o(.data);
+        fragments_34_fragment34_D380_data = .;
+        build/asm/us/data/fragments/34/fragment34_D380.data.o(.data);
         fragment34_DATA_END = .;
         fragment34_DATA_SIZE = ABSOLUTE(fragment34_DATA_END - fragment34_DATA_START);
         fragment34_RODATA_START = .;

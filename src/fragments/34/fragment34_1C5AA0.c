@@ -1098,7 +1098,49 @@ void func_8850BACC(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
                          0, (s32)mirror_step, (s16)step, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850BDE8.s")
+extern void func_80007328(Gfx **, s32);
+extern void func_800088DC(void);
+extern void func_80045DB4(u8 *, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern s32 D_8852304C;
+extern u8 D_8850D330[];
+
+void func_8850BDE8(void) {
+    static f32 D_8850D370 = 0.0f;
+    static f32 D_8850D374 = 0.0f;
+    static f32 D_8850D378 = 0.0f;
+    static f32 D_8850D37C = 0.0f;
+    u8 *texture;
+    u8 *second_texture;
+
+    texture = (u8 *)func_8004C990(329, 0);
+    second_texture = (u8 *)func_8004C990(329, 1);
+    func_80007328(&D_800D0510, D_8852304C);
+    gSPDisplayList(D_800D0510++, D_8850D330);
+    func_80045DB4(func_8004CA60(second_texture), 256, 1, second_texture[4], second_texture[5],
+                  *(u16 *)second_texture, *(u16 *)(second_texture + 2), 1, 0, 0, 0, 5, 5, 0, 1);
+    gDPSetTileSize(D_800D0510++, 1, (u32)(D_8850D378 * 4.0f), (u32)(D_8850D37C * 4.0f),
+                  (u32)((D_8850D378 + 31.0f) * 4.0f), (u32)((D_8850D37C + 31.0f) * 4.0f));
+    func_800459AC(func_8004CA60(texture), texture[4], texture[5], *(u16 *)texture,
+                  *(u16 *)(texture + 2), 1, 0, 0, 0, 5, 5, 0, 2);
+    gDPSetTileSize(D_800D0510++, 0, (u32)(D_8850D370 * 4.0f), (u32)(D_8850D374 * 4.0f),
+                  (u32)((D_8850D370 + 31.0f) * 4.0f), (u32)((D_8850D374 + 31.0f) * 4.0f));
+    GfxRect_DrawTextured(0, 0, 32, 32, 0, 0, 1024, 1024, G_CYC_2CYCLE);
+    D_8850D370 += 0.75f;
+    if (D_8850D370 >= 32.0f) {
+        D_8850D370 -= 32.0f;
+    }
+    D_8850D374 += 5.75f;
+    if (D_8850D374 >= 32.0f) {
+        D_8850D374 -= 32.0f;
+    }
+    D_8850D37C -= 2.5f;
+    if (D_8850D37C < 0.0f) {
+        D_8850D37C += 32.0f;
+    }
+    gDPPipeSync(D_800D0510++);
+    func_800088DC();
+}
+
 
 extern Gfx *D_800D0510;
 extern u8 D_8850D380[];
