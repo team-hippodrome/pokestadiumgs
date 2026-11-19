@@ -1233,12 +1233,69 @@ void func_8006FBC4(void *arg0, f32 (*arg1)[4]) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6E850/func_8006FF80.s")
+// Stadium 1 Model_WriteVtxBuffer. The per-iteration `v` copy (block-scoped) is what lets
+// IDO unroll the loop 4x as retail does; the hoisted count `n` keeps it from being reloaded.
+typedef struct {
+    /* 0x00 */ ModelVec3f base;
+    /* 0x0C */ ModelVec3f offset;
+    /* 0x18 */ ModelVec3f color;
+    /* 0x24 */ s16 texS;
+    /* 0x26 */ s16 texT;
+    /* 0x28 */ u8 alpha;
+    /* 0x29 */ u8 pad29;
+    /* 0x2A */ u16 disabled;
+    /* 0x2C */ u16 drawGroup;
+    /* 0x2E */ s16 nextIndex;
+} VtxPosBlend_8006FF80;
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x20];
+    /* 0x20 */ VtxPosBlend_8006FF80 position;
+} ModelVertex_8006FF80; // size = 0x50
+typedef struct {
+    /* 0x00 */ u16 type;
+    /* 0x02 */ u16 nodeCount;
+    /* 0x04 */ u16 vertexCount;
+} ModelSegment_8006FF80;
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x4];
+    /* 0x04 */ u32 modelSegment;
+    /* 0x08 */ u8 unk_08[0x38];
+    /* 0x40 */ ModelVertex_8006FF80 mvtx;
+} Model_8006FF80;
+void func_8006FF80(Model_8006FF80 *model, Vtx *vtxBuf) {
+    ModelSegment_8006FF80 *segment;
+    ModelVertex_8006FF80 *mvtx;
+    Vtx *vtx;
+    s32 i;
+    s32 n;
+
+    segment = (ModelSegment_8006FF80 *)Memmap_GetSegmentVaddr(model->modelSegment);
+    if ((s32)segment->type >= 0xF) {
+        return;
+    }
+    mvtx = &model->mvtx;
+    vtx = vtxBuf;
+    n = segment->vertexCount;
+    for (i = 0; i < n; i++) {
+        Vtx *v = vtx;
+        v->v.ob[0] = (s16)(mvtx->position.base.x * 10.0f);
+        v->v.ob[1] = (s16)(mvtx->position.base.y * 10.0f);
+        v->v.ob[2] = (s16)(mvtx->position.base.z * 10.0f);
+        v->v.cn[0] = (s16)mvtx->position.color.x;
+        v->v.cn[1] = (s16)mvtx->position.color.y;
+        v->v.cn[2] = (s16)mvtx->position.color.z;
+        v->v.tc[0] = mvtx->position.texS;
+        v->v.tc[1] = mvtx->position.texT;
+        v->v.cn[3] = mvtx->position.alpha;
+        vtx++;
+        mvtx++;
+    }
+}
 #endif
 
 #ifdef VERSION_US
 extern u32 Memmap_GetSegmentVaddr(u32);
-extern void func_8006FF80(void *, s32);
+extern void func_8006FF80();
 extern Mtx D_80129038;
 Gfx *Model_Draw(Gfx *arg0, void *arg1, s32 arg2) {
     void *segment;
