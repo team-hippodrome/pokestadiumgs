@@ -251,11 +251,12 @@ SECTIONS
 
     /* The scene and widget transition records keep their original loader-
      * cleared addresses. Their input sections contain only the real records
-     * (0x20 bytes from 0x822106B0 for the scene) and normal compiler
-     * alignment, with no loaded initializer bytes. */
+     * (0x24 bytes from 0x822106B0 for the scene, a .bss static so as1 groups
+     * its `lui $at` like retail) and normal compiler alignment, with no
+     * loaded initializer bytes. */
     .fragment17_state_106B0_data 0x822106B0 (NOLOAD) : SUBALIGN(4)
     {
-        build/src/fragments/17/fragment17_118870.o(.data)
+        build/src/fragments/17/fragment17_118870.o(.bss)
     }
 
     /* fragment17_1154C0's 0x18-byte scene record (three statics cleared by

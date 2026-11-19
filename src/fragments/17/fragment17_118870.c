@@ -33,7 +33,8 @@ typedef struct Fragment17ChoiceEntry {
 } Fragment17ChoiceEntry;
 extern Fragment17ChoiceEntry D_8220DEF4[];
 typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
-// Loader-cleared transition record at 0x822106B0. The scene's state machine
+// Loader-cleared transition record at 0x822106B0 (a .bss static, pinned in
+// datamig_bss.ld; +0x20/+0x22 are cleared by func_82208EB0). The scene's state machine
 // value is at +2 (also read as D_822106B2); func_82209360 sets the 0x14/0x18
 // scales and the 0x1E screen position when its zoom finishes.
 typedef struct F17TransitionRecord {
@@ -46,8 +47,10 @@ typedef struct F17TransitionRecord {
     f32 unk_18;
     s16 unk_1C;
     s16 unk_1E;
+    s16 unk_20;
+    s16 unk_22;
 } F17TransitionRecord;
-static F17TransitionRecord sTransitionRecord = { 0 };
+static F17TransitionRecord sTransitionRecord;
 extern s16 D_822106B2;
 extern s16 D_822106CC, D_822106CE;
 extern s16 D_822106BA;
@@ -238,7 +241,44 @@ extern void func_8220B900(void);
 extern void func_8220B984();
 extern void func_8220BF68(s32);
 extern void func_8220D560();
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82208EB0.s")
+extern s32 D_8220DEE0[][2];
+s32 func_82208EB0(void *arg0) {
+    F17TransitionRecord *rec = &sTransitionRecord;
+    s32 idx = *(s32 *)((u8 *)arg0 + 0x14);
+    Fragment17ChoiceEntry *e;
+
+    if (idx == 0) {
+        rec->transition.unk_02 = 0;
+        rec->unk_06 = 0;
+        if (rec->unk_00 < 0) {
+            rec->transition.state = 0;
+            rec->unk_08 = 1;
+        } else {
+            rec->transition.state = 3;
+            rec->unk_08 = rec->unk_00;
+        }
+        *(s16 *)&rec->unk_0A[0] = -1;
+        *(s16 *)&rec->unk_0A[4] = 0;
+        *(s16 *)&rec->unk_0A[6] = 0;
+        rec->unk_14 = 0.75f;
+        rec->unk_18 = 0.75f;
+        e = &D_8220DEF4[rec->unk_08];
+        if (*(s32 *)((u8 *)e + 8) != 0) {
+            rec->unk_06 |= 1;
+        } else {
+            rec->unk_06 &= ~1;
+        }
+        (&D_822106CC)[0] = *(s16 *)((u8 *)e + 0xC);
+        if (rec->unk_00 < 0) {
+            (&D_822106CC)[1] = -0x20;
+        } else {
+            (&D_822106CC)[1] = *(s16 *)((u8 *)e + 0xE);
+        }
+        rec->unk_20 = 0;
+        rec->unk_22 = 0;
+    }
+    *(s32 *)((u8 *)arg0 + 0x16C) = func_8004C990(D_8220DEE0[idx][0], D_8220DEE0[idx][1]);
+}
 
 extern s16 D_822106B8;
 extern s16 D_822106D4;
