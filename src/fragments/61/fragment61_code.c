@@ -2749,7 +2749,46 @@ void func_86B08978(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B08B74.s")
+extern void func_86B0B04C(void);
+extern s32 D_86B17B40[4];
+extern s32 D_86B17DDC[4];
+extern s32 D_86B17DEC[4];
+extern s32 D_86B17DFC[4];
+extern s32 D_86B17F1C[4];
+extern s32 D_86B17C1C[4];
+// Reaches the state record through the in-unit sStateHead (as func_86B007D0
+// does): the stores alias the +0x284 counter and the 2-stores share one lui.
+void func_86B08B74(void) {
+    s32 i;
+    if (*(s32 *)sStateHead == 0) {
+        if (*(s32 *)(sStateHead + 0x284) == 14) {
+            for (i = 0; i < 4; i++) {
+                ((s32 *)(sStateHead + 0x34))[i] = 2;
+            }
+        }
+        if ((*(s32 *)(sStateHead + 0x284))++ < 15) {
+            return;
+        }
+    }
+    *(s32 *)(sStateHead + 0x284) = 0;
+    *(s32 *)(sStateHead + 0x33C) = 0;
+    *(s32 *)(sStateHead + 0x340) = 0;
+    *(s32 *)(sStateHead + 0x32C) = 0;
+    *(s32 *)(sStateHead + 0x498) = 0;
+    *(s32 *)(sStateHead + 0x354) = 0;
+    *(s32 *)(sStateHead + 0x358) = 0;
+    for (i = 0; i < 4; i++) {
+        D_86B17B40[i] = 7;
+        D_86B17DDC[i] = 0;
+        D_86B17DEC[i] = 0;
+        D_86B17DFC[i] = 0;
+        D_86B17F1C[i] = 0;
+        D_86B17C1C[i] = 0;
+    }
+    *(s32 *)(sStateHead + 0x70) = 0;
+    func_86B0B04C();
+    *(s32 *)D_86B181C0 = 5;
+}
 #endif
 
 void func_86B08CEC(void) {
