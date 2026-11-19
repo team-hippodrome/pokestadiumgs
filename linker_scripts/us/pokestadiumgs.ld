@@ -4023,6 +4023,7 @@ SECTIONS
         fragment53_TEXT_START = .;
         build/asm/us/data/fragments/53/fragment53_header.o(.text);
         build/src/fragments/53/fragment53_code.o(.text);
+        build/src/fragments/53/fragment53_28E360.o(.text);
         fragment53_TEXT_END = .;
         fragment53_TEXT_SIZE = ABSOLUTE(fragment53_TEXT_END - fragment53_TEXT_START);
         fragment53_DATA_START = .;
@@ -4032,11 +4033,16 @@ SECTIONS
         build/src/fragments/53/fragment53_code.o(.data);
         fragments_53_fragment53_data_data = .;
         build/asm/us/data/fragments/53/fragment53_data.data.o(.data);
+        fragments_53_fragment53_28E360 = .;
+        build/src/fragments/53/fragment53_28E360.o(.data);
+        _296690_data = .;
+        build/asm/us/data/296690.data.o(.data);
         fragment53_DATA_END = .;
         fragment53_DATA_SIZE = ABSOLUTE(fragment53_DATA_END - fragment53_DATA_START);
         fragment53_RODATA_START = .;
         build/asm/us/data/fragments/53/fragment53_header.o(.rodata);
         build/src/fragments/53/fragment53_code.o(.rodata);
+        build/src/fragments/53/fragment53_28E360.o(.rodata);
         build/asm/us/data/296E50.rodata.o(.rodata);
         fragment53_RODATA_END = .;
         fragment53_RODATA_SIZE = ABSOLUTE(fragment53_RODATA_END - fragment53_RODATA_START);
@@ -4048,6 +4054,7 @@ SECTIONS
         fragment53_BSS_START = .;
         build/asm/us/data/fragments/53/fragment53_header.o(.bss);
         build/src/fragments/53/fragment53_code.o(.bss);
+        build/src/fragments/53/fragment53_28E360.o(.bss);
         fragment53_BSS_END = .;
         fragment53_BSS_SIZE = ABSOLUTE(fragment53_BSS_END - fragment53_BSS_START);
     }
