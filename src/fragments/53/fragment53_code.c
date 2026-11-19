@@ -684,7 +684,121 @@ void func_86502B88(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86503178.s")
+extern s32 D_8650C5E4;
+extern s32 D_8650C4DC;
+extern s32 D_8650C498;
+extern s32 D_8650C4B4;
+extern s32 D_8650C4AC;
+extern s32 D_8650C4CC;
+extern f32 D_8650C4B8;
+extern f32 D_8650C4D8;
+extern f32 D_8650C478;
+extern f32 D_86511690;
+extern s32 D_8650D9D4;
+extern s32 D_8650D0D4[];
+extern f32 D_8650D094, D_8650D098, D_8650D09C, D_8650D0A0;
+extern u8 D_865105B0[];
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_80027A28(u16, u8);
+extern u32 func_8003570C(void);
+
+// Fragment53ActorState / fragment-53 entity fields accessed by raw offset.
+#define ACTOR_S32(o) (*(s32 *)((u8 *)&D_86511698[arg0] + (o)))
+#define ACTOR_F32(o) (*(f32 *)((u8 *)&D_86511698[arg0] + (o)))
+#define ENTITY_F32(o) (*(f32 *)(D_865105B0 + arg0 * 0x2D0 + (o)))
+void func_86503178(s32 arg0) {
+    f32 height;
+    f32 sum; // declared before ratio so ratio's stack home lands at sp+0x34
+    f32 ratio;
+    s32 diff;
+
+    height = (f32)((f64)D_8650C4AC - 4.9 * (f64)D_8650C4B8 * (f64)D_8650C4B8 * (f64)(D_8650C5E4 + 2) * (f64)(D_8650C5E4 + 2));
+    if (height < (f32)D_8650C4B4 || (f32)D_8650C498 < height) {
+        if (ACTOR_S32(0x8) > 0) {
+            ACTOR_S32(0x8) = 0;
+        }
+        ACTOR_S32(0x80) = -10;
+        ACTOR_S32(0xC) = 4;
+        ModelAnim_SetFrame((u8 *)&D_8650E120[arg0], 0);
+        if (D_86511690 >= 92.0f) {
+            ACTOR_S32(0x3C) = 1;
+        }
+        func_80027A28(0x1F01, (u8)arg0);
+        return;
+    }
+    ACTOR_S32(0x80) = 0;
+    diff = D_8650C4DC - D_8650C5E4 + D_8650D9D4;
+    if (diff > 0) {
+        ACTOR_S32(0x54) = 1;
+    } else if (diff < 0) {
+        ACTOR_S32(0x80) = diff;
+        if (diff < -4) {
+            ACTOR_S32(0x80) = -5;
+        }
+        ACTOR_S32(0x54) = 2;
+    } else {
+        ACTOR_S32(0x54) = 3;
+    }
+    if (diff < 0) {
+        diff = -diff;
+    }
+    if (diff >= 0x10) {
+        diff = 0xF;
+    }
+    ACTOR_S32(0x8) = D_8650D0D4[diff];
+    if (ACTOR_S32(0x8) == 20) {
+        ACTOR_S32(0x94)++;
+    } else {
+        ACTOR_S32(0x94) = 0;
+    }
+    ACTOR_F32(0x14) = height;
+    ACTOR_S32(0x2C) = D_8650C5E4 + 2;
+    if (ACTOR_S32(0x54) == 3) {
+        func_80027A28(0x1F0C, (u8)arg0);
+    } else {
+        func_80027A28(0x1F00, (u8)arg0);
+    }
+    if (height > 0.0f) {
+        ratio = 92.0f - height;
+        ENTITY_F32(0x28) = (92.0f + height) / 2 + height;
+        ENTITY_F32(0x34) = ratio / D_8650C478;
+    } else {
+        ratio = 92.0f - height;
+        ENTITY_F32(0x28) = ratio / 2 + height;
+        ENTITY_F32(0x34) = ratio / D_8650C478;
+    }
+    ACTOR_S32(0x38) = (s32)ratio;
+    ratio = (f32)ACTOR_S32(0x38) / (f32)D_8650C4CC;
+    ACTOR_F32(0x70) = (func_8003570C() / 4294967296.0f) * 0.5f + (D_8650D094 + ratio);
+    ACTOR_F32(0x74) = (f32)(func_8003570C() % 31) + (D_8650D098 + 5.0f * ratio);
+    ACTOR_F32(0x6C) = (f32)((f64)((func_8003570C() / 4294967296.0f) * 0.2f) + ((f64)D_8650D09C + 0.5 * (f64)ratio));
+    ACTOR_F32(0x68) = (D_8650D0A0 + 4.0f * ratio) - (func_8003570C() / 4294967296.0f) * 0.5f;
+    sum = (f32)D_8650C4CC + height; // named temp: retail keeps it in $f12
+    height = sum - 92.0f;
+    ratio = height / 2 + 92.0f;
+    ENTITY_F32(0x190) = ratio;
+    ENTITY_F32(0x19C) = height / D_8650C478;
+    ACTOR_S32(0x30) = (s32)ENTITY_F32(0x28);
+    ACTOR_S32(0x34) = (s32)ratio;
+    ACTOR_S32(0xC) = 3;
+    ModelAnim_SetFrame((u8 *)&D_8650E120[arg0], 0);
+    ACTOR_S32(0x60) = 0x1000 - (ACTOR_S32(0x38) << 12) / D_8650C4CC;
+    switch (ACTOR_S32(0x54)) {
+    case 1:
+        ACTOR_F32(0x64) = (f32)(D_8650C4CC / (D_8650C4CC - ACTOR_S32(0x38)));
+        ACTOR_S32(0x5C) = (s32)((D_8650C4D8 - (f32)ACTOR_S32(0x38)) * (f32)D_8650C4CC / (f32)(D_8650C4CC - ACTOR_S32(0x38)) * 2000.0f / (f32)D_8650C4CC + -1000.0f);
+        break;
+    case 2:
+        ACTOR_F32(0x64) = (f32)(D_8650C4CC / ACTOR_S32(0x38));
+        ACTOR_S32(0x5C) = (s32)(1000.0f - ((f32)ACTOR_S32(0x38) - D_8650C4D8) * (f32)D_8650C4CC / (f32)ACTOR_S32(0x38) / (f32)D_8650C4CC * 2000.0f);
+        break;
+    case 3:
+        break;
+    }
+}
+#undef ACTOR_S32
+#undef ACTOR_F32
+#undef ENTITY_F32
 #endif
 
 #ifdef VERSION_US
