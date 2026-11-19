@@ -959,5 +959,175 @@ void func_88801554(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/37/fragment37_code/func_88802DCC.s")
+extern const char D_88803F34[];
+extern const char D_88803F40[];
+extern const char D_88803F48[];
+extern const char D_88803F54[];
+extern const char D_88803F5C[];
+extern const char D_88803F64[];
+extern const char D_88803F6C[];
+extern const char D_88803F74[];
+extern const char D_88803F7C[];
+extern const char D_88803F84[];
+extern const char D_88803F8C[];
+extern const char D_88803F94[];
+extern const char D_88803F9C[];
+extern void D_88000E4C(void);
+extern s32 func_88002958(u8 **, u16, s32, s16);
+
+void func_88802DCC(s32 mode, u8 *pokemon, void (*open)(void), void (*draw)(void), void (*close)(void), void *swap, u8 arg6, u8 arg7) {
+    extern void func_88005048(void);
+    extern void func_80042F94(void *, void *);
+    s32 i;
+    s32 value;
+    s32 message;
+    const char *strings[4];
+    u8 count;
+    u8 origin;
+    char suffix[8];
+    const char *text;
+    u8 kind;
+    func_80042F94(*(void **)(D_88804050 + 8), pokemon);
+    if (mode == 3) {
+        Color_SetRGB((Color88800DC0 *)(D_88804050 + 0x34A), 230, 255, 240);
+        *(s32 *)(D_88804050 + 0x350) = 1;
+        *(s32 *)(D_88804050 + 0x354) = 2;
+        *(s32 *)(D_88804050 + 0x358) = 3;
+        *(s32 *)(D_88804050 + 0x35C) = 5;
+    } else {
+        Color_SetRGB((Color88800DC0 *)(D_88804050 + 0x34A), 220, 220, 180);
+        *(s32 *)(D_88804050 + 0x350) = 70;
+        *(s32 *)(D_88804050 + 0x354) = 71;
+        *(s32 *)(D_88804050 + 0x358) = 72;
+        *(s32 *)(D_88804050 + 0x35C) = 73;
+    }
+    value = func_88004804(0, 3, 61, 79, 0, 1, D_88804050[0x34A], D_88804050[0x34B], D_88804050[0x34C], func_88801138, func_88801554, open, draw, arg6, arg7);
+    *(u8 **)(D_88804050 + 0x1C) = D_8800ED50 + value * 0x4C;
+    *(s16 *)(*(u8 **)(D_88804050 + 0x1C) + 0x10) = 520;
+    *(s16 *)(*(u8 **)(D_88804050 + 0x1C) + 0x12) = 368;
+    *(void (**)(void))(D_88804050 + 0x54) = close;
+    D_880068B0 = pokemon;
+    *(s32 *)D_88804050 = mode;
+    D_88804050[0x10] = 3;
+    *(s32 *)(D_88804050 + 0x14) = 1;
+    *(s32 *)(D_88804050 + 0x18) = 0;
+    D_88804050[0x2A] = 0;
+    for (i = 0; (u32)i < 4; i++) {
+        if (pokemon[i + 2] >= 166) D_88804050[0x2A] |= 1 << (i + 1);
+    }
+    if (pokemon[0] <= 0 || pokemon[0] >= 152 || (pokemon[0x1E] & 1)) D_88804050[0x2A] |= 1;
+    if (D_88804050[0x2A]) {
+        *(s32 *)(D_88804050 + 0x18) = 1;
+        func_88000288(D_88804050 + 0x2C, (s16)((s32)((5.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 5.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)) + (s32)((8.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 8.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)) + (s32)((30.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 30.0f / 60.0f > 0.0f) ? 0.5f : -0.5f))), 255, 0, (s32)((5.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 5.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((8.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 8.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((30.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 30.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)), (s32)((8.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 8.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    }
+    func_88000288(D_88804050 + 0x38, 0, 255, 100, 0, (s32)((10.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 10.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)), 0, (s32)((10.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 10.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    func_88000288(D_88804050 + 0x44, 0, 255, 0, 0, (s32)((10.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 10.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)), 0, (s32)((10.0f * func_80001FF0() / 60.0f) + ((func_80001FF0() * 10.0f / 60.0f > 0.0f) ? 0.5f : -0.5f)));
+    func_88005048();
+    D_88804050[0x50] = 0;
+    ((s8 *)D_88804050)[0x27] = -1;
+    ((s8 *)D_88804050)[0x26] = ((s8 *)D_88804050)[0x27];
+    switch (mode) {
+    case 3:
+    case 4: {
+        if (mode == 4) *(s16 *)(D_88804050 + 0x24) = 1;
+        else *(s16 *)(D_88804050 + 0x24) = 0;
+        D_88804050[0x11] = 1;
+        if (mode == 3 && D_88804054 && (D_88804050[0x2A] || func_80063754(pokemon[1]))) {
+            *(s32 *)(D_88804050 + 0x3B8) = 1;
+            if (D_88804050[0x2A] & 1) message = 34;
+            else if (D_88804050[0x2A]) message = 35;
+            else message = 37;
+            HAL_Strcpy((char *)D_88804050 + 0x5D, func_8004C874(38, message));
+        } else {
+            *(s32 *)(D_88804050 + 0x3B8) = 0;
+            if (mode == 3) message = 31;
+            else if (mode == 4) {
+                if (pokemon[1]) {
+                    message = 36;
+                } else {
+                    message = 32;
+                }
+            }
+            sprintf((char *)D_88804050 + 0x5D, "%s   %s  %s", func_8004C874(38, message), func_8004C874(38, 25), func_8004C874(38, 26));
+        }
+        *(s16 *)(D_88804050 + 0x3BC) = 320 - ((s32)func_80049290(8, 1, (s8 *)D_88804050 + 0x5D) >> 1);
+        if (*(s32 *)(D_88804050 + 0x3B8) == 0) {
+            for (i = 0; i < 2; i++) {
+                *(s16 *)(D_88804050 + 0x3C2 + i * 2) = func_80049290(8, 1, (s8 *)func_8004C874(38, i + 25));
+            }
+            *(s16 *)(D_88804050 + 0x3BE) = *(s16 *)(D_88804050 + 0x3BC) + func_80049148(8, 1, "%s   ", func_8004C874(38, message));
+            *(s16 *)(D_88804050 + 0x3C0) = *(s16 *)(D_88804050 + 0x3BC) + func_80049148(8, 1, "%s   %s  ", func_8004C874(38, message), func_8004C874(38, 25));
+        }
+        D_88804058 = 0;
+        break;
+    }
+    default: {
+        *(s16 *)(D_88804050 + 0x24) = 0;
+        D_88804050[0x11] = 0;
+        *(s32 *)(D_88804050 + 0x3A8) = 1;
+        *(void **)(D_88804050 + 0x3AC) = D_88804050 + 0x3B0;
+        for (i = 0; i < 4; i++) {
+            if (pokemon[i + 2] == 0) break;
+            if (pokemon[i + 2] == 252) strings[i] = func_8004C874(38, 42);
+            else strings[i] = func_80062CE0(pokemon[i + 2]);
+        }
+        *(s16 *)(D_88804050 + 0x3B4) = func_88002958((u8 **)strings, i, 8, 1) + 24;
+        *(void **)(D_88804050 + 0x58) = swap;
+        D_88804050[0x5C] = *(u8 *)&arg7 + 1;
+    }
+    }
+    if (pokemon[0x21] == 0 && pokemon[0x22] == 0) D_88804050[0x15D] = 0;
+    else {
+        count = pokemon[0x21] & 0x3F;
+        origin = pokemon[0x22] & 0x7F;
+        func_8004C54C(81, func_8004C874(38, (pokemon[0x21] >> 6) + 46));
+        value = origin;
+        func_8004C54C(82, func_8004C874(38, (value < 96 ? value : 0) + 50));
+        value = count;
+        if (value) func_8004C594(2, value == 1 ? 5 : value);
+        func_8004C8A0(D_88804050 + 0x15D, 128, 38, value == 0 ? 44 : 45);
+    }
+    if (pokemon[0x1E] & 1) {
+        sprintf((char *)D_88804050 + 0x1DD, "%s%s", func_8004C874(38, 14), func_8004C874(38, 19));
+        sprintf((char *)D_88804050 + 0x21D, "%s%s", func_8004C874(38, 15), func_8004C874(38, 19));
+    } else {
+        message = pokemon[0x22];
+        value = (u8)message;
+        value &= 0x7F;
+        if (value == 0 || value == 127) suffix[0] = 0;
+        else HAL_Strcpy(suffix, func_8004C874(38, message >> 7));
+        sprintf((char *)D_88804050 + 0x1DD, "%s%05d", func_8004C874(38, 14), *(u16 *)(pokemon + 6));
+        sprintf((char *)D_88804050 + 0x21D, "%s%s%s", func_8004C874(38, 15), pokemon + 64, suffix);
+        sprintf((char *)D_88804050 + 0x25D, "%s%d", func_8004C874(38, 16), *(s32 *)(pokemon + 8));
+        if (pokemon[0] != 252) {
+            if (pokemon[0x1D] == 100) {
+                func_8004C594(6, 0);
+                func_8004C594(7, 100);
+            } else {
+                func_8004C594(6, func_80061B88(pokemon[0], (u16)(pokemon[0x1D] + 1)) - *(s32 *)(pokemon + 8));
+                func_8004C594(7, pokemon[0x1D] + 1);
+            }
+            func_8004C8A0(D_88804050 + 0x29D, 64, 38, 17);
+        }
+        sprintf((char *)D_88804050 + 0x2DD, "%s%s", func_8004C874(38, 18), func_800635E0(pokemon[1]));
+    }
+    if (!(pokemon[0x1E] & 1)) {
+        *(s16 *)(D_88804050 + 0x346) = func_80049290(16, 1, (s8 *)pokemon + 52) + 87;
+        if (pokemon[0] == 252) {
+            text = func_8004C874(38, 43);
+            sprintf((char *)D_88804050 + 0x325, "%s%s", func_8004C874(38, 2), text);
+            sprintf((char *)D_88804050 + 0x335, "%s%s", func_8004C874(38, 3), text);
+            D_88804050[0x31D] = 0;
+        } else {
+            value = func_80064474(pokemon[0], *(u16 *)(pokemon + 22));
+            kind = value;
+            if (value == 0) D_88804050[0x31D] = 0;
+            else HAL_Strcpy((char *)D_88804050 + 0x31D, func_8004C874(38, kind - 1));
+            sprintf((char *)D_88804050 + 0x325, "%s%d", func_8004C874(38, 2), pokemon[0x1D]);
+            sprintf((char *)D_88804050 + 0x335, "%s%d", func_8004C874(38, 3), pokemon[0]);
+        }
+        *(s16 *)(D_88804050 + 0x348) = *(s16 *)(D_88804050 + 0x346) + func_80049290(8, 1, (s8 *)func_8004C874(38, 0)) + 10;
+    }
+    func_88005B60(0, D_88000E4C, D_88000E4C, D_88000E4C);
+}
 #endif
