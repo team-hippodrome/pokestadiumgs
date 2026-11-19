@@ -476,7 +476,7 @@ typedef struct AudioLayerPreparePrefix AudioLayerPreparePrefix;
 extern void AudioLayer_PrepareNote(AudioLayerPreparePrefix *);
 extern s32 func_8001CF5C(void *);
 extern s32 func_8001DA54();
-extern s32 func_8001D340(void *, s32);
+extern s32 func_8001D340();
 struct SequenceLayer;
 extern s32 func_8001CE70(struct SequenceLayer *, s32);
 typedef struct { u32 enabled:1; u32 finished:1; u32 stop:1; u32 continuous_notes:1; u32 low:28; } AudioLayerUpdateWordFlags;
@@ -930,7 +930,240 @@ s32 func_8001CF5C(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001D340.s")
+// Note setup for a sequence layer (OoT/MM SeqLayerProcessScriptStep4 equivalent).
+typedef struct { u8 pad0[0x2BE8]; s16 upf; u8 pad2BEA[0x1A]; f32 f2C04; u8 pad2C08[0x24]; s16 tempoExt; } L340Ctx;
+typedef struct { struct { u32 pad0; u32 pad4; struct { u32 pad0; u32 sampleEnd; } *loop; } *sample; f32 tuning; } L340Tuned;
+typedef struct { u8 decayIndex; u8 pan; u8 pad2[2]; L340Tuned tunedSample; void *envelope; } L340Drum;
+typedef struct { u8 pad[0x8]; u16 tempo; u8 padA[4]; s16 transposition; } L340Player;
+typedef struct {
+    u32 b0:3; u32 bit3:1; u32 hasInstrument:1; u32 rest:27;
+    u8 pad4[3]; u8 fontId;
+    u8 pad8[0xA]; u8 lastSemitone; u8 pad13[0x15];
+    s16 instOrWave; s16 transposition;
+    u8 pad2C[0x20]; void *instrument; L340Player *seqPlayer;
+} L340Channel;
+typedef struct { u8 mode; u8 pad1; s16 cur; s16 speed; s16 pad6; f32 extent; } L340Porta;
+typedef struct {
+    u8 enabled:1; u8 finished:1; u8 stop:1; u8 continuousNotes:1; u8 bit3:1; u8 ignoreDrumPan:1; u8 bit1:1; u8 bit0:1;
+    u8 pad1; u8 instOrWave; u8 pad3; u8 semitone; u8 portamentoTargetNote; u8 pan; u8 pad7;
+    u32 f8a:20; u32 useChanTransp:1; u32 f8b:11;
+    u8 padC[0xE]; s16 delay; s16 gateDelay; s16 delay2; u16 portamentoTime; s16 transposition;
+    u8 pad24[4]; u8 decayIndex; u8 pad29[3]; void *envelope;
+    L340Porta portamento; u8 pad3C[4]; f32 freqScale; f32 bend; u8 pad48[0x10]; void *instrument; L340Tuned *tunedSample; L340Channel *channel;
+} L340Layer;
+extern L340Drum *func_8001A3DC(s32, s32);
+extern L340Tuned *func_8001A4C0(u8, s32);
+extern L340Tuned *func_8001A2CC(void *, s32);
+extern f32 D_8008EF94[];
+#define CTX_REVERB_TS(i) ((L340Tuned *)(D_8011BE90 + 0x2A0 + (i) * 0x2D0))
+#define CTX_TEMPO_EXT (((L340Ctx *)D_8011BE90)->tempoExt)
+#define CTX_UPF (((L340Ctx *)D_8011BE90)->upf)
+#define CTX_2C04 (((L340Ctx *)D_8011BE90)->f2C04)
+s32 func_8001D340(L340Layer *layer, s32 cmd) {
+    s32 sameTunedSample = 1;
+    s32 instOrWave;
+    s32 speed;
+    f32 temp_f14;
+    f32 temp_f2;
+    L340Porta *portamento;
+    f32 freqScale;
+    f32 freqScale2;
+    L340Tuned *tunedSample;
+    void *instrument;
+    L340Drum *drum;
+    L340Tuned *sfx;
+    L340Channel *channel;
+    L340Player *seqPlayer;
+    u8 semitone = cmd;
+    u16 sfxId;
+    s32 semitone2;
+    s32 vel;
+    f32 tuning;
+    f32 time;
+    s32 pad; // FAKE: frame size
+
+    instOrWave = layer->instOrWave;
+    channel = layer->channel;
+    seqPlayer = channel->seqPlayer;
+
+    if (instOrWave == 0xFF) {
+        if (!channel->hasInstrument) {
+            return -1;
+        }
+        instOrWave = channel->instOrWave;
+    }
+
+    switch (instOrWave) {
+        case 0:
+            semitone += layer->transposition;
+            if (layer->useChanTransp) {
+                semitone += channel->transposition;
+            }
+            layer->semitone = semitone;
+            drum = func_8001A3DC(channel->fontId, semitone);
+            if (drum == NULL) {
+                layer->stop = 1;
+                layer->delay2 = layer->delay;
+                return -1;
+            }
+            tunedSample = &drum->tunedSample;
+            layer->envelope = drum->envelope;
+            layer->decayIndex = drum->decayIndex;
+            if (!layer->ignoreDrumPan) {
+                layer->pan = drum->pan;
+            }
+            layer->tunedSample = tunedSample;
+            layer->freqScale = tunedSample->tuning;
+            break;
+
+        case 1:
+            layer->semitone = semitone;
+            sfxId = (layer->transposition << 6) + semitone;
+            sfx = func_8001A4C0(channel->fontId, sfxId);
+            if (sfx == NULL) {
+                layer->stop = 1;
+                layer->delay2 = layer->delay + 1;
+                return -1;
+            }
+            tunedSample = sfx;
+            layer->tunedSample = tunedSample;
+            layer->freqScale = tunedSample->tuning;
+            break;
+
+        default:
+            semitone += seqPlayer->transposition + layer->transposition;
+            if (layer->useChanTransp) {
+                semitone += channel->transposition;
+            }
+            semitone2 = semitone;
+            layer->semitone = semitone;
+            if (semitone >= 0x80 || channel->bit3) {
+                layer->stop = 1;
+                if (channel->bit3) {
+                    channel->lastSemitone = layer->semitone;
+                }
+                return -1;
+            }
+            if (layer->instOrWave == 0xFF) {
+                instrument = channel->instrument;
+            } else {
+                instrument = layer->instrument;
+            }
+
+            if (layer->portamento.mode != 0) {
+                portamento = &layer->portamento;
+                vel = (semitone > layer->portamentoTargetNote) ? semitone : layer->portamentoTargetNote;
+
+                if (instrument != NULL) {
+                    tunedSample = func_8001A2CC(instrument, vel);
+                    sameTunedSample = (layer->tunedSample == tunedSample);
+                    layer->tunedSample = tunedSample;
+                    tuning = tunedSample->tuning;
+                } else {
+                    layer->tunedSample = NULL;
+                    tuning = 1.0f;
+                    if (instOrWave >= 0xC0) {
+                        layer->tunedSample = CTX_REVERB_TS(instOrWave - 0xC0);
+                    }
+                }
+
+                temp_f2 = D_8008EF94[semitone2] * tuning;
+                temp_f14 = D_8008EF94[layer->portamentoTargetNote] * tuning;
+
+                switch (portamento->mode & ~0x80) {
+                    case 1:
+                    case 3:
+                    case 5:
+                        freqScale2 = temp_f2;
+                        freqScale = temp_f14;
+                        break;
+                    case 2:
+                    case 4:
+                        freqScale = temp_f2;
+                        freqScale2 = temp_f14;
+                        break;
+                    default:
+                        freqScale = temp_f2;
+                        freqScale2 = temp_f2;
+                        break;
+                }
+
+                portamento->extent = (freqScale2 / freqScale) - 1.0f;
+
+                if (portamento->mode & 0x80) {
+                    speed = seqPlayer->tempo * 0x8000 / CTX_TEMPO_EXT;
+                    if (layer->delay != 0) {
+                        speed = speed * 0x100 / (layer->delay * layer->portamentoTime);
+                    }
+                } else {
+                    speed = 0x20000 / (layer->portamentoTime * CTX_UPF);
+                }
+
+                if (speed >= 0x7FFF) {
+                    speed = 0x7FFF;
+                } else if (speed < 1) {
+                    speed = 1;
+                }
+
+                portamento->speed = speed;
+                portamento->cur = 0;
+                layer->freqScale = freqScale;
+                if ((portamento->mode & ~0x80) == 5) {
+                    layer->portamentoTargetNote = semitone;
+                }
+                break;
+            }
+
+            if (instrument != NULL) {
+                tunedSample = func_8001A2CC(instrument, semitone2);
+                sameTunedSample = (tunedSample == layer->tunedSample);
+                layer->tunedSample = tunedSample;
+                layer->freqScale = D_8008EF94[semitone2] * tunedSample->tuning;
+            } else {
+                layer->tunedSample = NULL;
+                layer->freqScale = D_8008EF94[semitone2];
+                if (instOrWave >= 0xC0) {
+                    layer->tunedSample = CTX_REVERB_TS(instOrWave - 0xC0);
+                }
+            }
+            break;
+    }
+
+    layer->delay2 = layer->delay;
+    layer->freqScale *= layer->bend;
+
+    if (layer->delay == 0) {
+        if (layer->tunedSample != NULL) {
+            time = layer->tunedSample->sample->loop->sampleEnd;
+        } else {
+            time = 0.0f;
+        }
+        time *= seqPlayer->tempo;
+        time *= CTX_2C04;
+        time /= layer->freqScale;
+        do {} while (0); // FAKE: block boundary; keeps the 32766.0f load after the multiplies
+        if (time > 0x7FFE) {
+            time = 0x7FFE;
+        }
+        layer->gateDelay = 0;
+        layer->delay = (u16)(s32)time + 1;
+        if (layer->portamento.mode != 0) {
+            if (portamento->mode & 0x80) {
+                // semitone2 reused as the speed temp (a separate variable changes v0/v1)
+                semitone2 = (seqPlayer->tempo << 15) / CTX_TEMPO_EXT;
+                semitone2 = (semitone2 << 8) / (layer->delay * layer->portamentoTime);
+                if (semitone2 >= 0x7FFF) {
+                    semitone2 = 0x7FFF;
+                } else if (semitone2 < 1) {
+                    semitone2 = 1;
+                }
+                portamento->speed = semitone2;
+            }
+        }
+    }
+    channel->lastSemitone = layer->semitone;
+    return sameTunedSample;
+}
 
 
 // Close to Majora's Mask AudioScript_SeqLayerProcessScriptStep3 (src/audio/lib/seqplayer.c);
