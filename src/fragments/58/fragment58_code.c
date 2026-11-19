@@ -48,8 +48,89 @@ void func_83400038(s32 arg0) {
     D_83404888.unk04 = func_83400020(D_83404888.unk0C, D_83404888.unk14);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_8340010C.s")
-
+void func_8340010C(Fragment58State *arg0) {
+    extern s32 D_83403E14;
+    extern s32 func_8004C990(s32, s32);
+    extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+    extern u8 *func_8004CA60(u8 *);
+    extern Gfx *D_800D0510;
+    extern void GfxRect_DrawTextured(s16,s16,s16,s16,s16,s16,s16,s16,s32);
+    extern void Gfx_FillRectRgba(s16,s16,s16,s16,u8,u8,u8,u8);
+    extern u8 D_80094E38[], D_80094F50[];
+    s32 w;
+    s32 h;
+    s32 frame;
+    s32 tick;
+    s32 x=arg0->unk08, y=arg0->unk0C;
+    f32 scale = *(f32 *)&arg0->unk38;
+    s32 *counter = &D_83403E14;
+    s32 alpha;
+    s32 i;
+    s32 qh, qw, qy, qx;
+    w=(s32)((f32)arg0->unk10 * scale);
+    h=(s32)((f32)arg0->unk14 * scale);
+    if(h==0) {} // FAKE: preserves the original saved-register allocation.
+    if(h<22) h=22;
+    if(w>=97) alpha=255;
+    else alpha=w*255/96;
+    tick = *counter + 1;
+    *counter = tick;
+    if (tick >= 30) *counter = 0;
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gDPSetCycleType((*(Gfx **)&D_800D0510)++,G_CYC_1CYCLE);
+    gDPSetPrimColor((*(Gfx **)&D_800D0510)++,0,0,255,255,200,alpha);
+    gDPSetCombine((*(Gfx **)&D_800D0510)++,0xFFFFFF,0xFFFDF6FB);
+    gDPSetRenderMode((*(Gfx **)&D_800D0510)++,G_RM_XLU_SURF,G_RM_XLU_SURF2);
+    Gfx_FillRectRgba((s16)(x+5),(s16)(y+5),(s16)(w-10),(s16)(h-10),10,50,160,128);
+    tick = *counter;
+    frame = tick / 10;
+    gDPPipeSync((*(Gfx **)&D_800D0510)++);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++,D_80094E38);
+    frame=func_8004C990(356,frame);
+    if(arg0->unk1C==1) {
+        gDPSetPrimColor((*(Gfx **)&D_800D0510)++,0,0,255,255,255,arg0->unk30);
+        gDPSetCombine((*(Gfx **)&D_800D0510)++,0xFFB3FF,0xFF64FE7F);
+        gDPSetRenderMode((*(Gfx **)&D_800D0510)++,G_RM_XLU_SURF,G_RM_XLU_SURF2);
+        func_8004D19C(x+w-30,y+h-30,frame,1,0);
+    }
+    gSPDisplayList((*(Gfx **)&D_800D0510)++,D_80094F50);
+    gSPDisplayList((*(Gfx **)&D_800D0510)++,D_80094E38);
+    frame=(s32)func_8004CA60((u8 *)func_8004C990(78,0));
+    i=0;
+    counter=(s32 *)frame;
+    for(;i<4;i++,counter+=64) {
+        gDPLoadTextureBlockS((*(Gfx **)&D_800D0510)++,counter,G_IM_FMT_IA,G_IM_SIZ_8b,16,16,0,G_TX_NOMIRROR|G_TX_WRAP,G_TX_NOMIRROR|G_TX_WRAP,G_TX_NOMASK,G_TX_NOMASK,G_TX_NOLOD,G_TX_NOLOD);
+        switch(i) {
+        case 0:
+            qx=x;
+            qy=y;
+            qw=w-16;
+            qh=h-16;
+            break;
+        case 1:
+            qx=x+w-16;
+            qy=y;
+            qw=16;
+            qh=h-16;
+            break;
+        case 2:
+            qx=x;
+            qy=y+h-16;
+            qw=w-16;
+            qh=16;
+            break;
+        case 3:
+            qx=x+w;
+            qy=y+h;
+            qx-=16, qy-=16;
+            qw=16;
+            qh=16;
+            break;
+        }
+        GfxRect_DrawTextured((s16)qx,(s16)qy,(s16)qw,(s16)qh,0,0,1024,1024,0);
+    }
+    gSPDisplayList((*(Gfx **)&D_800D0510)++,D_80094F50);
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834006A8.s")
 
 // Fragment state record at D_83404188 (only the fields C code here reads are named).
@@ -602,7 +683,7 @@ void func_83401E64(void) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834022F8.s")
 
-extern void *D_800D0510;
+extern Gfx *D_800D0510;
 extern Fragment58State188 D_83404188;
 extern s32 D_834041A4;
 extern s32 D_834041CC;
