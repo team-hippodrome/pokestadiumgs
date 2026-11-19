@@ -37,6 +37,19 @@ SECTIONS
         build/src/fragments/58/fragment58_code.o(.bss)
     }
 
+    /* Fragment 60's active object pointer D_86A465BC, in the fragment's
+     * runtime bss. func_86A004B4 keeps it as a function-scope static so IDO
+     * rematerializes its address instead of holding it in a saved register.
+     * IDO pads the object's .bss to 16 bytes; only the first word is used. */
+    .fragment60_obj_bss 0x86A465BC (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/60/fragment60_code.o(.bss)
+    }
+    ASSERT(SIZEOF(.fragment60_obj_bss) == 16,
+           "fragment60 object pointer extent changed")
+    ASSERT(ADDR(.fragment60_obj_bss) == D_86A465BC,
+           "fragment60 object pointer address changed")
+
     /* Fragment 22's menu record D_827034E0 (0x2B4 bytes), in the fragment's
      * loaded data. func_827013F0 needs it defined in fragment22_14B090.c so
      * as1 folds the shared `lui $at` of its field stores. It overlaps the tail
