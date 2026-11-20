@@ -2907,20 +2907,6 @@ f32 D_8670C104 = 3380.0f;
 extern f32 D_8670BE7C;
 extern s16 D_8670BE80;
 extern s16 D_8670BE84;
-extern u8 D_86726A48[];
-extern u8 D_86726BB0[];
-extern u8 D_86726D18[];
-extern u8 D_86726E80[];
-extern u8 D_86726FE8[];
-extern u8 D_86727150[];
-extern u8 D_867272B8[];
-extern void *D_8670FEDC;
-extern void *D_8670FEE0;
-extern void *D_8670FEE4;
-extern void *D_8670FEE8;
-extern void *D_8670FEEC;
-extern void *D_8670FEF0;
-extern void *D_8670FEF4;
 extern void func_8003F114(u8 *, s16, s16, void *);
 extern void func_8003F1DC(void *);
 
@@ -2942,13 +2928,13 @@ void func_8670A07C(void) {
             ST(f32, 0x24) = 160.0f;
             D_8670BE7C = 13.6f;
             D_8670C108 = 192;
-            func_8003F114(D_86726A48, 0, -1, D_8670FEDC);
-            func_8003F114(D_86726BB0, 0, -1, D_8670FEE4);
-            func_8003F114(D_86726D18, 0, -1, D_8670FEE0);
-            func_8003F114(D_86726E80, 0, -1, D_8670FEE8);
-            func_8003F114(D_86726FE8, 0, -1, D_8670FEEC);
-            func_8003F114(D_86727150, 0, -1, D_8670FEF0);
-            func_8003F114(D_867272B8, 0, -1, D_8670FEF4);
+            func_8003F114((u8 *)&D_86726A48, 0, -1, (void *)D_8670FEDC);
+            func_8003F114((u8 *)&D_86726BB0, 0, -1, (void *)D_8670FEE4);
+            func_8003F114((u8 *)&D_86726D18, 0, -1, (void *)D_8670FEE0);
+            func_8003F114((u8 *)&D_86726E80, 0, -1, (void *)D_8670FEE8);
+            func_8003F114((u8 *)&D_86726FE8, 0, -1, (void *)D_8670FEEC);
+            func_8003F114((u8 *)&D_86727150, 0, -1, (void *)D_8670FEF0);
+            func_8003F114((u8 *)&D_867272B8, 0, -1, (void *)D_8670FEF4);
             break;
         case 1:
             D_8670BE80 = (rel << 8) - 32764;
@@ -2995,13 +2981,13 @@ void func_8670A07C(void) {
             break;
         case 3:
             ST(s32, 0x40) = 4;
-            func_8003F1DC(D_86726A48);
-            func_8003F1DC(D_86726BB0);
-            func_8003F1DC(D_86726D18);
-            func_8003F1DC(D_86726E80);
-            func_8003F1DC(D_86726FE8);
-            func_8003F1DC(D_86727150);
-            func_8003F1DC(D_867272B8);
+            func_8003F1DC(&D_86726A48);
+            func_8003F1DC(&D_86726BB0);
+            func_8003F1DC(&D_86726D18);
+            func_8003F1DC(&D_86726E80);
+            func_8003F1DC(&D_86726FE8);
+            func_8003F1DC(&D_86727150);
+            func_8003F1DC(&D_867272B8);
             break;
         case 4:
             break;
