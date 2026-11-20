@@ -2527,7 +2527,113 @@ void Stage55_UpdateResourcePools(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_8670A07C.s")
+f32 D_8670C100 = 200.0f;
+f32 D_8670C104 = 3380.0f;
+
+extern f32 D_8670BE7C;
+extern s16 D_8670BE80;
+extern s16 D_8670BE84;
+extern u8 D_86726A48[];
+extern u8 D_86726BB0[];
+extern u8 D_86726D18[];
+extern u8 D_86726E80[];
+extern u8 D_86726FE8[];
+extern u8 D_86727150[];
+extern u8 D_867272B8[];
+extern void *D_8670FEDC;
+extern void *D_8670FEE0;
+extern void *D_8670FEE4;
+extern void *D_8670FEE8;
+extern void *D_8670FEEC;
+extern void *D_8670FEF0;
+extern void *D_8670FEF4;
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+
+#define ST(type, off) (*(type *)((u8 *)&D_8670BB48 + (off)))
+
+void func_8670A07C(void) {
+    static s32 D_8670C108 = 192;
+    s32 rel;
+
+    if (D_8670B394 == 1) {
+        return;
+    }
+    rel = D_8670C108 - 192;
+    switch (ST(s32, 0x40)) {
+        case 0:
+            ST(s32, 0x40) = 2;
+            D_8670BE84 = 2773;
+            ST(f32, 0x1C) = 1610.0f;
+            ST(f32, 0x24) = 160.0f;
+            D_8670BE7C = 13.6f;
+            D_8670C108 = 192;
+            func_8003F114(D_86726A48, 0, -1, D_8670FEDC);
+            func_8003F114(D_86726BB0, 0, -1, D_8670FEE4);
+            func_8003F114(D_86726D18, 0, -1, D_8670FEE0);
+            func_8003F114(D_86726E80, 0, -1, D_8670FEE8);
+            func_8003F114(D_86726FE8, 0, -1, D_8670FEEC);
+            func_8003F114(D_86727150, 0, -1, D_8670FEF0);
+            func_8003F114(D_867272B8, 0, -1, D_8670FEF4);
+            break;
+        case 1:
+            D_8670BE80 = (rel << 8) - 32764;
+            D_8670C108++;
+            if (D_8670BE80 < 0) {
+                D_8670BE80 += 0xFFFF;
+            }
+            D_8670BE84 += 60;
+            if (D_8670BE84 + 960 > 6490) {
+                D_8670BE84 = 6490;
+                ST(s32, 0x40) = 2;
+            }
+            break;
+        case 2:
+            if (ST(f32, 0x1C) + 93.125 <= 7570.0) {
+                ST(f32, 0x1C) = ST(f32, 0x1C) + 93.125;
+            } else {
+                ST(f32, 0x1C) = 7570.0f;
+            }
+            if (D_8670BE84 + 59 < 6612) {
+                D_8670BE84 = D_8670BE84 + 59;
+            } else {
+                D_8670BE84 = 6611;
+            }
+            if (7.6 <= D_8670BE7C - 0.09375) {
+                D_8670BE7C = D_8670BE7C - 0.09375;
+            } else {
+                D_8670BE7C = 7.6f;
+            }
+            if (40.0f <= ST(f32, 0x24) - 10.0f) {
+                ST(f32, 0x24) = ST(f32, 0x24) - 10.0f;
+            } else {
+                ST(f32, 0x24) = 40.0f;
+            }
+            if (D_8670C108 <= 256) {
+                D_8670BE80 = -32764 - (rel << 8);
+            } else {
+                D_8670BE80 = 16388;
+            }
+            D_8670C108++;
+            if (D_8670C108 >= 268) {
+                ST(s32, 0x40) = 3;
+            }
+            break;
+        case 3:
+            ST(s32, 0x40) = 4;
+            func_8003F1DC(D_86726A48);
+            func_8003F1DC(D_86726BB0);
+            func_8003F1DC(D_86726D18);
+            func_8003F1DC(D_86726E80);
+            func_8003F1DC(D_86726FE8);
+            func_8003F1DC(D_86727150);
+            func_8003F1DC(D_867272B8);
+            break;
+        case 4:
+            break;
+    }
+}
+#undef ST
 #endif
 
 #ifdef VERSION_US

@@ -4119,10 +4119,10 @@ SECTIONS
         fragment55_DATA_START = .;
         fragments_55_fragment55_header = .;
         build/asm/us/data/fragments/55/fragment55_header.o(.data);
-        fragments_55_fragment55_code = .;
-        build/src/fragments/55/fragment55_code.o(.data);
         fragments_55_fragment55_data_data = .;
         build/asm/us/data/fragments/55/fragment55_data.data.o(.data);
+        fragments_55_fragment55_code = .;
+        build/src/fragments/55/fragment55_code.o(.data);
         fragment55_DATA_END = .;
         fragment55_DATA_SIZE = ABSOLUTE(fragment55_DATA_END - fragment55_DATA_START);
         fragment55_RODATA_START = .;
