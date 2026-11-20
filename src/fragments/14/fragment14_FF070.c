@@ -569,7 +569,120 @@ s32 func_81308014(void) {
 s32 D_81311F84[] = { 7680, 38400 };
 f32 D_81311F8C = 0.43f;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_81308078.s")
+extern Gfx *D_800D0510;
+extern void func_81605950(void);
+extern void *func_8160771C(u16 arg0, u16 arg1, u16 arg2);
+extern void func_816059CC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 *color);
+extern s32 func_81304678(u8 *arg0, u8 *arg1);
+extern s32 func_8130456C(void *, void *);
+extern void func_8004D998(s32 arg0, s32 arg1, u8 *arg2, s32 arg3, s32 arg4);
+extern void func_800498C4(void);
+extern void func_800496A4(s32 a0, s32 a1);
+extern void func_800495BC(s32 arg0, s32 arg1, const char *arg2, ...);
+extern void func_8004972C(s32 a0, s32 a1, s32 a2, s32 a3);
+extern const char *func_8004C874(s32, s32);
+extern void func_800499EC(void);
+extern s32 func_81601EAC(u8, u8);
+extern s32 func_81304884(u8 *arg0, s32 arg1);
+extern void func_81608550(s32, s32, s32, s32, f32);
+extern void func_8160324C(f32 alpha);
+extern void func_81603984(s32 arg0, s32 arg1);
+extern void func_8160852C(void);
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+typedef struct {
+    u8 species;
+    u8 item;
+    u8 pad2[0x1B];
+    u8 level;
+    u8 pad1E[0x16];
+    char name[0x2C];
+    u8 icon[0xCE8 - 0x60];
+} F14Mon;
+#define SCALE (*(f32 *)(arg0 + 0x137D0))
+#define OWNER (*(u8 **)(arg0 + 0x137AC) + 0x15370)
+#define sx (x0 + i * 0x80)
+void func_81308078(u8 *arg0, s16 x0, s16 y, s16 x1, s16 y1, F14Mon *arg5, s32 arg6 /* FAKE: holds item; callers pass 6 args */) {
+    u8 col[4];
+    s32 i;
+    char buf[0x20];
+
+    if (x1 + 0x224 < x0 || x0 + 0x224 < x1 || y + 0x28 < y1 || y1 + 0x9F < y) {
+        return;
+    }
+    func_81605950();
+    func_8160771C(*(u16 *)((u8 *)arg5 + 0x33AA), *(u16 *)(arg0 + 0x137D8), arg0[0x137FB]);
+    col[0] = 0;
+    col[1] = 0;
+    col[2] = 0;
+    col[3] = SCALE * 100.0f / 16;
+    for (i = 0; i < 4; i++) {
+        if (sx > x1 + 0x224 || sx + 0x80 < x1) continue;
+        if (arg5[i].species == 0) continue;
+        if (func_81304678(OWNER, (u8 *)arg5 + i * 0xCE8) || !func_8130456C(OWNER, &arg5[i])) {
+            col[3] = 0x32;
+        } else {
+            col[3] = 0x64;
+        }
+        func_816059CC(sx - 8, y - 6, 0x85, 0x34, col);
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, SCALE * 255.0f / 16);
+    for (i = 0; i < 4; i++) {
+        if (sx <= x1 + 0x224 && sx + 0x80 >= x1) {
+            if (arg5[i].species != 0) {
+                func_8004D998(sx + 2, y + 2, arg5[i].icon, 0, 1);
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(4, 1);
+    for (i = 0; i < 4; i++) {
+        if (sx <= x1 + 0x224 && sx + 0x80 >= x1) {
+            if (arg5[i].species != 0) {
+                if (func_81304678(OWNER, (u8 *)arg5 + i * 0xCE8)) {
+                    // FAKE: empty then-branch (retail branch layout)
+                } else {
+                    if (func_8130456C(OWNER, &arg5[i])) {
+                        func_8004972C(0xFF, 0xFF, 0xFF, (s32)(SCALE * 255.00f / 16));
+                    } else {
+                        func_8004972C(0x96, 0x96, 0x96, (s32)(SCALE * 255.000f / 16));
+                    }
+                    func_800496A4(4, 1);
+                    func_800495BC(sx + 0x29, y + 2, arg5[i].name);
+                    func_800496A4(4, -1);
+                    sprintf(buf, "%s %d", func_8004C874(0xD, 0x15), arg5[i].level);
+                    func_800495BC(sx + 0x29, y + 0x16, buf);
+                }
+            }
+        }
+    }
+    func_800499EC();
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, SCALE * 255.0000f / 16);
+    func_8160852C();
+    if (arg5 == 0) {} // FAKE
+    for (i = 0; i < 4; i++) {
+        s32 species = arg5[i].species;
+        arg6 = arg5[i].item; // FAKE: param slot keeps item out of the frame
+        if (!func_81304678(OWNER, (u8 *)&arg5[i])) {
+            if (sx <= x1 + 0x224 && sx + 0x80 >= x1 && species != 0) {
+                func_81608550(sx + 0x65, y + 0x16, arg6, func_81601EAC(arg6, species) != 0 && func_81304884(OWNER, arg6) == 0, SCALE / 16);
+            }
+        }
+    }
+    func_8160324C(SCALE / 16);
+    for (i = 0; i < 4; i++) {
+        if (func_81304678(OWNER, (u8 *)&arg5[i])) {
+            func_81603984(x0 + i * 0x80 + 0x2D, y + 0xA);
+        }
+    }
+}
+#undef sx
+#undef SCALE
+#undef OWNER
+
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130881C.s")
 
