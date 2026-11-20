@@ -814,7 +814,208 @@ if (mode >= 4 && mode < 10) ModelAnim_SetSpeed(model, D_86807C5C << 16);
 else if (mode >= 10 && mode < 13) ModelAnim_SetSpeed(model, 0x20000);
 else ModelAnim_SetSpeed(model, 0x10000);
 } } } }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/56/fragment56_code/func_86802740.s")
+// The tint func_87F0AD50 returns; a by-value argument of func_8004DFEC.
+typedef union Fragment56Tint {
+    struct {
+        s16 unk_00;
+        s8 unk_02;
+        s8 unk_03;
+    };
+    u32 raw;
+} Fragment56Tint;
+
+typedef struct Fragment56MovingModel {
+    u8 unk_000[36];
+    f32 position[3];
+    f32 scale[3];
+    u8 unk_03C[300];
+} Fragment56MovingModel;
+
+extern void func_87F0C650(void *);
+extern void func_87F0C694(void *, s32);
+extern void *func_80037E9C(void *, void *);
+extern s32 func_8004DDF4(s32);
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(void *, void *);
+extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern Fragment56Tint func_87F0AD50(s32, s32, s32);
+extern s32 func_8004DFEC(void *, s32, Fragment56Tint);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_87F0D48C(u8 *, void *, void *);
+extern void func_87F02CB0(void *, s32);
+extern void func_87F03700(void *, s32);
+extern void func_87F034F0(void *, u8 *, s32);
+extern void func_87F01870(void *);
+extern void func_87F09EBC(u8 *, void *);
+extern void func_80041E2C(void);
+extern void func_87F024CC(void);
+extern void func_81900020(void *);
+extern void func_8003F03C(void *, void *);
+extern void func_87F06430(f32 *, s32);
+extern void func_8003F018(void *);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_80037E3C(void *, void *, s32);
+extern void *D_86808590;
+extern u8 D_86808630[];
+extern u8 D_868084D0[];
+extern u8 D_86807D08[];
+extern u8 D_86807B70[];
+extern u8 D_86807BA4[];
+extern u8 D_86808598[];
+extern u8 D_86808610[];
+extern u8 D_868084F0[];
+extern u8 D_87F15B70[];
+extern s32 D_8682CCF8;
+extern s32 D_868086C4;
+extern void *D_8682CD10;
+extern void *D_8682CCFC;
+extern s32 D_8682CD00[];
+extern s32 D_86807E28[];
+extern s32 D_86807E18[];
+extern s32 D_86807C6C;
+extern f32 D_86807C54;
+extern f32 D_86807C50;
+extern f32 D_8682F2FC;
+extern f32 D_8682F300;
+extern u8 D_86807CAC[];
+extern Fragment56MovingModel D_8681E388[4];
+extern u8 D_86808C68[];
+extern u8 D_86808C8C[];
+extern u8 D_8681E3AC[];
+extern u8 D_8681E928[];
+extern void *D_8682F308;
+
+#define SAVE ((u8 *)D_86808590)
+#define GROUP(i) ((u8 *)&D_8682EE18[i])
+#define STATE ((u8 *)&D_8682F2A8)
+
+// Scene setup: loads the shared widget and model assets, gives each of the four groups its
+// pool and tint, picks the random starting group, then builds the per-group model pools
+// (40 + 40 + 20 models), the two group models and the moving model of each group, and
+// finally the two spare models at D_8681E928.
+void func_86802740(void) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 best;
+    s32 r;
+    u8 *pool;
+    s32 count;
+    s32 pad0; // FAKE: retail frame slot
+    s32 pad1; // FAKE: retail frame slot
+
+    best = -1;
+    if (SAVE[0x2180] == 4) {
+        func_87F0C650(D_86808630);
+        func_87F0C694(D_86808630, 0x14);
+    }
+    func_80037E9C(NULL, D_868084D0);
+    D_8682CCF8 = 0x90;
+    func_8004DDF4(D_8682CCF8);
+    func_8004DDF4(0x91);
+    func_8004DDF4(0xB9);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    D_868086C4 = func_80040E80(pool, D_86807D08);
+    D_8682CD10 = (void *)WidgetTree_RunMessagePanelSilent((s32)pool, 0x91);
+    D_8682CD14 = (void *)func_80040E80(pool, D_86807B70);
+    D_8682CCFC = (void *)func_80040E80(pool, D_86807BA4);
+    MainPool_FinalizeAllocation(pool);
+    for (i = 0; i < 4; i++) {
+        *(s32 *)(GROUP(i) + 0x2C) = 0x90;
+        func_8004DDF4(0x90);
+        pool = MainPool_AllocState(main_pool_get_available(), 0);
+        D_8682CD00[i] = func_8004DFEC(pool, *(s32 *)(GROUP(i) + 0x2C), func_87F0AD50((s32)SAVE, 0xA, i));
+        MainPool_FinalizeAllocation(pool);
+    }
+    *(s32 *)(STATE + 0x38) = -1;
+    *(s32 *)(STATE + 0x3C) = 3;
+    *(s32 *)(STATE + 0x4C) = 3;
+    for (i = 0; i < 4; i++) {
+        if (SAVE[0x2182] & (1 << i)) {
+            *(s32 *)(GROUP(i) + 8) = 0;
+            *(s32 *)(GROUP(i) + 0x3C) = i + 5;
+        } else {
+            r = guRandom() % 100;
+            *(s32 *)(STATE + 0x3C) = 4 - (s8)SAVE[0x2181];
+            if (best < r) {
+                *(s32 *)(STATE + 0x38) = i;
+                best = r;
+            }
+            *(s32 *)(STATE + 0x4C) = 0;
+            *(s32 *)(GROUP(i) + 8) = 4 - (s8)SAVE[0x2181];
+            *(s32 *)(GROUP(i) + 0x3C) = i + 1;
+        }
+        if (SAVE[0x2180] == 4) {
+            *(s32 *)(GROUP(i) + 8) = 4 - (s8)SAVE[0x2181];
+        }
+    }
+    D_86807C70 = D_86807E28[*(s32 *)(STATE + 0x3C)];
+    D_86807C6C = D_86807E18[*(s32 *)(STATE + 0x3C)];
+    ModelRenderer_InitDisplayRoots();
+    func_87F0D48C(D_86808598, SAVE, NULL);
+    func_87F02CB0(D_86808610, 0x63);
+    func_87F03700(D_868085C0, 0x63);
+    func_87F034F0(D_87F15B70, D_868085E8, 0x28);
+    func_87F01870(SAVE);
+    func_87F09EBC(D_868084F0, SAVE);
+    func_80041E2C();
+    func_87F024CC();
+    Fragment56_InitStateRecords();
+    D_8682F2FC = D_86807C54 / D_86807C50;
+    D_8682F304 = D_8682F2FC * 7.0 + D_86807C4C;
+    func_80037E9C(NULL, D_868084D0);
+    func_81900020(D_8682F308);
+    // A variable bound: retail compares against a stack copy of 4 (slt, not slti).
+    count = 4;
+    for (i = 0; i < count; i++) {
+        for (k = 0; k < 40; k++) {
+            func_8003F03C(&D_8681EBF8[i][k], D_868084D0);
+        }
+        for (j = 0; j < 40; j++) {
+            func_8003F03C(D_86809208 + i * 0x3840 + j * 0x168, D_868084D0);
+        }
+        for (j = 0; j < 20; j++) {
+            func_8003F03C(&D_86817308[i][j], D_868084D0);
+            D_86817308[i][j].scale[0] = D_86817308[i][j].scale[1] = D_86817308[i][j].scale[2] = D_86807C50;
+            ((u8 *)&D_86817308[i][j])[0x1D] = D_86807CAC[0];
+        }
+        j = 0; // FAKE: keeps the loop above on slti
+        D_8682F300 = D_8682F2FC * 0.045 / 0.17;
+        func_8003F03C(D_86808C68 + i * 0x168, D_87F15B70);
+        func_8003F03C((u8 *)&D_8681E388[i], D_87F15B70);
+        func_87F06430((f32 *)(D_86808C8C + i * 0x168), i);
+        *(f32 *)(D_86808C68 + i * 0x168 + 0x30) = *(f32 *)(D_86808C68 + i * 0x168 + 0x34) =
+            *(f32 *)(D_86808C68 + i * 0x168 + 0x38) = 0.045f;
+        *(f32 *)(D_86808C68 + i * 0x168 + 0x28) = 56.0f;
+        func_8003F114(D_86808C68 + i * 0x168, 0, -1, (void *)D_8682CD00[i]);
+        func_8003F210(D_86808C68 + i * 0x168, 0);
+        ModelAnim_SetFrame(D_86808C68 + i * 0x168, guRandom() % 24);
+        func_87F06430((f32 *)(D_8681E3AC + i * 0x168), i);
+        D_8681E388[i].position[1] += 7.0f * D_8682F300 * D_86807CC8;
+        D_8681E388[i].position[2] += 4.4 * D_8682F300 * D_86807CC8;
+        func_8003F018(D_868086C8 + i * 0x168);
+        *(f32 *)(D_868086C8 + i * 0x168 + 0x2C) = 0.0f;
+        *(f32 *)(D_868086C8 + i * 0x168 + 0x28) = D_86807C4C;
+        *(f32 *)(D_868086C8 + i * 0x168 + 0x24) = (i * 16 - 24) * D_8682F2FC;
+        *(f32 *)(D_868086C8 + i * 0x168 + 0x30) = *(f32 *)(D_868086C8 + i * 0x168 + 0x34) =
+            *(f32 *)(D_868086C8 + i * 0x168 + 0x38) = D_86807C50;
+        func_80037E3C(D_868086C8 + i * 0x168, (void *)func_86801E8C, i);
+    }
+    for (k = 0; k < 2; k++) {
+        func_8003F03C(D_8681E928 + k * 0x168, D_868084D0);
+        *(f32 *)(D_8681E928 + k * 0x168 + 0x30) = *(f32 *)(D_8681E928 + k * 0x168 + 0x34) =
+            *(f32 *)(D_8681E928 + k * 0x168 + 0x38) = D_86807C50;
+        *(f32 *)(D_8681E928 + k * 0x168 + 0x28) = D_8682F304;
+        *(f32 *)(D_8681E928 + k * 0x168 + 0x24) = *(f32 *)(D_868086C8 + 0x24);
+        *(f32 *)(D_8681E928 + k * 0x168 + 0x2C) = D_8682F2FC * 4.39;
+    }
+}
+
+#undef SAVE
+#undef GROUP
+#undef STATE
 
 /* mkdraft:func_86802EE8 begin */
 extern void Font_DisableTwoCycleTexturing(void);
@@ -2021,13 +2222,6 @@ typedef struct Fragment56MotionRecord {
     f32 initial_y;
     f32 horizontal_offset;
 } Fragment56MotionRecord;
-
-typedef struct Fragment56MovingModel {
-    u8 unk_000[36];
-    f32 position[3];
-    f32 scale[3];
-    u8 unk_03C[300];
-} Fragment56MovingModel;
 
 extern Fragment56MotionRecord D_8682ED98[4];
 extern Fragment56MovingModel D_8681E388[4];
