@@ -668,7 +668,17 @@ extern s32 D_8650C5E0;
 extern s32 D_8650D0A8;
 extern s32 D_8650D9D8;
 extern u8 D_8650D9F8[];
-extern u8 D_8650F200[];
+struct Fragment53ModelPos {
+    u8 pad0[0x1E];
+    s16 rotY;
+    u8 pad20[2];
+    s16 unk22;
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 rest[0x168 - 0x30];
+};
+extern struct Fragment53ModelPos D_8650F200[];
 extern u8 D_865105B0[];
 extern u8 D_865110F0[];
 extern u8 D_865118F8[];
@@ -731,8 +741,8 @@ void Fragment53_InitRoundState(void) {
     D_8650D0A8 = 0;
     func_86501280();
     for (i = 0; i < 4; i++) {
-        *(s16 *)(D_8650F200 + i * 0x168 + 0x1E) = -512;
-        func_8003F1DC(D_8650F200 + i * 0x168);
+        *(s16 *)((u8 *)D_8650F200 + i * 0x168 + 0x1E) = -512;
+        func_8003F1DC((u8 *)D_8650F200 + i * 0x168);
         for (j = 0; j < 2; j++) {
             func_8003F1DC(D_865105B0 + i * 0x2D0 + j * 0x168);
         }
@@ -1099,7 +1109,6 @@ extern s32 D_8650DB50[];
 extern s32 D_8650DB74;
 extern s32 D_8650DB78;
 extern f32 D_86511690;
-extern u8 D_8650F200[];
 extern u8 D_865105B0[];
 extern u8 D_86510010[];
 extern u32 func_8003570C(void);
@@ -1190,7 +1199,7 @@ void func_86503B98(s32 arg0, u8 *arg1) {
             func_8003F1DC(D_86510010 + offset);
         }
         if (D_8650C5E4 == (*(s32 *)((u8 *)state + 0x2C) + 1)) {
-            func_8003F1DC(D_8650F200 + offset);
+            func_8003F1DC((u8 *)D_8650F200 + offset);
         }
         if (*(s32 *)((u8 *)state + 4) > 0) {
             *(s32 *)((u8 *)state + 4) += 1;
@@ -1266,5 +1275,83 @@ s32 func_865046A8(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86504740.s")
+// Fragment 53 .data from 0x8650D130 (16-aligned) belongs to this file. The
+// D_8650D134-D_8650D13C are used by func_865040E4 (still asm); D_8650D130 is
+// not referenced.
+s32 D_8650D130 = 20;
+f32 D_8650D134 = 0.0f;
+s32 D_8650D138 = 0;
+s32 D_8650D13C[23] = {
+    688, 698, 705, 710, 714, 717, 718, 717,
+    716, 715, 713, 710, 706, 702, 698, 693,
+    687, 680, 674, -800, -600, 600, 800,
+};
+
+extern s32 D_8650C49C[];
+extern s32 D_8650C4C4;
+extern s32 D_8650C4F0;
+extern f32 D_8650C4F8;
+extern f32 D_86511690;
+extern f32 D_865119A0[];
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+typedef struct { u8 pad[0x14]; s32 idx; } F53Obj;
+#define ACT4740(i, o) (*(s32 *)((u8 *)&D_86511698[i] + (o)))
+void func_86504740(s32 arg0, F53Obj *arg1) {
+    s32 v;
+    static s32 D_8650D198 = 100;
+    static f32 D_8650D19C = 60.0f;
+    static f32 D_8650D1A0 = 10.0f;
+    static s32 D_8650D1A4 = 120;
+    static s32 D_8650D1A8 = 6;
+
+    switch (arg0) {
+    case 0:
+        D_86511690 = D_8650C49C[arg1->idx] - D_8650C4CC - 20;
+        do {} while (0); // FAKE
+        D_8650F200[arg1->idx].y = D_86511690;
+        D_8650F200[arg1->idx].unk22 = 0;
+        break;
+    case 2:
+        if (*(s32 *)((u8 *)&D_8650C5E0 + 8) == -2) {
+            D_86511690 = D_8650C49C[arg1->idx] - D_8650C4CC;
+        }
+        v = *(s32 *)((u8 *)&D_8650C5E0 + 0x30);
+        if (v == 0 && ACT4740(arg1->idx, 0x3C) != 2) {
+            D_8650F200[arg1->idx].y = (f32)D_8650C4C4 + D_86511690;
+            return;
+        }
+        if (ACT4740(arg1->idx, 0x3C) == 2) {
+            if (-3000.0f < D_8650F200[arg1->idx].y) {
+                D_865119A0[arg1->idx] = D_865119A0[arg1->idx] + 0.6;
+            }
+            if (D_8650C4F0 == 1) {
+                D_8650F200[arg1->idx].rotY = D_8650F200[arg1->idx].rotY + 64.0f * D_8650C4F8;
+            }
+            D_8650F200[arg1->idx].y = ((f64)(D_8650D1A4 + 0x5C) + 4.9 * (f64)D_8650D1A8 * (f64)D_8650D1A8)
+                - (4.9 * (f64)D_8650C508 * (f64)(D_865119A0[arg1->idx] - (f32)D_8650D1A8)) * (f64)(D_865119A0[arg1->idx] - (f32)D_8650D1A8);
+            if (D_8650C4F0 == 1) {
+                switch ((u32)arg1->idx) {
+                case 0:
+                    D_8650F200[arg1->idx].x -= D_8650F200[arg1->idx].y / D_8650D198 * __sinf(D_8650D19C / 360.0 * 6.14);
+                    D_8650F200[arg1->idx].z += D_8650F200[arg1->idx].y / D_8650D198 * __cosf(D_8650D19C / 360.0 * 6.14);
+                    break;
+                case 1:
+                    D_8650F200[arg1->idx].x -= D_8650F200[arg1->idx].y / D_8650D198 * __sinf(D_8650D1A0 / 360.0 * 6.14);
+                    D_8650F200[arg1->idx].z += D_8650F200[arg1->idx].y / D_8650D198 * __cosf(D_8650D1A0 / 360.0 * 6.14);
+                    break;
+                case 2:
+                    D_8650F200[arg1->idx].x += D_8650F200[arg1->idx].y / D_8650D198 * __sinf(D_8650D1A0 / 360.0 * 6.14);
+                    D_8650F200[arg1->idx].z += D_8650F200[arg1->idx].y / D_8650D198 * __cosf(D_8650D1A0 / 360.0 * 6.14);
+                    break;
+                case 3:
+                    D_8650F200[arg1->idx].x += D_8650F200[arg1->idx].y / D_8650D198 * __sinf(D_8650D19C / 360.0 * 6.14);
+                    D_8650F200[arg1->idx].z += D_8650F200[arg1->idx].y / D_8650D198 * __cosf(D_8650D19C / 360.0 * 6.14);
+                    break;
+                }
+            }
+        }
+        break;
+    }
+}
 #endif
