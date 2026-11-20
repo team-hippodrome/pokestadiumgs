@@ -3186,6 +3186,10 @@ SECTIONS
         build/src/fragments/40/fragment40_1E0550.o(.data);
         fragments_40_fragment40_data_data = .;
         build/asm/us/data/fragments/40/fragment40_data.data.o(.data);
+        fragments_40_fragment40_1DC1F0_rodata = .;
+        build/src/fragments/40/fragment40_1DC1F0.o(.rodata);
+        fragments_40_fragment40_1E2060_data = .;
+        build/asm/us/data/fragments/40/fragment40_1E2060.data.o(.data);
         fragment40_DATA_END = .;
         fragment40_DATA_SIZE = ABSOLUTE(fragment40_DATA_END - fragment40_DATA_START);
         fragment40_RODATA_START = .;
