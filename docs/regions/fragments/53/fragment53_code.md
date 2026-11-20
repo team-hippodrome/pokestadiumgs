@@ -628,3 +628,23 @@ The `u32` return copy is a marked FAKE: returning the global directly loads
 its high half into `$v0` instead of the original `$v1`. A permuter search
 found the copy; no other change was needed.
 //@src/fragments/53/fragment53_code.c
+
+## 2026-11-19 — func_86504740 matched
+
+`func_86504740` (476 instructions, frame 0x20) is now C.
+
+- `D_8650D198`..`D_8650D1A8` are function-scope statics. With externs, IDO
+  put the `lui` for `D_8650D1A8` and `D_8650C4F0` in the wrong blocks.
+- This file now owns fragment 53 `.data` from 0x2965E0 (0x8650D130), the
+  first 16-aligned boundary before the statics (the fragment uses
+  `SUBALIGN(16)`, so 0x296648 cannot start a section). `D_8650D130`..
+  `D_8650D13C` are defined as plain globals ahead of the function, because
+  `func_865040E4` (still asm) references them by name.
+- `D_8650F200` is declared as `struct Fragment53ModelPos[]` (0x168 bytes, with
+  the `rotY`, `unk22` and `x/y/z` fields). Existing byte-offset users take a
+  `(u8 *)` cast.
+- The outer `switch (arg0)` has cases 0 and 2. The inner switch is on
+  `(u32)arg1->idx`, which gives retail's `li $at` case compares.
+- `C5E0+0x30` is read into a named local before the early-return test.
+- `do {} while (0); // FAKE` after case 0's first statement stops IDO from
+  hoisting `360` and `&D_8650F200` into saved registers (frame 0x28 -> 0x20).
