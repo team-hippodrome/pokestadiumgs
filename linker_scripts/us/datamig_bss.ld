@@ -327,6 +327,13 @@ SECTIONS
     {
         build/src/fragments/45/fragment45_2251A0.o(.data)
     }
+    /* fragment79's side flags at 0x8419E918 (sFlags, a function-scope static
+     * in func_84154948 so as1 shares the `lui $at` for its stores). NOLOAD view
+     * of bytes in the loaded image. */
+    .fragment79_side_flags_bss 0x8419E918 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/79/fragment79_3C40B0.o(.bss)
+    }
     /* fragment2's state block D_81900820 (defined in fragment2_code.c so as1
      * folds the shared-page `lui $at`, as in func_81900020), then a pad and
      * the on-screen blink counter (a function-scope static in func_8190037C)
