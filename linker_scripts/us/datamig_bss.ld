@@ -323,6 +323,14 @@ SECTIONS
     {
         build/src/fragments/45/fragment45_2251A0.o(.data)
     }
+    /* fragment44's selection pulse statics at 0x8AF26580 (func_8AF08390's
+     * sObjs pointer table and sPhase counter, function-scope statics so IDO
+     * keeps the retail lui/addiu bases). NOLOAD view of bytes in the loaded
+     * fragment44 data. */
+    .fragment44_select_pulse_data 0x8AF26580 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_1F5F20.o(.data)
+    }
     /* fragment79's side flags at 0x8419E918 (sFlags, a function-scope static
      * in func_84154948 so as1 shares the `lui $at` for its stores). NOLOAD view
      * of bytes in the loaded image. */
