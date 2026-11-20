@@ -282,6 +282,9 @@ DECOMP_POKESTADIUMGS_FILTERED := $(patsubst %.c,%.o,$(addprefix build/,$(shell g
 
 # Padding still needs asm-processor after a file's final GLOBAL_ASM is removed.
 $(DECOMP_POKESTADIUMGS_FILTERED): CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $(AS) $(ASFLAGS) --
+# Fully matched files with Japanese string literals still need asm-processor's
+# UTF-8 -> EUC-JP conversion so their .rodata matches retail.
+build/src/fragments/56/fragment56_code.o: CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $(AS) $(ASFLAGS) --
 
 # The JPEG entropy decoder's original lowering is reproduced by stock IDO 5.3.
 # Keep this source-specific; the rest of the game continues to use IDO 7.1.

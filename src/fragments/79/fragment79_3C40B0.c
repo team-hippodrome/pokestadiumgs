@@ -51,7 +51,49 @@ void func_841548CC(u8 arg0) {
     D_8419E780[arg0 * 0xCC + 6] = D_841951F8[arg0][0xE];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C40B0/func_84154948.s")
+extern void func_84154C10(u8 *, u8);
+extern void func_84156550(void);
+extern void func_8415541C(u8 *, u8, u8);
+extern void func_841554B4(u8 *, u8, u8);
+extern void func_841551D4(u8 *, u8, u8);
+extern u8 *D_841951F0;
+/* Side flags at 0x8419E918 (read back by the getters below as D_8419E918..B).
+ * A function-scope static so as1 shares the `lui $at` for its stores; the TU's
+ * .bss is pinned there by datamig_bss.ld. */
+typedef struct F79Flags { u8 a, b, c, d; } F79Flags;
+void func_84154948(u8 arg0) {
+    u32 self;
+    static F79Flags sFlags;
+    u8 o;
+    u8 j;
+    u8 *b;
+    u8 *a;
+    s32 other;
+    s32 i;
+
+    func_84156550();
+    _bzero(D_8419E780, 0x19C);
+    self = arg0;
+    sFlags.c = arg0;
+    other = 1 - arg0;
+    sFlags.d = o = other;
+    self = self * 0xCC;
+    func_841548CC(0);
+    func_841548CC(1);
+    a = D_8419E780 + self;
+    b = D_8419E780 + other * 0xCC;
+    for (i = 0; i < 6; i++) {
+        j = i;
+        func_8415541C(a + 0x54 + i * 0x14, arg0, j);
+        func_841554B4(b + 0x54 + i * 0x14, o, j);
+    }
+    func_84154C10(a + 8, arg0);
+    if (!o) { } // FAKE
+    func_841551D4(b + 8, o, D_841951F8[other][0xA]);
+    // volatile view: retail reloads D_841951F0 after the first flag store.
+    sFlags.a = (*(u8 *volatile *)&D_841951F0)[0x9C4];
+    sFlags.b = (*(u8 *volatile *)&D_841951F0)[0x9C5];
+}
 
 extern u8 D_8419E920[];
 void func_84154AD4(void) {
