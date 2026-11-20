@@ -1411,6 +1411,7 @@
     - [0x2894D0, c,       fragments/53/fragment53_code]
     - [0x28E360, c,       fragments/53/fragment53_28E360] # Second TU from func_86504EB0 (text and rodata both start 16-aligned).
     - [0x293A90, data,    fragments/53/fragment53_data]
+    - [0x2965E0, .data,   fragments/53/fragment53_code] # D_8650D130-D_8650D13C, then func_86504740's statics D_8650D198-D_8650D1A8.
     - [0x296660, .data,   fragments/53/fragment53_28E360] # D_8650D1B0, func_8650515C's table initializer and its static D_8650D1DC.
     - [0x296690, data]
     - [0x296B30, .rodata, fragments/53/fragment53_code] # Jump tables, float literals, double literals.
