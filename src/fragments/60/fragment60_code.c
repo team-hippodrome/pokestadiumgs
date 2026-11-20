@@ -744,7 +744,175 @@ void StageCountdown_UpdateAndCheckExit(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A0167C.s")
+extern void func_86A06E14(void);
+extern u8 StageContext_GetFadeMode(void);
+extern void func_86A07124(void);
+extern void func_87F0277C(s32 *);
+extern s32 func_87F0C6F4();
+extern void func_87F0D5B8();
+extern u8 D_86A438D4[];
+extern u8 D_86A0F988[];
+#define M(i) ((u8 *)&D_86A438B0 + (i) * 0x168)
+#define M2(i) (D_86A438D4 + (i) * 0x168)
+void func_86A0167C(void) {
+    u8 *model; // FAKE: unused; its stack home puts the loop temps in the target slots (score 10 without it)
+    s32 i;
+    u8 *ent;
+
+    if (func_87F00930() == 0) {
+        func_87F006BC();
+    }
+    switch (*(u32 *)D_86A46548) {
+    case 0:
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC((u8 *)&D_86A42D70 + i * 0x168);
+            ent = (u8 *)&D_86A46578.unk_18[i];
+            ent[0x12] = 0xFF;
+            ent[0x13] = 0xFF;
+            // FAKE: i++/i-- gives i an extra def here so the i * 0x18 temp
+            // doesn't take s0 from the model address (score 159 without it).
+            i++;
+            i--;
+            ent[0x14] = 0xFF;
+            ent[0x15] = 0;
+        }
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC((u8 *)&D_86A43310 + i * 0x168);
+        }
+        for (i = 0; i < 4; i++) {
+            func_8003F210(D_86A43E50 + i * 0x168, 0xB);
+            if (func_8003EC54(D_86A43E50 + i * 0x168) > 0) {
+                ModelAnim_SetFrame(D_86A43E50 + i * 0x168, 0);
+                ModelAnim_SetSpeed(D_86A43E50 + i * 0x168, 0x18000);
+            }
+        }
+        if (StageContext_GetFadeMode() == 0) {
+            *(s32 *)D_86A46548 = 1;
+        }
+        break;
+    case 1:
+        func_86A003A8();
+        break;
+    case 2:
+        func_86A06E14();
+        break;
+    case 3:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            if (func_87F006AC() == 1) {
+                func_800279C4(0x2F00);
+            }
+            if (func_87F006AC() == 2) {
+                func_87F0277C((s32 *)D_86A0F9B0);
+                func_800279C4(0x2F01);
+                func_80021ED8(0x34);
+                *(s32 *)D_86A46548 = 4;
+            }
+            break;
+        case 3:
+            func_86A01480(0);
+            break;
+        case 4:
+            func_86A01480(1);
+            break;
+        }
+        break;
+    case 4:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            StageCountdown_UpdateAndCheckExit();
+            break;
+        case 3:
+            func_86A01480(0);
+            break;
+        case 4:
+            func_86A01480(1);
+            break;
+        }
+        break;
+    case 5:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86A07124();
+            break;
+        case 3:
+            func_86A01480(0);
+            break;
+        case 4:
+            func_86A01480(1);
+            break;
+        }
+        break;
+    case 6:
+        if (Fragment64_UpdateBounceAndConfirm(D_86A0F920) != 0) {
+            if ((*(u8 **)(D_86A46548 + 0xC))[0x2180] == 1) {
+                func_86A01480(2);
+            } else {
+                *(s32 *)D_86A46548 = 7;
+            }
+        }
+        break;
+    case 7:
+        D_86A0D4D4 = 1;
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(0);
+            *(s32 *)D_86A46548 = 8;
+            *(s32 *)(D_86A46548 + 4) = 0;
+            StageFade_StartFromTransparent(0xA);
+            for (i = 0; i < 4; i++) {
+                func_8003F03C(M(i), D_87F15B70);
+                func_87F06430(M2(i), i);
+                *(f32 *)(M(i) + 0x38) = 0.06666667f;
+                *(f32 *)(M(i) + 0x34) = 0.06666667f;
+                *(f32 *)(M(i) + 0x30) = 0.06666667f;
+                *(f32 *)(M(i) + 0x28) = 50.0f;
+                func_8003F114(M(i), 0, -1, ((s32 *)D_86A42D50)[i]);
+                func_8003F210(M(i), 0);
+                ModelAnim_SetFrame(M(i), (s16)(guRandom() % 24));
+                ModelAnim_SetSpeed(M(i), 0x18000);
+            }
+            for (i = 4; i < 8; i++) {
+                func_8003F03C(M(i), D_87F15B70);
+                func_87F06430(M2(i), i % 4);
+                *(f32 *)(M(i) + 0x38) = 0.06666667f;
+                *(f32 *)(M(i) + 0x34) = 0.06666667f;
+                *(f32 *)(M(i) + 0x30) = 0.06666667f;
+                *(f32 *)(M(i) + 0x28) = 50.0f;
+                func_8003F114(M(i), 0, -1, D_86A42D60[i % 4]);
+                func_8003F210(M(i), 0xB);
+                ModelAnim_SetFrame(M(i), (s16)(guRandom() % 24));
+                ModelAnim_SetSpeed(M(i), 0x18000);
+            }
+            break;
+        case 2:
+            func_86A01480(0);
+            break;
+        case 3:
+            func_86A01480(1);
+            break;
+        }
+        break;
+    case 8:
+        i = StageContext_GetFadeMode();
+        if (1 == i) {
+            *(s32 *)D_86A46548 = *(s32 *)(D_86A46548 + 4);
+            if (*(s32 *)D_86A46548 == 0) {
+                StageState_ResetPoolsAndDefaults();
+                StageFade_StartFromOpaque(0xA);
+            }
+        }
+        break;
+    }
+    func_87F0D5B8(D_86A0F988);
+    if (func_87F0C6F4(D_86A46548 + 0x1C) != 0) {
+        *(s32 *)(D_86A46548 + 0x18) = 3;
+        *(s32 *)D_86A46548 = 9;
+    }
+}
 #endif
 
 #ifdef VERSION_US
