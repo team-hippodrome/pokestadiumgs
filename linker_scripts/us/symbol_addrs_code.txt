@@ -7389,6 +7389,7 @@ func_86A0167C = 0x86A0167C; // type:func
 func_86A01C5C = 0x86A01C5C; // type:func
 func_86A01CC4 = 0x86A01CC4; // type:func
 func_86A01EF0 = 0x86A01EF0; // type:func
+func_86A02A94 = 0x86A02A94; // type:func
 func_86A02A9C = 0x86A02A9C; // type:func
 func_86A03234 = 0x86A03234; // type:func
 func_86A036F4 = 0x86A036F4; // type:func

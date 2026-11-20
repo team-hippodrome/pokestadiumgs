@@ -313,7 +313,7 @@ extern void func_8003F018(u8 *);
 extern void func_80037E3C(u8 *, void *, s32);
 extern s32 func_87F08DF8(s32, f32, f32, s32);
 extern void func_87F029B8(void *, s32);
-extern void func_86A01EF0();
+s32 func_86A01EF0(s32, u8 *);
 extern u8 D_86A0F184[], D_86A0D4F8[], D_86A0D52C[];
 extern s32 D_86A0FB54[];
 extern s32 D_86A0FCFC;
@@ -828,7 +828,220 @@ s32 func_86A01CC4(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/60/fragment60_code/func_86A01EF0.s")
+extern u16 D_86A2DD30[];
+extern u16 D_80094904;
+extern f32 D_86A0D7B8[];
+extern f32 D_86A0D890[];
+extern s32 ModelAnim_IsFinished(u8 *);
+extern void func_8002781C(s32, s32, void *);
+extern u8 D_86A42D70;
+extern u8 *D_86A46590;
+
+s32 func_86A01EF0(s32 arg0, u8 *arg1) {
+    u8 *model;
+    u8 *anim;
+    s32 player;
+    s32 idx;
+    s32 pad2; // FAKE
+    s32 pad; // FAKE
+    s32 frame;
+
+    player = *(s32 *)(arg1 + 0x14);
+    if (D_86A2DD30[player] != D_80094904) {
+        switch (arg0) {
+            case 0:
+                break;
+            case 2:
+                idx = player % 4;
+                *(f32 *)(arg1 + 0x24) = D_86A443F0.position[idx][0];
+                *(f32 *)(arg1 + 0x2C) = D_86A443F0.position[idx][1];
+                *(s16 *)(arg1 + 0x20) = D_86A443F0.unk_0E64[player];
+                if (player < 4) {
+                    switch (D_86A443F0.unk_0024[player]) {
+                        case 0:
+                            func_8003F210(&D_86A42D70 + player * 360, 0);
+                            break;
+                        case 1:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 1);
+                            if (func_8003EC54(model) == 3 || func_8003EC54(model) == 7) {
+                                if (D_86A443F0.unk_00E8[player] < 4) {
+                                    func_8002781C(0x8F0C, (u8)player, D_86A443F0.unk_0E48[player]);
+                                }
+                            }
+                            break;
+                        case 2:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 2);
+                            if (func_8003EC54(model) == 5 || func_8003EC54(model) == 10) {
+                                if (D_86A443F0.unk_00E8[player] < 4) {
+                                    func_8002781C(0x8F0C, (u8)player, D_86A443F0.unk_0E48[player]);
+                                }
+                            }
+                            break;
+                        case 3:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 3);
+                            if (func_8003EC54(model) == 5 || func_8003EC54(model) == 14) {
+                                if (D_86A443F0.unk_00E8[player] < 4) {
+                                    func_8002781C(0x8F0C, (u8)player, D_86A443F0.unk_0E48[player]);
+                                }
+                            }
+                            break;
+                        case 4:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 4);
+                            if (func_8003EC54(model) == 10 || func_8003EC54(model) == 23) {
+                                if (D_86A443F0.unk_00E8[player] < 4) {
+                                    func_8002781C(0x8F0C, (u8)player, D_86A443F0.unk_0E48[player]);
+                                }
+                            }
+                            break;
+                        case 5:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 5);
+                            if (func_8003EC54(model) == 15 || func_8003EC54(model) == 35) {
+                                if (D_86A443F0.unk_00E8[player] < 4) {
+                                    func_8002781C(0x8F0C, (u8)player, D_86A443F0.unk_0E48[player]);
+                                }
+                            }
+                            break;
+                        case 6:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 6);
+                            if (ModelAnim_IsFinished(model)) {
+                                ModelAnim_SetFrame(model, 9);
+                            }
+                            break;
+                        case 7:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 7);
+                            if (ModelAnim_IsFinished(model)) {
+                                ModelAnim_SetFrame(model, 42);
+                            }
+                            break;
+                        case 8:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 8);
+                            if (ModelAnim_IsFinished(model)) {
+                                ModelAnim_SetFrame(model, 0);
+                            }
+                            break;
+                        case 9:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 9);
+                            if (ModelAnim_IsFinished(model)) {
+                                ModelAnim_SetFrame(model, 0);
+                            }
+                            break;
+                        case 10:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 10);
+                            if (ModelAnim_IsFinished(model)) {
+                                ModelAnim_SetFrame(model, 0);
+                            }
+                            break;
+                    }
+                    switch (D_86A443F0.unk_0024[player]) {
+                        default:
+                            anim = D_86A46590 + player * 0x18, *(f32 *)(anim + 4) = D_86A443F0.position[player][0], *(f32 *)(anim + 8) = 55.0f;
+                            *(f32 *)(anim + 0xC) = D_86A443F0.position[player][1];
+                            break;
+                        case 6:
+                        {
+                            u8 *a;
+                            a = D_86A46590 + player * 0x18, *(f32 *)(a + 4) = D_86A443F0.position[player][0], *(f32 *)(a + 8) = D_86A0D7B8[func_8003EC54(&D_86A42D70 + player * 360)] * 0.0792380952380952464 * 100.0 - 16.1542269999999988;
+                            *(f32 *)(a + 0xC) = D_86A443F0.position[player][1];
+                            break;
+                        }
+                        case 10:
+                            model = D_86A46590 + player * 0x18, *(f32 *)(model + 4) = D_86A443F0.position[player][0], *(f32 *)(model + 8) = D_86A0D890[func_8003EC54(&D_86A42D70 + player * 360)] * 0.0792380952380952464 * 100.0 - 16.1542269999999988;
+                            *(f32 *)(model + 0xC) = D_86A443F0.position[player][1];
+                            break;
+                    }
+                } else {
+                    switch (D_86A443F0.unk_0024[idx]) {
+                        case 0:
+                            switch (D_86A443F0.unk_00E8[idx]) {
+                                case 0: frame = 1; break;
+                                case 1: frame = 12; break;
+                                case 2: frame = 23; break;
+                                case 3: frame = 34; break;
+                                case 4: frame = 45; break;
+                                case 5: frame = 56; break;
+                            }
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 11);
+                            if (frame < func_8003EC54(model)) {
+                                ModelAnim_SetFrame(model, frame - 1);
+                            }
+                            break;
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 8:
+                            switch (D_86A443F0.unk_00E8[idx]) {
+                                case 0: frame = 1; break;
+                                case 1: frame = 12; break;
+                                case 2: frame = 23; break;
+                                case 3: frame = 34; break;
+                                case 4:
+                                    frame = 45;
+                                    func_8002781C(0x8F10, idx & 0xFF, D_86A443F0.unk_0E48[idx]);
+                                    break;
+                                case 5:
+                                    frame = 56;
+                                    func_8002781C(0x8F11, idx & 0xFF, D_86A443F0.unk_0E48[idx]);
+                                    break;
+                            }
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 11);
+                            if (frame < func_8003EC54(model)) {
+                                ModelAnim_SetFrame(model, frame - 1);
+                            }
+                            break;
+                        case 9:
+                            switch (D_86A443F0.unk_00E8[idx]) {
+                                case 0: frame = 1; break;
+                                case 1: frame = 12; break;
+                                case 2: frame = 23; break;
+                                case 3: frame = 34; break;
+                                case 4: frame = 45; break;
+                                case 5: frame = 56; break;
+                            }
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 11);
+                            ModelAnim_SetSpeed(model, -0x19249);
+                            if (func_8003EC54(model) < frame - 11) {
+                                ModelAnim_SetFrame(model, frame - 1);
+                            }
+                            break;
+                        case 6:
+                            func_8003F210(&D_86A42D70 + player * 360, 13);
+                            break;
+                        case 7:
+                            func_8003F210(&D_86A42D70 + player * 360, 14);
+                            break;
+                        case 10:
+                            model = &D_86A42D70 + player * 360;
+                            func_8003F210(model, 12);
+                            if (ModelAnim_IsFinished(model)) {
+                                ModelAnim_SetFrame(model, 0);
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+    D_86A2DD30[player] = D_80094904;
+    return 0;
+}
+
+void func_86A02A94(void) {
+}
 #endif
 
 #ifdef VERSION_US
