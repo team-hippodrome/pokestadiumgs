@@ -46,7 +46,117 @@ s32 func_8AB0F760(s32 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2348E0/func_8AB0F87C.s")
+extern u8 *D_8AB17250;
+extern void *D_8AB17254, *D_8AB17258, *D_8AB1725C;
+extern u8 D_8AB17260[];
+extern u8 D_8AB126A8[];
+extern void *D_8AB11D00;
+extern void *D_8AB17360, *D_8AB17364, *D_8AB17368, *D_8AB1736C, *D_8AB17370, *D_8AB17374, *D_8AB17378, *D_8AB1737C;
+extern void *D_8AB17380;
+extern u8 D_8AB17388[];
+extern void *D_8AB17404;
+extern void *D_8AB17410, *D_8AB17414, *D_8AB1741C, *D_8AB17420, *D_8AB17424, *D_8AB17418;
+extern void *D_8AB17428, *D_8AB1742C, *D_8AB17430, *D_8AB17434;
+extern u8 *D_8AB17438;
+extern u8 D_8AB112E0;
+extern s16 D_8AB12690;
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(s32, s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern void *func_8004EB58(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern void func_8AC06E98(void *);
+extern void *func_8AC06D8C();
+extern void func_8004E308(void *, void *, void *);
+extern void func_8AC05E40(void *, s32, s32);
+extern void func_8AC06400(void *, void *);
+extern void func_8AC00DF4(void *);
+extern void func_8AC00270();
+extern void func_8AC03D24();
+extern s32 TextLabel_DrawCallback(s32, void *);
+extern void func_8AB00B98(u8 *, u32);
+void *func_8AB0F87C(void) {
+    s32 temp_v0;
+    s32 temp_v0_2;
+    s32 i;
+    // Retail stores "scor" through ap, reloads it for the flag clear, and
+    // reloads "mond" through bp; plain globals let IDO reuse the stored value.
+    void **ap = &D_8AB17424;
+    void **bp = &D_8AB1725C;
+
+    temp_v0 = func_8004DC6C(0xE0);
+    func_8004DCFC(temp_v0, 0);
+    temp_v0_2 = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8AB17250 = func_8004EB58(temp_v0_2, temp_v0);
+    D_8AB17438 = (u8 *)func_80040E80(temp_v0_2, &D_8AB112E0);
+    MainPool_FinalizeAllocation(temp_v0_2);
+    func_8AC06E98(D_8AB17250);
+    *(u16 *)((u8 *)D_8AB17250 + 2) |= 1;
+    *(u16 *)((u8 *)D_8AB17250 + 2) |= 2;
+    D_8AB17254 = func_8AC06D8C(D_8AB17250, 0x6A6F6231);
+    D_8AB17258 = func_8AC06D8C(D_8AB17250, 0x6A6F6232);
+    func_8004E308(func_8AC06D8C(D_8AB17250, 0x6579655F), func_8AC00270, NULL);
+    D_8AB1725C = func_8AC06D8C(D_8AB17250, 0x6D6F6E64);
+    func_8004E308(D_8AB1725C, TextLabel_DrawCallback, D_8AB17260);
+    func_8AB00B98(D_8AB1725C, -1);
+    D_8AB11D00 = func_8AC06D8C(D_8AB17250, 0x6D657373);
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= ~1;
+    func_8004E308(D_8AB11D00, TextLabel_DrawCallback, D_8AB126A8);
+    func_8AB00B98(D_8AB11D00, -1);
+    D_8AB17360 = func_8AC06D8C(D_8AB17250, 0x70696331);
+    D_8AB17364 = func_8AC06D8C(D_8AB17250, 0x70696332);
+    D_8AB17368 = func_8AC06D8C(D_8AB17250, 0x70696333);
+    D_8AB1736C = func_8AC06D8C(D_8AB17250, 0x70696334);
+    D_8AB17370 = func_8AC06D8C(D_8AB17250, 0x70636E31);
+    D_8AB17374 = func_8AC06D8C(D_8AB17250, 0x70636E32);
+    D_8AB17378 = func_8AC06D8C(D_8AB17250, 0x70636E33);
+    D_8AB1737C = func_8AC06D8C(D_8AB17250, 0x70636E34);
+    D_8AB17410 = func_8AC06D8C(D_8AB17250, 0x676F6F6F);
+    D_8AB17404 = func_8AC06D8C(D_8AB17250, 0x63646E62);
+    func_8004E308(D_8AB17404, func_8AB0F760, NULL);
+    D_8AB1740C = func_8AC06D8C(D_8AB17250, 0x666B6931);
+    *(u16 *)((u8 *)D_8AB1740C + 2) &= 0xFFFD;
+    D_8AB17414 = func_8AC06D8C(D_8AB17250, 0x7175736E);
+    *(u16 *)((u8 *)D_8AB17414 + 2) &= 0xFFFD;
+    D_8AB17428 = func_8AC06D8C(D_8AB17250, 0x73656E31);
+    D_8AB1742C = func_8AC06D8C(D_8AB17250, 0x73656E32);
+    D_8AB17430 = func_8AC06D8C(D_8AB17250, 0x73656E33);
+    D_8AB17434 = func_8AC06D8C(D_8AB17250, 0x73656E34);
+    for (i = 0; i < 3; i++) {
+        *(u16 *)((u8 *)(&D_8AB1742C)[i] + 2) &= ~1;
+    }
+    D_8AB1741C = func_8AC06D8C(D_8AB17250, 0x6D6F6A30);
+    D_8AB17420 = func_8AC06D8C(D_8AB17250, 0x6D6F6A31);
+    *(u16 *)((u8 *)D_8AB1741C + 2) &= ~1;
+    *(u16 *)((u8 *)D_8AB17420 + 2) &= ~1;
+    D_8AB17380 = func_8AC06D8C(D_8AB17250, 0x61627531);
+    func_8AC05E40(D_8AB17250, 0x61627531, (s32)D_8AB17388);
+    func_8AC06400(D_8AB17388, D_8AB17380);
+    func_8AC00DF4(D_8AB17250);
+    D_8AB17418 = func_8AC06D8C(D_8AB17250, 0x70617070);
+    func_8004E308(D_8AB17418, func_8AC03D24, NULL);
+    *(s32 *)((u8 *)D_8AB17418 + 0x2C) = -0x2301;
+    *(s32 *)((u8 *)D_8AB17418 + 0x30) = 0xFF;
+    *ap = func_8AC06D8C(D_8AB17250, 0x73636F72);
+    *(u16 *)((u8 *)D_8AB17424 + 2) &= ~1;
+    *(u16 *)((u8 *)D_8AB17360 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB17364 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB17368 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB1736C + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB17370 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB17374 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB17378 + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB1737C + 2) &= 0xFFFD;
+    ap = (void **)D_8AB1725C;
+    *(u16 *)((u8 *)ap + 2) &= ~1;
+    ap = (void **)*bp;
+    *(u16 *)((u8 *)ap + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AB11D00 + 2) &= ~1;
+    D_8AB12690 = 1;
+    return D_8AB17250;
+}
 #endif
 
 void func_8AB0FE08(void) {
