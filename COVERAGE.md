@@ -11,11 +11,11 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
 | 0–99 | 8,398 | 2 | 8,400 | 100.0% |
-| 100–199 | 1,292 | 17 | 1,309 | 98.7% |
-| 200–299 | 375 | 45 | 420 | 89.3% |
-| 300–399 | 151 | 27 | 178 | 84.8% |
+| 100–199 | 1,293 | 16 | 1,309 | 98.8% |
+| 200–299 | 378 | 42 | 420 | 90.0% |
+| 300–399 | 152 | 26 | 178 | 85.4% |
 | 400–499 | 71 | 8 | 79 | 89.9% |
-| 500–699 | 67 | 16 | 83 | 80.7% |
+| 500–699 | 69 | 14 | 83 | 83.1% |
 | 700–999 | 23 | 10 | 33 | 69.7% |
 | 1000–1499 | 12 | 4 | 16 | 75.0% |
 | 1500–1999 | 6 | 0 | 6 | 100.0% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,400 / 10,532 (98.7%)**
-- Remaining `GLOBAL_ASM` owners: **132**
+- US functions with C implementations: **10,407 / 10,532 (98.8%)**
+- Remaining `GLOBAL_ASM` owners: **125**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -46,17 +46,17 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/17/fragment17_10FFC0.c` | 2 | 56 | 96.4% |
 | `src/fragments/17/fragment17_113A60.c` | 1 | 82 | 98.8% |
 | `src/fragments/17/fragment17_118870.c` | 1 | 7 | 85.7% |
-| `src/fragments/19/fragment19_121100.c` | 3 | 54 | 94.4% |
+| `src/fragments/19/fragment19_121100.c` | 2 | 54 | 96.3% |
 | `src/fragments/20/fragment20_12C460.c` | 10 | 146 | 93.2% |
 | `src/fragments/21/fragment21_13FFA0.c` | 5 | 56 | 91.1% |
 | `src/fragments/21/fragment21_144790.c` | 2 | 46 | 95.7% |
-| `src/fragments/24/fragment24_150C10.c` | 3 | 92 | 96.7% |
+| `src/fragments/24/fragment24_150C10.c` | 2 | 92 | 97.8% |
 | `src/fragments/29/fragment29_16B030.c` | 1 | 6 | 83.3% |
 | `src/fragments/31/fragment31_189760.c` | 1 | 5 | 80.0% |
 | `src/fragments/31/fragment31_197640.c` | 1 | 38 | 97.4% |
 | `src/fragments/31/fragment31_1A1BD0.c` | 1 | 17 | 94.1% |
 | `src/fragments/32/fragment32_1B1330.c` | 1 | 22 | 95.5% |
-| `src/fragments/34/fragment34_1C5AA0.c` | 2 | 52 | 96.2% |
+| `src/fragments/34/fragment34_1C5AA0.c` | 1 | 52 | 98.1% |
 | `src/fragments/4/fragment4_AE600.c` | 1 | 15 | 93.3% |
 | `src/fragments/43/fragment43_1E5A10.c` | 1 | 114 | 99.1% |
 | `src/fragments/44/fragment44_1F1850.c` | 1 | 47 | 97.9% |
@@ -71,13 +71,13 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/51/fragment51_27AC10.c` | 1 | 12 | 91.7% |
 | `src/fragments/53/fragment53_28E360.c` | 6 | 6 | 0.0% |
 | `src/fragments/53/fragment53_code.c` | 3 | 54 | 94.4% |
-| `src/fragments/54/fragment54_code.c` | 7 | 43 | 83.7% |
+| `src/fragments/54/fragment54_code.c` | 6 | 43 | 86.0% |
 | `src/fragments/55/fragment55_code.c` | 4 | 53 | 92.5% |
-| `src/fragments/57/fragment57_code.c` | 4 | 32 | 87.5% |
+| `src/fragments/57/fragment57_code.c` | 3 | 32 | 90.6% |
 | `src/fragments/58/fragment58_code.c` | 3 | 25 | 88.0% |
 | `src/fragments/59/fragment59_code.c` | 4 | 44 | 90.9% |
 | `src/fragments/61/fragment61_code.c` | 5 | 57 | 91.2% |
-| `src/fragments/63/fragment63_319010.c` | 2 | 8 | 75.0% |
+| `src/fragments/63/fragment63_319010.c` | 1 | 8 | 87.5% |
 | `src/fragments/63/fragment63_31CB20.c` | 1 | 3 | 66.7% |
 | `src/fragments/64/fragment64_32AEF0.c` | 1 | 11 | 90.9% |
 | `src/fragments/66/fragment66_code.c` | 3 | 33 | 90.9% |
@@ -85,7 +85,7 @@ US bucket totals are retained from this table; open function sizes are counted f
 | `src/fragments/67/fragment67_34B0F0.c` | 1 | 15 | 93.3% |
 | `src/fragments/69/fragment69_code.c` | 2 | 46 | 95.7% |
 | `src/fragments/7/fragment7_BA250.c` | 1 | 100 | 99.0% |
-| `src/fragments/75/fragment75_code.c` | 2 | 16 | 87.5% |
+| `src/fragments/75/fragment75_code.c` | 1 | 16 | 93.8% |
 | `src/fragments/77/fragment77_code.c` | 1 | 30 | 96.7% |
 | `src/fragments/79/fragment79_377570.c` | 1 | 20 | 95.0% |
 | `src/fragments/79/fragment79_393CA0.c` | 1 | 461 | 99.8% |
