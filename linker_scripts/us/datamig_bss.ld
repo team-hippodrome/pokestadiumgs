@@ -112,16 +112,16 @@ SECTIONS
         build/src/fragments/61/fragment61_code.o(.bss)
     }
 
-    /* Fragment 59's D_8691A2C8..D_8691A2FC block, defined in fragment59_code.c
-     * so as1 shares the store `lui $at`s in func_86909FAC's copy loops. */
-    .fragment59_slot_block_bss 0x8691A2C8 (NOLOAD) : SUBALIGN(4)
+    /* Fragment 59's .bss, D_8691A2C8..D_8691AD9C, defined in fragment59_code.c
+     * in address order (func_86909FAC's frame counters are its last two words). */
+    .fragment59_bss_vars 0x8691A2C8 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/59/fragment59_code.o(.bss)
     }
 
-    /* func_86909FAC's two frame counters (zero-initialized function statics,
-     * so they sit in the object's .data) at D_8691AD98/D_8691AD9C. */
-    .fragment59_frame_counter_data 0x8691AD98 (NOLOAD) : SUBALIGN(4)
+    /* func_8690073C's zero-initialized function static D_8691ADB8 (the
+     * object's only .data). */
+    .fragment59_adb8_data 0x8691ADB8 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/59/fragment59_code.o(.data)
     }
