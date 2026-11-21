@@ -373,7 +373,102 @@ void func_87E06100(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_308D70/func_87E06290.s")
+extern void func_87F0B24C(s32, u8 *, f32, f32, f32, s32, s32);
+extern void func_87F02684(s32);
+extern void func_87E05944();
+extern void func_87E05AB0();
+extern void func_87E05D74();
+extern f32 D_87E19FC4[][3];
+extern f32 D_87E1A054[][3];
+extern u8 *D_87E19F64[][2];
+void func_87E06290(u8 *arg0) {
+    u8 *b;
+    u8 *list;
+    u8 *target;
+    s32 i;
+    u8 *node;
+    u8 *a;
+    u8 *obj;
+
+    func_87F02684((s32)arg0 + 0x40);
+    func_87F02684((s32)arg0 + 0x2C);
+    func_87F02684((s32)arg0 + 0x18);
+    for (i = 0; i < 1; i++) {
+        obj = func_87F025B8(arg0 + 0x18, (void *)func_87E05944);
+        if (NULL != obj) {
+            a = arg0 + 0x58;
+            node = obj + 0x24;
+            func_8003F1DC(node);
+            func_8003F114(node, 0, -1, *(s32 *)(arg0 + 0x160));
+            *(u8 **)(obj + 0x38) = obj;
+            *(u32 *)(obj + 0xC) |= 0x10000000;
+            *(u8 **)(obj + 0x20) = a;
+            target = a + 8;
+            node = obj + 0x48;
+            *(f32 *)(obj + 0x4C) = 240.0f;
+            func_87F0AFD0(target, node, obj + 0x54, obj + 0x42);
+            func_87F0B1A4((s32)target, node, 0, 89.5f, 0.0f, 0x14, 0);
+        }
+    }
+    for (i = 0; i < 12; i++) {
+        target = *(u8 **)(arg0 + 0x150) + i * 0x9C;
+        obj = func_87F025B8(arg0 + 0x18, (void *)func_87E05AB0);
+        if (obj != NULL) {
+            a = (u8 *)D_87E19FC4[i];
+            b = (u8 *)D_87E1A054[i];
+            node = obj + 0x24;
+            func_8003F1DC(node);
+            func_8003F114(node, 0, -1, *(s32 *)(arg0 + 0x164));
+            *(u8 **)(obj + 0x38) = obj;
+            *(u32 *)(obj + 0xC) |= 0x20000000;
+            *(u8 **)(obj + 0x20) = target;
+            node = obj + 0x48;
+            *(f32 *)(obj + 0x48) = ((f32 *)a)[0];
+            *(f32 *)(obj + 0x4C) = ((f32 *)a)[1];
+            *(f32 *)(obj + 0x50) = ((f32 *)a)[2];
+            *(f32 *)(obj + 0x54) = 0.625f;
+            *(f32 *)(obj + 0x58) = 0.625f;
+            *(f32 *)(obj + 0x5C) = 0.625f;
+            if (i == *(s32 *)(arg0 + 8)) {
+                *(s32 *)(obj + 0x60) = -1;
+            } else {
+                *(u32 *)(obj + 0x60) = 0xC8C8C8FF;
+            }
+            func_87F0AFD0(target, node, obj + 0x54, obj + 0x42);
+            func_87F0B1A4((s32)target, node, D_87E1A054[i][0], D_87E1A054[i][1], ((f32 *)b)[2], 0x14, 0);
+        }
+    }
+    for (i = 0; i < 2; ++i) {
+        b = *(u8 **)(arg0 + 0x154) + i * 0x94;
+        a = D_87E19F64[*(s32 *)(arg0 + 8)][i];
+        obj = func_87F025B8(arg0 + 0x2C, (void *)func_87E05D74);
+        if (NULL != obj) {
+            *(s32 *)b = *(s32 *)(arg0 + 8);
+            node = obj + 0x24;
+            func_8003F1DC(node);
+            *(u8 **)(obj + 0x20) = *(u8 **)(arg0 + 0x154) + i * 0x94;
+            *(u32 *)(obj + 0xC) |= 0x40000000;
+            if (NULL != a) {
+                func_87E05CE4(*(s32 *)(b + 0x90), *(s32 *)a, (s32)node, *(s32 *)(a + 4), *(s32 *)(a + 0x18));
+                *(Vec3f_87E05D74 *)(obj + 0x48) = *(Vec3f_87E05D74 *)(a + 0x38);
+                *(Vec3s_87E05D74 *)(obj + 0x42) = *(Vec3s_87E05D74 *)(a + 0x30);
+                *(f32 *)(obj + 0x54) = 0.0f;
+                *(f32 *)(obj + 0x58) = 0.0f;
+                *(f32 *)(obj + 0x5C) = 0.0f;
+            }
+            target = b + 8;
+            node = obj + 0x54;
+            func_87F0AFD0(target, obj + 0x48, node, obj + 0x42);
+            if (NULL != a) {
+                func_87F0B24C((s32)target, node, *(f32 *)(a + 0x2C), *(f32 *)(a + 0x2C), *(f32 *)(a + 0x2C), 0x14, 0);
+            } else {
+                *(u8 *)(obj + 0x25) &= ~1;
+            }
+        }
+    }
+    if (a == 0) {} // FAKE
+    func_87E06100(arg0);
+}
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
