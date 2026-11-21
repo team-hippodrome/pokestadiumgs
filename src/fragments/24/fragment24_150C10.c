@@ -1991,7 +1991,64 @@ void func_82B0560C(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B05654.s")
+extern void *D_82B126A4;
+extern u8 D_82B12450[0xFF8];
+extern s32 func_8004C8C0(s32);
+extern void HAL_Strcpy(void *, s32);
+extern void _bzero(void *, s32);
+extern void _bcopy(void *, void *, s32);
+
+s32 func_82B05654(void *arg0, u32 arg1, s16 arg2, u8 *arg3, s32 arg4, s32 arg5) {
+    F24State12450 *st = &sState12450;
+    s32 i;
+    // Taking arg2's address keeps it in its stack home (retail reads it with lh 0x3A(sp)).
+    s16 *cnt = &arg2;
+    // Initialised here, before _bzero, which is what puts ok in s0 like retail.
+    s32 ok = TRUE;
+    u8 *buf = D_82B12450; // the 0xFF8-byte state block; 0x20 holds the row count
+
+    _bzero(buf, 0xFF8);
+    if (ok) ok = func_8004C8C0(0x42);
+    if (ok) ok = func_8004C8C0(0x41);
+    if (ok) ok = func_8004C8C0(0x4F);
+    if (ok) ok = func_8004C8C0(0x1B);
+    if (ok) ok = func_8004C8C0(0x156);
+    if (ok) ok = func_8004C8C0(0xF6);
+    if (ok) ok = func_8004C8C0(0x105);
+    if (ok) ok = func_8004C8C0(0x106);
+    if (ok) ok = func_8004C8C0(0x9A);
+    if (ok) ok = func_8004C8C0(0x14D);
+    if (ok) ok = func_8004C8C0(0x50);
+    if (ok) ok = func_8004C8C0(0x47);
+    if (ok) {
+        st->state = 0;
+        st->flags |= 1;
+        // 0x1C/0x1E are the next two .bss halfwords (D_82B1246C/E); going through st
+        // lets as1 share one lui with the stores above.
+        *(s16 *)((u8 *)st + 0x1C) = arg4;
+        *(s16 *)((u8 *)st + 0x1E) = arg5;
+        switch (arg1 & 0xFFFF0000) {
+            case 0x10000: st->unk_08 = 0; break;
+            case 0x20000: st->unk_08 = 1; break;
+            case 0x30000: st->unk_08 = 2; break;
+            case 0x40000: st->unk_08 = 3; break;
+            case 0x50000: st->unk_08 = 4; break;
+            default: st->unk_08 = 0; break;
+        }
+        st->unk_0a = -2;
+        D_82B126A4 = arg0;
+        *(s16 *)(buf + 0x20) = *cnt;
+        for (i = 0; i < *(s16 *)(buf + 0x20); i++) {
+            _bcopy(arg3 + i * 0x44, buf + 0x22 + i * 0x40, 0x14);
+            *(u8 **)(buf + 0x224 + i * 4) = arg3 + i * 0x44;
+        }
+        for (i = *(s16 *)(buf + 0x20); i < 8; i++) {
+            HAL_Strcpy(buf + 0x22 + i * 0x40, (s32)func_8004C874(0x1B, 0x39));
+            *(u8 **)(buf + 0x224 + i * 4) = NULL;
+        }
+    }
+    return (st->flags & 1) != 0;
+}
 #endif
 
 #ifdef VERSION_US
