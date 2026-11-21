@@ -340,7 +340,53 @@ f32 func_822091E0(f32 arg0) {
     return 1.5f - arg0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_822091F0.s")
+extern f32 D_822106B0[];
+extern f32 D_8220DEF0;
+extern void func_8220BC7C(s32, s32);
+void func_822091F0(void) {
+    s32 pad[5]; // FAKE: places the `done` spill at 0x18 in the 0x38 frame
+    F17TransitionState *transition;
+    F17TransitionRecord *record;
+    s32 done;
+    s16 *state;
+    f32 frame;
+    f32 position;
+    f32 limit;
+    f32 width;
+    f32 scale;
+
+    transition = &sTransitionRecord.transition;
+    record = &sTransitionRecord;
+    state = (s16 *)D_822106B0;
+    state[2]++;
+    done = 0;
+    frame = state[2];
+    scale = frame * D_8220DEF0;
+    width = 35.0f;
+    limit = 320.0f + width;
+    position = frame * scale + -32.0f;
+    scale = limit - width * 0.4f;
+    if (position > scale) {
+        position = scale;
+        done = 1;
+    }
+    record->unk_1E = (position > 0.0f ? 0.5f : -0.5f) + position;
+    // Clamped directly in the record: uopt keeps unk_18 in a register and writes
+    // it back in the call's delay slot.
+    record->unk_18 = (limit - position) / 35.0f * 0.75f;
+    if (record->unk_18 > 0.75f) {
+        record->unk_18 = 0.75f;
+    }
+    record->unk_14 = func_822091E0(record->unk_18);
+    record->unk_20 = 0;
+    record->unk_22 = 0;
+    if (done) {
+        transition->state = 2;
+        transition->unk_02 = 0;
+        func_8220BC7C(record->unk_1C, record->unk_1E);
+        func_800226C0(0x36);
+    }
+}
 
 extern f32 D_822106B0[];
 extern s16 D_822106B4, D_822106BE;

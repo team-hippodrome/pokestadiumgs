@@ -739,7 +739,121 @@ void func_8AF1A764(void) {
 }
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_207AF0/func_8AF1AE30.s")
+extern s16 D_8AF2BDDC;
+extern u16 D_8AF2BDC6;
+extern void func_8AC007FC(void);
+extern void func_8AC0686C(void *, s16);
+extern s32 func_8AC0660C(s16);
+extern s32 func_8AC06630(s16, void *);
+extern void func_8AC0619C(void *, u16);
+extern void func_8AC06220(void *, u16);
+extern void *D_8AF263C0;
+extern void func_8AF00130(s32);
+
+typedef struct {
+    /* 0x0 */ s16 pos;
+    /* 0x2 */ s16 top;
+    /* 0x4 */ s16 dir;
+    /* 0x6 */ s16 unk[4];
+} ScrollState; // size = 0xE
+// The list scroll state at 0x8AF357C0 (the D_8AF357C0/C2/C4 externs used by
+// the other functions in this file name its fields). It is this file's only
+// .bss, pinned at that address in linker_scripts/us/datamig_bss.ld. As a sized
+// static, as1 shares one lui between the tail's field stores.
+static ScrollState sScroll;
+
+s16 func_8AF1AE30(void) {
+    s16 ret;
+    s16 top;
+    s16 pos;
+    u16 b2;
+    s16 prevCol;
+    s16 prevRow;
+    ScrollState *scroll = &sScroll;
+    s32 held;
+    s32 changed;
+    s32 i;
+
+    held = 0;
+    prevCol = D_8AF357AC;
+    prevRow = D_8AF357AE;
+    func_8AC007FC();
+    if (D_8AF2BDDC >= 3) {
+        *(u16 *)((u8 *)D_8AF37030 + 2) &= ~2;
+        for (i = 0; i < 15; i++) {
+            *(u16 *)((u8 *)D_8AF37038[i] + 2) &= ~2;
+        }
+        *(u16 *)((u8 *)D_8AF37074 + 2) &= ~1;
+        *(u16 *)((u8 *)D_8AF37078 + 2) &= ~1;
+    }
+    ret = 20;
+    if (scroll->dir != 0) {
+        held = 1;
+    }
+    func_8AC0686C(&sScroll, D_8AF357AE);
+    if (*(u16 *)((u8 *)D_8AF263C0 + 8) & 0x4000) {
+        func_8AF00130(3);
+        ret = 19;
+    } else {
+        if ((*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x100) && D_8AF357AC < 3) {
+            func_8AF00130(1);
+            D_8AF357AC++;
+        } else if ((*(u16 *)((u8 *)D_8AF263C0 + 0xC) & 0x200) && D_8AF357AC > 0) {
+            func_8AF00130(1);
+            D_8AF357AC--;
+        } else if (scroll->dir == 0) {
+            changed = 0;
+            b2 = *(u16 *)((u8 *)D_8AF263C0 + 0xC);
+            if (held) {
+                b2 = *(u16 *)((u8 *)D_8AF263C0 + 6);
+            }
+            if ((b2 & 0x800) && func_8AC0660C(D_8AF357AE)) {
+                func_8AF00130(1);
+                changed = 1;
+                D_8AF357AE--;
+            } else if ((b2 & 0x400) && func_8AC06630(D_8AF357AE, &sScroll)) {
+                func_8AF00130(1);
+                changed = 1;
+                D_8AF357AE++;
+            }
+            if (changed) {
+                func_8AC0686C(&sScroll, D_8AF357AE);
+            }
+        }
+    }
+    if (prevCol != D_8AF357AC || prevRow != D_8AF357AE) {
+        func_8AF1A2B8(((Unk8AF19CB0 *)&D_8AF357D0) + D_8AF357AC + (u32)(D_8AF357AE * 4));
+    }
+    func_8AC0619C(&D_8AF35058, D_8AF2BDC6);
+    func_8AC06220(&D_8AF350D0, D_8AF2BDC6);
+    top = scroll->top;
+    if (D_8AF357AE < top) {
+        top--;
+        // Redundant (both paths below store top again); uopt drops the store,
+        // but it makes the row load get copied on both edges like retail.
+        scroll->top = top;
+    }
+    if (top + 8 < D_8AF357AE) {
+        top++;
+    }
+    pos = scroll->pos;
+    if (pos < (top * 20)) {
+        scroll->top = top;
+        pos += 4;
+        scroll->pos = pos;
+        scroll->dir = 1;
+    } else {
+        scroll->top = top;
+        if ((top * 20) < pos) {
+            pos -= 4;
+            scroll->dir = -1;
+            scroll->pos = pos;
+        } else {
+            scroll->dir = 0;
+        }
+    }
+    return ret;
+}
 
 /* mkdraft:func_8AF1B23C begin */
 extern void func_800495BC(s32, s32, s32 *);
