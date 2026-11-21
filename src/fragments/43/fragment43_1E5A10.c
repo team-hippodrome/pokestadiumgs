@@ -46,7 +46,6 @@ typedef struct unk_D_8AC099C8 {
     void *unk_00;
     u8 unk_04;
 } unk_D_8AC099C8;
-extern unk_D_8AC099C8 D_8AC099C8;
 extern s32 func_8004D19C(s32, s32, void *, s32, s32);
 
 
@@ -1037,7 +1036,89 @@ void func_8AC01F8C(unk_func_8AC01F8C *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC0202C.s")
+// Loader-cleared state between the main-pool marks and func_8AC0202C's
+// D_8AC099C8 (0x8AC097B0-0x8AC099C8), used by functions still in asm. It keeps
+// the function-local static below at its retail address in the .bss pinned by
+// linker_scripts/us/datamig_bss.ld.
+static u8 D_8AC097B0[0x218];
+
+typedef struct { u8 prim[4]; u8 env[4]; u8 *texture; u16 mode; } F43_202CDraw;
+typedef struct { s32 *node; u8 unk_04[10]; u16 x; u16 y; F43_202CDraw draw; } F43_202COwner;
+extern Gfx D_8AC07C10[];
+extern Gfx * D_800D0510;
+void func_8AC0202C(void *arg0) {
+    static unk_D_8AC099C8 D_8AC099C8;
+    F43_202CDraw *d;
+    s32 *node;
+    u16 w, h;
+    u8 er, eg, eb, ea;
+    u32 pr;
+    u8 pg, pb, pa;
+    u16 x, y;
+    u8 *e;
+    u16 nw, nh;
+
+    d = &((F43_202COwner *)arg0)->draw;
+    node = ((F43_202COwner *)arg0)->node;
+    x = ((F43_202COwner *)arg0)->x;
+    y = ((F43_202COwner *)arg0)->y;
+    if (node == NULL) {
+        D_8AC099C8.unk_00 = 0;
+        D_8AC099C8.unk_04 = 0;
+        nw = 0;
+        nh = 0;
+    } else {
+        D_8AC099C8.unk_00 = (void *)node[1];
+        D_8AC099C8.unk_04 = 0;
+        nw = ((s16 *)node)[6];
+        nh = ((s16 *)node)[7];
+    }
+    if (d->texture == NULL) {
+        w = 0;
+        h = 0;
+    } else {
+        w = *(u16 *)d->texture;
+        h = ((u16 *)d->texture)[1];
+    }
+    pr = d->prim[0];
+    pg = d->prim[1];
+    pb = d->prim[2];
+    pa = d->prim[3];
+    e = d->env;
+    er = e[0];
+    eg = e[1];
+    eb = e[2];
+    ea = e[3];
+    gSPDisplayList(D_800D0510++, D_8AC07C10);
+    gDPSetPrimColor(D_800D0510++, 0, 0, pr, pg, pb, pa);
+    gDPSetEnvColor(D_800D0510++, er, eg, eb, ea);
+    if (d->texture != NULL) {
+        func_8004D1FC(d->texture);
+    }
+    switch (d->mode) {
+    case 0:
+        func_8004D19C(x, y, d->texture, 0, 0);
+        break;
+    case 1:
+        gSPTextureRectangleFlip(D_800D0510++, x * 4, y * 4, (x + h) * 4, (y + w) * 4, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+        break;
+    case 2:
+        gSPTextureRectangle(D_800D0510++, x * 4, y * 4, (x + w) * 4, (y + h) * 4, G_TX_RENDERTILE, w << 5, 0, -0x400, 0x400);
+        break;
+    case 3:
+        gSPTextureRectangle(D_800D0510++, x * 4, y * 4, (x + w) * 4, (y + h) * 4, G_TX_RENDERTILE, 0, h << 5, 0x400, -0x400);
+        break;
+    case 4:
+        gSPTextureRectangleFlip(D_800D0510++, x * 4, y * 4, (x + h) * 4, (y + w) * 4, G_TX_RENDERTILE, w << 5, 0, -0x400, 0x400);
+        break;
+    case 5:
+        gSPTextureRectangleFlip(D_800D0510++, x * 4, y * 4, (x + h) * 4, (y + w) * 4, G_TX_RENDERTILE, 0, h << 5, 0x400, -0x400);
+        break;
+    case 6:
+        gSPTextureRectangle(D_800D0510++, x * 4, y * 4, (x + nw) * 4, (y + nh) * 4, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US

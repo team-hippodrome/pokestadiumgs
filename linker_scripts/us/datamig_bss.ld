@@ -236,11 +236,17 @@ SECTIONS
     }
 
     /* fragment43_1E5A10's main-pool push/pop marks (function-local statics
-     * in func_8AC00FFC/func_8AC01064), 0x8AC09798-0x8AC097B0. */
+     * in func_8AC00FFC/func_8AC01064), 0x8AC09798-0x8AC097B0, the state
+     * still used from asm (D_8AC097B0) and func_8AC0202C's D_8AC099C8,
+     * ending at 0x8AC099D0. IDO rounds the input .bss up to 16 bytes, so the
+     * native aligned input footprint is 0x240; the trailing 8 bytes of pad
+     * cover D_8AC099D0's address but carry no load image. */
     .fragment43_1E5A10_bss 0x8AC09798 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/43/fragment43_1E5A10.o(.bss)
     }
+    ASSERT(SIZEOF(.fragment43_1E5A10_bss) == 0x240,
+           "fragment43_1E5A10 .bss extent changed")
 
     /* fragment67_34B0F0's text-reveal state (file-scope static D_8291BC68),
      * 0x8291BC68-0x8291BE6E. */
