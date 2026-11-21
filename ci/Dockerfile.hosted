@@ -39,6 +39,7 @@ RUN apt-get update \
 WORKDIR /work
 
 COPY src ./src
+COPY hand_asm ./hand_asm
 COPY include ./include
 COPY tools ./tools
 COPY linker_scripts ./linker_scripts
