@@ -518,9 +518,8 @@ void func_83401AAC(void) {
     func_800499EC();
 }
 
-// Shares the 16-byte padded .data section with D_83403F20 and the counter above; its
-// second word (0x43) stays in asm/us/data/fragments/58/2CC340.data.s.
-s32 D_83403F2C = 0x43;
+// Target x/y position for func_834022F8's sliding sprites.
+s32 D_83403F2C[2] = { 0x43, 0x43 };
 
 typedef struct {
     u8 color[4];
@@ -681,7 +680,138 @@ void func_83401E64(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834022F8.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[], D_80094F50[];
+extern s32 func_8004C990(s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_80025B54(u8);
+
+// Records copied wholesale by the stage setup cases below: D_83404848 gets
+// 0x40 bytes from D_83403D8C and D_83404188 gets 0xA4 bytes from D_83403CC4.
+// func_834022F8 reads D_83404848 as four sprite slots per field.
+typedef struct {
+    s32 unk00[16];
+} Fragment58NodePair;
+extern Fragment58NodePair D_83404848;
+
+// Words of D_83404188 (Fragment58State188) this function uses as counters and alphas.
+#define STATE58(i) (((s32 *)&D_83404188)[i])
+#define STEP58 ((f32)(STATE58(0xE) / 5))
+// (s32)(a - b) rounded half away from zero.
+#define ROUND_DIFF58(a, b) ((s32)(((a) - (b)) + (((b) < (a)) ? 0.5f : -0.5f)))
+
+// Slides four sprites (x at D_83404848[i], y at [i + 4], mirror signs at [i + 8] and
+// [i + 12]) towards the target position in D_83403F2C and draws each one twice. Once the
+// first sprite has reached both targets only it is drawn, and from the third frame after
+// that a flash overlay pulses in and fades out (alphas in D_83404188 words 0xF and 0x10).
+void func_834022F8(void) {
+    static s32 D_83403F34 = 0;
+    static s32 D_83403F38 = 0;
+    static f32 D_83403F3C = 1.0f;
+    f32 half;
+    s32 i;
+    s32 x2;
+    s32 wrap;
+    s32 sx;
+    s32 y2;
+    s32 count;
+    s32 unused; // FAKE: an unused local; it moves the two hoisted display-list temps to retail's stack slots.
+    s32 tex;
+    s32 sy;
+
+    count = 4;
+    wrap = 0;
+    STATE58(0xE)++;
+    for (i = 0; i < count; i++) {
+        if (i < 3) {
+            if (D_83404848.unk00[i + 4] < D_83403F2C[1]) {
+                half = (0.0f < STEP58) ? 0.5f : -0.5f;
+                D_83404848.unk00[i + 4] += (s32)(STEP58 + half);
+            }
+            if (!(D_83404848.unk00[i + 4] < D_83403F2C[1])) {
+                D_83404848.unk00[i + 4] = D_83403F2C[1];
+                if (i == 0) {
+                    wrap++;
+                }
+            }
+        } else {
+            if (D_83403F2C[1] < D_83404848.unk00[i + 4]) {
+                half = (0.0f < STEP58) ? 0.5f : -0.5f;
+                D_83404848.unk00[i + 4] -= (s32)(STEP58 + half);
+            }
+            if (!(D_83403F2C[1] < D_83404848.unk00[i + 4])) {
+                D_83404848.unk00[i + 4] = D_83403F2C[1];
+            }
+        }
+        if (D_83404848.unk00[i] < D_83403F2C[0]) {
+            half = (0.0f < STEP58) ? 0.5f : -0.5f;
+            D_83404848.unk00[i] += (s32)(STEP58 + half);
+        }
+        if (!(D_83404848.unk00[i] < D_83403F2C[0])) {
+            D_83404848.unk00[i] = D_83403F2C[0];
+            if (i == 0) {
+                wrap++;
+            }
+        }
+        if (wrap == 2) {
+            count = 1;
+            STATE58(0x11) = 0;
+        }
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+        gDPPipeSync((*(Gfx **)&D_800D0510)++);
+        gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0, 0, 0xFF, 0xFF, 0xFF, STATE58(0xF));
+        gDPSetRenderMode((*(Gfx **)&D_800D0510)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetCombine((*(Gfx **)&D_800D0510)++, 0xFFB3FF, 0xFF64FE7F);
+        tex = func_8004C990(0xF9, 0);
+        sy = ROUND_DIFF58((f32)(D_83404848.unk00[i + 4] + 0x34), 52.0f * D_83403F3C);
+        sx = ROUND_DIFF58((f32)(D_83404848.unk00[i] + 0x68), 104.0f * D_83403F3C);
+        x2 = D_83403F2C[0] + (D_83403F2C[0] - sx) * D_83404848.unk00[i + 8];
+        y2 = D_83403F2C[1] + (D_83403F2C[1] - sy) * D_83404848.unk00[i + 12];
+        func_8004D19C(sx, sy, tex, 0, 0);
+        func_8004D19C(x2, y2, tex, 0, 0);
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    }
+    if (count == 1) {
+        D_83403F34++;
+    } else {
+        D_83403F34 = 0;
+        D_83403F38 = 0;
+    }
+    if (count == 1 && D_83403F34 == 3) {
+        STATE58(0xF) = 0xFF;
+        STATE58(0x10) = 0x5A;
+        D_83403F38 = 1;
+        func_80025B54(0xC);
+    }
+    if (count == 1 && D_83403F34 >= 4) {
+        if (D_83403F38 == 1) {
+            STATE58(0x10) += 0x32;
+        }
+        if (D_83403F38 == -1) {
+            STATE58(0x10) -= 0x19;
+        }
+        if (STATE58(0x10) >= 0xFF) {
+            STATE58(0x10) = 0xFF;
+            D_83403F38 = -1;
+        }
+        if (STATE58(0x10) <= 0) {
+            STATE58(0x10) = 0;
+            STATE58(0xF) -= 0xA;
+        }
+        if (STATE58(0xF) <= 0) {
+            STATE58(0xF) = 0;
+        }
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094E38);
+        gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0, 0, 0xFF, 0xFF, 0xFF, STATE58(0x10));
+        gDPSetEnvColor((*(Gfx **)&D_800D0510)++, 0, 0xFF, 0xFF, 0xFF);
+        gDPSetRenderMode((*(Gfx **)&D_800D0510)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetCombine((*(Gfx **)&D_800D0510)++, 0x309661, 0x552EFF7F);
+        tex = func_8004C990(0xF8, 0);
+        func_8004D19C(0x43, 0x43, tex, 0, 0);
+        gSPDisplayList((*(Gfx **)&D_800D0510)++, D_80094F50);
+    }
+}
+
 
 extern Gfx *D_800D0510;
 extern Fragment58State188 D_83404188;
@@ -953,13 +1083,10 @@ extern void func_87F0DBFC(u8 *arg0, s32 arg1, u8 arg2, s32 arg3);
 extern void func_87F0DC3C(u8 *arg0);
 extern void func_87F0DC4C(u8 *arg0);
 
-// Records copied wholesale by the stage setup cases below: D_83404848 gets
-// 0x40 bytes from D_83403D8C and D_83404188 gets 0xA4 bytes from D_83403CC4.
-// The fields are not read individually here; the sizes are what the copy
-// loops encode.
-typedef struct {
-    s32 unk00[16];
-} Fragment58NodePair;
+// Record copied wholesale by the stage setup cases below (D_83404848's
+// Fragment58NodePair is declared above func_834022F8): D_83404188 gets 0xA4
+// bytes from D_83403CC4. The fields are not read individually here; the size
+// is what the copy loop encodes.
 typedef struct {
     s32 unk00[41];
 } Fragment58StageRecord;

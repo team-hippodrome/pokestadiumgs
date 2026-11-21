@@ -1407,7 +1407,123 @@ void Fragment7_DrawTeamListRows(s32 definition, Fragment7TeamRenderState *state,
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_83004FC0.s")
+extern u8 D_8300BCC0[];
+extern u8 D_8300CEE0[];
+extern u8 D_8300F82C[];
+extern s32 D_8300F900;
+extern void func_8004D998(s32, s32, u8 *, s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void func_80060E48(void *, void *);
+extern u8 *WidgetTexture_GetDescriptor(void *);
+typedef struct { u32 w : 16; u32 h : 16; } F7Desc;
+typedef struct { u32 pad : 5; u32 flag : 1; u32 rest : 26; } F7TeamFlags;
+typedef struct { u8 b[0x490]; } T490;
+typedef struct { u8 b[0x1B64]; } T1B64;
+typedef struct { u8 b[0x4010]; } T4010;
+typedef struct { u8 b[0x1DC]; } T1DC;
+typedef struct { u8 b[0x4B00]; } T4B00;
+typedef struct { u8 b[0xC80]; } TC80;
+typedef struct { u8 species; u8 item; u8 pad2[0x1B]; u8 level; u8 pad1E[6]; char name[0x18]; } F7Mon;
+typedef struct { u8 hdr[0x24]; u16 u24; u8 pad26[2]; F7Mon mons[6]; u8 rest[0x4C]; } F7Slot;
+#define ENTS ((u8 *)((T1DC *)team + slot))
+#define SL ((F7Slot *)team + slot)
+#define M (SL->mons[i])
+void func_83004FC0(s32 definition, void *memory, Fragment7DrawOrigin *origin) {
+    static s32 D_8300F8F8;
+    u8 *state = memory;
+    s32 slot;
+    u8 *bank;
+    F7Desc *desc;
+    s32 i;
+    u8 *team;
+    f32 weight;
+    Fragment7DrawOrigin rect;
+    Fragment7DrawOrigin rect2;
+    if (i == 0) {} // FAKE
+
+    weight = func_818055E0((void *)definition, state);
+    bank = ((T1B64 *)state)[state[0x3E]].b + 0x3872C;
+    team = ((T490 *)((T490 *)bank)[state[0x40]].b)[state[0x59]].b - 0x48C;
+    slot = state[0x4E] - 1;
+    WidgetResources_DrawRecords(definition, (s32)state, (s32)origin);
+    if (weight < 0.01) {
+        return;
+    }
+    if (bank[1] < state[0x59] + state[0x40]) {
+        return;
+    }
+    rect = *origin;
+    rect.x += 90;
+    rect.y += 51;
+    WidgetTexture_DrawRecord(D_8300BCC0, (u8 *)&rect, weight, 0);
+    for (i = 0; i < 6; i++) {
+    if (state == 0) {} // FAKE
+        rect2 = *origin;
+        if (*((u8 *)SL + 0x28 + i * 0x3C) != 0) { // species, read as raw bytes for the IV shape
+            rect2.x += (i % 2) * 82 + 52;
+            rect2.y += (i / 2) * 59 + 109;
+            WidgetTexture_DrawRecord(D_8300CEE0, (u8 *)&rect2, weight, 0);
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * weight);
+    func_818011EC(origin->x + 11, origin->y + 15, 56, 56,
+                  &((T4010 *)(state + state[0x3E] * 0x18060))[state[0x40]].b[state[0x59] * 0x4010 + slot * 0x2008 - 0x1C010]);
+    func_81800C18(origin->x + 109, origin->y + 51, 5, SL->u24);
+    for (i = 0; i < 6; i++) {
+        s32 x0 = (i % 2) * 82 + origin->x + 11;
+        s32 y0 = (i / 2) * 59 + origin->y + 83;
+        s32 x = (i % 2) * 82 + origin->x + 61;
+        s32 y = (i / 2) * 59 + origin->y + 109;
+        s32 digits = 3;
+        if (M.species != 0) {
+            if (M.level < 10) {
+                digits = 1;
+            } else if (M.level < 100) {
+                digits = 2;
+            }
+            func_8004D998(x0, y0, ((T4B00 *)state)[slot].b + i * 0xC80 + 0x3FF38, 0, 1);
+            func_81800C18(x, y, digits, M.level);
+        }
+    }
+    if (((F7TeamFlags *)(team + 0x464))->flag) {
+        desc = (F7Desc *)WidgetTexture_GetDescriptor(D_8300F82C);
+        func_8004D1FC((u8 *)desc);
+        for (i = 0; i < 6; i++) {
+            s32 x = (i % 2) * 82 + origin->x + 71;
+            s32 y = (i / 2) * 59 + origin->y + 91;
+            if (M.item != 0) {
+                if (func_83000BC0(M.item, M.species)) {
+                    gDPSetEnvColor(D_800D0510++, 255, 170, 0, 255.0f * weight);
+                } else {
+                    gDPSetEnvColor(D_800D0510++, 130, 130, 130, 255.0f * weight);
+                }
+                func_81800020(x, y, desc->w, desc->h, 0, 0, 1.0f, 1.0f);
+            }
+        }
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        {
+        char buf[132];
+        func_800498C4();
+        func_8004972C(255, 255, 255, 255.0f * weight);
+        func_80060E48(buf, ENTS);
+        func_8180351C(&D_8300F8F8);
+        func_800495F8(origin->x + 121, origin->y + 23, D_8300F8F8, buf);
+        func_8180351C(&D_8300F900);
+        for (i = 0; i < 6; i++) {
+            s32 x = (i % 2) * 82 + origin->x + 11;
+            s32 y = (i / 2) * 59 + origin->y + 124;
+            func_80060E48(buf, M.name);
+            func_800495BC(x, y, buf);
+        }
+        }
+    }
+    func_800499EC();
+}
+#undef M
+#undef SL
+#undef ENTS
+
 #endif
 
 #ifdef VERSION_US

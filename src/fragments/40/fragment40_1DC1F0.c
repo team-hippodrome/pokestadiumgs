@@ -259,7 +259,270 @@ void func_88B00700(s16 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/40/fragment40_1DC1F0/func_88B007A0.s")
+#include "controller.h"
+extern s8 D_88006868;
+extern s32 D_88B05F64;
+extern s16 D_88B05F6C;
+extern s32 D_88B05F70;
+extern s8 D_8800EF40;
+extern s8 D_8800EF41;
+extern s32 func_88B04950(void);
+extern s32 func_8005A228(s8);
+extern s32 func_88B04420(void);
+
+extern u8 func_8005E03C(s32);
+extern s32 func_88B04A08(u16);
+extern void func_88B05650(s16 *);
+extern s32 func_88B0552C(u16, s32, s32, s32);
+extern s32 func_88B041C4(u8 *);
+extern s32 func_88B04BB4(void);
+extern s32 func_8005F9A4(s32, u16);
+extern s32 func_88B048C4(void);
+void func_88B00288(Func88B00288Rect *arg0, Func88B00288Rect *arg1, s32 arg2);
+void func_88B00690(s16 *arg0);
+void func_88B00700(s16 *arg0);
+
+#define ST(t, o) (*(t *)((u8 *)D_88B05F60 + (o)))
+
+void func_88B007A0(void) {
+    s16 sp3E;
+    s16 sp34[4];
+    s32 r;
+    s32 p;
+    s32 sp28;
+
+    sp3E = 2;
+    if (ST(u8, 0) != 0) {
+        ST(u8, 0) -= 1;
+        p = (s32)D_88B05F60 + 0xC;
+        if (ST(u8, 0) == 0) {
+            ST(s16, 0xC) = 0x2B;
+            ST(s16, 0xE) = 0x23;
+            ST(s16, 0x10) = 0x159;
+            ST(s16, 0x12) = 0x33;
+            ST(s16, 0x14) = 0x52;
+            ST(s16, 0x16) = 0x139;
+            ST(s16, 0x18) = 0x1DB;
+            ST(s16, 0x1A) = 0x88;
+            if (func_88B04950() != 0 && ST(s32, 0x460) != 0) {
+                sp3E = 0x17;
+            } else {
+                func_88B00690(&sp3E);
+            }
+            func_88B00020((s32)sp3E);
+            return;
+        }
+        sp34[0] = 0x2B;
+        sp34[1] = 0x23;
+        sp34[2] = 0x159;
+        sp34[3] = 0x33;
+        func_88B00288((void *)p, (void *)sp34, ST(u8, 0));
+        sp34[0] = 0x52;
+        sp34[1] = 0x139;
+        sp34[2] = 0x1DB;
+        sp34[3] = 0x88;
+        func_88B00288((void *)((u8 *)D_88B05F60 + 0x14), (void *)sp34, ST(u8, 0));
+        return;
+    }
+
+    if (ST(u8, 0x46C) != 0) {
+        if (ST(u8, 0x46C) == 2) {
+            if (ST(s8, 0x46D) == 1) {
+                r = func_8005A228(D_88006868);
+                switch (r) {
+                case 1:
+                    ST(s8, 0x46F) = 1;
+                    break;
+                case 3:
+                    ST(s8, 0x46F) = 3;
+                    break;
+                case 2:
+                    ST(s8, 0x46D) = 2;
+                    ST(s8, 0x46E) = 3;
+                    ST(s8, 0x46F) = 0;
+                    break;
+                }
+            }
+            if (sp3E == 0) {} // FAKE: no code; changes uopt colouring so sp3E constants land in a1
+            if (ST(s8, 0x46D) == 2) {
+                ST(s8, 0x46E) -= 1;
+                if (ST(s8, 0x46E) != 1 && ST(s8, 0x46E) <= 0) {
+                    ST(s8, 0x46D) = 0;
+                    ST(s8, 0x46E) = 0;
+                }
+            }
+            if (ST(s8, 0x46D) == 0) {
+                if (func_88B0552C(ST(u16, 0x1C), ST(s32, 0x460), ST(s32, 0x464), ST(s32, 0x468)) != 0) {
+                    ST(s8, 0x46F) = -1;
+                    ST(u8, 0x46C) = 0;
+                    func_80021ED8(0x32);
+                    ST(s32, 0x458) = 0x32;
+                    p = (u16)D_88B05F6C; // p reused as a temp: retail keeps this value in a0
+                    if (p >= 0x100) {
+                        sp3E = 8;
+                    } else {
+                        sp3E = 9;
+                    }
+                    func_8004C54C(0x46, func_88B04420());
+                    func_88B00020((s32)sp3E);
+                } else {
+                    ST(s32, 0x468) = 0;
+                    ST(s8, 0x46D) = 1;
+                    func_800226C0(5);
+                    ST(s8, 0x46F) = 2;
+                    r = func_8005A228(D_88006868);
+                    switch (r) {
+                    case 1:
+                        ST(s8, 0x46F) = 1;
+                        break;
+                    case 3:
+                        ST(s8, 0x46F) = 3;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
+        } else {
+            ST(u8, 0x46C) = ST(u8, 0x46C) + 1;
+        }
+    } else if (func_88B041C4((u8 *)D_88B05F60 + 0x2C) == 0 && ST(s32, 0x238) != 0) {
+        if (*(s16 *)ST(void *, 0x450) == 0x3A) {
+            ST(u8, 0x46C) = 1;
+            ST(u8, 2) = 2;
+            ST(s32, 4) = 1;
+            ST(u8, 0xB) = *(s32 *)((u8 *)ST(void *, 0x450) + 0xC);
+            sp28 = func_80001FF0();
+            r = func_80001FF0();
+            ST(u8, 3) = Credits_RandomRange((s32)((0.0f < ((f32)r * 4.0f) / 60.0f ? 0.5f : -0.5f) + (4.0f * (f32)sp28) / 60.0f)) + 1;
+        } else {
+            if (*(s16 *)ST(void *, 0x450) == 6 && (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000)) {
+                func_800226C0(3);
+                func_88B00020(7);
+                ST(s32, 0x464) = 1;
+            } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+                if (*(s16 *)ST(void *, 0x450) == 6) {
+                    func_800226C0(0x158);
+                } else {
+                    func_800226C0(2);
+                }
+                switch (*(s16 *)ST(void *, 0x450)) {
+                case 2:
+                case 3:
+                    if (func_8005E03C(D_88006868) >= 5) {
+                        sp3E = 4;
+                    } else if (func_88B04A08(ST(u16, 0x1C)) != 0) {
+                        sp3E = 5;
+                    } else {
+                        sp3E = 6;
+                    }
+                    break;
+                case 4:
+                case 29:
+                    sp3E = 0xA;
+                    break;
+                case 5:
+                    sp3E = 0x1D;
+                    break;
+                case 6:
+                    sp3E = 0x3A;
+                    break;
+                case 7:
+                case 10:
+                    ST(s32, 0x248) = 1;
+                    break;
+                case 8:
+                case 9:
+                    if (ST(s32, 0x458) != 0x44) {
+                        func_80021ED8(0x44);
+                        ST(s32, 0x458) = 0x44;
+                        ST(s16, 0x45C) = 0;
+                    }
+                    func_88B05650(&sp3E);
+                    break;
+                case 18:
+                case 19:
+                case 20:
+                    switch (D_88B05F70) {
+                    case 0: sp3E = 0x37; break;
+                    case 1: sp3E = 0x38; break;
+                    case 2: sp3E = 0x39; break;
+                    case 3: sp3E = 0x1A; break;
+                    case 4: sp3E = 0x16; break;
+                    case 5: sp3E = 0x15; break;
+                    case 6: sp3E = 0x1B; break;
+                    }
+                    break;
+                case 21:
+                case 22:
+                case 25:
+                case 26:
+                case 27:
+                case 55:
+                case 56:
+                case 57:
+                    sp3E = 2;
+                    break;
+                case 24:
+                case 46:
+                    if (func_88B04BB4() < 11) {
+                        sp3E = 0x19;
+                    } else {
+                        sp3E = 2;
+                    }
+                    break;
+                case 28:
+                    sp3E = 3;
+                    break;
+                case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37:
+                case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45:
+                    if (D_88B05F70 == 4) {
+                        if (D_88B05F64 != 0) {
+                            if (Credits_RandomRange(4) == 0) {
+                                sp3E = 0x2F;
+                            } else {
+                                func_88B00700(&sp3E);
+                            }
+                        } else {
+                            if (Credits_RandomRange(2) == 0) {
+                                sp3E = 0x30;
+                            } else {
+                                func_88B00700(&sp3E);
+                            }
+                        }
+                    } else {
+                        func_88B00700(&sp3E);
+                    }
+                    break;
+                case 47:
+                case 48:
+                case 50:
+                case 51:
+                case 52:
+                    sp3E = 0xA;
+                    break;
+                case 23:
+                    if (func_8005F9A4(D_88006868, 0x2C8) != 0) {
+                        sp3E = 0x2E;
+                    } else if (func_88B048C4() >= 10) {
+                        sp3E = 0x18;
+                    } else {
+                        sp3E = 2;
+                    }
+                    break;
+                }
+                if (ST(s32, 0x248) == 0) {
+                    func_88B00020((s32)sp3E);
+                }
+            }
+        }
+    }
+
+    D_8800EF40 = ST(s8, 0x46F);
+    if (ST(s8, 0x46F) != -1) {
+        D_8800EF41 = D_88006868;
+    }
+}
 
 typedef float S1_MtxF_t[4][4];
 typedef union {
@@ -304,8 +567,6 @@ extern void Gfx_SetViewportDimensions(void *, s16, s16);
 extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D1FC(u8 *);
 extern Vtx D_88B05AF0[];
-extern f32 D_88B05E74;
-extern f32 D_88B05E78;
 
 
 
@@ -323,7 +584,7 @@ void func_88B010A0(f32 arg0, s32 arg1) {
     Gfx_SetViewportDimensions(viewport, dims[2], dims[3]);
     gSPViewport(D_800D0510++, (u32)viewport & 0x1FFFFFFF);
     guOrtho(mtx0, -320.0f, 320.0f, -240.0f, 240.0f, -2.0f, 2.0f, 1.0f);
-    MathUtil_BuildTransformMtx_fragment40(mtx1, 1.0f, 1.0f, 1.0f, arg0, 0.0f, 0.0f, 1.0f, D_88B05E74, D_88B05E78, 0.0f);
+    MathUtil_BuildTransformMtx_fragment40(mtx1, 1.0f, 1.0f, 1.0f, arg0, 0.0f, 0.0f, 1.0f, 203.5f, 142.5f, 0.0f);
     gDPPipeSync(D_800D0510++);
     gDPSetCycleType(D_800D0510++, G_CYC_1CYCLE);
     gDPSetRenderMode(D_800D0510++, 0x504240, 0);
@@ -501,7 +762,6 @@ extern u8 D_88B05B98[][3];
 extern u8 D_88B05BB0[][3];
 extern u16 D_88B05BC8[];
 extern u8 D_88B05BD8[];
-extern u8 D_88B05D70[];
 extern u8 D_8800686C;
 extern s8 D_88006868;
 extern s32 D_8800687C;
@@ -763,7 +1023,7 @@ after_timers:
         func_80048E30(D_8800687C, 134, 50, (s32)D_8800686D, 1);
         func_800496A4(4, 3);
         func_80048E30(D_8800687C, 248, 53, (s32)func_8004C874(61, 1), 1);
-        func_800495F8(285, 53, 0, D_88B05D70, D_8800686A);
+        func_800495F8(285, 53, 0, "%05d", D_8800686A);
         func_800496A4(0x10, 1);
         func_8004989C(0x20);
         func_80048E30(D_8800687C, 112, 337, (s32)(R2_S + 0x30), 1);
@@ -779,11 +1039,11 @@ extern s32 func_80001FF0(void);
 extern void StageFade_StartFromOpaque(s32);
 extern void func_80064D28(void);
 extern void func_88B01FE0(s32);
-extern f32 D_88B05E7C;
 void func_88B038E8(void) {
     u16 count;
     s32 i;
-    count = (u16)((f32)func_80001FF0() * D_88B05E7C / 3);
+    count = (u16)((f32)func_80001FF0() * 0.3f / 3);
+    if (count == 0) {} // FAKE: no code; with the 0.3f literal (was extern rodata) keeps count in s1 like retail
     StageFade_StartFromOpaque(count);
     if (count != 0) {
         i = 0;
@@ -817,11 +1077,11 @@ extern void func_800225C4(s32);
 extern void StageFade_StartFromTransparent(s32);
 extern void func_80064D28(void);
 extern void func_88B01FE0(s32);
-extern f32 D_88B05E80;
 void func_88B03A70(void) {
     u16 count;
     s32 i;
-    count = (u16)((f32)func_80001FF0() * D_88B05E80 / 3);
+    count = (u16)((f32)func_80001FF0() * 0.3f / 3);
+    if (count == 0) {} // FAKE: no code; with the 0.3f literal (was extern rodata) keeps count in s1 like retail
     func_800225C4(count * 3);
     StageFade_StartFromTransparent(count);
     if (count != 0) {
@@ -993,7 +1253,7 @@ extern void func_88B038E8(void);
 extern void func_88B039E4(void);
 extern void func_88B03A70(void);
 extern void func_80008574(void);
-extern void func_88B0552C(u16, s32, s32, s32);
+extern s32 func_88B0552C(u16, s32, s32, s32);
 extern void GbTower_StartPortSession(s8, s32);
 extern void Util_Free(void *);
 extern void func_80047610(void);

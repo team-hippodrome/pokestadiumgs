@@ -62,6 +62,7 @@
     - [0x232C0, c, audio_cue_dispatch]
     - [0x23D10, c]
     - [0x23DA0, c]
+    - [0x24610, c]
     - [0x25080, c]
     - [0x254A0, c]
     - [0x25B20, c]
@@ -374,7 +375,8 @@
     - [0xA2BD0, .rodata, 1CDC0] # jtbl_800A1FD0 (+2 more)
     - [0xA3260, rodata]
     - [0xA3270, .rodata, audio_cue_dispatch] # three cue-dispatch tables, then alignment
-    - [0xA37C0, .rodata, 23DA0] # command tables and constants
+    - [0xA37C0, .rodata, 23DA0] # func_800231A0 switch tables
+    - [0xA3BD0, .rodata, 24610] # command tables and constants
     - [0xA3E10, .rodata, 25080] # func_80024480's switch tables and constant
     - [0xA3E80, .rodata, 254A0] # func_80024E8C's switch table
     - [0xA3EC0, .rodata, 25B20] # command dispatch tables and constants
@@ -408,6 +410,7 @@
     - [0xA64E0, .rodata, 6DEC0] # jtbl_800A58E0
     - [0xA6500, .rodata, 6E850] # Strings, jump tables, float literals, double literals.
     - [0xA6600, rodata]
+    - [0xA6700, .rodata, 72C30]
     - [0xA6750, .rodata, 74020] # jtbl_800A5B50
     - [0xA6860, lib, libultra, setintmask, .rodata]
     - [0xA68E0, lib, libultra, sinf, .rodata]
@@ -1073,6 +1076,10 @@
     - [0x1C3FA0, c,       fragments/34/fragment34_1C3FA0]
     - [0x1C5AA0, c,       fragments/34/fragment34_1C5AA0]
     - [0x1CA690, data,    fragments/34/fragment34_data]
+    - [0x1CA8E0, .data,   fragments/34/fragment34_1C3FA0] # func_8850779C function static D_8850D2D0.
+    - [0x1CA8F0, data,    fragments/34/fragment34_1CA8F0]
+    - [0x1CA980, .data,   fragments/34/fragment34_1C5AA0] # Four persistent texture-coordinate floats.
+    - [0x1CA990, data,    fragments/34/fragment34_D380]
     - [0x1CA9C0, .rodata, fragments/34/fragment34_1BD630] # Jump tables, float literals.
     - [0x1CAA60, .rodata, fragments/34/fragment34_1BE300] # Strings, jump tables, float literals.
     - [0x1CAA90, .rodata, fragments/34/fragment34_1C1BC0] # strings, jump tables, float literals: referenced only by this file
@@ -1154,6 +1161,8 @@
     - [0x1DC1F0, c,       fragments/40/fragment40_1DC1F0]
     - [0x1E0550, c,       fragments/40/fragment40_1E0550]
     - [0x1E19E0, data,    fragments/40/fragment40_data]
+    - [0x1E1F40, .rodata, fragments/40/fragment40_1DC1F0] # func_88B007A0 jump tables + file literals
+    - [0x1E2060, data,    fragments/40/fragment40_1E2060]
 
   - name: fragment41
     type: code
@@ -1404,8 +1413,13 @@
     subsegments:
     - [0x2894B0, textbin, fragments/53/fragment53_header]
     - [0x2894D0, c,       fragments/53/fragment53_code]
+    - [0x28E360, c,       fragments/53/fragment53_28E360] # Second TU from func_86504EB0 (text and rodata both start 16-aligned).
     - [0x293A90, data,    fragments/53/fragment53_data]
+    - [0x2965E0, .data,   fragments/53/fragment53_code] # D_8650D130-D_8650D13C, then func_86504740's statics D_8650D198-D_8650D1A8.
+    - [0x296660, .data,   fragments/53/fragment53_28E360] # D_8650D1B0, func_8650515C's table initializer and its static D_8650D1DC.
+    - [0x296690, data]
     - [0x296B30, .rodata, fragments/53/fragment53_code] # Jump tables, float literals, double literals.
+    - [0x296CA0, .rodata, fragments/53/fragment53_28E360]
     - [0x296E50, rodata]
 
   - name: fragment54
@@ -1429,6 +1443,7 @@
     - [0x2A24E0, textbin, fragments/55/fragment55_header]
     - [0x2A2500, c,       fragments/55/fragment55_code]
     - [0x2AD040, data,    fragments/55/fragment55_data]
+    - [0x2AE5E0, .data,   fragments/55/fragment55_code] # D_8670C100/D_8670C104 and func_8670A07C's frame counter, in one 16-byte IDO-padded section
     - [0x2AE5F0, .rodata, fragments/55/fragment55_code] # strings, jump tables, float literals
     - [0x2AEBB0, rodata, fragments/55/fragment55_tail] # tables after the code object's rodata
 
@@ -1469,8 +1484,8 @@
     - [0x2C8430, c,       fragments/58/fragment58_code]
     - [0x2CBB90, data,    fragments/58/fragment58_data]
     - [0x2CC330, .data,   fragments/58/fragment58_code] # D_83403F20, an unreferenced word, func_83401AAC's
-                                                          # blink counter and D_83403F2C's first word (16-byte IDO section)
-    - [0x2CC340, data]
+                                                          # blink counter, D_83403F2C and func_834022F8's statics
+    - [0x2CC350, data]
     - [0x2CC360, .rodata, fragments/58/fragment58_code] # strings, jump tables, float literals
     - [0x2CC540, rodata, fragments/58/fragment58_tail] # tables after the code object's rodata
 

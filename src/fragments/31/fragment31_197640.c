@@ -1438,5 +1438,134 @@ void func_88227EE8(s32 arg0) {
         func_8004B314(*(s16 *)(*(u8 **)((u8 *)D_88234880+4)+12)+19,*(s16 *)(*(u8 **)((u8 *)D_88234880+4)+14)+20*row+6,*(u16 *)((u8 *)D_88234880+0x36)+10,26);
     }
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88228390.s")
+typedef struct { u8 r, g, b, a; } Color197640;
+extern Color197640 *Color_SetRGB(Color197640 *, u8, u8, u8);
+extern s32 func_80049290();
+extern void func_88227A60(void);
+extern void func_882277D0(void);
+extern void func_882278EC(void);
+extern void func_88903B00();
+extern u8 D_88000E4C[];
+
+typedef struct List197640 {
+    /* 0x0 */ void *entries;
+    /* 0x4 */ u16 count;
+    /* 0x6 */ s16 selected;
+    /* 0x8 */ s32 anyDone;
+    /* 0xC */ u8 *done;
+} List197640;
+
+typedef struct { u8 b[0x4C]; } T4C;
+void func_88228390(void) {
+    u8 j;
+    u8 i;
+    s16 posX;
+    s32 idx;
+    Color197640 color;
+    List197640 *list;
+    u8 *cur;
+
+    D_88234880 = Util_Malloc(0x68);
+    *(s32 *)((u8 *)D_88234880 + 8) = 0;
+    *(s32 *)((u8 *)D_88234880 + 0x2C) = 4;
+    *(s16 *)((u8 *)D_88234880 + 0x30) = 1;
+    *(s16 *)((u8 *)D_88234880 + 0x32) = 4;
+    cur = D_88A01C34 + D_88A01C30[0x10] * 0x18;
+    for (i = 0; i < 2; i++) {
+        if (i == 0) {
+            list = (List197640 *)((u8 *)D_88234880 + 0xC);
+            list->count = func_8005CB38(D_88006868, 0x21);
+            *(void **)((u8 *)D_88234880 + 0x38) = Util_Malloc(list->count * 4);
+            for (j = 0; j < list->count; j++) {
+                (*(void ***)((u8 *)D_88234880 + 0x38))[j] = Util_Malloc(9);
+                func_8005EE88(D_88006868, (s32)j, (*(void ***)((u8 *)D_88234880 + 0x38))[j]);
+            }
+            list->entries = *(void **)((u8 *)D_88234880 + 0x38);
+        } else {
+            list = (List197640 *)((u8 *)D_88234880 + 0x1C);
+            list->count = func_800532C4(0x11);
+            *(void **)((u8 *)D_88234880 + 0x3C) = Util_Malloc(list->count * 4);
+            for (j = 0; j < list->count; j++) {
+                (*(void ***)((u8 *)D_88234880 + 0x3C))[j] = Util_Malloc(0x12);
+                func_80053524(j, (*(void ***)((u8 *)D_88234880 + 0x3C))[j]);
+            }
+            list->entries = *(void **)((u8 *)D_88234880 + 0x3C);
+        }
+        list->selected = 0;
+        list->anyDone = 0;
+        list->done = Util_Malloc(list->count);
+        for (j = 0; j < list->count; j++, cur += 0x18) {
+            if (cur == *(u8 **)D_882345F4 || cur[0x14] == cur[0x15]) {
+                list->anyDone = 1;
+                list->done[j] = 1;
+                if (list->selected == j) {
+                    list->selected++;
+                }
+            } else {
+                list->done[j] = 0;
+            }
+        }
+    }
+    *(s32 *)((u8 *)D_88234880 + 0x40) = 1;
+    *(s16 *)((u8 *)D_88234880 + 0x44) = 0;
+    _bzero((u8 *)D_88234880 + 0x50, 3);
+    *(s32 *)((u8 *)D_88234880 + 0x48) = 0;
+    *(u8 **)((u8 *)D_88234880 + 0x4C) = (u8 *)D_88234880 + 0x50;
+    if (D_88A01C34 == *(u8 **)D_882345F4 || D_88A01C34[0x15] == D_88A01C34[0x14]) {
+        *(s32 *)((u8 *)D_88234880 + 0x48) = 1;
+        *((u8 *)D_88234880 + 0x50) = 1;
+        *(s16 *)((u8 *)D_88234880 + 0x44) = 1;
+    }
+    if (*(u16 *)((u8 *)D_88234880 + 0x10) == *(s16 *)((u8 *)D_88234880 + 0x12)) {
+        *(s32 *)((u8 *)D_88234880 + 0x48) = 1;
+        *((u8 *)D_88234880 + 0x51) = 1;
+        if (*(s16 *)((u8 *)D_88234880 + 0x44) == 1) {
+            *(s16 *)((u8 *)D_88234880 + 0x44) = 2;
+        }
+    }
+    if (*(u16 *)((u8 *)D_88234880 + 0x20) == *(s16 *)((u8 *)D_88234880 + 0x22)) {
+        *(s32 *)((u8 *)D_88234880 + 0x48) = 1;
+        *((u8 *)D_88234880 + 0x52) = 1;
+        if (*(s16 *)((u8 *)D_88234880 + 0x44) == 2) {
+            *(s16 *)((u8 *)D_88234880 + 0x44) = 3;
+        }
+    }
+    if (*(s16 *)((u8 *)D_88234880 + 0x44) == 3) {
+        func_882277F8();
+        LabPC_OpenMessageDialog(func_8004C874(0x25, (void *)0x37), 0x17C, 0x11F, 4, 0xFF, 0xAA, 0x8C, 2, 0, &D_880068B4,
+                                &D_880068B8, func_88903B00, D_88000E4C);
+        return;
+    }
+    idx = func_88004804(0, 3, 0xA7, 0x92, 0, 1, 0xDC, 0xDC, 0xB4, func_88227A60, func_88227EE8, func_882277D0,
+                        func_882278EC, 2, 0);
+    *(u8 **)D_88234880 = &D_8800ED50[idx * 0x4C];
+    *(s16 *)(*(u8 **)D_88234880 + 0x10) = 0xB0;
+    *(s16 *)(*(u8 **)D_88234880 + 0x12) = 0x97;
+    if (func_8003514C() == 0) {
+        posX = 0x92;
+    } else {
+        posX = 0x7E;
+    }
+    if (*((u8 *)D_88234880 + 0x50) == 1) {
+        Color_SetRGB(&color, 0xDC, 0xDC, 0xB4);
+    } else {
+        Color_SetRGB(&color, 0x96, 0x96, 0x82);
+    }
+    *(u8 **)((u8 *)D_88234880 + 4) = ((T4C *)D_8800ED50)[func_88004804((u8 *)D_88234880 + 8, 1, 0x15B, posX, 0, 1, color.r, color.g, color.b, (s32 *)(s32)D_88000E4C,
+                        (s32 *)(s32)D_88000E4C, (s32 *)(s32)D_88000E4C, (s32 *)(s32)D_88000E4C, 2, 0)].b;
+    D_880068B4 = 0;
+    *(s32 *)((u8 *)D_88234880 + 0x64) = 1;
+    for (j = 0; j < 3; j++) {
+        ((void **)((u8 *)D_88234880 + 0x54))[j] = func_8004C874(0x25, (void *)(j + 0x2C));
+    }
+    *(s16 *)((u8 *)D_88234880 + 0x60) = func_80049290(8, 1, *(char **)((u8 *)D_88234880 + 0x54)) + 0x22;
+    for (j = 0; j < 2; j++) {
+        if (func_80049290(8, 1, *(char **)((u8 *)D_88234880 + 0x58 + j * 4)) < *(u16 *)((u8 *)D_88234880 + 0x60)) {
+            *(s16 *)((u8 *)D_88234880 + 0x60) = *(u16 *)((u8 *)D_88234880 + 0x60);
+        } else {
+            *(s16 *)((u8 *)D_88234880 + 0x60) = func_80049290(8, 1, *(char **)((u8 *)D_88234880 + 0x58 + j * 4));
+        }
+    }
+}
+
 #endif

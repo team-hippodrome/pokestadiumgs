@@ -22,6 +22,13 @@ SECTIONS
            "audio request tick address changed")
 
 
+    /* Fragment 7's text-colour slot D_8300F8F8, a function-scope static of
+     * func_83004FC0 in the fragment's loaded data (zero in the data image). */
+    .fragment7_text_state_bss 0x8300F8F8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/7/fragment7_BA250.o(.bss)
+    }
+
     /* The preview initializer uses the work record in fragment 22's
      * loaded data. Keep IDO's static storage references on that record. */
     .fragment22_preview_state 0x827034C8 (NOLOAD) : SUBALIGN(4)
@@ -132,14 +139,21 @@ SECTIONS
         build/src/fragments/4/fragment4_AE600.o(.rodata)
     }
 
-    /* Three adjacent two-byte function-static timers for func_8AB07C34,
-     * func_8AB07DC4 and func_8AB07E6C, at 0x8AB16A34/36/38. The fragment
-     * loader clears these addresses after relocation; compiler BSS alignment
-     * has no load image and does not add fields to the timers. */
-    .fragment45_message_timers_bss 0x8AB16A34 (NOLOAD) : SUBALIGN(2)
+    /* fragment45_22AB80's function statics: func_8AB07538's state
+     * (0x8AB169A6, the 0x86 bytes used by address from other functions, and
+     * the counters at 0x8AB16A2E/30), func_8AB07A34's counter at 0x8AB16A32,
+     * and the two-byte timers of func_8AB07C34, func_8AB07DC4 and
+     * func_8AB07E6C at 0x8AB16A34/36/38. The fragment loader clears these
+     * addresses after relocation; compiler BSS alignment has no load image
+     * and does not add fields to the timers. IDO rounds the input .bss up to
+     * 16 bytes, so the native aligned input footprint is 0xA0 (0x94 of
+     * statics, ending at 0x8AB16A3A, plus 12 bytes of pad). */
+    .fragment45_message_timers_bss 0x8AB169A6 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/45/fragment45_22AB80.o(.bss)
     }
+    ASSERT(SIZEOF(.fragment45_message_timers_bss) == 0xA0,
+           "fragment45_22AB80 .bss extent changed")
 
     /* Eight-byte loader state, cleared by Memmap_RelocateFragment.
      * Original relocation metadata remains in the loaded image. */
@@ -236,11 +250,17 @@ SECTIONS
     }
 
     /* fragment43_1E5A10's main-pool push/pop marks (function-local statics
-     * in func_8AC00FFC/func_8AC01064), 0x8AC09798-0x8AC097B0. */
+     * in func_8AC00FFC/func_8AC01064), 0x8AC09798-0x8AC097B0, the state
+     * still used from asm (D_8AC097B0) and func_8AC0202C's D_8AC099C8,
+     * ending at 0x8AC099D0. IDO rounds the input .bss up to 16 bytes, so the
+     * native aligned input footprint is 0x240; the trailing 8 bytes of pad
+     * cover D_8AC099D0's address but carry no load image. */
     .fragment43_1E5A10_bss 0x8AC09798 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/43/fragment43_1E5A10.o(.bss)
     }
+    ASSERT(SIZEOF(.fragment43_1E5A10_bss) == 0x240,
+           "fragment43_1E5A10 .bss extent changed")
 
     /* fragment67_34B0F0's text-reveal state (file-scope static D_8291BC68),
      * 0x8291BC68-0x8291BE6E. */
@@ -309,6 +329,35 @@ SECTIONS
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
     }
+    /* fragment45's pulsing colour at 0x8AB16520 (sColor, defined in
+     * fragment45_2251A0.c so as1 shares the `lui $at` for its stores, as in
+     * func_8AB00618). It is a NOLOAD view of bytes in the loaded image. */
+    .fragment45_pulse_color_bss 0x8AB16520 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/45/fragment45_2251A0.o(.bss)
+    }
+    /* fragment45's panel pulse phases at 0x8AB14670 (sPanelPhase, an
+     * initialized static in fragment45_2251A0.c so IDO keeps the retail
+     * reloads in func_8AB04038). NOLOAD view of the fragment's bss. */
+    .fragment45_panel_phase_data 0x8AB14670 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/45/fragment45_2251A0.o(.data)
+    }
+    /* fragment44's selection pulse statics at 0x8AF26580 (func_8AF08390's
+     * sObjs pointer table and sPhase counter, function-scope statics so IDO
+     * keeps the retail lui/addiu bases). NOLOAD view of bytes in the loaded
+     * fragment44 data. */
+    .fragment44_select_pulse_data 0x8AF26580 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_1F5F20.o(.data)
+    }
+    /* fragment79's side flags at 0x8419E918 (sFlags, a function-scope static
+     * in func_84154948 so as1 shares the `lui $at` for its stores). NOLOAD view
+     * of bytes in the loaded image. */
+    .fragment79_side_flags_bss 0x8419E918 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/79/fragment79_3C40B0.o(.bss)
+    }
     /* fragment2's state block D_81900820 (defined in fragment2_code.c so as1
      * folds the shared-page `lui $at`, as in func_81900020), then a pad and
      * the on-screen blink counter (a function-scope static in func_8190037C)
@@ -364,6 +413,14 @@ SECTIONS
     .fragment53_models_10010_bss 0x86510010 (NOLOAD) : SUBALIGN(16)
     {
         build/src/fragments/53/fragment53_code.o(.bss)
+    }
+
+    /* func_8650515C's static table index D_8650D9D0, in fragment 53's
+     * loader-cleared area over the relocation tail. It is a function
+     * static so IDO keeps it in a register across the case-2 loop. */
+    .fragment53_index_D9D0_bss 0x8650D9D0 (NOLOAD) : SUBALIGN(16)
+    {
+        build/src/fragments/53/fragment53_28E360.o(.bss)
     }
 
     /* Fragment 21's saved argument pair and three state halfwords. Both
@@ -501,6 +558,9 @@ ASSERT(SIZEOF(.fragment73_preview_9A0_bss) == 32,
 
 ASSERT(SIZEOF(.fragment53_models_10010_bss) == 0x5A0,
        "fragment53 models must keep four 0x168-byte records");
+
+ASSERT(SIZEOF(.fragment53_index_D9D0_bss) == 16,
+       "fragment53 table index must keep its 16-byte compiler footprint");
 
 ASSERT(SIZEOF(.fragment32_anim_state_data) == 112,
        "fragment32 animation state must retain its compiler section footprint");

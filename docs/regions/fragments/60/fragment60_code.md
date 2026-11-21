@@ -454,3 +454,17 @@ retail receipt are under scratch/reset-final. Retail MD5 remains
 1561c75d11cedf356a8ddb1a4a5f9d5d. Existing accepted bodies are unchanged;
 only exact duplicate/unused declarations are cleaned up. Parent owns naming
 and integration. Meaning: initialize stage pools and default game state.
+
+## func_86A04C04
+
+Picks a side (0/1/2) for slot `arg0` by scanning the D_86A443F0 entry table
+(stride 0x14 at +0xE84) for an entry whose y lies within 5.5555553 of the
+slot's reference height (D_86A0F2AC..D_86A0F2B8), keeping that entry's x/z.
+A sentinel of 300 means "not found"; when nothing is found the result is a
+coin flip from two guRandom() calls.
+
+Matching notes: every 300 literal is spelled differently (300.0f, 300.00f,
+...) because retail re-materializes lui/mtc1 at each use and IDO CSEs float
+literals by spelling. The case-2 second search loop has no `break`. One
+`s32 pad` (marked FAKE) restores the 0x38 frame. The two trailing empty
+functions func_86A05334/func_86A0533C were part of the same asm file.

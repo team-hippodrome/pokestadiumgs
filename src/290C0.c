@@ -91,7 +91,8 @@ extern u8 D_80091F48[], D_80091F50[], D_80091F58[], D_80091F6C[];
 u8 D_800D1B40[36];
 u8 D_800D1B64[2];
 u8 D_800D1B66[2];
-u8 D_800D1B68[2728];
+u8 D_800D1B68[2720];
+u8 *D_800D2608[2];
 s32 D_800D2610[2];
 s32 D_800D2618[2];
 u8 D_800D2620[2][7];
@@ -443,8 +444,30 @@ void func_8002A80C(s32 arg0) {
     D_80091A10 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/290C0/func_8002A830.s")
+void func_8002A830(AudioBattleState *arg0) {
+    extern BattleMetadata84 D_800D1BEC[];
+    extern u8 *D_800D1C40[];
+    extern void func_8002AAD0(u8);
 
+    D_800D1B70 = arg0;
+    D_800D1B78[0] = (u8 *)D_800D1B70;
+    D_800D1B78[1] = (u8 *)(D_800D1B70 + 1);
+    D_800D1B98[0] = ((AudioRoster *)D_800D1B78[0])->metadata;
+    D_800D1BEC[0] = ((AudioRoster *)D_800D1B78[1])->metadata;
+    D_800D1B80[0] = (u8 *)D_800D1B98;
+    D_800D1B80[1] = (u8 *)D_800D1BEC;
+    D_800D1C40[0] = (u8 *)&((AudioRoster *)D_800D1B78[0])->metadata;
+    D_800D1C40[1] = (u8 *)&((AudioRoster *)D_800D1B78[1])->metadata;
+    D_800D1C48[0] = D_800D1B70[0];
+    D_800D2128[0] = D_800D1B70[1];
+    D_800D2608[0] = (u8 *)D_800D1C48;
+    D_800D2608[1] = (u8 *)D_800D2128;
+    if (D_800D1B78[0][18] != 0 || D_800D1B78[1][18] != 0) {
+        func_8002AAD0(1);
+    } else {
+        func_8002AAD0(0);
+    }
+}
 void func_8002A9C0(s32 arg0) {
     D_800D2630 = arg0;
 }
@@ -2799,7 +2822,26 @@ extern u8 D_800D2B30[];
 extern u8 D_800D27A0[];
 extern u16 D_800D27C6;
 extern f32 D_800D2B1C;
-extern u8 D_800D26B0[];
+typedef struct {
+    u32 time;
+    u16 freq;
+    u8 pad6[2];
+    u32 sweepPeriod;
+    u32 sweepNext;
+    s16 volume;
+    s16 step;
+    u32 envPeriod;
+    u32 envNext;
+    u16 duty_ticks[2];
+    s16 unk20;
+    u8 phase;
+    u8 pad23;
+    u32 nextPhase;
+    u32 period;
+    u32 length;
+    u8 enabled;
+} GbPulse1State;
+extern GbPulse1State D_800D26B0;
 extern u8 D_800D2710[];
 extern u8 D_800D2730[];
 
@@ -2863,8 +2905,8 @@ void func_80031A6C(s32 arg0, void *arg1)
   D_800D2AE4 = 0;
   D_800D27C6 = 0;
   D_800D2AE0 = 0;
-  *((u32 *) D_800D26B0) = 0;
-  D_800D26B0[0x30] = 0;
+  D_800D26B0.time = 0;
+  D_800D26B0.enabled = 0;
   D_800D26E8.unk0 = 0;
   D_800D26E8.unk24 = 0;
   *((u32 *) D_800D2710) = 0;
@@ -2963,7 +3005,212 @@ void func_80031E6C(u16 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/290C0/func_80031F00.s")
+// Game Boy channel 1 (pulse with sweep) sample renderer; sibling of GbAudio_RenderPulse2.
+#define P1 D_800D26B0
+#define GB_REG(n) (((u8 *)&D_800D2760)[(n) * 2])
+#define GB_DIRTY(n) (((u8 *)&D_800D2760)[(n) * 2 + 1])
+
+s16 func_80031F00(void) {
+    u32 i;
+    s32 changed;
+    s32 freqChanged;
+    s32 nr11;
+    u8 phase;
+    u16 freq;
+    s16 out;
+
+    changed = 0;
+    freqChanged = 0;
+    for (i = 0; i < 5; i++) {
+        if (GB_DIRTY(i) == 0) {
+            continue;
+        }
+        changed = 1;
+        if (i == 3 || i == 4) {
+            freqChanged = 1;
+        }
+        GB_DIRTY(i) = 0;
+    }
+
+    if (changed) {
+        if (freqChanged) {
+            P1.freq = ((u16)(GB_REG(4) & 7) << 8) | GB_REG(3);
+            P1.period = ((0x800 - P1.freq) * D_800D275C) >> 11;
+        }
+        switch ((GB_REG(1) & 0xC0) >> 6) {
+            case 0:
+                P1.duty_ticks[1] = P1.period >> 3;
+                if (P1.duty_ticks[1] < 64) {
+                    P1.duty_ticks[1] = 64;
+                }
+                phase = 1;
+                P1.duty_ticks[0] = P1.period - P1.duty_ticks[1];
+                goto duty_done;
+            case 1:
+                P1.duty_ticks[1] = P1.period >> 2;
+                if (P1.duty_ticks[1] < 64) {
+                    P1.duty_ticks[1] = 64;
+                }
+                phase = 0;
+                P1.duty_ticks[0] = P1.period - P1.duty_ticks[1];
+                goto duty_done;
+            case 2:
+                P1.duty_ticks[1] = P1.period >> 1;
+                if (P1.duty_ticks[1] < 64) {
+                    P1.duty_ticks[1] = 64;
+                }
+                phase = 0;
+                P1.duty_ticks[0] = P1.period - P1.duty_ticks[1];
+                goto duty_done;
+            case 3:
+                P1.duty_ticks[0] = P1.period >> 2;
+                if (P1.duty_ticks[0] < 64) {
+                    P1.duty_ticks[0] = 64;
+                }
+                phase = 1;
+                P1.duty_ticks[1] = P1.period - P1.duty_ticks[0];
+                goto duty_done;
+        }
+        P1.duty_ticks[1] = 0;
+        phase = 1;
+        P1.duty_ticks[0] = P1.period;
+    duty_done:
+
+        if (!(GB_REG(2) & 8) && !(GB_REG(2) & 0xF0)) {
+            P1.enabled = 0;
+            D_800D2760.unk2C &= 0xFFFE;
+            return 0;
+        }
+        if ((GB_REG(2) & 8) && !(GB_REG(2) & 0xF0) && !(GB_REG(2) & 7)) {
+            P1.enabled = 0;
+            D_800D2760.unk2C &= 0xFFFE;
+            return 0;
+        }
+
+        if (GB_REG(4) & 0x80) {
+            P1.time = 0;
+            P1.enabled = 1;
+            P1.phase = phase;
+            P1.unk20 = 0;
+            P1.nextPhase = 0;
+            P1.volume = (u8)(GB_REG(2) & 0xF0) << 7;
+            if (GB_REG(2) & 7) {
+                if (GB_REG(2) & 8) {
+                    P1.step = 0x800;
+                } else {
+                    P1.step = -0x800;
+                }
+                P1.envNext = P1.envPeriod = (GB_REG(2) & 7) * D_800D275C;
+            } else {
+                P1.step = 0;
+                P1.envPeriod = -1;
+                P1.envNext = -1;
+            }
+            P1.sweepPeriod = (((GB_REG(0) & 0x70) >> 4) * D_800D275C) >> 1;
+            P1.sweepNext = P1.time + P1.sweepPeriod;
+            if (P1.sweepPeriod == 0) {
+                P1.sweepPeriod = -1;
+                P1.sweepNext = -1;
+            }
+            if (GB_REG(4) & 0x40) {
+                P1.length = ((64 - (GB_REG(1) & 0x3F)) * D_800D275C) >> 2;
+            } else {
+                P1.length = -1;
+            }
+            GB_REG(4) &= ~0x80;
+        }
+        if (P1.enabled == 0) {
+            return 0;
+        }
+    } else if (P1.enabled == 0) {
+        return 0;
+    }
+
+    if (P1.length < P1.time) {
+        P1.enabled = 0;
+        D_800D2760.unk2C &= 0xFFFE;
+        return 0;
+    }
+
+    if (P1.sweepNext <= P1.time) {
+        P1.sweepNext += P1.sweepPeriod;
+        if (!(GB_REG(0) & 8)) {
+            freq = P1.freq + (P1.freq >> (GB_REG(0) & 7));
+            if (freq >= 0x800) {
+                P1.enabled = 0;
+                D_800D2760.unk2C &= 0xFFFE;
+                return 0;
+            }
+            P1.freq = freq;
+        } else {
+            freq = P1.freq - (P1.freq >> (GB_REG(0) & 7));
+            if (freq >= 0x800 || freq < 0) {
+                goto skip;
+            }
+            P1.freq = freq;
+        }
+        P1.period = ((0x800 - P1.freq) * D_800D275C) >> 11;
+        switch ((GB_REG(1) & 0xC0) >> 6) {
+            case 0:
+                P1.duty_ticks[1] = P1.period >> 3;
+                if (P1.duty_ticks[1] < 64) {
+                    P1.duty_ticks[1] = 64;
+                }
+                P1.duty_ticks[0] = P1.period - P1.duty_ticks[1];
+                break;
+            case 1:
+                P1.duty_ticks[1] = P1.period >> 2;
+                if (P1.duty_ticks[1] < 64) {
+                    P1.duty_ticks[1] = 64;
+                }
+                P1.duty_ticks[0] = P1.period - P1.duty_ticks[1];
+                break;
+            case 2:
+                P1.duty_ticks[1] = P1.period >> 1;
+                if (P1.duty_ticks[1] < 64) {
+                    P1.duty_ticks[1] = 64;
+                }
+                P1.duty_ticks[0] = P1.period - P1.duty_ticks[1];
+                break;
+            case 3:
+                P1.duty_ticks[0] = P1.period >> 2;
+                if (P1.duty_ticks[0] < 64) {
+                    P1.duty_ticks[0] = 64;
+                }
+                P1.duty_ticks[1] = P1.period - P1.duty_ticks[0];
+                break;
+            default:
+                P1.duty_ticks[1] = 0;
+                P1.duty_ticks[0] = P1.period;
+        }
+    }
+skip:
+
+    if (P1.envNext < P1.time) {
+        P1.volume += P1.step;
+        P1.envNext += P1.envPeriod;
+    }
+    while (P1.nextPhase < P1.time) {
+        P1.phase ^= 1;
+        P1.nextPhase += P1.duty_ticks[P1.phase];
+    }
+
+    if (!(GB_REG(2) & 8) && (P1.volume < 0)) {
+        P1.enabled = 0;
+        return 0;
+    }
+    if ((u16)P1.volume > 0x7800) {
+        P1.volume = 0x7800;
+        P1.step = 0;
+        P1.envNext = -1;
+    }
+    out = P1.volume;
+    if (P1.phase == 0) {
+        out = -out;
+    }
+    P1.time += 64;
+    return out;
+}
 
 s16 GbAudio_RenderPulse2(void) {
     s32 i;

@@ -127,7 +127,69 @@ void func_82204488(s16 *arg0) {
     arg0[1] = 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_82204494.s")
+typedef struct {
+    u8 r, g, b;
+} Color3_82204494;
+
+extern Color3_82204494 D_8220DB94;
+extern Color3_82204494 D_8220DB98;
+extern s16 D_8220DB9C;
+extern s16 D_8220DBA0;
+extern s16 D_8220DBA4;
+extern s32 D_8220EB90;
+
+#define ROUND_82204494(x) (s32)((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+
+// Steps a fade timer: arg0[0] enables it, arg0[1] counts frames. The colour
+// blends from D_8220DB94 to D_8220DB98 during the fade-in (D_8220DB9C frames),
+// holds (D_8220DBA0 frames, setting D_8220EB90), then the alpha fades out over
+// D_8220DBA4 frames. Writes RGBA to arg1[0x2C..0x2F] and toggles bit 1 of the
+// flags at arg1 + 2. Callers pass only arg0, hence the K&R definition.
+void func_82204494(arg0, arg1)
+    s16 *arg0;
+    u8 *arg1;
+{
+    s32 d;
+    s16 **pp = &arg0; // arg0 is reloaded from its stack home after each store
+    s32 active = 0;
+    f32 alpha = 0.0f;
+    f32 blend = 0.0f;
+    u8 *dst = arg1; // keeps arg1 in a1
+    Color3_82204494 from = D_8220DB94;
+    Color3_82204494 to = D_8220DB98;
+
+    if ((*pp)[0] != 0) {
+        s32 a = D_8220DB9C; // read before the counter store, as in retail
+        (*pp)[1]++;
+        active = 1;
+        if ((*pp)[1] < a) {
+            alpha = (f32)(*pp)[1] / (f32)a;
+            blend = alpha;
+        } else if ((*pp)[1] < a + D_8220DBA0) {
+            alpha = 1.0f;
+            blend = alpha;
+            // On one line with the next condition: IDO's as1 orders the
+            // instructions it hoists from both branches by source line.
+            D_8220EB90 = 1; } else if ((*pp)[1] < a + D_8220DBA0 + D_8220DBA4) {
+            blend = 1.0f;
+            d = (*pp)[1] - a - D_8220DBA0;
+            alpha = blend - (f32)d / (f32)D_8220DBA4;
+        } else {
+            blend = 1.0f;
+            active = 0;
+            (*pp)[0] = 0;
+        }
+    }
+    dst[0x2C] = ROUND_82204494((to.r - from.r) * blend) + from.r;
+    dst[0x2D] = ROUND_82204494((to.g - from.g) * blend) + from.g;
+    dst[0x2E] = ROUND_82204494((to.b - from.b) * blend) + from.b;
+    dst[0x2F] = ROUND_82204494(255.0f * alpha);
+    if (active && dst[0x2F] > 0) {
+        *(u16 *)(dst + 2) |= 2;
+    } else {
+        *(u16 *)(dst + 2) &= ~2;
+    }
+}
 
 /* mkdraft:func_82204744 begin */
 extern s16 D_822105E8;
@@ -175,7 +237,7 @@ extern s32 func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
 extern void func_80007328(Gfx **, s32, s32, u8 *);
 extern void func_80045DB4(u8 *, s32, s32, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
-extern void GfxRect_DrawTextured(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 
 // The retail words pack the colour bytes as g, b, r with alpha in the low byte;
 // PR/gbi.h's gDPSetPrimColor and gDPSetEnvColor write r, g, b, a, which makes IDO
@@ -272,7 +334,51 @@ void func_82204804(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_8220510C.s")
+extern u8 D_80094EC0[];
+extern void func_800088DC(void);
+void func_8220510C(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    u8 *base;
+    u16 *hdr;
+    s32 step;
+    s32 remaining;
+    s32 pad[3]; // FAKE
+    s32 count;
+    u8 *pix;
+    s32 i;
+    u8 *state;
+    s32 h;
+    s32 pad2[2]; // FAKE
+    f32 t;
+    f32 s;
+
+    base = D_8220D8D0 + arg1 * 52;
+    hdr = (u16 *)func_8004C990(3, *(u16 *)(base + 8));
+    step = func_82204780(hdr[0], 0x800);
+    remaining = hdr[1];
+    count = func_822047BC(remaining, step);
+    pix = func_8004CA60((u8 *)hdr);
+    func_82204804(arg1);
+    func_800088DC();
+    gSPDisplayList(D_800D0510++, D_80094EC0);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, *(s16 *)(base + 0x12));
+    state = (u8 *)(arg1 * 24 + (s32)&D_8220EB98);
+    for (i = 0; i < count; i++) {
+        h = (remaining < step) ? remaining : step;
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, *(u32 *)(*(u8 **)(state + 4) + 8));
+        t = (f32)step * (f32)i;
+        s = 0.0f;
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0x0000, G_TX_LOADTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 1023, 256);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0x0000, G_TX_RENDERTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC);
+        gDPSetTileSize(D_800D0510++, 0, (u32)(s * 4.0f), (u32)(t * 4.0f), (u32)((s + 31.0f) * 4.0f), (u32)((t + 31.0f) * 4.0f));
+        func_80045DB4(pix + hdr[0] * step * i, 0x100, 1, 4, *(u8 *)((u8 *)hdr + 5), hdr[0], step, 1, 0, 2, 2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(arg2, arg3 + i * step, hdr[0], h, 0, 0, 0x400, 0x400, 0x100000);
+        remaining -= h;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822056C0.s")
 
