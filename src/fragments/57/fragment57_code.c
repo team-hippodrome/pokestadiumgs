@@ -11,6 +11,20 @@ typedef struct Fragment57DialogContext {
 } Fragment57DialogContext;
 static Fragment57DialogContext sDialog;
 
+// The rest of the loader-cleared runtime memory after sDialog (0x8330AC38-0x8330ACE0), in address order, so that
+// func_83300CB0's function-scope statics land at 0x8330ACE0-0x8330ACF8.
+static s32 D_8330AC38[8];
+static s32 D_8330AC58;
+static f32 D_8330AC5C;
+static f32 D_8330AC60;
+static s32 D_8330AC64; // unreferenced
+static s32 D_8330AC68[0x19];
+static f32 D_8330ACCC;
+static f32 D_8330ACD0;
+static f32 D_8330ACD4;
+static f32 D_8330ACD8;
+static f32 D_8330ACDC;
+
 
 #ifdef VERSION_US
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300020.s")
@@ -192,7 +206,209 @@ void func_8330084C(unk_8330084C *arg0) {
     gSPDisplayList(gDL++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300CB0.s")
+typedef struct unk_D_8330A2B0 {
+    /* 0x00 */ u8 unk_00[0xC];
+    /* 0x0C */ s32 frame;
+    /* 0x10 */ s32 unk_10;
+    /* 0x14 */ u8 unk_14[0x30 - 0x14];
+    /* 0x30 */ s32 unk_30;
+    /* 0x34 */ u8 unk_34[0x40 - 0x34];
+    /* 0x40 */ s32 unk_40;
+    /* 0x44 */ s32 unk_44;
+    /* 0x48 */ s32 unk_48;
+    /* 0x4C */ u8 unk_4C[0x5C - 0x4C];
+    /* 0x5C */ f32 unk_5C;
+    /* 0x60 */ f32 unk_60;
+    /* 0x64 */ f32 unk_64;
+    /* 0x68 */ f32 unk_68;
+    /* 0x6C */ f32 unk_6C;
+    /* 0x70 */ f32 unk_70;
+    /* 0x74 */ f32 unk_74;
+    /* 0x78 */ f32 unk_78;
+    /* 0x7C */ u8 unk_7C[0x80 - 0x7C];
+    /* 0x80 */ f32 unk_80;
+    /* 0x84 */ u8 unk_84[0x98 - 0x84];
+    /* 0x98 */ f32 unk_98;
+    /* 0x9C */ u8 unk_9C[0xB8 - 0x9C];
+    /* 0xB8 */ f32 unk_B8;
+    /* 0xBC */ f32 unk_BC;
+    /* 0xC0 */ f32 unk_C0;
+    /* 0xC4 */ f32 cameraPos[3];
+    /* 0xD0 */ f32 cameraAt[3];
+    /* 0xDC */ f32 unk_DC;
+    /* 0xE0 */ f32 unk_E0;
+    /* 0xE4 */ u8 unk_E4[2][0x14];
+    /* 0x10C */ u8 unk_10C[4];
+} unk_D_8330A2B0;
+extern s32 func_83300020(s32);
+extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
+extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
+extern void func_800371B4(void *, f32 *, f32, s16, s16);
+extern u8 D_8330A380[];
+extern u8 D_8330A338[];
+extern u8 D_8330A32C[];
+extern u8 D_8330A374[];
+extern u8 D_8330A35C[];
+extern f32 D_8330ACDC;
+extern s16 D_833090D4;
+extern s16 D_833090D8;
+extern s16 D_833090DC;
+extern s32 D_8330ABD8;
+extern s16 D_83308760[];
+extern s16 D_83308770[];
+extern s16 D_83308A9C[];
+typedef struct { s32 w[17]; } Func83300CB0Entry;
+extern Func83300CB0Entry D_83308E9C[];
+extern f32 D_8330AC5C;
+extern f32 D_8330AC60;
+extern f32 D_8330ACCC;
+extern f32 D_8330ACD0;
+extern f32 D_8330ACD4;
+extern f32 D_8330ACD8;
+
+s32 func_83300CB0(s32 arg0, u8 *arg1) {
+    static f32 D_8330ACE0;
+    static s32 D_8330ACE4; // FAKE
+    static s32 D_8330ACE8;
+    static s16 *D_8330ACEC;
+    static s32 D_8330ACF0;
+    static s16 D_8330ACF4;
+    static s16 D_8330ACF6;
+    s32 ang; // FAKE
+    f32 d1, d2, d3, d4, d5;
+    s16 x1, y1, x2, y2, x3, y3, x4, y4, x5, y5;
+    f32 v70[3];
+    f32 v64[3];
+    f32 v58[3];
+    f32 vpad[3]; // FAKE
+    f32 v40[3];
+
+    D_8330ACE0 = sqrtf(D_8330A2B0.cameraPos[2] * D_8330A2B0.cameraPos[2] + D_8330A2B0.cameraPos[1] * D_8330A2B0.cameraPos[1]);
+    GeoCamera_SetPerspective((void *)arg1, 45.0f, D_8330A2B0.unk_DC, D_8330A2B0.unk_E0);
+    switch (D_8330A2B0.unk_10) {
+    case 1:
+        D_8330ACEC = D_83308760;
+        D_8330ACF0 = 0;
+        break;
+    case 2:
+        D_8330ACEC = D_83308770;
+        D_8330ACF0 = 1;
+        break;
+    case 3:
+        D_8330ACEC = D_83308A9C;
+        D_8330ACF0 = 2;
+        break;
+    case 4:
+        if (D_8330A2B0.unk_40 == 1) {
+            D_833090DC = (&D_833090D8)[2] + 0x40;
+            func_83300020(0);
+            D_8330ACF6 = 0;
+            D_8330ACF4 = 0;
+            d2 = 0.0f;
+            d3 = 0.0f;
+        }
+        func_80037120(D_8330A380, D_8330A338, &d1, &x1, &y1);
+        func_80037120(D_8330A380, D_8330A32C, &d2, &x2, &y2);
+        func_80037120(D_8330A338, D_8330A32C, &d3, &x3, &y3);
+        func_80037120(D_8330A374, D_8330A35C, &d4, &x4, &y4);
+        if ((d4 > 40.0f || d2 > 40.0f) && D_8330A2B0.unk_30 == 0) {
+            if (D_8330ACF4 > 0x4000) {
+                D_8330ACF4 = 0x4000;
+            }
+            D_8330ACF4 += 0x400;
+            func_800371B4(D_8330A380, v58, D_80087E50[(u16)D_8330ACF4 >> 4] * (d2 * 0.15), x2, y2);
+            Vec3f_SetComponentsDuplicate((f32 *)D_8330A380, v58[0], v58[1], v58[2]);
+            func_800371B4(D_8330A374, v64, D_80087E50[(u16)D_8330ACF4 >> 4] * (d4 * 0.05), x4, y4);
+            Vec3f_SetComponentsDuplicate((f32 *)D_8330A374, v64[0], v64[1], v64[2]);
+        } else {
+            D_8330A2B0.unk_48 = 1;
+            D_8330ACF4 = 0;
+            if (D_8330A2B0.unk_6C < d3) {
+                if (D_8330A2B0.unk_68 < d1 && D_8330A2B0.unk_30 == 1) {
+                    D_8330A2B0.unk_44 = 1;
+                    func_800371B4(D_8330A380, v70, d1 * D_8330A2B0.unk_60, x1, y1);
+                    if (D_8330ABD8 != 0x79 || !(D_8330A2B0.cameraAt[1] < D_8330A2B0.unk_80)) {
+                        Vec3f_SetComponentsDuplicate((f32 *)D_8330A380, v70[0], v70[1], v70[2]);
+                    }
+                    D_8330ACF4 += 0x800;
+                    D_8330ACF6 = 0;
+                }
+            } else if (D_8330A2B0.unk_44 == 1) {
+                if (d2 < 10.0f && D_8330A2B0.unk_30 == 0) {
+                    D_8330A2B0.unk_44 = 0;
+                }
+                if (D_8330ACF6 > 0x4000) {
+                    D_8330ACF6 = 0x4000;
+                }
+                func_800371B4(D_8330A380, v58, d2 * D_8330A2B0.unk_64, x2, y2);
+                Vec3f_SetComponentsDuplicate(v40, D_8330A2B0.cameraAt[0], D_8330A2B0.cameraAt[1], D_8330A2B0.cameraAt[2]);
+                Vec3f_SetComponentsDuplicate((f32 *)D_8330A380, v58[0], v58[1], v58[2]);
+                func_80037120(D_8330A380, D_8330A338, &d5, &x5, &y5);
+                if (d5 < D_8330A2B0.unk_68 || D_8330A2B0.unk_30 == 0) {
+                    D_8330ACF6 += 0x400;
+                    D_8330ACF4 = 0;
+                } else {
+                    Vec3f_SetComponentsDuplicate((f32 *)D_8330A380, v40[0], v40[1], v40[2]);
+                }
+            }
+        }
+        func_80038E14(arg1, D_8330A2B0.cameraAt[0] + D_8330A2B0.cameraPos[0] + D_8330A2B0.unk_B8, D_8330A2B0.cameraAt[1] + D_8330A2B0.cameraPos[1] + D_8330A2B0.unk_BC,
+                      D_8330A2B0.cameraAt[2] + D_8330A2B0.cameraPos[2] + D_8330A2B0.unk_C0, D_8330A2B0.cameraAt[0], D_8330A2B0.cameraAt[1], D_8330A2B0.cameraAt[2], 0);
+        /* fallthrough */
+    default:
+        D_8330A2B0.unk_DC = 100.0f;
+        GeoCamera_SetPerspective((void *)arg1, 45.0f, D_8330A2B0.unk_DC, D_8330A2B0.unk_E0);
+        func_80038E14(arg1,
+                      D_8330A2B0.cameraAt[0] + ((D_8330ACE0 * D_80088E50[(u16)D_833090D8 >> 4]) * D_80088E50[(u16)D_833090D4 >> 4] + 1.0f) + D_8330A2B0.unk_B8,
+                      D_8330A2B0.cameraAt[1] + D_80087E50[(u16)D_833090D8 >> 4] * D_8330ACE0 + D_8330A2B0.unk_BC,
+                      D_8330A2B0.cameraAt[2] + (D_8330ACE0 * D_80088E50[(u16)D_833090D8 >> 4]) * D_80087E50[(u16)D_833090D4 >> 4] + D_8330A2B0.unk_C0,
+                      D_8330A2B0.cameraAt[0], D_8330A2B0.cameraAt[1], D_8330A2B0.cameraAt[2], 0);
+        return 0;
+    }
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[15] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330ACDC = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[16])[D_8330A2B0.frame * D_8330ACE8];
+    GeoCamera_SetPerspective((void *)arg1, D_8330ACDC, D_8330A2B0.unk_DC, D_8330A2B0.unk_E0);
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[1] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330AC5C = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[2])[D_8330A2B0.frame * D_8330ACE8];
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[3] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330AC60 = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[4])[D_8330A2B0.frame * D_8330ACE8];
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[5] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330ACCC = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[6])[D_8330A2B0.frame * D_8330ACE8];
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[7] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330ACD0 = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[8])[D_8330A2B0.frame * D_8330ACE8];
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[9] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330ACD4 = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[10])[D_8330A2B0.frame * D_8330ACE8];
+    D_8330ACE8 = 1;
+    if (D_83308E9C[D_8330ACF0].w[11] == 1) {
+        D_8330ACE8 = 0;
+    }
+    D_8330ACD8 = (D_8330ACEC + D_83308E9C[D_8330ACF0].w[12])[D_8330A2B0.frame * D_8330ACE8];
+    func_80038E14(arg1, D_8330AC5C, D_8330AC60, D_8330ACCC, D_8330ACD0, D_8330ACD4, D_8330ACD8, 0);
+    return 0;
+}
+
 
 /* mkdraft:func_833015C8 begin */
 extern void *D_80094908;
@@ -298,29 +514,6 @@ s32 func_8330173C(s32 arg0, u8 *arg1) {
 
 // Fields of D_8330A2B0 that func_83303AB0 writes and func_83302AC8 prints. D_8330A344 (+0x94) and D_8330A368 (+0xB8) are
 // three-float vectors inside this object; unk_98 and unk_C0 alias their second and third components.
-typedef struct unk_D_8330A2B0 {
-    /* 0x00 */ u8 unk_00[0xC];
-    /* 0x0C */ s32 frame; // printed as "frame:%d"
-    /* 0x10 */ s32 unk_10; // below 3, func_83302AC8 prints D_8330AC5C..D_8330ACD8 instead of cameraPos/cameraAt
-    /* 0x14 */ u8 unk_14[0x5C - 0x14];
-    /* 0x5C */ f32 unk_5C;
-    /* 0x60 */ f32 unk_60;
-    /* 0x64 */ f32 unk_64;
-    /* 0x68 */ f32 unk_68;
-    /* 0x6C */ f32 unk_6C;
-    /* 0x70 */ f32 unk_70;
-    /* 0x74 */ f32 unk_74;
-    /* 0x78 */ f32 unk_78;
-    /* 0x7C */ u8 unk_7C[0x98 - 0x7C];
-    /* 0x98 */ f32 unk_98;
-    /* 0x9C */ u8 unk_9C[0xC0 - 0x9C];
-    /* 0xC0 */ f32 unk_C0;
-    /* 0xC4 */ f32 cameraPos[3]; // printed as "cam posx", "cam posy", "cam posz"
-    /* 0xD0 */ f32 cameraAt[3]; // printed as "cam latx", "cam laty", "cam latz" (look-at point)
-    /* 0xDC */ u8 unk_DC[0xE4 - 0xDC];
-    /* 0xE4 */ u8 unk_E4[2][0x14];
-    /* 0x10C */ u8 unk_10C[4];
-} unk_D_8330A2B0;
 
 extern unk_D_8330A2B0 D_8330A2B0;
 
@@ -480,7 +673,6 @@ extern s32 D_8330ABF8;
 extern s32 D_8330A258;
 extern s32 D_8330A270;
 extern s32 D_8330A240;
-extern s32 D_8330AC38;
 extern ColorAdjustment D_833091E0;
 extern s32 D_8330AA70[];
 extern u8 D_8330A638[];
@@ -2796,7 +2988,6 @@ extern s32 D_83308E38[];
 extern s32 D_8330907C[];
 extern s32 D_8330921C;
 extern s32 D_8330AA70[];
-extern s32 D_8330AC38;
 extern void StageContext_SetClearColor(u16 arg0);
 extern s32 StageFade_StartFromTransparent(s32 duration);
 extern s32 func_800225C4(s32);
@@ -3737,7 +3928,6 @@ extern s32 D_446E30;
 extern s32 D_447D00;
 extern f32 D_83308E30;
 extern s32 D_8330A4C4;
-extern s32 D_8330AC68;
 
 s32 func_8330853C(s32 arg0, u8 *arg1) {
     s32 sp24;
