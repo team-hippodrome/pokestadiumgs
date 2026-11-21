@@ -170,6 +170,13 @@ SECTIONS
         build/src/fragments/44/fragment44_1F0680.o(.bss)
     }
 
+    /* func_8AF1AE30's list scroll state (14 bytes; the other fragment 44 functions
+     * reach it through the D_8AF357C0/C2/C4 labels). */
+    .fragment44_scroll_state_bss 0x8AF357C0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/44/fragment44_207AF0.o(.bss)
+    }
+
     /* Tag and active flag used by the fragment 44 view callback. */
     .fragment44_view_state_bss 0x8AF395B8 (NOLOAD) : SUBALIGN(4)
     {
