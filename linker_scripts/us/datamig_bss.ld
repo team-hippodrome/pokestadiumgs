@@ -551,6 +551,14 @@ SECTIONS
     {
         build/src/fragments/55/fragment55_code.o(.bss)
     }
+
+    /* func_8FA00020's four function-static tile scroll offsets (retail
+     * D_8FA0208A..D_8FA02090), in fragment 75's reloc-table area that the
+     * game reuses as bss after loading. D_8FA0208A is only 2-aligned. */
+    .fragment75_scroll_bss 0x8FA0208A (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/75/fragment75_code.o(.bss)
+    }
 }
 
 ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
