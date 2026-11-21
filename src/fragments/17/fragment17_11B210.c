@@ -627,7 +627,76 @@ void func_8220CE10(Fragment17Panel *panel) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_11B210/func_8220CF9C.s")
+extern void Gfx_FillRectRgb(s16, s16, s16, s16, u8, u8, u8);
+extern u8 D_80094D90[];
+extern s16 D_82210C3A;
+extern s16 D_8220E060[];
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8006CEE8(u16);
+extern s32 func_8006CF70(s16);
+extern void func_8006D068(s8 *, s32, u16, s32, s32, s32);
+extern s32 func_8004C594(s32, s32);
+extern void func_8004C8A0(s8 *, s32, s32, s32);
+extern void Ui_DrawAnimatedTextureMarker(s16, s16);
+extern void func_800495F8(s32, s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_8004989C(s32);
+extern void func_800498C4(void);
+extern s32 func_800499EC(void);
+extern s32 func_8004C874(s32, s32);
+
+s32 func_8220CF9C(Fragment17Panel *panel, s32 arg1) {
+    s8 *text;
+    Fragment17HalfPair position;
+    s32 i;
+    u8 *data = (u8 *)D_82210C40;
+    s32 unused; // FAKE: keeps retail's frame slot
+    s8 buf[0x80];
+
+    if (panel) { } // FAKE
+    position.x = panel->pair_0A.x + panel->pair_12.x;
+    position.y = panel->pair_0A.y + panel->pair_12.y;
+    gSPDisplayList(D_800D0510++, D_80094D90);
+    Gfx_FillRectRgb(position.x + 0x3A, position.y + 0x28, 0x124, 0x59, 0, 0, 0);
+    Gfx_FillRectRgb(position.x + 0x3A, position.y + 0xB0, 0x124, 0x4A, 0, 0, 0);
+    func_8220CE10(panel);
+    if (data[4] != 0) {
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        func_8004D19C(position.x + 0x43, position.y + 0x28, func_8004C990(0x11D, 0), 0, 0);
+    }
+    if (arg1 != 0) {
+        Ui_DrawAnimatedTextureMarker(position.x + 0x3C, position.y + D_82210C3A * 0x16 + 0xB5);
+    }
+    func_800498C4();
+    func_800496A4(8, 0);
+    func_8004989C(0x18);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800495F8(position.x + 0x36, position.y + 0xA, 0, func_8004C874(0x17, 0x22));
+    func_800495F8(position.x + 0x36, position.y + 0x92, 0, func_8004C874(0x17, 0x23));
+    func_800495F8(position.x + panel->pair_06.x / 2, position.y + 0x105, 1, func_8004C874(0x17, 0x27));
+    for (i = 0; i != 3; i++) {
+        if (i == D_82210C3A) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_800495F8(position.x + 0x66, position.y + 0xB4 + i * 0x16, 0, func_8004C874(0x17, D_8220E060[i]));
+    }
+    func_8004972C(0xD2, 0, 0, 0xFF);
+    func_800495F8(position.x + 0x5C, position.y + 0x2A, 0, func_8004C874(0x12, func_8006CEE8(*(u16 *)data)));
+    func_800495F8(position.x + 0x5C, position.y + 0x40, 0, func_8004C874(0x12, func_8006CF70(*(s16 *)(data + 2))));
+    text = buf;
+    func_8006D068(text, 0x80, *(u16 *)data, *(s16 *)(data + 2), data[5], data[7]);
+    func_800495F8(position.x + 0x5C, position.y + 0x56, 0, (s32)text);
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    if ((*(u16 *)data & 0xFF00) == 0) {
+        func_8004C594(1, data[6]);
+        func_8004C8A0(text, 0x80, 0x17, 0x28);
+        func_800495F8(position.x + 0x139, position.y + 0x6C, 2, (s32)text);
+    }
+    return func_800499EC();
+}
 
 /* mkdraft:func_8220D3C4 begin */
 extern void Ui_DrawAnimatedTextureMarker(s16, s16);
