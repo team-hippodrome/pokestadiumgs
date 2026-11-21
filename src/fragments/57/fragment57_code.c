@@ -673,7 +673,6 @@ extern s32 D_8330ABF8;
 extern s32 D_8330A258;
 extern s32 D_8330A270;
 extern s32 D_8330A240;
-extern s32 D_8330AC38;
 extern ColorAdjustment D_833091E0;
 extern s32 D_8330AA70[];
 extern u8 D_8330A638[];
