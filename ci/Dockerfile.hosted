@@ -1,0 +1,68 @@
+# Public Pokemon Stadium GS ROM-gate baseline, built on a GitHub-hosted
+# ubuntu runner (see .github/workflows/rebuild-baseline-image.yml).
+#
+# ci/Dockerfile stages its derived state (asm/, assets/, lib and build
+# objects) from an incremental build on the Mac runner. A GitHub-hosted
+# runner has no persistent checkout, so this file runs the same steps as
+# ci/build-baseline.sh inside the image instead: extract, restore the
+# committed linker script, build, and require the retail checksum. It runs
+# natively on x86-64, with no emulation.
+#
+# The US baserom is never committed. The rebuild workflow copies it into the
+# build context from the private ghcr.io/team-hippodrome/pokestadiumgs-baserom
+# image, and the resulting image is pushed only to the private
+# ghcr.io/team-hippodrome/pokestadiumgs-ci package. Neither package may be
+# made public.
+
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    MIPS_BINUTILS_PREFIX=mips-linux-gnu- \
+    DETECTED_OS=linux \
+    PYTHON=/work/.venv/bin/python3
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        bash \
+        build-essential \
+        binutils-mips-linux-gnu \
+        ca-certificates \
+        gcc-multilib \
+        git \
+        make \
+        python3 \
+        python3-pip \
+        python3-venv \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /work
+
+COPY src ./src
+COPY include ./include
+COPY tools ./tools
+COPY linker_scripts ./linker_scripts
+COPY lib ./lib
+COPY yamls ./yamls
+COPY Makefile requirements.txt ./
+
+RUN make venv \
+    && make setup
+
+COPY baseroms ./baseroms
+
+# Same sequence as ci/build-baseline.sh. `make extract` regenerates
+# linker_scripts/us/pokestadiumgs.ld, but the committed one is the
+# authority, so put it back before building.
+RUN cp linker_scripts/us/pokestadiumgs.ld /tmp/pokestadiumgs.ld \
+    && make extract \
+    && cp /tmp/pokestadiumgs.ld linker_scripts/us/pokestadiumgs.ld \
+    && rm /tmp/pokestadiumgs.ld \
+    && make COMPARE=0 -j"$(nproc)" rom \
+    && md5sum -c baseroms/us/checksum.md5
+
+# As in ci/Dockerfile: swap the final ROM for the raw retail dump so the
+# gate can never mistake this baked seed for an already-verified build of
+# the PR's source.
+RUN cp baseroms/us/baserom.z64 build/pokestadiumgs-us.z64 \
+    && md5sum build/pokestadiumgs-us.z64 baseroms/us/baserom.z64

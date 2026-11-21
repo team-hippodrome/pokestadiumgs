@@ -18,6 +18,12 @@ on:
 
 permissions:
   contents: read
+  packages: read
+
+env:
+  # Built and pushed by rebuild-baseline-image.yml. Private: it contains
+  # the retail baserom.
+  GS_DECOMP_AGENT_IMAGE: ghcr.io/team-hippodrome/pokestadiumgs-ci:latest
 
 concurrency:
   group: public-pr-rom-gate-${{ github.event.pull_request.number || inputs.pr_number || inputs.ref || github.run_id }}
@@ -38,25 +44,26 @@ jobs:
     # external contributors" makes a maintainer approve every fork run before
     # it starts, so the approval is the trust decision. Keep that setting on.
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
-    # This label is intentionally different from the private repository's
-    # gs-decomp label. Register it only on a dedicated, credential-free Mac
-    # runner after the public baseline image has been built.
-    runs-on: [self-hosted, macOS, ARM64, gs-decomp-public]
+    # GitHub-hosted: free and unlimited for public repositories, 4 vCPU /
+    # 16 GB, x86-64, so the amd64 image runs natively.
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Mask self-hosted runner paths
+      - name: Pull the CI baseline image
         shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "::add-mask::${HOME}"
-          echo "::add-mask::${GITHUB_WORKSPACE}"
-          echo "::add-mask::${RUNNER_TEMP}"
+          set -euo pipefail
+          echo "$TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker pull --quiet --platform linux/amd64 "$GS_DECOMP_AGENT_IMAGE"
+          docker logout ghcr.io
 
       - name: Checkout the PR merge ref or selected branch
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.pr_number && format('refs/pull/{0}/merge', inputs.pr_number) || inputs.ref }}
           persist-credentials: false
-          set-safe-directory: false
 
       - name: Detect a coverage-only diff
         id: coverage-only
