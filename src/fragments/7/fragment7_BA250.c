@@ -1263,7 +1263,122 @@ void func_83003320(void *arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_830034C8.s")
+extern Gfx D_80094F50[];
+extern u8 D_8300BC40[];
+extern void func_818011EC(s16, s16, u16, u16, void *);
+extern f32 func_818014A8(void);
+extern void func_8004D998(s32, s32, u8 *, s32, s32);
+extern u8 D_8300F8A0[], D_8300F8A8[], D_8300CEC0[], D_8300CEE0[], D_8300CF20[], D_8300F82C[];
+extern u8 *WidgetTexture_GetDescriptor(void *);
+extern s32 func_8004D1FC(u8 *);
+typedef struct { u32 w : 16; u32 h : 16; } F7DescA;
+typedef struct { u32 pad : 5; u32 flag : 1; u32 rest : 26; } F7TeamFlagsA;
+#define ENT(o) (record + j * 0x58)[o]
+void func_830034C8(u8 *state, u8 *record, Fragment7DrawOrigin *origin, f32 weight) {
+    u8 *flags = state + 0x3FF20;
+    s32 j;
+
+    if (weight < 0.01) {
+        return;
+    }
+    if (record[0x10] == 0) {
+        return;
+    }
+    func_800498C4();
+    func_8180351C(D_8300F8A0);
+    func_8004972C(255, 255, 255, 255.0f * weight);
+    func_800495F8(origin->x + 121, origin->y + 23, 3, record);
+    func_800499EC();
+    WidgetTexture_DrawRecord(D_8300CEC0, (u8 *)origin, weight, 0);
+    func_81800C18(origin->x + 109, origin->y + 51, 5, *(u16 *)(record + 0xC));
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * weight);
+    func_818011EC(origin->x + 11, origin->y + 15, 56, 56, state + 0x32128);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    for (j = 0; j < 6; j++) {
+        Fragment7DrawOrigin rect;
+        rect = *origin;
+        if (ENT(0x10) != 0) {
+            rect.x += (j % 2) * 82 + 52;
+            rect.y += (j / 2) * 59 + 109;
+            if (flags[7] & (1 << j)) {
+                WidgetTexture_DrawRecord(D_8300CF20, (u8 *)&rect, func_818014A8() * weight, 0);
+            } else {
+                WidgetTexture_DrawRecord(D_8300CEE0, (u8 *)&rect, weight, 0);
+            }
+        }
+    }
+    WidgetTexture_DrawRecord(D_8300BC40, (u8 *)origin, weight, 0);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * weight);
+    for (j = 0; j < 6; j++) {
+        s32 x0 = (j % 2) * 82 + origin->x + 11;
+        s32 y0 = (j / 2) * 59 + origin->y + 83;
+        s32 x = (j % 2) * 82 + origin->x + 61;
+        s32 y = (j / 2) * 59 + origin->y + 109;
+        s32 digits = 3;
+        f32 f = weight;
+        if (ENT(0x10) != 0) {
+            if (ENT(0x2D) < 10) {
+                digits = 1;
+            } else if (ENT(0x2D) < 100) {
+                digits = 2;
+            }
+            if (flags[5] & (1 << j)) {
+                f *= func_818014A8();
+            }
+            gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * f);
+            func_8004D998(x0, y0, state + 0x3FF38 + j * 0xC80, 0, 1);
+            if (flags[7] & (1 << j)) {
+                gDPSetEnvColor(D_800D0510++, 255, 255, 0, func_818014A8() * (255.0f * weight));
+            } else {
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * weight);
+            }
+            func_81800C18(x, y, digits, ENT(0x2D));
+        }
+    }
+    if (*(u8 **)flags == NULL || ((F7TeamFlagsA *)(*(u8 **)flags + 0x40))->flag) {
+        F7DescA *desc;
+        desc = (F7DescA *)WidgetTexture_GetDescriptor(D_8300F82C);
+        func_8004D1FC((u8 *)desc);
+        for (j = 0; j < 6; j++) {
+            s32 x = (j % 2) * 82 + origin->x + 71;
+            s32 y = (j / 2) * 59 + origin->y + 91;
+            f32 f = weight;
+            if (ENT(0x10) != 0 && ENT(0x11) != 0) {
+                if (flags[6] & (1 << j)) {
+                    f *= func_818014A8();
+                }
+                if (desc == 0) {} // FAKE
+                if (x == 0) {} // FAKE
+                if (func_83000BC0(ENT(0x11), ENT(0x10))) {
+                    gDPSetEnvColor(D_800D0510++, 255, 170, 0, 255.0f * f);
+                } else {
+                    gDPSetEnvColor(D_800D0510++, 130, 130, 130, 255.0f * f);
+                }
+                func_81800020(x, y, desc->w, desc->h, 0, 0, 1.0f, 1.0f);
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_8004972C(255, 255, 255, 255.0f * weight);
+    func_8180351C(D_8300F8A8);
+    for (j = 0; j < 6; j++) {
+        s32 x = (j % 2) * 82 + origin->x + 11;
+        s32 y = (j / 2) * 59 + origin->y + 124;
+        if (ENT(0x10) != 0) {
+            if (flags[5] & (1 << j)) {
+                func_8004972C(255, 255, 0, func_818014A8() * (255.0f * weight));
+            } else {
+                func_8004972C(255, 255, 255, 255.0f * weight);
+            }
+            func_800495BC(x, y, (char *)(record + 0x44 + j * 0x58));
+        }
+    }
+    func_800499EC();
+}
+#undef ENT
 #endif
 
 #ifdef VERSION_US
@@ -1274,7 +1389,7 @@ typedef struct { u8 unk_00[31]; u8 mode; u8 unk_20[31]; u8 bank; u8 unk_40[0x3D9
 extern u8 D_8300CD00[];
 extern u8 D_8300F8B0[], D_8300CEA0[];
 extern Gfx D_80094F50[];
-extern void func_830034C8(void *, void *, void *, f32);
+extern void func_830034C8(u8 *, u8 *, Fragment7DrawOrigin *, f32);
 extern void func_818011EC(s16, s16, u16, u16, void *);
 void Fragment7_DrawProfileRecordRow(Fragment7ProfileRowDefinition *definition, void *memory, void *origin_memory) {
     Fragment7ProfileDisplayState *state = memory;
