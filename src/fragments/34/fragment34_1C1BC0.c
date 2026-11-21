@@ -954,7 +954,132 @@ void func_88505EDC(void)
 }
 /* mkdraft:func_88505EDC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C1BC0/func_88506018.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094DB8[];
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern void func_800495F8(s32 x, s32 y, s32 mode, const char *format, ...);
+extern void func_8004972C(s32, s32, s32, s32);
+extern s32 Envelope_Advance(void *);
+extern void GeoRender_AdvanceFrameCounter(void);
+extern void func_8003C6B8(s32);
+extern s8 D_8852300C[];
+extern s32 D_88523000;
+extern void func_88504AF0(s16 x, s16 y);
+extern void func_88504D9C(void);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+// Draws the three-slot menu panel: the prompt strings, each slot's name and "%s %05d" score
+// line from D_8850D678, and the two player-name rows selected by D_8852300C.
+#define MENU_STATE (*(s32 *)&D_885229A8)
+#define MENU_NODE(n) (*(s32 *)(*(u8 **)((u8 *)D_885229A0 + (n)) + 0x20))
+void func_88506018(void) {
+    const char *str;
+    s32 i;
+    s32 j;
+    u8 *ent;
+    s32 xs;
+
+    str = (const char *)func_8004C874(0xD, 9);
+    gSPDisplayList(D_800D0510++, D_80094DB8);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 0xAA);
+    GfxRect_DrawTextured(0x54, 0x6C, 0xC7, 0x4C, 0, 0, 0, 0, 0);
+    switch (MENU_STATE) {
+    case 2:
+    case 3:
+        GfxRect_DrawTextured(0x165, 0x6C, 0xC7, 0x4C, 0, 0, 0, 0, 0);
+        break;
+    }
+    if (MENU_STATE == 1) {
+        // ent doubles as the loop's dim flag (NULL / 1) and then as the packet pointer
+        // below; retail keeps all three in $s0. A separate s32 flag adds a stack home
+        // (frame 0x98) and a Gfx * block local adds a temp slot (frame 0x90).
+        ent = NULL;
+        if (MENU_NODE(4) == 2) {
+            for (i = 0; i != 3; i++) {
+                if (ent == NULL && D_885229B0[i + 1].unk_004 == -1) {
+                    gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 0x64);
+                    ent = (u8 *)1;
+                } else if (ent == (u8 *)1 && D_885229B0[i + 1].unk_004 != -1) {
+                    gDPSetPrimColor(D_800D0510++, 0, 0, 0, 0, 0, 0xAA);
+                    ent = NULL;
+                }
+                // x is i * 0x8E + 0x71: IDO strength-reduces it into a temp (t0, spilled at 0x50).
+                GfxRect_DrawTextured(i * 0x8E + 0x71, 0xEB, 0x82, 0x82, 0, 0, 0, 0, 0);
+            }
+        }
+        ent = (u8 *)D_800D0510++;
+        ((Gfx *)ent)->words.w0 = 0xFA000000;
+        ((Gfx *)ent)->words.w1 = Envelope_Advance((u8 *)D_885229A0 + 0x10) & 0xFF;
+        GfxRect_DrawTextured(0x165, 0x6C, 0xC7, 0x4C, 0, 0, 0, 0, 0);
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetRenderMode(D_800D0510++, 0x0F0A4000, 0x3008);
+    func_88504AF0(0x122, 0x68);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_800495F8(0x13F, 0x4F, 1, (const char *)func_8004C874(0x34, 2));
+    if (MENU_STATE == 1) {
+        if (MENU_NODE(8) == 2) {
+            func_800495F8(0x13F, 0x19C, 1, (const char *)func_8004C874(0x34, 3));
+        }
+        if (MENU_NODE(4) == 2) {
+            for (i = 0; i != 3; i++) {
+                if (D_885229B0[i + 1].unk_004 == -1) {
+                    continue;
+                }
+                xs = i * 0x8E + 0xB2;
+                ent = NULL;
+                switch (*(s32 *)((u8 *)&D_885229B0[i + 1] + 8)) {
+                case 0:
+                case 3:
+                case 4:
+                    ent = D_8850D678 + D_885229B0[i + 1].unk_004 * 20;
+                    break;
+                }
+                func_800496A4(8, 1);
+                if (ent == NULL) {
+                    func_800495F8(xs, 0xF3, 1, (const char *)func_8004C874(0x34, 4));
+                } else {
+                    func_800495F8(xs, 0xF3, 1, (const char *)(ent + 6));
+                }
+                func_800496A4(4, 0);
+                if (ent == NULL) {
+                    func_800495F8(xs, 0x10B, 1, "%s %s", str, func_8004C874(0x34, 5));
+                } else {
+                    func_800495F8(xs, 0x10B, 1, "%s %05d", str, *(u16 *)(ent + 4));
+                }
+            }
+        }
+    }
+    // A separate counter for this loop keeps i in $s1 (sharing i moves it to $s2).
+    for (j = 0; j != 2; j++) {
+        if (D_8852300C[j] == -1) {
+            continue;
+        }
+        xs = j * 0x111 + 0x96;
+        if (j == 0) {
+            if (*(s32 *)((u8 *)D_885229B0 + 8) == 0) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0x80);
+            }
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        ent = D_8850D678 + D_8852300C[j] * 20;
+        func_800496A4(0x10, 1);
+        func_800495F8(xs, 0x7B, 1, (const char *)(ent + 6));
+        func_800496A4(4, 0);
+        func_800495F8(xs, 0x9B, 1, "%s %05d", str, *(u16 *)(ent + 4));
+    }
+    func_800499EC();
+    GeoRender_AdvanceFrameCounter();
+    func_8003C6B8(D_88523000);
+    if (MENU_STATE == 1 && MENU_NODE(4) == 2) {
+        func_88504D9C();
+    }
+}
 
 extern void *Util_Malloc(s32);
 extern s32 D_885229B8;
