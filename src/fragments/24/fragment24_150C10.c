@@ -2052,7 +2052,46 @@ s32 func_82B05654(void *arg0, u32 arg1, s16 arg2, u8 *arg3, s32 arg4, s32 arg5) 
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B05920.s")
+#define BLK(kind, idx, tag) obj = func_82B018CC(D_82B126A8, 0x14); if (obj != NULL) { func_82B026E8((State02198 *)obj, kind, idx); func_82B0284C(obj, (u8 *)xy); func_82B00EA4(tag, 0, xy[0], xy[1], *(s16 *)((u8 *)obj + 0x48) + 8, *(s16 *)((u8 *)obj + 0x4A) + 8); }
+s32 func_82B05920(void) {
+    u8 *obj;
+    s32 i;
+    s32 j;
+    u8 *base;
+    s16 xy[2];
+    F24State12450 *state = &sState12450;
+
+    if (state->flags & 1) {
+        func_82B00EA4(0x46554C4C, -1, 0, 0, 0x280, 0x1E0);
+        BLK(3, 0, 0x4D535347)
+        BLK(4, 0, 0x53504331)
+        BLK(5, 0, 0x53504332)
+        for (i = 0; i < 5; i++) {
+            BLK(1, i, 0x43555030 + i)
+        }
+        BLK(2, 0, 0x434E4647)
+        BLK(6, 0, 0x43484C47)
+        BLK(7, 0, 0x45444954)
+        for (i = 0; i < 3; i++) {
+            BLK(9, i, 0x42544C30 + i)
+        }
+        for (i = 0; i < 2; i++) {
+            BLK(8, i, 0x504B4D30 + i)
+        }
+        BLK(0xA, 0, 0x45524F52)
+        base = (u8 *)state;
+        obj = D_82B12450;
+        *(s16 *)(base + 0x252) = 0;
+        for (j = 0; j < 5; j++) {
+            ((void **)(base + 0xB68))[*(s16 *)(base + 0x252)] = func_82B02800(1, j);
+            *(s16 *)(obj + 0x252) += 1;
+        }
+        ((void **)(D_82B12450 + 0xB68))[*(s16 *)(base + 0x252)] = func_82B02800(2, 0);
+        *(s16 *)(obj + 0x252) += 1;
+    }
+    return (state->flags & 1) != 0;
+}
+#undef BLK
 #endif
 
 #ifdef VERSION_US
