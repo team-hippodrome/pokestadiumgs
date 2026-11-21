@@ -326,13 +326,16 @@ SECTIONS
     {
         build/src/fragments/17/fragment17_1154C0.o(.bss)
     }
-    /* Loader-cleared color/state header and transition rows for fragment 19.
-     * The input sections contain the real objects and compiler alignment;
-     * the loaded relocation metadata retains its original bytes. */
-    .fragment19_state_5EE4_data 0x82305EE4 (NOLOAD) : SUBALIGN(2)
+    /* func_8230010C's sDuration (a function static) over the loaded word at
+     * 0x82305B84 in fragment 19's data. */
+    .fragment19_wipe_duration_5B84_data 0x82305B84 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/19/fragment19_121100.o(.data)
     }
+    /* Loader-cleared color/state header, transition rows and state halfwords
+     * (sState5EE4) for fragment 19. The input sections contain the real objects
+     * and compiler alignment; the loaded relocation metadata retains its
+     * original bytes. */
 
     .fragment19_transition_5EB0_bss 0x82305EB0 (NOLOAD) : SUBALIGN(2)
     {
@@ -625,9 +628,9 @@ ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 0x3150,
 ASSERT(SIZEOF(.fragment66_intro_state_data) == 16,
        "fragment66 intro state must retain its 16-byte aligned footprint");
 
-ASSERT(SIZEOF(.fragment19_state_5EE4_data) == 16,
-       "fragment19 secondary state must retain its native aligned input footprint");
-ASSERT(SIZEOF(.fragment19_transition_5EB0_bss) == 48,
+ASSERT(SIZEOF(.fragment19_wipe_duration_5B84_data) == 16,
+       "fragment19 wipe duration must retain its native aligned input footprint");
+ASSERT(SIZEOF(.fragment19_transition_5EB0_bss) == 64,
        "fragment19 transition records must retain their native aligned input footprint");
 
 ASSERT(SIZEOF(.fragment11_panel_color_cache_bss) == 16,

@@ -21,6 +21,13 @@ typedef struct F19TransitionRows {
     s16 unk_1A[4];
 } F19TransitionRows;
 static F19TransitionRows sTransitionRows;
+// Loader-cleared halfwords and float between the transition rows and sState5EE4.
+// They are defined here only so that IDO lays this object's .bss out in address order
+// (see datamig_bss.ld). Other code still names them D_82305EDC and D_82305EE0.
+static s16 sTransitionTail_5EDA;
+static s16 sTransitionTail_5EDC;
+static s16 sTransitionTail_5EDE;
+static f32 sTransitionTail_5EE0;
 typedef struct unk_D_82305A74 {
     /* 0x00 */ u8 unk_00[0xE];
     /* 0x0E */ s16 unk_0E;
@@ -38,7 +45,7 @@ typedef struct F19State5EE4 {
     s16 unk_02;
 } F19State5EE4;
 
-static F19State5EE4 sState5EE4 = { 0 };
+static F19State5EE4 sState5EE4;
 
 typedef struct unk_func_82302B8C {
     /* 0x00 */ u8 r;
@@ -100,9 +107,91 @@ s32 func_823000F8(void) {
     return D_82305EE4 == 2;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_8230010C.s")
+// One cell of the 15x20 screen-wipe grid at D_82305EE4 (rows of 20, stored flat).
+typedef struct {
+    s16 timer;
+    s16 pad;
+    f32 alpha;
+} WipeCell_8230010C;
+typedef struct {
+    s16 state;
+    s16 counter;
+    s16 reverse;
+    s16 pad;
+    WipeCell_8230010C cells[15 * 20];
+} Wipe_8230010C;
 
-extern void func_8230010C(s16 *);
+// Steps the grid wipe: opens alternating rows from opposite sides, fades each opened
+// cell over sDuration frames, and sets the state to 2 (or 0 when reversed) once every
+// cell is done. sDuration is a function static (at 0x82305B84, see datamig_bss.ld):
+// as an extern IDO reloads it after every cell store instead of keeping it in a temp.
+void func_8230010C(Wipe_8230010C *w) {
+    static s32 sDuration = 10;
+    s32 done = 1;
+    s32 lim;
+    s32 i;
+    s32 j;
+    WipeCell_8230010C *cell;
+    s32 idx;
+
+    w->counter++;
+    lim = w->counter * 2;
+    if (lim >= 20) {
+        lim = 19;
+    }
+    for (i = 0; i < 15; i++) {
+        for (j = 0; j < 20; j++) {
+            idx = i * 20 + j;
+            cell = &w->cells[idx];
+            if (!(i & 1)) {
+                if (j <= lim && cell->timer < 0) {
+                    cell->timer = 0;
+                }
+            } else {
+                if (j >= 19 - lim && cell->timer < 0) {
+                    cell->timer = 0;
+                }
+            }
+            if (cell->timer >= 0) {
+                if (cell->timer < sDuration) {
+                    cell->timer++;
+                    cell->alpha = (f32)cell->timer / (f32)sDuration;
+                } else {
+                    cell->alpha = 1.0f;
+                }
+                if (w->reverse) {
+                    cell->alpha = 1.0f - cell->alpha;
+                }
+            }
+        }
+    }
+    for (i = 0; i < 15; i++) {
+        for (j = 0; j < 20; j++) {
+            idx = i * 20 + j;
+            cell = &w->cells[idx];
+            if (!w->reverse) {
+                if (cell->alpha < 1.0f) {
+                    done = 0;
+                    break;
+                }
+            } else {
+                if (0.0f < cell->alpha) {
+                    done = 0;
+                    break;
+                }
+            }
+        }
+    }
+    if (done) {
+        if (!w->reverse) {
+            w->state = 2;
+            w->counter = 0;
+        } else {
+            w->state = 0;
+            w->counter = 0;
+        }
+    }
+}
 
 // Runs func_8230010C on D_82305EE4 only while that state halfword is 1; states 0 and 2
 // (tested by func_823000E8 and func_823000F8) do nothing here.
@@ -117,7 +206,7 @@ void func_82300368(void) {
             break;
 
         case 1:
-            func_8230010C(&D_82305EE4);
+            func_8230010C((Wipe_8230010C *)&D_82305EE4);
             break;
 
         case 2:
