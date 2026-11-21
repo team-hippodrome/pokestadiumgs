@@ -2723,7 +2723,117 @@ void func_82B07454(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B0760C.s")
+extern s16 D_82B12458;
+extern s16 D_82B12694;
+extern s16 D_82B1245A;
+extern s16 D_82B126A0;
+extern void *D_80087200;
+extern void func_800226C0();
+extern s32 func_82B02870(void);
+extern void func_82B02A34(void *, s32);
+extern s32 func_82B060A0(s32);
+
+void func_82B0760C(void) {
+    u8 *base = (u8 *)D_82B12450;
+    s32 confirm = 0;
+    s32 cancel = 0;
+    F24State12450 *state = &sState12450;
+    s32 prev;
+    s16 *sel = &D_82B12694;
+    s16 v;
+    s32 flag;
+    u8 *entry;
+    s32 i;
+
+    if (func_82B02870() != 0) {
+        prev = *sel;
+        if (func_82B01088() == -1) {
+            func_82B01054(2);
+        }
+        if (state->counter == 0 && (state->flags & 4)) {
+            state->counter = 1;
+            func_800226C0(5);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x200) {
+            do {
+                if (--*sel < 0) {
+                    *sel = prev;
+                }
+            } while (((s16 *)(base + 0x246))[*(s16 *)(base + 0x244)] == 0);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x100) {
+            do {
+                if (++*sel >= 3) {
+                    *sel = prev;
+                }
+            } while (((s16 *)(base + 0x246))[*(s16 *)(base + 0x244)] == 0);
+        }
+        if (prev != *sel) {
+            func_800226C0(1);
+        }
+        if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+            switch (*sel) {
+            case 0:
+                confirm = 1;
+                state->unk_0a = 0; // FAKE: makes IDO promote the field (store after the arg setup)
+                state->unk_0a = D_82B12458;
+                func_800226C0(0x93);
+                break;
+            case 1:
+                state->unk_02 = state->state;
+                state->state = 8;
+                state->flags |= 0x10;
+                state->counter = 0;
+                v = state->unk_08 | 0x100;
+                state->flags &= ~2;
+                state->flags &= ~4;
+                D_82B1245A = v;
+                func_800226C0(0xD2);
+                if (*(s16 *)((u8 *)state + 0x250) > 0) {
+                    entry = (u8 *)&D_82B12450;
+                    i = 0;
+                    do {
+                        func_82B02A34(*(void **)(entry + 0xB18), 0);
+                        i++;
+                        entry += 4;
+                    } while (i < *(s16 *)(base + 0x250));
+                }
+                break;
+            case 2:
+                cancel = 1;
+                func_800226C0(3);
+                break;
+            }
+        } else if (*(u16 *)((u8 *)D_80087200 + 8) & 0x4000) {
+            cancel = 1;
+            func_800226C0(3);
+        }
+    }
+    if (confirm) {
+        state->state = 9;
+        state->counter = 0;
+    } else if (cancel) {
+        state->flags &= ~2;
+        state->flags &= ~4;
+        if (*(s16 *)((u8 *)state + 0x250) > 0) {
+            entry = (u8 *)&D_82B12450;
+            i = 0;
+            do {
+                flag = 0;
+                if (**(s16 **)(entry + 0xB18) == 8) {
+                    flag = 1;
+                }
+                func_82B02A34(*(void **)(entry + 0xB18), flag);
+                i++;
+                entry += 4;
+            } while (i < *(s16 *)(base + 0x250));
+        }
+        func_82B060A0(1);
+    }
+    if (state->state != 6) {
+        func_82B01054(-1);
+    }
+}
 #endif
 
 #ifdef VERSION_US
