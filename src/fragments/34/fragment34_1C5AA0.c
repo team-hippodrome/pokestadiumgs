@@ -580,7 +580,56 @@ void func_8850998C(void) {
     } while (i != 2);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_88509A38.s")
+extern u8 D_8850D6D8;
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+void func_88509A38(void) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s16 dx;
+    unk_D_88523050 *ball;
+
+    k = 60;
+    func_80006F70(&D_800D0510, 0xF0, 0x50, 0xA2, 0x50);
+    ball = (unk_D_88523050 *)D_88523050;
+    for (i = 0; i < 2; i++, ball++) {
+        if (ball->unk_00 == 0) {
+            continue;
+        }
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 255, ball->unk_0E);
+        gDPLoadTextureBlock(D_800D0510++, &D_8850D6D8 + i * 0xA960 + 8, G_IM_FMT_RGBA, G_IM_SIZ_16b, 40, 40, 0,
+                            G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        if (ball->unk_00 == 1) {
+            for (j = 0; j < k; j++) {
+                dx = (MathUtil_Random16() % 33) * ball->unk_08 / 40;
+                if (MathUtil_Random16() & 0x8000) {
+                    dx = -dx;
+                }
+                GfxRect_DrawTextured(ball->unk_04 + dx, ball->unk_06 + j, 60, 1, -16,
+                                     (s32)((((f32)j * 32.0f / 1.5f > 0.0f) ? 0.5f : -0.5f) + (f32)j * 32.0f / 1.5f) - 16,
+                                     0x2AB, 0x2AB, 0);
+            }
+        } else {
+            GfxRect_DrawTextured(ball->unk_04, ball->unk_06, 60, 60, -16, -16, 0x2AB, 0x2AB, 0);
+        }
+        if (ball->unk_10 == 0) {
+            continue;
+        }
+        for (j = 0; j < 10; j++) {
+            // FAKE: keeps k (60) live through the ghost loop so it gets s8 at entry
+            if (k == 0) {}
+            if (ball->unk_12[j].unk_04 != 0) {
+                gDPPipeSync(D_800D0510++);
+                gDPSetEnvColor(D_800D0510++, 255, 255, 255, ball->unk_12[j].unk_04 * 255 / 20);
+                GfxRect_DrawTextured(ball->unk_12[j].unk_00, ball->unk_12[j].unk_02, 60, 60, -16, -16, 0x2AB, 0x2AB,
+                                     0);
+            }
+        }
+    }
+    func_80006F70(&D_800D0510, *(s16 *)(&D_88523148 + 0), *(s16 *)(&D_88523148 + 2), *(s16 *)(&D_88523148 + 4),
+                  *(s16 *)(&D_88523148 + 6));
+}
 
 // The open evolution view: the species index, its party data and the view handle.
 typedef struct Fragment34EvolutionState {
@@ -1238,9 +1287,6 @@ extern s32 D_8850D670;
 extern u32 D_8850D674;
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
 extern void func_8850BDE8(void);
-// func_88509A38 is still GLOBAL_ASM earlier in this file, so its prototype has to be here;
-// an implicit declaration makes IDO color the later D_8850D674 load as v1, not v0.
-extern void func_88509A38(void);
 extern void func_8850AFDC(u8 *, s16, s16, f32, s16, s16, s16);
 extern void func_8850BACC(s16, s16, f32, s16, s16, s16);
 extern void func_8850C514(s16, s16, f32, s16, s16, s16);
