@@ -2,7 +2,48 @@
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA00020.s")
+extern Gfx *D_800D0510;
+extern s32 D_8FA02028;
+extern Gfx D_8FA01A38[];
+extern u8 *func_8004CA60(u8 *);
+extern s32 func_8004CA10(u8 *);
+extern s32 func_8004CA24(u8 *);
+extern s32 func_8004CA38(u8 *);
+extern s32 func_8004CA4C(u8 *);
+extern void func_80045DB4(u8 *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+void func_8FA00020(s16 x, s16 y, s16 w, s16 h) {
+    static s16 D_8FA0208A;
+    static s16 D_8FA0208C;
+    static s16 D_8FA0208E;
+    static s16 D_8FA02090;
+    u8 *tex = (u8 *)D_8FA02028;
+    u8 *img;
+    s16 width;
+    s16 height;
+    s16 size;
+    s16 fmt;
+
+    img = func_8004CA60(tex);
+    width = func_8004CA10(tex);
+    height = func_8004CA24(tex);
+    size = func_8004CA4C(tex);
+    fmt = func_8004CA38(tex);
+
+    gSPDisplayList(D_800D0510++, D_8FA01A38);
+    gDPSetPrimColor(D_800D0510++, 0, 0x37, 0, 0, 0xFF, 0xFF);
+    gDPSetEnvColor(D_800D0510++, 0, 0xFF, 0xFF, 0xFF);
+    D_8FA0208A += 3;
+    D_8FA0208C -= 1;
+    D_8FA0208E -= 3;
+    D_8FA02090 += 1;
+    // The (s16)(u16) casts make IDO load each value once for both calls, as retail does.
+    func_80045DB4(img, 0, 0, fmt, (s16)(u16)size, (s16)(u16)width, (s16)(u16)height, 1, 0, 0, 0, 5, 5, 0xE, 0);
+    func_80045DB4(img, 0x100, 1, 4, (s16)(u16)size, (s16)(u16)width, (s16)(u16)height, 1, 0, 0, 0, 5, 5, 0xF, 0);
+    gDPSetTileSize(D_800D0510++, 0, D_8FA0208A, D_8FA0208C, D_8FA0208A + width - 1, D_8FA0208C + height - 1);
+    gDPSetTileSize(D_800D0510++, 1, D_8FA0208E, D_8FA02090, D_8FA0208E + width - 1, D_8FA02090 + height - 1);
+    gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + w) << 2, (y + h) << 2, 0, 0, 0, 0x200, 0x400);
+}
 #endif
 
 #ifdef VERSION_US
@@ -209,7 +250,7 @@ extern void func_8003C6B8(s32);
 extern void func_8003F2C4(s32, s32, s32);
 extern void GeoRender_AdvanceFrameCounter(void);
 extern s32 ModelAnim_IsFinished(void *);
-extern void func_8FA00020(s32, s32, s32, s32);
+extern void func_8FA00020(s16, s16, s16, s16);
 extern void func_8FA00AC8(void);
 
 extern s32 D_8FA01D30[];
