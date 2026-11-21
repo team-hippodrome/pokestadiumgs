@@ -95,7 +95,12 @@ jobs:
       - name: Build and compare against the retail checksum
         if: steps.coverage-only.outputs.skip != 'true'
         shell: bash
-        run: bash ci/gate-pr.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/pokestadiumgs-gate-out"
+        # The container runs as root with every capability dropped, so it
+        # cannot write into a runner-owned directory; make /out writable.
+        run: |
+          mkdir -p "$RUNNER_TEMP/pokestadiumgs-gate-out"
+          chmod 0777 "$RUNNER_TEMP/pokestadiumgs-gate-out"
+          bash ci/gate-pr.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/pokestadiumgs-gate-out"
 
       - name: Upload gate and proposed coverage
         if: always()

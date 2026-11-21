@@ -71,7 +71,12 @@ jobs:
 
       - name: Generate coverage graph and reports
         shell: bash
-        run: bash ci/generate-coverage.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/coverage-reports"
+        # See pr-rom-gate.yml: the capability-less root container needs a
+        # world-writable /out.
+        run: |
+          mkdir -p "$RUNNER_TEMP/coverage-reports"
+          chmod 0777 "$RUNNER_TEMP/coverage-reports"
+          bash ci/generate-coverage.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/coverage-reports"
 
       - name: Upload only generated reports
         uses: actions/upload-artifact@v4
