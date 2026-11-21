@@ -237,7 +237,7 @@ extern s32 func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
 extern void func_80007328(Gfx **, s32, s32, u8 *);
 extern void func_80045DB4(u8 *, s32, s32, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
-extern void GfxRect_DrawTextured(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 
 // The retail words pack the colour bytes as g, b, r with alpha in the low byte;
 // PR/gbi.h's gDPSetPrimColor and gDPSetEnvColor write r, g, b, a, which makes IDO
@@ -334,7 +334,51 @@ void func_82204804(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_8220510C.s")
+extern u8 D_80094EC0[];
+extern void func_800088DC(void);
+void func_8220510C(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    u8 *base;
+    u16 *hdr;
+    s32 step;
+    s32 remaining;
+    s32 pad[3]; // FAKE
+    s32 count;
+    u8 *pix;
+    s32 i;
+    u8 *state;
+    s32 h;
+    s32 pad2[2]; // FAKE
+    f32 t;
+    f32 s;
+
+    base = D_8220D8D0 + arg1 * 52;
+    hdr = (u16 *)func_8004C990(3, *(u16 *)(base + 8));
+    step = func_82204780(hdr[0], 0x800);
+    remaining = hdr[1];
+    count = func_822047BC(remaining, step);
+    pix = func_8004CA60((u8 *)hdr);
+    func_82204804(arg1);
+    func_800088DC();
+    gSPDisplayList(D_800D0510++, D_80094EC0);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, *(s16 *)(base + 0x12));
+    state = (u8 *)(arg1 * 24 + (s32)&D_8220EB98);
+    for (i = 0; i < count; i++) {
+        h = (remaining < step) ? remaining : step;
+        gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, *(u32 *)(*(u8 **)(state + 4) + 8));
+        t = (f32)step * (f32)i;
+        s = 0.0f;
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0x0000, G_TX_LOADTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD);
+        gDPLoadSync(D_800D0510++);
+        gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 1023, 256);
+        gDPPipeSync(D_800D0510++);
+        gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0x0000, G_TX_RENDERTILE, 0, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD, G_TX_NOMIRROR | G_TX_WRAP, 5, G_TX_NOLOD);
+        gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC);
+        gDPSetTileSize(D_800D0510++, 0, (u32)(s * 4.0f), (u32)(t * 4.0f), (u32)((s + 31.0f) * 4.0f), (u32)((t + 31.0f) * 4.0f));
+        func_80045DB4(pix + hdr[0] * step * i, 0x100, 1, 4, *(u8 *)((u8 *)hdr + 5), hdr[0], step, 1, 0, 2, 2, 0, 0, 0, 0);
+        GfxRect_DrawTextured(arg2, arg3 + i * step, hdr[0], h, 0, 0, 0x400, 0x400, 0x100000);
+        remaining -= h;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822056C0.s")
 
