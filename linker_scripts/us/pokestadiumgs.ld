@@ -4083,10 +4083,12 @@ SECTIONS
         fragment54_DATA_START = .;
         fragments_54_fragment54_header = .;
         build/asm/us/data/fragments/54/fragment54_header.o(.data);
-        fragments_54_fragment54_code = .;
-        build/src/fragments/54/fragment54_code.o(.data);
         fragments_54_fragment54_data_data = .;
         build/asm/us/data/fragments/54/fragment54_data.data.o(.data);
+        fragments_54_fragment54_code = .;
+        build/src/fragments/54/fragment54_code.o(.data);
+        _2A0030_data = .;
+        build/asm/us/data/2A0030.data.o(.data);
         fragment54_DATA_END = .;
         fragment54_DATA_SIZE = ABSOLUTE(fragment54_DATA_END - fragment54_DATA_START);
         fragment54_RODATA_START = .;

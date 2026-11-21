@@ -234,9 +234,10 @@ SECTIONS
         build/src/fragments/67/fragment67_344D70.o(.bss)
     }
 
-    /* fragment54_code's per-player position records (file-scope static
-     * D_866098A0), 0x866098A0-0x86609E40. */
-    .fragment54_code_bss 0x866098A0 (NOLOAD) : SUBALIGN(16)
+    /* fragment54_code's .bss: player models (sPlayerModels, overlapping the
+     * relocation tail the loader clears), then the per-player position
+     * records (D_866098A0), 0x86607410-0x86609E40. */
+    .fragment54_code_bss 0x86607410 (NOLOAD) : SUBALIGN(16)
     {
         build/src/fragments/54/fragment54_code.o(.bss)
     }
@@ -514,12 +515,6 @@ SECTIONS
     {
         build/src/fragments/72/fragment72_code.o(.bss)
     }
-    /* Four player model records, cleared after consuming the fragment
-     * relocation metadata; the original loaded table bytes stay intact. */
-    .fragment54_player_models_data 0x86607410 (NOLOAD) : SUBALIGN(16)
-    {
-        build/src/fragments/54/fragment54_code.o(.data)
-    }
     /* Fragment 57's loader-cleared runtime memory: the 48-byte dialog record
      * sDialog, the camera/menu objects after it, then func_83300CB0's
      * function-scope statics (0x8330AC08-0x8330ACF8). */
@@ -617,8 +612,8 @@ ASSERT(SIZEOF(.fragment2_blink_bss) == 0x5E0,
 ASSERT(SIZEOF(.fragment24_state_12450_bss) == 48,
        "fragment24 state and parameter prefix must retain its compiler section footprint");
 
-ASSERT(SIZEOF(.fragment54_player_models_data) == 1440,
-       "fragment54 player models must occupy their original runtime footprint");
+ASSERT(SIZEOF(.fragment54_code_bss) == 0x2A30,
+       "fragment54_code's .bss must end at 0x86609E40");
 
 ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 0xF0,
        "fragment57 runtime bss must end after func_83300CB0's statics");
