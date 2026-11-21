@@ -19,7 +19,9 @@ docker run --rm --platform linux/amd64 \
     --entrypoint bash "$image" -c '
 set -euo pipefail
 mkdir -p /tmp/coverage/baseroms/us
-cp -a /src/src /src/yamls /src/linker_scripts /src/tools /tmp/coverage/
+# The container runs as root without CAP_CHOWN, so keeping the host owner of
+# the mounted checkout fails on Linux runners; copy everything else.
+cp -a --no-preserve=ownership /src/src /src/yamls /src/linker_scripts /src/tools /tmp/coverage/
 ln -s /work/baseroms/us/baserom.z64 /tmp/coverage/baseroms/us/baserom.z64
 cd /tmp/coverage
 cat yamls/us/header.yaml yamls/us/rom.yaml > pokestadiumgs-us.yaml

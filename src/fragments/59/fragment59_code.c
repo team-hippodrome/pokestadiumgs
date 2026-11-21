@@ -1,5 +1,68 @@
 #include "global.h"
 
+#ifdef VERSION_US
+typedef struct unk_D_8691A448_entry {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ s32 unk_0C;
+    /* 0x10 */ s32 unk_10;
+} unk_D_8691A448_entry; // size = 0x14
+
+typedef struct unk_D_8691A448 {
+    /* 0x000 */ unk_D_8691A448_entry entries[40];
+    /* 0x320 */ s32 unk_320;
+    /* 0x324 */ s32 unk_324;
+    /* 0x328 */ s32 unk_328;
+    /* 0x32C */ s32 unk_32C;
+    /* 0x330 */ s32 unk_330;
+    /* 0x334 */ s32 unk_334[4];
+    /* 0x344 */ s32 unk_344[4];
+    /* 0x354 */ s32 unk_354;
+    /* 0x358 */ s32 unk_358;
+    /* 0x35C */ s32 unk_35C;
+    /* 0x360 */ s32 unk_360;
+    /* 0x364 */ s32 unk_364;
+    /* 0x368 */ s32 unk_368;
+    /* 0x36C */ s32 unk_36C;
+    /* 0x370 */ s32 unk_370;
+    /* 0x374 */ s32 unk_374;
+    /* 0x378 */ s32 unk_378;
+    /* 0x37C */ s32 unk_37C;
+    /* 0x380 */ s32 unk_380;
+    /* 0x384 */ s32 unk_384;
+    /* 0x388 */ s32 unk_388;
+} unk_D_8691A448; // size = 0x38C
+
+typedef struct unk_D_8691AB78 {
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ s32 active;
+} unk_D_8691AB78; // size = 0xC
+
+// fragment59's .bss (0x8691A2C8..0x8691AD98), defined in address order so the
+// object's .bss matches retail (func_86909FAC's two counters follow it).
+s32 D_8691A2C8[14];
+u8 D_8691A300[0x14];
+s32 D_8691A314;
+s32 D_8691A318;
+s32 D_8691A31C;
+u8 D_8691A320[0x104];
+s32 D_8691A424;
+u8 D_8691A428[0x10];
+s32 D_8691A438[4];
+unk_D_8691A448 D_8691A448;
+unk_D_8691A448 D_8691A7D8; // backup copy of D_8691A448
+s32 D_8691AB68[4];
+unk_D_8691AB78 D_8691AB78[40];
+#define D_8691AB80 ((u8 *)D_8691AB78 + 8)
+u8 *D_8691AD58;
+u8 D_8691AD60[0x20];
+s32 D_8691AD80[4];
+s32 D_8691AD90;
+s32 D_8691AD94;
+#endif
+
 
 #ifdef VERSION_US
 /* mkdraft:GeoCallback_InitCamera begin */
@@ -59,14 +122,12 @@ void func_86900138_padding(void) {}
 #ifdef VERSION_US
 /* mkdraft:func_869001AC begin */
 extern u8 D_8690E990[];
-extern u8 D_8691A7D8[];
 extern u8 D_8691A2A0[];
 extern u8 D_86911448[];
 extern u8 D_86919D00[];
 extern u8 D_8690EBA0[];
 extern f32 D_8690EB4C[];
 extern s32 D_8691AB68[4];
-extern s32 D_8691AB78[];
 extern u8 *D_8691AD58;
 extern f32 D_8690EB3C;
 extern f32 D_8690EB40;
@@ -101,7 +162,7 @@ void func_869001AC(void) {
     *(unk_StateA2A0 *)D_8691A2A0 = *(unk_StateA2A0 *)D_8690E990;
     func_819006A0(*(void **)(D_8691A2A0 + 0x184));
     func_87F02684(D_86911448);
-    *(unk_StateA448 *)&D_8691A448 = *(unk_StateA448 *)D_8691A7D8;
+    *(unk_StateA448 *)&D_8691A448 = *(unk_StateA448 *)&D_8691A7D8;
     D_8690EB3C = D_8690EB4C[4];
     D_8690EB40 = D_8690EB4C[5];
     D_8690EB44 = D_8690EB4C[6];
@@ -117,7 +178,7 @@ void func_869001AC(void) {
         // comparison as D_8691AB78 != ... gives retail's bne s1,s3 operand order.
         i++;
         D_8691AB68[i - 1] = 0;
-    } while (D_8691AB78 != &D_8691AB68[i]);
+    } while ((s32 *)D_8691AB78 != &D_8691AB68[i]);
     switch ((*(s8 *)((*(u8 **)(D_8691AD58 + 0xC)) + 0x2181))) {
         case 0:
             *(s32 *)(D_8691A2A0 + 0x78) = 0;
@@ -270,7 +331,394 @@ s32 func_86900698(s32 arg0, u8 *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690073C.s")
+#include "color_adjustment.h"
+typedef struct {
+    u32 id;
+    s32 *frames;
+    s32 count;
+    u32 dlist;
+} UnkE438;
+extern s32 func_80001FF0(void);
+extern void func_87F0C650(u8 *);
+extern void func_87F0C694(u8 *, s32);
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(s32, void *);
+extern s32 func_8004EB58(s32, s32);
+extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 func_87F0AD98(s32, s32, s32);
+extern void func_8004DDF4(s32);
+extern ColorAdjustment func_87F0AD50(s32, s32, s32);
+extern void *func_8004DFEC(s32, s32, ColorAdjustment);
+extern s32 func_80041E2C();
+extern s32 func_80041C98(s32);
+extern s32 func_800437B4(s32, s32, s32, s32);
+extern s32 func_8004BA70(s32);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_87F024CC(void);
+extern void func_87F01870(s32);
+extern void func_87F01F34(s32);
+extern void func_87F00030(void);
+extern void func_80037E9C(s32, void *);
+extern void func_87F0252C(void *, void *, void *, s32);
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F1DC(u8 *);
+extern void func_8003F114(u8 *, s32, s32, s32);
+extern s32 func_8004C8C0(s32);
+extern s32 func_8004C990(s32, s32);
+extern s32 func_87F08E3C(s32, s32);
+extern s32 func_87F08DF8(s32, f32, f32, s32);
+extern void func_8003F018(u8 *);
+extern void func_80037E3C(u8 *, void *, s32);
+extern void func_8003F3BC(u8 *, s32);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern void func_8003EF60(u8 *);
+extern void func_8690CF8C(s32);
+extern void func_87F024F4(void *, void *, s32);
+extern void func_8690DF18(void);
+extern void func_81900154(void);
+extern void func_81900020(s32);
+extern void func_8003F03C(u8 *, void *);
+extern void func_87F06430(u8 *, s32);
+extern void func_8003F210(u8 *, s32);
+extern int guRandom(void);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void func_87F029B8(u8 *, s32);
+extern void func_87F0D48C(u8 *, s32, void *);
+extern void func_87F0DB3C(u8 *, s32, u8 *);
+extern void func_869001AC(void);
+extern void StageFade_StartFromOpaque(s32);
+extern void fragment64_main(s32);
+extern void func_87F00688(void);
+extern void func_800225C4(s32);
+extern s32 func_869004AC(s32, u8 *);
+extern s32 func_86900698(s32, u8 *);
+extern u8 D_8690EBC0[];
+extern s32 D_8690FAD0[];
+extern s32 D_8690FAE0[];
+extern s32 D_8690FAB0;
+extern s32 D_8690FAC0;
+extern s32 D_8690FC94;
+extern s32 D_8690FE3C;
+extern s32 D_8690FFE4;
+extern s32 D_86919CF0[];
+extern u8 D_8690E124[];
+extern u8 D_8690E19C[];
+extern u8 D_8690E1D0[];
+extern s32 D_86911290;
+extern s32 D_8691143C;
+extern s32 D_86919020;
+extern s32 D_86919030[];
+extern s32 D_8691A438[];
+extern s32 D_8690F9E0;
+extern s32 D_8690F9E4;
+extern u8 D_8690F938[];
+extern u8 D_8690F950[];
+extern u8 D_8690F968[];
+extern u8 D_8690FAF0[];
+extern u8 D_8690FB08[];
+extern u8 D_8690FC98[];
+extern u8 D_8690FCB0[];
+extern u8 D_8690FE40[];
+extern u8 D_8690FE58[];
+extern UnkE438 D_8690E438[];
+// FAKE: D_8690E438[17]'s fields as scalars, so retail's separate luis come out.
+extern u32 D_8690E548;
+extern s32 *D_8690E54C;
+extern u32 D_8690E554;
+extern u8 D_8690F980[];
+extern u8 D_86911448[];
+extern u8 D_86911460[];
+extern u8 D_8690EBA0[];
+extern u8 D_86919D00[];
+extern s32 D_86911294;
+extern u8 D_8690FFE8;
+extern u8 D_86910000[];
+extern Gfx *D_86911440;
+extern u8 D_8690F920[];
+extern u8 D_86911298;
+extern u8 D_869112B0[];
+extern s32 D_8691A424;
+extern u8 D_87F15B70[];
+extern u8 D_86919040;
+extern u8 D_86919064[];
+extern u8 D_869195E0;
+typedef struct { u8 pad[0x14]; u8 *unk14; u8 *unk18; } SkelF9;
+extern SkelF9 D_8690F9A0;
+extern SkelF9 D_8690F9C0;
+extern u8 D_8690FA88[];
+extern u8 D_87F119C0[];
+extern f32 D_8690E0B0[];
+extern f32 D_8690E0EC[];
+extern s32 D_8690F998;
+
+void func_8690073C(void) {
+    // Function-scope static: retail reloads it with its own lui every time.
+    // Zero-initialized so it is the object's .data, pinned at 0x8691ADB8.
+    static u8 *D_8691ADB8 = 0;
+    s32 pool;
+    s32 i;
+    u8 *p;
+    u8 *m;
+    u8 *obj;
+    s32 *s3;
+    s32 off; // FAKE: unused, keeps retail's stack slots
+    s32 type;
+    f32 *fa;
+    f32 *fb; // FAKE: unused, keeps retail's stack slots
+    u8 *arr;
+    u8 *bb;
+    f32 x;
+    f32 y;
+    f32 z;
+
+    if (func_80001FF0() == 0x3C) {
+        D_8690F998 = 1;
+    } else {
+        D_8690F998 = 0;
+    }
+    func_87F0C650(D_8691AD58 + 0x14);
+    if (*(u8 *)(*(s32 *)(D_8691AD58 + 0xC) + 0x2180) == 4) {
+        func_87F0C694(D_8691AD58 + 0x14, 0x14);
+    }
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    *(s32 *)(D_8691AD58 + 8) = func_80040E80(pool, D_8690EBC0);
+    for (i = 0; i < 4; i++) {
+        (&D_8690FAB0)[i] = func_8004EB58(pool, D_8690FAD0[i]);
+    }
+    for (i = 0; i < 4; i++) {
+        (&D_8690FAC0)[i] = func_8004EB58(pool, D_8690FAE0[i]);
+    }
+    D_8690FC94 = WidgetTree_RunMessagePanelSilent(pool, 0x75);
+    D_8690FE3C = WidgetTree_RunMessagePanelSilent(pool, 0x74);
+    D_8690FFE4 = WidgetTree_RunMessagePanelSilent(pool, 0x76);
+    D_86919CF0[0] = WidgetTree_RunMessagePanelSilent(pool, 0x50);
+    D_86919CF0[1] = WidgetTree_RunMessagePanelSilent(pool, 0x64);
+    D_86919CF0[2] = WidgetTree_RunMessagePanelSilent(pool, 0x65);
+    D_86919CF0[3] = WidgetTree_RunMessagePanelSilent(pool, 0x66);
+    D_86911290 = func_80040E80(pool, D_8690E124);
+    D_8691143C = func_80040E80(pool, D_8690E19C);
+    D_86919020 = func_80040E80(pool, D_8690E1D0);
+    MainPool_FinalizeAllocation(pool);
+
+    for (i = 0; i < 4; i++) {
+        ColorAdjustment tmp;
+        type = *(u8 *)(*(s32 *)(*(s32 *)(D_8691AD58 + 0xC) + i * 0x6C0 + 0x1C) + 4);
+        if (type == 0xAD) {
+            D_8691A438[i] = 1;
+            s3 = &D_86919030[i];
+            if (func_87F0AD98(*(s32 *)(D_8691AD58 + 0xC), 7, i) != 0) {
+                func_8004DDF4(0xBA);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                tmp = func_87F0AD50(*(s32 *)(D_8691AD58 + 0xC), 7, i);
+                *s3 = (s32)func_8004DFEC(pool, 0xBA, tmp);
+                MainPool_FinalizeAllocation(pool);
+            } else {
+                func_8004DDF4(0x72);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                tmp = func_87F0AD50(*(s32 *)(D_8691AD58 + 0xC), 7, i);
+                *s3 = (s32)func_8004DFEC(pool, 0x72, tmp);
+                MainPool_FinalizeAllocation(pool);
+            }
+        } else if (type == 0xAE) {
+            D_8691A438[i] = 0;
+            s3 = &D_86919030[i];
+            if (func_87F0AD98(*(s32 *)(D_8691AD58 + 0xC), 7, i) != 0) {
+                func_8004DDF4(0xCD);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                tmp = func_87F0AD50(*(s32 *)(D_8691AD58 + 0xC), 7, i);
+                *s3 = (s32)func_8004DFEC(pool, 0xCD, tmp);
+                MainPool_FinalizeAllocation(pool);
+            } else {
+                func_8004DDF4(0x77);
+                pool = MainPool_AllocState(main_pool_get_available(), 0);
+                tmp = func_87F0AD50(*(s32 *)(D_8691AD58 + 0xC), 7, i);
+                *s3 = (s32)func_8004DFEC(pool, 0x77, tmp);
+                MainPool_FinalizeAllocation(pool);
+            }
+        }
+    }
+
+    func_80041E2C();
+    D_8690F9E0 = func_800437B4(func_80041C98(1), 3, 0x28, 0x28);
+    D_8690F9E4 = func_8004BA70(1);
+    ModelRenderer_InitDisplayRoots();
+    func_87F024CC();
+    func_87F01870(*(s32 *)(D_8691AD58 + 0xC));
+    func_87F01F34(*(s32 *)(D_8691AD58 + 0xC));
+    func_87F00030();
+    func_80037E9C(0, D_8690F938);
+    func_80037E9C(0, D_8690F950);
+    func_80037E9C(0, D_8690F968);
+    func_87F0252C(D_8690F938, D_8690FAF0, D_8690FB08, 1);
+    func_87F0252C(D_8690F950, D_8690FC98, D_8690FCB0, 1);
+    func_87F0252C(D_8690F968, D_8690FE40, D_8690FE58, 1);
+
+    obj = func_87F025B8(D_8690FAF0, 0);
+    D_8691ADB8 = obj;
+    *(f32 *)(obj + 0x54) = 0.1f;
+    *(f32 *)(obj + 0x58) = 0.1f;
+    *(f32 *)(obj + 0x5C) = 0.1f;
+    *(f32 *)(obj + 0x48) = 0.0f;
+    *(f32 *)(obj + 0x4C) = 0.0f;
+    *(f32 *)(obj + 0x50) = 0.0f;
+    func_8003F1DC(obj + 0x24);
+    func_8003F114(D_8691ADB8 + 0x24, 0, -1, D_8690FC94);
+
+    obj = func_87F025B8(D_8690FC98, 0);
+    D_8691ADB8 = obj;
+    *(f32 *)(obj + 0x48) = 0.0f;
+    *(f32 *)(obj + 0x4C) = 0.0f;
+    *(f32 *)(obj + 0x50) = 0.0f;
+    *(f32 *)(obj + 0x54) = 0.1f;
+    *(f32 *)(obj + 0x58) = 0.1f;
+    *(f32 *)(obj + 0x5C) = 0.1f;
+    func_8003F1DC(obj + 0x24);
+    func_8003F114(D_8691ADB8 + 0x24, 0, -1, D_8690FE3C);
+
+    obj = func_87F025B8(D_8690FE40, 0);
+    D_8691ADB8 = obj;
+    *(f32 *)(obj + 0x48) = 0.0f;
+    *(f32 *)(obj + 0x4C) = 0.0f;
+    *(f32 *)(obj + 0x50) = 0.0f;
+    *(f32 *)(obj + 0x54) = 0.1f;
+    *(f32 *)(obj + 0x58) = 0.1f;
+    *(f32 *)(obj + 0x5C) = 0.1f;
+    func_8003F1DC(obj + 0x24);
+    func_8003F114(D_8691ADB8 + 0x24, 0, -1, D_8690FFE4);
+
+    for (i = 0; i < 17; i++) {
+        func_8004C8C0(D_8690E438[i].id);
+        D_8690E438[i].dlist = func_87F08E3C(func_8004C990(D_8690E438[i].id, *D_8690E438[i].frames), 0x0F000000);
+    }
+    func_8004C8C0(D_8690E548);
+    D_8690E554 = func_87F08DF8(func_8004C990(D_8690E438[17].id, *D_8690E54C), 0.0f, 0.0f, 0x0F000000);
+    func_8004C8C0(0x19D);
+    func_8004C8C0(0x19F);
+    func_8004C8C0(0x1A0);
+    func_80037E9C(0, D_8690F980);
+    func_87F0252C(D_8690F980, D_86911448, D_86911460, 0x50);
+
+    for (i = 0; i < 4; i++) {
+        m = D_86919D00 + i * 0x168;
+        func_8003F018(m);
+        func_80037E3C(m, func_869004AC, i);
+        *(f32 *)(m + 0x24) = 0.0f;
+        *(f32 *)(m + 0x28) = 0.0f;
+        *(f32 *)(m + 0x2C) = 0.0f;
+        *(f32 *)(D_86919D00 + i * 0x168 + 0x30) = 0.1f;
+        *(f32 *)(D_86919D00 + i * 0x168 + 0x34) = 0.1f;
+        *(f32 *)(D_86919D00 + i * 0x168 + 0x38) = 0.1f;
+        func_8003F114(m, 0, -1, D_86919CF0[i]);
+        func_8003F3BC(m, 0);
+        ModelAnim_SetEventFrame(m, *(s16 *)(D_8690EBA0 + i * 8 + 2));
+        func_8003EF60(m);
+    }
+    m = D_86919D00;
+    *(f32 *)(m + 0x24) = -157.5f;
+    *(f32 *)(m + 0x28) = 10.0f;
+    *(f32 *)(m + 0x2C) = 0.0f;
+    *(f32 *)(m + 0x18C) = -52.5f;
+    *(f32 *)(m + 0x190) = 10.0f;
+    *(f32 *)(m + 0x194) = 0.0f;
+    *(f32 *)(m + 0x2F4) = 52.5f;
+    *(f32 *)(m + 0x2F8) = 10.0f;
+    *(f32 *)(m + 0x2FC) = 0.0f;
+    *(f32 *)(m + 0x45C) = 157.5f;
+    *(f32 *)(m + 0x460) = 10.0f;
+    *(f32 *)(m + 0x464) = 0.0f;
+
+    func_8004C8C0(0x19F);
+    D_86911294 = func_87F08DF8(func_8004C990(0x19F, 0), 0.0f, 0.0f, 0x0F000000);
+    func_87F024F4(&D_8690FFE8, D_86910000, 0xC);
+    for (i = 0; i < 12; i++) {
+        func_8690CF8C(i);
+    }
+    func_8004C8C0(0x1A0);
+    D_86911440 = (Gfx *)func_87F08DF8(func_8004C990(0x1A0, 0x13), 0.0f, 0.0f, 0x0F000000);
+    func_80037E9C(0, D_8690F920);
+    func_87F0252C(D_8690F920, &D_86911298, D_869112B0, 1);
+    func_8690DF18();
+    func_81900154();
+    func_81900020(D_8691A424);
+
+    for (i = 0; i < 4; i++) {
+        func_8003F03C(&D_86919040 + i * 0x168, D_87F15B70);
+        func_87F06430(D_86919064 + i * 0x168, i);
+        *(f32 *)(&D_86919040 + i * 0x168 + 0x28) = 50.0f;
+        *(f32 *)(&D_86919040 + i * 0x168 + 0x38) = 0.06666667f;
+        *(f32 *)(&D_86919040 + i * 0x168 + 0x34) = 0.06666667f;
+        *(f32 *)(&D_86919040 + i * 0x168 + 0x30) = 0.06666667f;
+        func_8003F114(&D_86919040 + i * 0x168, 0, -1, D_86919030[i]);
+        func_8003F210(&D_86919040 + i * 0x168, 0);
+        ModelAnim_SetFrame(&D_86919040 + i * 0x168, (s16)(guRandom() % 20));
+    }
+    for (i = 0; i < 4; i++) {
+        func_8003F018(&D_869195E0 + i * 0x168);
+        func_80037E3C(&D_869195E0 + i * 0x168, func_86900698, i);
+        *(f32 *)(&D_869195E0 + i * 0x168 + 0x30) = 0.075f;
+        *(f32 *)(&D_869195E0 + i * 0x168 + 0x34) = 0.075f;
+        *(f32 *)(&D_869195E0 + i * 0x168 + 0x38) = 0.075f;
+    }
+    func_87F029B8(&D_8690F9A0, *(u8 *)(*(s32 *)(D_8691AD58 + 0xC) + 0x2182));
+    func_87F029B8(&D_8690F9C0, *(u8 *)(*(s32 *)(D_8691AD58 + 0xC) + 0x2182));
+    func_87F0D48C(D_8690FA88, *(s32 *)(D_8691AD58 + 0xC), D_87F119C0);
+
+    for (i = 0; i < 4; i++) {
+        fa = D_8690E0B0 + i * 3;
+        {
+        x = fa[0] / 10.0;
+        y = fa[1] / 10.0;
+        z = fa[2] / 10.0;
+        p = D_8690F9A0.unk18 + i * 0x18;
+        *(s32 *)(p + 0) = 0;
+        m = D_8690F9A0.unk18 + i * 0x18;
+        *(f32 *)(m + 4) = x;
+        *(f32 *)(m + 8) = y;
+        *(f32 *)(m + 0xC) = z;
+        }
+        arr = D_8690F9A0.unk14 + i * 0x18C;
+        *(f32 *)(arr + 0x54) = 1.0f;
+        *(f32 *)(arr + 0x58) = 1.0f;
+        *(f32 *)(arr + 0x5C) = 1.0f;
+        func_87F0DB3C(D_8690FA88, i, D_8690F9A0.unk14 + i * 0x18C + 0x24);
+        {
+        x = D_8690E0EC[i * 3 + 0] / 10.0;
+        y = D_8690E0EC[i * 3 + 1] / 10.0;
+        z = D_8690E0EC[i * 3 + 2] / 10.0;
+        s3 = (s32 *)(D_8690F9C0.unk18 + i * 0x18);
+        *s3 = 0;
+        obj = D_8690F9C0.unk18 + i * 0x18;
+        *(f32 *)(obj + 4) = x;
+        *(f32 *)(obj + 8) = y;
+        *(f32 *)(obj + 0xC) = z;
+        }
+        bb = D_8690F9C0.unk14 + i * 0x18C;
+        *(f32 *)(bb + 0x54) = 2.0f;
+        *(f32 *)(bb + 0x58) = 2.0f;
+        *(f32 *)(bb + 0x5C) = 2.0f;
+    }
+    func_869001AC();
+
+    if (*(u8 *)(*(s32 *)(D_8691AD58 + 0xC) + 0x2180) == 4) {
+        for (i = 0; i < 4; i++) {
+            func_8003F1DC(&D_86919040 + i * 0x168);
+            func_8003F114(&D_869195E0 + i * 0x168, 0, -1, D_86919030[i]);
+            func_8003F210(&D_869195E0 + i * 0x168, 0);
+            ModelAnim_SetFrame(&D_869195E0 + i * 0x168, (s16)(guRandom() % 20));
+            func_8003F3BC(&D_869195E0 + i * 0x168, 0);
+        }
+        StageFade_StartFromOpaque(0x14);
+        *(s32 *)D_8691AD58 = 4;
+        fragment64_main(0x19);
+        func_87F00688();
+        *(s32 *)D_8691AD58 = 4;
+        func_87F00688();
+        func_800225C4(0x28);
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
@@ -574,38 +1022,6 @@ void func_8690241C(void) {
 #endif
 
 #ifdef VERSION_US
-typedef struct unk_D_8691A448_entry {
-    /* 0x00 */ f32 x;
-    /* 0x04 */ f32 y;
-    /* 0x08 */ s32 unk_08;
-    /* 0x0C */ s32 unk_0C;
-    /* 0x10 */ s32 unk_10;
-} unk_D_8691A448_entry; // size = 0x14
-
-typedef struct unk_D_8691A448 {
-    /* 0x000 */ unk_D_8691A448_entry entries[40];
-    /* 0x320 */ s32 unk_320;
-    /* 0x324 */ s32 unk_324;
-    /* 0x328 */ s32 unk_328;
-    /* 0x32C */ s32 unk_32C;
-    /* 0x330 */ s32 unk_330;
-    /* 0x334 */ s32 unk_334[4];
-    /* 0x344 */ s32 unk_344[4];
-    /* 0x354 */ s32 unk_354;
-    /* 0x358 */ s32 unk_358;
-    /* 0x35C */ s32 unk_35C;
-    /* 0x360 */ s32 unk_360;
-    /* 0x364 */ s32 unk_364;
-    /* 0x368 */ s32 unk_368;
-    /* 0x36C */ s32 unk_36C;
-    /* 0x370 */ s32 unk_370;
-    /* 0x374 */ s32 unk_374;
-    /* 0x378 */ s32 unk_378;
-    /* 0x37C */ s32 unk_37C;
-    /* 0x380 */ s32 unk_380;
-    /* 0x384 */ s32 unk_384;
-    /* 0x388 */ s32 unk_388;
-} unk_D_8691A448; // size = 0x38C
 
 typedef struct unk_D_8690E558 {
     /* 0x00 */ u8 unk_00[0x14];
@@ -2973,15 +3389,14 @@ extern void func_87F0C930(void *);
             break;                                       \
         }                                                \
     }
-// D_8691A2C8..D_8691A2FC is one block defined here (pinned in datamig_bss.ld):
-// as1 then shares the store `lui $at`s, and the copies below alias.
-s32 D_8691A2C8[14];
+// D_8691A2C8..D_8691A2FC is one block (defined with the rest of the .bss at the
+// top of this file): as1 then shares the store `lui $at`s, and the copies below alias.
 #define D_8691A2D8 (D_8691A2C8 + 4)
 #define D_8691A2F0 (D_8691A2C8 + 10)
 void func_86909FAC(void) {
-    // Zero-initialized so they go to .data, pinned at 0x8691AD98 in datamig_bss.ld.
-    static s32 D_8691AD98 = 0;
-    static s32 D_8691AD9C = 0;
+    // The last two words of the object's .bss (0x8691AD98/0x8691AD9C).
+    static s32 D_8691AD98;
+    static s32 D_8691AD9C;
     s32 frame;
     s32 i;
     s32 flag;
@@ -3221,7 +3636,6 @@ void func_8690AA64(void) {
 #ifdef VERSION_US
 extern void *D_87F119DC;
 extern s32 D_87F119D8;
-extern u8 D_8691AB80[];
 extern u8 D_8691A2A0[];
 extern void func_87F026E8(s32, void *, u8 *, s32);
 
@@ -3439,16 +3853,8 @@ typedef struct {
     u32 unk20;
 } UnkE564;
 
-typedef struct {
-    u32 id;
-    s32 *frames;
-    s32 count;
-    u32 dlist;
-} UnkE438;
 
 extern UnkE564 D_8690E564[];
-extern UnkE438 D_8690E438[];
-extern UnkE438 D_8690E548;
 extern s32 D_8690E264[];
 extern s32 D_8690E2DC[];
 extern s32 D_8691A2C4;
@@ -3502,7 +3908,7 @@ void func_8690B2A8(s32 arg0, s32 arg1) {
                 break;
             }
         }
-        if (&D_8690E548 == &D_8690E438[index]) {
+        if ((UnkE438 *)&D_8690E548 == &D_8690E438[index]) {
             gDPPipeSync(D_800D0510++);
             gDPSetEnvColor(D_800D0510++, 0xC0, 0xC0, 0xC0, 0x80);
             gDPSetCombine(D_800D0510++, 0x50FFFF, 0xFFFFF238);
