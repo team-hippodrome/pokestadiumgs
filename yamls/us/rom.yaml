@@ -1161,6 +1161,8 @@
     - [0x1DC1F0, c,       fragments/40/fragment40_1DC1F0]
     - [0x1E0550, c,       fragments/40/fragment40_1E0550]
     - [0x1E19E0, data,    fragments/40/fragment40_data]
+    - [0x1E1F40, .rodata, fragments/40/fragment40_1DC1F0] # func_88B007A0 jump tables + file literals
+    - [0x1E2060, data,    fragments/40/fragment40_1E2060]
 
   - name: fragment41
     type: code
