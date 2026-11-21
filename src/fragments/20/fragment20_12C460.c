@@ -3640,8 +3640,126 @@ void func_8260E4A8(void *arg0, s32 arg1) {
     func_800499EC();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260E684.s")
+void func_8260E684(void *arg0, s32 arg1) {
+    s16 *config;
+    s32 heading;
+    s32 offset_x;
+    s32 offset_y;
+    s32 info_x;
+    s32 info_y;
+    u8 *entries;
+    s32 text;
+    char buffer[128];
+    s16 coords[2];
+    s32 i;
+    u8 *entry;
+    s32 draw_y;
+    s32 info_draw_x, info_draw_y;
+    s32 label_x, label_y;
+    s32 info_text;
+    s32 shadow_y;
+    s32 draw_x;
+    u8 *info;
+    volatile s32 shadow_x;
 
+    config = (s16 *)((u8 *)arg0 + 48);
+    info_x = 0;
+    info_y = 0;
+    entries = *(u8 **)((u8 *)arg0 + 56);
+    coords[0] = *(s16 *)((u8 *)arg0 + 20) + *(s16 *)((u8 *)arg0 + 16);
+    coords[1] = *(s16 *)((u8 *)arg0 + 22) + *(s16 *)((u8 *)arg0 + 18);
+    offset_x = 0;
+    offset_y = 0;
+    heading = 0;
+    switch (*(u16 *)config) {
+    case 0:
+        offset_x = 78;
+        offset_y = 9;
+        break;
+    case 2:
+        offset_x = 78;
+        offset_y = 9;
+        info_x=291;
+        info_y=120;
+        break;
+    case 3:
+        offset_x = 78;
+        offset_y = 9;
+        info_x=291;
+        info_y=100;
+        break;
+    case 1:
+        heading = func_8004C874(18,16);
+        offset_x = 100;
+        offset_y = 50;
+        info_x=291;
+        info_y=100;
+        break;
+    case 4:
+        heading = func_8004C874(18,16);
+        offset_x = 100;
+        offset_y = 50;
+        break;
+    case 5:
+        offset_x = 78;
+        offset_y = 19;
+        break;
+    case 6:
+        offset_x = 78;
+        offset_y = 9;
+        break;
+    case 7:
+        offset_x = 78;
+        offset_y = 9;
+        break;
+    }
+    func_800498C4();
+    func_800496A4(8,0);
+    if (heading != 0) {
+        func_8004972C(128,128,128,128);
+        func_800495F8(*(s16 *)((u8 *)arg0+36)/2 + coords[0] + 2,coords[1]+14,1,heading);
+        func_8004972C(255,255,255,255);
+        func_800495F8(*(s16 *)((u8 *)arg0+36)/2 + coords[0],coords[1]+12,1,heading);
+    }
+    i=0;
+    if (config[2] > 0) {
+        draw_x=coords[0]+offset_x;
+        draw_y=coords[1]+offset_y;
+        shadow_x=draw_x+2;
+        shadow_y=draw_y+2;
+        entry=entries;
+        do {
+        func_8004972C(128,128,128,128);
+        text = func_8004C874(18,*(s16 *)(entry+4));
+        label_x = shadow_x;
+        label_y = shadow_y;
+        func_800495F8(label_x,label_y,0,text);
+        if (i==config[1]) func_8004972C(255,255,0,255);
+        else if (*(s16 *)entry != 0) func_8004972C(255,255,255,255);
+        else func_8004972C(128,128,128,255);
+        text = func_8004C874(18,*(s16 *)(entry+4));
+        func_800495F8(draw_x,draw_y,0,text);
+            entry += 12;
+            draw_y += 25;
+            shadow_y += 25;
+            i++;
+        } while (i < config[2]);
+    }
+    if (config[3] != 0) {
+        info = *(u8 **)D_8261A5A0;
+        func_8004C594(2,*(s16 *)(info+140));
+        info_text=func_8004C8A0(buffer,128,18,19);
+        if (info_text != 0) {
+            func_8004972C(128,128,128,128);
+            info_draw_x=coords[0]+info_x;
+            info_draw_y=coords[1]+info_y;
+            func_800495F8(info_draw_x+2,info_draw_y+2,2,info_text);
+            func_8004972C(255,255,255,255);
+            func_800495F8(info_draw_x,info_draw_y,2,info_text);
+        }
+    }
+    func_800499EC();
+}
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260EA60.s")
 
 /* mkdraft:func_8260ED40 begin */

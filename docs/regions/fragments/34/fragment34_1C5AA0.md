@@ -130,3 +130,51 @@ product survives as `mtc1 $zero` + `cvt`.
   separate scalars `D_885230F4`/`D_885230F8`, IDO hoists the data reload
   above the view store; one struct keeps retail's order. `func_88509EC8` now
   uses the fields too (same bytes).
+
+
+## func_8850BDE8: scrolling texture generator
+
+The no-argument renderer resolves archive 329 entries 0 and 1, selects the
+32-by-32 render target at `D_8852304C`, uploads entry 1 to tile 1 and entry
+0 to tile 0, and draws one rectangle with the two-cycle argument. Tile
+coordinates use unsigned conversion after multiplication by four. It advances
+tile 0's coordinates by 0.75 and 5.75, subtracting 32 at the upper boundary,
+and tile 1's second coordinate by -2.5, adding 32 below zero. The other tile
+1 coordinate retains its initialized value. It finishes with a pipe sync
+and restores the active background-stage render target.
+
+`func_8850C948` creates that target through `func_800071A4(0, 2, 32, 32, 1)`.
+`func_8850C998` invokes this renderer when sequence flags 4 and 16 are both
+set. `func_80007328` aliases `GfxImage_SetRenderTarget`; `func_800088DC`
+aliases `BgStage_DrawFrame`, which selects the active stage image. These
+producer and consumer operations establish the target and rendering roles.
+The unknown function and coordinate names remain unchanged.
+//@src/fragments/34/fragment34_1C5AA0.c
+//@src/7A50.c
+//@src/8470.c
+//@linker_scripts/us/aliases.ld
+
+The four function-local static floats own the original 16 initialized zero
+bytes at `0x8850D370..0x8850D380` (ROM `0x1CA980..0x1CA990`). Their order
+and addresses are exact. The YAML data split and corresponding linker input
+order transfer only those bytes from the assembly data block; the following
+display lists retain their addresses. Function-local ownership lets stock IDO
+retain the original direct address reloads and float value lifetimes. External
+scalar declarations instead introduce address caching and redundant reloads.
+No new fake, unused frame padding, compiler flag or instruction rewrite is used.
+
+Validation targets master `b9f02079c40235569551c9e1546fa89156212b9f` plus
+this patch. After normal extraction, the forced syntax-enabled US build is:
+
+```sh
+source /workspace/toolchain/activate.sh
+make -W src/fragments/34/fragment34_1C5AA0.c -j4 VERSION=us rom
+cmp build/pokestadiumgs-us.z64 baseroms/us/baserom.z64
+git diff --check
+```
+
+The complete link prints `build/pokestadiumgs-us.z64: OK`, and the rebuilt
+ROM compares byte-for-byte with retail. MD5 is
+`1561c75d11cedf356a8ddb1a4a5f9d5d`. The 459 instruction words / 1836 bytes
+at ROM `0x1C93F8..0x1C9B24` and the 88-byte frame match exactly. All prior
+module function extents and text outside this owner are preserved.

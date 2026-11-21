@@ -33,7 +33,8 @@ typedef struct Fragment17ChoiceEntry {
 } Fragment17ChoiceEntry;
 extern Fragment17ChoiceEntry D_8220DEF4[];
 typedef struct unk_func_8220AC64_pair { s16 unk_00; s16 unk_02; } unk_func_8220AC64_pair;
-// Loader-cleared transition record at 0x822106B0. The scene's state machine
+// Loader-cleared transition record at 0x822106B0 (a .bss static, pinned in
+// datamig_bss.ld; +0x20/+0x22 are cleared by func_82208EB0). The scene's state machine
 // value is at +2 (also read as D_822106B2); func_82209360 sets the 0x14/0x18
 // scales and the 0x1E screen position when its zoom finishes.
 typedef struct F17TransitionRecord {
@@ -46,8 +47,10 @@ typedef struct F17TransitionRecord {
     f32 unk_18;
     s16 unk_1C;
     s16 unk_1E;
+    s16 unk_20;
+    s16 unk_22;
 } F17TransitionRecord;
-static F17TransitionRecord sTransitionRecord = { 0 };
+static F17TransitionRecord sTransitionRecord;
 extern s16 D_822106B2;
 extern s16 D_822106CC, D_822106CE;
 extern s16 D_822106BA;
@@ -238,7 +241,44 @@ extern void func_8220B900(void);
 extern void func_8220B984();
 extern void func_8220BF68(s32);
 extern void func_8220D560();
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82208EB0.s")
+extern s32 D_8220DEE0[][2];
+s32 func_82208EB0(void *arg0) {
+    F17TransitionRecord *rec = &sTransitionRecord;
+    s32 idx = *(s32 *)((u8 *)arg0 + 0x14);
+    Fragment17ChoiceEntry *e;
+
+    if (idx == 0) {
+        rec->transition.unk_02 = 0;
+        rec->unk_06 = 0;
+        if (rec->unk_00 < 0) {
+            rec->transition.state = 0;
+            rec->unk_08 = 1;
+        } else {
+            rec->transition.state = 3;
+            rec->unk_08 = rec->unk_00;
+        }
+        *(s16 *)&rec->unk_0A[0] = -1;
+        *(s16 *)&rec->unk_0A[4] = 0;
+        *(s16 *)&rec->unk_0A[6] = 0;
+        rec->unk_14 = 0.75f;
+        rec->unk_18 = 0.75f;
+        e = &D_8220DEF4[rec->unk_08];
+        if (*(s32 *)((u8 *)e + 8) != 0) {
+            rec->unk_06 |= 1;
+        } else {
+            rec->unk_06 &= ~1;
+        }
+        (&D_822106CC)[0] = *(s16 *)((u8 *)e + 0xC);
+        if (rec->unk_00 < 0) {
+            (&D_822106CC)[1] = -0x20;
+        } else {
+            (&D_822106CC)[1] = *(s16 *)((u8 *)e + 0xE);
+        }
+        rec->unk_20 = 0;
+        rec->unk_22 = 0;
+    }
+    *(s32 *)((u8 *)arg0 + 0x16C) = func_8004C990(D_8220DEE0[idx][0], D_8220DEE0[idx][1]);
+}
 
 extern s16 D_822106B8;
 extern s16 D_822106D4;
@@ -381,10 +421,99 @@ void func_8220980C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209974.s")
+extern s16 D_822106D0;
+extern s16 D_822106D2;
+extern s16 D_822106D6;
+// Moves the transition record's position (unk_1C/1E) from D_822106D4/D6 toward the
+// selected entry's corner over five frames, then snaps it and starts state 6.
+void func_82209974(void) {
+    s16 *state = (s16 *)D_822106B0;
+    F17TransitionRecord *rec = &sTransitionRecord;
+    Fragment17ChoiceEntry *entry;
+    s16 tx;
+    f32 progress;
+    f32 x;
+    f32 y;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_82209BA4.s")
+    entry = &D_8220DEF4[state[4]];
+    state[2]++;
+    if (((u16 *)state)[3] & 1) {
+        tx = *(s16 *)&entry->unk_04[8] - 16;
+    } else {
+        tx = *(s16 *)&entry->unk_04[8] + 16;
+    }
+    if (D_822106B4 < 5) {
+        progress = D_822106B4 / 5.0f;
+        x = state[18] + (tx - state[18]) * progress;
+        state[14] = (x > 0.0f ? 0.5f : -0.5f) + x;
+        y = state[19] + (*(s16 *)&entry->unk_04[10] + 16 - state[19]) * progress;
+        state[15] = (y > 0.0f ? 0.5f : -0.5f) + y;
+        D_822106D0 = (s32)((x > 0.0f ? 0.5f : -0.5f) + x) - state[18];
+        D_822106D2 = (s32)((y > 0.0f ? 0.5f : -0.5f) + y) - *(s16 *)&entry->unk_04[10];
+    } else {
+        rec->transition.state = 6;
+        rec->transition.unk_02 = 0;
+        rec->unk_1C = tx;
+        rec->unk_1E = *(s16 *)&entry->unk_04[10] + 16;
+        *(unk_func_8220AC64_pair *)&D_822106D4 = *(unk_func_8220AC64_pair *)&D_822106CC;
+    }
+}
 
+// Second half of the selection transition: lerps the record position toward the
+// selected entry's rect, snaps it into state 7 on the fifth frame, then sets the
+// zoom scale (C4/C8) from the remaining distance. The `x < 0` int literal makes
+// IDO load a fresh 0.0f as retail does, and the (s32) round casts give retail's
+// t-register rotation.
+void func_82209BA4(void) {
+    s16 *state = (s16 *)D_822106B0;
+    F17TransitionRecord *rec = &sTransitionRecord;
+    s16 *choice;
+    f32 progress;
+    f32 base;
+    f32 target;
+    f32 x;
+    f32 y;
+    f32 scale;
+    f32 factor;
+    s32 n;
+
+    choice = (s16 *)&D_8220DEF4[state[4]];
+    state[2]++;
+    if (state[2] >= 5) {
+        n = D_822106B4 - 5;
+        progress = n / 5.0f;
+        target = choice[8] + choice[6];
+        base = state[18];
+        x = (target - base) * progress + base;
+        state[14] = (x > 0.0f ? 0.5f : -0.5f) + x;
+        y = state[19] + (choice[7] + choice[9] - state[19]) * progress;
+        state[15] = (y > 0.0f ? 0.5f : -0.5f) + y;
+        D_822106D0 = (s32)((x > 0.0f ? 0.5f : -0.5f) + x) - state[18];
+        D_822106D2 = (s32)((y > 0.0f ? 0.5f : -0.5f) + y) - choice[7];
+        if (n == 5) {
+            rec->transition.state = 7;
+            rec->transition.unk_02 = 0;
+            rec->unk_1C = target;
+            rec->unk_1E = choice[9] + choice[7];
+            D_822106BA = rec->unk_08;
+        }
+        x = target - D_822106CC; // distance left
+        if (x < 0) {
+            x = -x;
+        }
+        scale = (x / 40.0f + 0.4f) * 0.75f;
+        if (scale > 0.75f) {
+            scale = 0.75f;
+        }
+        rec->unk_14 = scale;
+        base = func_822091E0(scale);
+        scale = D_822106C4;
+        factor = 1.0f - 0.9f * progress;
+        scale *= factor;
+        D_822106C8 = base * factor;
+        rec->unk_14 = scale;
+    }
+}
 
 void func_82209E90(void) {
     D_822106B0[5] = 0.0f;

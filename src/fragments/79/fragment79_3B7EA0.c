@@ -68,7 +68,105 @@ s32 func_841486B0(u8 arg0, u8 arg1) {
     }
     return v1;
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_841487A8.s")
+extern u8 *func_84154B64(u8);
+extern u8 *func_84154B0C(void);
+extern void func_8414A180(void *, u8, u8);
+extern void func_8414A144(u8 *);
+typedef struct {
+    u8 unk_00[2];
+    u8 effect;
+    u8 unk_03;
+    u8 unk_04[8];
+    s32 amount;
+    u8 unk_10[0x10];
+} Calc_841487A8;
+extern void func_84149D54(void *, u8, u8);
+extern void func_84149D0C(void *);
+extern s32 BattleRecord_HasMove(u8 *, u8);
+void func_841487A8(u8 *arg0) {
+    u8 side;
+    u8 other;
+    u8 move;
+    Calc_841487A8 calc;
+    u8 info[0xC];
+    u8 *rec;
+    u8 *otherRec;
+    s32 v;
+
+    side = arg0[0];
+    move = arg0[1];
+    other = 1 - side;
+    rec = func_84154B64(side);
+    otherRec = func_84154B64(other);
+
+    if (arg0[1] == 0) {
+        return;
+    }
+    func_84149D54(&calc, side, move);
+    func_8414A180(info, side, move);
+    switch (calc.effect) {
+        case 0x07:
+            return;
+        case 0x26:
+            if (!(otherRec[0x19] & 0x20)) {
+                return;
+            }
+            break;
+        case 0x5C:
+            if (*(u16 *)(rec + 0x26) & 0x20) {
+                return;
+            }
+            break;
+        case 0x6C:
+        case 0x7D:
+            if ((*(u16 *)(rec + 0x26) & 7) && !BattleRecord_HasMove(rec, 0xD6)) {
+                return;
+            }
+            break;
+        default:
+            if (*(u16 *)(rec + 0x26) & 0x20) {
+                return;
+            }
+            if ((*(u16 *)(rec + 0x26) & 7) && !BattleRecord_HasMove(rec, 0xD6)) {
+                return;
+            }
+            if (calc.unk_03 == 0) {
+                return;
+            }
+            break;
+    }
+    if (func_841486B0(other, arg0[1]) != 0) {
+        return;
+    }
+    func_84149D0C(&calc);
+    func_8414A144(info);
+    switch (calc.effect) {
+        case 0x27:
+        case 0x4B:
+        case 0x50:
+        case 0x91:
+            calc.amount = calc.amount * 0.4;
+            break;
+        case 0x97:
+            if (func_84154B0C()[0x198] != 2) {
+                calc.amount = calc.amount * 0.4;
+            }
+            break;
+        case 0x9B:
+            calc.amount = calc.amount * 0.65;
+            break;
+    }
+    if (*(u16 *)(arg0 + 4) < calc.amount) {
+        arg0[2] = move;
+        *(u16 *)(arg0 + 4) = calc.amount;
+    }
+    v = info[2] * calc.amount / 255;
+    if (arg0 == 0) {} // FAKE
+    if (*(u16 *)(arg0 + 6) < v) {
+        arg0[3] = move;
+        *(u16 *)(arg0 + 6) = v;
+    }
+}
 
 extern u8 *func_84154B64(u8);
 extern void func_841487A8(u8 *);

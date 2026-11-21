@@ -183,7 +183,29 @@ void func_8AF08000(void) {
 }
 /* mkdraft:func_8AF08000 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F5F20/func_8AF08390.s")
+extern f32 D_80087E50[];
+void func_8AF08390(void) {
+    static s32 *sObjs[7] = { &D_8AF2C690, &D_8AF2C708, &D_8AF2C780, &D_8AF2C7F8, &D_8AF2C870, &D_8AF2C8E8, NULL };
+    static u16 sPhase = 0;
+    s32 i;
+    u8 *obj;
+    s32 t;
+
+    for (i = 0; i < 6; i++) {
+        obj = (u8 *)sObjs[i];
+        *(s32 *)(obj + 0x6C) = -1;
+        t = sPhase;
+        if (i != D_8AF2C960) {
+            *(f32 *)(obj + 0x40) = 0.8f;
+            *(f32 *)(obj + 0x44) = D_80087E50[(u16)(t & 0xFFFF) >> 4] * 0.08f + 0.8f;
+        } else {
+            *(f32 *)(obj + 0x40) = 1.0f;
+            *(f32 *)(obj + 0x44) = D_80087E50[(u16)((u16)t + 0x4000) >> 4] * 0.1f + 1.0f;
+        }
+    }
+    sPhase += 0x1000;
+}
+
 
 s32 func_8AF00130(s32);
 s32 func_8AF180F4();
