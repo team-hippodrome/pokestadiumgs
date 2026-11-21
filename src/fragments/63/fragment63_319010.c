@@ -80,7 +80,74 @@ void func_87E15A78(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E15AD0.s")
+extern void func_80035A10(f32 *);
+extern void Vec3f_CrossProduct(f32 *, f32 *, f32 *);
+extern u32 func_8003570C(void);
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+extern f32 D_87E1B344[][3];
+void func_87E15AD0(f32 *arg0) {
+    s32 stride; // FAKE: a variable stride keeps the three element addresses as i * 6 products
+    f32 px;
+    f32 py;
+    f32 pz;
+    s32 pad[3]; // FAKE
+    f32 v80[3];
+    f32 v74[3];
+    f32 v68[3];
+    u32 a;
+    u32 b;
+    u32 c;
+    s32 i;
+    f32 x;
+
+    a = func_8003570C();
+    b = func_8003570C();
+    c = func_8003570C();
+    Vec3f_SetComponentsDuplicate(v80, (f32)a / 4294967296.0f * 2.0f - 1.0f, (f32)b / 4294967296.0f * 2.0f - 1.0f,
+                                 (f32)c / 4294967296.0f * 2.0f - 1.0f);
+    func_87E15A78(v80);
+    func_80035A10(v80);
+    a = func_8003570C();
+    b = func_8003570C();
+    c = func_8003570C();
+    // FAKE: the 1.00f spelling stops IDO from sharing the 1.0f register with the first vector
+    Vec3f_SetComponentsDuplicate(v68, (f32)a / 4294967296.0f * 2.0f - 1.00f, (f32)b / 4294967296.0f * 2.0f - 1.00f,
+                                 (f32)c / 4294967296.0f * 2.0f - 1.00f);
+    func_87E15A78(v68);
+    func_80035A10(v68);
+    Vec3f_CrossProduct(v74, v68, v80);
+    func_80035A10(v74);
+    Vec3f_CrossProduct(v68, v80, v74);
+    func_80035A10(v68);
+    arg0[0] = v80[0];
+    arg0[1] = v80[1];
+    arg0[2] = v80[2];
+    arg0[3] = 0.0f;
+    arg0[4] = v74[0];
+    arg0[5] = v74[1];
+    arg0[6] = v74[2];
+    arg0[7] = 0.0f;
+    arg0[8] = v68[0];
+    arg0[9] = v68[1];
+    arg0[10] = v68[2];
+    arg0[11] = 0.0f;
+    arg0[12] = x = 0.0f;
+    arg0[13] = 600.0f;
+    stride = 6;
+    arg0[14] = x;
+    arg0[15] = 1.0f;
+    for (i = 0; i < 8; i++) {
+        px = D_87E1B344[i][0] + x;
+        py = D_87E1B344[i][1] + 600.0f;
+        pz = D_87E1B344[i][2] + x;
+        Vec3f_SetComponentsDuplicate(&arg0[16 + i * stride], px, py, pz);
+        Vec3f_SetComponentsDuplicate(&arg0[19 + i * stride], 0.0f, 0.0f, 0.0f);
+        func_87E15874(&arg0[16 + i * stride], D_87E1B344[i], arg0);
+        arg0[19 + i * 6] += x;
+        arg0[20 + i * 6] += x;
+        arg0[21 + i * 6] += x;
+    }
+}
 
 void func_87E15E18(f32 *arg0, f32 *arg1, s32 *arg2, s32 arg3) {
     s32 i;
@@ -704,7 +771,7 @@ void func_87E17D40(u8 *arg0) {
 extern void *D_87E1EC88;
 extern void func_87F02684(u8 *);
 extern void func_87E17928(u8 *);
-extern void func_87E15AD0(u8 *);
+extern void func_87E15AD0(f32 *);
 
 // Re-initialises the record published through D_87E1EC88: the first four bytes
 // become (-1, 1, arg1, 0), the pointer is advanced 0x30 bytes to the field block
@@ -736,7 +803,7 @@ void func_87E17DAC(u8 *arg0, s32 arg1) {
     *(f32 *)(p + 0x14) = 400.0f;
     *(f32 *)(p + 0x18) = -20.0f;
     *(u8 *)((u8 *)D_87E1EC88 + 0x1BD) |= 1;
-    func_87E15AD0(arg0 + 0x348);
+    func_87E15AD0((f32 *)(arg0 + 0x348));
 }
 /* mkdraft:func_87E17DAC end */
 
