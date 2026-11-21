@@ -674,7 +674,7 @@ extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
 extern void func_800495BC(s32, s32, const char *, ...);
 extern void WidgetResources_DrawRecords(s32, s32, s32);
-extern void func_830043F0(void *, void *, void *, void *, f32, s32);
+extern void func_830043F0(void *, void *, void *, Fragment7DrawOrigin *, f32, s32);
 extern void func_81800C18(s32, s32, s32, s32);
 extern void Gfx_FillRectRgb(s16, s16, s16, s16, u8, u8, u8);
 extern void func_800498C4();
@@ -1350,7 +1350,133 @@ void func_830042F0(s32 arg0, void *arg1, u8 *arg2) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/7/fragment7_BA250/func_830043F0.s")
+typedef struct { u32 w : 16; u32 h : 16; } F7Desc;
+/* Text style slot read by func_8180351C (bytes 4-6) and passed by value as its first word. */
+typedef struct { s32 value; s8 unk4[4]; } F7TextSlot;
+typedef struct { u32 pad : 5; u32 flag : 1; u32 rest : 26; } F7TeamFlags;
+typedef struct { u8 b[0x490]; } T490;
+typedef struct { u8 b[0x1B64]; } T1B64;
+typedef struct { u8 b[0x4010]; } T4010;
+typedef struct { u8 b[0x1DC]; } T1DC;
+typedef struct { u8 b[0x4B00]; } T4B00;
+typedef struct { u8 b[0xC80]; } TC80;
+typedef struct { u8 species; u8 item; u8 pad2[0x1B]; u8 level; u8 pad1E[6]; char name[0x18]; } F7Mon;
+typedef struct { u8 hdr[0x24]; u16 u24; u8 pad26[2]; F7Mon mons[6]; u8 rest[0x4C]; } F7Slot;
+extern void func_8004D998(s32, s32, u8 *, s32, s32);
+extern void func_80060D1C(u8 *, u8 *);
+extern u8 *WidgetTexture_GetDescriptor(void *);
+extern s32 func_8004D1FC(u8 *);
+extern u8 D_8300F82C[];
+extern u8 D_8300BC40[], D_8300BC80[], D_8300BCC0[];
+extern void func_800495F8(s32, s32, s32, void *);
+extern void func_81800C18(s32, s32, s32, s32);
+void func_830043F0(void *state, void *team, void *visual, Fragment7DrawOrigin *origin, f32 weight, s32 compact) {
+    static F7TextSlot D_8300F8D8;
+    static F7TextSlot D_8300F8E0;
+    static F7TextSlot D_8300F8E8;
+    static F7TextSlot D_8300F8F0;
+    s32 i;
+    s32 j;
+
+    if (weight < 0.01f) {
+        return;
+    }
+    func_800498C4();
+    func_8004972C(255, 255, 255, 255.0f * weight);
+    func_8180351C(&D_8300F8D8);
+    func_800495F8(origin->x + 213, origin->y + 11, D_8300F8D8.value, (u8 *)team + 0x468);
+    func_8180351C(&D_8300F8E0);
+    func_800495F8(origin->x + 73, origin->y + 35, D_8300F8E0.value, (u8 *)team + 0xD);
+    func_8180351C(&D_8300F8E8);
+    func_800495F8(origin->x + 352, origin->y + 35, D_8300F8E8.value, (u8 *)team + 0x1E9);
+    func_800499EC();
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * weight);
+    func_818011EC(origin->x + 11, origin->y + 25, 56, 56, visual);
+    func_818011EC(origin->x + 359, origin->y + 25, 56, 56, (u8 *)visual + 0x2008);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    WidgetTexture_DrawRecord(D_8300BC40, (u8 *)origin, weight, 0);
+    if (compact == 0) {
+        return;
+    }
+    for (i = 0; i < 2; i++) {
+        Fragment7DrawOrigin rect;
+        rect = *origin;
+        rect.x += i * 246 + 106;
+        rect.y += 88;
+        WidgetTexture_DrawRecord(D_8300BCC0, (u8 *)&rect, weight, 0);
+        for (j = 0; j < 6; j++) {
+            Fragment7DrawOrigin rect2;
+            rect2 = *origin;
+            if (((F7Slot *)team)[i].mons[j].species != 0) {
+                rect2.x += (j % 2) * 82 + i * 246 + 11;
+                rect2.y += (j / 2) * 59 + 109;
+                WidgetTexture_DrawRecord(D_8300BC80, (u8 *)&rect2, weight, 0);
+            }
+        }
+    }
+    WidgetTexture_DrawRecord(D_8300BC40, (u8 *)origin, weight, 0);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255.0f * weight);
+    func_81800C18(origin->x + 125, origin->y + 88, 5, ((F7Slot *)team)[0].u24);
+    func_81800C18(origin->x + 371, origin->y + 88, 5, ((F7Slot *)team)[1].u24);
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 6; j++) {
+            s32 x0 = (j % 2) * 82 + i * 246 + origin->x + 11;
+            s32 y0 = (j / 2) * 59 + origin->y + 109;
+            s32 x1 = (j % 2) * 82 + i * 246 + origin->x + 61;
+            s32 y1 = (j / 2) * 59 + origin->y + 135;
+            s32 digits = 3;
+            if (((F7Slot *)team)[i].mons[j].species != 0) {
+                if (((F7Slot *)team)[i].mons[j].level < 10) {
+                    digits = 1;
+                } else if (((F7Slot *)team)[i].mons[j].level < 100) {
+                    digits = 2;
+                }
+                func_8004D998(x0, y0, ((T4B00 *)state)[i].b + j * 0xC80 + 0x3FF38, 0, 1);
+                func_81800C18(x1, y1, digits, ((F7Slot *)team)[i].mons[j].level);
+            }
+        }
+    }
+    if (compact == 0) {} // FAKE
+    if (((F7TeamFlags *)((u8 *)team + 0x464))->flag) {
+        F7Desc *desc;
+        desc = (F7Desc *)WidgetTexture_GetDescriptor(D_8300F82C);
+        func_8004D1FC((u8 *)desc);
+        for (i = 0; i < 2; i++) {
+            for (j = 0; j < 6; j++) {
+                s32 x = (j % 2) * 82 + i * 246 + origin->x + 71;
+                s32 y = (j / 2) * 59 + origin->y + 117;
+                if (((F7Slot *)team)[i].mons[j].item != 0) {
+                    if (func_83000BC0(((F7Slot *)team)[i].mons[j].item, ((F7Slot *)team)[i].mons[j].species)) {
+                        gDPSetEnvColor(D_800D0510++, 255, 170, 0, 255.0f * weight);
+                    } else {
+                        gDPSetEnvColor(D_800D0510++, 130, 130, 130, 255.0f * weight);
+                    }
+                    func_81800020(x, y, desc->w, desc->h, 0, 0, 1.0f, 1.0f);
+                }
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    {
+    u8 buf[0x80];
+    func_800498C4();
+    func_8004972C(255, 255, 255, 255.0f * weight);
+    func_8180351C(&D_8300F8F0);
+    for (i = 0; i < 2; i++) {
+        func_80060D1C(buf, (u8 *)&((F7Slot *)team)[i]);
+        func_800495BC(origin->x + i * 246 + 11, origin->y + 87, (char *)buf);
+        for (j = 0; j < 6; j++) {
+            s32 x = (j % 2) * 82 + i * 246 + origin->x + 11;
+            s32 y = (j / 2) * 59 + origin->y + 150;
+            func_80060D1C(buf, (u8 *)((F7Slot *)team)[i].mons[j].name);
+            func_800495BC(x, y, (char *)buf);
+        }
+    }
+    }
+    func_800499EC();
+}
 #endif
 
 #ifdef VERSION_US
@@ -1414,18 +1540,6 @@ extern void func_8004D998(s32, s32, u8 *, s32, s32);
 extern s32 func_8004D1FC(u8 *);
 extern void func_80060E48(void *, void *);
 extern u8 *WidgetTexture_GetDescriptor(void *);
-typedef struct { u32 w : 16; u32 h : 16; } F7Desc;
-/* Text style slot read by func_8180351C (bytes 4-6) and passed by value as its first word. */
-typedef struct { s32 value; s8 unk4[4]; } F7TextSlot;
-typedef struct { u32 pad : 5; u32 flag : 1; u32 rest : 26; } F7TeamFlags;
-typedef struct { u8 b[0x490]; } T490;
-typedef struct { u8 b[0x1B64]; } T1B64;
-typedef struct { u8 b[0x4010]; } T4010;
-typedef struct { u8 b[0x1DC]; } T1DC;
-typedef struct { u8 b[0x4B00]; } T4B00;
-typedef struct { u8 b[0xC80]; } TC80;
-typedef struct { u8 species; u8 item; u8 pad2[0x1B]; u8 level; u8 pad1E[6]; char name[0x18]; } F7Mon;
-typedef struct { u8 hdr[0x24]; u16 u24; u8 pad26[2]; F7Mon mons[6]; u8 rest[0x4C]; } F7Slot;
 #define ENTS ((u8 *)((T1DC *)team + slot))
 #define SL ((F7Slot *)team + slot)
 #define M (SL->mons[i])

@@ -22,10 +22,11 @@ SECTIONS
            "audio request tick address changed")
 
 
-    /* Fragment 7's text-style slots D_8300F8F8/D_8300F900 (function-scope
-     * statics of func_83004FC0) and D_8300F908/D_8300F910 (func_83005740),
-     * in the fragment's loaded data (zero in the data image). */
-    .fragment7_text_state_bss 0x8300F8F8 (NOLOAD) : SUBALIGN(4)
+    /* Fragment 7's text-style slots D_8300F8D8..D_8300F8F0 (function-scope
+     * statics of func_830043F0), D_8300F8F8/D_8300F900 (func_83004FC0) and
+     * D_8300F908/D_8300F910 (func_83005740), in the fragment's loaded data
+     * (zero in the data image). */
+    .fragment7_text_state_bss 0x8300F8D8 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/7/fragment7_BA250.o(.bss)
     }
