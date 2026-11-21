@@ -80,6 +80,7 @@ jobs:
             --platform linux/amd64 \
             --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
             --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --label "org.opencontainers.image.description=Private: contains the retail baserom. Never make this package public." \
             --tag "$GS_DECOMP_AGENT_IMAGE" \
             --file ci/Dockerfile.hosted \
             .

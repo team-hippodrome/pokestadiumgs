@@ -102,11 +102,33 @@ jobs:
           chmod 0777 "$RUNNER_TEMP/pokestadiumgs-gate-out"
           bash ci/gate-pr.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/pokestadiumgs-gate-out"
 
+      # The container that wrote /out holds the retail baserom and ran PR
+      # code, and artifacts of this public repo are downloadable. Upload only
+      # the two known reports, size-capped: COVERAGE.md (a few KB), and a
+      # trimmed gate.log, which pr-integration.yml reads to explain failures.
+      # Lines are cut to 300 characters and the log to its last 2000 lines,
+      # so a log can carry at most ~600 KB.
+      - name: Stage only the size-capped reports
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/pokestadiumgs-gate-out"
+          upload="$RUNNER_TEMP/pokestadiumgs-gate-upload"
+          mkdir -p "$upload"
+          if [ -f "$out/COVERAGE.md" ] && [ "$(stat -c %s "$out/COVERAGE.md")" -le 65536 ]; then
+            cp "$out/COVERAGE.md" "$upload/COVERAGE.md"
+          fi
+          if [ -f "$out/gate.log" ]; then
+            { grep -Ev '(Binning object|Assembling):' "$out/gate.log" || true; } \
+              | cut -c1-300 | tail -n 2000 > "$upload/gate.log"
+          fi
+
       - name: Upload gate and proposed coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: public-pr-rom-gate-${{ github.event.pull_request.number || inputs.pr_number || github.run_id }}
-          path: ${{ runner.temp }}/pokestadiumgs-gate-out/
+          path: ${{ runner.temp }}/pokestadiumgs-gate-upload/
           if-no-files-found: warn
           retention-days: 14
