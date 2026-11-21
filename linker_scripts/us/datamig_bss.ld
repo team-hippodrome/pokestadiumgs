@@ -138,12 +138,14 @@ SECTIONS
      * and the two-byte timers of func_8AB07C34, func_8AB07DC4 and
      * func_8AB07E6C at 0x8AB16A34/36/38. The fragment loader clears these
      * addresses after relocation; compiler BSS alignment has no load image
-     * and does not add fields to the timers. */
+     * and does not add fields to the timers. IDO rounds the input .bss up to
+     * 16 bytes, so the native aligned input footprint is 0xA0 (0x94 of
+     * statics, ending at 0x8AB16A3A, plus 12 bytes of pad). */
     .fragment45_message_timers_bss 0x8AB169A6 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/45/fragment45_22AB80.o(.bss)
     }
-    ASSERT(SIZEOF(.fragment45_message_timers_bss) == 0x94,
+    ASSERT(SIZEOF(.fragment45_message_timers_bss) == 0xA0,
            "fragment45_22AB80 .bss extent changed")
 
     /* Eight-byte loader state, cleared by Memmap_RelocateFragment.
