@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 
 #ifdef VERSION_US
@@ -224,7 +225,94 @@ void func_8F60051C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/74/fragment74_code/func_8F600610.s")
+s32 func_8F600610(void) {
+    s32 result = 0;
+    s16 *sel = &sRuntimeState.prefix.unk_06;
+    s16 *cur = &sRuntimeState.prefix.unk_04;
+    s16 *mode = &sRuntimeState.unk_08[3];
+    s16 *idx1 = &sRuntimeState.unk_08[1];
+    s16 *idx2 = &sRuntimeState.unk_08[2];
+    s16 *dirty = &sRuntimeState.unk_08[0];
+    s16 *cnt1 = &sRuntimeState.unk_10[2];
+    s16 *cnt2 = &sRuntimeState.unk_10[3];
+
+    if (D_80087200->buttonsRepeat & 0x800) {
+        (*sel)--;
+        if (*sel < 0) {
+            *sel = 0;
+        }
+    }
+    if (D_80087200->buttonsRepeat & 0x400) {
+        (*sel)++;
+        if (*sel >= 3) {
+            *sel = 2;
+        }
+    }
+    switch (*sel) {
+        case 0:
+            if (D_80087200->buttonsRepeat & 0x200) {
+                (*cur)--;
+                if (*cur < 0) {
+                    *cur = 0;
+                }
+            }
+            if (D_80087200->buttonsRepeat & 0x100) {
+                (*cur)++;
+                if (*cur >= 2) {
+                    *cur = 1;
+                }
+            }
+            if (D_80087200->buttonsPressed & 0x8000) {
+                if (*cur != *mode) {
+                    *mode = *cur;
+                    result = 2;
+                }
+            } else if (D_80087200->buttonsPressed & 0x4000) {
+                result = 1;
+            }
+            break;
+        case 1:
+            if (D_80087200->buttonsRepeat & 0x200) {
+                (*idx1)--;
+                if (*idx1 < 0) {
+                    *idx1 = *cnt1 - 1;
+                }
+            }
+            if (D_80087200->buttonsRepeat & 0x100) {
+                (*idx1)++;
+                if (*idx1 >= *cnt1) {
+                    *idx1 = 0;
+                }
+            }
+            if (D_80087200->buttonsPressed & 0x8000) {
+                *dirty = 1;
+                *idx2 = 0;
+            } else if (D_80087200->buttonsPressed & 0x4000) {
+                result = 1;
+            }
+            break;
+        case 2:
+            if (D_80087200->buttonsRepeat & 0x200) {
+                (*idx2)--;
+                if (*idx2 < 0) {
+                    *idx2 = *cnt2 - 1;
+                }
+            }
+            if (D_80087200->buttonsRepeat & 0x100) {
+                (*idx2)++;
+                if (*idx2 >= *cnt2) {
+                    *idx2 = 0;
+                }
+            }
+            if (D_80087200->buttonsPressed & 0x8000) {
+                *dirty = 1;
+            } else if (D_80087200->buttonsPressed & 0x4000) {
+                result = 1;
+            }
+            break;
+    }
+    return result;
+}
 
 extern s32 StageContext_GetFadeMode(void);
 extern void StageFade_StartFromTransparent(s32);
