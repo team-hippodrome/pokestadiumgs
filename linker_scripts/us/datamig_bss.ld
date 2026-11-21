@@ -22,6 +22,13 @@ SECTIONS
            "audio request tick address changed")
 
 
+    /* Fragment 7's text-colour slot D_8300F8F8, a function-scope static of
+     * func_83004FC0 in the fragment's loaded data (zero in the data image). */
+    .fragment7_text_state_bss 0x8300F8F8 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/7/fragment7_BA250.o(.bss)
+    }
+
     /* The preview initializer uses the work record in fragment 22's
      * loaded data. Keep IDO's static storage references on that record. */
     .fragment22_preview_state 0x827034C8 (NOLOAD) : SUBALIGN(4)
