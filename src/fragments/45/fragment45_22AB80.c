@@ -909,12 +909,94 @@ s32 func_8AB073F4(s32 arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_22AB80/func_8AB07538.s")
+extern s16 D_8AB11210[][3];
+extern void func_8AB00FF8(s16, s16);
+extern void func_8AB01140(s16, s16);
+s32 func_8AB07538(s32 arg0) {
+    static s16 D_8AB169A6;
+    // Loader-cleared state that other functions use by address (D_8AB16A1E,
+    // D_8AB16A2A), kept so the two counters below stay at 0x8AB16A2E/30.
+    // Split up because IDO 8-aligns .bss arrays of 8 bytes or more.
+    static s16 D_8AB169A8;
+    static s16 D_8AB169AA;
+    static s16 D_8AB169AC;
+    static u8 D_8AB169AE[0x80];
+    static s16 D_8AB16A2E;
+    static s16 D_8AB16A30;
+    s32 i;
+    s32 result;
+    s32 val;
+
+    result = 0xD;
+    val = *(s16 *)(D_8AB12CB0 + 2);
+    switch (arg0) {
+    case 0:
+        D_8AB16A2E = 0;
+        D_8AB16A30 = 0;
+        func_8AB00BA4(0x1000F, 0, 0);
+        func_8004C8A0(D_8AB126A8, 0x100, 0x39, 0x184);
+        switch (val) {
+        case 0:
+            D_8AB169A6 = 0;
+            break;
+        case 10:
+            D_8AB169A6 = 1;
+            break;
+        default:
+            D_8AB169A6 = val + 1;
+            break;
+        }
+        if (*(s16 *)(D_8AB12CB0 + 2) >= 8) {
+            for (i = 0; i < 10; i++) {
+                ((s8 *)D_8AB11D0C)[i + 4] = -1;
+            }
+        } else {
+            D_8AB11D0C[0x16] = D_8AB11D0C[3];
+            for (i = 0; i < 10; i++) {
+                if (D_8AB11210[i % 10][0] == 1) {
+                    ((s8 *)D_8AB11D0C)[i + 4] = -1;
+                }
+            }
+        }
+        break;
+    case 1:
+        D_8AB16A2E++;
+        if (D_8AB16A2E % 15 == 0) {
+            D_8AB16A30 = D_8AB16A2E / 15;
+            if (D_8AB16A30 < 10) {
+                func_8AB00BA4(0x10011, 0, 0);
+            } else if (D_8AB16A30 == 10) {
+                func_8AB00BA4(0x10010, 0, 0);
+                *(u16 *)((u8 *)D_8AB16978 + 2) |= 1;
+            }
+            if (D_8AB16A30 > 10) {
+                D_8AB16A30 = 10;
+            }
+        }
+        if (D_8AB16A2E > 0xB4) {
+            if (*(s16 *)(D_8AB12CB0 + 2) >= 8) {
+                result = func_8AB07A34(0);
+            } else {
+                result = func_8AB07DC4(0);
+            }
+        }
+        break;
+    case 2:
+        for (i = 0; i < D_8AB16A30; i++) {
+            if (D_8AB11210[i % 10][0] == 1) {
+                func_8AB00FF8(D_8AB11210[i % 10][1], D_8AB11210[i % 10][2]);
+            } else {
+                func_8AB01140(D_8AB11210[i % 10][1], D_8AB11210[i % 10][2]);
+            }
+        }
+        break;
+    }
+    return result;
+}
 
 /* mkdraft:func_8AB07A34 begin */
 extern u8 D_8AB11268[];
 extern u8 D_8AB1126C[];
-extern s16 D_8AB16A32;
 extern u8 D_8AB126A8[];
 extern int func_8AB023EC();
 extern void func_80021ED8(s32);
@@ -928,6 +1010,7 @@ extern void func_8AC075A8(void);
 
 
 s32 func_8AB07A34(s32 arg0) {
+    static s16 D_8AB16A32;
     s32 result = 0xE;
     s16 x;
     s16 value;
