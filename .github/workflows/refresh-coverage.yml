@@ -22,15 +22,19 @@ name: Refresh coverage after merge
 # exactly as they would for any other eligible PR.
 on:
   # Hourly instead of after every merge: each refresh is a PR that needs a
-  # "Validate ROM against master" run on the single self-hosted runner, and a
-  # busy day merges dozens of matches. One refresh per hour (and none when
-  # nothing changed) keeps those runs from queueing behind real PRs.
+  # "Validate ROM against master" run, and a busy day merges dozens of
+  # matches. One refresh per hour (and none when nothing changed) keeps
+  # those runs from piling up.
   schedule:
     - cron: '17 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: read
+  packages: read
+
+env:
+  GS_DECOMP_AGENT_IMAGE: ghcr.io/team-hippodrome/pokestadiumgs-ci:latest
 
 concurrency:
   group: public-refresh-coverage
@@ -39,24 +43,26 @@ concurrency:
 jobs:
   generate:
     name: Generate reports from original assembly
-    runs-on: [self-hosted, macOS, ARM64, gs-decomp-public]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       revision: ${{ steps.revision.outputs.sha }}
     steps:
-      - name: Mask self-hosted runner paths
+      - name: Pull the CI baseline image
         shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "::add-mask::${HOME}"
-          echo "::add-mask::${GITHUB_WORKSPACE}"
-          echo "::add-mask::${RUNNER_TEMP}"
+          set -euo pipefail
+          echo "$TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker pull --quiet --platform linux/amd64 "$GS_DECOMP_AGENT_IMAGE"
+          docker logout ghcr.io
 
       - name: Checkout master without publishing credentials
         uses: actions/checkout@v4
         with:
           ref: master
           persist-credentials: false
-          set-safe-directory: false
 
       - name: Record the exact source revision
         id: revision
@@ -65,7 +71,12 @@ jobs:
 
       - name: Generate coverage graph and reports
         shell: bash
-        run: bash ci/generate-coverage.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/coverage-reports"
+        # See pr-rom-gate.yml: the capability-less root container needs a
+        # world-writable /out.
+        run: |
+          mkdir -p "$RUNNER_TEMP/coverage-reports"
+          chmod 0777 "$RUNNER_TEMP/coverage-reports"
+          bash ci/generate-coverage.sh "$GITHUB_WORKSPACE" "$RUNNER_TEMP/coverage-reports"
 
       - name: Upload only generated reports
         uses: actions/upload-artifact@v4
