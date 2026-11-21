@@ -577,7 +577,7 @@ extern void func_8003F1DC(void *);
 extern void func_8003F114(u8 *, s16, s16, void *);
 extern u8 *D_8330AC00;
 extern u8 *D_8330AC04;
-extern s32 D_8330A4D0;
+extern u8 D_8330A4D0;
 extern s32 D_8330ABE0;
 extern void func_83303AB0(s32);
 extern void func_83305C1C(s32);
@@ -650,7 +650,112 @@ void func_833019CC(void) {
     main_pool_pop_state('SWCH');
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83301C60.s")
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void *func_80037E9C(void *, void *);
+extern void func_8004DDF4(s32);
+extern s32 func_80040E80(void *, void *);
+extern s32 WidgetTree_RunMessagePanelSilent(void *, s32);
+extern void func_80041E2C(void);
+extern void func_87F024CC(void);
+extern void func_87F02CE0(void *, void *, s32);
+extern void func_8003F018(void *);
+extern void func_8003F03C(s32, void *);
+extern s32 func_800356CC(s32);
+extern s32 BinArchive_Open(s32, s32, s32, s32);
+extern s32 D_833090E0;
+extern s32 D_8330A4C8;
+extern s32 D_8330ABE8[];
+extern s32 D_8330ABF4;
+extern s32 D_8330ABF8;
+extern s32 D_8330A258;
+extern s32 D_8330A270;
+extern s32 D_8330A240;
+extern s32 D_8330AC38;
+extern ColorAdjustment D_833091E0;
+extern s32 D_8330AA70[];
+extern u8 D_8330A638[];
+
+s32 func_83301C60(void) {
+    void *block;
+    s32 i;
+    s32 n;
+    f32 scale;
+    s32 pad[4];
+
+    func_8004DDF4(0xBB);
+    func_8004DDF4(0xBD);
+    func_8004DDF4(0xD6);
+    func_8004DDF4(0xD9);
+    func_8004DDF4(0xDB);
+    block = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8330A4C8 = func_80040E80(block, &D_833090E0);
+    D_8330ABE8[0] = WidgetTree_RunMessagePanelSilent(block, 0xBB);
+    D_8330ABE8[1] = WidgetTree_RunMessagePanelSilent(block, 0xBD);
+    D_8330ABE8[2] = WidgetTree_RunMessagePanelSilent(block, 0xD6);
+    D_8330ABF4 = WidgetTree_RunMessagePanelSilent(block, 0xD9);
+    D_8330ABF8 = WidgetTree_RunMessagePanelSilent(block, 0xDB);
+    MainPool_FinalizeAllocation(block);
+    ModelRenderer_InitDisplayRoots();
+    func_80041E2C();
+    func_87F024CC();
+    func_80037E9C(NULL, &D_8330A258);
+    func_80037E9C(NULL, &D_8330A270);
+    func_80037E9C(NULL, &D_8330A240);
+    func_87F02CE0(&D_8330A270, &D_8330AC38, 0x63);
+    for (i = 0; i < 1; i++) {
+        if (((&D_8330A4CC)[i] = func_80041C98(1)) == 0) {
+            break;
+        }
+    }
+    n = 1;
+    for (i = 0; i < n; i++) {
+        func_8003F018((u8 *)&D_8330A4D0 + i * 0x168);
+        D_8330ABD8 = *(u8 *)(D_83308E34 + 4);
+        *(f32 *)((u8 *)&D_8330A4D0 + i * 0x168 + 0x30) = 8.0f;
+        *(f32 *)((u8 *)&D_8330A4D0 + i * 0x168 + 0x38) = 8.0f;
+        *(f32 *)((u8 *)&D_8330A4D0 + i * 0x168 + 0x34) = 8.0f;
+        if (D_833090AC == 1) {
+            D_8330ABDC = func_8003570C() % 101 + 1;
+            D_8330ABE0 = func_8003570C() % 101 + 1;
+            func_80041FA0(D_8330A4CC, *(u16 *)((u8 *)&D_8330ABD8 + 2), D_833091E0);
+        } else {
+            func_80041FD0(D_8330A4CC, *(u16 *)((u8 *)&D_8330ABD8 + 2), D_8330A2A4, D_8330A2A8);
+            D_8330A2A4 = func_8003F5AC(D_83308E34 + 4);
+            D_8330A2A8 = func_8006456C(*(u16 *)(D_83308E34 + 0x1A));
+            func_833018E8();
+        }
+        func_800428F8((&D_8330A4CC)[i]);
+        D_8330AC04 = (u8 *)main_pool_alloc(0x7F8, 0);
+        _bzero(D_8330AC04, 0x7F8);
+        D_8330AC00 = D_8330AC04;
+        *(s16 *)(D_8330AC00 + 0x658) = *(u8 *)(D_83308E34 + 4);
+        scale = func_8004B888(*(s16 *)(D_8330AC00 + 0x658));
+        A4D0_F(0x38) = scale;
+        A4D0_F(0x34) = scale;
+        A4D0_F(0x30) = scale;
+        *(s32 *)(D_8330AC00 + 0x2D0) = BinArchive_Open(func_800356CC(0), 0, 1, 1);
+        *(void **)(D_8330AC00 + 0x2D4) = func_80004B4C(*(s32 *)(D_8330AC00 + 0x2D0), *(s16 *)(D_8330AC00 + 0x658) - 1);
+    }
+    func_8003F03C((s32)D_8330AA70, &D_8330A258);
+    *(f32 *)((u8 *)D_8330AA70 + 0x30) = 0.45f;
+    *(f32 *)((u8 *)D_8330AA70 + 0x38) = 0.45f;
+    *(f32 *)((u8 *)D_8330AA70 + 0x34) = 0.45f;
+    *(f32 *)((u8 *)D_8330AA70 + 0x24) = 0.0f;
+    *(f32 *)((u8 *)D_8330AA70 + 0x2C) = 0.0f;
+    *(f32 *)((u8 *)D_8330AA70 + 0x28) = 0.0f;
+    for (i = 0; i < 3; i++) {
+        func_8003F018(D_8330A638 + i * 0x168);
+        *(f32 *)(D_8330A638 + i * 0x168 + 0x30) = 1.0f;
+        *(f32 *)(D_8330A638 + i * 0x168 + 0x38) = 1.0f;
+        *(f32 *)(D_8330A638 + i * 0x168 + 0x34) = 1.0f;
+        *(f32 *)(D_8330A638 + i * 0x168 + 0x24) = 0.0f;
+        *(f32 *)(D_8330A638 + i * 0x168 + 0x2C) = 0.0f;
+        *(f32 *)(D_8330A638 + i * 0x168 + 0x28) = 0.0f;
+    }
+}
 
 /* mkdraft:func_83302088 begin */
 extern f32 D_833091E4;
@@ -2843,7 +2948,7 @@ void func_833003B0(s32 arg0);                     /* extern */
 M2C_UNK func_83303640(M2C_UNK);                     /* extern */
 extern u8 *D_83308E34;
 extern s32 D_8330A4CC;
-extern M2C_UNK D_8330A4D0;
+extern u8 D_8330A4D0;
 extern s32 D_8330ABD8;
 
 void func_83306BF0(void) {
@@ -2990,7 +3095,7 @@ void func_83306D0C_padding(void) {}
 extern ControllerState *D_80087200;
 struct unk_D_8330A2B0;
 extern struct unk_D_8330A2B0 D_8330A2B0;
-extern s32 D_8330A4D0;
+extern u8 D_8330A4D0;
 
 
 void func_83307088(void)
