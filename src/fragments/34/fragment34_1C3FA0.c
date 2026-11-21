@@ -463,7 +463,137 @@ void func_88507724(void) {
     func_88506AA8();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C3FA0/func_8850779C.s")
+extern u8 D_8850D6E0[];
+extern u8 D_88522998[];
+extern u8 D_80094E00[];
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 D_8800687C;
+
+extern f32 D_80087E50[];
+extern Gfx *D_800D0510;
+extern void func_88504AF0(s16, s16);
+extern void func_88000808(s32, s32, s32, s32, s32);
+extern void func_80049668(s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800496A4(s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern s32 func_8004B7A4(s32);
+extern s32 func_80048E30(s32, s32, s32, s32, s32);
+extern void func_8004AF18(s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+#define GFXW(a, b) do { Gfx *_g = D_800D0510++; _g->words.w0 = (a); _g->words.w1 = (b); } while (0)
+typedef struct { u8 b[20]; } Ent8850779C;
+void func_8850779C(void) {
+    static s16 D_8850D2D0 = 0;
+    u8 *q;
+    u8 *s3;
+    s32 i;
+    s32 k;
+    s32 j;
+    s16 s2;
+    s16 a2;
+    s16 s0;
+    u8 *ents[2];
+    u8 **pe;
+
+    if (D_88523018.state != 0) {
+        for (i = 0, pe = ents; i < 2; i++, pe++) {
+            *pe = ((Ent8850779C *)D_8850D678)[*(s8 *)((u8 *)&D_8850D6D8 + i * 0xA960)].b;
+        }
+        GFXW(0xDE000000, (u32)D_80094E38);
+        q = D_8850D6E0; i = 0x91; do {
+            gDPLoadTextureBlock(D_800D0510++, q, G_IM_FMT_RGBA, G_IM_SIZ_16b, 40, 40, 0, G_TX_CLAMP, G_TX_CLAMP,
+                                G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            GfxRect_DrawTextured(i, 0x60, 0x40, 0x40, -16, -16, 0x280, 0x280, 0);
+            q += 0xA960;
+            i += 0x11C;
+        } while (i < 0x2C9);
+        i = 0; // FAKE: a use of i before the next loop keeps the `slti` loop test
+        if (D_88523010->mode == 0) {
+            {
+                // One block-scoped pointer for both words; two GFXW blocks add a stack slot.
+                Gfx *g = D_800D0510++; g->words.w0 = 0xE7000000; g->words.w1 = 0;
+                g = D_800D0510++; g->words.w0 = 0xE200001C; g->words.w1 = 0x0F0A7008;
+            }
+            func_88504AF0(0x122, 0x8C);
+        }
+        GFXW(0xDE000000, (u32)D_80094E00);
+        for (k = 0, pe = ents; k < 2; k++, pe++) {
+            func_88000808((*pe)[1], (s16)(k * 0x111 + 0x3E), 0x2A, 0, 0x200000);
+        }
+        GFXW(0xDE000000, (u32)D_80094F50);
+        func_800498C4();
+        for (k = 0, pe = ents; k < 2; pe++, k++) {
+            s3 = func_88500CF0(k);
+            func_800496A4(4, 0);
+            if (!(s3[0x1E] & 1)) {
+                func_800495F8(k * 0x11C + 0x54, 0xA8, 0, "%s%d", func_8004C874(0xD, 0x11), s3[0]);
+            }
+            func_80049668(1);
+            for (j = 0, s2 = 0xC2; j != 3; j++, s2 += 0x1A) {
+                if (j != 0 || !(s3[0x1E] & 1)) {
+                    func_800495F8(k * 0x11C + 0x91, s2, 2, (const char *)func_8004C874(0x34, j + 0xD));
+                }
+            }
+            func_800496A4(8, 1);
+            s0 = (s16)(k * 0x11C + 0x97);
+            s2 = 0xA4;
+            { u8 id = (s3[0x1E] & 1) ? 0xFD : s3[0]; func_80048E30(D_8800687C, s0, s2, func_8004B7A4(id), 1); }
+            s2 = (s16)(s2 + 0x1A);
+            if (!(s3[0x1E] & 1)) {
+                func_80048E30(D_8800687C, s0, s2, (s32)(s3 + 0x34), 1);
+            }
+            s2 = (s16)(s2 + 0x1A);
+            if (s3[0x1E] & 1) {
+                func_80048E30(D_8800687C, s0, s2, func_8004C874(0x34, 0x10), 1);
+            } else {
+                func_80048E30(D_8800687C, s0, s2, (s32)(s3 + 0x40), 1);
+            }
+            s2 = (s16)(s2 + 0x1A);
+            if (s3[0x1E] & 1) {
+                func_80048E30(D_8800687C, s0, s2, func_8004C874(0x34, 0x10), 1);
+            } else {
+                func_800495F8(s0, s2, 0, "%05d", *(u16 *)(s3 + 6));
+            }
+            func_80048E30(D_8800687C, k * 0x111 + 0x58, 0x2B, (s32)(*pe + 6), 1);
+            func_800496A4(4, 0);
+            func_800495F8(k * 0x111 + 0xBE, 0x2F, 0, "%s %05d", func_8004C874(0xD, 9), *(u16 *)(*pe + 4));
+        }
+        if (D_88523010->mode != 0) {
+            func_800496A4(8, 1);
+            func_800495F8(0x13F, 0x19C, 1, (const char *)func_8004C874(0x34, 0x17));
+            if (*(s32 *)(*(u8 **)((u8 *)D_88523010 + 8) + 0x20) == 2) {
+                if (D_88523018.state == 3) {
+                    func_800496A4(0x10, 1);
+                    func_800495F8(0x13F, 0x145, 1, (const char *)func_8004C874(0x34, 0x18));
+                } else {
+                    s0 = (s16)(*(s16 *)(*(u8 **)((u8 *)D_88523010 + 8) + 0xC) + *(u16 *)func_8004C990(0x79, 0) + 0x1F);
+                    for (k = 0, s2 = 0x12C; k != 3; k++, s2 += 0x1A) {
+                        func_80048E30(D_8800687C, s0, s2, func_8004C874(0x34, k + 0x14), 1);
+                    }
+                }
+            }
+        } else {
+            func_800496A4(0x10, 1);
+            func_80048E30(D_8800687C, 0xD8, 0x13F, func_8004C874(0x34, 0x11), 1);
+            for (k = 0, s2 = 0x163; k != 2; k++, s2 += 0x20) {
+                func_80048E30(D_8800687C, 0x112, s2, func_8004C874(0x34, k + 0x12), 1);
+            }
+        }
+        func_800499EC();
+        a2 = (s16)(D_80087E50[*(u16 *)&D_8850D2D0 >> 4] * 3.0f);
+        if (D_88523010->mode != 0) {
+            if (*(s32 *)(*(u8 **)((u8 *)D_88523010 + 8) + 0x20) == 2 && D_88523018.state != 3) {
+                func_8004AF18(*(s16 *)(*(u8 **)((u8 *)D_88523010 + 8) + 0xC) + a2 + 0x17, D_88523010->selection * 26 + 0x12A);
+            }
+        } else {
+            func_8004AF18(a2 + 0xEA, (D_88523010->selection << 5) + 0x163);
+        }
+        D_8850D2D0 = D_8850D2D0 + 0x1000;
+    }
+}
 
 extern u8 D_8800ED50[];
 
