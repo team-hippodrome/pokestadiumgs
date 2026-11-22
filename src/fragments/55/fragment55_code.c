@@ -533,7 +533,7 @@ s32 func_8670122C(s32 arg0) {
 typedef struct { f32 x; f32 z; f32 tx; f32 spd; s32 slot; s32 done; } Ctx86701C6C;
 // One 0x38-byte record of D_86728328 per player.
 typedef struct {
-    f32 unk00; f32 unk04; f32 unk08; u8 pad0C[4]; s32 unk10; u8 pad14[4];
+    f32 unk00; f32 unk04; f32 unk08; u8 pad0C[4]; s32 unk10; s32 unk14;
     s32 unk18; s32 unk1C; s32 unk20; s32 unk24; u8 pad28[4]; s32 unk2C; s32 unk30; s32 unk34;
 } Ent86728328;
 #define ENT_86701C6C(i) (((Ent86728328 *)&D_86728328)[i])
@@ -1049,7 +1049,286 @@ void func_86702B28(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86702E50.s")
+#define BB48(off) (*(s32 *)((u8 *)&D_8670BB48 + (off)))
+extern s32 D_8670C858;
+extern s32 D_8670C854;
+extern u8 *D_8670C900;
+extern u8 *D_8670B464[];
+extern u8 *D_8670B4D4[];
+extern u8 *D_8670B4E4[];
+extern u8 *D_8670B4F4[];
+/*
+ * Fragment 55's .data from 0x8670BDC0 to the end of this object is defined in C, so that
+ * func_86702E50's function-static counter lands at retail's 0x8670BE68. IDO emits .data in
+ * source order. D_8670BDCC, D_8670BE6C, D_8670C09C and D_8670C0D4 fill
+ * unlabelled words between labelled symbols. IDO word-aligns each s16 global, which also
+ * covers the zero halfwords after D_8670BE80/84/88.
+ */
+s32 D_8670BDC0 = 0;
+s32 D_8670BDC4 = 0;
+s32 D_8670BDC8 = 5;
+s32 D_8670BDCC[3] = { 4, 3, 2 };
+f32 D_8670BDD8[12][3] = {
+    { 0.8f, 0.8f, 0.8f }, { 0.8f, 1.0f, 0.8f }, { 0.8f, 1.0f, 0.8f },
+    { 0.6f, 0.6f, 0.6f }, { 0.6f, 0.6f, 0.6f }, { 0.6f, 0.6f, 0.6f },
+    { 0.4f, 0.4f, 0.4f }, { 0.4f, 0.4f, 0.4f }, { 0.4f, 0.4f, 0.4f },
+    { 4.0f, 4.0f, 4.0f }, { 0.12f, 0.12f, 0.12f }, { 3.5f, 3.5f, 3.5f },
+};
+extern s32 D_8670B3D4[][4];
+extern s32 D_8670B414[][4];
+extern s32 D_8670B3C0;
+extern s32 D_8670B398;
+extern s32 D_8670FF08[];
+#define st (&D_86728408[idx])
+#define row (&D_86711760[idx][slotIdx])
+#define slot (&D_8670C980[idx][slotIdx])
+#define p (&D_8670B464[k])
+void func_86702E50(s32 idx) {
+    static s32 D_8670BE68 = 0;
+    s32 slotIdx;
+    s32 q;
+    s32 k;
+    s32 c0;
+    s32 cur1;
+    s32 c3;
+    s32 c4;
+    s32 c5;
+    f32 base;
+    s32 r;
+    s32 t;
+    if (idx == 0) {} // FAKE
+
+    t = 0;
+    D_8670C858 = 0;
+    if (st->unk18 == 0) {
+        base = 400.0f;
+    } else {
+        base = t + D_8670C8A0;
+    }
+    if (st->unk6C > 0) {
+        base = t + 500;
+    }
+    q = st->unk18 / 4;
+    if (D_8670B3C0 == 1) {
+        k = (&D_8670B398)[q] * 4 + st->unk18 - q * 4;
+    } else {
+        k = D_8670B3AC[q] * 4 + st->unk18 - q * 4;
+    }
+    D_8670C854 = D_8670C890;
+    D_8670C900 = *p;
+    if (k == 28 || D_8670B4E4 == p) {
+        st->unkA4 = func_8003570C() % 3;
+    }
+    if (D_8670C900 == NULL) {
+        return;
+    }
+loop:
+    if (st->unk18 < 20) {
+        slotIdx = st->unk14;
+        if (D_8670C900[2] == 12U) {
+            st->unk18++;
+            if (BB48(0x54) < st->unk18) {
+                BB48(0x54) = st->unk18;
+            }
+            return;
+        }
+        if (((s32 *)D_86727CE8)[BB48(0x50)] == -1 && BB48(0x54) == st->unk18) {
+            ((s32 *)D_86727CE8)[BB48(0x50)] = 0;
+            BB48(0x50)++;
+            if (BB48(0x50) >= 401) {
+                BB48(0x50) = 0;
+            }
+        }
+        slot->unk04[2] = st->unk60;
+        c0 = D_8670C900[0];
+        cur1 = D_8670C900[1];
+        c3 = D_8670C900[3];
+        c4 = D_8670C900[4];
+        c5 = D_8670C900[5];
+        if (D_8670BDB4[st->unk18 / 4] == 1) {
+            c0 = 18 - D_8670C900[0];
+            c3 = 18 - c3;
+            c4 = 18 - c4;
+            c5 = 18 - c5;
+    if (idx == 0) {} // FAKE
+        }
+        slot->unk04[1] = c5;
+        if (ENT_86701C6C(idx).unk2C == 0) {
+            slot->unk04[1] = c3;
+        }
+        if (ENT_86701C6C(idx).unk2C == 1) {
+            slot->unk04[1] = c4;
+        }
+        r = func_8003570C() % 101;
+        if (r < D_8670B3D4[(&D_8670B374)[idx]][ENT_86701C6C(idx).unk30]) {
+            slot->unk04[1] = c3;
+        } else {
+            D_8670C980[idx][idx].unk04[1] = c4;
+        }
+        if (r < D_8670B414[(&D_8670B374)[idx]][ENT_86701C6C(idx).unk30]) {
+            slot->unk04[1] = c5;
+        }
+        if (p >= D_8670B4D4 && p < D_8670B4F4) {
+            switch (st->unkA4) {
+            case 0:
+                slot->unk04[1] = c3;
+                break;
+            case 1:
+                slot->unk04[1] = c4;
+                break;
+            case 2:
+                slot->unk04[1] = c5;
+                break;
+            }
+        }
+        if (ENT_86701C6C(idx).unk14 != 0) {
+            slot->unk04[1] = c5;
+            if (50.0f < st->unk10) {
+                slot->unk04[1] = c3;
+            }
+        }
+        if (BB48(0x44) != 0) {
+            slot->unk04[1] = c3;
+        }
+        slot->resource_index = D_8670C900[2];
+        slot->unk04[0] = D_8670C900[2];
+        row->scale[0] = D_8670BDD8[(s32)D_8670C900[2]][0];
+        row->scale[1] = D_8670BDD8[(s32)D_8670C900[2]][1];
+        row->scale[2] = D_8670BDD8[(s32)D_8670C900[2]][2];
+        if (D_8670C900[2] == 11) {
+            st->unkA0 += (func_8003570C() & 1) + 1;
+            if (st->unkA0 >= 3) {
+                st->unkA0 = 0;
+            }
+            row->unk14 = st->unkA0 * 18;
+        }
+        if (((s32 *)D_86727CE8)[st->unk60] == 1) {
+            slot->resource_index = 10;
+            slot->unk04[0] = 10;
+            slot->unk04[1] = c0;
+            row->scale[0] = D_8670BDD8[10][0];
+            row->scale[1] = D_8670BDD8[10][1];
+            row->scale[2] = D_8670BDD8[10][2];
+        }
+        st->unk60++;
+        if (st->unk60 >= 401) {
+            st->unk60 = 0;
+        }
+        row->z = cur1 * D_8670B3C8 + base;
+        row->x = st->unk1C + D_8670C854 + c0 * D_8670C890;
+        if (slot->unk04[0] == 9) {
+            row->y = 120.0f;
+        } else {
+            row->y = 90.0f;
+        }
+        row->unk20 = 0;
+        row->unk1E = 0;
+        if (slot->unk04[0] == 10) {
+            row->unk1E = 0x2C00;
+        }
+        if (D_86711760[idx][st->unk20].z <= row->z) {
+            st->unk20 = slotIdx;
+        }
+        if (row->z < 450.0f) {
+            func_8003F114((u8 *)row, 0, -1, (void *)D_8670FF08[slot->resource_index]);
+            D_8670BE68 += guRandom() % 5 + 6;
+            if (D_8670BE68 >= 81) {
+                D_8670BE68 = 0;
+            }
+            slot->resource_index = -1;
+        }
+        st->unk14++;
+        if (st->unk14 >= 60) {
+            st->unk14 = 0;
+        }
+        D_8670C900 += 6;
+        goto loop;
+    }
+}
+#undef st
+#undef row
+#undef slot
+#undef p
+#undef BB48
+
+/* Rest of this object's .data, after func_86702E50's counter (0x8670BE68). */
+s32 func_8670675C(s32 arg0, s32 arg1);
+s32 GeoCallback_OrientToCamera(s32 arg0, void *arg1);
+extern s32 D_1000000;
+extern u8 D_8670C6D0[];
+extern u8 D_8670C6E8[];
+extern u8 D_8670C700[];
+extern u8 D_8670C718[];
+extern u8 D_8670C730[];
+extern u8 D_8670C748[];
+extern u8 D_8670C760[];
+extern u8 D_8670C778[];
+extern u8 D_8670C790[];
+extern u8 D_8670C7A8[];
+extern u8 D_8670C7C0[];
+extern u8 D_8670C7D8[];
+extern u8 D_8670C7F0[];
+extern u8 D_8670C808[];
+extern u8 D_8670C820[];
+extern u8 D_80126420[];
+extern u8 D_87F0F530[];
+extern u8 D_87F0F620[];
+f32 D_8670BE6C = 3.0f;
+f32 D_8670BE70 = 0.55f;
+s16 D_8670BE74[2] = { 0x2C0, 0 };
+s32 D_8670BE78 = 20;
+f32 D_8670BE7C = 7.6f;
+s16 D_8670BE80 = 0x4004;
+s16 D_8670BE84 = 0x1900;
+s16 D_8670BE88 = 0;
+u32 D_8670BE8C[] = {
+    0x0C00FFFF, 0x05000000, 0x0B000020, 0x00000000,
+    0x014000F0, 0x0000000F, 0x00000000, 0x000003E8,
+    0x08000000, (u32)func_8670675C, 0x00000000, 0x05000000,
+    0x0D000000, 0x05000000, 0x14000000, 0x002D0019,
+    0xFFFFFF64, 0x08000000, (u32)GeoCallback_OrientToCamera, 0x00000000,
+    0x16646464, 0x0F000003, 0x05000000, 0x1F00FFFF,
+    0x00000000, 0x00000000, 0xFFFF0000, 0x00640064,
+    0x00640000, 0x06000000, 0x0F000002, 0x05000000,
+    0x0A000000, (u32)D_8670C6D0, 0x0A000000, (u32)D_8670C6E8,
+    0x0A000000, (u32)D_8670C700, 0x06000000, 0x0F000002,
+    0x05000000, 0x0A000000, (u32)D_8670C718, 0x06000000,
+    0x0F000000, 0x05000000, 0x0A000000, (u32)D_8670C730,
+    0x0A000000, (u32)D_8670C748, 0x06000000, 0x0F000001,
+    0x05000000, 0x0A000000, (u32)D_8670C760, 0x06000000,
+    0x0F000000, 0x05000000, 0x0A000000, (u32)D_8670C778,
+    0x06000000, 0x0F000000, 0x05000000, 0x0A000000,
+    (u32)D_8670C790, 0x06000000, 0x0F000001, 0x05000000,
+    0x0A000000, (u32)D_8670C7A8, 0x06000000, 0x0F000001,
+    0x05000000, 0x0A000000, (u32)D_8670C7C0, 0x06000000,
+    0x0F000003, 0x05000000, 0x0A000000, (u32)D_80126420,
+    0x06000000, 0x0F000000, 0x05000000, 0x0A000000,
+    (u32)D_8670C7D8, 0x06000000, 0x0F000003, 0x05000000,
+    0x0A000000, (u32)D_8670C7F0, 0x06000000, 0x0F000000,
+    0x05000000, 0x0A000000, (u32)D_8670C808, 0x06000000,
+    0x0F000000, 0x05000000, 0x0A000000, (u32)D_8670C820,
+    0x06000000, 0x0F000002, 0x05000000, 0x03000000,
+    (u32)D_87F0F620, 0x06000000, 0x06000000, 0x06000000,
+    0x03000000, (u32)D_87F0F530, 0x06000000, (u32)&D_1000000,
+};
+f32 D_8670C04C[4] = { -435.2f, -144.8f, 144.8f, 435.2f };
+f32 D_8670C05C = 144.0f;
+f32 D_8670C060[2] = { 570.0f, -580.0f };
+f32 D_8670C068 = 0.12f;
+s32 D_8670C06C = -48;
+s32 D_8670C070[5] = { -165, -108, -51, 5, 0 };
+s32 D_8670C084[5] = { -2, -1, 1, 2, 0x3F19999A };
+s32 D_8670C098 = 0;
+s32 D_8670C09C[11] = { 59, 126, 193, 257, 52, 126, 196, 268, 20, 200, 0 };
+s32 D_8670C0C8 = 7;
+s32 D_8670C0CC = 0;
+s32 D_8670C0D0 = 0;
+s32 D_8670C0D4 = 0;
+typedef struct { s32 v[4]; } Flags8670C0D8;
+Flags8670C0D8 D_8670C0D8 = { { 0, 0, 0, 0 } };
+f32 D_8670C0E8[4] = { -400.0f, -120.0f, 120.0f, 400.0f };
+s32 D_8670C0F8 = 40;
+s16 D_8670C0FC[2] = { 0x0D6D, 0 };
 #endif
 
 #ifdef VERSION_US
@@ -1696,7 +1975,6 @@ extern void ModelAnim_SetFrame(u8 *, s16);
 extern u32 func_8003570C(void);
 extern int guRandom(void);
 
-extern u8 D_8670BE8C[];
 extern u8 D_8670B7A8[];
 extern u8 D_8670B70C[];
 extern u8 D_8670B7DC[];
@@ -2777,7 +3055,6 @@ void func_8670972C(void) {
 
 #ifdef VERSION_US
 
-typedef struct { s32 v[4]; } Flags8670C0D8;
 extern Flags8670C0D8 D_8670C0D8;
 extern State86703DF4 D_86728408[];
 // D_8672843C is declared earlier in fragment55_code.c (anon struct with unk_00);
