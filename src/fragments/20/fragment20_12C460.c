@@ -16,7 +16,6 @@ typedef struct unk_func_8260F108 {
 } unk_func_8260F108;
 extern s16 D_8261575C, D_82615760, D_82615764;
 extern s32 D_826153C8, D_826153CC;
-extern s32 D_826155B0, D_826155B4, D_826155B8, D_826155BC;
 extern s32 D_826155F4, D_826155F8, D_826155FC;
 extern s32 func_8006CBA0(s32, s32);
 extern s16 D_8261A4A2;
@@ -1562,7 +1561,94 @@ void func_8260675C(u8 *arg0) {
 extern void func_800226C0(s32);
 void func_82606784(u8*a0,s32 a1,s32 a2,s32 a3){if(*(s16*)(a0+6)==0){*(s16*)(a0+6)=1;*(s16*)(a0+8)=0;*(s16*)(a0+0x1C)=a1;*(s16*)(a0+0x1E)=a3;*(s16*)(a0+0x20)=a2;*(s16*)(a0+0x22)=a3;func_800226C0(0x6D);}}
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826067D4.s")
+void func_826067D4(arg0)
+    s16 *arg0;
+{
+    static s32 D_826155B0 = 8;
+    static s32 D_826155B4 = 4;
+    static s32 D_826155B8 = 4;
+    static s32 D_826155BC = 8;
+    s32 mode;
+    s32 c;
+    s32 t;
+    s32 a;
+    s32 b;
+    s32 done;
+
+    done = 0;
+    mode = 0;
+    if (5 == arg0[0]) {
+        mode = 1;
+    }
+    a++; // FAKE
+    a--; // FAKE
+    if (mode == 1) {
+        t = arg0[4];
+        if (D_826155B4 + D_826155B8 > t) {
+            if (D_826155B4 > t) {
+                b = arg0[0xE];
+                c = arg0[0x14];
+                arg0[0xA] = (arg0[0x10] - b) * t / D_826155B4 + b;
+                arg0[0xB] = arg0[0xF];
+                arg0[0x12] = (arg0[0x15] - c) * t / D_826155B4 + c;
+                arg0[0x13] = arg0[0x16];
+            } else {
+                a = t - D_826155B4;
+                if (D_826155B8 == 0) {} // FAKE
+                arg0[0xA] = arg0[0x10];
+                b = arg0[0xF];
+                c = arg0[0x16];
+                arg0[0xB] = (arg0[0x11] - b) * t / D_826155B8 + b;
+                arg0[0x12] = arg0[0x15];
+                arg0[0x13] = (arg0[0x17] - c) * a / D_826155B8 + c;
+            }
+            arg0[4] = (++t) & 0xFFFF;
+        } else {
+            done = 1;
+        }
+    } else {
+        t = arg0[4];
+        if (t < D_826155B4 + D_826155B8) {
+            b = arg0[0xC];
+            c = arg0[0xD];
+            arg0[8] = b - b * t / D_826155B0;
+            arg0[9] = c - c * t / D_826155B0;
+            arg0[4] = t + 1;
+        } else {
+            done = 1;
+            do { } while (0); // FAKE
+        }
+    }
+    if (done) {
+        arg0[3] = 2;
+        if (arg0[0] == 1) {
+            arg0[4] = -D_826155BC;
+        } else {
+            arg0[4] = 0;
+        }
+        arg0[6] = 0;
+        arg0[7] = 0;
+        arg0[8] = 0;
+        arg0[9] = 0;
+        if (1 == mode) {
+            arg0[0xA] = arg0[0x10];
+            arg0[0xB] = arg0[0x11];
+            arg0[0x12] = arg0[0x15];
+            arg0[0x13] = arg0[0x17];
+        }
+        if (arg0[1] == 0) {
+            switch (arg0[0]) {
+                case 2:
+                case 4:
+                case 6:
+                case 7:
+                    func_800226C0(0x66);
+                    break;
+            }
+        }
+    }
+}
+
 
 typedef struct List_82606B28 {
     s16 unk_0;
