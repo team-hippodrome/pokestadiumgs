@@ -462,6 +462,22 @@ SECTIONS
         build/src/fragments/21/fragment21_13FFA0.o(.bss)
     }
 
+    /* func_82503F28's timer halfwords at D_82508F78. Its own file
+     * (fragment21_143DD0.c) so this function static can be pinned apart
+     * from func_82502EBC's record at D_82508F70. */
+    .fragment21_timer_8F78_bss 0x82508F78 (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/21/fragment21_143DD0.o(.bss)
+    }
+
+    /* func_82503F28's compiled switch addresses the retail table at
+     * jtbl_82508CD0 in fragment 21's loaded data (nine cases, then IDO
+     * alignment). */
+    .fragment21_state_dispatch_table 0x82508CD0 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/21/fragment21_143DD0.o(.rodata)
+    }
+
     .fragment21_state_8FF0_bss 0x82508FF0 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/21/fragment21_144790.o(.bss)
@@ -658,6 +674,12 @@ ASSERT(ADDR(.fragment16_state_1D58_bss) == 0x82001D58 &&
 
 ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
        "fragment 4 archive dispatch table footprint changed");
+
+ASSERT(SIZEOF(.fragment21_state_dispatch_table) == 48,
+       "fragment21 state dispatch table must keep nine cases plus IDO alignment");
+
+ASSERT(SIZEOF(.fragment21_timer_8F78_bss) == 16,
+       "fragment21 timer halfwords must keep their 16-byte compiler footprint");
 
 
 /* The assembly switch table targets these return blocks in the C function. */

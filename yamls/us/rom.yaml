@@ -809,6 +809,7 @@
     subsegments:
     - [0x13FF80, textbin, fragments/21/fragment21_header]
     - [0x13FFA0, c,       fragments/21/fragment21_13FFA0]
+    - [0x143DD0, c,       fragments/21/fragment21_143DD0]
     - [0x144790, c,       fragments/21/fragment21_144790]
     - [0x147D10, c,       fragments/21/fragment21_147D10]
     - [0x148600, data,    fragments/21/fragment21_data]
