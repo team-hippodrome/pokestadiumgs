@@ -4671,7 +4671,169 @@ s32 func_826119A4(s32 arg0, s32 arg1, s16 *arg2) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826119DC.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82611D44.s")
+/* Filler for D_82615600..D_8261577B, which stay in the fragment20 data blob.
+ * It keeps func_82611D44's timing statics at their retail offset from
+ * func_82606B28's statics (this .data is pinned in datamig_bss.ld). */
+static u8 sFragment20DataGap[0x17C] = { 0 };
+
+extern void *D_80087200;
+extern void func_82602708(s32);
+extern void func_826078B4(void *);
+
+void func_82611D44(u8 *a) {
+    static s32 D_8261577C = 0xA;
+    static s32 D_82615780 = 0x14;
+    static s32 D_82615784 = 0xA;
+    static s32 D_82615788 = 0xA;
+    static s32 D_8261578C = 0xB4;
+    static s32 D_82615790 = 0xF;
+    s32 s3;
+    s32 s5;
+    u8 *q;
+    u8 *r;
+    s32 i;
+    s32 f;
+    s32 v;
+    s32 go;
+    u8 *p;
+
+    go = 1;
+    r = func_82604C40(6, 0, a + 0x114, 0x14);
+    q = r + 0x30;
+    if ((*(u16 *)(a + 4) & 2) && *(s16 *)(q + 0x16) != 0) {
+        go = 0;
+        switch (*(s16 *)(q + 0x18)) {
+            case 0:
+                *(s16 *)(q + 0x18) = 1;
+                *(s16 *)(q + 0x1A) = 0;
+                func_800226C0(0x11F);
+                break;
+            case 3:
+                go = 1;
+                break;
+        }
+    }
+    if (go != 0) {
+        f = 1;
+        s5 = 0;
+        s3 = D_8261578C;
+        for (i = 0; i < 2; i++) {
+            r = func_82604C40(6, i, a + 0x114, 0x14);
+            p = r + 0x30;
+            switch (*(u16 *)(p + 0x10)) {
+            case 0:
+                *(s16 *)(p + 0x10) = 1;
+                *(s16 *)(p + 0x12) = 0;
+                *(s16 *)(p + 0x14) = 0;
+                func_800226C0(0x74);
+                s3 = D_8261578C;
+                break;
+            case 1:
+                *(s16 *)(p + 0x12) += 1;
+                if (*(s16 *)(p + 0x12) < D_8261577C) {
+                    *(s16 *)(p + 0x14) = *(s16 *)(p + 0x12) * 0xFF / D_8261577C;
+                } else {
+                    *(s16 *)(p + 0x10) = 2;
+                    *(s16 *)(p + 0x12) = 0;
+                    *(s16 *)(p + 0x14) = 0xFF;
+                }
+                break;
+            case 2:
+                *(s16 *)(p + 0x12) += 1;
+                if (*(s16 *)(p + 0x12) < D_82615780) {
+                    *(s16 *)(p + 0x14) = 0xFF;
+                } else {
+                    *(s16 *)(p + 0x10) = 3;
+                    *(s16 *)(p + 0x12) = 0;
+                    *(s16 *)(p + 0x14) = 0xFF;
+                }
+                break;
+            case 3:
+                *(s16 *)(p + 0x12) += 1;
+                if ((v = *(s16 *)(p + 0x12)) < D_82615784) {
+                    *(s16 *)(p + 0x14) = (s3 - 0xFF) * v / D_82615784 + 0xFF;
+                } else {
+                    *(s16 *)(p + 0x10) = 4;
+                    *(s16 *)(p + 0x12) = 0;
+                    *(s16 *)(p + 0x14) = s3;
+                }
+                break;
+            case 4:
+                if (*(u16 *)(a + 4) & 0x20) {
+                    if (*(u16 *)((u8 *)D_80087200 + 8) & 0x8000) {
+                        s5 = 1;
+                    }
+                } else {
+                    s5 = 1;
+                }
+                if (s5 != 0) {
+                    *(s16 *)(p + 0x10) = 5;
+                    *(s16 *)(p + 0x12) = 0;
+                }
+                break;
+            case 5:
+                *(s16 *)(p + 0x12) += 1;
+                if (*(s16 *)(p + 0x12) < D_82615788) {
+                    *(s16 *)(p + 0x14) = s3 - *(s16 *)(p + 0x12) * s3 / D_82615788;
+                } else {
+                    *(s16 *)(p + 0x10) = 6;
+                    *(s16 *)(p + 0x12) = 0;
+                    *(s16 *)(p + 0x14) = 0;
+                }
+                break;
+            case 6:
+                *(s16 *)(p + 0x12) += 1;
+                if (*(s16 *)(p + 0x12) >= D_82615790) {
+                    *(s16 *)(p + 0x10) = 7;
+                    *(s16 *)(p + 0x12) = 0;
+                }
+                break;
+            case 7:
+                break;
+            }
+            if (*(s16 *)(p + 0x10) != 7) {
+                f = 0;
+            }
+        }
+        if (f != 0) {
+            *(s16 *)(a + 6) += 1;
+            if (*(s16 *)(a + 6) < 10) {
+                f = 0;
+            }
+        }
+        if (f != 0) {
+            if (*(s32 *)(*(u8 **)(a + 0x110) + 0xC) != 0 && !(*(u16 *)(a + 4) & 0x800)) {
+                *(s16 *)(a + 2) = 9;
+                *(s16 *)(a + 6) = 0;
+                *(s16 *)(a + 0x18) = 0;
+                *(void **)(a + 0x34F4 + *(s16 *)(a + 0x18) * 4) = func_82604C40(6, 0, a + 0x114, 0x14);
+                *(s16 *)(a + 0x18) += 1;
+                for (i = 0; i < *(s16 *)(a + 0x18); i++) {
+                    func_826078B4(*(void **)(a + 0x34F4 + i * 4));
+                }
+            } else {
+                if (*(u16 *)(a + 4) & 0x10) {
+                    *(s16 *)(a + 2) = 0xE;
+                } else {
+                    *(s16 *)(a + 2) = 0x13;
+                }
+                *(s16 *)(a + 6) = 0;
+                *(s16 *)(a + 0x18) = 0;
+                *(void **)(a + 0x34F4 + *(s16 *)(a + 0x18) * 4) = func_82604C40(6, 0, a + 0x114, 0x14);
+                *(s16 *)(a + 0x18) += 1;
+                *(void **)(a + 0x34F4 + *(s16 *)(a + 0x18) * 4) = func_82604C40(6, 1, a + 0x114, 0x14);
+                *(s16 *)(a + 0x18) += 1;
+                for (i = 0; i < *(s16 *)(a + 0x18); i++) {
+                    func_826078B4(*(void **)(a + 0x34F4 + i * 4));
+                }
+            }
+            func_800226C0(0x69);
+        }
+    }
+    if (*(s16 *)(a + 2) != 8) {
+        func_82602708(*(s32 *)(a + 0x110));
+    }
+}
 
 void func_826122A4(u8 *arg0) {
     s32 ready;
@@ -5317,7 +5479,7 @@ extern s16 D_8261DA4C;
 extern void func_8260F108(unk_func_8260F108 *);
 void func_826114DC(u8 *arg0);
 extern void func_826119DC(void *);
-extern void func_82611D44(void *);
+extern void func_82611D44(u8 *);
 extern void func_826123B0(void *);
 extern void func_826127A4(void *);
 extern void func_826129AC(void *);
