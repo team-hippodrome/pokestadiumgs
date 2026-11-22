@@ -77,7 +77,8 @@ SECTIONS
 
     /* func_82606B28's two function-static limits (6 and 3) live in fragment
      * 20's loaded data at D_826155C0/D_826155C4; IDO only reloads them after
-     * calls when they are statics of that function. */
+     * calls when they are statics of that function. A filler then reaches
+     * func_82611D44's six timing statics at D_8261577C..D_82615790. */
     .fragment20_slot_fade_data 0x826155C0 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/20/fragment20_12C460.o(.data)
@@ -662,7 +663,7 @@ ASSERT(SIZEOF(.fragment4_archive_dispatch_table) == 112,
 /* The assembly switch table targets these return blocks in the C function. */
 .L81307278 = func_81307228 + 0x50;
 .L81307280 = func_81307228 + 0x58;
-ASSERT(SIZEOF(.fragment20_slot_fade_data) == 0x40, "fragment 20 slot fade limits footprint changed");
+ASSERT(SIZEOF(.fragment20_slot_fade_data) == 0x1E0, "fragment 20 slot fade limits footprint changed");
 ASSERT(SIZEOF(.fragment16_fade_lengths_data) == 0x20, "fragment 16 fade lengths footprint changed");
 ASSERT(SIZEOF(.fragment10_panel_color_bss) == 16, "fragment 10 panel color footprint changed");
 ASSERT(SIZEOF(.fragment22_preview_state) == 32, "fragment 22 preview state footprint changed");
