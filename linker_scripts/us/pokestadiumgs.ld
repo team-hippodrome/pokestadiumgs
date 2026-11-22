@@ -1927,6 +1927,7 @@ SECTIONS
         fragment21_TEXT_START = .;
         build/asm/us/data/fragments/21/fragment21_header.o(.text);
         build/src/fragments/21/fragment21_13FFA0.o(.text);
+        build/src/fragments/21/fragment21_143DD0.o(.text);
         build/src/fragments/21/fragment21_144790.o(.text);
         build/src/fragments/21/fragment21_147D10.o(.text);
         fragment21_TEXT_END = .;
@@ -1936,6 +1937,8 @@ SECTIONS
         build/asm/us/data/fragments/21/fragment21_header.o(.data);
         fragments_21_fragment21_13FFA0 = .;
         build/src/fragments/21/fragment21_13FFA0.o(.data);
+        fragments_21_fragment21_143DD0 = .;
+        build/src/fragments/21/fragment21_143DD0.o(.data);
         fragments_21_fragment21_144790 = .;
         build/src/fragments/21/fragment21_144790.o(.data);
         fragments_21_fragment21_147D10 = .;
@@ -1947,6 +1950,7 @@ SECTIONS
         fragment21_RODATA_START = .;
         build/asm/us/data/fragments/21/fragment21_header.o(.rodata);
         build/src/fragments/21/fragment21_13FFA0.o(.rodata);
+        build/src/fragments/21/fragment21_143DD0.o(.rodata);
         build/src/fragments/21/fragment21_144790.o(.rodata);
         build/src/fragments/21/fragment21_147D10.o(.rodata);
         fragment21_RODATA_END = .;
@@ -1959,6 +1963,7 @@ SECTIONS
         fragment21_BSS_START = .;
         build/asm/us/data/fragments/21/fragment21_header.o(.bss);
         build/src/fragments/21/fragment21_13FFA0.o(.bss);
+        build/src/fragments/21/fragment21_143DD0.o(.bss);
         build/src/fragments/21/fragment21_144790.o(.bss);
         build/src/fragments/21/fragment21_147D10.o(.bss);
         fragment21_BSS_END = .;
