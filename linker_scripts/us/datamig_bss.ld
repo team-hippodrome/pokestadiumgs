@@ -443,10 +443,12 @@ SECTIONS
         build/src/fragments/21/fragment21_144790.o(.data)
     }
 
-    /* func_82502854's archive handle and two state halfwords, in fragment
-     * 21's loaded data at D_82508D08. IDO shares one lui across the stores
-     * only when the record is a function-scope static. */
-    .fragment21_archive_8D08_data 0x82508D08 (NOLOAD) : SUBALIGN(4)
+    /* func_82501814's five timing halfwords (D_825087C0..D_825087D0), a
+     * filler up to D_82508D08, then func_82502854's archive handle and two
+     * state halfwords, all in fragment 21's loaded data. IDO keeps those
+     * values in registers across stores (and shares one lui) only when they
+     * are function-scope statics. */
+    .fragment21_archive_8D08_data 0x825087C0 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/21/fragment21_13FFA0.o(.data)
     }
@@ -565,7 +567,7 @@ SECTIONS
     }
 }
 
-ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 16,
+ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 0x550,
        "fragment21 archive record must retain its compiler section footprint");
 
 ASSERT(SIZEOF(.fragment73_preview_9A0_bss) == 32,

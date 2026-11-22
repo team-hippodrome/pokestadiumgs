@@ -755,7 +755,127 @@ void func_82501754(u16 *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_13FFA0/func_82501814.s")
+extern u8 D_82508F68[];
+extern u8 D_82508D10[];
+extern void func_800226C0(s32);
+extern s32 func_8250865C(void);
+extern void func_82501754(u16 *);
+extern void func_82502528(void);
+extern s16 func_82502924(u8 *);
+extern s32 Fragment21_SetRecordColorTransition(s32, void *, s16, s16, s16, s16, s32);
+extern void func_82507B18(void);
+extern void Fragment21_RequestClose(void);
+void func_82501814(u16 *arg0_) {
+    static s16 D_825087C0 = 0x1E;
+    static s16 D_825087C4 = 0xA;
+    static s16 D_825087C8 = 0x1E;
+    static s16 D_825087CC = 0x4;
+    static s16 D_825087D0 = 0x4;
+    s32 idx;
+    s16 *cnt = (s16 *)(D_82508F68 + 2);
+    s16 *a = (s16 *)arg0_;
+    u8 *state;
+    u8 *rec;
+    u8 *slot;
+    s16 end2;
+    s32 d;
+    f32 x;
+    s16 *p;
+
+    idx = *arg0_ & 0xFF;
+    switch (a[4]) {
+    case 0:
+        if (func_8250865C() != 0) {
+            state = D_82508F84;
+            if (((u16 *)a)[1] & 4) {
+                if (*arg0_ == 0x301) {
+                    *cnt = 8;
+                } else {
+                    *cnt += 1;
+                }
+            }
+            rec = *cnt * 0x30 + *(u8 **)(state + 0x1C);
+            slot = D_82508D10 + *cnt * 0x3C;
+            a[3] = 0;
+            a[4] = 1;
+            func_800226C0(0x119);
+            func_82501754(arg0_);
+            func_82502528();
+            if (((u16 *)a)[1] & 2) {
+                Fragment21_SetRecordColorTransition(0, (u8 *)(*(s32 *)(slot + 8) + 0x28), *(s16 *)(rec + 0x22), 0x31,
+                                                    *(s16 *)(rec + 0x22), func_82502924(*(u8 **)(slot + 0xC)),
+                                                    ((s32 *)(slot + 0x18))[**(u8 **)(slot + 0xC)]);
+                if (*(s16 *)(rec + 0x2C) != 0) {
+                    func_82507B18();
+                } else {
+                    Fragment21_RequestClose();
+                }
+            }
+        }
+        break;
+    case 1:
+        a[3] += 1;
+        if (a[3] < D_825087C0) {
+            x = ((f32)a[3] * 255.0f) / (f32)D_825087C0;
+            a[5] = (s32)(x + ((x > 0.0f) ? 0.5f : -0.5f));
+        } else if (a[3] < D_825087C0 + D_825087C4) {
+            a[5] = 0xFF;
+        } else {
+            end2 = D_825087C0 + D_825087C4 + D_825087C8;
+            if (a[3] < end2) {
+                d = a[3] - D_825087C0 - D_825087C4;
+                x = ((f32)d * 255.0f) / (f32)D_825087C8;
+                a[6] = (s32)(x + ((x > 0.0f) ? 0.5f : -0.5f));
+                a[5] = 0xFF - a[6];
+                if (d == D_825087C8 / 2) {
+                    func_800226C0(0x118);
+                }
+            } else {
+                a[3] = 0;
+                a[4] = 2;
+                a[6] = 0xFF;
+                a[5] = 0;
+                ((u16 *)a)[1] |= 1;
+            }
+        }
+        break;
+    case 2:
+        a[3] += 1;
+        if (a[3] < D_825087CC) {
+            if (a[3] == 1) {
+                func_800226C0(0x11A);
+            }
+            x = ((f32)a[3] * (f32)(*(s16 *)((u8 *)a + 0x34 + idx * 2) - 0x30)) / (f32)D_825087CC;
+            a[7] = (s32)(x + ((x > 0.0f) ? 0.5f : -0.5f)) + 0x30;
+        } else if (a[3] < D_825087CC + D_825087D0) {
+            p = (s16 *)((u8 *)a + idx * 2);
+            d = a[3] - D_825087CC;
+            a[7] = *(s16 *)((u8 *)p + 0x34);
+            x = ((f32)(*(s16 *)((u8 *)p + 0x38) - 0x30) * (f32)d) / (f32)D_825087D0;
+            a[8] = (s32)(x + ((x > 0.0f) ? 0.5f : -0.5f)) + 0x30;
+        } else {
+            p = (s16 *)((u8 *)a + idx * 2);
+            a[7] = *(s16 *)((u8 *)p + 0x34);
+            a[8] = *(s16 *)((u8 *)p + 0x38);
+            a[4] = 0x64;
+        }
+        break;
+    case 0x64:
+        a[2] = 2;
+        a[3] = 0;
+        a[4] = 0;
+        a[6] = 0xFF;
+        a[5] = 0;
+        break;
+    }
+}
+#endif
+
+#ifdef VERSION_US
+/* Filler for D_825087D4..D_82508D07, which stay in the fragment21 data blob.
+ * It keeps func_82502854's D_82508D08 at its retail offset from the
+ * timing statics above (this .data is pinned in datamig_bss.ld). */
+static u8 sFragment21DataGap[0x534] = { 0 };
 #endif
 
 #ifdef VERSION_US
