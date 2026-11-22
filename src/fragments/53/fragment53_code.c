@@ -1220,7 +1220,120 @@ void func_86503B98_padding(void) {}
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_865040E4.s")
+// Fragment 53 .data from 0x8650D130 (16-aligned) starts here; D_8650D130 is
+// not referenced.
+s32 D_8650D130 = 20;
+
+extern s32 D_8650C5E0;
+extern f32 D_8650C508;
+extern s32 D_8650C49C[4];
+extern s32 D_8650C4A0, D_8650C4A4, D_8650C4A8;
+extern s32 D_8650C4AC;
+extern s32 D_8650C4CC;
+extern s32 D_8650C470;
+extern s32 D_8650DB24;
+extern s32 D_8650D13C[];
+extern s32 D_865119B8[];
+extern f32 D_86511690;
+extern u8 D_8650DB80[];
+extern u8 D_8650F7A0[];
+extern u8 D_86511714[];
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F1DC(void *);
+extern u32 func_8003570C(void);
+void func_865040E4(s32 arg0) {
+    static f32 D_8650D134 = 0.0f;
+    static s32 D_8650D138 = 0;
+    s32 i;
+    s32 v1;
+    s32 t0;
+    f32 f;
+
+    switch (*(s32 *)((u8 *)&D_8650C5E0 + 0x44)) {
+    case 5:
+        D_8650D134 = 0.0f;
+        *(s32 *)((u8 *)&D_8650C5E0 + 0x44) = 0;
+        break;
+    case 0:
+        if (arg0 == 0) {
+            D_8650D134 = (f32)((f64)D_8650D134 + 0.45);
+        }
+        D_8650C49C[arg0] = (s32)((f64)*(s32 *)(D_86511714 + arg0 * 0x98) - 4.9 * (f64)D_8650C508 * (f64)D_8650D134 * (f64)D_8650D134);
+        if (D_8650C49C[arg0] < -0x1C2) {
+            *(s32 *)((u8 *)&D_8650C5E0 + 0x44) = 1;
+            for (i = 0; i < 4; i++) {
+                func_8003F114((u8 *)D_8650F200 + i * 0x168, 0, -1, D_8650DB24);
+                D_8650C49C[i] = -0x352 - D_8650C49C[i];
+            }
+        }
+        break;
+    case 1:
+        if (arg0 == 0) {
+            D_8650D138++;
+        }
+        if (D_8650D138 >= 6) {
+            D_8650D138 = 0;
+            *(s32 *)((u8 *)&D_8650C5E0 + 0x44) = 2;
+            D_8650D134 = 0.0f;
+        }
+        D_865119B8[arg0] = 0;
+        break;
+    case 2:
+        t0 = D_865119B8[arg0];
+        if (t0 == 0) {
+            f = 18.0f * D_8650C508;
+            if (!f) {} // FAKE
+            D_8650C49C[arg0] += (s32)(f + (f > 0.0f ? 0.5f : -0.5f));
+            if (f == 0) {} // FAKE
+        }
+        v1 = 0;
+        if (D_8650C49C[arg0] >= D_8650C4AC + D_8650C4CC + 15 || t0 > 0) {
+            v1 = 1;
+            if (D_8650C470 == 1) {
+                D_8650C49C[arg0] = D_8650C4AC + D_8650C4CC + 15;
+                *(f32 *)((u8 *)D_8650F228 + arg0 * 0x168) = (f32)D_8650C4AC;
+                for (i = 0; i < 4; i++) {
+                    if (D_8650C49C[i] < D_8650C4AC + D_8650C4CC + 15) {
+                        v1 = 0;
+                    }
+                }
+            }
+            if (arg0 == 0) {} // FAKE
+            if (D_8650C470 == 3) {
+                if (t0 < 0x12) {
+                    D_865119B8[arg0] = t0 + 1;
+                    t0 = t0 + 1;
+                    t0 = D_865119B8[arg0];
+                }
+                for (i = 0; i < 4; i++) {
+                    if (D_865119B8[i] < 0x12) {
+                        v1 = 0;
+                    }
+                }
+                D_8650C49C[arg0] = D_8650D13C[t0];
+            }
+        }
+        if (v1 == 1) {
+            *(s32 *)((u8 *)&D_8650C5E0 + 0x44) = 4;
+        }
+        break;
+    case 4:
+        *(s32 *)((u8 *)&D_8650C5E0 + 8) = -1;
+        *(s32 *)((u8 *)&D_8650C5E0 + 0x38) = 0;
+        *(s32 *)((u8 *)&D_8650C5E0 + 0x34) = 1;
+        D_86511690 = (f32)D_8650C4AC;
+        for (i = 0; i < 4; i++) {
+            v1 = 400 - -(s32)(func_8003570C() % 101);
+            D_8650C49C[i] = v1;
+            *(s32 *)((u8 *)&D_86511698[i] + 0x7C) = v1;
+            func_8003F1DC(D_8650DB80 + i * 0x168);
+            func_8003F1DC(D_8650F7A0 + i * 0x168);
+        }
+        break;
+    case 3:
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
@@ -1275,12 +1388,7 @@ s32 func_865046A8(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-// Fragment 53 .data from 0x8650D130 (16-aligned) belongs to this file. The
-// D_8650D134-D_8650D13C are used by func_865040E4 (still asm); D_8650D130 is
-// not referenced.
-s32 D_8650D130 = 20;
-f32 D_8650D134 = 0.0f;
-s32 D_8650D138 = 0;
+// D_8650D13C follows func_865040E4's function statics in .data.
 s32 D_8650D13C[23] = {
     688, 698, 705, 710, 714, 717, 718, 717,
     716, 715, 713, 710, 706, 702, 698, 693,
