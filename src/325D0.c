@@ -46,7 +46,32 @@ typedef struct {
 } GbPulse1State;
 extern GbPulse1State D_800D26B0;
 extern u8 D_800D2710[];
-extern u8 D_800D2730[];
+typedef struct {
+    u32 time;
+    u8 sampleId;
+    u8 pad5[3];
+    u32 pos;
+    f32 pitchStep;
+    f32 frac;
+    f32 volume;
+    f32 step;
+    u32 envPeriod;
+    u32 envNext;
+    u32 length;
+    u8 enabled;
+} GbNoiseState;
+
+typedef struct {
+    u8 sampleId;
+    f32 pitchStep;
+} GbNoiseEntry;
+
+typedef struct {
+    u32 rom;
+    u32 size;
+} GbNoiseSample;
+
+extern GbNoiseState D_800D2730;
 
 
 
@@ -114,9 +139,9 @@ void func_80031A6C(s32 arg0, void *arg1)
   D_800D26E8.unk24 = 0;
   *((u32 *) D_800D2710) = 0;
   D_800D2710[0x1C] = 0;
-  *((u32 *) D_800D2730) = 0;
-  D_800D2730[0x28] = 0;
-  D_800D2730[4] = 0xFF;
+  D_800D2730.time = 0;
+  D_800D2730.enabled = 0;
+  D_800D2730.sampleId = 0xFF;
 }
 /* mkdraft:func_80031A6C end */
 
@@ -548,6 +573,129 @@ s16 GbAudio_RenderPulse2(void) {
     return out;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/325D0/func_80032A28.s")
+// Noise sample table: [NR43 & 7][NR43 >> 4] -> sample id + pitch step.
+extern GbNoiseEntry D_80092120[8][16];
+
+// Noise channel (NR41-NR44). Stadium 1's func_8004A89C in gb_audio_render.c is
+// the same routine.
+s16 func_80032A28(void) {
+    s32 i;
+    s32 changed;
+    s32 nr43;
+    s32 row;
+    u16 col;
+    GbNoiseEntry *entry;
+    u8 id;
+    u32 nr42;
+    u32 nr44;
+    GbNoiseSample *ent;
+    s16 sample;
+    u32 inc;
+
+    changed = 0;
+    for (i = 0x10; i < 0x14; i++) {
+        if (GB_DIRTY(i) != 0) {
+            changed = 1;
+            GB_DIRTY(i) = 0;
+        }
+    }
+
+    if (changed) {
+        nr43 = GB_REG(0x12);
+        row = nr43 & 7;
+        col = (GB_REG(0x12) & 0xF0) >> 4;
+        entry = &D_80092120[row][col];
+        id = entry->sampleId;
+        if (id == 0xFF) {
+            D_800D2730.enabled = 0;
+            return 0;
+        }
+        if (GB_REG(0x12) & 8) {
+            id += 0x10;
+        }
+        D_800D2730.pitchStep = D_80092120[nr43 & 7][col].pitchStep;
+        if (id != D_800D2730.sampleId) {
+            D_800D2730.sampleId = id;
+            ent = (GbNoiseSample *)((u32 *)D_800D2B24 + (D_800D2730.sampleId << 1));
+            func_80035068(ent->rom, D_800D2B28, ent->size);
+        }
+        nr42 = GB_REG(0x11);
+        D_800D2730.pos = 0;
+        D_800D2730.frac = 0;
+        if (!(nr42 & 8) && !(nr42 & 0xF0)) {
+            D_800D2730.enabled = 0;
+            GB_REG(0x16) &= 0xFFF7;
+            return 0;
+        }
+        if ((nr42 & 8) && !(nr42 & 0xF0) && !(nr42 & 7)) {
+            D_800D2730.enabled = 0;
+            GB_REG(0x16) &= 0xFFF7;
+            return 0;
+        }
+        nr44 = GB_REG(0x13);
+        if (nr44 & 0x80) {
+            D_800D2730.time = 0;
+            D_800D2730.enabled = 1;
+            D_800D2730.volume = (u32)(u8)(nr42 & 0xF0) * 0.05f;
+            if (nr42 & 7) {
+                if (nr42 & 8) {
+                    D_800D2730.step = 0.05f;
+                } else {
+                    D_800D2730.step = -0.05f;
+                }
+                D_800D2730.envNext = D_800D2730.envPeriod = (nr42 & 7) * D_800D275C * 4;
+            } else {
+                D_800D2730.envPeriod = -1;
+                D_800D2730.envNext = -1;
+                D_800D2730.step = 0.0f;
+            }
+            if (nr44 & 0x40) {
+                D_800D2730.length = (0x40 - (GB_REG(0x10) & 0x3F)) * D_800D275C;
+            } else {
+                D_800D2730.length = -1;
+            }
+            GB_REG(0x13) = nr44 & 0xFF7F;
+        }
+        if (D_800D2730.enabled == 0) {
+            return 0;
+        }
+    } else if (D_800D2730.enabled == 0) {
+        return 0;
+    }
+
+    row = 0x11;
+    nr44 = D_800D2730.time;
+    if (D_800D2730.length < nr44) {
+        D_800D2730.enabled = 0;
+        GB_REG(0x16) &= 0xFFF7;
+        return 0;
+    }
+    inc = GB_REG(row) & 8;
+    if (D_800D2730.envNext < nr44) {
+        D_800D2730.envNext += D_800D2730.envPeriod;
+        D_800D2730.volume += D_800D2730.step;
+    }
+    sample = ((s16 *)D_800D2B28)[D_800D2730.pos];
+    D_800D2730.frac += 1.0f;
+    while (D_800D2730.pitchStep <= D_800D2730.frac) {
+        D_800D2730.frac -= D_800D2730.pitchStep;
+        D_800D2730.pos++;
+        if (D_800D2730.pos >= (((GbNoiseSample *)D_800D2B24)[D_800D2730.sampleId & 0xFF].size >> 1)) {
+            D_800D2730.pos = 0;
+        }
+    }
+    if (!inc && (D_800D2730.volume < 0.0f)) {
+        D_800D2730.enabled = 0;
+        return 0;
+    }
+    if (D_800D2730.volume > 0.75f) {
+        D_800D2730.volume = 0.75f;
+        D_800D2730.step = 0.0f;
+        D_800D2730.envNext = -1;
+    }
+    sample = sample * D_800D2730.volume;
+    D_800D2730.time = nr44 + 0x100;
+    return sample;
+}
 
 #endif
