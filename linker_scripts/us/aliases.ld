@@ -1138,6 +1138,11 @@ func_8AC039A4 = Fragment43_FillRectangleCallback;
 
 // Complete typed view of the assembly-owned fragment 55 main state.
 gStage55MainState = D_8670BB48;
+/* func_867043AC: second name for the per-player state array so its end-of-turn block
+ * gets its own address live range (retail register choice there), and an f32 scalar
+ * view of D_8670B3D4 (declared as s32[][4] earlier in fragment55_code.c). */
+D_86728408x = D_86728408;
+D_8670B3D4f = D_8670B3D4;
 
 func_8670018C = Stage55_DrawAnimatedResource;
 func_86708EDC = Stage55_UpdateTransition;
