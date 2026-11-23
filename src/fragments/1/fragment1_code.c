@@ -277,7 +277,70 @@ void func_835012C8(void) {
     gSPDisplayList(D_800D0510++, D_80094F50);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_8350182C.s")
+extern s32 D_83503BA8;
+extern f64 D_83503DD8;
+extern f64 D_83503DE0;
+extern f32 D_835040E0;
+extern s32 D_83503AC0[];
+extern void func_800226C0(s32);
+#define ROUND_MAX3(x) ((x) + ((x) > 0 ? 0.5f : -0.5f))
+#define BE0 (*(f32 *)((u8 *)&D_83503BA8 + 0x38))
+void func_8350182C(void) {
+    s32 archive;
+    s32 i;
+    s32 pass;
+    s32 y;
+    u8 *texBase;
+    static f32 D_83503CFC;
+    static f32 D_83503D00;
+
+    if (BE0 > 0.0f) {
+        D_835040E0 = BE0 + D_83503DD8;
+        BE0 -= D_83503CFC * D_83503CFC;
+        D_83503CFC = D_83503CFC + D_83503DE0;
+    } else if (D_83503AC0[3] == 0) {
+        D_83503AC0[3] = 1;
+        func_800226C0(0x77);
+    }
+    if (BE0 < 0.0f) {
+        BE0 = 0.0f;
+        D_835040E0 = 0.0f;
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    archive = func_8004C990(0x44, 4);
+    texBase = func_8004CA60((u8 *)archive);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+    gDPSetCombine(D_800D0510++, 0xFCFF97FF, 0xFF2CFE7F);
+    for (pass = 0; pass != 2; pass++) {
+        if (pass == 0) {
+            D_83503D00 = BE0 + D_83503BE8;
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 255);
+        } else {
+            if (!texBase) {} // FAKE
+            D_83503D00 = D_835040E0 + D_83503BE8;
+            gDPSetPrimColor(D_800D0510++, 0, 0, 255, 255, 255, 128);
+        }
+        y = 190.0f - 28.0f * D_83503D00;
+        for (i = 0; i != 0x1C00; i += 0xE00) {
+            gDPSetTextureImage(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texBase + i);
+            gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+            gDPLoadSync(D_800D0510++);
+            gDPLoadBlock(D_800D0510++, G_TX_LOADTILE, 0, 0, 1791, 0);
+            gDPPipeSync(D_800D0510++);
+            gDPSetTile(D_800D0510++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
+            gDPSetTileSize(D_800D0510++, G_TX_RENDERTILE, 0, 0, 63 << 2, 27 << 2);
+            GfxRect_DrawTextured(ROUND_MAX3(157.0f - 32.0f * D_83503D00), ROUND_MAX3((f32)y),
+                                 ROUND_MAX3(64.0f * D_83503D00), ROUND_MAX3(28.0f * D_83503D00), 0, 0,
+                                 ROUND_MAX3(1024.0f / D_83503D00), ROUND_MAX3(1024.0f / D_83503D00), 0);
+            y = y + 28.0f * D_83503D00;
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    // FAKE: this dead int ternary takes the last 8 bytes of cfe temps, which puts
+    // the rect x rounding temp at sp+0x9C and the float spill at sp+0x8C.
+    if (0) { pass = pass + (pass ? 1 : 2); }
+}
 
 extern s32 D_83503BB4;
 extern s16 D_83503E82;
