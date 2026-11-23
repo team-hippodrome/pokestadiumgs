@@ -3,14 +3,14 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **72 / 10,417 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **72 / 10,420 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 8,827 (2.8%)** (8,579 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Variables with a real name: **248 / 8,837 (2.8%)** (8,589 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,180**
-- Functions with generic `arg0`, `arg1`, ... parameters: **6,251 / 10,417 (60.0%)**
-- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,440 / 2,586**
-- Struct fields with a real name: **6,947 / 11,580 (60.0%)**
-- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **18,301**
+- Functions with generic `arg0`, `arg1`, ... parameters: **6,252 / 10,420 (60.0%)**
+- Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,441 / 2,587**
+- Struct fields with a real name: **6,950 / 11,587 (60.0%)**
+- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **18,305**
 <!-- AUTO_UNDOCUMENTED:END -->
 
 A function counts as commented when a `/* ... */` block ends on the line directly above its definition.
@@ -90,10 +90,10 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/63/fragment63_310270.c` | 43 | 43 | 72 | 12 | 7 | 33 | 100 |
 | `src/fragments/82/fragment82_4238F0.c` | 56 | 56 | 80 | 31 | 5 | 38 | 56 |
 | `src/fragments/37/fragment37_code.c` | 16 | 16 | 89 | 38 | 1 | 2 | 118 |
+| `src/fragments/63/fragment63_319010.c` | 44 | 44 | 76 | 19 | 4 | 39 | 81 |
 | `src/fragments/79/fragment79_3C60B0.c` | 113 | 113 | 80 | 50 | 2 | 5 | 13 |
 | `src/fragments/17/fragment17_118870.c` | 29 | 29 | 121 | 79 | 3 | 14 | 14 |
 | `src/fragments/40/fragment40_1DC1F0.c` | 20 | 20 | 85 | 33 | 4 | 13 | 105 |
-| `src/fragments/63/fragment63_319010.c` | 43 | 43 | 76 | 19 | 4 | 39 | 78 |
 | `src/fragments/14/fragment14_1025F0.c` | 50 | 49 | 104 | 18 | 5 | 50 | 32 |
 | `src/fragments/63/fragment63_303990.c` | 40 | 40 | 121 | 14 | 5 | 17 | 60 |
 | `src/21C0.c` | 1 | 1 | 252 | 0 | 0 | 0 | 0 |
@@ -152,13 +152,14 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/31/fragment31_189760.c` | 15 | 15 | 68 | 31 | 1 | 7 | 49 |
 | `src/fragments/44/fragment44_1F0680.c` | 18 | 18 | 22 | 12 | 0 | 16 | 103 |
 | `src/fragments/44/fragment44_212740.c` | 22 | 22 | 52 | 83 | 2 | 4 | 8 |
+| `src/fragments/1/fragment1_code.c` | 17 | 17 | 42 | 54 | 4 | 4 | 49 |
 | `src/fragments/31/fragment31_186690.c` | 22 | 22 | 85 | 34 | 5 | 3 | 20 |
 | `src/fragments/45/fragment45_2348E0.c` | 18 | 18 | 57 | 62 | 1 | 12 | 19 |
 | `src/fragments/31/fragment31_183700.c` | 21 | 21 | 83 | 25 | 2 | 11 | 26 |
 | `src/fragments/44/fragment44_204950.c` | 14 | 14 | 53 | 45 | 1 | 6 | 47 |
 | `src/fragments/82/fragment82_420EA0.c` | 39 | 39 | 47 | 28 | 3 | 7 | 40 |
-| `src/fragments/1/fragment1_code.c` | 16 | 16 | 42 | 48 | 4 | 4 | 48 |
 | `src/fragments/81/fragment81_code.c` | 34 | 34 | 39 | 45 | 1 | 17 | 26 |
+| `src/fragments/11/fragment11_E1E10.c` | 29 | 29 | 68 | 15 | 4 | 28 | 13 |
 | `src/41B60.c` | 40 | 40 | 33 | 9 | 3 | 28 | 41 |
 | `src/fragments/30/fragment30_170D70.c` | 10 | 10 | 53 | 25 | 1 | 2 | 63 |
 | `src/fragments/11/fragment11_D7BC0.c` | 41 | 39 | 39 | 7 | 10 | 38 | 20 |
@@ -173,7 +174,6 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/63/fragment63_307D60.c` | 17 | 17 | 59 | 12 | 3 | 15 | 41 |
 | `src/fragments/44/fragment44_1F85B0.c` | 16 | 15 | 53 | 61 | 4 | 7 | 5 |
 | `src/fragments/45/fragment45_2324B0.c` | 22 | 22 | 48 | 53 | 0 | 12 | 10 |
-| `src/fragments/11/fragment11_E1E10.c` | 28 | 28 | 60 | 10 | 4 | 27 | 13 |
 | `src/fragments/44/fragment44_20A610.c` | 13 | 13 | 28 | 50 | 0 | 3 | 46 |
 | `src/fragments/75/fragment75_code.c` | 19 | 19 | 61 | 38 | 2 | 7 | 10 |
 | `src/fragments/64/fragment64_3290A0.c` | 13 | 12 | 43 | 54 | 0 | 7 | 16 |
