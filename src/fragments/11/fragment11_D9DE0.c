@@ -226,16 +226,12 @@ s32 *func_81602D70(s32 arg0) {
 }
 
 extern void func_8004972C(u8, u8, u8, s32);
-void *func_81602C68();
+void *func_81602C68(s32 arg0);
 
-void func_81602DA4(void) {
+void func_81602DA4(s32 arg0) {
     void *temp_v0;
 
-#ifdef CC_CHECK
-    temp_v0 = func_81602C68(0);
-#else
-    temp_v0 = func_81602C68();
-#endif
+    temp_v0 = func_81602C68(arg0);
     func_8004972C((*(u8 *)((u8 *)(temp_v0) + (0))), (*(u8 *)((u8 *)(temp_v0) + (1))), (*(u8 *)((u8 *)(temp_v0) + (2))), 0xFF);
 }
 
@@ -853,7 +849,58 @@ void func_8160615C(s32 arg0, s32 arg1, s32 arg2, f32 arg3) {
 }
 /* mkdraft:func_8160615C end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81606304.s")
+extern u8 func_80062D5C(u8);
+extern u8 func_80062D98(u8);
+extern s32 func_80062CE0(u8);
+extern s32 func_80063270(u8);
+extern u8 func_80062DD4(u8);
+extern s32 func_8004C874();
+extern s32 func_80049148();
+extern void func_800495BC();
+extern void func_800496A4();
+extern void func_8004989C();
+extern void func_800498C4();
+extern void func_800499EC();
+void func_81606304(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    u32 idx;
+    f32 pct;
+    f32 ratio;
+    s32 val;
+    s32 width;
+
+    idx = (u8)arg4;
+    if (idx == 0) {} // FAKE
+    idx = (u8)arg4; // FAKE: repeat moves idx's spill slot below ratio's
+    val = func_80062D5C(idx);
+    if (arg2 >= 0x10 && arg3 >= 0x10) {
+        ratio = 1.0f - (f32)arg2 / 302.0f;
+        func_816048E0(arg0, arg1, arg2, arg3, ratio);
+        if (!(ratio > 0.1f) && arg4 != 0) {
+            Fragment11_SetClippedScissor(&D_800D0510, arg0 + 8, arg1 + 8, arg2 - 0x13, arg3 - 0x13);
+            func_800498C4();
+            func_800496A4(8, 0);
+            func_81602DA4(func_80062D98(idx));
+            func_800495BC(arg0 + 0xE, arg1 + 0xE, func_80062CE0(idx));
+            width = func_80049148(4, 0, "%s%s", func_8004C874(0xD, 1), func_8004C874(0xD, 0x16));
+            func_800496A4(4, 0);
+            func_800495BC(arg0 + width + 0xA4, arg1 + 0x12, func_80063270(func_80062D98(idx)));
+            func_800496A4(4, 0);
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            func_800495BC(arg0 + 0xA4, arg1 + 0x12, "%s%s", func_8004C874(0xD, 1), func_8004C874(0xD, 0x16));
+            if (val < 2) {
+                func_800495BC(arg0 + 0xE, arg1 + 0x26, "%s%s---", func_8004C874(0xD, 0xF), func_8004C874(0xD, 0x16));
+            } else {
+                func_800495BC(arg0 + 0xE, arg1 + 0x26, "%s%s%3d", func_8004C874(0xD, 0xF), func_8004C874(0xD, 0x16), val);
+            }
+            pct = (f32)(u32)func_80062DD4(idx) * 100.0f / 255.0f;
+            func_800495BC(arg0 + 0x95, arg1 + 0x26, "%s%s%3.0f", func_8004C874(0xD, 0x10), func_8004C874(0xD, 0x16), (f64)pct);
+            func_8004989C(0x14);
+            func_800495BC(arg0 + 0xE, arg1 + 0x3E, func_8004C874(7, arg4 - 1));
+            func_800499EC();
+            Fragment11_SetClippedScissor(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        }
+    }
+}
 
 /* mkdraft:func_81606694 begin */
 extern u32 D_800D0510;
