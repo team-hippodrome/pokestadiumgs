@@ -454,7 +454,35 @@ void func_87E16B50(void *arg0) {
     } while (src != (f32 *)D_87E1B3A4);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/63/fragment63_319010/func_87E16DC0.s")
+void func_87E16DC0(void *a0) {
+    u8 *arg0 = a0;
+    f32 acc[3];
+    f32 zero;
+    s32 pad; // FAKE
+    f32 *p;
+    f32 *base;
+    s32 i;
+
+    base = (f32 *)(arg0 + 0x40);
+    if (!zero) {} // FAKE
+    p = base;
+    for (i = 0; i < 8; i++) {
+        p[3] += 3.0f * *(f32 *)(arg0 + 0xD8C);
+        if (zero) {} // FAKE
+        p[4] += 20.0f * *(f32 *)(arg0 + 0xD8C);
+        p[5] += -0.7f * *(f32 *)(arg0 + 0xD8C);
+        p += 6;
+    }
+    zero = 0.0f;
+    Vec3f_SetComponentsDuplicate(acc, zero, zero, 0.0f);
+    p = base;
+    for (i = 0; i < 8; i++) {
+        acc[0] += p[3];
+        acc[1] += p[4];
+        acc[2] += p[5];
+        p += 6;
+    }
+}
 
 extern void *D_87E1EC88;
 extern s32 func_80001FF0(void);
