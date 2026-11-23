@@ -73,6 +73,8 @@
     - [0x28D30, pad]
     - [0x28D40, c]
     - [0x290C0, c]
+    - [0x325D0, c]
+    - [0x33A40, c]
     - [0x340C0, c]
     - [0x35BE0, c]
     - [0x35D40, c]
@@ -383,6 +385,8 @@
     - [0xA43A0, .rodata, 26CC0] # mode and category dispatch tables
     - [0xA4590, .rodata, 27590] # bank sizes, debug strings, then literals and jump tables
     - [0xA4660, .rodata, 290C0] # party debug strings, then literals and jump tables
+    - [0xA4E70, .rodata, 325D0] # func_80032A28's noise-channel literals
+    - [0xA4E80, .rodata, 33A40] # func_800333CC's channel switch table
     - [0xA4EA0, rodata]
     - [0xA4EC0, .rodata, 43700] # jtbl_800A42C0
     - [0xA4EE0, .rodata, 47580] # jtbl_800A43C0 (+2 more)

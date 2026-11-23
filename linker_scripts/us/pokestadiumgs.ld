@@ -115,6 +115,8 @@ SECTIONS
         . += 0x10;
         build/src/28D40.o(.text);
         build/src/290C0.o(.text);
+        build/src/325D0.o(.text);
+        build/src/33A40.o(.text);
         build/src/340C0.o(.text);
         build/src/35BE0.o(.text);
         build/src/35D40.o(.text);
@@ -648,6 +650,8 @@ SECTIONS
         build/src/27590.o(.rodata);
         build/src/28D40.o(.rodata);
         build/src/290C0.o(.rodata);
+        build/src/325D0.o(.rodata);
+        build/src/33A40.o(.rodata);
         build/src/340C0.o(.rodata);
         build/src/35BE0.o(.rodata);
         build/src/35D40.o(.rodata);
