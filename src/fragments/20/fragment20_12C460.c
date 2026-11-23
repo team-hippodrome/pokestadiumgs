@@ -4755,7 +4755,100 @@ s32 func_826119A4(s32 arg0, s32 arg1, s16 *arg2) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_826119DC.s")
+extern s32 D_826153D4;
+extern s32 D_826153D8;
+extern s32 D_826153DC;
+void func_826119DC(void *arg0_) {
+#define arg0 ((u8 *)arg0_)
+    s32 flag;
+    s32 lim;
+    s32 k;
+    u8 *sub;
+    s32 sc;
+    s16 o;
+    u8 *entry;
+    s16 *p;
+    s32 i;
+    s32 idx;
+    s32 t;
+    s32 pad2;
+    s32 pad3;
+    if (k == 2) {} // FAKE
+    flag = 1;
+    lim = (*(s16 **)(*(u8 **)(arg0 + 0x110) + 4))[1];
+    if (*(s16 *)(arg0 + 6) < 0x7530) {
+        *(s16 *)(arg0 + 6) += 1;
+    }
+    if (*(s16 *)(arg0 + 6) % D_826153D4 == 0) {
+        if (*(s16 *)(arg0 + 0x1A) < lim) {
+            *(s16 *)(arg0 + 0x1A) += 1;
+            if (*(s16 *)(arg0 + 0x1C) < *(s16 *)(arg0 + 0x1A)) {
+                *(s16 *)(arg0 + 0x1A) = lim;
+            }
+        }
+    }
+    for (k = 0; k < 2; k++) {
+        entry = func_82604C40(6, k, arg0 + 0x114, 0x14);
+        p = (s16 *)(entry + 0x30);
+        sub = entry + 0x30;
+        for (i = 0; i < *(s16 *)(sub + 6); i++, p++) {
+            idx = *(s16 *)(sub + 8) + i;
+            if (*(s16 *)((u8 *)p + 0x214) < 0) {
+                if (func_826119A4(idx, *(s16 *)(arg0 + 0x1A), (s16 *)(arg0 + 0x20)) != -1) {
+                    if (*(s16 *)((u8 *)p + 0x22C) < D_826153D8 + D_826153DC) {
+                        sc = *(s16 *)((u8 *)p + 0x22C);
+                        if (D_826153D8 < sc) {
+                            sc = D_826153D8;
+                        }
+                        *(s16 *)((u8 *)p + 0x22C) += 1;
+                        t = *(s16 *)((u8 *)p + 0x238);
+                        o = *(s16 *)((u8 *)p + 0x250);
+                        if (t < o && *(s16 *)((u8 *)p + 0x22C) == 1) {
+                            func_800226C0(0x71);
+                            t = *(s16 *)((u8 *)p + 0x238);
+                            o = *(s16 *)((u8 *)p + 0x250);
+                        }
+                        *(s16 *)((u8 *)p + 0x244) = o + (t - o) * sc / D_826153D8;
+                    } else {
+                        *(s16 *)((u8 *)p + 0x214) = 0;
+                        *(s16 *)((u8 *)p + 0x244) = *(s16 *)((u8 *)p + 0x238);
+                    }
+                    if (*(s16 *)((u8 *)p + 0x250) != 0 && *(s16 *)((u8 *)p + 0x244) == 0 &&
+                        *(s16 *)((u8 *)p + 0x25C) == 0) {
+                        *(s16 *)((u8 *)p + 0x25C) = 1;
+                        func_800226C0(0x77);
+                    }
+                }
+            }
+        }
+    }
+    for (k = 0; k < 2; k++) {
+        entry = func_82604C40(6, k, arg0 + 0x114, 0x14);
+        sub = entry + 0x30;
+        for (i = 0; i < *(s16 *)(sub + 6); i++) {
+            if (((s16 *)(sub + 0x214))[i] < 0) {
+                flag = 0;
+            }
+        }
+    }
+    if (flag != 0) {
+        if (*(u8 *)(**(u8 ***)(arg0 + 0x110) + 7) != 2) {
+            sub++; // FAKE
+            sub--; // FAKE
+            *(s16 *)(arg0 + 2) = 8;
+        } else {
+            *(s16 *)(arg0 + 2) = 10;
+        }
+        *(s16 *)(arg0 + 6) = 0;
+    }
+    entry = func_82604C40(6, 0, arg0 + 0x114, 0x14);
+    func_826026E8(*(s32 *)(arg0 + 0x110), *(s16 *)(entry + 0x14) + *(s16 *)(entry + 0x10),
+                  *(s16 *)(entry + 0x16) + *(s16 *)(entry + 0x12), *(s16 *)(entry + 0x24),
+                  *(s16 *)(entry + 0x26) << 1);
+}
+#undef arg0
+#undef arg0
+
 
 /* Filler for D_82615600..D_8261577B, which stay in the fragment20 data blob.
  * It keeps func_82611D44's timing statics at their retail offset from
