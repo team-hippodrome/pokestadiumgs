@@ -2493,5 +2493,5 @@ void func_8001FA80(void) {
 }
 /* mkdraft:func_8001FA80 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/1CDC0/func_8001FBE0.s")
+#pragma GLOBAL_ASM("hand_asm/1CDC0/func_8001FBE0.s")
 #endif
