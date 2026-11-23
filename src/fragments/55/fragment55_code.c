@@ -14,6 +14,9 @@ typedef struct {
     s32 animation_frame;
     u8 unk40[8];
     s32 exit_result;
+    s32 unk4C;
+    u8 unk50[0x14];
+    s32 unk64;
 } Stage55MainState;
 extern Stage55MainState gStage55MainState;
 
@@ -1707,7 +1710,777 @@ void Stage55_UpdateModelFade(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_867043AC.s")
+// D_8670B3D4f and D_86728408x are linker aliases (aliases.ld) of D_8670B3D4 / D_86728408.
+extern f32 D_8670B3D4f;
+extern State86703DF4 D_86728408x[];
+extern f32 D_80088E50[];
+extern f32 D_80087E50[];
+extern s32 D_8670B388;
+extern s32 D_8670B3DC;
+extern f32 D_8670BD98;
+extern u8 D_867286B8[];
+extern void *D_8670FEB0;
+extern u8 D_8670FEB8[];
+extern u8 D_8670D8B8[];
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern s32 func_8003F210(void *, s32);
+extern s32 ModelAnim_IsFinished(void *);
+extern void func_800279C4(u16);
+extern f32 D_8670BE70;
+extern s32 D_8670BE78;
+extern s16 D_8670B3E0;
+extern f32 D_8670B350;
+extern f32 D_8670B354;
+extern f32 D_8670B384;
+extern s32 D_8670B364;
+extern s32 D_8670BAD8;
+extern s32 D_8670BADC;
+extern s32 D_8670BAE0;
+extern s32 D_8670BAE4;
+extern s32 D_86728344[];
+extern s32 D_8670C860[];
+extern s32 D_8670C88C;
+extern s32 D_8670C874;
+extern s32 D_8670BB94;
+extern s32 D_8670BB88;
+extern f32 D_86710C08[];
+extern s32 D_8670FF58;
+extern void func_8003F3BC(void *, s32);
+extern void func_80027774(u16, s32);
+extern void func_87F0CA58(void);
+extern void func_87F0C930(void *);
+extern void func_87F0CB24(void);
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+extern s32 func_867037B8(s32, f32, f32);
+extern void func_86701C6C(s32);
+extern void func_86702E50(s32);
+extern void func_86703DF4(s32);
+extern void Stage55_UpdateModelSounds(s32);
+extern void func_86703E9C(s32);
+extern void func_86703F9C(void);
+extern void func_867036B4(s32);
+extern s16 func_86703D98(s8, s8);
+
+#define PF(p, o) (*(f32 *)((u8 *)(p) + (o)))
+#define PI(p, o) (*(s32 *)((u8 *)(p) + (o)))
+#define PH(p, o) (*(s16 *)((u8 *)(p) + (o)))
+#define PUH(p, o) (*(u16 *)((u8 *)(p) + (o)))
+#define FABS(x) ((x) < 0.0f ? -(x) : (x))
+#define FRAME(m) (PI((m), 0x48) >> 16)
+
+#define row ((u8 *)&D_86710C20[idx])
+#define st ((u8 *)&D_86728408[idx])
+#define pt ((u8 *)&D_867100C8[idx])
+#define mdl ((u8 *)&D_86710668[idx])
+#define ABS(x) ((x) < 0.0f ? -(x) : (x))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define cc vel.x
+#define dd vel.y
+#define ABSDIFF(a, b) ((a) < (b) ? -((a) - (b)) : ((a) - (b)))
+
+void func_867043AC(s32 arg0, u8 *arg1) {
+    // Fillers so this function static lands at retail D_8670C888 in fragment 55's reused
+    // reloc-area .bss (after func_86701C6C's sCurCtx at D_8670C850). Never accessed.
+    static s32 D_8670C854;
+    static u8 D_8670C858[0x30];
+    static s32 D_8670C888;
+    s32 idx;
+    s32 i;
+    s32 reached;
+    s32 j;
+    s32 v;
+    volatile s32 flagB;
+    s32 flagA;
+    struct { f32 x; f32 y; } vel;
+    volatile s32 flagC;
+    f32 fv0;
+    f32 fv1;
+    f32 fa0;
+    f32 ft4;
+    f32 ft5;
+    u8 *slots;
+    s32 *pflag;
+    f32 *lim;
+    f32 sp38;
+    s32 a1i;
+    s32 a2i;
+    f32 fn1;
+    f32 fx0;
+    s32 pad[2]; // FAKE
+
+    idx = PI(arg1, 0x14);
+    flagA = 0;
+    flagB = 0;
+    if (arg0 == 0) {
+        return;
+    }
+    if (arg0 != 2) {
+        return;
+    }
+
+    ft5 = D_8670BE70;
+    PF(pt, 0x24) = PF(row, 0x24);
+    if (idx) { } // FAKE
+    PF(pt, 0x2C) = PF(row, 0x2C);
+    PF(mdl, 0x2C) = PF(row, 0x2C);
+    PF(mdl, 0x24) = PF(row, 0xAC);
+    PF(mdl, 0x28) = PF(row, 0xB0);
+    PF(mdl, 0x38) = PF(st, 0x5C) + ft5;
+    PF(mdl, 0x34) = ft5;
+    PF(mdl, 0x30) = ft5;
+    PH(mdl, 0x1E) = D_8670BE74[0];
+    if (D_8670B394 != 0) {
+        return;
+    }
+    Stage55_UpdateModelFade(idx);
+
+    if (PI(st, 0x2C) == 9) {
+    if (i == 360) { } // FAKE
+        if (D_8670BE78 == FRAME(row) && PI(st, 0x90) == 0) {
+            func_800279C4(0x9F02);
+            PI(st, 0x90) = 1;
+        }
+        ft5 = D_80088E50[(u16)(FRAME(row) * 1310 + 1310) >> 4] * 1.5;
+        PF(pt, 0x38) = ft5;
+        PF(pt, 0x30) = ft5;
+    }
+    if (PI(st, 0x2C) == 8 && PI(st, 0x98) == 0xCE) {
+        PF(pt, 0x30) = 2.25f;
+        PF(pt, 0x38) = 2.25f;
+    }
+
+    dd = 0;
+    cc = 0;
+    {
+        u8 *pad_ = (u8 *)D_800CE060 + idx * 0x28;
+        if (idx) { } // FAKE
+        if ((PUH(pad_, 6) & 0xF00) != 0) {
+            if (PUH(pad_, 6) & 0x100) {
+                dd = 60.0f;
+            }
+            if (PUH(pad_, 6) & 0x200) {
+                dd = -60.0f;
+            }
+            if (PUH(pad_, 6) & 0x400) {
+                cc = -60.0f;
+            }
+            if (PUH(pad_, 6) & 0x800) {
+                cc = 60.0f;
+            }
+            if (dd != 0.0f && cc != 0.0f) {
+                dd = dd * 0.75;
+                cc = cc * 0.75;
+            }
+        } else {
+            dd = PF(pad_, 0x18);
+            cc = PF(pad_, 0x1C);
+        }
+    }
+
+
+    fv1 = ((f32)idx * 120.0f + -180.0f) * D_8670B3C4;
+    sp38 = PF(row, 0x24);
+    if (sp38 < fv1) {
+        PF(st, 0x78) = -ABSDIFF(sp38, fv1);
+    } else {
+        PF(st, 0x78) = ABSDIFF(fv1, sp38);
+    }
+    D_8670B3E0 += 0x100;
+    flagC = 0;
+    PI(st, 0xC) = 1;
+
+    for (i = 0; i < 60; i++) {
+        if (D_8670C980[idx][i].unk04[0] == 9) {
+            PF(&D_86711760[idx][i], 0x24) = (PF(st, 0x1C) + 4.0f * D_8670C890) + (1.0f - D_80087E50[(u16)D_8670B3E0 >> 4]) * (5.0f * D_8670C890);
+        }
+    }
+    if (D_8670BE74[0]) { } if (D_8670B394) { } // FAKE
+
+    pflag = &D_8670B374 + idx;
+    if (*pflag != 0) {
+        func_86701C6C(idx);
+    }
+
+    if (PI(st, 0x2C) == 0xC) {
+        if (FRAME(arg1) < 8 && PF(st, 0x70) != 0.0f) {
+            PH(row, 0x20) = func_86703D98(PF(st, 0x70) * 5.0f, -0x2D);
+        } else {
+            PH(row, 0x20) = 0;
+        }
+        if (FRAME(arg1) < 8) {
+            PF(row, 0x24) += PF(st, 0x70);
+        }
+        if (FRAME(arg1) < 0xC) {
+            fv1 = 1.5 - D_80087E50[(u16)(FRAME(arg1) * 0xAAA + 0xAAA) >> 4] * 1.5;
+            PF(pt, 0x38) = fv1;
+            PF(pt, 0x30) = fv1;
+            PF(row, 0x2C) += 30.0 * (D_8670BD9C + PF(st, 0x5C) * 1.6);
+        }
+        for (i = 0; i < 60; i++) {
+            func_8003F1DC(&D_86711760[idx][i]);
+        }
+    }
+    if (PI(st, 0x74) > 0) {
+        if (PI(st, 0x74) == 3) {
+            func_80027A28(0x9F0B, idx);
+        }
+        PI(st, 0x74)++;
+    }
+    if (PI(st, 0x74) >= 0xB) {
+        PI(st, 0x74) = 0;
+    }
+
+    if (PI(st, 0x68) > 0) {
+        PI(st, 0x68)++;
+        sp38 = D_80087E50[(u16)(PI(st, 0x68) * 0xCCC) >> 4];
+        fv0 = 1.5 - sp38 * 1.5;
+        PF(pt, 0x38) = fv0;
+        PF(pt, 0x30) = fv0;
+        PF(row, 0x28) = sp38 * 60.0f + 80.0f;
+    }
+    if (PI(st, 0x68) >= 0xB) {
+        PI(st, 0x68) = 0;
+    }
+    if (PI(st, 0x68) == 5) {
+        PF(st, 0x5C) = 0.05f;
+        PF(st, 0x58) = 0.01f;
+    }
+
+    if (D_8670BB48 == 1 && (PI(st, 0x2C) == 0 || PI(st, 0x2C) == 1 || PI(st, 0x2C) == 6 || PI(st, 0x2C) == 10)) {
+        if (D_8670B388 == 1) {
+            if (D_8670B3D0 != 1) {
+                cc = 0.0f;
+            }
+            if (cc > 20.0f) {
+                flagC = 1;
+            }
+            if (*pflag == 0) {
+                cc = cc / 3.0f - 30.0f;
+            } else {
+                cc = -30.0f;
+            }
+            if (PI(st, 0x48) == 1) {
+                cc = 0.0f;
+            }
+        }
+        if (*pflag != 0) {
+            dd = *(s32 *)((u8 *)D_86728344 + idx * 0x38);
+        }
+        if (PI(st, 0x38) > 0) {
+            PI(st, 0x38)++;
+        } else if (D_8670B3D0 < 2) {
+            PF(st, 0x58) = 0.0f;
+        }
+        if (PI(st, 0x38) == 0) {
+            if ((PI((u8 *)&D_86728328 + idx * 0x38, 0x28) == 1 || PI(st, 0x64) == 1) && PI(st, 0x2C) == 0) {
+                PF(st, 0x84) = PF(st, 0x10) + 5.6 * D_8670B3C8 / 18.0;
+                PI(st, 0x74) = 1;
+                PI(st, 0x38) = 1;
+                if (D_8670B3D0 >= 2) {
+                    PF(st, 0x5C) = PF(st, 0x5C) + 0.2;
+                    if (0.4 <= PF(st, 0x5C)) {
+                        PF(st, 0x5C) = 0.4f;
+                    }
+                } else {
+                    PF(st, 0x5C) = PF(st, 0x5C) + D_8670B350;
+                    PF(st, 0x58) = PF(st, 0x58) + D_8670B354;
+                }
+                PI((u8 *)&D_86728328 + idx * 0x38, 0x28) = 0;
+                func_8003F1DC(mdl);
+                func_8003F114(mdl, 0, -1, (void *)D_8670FF58);
+                PF(mdl, 0x38) = PF(mdl, 0x38) * 1.5;
+                PI(st, 0x94) = 1;
+                PI(st, 0x9C) = 0;
+                PI(st, 0x64) = 0;
+                *(u8 *)(mdl + 0x1D) = 0xFF;
+            }
+        }
+
+        if (D_8670B388 == 0) {
+            if (60.0f < dd) {
+                dd = 60.0f;
+            }
+            if (dd < -60.0f) {
+                dd = -60.0f;
+            }
+            if (*pflag != 0) {
+                cc = FABS(dd) * 15.0f / 60.0f + -60.0f;
+            }
+            if (cc < -60.0f) {
+                cc = -60.0f;
+            }
+            cc = cc * 0.75;
+            dd = dd * 0.75;
+        }
+
+        if (PI(st, 0x38) != 0) {
+            if (PF(st, 0x84) < PF(st, 0x10)) {
+                PI(st, 0x94) = -1;
+                PF(st, 0x5C) = -0.01f;
+                PF(st, 0x58) = 0.0f;
+                if (ModelAnim_IsFinished(row) == 1) {
+                    PI(st, 0x38) = 0;
+                }
+            } else if (ModelAnim_IsFinished(row) == 1) {
+                PI(st, 0x38) = 1;
+            }
+        }
+        if (PF(st, 0x5C) < 0.0f) {
+            if (ModelAnim_IsFinished(row) == 1) {
+                PI(st, 0x2C) = 0;
+                PI(st, 0x30) = 1;
+            }
+            if (PF(st, 0x5C) + D_8670BD9C <= 0.01) {
+                PF(st, 0x5C) = 0.0f;
+            } else {
+                PF(st, 0x5C) = PF(st, 0x5C) - 0.01;
+            }
+            if (cc * D_8670BD9C <= (PF(st, 0x5C) + D_8670BD9C) * -35.0f) {
+                PF(st, 0x5C) = 0.0f;
+            } else {
+                cc = -35.0f;
+            }
+        }
+
+        if (cc < 100.0f || 5.0f < dd || dd < -5.0f || PI(st, 0x38) != 0) {
+            ft4 = PF(st, 0x5C) + D_8670BD9C;
+            if (PI(st, 0x38) != 0) {
+                PH(row, 0x20) = 0;
+                if (D_8670B388 == 0) {
+                    if (5.0f < cc && D_8670B3DC == 1) {
+                        cc = cc / 1.5 + -45.0;
+                    } else {
+                        cc = -45.0f;
+                    }
+                } else {
+                    cc = -60.0f;
+                }
+            }
+            if (PI(st, 0x74) < 3) {
+                cc = cc - PI(st, 0x74) * 15;
+            }
+            if (cc < -5.0f) {
+                flagA = 1;
+            } else {
+                cc = 0.0f;
+            }
+            if (5.0f < dd || dd < -5.0f) {
+                flagB = 1;
+            } else {
+                dd = 0.0f;
+            }
+            if (PI(st, 0x2C) == 6) {
+                if (PI(st, 0x4C) == 0) {
+                    flagA = 0;
+                } else {
+                    flagB = 0;
+                }
+            }
+            if (func_867037B8(idx, (PF(st, 0x58) + D_8670BD98) * dd * flagB, ft4 * 1.0f * flagA * cc) > 0) {
+                if (cc < -5.0f && PI(st, 0x2C) != 6 && PI(st, 0x2C) != 1 && 15.0f < PF(st, 0x10) &&
+                    PF(st, 0x10) < 98.0f) {
+                    if (90.0f < PF(st, 0x10) && (f32)D_8670B364 < PF(row, 0x2C)) {
+                        PF(row, 0x2C) = PF(row, 0x2C) - 2 * D_8670B3D4f;
+                    } else {
+                        switch (PI(st, 0x34)) {
+                            case 1:
+                                if (PF(row, 0x2C) < (f32)D_8670BAD8) {
+                                    fa0 = PF(row, 0x2C);
+                                    PF(row, 0x2C) = fa0 + D_8670B3D4f;
+                                    PF(st, 0x84) = PF(st, 0x84) - 0.019;
+                                }
+                                break;
+                            case 2:
+                                if (PF(row, 0x2C) < (f32)D_8670BADC) {
+                                    PF(row, 0x2C) = PF(row, 0x2C) + D_8670B3D4f;
+                                    PF(st, 0x84) = PF(st, 0x84) - 0.019;
+                                } else if ((f32)D_8670BADC < PF(row, 0x2C)) {
+                                    PF(row, 0x2C) = PF(row, 0x2C) - D_8670B3D4f;
+                                    PF(st, 0x84) = PF(st, 0x84) + 0.019;
+                                }
+                                break;
+                            case 3:
+                                if (PF(row, 0x2C) < (f32)D_8670BAE0) {
+                                    PF(row, 0x2C) = PF(row, 0x2C) + D_8670B3D4f;
+                                    PF(st, 0x84) = PF(st, 0x84) - 0.019;
+                                } else if ((f32)D_8670BAE0 < PF(row, 0x2C)) {
+                                    PF(row, 0x2C) = PF(row, 0x2C) - D_8670B3D4f;
+                                    PF(st, 0x84) = PF(st, 0x84) + 0.019;
+                                }
+                                break;
+                            case 4:
+                                if ((f32)D_8670BAE4 < PF(row, 0x2C)) {
+                                    PF(row, 0x2C) = PF(row, 0x2C) - D_8670B3D4f;
+                                    PF(st, 0x84) = PF(st, 0x84) + 0.019;
+                                }
+                                break;
+                        }
+                    }
+                }
+                if (PI(st, 0x38) == 1) {
+                    PI(st, 0x2C) = 10;
+                    func_8003F210(arg1, 7);
+                    ModelAnim_SetFrame(arg1, 0);
+                    ft5 = PF(st, 0x5C) + 1.0;
+                    ModelAnim_SetSpeed(arg1, 65536.0f * ft5);
+                }
+                if (PI(st, 0x2C) == 1 && PI(st, 0x38) == 0) {
+                    PF(st, 0x80) = 0.3f;
+                }
+                if (PI(st, 0x7C) == 1) {
+                    PF(st, 0x80) = 0.3f;
+                }
+                if (PF(st, 0x80) < 1.0f) {
+                    if (PI(st, 0x38) == 0 && PI(st, 0x2C) == 0) {
+                        PF(st, 0x80) = 1.0f;
+                    }
+                    if (PI(st, 0x7C) == 0) {
+                        PF(st, 0x80) = PF(st, 0x80) + 0.1;
+                    }
+                    if (1.0f < PF(st, 0x80)) {
+                        PF(st, 0x80) = 1.0f;
+                    }
+                }
+                if (flagA == 1) {
+                    if (D_8670B35C < PI(st, 0x24) && D_8670B360 < PF(st, 0x28)) {
+                        PF(row, 0x2C) -= cc * (D_8670BD9C + PF(st, 0x5C)) * PF(st, 0x80);
+                    } else {
+                        PF(st, 0x28) -= (cc * (D_8670BD9C + PF(st, 0x5C)) * D_8670B384) * PF(st, 0x80);
+                    }
+                    for (i = 0; i < 60; i++) {
+                        D_86711760[idx][i].z += cc * (D_8670BD9C + PF(st, 0x5C)) * PF(st, 0x80);
+                    }
+                    reached = 0;
+                    if (v) { } // FAKE
+                    fn1 = (-280.0f - PF(row, 0x2C)) * D_8670B384;
+                    j = 0x3A;
+                    fx0 = PF(st, 0x28);
+                    v = PI(st, 0x24);
+                loop1:
+                    if (fn1 < 0.0f) {
+                        fn1 += 32.0f;
+                        j--;
+                        goto loop1;
+                    }
+                loop2:
+                    if (fx0 < 0.0f) {
+                        fx0 += 32.0f;
+                        v--;
+                        goto loop2;
+                    }
+                    if (PF(st, 0x10) <= 66.0f) {
+                        PF(st, 0x10) = ((PF(st, 0x10) / 2 + ((f32)(v * 32 - 1) + fx0 - 33.0f)) /
+                                        ((f32)(j * 32 - 1) + fn1)) * 100.0f;
+                    } else {
+                        PF(st, 0x10) = (((f32)(v * 32 - 1) + fx0) / ((f32)(j * 32 - 1) + fn1)) * 100.0f;
+                    }
+                    func_867036B4(idx);
+                    if (D_8670B35C < PI(st, 0x24) && D_8670B360 <= PF(st, 0x28) &&
+                        (f32)D_8670B364 <= PF(row, 0x2C)) {
+                        reached = 1;
+                    }
+                    if (reached == 1 && PI(st, 0x44) == -1) {
+                        PH(row, 0x20) = 0;
+                        if (D_8670BB8C == 0) {
+                            D_8670C888 = D_8670BB58;
+                            D_8670C88C = 1;
+                            func_86703F9C();
+                            func_87F0CA58();
+                            PI(st, 0xA8) = D_8670C88C;
+                            D_8670C874 = D_8670BB58;
+                            PI(st, 0x44) = 1;
+                            func_800279C4(0x5F08);
+                            func_80027774(0x1C07, 0x44);
+                            arg0 = D_8670BB8C + 1;
+                        } else {
+                            func_800279C4(0x5F08);
+                            if (D_8670BB58 == D_8670C874) {
+                                PI(st, 0x44) = 1;
+                                PI(st, 0xA8) = D_8670C88C;
+                                arg0 = D_8670BB8C + 1;
+                            } else {
+                                if (D_8670BB58 == D_8670C888) {
+                                    arg0 = D_8670BB8C + 1;
+                                } else {
+                                    arg0 = D_8670BB8C + 1;
+                                    D_8670C88C = arg0;
+                                    D_8670C888 = D_8670BB58;
+                                }
+                                PI(st, 0xA8) = D_8670C88C;
+                                PI(st, 0x44) = 0;
+                            }
+                        }
+                        PF(st, 0x10) = 120 - PI(st, 0x34) * 3;
+                        D_8670BB8C = arg0;
+                        if (PF(row, 0x24) < D_86710C08[idx] + D_8670B3CC + 30.0f ||
+                            D_86710C08[idx + 1] - D_8670B3CC - 30.0f < PF(row, 0x24)) {
+                            PF(st, 0x70) = (((f32)idx * 120.0f + -180.0f) * D_8670B3C4 - PF(row, 0x24)) / 10.0f;
+                        }
+                        func_8003F210(row, 8);
+                        PI(st, 0x2C) = 0xC;
+                        PI(st, 0x94) = -1;
+                        if (D_8670BB8C == 4) {
+                            D_8670BB94 = idx;
+                        }
+                    }
+                }
+                if (flagB == 1) {
+                    PF(row, 0x24) += dd * (D_8670BD98 + PF(st, 0x58)) * PF(st, 0x80);
+                    j = 0;
+                    if (PI(st, 0x98) == 0xCE) {
+                        j = -5;
+                    }
+                    if (PF(row, 0x24) < D_86710C08[idx] + D_8670B3CC + j) {
+                        PF(row, 0x24) = D_86710C08[idx] + D_8670B3CC + j;
+                    }
+                    if (D_86710C08[idx + 1] - D_8670B3CC - 4.0f - j < PF(row, 0x24)) {
+                        PF(row, 0x24) = D_86710C08[idx + 1] - D_8670B3CC - 4.0f - j;
+                    }
+                }
+            }
+
+            if (PI(st, 0x38) == 0) {
+                PI(st, 0x30) = 1;
+            }
+            if (D_8670B388 == 1) {
+                fv1 = cc * 2;
+                PI(st, 0xC) = MAX(ABS(fv1), ABS(dd)) / 15.0f;
+            } else if (PI(st, 0x2C) == 10) {
+                PI(st, 0xC) = 1;
+            } else {
+                v = 1;
+                PI(st, 0xC) = (ABS(cc) > ABS(dd) ? ABS(cc) : ABS(dd) * v) / 9.0f;
+            }
+            if (flagC == 1) {
+                PI(st, 0xC) = 5;
+            }
+            if (PI(st, 0xC) <= 0) {
+                PI(st, 0xC) = 1;
+            }
+            if (PI(st, 0x38) == 0) {
+                if (cc < -5.0f || 5.0f < dd || dd < -5.0f) {
+                    if (PI(st, 0x98) == 0x6D) {
+                        PH(row, 0x20) = func_86703D98(dd, cc);
+                    } else {
+                        PH(row, 0x20) = func_86703D98(dd / 2, cc);
+                        if (ABS(dd) > ABS(cc) + 5.0f) {
+                            PH(row, 0x20) = func_86703D98(dd / 2, -ABS(dd));
+                        }
+                    }
+                } else {
+                    PH(row, 0x20) = func_86703D98(1, -0x2D);
+                }
+            }
+        }
+        Stage55_UpdateModelSounds(idx);
+    }
+    if (PI(D_86728408, 0x34)) { } // FAKE
+
+    if (PI(st, 0x2C) == 5) {
+        PF(pt, 0x38) = 0.0f;
+        PF(pt, 0x30) = 0.0f;
+        if (FRAME(arg1) == 0xB) {
+            if (PI(st, 0x8) == 0) {
+                func_86703E9C(idx);
+            }
+            if (D_8670C860[idx] < 0x1E) {
+                D_8670C860[idx] = D_8670C860[idx] + 1;
+                ModelAnim_SetFrame(row, 9);
+            } else {
+                ModelAnim_SetFrame(row, 0xC);
+            }
+        }
+    }
+
+    if (PI(st, 0x30) == 1) {
+        {
+            switch (PI(st, 0x2C)) {
+                case 10:
+                    PI(st, 0x30) = 0;
+                    break;
+                case 0:
+                    PF(pt, 0x38) = 1.5f;
+                    PF(pt, 0x30) = 1.5f;
+                    /* fallthrough */
+                case 1:
+                    func_8003F210(row, 1);
+                    ModelAnim_SetSpeed(arg1, PH(st, 0xE) << 16);
+                    break;
+                case 3:
+                    func_8003F210(row, 2);
+                    ModelAnim_SetSpeed(arg1, 0x20000);
+                    ModelAnim_SetFrame(row, 0);
+                    PI(st, 0x30) = 0;
+                    break;
+                case 4:
+                    func_8003F210(row, 2);
+                    ModelAnim_SetSpeed(arg1, 0x20000);
+                    ModelAnim_SetFrame(row, 0);
+                    PI(st, 0x30) = 0;
+                    break;
+                case 5:
+                    D_8670C860[idx] = 0;
+                    PI(st, 0x30) = 0;
+                    break;
+                case 2:
+                    func_8003F210(row, 3);
+                    ModelAnim_SetSpeed(arg1, 0x20000);
+                    ModelAnim_SetFrame(row, 0);
+                    PI(st, 0x30) = 0;
+                    break;
+                case 7:
+                    func_8003F210(row, 4);
+                    ModelAnim_SetSpeed(arg1, 0x10000);
+                    func_8003F3BC(row, 0);
+                    ModelAnim_SetFrame(row, 0);
+                    PI(st, 0x30) = 0;
+                    break;
+                case 8:
+                    func_8003F210(row, 5);
+                    func_8003F3BC(row, 1);
+                    ModelAnim_SetSpeed(arg1, 0x10000);
+                    ModelAnim_SetFrame(row, 0);
+                    PI(st, 0x30) = 0;
+                    break;
+                case 9:
+                    func_8003F210(row, 6);
+                    ModelAnim_SetSpeed(arg1, 0x10000);
+                    ModelAnim_SetFrame(row, 0);
+                    PI(st, 0x30) = 0;
+                    break;
+            }
+        }
+    }
+
+    a2i = 0;
+    a1i = 0;
+    if ((PI(st, 0x2C) == 3 || PI(st, 0x2C) == 4) && PI(st, 0x48) == 0) {
+        if (FRAME(arg1) == 2 || FRAME(arg1) == 3) {
+            func_80027A28(0x9F01, idx);
+        }
+        if (FRAME(arg1) < 5) {
+            a2i = -0x4B;
+        } else if (FRAME(arg1) < 0x18) {
+            a2i = -7;
+        }
+        a1i = D_80087E50[PUH(row, 0x20) >> 4] * a2i;
+    }
+    if (PI(st, 0x2C) == 2 && PI(st, 0x48) == 0) {
+        if (FRAME(arg1) == 2) {
+            func_80027A28(0x9F01, idx);
+        }
+        if (FRAME(arg1) < 3) {
+            a2i = -0xB4;
+        } else if (FRAME(arg1) < 0xD) {
+            a2i = -0x12;
+        } else if (FRAME(arg1) == 0x28) {
+            PI(st, 0x30) = 1;
+            PI(st, 0x2C) = 0;
+        }
+        PH(row, 0x20) = 0;
+        a1i = D_80087E50[PUH(row, 0x20) >> 4] * a2i * (f32)0;
+    }
+    if (a1i != 0 || a2i != 0) {
+        i = 0;
+        ft4 = PF(st, 0x5C) + D_8670BD9C;
+        fa0 = PF(st, 0x80);
+        fv0 = (f32)a2i * ft4 * fa0;
+        for (; i < 60; i++) {
+            D_86711760[idx][i].z += fv0;
+        }
+        PF(st, 0x28) = PF(st, 0x28) + (f32)(-a2i) * ft4 * D_8670B384 * fa0;
+        PF(row, 0x24) -= (f32)a1i * (D_8670BD98 + PF(st, 0x58));
+        fv0 = D_8670B3CC;
+        if (PF(row, 0x24) < D_86710C08[idx] + fv0) {
+            PF(row, 0x24) = D_86710C08[idx] + fv0;
+        }
+        if (D_86710C08[idx + 1] - fv0 - 10.0f < PF(row, 0x24)) {
+            PF(row, 0x24) = D_86710C08[idx + 1] - fv0 - 10.0f;
+        }
+    }
+
+    if (ModelAnim_IsFinished(arg1) == 1) {
+        switch (PI(st, 0x2C)) {
+            case 10:
+    if (cc) { } // FAKE
+                PI(st, 0x2C) = 0;
+                PI(st, 0x30) = 1;
+                break;
+            case 7:
+                PI(st, 0x2C) = 8;
+                PI(st, 0x30) = 1;
+                break;
+            case 1:
+                if (PI(st, 0x38) != 0) {
+                    PI(st, 0x8) = 1;
+                }
+                PI(st, 0x2C) = 0;
+                break;
+            case 12:
+    if (gStage55MainState.unk64) { } // FAKE
+                PH(row, 0x20) = 0;
+                PI(st, 0x30) = 1;
+                PF(row, 0x28) = 80.0f;
+                func_8003F210(row, 0);
+                PI(st, 0x2C) = 0xB;
+                if (idx == gStage55MainState.unk4C) {
+                    for (v = 0; v < 4; v++) {
+                        if (PI(&D_86728408x[v], 0x34) == 1 && PI(&D_86728408x[gStage55MainState.unk4C], 0x34) != 1) {
+                            PI(&D_86728408x[v], 0x44) = 1;
+                        } else {
+                            PI(&D_86728408x[v], 0x44) = 0;
+                        }
+                    }
+                    gStage55MainState.unk64 = 1;
+                    for (v = 0; v < 4; v++) {
+                        if (PI(&D_86728408x[v], 0x44) == 1) {
+                            gStage55MainState.unk64 = 0;
+                        }
+                    }
+                    if (*((u8 *)D_8670FEB0 + 0x2180) == 4) {
+                        func_87F0C930(D_8670FEB8);
+                    } else {
+                        Fragment64_StartPlayerPanel(D_8670D8B8, D_8670FEB0, 8, PI(&D_86728408x[0], 0x44),
+                                                    PI(&D_86728408x[1], 0x44), PI(&D_86728408x[2], 0x44),
+                                                    PI(&D_86728408x[3], 0x44));
+    if (gStage55MainState.unk64) { } // FAKE
+                    }
+                    func_87F0CB24();
+                    D_8670BBA4 = 0;
+                    D_8670BB48 = 0xE;
+                    D_8670BB88 = 0;
+                }
+                break;
+            case 6:
+                ModelAnim_SetSpeed(arg1, 0x10000);
+                /* fallthrough */
+            case 0:
+                func_8003F210(row, 0);
+                PI(st, 0x30) = 0;
+                break;
+            case 8:
+            case 9:
+            case 11:
+                break;
+            default:
+                func_8003F210(row, 0);
+                PI(st, 0x30) = 0;
+                if (PI(st, 0x8) == 0) {
+                    PI(st, 0x8) = 1;
+                }
+                break;
+        }
+    }
+    if ((double)((f32)(PI(st, 0x24) << 5) + PF(st, 0x28)) >= (double)PI(st, 0x18) * 83.5 && PI(st, 0x18) < 0x14) {
+        func_86702E50(idx);
+    }
+    if (PI(st, 0x8) != 0) {
+        func_86703DF4(idx);
+    }
+}
+
+
 #endif
 
 #ifdef VERSION_US
@@ -1963,7 +2736,7 @@ extern void func_8003F3BC(void *, s32);
 extern void func_8003EF60(void *);
 extern void func_80037E3C(void *, void *, s32);
 extern void func_86702B28(void);
-extern void func_867043AC(void);
+extern void func_867043AC(s32, u8 *);
 extern void func_86706AC8(s32);
 extern void func_86706D3C(s32);
 extern void Stage55_SpawnVariantEffect(s32);
