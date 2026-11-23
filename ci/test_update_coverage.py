@@ -62,6 +62,22 @@ class InstructionCoverageTests(unittest.TestCase):
         self.assertEqual(graph, coverage.render_graph(buckets))
         self.assertIn("100 C upstream; 25 open; 125 total", graph)
 
+    def test_percentages_round_down(self):
+        self.assertEqual(coverage.floor_percent(8399, 8400), "99.9%")
+        self.assertEqual(coverage.floor_percent(9999, 10000), "99.9%")
+        self.assertEqual(coverage.floor_percent(8400, 8400), "100.0%")
+        self.assertEqual(coverage.floor_percent(1, 3), "33.3%")
+        self.assertEqual(coverage.floor_percent(2, 3), "66.6%")
+        self.assertEqual(coverage.floor_percent(1, 10000), "0.0%")
+        self.assertEqual(coverage.floor_percent(0, 0), "0.0%")
+        buckets = [[8399, 1]] + [[0, 0] for _ in range(10)]
+        snapshot = coverage.CoverageSnapshot(8399, 8400, 8399 / 8400 * 100, {"src/a.c": 1}, buckets)
+        rendered = coverage.render(snapshot, {"src/a.c": 8400})
+        self.assertIn("| 0–99 | 8,399 | 1 | 8,400 | 99.9% |", rendered)
+        self.assertIn("(99.9%)", rendered)
+        self.assertIn("| `src/a.c` | 1 | 8,400 | 99.9% |", rendered)
+        self.assertNotIn("100.0%", rendered)
+
     def test_check_detects_missing_or_stale_graph(self):
         buckets = [[1, 0]] + [[0, 0] for _ in range(10)]
         snapshot = coverage.CoverageSnapshot(1, 1, 100.0, {}, buckets)

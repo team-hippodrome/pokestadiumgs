@@ -141,6 +141,18 @@ def snapshot(repo_root: Path, revision: str, staged: bool,
     )
 
 
+def floor_percent(covered: int, total: int) -> str:
+    """Format covered/total as a percentage rounded down to one decimal.
+
+    Rounding down keeps the figure pessimistic: 100.0% appears only when
+    nothing is left, so a single open function is never hidden.
+    """
+    if total <= 0:
+        return "0.0%"
+    tenths = covered * 1000 // total
+    return f"{tenths // 10}.{tenths % 10}%"
+
+
 def render(snapshot_value: CoverageSnapshot, baseline: dict[str, int]) -> str:
     lines = [
         GENERATED_HEADER,
@@ -155,12 +167,12 @@ def render(snapshot_value: CoverageSnapshot, baseline: dict[str, int]) -> str:
         "",
         "| Original instructions | C upstream | Open | Total | Complete |",
         "| --- | ---: | ---: | ---: | ---: |",
-        *[f"| {label} | {covered:,} | {remaining:,} | {covered + remaining:,} | {covered / (covered + remaining) * 100:.1f}% |"
+        *[f"| {label} | {covered:,} | {remaining:,} | {covered + remaining:,} | {floor_percent(covered, covered + remaining)} |"
           if covered + remaining else f"| {label} | 0 | 0 | 0 | — |"
           for label, (covered, remaining) in zip(BUCKET_LABELS, snapshot_value.instruction_buckets)],
         "",
         START_MARKER,
-        f"- US functions with C implementations: **{snapshot_value.covered:,} / {snapshot_value.total:,} ({snapshot_value.percentage:.1f}%)**",
+        f"- US functions with C implementations: **{snapshot_value.covered:,} / {snapshot_value.total:,} ({floor_percent(snapshot_value.covered, snapshot_value.total)})**",
         f"- Remaining `GLOBAL_ASM` owners: **{snapshot_value.total - snapshot_value.covered:,}**",
         f"- Baseline: **{snapshot_value.total:,}** US `GLOBAL_ASM` owners in the original pragma snapshot",
         END_MARKER,
@@ -173,8 +185,7 @@ def render(snapshot_value: CoverageSnapshot, baseline: dict[str, int]) -> str:
     for path in sorted(snapshot_value.remaining_by_file):
         remaining = snapshot_value.remaining_by_file[path]
         total = baseline.get(path, remaining)
-        percentage = max(total - remaining, 0) / total * 100.0 if total else 0.0
-        lines.append(f"| `{path}` | {remaining:,} | {total:,} | {percentage:.1f}% |")
+        lines.append(f"| `{path}` | {remaining:,} | {total:,} | {floor_percent(max(total - remaining, 0), total)} |")
     if not snapshot_value.remaining_by_file:
         lines.append("_No source files with remaining `GLOBAL_ASM` owners._")
     return "\n".join(lines) + "\n"
