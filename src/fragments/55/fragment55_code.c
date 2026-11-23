@@ -1790,10 +1790,10 @@ void func_867043AC(s32 arg0, u8 *arg1) {
     s32 reached;
     s32 j;
     s32 v;
-    volatile s32 flagB;
+    volatile s32 flagB; // FAKE
     s32 flagA;
     struct { f32 x; f32 y; } vel;
-    volatile s32 flagC;
+    volatile s32 flagC; // FAKE
     f32 fv0;
     f32 fv1;
     f32 fa0;
