@@ -738,7 +738,91 @@ void func_82D0125C(void)
   func_82D00C34();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_420EA0/func_82D01590.s")
+extern void func_800226C0(s32);
+extern s32 func_82D002CC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern u8 D_82D23830;
+extern u8 D_82D23D84;
+extern u16 D_82D23D88;
+extern u16 D_82D23D8A;
+void func_82D01590(void) {
+    u8 *pa = &D_82D23830 + 0xF6;
+    u8 *pb = &D_82D23830 + 0xF7;
+    u16 *pc = (u16 *)(&D_82D23830 + 0xF8);
+    u8 lo, hi;
+    s32 v;
+    s8 d;
+    s8 *pd;
+    u8 x;
+    if (D_82D23D8A & 0x200) {
+        ((Fragment82NameState *)&D_82D23830)->digit--;
+        if (((Fragment82NameState *)&D_82D23830)->digit < 0) ((Fragment82NameState *)&D_82D23830)->digit = 5;
+        func_800226C0(1);
+    } else if (D_82D23D8A & 0x100) {
+        ((Fragment82NameState *)&D_82D23830)->digit++; if (((Fragment82NameState *)&D_82D23830)->digit >= 6) ((Fragment82NameState *)&D_82D23830)->digit = 0;
+        func_800226C0(1);
+    }
+    pd = (s8 *)&D_82D23830 + 2;
+    d = *pd;
+    switch (d) {
+    case 0:
+        x = func_82D002CC(*pa, 100, 1, 100);
+        d = *pd;
+        *pa = x;
+        break;
+    case 1:
+        *pa = func_82D002CC(*pa, 10, 1, 100);
+        d = *pd;
+        break;
+    case 2:
+        *pa = func_82D002CC(*pa, 1, 1, 100);
+        d = *pd;
+        break;
+    case 3:
+        *pb = func_82D002CC(*pb, 100, 1, 100);
+        d = *pd;
+        break;
+    case 4:
+        *pb = func_82D002CC(*pb, 10, 1, 100);
+        d = *pd;
+        break;
+    case 5:
+        x = func_82D002CC(*pb, 1, 1, 100);
+        d = *pd;
+        *pb = x;
+        break;
+    }
+    lo = *pa; hi = *pb;
+    if (d < 3) {
+        v = lo;
+        if (v == 0) {} // FAKE
+        *pb = hi;
+        if (hi < lo) {
+            *pb = lo;
+        }
+        *pa = lo;
+        if (*pc < v * 3) {
+            *pc = v * 3;
+            *pa = lo;
+        }
+    } else {
+        v = hi;
+        if (v == 0) {} // FAKE
+        *pa = lo;
+        if (hi < lo) {
+            *pa = hi;
+        }
+        *pb = hi;
+        if (v * 3 < *pc) {
+            *pc = v * 3;
+            *pb = hi;
+        }
+    }
+    if (D_82D23D88 & 0xC000) {
+        D_82D23D84 = 2;
+        ((Fragment82NameState *)&D_82D23830)->kind = 4;
+        func_800226C0(0x92);
+    }
+}
 
 extern u8 D_82D23926, D_82D23927;
 extern u16 D_82D23928;
