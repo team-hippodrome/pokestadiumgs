@@ -61,7 +61,73 @@ s32 func_86B00158(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B001C4.s")
+extern s32 D_86B0D160;
+extern u8 *D_86B181C0;
+extern u8 D_86B17A78[];
+extern s32 D_86B0D8F0[];
+extern s32 D_86B0D990[];
+extern s32 D_86B18118[];
+extern s32 D_86B18128[];
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern s32 func_8004D1FC(u8 *arg0);
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+#define TEX_W_86B001C4(t) ((f32)(u32)((u16 *)(t))[0])
+#define TEX_H_86B001C4(t) ((f32)(u32)((u16 *)(t))[1])
+#define ROUND_86B001C4(x) ((x) + ((x) > 0.0f ? 0.5f : -0.5f))
+#define POS_86B001C4(k) (((s32 (*)[5][2])D_86B0D8F0)[j][i][k])
+#define OFS_86B001C4(n, k) (((s32 (*)[2])D_86B0D990)[n][k])
+#define SLOT_86B001C4(o) (*(s32 *)(D_86B17A78 + j * 20 + i * 4 + (o)))
+
+s32 func_86B001C4(s32 arg0, s32 arg1) {
+    s32 j;
+    s32 i;
+    s32 val;
+
+    if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4) {
+        if (*(s32 *)D_86B181C0 != 0 && *(s32 *)D_86B181C0 != 1 && *(s32 *)D_86B181C0 != 2 && D_86B0D160 == 0) {
+            gSPDisplayList(D_800D0510++, D_80094E38);
+            for (j = 0; j < 2; j++) {
+                for (i = 0; i < *(s32 *)(D_86B17A78 + j * 4 + 0x1B4); i++) {
+                    if (*(s32 *)(D_86B17A78 + j * 4 + 0x1B4) - 1 == i && *(s32 *)(D_86B17A78 + j * 4 + 0x1A4) % 2) {
+                        gDPSetCombine(D_800D0510++, 0xFC377E6E, 0x11FCF279);
+                        gDPSetPrimColor(D_800D0510++, 0x64, 0x64, 0xFF, 0xFF, 0xFF, 0xFF);
+                    } else {
+                        gSPDisplayList(D_800D0510++, D_80094E38);
+                    }
+                    func_8004D1FC((u8 *)D_86B18118[SLOT_86B001C4(0x1C4)]);
+                    GfxRect_DrawTextured(POS_86B001C4(0) + OFS_86B001C4(SLOT_86B001C4(0x1C4), 0),
+                                         POS_86B001C4(1) + OFS_86B001C4(SLOT_86B001C4(0x1C4), 1),
+                                         (s32)ROUND_86B001C4(TEX_W_86B001C4(D_86B18118[SLOT_86B001C4(0x1C4)])),
+                                         (s32)ROUND_86B001C4(TEX_H_86B001C4(D_86B18118[SLOT_86B001C4(0x1C4)])), 0, 0,
+                                         0x400, 0x400, 0);
+                    if (SLOT_86B001C4(0x224) != 0) {
+                        gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xB4, 0x00, 0xFF);
+                        gDPSetEnvColor(D_800D0510++, 0, 0, 0, 0xFF);
+                        gDPSetCombine(D_800D0510++, 0xFC30FE61, 0xFFFFF3F9);
+                        val = SLOT_86B001C4(0x224);
+                        if (val / 10 != 0) {
+                            func_8004D1FC((u8 *)D_86B18128[val / 10]);
+                            GfxRect_DrawTextured(POS_86B001C4(0) + 10, POS_86B001C4(1) + 13,
+                                                 (s32)ROUND_86B001C4(TEX_W_86B001C4(D_86B18128[val / 10])),
+                                                 (s32)ROUND_86B001C4(TEX_H_86B001C4(D_86B18128[val / 10])), 0, 0,
+                                                 0x400, 0x400, 0);
+                        }
+                        func_8004D1FC((u8 *)D_86B18128[val % 10]);
+                        GfxRect_DrawTextured(POS_86B001C4(0) + 14, POS_86B001C4(1) + 13,
+                                             (s32)ROUND_86B001C4(TEX_W_86B001C4(D_86B18128[val % 10])),
+                                             (s32)ROUND_86B001C4(TEX_H_86B001C4(D_86B18128[val % 10])), 0, 0,
+                                             0x400, 0x400, 0);
+                    }
+                }
+            }
+            gSPDisplayList(D_800D0510++, D_80094F50);
+        }
+    }
+    return 1;
+}
 #endif
 
 #ifdef VERSION_US
