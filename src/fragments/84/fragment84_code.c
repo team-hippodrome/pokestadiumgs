@@ -248,13 +248,14 @@ typedef struct {
     s16 row;
     s16 cursor;
     s8 text[32];
+    u16 cap;
 } Fragment84TextEntryState;
 
 extern u16 D_8FC025C0[14][15];
 
 extern void func_80049628(s32, s32, s32);
 
-extern u8 D_8FC0C768;
+extern Fragment84TextEntryState D_8FC0C768;
 
 extern void func_8FC00B68(void);
 
@@ -606,7 +607,7 @@ void func_8FC01408(void) {
 extern u8 D_8FC02832;
 extern u8 D_8FC0244C;
 extern u8 D_8FC0C776;
-extern u8 D_8FC0C768;
+extern Fragment84TextEntryState D_8FC0C768;
 extern void _bcopy(s32 *, s32, s32);
 void func_8FC01480(void) {
     u8 *record = (u8 *)((D_8FC02832 * 0x10) + &D_8FC0244C);
@@ -651,7 +652,7 @@ void func_8FC01530(void) {
 
 #ifdef VERSION_US
 extern void func_8FC01480();
-extern u8 D_8FC0C768;
+extern Fragment84TextEntryState D_8FC0C768;
 void func_8FC015AC(void) {
     (*(s16 *)((u8 *)(&D_8FC0C768) + (0))) = 0xB4;
     (*(s16 *)((u8 *)(&D_8FC0C768) + (2))) = 0x6E;
@@ -664,7 +665,96 @@ void func_8FC015AC(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC015F8.s")
+extern u16 D_8FC02764[];
+extern u16 D_8FC027B4[];
+// Same routine as func_8FB002BC in fragment 9, on the global text-entry buffer.
+// The cursor and capacity are read through pointer locals so each read is a fresh lui/lh.
+// The shift loops are written with goto: as for/while loops IDO hoists the cursor address
+// into a register, retail reloads it with a lui on every pass.
+void func_8FC015F8(u16 arg1) {
+    Fragment84TextEntryState *p;
+    s16 *pp = &D_8FC0C768.cursor;
+    u16 *pc = &D_8FC0C768.cap;
+    u16 prev;
+    s32 i;
+    s32 k;
+    s32 j;
+
+    p = &D_8FC0C768;
+    prev = (*(u8 *)&D_8FC0C768.text[D_8FC0C768.cursor - 2] << 8) | *(u8 *)&D_8FC0C768.text[D_8FC0C768.cursor - 1];
+    switch (arg1) {
+    case 0x212B:
+        if (*pp > 0) {
+            for (i = 0; i < 40; i++) {
+                if (prev == D_8FC02764[i]) {
+                    p->text[*pp - 1] += 1;
+                }
+            }
+        }
+        return;
+    case 0x212C:
+        if (*pp > 0) {
+            for (i = 0; i < 10; i++) {
+                if (prev == D_8FC027B4[i]) {
+                    p->text[*pp - 1] += 2;
+                }
+            }
+        }
+        return;
+    default:
+        if (arg1 >= 0x100) {
+            if (*pp < *pc - 1) {
+                k = *pc - 4;
+                if (prev == 0) {} // FAKE
+                if (k >= *pp) {
+                loop4:
+                    p->text[k + 2] = p->text[k];
+                    k--;
+                    if (k >= *pp) {
+                        goto loop4;
+                    }
+                }
+                p->text[*pp] = (arg1 >> 8) & 0xFF;
+                (*pp)++;
+                p->text[*pp] = arg1 & 0xFF;
+                (*pp)++;
+            }
+        } else {
+            if (*pp < *pc) {
+                k = *pc - 3;
+                if (k >= *pp) {
+                loop3:
+                    p->text[k + 1] = p->text[k];
+                    k--;
+                    if (k >= *pp) {
+                        goto loop3;
+                    }
+                }
+                p->text[*pp] = arg1;
+                (*pp)++;
+            }
+        }
+        break;
+    }
+    k = 0;
+    j = 0;
+    if (*pc - 1 > 0) {
+        if (p->text[0] != 0) {
+            do {
+                k += 2;
+                if (p->text[j] & 0x80) {
+                    j += 2;
+                } else {
+                    j += 1;
+                }
+            } while (k < *pc - 1 && p->text[j] != 0);
+        }
+    }
+    p->text[j] = 0;
+    if (j < *pp) {
+        *pp = j;
+    }
+}
 #endif
 
 #ifdef VERSION_US
