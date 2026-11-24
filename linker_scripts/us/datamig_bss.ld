@@ -22,15 +22,25 @@ SECTIONS
            "audio request tick address changed")
 
 
-    /* Fragment 1's scale and fall speed D_83503CFC/D_83503D00 (function-scope
-     * statics of func_8350182C), in the fragment's loaded data (zero in the
-     * data image). IDO pads the object's .bss to 16 bytes. */
-    .fragment1_scale_bss 0x83503CFC (NOLOAD) : SUBALIGN(4)
+    /* Fragment 1's function-scope statics in the fragment's loaded data:
+     * D_83503CFC/D_83503D00 (func_8350182C) and D_83503D10..D_83503D30
+     * (func_83501DC0, with the unreferenced words between them). The data
+     * image supplies the values. IDO pads the object's .data to 16 bytes. */
+    .fragment1_statics_data 0x83503CFC (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/1/fragment1_code.o(.data)
+    }
+    ASSERT(SIZEOF(.fragment1_statics_data) == 64,
+           "fragment1 statics extent changed")
+
+    /* Fragment 1's D_835040E4 (func_83501DC0's frame timer), in the
+     * fragment's runtime storage. IDO pads the object's .bss to 16 bytes. */
+    .fragment1_timer_bss 0x835040E4 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/1/fragment1_code.o(.bss)
     }
-    ASSERT(SIZEOF(.fragment1_scale_bss) == 16,
-           "fragment1 scale statics extent changed")
+    ASSERT(SIZEOF(.fragment1_timer_bss) == 16,
+           "fragment1 timer static extent changed")
 
     /* Fragment 7's text-style slots D_8300F8D8..D_8300F8F0 (function-scope
      * statics of func_830043F0), D_8300F8F8/D_8300F900 (func_83004FC0) and

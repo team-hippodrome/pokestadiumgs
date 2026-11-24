@@ -489,8 +489,8 @@
     - [0xA8AA0, c,       fragments/1/fragment1_code]
     - [0xAC070, c,       fragments/1/fragment1_tail]
     - [0xAC540, data,    fragments/1/fragment1_data]
-    - [0xAC860, .rodata, fragments/1/fragment1_code] # D_83503DE0 (func_8350182C) + jtbl_83503DE8, 16-byte aligned
-    - [0xAC880, rodata]
+    - [0xAC860, .rodata, fragments/1/fragment1_code] # D_83503DE0 (func_8350182C) + jtbl_83503DE8, func_83501DC0's literals D_83503E00..E30, func_83503188's D_83503E38
+    - [0xAC8C0, rodata] # D_83503E40..E48, read through externs by func_83503324
     - [0xAC8D0, .rodata, fragments/1/fragment1_code] # jtbl_83503E50 + jtbl_83503E64 first 3 words, 16-byte aligned
     - [0xAC8F0, rodata]
 
