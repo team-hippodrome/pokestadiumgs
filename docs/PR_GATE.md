@@ -8,10 +8,16 @@ checksum acceptance line:
 build/pokestadiumgs-us.z64: OK
 ```
 
-## Local baseline setup
+## Baseline image
 
-Use a clean public checkout on the isolated Mac runner. Keep the retail ROM
-outside Git and either place a local ignored copy at
+`rebuild-baseline-image.yml` builds the gate image from `ci/Dockerfile.hosted`
+on a GitHub-hosted ubuntu runner and pushes it to the private
+`ghcr.io/team-hippodrome/pokestadiumgs-ci:latest` package. The gate and
+`refresh-coverage.yml` pull it from there. The image contains the retail ROM,
+so the package must stay private.
+
+To build the same image on a local Mac instead, use a clean public checkout.
+Keep the retail ROM outside Git and either place a local ignored copy at
 `baseroms/us/baserom.z64` or provide it through the environment:
 
 ```bash
@@ -27,7 +33,7 @@ gs-decomp-agent-pokestadiumgs:latest
 ## Gate behavior
 
 `ci/gate-pr.sh <checkout>` mounts the checkout read-only into a disposable
-`linux/amd64` container on the Apple Silicon runner. The container has no
+`linux/amd64` container on the GitHub-hosted runner. The container has no
 network, no Docker socket, and no repository write access. It overlays the
 PR's tracked `src`, `include`, `tools`, `lib`, `linker_scripts`, `yamls`, and
 `Makefile`, then runs the complete root build and checksum comparison.
@@ -89,7 +95,7 @@ setting is enabled.
 
 Fork and non-verified PRs never receive the App token and remain maintainer
 controlled. Their gate can be approved or manually dispatched, followed by a
-manual coverage update and merge. The self-hosted gate must never receive
+manual coverage update and merge. The ROM gate must never receive
 write permissions while running PR-controlled code.
 
 ## Phase 4 activation checklist
@@ -105,12 +111,10 @@ in order after publishing a reviewed commit containing both workflows:
    `Public PR ROM Gate / Validate ROM against master`.
 4. Set `PUBLIC_CI_AUTOMERGE_ENABLED=true` only after those protections are
    confirmed.
-5. Create a dedicated `ghrunner` macOS account with no personal credentials or
-   unrelated checkouts. Register it with the `gs-decomp-public` label, build
-   `gs-decomp-agent-pokestadiumgs:latest` from a clean public checkout, and
-   verify one maintainer PR end-to-end.
-6. Only after public validation succeeds, detach the existing private runner
-   and begin the private-repository retirement process.
+5. Run `rebuild-baseline-image.yml` once so the private gate image exists in
+   ghcr, then verify one maintainer PR end-to-end.
+6. Only after public validation succeeds, begin the private-repository
+   retirement process.
 
 Do not require the ROM check until the workflow has reported successfully at
 least once; otherwise every PR can be blocked waiting for a check that has not
