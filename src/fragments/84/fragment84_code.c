@@ -255,7 +255,7 @@ extern u16 D_8FC025C0[14][15];
 
 extern void func_80049628(s32, s32, s32);
 
-extern Fragment84TextEntryState D_8FC0C768;
+Fragment84TextEntryState D_8FC0C768;
 
 extern void func_8FC00B68(void);
 
@@ -758,7 +758,114 @@ void func_8FC015F8(u16 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/84/fragment84_code/func_8FC019B8.s")
+extern s32 D_8FC0C798;
+extern u16 D_8FC0C79C;
+extern u16 D_8FC0C79E;
+extern u16 D_8FC0C7A0;
+extern void func_8FC015F8(u16);
+extern char *strchr(const char *, s32);
+s32 func_8FC019B8(void) {
+    s32 result;
+    s8 *st = (s8 *)&D_8FC0C768;
+    u16 ch;
+    s32 m;
+    s32 i;
+    s32 btn;
+
+    result = 0;
+    btn = D_8FC0C7A0;
+    if (btn & 0x800) {
+        func_800226C0(1);
+        (*(s16 *)(st + 0xA)) = (*(s16 *)(st + 0xA)) - 1;
+        if ((*(s16 *)(st + 0xA)) < 0) {
+            (*(s16 *)(st + 0xA)) = 13;
+        }
+    } else if (btn & 0x400) {
+        func_800226C0(1);
+        (*(s16 *)(st + 0xA)) = (*(s16 *)(st + 0xA)) + 1;
+        if ((*(s16 *)(st + 0xA)) >= 14) {
+            (*(s16 *)(st + 0xA)) = 0;
+        }
+    } else if (btn & 0x200) {
+        func_800226C0(1);
+        (*(s16 *)(st + 8)) = (*(s16 *)(st + 8)) - 1;
+        if ((*(s16 *)(st + 8)) < 0) {
+            (*(s16 *)(st + 8)) = 14;
+        }
+    } else if (btn & 0x100) {
+        func_800226C0(1);
+        (*(s16 *)(st + 8)) = (*(s16 *)(st + 8)) + 1;
+        if ((*(s16 *)(st + 8)) >= 15) {
+            (*(s16 *)(st + 8)) = 0;
+        }
+    }
+    btn = D_8FC0C79E;
+    if (btn & 0x8000) {
+        ch = D_8FC025C0[(*(s16 *)(st + 0xA))][(*(s16 *)(st + 8))];
+        func_800226C0(2);
+        btn = D_8FC0C79C;
+        if (btn & 0x10) {
+            if ((ch >= 0xA4AB && ch < 0xA4C9) || (ch >= 0xA4CF && ch < 0xA4DC) ||
+                (ch >= 0xA5AB && ch < 0xA5C9) || (ch >= 0xA5CF && ch < 0xA5DC)) {
+                ch += 1;
+            }
+        } else if (btn & 0x20) {
+            if ((ch >= 0xA4CF && ch < 0xA4DC) || (ch >= 0xA5CF && ch < 0xA5DC)) {
+                ch += 2;
+            }
+        }
+        if (ch != 0x5E) {
+            func_8FC015F8(ch);
+        } else {
+            result = 1;
+        }
+    } else if (btn & 0x4000) {
+        if ((*(s16 *)(st + 0xC)) > 0) {
+            if (D_8FC0C768.text[(*(s16 *)(st + 0xC)) - 1] & 0x80) {
+                m = (*(s16 *)(st + 0xC)) - 2;
+            } else {
+                m = (*(s16 *)(st + 0xC)) - 1;
+            }
+            if (m < 0) {
+                m = 0;
+            }
+            for (i = 0; i < (*(u16 *)(st + 0x2E)) - (*(s16 *)(st + 0xC)); i++) {
+                D_8FC0C768.text[m + i] = D_8FC0C768.text[(*(s16 *)(st + 0xC)) + i];
+            }
+            (*(s16 *)(st + 0xC)) = m;
+        } else {
+            result = 2;
+        }
+    } else if (btn & 0x1000) {
+        (*(s16 *)(st + 0xA)) = 8;
+        (*(s16 *)(st + 8)) = 14;
+    } else if (btn & 0x8) {
+        st[0xE] = 0;
+        (*(s16 *)(st + 0xC)) = 0;
+    } else if (btn & 0x4) {
+        if (D_8FC0C798 != 0 && strchr((char *)(st + 0xE), '\n') == NULL) {
+            func_8FC015F8('\n');
+        }
+    } else if (btn & 0x2) {
+        if ((*(s16 *)(st + 0xC)) > 0) {
+            if (D_8FC0C768.text[(*(s16 *)(st + 0xC)) - 1] & 0x80) {
+                (*(s16 *)(st + 0xC)) = (*(s16 *)(st + 0xC)) - 2;
+            } else {
+                (*(s16 *)(st + 0xC)) = (*(s16 *)(st + 0xC)) - 1;
+            }
+            if ((*(s16 *)(st + 0xC)) < 0) {
+                (*(s16 *)(st + 0xC)) = 0;
+            }
+        }
+    } else if (btn & 0x1) {
+        if (D_8FC0C768.text[(*(s16 *)(st + 0xC))] & 0x80) {
+            (*(s16 *)(st + 0xC)) = (*(s16 *)(st + 0xC)) + 2;
+        } else if (D_8FC0C768.text[(*(s16 *)(st + 0xC))] != 0) {
+            (*(s16 *)(st + 0xC)) = (*(s16 *)(st + 0xC)) + 1;
+        }
+    }
+    return result;
+}
 #endif
 
 #ifdef VERSION_US

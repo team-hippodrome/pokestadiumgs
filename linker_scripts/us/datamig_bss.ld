@@ -596,6 +596,16 @@ SECTIONS
     {
         build/src/fragments/75/fragment75_code.o(.bss)
     }
+
+    /* Fragment 84's name-entry buffer D_8FC0C768 (Fragment84TextEntryState),
+     * defined in fragment84_code.c so as1 can share one lui across its fields
+     * like retail. The input words D_8FC0C798.. follow it. */
+    .fragment84_text_entry_bss 0x8FC0C768 (NOLOAD) : SUBALIGN(4)
+    {
+        build/src/fragments/84/fragment84_code.o(.bss)
+    }
+    ASSERT(SIZEOF(.fragment84_text_entry_bss) == 0x30,
+           "fragment84 text entry buffer extent changed")
 }
 
 ASSERT(SIZEOF(.fragment21_archive_8D08_data) == 0x550,
