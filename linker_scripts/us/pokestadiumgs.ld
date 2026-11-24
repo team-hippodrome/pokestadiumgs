@@ -907,7 +907,7 @@ SECTIONS
         fragment1_RODATA_START = .;
         build/asm/us/data/fragments/1/fragment1_header.o(.rodata);
         build/src/fragments/1/fragment1_code.o(.rodata);
-        build/asm/us/data/AC880.rodata.o(.rodata);
+        build/asm/us/data/AC8C0.rodata.o(.rodata);
         build/src/fragments/1/fragment1_code.o(.rodata);
         build/src/fragments/1/fragment1_tail.o(.rodata);
         build/asm/us/data/AC8F0.rodata.o(.rodata);
