@@ -125,7 +125,114 @@ void func_81402CD8(void *arg0, f32 arg1) {
         *(f32 *)((u8 *)arg0 + 0xCA8) = arg1;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81402D08.s")
+extern f32 func_816092FC(void);
+extern f32 func_8000B770(f32);
+extern f32 sqrtf(f32);
+void func_81402D08(void *arg0) {
+    static f32 D_814078A0 = 0.029f;
+    static f32 D_814078A4 = 0.42f;
+    static f32 D_814078A8 = 0.95f;
+    static f32 D_814078AC = 0.001f;
+    f32 base;
+    f32 mid;
+    f32 corr;
+    f32 d;
+    f32 vA;
+    f32 vB;
+    f32 oA;
+    f32 oB;
+    s32 step;
+    s32 steps;
+    s32 s1;
+    s32 ni;
+    s32 flag;
+    s32 i;
+    Fragment12Row *list[7];
+    Fragment12Rows *p = arg0;
+    Fragment12Row *a;
+    Fragment12Row *b;
+    s32 pad[10]; // FAKE
+
+    steps = (s32)(func_816092FC() * 6.0f);
+    for (step = 0; step < steps; step++) {
+        s1 = p->unk_CB0;
+        flag = 0;
+        Fragment12_RankActiveRows(list, (Fragment12Row *)p, s1);
+        p->unk_CB0 = (p->unk_CB0 + 1) % 0x80;
+        ni = p->unk_CB0;
+        for (i = 0; i < 6; i++) {
+            if (list[i] != 0) {
+                list[i]->values[ni] = list[i]->unk_200 + list[i]->values[s1];
+            }
+        }
+        if (list[0] != 0) {
+            if (list[0]->values[ni] < p->unk_CAC) {
+                list[0]->values[ni] = (p->unk_CAC - list[0]->values[ni]) * D_814078A4 + p->unk_CAC;
+                if (list[0]->unk_200 < 0.0f) {
+                    func_81402CD8(p, -list[0]->unk_200);
+                    list[0]->unk_200 = list[0]->unk_200 * -D_814078A4;
+                }
+                flag = 1;
+            }
+            for (i = 0; i < 5; i++) {
+                a = list[i];
+                b = list[i + 1];
+                if (i == 0) {
+                    base = p->unk_CAC;
+                } else {
+                    base = list[i - 1]->values[ni] + 22.0f;
+                }
+                if (b == 0) {
+                    break;
+                }
+                oA = a->unk_200;
+                if (a->unk_200 == oA) {} // FAKE
+                oB = b->unk_200;
+                if (b->values[ni] - a->values[ni] < 22.0f) {
+                    mid = (a->values[ni] + (b->values[ni] - 22.0f)) * 0.5f;
+                    if (mid <= base) {
+                        corr = (base - mid) + D_814078AC;
+                    } else {
+                        corr = 0.0f;
+                    }
+                    vA = a->unk_200;
+                    vB = b->unk_200;
+                    flag |= 3 << i;
+                    a->values[ni] = mid + corr;
+                    if (vB) {} // FAKE
+                    if (corr > 0.0f) {
+                        d = sqrtf(D_814078A0 + D_814078A0) * corr;
+                        vA = vA - d;
+                        if (oA == vA) {} // FAKE
+                        vB = vB - d;
+                    }
+                    b->values[ni] = a->values[ni] + 22.0f + D_814078AC;
+                    if (vB < vA) {
+                        b->unk_200 = ((1.0f + D_814078A8) * vA + (D_814078A8 - 1.0f) * vB) / (D_814078A8 + D_814078A8);
+                        if (oA == vA) {} // FAKE
+                        a->unk_200 = ((D_814078A8 - 1.0f) * vA + (1.0f + D_814078A8) * vB) / (D_814078A8 + D_814078A8);
+                    }
+                }
+                func_81402CD8(p, func_8000B770(oA - a->unk_200));
+                func_81402CD8(p, func_8000B770(oB - b->unk_200));
+            }
+        }
+        for (i = 0; i < 6; i++) {
+            Fragment12Row *r = list[i];
+            if (r != 0) {
+                r->unk_200 -= D_814078A0;
+            }
+        }
+    }
+    for (step = 0; step < 6; step++) {
+        if (D_814078A0) {} // FAKE
+        p->slots[step].unk_04 -= (f32)steps;
+        if (p->slots[step].unk_04 < 0.0f) {
+            p->slots[step].unk_04 = 0.0f;
+            p->slots[step].unk_08 = -1;
+        }
+    }
+}
 
 void func_81403244(Fragment12Rows *arg0, s32 arg1, s32 arg2) {
     f32 max;
