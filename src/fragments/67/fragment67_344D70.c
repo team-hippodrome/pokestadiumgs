@@ -719,7 +719,60 @@ void func_829092AC(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/67/fragment67_344D70/func_8290954C.s")
+extern s16 D_8291B828;
+extern u8 D_82916EB6[];
+extern s16 D_82913784[][3];
+extern Gfx D_82912F18[];
+extern Gfx D_82912F48[];
+extern char *func_8004B7A4(s32);
+extern s32 func_80049148(s32, s32, char *);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_800495BC(s32, s32, const char *, ...);
+extern void func_800499EC(void);
+
+void func_8290954C(void) {
+    s32 i;
+    s32 val;
+    char *str;
+    s32 halfW;
+    s16 count;
+    u8 id;
+
+    count = 14;
+    if (D_8291B828 == 0x24 || D_8291B828 == 0x25 || D_8291B828 == 0x26) {
+        count = 1;
+    }
+    for (i = 0; i < count; i++) {
+        val = ((s16 (*)[17])D_82913210)[D_8291B828][i];
+        id = D_82916EB6[val * 4];
+        if (val > 0 && D_8291B880[i].unk_00 == 1) {
+            if (i == 0) {} // FAKE: dead compare that fixes the loop register allocation; diff score 268 without it.
+            str = func_8004B7A4(val);
+            halfW = func_80049148(4, 0, str) / 2;
+            func_800498C4();
+            func_800496A4(4, 0);
+            gSPDisplayList((*(Gfx **)&D_800D0510)++, D_82912F18);
+            gDPPipeSync((*(Gfx **)&D_800D0510)++);
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, (u8)((f32 *)D_8291B880[i].unk_08)[4], (u8)((f32 *)D_8291B880[i].unk_08)[5], (u8)((f32 *)D_8291B880[i].unk_08)[6], 255);
+            gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0, 0, (u8)((f32 *)D_8291B880[i].unk_08)[0], (u8)((f32 *)D_8291B880[i].unk_08)[1], (u8)((f32 *)D_8291B880[i].unk_08)[2], (u8)((f32 *)D_8291B880[i].unk_08)[3]);
+            func_800495BC(D_82913784[id][0] - halfW, D_82913784[id][1] - 8, "%s", str);
+            func_800499EC();
+            func_800498C4();
+            func_800496A4(4, 0);
+            gSPDisplayList((*(Gfx **)&D_800D0510)++, D_82912F48);
+            gDPPipeSync((*(Gfx **)&D_800D0510)++);
+            gDPSetEnvColor((*(Gfx **)&D_800D0510)++, (u8)((f32 *)D_8291B880[i].unk_08)[11], (u8)((f32 *)D_8291B880[i].unk_08)[12], (u8)((f32 *)D_8291B880[i].unk_08)[13], 255);
+            gDPSetPrimColor((*(Gfx **)&D_800D0510)++, 0, 0, (u8)((f32 *)D_8291B880[i].unk_08)[7], (u8)((f32 *)D_8291B880[i].unk_08)[8], (u8)((f32 *)D_8291B880[i].unk_08)[9], (u8)((f32 *)D_8291B880[i].unk_08)[10]);
+            func_800495BC(D_82913784[id][0] - halfW - (s16)(D_8291B880[i].unk_04 * 1.2f), D_82913784[id][1] - 8, "%s", str);
+            func_800495BC(D_82913784[id][0] + (s16)(D_8291B880[i].unk_04 * 1.2f) - halfW, D_82913784[id][1] - 8, "%s", str);
+            func_800495BC(D_82913784[id][0] - halfW, D_82913784[id][1] - (s16)D_8291B880[i].unk_04 - 8, "%s", str);
+            func_800495BC(D_82913784[id][0] - halfW, D_82913784[id][1] + (s16)D_8291B880[i].unk_04 - 8, "%s", str);
+            func_800499EC();
+        }
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
