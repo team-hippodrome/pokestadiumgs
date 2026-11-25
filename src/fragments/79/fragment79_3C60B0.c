@@ -219,7 +219,7 @@ void func_84156C40(void) {
 
 #ifdef VERSION_US
 extern s32 D_800D0510;
-extern s32 func_8415ADE0();
+extern Gfx *func_8415ADE0(Gfx *);
 void func_84156C60(void) {
     #define EMIT_GFX(pkt) { Gfx *_g = (Gfx *)(pkt); _g->words.w0 = 0xDA380003; _g->words.w1 = (u32)&D_841A4D08; }
     s32 temp = D_800D0510; D_800D0510 += 8; EMIT_GFX(temp) D_800D0510 = func_8415ADE0(D_800D0510);
@@ -1818,5 +1818,144 @@ void BattleAnim_UpdateTerrainGrid(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3C60B0/func_8415ADE0.s")
+extern u8 *D_8418CA20[];
+extern Gfx D_84187338[];
+extern Gfx D_841873B0[];
+extern f32 D_8418C61C;
+extern void BattleAnim_SetTerrainGridPointValue(u8 value);
+
+Gfx *func_8415ADE0(Gfx *gfx) {
+    s32 i;
+    s32 j;
+    s32 r;
+    s32 c;
+    Vtx *vtx;
+    Vtx *quad;
+    Fragment79TerrainPointView *point;
+    s16 alpha;
+    Mtx *mtx;
+    f32 x0;
+    f32 z0;
+    f32 x1;
+    f32 z1;
+    f32 x2;
+    f32 y2;
+    f32 z2;
+    f32 h1;
+    f32 h2;
+    f32 x3;
+    f32 slope;
+    f32 y3;
+    f32 cx;
+    f32 cy;
+    f32 cz;
+    f32 rx;
+    f32 ry;
+    f32 rz;
+    f32 ux;
+    f32 uy;
+    f32 uz;
+    f32 z3;
+    s32 pad;
+
+    *(Vtx **)(D_84187330 + 0xC) = Gfx_AllocDisplayList(0x1000);
+    vtx = *(Vtx **)(D_84187330 + 0xC);
+    point = (Fragment79TerrainPointView *)(D_84187330 + 0x1010);
+    for (i = 0; i < 16; i++) {
+        for (j = 0; j < 16; j++) {
+            vtx->v.ob[0] = point->field_00;
+            vtx->v.ob[1] = point->field_04;
+            vtx->v.ob[2] = point->field_08;
+            vtx->v.tc[0] = (i * 0x800) / 3;
+            vtx->v.tc[1] = (j * 0x800) / 3;
+            vtx->v.cn[3] = point->value;
+            vtx++;
+            point++;
+        }
+    }
+    gSPDisplayList(gfx++, D_84187338);
+    gDPPipeSync(gfx++);
+    if (*(s16 *)(D_84187330 + 4) < 20) {
+        alpha = *(s16 *)(D_84187330 + 4) * 255 / 20;
+    } else if (*(s16 *)(D_84187330 + 8) - 20 < *(s16 *)(D_84187330 + 4)) {
+        alpha = (*(s16 *)(D_84187330 + 8) - *(s16 *)(D_84187330 + 4)) * 255 / 20;
+    } else {
+        alpha = 255;
+    }
+    BattleAnim_SetTerrainGridPointValue(alpha);
+    gDPSetPrimColor(gfx++, 0, 0x7D, 0xAF, 0xFF, 0xFF, 0xFF);
+    gDPSetEnvColor(gfx++, 0x00, 0x28, 0xAF, 0x37);
+    gDPSetBlendColor(gfx++, 0xFF, 0xFF, 0xFF, 0xFF);
+    gDPLoadMultiTile_4b(gfx++, D_8418CA20[0x1F], 0, G_TX_RENDERTILE, G_IM_FMT_I, 32, 32, 0, 0, 31, 31, 0, G_TX_WRAP, G_TX_WRAP, 5, 5, 1, 1);
+    gDPSetTileSize(gfx++, G_TX_RENDERTILE, D_841A4D62, 0, D_841A4D62 + 31, 31);
+    gDPLoadMultiTile_4b(gfx++, D_8418CA20[0x20], 0x100, 1, G_IM_FMT_I, 32, 32, 0, 0, 31, 31, 0, G_TX_WRAP, G_TX_WRAP, 5, 5, 0, 0);
+    gDPSetTileSize(gfx++, 1, D_841A4D64, 0, D_841A4D64 + 31, 31);
+    vtx = *(Vtx **)(D_84187330 + 0xC);
+    for (i = 0; i < 15; i++) {
+        for (j = 0; j < 15; j++) {
+            c = i * 16 + j;
+            gSPVertex(gfx++, &vtx[c], 1, 0);
+            gSPVertex(gfx++, &vtx[c + 1], 1, 1);
+            gSPVertex(gfx++, &vtx[c + 16], 1, 2);
+            gSPVertex(gfx++, &vtx[c + 17], 1, 3);
+            gSP2Triangles(gfx++, 0, 2, 1, 0, 2, 3, 1, 0);
+        }
+    }
+    BattleAnim_BuildTerrainCameraBounds(D_84187334);
+    cx = ((f32 *)D_84187334)[0] * 10.0f;
+    cy = ((f32 *)D_84187334)[1] * 10.0f;
+    cz = ((f32 *)D_84187334)[2] * 10.0f;
+    rx = ((f32 *)D_84187334)[3] * 10.0f;
+    ry = ((f32 *)D_84187334)[4] * 10.0f;
+    rz = ((f32 *)D_84187334)[5] * 10.0f;
+    ux = ((f32 *)D_84187334)[6] * 10.0f;
+    uy = ((f32 *)D_84187334)[7] * 10.0f;
+    uz = ((f32 *)D_84187334)[8] * 10.0f;
+    x0 = cx - rx - ux;
+    z0 = cz - rz - uz;
+    x1 = cx + rx - ux;
+    z1 = cz + rz - uz;
+    x2 = cx - rx + ux;
+    y2 = cy - ry + uy;
+    z2 = cz - rz + uz;
+    x3 = cx + rx + ux;
+    y3 = cy + ry + uy;
+    z3 = cz + rz + uz;
+    h1 = BattleAnim_SampleTerrainHeightAndSlope(x2 / 10.0f, z2 / 10.0f, &slope) * 10.0f;
+    h2 = BattleAnim_SampleTerrainHeightAndSlope(x3 / 10.0f, z3 / 10.0f, &slope) * 10.0f;
+    if (y2 < h1 || y3 < h2) {
+        quad = Gfx_AllocDisplayList(sizeof(Vtx) * 4);
+        quad[0].v.ob[0] = x0;
+        quad[0].v.ob[1] = h1;
+        quad[0].v.ob[2] = z0;
+        quad[0].v.tc[0] = 0;
+        quad[0].v.tc[1] = 0;
+        quad[1].v.ob[0] = x1;
+        quad[1].v.ob[1] = h2;
+        quad[1].v.ob[2] = z1;
+        quad[1].v.tc[0] = 0x3E0;
+        quad[1].v.tc[1] = 0;
+        quad[2].v.ob[0] = x2;
+        quad[2].v.ob[1] = y2;
+        quad[2].v.ob[2] = z2;
+        quad[2].v.tc[0] = 0;
+        quad[2].v.tc[1] = 0x3E0;
+        quad[3].v.ob[0] = x3;
+        quad[3].v.ob[1] = y3;
+        quad[3].v.ob[2] = z3;
+        quad[3].v.tc[0] = 0x3E0;
+        quad[3].v.tc[1] = 0x3E0;
+        gSPDisplayList(gfx++, D_841873B0);
+        gDPLoadMultiTile_4b(gfx++, D_8418CA20[0x21], 0, G_TX_RENDERTILE, G_IM_FMT_I, 32, 32, 0, 0, 31, 31, 0, G_TX_WRAP, G_TX_WRAP, 5, 5, 15, 0);
+        gDPSetTileSize(gfx++, G_TX_RENDERTILE, 0, D_841A4D62, 31, D_841A4D62 + 31);
+        gDPLoadMultiTile_4b(gfx++, D_8418CA20[0x21], 0x100, 1, G_IM_FMT_I, 32, 32, 0, 0, 31, 31, 0, G_TX_WRAP, G_TX_WRAP, 5, 5, 14, 0);
+        gDPSetTileSize(gfx++, 1, 0, D_841A4D64, 31, D_841A4D64 + 31);
+        mtx = Gfx_AllocDisplayList(sizeof(Mtx));
+        guScale(mtx, D_8418C61C, D_8418C61C, D_8418C61C);
+        gSPMatrix(gfx++, mtx, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPVertex(gfx++, quad, 4, 0);
+        gSP2Triangles(gfx++, 0, 2, 1, 0, 2, 3, 1, 0);
+    }
+    return gfx;
+}
 #endif
