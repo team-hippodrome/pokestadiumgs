@@ -1016,7 +1016,110 @@ s32 func_8000E13C(s32 arg0, u8 *arg1, s16 arg2)
 #endif
 
 #ifdef VERSION_US
-extern Acmd *func_8000E750(u32, u8 *, u8 *, s16 *, s32, Acmd *, s32);
+typedef struct {
+    /* 0x00 */ u32 start;
+    /* 0x04 */ u32 loopEnd;
+    /* 0x08 */ u32 count;
+    /* 0x0C */ u32 sampleEnd;
+    /* 0x10 */ s16 predictorState[16];
+} AdpcmLoopGS;
+
+typedef struct {
+    /* 0x00 */ s32 order;
+    /* 0x04 */ s32 numPredictors;
+    /* 0x08 */ s16 codeBook[1];
+} AdpcmBookGS;
+
+typedef struct {
+    /* 0x00 */ u32 unk_0 : 1;
+    /* 0x00 */ u32 codec : 3;
+    /* 0x00 */ u32 medium : 2;
+    /* 0x00 */ u32 unk_bit26 : 1;
+    /* 0x00 */ u32 isRelocated : 1;
+    /* 0x01 */ u32 size : 24;
+    /* 0x04 */ u8 *sampleAddr;
+    /* 0x08 */ AdpcmLoopGS *loop;
+    /* 0x0C */ AdpcmBookGS *book;
+} SampleGS;
+
+typedef struct {
+    /* 0x00 */ SampleGS *sample;
+    /* 0x04 */ f32 tuning;
+} TunedSampleGS;
+
+typedef struct {
+    /* 0x00 */ struct {
+        u8 enabled : 1;
+        u8 needsInit : 1;
+        u8 finished : 1;
+        u8 unused : 1;
+        u8 strongRight : 1;
+        u8 strongLeft : 1;
+        u8 strongReverbRight : 1;
+        u8 strongReverbLeft : 1;
+    } bitField0;
+    /* 0x01 */ struct {
+        u8 reverbIndex : 3;
+        u8 bookOffset : 2;
+        u8 isSyntheticWave : 1;
+        u8 hasTwoParts : 1;
+        u8 useHaasEffect : 1;
+    } bitField1;
+    /* 0x02 */ u8 gain;
+    /* 0x03 */ u8 haasEffectLeftDelaySize;
+    /* 0x04 */ u8 haasEffectRightDelaySize;
+    /* 0x05 */ u8 targetReverbVol;
+    /* 0x06 */ u8 unk_06[2];
+    /* 0x08 */ u16 targetVolLeft;
+    /* 0x0A */ u16 targetVolRight;
+    /* 0x0C */ u16 frequencyFixedPoint;
+    /* 0x0E */ u8 unk_0E[2];
+    /* 0x10 */ TunedSampleGS *tunedSample;
+    /* 0x14 */ s16 *filter;
+    /* 0x18 */ u8 unk_18;
+    /* 0x19 */ u8 surroundEffectIndex;
+    /* 0x1A */ u8 unk_1A[6];
+} NoteSampleStateGS; // size = 0x20
+
+typedef struct {
+    /* 0x000 */ s16 adpcmState[16];
+    /* 0x020 */ s16 finalResampleState[16];
+    /* 0x040 */ s16 filterState[32];
+} NoteSynthesisBuffersGS;
+
+typedef struct {
+    /* 0x00 */ u8 atLoopPoint : 1;
+    /* 0x00 */ u8 stopLoop : 1;
+    /* 0x01 */ u8 sampleDmaIndex;
+    /* 0x02 */ u8 prevHaasEffectLeftDelaySize;
+    /* 0x03 */ u8 prevHaasEffectRightDelaySize;
+    /* 0x04 */ u8 curReverbVol;
+    /* 0x05 */ u8 numParts;
+    /* 0x06 */ u8 combFilterNeedsInit;
+    /* 0x07 */ u8 unk_07;
+    /* 0x08 */ u16 samplePosFrac;
+    /* 0x0C */ s32 samplePosInt;
+    /* 0x10 */ NoteSynthesisBuffersGS *synthesisBuffers;
+    /* 0x14 */ s16 curVolLeft;
+    /* 0x16 */ s16 curVolRight;
+} NoteSynthesisStateGS;
+
+typedef struct {
+    /* 0x00 */ u8 unk_00[0x34];
+    /* 0x34 */ u8 status;
+    /* 0x35 */ u8 unk_35[0x60 - 0x35];
+    /* 0x60 */ struct {
+        u32 unk_0 : 1;
+    } unk_60;
+    /* 0x64 */ u8 unk_64[0xAC - 0x64];
+    /* 0xAC */ u8 unk_AC;
+    /* 0xB0 */ s32 startSamplePos;
+    /* 0xB4 */ u8 unk_B4[0xD0 - 0xB4];
+    /* 0xD0 */ NoteSampleStateGS sampleState;
+    /* 0xF0 */ u8 unk_F0[0x10];
+} NoteGS; // size = 0x100
+
+extern Acmd *func_8000E750(u32, NoteSampleStateGS *, NoteSynthesisStateGS *, s16 *, s32, Acmd *, s32);
 extern Acmd *(*D_80122A2C)(Acmd *cmd, s32 size, s32 update_index);
 
 // Same code as Majora's Mask AudioSynth_ProcessSamples (src/audio/lib/synthesis.c).
@@ -1198,13 +1301,6 @@ typedef struct {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/CE80/func_8000E750.s")
-#endif
-
-#ifdef VERSION_US
-/* mkdraft:func_8000F4E0 begin */
-extern f32 D_8008F904[];
-
 // Views of the shared per-voice state structs (NoteSampleState and
 // NoteSynthesisState, defined further down this file) covering only the bytes
 // this function touches: the target envelope volumes, the surround effect
@@ -1225,6 +1321,539 @@ typedef struct {
     /* 0x0C */ u8 unk_0C[4];
     /* 0x10 */ void *unk_10;
 } NoteSynthesisStateSurround;
+
+// Per-voice mixer input, laid out like Majora's Mask NoteSampleState
+// (include/audio/playback.h); only the fields func_8000F834 reads are named.
+typedef struct {
+    /* 0x00 */ struct {
+        u8 unk_0 : 4;
+        u8 strongRight : 1;
+        u8 strongLeft : 1;
+        u8 strongReverbRight : 1;
+        u8 strongReverbLeft : 1;
+    } bitField0;
+    /* 0x01 */ struct {
+        u8 unk_0 : 7;
+        u8 useHaasEffect : 1;
+    } bitField1;
+    /* 0x02 */ u8 unk_02[3];
+    /* 0x05 */ u8 targetReverbVol;
+    /* 0x06 */ u8 unk_06[2];
+    /* 0x08 */ u16 targetVolLeft;
+    /* 0x0A */ u16 targetVolRight;
+    /* 0x0C */ u8 unk_0C[4];
+    /* 0x10 */ void *unk_10;
+    /* 0x14 */ void *unk_14;
+    /* 0x18 */ u8 unk_18;
+    /* 0x19 */ u8 surroundEffectIndex;
+    /* 0x1A */ u8 unk_1A[6];
+} NoteSampleState; // size = 0x20
+
+// Per-voice mixer state, laid out like the start of Majora's Mask
+// NoteSynthesisState (include/audio/synthesis.h).
+typedef struct {
+    /* 0x00 */ u8 unk_00[4];
+    /* 0x04 */ u8 curReverbVol;
+    /* 0x05 */ u8 unk_05[0x10 - 0x05];
+    /* 0x10 */ void *unk_10;
+    /* 0x14 */ s16 curVolLeft;
+    /* 0x16 */ s16 curVolRight;
+} NoteSynthesisState;
+
+extern s8 D_8011EABE;
+Acmd *func_8000F4E0(Acmd *cmd, NoteSampleStateSurround *sample_state, NoteSynthesisStateSurround *synth_state,
+                    s32 size, s32 dmem_src, s32 flags);
+Acmd *func_8000F794(Acmd *cmd, u8 *synth_state, s32 size, u16 pitch, u16 inp_dmem, s32 resample_flags);
+Acmd *func_8000F834(Acmd *cmd, NoteSampleState *sample_state, NoteSynthesisState *synth_state,
+                    s32 num_samples_per_update, u16 dmem_src, s32 haas_effect_delay_side, s32 flags);
+Acmd *func_8000FCF0(Acmd *cmd, NoteSampleState *sample_state, NoteSynthesisState *synth_state, s32 size, s32 flags,
+                    s32 haas_effect_delay_side);
+
+#define aSetBuffer2_GS(pkt, f, i, o, c)                                            \
+    AUDIO_CMD(pkt, _SHIFTL(0x08, 24, 8) | _SHIFTL(f, 16, 8) | _SHIFTL(i, 0, 16), \
+              _SHIFTL(o, 16, 16) | _SHIFTL(c, 0, 16))
+extern NoteGS *D_8011F2F8;
+extern s16 *D_8011BEA0;
+extern s16 D_8008F28A[];
+extern s8 D_8011EBB8;
+extern void *(*D_80122A28)(SampleGS *, s32, s8, s32);
+extern void *func_80013C40(u32 devAddr, u32 size, s32 arg2, u8 *dmaIndexRef, s32 medium);
+
+// Same code as Majora's Mask AudioSynth_ProcessSample (src/audio/lib/synthesis.c),
+// from an earlier revision without the wave and comb-filter paths.
+Acmd *func_8000E750(u32 noteIndex, NoteSampleStateGS *sampleState, NoteSynthesisStateGS *synthState, s16 *aiBuf,
+                    s32 numSamplesPerUpdate, Acmd *cmd, s32 updateIndex) {
+    s32 pad1[2];
+    void *reverbAddrSrc;
+    SampleGS *sample;
+    AdpcmLoopGS *loopInfo;
+    s32 numSamplesUntilEnd;
+    s32 numSamplesInThisIteration;
+    s32 sampleFinished;
+    s32 loopToPoint;
+    s32 flags;
+    u16 frequencyFixedPoint;
+    s32 gain;
+    s32 frameIndex;
+    s32 skipBytes;
+    void *combFilterState;
+    s32 numSamplesToDecode;
+    s32 numFirstFrameSamplesToIgnore;
+    u8 *sampleAddr;
+    u32 numSamplesToLoadFixedPoint;
+    s32 numSamplesToLoadAdj;
+    s32 numSamplesProcessed;
+    s32 sampleEndPos;
+    s32 numSamplesToProcess;
+    s32 dmemUncompressedAddrOffset2;
+    s32 pad2[3];
+    s32 numSamplesInFirstFrame;
+    s32 numTrailingSamplesToIgnore;
+    s32 pad3[3];
+    s32 frameSize;
+    s32 numFramesToDecode;
+    s32 skipInitialSamples;
+    s32 zeroOffset;
+    u8 *samplesToLoadAddr;
+    s32 numParts;
+    s32 curPart;
+    s32 sampleDataChunkAlignPad;
+    s32 haasEffectDelaySide;
+    s32 numSamplesToLoadFirstPart;
+    u16 sampleDmemBeforeResampling;
+    s32 sampleAddrOffset;
+    s32 combFilterDmem;
+    s32 dmemUncompressedAddrOffset1;
+    NoteGS *note;
+    u32 numSamplesToLoad;
+    u16 sampleDataChunkSize;
+    s16 sampleDataDmemAddr;
+    s16 *filter;
+    s32 bookOffset;
+    s32 finished;
+
+    if (0) { func_8000CFB4((s32)&updateIndex, (s32)&sampleState); } // FAKE: address-taken args keep note/sampleState in memory like retail
+    bookOffset = sampleState->bitField1.bookOffset;
+    finished = sampleState->bitField0.finished;
+    note = &D_8011F2F8[noteIndex];
+    if (sampleState->tunedSample != NULL) {
+    flags = 0;
+
+    if (sampleState->bitField0.needsInit == 1) {
+        flags = 1;
+        synthState->atLoopPoint = 0;
+        synthState->stopLoop = 0;
+        synthState->samplePosInt = note->startSamplePos;
+        synthState->samplePosFrac = 0;
+        if ((s32)note->unk_60.unk_0 == 1) {
+            synthState->curVolLeft = sampleState->targetVolLeft << 4;
+            synthState->curVolRight = sampleState->targetVolRight << 4;
+        } else {
+            synthState->curVolLeft = 0;
+            synthState->curVolRight = 0;
+        }
+        synthState->prevHaasEffectLeftDelaySize = 0;
+        synthState->prevHaasEffectRightDelaySize = 0;
+        synthState->curReverbVol = sampleState->targetReverbVol;
+        synthState->numParts = 0;
+        synthState->combFilterNeedsInit = 1;
+        finished = 0;
+        note->sampleState.bitField0.finished = 0;
+        synthState->unk_07 = note->unk_AC;
+    }
+
+    frequencyFixedPoint = sampleState->frequencyFixedPoint;
+    numParts = sampleState->bitField1.hasTwoParts + 1;
+    numSamplesToLoadFixedPoint = (frequencyFixedPoint * numSamplesPerUpdate * 2) + synthState->samplePosFrac;
+    goto L_split; L_split:; // FAKE: splits the uopt block so numSamplesToLoad gets retail's spill slot
+    numSamplesToLoad = numSamplesToLoadFixedPoint >> 16;
+
+    if (numSamplesToLoad == 0) {
+        skipBytes = 0;
+    }
+
+    synthState->samplePosFrac = numSamplesToLoadFixedPoint & 0xFFFF;
+
+    if ((synthState->numParts == 1) && (numParts == 2)) {
+    } else if ((synthState->numParts == 2) && (numParts == 1)) {
+    } else {
+    }
+
+    synthState->numParts = numParts;
+
+    sample = sampleState->tunedSample->sample;
+    loopInfo = sample->loop;
+
+    if (note->status != 0) {
+        synthState->stopLoop = 1;
+    }
+
+    if ((loopInfo->count == 2) && synthState->stopLoop) {
+        sampleEndPos = loopInfo->sampleEnd;
+    } else {
+        sampleEndPos = loopInfo->loopEnd;
+    }
+
+    sampleAddr = sample->sampleAddr;
+    numSamplesToLoadFirstPart = 0;
+
+    for (curPart = 0; curPart < numParts; curPart++) {
+        numSamplesProcessed = 0;
+        dmemUncompressedAddrOffset1 = 0;
+
+        if (numParts == 1) {
+            numSamplesToLoadAdj = numSamplesToLoad;
+        } else if (numSamplesToLoad & 1) {
+            numSamplesToLoadAdj = (numSamplesToLoad & ~1) + (curPart * 2);
+        } else {
+            numSamplesToLoadAdj = numSamplesToLoad;
+            if (synthState) {} // FAKE
+        }
+
+        if ((sample->codec == 0) || (sample->codec == 3)) {
+            if (D_8011BEA0 != sample->book->codeBook) {
+                u32 numEntries;
+
+                switch (bookOffset) {
+                    case 1:
+                        D_8011BEA0 = D_8008F28A;
+                        break;
+
+                    case 2:
+                    case 3:
+                    default:
+                        D_8011BEA0 = sample->book->codeBook;
+                        break;
+                }
+
+                numEntries = 16 * sample->book->order * sample->book->numPredictors;
+                AUDIO_CMD(cmd++, _SHIFTL(0x0B, 24, 8) | _SHIFTL(numEntries, 0, 24), (unsigned int)D_8011BEA0);
+            }
+        }
+
+        while (numSamplesProcessed != numSamplesToLoadAdj) {
+            sampleFinished = 0;
+            loopToPoint = 0;
+            dmemUncompressedAddrOffset2 = 0;
+
+            numFirstFrameSamplesToIgnore = synthState->samplePosInt & 0xF;
+            numSamplesUntilEnd = sampleEndPos - synthState->samplePosInt;
+            numSamplesToProcess = numSamplesToLoadAdj - numSamplesProcessed;
+
+            if ((numFirstFrameSamplesToIgnore == 0) && !synthState->atLoopPoint) {
+                numFirstFrameSamplesToIgnore = 16;
+            }
+            numSamplesInFirstFrame = 16 - numFirstFrameSamplesToIgnore;
+
+            if (numSamplesToProcess < numSamplesUntilEnd) {
+                numFramesToDecode = (s32)(numSamplesToProcess - numSamplesInFirstFrame + 16 - 1) / 16;
+                numSamplesToDecode = numFramesToDecode * 16;
+                numTrailingSamplesToIgnore = numSamplesInFirstFrame + numSamplesToDecode - numSamplesToProcess;
+            } else {
+                numSamplesToDecode = numSamplesUntilEnd - numSamplesInFirstFrame;
+                numTrailingSamplesToIgnore = 0;
+                if (numSamplesToDecode <= 0) {
+                    numSamplesToDecode = 0;
+                    numSamplesInFirstFrame = numSamplesUntilEnd;
+                }
+                numFramesToDecode = (numSamplesToDecode + 16 - 1) / 16;
+                if (loopInfo->count != 0) {
+                    if ((loopInfo->count == 2) && synthState->stopLoop) {
+                        sampleFinished = 1;
+                    } else {
+                        loopToPoint = 1;
+                    }
+                } else {
+                    sampleFinished = 1;
+                }
+            }
+
+            switch (sample->codec) {
+                case 0:
+                    frameSize = 9;
+                    skipInitialSamples = 16;
+                    zeroOffset = 0;
+                    break;
+
+                case 3:
+                    frameSize = 5;
+                    skipInitialSamples = 16;
+                    zeroOffset = 0;
+                    break;
+
+                case 7:
+                    frameSize = 4;
+                    skipInitialSamples = 16;
+                    zeroOffset = 0;
+                    break;
+
+                case 1:
+                    frameSize = 16;
+                    skipInitialSamples = 16;
+                    zeroOffset = 0;
+                    break;
+
+                case 4:
+                    reverbAddrSrc = (void *)0xFFFFFFFF;
+                    if (D_80122A28 != NULL) {
+                        reverbAddrSrc = D_80122A28(sample, numSamplesToLoadAdj, flags, noteIndex);
+                    }
+
+                    if (reverbAddrSrc == (void *)0xFFFFFFFF) {
+                        sampleFinished = 1;
+                    } else if (reverbAddrSrc == NULL) {
+                        return cmd;
+                    } else {
+                        func_8000D9C8(cmd++, 0x570, (numSamplesToLoadAdj + 16) * 2, (s32)reverbAddrSrc);
+                        flags = 0;
+                        skipBytes = 0;
+                        numSamplesProcessed = numSamplesToLoadAdj;
+                        dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
+                    }
+                    goto skip;
+
+                case 2:
+                case 6:
+                    func_8000D880((u8 *)cmd++, 0x570, (numSamplesToLoadAdj + 16) * 2);
+                    flags = 0;
+                    skipBytes = 0;
+                    numSamplesProcessed = numSamplesToLoadAdj;
+                    dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
+                    goto skip;
+
+                case 5:
+                    reverbAddrSrc = (void *)func_8000C85C((u8 *)sample, numSamplesToLoadAdj, flags, noteIndex);
+                    flags = 0;
+                    numSamplesProcessed = numSamplesToLoadAdj;
+                    dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
+                    if (reverbAddrSrc == NULL) {
+                        func_8000D880((u8 *)cmd++, 0x570, (numSamplesToLoadAdj + 16) * 2);
+                    } else {
+                        func_8000D9C8(cmd++, 0x570, (numSamplesToLoadAdj + 16) * 2, (u32)reverbAddrSrc & ~0xF);
+                    }
+                    skipBytes = (u32)reverbAddrSrc & 0xF;
+                    goto skip;
+
+                default:
+                    break;
+            }
+
+            if (numFramesToDecode != 0) {
+                frameIndex = (synthState->samplePosInt + skipInitialSamples - numFirstFrameSamplesToIgnore) / 16;
+                sampleAddrOffset = frameIndex * frameSize;
+
+                if (sample->medium == 0) {
+                    samplesToLoadAddr = sampleAddr + (zeroOffset + sampleAddrOffset);
+                } else if (D_8011EBB8) {
+                    return cmd;
+                } else if (sample->medium == 1) {
+                    return cmd;
+                } else {
+                    samplesToLoadAddr = func_80013C40((u32)(sampleAddr + (zeroOffset + sampleAddrOffset)),
+                                                      ((numFramesToDecode * frameSize) + 16 + 0xF) & ~0xF, flags,
+                                                      &synthState->sampleDmaIndex, sample->medium);
+                }
+
+                if (samplesToLoadAddr == NULL) {
+                    return cmd;
+                }
+
+                sampleDataChunkSize = ((numFramesToDecode * frameSize) + 16 + 0xF) & ~0xF;
+                sampleDataDmemAddr = 0x930 - sampleDataChunkSize;
+                sampleDataChunkAlignPad = (u32)samplesToLoadAddr & 0xF;
+                aLoadBuffer_GS(cmd++, samplesToLoadAddr - sampleDataChunkAlignPad, sampleDataDmemAddr,
+                               sampleDataChunkSize);
+            } else {
+                numSamplesToDecode = 0;
+                sampleDataChunkAlignPad = 0;
+            }
+
+            if (synthState->atLoopPoint) {
+                AUDIO_CMD(cmd++, _SHIFTL(0x0F, 24, 8), (unsigned int)sample->loop->predictorState);
+                flags = 2;
+                synthState->atLoopPoint = 0;
+            }
+
+            if (numSamplesProcessed == 0) {
+                if (1) {} // FAKE
+                skipBytes = numFirstFrameSamplesToIgnore * 2;
+            } else {
+                dmemUncompressedAddrOffset2 = (dmemUncompressedAddrOffset1 + 16 + 0xF) & ~0xF;
+            }
+
+            switch (sample->codec) {
+                case 0:
+                    sampleDataDmemAddr = 0x930 - (((numFramesToDecode * frameSize) + 16 + 0xF) & ~0xF);
+                    aSetBuffer2_GS(cmd++, 0, sampleDataDmemAddr + sampleDataChunkAlignPad,
+                                  0x570 + dmemUncompressedAddrOffset2, numSamplesToDecode * 2);
+                    AUDIO_CMD(cmd++, _SHIFTL(0x01, 24, 8) | _SHIFTL(flags, 16, 8),
+                              (unsigned int)synthState->synthesisBuffers->adpcmState);
+                    break;
+
+                case 3:
+                    sampleDataDmemAddr = 0x930 - (((numFramesToDecode * frameSize) + 16 + 0xF) & ~0xF);
+                    aSetBuffer2_GS(cmd++, 0, sampleDataDmemAddr + sampleDataChunkAlignPad,
+                                  0x570 + dmemUncompressedAddrOffset2, numSamplesToDecode * 2);
+                    AUDIO_CMD(cmd++, _SHIFTL(0x01, 24, 8) | _SHIFTL(flags | 4, 16, 8),
+                              (unsigned int)synthState->synthesisBuffers->adpcmState);
+                    break;
+
+                case 1:
+                    sampleDataDmemAddr = 0x930 - (((numFramesToDecode * frameSize) + 16 + 0xF) & ~0xF);
+                    func_8000D8D8(cmd++, 0, sampleDataDmemAddr + sampleDataChunkAlignPad,
+                                  0x570 + dmemUncompressedAddrOffset2, numSamplesToDecode * 2);
+                    func_8000DA2C((u8 *)cmd++, flags, (s32)synthState->synthesisBuffers->adpcmState);
+                    break;
+
+                case 7:
+                default:
+                    break;
+            }
+
+            if (numSamplesProcessed != 0) {
+                aDMEMMove_GS(cmd++, 0x570 + dmemUncompressedAddrOffset2 + (numFirstFrameSamplesToIgnore * 2),
+                             0x570 + dmemUncompressedAddrOffset1,
+                             (numSamplesToDecode + numSamplesInFirstFrame - numTrailingSamplesToIgnore) * 2);
+            }
+
+            numSamplesInThisIteration = numSamplesToDecode + numSamplesInFirstFrame - numTrailingSamplesToIgnore;
+
+            numSamplesProcessed += numSamplesInThisIteration;
+
+            switch (flags) {
+                case 1:
+                    skipBytes = 16 * 2;
+                    dmemUncompressedAddrOffset1 = (numSamplesToDecode + 16) * 2;
+                    break;
+
+                case 2:
+                    dmemUncompressedAddrOffset1 = numSamplesInThisIteration * 2 + dmemUncompressedAddrOffset1;
+                    break;
+
+                default:
+                    if (dmemUncompressedAddrOffset1 != 0) {
+                        dmemUncompressedAddrOffset1 = numSamplesInThisIteration * 2 + dmemUncompressedAddrOffset1;
+                    } else {
+                        dmemUncompressedAddrOffset1 = (numFirstFrameSamplesToIgnore + numSamplesInThisIteration) * 2;
+                    }
+                    break;
+            }
+
+            flags = 0;
+
+        skip:
+            if (sampleFinished) {
+                func_8000D880((u8 *)cmd++, 0x570 + dmemUncompressedAddrOffset1,
+                              (numSamplesToLoadAdj - numSamplesProcessed) * 2);
+                finished = 1;
+                note->sampleState.bitField0.finished = 1;
+                func_8000CFB4(updateIndex, noteIndex);
+                break;
+            } else if (loopToPoint) {
+                synthState->atLoopPoint = 1;
+                synthState->samplePosInt = loopInfo->start;
+            } else {
+                synthState->samplePosInt += numSamplesToProcess;
+            }
+        }
+
+        switch (numParts) {
+            case 1:
+                sampleDmemBeforeResampling = 0x570 + skipBytes;
+                break;
+
+            case 2:
+                switch (curPart) {
+                    case 0:
+                        func_8000D968(cmd++, 0x570 + skipBytes, 0x3D0, ((numSamplesToLoadAdj / 2) + 7) & ~7);
+                        numSamplesToLoadFirstPart = numSamplesToLoadAdj;
+                        sampleDmemBeforeResampling = 0x3D0;
+                        if (finished) {
+                            func_8000D880((u8 *)cmd++, sampleDmemBeforeResampling + numSamplesToLoadFirstPart,
+                                          numSamplesToLoadAdj + 16);
+                        }
+                        break;
+
+                    case 1:
+                        func_8000D968(cmd++, 0x570 + skipBytes, 0x3D0 + numSamplesToLoadFirstPart,
+                                      ((numSamplesToLoadAdj / 2) + 7) & ~7);
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+
+            default:
+                break;
+        }
+        if (finished) {
+            break;
+        }
+    }
+
+    flags = 0;
+    if (sampleState->bitField0.needsInit == 1) {
+        sampleState->bitField0.needsInit = 0;
+        flags = 1;
+    }
+
+    cmd = func_8000F794(cmd, (u8 *)synthState, numSamplesPerUpdate * 2, frequencyFixedPoint,
+                        sampleDmemBeforeResampling, flags);
+
+    if (bookOffset == 3) {
+        func_8000DA7C(cmd++, 0x3B0, 0x3B0, numSamplesPerUpdate * 2, 0);
+    }
+
+    gain = sampleState->gain;
+    if (gain != 0) {
+        if (gain < 0x10) {
+            gain = 0x10;
+        }
+        func_8000DA48((u32 *)cmd++, gain, 0x3B0, 0, (numSamplesPerUpdate + 16) * 2);
+    }
+
+    filter = sampleState->filter;
+    if (filter != 0) {
+        func_8000DB0C((u8 *)cmd++, numSamplesPerUpdate * 2, (s32)filter);
+        func_8000DAE8((u8 *)cmd++, flags, 0x3B0, (s32)synthState->synthesisBuffers->filterState);
+    }
+
+    if ((sampleState->haasEffectLeftDelaySize != 0) || (synthState->prevHaasEffectLeftDelaySize != 0)) {
+        haasEffectDelaySide = 1;
+    } else if ((sampleState->haasEffectRightDelaySize != 0) || (synthState->prevHaasEffectRightDelaySize != 0)) {
+        haasEffectDelaySide = 2;
+    } else {
+        haasEffectDelaySide = 0;
+    }
+
+    if (D_8011EABE == 4) {
+        if (sampleState->surroundEffectIndex != 0xFF) {
+            cmd = func_8000F4E0(cmd, (NoteSampleStateSurround *)sampleState,
+                                (NoteSynthesisStateSurround *)synthState, numSamplesPerUpdate, 0x3B0, flags);
+        }
+    }
+
+    cmd = func_8000F834(cmd, (NoteSampleState *)sampleState, (NoteSynthesisState *)synthState, numSamplesPerUpdate,
+                        0x3B0, haasEffectDelaySide, flags);
+
+    if (sampleState->bitField1.useHaasEffect) {
+        if (!(flags & 1)) {
+            flags = 0;
+        }
+        cmd = func_8000FCF0(cmd, (NoteSampleState *)sampleState, (NoteSynthesisState *)synthState,
+                            numSamplesPerUpdate * 2, flags, haasEffectDelaySide);
+    }
+
+    }
+    return cmd;
+}
+#endif
+
+#ifdef VERSION_US
+/* mkdraft:func_8000F4E0 begin */
+extern f32 D_8008F904[];
+
 
 // Same code as Majora's Mask AudioSynth_ApplySurroundEffect
 // (src/audio/lib/synthesis.c).
@@ -1292,43 +1921,6 @@ Acmd *func_8000F794(Acmd *cmd, u8 *synth_state, s32 size, u16 pitch, u16 inp_dme
 #endif
 
 #ifdef VERSION_US
-// Per-voice mixer input, laid out like Majora's Mask NoteSampleState
-// (include/audio/playback.h); only the fields func_8000F834 reads are named.
-typedef struct {
-    /* 0x00 */ struct {
-        u8 unk_0 : 4;
-        u8 strongRight : 1;
-        u8 strongLeft : 1;
-        u8 strongReverbRight : 1;
-        u8 strongReverbLeft : 1;
-    } bitField0;
-    /* 0x01 */ struct {
-        u8 unk_0 : 7;
-        u8 useHaasEffect : 1;
-    } bitField1;
-    /* 0x02 */ u8 unk_02[3];
-    /* 0x05 */ u8 targetReverbVol;
-    /* 0x06 */ u8 unk_06[2];
-    /* 0x08 */ u16 targetVolLeft;
-    /* 0x0A */ u16 targetVolRight;
-    /* 0x0C */ u8 unk_0C[4];
-    /* 0x10 */ void *unk_10;
-    /* 0x14 */ void *unk_14;
-    /* 0x18 */ u8 unk_18;
-    /* 0x19 */ u8 surroundEffectIndex;
-    /* 0x1A */ u8 unk_1A[6];
-} NoteSampleState; // size = 0x20
-
-// Per-voice mixer state, laid out like the start of Majora's Mask
-// NoteSynthesisState (include/audio/synthesis.h).
-typedef struct {
-    /* 0x00 */ u8 unk_00[4];
-    /* 0x04 */ u8 curReverbVol;
-    /* 0x05 */ u8 unk_05[0x10 - 0x05];
-    /* 0x10 */ void *unk_10;
-    /* 0x14 */ s16 curVolLeft;
-    /* 0x16 */ s16 curVolRight;
-} NoteSynthesisState;
 
 extern s8 D_8011EABE;
 extern f32 D_8008F708[];
