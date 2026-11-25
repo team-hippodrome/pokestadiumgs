@@ -49,6 +49,7 @@
     - [0xCE80, c]
     - [0x10BB0, c]
     - [0x14640, c]
+    - [0x186C0, c]
     - [0x1A140, c]
     - [0x1A360, c]
     - [0x1C2D0, c]
@@ -322,7 +323,8 @@
     - [0x88A20, .data, AC80] # src/AC80.c owns [0x80087E20, 0x80087E40): profiler/render statics,
                              # D_80087E30/E34, sBackupTime (wave-5 migration)
     - [0x88A40, data]
-    - [0x90670, .data, 14640] # src/14640.c's tail data: D_8008FA70..D_8008FA88 and func_800194A0's statics
+    - [0x90670, .data, 14640] # D_8008FA70..D_8008FA78 and func_800179CC's sLoadIndex
+    - [0x90680, .data, 186C0] # D_8008FA80, D_8008FA84 and func_800194A0's statics
     - [0x906A0, data]
     - [0x97ED0, .data, 56F90]
     - [0x97EE0, data]
@@ -372,6 +374,7 @@
     - [0xA2900, .rodata, CE80] # jtbl_800A1D00
     - [0xA2930, .rodata, 10BB0] # jtbl_800A1D3C (+1 more)
     - [0xA2980, .rodata, 14640] # jtbl_800A1DD8 (+2 more)
+    - [0xA2A10, .rodata, 186C0] # func_80018078's jump tables onwards
     - [0xA2B60, .rodata, 1A360] # audio float constants 800A1F60..800A1F70
     - [0xA2B80, .rodata, 1C2D0] # jtbl_800A1F80 (+1 more)
     - [0xA2BD0, .rodata, 1CDC0] # jtbl_800A1FD0 (+2 more)

@@ -91,6 +91,7 @@ SECTIONS
         build/src/CE80.o(.text);
         build/src/10BB0.o(.text);
         build/src/14640.o(.text);
+        build/src/186C0.o(.text);
         build/src/1A140.o(.text);
         build/src/1A360.o(.text);
         build/src/1C2D0.o(.text);
@@ -422,6 +423,8 @@ SECTIONS
         build/asm/us/data/88A40.data.o(.data);
         _14640 = .;
         build/src/14640.o(.data);
+        _186C0 = .;
+        build/src/186C0.o(.data);
         _1A140 = .;
         build/src/1A140.o(.data);
         _1A360 = .;
@@ -627,6 +630,7 @@ SECTIONS
         build/src/CE80.o(.rodata);
         build/src/10BB0.o(.rodata);
         build/src/14640.o(.rodata);
+        build/src/186C0.o(.rodata);
         build/src/1A140.o(.rodata);
         build/src/1A360.o(.rodata);
         build/src/1C2D0.o(.rodata);
@@ -771,6 +775,7 @@ SECTIONS
         build/src/CE80.o(.bss);
         build/src/10BB0.o(.bss);
         build/src/14640.o(.bss);
+        build/src/186C0.o(.bss);
         build/src/1A140.o(.bss);
         build/src/1A360.o(.bss);
         build/src/1C2D0.o(.bss);
