@@ -27,7 +27,99 @@ static f32 D_8330ACDC;
 
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83300020.s")
+extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
+struct unk_D_8330A2B0;
+extern struct unk_D_8330A2B0 D_8330A2B0;
+extern u8 D_8330A4D0;
+extern u8 D_8330A338[];
+#define F338 (*(f32 *)D_8330A338)
+extern f32 D_8330A33C;
+extern f32 D_8330A340;
+extern s32 D_8330ABD8;
+extern s32 D_8330AA70[];
+extern s32 D_8330ABF4;
+extern f32 D_8330AA94;
+extern f32 D_8330AA98;
+extern f32 D_8330AA9C;
+extern s32 func_8003C9B8();
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+
+#define A2B0(type, off) (*(type *)((u8 *)&D_8330A2B0 + (off)))
+#define AA70(type, off) (*(type *)((u8 *)D_8330AA70 + (off)))
+
+void func_83300020(s32 arg0) {
+    s32 alpha;
+    s32 visible;
+
+    Vec3f_SetComponentsDuplicate(&A2B0(f32, 0x88), *(f32 *)((u8 *)&D_8330A4D0 + 0x24), *(f32 *)((u8 *)&D_8330A4D0 + 0x28), *(f32 *)((u8 *)&D_8330A4D0 + 0x2C));
+    if (func_8003C9B8(&D_8330A4D0, 100, &A2B0(f32, 0x88)) == 0) {
+        func_8003C9B8(&D_8330A4D0, 9, &A2B0(f32, 0x88));
+    } else {
+        func_8003C9B8(&D_8330A4D0, 100, &A2B0(f32, 0x88));
+    }
+    switch (D_8330ABD8) {
+        case 24:
+        case 70:
+        case 82:
+        case 95:
+        case 102:
+        case 127:
+        case 130:
+        case 138:
+        case 247:
+            if (func_8003C9B8(&D_8330A4D0, 10, &A2B0(f32, 0x88)) == 0) {
+                func_8003C9B8(&D_8330A4D0, 9, &A2B0(f32, 0x88));
+            }
+            break;
+    }
+    if (arg0 == 0) {
+        A2B0(f32, 0xAC) = 0.0f;
+        A2B0(f32, 0xB0) = 200.0f;
+        A2B0(f32, 0xB4) = 1500.0f;
+        Vec3f_SetComponentsDuplicate(&A2B0(f32, 0xD0), F338, D_8330A33C, D_8330A340);
+        Vec3f_SetComponentsDuplicate(&A2B0(f32, 0x7C), F338, D_8330A33C, D_8330A340);
+        Vec3f_SetComponentsDuplicate(&A2B0(f32, 0x88), F338, D_8330A33C, D_8330A340);
+        Vec3f_SetComponentsDuplicate(&A2B0(f32, 0xC4), F338, D_8330A33C, D_8330A340);
+        func_8003F114((u8 *)D_8330AA70, 0, -1, (void *)D_8330ABF4);
+        AA70(u8, 0x1D) = 0xFF;
+        A2B0(s32, 0x20) = 1;
+        return;
+    }
+    if (A2B0(s32, 0x20) == 1) {
+        alpha = AA70(u8, 0x1D);
+        if (alpha > 0xF0) {
+            D_8330AA94 = A2B0(f32, 0x94) + F338;
+            D_8330AA98 = A2B0(f32, 0x98) + (*(f32 *)&D_8330A33C);
+            D_8330AA9C = A2B0(f32, 0x9C) + (*(f32 *)&D_8330A340);
+        }
+        AA70(u8, 0x1D) = alpha - 5;
+        alpha = AA70(u8, 0x1D);
+        AA70(f32, 0x34) = AA70(f32, 0x34) * 1.001;
+        AA70(f32, 0x38) = AA70(f32, 0x34);
+        AA70(f32, 0x30) = AA70(f32, 0x38);
+        visible = 1;
+        if (alpha < 60) {
+            visible = 0;
+        }
+        if (alpha < 6) {
+            func_8003F1DC(D_8330AA70);
+            AA70(u8, 0x1D) = 0;
+            A2B0(s32, 0x20) = 0;
+            alpha = AA70(u8, 0x1D);
+        }
+        *((u8 *)&D_8330A4D0 + 0xA0) = 0xFF;
+        *((u8 *)&D_8330A4D0 + 0xA1) = 0xFF;
+        *((u8 *)&D_8330A4D0 + 0xA2) = 0xFF;
+        *((u8 *)&D_8330A4D0 + 0xA3) = alpha * visible;
+    }
+    D_8330AA94 = A2B0(f32, 0x94) + F338;
+    D_8330AA98 = A2B0(f32, 0x98) + (*(f32 *)&D_8330A33C);
+    D_8330AA9C = A2B0(f32, 0x9C) + (*(f32 *)&D_8330A340);
+}
+#undef A2B0
+#undef AA70
+#undef F338
 
 s32 func_83300398(s32 arg0, s32 arg1) {
     return arg0 + arg1 / 2;
@@ -240,7 +332,7 @@ typedef struct unk_D_8330A2B0 {
     /* 0xE4 */ u8 unk_E4[2][0x14];
     /* 0x10C */ u8 unk_10C[4];
 } unk_D_8330A2B0;
-extern s32 func_83300020(s32);
+extern void func_83300020(s32);
 extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
 extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
 extern void Vec3f_SetComponentsDuplicate(f32 *, f32, f32, f32);
@@ -2942,7 +3034,7 @@ s32 ModelAnim_IsFinished(M2C_UNK *);                /* extern */
 M2C_UNK func_80024480(s32, M2C_UNK);                /* extern */
 M2C_UNK func_8003F2C4(s32, M2C_UNK *, s32);         /* extern */
 M2C_UNK func_8003F3BC(M2C_UNK *, s32);              /* extern */
-M2C_UNK func_83300020(M2C_UNK);                     /* extern */
+void func_83300020(s32);                     /* extern */
 void func_833003B0(s32 arg0);                     /* extern */
 M2C_UNK func_83303640(M2C_UNK);                     /* extern */
 extern u8 *D_83308E34;
