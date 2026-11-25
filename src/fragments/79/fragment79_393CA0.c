@@ -3950,7 +3950,60 @@ void BattleAnim_Table_84185F10_040(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_393CA0/func_8412D6C0.s")
+extern s32 *func_80062CE0(u8);
+extern s32 func_8004C54C(s32, s32);
+extern void func_8004C594(s32, s32);
+extern u8 func_84125080(void);
+extern s32 func_841263D8(u8 arg0, u8 arg1);
+extern void func_84126A90(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84126B1C(u8 arg0, u8 arg1, u8 arg2);
+extern void func_84136678(u8, s16);
+extern void func_84135B00(u16);
+extern void func_84134E30(s32 arg0);
+extern void func_84124604(u8 arg0, u8 arg1);
+extern void BattleRecord_AdvanceWriteSlot(void);
+extern u8 D_841951BC;
+extern u8 D_841951BD;
+extern u8 D_841951BF;
+extern u8 D_841951D2;
+extern u8 *D_84195200[];
+extern u8 *D_84195208[];
+void func_8412D6C0(void) {
+    u8 amount;
+    u8 move;
+    s16 slot;
+    s32 raw_slot;
+
+    move = D_84195208[D_841951BD][0x26];
+    raw_slot = func_841263D8(D_841951BD, move);
+    slot = (u8)raw_slot;
+    if (move == 0 || move == 0xA5 || raw_slot == 0 || !(D_84195208[D_841951BD][raw_slot + 8] & 0x3F)) {
+        func_84126A90(D_841951BC, D_841951BD, 0);
+        return;
+    }
+    if (D_841951D2 != 0) {
+        func_84126B1C(D_841951BC, D_841951BD, 1);
+        return;
+    }
+    slot = (u8)(slot - 1);
+    func_84136678(D_841951BC, -1);
+    raw_slot = (s32)func_80062CE0(D_84195208[D_841951BD][slot + 5]);
+    func_8004C54C(0x1E, raw_slot);
+    amount = (func_84125080() & 3) + 2;
+    if ((D_84195208[D_841951BD][slot + 9] & 0x3F) < amount) {
+        D_84195208[D_841951BD][slot + 9] &= 0x3F;
+        amount = D_84195208[D_841951BD][slot + 9];
+    }
+    D_84195208[D_841951BD][slot + 9] -= amount;
+    func_8004C594(1, amount);
+    if (!(D_84195208[D_841951BD][0x11] & 8)) {
+        D_84195200[D_841951BD][slot + 0x18] -= amount;
+    }
+    func_84135B00(0x98);
+    func_84134E30(5);
+    func_84124604(D_841951BD, D_841951BF);
+    BattleRecord_AdvanceWriteSlot();
+}
 #endif
 
 #ifdef VERSION_US
