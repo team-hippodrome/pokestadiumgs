@@ -10,7 +10,8 @@ typedef struct Fragment83OrderState {
     /* 0x003 */ u8 unk_003;
     /* 0x004 */ s16 unk_004;
     /* 0x006 */ s16 unk_006;
-    /* 0x008 */ u8 unk_008[0x44];
+    /* 0x008 */ s16 unk_008;
+    /* 0x00A */ u8 unk_00A[0x42];
     /* 0x04C */ u8 order[0xFC];
     /* 0x148 */ u8 unk_148[4];
 } Fragment83OrderState; // size = 0x14C
@@ -270,7 +271,148 @@ void func_82C00C78(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C00F20.s")
+extern u8 D_80094E38[];
+extern Gfx D_82C049A0[];
+extern u8 D_82C0491C[];
+extern u8 D_82C04920[];
+extern u8 D_82C0492C[];
+extern u8 D_82C04C39;
+extern s16 D_82C04C3E;
+extern void func_8004D878(void *, s32, s32);
+extern void func_8004D998(s32, s32, void *, s32, s32);
+extern void func_800498C4(void);
+extern void func_800499EC(void);
+extern void func_800496A4(s32, s32);
+extern s32 func_800647C8(s32);
+extern void func_80049064(s32 arg0, s32 arg1, s32 arg2, s8 *text);
+
+// One page of the 6x6 grid drawn by func_82C00F20. Pages follow D_82C05E80 in .bss
+// (0x148 + page * 0x4B28); func_82C00F20 draws six consecutive pages, wrapping after 6.
+typedef struct Fragment83GridPage {
+    /* 0x0000 */ u32 used;      // zero: the page's cell images and labels are skipped
+    /* 0x0004 */ u8 mask;       // bit n set: column n uses fill color D_82C04918 (if slot[n] != 0)
+    /* 0x0005 */ u8 slot[6];    // passed to func_800647C8 for each column's label
+    /* 0x000B */ u8 unk_00B;
+    /* 0x000C */ u16 ids[6];    // per-column image id, loaded into tex[n] by func_8004D878
+    /* 0x0018 */ u16 loaded[6]; // id currently held in tex[n]
+    /* 0x0024 */ u8 unk_024[4];
+    /* 0x0028 */ u8 tex[6][0xC80];
+} Fragment83GridPage; // size = 0x4B28
+
+#define FRAGMENT83_GRID_PAGE(page) ((Fragment83GridPage *)((u8 *)&D_82C05E80 + 0x148 + (page) * 0x4B28))
+
+// Clamped lower-right corner for a fill rectangle starting at v with extent k + 1. Written as a
+// compare against -k (not gbi's MAX(v + k, 0)) so IDO tests v with slti and adds k only when it
+// is positive, as the grid lines below do.
+#define FRAGMENT83_CLAMP_END(v, k) ((v) > -(k) ? (v) + (k) : 0)
+
+#define FRAGMENT83_FILL_LINE(x, y, w, h)                                                                  \
+    {                                                                                                     \
+        Gfx *_g = (Gfx *)(D_800D0510++);                                                                  \
+                                                                                                          \
+        _g->words.w0 = (_SHIFTL(G_FILLRECT, 24, 8) | _SHIFTL(FRAGMENT83_CLAMP_END(x, (w) - 1), 14, 10) | \
+                        _SHIFTL(FRAGMENT83_CLAMP_END(y, (h) - 1), 2, 10));                                \
+        _g->words.w1 = (_SHIFTL(MAX(x, 0), 14, 10) | _SHIFTL(MAX(y, 0), 2, 10));                          \
+    }
+
+// Draws the 6x6 grid shown in menu mode 6: each cell is filled with D_82C04918 or D_82C0491C,
+// then the grid lines, the cell images and the cell labels are drawn, starting from page
+// D_82C05E80.unk_002 and shifted vertically by D_82C05E80.unk_004. Modes 5 to 7 then call
+// func_82C00AE8 with D_82C05E80.unk_008 / 2257 as its f32 argument.
+void func_82C00F20(void) {
+    Fragment83GridPage *grid_page;
+    s32 page;
+    s32 col;
+    s32 row;
+    s16 left;
+    u16 id;
+    s16 top;
+    s16 *panel_x = &D_82C04C44;
+    s16 *panel_y = &D_82C04C46;
+
+    func_82C00164(((unk_D_82C04C38 *)&D_82C04C38)->panelRect.x + 0x1A, ((unk_D_82C04C38 *)&D_82C04C38)->panelRect.y + 0x29, 0x1F2, 0x131);
+    if (D_82C04C39 == 6) {
+        gSPDisplayList(D_800D0510++, D_80094DE0);
+        page = D_82C05E80.unk_002;
+        for (row = 0; row < 6; row++) {
+            grid_page = FRAGMENT83_GRID_PAGE(page);
+            for (col = 0; col < 6; col++) {
+                if ((grid_page->mask & (1 << col)) && grid_page->slot[col]) {
+                    func_82C0012C((s32)D_82C04918);
+                } else {
+                    func_82C0012C((s32)D_82C0491C);
+                }
+                left = *panel_x + col * 0x53 + 0x1A;
+                top = *panel_y + row * 0x3D + D_82C05E80.unk_004 + 0x29;
+                gDPScisFillRectangle(D_800D0510++, left, top, left + 0x52 - 1, top + 0x3C - 1);
+            }
+            page++;
+            if (page >= 6) {
+                // FAKE: dead compare; without it IDO keeps &D_800D0510 in a3 instead of a0 in
+                // the cell fill loop above.
+                if (page == 0) {}
+                page = 0;
+            }
+        }
+        func_82C000B0(D_82C04920[0], D_82C04920[1], D_82C04920[2], 1);
+        for (row = 0; row < 5; row++) {
+            left = *panel_x + 0x1A;
+            top = *panel_y + row * 0x3D + D_82C05E80.unk_004 + 0x65;
+            FRAGMENT83_FILL_LINE(left, top, 0x1F1, 1);
+        }
+        for (col = 0; col < 5; col++) {
+            left = *panel_x + col * 0x53 + 0x6C;
+            top = *panel_y + D_82C05E80.unk_004 + 0x29;
+            FRAGMENT83_FILL_LINE(left, top, 1, 0x16D);
+        }
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        page = D_82C05E80.unk_002;
+        for (row = 0; row < 6; row++) {
+            grid_page = FRAGMENT83_GRID_PAGE(page);
+            for (col = 0; col < 6; col++) {
+                if (grid_page->used != 0) {
+                    id = grid_page->ids[col];
+                    if (id != 0) {
+                        if (id != grid_page->loaded[col]) {
+                            func_8004D878(grid_page->tex[col], id, 0);
+                            grid_page->loaded[col] = grid_page->ids[col];
+                        }
+                        func_8004D998(*panel_x + col * 0x53 + 0x2F, *panel_y + row * 0x3D + D_82C05E80.unk_004 + 0x2B, grid_page->tex[col], 0, 0);
+                    }
+                }
+            }
+            page++;
+            if (page >= 6) {
+                page = 0;
+            }
+        }
+        func_800498C4();
+        func_800496A4(4, 0);
+        page = D_82C05E80.unk_002;
+        for (row = 0; row < 6; row++) {
+            grid_page = FRAGMENT83_GRID_PAGE(page);
+            for (col = 0; col < 6; col++) {
+                if (grid_page->used != 0) {
+                    left = *panel_x + col * 0x53 + 0x43;
+                    top = *panel_y + row * 0x3D + D_82C05E80.unk_004 + 0x53;
+                    func_80049064(left, top, 1, (s8 *)func_800647C8(grid_page->slot[col]));
+                }
+            }
+            page++;
+            if (page >= 6) {
+                page = 0;
+            }
+        }
+        func_800499EC();
+    }
+    if (D_82C04C39 == 5 || D_82C04C39 == 6 || D_82C04C39 == 7) {
+        gSPDisplayList(D_800D0510++, D_82C049A0);
+        func_82C00164(*panel_x + 7, *panel_y + 0x29, 0x15, 0x130);
+        func_82C00078(D_82C0492C, 0xFF);
+        func_82C00AE8(*panel_x + D_82C04C3E * 4 + 7, *panel_y + 0x29, D_82C04C4A - 0x32, (f32)D_82C05E80.unk_008 / 2257.0f);
+    }
+    func_82C00164(*panel_x + 7, *panel_y + 7, 0x205, 0x22);
+}
 #endif
 
 #ifdef VERSION_US
