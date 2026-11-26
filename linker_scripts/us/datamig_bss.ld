@@ -137,9 +137,9 @@ SECTIONS
         build/src/fragments/61/fragment61_code.o(.bss)
     }
 
-    /* Fragment 59's .bss, D_8691A2C8..D_8691AD9C, defined in fragment59_code.c
+    /* Fragment 59's .bss, D_8691A2A0..D_8691AD9C, defined in fragment59_code.c
      * in address order (func_86909FAC's frame counters are its last two words). */
-    .fragment59_bss_vars 0x8691A2C8 (NOLOAD) : SUBALIGN(4)
+    .fragment59_bss_vars 0x8691A2A0 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/59/fragment59_code.o(.bss)
     }
