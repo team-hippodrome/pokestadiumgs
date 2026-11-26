@@ -497,6 +497,35 @@ s32 func_84156618(u8 arg0, u8 arg1, u8 arg2);
 u8 *func_84154B30(u8 arg0);
 u8 func_80062D20(u8 arg0);
 u8 func_84154B18(void);
+// Same layout as fragment79_3B9B80.c's Frag79Eval (entry + 4); [2] arrays are
+// indexed by side.
+typedef struct {
+    /* 0x00 */ u8 flags;
+    /* 0x01 */ u8 unk01;
+    /* 0x02 */ u8 moves[2];
+    /* 0x04 */ u8 unk04[2];
+    /* 0x06 */ u8 unk06[2];
+    /* 0x08 */ u8 unk08[2];
+    /* 0x0A */ u16 unk0A[2];
+    /* 0x0E */ u16 unk0E[2];
+    /* 0x12 */ u16 unk12[2];
+    /* 0x16 */ u16 unk16[2];
+    /* 0x1A */ u16 unk1A[2];
+    /* 0x1E */ u16 unk1E[2];
+    /* 0x22 */ u16 unk22[2];
+    /* 0x26 */ u8 unk26[6];
+    /* 0x2C */ s32 unk2C[2];
+    /* 0x34 */ s32 unk34[2];
+} Frag79Eval;
+
+typedef struct {
+    /* 0x00 */ u8 unk00;
+    /* 0x01 */ u8 unk01;
+    /* 0x02 */ u8 unk02[2];
+    /* 0x04 */ Frag79Eval eval;
+} Frag79Entry; // size 0x40
+
+extern u8 func_84154B24(void);
 s32 func_8414D680(u8 arg0, u8 arg1) {
     s32 sp1C;
     u8 temp_v0;
@@ -520,8 +549,32 @@ s32 func_8414D680(u8 arg0, u8 arg1) {
     return sp1C;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3BC290/func_8414D720.s")
+void func_8414D720(Frag79Entry *arg0, u8 arg1) {
+    u8 other;
+    u8 value;
+    u8 *mon;
+    u8 *opponent;
+    Frag79Eval *view;
 
+    other = 1 - arg1;
+    mon = func_84154B64(arg1);
+    opponent = func_84154B64(other);
+    view = &arg0->eval;
+    if (view->unk0A[arg1] >= *(u16 *)(opponent + 40)) {
+        if (view->unk01 == arg1) {
+            if (arg1 != func_84154B24()) {
+                value = (255 - (view->unk04[arg1] * view->unk06[arg1]) / 255) * view->unk04[other] / 255;
+                if (view->unk04[other] != 0 && value == 0) value++;
+                view->unk04[other] = value;
+            }
+            if ((opponent[25] & 0x40) || func_8414D680(other, view->moves[arg1])) {
+                view->unk1A[arg1] = *(u16 *)(mon + 40);
+            }
+        } else if (func_84156618(other, func_84154B30(other)[1], 16)) {
+            view->unk1A[arg1] = *(u16 *)(mon + 40);
+        }
+    }
+}
 extern u8 func_84154B24(void);
 extern void func_8414FC30(void *, u8);
 extern void func_84150268(void *, u8);
@@ -1126,7 +1179,7 @@ void BattleEffects_HalveAmountsForStatus(void *state) {
     }
 }
 
-extern void func_8414D720(s32, u8);
+extern void func_8414D720(Frag79Entry *, u8);
 extern void func_8414E880(s32);
 extern void func_8414EC18(s32);
 u8 func_84154B24();
