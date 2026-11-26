@@ -250,7 +250,72 @@ s32 func_8414B958(u8 arg0) {
 }
 /* mkdraft:func_8414B958 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414B9D0.s")
+extern void func_841485A4(u8 *, u16, u16);
+void func_8414B9D0(void) {
+    s32 side;
+    u8 *party;
+    u8 *e;
+    s32 i;
+    s32 val;
+    u8 dmg;
+    u8 best;
+    u8 inv;
+    u8 hp;
+    s32 lo;
+    u8 *mon;
+    s32 a;
+    u8 b;
+
+    side = func_84154B24();
+    best = 0xFF;
+    inv = 0xFF - func_8414A3A0(side)[6];
+    party = D_841951F8[side];
+    lo = party[0xA] * 4;
+    for (i = lo; i < lo + 4; i++) {
+        e = &D_8419D7C0[i * 0xA8];
+        if (e[0] & 1) {
+            func_841485A4(&dmg, *(u16 *)(e + 8), *(u16 *)(D_84195200[side] + 0x28));
+            if (dmg < best) {
+                best = dmg;
+            }
+            *(s32 *)(e + 0xC) += (inv * *(u16 *)(e + side * 2 + 2) * (s32)func_8414A258()) / 0xFF;
+        }
+    }
+    party = D_841951F8[side];
+    hp = (*(u16 *)(D_84195200[side] + 0x26) * 0xFF) / *(u16 *)(D_84195200[side] + 0x28);
+    for (i = 0; i < party[8] * 4; i++) {
+        e = &D_8419D7C0[i * 0xA8];
+        if ((i & 3) == 0) {
+            val = 0x80000000;
+        }
+        if (e[0] & 1) {
+            if (val == 0x80000000) {
+                val = (i / 4) * 0x58;
+                if (e[0] & 2) {
+                    mon = party + val; mon += 0x18;
+                    party = D_841951F8[side];
+                    func_841485A4(&dmg, *(u16 *)(e + 8), *(u16 *)(mon + 0x28));
+                    do {
+                        b = (*(u16 *)(mon + 0x26) * 0xFF) / *(u16 *)(mon + 0x28);
+                        val = func_8414A258();
+                    } while (0);
+                    val = (best - dmg - inv - 0x7F) * val;
+
+                    val = ((0xFF - hp) / 128) * val * ((0xFF - b) / 64);
+                    party = D_841951F8[side];
+                } else {
+                    if (e && e) {} // FAKE
+                    val = func_8414B7BC(side);
+                    val += func_8414B878(side);
+                    val += func_8414B958(side);
+                    party = D_841951F8[side];
+                }
+
+            }
+            *(s32 *)(e + 0xC) += val;
+        }
+    }
+}
 
 void func_8414BDA0(void) {
     s32 i;
