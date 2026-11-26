@@ -2099,7 +2099,168 @@ s32 Fragment43_GrowthRectCallback(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/43/fragment43_1E5A10/func_8AC049A8.s")
+typedef struct {
+    u8 unk_00[8];
+    s16 x;
+    s16 y;
+} F43_49A8Node;
+typedef struct {
+    u8 unk_00[0x24];
+    u16 id;
+    u16 index;
+    u8 unk_28[0x10];
+    u8 *image;
+} F43_49A8Src;
+typedef struct {
+    u8 unk_00[0x38];
+    u8 *tex;
+    Gfx *dl;
+    f32 scaleX;
+    f32 scaleY;
+    f32 x;
+    f32 y;
+    f32 x2;
+    f32 y2;
+    s16 width;
+    s16 height;
+    s16 format;
+    s16 size;
+    s16 sliceH;
+    s16 flipX;
+    s16 flipY;
+    s16 nSlices;
+    s16 rem;
+    u8 unk_6A[2];
+    u8 colR; u8 colG; u8 colB; u8 colA;
+    s16 useDl;
+    u8 unk_72[2];
+    s32 reinit;
+} F43_49A8State;
+extern s32 D_8AC07DDC;
+extern void func_800504BC(s16 *);
+s32 func_8AC049A8(s32 arg0, void *arg1) {
+    F43_49A8State *st;
+    f32 h4;
+    f32 x4;
+    f32 y4;
+    f32 w4;
+    s32 pad130;
+    s32 pad12C;
+    s16 size;
+    s16 pad128;
+    u8 *res;
+    s16 n;
+    s32 pad11C;
+    f32 sh4;
+    s16 stride;
+    f32 sx;
+    f32 sy;
+    Gfx *savedDl;
+    s16 pos[2];
+    s32 i;
+    s32 pz[4]; // FAKE
+    f32 yoff;
+
+    st = *(F43_49A8State **)((u8 *)arg1 + 0x20);
+    D_8AC07DDC = *(s32 *)((u8 *)arg1 + 4);
+    func_800504BC(pos);
+    switch (arg0) {
+    case 0:
+        res = (u8 *)func_8004C990(*(u16 *)((u8 *)st + 0x24), *(u16 *)((u8 *)st + 0x26));
+        st->tex = func_8004CA60(res);
+        st->width = func_8004CA10((u16 *)res);
+        st->height = func_8004CA24((u16 *)res);
+        size = func_8004CA4C(res);
+        st->sliceH = 0x1000 / (size * st->width);
+        if (st->sliceH >= 2 && (st->sliceH & 1)) {
+            st->sliceH--;
+        }
+        st->nSlices = st->height / st->sliceH;
+        st->rem = st->height % st->sliceH;
+        st->format = func_8004CA38(res);
+        st->size = size;
+        st->flipX = (*(u8 *)((u8 *)arg1 + 1) & 1) != 0;
+        st->flipY = (*(u8 *)((u8 *)arg1 + 1) & 2) != 0;
+        *(s32 *)&st->colR = -1;
+        st->x = (f32)(*(s16 *)((u8 *)arg1 + 8) + pos[0]) + (f32)st->width * 0.5f;
+        st->y = (f32)(*(s16 *)((u8 *)arg1 + 0xA) + pos[1]) + (f32)st->height * 0.5f;
+        st->x2 = st->x;
+        st->y2 = st->y;
+        st->dl = NULL;
+        st->scaleX = 1.0f;
+        st->scaleY = 1.0f;
+        *(u16 *)((u8 *)arg1 + 2) &= 0xFFFD;
+        st->reinit = 0;
+        break;
+    case 1:
+        res = (u8 *)func_8004C990(*(u16 *)((u8 *)st + 0x24), *(u16 *)((u8 *)st + 0x26));
+        st->tex = func_8004CA60(res);
+        if (st->reinit != 0) {
+            st->x = (f32)(*(s16 *)((u8 *)arg1 + 8) + pos[0]) + (f32)st->width * 0.5f;
+            st->y = (f32)(*(s16 *)((u8 *)arg1 + 0xA) + pos[1]) + (f32)st->height * 0.5f;
+        }
+        sx = st->scaleX;
+        sy = st->scaleY;
+        if (sx == 0.0f || sy == 0.0f) {
+            break;
+        }
+        n = st->nSlices;
+        if (st->useDl != 0) {
+            st->dl = (Gfx *)Gfx_AllocDisplayList((n * 10 + 14) * sizeof(Gfx));
+            savedDl = D_800D0510;
+            D_800D0510 = st->dl;
+        }
+        w4 = (f32)st->width * sx * 4.0f;
+        h4 = (f32)st->height * sy * 4.0f;
+        sh4 = (f32)st->sliceH * sy * 4.0f;
+        stride = st->width * 2 * st->sliceH;
+        x4 = ((f32)pos[0] + st->x) * 4.0f - w4 * 0.5f;
+        y4 = ((f32)pos[1] + st->y) * 4.0f - h4 * 0.5f;
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetEnvColor(D_800D0510++, st->colR, st->colG, st->colB, st->colA);
+        for (i = 0; i < n; i++) {
+            func_800459AC(st->tex + i * stride, st->format, st->size, st->width, st->sliceH, 1, 0, 2, 2, 0, 0, 0, 0);
+            if (0) { if ((s16)x4) {} if ((s16)x4 == (s16)(x4 + w4)) {} } // FAKE: orders the x4 spill temps before yoff
+            if (st->flipX) {
+                yoff = y4; yoff += i * sh4;
+                gSPScisTextureRectangle(D_800D0510++, (s16)x4, (s16)(yoff), (s16)(x4 + w4), (s16)(yoff + sh4), G_TX_RENDERTILE,
+                                        (u16)st->width << 5, -16, -(u16)(1024.0f / sx), (u16)(1024.0f / sy));
+            } else if (st->flipY) {
+                yoff = (n - i) * sh4;
+                gSPScisTextureRectangle(D_800D0510++, (s16)x4, (s16)(y4 + (n - i) * sh4), (s16)(x4 + w4), (s16)(y4 + yoff + sh4), G_TX_RENDERTILE,
+                                        -16, (u16)st->sliceH << 5, (u16)(1024.0f / sx), -(u16)(1024.0f / sy));
+            } else {
+                yoff = i * sh4;
+                gSPScisTextureRectangle(D_800D0510++, (s16)x4, (s16)(y4 + yoff), (s16)(x4 + w4), (s16)(y4 + yoff + sh4), G_TX_RENDERTILE,
+                                        -16, -16, (u16)(1024.0f / sx), (u16)(1024.0f / sy));
+            }
+        }
+        if (st->rem > 0) {
+            func_800459AC(st->tex + stride * n, st->format, st->size, st->width, st->rem, 1, 0, 2, 2, 0, 0, 0, 0);
+            if (st->flipX) {
+                yoff = n * sh4;
+                gSPScisTextureRectangle(D_800D0510++, (s16)x4, (s16)(y4 + yoff), (s16)(x4 + w4), (s16)(y4 + yoff + st->rem * 4.0f * sy), G_TX_RENDERTILE,
+                                        (u16)st->width << 5, -16, -(u16)(1024.0f / sx), (u16)(1024.0f / sy));
+            } else if (st->flipY) {
+                yoff = 0.0f;
+                gSPScisTextureRectangle(D_800D0510++, (s16)x4, (s16)(y4 + yoff), (s16)(x4 + w4), (s16)(y4 + yoff + st->rem * 4.0f * sy), G_TX_RENDERTILE,
+                                        -16, (u16)st->rem << 5, (u16)(1024.0f / sx), -(u16)(1024.0f / sy));
+            } else {
+                yoff = n * sh4;
+                gSPScisTextureRectangle(D_800D0510++, (s16)x4, (s16)(y4 + yoff), (s16)(x4 + w4), (s16)(y4 + yoff + st->rem * 4.0f * sy), G_TX_RENDERTILE,
+                                        -16, -16, (u16)(1024.0f / sx), (u16)(1024.0f / sy));
+            }
+        }
+        gSPDisplayList(D_800D0510++, D_80094F50);
+        if (st->useDl != 0) {
+            gSPEndDisplayList(D_800D0510);
+            D_800D0510 = savedDl;
+        }
+        break;
+    }
+    return 0;
+}
+
 #endif
 
 #ifdef VERSION_US
