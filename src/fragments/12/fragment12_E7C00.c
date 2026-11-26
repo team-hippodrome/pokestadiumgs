@@ -1635,7 +1635,87 @@ void func_814057CC(s32 arg0, s32 arg1, u8 *arg2, u8 *arg3) {
 }
 /* mkdraft:func_814057CC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81405CC4.s")
+extern void func_81602240(f32, f32, f32, f32, s32, s32, f32, f32);
+extern void func_814024B4(s32, s32, s32);
+extern s32 func_80064474(u8, u16);
+extern void Gfx_FillRectRgb(s16, s16, s16, s16, u32, u32, u32);
+extern u8 D_80094D90[];
+
+void func_81405CC4(u8 *arg0, s32 arg1, s32 arg2) {
+    s32 i;
+    s32 j;
+    s32 flagv;
+    s32 flag;
+    s32 s0;
+    s32 v;
+    u8 *r;
+    s32 pad0;
+    s32 pad1;
+    s32 pad2;
+    s32 pad3;
+
+    flagv = *(s32 *)(arg0 + 0x18);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 2; j++) {
+            do { // FAKE
+                if ((arg0 + 0x4B40)[(j * 3 + i) * 0x58] == 0) {
+                    continue;
+                }
+                gDPLoadTextureBlock(D_800D0510++, arg0 + 0x40 + (j * 3 + i) * 0xC80, G_IM_FMT_RGBA, G_IM_SIZ_16b, 40, 40, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                func_81602240((f32)(arg1 + 0x24 + i * 0x54), (f32)(arg2 + 6 + j * 0x5C), 44.0f, 44.0f, 0, 0, 0.90909094f, 0.90909094f);
+            } while (0);
+        }
+    }
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 2; j++) {
+            if ((arg0 + 0x4B40)[(j * 3 + i) * 0x58] != 0) {
+                func_8160877C(arg1 + 7 + i * 0x54, arg2 + 0x48 + j * 0x5C, (r = arg0 + 0x4B40 + (j * 3 + i) * 0x58)[1], 1, 1.0f);
+                func_814024B4(arg1 + 9 + i * 0x54, arg2 + 0x12 + j * 0x5C, j * 3 + i);
+            }
+        }
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(4, 1);
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 2; j++) {
+            s0 = flagv != 0 && func_81404DA0(arg0, j * 3 + i) != 0;
+            if ((arg0 + 0x4B40)[(j * 3 + i) * 0x58] != 0) {
+                r = arg0 + 0x4B40 + (j * 3 + i) * 0x58;
+                if (s0 != 0) {
+                    func_8004972C(0xFF, 0xFF, 0, 0xFF);
+                }
+                func_800495F8(arg1 + 0x2D + i * 0x54, arg2 + 0x34 + j * 0x5C, 3, (const char *)(r + 0x34));
+                if (s0 != 0) {
+                    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+                }
+                func_800495BC(arg1 + 0x19 + i * 0x54, arg2 + 0x48 + j * 0x5C, "%s%d", func_8004C874(0xD, 0x15), r[0x1D]);
+                v = func_80064474(r[0], *(u16 *)(r + 0x16));
+                switch (v) {
+                case 0:
+                    break;
+                case 1:
+                    func_800495F8(arg1 + 0x43 + i * 0x54, arg2 + 0x22 + j * 0x5C, 0, (const char *)func_8004C874(0xD, 0x1D));
+                    break;
+                case 2:
+                    func_800495F8(arg1 + 0x43 + i * 0x54, arg2 + 0x22 + j * 0x5C, 0, (const char *)func_8004C874(0xD, 0x1E));
+                    break;
+                }
+            }
+            if (arg2) {
+            } // FAKE
+        }
+    }
+    func_800499EC();
+    gSPDisplayList(D_800D0510++, D_80094D90);
+    Gfx_FillRectRgb((s16)(arg1 + 0x56), (s16)(arg2 + 0xA), 1, 0xAA, 0, 0, 0);
+    Gfx_FillRectRgb((s16)(arg1 + 0xAA), (s16)(arg2 + 0xA), 1, 0xAA, 0, 0, 0);
+    Gfx_FillRectRgb((s16)(arg1 + 7), (s16)(arg2 + 0x5E), 0xF4, 1, 0, 0, 0);
+    Gfx_FillRectRgb((s16)(arg1 + 0x57), (s16)(arg2 + 0xA), 1, 0xAA, 0xFF, 0xFF, 0xFF);
+    Gfx_FillRectRgb((s16)(arg1 + 0xAB), (s16)(arg2 + 0xA), 1, 0xAA, 0xFF, 0xFF, 0xFF);
+    Gfx_FillRectRgb((s16)(arg1 + 7), (s16)(arg2 + 0x5F), 0xF4, 1, 0xFF, 0xFF, 0xFF);
+}
 
 extern void Fragment11_DrawThickPanelFrame(s32, s32, s32, s32);
 extern void func_81607B1C(s32, s32, s32, s32, f32, u8 *, u8 *);
@@ -1692,7 +1772,7 @@ typedef struct Fragment12SelectionPayloads {
     /* 0x4B40 */ Fragment12SelectionEntry entries[6];
 } Fragment12SelectionPayloads;
 extern void func_81604944(s32, s32, s32, s32, s32 *, s32 *);
-extern void func_81405CC4(void *, s32, s32);
+extern void func_81405CC4(u8 *, s32, s32);
 extern void func_80006F70(Gfx **, s16, s16, s16, s16);
 extern u8 D_814078B8[];
 extern void Fragment12_GetInterpolatedPanelRect(void *state, s16 *rect, s32 remap_mode);
