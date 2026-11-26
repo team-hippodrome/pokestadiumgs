@@ -1,7 +1,5 @@
 #include "global.h"
 extern s32 D_826153D4, D_826153D8, D_826153DC;
-extern s32 D_82615700, D_82615704;
-extern u32 D_826156FC;
 extern u8 D_8261A5A4[];
 typedef struct Func82604D40Pair {
     s16 unk_00;
@@ -3014,7 +3012,77 @@ void func_8260BEF4(u8 *arg0, s32 arg1) {
 }
 /* mkdraft:func_8260BEF4 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260C2B0.s")
+extern s32 func_8004D1FC(u8 *);
+extern void func_82607BF4(s32, u8 *, u8 *, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern Gfx *D_800D0510;
+extern u8 D_80094E78[];
+#define FRAME9(X, Y, W, H) \
+    GfxRect_DrawTextured((s16) (X), (s16) (Y), (s16) stripWidth, (s16) textureHeight, (s16) (stripWidth * 0), 0, 0x400, 0x400, 0); \
+    GfxRect_DrawTextured((s16) ((X) + stripWidth), (s16) (Y), (s16) ((W) - (stripWidth * 2)), (s16) textureHeight, (s16) (stripWidth << 5), 0, 0, 0x400, 0); \
+    GfxRect_DrawTextured((s16) (((X) + (W)) - stripWidth), (s16) (Y), (s16) stripWidth, (s16) textureHeight, (s16) (stripWidth << 5), 0, 0x400, 0x400, 0); \
+    GfxRect_DrawTextured((s16) (X), (s16) ((Y) + textureHeight), (s16) stripWidth, (s16) ((H) - (textureHeight * 2)), (s16) ((stripWidth * 2) << 5), 0, 0x400, 0, 0); \
+    GfxRect_DrawTextured((s16) (X), (s16) (((Y) + (H)) - textureHeight), (s16) stripWidth, (s16) textureHeight, (s16) ((stripWidth * 2) << 5), 0, 0x400, 0x400, 0); \
+    GfxRect_DrawTextured((s16) ((X) + stripWidth), (s16) (((Y) + (H)) - textureHeight), (s16) ((W) - (stripWidth * 2)), (s16) textureHeight, (s16) ((stripWidth * 3) << 5), 0, 0, 0x400, 0); \
+    GfxRect_DrawTextured((s16) (((X) + (W)) - stripWidth), (s16) (((Y) + (H)) - textureHeight), (s16) stripWidth, (s16) textureHeight, (s16) ((stripWidth * 3) << 5), 0, 0x400, 0x400, 0); \
+    GfxRect_DrawTextured((s16) (((X) + (W)) - stripWidth), (s16) ((Y) + textureHeight), (s16) stripWidth, (s16) ((H) - (textureHeight * 2)), (s16) ((stripWidth * 3) << 5), 0, 0x400, 0, 0)
+extern u8 D_80094E38[];
+/* Filler for D_82615600..D_826156FB (fragment20 data blob), so
+ * func_8260C2B0's statics land at D_826156FC (.data pinned in datamig_bss.ld). */
+static u8 sFragment20DataGap0[0xFC] = { 0 };
+
+void func_8260C2B0(u8 *arg0, s32 arg1) {
+    u8 *sub;
+    u16 *texture;
+    s32 stripWidth;
+    s32 textureHeight;
+    s32 i;
+    s16 originY;
+    s16 originX;
+    s32 phase;
+    s32 alpha;
+    s32 x;
+    s32 y;
+    Gfx *gfx;
+    s32 width;
+    s32 height;
+    static u32 D_826156FC = 0;
+    static s32 D_82615700 = 10;
+    static s32 D_82615704 = 20;
+
+    if (originX + i * 0x86 + 7) { } // FAKE
+    if (originY + 5) { } // FAKE
+    sub = ((u8 *) arg0) + 0x30;
+    width = 0x88;
+    height = 0x88;
+    texture = (u16 *) ((u32) func_8004C990(0x53, 1));
+    stripWidth = ((s32) texture[0]) / 4;
+    textureHeight = texture[1];
+    if (arg1 != 0) {
+        phase = D_826156FC % (u32) (D_82615700 + D_82615704);
+        gfx = D_800D0510++;
+        gfx->words.w0 = 0xDE000000; gfx->words.w1 = (u32)D_80094E38;
+        func_8004D1FC((u8 *) texture);
+        if (phase < D_82615700) {
+            alpha = (phase * 0xFF) / D_82615700;
+        } else {
+            alpha = 0xFF - ((phase - D_82615700) * 0xFF) / D_82615704;
+        }
+        gfx = D_800D0510++;
+        gfx->words.w0 = 0xFB000000; gfx->words.w1 = (alpha & 0xFF) | 0xFFFF00;
+        D_826156FC++;
+        if (arg0) { } // FAKE
+    }
+    originX = *(s16 *)(arg0 + 0x14) + *(s16 *)(arg0 + 0x10);
+    originY = *(s16 *)(arg0 + 0x16) + *(s16 *)(arg0 + 0x12);
+    for (i = 0; i < *(s16 *) (sub + 4); i++) {
+        if (*(s16 *) sub != 0 && *(s16 *) (sub + 0xA + i * 2) < 0xFF && i == *(s16 *) (sub + 2)) {
+            x = originX + i * 0x86 + 7;
+            y = originY + 5;
+            FRAME9(x, y, width, height);
+        }
+    }
+}
 
 extern void func_8004D150(s32, s32, s32, s32, s32, s32);
 extern s32 func_8004C990(s32, s32);
@@ -5164,10 +5232,10 @@ void func_826119DC(void *arg0_) {
 #undef arg0
 
 
-/* Filler for D_82615600..D_8261577B, which stay in the fragment20 data blob.
+/* Filler for D_82615708..D_8261577B, which stay in the fragment20 data blob.
  * It keeps func_82611D44's timing statics at their retail offset from
- * func_82606B28's statics (this .data is pinned in datamig_bss.ld). */
-static u8 sFragment20DataGap[0x17C] = { 0 };
+ * func_8260C2B0's statics (this .data is pinned in datamig_bss.ld). */
+static u8 sFragment20DataGap[0x74] = { 0 };
 
 extern void *D_80087200;
 extern void func_82602708(s32);
