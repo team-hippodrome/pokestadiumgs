@@ -40,8 +40,11 @@ typedef struct unk_D_8691AB78 {
     /* 0x08 */ s32 active;
 } unk_D_8691AB78; // size = 0xC
 
-// fragment59's .bss (0x8691A2C8..0x8691AD98), defined in address order so the
+// fragment59's .bss (0x8691A2A0..0x8691AD98), defined in address order so the
 // object's .bss matches retail (func_86909FAC's two counters follow it).
+// D_8691A2A0 is the start of a state block that runs past D_8691A2C8; defining
+// its head here lets as1 share one lui between func_8690941C's two stores to it.
+u8 D_8691A2A0[0x28];
 s32 D_8691A2C8[14];
 u8 D_8691A300[0x14];
 s32 D_8691A314;
@@ -3325,7 +3328,234 @@ gSPDisplayList(D_800D0510++, D_80094F50);
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_8690941C.s")
+typedef struct S941C { u8 pad[0x48]; u32 e8; s32 ec; } S941C;
+extern s32 D_8691A2C4;
+extern u32 D_8691A2E8;
+extern s32 D_8691A2EC;
+extern u8 D_86919B80[];
+extern void func_87F0277C(u8 *);
+extern u8 D_8690EBA6[];
+extern s32 func_869053B4(s32);
+#define W(off) (*(s32 *)(D_8691A2A0 + (off)))
+void func_8690941C(void) {
+    s32 frame;
+    s32 i;
+    s32 j;
+    s32 save1[7];
+    s32 cnt;
+    S941C *st = (S941C *)D_8691A2A0;
+    s32 save2[6];
+
+    frame = W(0x4C)++;
+    func_87F0277C(&D_86911298);
+    if (D_8691A2E8 == 4 && frame >= 0x1D) {
+        D_8691A2EC = 0;
+        *(s32 *)D_8691AD58 = 8;
+        return;
+    }
+    if (frame < 0x1E) {
+        for (i = 0; i < 4; i++) {
+            ModelAnim_SetEventFrame(D_86919D00 + i * 0x168, *(s16 *)(D_8690EBA0 + i * 8 + 2));
+            func_8003EF60(D_86919D00 + i * 0x168);
+        }
+    } else if (frame < 0x3C) {
+        if (frame < 0x3B) {
+            func_800279C4(0x3000);
+        }
+    } else if (frame < 0x5A) {
+        if (frame == 0x3C) {
+            func_800279C4(0x3F01);
+        }
+    } else if (frame < 0x82) {
+        if (frame == 0x5A) {
+            for (i = 0; i < 4; i++) {
+                W(0x38 + i * 4) = func_869053B4(W(0x10 + i * 4));
+            }
+            if (func_86904D48() == W(0x10) || func_86904D48() == W(0x14) || func_86904D48() == W(0x18) ||
+                func_86904D48() == W(0x1C)) {
+                func_800279C4(0x3F05);
+                D_8691AD90 = 1;
+            } else {
+                D_8691AD90 = 0;
+            }
+            for (i = 0; i < 4; i++) {
+                D_8691AD80[i] = guRandom() % 6;
+            }
+            if (W(0x38) + W(0x3C) + W(0x40) + W(0x44) == 0) {
+                func_800279C4(0x3F04);
+                D_8691AD94 = 0;
+            } else {
+                D_8691AD94 = 1;
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (func_86904D48() == W(0x10 + i * 4)) {
+                if (frame == D_8691AD80[i] + 0x5A) {
+                    if (D_8691A438[i]) {} // FAKE
+                    func_8003F210(&D_869195E0 + i * 0x168, 2);
+                    ModelAnim_SetFrame(&D_869195E0 + i * 0x168, 0xB);
+                }
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (W(0x10 + i * 4) >= func_86904D48() + 3 || func_86904D48() - 3 >= W(0x10 + i * 4)) {
+                if (frame == D_8691AD80[i] + 0x5A) {
+                    func_8003F210(&D_869195E0 + i * 0x168, 3);
+                    if (D_8691A438[i] == 0) {
+                        func_8003F3BC(&D_869195E0 + i * 0x168, 2);
+                    }
+                }
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (ModelAnim_IsFinished(&D_869195E0 + i * 0x168) && frame > D_8691AD80[i] + 0x5A) {
+                func_8003F210(&D_869195E0 + i * 0x168, 0);
+                func_8003F3BC(&D_869195E0 + i * 0x168, 0);
+            }
+        }
+        if (D_8691AD94 != 0) {
+            switch (D_8691A2E8) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    if (D_8691AD90 != 0) {
+                        func_800279C4(0x1D08);
+                    } else {
+                        func_800279C4(0x1E09);
+                    }
+                    break;
+                case 4:
+                    func_800279C4(0x1C07);
+                    break;
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            ModelAnim_SetEventFrame(D_86919D00 + i * 0x168, *(s16 *)(D_8690EBA0 + i * 8 + 2));
+            func_8003EF60(D_86919D00 + i * 0x168);
+        }
+        if (!((frame - 0x5A) % 2)) {
+            for (i = 0; i < 4; i++) {
+                if (W(0x38 + i * 4) != 0) {
+                    W(0x38 + i * 4)--;
+                    W(0x28 + i * 4)++;
+                    ModelAnim_SetEventFrame(D_86919D00 + i * 0x168, *(s16 *)(D_8690EBA6 + i * 8));
+                    func_8003EF60(D_86919D00 + i * 0x168);
+                }
+            }
+            if (W(0x38) + W(0x3C) + W(0x40) + W(0x44) == 0) {
+                if (frame >= 0x60) {
+                    D_8691A2EC = 0x81;
+                }
+            } else {
+                func_800279C4(0x3F06);
+            }
+        }
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (ModelAnim_IsFinished(&D_869195E0 + i * 0x168)) {
+                func_8003F210(&D_869195E0 + i * 0x168, 0);
+                func_8003F3BC(&D_869195E0 + i * 0x168, 0);
+            }
+        }
+        if (D_8691AD94 != 0) {
+            switch (D_8691A2E8) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    if (D_8691AD90 != 0) {
+                        func_800279C4(0x1D08);
+                    } else {
+                        func_800279C4(0x1E09);
+                    }
+                    break;
+                case 4:
+                    func_800279C4(0x1C07);
+                    break;
+            }
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (ModelAnim_IsFinished(&D_869195E0 + i * 0x168)) {
+            func_8003F210(&D_869195E0 + i * 0x168, 0);
+        }
+    }
+    if (frame >= 0xBE && W(0x48) < 5) {
+        D_8691A2C4 = 0;
+        for (j = 0; j < 4; j++) {
+            W(0x10 + j * 4) = 0;
+        }
+        for (j = 0; j < 7; j++) {
+            save1[j] = (&D_8691A448.unk_354)[j];
+        }
+        for (j = 0; j < 6; j++) {
+            save2[j] = (&D_8691A448.unk_370)[j];
+        }
+        D_8691A448 = D_8691A7D8;
+        for (j = 0; j < 7; j++) {
+            (&D_8691A448.unk_354)[j] = save1[j];
+        }
+        for (j = 0; j < 6; j++) {
+            (&D_8691A448.unk_370)[j] = save2[j];
+        }
+        st->ec = 0;
+        st->e8 = D_8691A2E8 + 1;
+        switch (D_8691A2E8 + 1) {
+            case 1:
+                cnt = 0;
+                for (j = 0; j < 4; j++) {
+                    if (D_8691A2C8[j] == 10) {
+                        cnt++;
+                    }
+                }
+                if (cnt >= 3) {
+                    D_8691A314 = (&D_8691A318)[-1] + 2; // FAKE: D_8691A314 += 2 (one address use per block)
+                }
+                if (cnt == 4 && D_8691A31C != 0) {
+                    D_8691A318 = (&D_8691A314)[1] + 1; // FAKE: D_8691A318++
+                }
+                break;
+            case 2:
+                cnt = 0;
+                for (j = 0; j < 4; j++) {
+                    if (D_8691A2C8[j] == 20) {
+                        cnt++;
+                    }
+                }
+                if (cnt >= 3) {
+                    D_8691A314 = (&D_8691A318)[-1] + 2; // FAKE: D_8691A314 += 2 (one address use per block)
+                }
+                break;
+            case 3:
+                cnt = 0;
+                for (j = 0; j < 4; j++) {
+                    if (D_8691A2C8[j] == 40) {
+                        cnt++;
+                    }
+                }
+                if (cnt >= 2) {
+                    D_8691A314 = (&D_8691A318)[-1] + 2; // FAKE: D_8691A314 += 2 (one address use per block)
+                }
+                if (cnt == 4 && D_8691A31C != 0) {
+                    D_8691A318 = (&D_8691A314)[1] + 1; // FAKE: D_8691A318++
+                }
+                break;
+            case 4:
+                cnt = 0;
+                for (j = 0; j < 4; j++) {
+                    if (D_8691A2C8[j] == 60) {
+                        cnt++;
+                    }
+                }
+                if (cnt > 0) {
+                    D_8691A314 = (&D_8691A318)[-1] + 2; // FAKE: D_8691A314 += 2 (one address use per block)
+                }
+                break;
+        }
+        *(s32 *)D_8691AD58 = 5;
+    }
+}
 #endif
 
 #ifdef VERSION_US
