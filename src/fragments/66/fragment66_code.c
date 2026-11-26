@@ -283,7 +283,136 @@ s32 func_82E00868(s32 kind, void *data) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E00E5C.s")
+extern s32 D_82E07C60[], D_82E07DF0[], D_82E07F80[], D_82E08110[], D_82E082A0[], D_82E08430[], D_82E088E0[], D_82E08750[];
+extern s32 D_82E06168[];
+extern F66ViewState D_82E06138;
+extern s32 D_82E07130;
+extern s32 D_82E085C0[];
+extern u8 *D_82E085C4[];
+extern s32 func_8004C874(s32, s32);
+extern void func_800498C4(void);
+extern void Font_EnableTwoCycleTexturing(void);
+extern void Font_DisableTwoCycleTexturing(void);
+extern void func_800496A4(s32, s32);
+extern void func_80049770(s32, s32, s32, s32, s32);
+/* Declared int-returning (the real one is void) so v0 stays pinned across the call, as in retail. */
+extern s32 func_80049828(s32, s32, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, char *, s32);
+extern void func_800499EC(void);
+
+s32 func_82E00E5C(s32 kind, u8 *event) {
+    s32 i;
+    s32 count;
+    s32 step;
+
+    switch (kind) {
+    case 0:
+        D_82E07C60[*(s32 *)(event + 0x20)] = event[0x28];
+        D_82E07DF0[*(s32 *)(event + 0x20)] = event[0x29];
+        D_82E07F80[*(s32 *)(event + 0x20)] = event[0x2A];
+        D_82E08110[*(s32 *)(event + 0x20)] = event[0x2B];
+        D_82E082A0[*(s32 *)(event + 0x20)] = event[0x2D] + (event[0x2C] << 8) - 1;
+        D_82E08430[*(s32 *)(event + 0x20)] = event[0x2F] + (event[0x2E] << 8) - 1;
+        D_82E088E0[*(s32 *)(event + 0x20)] = 1;
+        i = D_82E082A0[*(s32 *)(event + 0x20)];
+        while (i <= D_82E08430[*(s32 *)(event + 0x20)]) {
+            D_82E06168[i] = func_8004C874(0x35, i);
+            i++;
+        }
+        if (*(s32 *)(event + 0x20) == 0) {
+            F66_TIMERS[*(s32 *)(event + 0x20)].owner = event;
+        }
+        D_82E085C0[*(s32 *)(event + 0x20)] = (s32)event;
+        D_82E08750[*(s32 *)(event + 0x20)] = 0;
+        *(u16 *)(event + 2) &= 0xFFFE;
+        break;
+    case 1:
+        func_800498C4();
+        Font_EnableTwoCycleTexturing();
+        if (D_82E08110[*(s32 *)(event + 0x20)] != 2) {
+        switch (D_82E06168[0xFB0 / 4]) {
+        case 0x14:
+            func_800496A4(8, 0);
+            step = D_82E06168[0xFB8 / 4];
+            break;
+        case 0x18:
+            func_800496A4(0x10, 0);
+            step = D_82E06168[0xFBC / 4];
+            break;
+        }
+        func_80049770(0, D_82E07C60[*(s32 *)(event + 0x20)], D_82E07DF0[*(s32 *)(event + 0x20)], D_82E07F80[*(s32 *)(event + 0x20)], 0xFF);
+        func_80049828(0, 0xFF, 0xFF, 0xFF, 0xFF);
+        count = 0;
+        for (i = D_82E082A0[*(s32 *)(event + 0x20)]; i <= D_82E08430[*(s32 *)(event + 0x20)]; ) {
+            func_800495F8(D_82E06168[0xFA4 / 4], 480 - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 + step * count, 2, "%s", D_82E06168[i]);
+            i++;
+            if (i <= D_82E08430[*(s32 *)(event + 0x20)]) {
+                func_800495F8(D_82E06168[0xFAC / 4], 480 - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 + step * count, 0, "%s", D_82E06168[i]);
+            }
+            i++;
+            count++;
+        }
+        if (D_82E088E0[*(s32 *)(event + 0x20)] != 0) {
+            if (step * count - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 < 0) {
+                if (*(s32 *)(event + 0x20) < (u32)D_82E06168[0xFC0 / 4]) {
+                    *(u16 *)(D_82E085C4[*(s32 *)(event + 0x20)] + 2) |= 1;
+                }
+                D_82E088E0[*(s32 *)(event + 0x20)] = 0;
+            }
+        }
+        if (480 - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 + step * count < 0) {
+            if (D_82E06168[0xFC0 / 4] == *(s32 *)(event + 0x20)) {
+                ((s32 *)&D_82E05950)[2] = ((s32 *)&D_82E07130)[0] - D_82E06138.value + 1;
+                ((s32 *)&D_82E05950)[3] = ((s32 *)&D_82E05950)[5] + ((s32 *)&D_82E07130)[0] - D_82E06138.value + 1;
+                ((s32 *)&D_82E07130)[0x4B4 / 4] = ((s32 *)&D_82E05950)[5] + ((s32 *)&D_82E07130)[0] + 1;
+                D_82E06138.unused0C = ((s32 *)&D_82E05950)[5] + ((s32 *)&D_82E07130)[0] - D_82E06138.value + 1;
+            }
+            *(u16 *)(event + 2) &= 0xFFFE;
+        }
+        } else {
+        switch (D_82E06168[0xFB4 / 4]) {
+        case 0x14:
+            func_800496A4(8, 0);
+            step = D_82E06168[0xFB8 / 4];
+            break;
+        case 0x18:
+            func_800496A4(0x10, 0);
+            step = D_82E06168[0xFBC / 4];
+            break;
+        }
+        func_80049770(0, D_82E07C60[*(s32 *)(event + 0x20)], D_82E07DF0[*(s32 *)(event + 0x20)], D_82E07F80[*(s32 *)(event + 0x20)], 0xFF);
+        func_80049828(0, 0xFF, 0xFF, 0xFF, 0xFF);
+        count = 0;
+        for (i = D_82E082A0[*(s32 *)(event + 0x20)]; i <= D_82E08430[*(s32 *)(event + 0x20)]; ) {
+            func_800495F8(D_82E06168[0xFA8 / 4], 480 - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 + step * count, 1, "%s", D_82E06168[i]);
+            i++;
+            count++;
+        }
+        if (D_82E088E0[*(s32 *)(event + 0x20)] != 0) {
+            if (step * count - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 < 0) {
+                if (*(s32 *)(event + 0x20) < (u32)D_82E06168[0xFC0 / 4]) {
+                    *(u16 *)(D_82E085C4[*(s32 *)(event + 0x20)] + 2) |= 1;
+                }
+                D_82E088E0[*(s32 *)(event + 0x20)] = 0;
+            }
+        }
+        if (480 - (D_82E06168[0xFA0 / 4] * D_82E08750[*(s32 *)(event + 0x20)]) / 10 + step * count < 0) {
+            if (D_82E06168[0xFC0 / 4] == *(s32 *)(event + 0x20)) {
+                ((s32 *)&D_82E05950)[2] = ((s32 *)&D_82E07130)[0] - D_82E06138.value + 1;
+                ((s32 *)&D_82E05950)[3] = ((s32 *)&D_82E05950)[5] + ((s32 *)&D_82E07130)[0] - D_82E06138.value + 1;
+                ((s32 *)&D_82E07130)[0x4B4 / 4] = ((s32 *)&D_82E05950)[5] + ((s32 *)&D_82E07130)[0] + 1;
+                D_82E06138.unused0C = ((s32 *)&D_82E05950)[5] + ((s32 *)&D_82E07130)[0] - D_82E06138.value + 1;
+            }
+            *(u16 *)(event + 2) &= 0xFFFE;
+        }
+        }
+        Font_DisableTwoCycleTexturing();
+        func_800499EC();
+        D_82E08750[*(s32 *)(event + 0x20)]++;
+        break;
+    }
+    return 0;
+}
 #endif
 
 #ifdef VERSION_US
