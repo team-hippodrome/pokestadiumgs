@@ -440,7 +440,47 @@ void func_865064B0(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_28E360/func_86506B2C.s")
+void func_86506B2C(s32 arg0) {
+    extern f32 D_8650D320[];
+    extern s32 D_8650D348[37];
+    extern s32 D_8650D2FC[];
+    extern s32 D_8650D2EC[];
+    extern Gfx *D_800D0510;
+    extern s32 func_8004D1FC(u8 *);
+    extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+    u16 *texture;
+    f32 scale;
+    s32 saved_frame[1];
+    int frame;
+
+    if (D_8650C494 == 0) {
+        *(s32 *)((u8 *)&D_86511698[arg0] + 0x8C) += 1;
+    }
+    frame = *(s32 *)((u8 *)&D_86511698[arg0] + 0x8C);
+    if (frame >= 10) {
+        *(s32 *)((u8 *)&D_86511698[arg0] + 0x8C) = 0;
+        frame = 0;
+    }
+    scale = D_8650D320[frame];
+    saved_frame[0] = frame;
+    texture = (u16 *)func_8004C990(398, 0);
+    func_8004D1FC((u8 *)texture);
+    {
+        Gfx *gfx = D_800D0510++;
+        s32 *color;
+        gfx->words.w0 = 0xFA000000;
+        color = ((s32 (*)[3])D_8650D348)[saved_frame[0]];
+        gfx->words.w1 = _SHIFTL(color[0], 24, 8) | _SHIFTL(color[1], 16, 8) | _SHIFTL(color[2], 8, 8) | 255;
+    }
+    gDPSetEnvColor(D_800D0510++, 255, 255, 255, 255);
+    GfxRect_DrawTextured((s16)(D_8650D2EC[arg0] + D_8650D2FC[4] + (s32)(((1.2 - scale) / 2) * 56.0) - 19),
+                        (s16)(*(s32 *)((u8 *)&D_86511698[arg0] + 0x44) + (s32)(((1.2 - scale) / 2) * 42.0) - 16),
+                        (s16)(s32)((f32)(u32)texture[0] * scale + ((f32)(u32)texture[0] * scale > 0.0f ? 0.5f : -0.5f)),
+                        (s16)(s32)((f32)(u32)texture[1] * scale + ((f32)(u32)texture[1] * scale > 0.0f ? 0.5f : -0.5f)),
+                        0, 0,
+                        (s32)(1024.0f / scale + (1024.0f / scale > 0.0f ? 0.5f : -0.5f)),
+                        (s32)(1024.0f / scale + (1024.0f / scale > 0.0f ? 0.5f : -0.5f)), 0);
+}
 #endif
 
 #ifdef VERSION_US
