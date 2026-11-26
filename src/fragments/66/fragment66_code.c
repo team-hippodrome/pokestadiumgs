@@ -1041,7 +1041,168 @@ void func_82E02F00(s32 x, s32 y, u8 opacity) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E030B0.s")
+typedef struct F66Phase { s32 start, rise, hold, fall, w10, w14; } F66Phase;
+#define PH82E05950 ((F66Phase *)&D_82E05950)
+extern void func_8003F114(u8*, s32, s32, s32);
+extern void func_8003F1DC(void*);
+extern void func_82E0393C(void);
+extern f32 D_80088E50[];
+extern f32 D_82E05684, D_82E05688, D_82E057EC, D_82E057F0;
+extern s16 D_82E057E8;
+extern u8 D_82E057E5;
+
+void func_82E030B0(void) {
+    s32 i;
+    f32 ratio;
+    s32 angle;
+    u16 rot;
+    s32 x0, y0, x1, y1;
+    s32 start;
+    s32 dur;
+    s32 now;
+    s32 fadeStart, fadeEnd;
+    s32 elapsed;
+    s32 alpha;
+    s32 value;
+    s32 off;
+    s32 b1; // FAKE: unused, but needed for the codegen
+
+    D_82E07130++;
+    if (D_82E0543C != 11) {
+        if (D_82E07130 == *(s32 *)((u8 *)&D_82E07130 + 0x4B4)) {
+            D_82E0543C = D_82E0543C % 11;
+            func_82E04040(D_82E0543C);
+            D_82E0543C++;
+            D_82E07130++;
+        }
+    }
+    if (8 != D_82E0543C) {
+        for (i = 0; i < 100; i += 4) {
+            if (D_82E07130 == F66_TIMERS[i].time && F66_TIMERS[i].owner != 0) {
+                *(u16 *)((u8 *)F66_TIMERS[i].owner + 2) |= 1;
+            }
+            if (D_82E07130 == F66_TIMERS[i + 1].time && F66_TIMERS[i + 1].owner != 0) {
+                *(u16 *)((u8 *)F66_TIMERS[i + 1].owner + 2) |= 1;
+            }
+            if (D_82E07130 == F66_TIMERS[i + 2].time && F66_TIMERS[i + 2].owner != 0) {
+                *(u16 *)((u8 *)F66_TIMERS[i + 2].owner + 2) |= 1;
+            }
+            if (D_82E07130 == F66_TIMERS[i + 3].time && F66_TIMERS[i + 3].owner != 0) {
+                *(u16 *)((u8 *)F66_TIMERS[i + 3].owner + 2) |= 1;
+            }
+        }
+    } else {
+        if (D_82E07130 == *(s32 *)((u8 *)&D_82E07130 + 0xC) && *(void **)((u8 *)&D_82E07130 + 4) != 0) {
+            *(u16 *)((u8 *)*(void **)((u8 *)&D_82E07130 + 4) + 2) |= 1;
+        }
+    }
+    if (8 == D_82E0543C) {
+        func_82E0393C();
+        return;
+    }
+    if (11 == D_82E0543C) {
+        return;
+    }
+
+    if (D_82E07130 >= D_82E06138.value) {
+        elapsed = D_82E07130 - D_82E06138.value;
+        if (D_82E07130 < D_82E06138.value + D_82E06138.unused0C) {
+            x0 = D_82E06138.x;
+            y0 = D_82E06138.y;
+            x1 = D_82E06138.secondX;
+            y1 = D_82E06138.secondY;
+            start = D_82E06138.value;
+            now = D_82E07130;
+            dur = D_82E06138.unused0C;
+            if (D_82E07130 == D_82E06138.value + 3) {
+                func_8003F1DC(D_82E05660);
+                D_82E05684 = (f32)((x1 - x0) * (now - start) / dur + x0);
+                D_82E05688 = (f32)((y1 - y0) * (now - start) / dur + y0);
+                D_82E05660[0x1D] = 0;
+                func_8003F114(D_82E05660, 0, -1, D_82E05658);
+                D_82E05660[0x1D] = 0;
+            }
+            D_82E05684 = (f32)((x1 - x0) * (now - start) / dur + x0);
+            D_82E05688 = (f32)((y1 - y0) * (now - start) / dur + y0);
+
+            fadeStart = ((s32 *)&D_82E06138)[6];
+            fadeEnd = 0; // FAKE
+            if (D_82E07130 < fadeStart) {
+                alpha = 0;
+                fadeEnd = ((s32 *)&D_82E06138)[7];
+            } else {
+                fadeEnd = ((s32 *)&D_82E06138)[7];
+                if (D_82E07130 < fadeEnd) {
+                    alpha = ((D_82E07130 - fadeStart) * 255) / (fadeEnd - fadeStart);
+                } else {
+                    if (0) {} // FAKE
+                    D_82E05660[1] &= ~1;
+                    alpha = 0xFF;
+                }
+            }
+            D_82E057EC = (f32)((x1 - x0) * (now - start) / dur + x0);
+            D_82E057F0 = (f32)((y1 - y0) * (now - start) / dur + y0);
+            D_82E057E5 = alpha;
+            if (D_82E07130 >= fadeStart && D_82E07130 < fadeEnd && D_82E07130 == (fadeStart + 3 | (D_82E07130 ^ D_82E07130))) {
+                func_8003F1DC(D_82E057C8);
+                D_82E057EC = (f32)((x1 - x0) * (now - start) / dur + x0);
+                D_82E057F0 = (f32)((y1 - y0) * (now - start) / dur + y0);
+                func_8003F114(D_82E057C8, 0, -1, D_82E0565C); D_82E057E5 = alpha; D_82E057EC = (f32)((x1 - x0) * (now - start) / dur + x0); D_82E057F0 = (f32)((y1 - y0) * (now - start) / dur + y0);
+            }
+
+            if (elapsed < PH82E05950->rise) {
+                ratio = (180.0f * (f32)elapsed / (f32)(PH82E05950->rise - PH82E05950->start) - 90.0f) * 182.0416718f;
+                if (ratio >= 0.0f) {
+                    angle = (s32)(ratio + 0.5f);
+                } else {
+                    angle = (s32)(ratio - 0.5f);
+                }
+                value = (s32)((D_80087E50[(angle & 0xFFFF) >> 4] * 0.5f + 0.5f) * 255.0f);
+            } else if (elapsed < PH82E05950->hold) {
+                value = 0xFF;
+            } else if (elapsed < PH82E05950->fall) {
+                ratio = (180.0f * (f32)(elapsed - PH82E05950->hold) / (f32)(PH82E05950->fall - PH82E05950->hold) - 90.0f) * 182.0416718f;
+                if (ratio >= 0.0f) {
+                    angle = (s32)(ratio + 0.5f);
+                } else {
+                    angle = (s32)(ratio - 0.5f);
+                }
+                value = (s32)(255.0f - (D_80087E50[(angle & 0xFFFF) >> 4] * 0.5f + 0.5f) * 255.0f);
+            } else {
+                value = 0;
+            }
+            if (value == 0) {} // FAKE
+            D_82E05660[0x1D] = value;
+
+            off = (s32)((f32)*(u16 *)((u8 *)&D_82E06138 + 0x20) * ((1.0f - D_80088E50[((u16)*(s16 *)(D_82E05660 + 0x20)) >> 4]) * 2.0f + 0.5f));
+            rot = (u16)((*(s16 *)(D_82E05660 + 0x20) + off) % 0xFFFF);
+            if (elapsed < PH82E05950->rise) {
+                if (rot < 0xBFFF) {
+                    rot = 0;
+                }
+            } else if (elapsed < PH82E05950->hold) {
+                if (rot < 0xBFFF) {
+                    rot = 0;
+                }
+            } else if (elapsed < PH82E05950->fall) {
+                if (rot >= 0x4000) {
+                    rot = 0x3FFF;
+                }
+                do {} while (0); // FAKE
+            }
+            if (elapsed == 0) {
+                rot = 0xBFFF;
+            }
+        }
+        if (0) { if (rot) {} } // FAKE
+    }
+    if (D_82E06138.value + D_82E06138.unused0C == D_82E07130 + 1) {
+        D_82E05660[1] &= ~1;
+        D_82E057C8[1] &= ~1;
+    }
+    *(s16 *)(D_82E057C8 + 0x20) = rot;
+    *(s16 *)(D_82E05660 + 0x20) = *(s16 *)(D_82E057C8 + 0x20);
+}
 #endif
 
 #ifdef VERSION_US
