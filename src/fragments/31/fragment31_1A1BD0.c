@@ -163,7 +163,180 @@ void func_8822EB78(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_1A1BD0/func_8822EDA8.s")
+
+#define SCALE_ROUND(k, v, d) ((k) * (v) / (d) + (((v) * (k) / (d) > 0.0f) ? 0.5f : -0.5f))
+#define RAND_OFFSET(k) ((f32)(k) * func_80001FF0() / 60.0f + ((func_80001FF0() * (f32)(k) / 60.0f > 0.0f) ? 0.5f : -0.5f))
+extern Gfx *D_800D0510;
+extern u8 D_80094DE0[];
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 *D_8800687C;
+extern u8 *D_8800ECC4;
+extern u8 *D_8800ECC8;
+extern char **D_8823466C[];
+extern s32 func_80001FF0(void);
+extern void func_88002BA0(u8, u8, u8);
+extern void func_88002C2C(u8, u8, u8);
+extern void func_88002EC0(s16, s16, u16, u16, u8);
+extern s32 func_8004D334(s32, s32);
+extern void func_8004D40C(s32);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern s32 func_8004CA10(u8 *);
+extern void func_80044424(s16, s16, s16, s16, s16, s16, s16, s16, s32, s32);
+extern void func_8004D5B8(s32 x, s32 y, s32 alignment, const char *format, ...);
+extern void func_8004D998(s32, s32, void *, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_880002F4(void *, s16);
+extern s16 Envelope_Advance(void *);
+extern void func_88000308(u8 *, s16);
+extern void func_800496A4(s32, s32);
+extern s32 func_880007B0(u8 *);
+extern void func_88000488(s32 *, s32);
+extern s32 func_80048E30(u8 *, s32, s32, const char *, s32);
+extern s32 func_80064474(u8, u16);
+extern void *func_8004C874(s32, s32);
+extern void func_80049064(s32, s32, s32, const char *);
+extern void func_800499EC(void);
+extern void func_800498C4(void);
+extern void func_880009A8(s32, s16, s16, s16, s16, s16, s16);
+#define G8(p, off) (*(u8 *)((u8 *)(p) + (off)))
+#define GP(p, off) (*(u8 **)((u8 *)(p) + (off)))
+#define GH(p, off) (*(s16 *)((u8 *)(p) + (off)))
+#define GW(p, off) (*(s32 *)((u8 *)(p) + (off)))
+#define GRID ((u8 *)D_88234970)
+
+void func_8822EDA8(void) {
+    u8 **ent;
+    u32 o;
+    u8 *buf;
+    u32 l;
+    u8 g;
+    u8 col[3];
+    s32 j;
+    u32 idx;
+    s16 x;
+    s16 y;
+
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    gDPSetFillColor(D_800D0510++, 0x09A909A9);
+    for (l = 0, y = 0x73; l < 5; l++, y += 0x42) {
+        for (j = 0, x = 0x3B, idx = l * 6; j < 6U; j++, x += 0x57, idx++) {
+            if (G8(GRID, 0x1C) == idx + (G8(GRID, 0x1C) - G8(GRID, 0x1C))) { // FAKE: the (x - x) term folds to 0; it makes uopt keep the load as the first bne operand
+                gDPPipeSync(D_800D0510++);
+                gDPSetFillColor(D_800D0510++, 0x39CF39CF);
+            }
+            gDPFillRectangle(D_800D0510++, x, y, x + 0x55, y + 0x40);
+        }
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetFillColor(D_800D0510++, 0x7D3F7D3F);
+    for (j = 0, x = 0x91; j < 5; j++, x += 0x57) {
+        gDPFillRectangle(D_800D0510++, x, 0x73, x, 0x1BB);
+    }
+    for (o = 0, y = 0xB4; o < 4; o++, y += 0x42) {
+        gDPFillRectangle(D_800D0510++, 0x3B, y, 0x243, y);
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_88002BA0(0xFF, 0xFF, 0xFF);
+    func_8004D334(0xEF, 0);
+    func_8004D40C(1);
+    func_8004D27C(GP(GRID, 0x14), 0x100, 1);
+    func_8004D27C(GP(GRID, 0x18), 0x180, 2);
+
+    o = 0;
+    ent = *(u8 ***)(GP(GRID, 8) + 0x10);
+    for (y = 0x91; o < 5; o++, y += 0x42) {
+        for (j = 0, x = 0x49, idx = o * 6; j < 6U; j++, x += 0x57, idx++, ent++) {
+            if (G8(GP(GRID, 8), 0x15) == idx + (G8(GP(GRID, 8), 0x15) - G8(GP(GRID, 8), 0x15))) { // FAKE: see above
+                o = 5;
+                break;
+            }
+            if (!(G8(*ent, 0x26) & 1)) {
+                func_80044424(x - 9, y, GH(GP(GRID, 0x14), 0), GH(GP(GRID, 0x14), 2), 0, 0, 0x400, 0x400, 0, 1);
+                if (G8(*ent, 8) == 0xFC) {
+                    for (l = 0; l < 2; l++) {
+                        func_80044424(x + l * 9, y, GH(GP(GRID, 0x18), 0), GH(GP(GRID, 0x18), 2), 0, 0, 0x400, 0x400, 0, 2);
+                    }
+                } else {
+                    func_8004D5B8(x, y, 0, "%d", G8(*ent, 0x25));
+                }
+            }
+        }
+    }
+    buf = GP(GRID, 0xC);
+    for (o = 0, y = 0x77; o < 5; o++, y += 0x42) {
+        for (j = 0, x = 0x64, idx = o * 6; j < 6; j++, x += 0x57, idx++, buf += 0xC80) {
+            if (G8(GP(GRID, 8), 0x15) == idx + (G8(GP(GRID, 8), 0x15) - G8(GP(GRID, 8), 0x15))) { // FAKE: see above
+                o = 5;
+                break;
+            }
+            func_8004D998(x, y, buf, 0, 0);
+        }
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xAA, 0x00, 0xFF);
+    func_8004D1FC(GP(GRID, 0x10));
+    o = 0;
+    ent = *(u8 ***)(GP(GRID, 8) + 0x10);
+    for (y = 0x7D; o < 5; o++, y += 0x42) {
+        for (j = 0, x = 0x52, idx = o * 6; j < 6; j++, x += 0x57, idx++, ent++) {
+            if (G8(GP(GRID, 8), 0x15) == idx + (G8(GP(GRID, 8), 0x15) - G8(GP(GRID, 8), 0x15))) { // FAKE: see above
+                o = 5;
+                break;
+            }
+            if (!(G8(*ent, 0x26) & 1) && G8(*ent, 9) != 0) {
+                GfxRect_DrawTextured(x, y, GH(GP(GRID, 0x10), 0), GH(GP(GRID, 0x10), 2), 0, 0, 0x400, 0x400, 0);
+            }
+        }
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xDC, 0xDC, 0xB4, 0xFF);
+    func_8004D27C(D_8800ECC8, 0x180, 2);
+    func_88002EC0(0x38, 0x70, 0x20F, 0x14F, 3);
+    func_88002C2C(0xDC, 0xDC, 0xB4);
+    func_8004D1FC(D_8800ECC4);
+    GfxRect_DrawTextured(0x38, 0x4E, 0x20F, 0x22, 0, 0, SCALE_ROUND(1024.0f, func_8004CA10(D_8800ECC4), 527.0f), 0, 0);
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    GW(GRID, 0x2C) = 0;
+    if (GW(GP(GRID, 0), 0x2C) == 0) {
+        func_880002F4(GRID + 0x1E, (s16)((s32)RAND_OFFSET(5) + (s32)RAND_OFFSET(8) + (s32)RAND_OFFSET(30)));
+    }
+    func_88000308(col, (s16)Envelope_Advance(GRID + 0x1E));
+    {
+        Gfx *g = D_800D0510++;
+        g->words.w0 = 0xFA000000;
+        g->words.w1 = _SHIFTL(col[1], 16, 8) | _SHIFTL(col[2], 8, 8) | _SHIFTL(col[0], 24, 8) | _SHIFTL(0xFF, 0, 8);
+    }
+    func_800496A4(4, 1);
+    o = 0;
+    ent = *(u8 ***)(GP(GRID, 8) + 0x10);
+    for (y = 0xA0; o < 5; o++, y += 0x42) {
+        for (j = 0, x = 0x40, idx = o * 6; j < 6; j++, x += 0x57, idx++, ent++) {
+            if (G8(GP(GRID, 8), 0x15) == idx + (G8(GP(GRID, 8), 0x15) - G8(GP(GRID, 8), 0x15))) { // FAKE: see above
+                o = 5;
+                break;
+            }
+            if (func_880007B0(*ent + 8) == 0) {
+                func_88000488((s32 *)(GRID + 0x2C), 1);
+            }
+            func_80048E30(D_8800687C, x, y, (const char *)(*ent + 0x3C), 1);
+            func_88000488((s32 *)(GRID + 0x2C), 0);
+            if (!(G8(*ent, 0x26) & 1) && G8(*ent, 8) != 0xFC) {
+                l = func_80064474(G8(*ent, 8), *(u16 *)(*ent + 0x1E));
+                g = l;
+                if (l != 0) {
+                    func_80048E30(D_8800687C, x + 1, y - 0x23, func_8004C874(0x26, g - 1), 1);
+                }
+            }
+        }
+    }
+    func_800496A4(0x10, 1);
+    func_80049064(0x13F, 0x53, 1, D_8823466C[G8(GP(GP(GRID, 8), 0), 8)][G8(GP(GRID, 8), 4)]);
+    func_800499EC();
+    func_880009A8(GW(GP(GRID, 0), 0x2C), GH(GRID, 4) * 87 + 0x3B, GH(GRID, 6) * 66 + 0x73, 0x56, 0x41, 0, 0);
+}
 
 extern s32 D_880068B8;
 
@@ -185,7 +358,7 @@ extern u8 D_8800ED50[];
 extern u8 **D_88234970;
 extern s32 D_880068B4;
 void func_8822EB78(void);
-extern s32 func_8822EDA8;
+void func_8822EDA8(void);
 extern s32 func_80001FF0(void);
 extern u8 *func_8004D878(u8 *destination, s32 id, u8 *mon);
 extern s32 func_88004804(void *, s32, s16, s16, s32, s32, s32, s32, s32, s32 *, s32 *, s32 *, s32 *, s32, s32);
