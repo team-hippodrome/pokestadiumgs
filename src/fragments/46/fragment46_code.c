@@ -2109,7 +2109,44 @@ void func_8AE04478(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/46/fragment46_code/func_8AE04618.s")
+void func_8AE04618(s16 arg0, s16 arg1, s16 w, s16 h) {
+    s32 x = arg0;
+    s16 y = arg1;
+    s16 right;
+    s16 bottom;
+
+    if (w != 0) {
+        gSPDisplayList(D_800D0510++, D_8AE071E8);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0x32, 0x32, 0xB4, 0x8C);
+        gDPSetEnvColor(D_800D0510++, 0, 0, 0x1E, 0xB4);
+        func_8004D1FC((u8 *)D_8AE09918);
+        right = (s32)x + w; // the (s32) cast keeps the x + w operand order
+        bottom = y + h;
+        {
+            Gfx *_g = (Gfx *)(D_800D0510++); _g->words.w0 = (_SHIFTL(G_TEXRECT, 24, 8) | _SHIFTL((right + 6) << 2, 12, 12) | _SHIFTL((bottom + 6) << 2, 0, 12)); _g->words.w1 = (_SHIFTL(0, 24, 3) | _SHIFTL((x + 2) << 2, 12, 12) | _SHIFTL((y + 2) << 2, 0, 12)); // one line: as1 scheduling
+            gImmp1(D_800D0510++, G_RDPHALF_1, (_SHIFTL(0, 16, 16) | _SHIFTL(0, 0, 16)));
+            bottom = 0x400 / (w / 64);
+            gImmp1(D_800D0510++, G_RDPHALF_2, (_SHIFTL(bottom, 16, 16) | _SHIFTL(0x400, 0, 16)));
+        }
+        gSPDisplayList(D_800D0510++, D_8AE07228);
+        gDPSetPrimColor(D_800D0510++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+        func_8004D1FC((u8 *)D_8AE09900);
+        bottom = y + h;
+        gSPTextureRectangle(D_800D0510++, x << 2, y << 2, (x + 8) << 2, (y + 8) << 2, 0, 0, 0, 0x400, 0x400);
+        gSPTextureRectangle(D_800D0510++, (x + 8) << 2, y << 2, (right - 1) << 2, (y + 5) << 2, 0, 0xA0, 0, 0, 0x400);
+        if (x != y) {} // FAKE: keeps x and y live here for the register picks
+        gSPTextureRectangle(D_800D0510++, x << 2, (y + 8) << 2, (x + 5) << 2, bottom << 2, 0, 0, 0xA0, 0x400, 0);
+        func_8004D1FC((u8 *)D_8AE09908);
+        gSPTextureRectangle(D_800D0510++, x << 2, bottom << 2, (x + 8) << 2, (bottom + 8) << 2, 0, 0, 0, 0x400, 0x400);
+        func_8004D1FC((u8 *)D_8AE09910);
+        gSPTextureRectangle(D_800D0510++, right << 2, y << 2, (right + 8) << 2, (y + 8) << 2, 0, 0, 0, 0x400, 0x400);
+        func_8004D1FC((u8 *)D_8AE09914);
+        gSPTextureRectangle(D_800D0510++, right << 2, bottom << 2, (right + 8) << 2, (bottom + 8) << 2, 0, 8, 8, 0x400, 0x400);
+        right = right; bottom = bottom; // FAKE: moves uopt's 20-load block split between the two rects
+        gSPTextureRectangle(D_800D0510++, (x + 8) << 2, (bottom + 4) << 2, right << 2, (bottom + 8) << 2, 0, 0x60, 0x80, 0, 0x400);
+        gSPTextureRectangle(D_800D0510++, (right + 4) << 2, (y + 8) << 2, (right + 8) << 2, bottom << 2, 0, 0x80, 0x60, 0x400, 0);
+    }
+}
 #endif
 
 #ifdef VERSION_US
