@@ -1374,8 +1374,100 @@ void func_86103B74(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/49/fragment49_code/func_86103C48.s")
+void func_86103C48(void) {
+    extern void func_86104BEC(void *node);
+    extern s32 func_8003F210(void *model, s32 anim);
+    f32 random;
+    u8 *model;
+    u8 *node;
+    s32 duration;
+    u8 *entry;
+    f32 x_delta;
+    f32 y_delta;
 
+    model = (u8 *)D_87F119DC + 36;
+    node = ((u8 (*)[44])(u32)D_8610AD20)[*(s32 *)((u8 *)D_87F119DC + 32)] + 36320;
+    *((u8 *)D_87F119DC + 199) = 0;
+    func_86103B74();
+    if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x400000) {
+        f32 scale;
+        entry = *(s32 *)((u8 *)D_87F119DC + 32) * 24 + *(u8 **)((u8 *)(u32)D_8610AD20 + 36848);
+        *(f32 *)(entry + 8) += (700.0f * (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38760))) * 0.015f;
+        duration = (*(s32 *)((u8 *)D_87F119DC + 12) & 0x100000) ? 30 : 15;
+        if (*(s32 *)((u8 *)D_87F119DC + 28) < 3 || *(f32 *)((u8 *)D_87F119DC + 16) > 0.0) {
+            *(f32 *)((u8 *)D_87F119DC + 16) -= 64.0f * (0.025f + ((f32)func_8003570C() / 4294967296.0f) * 0.05f);
+        }
+        if (*(f32 *)((u8 *)D_87F119DC + 76) < -104.5001831f) {
+            *(f32 *)((u8 *)D_87F119DC + 20) += ((f32)func_8003570C() / 4294967296.0f) * 9.0f;
+        } else {
+            random = -*(f32 *)((u8 *)(u32)D_8610AD20 + 38860);
+            if (*(f32 *)((u8 *)D_87F119DC + 20) < random) *(f32 *)((u8 *)D_87F119DC + 20) = random;
+        }
+        random = (f32)func_8003570C() / 4294967296.0f;
+        *(f32 *)((u8 *)D_87F119DC + 72) += ((random + random - 1.0f) * (700.0f * (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38760)))) * 0.1f;
+        random = (f32)func_8003570C() / 4294967296.0f;
+        *(f32 *)((u8 *)D_87F119DC + 76) += ((random + random - 1.0f) * (700.0f * (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38760)))) * 0.1f;
+        func_86100DA8(D_87F119DC);
+        scale = 0.04f;
+        scale *= *(f32 *)((u8 *)(u32)D_8610AD20 + 38760);
+        if (*(f32 *)((u8 *)D_87F119DC + 84) < scale * 1.25f) {
+            *(f32 *)((u8 *)D_87F119DC + 84) += scale * 0.1f;
+            *(f32 *)((u8 *)D_87F119DC + 88) = *(f32 *)((u8 *)D_87F119DC + 92) = *(f32 *)((u8 *)D_87F119DC + 84);
+            entry = *(s32 *)((u8 *)D_87F119DC + 32) * 24 + *(u8 **)((u8 *)(u32)D_8610AD20 + 36848);
+            *(f32 *)(entry + 4) = 0.0f;
+            scale = 0.04f;
+            scale *= *(f32 *)((u8 *)(u32)D_8610AD20 + 38760);
+            *(f32 *)(entry + 8) = ((*(f32 *)((u8 *)D_87F119DC + 84) / scale) * (700.0f * scale)) * 1.9f;
+            *(f32 *)(entry + 12) = 0.0f;
+        }
+        if (duration < *(s32 *)((u8 *)D_87F119DC + 28)) {
+            *(s32 *)((u8 *)D_87F119DC + 12) &= ~0x400000;
+            if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x100000) {
+                func_8003F210(model, 6);
+                ModelAnim_SetFrame(model, func_8003570C() % 26);
+            }
+        }
+        *(s16 *)(model + 32) = 16383;
+    } else if ((*(s32 *)((u8 *)D_87F119DC + 12) & 0x100000) && !(*(s32 *)((u8 *)D_87F119DC + 12) & 0x800000)) {
+        func_86102B30(node, &x_delta, &y_delta);
+        x_delta *= 0.025f;
+        y_delta *= 0.025f;
+        if ((((*(f32 *)((u8 *)D_87F119DC + 72) < *(f32 *)(node + 24)) ? (*(f32 *)(node + 24) - *(f32 *)((u8 *)D_87F119DC + 72)) : -(*(f32 *)(node + 24) - *(f32 *)((u8 *)D_87F119DC + 72))) < ((0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38760)) * (0, 700.0f)) * 4.0f)
+         && (((*(f32 *)((u8 *)D_87F119DC + 76) < *(f32 *)(node + 28)) ? (*(f32 *)(node + 28) - *(f32 *)((u8 *)D_87F119DC + 76)) : -(*(f32 *)(node + 28) - *(f32 *)((u8 *)D_87F119DC + 76))) < ((0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38760)) * (0, 700.0f)) * 4.0f)) {
+            func_86104BEC(node);
+        }
+        if (64.0f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38800) < ((x_delta > 0.0f) ? x_delta : -x_delta)) x_delta = (64.0f * *(f32 *)((u8 *)(u32)D_8610AD20 + 38800)) * ((x_delta > 0.0f) ? 1.0f : -1.0f);
+        *(f32 *)((u8 *)D_87F119DC + 16) += x_delta;
+        if (9.0f < ((y_delta > 0.0f) ? y_delta : -y_delta)) y_delta = ((y_delta > 0.0f) ? 1.0f : -1.0f) * 9.0f;
+        *(f32 *)((u8 *)D_87F119DC + 20) += y_delta;
+        *(f32 *)((u8 *)D_87F119DC + 20) -= *(f32 *)((u8 *)(u32)D_8610AD20 + 38860);
+    } else {
+        entry = ((u8 (*)[396])*(u8 **)((u8 *)(u32)D_8610AD20 + 36844))[*(s32 *)((u8 *)D_87F119DC + 32)];
+        *(u32 *)(entry + 12) |= 0x10000000;
+        ModelAnim_SetSpeed((u8 *)D_87F119DC + 36, 65536);
+        random = *(f32 *)((u8 *)(u32)D_8610AD20 + 38860);
+        *(f32 *)((u8 *)D_87F119DC + 20) += random + random;
+        if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x200000) {
+            if (-192.9234314f < *(f32 *)(model + 40)) *(f32 *)(model + 40) = -192.9234314f;
+            *(f32 *)((u8 *)D_87F119DC + 16) *= 0.7f;
+        } else if (*(f32 *)(model + 40) < -192.9234314f) {
+            *(f32 *)(model + 40) = -192.9234314f;
+            if (!(*(s32 *)((u8 *)D_87F119DC + 12) & 0x200000)) {
+                *(s32 *)((u8 *)D_87F119DC + 12) |= 0x200000;
+                *(s16 *)(model + 32) = (s16)(func_8003570C() & 0xFFFF);
+            }
+            func_8003F210(model, 9);
+            (*(s16 **)(model + 68))[3] = 49;
+        } else {
+            func_8003F210(model, 8);
+            if (ModelAnim_IsFinished(model)) ModelAnim_SetFrame(model, 14);
+        }
+        func_86100874();
+    }
+    func_86103194();
+    if (*(s32 *)((u8 *)D_87F119DC + 12) & 0x500000) func_86100BE0(D_87F119DC);
+    else func_86100CFC(D_87F119DC);
+}
 /* mkdraft:func_861044EC begin */
 extern s32 D_8610AD20;
 extern void * D_87F119DC;
