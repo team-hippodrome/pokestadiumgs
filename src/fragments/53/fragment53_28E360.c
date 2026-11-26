@@ -1,4 +1,5 @@
 #include "global.h"
+#include "controller.h"
 
 #ifdef VERSION_US
 struct Fragment53ActorState {
@@ -1067,7 +1068,209 @@ s32 Fragment53_UpdateStartState(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_28E360/func_86508C2C.s")
+extern s32 D_8650C4AC;
+extern s32 D_8650C4CC;
+extern f32 D_8650C4B8;
+extern s32 D_8650C4BC;
+extern s32 D_8650C4B0;
+extern s32 D_8650C4C0;
+extern f32 D_8650C4F4;
+extern f32 D_8650C4F8;
+extern f32 D_8650C4FC;
+extern s32 D_8650C470;
+extern s32 D_8650C4F0;
+extern s32 D_8650C500;
+extern s32 D_8650C504;
+extern f32 D_8650C47C;
+extern f32 D_8650C4D0;
+extern f32 D_8650F230;
+extern s32 D_8650D9D4;
+extern u8 D_8650D648[];
+extern u8 D_86510010[];
+extern void func_86502524(void);
+extern void osSyncPrintf(const char *, ...);
+#define C5E0F(o) (*(f32 *)((u8 *)&D_8650C5E0 + (o)))
+#define C5E0I(o) (*(s32 *)((u8 *)&D_8650C5E0 + (o)))
+
+void func_86508C2C(void) {
+    s32 changed;
+    ControllerState *pad;
+    u16 held;
+
+    changed = 0;
+    ModelAnim_SetFrame(D_86510010, 4);
+    pad = D_80087200;
+    if (pad->buttonsPressed & 0x400) {
+        changed = 1;
+        C5E0I(0x1C)++;
+        if (C5E0I(0x1C) > 12) {
+            C5E0I(0x1C) = 12;
+        }
+    } else if (pad->buttonsPressed & 0x800) {
+        changed = 1;
+        C5E0I(0x1C)--;
+        if (C5E0I(0x1C) <= 0) {
+            C5E0I(0x1C) = 1;
+        }
+    } else if ((pad->buttonsPressed & 0x100) || ((held = pad->buttonsHeld) & 1)) {
+        if ((D_8650C4C0 > 0) && (pad->buttonsHeld & 1)) {
+        } else {
+            changed = 1;
+            switch (C5E0I(0x1C)) {
+                case 1:
+                    D_8650C4AC++;
+                    break;
+                case 2:
+                    D_8650C4CC++;
+                    break;
+                case 3:
+                    D_8650C4B8 += 0.01f;
+                    break;
+                case 4:
+                    D_8650C4BC *= 2;
+                    if (D_8650C4BC >= 0x10) {
+                        D_8650C4BC = 0x10;
+                    }
+                    break;
+                case 5:
+                    D_8650C4B0++;
+                    if (D_8650C4B0 >= 0xA) {
+                        D_8650C4B0 = 0xA;
+                    }
+                    break;
+                case 6:
+                    D_8650C4C0++;
+                    if (D_8650C4C0 > 0) {
+                        D_8650C4C0 = 1;
+                    }
+                    break;
+                case 7:
+                    D_8650C4F4 = D_8650C4F4 + 0.01;
+                    break;
+                case 8:
+                    D_8650C470 = 1;
+                    break;
+                case 9:
+                    D_8650C4F0 = 1;
+                    break;
+                case 10:
+                    D_8650C500 = 1;
+                    break;
+                case 11:
+                    D_8650C504 = 1;
+                    break;
+            }
+        }
+    } else if ((pad->buttonsPressed & 0x200) || (held & 2)) {
+        if ((D_8650C4C0 > 0) && (held & 2)) {
+        } else {
+            changed = 1;
+            switch (C5E0I(0x1C)) {
+                case 1:
+                    D_8650C4AC--;
+                    if (D_8650D9D4 < 2) {
+                        D_8650C4AC++;
+                    }
+                    break;
+                case 2:
+                    D_8650C4CC--;
+                    break;
+                case 3:
+                    D_8650C4B8 -= 0.01f;
+                    if (D_8650C4B8 <= 0.2f) {
+                        D_8650C4B8 = 0.2;
+                    }
+                    break;
+                case 4:
+                    D_8650C4BC /= 2;
+                    if (D_8650C4BC < 2) {
+                        D_8650C4BC = 1;
+                    }
+                    break;
+                case 5:
+                    D_8650C4B0--;
+                    if (D_8650C4B0 < 2) {
+                        D_8650C4B0 = 1;
+                    }
+                    break;
+                case 6:
+                    D_8650C4C0--;
+                    if (D_8650C4C0 <= 0) {
+                        D_8650C4C0 = 0;
+                    }
+                    break;
+                case 7:
+                    D_8650C4F4 = D_8650C4F4 - 0.01;
+                    if (D_8650C4F4 < 0.0f) {
+                        D_8650C4F4 = 0.0f;
+                    }
+                    break;
+                case 8:
+                    D_8650C470 = 3;
+                    break;
+                case 9:
+                    D_8650C4F0 = 0;
+                    break;
+                case 10:
+                    D_8650C500 = 0;
+                    break;
+                case 11:
+                    D_8650C504 = 0;
+                    break;
+            }
+        }
+    }
+    if (C5E0I(0x1C) == 10) {
+        if (pad->buttonsHeld & 0x8000) {
+            if (D_8650C500 == 0) {
+                D_8650C4F8 = D_8650C4F8 + 0.1;
+            } else {
+                D_8650C4FC = D_8650C4FC + 0.1;
+            }
+        }
+        if (pad->buttonsHeld & 0x4000) {
+            if (D_8650C500 == 0) {
+                D_8650C4F8 = D_8650C4F8 - 0.1;
+            } else {
+                D_8650C4FC = D_8650C4FC - 0.1;
+            }
+        }
+    }
+    if (D_8650C4C0 > 0) {
+        held = pad->buttonsHeld;
+        changed = 1;
+        if (held & 8) {
+            D_8650C47C += 5.0f;
+            if (D_8650D9D4 < 2) {
+                D_8650C47C -= 5.0f;
+            }
+        } else if (held & 4) {
+            D_8650C47C -= 5.0f;
+            if (D_8650C47C < -500.0f) {
+                D_8650C47C = -500.0f;
+            }
+        } else if (held & 0x8000) {
+            C5E0F(0x2C) -= 10.0f;
+            if (C5E0F(0x2C) < -2000.0f) {
+                C5E0F(0x2C) = -2000.0f;
+            }
+        } else if (held & 0x4000) {
+            C5E0F(0x2C) += 10.0f;
+            if (C5E0F(0x2C) > 3000.0f) {
+                C5E0F(0x2C) = 3000.0f;
+            }
+        } else if (held & 1) {
+            D_8650C4D0 += 0.1f;
+        } else if (held & 2) {
+            D_8650C4D0 -= 0.1f;
+        } else if (pad->buttonsPressed & 0x2000) {
+            osSyncPrintf(D_8650D648, (f64)D_8650C4D0, (f64)C5E0F(0x2C), (f64)D_8650C47C, (f64)D_8650F230);
+        }
+    }
+    if (changed != 0) {
+        func_86502524();
+    }
+}
 #endif
 
 #ifdef VERSION_US
