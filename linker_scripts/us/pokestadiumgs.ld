@@ -4055,8 +4055,8 @@ SECTIONS
         build/src/fragments/53/fragment53_code.o(.data);
         fragments_53_fragment53_28E360 = .;
         build/src/fragments/53/fragment53_28E360.o(.data);
-        _296690_data = .;
-        build/asm/us/data/296690.data.o(.data);
+        _2968E0_data = .;
+        build/asm/us/data/2968E0.data.o(.data);
         fragment53_DATA_END = .;
         fragment53_DATA_SIZE = ABSOLUTE(fragment53_DATA_END - fragment53_DATA_START);
         fragment53_RODATA_START = .;
