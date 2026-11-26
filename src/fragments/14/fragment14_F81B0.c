@@ -430,8 +430,61 @@ extern void func_81304208(s32);
 extern void func_81311C18(s32);
 void func_81300BA0(s32 arg0) { func_8130A570(arg0 + 0xDA8, 0); func_81304208(arg0 + 0x15370); func_81311C18(arg0 + 0x74); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_F81B0/func_81300BE8.s")
-
+void func_81300BE8(void *arg0, void *arg1, s32 arg2) {
+    typedef struct {
+        u8 species;
+        u8 unk_01;
+        u8 unk_02[2];
+        s32 unk_04[0x15];
+    } MonData;
+    typedef struct {
+        s32 v;
+    } WordStruct;
+    typedef struct {
+        MonData pokemon;
+        WordStruct unk_58;
+        u8 unk_5C[4];
+    } Fragment14TransferRecord;
+    typedef struct {
+        u8 unk_00[0x20];
+        MonData pokemon;
+        WordStruct unk_78;
+        u8 unk_7C[0xCE8 - 0x7C];
+    } Fragment14SourceRecord;
+    typedef struct {
+        u8 unk_00[0x40];
+        struct {
+            u32 pad0 : 5;
+            u32 unk_26 : 1;
+            u32 pad1 : 26;
+        } bits;
+    } Fragment14TransferFlags;
+    s32 i;
+    u8 *data;
+    if (arg2 >= 0 && arg2 < 4) {
+        for (i = 0; i < 6; i++) {
+            ((Fragment14TransferRecord (*)[6])*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148))[arg2][i].pokemon =
+                ((Fragment14SourceRecord *)arg1)[i].pokemon;
+            ((Fragment14TransferRecord (*)[6])*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148))[arg2][i].unk_58 =
+                ((Fragment14SourceRecord *)arg1)[i].unk_78;
+        }
+        if (!((Fragment14TransferFlags *)*(u8 **)(*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148) + 0x940))->bits.unk_26) {
+            for (i = 0; i < 6; i++) {
+                ((u8 *)&((Fragment14TransferRecord (*)[6])*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148))[arg2][i])[1] = 0;
+            }
+        }
+        if (*(s8 *)((u8 *)arg1 + 17) != 0) {
+            HAL_Strcpy((s8 *)(*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148) + arg2 * 12 + 0x904), (s8 *)arg1 + 17);
+            *(u16 *)(*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148) + arg2 * 2 + 0x934) = *(u16 *)((u8 *)arg1 + 0x4D90);
+        } else {
+            data = *(u8 **)((u8 *)arg0 + 0x18000 + 0x2148);
+            if (((s8 *)data)[arg2 + 0x900] >= 0 && ((s8 *)data)[arg2 + 0x900] < 4) {
+                HAL_Strcpy((s8 *)(*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148) + arg2 * 12 + 0x904), func_8004C874(15, ((s8 *)data)[arg2 + 0x900] + 98));
+            }
+            *(u16 *)(*(u8 **)((u8 *)arg0 + 0x18000 + 0x2148) + arg2 * 2 + 0x934) = 0;
+        }
+    }
+}
 /* mkdraft:func_81300E34 begin */
 extern void func_8130015C(void *, s32);
 extern s32 func_813002D0(void *);
