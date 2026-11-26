@@ -55,6 +55,13 @@ extern struct F66Record D_82E05968[100];
 #define F66_RECS ((F66RecView *)0)
 #endif
 #define F66_TIMERS ((F66Timer *)&D_82E07130)
+typedef struct F66TimerTable {
+    F66Timer timers[100];
+    s32 unk4B0;
+    s32 unk4B4;
+} F66TimerTable;
+extern F66TimerTable D_82E04F84;
+extern s32 func_82E00E5C(s32, u8 *);
 
 
 
@@ -1088,7 +1095,62 @@ void func_82E04040(s32 scene) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/66/fragment66_code/func_82E0424C.s")
+void func_82E0424C(s32 arg0) {
+    s32 pad[5];
+    s32 i;
+    u32 j;
+    s32 index;
+    s32 id;
+    s32 id2;
+    s32 max;
+
+    *(F66TimerTable *)&D_82E07130 = D_82E04F84;
+    switch (arg0) {
+    case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 8: case 9:
+        for (i = 0, index = 0; index != 100; i += 0x100, index += 10) {
+            id = 0x675F3030 + (i & 0xFFFFFFFF);
+            j = 0;
+            id2 = 0x635F3030 + (i & 0xFFFFFFFF);
+            for (; j != 10; j++) {
+                func_8004E308(func_8005049C(D_82E0760C, id + j), func_82E00020, (s32)(index + j));
+                func_8004E308(func_8005049C(D_82E0760C, id2 + j), func_82E0048C, (s32)(index + j));
+            }
+        }
+        func_8004E308(func_8005049C(D_82E0760C, 0x696D6773), func_82E00700, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x696D6765), func_82E00700, 1);
+        func_8004E308(func_8005049C(D_82E0760C, 0x6A5F696F), func_82E00868, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x655F696F), func_82E00868, 1);
+        func_8004E308(func_8005049C(D_82E0760C, 0x655F7370), func_82E0248C, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x656E6466), func_82E007F0, 0);
+        break;
+    case 7:
+        for (i = 0, index = 0, max = 100; index != max; i += 0x100, index += 10) {
+            j = 0;
+            id = 0x675F3030 + (i & 0xFFFFFFFF);
+            for (; j != 10; j++) {
+                func_8004E308(func_8005049C(D_82E0760C, id + j), func_82E00E5C, (s32)(index + j));
+            }
+        }
+        func_8004E308(func_8005049C(D_82E0760C, 0x706F5F31), func_82E017E0, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x706F5F32), func_82E017E0, 1);
+        func_8004E308(func_8005049C(D_82E0760C, 0x706F5F33), func_82E017E0, 2);
+        func_8004E308(func_8005049C(D_82E0760C, 0x3230666F), func_82E017E0, 3);
+        func_8004E308(func_8005049C(D_82E0760C, 0x3234666F), func_82E017E0, 4);
+        func_8004E308(func_8005049C(D_82E0760C, 0x696D6731), func_82E01898, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x655F696F), func_82E01A00, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x655F7370), func_82E0248C, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x656E6467), func_82E019B0, 0);
+        break;
+    case 10:
+        func_8004E308(func_8005049C(D_82E0760C, 0x675F7469), func_82E01CE8, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x6A5F696F), func_82E00868, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x7469746C), func_82E02378, 0);
+        func_8004E308(func_8005049C(D_82E0760C, 0x615F6231), func_82E02378, 1);
+        func_8004E308(func_8005049C(D_82E0760C, 0x615F6232), func_82E02378, 2);
+        func_8004E308(func_8005049C(D_82E0760C, 0x615F6233), func_82E02378, 3);
+        break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
