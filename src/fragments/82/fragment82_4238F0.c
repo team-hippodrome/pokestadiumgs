@@ -365,7 +365,180 @@ void func_82D04C44(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_4238F0/func_82D04DC8.s")
+extern Fragment82MenuColor D_82D06FA4, D_82D06FA8, D_82D06FAC, D_82D06FB0;
+extern Gfx D_80094DE0[];
+extern Gfx D_80094E38[];
+extern void func_82D02AC8(u16 arg0, u16 arg1, u16 arg2, u16 arg3);
+extern void func_8004D878(void *, u16, s32);
+extern void func_8004D998(s32, s32, void *, s32, s32);
+extern s32 func_800647C8(s32);
+extern void func_8004B314(s32, s32, s32, s32);
+extern void func_82D03144(s16 x, s16 y, u16 width, u16 height);
+extern void func_82D0396C(s16 arg0, s16 arg1, u16 arg2, u16 arg3);
+extern void func_82D03A5C(s16 arg0, s16 arg1, u16 arg2, f32 arg3);
+#define SCIS_RECT_G(pkt, ulx, uly, lrx, lry) \
+{ \
+    g = (Gfx *)(pkt); \
+    g->words.w0 = (_SHIFTL(G_FILLRECT, 24, 8) | _SHIFTL(MAX((lrx), 0), 14, 10) | _SHIFTL(MAX((lry), 0), 2, 10)); \
+    g->words.w1 = (_SHIFTL(MAX((ulx), 0), 14, 10) | _SHIFTL(MAX((uly), 0), 2, 10)); \
+}
+#define SCIS_RECT_W(pkt, ulx, uly, w, lry) \
+{ \
+    g = (Gfx *)(pkt); \
+    g->words.w0 = (_SHIFTL(G_FILLRECT, 24, 8) | _SHIFTL(((ulx) > -(w) ? (ulx) + (w) : 0), 14, 10) | _SHIFTL(MAX((lry), 0), 2, 10)); \
+    g->words.w1 = (_SHIFTL(MAX((ulx), 0), 14, 10) | _SHIFTL(MAX((uly), 0), 2, 10)); \
+}
+#define SCIS_RECT_H(pkt, ulx, uly, lrx, h) \
+{ \
+    g = (Gfx *)(pkt); \
+    g->words.w0 = (_SHIFTL(G_FILLRECT, 24, 8) | _SHIFTL(MAX((lrx), 0), 14, 10) | _SHIFTL(((uly) > -(h) ? (uly) + (h) : 0), 2, 10)); \
+    g->words.w1 = (_SHIFTL(MAX((ulx), 0), 14, 10) | _SHIFTL(MAX((uly), 0), 2, 10)); \
+}
+typedef struct G82Group {
+    s32 active;
+    u8 flags;
+    u8 present[6];
+    u8 pad0B;
+    u16 ids[6];
+    u16 prev[6];
+    u8 pad24[4];
+    u8 img[6][0xC80];
+} G82Group;
+typedef struct G82Data {
+    s16 scroll;
+    u8 pad2[2];
+    u16 value4;
+    u8 pad6[6];
+    s8 col;
+    s8 row;
+    s8 top;
+    u8 padF[0x10E - 0xF];
+    u8 start;
+    u8 pad10F;
+    G82Group groups[6];
+} G82Data;
+void func_82D04DC8(Fragment82MenuRow *row) {
+    G82Group *grp;
+    s32 k;
+    s32 i;
+    s32 j;
+    s32 py;
+    s32 px;
+    G82Data *data;
+    s32 ulx;
+    s32 uly;
+    Gfx *g;
+
+    data = row->data;
+    if (uly) { } // FAKE
+    func_82D02B44(row->x + 0x1A, row->y + 0x29, 0x1F2, 0x131);
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    i = data->start;
+    py = 0; do {
+        if (uly) { } // FAKE
+        grp = &data->groups[i];
+        for (j = 0, px = 0; j < 6; j++, px += 0x53) {
+            if (((grp->flags & (1 << j)) != 0) && grp->present[j] != 0) {
+                func_82D02AC8(D_82D06FA4.r, D_82D06FA4.g, D_82D06FA4.b, 1);
+            } else {
+                func_82D02AC8(D_82D06FA8.r, D_82D06FA8.g, D_82D06FA8.b, 1);
+            }
+            ulx = (s16)(row->x + px + 0x1A);
+            uly = (s16)(row->y + py + data->scroll + 0x29);
+            if (D_82D06FA4.r == j) { } // FAKE
+            { Gfx *g; SCIS_RECT_G(D_800D0510++, ulx, uly, ulx + 0x51, uly + 0x3B); }
+        }
+        i++;
+        if (i >= 6) {
+            i = 0;
+        }
+        py += 0x3D;
+    } while (py < 0x16E);
+
+    func_82D02AC8(D_82D06FAC.r, D_82D06FAC.g, D_82D06FAC.b, 1);
+    ulx = (s16)(row->x + 0x1A); uly = (s16)(row->y + data->scroll + 0x65); SCIS_RECT_W(D_800D0510++, ulx, uly, 0x1F0, uly);
+    py = 0x3D; do {
+        if (j * 0x53) { } // FAKE
+        ulx = (s16)(row->x + 0x1A);
+        uly = (s16)(row->y + py + data->scroll + 0x65);
+        SCIS_RECT_W(D_800D0510++, ulx, uly, 0x1F0, uly);
+        ulx = (s16)(row->x + 0x1A); uly = (s16)(row->y + py + data->scroll + 0xA2); SCIS_RECT_W(D_800D0510++, ulx, uly, 0x1F0, uly);
+        py += 0x7A;
+    } while (py != 0x131);
+    ulx = (s16)(row->x + 0x6C); uly = (s16)(row->y + data->scroll + 0x29); SCIS_RECT_H(D_800D0510++, ulx, uly, ulx, 0x16C);
+    px = 0x53; do {
+        if (0x3D * k) { } // FAKE
+        ulx = (s16)(row->x + px + 0x6C);
+        uly = (s16)(row->y + data->scroll + 0x29);
+        SCIS_RECT_H(D_800D0510++, ulx, uly, ulx, 0x16C);
+        ulx = (s16)(row->x + px + 0xBF); uly = (s16)(row->y + data->scroll + 0x29); SCIS_RECT_H(D_800D0510++, ulx, uly, ulx, 0x16C);
+        px += 0xA6;
+    } while (px != 0x19F);
+
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    i = data->start;
+    for (k = 0; k < 6; k++) {
+        grp = data->groups + i;
+        if (grp->active != 0) {
+            for (j = 0; j < 6; j++) {
+                if (grp->ids[j] != 0) {
+                    if (grp) { } // FAKE
+                    if (grp->ids[j] != grp->prev[j]) {
+                        func_8004D878(grp->img[j], grp->ids[j], 0);
+                        grp->prev[j] = grp->ids[j];
+                    }
+                    func_8004D998(row->x + j * 0x53 + 0x2F,
+                                  row->y + k * 0x3D + data->scroll + 0x2B,
+                                  grp->img[j], 0, 0);
+                }
+            }
+        }
+        i++;
+        if (i >= 6) {
+            i = 0;
+        }
+    }
+    func_800498C4();
+    func_800496A4(4, 0);
+    i = data->start;
+    for (k = 0; k != 6; k++) {
+        grp = &data->groups[i];
+        for (j = 0; j != 6; j++) {
+            if (grp->active != 0) {
+                ulx = (s16)(row->x + j * 0x53 + 0x43);
+                uly = (s16)(row->y + k * 0x3D + data->scroll + 0x53);
+                func_80049064(ulx, uly, 1, func_800647C8(grp->present[j]));
+            }
+        }
+        i++;
+        if (i >= 6) {
+            i = 0;
+        }
+    }
+    func_800499EC();
+    func_8004B314(row->x + data->col * 0x53 + 0x1A,
+                  row->y + (data->row - data->top) * 0x3D + data->scroll + 0x29,
+                  0x52, 0x3C);
+    gSPDisplayList(D_800D0510++, D_82D07210);
+    ParticleGfx_SetPrimColor_fragment82(D_82D06FB0.r, D_82D06FB0.g, D_82D06FB0.b, 0xFF);
+    func_82D02B44(row->x + 7, row->y + 0x29, 0x15, 0x130);
+    func_82D03A5C(row->x + 7, row->y + 0x29, (s16)row->height - 0x32, (f32)data->value4 / 2257.0f);
+    func_82D02B44(row->x, row->y, 0x216, 0x164);
+    ParticleGfx_SetPrimColor_fragment82(D_82D06FB0.r, D_82D06FB0.g, D_82D06FB0.b, 0xFF);
+    func_82D0396C(row->x + 7, row->y + 7, (s16)row->width - 0x11, 0x22);
+    ParticleGfx_SetPrimColor_fragment82(0xFF, 0xFF, 0xFF, 0xFF);
+    func_82D03144(row->x, row->y, row->width, row->height);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_82D02D5C(row->x + 0x131, row->y + 0xB, 0x33, 0);
+    func_800498C4();
+    func_800496A4(4, 0);
+    func_80049064(row->x + 0x14, row->y + 0xF, 0, func_8004C874(0x43, 0x15));
+    func_800496A4(8, 0);
+    func_80049064(row->x + 0x14D, row->y + 0xD, 0, func_8004C874(0x43, 0x16));
+    func_800499EC();
+    func_82D02B44(D_82D07198.x, D_82D07198.y, D_82D07198.width, D_82D07198.height);
+}
+
 
 extern Fragment82MenuColor D_82D06FA4;
 extern Gfx D_80094DE0[];
@@ -395,7 +568,7 @@ void func_82D0599C(void *arg0) {
 
 extern void func_82D03CC0(void *);
 extern void func_82D049A0(void *);
-extern void func_82D04DC8(void *);
+extern void func_82D04DC8(Fragment82MenuRow *);
 extern void func_82D0599C(void *);
 void func_82D05BD8(u8 *row) {
     if (row != 0 && (row[0xA] & 1)) {
