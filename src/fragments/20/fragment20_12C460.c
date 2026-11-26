@@ -4239,7 +4239,202 @@ typedef struct State8261A490 {
 
 #define sState8261A490 (*(State8261A490 *)&D_8261A490)
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260F7FC.s")
+extern u8 D_8261A5A4[];
+extern void *D_8261A4F8[];
+extern s16 D_8261DA4C;
+extern s32 func_8260F49C(s32, s32);
+extern s32 func_8260F6C8(void *, void **, s32);
+extern void func_8260F4E4(void *);
+extern s32 func_8260F7C4(s32, s32);
+extern void func_8260F084(void *, s32);
+extern s16 *func_82604C08(s16 *, s32);
+extern void func_826065B0(void *, void *, s32, s32);
+
+s32 func_8260F7FC(s32 arg0) {
+    u8 *unused;
+    s32 ok;
+    State8261A490 *st;
+    u8 *B;
+    s32 flags;
+    s32 i;
+    s32 unused2;
+    s32 n;
+    s32 v;
+    s32 s2;
+    s32 pos;
+    s16 *e;
+    u8 *p;
+
+    st = &sState8261A490;
+    B = *(u8 **)arg0;
+    ok = 1;
+    flags = 0;
+    if (func_8004C8C0(0x51)) {
+        flags = 1;
+    }
+    if (func_8004C8C0(0x52)) {
+        flags |= 2;
+    }
+    if (func_8004C8C0(0x53)) {
+        flags |= 4;
+    }
+    if (func_826047C4(*(u16 *)(B + 8), *(s16 *)(B + 0xA))) {
+        flags |= 8;
+    }
+    if (func_8004C8C0(0x65)) {
+        flags |= 0x10;
+    }
+    if (func_8004C8C0(0x66)) {
+        flags |= 0x20;
+    }
+    if (func_826046D0(*(u16 *)(B + 8), *(s16 *)(B + 0xA))) {
+        flags |= 0x40;
+    }
+    if (func_8004C8C0(0x6D)) {
+        flags |= 0x80;
+    }
+    flags++; // FAKE
+    flags--; // FAKE
+    if (func_8004C8C0(0x68)) {
+        if (i == 0) {} // FAKE
+    }
+    if (flags == 0) {} // FAKE
+    func_8004C8C0(0x71);
+    for (i = 0; i != 2; i++) {
+        s8 a1 = *(s8 *)(B + i + 0x74);
+        s8 a2 = *(s8 *)(B + i + 0x78);
+        if (a1 == -1) {
+            u8 *rec = (u8 *)arg0 + i * 0x428;
+
+            rec += 0xB0;
+            if (*(s16 *)rec >= 2) {
+                if ((sState8261A490.unk_C8[i] = func_8004E0F0(0, 0x41, 0)) == 0) {
+                    ok = 0;
+                }
+            } else {
+                if ((sState8261A490.unk_C8[i] = func_8004E0F0(0, 0x40, *(u8 *)(rec + 6) != 0 ? 0 : 1)) == 0) {
+                    ok = 0;
+                }
+            }
+        } else {
+            if ((sState8261A490.unk_C8[i] = func_8004E0F0(0, a1, a2)) == 0) {
+                ok = 0;
+            }
+        }
+    }
+    for (i = 0; i < *(s16 *)(st->unk_110 + 0x14); i++) {
+        if (ok != 0) {
+            sState8261A490.unk_D0[i] = func_8260F49C(arg0, i);
+        }
+    }
+    for (i = 0; i < *(s16 *)(*(u8 **)(st->unk_110 + 4) + 2); i++) {
+        sState8261A490.unk_38[i] = i;
+        p = ((u8 (*)[6][0x58])(B + 0x90))[i / 6][i % 6];
+        sState8261A490.unk_68[i] = p;
+        if (*p != 0) {
+            v = func_8260F6C8(p, D_8261A4F8, i - 1);
+            if (v != -1) {
+                sState8261A490.unk_38[i] = v;
+            } else {
+                func_80043A30(*(void **)(D_8261A5A0 + 4), (void *)i, (s32)p);
+                func_8004418C(*(void **)(D_8261A5A0 + 4), i, *(s32 *)((u8 *)arg0 + 8), *p);
+                func_80043BD4(*(void **)(D_8261A5A0 + 4), i, (s32)func_8260F4E4);
+            }
+        }
+    }
+    n = 0;
+    if (ok != 0) {
+        st->unk_02 = 0;
+        st->unk_04 |= 1;
+        func_8260F084(&D_8261DA4C, *(s16 *)(B + 0x88));
+        st->unk_12 = func_8260F7C4(*(s8 *)(B + 1), *(s16 *)(D_8261A5A0 + 0x14));
+        switch (*(u16 *)(B + 8) & 0xFF00) {
+        default:
+            st->unk_04 |= 0x80;
+            s2 = 1;
+            break;
+        case 0x300:
+            st->unk_04 &= 0xFF7F;
+            s2 = 1;
+            break;
+        case 0x400:
+            st->unk_04 &= 0xFF7F;
+            s2 = 0;
+            break;
+        case 0x600:
+            st->unk_04 |= 0x80;
+            s2 = 0;
+            break;
+        case 0x500:
+            st->unk_04 |= 0x80;
+            s2 = 0;
+            break;
+        case 0x200:
+            st->unk_04 |= 0x80;
+            s2 = 1;
+            break;
+        }
+        st->unk_14 = 0;
+        if (st->unk_12 > 0) {
+            st->layout[st->unk_14].type = 1;
+            st->layout[st->unk_14].index = 0;
+            st->unk_14++;
+            n = 1;
+        }
+        st->layout[st->unk_14].type = 2;
+        st->layout[st->unk_14].index = 0;
+        st->unk_14++;
+        if (s2 != 0) {
+            st->layout[st->unk_14].type = 3;
+            st->layout[st->unk_14].index = 0;
+            st->unk_14++;
+        }
+        if (n < st->unk_12) {
+            st->layout[st->unk_14].type = 1;
+            st->layout[st->unk_14].index = n;
+            st->unk_14++;
+        }
+        {
+            extern s16 D_82615504[];
+            s32 total = D_82615504[1] * 2 + D_82615504[2] + D_82615504[3];
+            pos = 0;
+            for (i = 0; i < st->unk_14; i++) {
+                st->layout[i].offset = pos;
+                pos += D_82615504[st->layout[i].type];
+            }
+            st->unk_16 = (total - pos) / 2;
+        }
+        for (i = 0; i < st->unk_12; i++) {
+            e = func_82604C08((s16 *)D_8261A5A4, 0x14);
+            if (e != NULL) {
+                func_826065B0(st, e, 1, i);
+            }
+        }
+        e = func_82604C08((s16 *)D_8261A5A4, 0x14);
+        if (e != NULL) {
+            func_826065B0(st, e, 2, 0);
+        }
+        if (s2 != 0) {
+            e = func_82604C08((s16 *)D_8261A5A4, 0x14);
+            if (e != NULL) {
+                func_826065B0(st, e, 3, 0);
+            }
+        }
+        for (i = 0; i < 2; i++) {
+            e = func_82604C08((s16 *)D_8261A5A4, 0x14);
+            if (e != NULL) {
+                func_826065B0(st, e, 4, i);
+            }
+        }
+        if (*(s32 *)((u8 *)arg0 + 0xC) != 0) {
+            e = func_82604C08((s16 *)D_8261A5A4, 0x14);
+            if (e != NULL) {
+                func_826065B0(st, e, 5, 0);
+            }
+        }
+    }
+    return (st->unk_04 & 1) != 0;
+}
 
 
 
