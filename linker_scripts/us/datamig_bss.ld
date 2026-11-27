@@ -71,7 +71,9 @@ SECTIONS
 
     /* Fragment 58's text overlay state D_83404888, in the fragment's loaded
      * data. func_8340156C needs it defined in fragment58_code.c so as1 folds
-     * the shared `lui $at` of its back-to-back field stores. */
+     * the shared `lui $at` of its back-to-back field stores. It is followed by
+     * the camera values D_834048C4-D_834048DC and func_834006A8's function
+     * statics (0x834048E0-0x834048F4), which IDO pads to 0x70 bytes. */
     .fragment58_state_bss 0x83404888 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/58/fragment58_code.o(.bss)
