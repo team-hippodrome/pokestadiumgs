@@ -167,7 +167,119 @@ void func_8FA0071C(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/75/fragment75_code/func_8FA00724.s")
+typedef struct { s16 x, y, z; } V3s;
+typedef struct { s32 w; } F75Arg4;
+extern s32 main_pool_get_available(void);
+extern s32 MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(s32);
+extern s32 func_80054410(s32);
+extern void func_8FA010B0(s16, s16, u8);
+extern void func_8FA01110(s16);
+extern void func_8FA00380(void);
+extern s32 func_80040E80(s32, void *);
+extern void func_8FA005A0(f32, void *);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_80041E2C(void);
+extern void func_8003F018(void *);
+extern s32 func_80041C98(s32);
+extern void func_80041FA0(s32, u16, F75Arg4);
+extern void func_800428F8(s32);
+extern void func_8003F1DC(s32);
+extern void func_8003F114(s32, s32, s16, s32);
+extern void func_8003F2C4(s32, s32, s32);
+extern void func_8003F3BC(s32, s32);
+extern void func_8FA0069C(void);
+extern void func_800476A0(void *, s32);
+extern void func_800476FC(void *, s32);
+extern s32 D_8FA02024;
+extern u16 D_8FA02050[];
+extern u8 D_8FA02020[];
+extern u8 D_8FA02021[];
+extern u8 D_8FA02022[];
+extern u8 D_8FA01994[];
+extern s32 D_8FA01D38;
+extern s32 D_8FA0202C;
+extern s32 D_8FA02030;
+extern s32 D_8FA02034;
+extern F75Arg4 D_8FA02040;
+extern f32 D_8FA02044[1];
+extern V3s D_800948DC;
+extern V3s D_8FA02048;
+extern u8 D_8FA01D40[];
+extern s32 D_8FA01950[];
+extern s32 D_8FA01D30[];
+extern s32 D_8FA02010;
+extern s32 D_8FA02014;
+extern s32 D_8FA02038;
+extern s32 D_8FA0203C;
+extern u8 D_8FA02058[];
+void func_8FA00724(void) {
+    s32 alloc;
+    s32 i;
+
+    alloc = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8FA02024 = 0;
+    for (i = 0; i < 3; i++) {
+        D_8FA02050[i] = 0;
+    }
+    for (i = 0; i < 7; i++) {
+        D_8FA02050[0] |= (func_80054410(i) & 1) << i;
+    }
+    for (i = 0; i < 5; i++) {
+        D_8FA02050[1] |= (func_80054410(i + 7) & 1) << i;
+    }
+    for (i = 0; i < 4; i++) {
+        D_8FA02050[2] |= (func_80054410(i + 12) & 1) << i;
+    }
+    D_8FA02020[0] = 0;
+    D_8FA02021[0] = 0;
+    D_8FA02022[0] = 0;
+    for (i = 0; i < 20; i++) {
+        func_8FA010B0(0, i, 0);
+        func_8FA010B0(1, i, 0);
+        func_8FA010B0(2, i, 0);
+    }
+    for (i = 0; i < 3; i++) {
+        func_8FA01110(i);
+    }
+    func_8FA00380();
+    D_8FA01D38 = func_80040E80(alloc, D_8FA01994);
+    MainPool_FinalizeAllocation(alloc);
+    D_8FA0202C = 4;
+    D_8FA02030 = 0;
+    // Reading both globals back (instead of `= 4`) adds the two ugen temp
+    // allocations retail has before the D_800948DC copy.
+    D_8FA02034 = D_8FA0202C + D_8FA02030;
+    D_8FA02040.w = 0;
+    D_8FA02044[0] = 5.0f;
+    D_8FA02048 = D_800948DC;
+    func_8FA005A0(D_8FA02044[0], &D_8FA02048);
+    ModelRenderer_InitDisplayRoots();
+    func_80041E2C();
+    for (i = 0; i < 2; i++) {
+        D_8FA02010 = (s32)(D_8FA01D40 + i * 0x168);
+        D_8FA02034 = D_8FA01950[i];
+        func_8003F018((void *)D_8FA02010);
+        *(f32 *)(D_8FA02010 + 0x24) = (i - 1) * 50.0f;
+        *(f32 *)(D_8FA02010 + 0x28) = 0.0f;
+        *(f32 *)(D_8FA02010 + 0x2C) = 0.0f;
+        D_8FA02014 = D_8FA01D30[i] = func_80041C98(1);
+        func_80041FA0(D_8FA02014, D_8FA02034, D_8FA02040);
+        func_800428F8(D_8FA02014);
+        D_8FA02038 = 0;
+        // Reading D_8FA02038 back raises its uopt priority so its address gets s3.
+        D_8FA0203C = D_8FA02038;
+        func_8003F1DC(D_8FA02010);
+        func_8003F114(D_8FA02010, 0, D_8FA02034, **(s32 **)(*(s32 *)(D_8FA02014 + 0x38) + 8));
+        func_8003F2C4(D_8FA02014, D_8FA02010, D_8FA02038);
+        func_8003F3BC(D_8FA02010, 0);
+    }
+    func_8FA0069C();
+    func_8FA00380();
+    func_800476A0(D_8FA02058, 2);
+    func_800476FC(D_8FA02058, 2);
+}
+
 #endif
 
 void func_8FA00AC0(void) {
@@ -299,7 +411,7 @@ void func_8FA00E2C(void) {
 /* mkdraft:func_8FA00F4C begin */
 extern u8 *D_80087200;
 extern f32 D_8FA02044[1];
-extern s16 D_8FA02048[2];
+extern V3s D_8FA02048;
 extern void func_8FA005A0(f32, void *);
 
 
@@ -336,22 +448,22 @@ void func_8FA00F4C(void)
     // trunc.w.s/mfc1 before the s16 store; without both casts the diff score
     // is 70.
     new_var2 = (s32) ((short) (stick * 32.0f));
-    D_8FA02048[1] -= new_var2;
+    D_8FA02048.y -= new_var2;
   }
   stick = *((f32 *) (context + 0x1C));
   if (zero != stick)
   {
-    D_8FA02048[0] += (s32) ((short) (stick * 32.0f));
-    if (D_8FA02048[0] >= 0x3F01)
+    D_8FA02048.x += (s32) ((short) (stick * 32.0f));
+    if (D_8FA02048.x >= 0x3F01)
     {
-      D_8FA02048[0] = 0x3F00;
+      D_8FA02048.x = 0x3F00;
     }
-    if (D_8FA02048[0] < (-0x3F00))
+    if (D_8FA02048.x < (-0x3F00))
     {
-      D_8FA02048[0] = -0x3F00;
+      D_8FA02048.x = -0x3F00;
     }
   }
-  func_8FA005A0(D_8FA02044[0], D_8FA02048);
+  func_8FA005A0(D_8FA02044[0], &D_8FA02048);
 }
 /* mkdraft:func_8FA00F4C end */
 #endif
