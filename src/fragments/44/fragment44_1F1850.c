@@ -118,7 +118,7 @@ extern void func_800231A0(s32, u32, s32, s32);
 extern void func_800238C4(void);
 extern void func_80026068(u32);
 extern s32 func_80026098();
-extern void func_800504BC(s16 *);
+extern s32 func_800504BC(s16 *);
 extern void func_8AF070B4(void);
 extern void func_8AF07110(void);
 extern u16 *D_8AF2BABC;
@@ -247,7 +247,7 @@ extern s32 D_8AF2BF78;
 extern s32 D_8AF2BF7C;
 extern s16 D_8AF2C308;
 extern void func_800226C0(s32);
-extern void func_800504BC(s16 *);
+extern s32 func_800504BC(s16 *);
 
 // Per-object UI sound trigger. obj+0x22 selects one of 12 slots. Mode 0 clears the
 // slot; mode 1 sets it and plays sound 0xDC + slot the first time the object's x
@@ -343,7 +343,54 @@ s32 func_8AF03DF0(s32 arg0, void *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1F1850/func_8AF03E38.s")
+// func_8AC0077C and func_800504BC are void in their own files, but their return
+// values are read here (FAKE): the live 64-bit v0/v1 result keeps v0 and v1 busy, so
+// h, inner and w land in t0, t1 and t2 like retail.
+extern s64 func_8AC0077C(s32, s32, s32, s32);
+extern s32 D_8AF2BF6C;
+extern s32 D_8AF2BF70;
+extern s16 D_8AF26464;
+extern s16 D_8AF26468;
+
+s32 func_8AF03E38(s32 arg0, void *arg1) {
+    void *inner = *(void **)((u8 *)arg1 + 0x20);
+    s32 x;
+    s32 y;
+    s32 w;
+    s32 bottom;
+    s32 h;
+    s32 r;
+    s16 rect[2];
+
+    switch (arg0) {
+    case 0:
+        break;
+    case 1:
+        r = func_800504BC(rect);
+        x = rect[0] + *(s16 *)((u8 *)inner + 8);
+        y = rect[1] + *(s16 *)((u8 *)inner + 0xA);
+        w = *(s16 *)((u8 *)inner + 0xC);
+        h = *(s16 *)((u8 *)inner + 0xE);
+        D_8AF2BF78 = h;
+        D_8AF2BF7C = y;
+        bottom = y + h + r * 0; // FAKE r * 0
+        h = 0; // FAKE: kills y + h so bottom stays a var in its own home
+        r = func_8AC0077C(x, y, x + w, bottom);
+        if (bottom) {} // FAKE
+        if ((y + 0x37) < D_8AF26464) {
+            D_8AF2BF6C = 1;
+        } else {
+            D_8AF2BF6C = 0;
+        }
+        if (D_8AF26468 < bottom + r * 0) { // FAKE r * 0
+            D_8AF2BF70 = 1;
+        } else {
+            D_8AF2BF70 = 0;
+        }
+        break;
+    }
+    return 0;
+}
 
 extern void func_8AC00738();
 
@@ -629,7 +676,7 @@ s32 func_8AF0455C(s32 arg0, u8 *arg1) {
         }
         if (*(u16 *)(arg1 + 0x26) == 0) flag = 0xFF;
         if (*(s32 *)(arg1 + 4) == *(s32 *)(inner + 0x4C0)) {
-            func_800504BC(pos);
+            if (func_800504BC(pos)) {} // FAKE: keeps the s32 return out of the next block
             *(s32 *)(inner + 0x4CC) = *(s16 *)(arg1 + 8) + pos[0];
             *(s32 *)(inner + 0x4D0) = *(s16 *)(arg1 + 0xA) + pos[1];
             if (*(s32 *)(inner + 0x4E0) < *(s32 *)(inner + 0x4D0)) {
@@ -659,7 +706,7 @@ extern s16 D_8AF2BA6C;
 extern u8 D_8AF28A90[];
 extern u8 D_8AF28A94[];
 extern u8 D_8AF28A98[];
-extern void func_800504BC(s16 *);
+extern s32 func_800504BC(s16 *);
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
 extern void func_8004972C(s32, s32, s32, s32);
