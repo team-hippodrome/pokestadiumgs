@@ -1690,7 +1690,204 @@ void func_86603108(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86603604.s")
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern s32 D_866066C4[];
+extern s32 D_86606808;
+extern s32 D_86606E2C[];
+extern s32 D_86606E3C[];
+extern s32 D_86606E4C[][2];
+extern s32 D_86606E6C[][2];
+extern s32 D_86606E94[][2];
+extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern s32 func_8004D1FC(u8 *);
+extern void func_87F0D600(void *, s32, s32, s32, f32, f32);
+// .bss block from 0x86607224, viewed as one record so the function shares its address.
+typedef struct {
+    /* 0x00 */ s32 alpha;   // D_86607224
+    /* 0x04 */ s16 scroll;  // D_86607228
+    /* 0x06 */ s16 pad6;
+    /* 0x08 */ s32 unk8;    // D_8660722C
+    /* 0x0C */ void *panel; // D_86607230
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ u8 unk14;    // D_86607238
+} Frag54Bss7224;
+#define F54REC(r, o) (*(s32 *)((u8 *)(r) + (o)))
+void func_86603604(void) {
+    extern s32 D_8660680C;
+    extern s32 D_86606824;
+    extern f32 D_86606EB4;
+    extern f32 D_86606EB8;
+    extern f32 D_8660721C;
+    extern f32 D_86607220;
+    extern Frag54Bss7224 D_86607224;
+    s32 i;
+    s32 v;
+    s32 ox;
+    s32 alpha;
+    s32 oy;
+    f32 h;
+    f32 inv0;
+    f32 inv1;
+    f32 scale;
+    f32 scale2;
+    f64 off;
+    f32 jitter;
+    f32 zero;
+    f32 val;
+    u8 *rec;
+    u8 *tex;
+    Gfx *g;
+    Gfx *g2;
+    Gfx *g3;
+    s32 *p86606824 = &D_86606824;
+
+    rec = (u8 *)&D_8660721C;
+    tex = (u8 *)&D_86606EB8;
+    if (D_86606714 == 0) {
+        v = (*p86606824);
+        if ((v | 0) == 0x50) {
+            (*(f32 *)rec) = 0.00f;
+            ((f32 *)rec)[1] = 12.0f;
+        }
+        D_86607224.alpha = (0x50 - v) * 6;
+        if (v >= 0x29) {
+            alpha = 0x28;
+            (*p86606824) = v - 1;
+        } else {
+            D_86607224.alpha = 0xFF;
+            if (D_8660680C == 1) {
+                v = (s32)((f32)v - ((f32 *)rec)[1]);
+                (*p86606824) = v;
+                if (v > 0) {
+                    (*(f32 *)rec) = (*(f32 *)rec) + D_86606EB4;
+                    if ((*(f32 *)tex) < ((f32 *)rec)[1]) {
+                        ((f32 *)rec)[1] = (f32)((f64)((f32 *)rec)[1] - (f64)(((f32 *)rec)[1] * (*(f32 *)tex)) / 1.5);
+                    }
+                } else {
+                    (*p86606824) = 0;
+                    ox = D_8660680C + v; ox = ox; // FAKE
+                    v = 0;
+                }
+            }
+            alpha = v;
+        }
+    } else {
+        alpha = (*p86606824);
+        if (alpha >= 0x29) {
+            alpha = 0x28;
+        }
+    }
+    scale2 = scale = (f32)((f64)alpha * 0.02 + 0.7);
+    h = 1024.0f;
+    off = (0.7 - (f64)scale) / 2; // FAKE
+    off = (0.7 - (f64)scale) / 2; // FAKE
+    for (i = 0; i < 4; i++) {
+        if (*(u8 *)((u8 *)D_86607224.panel + 0x2180) != 4) {
+            g = D_800D0510++; g->words.w0 = _SHIFTL(G_DL, 24, 8) | _SHIFTL(G_DL_PUSH, 16, 8) | _SHIFTL(0, 0, 16); g->words.w1 = (unsigned int)(D_80094E38);
+            g = D_800D0510++; g->words.w0 = (_SHIFTL(G_SETPRIMCOLOR, 24, 8) | _SHIFTL(0, 8, 8) | _SHIFTL(0, 0, 8)); g->words.w1 = (_SHIFTL(0xFF, 24, 8) | _SHIFTL(0xFF, 16, 8) | _SHIFTL(0xFF, 8, 8) | (D_86607224.alpha & 0xFF));
+            g = D_800D0510++; g->words.w0 = _SHIFTL(G_SETCOMBINE, 24, 8) | _SHIFTL(0xFF97FF, 0, 24); g->words.w1 = (unsigned int)(0xFF2CFE7F);
+            inv0 = 1024.0f / scale; \
+            rec = D_8660A990 + i * 0x58; \
+            tex = (u8 *)func_8004C990(0x1B2, D_866066C4[F54REC(rec, 0x34)]); \
+            off = (0.7 - (f64)scale) / 2; \
+            ox = (s32)(off * 36.0); \
+            oy = (s32)(off * 28.0); \
+            inv0 = 1024.0f / scale; \
+            inv1 = h / scale2;
+            v = (s32)((0.7 - (f64)(f32)((f64)alpha * 0.02 + 0.7)) / 2 * 36.0); oy = (s32)((0.7 - (f64)(f32)((f64)alpha * 0.02 + 0.7)) / 2 * 28.0); val = 1024.0f / scale2; // FAKE
+            func_8004D1FC(tex);
+            GfxRect_DrawTextured((s16)(D_86606E4C[i][0] + D_86606E94[i][0] * alpha + ox),
+                                 (s16)(D_86606E4C[i][1] + D_86606E94[i][1] * alpha + oy),
+                                 (s16)(s32)((*(u16 *)tex * scale2) + (((*(u16 *)tex * scale2) > 0.0f) ? 0.5f : -0.5f)), (s16)(s32)((*(u16 *)(tex + 2) * scale2) + (((*(u16 *)(tex + 2) * scale2) > 0.0f) ? 0.5f : -0.5f)), 0, 0,
+                                 (s32)(inv1 + ((inv0 > 0.0f) ? 0.5f : -0.5f)),
+                                 (s32)(inv1 + ((inv0 > 0.0f) ? 0.5f : -0.5f)), 0);
+            g = D_800D0510++; g->words.w0 = _SHIFTL(G_DL, 24, 8) | _SHIFTL(G_DL_PUSH, 16, 8) | _SHIFTL(0, 0, 16); g->words.w1 = (unsigned int)(D_80094F50);
+            if (ox == 0) {} // FAKE
+            if (alpha == 0) {} // FAKE
+            func_87F0D600(&D_86607224.unk14, i, D_86606E4C[i][0] + D_86606E94[i][0] * alpha + ox,
+                          D_86606E4C[i][1] + D_86606E94[i][1] * alpha + oy, scale, scale);
+                          if (i == 0) {} // FAKE
+            if (D_8660680C == 0) {} else {
+                g = D_800D0510++; g->words.w0 = _SHIFTL(G_DL, 24, 8) | _SHIFTL(G_DL_PUSH, 16, 8) | _SHIFTL(0, 0, 16); g->words.w1 = (unsigned int)(D_80094E38);
+                tex = (u8 *)func_8004C990(0x19A, 0);
+                func_8004D19C(D_86606E6C[i][0] + D_86606808, D_86606E6C[i][1], (s32)tex, 0, 0);
+                GfxRect_DrawTextured((s16)(*(u16 *)tex + D_86606E6C[i][0] + D_86606808), (s16)D_86606E6C[i][1],
+                                     (s16)(0x36 - D_86606808 * 2), *(s16 *)(tex + 2), (*(u16 *)tex - 1) << 5, 0,
+                                     0, 0x400, 0);
+                if (i == 0) {} // FAKE
+                func_8004D150(*(u16 *)tex + D_86606E6C[i][0] - D_86606808 + 0x36, D_86606E6C[i][1], (s32)tex, 0, 1, 0);
+                if (D_86606808 >= 0) {
+                    if (D_86606714 == 0) {
+                        D_86606808--;
+            if (ox == 0) {} // FAKE
+                    }
+                    v = *p86606824; v = v; // FAKE
+                } else {
+                    zero = 0;
+                    jitter = zero;
+                    if (F54REC(rec, 0x10) == 1) {
+                        jitter = (f32)(func_8003570C() & 1);
+                    }
+                    if (D_86606714 == 0) {
+                        D_86607224.scroll += 0x1000;
+                        F54REC(rec, 0x54)++;
+                    } else {
+                        jitter = zero;
+                    }
+                    if ((D_8660678C != 1) && (F54REC(rec, 0x28) != 5)) {
+                        F54REC(rec, 0x54) = 10;
+                        jitter = zero;
+                    }
+                    if (F54REC(rec, 0x54) >= 0x15) {
+                        F54REC(rec, 0x54) = 0;
+                    }
+                    val = F54REC(rec, 0xC); val /= D_8660673C;
+                    if (F54REC(rec, 0x28) == 5) {
+                        val = 61.0f;
+                    }
+                    if (val != zero) {
+                        tex = (u8 *)func_8004C990(0x199, 0);
+                        func_8004D1FC(tex);
+                        inv0 = 256.0f / val;
+                        GfxRect_DrawTextured((s16)(D_86606E6C[i][0] + 5), (s16)(D_86606E6C[i][1] + 3),
+                                             (s16)(s32)(val + ((val > 0.0f) ? 0.5f : -0.5f)), *(s16 *)(tex + 2),
+                                             0, 0, (s32)(inv0 + ((inv0 > 0.0f) ? 0.5f : -0.5f)), 0x400, 0);
+                                             if (alpha == 0) {} // FAKE
+                        tex = (u8 *)func_8004C990(0x199, 1);
+                        func_8004D1FC(tex);
+                        g2 = D_800D0510++; g2->words.w0 = (_SHIFTL(G_SETPRIMCOLOR, 24, 8) | _SHIFTL(0, 8, 8) | _SHIFTL(0, 0, 8)); g2->words.w1 = (_SHIFTL(0xFF, 24, 8) | _SHIFTL(0xFF, 16, 8) | _SHIFTL(0xFF, 8, 8) | _SHIFTL(((10 - F54REC(rec, 0x54)) < 0 ? -(10 - F54REC(rec, 0x54)) : (10 - F54REC(rec, 0x54))) * 20, 0, 8));
+                        g3 = D_800D0510++; g3->words.w0 = _SHIFTL(G_SETCOMBINE, 24, 8) | _SHIFTL(0xFFFFFF, 0, 24); g3->words.w1 = (unsigned int)(0xFFFCF67B);
+                        inv1 = jitter * 0 + val;
+                        GfxRect_DrawTextured((s16)(D_86606E6C[i][0] + 5), (s16)(D_86606E6C[i][1] + 3),
+                                             (s16)(s32)(inv1 + ((inv1 > 0.0f) ? 0.5f : -0.5f)), *(s16 *)(tex + 2),
+                                             0, 0, (s32)(inv0 + ((inv0 > 0.0f) ? 0.5f : -0.5f)), 0x400, 0);
+                    }
+                }
+                g3 = D_800D0510++; g3->words.w0 = _SHIFTL(G_DL, 24, 8) | _SHIFTL(G_DL_PUSH, 16, 8) | _SHIFTL(0, 0, 16); g3->words.w1 = (unsigned int)(D_80094F50);
+            }
+        }
+    }
+    func_800498C4();
+    func_800496A4(1, 0);
+    Font_EnableTwoCycleTexturing();
+    func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0xFF, 0xFF, 0xFF, 0xFF);
+    func_800497E4(0, 0, 0xFF, 0xFF);
+    func_800496A4(4, 0);
+    if (D_86606730 != 0) {
+        func_800496A4(1, 0);
+        func_800497E4(0xFF, 0, 0, 0xFF);
+        for (i = 0; i < 4; i++) {
+            func_800495F8(D_86606E2C[i] + 0x19, D_86606E3C[i] - 0x19, 1, "%d", F54REC(D_8660A990 + i * 0x58, 0x18));
+        }
+    }
+    Font_DisableTwoCycleTexturing();
+    func_800499EC();
+}
+#undef F54REC
+
 #endif
 
 #ifdef VERSION_US
@@ -2095,13 +2292,15 @@ f32 D_866067A8[15] = { 50.0f, 2210.0f, 0.0f, 50.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
 s32 D_866067E4[6] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
 s32 D_866067FC = 0x0;
 static s32 sPad_86606800[2] = { 0x0, 0x1B };
-s32 D_86606808[1] = { 0x0 };
-s32 D_8660680C[2] = { 0x2, 0x0 };
+s32 D_86606808 = 0x0;
+s32 D_8660680C = 0x2;
+static s32 sPad_86606810 = 0x0;
 s32 D_86606814 = 0x0;
 static s32 sPad_86606818[1] = { 0x0 };
 s32 D_8660681C = 0x0;
 static s32 sPad_86606820[1] = { 0x0 };
-s32 D_86606824[2] = { 0x50, 0x0 };
+s32 D_86606824 = 0x50;
+static s32 sPad_86606828 = 0x0;
 s32 D_8660682C = 0x0;
 f32 D_86606830[21] = { 750.0f, 300.0f, 900.0f, 60.0f, 60.0f, 50.0f, 2.0f, 0.0f, 50.0f, 2210.0f, 0.0f, 50.0f, 0.0f, 2.0f, 0.0f, 50.0f, 2210.0f, 0.0f, 50.0f, 0.0f, 2.0f };
 u8 D_86606884[72] = { 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x45, 0x0A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x3B, 0x80, 0x00, 0x43, 0x96, 0x00, 0x00, 0x44, 0x61, 0x00, 0x00, 0x42, 0x70, 0x00, 0x00, 0x42, 0x70, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x43, 0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -2128,11 +2327,12 @@ s32 D_86606E20 = 0x0;
 static s32 sPad_86606E24[2] = { 0x0, 0x0 };
 s32 D_86606E2C[4] = { 0x5C, 0xE7, 0x5C, 0xE7 };
 s32 D_86606E3C[4] = { 0x73, 0x73, 0xDA, 0xDA };
-s32 D_86606E4C[8] = { 0x29, 0x27, 0xFF, 0x27, 0x29, 0x8F, 0xFF, 0x8F };
-s32 D_86606E6C[10] = { 0x28, 0x13, 0xD2, 0x13, 0x28, 0x7B, 0xD2, 0x7B, 0x2, 0x28 };
-s32 D_86606E94[8] = { 0x1, 0x1, -0x1, 0x1, 0x1, 0x1, -0x1, 0x1 };
-f32 D_86606EB4[1] = { 0.449999988f };
-f32 D_86606EB8[2] = { 0.5f, 0.0f };
+s32 D_86606E4C[4][2] = { { 0x29, 0x27 }, { 0xFF, 0x27 }, { 0x29, 0x8F }, { 0xFF, 0x8F } };
+s32 D_86606E6C[5][2] = { { 0x28, 0x13 }, { 0xD2, 0x13 }, { 0x28, 0x7B }, { 0xD2, 0x7B }, { 0x2, 0x28 } };
+s32 D_86606E94[4][2] = { { 0x1, 0x1 }, { -0x1, 0x1 }, { 0x1, 0x1 }, { -0x1, 0x1 } };
+f32 D_86606EB4 = 0.449999988f;
+f32 D_86606EB8 = 0.5f;
+static f32 sPad_86606EBC = 0.0f;
 
 void func_866049D4(void) {
     s32 i;
