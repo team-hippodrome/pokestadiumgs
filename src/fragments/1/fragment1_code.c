@@ -146,6 +146,7 @@ void func_83500300(void) {
             col[0x11] = 255;
             col[0x12] = 255;
             col[0x13] = 255;
+            // FAKE: one line, so as1 schedules the 0x15..0x17 stores like retail
             col[0x14] = (func_8003570C() % 176) * D_83503CF0 + 80; col[0x15] = 255; col[0x16] = 0; col[0x17] = 255;
         }
     }
