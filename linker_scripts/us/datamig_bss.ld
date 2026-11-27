@@ -42,6 +42,16 @@ SECTIONS
     ASSERT(SIZEOF(.fragment1_timer_bss) == 16,
            "fragment1 timer static extent changed")
 
+    /* Fragment 69's D_8F1DEE68 (0x81 8-byte entries, func_8F100E78 and
+     * func_8F1027F8), in the fragment's runtime storage. IDO pads the
+     * object's .bss to 16 bytes; the pad is never read. */
+    .fragment69_table_bss 0x8F1DEE68 (NOLOAD) : SUBALIGN(8)
+    {
+        build/src/fragments/69/fragment69_code.o(.bss)
+    }
+    ASSERT(SIZEOF(.fragment69_table_bss) == 0x410,
+           "fragment69 table extent changed")
+
     /* Fragment 7's text-style slots D_8300F8D8..D_8300F8F0 (function-scope
      * statics of func_830043F0), D_8300F8F8/D_8300F900 (func_83004FC0) and
      * D_8300F908/D_8300F910 (func_83005740), in the fragment's loaded data
