@@ -1622,28 +1622,70 @@ void func_86104A3C(void) {
 }
 
 extern u32 func_8003570C(void);
-extern f32 D_8610AC08;
-extern f32 D_8610AC0C;
-extern f32 D_8610AC10;
-extern f32 D_8610AC14;
 void func_86104B2C(void *arg0) {
-    (*(f32 *)((u8 *)arg0 + 0x18)) = ((f32)func_8003570C() / 4294967296.0f) * D_8610AC08 + D_8610AC0C;
-    (*(f32 *)((u8 *)arg0 + 0x1C)) = ((f32)func_8003570C() / 4294967296.0f) * D_8610AC10 + D_8610AC14;
+    (*(f32 *)((u8 *)arg0 + 0x18)) = ((f32)func_8003570C() / 4294967296.0f) * 480.164978f + -158.6259308f;
+    (*(f32 *)((u8 *)arg0 + 0x1C)) = ((f32)func_8003570C() / 4294967296.0f) * 245.0127411f + -127.3294525f;
     (*(f32 *)((u8 *)arg0 + 0x20)) = 0.0f;
 }
 
 extern u32 func_8003570C(void);
-extern f32 D_8610AC18;
-extern f32 D_8610AC1C;
-extern f32 D_8610AC20;
-extern f32 D_8610AC24;
 void func_86104BEC(void *arg0) {
-    (*(f32 *)((u8 *)arg0 + 0x18)) = ((f32)func_8003570C() / 4294967296.0f) * D_8610AC18 + D_8610AC1C;
-    (*(f32 *)((u8 *)arg0 + 0x1C)) = ((f32)func_8003570C() / 4294967296.0f) * D_8610AC20 + D_8610AC24;
+    (*(f32 *)((u8 *)arg0 + 0x18)) = ((f32)func_8003570C() / 4294967296.0f) * 685.9499512f + -364.4109192f;
+    (*(f32 *)((u8 *)arg0 + 0x1C)) = ((f32)func_8003570C() / 4294967296.0f) * 122.5063705f + -63.66472626f;
     (*(f32 *)((u8 *)arg0 + 0x20)) = 0.0f;
 }
 
-#pragma GLOBAL_ASM("hand_asm/fragments/49/func_86104CAC_rodata_manual.s")
+extern void *func_87F025B8(void *, void *);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F1DC(void *);
+extern s32 func_8003F210(void *, s32);
+extern void func_80035A10(f32 *);
+extern void func_86109EAC(void *, s32, s32);
+extern void func_86104A3C(void);
+void func_86104CAC(void) {
+    u8 *pool;
+    u8 *record;
+    u8 *model;
+    s32 i;
+    for (i = 0; i != 4; i++) {
+        record = func_87F025B8((u8 *)D_8610AD20 + 1768, func_86104A3C);
+        if (record != 0) {
+            pool = (u8 *)D_8610AD20 + i * 44 + 36320;
+            *(s32 *)(record + 32) = i;
+            func_861034A8((Struct861034A8 *)record, i);
+            model = record + 36;
+            func_8003F1DC(model);
+            func_8003F114(model, 0, -1, *(s32 *)((u8 *)D_8610AD20 + i * 4 + 1740));
+            func_8003F210(model, 2);
+            ModelAnim_SetFrame(model, (s16)(func_8003570C() % 10));
+            *(u8 **)pool = record;
+            if ((*(u8 *)(*(u8 **)D_8610AD20 + 8578) & (1 << i)) != 0) {
+                *(u32 *)(record + 12) |= 0x10000000;
+            } else {
+                *(u32 *)(*(u8 **)pool + 12) |= 0x20000000;
+                *(s32 *)(pool + 8) = 4096;
+            }
+            *(u32 *)(*(u8 **)pool + 12) |= 0x10000;
+            *(s32 *)(pool + 4) = 0;
+            *(s32 *)(pool + 40) = 0;
+            *(f32 *)(pool + 12) = (func_8003570C() % 201) / 100.0f - 1.0f;
+            *(f32 *)(pool + 16) = (func_8003570C() % 201) / 100.0f - 1.0f;
+            *(f32 *)(pool + 20) = 0.0f;
+            if (*(f32 *)(pool + 12) == 0.0f && *(f32 *)(pool + 16) == 0.0f && *(f32 *)(pool + 20) == 0.0f) {
+                *(f32 *)(pool + 12) = 1.0f;
+                *(f32 *)(pool + 16) = 0.0f;
+            } else {
+                func_80035A10((f32 *)(pool + 12));
+            }
+            *(f32 *)(pool + 24) = -160.769516f - (*(f32 *)((u8 *)D_8610AD20 + 38760) * 0.04f * 700.0f * 4) * (i % 2);
+            *(f32 *)(pool + 32) = 0.0f;
+            *(f32 *)(pool + 28) = 199.3542023f - (i + 1) * 81.6709137f;
+            pool[36] = 0;
+            func_861047CC(*(u8 **)pool);
+            func_86109EAC((u8 *)D_8610AD20 + 36956, i, (s32)record);
+        }
+    }
+}
 
 extern s32 D_8610AD20;
 extern void func_87F026E8(s32, s32);
@@ -1681,7 +1723,6 @@ void func_8610519C(void) {
     (*(s16 *)((u8 *)(D_87F119DC) + (0x44))) = MathUtil_Atan2s((*(f32 *)((u8 *)(D_87F119DC) + (0x18))), (*(f32 *)((u8 *)(D_87F119DC) + (0x10))));
 }
 
-extern f32 D_8610AC38;
 extern void func_800277C4(u16, u8, void *);
 extern s32 D_8610AD20;
 extern void *D_87F119DC;
@@ -1727,9 +1768,9 @@ void func_86105204(void) {
     *(f32 *)((u8 *)D_87F119DC + 0x4C) += *(f32 *)((u8 *)D_87F119DC + 0x14);
     *(f32 *)((u8 *)D_87F119DC + 0x50) += *(f32 *)((u8 *)D_87F119DC + 0x18);
     dz = (target->x > *(f32 *)((u8 *)D_87F119DC + 0x48)) ? (target->x - *(f32 *)((u8 *)D_87F119DC + 0x48)) : -(target->x - *(f32 *)((u8 *)D_87F119DC + 0x48));
-    // FAKE: the comma expression schedules the D_8610AC38 load before the address
+    // FAKE: the comma expression schedules the 0.04f load before the address
     // chain of D_8610AD20 + 0x9768; diff score 290 without it.
-    limit = (D_8610AC38 * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f) * 10.0f;
+    limit = (0.04f * *(f32 *)((u8 *)(u32)D_8610AD20 + 0x9768)) * (0, 700.0f) * 10.0f;
     if (dz < limit) {
         if (((target->y > *(f32 *)((u8 *)D_87F119DC + 0x4C)) ? (target->y - *(f32 *)((u8 *)D_87F119DC + 0x4C)) : -(target->y - *(f32 *)((u8 *)D_87F119DC + 0x4C))) < limit) {
             dz = (target->z > *(f32 *)((u8 *)D_87F119DC + 0x50)) ? (target->z - *(f32 *)((u8 *)D_87F119DC + 0x50)) : -(target->z - *(f32 *)((u8 *)D_87F119DC + 0x50));

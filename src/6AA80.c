@@ -957,8 +957,73 @@ void func_8006BA74(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/6AA80/func_8006BAC4.s")
-
+void *func_8006BAC4(void) {
+    extern void func_80073394(u8 *, u8 *, u8, u8);
+    s32 i;
+    u16 mode;
+    s32 copy_index;
+    u8 *result = NULL;
+    s32 j;
+    s32 slot;
+    if ((u8 *)D_8009DF70 != NULL) {
+        if (*(u8 **)((u8 *)D_8009DF70 + 40) != NULL) {
+            result = *(u8 **)((u8 *)D_8009DF70 + 40);
+            for (i = 0; i < 4; i++) {
+                for (j = 0; j < 6; j++) {
+                    ((unk_D_8009DF70_58 (*)[6])result)[i][j] =
+                        ((unk_D_8009DF70 *)D_8009DF70)->unk_2C->unk_90[i][j];
+                }
+            }
+            *(s32 *)(result + 2112) = *(s32 *)((u8 *)D_8009DF70 + 28);
+            if (*(s16 *)((u8 *)D_8009DF70 + 6) != 14) {
+                *(s32 *)(result + 2116) = func_800718B8(*(s16 *)((u8 *)D_8009DF70 + 6));
+            } else {
+                *(u8 **)(result + 2116) = (u8 *)D_8009DF70 + 60;
+            }
+            *(s32 *)(result + 2120) = *(s32 *)((u8 *)D_8009DF70 + 12);
+            for (i = 0; i < 4; i++) {
+                *(s8 *)(result + 2124 + i) = *(s8 *)((u8 *)D_8009DF70 + 8 + i);
+            }
+            for (i = 0; i != 4; i++) {
+                _bzero(result + 2128 + i * 12, 12);
+                *(u16 *)(result + 2196 + i * 2) = 0;
+            }
+            for (copy_index = 0; copy_index != 2; copy_index++) {
+                if (*(s32 *)((u8 *)D_8009DF70 + 12) != 0) slot = copy_index * 2;
+                else slot = copy_index;
+                _bcopy((u8 *)((unk_D_8009DF70 *)D_8009DF70)->unk_2C + 2256 + copy_index * 12,
+                       result + 2128 + slot * 12, 12);
+                *(u16 *)(result + 2196 + slot * 2) =
+                    *(u16 *)((u8 *)((unk_D_8009DF70 *)D_8009DF70)->unk_24 + 2356 + slot * 2);
+            }
+            if (*(s32 *)((u8 *)D_8009DF70 + 12) == 0) {
+                for (i = 0; i != 2; i++) {
+                    *(s16 *)(result + 2176 + i * 4) = *(s16 *)((u8 *)((unk_D_8009DF70 *)D_8009DF70)->unk_2C + 128 + i * 4);
+                    *(s16 *)(result + 2178 + i * 4) = *(s16 *)((u8 *)((unk_D_8009DF70 *)D_8009DF70)->unk_2C + 130 + i * 4);
+                }
+            }
+            *(s32 *)(result + 2184) = ((*(u16 *)D_8009DF70 & 0xFF00) == 0x400) ? 1 : 0;
+            *(s32 *)(result + 2192) = (*(u8 *)((u8 *)D_8009DF70 + 26) == 2) ? 1 : 0;
+            *(s32 *)(result + 2188) = *(s32 *)((u8 *)D_8009DF70 + 32);
+            if (((*(u16 *)D_8009DF70 & 0xFF00) == 0x700) && (*(u8 *)((u8 *)D_8009DF70 + 27) == 2)) {
+                func_80073394(*(void **)((u8 *)D_8009DF70 + 28), *(void **)((u8 *)D_8009DF70 + 32), 1, 1);
+            }
+            switch (*(u8 *)((u8 *)D_8009DF70 + 26)) {
+            case 0:
+            case 1:
+                func_8006BA74(*(u8 **)((u8 *)D_8009DF70 + 32));
+                mode = *(u16 *)((u8 *)D_8009DF70);
+                break;
+            default:
+                mode = *(u16 *)D_8009DF70;
+                break;
+            }
+            *(u16 *)(result + 2204) = mode;
+            *(s16 *)(result + 2206) = *(s16 *)((u8 *)D_8009DF70 + 2);
+        }
+    }
+    return result;
+}
 typedef struct { u32 b[22]; } Struct58b;
 typedef struct { Struct58b e[6]; } S210b;
 typedef struct { u8 b[0x60]; } S60b;
