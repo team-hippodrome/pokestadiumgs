@@ -388,10 +388,12 @@ SECTIONS
     {
         build/src/fragments/45/fragment45_2251A0.o(.bss)
     }
-    /* fragment45's panel pulse phases at 0x8AB14670 (sPanelPhase, an
-     * initialized static in fragment45_2251A0.c so IDO keeps the retail
-     * reloads in func_8AB04038). NOLOAD view of the fragment's bss. */
-    .fragment45_panel_phase_data 0x8AB14670 (NOLOAD) : SUBALIGN(4)
+    /* fragment45_2251A0.c's .data: the panel row records at 0x8AB12CB0
+     * (sRows, so func_8AB03394's tail stores share one lui per pair), a
+     * filler up to 0x8AB14670, then the panel pulse phases (sPanelPhase, an
+     * initialized static so IDO keeps the retail reloads in func_8AB04038).
+     * NOLOAD view of the fragment's bss. */
+    .fragment45_panel_phase_data 0x8AB12CB0 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/45/fragment45_2251A0.o(.data)
     }

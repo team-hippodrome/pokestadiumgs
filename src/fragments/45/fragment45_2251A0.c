@@ -1499,7 +1499,290 @@ void func_8AB032F0(s16 arg0)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/45/fragment45_2251A0/func_8AB03394.s")
+extern s16 D_8AB1466A, D_8AB1466E, D_8AB1466C, D_8AB14678, D_8AB14668;
+extern s16 D_8AB14648;
+extern u16 D_8AB1464A, D_8AB1464C, D_8AB1464E, D_8AB14650, D_8AB14652;
+extern u16 D_8AB14654, D_8AB14656, D_8AB14658;
+extern u8 D_8AB14D08[];
+extern u8 D_8AB154D8[];
+extern u8 D_8AB15CA8[];
+extern u16 func_8AB023EC(u32);
+extern u8 *TextReference_GetText(u8 *, u16);
+extern u8 *D_8AB1419C;
+extern u8 *D_8AB141A0[3];
+extern u8 D_8AB126A8[];
+extern u8 D_8AB14218[];
+extern void func_8AB00430(void);
+extern void func_8AB0130C(s16);
+extern void *func_8004C874(s32, s32);
+extern s32 func_8004C54C(s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern s32 HAL_Strcmp(const s8 *, const s8 *);
+typedef struct { u16 a; u16 b; } P2;
+typedef struct { u8 pad0[4]; s16 a; s16 b; u8 pad8[0x8C]; } F45Row;
+static F45Row sRows[4] = { 0 };
+static u8 sRowsTail[0x14670 - 0x12F00] = { 0 };
+void func_8AB03394(void) {
+    u16 *s0;
+    u16 v;
+    u16 *q;
+    u16 *p;
+    u16 *r;
+    s32 i;
+    s32 j;
+    s32 dup;
+    s32 sel;
+    s32 pad2; // FAKE
+    u8 *txt;
+    s32 k;
+    void *name;
+    u16 w;
+    u16 arg;
+    s32 pad0[7]; // FAKE
+    s16 seen[3];
+    s32 pad1[4]; // FAKE
+
+    func_8AB00430();
+    s0 = func_8AB02EF8();
+    if (s0 == NULL) {
+        s0 = func_8AB02EF8();
+    }
+    D_8AB1466A = 0;
+    D_8AB1466E = 0;
+    D_8AB1466C = 0;
+    *(s32 *)D_8AB14218 = 0;
+    D_8AB14678 = 0;
+    while (1) {
+        v = *s0++;
+        if (v == 0xFFFFU) {
+            break;
+        }
+        if (!(v & 0x8000)) {
+            continue;
+        }
+        switch ((u16)(v & 0x7FFF)) {
+        case 0:
+            *(u16 *)(D_8AB11D00 + 0x30) = s0[0];
+            s0 += 2;
+            *(u16 *)(D_8AB11D00 + 0x32) = s0[-1];
+            func_8004C8A0(D_8AB126A8, 0x100, *(u16 *)(D_8AB11D00 + 0x30), *(u16 *)(D_8AB11D00 + 0x32));
+            break;
+        case 1:
+            D_8AB14648 = s0[0];
+            s0 += 2;
+            v = s0[-1];
+            if (v != 0xFFFF) {
+                *(u16 **)&D_8AB14198 = ((u16 **)D_8AB11D10)[v];
+                D_8AB1466A = func_8AB03194();
+            }
+            D_8AB14678 = 1;
+            break;
+        case 16:
+            v = *s0++;
+            if (v != 0xFFFF) {
+                *(u16 **)&D_8AB14198 = ((u16 **)D_8AB11D10)[v];
+                D_8AB1466A = func_8AB03194();
+            }
+            D_8AB14678 = 4;
+            break;
+        case 14:
+            v = *s0++;
+            if (v != 0xFFFF) {
+                *(u16 **)&D_8AB14198 = ((u16 **)D_8AB11D10)[v];
+                D_8AB1466A = func_8AB03194();
+            }
+            D_8AB14678 = 2;
+            break;
+        case 15:
+            v = *s0++;
+            if (v != 0xFFFF) {
+                *(u16 **)&D_8AB14198 = ((u16 **)D_8AB11D10)[v];
+                D_8AB1466A = func_8AB03194();
+            }
+            D_8AB14678 = 3;
+            break;
+        case 2:
+            s0++;
+            break;
+        case 3:
+            p = ((u16 **)D_8AB11D10)[((D_8AB1464A = *s0++) & 0xFFFF) & 0xFFFF];
+            D_8AB1466E = 0;
+            *(u16 **)&D_8AB14198 = p;
+            q = (u16 *)D_8AB154D8;
+            while (1) {
+                if ((u16)(pad2 = p[0]) == 0xFFFF) {
+                    *q = 0xFFFF; *++q = 0xFFFF;
+                    break;
+                }
+                *q++ = *p++;
+                *q++ = *p++;
+                D_8AB1466E++;
+            }
+            break;
+        case 4:
+            p = ((u16 **)D_8AB11D10)[D_8AB1464C = *s0++];
+            D_8AB1466C = 0;
+            *(u16 **)&D_8AB14198 = p;
+            q = (u16 *)D_8AB15CA8;
+            while (1) {
+                if ((u16)(pad2 = p[0]) == 0xFFFF) {
+                    *q = 0xFFFF;
+                    *++q = 0xFFFF;
+                    break;
+                }
+                *q++ = *p++;
+                *q++ = *p++;
+                D_8AB1466C++;
+            }
+            break;
+        case 5:
+            D_8AB1464E = s0[0];
+            D_8AB14650 = s0[1];
+            s0 += 2;
+            func_8AB03064(D_8AB14D08, D_8AB1464E, D_8AB14650);
+            break;
+        case 6:
+            D_8AB1464E = s0[0];
+            D_8AB14650 = s0[1];
+            s0 += 2;
+            func_8AB03064(D_8AB154D8, D_8AB1464E, D_8AB14650);
+            break;
+        case 7:
+            D_8AB1464E = s0[0];
+            D_8AB14650 = s0[1];
+            s0 += 2;
+            func_8AB03064(D_8AB15CA8, D_8AB1464E, D_8AB14650);
+            break;
+        case 8:
+            D_8AB14652 = *s0;
+            // FAKE: `(x << 1) << 1` folds to << 2, but the unfolded pair takes one
+            // extra ugen temp, so the reload gets a fresh register (lui t7, lhu t8)
+            // like retail.
+            r = (u16 *)(D_8AB14D08 + ((D_8AB14652 << 1) << 1));
+            s0++;
+            r[0] = 0xFFFE;
+            r[1] = 0xFFFE;
+            continue;
+        case 9:
+            D_8AB14652 = *s0++;
+            // FAKE: same folded shift pair; it adds the temp retail burns between
+            // the lhu and the andi (cases 9 and 10).
+            *(u16 *)(D_8AB154D8 + ((D_8AB14652 << 1) << 1)) = 0xFFFE;
+            *(u16 *)(D_8AB154D8 + ((D_8AB14652 << 1) << 1) + 2) = 0xFFFE;
+            continue;
+        case 10:
+            D_8AB14652 = *s0++;
+            *(u16 *)(D_8AB15CA8 + ((D_8AB14652 << 1) << 1)) = 0xFFFE;
+            *(u16 *)(D_8AB15CA8 + ((D_8AB14652 << 1) << 1) + 2) = 0xFFFE;
+            continue;
+        case 11:
+            D_8AB14654 = s0[0];
+            s0 += 3;
+            D_8AB14656 = s0[-2];
+            D_8AB14658 = s0[-1];
+            func_8AB030BC(D_8AB14D08, D_8AB14654, D_8AB14656, D_8AB14658);
+            break;
+        case 12:
+            D_8AB14654 = s0[0];
+            s0 += 3;
+            D_8AB14656 = s0[-2];
+            D_8AB14658 = s0[-1];
+            func_8AB030BC(D_8AB154D8, D_8AB14654, D_8AB14656, D_8AB14658);
+            break;
+        case 13:
+            D_8AB14654 = s0[0];
+            s0 += 3;
+            D_8AB14656 = s0[-2];
+            D_8AB14658 = s0[-1];
+            func_8AB030BC(D_8AB15CA8, D_8AB14654, D_8AB14656, D_8AB14658);
+            break;
+        case 17:
+            *(s32 *)D_8AB14218 = 1;
+            s0++;
+            break;
+        }
+    }
+    if (D_8AB1466A > 0) {
+        sel = ((s16 *)D_8AB14680)[D_8AB12694];
+        D_8AB1466A = func_8AB03124((u16 *)D_8AB14D08);
+        for (k = 0; k < D_8AB1466A; k++) {
+            D_8AB13F30[k] = k;
+        }
+        func_8AB0322C();
+        func_8AB032F0(sel);
+        p = (u16 *)(D_8AB14D08 + D_8AB14668 * 4);
+        sel = 1;
+        v = *p;
+        arg = *++p;
+        name = func_8004C874(v, arg);
+        switch (D_8AB14678) {
+        case 1:
+            func_8004C54C(D_8AB14648, (s32)name);
+            break;
+        case 4:
+            func_8AB01F80(arg);
+            break;
+        case 2:
+            func_8AB01F80(arg);
+            break;
+        case 3:
+            func_8AB016E4(arg);
+            break;
+        }
+    } else {
+        sel = -1;
+    }
+    if (D_8AB14678 == 0) {
+        func_8AB0130C(D_8AB12694);
+    }
+    if (sel == -1 && D_8AB1466A == 0) {
+        D_8AB14668 = 0;
+    }
+    if (D_8AB1466E > 0) {
+        D_8AB1466E = func_8AB03124((u16 *)D_8AB154D8);
+        func_8AB02FE0(0, D_8AB154D8, D_8AB14668);
+        D_8AB1419C = func_8004C874(*(u16 *)(((u8 **)D_8AB12668)[0] + 0x30), *(u16 *)(((u8 **)D_8AB12668)[0] + 0x32));
+        func_8AB0026C(((s16 *)D_8AB14680)[D_8AB12694], D_8AB14668);
+    }
+    if (D_8AB1466C > 0) {
+        D_8AB1466C = func_8AB03124((u16 *)D_8AB15CA8);
+        for (i = 0; i < 3; i++) {
+            seen[i] = -1;
+        }
+        for (i = 0; i < 3; i++) {
+            dup = 0;
+            while (1) {
+                w = func_8AB023EC(D_8AB1466C);
+                for (j = 0; j < i; j++) {
+                    if (w == seen[j]) {
+                        dup = 1;
+                    }
+                }
+                txt = TextReference_GetText(D_8AB15CA8, w);
+                if (HAL_Strcmp((s8 *)txt, (s8 *)D_8AB1419C) == 0) {
+                    dup = 1;
+                }
+                for (j = 0; j < i; j++) {
+                    if (HAL_Strcmp((s8 *)txt, (s8 *)D_8AB141A0[j]) == 0) {
+                        dup = 1;
+                    }
+                }
+                if (dup == 0) {
+                    break;
+                }
+                dup = 0;
+            }
+            seen[i] = w;
+            D_8AB141A0[i] = txt;
+            func_8AB02FE0(i + 1, D_8AB15CA8, w);
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        sRows[i].a = 0;
+        sRows[i].b = 0;
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
