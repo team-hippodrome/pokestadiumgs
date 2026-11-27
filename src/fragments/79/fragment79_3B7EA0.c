@@ -278,7 +278,134 @@ s32 func_84148C74(u8 arg0) {
 }
 /* mkdraft:func_84148C74 end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B7EA0/func_84148D54.s")
+extern u8 D_8419D7B0[];
+extern u8 *D_841951F8[];
+extern u8 *func_84154B0C(void);
+extern void BattleState_PushSnapshot(void);
+extern void _bzero(void *, s32);
+extern void func_84148A4C(u8 *);
+extern u8 func_80062CE0(u8);
+extern s32 func_84156800(u8 *, s32);
+extern void func_84149D54(void *, u8, u8);
+extern void func_84149D0C(void *);
+extern void func_841485A4(u8 *, u16, u16);
+extern void func_84154820(u8, u8);
+extern u32 func_8003570C(void);
+extern void func_841557B0(void);
+extern u8 *D_84195200[];
+typedef struct { s64 unk0; u8 pad8[4]; s32 dmg; u8 pad10[4]; u8 *unk_14; } F84148D54_Ctx;
+typedef struct { u8 b[0xCC]; } F84148D54_Rec;
+void func_84148D54(u8 arg0) {
+    u8 m;
+    u8 r3;
+    u8 r2;
+    u8 r1;
+    u8 r0;
+    u8 move;
+    u16 hp;
+    F84148D54_Rec *recs;
+    u8 **pp;
+    u8 **slotp;
+    s32 best_idx;
+    u8 *ent;
+    s32 best_score;
+    s32 i;
+    s32 score;
+    u8 *opp;
+    u8 *own;
+    u16 dmg;
+    u8 other;
+    F84148D54_Ctx sp70;
+    u8 sp68[8];
+
+    if (&move) {} // FAKE: keeps move in memory so m below is a real per-pass copy
+    best_idx = -1;
+    best_score = 0x80000000;
+    other = 1 - arg0;
+    recs = (F84148D54_Rec *)func_84154B0C();
+    opp = recs[other].b;
+    own = recs[arg0].b;
+    BattleState_PushSnapshot();
+    _bzero(sp68, 8);
+    sp68[0] = other;
+    func_84148A4C(sp68);
+    move = sp68[3];
+    func_84156800((u8 *)func_80062CE0(sp68[3]), 0);
+    func_84149D54(&sp70, other, move);
+    func_84149D0C(&sp70);
+    func_841485A4(&r0, sp70.dmg, *(u16 *)(sp70.unk_14 + 0x2A));
+    _bzero(sp68, 8);
+    sp68[0] = arg0;
+    func_84148A4C(sp68);
+    func_84149D54(&sp70, arg0, sp68[3]);
+    func_84149D0C(&sp70);
+    hp = sp70.dmg;
+    func_841485A4(&r1, sp70.dmg, *(u16 *)(sp70.unk_14 + 0x2A));
+    func_84156800(D_84195200[arg0] + 0x34, 0);
+    if (arg0 * 4) {} // FAKE: orders the arg0 * 4 spill slot
+    for (i = 0; i < D_841951F8[arg0][8]; i++) {
+        ent = D_841951F8[arg0] + i * 0x58 + 0x18;
+        if (*(u16 *)(ent + 0x26) != 0) {
+            score = 0;
+            if (i != own[1]) {
+                m = move + (u8)i * 0; // FAKE: (u8)i * 0 computes the u8 index first
+                func_84154820(arg0, i);
+                func_84149D54(&sp70, other, move);
+                func_84149D0C(&sp70);
+                dmg = sp70.dmg * 1.5;
+                if (own[3] & 1) {
+                    dmg += *(u16 *)(ent + 0x28) >> 3;
+                }
+                func_841485A4(&r2, dmg, *(u16 *)(ent + 0x28));
+                _bzero(sp68, 8);
+                sp68[0] = arg0;
+                func_84148A4C(sp68);
+                func_84149D54(&sp70, arg0, sp68[3]);
+                func_84149D0C(&sp70);
+                func_841485A4(&r3, sp70.dmg, *(u16 *)(sp70.unk_14 + 0x2A));
+                if (!(dmg < *(u16 *)(ent + 0x26))) {
+                    score = -200;
+                }
+                if (m != 0 && r0 > 0 && dmg == 0) {
+                    score += func_8003570C() % 41 + 40;
+                }
+                if (r3 >= 0xB3 && r1 < 0x80) {
+                    score += func_8003570C() % 41;
+                    score += 10;
+                    if (*(u16 *)(opp + 0x42) < *(u16 *)(ent + 0x2E)) {
+                        score += 20;
+                    }
+                }
+                if (r2 >= 0xB3) {
+                    score -= func_8003570C() % 41 + 10;
+                }
+                if (r2 < 0x80 && r0 >= 0xB3) {
+                    score += func_8003570C() % 41 + 10;
+                }
+                if (*(u16 *)(D_84195200[other] + 0x26) < hp) {
+                    score -= 0x50;
+                }
+                if (best_score < score || (score == best_score && (best_idx == -1 || (func_8003570C() & 1)))) {
+                    best_idx = i;
+                    best_score = score;
+                }
+                func_84156800(ent + 0x34, 0);
+            }
+        }
+    }
+    func_841557B0();
+    if (best_idx != -1) {
+        if (best_score < 0) {
+            best_score = 0;
+        }
+        if (best_score >= 0xDA) {
+            best_score = 0xD9;
+        }
+        D_8419D7B0[0] = best_idx;
+        D_8419D7B0[1] = best_score;
+    }
+}
+
 
 /* mkdraft:func_84149294 begin */
 extern u8 D_8419D7B0[];
@@ -289,7 +416,7 @@ extern void func_84148D54(u8);
 // but this prototype is s32 so that IDO passes the index through instead of
 // masking it with andi at each call site.
 extern s32 func_8414A3C0(s32, u32);
-extern void func_84156800(u8 *, s32);
+extern s32 func_84156800(u8 *, s32);
 
 
 

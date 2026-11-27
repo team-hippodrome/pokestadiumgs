@@ -991,7 +991,105 @@ void func_82C02B30(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/83/fragment83_code/func_82C02B84.s")
+// Scrolls the 6x6 grid pages of the shuffle-order state by whole rows: unk_004 holds the
+// pixel offset, each 0x3D pixels moves one row (unk_003) and one page (unk_002, mod 6),
+// and the row that comes into view is filled from order[]. Then every page's six slots get
+// their bit in unk4 from func_82C02664.
+void func_82C02B84(void) {
+    struct {
+        s8 unk_000;
+        u8 unk_001;
+        u8 unk_002;
+        s8 unk_003;
+        s16 unk_004;
+        s16 unk_006;
+        s16 unk_008;
+        u8 unk_00A[0x42];
+        u8 order[0xFC];
+        u8 unk_148[4];
+    } *st = (void *)&D_82C05E80;
+    s32 i;
+    u32 j;
+    s32 k;
+    struct {
+        u8 unk0[4];
+        u8 unk4;
+        u8 unk5[6];
+        u8 pad;
+        s16 unkC[6];
+    } *p;
+    s16 d = 0; // also the slot value in the row loops
+    s8 c;
+
+    if (*(s16 *)((u8 *)&D_82C04C38 + 0x1250) != *(s16 *)((u8 *)&D_82C04C38 + 0x124E)) {
+        c = st->unk_000;
+        if (c < 2) {
+            st->unk_000 = 0;
+            d = st->unk_006 - st->unk_008;
+            st->unk_008 = st->unk_006;
+        } else {
+            d = (st->unk_006 - st->unk_008) / c;
+            c = c - 1;
+            st->unk_008 = st->unk_008 + d;
+            st->unk_000 = c;
+        }
+    } else {
+        st->unk_004 = 0;
+        st->unk_000 = 0;
+    }
+    st->unk_004 = st->unk_004 - d;
+    while (st->unk_004 > 0) {
+        if (st->unk_002 == 0) {
+            st->unk_002 = 5;
+        } else {
+            st->unk_002--;
+        }
+        st->unk_003 = st->unk_003 - 1;
+        p = (void *)((u8 *)st + st->unk_002 * 0x4B28 + 0x148);
+        for (j = 0; j < 6; j++) {
+            i = st->unk_003 * 6 + j + ((s8 *)st)[0] * 0; // FAKE: the load keeps i a variable in the unrolled copies
+            d = (i >= 0) ? st->order[i] : 0;
+            p->unk5[j] = d;
+            p->unkC[j] = d;
+        }
+        st->unk_004 = st->unk_004 - 0x3D;
+    }
+
+    while (st->unk_004 < -0x3C) {
+        if (st->unk_002) {} // FAKE
+        p = (void *)((u8 *)st + st->unk_002 * 0x4B28 + 0x148);
+        for (j = 0; j < 6; j++) {
+            i = st->unk_003 * 6 + j + 0x24 + p->unk4 * 0; // FAKE: as above
+            d = (i < 0xFC) ? st->order[i] : 0;
+            p->unk5[j] = d;
+            p->unkC[j] = d;
+        }
+        if (st->unk_002 == 5) {
+            st->unk_002 = 0;
+        } else {
+            st->unk_002++;
+        }
+        st->unk_003 = st->unk_003 + 1;
+        if (p) {} // FAKE
+        st->unk_004 = st->unk_004 + 0x3D;
+    }
+
+    k = st->unk_002;
+    for (j = 0; (s32)j != 6; j++) {
+        p = (void *)((u8 *)st + k * 0x4B28 + 0x148);
+        for (i = 0; i != 6; i++) {
+            if (func_82C02664((u8 *)(*(s32 *)((u8 *)&D_82C04C38 + 0x18) + 0x14), p->unk5[i])) {
+                p->unk4 |= 1 << i;
+            } else {
+                p->unk4 &= ~(1 << i);
+            }
+        }
+        k++;
+        if (k >= 6) {
+            k = 0;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
