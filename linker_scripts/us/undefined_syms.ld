@@ -44,3 +44,9 @@ D_8600DD80 = 0x8600DD80;
 D_8600DDB0 = 0x8600DDB0;
 D_8600DDF8 = 0x8600DDF8;
 D_8600DE00 = 0x8600DE00;
+
+/* fragment45 data: second halves of the D_8AB14650 / D_8AB14654 u16 pairs.
+   Retail code addresses them as D_8AB14650 + 2 / D_8AB14654 + 2; func_8AB03394
+   (fragment45_2251A0.c) reads and writes them as their own u16 globals. */
+D_8AB14652 = 0x8AB14652;
+D_8AB14656 = 0x8AB14656;
